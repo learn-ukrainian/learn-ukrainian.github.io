@@ -1,12 +1,14 @@
 """Independent integrity checks and takedown rehearsal for assembled pilot cards (#8981).
 
-`verify` re-reads every cited locator from the held sources (read-only), re-authenticates derived ULIF forms
-against the held raw pages and re-derives what it can from the frozen inputs; it does not trust the assembler's
-bookkeeping. Retained evidence is checked whole: suppressed assertions keep their identity, record, register and
-locator and must be accounted for by the takedown report, while the public projection must carry them only as
-tombstones. `rehearse` runs the withdrawal / rollback contract of schema.md §12-§13: selectors reach the same
-assertions in any order, structured values are withdrawn by their exact proposition, a withdrawn build verifies,
-the rebuild under the same selectors is stable, and lifting the selectors restores the previous bytes.
+`verify` re-audits its inputs against the frozen identity allocation, checks every supplied card's identity, senses
+and sense maps against that allocation, re-reads every cited locator from the held sources (read-only),
+re-authenticates derived ULIF forms against the held raw pages and re-derives what it can from the frozen inputs; it
+does not trust the assembler's bookkeeping and never rebuilds the output it checks. Retained evidence is checked
+whole: suppressed assertions keep their identity, record, register and locator and must be accounted for by the
+takedown report, while the public projection must carry them only as tombstones. `rehearse` runs the withdrawal /
+rollback contract of schema.md §12-§13: selectors reach the same assertions in any order, structured values are
+withdrawn by their exact proposition, a withdrawn build verifies, the rebuild under the same selectors is stable,
+and lifting the selectors restores the previous bytes.
 
 Neither command certifies linguistic correctness: a green run proves mechanics, never meaning.
 """
@@ -16,7 +18,7 @@ from __future__ import annotations
 import html
 import json
 import re
-from collections import Counter
+from collections import Counter, defaultdict
 from pathlib import Path
 
 from jsonschema import Draft202012Validator
@@ -236,6 +238,75 @@ def relation_conservation(inputs: wa.Inputs, cards: dict) -> dict:
             "errors": {k: v for k, v in errors.items() if v}}
 
 
+def live_relation_maps(card: dict) -> dict[str, list[dict]]:
+    """Sense id -> the sense-map units its LIVE relation assertions justify, read from the supplied card only."""
+    by_sense = defaultdict(list)
+    for a in card["assertions"]:
+        if a["subject"]["kind"] == "sense" and a["field"] in wa.RELATION_FIELDS and a["status"] == "active":
+            section = re.search(r"id:(\d+)", a["locator"]).group(1)
+            rule = wa.SENSE_RULE_ALIGNED if a["mapping"]["confidence"] == "high" else wa.SENSE_RULE_HOLDING
+            unit = {"source_id": "ulif", "source_sense_key": f"ulif:section:{section}", "mapped_by": rule}
+            if unit not in by_sense[a["subject"]["id"]]:
+                by_sense[a["subject"]["id"]].append(unit)
+    return {k: sorted(v, key=lambda u: u["source_sense_key"]) for k, v in by_sense.items()}
+
+
+def identity_binding(inputs: wa.Inputs, cards: dict) -> dict:
+    """Every supplied card against the freshly audited allocation (#8981 R3-F1), never against a rebuilt output.
+
+    The card inventory is exactly the allocated cards under their own ids; each card keeps its allocated kind,
+    complete creation key, redirects and its registry senses (ids, order, state) with the seed provenance and
+    registry sense-map units their mint evidence names. Live sense-map units are exactly those the card's live
+    relation assertions justify, and every assertion's subject is the card or one of its own senses. `inventory`,
+    `dictionary_key` and `malformed` mean the per-card checks below cannot address the cards.
+    """
+    errors = Counter()
+    expected = {inputs.entry_by_unit[u["unit_key"]]["card_id"]: inputs.entry_by_unit[u["unit_key"]]
+                for u in inputs.units}
+    try:
+        errors["inventory"] += set(cards) != set(expected)
+        errors["dictionary_key"] += sum(card["card_id"] != key for key, card in cards.items())
+        for card_id, entry in expected.items():
+            card = cards.get(card_id)
+            if card is None:
+                continue
+            errors["card_kind"] += card["card_kind"] != entry["card_kind"]
+            errors["key_at_creation"] += card["key_at_creation"] != entry["key_at_creation"]
+            errors["redirect"] += (card["merged_into"], card["split_into"]) != (
+                entry.get("merged_into"), entry.get("split_into"))
+            errors["sense_inventory"] += [(s["sense_id"], s["order"], s["state"]) for s in card["senses"]] != [
+                (s["sense_id"], s["order"], s["state"]) for s in entry["senses"]]
+            owned = {s["sense_id"] for s in entry["senses"]}
+            live = live_relation_maps(card)
+            for row in card["senses"]:
+                event = inputs.sense_events.get(row["sense_id"]) if row["sense_id"] in owned else None
+                if event is None:
+                    errors["sense_owner"] += 1
+                    continue
+                errors["redirect"] += row["merged_into"] is not None
+                seeded = event["source_unit"] if row["state"] == "active" and event.get("literal_gloss_unit") else None
+                errors["seeded_from"] += row.get("seeded_from") != (seeded and "ulif_sense_gloss:" + seeded)
+                source = "ulif" if event["source_unit"].startswith("ulif:") else "frazeolohichnyi"
+                registry_units = [{"source_id": source, "source_sense_key": event["source_unit"],
+                                   "mapped_by": "registry:" + event.get("rules_version", "")}]
+                errors["registry_sense_map"] += [
+                    u for u in row["sense_map"] if u["mapped_by"].startswith("registry:")] != registry_units
+                errors["live_sense_map"] += [
+                    u for u in row["sense_map"] if not u["mapped_by"].startswith("registry:")] != live.get(
+                    row["sense_id"], [])
+            errors["live_sense_map"] += bool(set(live) - {s["sense_id"] for s in card["senses"]})
+            errors["assertion_subject"] += sum(
+                not ((a["subject"]["kind"] == "card" and a["subject"]["id"] == card_id)
+                     or (a["subject"]["kind"] == "sense" and a["subject"]["id"] in owned))
+                for a in card["assertions"])
+    except (KeyError, TypeError, AttributeError):  # a card without the fields its identity needs
+        errors["malformed"] += 1
+    return {"passed": not any(errors.values()), "errors": {k: v for k, v in errors.items() if v}}
+
+
+UNADDRESSABLE = frozenset({"inventory", "dictionary_key", "malformed"})
+
+
 def _stored_proposition(field: str, value_norm: str, structured: bool, normalise) -> tuple | str:
     """A proposition read from a STORED `value_norm` (the assembler regenerates it from the raw value instead):
     a paradigm slot is its slot plus its unstressed form set, a declared set its member set, else the text."""
@@ -378,16 +449,28 @@ def public_tombstones(card: dict) -> list[str]:
 
 
 def verify(inputs: wa.Inputs, result: dict, again: dict | None = None, suppressions: dict | None = None) -> dict:
-    """Run every integrity check; returns {check: {passed, ...}} and never raises on a failed check."""
+    """Run every integrity check; returns {check: {passed, ...}} and never raises on a failed check.
+
+    Inputs whose allocation or views differ from the frozen allocation give one failed `input_allocation` check and
+    nothing else; supplied cards that cannot be addressed by their allocated ids stop after `identity_binding`.
+    """
+    try:
+        inputs.check_allocation()
+    except foundation.Refusal:
+        return {"input_allocation": {"passed": False, "errors": {"allocation_refused": 1}}, "passed": False}
     cards = result["cards"]
     validator = Draft202012Validator(json.loads(SCHEMA.read_text(encoding="utf-8")))
-    report: dict = {}
+    report: dict = {"input_allocation": {"passed": True}}
 
     schema_errors = Counter()
     for card in cards.values():
         for error in validator.iter_errors(card):
             schema_errors[error.message[:80]] += 1
     report["schema"] = {"passed": not schema_errors, "cards": len(cards), "errors": dict(schema_errors)}
+    report["identity_binding"] = identity_binding(inputs, cards)
+    if UNADDRESSABLE & set(report["identity_binding"]["errors"]):
+        report["passed"] = False
+        return report
 
     unit_cards = {inputs.entry_by_unit[u["unit_key"]]["card_id"] for u in inputs.units}
     senses_ok = all(
@@ -438,9 +521,17 @@ def verify(inputs: wa.Inputs, result: dict, again: dict | None = None, suppressi
                                   "errors": {**register_errors, **lineage_errors}}
     frozen = {bound[0] for bound in binding.values() if bound}
     sr_errors["unbound_frozen_row"] += sum(bound is None for bound in binding.values())
-    # A frozen record no assertion cites must be accounted for by a ledger hold naming it (refused evidence).
-    held = {h["source_record_id"] for item in result["ledger"].cards.values() for h in item["held"]
-            if h.get("source_record_id")}
+    # A frozen record no assertion cites must be accounted for by a ledger hold naming it (refused evidence), and a
+    # hold may name only a frozen record of the card's own allocated unit.
+    unit_of = {inputs.entry_by_unit[u["unit_key"]]["card_id"]: u for u in inputs.units}
+    held = set()
+    for card_id, item in result["ledger"].cards.items():
+        own = {binding[k][0] for k in unit_of[card_id]["source_record_keys"] if binding.get(k)} \
+            if card_id in unit_of else set()
+        for h in item["held"]:
+            if h.get("source_record_id"):
+                held.add(h["source_record_id"])
+                sr_errors["held_unbound"] += h["source_record_id"] not in own
     report["source_records"] = {"passed": not any(sr_errors.values()) and frozen <= cited_records | held
                                 and not forbidden,
                                 "frozen": len(frozen), "cited": len(frozen & cited_records),

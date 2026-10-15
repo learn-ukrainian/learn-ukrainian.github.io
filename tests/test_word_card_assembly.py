@@ -14,16 +14,19 @@ import shutil
 import sqlite3
 import subprocess
 import tempfile
+from contextlib import ExitStack
 from pathlib import Path
 
 import pytest
 from jsonschema import Draft202012Validator
 
+from scripts.atlas import allocate_pilot_identities as allocator
 from scripts.atlas import word_card_assembly as wa
 from scripts.atlas import word_card_foundation as foundation
 from scripts.atlas import word_card_sources as src
 from scripts.atlas import word_card_verify as verify
-from scripts.atlas.allocate_pilot_identities import BUILD_PREFIX, HOLDING_BUILD_PREFIX
+from scripts.atlas.allocate_pilot_identities import BUILD_PREFIX, HOLDING_BASIS, HOLDING_BUILD_PREFIX
+from scripts.atlas.word_card_resolver import _project, aid, card_version
 from scripts.common.git_context import sanitized_git_env
 from scripts.guardrails import worktree_containment as containment
 from tests.test_word_card_sources import (
@@ -38,7 +41,8 @@ from tests.test_word_card_sources import (
 )
 
 A = src.ACUTE
-SCHEMA = json.loads((Path(__file__).resolve().parents[1] / "schemas" / "word-card-v1.schema.json").read_text())
+ROOT = Path(__file__).resolve().parents[1]
+SCHEMA = json.loads((ROOT / "schemas" / "word-card-v1.schema.json").read_text())
 MANIFEST_SHA = "7" * 64
 BUILD = BUILD_PREFIX + MANIFEST_SHA
 HOLDING_BUILD = HOLDING_BUILD_PREFIX + MANIFEST_SHA
@@ -108,17 +112,21 @@ class World:
         rec = {"source_id": source, "table": table, "row_key": {"id": raw["id"]}, "locator": locator, "raw_row": raw,
                "snapshot_id": SNAP + digest, "content_sha256": digest, **extra}
         self.records.append(rec)
-        number = self.next()
-        sr_id = opaque("sr_", number)
-        self.sr.append({"source_record_id": sr_id, "source_id": source,
-                        "aliases": [{"kind": "table_row", "key": f"{source}:row:{raw['id']}",
-                                     "snapshot_id": rec["snapshot_id"]}],
-                        "correspondence": [{"snapshot_id": rec["snapshot_id"], "status": "unique",
-                                            "locator": locator}]})
+        self.source_record(rec, f"{source}:row:{raw['id']}")
         return rec
 
+    def source_record(self, rec, alias):
+        """The persistent record of one frozen row and its original mint (the foundation allocation)."""
+        sr_id = opaque("sr_", self.next())
+        self.sr.append({"source_record_id": sr_id, "source_id": rec["source_id"],
+                        "aliases": [{"kind": "table_row", "key": alias, "snapshot_id": rec["snapshot_id"]}],
+                        "correspondence": [{"snapshot_id": rec["snapshot_id"], "status": "unique",
+                                            "locator": rec["locator"]}]})
+        self.events.append({"event_id": f"ie_{self.next():04d}", "kind": "source_record_mint",
+                            "build_id": "pilot@sha256:" + MANIFEST_SHA, "to": [sr_id], "evidence": rec["locator"]})
+
     def ulif(self, entry_id, query, head, label, gloss="", homonym=1, rows=(), sections=(), puls=None, extra=(),
-             kind="lexeme", holding=False):
+             kind="lexeme", holding=()):
         raw = add_entry(self.sources, self.raw, entry_id, query, head, label, gloss, homonym, rows, sections)
         anchor = self.record("ulif", "ulif_dictua_entries", raw)
         keys = [anchor["locator"]]
@@ -149,27 +157,40 @@ class World:
         self.add_card(unit, "mwe", {"spelling": form, "pos": "phrase"}, None)
         return unit
 
-    def add_card(self, unit, kind, key, gloss, holding=False):
+    def add_card(self, unit, kind, key, gloss, holding=()):
+        """One explicit draft allocation: the card, its seed senses and (when the build needs one) the appended
+        holding sense, each with its original mint evidence in the shape the allocator records."""
         number = self.next()
         card_id = opaque("wc_", number)
+        anchor = next(r for r in self.records if r["locator"] == unit["anchor_locator"])
         source = unit["anchor_locator"].split(":")[0]
         key = {**key, "source_keys": [{"source_id": source, "key": unit["unit_key"], "snapshot_id": "s"},
                                       {"source_id": source, "key": unit["anchor_locator"], "snapshot_id": "s"}]}
+        versions = {"rules_version": "rules-v1-draft", "normaliser_version": "norm-v1"}
+        self.events.append({"event_id": f"ie_{self.next():04d}", "kind": "mint", "build_id": BUILD, "cards": [card_id],
+                            "evidence": foundation.canonical({
+                                "source_partition": unit["unit_key"], "anchor_locator": anchor["locator"],
+                                "snapshot_id": anchor["snapshot_id"], "source_row_sha256": anchor["content_sha256"],
+                                **versions}).decode()})
         senses = []
         if kind == "mwe" or not gloss:
             parts = [("unsplit", unit["anchor_locator"] + "#unsplit", None, BUILD)]
         else:
-            parts = [("active", f"ulif:entry:{self.records[-1]['raw_row']['id']} sense_gloss[{i}]", p.strip(), BUILD)
+            parts = [("active", f"ulif:entry:{anchor['raw_row']['id']} sense_gloss[{i}]", p.strip(), BUILD)
                      for i, p in enumerate(gloss[1:-1].split(";"))]
         if holding:  # the registry's append-only holding sense (allocate_pilot_identities --append-holding)
             parts.append(("unsplit", unit["anchor_locator"] + "#unsplit", None, HOLDING_BUILD))
         for order, (state, source_unit, literal, build) in enumerate(parts, start=1):
             sense_id = opaque("ws_", self.next())
             senses.append({"sense_id": sense_id, "order": order, "state": state})
+            basis = "ULIF structured sense_gloss" if literal else "unaligned source unit; no structured seed"
+            evidence = {"source_partition": unit["unit_key"], "anchor_locator": anchor["locator"],
+                        "source_unit": source_unit, "source_row_sha256": anchor["content_sha256"], "state": state,
+                        "literal_gloss_unit": literal, "basis": basis, **versions}
+            if build == HOLDING_BUILD:
+                evidence.update(basis=HOLDING_BASIS, held_units=list(holding))
             self.events.append({"event_id": f"ie_{self.next():04d}", "kind": "sense_mint", "build_id": build,
-                                "to": [sense_id], "evidence": json.dumps({
-                                    "source_unit": source_unit, "literal_gloss_unit": literal,
-                                    "rules_version": "rules-v1-draft"})})
+                                "to": [sense_id], "evidence": foundation.canonical(evidence).decode()})
         self.entries.append({"card_id": card_id, "card_kind": kind, "state": "active", "key_at_creation": key,
                              "created_in_build": BUILD, "senses": senses})
 
@@ -188,7 +209,8 @@ def build_world():
     for form, tags in (("альфа", "v_naz"), ("альфу", "v_rod"), ("альфі", "v_mis")):
         w.vesum_form(102, "альфа", form, f"noun:inanim:m:{tags}", f"альфа{A} (друга)")
     # Two active senses and one synonym group: the group cannot be aligned; it waits on the holding sense.
-    w.ulif(1, "альфа", f"а{A}льфа", LABEL_M, "(перше; друге)", homonym=1, puls=("A2", "іменник"), holding=True,
+    w.ulif(1, "альфа", f"а{A}льфа", LABEL_M, "(перше; друге)", homonym=1, puls=("A2", "іменник"),
+           holding=["ulif:section:101"],
            rows=[("називний", f"а{A}льфа", ""), ("родовий", f"а{A}льфи", ""), ("місцевий", f"на а{A}льфі", ""),
                  ("кличний", f"а{A}льфо*", "")],
            sections=[("synonyms", synonym_html(f"а{A}льфа", "перше значення", "синонімодин"))])
@@ -220,9 +242,7 @@ def build_world():
            "locator": "atlas0:enrichment:дельта/stress", "raw_row": uws_raw, "snapshot_id": SNAP + digest,
            "content_sha256": digest, "database": "atlas"}
     w.records.append(uws)
-    w.sr.append({"source_record_id": opaque("sr_", w.next()), "source_id": "ukrainian_word_stress",
-                 "aliases": [{"kind": "table_row", "key": "uws:row:1", "snapshot_id": uws["snapshot_id"]}],
-                 "correspondence": [{"snapshot_id": uws["snapshot_id"], "status": "unique", "locator": uws["locator"]}]})
+    w.source_record(uws, "uws:row:1")
     w.vesum_form(105, "дельта", "дельта", "adv", pos="adv")
     w.ulif(5, "дельта", f"де{A}льта", "прислівник", "", extra=[uws])
     # A host entry whose phraseology repeats one aggregator record and quotes another; a single antonym group on
@@ -265,6 +285,21 @@ def make_inputs(w, scratch, registry=None):
 @pytest.fixture(scope="module")
 def world():
     return build_world()
+
+
+# The clean synthetic world is its own explicit frozen allocation, pinned by the literal digest of its identity
+# projection (allocate_pilot_identities.identity_allocation_check). Frozen once; never recomputed from a candidate.
+SYNTHETIC_ALLOCATION_DIGEST = "9b5263fa58ad40108255bb3342215d9fd23f92317ff83a17fc586e76e3c634d0"
+# The same synthetic allocation before its holding epoch: a distinct explicit allocation (registry v2).
+SYNTHETIC_WITHOUT_HOLDING_DIGEST = "2f8f83b2ff75102e32b4f5dddae01e576393528a287589716ed5184125e33cbb"
+
+
+@pytest.fixture(autouse=True)
+def synthetic_allocation(request, monkeypatch):
+    """Pin the synthetic allocation, except for tests over the committed pilot (`committed_pilot`), which keep the
+    production pin."""
+    if "committed_pilot" not in request.fixturenames:
+        monkeypatch.setattr(allocator, "ASSEMBLY_ALLOCATION_DIGEST", SYNTHETIC_ALLOCATION_DIGEST, raising=False)
 
 
 @pytest.fixture
@@ -433,7 +468,7 @@ def test_two_active_senses_use_the_registry_holding_sense(result, inputs):
         s["sense_id"] for e in inputs.registry["entries"] if e["card_id"] == first["card_id"] for s in e["senses"]]
 
 
-def test_missing_holding_sense_is_refused_never_minted(world, tmp_path):
+def test_missing_holding_sense_is_refused_never_minted(world, tmp_path, monkeypatch):
     registry = copy.deepcopy({"schema_version": 1, "registry_version": 2, "entries": world.entries,
                               "source_records": world.sr, "events": world.events})
     holding_ids = {e["to"][0] for e in registry["events"] if e["build_id"] == HOLDING_BUILD}
@@ -442,6 +477,10 @@ def test_missing_holding_sense_is_refused_never_minted(world, tmp_path):
     registry["events"] = [e for e in registry["events"] if e["build_id"] != HOLDING_BUILD]
     with pytest.raises(wa.MissingAllocation):
         wa.build(make_inputs(world, tmp_path, registry))
+    # Even as its own explicit allocation (pinned), a registry without the holding sense the build needs refuses.
+    monkeypatch.setattr(allocator, "ASSEMBLY_ALLOCATION_DIGEST", SYNTHETIC_WITHOUT_HOLDING_DIGEST)
+    with pytest.raises(wa.MissingAllocation, match="unsplit holding sense"):
+        wa.build(make_inputs(world, tmp_path / "pinned", registry))
 
 
 def test_needs_holding_sense_rule():
@@ -831,12 +870,24 @@ def test_frozen_rows_bind_through_their_own_snapshot_only(world, tmp_path, resul
     assert verify.verify(inputs, rebuilt)["passed"]
 
 
-@pytest.mark.parametrize("damage", ["missing", "held_own", "competing_unique", "competing_hold", "alias_elsewhere"])
+CORRESPONDENCE_DAMAGE = ["missing", "held_own", "competing_unique", "competing_hold", "alias_elsewhere"]
+
+
+@pytest.mark.parametrize("damage", CORRESPONDENCE_DAMAGE)
 def test_unresolved_or_competing_frozen_correspondence_refuses_before_output(world, tmp_path, damage):
     registry = copy.deepcopy({"schema_version": 1, "registry_version": 3, "entries": world.entries,
                               "source_records": world.sr, "events": world.events})
+    damage_correspondence(registry, damage)
+    expected = wa.MissingAllocation if damage == "missing" else wa.AssemblyError
+    with pytest.raises(expected, match="own snapshot"):
+        make_inputs(world, tmp_path, registry)
+
+
+def damage_correspondence(registry, damage):
+    """Damage the first ULIF entry record's own-snapshot correspondence; returns that record's frozen locator."""
     a, b = ulif_entry_records(registry)[:2]
     own = a["correspondence"][0]
+    locator = own["locator"]
     if damage == "missing":
         a["correspondence"] = []
     elif damage == "held_own":
@@ -849,9 +900,7 @@ def test_unresolved_or_competing_frozen_correspondence_refuses_before_output(wor
     else:
         for alias in a["aliases"]:
             alias["snapshot_id"] = "other@sha256:" + "1" * 64
-    expected = wa.MissingAllocation if damage == "missing" else wa.AssemblyError
-    with pytest.raises(expected, match="own snapshot"):
-        make_inputs(world, tmp_path, registry)
+    return locator
 
 
 def test_verify_rejects_a_frozen_row_credited_to_another_record(inputs, result):
@@ -1136,6 +1185,7 @@ def host_stores_available():
 
 
 @pytest.mark.skipif(not host_stores_available(), reason="held sources are host-only")
+@pytest.mark.usefixtures("committed_pilot")  # the real pilot under the production allocation pin
 def test_host_pilot_builds_and_verifies_end_to_end(host_scratch, capsys, monkeypatch):
     """Host-only product proof through the real CLI: the frozen pilot assembles over the canonical read-only
     stores, every locator resolves, derived forms authenticate, relation units are conserved, rebuild is identical."""
@@ -1161,3 +1211,550 @@ def test_host_pilot_builds_and_verifies_end_to_end(host_scratch, capsys, monkeyp
     assert wa.main(["build", *inputs, "--output", str(refused)]) == 1
     assert not refused.exists()
     shutil.rmtree(host_scratch / "pilot")
+
+
+# --- R3-F1: persistent identities stay bound to their frozen creation and mint evidence -----------------------
+
+ALLOCATION_REFUSAL = "Pilot allocation differs from frozen creation/mint evidence"
+
+
+def registry_copy(world):
+    """A private copy of the world's registry: the module-scoped world is never mutated."""
+    return copy.deepcopy({"schema_version": 1, "registry_version": 3, "entries": world.entries,
+                          "source_records": world.sr, "events": world.events})
+
+
+def identities(registry):
+    return ([e["card_id"] for e in registry["entries"]] + [s["sense_id"] for e in registry["entries"]
+                                                           for s in e["senses"]]
+            + [r["source_record_id"] for r in registry["source_records"]])
+
+
+def swap_card_ids(registry, left, right):
+    """Exchange two allocated card ids; keys, senses, creation builds and every mint event stay where they were."""
+    a, b = (next(e for e in registry["entries"] if e["card_id"] == i) for i in (left, right))
+    a["card_id"], b["card_id"] = right, left
+
+
+def retarget_card_id(registry, old, new):
+    """Rename one card coherently: its entry and every mint event that names it."""
+    next(e for e in registry["entries"] if e["card_id"] == old)["card_id"] = new
+    for event in registry["events"]:
+        if event.get("cards") == [old]:
+            event["cards"] = [new]
+
+
+def swap_source_record_ids(registry, left, right):
+    """Exchange two persistent source-record ids and the targets of their own mint events (when present); source
+    ids, aliases, correspondence, locators and creation evidence stay where they were."""
+    swap = {left: right, right: left}
+    for record in registry["source_records"]:
+        record["source_record_id"] = swap.get(record["source_record_id"], record["source_record_id"])
+    for event in registry["events"]:
+        if event["kind"] == "source_record_mint":
+            event["to"] = [swap.get(event["to"][0], event["to"][0])]
+
+
+def test_r3f1_build_rejects_swapped_persistent_card_ids(world, tmp_path, inputs, result):
+    assert verify.verify(inputs, result)["passed"]  # unchanged control
+    first, second = [u for u in inputs.units if u["entry_type"] == "lexeme_candidate"][:2]
+    left, right = (inputs.entry_by_unit[u["unit_key"]]["card_id"] for u in (first, second))
+    registry = registry_copy(world)
+    swap_card_ids(registry, left, right)
+    # Same count, same unique identity set: only the binding of two persistent ids to their units changed.
+    assert sorted(identities(registry)) == sorted(identities(inputs.registry))
+    assert len(set(identities(registry))) == len(identities(registry))
+    with pytest.raises(wa.MissingAllocation, match=ALLOCATION_REFUSAL):
+        wa.build(make_inputs(world, tmp_path / "swapped", registry))
+    # A coherent retarget of the entry id and its mint target is still a different allocation.
+    registry = registry_copy(world)
+    retarget_card_id(registry, left, opaque("wc_", 31_000))
+    with pytest.raises(wa.MissingAllocation, match=ALLOCATION_REFUSAL):
+        wa.build(make_inputs(world, tmp_path / "retargeted", registry))
+
+
+def test_r3f1_build_rejects_unsplit_promotion_against_mint(world, tmp_path, inputs, result):
+    unit = unit_by_head(inputs, "ета")
+    entry = inputs.entry_by_unit[unit["unit_key"]]
+    (sense,) = entry["senses"]
+    assert sense["state"] == "unsplit" and inputs.sense_events[sense["sense_id"]]["literal_gloss_unit"] is None
+    (antonym,) = assertions(result["cards"][entry["card_id"]], "antonyms")
+    assert antonym["mapping"]["confidence"] == "unresolved"  # unchanged control: held, never aligned
+    registry = registry_copy(world)
+    promoted = next(e for e in registry["entries"] if e["card_id"] == entry["card_id"])
+    promoted["senses"][0]["state"] = "active"  # the mint evidence and every creation field stay unchanged
+    with pytest.raises(wa.MissingAllocation, match=ALLOCATION_REFUSAL):
+        wa.build(make_inputs(world, tmp_path / "promoted", registry))
+
+
+def test_r3f1_build_rejects_coherent_source_record_id_swap(world, tmp_path, inputs, result):
+    assert verify.verify(inputs, result)["passed"]  # unchanged control
+    a, b = ulif_entry_records(inputs.registry)[:2]
+    for record in (a, b):
+        locator = record["correspondence"][0]["locator"]
+        assert inputs.record_ids[("ulif", locator)]["source_record_id"] == record["source_record_id"]
+    registry = registry_copy(world)
+    swap_source_record_ids(registry, a["source_record_id"], b["source_record_id"])
+    assert sorted(identities(registry)) == sorted(identities(inputs.registry))
+    with pytest.raises(wa.MissingAllocation, match=ALLOCATION_REFUSAL):
+        wa.build(make_inputs(world, tmp_path / "swapped", registry))
+
+
+def resign(card):
+    """Recompute a forged card's mutable digests (assertion ids, card version) so only the binding is wrong."""
+    for a in card["assertions"]:
+        a["assertion_id"] = aid(a["source_id"], a["snapshot_id"], a["locator"], a["subject"], a["field"],
+                                a["value_norm"], a["extraction_version"])
+    card["build"]["card_version"] = card_version(_project(card))
+    return card
+
+
+def rebind_card(card, new_id):
+    """Give a card another id, carrying its card-subject assertions along (a coherent output rebinding)."""
+    card["card_id"] = new_id
+    for a in card["assertions"]:
+        if a["subject"]["kind"] == "card":
+            a["subject"]["id"] = new_id
+
+
+def two_card_ids(inputs):
+    first, second = [u for u in inputs.units if u["entry_type"] == "lexeme_candidate"][:2]
+    return [inputs.entry_by_unit[u["unit_key"]]["card_id"] for u in (first, second)]
+
+
+def stale_inputs(world, scratch, damage):
+    """Valid inputs whose registry or one derived view is damaged after construction."""
+    candidate = make_inputs(world, scratch, registry_copy(world))
+    damage(candidate)
+    return candidate
+
+
+def swap_values(mapping, first, second):
+    mapping[first], mapping[second] = mapping[second], mapping[first]
+
+
+def promote_after_construction(i):
+    entry = i.entry_by_unit[unit_by_head(i, "ета")["unit_key"]]
+    entry["senses"][0]["state"] = "active"  # the registry's own entry object: registry and view change together
+
+
+CACHE_DAMAGE = {
+    "registry_card_swap": lambda i: swap_card_ids(i.registry, *two_card_ids(i)),
+    "registry_promotion": promote_after_construction,
+    "entry_by_unit": lambda i: swap_values(i.entry_by_unit, *[u["unit_key"] for u in i.units[:2]]),
+    "sense_events": lambda i: i.sense_events.update({
+        sid: {**ev, "source_unit": "forged"} for sid, ev in list(i.sense_events.items())[:1]}),
+    "record_ids": lambda i: swap_values(i.record_ids, *list(i.record_ids)[:2]),
+    "units_view": lambda i: setattr(i, "units", i.units[:-1]),
+    "records_view": lambda i: setattr(i, "records", {
+        **i.records, i.units[0]["anchor_locator"]: {**i.records[i.units[0]["anchor_locator"]], "snapshot_id": "x"}}),
+    "malformed_manifest_unit": lambda i: setattr(i, "manifest", {**i.manifest, "selection": {
+        **i.manifest["selection"], "units": [{k: v for k, v in u.items() if k != "anchor_locator"} for u in i.units]}}),
+}
+
+
+@pytest.mark.parametrize("damage", sorted(CACHE_DAMAGE))
+def test_r3f1_rechecks_allocation_and_views_after_construction(world, tmp_path, result, damage):
+    candidate = stale_inputs(world, tmp_path / damage, CACHE_DAMAGE[damage])
+    began = []
+    candidate.sources.begin = lambda: began.append(True)
+    with pytest.raises(wa.MissingAllocation, match=ALLOCATION_REFUSAL):
+        wa.build(candidate)
+    assert not began  # refused before any source read
+    report = verify.verify(candidate, result)
+    assert report == {"input_allocation": {"passed": False, "errors": {"allocation_refused": 1}}, "passed": False}
+    # The views are refused, never silently refreshed: a second attempt refuses the same way.
+    with pytest.raises(wa.MissingAllocation, match=ALLOCATION_REFUSAL):
+        candidate.check_allocation()
+
+
+def forged_report(inputs, result, edit, again=None):
+    """Verify a supplied output changed by `edit` (which returns the cards it touched); inputs stay valid."""
+    forged = copy.deepcopy(result)
+    for card in edit(forged["cards"]):
+        resign(card)
+    return verify.verify(inputs, forged, again)
+
+
+def forge_sense_state(cards):
+    card = card_of({"cards": cards}, "ета")
+    card["senses"][0]["state"] = "active"
+    return [card]
+
+
+def forge_sense_order(cards):
+    card = card_of({"cards": cards}, "альфа", nth=0)
+    card["senses"][0]["order"], card["senses"][1]["order"] = 2, 1
+    return [card]
+
+
+def forge_seeded_from(cards):
+    card = card_of({"cards": cards}, "альфа", nth=0)
+    card["senses"][0]["seeded_from"] = card["senses"][1]["seeded_from"]
+    return [card]
+
+
+def forge_registry_sense_map(cards):
+    card = card_of({"cards": cards}, "альфа", nth=0)
+    card["senses"][0]["sense_map"][0] = dict(card["senses"][1]["sense_map"][0])
+    return [card]
+
+
+@pytest.mark.parametrize(("forgery", "error"), [
+    (forge_sense_state, "sense_inventory"), (forge_sense_order, "sense_inventory"),
+    (forge_seeded_from, "seeded_from"), (forge_registry_sense_map, "registry_sense_map")])
+def test_r3f1_verify_rejects_independent_sense_promotion(inputs, result, forgery, error):
+    report = forged_report(inputs, result, forgery)
+    assert report["passed"] is False
+    assert report["identity_binding"]["passed"] is False and error in report["identity_binding"]["errors"]
+
+
+def forge_dictionary_key(cards):
+    card_id = card_of({"cards": cards}, "бета")["card_id"]
+    cards[opaque("wc_", 31_001)] = cards.pop(card_id)
+    return []
+
+
+def forge_embedded_id(cards):
+    card = card_of({"cards": cards}, "бета")
+    del cards[card["card_id"]]
+    rebind_card(card, opaque("wc_", 31_002))
+    cards[card["card_id"]] = card
+    return [card]
+
+
+def forge_homograph_swap(cards):
+    """Two cards of one spelling exchange identities; every locator still names that spelling."""
+    left, right = card_of({"cards": cards}, "альфа", nth=0), card_of({"cards": cards}, "альфа", nth=1)
+    left_id, right_id = left["card_id"], right["card_id"]
+    rebind_card(left, right_id)
+    rebind_card(right, left_id)
+    cards[left_id], cards[right_id] = right, left
+    return [left, right]
+
+
+def forge_creation_key(cards):
+    card = card_of({"cards": cards}, "голова")
+    card["key_at_creation"]["pos"] = "verb"
+    return [card]
+
+
+def forge_creation_source_key(cards):
+    card = card_of({"cards": cards}, "голова")
+    card["key_at_creation"]["source_keys"][0]["key"] = card_of({"cards": cards}, "бета")[
+        "key_at_creation"]["source_keys"][0]["key"]
+    return [card]
+
+
+def forge_card_kind(cards):
+    card = card_of({"cards": cards}, "голова")
+    card["card_kind"] = "proper_name"
+    return [card]
+
+
+def forge_sense_owner(cards):
+    left, right = card_of({"cards": cards}, "бета"), card_of({"cards": cards}, "ета")
+    left["senses"], right["senses"] = right["senses"], left["senses"]
+    return [left, right]
+
+
+@pytest.mark.parametrize(("forgery", "error"), [
+    (forge_dictionary_key, "inventory"), (forge_embedded_id, "inventory"),
+    (forge_homograph_swap, "key_at_creation"), (forge_creation_key, "key_at_creation"),
+    (forge_creation_source_key, "key_at_creation"), (forge_card_kind, "card_kind"),
+    (forge_sense_owner, "sense_inventory")])
+def test_r3f1_verify_rejects_independent_card_rebinding(inputs, result, forgery, error):
+    report = forged_report(inputs, result, forgery)
+    assert report["passed"] is False
+    assert report["identity_binding"]["passed"] is False and error in report["identity_binding"]["errors"]
+
+
+def forge_registry_source_unit(cards):
+    card = card_of({"cards": cards}, "бета")
+    card["senses"][0]["sense_map"][0]["source_sense_key"] = "ulif:ulif_dictua_entries:id:4#unsplit"
+    return [card]
+
+
+def forge_rule_label(cards):
+    card = card_of({"cards": cards}, "бета")
+    live = next(u for u in card["senses"][0]["sense_map"] if u["mapped_by"] == wa.SENSE_RULE_HOLDING)
+    live["mapped_by"] = wa.SENSE_RULE_ALIGNED
+    return [card]
+
+
+def forge_moved_live_map(cards):
+    card = card_of({"cards": cards}, "альфа", nth=0)
+    holder, first = card["senses"][2], card["senses"][0]
+    moved = [u for u in holder["sense_map"] if u["mapped_by"] == wa.SENSE_RULE_HOLDING]
+    holder["sense_map"] = [u for u in holder["sense_map"] if u not in moved]
+    first["sense_map"] += [dict(u, mapped_by=wa.SENSE_RULE_ALIGNED) for u in moved]
+    return [card]
+
+
+def forge_confidence_promotion(cards):
+    """A held group promoted to an aligned one, coherently in its assertion and the live sense map."""
+    card = card_of({"cards": cards}, "ета")
+    (antonym,) = assertions(card, "antonyms")
+    antonym["mapping"] = {"confidence": "high", "basis": "sense", "note": "one active card sense and one source group"}
+    for u in card["senses"][0]["sense_map"]:
+        if u["mapped_by"] == wa.SENSE_RULE_HOLDING:
+            u["mapped_by"] = wa.SENSE_RULE_ALIGNED
+    return [card]
+
+
+@pytest.mark.parametrize(("forgery", "check", "error"), [
+    (forge_registry_source_unit, "identity_binding", "registry_sense_map"),
+    (forge_rule_label, "identity_binding", "live_sense_map"),
+    (forge_moved_live_map, "identity_binding", "live_sense_map"),
+    (forge_confidence_promotion, "relation_units", "mapping")])
+def test_r3f1_verify_checks_live_and_registry_sense_maps(inputs, result, forgery, check, error):
+    report = forged_report(inputs, result, forgery)
+    assert report["passed"] is False and report[check]["passed"] is False and error in report[check]["errors"]
+
+
+def test_r3f1_withdrawn_relation_keeps_registry_provenance_and_verifies(inputs):
+    withdrawn, suppressions = withdrawn_alpha(inputs)
+    card = card_of(withdrawn, "альфа", nth=0)
+    holder = card["senses"][2]
+    assert [u["mapped_by"] for u in holder["sense_map"]] == ["registry:rules-v1-draft"]  # live map gone only
+    report = verify.verify(inputs, withdrawn, None, suppressions)
+    assert report["passed"], {k: v for k, v in report.items() if isinstance(v, dict) and not v["passed"]}
+    assert report["identity_binding"] == {"passed": True, "errors": {}}
+
+
+def frozen_record(inputs, locator):
+    return inputs.record_ids[("ulif", locator)]
+
+
+def forge_other_record(inputs):
+    a, b = ulif_entry_records(inputs.registry)[:2]
+    locator = a["correspondence"][0]["locator"]
+
+    def edit(cards):
+        touched = []
+        for card in cards.values():
+            for x in card["assertions"]:
+                if x["locator"].split(" ")[0] == locator:
+                    x["source_record_id"], x["source_record_key"] = b["source_record_id"], b["aliases"][0]["key"]
+                    touched.append(card)
+        return touched
+    return edit
+
+
+def forge_key_outside_snapshot(inputs):
+    locator = ulif_entry_records(inputs.registry)[0]["correspondence"][0]["locator"]
+
+    def edit(cards):
+        card = next(c for c in cards.values() for x in c["assertions"] if x["locator"].split(" ")[0] == locator)
+        next(x for x in card["assertions"] if x["locator"].split(" ")[0] == locator)["source_record_key"] = \
+            "ulif:uid:later"
+        return [card]
+    return edit
+
+
+def forge_foreign_source(inputs):
+    puls = next(sr for sr in inputs.registry["source_records"] if sr["source_id"] == "puls")
+    locator = ulif_entry_records(inputs.registry)[0]["correspondence"][0]["locator"]
+
+    def edit(cards):
+        card = next(c for c in cards.values() for x in c["assertions"] if x["locator"].split(" ")[0] == locator)
+        victim = next(x for x in card["assertions"] if x["locator"].split(" ")[0] == locator)
+        victim["source_record_id"], victim["source_record_key"] = puls["source_record_id"], puls["aliases"][0]["key"]
+        return [card]
+    return edit
+
+
+@pytest.mark.parametrize(("forgery", "error"), [
+    (forge_other_record, "snapshot_binding"), (forge_key_outside_snapshot, "key_outside_snapshot"),
+    (forge_foreign_source, "source")])
+def test_r3f1_verify_rejects_independent_source_record_rebinding(inputs, result, forgery, error):
+    report = forged_report(inputs, result, forgery(inputs))
+    assert report["passed"] is False
+    assert report["source_records"]["passed"] is False and error in report["source_records"]["errors"]
+
+
+def test_r3f1_verify_rejects_a_rebound_held_ledger_source_record(tmp_path):
+    held_world = build_world()
+    held_world.sources.execute("UPDATE ulif_forms SET source_entry_fingerprint=? WHERE entry_id=3", ("0" * 64,))
+    inputs = make_inputs(held_world, tmp_path)
+    result = wa.build(inputs)
+    card = card_of(result, "бета")
+    (held,) = [h for h in result["ledger"].cards[card["card_id"]]["held"] if h.get("source_record_id")]
+    assert verify.verify(inputs, result)["passed"]  # unchanged control: the refused forms' record is held
+    other = frozen_record(inputs, unit_by_head(inputs, f"а{A}льфа")["anchor_locator"])["source_record_id"]
+    held["source_record_id"] = other  # another card's frozen record, cited by that card
+    report = verify.verify(inputs, result)
+    assert report["passed"] is False and report["source_records"]["errors"].get("held_unbound") == 1
+
+
+def test_r3f1_identity_verification_does_not_rebuild_output(inputs, result, monkeypatch):
+    def rebuilt(*args, **kwargs):
+        raise AssertionError("verification must never rebuild the output it checks")
+
+    for name in ("build", "card_json", "refresh_sense_maps"):
+        monkeypatch.setattr(wa, name, rebuilt)
+    clean = verify.verify(inputs, result, None)
+    assert clean["passed"] and clean["identity_binding"] == {"passed": True, "errors": {}}
+    for forgery, error in ((forge_sense_state, "sense_inventory"), (forge_homograph_swap, "key_at_creation"),
+                           (forge_moved_live_map, "live_sense_map")):
+        report = forged_report(inputs, result, forgery)
+        assert report["passed"] is False and error in report["identity_binding"]["errors"]
+
+
+def test_r3f1_unchanged_draft_allocations_remain_valid(inputs, result):
+    inputs.check_allocation()
+    report = verify.verify(inputs, result, wa.build(inputs))
+    assert report["passed"], {k: v for k, v in report.items() if isinstance(v, dict) and not v["passed"]}
+    assert report["input_allocation"] == {"passed": True}
+    assert report["identity_binding"] == {"passed": True, "errors": {}}
+    states = {key: [s["state"] for s in card_of(result, key, nth=nth)["senses"]] for key, nth in (
+        ("голова", 0), ("альфа", 0), ("бета", 0), ("ета", 0), ("перша фраза", 0), ("Ета", 0))}
+    assert states == {"голова": ["active"], "альфа": ["active", "active", "unsplit"], "бета": ["unsplit"],
+                      "ета": ["unsplit"], "перша фраза": ["unsplit"], "Ета": ["unsplit"]}
+    assert card_of(result, "Ета")["card_kind"] == "proper_name" and card_of(result, "перша фраза")["card_kind"] == "mwe"
+    (aligned,) = assertions(card_of(result, "голова"), "synonyms")
+    assert aligned["mapping"]["confidence"] == "high"  # one active sense, one group
+    (held,) = assertions(card_of(result, "альфа", nth=0), "synonyms")
+    assert held["mapping"]["confidence"] == "unresolved"  # two active senses never align by position
+    assert held["subject"]["id"] == card_of(result, "альфа", nth=0)["senses"][2]["sense_id"]
+    (antonym,) = assertions(card_of(result, "ета"), "antonyms")
+    assert antonym["mapping"]["confidence"] == "unresolved"  # an unsplit-only card holds its one group
+    beta = result["ledger"].cards[card_of(result, "бета")["card_id"]]["fields"]
+    assert beta["definition_uk"]["disposition"] == "source_absent"
+    assert all(c["quality"]["practice_eligibility"] == [] for c in result["cards"].values())
+
+
+def test_r3f1_verifier_allocation_failures_are_closed_reports(world, tmp_path, inputs, result):
+    closed = {"input_allocation": {"passed": False, "errors": {"allocation_refused": 1}}, "passed": False}
+    swapped = stale_inputs(world, tmp_path / "swapped", lambda i: swap_card_ids(i.registry, *two_card_ids(i)))
+    assert verify.verify(swapped, result) == closed
+    malformed = stale_inputs(world, tmp_path / "malformed", lambda i: i.registry.pop("events"))
+    assert verify.verify(malformed, result) == closed
+    with pytest.raises(wa.MissingAllocation, match=ALLOCATION_REFUSAL):
+        wa.build(malformed)
+    missing = copy.deepcopy(result)
+    del missing["cards"][card_of(missing, "бета")["card_id"]]
+    shapeless = copy.deepcopy(result)
+    del card_of(shapeless, "бета")["senses"]
+    for output, error in ((missing, "inventory"), (shapeless, "malformed")):
+        report = verify.verify(inputs, output)
+        assert report["passed"] is False and error in report["identity_binding"]["errors"]
+        assert all(v["passed"] is False for k, v in report.items() if isinstance(v, dict) and k not in (
+            "input_allocation", "schema"))  # nothing past the failed identity check is reported as passed
+    for report in (verify.verify(swapped, result), verify.verify(inputs, missing)):
+        assert not any("\u0400" <= ch <= "\u04ff" for ch in json.dumps(report, ensure_ascii=False))
+
+
+# --- R3-F1 over the committed pilot: the loader and the CLI refuse before any source read ---------------------
+
+PILOT_TAMPERS = ["card_id_swap", "unsplit_promotion", "source_record_swap"]
+
+
+class SourceOpened(Exception):
+    """A source store was opened: the allocation audit did not refuse first."""
+
+
+@pytest.fixture
+def committed_pilot():
+    """The committed frozen pilot inputs; tests using it keep the production allocation pin."""
+    return {"manifest": ROOT / "registry/atlas/pilot/pilot-v1.json",
+            "registry": ROOT / "registry/atlas/identity/registry.json",
+            "register": ROOT / "docs/sources/permissions-register.yaml"}
+
+
+@pytest.fixture
+def source_sentinel(monkeypatch):
+    opened = []
+
+    def sentinel(stack, path):
+        opened.append(path)
+        raise SourceOpened
+
+    monkeypatch.setattr(foundation, "readonly", sentinel)
+    return opened
+
+
+def tampered_pilot(committed_pilot, tamper, directory):
+    """A copy of the committed registry with one known R3-F1 tamper that the foundation audit alone accepts."""
+    registry, manifest = foundation.load(committed_pilot["registry"]), foundation.load(committed_pilot["manifest"])
+    pilot = [e for e in registry["entries"] if e["created_in_build"] == BUILD_PREFIX + manifest["manifest_sha256"]]
+    if tamper == "card_id_swap":
+        swap_card_ids(registry, pilot[0]["card_id"], pilot[1]["card_id"])
+    elif tamper == "unsplit_promotion":
+        next(s for e in pilot for s in e["senses"] if s["state"] == "unsplit")["state"] = "active"
+    else:
+        a, b = [r for r in registry["source_records"] if r["source_id"] == "ulif"][:2]
+        swap_source_record_ids(registry, a["source_record_id"], b["source_record_id"])
+    foundation.allocation_check(manifest, registry)
+    directory.mkdir(parents=True, exist_ok=True)
+    path = directory / "registry.json"
+    path.write_text(json.dumps(registry, ensure_ascii=False), encoding="utf-8")
+    return path
+
+
+@pytest.mark.parametrize("tamper", PILOT_TAMPERS)
+def test_r3f1_loader_refuses_allocation_tampering_before_source_reads(committed_pilot, source_sentinel, tmp_path,
+                                                                       tamper):
+    stores = [tmp_path / f"{name}.db" for name in ("sources", "vesum", "atlas")]
+    scratch = tmp_path / "scratch"
+    scratch.mkdir()
+    paths = committed_pilot
+    # Unchanged control: the committed allocation passes every audit and reaches the first source open.
+    with ExitStack() as stack, pytest.raises(SourceOpened):
+        wa.load_inputs(paths["manifest"], paths["registry"], paths["register"], *stores, stack, scratch)
+    assert len(source_sentinel) == 1
+    registry = tampered_pilot(committed_pilot, tamper, tmp_path / "tampered")
+    with ExitStack() as stack, pytest.raises(wa.MissingAllocation, match=ALLOCATION_REFUSAL):
+        wa.load_inputs(paths["manifest"], registry, paths["register"], *stores, stack, scratch)
+    assert len(source_sentinel) == 1 and not any(scratch.iterdir())
+
+
+@pytest.mark.parametrize("tamper", PILOT_TAMPERS)
+@pytest.mark.parametrize("operation", ["build", "verify", "rehearse"])
+def test_r3f1_cli_allocation_refusal_preserves_existing_output(committed_pilot, source_sentinel, tmp_path, capsys,
+                                                                operation, tamper):
+    registry = tampered_pilot(committed_pilot, tamper, tmp_path / "tampered")
+    output = tmp_path / "out"
+    (output / "cards").mkdir(parents=True)
+    sentinel = output / "cards" / "wc_sentinel.json"
+    sentinel.write_bytes(b'{"sentinel": true}\n')
+    before = sorted(p.relative_to(output) for p in output.rglob("*"))
+    stores = [arg for name in ("sources", "vesum", "atlas") for arg in (f"--{name}-db", str(tmp_path / f"{name}.db"))]
+    code = wa.main([operation, "--manifest", str(committed_pilot["manifest"]), "--registry", str(registry),
+                    "--register", str(committed_pilot["register"]), "--output", str(output), *stores])
+    assert code == 1
+    assert capsys.readouterr().err.strip() == "REFUSED: " + ALLOCATION_REFUSAL
+    assert not source_sentinel
+    assert sorted(p.relative_to(output) for p in output.rglob("*")) == before
+    assert sentinel.read_bytes() == b'{"sentinel": true}\n'
+
+
+def test_r3f1_cli_verify_rejects_independent_disk_tampering(world, host_scratch, monkeypatch, capsys):
+    # Bounded local inputs: the synthetic world stands in for the loader; build, verify and on-disk checks are real.
+    monkeypatch.setattr(wa, "load_inputs", lambda *args: make_inputs(world, args[7]))
+    output = host_scratch / "pilot"
+    stores = [arg for name in ("sources", "vesum", "atlas") for arg in (f"--{name}-db", str(host_scratch / name))]
+    args = ["--manifest", "m.json", "--registry", "r.json", "--register", "g.yaml", "--output", str(output), *stores]
+    assert wa.main(["build", *args]) == 0
+    assert wa.main(["verify", *args]) == 0
+    capsys.readouterr()
+    paths = {p.stem: p for p in (output / "cards").glob("*.json")}
+    built = {k: foundation.load(p) for k, p in paths.items()}
+
+    def tamper_sense(cards):
+        card = card_of({"cards": cards}, "ета")
+        card["senses"][0]["state"] = "active"
+        return [card]
+
+    for edit in (tamper_sense, forge_homograph_swap):
+        cards = copy.deepcopy(built)
+        for card in edit(cards):
+            resign(card)
+        for key, card in cards.items():
+            foundation.write(paths[key], card)
+        assert wa.main(["verify", *args]) == 1
+        report = json.loads(capsys.readouterr().out)
+        assert report["passed"] is False and report["on_disk"]["passed"] is False
+        for key, card in built.items():
+            foundation.write(paths[key], card)
+    assert wa.main(["verify", *args]) == 0

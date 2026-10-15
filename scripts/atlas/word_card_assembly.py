@@ -5,7 +5,9 @@ cache and the permissions register; emits one schema-valid card per frozen unit 
 Every Ukrainian value is a verbatim source value with its exact locator; nothing is generated, translated or
 paraphrased. Derived ULIF forms are attached only after they authenticate against the held raw page.
 
-Assembly never mints identities (it refuses cards, senses and holding senses the registry does not allocate),
+Assembly never mints identities (it refuses cards, senses and holding senses the registry does not allocate) and
+consumes only the frozen identity allocation: every persistent card, sense and source-record id must agree with its
+creation and mint evidence, checked at load, at construction and again before every build and verification.
 never writes to the sources, and is deterministic: the same inputs give byte-identical cards. Its build id covers
 every row and query result it consumed. Cards are host-only build output: every write and deletion is refused in
 the primary checkout and in every sibling worktree, and inside the running checkout only into git-ignored paths.
@@ -37,6 +39,8 @@ from scripts.atlas import word_card_sources as src
 from scripts.atlas.allocate_pilot_identities import (
     BUILD_PREFIX,
     HOLDING_BUILD_PREFIX,
+    IDENTITY_REFUSAL,
+    identity_allocation_check,
     is_proper_name,
     label_pos,
     normalize_mwe_form,
@@ -111,9 +115,25 @@ class MissingAllocation(AssemblyError):
     """A card, sense or source record the frozen registry does not allocate (schema.md §13)."""
 
 
+ALLOCATION_REFUSAL = IDENTITY_REFUSAL
+
+
 def need(condition, message):
     if not condition:
         raise AssemblyError(message)
+
+
+def allocated(condition):
+    if not condition:
+        raise MissingAllocation(ALLOCATION_REFUSAL)
+
+
+def audit_allocation(registry: dict, manifest: dict) -> None:
+    """The registry's persistent identities are the frozen pilot allocation (allocate_pilot_identities), or refuse."""
+    try:
+        identity_allocation_check(registry, manifest)
+    except foundation.Refusal:
+        raise MissingAllocation(ALLOCATION_REFUSAL) from None
 
 
 def squeeze(text: str) -> str:
@@ -157,6 +177,75 @@ class Inputs:
         for event in registry["events"]:
             if event["kind"] == "sense_mint" and event["build_id"] in builds:
                 self.sense_events[event["to"][0]] = json.loads(event["evidence"])
+        self.check_allocation()
+
+    def check_allocation(self) -> None:
+        """Re-audit the CURRENT registry against the frozen allocation and every derived view against it.
+
+        Run at construction and again by `build` and `verify`: a registry or view changed after construction is
+        refused with a fixed diagnostic, never refreshed, and no earlier success is cached.
+        """
+        try:
+            audit_allocation(self.registry, self.manifest)
+            selection = self.manifest["selection"]
+            entry_by_unit, sense_events = pilot_allocation(self.manifest, self.registry)
+            record_ids = {(r["source_id"], r["locator"]): bound_source_record(self.registry, r)
+                          for r in selection["source_records"]}
+            current = (self.units, self.records, self.entry_by_unit, self.sense_events, self.record_ids)
+            expected = (selection["units"], {r["locator"]: r for r in selection["source_records"]}, entry_by_unit,
+                        sense_events, record_ids)
+        except foundation.Refusal:
+            raise
+        except (KeyError, TypeError, AttributeError, ValueError) as error:  # malformed inputs or views
+            raise MissingAllocation(ALLOCATION_REFUSAL) from error
+        allocated(current == expected)
+
+
+def pilot_allocation(manifest: dict, registry: dict) -> tuple[dict, dict]:
+    """The audited allocation's views: unit key -> card entry, and sense id -> its mint evidence.
+
+    Each frozen unit binds one-to-one to the card created in the pilot build whose creation source keys name the
+    unit and whose single mint names the unit, its anchor row, that row's snapshot and content. Each of the card's
+    senses, numbered in order, binds to its single mint under the pilot or holding build, naming the same unit and
+    row and the sense's own state; a holding sense is `unsplit`. Nothing is inferred: these are the frozen records.
+    """
+    sha = manifest["manifest_sha256"]
+    build, holding = BUILD_PREFIX + sha, HOLDING_BUILD_PREFIX + sha
+    records = {r["locator"]: r for r in manifest["selection"]["source_records"]}
+    units = manifest["selection"]["units"]
+    pilot = [e for e in registry["entries"] if e["created_in_build"] == build]
+    mints = defaultdict(list)
+    for event in registry["events"]:
+        for target in event.get("cards", []) + event.get("to", []):
+            mints[target].append(event)
+    allocated(len(pilot) == len(units) == len({u["unit_key"] for u in units}))
+    entry_by_unit, sense_events = {}, {}
+    for unit in units:
+        anchor = records[unit["anchor_locator"]]
+        matches = [e for e in pilot if unit["unit_key"] in foundation.source_keys(e)]
+        allocated(len(matches) == 1)
+        entry = matches[0]
+        allocated((entry["card_kind"] == "mwe") == (unit["entry_type"] == "mwe_candidate"))
+        events = mints[entry["card_id"]]
+        allocated(len(events) == 1 and events[0]["kind"] == "mint" and events[0]["build_id"] == build)
+        evidence = json.loads(events[0]["evidence"])
+        allocated((evidence["source_partition"], evidence["anchor_locator"], evidence["snapshot_id"],
+                   evidence["source_row_sha256"]) == (unit["unit_key"], anchor["locator"], anchor["snapshot_id"],
+                                                      anchor["content_sha256"]))
+        allocated([s["order"] for s in entry["senses"]] == list(range(1, len(entry["senses"]) + 1)))
+        for sense in entry["senses"]:
+            events = mints[sense["sense_id"]]
+            allocated(len(events) == 1 and events[0]["kind"] == "sense_mint"
+                      and events[0]["build_id"] in (build, holding))
+            evidence = json.loads(events[0]["evidence"])
+            allocated((evidence["source_partition"], evidence["anchor_locator"], evidence["source_row_sha256"],
+                       evidence["state"]) == (unit["unit_key"], anchor["locator"], anchor["content_sha256"],
+                                              sense["state"])
+                      and (events[0]["build_id"] == build or sense["state"] == "unsplit"))
+            sense_events[sense["sense_id"]] = evidence
+        entry_by_unit[unit["unit_key"]] = entry
+    allocated(len({e["card_id"] for e in entry_by_unit.values()}) == len(units))
+    return entry_by_unit, sense_events
 
 
 def bound_source_record(registry: dict, record: dict) -> dict:
@@ -201,6 +290,7 @@ def load_inputs(manifest_path, registry_path, register_path, sources_db, vesum_d
     foundation.manifest_check(manifest, manifest_path)
     registry = foundation.load(registry_path)
     foundation.allocation_check(manifest, registry)
+    audit_allocation(registry, manifest)  # before any source store is opened or the extract is written
     register = foundation.load_register(register_path)
     # The register file may grow after the freeze; the referenced entries are pinned, not the whole file.
     counts = foundation.selection_check(manifest["selection"], {s["id"] for s in register["sources"]})
@@ -1137,7 +1227,8 @@ def apply_suppressions(cards: dict[str, dict], suppressions: dict, source_record
 def build(inputs: Inputs, suppressions: dict | None = None) -> dict:
     """Pure assembly over loaded inputs. Returns {cards, ledger, build_id, takedown, block}."""
     suppressions = suppressions or {"schema_version": "1", "entries": []}
-    allocated = {e["card_id"] for e in inputs.registry["entries"]}
+    inputs.check_allocation()  # the registry and every view as they are NOW, before any source read
+    allocated_cards = {e["card_id"] for e in inputs.registry["entries"]}
     need(len(inputs.units) == len(set(inputs.entry_by_unit)), "Duplicate frozen unit key")
     inputs.sources.begin()
     spelling_count = Counter(
@@ -1149,7 +1240,7 @@ def build(inputs: Inputs, suppressions: dict | None = None) -> dict:
     match_cache: dict = {}
     for unit in inputs.units:
         entry = inputs.entry_by_unit[unit["unit_key"]]
-        if entry["card_id"] not in allocated:
+        if entry["card_id"] not in allocated_cards:
             raise MissingAllocation("Card is not allocated in the frozen identity registry")
         for sense in entry["senses"]:
             need(sense["sense_id"] in inputs.sense_events, "Sense without registry mint evidence")
