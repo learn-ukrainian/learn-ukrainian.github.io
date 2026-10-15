@@ -51,7 +51,7 @@ import uuid
 from dataclasses import dataclass, field
 from pathlib import Path
 
-GATE_VERSION = 7  # 7: inherited thread caps for the pytest stage (#10716)
+GATE_VERSION = 8  # 8: unconditional process cap and invariant timing (#10734)
 # Copied from scripts/common/test_thread_caps.py: this gate imports no project policy code.
 # tests/test_pre_push_gate.py checks table and behavior parity.
 THREAD_CAPS = {
@@ -1288,14 +1288,12 @@ def test_process_limit() -> int:
 
 
 def parallel_options(dist: str = "loadfile", cap: int | None = None) -> list[str]:
-    """Use configured parallelism when available, scheduled by xdist mode ``dist``, at most ``cap`` processes."""
-    limit = test_process_limit()
+    """Bound configured parallelism by the gate ceiling and any held host slots."""
+    limit = min(test_process_limit(), 2)
     if cap is not None:
         limit = min(limit, cap)
     if limit == 1 or importlib.util.find_spec("xdist") is None:
         return []
-    if os.environ.get("LEARN_UKRAINIAN_DISPATCH_TASK_ID", "").strip():
-        limit = min(limit, 2)  # Match ci.pytest_dispatch_cap before recording the invocation.
     return ["-n", str(limit), "--dist", dist]
 
 
@@ -1623,6 +1621,8 @@ def run_pytest_stage(
     admission: Admission | None = None,
     slots: object | None = None,
 ) -> str:
+    if diagnostics is not None:
+        diagnostics["invariant_serial_total_s"] = None
     state = state_dir(root)
     state.mkdir(parents=True, exist_ok=True)
     temp_parent = pytest_temp_parent(state)
@@ -1650,37 +1650,52 @@ def run_pytest_stage(
         slot_environment.update({name: capped[name] for name in THREAD_CAPS if name in capped})
     options = parallel_options(cap=cap)
     if diagnostics is not None:
+        requested = test_process_limit()
         diagnostics.update(
-            requested_test_processes=test_process_limit(),
+            requested_test_processes=requested,
             effective_test_processes=int(options[1]) if options else 1,
+            test_processes_clamp_reason="gate_process_limit" if requested > 2 else None,
             pytest_invocations=[{"dist": dist, "nodes": len(nodes)} for nodes, dist in invocations],
         )
     # The runs share the stage deadline and stop at the first refusal; a green stage means every run passed.
     summaries = []
+    # A changed whole file can subsume registered tests; count that invocation's wall time too.
+    invariant_files = {node.split("::", 1)[0] for node in plan.registry_nodes}
     for nodes, dist in invocations:
         with own_base_temp(temp_parent) as base_temp:
-            code, output = run_bounded(
-                [
-                    "bash",
-                    launcher,
-                    "-m",
-                    "pytest",
-                    *nodes,
-                    "-rfE",
-                    "-q",
-                    "--tb=short",
-                    "-p",
-                    "no:cacheprovider",
-                    "--basetemp",
-                    base_temp,
-                    *parallel_options(dist, cap=cap),
-                ],
-                cwd=root,
-                deadline=deadline,
-                label="pytest stage",
-                diagnostics=diagnostics,
-                extra_env=slot_environment,
-            )
+            started = time.monotonic()
+            try:
+                code, output = run_bounded(
+                    [
+                        "bash",
+                        launcher,
+                        "-m",
+                        "pytest",
+                        *nodes,
+                        "-rfE",
+                        "-q",
+                        "--tb=short",
+                        "-p",
+                        "no:cacheprovider",
+                        "--basetemp",
+                        base_temp,
+                        *parallel_options(dist, cap=cap),
+                    ],
+                    cwd=root,
+                    deadline=deadline,
+                    label="pytest stage",
+                    diagnostics=diagnostics,
+                    extra_env=slot_environment,
+                )
+            finally:
+                if (
+                    any(node.split("::", 1)[0] in invariant_files for node in nodes)
+                    and diagnostics is not None
+                    and diagnostics.get("child_unavailable_reason") in (None, "exit_unobserved")
+                ):
+                    diagnostics["invariant_serial_total_s"] = (
+                        diagnostics["invariant_serial_total_s"] or 0.0
+                    ) + time.monotonic() - started
         failing = failing_node_ids(output)
         if code == 0:
             match = SUMMARY_RE.findall(output)
@@ -2182,7 +2197,10 @@ def main(argv: list[str] | None = None, stdin: str | None = None) -> int:
             "attempt_id": uuid.uuid4().hex,
             "fingerprints": fingerprints,
             "requested_test_processes": None,
+            "requested_test_processes_raw": os.environ.get(MAX_TEST_PROCESSES_ENV),
             "effective_test_processes": None,
+            "test_processes_clamp_reason": None,
+            "invariant_serial_total_s": None,
             "peak_memory_bytes": None,
             "peak_memory_unknown_reason": "no_supported_scope",
             "admission_wait_s": 0.0,
@@ -2220,6 +2238,8 @@ def main(argv: list[str] | None = None, stdin: str | None = None) -> int:
         event["phase"] = "TERMINAL"
         pytest_stage = event.get("stages", {}).get("pytest", {})
         event["effective_test_processes"] = pytest_stage.get("effective_test_processes")
+        event["test_processes_clamp_reason"] = pytest_stage.get("test_processes_clamp_reason")
+        event["invariant_serial_total_s"] = pytest_stage.get("invariant_serial_total_s")
         return record(state, event)
 
     with catch_interruptions():
