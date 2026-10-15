@@ -104,6 +104,7 @@ class CallGovernor:
         self._clock = clock
         self._ids = itertools.count(1)
         self._slots: asyncio.Semaphore | None = None
+        self._slots_loop: asyncio.AbstractEventLoop | None = None
         self._running: dict[int, tuple[str, float]] = {}
         self._dumped: set[int] = set()
         self._queued = 0
@@ -119,9 +120,13 @@ class CallGovernor:
         return self._queued
 
     def _semaphore(self) -> asyncio.Semaphore:
-        # Created on first use so it binds to the server's running loop.
-        if self._slots is None:
+        # One semaphore per event loop: an asyncio primitive that has waited on
+        # one loop refuses another. The server runs one loop; callers that run
+        # several in turn (asyncio.run per call) get a fresh bound each time.
+        loop = asyncio.get_running_loop()
+        if self._slots is None or self._slots_loop is not loop:
             self._slots = asyncio.Semaphore(self.limits.max_concurrent)
+            self._slots_loop = loop
         return self._slots
 
     async def run(self, tool: str, call: Callable[[], Awaitable[T]]) -> T:

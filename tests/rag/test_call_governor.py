@@ -139,3 +139,17 @@ def test_limits_from_environ_reject_invalid_values() -> None:
         }
     )
     assert limits == GovernorLimits(max_concurrent=4, queue_timeout=30.0, call_timeout=120.0, slow_dump_after=90.0)
+
+
+def test_a_governor_survives_successive_event_loops(caplog: pytest.LogCaptureFixture) -> None:
+    governor = _governor(caplog, max_concurrent=1, queue_timeout=5, call_timeout=5)
+
+    async def call() -> str:
+        await asyncio.sleep(0.01)
+        return "ok"
+
+    async def contended() -> list[str]:
+        return await asyncio.gather(governor.run("search_text", call), governor.run("search_text", call))
+
+    assert asyncio.run(contended()) == ["ok", "ok"]
+    assert asyncio.run(contended()) == ["ok", "ok"]
