@@ -1,4 +1,4 @@
-"""Ops surfaces — Sol PR-L retention latest plan and the host test-slot pool (read-only)."""
+"""Read-only ops surfaces: retention plans, test slots and high-load samples."""
 
 from __future__ import annotations
 
@@ -6,10 +6,11 @@ import json
 import logging
 from pathlib import Path
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query
 
 from scripts.common import test_slots
 
+from . import load_samples
 from .entire_context_router import router as entire_context_router
 from .monitor_context import MonitorContext, get_ctx
 
@@ -83,3 +84,11 @@ def test_slots_status(_ctx: MonitorContext = Depends(get_ctx)) -> dict:
     A plain ``def``: the status read touches files, so FastAPI runs it off the event loop.
     """
     return test_slots.status()
+
+
+@router.get("/v1/load-samples")
+def load_samples_tail(
+    limit: int = Query(50, ge=1, le=load_samples.MAX_SAMPLES), ctx: MonitorContext = Depends(get_ctx)
+) -> dict:
+    """Read the bounded attribution ring without triggering process collection."""
+    return load_samples.tail(ctx.roots.batch_state_dir, limit)
