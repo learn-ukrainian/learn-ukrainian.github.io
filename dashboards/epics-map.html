@@ -226,6 +226,7 @@ button { font: inherit; }
     selectedEpicId: null,
     fetchError: null,
     lastUpdated: null,
+    loading: false,
   };
 
   const els = {
@@ -248,10 +249,9 @@ button { font: inherit; }
   }
 
   function escapeHtml(value) {
-    if (value == null) return '';
-    const node = document.createElement('span');
-    node.textContent = String(value);
-    return node.innerHTML;
+    return String(value ?? '').replace(/[&<>"']/g, ch => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[ch]));
   }
 
   function short(value, fallback = '—') {
@@ -304,13 +304,16 @@ button { font: inherit; }
 
   function getLeaseState(epic) {
     const lease = isObject(epic) && isObject(epic.lease) ? epic.lease : null;
-    if (!lease) return 'none';
-    const rawState = typeof lease.state === 'string' ? lease.state.toLowerCase() : 'none';
-    if (rawState === 'active' && lease.expires_at) {
+    if (!isObject(epic) || !Object.hasOwn(epic, 'lease')) return 'unknown';
+    if (epic.lease === null) return 'none';
+    if (!lease) return 'unknown';
+    const rawState = typeof lease.state === 'string' ? lease.state.toLowerCase() : 'unknown';
+    if (rawState === 'active') {
+      if (!lease.expires_at || !Number.isFinite(Date.parse(lease.expires_at))) return 'unknown';
       const expiresAtMs = new Date(lease.expires_at).getTime();
       if (!Number.isNaN(expiresAtMs) && Date.now() >= expiresAtMs) return 'expired';
     }
-    return ['active', 'expired', 'released'].includes(rawState) ? rawState : 'none';
+    return ['active', 'expired', 'released'].includes(rawState) ? rawState : 'unknown';
   }
 
   function statusKey(epic) {
@@ -318,6 +321,7 @@ button { font: inherit; }
     if (leaseState === 'active') return 'active';
     if (leaseState === 'expired') return 'expired';
     if (leaseState === 'released') return 'released';
+    if (leaseState === 'unknown') return 'unknown';
     const registryStatus = isObject(epic) ? String(epic.registry_status || '').toLowerCase() : '';
     return registryStatus === 'unregistered' ? 'unregistered' : 'none';
   }
@@ -327,7 +331,7 @@ button { font: inherit; }
     if (status === 'expired') return 'Expired lease';
     if (status === 'released') return 'Released';
     if (status === 'unregistered') return 'Unregistered';
-    return 'No active lease';
+    return status === 'unknown' ? 'Lease unknown' : 'No active lease';
   }
 
   function formatTime(value) {
@@ -388,15 +392,13 @@ button { font: inherit; }
         cache: 'no-store',
       });
       const text = await response.text();
-      let data = {};
-      try {
-        data = text ? JSON.parse(text) : {};
-      } catch {
-        data = { detail: text };
-      }
+      let data;
+      try { data = JSON.parse(text); }
+      catch { throw new Error('Malformed JSON response'); }
       if (!response.ok) {
         throw new Error(data.detail || data.error || 'HTTP ' + String(response.status));
       }
+      if (!data || typeof data !== 'object' || Array.isArray(data)) throw new Error('Malformed response object');
       return data;
     } finally {
       clearTimeout(timer);
@@ -499,7 +501,8 @@ button { font: inherit; }
     const numberLabel = number === null ? short(epic.id, 'Epic node') : '#' + String(number);
     const title = short(epic.title, 'Title unavailable');
     const stateText = entryBody(epic.last_state);
-    const holder = isObject(epic.lease) ? formatHolder(epic.lease.holder) : 'No active driver';
+    const holder = isObject(epic.lease) ? formatHolder(epic.lease.holder) : 'Driver unknown';
+    const membershipKnown = state.data?.membership_complete !== false && !(state.data?.incomplete_nodes?.length);
     const ariaLabel = number === null
       ? title + ', ' + statusLabel(status)
       : 'Epic ' + String(number) + ': ' + title + ', ' + statusLabel(status);
@@ -507,7 +510,7 @@ button { font: inherit; }
     return '<button class="epic-node status-' + escapeHtml(status) + '" type="button" data-epic-id="' + escapeHtml(id) + '" aria-pressed="' + (selected ? 'true' : 'false') + '" aria-label="' + escapeHtml(ariaLabel) + '">' +
       '<span class="epic-node-top"><span class="epic-number">' + escapeHtml(numberLabel) + '</span><span class="status-chip status-' + escapeHtml(status) + '">' + escapeHtml(statusLabel(status)) + '</span></span>' +
       '<span class="epic-title">' + escapeHtml(title) + '</span>' +
-      '<span class="epic-meta"><span>Open: ' + escapeHtml(formatCount(epic.open_issue_count, 'unknown')) + '</span><span>Closed: ' + escapeHtml(formatCount(epic.closed_issue_count, 'unknown')) + '</span></span>' +
+      '<span class="epic-meta"><span>Open: ' + escapeHtml(formatCount(membershipKnown ? epic.open_issue_count : null, 'unknown')) + '</span><span>Closed: ' + escapeHtml(formatCount(membershipKnown ? epic.closed_issue_count : null, 'unknown')) + '</span></span>' +
       '<span class="epic-driver">Driver: ' + escapeHtml(holder) + '</span>' +
       (stateText ? '<span class="epic-state" title="' + escapeHtml(stateText) + '">Latest state: ' + escapeHtml(stateText) + '</span>' : '') +
       '</button>';
@@ -533,18 +536,31 @@ button { font: inherit; }
       return;
     }
 
-    els.mapContent.innerHTML = state.areas.map(area => {
+    const focusedInside = els.mapContent.contains(document.activeElement);
+    const focusedId = focusedInside ? document.activeElement.dataset.epicId : null;
+    const focusedAlternative = focusedInside && Boolean(document.activeElement.closest?.('details'));
+    const focusedSummary = focusedInside && document.activeElement.tagName === 'SUMMARY';
+    const listOpen = els.mapContent.querySelector?.('details')?.open === true;
+    els.mapContent.innerHTML = state.areas.map((area, index) => {
       const epicCount = area.epics.length;
       const epicHtml = epicCount
         ? area.epics.map(epic => renderEpicNode(epic)).join('')
         : '<div class="area-empty">No epic nodes in this area.</div>';
-      return '<section class="area-cluster" aria-labelledby="' + escapeHtml(area.id) + '-title">' +
-        '<header class="area-cluster-head"><h4 class="area-cluster-title" id="' + escapeHtml(area.id) + '-title">' + escapeHtml(area.title) + '</h4>' +
+      return '<section class="area-cluster" aria-labelledby="' + 'area-heading-' + index + '">' +
+        '<header class="area-cluster-head"><h4 class="area-cluster-title" id="' + 'area-heading-' + index + '">' + escapeHtml(area.title) + '</h4>' +
         '<p class="area-cluster-meta">' + escapeHtml(short(area.streamId, 'area id unavailable')) + ' · ' + String(epicCount) + ' epic' + (epicCount === 1 ? '' : 's') + '</p></header>' +
         '<div class="epic-list">' + epicHtml + '</div>' +
         '</section>';
     }).join('');
 
+    const list = '<details' + (listOpen ? ' open' : '') + '><summary>Relationship list alternative</summary><ul>' + state.areas.map(area =>
+      '<li>' + escapeHtml(area.title) + '<ul>' + area.epics.map(epic =>
+        '<li><button class="epic-node" data-epic-id="' + escapeHtml(epicId(epic)) + '">' + escapeHtml(short(epic.title, epicId(epic))) + '</button></li>'
+      ).join('') + '</ul></li>'
+    ).join('') + '</ul></details>';
+    els.mapContent.innerHTML += list;
+    if (focusedId) [...els.mapContent.querySelectorAll(focusedAlternative ? 'details [data-epic-id]' : '.epic-list [data-epic-id]')].find(button => button.dataset.epicId === focusedId)?.focus();
+    if (focusedSummary) els.mapContent.querySelector('summary')?.focus();
     els.mapContent.querySelectorAll('.epic-node').forEach(button => {
       button.addEventListener('click', () => selectEpic(button.getAttribute('data-epic-id')));
     });
@@ -656,6 +672,7 @@ button { font: inherit; }
       : '<span class="muted">GitHub issue number unavailable</span>';
     const stateText = entryBody(epic.last_state);
     const registryStatus = short(epic.registry_status, 'unknown');
+    const membershipKnown = state.data?.membership_complete !== false && !(state.data?.incomplete_nodes?.length);
 
     els.detailMeta.textContent = number === null ? 'Epic node' : 'Epic #' + String(number);
     els.detailPane.classList.remove('empty');
@@ -665,8 +682,8 @@ button { font: inherit; }
       '<dl class="detail-grid">' +
       '<div class="detail-field"><dt>Area</dt><dd>' + escapeHtml(area ? area.title : short(epic.area_id, 'Area unavailable')) + '</dd></div>' +
       '<div class="detail-field"><dt>Registry</dt><dd class="mono">' + escapeHtml(registryStatus) + '</dd></div>' +
-      '<div class="detail-field"><dt>Open issues</dt><dd>' + escapeHtml(formatCount(epic.open_issue_count, 'unknown')) + '</dd></div>' +
-      '<div class="detail-field"><dt>Closed issues</dt><dd>' + escapeHtml(formatCount(epic.closed_issue_count, 'unknown')) + '</dd></div>' +
+      '<div class="detail-field"><dt>Open issues</dt><dd>' + escapeHtml(formatCount(membershipKnown ? epic.open_issue_count : null, 'unknown')) + '</dd></div>' +
+      '<div class="detail-field"><dt>Closed issues</dt><dd>' + escapeHtml(formatCount(membershipKnown ? epic.closed_issue_count : null, 'unknown')) + '</dd></div>' +
       '</dl></section>' +
       renderLeaseSection(epic, status) +
       '<section class="detail-section"><h5>Latest state</h5><p class="detail-lede">' + escapeHtml(stateText || 'No latest state entry.') + '</p></section>' +
@@ -687,9 +704,14 @@ button { font: inherit; }
   }
 
   async function loadGraph() {
+    if (state.loading) return;
+    state.loading = true;
+    els.mapContent.setAttribute('aria-busy', 'true');
     try {
       const data = await fetchJson('/api/epics/graph/v1');
-      if (!isObject(data) || data.schema !== 'epics-graph.v1' || !isObject(data.nodes)) {
+      if (!isObject(data) || data.schema !== 'epics-graph.v1' || !isObject(data.nodes)
+          || !Array.isArray(data.nodes.areas) || !Array.isArray(data.nodes.epics)
+          || ![...data.nodes.areas, ...data.nodes.epics].every(isObject) || !Array.isArray(data.edges)) {
         throw new Error('response did not contain the epics-graph.v1 schema');
       }
       const model = buildModel(data);
@@ -701,12 +723,15 @@ button { font: inherit; }
       }
       state.lastUpdated = new Date();
       showError('');
-      els.lastUpdatedText.textContent = 'Updated ' + state.lastUpdated.toLocaleTimeString();
+      els.lastUpdatedText.textContent = 'Source age unknown · Last successful fetch ' + state.lastUpdated.toLocaleTimeString() + (data.stale ? ' · stale upstream cache' : '') + ' · Response assembled ' + formatTime(data.generated_at);
       renderAll();
     } catch (error) {
-      showError('Failed to fetch /api/epics/graph/v1: ' + error.message);
-      els.lastUpdatedText.textContent = 'Update failed';
+      showError('Failed to fetch /api/epics/graph/v1: ' + error.message + (state.lastUpdated ? '. Retained graph is historical.' : '. State unknown.'));
+      if (!state.lastUpdated) els.lastUpdatedText.textContent = 'Source age unknown · No successful fetch';
       renderAll();
+    } finally {
+      state.loading = false;
+      els.mapContent.removeAttribute('aria-busy');
     }
   }
 

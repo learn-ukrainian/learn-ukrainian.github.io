@@ -175,11 +175,13 @@ const ORIENT_TIMEOUT_MS = 20000;
 const GLANCE_TIMEOUT_MS = 12000;
 let refreshTimer = null;
 let refreshHalted = false;
+let orientLoading = false;
+const sectionFetches = {};
 
 function escapeHtml(value) {
-  const node = document.createElement('span');
-  node.textContent = value == null ? '' : String(value);
-  return node.innerHTML;
+  return String(value ?? '').replace(/[&<>"']/g, ch => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[ch]));
 }
 
 function formatTimestamp(value) {
@@ -210,13 +212,11 @@ async function fetchJson(url, timeoutMs = API_TIMEOUT_MS) {
   try {
     const response = await fetch(url, { signal: controller.signal });
     const text = await response.text();
-    let data = {};
-    try {
-      data = text ? JSON.parse(text) : {};
-    } catch {
-      data = { detail: text };
-    }
+    let data;
+    try { data = JSON.parse(text); }
+    catch { throw new Error('Malformed JSON response'); }
     if (!response.ok) throw new Error(data.detail || data.error || `HTTP ${response.status}`);
+    if (!data || typeof data !== 'object' || Array.isArray(data)) throw new Error('Malformed response object');
     return data;
   } catch (error) {
     if (error.name === 'AbortError') throw new Error('Request timed out');
@@ -402,14 +402,15 @@ function renderRuntime(runtime) {
 
 async function renderDelegate(delegate) {
   let recent = Array.isArray(delegate && delegate.recent) ? delegate.recent : [];
-  let activeCount = delegate && delegate.active_count ? delegate.active_count : 0;
+  let activeCount = Number.isSafeInteger(delegate?.active_count) ? delegate.active_count : 'unknown';
   let liveChecked = false;
   if (!recent.length) {
     // The /api/orient snapshot can lag or truncate; cross-check the live
     // delegate list before claiming there is nothing recent (#7078).
     try {
       const live = await fetchJson('/api/delegate/tasks?limit=5');
-      const liveTasks = Array.isArray(live.tasks) ? live.tasks : [];
+      if (!Array.isArray(live.tasks) || !live.tasks.every(task => task && typeof task.task_id === 'string')) throw new Error('Malformed delegate cross-check');
+      const liveTasks = live.tasks;
       liveChecked = true;
       if (liveTasks.length) {
         recent = liveTasks;
@@ -418,7 +419,7 @@ async function renderDelegate(delegate) {
     } catch { /* live list unavailable — keep snapshot-honest copy below */ }
   }
   const emptyCopy = liveChecked
-    ? 'No recent delegate tasks'
+    ? 'No recent delegate tasks returned; source age and complete coverage unknown'
     : 'Snapshot shows no recent tasks and the live delegate list is unavailable — open <a href="/delegate.html">Delegate</a>.';
   document.getElementById('delegate-muted').textContent = `${activeCount} active`;
   document.getElementById('delegate-content').innerHTML = `
@@ -476,8 +477,8 @@ function renderDiscussions(data) {
     discussions.map(item => {
       const url = `/fleet.html?conversation=${encodeURIComponent(item.thread_id || '')}`;
       const statusClass = item.status === 'running' ? 'warn' : item.status === 'converged' ? 'ok' : 'gray';
-      return `<tr onclick="location.href='${url}'" style="cursor:pointer">
-        <td><strong>#${escapeHtml(item.channel || '—')}</strong><div class="mono" style="color:var(--text3);font-size:12px">${escapeHtml(String(item.thread_id || '').slice(0, 12))}</div></td>
+      return `<tr>
+        <td><a href="${escapeHtml(url)}"><strong>#${escapeHtml(item.channel || '—')}</strong></a><div class="mono" style="color:var(--text3);font-size:12px">${escapeHtml(String(item.thread_id || '').slice(0, 12))}</div></td>
         <td>${escapeHtml((item.agents || []).join(', ') || '—')}<div style="color:var(--text3);font-size:12px">round ${item.last_round || 0} · ${item.message_count || 0} messages</div></td>
         <td><span class="pill ${statusClass}">${escapeHtml(item.status || 'unknown')}</span></td>
         <td>${discussionAge(item.last_message_at)}</td>
@@ -507,13 +508,13 @@ function renderWiki(wiki) {
 
 function renderHealth(health) {
   const items = [
-    ['API', !!(health && health.api)],
-    ['MCP', !!(health && (health.mcp_sources ?? health.mcp_rag))],
-    ['sources.db', !!(health && health.sources_db)],
-    ['broker', !!(health && health.message_broker)],
+    ['API', health?.api],
+    ['MCP', health?.mcp_sources ?? health?.mcp_rag],
+    ['sources.db', health?.sources_db],
+    ['broker', health?.message_broker],
   ];
   document.getElementById('health-content').innerHTML = `<div class="health-grid">${
-    items.map(([label, ok]) => `<div class="mini-card"><div class="title">${label}</div><div style="font-size:15px"><span class="dot ${ok ? 'ok' : 'err'}"></span>${ok ? 'healthy' : 'down'}</div></div>`).join('')
+    items.map(([label, ok]) => `<div class="mini-card"><div class="title">${label}</div><div style="font-size:15px"><span class="dot ${ok === true ? 'ok' : ok === false ? 'err' : 'gray'}"></span>${ok === true ? 'healthy' : ok === false ? 'down' : 'unknown'}</div></div>`).join('')
   }</div>`;
 }
 
@@ -541,6 +542,12 @@ function opaqueHost(value) {
     ? value : 'unknown';
 }
 
+function glanceAge(age, observedAt) {
+  if (typeof age !== 'number' || !Number.isFinite(age) || age < 0
+      || (observedAt && (!Number.isFinite(Date.parse(observedAt)) || Date.parse(observedAt) > Date.now()))) return 'Source age unknown';
+  return `${Math.round(age)}s at fetch`;
+}
+
 function glanceTable(headers, rows) {
   return `<table><thead><tr>${headers.map(h => `<th>${escapeHtml(h)}</th>`).join('')}</tr></thead><tbody>${rows.map(row => `<tr>${row.map(cell => `<td>${escapeHtml(cell)}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
 }
@@ -566,10 +573,10 @@ function renderGlanceEpics(data) {
 }
 
 function renderGlanceHosts(data) {
-  return glanceTable(['Host', 'Observation', 'Occupancy'], glanceHosts(data).map(([id, host]) => {
+  return glanceTable(['Host', 'Observation', 'Occupancy', 'Report age'], glanceHosts(data).map(([id, host]) => {
     const fresh = host.status === 'fresh';
     const burn = ['active', 'idle', 'unknown'].includes(host.burn_state) ? host.burn_state : 'unknown';
-    return [id, ['fresh', 'stale', 'unavailable'].includes(host.status) ? host.status : 'unknown', fresh ? burn : 'unknown'];
+    return [id, ['fresh', 'stale', 'unavailable'].includes(host.status) ? host.status : 'unknown', fresh ? burn : 'unknown', ['fresh', 'stale'].includes(host.status) ? glanceAge(host.age_seconds, host.observed_at) : 'Source age unknown'];
   }));
 }
 
@@ -615,18 +622,18 @@ function renderGlanceWorkers(data) {
     const id = opaqueHost(host.host_id);
     if (id === 'unknown') continue;
     if (host.freshness !== 'fresh' || host.workers_status !== 'reported' || !Array.isArray(host.workers)) {
-      rows.push([id, 'unknown', 'unknown / unavailable']);
+      rows.push([id, 'unknown', 'unknown / unavailable', host.freshness === 'stale' ? glanceAge(host.age_s) : 'Source age unknown']);
       continue;
     }
     for (const worker of uniqueSeats(host.workers)) {
       const key = JSON.stringify([id, worker.kind, worker.agent, worker.id, worker.run_id || null]);
       if (seen.has(key)) continue;
       seen.add(key);
-      rows.push([id, `${worker.agent || 'unknown'} · ${worker.id || 'unknown'}`, worker.state || 'unknown']);
+      rows.push([id, `${worker.agent || 'unknown'} · ${worker.id || 'unknown'}`, worker.state || 'unknown', glanceAge(host.age_s)]);
     }
-    if (!host.workers.some(worker => worker.kind !== 'service')) rows.push([id, 'No AI workers reported', 'fresh']);
+    if (!host.workers.some(worker => worker.kind !== 'service')) rows.push([id, 'No AI workers reported', 'fresh', glanceAge(host.age_s)]);
   }
-  return rows.length ? glanceTable(['Host', 'Seat', 'State'], rows) : 'Unknown — no host reports';
+  return rows.length ? glanceTable(['Host', 'Seat', 'State', 'Report age'], rows) : 'Unknown — no host reports';
 }
 
 function shortSha(value) {
@@ -663,8 +670,13 @@ async function loadGlance() {
       ['projects', '/api/fleet/projects/v1', renderGlanceProjects],
     ].map(async ([key, url, render]) => {
       const node = document.getElementById(`glance-${key}`);
-      try { node.innerHTML = render(await fetchJson(url, GLANCE_TIMEOUT_MS)); }
+      node.setAttribute?.('aria-busy', 'true');
+      try {
+        const data = await fetchJson(url, GLANCE_TIMEOUT_MS);
+        node.innerHTML = render(data) + `<p class="muted">Collection source age unknown; row report ages are measured at fetch · Last successful fetch ${escapeHtml(new Date().toLocaleTimeString())}</p>`;
+      }
       catch { node.textContent = 'Unknown — lookup unavailable'; }
+      finally { node.removeAttribute?.('aria-busy'); }
     }));
   } finally { glanceLoading = false; }
 }
@@ -681,51 +693,76 @@ function startRefresh() {
   refreshTimer = setInterval(loadOrient, REFRESH_MS);
 }
 
+function isObject(value) {
+  return value !== null && typeof value === 'object' && !Array.isArray(value);
+}
+
+async function renderSection(key, value, valid, render) {
+  const node = document.getElementById(`${key}-content`);
+  if (node.contains(document.activeElement)) return;
+  node.querySelectorAll('.section-read-error').forEach(note => note.remove());
+  node.setAttribute('aria-busy', 'true');
+  try {
+    if (!valid(value) || value?.error) throw new Error('Unavailable or malformed section');
+    await render(value);
+    sectionFetches[key] = new Date();
+    node.innerHTML += `<p class="muted">Source age unknown · Last successful fetch ${escapeHtml(sectionFetches[key].toLocaleTimeString())}</p>`;
+  } catch (error) {
+    const previous = sectionFetches[key];
+    const message = `${escapeHtml(key)} unavailable: ${escapeHtml(error.message)}. ${previous ? 'Retained observation is historical.' : 'State unknown.'}`;
+    if (previous) node.innerHTML += `<p class="section-read-error" role="status">${message}</p>`;
+    else node.innerHTML = `<p role="status">${message}</p>`;
+  } finally { node.removeAttribute('aria-busy'); }
+}
+
 async function loadOrient() {
   void loadGlance();
+  if (orientLoading) return;
+  orientLoading = true;
   try {
-    const [orientResult, discussionsResult] = await Promise.allSettled([
-      fetchJson('/api/orient', ORIENT_TIMEOUT_MS),
-      fetchJson('/api/discussions/active', GLANCE_TIMEOUT_MS)
+    await Promise.allSettled([
+      (async () => {
+        try {
+          const data = await fetchJson('/api/orient', ORIENT_TIMEOUT_MS);
+          if (!isObject(data) || !['git', 'health', 'runtime', 'delegate', 'pipeline'].some(key => Object.hasOwn(data, key))) throw new Error('Malformed session snapshot');
+          setPageBanner('');
+          await Promise.all([
+            renderSection('git', data.git, isObject, renderGit),
+            renderSection('issues', data.issues, Array.isArray, renderIssues),
+            renderSection('pipeline', data.pipeline, isObject, renderPipeline),
+            renderSection('runtime', data.runtime, isObject, renderRuntime),
+            renderSection('delegate', data.delegate, isObject, async value => { await renderDelegate(value); }),
+            renderSection('bridge', data.bridge_pending, isObject, renderBridgePending),
+            renderSection('wiki', data.wiki, isObject, renderWiki),
+            renderSection('health', data.health, isObject, renderHealth),
+            renderSection('session', data.session_hints, Array.isArray, renderSessionHints)
+          ]);
+          document.getElementById('generated-at').textContent = `Response assembled ${formatTimestamp(data.generated_at)} · source ages remain unknown`;
+        } catch (error) {
+          setPageBanner(`Session snapshot unavailable: ${error.message}. Retained observations are historical.`);
+          document.querySelectorAll('[id$="-content"]').forEach(node => {
+            if (node.textContent.trim() === 'Loading...') node.textContent = 'Unavailable — session snapshot failed to load';
+          });
+          for (const key of ['git', 'issues', 'pipeline', 'runtime', 'delegate', 'bridge', 'wiki', 'health', 'session']) {
+            await renderSection(key, null, () => false, () => {});
+          }
+        }
+      })(),
+      (async () => {
+        try {
+          const data = await fetchJson('/api/discussions/active', GLANCE_TIMEOUT_MS);
+          await renderSection('discussions', data, value => isObject(value) && Array.isArray(value.discussions), renderDiscussions);
+        } catch (error) {
+          await renderSection('discussions', null, () => false, () => {});
+          document.getElementById('discussions-muted').textContent = 'Discussion lookup unavailable';
+        }
+      })()
     ]);
-    if (orientResult.status !== 'fulfilled') throw orientResult.reason;
-    const data = orientResult.value;
-    const discussions = discussionsResult.status === 'fulfilled'
-      ? discussionsResult.value
-      : { discussions: [], error: discussionsResult.reason && discussionsResult.reason.message ? discussionsResult.reason.message : String(discussionsResult.reason || 'Discussion lookup failed') };
-    setPageBanner('');
+  } finally {
+    orientLoading = false;
     refreshHalted = false;
-    renderGit(data.git || {});
-    renderIssues(Array.isArray(data.issues) ? data.issues : []);
-    renderPipeline(data.pipeline || {});
-    renderRuntime(data.runtime || {});
-    await renderDelegate(data.delegate || {});
-    renderBridgePending(data.bridge_pending || {});
-    renderDiscussions(discussions || {});
-    if (discussions && discussions.error) {
-      document.getElementById('discussions-content').innerHTML = `<div class="empty">Discussion lookup unavailable: ${escapeHtml(discussions.error)}</div>`;
-    }
-    renderWiki(data.wiki || {});
-    renderHealth(data.health || {});
-    renderSessionHints(Array.isArray(data.session_hints) ? data.session_hints : []);
-    document.getElementById('generated-at').textContent = `Updated ${formatTimestamp(data.generated_at)}`;
-    document.getElementById('refresh-status').textContent = 'Auto-refresh every 30s';
-    console.info(`[orient] refreshed branch=${data.git && data.git.branch ? data.git.branch : 'unknown'} issues=${Array.isArray(data.issues) ? data.issues.length : 0} generated_at=${data.generated_at || 'unknown'}`);
+    document.getElementById('refresh-status').textContent = 'Auto-refresh every 30s · section errors retry independently';
     startRefresh();
-  } catch (error) {
-    setPageBanner(`Session snapshot unavailable: ${error.message}`);
-    document.getElementById('refresh-status').textContent = 'Session refresh stopped; fleet retries every 30s';
-    document.getElementById('generated-at').textContent = 'Waiting for refresh';
-    // Skeletons must not outlive a failed load: replace any section still
-    // showing "Loading..." with an honest unavailable state (#7976).
-    document.querySelectorAll('[id$="-content"]').forEach((node) => {
-      if (node.textContent.trim() === 'Loading...') {
-        node.textContent = 'Unavailable — session snapshot failed to load';
-      }
-    });
-    refreshHalted = true;
-    stopRefresh();
-    console.error('[orient] refresh failed', error);
   }
 }
 

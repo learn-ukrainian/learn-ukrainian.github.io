@@ -81,7 +81,7 @@ tr:last-child td { border-bottom:none; }
     </div>
     <div class="actions">
       <button id="refresh-btn" type="button">Refresh</button>
-      <div class="status" id="refresh-status">Loading...</div>
+      <div class="status" role="status" id="refresh-status">Loading...</div>
     </div>
   </section>
 
@@ -95,7 +95,7 @@ tr:last-child td { border-bottom:none; }
 
   <section class="section panel">
     <h2>Claude accounts</h2>
-    <p class="sub" style="margin-bottom:10px">One row per registered Claude account. The <span class="mono">claude</span> lane above stays the default account. Projected leftover is the weekly share left at reset if the current pace continues; 0% means the account runs out before reset. Display only: routing does not read these rows.</p>
+    <p class="sub" style="margin-bottom:10px">One row per registered Claude account. The <span class="mono">claude</span> lane above stays the default account. Projected leftover is the weekly share left at reset if the current pace continues; 0% means the account runs out before reset. Display only: routing does not read these rows. Cross-account reference parity is unverified; D02 remains with the Monitor API and operator capacity custodian.</p>
     <div id="claude-accounts-table"></div>
   </section>
 
@@ -118,6 +118,27 @@ tr:last-child td { border-bottom:none; }
 
 <script>
 const API_TIMEOUT_MS = 5000;
+let routingLoading = false;
+const feedState = {};
+
+function isObject(value) {
+  return value !== null && typeof value === 'object' && !Array.isArray(value);
+}
+
+function validateFeed(key, data) {
+  if (!isObject(data) || data.error) throw new Error('Unavailable or malformed ' + key + ' response');
+  if (key === 'routing' && !isObject(data.agents)) throw new Error('Malformed routing agents');
+  if (key === 'agents' && (!Array.isArray(data.agents) || !data.agents.every(row => isObject(row) && typeof row.name === 'string' && (row.supported_modes == null || (Array.isArray(row.supported_modes) && row.supported_modes.every(mode => typeof mode === 'string')))))) throw new Error('Malformed runtime agents');
+  if (key === 'usage' && (!Number.isSafeInteger(data.records_total) || data.records_total < 0 || !isObject(data.by_agent))) throw new Error('Malformed runtime usage');
+  if (key === 'delegates' && (!Array.isArray(data.tasks) || !data.tasks.every(row => isObject(row) && typeof row.task_id === 'string'))) throw new Error('Malformed delegate tasks');
+  return data;
+}
+
+function feedNote(key) {
+  const feed = feedState[key];
+  return `<p class="stale-note" role="status">${escapeHtml(key)}: Source age unknown · Last successful fetch ${feed?.fetched ? escapeHtml(feed.fetched.toLocaleTimeString()) : 'none'}${feed?.error ? ' · Read failed: ' + escapeHtml(feed.error) + '; retained values are historical' : ''}</p>`;
+}
+
 const ENDPOINTS = {
   routing: '/api/state/routing-budget',
   agents: '/api/runtime/agents',
@@ -131,13 +152,11 @@ async function fetchJson(path) {
   try {
     const res = await fetch(path, { signal: controller.signal });
     const text = await res.text();
-    let data = {};
-    try {
-      data = text ? JSON.parse(text) : {};
-    } catch {
-      data = { detail: text };
-    }
+    let data;
+    try { data = JSON.parse(text); }
+    catch { throw new Error('Malformed JSON response'); }
     if (!res.ok) throw new Error(data.detail || data.error || `HTTP ${res.status}`);
+    if (!data || typeof data !== 'object' || Array.isArray(data)) throw new Error('Malformed response object');
     return data;
   } finally {
     clearTimeout(timeout);
@@ -149,6 +168,8 @@ function escapeHtml(value) {
     '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
   }[ch]));
 }
+
+let routingReceivedAt = Date.now();
 
 function formatTs(value) {
   if (!value) return '—';
@@ -162,8 +183,9 @@ function pct(value) {
 }
 
 function statusPill(status) {
-  const cls = String(status || 'unknown').toLowerCase();
-  return `<span class="pill ${escapeHtml(cls)}">${escapeHtml(status || 'unknown')}</span>`;
+  const value = String(status || 'unknown').toLowerCase();
+  const cls = ['cool', 'ok', 'done', 'warm', 'hot', 'warn', 'timeout', 'stale', 'near_cap', 'error', 'failed', 'rate_limited', 'zombie', 'gray', 'spawning', 'running', 'unavailable', 'need_login', 'need_probe'].includes(value) ? value : 'unknown';
+  return `<span class="pill ${cls}">${escapeHtml(status || 'unknown')}</span>`;
 }
 
 const CODEXBAR_HOST_TOOLING_SKIP = {
@@ -238,7 +260,7 @@ function routingRecommendationDisplay(routing) {
     title: 'Primary Agent',
     value: displayRecommendationAgent(rec.primary_agent_for_code) || 'unknown',
     detail: rec.rationale || '',
-    panelClass: 'ok',
+    panelClass: rec.primary_agent_for_code ? 'info' : 'warn',
     warnings: sourceWarnings
   };
 }
@@ -246,9 +268,11 @@ function routingRecommendationDisplay(routing) {
 function renderSummary(routing, usage, delegates) {
   const recommendation = routingRecommendationDisplay(routing);
   const warnings = recommendation.warnings;
-  const active = Object.values(routing.in_flight || {}).reduce((sum, val) => sum + Number(val || 0), 0);
-  const recentTasks = delegates.tasks || [];
-  const recentDone = recentTasks.filter(task => task.status === 'done').length;
+  const warningsKnown = Array.isArray(routing.recommendation?.warnings);
+  const counts = isObject(routing.in_flight) ? Object.values(routing.in_flight) : null;
+  const active = counts && counts.every(value => Number.isSafeInteger(value) && value >= 0) ? counts.reduce((sum, value) => sum + value, 0) : 'unknown';
+  const recentTasks = delegates?.tasks;
+  const recentDone = recentTasks ? recentTasks.filter(task => task.status === 'done').length : 'unknown';
   document.getElementById('summary-grid').innerHTML = `
     <div class="panel ${recommendation.panelClass}">
       <h3>${escapeHtml(recommendation.title)}</h3>
@@ -258,27 +282,38 @@ function renderSummary(routing, usage, delegates) {
     <div class="panel info">
       <h3>In Flight</h3>
       <div class="value">${active}</div>
-      <div class="sub">${Object.entries(routing.in_flight || {}).map(([k,v]) => `${escapeHtml(k)}: ${escapeHtml(v)}`).join(' | ') || 'No active delegates'}</div>
+      <div class="sub">${Object.entries(routing.in_flight || {}).map(([k,v]) => `${escapeHtml(k)}: ${escapeHtml(v)}`).join(' | ') || 'In-flight state unknown'}</div>
     </div>
     <div class="panel ${warnings.length ? 'warn' : 'ok'}">
       <h3>Warnings</h3>
-      <div class="value">${warnings.length}</div>
-      <div class="sub">${warnings.map(escapeHtml).join('<br>') || 'No routing warnings'}</div>
+      <div class="value">${warningsKnown ? warnings.length : 'unknown'}</div>
+      <div class="sub">${warnings.map(escapeHtml).join('<br>') || (warningsKnown ? 'No routing warnings returned' : 'Routing warnings unknown')}</div>
     </div>
     <div class="panel info">
       <h3>7-Day Runtime Calls</h3>
-      <div class="value">${escapeHtml(usage.records_total || 0)}</div>
-      <div class="sub">${recentDone}/${recentTasks.length} recent delegate records done</div>
+      <div class="value">${escapeHtml(usage?.records_total ?? 'unknown')}</div>
+      <div class="sub">${recentDone}/${recentTasks?.length ?? 'unknown'} recent delegate records done</div>
     </div>
   `;
 }
 
-function formatAge(ageS) {
-  const num = Number(ageS);
-  if (!Number.isFinite(num) || num < 0) return '';
+function formatAge(ageS, receivedAt = routingReceivedAt) {
+  if (typeof ageS !== 'number' || !Number.isFinite(ageS) || ageS < 0) return 'Source age unknown';
+  const num = ageS + Math.max(0, (Date.now() - receivedAt) / 1000);
   if (num < 60) return `${Math.round(num)}s ago`;
   if (num < 3600) return `${Math.round(num / 60)}m ago`;
   return `${(num / 3600).toFixed(1)}h ago`;
+}
+
+function sourceAgeHtml(age) {
+  if (typeof age !== 'number' || !Number.isFinite(age) || age < 0) return 'Source age unknown';
+  return `<span data-source-age="${age}" data-age-at="${routingReceivedAt}">${escapeHtml(formatAge(age))}</span>`;
+}
+
+function updateSourceAges() {
+  document.querySelectorAll('[data-source-age]').forEach(node => {
+    node.textContent = formatAge(Number(node.dataset.sourceAge), Number(node.dataset.ageAt));
+  });
 }
 
 function windowKindLabel(win) {
@@ -297,8 +332,8 @@ function windowKindLabel(win) {
 }
 
 function pctDisplay(used, remaining) {
-  const usedNum = Number(used);
-  const remNum = Number(remaining);
+  const usedNum = typeof used === 'number' ? used : NaN;
+  const remNum = typeof remaining === 'number' ? remaining : NaN;
   if (!Number.isFinite(usedNum)) return null;
   const rem = Number.isFinite(remNum) ? remNum : Math.max(0, 100 - usedNum);
   return `${usedNum.toFixed(0)}% used · ${rem.toFixed(0)}% left`;
@@ -374,9 +409,9 @@ function renderLaneFreshness(agent) {
   const stale = cb.stale || agent.stale;
   const parts = [];
   if (fetched) parts.push(formatTs(fetched));
-  if (age != null) parts.push(formatAge(age));
+  parts.push('Source age');
   if (stale) parts.push('stale');
-  return parts.length ? `<span class="stale-note">${escapeHtml(parts.join(' · '))}</span>` : '';
+  return `<span class="stale-note">Source observation: ${escapeHtml(parts.join(' · '))} ${sourceAgeHtml(age)}</span>`;
 }
 
 function formatUsd(value, currency = 'USD') {
@@ -395,14 +430,14 @@ function renderApiAccountFreshness(account) {
   const stale = account?.stale;
   const parts = [];
   if (fetched) parts.push(formatTs(fetched));
-  if (age != null) parts.push(formatAge(age));
+  parts.push('Source age');
   if (stale) parts.push('stale');
-  return parts.length ? `<span class="stale-note">${escapeHtml(parts.join(' · '))}</span>` : '';
+  return `<span class="stale-note">Source observation: ${escapeHtml(parts.join(' · '))} ${sourceAgeHtml(age)}</span>`;
 }
 
 function renderApiAccounts(routing) {
   const accounts = routing.api_accounts || {};
-  const lanes = ['openrouter', 'deepseek'];
+  const lanes = Object.keys(accounts);
   const rows = lanes.map(name => {
     const account = accounts[name] || {};
     const probeState = String(account.probe_state || 'NEED_PROBE').toUpperCase();
@@ -484,12 +519,14 @@ function claudeAccountRowsHtml(routing) {
   const preferred = routing.preferred_claude_account;
   return Object.keys(accounts).sort().map(key => {
     const row = accounts[key] && typeof accounts[key] === 'object' ? accounts[key] : {};
-    const session = row.session5h || {};
-    const weekly = row.weekly || {};
+    const usable = ['ok', 'stale'].includes(row.status);
+    const session = usable ? row.session5h || {} : {};
+    const weekly = usable ? row.weekly || {} : {};
     const label = key.replace(/^claude:/, '');
     const freshness = [];
     if (row.updated) freshness.push(formatTs(row.updated));
-    if (row.age_s != null) freshness.push(formatAge(row.age_s));
+    const age = usable && (!row.updated || Date.parse(row.updated) <= Date.now()) ? row.age_s : null;
+    if (row.stale || row.status === 'stale') freshness.push('stale historical sample');
     if (row.reason) freshness.push(String(row.reason));
     const preferredPill = preferred && preferred === label ? ' <span class="pill ok">more weekly leftover</span>' : '';
     return `<tr>
@@ -500,7 +537,7 @@ function claudeAccountRowsHtml(routing) {
       <td>${accountPctCell(weekly.leftover_pct, 'runs out before reset')}</td>
       <td>${accountTextCell(weekly.pace)}</td>
       <td>${accountTextCell(weekly.resets_at, formatTs)}</td>
-      <td>${freshness.length ? `<span class="stale-note">${escapeHtml(freshness.join(' · '))}</span>` : ''}</td>
+      <td><span class="stale-note">${escapeHtml(freshness.join(' · '))} · Source age ${sourceAgeHtml(age)}</span></td>
     </tr>`;
   }).join('');
 }
@@ -509,7 +546,7 @@ function renderClaudeAccounts(routing) {
   const rows = claudeAccountRowsHtml(routing);
   document.getElementById('claude-accounts-table').innerHTML = `<table>
     <tr><th>Account</th><th>Status</th><th>5h left</th><th>Weekly left</th><th>Projected leftover at reset</th><th>Weekly pace</th><th>Weekly reset</th><th>Freshness</th></tr>
-    ${rows || '<tr><td colspan="8">No per-account data.</td></tr>'}
+    ${rows || '<tr><td colspan="8">No per-account data. D02: Monitor API and operator capacity custodian own account bindings and reference parity.</td></tr>'}
   </table>`;
 }
 
@@ -520,8 +557,8 @@ function resolveSubscriptionAgent(agents, name) {
 }
 
 function resolveSubscriptionInFlight(inFlight, name) {
-  if (name === 'agy') return inFlight.agy ?? inFlight.gemini ?? 0;
-  return inFlight[name] ?? 0;
+  if (name === 'agy') return inFlight.agy ?? inFlight.gemini ?? 'unknown';
+  return inFlight[name] ?? 'unknown';
 }
 
 function renderSubscriptions(routing) {
@@ -551,7 +588,7 @@ function renderSubscriptions(routing) {
           renderWindowBlock('Grok Bot', pw.grok_bot || {}, { missingLabel: needProbe ? 'NEED_PROBE' : 'unknown' }),
         ].join('');
       } else {
-        const windows = collectSubscriptionWindows(agent);
+        const windows = ['unknown', 'error', 'not_probed', 'account_ambiguous', 'unavailable'].includes(agent.status) ? [] : collectSubscriptionWindows(agent);
         if (windows.length) {
           windowsHtml = windows.map(w => renderWindowBlock(
             w.label,
@@ -579,7 +616,7 @@ function renderSubscriptions(routing) {
 }
 
 function renderAgents(agents, usage) {
-  const byAgent = usage.by_agent || {};
+  const byAgent = usage?.by_agent || {};
   const rows = (agents.agents || []).map(agent => {
     const stats = byAgent[agent.name] || {};
     return `<tr>
@@ -587,14 +624,14 @@ function renderAgents(agents, usage) {
       <td>${escapeHtml(agent.default_model || '')}</td>
       <td>${escapeHtml(agent.binary || '')}</td>
       <td>${escapeHtml((agent.supported_modes || []).join(', '))}</td>
-      <td>${escapeHtml(stats.total || 0)}</td>
-      <td>${escapeHtml(stats.ok || 0)}</td>
-      <td>${escapeHtml((stats.error || 0) + (stats.timeout || 0) + (stats.rate_limited || 0))}</td>
+      <td>${escapeHtml(stats.total ?? 'unknown')}</td>
+      <td>${escapeHtml(stats.ok ?? 'unknown')}</td>
+      <td>${escapeHtml(['error', 'timeout', 'rate_limited'].every(key => typeof stats[key] === 'number') ? stats.error + stats.timeout + stats.rate_limited : 'unknown')}</td>
     </tr>`;
   }).join('');
   document.getElementById('agent-table').innerHTML = `<table>
     <tr><th>Agent</th><th>Default Model</th><th>Binary</th><th>Modes</th><th>7d Calls</th><th>OK</th><th>Issues</th></tr>
-    ${rows || '<tr><td colspan="7">No runtime agents found.</td></tr>'}
+    ${rows || '<tr><td colspan="7">No runtime agent rows returned; coverage unknown.</td></tr>'}
   </table>`;
 }
 
@@ -605,50 +642,66 @@ function renderDelegates(delegates) {
     <td>${escapeHtml(task.model || '')}</td>
     <td>${statusPill(task.status)}</td>
     <td>${task.duration_s == null ? '' : `${Number(task.duration_s).toFixed(1)}s`}</td>
-    <td>${formatTs(task.started_at)}</td>
+    <td>${escapeHtml(formatTs(task.started_at))}</td>
   </tr>`).join('');
   document.getElementById('delegate-table').innerHTML = `<table>
     <tr><th>Task</th><th>Agent</th><th>Model</th><th>Status</th><th>Duration</th><th>Started</th></tr>
-    ${rows || '<tr><td colspan="6">No delegate tasks found.</td></tr>'}
+    ${rows || '<tr><td colspan="6">No task rows returned; coverage and source age unknown.</td></tr>'}
   </table>`;
 }
 
 async function loadRouting() {
+  if (routingLoading) return;
+  routingLoading = true;
   const status = document.getElementById('refresh-status');
-  status.textContent = 'Loading...';
-  const results = await Promise.allSettled([
-    fetchJson(ENDPOINTS.routing),
-    fetchJson(ENDPOINTS.agents),
-    fetchJson(ENDPOINTS.usage),
-    fetchJson(ENDPOINTS.delegates)
-  ]);
-  const routing = results[0].status === 'fulfilled' ? results[0].value : null;
-  const agents = results[1].status === 'fulfilled' ? results[1].value : { agents: [] };
-  const usage = results[2].status === 'fulfilled' ? results[2].value : {};
-  const delegates = results[3].status === 'fulfilled' ? results[3].value : { tasks: [] };
-  const errors = results
-    .map((r, i) => (r.status === 'rejected' ? Object.values(ENDPOINTS)[i] : null))
-    .filter(Boolean);
+  status.textContent = 'Loading routing feeds...';
+  status.setAttribute('aria-busy', 'true');
+  try {
+    await Promise.all(Object.entries(ENDPOINTS).map(async ([key, url]) => {
+      const previous = feedState[key];
+      try {
+        const data = validateFeed(key, await fetchJson(url));
+        feedState[key] = {data, fetched: new Date(), error: null};
+      } catch (error) {
+        feedState[key] = {...previous, error: error.message};
+      }
+      // Each settled source updates independently; a slow sibling cannot hide it.
+      renderRoutingFeeds();
+    }));
+    const errors = Object.values(feedState).filter(feed => feed.error).length;
+    status.textContent = errors ? `Partial load: ${errors} failed feeds. Retry with Refresh.` : 'Feeds read; source ages remain separately qualified';
+  } finally {
+    routingLoading = false;
+    status.removeAttribute('aria-busy');
+  }
+}
 
+function renderRoutingFeeds() {
+  const routing = feedState.routing?.data;
+  const agents = feedState.agents?.data;
+  const usage = feedState.usage?.error ? null : feedState.usage?.data;
+  const delegates = feedState.delegates?.data;
+  routingReceivedAt = feedState.routing?.fetched?.getTime() ?? Date.now();
   if (routing) {
-    renderSummary(routing, usage, delegates);
+    renderSummary(routing, usage, feedState.delegates?.error ? null : delegates);
     renderSubscriptions(routing);
     renderClaudeAccounts(routing);
     renderApiAccounts(routing);
+    document.getElementById('summary-grid').innerHTML += feedNote('routing') + feedNote('usage') + feedNote('delegates');
+    for (const id of ['subscriptions-table', 'claude-accounts-table', 'api-accounts-table']) document.getElementById(id).innerHTML += feedNote('routing');
   } else {
-    document.getElementById('summary-grid').innerHTML = `<div class="error">Routing budget unavailable${errors.length ? `: ${escapeHtml(errors.join(', '))}` : ''}</div>`;
-    document.getElementById('subscriptions-table').innerHTML = '<div class="error">Subscriptions unavailable — routing-budget failed.</div>';
-    document.getElementById('claude-accounts-table').innerHTML = '<div class="error">Claude accounts unavailable — routing-budget failed.</div>';
-    document.getElementById('api-accounts-table').innerHTML = '<div class="error">API accounts unavailable — routing-budget failed.</div>';
+    for (const id of ['summary-grid', 'subscriptions-table', 'claude-accounts-table', 'api-accounts-table']) document.getElementById(id).innerHTML = '<p>Routing unavailable or loading; values unknown.</p>' + feedNote('routing');
   }
-  renderAgents(agents, usage);
-  renderDelegates(delegates);
-  status.textContent = errors.length
-    ? `Partial load (${errors.length} failed) ${new Date().toLocaleTimeString()}`
-    : `Updated ${new Date().toLocaleTimeString()}`;
+  if (agents) renderAgents(agents, usage);
+  else document.getElementById('agent-table').textContent = 'Runtime agents unavailable or loading';
+  document.getElementById('agent-table').innerHTML += feedNote('agents') + feedNote('usage');
+  if (delegates) renderDelegates(delegates);
+  else document.getElementById('delegate-table').textContent = 'Delegate tasks unavailable or loading; task state unknown';
+  document.getElementById('delegate-table').innerHTML += feedNote('delegates');
 }
 
 document.getElementById('refresh-btn').addEventListener('click', loadRouting);
+setInterval(updateSourceAges, 1000);
 loadRouting();
 </script>
 </body>

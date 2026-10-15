@@ -175,6 +175,7 @@ button, input, select { font: inherit; }
         <option value="released">released</option>
         <option value="expired">expired</option>
         <option value="none">none</option>
+        <option value="unknown">unknown</option>
       </select>
     </div>
     <div class="filter-actions">
@@ -196,7 +197,7 @@ button, input, select { font: inherit; }
               <th>Name / title</th>
               <th>Holder</th>
               <th>Lease State</th>
-              <th>Age</th>
+              <th>Heartbeat age</th>
               <th>Expiry</th>
               <th>Latest Handoff</th>
             </tr>
@@ -213,7 +214,7 @@ button, input, select { font: inherit; }
         <h3 id="detail-heading">Epic Detail</h3>
         <p id="detail-meta">Select an epic to inspect</p>
       </div>
-      <div id="detail-pane" class="detail-pane empty">Select an epic from the list to view its lease parameters and recent handoff digest.</div>
+      <div aria-live="polite" id="detail-pane" class="detail-pane empty">Select an epic from the list to view its lease parameters and recent handoff digest.</div>
     </article>
   </section>
 
@@ -232,6 +233,8 @@ button, input, select { font: inherit; }
     detailLoading: false,
     fetchError: null,
     lastUpdated: null,
+    listLoading: false,
+    detailGeneration: 0,
   };
 
   const els = {
@@ -253,10 +256,30 @@ button, input, select { font: inherit; }
   };
 
   function escapeHtml(value) {
-    if (value == null) return '';
-    const node = document.createElement('span');
-    node.textContent = String(value);
-    return node.innerHTML;
+    return String(value ?? '').replace(/[&<>"']/g, ch => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[ch]));
+  }
+
+  function isObject(value) {
+    return value !== null && typeof value === 'object' && !Array.isArray(value);
+  }
+
+  function validateStream(stream) {
+    if (!isObject(stream) || typeof stream.stream_id !== 'string' || !stream.stream_id
+        || (stream.lease != null && !isObject(stream.lease))) throw new Error('Malformed stream row');
+    for (const key of ['last_state', 'last_decision', 'last_next_action']) {
+      if (stream[key] != null && (!isObject(stream[key]) || typeof stream[key].body !== 'string')) throw new Error('Malformed stream entry');
+    }
+    return stream;
+  }
+
+  function validateDetail(data, streamId) {
+    validateStream(data);
+    if (data.schema !== 'remote-epic-lifecycle.v1' || data.stream_id !== streamId || !isObject(data.digest)
+        || !Array.isArray(data.digest.pinned) || !Array.isArray(data.digest.recent)
+        || ![...data.digest.pinned, ...data.digest.recent].every(isObject)) throw new Error('Malformed stream detail');
+    return data;
   }
 
   function short(value, fallback = '—') {
@@ -280,9 +303,11 @@ button, input, select { font: inherit; }
   }
 
   function getLeaseState(stream) {
-    if (!stream || !stream.lease) return 'none';
-    const rawState = stream.lease.state || 'none';
-    if (rawState === 'active' && stream.lease.expires_at) {
+    if (!stream || !Object.hasOwn(stream, 'lease')) return 'unknown';
+    if (stream.lease === null) return 'none';
+    const rawState = typeof stream.lease?.state === 'string' ? stream.lease.state : 'unknown';
+    if (rawState === 'active') {
+      if (!stream.lease.expires_at || !Number.isFinite(Date.parse(stream.lease.expires_at))) return 'unknown';
       const expiresAtMs = new Date(stream.lease.expires_at).getTime();
       if (!Number.isNaN(expiresAtMs) && Date.now() >= expiresAtMs) {
         return 'expired';
@@ -292,9 +317,10 @@ button, input, select { font: inherit; }
   }
 
   function formatAge(ageSeconds) {
-    if (ageSeconds == null || typeof ageSeconds !== 'number' || Number.isNaN(ageSeconds) || ageSeconds < 0) {
+    if (ageSeconds == null || typeof ageSeconds !== 'number' || !Number.isFinite(ageSeconds) || ageSeconds < 0) {
       return '—';
     }
+    if (typeof state !== 'undefined' && state.lastUpdated) ageSeconds = Math.floor(ageSeconds + Math.max(0, (Date.now() - state.lastUpdated.getTime()) / 1000));
     if (ageSeconds < 60) {
       return `${ageSeconds}s ago`;
     }
@@ -342,7 +368,8 @@ button, input, select { font: inherit; }
 
   function renderPill(leaseState, label = null) {
     const s = String(leaseState || 'none').toLowerCase();
-    return `<span class="pill ${escapeHtml(s)}">${escapeHtml(label || s.toUpperCase())}</span>`;
+    const cls = ['active', 'released', 'expired', 'none', 'registered', 'stale', 'store-only', 'state', 'decision', 'next_action'].includes(s) ? s : 'unknown';
+    return `<span class="pill ${cls}">${escapeHtml(label || s.toUpperCase())}</span>`;
   }
 
   async function fetchJson(path) {
@@ -355,15 +382,13 @@ button, input, select { font: inherit; }
         cache: 'no-store',
       });
       const text = await response.text();
-      let data = {};
-      try {
-        data = text ? JSON.parse(text) : {};
-      } catch {
-        data = { detail: text };
-      }
+      let data;
+      try { data = JSON.parse(text); }
+      catch { throw new Error('Malformed JSON response'); }
       if (!response.ok) {
         throw new Error(data.detail || data.error || `HTTP ${response.status}`);
       }
+      if (!data || typeof data !== 'object' || Array.isArray(data)) throw new Error('Malformed response object');
       return data;
     } finally {
       clearTimeout(timer);
@@ -405,6 +430,10 @@ button, input, select { font: inherit; }
   }
 
   function renderMetrics() {
+    if (!state.lastUpdated) {
+      for (const key of ['metricTotal', 'metricActive', 'metricReleased', 'metricExpired', 'metricNoLease']) els[key].textContent = 'unknown';
+      return;
+    }
     const total = state.streams.length;
     let active = 0;
     let released = 0;
@@ -416,7 +445,7 @@ button, input, select { font: inherit; }
       if (s === 'active') active += 1;
       else if (s === 'released') released += 1;
       else if (s === 'expired') expired += 1;
-      else noLease += 1;
+      else if (s === 'none') noLease += 1;
     });
 
     els.metricTotal.textContent = String(total);
@@ -434,10 +463,10 @@ button, input, select { font: inherit; }
     }
 
     const visible = filteredStreams();
-    els.listCountMeta.textContent = `${visible.length} of ${state.streams.length} epics`;
+    els.listCountMeta.textContent = `${visible.length} of ${state.streams.length} streams known to the session store`;
 
     if (!state.streams.length) {
-      els.epicsTbody.innerHTML = `<tr><td colspan="7" class="empty">No registered epics found in session-stream store.</td></tr>`;
+      els.epicsTbody.innerHTML = `<tr><td colspan="7" class="empty">No stream rows returned; source age and registry coverage unknown.</td></tr>`;
       return;
     }
 
@@ -491,13 +520,19 @@ button, input, select { font: inherit; }
         <td>${identityHtml}</td>
         <td class="mono">${escapeHtml(holderFormatted)}</td>
         <td>${renderPill(leaseState, leaseLabel)}</td>
-        <td>${escapeHtml(ageFormatted)}</td>
+        <td data-heartbeat-age="${typeof lease?.age_seconds === 'number' && Number.isFinite(lease.age_seconds) && lease.age_seconds >= 0 ? lease.age_seconds : ''}">${escapeHtml(ageFormatted)}</td>
         <td class="countdown-cell" data-expires-at="${lease && lease.expires_at ? escapeHtml(lease.expires_at) : ''}" data-state="${escapeHtml(leaseState)}">${escapeHtml(expiryFormatted)}</td>
         <td class="snippet-cell">${handoffHtml}</td>
       </tr>`;
     }).join('');
 
+    const focusedId = els.epicsTbody.contains(document.activeElement) ? document.activeElement.closest('[data-stream-id]')?.dataset.streamId : null;
+    const focusedLink = Boolean(focusedId && document.activeElement.tagName === 'A');
     els.epicsTbody.innerHTML = rowsHtml;
+    if (focusedId) {
+      const row = [...els.epicsTbody.querySelectorAll('[data-stream-id]')].find(row => row.dataset.streamId === focusedId);
+      (focusedLink ? row?.querySelector('a') : row)?.focus();
+    }
 
     // Attach click listeners to rows
     const rowElements = els.epicsTbody.querySelectorAll('.epic-row');
@@ -517,6 +552,10 @@ button, input, select { font: inherit; }
   }
 
   function updateLiveCountdowns() {
+    document.querySelectorAll('[data-heartbeat-age]').forEach(cell => {
+      const age = cell.getAttribute('data-heartbeat-age');
+      if (age !== '') cell.textContent = formatAge(Number(age));
+    });
     const cells = document.querySelectorAll('.countdown-cell');
     cells.forEach((cell) => {
       const expiresAt = cell.getAttribute('data-expires-at');
@@ -527,21 +566,32 @@ button, input, select { font: inherit; }
     });
   }
 
-  async function selectEpic(streamId) {
+  async function selectEpic(streamId, background = false) {
     if (!streamId) return;
+    const generation = ++state.detailGeneration;
     state.selectedStreamId = streamId;
+    state.selectedDetail = null;
     renderTable(); // Update selected highlight in table
 
-    els.detailMeta.textContent = `Loading ${streamId}…`;
-    els.detailPane.innerHTML = `<div class="empty">Loading details for ${escapeHtml(streamId)}…</div>`;
+    if (!background) {
+      els.detailMeta.textContent = `Loading ${streamId}…`;
+      els.detailPane.innerHTML = `<div class="empty">Loading details for ${escapeHtml(streamId)}…</div>`;
+    }
+    els.detailPane.setAttribute('aria-busy', 'true');
 
     try {
       const data = await fetchJson(`/api/epics/v1/${encodeURIComponent(streamId)}`);
+      if (generation !== state.detailGeneration || state.selectedStreamId !== streamId) return;
+      validateDetail(data, streamId);
       state.selectedDetail = data;
       renderDetail(data);
+      els.detailMeta.textContent += ` · Source age unknown · Last successful fetch ${new Date().toLocaleTimeString()}`;
     } catch (err) {
+      if (generation !== state.detailGeneration || state.selectedStreamId !== streamId) return;
       els.detailMeta.textContent = 'Fetch failed';
       els.detailPane.innerHTML = `<div class="error">Failed to load epic detail for ${escapeHtml(streamId)}: ${escapeHtml(err.message)}</div>`;
+    } finally {
+      if (generation === state.detailGeneration) els.detailPane.removeAttribute('aria-busy');
     }
   }
 
@@ -578,7 +628,7 @@ button, input, select { font: inherit; }
     let leaseSectionHtml = '';
 
     if (!lease) {
-      const noLeaseMessage = detail.registered
+      const noLeaseMessage = !Object.hasOwn(detail, 'lease') ? 'Lease data unknown' : detail.registered
         ? 'Never claimed: this registered epic has no lease projection.'
         : detail.stream_name || detail.title
           ? 'No lease: this row is from an older registry snapshot.'
@@ -634,9 +684,9 @@ button, input, select { font: inherit; }
       const ts = formatTime(entry.ts);
       const body = entry.body || '';
 
-      return `<div class="digest-card ${isPinned ? 'pinned' : escapeHtml(type)}">
+      return `<div class="digest-card ${isPinned ? 'pinned' : ['state', 'decision', 'next_action'].includes(type) ? type : 'entry'}">
         <div class="digest-head">
-          <span><strong>#${escapeHtml(short(entry.entry_id))}</strong> <span class="pill ${escapeHtml(type)}">${escapeHtml(type)}</span> ${escapeHtml(agent)}${escapeHtml(harness)}</span>
+          <span><strong>#${escapeHtml(short(entry.entry_id))}</strong> ${renderPill(type, type)} ${escapeHtml(agent)}${escapeHtml(harness)}</span>
           <span class="digest-meta">${escapeHtml(ts)}</span>
         </div>
         <div class="digest-body">${escapeHtml(body)}</div>
@@ -668,29 +718,37 @@ button, input, select { font: inherit; }
   }
 
   async function loadStreams() {
+    if (state.listLoading) return;
+    state.listLoading = true;
+    els.epicsTbody.setAttribute('aria-busy', 'true');
     try {
       const data = await fetchJson('/api/epics/v1');
-      showError('');
-      state.streams = Array.isArray(data.streams) ? data.streams : [];
+      if (data.schema !== 'remote-epic-lifecycle.v1' || !Array.isArray(data.streams)) throw new Error('Malformed stream list');
+      const streams = data.streams.filter(row => { try { validateStream(row); return true; } catch { return false; } });
+      if (data.streams.length && !streams.length) throw new Error('Malformed stream rows');
+      showError(streams.length === data.streams.length ? '' : `Partial stream list: ${data.streams.length - streams.length} malformed rows omitted; coverage incomplete.`);
+      state.streams = streams;
       state.lastUpdated = new Date();
-      els.lastUpdatedText.textContent = `Updated ${state.lastUpdated.toLocaleTimeString()}`;
+      els.lastUpdatedText.textContent = `Source age unknown · Last successful fetch ${state.lastUpdated.toLocaleTimeString()}`;
       renderMetrics();
       renderTable();
-
-      // If an epic was already selected, refresh its details in the background
       if (state.selectedStreamId) {
         const stillExists = state.streams.some(s => s.stream_id === state.selectedStreamId);
-        if (stillExists) {
-          fetchJson(`/api/epics/v1/${encodeURIComponent(state.selectedStreamId)}`)
-            .then((detail) => { renderDetail(detail); })
-            .catch(() => {});
+        if (stillExists) void selectEpic(state.selectedStreamId, true);
+        else {
+          ++state.detailGeneration;
+          state.selectedStreamId = null;
+          state.selectedDetail = null;
+          renderDetail(null);
         }
       }
     } catch (err) {
-      showError(`Failed to fetch /api/epics/v1: ${err.message}`);
-      els.lastUpdatedText.textContent = 'Update failed';
+      showError(`Failed to fetch /api/epics/v1: ${err.message}. ${state.lastUpdated ? 'Retained rows are historical.' : 'State unknown.'}`);
       renderMetrics();
       renderTable();
+    } finally {
+      state.listLoading = false;
+      els.epicsTbody.removeAttribute('aria-busy');
     }
   }
 

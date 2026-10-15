@@ -27,7 +27,7 @@ def test_delegate_idle_copy_distinguishes_now_from_today():
     html = DELEGATE.read_text(encoding="utf-8")
     assert "Nothing running right now" in html
     assert "finished today" in html
-    assert "No tasks today" in html
+    assert "No running task rows returned" in html
     assert "taskTouchedToday" in html
     assert "renderActive(active, finishedToday)" in html
     # The unqualified hero lie is gone.
@@ -71,7 +71,7 @@ def test_delegate_idle_copy_behavioral_js():
     )
     assert result.returncode == 0, result.stderr or result.stdout
     out = json.loads(result.stdout)
-    assert out["emptyToday"].startswith("No tasks today")
+    assert out["emptyToday"].startswith("No running task rows returned")
     assert "Nothing running right now" in out["oneToday"]
     assert "1 task finished today" in out["oneToday"]
     assert "3 tasks finished today" in out["manyToday"]

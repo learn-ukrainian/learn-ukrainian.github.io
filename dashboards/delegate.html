@@ -89,18 +89,18 @@ pre { background: var(--bg); border: 1px solid var(--border); border-radius: 8px
   <section class="card">
     <div class="card-header"><h2>&#129309; Active Tasks</h2><div class="muted" id="active-muted"></div></div>
     <div class="banner" id="active-banner"></div>
-    <div id="active-content" class="empty">Loading...</div>
+    <div aria-live="polite" aria-busy="true" id="active-content" class="empty">Loading...</div>
   </section>
 
   <section class="card orange">
-    <div class="card-header"><h2>&#10003; Recent Completed Tasks</h2><div class="muted" id="completed-muted"></div></div>
+    <div class="card-header"><h2>&#10003; Finished and attention tasks</h2><div class="muted" id="completed-muted"></div></div>
     <div class="banner" id="completed-banner"></div>
-    <div id="completed-content" class="empty">Loading...</div>
+    <div aria-live="polite" id="completed-content" class="empty">Loading...</div>
   </section>
 </div>
 
 <div class="overlay" id="overlay" onclick="closeModal(event)">
-  <div class="modal" onclick="event.stopPropagation()">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" tabindex="-1" onclick="event.stopPropagation()">
     <div class="modal-top">
       <h3 id="modal-title">Task Detail</h3>
       <div class="spacer"></div>
@@ -123,11 +123,35 @@ pre { background: var(--bg); border: 1px solid var(--border); border-radius: 8px
 
 <script>
 const API_TIMEOUT_MS = 5000;
+let tasksLoading = false;
+let lastTasksFetch = null;
+let detailGeneration = 0;
+let detailOpener = null;
+
+function validTask(task) {
+  return task && typeof task === 'object' && typeof task.task_id === 'string' && task.task_id.length > 0
+    && (task.status == null || typeof task.status === 'string');
+}
+
+function validateTasks(data) {
+  if (!Array.isArray(data.tasks) || !Number.isSafeInteger(data.total) || data.total < data.tasks.length
+      ) throw new Error('Malformed task list');
+  const tasks = data.tasks.filter(validTask);
+  if (data.tasks.length && !tasks.length) throw new Error('Malformed task rows');
+  return tasks;
+}
+
+function bindDetails(container) {
+  container.querySelectorAll('button[data-task-id]').forEach(button => {
+    button.addEventListener('click', event => { event.stopPropagation(); openDetail(button.dataset.taskId); });
+  });
+}
+
 
 function escapeHtml(value) {
-  const node = document.createElement('span');
-  node.textContent = value == null ? '' : String(value);
-  return node.innerHTML;
+  return String(value ?? '').replace(/[&<>"']/g, ch => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[ch]));
 }
 
 function formatTs(value) {
@@ -137,7 +161,7 @@ function formatTs(value) {
 }
 
 function formatElapsed(seconds) {
-  if (typeof seconds !== 'number') return '—';
+  if (typeof seconds !== 'number' || !Number.isFinite(seconds) || seconds < 0) return '—';
   if (seconds >= 3600) return `${(seconds / 3600).toFixed(1)}h`;
   if (seconds >= 60) return `${(seconds / 60).toFixed(1)}m`;
   return `${seconds.toFixed(0)}s`;
@@ -156,13 +180,11 @@ async function fetchJson(url) {
   try {
     const response = await fetch(url, { signal: controller.signal });
     const text = await response.text();
-    let data = {};
-    try {
-      data = text ? JSON.parse(text) : {};
-    } catch {
-      data = { detail: text };
-    }
+    let data;
+    try { data = JSON.parse(text); }
+    catch { throw new Error('Malformed JSON response'); }
     if (!response.ok) throw new Error(data.detail || data.error || `HTTP ${response.status}`);
+    if (!data || typeof data !== 'object' || Array.isArray(data)) throw new Error('Malformed response object');
     return data;
   } catch (error) {
     if (error.name === 'AbortError') throw new Error('Request timed out');
@@ -228,8 +250,8 @@ function taskTouchedToday(task) {
 function idleCopy(finishedToday) {
   // Distinguish live-now idle (work happened today) from a genuinely empty day (#7078).
   return finishedToday > 0
-    ? `Nothing running right now — ${finishedToday} task${finishedToday === 1 ? '' : 's'} finished today. See Completed below.`
-    : 'No tasks today — nothing running and nothing finished yet.';
+    ? `Nothing running right now in returned rows. ${finishedToday} task${finishedToday === 1 ? '' : 's'} finished today in returned rows. See finished and attention tasks below; coverage unknown.`
+    : 'No running task rows returned; source age and complete-day coverage unknown.';
 }
 
 function renderActive(tasks, finishedToday) {
@@ -239,83 +261,117 @@ function renderActive(tasks, finishedToday) {
     return;
   }
   document.getElementById('active-content').innerHTML = `<div class="task-grid">${tasks.map(task => `
-    <div class="task-card ${escapeHtml(task.status || 'gray')}">
+    <div class="task-card ${statusClass(task.status)}">
       <div class="task-top">
         <div class="mono">${escapeHtml(task.task_id || '—')}</div>
         <span class="pill ${statusClass(task.status)}">${task.status === 'zombie' ? 'ZOMBIE' : escapeHtml(task.status || 'unknown')}</span>
       </div>
       <div class="kv">
         <div class="k">agent</div><div>${escapeHtml(task.agent || '—')}</div>
-        <div class="k">started</div><div>${formatTs(task.started_at)}</div>
+        <div class="k">started</div><div>${escapeHtml(formatTs(task.started_at))}</div>
         <div class="k">elapsed</div><div>${formatElapsed(task.age_s)}</div>
       </div>
-      <button class="btn" onclick='openDetail(${JSON.stringify(String(task.task_id || ''))})'>View detail</button>
+      <button class="btn" data-task-id="${escapeHtml(task.task_id)}">View detail</button>
     </div>
   `).join('')}</div>`;
+  bindDetails(document.getElementById('active-content'));
 }
 
 function renderCompleted(tasks) {
   document.getElementById('completed-muted').textContent = `${tasks.length} shown`;
   if (!tasks.length) {
-    document.getElementById('completed-content').innerHTML = '<div class="empty">No completed tasks</div>';
+    document.getElementById('completed-content').innerHTML = '<div class="empty">No finished or attention rows returned; coverage unknown</div>';
     return;
   }
   document.getElementById('completed-content').innerHTML = `<table>
     <thead><tr><th>task_id</th><th>agent</th><th>status</th><th>duration</th><th>finished_at</th></tr></thead>
-    <tbody>${tasks.map(task => `<tr class="task-row" onclick='openDetail(${JSON.stringify(String(task.task_id || ''))})'>
-      <td class="mono">${escapeHtml(task.task_id || '—')}</td>
+    <tbody>${tasks.map(task => `<tr class="task-row" onclick='openDetail(this.dataset.taskId)' data-task-id="${escapeHtml(task.task_id)}">
+      <td class="mono"><button class="btn" data-task-id="${escapeHtml(task.task_id)}">${escapeHtml(task.task_id)}</button></td>
       <td>${escapeHtml(task.agent || '—')}</td>
       <td><span class="pill ${statusClass(task.status)}">${escapeHtml(task.status || 'unknown')}</span></td>
       <td>${formatElapsed(task.duration_s)}</td>
       <td>${finishedAt(task)}</td>
     </tr>`).join('')}</tbody>
   </table>`;
+  bindDetails(document.getElementById('completed-content'));
 }
 
 async function openDetail(taskId) {
+  const generation = ++detailGeneration;
+  if (!document.getElementById('overlay').classList.contains('open')) detailOpener = document.activeElement;
   document.getElementById('overlay').classList.add('open');
   document.getElementById('modal-title').textContent = taskId;
   document.getElementById('detail-meta').textContent = 'Loading...';
   document.getElementById('task-json').textContent = 'Loading...';
   document.getElementById('task-result').textContent = 'Loading...';
   setBanner('detail-banner', '');
+  document.querySelector('.modal').focus();
   try {
     const detail = await fetchJson(`/api/delegate/tasks/${encodeURIComponent(taskId)}`);
-    document.getElementById('detail-meta').textContent = detail.result_truncated ? 'Result truncated to 64 KiB' : 'Result loaded';
+    if (generation !== detailGeneration) return;
+    if (!validTask(detail.task) || detail.task.task_id !== taskId || (detail.result !== null && typeof detail.result !== 'string')
+        || typeof detail.result_truncated !== 'boolean') throw new Error('Malformed task detail');
+    document.getElementById('detail-meta').textContent = `Source age unknown · Last successful fetch ${new Date().toLocaleTimeString()} · ${detail.result_truncated ? 'Result truncated to 64 KiB' : 'Result read'}`;
     document.getElementById('task-json').textContent = JSON.stringify(observerTaskView(detail.task || {}), null, 2);
-    document.getElementById('task-result').textContent = detail.result ? detail.result : 'no result';
+    document.getElementById('task-result').textContent = detail.result ? detail.result : 'No result returned; task completion is not established by this field';
   } catch (error) {
+    if (generation !== detailGeneration) return;
     setBanner('detail-banner', `API unavailable: ${error.message}`);
     document.getElementById('detail-meta').textContent = 'Unable to load task detail';
     document.getElementById('task-json').textContent = 'Unable to load task detail';
-    document.getElementById('task-result').textContent = 'no result';
+    document.getElementById('task-result').textContent = 'No result returned; task completion is not established by this field';
   }
 }
 
 function closeModal(event) {
   if (event && event.target && event.target.id !== 'overlay') return;
+  ++detailGeneration;
   document.getElementById('overlay').classList.remove('open');
+  if (detailOpener?.isConnected) detailOpener.focus();
 }
 
 async function loadTasks() {
+  if (tasksLoading) return;
+  tasksLoading = true;
+  document.getElementById('active-content').setAttribute('aria-busy', 'true');
   try {
     const data = await fetchJson('/api/delegate/tasks?limit=100');
-    const tasks = Array.isArray(data.tasks) ? data.tasks : [];
-    const active = tasks.filter(task => ['running', 'spawning', 'zombie'].includes(task.status));
-    const completed = tasks.filter(task => ['done', 'failed'].includes(task.status));
-    const finishedToday = completed.filter(taskTouchedToday).length;
+    const tasks = validateTasks(data);
+    const active = tasks.filter(task => ['running', 'spawning'].includes(task.status));
+    const completed = tasks.filter(task => !['running', 'spawning'].includes(task.status));
+    const finishedToday = completed.filter(task => task.status === 'done' || task.finished_at || typeof task.duration_s === 'number').filter(taskTouchedToday).length;
     renderActive(active, finishedToday);
     renderCompleted(completed);
-    setBanner('active-banner', '');
-    setBanner('completed-banner', '');
+    lastTasksFetch = new Date();
+    document.getElementById('last-refresh').textContent = `Source age unknown · Last successful fetch ${lastTasksFetch.toLocaleTimeString()} · ${tasks.length} of ${data.total} task records loaded · refresh on demand`;
+    const partial = data.tasks.length !== tasks.length ? `Partial task list: ${data.tasks.length - tasks.length} malformed rows omitted; coverage incomplete.` : '';
+    setBanner('active-banner', partial);
+    setBanner('completed-banner', partial);
   } catch (error) {
-    setBanner('active-banner', `API unavailable: ${error.message}`);
-    setBanner('completed-banner', `API unavailable: ${error.message}`);
-    document.getElementById('active-content').innerHTML = '<div class="empty">Unable to load tasks</div>';
-    document.getElementById('completed-content').innerHTML = '<div class="empty">Unable to load tasks</div>';
+    const message = `Task read failed: ${error.message}. ${lastTasksFetch ? 'Retained rows are historical.' : 'Task state unknown.'}`;
+    setBanner('active-banner', message);
+    setBanner('completed-banner', message);
+    if (!lastTasksFetch) {
+      document.getElementById('active-content').textContent = 'Unable to load tasks';
+      document.getElementById('completed-content').textContent = 'Unable to load tasks';
+    }
+  } finally {
+    tasksLoading = false;
+    document.getElementById('active-content').removeAttribute('aria-busy');
   }
-  document.getElementById('last-refresh').textContent = `Updated ${new Date().toLocaleTimeString()} · refresh on demand`;
 }
+
+document.addEventListener('keydown', event => {
+  const overlay = document.getElementById('overlay');
+  if (!overlay.classList.contains('open')) return;
+  if (event.key === 'Escape') closeModal();
+  if (event.key === 'Tab') {
+    const controls = [...overlay.querySelectorAll('button, [tabindex="0"]')];
+    const first = controls[0], last = controls[controls.length - 1];
+    if (event.shiftKey && (document.activeElement === first || document.activeElement === document.querySelector('.modal'))) { event.preventDefault(); last.focus(); }
+    else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+  }
+});
 
 loadTasks();
 </script>
