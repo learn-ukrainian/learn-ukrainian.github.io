@@ -17,6 +17,8 @@ import unicodedata
 from collections import defaultdict
 from pathlib import Path
 
+from scripts.lib.readonly_sqlite import SQLiteConnection
+
 ACUTE = "́"
 CASES = ("v_naz", "v_rod", "v_dav", "v_zna", "v_oru", "v_mis", "v_kly")
 GENDERS = ("m", "f", "n")
@@ -89,7 +91,7 @@ def row_dict(row) -> dict:
 class PilotSources:
     """Read-only handles for the held sources plus per-entry caches."""
 
-    def __init__(self, sources: sqlite3.Connection, vesum: sqlite3.Connection):
+    def __init__(self, sources: SQLiteConnection, vesum: SQLiteConnection):
         self.sources = sources
         self.vesum = vesum
         self.sources.row_factory = sqlite3.Row
@@ -400,7 +402,7 @@ def match_identity(target_id: int, ulif_homonyms: dict[int, dict], vesum_entries
 WP3_TABLES = ("ulif_dictua_entries", "ulif_dictua_sections", "sum20_articles", "sum20_senses", "sum20_citations")
 
 
-def write_extract(sources: sqlite3.Connection, entry_ids: list[int], destination: Path) -> dict:
+def write_extract(sources: SQLiteConnection, entry_ids: list[int], destination: Path) -> dict:
     """Copy the rows the C3/C4 ingestion reads for the pilot entries into a standalone SQLite file.
 
     Rows are copied verbatim (same ids, same values), so citations and field digests computed on the extract
