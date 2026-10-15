@@ -6,10 +6,15 @@ At start-up the standalone server calls :func:`arm_abort_dump`, which:
 
 - opens that directory once, without following a symlink, and refuses it
   unless it is owned by this user and closed to group and others;
-- prunes earlier processes' dump files through that descriptor (below);
-- creates this process's dump file there (0600, new name, ``O_EXCL``), takes
-  an exclusive ``flock`` on it for the process's lifetime, and hands the
-  open descriptor to ``faulthandler.enable(all_threads=True)``.
+- holding an exclusive ``flock`` on the directory, prunes earlier
+  processes' dump files through that descriptor (below), creates this
+  process's dump file there (0600, new name, ``O_EXCL``) and takes an
+  exclusive ``flock`` on the file for the process's lifetime;
+- hands the open descriptor to ``faulthandler.enable(all_threads=True)``.
+
+Every pruner takes the same directory lock, so no pruner runs between the
+file's creation and its lifetime lock, the one moment the new file is empty
+and unlocked.
 
 On SIGABRT (and the other fatal signals) faulthandler writes every thread's
 stack to that descriptor and lets the signal kill the process. Nothing is
@@ -49,7 +54,7 @@ import resource
 import secrets
 import stat
 import sys
-from collections.abc import Mapping
+from collections.abc import Iterator, Mapping
 from datetime import UTC, datetime
 from typing import IO
 
@@ -100,8 +105,23 @@ def prune_dumps(dir_fd: int, *, keep: int, max_bytes: int) -> list[str]:
     ``keep`` files and ``max_bytes`` bytes. Only regular files whose
     ``flock`` this call holds are candidates, so a live process's file is
     never removed; a name is unlinked only while it still names the locked
-    file.
+    file. Waits for the directory lock, so a file being armed is never seen
+    before its lifetime lock.
     """
+    with _directory_lock(dir_fd):
+        return _prune_locked(dir_fd, keep=keep, max_bytes=max_bytes)
+
+
+@contextlib.contextmanager
+def _directory_lock(dir_fd: int) -> Iterator[None]:
+    fcntl.flock(dir_fd, fcntl.LOCK_EX)
+    try:
+        yield
+    finally:
+        fcntl.flock(dir_fd, fcntl.LOCK_UN)
+
+
+def _prune_locked(dir_fd: int, *, keep: int, max_bytes: int) -> list[str]:
     held: list[tuple[str, int, os.stat_result]] = []
     try:
         for name in os.listdir(dir_fd):
@@ -172,10 +192,12 @@ def arm_abort_dump(
         return None
     dir_fd = open_state_dir(directory)
     try:
-        prune_dumps(dir_fd, keep=max(0, keep - 1), max_bytes=max_bytes - MAX_DUMP_BYTES)
-        name = _dump_name(now or datetime.now(UTC), os.getpid())
-        fd = os.open(name, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW | os.O_CLOEXEC, 0o600, dir_fd=dir_fd)
-        fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        with _directory_lock(dir_fd):
+            _prune_locked(dir_fd, keep=max(0, keep - 1), max_bytes=max_bytes - MAX_DUMP_BYTES)
+            name = _dump_name(now or datetime.now(UTC), os.getpid())
+            flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW | os.O_CLOEXEC
+            fd = os.open(name, flags, 0o600, dir_fd=dir_fd)
+            fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
         handle = os.fdopen(fd, "w", encoding="utf-8")
     except BaseException:
         os.close(dir_fd)

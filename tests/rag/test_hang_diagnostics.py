@@ -7,6 +7,7 @@ import os
 import signal
 import subprocess
 import sys
+import threading
 from pathlib import Path
 
 import pytest
@@ -114,6 +115,75 @@ def test_a_live_writers_file_is_never_pruned(state_dir: Path) -> None:
     assert (state_dir / live_name).read_bytes() == b"still writing"
     assert len(removed) == 18
     assert len(_dumps(state_dir)) == 3
+
+
+PAUSED_ARM_CHILD = """\
+import fcntl, os, stat, sys
+sys.path.insert(0, sys.argv[1])
+from scripts.rag import hang_diagnostics as hd
+
+real_flock = fcntl.flock
+
+class PausingFcntl:
+    # Pause before the first lock on a regular file: the moment the new dump
+    # file exists but its lifetime lock is not yet taken.
+    def __getattr__(self, name):
+        return getattr(fcntl, name)
+
+    def flock(self, fd, operation):
+        if stat.S_ISREG(os.fstat(fd).st_mode) and not getattr(self, "paused", False):
+            self.paused = True
+            print("paused", flush=True)
+            sys.stdin.readline()
+        return real_flock(fd, operation)
+
+hd.fcntl = PausingFcntl()
+print(hd.arm_abort_dump(), flush=True)
+sys.stdin.readline()
+"""
+
+
+def test_a_pruner_cannot_remove_a_dump_file_before_its_lock_is_taken(state_dir: Path) -> None:
+    """Creation and the lifetime lock are one step for any pruner: the file survives and receives the dump."""
+    child = subprocess.Popen(
+        [sys.executable, "-c", PAUSED_ARM_CHILD, str(ROOT)],
+        env={**os.environ, hd.STATE_DIRECTORY_ENV: str(state_dir)},
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        text=True,
+    )
+    pruned: list[list[str]] = []
+    pruner = None
+    try:
+        assert child.stdout.readline().strip() == "paused"  # type: ignore[union-attr]
+        dir_fd = hd.open_state_dir(str(state_dir))
+
+        def prune() -> None:
+            try:
+                limits = {"keep": hd.DEFAULT_KEEP_DUMPS - 1, "max_bytes": hd.DEFAULT_MAX_DUMP_BYTES - hd.MAX_DUMP_BYTES}
+                pruned.append(hd.prune_dumps(dir_fd, **limits))
+            finally:
+                os.close(dir_fd)
+
+        pruner = threading.Thread(target=prune, daemon=True)
+        pruner.start()
+        pruner.join(1.0)  # a pruner that is not excluded finishes here
+        child.stdin.write("\n")  # type: ignore[union-attr]
+        child.stdin.flush()  # type: ignore[union-attr]
+        name = child.stdout.readline().strip()  # type: ignore[union-attr]
+        pruner.join(10)
+        assert not pruner.is_alive()
+        assert pruned == [[]], "the pruner removed the new dump file"
+        assert (state_dir / name).is_file()
+        child.send_signal(signal.SIGABRT)
+        assert child.wait(20) == -signal.SIGABRT
+    finally:
+        if child.poll() is None:
+            child.kill()
+            child.wait(10)
+        for stream in (child.stdin, child.stdout):
+            stream.close()  # type: ignore[union-attr]
+    assert (state_dir / name).read_text(encoding="utf-8").startswith("Fatal Python error: Aborted")
 
 
 def test_empty_files_go_first_and_other_files_and_symlinks_are_left_alone(state_dir: Path, tmp_path: Path) -> None:
