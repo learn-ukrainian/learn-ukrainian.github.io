@@ -14,7 +14,7 @@ tests/backup_data_script/test_full_restore.py  # git show <pre-batching base sha
 tests/test_gemma_hardware_probe.py  # git cat-file blob <pre-migration sha>:<path>
 tests/test_open_model_phase3_source_universe_freeze_validator.py  # origin/main and merge-base ancestry
 tests/test_storage_classification_table.py  # classification table at a frozen base commit
-tests/test_claude_lane_reads_structure.py  # shrink-only baseline: git show HEAD and the origin/main merge base
+tests/test_claude_lane_reads_structure.py  # exception ceiling: git show at the origin/main merge base
 
 # A --dry-run `delegate.py dispatch --worktree` runs `git fetch origin main`
 # against this checkout. That takes about 0.3 s with full history and 65-77 s
