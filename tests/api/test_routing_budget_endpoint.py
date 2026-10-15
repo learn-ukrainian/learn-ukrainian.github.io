@@ -1355,3 +1355,34 @@ def test_aged_snapshot_reads_account_freshness_at_serve_time(monkeypatch, tmp_pa
     assert row_b["age_s"] >= 770
     assert served["preferred_claude_account"] is None
     assert snapshot["claude_accounts"] is fields["claude_accounts"]  # the stored snapshot is not mutated
+
+
+# Fails on 7f1bcc27f0 (#10646): the pre-push gate's base temp is inside the Git
+# common directory, so every probe sandbox was refused and every row read unknown.
+def test_account_rows_do_not_depend_on_a_base_temp_inside_git(monkeypatch, tmp_path):
+    real_git_tree = claude_account_usage._git_tree
+    above = tmp_path.resolve().parent  # reads as Git, as the gate's base temp does
+
+    def git_tree(directory: Path) -> bool:
+        return directory == above or real_git_tree(directory)
+
+    monkeypatch.setattr(claude_account_usage, "_git_tree", git_tree)
+    _configure(monkeypatch, tmp_path, [])
+    _populate_accounts(monkeypatch, tmp_path)
+
+    rows = _routing_client(tmp_path).get("/api/state/routing-budget").json()["claude_accounts"]
+
+    assert {row["status"] for row in rows.values()} == {"ok"}
+
+
+def test_account_rows_refuse_a_scratch_root_inside_a_git_checkout(monkeypatch, tmp_path):
+    """Git a test builds below ``tmp_path`` is still judged, so the rows are refused."""
+    checkout = tmp_path / "checkout"
+    (checkout / ".git").mkdir(parents=True)
+    _configure(monkeypatch, tmp_path, [])
+    monkeypatch.setenv("LU_SCRATCH_ROOT", str(checkout / "scratch"))
+    _populate_accounts(monkeypatch, tmp_path)
+
+    rows = _routing_client(tmp_path).get("/api/state/routing-budget").json()["claude_accounts"]
+
+    assert {(row["status"], row["reason"]) for row in rows.values()} == {("unknown", "sandbox_unavailable")}

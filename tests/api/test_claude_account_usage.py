@@ -35,22 +35,8 @@ _FAKE_ACCOUNT_ID = "0f0e0d0c-0b0a-4908-8706-050403020100"
 _ACCOUNT_A = "0a0a0a0a-0a0a-4a0a-8a0a-0a0a0a0a0a0a"
 _ACCOUNT_B = "0b0b0b0b-0b0b-4b0b-8b0b-0b0b0b0b0b0b"
 _MARKER = "SYNTHETIC_PRIVATE_MARKER"
+# The unpatched check; ``tests/api/conftest.py`` scopes it to ``tmp_path`` in every test.
 _REAL_INSIDE_GIT = cau._inside_git
-
-
-@pytest.fixture(autouse=True)
-def _judge_git_below_tmp_path(tmp_path, monkeypatch):
-    """The pre-push gate runs pytest with its base temp inside the Git common
-    directory, so every fixture path is truly inside Git. The sandbox's Git
-    check judges only the directories a test builds below ``tmp_path``."""
-    boundary = tmp_path.resolve()
-
-    def inside_git(path: Path) -> bool:
-        return any(
-            cau._git_tree(directory) for directory in (path, *path.parents) if directory.is_relative_to(boundary)
-        )
-
-    monkeypatch.setattr(cau, "_inside_git", inside_git)
 
 
 def test_git_tree_recognises_every_git_layout(tmp_path):
