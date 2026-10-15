@@ -639,6 +639,12 @@ def _disable_open_pr_freeze(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 @pytest.fixture(autouse=True)
+def _no_host_claude_default_account(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Keep claude dispatch tests off the host's default-account file (#10619); account tests opt in."""
+    monkeypatch.setenv("LU_CLAUDE_DEFAULT_ACCOUNT_FILE", "")
+
+
+@pytest.fixture(autouse=True)
 def driver_scope_detection(monkeypatch: pytest.MonkeyPatch) -> Callable[[], bool]:
     """Make fallback tests independent of the caller's cgroup (#9624).
 
