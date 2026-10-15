@@ -9,6 +9,7 @@ import subprocess
 import sys
 import textwrap
 import time
+from collections.abc import Callable
 from pathlib import Path
 
 import pytest
@@ -17,6 +18,7 @@ from scripts.orchestration import sources_watchdog as wd
 from scripts.rag import hang_diagnostics as hd
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
+REAL_HOST = wd.Host
 
 PROC_NET_TCP = textwrap.dedent(
     """\
@@ -44,16 +46,19 @@ class FakeHost:
         self.healthy: list[bool] = []
         self.active = active
         self.pid = pid
+        self.started = 7_000_000
         self.clock = 1_000_000.0
+        self.probes = 0
         self.captures: list[int] = []
         self.restarts: list[str] = []
         self.published: list[tuple[str, str]] = []
         self.publish_fails = 0
+        self.during_capture: Callable[[], None] | None = None
 
     def host(self) -> wd.Host:
-        return wd.Host(
+        return REAL_HOST(
             probe=self.probe,
-            unit_state=lambda unit: (self.active, "running" if self.active == "active" else "dead", self.pid),
+            unit_state=self.unit_state,
             restart=self.restart,
             capture=self.capture,
             wait_healthy=lambda url, timeout, deadline: (True, "healthy 3s after restart"),
@@ -61,7 +66,12 @@ class FakeHost:
             now=lambda: self.clock,
         )
 
+    def unit_state(self, unit: str) -> wd.UnitState:
+        sub = "running" if self.active == "active" else "dead"
+        return wd.UnitState(self.active, sub, self.pid, self.started)
+
     def probe(self, url: str, timeout: float) -> tuple[bool, str]:
+        self.probes += 1
         ok = self.healthy.pop(0) if self.healthy else False
         return ok, "ok" if ok else "TimeoutError: timed out after 5.0s"
 
@@ -69,6 +79,8 @@ class FakeHost:
         self.captures.append(pid)
         path = dump_dir / f"incident-{len(self.captures)}"
         path.mkdir(parents=True, exist_ok=True)
+        if self.during_capture is not None:
+            self.during_capture()
         return path
 
     def restart(self, unit: str) -> str:
@@ -122,7 +134,7 @@ def test_sustained_failure_dumps_before_restart_and_notifies_once(tmp_path: Path
     assert "sustained failure" in result and "cto notified" in result
     assert len(fake.published) == 1
     message, key = fake.published[0]
-    assert "HUNG" in message and "Dump captured before restart" in message
+    assert "HUNG" in message and "Dump captured: " in message
     assert key.startswith("lu-sources-watchdog:")
 
     # A second hang inside the same incident: dump and restart again, no new report.
@@ -207,6 +219,154 @@ def test_incident_closes_after_quiet_period_and_next_hang_reports_again(tmp_path
     assert len(fake.published) == 2
     state = json.loads((tmp_path / "dumps" / wd.STATE_FILE).read_text(encoding="utf-8"))
     assert state["incident"]["notified"] is True
+
+
+def test_restart_budget_survives_incident_closure(tmp_path: Path) -> None:
+    """Sol's reproducer: closing an incident must not refill the hourly budget."""
+    fake, config = FakeHost(tmp_path), _config(tmp_path)
+    failures: list[str] = []
+    for _cycle in range(4):
+        failures.extend(_tick(fake, config, False) for _ in range(3))
+        closed = [_tick(fake, config, True) for _ in range(50)]
+        assert any("closed" in result for result in closed)
+    # Four cycles fit in about 2,600 s, inside the one-hour window.
+    assert fake.clock - 1_000_000.0 < config.restart_window
+    assert len(fake.restarts) == 3
+    assert "restart budget exhausted (3 in 3600s)" in failures[-1]
+    state = json.loads((tmp_path / "dumps" / wd.STATE_FILE).read_text(encoding="utf-8"))
+    assert len(state["restart_history"]) == 3
+    # The fourth incident opened with the budget spent: it is still reported, once.
+    assert len(fake.published) == 4
+    assert "Action: restart budget exhausted" in fake.published[-1][0]
+
+
+def test_restart_history_keeps_only_the_window(tmp_path: Path) -> None:
+    fake, config = FakeHost(tmp_path), _config(tmp_path, startup_grace=0, restart_window=100)
+    for _ in range(3):
+        _tick(fake, config, False)
+    fake.clock += 200
+    for _ in range(3):
+        _tick(fake, config, False)
+    state = json.loads((tmp_path / "dumps" / wd.STATE_FILE).read_text(encoding="utf-8"))
+    assert state["restart_history"] == [fake.clock - 15]
+    assert len(fake.restarts) == 2
+
+
+def test_recovery_during_capture_aborts_the_restart(tmp_path: Path) -> None:
+    """Sol's reproducer: health restored while dumping; the server must not be killed."""
+    fake, config = FakeHost(tmp_path), _config(tmp_path, startup_grace=0)
+    fake.during_capture = lambda: fake.healthy.append(True)
+    for _ in range(2):
+        _tick(fake, config, False)
+    result = _tick(fake, config, False)
+    assert fake.captures == [4242]
+    assert fake.restarts == []
+    assert fake.probes == 4, "health is probed again after the dump"
+    assert "restart aborted: recovered" in result
+    message, _key = fake.published[0]
+    assert "restart aborted: recovered" in message
+    state = json.loads((tmp_path / "dumps" / wd.STATE_FILE).read_text(encoding="utf-8"))
+    assert state["failures"] == 0 and state.get("restart_history", []) == []
+
+
+@pytest.mark.parametrize(
+    ("change", "seen"),
+    [
+        (lambda fake: setattr(fake, "pid", 5151), "pid 5151"),
+        (lambda fake: setattr(fake, "started", 7_000_999), "pid 4242"),
+        (lambda fake: setattr(fake, "active", "deactivating"), "deactivating"),
+    ],
+    ids=["new-main-pid", "same-pid-new-process", "unit-stopping"],
+)
+def test_changed_unit_during_capture_aborts_the_restart(
+    tmp_path: Path, change: Callable[[FakeHost], None], seen: str
+) -> None:
+    fake, config = FakeHost(tmp_path), _config(tmp_path, startup_grace=0)
+    fake.during_capture = lambda: change(fake)
+    for _ in range(3):
+        result = _tick(fake, config, False)
+    assert fake.captures == [4242]
+    assert fake.restarts == []
+    assert "restart aborted: changed" in result and seen in result
+
+
+def test_unreadable_unit_state_after_capture_aborts_the_restart(tmp_path: Path) -> None:
+    fake, config = FakeHost(tmp_path), _config(tmp_path, startup_grace=0)
+    host = fake.host()
+    reads: list[str] = []
+
+    def unit_state(unit: str) -> wd.UnitState:
+        reads.append(unit)
+        if fake.captures:
+            raise wd.WatchdogError("systemctl show exited 1: bus unavailable")
+        return fake.unit_state(unit)
+
+    host.unit_state = unit_state
+    for _ in range(3):
+        fake.healthy.append(False)
+        result = wd.run_once(config, host)
+        fake.clock += 15
+    assert fake.restarts == []
+    assert "restart aborted: unverified" in result and "bus unavailable" in result
+    assert len(reads) == 4
+
+
+def test_failures_of_a_replaced_process_do_not_carry_over(tmp_path: Path) -> None:
+    """An operator restart between probes gives the new process a fresh count."""
+    fake, config = FakeHost(tmp_path), _config(tmp_path, startup_grace=0)
+    _tick(fake, config, False)
+    _tick(fake, config, False)
+    fake.pid, fake.started = 5151, 7_100_000
+    assert "failure 1/3" in _tick(fake, config, False)
+    assert "failure 2/3" in _tick(fake, config, False)
+    assert fake.restarts == []
+    assert "sustained failure" in _tick(fake, config, False)
+    assert fake.captures == [5151]
+
+
+def test_only_the_sources_unit_reaches_the_restart_callback(tmp_path: Path) -> None:
+    fake, config = FakeHost(tmp_path), _config(tmp_path, unit="unrelated.service", failures_to_act=1)
+    with pytest.raises(wd.WatchdogError, match=r"refusing unit 'unrelated\.service'"):
+        wd.run_once(config, fake.host())
+    assert fake.restarts == [] and fake.captures == [] and fake.probes == 0
+
+
+def test_cli_refuses_another_unit_before_any_action(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Sol's reproducer: ``run-once --unit unrelated.service --apply --failures-to-act 1``."""
+    fake = FakeHost(tmp_path)
+    monkeypatch.setattr(wd, "Host", lambda **_kwargs: fake.host())
+    monkeypatch.setattr(wd, "default_publisher", lambda: fake.publish)
+    argv = ["--dump-dir", str(tmp_path / "dumps"), "run-once", "--unit", "unrelated.service", "--apply"]
+    with pytest.raises(SystemExit) as raised:
+        wd.main([*argv, "--failures-to-act", "1"])
+    assert raised.value.code == 2
+    assert fake.restarts == [] and fake.captures == [] and fake.probes == 0
+    # The sources unit itself is still served.
+    assert wd.main([*argv[:3], "--unit", wd.UNIT, "--apply", "--failures-to-act", "1"]) == 0
+    assert fake.restarts == [wd.UNIT]
+
+
+def test_systemd_actions_refuse_another_unit(monkeypatch: pytest.MonkeyPatch) -> None:
+    def no_subprocess(*_args: object, **_kwargs: object) -> None:
+        raise AssertionError("systemctl must not run for another unit")
+
+    monkeypatch.setattr(wd.subprocess, "run", no_subprocess)
+    for action in (wd.systemd_kill_and_start, wd.systemd_unit_state):
+        with pytest.raises(wd.WatchdogError, match="refusing unit"):
+            action("unrelated.service")
+
+
+def test_systemd_unit_state_reads_the_main_process_identity(monkeypatch: pytest.MonkeyPatch) -> None:
+    calls: list[list[str]] = []
+
+    def show(command: list[str], **_kwargs: object) -> subprocess.CompletedProcess[str]:
+        calls.append(command)
+        stdout = "ActiveState=active\nSubState=running\nMainPID=299873\nExecMainStartTimestampMonotonic=1341302900692\n"
+        return subprocess.CompletedProcess(command, 0, stdout, "")
+
+    monkeypatch.setattr(wd.subprocess, "run", show)
+    assert wd.systemd_unit_state(wd.UNIT) == wd.UnitState("active", "running", 299873, 1341302900692)
+    assert "ActiveState,SubState,MainPID,ExecMainStartTimestampMonotonic" in calls[0]
 
 
 def test_prune_keeps_newest_incidents_and_drops_dead_pid_logs(tmp_path: Path) -> None:

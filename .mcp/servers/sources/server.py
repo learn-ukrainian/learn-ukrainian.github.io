@@ -2042,8 +2042,9 @@ async def _on_call_tool(_ctx: Any, params: CallToolRequestParams) -> CallToolRes
             params.name, lambda: _dispatch_tool_call(params.name, arguments)
         )
     except CallRefused as refusal:
-        # Typed and argument-free: server_busy (queue wait exceeded) or
-        # call_timeout (no result within the per-call limit), #10674.
+        # Typed and argument-free (#10674): server_busy (queue wait exceeded),
+        # call_timeout (no result within the per-call limit) or
+        # server_overloaded (every slot held by timed-out work still running).
         return CallToolResult(
             content=[
                 TextContent(type="text", text=f"Tool call failed: {params.name} ({refusal.code}: {refusal.detail}).")

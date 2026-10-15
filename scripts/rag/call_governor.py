@@ -2,14 +2,21 @@
 
 Every ``tools/call`` passes through one :class:`CallGovernor`:
 
-- at most ``max_concurrent`` calls run at once; the rest wait in FIFO order
-  for at most ``queue_timeout`` seconds and are then refused as busy;
-- a running call is abandoned after ``call_timeout`` seconds and answered
-  with a typed timeout. The coroutine is cancelled; blocking work already
-  handed to a worker thread finishes in that thread, because Python threads
-  cannot be killed;
-- each call logs one start and one end line (call id, tool name, in-flight
-  and queued counts, outcome, duration). Argument values are never logged;
+- at most ``max_concurrent`` calls hold a slot at once; the rest wait in FIFO
+  order for at most ``queue_timeout`` seconds and are then refused as busy;
+- a caller stops waiting after ``call_timeout`` seconds (or when its request
+  is cancelled) and is answered with a typed timeout. The call itself is
+  abandoned, not cancelled: its blocking work runs in a worker thread that
+  Python cannot kill, so the call keeps its slot until that work finishes.
+  A timeout therefore never lets more than ``max_concurrent`` calls' work run
+  at once;
+- while every slot is held by abandoned work, new and queued calls are
+  refused at once as overloaded instead of waiting for a slot that may never
+  come back;
+- each call logs one start and one end line (call id, tool name, in-flight,
+  queued and abandoned counts, outcome, duration), and an abandoned call one
+  more line when its work finishes and frees the slot. Argument values are
+  never logged;
 - a call still running after ``slow_dump_after`` seconds triggers one
   all-thread stack dump into the dump directory, at most one per minute.
 
@@ -23,15 +30,17 @@ from __future__ import annotations
 import asyncio
 import contextlib
 import faulthandler
+import functools
 import itertools
 import logging
 import os
 import time
+from collections import deque
 from collections.abc import Awaitable, Callable, Mapping
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import TypeVar
+from typing import Any, TypeVar
 
 T = TypeVar("T")
 
@@ -103,9 +112,12 @@ class CallGovernor:
         self.logger = logger or default_logger()
         self._clock = clock
         self._ids = itertools.count(1)
-        self._slots: asyncio.Semaphore | None = None
-        self._slots_loop: asyncio.AbstractEventLoop | None = None
+        self._loop: asyncio.AbstractEventLoop | None = None
+        self._held = 0
+        self._waiters: deque[asyncio.Future[bool]] = deque()
         self._running: dict[int, tuple[str, float]] = {}
+        self._abandoned: set[int] = set()
+        self._tasks: set[asyncio.Task[Any]] = set()
         self._dumped: set[int] = set()
         self._queued = 0
         self._last_dump = float("-inf")
@@ -113,72 +125,173 @@ class CallGovernor:
 
     @property
     def in_flight(self) -> int:
+        """Calls holding a slot, abandoned ones included."""
         return len(self._running)
+
+    @property
+    def abandoned(self) -> int:
+        """Calls whose caller has been answered while their work still runs."""
+        return len(self._abandoned)
 
     @property
     def queued(self) -> int:
         return self._queued
 
-    def _semaphore(self) -> asyncio.Semaphore:
-        # One semaphore per event loop: an asyncio primitive that has waited on
-        # one loop refuses another. The server runs one loop; callers that run
-        # several in turn (asyncio.run per call) get a fresh bound each time.
+    def _bind_loop(self) -> asyncio.AbstractEventLoop:
+        # Slots, waiters and tasks belong to one event loop. The server runs
+        # one loop; a caller that runs several in turn (asyncio.run per call)
+        # gets fresh accounting, since a closed loop's tasks never finish.
         loop = asyncio.get_running_loop()
-        if self._slots is None or self._slots_loop is not loop:
-            self._slots = asyncio.Semaphore(self.limits.max_concurrent)
-            self._slots_loop = loop
-        return self._slots
+        if self._loop is not loop:
+            self._loop = loop
+            self._held = self._queued = 0
+            self._waiters.clear()
+            self._running.clear()
+            self._abandoned.clear()
+            self._tasks.clear()
+            self._dumped.clear()
+            self._watcher = None
+        return loop
 
-    async def run(self, tool: str, call: Callable[[], Awaitable[T]]) -> T:
-        call_id = next(self._ids)
-        started = self._clock()
-        slots = self._semaphore()
+    def _overloaded(self) -> CallRefused:
+        return CallRefused(
+            "server_overloaded", f"all {self.limits.max_concurrent} call slots held by timed-out work still running"
+        )
+
+    def _saturated(self) -> bool:
+        return len(self._abandoned) >= self.limits.max_concurrent
+
+    async def _acquire(self, loop: asyncio.AbstractEventLoop) -> None:
+        if self._saturated():
+            raise self._overloaded()
+        if self._held < self.limits.max_concurrent and not self._waiters:
+            self._held += 1
+            return
+        # A released slot passes straight to the first waiter (True); a
+        # waiter refused because every slot is abandoned receives False.
+        waiter: asyncio.Future[bool] = loop.create_future()
+        self._waiters.append(waiter)
         self._queued += 1
         try:
-            await asyncio.wait_for(slots.acquire(), self.limits.queue_timeout)
-        except TimeoutError:
-            self._queued -= 1
-            self._log_end(call_id, tool, "server_busy", started)
-            raise CallRefused(
-                "server_busy", f"{self.limits.max_concurrent} calls running; waited {self.limits.queue_timeout:.0f}s"
-            ) from None
-        self._queued -= 1
-        self._running[call_id] = (tool, self._clock())
-        self._ensure_watcher()
-        self.logger.info(
-            "call_start id=%d tool=%s inflight=%d queued=%d wait_ms=%d",
-            call_id,
-            tool,
-            self.in_flight,
-            self._queued,
-            (self._clock() - started) * 1000,
-        )
-        outcome = "error"
-        try:
-            result = await asyncio.wait_for(call(), self.limits.call_timeout)
-            outcome = "ok"
-            return result
-        except TimeoutError:
-            outcome = "call_timeout"
-            raise CallRefused("call_timeout", f"no result after {self.limits.call_timeout:.0f}s") from None
-        except asyncio.CancelledError:
-            outcome = "cancelled"
+            async with asyncio.timeout(self.limits.queue_timeout):
+                granted = await waiter
+        except BaseException as error:
+            if waiter.done() and not waiter.cancelled() and waiter.result():
+                # Granted in the same instant the wait ended: pass it on.
+                self._release()
+            else:
+                waiter.cancel()
+            if isinstance(error, TimeoutError):
+                raise CallRefused(
+                    "server_busy",
+                    f"{self.limits.max_concurrent} calls running; waited {self.limits.queue_timeout:.0f}s",
+                ) from None
             raise
         finally:
-            self._running.pop(call_id, None)
-            self._dumped.discard(call_id)
-            slots.release()
-            self._log_end(call_id, tool, outcome, started)
+            self._queued -= 1
+            with contextlib.suppress(ValueError):
+                self._waiters.remove(waiter)
+        if not granted:
+            raise self._overloaded()
 
-    def _log_end(self, call_id: int, tool: str, outcome: str, started: float) -> None:
+    def _release(self) -> None:
+        while self._waiters:
+            waiter = self._waiters.popleft()
+            if not waiter.done():
+                waiter.set_result(True)
+                return
+        self._held -= 1
+
+    def _abandon(self, call_id: int) -> None:
+        self._abandoned.add(call_id)
+        if self._saturated():
+            while self._waiters:
+                waiter = self._waiters.popleft()
+                if not waiter.done():
+                    waiter.set_result(False)
+
+    def _finished(self, call_id: int, tool: str, started: float, task: asyncio.Task[Any]) -> None:
+        """Done callback of a call's work: its slot is freed here, when the work ends."""
+        self._tasks.discard(task)
+        self._running.pop(call_id, None)
+        self._dumped.discard(call_id)
+        abandoned = call_id in self._abandoned
+        self._abandoned.discard(call_id)
+        self._release()
+        if not abandoned:
+            return
+        # Retrieving the exception keeps asyncio from reporting it as never
+        # retrieved; the caller was already answered.
+        outcome = "cancelled" if task.cancelled() else "ok" if task.exception() is None else "error"
         self.logger.info(
-            "call_end id=%d tool=%s outcome=%s duration_ms=%d inflight=%d queued=%d",
+            "call_released id=%d tool=%s outcome=%s duration_ms=%d inflight=%d queued=%d abandoned=%d",
             call_id,
             tool,
             outcome,
             (self._clock() - started) * 1000,
             self.in_flight,
             self._queued,
+            self.abandoned,
+        )
+
+    async def run(self, tool: str, call: Callable[[], Awaitable[T]]) -> T:
+        loop = self._bind_loop()
+        call_id = next(self._ids)
+        started = self._clock()
+        try:
+            await self._acquire(loop)
+        except CallRefused as refusal:
+            self._log_end(call_id, tool, refusal.code, started)
+            raise
+        self._running[call_id] = (tool, self._clock())
+        self._ensure_watcher()
+        self.logger.info(
+            "call_start id=%d tool=%s inflight=%d queued=%d abandoned=%d wait_ms=%d",
+            call_id,
+            tool,
+            self.in_flight,
+            self._queued,
+            self.abandoned,
+            (self._clock() - started) * 1000,
+        )
+        try:
+            work: asyncio.Future[T] = asyncio.ensure_future(call())
+        except BaseException:
+            self._running.pop(call_id, None)
+            self._release()
+            self._log_end(call_id, tool, "error", started)
+            raise
+        self._tasks.add(work)  # the loop keeps only weak references to tasks
+        work.add_done_callback(functools.partial(self._finished, call_id, tool, started))
+        outcome = "error"
+        try:
+            # asyncio.wait never cancels the work; it only stops waiting.
+            await asyncio.wait((work,), timeout=self.limits.call_timeout)
+            if not work.done():
+                outcome = "call_timeout"
+                self._abandon(call_id)
+                raise CallRefused("call_timeout", f"no result after {self.limits.call_timeout:.0f}s")
+            result = work.result()
+            outcome = "ok"
+            return result
+        except asyncio.CancelledError:
+            outcome = "cancelled"
+            if not work.done():
+                self._abandon(call_id)
+            raise
+        finally:
+            self._log_end(call_id, tool, outcome, started)
+
+    def _log_end(self, call_id: int, tool: str, outcome: str, started: float) -> None:
+        self.logger.info(
+            "call_end id=%d tool=%s outcome=%s duration_ms=%d inflight=%d queued=%d abandoned=%d",
+            call_id,
+            tool,
+            outcome,
+            (self._clock() - started) * 1000,
+            self.in_flight,
+            self._queued,
+            self.abandoned,
         )
 
     def _ensure_watcher(self) -> None:
