@@ -14,6 +14,7 @@ import re
 import sys
 from collections import Counter, defaultdict
 from collections.abc import Mapping, Sequence
+from functools import lru_cache
 from pathlib import Path
 from typing import NamedTuple
 
@@ -182,7 +183,13 @@ def timeout_less_calls(path: Path) -> list[TimeoutLessCall]:
     src = read_test_source(path)
     if "subprocess" not in src or not _SUBPROCESS_IMPORT_RE.search(src):
         return []
-    return timeout_less_calls_from_tree(parse_test_source(path))
+    return list(_timeout_less_calls_for_content(src, parse_test_source(path)))
+
+
+@lru_cache(maxsize=4096)
+def _timeout_less_calls_for_content(src: str, tree: ast.AST) -> tuple[TimeoutLessCall, ...]:
+    """Reuse visitor results only for exact source content and parse identity."""
+    return tuple(timeout_less_calls_from_tree(tree))
 
 
 def scan_scripts(scripts_root: Path, repo_root: Path) -> tuple[dict[str, list[TimeoutLessCall]], list[str]]:

@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import ast
 import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -882,3 +883,60 @@ def test_rebound_reader_alias_still_reports_collection_access():
     assert len(findings) == 1
     assert findings[0].kind == 'test_import_access'
     assert findings[0].scope == '<module>'
+
+
+@pytest.mark.parametrize('enabled', [False, True])
+@pytest.mark.parametrize('source', ['value = 42', 'value = ('])
+def test_scan_restores_gc_state_with_valid_and_unreadable_source(tmp_path, monkeypatch, enabled, source):
+    import gc
+
+    original = ast.parse
+    states_during_parse = []
+
+    def observed(*args, **kwargs):
+        states_during_parse.append(gc.isenabled())
+        return original(*args, **kwargs)
+
+    monkeypatch.setattr(ast, 'parse', observed)
+    path = tmp_path / 'scripts' / 'input.py'
+    path.parent.mkdir()
+    path.write_text(source)
+    was_enabled = gc.isenabled()
+    (gc.enable if enabled else gc.disable)()
+    try:
+        expected_unreadable = ['scripts/input.py'] if source.endswith('(') else []
+        assert lint.find_violations(tmp_path, ()) == ([], expected_unreadable)
+        assert states_during_parse == [False]
+        assert gc.isenabled() is enabled
+    finally:
+        (gc.enable if was_enabled else gc.disable)()
+
+
+@pytest.mark.parametrize('enabled', [False, True])
+def test_scan_restores_gc_state_after_unexpected_error(tmp_path, monkeypatch, enabled):
+    import gc
+
+    def broken_paths(root):
+        assert gc.isenabled() is False
+        raise RuntimeError('scan failed')
+
+    monkeypatch.setattr(lint, 'iter_scan_paths', broken_paths)
+    was_enabled = gc.isenabled()
+    (gc.enable if enabled else gc.disable)()
+    try:
+        with pytest.raises(RuntimeError, match='scan failed'):
+            lint.find_violations(tmp_path, ())
+        assert gc.isenabled() is enabled
+    finally:
+        (gc.enable if was_enabled else gc.disable)()
+
+
+@pytest.mark.parametrize('entry', [
+    ['-m', 'scripts.hygiene.lint_source_db_writable_connects'],
+    ['scripts/hygiene/lint_source_db_writable_connects.py'],
+], ids=['module', 'script'])
+def test_cli_help_entrypoints(entry):
+    result = subprocess.run([sys.executable, *entry, '--help'], cwd=REPO_ROOT,
+                            capture_output=True, text=True, timeout=30)
+    assert result.returncode == 0, result.stderr
+    assert 'Structural SQLite boundary and store-access ratchet' in result.stdout

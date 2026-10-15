@@ -25,6 +25,7 @@ from pathlib import Path
 
 import pytest
 
+from scripts.ci import subprocess_timeout_guard as guard
 from scripts.ci.subprocess_timeout_guard import (
     ALLOWLIST_KEY_PARTS,
     SHAPE_HASH_HEX_LEN,
@@ -101,6 +102,64 @@ def test_subprocess_timeout_allowlist_is_sorted_and_valid() -> None:
     assert entries == sort_allowlist_entries(entries), SORT_ADVICE
     for entry in entries:
         validate_allowlist_entry(entry, _REPO_ROOT)
+
+
+def test_cached_findings_refresh_after_edit_and_cannot_be_mutated(tmp_path: Path) -> None:
+    path = tmp_path / "calls.py"
+    path.write_text("import subprocess\nsubprocess.run(['old'])\n", encoding="utf-8")
+    first = timeout_less_calls(path)
+    expected = first.copy()
+    assert len(expected) == 1
+    first.clear()
+    assert timeout_less_calls(path) == expected
+
+    path.write_text("import subprocess\nsubprocess.run(['new'], timeout=30)\n", encoding="utf-8")
+    assert timeout_less_calls(path) == []
+    path.write_text("import subprocess\nsubprocess.run(['other'])\n", encoding="utf-8")
+    changed = timeout_less_calls(path)
+    assert len(changed) == 1
+    assert changed[0].shape_hash != expected[0].shape_hash
+
+
+def test_cached_findings_preserve_syntax_errors_and_path_identity(tmp_path: Path) -> None:
+    good = tmp_path / "good.py"
+    broken = tmp_path / "broken.py"
+    source = "import subprocess\nsubprocess.call(['same'])\n"
+    good.write_text(source, encoding="utf-8")
+    broken.write_text(source, encoding="utf-8")
+    assert timeout_less_calls(good) == timeout_less_calls(broken)
+    broken.write_text("import subprocess\nsubprocess.call(\n", encoding="utf-8")
+    with pytest.raises(SyntaxError) as exc:
+        timeout_less_calls(broken)
+    assert exc.value.filename == str(broken)
+
+
+@pytest.mark.parametrize("root", [_SCRIPTS_ROOT, _TESTS_ROOT], ids=["scripts", "tests"])
+def test_cached_findings_equal_uncached_findings_on_full_tree(root: Path) -> None:
+    for path in sorted(root.rglob("*.py")):
+        source = path.read_text(encoding="utf-8")
+        expected = timeout_less_calls_from_source(source, filename=str(path))
+        assert timeout_less_calls(path) == expected, path
+        assert timeout_less_calls(path) == expected, path
+
+
+def test_cached_findings_reuse_the_visitor(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    path = tmp_path / "calls.py"
+    source = "import subprocess\nsubprocess.run(['same'])\n"
+    path.write_text(source, encoding="utf-8")
+    expected = timeout_less_calls_from_source(source)
+    assert len(expected) == 1
+    calls = []
+    original = guard.timeout_less_calls_from_tree
+
+    def counted(tree):
+        calls.append(tree)
+        return original(tree)
+
+    monkeypatch.setattr(guard, "timeout_less_calls_from_tree", counted)
+    assert timeout_less_calls(path) == expected
+    assert timeout_less_calls(path) == expected
+    assert len(calls) == 1
 
 
 def test_no_unallowlisted_timeout_less_subprocess_calls_under_scripts() -> None:

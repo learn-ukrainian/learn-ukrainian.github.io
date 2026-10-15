@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import argparse
 import ast
+import gc
 import hashlib
 import json
 import re
@@ -27,7 +28,7 @@ import subprocess
 import sys
 from collections import Counter
 from dataclasses import dataclass
-from functools import cached_property, lru_cache
+from functools import cached_property, lru_cache, wraps
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -35,6 +36,20 @@ READER_BOUNDARY = "scripts/lib/readonly_sqlite.py"
 REFERENCE_MANIFEST = Path(__file__).with_name("sqlite_reference_allowlist.json")
 SQLITE_MODULES = frozenset({"sqlite3", "sqlite3.dbapi2", "_sqlite3"})
 CONSTRUCTORS = frozenset({"connect", "Connection"})
+
+
+def _without_cyclic_gc(scan):
+    """Release per-file ASTs before collection visits unrelated cached trees."""
+    @wraps(scan)
+    def run(*args, **kwargs):
+        was_enabled = gc.isenabled()
+        gc.disable()
+        try:
+            return scan(*args, **kwargs)
+        finally:
+            if was_enabled:
+                gc.enable()
+    return run
 
 
 @dataclass(frozen=True)
@@ -660,6 +675,7 @@ def _commit_sha(commit: str, root: Path) -> str | None:
     return result.stdout.strip() or None
 
 
+@_without_cyclic_gc
 def census(commit: str, root: Path = REPO_ROOT) -> dict:
     """Read the complete committed tree, independent of checkout sparsity.
 
@@ -776,6 +792,7 @@ def iter_scan_paths(root: Path) -> list[Path]:
     return sorted([*(root / "scripts").rglob("*.py"), *(root / "tests").rglob("*.py")])
 
 
+@_without_cyclic_gc
 def find_violations(
     repo_root: Path | None = None, allowlist: tuple[AllowedReference, ...] | None = None
 ) -> tuple[list[str], list[str]]:
