@@ -3654,7 +3654,7 @@ def test_review_facts_pr_lookup_is_bound_to_the_frozen_head(tmp_path, monkeypatc
     if metadata == "intact":
         facts = delegate._dispatch_review_facts(args, ())
         assert facts.head_sha == head and facts.existing_families == {"openai"}
-        assert facts.resolver_inputs(risk="critical").author_models == ("gpt-6.1-sol",)
+        assert facts.author_models == ("gpt-6.1-sol",)
     else:
         with pytest.raises(recorder.BranchFactsError) as refused:
             delegate._dispatch_review_facts(args, ())
