@@ -4,7 +4,9 @@ Every positive path (the initial read, the fresh pre-enqueue read and the
 historical helpers) resolves review state through
 :func:`integration_sweep.lookup_verdict` with the recorder receipts of the
 review task ledger (#10501). Those receipts are same-user traceability against
-accidental or supported-path bypass, not isolated review authority.
+accidental or supported-path bypass, not isolated review authority. Ledger
+evidence that cannot be read coherently (``CF-evidence-unavailable``) holds a
+head as it is for the next run: never enqueued, never removed.
 """
 
 from __future__ import annotations
@@ -36,6 +38,7 @@ from scripts.opsec.prepublish import (
 )
 from scripts.orchestration.integration_sweep import (
     IN_FLIGHT,
+    UNAVAILABLE,
     UNRECEIPTED,
     RecordedEvidence,
     ReviewLedger,
@@ -669,8 +672,11 @@ def _revoke_reason(
     a queued or armed head with an unsettled outside review (``CF-in-flight``):
     its verdict may still reject the head an earlier receipt approved. So is a
     queued or armed head whose only approval is known to lack the recorder's
-    receipt (``CF-unreceipted``, #10501). Ledger evidence the keeper cannot read
-    is ``unknown``, never unreceipted: it removes a head only after an approval.
+    receipt (``CF-unreceipted``, #10501): a coherent ledger read binds no
+    receipt for it. Ledger evidence the keeper cannot read coherently
+    (``CF-evidence-unavailable``) is no known blocker: it removes nothing, even
+    after an approval. Readable but malformed evidence (``unknown``) removes a
+    head only after an approval.
     """
     if row.get("isDraft") is True:
         return "draft"
@@ -680,6 +686,8 @@ def _revoke_reason(
         return checks
     if verdict.state in {"CHANGES_REQUESTED", "BLOCKED"}:
         return f"CF-{verdict.state.lower()}"
+    if verdict.state == UNAVAILABLE:
+        return None
     if verdict_lookup_ok and verdict.state in {IN_FLIGHT, UNRECEIPTED}:
         return verdict.state
     if verdict_lookup_ok and verdict.state == "unknown" and approved_before:
@@ -1044,7 +1052,8 @@ def run(
                 estimated_remaining -= 30
             _flush_pending_comments(gh, number, comments, login, previous, comment_safe=can_comment)
             if (
-                reason not in {"ready", "needs-CF", "CF-unknown", "fresh-evidence-unknown", "fresh-read-unknown"}
+                reason
+                not in {"ready", "needs-CF", "CF-unknown", UNAVAILABLE, "fresh-evidence-unknown", "fresh-read-unknown"}
                 and reason not in QUIET_GATE_REASONS
                 and comment_safe
                 and (_ever_approved(comments, login, history) or dropped)

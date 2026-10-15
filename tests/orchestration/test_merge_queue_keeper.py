@@ -62,6 +62,14 @@ def recovery_store(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(recovery, "ledger_path", lambda cwd: common / "ci-recovery.sqlite3")
 
 
+@pytest.fixture(autouse=True)
+def _fresh_generation_floor(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Forget the store generations this process read: test ledgers are short-lived directories."""
+    from scripts.orchestration import task_record_store
+
+    monkeypatch.setattr(task_record_store, "_GENERATION_FLOOR", {})
+
+
 def recovery_comment(head: str = HEAD_A) -> dict[str, Any]:
     data = {
         "pr": 42,
@@ -2013,7 +2021,7 @@ class FixedLedger(FakeGitHub):
 def test_unreadable_receipt_evidence_never_revokes_a_receipted_head(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, failure: str
 ) -> None:
-    """Evidence the keeper cannot read stays unknown; it is never a known unreceipted approval."""
+    """Evidence the keeper cannot read is unavailable (#10501); it is never a known unreceipted approval."""
     from scripts.orchestration import stale_task_records
 
     fake = FixedLedger(pr(isInMergeQueue=True))
@@ -2039,7 +2047,7 @@ def test_unreadable_receipt_evidence_never_revokes_a_receipted_head(
     lines, failed = keeper.run(fake, path, apply=True)
     assert not failed
     assert mutations(fake) == []
-    assert "reason=CF-unknown" in lines[0]
+    assert "reason=CF-evidence-unavailable" in lines[0]
     assert f"42:{HEAD_A}" not in json.loads(path.read_text())["drops"]
 
 
@@ -2086,7 +2094,7 @@ def test_fresh_pre_enqueue_read_rechecks_the_receipt_ledger(
     expected = {
         "review-starts": "CF-in-flight",
         "receipt-lost": "CF-unreceipted",
-        "record-corrupted": "unknown",
+        "record-corrupted": "CF-evidence-unavailable",
         "rejection-recorded": "BLOCKED",
     }[change]
     # The initial read was clean; the fresh pre-enqueue read saw the change.
@@ -2352,3 +2360,185 @@ def test_unresolved_active_review_removes_an_approved_queued_head_without_a_drop
     assert ("dequeue", "PR_node_42") in fake.actions
     assert "#42 revoked: CF-unknown-after-approval" in lines
     assert f"42:{HEAD_A}" not in json.loads(path.read_text())["drops"]
+
+
+# Exact-head review of 3972f8be (#10501): a seqlocked ledger read, and ledger evidence the keeper cannot
+# read (unavailable) holds a head instead of revoking it; only a readable, stable ledger proves a receipt absent.
+UNAVAILABLE = "CF-evidence-unavailable"
+
+
+class FreshFixedLedger(FixedLedger):
+    """A fixed ledger whose ``hook`` runs once, at the fresh pre-enqueue read."""
+
+    hook = None
+
+    def current(self, number: int) -> dict[str, Any]:
+        if self.hook is not None:
+            hook, self.hook = self.hook, None
+            hook(self)
+        return super().current(number)
+
+
+@pytest.fixture
+def isolated_locks(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    from scripts import delegate
+
+    monkeypatch.setattr(delegate, "_WORKTREE_LOCK_DIR", tmp_path / "worktree-locks")
+
+
+@pytest.mark.parametrize("token,reason", [("REQUEST_CHANGES", "CF-changes_requested"), ("BLOCKED", "CF-blocked")])
+def test_repeated_archive_restore_during_the_fresh_read_never_enqueues(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, isolated_locks: None, token: str, reason: str
+) -> None:
+    """The reviewer's interleaving with the public archive/restore calls: never enqueued."""
+    from scripts.orchestration import stale_task_records
+
+    fake = FreshFixedLedger()
+    ledger = fake.ledger
+    archive = ledger / "archive"
+    archive.mkdir()
+    (ledger / "review.json").rename(archive / "review.json")  # Only the rejection moves below.
+    unpublished_review(fake, token, archive=True)
+    original = Path.iterdir
+    moves: list[dict[str, int]] = []
+
+    def hook(_fake: FakeGitHub) -> None:
+        listings: list[Path] = []
+        busy: list[bool] = []
+
+        def iterdir(self):
+            if busy or self not in (ledger, archive):
+                return original(self)
+            busy.append(True)
+            try:
+                listings.append(self)
+                if len(listings) == 3:
+                    moves.append(stale_task_records.archive_terminal(ledger, min_age_days=0, apply=True)["actions"])
+                items = list(original(self))
+                if len(listings) in (1, 3):
+                    moves.append(stale_task_records.restore_archived(ledger, ["unpublished"], apply=True)["actions"])
+                return iter(items)
+            finally:
+                busy.pop()
+
+        monkeypatch.setattr(Path, "iterdir", iterdir)
+
+    fake.hook = hook
+    lines, failed = keeper.run(fake, tmp_path / "state.json", apply=True)
+    assert not failed
+    assert f"reason={reason}" in lines[0]
+    assert moves == [{"restored": 1}, {"archived": 1}, {"restored": 1}]
+    assert "enqueue" not in mutations(fake)
+    assert "#42 enqueued" not in lines
+
+
+def _make_unavailable(ledger: Path, failure: str, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Leave the genuine receipt-bearing record unreadable, truncated, mid-move or parked."""
+    from scripts.orchestration import stale_task_records
+
+    record = ledger / "review.json"
+    archive = ledger / "archive"
+    if failure == "unreadable":
+        original = Path.read_text
+
+        def unreadable(self, *args, **kwargs):
+            if self == record:
+                raise PermissionError("record unreadable")
+            return original(self, *args, **kwargs)
+
+        monkeypatch.setattr(Path, "read_text", unreadable)
+    elif failure == "truncated":
+        record.write_text(record.read_text()[:40])
+    else:
+        archive.mkdir(exist_ok=True)
+        staged = stale_task_records._stage(record, archive)
+        if failure == "parked":
+            record.write_text("{}")  # A writer took the hot name; the receipt-bearing record is parked.
+            stale_task_records._unstage(staged, record, archive)
+            record.unlink()
+
+
+FAILURES = ["unreadable", "truncated", "staged", "parked"]
+
+
+@pytest.mark.parametrize("membership", ["queued", "armed"])
+@pytest.mark.parametrize("failure", FAILURES)
+def test_receipt_unavailable_after_the_initial_read_holds_instead_of_revoking(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, failure: str, membership: str
+) -> None:
+    row = pr(isInMergeQueue=True) if membership == "queued" else pr(autoMergeRequest={"enabledAt": "now"})
+    fake = FreshFixedLedger(row)
+    fake.hook = lambda _fake: _make_unavailable(fake.ledger, failure, monkeypatch)
+    path = tmp_path / "state.json"
+    lines, failed = keeper.run(fake, path, apply=True)
+    assert not failed
+    assert "reason=ready" in lines[0]  # The initial read saw the genuine receipt.
+    assert mutations(fake) == []
+    assert f"#42 held: {UNAVAILABLE}" in lines
+    state = json.loads(path.read_text())
+    assert f"42:{HEAD_A}" not in state["drops"]
+    assert state["approved"] == {"42": HEAD_A}
+    if membership == "queued":
+        assert state["queued"] == {"42": HEAD_A}
+
+
+@pytest.mark.parametrize("failure", FAILURES)
+def test_persisted_approval_with_unavailable_evidence_all_run_is_held(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, failure: str
+) -> None:
+    fake = FixedLedger(pr(isInMergeQueue=True))
+    path = tmp_path / "state.json"
+    path.write_text(json.dumps({"queued": {"42": HEAD_A}, "drops": {}, "approved": {"42": HEAD_A}}))
+    _make_unavailable(fake.ledger, failure, monkeypatch)
+    lines, failed = keeper.run(fake, path, apply=True)
+    assert not failed
+    assert f"reason={UNAVAILABLE}" in lines[0]
+    assert mutations(fake) == []
+    assert f"#42 held: {UNAVAILABLE}" in lines
+    state = json.loads(path.read_text())
+    assert state["approved"] == {"42": HEAD_A} and state["queued"] == {"42": HEAD_A}
+    assert f"42:{HEAD_A}" not in state["drops"]
+
+
+def test_persisted_approval_whose_readable_ledger_lacks_the_receipt_is_revoked(tmp_path: Path) -> None:
+    """Known invalidity still revokes: the record reads cleanly and binds no receipt for the marker."""
+    fake = FixedLedger(pr(isInMergeQueue=True))
+    record = json.loads((fake.ledger / "review.json").read_text())
+    record.pop(RECEIPT_FIELD)
+    (fake.ledger / "review.json").write_text(json.dumps(record))
+    path = tmp_path / "state.json"
+    path.write_text(json.dumps({"queued": {"42": HEAD_A}, "drops": {}, "approved": {"42": HEAD_A}}))
+    lines, failed = keeper.run(fake, path, apply=True)
+    assert not failed
+    assert ("dequeue", "PR_node_42") in fake.actions
+    assert "#42 revoked: CF-unreceipted" in lines
+    assert json.loads(path.read_text())["drops"][f"42:{HEAD_A}"] == 1
+
+
+def test_receipt_lost_after_the_initial_read_is_revoked(tmp_path: Path) -> None:
+    def lose(fake: FakeGitHub) -> None:
+        record = json.loads((fake.ledger / "review.json").read_text())
+        record.pop(RECEIPT_FIELD)
+        (fake.ledger / "review.json").write_text(json.dumps(record))
+
+    fake = FreshFixedLedger(pr(isInMergeQueue=True))
+    fake.hook = lose
+    lines, failed = keeper.run(fake, tmp_path / "state.json", apply=True)
+    assert not failed
+    assert ("dequeue", "PR_node_42") in fake.actions
+    assert "#42 revoked: CF-unreceipted" in lines
+
+
+def test_unavailable_evidence_after_a_queue_drop_posts_no_pull_request_comment(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A local ledger that cannot be read is the keeper's problem, not the pull request's: no note."""
+    fake = FixedLedger(pr(isInMergeQueue=False))
+    path = tmp_path / "state.json"
+    path.write_text(json.dumps({"queued": {"42": HEAD_A}, "drops": {}, "approved": {"42": HEAD_A}}))
+    _make_unavailable(fake.ledger, "truncated", monkeypatch)
+    lines, failed = keeper.run(fake, path, apply=True)
+    assert not failed
+    assert f"reason={UNAVAILABLE}" in lines[0]
+    assert "enqueue" not in mutations(fake)
+    assert not [body for kind, body in fake.actions if kind == "comment" and UNAVAILABLE in body]

@@ -27,8 +27,10 @@ from scripts.opsec.prepublish import normalize_repository
 from scripts.orchestration.task_record_store import (
     ARCHIVE_DIR_NAME,
     RECORD_SUFFIXES,
+    StoreUnstable,
     archived_task_record_path,
     relocation_residue,
+    stable_read,
     task_record_path,
 )
 from scripts.publish.github import Request, request_run
@@ -71,9 +73,12 @@ NEEDS_FINALIZE = "needs_finalize"
 UNSETTLED_REVIEW_STATUSES = ACTIVE_TASK_STATUSES | {NEEDS_FINALIZE}
 VERDICT_TASK_STATUSES = frozenset({"done", NEEDS_FINALIZE})
 # Approval states that block admission; the keeper also removes a queued or armed head in either.
-# Unreceipted is known: every approval's record was read and none binds it. Unreadable evidence is ``unknown``.
+# Unreceipted is known: every approval's record was read coherently and none binds it.
 UNRECEIPTED = "CF-unreceipted"
 IN_FLIGHT = "CF-in-flight"
+# Ledger evidence that could not be read coherently (#10501): it blocks admission but is no known
+# blocker, so the keeper holds the head as it is, neither revoking nor enqueuing it.
+UNAVAILABLE = "CF-evidence-unavailable"
 
 
 class SweepError(RuntimeError):
@@ -244,35 +249,42 @@ def outside_review_in_flight(tasks_dir: Path, repository: str, sha: str) -> bool
 
 
 class EvidenceUnavailable(SweepError):
-    """The local review ledger could not be read; the head stays unknown."""
+    """The local review ledger could not be read coherently: the head's state is unavailable, never known."""
 
 
-# A read whose listings moved under it is retried this many times, then is unknown.
-LEDGER_READ_ATTEMPTS = 3
+class EvidenceMalformed(SweepError):
+    """The ledger read cleanly but holds evidence nobody can resolve: the head is ``unknown``."""
+
+
+# A completed task's reply as read inside the ledger's coherent read, when it
+# states no single normalized verdict.
+REPLY_ABSENT = "absent"  # No ``.result`` was listed.
+REPLY_UNREADABLE = "unreadable"
+REPLY_SILENT = "silent"  # No recognized ``VERDICT:`` token.
+REPLY_AMBIGUOUS = "ambiguous"  # Tokens, but not exactly one verdict.
 
 
 @dataclass(frozen=True)
 class CompletedTask:
     """One completed task pinned to a head; ``scoped`` when bound to exactly that head and repository.
 
-    ``reply`` is where the coherent listing held its ``.result`` (``None``:
-    no reply was listed).
+    ``reply`` is its ``.result`` read inside the same coherent read: the
+    normalized verdict, or one of the ``REPLY_*`` states.
     """
 
     path: Path
     task_id: str
     declared: bool
     scoped: bool
-    reply: Path | None
+    reply: str
 
 
 @dataclass(frozen=True)
 class _Listing:
-    """Record, reply and mid-move names of the hot directory and its archive, with both directories' identity."""
+    """Record, reply and relocation-residue names of the hot directory and its archive."""
 
     hot: frozenset[str]
     archive: frozenset[str]
-    identity: tuple[Any, ...]
 
     @property
     def residue(self) -> str | None:
@@ -289,36 +301,41 @@ def _names(directory: Path) -> frozenset[str]:
 
 
 def _ledger_listing(tasks_dir: Path) -> _Listing:
-    """List the hot directory, then the archive; ``OSError`` when either cannot be listed."""
-    hot = tasks_dir.stat()
-    hot_names = _names(tasks_dir)
+    """List the hot directory, then the archive if it exists; ``OSError`` when either cannot be listed."""
+    hot = _names(tasks_dir)
     archive_dir = tasks_dir / ARCHIVE_DIR_NAME
     try:
-        archive = archive_dir.stat()
+        archive_dir.stat()
     except FileNotFoundError:
-        return _Listing(hot_names, frozenset(), (hot.st_dev, hot.st_ino, None))
-    return _Listing(hot_names, _names(archive_dir), (hot.st_dev, hot.st_ino, archive.st_dev, archive.st_ino))
+        return _Listing(hot, frozenset())
+    return _Listing(hot, _names(archive_dir))
 
 
 @dataclass(frozen=True)
 class LedgerSnapshot:
     """One coherent read of the review ledger for a repository (#10501).
 
-    ``error`` makes everything unknown (the listings could not be read, kept
-    changing, or show a record held outside its name); ``active_error`` makes
-    in-flight state unknown; ``broken`` makes completed-review vetoes unknown.
-    A rejection actually read from a record still wins over all three.
-    ``records`` keeps the receipt fields of each readable record that has one.
+    ``error`` makes everything unavailable: no read was coherent (see
+    :func:`read_ledger`), a directory could not be listed, or a file is held
+    at a staging or parked name. A record in ``unreadable`` makes its own
+    receipt, completed-review vetoes and, when hot, in-flight state
+    unavailable. Readable but invalid evidence is ``unknown``: a record in
+    ``malformed`` (not an object), an unsettled review or prepared head
+    nobody can resolve (``unresolved``), or a completed task pinned to an
+    unresolvable head (``broken``). A rejection actually read from a record
+    still wins over all of these. ``records`` keeps the receipt fields of each
+    readable record that has one.
     """
 
     error: str | None = None
-    active_error: str | None = None
+    unresolved: str | None = None
     broken: bool = False
     reviewed: frozenset[str] = frozenset()
     prepared: frozenset[str] = frozenset()
     candidates: Mapping[str, Sequence[CompletedTask]] = field(default_factory=dict)
     present: frozenset[Path] = frozenset()
     unreadable: frozenset[Path] = frozenset()
+    malformed: frozenset[Path] = frozenset()
     records: Mapping[Path, Mapping[str, Any]] = field(default_factory=dict)
 
 
@@ -332,16 +349,30 @@ def _reply_path(record: Path, names: frozenset[str], other_dir: Path, others: fr
     return None
 
 
+def _read_reply(path: Path | None) -> str:
+    """A completed task's reply: its one normalized verdict, or a ``REPLY_*`` state."""
+    if path is None:
+        return REPLY_ABSENT
+    try:
+        reply = path.read_text(encoding="utf-8")
+    except (OSError, ValueError):
+        return REPLY_UNREADABLE
+    if not recognized_verdicts(reply):
+        return REPLY_SILENT
+    return reply_verdict(reply) or REPLY_AMBIGUOUS
+
+
 def _read_listed(tasks_dir: Path, listing: _Listing, wanted: str) -> LedgerSnapshot:
-    """Read every listed record once, deriving in-flight heads, completed candidates and receipts."""
+    """Read every listed record, and the reply of every completed one, once."""
     archive = tasks_dir / ARCHIVE_DIR_NAME
     reviewed: set[str] = set()
     prepared: set[str] = set()
     candidates: dict[str, list[CompletedTask]] = {}
     present: set[Path] = set()
     unreadable: set[Path] = set()
+    malformed: set[Path] = set()
     records: dict[Path, dict[str, Any]] = {}
-    active_error: str | None = None
+    unresolved: str | None = None
     broken = False
     for directory, names, other_dir, others in (
         (tasks_dir, listing.hot, archive, listing.archive),
@@ -353,11 +384,10 @@ def _read_listed(tasks_dir: Path, listing: _Listing, wanted: str) -> LedgerSnaps
             try:
                 task = json.loads(path.read_text(encoding="utf-8"))
             except (OSError, ValueError, RecursionError):
-                task = None
-            if not isinstance(task, dict):
                 unreadable.add(path)
-                broken = True
-                active_error = active_error or ("review ledger record unreadable" if hot else None)
+                continue
+            if not isinstance(task, dict):
+                malformed.add(path)
                 continue
             present.add(path)
             if RECEIPT_FIELD in task:
@@ -366,7 +396,7 @@ def _read_listed(tasks_dir: Path, listing: _Listing, wanted: str) -> LedgerSnaps
                 try:
                     heads, preparing = _active_targets(task, wanted)
                 except UnresolvedReview as exc:
-                    active_error = active_error or str(exc)
+                    unresolved = unresolved or str(exc)
                 else:
                     reviewed |= heads
                     prepared |= preparing
@@ -382,55 +412,58 @@ def _read_listed(tasks_dir: Path, listing: _Listing, wanted: str) -> LedgerSnaps
             if len(heads) != len(set(resolved)):  # A completed task pinned to a head nobody can resolve.
                 broken = True
                 continue
+            if not heads:
+                continue
             scoped = len(heads) == 1 and isinstance(owner, str) and normalize_repository(owner) == wanted
             task_id = task["task_id"] if isinstance(task.get("task_id"), str) else path.stem
-            item = CompletedTask(
-                path, task_id, is_review_task(task), scoped, _reply_path(path, names, other_dir, others)
-            )
+            reply = _read_reply(_reply_path(path, names, other_dir, others))
+            item = CompletedTask(path, task_id, is_review_task(task), scoped, reply)
             for head in heads:
                 candidates.setdefault(head, []).append(item)
     return LedgerSnapshot(
-        active_error=active_error,
+        unresolved=unresolved,
         broken=broken,
         reviewed=frozenset(reviewed),
         prepared=frozenset(prepared),
         candidates=candidates,
         present=frozenset(present),
         unreadable=frozenset(unreadable),
+        malformed=frozenset(malformed),
         records=records,
     )
 
 
-def read_ledger(tasks_dir: Path, repository: str, *, attempts: int = LEDGER_READ_ATTEMPTS) -> LedgerSnapshot:
-    """Read the hot ledger and its archive as one coherent snapshot (#10501).
+def read_ledger(tasks_dir: Path, repository: str) -> LedgerSnapshot:
+    """Read the hot ledger, its archive and every completed reply as one coherent snapshot (#10501).
 
-    Both directories are listed before and after their records are read. A
-    record or reply that an archive, restore or re-dispatch moved meanwhile
-    changes a listing or leaves a staging name, so the read is retried and,
-    after ``attempts``, is unknown. A parked record or reply is unknown at
-    once: no reader sees it until someone recovers it. Only an adversary that
-    moves one record three times within one read could hide it, and a
-    same-user writer is outside this traceability control anyway.
+    The read is a :func:`task_record_store.stable_read`: every supported
+    archive, restore, settle or receipt write changes the store generation,
+    so a read one overlapped is retried and, when none is coherent, the
+    snapshot is unavailable (``error``). A file at a staging or parked name in
+    a coherent read was left by a mover that died or could not place it; no
+    reader sees it until someone recovers it, so that read is unavailable too.
+    A rejection read in an incoherent attempt is kept: it was read from a
+    record and still vetoes.
     """
     wanted = normalize_repository(repository)
     if wanted == "unknown":
         return LedgerSnapshot(error="ledger repository unresolved")
-    snapshot = LedgerSnapshot(error="review ledger unreadable")
-    for _attempt in range(attempts):
-        try:
-            before = _ledger_listing(tasks_dir)
-            snapshot = _read_listed(tasks_dir, before, wanted)
-            after = _ledger_listing(tasks_dir)
-        except OSError:
-            return replace(snapshot, error="review ledger unreadable")
-        if before != after:
-            continue
-        residue = before.residue
-        if residue is None:
-            return snapshot
-        if residue == "parked":
-            return replace(snapshot, error="a review ledger file is parked outside its name")
-    return replace(snapshot, error="review ledger kept moving while it was read")
+
+    def read() -> tuple[_Listing, LedgerSnapshot]:
+        listing = _ledger_listing(tasks_dir)
+        return listing, _read_listed(tasks_dir, listing, wanted)
+
+    try:
+        listing, snapshot = stable_read(tasks_dir, read)
+    except StoreUnstable as exc:
+        partial = exc.partial[1] if exc.partial is not None else LedgerSnapshot()
+        return replace(partial, error=f"review ledger {exc}")
+    except OSError:
+        return LedgerSnapshot(error="review ledger unreadable")
+    if listing.residue is not None:
+        where = "a staging" if listing.residue == "moving" else "a parked"
+        return replace(snapshot, error=f"a review ledger file is held at {where} name")
+    return snapshot
 
 
 @dataclass
@@ -454,49 +487,62 @@ class ReviewLedger:
         return self._snapshot
 
     def in_flight(self, sha: str) -> bool:
+        """Whether an unsettled outside review or a preparing dispatch holds ``sha``.
+
+        Raises :class:`EvidenceUnavailable` when the read or a hot record is
+        unreadable, :class:`EvidenceMalformed` when a hot record is not an
+        object or names a target nobody can resolve.
+        """
         snapshot = self.snapshot()
-        reason = snapshot.error or snapshot.active_error
-        if reason is not None:
-            raise EvidenceUnavailable(reason)
+        if snapshot.error is not None:
+            raise EvidenceUnavailable(snapshot.error)
+        if any(path.parent == self.tasks_dir for path in snapshot.unreadable):
+            raise EvidenceUnavailable("review ledger record unreadable")
+        if any(path.parent == self.tasks_dir for path in snapshot.malformed):
+            raise EvidenceMalformed("review ledger record is not an object")
+        if snapshot.unresolved is not None:
+            raise EvidenceMalformed(snapshot.unresolved)
         return sha.casefold() in snapshot.reviewed or sha.casefold() in snapshot.prepared
 
     def completed_verdict(self, sha: str) -> Verdict | None:
         """The veto from every completed exact-head review, published or not (RE-07).
 
-        Reads the ``.result`` reply of each completed (``done`` or
-        ``needs_finalize``) task pinned to ``sha``, including archived runs and
-        tasks that never declared review typing but replied with a verdict.
-        These verdicts veto admission and never grant approval: a known
-        rejection wins; an unreadable, missing, ambiguous or unscoped verdict,
-        or a reply that moved since the snapshot listed it, is ``unknown``;
-        otherwise ``None``.
+        Uses the reply of each completed (``done`` or ``needs_finalize``) task
+        pinned to ``sha``, including archived runs and tasks that never
+        declared review typing but replied with a verdict. These verdicts
+        veto admission and never grant approval. A known rejection wins.
+        Otherwise, in a coherent read, readable but invalid evidence (a
+        missing, ambiguous or unscoped verdict, a record that is not an
+        object, a completed task pinned to an unresolvable head) is
+        ``unknown``, and evidence that could not be read (a record or a reply)
+        is :data:`UNAVAILABLE`; else ``None``. In a read that was not coherent
+        any such doubt may be a move caught halfway, so it is
+        :data:`UNAVAILABLE`, never ``unknown``.
         """
         if sha in self._verdicts:
             return self._verdicts[sha]
         snapshot = self.snapshot()
         rejected: list[Verdict] = []
-        unknown = snapshot.broken or snapshot.error is not None
+        unknown = snapshot.broken or bool(snapshot.malformed)
+        unavailable = snapshot.error is not None or bool(snapshot.unreadable)
         for item in snapshot.candidates.get(sha, ()):
-            if item.reply is None:
+            if item.reply == REPLY_ABSENT:
                 unknown = unknown or item.declared
+            elif item.reply == REPLY_UNREADABLE:
+                unavailable = True
+            elif item.reply == REPLY_SILENT and not item.declared:
                 continue
-            try:
-                reply = item.reply.read_text(encoding="utf-8")
-            except (OSError, ValueError):
+            elif item.reply in {REPLY_SILENT, REPLY_AMBIGUOUS} or not item.scoped:
                 unknown = True
-                continue
-            if not item.declared and not recognized_verdicts(reply):
-                continue
-            verdict = reply_verdict(reply)
-            if verdict is None or not item.scoped:
-                unknown = True
-            elif verdict in REJECTED:
-                rejected.append(Verdict(verdict, task=item.task_id))
+            elif item.reply in REJECTED:
+                rejected.append(Verdict(item.reply, task=item.task_id))
         result: Verdict | None = None
         if rejected:
             result = next((item for item in rejected if item.state == "BLOCKED"), rejected[0])
-        elif unknown:
+        elif unknown and snapshot.error is None:
             result = Verdict("unknown")
+        elif unknown or unavailable:
+            result = Verdict(UNAVAILABLE)
         self._verdicts[sha] = result
         return result
 
@@ -508,6 +554,8 @@ class ReviewLedger:
         for path in (task_record_path(self.tasks_dir, task_id), archived_task_record_path(self.tasks_dir, task_id)):
             if path in snapshot.unreadable:
                 raise EvidenceUnavailable("review task record unreadable")
+            if path in snapshot.malformed:
+                raise EvidenceMalformed("review task record is not an object")
             if path in snapshot.present:
                 return dict(snapshot.records.get(path, {}))
         return None
@@ -534,15 +582,16 @@ class RecordedEvidence:
     def receipted(self, marker: Mapping[str, Any], comment: Mapping[str, Any]) -> bool:
         """Whether this exact comment is the recorder's verified publication for ``marker``.
 
-        A missing record or receipt is ``False``; an unreadable record or a
-        non-object receipt raises :class:`EvidenceUnavailable`.
+        A missing record or receipt is ``False``. An unreadable record raises
+        :class:`EvidenceUnavailable`; a record that is not an object, or a
+        receipt that is not an object, raises :class:`EvidenceMalformed`.
         """
         record = self.ledger.task(marker["task"])
         if record is None or record.get(RECEIPT_FIELD) is None:
             return False
         receipt = record[RECEIPT_FIELD]
         if not isinstance(receipt, dict):
-            raise EvidenceUnavailable("recorder receipt malformed")
+            raise EvidenceMalformed("recorder receipt malformed")
         body, comment_id = comment.get("body"), comment.get("id")
         repository = normalize_repository(self.ledger.repository)
         run_nonce = record.get("run_nonce")
@@ -734,8 +783,9 @@ def lookup_verdict(
 
     Precedence, independent of comment order and declared timestamps: any
     trusted same-head rejection, including unpublished completed task verdicts;
-    then malformed or edited evidence
-    (``unknown``); then, with ``evidence``, an active outside review
+    then malformed or edited evidence, in comments or the ledger
+    (``unknown``); then ledger evidence that could not be read coherently
+    (:data:`UNAVAILABLE`); then, with ``evidence``, an active outside review
     (``CF-in-flight``); then an approval whose recorder receipt matches
     (``APPROVED``) or none does (``CF-unreceipted``). A marker's start is
     clamped to its comment's creation time.
@@ -806,13 +856,17 @@ def lookup_verdict(
         # Every applicable same-head rejection blocks; report the latest one.
         winner = max(rejections, key=lambda item: item[0])
         return _verdict(winner[2]["verdict"], winner, untrusted)
+    unavailable = False
     if evidence is not None:
         completed = evidence.ledger.completed_verdict(sha)
         if completed is not None and completed.state in REJECTED:
             return completed
-        poisoned = poisoned or completed is not None
+        unavailable = completed is not None and completed.state == UNAVAILABLE
+        poisoned = poisoned or (completed is not None and not unavailable)
     if poisoned:
         return Verdict("unknown", untrusted_markers=tuple(untrusted))
+    if unavailable:
+        return Verdict(UNAVAILABLE, untrusted_markers=tuple(untrusted))
     if not approvals:
         state = "CF-unrecorded" if legacy else "CF-stale" if other_head else "needs-CF"
         return Verdict(state, untrusted_markers=tuple(untrusted))
@@ -824,6 +878,8 @@ def lookup_verdict(
                 return Verdict(IN_FLIGHT, untrusted_markers=tuple(untrusted))
             receipted = [item for item in approvals if evidence.receipted(item[2], comments[item[1]])]
         except EvidenceUnavailable:
+            return Verdict(UNAVAILABLE, untrusted_markers=tuple(untrusted))
+        except EvidenceMalformed:
             return Verdict("unknown", untrusted_markers=tuple(untrusted))
     if not receipted:
         return Verdict(UNRECEIPTED, untrusted_markers=tuple(untrusted))

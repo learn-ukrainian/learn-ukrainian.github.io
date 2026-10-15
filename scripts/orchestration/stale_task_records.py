@@ -65,6 +65,12 @@ branch-holder release and ``post_task_reap`` read the hot record as the
 ownership proof. ``restore`` moves an archived record back. Which readers see
 the archive is documented in :mod:`scripts.orchestration.task_record_store`.
 
+Settle, archive and restore are task-store changes
+(:func:`task_record_store.store_change`): each holds the store lock with the
+store generation odd while it writes or moves, so a ledger read that one
+overlaps is retried (#10501). The store lock comes after the checkout lock and
+before the per-task lock.
+
 Settle and archive both hold the record's lock while they write or move it:
 ``delegate.worktree_lock`` for its checkout, the lock dispatch holds while it
 publishes a record naming that checkout (a record naming no checkout locks its
@@ -957,7 +963,10 @@ def apply_settlement(candidate: Candidate, *, lock_timeout_s: float, now: dateti
             if os.path.lexists(str(candidate.evidence["worktree_path"])):
                 candidate.action, candidate.skip_reason = "skipped", "worktree path reappeared since classification"
                 return
-            delegate._write_state_atomic(candidate.path, _settled_record(candidate, current, now.isoformat()))
+            # A store change (#10501): the store lock sits between the checkout
+            # lock and the per-task lock the writer takes.
+            with task_record_store.store_change(candidate.path.parent):
+                delegate._write_state_atomic(candidate.path, _settled_record(candidate, current, now.isoformat()))
     except worktree_claims.WorktreeLockError as exc:
         candidate.action, candidate.skip_reason = "skipped", worktree_claims.lock_refusal(exc)
         return
@@ -1260,10 +1269,11 @@ def _archive_one(
         with delegate.worktree_lock(lock_target, timeout_s=lock_timeout_s):
             if before_move is not None:
                 before_move(path)
-            # Per-task writers (the review receipt among them, #10501) rewrite a
-            # record under its own lock; holding it keeps a rewrite read before
-            # the move from landing on the hot name the move just vacated.
-            with task_state_lock(path):
+            # The move is a store change, so a ledger read it overlaps is
+            # retried (#10501). Per-task writers (the review receipt among them)
+            # rewrite a record under its own lock; holding it keeps a rewrite
+            # read before the move from landing on the hot name the move vacated.
+            with task_record_store.store_change(archive_dir.parent), task_state_lock(path):
                 current, stat = _read_pinned(path)
                 if stat.st_mtime_ns != selected_mtime_ns:
                     row["action"], row["skip_reason"] = "skipped", "record changed since selection"
@@ -1303,12 +1313,13 @@ def archive_terminal(
 ) -> dict[str, Any]:
     """Move old terminal records and their sidecars into ``<tasks_dir>/archive/``.
 
-    Each move holds the record's lock (:func:`_record_lock_target`), then its
-    per-task ``<record>.json.lock``, and first re-reads the record: it is
-    skipped if its mtime changed since selection, its status is no longer
-    terminal, or it still owns a path (:func:`keep_hot_reason`).
-    ``before_move`` is a test seam called under the checkout lock, before the
-    per-task lock and that re-check.
+    Each move holds the record's lock (:func:`_record_lock_target`), then the
+    store lock as a :func:`task_record_store.store_change`, then its per-task
+    ``<record>.json.lock``, and first re-reads the record: it is skipped if its
+    mtime changed since selection, its status is no longer terminal, or it
+    still owns a path (:func:`keep_hot_reason`). ``before_move`` is a test
+    seam called under the checkout lock, before the store and per-task locks
+    and that re-check.
     """
     now = now or datetime.now(UTC)
     archive_dir = tasks_dir / ARCHIVE_DIR_NAME
@@ -1372,32 +1383,34 @@ def _restore_group(group: list[Path], tasks_dir: Path, row: dict[str, Any]) -> N
     after it. Every move is :func:`_move_no_replace`, so that writer's file is
     kept and the archived copy (a snapshot directory whole) stays where it is.
 
-    The record move holds the per-task lock on the archived record — the same
-    ``<record>.json.lock`` the retention sweep holds while it rewrites
-    ``tasks/archive``. Without it, the sweep can write that name back after
-    this move.
+    The whole group moves as one :func:`task_record_store.store_change`, so a
+    ledger read it overlaps is retried (#10501). The record move also holds the
+    per-task lock on the archived record — the same ``<record>.json.lock`` the
+    retention sweep holds while it rewrites ``tasks/archive``. Without it, the
+    sweep can write that name back after this move.
     """
     record_path, *sidecars = group
-    try:
-        with task_state_lock(record_path):
-            _move_no_replace(record_path, tasks_dir / record_path.name)
-    except FileExistsError:
-        row["action"] = "skipped"
-        row["skip_reason"] = f"a writer created {record_path.name} in the hot directory first; archived copy kept"
-        return
-    except OSError as exc:
-        row["action"], row["error"] = "error", f"{type(exc).__name__}: {exc}"
-        return
-    kept: list[str] = []
-    try:
-        for sidecar in sidecars:
-            try:
-                _move_no_replace(sidecar, tasks_dir / sidecar.name)
-            except FileExistsError:
-                kept.append(str(sidecar))
-    except OSError as exc:
-        row["action"], row["error"] = "error", f"{type(exc).__name__}: {exc}"
-        return
+    with task_record_store.store_change(tasks_dir):
+        try:
+            with task_state_lock(record_path):
+                _move_no_replace(record_path, tasks_dir / record_path.name)
+        except FileExistsError:
+            row["action"] = "skipped"
+            row["skip_reason"] = f"a writer created {record_path.name} in the hot directory first; archived copy kept"
+            return
+        except OSError as exc:
+            row["action"], row["error"] = "error", f"{type(exc).__name__}: {exc}"
+            return
+        kept: list[str] = []
+        try:
+            for sidecar in sidecars:
+                try:
+                    _move_no_replace(sidecar, tasks_dir / sidecar.name)
+                except FileExistsError:
+                    kept.append(str(sidecar))
+        except OSError as exc:
+            row["action"], row["error"] = "error", f"{type(exc).__name__}: {exc}"
+            return
     row["action"] = "restored"
     if kept:
         row["kept_in_archive"] = kept

@@ -137,6 +137,15 @@ def _record(tasks_dir: Path, name: str, **fields: Any) -> Path:
     return path
 
 
+def _hot_names(tasks_dir: Path) -> list[str]:
+    """Hot-directory entries besides the permanent anchors: per-task locks (#8659) and the store's control dir."""
+    return sorted(
+        path.name
+        for path in tasks_dir.iterdir()
+        if path.suffix != ".lock" and path.name != task_record_store.CONTROL_DIR_NAME
+    )
+
+
 def _merged(
     branch: str, number: int, merged_at: datetime, *, slug: str = SLUG, head_sha: str | None = None
 ) -> dict[str, Any]:
@@ -854,7 +863,7 @@ def test_archive_round_trip_moves_record_with_sidecars(tasks_dir):
     assert report["actions"] == {"archived": 2}
     archive = tasks_dir / "archive"
     # The move holds each record's per-task lock, whose stable anchor (#8659) stays at the hot name.
-    assert sorted(path.name for path in tasks_dir.iterdir() if path.suffix != ".lock") == ["archive"]
+    assert _hot_names(tasks_dir) == ["archive"]
     assert sorted(path.name for path in tasks_dir.glob("*.lock")) == [
         "old-done.json.lock",
         f"redo.{stamp}.archived.json.lock",
@@ -865,10 +874,17 @@ def test_archive_round_trip_moves_record_with_sidecars(tasks_dir):
 
     restored = str_mod.restore_archived(tasks_dir, ["old-done", f"redo.{stamp}.archived.json"], apply=True)
     assert restored["actions"] == {"restored": 2}
-    # The per-task lock file is not a task artifact; restore leaves it beside the archived name.
-    after = {key: value[0] for key, value in _snapshot(tasks_dir).items() if not key.endswith(".lock")}
+    # The per-task lock file is not a task artifact; restore leaves it beside the archived name. Nor is the
+    # store's control directory: each of the two archives and two restores was one store change (#10501).
+    control = f"{task_record_store.CONTROL_DIR_NAME}/"
+    after = {
+        key: value[0]
+        for key, value in _snapshot(tasks_dir).items()
+        if not key.endswith(".lock") and not key.startswith(control)
+    }
     assert after == {key: value[0] for key, value in before.items()}
     assert task_record_store.locate_task_record(tasks_dir, "old-done") == tasks_dir / "old-done.json"
+    assert task_record_store.read_generation(tasks_dir).value == 8
 
 
 def test_archive_preserves_stable_lock_anchors(tasks_dir):
@@ -1229,7 +1245,7 @@ def test_archive_moves_a_snapshot_directory_onto_an_empty_one(tasks_dir):
     assert row["action"] == "archived"
     assert row["moved"] == ["empty-dest.json", "empty-dest.result", "empty-dest.snapshots"]
     assert _contents(tasks_dir / "archive" / "empty-dest.snapshots") == SNAPSHOT_FILES
-    assert sorted(path.name for path in tasks_dir.iterdir() if path.suffix != ".lock") == ["archive"]
+    assert _hot_names(tasks_dir) == ["archive"]
 
 
 def test_archive_moves_a_snapshot_directory_whole_past_a_writer_filled_name(tasks_dir, monkeypatch):
@@ -1246,7 +1262,7 @@ def test_archive_moves_a_snapshot_directory_whole_past_a_writer_filled_name(task
     assert row["moved"] == ["clash.json", "clash.result", stamped.name]
     assert _contents(stamped) == SNAPSHOT_FILES
     assert _contents(foreign) == {"read_only_checkout_post.json": "writer\n"}
-    assert sorted(path.name for path in tasks_dir.iterdir() if path.suffix != ".lock") == ["archive"]
+    assert _hot_names(tasks_dir) == ["archive"]
     assert _no_staging_left(tasks_dir)
 
 
@@ -1317,7 +1333,7 @@ def test_archive_never_replaces_a_destination_created_during_the_move(tasks_dir,
     assert record_name.endswith(".archived.json") and result_name == record_name.removesuffix(".json") + ".result"
     assert json.loads((foreign.parent / record_name).read_text())["status"] == "done"
     assert (foreign.parent / result_name).read_text() == "reply\n"
-    assert sorted(path.name for path in tasks_dir.iterdir() if path.suffix != ".lock") == ["archive"]
+    assert _hot_names(tasks_dir) == ["archive"]
     assert not list(foreign.parent.glob(".*.moving"))
 
 
@@ -1704,3 +1720,108 @@ def test_archive_waits_for_a_per_task_writer_and_never_strands_its_update(tasks_
     assert json.loads(record_path.read_text())["cf_recording"] == {"schema": "cf-recording.v1"}
     assert (tasks_dir / "reviewed.result").is_file()
     assert not (tasks_dir / "archive" / "reviewed.json").exists()
+
+
+# Archive, restore and settle are task-store changes (#10501): the generation is odd while each moves or
+# writes, and the store lock sits between the checkout lock and the per-task lock.
+def _store_lock_held(tasks_dir: Path) -> bool:
+    fd = os.open(tasks_dir / task_record_store.CONTROL_DIR_NAME / task_record_store.LOCK_NAME, os.O_RDWR)
+    try:
+        fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except BlockingIOError:
+        return True
+    finally:
+        os.close(fd)
+    return False
+
+
+def _per_task_lock_held(record: Path) -> bool:
+    fd = os.open(record.with_suffix(record.suffix + ".lock"), os.O_RDWR | os.O_CREAT, 0o600)
+    try:
+        fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except BlockingIOError:
+        return True
+    finally:
+        os.close(fd)
+    return False
+
+
+def test_archive_moves_each_record_inside_one_store_change(tasks_dir, monkeypatch):
+    _terminal(tasks_dir, "old-done")
+    (tasks_dir / "old-done.result").write_text("reply\n")
+    seen: list[tuple[int, bool, bool]] = []
+    move_group = str_mod._move_group
+
+    def observed(record_path, *args, **kwargs):
+        with pytest.raises(worktree_claims.WorktreeLockError):  # The checkout lock is held too.
+            with delegate.worktree_lock(str(record_path), timeout_s=0.05):
+                pass
+        generation = task_record_store.read_generation(tasks_dir).value
+        seen.append((generation, _store_lock_held(tasks_dir), _per_task_lock_held(record_path)))
+        return move_group(record_path, *args, **kwargs)
+
+    monkeypatch.setattr(str_mod, "_move_group", observed)
+    report = str_mod.archive_terminal(tasks_dir, now=NOW, apply=True)
+    assert report["actions"] == {"archived": 1}
+    assert seen == [(1, True, True)]
+    assert task_record_store.read_generation(tasks_dir).value == 2
+
+
+def test_restore_moves_the_whole_group_inside_one_store_change(tasks_dir, monkeypatch):
+    _terminal(tasks_dir, "old-done")
+    (tasks_dir / "old-done.result").write_text("reply\n")
+    str_mod.archive_terminal(tasks_dir, now=NOW, apply=True)
+    assert task_record_store.read_generation(tasks_dir).value == 2
+    generations: list[int] = []
+    move = str_mod._move_no_replace
+
+    def observed(src, dst):
+        generations.append(task_record_store.read_generation(tasks_dir).value)
+        assert _store_lock_held(tasks_dir)
+        return move(src, dst)
+
+    monkeypatch.setattr(str_mod, "_move_no_replace", observed)
+    report = str_mod.restore_archived(tasks_dir, ["old-done"], apply=True)
+    assert report["actions"] == {"restored": 1}
+    assert generations == [3, 3]  # The record and its reply, in one change.
+    assert task_record_store.read_generation(tasks_dir).value == 4
+
+
+def test_settle_writes_inside_a_store_change(tasks_dir, monkeypatch):
+    path = _record(tasks_dir, "orphan")
+    candidate = str_mod.Candidate(
+        path=path,
+        mtime_ns=path.stat().st_mtime_ns,
+        record=json.loads(path.read_text()),
+        age_days=30,
+        klass="C",
+        evidence={"worktree_path": str(tasks_dir.parent / "gone" / "orphan")},
+        outcome="failed",
+        settle_reason="orphaned",
+    )
+    generations: list[int] = []
+    write = delegate._write_state_atomic
+
+    def observed(target, state):
+        generations.append(task_record_store.read_generation(tasks_dir).value)
+        assert _store_lock_held(tasks_dir)
+        return write(target, state)
+
+    monkeypatch.setattr(delegate, "_write_state_atomic", observed)
+    str_mod.apply_settlement(candidate, lock_timeout_s=1, now=NOW)
+    assert candidate.action == "settled"
+    assert generations == [1]
+    assert task_record_store.read_generation(tasks_dir).value == 2
+    assert json.loads(path.read_text())["status"] == "failed"
+
+
+def test_an_archive_repairs_an_abandoned_store_change_and_still_moves(tasks_dir):
+    """A writer killed mid-change leaves the generation odd; the next one closes it under the lock."""
+    control = tasks_dir / task_record_store.CONTROL_DIR_NAME
+    control.mkdir()
+    (control / task_record_store.GENERATION_NAME).write_text(json.dumps({"epoch": "0" * 16, "generation": 5}))
+    _terminal(tasks_dir, "old-done")
+    report = str_mod.archive_terminal(tasks_dir, now=NOW, apply=True)
+    assert report["actions"] == {"archived": 1}
+    assert (tasks_dir / "archive" / "old-done.json").is_file()
+    assert task_record_store.read_generation(tasks_dir) == ("0" * 16, 8)

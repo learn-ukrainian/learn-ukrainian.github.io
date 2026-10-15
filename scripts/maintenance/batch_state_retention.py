@@ -434,11 +434,16 @@ def _apply_one(
     * dispatch (``_write_state_atomic``): the checkout lock, then the per-task lock
     * ``delegate._archive_task_artifacts`` (``--force-new``): the per-task lock
       around the rename, released before dispatch takes the checkout lock
-    * ``stale_task_records._restore_group``: the per-task lock on the archived
-      record around that record's move
+    * ``stale_task_records._restore_group``: the task-store lock, then the
+      per-task lock on the archived record around that record's move
     * ``stale_task_records.archive_terminal``: the checkout lock
-      (:func:`_record_lock_target`), then the per-task lock, while it renames
-      the record and its sidecar
+      (:func:`_record_lock_target`), then the task-store lock, then the
+      per-task lock, while it renames the record and its sidecar
+
+    The task-store lock (``task_record_store.store_change``, #10501) always
+    sits between the checkout lock and the per-task lock. This sweep rewrites
+    a record in place under its own name, which never hides it from a ledger
+    read, so it does not take that lock or change the store generation.
 
     Taking the per-task lock and then waiting on the checkout lock deadlocks
     a holder that already has the checkout lock and is waiting for the per-task

@@ -18,6 +18,14 @@ START = "2026-09-23T12:00:00.000001+00:00"
 
 
 @pytest.fixture(autouse=True)
+def _fresh_generation_floor(monkeypatch):
+    """Forget the store generations this process read: pytest reuses a passing test's tmp path."""
+    from scripts.orchestration import task_record_store
+
+    monkeypatch.setattr(task_record_store, "_GENERATION_FLOOR", {})
+
+
+@pytest.fixture(autouse=True)
 def _advisory_fixture_workflow(monkeypatch):
     """The real ci.yml has no advisory job; cover the rule with a fixture workflow."""
     from scripts.ci import advisory_checks
@@ -578,16 +586,20 @@ def test_archived_review_record_still_supplies_its_receipt(tasks):
 
 
 @pytest.mark.parametrize("where", ["hot", "archive"])
-@pytest.mark.parametrize("content", ["{", "[]", "not json"])
-def test_malformed_review_record_is_unknown(tasks, where, content):
+@pytest.mark.parametrize(
+    "content,expected",
+    [("{", "CF-evidence-unavailable"), ("[]", "unknown"), ("not json", "CF-evidence-unavailable")],
+)
+def test_unparsable_review_record_is_unavailable_and_a_non_object_unknown(tasks, where, content, expected):
+    """A record that does not parse may be mid-write: unavailable (#10501). One that parses to a non-object is bad."""
     item = published()
     directory = tasks / "archive" if where == "archive" else tasks
     directory.mkdir(exist_ok=True)
     (directory / "review-one.json").write_text(content)
-    assert lookup([item], tasks).state == "unknown"
+    assert lookup([item], tasks).state == expected
 
 
-def test_non_object_receipt_and_unreadable_record_are_unknown(tasks, monkeypatch):
+def test_non_object_receipt_is_unknown_and_unreadable_record_unavailable(tasks, monkeypatch):
     item = published()
     bind(tasks, item)
     record = json.loads((tasks / "review-one.json").read_text())
@@ -603,12 +615,12 @@ def test_non_object_receipt_and_unreadable_record_are_unknown(tasks, monkeypatch
         return original(path, *args, **kwargs)
 
     monkeypatch.setattr(Path, "read_text", unreadable)
-    assert lookup([item], tasks).state == "unknown"
+    assert lookup([item], tasks).state == "CF-evidence-unavailable"
 
 
-def test_missing_ledger_is_unknown(tmp_path):
+def test_missing_ledger_is_unavailable(tmp_path):
     item = published()
-    assert lookup([item], tmp_path / "absent").state == "unknown"
+    assert lookup([item], tmp_path / "absent").state == "CF-evidence-unavailable"
 
 
 @pytest.mark.parametrize("order", ["approval-first", "rejection-first"])
@@ -922,15 +934,15 @@ def test_unreadable_completed_reply_never_approves(tasks, monkeypatch, archive):
         return original(self, *args, **kwargs)
 
     monkeypatch.setattr(Path, "read_text", unreadable)
-    assert lookup([item], tasks).state == "unknown"
+    assert lookup([item], tasks).state == "CF-evidence-unavailable"
 
 
-@pytest.mark.parametrize("corruption", ["{", "[]"])
-def test_unscopable_completed_record_is_unknown_but_known_rejection_wins(tasks, corruption):
+@pytest.mark.parametrize("corruption,expected", [("{", "CF-evidence-unavailable"), ("[]", "unknown")])
+def test_unscopable_completed_record_never_approves_but_known_rejection_wins(tasks, corruption, expected):
     item = published()
     bind(tasks, item)
     (tasks / "broken.json").write_text(corruption)
-    assert lookup([item], tasks).state == "unknown"
+    assert lookup([item], tasks).state == expected
     completed_review(tasks, "unpublished", "VERDICT: REQUEST_CHANGES")
     assert lookup([item], tasks).state == "CHANGES_REQUESTED"
 
@@ -949,7 +961,7 @@ def test_unreadable_completed_archive_never_approves(tasks, monkeypatch, failure
         return original(self, *args, **kwargs)
 
     monkeypatch.setattr(Path, "iterdir" if failure == "enumeration" else "stat", unavailable)
-    assert lookup([item], tasks).state == "unknown"
+    assert lookup([item], tasks).state == "CF-evidence-unavailable"
 
 
 def test_hot_and_archived_runs_of_same_task_both_veto(tasks):
@@ -1084,18 +1096,18 @@ def test_restore_between_ledger_listings_never_hides_a_rejection(tasks, monkeypa
     assert (tasks / "rejecting.json").is_file() and (tasks / "rejecting.result").is_file()
 
 
-def test_record_at_its_archive_staging_name_is_unknown(tasks):
+def test_record_at_its_archive_staging_name_is_unavailable(tasks):
     from scripts.orchestration import stale_task_records
 
     item = published()
     bind(tasks, item)
     path = completed_review(tasks, "rejecting", "VERDICT: BLOCKED")
     (tasks / "archive").mkdir()
-    stale_task_records._stage(path, tasks / "archive")  # The archiver's first step, caught mid-move.
-    assert lookup([item], tasks).state == "unknown"
+    stale_task_records._stage(path, tasks / "archive")  # The archiver's first step, left by a dead mover.
+    assert lookup([item], tasks).state == "CF-evidence-unavailable"
 
 
-def test_record_parked_outside_the_ledger_is_unknown(tasks):
+def test_record_parked_outside_the_ledger_is_unavailable(tasks):
     from scripts.orchestration import stale_task_records
 
     item = published()
@@ -1108,7 +1120,7 @@ def test_record_parked_outside_the_ledger_is_unknown(tasks):
     parked = stale_task_records._unstage(staged, path, archive)
     assert parked.parent == archive and ".unplaced-" in parked.name
     path.unlink()
-    assert lookup([item], tasks).state == "unknown"
+    assert lookup([item], tasks).state == "CF-evidence-unavailable"
 
 
 @pytest.mark.parametrize("record_in", ["hot", "archive"])
@@ -1205,3 +1217,260 @@ def test_completed_task_with_a_malformed_head_is_unknown(tasks):
     bind(tasks, item)
     completed_review(tasks, "exec", "VERDICT: REQUEST_CHANGES", review=False, worktree_base_sha="", head_sha=SHA)
     assert lookup([item], tasks).state == "unknown"
+
+
+# Exact-head review of 3972f8be (#10501): listing-and-compare cannot give a coherent read of records that
+# move between two directories. The task store's generation (a seqlock) decides when a read is coherent.
+UNAVAILABLE = "CF-evidence-unavailable"
+CONTROL = ".task-record-store"
+
+
+@pytest.fixture
+def isolated_locks(tmp_path, monkeypatch):
+    """Real checkout locks for the supported archive and restore, kept out of the shared lock directory."""
+    from scripts import delegate
+
+    monkeypatch.setattr(delegate, "_WORKTREE_LOCK_DIR", tmp_path / "worktree-locks")
+
+
+def archive_now(tasks):
+    from scripts.orchestration import stale_task_records
+
+    return stale_task_records.archive_terminal(tasks, min_age_days=0, apply=True)["actions"]
+
+
+def restore_now(tasks, name):
+    from scripts.orchestration import stale_task_records
+
+    return stale_task_records.restore_archived(tasks, [name], apply=True)["actions"]
+
+
+def hide_across_listings(monkeypatch, tasks, name):
+    """The reviewer's interleaving: public archive/restore calls around the listings of one read.
+
+    The record starts archived. Right after the first hot listing it is
+    restored, so the archive listing misses it; before the next hot listing it
+    is archived and right after it restored again, so the second pair of
+    listings misses it as well, with every name and directory unchanged
+    between the two pairs. Later listings are left alone.
+    """
+    original = Path.iterdir
+    archive = tasks / "archive"
+    listings: list[Path] = []
+    moves: list[dict[str, int]] = []
+    busy: list[bool] = []
+
+    def iterdir(self):
+        if busy or self not in (tasks, archive):
+            return original(self)
+        busy.append(True)
+        try:
+            listings.append(self)
+            count = len(listings)
+            if count == 3:
+                moves.append(archive_now(tasks))
+            items = list(original(self))
+            if count in (1, 3):
+                moves.append(restore_now(tasks, name))
+            return iter(items)
+        finally:
+            busy.pop()
+
+    monkeypatch.setattr(Path, "iterdir", iterdir)
+    return moves
+
+
+def test_unavailable_state_is_its_own_non_approving_state():
+    assert sweep.UNAVAILABLE == UNAVAILABLE
+    report = sweep.classify_pr(pr(), sweep.Verdict(UNAVAILABLE), queued=False, observed_at=START)
+    assert report.state == UNAVAILABLE and UNAVAILABLE in report.blockers
+
+
+@pytest.mark.parametrize("token,expected", [("REQUEST_CHANGES", "CHANGES_REQUESTED"), ("BLOCKED", "BLOCKED")])
+def test_repeated_archive_restore_during_one_read_never_hides_a_rejection(
+    tasks, monkeypatch, isolated_locks, token, expected
+):
+    item = published()
+    bind(tasks, item, archive=True)  # Archived already, so the archive run below moves only the rejection.
+    completed_review(tasks, "rejecting", f"VERDICT: {token}", archive=True)
+    assert lookup([item], tasks).state == expected
+    moves = hide_across_listings(monkeypatch, tasks, "rejecting")
+    assert lookup([item], tasks).state in {expected, UNAVAILABLE}
+    assert moves == [{"restored": 1}, {"archived": 1}, {"restored": 1}]
+    assert (tasks / "rejecting.json").is_file() and (tasks / "rejecting.result").is_file()
+
+
+def test_concurrent_archive_restore_never_approves_a_rejected_head(tasks, monkeypatch, isolated_locks):
+    """At least 300 reads while the rejection moves at least 20 times: a slow mover reads longer, never less."""
+    import threading
+    import time
+
+    from scripts.orchestration import task_record_store
+
+    monkeypatch.setattr(task_record_store, "READ_BACKOFF_S", 0.0005, raising=False)
+    item = published()
+    bind(tasks, item, archive=True)
+    completed_review(tasks, "rejecting", "VERDICT: BLOCKED", archive=True)
+    stop = threading.Event()
+    cycles: list[int] = []
+    errors: list[BaseException] = []
+
+    def mover():
+        try:
+            while not stop.is_set():
+                restore_now(tasks, "rejecting")
+                archive_now(tasks)
+                cycles.append(1)
+        except BaseException as exc:  # Surface a mover crash instead of a silent stop.
+            errors.append(exc)
+
+    thread = threading.Thread(target=mover)
+    thread.start()
+    outcomes: dict[str, int] = {}
+    deadline = time.monotonic() + 120
+    try:
+        while (sum(outcomes.values()) < 300 or len(cycles) < 20) and time.monotonic() < deadline and not errors:
+            state = lookup([item], tasks).state
+            outcomes[state] = outcomes.get(state, 0) + 1
+    finally:
+        stop.set()
+        thread.join()
+    assert not errors
+    assert sum(outcomes.values()) >= 300 and len(cycles) >= 20, (outcomes, len(cycles))
+    assert set(outcomes) <= {"BLOCKED", UNAVAILABLE}, outcomes
+    assert outcomes.get("BLOCKED", 0) > 0, outcomes
+
+
+def write_generation(tasks, value, epoch="0123456789abcdef"):
+    control = tasks / CONTROL
+    control.mkdir(exist_ok=True)
+    (control / "generation").write_text(json.dumps({"epoch": epoch, "generation": value}))
+
+
+def test_a_stable_generation_admits_the_read(tasks):
+    item = published()
+    bind(tasks, item)
+    write_generation(tasks, 6)
+    assert lookup([item], tasks).state == "APPROVED"
+
+
+@pytest.mark.parametrize(
+    "content",
+    [
+        None,
+        "",
+        "{",
+        "[]",
+        '{"epoch": "0123456789abcdef"}',
+        '{"epoch": "0123456789abcdef", "generation": -2}',
+        '{"epoch": "0123456789abcdef", "generation": "4"}',
+        '{"epoch": "0123456789abcdef", "generation": true}',
+        '{"epoch": "short", "generation": 4}',
+        '{"epoch": "0123456789abcdef", "generation": 4, "extra": 1}',
+    ],
+)
+def test_missing_or_malformed_generation_is_unavailable(tasks, content):
+    item = published()
+    bind(tasks, item)
+    control = tasks / CONTROL
+    control.mkdir()
+    if content is not None:
+        (control / "generation").write_text(content)
+    assert lookup([item], tasks).state == UNAVAILABLE
+
+
+def test_a_relocation_in_progress_is_unavailable(tasks):
+    item = published()
+    bind(tasks, item)
+    write_generation(tasks, 7)
+    assert lookup([item], tasks).state == UNAVAILABLE
+
+
+@pytest.mark.parametrize("change", ["backwards", "new-epoch", "deleted"])
+def test_non_monotonic_generation_is_unavailable(tasks, change):
+    item = published()
+    bind(tasks, item)
+    write_generation(tasks, 8)
+    assert lookup([item], tasks).state == "APPROVED"
+    if change == "backwards":
+        write_generation(tasks, 4)
+    elif change == "new-epoch":
+        write_generation(tasks, 10, epoch="fedcba9876543210")
+    else:
+        import shutil
+
+        shutil.rmtree(tasks / CONTROL)
+    assert lookup([item], tasks).state == UNAVAILABLE
+
+
+def test_reader_retry_exhaustion_is_unavailable(tasks, monkeypatch):
+    from scripts.orchestration import task_record_store
+
+    item = published()
+    bind(tasks, item)
+    reads: list[int] = []
+    original = task_record_store.read_generation
+
+    def moving(path):
+        current = original(path)
+        reads.append(1)
+        return current._replace(value=current.value + 2 * len(reads))  # A writer finishes between every pair.
+
+    monkeypatch.setattr(task_record_store, "read_generation", moving)
+    monkeypatch.setattr(task_record_store, "READ_BACKOFF_S", 0.0)
+    assert lookup([item], tasks).state == UNAVAILABLE
+    assert len(reads) == 2 * task_record_store.READ_ATTEMPTS
+
+
+@pytest.mark.parametrize("reply,expected", [(None, UNAVAILABLE), ("VERDICT: BLOCKED", "BLOCKED")])
+def test_an_incoherent_read_keeps_only_the_rejections_it_read(tasks, monkeypatch, reply, expected):
+    """A declared review without its reply, seen while every attempt overlaps a change, is a move caught halfway."""
+    from scripts.orchestration import task_record_store
+
+    item = published()
+    bind(tasks, item)
+    completed_review(tasks, "rejecting", reply)
+    original = task_record_store.read_generation
+    reads: list[int] = []
+
+    def moving(path):
+        reads.append(1)
+        return original(path)._replace(value=2 * len(reads))
+
+    monkeypatch.setattr(task_record_store, "read_generation", moving)
+    monkeypatch.setattr(task_record_store, "READ_BACKOFF_S", 0.0)
+    ledger = sweep.ReviewLedger(tasks, REPO)
+    assert ledger.snapshot().error is not None
+    assert lookup([item], tasks).state == expected
+
+
+def test_a_crash_inside_a_store_change_fails_reads_closed_until_the_next_writer_repairs_it(
+    tasks, isolated_locks, tmp_path
+):
+    import subprocess
+    import sys
+
+    item = published()
+    bind(tasks, item)
+    completed_review(tasks, "rejecting", "VERDICT: BLOCKED", archive=True)
+    root = Path(__file__).resolve().parents[2]
+    child = (
+        "import os, sys\n"
+        "from pathlib import Path\n"
+        "from scripts.orchestration import task_record_store as store\n"
+        "with store.store_change(Path(sys.argv[1])):\n"
+        "    os._exit(17)  # Killed mid-change: the generation stays odd, the kernel drops the lock.\n"
+    )
+    result = subprocess.run(
+        [sys.executable, "-c", child, str(tasks)], cwd=root, capture_output=True, text=True, timeout=60
+    )
+    assert result.returncode == 17, result.stderr
+    from scripts.orchestration import task_record_store
+
+    assert task_record_store.read_generation(tasks).value % 2 == 1
+    assert lookup([item], tasks).state == UNAVAILABLE
+    assert lookup([item], tasks).state == UNAVAILABLE  # Still closed: readers never repair.
+    # The next supported writer repairs the abandoned change under the lock, and its own move proceeds.
+    assert restore_now(tasks, "rejecting") == {"restored": 1}
+    assert task_record_store.read_generation(tasks).value % 2 == 0
+    assert lookup([item], tasks).state == "BLOCKED"
