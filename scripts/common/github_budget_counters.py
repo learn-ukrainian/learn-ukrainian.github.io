@@ -34,6 +34,8 @@ import time
 from dataclasses import dataclass
 from pathlib import Path
 
+from scripts.lib.readonly_sqlite import open_readonly
+
 LANDING_RESERVE = 500
 RETENTION_SECONDS = 7 * 24 * 3600
 HOUR = 3600
@@ -301,6 +303,8 @@ def admit(db, *, scope, now, resource, caller, landing, soft_caps=None) -> Refus
 
 def top_callers(db, hour, resource, limit=10) -> list[dict]:
     """Callers of one pool in one hour bucket, busiest first (ties by name); counts only."""
+    if db is None:
+        return []
     rows = db.execute(
         "SELECT caller,count FROM caller_counter WHERE hour=? AND resource=? ORDER BY count DESC,caller LIMIT ?",
         (hour, resource, limit),
@@ -311,6 +315,8 @@ def top_callers(db, hour, resource, limit=10) -> list[dict]:
 def remaining_budget(db, now) -> dict:
     """Lowest live remaining per pool across credential scopes; only counts and a reset time."""
     out = {}
+    if db is None:
+        return out
     for resource, remaining, reset in db.execute(
         "SELECT resource,min(remaining),max(reset) FROM budget WHERE reset>? AND resource IN (?,?,?) GROUP BY resource",
         (now, *RESOURCES),
@@ -320,7 +326,10 @@ def remaining_budget(db, now) -> dict:
 
 
 def build_report(db, now, *, limit=10) -> dict:
-    """Top callers for the current and previous hour, per pool, with the remaining budget."""
+    """Top callers for the current and previous hour, per pool, with the remaining budget.
+
+    ``db=None`` means there is no database to read: every pool is empty.
+    """
     current = hour_start(now)
     windows = {}
     for label, hour in (("current", current), ("previous", current - HOUR)):
@@ -335,36 +344,29 @@ def build_report(db, now, *, limit=10) -> dict:
     return {"schema": "github-budget-callers.v1", "generated_at": int(now), "windows": windows, "budget": budget}
 
 
-def open_readonly(cache_dir):
+def _open_cache(cache_dir):
     """Read-only handle on the shared client database, or ``None`` when there is none."""
     if cache_dir is None:
         return None
     path = Path(cache_dir) / "cache.sqlite3"
     if not path.is_file():
         return None
-    return sqlite3.connect(f"file:{path}?mode=ro", uri=True, timeout=5)
+    return open_readonly(path)
 
 
 def report_for(cache_dir, now=None, *, limit=10) -> dict:
     """Report from a cache directory; a missing database or table is an empty report."""
     now = time.time() if now is None else now
-    db = open_readonly(cache_dir)
+    db = _open_cache(cache_dir)
     if db is None:
-        return build_report(_empty(), now, limit=limit)
+        return build_report(None, now, limit=limit)
     try:
         try:
             return build_report(db, now, limit=limit)
         except sqlite3.OperationalError:
-            return build_report(_empty(), now, limit=limit)
+            return build_report(None, now, limit=limit)
     finally:
         db.close()
-
-
-def _empty():
-    db = sqlite3.connect(":memory:")
-    db.execute(SCHEMA)
-    db.execute("CREATE TABLE budget (scope TEXT, resource TEXT, remaining INTEGER, reset INTEGER)")
-    return db
 
 
 def _render(report) -> str:
