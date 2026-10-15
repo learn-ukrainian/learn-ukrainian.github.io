@@ -217,11 +217,15 @@ def test_prune_keeps_newest_incidents_and_drops_dead_pid_logs(tmp_path: Path) ->
     (proc_root / "77").mkdir(parents=True)
     (dump_dir / "faulthandler-77.log").write_text("", encoding="utf-8")
     (dump_dir / "faulthandler-78.log").write_text("", encoding="utf-8")
+    for stamp in ("20261015T010000Z", "20261015T020000Z", "20261015T030000Z"):
+        (dump_dir / f"slow-call-{stamp}-pid77.txt").write_text("", encoding="utf-8")
     wd.prune_dump_dir(dump_dir, keep=2, proc_root=proc_root)
     assert sorted(path.name for path in dump_dir.iterdir()) == [
         "faulthandler-77.log",
         "incident-20261015T020000Z-pid1",
         "incident-20261015T030000Z-pid1",
+        "slow-call-20261015T020000Z-pid77.txt",
+        "slow-call-20261015T030000Z-pid77.txt",
     ]
 
 
