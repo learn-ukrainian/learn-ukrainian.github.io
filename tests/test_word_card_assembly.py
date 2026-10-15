@@ -13,6 +13,7 @@ import json
 import shutil
 import sqlite3
 import subprocess
+import tempfile
 from pathlib import Path
 
 import pytest
@@ -939,11 +940,23 @@ def test_cli_rehearse_and_build_writes_are_guarded(monkeypatch, tmp_path):
     assert tmp_path / "build" / "cards" / "wc_x.json" in calls[0]
 
 
-def test_this_repository_refuses_tracked_destinations(tmp_path):
+@pytest.fixture
+def host_scratch():
+    """Host scratch outside every checkout of this repository. pytest's tmp_path may live inside the repository's
+    git directory (the pre-push gate puts its basetemp there), which the guard rightly refuses."""
+    base = Path(tempfile.gettempdir()).resolve()
+    if base.is_relative_to(containment.resolve_main_root(Path(wa.__file__))):
+        pytest.skip("the temporary directory is inside the repository; no host scratch is available")
+    with tempfile.TemporaryDirectory(prefix="word-card-host-") as scratch:
+        yield Path(scratch)
+
+
+def test_this_repository_refuses_tracked_destinations(host_scratch):
     root = Path(wa.__file__).resolve().parents[2]
     with pytest.raises(wa.AssemblyError):
         wa.require_host_only([root / "docs" / "atlas" / "word-cards" / "cards-output" / "ledger.json"])
-    wa.require_host_only([tmp_path / "cards" / "x.json"])  # outside the repository: fine
+    wa.require_host_only([host_scratch / "cards" / "x.json"])  # outside the repository: fine
+    wa.require_host_only([root / "batch_state" / "reports" / "probe" / "cards" / "x.json"])  # ignored here: fine
 
 
 def host_stores_available():
@@ -955,7 +968,7 @@ def host_stores_available():
 
 
 @pytest.mark.skipif(not host_stores_available(), reason="held sources are host-only")
-def test_host_pilot_builds_and_verifies_end_to_end(tmp_path, capsys, monkeypatch):
+def test_host_pilot_builds_and_verifies_end_to_end(host_scratch, capsys, monkeypatch):
     """Host-only product proof through the real CLI: the frozen pilot assembles over the canonical read-only
     stores, every locator resolves, derived forms authenticate, relation units are conserved, rebuild is identical."""
     root = Path(wa.__file__).resolve().parents[2]
@@ -964,7 +977,7 @@ def test_host_pilot_builds_and_verifies_end_to_end(tmp_path, capsys, monkeypatch
     stores = [arg for name in ("sources", "vesum", "atlas") for arg in (f"--{name}-db", str(wa.store_path(name, None)))]
     inputs = ["--manifest", "registry/atlas/pilot/pilot-v1.json", "--registry", "registry/atlas/identity/registry.json",
               "--register", "docs/sources/permissions-register.yaml", *stores]
-    args = [*inputs, "--output", str(tmp_path / "pilot")]
+    args = [*inputs, "--output", str(host_scratch / "pilot")]
     assert wa.main(["build", *args]) == 0
     built = json.loads(capsys.readouterr().out)
     assert built["cards"] == 150 and built["relation_units"]["total"] == 158
@@ -979,4 +992,4 @@ def test_host_pilot_builds_and_verifies_end_to_end(tmp_path, capsys, monkeypatch
     refused = root / "docs" / "atlas" / "word-cards" / "cards-output"
     assert wa.main(["build", *inputs, "--output", str(refused)]) == 1
     assert not refused.exists()
-    shutil.rmtree(tmp_path / "pilot")
+    shutil.rmtree(host_scratch / "pilot")
