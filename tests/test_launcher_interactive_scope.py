@@ -428,7 +428,8 @@ def test_refusal_only_wrapper_refuses_before_any_manager_contact(tmp_path: Path,
     env = {
         key: value
         for key, value in os.environ.items()
-        if not key.startswith(("LAUNCHER_", "GIT_", "SESSION_", "LC_")) and key != "LU_RULES_SEAT"
+        if not key.startswith(("LAUNCHER_", "GIT_", "SESSION_", "LC_", "LU_DRIVER_"))
+        and key not in {"LU_RULES_SEAT", "PYTEST_XDIST_AUTO_NUM_WORKERS"}
     }
     path = f"{bindir}:{guard}:{os.environ['PATH']}"
     env.update(

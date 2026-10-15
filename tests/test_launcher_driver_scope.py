@@ -189,11 +189,23 @@ launcher_adapter_exec() {
     return launcher, env
 
 
+_INHERITED_HOLDS = ("LU_DRIVER_", "PYTEST_XDIST_AUTO_NUM_WORKERS")
+
+
+def _inherited_environ() -> dict[str, str]:
+    """The process environment minus holds the pre-push gate or a driver scope exports.
+
+    The gate sets PYTEST_XDIST_AUTO_NUM_WORKERS and a driver scope sets the
+    LU_DRIVER_* limits; each test supplies the ones it asserts on explicitly.
+    """
+    return {k: v for k, v in os.environ.items() if not k.startswith(_INHERITED_HOLDS)}
+
+
 def _run(launcher: Path, env: dict[str, str], **extra: str) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
         ["bash", str(launcher)],
         cwd=launcher.parent,
-        env={**os.environ, **env, **extra},
+        env={**_inherited_environ(), **env, **extra},
         input="stdin survives\n",
         capture_output=True,
         text=True,
@@ -289,7 +301,7 @@ def test_closed_stderr_preserves_exit_and_journal(tmp_path: Path, rc: int) -> No
     with subprocess.Popen(
         ["bash", str(launcher)],
         cwd=launcher.parent,
-        env={**os.environ, **env, "TEST_RC": str(rc)},
+        env={**_inherited_environ(), **env, "TEST_RC": str(rc)},
         stdin=subprocess.PIPE,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
@@ -526,7 +538,7 @@ def _direct_entry(
     )
     result = subprocess.run(
         ["bash", str(entry)],
-        env={**os.environ, **env},
+        env={**_inherited_environ(), **env},
         capture_output=True,
         text=True,
         timeout=15,
@@ -802,16 +814,7 @@ def test_driver_scope_caps_pytest_auto_workers(
     extra = {} if inherited is None else {"PYTEST_XDIST_AUTO_NUM_WORKERS": inherited}
     if cap is not None:
         extra["LU_DRIVER_PYTEST_MAX_WORKERS"] = cap
-    base = {k: v for k, v in os.environ.items() if k != "PYTEST_XDIST_AUTO_NUM_WORKERS"}
-    result = subprocess.run(
-        ["bash", str(launcher)],
-        cwd=launcher.parent,
-        env={**base, **env, **extra},
-        input="stdin survives\n",
-        capture_output=True,
-        text=True,
-        timeout=15,
-    )
+    result = _run(launcher, env, **extra)
     assert result.returncode == 0, result.stderr
     assert f"XDIST_AUTO:{expected}" in result.stdout
 
