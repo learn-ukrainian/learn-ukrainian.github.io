@@ -24,6 +24,12 @@ nothing for it. The check matches lines with a regular expression instead.
 - `<task-id>` is letters, digits, `.`, `_` and `-`.
 - Exactly one space after the colon, no trailing whitespace. A line that starts with
   `X-Agent:` and does not match is **malformed**, even when another line is valid.
+- Only a line of the **plain message body** counts. A line inside a backtick or tilde
+  fenced block (an unclosed fence runs to the end of the message), an indented code
+  block, a quoted block (`>`, including its lazy continuation up to the next blank
+  line) or an HTML comment (`<!-- ... -->`, unclosed runs to the end) is an example,
+  never a declaration: it satisfies nothing and is not required of the landed message.
+  A real line beside a fenced example counts; the example does not.
 
 Source commits keep writing the trailer as today (`X-Agent: <agent>/<task-id>`).
 The repository setting below is what carries those lines into the landed message.
@@ -58,19 +64,33 @@ readback; agent tokens do not change it.
    - the terminal `(#N)` of the subject names the PR; earlier `(#issue)` references are
      ignored; none fails;
    - the landed message has at least one well-formed line and no malformed one;
-   - `git fetch origin refs/pull/N/head` freezes the PR's source head; the non-merge
-     commits in `<squash parent>..<source head>` are the PR's own commits;
+   - `git fetch origin refs/pull/N/head` freezes the PR's source head. It must be
+     **verifiably the squash's own source**: `git merge-tree --write-tree <squash
+     parent> <source head>` (a three-way merge from their merge base, as a squash does)
+     must succeed without conflict and yield exactly the squash commit's tree. Unrelated
+     histories, a conflict or any tree difference is `UNVERIFIABLE_SOURCE`; the PR
+     number alone never certifies a history. The check writes the merged tree objects
+     into the CI checkout's object database only;
+   - the non-merge commits in `<squash parent>..<source head>` are the PR's own commits;
    - every distinct `X-Agent` value found on those commits appears in the landed message;
    - a source commit with no line fails unless it is a verified app bot's (below).
 
 A requeue or a new head produces a new chain and is checked afresh; a squash commit
-built from an older head fails when the PR head has since gained another agent's value.
+built from an older head fails (`UNVERIFIABLE_SOURCE`, its tree no longer matches the
+moved head) once the PR head has gained another commit. The check is exact: if GitHub's
+squash merge ever differs from `git merge-tree` for a legitimate PR (for example a
+different rename heuristic), the finding is a false failure that stays a warning while
+`ATTRIBUTION_ENFORCE` is not `1`; investigate before enforcing.
 
 ### `--pr BASE HEAD` (early feedback)
 
-Every non-merge commit in `BASE..HEAD` carries a well-formed line or is a verified app
-bot's. This catches the problem at review time, but it cannot see the setting; only the
-merge-group check proves what actually lands.
+`BASE` and `HEAD` must share history (`git merge-base BASE HEAD` succeeds); otherwise
+`BASE..HEAD` is not the pull request's own range and the run fails with
+`UNVERIFIABLE_SOURCE`. A PR that diverged from a newer base still passes: the range is
+the PR's own commits. Every non-merge commit in `BASE..HEAD` (an empty range fails;
+merge commits are skipped, they carry no authored change) carries a well-formed line or
+is a verified app bot's. This catches the problem at review time, but it cannot see the
+setting; only the merge-group check proves what actually lands.
 
 ### Bot exemption
 
@@ -85,7 +105,8 @@ that mixes bot and agent commits keeps the agent attribution requirement.
 ### Violation codes
 
 Output is `::error title=agent-attribution::<CODE> pr=#N commit=<12 hex> <detail>`.
-A malformed value is never echoed.
+Details carry counts, PR numbers and short SHAs only. No message content is echoed: not
+a malformed line, and not a task id (`omits 1 of 2 PR value(s)` names no value).
 
 | Code | Meaning |
 | --- | --- |
@@ -95,6 +116,7 @@ A malformed value is never echoed.
 | `MISSING_PR_REFERENCE` | Subject does not end in `(#N)`. |
 | `FETCH_FAILED` | `refs/pull/N/head` could not be fetched or read. |
 | `EMPTY_SOURCE` | The PR head adds no non-merge commit to the squash parent. |
+| `UNVERIFIABLE_SOURCE` | The fetched PR head is not verifiably the squash's source (merge-group), or `--pr` BASE and HEAD share no history. |
 | `MALFORMED_ATTRIBUTION` | An `X-Agent:` line does not match the grammar. |
 | `MISSING_ATTRIBUTION` | No line and no verified app-bot authorship. |
 | `SOURCE_UNATTRIBUTED` | A PR commit has no line and no verified app-bot authorship. |
@@ -205,7 +227,9 @@ Also inspect source messages and PR bodies for `Closes #N` text: with
   more PRs must be captured, including the `base_sha` GitHub delivers for it, before
   #10736 is called complete. The tests build the same shape (a first-parent chain of
   squash commits with `(#N)` subjects) in temporary repositories, not from a live
-  queue.
+  queue. The same capture must show the squash-tree check (`git merge-tree`) agreeing
+  with GitHub's squash on a live queue commit; it is proven here only against Git's own
+  squash merges.
 - **Bot exemption on a live queue.** The exemption is exercised against REST payloads
   shaped like GitHub's, not a live Dependabot landing.
 - **Declaration, not identity.** An `X-Agent` line records who claims authorship; it is

@@ -5,17 +5,24 @@ in the landed message. GitHub appends its own ``Co-authored-by`` paragraph to a 
 message, so the attribution is never the final paragraph and ``%(trailers)`` parsing
 cannot see it; a line match can.
 
+Only a line of the plain message body counts. A line inside a fenced code block
+(backtick or tilde), an indented code block, a quoted block (``>``, including its lazy
+continuation) or an HTML comment is an example, never a declaration.
+
 Modes
 =====
 ``--merge-group BASE HEAD``
     ``BASE``/``HEAD`` are ``merge_group.base_sha``/``head_sha``. Each first-parent commit
     in ``BASE..HEAD`` is one pull request's squash commit with a terminal ``(#N)`` in its
-    subject. For EACH commit this requires (a) at least one well-formed line and (b) that
-    every distinct value found over the PR's own commits (fetched from
-    ``refs/pull/N/head``) also appears in the landed message, so one PR's attribution
-    cannot mask another's omission and a requeue with new heads is checked afresh.
+    subject. For EACH commit this requires (a) that ``refs/pull/N/head`` is verifiably the
+    squash's own source: merging that head into the squash's first parent with
+    ``git merge-tree --write-tree`` must reproduce the squash's tree exactly; (b) at least
+    one well-formed line; and (c) that every distinct value found over the PR's own
+    commits also appears in the landed message, so one PR's attribution cannot mask
+    another's omission and a requeue with new heads is checked afresh.
 ``--pr BASE HEAD``
-    Every non-merge commit in ``BASE..HEAD`` of a pull request carries a well-formed line.
+    ``BASE`` and ``HEAD`` must share history (``git merge-base``); every non-merge commit
+    in ``BASE..HEAD`` of the pull request then carries a well-formed line.
 
 Bot exemption
 =============
@@ -28,9 +35,10 @@ agent attribution requirement.
 Fail closed
 ===========
 A git or fetch error, a missing ``(#N)``, an empty chain, a non-ancestor base, a
-non-squash commit shape, an unverifiable exemption or a malformed value is a typed
-violation. Messages name codes, PR numbers and short SHAs; a malformed value is never
-echoed.
+non-squash commit shape, a source history that cannot be tied to the squash
+(``UNVERIFIABLE_SOURCE``), an unverifiable exemption or a malformed value is a typed
+violation. Messages carry codes, counts, PR numbers and short SHAs only; no message
+content (task ids included) is ever echoed.
 
 Report-only switch
 ==================
@@ -71,8 +79,10 @@ GIT_TIMEOUT_SECONDS = 120
 API_TIMEOUT_SECONDS = 30
 _GITHUB_HTTPS = "https://github.com/"
 
-# Any line that claims to be attribution; the grammar below decides whether it is one.
-_CANDIDATE_LINE = re.compile(r"^X-Agent:.*$", re.MULTILINE)
+# Any body line that claims to be attribution; the grammar below decides whether it is one.
+_CANDIDATE_PREFIX = "X-Agent:"
+_FENCE_OPEN = re.compile(r"^ {0,3}(?P<fence>`{3,}|~{3,})(?P<info>.*)$")
+_QUOTE_LINE = re.compile(r"^ {0,3}>")
 _WELL_FORMED = re.compile(r"^X-Agent: (?P<value>[a-z][a-z0-9]*(?:-[a-z0-9]+)*/[A-Za-z0-9._-]+)$")
 # The squash headline ends in the PR number; earlier "(#N)" references are issues.
 _PR_SUFFIX = re.compile(r"\(#(?P<number>[1-9][0-9]*)\)$")
@@ -119,12 +129,73 @@ class Report:
     violations: list[Violation] = field(default_factory=list)
 
 
+def _closes_fence(line: str, fence: str) -> bool:
+    stripped = line.lstrip(" ")
+    if len(line) - len(stripped) > 3 or not stripped.startswith(fence):
+        return False
+    return stripped.rstrip(" \t").strip(fence[0]) == ""
+
+
+def _body_lines(message: str) -> list[str]:
+    """Lines of ``message`` that sit in the plain body, outside every example context.
+
+    A line is dropped when it is inside a fenced code block (an unclosed fence runs to the
+    end), an HTML comment (an unclosed comment runs to the end), a quoted block or the lazy
+    continuation of one (until the next blank line), or is an indented code line. For a
+    kept line only the text outside ``<!-- -->`` is returned.
+    """
+    kept: list[str] = []
+    fence: str | None = None
+    in_comment = False
+    in_quote = False
+    for line in message.split("\n"):
+        if fence is not None:
+            if _closes_fence(line, fence):
+                fence = None
+            continue
+        if in_comment:
+            # What follows the comment's end shares the line with comment text: never column 0.
+            in_comment = "-->" not in line
+            continue
+        if not line.strip():
+            in_quote = False
+            kept.append(line)
+            continue
+        if in_quote or _QUOTE_LINE.match(line):
+            in_quote = True
+            continue
+        if line.startswith(("    ", "\t")):
+            continue
+        opening = _FENCE_OPEN.match(line)
+        if opening and not (opening.group("fence")[0] == "`" and "`" in opening.group("info")):
+            fence = opening.group("fence")
+            continue
+        text = ""
+        while True:
+            start = line.find("<!--")
+            if start == -1:
+                text += line
+                break
+            text += line[:start]
+            end = line.find("-->", start + 4)
+            if end == -1:
+                in_comment = True
+                break
+            line = line[end + 3 :]
+        kept.append(text)
+    return kept
+
+
 def extract_attribution(message: str) -> Attribution:
-    """Well-formed ``X-Agent`` values (first-seen order, distinct) and the malformed-line count."""
+    """Well-formed ``X-Agent`` values (first-seen order, distinct) and the malformed-line count.
+
+    Only plain-body lines count; fenced, indented, quoted and commented lines are examples.
+    """
     values: list[str] = []
     malformed = 0
-    for match in _CANDIDATE_LINE.finditer(message):
-        line = match.group(0)
+    for line in _body_lines(message):
+        if not line.startswith(_CANDIDATE_PREFIX):
+            continue
         strict = _WELL_FORMED.fullmatch(line)
         if strict is None:
             malformed += 1
@@ -185,8 +256,8 @@ def _bot_verified(get: GitHubGet | None, repository: str | None, sha: str) -> bo
     return verified_app_bot_login(commit, sha, repository) is not None
 
 
-def _source_commits(remote: str, pr: int, parent: str) -> tuple[str, ...]:
-    """Non-merge commits of PR ``pr`` that its squash commit's first parent lacks."""
+def _fetch_pr_head(remote: str, pr: int) -> str:
+    """Fetch ``refs/pull/N/head`` and return the commit it names."""
     env = None
     token = os.environ.get("GITHUB_TOKEN")
     if token:
@@ -204,9 +275,27 @@ def _source_commits(remote: str, pr: int, parent: str) -> tuple[str, ...]:
                 "GIT_CONFIG_VALUE_0": f"AUTHORIZATION: basic {basic}",
             }
     _git("fetch", "--no-tags", "--quiet", remote, f"refs/pull/{pr}/head", env=env)
-    head = _resolve_commit("FETCH_HEAD")
-    listing = _git("rev-list", "--no-merges", f"{parent}..{head}")
-    return tuple(listing.split())
+    return _resolve_commit("FETCH_HEAD")
+
+
+def _range_commits(parent: str, head: str) -> tuple[str, ...]:
+    """Non-merge commits reachable from ``head`` but not from ``parent``."""
+    return tuple(_git("rev-list", "--no-merges", f"{parent}..{head}").split())
+
+
+def _source_is_squash_of(squash: str, parent: str, head: str) -> bool:
+    """True only when merging ``head`` into ``parent`` reproduces the tree of ``squash``.
+
+    ``git merge-tree --write-tree`` performs the same three-way merge a squash does, from
+    the merge base of ``parent`` and ``head``. Unrelated histories (no merge base), a
+    conflict or any difference in the resulting tree make the fetched head unverifiable as
+    the squash's source; the PR number alone never establishes that relation.
+    """
+    try:
+        merged = _git("merge-tree", "--write-tree", parent, head).split("\n", 1)[0].strip()
+        return _SHA.fullmatch(merged) is not None and merged == _git("rev-parse", f"{squash}^{{tree}}").strip()
+    except GitFailure:
+        return False
 
 
 def _bad_attribution(attribution: Attribution, sha: str, pr: int | None) -> Violation | None:
@@ -225,7 +314,19 @@ def check_pr(base: str, head: str, *, github_get: GitHubGet | None = None, repos
     report = Report("pr")
     try:
         base_sha, head_sha = _resolve_commit(base), _resolve_commit(head)
-        shas = _git("rev-list", "--no-merges", f"{base_sha}..{head_sha}").split()
+    except GitFailure as exc:
+        report.violations.append(Violation("GIT_ERROR", str(exc)))
+        return report
+    try:
+        _git("merge-base", base_sha, head_sha)
+    except GitFailure:
+        # No common history: BASE..HEAD would be the whole of an unrelated history.
+        report.violations.append(
+            Violation("UNVERIFIABLE_SOURCE", "base and head share no history; range is not the pull request's")
+        )
+        return report
+    try:
+        shas = _range_commits(base_sha, head_sha)
     except GitFailure as exc:
         report.violations.append(Violation("GIT_ERROR", str(exc)))
         return report
@@ -308,9 +409,22 @@ def _check_squash(
     if bad is not None:
         return [bad]
     try:
-        sources = _source_commits(remote, pr, parent)
+        pr_head = _fetch_pr_head(remote, pr)
     except GitFailure as exc:
         return [Violation("FETCH_FAILED", f"cannot read refs/pull/{pr}/head: {exc}", sha, pr)]
+    if not _source_is_squash_of(sha, parent, pr_head):
+        return [
+            Violation(
+                "UNVERIFIABLE_SOURCE",
+                f"refs/pull/{pr}/head merged into the squash parent does not reproduce the squash tree",
+                sha,
+                pr,
+            )
+        ]
+    try:
+        sources = _range_commits(parent, pr_head)
+    except GitFailure as exc:
+        return [Violation("FETCH_FAILED", f"cannot list refs/pull/{pr}/head: {exc}", sha, pr)]
     if not sources:
         return [Violation("EMPTY_SOURCE", f"refs/pull/{pr}/head adds no non-merge commit", sha, pr)]
 
@@ -355,7 +469,7 @@ def _check_squash(
         problems.append(
             Violation(
                 "INCOMPLETE_ATTRIBUTION",
-                f"landed message omits {len(missing)} of {len(expected)} PR value(s): " + ", ".join(missing),
+                f"landed message omits {len(missing)} of {len(expected)} PR value(s)",
                 sha,
                 pr,
             )

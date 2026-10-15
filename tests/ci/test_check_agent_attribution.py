@@ -235,7 +235,8 @@ def test_two_commit_pr_needs_both_values(queue: Queue, capsys: pytest.CaptureFix
 
     assert code == 1
     assert "INCOMPLETE_ATTRIBUTION pr=#41" in out
-    assert "omits 1 of 2 PR value(s): claude/impl-41-b" in out
+    assert "omits 1 of 2 PR value(s)" in out
+    assert "claude/impl-41-b" not in out  # counts only; message content is never echoed
 
 
 def test_two_commit_pr_with_both_values_passes(queue: Queue, capsys: pytest.CaptureFixture[str]) -> None:
@@ -264,11 +265,12 @@ def test_requeue_with_a_new_head_is_checked_afresh(queue: Queue, capsys: pytest.
     queue.land(51, _landed(51, "feature", "codex/impl-51"))
     assert _run_group(queue, capsys)[0] == 0
 
-    # A review-fix push by another agent moves refs/pull/51/head; the old squash is now stale.
+    # A review-fix push by another agent moves refs/pull/51/head; the old squash is now stale:
+    # the moved head is no longer the squash's source, so it cannot certify it.
     queue.push_commit(51, "review fix\n\nX-Agent: claude/impl-51-fix\n")
     code, out = _run_group(queue, capsys)
     assert code == 1
-    assert "INCOMPLETE_ATTRIBUTION pr=#51" in out
+    assert "UNVERIFIABLE_SOURCE pr=#51" in out
 
     # The requeue builds a new squash commit that carries both values.
     queue.tip = queue.base
@@ -595,7 +597,7 @@ def test_pull_ref_fetch_sends_the_token_through_the_environment_only(
     monkeypatch.setenv("GITHUB_TOKEN", "ghs_sentinel")
     monkeypatch.setattr(check, "_git", fake_git)
 
-    check._source_commits("origin", 7, "b" * 40)
+    check._fetch_pr_head("origin", 7)
 
     (fetch,) = [(args, env) for args, env in seen if args[0] == "fetch"]
     assert fetch[0] == ("fetch", "--no-tags", "--quiet", "origin", "refs/pull/7/head")
@@ -610,7 +612,8 @@ def test_a_non_github_remote_gets_no_credentials(queue: Queue, monkeypatch: pyte
     queue.open_pr(501, ["fix\n\nX-Agent: codex/impl-501\n"])
     parent = queue.base
 
-    sources = check._source_commits("origin", 501, parent)
+    head = check._fetch_pr_head("origin", 501)
+    sources = check._range_commits(parent, head)
 
     assert len(sources) == 1
 
@@ -692,3 +695,266 @@ def test_production_getter_failure_is_not_proof(monkeypatch: pytest.MonkeyPatch,
     with pytest.raises(RuntimeError):
         get("repos/owner/repo/commits/abc")
     assert check._bot_verified(get, REPOSITORY, "a" * 40) is False
+
+
+# --- attribution contexts: examples are not declarations --------------------------------------
+
+VALUE = "codex/heldout-12"
+_EXAMPLE = f"X-Agent: {VALUE}"
+_WRAPPED = {
+    "backtick-fence": f"```text\n{_EXAMPLE}\n```",
+    "long-backtick-fence": f"````\n{_EXAMPLE}\n````",
+    "tilde-fence": f"~~~\n{_EXAMPLE}\n~~~",
+    "indented-fence": f"  ```\n{_EXAMPLE}\n  ```",
+    "unclosed-fence": f"```\n{_EXAMPLE}",
+    "html-comment": f"<!--\n{_EXAMPLE}\n-->",
+    "one-line-comment": f"<!-- {_EXAMPLE} -->",
+    "unclosed-comment": f"<!--\n{_EXAMPLE}",
+    "comment-then-fence-marker": f"<!-- ``` -->\n<!--\n{_EXAMPLE}\n-->",
+    "indented-code": f"    {_EXAMPLE}",
+    "tab-code": f"\t{_EXAMPLE}",
+    "blockquote": f"> {_EXAMPLE}",
+    "lazy-quote-continuation": f"> quoted\n{_EXAMPLE}",
+}
+
+
+@pytest.mark.parametrize("name", sorted(_WRAPPED))
+def test_wrapped_example_is_not_an_attribution(name: str) -> None:
+    message = f"subject (#12)\n\nExample:\n{_WRAPPED[name]}\n"
+
+    assert check.extract_attribution(message) == check.Attribution((), 0)
+
+
+@pytest.mark.parametrize("name", sorted(_WRAPPED))
+def test_wrapped_example_does_not_satisfy_the_merge_group(
+    queue: Queue, capsys: pytest.CaptureFixture[str], name: str
+) -> None:
+    queue.open_pr(12, [f"source\n\n{_EXAMPLE}\n"])
+    queue.land(12, f"land (#12)\n\nExample:\n{_WRAPPED[name]}\n")
+
+    code, out = _run_group(queue, capsys)
+
+    assert code == 1
+    assert "MISSING_ATTRIBUTION pr=#12" in out
+
+
+@pytest.mark.parametrize("name", sorted(_WRAPPED))
+def test_wrapped_example_does_not_satisfy_pr_mode(queue: Queue, capsys: pytest.CaptureFixture[str], name: str) -> None:
+    (sha,) = queue.open_pr(12, [f"source\n\nExample:\n{_WRAPPED[name]}\n"])
+
+    code, out = _run_pr(queue, capsys, sha)
+
+    assert code == 1
+    assert f"MISSING_ATTRIBUTION commit={sha[:12]}" in out
+
+
+def test_malformed_line_inside_a_fence_is_not_counted() -> None:
+    message = "s\n\n```\nX-Agent: oops\n```\n\nX-Agent: codex/a\n"
+
+    assert check.extract_attribution(message) == check.Attribution(("codex/a",), 0)
+
+
+def test_real_line_beside_a_fenced_example_counts_only_the_real_line() -> None:
+    message = "s\n\n```\nX-Agent: claude/example\n```\n\nX-Agent: codex/real\n"
+
+    assert check.extract_attribution(message) == check.Attribution(("codex/real",), 0)
+
+
+def test_example_value_in_a_source_is_not_required_in_the_landed_message(
+    queue: Queue, capsys: pytest.CaptureFixture[str]
+) -> None:
+    queue.open_pr(13, ["fix\n\n```\nX-Agent: claude/example\n```\n\nX-Agent: codex/real-13\n"])
+    queue.land(13, _landed(13, "fix", "codex/real-13"))
+
+    code, out = _run_group(queue, capsys)
+
+    assert code == 0, out
+
+
+def test_fenced_value_in_the_landed_message_does_not_cover_a_real_source_value(
+    queue: Queue, capsys: pytest.CaptureFixture[str]
+) -> None:
+    queue.open_pr(14, ["fix\n\nX-Agent: codex/real-14\n", "more\n\nX-Agent: claude/real-14\n"])
+    queue.land(14, "fix (#14)\n\nX-Agent: codex/real-14\n\n```\nX-Agent: claude/real-14\n```\n")
+
+    code, out = _run_group(queue, capsys)
+
+    assert code == 1
+    assert "INCOMPLETE_ATTRIBUTION pr=#14" in out
+    assert "omits 1 of 2 PR value(s)" in out
+
+
+def test_attribution_after_a_closed_fence_and_comment_counts() -> None:
+    message = "s\n\n~~~\ncode\n~~~\n\n<!-- note -->\n\nX-Agent: codex/a\n"
+
+    assert check.extract_attribution(message) == check.Attribution(("codex/a",), 0)
+
+
+# --- source relation: the fetched PR head must be the squash's own source ---------------------
+
+
+class Plumbing:
+    """Commits built with ``commit-tree`` so trees, parents and refs are exactly what a case states."""
+
+    def __init__(self, path: Path) -> None:
+        self.path = path
+        path.mkdir()
+        _git(path, "init", "-q", "-b", "main")
+        _git(path, "config", "user.name", "Fixture")
+        _git(path, "config", "user.email", "fixture@local.invalid")
+        _git(path, "remote", "add", "origin", str(path))
+        self.empty = _git(path, "mktree", stdin="")
+        self.base = self.commit("base\n\nX-Agent: codex/base\n")
+
+    def blob_tree(self, name: str, text: str) -> str:
+        blob = _git(self.path, "hash-object", "-w", "--stdin", stdin=text)
+        return _git(self.path, "mktree", stdin=f"100644 blob {blob}\t{name}\n")
+
+    def commit(self, message: str, parent: str | None = None, tree: str | None = None) -> str:
+        args = ["commit-tree", tree or self.empty]
+        if parent:
+            args += ["-p", parent]
+        return _git(self.path, *args, stdin=message)
+
+    def source(self, number: int, message: str, parent: str | None = None) -> tuple[str, str]:
+        tree = self.blob_tree(f"file-{number}", f"payload-{number}\n")
+        sha = self.commit(message, parent or self.base, tree)
+        _git(self.path, "update-ref", f"refs/pull/{number}/head", sha)
+        return sha, tree
+
+    def union(self, *trees: str) -> str:
+        entries = sorted({line for tree in trees for line in _git(self.path, "ls-tree", tree).splitlines()})
+        return _git(self.path, "mktree", stdin="\n".join(entries) + "\n")
+
+
+@pytest.fixture
+def plumbing(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Plumbing:
+    monkeypatch.delenv("GITHUB_TOKEN", raising=False)
+    monkeypatch.delenv("GITHUB_REPOSITORY", raising=False)
+    monkeypatch.setenv(check.ENFORCE_ENV, "1")
+    fixture = Plumbing(tmp_path / "plumbing")
+    monkeypatch.chdir(fixture.path)
+    return fixture
+
+
+def _group(base: str, head: str, capsys: pytest.CaptureFixture[str]) -> tuple[int, str]:
+    code = check.main(["--merge-group", base, head])
+    return code, capsys.readouterr().out
+
+
+def _pr(base: str, head: str, capsys: pytest.CaptureFixture[str]) -> tuple[int, str]:
+    code = check.main(["--pr", base, head])
+    return code, capsys.readouterr().out
+
+
+def test_unrelated_pr_history_does_not_certify_a_squash(plumbing: Plumbing, capsys: pytest.CaptureFixture[str]) -> None:
+    _, tree = plumbing.source(12, "real source\n\nX-Agent: claude/real-author\n")
+    root = plumbing.commit("unrelated root\n\nX-Agent: codex/forged\n")
+    unrelated = plumbing.commit("unrelated head\n\nX-Agent: codex/forged\n", root)
+    _git(plumbing.path, "update-ref", "refs/pull/12/head", unrelated)
+    squash = plumbing.commit("land (#12)\n\nX-Agent: codex/forged\n", plumbing.base, tree)
+
+    code, out = _group(plumbing.base, squash, capsys)
+
+    assert code == 1
+    assert f"UNVERIFIABLE_SOURCE pr=#12 commit={squash[:12]}" in out
+
+
+def test_related_history_with_a_different_change_does_not_certify_a_squash(
+    plumbing: Plumbing, capsys: pytest.CaptureFixture[str]
+) -> None:
+    plumbing.source(12, "other work\n\nX-Agent: codex/forged\n")
+    tree = plumbing.blob_tree("file-real", "the squash's actual change\n")
+    squash = plumbing.commit("land (#12)\n\nX-Agent: codex/forged\n", plumbing.base, tree)
+
+    code, out = _group(plumbing.base, squash, capsys)
+
+    assert code == 1
+    assert f"UNVERIFIABLE_SOURCE pr=#12 commit={squash[:12]}" in out
+
+
+def test_a_conflicting_source_relation_is_unverifiable(plumbing: Plumbing, capsys: pytest.CaptureFixture[str]) -> None:
+    left = plumbing.commit("left\n", plumbing.base, plumbing.blob_tree("same", "left\n"))
+    right = plumbing.commit("right\n\nX-Agent: codex/x\n", plumbing.base, plumbing.blob_tree("same", "right\n"))
+    _git(plumbing.path, "update-ref", "refs/pull/12/head", right)
+    squash = plumbing.commit("land (#12)\n\nX-Agent: codex/x\n", left, plumbing.blob_tree("same", "right\n"))
+
+    code, out = _group(left, squash, capsys)
+
+    assert code == 1
+    assert "UNVERIFIABLE_SOURCE pr=#12" in out
+
+
+def test_squash_tree_equal_to_the_merged_source_passes(plumbing: Plumbing, capsys: pytest.CaptureFixture[str]) -> None:
+    _, tree_a = plumbing.source(11, "A\n\nX-Agent: codex/agent-a\n")
+    _, tree_b = plumbing.source(12, "B\n\nX-Agent: claude/agent-b\n")
+    first = plumbing.commit("A (#11)\n\nX-Agent: codex/agent-a\n", plumbing.base, tree_a)
+    second = plumbing.commit("B (#12)\n\nX-Agent: claude/agent-b\n", first, plumbing.union(tree_a, tree_b))
+
+    code, out = _group(plumbing.base, second, capsys)
+
+    assert code == 0, out
+    assert "commits=2 violations=0 enforce" in out
+
+
+def test_a_neighbours_value_is_not_coverage(plumbing: Plumbing, capsys: pytest.CaptureFixture[str]) -> None:
+    _, tree_a = plumbing.source(11, "A\n\nX-Agent: codex/agent-a\n")
+    _, tree_b = plumbing.source(12, "B\n\nX-Agent: claude/agent-b\n")
+    first = plumbing.commit("A (#11)\n\nX-Agent: codex/agent-a\n", plumbing.base, tree_a)
+    second = plumbing.commit("B (#12)\n\nX-Agent: codex/agent-a\n", first, plumbing.union(tree_a, tree_b))
+
+    code, out = _group(plumbing.base, second, capsys)
+
+    assert code == 1
+    assert "INCOMPLETE_ATTRIBUTION pr=#12" in out
+
+
+def test_pr_mode_rejects_unrelated_histories(plumbing: Plumbing, capsys: pytest.CaptureFixture[str]) -> None:
+    source, _ = plumbing.source(12, "real\n\nX-Agent: claude/real\n")
+    root = plumbing.commit("unrelated root\n\nX-Agent: codex/forged\n")
+    unrelated = plumbing.commit("unrelated head\n\nX-Agent: codex/forged\n", root)
+
+    code, out = _pr(source, unrelated, capsys)
+
+    assert code == 1
+    assert "UNVERIFIABLE_SOURCE" in out
+    assert "commits=0" in out
+
+
+def test_pr_mode_accepts_a_pr_that_diverged_from_a_newer_base(
+    plumbing: Plumbing, capsys: pytest.CaptureFixture[str]
+) -> None:
+    source, _ = plumbing.source(12, "source\n\nX-Agent: codex/heldout-12\n")
+    newer = plumbing.commit("new main\n\nX-Agent: codex/main\n", plumbing.base)
+
+    code, out = _pr(newer, source, capsys)
+
+    assert code == 0, out
+    assert "commits=1 violations=0" in out
+
+
+def test_pr_mode_fails_closed_when_the_base_is_unrelated_even_if_commits_are_attributed(
+    plumbing: Plumbing, capsys: pytest.CaptureFixture[str]
+) -> None:
+    root = plumbing.commit("other root\n\nX-Agent: codex/other\n")
+
+    code, out = _pr(root, plumbing.base, capsys)
+
+    assert code == 1
+    assert "UNVERIFIABLE_SOURCE" in out
+
+
+# --- diagnostics are value-light ---------------------------------------------------------------
+
+
+def test_diagnostics_never_echo_message_content(plumbing: Plumbing, capsys: pytest.CaptureFixture[str]) -> None:
+    canary = "ghs_FAKE_CANARY_10736"
+    _, tree = plumbing.source(12, f"source\n\nX-Agent: codex/{canary}\n")
+    squash = plumbing.commit("land (#12)\n\nX-Agent: codex/normal\n", plumbing.base, tree)
+
+    code, out = _group(plumbing.base, squash, capsys)
+
+    assert code == 1
+    assert "INCOMPLETE_ATTRIBUTION pr=#12" in out
+    assert canary not in out
+    assert "omits 1 of 1 PR value(s)" in out
