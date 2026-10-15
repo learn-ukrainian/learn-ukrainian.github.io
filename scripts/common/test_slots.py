@@ -840,6 +840,12 @@ def _run(arguments: argparse.Namespace, parser: argparse.ArgumentParser) -> int:
     except SlotError as error:
         return _refuse(error)
     env.update(hold.environment())
+    if __package__:
+        from .test_thread_caps import apply
+    else:
+        from test_thread_caps import apply
+
+    env = apply(env)
     env[XDIST_AUTO_ENV] = str(hold.count if auto_cap is None else min(hold.count, auto_cap))
     hold.inheritable()
     return _exec(limit_processes(command, hold.count, auto_cap), env)

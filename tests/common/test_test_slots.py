@@ -551,6 +551,33 @@ def test_status_cli_prints_json_and_a_readable_summary(pool: Path) -> None:
 # ---- the launcher ---------------------------------------------------------------------------------------------
 
 
+@pytest.mark.parametrize("case", ["governed", "opt_out", "disabled", "ci"])
+@pytest.mark.parametrize("direct", [False, True], ids=["module", "script"])
+def test_launcher_child_thread_environment(case: str, direct: bool, monkeypatch: pytest.MonkeyPatch) -> None:
+    from tests.common.test_test_thread_caps import EXPECTED
+
+    source = f"import json, os; print(json.dumps({{key: os.environ.get(key) for key in {list(EXPECTED)!r}}}))"
+    extra = dict.fromkeys(EXPECTED, "8")
+    extra["LU_TEST_THREAD_CAP"] = "off" if case == "opt_out" else "on"
+    if case == "disabled":
+        extra[test_slots.ENABLE_ENV] = "off"
+    elif case == "ci":
+        monkeypatch.delenv(test_slots.ENABLE_ENV)
+        extra["CI"] = "true"
+    entry = [str(REPO_ROOT / "scripts/common/test_slots.py")] if direct else ["-m", "scripts.common.test_slots"]
+    result = subprocess.run(
+        [sys.executable, *entry, "run", "--", sys.executable, "-c", source],
+        cwd=REPO_ROOT,
+        env=_child_env(**extra),
+        capture_output=True,
+        text=True,
+        timeout=60,
+    )
+    assert result.returncode == 0, result.stderr
+    expected = EXPECTED if case == "governed" else dict.fromkeys(EXPECTED, "8")
+    assert json.loads(result.stdout) == expected
+
+
 @pytest.mark.parametrize(
     ("arguments", "expected", "auto"),
     [
