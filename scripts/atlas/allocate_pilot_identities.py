@@ -34,6 +34,12 @@ BASELINE = "1ada13b572387640a7e8830f2e8daff87596b90f"
 # The reviewed pilot allocation (registry v2, committed in ef03828228bb, #9402 / #10641), pinned by the canonical
 # content digest of its registry so the check needs no Git history: every later registry version keeps it whole.
 PILOT_ALLOCATION_DIGEST = "d094872dbfaabe71cbfacaf4951138f08861f17c032d04bf0182e1ee0f312860"
+# The frozen draft identity allocation assembly may consume (#8981 R3-F1): the canonical digest of
+# `identity_allocation_check`'s projection of the committed v3 registry. Its entries and events are the reviewed v2
+# allocation above plus the holding epoch `holding_check` admits against host-derived obligations. A fixed reviewed
+# value: never learned from a candidate, a manifest, the environment or an invocation.
+ASSEMBLY_ALLOCATION_DIGEST = "438b54e1995e5069076fb997454f6c3205fa4b5580dd7225ba86e3d295871ee6"
+IDENTITY_REFUSAL = "Pilot allocation differs from frozen creation/mint evidence"
 BUILD_PREFIX = "pilot-identity-allocation-9402@sha256:"
 HOLDING_BUILD_PREFIX = "pilot-holding-sense-allocation-8981@sha256:"
 HOLDING_BASIS = "holding sense for source units that cannot be aligned to one active sense (schema.md §6)"
@@ -240,6 +246,34 @@ def reviewed_allocation(registry, manifest):
     assert foundation.digest(allocation) == PILOT_ALLOCATION_DIGEST, \
         "The registry is not the reviewed pilot allocation plus appended holding senses"
     return allocation
+
+
+def identity_allocation_check(registry, manifest):
+    """Refuse a registry whose persistent identities differ from the frozen pilot allocation (#8981 R3-F1).
+
+    The projection keeps every entry and event (creation keys and builds, senses, every mint and its literal
+    evidence, in order), every persistent source-record and source id, and each record's aliases and correspondence
+    in the frozen snapshots, together with that snapshot set, so a narrower manifest cannot shrink it. An existing
+    record's history in a later snapshot stays outside; `registry_version` is left to the full audit above. Explicit
+    refusals only: an optimised interpreter enforces this check too.
+    """
+    try:
+        frozen = sorted({r["snapshot_id"] for r in manifest["selection"]["source_records"]})
+        snapshots = set(frozen)
+        projection = {
+            "frozen_snapshots": frozen,
+            "entries": registry["entries"],
+            "events": registry["events"],
+            "source_records": [
+                {"source_record_id": sr["source_record_id"], "source_id": sr["source_id"],
+                 "aliases": [x for x in sr["aliases"] if x["snapshot_id"] in snapshots],
+                 "correspondence": [x for x in sr["correspondence"] if x["snapshot_id"] in snapshots]}
+                for sr in registry["source_records"]],
+        }
+        observed = foundation.digest(projection)
+    except (KeyError, TypeError, AttributeError, ValueError) as error:  # a malformed registry or manifest
+        raise foundation.Refusal(IDENTITY_REFUSAL) from error
+    foundation.require(observed == ASSEMBLY_ALLOCATION_DIGEST, IDENTITY_REFUSAL)
 
 
 def holding_check(registry, manifest, needs, allocation):
