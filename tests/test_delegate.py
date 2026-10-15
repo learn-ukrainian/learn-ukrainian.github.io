@@ -7304,6 +7304,61 @@ def test_explicit_label_is_not_blocked_by_an_invalid_default_file(tmp_tasks_dir,
     assert _dry_run_claude_dispatch(tmp_path, monkeypatch, "claude-explicit-over-invalid", "--claude-account", "a") == 0
 
 
+@pytest.mark.parametrize("source", ["explicit", "default-file"])
+def test_check_budget_judges_the_selected_claude_account(tmp_tasks_dir, tmp_path, monkeypatch, capsys, source):
+    """#10619: b with headroom keeps an explicit Opus dispatch while the default account a is exhausted.
+
+    On 50016b7b2e this refused: the guard read only the lane row (account a),
+    hard-substituted codex, and codex cannot run Opus.
+    """
+    from tests.test_delegate_check_budget import _UNVERIFIED_ROW, _account_row, _accounts_budget, _default_claude_lane
+
+    _bind_claude_account_b(tmp_path, monkeypatch)
+    extra = ["--claude-account", "b"] if source == "explicit" else []
+    if source == "default-file":
+        _default_account_file(tmp_path, monkeypatch, b"b\n")
+    budget = _accounts_budget(_default_claude_lane("hot"), {"a": _UNVERIFIED_ROW, "b": _account_row(89.0)})
+    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: budget)
+    task_id = f"claude-budget-account-{source}"
+
+    rc = _dry_run_claude_dispatch(
+        tmp_path, monkeypatch, task_id, "--model", "claude-opus-5-5", "--check-budget", *extra
+    )
+
+    err = capsys.readouterr().err
+    assert rc == 0, err
+    assert "HARD AUTO-SUBSTITUTE" not in err and "ROUTING REFUSED" not in err
+    state = delegate._read_state(delegate._state_path(task_id))
+    assert (state["status"], state["agent"], state["model"]) == ("dry_run", "claude", "claude-opus-5-5")
+    assert state["substitution"] is None
+    assert (state["claude_account"], state["claude_account_source"]) == ("b", source)
+
+
+@pytest.mark.parametrize(
+    ("extra", "b_left"), [(["--claude-account", "a"], 89.0), ([], 89.0), (["--claude-account", "b"], 0.5)]
+)
+def test_check_budget_refuses_an_exhausted_claude_account_as_before(
+    tmp_tasks_dir, tmp_path, monkeypatch, capsys, extra, b_left
+):
+    """The default label still reads the lane row, and a b as exhausted as a is refused the same way."""
+    from tests.test_delegate_check_budget import _account_row, _accounts_budget, _default_claude_lane
+
+    _bind_claude_account_b(tmp_path, monkeypatch)
+    budget = _accounts_budget(_default_claude_lane("near_cap"), {"b": _account_row(b_left)})
+    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: budget)
+
+    rc = _dry_run_claude_dispatch(
+        tmp_path, monkeypatch, "claude-budget-exhausted", "--model", "claude-opus-5-5", "--check-budget", *extra
+    )
+
+    assert rc == 2
+    assert (
+        "❌ ROUTING REFUSED: substitute --agent codex rejects explicit --model claude-opus-5-5"
+        in capsys.readouterr().err
+    )
+    assert not delegate._state_path_no_create("claude-budget-exhausted").exists()
+
+
 def _invalid_default_file(tmp_path: Path, monkeypatch, case: str) -> None:
     path = _default_account_file(tmp_path, monkeypatch)
     if case == "unknown_label":

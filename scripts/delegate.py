@@ -162,6 +162,7 @@ import hashlib
 import io
 import json
 import logging
+import math
 import os
 import re
 import resource
@@ -12848,7 +12849,9 @@ def _dispatch(
     kimi_refusal, kimi_start_commit, launch_target = _kimi_dispatch_gate(
         args,
         agent=original_agent,
-        route=_dispatch_route(args, routing, language_lane=language_lane, review_attempt=review_attempt),
+        route=_dispatch_route(
+            args, routing, language_lane=language_lane, review_attempt=review_attempt, claude_account=claude_account
+        ),
         repo_role=fleet_repo.role,
         target_repo_root=target_repo_root,
         validated_worktree=validated_worktree,
@@ -14979,6 +14982,83 @@ def _budget_headroom_blocked(agent_info: dict[str, Any]) -> bool:
     return isinstance(runtime, dict) and bool(runtime.get("headroom_blocked"))
 
 
+# Facts of the claude route, not of one account's meter (#10619): spawn health,
+# runtime rate-limit evidence (usage records carry no account label), scheduler,
+# circuit and eligibility state. A selected account's lane view keeps them.
+_CLAUDE_ROUTE_FACT_KEYS = ("health", "runtime", "scheduler", "circuit_open", "eligible")
+# The normalizer's error-shape keys, which the producer leaves out of a lane's ``codexbar``.
+_NATIVE_ERROR_SHAPE_KEYS = frozenset({"lane", "status", "auth_error", "error_kind", "error_code"})
+
+
+def _account_left_pct(window: Any) -> float | None:
+    """A ``claude_accounts`` window's ``left_pct`` when it is a real percentage, else None."""
+    value = window.get("left_pct") if isinstance(window, Mapping) else None
+    if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value):
+        return None
+    return float(value) if 0 <= value <= 100 else None
+
+
+def _claude_account_lane_view(row: Any, lane_row: Any) -> tuple[dict[str, Any], str | None]:
+    """The ``claude`` lane record for one ``claude_accounts`` row (#10619), and why its meter is unknown.
+
+    An ``ok`` or ``stale`` row with known weekly and session ``left_pct`` takes the
+    producer's path for the default account: the windows ``_probe_claude_native``
+    builds, ``_normalize_provider_data`` and ``_status_from_weekly_used`` on the
+    weekly used-%, so near cap, warm and pace deficit use the
+    default lane's thresholds, and a runtime headroom block marks it hot as the
+    producer does. A stale row reads ``stale_last_good`` like a stale default
+    probe. Any other row reads status ``unknown`` with the probe ``unavailable``
+    and no pace, and the reason is returned (otherwise None). Both keep the lane
+    row's route facts (``_CLAUDE_ROUTE_FACT_KEYS``) and nothing of the default
+    account's own meter, credit or login state.
+    """
+    from scripts.api.state_router import _status_from_weekly_used
+    from scripts.api.subscription_usage import _normalize_provider_data, _window_from_used_pct
+
+    lane = lane_row if isinstance(lane_row, Mapping) else {}
+    route = {key: lane[key] for key in _CLAUDE_ROUTE_FACT_KEYS if key in lane}
+    meter = row if isinstance(row, Mapping) else {}
+    state = meter.get("status")
+    session, weekly = meter.get("session5h"), meter.get("weekly")
+    session_left, weekly_left = _account_left_pct(session), _account_left_pct(weekly)
+    if state not in {"ok", "stale"} or session_left is None or weekly_left is None:
+        if not meter:
+            reason = "no account row"
+        elif state not in {"ok", "stale"}:
+            reason = str(meter.get("reason") or f"status {state or 'missing'}")
+        else:
+            reason = "weekly or session left_pct unknown"
+        return {"status": "unknown", "freshness": "unavailable", **route}, reason
+    stale = state == "stale"
+    usage = {
+        "primary": _window_from_used_pct(100.0 - session_left, window_minutes=300, resets_at=session.get("resets_at")),
+        "secondary": _window_from_used_pct(
+            100.0 - weekly_left, window_minutes=10080, resets_at=weekly.get("resets_at")
+        ),
+    }
+    native = _normalize_provider_data("claude", {"provider": "claude", "source": "claude_account", "usage": usage})
+    native.update({"freshness": "stale_last_good" if stale else "fresh", "stale": stale, "age_s": meter.get("age_s")})
+    used = 100.0 - weekly_left  # the producer's capacity used-%: the weekly window's
+    status = _status_from_weekly_used(
+        used, native, lane="claude", info={**native, "codexbar": native}, snapshot_stale=stale
+    )
+    runtime = route.get("runtime")
+    if isinstance(runtime, Mapping) and runtime.get("headroom_blocked") and status in {None, "cool", "warm", "unknown"}:
+        status = "hot"
+    return {
+        "status": status,
+        "status_source": "weekly_pace",
+        "interactive": {"status": status, "burn_pct_7d": used},
+        "burn_pct_7d": used,
+        "remaining_pct": 100.0 - used,
+        "resets_at": native.get("weekly_resets_at"),
+        "freshness": native["freshness"],
+        "age_s": native["age_s"],
+        "codexbar": {key: value for key, value in native.items() if key not in _NATIVE_ERROR_SHAPE_KEYS},
+        **route,
+    }, None
+
+
 def _budget_owner_facts(
     lane: str,
     info: dict[str, Any] | None,
@@ -16700,6 +16780,7 @@ def _dispatch_route(
     *,
     language_lane: bool,
     review_attempt: Any,
+    claude_account: tuple[str, str] | None = None,
 ) -> Route:
     """The launch route ``resolve_and_admit`` runs for a dispatch, after the original request is gated.
 
@@ -16709,7 +16790,9 @@ def _dispatch_route(
     keeps the requested seat and still records quota and health; its model is
     mapped or defaulted (``_resolve_substitution_model``). Review routes use
     ``request.review_select`` instead, retaining the resolver's exact model.
-    Refusals raise
+    ``claude_account`` is the ``(label, source)`` dispatch resolved
+    (``_resolve_dispatch_claude_account``); the guard judges a claude seat on
+    that account (#10619). Refusals raise
     ``_DispatchRouteRefused`` or ``BudgetGuardRefuseError``. Records what it
     decided in ``routing``.
     """
@@ -16790,6 +16873,7 @@ def _dispatch_route(
                 ),
                 force_agent=force_agent,
                 diagnostic_sink=diagnostic_sink if force_agent else None,
+                claude_account=claude_account[0] if claude_account is not None else None,
             )
             if diagnostic_sink:
                 routing.budget_diagnostics = diagnostic_sink
@@ -17501,6 +17585,7 @@ def _publish_forced_lane_diagnostics(
     model: str | None,
     sink: dict[str, Any] | None,
     ranked: Any = None,
+    account: Mapping[str, Any] | None = None,
 ) -> None:
     """Print and retain one forced lane's quota and health (#9673).
 
@@ -17509,7 +17594,8 @@ def _publish_forced_lane_diagnostics(
     remaining percent is added with the owner's ``% remaining`` phrase when
     that reason does not already include it. ``sink`` receives
     :meth:`credit_lane.RoutingFacts.summary`, whose missing quota, health and
-    freshness are explicit unknowns.
+    freshness are explicit unknowns, and for a claude dispatch the account
+    the decision read as ``claude_account`` (#10619).
     """
     facts = credit_lane.routing_facts(
         lane,
@@ -17534,6 +17620,8 @@ def _publish_forced_lane_diagnostics(
     if sink is not None:
         sink.clear()
         sink.update(facts.summary())
+        if account is not None:
+            sink["claude_account"] = dict(account)
 
 
 def _resolve_agent_with_budget_guard(
@@ -17549,6 +17637,7 @@ def _resolve_agent_with_budget_guard(
     review_trusted_inputs: bool = False,
     force_agent: bool = False,
     diagnostic_sink: dict[str, Any] | None = None,
+    claude_account: str | None = None,
 ) -> str:
     """Return possibly-substituted agent.
 
@@ -17564,8 +17653,19 @@ def _resolve_agent_with_budget_guard(
     Review routes use ``review_select`` before either coding fallback path;
     pace only orders equal fits and ``force_agent`` never bypasses review hard gates.
     A lane with a credit balance present (``scripts.fleet.credit_lane``) is not substituted.
+
+    ``claude_account`` is a claude dispatch's resolved account label (#10619). The
+    ``claude`` lane row is the Monitor host's default account, so a non-default
+    label is judged on its own ``claude_accounts`` row instead
+    (:func:`_claude_account_lane_view`), by every decision below: a stale row is
+    advisory like a stale snapshot, and an unknown one is advisory and never
+    healthy. None or the default label reads the lane row as before.
     """
     requested = (agent or "").strip().lower()
+    # The account the claude decision reads, named in forced diagnostics (#10619).
+    evaluated_account = (
+        {"label": claude_account, "meter": None} if requested == "claude" and claude_account is not None else None
+    )
     if language_lane and requested not in _LANGUAGE_LANES:
         raise BudgetGuardRefuseError(
             "ROUTING REFUSED: LANGUAGE-LANES RULE (operator 2026-09-27): "
@@ -17586,6 +17686,7 @@ def _resolve_agent_with_budget_guard(
                 None,
                 model=requested_model,
                 sink=diagnostic_sink,
+                account=evaluated_account,
             )
         return requested
 
@@ -17655,8 +17756,41 @@ def _resolve_agent_with_budget_guard(
                 diags if isinstance(diags, dict) else None,
                 model=requested_model,
                 sink=diagnostic_sink,
+                account=evaluated_account,
             )
         return requested
+
+    account_stale = False
+    if evaluated_account is not None:
+        from scripts.agent_runtime.attempt_boundary import DEFAULT_CLAUDE_ACCOUNT
+
+        evaluated_account["meter"] = "agents.claude"
+        if claude_account != DEFAULT_CLAUDE_ACCOUNT:
+            # #10619: the lane row is the default account; judge the selected one on its own meter.
+            row_key = f"claude:{claude_account}"
+            rows = payload.get("claude_accounts")
+            view, unknown = _claude_account_lane_view(
+                rows.get(row_key) if isinstance(rows, Mapping) else None, agents.get("claude")
+            )
+            agents = {**agents, "claude": view}
+            account_stale = unknown is None and view["freshness"] != "fresh"
+            evaluated_account.update(
+                meter=f"claude_accounts.{row_key}",
+                state="unknown" if unknown is not None else "stale" if account_stale else "ok",
+                reason=unknown,
+            )
+            if unknown is not None:
+                print(
+                    f"⚠ ROUTING CHECK UNKNOWN: claude account {claude_account} meter unavailable ({unknown}); "
+                    "no hard sub",
+                    file=sys.stderr,
+                )
+            elif account_stale:
+                print(
+                    f"⚠ ROUTING CHECK ADVISORY (stale claude account {claude_account} meter, "
+                    f"age_s={view['age_s']}) — verify manually; no hard sub",
+                    file=sys.stderr,
+                )
 
     # Warn about demoted lanes and lanes whose health is unknown (#9740 F4: the owner's reading).
     for item in payload.get("ranked_by_headroom") or []:
@@ -17695,6 +17829,8 @@ def _resolve_agent_with_budget_guard(
             )
             if rec.get("rationale"):
                 print(f"Rationale: {rec['rationale']}", file=sys.stderr)
+    # A stale account meter follows the stale-snapshot rule from here on: advisory only.
+    is_stale = is_stale or account_stale
 
     agent_info = agents.get(requested, {}) or {}
     agent_dict = agent_info if isinstance(agent_info, dict) else {}
@@ -17773,6 +17909,7 @@ def _resolve_agent_with_budget_guard(
             model=requested_model,
             sink=diagnostic_sink,
             ranked=payload.get("ranked_by_headroom"),
+            account=evaluated_account,
         )
         if review_select is None:
             return requested

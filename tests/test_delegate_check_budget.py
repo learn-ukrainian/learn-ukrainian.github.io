@@ -2030,3 +2030,358 @@ def test_demoted_message_prints_unknown_health_as_unknown(monkeypatch, capsys):
     assert "⚠ lane grok demoted: 3 spawn failures in 12m" in err
     assert "None spawn failures" not in err
     assert "lane agy" not in err
+
+
+# --- #10619: a claude dispatch is judged on its selected account's meter ----------------
+
+
+def _utc_in(delta: timedelta) -> str:
+    return (datetime.now(UTC) + delta).isoformat(timespec="seconds").replace("+00:00", "Z")
+
+
+def _account_row(
+    weekly_left: float | None,
+    *,
+    session_left: float | None = 100.0,
+    status: str = "ok",
+    weekly_resets_in: timedelta = timedelta(days=5),
+    reason: str | None = None,
+) -> dict:
+    """One ``claude_accounts`` row as ``scripts.api.claude_account_usage`` serves it."""
+
+    def window(left: float | None, resets_in: timedelta) -> dict:
+        resets = None if left is None else _utc_in(resets_in)
+        return {"left_pct": left, "resets_at": resets, "pace": None, "pace_delta_pct": None, "leftover_pct": None}
+
+    return {
+        "session5h": window(session_left, timedelta(hours=3)),
+        "weekly": window(weekly_left, weekly_resets_in),
+        "updated": _utc_in(timedelta(minutes=-1)),
+        "age_s": 60.0,
+        "stale": status == "stale",
+        "status": status,
+        "reason": reason,
+    }
+
+
+_UNVERIFIED_ROW = {
+    "session5h": dict.fromkeys(("left_pct", "resets_at", "pace", "pace_delta_pct", "leftover_pct")),
+    "weekly": dict.fromkeys(("left_pct", "resets_at", "pace", "pace_delta_pct", "leftover_pct")),
+    "updated": None,
+    "age_s": None,
+    "stale": False,
+    "status": "unknown",
+    "reason": "claude_account_unverified",
+}
+
+
+def _default_claude_lane(state: str) -> dict:
+    """The ``claude`` lane row (the Monitor host's default account) as the producer publishes it."""
+    if state == "healthy":
+        return _fresh_lane(
+            status="cool",
+            status_source="weekly_pace",
+            interactive={"status": "cool", "burn_pct_7d": 10.0},
+            remaining_pct=90.0,
+            codexbar={"weekly_used_pct": 10.0, "weekly_remaining_pct": 90.0, "will_last_to_reset": True},
+        )
+    if state == "near_cap":
+        return _fresh_lane(
+            status="near_cap",
+            status_source="weekly_pace",
+            interactive={"status": "near_cap", "burn_pct_7d": 99.5},
+            remaining_pct=0.5,
+            codexbar={"weekly_used_pct": 99.5, "weekly_remaining_pct": 0.5, "primary_remaining_pct": 100.0},
+        )
+    # The live shape that motivated #10619: 84% used, a weekly-pace deficit, capacity avoid.
+    return _fresh_lane(
+        status="hot",
+        status_source="weekly_pace",
+        interactive={"status": "hot", "burn_pct_7d": 84.0},
+        remaining_pct=16.0,
+        codexbar={
+            "weekly_used_pct": 84.0,
+            "weekly_remaining_pct": 16.0,
+            "primary_remaining_pct": 100.0,
+            "weekly_pace_delta_pct": 40.7,
+            "weekly_expected_pct": 43.3,
+            "will_last_to_reset": False,
+        },
+    )
+
+
+def _accounts_budget(lane: dict, rows: dict[str, dict | None]) -> dict:
+    return {
+        "recommendation": {"primary_agent_for_code": "codex", "rationale": "fixture rationale", "warnings": []},
+        "agents": {
+            "claude": lane,
+            "codex": _fresh_lane(status="cool", codexbar={"weekly_remaining_pct": 90.0, "will_last_to_reset": True}),
+        },
+        "claude_accounts": {f"claude:{label}": row for label, row in rows.items() if row is not None},
+        "diagnostics": {"records_loaded": 0, "stale": False, "codexbar_data_available": True},
+    }
+
+
+def _account_guard(monkeypatch, budget: dict, label: str | None, *, model: str | None = "claude-opus-5-5", **kwargs):
+    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: budget)
+    monkeypatch.setattr(delegate, "_load_reset_reserve", lambda *_a, **_k: {})
+    return delegate._resolve_agent_with_budget_guard(
+        "claude", requested_model=model, fallbacks={"claude": "codex"}, claude_account=label, **kwargs
+    )
+
+
+def _guard_outcome(monkeypatch, budget: dict, label: str | None, **kwargs) -> tuple[str, str]:
+    """``("agent", name)`` or ``("refused", message)`` for one guard call."""
+    try:
+        return "agent", _account_guard(monkeypatch, budget, label, **kwargs)
+    except delegate.BudgetGuardRefuseError as exc:
+        return "refused", str(exc)
+
+
+@pytest.mark.parametrize(
+    ("weekly_left", "weekly_resets_in", "status", "hard_action"),
+    [
+        (89.0, timedelta(days=5), "cool", False),  # 11% used two days in: lasts to reset
+        (45.0, timedelta(days=1), "cool", False),  # 55% used six days in: lasts to reset at any used-%
+        (40.0, timedelta(days=5), "hot", True),  # 60% used two days in: a visible uncovered deficit
+        (0.5, timedelta(days=5), "near_cap", True),  # >= 99% used
+    ],
+)
+def test_account_view_uses_the_default_lane_thresholds(weekly_left, weekly_resets_in, status, hard_action):
+    lane = _default_claude_lane("healthy")
+    row = _account_row(weekly_left, session_left=70.0, weekly_resets_in=weekly_resets_in)
+
+    view, unknown = delegate._claude_account_lane_view(row, lane)
+
+    assert unknown is None
+    assert (view["status"], view["interactive"]["status"], view["status_source"]) == (status, status, "weekly_pace")
+    assert view["remaining_pct"] == pytest.approx(weekly_left)
+    assert view["codexbar"]["weekly_remaining_pct"] == pytest.approx(weekly_left)
+    assert view["codexbar"]["primary_remaining_pct"] == pytest.approx(70.0)
+    assert (view["freshness"], view["codexbar"]["freshness"], view["codexbar"]["stale"]) == ("fresh", "fresh", False)
+    needs, _reason = delegate._budget_needs_hard_capacity_action(
+        status=view["status"],
+        will_last=delegate._budget_will_last_to_reset(view),
+        is_stale=False,
+        snapshot_metadata={"stale": False},
+        pace=delegate._budget_pace(view),
+        headroom_blocked=delegate._budget_headroom_blocked(view),
+        lane="claude",
+        info=view,
+        model="claude-opus-5-5",
+    )
+    assert needs is hard_action
+
+
+def test_account_view_keeps_route_facts_but_not_the_default_accounts_meter():
+    runtime = {"headroom_blocked": True, "headroom_reason": "rate_limited 10s ago (2 events in last 5min)"}
+    lane = _default_claude_lane("near_cap") | {
+        "runtime": runtime,
+        "credit_balance": 25.0,
+        "fable_weekly": {"used_pct": 3.0},
+        "login_state": "NEED_LOGIN",
+        "probe_state": "NEED_LOGIN",
+    }
+
+    view, unknown = delegate._claude_account_lane_view(_account_row(89.0), lane)
+
+    assert unknown is None
+    assert view["health"] == {"healthy": True} and view["runtime"] == runtime
+    for key in ("credit_balance", "fable_weekly", "login_state", "probe_state"):
+        assert key not in view
+    # The account's own probe shape carries no credit or Fable reading, never the default account's.
+    assert view["codexbar"]["credit_balance"] is None
+    assert view["codexbar"]["fable_weekly"]["used_pct"] is None
+    assert "login_state" not in view["codexbar"] and "probe_state" not in view["codexbar"]
+    assert "status" not in view["codexbar"]
+    # A lane-wide runtime block marks a cool meter hot, as the producer does for the default account.
+    assert view["status"] == view["interactive"]["status"] == "hot"
+
+
+@pytest.mark.parametrize(
+    ("row", "reason"),
+    [
+        (None, "no account row"),
+        (_UNVERIFIED_ROW, "claude_account_unverified"),
+        ({**_UNVERIFIED_ROW, "reason": None}, "status unknown"),
+        (_account_row(None), "weekly or session left_pct unknown"),
+        (_account_row(89.0, session_left=None), "weekly or session left_pct unknown"),
+        (_account_row(True), "weekly or session left_pct unknown"),
+        (_account_row(101.0), "weekly or session left_pct unknown"),
+        (_account_row(float("nan")), "weekly or session left_pct unknown"),
+    ],
+)
+def test_account_view_without_a_usable_meter_is_unknown(row, reason):
+    lane = _default_claude_lane("healthy")
+
+    view, unknown = delegate._claude_account_lane_view(row, lane)
+
+    assert unknown == reason
+    assert view == {"status": "unknown", "freshness": "unavailable", "health": {"healthy": True}}
+
+
+def test_account_view_of_a_stale_row_reads_stale_last_good():
+    view, unknown = delegate._claude_account_lane_view(_account_row(0.5, status="stale"), {})
+
+    assert unknown is None
+    assert view["freshness"] == view["codexbar"]["freshness"] == "stale_last_good"
+    assert view["codexbar"]["stale"] is True
+
+
+@pytest.mark.parametrize("default_state", ["near_cap", "hot"])
+def test_selected_account_with_headroom_keeps_claude_when_the_default_account_is_exhausted(
+    monkeypatch, capsys, default_state
+):
+    """The reported defect: account b with 89% weekly headroom was refused for account a's meter."""
+    budget = _accounts_budget(_default_claude_lane(default_state), {"a": _UNVERIFIED_ROW, "b": _account_row(89.0)})
+
+    assert _account_guard(monkeypatch, budget, "b") == "claude"
+    err = capsys.readouterr().err
+    assert "HARD AUTO-SUBSTITUTE" not in err and "ROUTING REFUSED" not in err and "ROUTING CHECK UNKNOWN" not in err
+
+    # The default account is still judged on the lane row: the explicit Opus model cannot move to codex.
+    for label in (None, "a"):
+        outcome, message = _guard_outcome(monkeypatch, budget, label)
+        assert outcome == "refused"
+        assert "substitute --agent codex rejects explicit --model claude-opus-5-5" in message
+
+
+@pytest.mark.parametrize("model", ["claude-opus-5-5", None])
+def test_both_accounts_exhausted_substitute_or_refuse_exactly_as_before(monkeypatch, capsys, model):
+    """B at the same near cap as the default lane row gets the default label's outcome, word for word."""
+    budget = _accounts_budget(_default_claude_lane("near_cap"), {"b": _account_row(0.5)})
+
+    before = _guard_outcome(monkeypatch, budget, None, model=model)
+    before_err = capsys.readouterr().err
+    selected = _guard_outcome(monkeypatch, budget, "b", model=model)
+    selected_err = capsys.readouterr().err
+
+    assert selected == before
+    assert selected[0] == ("refused" if model else "agent")
+    if model is None:
+        assert selected[1] == "codex"
+        substitution = [line for line in before_err.splitlines() if "HARD AUTO-SUBSTITUTE" in line]
+        assert substitution and substitution[0] in selected_err.splitlines()
+        assert "near_cap (0.5% remaining on FRESH snapshot)" in substitution[0]
+
+
+def test_selected_account_in_pace_deficit_substitutes(monkeypatch, capsys):
+    budget = _accounts_budget(_default_claude_lane("healthy"), {"b": _account_row(40.0)})
+
+    assert _account_guard(monkeypatch, budget, "b", model=None) == "codex"
+    assert "HARD AUTO-SUBSTITUTE: --agent claude → codex" in capsys.readouterr().err
+
+
+@pytest.mark.parametrize(
+    ("rows", "reason"),
+    [
+        ({"a": _UNVERIFIED_ROW, "b": _UNVERIFIED_ROW}, "claude_account_unverified"),
+        ({}, "no account row"),
+        ({"b": _account_row(89.0, session_left=None)}, "weekly or session left_pct unknown"),
+    ],
+)
+def test_unknown_selected_account_is_advisory_and_never_substitutes(monkeypatch, capsys, rows, reason):
+    budget = _accounts_budget(_default_claude_lane("near_cap"), rows)
+
+    assert _account_guard(monkeypatch, budget, "b") == "claude"
+    err = capsys.readouterr().err
+    assert f"⚠ ROUTING CHECK UNKNOWN: claude account b meter unavailable ({reason}); no hard sub" in err
+    assert "HARD AUTO-SUBSTITUTE" not in err
+
+
+def test_stale_selected_account_follows_the_stale_snapshot_rule(monkeypatch, capsys):
+    budget = _accounts_budget(_default_claude_lane("healthy"), {"b": _account_row(0.5, status="stale")})
+
+    assert _account_guard(monkeypatch, budget, "b", model=None) == "claude"
+    err = capsys.readouterr().err
+    assert "⚠ ROUTING CHECK ADVISORY (stale claude account b meter, age_s=60.0) — verify manually; no hard sub" in err
+    assert "stale snapshot" not in err and "HARD AUTO-SUBSTITUTE" not in err
+    # The snapshot itself is fresh, so its recommendation warning still prints.
+    assert "⚠ ROUTING WARNING: budget recommends --agent codex" in err
+
+
+@pytest.mark.parametrize("label", [None, "a"])
+def test_default_label_reads_the_lane_row_and_ignores_account_rows(monkeypatch, capsys, label):
+    healthy_default = _accounts_budget(
+        _default_claude_lane("healthy"), {"a": _account_row(0.5), "b": _account_row(0.5)}
+    )
+    assert _account_guard(monkeypatch, healthy_default, label, model=None) == "claude"
+
+    exhausted_default = _accounts_budget(_default_claude_lane("near_cap"), {"a": _account_row(89.0)})
+    assert _account_guard(monkeypatch, exhausted_default, label, model=None) == "codex"
+    assert "ROUTING CHECK UNKNOWN: claude account" not in capsys.readouterr().err
+
+
+@pytest.mark.parametrize(
+    ("label", "rows", "account", "remaining"),
+    [
+        (
+            "b",
+            {"b": _account_row(89.0)},
+            {"label": "b", "meter": "claude_accounts.claude:b", "state": "ok", "reason": None},
+            89.0,
+        ),
+        (
+            "b",
+            {"b": _UNVERIFIED_ROW},
+            {
+                "label": "b",
+                "meter": "claude_accounts.claude:b",
+                "state": "unknown",
+                "reason": "claude_account_unverified",
+            },
+            None,
+        ),
+        ("a", {"b": _account_row(89.0)}, {"label": "a", "meter": "agents.claude"}, 0.5),
+        (None, {"b": _account_row(89.0)}, None, 0.5),
+    ],
+)
+def test_forced_dispatch_diagnostics_name_the_account_evaluated(monkeypatch, capsys, label, rows, account, remaining):
+    budget = _accounts_budget(_default_claude_lane("near_cap"), rows)
+    sink: dict = {}
+
+    assert _account_guard(monkeypatch, budget, label, force_agent=True, diagnostic_sink=sink) == "claude"
+
+    assert sink.get("claude_account") == account
+    assert sink["plan_remaining_pct"] == (pytest.approx(remaining) if remaining is not None else None)
+    if account is not None and account.get("state") == "unknown":
+        assert sink["capacity"] == "unknown" and sink["capacity_reason"] == "usage probe unavailable"
+    assert "HARD AUTO-SUBSTITUTE" not in capsys.readouterr().err
+
+
+def test_forced_dispatch_without_the_monitor_names_the_unevaluated_account(monkeypatch):
+    def unavailable():
+        raise delegate.MonitorApiUnavailable("down")
+
+    monkeypatch.setattr(delegate, "_fetch_routing_budget", unavailable)
+    sink: dict = {}
+
+    assert (
+        delegate._resolve_agent_with_budget_guard(
+            "claude", fallbacks={"claude": "codex"}, force_agent=True, diagnostic_sink=sink, claude_account="b"
+        )
+        == "claude"
+    )
+    assert sink["claude_account"] == {"label": "b", "meter": None}
+
+
+def test_review_route_capacity_reads_the_selected_account(monkeypatch):
+    """Review exclusions and the resolver's snapshot see account b for the claude seats, not the lane row."""
+    from scripts.review.reviewer_resolver import REVIEW_CANDIDATES
+
+    claude_seats = {name for name, candidate in REVIEW_CANDIDATES.items() if candidate.route == "claude"}
+    assert claude_seats
+    budget = _accounts_budget(_default_claude_lane("near_cap"), {"b": _account_row(89.0)})
+    seen: list[dict] = []
+
+    def review_select(snapshot, _excluded):
+        seen.append(snapshot)
+        return "claude", "claude-opus-5-5"
+
+    for label, excluded in (("b", set()), (None, claude_seats)):
+        seen.clear()
+        assert _account_guard(monkeypatch, budget, label, review_select=review_select) == "claude"
+        (snapshot,) = seen
+        assert set(snapshot["review_capacity_exclusions"]) & claude_seats == excluded
+        expected_remaining = 89.0 if label == "b" else 0.5
+        assert snapshot["agents"]["claude"]["remaining_pct"] == pytest.approx(expected_remaining)
