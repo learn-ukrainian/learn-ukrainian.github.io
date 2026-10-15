@@ -59,7 +59,7 @@ DIGEST_SCHEMA_PATH = REPO_ROOT / "schemas/module-digest-v1.schema.json"
 
 
 @contextlib.contextmanager
-def record_file_reads(monkeypatch: pytest.MonkeyPatch) -> Generator[list[str], None, None]:
+def record_file_reads(monkeypatch: pytest.MonkeyPatch) -> Generator[list[str]]:
     """Record every file open/read operation made during the context."""
     opened: list[str] = []
 

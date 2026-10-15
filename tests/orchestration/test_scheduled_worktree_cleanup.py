@@ -8,10 +8,12 @@ import tempfile
 import time
 from dataclasses import replace
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
 from scripts.common import task_scratch
+from scripts.maintenance import claude_session_scratch
 from scripts.maintenance.claude_session_scratch import ProcessEvidence, sweep_sessions
 from scripts.orchestration import scheduled_worktree_cleanup as cleanup
 
@@ -98,6 +100,19 @@ def test_main_nested_lease_json_writes_receipt_and_keeps_scratch(tmp_path: Path,
     lineage = tmp_path / ".agent/thread-rollovers/claude/lineage"
     lineage.mkdir(parents=True)
     (lineage / "lease.json").write_text("[" * 10000 + "]" * 10000)
+    real_load = json.load
+
+    def _hostile_nesting_load(source, *args, **kwargs):
+        # How deep ``json`` may nest before RecursionError is interpreter-defined: a
+        # fixed count on 3.12/3.13, the real C stack on 3.14 (gh-91079), where 10000
+        # levels now parse. Raise what CPython raises past its limit, so the lease
+        # handling is exercised on every interpreter.
+        if source.read(2) == b"[[":
+            raise RecursionError("maximum recursion depth exceeded while decoding a JSON array")
+        source.seek(0)
+        return real_load(source, *args, **kwargs)
+
+    monkeypatch.setattr(claude_session_scratch, "json", SimpleNamespace(load=_hostile_nesting_load, dumps=json.dumps))
     monkeypatch.setattr(
         cleanup,
         "sweep_sessions",
