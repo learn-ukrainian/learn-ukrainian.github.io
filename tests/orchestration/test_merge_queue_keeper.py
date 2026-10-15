@@ -904,8 +904,8 @@ def test_drop_lookup_error_is_not_reported_as_unknown(tmp_path, monkeypatch) -> 
 def test_drop_without_matching_run_is_unknown() -> None:
     fake = FakeGitHub()
     fake.events = [{"event": "removed_from_merge_queue", "created_at": "2026-09-23T00:00:01Z"}]
-    detail, jobs = keeper._drop_detail(fake, 42, HEAD_A, "2026-09-23T00:00:00Z")
-    assert "failing merge_group run unknown" in detail and jobs == []
+    detail, jobs, tests = keeper._drop_detail(fake, 42, HEAD_A, "2026-09-23T00:00:00Z")
+    assert "failing merge_group run unknown" in detail and jobs == [] and tests == {}
 
 
 @pytest.mark.parametrize("entry_available", [False, True])
@@ -935,10 +935,10 @@ def test_drop_finds_run_created_before_last_queue_observation(monkeypatch, entry
 
     monkeypatch.setattr(fake, "runs", runs)
     fake.job_rows = [{"name": "pytest", "conclusion": "failure"}]
-    detail, jobs = keeper._drop_detail(fake, 42, HEAD_A, observed)
+    detail, jobs, tests = keeper._drop_detail(fake, 42, HEAD_A, observed)
     assert windows == [entered if entry_available else fake.created_at(42)]
     assert "Failing merge_group: 123; failing jobs: pytest" in detail
-    assert jobs == ["pytest"]
+    assert jobs == ["pytest"] and tests == {}
 
 
 @pytest.mark.parametrize("payload,valid", [
@@ -1024,10 +1024,11 @@ def test_drop_detail_keeps_run_and_jobs_with_optional_first_failed_test(tmp_path
         return "2026-10-10T01:00:00Z FAILED tests/test_lint_tmp_paths.py::test_paths - AssertionError\nFAILED tests/other.py::test_other - error"
 
     monkeypatch.setattr(client, "call", call)
-    detail, jobs = keeper._drop_detail(client, 10256, HEAD_A, "2026-10-10T00:00:00Z")
+    detail, jobs, tests = keeper._drop_detail(client, 10256, HEAD_A, "2026-10-10T00:00:00Z")
     assert "https://github.com/example/runs/123" in detail and "pytest (N)" in detail
     assert jobs == ["CI Gate", "pytest (N)"]
     assert ("First FAILED test: tests/test_lint_tmp_paths.py::test_paths" in detail) is not log_error
+    assert tests == ({} if log_error else {"pytest (N)": "tests/test_lint_tmp_paths.py::test_paths"})
     assert "other.py" not in detail and "unknown" not in detail
 
 
@@ -1851,3 +1852,126 @@ def test_publisher_removal_read_failure_refuses_initial_keeper_enqueue(tmp_path,
     assert failed
     assert "enqueue" not in mutations(fake)
     assert any("RECOVERY_REMOVAL_UNKNOWN" in line for line in lines)
+
+
+def _flaky_run(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, prior: list[dict[str, Any]], jobs: list[str]
+) -> tuple[FakeGitHub, Path]:
+    """Eject PR 42 with these failed jobs while the state already holds the prior failures."""
+    path = tmp_path / "state.json"
+    fake = FakeGitHub()
+    _ejected(fake, path, jobs, failures=prior)
+    run(fake, path, monkeypatch)
+    return fake, path
+
+
+def _issue_titles(fake: FakeGitHub) -> list[str]:
+    return [title for kind, title in fake.actions if kind == "issue"]
+
+
+# Failed jobs of the merge_group runs named on #10600 (read from the Actions API).
+REPLAYS = {
+    "38421606057": (10494, ["Frontend", "CI Gate"]),
+    "38518155884": (10596, ["pytest (3)", "CI Gate"]),
+    "38573355621": (10626, ["pytest (11)", "CI Gate"]),
+    "38578192239": (10626, ["pytest (13)", "CI Gate"]),
+}
+
+
+@pytest.mark.parametrize(
+    "earlier,later",
+    [("38421606057", "38518155884"), ("38518155884", "38573355621"), ("38573355621", "38578192239")],
+)
+def test_replayed_runs_with_different_failed_jobs_open_no_issue(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, earlier: str, later: str
+) -> None:
+    pr_number, jobs = REPLAYS[earlier]
+    prior = [_recent(job, pr_number) for job in jobs]
+    fake, path = _flaky_run(tmp_path, monkeypatch, prior, REPLAYS[later][1])
+    assert _issue_titles(fake) == []
+    # The aggregate job is never recorded, so it cannot be counted later either.
+    recorded_now = [item["job"] for item in json.loads(path.read_text())["failures"] if item["pr"] == 42]
+    assert recorded_now == [job for job in REPLAYS[later][1] if job != "CI Gate"]
+
+
+def test_aggregate_job_failing_on_distinct_prs_opens_no_issue(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    # PRs 10596, 10616 and 10626 each produced a keeper issue from CI Gate alone.
+    prior = [_recent("CI Gate", number) for number in (10596, 10616, 10626)]
+    fake, path = _flaky_run(tmp_path, monkeypatch, prior, ["CI Gate"])
+    assert _issue_titles(fake) == []
+    assert all(item["job"] != "CI Gate" for item in json.loads(path.read_text())["failures"] if item["pr"] == 42)
+
+
+def test_real_job_failing_on_two_distinct_prs_opens_one_issue_naming_it(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    prior = [_recent("pytest (3)", 10596), _recent("CI Gate", 10596)]
+    fake, _ = _flaky_run(tmp_path, monkeypatch, prior, ["pytest (3)", "CI Gate"])
+    assert _issue_titles(fake) == ["Merge queue flaky test: pytest (3)"]
+    assert [title for title in fake.issue_rows] == [{"title": "Merge queue flaky test: pytest (3)"}]
+
+
+def test_aggregate_plus_real_job_names_the_real_job_only(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    prior = [_recent("CI Gate", 10596), _recent("Frontend", 10596)]
+    fake, _ = _flaky_run(tmp_path, monkeypatch, prior, ["Frontend", "CI Gate"])
+    assert _issue_titles(fake) == ["Merge queue flaky test: Frontend"]
+
+
+def test_legacy_aggregate_records_already_in_state_open_no_issue(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    fake, _ = _flaky_run(tmp_path, monkeypatch, [_recent("CI Gate", 7), _recent("CI Gate", 8)], ["pytest (9)"])
+    assert _issue_titles(fake) == []
+
+
+def test_issue_body_names_the_failed_test_when_known(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    test = "tests/test_codexbar_usage.py::test_agy_fixture_publishes_separate_quota_groups"
+    path = tmp_path / "state.json"
+    fake = FakeGitHub()
+    _ejected(fake, path, [], failures=[{**_recent("pytest (3)", 10596), "test": test}])
+    fake.job_rows = [{"id": 5, "name": "pytest (3)", "conclusion": "failure"}]
+    monkeypatch.setattr(fake, "first_failed_test", lambda job_id: test, raising=False)
+    bodies: list[str] = []
+    monkeypatch.setattr(fake, "create_issue", lambda title, body: bodies.append(body))
+    run(fake, path, monkeypatch)
+    assert len(bodies) == 1
+    assert "pytest (3) failed" in bodies[0] and "#42" in bodies[0] and "#10596" in bodies[0]
+    assert f"Failed test: {test}." in bodies[0]
+    assert {item["test"] for item in json.loads(path.read_text())["failures"] if item["pr"] == 42} == {test}
+
+
+def test_flaky_jobs_counts_distinct_prs_and_skips_aggregate_jobs() -> None:
+    failures = [
+        {"job": "pytest (1)", "pr": 5, "test": "tests/a.py::test_a"},
+        {"job": "pytest (1)", "pr": 6},
+        {"job": "CI Gate", "pr": 5},
+        {"job": "CI Gate", "pr": 6},
+        {"job": "Frontend", "pr": 5},
+        "garbage",
+        {"job": 3, "pr": 9},
+        {"job": "pytest (2)", "pr": True},
+    ]
+    assert keeper._flaky_jobs(failures) == {"pytest (1)": ([5, 6], ["tests/a.py::test_a"])}
+
+
+def test_flaky_jobs_counts_one_pr_failing_the_same_job_twice_once() -> None:
+    failures = [{"job": "pytest (1)", "pr": 5}, {"job": "pytest (1)", "pr": 5}]
+    assert keeper._flaky_jobs(failures) == {}
+
+
+@pytest.mark.parametrize("failures", [[], None, "x", {}])
+def test_flaky_jobs_with_no_usable_failures_is_empty(failures: Any) -> None:
+    assert keeper._flaky_jobs(failures) == {}
+
+
+def test_same_pr_failing_the_same_job_twice_opens_no_issue(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    fake, _ = _flaky_run(tmp_path, monkeypatch, [_recent("pytest (3)", 42)], ["pytest (3)"])
+    assert _issue_titles(fake) == []
+
+
+def test_ejection_with_no_failed_jobs_records_nothing_and_opens_no_issue(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    fake, path = _flaky_run(tmp_path, monkeypatch, [], [])
+    assert _issue_titles(fake) == []
+    assert json.loads(path.read_text()).get("failures", []) == []
