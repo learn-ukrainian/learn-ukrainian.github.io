@@ -110,9 +110,6 @@ OVERLAY_PATHSPECS = (
     ":(glob)**/tox.ini",
     ":(glob)**/setup.cfg",
     ":(glob)**/pyproject.toml",
-    # Pytest's default norecursedirs skips node_modules; pyproject.toml sets testpaths = ["tests"].
-    # Its scripts-only pythonpath and conftest setup never add node_modules to the interpreter path.
-    ":(exclude,glob)**/node_modules/**",
 )
 # Pytest base temps live outside every Git checkout and Git directory (#10654), under the fleet scratch
 # root of scripts/common/scratch.py. The hook imports no project code, so it restates that convention.
@@ -286,12 +283,52 @@ def outgoing_base(update: Update, root: Path) -> str:
     return base
 
 
+def is_regenerable_dependency_input(path: str, *, root: Path, tracked: set[str]) -> bool:
+    """Restate scripts/fleet/regenerable_output.py's dependency-directory predicate.
+
+    The hook stays stdlib-only. Keep this in parity with is_regenerable_ignored_path:
+    walk through the first node_modules, then require its tracked, local regular
+    sibling package-lock.json. Like the reaper, do not traverse dependency contents.
+    """
+    relative = Path(path)
+    if (
+        relative.is_absolute()
+        or ".." in relative.parts
+        or ".venv" in relative.parts
+        or "node_modules" not in relative.parts
+        or relative.as_posix() in tracked
+    ):
+        return False
+    current = root
+    try:
+        for index, part in enumerate(relative.parts):
+            current /= part
+            status = current.lstat()
+            if not (stat.S_ISDIR(status.st_mode) or stat.S_ISREG(status.st_mode)):
+                return False
+            if part == "node_modules" and stat.S_ISDIR(status.st_mode):
+                lock = Path(*relative.parts[:index]) / "package-lock.json"
+                return lock.as_posix() in tracked and stat.S_ISREG((root / lock).lstat().st_mode)
+    except OSError:
+        return False
+    return False
+
+
 def reject_untracked_inputs(root: Path) -> None:
     """Refuse when untracked or ignored Python/config files could change the run but not the receipt."""
     listing = git_ok("ls-files", "-z", "--others", "--", *OVERLAY_PATHSPECS, cwd=root)
     if listing is None:
         raise GateOutcome("state_unavailable", "cannot list untracked validation inputs", incomplete=True)
-    overlays = sorted(path for path in listing.split("\0") if path)
+    candidates = [path for path in listing.split("\0") if path]
+    tracked: set[str] = set()
+    if any("node_modules" in Path(path).parts for path in candidates):
+        tracked_listing = git_ok("ls-files", "-z", "--cached", cwd=root)
+        if tracked_listing is None:
+            raise GateOutcome("state_unavailable", "cannot list tracked dependency inputs", incomplete=True)
+        tracked = set(tracked_listing.split("\0"))
+    overlays = sorted(
+        path for path in candidates if not is_regenerable_dependency_input(path, root=root, tracked=tracked)
+    )
     if overlays:
         shown = ", ".join(overlays[:10]) + (f" (+{len(overlays) - 10} more)" if len(overlays) > 10 else "")
         raise GateOutcome(
