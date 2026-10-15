@@ -141,8 +141,9 @@ def _body_lines(message: str) -> list[str]:
 
     A line is dropped when it is inside a fenced code block (an unclosed fence runs to the
     end), an HTML comment (an unclosed comment runs to the end), a quoted block or the lazy
-    continuation of one (until the next blank line), or is an indented code line. For a
-    kept line only the text outside ``<!-- -->`` is returned.
+    continuation of one (until the next blank line), or is an indented code line. A kept
+    line is returned raw; a kept line containing a comment marker (``<!--`` or ``-->``) is
+    returned empty, so a comment can never be stripped into a well-formed line.
     """
     kept: list[str] = []
     fence: str | None = None
@@ -170,19 +171,22 @@ def _body_lines(message: str) -> list[str]:
         if opening and not (opening.group("fence")[0] == "`" and "`" in opening.group("info")):
             fence = opening.group("fence")
             continue
-        text = ""
+        if "<!--" not in line and "-->" not in line:
+            kept.append(line)
+            continue
+        # A line that carries a comment marker is never an attribution line and is never
+        # rewritten into one; only whether a comment stays open past it is tracked.
+        kept.append("")
+        remainder = line
         while True:
-            start = line.find("<!--")
+            start = remainder.find("<!--")
             if start == -1:
-                text += line
                 break
-            text += line[:start]
-            end = line.find("-->", start + 4)
+            end = remainder.find("-->", start + 4)
             if end == -1:
                 in_comment = True
                 break
-            line = line[end + 3 :]
-        kept.append(text)
+            remainder = remainder[end + 3 :]
     return kept
 
 

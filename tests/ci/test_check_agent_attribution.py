@@ -790,6 +790,64 @@ def test_attribution_after_a_closed_fence_and_comment_counts() -> None:
     assert check.extract_attribution(message) == check.Attribution(("codex/a",), 0)
 
 
+# --- a comment is never stripped into an attribution line --------------------------------------
+
+_COMMENT_SPELLINGS = {
+    "comment-inside-value": "X-Agent: codex/<!-- example -->a",
+    "comment-prefix": "<!-- c -->X-Agent: codex/a",
+    "comment-suffix": "X-Agent: codex/a<!-- c -->",
+    "unclosed-suffix": "X-Agent: codex/a<!--",
+}
+
+
+@pytest.mark.parametrize("name", sorted(_COMMENT_SPELLINGS))
+def test_comment_spelling_is_not_an_attribution_line(name: str) -> None:
+    message = f"subject (#12)\n\n{_COMMENT_SPELLINGS[name]}\n"
+
+    assert check.extract_attribution(message).values == ()
+
+
+@pytest.mark.parametrize("name", sorted(_COMMENT_SPELLINGS))
+def test_comment_spelling_fails_the_merge_group(
+    queue: Queue, capsys: pytest.CaptureFixture[str], name: str
+) -> None:
+    queue.open_pr(12, [f"source\n\n{_EXAMPLE}\n"])
+    queue.land(12, f"land (#12)\n\n{_COMMENT_SPELLINGS[name]}\n")
+
+    code, out = _run_group(queue, capsys)
+
+    assert code == 1
+    assert "MISSING_ATTRIBUTION pr=#12" in out
+
+
+@pytest.mark.parametrize("name", sorted(_COMMENT_SPELLINGS))
+def test_comment_spelling_fails_pr_mode(queue: Queue, capsys: pytest.CaptureFixture[str], name: str) -> None:
+    (sha,) = queue.open_pr(12, [f"source\n\n{_COMMENT_SPELLINGS[name]}\n"])
+
+    code, out = _run_pr(queue, capsys, sha)
+
+    assert code == 1
+    assert f"MISSING_ATTRIBUTION commit={sha[:12]}" in out
+
+
+@pytest.mark.parametrize(
+    "body",
+    ["X-Agent: codex/a\n", "<!-- note -->\n\nX-Agent: codex/a\n", "X-Agent: codex/a\n\nsee <!-- note --> here\n"],
+    ids=["plain", "comment-before", "comment-after"],
+)
+def test_well_formed_line_passes_both_modes_beside_a_comment(
+    queue: Queue, capsys: pytest.CaptureFixture[str], body: str
+) -> None:
+    (sha,) = queue.open_pr(12, [f"source\n\n{body}"])
+    queue.land(12, f"land (#12)\n\n{body}")
+
+    pr_code, pr_out = _run_pr(queue, capsys, sha)
+    group_code, group_out = _run_group(queue, capsys)
+
+    assert pr_code == 0, pr_out
+    assert group_code == 0, group_out
+
+
 # --- source relation: the fetched PR head must be the squash's own source ---------------------
 
 

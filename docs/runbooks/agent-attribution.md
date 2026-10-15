@@ -29,6 +29,8 @@ nothing for it. The check matches lines with a regular expression instead.
   block, a quoted block (`>`, including its lazy continuation up to the next blank
   line) or an HTML comment (`<!-- ... -->`, unclosed runs to the end) is an example,
   never a declaration: it satisfies nothing and is not required of the landed message.
+  A line is matched raw: a line containing a comment marker (`<!--` or `-->`) is never an
+  attribution line, so a comment is never stripped to leave a well-formed one.
   A real line beside a fenced example counts; the example does not.
 
 Source commits keep writing the trailer as today (`X-Agent: <agent>/<task-id>`).
