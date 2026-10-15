@@ -338,6 +338,60 @@ launcher_adapter_exec() {
     _assert_exit_line(result.stderr, env, 143, "TERM")
 
 
+# Bash discards a child's status when a trapped signal interrupts `wait` as the
+# child exits (a later `wait` then reports 127), so the waiting launcher must
+# only `wait` for a child that has already exited. The race itself is
+# timing-dependent; this asserts the invariant that rules it out (#9624). The
+# waiter's trap is the real relay, which also must not stall the timed pause.
+_WAIT_CHILD_SCRIPT = """
+source "$1"
+violations=0
+wait() {
+  if driver_scope_child_running "$1"; then violations=$((violations + 1)); fi
+  builtin wait "$@"
+}
+LC_MODE=interactive
+relayed=""
+child=""
+trap 'driver_scope_relay QUIT' QUIT
+( trap - QUIT; %s ) &
+child=$!
+%s
+driver_scope_wait_child "$child"
+printf 'rc=%%s violations=%%s relayed=%%s\\n' "$DS_CHILD_RC" "$violations" "$relayed"
+"""
+
+
+@pytest.mark.parametrize(
+    ("child", "signal_waiter", "expected"),
+    [
+        # The terminal's QUIT reaches the waiter while the child runs: relayed
+        # (no foreground terminal here), and the child's own status survives.
+        ("trap 'exit 43' QUIT; while :; do sleep 0.05; done", True, "rc=43 violations=0 relayed=QUIT"),
+        ("sleep 0.6; exit 0", False, "rc=0 violations=0 relayed="),
+        ("sleep 0.6; kill -KILL $BASHPID", False, "rc=137 violations=0 relayed="),
+        # Already exited, and not yet collected, when the launcher starts waiting.
+        ("exit 7", False, "rc=7 violations=0 relayed="),
+    ],
+)
+def test_waiting_launcher_collects_status_without_waiting_on_a_running_child(
+    child: str, signal_waiter: bool, expected: str
+) -> None:
+    signal = "( sleep 0.3; kill -QUIT $$ ) &" if signal_waiter else "sleep 0.3"
+    result = subprocess.run(
+        ["bash", "-c", _WAIT_CHILD_SCRIPT % (child, signal), "bash", str(REPO / "scripts/lib/driver_scope.sh")],
+        capture_output=True,
+        text=True,
+        timeout=30,
+        # No controlling terminal: the waiter is never in a foreground group.
+        start_new_session=True,
+    )
+    assert result.returncode == 0, result.stderr
+    assert result.stdout.strip() == expected, result.stderr
+    assert "not a child" not in result.stderr
+    assert "No such file" not in result.stderr
+
+
 @pytest.mark.parametrize("rc", [0, 5, 137])
 def test_logger_failure_preserves_exit_and_stderr(tmp_path: Path, rc: int) -> None:
     launcher, env = _launcher(tmp_path)

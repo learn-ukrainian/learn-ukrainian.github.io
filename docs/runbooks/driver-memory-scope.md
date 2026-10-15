@@ -78,6 +78,10 @@ relayed. The provider keeps the default QUIT disposition, as with direct
 execution. The status is the provider's own unless the launcher relayed a
 signal (130, 143, 129 or 131). Window resizes and terminal suspend/resume reach
 the whole job.
+The waiting launcher never blocks in `wait` while the session runs: a trapped
+signal that interrupts `wait` as the provider exits makes Bash drop the
+provider's status (a later `wait` reports 127). It polls the child's process
+state with a timed read and collects the status only after the child has exited.
 
 Known limits, each with a test or listed as untested: a terminal Ctrl-C reaches
 a driver's provider twice, once from the terminal and once from the supervisor

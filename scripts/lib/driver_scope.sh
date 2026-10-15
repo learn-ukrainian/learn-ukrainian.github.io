@@ -61,12 +61,15 @@ driver_scope_cgroup() {
 driver_scope_terminal_foreground() {
   # True when this shell's process group is its terminal's foreground group,
   # the group a keyboard INT or QUIT reaches as a whole.
-  local stat pgrp tpgid
-  IFS= read -r stat < "/proc/$$/stat" || return 1
+  # No `read` builtin: this runs in the relay trap, possibly inside the
+  # waiter's timed read (driver_scope_wait_child), whose timeout it would cancel.
+  local stat fields
+  stat="$(< "/proc/$$/stat")" || return 1
   # After the parenthesised command name, which may contain spaces: state,
   # ppid, pgrp, session, tty_nr, tpgid (proc_pid_stat(5)).
-  read -r _ _ pgrp _ _ tpgid _ <<< "${stat##*) }"
-  [ -n "$pgrp" ] && [ "$pgrp" = "$tpgid" ]
+  # shellcheck disable=SC2206 # splitting the numeric fields is the intent
+  fields=(${stat##*) })
+  [ -n "${fields[2]:-}" ] && [ "${fields[2]}" = "${fields[5]:-}" ]
 }
 
 # Generic, conservative fallbacks (bytes), not sized for any host. Each
@@ -210,6 +213,35 @@ driver_scope_relay() {
   [ -z "${child:-}" ] || kill -"$1" "$child" 2>/dev/null || true
 }
 
+driver_scope_child_running() {
+  # True while process $1 exists and has not exited: a zombie, which bash has
+  # not reaped yet, is finished (state after the parenthesised command name,
+  # proc_pid_stat(5)).
+  local stat
+  { IFS= read -r stat < "/proc/$1/stat"; } 2>/dev/null || return 1
+  stat="${stat##*) }"
+  case "${stat%% *}" in Z|X) return 1 ;; esac
+}
+
+driver_scope_wait_child() {
+  # Sets DS_CHILD_RC to the status of background child $1. Never blocks in
+  # `wait` while the child runs: a trapped signal that interrupts `wait` as the
+  # child exits leaves bash having reaped it and returning 128+signal, and
+  # every later `wait` reports 127 (not a child), so the provider's own status
+  # is lost. `wait` only collects a child that has already exited. The pause is
+  # a timed read on a pipe nothing writes to: a builtin, so the job gains no
+  # process, and traps still run at once. A trap must not run `read` itself
+  # (driver_scope_terminal_foreground does not): a nested read cancels this
+  # one's timeout.
+  local pid="$1" tick=""
+  { exec {tick}<> <(:); } 2>/dev/null || tick=""
+  while driver_scope_child_running "$pid"; do
+    if [ -n "$tick" ]; then read -r -t 0.1 -u "$tick" _ || true; else sleep 0.1; fi
+  done
+  [ -z "$tick" ] || exec {tick}<&-
+  wait "$pid" && DS_CHILD_RC=0 || DS_CHILD_RC=$?
+}
+
 launcher_enter_driver_scope() {
   local label
   case "$LC_MODE" in driver|interactive) ;; *) driver_scope_refuse invalid-mode; return 6 ;; esac
@@ -269,12 +301,8 @@ launcher_enter_driver_scope() {
   child=$!
   exec 219>&-
   [ -z "$relayed" ] || kill -"$relayed" "$child" 2>/dev/null || true
-  while :; do
-    wait "$child" || true
-    kill -0 "$child" 2>/dev/null || break
-  done
-  # A trapped signal ends wait early; bash keeps the child's own status.
-  wait "$child" && rc=0 || rc=$?
+  driver_scope_wait_child "$child"
+  rc="$DS_CHILD_RC"
   trap - INT TERM HUP QUIT
   local verified=""
   IFS= read -r verified <&218 || true
