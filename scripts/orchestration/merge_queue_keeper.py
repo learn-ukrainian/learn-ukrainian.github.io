@@ -4,11 +4,13 @@ from __future__ import annotations
 
 import argparse
 import fcntl
+import hashlib
 import json
 import os
 import re
 import subprocess
 import sys
+import unicodedata
 from collections import defaultdict
 from collections.abc import Mapping, Sequence
 from datetime import UTC, datetime, timedelta
@@ -71,6 +73,84 @@ QUIET_GATE_REASONS = frozenset({"requeue-pending"})
 # times per head. Aggregate jobs only mirror other jobs and never attribute.
 SHARED_FAILURE_REQUEUE_LIMIT = 3
 AGGREGATE_JOBS = frozenset({"CI Gate"})
+# Job and check names and failed-test identifiers come from workflow files and CI
+# logs, so any PR author controls them; gate reasons embed check names, and
+# GitHub error text is unvetted. They reach public issue titles, issue bodies and
+# PR comments only through ``display_text`` / ``code_span``, bounded here, and the
+# HTML comment marker only through ``marker_value``. Decisions and local log
+# lines keep the raw text.
+DISPLAY_JOB_LIMIT = 100  # characters of a job name shown, before the id suffix
+DISPLAY_TEST_LIMIT = 200  # characters of a failed-test identifier shown
+DISPLAY_REASON_LIMIT = 200  # characters of a gate reason or GitHub error shown
+DISPLAY_TEST_ITEMS = 10  # failed tests listed in one issue body
+DISPLAY_ID_LENGTH = 8  # hex digits of the raw-text digest appended to altered text
+MARKER_ID_LENGTH = 16  # hex digits of the raw-text digest that replaces a disallowed marker value
+
+
+# (pattern, replacement) pairs applied in order by ``display_text``.
+_NEUTRALISERS = tuple(
+    (re.compile(pattern), replacement)
+    for pattern, replacement in (
+        (r"@", "(at)"),  # user and team mentions, and bare addresses
+        (r"#(?=\d)", "(#)"),  # issue and PR references
+        (r"(?i)\bGH-(?=\d)", "GH(-)"),
+        (r"\[", "("),  # inline links, images and references
+        (r"\]", ")"),
+        (r"<", "\u2039"),  # HTML and autolinks
+        (r">", "\u203a"),
+        (r"`", "'"),  # code spans and fences
+        (r"~", "-"),  # tilde fences and strike-through
+        (r"&(?=#?\w+;)", "(&)"),  # character references
+        (r"://", ":(//)"),  # bare URLs
+        (r"(?i)\bwww\.", "www(.)"),
+    )
+)
+_DROPPED_CATEGORIES = frozenset({"Cf", "Cs", "Co", "Cn"})  # format, surrogate, private, unassigned
+_SPACED_CATEGORIES = frozenset({"Cc", "Zl", "Zp"})  # control and line or paragraph separators
+# Short ASCII without ``<``, ``>``, ``!``, ``@``, brackets, backticks or line breaks:
+# such a value can neither end the HTML comment nor mention, link or format anything.
+_MARKER_VALUE = re.compile(r"[A-Za-z0-9 _.,;:=+/()-]{1,200}\Z")
+
+
+def display_text(raw: str, limit: int = DISPLAY_JOB_LIMIT) -> str:
+    """Plain text safe for an issue title or Markdown body, deterministic in ``raw``.
+
+    Neutralises mentions (including look-alike ``@`` signs and ``@org/team``),
+    Markdown links and images, HTML, backticks and tildes, issue and PR
+    auto-references, newlines and control or format characters, then bounds the
+    length. Text that had to change gets a short digest of the raw text, so two
+    different hostile names never collapse into one title. Benign names pass
+    through unchanged, which keeps titles of already filed issues matching.
+    """
+    text = unicodedata.normalize("NFKC", raw)  # folds full-width and small ``@``, ``#``, backtick, ``<``
+    categories = [(char, unicodedata.category(char)) for char in text]
+    text = "".join(" " if cat in _SPACED_CATEGORIES else char for char, cat in categories if cat not in _DROPPED_CATEGORIES)
+    text = " ".join(text.split())
+    for pattern, replacement in _NEUTRALISERS:
+        text = pattern.sub(replacement, text)
+    if len(text) > limit:
+        text = text[: limit - 1].rstrip() + "\u2026"
+    text = text or "(unnamed)"
+    if text != raw:
+        text += f" (id:{hashlib.sha256(raw.encode('utf-8', 'surrogatepass')).hexdigest()[:DISPLAY_ID_LENGTH]})"
+    return text
+
+
+def code_span(raw: str, limit: int = DISPLAY_JOB_LIMIT) -> str:
+    """``display_text`` inside an inline code span: inert Markdown even if a pattern slips through."""
+    return f"`{display_text(raw, limit)}`"
+
+
+def marker_value(raw: str) -> str:
+    """``raw`` for an HTML comment marker when it is allowlisted, else a digest of it.
+
+    Fixed reasons, head SHAs and plain check names keep the markers of comments
+    already posted, so de-duplication still finds them. Any other text becomes
+    ``sha256-<hex>``: deterministic in ``raw`` and unable to break out of the marker.
+    """
+    if _MARKER_VALUE.fullmatch(raw):
+        return raw
+    return f"sha256-{hashlib.sha256(raw.encode('utf-8', 'surrogatepass')).hexdigest()[:MARKER_ID_LENGTH]}"
 
 
 class KeeperError(RuntimeError):
@@ -671,14 +751,17 @@ def _flush_pending_comments(
 def _comment_once(
     gh: GitHub, number: int, head: str, reason: str, comments: list[dict[str, Any]], login: str, detail: str = ""
 ) -> None:
-    marker = MARKER.format(head=head, reason=reason)
+    """Post why ``head`` was not queued, once per head and reason; ``detail`` is already display-safe."""
+    marker = MARKER.format(head=marker_value(head), reason=marker_value(reason))
     if any(marker in str(row.get("body", "")) and (row.get("user") or {}).get("login") == login for row in comments):
         return
-    gh.comment(number, f"Merge queue keeper: #{number} was not queued because {reason}.{detail}\n\n{marker}")
+    shown = display_text(reason, DISPLAY_REASON_LIMIT)
+    gh.comment(number, f"Merge queue keeper: #{number} was not queued because {shown}.{detail}\n\n{marker}")
     comments.append({"body": marker, "user": {"login": login}})
 
 
-def _drop_detail(gh: GitHub, number: int, head: str, since: str) -> tuple[str, list[str]]:
+def _drop_detail(gh: GitHub, number: int, head: str, since: str) -> tuple[str, list[str], dict[str, str]]:
+    """Return the diagnosis text, the failed job names and the first failed test per job."""
     timeline = gh.timeline(number)
     events = [
         item
@@ -706,7 +789,7 @@ def _drop_detail(gh: GitHub, number: int, head: str, since: str) -> tuple[str, l
         and extract_pr_number(str(item.get("head_branch", ""))) == number
     ]
     if not runs:
-        return (" Queue removal confirmed; failing merge_group run unknown." if events else ""), []
+        return (" Queue removal confirmed; failing merge_group run unknown." if events else ""), [], {}
     run = max(runs, key=lambda item: item.get("created_at", ""))
     if not isinstance(run.get("id"), int):
         raise KeeperError("matching merge_group run has no valid id")
@@ -714,11 +797,12 @@ def _drop_detail(gh: GitHub, number: int, head: str, since: str) -> tuple[str, l
     try:
         jobs = gh.jobs(run["id"])
     except KeeperError as exc:
-        return f"{run_detail}; failing job lookup failed: {exc}.", []
+        return f"{run_detail}; failing job lookup failed: {display_text(str(exc), DISPLAY_REASON_LIMIT)}.", [], {}
     failed = sorted(
         {str(job["name"]) for job in jobs if job.get("conclusion") == "failure" and isinstance(job.get("name"), str)}
     )
-    detail = f"{run_detail}; failing jobs: {', '.join(failed) or 'none reported'}."
+    names = ", ".join(code_span(name) for name in failed) or "none reported"
+    detail = f"{run_detail}; failing jobs: {names}."
     job = next(
         (
             job
@@ -729,14 +813,16 @@ def _drop_detail(gh: GitHub, number: int, head: str, since: str) -> tuple[str, l
         ),
         None,
     )
+    tests: dict[str, str] = {}
     if job:
         try:
             test = gh.first_failed_test(job["id"])
             if test:
-                detail += f" First FAILED test: {test}."
+                detail += f" First FAILED test: {code_span(test, DISPLAY_TEST_LIMIT)}."
+                tests[str(job["name"])] = test
         except KeeperError:
             pass  # Optional log enrichment must not hide the run/job diagnosis.
-    return detail, failed
+    return detail, failed, tests
 
 
 def _shared_failure(failures: Any, failed_jobs: list[str], number: int) -> list[int]:
@@ -755,6 +841,22 @@ def _shared_failure(failures: Any, failed_jobs: list[str], number: int) -> list[
     if not all(others.get(job) for job in jobs):
         return []
     return sorted(set().union(*(others[job] for job in jobs)))
+
+
+def _flaky_jobs(failures: Any) -> dict[str, tuple[list[int], list[str]]]:
+    """Non-aggregate jobs that failed on two or more distinct PRs, with their PRs and failed tests."""
+    prs: dict[str, set[int]] = defaultdict(set)
+    tests: dict[str, set[str]] = defaultdict(set)
+    for item in failures if isinstance(failures, list) else []:
+        if not isinstance(item, dict):
+            continue
+        job, number, test = item.get("job"), item.get("pr"), item.get("test")
+        if not isinstance(job, str) or job in AGGREGATE_JOBS or type(number) is not int:
+            continue
+        prs[job].add(number)
+        if isinstance(test, str) and test:
+            tests[job].add(test)
+    return {job: (sorted(numbers), sorted(tests[job])) for job, numbers in prs.items() if len(numbers) >= 2}
 
 
 def run(
@@ -807,6 +909,7 @@ def run(
         dropped = key in previous["queued"] and queued is False
         detail = ""
         failed_jobs: list[str] = []
+        failed_tests: dict[str, str] = {}
         if dropped:
             dropped_head = previous["queued"][key]
             previous.setdefault("undiagnosed", {}).setdefault(f"{number}:{dropped_head}", previous.get("observed", ""))
@@ -815,7 +918,7 @@ def run(
         prior_drop_key = f"{number}:{dropped_head}"
         if queued is False and prior_drop_key in previous.get("undiagnosed", {}):
             try:
-                detail, failed_jobs = _drop_detail(gh, number, head, previous["undiagnosed"][prior_drop_key])
+                detail, failed_jobs, failed_tests = _drop_detail(gh, number, head, previous["undiagnosed"][prior_drop_key])
                 if detail:
                     previous["undiagnosed"].pop(prior_drop_key)
                     previous["drops"][prior_drop_key] = int(previous["drops"].get(prior_drop_key, 0)) + 1
@@ -834,7 +937,7 @@ def run(
                 else:
                     detail = " Queue removal diagnosis unknown."
             except KeeperError as exc:
-                detail = f" Queue removal diagnosis lookup failed: {exc}."
+                detail = f" Queue removal diagnosis lookup failed: {display_text(str(exc), DISPLAY_REASON_LIMIT)}."
         reason = _reason(pr, verdict, checks, drops, queue_enabled)
         if reason == "ready" and queued is not True and not armed:
             try:
@@ -996,7 +1099,12 @@ def run(
             elif reason != "ready" and dropped and detail and comment_safe:
                 _comment_once(gh, number, head, "queue-drop", comments, login, detail)
             for job in failed_jobs:
-                previous.setdefault("failures", []).append({"job": job, "pr": number, "at": observed})
+                if job in AGGREGATE_JOBS:
+                    continue  # The aggregate gate fails whenever any job fails; it is never a flaky test.
+                record: dict[str, Any] = {"job": job, "pr": number, "at": observed}
+                if job in failed_tests:
+                    record["test"] = failed_tests[job]
+                previous.setdefault("failures", []).append(record)
         except KeeperError as exc:
             failed = True
             lines.append(f"#{number} FAILED: {exc}")
@@ -1017,20 +1125,22 @@ def run(
             if isinstance(item, dict) and isinstance(item.get("at"), str) and item["at"] >= cutoff.isoformat()
         ]
         previous["failures"] = failures
-        by_job: dict[str, set[int]] = defaultdict(set)
-        for item in failures:
-            by_job[str(item["job"])].add(int(item["pr"]))
-        for job, numbers in by_job.items():
-            if len(numbers) < 2 or not budget:
+        for job, (numbers, tests) in _flaky_jobs(failures).items():
+            if not budget:
                 continue
-            title = f"Merge queue flaky test: {job}"
+            title = f"Merge queue flaky test: {display_text(job)}"
+            body = (
+                f"{code_span(job)} failed merge_group runs on distinct PRs "
+                f"{', '.join(f'#{n}' for n in numbers)} within 24 hours."
+            )
+            if tests:
+                shown = ", ".join(code_span(test, DISPLAY_TEST_LIMIT) for test in tests[:DISPLAY_TEST_ITEMS])
+                more = len(tests) - DISPLAY_TEST_ITEMS
+                body += f" Failed test: {shown}{f' and {more} more' if more > 0 else ''}."
             try:
                 issues = gh.issues(title)
                 if not any(item.get("title") == title for item in issues):
-                    gh.create_issue(
-                        title,
-                        f"{job} failed merge_group runs on distinct PRs {', '.join(f'#{n}' for n in sorted(numbers))} within 24 hours.",
-                    )
+                    gh.create_issue(title, body)
             except KeeperError as exc:
                 failed = True
                 lines.append(f"flaky-test issue FAILED: {exc}")
