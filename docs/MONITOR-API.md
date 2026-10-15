@@ -619,10 +619,14 @@ contract:
   in the kernel's socket tables, the one process holding the connecting end of
   the claim's loopback connection, and records the identity of that process's
   parent when the parent is the claim's `process_id` (the launcher runs the
-  claim command as its direct child). Otherwise, including a shared socket, a
-  peer in another PID or network namespace, a proxy or a process Monitor may
-  not inspect, it records none. A replay with the same IDs must derive the same
-  value, otherwise `409`.
+  claim command as its direct child). A local proxy or TCP forwarder is itself
+  the connecting process, so Monitor records the forwarder's own parent (only
+  when that parent is the claim's `process_id`), never the client behind it;
+  the ancestry proof then admits only that parent and its descendants. It
+  records none for a socket shared by two processes, a peer in another PID or
+  network namespace (a forwarder there included), a process Monitor may not
+  inspect, or a parent other than the claim's `process_id`. A replay with the
+  same IDs must derive the same value, otherwise `409`.
 - The value is fixed for the generation. `heartbeat`, `handoff`, `bundles` and
   `release` never match, populate or change it: any value in their lease
   envelope is ignored, so an envelope echoed from a read still works. Store

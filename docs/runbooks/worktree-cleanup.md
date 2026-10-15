@@ -348,9 +348,13 @@ loopback connection and fingerprints that process's parent, recording it only
 when that parent is the holder PID the claim names: the launcher runs the claim
 command (the session supervisor) as its direct child. A claim that carries the
 field at all is refused `400` with error `process_identity_nominated`, so no
-argument, environment value or API client nominates it. Anything ambiguous (a
-socket shared by two processes, a peer in another PID or network namespace, a
-proxy, a process Monitor may not inspect) records none. It is fixed for the
+argument, environment value or API client nominates it. A local proxy or TCP
+forwarder is itself the connecting process, so Monitor records the forwarder's
+own parent (only when that parent is the claimed holder PID), never the client
+behind it, and the ancestry proof then admits only that parent and its
+descendants. Anything ambiguous (a socket shared by two processes, a peer in
+another PID or network namespace, a forwarder there included, a process
+Monitor may not inspect) records none. It is fixed for the
 generation: renewal, release and fenced writes never match, carry or change it
 (the store's triggers refuse any change within a generation and any
 `INSERT OR REPLACE` of the projection), and a new holder gets a new generation

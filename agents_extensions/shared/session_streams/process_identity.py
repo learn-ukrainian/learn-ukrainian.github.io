@@ -196,10 +196,12 @@ def connected_peer_parent_identity(client: tuple[str, int], server: tuple[str, i
     parent. The identity is returned only when that parent is ``parent_pid``,
     the holder PID the claim records: the launcher runs the claim command as
     its direct child, so a lease records the launcher it names and nothing a
-    caller nominates. ``None`` when anything is ambiguous or unreadable (a
-    shared socket, a peer in another PID or network namespace, a proxy, a
-    process this one may not inspect, or a parent other than ``parent_pid``):
-    the lease then records no identity and every proof against it refuses.
+    caller nominates. A local proxy or TCP forwarder is itself the peer, so
+    the identity is the forwarder's own parent, never the client behind it.
+    ``None`` when anything is ambiguous or unreadable (a shared socket, a peer
+    in another PID or network namespace, a process this one may not inspect,
+    or a parent other than ``parent_pid``): the lease then records no
+    identity and every proof against it refuses.
     """
     if isinstance(parent_pid, bool) or not isinstance(parent_pid, int) or parent_pid <= 1:
         return None
