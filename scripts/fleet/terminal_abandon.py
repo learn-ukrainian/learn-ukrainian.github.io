@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import contextlib
 import hashlib
+import hmac
 import json
 import os
 import re
@@ -13,7 +14,7 @@ import subprocess
 import sys
 import tempfile
 from collections.abc import Mapping
-from datetime import UTC, datetime, timedelta
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -103,9 +104,10 @@ def _current_custody(lease: Any, stream: str) -> dict[str, Any]:
     Membership in the succession map grants nothing; only this exact, unexpired
     lease does. A local PID never proves a remote lease expired, so Monitor is the
     sole authority and any unavailable or malformed answer refuses. The envelope
-    from the environment only names the lease: Monitor's stream view publishes
-    every envelope field, so possession proves nothing until the caller is shown
-    to run beneath Monitor's recorded holder process. Read only.
+    from the environment (including its ``LU_MONITOR_HOST_ID`` host label) only
+    names the lease and can only narrow the match: Monitor's stream view
+    publishes every envelope field, so possession proves nothing until the kernel
+    shows the caller running beneath Monitor's recorded holder process. Read only.
     """
     from scripts.session_supervisor.remote import RemoteEpicClient
 
@@ -131,7 +133,8 @@ def verify_current_custody(expected: dict[str, Any], *, caller_holds: bool = Fal
 
     Only the canonical loopback Monitor is asked: an environment-selected
     endpoint could answer for any lease. With ``caller_holds`` this process must
-    also be Monitor's recorded holder process or one of its descendants.
+    also be Monitor's recorded holder process or one of its descendants, proven
+    from the kernel by ``prove_holder_process``.
     """
     from agents_extensions.shared.session_streams.model import parse_timestamp
     from scripts.session_supervisor.remote import DEFAULT_MONITOR, RemoteEpicClient, RemoteSupervisorError
@@ -166,9 +169,7 @@ def verify_current_custody(expected: dict[str, Any], *, caller_holds: bool = Fal
         prove_holder_process(current)
 
 
-# Monitor stores whole-second heartbeats and /proc reports a whole-second boot
-# time; allow that rounding when comparing a holder's start with its lease.
-_HOLDER_START_SLACK = timedelta(seconds=2)
+_BOOT_ID = Path("/proc/sys/kernel/random/boot_id")
 
 
 def _process_lineage() -> dict[int, int]:
@@ -185,44 +186,54 @@ def _process_lineage() -> dict[int, int]:
     return lineage
 
 
-def _boot_time() -> datetime:
-    for line in Path("/proc/stat").read_text(encoding="ascii").splitlines():
-        if line.startswith("btime "):
-            return datetime.fromtimestamp(int(line.split()[1]), UTC)
-    raise ValueError("boot time unavailable")
+def _boot_id() -> str:
+    """This kernel's random per-boot identity; it differs on every other host and boot."""
+    value = _BOOT_ID.read_text(encoding="ascii").strip()
+    if not re.fullmatch(r"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}", value):
+        raise ValueError("kernel boot identity unavailable")
+    return value
+
+
+def _holder_identity(boot_id: str, pid: int, start_ticks: int) -> str:
+    """One process incarnation on one boot of one host: SHA-256 of ``<boot_id>:<pid>:<start_ticks>``."""
+    return hashlib.sha256(f"{boot_id}:{pid}:{start_ticks}".encode("ascii")).hexdigest()
 
 
 def prove_holder_process(lease: Mapping[str, Any]) -> None:
     """Prove this process is Monitor's recorded lease holder process or its descendant (#10657).
 
     The launcher records its own PID as the holder and starts the provider
-    beneath it, so a genuine session always descends from that process on the
-    holder's host. Process ancestry cannot be set from the environment. A PID
-    the kernel reused after the holder exited belongs to a process that started
-    after the lease's last heartbeat and is refused, as is an app-thread holder,
-    which has no process to prove.
+    beneath it. A PID alone names a process only on one host and boot, and a
+    host label is configuration any caller can set, so locality is proven from
+    the kernel alone: the lease must record ``holder.process_identity``, the
+    SHA-256 of the holder's boot id, PID and start time in clock ticks since
+    boot (/proc/<pid>/stat field 22), and this process's own ancestor with that
+    PID must reproduce it from this kernel. A lease held on another host or
+    boot, a reused PID, a lease that records no identity, and an app-thread
+    holder (no process) are all refused. No environment value is read.
     """
-    from agents_extensions.shared.session_streams.model import parse_timestamp
-    from scripts.api.occupancy_local import resolve_launcher_host_id
-
     holder = lease.get("holder")
     pid = holder.get("process_id") if isinstance(holder, dict) else None
     if not isinstance(holder, dict) or holder.get("holder_kind") != "process" or type(pid) is not int or pid <= 0:
         raise Refusal("HOLDER_UNPROVEN", "stream custody is not held by a recorded local process")
-    if holder.get("host_id") is None or holder.get("host_id") != resolve_launcher_host_id():
-        raise Refusal("HOLDER_UNPROVEN", "stream custody is held on another host")
+    claimed = holder.get("process_identity")
+    if not isinstance(claimed, str) or not re.fullmatch(r"[a-f0-9]{64}", claimed):
+        raise Refusal(
+            "HOLDER_UNPROVEN",
+            "stream custody records no kernel process identity for its holder, so no host can prove it holds it",
+        )
     try:
         lineage = _process_lineage()
-        heartbeat = parse_timestamp(lease["heartbeat_at"])
-        started = None
-        if pid in lineage:
-            started = _boot_time() + timedelta(seconds=lineage[pid] / os.sysconf("SC_CLK_TCK"))
-    except (OSError, ValueError, KeyError, IndexError, TypeError, OverflowError):
-        raise Refusal("HOLDER_UNPROVEN", "process ancestry or custody heartbeat unavailable") from None
-    if started is None:
+        boot = _boot_id()
+    except (OSError, ValueError, IndexError, UnicodeDecodeError):
+        raise Refusal("HOLDER_UNPROVEN", "process ancestry or kernel boot identity unavailable") from None
+    if pid not in lineage:
         raise Refusal("HOLDER_UNPROVEN", "this process is neither the stream custody holder nor its descendant")
-    if started > heartbeat + _HOLDER_START_SLACK:
-        raise Refusal("HOLDER_UNPROVEN", "the holder PID was reused after the custody's last heartbeat")
+    if not hmac.compare_digest(_holder_identity(boot, pid, lineage[pid]), claimed):
+        raise Refusal(
+            "HOLDER_UNPROVEN",
+            "stream custody is held by a process on another host or boot, or by an earlier process with this PID",
+        )
 
 
 def _succession_map() -> tuple[dict[str, str], str]:
@@ -579,8 +590,10 @@ def record_abandon(
             receipt["preservation"]["path"] = temporary.relative_to(primary).as_posix()
             candidate = dict(creator, worktree_abandon=receipt)
             proposed = [(p, candidate if p == creator_path else r) for p, r in matches]
+            # Local validation of the proposed record; the complete proof, with its
+            # GitHub and Monitor probes first, runs again just before publication.
             try:
-                output.terminal_abandon_creator(proposed, tree, primary=primary, tasks_dir=tasks)
+                output.terminal_abandon_local(proposed, tree, primary=primary, tasks_dir=tasks, on_disk=matches)
             except output.SuccessionRefusal as exc:
                 raise Refusal(exc.code, str(exc)) from None
             except (OSError, ValueError, RuntimeError):
@@ -613,11 +626,12 @@ def record_abandon(
                     raise Refusal(
                         "PRESERVATION_INVALID", "untracked or ignored output changed before publication"
                     ) from None
-            # Activity probes can take time. Revalidate the head and every patch
-            # after them, immediately before publishing either final artifact.
+            # Activity and PR probes take time. The validator runs its own GitHub
+            # and Monitor probes first, then re-reads the cohort, head, patches and
+            # output, immediately before publishing either final artifact (#10657).
             receipt["preservation"]["path"] = temporary.relative_to(primary).as_posix()
             try:
-                output.terminal_abandon_creator(proposed, tree, primary=primary, tasks_dir=tasks)
+                output.terminal_abandon_creator(proposed, tree, primary=primary, tasks_dir=tasks, on_disk=matches)
             except output.SuccessionRefusal as exc:
                 raise Refusal(exc.code, str(exc)) from None
             except (OSError, ValueError, RuntimeError):
@@ -924,9 +938,7 @@ def owner_lane(seat: Any, holder_agent: Any, initiator: Any, initiators: list[An
     }
 
 
-def _attested_owner(
-    caller: Any, host: dict[str, Any], matches: list[tuple[Path, dict[str, Any]]]
-) -> tuple[Any, dict[str, Any]]:
+def _attested_owner(caller: Any, host: dict[str, Any], matches: list[tuple[Path, dict[str, Any]]]) -> dict[str, Any]:
     """Authenticate the lane owner from this session's launcher custody, never from an argument.
 
     The environment's lease only names which custody the caller claims; it must
@@ -954,7 +966,7 @@ def _attested_owner(
     if lease.stream_id != owner["stream_id"]:
         raise Refusal("FOREIGN_OWNER", "caller's seat and stream custody are not the lane that owns the task")
     owner["authority"] = _current_custody(lease, owner["stream_id"])
-    return lease, owner
+    return owner
 
 
 def _content_file(primary: Path, parent: Path, key: str, payload: bytes) -> tuple[dict[str, str], Path | None]:
@@ -1077,11 +1089,13 @@ def _attest(
             else:
                 return {"outcome": "already_recorded", **summary}
         replaces = _replaced(matches, host_path, tasks)
+        # Slow and external probes (GitHub, Monitor, process scan) come before the
+        # local tree checks, so the tree they describe is the one just read.
         _attested_prs(tree, branch, matches)
         _attested_activity(primary, tasks, tree, matches, head)
+        owner = _attested_owner(caller, host, matches)
         _attested_clean(tree, head)
         plan = _preservation_plan(primary, tree, host, head)
-        lease, owner = _attested_owner(caller, host, matches)
         if not write:
             return {
                 "outcome": "would_record",
@@ -1091,7 +1105,7 @@ def _attest(
                 "preservation_plan": plan,
             }
         return _publish_attestation(
-            primary, tasks, tree, host_path, host, matches, identity, summary, replaces, plan, lease, owner
+            primary, tasks, tree, host_path, host, matches, identity, summary, replaces, plan, owner
         )
     except Refusal as exc:
         if replaces is not None and exc.context is None:
@@ -1110,7 +1124,6 @@ def _publish_attestation(
     summary: dict[str, Any],
     replaces: list[dict[str, str]],
     plan: dict[str, Any],
-    lease: Any,
     owner: dict[str, Any],
 ) -> dict[str, Any]:
     """Produce and verify all preservation, then publish manifest, output locator and record."""
@@ -1191,28 +1204,27 @@ def _publish_attestation(
         candidate = dict(host, worktree_abandon=receipt)
         proposed = [(path, candidate if path == host_path else member) for path, member in matches]
 
-        def validate(stage: str) -> None:
-            # The unmodified removal reader validates the temporary manifest.
-            receipt["preservation"]["path"] = temporary.relative_to(primary).as_posix()
-            try:
-                output.terminal_abandon_creator(proposed, tree, primary=primary, tasks_dir=tasks)
-            except (OSError, ValueError, RuntimeError, subprocess.SubprocessError) as exc:
-                raise Refusal("PRESERVATION_INVALID", f"{stage}: {_privacy_safe(str(exc), tree, primary)}") from None
-            receipt["preservation"]["path"] = destination.relative_to(primary).as_posix()
-
-        validate("attested preservation failed the removal reader")
-        # Probes take time: recheck activity, cohort, PRs, custody and output.
-        _attested_activity(primary, tasks, tree, matches, head)
-        if output.matching_worktree_records(tree, tasks, repo_root=primary, publish_cache=False) != matches:
-            raise Refusal("STATE_CHANGED", "task cohort changed during validation; retry after it settles")
-        _attested_prs(tree, identity["branch"], matches)
-        if _current_custody(lease, owner["stream_id"]) != owner["authority"]:
-            raise Refusal("STALE_AUTHORITY", "stream custody changed during validation")
+        # The unmodified removal reader validates the temporary manifest. Every
+        # slow probe runs first: the reader's GitHub and Monitor probes, then
+        # liveness (Monitor, process scan). Only then does the reader re-read the
+        # cohort and every local fact, immediately before publication (#10657).
+        receipt["preservation"]["path"] = temporary.relative_to(primary).as_posix()
         try:
-            output.verify_abandon_output(tree, primary=primary, record=host, locator=locator)
-        except (OSError, ValueError, RuntimeError, subprocess.SubprocessError):
-            raise Refusal("PRESERVATION_INVALID", "untracked or ignored output changed before publication") from None
-        validate("checkout or preservation changed before publication")
+            output.terminal_abandon_external(proposed, tree, primary=primary, tasks_dir=tasks)
+            _attested_activity(primary, tasks, tree, matches, head)
+            output.terminal_abandon_local(proposed, tree, primary=primary, tasks_dir=tasks, on_disk=matches)
+        except Refusal:
+            raise
+        except output.AttestationRefusal as exc:
+            raise Refusal(exc.code, exc.reason) from None
+        except output.CohortChanged as exc:
+            raise Refusal("STATE_CHANGED", str(exc)) from None
+        except (OSError, ValueError, RuntimeError, subprocess.SubprocessError) as exc:
+            raise Refusal(
+                "PRESERVATION_INVALID",
+                f"checkout or preservation changed before publication: {_privacy_safe(str(exc), tree, primary)}",
+            ) from None
+        receipt["preservation"]["path"] = destination.relative_to(primary).as_posix()
         if destination.exists() or destination.is_symlink():
             if _regular_bytes(destination, primary) != encoded:
                 raise Refusal("PRESERVATION_INVALID", "existing manifest differs; no overwrite is permitted")
@@ -1261,8 +1273,11 @@ def main(argv: list[str] | None = None) -> int:
             "Dry-run by default; --apply writes one record per tree; a rerun is already_recorded.\n"
             "The owner is never an argument: it is this session's launcher lease, verified as the\n"
             "current custody in the canonical loopback Monitor, with this process running beneath\n"
-            "the lease's recorded holder process on the same host (HOLDER_UNPROVEN otherwise; an\n"
-            "environment copy of a lease proves nothing). Its attributed seat must be registered\n"
+            "the lease's recorded holder process, proven from the kernel alone: the lease must\n"
+            "record holder.process_identity, SHA-256 of '<boot_id>:<pid>:<start_ticks>', and this\n"
+            "host must reproduce it for one of this process's ancestors (HOLDER_UNPROVEN otherwise;\n"
+            "a lease without it, an environment copy of a lease or a host label proves nothing;\n"
+            "no environment value is read for this). Its attributed seat must be registered\n"
             "in scripts/config/area_assignments.yaml for the provider holding the lease, and its\n"
             "stream must be the lane that scripts/config/terminal_abandon_succession.yaml maps\n"
             "every bound task's initiator to. It replaces only missing creator evidence\n"
@@ -1278,7 +1293,9 @@ def main(argv: list[str] | None = None) -> int:
             "complete task cohort including each initiator; any later change refuses removal.\n"
             "Removal recomputes the owning lane from the reviewed maps, rechecks every bound\n"
             "branch's PR, and requires the attested lease to still be current custody with the\n"
-            "remover beneath its holder process: run the reaper from the attesting session,\n"
+            "remover beneath its holder process. Writer and remover run every GitHub and Monitor\n"
+            "probe first, then re-read the cohort and the checkout, immediately before acting.\n"
+            "Run the reaper from the attesting session,\n"
             "  scripts/orchestration/reap_worktrees.py --legacy-classes --preserve-then-reap\n"
             "  --worktree <tree> --apply\n"
             "After a session rollover or a map change the lane's current owner reruns the same\n"

@@ -74,6 +74,10 @@ class AttestationRefusal(ValueError):
         self.reason = reason
 
 
+class CohortChanged(ValueError):
+    """The bound task records changed while an abandon proof was checked; retry after they settle (#10657)."""
+
+
 class PreservationLimit(ValueError):
     """A complete snapshot exceeds the existing automatic preservation budget."""
 
@@ -582,6 +586,31 @@ def succession_streams(path: Path | None = None) -> tuple[dict[str, str], str]:
     return mapping, hashlib.sha256(raw).hexdigest()
 
 
+def _succession_authority(receipt: Mapping[str, Any]) -> dict[str, Any]:
+    """The custody a successor's receipt names, shape-checked before Monitor is asked about it."""
+    succession = receipt.get("succession")
+    authority = succession.get("authority") if isinstance(succession, dict) else None
+    if (
+        not isinstance(authority, dict)
+        or not isinstance(authority.get("stream_id"), str)
+        or authority["stream_id"] != succession.get("stream_id")
+        or any(type(authority.get(key)) is not int for key in ("generation", "fencing_token"))
+        or any(not isinstance(authority.get(key), str) or not authority[key] for key in ("session_id", "lease_id"))
+    ):
+        raise ValueError("terminal-abandon succession receipt invalid")
+    return authority
+
+
+def _succession_custody(receipt: Mapping[str, Any]) -> None:
+    """The external half of the succession proof: the recorded custody is still Monitor's current lease."""
+    from scripts.fleet.terminal_abandon import Refusal, verify_current_custody
+
+    try:
+        verify_current_custody(_succession_authority(receipt))
+    except Refusal as exc:
+        raise SuccessionRefusal(exc.code, str(exc)) from None
+
+
 def _verify_succession(
     receipt: Mapping[str, Any],
     manifest: Mapping[str, Any],
@@ -592,7 +621,8 @@ def _verify_succession(
 ) -> None:
     """Prove a successor's receipt still binds this exact task, tree, head and map entry (#10617).
 
-    Removal rechecks live custody, exact map bytes, checkout identity, branch,
+    The local half only: removal first rechecks live custody
+    (``_succession_custody``), then exact map bytes, checkout identity, branch,
     preservation digest and current untracked/ignored output under its locks.
     """
     from scripts.orchestration.worktree_claims import checked_out_branch
@@ -605,7 +635,6 @@ def _verify_succession(
         raise ValueError("terminal-abandon succession tree binding invalid") from None
     mapping, mapping_digest = succession_streams()
     initiator = creator.get("initiator")
-    branch = checked_out_branch(worktree)
     if (
         not isinstance(succession, dict)
         or not isinstance(authority, dict)
@@ -617,7 +646,6 @@ def _verify_succession(
         or not isinstance(succession.get("mapping_sha256"), str)
         or not re.fullmatch(r"[a-f0-9]{64}", succession["mapping_sha256"])
         or succession.get("tree") != tree
-        or succession.get("branch") != branch
         or succession.get("head_sha") != receipt.get("head_sha")
         or succession.get("preservation_sha256") != (receipt.get("preservation") or {}).get("sha256")
         or authority.get("stream_id") != succession.get("stream_id")
@@ -628,17 +656,7 @@ def _verify_succession(
         raise ValueError("terminal-abandon succession receipt invalid")
     if mapping_digest != succession["mapping_sha256"]:
         raise ValueError("terminal-abandon succession MAPPING_CHANGED: reviewed mapping bytes changed")
-    if branch is None:
-        if not detached_head(worktree):
-            raise ValueError("terminal-abandon detached HEAD proof unavailable")
-        tracked_clean(worktree, receipt["head_sha"], label="detached")
-        verify_commit_bundle(primary, manifest.get("detached_bundle"), receipt["head_sha"], label="detached")
-    from scripts.fleet.terminal_abandon import Refusal, verify_current_custody
-
-    try:
-        verify_current_custody(authority)
-    except Refusal as exc:
-        raise SuccessionRefusal(exc.code, str(exc)) from None
+    # The slowest local check first; the commit, tracked and branch checks last.
     located = manifest.get("output")
     if not isinstance(located, dict) or located.get("schema") != "terminal-abandon-output.v1":
         raise ValueError("terminal-abandon succession output preservation missing")
@@ -653,6 +671,14 @@ def _verify_succession(
         raise ValueError(
             "terminal-abandon succession OUTPUT_CHANGED: current output differs from authorized snapshot"
         ) from None
+    branch = checked_out_branch(worktree)
+    if branch is None:
+        if not detached_head(worktree):
+            raise ValueError("terminal-abandon detached HEAD proof unavailable")
+        verify_commit_bundle(primary, manifest.get("detached_bundle"), receipt["head_sha"], label="detached")
+        tracked_clean(worktree, receipt["head_sha"], label="detached")
+    if succession.get("branch") != branch:
+        raise ValueError("terminal-abandon succession receipt invalid")
 
 
 def detached_head(worktree: Path) -> bool:
@@ -846,10 +872,10 @@ def bound_branches_unclaimed(worktree: Path, branch: str | None, matches: list[t
             raise AttestationRefusal("LIVE_OR_WANTED", "a branch bound to the tree has an open PR")
 
 
-def _verified_manifest(
+def _preservation_manifest(
     primary: Path, receipt: Mapping[str, Any], worktree: Path, *, identity: str, nonce: str, head: str
 ) -> dict[str, Any]:
-    """The hashed preservation manifest, whose three patches equal Git's current bytes."""
+    """The hashed preservation manifest bound to this owner, run and HEAD; ``_verify_patches`` checks its bytes."""
     from scripts.orchestration import reap_worktrees as rw
 
     manifest = json.loads(_abandon_file(primary, receipt.get("preservation")))
@@ -865,6 +891,11 @@ def _verified_manifest(
         or not rw._sha_is_ancestor(worktree, manifest["base_sha"], "refs/remotes/origin/main")
     ):
         raise ValueError("terminal-abandon preservation manifest identity invalid")
+    return manifest
+
+
+def _verify_patches(primary: Path, manifest: Mapping[str, Any], worktree: Path, *, head: str) -> None:
+    """The manifest's three hash-bound patches equal Git's current binary, full-index diffs."""
     for key, revisions in (
         ("head_patch", [manifest["base_sha"], head]),
         ("index_patch", ["--cached", head]),
@@ -882,7 +913,6 @@ def _verified_manifest(
         )
         if probe.returncode != 0 or probe.stdout != stored:
             raise ValueError(f"terminal-abandon {key} does not preserve current Git bytes")
-    return manifest
 
 
 # Owner-attested abandonment (#10657). The attestation may stand in only for
@@ -984,26 +1014,10 @@ def _attestation_well_formed(attestation: Mapping[str, Any]) -> bool:
     )
 
 
-def _verify_attestation(
-    matches: list[tuple[Path, dict[str, Any]]], worktree: Path, *, primary: Path, tasks_dir: Path
-) -> tuple[Path, dict[str, Any]]:
-    """Prove an owner attestation still binds this exact tree, cohort, HEAD and preservation (#10657).
-
-    The attestation replaces creator evidence and unsettled status or retention
-    only. Liveness, checkout identity, tracked cleanliness, the Git patches, the
-    commit bundle (including every commit only the tree's reflog reaches), the
-    untracked/ignored output copy and every bound branch's PR state are all
-    rechecked here. No recorded owner field is trusted: the owning lane is
-    recomputed from the reviewed maps and the bound records' initiators, and the
-    attested custody must still be the stream's current Monitor lease, held by
-    this process or one of its ancestors. A lease envelope is readable by any
-    local process, so only the owning session itself can consume an attestation;
-    after a rollover the lane's new session re-attests.
-    """
-    from scripts.fleet.terminal_abandon import Refusal, owner_lane, verify_current_custody
-    from scripts.orchestration import reap_worktrees as rw
-    from scripts.orchestration.worktree_claims import checked_out_branch
-
+def _attestation_receipt(
+    matches: list[tuple[Path, dict[str, Any]]], tasks_dir: Path
+) -> tuple[Path, dict[str, Any], dict[str, Any], dict[str, Any]]:
+    """The tree's single attested record and its receipt, shape-checked from record state alone."""
     hosts = [(path, member) for path, member in matches if "worktree_abandon" in member]
     if len(hosts) != 1:
         raise ValueError("terminal-abandon attestation must be the tree's only abandon record")
@@ -1038,6 +1052,75 @@ def _verify_attestation(
         or attestation["preservation_sha256"] != receipt["preservation"].get("sha256")
     ):
         raise ValueError("terminal-abandon attestation receipt invalid")
+    return path, host, receipt, attestation
+
+
+def _attested_owner_lane(
+    attestation: Mapping[str, Any], host: Mapping[str, Any], matches: list[tuple[Path, dict[str, Any]]]
+) -> None:
+    """The recorded owner must be the lane the reviewed maps assign every bound task to, from current map bytes."""
+    from scripts.fleet.terminal_abandon import Refusal, owner_lane
+
+    owner = attestation["owner"]
+    try:
+        lane = owner_lane(
+            owner["seat"],
+            owner["authority"]["holder"]["agent"],
+            host.get("initiator"),
+            [member.get("initiator") for _, member in matches],
+        )
+    except Refusal as exc:
+        raise AttestationRefusal(exc.code, str(exc)) from None
+    if any(owner[key] != lane[key] for key in ("mapping_sha256", "assignments_sha256")):
+        raise AttestationRefusal("MAPPING_CHANGED", "reviewed lane or area map bytes changed; the owner re-attests")
+    if any(owner[key] != value for key, value in lane.items()):
+        raise AttestationRefusal("FOREIGN_OWNER", "recorded owner is not the lane that owns every bound task")
+
+
+def _attestation_external(matches: list[tuple[Path, dict[str, Any]]], worktree: Path, *, tasks_dir: Path) -> None:
+    """The slow half of an attestation proof: GitHub PR state and Monitor custody (#10657).
+
+    A changed cohort or a record naming a foreign lane is refused from record
+    state and the reviewed maps before any network probe; the local half checks
+    both again afterwards. Every bound branch, the attested one and each
+    recorded one, must have no open PR; the local half later proves the
+    checkout is still on the attested branch. The attested custody must still
+    be the stream's current Monitor lease, held by this process or one of its
+    ancestors (kernel-proven).
+    """
+    from scripts.fleet.terminal_abandon import Refusal, verify_current_custody
+
+    _, host, _, attestation = _attestation_receipt(matches, tasks_dir)
+    if attestation["cohort"] != attestation_cohort(matches, tasks_dir):
+        raise ValueError("terminal-abandon attestation cohort changed")
+    _attested_owner_lane(attestation, host, matches)
+    bound_branches_unclaimed(worktree, attestation["branch"], matches)
+    try:
+        verify_current_custody(attestation["owner"]["authority"], caller_holds=True)
+    except Refusal as exc:
+        raise AttestationRefusal(exc.code, str(exc)) from None
+
+
+def _attestation_local(
+    matches: list[tuple[Path, dict[str, Any]]], worktree: Path, *, primary: Path, tasks_dir: Path
+) -> tuple[Path, dict[str, Any]]:
+    """The local half of an attestation proof, run after every slow probe (#10657).
+
+    The attestation replaces creator evidence and unsettled status or retention
+    only. Liveness, checkout identity, tracked cleanliness, the Git patches, the
+    commit bundle (including every commit only the tree's reflog reaches) and
+    the untracked/ignored output copy are all rechecked here. No recorded owner
+    field is trusted: the owning lane is recomputed from the reviewed maps and
+    the bound records' initiators. Record and configuration checks come first,
+    then the slowest tree check (output hashing), HEAD, branch and the commit
+    bundle (every new reflog entry counts); the tracked and Git byte checks run
+    last, immediately before the caller acts.
+    """
+    from scripts.orchestration import reap_worktrees as rw
+    from scripts.orchestration.worktree_claims import checked_out_branch
+
+    path, host, receipt, attestation = _attestation_receipt(matches, tasks_dir)
+    identity, nonce, head = host["task_id"], host["run_nonce"], receipt["head_sha"]
     try:
         tree = worktree.resolve(strict=True).relative_to(primary.resolve(strict=True)).as_posix()
         status = worktree.stat()
@@ -1056,44 +1139,8 @@ def _verify_attestation(
         for _, member in matches
     ):
         raise ValueError("terminal-abandon attestation task, PID or lease proof unavailable")
-    current = rw._run(["git", "rev-parse", "HEAD"], cwd=worktree)
-    if current is None or current.returncode != 0 or current.stdout.strip() != head:
-        raise ValueError("terminal-abandon checkout HEAD differs from receipt")
-    branch = checked_out_branch(worktree)
-    if branch is None and not detached_head(worktree):
-        raise ValueError("terminal-abandon attestation branch probe unavailable")
-    if branch != attestation["branch"]:
-        raise ValueError("terminal-abandon attestation branch changed")
-    owner = attestation["owner"]
-    authority = owner["authority"]
-    try:
-        lane = owner_lane(
-            owner["seat"],
-            authority["holder"]["agent"],
-            host.get("initiator"),
-            [member.get("initiator") for _, member in matches],
-        )
-    except Refusal as exc:
-        raise AttestationRefusal(exc.code, str(exc)) from None
-    if any(owner[key] != lane[key] for key in ("mapping_sha256", "assignments_sha256")):
-        raise AttestationRefusal("MAPPING_CHANGED", "reviewed lane or area map bytes changed; the owner re-attests")
-    if any(owner[key] != value for key, value in lane.items()):
-        raise AttestationRefusal("FOREIGN_OWNER", "recorded owner is not the lane that owns every bound task")
-    index_settled(worktree)
-    tracked_clean(worktree, head, label="attested")
-    manifest = _verified_manifest(primary, receipt, worktree, identity=identity, nonce=nonce, head=head)
-    reflog = unreachable_reflog_commits(worktree, head)
-    head_on_main = rw._sha_is_ancestor(worktree, head, "refs/remotes/origin/main")
-    bundle = manifest.get("commit_bundle")
-    if bundle is not None:
-        verify_attested_bundle(primary, bundle, head, reflog, require_head=not head_on_main)
-    elif reflog or not head_on_main:
-        raise ValueError("terminal-abandon attestation commit bundle missing for commits outside origin/main")
-    bound_branches_unclaimed(worktree, branch, matches)
-    try:
-        verify_current_custody(authority, caller_holds=True)
-    except Refusal as exc:
-        raise AttestationRefusal(exc.code, str(exc)) from None
+    _attested_owner_lane(attestation, host, matches)
+    manifest = _preservation_manifest(primary, receipt, worktree, identity=identity, nonce=nonce, head=head)
     located = manifest.get("output")
     if not isinstance(located, dict) or located.get("schema") != "terminal-abandon-output.v1":
         raise ValueError("terminal-abandon attestation output preservation missing")
@@ -1107,6 +1154,24 @@ def _verify_attestation(
         raise ValueError(
             "terminal-abandon attestation OUTPUT_CHANGED: current output differs from attested snapshot"
         ) from None
+    current = rw._run(["git", "rev-parse", "HEAD"], cwd=worktree)
+    if current is None or current.returncode != 0 or current.stdout.strip() != head:
+        raise ValueError("terminal-abandon checkout HEAD differs from receipt")
+    branch = checked_out_branch(worktree)
+    if branch is None and not detached_head(worktree):
+        raise ValueError("terminal-abandon attestation branch probe unavailable")
+    if branch != attestation["branch"]:
+        raise ValueError("terminal-abandon attestation branch changed")
+    reflog = unreachable_reflog_commits(worktree, head)
+    head_on_main = rw._sha_is_ancestor(worktree, head, "refs/remotes/origin/main")
+    bundle = manifest.get("commit_bundle")
+    if bundle is not None:
+        verify_attested_bundle(primary, bundle, head, reflog, require_head=not head_on_main)
+    elif reflog or not head_on_main:
+        raise ValueError("terminal-abandon attestation commit bundle missing for commits outside origin/main")
+    index_settled(worktree)
+    tracked_clean(worktree, head, label="attested")
+    _verify_patches(primary, manifest, worktree, head=head)
     return path, host
 
 
@@ -1324,28 +1389,17 @@ def _abandon_file(
     return payload
 
 
-def terminal_abandon_creator(
-    matches: list[tuple[Path, dict[str, Any]]], worktree: Path, *, primary: Path, tasks_dir: Path
-) -> tuple[Path, dict[str, Any]]:
-    """Prove explicit owner abandonment and exact Git patches, never infer it from CLOSED.
-
-    The creator's ``worktree_abandon`` record is terminal-abandon.v1: ABANDON,
-    owner, run_nonce, head_sha, reason and a preservation {path, sha256} locator.
-    That hashed terminal-abandon-preservation.v1 manifest repeats the identity,
-    names base_sha and hash-bound head_patch, index_patch and working_patch.
-    All three patches must equal Git's binary, full-index diff for this checkout.
-    Untracked and ignored bytes still require the ordinary verified-copy gate.
-    A successor's receipt adds ``succession`` and a manifest ``output`` copy;
-    both are revalidated here, at removal (#10617). An owner attestation is a
-    separate, complete proof that replaces creator evidence (#10657).
-    """
-    from scripts.orchestration import reap_worktrees as rw
-
-    if any(
+def _abandon_attested(matches: list[tuple[Path, dict[str, Any]]]) -> bool:
+    return any(
         isinstance(member.get("worktree_abandon"), dict) and "attestation" in member["worktree_abandon"]
         for _, member in matches
-    ):
-        return _verify_attestation(matches, worktree, primary=primary, tasks_dir=tasks_dir)
+    )
+
+
+def _creator_receipt(
+    matches: list[tuple[Path, dict[str, Any]]], worktree: Path, *, primary: Path, tasks_dir: Path
+) -> tuple[Path, dict[str, Any], Any, Path | None]:
+    """The sole creator-of-record and its raw abandon receipt, identified from record state alone."""
     recovery = _recovery_source(matches, worktree, primary=primary, tasks=tasks_dir)
     creators = [item for item in matches if item[0] != recovery and record_created_worktree(item[1])]
     if len(creators) != 1 or not matches:
@@ -1360,13 +1414,35 @@ def terminal_abandon_creator(
         or path not in (task_record_path(tasks_dir, identity), task_record_path(tasks_dir / "archive", identity))
     ):
         raise ValueError("terminal-abandon owner identity unavailable")
-    receipt = creator.get("worktree_abandon")
-    merged = receipt.get("merged_pr") if isinstance(receipt, dict) else None
+    return path, creator, creator.get("worktree_abandon"), recovery
+
+
+def _creator_external(
+    matches: list[tuple[Path, dict[str, Any]]], worktree: Path, *, primary: Path, tasks_dir: Path
+) -> None:
+    """The slow half of a creator or successor proof: merged-PR evidence (GitHub) and custody (Monitor)."""
+    _, creator, receipt, _ = _creator_receipt(matches, worktree, primary=primary, tasks_dir=tasks_dir)
+    if not isinstance(receipt, dict):
+        return  # The local half refuses a missing record.
+    merged = receipt.get("merged_pr")
     if merged is not None and (
         not isinstance(receipt.get("succession"), dict)
         or merged != merged_abandon_proof(worktree, creator, receipt.get("head_sha"))
     ):
         raise ValueError("terminal-abandon merged terminal proof changed")
+    if "succession" in receipt:
+        _succession_custody(receipt)
+
+
+def _creator_local(
+    matches: list[tuple[Path, dict[str, Any]]], worktree: Path, *, primary: Path, tasks_dir: Path
+) -> tuple[Path, dict[str, Any]]:
+    """The local half of a creator or successor proof; HEAD, index and Git byte checks run last."""
+    from scripts.orchestration import reap_worktrees as rw
+
+    path, creator, receipt, recovery = _creator_receipt(matches, worktree, primary=primary, tasks_dir=tasks_dir)
+    identity, nonce = creator["task_id"], creator["run_nonce"]
+    merged = receipt.get("merged_pr") if isinstance(receipt, dict) else None
     if any(
         not abandon_task_is_terminal(
             member, successor=isinstance(receipt, dict) and "succession" in receipt, merged=merged is not None
@@ -1378,7 +1454,6 @@ def terminal_abandon_creator(
         for member_path, member in matches
     ):
         raise ValueError("terminal-abandon task, PID, lease or retention proof unavailable")
-    receipt = creator.get("worktree_abandon")
     if not isinstance(receipt, dict):
         raise ValueError("terminal-abandon owner ABANDON record missing")
     head = receipt.get("head_sha")
@@ -1393,14 +1468,81 @@ def terminal_abandon_creator(
         or not re.fullmatch(r"[a-f0-9]{40}", head)
     ):
         raise ValueError("terminal-abandon owner ABANDON record invalid")
+    manifest = _preservation_manifest(primary, receipt, worktree, identity=identity, nonce=nonce, head=head)
+    if "succession" in receipt:
+        _verify_succession(receipt, manifest, creator, worktree, primary=primary)
     current = rw._run(["git", "rev-parse", "HEAD"], cwd=worktree)
     if current is None or current.returncode != 0 or current.stdout.strip() != head:
         raise ValueError("terminal-abandon checkout HEAD differs from receipt")
     index_settled(worktree)
-    manifest = _verified_manifest(primary, receipt, worktree, identity=identity, nonce=nonce, head=head)
-    if "succession" in receipt:
-        _verify_succession(receipt, manifest, creator, worktree, primary=primary)
+    _verify_patches(primary, manifest, worktree, head=head)
     return path, creator
+
+
+def terminal_abandon_external(
+    matches: list[tuple[Path, dict[str, Any]]], worktree: Path, *, primary: Path, tasks_dir: Path
+) -> None:
+    """The slow half of the abandon proof: every GitHub and Monitor probe it needs (#10657).
+
+    A caller that acts on the proof (publishing a record, deleting the tree)
+    runs this first and ``terminal_abandon_local`` last, with nothing slow in
+    between, so no tree or cohort change can land during a network wait and go
+    unseen. Raises ``ValueError`` (or a typed subclass) on refusal.
+    """
+    if _abandon_attested(matches):
+        _attestation_external(matches, worktree, tasks_dir=tasks_dir)
+    else:
+        _creator_external(matches, worktree, primary=primary, tasks_dir=tasks_dir)
+
+
+def terminal_abandon_local(
+    matches: list[tuple[Path, dict[str, Any]]],
+    worktree: Path,
+    *,
+    primary: Path,
+    tasks_dir: Path,
+    on_disk: list[tuple[Path, dict[str, Any]]] | None = None,
+) -> tuple[Path, dict[str, Any]]:
+    """The local half of the abandon proof: re-read the bound cohort, then check the checkout itself (#10657).
+
+    The cohort read now must equal ``on_disk`` (default ``matches``); a writer
+    validating an unpublished record passes the proposed cohort as ``matches``
+    and the locked on-disk cohort as ``on_disk``. Then every record, tree and
+    preservation fact is read again, with the checkout's HEAD, branch, tracked
+    and Git byte checks last. No network call is made here.
+    """
+    current = matching_worktree_records(worktree, tasks_dir, repo_root=primary, publish_cache=False)
+    if current != (matches if on_disk is None else on_disk):
+        raise CohortChanged("terminal-abandon task cohort changed during verification; retry after it settles")
+    if _abandon_attested(matches):
+        return _attestation_local(matches, worktree, primary=primary, tasks_dir=tasks_dir)
+    return _creator_local(matches, worktree, primary=primary, tasks_dir=tasks_dir)
+
+
+def terminal_abandon_creator(
+    matches: list[tuple[Path, dict[str, Any]]],
+    worktree: Path,
+    *,
+    primary: Path,
+    tasks_dir: Path,
+    on_disk: list[tuple[Path, dict[str, Any]]] | None = None,
+) -> tuple[Path, dict[str, Any]]:
+    """Prove explicit owner abandonment and exact Git patches, never infer it from CLOSED.
+
+    The creator's ``worktree_abandon`` record is terminal-abandon.v1: ABANDON,
+    owner, run_nonce, head_sha, reason and a preservation {path, sha256} locator.
+    That hashed terminal-abandon-preservation.v1 manifest repeats the identity,
+    names base_sha and hash-bound head_patch, index_patch and working_patch.
+    All three patches must equal Git's binary, full-index diff for this checkout.
+    Untracked and ignored bytes still require the ordinary verified-copy gate.
+    A successor's receipt adds ``succession`` and a manifest ``output`` copy;
+    both are revalidated here, at removal (#10617). An owner attestation is a
+    separate, complete proof that replaces creator evidence (#10657).
+    Every slow probe runs before the cohort is re-read and the checkout is
+    checked, so the last check precedes the caller's act with no wait between.
+    """
+    terminal_abandon_external(matches, worktree, primary=primary, tasks_dir=tasks_dir)
+    return terminal_abandon_local(matches, worktree, primary=primary, tasks_dir=tasks_dir, on_disk=on_disk)
 
 
 def _record_absence(root: Path, name: str, absent: list[dict[str, str]]) -> None:
@@ -1932,6 +2074,8 @@ def preserve_worktree_artifacts(
                 if current_members != disposition_members:
                     raise ValueError("disposition task records changed during preservation")
                 if disposition == "abandon":
+                    # The last check before destructive Git: its GitHub and Monitor
+                    # probes run first, then the cohort and checkout are read again.
                     terminal_abandon_creator(current_members, worktree, primary=primary, tasks_dir=tasks_dir)
                     metadata["abandon_proof"] = record["worktree_abandon"]
                 else:

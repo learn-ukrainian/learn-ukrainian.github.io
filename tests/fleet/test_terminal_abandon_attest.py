@@ -7,6 +7,7 @@ recorded branch, a ``needs_finalize`` tree whose checked-out branch moved, and a
 tree whose caller-supplied preservation bundle fails the validator.
 """
 
+import contextlib
 import hashlib
 import io
 import json
@@ -30,8 +31,10 @@ from tests.fleet.test_terminal_abandon import (
     _refused_removal,
     _set_lease_env,
     invoke,
+    kernel_identity,
     monitor_lease,
 )
+from tests.fleet.test_terminal_abandon import succession as succession
 from tests.fleet.test_terminal_abandon import writer_fixture as writer_fixture
 from tests.orchestration.test_worktree_claims_cli import _git
 from tests.orchestration.test_worktree_output_chokepoint import boundary_tree as boundary_tree
@@ -50,6 +53,8 @@ REPLACES = {
     "preservation_invalid": ["LIVE_OR_WANTED"],
 }
 REASON = "owner retired superseded implementation"
+# Another host's kernel boot identity: a lease held there never proves custody here.
+REMOTE_BOOT = "0f0e0d0c-0b0a-4908-8706-050403020100"
 
 
 @pytest.fixture
@@ -645,9 +650,10 @@ def _drift(drift, fx):
         _git(tree, "checkout", "--detach")
         return "branch"
     if drift == "directory":
-        # Same path, branch and HEAD, but a different checkout directory.
-        _git(repo, "worktree", "remove", "--force", str(tree))
-        _git(repo, "worktree", "add", str(tree), "codex/boundary")
+        # Same path, branch and HEAD, but a different checkout directory. The old
+        # checkout moves aside and keeps its inode, so the new one cannot reuse it.
+        _git(repo, "worktree", "move", str(tree), str(tree.with_name("boundary-before")))
+        _git(repo, "worktree", "add", "--force", str(tree), "codex/boundary")
         (tree / "ignored").mkdir()
         (tree / "ignored/output.txt").write_bytes(b"current output")
         (tree / "untracked.txt").write_bytes(b"untracked unique bytes")
@@ -724,7 +730,6 @@ def test_reader_refuses_a_malformed_attestation(attest, capsys, tamper):
 
 def _holder_defect(defect, fx, monkeypatch):
     """Make the session's custody unprovable while every envelope field still matches Monitor."""
-    from scripts.api import occupancy_local
     from scripts.fleet import terminal_abandon
 
     lease = fx["monitor"]["streams"][MONITOR]
@@ -738,10 +743,14 @@ def _holder_defect(defect, fx, monkeypatch):
         monkeypatch.delenv("SESSION_STREAM_PROCESS_ID")
         lease["holder"] = dict(lease["holder"], holder_kind="app_thread", process_id=None, task_id=task)
     elif defect == "other_host":
-        monkeypatch.setattr(occupancy_local, "resolve_launcher_host_id", lambda: "host-elsewhere")
+        # The holder PID is this process's PID, on another host's boot.
+        lease["holder"]["process_identity"] = kernel_identity(os.getpid(), boot_id=REMOTE_BOOT)
     elif defect == "reused_pid":
-        # This process started long after the lease's last heartbeat.
-        lease["heartbeat_at"] = "2000-01-01T00:00:00Z"
+        # An earlier process with this PID held the lease; this one started later.
+        lease["holder"]["process_identity"] = kernel_identity(os.getpid(), ticks_delta=-1)
+    elif defect == "unrecorded":
+        # A launcher that records no kernel identity: locality is unprovable.
+        del lease["holder"]["process_identity"]
     elif defect == "ancestry_unavailable":
 
         def unavailable():
@@ -753,7 +762,7 @@ def _holder_defect(defect, fx, monkeypatch):
 
 
 @pytest.mark.parametrize(
-    "defect", ["copied_envelope", "app_thread", "other_host", "reused_pid", "ancestry_unavailable"]
+    "defect", ["copied_envelope", "app_thread", "other_host", "reused_pid", "unrecorded", "ancestry_unavailable"]
 )
 @pytest.mark.parametrize("apply", [False, True])
 def test_owner_must_run_beneath_the_recorded_holder_process(attest, monkeypatch, capsys, defect, apply):
@@ -769,8 +778,8 @@ def test_owner_must_run_beneath_the_recorded_holder_process(attest, monkeypatch,
 def test_holder_may_be_an_ancestor_not_only_this_process(attest, monkeypatch, capsys):
     parent = os.getppid()
     _set_lease_env(monkeypatch, PROCESS_ID=str(parent))
-    lease = attest["monitor"]["streams"][MONITOR]
-    lease["holder"] = dict(lease["holder"], process_id=parent)
+    attest["monitor"]["streams"][MONITOR] = monitor_lease()
+    assert attest["monitor"]["streams"][MONITOR]["holder"]["process_id"] == parent
     assert attest_cli(attest, apply=True) == 0
     assert _out(capsys)["outcome"] == "recorded"
     _remove(attest)
@@ -1007,3 +1016,273 @@ def test_unwalkable_reflog_is_a_typed_refusal(attest, capsys):
         result = _out(capsys)
         assert result["code"] == "PRESERVATION_INVALID" and "completeness" in result["reason"], result
     _no_writes(attest, before)
+
+
+# --- #10657 review round 2, blocker 2: no environment value proves the holder's host ---
+#
+# The genuine remote lease of the probe: Monitor's current custody, every
+# envelope field equal, and a numeric holder PID equal to this process, but
+# held on another host's boot. Each variable class below makes the round-2
+# host-label resolver name that remote host; none may prove custody here.
+
+REMOTE_HOST = "host-remote"
+HOST_VARIABLES = ["LU_MONITOR_HOST_ID", "MONITOR_OCCUPANCY_DRIVER_HOST_ID", "MONITOR_OCCUPANCY_HOST_IDS", "unset"]
+
+
+def _remote_holder(fx):
+    lease = fx["monitor"]["streams"][MONITOR]
+    lease["holder"] = dict(
+        lease["holder"], host_id=REMOTE_HOST, process_identity=kernel_identity(os.getpid(), boot_id=REMOTE_BOOT)
+    )
+    return lease
+
+
+def _claim_remote_host(variable, fx, monkeypatch):
+    """Through one environment variable class, make the host label resolve to the remote holder's label."""
+    from scripts.api import occupancy_local
+
+    for name in ("LU_MONITOR_HOST_ID", "MONITOR_OCCUPANCY_DRIVER_HOST_ID", "MONITOR_OCCUPANCY_HOST_IDS"):
+        monkeypatch.delenv(name, raising=False)
+    if variable == "MONITOR_OCCUPANCY_HOST_IDS":
+        monkeypatch.setenv(variable, f"remote-box={REMOTE_HOST}")
+        monkeypatch.setenv("ATLAS_JOB_SELF_HOST", "remote-box")
+    elif variable != "unset":
+        monkeypatch.setenv(variable, REMOTE_HOST)
+    else:
+        # No host variable at all: every unconfigured host resolves the same platform label.
+        monkeypatch.delenv("ATLAS_JOB_SELF_HOST", raising=False)
+        fx["monitor"]["streams"][MONITOR]["holder"]["host_id"] = occupancy_local.resolve_launcher_host_id()
+    # Negative control: the round-2 label comparison would have accepted this holder.
+    assert occupancy_local.resolve_launcher_host_id() == fx["monitor"]["streams"][MONITOR]["holder"]["host_id"]
+
+
+@pytest.mark.parametrize("variable", HOST_VARIABLES)
+def test_remote_holder_with_this_pid_never_proves_custody(attest, monkeypatch, variable):
+    from scripts.fleet import terminal_abandon
+
+    lease = _remote_holder(attest)
+    _claim_remote_host(variable, attest, monkeypatch)
+    with pytest.raises(terminal_abandon.Refusal) as refused:
+        terminal_abandon.prove_holder_process(lease)
+    assert refused.value.code == "HOLDER_UNPROVEN"
+    # Paired control: the same lease recorded on this boot proves, whatever the label says.
+    lease["holder"]["process_identity"] = kernel_identity(os.getpid())
+    terminal_abandon.prove_holder_process(lease)
+
+
+def test_reviewer_probe_remote_host_assertion_cannot_record(attest, monkeypatch, capsys):
+    """The round-2 probe's writer step: only LU_MONITOR_HOST_ID changes, and it proves nothing."""
+    _remote_holder(attest)
+    monkeypatch.setenv("LU_MONITOR_HOST_ID", REMOTE_HOST)
+    before = _files(attest["repo"])
+    for apply in (False, True):
+        assert attest_cli(attest, apply=apply) == 2
+        result = _out(capsys)
+        assert (result["outcome"], result["code"]) == ("refused", "HOLDER_UNPROVEN"), result
+    _no_writes(attest, before)
+
+
+@pytest.mark.parametrize("variable", HOST_VARIABLES)
+def test_remote_holder_never_consumes_an_attestation(attest, monkeypatch, capsys, variable):
+    """The round-2 probe's reader and removal steps, for every host variable class."""
+    _attested(attest, capsys)
+    _remote_holder(attest)
+    _claim_remote_host(variable, attest, monkeypatch)
+    _reader_refuses(attest, "HOLDER_UNPROVEN")
+
+
+def test_holder_proof_reads_no_environment(attest, monkeypatch):
+    from scripts.fleet import terminal_abandon
+
+    lease = attest["monitor"]["streams"][MONITOR]
+    for name in [name for name in os.environ if name.startswith(("LU_", "MONITOR_", "SESSION_STREAM_", "ATLAS_"))]:
+        monkeypatch.delenv(name)
+    terminal_abandon.prove_holder_process(lease)
+    monkeypatch.setenv("LU_MONITOR_HOST_ID", "host-elsewhere")
+    terminal_abandon.prove_holder_process(lease)
+
+
+def test_git_redirect_environment_never_hides_a_dirty_tree(attest, monkeypatch, capsys, tmp_path):
+    """Every Git probe strips GIT_*: a redirect to a clean copy cannot hide a tracked edit."""
+    tree = attest["tree"]
+    _attested(attest, capsys)
+    clean = tmp_path / "clean-copy"
+    clean.mkdir()
+    (clean / "README.md").write_bytes((tree / "README.md").read_bytes())
+    (tree / "README.md").write_bytes(b"tracked edit the redirect would hide\n")
+    gitdir = _git(tree, "rev-parse", "--path-format=absolute", "--git-dir")
+    redirect = {"GIT_DIR": gitdir, "GIT_WORK_TREE": str(clean)}
+    # Negative control: a probe that passed the environment through would see a clean tree.
+    hidden = subprocess.run(
+        ["git", "diff", "--quiet", "--", "README.md"], cwd=tree, env={**os.environ, **redirect}, timeout=30
+    )
+    assert hidden.returncode == 0
+    for name, value in redirect.items():
+        monkeypatch.setenv(name, value)
+    _reader_refuses(attest, "tracked")
+    before = _files(attest["repo"])
+    assert attest_cli(attest) == 2
+    assert _out(capsys)["code"] == "DIRTY_TREE"
+    assert _files(attest["repo"]) == before
+
+
+# --- #10657 review round 2, blocker 1: no slow probe between the last check and the act ---
+#
+# Each test runs the operation twice on independent fixtures. The first run
+# counts every slow or external probe (GitHub PR state, Monitor custody and
+# active tasks, the process scan) made before the act: publishing the record
+# (writer) or deleting the tree (remover). The second run makes one change to
+# the tree or the bound records inside the last of those probes. Whatever
+# probe order the code uses, that change lands after every earlier check, so
+# only a complete local recheck after the final probe can see it.
+
+LATE = b"bytes written while a slow probe waited\n"
+MUTATIONS = ["tracked_edit", "new_untracked", "new_ignored", "new_commit", "branch_change", "new_bound_record"]
+
+
+@contextlib.contextmanager
+def _fresh(root, path):
+    """An independent owner-attested or lane-succession fixture, so one test can count and then inject."""
+    root.mkdir()
+    with pytest.MonkeyPatch.context() as patches:
+        base = boundary_tree.__wrapped__(root, patches)
+        pending = same_branch_pending_cohort.__wrapped__(cohort.__wrapped__(base))
+        strict = writer_fixture.__wrapped__(abandon_cohort.__wrapped__(pending, patches), patches)
+        if path == "attested":
+            yield attest.__wrapped__(strict, patches), patches
+        else:
+            fixture, _ = succession.__wrapped__(strict, patches)
+            repo, tree, tasks, _, successor, *_ = fixture
+            yield {"repo": repo, "tree": tree, "tasks": tasks, "successor": successor, "fixture": fixture}, patches
+
+
+def _write(fx):
+    """The path's writer, quietly: owner attestation or the lane-succession record."""
+    with contextlib.redirect_stdout(io.StringIO()) as stdout:
+        code = invoke(fx["fixture"]) if "monitor" not in fx else attest_cli(fx, apply=True)
+    return code, json.loads(stdout.getvalue())
+
+
+def _slow_probes(patches, hook):
+    """Run ``hook`` inside every slow or external probe the writer and the remover make."""
+    from scripts.session_supervisor import remote
+
+    def wrap(real):
+        def probe(*args, **kwargs):
+            hook()
+            return real(*args, **kwargs)
+
+        return probe
+
+    for owner, name in (
+        (rw, "_query_pr_states"),
+        (rw, "_active_task_ids"),
+        (rw, "_live_cwd_paths"),
+        (remote.RemoteEpicClient, "stream"),
+    ):
+        patches.setattr(owner, name, wrap(getattr(owner, name)))
+
+
+def _mutate(kind, fx):
+    tree = fx["tree"]
+    if kind == "tracked_edit":
+        (tree / "README.md").write_bytes(LATE)
+    elif kind == "new_untracked":
+        (tree / "late-untracked.txt").write_bytes(LATE)
+    elif kind == "new_ignored":
+        (tree / "ignored").mkdir(exist_ok=True)
+        (tree / "ignored/late-output.txt").write_bytes(LATE)
+    elif kind == "new_commit":
+        (tree / "README.md").write_bytes(LATE)
+        _git(tree, "commit", "-qam", "work committed while a probe waited")
+    elif kind == "branch_change":
+        _git(tree, "checkout", "-q", "-b", "codex/late-branch")
+    elif kind == "new_bound_record":
+        save(fx["tasks"], dict(fx["successor"], task_id="late-bound", run_nonce="late-run"))
+    else:
+        raise AssertionError(kind)
+
+
+def _mutation_survives(kind, fx):
+    tree = fx["tree"]
+    if kind in {"tracked_edit", "new_commit"}:
+        return (tree / "README.md").read_bytes() == LATE
+    if kind == "new_untracked":
+        return (tree / "late-untracked.txt").read_bytes() == LATE
+    if kind == "new_ignored":
+        return (tree / "ignored/late-output.txt").read_bytes() == LATE
+    if kind == "branch_change":
+        return _git(tree, "rev-parse", "--abbrev-ref", "HEAD") == "codex/late-branch"
+    return (fx["tasks"] / "late-bound.json").exists()
+
+
+def _recorded_any(fx):
+    return any("worktree_abandon" in json.loads(path.read_bytes()) for path in fx["tasks"].glob("*.json"))
+
+
+def _reap(fx):
+    return next(
+        row
+        for row in rw.reap_worktrees(
+            repo_root=fx["repo"], apply=True, live_cwds=set(), preserve_then_reap=True, merged_pr_only=False
+        )
+        if row.path == str(fx["tree"])
+    )
+
+
+def _last_probe_before(acted, root, path, prepare, operation):
+    """Count the probes a clean run makes before ``acted`` turns true; return the last one's index."""
+    with _fresh(root, path) as (fx, patches):
+        prepare(fx)
+        before_act = []
+        _slow_probes(patches, lambda: before_act.append(not acted(fx)))
+        operation(fx)
+        assert acted(fx), "the clean run must complete its act"
+    assert any(before_act), "the act must follow at least one slow probe"
+    return max(index for index, waiting in enumerate(before_act, 1) if waiting)
+
+
+@contextlib.contextmanager
+def _inject_at(target, kind, root, path, prepare, operation):
+    """Rerun on a fresh fixture, changing ``kind`` inside probe number ``target``."""
+    with _fresh(root, path) as (fx, patches):
+        prepare(fx)
+        calls = []
+
+        def hook():
+            calls.append(None)
+            if len(calls) == target:
+                _mutate(kind, fx)
+
+        _slow_probes(patches, hook)
+        result = operation(fx)
+        assert len(calls) >= target, "the injected run must reach the last probe"
+        yield fx, result
+
+
+@pytest.mark.parametrize("kind", MUTATIONS)
+@pytest.mark.parametrize("path", ["attested", "succession"])
+def test_writer_rechecks_after_its_last_slow_probe(tmp_path, path, kind):
+    def prepare(fx):
+        pass
+
+    target = _last_probe_before(_recorded_any, tmp_path / "count", path, prepare, _write)
+    with _inject_at(target, kind, tmp_path / "inject", path, prepare, _write) as (fx, (code, result)):
+        assert (code, result["outcome"]) == (2, "refused"), result
+        assert not _recorded_any(fx)
+        assert _mutation_survives(kind, fx)
+
+
+@pytest.mark.parametrize("kind", MUTATIONS)
+@pytest.mark.parametrize("path", ["attested", "succession"])
+def test_remover_rechecks_after_its_last_slow_probe(tmp_path, path, kind):
+    def prepare(fx):
+        assert _write(fx)[1]["outcome"] == "recorded"
+
+    def removed(fx):
+        return not fx["tree"].exists()
+
+    target = _last_probe_before(removed, tmp_path / "count", path, prepare, _reap)
+    with _inject_at(target, kind, tmp_path / "inject", path, prepare, _reap) as (fx, row):
+        assert row.action not in {"removed", "preserved_then_removed"}, row
+        assert fx["tree"].exists() and _mutation_survives(kind, fx)

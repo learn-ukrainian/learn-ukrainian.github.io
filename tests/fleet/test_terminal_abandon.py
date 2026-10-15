@@ -317,18 +317,35 @@ def _set_lease_env(monkeypatch, **overrides):
         monkeypatch.setenv(f"SESSION_STREAM_{key}", value)
 
 
+def kernel_identity(pid, *, boot_id=None, ticks_delta=0):
+    """Independent /proc oracle for a lease's holder identity: SHA-256 of '<boot_id>:<pid>:<start_ticks>'."""
+    boot = boot_id or Path("/proc/sys/kernel/random/boot_id").read_text(encoding="ascii").strip()
+    try:
+        ticks = int(Path(f"/proc/{pid}/stat").read_text().rsplit(")", 1)[1].split()[19]) + ticks_delta
+    except OSError:
+        ticks = 0  # Not a process on this host: any identity is foreign here.
+    return hashlib.sha256(f"{boot}:{pid}:{ticks}".encode()).hexdigest()
+
+
 def monitor_lease():
-    """Monitor's view of the environment's lease: active, open, unexpired and just renewed."""
+    """Monitor's view of the environment's lease: active, open, unexpired and just renewed.
+
+    The holder carries the kernel process identity the lease must record for a
+    holder to be provable on this host (#10657).
+    """
     from agents_extensions.shared.session_streams.hooks import lease_from_environment
     from scripts.session_supervisor import remote
 
-    return dict(
+    lease = dict(
         remote.RemoteEpicClient._lease_payload(lease_from_environment()),
         state="active",
         session_state="open",
         heartbeat_at=datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
         expires_at="2999-01-01T00:00:00Z",
     )
+    if lease["holder"]["process_id"] is not None:
+        lease["holder"]["process_identity"] = kernel_identity(lease["holder"]["process_id"])
+    return lease
 
 
 @pytest.fixture
@@ -383,7 +400,9 @@ def test_same_stream_successor_records_bound_succession_receipt(succession, caps
     repo, tree, _, _, _, _, head = fixture
     assert invoke(fixture) == 0
     assert json.loads(capsys.readouterr().out)["outcome"] == "recorded"
-    assert monitor["calls"] == 4  # admission, two reader validations, final writer recheck
+    # Admission, the writer's recheck, then the final reader validation's probe,
+    # which precedes its local recheck; the first reader validation is local only.
+    assert monitor["calls"] == 3
     record, receipt, manifest = _recorded(fixture)
     # The creator's identity and nonce are kept; succession is appended, not substituted.
     assert record["initiator"] == "claude-monitor"

@@ -333,9 +333,16 @@ loopback Monitor must confirm as the stream's current custody;
 `LU_MONITOR_LOOPBACK` never selects that endpoint. The envelope alone proves
 nothing, because Monitor's stream view publishes every field of it. The
 command must also run beneath the lease's recorded holder process (the
-launcher) on the holder's host, and that process must have started before the
-lease's last heartbeat, so a reused PID does not count. Otherwise it refuses
-`HOLDER_UNPROVEN`, as does an app-thread holder. The session's attributed seat
+launcher), proven from the kernel alone. The lease must record
+`holder.process_identity`: the SHA-256 of `<boot_id>:<pid>:<start_ticks>`, where
+`boot_id` is `/proc/sys/kernel/random/boot_id` and `start_ticks` is field 22 of
+`/proc/<pid>/stat` for the holder. One of this process's ancestors with that
+PID must reproduce it on this kernel. A PID alone names a process only on one
+host and boot, and a host label (`LU_MONITOR_HOST_ID`, the occupancy host map,
+or the platform default every unconfigured host shares) is configuration, so
+no environment value is read for this proof. A lease held on another host or
+boot, a reused PID, a lease that records no identity and an app-thread holder
+all refuse `HOLDER_UNPROVEN`. The session's attributed seat
 must be registered for that lease holder's provider in
 `scripts/config/area_assignments.yaml` (roster slot or the bridge's legacy
 `<provider>-monitor` alias). Its lane stream must be the one
@@ -346,7 +353,9 @@ unmapped initiator refuses `OWNER_UNMAPPED`. A seat, provider, stream or
 bound task of another lane refuses `FOREIGN_OWNER`. Monitor disagreement or
 outage refuses `STALE_AUTHORITY` or `AUTHORITY_UNKNOWN`. A tree owned by
 another lane is reported to that lane's driver, not attested by this one. The
-lane-succession writer applies the same holder-process proof.
+lane-succession writer applies the same holder-process proof. Until launchers
+record `holder.process_identity` in the lease, both refuse `HOLDER_UNPROVEN`
+rather than accept an unprovable holder.
 
 The attestation replaces only two strict refusals, recorded as `replaces` in
 the receipt:
@@ -411,6 +420,19 @@ cohort), the lane's current owner reruns the same `--owner-attest` command.
 It re-issues the record after every check passes again and reports
 `reissues` with the reason. A different decision is still refused
 `ALREADY_RECORDED`.
+
+Check order. The writer and the remover both run every slow or external probe
+first: GitHub PR state, Monitor custody, and (writer) Monitor active tasks and
+the process scan. Only then do they re-read the bound cohort from disk and
+recheck output, HEAD, branch, the bundle, tracked bytes and the patches, and
+then act. The writer publishes; the remover writes its preservation receipt and
+runs `git worktree remove`. A tracked edit, new untracked or ignored output, a
+new commit, a branch change or a new bound record that lands while a probe
+waits is therefore seen and refuses (`STATE_CHANGED` for a cohort change at the
+writer). The lane-succession and creator paths use the same reader and order.
+Not closed: a write that lands during that final local recheck or between it
+and the deletion itself. Only exclusive access to the tree could close that, so
+run removal only when nothing is working in the tree.
 
 Restore commits with `git fetch <bundle> HEAD 'refs/abandon/reflog/*:refs/restored/*'`
 in any clone that contains the manifest's `base_sha` (`git bundle list-heads`
