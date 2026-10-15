@@ -17,9 +17,10 @@ import {
 } from '../../src/lib/lexicon/pronoun-mechanics';
 
 describe('pronoun-mechanics', () => {
-  it('defines all 15 pronoun categories and 17 interference keys', () => {
+  it('defines pronoun categories and includes a neutral preposition-order diagnostic', () => {
     expect(PRONOUN_MECHANICS_CATEGORY_KEYS).toHaveLength(15);
-    expect(PRONOUN_MECHANICS_INTERFERENCE_KEYS).toHaveLength(17);
+    expect(PRONOUN_MECHANICS_INTERFERENCE_KEYS).toHaveLength(18);
+    expect(PRONOUN_MECHANICS_INTERFERENCE_KEYS).toContain('external_preposition_order');
 
     expect(PRONOUN_MECHANICS_CATEGORY_KEYS).toContain('epenthetic_n_prepositional');
     expect(PRONOUN_MECHANICS_CATEGORY_KEYS).toContain('epenthetic_n_absence_direct');

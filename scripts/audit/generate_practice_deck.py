@@ -6587,7 +6587,9 @@ def build_practice_shards(
             cloze_by_level[lexeme["cefr"]].append(item)
             cloze_ids_by_lemma.setdefault(lexeme["lemmaId"], []).append(item["clozeId"])
         stress = _stress_payload(_entry, end_dictionary_stress=end_dictionary_stress)
-        if stress:
+        # #10672: bare перед has ULIF noun readings пе́ред / пере́д
+        # and prepositional пе́ред. A single-key prompt cannot disambiguate.
+        if stress and _plain(stress["unstressed"]) != "перед":
             stress_item = {
                 "stressId": f"{lexeme['lemmaId']}:stress",
                 "lemmaId": lexeme["lemmaId"],

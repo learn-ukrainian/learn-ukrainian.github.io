@@ -251,6 +251,11 @@ def _parse_options(value: str, *, correct_index: int) -> list[str] | None:
 
 
 def _item_from_row(row: sqlite3.Row) -> tuple[dict[str, Any] | None, str | None]:
+    # #10672: the official key is Б (пі́длітковий), but ULIF also
+    # attests ко́рисний alongside кори́сний in option В. The choice UI
+    # cannot explain the variant, so withhold this ambiguous task.
+    if int(row["id"]) == 309:
+        return None, "ambiguous_stress_ulif_variant"
     correct_letter = str(row["correct_json"]).strip()
     correct_index = LETTER_TO_INDEX.get(correct_letter)
     if correct_index is None:

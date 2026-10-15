@@ -821,7 +821,7 @@ CANONICAL_PARTICLE_ITEMS = [
         "distractors": [
             ("будь хто", FunctionWordInterferenceType.MISSING_HYPHEN_PARTICLE, "Частки «будь-», «казна-», «хтозна-» з займенниками без прийменника пишуться через дефіс: «будь-хто».", "Particles будь-, казна-, хтозна- are hyphenated with pronouns when no preposition intervenes."),
             ("будьхто", FunctionWordInterferenceType.FALSE_SOLID_PARTICLE, "«Будь-хто» пишеться через дефіс, а не разом.", "Written with a hyphen, not solid."),
-            ("хто будь", FunctionWordInterferenceType.LEXICAL_SEMANTIC_CONFUSION, "Нормативний порядок морфем — префіксальна частка попереду: «будь-хто».", "Standard order places 'будь-' before the pronoun."),
+            ("хто будь", FunctionWordInterferenceType.MISSING_HYPHEN_PARTICLE, "Частка «будь» із займенником без прийменника пишеться через дефіс: «будь-хто» або «хто-будь». У варіанті «хто будь» пропущено дефіс.", "Without an intervening preposition, будь is hyphenated with the pronoun: будь-хто or хто-будь. The option хто будь is missing the hyphen."),
         ],
         "citation": "Правопис 2019, § 44, п. 3.2",
         "rule_ua": "Частки «будь-», «казна-», «хтозна-» пишуться через дефіс: будь-хто, будь-який, хтозна-хто.",

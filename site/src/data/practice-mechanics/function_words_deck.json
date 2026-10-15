@@ -1692,9 +1692,9 @@
         },
         {
           "form": "хто будь",
-          "interferenceType": "lexical_semantic_confusion",
-          "explanationUa": "Нормативний порядок морфем — префіксальна частка попереду: «будь-хто».",
-          "explanationEn": "Standard order places 'будь-' before the pronoun."
+          "interferenceType": "missing_hyphen_particle",
+          "explanationUa": "Частка «будь» із займенником без прийменника пишеться через дефіс: «будь-хто» або «хто-будь». У варіанті «хто будь» пропущено дефіс.",
+          "explanationEn": "Without an intervening preposition, будь is hyphenated with the pronoun: будь-хто or хто-будь. The option хто будь is missing the hyphen."
         }
       ],
       "ruleCitation": "Правопис 2019, § 44, п. 3.2",

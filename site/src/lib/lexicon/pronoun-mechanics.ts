@@ -56,6 +56,7 @@ export const PRONOUN_MECHANICS_INTERFERENCE_KEYS = [
   'hyphenated_split_preposition',
   'solid_split_preposition',
   'external_preposition_russian_calque',
+  'external_preposition_order',
   'separate_negative_pronoun',
   'hyphenated_negative_pronoun',
   'defective_refl_nominative',

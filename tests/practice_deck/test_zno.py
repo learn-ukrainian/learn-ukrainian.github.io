@@ -75,6 +75,30 @@ def _database(path: Path) -> Path:
     return path
 
 
+def test_ambiguous_stress_task_is_quarantined_on_rebuild(tmp_path: Path) -> None:
+    database = _database(tmp_path / "sources.db")
+    conn = sqlite3.connect(database)
+    conn.execute(
+        "INSERT INTO zno_tasks VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        (309, 1, 2019, "zno", "dodatkova", 1, "single-choice",
+         "На перший склад падає наголос у слові",
+         json.dumps(["віршовий", "підлітковий", "корисний", "фаховий"], ensure_ascii=False),
+         "Б", "ТЕМА: Наголос", "", "", ""),
+    )
+    conn.commit()
+    conn.close()
+    shards, residual, fill = build_zno_shards(database)
+    assert [item["znoTaskId"] for item in shards["stress"]["items"]] == ["zno:1"]
+    assert residual["decks"]["stress"]["dropped"]["ambiguous_stress_ulif_variant"] == 1
+    assert {"znoTaskId": "zno:309", "reason": "ambiguous_stress_ulif_variant"} in fill["deckDrops"]["stress"]
+    repo_root = Path(__file__).resolve().parents[2]
+    shipped = json.loads((repo_root / "site/src/data/practice-zno.stress.json").read_text())
+    assert len(shipped["items"]) == 20
+    assert all(item["znoTaskId"] != "zno:309" for item in shipped["items"])
+    meta = json.loads((repo_root / "site/src/data/practice-zno-meta.json").read_text())
+    assert next(row["itemCount"] for row in meta if row["deckId"] == "zno-stress") == 20
+
+
 def test_builder_keeps_ukrainian_item_text_maps_letter_and_reports_drops(tmp_path: Path) -> None:
     shards, residual, fill_residual = build_zno_shards(_database(tmp_path / "sources.db"))
 

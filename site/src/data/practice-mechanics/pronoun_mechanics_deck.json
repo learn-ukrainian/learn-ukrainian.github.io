@@ -1836,10 +1836,10 @@
       "distractors": [
         {
           "text": "про ніщо",
-          "interference_type": "external_preposition_russian_calque",
+          "interference_type": "external_preposition_order",
           "explanation": {
-            "ua": "Російська калька порушує порядок слів: в українській мові прийменник ставиться всередині — 'ні про що'.",
-            "en": "Calqued word order: in Ukrainian, preposition stands inside the phrase — 'ні про що'."
+            "ua": "За наявності прийменника частка 'ні', прийменник і займенник пишуться окремо трьома словами: 'ні про що'.",
+            "en": "With a preposition, ні, the preposition and the pronoun are written as three separate words: ні про що."
           }
         },
         {
@@ -2356,8 +2356,8 @@
       ],
       "pravopys_section": "Правопис 2019 § 113",
       "rule_summary": {
-        "ua": "Займенник 'весь' в орудному відмінку множини має нормативне закінчення -іма: всіма (форми *всьома чи *всеми є ненормативними).",
-        "en": "The pronoun 'весь' in Instrumental plural takes ending -іма: всіма (forms *всьома and *всеми are ungrammatical)."
+        "ua": "Давальний відмінок множини займенника 'весь' — 'всім'. У сполуці 'побажали успіху всім учасникам' адресата названо в давальному відмінку: кому? — всім учасникам.",
+        "en": "The Dative plural of весь is всім. In побажали успіху всім учасникам, the recipients take the Dative: кому? — всім учасникам."
       }
     },
     {

@@ -51,6 +51,27 @@ from scripts.practice.pronoun_mechanics_engine import (
 )
 
 
+def test_targeted_pronoun_feedback_matches_the_tested_rule():
+    deck = export_pronoun_mechanics_deck(build_canonical_pronoun_cards())
+    cards = {card["card_id"]: card for card in deck["cards"]}
+    dative = cards["pron_ves_vsim"]
+    assert dative["correct_answer"] == "всім"
+    assert "Давальний відмінок множини" in dative["rule_summary"]["ua"]
+    assert "всім учасникам" in dative["rule_summary"]["ua"]
+    assert "всіма" not in dative["rule_summary"]["ua"]
+    assert "Dative plural" in dative["rule_summary"]["en"]
+    split = cards["pron_orth_split_neg_ni_pro_shcho"]
+    assert split["correct_answer"] == "ні про що"
+    distractor = next(row for row in split["distractors"] if row["text"] == "про ніщо")
+    assert distractor["interference_type"] == "external_preposition_order"
+    feedback = distractor["explanation"]
+    assert "окремо трьома словами: 'ні про що'" in feedback["ua"]
+    assert "калька" not in feedback["ua"].lower()
+    assert "calqu" not in feedback["en"].lower()
+    for path in ("registry/practice/pronoun_mechanics_deck.json", "site/src/data/practice-mechanics/pronoun_mechanics_deck.json"):
+        assert json.loads(Path(path).read_text(encoding="utf-8")) == deck
+
+
 def test_resolve_epenthesis_rules():
     """Verify epenthetic n- rules per Правопис 2019 § 108."""
     cit, ua, en = resolve_epenthesis_rule(PronounCategory.EPENTHETIC_N_PREPOSITIONAL)

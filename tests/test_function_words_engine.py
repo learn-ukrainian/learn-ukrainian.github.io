@@ -43,6 +43,19 @@ from scripts.practice.function_words_engine import (
 )
 
 
+def test_bud_pronoun_feedback_teaches_the_missing_hyphen():
+    deck = export_function_word_deck(build_canonical_function_word_cards())
+    card = next(card for card in deck["cards"] if card["id"] == "part_prefix_hyphen_12")
+    distractor = next(row for row in card["distractors"] if row["form"] == "хто будь")
+    assert card["correctAnswer"] == "будь-хто"
+    assert distractor["interferenceType"] == "missing_hyphen_particle"
+    assert "«будь-хто» або «хто-будь»" in distractor["explanationUa"]
+    assert "пропущено дефіс" in distractor["explanationUa"]
+    assert "missing the hyphen" in distractor["explanationEn"]
+    for path in ("registry/practice/function_words_deck.json", "site/src/data/practice-mechanics/function_words_deck.json"):
+        assert json.loads(Path(path).read_text(encoding="utf-8")) == deck
+
+
 def test_resolve_preposition_hyphenation():
     """Verify compound preposition hyphenation rules per Правопис 2019 (§ 42, п. 2 vs § 42, п. 1)."""
     # Prepositions with initial з- / із- must be hyphenated (§ 42, п. 2)

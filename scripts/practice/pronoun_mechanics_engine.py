@@ -95,6 +95,7 @@ class PronounInterferenceType(StrEnum):
     HYPHENATED_SPLIT_PREPOSITION = "hyphenated_split_preposition"
     SOLID_SPLIT_PREPOSITION = "solid_split_preposition"
     EXTERNAL_PREPOSITION_RUSSIAN_CALQUE = "external_preposition_russian_calque"
+    EXTERNAL_PREPOSITION_ORDER = "external_preposition_order"
     SEPARATE_NEGATIVE_PRONOUN = "separate_negative_pronoun"
     HYPHENATED_NEGATIVE_PRONOUN = "hyphenated_negative_pronoun"
     DEFECTIVE_REFL_NOMINATIVE = "defective_refl_nominative"
@@ -1555,9 +1556,9 @@ def build_canonical_pronoun_cards() -> list[PronounCard]:
             distractors=(
                 PronounDistractor(
                     text="про ніщо",
-                    interference_type=PronounInterferenceType.EXTERNAL_PREPOSITION_RUSSIAN_CALQUE,
-                    explanation_ua="Російська калька порушує порядок слів: в українській мові прийменник ставиться всередині — 'ні про що'.",
-                    explanation_en="Calqued word order: in Ukrainian, preposition stands inside the phrase — 'ні про що'.",
+                    interference_type=PronounInterferenceType.EXTERNAL_PREPOSITION_ORDER,
+                    explanation_ua="За наявності прийменника частка 'ні', прийменник і займенник пишуться окремо трьома словами: 'ні про що'.",
+                    explanation_en="With a preposition, ні, the preposition and the pronoun are written as three separate words: ні про що.",
                 ),
                 PronounDistractor(
                     text="ніпрощо",
@@ -1920,8 +1921,8 @@ def build_canonical_pronoun_cards() -> list[PronounCard]:
                 ),
             ),
             rule_citation=cit_ves,
-            rule_summary_ua=ua_ves,
-            rule_summary_en=en_ves,
+            rule_summary_ua="Давальний відмінок множини займенника 'весь' — 'всім'. У сполуці 'побажали успіху всім учасникам' адресата названо в давальному відмінку: кому? — всім учасникам.",
+            rule_summary_en="The Dative plural of весь is всім. In побажали успіху всім учасникам, the recipients take the Dative: кому? — всім учасникам.",
         ),
         PronounCard(
             card_id="pron_ves_vsyoho",

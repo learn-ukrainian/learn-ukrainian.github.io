@@ -979,6 +979,22 @@ def test_stress_position_preserves_non_stress_combining_marks() -> None:
     assert _stress_position("кра́й") == ("край", 2)
 
 
+@pytest.mark.parametrize("stressed", ["пе́ред", "пере́д"])
+def test_bare_pered_is_withheld_from_atlas_stress(stressed: str) -> None:
+    entries = [
+        {"lemma": "перед", "url_slug": "перед", "gloss": "front", "pos": "noun",
+         "enrichment": {"cefr": {"level": "A2"}, "stress": {"form": stressed}}},
+        {"lemma": "книга", "url_slug": "книга", "gloss": "book", "pos": "noun",
+         "enrichment": {"cefr": {"level": "A2"}, "stress": {"form": "кни́га"}}},
+    ]
+    shards = build_practice_shards(
+        entries, ReviewedSourceAllowlist.from_payload([]), JsonVesumVerifier({}),
+        heritage_pairs=[], paronym_pairs=[], antonym_pairs=[], homonym_pairs=[],
+    )
+    assert [item["stressId"] for level in shards.values() for item in level["stress"]["stress"]] == ["книга:stress"]
+    assert {item["lemmaId"] for level in shards.values() for item in level["index"]["items"]} == {"перед", "книга"}
+
+
 def test_neuter_a_ya_nouns_can_reach_fourth_declension() -> None:
     entry = {"lemma": "ім'я", "pos": "noun"}
     paradigm = {"cases": {"nominative": {"singular": "ім'я"}}}
