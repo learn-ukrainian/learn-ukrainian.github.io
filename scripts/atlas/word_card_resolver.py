@@ -32,8 +32,6 @@ def aid(
     return "wa_" + hashlib.sha256(canon.encode("utf-8")).hexdigest()[:24]
 
 
-
-
 # ---------------------------------------------------------------- field resolution (schema.md §8)
 # Comparison class per field: what proposition two assertions are compared on.
 #   scalar: one proposition per (subject, field); different value_norms contradict (stress, pos, cefr ...).
@@ -55,14 +53,6 @@ TEXT_FIELDS = {
     "register",
     "mwe_frame",
 }
-# Fields a card subject may resolve (schema `card_field_name`). A sense-level field asserted on the card because its
-# source unit could not be aligned to one sense stays retained evidence in `assertions`, never a card field.
-CARD_FIELD_NAMES = frozenset(
-    {
-        "spelling", "stress", "pos", "grammatical_label", "gender", "aspect", "paradigm", "cefr", "frequency",
-        "heritage_status", "transliteration", "english_gloss", "spelling_variants", "mwe_form", "mwe_frame",
-    }
-)
 CONF_ORDER = ["high", "medium", "low"]
 STATE_RANK = {"verified": 0, "variant": 1, "single-source": 2, "unverified": 3, "conflict": 4, "suppressed": 5}
 
@@ -331,9 +321,7 @@ def _recompute(c: dict) -> None:
     """Field resolutions and link states from the assertions as they are NOW (schema.md §12.2): called at
     assembly and again before every public projection, so a suppression is reflected everywhere."""
     asr = c["assertions"]
-    card_fields = sorted(
-        {a["field"] for a in asr if a.get("subject", {}).get("kind") == "card" and a["field"] in CARD_FIELD_NAMES}
-    )
+    card_fields = sorted({a["field"] for a in asr if a.get("subject", {}).get("kind") == "card"})
     c["fields"] = {f: resolve(asr, f, c["card_id"]) for f in card_fields}
     if c["fields"].get("english_gloss"):
         c["fields"]["english_gloss"]["level_policy"] = "scaffold: shown at A1 by design, never raised from A2 (#8983)"

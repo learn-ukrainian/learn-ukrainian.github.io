@@ -1,9 +1,12 @@
 """Independent integrity checks and takedown rehearsal for assembled pilot cards (#8981).
 
-`verify` re-reads every cited locator from the held sources (read-only) and re-derives what it can from the
-frozen inputs; it does not trust the assembler's own bookkeeping. `rehearse` runs the withdrawal / rollback
-contract of schema.md §12-§13: a suppression selector removes the dependent assertions everywhere, the rebuild
-under the same selectors is stable, and lifting the selector restores the previous bytes.
+`verify` re-reads every cited locator from the held sources (read-only), re-authenticates derived ULIF forms
+against the held raw pages and re-derives what it can from the frozen inputs; it does not trust the assembler's
+bookkeeping. Retained evidence is checked whole: suppressed assertions keep their identity, record, register and
+locator and must be accounted for by the takedown report, while the public projection must carry them only as
+tombstones. `rehearse` runs the withdrawal / rollback contract of schema.md §12-§13: selectors reach the same
+assertions in any order, structured values are withdrawn by their exact proposition, a withdrawn build verifies,
+the rebuild under the same selectors is stable, and lifting the selectors restores the previous bytes.
 
 Neither command certifies linguistic correctness: a green run proves mechanics, never meaning.
 """
@@ -22,14 +25,15 @@ from scripts.atlas import word_card_assembly as wa
 from scripts.atlas import word_card_foundation as foundation
 from scripts.atlas import word_card_sources as src
 from scripts.atlas.allocate_pilot_identities import label_pos
-from scripts.atlas.word_card_resolver import aid, public_projection
+from scripts.atlas.word_card_resolver import aid, card_version, public_projection, resolve
 
 SCHEMA = Path(__file__).resolve().parents[2] / "schemas" / "word-card-v1.schema.json"
 DISPOSITIONS = frozenset({
     "asserted", "held", "source_absent", "not_in_frozen_inputs", "not_applicable", "unresolved",
 })
 LOCATOR = re.compile(r"^(?P<head>[a-z0-9_]+(?::[a-z0-9_]+)*:(?:id|entry):\d+|atlas0:enrichment:[^ ]+)"
-                     r"(?::slot:(?P<slot>[A-Za-z0-9_.*~+]+))?(?: \[(?P<part>.+)\])?$")
+                     r"(?::slot:(?P<slot>[A-Za-z0-9_.]+))?(?: \[(?P<part>.+)\])?$")
+TOMBSTONE_KEYS = {"assertion_id", "status", "suppression_ref"}
 
 
 def plain_text(raw_html: str) -> str:
@@ -135,19 +139,19 @@ class Resolver:
         return None
 
     def forms_value(self, a, entry_id, slot):
+        """The cited rows must be authenticated rows of the entry (held raw page parse), in exactly this slot."""
+        if self.sources.forms_status(entry_id) is not None:
+            return "forms_unauthenticated"
         value = a["value"]
-        rows = {r["id"]: r for r in self.sources.sources.execute(
-            f"SELECT * FROM ulif_forms WHERE id IN ({','.join('?' * len(value['row_ids']))})", value["row_ids"])}
-        if len(rows) != len(value["row_ids"]):
+        rows = {r["id"]: r for r in self.sources.forms(entry_id)}
+        if not set(value["row_ids"]) <= set(rows):
             return "row_missing"
-        tokens = set(slot.split("."))
-        for row in rows.values():
-            if row["entry_id"] != entry_id or row["marked_asterisk"]:
-                return "value_mismatch"
+        cited = [rows[i] for i in value["row_ids"]]
+        for row in cited:
             row_slot = src.ulif_slot(json.loads(row["grammatical_tags"]))
-            if row_slot is None or not tokens <= set(row_slot) | {"*"}:
+            if row["is_lemma"] or row_slot is None or src.slot_name(row_slot) != slot:
                 return "value_mismatch"
-        stressed = sorted({src.nfc(r["form_stressed"]) for r in rows.values()})
+        stressed = sorted({src.nfc(r["form_stressed"]) for r in cited if not r["marked_asterisk"]})
         return None if stressed == sorted(value["forms"]) else "value_mismatch"
 
     def vesum_value(self, a, entry_id, part, lemma):
@@ -173,11 +177,14 @@ class Resolver:
             if field == "gender":
                 return None if set(value) <= tokens else "value_mismatch"
             if field == "aspect":
-                return None if (wa.vesum_aspect([{"tags": r["tags"]} for r in rows]) == value) else "value_mismatch"
+                return None if (wa.vesum_aspect(rows) == value) else "value_mismatch"
         if part.startswith("slot "):
-            forms = {src.nfc(r["word_form"]) for r in rows}
-            tags = {r["tags"] for r in rows}
-            return None if set(value["forms"]) <= forms and set(value["tags"]) <= tags else "value_mismatch"
+            # Exactly the forms of the rows printing these tags: a slot never drops or adds a VESUM form.
+            tags = set(value["tags"])
+            if not tags <= {r["tags"] for r in rows}:
+                return "value_mismatch"
+            forms = {src.nfc(r["word_form"]) for r in rows if r["tags"] in tags}
+            return None if forms == set(value["forms"]) else "value_mismatch"
         return "locator_part"
 
 
@@ -185,7 +192,128 @@ def squeezed(text: str) -> str:
     return wa.squeeze(text)
 
 
-def verify(inputs: wa.Inputs, result: dict, again: dict | None = None) -> dict:
+def relation_conservation(inputs: wa.Inputs, cards: dict) -> dict:
+    """Every accepted C3 relation unit appears exactly once, on the sense the one-unit rule or the registry's
+    `unsplit` holding sense names, with its payload, locator and source record; none sits on a card subject."""
+    errors, total, aligned, held = Counter(), 0, 0, 0
+    placed = Counter()
+    for card in cards.values():
+        for a in card["assertions"]:
+            if a["field"] in wa.RELATION_FIELDS and a["source_id"] == "ulif":
+                if a["subject"]["kind"] != "sense":
+                    errors["card_subject"] += 1
+                placed[(card["card_id"], a["field"], a["locator"].split(" ")[0])] += 1
+    seen = set()
+    for unit in inputs.units:
+        if unit["entry_type"] != "lexeme_candidate":
+            continue
+        entry = inputs.entry_by_unit[unit["unit_key"]]
+        card = cards[entry["card_id"]]
+        by_kind = wa.relation_units(inputs.wp3_units, inputs.records[unit["anchor_locator"]]["raw_row"]["id"])
+        for kind, units in by_kind.items():
+            target = wa.aligned_sense(entry["senses"], units)
+            for u in units:
+                if u.candidate.outcome != "accepted":
+                    continue
+                total += 1
+                locator = f"ulif:ulif_dictua_sections:id:{u.source_key.rpartition('=')[2]}"
+                key = (card["card_id"], kind, locator)
+                seen.add(key)
+                found = [a for a in card["assertions"] if a["field"] == kind and a["locator"].split(" ")[0] == locator]
+                if len(found) != 1 or placed[key] != 1:
+                    errors["not_exactly_once"] += 1
+                    continue
+                a = found[0]
+                members = next(v for v in u.candidate.response if v.slot == "members")
+                errors["payload"] += a["value"]["members"] != members.text
+                expected = target or wa.holding_sense(entry["senses"])
+                errors["placement"] += expected is None or a["subject"] != {"kind": "sense", "id": expected["sense_id"]}
+                errors["mapping"] += a["mapping"]["confidence"] != ("high" if target else "unresolved")
+                aligned += target is not None
+                held += target is None
+    errors["unexpected"] += sum(1 for key in placed if key not in seen)
+    return {"passed": not any(errors.values()), "units": total, "aligned": aligned, "held_unsplit": held,
+            "errors": {k: v for k, v in errors.items() if v}}
+
+
+def withdrawal(cards: dict, takedown: list[dict], suppressions: dict | None) -> dict:
+    """Suppressed provenance: every suppressed assertion is credited by the takedown entry it names, every
+    credited assertion is retained and suppressed, and the takedown covers exactly the declared selectors."""
+    errors = Counter()
+    entries = {t["suppression_id"]: t for t in takedown}
+    declared = [e["suppression_id"] for e in (suppressions or {}).get("entries", [])]
+    errors["takedown_vs_selectors"] += sorted(entries) != sorted(declared)
+    retained = {}
+    for card in cards.values():
+        for a in card["assertions"]:
+            retained[(card["card_id"], a["assertion_id"])] = a
+            if a["status"] == "suppressed":
+                entry = entries.get(a.get("suppression_ref"))
+                errors["unknown_suppression_ref"] += entry is None
+                if entry is not None:
+                    errors["ref_not_credited"] += a["assertion_id"] not in entry["assertions"]
+                    errors["ref_not_smallest"] += a["suppression_ref"] != min(
+                        t for t, e in entries.items() if a["assertion_id"] in e["assertions"]
+                        and card["card_id"] in e["cards"])
+            elif a["status"] != "active":
+                errors["status"] += 1
+    for entry in takedown:
+        reached = [retained.get((c, i)) for c in entry["cards"] for i in entry["assertions"]
+                   if (c, i) in retained]
+        errors["credited_missing"] += len({i for i in entry["assertions"]} - {a["assertion_id"] for a in reached})
+        errors["credited_active"] += sum(1 for a in reached if a["status"] != "suppressed")
+        errors["empty_selector"] += not entry["assertions"]
+    return {"passed": not any(errors.values()), "suppressed": sum(a["status"] == "suppressed" for a in retained.values()),
+            "selectors": len(takedown), "errors": {k: v for k, v in errors.items() if v}}
+
+
+def public_tombstones(card: dict) -> list[str]:
+    """Independent checks of one card's public projection; returns closed reason codes."""
+    public = public_projection(card)
+    problems = []
+    suppressed = {a["assertion_id"]: a for a in card["assertions"] if a["status"] == "suppressed"}
+    live = {a["assertion_id"] for a in card["assertions"] if a["status"] == "active"}
+    if not suppressed:
+        return [] if foundation.digest(public) == foundation.digest(card) else ["untouched_card_differs"]
+    for a in public["assertions"]:
+        if a["assertion_id"] in suppressed:
+            if set(a) != TOMBSTONE_KEYS or a["suppression_ref"] != suppressed[a["assertion_id"]]["suppression_ref"]:
+                problems.append("tombstone_shape")
+        elif a["assertion_id"] not in live:
+            problems.append("unknown_assertion")
+    if {a["assertion_id"] for a in public["assertions"]} != set(suppressed) | live:
+        problems.append("assertion_inventory")
+    resolutions = [*public["fields"].items(), *((f, r) for s in public["senses"] for f, r in s["fields"].items())]
+    for _field, res in resolutions:
+        cited = {i for v in res["values"] for i in v["assertion_ids"]}
+        selected = res["selected"] if isinstance(res["selected"], list) else [res["selected"]] if res["selected"] else []
+        if (cited | set(selected)) & set(suppressed):
+            problems.append("withdrawn_value_in_resolution")
+    for field in public["fields"]:
+        survivors = [a for a in card["assertions"] if a["status"] == "active"]
+        if survivors and public["fields"][field] != resolve(card["assertions"], field, card["card_id"]) | (
+                {"level_policy": public["fields"][field]["level_policy"]} if "level_policy" in public["fields"][field]
+                else {}):
+            problems.append("resolution_not_recomputed")
+    text = json.dumps({k: v for k, v in public.items() if k != "assertions"}, ensure_ascii=False)
+    for a in suppressed.values():
+        if a["locator"] in text:
+            problems.append("withdrawn_locator_in_public")
+        if a["field"] in wa.RELATION_FIELDS and any(
+                f"ulif:section:{re.search(r'id:(\d+)', a['locator']).group(1)}" == u["source_sense_key"]
+                and not u["mapped_by"].startswith("registry:") for s in public["senses"] for u in s["sense_map"]):
+            problems.append("withdrawn_unit_in_sense_map")
+    for link in public["links"]:
+        if link["state"] == "active" and set(link["assertion_ids"]) & set(suppressed):
+            problems.append("link_on_withdrawn_evidence")
+    if public["build"]["card_version"] != card_version(public):
+        problems.append("card_version")
+    if (public["state"] == "suppressed") != (not live):
+        problems.append("card_state")
+    return sorted(set(problems))
+
+
+def verify(inputs: wa.Inputs, result: dict, again: dict | None = None, suppressions: dict | None = None) -> dict:
     """Run every integrity check; returns {check: {passed, ...}} and never raises on a failed check."""
     cards = result["cards"]
     validator = Draft202012Validator(json.loads(SCHEMA.read_text(encoding="utf-8")))
@@ -199,22 +327,22 @@ def verify(inputs: wa.Inputs, result: dict, again: dict | None = None) -> dict:
 
     unit_cards = {inputs.entry_by_unit[u["unit_key"]]["card_id"] for u in inputs.units}
     senses_ok = all(
-        {s["sense_id"] for s in c["senses"]} == {s["sense_id"] for e in inputs.registry["entries"]
-                                                  if e["card_id"] == c["card_id"] for s in e["senses"]}
+        [s["sense_id"] for s in c["senses"]] == [s["sense_id"] for e in inputs.registry["entries"]
+                                                  if e["card_id"] == c["card_id"] for s in e["senses"]]
         for c in cards.values())
     report["conservation"] = {
         "passed": set(cards) == unit_cards and len(cards) == len(inputs.units) and senses_ok
         and set(result["ledger"].cards) == unit_cards,
         "units": len(inputs.units), "cards": len(cards), "ledger_cards": len(result["ledger"].cards),
     }
+    report["relation_units"] = relation_conservation(inputs, cards)
 
     registry_sr = {sr["source_record_id"]: sr for sr in inputs.registry["source_records"]}
     id_errors, register_errors, lineage_errors, sr_errors, forbidden = Counter(), Counter(), Counter(), Counter(), 0
     cited_records = set()
     for card in cards.values():
+        # Retained evidence is checked whole: a suppressed assertion keeps its identity, record and lineage.
         for a in card["assertions"]:
-            if a.get("status") != "active":
-                continue
             expected = aid(a["source_id"], a["snapshot_id"], a["locator"], a["subject"], a["field"], a["value_norm"],
                            a["extraction_version"])
             id_errors["id"] += expected != a["assertion_id"]
@@ -232,8 +360,13 @@ def verify(inputs: wa.Inputs, result: dict, again: dict | None = None) -> dict:
                                   "errors": {**register_errors, **lineage_errors}}
     frozen = {sr["source_record_id"] for sr in inputs.registry["source_records"]
               if any(c.get("locator") in inputs.records for c in sr["correspondence"])}
-    report["source_records"] = {"passed": not any(sr_errors.values()) and frozen <= cited_records and not forbidden,
+    # A frozen record no assertion cites must be accounted for by a ledger hold naming it (refused evidence).
+    held = {h["source_record_id"] for item in result["ledger"].cards.values() for h in item["held"]
+            if h.get("source_record_id")}
+    report["source_records"] = {"passed": not any(sr_errors.values()) and frozen <= cited_records | held
+                                and not forbidden,
                                 "frozen": len(frozen), "cited": len(frozen & cited_records),
+                                "held": len((frozen - cited_records) & held),
                                 "errors": dict(sr_errors), "sum11_outside_russification": forbidden}
 
     resolver = Resolver(inputs)
@@ -241,14 +374,14 @@ def verify(inputs: wa.Inputs, result: dict, again: dict | None = None) -> dict:
     checked = 0
     for card in cards.values():
         for a in card["assertions"]:
-            if a.get("status") != "active":
-                continue
             checked += 1
             problem = resolver.check(card, a)
             if problem:
                 locator_errors[f"{a['source_id']}:{a['field']}:{problem}"] += 1
     report["locators"] = {"passed": not locator_errors, "checked": checked, "errors": dict(locator_errors)}
 
+    report["withdrawal"] = withdrawal(cards, result["takedown"], suppressions)
+    withdrawn_fields = {f for t in result["takedown"] for f in t["fields"]}
     ledger_errors = Counter()
     for card_id, item in result["ledger"].cards.items():
         card = cards[card_id]
@@ -256,79 +389,118 @@ def verify(inputs: wa.Inputs, result: dict, again: dict | None = None) -> dict:
         kind = "mwe" if card["card_kind"] == "mwe" else "lexeme"
         required = set((wa.MWE_FIELDS if kind == "mwe" else wa.CARD_FIELDS) + wa.SENSE_FIELDS)
         ledger_errors["missing_field"] += len(required - fields)
-        asserted = {a["field"] for a in card["assertions"] if a["status"] == "active"}
+        retained = {a["field"] for a in card["assertions"]}
+        live = {a["field"] for a in card["assertions"] if a["status"] == "active"}
         for name, d in item["fields"].items():
             ledger_errors["bad_disposition"] += d["disposition"] not in DISPOSITIONS
-            if d["disposition"] == "asserted" and name not in asserted:
-                ledger_errors["asserted_without_assertion"] += 1
+            if d["disposition"] == "asserted":
+                # Extraction accounting stays; a field whose every assertion was withdrawn must be in the takedown.
+                ledger_errors["asserted_without_assertion"] += name not in retained
+                ledger_errors["withdrawn_unaccounted"] += name in retained and name not in live and \
+                    f"{card_id}:{name}" not in withdrawn_fields
     report["ledger"] = {"passed": not any(ledger_errors.values()), "errors": dict(ledger_errors)}
 
     if again is not None:
         first = {k: foundation.digest(v) for k, v in cards.items()}
         second = {k: foundation.digest(v) for k, v in again["cards"].items()}
-        report["determinism"] = {"passed": first == second, "cards": len(first)}
+        report["determinism"] = {"passed": first == second and result["build_id"] == again["build_id"],
+                                 "cards": len(first)}
 
-    projection_errors = 0
+    projection = Counter()
     for card in cards.values():
-        if foundation.digest(public_projection(card)) != foundation.digest(card):
-            projection_errors += 1
-    report["public_projection"] = {"passed": projection_errors == 0, "differing_cards": projection_errors}
+        for problem in public_tombstones(card):
+            projection[problem] += 1
+    report["public_projection"] = {"passed": not projection, "errors": dict(projection),
+                                   "withdrawn_cards": sum(1 for c in cards.values() if any(
+                                       a["status"] == "suppressed" for a in c["assertions"]))}
     report["passed"] = all(v["passed"] for v in report.values() if isinstance(v, dict))
     return report
+
+
+def _semantic(result: dict) -> str:
+    """Card content without the build block: equal whenever the same assertions are withdrawn the same way."""
+    return foundation.digest({k: {f: v for f, v in c.items() if f != "build"} for k, c in sorted(result["cards"].items())})
+
+
+def _suppression(name: str, selector: dict) -> dict:
+    return {"suppression_id": f"sup-rehearsal-{name}",
+            "issue": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8980",
+            "date": "2026-10-15", "selector": selector, "scope": ["site", "dataset", "internal"],
+            "applies_to": {"reharvest": True, "rollback": True}}
+
+
+def rehearsal_selectors(inputs: wa.Inputs, baseline: dict) -> list[tuple[str, list[dict]]]:
+    """The rehearsal scenarios: record and source withdrawals, an overlapping pair, structured content selectors
+    (a declared stress set and a paradigm slot) and an assertion-id selector whose id no longer exists."""
+    scenarios = []
+    rehearsal_units = [u for u in inputs.units if "withdrawal_rehearsal_candidate" in u["categories"]]
+    record_entries = []
+    for number, unit in enumerate(rehearsal_units, start=1):
+        record = inputs.record_ids[("ulif", unit["anchor_locator"])]
+        record_entries.append(_suppression(f"source_record-{number}", {
+            "kind": "source_record", "source_id": "ulif", "source_record_id": record["source_record_id"],
+            "alias_at_creation": record["aliases"][0]["key"], "on_ambiguous": "suppress_all_candidates"}))
+    if record_entries:
+        scenarios.append(("source_record", record_entries))
+        whole = _suppression("ulif", {"kind": "source", "source_id": "ulif"})
+        scenarios.append(("overlap_source_then_record", [whole, record_entries[0]]))
+        scenarios.append(("overlap_record_then_source", [record_entries[0], whole]))
+    scenarios.append(("source", [_suppression("source", {"kind": "source", "source_id": "ukrainian_word_stress"})]))
+    cards = sorted(baseline["cards"].values(), key=lambda c: c["card_id"])
+    structured = {
+        "content_stress_set": next(((c, a) for c in cards for a in c["assertions"]
+                                    if a["field"] == "stress" and isinstance(a["value"], list)), None),
+        "content_paradigm_slot": next(((c, a) for c in cards for a in c["assertions"]
+                                       if a["field"] == "paradigm" and a["source_id"] == "ulif"), None),
+    }
+    for name, found in structured.items():
+        if found is None:
+            continue
+        card, a = found
+        content = {"kind": "assertion_content", "source_id": a["source_id"], "field": a["field"],
+                   "subject_spelling": card["key_at_creation"]["spelling"], "value_norm": a["value_norm"],
+                   "normaliser_version": inputs.manifest["normaliser_version"]}
+        scenarios.append((name, [_suppression(name, content)]))
+        if name == "content_paradigm_slot":
+            # An assertion id that no longer exists (re-extraction changed it): the pinned content still withdraws.
+            scenarios.append(("assertion_id_fallback", [_suppression("id-fallback", {
+                "kind": "assertion_id", "assertion_id": "wa_" + "0" * 24, "fallback": content})]))
+    return scenarios
 
 
 def rehearse(inputs: wa.Inputs) -> dict:
     """Withdrawal and rollback rehearsal against the frozen pilot (schema.md §12-§13, #8980 contract)."""
     baseline = wa.build(inputs)
-    rehearsal_units = [u for u in inputs.units if "withdrawal_rehearsal_candidate" in u["categories"]]
-    out = {"units": [u["unit_key"] for u in rehearsal_units], "scenarios": {}}
-    selectors = []
-    for unit in rehearsal_units:
-        record = inputs.record_ids[("ulif", unit["anchor_locator"])]
-        selectors.append(("source_record", {
-            "kind": "source_record", "source_id": "ulif", "source_record_id": record["source_record_id"],
-            "alias_at_creation": record["aliases"][0]["key"], "on_ambiguous": "suppress_all_candidates"}))
-    selectors.append(("source", {"kind": "source", "source_id": "ukrainian_word_stress"}))
-    for name, selector in selectors:
-        suppressions = {"schema_version": "1", "entries": [{
-            "suppression_id": f"sup-rehearsal-{name}",
-            "issue": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8980",
-            "date": "2026-10-15", "selector": selector, "scope": ["site", "dataset", "internal"],
-            "applies_to": {"reharvest": True, "rollback": True}}]}
+    scenarios = rehearsal_selectors(inputs, baseline)
+    out = {"units": [u["unit_key"] for u in inputs.units if "withdrawal_rehearsal_candidate" in u["categories"]],
+           "scenarios": {}}
+    for name, entries in scenarios:
+        suppressions = {"schema_version": "1", "entries": entries}
         withdrawn = wa.build(inputs, suppressions)
-        stable = wa.build(inputs, suppressions)  # rollback: same previous inputs, selectors still applied
+        stable = wa.build(inputs, suppressions)  # rollback / reimport: same inputs, current selectors applied
         lifted = wa.build(inputs, None)
-        reached = withdrawn["takedown"][0]
-        suppressed_ids = set(reached["assertions"])
-        leaks = 0
-        field_changes = Counter()
-        for card_id in reached["cards"]:
-            before, after = baseline["cards"][card_id], withdrawn["cards"][card_id]
-            public = public_projection(after)
-            text = json.dumps(public, ensure_ascii=False)
-            for a in after["assertions"]:
-                if a["assertion_id"] in suppressed_ids:
-                    leaks += a["locator"] in text or any(
-                        a["assertion_id"] in v["assertion_ids"] for f in (*public["fields"].values(),
-                        *(x for s in public["senses"] for x in s["fields"].values())) for v in f["values"])
-            for field, resolution in before["fields"].items():
-                now = public["fields"].get(field)
-                if now is None or now["state"] != resolution["state"]:
-                    field_changes[f"{field}:{resolution['state']}->{now['state'] if now else 'absent'}"] += 1
-            leaks += any(a.get("value") is not None and a.get("status") == "suppressed" and "value" in a
-                         for a in public["assertions"] if set(a) != {"assertion_id", "status", "suppression_ref"})
+        checks = verify(inputs, withdrawn, stable, suppressions)
+        suppressed_ids = {a["assertion_id"] for c in withdrawn["cards"].values() for a in c["assertions"]
+                          if a["status"] == "suppressed"}
         out["scenarios"][name] = {
+            "selectors": len(entries),
             "assertions_suppressed": len(suppressed_ids),
-            "cards_reached": reached["cards"],
-            "field_state_changes": dict(field_changes),
-            "suppressed_values_in_public_projection": leaks,
+            "credited_per_selector": {t["suppression_id"]: len(t["assertions"]) for t in withdrawn["takedown"]},
+            "cards_reached": sorted({c for t in withdrawn["takedown"] for c in t["cards"]}),
             "card_states": dict(Counter(c["state"] for c in withdrawn["cards"].values())),
+            "withdrawn_build_verifies": checks["passed"],
+            "verify_failures": sorted(k for k, v in checks.items() if isinstance(v, dict) and not v["passed"]),
             "rebuild_with_selectors_identical": _digest(withdrawn) == _digest(stable),
             "lifted_selector_restores_baseline": _digest(lifted) == _digest(baseline),
-            "withdrawn_differs_from_baseline": _digest(withdrawn) != _digest(baseline),
+            "withdrawn_differs_from_baseline": _semantic(withdrawn) != _semantic(baseline),
+            "semantic_digest": _semantic(withdrawn),
         }
-    out["passed"] = bool(out["scenarios"]) and all(
-        s["assertions_suppressed"] > 0 and s["suppressed_values_in_public_projection"] == 0
+    pairs = [("overlap_source_then_record", "overlap_record_then_source")]
+    out["order_independent"] = all(
+        out["scenarios"][a]["semantic_digest"] == out["scenarios"][b]["semantic_digest"]
+        for a, b in pairs if a in out["scenarios"])
+    out["passed"] = bool(out["scenarios"]) and out["order_independent"] and all(
+        s["assertions_suppressed"] > 0 and s["withdrawn_build_verifies"]
         and s["rebuild_with_selectors_identical"] and s["lifted_selector_restores_baseline"]
         and s["withdrawn_differs_from_baseline"] for s in out["scenarios"].values())
     return out
