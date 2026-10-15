@@ -347,7 +347,10 @@ def test_claude_adapter_skips_effort_when_unsupported(tmp_path, caplog):
         f"plan.cmd={plan.cmd}"
     )
     assert any(
-        "does not support --effort" in rec.message for rec in caplog.records
+        rec.getMessage() == (
+            "Claude CLI does not support effort selection; "
+            "ignoring requested effort and using CLI default (#1396)"
+        ) and rec.args == () for rec in caplog.records
     ), (
         f"expected a WARNING log about effort being unsupported; "
         f"records={[r.message for r in caplog.records]}"
@@ -379,7 +382,10 @@ def test_claude_adapter_default_high_skips_when_unsupported(tmp_path, caplog):
         f"plan.cmd={plan.cmd}"
     )
     assert any(
-        "does not support --effort" in rec.message for rec in caplog.records
+        rec.getMessage() == (
+            "Claude CLI does not support effort selection; "
+            "ignoring requested effort and using CLI default (#1396)"
+        ) and rec.args == () for rec in caplog.records
     ), (
         f"expected a WARNING log about effort being unsupported; "
         f"records={[r.message for r in caplog.records]}"
