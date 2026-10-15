@@ -937,7 +937,7 @@ class ClaudeAdapter:
             else:
                 _logger.warning(
                     "Claude CLI at %s does not support --effort; ignoring effort=%r and using CLI default (#1396)",
-                    probe_prefix,
+                    Path(probe_prefix[0]).name,
                     effective_effort,
                 )
 
