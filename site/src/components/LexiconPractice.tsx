@@ -2418,12 +2418,8 @@ function LexiconPracticeIsland({
   const [feedback, setFeedback] = useState<{ uk: string; en?: string } | null>(null);
   const [revision, setRevision] = useState(0);
   const [history, setHistory] = useState<SelectionHistoryItem[]>([]);
-  // #8733: derived synchronously from the session history position, not bumped in a
-  // post-render effect — the first paint of a fresh card already has the final salt,
-  // and an immediate same-lemma requeue (a new history entry, same itemId) still gets
-  // a new value since history.length itself advances, so Paronym's per-presentation
-  // option shuffle never reorders in front of the learner or replays the prior order.
-  const presentationSeq = history.length;
+  // Advance only when Next presents another item; retained history is capped at 50.
+  const [presentationSeq, setPresentationSeq] = useState(0);
   const [answerLocked, setAnswerLocked] = useState(false);
   // After ANY answer (correct or wrong), park the scored outcome here instead of
   // auto-advancing so the learner explicitly continues via «Далі →» or Enter.
@@ -2696,9 +2692,9 @@ function LexiconPracticeIsland({
   const pendingCompletionRef = useRef<number | null>(null);
   const advanceButtonRef = useRef<HTMLButtonElement | null>(null);
   // Selection ref used to stabilize the in-flight item across live deck merges (pool growth from
-  // background level shards). While history length is unchanged we keep returning the
+  // background level shards). Within one presentation we keep returning the
   // prior selection object so a B1 card is not yanked when an A1/A2 shard lands mid-item.
-  const committedSelectionRef = useRef<{ selection: PracticeSelection; historyLen: number } | null>(null);
+  const committedSelectionRef = useRef<{ selection: PracticeSelection; presentationSeq: number } | null>(null);
   // Deduping cache for shard JSON fetches (by full URL) so index shards fetched by the eager
   // due-count effect are not re-fetched by ensure, and no shard is fetched twice.
   const shardJsonCacheRef = useRef(new Map<string, Promise<unknown>>());
@@ -3384,13 +3380,13 @@ function LexiconPracticeIsland({
     });
     // Stabilize in-flight selection across live merges from background level shards.
     // The selector cache (per deck identity) produces a new pool, but we keep the exact
-    // prior selection object (for same history length) so the user is not yanked mid-item
-    // and #4740/#4744 flows are unperturbed. Once history advances on complete, fresh pick
+    // prior selection object (for the same presentation) so the user is not yanked mid-item
+    // and #4740/#4744 flows are unperturbed. Once Next advances the presentation, a fresh pick
     // uses the grown pool.
     const committed = committedSelectionRef.current;
     const committedStillValid =
       committed &&
-      committed.historyLen === history.length &&
+      committed.presentationSeq === presentationSeq &&
       itemIdPresentInDeck(selectionDeck, committed.selection.itemId);
     // #8732: while an answer dwells (rated, waiting for «Далі →»/Enter), the rating
     // itself bumps `revision`/`reviewsCompleted`/`sessionNewIntroduced` synchronously —
@@ -3415,6 +3411,7 @@ function LexiconPracticeIsland({
     history,
     mode,
     pendingOutcome,
+    presentationSeq,
     poolFilter,
     revision,
     selectionDeck,
@@ -3439,15 +3436,11 @@ function LexiconPracticeIsland({
     resetItemFeedback();
     if (selection) {
       // Record for stabilization across future deck swaps (bg merges).
-      committedSelectionRef.current = { selection, historyLen: history.length };
+      committedSelectionRef.current = { selection, presentationSeq };
       window.setTimeout(() => stageRef.current?.focus({ preventScroll: true }), 0);
     }
-    // #8732/#8733: `history.length` (not just `selection?.itemId`) is a dependency so a
-    // same-lemma requeue — a new history entry that happens to pick the same itemId
-    // again — still re-commits here. Without it, `committedSelectionRef.current.historyLen`
-    // is left stale, `committedStillValid` misfires false on the very next rating, and the
-    // card can swap out from under the learner before they click Next.
-  }, [selection?.itemId, history.length, resetItemFeedback]);
+    // A same-item Next must re-commit even after retained history reaches its cap.
+  }, [selection?.itemId, presentationSeq, resetItemFeedback]);
 
   // Rate the selected lemma if matched but never completed (due to session abort/unmount)
   useEffect(() => {
@@ -4302,6 +4295,9 @@ function LexiconPracticeIsland({
       extensionUsed,
       unresolvedCount: outcome.nextUnresolved.size,
     });
+    if (decision === 'continue' || decision === 'extend') {
+      setPresentationSeq((value) => value + 1);
+    }
     if (decision === 'continue') return;
     if (decision === 'extend') {
       setExtensionUsed((value) => value + 1);

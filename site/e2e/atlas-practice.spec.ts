@@ -1249,6 +1249,7 @@ async function nativePlaying(page: Page): Promise<void> {
     record.events.includes('playing') && record.promises.includes('fulfilled') && !record.element.paused && record.element.currentTime > 0,
   ))).toBe(true);
   await expect(audioButton(page)).toHaveText('Stop pronunciation');
+  await expect(audioButton(page)).toHaveAttribute('aria-busy', 'false');
   await expect(page.locator('[data-pronunciation-lemma] [role="status"]')).toBeEmpty();
 }
 async function oldAudioStopped(page: Page): Promise<void> {
@@ -1258,7 +1259,7 @@ async function oldAudioStopped(page: Page): Promise<void> {
   })).toEqual({ paused: true, time: 0, pauseCalled: true });
 }
 
-async function settledAudioVoices(page: Page) {
+async function observedAudioVoices(page: Page) {
   return page.evaluate(async () => {
     if (!window.speechSynthesis) return { supported: false, voices: [] };
     let previous = '';
@@ -1271,18 +1272,27 @@ async function settledAudioVoices(page: Page) {
       if (stable >= 5) return { supported: true, voices: inventory };
       await new Promise((resolve) => setTimeout(resolve, 100));
     }
-    throw new Error('Native speech inventory did not settle');
+    throw new Error('Native speech inventory kept changing during observation');
   });
 }
 
 async function assertNativeFallback(page: Page) {
-  const inventory = await settledAudioVoices(page);
+  const inventory = await observedAudioVoices(page);
   await test.info().attach('native-voice-inventory.json', { body: JSON.stringify(inventory), contentType: 'application/json' });
   const localUkrainian = inventory.voices.some((voice) => voice.local && voice.lang.toLowerCase().startsWith('uk'));
   const before = await audioLearningState(page);
   await audioButton(page).click();
   if (localUkrainian) {
     await expect.poll(() => page.evaluate(() => window.practiceAudioProbe.speech.some((entry) => entry.local && entry.lang === 'uk-UA' && entry.events.includes('start')))).toBe(true);
+  } else if (inventory.supported && inventory.voices.length === 0) {
+    await expect(audioButton(page)).toHaveAccessibleName('Stop pronunciation');
+    await expect(audioButton(page)).toHaveAttribute('aria-busy', 'true');
+    await expect(page.locator('[data-pronunciation-lemma] [role="status"]')).toBeEmpty();
+    expect(await page.evaluate(() => window.practiceAudioProbe.speech)).toEqual([]);
+    test.info().annotations.push({ type: 'native-empty-catalog', description: 'UNKNOWN: the API cannot distinguish an empty catalog from one still loading; request stays cancellable' });
+    await audioButton(page).click();
+    await expect(audioButton(page)).toHaveText('Play pronunciation');
+    await expect(audioButton(page)).toHaveAttribute('aria-busy', 'false');
   } else {
     await expect(page.locator('[data-pronunciation-lemma] [role="status"]')).toHaveText('Audio unavailable. Try again.');
     await expect(audioButton(page)).toHaveText('Play pronunciation');
@@ -1622,13 +1632,13 @@ test.describe('#10706 audio:', () => {
     });
   }
 
-  test('P11 settled native inventory, language and controlled empty availability retry', async ({ page }) => {
+  test('P11 observed native inventory, language and controlled empty availability retry', async ({ page }) => {
     await observePracticeAudio(page);
     await page.route('**/audio/pronunciation/manifest.json', (route) => route.fulfill({ json: { schemaVersion: 1, entries: {} } }));
     await openAudioPractice(page);
     const nativeInventory = await assertNativeFallback(page);
     if (!nativeInventory.voices.some((voice) => voice.local && voice.lang.toLowerCase().startsWith('uk'))) {
-      test.info().annotations.push({ type: 'native-local-positive', description: 'N/A: settled device inventory contains no local Ukrainian voice; no remote speech requested' });
+      test.info().annotations.push({ type: 'native-local-positive', description: 'N/A: observed device inventory offers no local Ukrainian voice; empty catalog capability remains UNKNOWN; no remote speech requested' });
     }
     await page.evaluate(() => {
       const nativeGetVoices = speechSynthesis.getVoices.bind(speechSynthesis);
@@ -1637,8 +1647,22 @@ test.describe('#10706 audio:', () => {
     });
     const before = await audioLearningState(page);
     await audioButton(page).click();
-    await expect(page.locator('[data-pronunciation-lemma] [role="status"]')).toHaveText('Audio unavailable. Try again.');
-    await page.evaluate(() => Reflect.get(window, 'restoreNativeVoices')());
+    await expect(audioButton(page)).toHaveAccessibleName('Stop pronunciation');
+    await expect(audioButton(page)).toHaveAttribute('aria-busy', 'true');
+    await expect(page.locator('[data-pronunciation-lemma] [role="status"]')).toBeEmpty();
+    await page.evaluate(() => {
+      Reflect.get(window, 'restoreNativeVoices')();
+      speechSynthesis.dispatchEvent(new Event('voiceschanged'));
+    });
+    if (nativeInventory.voices.some((voice) => voice.local && voice.lang.toLowerCase().startsWith('uk'))) {
+      await expect.poll(() => page.evaluate(() => window.practiceAudioProbe.speech.some((entry) => entry.events.includes('start')))).toBe(true);
+      await audioButton(page).click();
+    } else if (!nativeInventory.supported || nativeInventory.voices.length > 0) {
+      await expect(page.locator('[data-pronunciation-lemma] [role="status"]')).toHaveText('Audio unavailable. Try again.');
+    } else {
+      await expect(audioButton(page)).toHaveAttribute('aria-busy', 'true');
+      await audioButton(page).click();
+    }
     await assertNativeFallback(page);
     expect(await audioLearningState(page)).toEqual(before);
   });
@@ -1730,6 +1754,80 @@ test.describe('#10706 audio:', () => {
       expect((await audioLearningState(page)).saved.srs).toBe(answered.saved.srs);
     });
   }
+  for (const historyLength of [49, 50]) {
+    test(`P03 resumed history ${historyLength} cancels native same-item audio through and beyond the cap`, async ({ page }) => {
+      await observePracticeAudio(page, true);
+      await routeGoodAudio(page);
+      await openAudioPractice(page);
+      await completeOneFlashcard(page, 'again');
+      await page.getByRole('button', { name: /Додому|Home/ }).click();
+      await page.evaluate((length) => {
+        const stored = JSON.parse(localStorage.getItem('lu-practice-session')!);
+        const snapshot = stored.byMode.flashcards;
+        snapshot.history = Array.from({ length }, () => snapshot.history[0]);
+        snapshot.completed = length;
+        snapshot.plannedTotal = 100;
+        snapshot.budget = 'until-zero';
+        snapshot.modeFilter = 'mixed';
+        localStorage.setItem('lu-practice-session', JSON.stringify({ version: 2, byMode: { mixed: snapshot } }));
+      }, historyLength);
+      await page.reload();
+      await page.getByTestId('practice-start-session').click();
+      for (let round = 0; round < 3; round++) {
+        await completeOneFlashcard(page, 'again');
+        const answered = await audioLearningState(page);
+        expect(JSON.parse(answered.saved.srs!).reviews).toHaveLength(round + 2);
+        await audioButton(page).click();
+        await nativePlaying(page);
+        const index = await page.evaluate(() => window.practiceAudioProbe.media.length - 1);
+        await page.getByTestId('practice-advance-button').click();
+        await expect.poll(() => page.evaluate((i) => {
+          const record = window.practiceAudioProbe.media[i];
+          return { paused: record.element.paused, time: record.element.currentTime, pauseCalled: record.events.includes('pause()') };
+        }, index)).toEqual({ paused: true, time: 0, pauseCalled: true });
+        await expect(page.locator('[data-activity="flashcard"]')).toHaveAttribute('data-rated', 'false');
+        await expect(audioButton(page)).toHaveAccessibleName('Play pronunciation');
+        await expect(page.getByTestId('practice-session-progress')).toContainText(`${historyLength + round + 1}/`);
+        expect((await audioLearningState(page)).saved.srs).toBe(answered.saved.srs);
+        expect(await page.evaluate(() => JSON.parse(localStorage.getItem('lu-practice-session')!).byMode.mixed.history.length)).toBe(50);
+      }
+    });
+  }
+
+  for (const transition of ['cancel', 'Home', 'Next same item']) {
+    test(`P11 late native catalog observation after ${transition} cannot resurrect a cancelled request`, async ({ page }) => {
+      await observePracticeAudio(page);
+      await page.addInitScript(() => {
+        const native = speechSynthesis.getVoices.bind(speechSynthesis);
+        Reflect.set(window, 'restoreNativeVoices', () => { speechSynthesis.getVoices = native; });
+        speechSynthesis.getVoices = () => [];
+      });
+      await page.route('**/manifest.json', (route) => route.fulfill({ json: { schemaVersion: 1, entries: {} } }));
+      await openAudioPractice(page);
+      if (transition === 'Next same item') await completeOneFlashcard(page, 'again');
+      const before = await audioLearningState(page);
+      await audioButton(page).click();
+      await expect(audioButton(page)).toHaveAccessibleName('Stop pronunciation');
+      await expect(audioButton(page)).toHaveAttribute('aria-busy', 'true');
+      await expect(page.locator('[data-pronunciation-lemma] [role="status"]')).toBeEmpty();
+      if (transition === 'cancel') await audioButton(page).click();
+      else if (transition === 'Home') await page.getByRole('button', { name: /Додому|Home/ }).click();
+      else await page.getByTestId('practice-advance-button').click();
+      await page.evaluate(() => {
+        Reflect.get(window, 'restoreNativeVoices')();
+        speechSynthesis.dispatchEvent(new Event('voiceschanged'));
+      });
+      const inventory = await observedAudioVoices(page);
+      await test.info().attach('late-native-catalog.json', { body: JSON.stringify(inventory), contentType: 'application/json' });
+      expect(await page.evaluate(() => window.practiceAudioProbe.speech)).toEqual([]);
+      expect(await page.evaluate(() => localStorage.getItem('lu-lexicon-srs'))).toBe(before.saved.srs);
+      if (transition !== 'Home') {
+        await expect(audioButton(page)).toHaveAccessibleName('Play pronunciation');
+        await expect(audioButton(page)).toHaveAttribute('aria-busy', 'false');
+      }
+    });
+  }
+
   test('P10 held native play / native abort then SAME-mounted retry', async ({ page }) => {
     await observePracticeAudio(page, true);
     await routeGoodAudio(page);
@@ -1747,7 +1845,8 @@ test.describe('#10706 audio:', () => {
     const before = await audioLearningState(page);
     await audioButton(page).click();
     await expect.poll(() => requests).toBe(1);
-    await expect(audioButton(page)).toHaveText('Play pronunciation');
+    await expect(audioButton(page)).toHaveAccessibleName('Stop pronunciation');
+    await expect(audioButton(page)).toHaveAttribute('aria-busy', 'true');
     await page.evaluate(() => window.practiceAudioProbe.media[0].element.load());
     await expect.poll(() => page.evaluate(() => window.practiceAudioProbe.media[0].promises)).toContain('AbortError');
     await expect(page.locator('[data-pronunciation-lemma] [role="status"]')).toHaveText('Audio unavailable. Try again.');
@@ -1801,9 +1900,12 @@ test.describe('#10706 audio:', () => {
     const before = await audioLearningState(page);
     await audioButton(page).click();
     await expect.poll(() => requests).toBe(1);
-    await expect(audioButton(page)).toHaveText('Play pronunciation');
+    await expect(audioButton(page)).toHaveAccessibleName('Stop pronunciation');
+    await expect(audioButton(page)).toHaveAttribute('aria-busy', 'true');
     await audioButton(page).click();
     await oldAudioStopped(page);
+    await expect(audioButton(page)).toHaveAccessibleName('Play pronunciation');
+    await expect(audioButton(page)).toHaveAttribute('aria-busy', 'false');
     await audioButton(page).click();
     await nativePlaying(page);
     release();

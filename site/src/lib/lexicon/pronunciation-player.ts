@@ -78,6 +78,7 @@ export function mountPronunciationPlayer(root: HTMLElement): () => void {
   const lemma = pronunciationKey(rawSpoken);
   const synthesis = window.speechSynthesis;
   let utterance: SpeechSynthesisUtterance | undefined;
+  let cancelVoiceWait: (() => void) | undefined;
   let disposed = false;
   let audio: HTMLAudioElement | undefined;
   let isCdn = false;
@@ -91,11 +92,13 @@ export function mountPronunciationPlayer(root: HTMLElement): () => void {
   const label = () => {
     const locale = copy() === COPY.en ? 'en' : 'uk';
     button.lang = status.lang = locale;
-    button.textContent = phase === 'playing' ? copy().stop : copy().play;
+    button.textContent = phase === 'idle' ? copy().play : copy().stop;
+    button.setAttribute('aria-busy', String(phase === 'pending'));
     status.textContent = hasError ? copy().error : '';
   };
   const stop = () => {
     attempt++;
+    cancelVoiceWait?.();
     if (active === stop) active = undefined;
     if (utterance) {
       utterance.onstart = utterance.onend = utterance.onerror = null;
@@ -117,10 +120,27 @@ export function mountPronunciationPlayer(root: HTMLElement): () => void {
   };
   const speakWithSynthesis = (current: number) => {
     if (disposed || current !== attempt) return;
-    const voices = synthesis?.getVoices() ?? [];
+    if (!synthesis || !window.SpeechSynthesisUtterance) { failed(); return; }
+    const voices = synthesis.getVoices();
+    // An empty catalog can still be loading; the API has no catalog-complete flag.
+    if (voices.length === 0) {
+      if (!cancelVoiceWait) {
+        const voicesChanged = () => {
+          if (disposed || current !== attempt) return;
+          try { speakWithSynthesis(current); } catch { failed(); }
+        };
+        synthesis.addEventListener('voiceschanged', voicesChanged);
+        cancelVoiceWait = () => {
+          synthesis.removeEventListener('voiceschanged', voicesChanged);
+          cancelVoiceWait = undefined;
+        };
+      }
+      return;
+    }
+    cancelVoiceWait?.();
     const ukVoices = voices.filter((v) => v.lang.toLowerCase().startsWith('uk'));
     const voice = ukVoices.find((v) => v.localService) ?? ukVoices[0];
-    if (!voice || !window.SpeechSynthesisUtterance) { failed(); return; }
+    if (!voice) { failed(); return; }
     if (synthesis?.speaking || utterance) {
       synthesis?.cancel();
       utterance = undefined;

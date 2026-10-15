@@ -12,7 +12,7 @@ class FakeUtterance {
   onerror: (() => void) | null = null;
   constructor(public text: string) {}
 }
-let speech: { getVoices: ReturnType<typeof vi.fn>; speak: ReturnType<typeof vi.fn>; cancel: ReturnType<typeof vi.fn> };
+let speech: EventTarget & { getVoices: ReturnType<typeof vi.fn>; speak: ReturnType<typeof vi.fn>; cancel: ReturnType<typeof vi.fn> };
 class FakeAudio {
   src: string;
   paused = false;
@@ -32,7 +32,7 @@ beforeEach(() => {
   vi.resetModules();
   instances = [];
   vi.stubGlobal('Audio', FakeAudio);
-  speech = { getVoices: vi.fn(() => [UK_VOICE]), speak: vi.fn((value: FakeUtterance) => value.onstart?.()), cancel: vi.fn() };
+  speech = Object.assign(new EventTarget(), { getVoices: vi.fn(() => [UK_VOICE]), speak: vi.fn((value: FakeUtterance) => value.onstart?.()), cancel: vi.fn() });
   vi.stubGlobal('speechSynthesis', speech);
   vi.stubGlobal('SpeechSynthesisUtterance', FakeUtterance);
   vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true, json: async () => ({
@@ -131,27 +131,29 @@ describe('#10706 audio:', () => {
     view.unmount();
   });
 
-  it('keeps Play while native playback is pending, then shows Stop only after start', async () => {
+  it('exposes a busy Stop action while native playback is pending', async () => {
     const Player = await player();
     render(<Player lemma="автобус" locale="en" />);
     await waitFor(() => expect(instances).toHaveLength(1));
     let start!: () => void;
     instances[0].play.mockImplementationOnce(() => new Promise<void>((resolve) => { start = resolve; }));
     fireEvent.click(screen.getByRole('button'));
-    expect(screen.getByRole('button')).toHaveTextContent('Play pronunciation');
+    expect(screen.getByRole('button')).toHaveAccessibleName('Stop pronunciation');
+    expect(screen.getByRole('button')).toHaveAttribute('aria-busy', 'true');
     expect(screen.getByRole('status')).toBeEmptyDOMElement();
     start();
     await screen.findByRole('button', { name: 'Stop pronunciation' });
   });
 
-  it('keeps Play until speech starts and cancels pending speech on a second activation', async () => {
+  it('exposes a busy Stop action and cancels pending speech on a second activation', async () => {
     vi.mocked(fetch).mockRejectedValue(new Error('no manifest'));
     speech.speak.mockImplementation(() => {});
     const Player = await player();
     render(<Player lemma="автобус" locale="en" />);
     fireEvent.click(screen.getByRole('button'));
     const pending = speech.speak.mock.calls[0][0];
-    expect(screen.getByRole('button')).toHaveTextContent('Play pronunciation');
+    expect(screen.getByRole('button')).toHaveAccessibleName('Stop pronunciation');
+    expect(screen.getByRole('button')).toHaveAttribute('aria-busy', 'true');
     fireEvent.click(screen.getByRole('button'));
     expect(speech.cancel).toHaveBeenCalledOnce();
     expect(screen.getByRole('button')).toHaveTextContent('Play pronunciation');
@@ -421,17 +423,85 @@ describe('on-device Ukrainian speech', () => {
     expect(path).toBe(`${flatPath.slice(0, 2)}/${flatPath}`);
   });
 
-  it('handles voices arriving after mount without autoplay', async () => {
+  it('does not autoplay when voices arrive before any playback request', async () => {
     speech.getVoices.mockReturnValue([]);
     const Player = await player();
     render(<Player lemma="автобус" />);
-    fireEvent.click(screen.getByRole('button'));
-    expect(speech.speak).not.toHaveBeenCalled();
     speech.getVoices.mockReturnValue([UK_VOICE]);
-    window.dispatchEvent(new Event('voiceschanged'));
+    speech.dispatchEvent(new Event('voiceschanged'));
     expect(speech.speak).not.toHaveBeenCalled();
     fireEvent.click(screen.getByRole('button'));
     expect(speech.speak).toHaveBeenCalledOnce();
+  });
+
+  it('#10706 F3 waits for a late catalog without claiming unavailability or needing another click', async () => {
+    vi.mocked(fetch).mockRejectedValue(new Error('no manifest'));
+    speech.getVoices.mockReturnValue([]);
+    const Player = await player();
+    render(<Player lemma="автобус" locale="en" />);
+    fireEvent.click(screen.getByRole('button'));
+    expect(screen.getByRole('status')).toBeEmptyDOMElement();
+    expect(screen.getByRole('button')).toHaveAccessibleName('Stop pronunciation');
+    expect(screen.getByRole('button')).toHaveAttribute('aria-busy', 'true');
+    speech.dispatchEvent(new Event('voiceschanged'));
+    expect(speech.speak).not.toHaveBeenCalled();
+    speech.getVoices.mockReturnValue([UK_VOICE]);
+    speech.dispatchEvent(new Event('voiceschanged'));
+    expect(speech.speak).toHaveBeenCalledOnce();
+    expect(screen.getByRole('button')).toHaveAttribute('aria-busy', 'false');
+    speech.dispatchEvent(new Event('voiceschanged'));
+    expect(speech.speak).toHaveBeenCalledOnce();
+  });
+
+  it('#10706 F3 a late non-Ukrainian catalog reports known absence and allows a later retry', async () => {
+    vi.mocked(fetch).mockRejectedValue(new Error('no manifest'));
+    speech.getVoices.mockReturnValue([]);
+    const Player = await player();
+    render(<Player lemma="автобус" locale="en" />);
+    fireEvent.click(screen.getByRole('button'));
+    speech.getVoices.mockReturnValue([{ ...UK_VOICE, lang: 'en-US' }]);
+    speech.dispatchEvent(new Event('voiceschanged'));
+    expect(screen.getByRole('status')).toHaveTextContent('Audio unavailable. Try again.');
+    expect(screen.getByRole('button')).toHaveAccessibleName('Play pronunciation');
+    expect(screen.getByRole('button')).toHaveAttribute('aria-busy', 'false');
+    expect(speech.speak).not.toHaveBeenCalled();
+    speech.getVoices.mockReturnValue([UK_VOICE]);
+    speech.dispatchEvent(new Event('voiceschanged'));
+    expect(speech.speak).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole('button'));
+    expect(speech.speak).toHaveBeenCalledOnce();
+    expect(screen.getByRole('status')).toBeEmptyDOMElement();
+  });
+
+  it('#10706 F3 a late catalog playback exception is an actual failure, not a stuck pending request', async () => {
+    vi.mocked(fetch).mockRejectedValue(new Error('no manifest'));
+    speech.getVoices.mockReturnValue([]);
+    const Player = await player();
+    render(<Player lemma="автобус" locale="en" />);
+    fireEvent.click(screen.getByRole('button'));
+    speech.getVoices.mockReturnValue([UK_VOICE]);
+    speech.speak.mockImplementation(() => { throw new Error('engine failed'); });
+    speech.dispatchEvent(new Event('voiceschanged'));
+    expect(screen.getByRole('status')).toHaveTextContent('Audio unavailable. Try again.');
+    expect(screen.getByRole('button')).toHaveAccessibleName('Play pronunciation');
+    expect(screen.getByRole('button')).toHaveAttribute('aria-busy', 'false');
+  });
+
+  it.each(['cancel', 'unmount', 'new presentation', 'pagehide', 'astro:before-swap'])('#10706 F3 late voices cannot resurrect after %s', async (transition) => {
+    vi.mocked(fetch).mockRejectedValue(new Error('no manifest'));
+    speech.getVoices.mockReturnValue([]);
+    const Player = await player();
+    const view = render(<Player lemma="автобус" locale="en" />);
+    fireEvent.click(screen.getByRole('button'));
+    expect(screen.getByRole('button')).toHaveAccessibleName('Stop pronunciation');
+    expect(screen.getByRole('button')).toHaveAttribute('aria-busy', 'true');
+    if (transition === 'cancel') fireEvent.click(screen.getByRole('button'));
+    else if (transition === 'unmount') view.unmount();
+    else if (transition === 'new presentation') view.rerender(<Player key="next" lemma="автобус" locale="en" />);
+    else (transition === 'pagehide' ? window : document).dispatchEvent(new Event(transition));
+    speech.getVoices.mockReturnValue([UK_VOICE]);
+    speech.dispatchEvent(new Event('voiceschanged'));
+    expect(speech.speak).not.toHaveBeenCalled();
   });
 
   it('cancels exclusively, ignores stale callbacks, and cancels on lemma change/unmount', async () => {
