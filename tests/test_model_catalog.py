@@ -16,6 +16,7 @@ from scripts.audit import model_families
 from scripts.review.model_catalog import (
     VALID_REVIEW_PROFILES,
     ModelCatalogError,
+    activity_role_refusal,
     bounded_execution_policy,
     canonical_model_id,
     catalog_age_days,
@@ -1549,6 +1550,60 @@ def test_catalog_rejects_sonnet_on_critical_security_ladder(model):
     catalog["review_ladders"]["critical"].append([model])
     with pytest.raises(ModelCatalogError, match=r"Sonnet is excluded from security review|unknown candidate"):
         validate_catalog(catalog)
+
+
+@pytest.mark.parametrize("tier", ["low", "medium", "high"])
+@pytest.mark.parametrize("risk", ["low", "medium", "high", "critical"])
+def test_argon_formal_code_review_is_refused_before_routing_or_launch(monkeypatch, tier, risk):
+    from scripts.agent_runtime import target_admission
+
+    def forbidden(*args, **kwargs):
+        pytest.fail("Argon formal review must refuse before routing or provider launch")
+
+    monkeypatch.setattr("subprocess.run", forbidden)
+    monkeypatch.setattr("subprocess.Popen", forbidden)
+    with pytest.raises(target_admission.ReviewAdmissionRefused, match="holds no review, critique or approval role"):
+        target_admission.resolve_and_admit(
+            ("agy",), mode="read-only", model=f"gemini-4-argon-{tier}",
+            review_dispatch=True, review_profile="code", review_risk=risk,
+            review_author_model="gpt-6.1-sol", route=forbidden,
+        )
+
+
+def test_gemini_4_argon_trial_selectors_have_no_authority_roles():
+    """Three listed slugs, no trial role id, and no critical/security/advisor admission."""
+    catalog = load_model_catalog()
+    argon = catalog["models"]["gemini-4-argon-high"]
+    assert argon["family"] == "google"
+    assert argon["lifecycle"] == "hold"
+    assert argon["transports"] == ["agy"]
+    assert argon["aliases"] == ["gemini-4-argon-medium", "gemini-4-argon-low"]
+    assert argon["roles"] == ["explicit_bakeoff_only"]
+    authority = {
+        "critical_review",
+        "security_review",
+        "advisory",
+        "bounded_advisory_envelope",
+        "architecture",
+        "consequential_advisory",
+    }
+    assert authority.isdisjoint(argon["roles"])
+    assert "gemini-4-argon" not in catalog["models"]
+    assert canonical_model_id("gemini-4-argon") is None
+    assert canonical_model_id("gemini-4-argon-ultra") is None
+    for slug in ("gemini-4-argon-high", "gemini-4-argon-medium", "gemini-4-argon-low"):
+        assert canonical_model_id(slug) == "gemini-4-argon-high"
+        assert activity_role_refusal(slug, "review")
+        assert activity_role_refusal(slug, "consult")
+        with pytest.raises(ModelCatalogError, match="not admitted for execution"):
+            require_execution_model(slug, transport="agy")
+    assert "gemini-4-argon-high" not in catalog["review_candidates"]
+    for ladder in catalog["review_ladders"].values():
+        assert "gemini-4-argon-high" not in {candidate for rung in ladder for candidate in rung}
+    assert AGENTS["gemini"]["default_model"] == "gemini-3.1-pro-high"
+    assert AGENTS["agy"]["default_model"] == "gemini-3.8-flash-high"
+    assert canonical_model_id("gemini-3.8-flash-medium") == "gemini-3.8-flash-high"
+    assert canonical_model_id("gemini-3.1-pro-preview") == "gemini-3.1-pro-high"
 
 
 def test_issue_9301_active_exceptions_and_advisory_effort():

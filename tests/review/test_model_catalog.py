@@ -204,6 +204,29 @@ def approved_reviewer_seats_baseline(baseline):
     return {**baseline, **SEATS_OVERLAY["surfaces"], "dispatch": dispatch}
 
 
+ARGON_OVERLAY_PATH = CAPACITY_FIXTURE / "routing-10568.json.gz"
+ARGON_OVERLAY = json.loads(gzip.decompress(ARGON_OVERLAY_PATH.read_bytes()))
+
+
+def approved_argon_trial_baseline(baseline, configuration):
+    """Apply #10568's Argon catalog, approval and reviewer additions.
+
+    Historical baseline bytes stay put. Pro, registry, launcher and adapter
+    receipts retain their baseline values. Refusal help lists the added slugs.
+    """
+    updated = {**baseline, **ARGON_OVERLAY["surfaces"]}
+    for surface, rows in ARGON_OVERLAY["row_patches"].items():
+        copied = deepcopy(updated[surface])
+        for index, row in rows.items():
+            copied[int(index)] = row
+        updated[surface] = copied
+    adapters = deepcopy(updated["adapters"])
+    for index, row in ARGON_OVERLAY["adapter_patches"][configuration].items():
+        adapters[int(index)] = row
+    updated["adapters"] = adapters
+    return updated
+
+
 def approved_claude_account_dispatch_baseline(baseline):
     """Apply #10619's account option and argparse usage reflow to refusals."""
     indent = " " * 28
@@ -229,7 +252,7 @@ def approved_claude_account_dispatch_baseline(baseline):
 
 # Apply literal paragraph edits last: a surface overlay such as #10291's Grok
 # help revision must neither erase this wording nor have its other lines erased.
-APPROVED_BASELINE = approved_claude_account_dispatch_baseline(
+PRE_ARGON_HOST_BASELINE = approved_claude_account_dispatch_baseline(
     approved_cto_wrappers_baseline(
         approved_claude_cap_baseline(
             approved_cursor_trailer_baseline(
@@ -246,7 +269,62 @@ APPROVED_BASELINE = approved_claude_account_dispatch_baseline(
         )
     )
 )
-APPROVED_INPUTS = {**GEMINI_INPUTS, **SEATS_OVERLAY["inputs"]}
+APPROVED_BASELINE = approved_argon_trial_baseline(PRE_ARGON_HOST_BASELINE, "host-cli")
+APPROVED_INPUTS = {**GEMINI_INPUTS, **SEATS_OVERLAY["inputs"], **ARGON_OVERLAY["inputs"]}
+
+
+def test_argon_trial_overlay_records_only_the_model_data_delta():
+    """#10568 changes model data. Existing reviewer verdicts and other surfaces stay."""
+    assert hashlib.sha256(ARGON_OVERLAY_PATH.read_bytes()).hexdigest() == (
+        "efe9c9b9db2f651e421e42769cc1682c12b724122545d2e2e8b4b0d66d1148ba"
+    )
+    assert set(ARGON_OVERLAY) == {"adapter_patches", "inputs", "row_patches", "surfaces"}
+    before, after = PRE_ARGON_HOST_BASELINE, APPROVED_BASELINE
+    assert set(before) == set(after)
+    assert set(ARGON_OVERLAY["surfaces"]) == {"catalog", "approval", "reviewer"}
+    assert set(ARGON_OVERLAY["inputs"]) == {"reviewer"}
+    assert set(ARGON_OVERLAY["row_patches"]) == {"dispatch"}
+    assert ARGON_OVERLAY["adapter_patches"] == {"host-cli": {}, "no-cli": {}}
+    for surface in set(before) - {"catalog", "approval", "reviewer", "dispatch"}:
+        assert before[surface] == after[surface], surface
+    changed_dispatch = [i for i, (old, new) in enumerate(zip(before["dispatch"], after["dispatch"], strict=True)) if old != new]
+    assert changed_dispatch == list(range(196, 220, 2))
+    old_ids = "`gemini-3.1-pro-high`, `gemini-3.1-pro-low`."
+    new_ids = "`gemini-3.1-pro-high`, `gemini-3.1-pro-low`, `gemini-4-argon-high`, `gemini-4-argon-medium`, `gemini-4-argon-low`."
+    for index in changed_dispatch:
+        expected = deepcopy(before["dispatch"][index])
+        assert expected["value"]["refusal"].count(old_ids) == 1
+        expected["value"]["refusal"] = expected["value"]["refusal"].replace(old_ids, new_ids)
+        assert after["dispatch"][index] == expected
+    old_models, new_models = before["catalog"]["models"], after["catalog"]["models"]
+    assert set(new_models) - set(old_models) == {"gemini-4-argon-high"}
+    assert {model: new_models[model] for model in old_models} == old_models
+    assert {key: value for key, value in after["catalog"].items() if key != "models"} == {
+        key: value for key, value in before["catalog"].items() if key != "models"
+    }
+    assert new_models["gemini-4-argon-high"]["lifecycle"] == "hold"
+    assert new_models["gemini-4-argon-high"]["roles"] == ["explicit_bakeoff_only"]
+    old_review_inputs = {**GEMINI_INPUTS, **SEATS_OVERLAY["inputs"]}["reviewer"]
+    new_review_inputs = APPROVED_INPUTS["reviewer"]
+    old_by_input = {dispatch_key(row): receipt for row, receipt in zip(old_review_inputs, before["reviewer"], strict=True)}
+    added = changed = 0
+    for row, receipt in zip(new_review_inputs, after["reviewer"], strict=True):
+        key = dispatch_key(row)
+        if key not in old_by_input:
+            added += 1
+        elif old_by_input[key] != receipt:
+            changed += 1
+    assert added == 24 and changed == 0
+    assert {row["author_model"] for row in new_review_inputs} - {row["author_model"] for row in old_review_inputs} == {
+        "gemini-4-argon-high",
+        "gemini-4-argon-medium",
+        "gemini-4-argon-low",
+    }
+    old_authors = {row["author"] for row in before["approval"]["rows"]}
+    new_rows = after["approval"]["rows"]
+    assert {row["author"] for row in new_rows} - old_authors == {"gemini-4-argon-high"}
+    assert sum(row["author"] == "gemini-4-argon-high" for row in new_rows) == 9
+    assert len(new_rows) == len(before["approval"]["rows"]) + 9
 
 
 @pytest.mark.parametrize("configuration", ("host-cli", "no-cli"))
@@ -1017,22 +1095,25 @@ def test_no_cli_capture_equals_separate_frozen_surface(tmp_path):
         assert hashlib.sha256((output / name).read_bytes()).hexdigest() == digest
     actual = json.loads(gzip.decompress((output / "baseline.json.gz").read_bytes()))
     original = json.loads(gzip.decompress((expected / "baseline.json.gz").read_bytes()))
-    assert actual == approved_claude_account_dispatch_baseline(
-        approved_cto_wrappers_baseline(
-            approved_claude_cap_baseline(
-                approved_cursor_trailer_baseline(
-                    approved_launcher_canary_baseline(
-                        approved_reviewer_seats_baseline(
-                            {
-                                **approved_review_baseline(original),
-                                **GEMINI_OVERLAY["surfaces"],
-                                **RESOURCE_OVERLAY["surfaces"],
-                            }
+    assert actual == approved_argon_trial_baseline(
+        approved_claude_account_dispatch_baseline(
+            approved_cto_wrappers_baseline(
+                approved_claude_cap_baseline(
+                    approved_cursor_trailer_baseline(
+                        approved_launcher_canary_baseline(
+                            approved_reviewer_seats_baseline(
+                                {
+                                    **approved_review_baseline(original),
+                                    **GEMINI_OVERLAY["surfaces"],
+                                    **RESOURCE_OVERLAY["surfaces"],
+                                }
+                            )
                         )
                     )
                 )
             )
-        )
+        ),
+        "no-cli",
     )
     assert len(actual["launchers"]) == 70
     errors = [row.get("error", "") for row in actual["adapters"]]
@@ -1067,7 +1148,7 @@ def test_extended_capture_denominator_and_current_contract():
     assert {pin for mapping in catalog["budget_substitution_models"].values() for pin in mapping} <= pins
     assert {row["review_attempt"] for row in INPUTS["dispatch"]} == {None, "frozen-review-attempt.yaml"}
     contract = CAPTURE["approval_contract_rows"](Path(__file__).resolve().parents[2], catalog)
-    assert contract == BASELINE["approval"]
+    assert contract == APPROVED_BASELINE["approval"]
     assert len(contract["rows"]) == len(catalog["models"]) * 9
     assert {row["outcome"] for row in contract["rows"]} == {"approved", "missing_approval", "operator_disposition"}
     assert all(not row["self_approval_counts"] for row in contract["rows"])

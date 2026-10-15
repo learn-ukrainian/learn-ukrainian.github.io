@@ -308,6 +308,27 @@ entries:
   kind: migration_debt
   reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
 - path: scripts/agent_runtime/adapters/agy.py
+  scope: <module>
+  context: expression
+  id: gemini-4-argon-high
+  count: 1
+  kind: adapter_identity
+  reason: 'Listed AGY selector gemini-4-argon-high; supervised trial, not an authority role (#10568).'
+- path: scripts/agent_runtime/adapters/agy.py
+  scope: <module>
+  context: expression
+  id: gemini-4-argon-low
+  count: 1
+  kind: adapter_identity
+  reason: 'Listed AGY selector gemini-4-argon-low; supervised trial, not an authority role (#10568).'
+- path: scripts/agent_runtime/adapters/agy.py
+  scope: <module>
+  context: expression
+  id: gemini-4-argon-medium
+  count: 1
+  kind: adapter_identity
+  reason: 'Listed AGY selector gemini-4-argon-medium; supervised trial, not an authority role (#10568).'
+- path: scripts/agent_runtime/adapters/agy.py
   scope: AgyAdapter
   context: expression
   id: gemini-3.8-flash-high
