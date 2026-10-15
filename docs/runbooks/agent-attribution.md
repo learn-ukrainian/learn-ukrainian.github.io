@@ -150,7 +150,7 @@ the reuse path. The job also needs the permission block shown.
 
 Notes:
 
-- The script is standard-library only and needs no `pip install`.
+- The script needs no `pip install`; its GitHub REST read goes through `scripts/common/github_client.py` (`gh api`, credential from `GITHUB_TOKEN`).
 - `persist-credentials: false` stays. The repository is public, so
   `refs/pull/N/head` fetches anonymously; when `GITHUB_TOKEN` is set the script also
   sends it to a `https://github.com/` remote through `GIT_CONFIG_*` environment

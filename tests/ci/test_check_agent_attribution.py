@@ -649,3 +649,46 @@ def test_extract_attribution(message: str, values: tuple[str, ...], malformed: i
 )
 def test_pr_number_from_subject(subject: str, number: int | None) -> None:
     assert check.pr_number_from_subject(subject) == number
+
+
+def _completed(returncode: int, stdout: str = "") -> subprocess.CompletedProcess[str]:
+    return subprocess.CompletedProcess(["gh"], returncode, stdout=stdout, stderr="")
+
+
+def test_production_getter_is_built_from_the_shared_client(monkeypatch: pytest.MonkeyPatch) -> None:
+    calls: list[tuple[list[str], dict[str, object]]] = []
+
+    def fake_run(args: list[str], **kwargs: object) -> subprocess.CompletedProcess[str]:
+        calls.append((args, kwargs))
+        return _completed(0, '{"sha": "abc"}')
+
+    monkeypatch.setenv("GITHUB_TOKEN", "x-token-value")
+    monkeypatch.setattr(check.github_client, "run", fake_run)
+
+    get = check._github_get_from_env()
+
+    assert get is not None
+    assert get("repos/owner/repo/commits/abc") == {"sha": "abc"}
+    ((args, kwargs),) = calls
+    assert args == ["gh", "api", "-X", "GET", "repos/owner/repo/commits/abc"]
+    assert kwargs["fresh"] is True
+    assert "x-token-value" not in " ".join(args)
+
+
+def test_production_getter_needs_a_token(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.delenv("GITHUB_TOKEN", raising=False)
+
+    assert check._github_get_from_env() is None
+
+
+@pytest.mark.parametrize("completed", [_completed(1), _completed(0, "not json")], ids=["exit", "body"])
+def test_production_getter_failure_is_not_proof(monkeypatch: pytest.MonkeyPatch, completed) -> None:
+    monkeypatch.setenv("GITHUB_TOKEN", "x-token-value")
+    monkeypatch.setattr(check.github_client, "run", lambda args, **kwargs: completed)
+
+    get = check._github_get_from_env()
+
+    assert get is not None
+    with pytest.raises(RuntimeError):
+        get("repos/owner/repo/commits/abc")
+    assert check._bot_verified(get, REPOSITORY, "a" * 40) is False

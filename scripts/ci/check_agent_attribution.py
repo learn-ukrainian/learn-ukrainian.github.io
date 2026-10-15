@@ -55,8 +55,6 @@ import os
 import re
 import subprocess
 import sys
-import urllib.error
-import urllib.request
 from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -65,12 +63,12 @@ _REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
 
+from scripts.common import github_client
 from scripts.review.app_bot_authorship import verified_app_bot_login
 
 ENFORCE_ENV = "ATTRIBUTION_ENFORCE"
 GIT_TIMEOUT_SECONDS = 120
 API_TIMEOUT_SECONDS = 30
-_API_ROOT = "https://api.github.com"
 _GITHUB_HTTPS = "https://github.com/"
 
 # Any line that claims to be attribution; the grammar below decides whether it is one.
@@ -366,24 +364,29 @@ def _check_squash(
 
 
 def _github_get_from_env() -> GitHubGet | None:
-    token = os.environ.get("GITHUB_TOKEN")
-    if not token:
+    """Production getter: the shared GitHub client, authenticated from the CI environment.
+
+    The client reads its credential from the environment, so it never appears on argv.
+    A non-zero exit or an undecodable body raises, which callers treat as "not proven".
+    """
+    if not os.environ.get("GITHUB_TOKEN"):
         return None
 
     def get(path: str) -> object:
-        request = urllib.request.Request(
-            f"{_API_ROOT}/{path}",
-            headers={
-                "Authorization": f"Bearer {token}",
-                "Accept": "application/vnd.github+json",
-                "X-GitHub-Api-Version": "2022-11-28",
-            },
+        # A commit's verification can change after it lands, so never answer from cache.
+        completed = github_client.run(
+            ["gh", "api", "-X", "GET", path],
+            fresh=True,
+            capture_output=True,
+            text=True,
+            timeout=API_TIMEOUT_SECONDS,
         )
+        if completed.returncode != 0:
+            raise RuntimeError(f"GET {path} failed: gh exit {completed.returncode}")
         try:
-            with urllib.request.urlopen(request, timeout=API_TIMEOUT_SECONDS) as response:
-                return json.load(response)
-        except (urllib.error.URLError, TimeoutError, ValueError) as exc:
-            raise RuntimeError(f"GET {path} failed: {type(exc).__name__}") from exc
+            return json.loads(completed.stdout)
+        except ValueError as exc:
+            raise RuntimeError(f"GET {path} failed: undecodable response") from exc
 
     return get
 
