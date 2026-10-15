@@ -46,6 +46,7 @@ for _path in (PROJECT_ROOT, SCRIPTS_DIR):
     if str(_path) not in sys.path:
         sys.path.insert(0, str(_path))
 
+from scripts.rag.call_governor import CallGovernor, CallRefused, GovernorLimits
 from scripts.verification.check_ru_morph import is_russian_pattern
 from wiki.textbook_subjects import CANONICAL_TEXTBOOK_SUBJECTS
 
@@ -2004,6 +2005,26 @@ async def _on_list_tools(_ctx: Any, _params: Any) -> ListToolsResult:
     return ListToolsResult(tools=tools)
 
 
+_CALL_GOVERNOR: CallGovernor | None = None
+
+
+def _call_governor() -> CallGovernor:
+    """The process-wide bound on concurrent tool calls (#10674).
+
+    Slow-call stack dumps are written only by the standalone HTTP service;
+    a per-agent stdio server keeps the bound and the logging.
+    """
+    global _CALL_GOVERNOR
+    if _CALL_GOVERNOR is None:
+        from scripts.rag.hang_diagnostics import resolve_dump_dir
+
+        _CALL_GOVERNOR = CallGovernor(
+            GovernorLimits.from_environ(),
+            dump_dir=resolve_dump_dir(PROJECT_ROOT) if _HTTP_MODE else None,
+        )
+    return _CALL_GOVERNOR
+
+
 async def _on_call_tool(_ctx: Any, params: CallToolRequestParams) -> CallToolResult:
     """MCP 2.0 registered handler for tools/call — the actual wire path.
 
@@ -2015,8 +2036,20 @@ async def _on_call_tool(_ctx: Any, params: CallToolRequestParams) -> CallToolRes
     wire result is the recorded text plus the receipt line, so the seat
     can cite the call. With that environment unset this stays generic.
     """
+    arguments = dict(params.arguments or {})
     try:
-        _content, is_error, typed_outcome = await _dispatch_tool_call(params.name, dict(params.arguments or {}))
+        _content, is_error, typed_outcome = await _call_governor().run(
+            params.name, lambda: _dispatch_tool_call(params.name, arguments)
+        )
+    except CallRefused as refusal:
+        # Typed and argument-free: server_busy (queue wait exceeded) or
+        # call_timeout (no result within the per-call limit), #10674.
+        return CallToolResult(
+            content=[
+                TextContent(type="text", text=f"Tool call failed: {params.name} ({refusal.code}: {refusal.detail}).")
+            ],
+            isError=True,
+        )
     except Exception:
         return CallToolResult(content=[TextContent(type="text", text="Tool call failed.")], isError=True)
     if is_error and not _review_env_engaged():
@@ -4105,7 +4138,14 @@ async def main_sse(host: str = "127.0.0.1", port: int = 8766):
     print(f"  Health: http://{host}:{port}/health")
     sys.stdout.flush()
 
-    config = uvicorn.Config(app, host=host, port=port, log_level="warning")
+    limits = _call_governor().limits
+    print(
+        f"  Call limits: {limits.max_concurrent} concurrent, queue {limits.queue_timeout:.0f}s, "
+        f"timeout {limits.call_timeout:.0f}s, slow-call dump {limits.slow_dump_after:.0f}s"
+    )
+    sys.stdout.flush()
+    # Idle keep-alive connections close after 5 s (uvicorn's default, pinned).
+    config = uvicorn.Config(app, host=host, port=port, log_level="warning", timeout_keep_alive=5)
     srv = uvicorn.Server(config)
     await srv.serve()
 

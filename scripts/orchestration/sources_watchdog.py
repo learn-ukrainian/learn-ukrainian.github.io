@@ -62,6 +62,7 @@ UNIT = "learn-ukrainian-sources.service"
 HEALTH_URL = "http://127.0.0.1:8766/health"
 STATE_FILE = "watchdog-state.json"
 INCIDENT_PREFIX = "incident-"
+SLOW_CALL_PREFIX = "slow-call-"
 DEFAULT_FAILURES_TO_ACT = 3
 DEFAULT_PROBE_TIMEOUT_S = 5.0
 DEFAULT_MAX_RESTARTS = 3
@@ -342,11 +343,16 @@ def capture_incident_dump(
 
 
 def prune_dump_dir(dump_dir: Path, *, keep: int, proc_root: Path = Path("/proc")) -> list[Path]:
-    """Keep the newest ``keep`` incidents; drop faulthandler logs of dead pids."""
+    """Keep the newest ``keep`` incidents and slow-call dumps; drop logs of dead pids."""
     removed: list[Path] = []
     incidents = sorted(path for path in dump_dir.glob(f"{INCIDENT_PREFIX}*") if path.is_dir())
     for path in incidents[: max(0, len(incidents) - keep)]:
         shutil.rmtree(path)
+        removed.append(path)
+    # The server's own slow-call dumps (scripts/rag/call_governor.py) rotate here too.
+    slow_calls = sorted(path for path in dump_dir.glob(f"{SLOW_CALL_PREFIX}*.txt") if path.is_file())
+    for path in slow_calls[: max(0, len(slow_calls) - keep)]:
+        path.unlink(missing_ok=True)
         removed.append(path)
     for log in dump_dir.glob("faulthandler-*.log"):
         pid = log.stem.removeprefix("faulthandler-")
