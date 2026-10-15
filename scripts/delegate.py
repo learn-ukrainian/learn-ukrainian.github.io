@@ -6976,6 +6976,7 @@ def _kimi_worker_refusal(
     that worktree's git config and hooks directory.
     """
     from scripts.agent_runtime import kimi_boundary
+    from scripts.agent_runtime.attempt_boundary import ClaudeAccountRefused
     from scripts.agent_runtime.kimi_admission import (
         ADMITTED_MODE,
         KimiAdmissionRefused,
@@ -6999,8 +7000,11 @@ def _kimi_worker_refusal(
             launch = _read_state_json(_state_path_no_create(task_id)) or {}
             scope = mechanical_worker_scope(launch, mode=mode, model=model, prompt=prompt)
             scope["review"] = review or bool(launch.get("review")) or bool(scope.get("review"))
-            # A worker re-checks headroom on the account its record names (#10619, #10630);
-            # an unknown label is refused before any claude seat is admitted on it.
+            # A worker re-checks headroom on the account its record names (#10619, #10630); a
+            # claude record naming an account this worker cannot honour is refused with its code.
+            account = claude_account_lane.account_from_record(launch, agent=agent)
+            if agent == "claude" and account.refusal is not None:
+                raise ClaudeAccountRefused(account.refusal)
             (target,) = resolve_and_admit(
                 (agent,),
                 model=model,
@@ -7009,18 +7013,21 @@ def _kimi_worker_refusal(
                 trees=lambda: _kimi_worktree_trees(cwd),
                 new_dispatch=True,
                 harness=harness,
-                claude_account=claude_account_lane.account_from_record(launch, agent=agent),
+                claude_account=account,
                 **scope,
             )
-        except (MechanicalAdmissionRefused, ReviewAdmissionRefused, KimiAdmissionRefused) as exc:
+        except (MechanicalAdmissionRefused, ReviewAdmissionRefused, KimiAdmissionRefused, ClaudeAccountRefused) as exc:
             code = (
-                "mechanical_admission_refused"
+                exc.code
+                if isinstance(exc, ClaudeAccountRefused)
+                else "mechanical_admission_refused"
                 if isinstance(exc, MechanicalAdmissionRefused)
                 else "review_admission_refused"
                 if isinstance(exc, ReviewAdmissionRefused)
                 else "kimi_admission_refused"
             )
-            cause = _publish_cause(task_id, _TypedCause(code, diagnostic=str(exc)), source="worker")
+            detail = f"CLAUDE_ACCOUNT_REFUSED: {exc.code}" if isinstance(exc, ClaudeAccountRefused) else str(exc)
+            cause = _publish_cause(task_id, _TypedCause(code, diagnostic=detail), source="worker")
             if launch:
                 launch.update(
                     {
@@ -7031,7 +7038,7 @@ def _kimi_worker_refusal(
                         "returncode_reason": cause,
                         "returncode": None,
                         "exit_code": 1,
-                        "stderr_excerpt": str(exc),
+                        "stderr_excerpt": detail,
                     }
                 )
                 _write_state_atomic(_state_path_no_create(task_id), launch)
@@ -17670,9 +17677,7 @@ def _resolve_agent_with_budget_guard(
         )
     if requested == "claude" and not claude_account.resolved:
         # #10733: no claude seat is selected on an account that was not resolved and bound.
-        raise BudgetGuardRefuseError(
-            f"CLAUDE_ACCOUNT_REFUSED: {claude_account.refusal}: no claude seat is admitted on an unresolved account"
-        )
+        raise BudgetGuardRefuseError(f"CLAUDE_ACCOUNT_REFUSED: {claude_account.refusal}")
     try:
         payload = _fetch_routing_budget()
     except MonitorApiUnavailable:

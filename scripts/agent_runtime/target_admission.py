@@ -484,9 +484,7 @@ def resolve_and_admit(
         from .mechanical_admission import MechanicalAdmissionRefused
 
         # #10733: whatever step chose it, no claude seat runs on an account that was not resolved and bound.
-        raise MechanicalAdmissionRefused(
-            f"CLAUDE_ACCOUNT_REFUSED: {claude_account.refusal}: no claude seat is admitted on an unresolved account"
-        )
+        raise MechanicalAdmissionRefused(f"CLAUDE_ACCOUNT_REFUSED: {claude_account.refusal}")
     final = _gate_names(
         [*seats, *(recipient for recipient, _, _ in resolved)],
         [*models, *(target_model for _, target_model, _ in resolved)],
