@@ -341,7 +341,7 @@ def _authority_from_section(domain: str, section: SectionResult | None) -> dict[
         domain,
         observed_at=section.observed_at,
         age_s=section.age_s,
-        stale=section.status not in {"ok", "truncated"},
+        stale=section.status not in {"ok", "truncated"} or section.observed_at is None or section.age_s is None,
     )
 
 
@@ -422,12 +422,24 @@ def _build_pr_item(
     tasks: list[dict[str, Any]],
     reviews: list[dict[str, Any]],
     section_times: dict[str, SectionResult],
+    section_name: str = "prs",
 ) -> dict[str, Any]:
     number = int(raw["number"])
     is_draft = bool(raw.get("isDraft"))
-    lifecycle = "draft" if is_draft else str(raw.get("state") or "open").lower()
-    prs_section = section_times.get("prs")
-    current = prs_section is not None and prs_section.status in {"ok", "truncated"}
+    state = str(raw.get("state") or "open").lower()
+    # MERGED is a fact from GitHub's timestamp, never a missing open row or
+    # a terminal state string alone. A merged PR cannot remain a draft.
+    if raw.get("mergedAt"):
+        lifecycle = "merged"
+    elif state in {"merged", "closed"}:
+        lifecycle = "closed"
+    else:
+        lifecycle = "draft" if is_draft else state
+    prs_section = section_times.get(section_name)
+    current = (
+        prs_section is not None and prs_section.status in {"ok", "truncated"} and prs_section.observed_at is not None
+    )
+    current = current and lifecycle not in {"merged", "closed"}
     current = current and raw.get("detailReadComplete") is not False
     ci_state = _pr_check_state(raw) if current else "unknown"
     review_proj = _match_reviews(reviews, pr_number=number, repository_id=repository_id)
@@ -465,6 +477,14 @@ def _build_pr_item(
                 "merge_state_status": raw.get("mergeStateStatus") if current else None,
                 "head_sha": raw.get("headRefOid"),
                 "head_ref": raw.get("headRefName"),
+                **(
+                    {
+                        "merged_at": raw["mergedAt"],
+                        "merge_commit_sha": (raw.get("mergeCommit") or {}).get("oid"),
+                    }
+                    if lifecycle == "merged"
+                    else {}
+                ),
             },
         },
         "relationships": [],
@@ -477,7 +497,8 @@ def _build_pr_item(
         ],
         "omissions": [],
         "flags": {
-            "is_draft": is_draft,
+            "is_draft": is_draft and lifecycle not in {"merged", "closed"},
+            "pr_history": section_name == "prs_merged",
             "has_blocker": False,
             "source_ok": current,
         },
@@ -666,6 +687,11 @@ def build_projection(
     # Projection boundary: every filter path (HTTP, direct call, cache key) must
     # re-enter the shared saved-view admission gate before filter/echo.
     canonical_filters = admit_projection_filters(filters)
+    sections = dict(sections)
+    history_section = sections.setdefault(
+        "prs_merged",
+        SectionResult("prs_merged", "unavailable", reason="gh_pr_snapshot_missing", age_s=None, observed_at=None),
+    )
     issues_section = sections.get("issues") or SectionResult("issues", "unavailable")
     prs_section = sections.get("prs") or SectionResult("prs", "unavailable")
     streams_section = sections.get("streams") or SectionResult("streams", "unavailable")
@@ -708,19 +734,33 @@ def build_projection(
                     )
                 )
     open_pr_numbers: set[int] = set()
+    pr_items: dict[int, dict[str, Any]] = {}
     if isinstance(prs_section.payload, list):
         for raw in prs_section.payload:
             if isinstance(raw, dict) and raw.get("number") is not None:
                 open_pr_numbers.add(int(raw["number"]))
-                items.append(
-                    _build_pr_item(
-                        raw,
-                        repository_id=repo,
-                        tasks=task_rows,
-                        reviews=review_rows,
-                        section_times=sections,
-                    )
+                pr_items[int(raw["number"])] = _build_pr_item(
+                    raw,
+                    repository_id=repo,
+                    tasks=task_rows,
+                    reviews=review_rows,
+                    section_times=sections,
                 )
+
+    if isinstance(history_section.payload, list):
+        for raw in history_section.payload:
+            if isinstance(raw, dict) and raw.get("number") is not None and raw.get("mergedAt"):
+                # A proven terminal observation wins a mixed refresh race.
+                # Its authority stays bound to history, including stale/error.
+                pr_items[int(raw["number"])] = _build_pr_item(
+                    raw,
+                    repository_id=repo,
+                    tasks=task_rows,
+                    reviews=review_rows,
+                    section_times=sections,
+                    section_name="prs_merged",
+                )
+    items.extend(pr_items.values())
 
     linked_task_ids: set[str] = set()
     linked_review_ids: set[str] = set()
@@ -779,7 +819,8 @@ def build_projection(
         if kind == "issue":
             row_ok = _section_source_ok(issues_section)
         elif kind == "pr":
-            row_ok = _section_source_ok(prs_section) and item.get("flags", {}).get("source_ok") is not False
+            section = history_section if item.get("flags", {}).get("pr_history") else prs_section
+            row_ok = _section_source_ok(section) and item.get("flags", {}).get("source_ok") is not False
         elif kind == "task":
             row_ok = _section_source_ok(tasks_section)
         elif kind == "review":
@@ -807,6 +848,12 @@ def build_projection(
         omissions.append({"class": "issues", "reason": "enumeration_cap", "count": GH_ENUM_LIMIT})
     if prs_section.truncated:
         omissions.append({"class": "prs", "reason": "enumeration_cap", "count": GH_ENUM_LIMIT})
+    if history_section.truncated:
+        omissions.append({"class": "prs_merged", "reason": "enumeration_cap", "count": history_section.count})
+    if history_section.status not in {"ok", "truncated"}:
+        omissions.append(
+            {"class": "prs_merged", "reason": history_section.reason or history_section.status, "count": 0}
+        )
     if issues_section.status in {"unavailable", "timeout", "degraded"}:
         omissions.append(
             {
@@ -918,48 +965,57 @@ def qualify_pr_snapshot_age(payload: dict[str, Any]) -> dict[str, Any]:
     for source in out.get("sources") or []:
         if source.get("source_id") != SOURCE_PUBLIC:
             continue
-        section = (source.get("sections") or {}).get("prs") or {}
-        observed_at = section.get("observed_at")
-        if not observed_at:
-            continue
-        age = max(0.0, (datetime.now(UTC) - datetime.fromisoformat(observed_at)).total_seconds())
-        section["age_s"] = age
-        stale = section.get("status") == "stale" or age > PR_SNAPSHOT_FRESHNESS_S
-        if stale:
-            section["status"] = "stale"
-            section["reason"] = "gh_pr_snapshot_stale"
-            if source.get("status") in {"ok", "truncated"}:
-                source["status"] = "stale"
-            omissions = out.get("denominator", {}).get("omissions", [])
-            if not any(o.get("class") == "prs" and o.get("reason") == "gh_pr_snapshot_stale" for o in omissions):
-                omissions.append({"class": "prs", "reason": "gh_pr_snapshot_stale", "count": section.get("count", 0)})
-        for item in out.get("items") or []:
-            if item.get("resource_kind") != "pr":
+        for name in ("prs", "prs_merged"):
+            section = (source.get("sections") or {}).get(name)
+            if not section:
                 continue
-            for authority in item.get("authority") or []:
-                if authority.get("domain") == "github":
-                    authority["age_s"] = age
-                    authority["stale"] = authority.get("stale", False) or stale
+            observed_at = section.get("observed_at")
+            age = None
+            if observed_at:
+                age = max(0.0, (datetime.now(UTC) - datetime.fromisoformat(observed_at)).total_seconds())
+            section["age_s"] = age
+            stale = section.get("status") not in {"ok", "truncated"} or age is None or age > PR_SNAPSHOT_FRESHNESS_S
             if stale:
-                item["flags"]["source_ok"] = False
-                item["flags"]["attention"] = False
-                item["health"] = "UNKNOWN"
-                item["safe_next_action"] = {
-                    "code": "INSPECT_UNKNOWN",
-                    "reason_codes": ["gh_pr_snapshot_stale"],
-                    "state": "unknown",
-                }
-                verification = item["projections"]["verification"]
-                verification.update(state="unknown", ci_state="unknown", merge_state_status=None)
-                verification["merge_evidence"] = {"state": "unknown", "reason": "gh_pr_snapshot_stale"}
-                item["projections"]["review"]["review_decision"] = "UNKNOWN"
-        if stale:
-            pr_ids = {item["work_id"]: item for item in out.get("items") or [] if item.get("resource_kind") == "pr"}
-            for row in out.get("attention") or []:
-                if row.get("work_id") in pr_ids:
-                    item = pr_ids[row["work_id"]]
-                    row["health"] = item["health"]
-                    row["safe_next_action"] = copy.deepcopy(item["safe_next_action"])
+                reason = "gh_pr_snapshot_missing" if age is None else "gh_pr_snapshot_stale"
+                if section.get("status") in {"ok", "truncated", "stale"}:
+                    section["status"] = "stale"
+                    section["reason"] = section.get("reason") or reason
+                if source.get("status") in {"ok", "truncated"}:
+                    source["status"] = "stale"
+                omissions = out.get("denominator", {}).get("omissions", [])
+                reason = section.get("reason") or reason
+                if not any(o.get("class") == name and o.get("reason") == reason for o in omissions):
+                    omissions.append({"class": name, "reason": reason, "count": section.get("count", 0)})
+            for item in out.get("items") or []:
+                if item.get("resource_kind") != "pr":
+                    continue
+                item_section = "prs_merged" if item.get("flags", {}).get("pr_history") else "prs"
+                if item_section != name:
+                    continue
+                for authority in item.get("authority") or []:
+                    if authority.get("domain") == "github":
+                        authority["age_s"] = age
+                        authority["stale"] = authority.get("stale", False) or stale
+                if stale:
+                    item["flags"]["source_ok"] = False
+                    item["flags"]["attention"] = False
+                    item["health"] = "UNKNOWN"
+                    terminal = item.get("lifecycle") in {"merged", "closed"}
+                    item["safe_next_action"] = {
+                        "code": "NONE" if terminal else "INSPECT_UNKNOWN",
+                        "reason_codes": ["pr_terminal_historical" if terminal else "gh_pr_snapshot_stale"],
+                        "state": "none" if terminal else "unknown",
+                    }
+                    verification = item["projections"]["verification"]
+                    verification.update(state="unknown", ci_state="unknown", merge_state_status=None)
+                    verification["merge_evidence"] = {"state": "unknown", "reason": "gh_pr_snapshot_stale"}
+                    item["projections"]["review"]["review_decision"] = "UNKNOWN"
+        pr_ids = {item["work_id"]: item for item in out.get("items") or [] if item.get("resource_kind") == "pr"}
+        for row in out.get("attention") or []:
+            if row.get("work_id") in pr_ids:
+                item = pr_ids[row["work_id"]]
+                row["health"] = item["health"]
+                row["safe_next_action"] = copy.deepcopy(item["safe_next_action"])
     return out
 
 
@@ -1038,7 +1094,12 @@ def downgrade_expired_projection(payload: dict[str, Any], *, age_s: float, fresh
         if not isinstance(item, dict):
             continue
         item["health"] = "UNKNOWN"
-        item["safe_next_action"] = dict(unknown_action)
+        terminal = item.get("resource_kind") == "pr" and item.get("lifecycle") in {"merged", "closed"}
+        item["safe_next_action"] = (
+            {"code": "NONE", "reason_codes": ["pr_terminal_historical"], "state": "none"}
+            if terminal
+            else dict(unknown_action)
+        )
         flags = item.get("flags")
         if not isinstance(flags, dict):
             flags = {}
@@ -1074,10 +1135,12 @@ def downgrade_expired_projection(payload: dict[str, Any], *, age_s: float, fresh
         for entry in item.get("authority") or []:
             if isinstance(entry, dict):
                 entry["stale"] = True
+    items_by_id = {item.get("work_id"): item for item in out.get("items") or [] if isinstance(item, dict)}
     for row in out.get("attention") or []:
         if isinstance(row, dict):
             row["health"] = "UNKNOWN"
-            row["safe_next_action"] = dict(unknown_action)
+            item = items_by_id.get(row.get("work_id"))
+            row["safe_next_action"] = copy.deepcopy(item["safe_next_action"]) if item else dict(unknown_action)
     denominator = out.get("denominator")
     if isinstance(denominator, dict):
         denominator["streams_complete"] = False

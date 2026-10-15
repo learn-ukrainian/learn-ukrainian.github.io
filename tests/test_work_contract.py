@@ -3601,3 +3601,164 @@ def test_refresh_does_not_call_observe_local_git(monkeypatch):
     test_refresh_does_not_call_authority_seam(
         monkeypatch, "observe_local_git", "scripts.orchestration.task_lifecycle.observe_local_git"
     )
+
+
+@pytest.mark.parametrize(
+    "open_status,history_status",
+    [
+        ("ok", "ok"),
+        ("ok", "truncated"),
+        ("ok", "stale"),
+        ("ok", "degraded"),
+        ("ok", "timeout"),
+        ("ok", "unavailable"),
+        ("unavailable", "ok"),
+        ("stale", "ok"),
+        ("degraded", "truncated"),
+        ("timeout", "unavailable"),
+    ],
+)
+def test_merged_history_source_statuses_never_launder_each_other(open_status, history_status):
+    history = _pr_raw_9741(number=71, state="MERGED", mergedAt="2026-10-14T12:00:00Z", isDraft=True)
+    history_section = SectionResult(
+        "prs_merged",
+        history_status,
+        payload=[history] if history_status != "unavailable" else None,
+        count=1 if history_status != "unavailable" else 0,
+        truncated=history_status in {"truncated", "stale"},
+        age_s=80 if history_status == "stale" else 1,
+    )
+    open_section = SectionResult("prs", open_status, payload=[_pr_raw_9741()], count=1)
+    projection = build_projection(_empty_sections_9741(prs=open_section, prs_merged=history_section))
+    rows = {i["remote_id"]: i for i in projection["items"]}
+    assert projection["denominator"]["prs_open"] == (0 if open_status in {"unavailable", "timeout"} else 1)
+    assert rows["77"]["projections"]["verification"]["ci_state"] == ("passing" if open_status == "ok" else "unknown")
+    if history_status != "unavailable":
+        row = rows["71"]
+        assert row["lifecycle"] == "merged" and row["flags"]["is_draft"] is False
+        assert row["health"] == "UNKNOWN" and row["safe_next_action"]["code"] == "NONE"
+        assert row["flags"]["attention"] is False
+        assert row["authority"][0]["age_s"] == history_section.age_s
+        assert row["authority"][0]["stale"] is (history_status not in {"ok", "truncated"})
+        assert row["projections"]["dispatch"]["accountable_owner"] == "unknown"
+        assert row["projections"]["stream"]["status"] == "n/a"
+    else:
+        assert "71" not in rows
+    meta = projection["sources"][0]["sections"]
+    assert meta["prs"]["status"] == open_status
+    assert meta["prs_merged"]["status"] == history_status
+    reasons = {o["reason"] for o in projection["denominator"]["omissions"] if o["class"] == "prs_merged"}
+    assert ("enumeration_cap" in reasons) is history_section.truncated
+    if history_status not in {"ok", "truncated"}:
+        assert history_status in reasons
+    validate_projection(projection)
+
+
+def test_merged_history_identity_dedup_and_positive_merge_evidence_only():
+    from scripts.work.attention import is_actionable, qualify_merge_advice
+
+    raw = _pr_raw_9741()
+    merged = {**raw, "state": "CLOSED", "mergedAt": "2026-10-14T12:00:00Z"}
+    sections = _empty_sections_9741(
+        prs=SectionResult("prs", "ok", payload=[raw, raw], count=1),
+        prs_merged=SectionResult(
+            "prs_merged",
+            "stale",
+            payload=[
+                merged,
+                merged,
+                {"number": 78, "state": "MERGED"},
+                {"number": 79, "state": "CLOSED", "mergedAt": None},
+            ],
+            count=1,
+            age_s=80,
+        ),
+    )
+    projection = build_projection(sections)
+    assert [i["remote_id"] for i in projection["items"]] == ["77"]
+    row = projection["items"][0]
+    assert row["lifecycle"] == "merged"
+    assert row["authority"][0]["age_s"] == 80 and row["authority"][0]["stale"]
+    assert row["safe_next_action"]["code"] == "NONE"
+    assert qualify_merge_advice(row, _ci_passed_ledger(datetime.now(UTC).isoformat())) == {
+        "state": "unknown",
+        "reason": "pr_terminal_historical",
+    }
+    # Even poisoned current readiness must not make a terminal pick-list row.
+    row["health"] = "OFF_TRACK"
+    row["safe_next_action"] = {"code": "MERGE_WHEN_READY"}
+    assert is_actionable(row) is False
+    assert derive_health(row, source_ok=True) == "UNKNOWN"
+    assert derive_safe_next_action(row)["code"] == "NONE"
+    # An empty later open snapshot is absence, never merge evidence.
+    sections["prs"].payload = []
+    sections["prs_merged"].payload = []
+    assert build_projection(sections)["items"] == []
+
+
+def test_terminal_pr_without_merge_evidence_is_closed_and_never_ready():
+    for state in ("CLOSED", "MERGED"):
+        projection = build_projection(
+            _empty_sections_9741(
+                prs=SectionResult("prs", "ok", payload=[_pr_raw_9741(state=state)], count=1),
+            )
+        )
+        row = projection["items"][0]
+        assert row["lifecycle"] == "closed"
+        assert "merged_at" not in row["projections"]["verification"]
+        assert row["safe_next_action"]["code"] == "NONE" and row["flags"]["attention"] is False
+
+
+@pytest.mark.parametrize(
+    "result,expected",
+    [
+        ((0, "[]", ""), "ok"),
+        ((0, "{}", ""), "degraded"),
+        ((0, "invalid", ""), "degraded"),
+        ((124, "", ""), "timeout"),
+        ((1, "", "fixture_failure"), "unavailable"),
+    ],
+)
+def test_merged_history_fixture_runner_qualification_and_repository_admission(result, expected):
+    from scripts.work.sources_public import fetch_merged_prs
+
+    calls = []
+
+    def run(args, timeout):
+        calls.append(args)
+        return result
+
+    section = fetch_merged_prs(REPO, runner=run)
+    assert section.name == "prs_merged" and section.status == expected
+    assert calls[0][calls[0].index("--state") + 1] == "merged"
+    assert "mergedAt,mergeCommit" in calls[0][-1]
+    if expected != "ok":
+        assert section.age_s is None and section.observed_at is None
+    with pytest.raises(ValueError):
+        fetch_merged_prs("foreign/repository", runner=run)
+    assert len(calls) == 1
+
+
+def test_actual_public_collection_includes_independent_history(monkeypatch):
+    from scripts.work.sources_public import collect_public_sections
+
+    calls = []
+
+    def run(args, timeout):
+        calls.append(args)
+        if args[1] == "pr" and args[args.index("--state") + 1] == "merged":
+            return 0, json.dumps([{"number": 71, "state": "MERGED", "mergedAt": "2026-10-14T12:00:00Z"}]), ""
+        return 0, "[]", ""
+
+    sections = collect_public_sections(
+        gh_runner=run,
+        streams_loader=lambda: {"streams": {}},
+        delegate_active_loader=lambda _repo: {"tasks": []},
+        delegate_tasks_loader=lambda _repo: {"tasks": []},
+        fleet_reviews_loader=lambda *_args: {"reviews": []},
+    )
+    assert len(calls) == 3 and sections["prs"].count == 0 and sections["prs_merged"].count == 1
+    projection = build_projection(sections)
+    assert projection["items"][0]["lifecycle"] == "merged"
+    assert projection["denominator"]["prs_open"] == 0
+    validate_projection(projection)

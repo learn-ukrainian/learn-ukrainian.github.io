@@ -1940,3 +1940,105 @@ def test_merge_qualification_adds_no_network_and_keeps_timeouts(monkeypatch):
     assert work_router.TIMEOUT_S == 5.0
     assert work_router.NEXT_BUILD_TIMEOUT_S == 20.0
     assert projection["budget"]["timeout_s"] == 5
+
+
+@pytest.mark.parametrize("status", ["ok", "truncated", "stale", "unavailable"])
+def test_http_merged_history_is_visible_but_never_next(monkeypatch, status):
+    from scripts.work.schema import validate_projection
+
+    sections = _qualify_sections(
+        prs=SectionResult(
+            "prs",
+            "ok",
+            payload=[
+                {
+                    "number": 72,
+                    "state": "OPEN",
+                    "statusCheckRollup": [{"conclusion": "FAILURE"}],
+                }
+            ],
+            count=1,
+        ),
+        prs_merged=SectionResult(
+            "prs_merged",
+            status,
+            payload=[
+                {
+                    "number": 71,
+                    "state": "MERGED",
+                    "mergedAt": "2026-10-14T12:00:00Z",
+                    "mergeCommit": {"oid": "b" * 40},
+                    "reviewDecision": "CHANGES_REQUESTED",
+                    "statusCheckRollup": [{"conclusion": "FAILURE"}],
+                }
+            ]
+            if status != "unavailable"
+            else None,
+            count=0 if status == "unavailable" else 1,
+            truncated=status == "truncated",
+        ),
+    )
+    _local, projection, nxt = _projection_and_next(monkeypatch, sections)
+    validate_projection(projection)
+    assert projection["denominator"]["prs_open"] == 1
+    assert projection["sources"][0]["sections"]["prs_merged"]["status"] == status
+    open_row = next(row for row in projection["items"] if row["remote_id"] == "72")
+    assert open_row["safe_next_action"]["code"] == "FIX_CI"
+    rows = [row for row in projection["items"] if row["remote_id"] == "71"]
+    if status == "unavailable":
+        assert rows == []
+    else:
+        assert rows[0]["lifecycle"] == "merged" and rows[0]["safe_next_action"]["code"] == "NONE"
+        assert rows[0]["flags"]["attention"] is False
+        assert rows[0]["projections"]["verification"]["merge_commit_sha"] == "b" * 40
+    assert all(row["remote_id"] != "71" for row in nxt.get("items", []))
+
+
+def test_actual_dashboard_consumer_admits_http_history(monkeypatch):
+    """Execute the shipped consumer against an actual API response, no UI edits."""
+    import shutil
+    import subprocess
+    from pathlib import Path
+
+    from scripts.work.schema import schema_digest_sha256
+
+    node = shutil.which("node")
+    assert node is not None, "Node is required for the actual Work consumer compatibility proof"
+    _local, projection, _nxt = _projection_and_next(
+        monkeypatch,
+        _qualify_sections(
+            prs_merged=SectionResult(
+                "prs_merged",
+                "ok",
+                payload=[
+                    {
+                        "number": 71,
+                        "state": "MERGED",
+                        "mergedAt": "2026-10-14T12:00:00Z",
+                    }
+                ],
+                count=1,
+            ),
+        ),
+    )
+    html = (Path(__file__).resolve().parents[1] / "dashboards/work.html").read_text()
+    functions = []
+    for name in ("isObject", "isFiniteNonNegativeNumber", "admitPublicDocument", "isActionable"):
+        start = html.index(f"function {name}(")
+        end = html.index("function ", start + 1)
+        functions.append(html[start:end])
+    script = (
+        "\n".join(functions)
+        + """
+const doc = JSON.parse(require('fs').readFileSync(0, 'utf8'));
+const result = admitPublicDocument(doc);
+console.log(JSON.stringify({admitted: result.ok, actionable: doc.items.map(isActionable),
+                           lifecycles: doc.items.map(item => item.lifecycle)}));
+"""
+    )
+    proc = subprocess.run(
+        [node, "-e", script], input=json.dumps(projection), capture_output=True, text=True, timeout=20
+    )
+    assert proc.returncode == 0, proc.stderr
+    assert json.loads(proc.stdout) == {"admitted": True, "actionable": [False], "lifecycles": ["merged"]}
+    assert schema_digest_sha256() == "55bd2ebd6dbdbe80f2950d498e783fe2ef8d82fff24a4ad807ed934b66fa74f7"

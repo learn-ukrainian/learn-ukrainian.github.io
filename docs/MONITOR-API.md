@@ -97,6 +97,25 @@ Read-only public Work attention projection (`FOUNDATION_COMPLETE` foundation onl
 | GET | `/api/work/v1/capabilities` | Schema digest, budgets, private-source seam (`not_configured`) |
 | GET | `/api/work/v1/health` | Work surface liveness |
 
+The public projection includes bounded merged-PR history, qualified separately
+in `sources[].sections.prs_merged` by status, observation time, age and count.
+It scans closed PRs in updated order through the existing background REST
+snapshot, retaining only rows with GitHub `merged_at`. The existing 1,000-item,
+20-page and 60-second refresh bounds apply. Truncation and source failures
+remain explicit in `denominator.omissions`, including stale truncated lists;
+this is not a complete repository history. A cold or failed history read never
+substitutes an open-list observation for history.
+
+Historical PR rows have lifecycle `merged`, actual `merged_at` and optional
+`merge_commit_sha` in `projections.verification`, and their own GitHub authority
+age. Health stays `UNKNOWN` because current readiness does not apply; their
+action is `NONE` and attention is false, including after cache expiry. They do
+not enter `/next` or increase `denominator.prs_open`. Accountable owner and
+canonical stream association remain unresolved. Existing saved-view filters
+and the schema digest are unchanged. Collection never waits for GitHub on a
+Work HTTP request. GitHub's [pull-request REST contract](https://docs.github.com/en/rest/pulls/pulls#list-pull-requests)
+defines the closed-list and merge evidence fields.
+
 ## Fleet facade — `/api/fleet/facade`
 
 This thin, read-only namespace makes the existing `python -m scripts.fleet_comms fleet …` seat-facing surfaces available to Monitor clients. It does not introduce a message bus, write to the Fleet Comms plane, retrieve message bodies, or expose reaper apply mode.

@@ -625,7 +625,15 @@ def project_pull_request(
     return {
         "number": raw.get("number"),
         "title": raw.get("title"),
-        "state": str(state).upper() if isinstance(state, str) and state else None,
+        "state": "MERGED" if raw.get("merged_at") else str(state).upper() if isinstance(state, str) and state else None,
+        **(
+            {
+                "mergedAt": raw["merged_at"],
+                "mergeCommit": {"oid": raw["merge_commit_sha"]} if raw.get("merge_commit_sha") else None,
+            }
+            if raw.get("merged_at")
+            else {}
+        ),
         "isDraft": bool(raw.get("draft")),
         "headRefName": head.get("ref"),
         "headRefOid": head.get("sha"),
@@ -904,6 +912,45 @@ def list_open_prs(
             stale=raw.stale or any(row.get("stale") for row in rows),
             age_seconds=max(raw.age_seconds, max((row.get("age_seconds", 0) for row in rows), default=0)),
         )
+
+
+def list_merged_prs(
+    repo: str,
+    *,
+    limit: int,
+    timeout: float,
+    cache: GitHubRestCache | None = None,
+) -> RestPage:
+    """Bounded closed-pull scan, retaining only GitHub's actual merge evidence.
+
+    Rejected closed pulls do not consume the item budget. The shared page and
+    deadline ceilings still bind, including when no merged pulls were found.
+    Historical rows need no current-head check/review/detail fan-out.
+    """
+    if limit <= 0:
+        return RestPage([], truncated=False)
+    raw, truncated = _collect_pages(
+        cache or shared_cache(),
+        f"repos/{repo}/pulls?state=closed&per_page=100&sort=updated&direction=desc",
+        deadline=time.monotonic() + timeout,
+        timeout=timeout,
+        limit=limit,
+        keep=lambda row: bool(row.get("merged_at")),
+    )
+    rows = [
+        project_pull_request(
+            row,
+            pull=None,
+            check_runs=[],
+            statuses=[],
+            reviews=[],
+            comments=None,
+            checks_complete=False,
+            reviews_complete=False,
+        )
+        for row in raw
+    ]
+    return RestPage(rows, truncated=truncated, stale=raw.stale, age_seconds=raw.age_seconds)
 
 
 def issue_states(

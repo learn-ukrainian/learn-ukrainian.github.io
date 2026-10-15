@@ -295,9 +295,11 @@ class _PRSnapshot:
     observation without changing its age; a cold cache is an explicit omission.
     """
 
-    def __init__(self, repo: str, limit: int) -> None:
+    def __init__(self, repo: str, limit: int, merged: bool = False) -> None:
         self.repo = repo
         self.limit = limit
+        self.merged = merged
+        self.name = "prs_merged" if merged else "prs"
         self._lock = threading.Lock()
         self._thread: threading.Thread | None = None
         self._snapshot: SectionResult | None = None
@@ -320,17 +322,22 @@ class _PRSnapshot:
                 )
                 self._thread.start()
             if self._snapshot is None:
-                return SectionResult("prs", "unavailable", reason=self._reason, age_s=None, observed_at=None)
+                return SectionResult(self.name, "unavailable", reason=self._reason, age_s=None, observed_at=None)
             result = deepcopy(self._snapshot)
-        result.age_s = max(0.0, (_utc_now() - datetime.fromisoformat(result.observed_at)).total_seconds())
-        if result.age_s > PR_SNAPSHOT_FRESHNESS_S:
+        result.age_s = (
+            max(0.0, (_utc_now() - datetime.fromisoformat(result.observed_at)).total_seconds())
+            if result.observed_at
+            else None
+        )
+        if result.age_s is None or result.age_s > PR_SNAPSHOT_FRESHNESS_S:
             result.status = "stale"
-            result.reason = "gh_pr_snapshot_stale"
+            result.reason = result.reason or "gh_pr_snapshot_stale"
         return result
 
     def _refresh(self, observed_at: str) -> None:
         try:
-            payload = github_rest.list_open_prs(self.repo, limit=self.limit, timeout=PR_REFRESH_TIMEOUT_S)
+            loader = github_rest.list_merged_prs if self.merged else github_rest.list_open_prs
+            payload = loader(self.repo, limit=self.limit, timeout=PR_REFRESH_TIMEOUT_S)
             if not isinstance(payload, list):
                 raise ValueError("gh_pr_list_not_list")
             truncated = bool(getattr(payload, "truncated", False))
@@ -339,7 +346,7 @@ class _PRSnapshot:
                 max((row.get("age_seconds", 0) for row in payload if isinstance(row, dict)), default=0),
             )
             result = SectionResult(
-                "prs",
+                self.name,
                 "stale"
                 if getattr(payload, "stale", False) or any(row.get("stale") for row in payload if isinstance(row, dict))
                 else "truncated"
@@ -363,14 +370,17 @@ class _PRSnapshot:
                 self._reason = (
                     "gh_pr_list_timeout" if isinstance(exc, github_rest.GitHubRestTimeout) else "gh_pr_refresh_failed"
                 )
+                if self.merged and self._snapshot is not None:
+                    self._snapshot.status = "stale"
+                    self._snapshot.reason = self._reason
             return
         with self._lock:
             self._snapshot = result
 
 
 @lru_cache(maxsize=8)
-def _pr_snapshot(repo: str, limit: int) -> _PRSnapshot:
-    return _PRSnapshot(repo, limit)
+def _pr_snapshot(repo: str, limit: int, merged: bool = False) -> _PRSnapshot:
+    return _PRSnapshot(repo, limit, merged)
 
 
 def _fetch_open_prs_rest(repo: str, limit: int) -> SectionResult:
@@ -479,9 +489,30 @@ def fetch_open_prs(
     conditional reads bounded by the open PR count. An injected runner is the
     fixture seam.
     """
+    return _fetch_prs(repository_id, limit=limit, runner=runner, merged=False)
+
+
+def fetch_merged_prs(
+    repository_id: str | None = None,
+    *,
+    limit: int = GH_ENUM_LIMIT,
+    runner: Callable[[list[str], float], tuple[int, str, str]] | None = None,
+) -> SectionResult:
+    """Independently qualified historical PRs, refreshed outside HTTP requests."""
+    return _fetch_prs(repository_id, limit=limit, runner=runner, merged=True)
+
+
+def _fetch_prs(
+    repository_id: str | None,
+    *,
+    limit: int,
+    runner: Callable[[list[str], float], tuple[int, str, str]] | None,
+    merged: bool,
+) -> SectionResult:
     repo = admit_public_repository_id(repository_id)
+    name = "prs_merged" if merged else "prs"
     if runner is None:
-        return _fetch_open_prs_rest(repo, limit)
+        return _pr_snapshot(repo, limit, True).read() if merged else _fetch_open_prs_rest(repo, limit)
     run = runner
     code, stdout, stderr = run(
         [
@@ -491,32 +522,36 @@ def fetch_open_prs(
             "--repo",
             repo,
             "--state",
-            "open",
+            "merged" if merged else "open",
             "--limit",
             str(limit),
             "--json",
-            "number,title,state,isDraft,headRefName,headRefOid,updatedAt,createdAt,"
+            "number,title,state,isDraft,headRefName,headRefOid,updatedAt,createdAt,labels,assignees,url,mergedAt,mergeCommit"
+            if merged
+            else "number,title,state,isDraft,headRefName,headRefOid,updatedAt,createdAt,"
             "reviewDecision,statusCheckRollup,mergeStateStatus,labels,assignees,url",
         ],
         SECTION_TIMEOUT_S,
     )
     if code == 124:
-        return SectionResult("prs", "timeout", reason="gh_pr_list_timeout")
+        return SectionResult(name, "timeout", reason="gh_pr_list_timeout", age_s=None, observed_at=None)
     if code != 0:
         return SectionResult(
-            "prs",
+            name,
             "unavailable",
             reason=(stderr.strip() or "gh_pr_list_failed")[:200],
+            age_s=None,
+            observed_at=None,
         )
     try:
         payload = json.loads(stdout or "[]")
     except json.JSONDecodeError as exc:
-        return SectionResult("prs", "degraded", reason=f"invalid_gh_json:{exc}")
+        return SectionResult(name, "degraded", reason=f"invalid_gh_json:{exc}", age_s=None, observed_at=None)
     if not isinstance(payload, list):
-        return SectionResult("prs", "degraded", reason="gh_pr_list_not_list")
+        return SectionResult(name, "degraded", reason="gh_pr_list_not_list", age_s=None, observed_at=None)
     truncated = len(payload) >= limit
     return SectionResult(
-        "prs",
+        name,
         "stale"
         if getattr(payload, "stale", False) or any(row.get("stale") for row in payload if isinstance(row, dict))
         else "truncated"
@@ -1067,6 +1102,7 @@ def collect_public_sections(
     jobs: dict[str, Callable[[], SectionResult]] = {
         "issues": lambda: fetch_open_issues(repo, runner=gh_runner),
         "prs": lambda: fetch_open_prs(repo, runner=gh_runner),
+        "prs_merged": lambda: fetch_merged_prs(repo, runner=gh_runner),
         "streams": lambda: fetch_streams_projection(loader=streams_loader),
         "delegate_active": lambda: fetch_delegate_active(loader=delegate_active_loader, repository_id=repo),
         "delegate_tasks": lambda: fetch_delegate_tasks(loader=delegate_tasks_loader, repository_id=repo),

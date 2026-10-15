@@ -64,6 +64,8 @@ def is_actionable(item: dict[str, Any] | None) -> bool:
     """
     if not item:
         return False
+    if item.get("resource_kind") == "pr" and item.get("lifecycle") in {"merged", "closed"}:
+        return False
     if item.get("health") in {"OFF_TRACK", "AT_RISK"}:
         return True
     code = str(((item.get("safe_next_action") or {}).get("code")) or "")
@@ -171,6 +173,8 @@ def _linked_terminal(dispatch: dict[str, Any]) -> str | None:
 
 def derive_health(item: dict[str, Any], *, source_ok: bool) -> str:
     """Rule-derived health. Never infers from activity metrics."""
+    if item.get("resource_kind") == "pr" and item.get("lifecycle") in {"merged", "closed"}:
+        return "UNKNOWN"
     if not source_ok:
         return "UNKNOWN"
 
@@ -278,6 +282,8 @@ def derive_safe_next_action(item: dict[str, Any]) -> dict[str, Any]:
     verification = projections.get("verification") or {}
     dispatch = projections.get("dispatch") or {}
 
+    if kind == "pr" and item.get("lifecycle") in {"merged", "closed"}:
+        return _action("NONE", ["pr_terminal_historical"], "none")
     # Missing qualification fails closed. Unit callers that omit the flag keep
     # the previous rule path; a projection row always sets the flag.
     if flags.get("source_ok") is False:
@@ -397,6 +403,8 @@ def qualify_merge_advice(
     neither ``DIRTY`` nor ``UNKNOWN``, with no requested changes and CI neither
     failing nor pending. Anything else suppresses merge advice.
     """
+    if item.get("lifecycle") in {"merged", "closed"}:
+        return _unknown("pr_terminal_historical")
     if not isinstance(ledger, dict):
         return _unknown("no_ledger")
     receipts = ledger.get("observation_receipts")

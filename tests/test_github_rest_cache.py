@@ -1109,3 +1109,96 @@ def test_concurrent_login_failures_keep_the_http_status():
     assert all(not thread.is_alive() for thread in threads)
     assert len(errors) == workers
     assert all(isinstance(exc, github_rest.GitHubRestError) and exc.status == 403 for exc in errors)
+
+
+@pytest.mark.parametrize("cap", [1, 2, 1000])
+def test_merged_history_filters_before_item_budget_and_preserves_etags(cap):
+    """Author fixture: only merged_at is merge proof, with no detail fan-out."""
+    first = f"repos/{REPO}/pulls?state=closed&per_page=100&sort=updated&direction=desc"
+    second = f"repos/{REPO}/pulls?state=closed&page=2"
+    calls = []
+    pages = {
+        first: [
+            {"number": 1, "state": "closed", "merged_at": None},
+            {"number": 2, "state": "closed", "merged_at": "2026-10-14T12:00:00Z", "merge_commit_sha": "b" * 40},
+        ],
+        second: [{"number": 3, "state": "closed", "merged_at": "2026-10-13T12:00:00Z"}],
+    }
+
+    def transport(path, headers, timeout):
+        calls.append((path, headers, timeout))
+        response_headers = {"etag": '"history"'}
+        if path == first:
+            response_headers["link"] = f'<{second}>; rel="next"'
+        if headers.get("If-None-Match"):
+            return 304, response_headers, b""
+        return 200, response_headers, json.dumps(pages[path]).encode()
+
+    cache = github_rest.GitHubRestCache(transport=transport, identity="fixture")
+    for _ in range(2):
+        rows = github_rest.list_merged_prs(REPO, limit=cap, timeout=3, cache=cache)
+        assert [row["number"] for row in rows] == ([2] if cap == 1 else [2, 3])
+        assert rows.truncated is (cap == 1)
+        assert rows[0]["state"] == "MERGED"
+        assert rows[0]["mergedAt"] == "2026-10-14T12:00:00Z"
+        assert rows[0]["mergeCommit"] == {"oid": "b" * 40}
+        assert rows[0]["statusCheckRollup"] is None
+        assert rows[0]["reviewDecision"] is None
+    assert all(path in {first, second} and 0 < timeout <= 3 for path, _, timeout in calls)
+    assert calls[-1][1]["If-None-Match"] == '"history"'
+    assert github_rest.list_merged_prs(REPO, limit=0, timeout=3, cache=cache) == []
+
+
+def test_merged_history_empty_filtered_pages_retain_stale_and_page_cap():
+    calls = []
+
+    def transport(path, headers, timeout):
+        calls.append(path)
+        return (
+            200,
+            {"link": '<repos/o/r/pulls?page=next>; rel="next"', "x-github-stale": "true", "x-github-age": "95"},
+            b'[{"number": 1, "state": "closed"}]',
+        )
+
+    cache = github_rest.GitHubRestCache(transport=transport, identity="fixture")
+    rows = github_rest.list_merged_prs(REPO, limit=1000, timeout=3, cache=cache)
+    assert rows == [] and rows.truncated and rows.stale and rows.age_seconds == 95
+    assert len(calls) == 20
+
+
+@pytest.mark.parametrize("error", ["deadline", "error"])
+def test_merged_history_later_page_failure_is_not_complete_history(error):
+    calls = []
+
+    def transport(path, headers, timeout):
+        calls.append(path)
+        if len(calls) == 1:
+            return (
+                200,
+                {"link": '<repos/o/r/pulls?page=2>; rel="next"'},
+                b'[{"number": 1, "merged_at": "2026-10-14T12:00:00Z"}]',
+            )
+        if error == "deadline":
+            raise github_rest.GitHubRestTimeout(timeout)
+        return 503, {}, b"{}"
+
+    cache = github_rest.GitHubRestCache(transport=transport, identity="fixture")
+    with pytest.raises((github_rest.GitHubRestError, github_rest.GitHubRestTimeout)):
+        github_rest.list_merged_prs(REPO, limit=1000, timeout=3, cache=cache)
+    assert len(calls) == 2
+
+
+def test_merged_history_deadline_stops_before_another_page(monkeypatch):
+    clock = [100.0]
+    calls = []
+    monkeypatch.setattr(github_rest.time, "monotonic", lambda: clock[0])
+
+    def transport(path, headers, timeout):
+        calls.append(path)
+        clock[0] += 3
+        return 200, {"link": '<repos/o/r/pulls?page=2>; rel="next"'}, b'[{"number": 1, "merged_at": null}]'
+
+    cache = github_rest.GitHubRestCache(transport=transport, identity="fixture")
+    with pytest.raises(github_rest.GitHubRestTimeout):
+        github_rest.list_merged_prs(REPO, limit=1000, timeout=2, cache=cache)
+    assert len(calls) == 1

@@ -34,6 +34,36 @@ def _join(snapshot):
     assert not snapshot._thread.is_alive()
 
 
+def test_merged_history_actual_projection_regression():
+    """Author fixture: a real merge observation must survive the public join."""
+    sections = _sections(sources.SectionResult("prs", "ok", payload=[], count=0))
+    sections["prs_merged"] = sources.SectionResult(
+        "prs_merged",
+        "ok",
+        count=1,
+        payload=[
+            {
+                "number": 71,
+                "state": "MERGED",
+                "mergedAt": "2026-10-14T12:00:00Z",
+                "mergeCommit": {"oid": "b" * 40},
+                "title": "Merged fixture",
+            }
+        ],
+    )
+    projection = build_projection(sections, lifecycle_ledgers=[])
+    assert [i["remote_id"] for i in projection["items"]] == ["71"]
+    row = projection["items"][0]
+    assert row["lifecycle"] == "merged"
+    assert row["projections"]["verification"]["merged_at"] == "2026-10-14T12:00:00Z"
+    assert row["projections"]["verification"]["merge_commit_sha"] == "b" * 40
+    assert row["safe_next_action"]["code"] == "NONE"
+    assert row["flags"]["attention"] is False
+    assert projection["denominator"]["prs_open"] == 0
+    assert projection["sources"][0]["sections"]["prs_merged"]["count"] == 1
+    validate_projection(projection)
+
+
 def test_snapshot_registry_reuses_the_same_inventory():
     first = sources._pr_snapshot(REPO, 1000)
     assert sources._pr_snapshot(REPO, 1000) is first
@@ -200,3 +230,189 @@ def test_stale_and_incomplete_prs_stay_unknown_independently():
     assert all(i["health"] == "UNKNOWN" for i in stale["items"])
     assert all(i["projections"]["verification"]["ci_state"] == "unknown" for i in stale["items"])
     assert any(o["class"] == "prs" and o["reason"] == "stale" for o in stale["denominator"]["omissions"])
+
+
+@pytest.mark.parametrize("failure", [None, "timeout", "error", "rate_limit", "shape"])
+def test_history_snapshot_is_independent_background_and_atomic(monkeypatch, failure):
+    entered = threading.Event()
+    release = threading.Event()
+    raw = [{"number": 71, "mergedAt": "2026-10-14T12:00:00Z", "state": "MERGED"}]
+
+    def load(*args, **kwargs):
+        entered.set()
+        assert release.wait(timeout=5)
+        if failure == "timeout":
+            raise github_rest.GitHubRestTimeout(60)
+        if failure in {"error", "rate_limit"}:
+            raise github_rest.GitHubRestError("private transport text", status=429 if failure == "rate_limit" else 503)
+        if failure == "shape":
+            return {}
+        return github_rest.RestPage(raw, truncated=True, stale=True, age_seconds=90)
+
+    monkeypatch.setattr(github_rest, "list_merged_prs", load)
+    snapshot = sources._PRSnapshot(REPO, 1000, True)
+    open_snapshot = sources._PRSnapshot(REPO, 1000)
+    monkeypatch.setattr(
+        sources, "_pr_snapshot", lambda _repo, _limit, merged=False: snapshot if merged else open_snapshot
+    )
+    open_snapshot._snapshot = sources.SectionResult("prs", "ok", payload=[{"number": 5}], count=1)
+    open_snapshot._started_at = time.monotonic()
+    try:
+        cold = sources.fetch_merged_prs(REPO)
+        assert cold.status == "unavailable" and cold.age_s is None and cold.observed_at is None
+        assert entered.wait(timeout=2)
+        thread = snapshot._thread
+        assert sources.fetch_merged_prs(REPO).payload is None
+        assert snapshot._thread is thread
+        assert sources.fetch_open_prs(REPO).payload == [{"number": 5}]
+    finally:
+        release.set()
+        _join(snapshot)
+    result = snapshot.read()
+    if failure:
+        assert result.status == "unavailable" and result.payload is None
+        assert result.observed_at is None and result.age_s is None
+        assert result.reason in {"gh_pr_list_timeout", "gh_pr_refresh_failed", "github_rate_limited"}
+        assert "private" not in result.reason
+    else:
+        assert result.status == "stale" and result.truncated and result.age_s >= 90
+        assert result.payload == raw and result.count == 1
+    assert sources.fetch_open_prs(REPO).status == "ok"
+
+
+@pytest.mark.parametrize("failure", ["timeout", "error", "rate_limit"])
+@pytest.mark.parametrize("observed_age", [0, 80])
+def test_history_failed_refresh_preserves_observation_and_coverage(monkeypatch, failure, observed_age):
+    def load(*args, **kwargs):
+        if failure == "timeout":
+            raise github_rest.GitHubRestTimeout(60)
+        raise github_rest.GitHubRestError("hidden", status=429 if failure == "rate_limit" else 503)
+
+    monkeypatch.setattr(github_rest, "list_merged_prs", load)
+    snapshot = sources._PRSnapshot(REPO, 1000, True)
+    observed = (sources._utc_now() - timedelta(seconds=observed_age)).isoformat()
+    snapshot._snapshot = sources.SectionResult(
+        "prs_merged",
+        "truncated",
+        payload=[{"number": 71, "mergedAt": "2026-10-14T12:00:00Z"}],
+        count=1,
+        truncated=True,
+        observed_at=observed,
+    )
+    snapshot.read()
+    _join(snapshot)
+    result = snapshot.read()
+    assert result.status == "stale" and result.truncated and result.count == 1
+    assert result.observed_at == observed and result.age_s >= observed_age
+    assert result.reason in {"gh_pr_list_timeout", "gh_pr_refresh_failed", "github_rate_limited"}
+    projection = build_projection({**_sections(sources.SectionResult("prs", "ok", payload=[])), "prs_merged": result})
+    assert projection["items"][0]["safe_next_action"]["code"] == "NONE"
+    omissions = projection["denominator"]["omissions"]
+    assert {o["reason"] for o in omissions if o["class"] == "prs_merged"} == {"enumeration_cap", result.reason}
+
+
+def test_history_snapshot_registry_and_missing_age(monkeypatch):
+    first = sources._pr_snapshot(REPO, 1000, True)
+    assert sources._pr_snapshot(REPO, 1000, True) is first
+    assert sources._pr_snapshot(REPO, 1000) is not first
+    snapshot = sources._PRSnapshot(REPO, 1000, True)
+    snapshot._started_at = time.monotonic()
+    snapshot._snapshot = sources.SectionResult("prs_merged", "ok", payload=[], observed_at=None, age_s=None)
+    result = snapshot.read()
+    assert result.status == "stale" and result.age_s is None and result.observed_at is None
+
+
+@pytest.mark.parametrize("open_age,history_age", [(10, 45), (45, 10), (10, None)])
+def test_projection_requalifies_history_and_open_ages_separately(open_age, history_age):
+    from scripts.work.normalize import downgrade_expired_projection
+
+    now = sources._utc_now()
+    sections = _sections(
+        sources.SectionResult(
+            "prs",
+            "ok",
+            payload=[{"number": 5, "statusCheckRollup": [{"conclusion": "SUCCESS"}]}],
+            count=1,
+            observed_at=(now - timedelta(seconds=open_age)).isoformat(),
+        )
+    )
+    sections["prs_merged"] = sources.SectionResult(
+        "prs_merged",
+        "ok",
+        payload=[{"number": 71, "mergedAt": "2026-10-14T12:00:00Z"}],
+        count=1,
+        observed_at=(now - timedelta(seconds=history_age)).isoformat() if history_age is not None else None,
+        age_s=history_age,
+    )
+    original = build_projection(sections)
+    qualified = qualify_pr_snapshot_age(original)
+    by_id = {row["remote_id"]: row for row in qualified["items"]}
+    assert by_id["71"]["safe_next_action"]["code"] == "NONE"
+    assert by_id["71"]["flags"]["attention"] is False
+    assert by_id["71"]["projections"]["verification"]["merged_at"] == "2026-10-14T12:00:00Z"
+    assert by_id["5"]["safe_next_action"]["code"] == ("REQUEST_CF_REVIEW" if open_age < 30 else "INSPECT_UNKNOWN")
+    meta = qualified["sources"][0]["sections"]
+    assert meta["prs"]["status"] == ("ok" if open_age < 30 else "stale")
+    assert meta["prs_merged"]["status"] == ("ok" if history_age is not None and history_age < 30 else "stale")
+    if history_age is None:
+        assert by_id["71"]["authority"][0]["age_s"] is None
+    assert original["sources"][0]["sections"]["prs_merged"]["status"] == "ok"
+    expired = downgrade_expired_projection(qualified, age_s=100, freshness_s=30)
+    history = next(row for row in expired["items"] if row["remote_id"] == "71")
+    attention = next(row for row in expired["attention"] if row["work_id"] == history["work_id"])
+    assert history["safe_next_action"]["code"] == attention["safe_next_action"]["code"] == "NONE"
+    assert history["flags"]["attention"] is False
+    assert history["projections"]["verification"]["merge_evidence"]["state"] == "unknown"
+    validate_projection(expired)
+
+
+def test_raw_public_merge_observation_reaches_actual_projection(monkeypatch):
+    raw = [
+        {"number": 71, "state": "closed", "merged_at": "2026-10-14T12:00:00Z", "merge_commit_sha": "b" * 40},
+        {"number": 72, "state": "closed", "merged_at": None},
+    ]
+    cache = github_rest.GitHubRestCache(
+        identity="fixture",
+        transport=lambda *_args: (200, {}, json.dumps(raw).encode()),
+    )
+    monkeypatch.setattr(github_rest, "shared_cache", lambda: cache)
+    snapshot = sources._PRSnapshot(REPO, 1000, True)
+    snapshot.read()
+    _join(snapshot)
+    result = snapshot.read()
+    assert result.status == "ok" and result.count == 1
+    projection = build_projection({**_sections(sources.SectionResult("prs", "ok", payload=[])), "prs_merged": result})
+    assert [row["remote_id"] for row in projection["items"]] == ["71"]
+    row = projection["items"][0]
+    assert row["lifecycle"] == "merged" and row["projections"]["verification"]["merged_at"] == raw[0]["merged_at"]
+    assert row["projections"]["verification"]["merge_commit_sha"] == raw[0]["merge_commit_sha"]
+    assert row["authority"][0]["observed_at"] == result.observed_at
+    assert projection["sources"][0]["sections"]["prs_merged"]["observed_at"] == result.observed_at
+    assert row["safe_next_action"]["code"] == "NONE"
+    validate_projection(projection)
+
+
+def test_history_empty_success_is_not_missing_and_open_failure_behavior_is_preserved(monkeypatch):
+    monkeypatch.setattr(github_rest, "list_merged_prs", lambda *_args, **_kwargs: [])
+    history = sources._PRSnapshot(REPO, 1000, True)
+    history._refresh(sources._iso_now())
+    history._started_at = time.monotonic()
+    result = history.read()
+    assert result.name == "prs_merged" and result.status == "ok" and result.payload == [] and result.count == 0
+    assert result.observed_at is not None and result.age_s is not None
+
+    def fail(*_args, **_kwargs):
+        raise github_rest.GitHubRestTimeout(60)
+
+    monkeypatch.setattr(github_rest, "list_open_prs", fail)
+    opened = sources._PRSnapshot(REPO, 1000)
+    opened._snapshot = sources.SectionResult("prs", "ok", payload=[{"number": 5}], count=1)
+    observed = opened._snapshot.observed_at
+    opened._refresh(sources._iso_now())
+    opened._started_at = time.monotonic()
+    result = opened.read()
+    # The existing open path retains its still-fresh settled observation.
+    assert result.status == "ok" and result.observed_at == observed and result.count == 1
+    projection = build_projection({**_sections(result), "prs_merged": history.read()})
+    assert projection["sources"][0]["sections"]["prs_merged"]["status"] == "ok"
+    assert not any(o["class"] == "prs_merged" for o in projection["denominator"]["omissions"])
