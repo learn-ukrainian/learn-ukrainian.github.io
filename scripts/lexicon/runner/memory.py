@@ -55,6 +55,22 @@ MemoryMechanism = Literal["systemd_scope", "cgroup_v2", "rlimit_as", "none"]
 ROOT = Path(__file__).resolve().parents[3]
 _LOG = logging.getLogger(__name__)
 
+# Capped-scope unit prefixes (#9624). The test suite sets
+# ``LEXICON_CAP_UNIT_PREFIX`` so scopes it kills on purpose are not counted by
+# the host's CappedScopeOomKill alert as word-card workload kills. Closed
+# allowlist of two values: any other value is ignored, so the variable can
+# never choose an arbitrary systemd unit name.
+SCOPE_UNIT_PREFIX = "lexicon-cap"
+TEST_SCOPE_UNIT_PREFIX = "lexicon-captest"
+SCOPE_UNIT_PREFIX_ENV = "LEXICON_CAP_UNIT_PREFIX"
+
+
+def scope_unit_prefix() -> str:
+    """Unit-name prefix for a capped scope: the test one only on an exact match."""
+    if os.environ.get(SCOPE_UNIT_PREFIX_ENV) == TEST_SCOPE_UNIT_PREFIX:
+        return TEST_SCOPE_UNIT_PREFIX
+    return SCOPE_UNIT_PREFIX
+
 
 @dataclass(frozen=True, slots=True)
 class MemoryPolicy:
@@ -376,7 +392,7 @@ def run_bounded_command(
     use_oom_policy = _probe_systemd_user_scope(policy, timeout_s)
     scope_env = _user_systemd_environ() if use_oom_policy is not None else None
     if scope_env is not None:
-        unit = f"lexicon-cap-{os.getpid()}-{uuid.uuid4().hex[:8]}"
+        unit = f"{scope_unit_prefix()}-{os.getpid()}-{uuid.uuid4().hex[:8]}"
         slice_name = caller_slice_name()
         proc: subprocess.CompletedProcess[str] | None = None
         oom_kill: int | None = None

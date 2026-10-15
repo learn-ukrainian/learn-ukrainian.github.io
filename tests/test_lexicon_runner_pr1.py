@@ -13,8 +13,12 @@ from scripts.lexicon import enrich_manifest as em
 from scripts.lexicon.runner.contracts import ChunkSpec, ChunkState, ErrorCode, OomSplitChildren
 from scripts.lexicon.runner.generate_pr1_fixture import load_slovnyk_cache
 from scripts.lexicon.runner.memory import (
+    SCOPE_UNIT_PREFIX,
+    SCOPE_UNIT_PREFIX_ENV,
+    TEST_SCOPE_UNIT_PREFIX,
     require_hard_cap_protection,
     run_startup_self_test,
+    scope_unit_prefix,
 )
 from scripts.lexicon.runner.phase_cefr import (
     apply_sealed_cefr_to_engine_cache,
@@ -140,12 +144,13 @@ def test_slice_name_from_dispatch_cgroup() -> None:
     assert slice_name_from_cgroup_relative("/user.slice/user-1000.slice/session-3.scope") is None
     assert slice_name_from_cgroup_relative("/app.slice/run-p1.scope") is None
     assert slice_name_from_cgroup_relative("/user.slice/user-1000.slice/user@1000.service") is None
-    omitted = _scope_argv(["/bin/true"], MemoryPolicy(), "lexicon-cap-x", None)
+    unit = f"{scope_unit_prefix()}-x"
+    omitted = _scope_argv(["/bin/true"], MemoryPolicy(), unit, None)
     assert not any(part.startswith("--slice=") for part in omitted)
     assert "OOMPolicy=continue" in omitted
-    placed = _scope_argv(["/bin/true"], MemoryPolicy(), "lexicon-cap-x", "lu-dispatch.slice")
+    placed = _scope_argv(["/bin/true"], MemoryPolicy(), unit, "lu-dispatch.slice")
     assert "--slice=lu-dispatch.slice" in placed
-    timed = _scope_argv(["/bin/true"], MemoryPolicy(), "lexicon-cap-x", None, timeout_s=3)
+    timed = _scope_argv(["/bin/true"], MemoryPolicy(), unit, None, timeout_s=3)
     assert "RuntimeMaxSec=3s" in timed
 
 
@@ -216,24 +221,28 @@ def _lexicon_cap_units() -> list[str]:
     if env is None:
         return []
     completed = subprocess.run(
-        ["systemctl", "--user", "list-units", "lexicon-cap-*", "--no-legend", "--plain", "--all"],
+        ["systemctl", "--user", "list-units", "lexicon-cap*", "--no-legend", "--plain", "--all"],
         env=env,
         capture_output=True,
         text=True,
         timeout=15,
         check=False,
     )
-    return [line.strip() for line in completed.stdout.splitlines() if "lexicon-cap-" in line]
+    # Both prefixes: a leaked scope must be found whichever name it carries.
+    prefixes = (f"{SCOPE_UNIT_PREFIX}-", f"{TEST_SCOPE_UNIT_PREFIX}-")
+    return [line.strip() for line in completed.stdout.splitlines() if line.strip().startswith(prefixes)]
 
 
-def _own_lexicon_cap_units() -> list[str]:
+def _own_lexicon_cap_units(prefix: str | None = None) -> list[str]:
     """Units launched by this process — ``run_bounded_command`` names scopes
-    ``lexicon-cap-{pid}-{uuid8}``. Parallel pytest workers and real lexicon
-    runs use other pids, so only this subset is this test's to watch."""
+    ``{prefix}-{pid}-{uuid8}``. Parallel pytest workers and real lexicon runs
+    use other pids, so only this subset is this test's to watch. Without
+    ``prefix`` both the production and the test prefix count."""
     import os
 
-    prefix = f"lexicon-cap-{os.getpid()}-"
-    return [line for line in _lexicon_cap_units() if line.split()[0].startswith(prefix)]
+    prefixes = (prefix,) if prefix else (SCOPE_UNIT_PREFIX, TEST_SCOPE_UNIT_PREFIX)
+    own = tuple(f"{name}-{os.getpid()}-" for name in prefixes)
+    return [line for line in _lexicon_cap_units() if line.split()[0].startswith(own)]
 
 
 def _wait_lexicon_cap_units(before: list[str]) -> list[str]:
@@ -294,7 +303,7 @@ def test_worker_scope_placement_follows_caller_slice(
 
     def capture_scope_argv(cmd, policy, unit, requested_slice, **kwargs):
         argv = original_scope_argv(cmd, policy, unit, requested_slice, **kwargs)
-        if unit.startswith("lexicon-cap-"):
+        if unit.startswith(f"{scope_unit_prefix()}-"):
             launched.append(argv)
         return argv
 
@@ -310,7 +319,7 @@ def test_worker_scope_placement_follows_caller_slice(
     assert any("mechanism=systemd_scope" in record.message for record in caplog.records)
     child_parts = [part for part in result.message.split("/") if part]
     parent_parts = [part for part in parent.split("/") if part]
-    assert child_parts[-1].startswith("lexicon-cap-")
+    assert child_parts[-1].startswith(f"{scope_unit_prefix()}-")
     assert child_parts[-1].endswith(".scope")
     assert len(launched) == 1
     if slice_name is None:
@@ -333,7 +342,7 @@ def test_worker_scope_without_caller_slice(tmp_path: Path, monkeypatch: pytest.M
 
     def capture_scope_argv(cmd, policy, unit, requested_slice, **kwargs):
         argv = original_scope_argv(cmd, policy, unit, requested_slice, **kwargs)
-        if unit.startswith("lexicon-cap-"):
+        if unit.startswith(f"{scope_unit_prefix()}-"):
             launched.append(argv)
         return argv
 
@@ -345,7 +354,7 @@ def test_worker_scope_without_caller_slice(tmp_path: Path, monkeypatch: pytest.M
     )
     assert result.outcome == "done"
     assert result.memory_mechanism == "systemd_scope"
-    assert result.message.split("/")[-1].startswith("lexicon-cap-")
+    assert result.message.split("/")[-1].startswith(f"{scope_unit_prefix()}-")
     assert len(launched) == 1
     assert not any(arg.startswith("--slice=") for arg in launched[0])
 
@@ -369,6 +378,126 @@ def test_scope_sigkill_classified_as_oom(tmp_path: Path, attempt: int) -> None:
     assert result.memory_mechanism == "systemd_scope"
     assert result.oom_kill is not None and result.oom_kill >= 1
     assert "returncode=-9" in result.message
+
+
+@pytest.mark.parametrize(
+    ("env_value", "expected"),
+    [
+        (TEST_SCOPE_UNIT_PREFIX, TEST_SCOPE_UNIT_PREFIX),
+        (None, SCOPE_UNIT_PREFIX),
+        ("", SCOPE_UNIT_PREFIX),
+        ("lexicon-cap", SCOPE_UNIT_PREFIX),
+        ("evil", SCOPE_UNIT_PREFIX),
+        ("lexicon-captest-x", SCOPE_UNIT_PREFIX),
+        ("LEXICON-CAPTEST", SCOPE_UNIT_PREFIX),
+        (" lexicon-captest", SCOPE_UNIT_PREFIX),
+    ],
+)
+def test_scope_unit_prefix_is_a_closed_allowlist(
+    monkeypatch: pytest.MonkeyPatch, env_value: str | None, expected: str
+) -> None:
+    """Only the exact test prefix switches the name; anything else is ignored (#9624)."""
+    if env_value is None:
+        monkeypatch.delenv(SCOPE_UNIT_PREFIX_ENV, raising=False)
+    else:
+        monkeypatch.setenv(SCOPE_UNIT_PREFIX_ENV, env_value)
+    assert scope_unit_prefix() == expected
+
+
+def test_suite_runs_with_the_test_unit_prefix() -> None:
+    """The session fixture exports the prefix, so workers and subprocesses inherit it."""
+    import os
+
+    assert os.environ.get(SCOPE_UNIT_PREFIX_ENV) == TEST_SCOPE_UNIT_PREFIX
+    assert scope_unit_prefix() == TEST_SCOPE_UNIT_PREFIX
+
+
+def test_suite_test_prefix_literals_match_runner_memory() -> None:
+    """tests/conftest.py cannot import the runner package, so it carries literals."""
+    assert SCOPE_UNIT_PREFIX_ENV == "LEXICON_CAP_UNIT_PREFIX"
+    assert TEST_SCOPE_UNIT_PREFIX == "lexicon-captest"
+
+
+@pytest.mark.parametrize(("env_value", "expected"), [(TEST_SCOPE_UNIT_PREFIX, TEST_SCOPE_UNIT_PREFIX), (None, SCOPE_UNIT_PREFIX)])
+def test_run_bounded_command_names_unit_from_active_prefix(
+    monkeypatch: pytest.MonkeyPatch, env_value: str | None, expected: str
+) -> None:
+    """The generated ``--unit=`` carries the prefix chosen by the env (#9624)."""
+    import os
+    import subprocess
+
+    from scripts.lexicon.runner import memory
+
+    if env_value is None:
+        monkeypatch.delenv(SCOPE_UNIT_PREFIX_ENV, raising=False)
+    units: list[str] = []
+    original_scope_argv = memory._scope_argv
+
+    def capture_scope_argv(cmd, policy, unit, requested_slice, **kwargs):
+        units.append(unit)
+        return original_scope_argv(cmd, policy, unit, requested_slice, **kwargs)
+
+    monkeypatch.setattr(memory, "_probe_systemd_user_scope", lambda *args: True)
+    monkeypatch.setattr(memory, "_user_systemd_environ", lambda: {"PATH": "/usr/bin"})
+    monkeypatch.setattr(memory, "_scope_argv", capture_scope_argv)
+    monkeypatch.setattr(
+        memory.subprocess, "run", lambda argv, **kw: subprocess.CompletedProcess(argv, 0, "", "")
+    )
+    memory.run_bounded_command(["/bin/true"], memory.MemoryPolicy(), cwd=".", timeout_s=5)
+    assert len(units) == 1
+    assert units[0].startswith(f"{expected}-{os.getpid()}-")
+    if expected == SCOPE_UNIT_PREFIX:
+        assert not units[0].startswith(f"{TEST_SCOPE_UNIT_PREFIX}-")
+
+
+def test_real_capped_kill_creates_only_test_prefixed_scope(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """A real OOM-killed scope under pytest never carries the production prefix (#9624).
+
+    The scope lives ~0.2 s, so the unit name is also captured from the launch
+    argv; the list-units poll proves systemd never saw a production-named own
+    scope while the worker ran.
+    """
+    import os
+    import threading
+
+    from scripts.lexicon.runner import memory
+
+    _skip_without_user_scope()
+    launched: list[str] = []
+    original_scope_argv = memory._scope_argv
+
+    def capture_scope_argv(cmd, policy, unit, requested_slice, **kwargs):
+        launched.append(unit)
+        return original_scope_argv(cmd, policy, unit, requested_slice, **kwargs)
+
+    monkeypatch.setattr(memory, "_scope_argv", capture_scope_argv)
+    seen: set[str] = set()
+    stop = threading.Event()
+
+    def poll() -> None:
+        while not stop.is_set():
+            seen.update(line.split()[0] for line in _own_lexicon_cap_units())
+
+    watcher = threading.Thread(target=poll, daemon=True)
+    watcher.start()
+    cap = 128 * 1024 * 1024
+    try:
+        result = run_capped_worker(
+            {"job": "inject_oom", "chunk_id": "prefix-oom", "memory_high_bytes": cap, "memory_max_bytes": cap},
+            result_path=tmp_path / "prefix-oom.json",
+            timeout_s=60,
+        )
+    finally:
+        stop.set()
+        watcher.join(timeout=30)
+    assert result.error_code == ErrorCode.FAILED_OOM.value
+    assert result.memory_mechanism == "systemd_scope"
+    own = f"-{os.getpid()}-"
+    # ``lexicon-probe-*`` scopes are the /bin/true availability probe, not caps.
+    capped = [unit for unit in launched if own in unit and unit.startswith("lexicon-cap")]
+    assert capped, "no capped scope was launched"
+    assert all(unit.startswith(f"{TEST_SCOPE_UNIT_PREFIX}{own}") for unit in capped)
+    assert not any(unit.startswith(f"{SCOPE_UNIT_PREFIX}{own}") for unit in seen)
 
 
 def test_timeout_stops_worker_scope(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -625,7 +754,7 @@ def _kill_new_scope(before: list[str]) -> tuple[bool, int | None]:
     if env is None:
         return False, None
     before_units = {line.split()[0] for line in before}
-    own_prefix = f"lexicon-cap-{os.getpid()}-"
+    own_prefix = f"{scope_unit_prefix()}-{os.getpid()}-"
     for _ in range(80):
         for line in _lexicon_cap_units():
             unit = line.split()[0]
