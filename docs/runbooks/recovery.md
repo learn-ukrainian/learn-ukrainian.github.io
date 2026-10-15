@@ -42,15 +42,15 @@ database.
   git switch main
   git pull --ff-only
 
-  PYTHON_CONFIGURE_OPTS="--enable-loadable-sqlite-extensions" pyenv install 3.12.14
-  pyenv local 3.12.14
-  uv venv --python 3.12.14 .venv
+  PYTHON_CONFIGURE_OPTS="--enable-loadable-sqlite-extensions" pyenv install 3.14.8
+  pyenv local 3.14.8
+  uv venv --python 3.14.8 .venv
   .venv/bin/python -m pip install --upgrade pip
   uv pip install --python .venv/bin/python -r requirements.txt -r requirements-dev.txt
 )
 ```
 
-If `pyenv install` reports that 3.12.14 already exists, retain that interpreter;
+If `pyenv install` reports that 3.14.8 already exists, retain that interpreter;
 do not substitute another Python version.
 
 **`pip install -e .` does NOT work on this tree — do not use it.** `pyproject.toml`

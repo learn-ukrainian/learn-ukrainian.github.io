@@ -13,12 +13,12 @@ rights-classified prepared data is tracked under
 
 ## Install without an API
 
-Use Python 3.12.14 and the repository's pinned dependency file:
+Use Python 3.14.8 (`requires-python` remains `>=3.12`) and the repository's pinned dependency file:
 
 ```bash
 git clone https://github.com/learn-ukrainian/learn-ukrainian.github.io.git
 cd learn-ukrainian.github.io
-pyenv local 3.12.14
+pyenv local 3.14.8
 pyenv exec python -m venv .venv
 .venv/bin/python -m pip install -r requirements-lock.txt
 ```

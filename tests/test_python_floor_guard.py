@@ -7,11 +7,13 @@ than by picking out ``>=`` parts. The invariants:
 * the pinned interpreter in ``.python-version`` satisfies the whole set (this
   is what rejects ``>=3.12,>3.13`` and ``>=3.12,!=3.12.*``);
 * the declared lower bound is exactly ``PROJECT_FLOOR``;
-* neither the ruff target nor the mypy ``python_version`` is below it.
+* neither the ruff target nor the mypy ``python_version`` is below it, nor
+  ahead of the pinned interpreter (the tools may not target a Python the
+  project does not run on).
 
 The floor is deliberately *not* required to equal the pinned interpreter: the
 pin may move ahead of the floor (e.g. 3.14.x against ``>=3.12``), so the
-invariant is floor <= pinned and pinned contained in the set.
+invariant is floor <= tool targets <= pinned and pinned contained in the set.
 """
 
 from __future__ import annotations
@@ -71,6 +73,13 @@ def _check_floor_contract(requires_python: str, pinned: str, ruff_target: str, m
     assert _parse_minor(pinned) >= floor, f"pinned interpreter {pinned_version} is below the floor {floor}"
     assert _parse_minor(ruff_target) >= floor, f"ruff target-version {ruff_target!r} is below the floor {floor}"
     assert _parse_minor(mypy_target) >= floor, f"mypy python_version {mypy_target!r} is below the floor {floor}"
+    pinned_minor = _parse_minor(pinned)
+    assert _parse_minor(ruff_target) <= pinned_minor, (
+        f"ruff target-version {ruff_target!r} is ahead of the pinned interpreter {pinned_version}"
+    )
+    assert _parse_minor(mypy_target) <= pinned_minor, (
+        f"mypy python_version {mypy_target!r} is ahead of the pinned interpreter {pinned_version}"
+    )
 
 
 def _pyproject() -> dict:
@@ -135,3 +144,29 @@ def test_rejected_specifier_shapes(requires_python: str, pinned: str, message: s
 def test_tool_targets_below_floor_are_rejected(ruff_target: str, mypy_target: str, message: str) -> None:
     with pytest.raises(AssertionError, match=message):
         _check_floor_contract(">=3.12", "3.12.14", ruff_target, mypy_target)
+
+
+@pytest.mark.parametrize(
+    ("ruff_target", "mypy_target", "message"),
+    [
+        ("py315", "3.14", "ruff target-version .* ahead of the pinned"),
+        ("py314", "3.15", "mypy python_version .* ahead of the pinned"),
+        ("py313", "3.15", "mypy python_version .* ahead of the pinned"),
+    ],
+)
+def test_tool_targets_ahead_of_pin_are_rejected(ruff_target: str, mypy_target: str, message: str) -> None:
+    with pytest.raises(AssertionError, match=message):
+        _check_floor_contract(">=3.12", "3.14.8", ruff_target, mypy_target)
+
+
+@pytest.mark.parametrize(
+    ("ruff_target", "mypy_target", "pinned"),
+    [
+        ("py314", "3.14", "3.14.8"),
+        ("py312", "3.14", "3.14.8"),
+        ("py312", "3.12", "3.12.14"),
+        ("py312", "3.12", "3.14.8"),
+    ],
+)
+def test_tool_targets_between_floor_and_pin_are_accepted(ruff_target: str, mypy_target: str, pinned: str) -> None:
+    _check_floor_contract(">=3.12", pinned, ruff_target, mypy_target)
