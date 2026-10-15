@@ -936,9 +936,8 @@ class ClaudeAdapter:
                 cmd.extend(["--effort", effective_effort])
             else:
                 _logger.warning(
-                    "Claude CLI at %s does not support --effort; ignoring effort=%r and using CLI default (#1396)",
-                    probe_prefix,
-                    effective_effort,
+                    "Claude CLI does not support effort selection; "
+                    "ignoring requested effort and using CLI default (#1396)",
                 )
 
         output_schema = load_output_schema(tc)
