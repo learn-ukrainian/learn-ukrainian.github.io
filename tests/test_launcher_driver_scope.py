@@ -7,6 +7,7 @@ import re
 import select
 import shlex
 import shutil
+import signal
 import subprocess
 import sys
 from datetime import UTC, datetime
@@ -56,7 +57,7 @@ printf 'systemd-run %s\\n' "$*" >> "${FAKE_MANAGER_CALLS:-/dev/null}"
 for arg; do case "$arg" in --unit=*) unit="${arg#*=}" ;; esac; done
 while [ "$1" != -- ]; do shift; done
 shift
-[ "${FAKE_SCOPE_FAIL:-0}" = 0 ] || exit 1
+[ "${FAKE_SCOPE_FAIL:-0}" = 0 ] || { printf 'fake systemd-run: scope start failed\\n' >&2; exit 1; }
 printf '0::/test/lu.slice/lu-driver.slice/%s\\n' "$unit" > "$FAKE_CGROUP"
 if [ "${FAKE_UNLINK_ENTRY:-0}" = 1 ]; then
   rc=0
@@ -75,7 +76,7 @@ if [[ "$*" == *lu-driver.slice* ]]; then
   printf 'LoadState=%s\\nFragmentPath=%s\\n' "${FAKE_SLICE_LOAD_STATE:-loaded}" "${FAKE_SLICE_FRAGMENT-/test/lu-driver.slice}"
   exit
 fi
-printf 'Id=%s\\nControlGroup=/test/lu.slice/lu-driver.slice/%s\\nSlice=lu-driver.slice\\nOOMPolicy=%s\\nActiveState=active\\n' "$LU_DRIVER_SCOPE_UNIT" "$LU_DRIVER_SCOPE_UNIT" "${FAKE_OOM_POLICY:-continue}"
+printf 'Id=%s\\nControlGroup=/test/lu.slice/lu-driver.slice/%s\\nSlice=%s\\nOOMPolicy=%s\\nActiveState=active\\n' "$LU_DRIVER_SCOPE_UNIT" "$LU_DRIVER_SCOPE_UNIT" "${FAKE_UNIT_SLICE:-lu-driver.slice}" "${FAKE_OOM_POLICY:-continue}"
 """)
     exe.chmod(0o755)
     exe = bindir / "cat"
@@ -350,11 +351,11 @@ wait() {
   if driver_scope_child_running "$1"; then violations=$((violations + 1)); fi
   builtin wait "$@"
 }
-LC_MODE=interactive
+LC_MODE=driver
 relayed=""
 child=""
-trap 'driver_scope_relay QUIT' QUIT
-( trap - QUIT; %s ) &
+trap 'driver_scope_relay TERM' TERM
+( trap - TERM; %s ) &
 child=$!
 %s
 driver_scope_wait_child "$child"
@@ -365,9 +366,9 @@ printf 'rc=%%s violations=%%s relayed=%%s\\n' "$DS_CHILD_RC" "$violations" "$rel
 @pytest.mark.parametrize(
     ("child", "signal_waiter", "expected"),
     [
-        # The terminal's QUIT reaches the waiter while the child runs: relayed
-        # (no foreground terminal here), and the child's own status survives.
-        ("trap 'exit 43' QUIT; while :; do sleep 0.05; done", True, "rc=43 violations=0 relayed=QUIT"),
+        # TERM reaches the driver waiter while its child runs; the collector
+        # retains the child's own status without waiting on a running child.
+        ("trap 'exit 43' TERM; while :; do sleep 0.05; done", True, "rc=43 violations=0 relayed=TERM"),
         ("sleep 0.6; exit 0", False, "rc=0 violations=0 relayed="),
         ("sleep 0.6; kill -KILL $BASHPID", False, "rc=137 violations=0 relayed="),
         # Already exited, and not yet collected, when the launcher starts waiting.
@@ -377,7 +378,7 @@ printf 'rc=%%s violations=%%s relayed=%%s\\n' "$DS_CHILD_RC" "$violations" "$rel
 def test_waiting_launcher_collects_status_without_waiting_on_a_running_child(
     child: str, signal_waiter: bool, expected: str
 ) -> None:
-    signal = "( sleep 0.3; kill -QUIT $$ ) &" if signal_waiter else "sleep 0.3"
+    signal = "( sleep 0.3; kill -TERM $$ ) &" if signal_waiter else "sleep 0.3"
     result = subprocess.run(
         ["bash", "-c", _WAIT_CHILD_SCRIPT % (child, signal), "bash", str(REPO / "scripts/lib/driver_scope.sh")],
         capture_output=True,
@@ -390,6 +391,43 @@ def test_waiting_launcher_collects_status_without_waiting_on_a_running_child(
     assert result.stdout.strip() == expected, result.stderr
     assert "not a child" not in result.stderr
     assert "No such file" not in result.stderr
+
+
+@pytest.mark.parametrize("provider_exit", ["exit 42", "kill -KILL $$"])
+def test_late_term_preserves_the_collected_provider_status(tmp_path: Path, provider_exit: str) -> None:
+    """Hold the real collector after wait, then deliver TERM before final logging."""
+    from tests.test_launcher_interactive_scope import DEADLINE_S, _checkout, _lines, _Terminal, _write
+
+    root, env = _checkout(tmp_path)
+    collected = tmp_path / "collected"
+    release = tmp_path / "release"
+    os.mkfifo(release)
+    release_fd = os.open(release, os.O_RDWR | os.O_NONBLOCK)
+    helper = root / "scripts/lib/driver_scope.sh"
+    body = helper.read_text().replace("driver_scope_wait_child() {", "original_wait_child() {")
+    helper.write_text(
+        body
+        + "\ndriver_scope_wait_child() {\n"
+        + '  original_wait_child "$@"\n'
+        + f"  printf 'collected\\n' > {shlex.quote(str(collected))}\n"
+        + f"  IFS= read -r -t {DEADLINE_S} _ < {shlex.quote(str(release))}\n"
+        + "}\n"
+    )
+    _write(Path(env["TEST_PROVIDER"]), f"#!/usr/bin/env bash\n{provider_exit}\n", 0o755)
+    terminal = _Terminal(tmp_path, ["bash", str(root / "start-claude-driver.sh"), "--epic", "devops"], env, root)
+    try:
+        terminal.wait_for(collected.exists, "collected provider exit")
+        job = int(next(line.split()[1] for line in _lines(terminal.status) if line.startswith("job ")))
+        os.kill(job, signal.SIGTERM)
+        # Writing the FIFO completes the collector's positive synchronization;
+        # the pending trap runs before the launcher chooses its final status.
+        os.write(release_fd, b"release\n")
+        expected = 137 if provider_exit.startswith("kill") else 42
+        assert terminal.finish() == expected
+        assert f"rc={expected} signal=none " in terminal.output.decode(errors="replace")
+    finally:
+        terminal.close()
+        os.close(release_fd)
 
 
 @pytest.mark.parametrize("rc", [0, 5, 137])
@@ -441,6 +479,19 @@ def test_entry_owner_observes_verified_after_path_unlinked(tmp_path: Path) -> No
     assert "scope-start-failed" not in result.stderr
     assert "PROVIDER:stdin survives" in result.stdout
     assert not list(temporary.iterdir())
+
+
+def test_failed_scope_start_publishes_only_for_a_driver_successor(tmp_path: Path) -> None:
+    """The full driver wrapper still publishes only its captured start failure."""
+    from tests.test_launcher_interactive_scope import _SUPERVISOR, _checkout, _events, _launch
+
+    root, env = _checkout(tmp_path)
+    result = _launch(root, env, "start-claude-driver.sh", "--epic", "devops", FAKE_SCOPE_FAIL="1", **_SUPERVISOR)
+    assert result.returncode == 6, result.stdout + result.stderr
+    assert "DRIVER_SCOPE_REFUSED reason=scope-start-failed;" in result.stderr
+    names = [name for name, _ in _events(env)]
+    assert names.count("publish") == 1, names
+    assert not [name for name in names if name.startswith(("lease-", "rollover-"))]
 
 
 @pytest.mark.parametrize("publish_ok", [True, False])
@@ -512,6 +563,7 @@ def test_scope_refusals_publish_only_for_captured_successor_start(
         ({"FAKE_BUS_FAIL": "1"}, "user-manager-unavailable"),
         ({"FAKE_SCOPE_FAIL": "1"}, "scope-start-failed"),
         ({"FAKE_OOM_POLICY": "stop"}, "unit-properties-mismatch"),
+        ({"FAKE_UNIT_SLICE": "app.slice"}, "unit-properties-mismatch"),
         ({"LU_DRIVER_MEMORY_MAX": "max"}, "invalid-limits"),
         ({"LU_DRIVER_MEMORY_HIGH": "5", "LU_DRIVER_MEMORY_MAX": "5"}, "invalid-limits"),
         ({"LU_DRIVER_MEMORY_HIGH": "3221225473"}, "invalid-limits"),

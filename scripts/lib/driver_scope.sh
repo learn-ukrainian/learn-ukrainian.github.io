@@ -58,20 +58,6 @@ driver_scope_cgroup() {
   [ -n "$DS_CGROUP" ]
 }
 
-driver_scope_terminal_foreground() {
-  # True when this shell's process group is its terminal's foreground group,
-  # the group a keyboard INT or QUIT reaches as a whole.
-  # No `read` builtin: this runs in the relay trap, possibly inside the
-  # waiter's timed read (driver_scope_wait_child), whose timeout it would cancel.
-  local stat fields
-  stat="$(< "/proc/$$/stat")" || return 1
-  # After the parenthesised command name, which may contain spaces: state,
-  # ppid, pgrp, session, tty_nr, tpgid (proc_pid_stat(5)).
-  # shellcheck disable=SC2206 # splitting the numeric fields is the intent
-  fields=(${stat##*) })
-  [ -n "${fields[2]:-}" ] && [ "${fields[2]}" = "${fields[5]:-}" ]
-}
-
 # Generic, conservative fallbacks (bytes), not sized for any host. Each
 # deployment sets its real limits in the environment or in the config file
 # below; see docs/runbooks/driver-memory-scope.md.
@@ -204,14 +190,6 @@ driver_scope_relay() {
   # A completed provider owns its exit cause. In particular, a late TERM
   # must not replace a collected OOM/SIGKILL status with 143.
   if [ -n "${child:-}" ] && ! driver_scope_child_running "$child"; then return 0; fi
-  # Trap action of the waiting launcher. A keyboard INT or QUIT has already
-  # reached the interactive provider through the terminal's foreground process
-  # group; relaying it would deliver it twice. Drivers keep their relay.
-  case "$LC_MODE:$1" in
-    interactive:INT|interactive:QUIT)
-      if driver_scope_terminal_foreground; then return 0; fi
-      ;;
-  esac
   relayed="$1"
   [ -z "${child:-}" ] || kill -"$1" "$child" 2>/dev/null || true
 }
@@ -236,9 +214,8 @@ driver_scope_wait_child() {
   # every later `wait` reports 127 (not a child), so the provider's own status
   # is lost. `wait` only collects a child that has already exited. The pause is
   # a timed read on a pipe nothing writes to: a builtin, so the job gains no
-  # process, and traps still run at once. A trap must not run `read` itself
-  # (driver_scope_terminal_foreground does not): a nested read cancels this
-  # one's timeout.
+  # process, and traps still run at once. A trap must not run `read` itself:
+  # a nested read cancels this one's timeout.
   local pid="$1" tick=""
   { exec {tick}<> <(:); } 2>/dev/null || tick=""
   while driver_scope_child_running "$pid"; do
@@ -278,6 +255,15 @@ launcher_enter_driver_scope() {
   local token unit entry rc=0 child relayed=""
   token="$(cat /proc/sys/kernel/random/uuid)" || { driver_scope_refuse identity-unavailable; return 6; }
   unit="lu-${LC_MODE}-${LC_PROVIDER}-${label}-${token}.scope"
+  if [ "$LC_MODE" = interactive ]; then
+    printf 'DRIVER_SCOPE_START unit=%s high=%s max=%s swap=%s oom=continue\n' "$unit" "$DS_HIGH" "$DS_MAX" "$DS_SWAP" >&2
+    # Preserve direct-exec PID and signal delivery. No waiter, marker or relay;
+    # verification still runs in the helper before the wrapper is replayed.
+    exec systemd-run --user --scope --expand-environment=no --slice=lu-driver.slice --unit="$unit" --collect --quiet \
+      --property="MemoryHigh=$DS_HIGH" --property="MemoryMax=$DS_MAX" --property="MemorySwapMax=$DS_SWAP" \
+      --property=OOMPolicy=continue -- bash "$LC_ROOT/scripts/lib/driver_scope.sh" \
+      --entry "$LC_MODE" "$unit" - "$LC_ROOT/$DS_ENTRY_PATH" ${LC_SCOPE_ORIGINAL_ARGS[@]+"${LC_SCOPE_ORIGINAL_ARGS[@]}"}
+  fi
   entry="$(mktemp)" || { driver_scope_refuse entry-marker-unavailable; return 6; }
   # The waiting launcher owns the marker. Distinct read/write offsets and
   # inherited descriptors preserve verified entry across unlink or namespaces.
@@ -293,11 +279,8 @@ launcher_enter_driver_scope() {
   trap 'driver_scope_relay INT' INT
   trap 'driver_scope_relay TERM' TERM
   trap 'driver_scope_relay HUP' HUP
-  [ "$LC_MODE" = driver ] || trap 'driver_scope_relay QUIT' QUIT
   (
     trap - INT TERM HUP
-    # An interactive provider keeps the terminal's QUIT, as with direct exec.
-    [ "$LC_MODE" = driver ] || trap - QUIT
     exec 218<&-
     exec systemd-run --user --scope --expand-environment=no --slice=lu-driver.slice --unit="$unit" --collect --quiet \
     --property="MemoryHigh=$DS_HIGH" --property="MemoryMax=$DS_MAX" --property="MemorySwapMax=$DS_SWAP" \
@@ -340,7 +323,6 @@ launcher_enter_driver_scope() {
   local exit_line stamp
   stamp="rc=$rc signal=${relayed:-none} ts=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
   exit_line="DRIVER_SCOPE_EXIT epic=$LC_EPIC $stamp"
-  [ "$LC_MODE" = driver ] || exit_line="DRIVER_SCOPE_EXIT mode=interactive unit=$unit $stamp"
   # A closed stderr reader must not SIGPIPE the waiting launcher before the
   # journal write or replace the child's status. Isolate the write's signal.
   (printf '%s\n' "$exit_line" >&2) || true
@@ -355,8 +337,10 @@ if [ "${1:-}" = --entry ] && [ "${BASH_SOURCE[0]}" = "$0" ]; then
   export LU_DRIVER_SCOPE_UNIT="$2" LU_DRIVER_SCOPE_PID="$$"
   entry="$3"; shift 3
   if ! { driver_scope_config && driver_scope_verify "$mode"; }; then
-    printf 'refused\n' >&"$entry" || true
-    exec 219>&-
+    if [ "$entry" != - ]; then
+      printf 'refused\n' >&"$entry" || true
+      exec 219>&-
+    fi
     exit 6
   fi
   # #9624: pytest `-n auto`/`-n logical` inside a session scope resolves to at
@@ -367,7 +351,9 @@ if [ "${1:-}" = --entry ] && [ "${BASH_SOURCE[0]}" = "$0" ]; then
   if ! [[ "$inherited" =~ ^[0-9]{1,4}$ ]] || (( 10#$inherited > DS_PYTEST_WORKERS )); then
     export PYTEST_XDIST_AUTO_NUM_WORKERS="$DS_PYTEST_WORKERS"
   fi
-  printf 'verified\n' >&"$entry"
-  exec 219>&-
+  if [ "$entry" != - ]; then
+    printf 'verified\n' >&"$entry"
+    exec 219>&-
+  fi
   exec bash "$@"
 fi

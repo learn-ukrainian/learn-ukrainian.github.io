@@ -24,14 +24,21 @@ with explicit `OOMPolicy=continue`. Limits are read back from the actual cgroup;
 ControlGroup, Slice, ActiveState and OOMPolicy must agree. Re-entry requires the
 same launcher PID and verified unit. A nested launch gets a new UUID and scope.
 
-The outside shell only waits. Scope mode preserves the terminal, stdin and
-process group; for drivers the existing inner launcher supervises the provider,
-renewal and lease cleanup, and an interactive launcher replaces itself with the
-provider. The command's status, including the earlier refusal codes, propagates.
-Failure to enter or verify returns 6 and a typed `DRIVER_SCOPE_REFUSED
-reason=...` for drivers and interactive sessions alike. There is no unbounded
-override. Restore the user manager/bus and install the unit; do not bypass this
-boundary. The helper derives a missing runtime directory only from the current
+Interactive and bio launchers replace themselves with `exec systemd-run
+--scope ...`. Systemd executes the entry helper in the same process; the helper
+replays the wrapper, which replaces itself with the provider. There is no
+additional launcher waiter, relay or status collector. Providers may create
+children. Drivers retain the outside waiter and the inner launcher that
+supervises the provider, renewal and lease cleanup. Both paths preserve the
+terminal, stdin, process group and replay arguments.
+
+Preflight and containment verification refusals return 6 with typed
+`DRIVER_SCOPE_REFUSED reason=...`. An interactive `systemd-run` failure before
+helper entry instead returns systemd's diagnostic and status, without
+normalizing it to `scope-start-failed`/6. Verification inside the entry helper
+still refuses with a typed reason and exit 6 before any provider execution.
+There is no unbounded override. Restore the user manager/bus and install the
+unit; do not bypass this boundary. The helper derives a missing runtime directory only from the current
 user's owned logind directory and bus socket. Headless tool shells, cron and
 service callers must have access to that user's manager; an inaccessible manager
 is a refusal. Before starting a scope, `lu-driver.slice` must report both
@@ -70,39 +77,35 @@ statuses (130, 143 and 129) replace the inner status. SIGQUIT remains ignored
 throughout the scoped driver tree because Bash launches the scope wrapper as a
 background job without job control.
 
-Interactive sessions: the provider shares the terminal's foreground process
-group, so a keyboard INT or QUIT reaches it directly, exactly once. The waiting
-launcher relays INT and QUIT only when its process group is not the terminal's
-foreground group, for example a session without a terminal. TERM and HUP are
-relayed. The provider keeps the default QUIT disposition, as with direct
-execution. The status is the provider's own unless the launcher relayed a
-signal (130, 143, 129 or 131). Window resizes and terminal suspend/resume reach
-the whole job.
-The waiting launcher never blocks in `wait` while the session runs: a trapped
-signal that interrupts `wait` as the provider exits makes Bash drop the
-provider's status (a later `wait` reports 127). It polls the child's process
-state with a timed read and collects the status only after the child has exited.
-Once the child has exited, the relay leaves its status and recorded signal
-unchanged, including when a later TERM arrives after status collection.
+Interactive sessions preserve direct-execution signal delivery and the
+provider's own exit status. Signals sent to the launcher PID reach the provider
+at that same PID. Group signals reach the provider once, without a second
+launcher relay. Keyboard INT/QUIT, window resize and terminal suspend/resume
+reach the foreground job. Signals inherited as ignored remain ignored, as with
+direct execution; direct exec does not reset inherited dispositions.
 
-HUP or TERM sent to the whole process group can still reach the interactive
-provider twice: directly and through the waiting launcher's relay. Sending
-either signal to the launcher PID alone reaches the provider once. The
-deterministic `test_hup_term_delivery_exactly_once` group cases expose this
-unresolved #9624 blocker; its PID cases preserve the relay requirement. Bash's
-trap supplies no delivery-target information, and a pending-signal snapshot
-cannot show a signal the provider has already handled. Fixing both delivery
-paths requires a single signal owner, beyond the current shared-group relay.
+Interactive sessions no longer emit `DRIVER_SCOPE_EXIT mode=interactive` on
+stderr or to the journal. Its timestamp, recorded signal and provider status
+are no longer recorded there. Systemd's unit records remain available for OOM
+attribution but are not an equivalent provider-status record. Driver exit
+logging on stderr and in the journal is unchanged.
 
-Known limits, each with a test or listed as untested: a terminal Ctrl-C reaches
-a driver's provider twice, once from the terminal and once from the supervisor
-shell (`test_driver_keyboard_interrupt_reaches_the_provider_exactly_once`,
-expected failure, owned by DevOps). A launcher started with INT ignored, such as
-a background job of a non-interactive script, cannot relay an INT sent to its
-own PID, because Bash does not trap a signal ignored on entry; the provider
-inherits the same disposition as with direct execution. A provider that
-suspends only its own process leaves the waiting launcher running, so the shell
-regains the terminal only on a second Ctrl-Z (untested with a real TUI).
+The driver waiter never blocks in `wait` while its child runs: a trapped signal
+that interrupts `wait` as the child exits makes Bash drop the child's status
+(a later `wait` reports 127). It polls the child's process state with a timed
+read and collects the status only after the child has exited. Once the child
+has exited, the relay leaves its status and recorded signal unchanged,
+including when a later TERM arrives after status collection. Interactive
+sessions have no collector whose completed status can be overwritten.
+
+Driver residuals remain owned by DevOps. A terminal Ctrl-C reaches a driver's
+provider twice, once from the terminal and once from the supervisor shell
+(`test_driver_keyboard_interrupt_reaches_the_provider_exactly_once`, expected
+failure). Driver group HUP/TERM can also be duplicated by the relay. A driver
+started with INT ignored cannot trap and relay that INT. A provider that
+suspends only itself can leave the driver waiter running until a second Ctrl-Z;
+this remains untested with a real TUI. Real interactive provider TUIs also
+remain untested; synthetic terminal tests cover the direct exec mechanism.
 
 ## Nesting
 
@@ -114,9 +117,12 @@ slice's cap; an unreadable caller cgroup is refused as
 `caller-cgroup-unavailable`. Dispatch from an interactive session behaves as from
 a driver: bounded worker scopes start, and the unbounded fallback is refused.
 
-## Entry marker ownership
+## Driver entry marker ownership
 
-The waiting launcher opens separate read and write descriptors for the entry
+Interactive sessions enter without a marker and cannot encounter a marker-allocation
+refusal. The following marker and failure-publication path is driver-only.
+
+The waiting driver launcher opens separate read and write descriptors for the entry
 marker and immediately unlinks its temporary name. The entry helper inherits
 the write descriptor, writes `verified` after successful verification, closes
 it, then replaces itself with the launcher. The waiting owner reads that exact
@@ -127,10 +133,9 @@ Configuration or containment verification failures write a refusal marker and
 exit 6; the waiting launcher preserves that refusal without publishing a
 successor-start failure. An absent verified/refusal marker is
 `scope-start-failed`. Only a supervisory driver successor with a captured
-predecessor generation publishes that status, after refusal and before exit 6;
-an interactive session never publishes, even with inherited supervisor
-variables. This path
-never prepares a provider, claims a lease, closes a lease, or retries entry.
+predecessor generation publishes that status, after refusal and before exit 6.
+Interactive sessions never publish, even with inherited supervisor variables.
+This path never prepares a provider, claims a lease, closes a lease, or retries entry.
 See [supervisory wake status](session-supervisor.md#supervisory-wake-ownership-and-failure-status).
 
 ## Limits are set per deployment
@@ -271,7 +276,9 @@ its lock (one run at a time) or without twice the scope's maximum free in the
 its scope's three limits back and checks them before it allocates anything.
 Use the real launcher with a synthetic provider; raise only the hog's OOM
 score so the cleanup shell is likely to survive. Require SIGKILL, an OOM record
-for the exact unit, normal launcher cleanup and the provider's exit status.
+for the exact unit, normal driver cleanup and the provider's exit status. The
+interactive launcher has no cleanup waiter; its Python subprocess return code is `-SIGKILL` (shell
+status 137), while the driver waiter returns 137.
 Compare all four shared services' MainPID, memory, invocation ID, restart count
 and OOM counters before/after. A memory sample can vary during normal service
 activity; identity/restart/OOM evidence must remain unchanged. Never run the

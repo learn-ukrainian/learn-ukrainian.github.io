@@ -405,10 +405,14 @@ def test_every_wrapper_enters_one_verified_scope_then_reaches_its_provider_once(
         assert not [name for name in names if name.startswith(("lease-", "rollover-", "canary", "publish"))]
         assert _argv(env) == _expected_forward(wrapper)
     exit_lines = [line for line in result.stderr.splitlines() if line.startswith("DRIVER_SCOPE_EXIT ")]
-    expected = f"epic={label} " if mode == "driver" else f"mode=interactive unit={unit} "
-    assert len(exit_lines) == 1 and exit_lines[0].startswith(
-        f"DRIVER_SCOPE_EXIT {expected}rc={PROVIDER_RC} signal=none "
-    )
+    if mode == "driver":
+        assert len(exit_lines) == 1 and exit_lines[0].startswith(
+            f"DRIVER_SCOPE_EXIT epic={label} rc={PROVIDER_RC} signal=none "
+        )
+        assert _lines(env["FAKE_LOGGER_MESSAGES"]) == exit_lines
+    else:
+        assert exit_lines == []
+        assert _lines(env["FAKE_LOGGER_MESSAGES"]) == []
 
 
 @pytest.mark.parametrize("wrapper", sorted(REFUSAL_ONLY))
@@ -500,7 +504,7 @@ def test_scope_replays_the_invoked_wrapper_with_the_callers_argv(tmp_path: Path,
     assert command[:3] == ["bash", f"{root}/scripts/lib/driver_scope.sh", "--entry"]
     assert command[3] == mode
     assert re.fullmatch(rf"lu-{mode}-[a-z]+-[a-z]+-{UUID}\.scope", command[4])
-    assert command[5:] == ["219", f"{root}/{wrapper}", "--", *TRICKY]
+    assert command[5:] == ["-" if mode == "interactive" else "219", f"{root}/{wrapper}", "--", *TRICKY]
 
 
 # --- Ordering and refusals -------------------------------------------------
@@ -553,8 +557,8 @@ def test_help_and_dry_run_make_no_manager_calls(tmp_path: Path, wrapper: str, re
     [
         ({"FAKE_BUS_FAIL": "1"}, "user-manager-unavailable"),
         ({"FAKE_SLICE_FRAGMENT": ""}, "slice-not-installed"),
-        ({"FAKE_SCOPE_FAIL": "1"}, "scope-start-failed"),
         ({"FAKE_OOM_POLICY": "stop"}, "unit-properties-mismatch"),
+        ({"FAKE_UNIT_SLICE": "app.slice"}, "unit-properties-mismatch"),
         ({"FAKE_MEMORY_MAX": "1"}, "limits-mismatch"),
         ({"LU_DRIVER_MEMORY_MAX": "max"}, "invalid-limits"),
     ],
@@ -737,19 +741,24 @@ def test_interactive_session_never_touches_a_lease_even_with_inherited_superviso
     assert not [name for name in names if name.startswith(("lease-", "rollover-", "publish", "canary"))], names
 
 
-@pytest.mark.parametrize(("wrapper", "published"), [("start-claude.sh", False), ("start-claude-driver.sh", True)])
-def test_failed_scope_start_publishes_only_for_a_driver_successor(
-    tmp_path: Path, wrapper: str, published: bool
-) -> None:
-    """An interactive session cannot publish a supervisory start failure; the driver control does."""
+def test_interactive_scope_start_failure_preserves_systemd_status_without_publishing(tmp_path: Path) -> None:
     root, env = _checkout(tmp_path)
-    args = ("--epic", "devops") if published else ()
-    result = _launch(root, env, wrapper, *args, FAKE_SCOPE_FAIL="1", **_SUPERVISOR)
-    assert result.returncode == 6, result.stdout + result.stderr
-    assert "DRIVER_SCOPE_REFUSED reason=scope-start-failed;" in result.stderr
-    names = [name for name, _ in _events(env)]
-    assert names.count("publish") == int(published), names
-    assert not [name for name in names if name.startswith(("lease-", "rollover-"))]
+    result = _launch(root, env, "start-claude.sh", FAKE_SCOPE_FAIL="1", **_SUPERVISOR)
+    assert result.returncode == 1, result.stdout + result.stderr
+    assert "fake systemd-run: scope start failed" in result.stderr
+    assert "DRIVER_SCOPE_REFUSED" not in result.stderr
+    assert "DRIVER_SCOPE_EXIT" not in result.stderr
+    assert _events(env) == []
+    assert _lines(env["FAKE_LOGGER_MESSAGES"]) == []
+
+
+def test_interactive_scope_needs_no_entry_marker(tmp_path: Path) -> None:
+    root, env = _checkout(tmp_path)
+    _write(tmp_path / "scope-bin/mktemp", "#!/usr/bin/env bash\nexit 1\n", 0o755)
+    result = _launch(root, env, "start-claude.sh")
+    assert result.returncode == PROVIDER_RC, result.stdout + result.stderr
+    assert "DRIVER_SCOPE_EXIT" not in result.stderr
+    assert _lines(env["FAKE_LOGGER_MESSAGES"]) == []
 
 
 # --- Nesting -------------------------------------------------------------------
@@ -953,51 +962,11 @@ def _signal_log(env: dict[str, str]) -> list[str]:
     return _lines(env["TEST_SIGNAL_LOG"])
 
 
-@pytest.mark.parametrize("provider_exit", ["exit 42", "kill -KILL $$"])
-def test_late_term_preserves_the_collected_provider_status(tmp_path: Path, provider_exit: str) -> None:
-    """Hold the real collector after wait, then deliver TERM before final logging."""
-    root, env = _checkout(tmp_path)
-    collected = tmp_path / "collected"
-    release = tmp_path / "release"
-    os.mkfifo(release)
-    release_fd = os.open(release, os.O_RDWR | os.O_NONBLOCK)
-    helper = root / "scripts/lib/driver_scope.sh"
-    body = helper.read_text().replace("driver_scope_wait_child() {", "original_wait_child() {")
-    helper.write_text(
-        body
-        + "\ndriver_scope_wait_child() {\n"
-        + '  original_wait_child "$@"\n'
-        + f"  printf 'collected\\n' > {shlex.quote(str(collected))}\n"
-        + f"  IFS= read -r -t {DEADLINE_S} _ < {shlex.quote(str(release))}\n"
-        + "}\n"
-    )
-    _write(Path(env["TEST_PROVIDER"]), f"#!/usr/bin/env bash\n{provider_exit}\n", 0o755)
-    terminal = _Terminal(tmp_path, ["bash", str(root / "start-claude.sh")], env, root)
-    try:
-        terminal.wait_for(collected.exists, "collected provider exit")
-        job = int(next(line.split()[1] for line in _lines(terminal.status) if line.startswith("job ")))
-        os.kill(job, signal.SIGTERM)
-        # Writing the FIFO completes the collector's positive synchronization;
-        # the pending trap runs before the launcher chooses its final status.
-        os.write(release_fd, b"release\n")
-        expected = 137 if provider_exit.startswith("kill") else 42
-        assert terminal.finish() == expected
-        assert f"rc={expected} signal=none " in terminal.output.decode(errors="replace")
-    finally:
-        terminal.close()
-        os.close(release_fd)
-
-
 @pytest.mark.parametrize("name", ["HUP", "TERM"])
 @pytest.mark.parametrize("target", ["group", "pid"])
 def test_hup_term_delivery_exactly_once(tmp_path: Path, name: str, target: str) -> None:
-    """Separate group delivery from relay by stopping only the waiting launcher."""
+    """Ten group and ten PID deliveries per signal, with one synthetic provider."""
     root, env = _checkout(tmp_path)
-    helper = root / "scripts/lib/driver_scope.sh"
-    helper.write_text(
-        helper.read_text().replace("driver_scope_relay() {", "observed_relay() {")
-        + '\ndriver_scope_relay() { observed_relay "$@"; printf "done\\n" > "$TEST_RELAY_DONE"; }\n'
-    )
     provider = Path(env["TEST_SIGNAL_PROVIDER"])
     provider.write_text(
         provider.read_text().replace(
@@ -1010,8 +979,7 @@ def test_hup_term_delivery_exactly_once(tmp_path: Path, name: str, target: str) 
     counts = []
     for iteration in range(10):
         log = tmp_path / f"signal-{iteration}"
-        relayed = tmp_path / f"relay-{iteration}"
-        case_env = {**env, "TEST_PROVIDER": str(provider), "TEST_SIGNAL_LOG": str(log), "TEST_RELAY_DONE": str(relayed)}
+        case_env = {**env, "TEST_PROVIDER": str(provider), "TEST_SIGNAL_LOG": str(log)}
         process = subprocess.Popen(
             ["bash", str(root / "start-claude.sh")],
             cwd=root,
@@ -1023,31 +991,39 @@ def test_hup_term_delivery_exactly_once(tmp_path: Path, name: str, target: str) 
         )
         try:
             wait_until(lambda log=log: any(row.startswith("ready ") for row in _lines(log)), timeout=DEADLINE_S)
-            os.kill(process.pid, signal.SIGSTOP)
-            wait_until(
-                lambda process=process: (
-                    Path(f"/proc/{process.pid}/stat").read_text().rsplit(")", 1)[1].split()[0] == "T"
-                ),
-                timeout=DEADLINE_S,
-            )
+            ready = next(row for row in _lines(log) if row.startswith("ready "))
+            identity = dict(item.split("=", 1) for item in ready.split()[1:])
+            assert int(identity["pid"]) == process.pid
+            assert int(identity["pgrp"]) == process.pid
+            members = []
+            for entry in Path("/proc").iterdir():
+                if not entry.name.isdigit():
+                    continue
+                try:
+                    fields = (entry / "stat").read_text().rsplit(")", 1)[1].split()
+                except (FileNotFoundError, ProcessLookupError):
+                    continue
+                if int(fields[2]) == process.pid:
+                    members.append(int(entry.name))
+            assert members == [process.pid], members
             sig = getattr(signal, f"SIG{name}")
             if target == "group":
                 os.killpg(process.pid, sig)
-                # The provider positively acknowledges direct delivery while
-                # the launcher cannot yet relay, irrespective of scheduling.
-                wait_until(lambda log=log: name in _lines(log), timeout=DEADLINE_S)
             else:
                 os.kill(process.pid, sig)
-            os.kill(process.pid, signal.SIGCONT)
-            wait_until(relayed.exists, timeout=DEADLINE_S)
+            wait_until(lambda log=log: name in _lines(log), timeout=DEADLINE_S, message=f"provider {name}")
             _, stderr = process.communicate(b"done\n", timeout=DEADLINE_S)
-            counts.append(_lines(log).count(name))
-            assert process.returncode in (42, 129, 143), stderr.decode(errors="replace")
+            assert process.returncode == PROVIDER_RC, stderr.decode(errors="replace")
+            rows = _lines(log)
+            assert rows[-1] == "LINE done", rows
+            counts.append(rows.count(name))
+            assert "DRIVER_SCOPE_EXIT" not in stderr.decode(errors="replace")
         finally:
             with suppress(ProcessLookupError):
                 os.killpg(process.pid, signal.SIGKILL)
             process.wait(timeout=10)
     assert counts == [1] * 10, (name, target, counts)
+    _assert_no_real_manager(env)
 
 
 def test_interactive_terminal_keeps_tty_stdin_and_foreground_group(tmp_path: Path) -> None:
@@ -1081,10 +1057,6 @@ def test_interactive_keyboard_signal_reaches_the_provider_exactly_once(
     finally:
         terminal.close()
     assert _signal_log(env).count(name) == 1, _signal_log(env)
-    # The waiting launcher records any signal it relayed; none means the
-    # terminal's delivery was the only one, whatever the scheduling.
-    output = terminal.output.decode(errors="replace")
-    assert re.search(rf"DRIVER_SCOPE_EXIT mode=interactive unit=\S+ rc={status} signal=none ", output), output
 
 
 def test_interactive_resize_reaches_the_provider_once(tmp_path: Path) -> None:
@@ -1111,13 +1083,13 @@ def test_interactive_suspend_and_resume_stop_and_continue_the_whole_job(tmp_path
     finally:
         terminal.close()
     stops = [line for line in _lines(terminal.status) if line.startswith("stopped ")]
-    # The waiting launcher and the provider both stopped, then both resumed.
-    assert stops == ["stopped TT"], _lines(terminal.status)
+    # Direct exec leaves just the synthetic provider in this foreground job.
+    assert stops == ["stopped T"], _lines(terminal.status)
     assert _signal_log(env).count("CONT") == 1
 
 
-def test_interactive_terminal_signal_relays_once_without_a_foreground_terminal(tmp_path: Path) -> None:
-    """A launcher with no terminal foreground group relays an INT sent only to it."""
+def test_interactive_pid_signal_reaches_provider_once_without_a_foreground_terminal(tmp_path: Path) -> None:
+    """Direct exec delivers PID INT and preserves the provider's own status."""
     root, env = _checkout(tmp_path)
     env = {**env, "TEST_PROVIDER": env["TEST_SIGNAL_PROVIDER"]}
     # A runner started as a background job ignores INT, and Bash cannot trap a
@@ -1147,15 +1119,14 @@ def test_interactive_terminal_signal_relays_once_without_a_foreground_terminal(t
             message="provider readiness",
         )
         process.send_signal(signal.SIGINT)
-        wait_until(lambda: "INT" in _signal_log(env), timeout=DEADLINE_S, message="relayed INT")
+        wait_until(lambda: "INT" in _signal_log(env), timeout=DEADLINE_S, message="provider INT")
         _, stderr = process.communicate(b"done\n", timeout=DEADLINE_S)
     finally:
         with suppress(ProcessLookupError):
             os.killpg(process.pid, signal.SIGKILL)
     assert _signal_log(env).count("INT") == 1
-    # The waiting launcher ended the session by relaying, so the conventional status.
-    assert process.returncode == 130
-    assert "signal=INT " in stderr.decode()
+    assert process.returncode == PROVIDER_RC, stderr.decode()
+    assert "DRIVER_SCOPE_EXIT" not in stderr.decode()
 
 
 def test_driver_keyboard_interrupt_cleans_the_lease_once(tmp_path: Path) -> None:
@@ -1220,7 +1191,7 @@ def test_bounded_live_interactive_scope_soak(tmp_path: Path) -> None:
         "TEST_PROVIDER": str(provider),
     }
     result, receipt = run_live_soak(["bash", str(root / "start-claude.sh")], root, env, proof)
-    assert result.returncode == 137, result.stdout + result.stderr
+    assert result.returncode == -signal.SIGKILL, result.stdout + result.stderr
     unit = str(receipt["unit"])
     assert unit.startswith("lu-interactive-claude-claude-")
     names = [name for name, _ in _events(env)]
