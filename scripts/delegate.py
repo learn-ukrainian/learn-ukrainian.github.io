@@ -1572,7 +1572,9 @@ def _runtime_tmp_state_has_live_pid(state: dict[str, Any]) -> bool:
     if isinstance(pid, bool):
         return False
     try:
-        return isinstance(pid, (int, str)) and int(pid) > 0 and worker_liveness(state, pid_alive=_pid_alive) is not False
+        return (
+            isinstance(pid, (int, str)) and int(pid) > 0 and worker_liveness(state, pid_alive=_pid_alive) is not False
+        )
     except (TypeError, ValueError):
         return False
 
