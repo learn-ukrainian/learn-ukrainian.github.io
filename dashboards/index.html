@@ -37,9 +37,18 @@ body { min-height: 100vh; font-family: -apple-system, BlinkMacSystemFont, 'Segoe
 @media (max-width: 820px) {
   .hero { grid-template-columns:1fr; }
 }
+.skip-link { position:absolute; left:-10000px; }
+.skip-link:focus { left:1rem; top:0; z-index:20; background:var(--bg); padding:1rem; }
+:focus-visible { outline:3px solid var(--accent); outline-offset:3px; }
+.cards { margin-top:1rem; }
+.source-note { font-size:12px; color:var(--text3); margin-block:.5rem; }
+.top-bar { flex-wrap:wrap; }
+@media (max-width: 480px) { .wrap { padding:16px 12px; } .cards { grid-template-columns:1fr; } }
+@media (prefers-reduced-motion: reduce) { * { transition:none !important; animation:none !important; } }
 </style>
 </head>
 <body>
+<a class="skip-link" href="#launchpad">Skip to dashboards</a>
 
 <div class="top-bar">
   <div class="top-left">
@@ -57,23 +66,27 @@ body { min-height: 100vh; font-family: -apple-system, BlinkMacSystemFont, 'Segoe
   </nav>
 </div>
 
-<main class="wrap">
+<main class="wrap" id="launchpad" tabindex="-1">
 <section class="hero">
   <div>
     <h2>Operations launchpad</h2>
-    <p>All Ops API surfaces in one place: curriculum status, agent communications, build events, runtime health, artifacts, and review queues. <a href="/docs">Interactive API docs</a> and <a href="/api/contracts/routes">route contracts</a> available.</p>
+    <p><a href="/fleet-board.html#/home">Open Operator home</a> for lane, worker, capacity, PR and Ops observations. Specialist dashboards: curriculum status, agent communications, build events, runtime health, artifacts, and review queues. <a href="/docs">Interactive API docs</a> and <a href="/api/contracts/routes">route contracts</a> available.</p>
   </div>
 </section>
 
-<div class="stats-row" id="stats-row"></div>
+<div class="stats-row" id="stats-row" aria-busy="true">Loading module observations…</div>
 
 <div id="api-surfaces" class="contracts-note" hidden style="font-size:12px;color:var(--text3);margin:0 0 16px 0;padding:8px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:4px;"></div>
 
+<h2>Specialist directory</h2>
 <div class="cards">
+  <a class="card" href="/fleet-board.html#/home"><h2>Operator home / Fleet Board</h2><p>Lanes, workers, host and test capacity, accounts, PR pipeline and Ops with independent source states.</p></a>
+  <a class="card" href="/epics-map.html"><h2>Epics Map</h2><p>Stream relationships and uncertain membership.</p></a>
+  <a class="card" href="/acp.html"><h2>ACP reader</h2><p>Persisted conversations in their existing access boundary.</p></a>
   <a class="card comms" href="/fleet.html" style="border-left-color: var(--purple);">
     <div class="icon">&#128451;</div>
     <h2>Fleet Observer</h2>
-    <p>Consolidated read-only durable-plane evidence: requests, ACP rounds, formal reviews, dead letters, and Source / Agent / Via provenance. Pre-flip only.</p>
+    <p>Consolidated read-only durable-plane evidence: requests, ACP rounds, formal reviews, dead letters, and Source / Agent / Via provenance. Source availability and provenance remain explicit.</p>
     <div class="card-stat">read-only fleet evidence</div>
   </a>
   <a class="card" href="/epics.html" style="border-left: 3px solid var(--green);">
@@ -130,7 +143,7 @@ body { min-height: 100vh; font-family: -apple-system, BlinkMacSystemFont, 'Segoe
     <p>Cursor Auto / API monthly + other lane subscriptions, dispatch usage, and routing recommendations.</p>
     <div class="card-stat">routing &amp; usage</div>
   </a>
-  <a class="card" href="/artifacts/" style="border-left: 3px solid var(--accent);">
+  <a class="card" href="/artifacts.html" style="border-left: 3px solid var(--accent);">
     <div class="icon">&#128196;</div>
     <h2>Artifacts</h2>
     <p>HTML reports, audit evidence, session handoffs, decisions, and best-practice companions.</p>
@@ -174,6 +187,9 @@ body { min-height: 100vh; font-family: -apple-system, BlinkMacSystemFont, 'Segoe
   </a>
 </div>
 
+<p class="source-note">These are observed summaries, not whole-fleet clearance. Source age/coverage are unknown unless stated. Fetch time is separate.</p>
+<button type="button" id="retry-stats">Refresh launchpad summaries</button>
+<p id="fetch-status" class="source-note" role="status"></p>
 <div class="footer">Serving from <span id="footer-origin">this host</span> — <a href="/docs">API docs</a> • <a href="/api/contracts/routes">contracts</a></div>
 </main>
 
@@ -187,25 +203,72 @@ async function fetchJson(path) {
   try {
     const res = await fetch(path, { signal: controller.signal });
     const text = await res.text();
-    let data = {};
+    let data;
     try {
-      data = text ? JSON.parse(text) : {};
+      data = JSON.parse(text);
     } catch {
-      data = { detail: text };
+      throw new Error("JSON parse failed");
     }
     if (!res.ok) throw new Error(data.detail || data.error || `HTTP ${res.status}`);
+    if (!validSummary(path, data)) throw new Error('Malformed success response');
     return data;
   } finally {
     clearTimeout(timeout);
   }
 }
 
+const summaryFetches = {};
+const SUMMARY_TARGETS = {
+  '/api/dashboard/overview': 'curriculum-stat', '/api/state/summary': 'progress-stat',
+  '/api/consultation/metrics': 'consultation-stat', '/api/runtime/agents': 'card-stat-runtime',
+  '/api/delegate/tasks?limit=100': 'card-stat-delegate', '/api/build/events/active': 'card-stat-build-events',
+  '/api/wiki/status': 'card-stat-wiki', '/api/analytics/cost': 'card-stat-cost',
+  '/api/state/weak-points?limit=1': 'quality-stat', '/api/orient': 'card-stat-orient',
+};
+function validSummary(path, data) {
+  if (!data || typeof data !== 'object' || Array.isArray(data)) return false;
+  const arrays = { '/api/dashboard/overview': 'tracks', '/api/runtime/agents': 'agents',
+    '/api/delegate/tasks?limit=100': 'tasks', '/api/build/events/active': 'active', '/api/wiki/status': 'tracks',
+    '/api/contracts/routes': 'route_contracts' };
+  if (arrays[path]) return Array.isArray(data[arrays[path]]) && data[arrays[path]].every(row => row && typeof row === 'object' && !Array.isArray(row));
+  if (path === '/api/state/summary') return !!data.tracks && typeof data.tracks === 'object' && !Array.isArray(data.tracks) && Object.values(data.tracks).every(track => track && typeof track === 'object' && !Array.isArray(track));
+  if (path === '/api/consultation/metrics') return Number.isFinite(data.pending_queue);
+  if (path === '/api/analytics/cost') return !!data.windows && typeof data.windows === 'object';
+  if (path === '/api/state/weak-points?limit=1') return Number.isFinite(data.count);
+  if (path === '/api/state/pipeline-versions') return !!(data.build_state || data.counts || data.per_track || 'current_builds' in data);
+  return path === '/api/orient' && !!data.git;
+}
 async function safeFetch(path) {
   try {
-    return await fetchJson(path);
-  } catch {
+    const body = await fetchJson(path);
+    summaryFetches[path] = { at: Date.now(), error: '' };
+    applyIndependentSummary(path, body);
+    return body;
+  } catch (error) {
+    summaryFetches[path] = { at: summaryFetches[path]?.at || null, error: error.message };
+    const target = SUMMARY_TARGETS[path];
+    if (target) setStat(target, 'Unavailable: ' + error.message + '; source age unknown');
     return null;
   }
+}
+function applyIndependentSummary(path, body) {
+  const values = {
+    '/api/runtime/agents': () => `${body.agents.length} returned agents`,
+    '/api/delegate/tasks?limit=100': () => taskSummary(body.tasks, body.total),
+    '/api/build/events/active': () => `${body.active.length} returned active builds`,
+    '/api/consultation/metrics': () => `${body.pending_queue} returned proposals`,
+    '/api/state/weak-points?limit=1': () => `${body.count} modules need attention`,
+    '/api/orient': () => body.git?.branch || 'branch unknown',
+  };
+  if (values[path]) setStat(SUMMARY_TARGETS[path], values[path]() + '; source age/coverage unknown; fetched ' + new Date().toISOString());
+}
+function taskSummary(tasks, total) {
+  const active = tasks.filter(t => ['running', 'spawning'].includes(t.status)).length;
+  const done = tasks.filter(t => t.status === 'done').length;
+  const attention = tasks.filter(t => !['running', 'spawning', 'done'].includes(t.status));
+  const statuses = [...new Set(attention.map(t => t.status || 'unknown'))];
+  const finishedToday = tasks.filter(t => t.status === 'done' && taskTouchedToday(t)).length;
+  return `${active} active · ${done} done · ${attention.length} attention (${statuses.join(', ') || 'none returned'}) · ${finishedToday} finished today · ${tasks.length} loaded / ${Number.isFinite(total) ? total : 'unknown'} total; source age/coverage unknown`;
 }
 
 function taskTouchedToday(task) {
@@ -251,7 +314,7 @@ function filterOperationalDashboardTracks(tracks, summary) {
 }
 
 function sumDashboardTotals(tracks) {
-  return tracks.reduce((acc, track) => {
+  const totals = tracks.reduce((acc, track) => {
     const stats = track.stats || {};
     acc.total += track.module_count || 0;
     acc.pass += stats.pass || 0;
@@ -262,6 +325,15 @@ function sumDashboardTotals(tracks) {
     acc.research += (stats.research && stats.research.total) || 0;
     return acc;
   }, { total: 0, pass: 0, fail: 0, unaudited: 0, content_complete: 0, published: 0, research: 0 });
+  const fields = {
+    total: track => track.module_count, pass: track => track.stats?.pass, fail: track => track.stats?.fail,
+    unaudited: track => track.stats?.unaudited, content_complete: track => track.stats?.content_complete,
+    published: track => track.published_mdx ?? track.stats?.published_mdx, research: track => track.stats?.research?.total,
+  };
+  for (const [name, read] of Object.entries(fields)) {
+    if (!tracks.length || !tracks.every(track => typeof read(track) === 'number' && Number.isFinite(read(track)) && read(track) >= 0)) totals[name] = 'unknown';
+  }
+  return totals;
 }
 
 function sumSummaryTotals(summary, trackIds) {
@@ -280,7 +352,7 @@ function sumSummaryTotals(summary, trackIds) {
 const BACKLOG_PENDING_LABEL = 'backlog pending';
 
 function displayBuildCount(value) {
-  return value == null ? '—' : String(value);
+  return value == null ? '—' : typeof value === 'number' && Number.isFinite(value) && value >= 0 ? String(value) : 'unknown';
 }
 
 function formatBacklogSegment(buildState) {
@@ -294,7 +366,8 @@ function buildStateSummary(pv, trackIds) {
   if (trackIds && trackIds.size && pv.per_track) {
     const counts = {v6:0,v5:0,v3:0,unbuilt:0};
     for (const trackId of trackIds) {
-      const row = pv.per_track[trackId] || {};
+      const row = pv.per_track[trackId];
+      if (!row || !Object.keys(counts).every(key => Number.isFinite(row[key]))) return { pending: true, current: null, backlog: null, builtPct: null };
       for (const key of Object.keys(counts)) counts[key] += row[key] || 0;
     }
     const total = counts.v6 + counts.v5 + counts.v3 + counts.unbuilt;
@@ -317,9 +390,9 @@ function buildStateSummary(pv, trackIds) {
   }
   return {
     pending: false,
-    current: current ?? 0,
-    backlog: backlog ?? 0,
-    builtPct: pv.pct_built || 0,
+    current: current ?? null,
+    backlog: backlog ?? null,
+    builtPct: Number.isFinite(pv.pct_built) ? pv.pct_built : null,
   };
 }
 
@@ -341,9 +414,14 @@ async function loadOrientStat() {
   setStat('card-stat-orient', orient.git?.branch || 'no branch');
 }
 
+let statsRunning = false;
 async function loadStats() {
+  if (statsRunning) return;
+  statsRunning = true;
+  document.getElementById('stats-row').setAttribute('aria-busy', 'true');
+  Object.values(SUMMARY_TARGETS).forEach(id => setStat(id, 'Loading; source age unknown'));
   let buildState = { pending: true, current: null, backlog: null, builtPct: null };
-  let pendingConsultations = 0;
+  let pendingConsultations = null;
   // Quality + Orient are often multi-second; defer so they cannot gate first paint.
   const [data, pv, cMetrics, summary, runtimeAgents, delegate, buildEvents, wiki, cost, contracts] = await Promise.all([
     safeFetch('/api/dashboard/overview'),
@@ -367,7 +445,7 @@ async function loadStats() {
     if (summary && pv) {
       buildState = resolveOperationalBuildState(pv, summary);
     }
-    pendingConsultations = cMetrics?.pending_queue || 0;
+    pendingConsultations = cMetrics?.pending_queue ?? null;
 
     // Honesty of zero: only pass/fail count as recorded audits. An
     // unaudited-only total (pass=0,fail=0,unaudited=N) is still "no audit
@@ -383,15 +461,15 @@ async function loadStats() {
       <div class="stat"><div class="value" style="color:var(--blue)">${t.content_complete}</div><div class="label">Prose Only</div></div>
       <div class="stat"><div class="value" style="color:var(--cyan)">${displayBuildCount(buildState.current)}</div><div class="label">Current Builds</div></div>
       <div class="stat"><div class="value" style="color:var(--orange)">${displayBuildCount(buildState.backlog)}</div><div class="label">Rebuild Backlog</div></div>
-      <div class="stat"><div class="value" style="color:var(--purple)">${buildState.pending ? '—' : `${buildState.builtPct}%`}</div><div class="label">Built</div></div>
+      <div class="stat"><div class="value" style="color:var(--purple)">${buildState.pending || buildState.builtPct == null ? 'unknown' : `${buildState.builtPct}%`}</div><div class="label">Built</div></div>
     `;
 
     document.getElementById('curriculum-stat').textContent = `${dashboardTracks.length} tracks`;
-    if (pendingConsultations > 0) {
+    if (pendingConsultations != null) {
       document.getElementById('consultation-stat').textContent = `${pendingConsultations} pending proposals`;
     }
   } catch(e) {
-    console.error('Failed to load stats:', e);
+    document.getElementById('stats-row').textContent = 'Module observations unavailable; source age/coverage unknown.';
   }
 
   try {
@@ -404,22 +482,16 @@ async function loadStats() {
     const t = sumSummaryTotals(summary, operationalIds);
     const stale = t.audit_stale ? ` · ${t.audit_stale} stale audit` : '';
     document.getElementById('progress-stat').textContent =
-      `${displayBuildCount(buildState.current)} current · ${formatBacklogSegment(buildState)} · ${t.dossier_done ?? 0} dossiers · ${t.published_mdx ?? 0} published${stale}`;
+      `${displayBuildCount(buildState.current)} current · ${formatBacklogSegment(buildState)} · ${t.dossier_done ?? 'unknown'} dossiers · ${t.published_mdx ?? 'unknown'} published${stale}`;
   } catch(e) {}
 
+  if (cMetrics) setStat('consultation-stat', `${cMetrics.pending_queue} returned proposals; source age/coverage unknown`);
   if (runtimeAgents) {
     setStat('card-stat-runtime', `${(runtimeAgents.agents || []).length} agents`);
   }
 
   if (delegate) {
-    const tasks = delegate.tasks || [];
-    const active = tasks.filter(task => task.status === 'running' || task.status === 'spawning').length;
-    const zombies = tasks.filter(task => task.status === 'zombie').length;
-    const finishedToday = tasks.filter(task => ['done', 'failed'].includes(task.status) && taskTouchedToday(task)).length;
-    const parts = [`${active} active`];
-    if (zombies) parts.push(`${zombies} zombie`);
-    if (!active && finishedToday) parts.push(`${finishedToday} finished today`);
-    setStat('card-stat-delegate', parts.join(' · '));
+    setStat('card-stat-delegate', taskSummary(delegate.tasks, delegate.total));
   }
 
   if (buildEvents) {
@@ -434,16 +506,17 @@ async function loadStats() {
       acc.total += track.total || 0;
       return acc;
     }, { compiled: 0, total: 0 });
-    setStat('card-stat-wiki', `${totals.compiled}/${totals.total} compiled`);
+    const complete = tracks.length && tracks.every(t => Number.isFinite(t.compiled) && Number.isFinite(t.total));
+    setStat('card-stat-wiki', complete ? `${totals.compiled}/${totals.total} compiled` : 'Compilation totals unknown; coverage incomplete');
   }
 
   if (cost) {
     const week = cost.windows?.last_7_days || {};
     if (week.ledger_empty) {
-      setStat('card-stat-cost', `ledger empty · ${Number(week.runtime_calls_total || 0)} runtime calls (7d)`);
+      setStat('card-stat-cost', `ledger empty · ${Number.isFinite(week.runtime_calls_total) ? week.runtime_calls_total : 'unknown'} runtime calls (7d)`);
     } else {
-      const amount = Number(week.totals?.cost_usd_est || 0);
-      setStat('card-stat-cost', `~$${amount.toFixed(2)} last 7d`);
+      const amount = week.totals?.cost_usd_est;
+      setStat('card-stat-cost', Number.isFinite(amount) ? `~$${amount.toFixed(2)} last 7d` : 'Cost unknown; no measured amount');
     }
   }
 
@@ -458,14 +531,22 @@ async function loadStats() {
       // Show a compact summary of key sources + link to full contracts.
       const sample = routes.slice(0, 3).map(r => r.source_of_truth || r.pattern).filter(Boolean);
       el.hidden = false;
-      el.innerHTML = `API surface: <strong>${families} route families</strong> • <strong>${dashboards} dashboard pages</strong>. ` +
+      el.textContent = `API surface: ${families} route families • ${dashboards} dashboard pages. ` +
         `Sources include ${sample.join(', ')}… ` +
-        `<a href="/api/contracts/routes">full contracts</a> • <a href="/docs">Swagger</a>. ` +
+        `Full contracts: /api/contracts/routes. API documentation: /docs. ` +
         `See definition authority in route_contracts.py and MONITOR-API.md.`;
     }
-  } catch (e) { /* non-fatal */ }
+  } catch (e) { /* Contracts are independent of the other summaries. */ }
+  document.getElementById('stats-row').setAttribute('aria-busy', 'false');
+  statsRunning = false;
+  document.getElementById('fetch-status').textContent = 'Fetch completed ' + new Date().toISOString() + '. Source age/coverage unknown.';
+  for (const [path, id] of Object.entries(SUMMARY_TARGETS)) {
+    const el = document.getElementById(id), state = summaryFetches[path];
+    if (el && state?.at && !state.error) el.textContent += ' · fetched ' + new Date(state.at).toISOString();
+  }
 }
 
+document.getElementById('retry-stats').addEventListener('click', loadStats);
 loadStats();
 </script>
 </body>

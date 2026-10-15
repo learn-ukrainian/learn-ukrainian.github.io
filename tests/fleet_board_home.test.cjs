@@ -346,9 +346,8 @@ test("home renders attention, cards, unknown harness, and not installed", () => 
   assert.match(rendered, /not installed/);
   assert.match(rendered, /A source is stale/);
   assert.match(rendered, /Values below may be out of date/);
-  assert.match(rendered, /Dependency layers/);
-  assert.match(rendered, /Routing budget and pace/);
-  assert.match(rendered, /later slice/);
+  assert.match(rendered, /Optional Fleet board observations/);
+  assert.doesNotMatch(rendered, /Nothing needs attention|later slice/);
 });
 
 test("filters, search, and sort stay in the rendered query", () => {
@@ -571,14 +570,15 @@ test("a superseded epic response is discarded and each payload keeps its own age
   assert.match(rendered, /over 2 minutes/);
 });
 
-test("the PR view stays a placeholder", () => {
-  const rendered = FB.renderPrs(new URLSearchParams("pr=17"), sources, { ageMs: 1000 });
-  const doc = parseHtml(rendered);
-  assert.match(textContent(doc), /PR pipeline/);
-  assert.match(textContent(doc), /Selected PR #17/);
-  assert.match(textContent(doc), /not installed/);
-  assert.match(textContent(doc), /later slice/);
-  assert.match(rendered, /A source is stale/);
+test("the PR view is an observed pipeline with explicit unmet history and owner", () => {
+  const rendered = FB.renderPrs(new URLSearchParams("pr=17"), sampleReads(), { now: NOW });
+  assert.match(rendered, /PR pipeline/);
+  assert.match(rendered, /Selected PR #17/);
+  assert.match(rendered, /Accountable owner/);
+  assert.match(rendered, /unknown \(D04; canonical PR association unavailable\)/);
+  assert.match(rendered, /Merged history/);
+  assert.match(rendered, /Head head-new/);
+  assert.doesNotMatch(rendered, /later slice|Detail arrives/);
 });
 
 test("shipped files and the fixture carry no hosts, absolute urls, or session names", () => {
@@ -725,6 +725,7 @@ function mountedBoard() {
   document.addEventListener = (name, handler) => { document.events[name] = handler; };
   const location = { hash: "" };
   const requests = [];
+  const overrides = {};
   let mode = "ok";
   const window = {
     scrollY: 7, scrollTo() {},
@@ -748,7 +749,7 @@ function mountedBoard() {
       };
       return { ok: mode !== "bad", status: mode === "bad" ? 500 : 200, async json() {
         if (mode === "invalid-json") throw new Error("synthetic JSON failure");
-        return bodies[url] || null;
+        return url in overrides ? overrides[url] : bodies[url] || null;
       } };
     },
   };
@@ -757,6 +758,7 @@ function mountedBoard() {
   return {
     nodes, location, document, nav, requests, intervals, timeouts, sandbox,
     setMode(value) { mode = value; },
+    overrides,
     async settle() { await new Promise(setImmediate); },
     async navigate(hash) { location.hash = hash; windowEvents.hashchange(); await this.settle(); },
     key(key, target = nodes.get("fb-app")) { document.events.keydown({ key, target, preventDefault() {} }); },
@@ -772,7 +774,7 @@ test("mounted board refreshes, filters, preserves failure state, and recovers", 
   assert.equal(board.nav[0].attrs["aria-current"], "page");
   assert.ok(board.intervals.has(30000));
   assert.ok(board.intervals.has(1000));
-  assert.ok(board.requests.every(({ url, init }) => url.startsWith("/api/fleet/v1/") && init.cache === "no-store"));
+  assert.ok(board.requests.every(({ url, init }) => (url.startsWith("/api/fleet/v1/") || Object.values(FB.READS).includes(url)) && init.cache === "no-store"));
   const filter = { getAttribute: () => "state", value: "working" };
   app.events.change({ target: filter });
   assert.match(board.location.hash, /state=working/);
@@ -849,4 +851,283 @@ test("health tiles keep separate counters and withhold stale or unknown values",
       assert.doesNotMatch(get(doc, name), /[0-9]/);
     }
   }
+});
+
+const NOW = Date.parse('2026-10-15T12:00:00Z');
+const at = seconds => new Date(NOW - seconds * 1000).toISOString();
+const envelope = (key, data, reports = [source(key, 'ok')]) => ({ schema: 'fleet.v1.' + key, sources: reports, data });
+function sampleBodies() {
+  const item = {
+    work_id: 'pr:sample:17', resource_kind: 'pr', repository_id: 'sample/repo', remote_id: '17',
+    title: 'Sample PR', lifecycle: 'open', flags: { source_ok: true, has_blocker: false },
+    projections: { verification: { head_sha: 'head-new', ci_state: 'green' }, review: { review_decision: 'APPROVED' },
+      dispatch: { accountable_owner: 'unknown', owner_reason: 'owner_unknown' }, stream: { status: 'n/a', fresh: true } },
+    authority: [{ domain: 'github', observed_at: at(20), age_s: 20, stale: false }], omissions: [],
+  };
+  return {
+    registry: { streams: [{ stream_id: 'epic:1', registered: true, stream_name: 'cedar', title: 'Cedar registry',
+      lease: { state: 'active', heartbeat_at: at(10), expires_at: at(-100), holder: { agent: 'driver-a', task_id: 'task-a', harness: 'native' } },
+      last_state: { body: 'Recorded state', created_at: at(90) }, last_decision: { body: 'Recorded decision', created_at: at(95) } },
+      { stream_id: 'epic:2', registered: false, title: 'Unregistered stream', lease: null }] },
+    work: { items: [item], sources: [{ source_id: 'public-monitor', status: 'ok', sections: { prs: { status: 'ok', count: 1, observed_at: at(20), age_s: 20 } } }], cache_age_s: 0 },
+    hosts: { hosts: { 'host-a': { status: 'fresh', observed_at: at(4), age_seconds: 4, cpu_count: 4, loadavg: [0,1,2], mem: { used: 42 } },
+      'host-b': { status: 'unavailable', age_seconds: 0 }, 'host-c': { status: 'stale', observed_at: at(400), age_seconds: 400, cpu_count: 2, loadavg: [1] } } },
+    workers: { counts: { live: 99, workers_total: 4, skipped: 2 }, hosts: [
+      { host_id: 'host-a', freshness: 'fresh', workers_status: 'reported', age_s: 5, workers: [{ id: 'worker-a', agent: 'agent-a', harness: 'native', kind: 'delegate', state: 'live', age_s: 6 }] },
+      { host_id: 'host-b', freshness: 'stale', workers_status: 'reported', age_s: 400, workers: [{ id: 'worker-b', state: 'live', age_s: 4 }] },
+      { host_id: 'unattributed', freshness: 'fresh', workers_status: 'reported', workers: [{ id: 'worker-c', state: 'live' }] },
+      { host_id: 'host-c', freshness: 'unknown', workers_status: 'unreported', workers: [{ id: 'worker-d', state: 'starting' }] },
+    ] },
+    tasks: { total: 22, tasks: ['running','spawning','done','failed','timeout','rate_limited','cancelled','crashed','needs_finalize','no_deliverable','dry_run'].map((status,i) => ({task_id: 'task-' + i, status})) },
+    slots: { schema: 'test-slots.status.v1', enabled: true, pool_size: 2, slots_in_use: 2, slots_free: 0, queue_depth: 0, error: null },
+    accounts: { claude_accounts: { 'claude:a': {status: 'ok', updated: at(10), session5h: {left_pct: 0, pace: 'on pace'}, weekly: {left_pct: 40}}, 'claude:b': {status: 'unknown', reason: 'account_ambiguous', updated: null, session5h: {left_pct: 99}} } },
+    proposals: { pending: [{ source_module: 'Sample proposal', root_cause_summary: 'A proposal is not an operator decision', queued_at: at(40) }], count: 1 },
+    messages: { messages: [], availability: 'available', total: 5 },
+    prs: envelope('prs', { prs: [{number:17, repo:'sample/repo', title:'Sample PR', head_sha:'head-old', cf:{verdict:'APPROVE',at_head:true}, ci:'green', gate:'green', mq:'queued', owner_lane:'branch-derived', keeper:{hold:false}, blocker:{kind:'none'}}] }, [source('github','ok'),source('mq_state','ok')]),
+    alerts: envelope('alerts', { alerts: [{ name: 'Sample alert', state: 'active', severity:'warning', summary:'Check sample', starts_at:at(50) }] }),
+    backups: envelope('backups', {age_h:0, stale:false, last_result:{at:at(60),status:'success'}, restore_test:null}),
+    downloads: envelope('downloads', {state:'ok',items:[{source:'unlisted',state:'active',done:1,total:null,pct:100,last_progress_at:null,stalled:null},{source:'unlisted',state:'active',done:2,total:10,pct:20,last_progress_at:at(600),stalled:true}]}),
+    stats: envelope('stats', {stats:[{name:'sample count',value:0,status:'ok'},{name:'sample unavailable',value:99,status:'unavailable'}],by_repo:[{repo:'sample/repo',backlog:0,days:[]}],by_lane:[]},[source('stats','ok'),source('stale_prs','not_configured')]),
+    links: envelope('links', {links:[{name:'Overview',href:'javascript:bad()'}]}),
+  };
+}
+function sampleReads() {
+  return Object.fromEntries(Object.entries(sampleBodies()).map(([key,body]) => [key, FB.readResult(key,body,'',null,NOW)]));
+}
+function operator(reads = sampleReads(), view = 'home', params = '') {
+  return FB.renderOperator(reads, {view, params:new URLSearchParams(params)}, NOW);
+}
+
+test('Q01-Q14 render registry, task denominators, governor, account windows and named missing obligations', () => {
+  const out = operator();
+  for (const label of ['Needs attention','Lanes and drivers','Workers','Host and test capacity','Account capacity','PR pipeline','Ops',
+    'Cedar registry','Unregistered stream','driver-a / task-a','Recorded state','Recorded decision','2 streams known to the session store',
+    '11 loaded tasks of 22','Pool 2; occupied 2; free 0; queued 0','claude:a','claude:b','0%',
+    'D02','D03','D04','D05','D11-AL','D11-BA','D11-DL','D11-ST','D11-LI','D12','D13','RETAIN-02']) assert.ok(out.includes(label),label);
+  for (const status of sampleBodies().tasks.tasks.map(t => t.status)) assert.ok(out.includes(status), status);
+  assert.doesNotMatch(out,/Nothing needs|no blockers|later slice|working from active/);
+  assert.match(out,/proposals, not confirmed operator decisions/);
+  assert.match(out,/No rows returned; coverage\/age unknown/);
+});
+
+test('P02 counts final fresh reporting hosts and excludes stale, unreported and unattributed live states', () => {
+  const result = FB.workerBuckets(sampleBodies().workers);
+  assert.equal(result.counts.live,1);
+  assert.equal(result.counts.fresh,1);
+  assert.equal(result.counts.stale,1);
+  assert.equal(result.counts.unknown,1);
+  assert.equal(result.counts.unreported,1);
+  const out = operator(sampleReads(),'workers');
+  assert.match(out,/1 observed live workers/);
+  assert.doesNotMatch(out,/99 observed live/);
+  assert.match(out,/last observed: live/);
+  assert.match(out,/reported total 4; skipped 2/);
+});
+
+test('P03-P05 distinguish unavailable age zero, real zero slots, disabled governor and ambiguous accounts', () => {
+  let reads = sampleReads();
+  let out = operator(reads,'capacity');
+  const unavailable = textContent(parseHtml(out)).split('host-b')[1].split('host-c')[0];
+  assert.match(unavailable,/unavailable \/ unknown/);
+  assert.doesNotMatch(unavailable,/0 s/);
+  const accountB = textContent(parseHtml(out)).split('claude:b')[1];
+  assert.doesNotMatch(accountB,/99%/);
+  reads.slots = FB.readResult('slots',{...sampleBodies().slots,enabled:false},'',null,NOW);
+  assert.match(operator(reads,'capacity'),/Governor disabled/);
+  reads.slots = FB.readResult('slots',{...sampleBodies().slots,error:{reason:'unavailable'}},'',null,NOW);
+  assert.match(operator(reads,'capacity'),/governor read failed/);
+  assert.equal(FB.elapsedSeconds(at(-1),NOW),null);
+  assert.equal(FB.elapsedSeconds('invalid',NOW),null);
+  assert.equal(FB.advancedAge(20,NOW,NOW+5000),25);
+  assert.equal(FB.advancedAge(null,NOW,NOW),null);
+});
+
+test('P06-P08 keep old-head approval unknown and qualify each PR source independently', () => {
+  let reads = sampleReads();
+  let out = operator(reads,'prs');
+  assert.match(out,/CF unknown; Work review APPROVED is not exact-head approval/);
+  assert.match(out,/branch-derived; provenance unverified/);
+  assert.match(out,/Work PR flags carry no blocker evidence/);
+  assert.doesNotMatch(out,/CF APPROVE at observed head/);
+  reads.prs.body.data.prs[0].head_sha='head-new';
+  assert.match(operator(reads,'prs'),/CF APPROVE at observed head/);
+  reads.prs.body.sources[0].status='unavailable';
+  out = operator(reads,'prs');
+  assert.match(out,/Partial \/ unavailable source/);
+  assert.match(out,/Sample PR/);
+  assert.doesNotMatch(out,/CF APPROVE at observed head/);
+  reads.work.body.items[0].authority[0].stale=true;
+  assert.doesNotMatch(operator(reads,'prs'),/Work review APPROVED/);
+});
+
+test('P09-P14 separate posted obligations, restore proof, unknown total, event clocks and withheld destinations', () => {
+  const out = operator();
+  assert.match(out,/Posted blockers and confirmed operator decisions require a safe typed projection/);
+  assert.match(out,/Restore test unknown; restore event age unknown/);
+  assert.equal((out.match(/Unidentified download \(D12\)/g)||[]).length,2);
+  assert.match(out,/1 \/ unknown total/);
+  assert.match(out,/PR throughput unknown/);
+  assert.match(out,/Destination unavailable: boundary approval unknown/);
+  assert.doesNotMatch(out,/javascript:bad|href="javascript|100%/);
+  const doc=parseHtml(out);
+  const badStat=textContent(doc).split('sample unavailable')[1].split('PR throughput')[0];
+  assert.doesNotMatch(badStat,/99/);
+});
+
+test('response boundary separates malformed success, valid empty, partial rows and retained failed observations', () => {
+  const bodies=sampleBodies();
+  for (const [key,body] of Object.entries(bodies)) {
+    assert.equal(FB.validRead(key,body),true,key);
+    const invalid=FB.readResult(key,{},'',null,NOW);
+    assert.equal(invalid.body,null,key);
+    assert.match(invalid.error,/Malformed/);
+  }
+  const old=FB.readResult('registry',bodies.registry,'',null,NOW-10000);
+  const failed=FB.readResult('registry',null,'Request failed',old,NOW);
+  assert.equal(failed.body,old.body);
+  assert.equal(failed.fetchedAt,NOW-10000);
+  const empty=FB.readResult('registry',{streams:[]},'',old,NOW);
+  assert.equal(empty.error,'');
+  assert.equal(empty.body.streams.length,0);
+  assert.match(operator({registry:failed}),/retained historical observation/);
+  assert.match(operator({registry:empty}),/0 streams known to the session store/);
+  const partial=FB.readResult('registry',{streams:[null,bodies.registry.streams[0]]},'',null,NOW);
+  assert.equal(partial.omitted,1);
+  assert.match(operator({registry:partial}),/Partial: 1 malformed rows omitted/);
+  assert.match(operator({registry:partial}),/Cedar registry/);
+  const broken=FB.readResult('registry',{streams:[null]},'',null,NOW);
+  assert.match(broken.error,/Malformed/);
+});
+
+test('untrusted metadata never creates elements, attributes, handlers or destinations', () => {
+  const reads=sampleReads();
+  const attack='"><img src=x onerror=bad()>';
+  reads.registry.body.streams[0].title=attack;
+  reads.registry.body.streams[0].stream_id=attack;
+  reads.work.body.items[0].title=attack;
+  reads.alerts.body.data.alerts[0].summary=attack;
+  const out=operator(reads);
+  assert.match(out,/&lt;img/);
+  assert.doesNotMatch(out,/<img|href="javascript|<script/);
+  for (const node of queryAll(parseHtml(out),'fb-panel')) {
+    assert.ok(node.attrs['data-read']);
+    assert.match(textContent(node),/Source age unknown/);
+    assert.match(textContent(node),/Last successful fetch/);
+  }
+  assert.ok(!Object.values(FB.READS).some(p=> /fresh=true|agent-monitor\/status/.test(p)));
+});
+
+test('each navigation view remains usable and explicitly identifies its unavailable sources', () => {
+  for (const view of ['attention','workers','capacity','prs','ops']) {
+    const loading=operator({},view);
+    assert.match(loading,/Loading/);
+    assert.match(loading,/aria-busy="true"/);
+    const reads=sampleReads();
+    reads.alerts.body.sources[0].status='not_configured';
+    assert.doesNotMatch(operator(reads,view),/later slice/);
+  }
+  assert.match(operator(sampleReads(),'ops'),/Partial \/ not installed source/);
+});
+
+const indexHtml = fs.readFileSync(path.join(root,'dashboards/index.html'),'utf8');
+const indexScript = [...indexHtml.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(m=>m[1]).join('\n');
+function mountedIndex() {
+  const nodes=new Map();
+  for (const match of indexHtml.matchAll(/id="([^"]+)"/g)) nodes.set(match[1],{
+    textContent:'',innerHTML:'',hidden:false,attrs:{},events:{},
+    setAttribute(k,v){this.attrs[k]=v;},addEventListener(k,f){this.events[k]=f;},
+  });
+  const overrides={};
+  const sandbox={document:{getElementById:id=>nodes.get(id)||null},location:{host:'sample.test'},
+    AbortController,setTimeout,clearTimeout,Date,URLSearchParams,console,
+    async fetch(url){
+      const value=url in overrides ? overrides[url] : null;
+      if(value instanceof Error || value===null) throw new Error('Synthetic unavailable source');
+      return {ok:true,async text(){return JSON.stringify(value);}};
+    },
+  };
+  vm.createContext(sandbox);
+  vm.runInContext(indexScript,sandbox);
+  return {nodes,overrides,sandbox,eval:code=>vm.runInContext(code,sandbox),async settle(){await new Promise(setImmediate);}};
+}
+
+test('R11 directory exposes all 21 content workflows including home and map', () => {
+  const pages=['index','fleet-board','acp','admin','artifacts','build-events','consultation','cost','curriculum-dashboard',
+    'delegate','epics-map','epics','fleet','image-explorer','orient','progress','quality','routing','runtime','wiki','work'];
+  for (const page of pages) assert.match(indexHtml,page==='index' ? /href="\/"/ : new RegExp('href="/' + page + '\\.html'));
+});
+
+test('R11 task summaries retain every attention state and count only done as successful completion', async () => {
+  const page=mountedIndex();await page.settle();
+  const statuses=['running','spawning','done','failed','timeout','rate_limited','cancelled','crashed','needs_finalize','dry_run','no_deliverable'];
+  page.sandbox.testTasks=statuses.map((status,i)=>({task_id:'task-'+i,status,started_at:new Date().toISOString()}));
+  const out=page.eval('taskSummary(testTasks,30)');
+  assert.match(out,/2 active · 1 done · 8 attention/);
+  assert.match(out,/1 finished today · 11 loaded \/ 30 total/);
+  for(const status of statuses.slice(3)) assert.ok(out.includes(status),status);
+  assert.match(page.nodes.get('card-stat-delegate').textContent,/Unavailable/);
+});
+
+test('R11 independent source failure, malformed success, missing numerics and contracts injection stay honest', async () => {
+  const page=mountedIndex(); await page.settle();
+  page.overrides['/api/runtime/agents']={agents:[{agent:'sample'}]};
+  page.overrides['/api/delegate/tasks?limit=100']={};
+  page.overrides['/api/analytics/cost']={windows:{}};
+  page.overrides['/api/contracts/routes']={route_contracts:[{source_of_truth:'<img src=x onerror=bad()>'}],page_contracts:[]};
+  await page.eval('loadStats()');await page.settle();
+  assert.match(page.nodes.get('card-stat-runtime').textContent,/1 agents/);
+  assert.match(page.nodes.get('card-stat-delegate').textContent,/Malformed success response/);
+  assert.match(page.nodes.get('card-stat-cost').textContent,/Cost unknown/);
+  assert.match(page.nodes.get('api-surfaces').textContent,/<img/);
+  assert.equal(page.nodes.get('api-surfaces').innerHTML,'');
+  assert.equal(page.eval('sumDashboardTotals([{module_count:1,stats:{}}]).published'),'unknown');
+  assert.equal(page.eval('buildStateSummary({current_builds:2},null).backlog'),null);
+  assert.equal(page.eval('validSummary("/api/runtime/agents", {agents:42})'),false);
+  assert.equal(page.nodes.get('stats-row').attrs['aria-busy'],'false');
+});
+
+test('P05 provider windows remain separate from account attribution and never use fleet burn as quota',()=>{
+  const reads=sampleReads();
+  reads.accounts.body.agents={codex:{codexbar:{freshness:'fresh',age_s:20,windows:{primary:{used_pct:0,remaining_pct:100,resets_at:at(-50)}}}},
+    cursor:{remaining_pct:77,burn_pct_7d:23,codexbar:{freshness:'unavailable',weekly_remaining_pct:99}}};
+  const out=operator(reads,'capacity');
+  assert.match(out,/Provider meters; account attribution and shared-meter parity unverified/);
+  assert.match(out,/100%/);
+  assert.doesNotMatch(out,/77%|99%/);
+  assert.match(out,/never summed or counted as separate accounts/);
+});
+
+test('mounted registry-only detail survives absent roster and failed sibling reads', async()=>{
+  const board=mountedBoard();await board.settle();
+  for (const [key,body] of Object.entries(sampleBodies())) board.overrides[FB.READS[key]]=body;
+  board.overrides['/api/fleet/v1/epics/cedar']={schema:'fleet.v1.epic',sources:[source('roster_snapshot','not_configured')],data:null};
+  await board.navigate('#/epic/cedar');
+  const app=board.nodes.get('fb-app');
+  assert.match(app.innerHTML,/Selected session-store stream/);
+  assert.match(app.innerHTML,/Cedar registry/);
+  assert.match(app.innerHTML,/Optional board detail unavailable/);
+  await board.navigate('#/capacity');
+  assert.match(app.innerHTML,/Pool 2; occupied 2; free 0; queued 0/);
+  board.overrides[FB.READS.slots]={};
+  board.intervals.get(30000)();await board.settle();
+  assert.match(app.innerHTML,/Malformed success response; retained historical observation/);
+  assert.match(app.innerHTML,/claude:a/);
+});
+
+test('R11 pipeline count strings cannot enter the module stat HTML',async()=>{
+  const page=mountedIndex();await page.settle();
+  assert.equal(page.eval('displayBuildCount("<img src=x onerror=bad()>")'),'unknown');
+  assert.equal(page.eval('displayBuildCount(0)'),'0');
+  assert.equal(page.eval('validSummary("/api/state/summary",{tracks:{sample:null}})'),false);
+});
+
+test('P08 non-unknown Work fields without canonical PR association cannot certify owner or stream',()=>{
+  const reads=sampleReads();
+  const p=reads.work.body.items[0].projections;
+  p.dispatch.accountable_owner='unverified-owner';
+  p.stream={status:'ok',fresh:true,authority_missing:false,streams:['unverified-stream']};
+  const out=operator(reads,'prs');
+  assert.doesNotMatch(out,/unverified-owner|unverified-stream/);
+  assert.match(out,/canonical PR association unavailable/);
+  assert.match(out,/canonical PR membership unavailable/);
 });

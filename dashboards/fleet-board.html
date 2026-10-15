@@ -20,21 +20,26 @@
 <link rel="stylesheet" href="/fleet-board.css">
 </head>
 <body class="fb-page">
+<a class="fb-skip" href="#fb-app">Skip to operator home</a>
 <header class="topbar fb-top">
   <div class="fb-bar">
     <div class="fb-brand">
       <h1>Fleet Board</h1>
-      <p>who is doing what, now</p>
+      <p>Operator home and source observations</p>
     </div>
     <nav class="fb-views" aria-label="Fleet board views">
       <a href="#/home" data-nav="home">Home</a>
       <a href="#/prs" data-nav="prs">PRs</a>
+      <a href="#/attention" data-nav="attention">Needs attention</a>
+      <a href="#/workers" data-nav="workers">Workers</a>
+      <a href="#/capacity" data-nav="capacity">Capacity</a>
+      <a href="#/ops" data-nav="ops">Ops</a>
     </nav>
     <div class="fb-spacer"></div>
     <div class="fb-stamp" id="fb-stamp">
       <span class="fb-dot" aria-hidden="true"></span>
-      <span class="fb-stamp-label" id="fb-stamp-label" hidden>Updated</span>
-      <span id="fb-ago" aria-live="polite">waiting</span>
+      <span class="fb-stamp-label" id="fb-stamp-label" hidden>Optional board fetched</span>
+      <span id="fb-ago">waiting</span>
     </div>
     <button type="button" id="fb-theme" class="fb-icon-btn" aria-label="Toggle colour theme" title="Toggle colour theme (t)">Theme</button>
     <button type="button" id="fb-help" class="fb-icon-btn" aria-label="Keyboard shortcuts" title="Keyboard shortcuts (?)">?</button>
@@ -50,11 +55,12 @@
   </nav>
 </header>
 
-<main id="fb-app" class="fb-main" data-read-only="true">
+<p id="fb-status" class="fb-sr-only" role="status"></p>
+<main tabindex="-1" id="fb-app" class="fb-main" data-read-only="true">
   <p class="fb-empty">Loading the board…</p>
 </main>
 
-<aside id="fb-drawer" class="fb-drawer" hidden aria-label="Agent"></aside>
+<aside role="dialog" aria-modal="true" id="fb-drawer" class="fb-drawer" hidden aria-label="Agent"></aside>
 
 <div id="fb-help-modal" class="fb-modal" hidden>
   <div class="fb-modal-card" role="dialog" aria-modal="true" aria-labelledby="fb-help-title">

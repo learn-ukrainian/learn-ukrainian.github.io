@@ -1,4 +1,4 @@
-/* Read-only fleet board. Talks only to /api/fleet/v1. */
+/* Read-only operator home. Requests only the explicit existing endpoints below. */
 (function (root) {
   const REFRESH_MS = 30000;
   const STALE_MS = 120000;
@@ -28,7 +28,7 @@
     if (path.includes("://") || path.includes("\\") || path.includes("..")) return false;
     if (!path.startsWith("/api/fleet/v1")) return false;
     const rest = path.slice("/api/fleet/v1".length);
-    if (rest === "/now" || rest === "/epics" || rest === "/agents") return true;
+    if (["/now", "/epics", "/agents", "/prs", "/alerts", "/backups", "/downloads", "/stats", "/links"].includes(rest)) return true;
     const epic = /^\/epics\/([^/]+)$/.exec(rest);
     if (epic) return epic[1].length > 0 && !/%2f/i.test(epic[1]);
     const agent = /^\/agents\/([^/]+)$/.exec(rest);
@@ -36,6 +36,727 @@
     return false;
   }
 
+  const READS = {
+    registry: '/api/epics/v1',
+    work: '/api/work/v1/projection',
+    hosts: '/api/occupancy',
+    workers: '/api/fleet/workers/v1',
+    tasks: '/api/delegate/tasks?limit=100',
+    slots: '/api/ops/v1/test-slots',
+    accounts: '/api/state/routing-budget',
+    proposals: '/api/consultation/queue',
+    messages: '/api/fleet/messages?limit=50',
+    prs: '/api/fleet/v1/prs',
+    alerts: '/api/fleet/v1/alerts',
+    backups: '/api/fleet/v1/backups',
+    downloads: '/api/fleet/v1/downloads',
+    stats: '/api/fleet/v1/stats',
+    links: '/api/fleet/v1/links',
+  };
+  const record = (v) => !!v && typeof v === 'object' && !Array.isArray(v);
+  const number = (v) => typeof v === 'number' && Number.isFinite(v) && v >= 0;
+  const text = (v) => typeof v === 'string' && v.length > 0;
+
+  function validRead(key, b) {
+    if (!record(b)) return false;
+    if (key === 'registry')
+      return Array.isArray(b.streams) && b.streams.every((r) => record(r) && text(r.stream_id));
+    if (key === 'work')
+      return (
+        Array.isArray(b.items) &&
+        Array.isArray(b.sources) &&
+        b.items.every(
+          (r) => record(r) && text(r.work_id) && text(r.resource_kind) && record(r.projections),
+        )
+      );
+    if (key === 'hosts') return record(b.hosts) && Object.values(b.hosts).every(record);
+    if (key === 'workers')
+      return (
+        Array.isArray(b.hosts) &&
+        record(b.counts) &&
+        b.hosts.every(
+          (h) =>
+            record(h) &&
+            text(h.host_id) &&
+            Array.isArray(h.workers) &&
+            h.workers.every((w) => record(w) && text(w.id) && text(w.state)),
+        )
+      );
+    if (key === 'tasks')
+      return (
+        Array.isArray(b.tasks) && b.tasks.every((t) => record(t) && text(t.task_id) && text(t.status))
+      );
+    if (key === 'slots')
+      return (
+        b.schema === 'test-slots.status.v1' &&
+        (typeof b.enabled === 'boolean' || (b.enabled === null && record(b.error))) &&
+        'error' in b &&
+        (b.error !== null ||
+          ['pool_size', 'slots_in_use', 'slots_free', 'queue_depth'].every((k) => number(b[k])))
+      );
+    if (key === 'accounts') return record(b.claude_accounts);
+    if (key === 'proposals')
+      return Array.isArray(b.pending) && number(b.count) && b.pending.every(record);
+    if (key === 'messages') return Array.isArray(b.messages) && text(b.availability);
+    if (!Array.isArray(b.sources) || !record(b.data) || b.schema !== 'fleet.v1.' + key) return false;
+    if (key === 'backups') return ['age_h', 'last_result', 'restore_test'].every((k) => k in b.data);
+    if (key === 'stats')
+      return (
+        Array.isArray(b.data.stats) && Array.isArray(b.data.by_repo) && Array.isArray(b.data.by_lane)
+      );
+    const rows = b.data[key === 'downloads' ? 'items' : key];
+    if (!Array.isArray(rows)) return false;
+    if (key === 'prs')
+      return rows.every(
+        (r) =>
+          record(r) && text(r.repo) && Number.isInteger(r.number) && r.number > 0 && text(r.head_sha),
+      );
+    return rows.every(record);
+  }
+
+  function readResult(key, body, error, previous, at) {
+    let omitted = 0;
+    if (!error && record(body)) {
+      const validators = {
+        registry: ['streams', (r) => record(r) && text(r.stream_id)],
+        work: [
+          'items',
+          (r) => record(r) && text(r.work_id) && text(r.resource_kind) && record(r.projections),
+        ],
+        tasks: ['tasks', (r) => record(r) && text(r.task_id) && text(r.status)],
+        workers: [
+          'hosts',
+          (h) =>
+            record(h) &&
+            text(h.host_id) &&
+            Array.isArray(h.workers) &&
+            h.workers.every((w) => record(w) && text(w.id) && text(w.state)),
+        ],
+        proposals: ['pending', record],
+        messages: ['messages', record],
+      };
+      const field = key === 'downloads' ? 'items' : key;
+      const collection =
+        validators[key] ||
+        (record(body.data) && Array.isArray(body.data[field])
+          ? [
+              field,
+              key === 'prs'
+                ? (r) =>
+                    record(r) &&
+                    text(r.repo) &&
+                    Number.isInteger(r.number) &&
+                    r.number > 0 &&
+                    text(r.head_sha)
+                : record,
+            ]
+          : null);
+      const container = validators[key] ? body : body.data;
+      if (collection && Array.isArray(container?.[collection[0]])) {
+        const [name, valid] = collection;
+        const input = container[name],
+          kept = input.filter(valid);
+        omitted = input.length - kept.length;
+        if (omitted && !kept.length) error = 'Malformed success response';
+        else if (omitted)
+          body = validators[key]
+            ? Object.assign({}, body, { [name]: kept })
+            : Object.assign({}, body, { data: Object.assign({}, body.data, { [name]: kept }) });
+      }
+    }
+    if (!error && !validRead(key, body)) error = 'Malformed success response';
+    if (error)
+      return {
+        body: previous?.body || null,
+        fetchedAt: previous?.fetchedAt || null,
+        error,
+        pending: false,
+      };
+    return { body, fetchedAt: at, error: '', pending: false, omitted };
+  }
+
+  function elapsedSeconds(at, now) {
+    const parsed = typeof at === 'string' ? Date.parse(at) : NaN;
+    return Number.isFinite(parsed) && parsed <= now ? (now - parsed) / 1000 : null;
+  }
+
+  function ageText(seconds) {
+    return number(seconds) ? metricText(seconds, ' s') : 'unknown';
+  }
+
+  function advancedAge(age, fetchedAt, now) {
+    return number(age) && number(fetchedAt) && now >= fetchedAt
+      ? age + (now - fetchedAt) / 1000
+      : null;
+  }
+
+  function valueText(v) {
+    return typeof v === 'boolean'
+      ? String(v)
+      : typeof v === 'number'
+        ? metricText(v)
+        : text(v)
+          ? esc(v)
+          : 'unknown';
+  }
+
+  function table(caption, headers, rows) {
+    if (!rows.length) return '<p class="fb-empty">No rows returned; coverage/age unknown.</p>';
+    return `<div class="fb-table-wrap"><table class="fb-table"><caption>${esc(caption)}</caption><thead><tr>${headers.map((h) => `<th scope="col">${esc(h)}</th>`).join('')}</tr></thead><tbody>${rows.map((row) => `<tr>${row.map((cell, i) => `<td data-l="${esc(headers[i])}">${cell}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+  }
+
+  function sourceNotes(entry, now) {
+    if (!entry?.body) return '';
+    const b = entry.body;
+    const rows = [];
+    for (const s of Array.isArray(b.sources) ? b.sources : []) {
+      if (!record(s)) continue;
+      const name = s.name || s.source_id || s.id || 'source';
+      rows.push(
+        `<li>${esc(name)}: ${valueText(s.status)}; read/cache age ${ageText(advancedAge(s.age_s, entry.fetchedAt, now))}</li>`,
+      );
+      for (const [name, section] of Object.entries(s.sections || {})) {
+        if (!record(section)) continue;
+        rows.push(
+          `<li>${esc(name)} section: ${valueText(section.status)}; coverage ${valueText(section.count)} returned rows; observation age ${ageText(advancedAge(section.age_s, entry.fetchedAt, now))}; omissions ${valueText(section.reason)}</li>`,
+        );
+      }
+    }
+    if (number(b.cache_age_s))
+      rows.push(
+        `<li>Projection cache age ${ageText(advancedAge(b.cache_age_s, entry.fetchedAt, now))}; source age remains independent.</li>`,
+      );
+    return rows.length
+      ? `<details class="fb-provenance"><summary>Source qualifications</summary><ul>${rows.join('')}</ul></details>`
+      : '';
+  }
+
+  function readPanel(key, title, entries, now, render, extra) {
+    const e = entries[key];
+    const b = e?.body;
+    const reports = sourcesOf(b);
+    let status = 'Unknown';
+    if (!e || (e.pending && !b)) status = 'Loading';
+    else if (e.error) status = 'Error: ' + e.error + (b ? '; retained historical observation' : '');
+    else if (
+      reports.some((s) =>
+        ['unavailable', 'timeout', 'degraded', 'permission_denied'].includes(s.status),
+      )
+    )
+      status = 'Partial / unavailable source';
+    else if (reports.length && reports.every((s) => s.status === 'not_configured'))
+      status = 'Not installed';
+    else if (reports.some((s) => s.status === 'not_configured'))
+      status = 'Partial / not installed source';
+    else if (
+      reports.some((s) => s.status === 'stale') ||
+      (e.fetchedAt && now - e.fetchedAt > STALE_MS)
+    )
+      status = 'Stale';
+    else if (reports.length && reports.every((s) => s.status === 'ok'))
+      status = 'Observed; upstream sample age/coverage unknown';
+    if (key === 'slots' && b?.error) status = 'Unavailable: governor read failed';
+    if (key === 'messages' && b && b.availability !== 'available')
+      status = 'Unavailable: ' + b.availability;
+    if (e?.omitted) status = 'Partial: ' + e.omitted + ' malformed rows omitted';
+    const busy = !e || e.pending ? 'true' : 'false';
+    const fetchAge = e?.fetchedAt ? ageText((now - e.fetchedAt) / 1000) + ' ago' : 'none';
+    return `<section class="fb-panel" data-read="${key}" aria-busy="${busy}"><h3>${esc(title)}</h3><p class="fb-read-state">${esc(status)}</p>
+        ${b ? render(b, e) : '<p>No values available.</p>'}${extra || ''}
+        <p class="fb-src">Source age unknown unless qualified below. Last successful fetch: ${esc(fetchAge)}. Read: ${esc(READS[key])}</p>
+        ${sourceNotes(e, now)}<button type="button" class="fb-btn" data-retry="${key}">Retry ${esc(title)}</button></section>`;
+  }
+
+  function gap(id, owner, reason) {
+    return `<p class="fb-gap">${esc(id)} unmet: ${esc(reason)} Owner: ${esc(owner)}.</p>`;
+  }
+
+  function registryRows(b, entries, now) {
+    const optional = entries.epics?.body?.data?.epics || [];
+    return (
+      `<p>${b.streams.length} streams known to the session store, including ${b.streams.filter((s) => s.registered === true).length} registered.</p>` +
+      table(
+        'Lanes and recorded driver observations',
+        [
+          'Stream',
+          'Registry',
+          'Lease holder / task',
+          'Lease / heartbeat',
+          'Model',
+          'Last recorded state / decision',
+        ],
+        b.streams.map((s) => {
+          const lease = s.lease || {},
+            holder = lease.holder || {};
+          const match = optional.find(
+            (o) => o.epic === s.stream_name && o.driver?.agent_id === holder.agent,
+          );
+          const model = match?.driver?.model;
+          const events =
+            [s.last_state, s.last_decision]
+              .filter(record)
+              .map(
+                (v) =>
+                  `${esc(v.body || 'recorded event')} (event age ${ageText(elapsedSeconds(v.created_at, now))})`,
+              )
+              .join('<br>') || 'unknown';
+          return [
+            `<a href="/epics.html#${esc(encodeURIComponent(s.stream_id))}">${esc(s.title || s.stream_name || s.stream_id)}</a> <a href="#/epic/${esc(encodeURIComponent(s.stream_name || s.stream_id))}">Board detail</a>`,
+            s.registered === true ? 'registered' : 'unregistered',
+            `${valueText(holder.agent)} / ${valueText(holder.task_id)}<br>Harness ${valueText(holder.harness)}`,
+            `${valueText(lease.state)} / heartbeat age ${ageText(elapsedSeconds(lease.heartbeat_at, now))}; expires ${valueText(lease.expires_at)}`,
+            model
+              ? `${esc(model)} (optional board observation, currentness unknown)`
+              : 'unknown (D11-RO/HA)',
+            events,
+          ];
+        }),
+      )
+    );
+  }
+
+  function workerBuckets(b) {
+    const counts = { fresh: 0, stale: 0, unknown: 0, unreported: 0, live: 0, rows: 0 };
+    const rows = [];
+    b.hosts.forEach((h) => {
+      const bucket =
+        h.workers_status !== 'reported'
+          ? 'unreported'
+          : h.host_id === 'unattributed'
+            ? 'unknown'
+            : ['fresh', 'stale'].includes(h.freshness)
+              ? h.freshness
+              : 'unknown';
+      counts[bucket]++;
+      h.workers.forEach((w) => {
+        if (!record(w)) return;
+        counts.rows++;
+        if (bucket === 'fresh' && w.state === 'live') counts.live++;
+        rows.push({ host: h, worker: w, bucket });
+      });
+    });
+    return { counts, rows };
+  }
+
+  function workersRows(b, e, now) {
+    const { counts: c, rows } = workerBuckets(b);
+    return (
+      `<p>${c.live} observed live workers on fresh reporting hosts. Host coverage: ${c.fresh} fresh, ${c.stale} stale, ${c.unknown} unknown/unattributed, ${c.unreported} unreported; ${b.hosts.length} returned hosts. ${c.rows} loaded worker rows; reported total ${valueText(b.counts.workers_total)}; skipped ${valueText(b.counts.skipped)}. Feeds overlap; totals are not added.</p>` +
+      table(
+        'Workers by final host freshness',
+        ['Worker', 'Host / report age', 'Observation', 'Activity age', 'Task / epic'],
+        rows.map(({ host: h, worker: w, bucket }) => [
+          `${valueText(w.agent)} / ${valueText(w.harness)}<br>${valueText(w.id)} (${valueText(w.kind)})`,
+          `${esc(h.host_id)} / ${ageText(advancedAge(h.age_s, e.fetchedAt, now))}`,
+          `${esc(bucket === 'stale' ? 'last observed' : bucket)}: ${valueText(w.state)}`,
+          ageText(advancedAge(w.age_s, e.fetchedAt, now)),
+          valueText(w.epic),
+        ]),
+      )
+    );
+  }
+
+  function hostRows(b, e, now) {
+    return table(
+      'Host load observations',
+      ['Host', 'Status / source age', 'Load / CPUs', 'Memory', 'Disk'],
+      Object.entries(b.hosts).map(([id, h]) => {
+        const usable =
+          ['fresh', 'stale'].includes(h.status) && elapsedSeconds(h.observed_at, now) !== null;
+        const age = usable ? elapsedSeconds(h.observed_at, now) : null;
+        const metric = (v) =>
+          !usable
+            ? 'unknown'
+            : Array.isArray(v)
+              ? v.map(valueText).join(' / ')
+              : record(v)
+                ? Object.entries(v)
+                    .filter(([, v]) => typeof v === 'number')
+                    .map(([k, v]) => `${esc(k)} ${valueText(v)}`)
+                    .join('; ') || 'unknown'
+                : valueText(v);
+        return [
+          esc(id),
+          `${valueText(h.status)} / ${ageText(age)}${h.status === 'stale' ? ' (historical)' : ''}`,
+          `${metric(h.loadavg)} / ${metric(h.cpu_count)}`,
+          metric(h.mem),
+          metric(h.disk),
+        ];
+      }),
+    );
+  }
+
+  function slotsRows(b) {
+    if (b.error) return '<p>Unavailable: governor read failed. Counts unknown.</p>';
+    if (!b.enabled)
+      return '<p>Governor disabled. Governed occupancy, free slots and queue are unknown.</p>';
+    return `<p>Pool ${b.pool_size}; occupied ${b.slots_in_use}; free ${b.slots_free}; queued ${b.queue_depth}. Source observation time is not supplied.</p>`;
+  }
+
+  function accountRows(b, e, now) {
+    return (
+      table(
+        'Account windows, separate from provider meters',
+        ['Account alias', 'State / source age', 'Window', 'Left', 'Reset', 'Pace / delta / leftover'],
+        ['claude:a', 'claude:b'].flatMap((alias) => {
+          const a = b.claude_accounts[alias] || {};
+          const usable =
+            ['ok', 'stale'].includes(a.status) &&
+            !['account_ambiguous', 'not_probed'].includes(a.reason);
+          return ['session5h', 'weekly'].map((window) => {
+            const w = usable && record(a[window]) ? a[window] : {};
+            return [
+              esc(alias),
+              `${valueText(a.stale === true ? "stale" : a.status)} / ${ageText(elapsedSeconds(a.updated, now))}; ${valueText(a.reason)}`,
+              window,
+              number(w.left_pct) && w.left_pct <= 100 ? valueText(w.left_pct) + '%' : 'unknown',
+              valueText(w.resets_at),
+              `${valueText(w.pace)} / ${valueText(w.pace_delta_pct)} / ${valueText(w.leftover_pct)}`,
+            ];
+          });
+        }),
+      ) +
+      '<p>Other provider meters are not verified account equivalents. Preference is a display hint, never routing authorization.</p>' + providerRows(b,e,now)
+    );
+  }
+
+  function providerRows(b, e, now) {
+    const rows = [];
+    for (const lane of ['claude', 'codex', 'agy', 'grok', 'cursor', 'kimi']) {
+      const agent = b.agents?.[lane] || {};
+      const cb = agent.codexbar || {};
+      const named = record(agent.provider_windows) ? agent.provider_windows : cb.provider_windows;
+      const windows = record(named) ? Object.entries(named) : record(cb.windows)
+        ? ['primary','secondary','tertiary'].filter(k => record(cb.windows[k])).map(k => [k,cb.windows[k]]) : [];
+      if (!windows.length) windows.push(['weekly', {used_pct:cb.weekly_used_pct,remaining_pct:cb.weekly_remaining_pct,resets_at:cb.weekly_resets_at}]);
+      for (const [name,win] of windows) {
+        const usable = record(win) && ['fresh','stale','stale_last_good'].includes(cb.freshness) && cb.status !== 'unavailable' && cb.probe_state !== 'NEED_PROBE';
+        const pct = v => usable && number(v) && v <= 100 ? valueText(v) + '%' : 'unknown';
+        rows.push([esc(lane),esc(name), `${valueText(cb.stale === true ? 'stale' : cb.freshness)} / report age ${ageText(advancedAge(cb.age_s,e.fetchedAt,now))}`,
+          pct(win?.used_pct),pct(win?.remaining_pct),valueText(usable ? win?.resets_at : null)]);
+      }
+    }
+    return table('Provider meters; account attribution and shared-meter parity unverified', ['Lane alias','Window','Source state / age','Used','Remaining','Reset'],rows) + '<p>Grok/Cursor meters may overlap. They are never summed or counted as separate accounts. Cost/burn fallback is excluded.</p>';
+  }
+
+  function workQualifications(item, e, now) {
+    return (
+      (Array.isArray(item.authority) ? item.authority.filter(record) : [])
+        .map(
+          (a) =>
+            `${valueText(a.domain)}; observation age ${ageText(advancedAge(a.age_s, e.fetchedAt, now))}; stale ${valueText(a.stale)}`,
+        )
+        .join('<br>') +
+      (Array.isArray(item.omissions) && item.omissions.length ? '<br>Item omissions present' : '')
+    );
+  }
+
+  function pipelineRows(entries, now, params) {
+    const work = entries.work?.body;
+    const fleet = entries.prs?.body;
+    const selected = params?.get('pr');
+    const workRows = (work?.items || []).filter((r) => r.resource_kind === 'pr');
+    const optional = fleet?.data?.prs || [];
+    const rows = workRows.map((item) => {
+      const p = item.projections || {},
+        v = p.verification || {};
+      const f = optional.find(
+        (f) => f.repo === item.repository_id && String(f.number) === String(item.remote_id),
+      );
+      return { item, f, v, p };
+    });
+    optional
+      .filter((f) => !rows.some((r) => r.f === f))
+      .forEach((f) => rows.push({ f, item: null, p: {}, v: {} }));
+    const gh = sourceStatus(sourcesOf(fleet), 'github');
+    const mq = sourceStatus(sourcesOf(fleet), 'mq_state');
+    const shown = rows.filter(
+      (r) => !selected || String(r.item?.remote_id || r.f?.number) === selected,
+    );
+    return (
+      `${selected ? `<p>Selected PR #${esc(selected)}. <a href="#/prs">Clear selection</a></p>` : ''}` +
+      table(
+        'Observed PR pipeline; no merge eligibility is granted here',
+        [
+          'PR / head',
+          'Accountable owner',
+          'Stream',
+          'Derived/recorded lane',
+          'Review',
+          'CI',
+          'Gate',
+          'Queue / hold',
+          'Idle / blockers / flags',
+          'Source qualification',
+        ],
+        shown.map(({ item: i, f, p, v }) => {
+          const usable =
+            i?.flags?.source_ok === true &&
+            !entries.work?.error &&
+            Array.isArray(i.authority) &&
+            i.authority.some(
+              (a) =>
+                record(a) &&
+                a.domain === 'github' &&
+                a.stale === false &&
+                elapsedSeconds(a.observed_at, now) !== null,
+            );
+          const headMatch = !i || f?.head_sha === v.head_sha;
+          const fleetUsable = gh === 'ok' && !entries.prs?.error && headMatch;
+          const currentCF = fleetUsable && f?.cf?.at_head === true;
+          const id = i?.remote_id || f?.number;
+          const title = i?.title || f?.title;
+          const blocker =
+            fleetUsable && f?.blocker?.kind && f.blocker.kind !== 'none'
+              ? valueText(f.blocker.kind) +
+                (Array.isArray(f.blocker.checks) ? ': ' + f.blocker.checks.map(esc).join(', ') : '')
+              : 'unknown; Work PR flags carry no blocker evidence';
+          return [
+            `<a href="#/prs?pr=${esc(encodeURIComponent(id))}">#${esc(id)} ${esc(title)}</a><br>${valueText(i?.repository_id || f?.repo)}<br>Head ${valueText(v.head_sha || f?.head_sha)}<br>${valueText(i?.lifecycle || (f?.draft ? 'draft' : 'open observation'))}`,
+            'unknown (D04; canonical PR association unavailable)',
+            'unknown (D04; canonical PR membership unavailable)',
+            `${valueText(f?.owner_lane)}; provenance unverified`,
+            currentCF
+              ? `CF ${valueText(f.cf.verdict)} at observed head`
+              : `CF unknown; Work review ${valueText(usable ? p.review?.review_decision : null)} is not exact-head approval`,
+            fleetUsable ? valueText(f?.ci) : valueText(usable ? v.ci_state : null),
+            fleetUsable ? valueText(f?.gate) : 'unknown',
+            fleetUsable && mq === 'ok'
+              ? `${valueText(f?.mq)} / hold ${valueText(f?.keeper?.hold)} ${valueText(f?.keeper?.reason)}`
+              : 'unknown',
+            `Idle ${valueText(f?.hours_idle)} h (activity clock); ${blocker}<br>Draft ${valueText(f?.draft ?? i?.flags?.is_draft)}; stale green ${valueText(f?.stale_green)}; stacked ${valueText(f?.stacked_base?.state)}; flake ${valueText(f?.flake_grant?.decision)}`,
+            i
+              ? workQualifications(i, entries.work, now)
+              : 'Optional Fleet observation; Work association unknown',
+          ];
+        }),
+      ) +
+      gap(
+        'D04 / D11-GH/MQ/SP',
+        'codex-monitor and existing source custodians',
+        'Merged history, canonical PR ownership/stream association and missing current-head evidence remain required; disappearance is not a merge.',
+      )
+    );
+  }
+
+  function attentionPanels(entries, now) {
+    return (
+      `<h2>Needs attention</h2><div class="fb-gap"><h3>Posted blockers</h3><p>Unknown: safe typed projection unavailable (D05). Source age unknown; last successful fetch: none.</p><h3>Confirmed operator decisions</h3><p>Unknown: safe typed projection unavailable (D05). Source age unknown; last successful fetch: none.</p></div>${gap('D05', 'codex-monitor and existing Fleet/decision custodians', 'Posted blockers and confirmed operator decisions require a safe typed projection. Neither Work impediments, proposals nor recorded decisions proves those obligations.')}` +
+      readPanel('work', 'Derived impediments', entries, now, (b) =>
+        table(
+          'Derived Work attention, not posted blocker reports',
+          ['Work', 'Lifecycle / action'],
+          b.items
+            .filter(
+              (i) =>
+                i.resource_kind !== 'pr' &&
+                (i.flags?.has_blocker ||
+                  (i.safe_next_action?.code && i.safe_next_action.code !== 'NONE')),
+            )
+            .map((i) => [
+              esc(i.title || i.work_id),
+              `${valueText(i.lifecycle)} / ${valueText(i.safe_next_action?.code)}`,
+            ]),
+        ),
+      ) +
+      readPanel(
+        'messages',
+        'Posted blocker / decision metadata',
+        entries,
+        now,
+        (b) =>
+          `<p>Availability ${valueText(b.availability)}; ${b.messages.length} loaded messages of ${valueText(b.total)}. Source age and classification coverage unknown. <a href="/fleet.html">Fleet metadata</a></p>`,
+      ) +
+      readPanel('proposals', 'Proposals', entries, now, (b) =>
+        table(
+          'Queued proposals, not confirmed operator decisions',
+          ['Proposal', 'Summary', 'Queued event age'],
+          b.pending.map((p) => [
+            `<a href="/consultation.html">${esc(p.source_module || 'Proposal')}</a>`,
+            valueText(p.root_cause_summary),
+            ageText(elapsedSeconds(p.queued_at, now)),
+          ]),
+        ),
+      ) +
+      readPanel(
+        'alerts',
+        'Alerts',
+        entries,
+        now,
+        (b) =>
+          table(
+            'Returned alerts',
+            ['Name', 'Severity / state', 'Summary', 'Started event age'],
+            b.data.alerts
+              .filter(record)
+              .map((a) => [
+                valueText(a.name),
+                `${valueText(a.severity)} / ${valueText(a.state)}`,
+                valueText(a.summary),
+                ageText(elapsedSeconds(a.starts_at, now)),
+              ]),
+          ),
+        gap(
+          'D11-AL',
+          'existing observability custodian and codex-monitor',
+          'Unavailable alert source cannot prove no alerts.',
+        ),
+      )
+    );
+  }
+
+  function opsPanels(entries, now) {
+    return (
+      `<h2>Ops</h2>` +
+      readPanel(
+        'backups',
+        'Backup and restore',
+        entries,
+        now,
+        (b, e) => {
+          const d = b.data;
+          return `<p>Backup result ${valueText(d.last_result?.status)}; backup event age ${ageText(elapsedSeconds(d.last_result?.at, now))}. Restore test ${valueText(d.restore_test?.ok)}; restore event age ${ageText(elapsedSeconds(d.restore_test?.at, now))}. Upstream stale ${valueText(d.stale)}.</p><a href="/admin.html#backups">Backup detail</a>`;
+        },
+        gap(
+          'D11-BA',
+          'existing backup custodian and codex-monitor',
+          'Missing backup or restore evidence remains unknown.',
+        ),
+      ) +
+      readPanel(
+        'downloads',
+        'Downloads',
+        entries,
+        now,
+        (b) =>
+          table(
+            'Download observations; unidentified rows are never merged',
+            ['Alias', 'State', 'Progress', 'Last progress event age', 'Stalled'],
+            b.data.items
+              .filter(record)
+              .map((d) => [
+                d.source === 'unlisted' ? 'Unidentified download (D12)' : valueText(d.source),
+                valueText(d.state),
+                number(d.total) && d.total > 0
+                  ? `${valueText(d.done)} / ${d.total} (${valueText(d.pct)}%)`
+                  : `${valueText(d.done)} / unknown total`,
+                ageText(elapsedSeconds(d.last_progress_at, now)),
+                valueText(d.stalled),
+              ]),
+          ),
+        gap(
+          'D11-DL / D12',
+          'existing download custodian, DevOps/operator and codex-monitor',
+          'Producer binding and approved recognizable public aliases are required.',
+        ),
+      ) +
+      readPanel(
+        'stats',
+        'Statistics and PR throughput',
+        entries,
+        now,
+        (b) => {
+          const stats = table(
+            'Returned monitoring statistics',
+            ['Metric', 'Value', 'Status'],
+            b.data.stats
+              .filter(record)
+              .map((s) => [
+                valueText(s.name),
+                s.status === 'ok' ? valueText(s.value) : 'unknown',
+                valueText(s.status),
+              ]),
+          );
+          const eventOK = sourceStatus(b.sources, 'stale_prs') === 'ok';
+          return (
+            stats +
+            (eventOK
+              ? table(
+                  'PR event history; not per-PR merge proof',
+                  ['Repository', 'Backlog', 'Daily opened / merged'],
+                  b.data.by_repo
+                    .filter(record)
+                    .map((r) => [
+                      valueText(r.repo),
+                      valueText(r.backlog),
+                      (Array.isArray(r.days) ? r.days.filter(record) : [])
+                        .map(
+                          (d) =>
+                            `${valueText(d.date)}: ${valueText(d.opened)} / ${valueText(d.merged)}`,
+                        )
+                        .join('<br>'),
+                    ]),
+                )
+              : '<p>PR throughput unknown: event source unavailable. Default zero aggregates are not measurements.</p>')
+          );
+        },
+        gap(
+          'D11-ST/SP',
+          'existing statistics custodian and codex-monitor',
+          'Missing global statistics and PR event history remain required.',
+        ),
+      ) +
+      readPanel(
+        'links',
+        'Monitoring destinations',
+        entries,
+        now,
+        (b) =>
+          table(
+            'Approved monitoring names',
+            ['Name', 'Destination'],
+            b.data.links
+              .filter(record)
+              .map((l) => [
+                valueText(l.name),
+                'Destination unavailable: boundary approval unknown (D13)',
+              ]),
+          ),
+        gap(
+          'D11-LI / D13 / RETAIN-02',
+          'DevOps/operator and codex-monitor',
+          'Named destinations need existing-boundary approval; link construction does not prove destination health.',
+        ),
+      )
+    );
+  }
+
+  function renderOperator(entries, route, now) {
+    const p = (k, t, render, extra) => readPanel(k, t, entries, now, render, extra);
+    const workers = () =>
+      `<h2>Workers</h2>${p('workers', 'Worker observations', (b, e) => workersRows(b, e, now))}${p(
+        'tasks',
+        'Task results',
+        (b) =>
+          `<p>${b.tasks.length} loaded tasks of ${valueText(b.total)} returned total. Statuses remain distinct.</p>` +
+          table(
+            'Delegate task observations',
+            ['Task', 'Status', 'Detail'],
+            b.tasks.map((t) => [
+              esc(t.task_id),
+              esc(t.status),
+              `<a href="/delegate.html">Select task in Delegate</a>`,
+            ]),
+          ),
+      )}`;
+    const capacity = () =>
+      `<h2>Host and test capacity</h2>${p('hosts', 'Host load', (b, e) => hostRows(b, e, now))}${p('slots', 'Governed test slots', slotsRows)}<h2>Account capacity</h2>${p('accounts', 'Account windows', (b, e) => accountRows(b, e, now), gap('D02', 'codex-monitor; external tool custodian and account bindings under operator authority', 'Muse, OpenAI/Sol, AGY Claude/GPT, Gemini and shared Grok/Cursor windows and coherent lu-capacity parity remain required.'))}<a href="/routing.html">Routing details</a>`;
+    const pipeline = () =>
+      `<h2>PR pipeline</h2>${p('work', 'Public PR observations', () => pipelineRows(entries, now, route.params))}${p('prs', 'Optional current-head pipeline', () => (entries.work?.body ? '<p>Matched by repository and PR identity in the table above. Field qualifications stay separate.</p>' : pipelineRows(entries, now, route.params)))}`;
+    if (route.view === 'prs') return pipeline();
+    if (route.view === 'workers') return workers();
+    if (route.view === 'capacity') return capacity();
+    if (route.view === 'attention') return attentionPanels(entries, now);
+    if (route.view === 'ops') return opsPanels(entries, now);
+    return (
+      attentionPanels(entries, now) +
+      `<h2>Lanes and drivers</h2>${p('registry', 'Session-store streams', (b) => registryRows(b, entries, now), gap('D03 / D11-RO/HA', 'codex-monitor and existing registry/roster custodians', 'Lease activity is not current work. Registry has no model field or universal current-activity classifier.'))}` +
+      workers() +
+      capacity() +
+      pipeline() +
+      opsPanels(entries, now)
+    );
+  }
   function parseRoute(hash) {
     const fragment = hash || "#/home";
     const raw = fragment.charAt(0) === "#" ? fragment.slice(1) : fragment;
@@ -89,7 +810,7 @@
   }
 
   function taskText(task) {
-    if (!task || (task.kind !== "pr" && task.kind !== "issue")) return "no current task";
+    if (!task || (task.kind !== "pr" && task.kind !== "issue")) return "current task unknown";
     const label = task.kind === "pr" ? "PR" : "Issue";
     const number = Number.isInteger(task.number) ? " #" + task.number : "";
     const title = task.title ? " · " + task.title : "";
@@ -212,7 +933,7 @@
   }
 
   function workerSummary(workers) {
-    if (!Array.isArray(workers) || workers.length === 0) return "no workers";
+    if (!Array.isArray(workers) || workers.length === 0) return "worker coverage unknown";
     const bits = workers.map((worker) => {
       const model = (worker && worker.model) || "unknown model";
       const state = worker && STATES.indexOf(worker.state) !== -1 ? worker.state : "unknown";
@@ -252,7 +973,7 @@
     const driver = epic.driver;
     const driverLine = driver
       ? `<p class="fb-sub">driver: <b>${esc(driver.cli || "unknown cli")}</b> · ${esc(driver.model || "unknown model")}</p>`
-      : `<p class="fb-sub">no driver</p>`;
+      : `<p class="fb-sub">driver unknown</p>`;
     return `<a class="fb-card is-${state}" href="${esc(href)}">
       <div class="fb-card-top"><div><h3>${esc(epic.title || id || "Untitled")}</h3>
         <p class="fb-sub">${esc(subtitle(epic))}</p></div>${statePill(epic.state)}</div>
@@ -324,34 +1045,14 @@
     return "unknown";
   }
 
-  function panelStatus(sources, name) {
-    if (!name) return "later slice";
-    const status = sourceStatus(sources, name);
-    if (status === "not_configured") return "not installed";
-    if (status === "unavailable") return "unavailable";
-    if (status === "stale") return "stale";
-    return "later slice";
-  }
-
-  function statusRows(sources, pairs) {
-    return pairs.map(([label, name]) => {
-      const value = panelStatus(sources, name);
-      return `<div class="fb-place-row"><span>${esc(label)}</span><b>${esc(value)}</b></div>`;
-    }).join("");
-  }
-
-  function panel(title, endpoint, body) {
-    return `<section class="fb-panel fb-placeholder"><h3>${esc(title)}</h3>${body}<p class="fb-src">source: ${esc(endpoint)}</p></section>`;
-  }
-
   function harnessCaption(sources) {
-    if (panelStatus(sources, "harness_snapshot") !== "not installed") return "";
+    if (sourceLabel(sourceStatus(sources, "harness_snapshot")) !== "not installed") return "";
     return `<p class="fb-src">Harness health: not installed</p>`;
   }
 
   function sourcesOf(envelope) {
     const rows = envelope && envelope.sources;
-    return Array.isArray(rows) ? rows : [];
+    return Array.isArray(rows) ? rows.filter(record) : [];
   }
 
   function mergeSources() {
@@ -429,50 +1130,9 @@
     const epics = Array.isArray(model.epics) ? model.epics : [];
     const attention = Array.isArray(model.attention) ? model.attention : [];
     const sources = model.sources || [];
-    const filtered = filterEpics(epics, query);
-    const banner = staleBanner(staleState(sources, ageOption(options), optionFlag(options, "failed")));
-    const cards = filtered.map(cardHtml).join("") || `<p class="fb-empty">No epics match these filters.</p>`;
-    const attn = attention.map(attentionItem).join("") || `<p class="fb-empty">Nothing needs attention.</p>`;
-    const roster = panel(
-      "Roster",
-      "/api/fleet/v1/roster",
-      statusRows(sources, [["Roster", "roster_snapshot"]]),
-    );
-    const budget = panel(
-      "Routing budget and pace",
-      "/api/fleet/v1/budget",
-      statusRows(sources, [["Budget", ""]]),
-    );
-    const ops = panel(
-      "Ops",
-      "/api/fleet/v1/alerts",
-      statusRows(sources, [
-        ["Alerts", "alerts"],
-        ["Backups", "backups"],
-        ["Downloads", "downloads"],
-        ["Stats", "stats"],
-        ["Links", "links"],
-      ]),
-    );
-    return `${banner}
-      <section>
-        <h2>Needs attention <span class="fb-count">${attention.length} items</span></h2>
-        <div class="fb-attn">${attn}</div>
-        <p class="fb-src">source: /api/fleet/v1/now</p>
-      </section>
-      <section>
-        <h2>Dependency layers</h2>
-        ${roster}
-      </section>
-      <section>
-        <h2>Epics and drivers <span class="fb-count">${filtered.length} of ${epics.length}</span></h2>
-        ${toolbar(epics, query)}
-        ${harnessCaption(sources)}
-        <div class="fb-grid">${cards}</div>
-        <p class="fb-src">source: /api/fleet/v1/now · /api/fleet/v1/epics</p>
-      </section>
-      <div class="fb-bottom">${budget}${ops}</div>
-      ${sourceList(sources)}`;
+    return `${staleBanner(staleState(sources, ageOption(options), optionFlag(options, "failed")))}
+      <section><h2>Derived Fleet attention</h2><div class="fb-attn">${attention.map(attentionItem).join("") || '<p>No derived attention rows returned; coverage unknown.</p>'}</div></section>
+      <section><h2>Optional Fleet board observations</h2>${toolbar(epics, query)}${harnessCaption(sources)}<div class="fb-grid">${filterEpics(epics, query).map(cardHtml).join("") || '<p>No epics match these filters; source coverage unknown.</p>'}</div></section>${sourceList(sources)}`;
   }
 
   function liveness(driver) {
@@ -484,7 +1144,7 @@
     const driver = epic.driver;
     const source = `<p class="fb-src">source: /api/fleet/v1/epics/${esc(epic.epic || "")} · /api/fleet/v1/agents</p>`;
     if (!driver) {
-      return `<section class="fb-panel"><h3>Driver</h3><p class="fb-sub">No driver.</p>
+      return `<section class="fb-panel"><h3>Driver</h3><p class="fb-sub">Driver unknown.</p>
         <h3 class="fb-subhead">Harness health</h3>${harnessTiles(null)}${harnessCaption(sources)}${source}</section>`;
     }
     return `<section class="fb-panel"><h3>Driver</h3>
@@ -504,7 +1164,7 @@
   function workersTable(workers) {
     const rows = Array.isArray(workers) ? workers : [];
     if (!rows.length) {
-      return `<section class="fb-panel"><h3>Workers</h3><p class="fb-sub">No workers.</p>
+      return `<section class="fb-panel"><h3>Workers</h3><p class="fb-sub">No worker rows returned; coverage unknown.</p>
         <p class="fb-src">source: /api/fleet/v1/agents</p></section>`;
     }
     const body = rows.map((worker) => `<tr>
@@ -559,37 +1219,16 @@
     const workers = agents
       ? agents.filter((agent) => agent && agent.epic === epic.epic && agent.role === "worker")
       : (Array.isArray(epic.workers) ? epic.workers : []);
-    const prs = panel(
-      "PRs for this epic",
-      "/api/fleet/v1/prs",
-      statusRows(sources, [["Merge queue", "mq_state"]]),
-    );
-    const deps = panel(
-      "Dependencies and restart",
-      "/api/fleet/v1/roster",
-      statusRows(sources, [["Roster", "roster_snapshot"]]),
-    );
+    const prs = '<section class="fb-panel"><h3>PR observations</h3><p>Canonical PR membership unknown (D04). <a href="#/prs">Open PR pipeline</a></p></section>';
+    const deps = '<section class="fb-panel"><h3>Registry and dependencies</h3><p>Board snapshot does not establish registry coverage. <a href="/epics.html">Registry detail</a> · <a href="/epics-map.html">Epics Map</a></p></section>';
     return `${banner}
       ${epicHeader(epic)}
       <div class="fb-cols"><div>${driverBlock(epic, sources)}${workersTable(workers)}${prs}</div><div>${deps}</div></div>
       ${sourceList(sources)}`;
   }
 
-  function renderPrs(params, sources, options) {
-    const query = params instanceof URLSearchParams ? params : new URLSearchParams(params || "");
-    const selected = query.get("pr");
-    const banner = staleBanner(staleState(sources || [], ageOption(options), optionFlag(options, "failed")));
-    const extra = selected
-      ? `<p class="fb-sub">Selected PR #${esc(selected)}. Detail arrives in a later slice.</p>`
-      : "";
-    const body = panel(
-      "PR pipeline",
-      "/api/fleet/v1/prs",
-      statusRows(sources, [["Merge queue", "mq_state"]]),
-    );
-    return `${banner}
-      <p class="fb-crumbs"><a href="#/home">Home</a> <span aria-hidden="true">›</span> PR pipeline</p>
-      <h2>PR pipeline</h2>${extra}${body}${sourceList(sources)}`;
+  function renderPrs(params, entries, options) {
+    return renderOperator(entries || {}, { view: 'prs', params: params instanceof URLSearchParams ? params : new URLSearchParams(params || '') }, options?.now || Date.now());
   }
 
   function renderAgent(agent) {
@@ -712,6 +1351,7 @@
   }
 
   const api = {
+    READS, validRead, readResult, elapsedSeconds, advancedAge, workerBuckets, renderOperator,
     REFRESH_MS,
     STALE_MS,
     esc,
@@ -745,6 +1385,12 @@
 
   if (typeof document === "undefined" || !document.getElementById) return;
 
+  const reads = {};
+  const readGeneration = {};
+  let pendingRefresh = false;
+  let refreshRunning = false;
+  let returnFocus = null;
+
   const snapshot = { now: null, epics: null, epic: null, epicId: "", agents: null };
   const freshAt = { now: 0, epics: 0, epic: 0, agents: 0 };
   const failures = { now: false, epics: false, epic: false, agents: false };
@@ -752,6 +1398,8 @@
   let appliedKey = "";
   let openAgentId = null;
   let searchTimer = 0;
+  let searchVersion = 0;
+  let paintQueued = false;
   let failed = false;
   let chord = false;
 
@@ -806,6 +1454,9 @@
     const drawer = document.getElementById("fb-drawer");
     if (!drawer) return;
     drawer.hidden = false;
+    document.getElementById("fb-app").inert = true;
+    const top = document.querySelector("header");
+    if (top) top.inert = true;
     drawer.classList.add("is-open");
     drawer.innerHTML = renderAgent(findAgent(id));
   }
@@ -816,11 +1467,21 @@
     if (!drawer) return;
     drawer.classList.remove("is-open");
     drawer.hidden = true;
+    document.getElementById("fb-app").inert = false;
+    const top = document.querySelector("header");
+    if (top) top.inert = false;
     drawer.innerHTML = "";
+    if (returnFocus?.isConnected !== false && returnFocus?.focus) returnFocus.focus();
+    else if (returnFocus?.getAttribute && document.querySelectorAll) {
+      const id = returnFocus.getAttribute('data-agent');
+      const replacement = Array.from(document.querySelectorAll('[data-agent]')).find(el => el.getAttribute('data-agent') === id);
+      if (replacement) replacement.focus();
+    }
   }
 
   function openAgent(id) {
     if (!id) return;
+    returnFocus = document.activeElement;
     openAgentId = id;
     fillDrawer(id);
     const close = document.querySelector("#fb-drawer [data-action='close']");
@@ -856,11 +1517,17 @@
     const app = document.getElementById("fb-app");
     if (!app) return;
     const route = parseRoute(location.hash || "#/home");
-    const drafting = document.activeElement && document.activeElement.id === "fb-search" && searchTimer;
+    const focused = document.activeElement;
+    const focusId = focused && focused.id;
+    const focusAgent = focused?.getAttribute && focused.getAttribute("data-agent");
+    const focusRetry = focused?.getAttribute && focused.getAttribute("data-retry");
+    const focusFilter = focused?.getAttribute && focused.getAttribute("data-filter");
+    const focusHref = focused?.getAttribute && focused.getAttribute("href");
+    const drafting = document.activeElement && document.activeElement.id === "fb-search";
     const draft = drafting ? document.activeElement.value : null;
     const selection = drafting ? document.activeElement.selectionStart : null;
+    const selectionEnd = drafting ? document.activeElement.selectionEnd : null;
     const y = window.scrollY;
-    const sources = viewSources(route);
     const options = {
       ageMs: ageMs(),
       failed: routeFailed(failures, route),
@@ -871,34 +1538,52 @@
       const data = snapshot.epic && snapshot.epic.data;
       const id = data && data.epic;
       const matches = snapshot.epicId === route.epicId && snapshot.epic && (id === route.epicId || data === null);
-      if (matches) html = renderEpic(snapshot.epic, snapshot.agents, options);
+      const registered = reads.registry?.body?.streams.find(s => s.stream_id === route.epicId || s.stream_name === route.epicId);
+      if (registered) {
+        html = `<p class="fb-crumbs"><a href="#/home">Home</a> / stream</p><h2>${esc(registered.title || registered.stream_id)}</h2>` +
+          readPanel('registry', 'Selected session-store stream', reads, Date.now(), () => registryRows({streams:[registered]}, reads, Date.now()));
+        if (matches && data) html += renderEpic(snapshot.epic, snapshot.agents, options);
+        else html += '<p>Optional board detail unavailable. Registry lease evidence is separate from current activity. <a href="#/prs">PR pipeline</a></p>';
+      }
+      else if (matches) html = renderEpic(snapshot.epic, snapshot.agents, options);
       else if (failed && snapshot.epicId === route.epicId) html = `<p class="fb-empty">The board could not be read.</p>`;
       else html = `<p class="fb-empty">Loading the board…</p>`;
-    } else if (route.view === "prs") {
-      html = renderPrs(route.params, sources, options);
-    } else if (!snapshot.now && !snapshot.epics) {
-      html = failed ? `<p class="fb-empty">The board could not be read.</p>` : `<p class="fb-empty">Loading the board…</p>`;
     } else {
-      html = renderHome(homeModel(snapshot.now, snapshot.epics), route.params, options);
+      reads.epics = { body: snapshot.epics, fetchedAt: freshAt.epics };
+      html = renderOperator(reads, route, Date.now());
+      if (route.view === "home") {
+        const model = homeModel(snapshot.now, snapshot.epics);
+        html += renderHome(model, route.params, options);
+      }
     }
+    const statusText = Object.entries(reads).filter(([key]) => READS[key]).map(([key,e]) => key + ': ' + (e.error || (e.pending ? 'loading' : 'observed'))).join('; ');
+    const live = document.getElementById('fb-status');
+    if (live && live.textContent !== statusText) live.textContent = statusText;
     app.innerHTML = html;
     markNav(route.view);
     syncStamp(route);
+    if (focusId || focusAgent || focusRetry || focusFilter || focusHref) {
+      // Match attributes directly; untrusted identities never enter a CSS selector.
+      const candidates = Array.from(app.querySelectorAll ? app.querySelectorAll('a, button, input, select') : []);
+      const replacement = candidates.find(el => focusId ? el.id === focusId : focusAgent ? el.getAttribute('data-agent') === focusAgent : focusRetry ? el.getAttribute('data-retry') === focusRetry : focusFilter ? el.getAttribute('data-filter') === focusFilter : el.getAttribute('href') === focusHref);
+      if (replacement) replacement.focus();
+    }
     if (draft != null) {
       const field = document.getElementById("fb-search");
       if (field) {
         field.value = draft;
         field.focus();
         const pos = selection == null ? draft.length : selection;
-        if (field.setSelectionRange) field.setSelectionRange(pos, pos);
+        if (field.setSelectionRange) field.setSelectionRange(pos, selectionEnd ?? pos);
       }
     }
     window.scrollTo(0, y);
-    if (openAgentId) fillDrawer(openAgentId);
+    if (openAgentId && !(document.getElementById("fb-drawer")?.contains?.(document.activeElement))) fillDrawer(openAgentId);
   }
 
-  async function fetchJson(path) {
-    if (!isFleetPath(path)) return null;
+  async function fetchJson(path, detailed) {
+    const result = (body, error) => detailed ? { body, error } : body;
+    if (!isFleetPath(path) && !Object.values(READS).includes(path)) return result(null, 'Read path refused');
     try {
       const init = {
         headers: { Accept: "application/json" },
@@ -912,17 +1597,48 @@
       try {
         body = await response.json();
       } catch (error) {
-        body = null;
+        return result(null, 'JSON parse failed');
       }
-      if (!response.ok && response.status !== 404) return null;
-      if (!body || typeof body !== "object") return null;
-      return body;
+      if (!response.ok && !(response.status === 404 && path.startsWith("/api/fleet/v1/epics/"))) return result(null, 'HTTP ' + response.status);
+      if (!record(body)) return result(null, 'Malformed success response');
+      if (path.startsWith('/api/fleet/v1/') && !Object.values(READS).includes(path)) {
+        const slot = path.includes('/epics/') ? 'epic' : path.endsWith('/agents') ? 'agents' : path.endsWith('/epics') ? 'epics' : 'now';
+        if (!Array.isArray(body.sources) || !body.sources.every(record) || body.schema !== 'fleet.v1.' + slot) return result(null, 'Malformed success response');
+        const epicRow = row => record(row) && text(row.epic) && (!('workers' in row) || Array.isArray(row.workers) && row.workers.every(record));
+        if (slot === 'epic') { if (body.data !== null && !epicRow(body.data)) return result(null, 'Malformed success response'); }
+        else {
+          const data = body.data, rows = data?.[slot === 'now' ? 'attention' : slot];
+          if (!record(data) || !Array.isArray(rows) || !rows.every(slot === 'epics' ? epicRow : record)) return result(null, 'Malformed success response');
+          if (slot === 'now' && (!Array.isArray(data.epics) || !data.epics.every(epicRow))) return result(null, 'Malformed success response');
+        }
+      }
+      return result(body, '');
     } catch (error) {
-      return null;
+      return result(null, 'Request failed');
     }
   }
 
+  function schedulePaint() {
+    if (paintQueued) return;
+    paintQueued = true;
+    Promise.resolve().then(() => { paintQueued = false; paint(); });
+  }
+
+  async function refreshRead(key) {
+    const gen = (readGeneration[key] || 0) + 1;
+    readGeneration[key] = gen;
+    reads[key] = Object.assign({}, reads[key], { pending: true });
+    schedulePaint();
+    const result = await fetchJson(READS[key], true);
+    if (readGeneration[key] !== gen) return;
+    reads[key] = readResult(key, result.body, result.error, reads[key], Date.now());
+    schedulePaint();
+  }
+
   async function refresh() {
+    if (refreshRunning) { pendingRefresh = true; return; }
+    refreshRunning = true;
+    const extraReads = Promise.all(Object.keys(READS).map(refreshRead));
     const generation = ++refreshGen;
     const route = parseRoute(location.hash || "#/home");
     const ticket = { generation, key: routeKey(route) };
@@ -969,13 +1685,20 @@
         appliedKey = ticket.key;
         paint();
       }
+      await extraReads;
+      refreshRunning = false;
+      if (pendingRefresh) { pendingRefresh = false; refresh(); }
     }
   }
 
   function openHelp() {
     const help = document.getElementById("fb-help-modal");
     if (!help) return;
+    returnFocus = document.activeElement;
     help.hidden = false;
+    document.getElementById("fb-app").inert = true;
+    const top = document.querySelector("header");
+    if (top) top.inert = true;
     const close = document.getElementById("fb-help-close");
     if (close) close.focus();
   }
@@ -983,6 +1706,10 @@
   function closeHelp() {
     const help = document.getElementById("fb-help-modal");
     if (help) help.hidden = true;
+    document.getElementById("fb-app").inert = false;
+    const top = document.querySelector("header");
+    if (top) top.inert = false;
+    if (returnFocus?.isConnected !== false && returnFocus?.focus) returnFocus.focus();
   }
 
   function setTheme(theme) {
@@ -1032,14 +1759,18 @@
     app.addEventListener("input", (event) => {
       if (!event.target || event.target.id !== "fb-search") return;
       const value = event.target.value;
+      const version = ++searchVersion;
       window.clearTimeout(searchTimer);
       searchTimer = window.setTimeout(() => {
         searchTimer = 0;
+        if (version !== searchVersion) return;
         history.replaceState(null, "", withParams(location.hash || "#/home", { q: value.trim() ? value : "" }));
         paint();
       }, 250);
     });
     app.addEventListener("click", (event) => {
+      const retry = event.target.closest && event.target.closest('[data-retry]');
+      if (retry && READS[retry.getAttribute('data-retry')]) { refreshRead(retry.getAttribute('data-retry')); return; }
       const button = event.target.closest && event.target.closest("[data-agent]");
       if (!button) return;
       event.preventDefault();
@@ -1071,6 +1802,19 @@
     }
 
     document.addEventListener("keydown", (event) => {
+      const help = document.getElementById('fb-help-modal');
+      const drawer = document.getElementById('fb-drawer');
+      const dialog = help && !help.hidden ? help : drawer && !drawer.hidden ? drawer : null;
+      if (dialog) {
+        if (event.key === 'Escape') { event.preventDefault(); if (dialog === help) closeHelp(); else closeDrawer(); return; }
+        if (event.key === 'Tab' && dialog.querySelectorAll) {
+          const items = Array.from(dialog.querySelectorAll('a[href], button:not([disabled]), input, select, [tabindex="0"]'));
+          const first = items[0], last = items[items.length - 1];
+          if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
+          else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
+        }
+        return;
+      }
       const tag = event.target && event.target.tagName;
       if (tag === "INPUT" || tag === "SELECT" || tag === "TEXTAREA") {
         if (event.key === "Escape") event.target.blur();
@@ -1106,6 +1850,9 @@
     });
 
     window.addEventListener("hashchange", () => {
+      searchVersion++;
+      window.clearTimeout(searchTimer);
+      searchTimer = 0;
       const route = parseRoute(location.hash || "#/home");
       paint();
       if (routeKey(route) !== appliedKey) refresh();
