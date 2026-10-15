@@ -25,6 +25,10 @@ def _script(page: str, start: str, end: str) -> str:
     return html[html.index(start) : html.index(end, html.index(start))]
 
 
+def _retained_script(page: str, start: str, end: str) -> str:
+    return _script(page, "const retainedPanels", "// End retained panel clocks.") + _script(page, start, end)
+
+
 @pytest.mark.parametrize("source_status", ["ok", "degraded", "unavailable"])
 def test_next_empty_queue_preserves_source_completeness(monkeypatch, source_status):
     source = {
@@ -63,10 +67,14 @@ def test_projection_direct_json_retains_opsec_middleware(monkeypatch):
 
 _DOM = r"""
 const assert = require('node:assert/strict');
+// Run page clocks without keeping the subprocess alive after its assertions finish.
+const setInterval = (...args) => require('node:timers').setInterval(...args).unref();
 const elements = new Map();
-const document = {getElementById(id) {
-  if (!elements.has(id)) elements.set(id, {textContent: 'old data', innerHTML: 'old data', className: '',
-    setAttribute() {}, classList: {toggle() {}, add() {}, remove() {}}});
+const makeElement = () => ({textContent: 'old data', innerHTML: 'old data', className: '',
+  dataset: {}, style: {}, after(node) {this.nextElementSibling = node;},
+  setAttribute(key, value) {this[key] = value;}, classList: {toggle() {}, add() {}, remove() {}}});
+const document = {createElement: makeElement, querySelectorAll: () => [], getElementById(id) {
+  if (!elements.has(id)) elements.set(id, makeElement());
   return elements.get(id);
 }};
 const tick = () => new Promise(resolve => setImmediate(resolve));
@@ -74,7 +82,9 @@ const tick = () => new Promise(resolve => setImmediate(resolve));
 
 
 def test_runtime_panels_paint_independently_and_empty_is_not_error():
-    code = _script("runtime.html", "let runtimeLoading", "\nfunction refreshRuntime")
+    code = _retained_script("runtime.html", "const runtimeTargets", "\nfunction setBanner") + _script(
+        "runtime.html", "let runtimeLoading", "\nfunction refreshRuntime"
+    )
     _node(
         _DOM
         + r"""
@@ -86,7 +96,9 @@ const fetchJson = async url => {
   if (url.includes('/acpx')) return pendingAcpx;
   if (url.endsWith('/agents')) return {agents: []};
   if (url.includes('/routing-assignments')) throw new Error('unavailable');
-  return {};
+  if (url.includes('/usage')) return {by_agent: {}};
+  if (url.includes('/recent')) return {records: []};
+  throw new Error(`Unexpected URL: ${url}`);
 };
 const setBanner = (id, text) => banners[id] = text;
 const renderAgents = () => painted.push('agents');
@@ -108,7 +120,7 @@ const renderHeadroom = () => {};
   assert.match(document.getElementById('headroom-content').innerHTML, /No runtime agents/);
   assert.equal(banners['headroom-banner'], '');
   assert.match(document.getElementById('routing-assignments-status').textContent, /unknown/);
-  resolveAcpx({});
+  resolveAcpx({seats: [], transport: {}});
   await first;
   assert.match(document.getElementById('last-refresh').textContent, /Refresh attempted/);
 })().catch(e => {console.error(e); process.exitCode = 1;});
@@ -117,11 +129,20 @@ const renderHeadroom = () => {};
 
 
 def test_runtime_failed_agent_inventory_does_not_claim_empty_headroom():
-    code = _script("runtime.html", "let runtimeLoading", "\nfunction refreshRuntime")
+    code = _retained_script("runtime.html", "const runtimeTargets", "\nfunction setBanner") + _script(
+        "runtime.html", "let runtimeLoading", "\nfunction refreshRuntime"
+    )
     _node(
         _DOM
         + r"""
-const fetchJson = async url => {if (url.endsWith('/agents')) throw new Error('unavailable'); return {};};
+const fetchJson = async url => {
+  if (url.endsWith('/agents')) throw new Error('unavailable');
+  if (url.includes('/usage')) return {by_agent: {}};
+  if (url.includes('/recent')) return {records: []};
+  if (url.includes('/acpx')) return {seats: [], transport: {}};
+  if (url.includes('/routing-assignments')) return {assignments: []};
+  throw new Error(`Unexpected URL: ${url}`);
+};
 const setBanner = () => {};
 const renderAgents = () => {}, renderUsage = () => {}, renderRecent = () => {};
 const renderAcpx = () => {}, renderRoutingAssignments = () => {}, renderHeadroom = () => {};
@@ -136,7 +157,9 @@ loadRuntime().then(() => {
 
 
 def test_monitor_http_failure_clears_previous_capacity():
-    code = _script("runtime.html", "async function refreshAgentMonitor", "document.addEventListener('DOMContentLoaded'")
+    code = _retained_script(
+        "runtime.html", "async function refreshAgentMonitor", "document.addEventListener('DOMContentLoaded'"
+    )
     _node(
         _DOM
         + "const fetch = async () => ({ok: false});\n"
@@ -152,24 +175,41 @@ refreshAgentMonitor().then(() => {
 
 
 def test_fleet_failed_panels_clear_old_data_and_old_refresh_cannot_overwrite():
-    code = _script("fleet.html", "let fleetGeneration", "\nfunction queueRefresh")
+    code = _retained_script("fleet.html", "function validateFleetPanel", "\nfunction queueRefresh")
     _node(
         _DOM
         + r"""
 let resolveOld, old = true;
 const errors = [], occupancyAttention = [];
 const oldResponse = new Promise(resolve => {resolveOld = resolve;});
+const fixtures = {
+  '/api/fleet/health': {authority_health: {}},
+  '/api/fleet/overview': {counts: {}},
+  '/api/fleet/operations': {broker: {}, zombies: {}, batches: {}},
+  '/api/fleet/authority/jobs': {jobs: []},
+  '/api/fleet/reviews': {reviews: []},
+  '/api/fleet/acp/conversations': {conversations: []},
+  '/api/fleet/dead-letters': {dead_letters: []},
+  '/api/fleet/workers/v1': {hosts: []},
+  '/api/occupancy': {hosts: {}, attention: []},
+  '/api/fleet/projects/v1': {hosts: {}},
+  '/api/fleet/activity': {records: []},
+  '/api/fleet/messages': {messages: []},
+  '/api/ops/entire-context/status': {recall: {}},
+};
 const fetchJson = async url => {
-  if (old) return oldResponse;
+  assert.ok(url in fixtures, `Unexpected URL: ${url}`);
+  if (old) return {...fixtures[url], ...await oldResponse};
   if (url === '/api/occupancy' || url === '/api/fleet/health') throw new Error('failed');
-  return {marker: 'new'};
+  return {...fixtures[url], marker: 'new'};
 };
 const query = url => url;
 const setError = text => errors.push(text);
 const renderHealth = data => {document.getElementById('plane-status').textContent = data.marker;};
 const renderOccupancy = data => {document.getElementById('occupancy-content').textContent = data.marker;};
 const renderOccupancyAttention = data => occupancyAttention.push(data);
-const renderOverview = () => {}, renderOperations = () => {}, renderRequests = () => {};
+const renderOverview = data => {document.getElementById('requests-total').textContent = data.marker;};
+const renderOperations = () => {}, renderRequests = () => {};
 const renderAuthorityJobs = () => {}, renderReviews = () => {}, renderAcp = () => {};
 const renderDeadLetters = () => {}, renderWorkers = () => {}, renderProjects = () => {};
 const renderActivity = () => {}, renderMessages = () => {}, refreshConversationContext = async () => {};
@@ -180,12 +220,14 @@ const renderActivity = () => {}, renderMessages = () => {}, refreshConversationC
   const first = refreshFleet();
   old = false;
   await refreshFleet();
+  assert.equal(document.getElementById('requests-total').textContent, 'new');
   assert.match(document.getElementById('occupancy-content').textContent, /Unavailable/);
   assert.match(document.getElementById('plane-status').textContent, /Unavailable/);
   assert.deepEqual(occupancyAttention, [[]]);
   assert.match(errors.at(-1), /Observer data could not be read/);
   resolveOld({marker: 'stale'});
   await first;
+  assert.equal(document.getElementById('requests-total').textContent, 'new');
   assert.match(document.getElementById('occupancy-content').textContent, /Unavailable/);
   assert.match(document.getElementById('plane-status').textContent, /Unavailable/);
 })().catch(e => {console.error(e); process.exitCode = 1;});
@@ -209,13 +251,14 @@ assert.rejects(fetchJson('/fixture'), /Invalid/).catch(e => {console.error(e); p
 
 
 def test_work_new_refresh_wins_while_private_is_pending():
-    code = _script("work.html", "  let projectionGeneration", "\n  function refilterOnly")
+    code = _retained_script("work.html", "  function recordWorkFetch", "\n  function refilterOnly")
     _node(
         _DOM
         + r"""
 const pending = [], installed = [];
 const PUBLIC_PROJECTION_URL = '/public', PRIVATE_PROJECTION_URL = '/private', PRIVATE_TIMEOUT_MS = 5000;
-const state = {};
+const PUBLIC_SOURCE_ID = 'public-monitor', PRIVATE_SOURCE_ID = 'private-local-adapter';
+const state = {receivedAt: new Map()};
 const showError = () => {};
 const installView = doc => installed.push(doc.marker);
 const admitPublicDocument = doc => ({ok: true, doc});
@@ -228,11 +271,11 @@ const privateMetaFromCode = code => code;
 (async () => {
   const first = loadProjection();
   const second = loadProjection();
-  pending[2].resolve({marker: 'new'});
+  pending[2].resolve({marker: 'new', sources: [{source_id: PUBLIC_SOURCE_ID, status: 'ok'}]});
   await tick();
   assert.deepEqual(installed, ['new']);
   assert.equal(state.privateStatusText, 'Checking capability…');
-  pending[0].resolve({marker: 'old'});
+  pending[0].resolve({marker: 'old', sources: [{source_id: PUBLIC_SOURCE_ID, status: 'ok'}]});
   pending[1].reject(new Error('old private unavailable'));
   await first;
   assert.deepEqual(installed, ['new']);
