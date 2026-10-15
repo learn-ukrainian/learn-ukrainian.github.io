@@ -699,15 +699,21 @@ def test_plus_command_dynamic_payload_refuses_when_operation_text_is_visible():
 
 @pytest.mark.parametrize("repetitions", [16, 28])
 def test_unterminated_heredoc_backticks_finish_within_existing_ceiling(repetitions):
+    # Bash cannot finish this backquote expansion, so the reader refuses it (#10521),
+    # still within the original time ceiling.
     code = (
         "import sys; sys.path.insert(0, 'agents_extensions/shared/hooks'); "
-        "from shell_bash import read_commands; "
-        "read_commands('cat <<EOF\\n`' + '\\\\_' * int(sys.argv[1]) + '\\nEOF\\ngh pr merge 5')"
+        "from shell_bash import ShellParseError, read_commands\n"
+        "try:\n"
+        "    read_commands('cat <<EOF\\n`' + '\\\\_' * int(sys.argv[1]) + '\\nEOF\\ngh pr merge 5')\n"
+        "except ShellParseError as refusal:\n"
+        "    print(refusal.reason_class, refusal)\n"
     )
     result = subprocess.run(
         [sys.executable, "-c", code, str(repetitions)], cwd=ROOT, capture_output=True, text=True, timeout=0.5
     )
     assert result.returncode == 0, result.stderr
+    assert result.stdout.strip() == "PARSE_INCOMPLETE unterminated backquote in a here-document"
 
 
 @pytest.mark.parametrize("body", ["`gh pr merge 5`", "`gh pr \\\nmerge 5`", "`gh pr merge 5 --admin`"])

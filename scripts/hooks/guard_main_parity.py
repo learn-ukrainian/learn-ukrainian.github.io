@@ -105,6 +105,11 @@ RULING_BY_CLASS: dict[str, tuple[str, str] | None] = {
     "redirect": ("2", "a redirect on the guarded op is outside the closed grammar"),
     "multiline_before": ("4", "a newline-separated command before the guarded op is not `&&`-admitted"),
     "multiline_after": ("2", "a command after the guarded op is outside the closed grammar"),
+    "decoded_word": (
+        "2",
+        'a word whose Bash value the reader cannot prove ($"...", brace expansion, a locale- or '
+        "version-dependent $'...' escape) is outside the closed grammar",
+    ),
 }
 
 
@@ -586,6 +591,10 @@ def attribute(row: dict, run: Run) -> dict:
     # An untyped block is a policy block of a detected trigger, not a grammar refusal.
     if run.reason_class is None and _NEW_TRIGGER.search(row["command"]):
         return entry("7", "symbolic-ref HEAD, bisect and rebase are blockable triggers origin/main did not guard")
+    if run.reason_class is None and row["class"] == "decoded_word":
+        return entry(
+            "1", "Bash decodes the word to the guarded op origin/main misread ($'...' octal wraps, NUL ends it)"
+        )
     if run.reason_class is None and ruling is not None:
         return entry("1", "the guarded op is detected in the unpruned tree (through a wrapper) where main missed it")
     if ruling is None:
