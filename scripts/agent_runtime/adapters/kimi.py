@@ -131,13 +131,7 @@ class KimiAdapter:
         for add_dir in _as_string_list(config.get("kimi_add_dirs")):
             cmd.extend(["--add-dir", add_dir])
 
-        _logger.debug(
-            "kimi invocation: task=%s mode=%s model=%s effort=%s",
-            task_id,
-            mode,
-            requested_model,
-            self.default_effort,
-        )
+        _logger.debug("kimi invocation")
 
         liveness_paths = tuple(
             path
