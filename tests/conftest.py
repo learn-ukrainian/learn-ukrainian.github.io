@@ -130,6 +130,28 @@ def sources_log_dir(tmp_path_factory: pytest.TempPathFactory) -> Generator[Path,
 
 
 @pytest.fixture(scope="session", autouse=True)
+def _lexicon_cap_test_unit_prefix() -> Generator[None, None, None]:
+    """Name scopes created by the suite ``lexicon-captest-*`` (#9624).
+
+    The cap tests OOM-kill real scopes on purpose; under the production prefix
+    the host's CappedScopeOomKill alert counts them as word-card workload
+    kills. ``os.environ`` (not a fixture-local value) so xdist workers and
+    nested subprocesses inherit it.
+    """
+    from scripts.lexicon.runner.memory import SCOPE_UNIT_PREFIX_ENV, TEST_SCOPE_UNIT_PREFIX
+
+    previous = os.environ.get(SCOPE_UNIT_PREFIX_ENV)
+    os.environ[SCOPE_UNIT_PREFIX_ENV] = TEST_SCOPE_UNIT_PREFIX
+    try:
+        yield
+    finally:
+        if previous is None:
+            os.environ.pop(SCOPE_UNIT_PREFIX_ENV, None)
+        else:
+            os.environ[SCOPE_UNIT_PREFIX_ENV] = previous
+
+
+@pytest.fixture(scope="session", autouse=True)
 def _dispatch_template_factory(tmp_path_factory: pytest.TempPathFactory) -> None:
     """Let the dispatch fixture clone be built once per worker (#9065)."""
     from tests.helpers.dispatch_checkout import register_template_factory
