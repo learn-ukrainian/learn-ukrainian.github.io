@@ -119,6 +119,14 @@ checkout or Git directory, an uncreatable root, or a directory that is not priva
 as `pytest_temp_unavailable`; the gate never falls back into the Git directory. Admission, queue,
 receipt and measurement files stay under `<git-common-dir>/lu-pre-push-gate/`.
 
+Each invocation creates its own uniquely named base in the repository directory and removes only that
+base when the invocation ends, green or not. The repository directory is opened once without
+following links, and the base is created and removed relative to that descriptor, so renaming or
+replacing an ancestor cannot redirect either step into another run's base. A cleanup failure refuses
+the push as incomplete unless the run has already failed. Nothing sweeps this location: a base left by
+a killed gate, including one a surviving pytest worker still uses, stays until the host's scratch
+aging described in `scripts/common/scratch.py` removes it.
+
 ## Experimental concurrent admission (#10555)
 
 `LU_PRE_PUSH_GATE_MAX_CONCURRENT_RUNS` accepts exactly `1` or `2`. Unset means `1`.
@@ -142,10 +150,11 @@ reservations for own-unit cleanup and driver disposition; it never promotes an o
 
 The serial pytest stage restores the stale `pytest-*` sweep only while its run holds the exclusive
 Git-common admission lock. That lock excludes live shared holders and any surviving scoped executor.
-A later exclusive serial run may reap directories left by a dead run. The sweep covers only this
-repository's base temp directory and, for bases left by gates that predate #10654, the gate state
-directory. It removes at most 64 entries per directory per run, never following links; a larger
-backlog drains over later exclusive runs.
+A later exclusive serial run may reap directories left by a dead run. The sweep reaches only the gate
+state directory, where only gates that predate #10654 create bases; it never touches the base temp
+location described above. Known gap: the lock does not exclude a serial pytest worker that outlived
+its SIGKILLed gate, because that worker holds no admission descriptor, so a later exclusive run can
+reap the legacy base it still uses.
 Shared/scoped execution or unknown exclusivity skips the sweep and records
 `stale_pytest_cleanup=skipped_shared_or_unknown` in stage diagnostics. Every run still removes its
 own pytest temporary directory. Sweep failures refuse the push as incomplete.

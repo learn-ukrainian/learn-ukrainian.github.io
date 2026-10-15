@@ -106,7 +106,6 @@ OVERLAY_PATHSPECS = (
 SCRATCH_ROOT_ENV = "LU_SCRATCH_ROOT"
 DEFAULT_SCRATCH_ROOT = Path("/var/tmp/lu")
 FALLBACK_SCRATCH_DIRNAME = "lu-scratch"
-STALE_PYTEST_SWEEP_LIMIT = 64  # per directory and run; a larger backlog drains over later exclusive runs
 
 
 class GateOutcome(Exception):
@@ -1247,15 +1246,15 @@ def inside_git_tree(path: Path) -> bool:
         return True
 
 
-def private_directory(path: Path) -> None:
-    """Create ``path`` with mode 0700 if missing; require a real directory owned by this user, closed to others."""
+def private_directory(path: Path) -> int:
+    """Create ``path`` with mode 0700 if missing and open it without following a link.
+
+    Requires a real directory owned by this user, closed to others, and returns its descriptor for the
+    caller to close.
+    """
     try:
         path.mkdir(mode=0o700, exist_ok=True)
         fd = os.open(path, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
-        try:
-            info = os.fstat(fd)
-        finally:
-            os.close(fd)
     except OSError as error:
         raise GateOutcome(
             "pytest_temp_unavailable",
@@ -1263,12 +1262,15 @@ def private_directory(path: Path) -> None:
             f"set {SCRATCH_ROOT_ENV} to a writable directory outside every Git checkout",
             incomplete=True,
         ) from None
+    info = os.fstat(fd)
     if info.st_uid != os.geteuid() or stat.S_IMODE(info.st_mode) & 0o077:
+        os.close(fd)
         raise GateOutcome(
             "pytest_temp_unavailable",
             "the pytest base temp directory is not private to this user (owner or mode); remove it and push again",
             incomplete=True,
         )
+    return fd
 
 
 def pytest_temp_parent(state: Path) -> Path:
@@ -1276,9 +1278,9 @@ def pytest_temp_parent(state: Path) -> Path:
 
     The root follows the fleet scratch convention: ``LU_SCRATCH_ROOT`` when set (strictly), else
     ``/var/tmp/lu``, else ``<system temp>/lu-scratch`` when the default cannot be created. Below it a
-    per-user 0700 directory holds one 0700 directory per Git common dir, so a sweep proven by this
-    repository's exclusive admission reaches neither another repository's nor another user's base temps.
-    An unsafe or uncreatable location refuses the push as incomplete; it never falls back into Git.
+    per-user 0700 directory holds one 0700 directory per Git common dir. Nothing sweeps them: each run
+    removes only its own base (``own_base_temp``) and the host's scratch aging owns what a killed run
+    leaves. An unsafe or uncreatable location refuses the push as incomplete; it never falls back into Git.
     """
 
     def unsafe() -> GateOutcome:
@@ -1315,25 +1317,76 @@ def pytest_temp_parent(state: Path) -> Path:
     user = scratch / f"pre-push-gate-{os.geteuid()}"
     parent = user / hashlib.sha256(os.fsencode(state.resolve())).hexdigest()[:32]
     for directory in (user, parent):
-        private_directory(directory)
+        os.close(private_directory(directory))
     if inside_git_tree(parent):
         raise unsafe()
     return parent
 
 
-def reap_stale_pytest_temps(directory: Path) -> None:
-    """Reap at most ``STALE_PYTEST_SWEEP_LIMIT`` leftover ``pytest-*`` entries, never following links."""
+def remove_own_base_temp(parent_fd: int, name: str) -> None:
+    """Remove ``name`` below ``parent_fd`` and everything in it, never following a link.
+
+    Every directory is opened relative to its parent's descriptor with ``O_NOFOLLOW``, so a rename or
+    link above or inside the base cannot redirect the removal. A directory a test left without owner
+    access is first given 0700, as ``tempfile.TemporaryDirectory`` does, without following a link.
+    """
+    flags = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW
     try:
-        with os.scandir(directory) as entries:
-            names = sorted(entry.name for entry in entries if entry.name.startswith("pytest-"))
+        if not stat.S_ISDIR(os.stat(name, dir_fd=parent_fd, follow_symlinks=False).st_mode):
+            os.unlink(name, dir_fd=parent_fd)
+            return
+        try:
+            fd = os.open(name, flags, dir_fd=parent_fd)
+        except PermissionError:
+            os.chmod(name, 0o700, dir_fd=parent_fd, follow_symlinks=False)
+            fd = os.open(name, flags, dir_fd=parent_fd)
+        try:
+            os.fchmod(fd, 0o700)
+            for entry in os.listdir(fd):
+                remove_own_base_temp(fd, entry)
+        finally:
+            os.close(fd)
+        os.rmdir(name, dir_fd=parent_fd)
     except FileNotFoundError:
         return
-    except OSError as error:
-        raise GateOutcome(
-            "validation_incomplete", f"stale pytest temp listing failed: {error}", incomplete=True
-        ) from None
-    for name in names[:STALE_PYTEST_SWEEP_LIMIT]:
-        reap_stale_node(directory / name)
+
+
+@contextlib.contextmanager
+def own_base_temp(parent: Path):
+    """Create this run's own pytest base temp below ``parent`` and remove only it afterwards (#10654).
+
+    The private parent is opened once without following a link, and the base is created and removed
+    relative to that descriptor, so replacing any ancestor after validation cannot redirect either step
+    into another run's base. Pytest deletes and recreates a given ``--basetemp``, so the base is held by
+    name inside the anchored parent, not by its own descriptor. No other run's base is ever removed.
+    """
+    parent_fd = private_directory(parent)
+    try:
+        name = f"pytest-{uuid.uuid4().hex}"
+        try:
+            os.mkdir(name, 0o700, dir_fd=parent_fd)
+        except OSError as error:
+            raise GateOutcome(
+                "pytest_temp_unavailable",
+                f"cannot create the pytest base temp ({errno.errorcode.get(error.errno, 'error')})",
+                incomplete=True,
+            ) from None
+        try:
+            yield str(parent / name)
+        except BaseException:
+            with contextlib.suppress(OSError):  # the run's own outcome outranks a cleanup failure
+                remove_own_base_temp(parent_fd, name)
+            raise
+        try:
+            remove_own_base_temp(parent_fd, name)
+        except OSError as error:
+            raise GateOutcome(
+                "validation_incomplete",
+                f"pytest base temp cleanup failed ({errno.errorcode.get(error.errno, 'error')})",
+                incomplete=True,
+            ) from None
+    finally:
+        os.close(parent_fd)
 
 
 def run_pytest_stage(
@@ -1359,9 +1412,8 @@ def run_pytest_stage(
     if diagnostics is not None:
         diagnostics["stale_pytest_cleanup"] = "exclusive_sweep" if exclusive else "skipped_shared_or_unknown"
     if exclusive:
-        # The state directory still holds bases left by gates that predate #10654.
-        for directory in (temp_parent, state):
-            reap_stale_pytest_temps(directory)
+        for stale in state.glob("pytest-*"):
+            reap_stale_node(stale)
     if not plan.node_ids:
         return "no tests selected"
     invocations = pytest_invocations(plan)
@@ -1375,7 +1427,7 @@ def run_pytest_stage(
     # The runs share the stage deadline and stop at the first refusal; a green stage means every run passed.
     summaries = []
     for nodes, dist in invocations:
-        with tempfile.TemporaryDirectory(prefix="pytest-", dir=temp_parent) as base_temp:
+        with own_base_temp(temp_parent) as base_temp:
             code, output = run_bounded(
                 [
                     "bash",
