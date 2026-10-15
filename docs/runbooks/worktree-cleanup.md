@@ -324,21 +324,29 @@ refuse uses the owner-attested mode, run by the lane that owns the task:
   --legacy-classes --preserve-then-reap --worktree "$PRIMARY_REPO/.worktrees/dispatch/<agent>/<task>" --apply
 ```
 
-Run it from the owning lane's launcher session, in any checkout other than
-the target. A relative `--tree` resolves against the control plane, and the
-writer refuses a symlink spelling or a subdirectory. The owner is never an
-argument. It is the session's launcher lease
-(`SESSION_STREAM_*`), which Monitor must confirm as the stream's current
-custody. The session's attributed seat must be registered for that lease
-holder's provider in `scripts/config/area_assignments.yaml` (roster slot or
-the bridge's legacy `<provider>-monitor` alias). Its lane stream must be the
-one `scripts/config/terminal_abandon_succession.yaml` gives the task's
+Run both commands directly from the owning lane's launcher session (not through
+`systemd-run` or another detached launcher), in any checkout other than the
+target. A relative `--tree` resolves against the control plane, and the writer
+refuses a symlink spelling or a subdirectory. The owner is never an argument.
+It is the session's launcher lease (`SESSION_STREAM_*`), which the canonical
+loopback Monitor must confirm as the stream's current custody;
+`LU_MONITOR_LOOPBACK` never selects that endpoint. The envelope alone proves
+nothing, because Monitor's stream view publishes every field of it. The
+command must also run beneath the lease's recorded holder process (the
+launcher) on the holder's host, and that process must have started before the
+lease's last heartbeat, so a reused PID does not count. Otherwise it refuses
+`HOLDER_UNPROVEN`, as does an app-thread holder. The session's attributed seat
+must be registered for that lease holder's provider in
+`scripts/config/area_assignments.yaml` (roster slot or the bridge's legacy
+`<provider>-monitor` alias). Its lane stream must be the one
+`scripts/config/terminal_abandon_succession.yaml` gives the task's
 `initiator`, and every task record bound to the tree must map to that same
 lane. A missing lease or attribution refuses `OWNER_UNAUTHENTICATED`. An
 unmapped initiator refuses `OWNER_UNMAPPED`. A seat, provider, stream or
 bound task of another lane refuses `FOREIGN_OWNER`. Monitor disagreement or
 outage refuses `STALE_AUTHORITY` or `AUTHORITY_UNKNOWN`. A tree owned by
-another lane is reported to that lane's driver, not attested by this one.
+another lane is reported to that lane's driver, not attested by this one. The
+lane-succession writer applies the same holder-process proof.
 
 The attestation replaces only two strict refusals, recorded as `replaces` in
 the receipt:
@@ -367,30 +375,48 @@ Preservation is produced by the tool, never taken from the caller
 (`--preservation-bundle` is refused in this mode). Files go below
 `batch_state/abandon/<task>/`:
 
-- a Git bundle of every commit not on `origin/main` (`HEAD --not` its merge base);
-- the three Git patches, which are empty for a clean tree;
+- a Git bundle of every commit not on `origin/main` (`HEAD --not` its merge
+  base), plus one `refs/abandon/reflog/<sha>` ref for each commit that only
+  the tree's own HEAD reflog still reaches (for example work left behind by a
+  reset), since removing the tree deletes that reflog. A reflog the tool cannot
+  read or walk completely refuses `PRESERVATION_INVALID`;
+- the three Git patches: `head_patch` holds the committed changes from the base
+  to HEAD and is non-empty whenever HEAD has commits beyond `origin/main`;
+  `index_patch` and `working_patch` are empty for a clean tree;
 - the hash-bound `terminal-abandon-preservation.v1` manifest.
 
 Untracked and ignored output goes to `batch_state/preserved/<task>/` as a
 verified copy plus a tar archive. Each artifact is digest-checked by the
-unmodified removal reader before publication. A detached tree is bound by its
-exact HEAD. The receipt's `attestation` binds:
+removal reader before publication. A detached tree is bound by its exact HEAD.
+The receipt's `attestation` binds:
 
 - tree path, directory identity (device and inode), branch (or `null`) and HEAD;
 - reason, owner seat, area, stream and Monitor-verified lease, and the UTC time;
 - the replaced classes, the manifest digest and the complete cohort of bound
-  task records.
+  task records, including each record's `initiator`.
 
 At removal the reader rechecks every one of those bindings. It also rechecks
-liveness, tracked cleanliness, the patches, the bundle and the output copy.
-Any later change of HEAD, branch, directory, cohort or output refuses removal,
-and the record is never overwritten. The lease is not rechecked at removal:
-custody was proven when the record was written, so a later rollover of the
-owner's session neither strands nor re-authorizes it.
+liveness, tracked cleanliness, the patches, the bundle (including every
+current reflog-only commit) and the output copy, and the PR state of every
+bound branch, checked out or recorded; an open or unknown PR refuses. Any
+later change of HEAD, branch, directory, cohort or output refuses removal. No
+recorded owner field is trusted. The reader recomputes the owning lane from
+the current reviewed maps and the bound records' initiators
+(`FOREIGN_OWNER`, or `MAPPING_CHANGED` when either map's bytes changed). The
+attested lease must still be the stream's current custody (`STALE_AUTHORITY`),
+and the remover must run beneath its holder process (`HOLDER_UNPROVEN`). So run
+the reaper from the attesting session. After a rollover, a map change or
+another stale binding of the same decision (same tree, HEAD, reason and
+cohort), the lane's current owner reruns the same `--owner-attest` command.
+It re-issues the record after every check passes again and reports
+`reissues` with the reason. A different decision is still refused
+`ALREADY_RECORDED`.
 
-Restore commits with `git fetch <bundle> HEAD` in any clone that contains the
-manifest's `base_sha`. Restore the tree bytes with `git apply` of `head_patch`
-on `base_sha`, and output from the preserved copy or its tar.
+Restore commits with `git fetch <bundle> HEAD 'refs/abandon/reflog/*:refs/restored/*'`
+in any clone that contains the manifest's `base_sha` (`git bundle list-heads`
+omits `HEAD` when `origin/main` already contains it). Restore the tree bytes
+with `git apply` of `head_patch` on `base_sha`, and output from the preserved
+copy or its tar.
 
 ## Branch sweep evidence (#9909)
 

@@ -21,6 +21,7 @@ from scripts.fleet import ignored_task_output as output
 from scripts.orchestration import reap_worktrees as rw
 from tests.fleet.test_terminal_abandon import (
     _LEASE_ENV,
+    FOREIGN_PID,
     INFRA,
     MONITOR,
     _files,
@@ -29,6 +30,7 @@ from tests.fleet.test_terminal_abandon import (
     _refused_removal,
     _set_lease_env,
     invoke,
+    monitor_lease,
 )
 from tests.fleet.test_terminal_abandon import writer_fixture as writer_fixture
 from tests.orchestration.test_worktree_claims_cli import _git
@@ -53,7 +55,6 @@ REASON = "owner retired superseded implementation"
 @pytest.fixture
 def attest(writer_fixture, monkeypatch):
     """A retired monitor seat's settled-but-unfinalized tree; Muse holds monitor custody."""
-    from agents_extensions.shared.session_streams.hooks import lease_from_environment
     from scripts.session_supervisor import remote
 
     repo, tree, tasks, creator, successor, bundle, head = writer_fixture
@@ -64,16 +65,11 @@ def attest(writer_fixture, monkeypatch):
     monkeypatch.setenv("LU_RUNTIME_INITIATOR", "muse-monitor")
     _set_lease_env(monkeypatch)
     (tree / "untracked.txt").write_bytes(b"untracked unique bytes")
-    current = dict(
-        remote.RemoteEpicClient._lease_payload(lease_from_environment()),
-        state="active",
-        session_state="open",
-        expires_at="2999-01-01T00:00:00Z",
-    )
-    monitor = {"streams": {MONITOR: current}, "calls": 0, "error": None}
+    monitor = {"streams": {MONITOR: monitor_lease()}, "calls": 0, "error": None, "bases": set()}
 
     def stream(self, stream_id, *, digest_limit=20):
         monitor["calls"] += 1
+        monitor["bases"].add(self.base)
         if monitor["error"] is not None:
             raise monitor["error"]
         return {"stream_id": stream_id, "lease": json.loads(json.dumps(monitor["streams"].get(stream_id)))}
@@ -721,3 +717,293 @@ def test_reader_refuses_a_malformed_attestation(attest, capsys, tamper):
     with pytest.raises(ValueError, match="attestation"):
         output.terminal_abandon_creator(matches, attest["tree"], primary=attest["repo"], tasks_dir=tasks)
     _refused_removal(attest["fixture"], "terminal-abandon refused")
+
+
+# --- #10657 review round 1: the four blockers, each from its reproduction ---
+
+
+def _holder_defect(defect, fx, monkeypatch):
+    """Make the session's custody unprovable while every envelope field still matches Monitor."""
+    from scripts.api import occupancy_local
+    from scripts.fleet import terminal_abandon
+
+    lease = fx["monitor"]["streams"][MONITOR]
+    if defect == "copied_envelope":
+        # The reviewer's probe: the stream response copied into the environment.
+        _set_lease_env(monkeypatch, PROCESS_ID=str(FOREIGN_PID))
+        lease["holder"] = dict(lease["holder"], process_id=FOREIGN_PID)
+    elif defect == "app_thread":
+        task = "7c9e6679-7425-40de-944b-e07fc1f90ae7"
+        _set_lease_env(monkeypatch, HOLDER_KIND="app_thread", TASK_ID=task)
+        monkeypatch.delenv("SESSION_STREAM_PROCESS_ID")
+        lease["holder"] = dict(lease["holder"], holder_kind="app_thread", process_id=None, task_id=task)
+    elif defect == "other_host":
+        monkeypatch.setattr(occupancy_local, "resolve_launcher_host_id", lambda: "host-elsewhere")
+    elif defect == "reused_pid":
+        # This process started long after the lease's last heartbeat.
+        lease["heartbeat_at"] = "2000-01-01T00:00:00Z"
+    elif defect == "ancestry_unavailable":
+
+        def unavailable():
+            raise OSError("no /proc")
+
+        monkeypatch.setattr(terminal_abandon, "_process_lineage", unavailable, raising=False)
+    else:
+        raise AssertionError(defect)
+
+
+@pytest.mark.parametrize(
+    "defect", ["copied_envelope", "app_thread", "other_host", "reused_pid", "ancestry_unavailable"]
+)
+@pytest.mark.parametrize("apply", [False, True])
+def test_owner_must_run_beneath_the_recorded_holder_process(attest, monkeypatch, capsys, defect, apply):
+    """Blocker 1: a lease envelope is bearer data; only the holder's process tree is the owner."""
+    _holder_defect(defect, attest, monkeypatch)
+    before = _files(attest["repo"])
+    assert attest_cli(attest, apply=apply) == 2
+    result = _out(capsys)
+    assert (result["outcome"], result["code"]) == ("refused", "HOLDER_UNPROVEN"), result
+    _no_writes(attest, before)
+
+
+def test_holder_may_be_an_ancestor_not_only_this_process(attest, monkeypatch, capsys):
+    parent = os.getppid()
+    _set_lease_env(monkeypatch, PROCESS_ID=str(parent))
+    lease = attest["monitor"]["streams"][MONITOR]
+    lease["holder"] = dict(lease["holder"], process_id=parent)
+    assert attest_cli(attest, apply=True) == 0
+    assert _out(capsys)["outcome"] == "recorded"
+    _remove(attest)
+
+
+def test_environment_never_selects_the_authority_endpoint(attest, monkeypatch, capsys):
+    monkeypatch.setenv("LU_MONITOR_LOOPBACK", "http://127.0.0.1:9")
+    assert attest_cli(attest) == 0
+    assert _out(capsys)["outcome"] == "would_record"
+    assert attest["monitor"]["bases"] == {"http://127.0.0.1:8765"}
+
+
+def _attested(fx, capsys):
+    assert attest_cli(fx, apply=True) == 0
+    assert _out(capsys)["outcome"] == "recorded"
+    return _recorded(fx["fixture"])
+
+
+def _reader_refuses(fx, code):
+    matches = output.matching_worktree_records(fx["tree"], fx["tasks"], repo_root=fx["repo"], publish_cache=False)
+    with pytest.raises(ValueError, match=code):
+        output.terminal_abandon_creator(matches, fx["tree"], primary=fx["repo"], tasks_dir=fx["tasks"])
+    _refused_removal(fx["fixture"], code)
+
+
+@pytest.mark.parametrize(
+    "tamper,code",
+    [
+        ("reviewer_probe", "FOREIGN_OWNER"),
+        ("foreign_seat", "FOREIGN_OWNER"),
+        ("area", "FOREIGN_OWNER"),
+        ("lane", "FOREIGN_OWNER"),
+        ("task_initiator", "FOREIGN_OWNER"),
+        ("invented_session", "STALE_AUTHORITY"),
+        ("invented_lease", "STALE_AUTHORITY"),
+        ("invented_fence", "STALE_AUTHORITY"),
+        ("mapping_hash", "MAPPING_CHANGED"),
+        ("assignments_hash", "MAPPING_CHANGED"),
+    ],
+)
+def test_reader_refuses_fabricated_authorization(attest, capsys, tamper, code):
+    """Blocker 2: no self-described owner field authorizes removal."""
+    record, receipt, _ = _attested(attest, capsys)
+    owner = receipt["attestation"]["owner"]
+    authority = owner["authority"]
+    if tamper == "reviewer_probe":
+        owner.update(seat="claude-infra", area="infra-harness", stream_id=INFRA)
+        owner.update(mapping_sha256="a" * 64, assignments_sha256="b" * 64)
+        authority.update(stream_id=INFRA, session_id="session-invented", lease_id="lease-invented")
+        authority["holder"] = {"agent": "claude", "harness": "claude-code", "instance_id": "claude-infra-1"}
+    elif tamper == "foreign_seat":
+        owner["seat"] = "muse-folk"
+    elif tamper == "area":
+        owner["area"] = "infra-harness"
+    elif tamper == "lane":
+        owner["stream_id"] = authority["stream_id"] = INFRA
+    elif tamper == "task_initiator":
+        owner["task_initiator"] = "muse-monitor"
+    elif tamper == "invented_session":
+        authority["session_id"] = "session-invented"
+    elif tamper == "invented_lease":
+        authority["lease_id"] = "lease-invented"
+    elif tamper == "invented_fence":
+        authority["fencing_token"] += 1
+    else:
+        owner[tamper.replace("_hash", "_sha256")] = "0" * 64
+    save(attest["tasks"], record)
+    _reader_refuses(attest, code)
+
+
+@pytest.mark.parametrize("consistent", [False, True])
+def test_changed_bound_initiator_refuses_removal(attest, capsys, consistent):
+    """Blocker 2: the cohort pins initiators, and the lane is recomputed from them."""
+    record, receipt, _ = _attested(attest, capsys)
+    attest["successor"]["initiator"] = "claude-infra"
+    save(attest["tasks"], attest["successor"])
+    if consistent:
+        # A forger who also rewrites the pinned cohort still fails the lane recomputation.
+        for entry in receipt["attestation"]["cohort"]:
+            if entry["task_id"] == "successor":
+                entry["initiator"] = "claude-infra"
+        save(attest["tasks"], record)
+    _reader_refuses(attest, "FOREIGN_OWNER" if consistent else "cohort")
+
+
+def test_remover_must_run_beneath_the_attested_holder(attest, capsys):
+    """Blocker 2: an attestation is consumed only by the owning session's own process tree."""
+    _attested(attest, capsys)
+    lease = attest["monitor"]["streams"][MONITOR]
+    lease["holder"] = dict(lease["holder"], process_id=FOREIGN_PID)
+    _reader_refuses(attest, "HOLDER_UNPROVEN")
+
+
+def _rollover(fx, monkeypatch):
+    _set_lease_env(monkeypatch, SESSION_ID="session-next", LEASE_ID="lease-next", GENERATION="5", FENCING_TOKEN="18")
+    fx["monitor"]["streams"][MONITOR] = monitor_lease()
+
+
+def _map_revision(fx, monkeypatch, tmp_path):
+    from scripts.fleet import terminal_abandon
+
+    revised = tmp_path / "area_assignments.yaml"
+    revised.write_bytes(terminal_abandon.AREA_ASSIGNMENTS.read_bytes() + b"\n# roster revision\n")
+    monkeypatch.setattr(terminal_abandon, "AREA_ASSIGNMENTS", revised)
+
+
+@pytest.mark.parametrize("change,code", [("rollover", "STALE_AUTHORITY"), ("map", "MAPPING_CHANGED")])
+def test_stale_attestation_refuses_removal_until_the_owner_reissues(
+    attest, monkeypatch, tmp_path, capsys, change, code
+):
+    _, first, _ = _attested(attest, capsys)
+    if change == "rollover":
+        _rollover(attest, monkeypatch)
+    else:
+        _map_revision(attest, monkeypatch, tmp_path)
+    _reader_refuses(attest, code)
+    assert attest_cli(attest) == 0
+    dry = _out(capsys)
+    assert dry["outcome"] == "would_record" and code in dry["reissues"], dry
+    assert attest_cli(attest, apply=True) == 0
+    result = _out(capsys)
+    assert result["outcome"] == "recorded" and code in result["reissues"], result
+    _, second, _ = _recorded(attest["fixture"])
+    if change == "rollover":
+        assert second["attestation"]["owner"]["authority"]["session_id"] == "session-next"
+    else:
+        assert (
+            second["attestation"]["owner"]["assignments_sha256"] != first["attestation"]["owner"]["assignments_sha256"]
+        )
+    assert attest_cli(attest, apply=True) == 0
+    assert _out(capsys)["outcome"] == "already_recorded"
+    _remove(attest)
+
+
+def test_reissue_still_refuses_a_different_decision(attest, monkeypatch, capsys):
+    _attested(attest, capsys)
+    _rollover(attest, monkeypatch)
+    before = _files(attest["repo"])
+    assert attest_cli(attest, apply=True, reason="a different disposition") == 2
+    assert _out(capsys)["code"] == "ALREADY_RECORDED"
+    assert _files(attest["repo"]) == before
+
+
+def _pr_states(states):
+    return lambda _root, branch: states.get(branch, ([], None))
+
+
+@pytest.mark.parametrize(
+    "state,code",
+    [
+        (([rw.PullRequestState(10700, "OPEN", "0" * 40)], None), "LIVE_OR_WANTED"),
+        (([], "unavailable"), "ACTIVITY_UNKNOWN"),
+    ],
+)
+def test_open_pr_on_another_bound_branch_refuses_removal(attest, monkeypatch, capsys, state, code):
+    """Blocker 3: a successor bound to another branch gains a PR after the attestation."""
+    attest["successor"]["worktree_branch"] = "codex/other-bound"
+    save(attest["tasks"], attest["successor"])
+    _attested(attest, capsys)
+    queried = []
+
+    def states(root, branch):
+        queried.append(branch)
+        return state if branch == "codex/other-bound" else ([], None)
+
+    monkeypatch.setattr(rw, "_query_pr_states", states)
+    _reader_refuses(attest, code)
+    assert "codex/other-bound" in queried and "codex/boundary" in queried
+
+
+def _reflog_only_commit(tree, head, name="lost.txt", text=b"work only the reflog still reaches\n"):
+    """Commit unique work, then reset back: the commit stays reachable only from the tree's HEAD reflog."""
+    (tree / name).write_bytes(text)
+    _git(tree, "add", name)
+    _git(tree, "commit", "-m", f"unique {name}")
+    lost = _git(tree, "rev-parse", "HEAD")
+    _git(tree, "reset", "--hard", head)
+    return lost
+
+
+@pytest.mark.parametrize("shape", ["needs_finalize", "detached", "reset_to_main"])
+def test_reflog_only_commits_restore_from_a_clean_clone(attest, tmp_path, capsys, shape):
+    """Blocker 4: restoring from the bundle gives back every commit the tree's own reflog reaches."""
+    repo, tree = attest["repo"], attest["tree"]
+    lost = _reflog_only_commit(tree, attest["head"])
+    expected = {lost}
+    if shape == "detached":
+        _shape("detached", attest)
+    elif shape == "reset_to_main":
+        # The tree's own commit becomes reflog-only too; HEAD carries nothing new.
+        expected.add(attest["head"])
+        attest["head"] = _git(repo, "rev-parse", "main")
+        _git(tree, "reset", "--hard", attest["head"])
+    assert attest_cli(attest) == 0
+    plan = _out(capsys)["preservation_plan"]
+    assert plan["reflog_commits"] == len(expected) and plan["commit_bundle"] is True
+    assert attest_cli(attest, apply=True) == 0
+    assert _out(capsys)["outcome"] == "recorded"
+    _, _, manifest = _recorded(attest["fixture"])
+    bundle = repo / manifest["commit_bundle"]["path"]
+    heads = _git(repo, "bundle", "list-heads", str(bundle)).splitlines()
+    # A HEAD that main already contains needs no bundle ref of its own.
+    assert (f"{attest['head']} HEAD" in heads) is (shape != "reset_to_main")
+    assert {f"{oid} {output.REFLOG_BUNDLE_REF}{oid}" for oid in expected} <= set(heads)
+    _remove(attest)
+    restored = tmp_path / "restored"
+    _git(repo, "clone", "--no-local", "--single-branch", "--branch", "main", str(repo), str(restored))
+    for oid in expected:
+        assert subprocess.run(["git", "cat-file", "-e", oid], cwd=restored, timeout=30).returncode != 0
+    _git(restored, "fetch", str(bundle), f"{output.REFLOG_BUNDLE_REF}*:refs/restored/*")
+    for oid in expected:
+        assert _git(restored, "cat-file", "-t", oid) == "commit"
+    assert _git(restored, "show", f"{lost}:lost.txt") == "work only the reflog still reaches"
+
+
+def test_reflog_growth_after_attestation_refuses_removal_until_reissued(attest, capsys):
+    _attested(attest, capsys)
+    _reflog_only_commit(attest["tree"], attest["head"], name="later.txt", text=b"after the attestation\n")
+    _reader_refuses(attest, "REFLOG_UNPRESERVED")
+    assert attest_cli(attest, apply=True) == 0
+    assert "REFLOG_UNPRESERVED" in _out(capsys)["reissues"]
+    _remove(attest)
+
+
+def test_unwalkable_reflog_is_a_typed_refusal(attest, capsys):
+    """Completeness that cannot be established refuses instead of losing a commit."""
+    tree = attest["tree"]
+    log = _git(tree, "rev-parse", "--path-format=absolute", "--git-path", "logs/HEAD")
+    with open(log, "ab") as handle:
+        handle.write(f"{attest['head']} {'1' * 40} T <t@example.invalid> 1 +0000\treset: lost object\n".encode())
+    before = _files(attest["repo"])
+    for apply in (False, True):
+        assert attest_cli(attest, apply=apply) == 2
+        result = _out(capsys)
+        assert result["code"] == "PRESERVATION_INVALID" and "completeness" in result["reason"], result
+    _no_writes(attest, before)

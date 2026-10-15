@@ -12,7 +12,8 @@ import shutil
 import subprocess
 import sys
 import tempfile
-from datetime import UTC, datetime
+from collections.abc import Mapping
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
@@ -97,17 +98,20 @@ def _caller_lease(caller: Any) -> Any:
 
 
 def _current_custody(lease: Any, stream: str) -> dict[str, Any]:
-    """Prove with Monitor that ``lease`` is the stream's current active lease.
+    """Prove with Monitor that ``lease`` is the stream's current active lease, held by this process tree.
 
     Membership in the succession map grants nothing; only this exact, unexpired
     lease does. A local PID never proves a remote lease expired, so Monitor is the
-    sole authority and any unavailable or malformed answer refuses. Read only.
+    sole authority and any unavailable or malformed answer refuses. The envelope
+    from the environment only names the lease: Monitor's stream view publishes
+    every envelope field, so possession proves nothing until the caller is shown
+    to run beneath Monitor's recorded holder process. Read only.
     """
     from scripts.session_supervisor.remote import RemoteEpicClient
 
     if lease.stream_id != stream:
         raise Refusal("CROSS_STREAM", "caller's stream custody is not the creator's canonical stream")
-    verify_current_custody(RemoteEpicClient._lease_payload(lease))
+    verify_current_custody(RemoteEpicClient._lease_payload(lease), caller_holds=True)
     return {
         "stream_id": stream,
         "session_id": lease.session_id,
@@ -122,14 +126,19 @@ def _current_custody(lease: Any, stream: str) -> dict[str, Any]:
     }
 
 
-def verify_current_custody(expected: dict[str, Any]) -> None:
-    """Revalidate writer or receipt custody against Monitor without acquiring a lease."""
+def verify_current_custody(expected: dict[str, Any], *, caller_holds: bool = False) -> None:
+    """Revalidate writer or receipt custody against Monitor without acquiring a lease.
+
+    Only the canonical loopback Monitor is asked: an environment-selected
+    endpoint could answer for any lease. With ``caller_holds`` this process must
+    also be Monitor's recorded holder process or one of its descendants.
+    """
     from agents_extensions.shared.session_streams.model import parse_timestamp
-    from scripts.session_supervisor.remote import RemoteEpicClient, RemoteSupervisorError
+    from scripts.session_supervisor.remote import DEFAULT_MONITOR, RemoteEpicClient, RemoteSupervisorError
 
     stream = expected["stream_id"]
     try:
-        response = RemoteEpicClient().stream(stream, digest_limit=1)
+        response = RemoteEpicClient(base=DEFAULT_MONITOR).stream(stream, digest_limit=1)
     except RemoteSupervisorError:
         raise Refusal("AUTHORITY_UNKNOWN", "Monitor stream custody probe unavailable") from None
     current = response.get("lease")
@@ -153,6 +162,67 @@ def verify_current_custody(expected: dict[str, Any]) -> None:
         raise Refusal("AUTHORITY_UNKNOWN", "Monitor stream custody expiry unavailable") from None
     if expired:
         raise Refusal("STALE_AUTHORITY", "caller's stream custody has expired")
+    if caller_holds:
+        prove_holder_process(current)
+
+
+# Monitor stores whole-second heartbeats and /proc reports a whole-second boot
+# time; allow that rounding when comparing a holder's start with its lease.
+_HOLDER_START_SLACK = timedelta(seconds=2)
+
+
+def _process_lineage() -> dict[int, int]:
+    """This process and each of its ancestors, mapped to its start time in clock ticks since boot."""
+    lineage: dict[int, int] = {}
+    pid = os.getpid()
+    while pid > 0 and pid not in lineage:
+        text = Path(f"/proc/{pid}/stat").read_text(encoding="utf-8", errors="replace")
+        # comm is parenthesized and may contain spaces or ')'. The fields after
+        # the final ')' start at state (field 3): ppid is field 4, starttime 22.
+        fields = text.rsplit(")", 1)[1].split()
+        lineage[pid] = int(fields[19])
+        pid = int(fields[1])
+    return lineage
+
+
+def _boot_time() -> datetime:
+    for line in Path("/proc/stat").read_text(encoding="ascii").splitlines():
+        if line.startswith("btime "):
+            return datetime.fromtimestamp(int(line.split()[1]), UTC)
+    raise ValueError("boot time unavailable")
+
+
+def prove_holder_process(lease: Mapping[str, Any]) -> None:
+    """Prove this process is Monitor's recorded lease holder process or its descendant (#10657).
+
+    The launcher records its own PID as the holder and starts the provider
+    beneath it, so a genuine session always descends from that process on the
+    holder's host. Process ancestry cannot be set from the environment. A PID
+    the kernel reused after the holder exited belongs to a process that started
+    after the lease's last heartbeat and is refused, as is an app-thread holder,
+    which has no process to prove.
+    """
+    from agents_extensions.shared.session_streams.model import parse_timestamp
+    from scripts.api.occupancy_local import resolve_launcher_host_id
+
+    holder = lease.get("holder")
+    pid = holder.get("process_id") if isinstance(holder, dict) else None
+    if not isinstance(holder, dict) or holder.get("holder_kind") != "process" or type(pid) is not int or pid <= 0:
+        raise Refusal("HOLDER_UNPROVEN", "stream custody is not held by a recorded local process")
+    if holder.get("host_id") is None or holder.get("host_id") != resolve_launcher_host_id():
+        raise Refusal("HOLDER_UNPROVEN", "stream custody is held on another host")
+    try:
+        lineage = _process_lineage()
+        heartbeat = parse_timestamp(lease["heartbeat_at"])
+        started = None
+        if pid in lineage:
+            started = _boot_time() + timedelta(seconds=lineage[pid] / os.sysconf("SC_CLK_TCK"))
+    except (OSError, ValueError, KeyError, IndexError, TypeError, OverflowError):
+        raise Refusal("HOLDER_UNPROVEN", "process ancestry or custody heartbeat unavailable") from None
+    if started is None:
+        raise Refusal("HOLDER_UNPROVEN", "this process is neither the stream custody holder nor its descendant")
+    if started > heartbeat + _HOLDER_START_SLACK:
+        raise Refusal("HOLDER_UNPROVEN", "the holder PID was reused after the custody's last heartbeat")
 
 
 def _succession_map() -> tuple[dict[str, str], str]:
@@ -204,10 +274,47 @@ def _recover_creator(
     return verified[0]
 
 
+def _reflog_gitdir(tree: Path, scratch: Path, head: str, reflog: list[str]) -> None:
+    """Make ``scratch`` a bare gitdir borrowing the tree's objects, with HEAD and one ref per reflog-only commit.
+
+    A bundle advertises only named refs, and the target's own refs must not
+    change, so the names live here. Only admitted Git commands touch it.
+    """
+    common = artifacts.safe_git(
+        ["rev-parse", "--path-format=absolute", "--git-common-dir"],
+        cwd=tree,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+    if common.returncode != 0 or not Path(common.stdout.strip()).is_absolute():
+        raise Refusal("PRESERVATION_INVALID", "object store probe unavailable for the reflog bundle")
+    (scratch / "objects/info").mkdir(parents=True)
+    (scratch / "refs").mkdir()
+    (scratch / "objects/info/alternates").write_text(f"{Path(common.stdout.strip()) / 'objects'}\n")
+    (scratch / "HEAD").write_text(f"{head}\n")
+    named = artifacts.safe_git(
+        ["update-ref", "--stdin"],
+        cwd=scratch,
+        input="".join(f"create {output.REFLOG_BUNDLE_REF}{oid} {oid}\n" for oid in reflog),
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+    if named.returncode != 0:
+        raise Refusal("PRESERVATION_INVALID", "reflog-only commits could not be named for the bundle")
+
+
 def _detached_bundle(
-    tree: Path, parent: Path, primary: Path, head: str, base_sha: str
+    tree: Path, parent: Path, primary: Path, head: str, base_sha: str, reflog: list[str] | None = None
 ) -> tuple[dict[str, str], Path | None]:
-    """Preserve only post-base objects; reuse a digest-named copy without owning it."""
+    """Preserve only post-base objects; reuse a digest-named copy without owning it.
+
+    ``reflog`` names commits only the tree's HEAD reflog reaches; each becomes
+    its own bundle ref so a restore gives every one of them back (#10657).
+    """
     if (
         not isinstance(base_sha, str)
         or not re.fullmatch(r"[a-f0-9]{40}", base_sha)
@@ -219,15 +326,38 @@ def _detached_bundle(
     # atomic publication; the finally block owns cleanup, not the scratch lease.
     with tempfile.NamedTemporaryFile(dir=parent, prefix=".head-bundle-", delete=False) as handle:
         temporary = Path(handle.name)
+    scratch = None
     try:
         try:
-            probe = artifacts.safe_git(
-                ["bundle", "create", str(temporary), "HEAD", "--not", base_sha],
-                cwd=tree,
-                capture_output=True,
-                check=False,
-                timeout=30,
-            )
+            if reflog:
+                try:
+                    scratch = Path(tempfile.mkdtemp(dir=parent, prefix=".reflog-bundle-"))
+                    _reflog_gitdir(tree, scratch, head, reflog)
+                except OSError:
+                    raise Refusal("PRESERVATION_INVALID", "reflog bundle scratch could not be prepared") from None
+                # A HEAD already on main is the base itself, which Git would exclude.
+                revisions = [
+                    *(["HEAD"] if head != base_sha else []),
+                    *(output.REFLOG_BUNDLE_REF + oid for oid in reflog),
+                    f"^{base_sha}",
+                ]
+                probe = artifacts.safe_git(
+                    ["bundle", "create", str(temporary), "--stdin"],
+                    cwd=scratch,
+                    input="".join(f"{revision}\n" for revision in revisions),
+                    capture_output=True,
+                    text=True,
+                    check=False,
+                    timeout=30,
+                )
+            else:
+                probe = artifacts.safe_git(
+                    ["bundle", "create", str(temporary), "HEAD", "--not", base_sha],
+                    cwd=tree,
+                    capture_output=True,
+                    check=False,
+                    timeout=30,
+                )
         except subprocess.TimeoutExpired:
             raise Refusal("PRESERVATION_INVALID", "detached HEAD bundle could not be created in time") from None
         if probe.returncode != 0:
@@ -254,6 +384,8 @@ def _detached_bundle(
         temporary.unlink(missing_ok=True)
         # Git's own lock beside the target survives an interrupted create.
         temporary.with_name(temporary.name + ".lock").unlink(missing_ok=True)
+        if scratch is not None:
+            shutil.rmtree(scratch, ignore_errors=True)
 
 
 def record_abandon(
@@ -265,7 +397,8 @@ def record_abandon(
     force-new path. It is attribution within the shared-UID control plane, not
     a security boundary against a writer already able to modify task state.
     A non-creator succeeds only while holding the Monitor-verified current lease
-    of the creator's stream from the reviewed succession map. That record keeps
+    of the creator's stream from the reviewed succession map, and only from
+    beneath that lease's recorded holder process (#10657). That record keeps
     the creator identity and nonce, appends a succession receipt, and also
     preserves untracked and ignored output. This never acquires or moves a lease.
     """
@@ -598,14 +731,14 @@ def _replaced(matches: list[tuple[Path, dict[str, Any]]], host_path: Path, tasks
 
 
 def _attested_prs(tree: Path, branch: str | None, matches: list[tuple[Path, dict[str, Any]]]) -> None:
-    """Every branch the tree is bound to, checked out or recorded, so detaching hides no PR."""
-    names = {branch, *(member.get("worktree_branch") for _, member in matches)}
-    for name in sorted(name for name in names if isinstance(name, str) and name):
-        prs, error = rw._query_pr_states(tree, name)
-        if error is not None:
-            raise Refusal("ACTIVITY_UNKNOWN", "open PR probe unavailable")
-        if any(pr.state == "OPEN" for pr in prs):
-            raise Refusal("LIVE_OR_WANTED", "a branch bound to the tree has an open PR")
+    """Every branch the tree is bound to, checked out or recorded, so detaching hides no PR.
+
+    The removal reader runs the same check again before deleting the tree.
+    """
+    try:
+        output.bound_branches_unclaimed(tree, branch, matches)
+    except output.AttestationRefusal as exc:
+        raise Refusal(exc.code, exc.reason) from None
 
 
 def _attested_activity(
@@ -683,6 +816,7 @@ def _preservation_plan(primary: Path, tree: Path, host: dict[str, Any], head: st
             "PRESERVATION_INVALID", "HEAD shares no history with origin/main; there is no bundle base"
         ) from None
     commits = int(_git_bytes(tree, ["rev-list", "--count", f"{base}..{head}"]).decode().strip())
+    reflog = _reflog_commits(tree, head, primary)
     try:
         inventory = output._abandon_output_inventory(tree, primary=primary, record=host)
     except (OSError, ValueError, RuntimeError, subprocess.SubprocessError) as exc:
@@ -699,10 +833,19 @@ def _preservation_plan(primary: Path, tree: Path, host: dict[str, Any], head: st
     return {
         "base_sha": base,
         "commits": commits,
-        "commit_bundle": commits > 0,
+        "reflog_commits": len(reflog),
+        "commit_bundle": commits > 0 or bool(reflog),
         "output_files": len(inventory),
         "output_bytes": total,
     }
+
+
+def _reflog_commits(tree: Path, head: str, primary: Path) -> list[str]:
+    """Commits only the tree's own HEAD reflog reaches, or the named blocker when completeness is unknown."""
+    try:
+        return output.unreachable_reflog_commits(tree, head)
+    except (OSError, ValueError, subprocess.SubprocessError) as exc:
+        raise Refusal("PRESERVATION_INVALID", _privacy_safe(str(exc), tree, primary)) from None
 
 
 def _area_roster() -> tuple[dict[str, str], frozenset[str], str]:
@@ -739,16 +882,57 @@ def _seat_area(seat: str, roster: dict[str, str], areas: frozenset[str]) -> str 
     return None
 
 
+def owner_lane(seat: Any, holder_agent: Any, initiator: Any, initiators: list[Any]) -> dict[str, str]:
+    """The lane that owns every bound task and the seat's standing in it, from the reviewed maps alone.
+
+    The task initiator names the lane through the reviewed succession map; every
+    bound task must belong to that lane. The seat must be a registered seat of
+    the same area (area_assignments.yaml), of the provider holding the lease,
+    mapped to that lane's stream. The writer records this and the removal
+    reader recomputes it, trusting a recorded owner only where the two agree.
+    """
+    mapping, mapping_digest = _succession_map()
+    try:
+        roster, areas, assignments_digest = _area_roster()
+    except (OSError, ValueError, UnicodeDecodeError, yaml.YAMLError):
+        raise Refusal("OWNER_UNMAPPED", "area assignment map unavailable or invalid") from None
+    stream = mapping.get(initiator) if isinstance(initiator, str) else None
+    if stream is None:
+        raise Refusal("OWNER_UNMAPPED", "task initiator has no reviewed lane stream; its owner cannot be verified")
+    for member_initiator in initiators:
+        lane = mapping.get(member_initiator) if isinstance(member_initiator, str) else None
+        if lane is None:
+            raise Refusal("OWNER_UNMAPPED", "a task bound to the tree has no reviewed lane stream")
+        if lane != stream:
+            raise Refusal("FOREIGN_OWNER", "a task bound to the tree belongs to another lane")
+    seat_area = _seat_area(seat, roster, areas) if isinstance(seat, str) else None
+    task_area = _seat_area(initiator, roster, areas)
+    if (
+        seat_area is None
+        or seat.partition("-")[0] != holder_agent
+        or mapping.get(seat) != stream
+        or (task_area is not None and task_area != seat_area)
+    ):
+        raise Refusal("FOREIGN_OWNER", "caller's seat and stream custody are not the lane that owns the task")
+    return {
+        "seat": seat,
+        "area": seat_area,
+        "stream_id": stream,
+        "task_initiator": initiator,
+        "mapping_sha256": mapping_digest,
+        "assignments_sha256": assignments_digest,
+    }
+
+
 def _attested_owner(
     caller: Any, host: dict[str, Any], matches: list[tuple[Path, dict[str, Any]]]
 ) -> tuple[Any, dict[str, Any]]:
     """Authenticate the lane owner from this session's launcher custody, never from an argument.
 
-    The task initiator names the lane through the reviewed succession map; every
-    bound task must belong to that lane. The caller's attributed seat must be a
-    registered seat of the same area (area_assignments.yaml), of the provider
-    Monitor records as the lease holder, mapped to that lane's stream; and the
-    session's launcher lease must be that stream's current custody in Monitor.
+    The environment's lease only names which custody the caller claims; it must
+    equal Monitor's current lease of the owning lane's stream, and this process
+    must run beneath that lease's recorded holder process. Neither the envelope
+    nor the attributed seat can widen authority.
     """
     from agents_extensions.shared.session_streams.hooks import lease_from_environment
 
@@ -761,42 +945,15 @@ def _attested_owner(
         ) from None
     if caller.source == "unknown" or caller.initiator == "unknown":
         raise Refusal("OWNER_UNAUTHENTICATED", "session seat attribution unavailable")
-    mapping, mapping_digest = _succession_map()
-    try:
-        roster, areas, assignments_digest = _area_roster()
-    except (OSError, ValueError, UnicodeDecodeError, yaml.YAMLError):
-        raise Refusal("OWNER_UNMAPPED", "area assignment map unavailable or invalid") from None
-    initiator = host.get("initiator")
-    stream = mapping.get(initiator) if isinstance(initiator, str) else None
-    if stream is None:
-        raise Refusal("OWNER_UNMAPPED", "task initiator has no reviewed lane stream; its owner cannot be verified")
-    for _, member in matches:
-        lane = mapping.get(member["initiator"]) if isinstance(member.get("initiator"), str) else None
-        if lane is None:
-            raise Refusal("OWNER_UNMAPPED", "a task bound to the tree has no reviewed lane stream")
-        if lane != stream:
-            raise Refusal("FOREIGN_OWNER", "a task bound to the tree belongs to another lane")
-    seat = caller.initiator
-    seat_area = _seat_area(seat, roster, areas)
-    task_area = _seat_area(initiator, roster, areas)
-    if (
-        seat_area is None
-        or seat.partition("-")[0] != lease.holder.agent
-        or mapping.get(seat) != stream
-        or lease.stream_id != stream
-        or (task_area is not None and task_area != seat_area)
-    ):
+    owner: dict[str, Any] = owner_lane(
+        caller.initiator,
+        lease.holder.agent,
+        host.get("initiator"),
+        [member.get("initiator") for _, member in matches],
+    )
+    if lease.stream_id != owner["stream_id"]:
         raise Refusal("FOREIGN_OWNER", "caller's seat and stream custody are not the lane that owns the task")
-    authority = _current_custody(lease, stream)
-    owner = {
-        "seat": seat,
-        "area": seat_area,
-        "stream_id": stream,
-        "task_initiator": initiator,
-        "mapping_sha256": mapping_digest,
-        "assignments_sha256": assignments_digest,
-        "authority": authority,
-    }
+    owner["authority"] = _current_custody(lease, owner["stream_id"])
     return lease, owner
 
 
@@ -830,7 +987,9 @@ def record_attested_abandon(*, tree: Path, task_id: str, head: str, reason: str,
     or retention intent. Liveness, open PRs, a dirty tree and preservation are
     checked exactly as for every other abandonment and are never replaced. The
     tool produces all preservation itself (commit bundle, Git patches and the
-    untracked/ignored output copy); no caller bundle is read.
+    untracked/ignored output copy); no caller bundle is read. An existing
+    attestation of the same decision that no longer verifies is re-issued;
+    any other existing record refuses overwrite.
     """
     if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]*", task_id) or not re.fullmatch(r"[a-f0-9]{40}", head):
         raise Refusal("INVALID_INPUT", "task id must be canonical and head must be a full lowercase 40-hex SHA")
@@ -892,7 +1051,7 @@ def _attest(
         "reason": reason,
         "cohort": output.attestation_cohort(matches, tasks),
     }
-    summary = {"task_id": task_id, "tree": identity["tree"], "head_sha": head, "branch": branch}
+    summary: dict[str, Any] = {"task_id": task_id, "tree": identity["tree"], "head_sha": head, "branch": branch}
     replaces = None
     try:
         recorded = [(path, member) for path, member in matches if "worktree_abandon" in member]
@@ -911,12 +1070,12 @@ def _attest(
             try:
                 output.terminal_abandon_creator(matches, tree, primary=primary, tasks_dir=tasks)
             except (OSError, ValueError, RuntimeError, subprocess.SubprocessError) as exc:
-                raise Refusal(
-                    "ALREADY_RECORDED",
-                    f"existing attestation no longer verifies ({_privacy_safe(str(exc), tree, primary)}); "
-                    "no overwrite is permitted",
-                ) from None
-            return {"outcome": "already_recorded", **summary}
+                # The same decision on the same tree, cohort and HEAD, whose custody
+                # rolled over or whose evidence went stale: it authorizes nothing,
+                # so the lane's authenticated owner re-issues it after every check.
+                summary["reissues"] = _privacy_safe(str(exc), tree, primary)
+            else:
+                return {"outcome": "already_recorded", **summary}
         replaces = _replaced(matches, host_path, tasks)
         _attested_prs(tree, branch, matches)
         _attested_activity(primary, tasks, tree, matches, head)
@@ -987,8 +1146,11 @@ def _publish_attestation(
             manifest[key], made = _content_file(primary, parent, key, payload)
             if made is not None:
                 created.append(made)
-        if plan["commit_bundle"]:
-            manifest["commit_bundle"], made = _detached_bundle(tree, parent, primary, head, base)
+        # Recompute: the reflog can grow between the plan and publication, and
+        # the reader rechecks that every reflog-only commit is in the bundle.
+        reflog = _reflog_commits(tree, head, primary)
+        if plan["commits"] > 0 or reflog:
+            manifest["commit_bundle"], made = _detached_bundle(tree, parent, primary, head, base, reflog)
             if made is not None:
                 created.append(made)
         try:
@@ -1098,28 +1260,38 @@ def main(argv: list[str] | None = None) -> int:
             "Owner attestation (#10657): for a tree the creator and succession paths refuse.\n"
             "Dry-run by default; --apply writes one record per tree; a rerun is already_recorded.\n"
             "The owner is never an argument: it is this session's launcher lease, verified as the\n"
-            "current custody in Monitor, whose attributed seat is registered in scripts/config/\n"
-            "area_assignments.yaml for the provider holding the lease, and whose stream is the\n"
-            "lane that scripts/config/terminal_abandon_succession.yaml maps every bound task's\n"
-            "initiator to. It replaces only missing creator evidence (CREATOR_RECOVERY_REQUIRED)\n"
-            "and unsettled status or retention intent with no live activity (needs_finalize or\n"
-            "keep_worktree; LIVE_OR_WANTED). It never replaces a live process, an active task, a\n"
-            "worker or rollover lease, an in-flight status, an open PR on any bound branch, a\n"
-            "dirty tracked tree (DIRTY_TREE) or preservation. The tool itself writes a Git bundle\n"
-            "of the commits not on origin/main, the three Git patches and a verified copy plus tar\n"
-            "of untracked and ignored output; a caller bundle is refused. A detached tree is bound\n"
-            "by its exact HEAD. The record binds tree path, directory identity, branch, HEAD,\n"
-            "reason, owner, time and the complete task cohort; any later change refuses removal.\n"
-            "Remove afterwards with scripts/orchestration/reap_worktrees.py --legacy-classes\n"
-            "--preserve-then-reap --worktree <tree> --apply.\n\n"
+            "current custody in the canonical loopback Monitor, with this process running beneath\n"
+            "the lease's recorded holder process on the same host (HOLDER_UNPROVEN otherwise; an\n"
+            "environment copy of a lease proves nothing). Its attributed seat must be registered\n"
+            "in scripts/config/area_assignments.yaml for the provider holding the lease, and its\n"
+            "stream must be the lane that scripts/config/terminal_abandon_succession.yaml maps\n"
+            "every bound task's initiator to. It replaces only missing creator evidence\n"
+            "(CREATOR_RECOVERY_REQUIRED) and unsettled status or retention intent with no live\n"
+            "activity (needs_finalize or keep_worktree; LIVE_OR_WANTED). It never replaces a live\n"
+            "process, an active task, a worker or rollover lease, an in-flight status, an open PR\n"
+            "on any bound branch, a dirty tracked tree (DIRTY_TREE) or preservation. The tool\n"
+            "itself writes a Git bundle of the commits not on origin/main, including every commit\n"
+            "only the tree's own HEAD reflog still reaches (one refs/abandon/reflog/<sha> ref\n"
+            "each), the three Git patches and a verified copy plus tar of untracked and ignored\n"
+            "output; a caller bundle is refused. A detached tree is bound by its exact HEAD. The\n"
+            "record binds tree path, directory identity, branch, HEAD, reason, owner, time and the\n"
+            "complete task cohort including each initiator; any later change refuses removal.\n"
+            "Removal recomputes the owning lane from the reviewed maps, rechecks every bound\n"
+            "branch's PR, and requires the attested lease to still be current custody with the\n"
+            "remover beneath its holder process: run the reaper from the attesting session,\n"
+            "  scripts/orchestration/reap_worktrees.py --legacy-classes --preserve-then-reap\n"
+            "  --worktree <tree> --apply\n"
+            "After a session rollover or a map change the lane's current owner reruns the same\n"
+            "--owner-attest command, which re-issues the record (reissues: <why>).\n\n"
             "Bundle JSON: base_sha (40 hex), head_patch, index_patch, working_patch. Each patch is\n"
             "{path: 'batch_state/...', sha256: '<64-hex-digest>'}. Patches must equal git diff\n"
             "--binary --full-index --no-ext-diff --no-textconv for base..HEAD, --cached HEAD,\n"
             "and the working tree. The base must be an ancestor of HEAD and origin/main.\n"
             "Run from the owner's session in another checkout. Caller comes from the existing\n"
             "runtime/session attribution resolver and must match the creator's initiator.\n"
-            "Lane succession: a non-creator is admitted only while its launcher session holds the\n"
-            "Monitor-verified current lease of the stream that scripts/config/\n"
+            "Lane succession: a non-creator is admitted only while its launcher session holds, and\n"
+            "this process runs beneath the holder of, the Monitor-verified current lease of the\n"
+            "stream that scripts/config/\n"
             "terminal_abandon_succession.yaml maps the creator's initiator to. It keeps the\n"
             "creator identity and nonce, appends a succession receipt and copies untracked and\n"
             "ignored output below batch_state/preserved/<task> before publishing, with a hash-bound\n"
@@ -1137,8 +1309,8 @@ def main(argv: list[str] | None = None) -> int:
             "Monitor must be available.\n"
             "Exit codes: 0 recorded/already_recorded/would_record (dry-run); 2 typed refusal with no\n"
             "abandon record written (NOT_CREATOR, STREAM_UNMAPPED, CROSS_STREAM, STALE_AUTHORITY,\n"
-            "AUTHORITY_UNKNOWN, OWNER_UNAUTHENTICATED, OWNER_UNMAPPED, FOREIGN_OWNER, DIRTY_TREE,\n"
-            "LIVE_OR_WANTED, PRESERVATION_INVALID, PRESERVATION_LIMIT, ...).\n"
+            "AUTHORITY_UNKNOWN, HOLDER_UNPROVEN, OWNER_UNAUTHENTICATED, OWNER_UNMAPPED,\n"
+            "FOREIGN_OWNER, DIRTY_TREE, LIVE_OR_WANTED, PRESERVATION_INVALID, PRESERVATION_LIMIT, ...).\n"
             "Related: #10594, #10617, #10657; scripts/fleet/ignored_task_output.py;\n"
             "docs/runbooks/worktree-cleanup.md"
         ),

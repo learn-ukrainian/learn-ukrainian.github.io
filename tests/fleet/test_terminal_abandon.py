@@ -5,6 +5,7 @@ import json
 import os
 import subprocess
 import sys
+from datetime import UTC, datetime
 from pathlib import Path
 
 import pytest
@@ -292,6 +293,8 @@ MONITOR = _anchor("monitor")
 INFRA = _anchor("infra-harness")
 OPEN_MODEL_DATA = _anchor("open-model-data")
 
+# The holder process is this test process, as a launcher is for its provider's tools.
+HOLDER_HOST = "host-tests"
 _LEASE_ENV = {
     "ID": MONITOR,
     "SESSION_ID": "session-current",
@@ -302,19 +305,35 @@ _LEASE_ENV = {
     "HARNESS": "muse-cli",
     "INSTANCE_ID": "muse-monitor-1",
     "HOLDER_KIND": "process",
-    "PROCESS_ID": "4242",
+    "PROCESS_ID": str(os.getpid()),
 }
+# Above the kernel's PID_MAX_LIMIT, so never this process or an ancestor.
+FOREIGN_PID = 4_194_305
 
 
 def _set_lease_env(monkeypatch, **overrides):
+    monkeypatch.setenv("LU_MONITOR_HOST_ID", HOLDER_HOST)
     for key, value in dict(_LEASE_ENV, **overrides).items():
         monkeypatch.setenv(f"SESSION_STREAM_{key}", value)
+
+
+def monitor_lease():
+    """Monitor's view of the environment's lease: active, open, unexpired and just renewed."""
+    from agents_extensions.shared.session_streams.hooks import lease_from_environment
+    from scripts.session_supervisor import remote
+
+    return dict(
+        remote.RemoteEpicClient._lease_payload(lease_from_environment()),
+        state="active",
+        session_state="open",
+        heartbeat_at=datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        expires_at="2999-01-01T00:00:00Z",
+    )
 
 
 @pytest.fixture
 def succession(writer_fixture, monkeypatch):
     """A retired monitor seat's tree; the current Muse monitor driver holds custody."""
-    from agents_extensions.shared.session_streams.hooks import lease_from_environment
     from scripts.session_supervisor import remote
 
     _, tree, tasks, creator, successor, _, _ = writer_fixture
@@ -328,13 +347,7 @@ def succession(writer_fixture, monkeypatch):
     monkeypatch.setenv("LU_RUNTIME_INITIATOR", "muse-monitor")
     _set_lease_env(monkeypatch)
     (tree / "untracked.txt").write_bytes(b"untracked unique bytes")
-    current = dict(
-        remote.RemoteEpicClient._lease_payload(lease_from_environment()),
-        state="active",
-        session_state="open",
-        expires_at="2999-01-01T00:00:00Z",
-    )
-    monitor = {"streams": {MONITOR: current}, "calls": 0, "on_call": None, "error": None}
+    monitor = {"streams": {MONITOR: monitor_lease()}, "calls": 0, "on_call": None, "error": None}
 
     def stream(self, stream_id, *, digest_limit=20):
         monitor["calls"] += 1
@@ -470,6 +483,17 @@ def _defect(failure, fixture, monitor, monkeypatch, tmp_path):
         _set_lease_env(monkeypatch, ID=INFRA)
         monitor["streams"][INFRA] = dict(lease, stream_id=INFRA)
         return lambda: _set_lease_env(monkeypatch)
+    if failure == "copied_envelope":
+        # #10657 review: Monitor's stream response copied into the environment
+        # matches exactly, but this process is not beneath the recorded holder.
+        lease["holder"] = dict(lease["holder"], process_id=FOREIGN_PID)
+        _set_lease_env(monkeypatch, PROCESS_ID=str(FOREIGN_PID))
+
+        def repair():
+            lease["holder"] = dict(lease["holder"], process_id=os.getpid())
+            _set_lease_env(monkeypatch)
+
+        return repair
     if failure in {"stale_fence", "stale_generation", "other_session", "released", "expired", "closed_session"}:
         field, value = {
             "stale_fence": ("fencing_token", 18),
@@ -536,6 +560,7 @@ def _defect(failure, fixture, monitor, monkeypatch, tmp_path):
         ("alias_only", "NOT_CREATOR", "stream custody"),
         ("unknown_caller", "NOT_CREATOR", "creator-of-record"),
         ("cross_stream", "CROSS_STREAM", "canonical stream"),
+        ("copied_envelope", "HOLDER_UNPROVEN", "neither the stream custody holder nor its descendant"),
         ("stale_fence", "STALE_AUTHORITY", "current active custody"),
         ("stale_generation", "STALE_AUTHORITY", "current active custody"),
         ("other_session", "STALE_AUTHORITY", "current active custody"),

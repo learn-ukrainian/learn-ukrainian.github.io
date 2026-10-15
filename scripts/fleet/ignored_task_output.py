@@ -65,6 +65,15 @@ class SuccessionRefusal(ValueError):
         self.code = code
 
 
+class AttestationRefusal(ValueError):
+    """A typed owner-attestation refusal shared by the writer and the removal reader (#10657)."""
+
+    def __init__(self, code: str, reason: str):
+        super().__init__(f"terminal-abandon attestation {code}: {reason}")
+        self.code = code
+        self.reason = reason
+
+
 class PreservationLimit(ValueError):
     """A complete snapshot exceeds the existing automatic preservation budget."""
 
@@ -721,6 +730,122 @@ def verify_commit_bundle(primary: Path, locator: Any, head: str, *, label: str) 
         raise ValueError(f"terminal-abandon {label} bundle does not preserve HEAD")
 
 
+# Bundle refs naming commits that only the tree's own HEAD reflog reaches (#10657).
+REFLOG_BUNDLE_REF = "refs/abandon/reflog/"
+_REFLOG_ENTRY = re.compile(rb"([0-9a-f]{40}) ([0-9a-f]{40}) [^\n]*")
+_ZERO_OID = "0" * 40
+
+
+def unreachable_reflog_commits(worktree: Path, head: str) -> list[str]:
+    """Commits the tree's own HEAD reflog still reaches that neither HEAD nor origin/main contains.
+
+    Removing a linked worktree deletes this per-worktree reflog, so such a
+    commit (for example one left behind by a reset) survives only inside the
+    preservation bundle. Both object ids of every entry count, as they do for
+    Git's own reachability. Completeness that cannot be established refuses.
+    """
+    formats = artifacts.safe_git(
+        ["rev-parse", "--show-ref-format", "--show-object-format"],
+        cwd=worktree,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+    if formats.returncode != 0 or formats.stdout.split() != ["files", "sha1"]:
+        raise ValueError("terminal-abandon reflog completeness cannot be established for this ref or object format")
+    located = artifacts.safe_git(
+        ["rev-parse", "--path-format=absolute", "--git-path", "logs/HEAD"],
+        cwd=worktree,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+    if located.returncode != 0 or not Path(located.stdout.strip()).is_absolute():
+        raise ValueError("terminal-abandon reflog probe unavailable")
+    try:
+        fd = os.open(located.stdout.strip(), artifacts._LEAF_FLAGS)
+    except FileNotFoundError:
+        return []
+    except OSError:
+        raise ValueError("terminal-abandon reflog unreadable") from None
+    with os.fdopen(fd, "rb") as handle:
+        if not stat.S_ISREG(os.fstat(handle.fileno()).st_mode):
+            raise ValueError("terminal-abandon reflog must be a regular file")
+        entries = handle.read().split(b"\n")
+    if entries[-1] == b"":
+        entries.pop()
+    oids: set[str] = set()
+    for line in entries:
+        entry = _REFLOG_ENTRY.fullmatch(line)
+        if entry is None:
+            raise ValueError("terminal-abandon reflog entry unreadable; completeness cannot be established")
+        oids.update(oid.decode() for oid in entry.groups())
+    oids.discard(_ZERO_OID)
+    if not oids:
+        return []
+    # Everything the reflog reaches minus what HEAD or origin/main already carries.
+    probe = artifacts.safe_git(
+        ["rev-list", "--stdin"],
+        cwd=worktree,
+        input="".join(f"{oid}\n" for oid in sorted(oids)) + f"^{head}\n^refs/remotes/origin/main\n",
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+    if probe.returncode != 0:
+        raise ValueError(
+            "terminal-abandon reflog names a commit the object store cannot walk; completeness cannot be established"
+        )
+    return sorted(oids & set(probe.stdout.split()))
+
+
+def verify_attested_bundle(primary: Path, locator: Any, head: str, reflog: list[str], *, require_head: bool) -> None:
+    """A hash-bound bundle whose heads are HEAD plus a named ref for every current reflog-only commit.
+
+    ``require_head`` is false only when origin/main already contains HEAD.
+    """
+    _abandon_file(primary, locator, read_payload=False, max_bytes=MAX_DETACHED_BUNDLE_BYTES)
+    bundle_path = primary / locator["path"]
+    verify = artifacts.safe_git(
+        ["bundle", "verify", str(bundle_path)], cwd=primary, capture_output=True, check=False, timeout=30
+    )
+    listed = artifacts.safe_git(
+        ["bundle", "list-heads", str(bundle_path)],
+        cwd=primary,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+    heads = listed.stdout.splitlines() if listed.returncode == 0 else []
+    if verify.returncode != 0 or listed.returncode != 0 or heads.count(f"{head} HEAD") != int(require_head):
+        raise ValueError("terminal-abandon attestation commit bundle does not preserve HEAD")
+    named = set()
+    for line in heads:
+        oid, _, ref = line.partition(" ")
+        if line != f"{head} HEAD" and (not re.fullmatch(r"[a-f0-9]{40}", oid) or ref != REFLOG_BUNDLE_REF + oid):
+            raise ValueError("terminal-abandon attestation commit bundle names an unexpected ref")
+        named.add(oid)
+    if not set(reflog) <= named:
+        raise ValueError("terminal-abandon attestation REFLOG_UNPRESERVED: a reflog-only commit is not in the bundle")
+
+
+def bound_branches_unclaimed(worktree: Path, branch: str | None, matches: list[tuple[Path, dict[str, Any]]]) -> None:
+    """No branch bound to the tree, checked out or recorded, has an open PR; an unknown probe refuses."""
+    from scripts.orchestration import reap_worktrees as rw
+
+    names = {branch, *(member.get("worktree_branch") for _, member in matches)}
+    for name in sorted(name for name in names if isinstance(name, str) and name):
+        prs, error = rw._query_pr_states(worktree, name)
+        if error is not None:
+            raise AttestationRefusal("ACTIVITY_UNKNOWN", "open PR probe unavailable")
+        if any(pr.state == "OPEN" for pr in prs):
+            raise AttestationRefusal("LIVE_OR_WANTED", "a branch bound to the tree has an open PR")
+
+
 def _verified_manifest(
     primary: Path, receipt: Mapping[str, Any], worktree: Path, *, identity: str, nonce: str, head: str
 ) -> dict[str, Any]:
@@ -790,13 +915,17 @@ _ATTESTATION_TIME = re.compile(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?Z"
 
 
 def attestation_cohort(matches: list[tuple[Path, dict[str, Any]]], tasks_dir: Path) -> list[dict[str, Any]]:
-    """Every task record bound to the tree, by task-store path, task and run."""
+    """Every task record bound to the tree, by task-store path, task, run and initiator.
+
+    The initiator decides the owning lane, so a changed initiator is a changed cohort.
+    """
     return sorted(
         (
             {
                 "record": path.relative_to(tasks_dir).as_posix(),
                 "task_id": member.get("task_id"),
                 "run_nonce": member.get("run_nonce"),
+                "initiator": member.get("initiator"),
             }
             for path, member in matches
         ),
@@ -862,11 +991,16 @@ def _verify_attestation(
 
     The attestation replaces creator evidence and unsettled status or retention
     only. Liveness, checkout identity, tracked cleanliness, the Git patches, the
-    commit bundle and the untracked/ignored output copy are all rechecked here.
-    Owner custody was Monitor-verified when written; the record is bound to the
-    tree's directory identity and complete task cohort instead of a live lease,
-    so a later session rollover neither strands nor re-authorizes it.
+    commit bundle (including every commit only the tree's reflog reaches), the
+    untracked/ignored output copy and every bound branch's PR state are all
+    rechecked here. No recorded owner field is trusted: the owning lane is
+    recomputed from the reviewed maps and the bound records' initiators, and the
+    attested custody must still be the stream's current Monitor lease, held by
+    this process or one of its ancestors. A lease envelope is readable by any
+    local process, so only the owning session itself can consume an attestation;
+    after a rollover the lane's new session re-attests.
     """
+    from scripts.fleet.terminal_abandon import Refusal, owner_lane, verify_current_custody
     from scripts.orchestration import reap_worktrees as rw
     from scripts.orchestration.worktree_claims import checked_out_branch
 
@@ -930,14 +1064,36 @@ def _verify_attestation(
         raise ValueError("terminal-abandon attestation branch probe unavailable")
     if branch != attestation["branch"]:
         raise ValueError("terminal-abandon attestation branch changed")
+    owner = attestation["owner"]
+    authority = owner["authority"]
+    try:
+        lane = owner_lane(
+            owner["seat"],
+            authority["holder"]["agent"],
+            host.get("initiator"),
+            [member.get("initiator") for _, member in matches],
+        )
+    except Refusal as exc:
+        raise AttestationRefusal(exc.code, str(exc)) from None
+    if any(owner[key] != lane[key] for key in ("mapping_sha256", "assignments_sha256")):
+        raise AttestationRefusal("MAPPING_CHANGED", "reviewed lane or area map bytes changed; the owner re-attests")
+    if any(owner[key] != value for key, value in lane.items()):
+        raise AttestationRefusal("FOREIGN_OWNER", "recorded owner is not the lane that owns every bound task")
     index_settled(worktree)
     tracked_clean(worktree, head, label="attested")
     manifest = _verified_manifest(primary, receipt, worktree, identity=identity, nonce=nonce, head=head)
+    reflog = unreachable_reflog_commits(worktree, head)
+    head_on_main = rw._sha_is_ancestor(worktree, head, "refs/remotes/origin/main")
     bundle = manifest.get("commit_bundle")
     if bundle is not None:
-        verify_commit_bundle(primary, bundle, head, label="attestation commit")
-    elif not rw._sha_is_ancestor(worktree, head, "refs/remotes/origin/main"):
+        verify_attested_bundle(primary, bundle, head, reflog, require_head=not head_on_main)
+    elif reflog or not head_on_main:
         raise ValueError("terminal-abandon attestation commit bundle missing for commits outside origin/main")
+    bound_branches_unclaimed(worktree, branch, matches)
+    try:
+        verify_current_custody(authority, caller_holds=True)
+    except Refusal as exc:
+        raise AttestationRefusal(exc.code, str(exc)) from None
     located = manifest.get("output")
     if not isinstance(located, dict) or located.get("schema") != "terminal-abandon-output.v1":
         raise ValueError("terminal-abandon attestation output preservation missing")
