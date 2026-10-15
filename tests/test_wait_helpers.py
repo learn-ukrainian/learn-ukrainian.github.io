@@ -55,6 +55,38 @@ def test_wait_until_times_out_naming_the_condition(monkeypatch):
         wait_helpers.wait_until(lambda: False, timeout=1.0, interval=0.5, message="ticket publication")
 
 
+def test_wait_until_never_sleeps_past_the_deadline(monkeypatch):
+    elapsed = [0.0]
+    sleeps: list[float] = []
+
+    def sleep(interval):
+        sleeps.append(interval)
+        elapsed[0] += interval
+
+    monkeypatch.setattr(wait_helpers.time, "monotonic", lambda: elapsed[0])
+    monkeypatch.setattr(wait_helpers.time, "sleep", sleep)
+    with pytest.raises(AssertionError, match=r"slow thing not met within 0\.1s"):
+        wait_helpers.wait_until(lambda: False, timeout=0.1, interval=1.0, message="slow thing")
+    assert sleeps == [pytest.approx(0.1)]
+    assert elapsed[0] == pytest.approx(0.1)
+
+
+def test_wait_until_fails_a_condition_that_is_only_true_after_the_deadline(monkeypatch):
+    elapsed = [0.0]
+    monkeypatch.setattr(wait_helpers.time, "monotonic", lambda: elapsed[0])
+    monkeypatch.setattr(wait_helpers.time, "sleep", lambda interval: elapsed.__setitem__(0, elapsed[0] + interval))
+    with pytest.raises(AssertionError, match=r"late condition not met within 0\.1s"):
+        wait_helpers.wait_until(lambda: elapsed[0] > 0.1, timeout=0.1, interval=1.0, message="late condition")
+
+
+def test_wait_until_accepts_a_condition_true_exactly_at_the_deadline(monkeypatch):
+    elapsed = [0.0]
+    monkeypatch.setattr(wait_helpers.time, "monotonic", lambda: elapsed[0])
+    monkeypatch.setattr(wait_helpers.time, "sleep", lambda interval: elapsed.__setitem__(0, elapsed[0] + interval))
+    wait_helpers.wait_until(lambda: elapsed[0] >= 0.5, timeout=0.5, interval=2.0)
+    assert elapsed[0] == 0.5
+
+
 def test_wait_until_propagates_a_predicate_assertion():
     def watched_process_exited() -> bool:
         raise AssertionError("watched process exited")

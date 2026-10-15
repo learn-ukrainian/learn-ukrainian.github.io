@@ -51,16 +51,18 @@ def wait_until(
     """Poll ``predicate`` until it returns true, with a real deadline.
 
     Raises ``AssertionError`` naming ``message`` if ``timeout`` elapses first.
-    The predicate is checked once more at the deadline, so a condition that
-    became true during the final interval is not reported as a timeout. An
+    Each sleep is capped at the time remaining, so the wait never overshoots
+    the deadline; the predicate is checked once more at the deadline itself,
+    and a condition that only becomes true after it is a timeout. An
     ``AssertionError`` raised by the predicate propagates, so callers can fail
     fast (e.g. a watched process exited) with their own diagnostics.
     """
     deadline = time.monotonic() + timeout
     while not predicate():
-        if time.monotonic() >= deadline:
+        remaining = deadline - time.monotonic()
+        if remaining <= 0:
             raise AssertionError(f"{message} not met within {timeout}s")
-        time.sleep(interval)
+        time.sleep(min(interval, remaining))
 
 
 def wait_for_pid_line(path: Path, *, timeout: float = 60.0) -> int:

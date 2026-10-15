@@ -1549,12 +1549,16 @@ def test_launcher_refuses_a_same_size_edit_with_restored_mtime(tmp_path):
         fake = _dumping_claude(tmp_path / f"host-{attempt}")
         before = fake.lstat()
         identity = acpx_module._claude_code_launch_identity(before)
-        # The edit must land on a later clock tick than the creation, or the ctime would not move.
-        wait_until(
-            lambda created_ns=before.st_ctime_ns: time.time_ns() - created_ns >= 10_000_000,
-            timeout=2.0,
-            message="ctime tick",
-        )
+        # The edit must land on a later filesystem clock tick than the creation, or the ctime would not
+        # move: touch a scratch probe until the filesystem stamps it later than the launcher's ctime.
+        probe = tmp_path / f"ctime-probe-{attempt}"
+        probe.touch()
+
+        def _ctime_advanced(probe=probe, created_ns=before.st_ctime_ns) -> bool:
+            os.utime(probe)
+            return probe.lstat().st_ctime_ns > created_ns
+
+        wait_until(_ctime_advanced, timeout=2.0, message="ctime tick")
         original = fake.read_bytes()
         edited = original.replace(b"import json, os, sys", b"import json,os, sys ")
         assert len(edited) == len(original) and edited != original
