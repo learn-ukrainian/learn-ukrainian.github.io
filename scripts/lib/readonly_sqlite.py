@@ -66,11 +66,12 @@ def open_readonly(
     conn = sqlite3.connect(uri, uri=True, **settings)
     try:
         conn.execute("PRAGMA query_only=ON")
-        conn.set_authorizer(
-            lambda action, _arg1, _arg2, _db, _trigger: (
-                sqlite3.SQLITE_DENY if action in (sqlite3.SQLITE_ATTACH, sqlite3.SQLITE_DETACH) else sqlite3.SQLITE_OK
-            )
-        )
+        # Refuse ATTACH with SQLite's own limit, never a Python callback: a
+        # callback runs while SQLite holds the connection mutex with the GIL
+        # released, so a connection shared across threads deadlocks against a
+        # thread that holds the GIL and waits for that mutex (#10674). With no
+        # attached database, DETACH has nothing to remove.
+        conn.setlimit(sqlite3.SQLITE_LIMIT_ATTACHED, 0)
     except BaseException:
         conn.close()
         raise
