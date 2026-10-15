@@ -511,7 +511,11 @@ def _task_still_active(
     (Claude CF #5649 F001). Outside the grace window, task-state + worker PID
     are authoritative.
     """
+    # Imported here because the shared markers also use OwnershipLedger.
+    from scripts.orchestration.dead_worker_state import worker_liveness
+
     state_path = state_dir / f"{_safe_task_state_name(task_id)}.json"
+    data: dict = {}
     status = None
     state_pid: int | None = None
     orphaned_prep = False
@@ -530,12 +534,30 @@ def _task_still_active(
             elif isinstance(raw_pid, str) and raw_pid.isdigit():
                 state_pid = int(raw_pid)
             worktree_path = data.get("worktree_path") or data.get("cwd")
+        else:
+            data = {}
 
     clock = time.time() if now is None else now
     in_grace = created_at is not None and (clock - float(created_at)) <= ADMISSION_PID_GRACE_S
 
-    pid_is_alive = pid is not None and pid > 0 and _pid_alive(pid)
-    state_pid_is_alive = state_pid is not None and state_pid > 0 and _pid_alive(state_pid)
+    # A pid-less dispatch still owns its write claim while its recorded
+    # dispatcher is live or unknown, including after the admission grace.
+    owner = data.get("worktree_prep") or data.get(dispatch_admission.ADMISSION_HOLD_KEY)
+    if (
+        status in ("running", "spawning")
+        and state_pid is None
+        and isinstance(owner, dict)
+        and "owner_identity" in owner
+        and owner.get("owner_pid") == pid
+    ):
+        return not orphaned_prep
+
+    state_liveness = worker_liveness(data, pid_alive=_pid_alive)
+    claim_liveness = (
+        state_liveness if state_pid == pid else worker_liveness({"pid": pid}, pid_alive=_pid_alive)
+    )
+    pid_is_alive = pid is not None and pid > 0 and claim_liveness is True
+    state_pid_is_alive = state_pid is not None and state_pid > 0 and state_liveness is True
     matcher = process_matches_task or _pid_matches_task
 
     def _check_match(candidate_pid: int) -> bool | None:
@@ -545,6 +567,22 @@ def _task_still_active(
             return matcher(candidate_pid, task_id, worktree_path=worktree_path)
         except TypeError:
             return matcher(candidate_pid, task_id)
+
+    # The worker's own terminal write releases this exact PID's write claim.
+    if status in TERMINAL_TASK_STATUSES and state_pid is not None and state_pid == pid:
+        return False
+
+    # Namespace uncertainty cannot release an active worker's protection. Proven
+    # identity death, including PID reuse, overrides admission grace for its claim.
+    if state_pid is not None and state_liveness is None:
+        return True
+    if (
+        status in ("running", "spawning", "needs_finalize", "", None)
+        and state_pid is not None
+        and state_pid == pid
+        and state_liveness is False
+    ):
+        return False
 
     # Within grace only: live ledger PID holds claim (admission→state-write race).
     if in_grace and pid_is_alive:
@@ -558,8 +596,8 @@ def _task_still_active(
     # denied (preserving protection against false eviction). If the PID is verified to be a
     # confirmed mismatch (recycled PID), the stale claim must be released.
     if status in TERMINAL_TASK_STATUSES:
-        if state_pid is not None and pid is not None and state_pid == pid:
-            return False
+        if pid is not None and claim_liveness is None:
+            return True
         if not pid_is_alive or pid is None:
             return False
         # Confirmed mismatch (match_result is False) releases stale claim;
@@ -578,6 +616,8 @@ def _task_still_active(
     # spawning/running/needs_finalize/empty with live pid (or unknown pid) = active.
     # no_deliverable is terminal: there is no unfinished tree to protect.
     if status in ("running", "spawning", "needs_finalize", "", None):
+        if pid is not None and claim_liveness is None:
+            return True
         if pid_is_alive and pid is not None:
             if in_grace or (state_pid is not None and state_pid == pid):
                 return True
@@ -676,6 +716,8 @@ class OwnershipLedger:
         return released
 
     def release(self, task_id: str, *, pid: int | None = None) -> None:
+        from scripts.orchestration.dead_worker_state import worker_liveness
+
         with self._connect() as conn:
             conn.execute("BEGIN IMMEDIATE")
             if pid is not None:
@@ -691,6 +733,11 @@ class OwnershipLedger:
                     "SELECT DISTINCT pid FROM write_claims WHERE task_id = ?",
                     (task_id,),
                 ).fetchall()
+                state_path = self.task_state_dir / f"{_safe_task_state_name(task_id)}.json"
+                try:
+                    record = json.loads(state_path.read_text(encoding="utf-8"))
+                except (OSError, ValueError):
+                    record = {}
                 for row in rows:
                     row_pid = row["pid"]
                     if row_pid is None:
@@ -698,11 +745,16 @@ class OwnershipLedger:
                             "DELETE FROM write_claims WHERE task_id = ? AND pid IS NULL",
                             (task_id,),
                         )
-                    elif not _pid_alive(int(row_pid)):
-                        conn.execute(
-                            "DELETE FROM write_claims WHERE task_id = ? AND pid = ?",
-                            (task_id, int(row_pid)),
+                    else:
+                        candidate = (
+                            record if isinstance(record, dict) and record.get("pid") in (row_pid, str(row_pid))
+                            else {"pid": int(row_pid)}
                         )
+                        if worker_liveness(candidate, pid_alive=_pid_alive) is False:
+                            conn.execute(
+                                "DELETE FROM write_claims WHERE task_id = ? AND pid = ?",
+                                (task_id, int(row_pid)),
+                            )
             conn.execute("COMMIT")
 
     def update_claim_pid(self, task_id: str, new_pid: int) -> None:
@@ -726,6 +778,8 @@ class OwnershipLedger:
         caller: str = "delegate.cmd_dispatch",
     ) -> AdmissionResult:
         """Attempt admission. WARN always admits; REFUSE may refuse."""
+        from scripts.orchestration.dead_worker_state import worker_liveness
+
         if mode not in WRITE_CAPABLE_MODES:
             return AdmissionResult(
                 admitted=True,
@@ -761,7 +815,7 @@ class OwnershipLedger:
             # between admission and state write (CF r7 F001). Refuse if another
             # live PID already holds claims for this task_id.
             same_rows = conn.execute(
-                "SELECT DISTINCT pid FROM write_claims WHERE task_id = ?",
+                "SELECT pid, MIN(created_at) AS created_at FROM write_claims WHERE task_id = ? GROUP BY pid",
                 (task_id,),
             ).fetchall()
             for row in same_rows:
@@ -769,8 +823,15 @@ class OwnershipLedger:
                 if other_pid is None or other_pid <= 0:
                     continue
                 if pid is not None and other_pid == pid:
-                    continue  # same process re-admit / retry
-                if _pid_alive(other_pid):
+                    state_path = self.task_state_dir / f"{_safe_task_state_name(task_id)}.json"
+                    try:
+                        record = json.loads(state_path.read_text(encoding="utf-8"))
+                    except (OSError, ValueError):
+                        record = {}
+                    candidate = record if isinstance(record, dict) and record.get("pid") in (pid, str(pid)) else {"pid": pid}
+                    if worker_liveness(candidate, pid_alive=_pid_alive) is True:
+                        continue  # Proven same-namespace process re-admit / retry.
+                if _task_still_active(task_id, other_pid, self.task_state_dir, created_at=row["created_at"]):
                     event = {
                         "task_id": task_id,
                         "other_pid": other_pid,

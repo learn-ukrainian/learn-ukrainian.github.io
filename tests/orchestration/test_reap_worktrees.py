@@ -4095,6 +4095,43 @@ def test_active_write_ownership_claim_in_write_claims_blocks_reaping(
     assert worktree.exists()
 
 
+@pytest.mark.parametrize("claim_state", ["live", "dead", "unknown"])
+def test_write_claim_pid_replacement_ignores_stale_task_identity(tmp_path, monkeypatch, claim_state):
+    from scripts.orchestration import dead_worker_state
+
+    repo = init_repo(tmp_path)
+    task_id = "replacement-claim"
+    dead_pid, dead_start = exited_process_identity()
+    claim_pid = dead_pid if claim_state == "dead" else os.getpid()
+    stale_pid = os.getpid() if claim_state == "dead" else dead_pid
+    task_dir = repo / "batch_state" / "tasks"
+    task_dir.mkdir(parents=True, exist_ok=True)
+    task_file = task_dir / f"{task_id}.json"
+    task_file.write_text(json.dumps({
+        "pid": stale_pid,
+        "worker_identity": {
+            **dead_worker_state.capture_worker_identity(stale_pid),
+            "start_time": dead_start if stale_pid == dead_pid else -1,
+        },
+    }))
+    db_path = task_dir / "write-ownership.sqlite3"
+    with sqlite3.connect(db_path) as conn:
+        conn.execute("CREATE TABLE write_claims (task_id TEXT, pid INTEGER)")
+        conn.execute("INSERT INTO write_claims VALUES (?, ?)", (task_id, claim_pid))
+    before_task = task_file.read_bytes()
+    before_ledger = db_path.read_bytes()
+    monkeypatch.setenv("LEARN_UKRAINIAN_OWNERSHIP_LEDGER", str(db_path))
+    if claim_state == "unknown":
+        monkeypatch.setattr(dead_worker_state, "_pid_namespace", lambda *_args: "pid:[999999]")
+        monkeypatch.setattr(dead_worker_state, "_proc_pid_namespace", lambda: "pid:[999999]")
+
+    reason = rw._has_active_ownership_claim(repo, task_id)
+
+    assert reason == (None if claim_state == "dead" else "active write claim task-id=replacement-claim")
+    assert task_file.read_bytes() == before_task
+    assert db_path.read_bytes() == before_ledger
+
+
 def test_write_claims_query_error_fails_closed_without_empty_skip(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -8198,3 +8235,20 @@ def test_reaper_lock_malformed_legacy_pid_is_unknown(tmp_path, monkeypatch, meta
                 pytest.fail("legacy holder was displaced")
         assert not holder.closed
         assert lock.read_bytes() == metadata
+
+
+
+def test_namespace_unknown_worker_is_not_gone():
+    record = {
+        "pid": 999_999_998,
+        "status": "crashed",
+        "worker_identity": {
+            "pid": 999_999_998,
+            "host_pid": 999_999_998,
+            "start_time": 123,
+            "pid_namespace": "pid:[999999]",
+            "recorder_pid_namespace": "pid:[999999]",
+        },
+    }
+    assert rw._task_pid_alive(record) is True
+    assert rw._pid_proven_absent(record) is False

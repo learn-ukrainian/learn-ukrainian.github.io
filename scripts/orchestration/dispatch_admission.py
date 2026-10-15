@@ -456,11 +456,14 @@ def _age_s(started_at: Any, now: datetime) -> float | None:
 
 def new_admission_hold(run_nonce: str) -> dict[str, Any]:
     """This dispatcher's claim on an admitted slot: run, pid and ``/proc`` start time."""
-    owner = worktree_prep.process_identity(os.getpid())
+    from scripts.orchestration.dead_worker_state import capture_worker_identity
+
+    owner = capture_worker_identity(os.getpid(), self_process=True)
     return {
         "run_nonce": run_nonce,
         "owner_pid": owner["pid"],
-        "owner_start": owner["start"],
+        "owner_start": owner["start_time"],
+        "owner_identity": owner,
         "admitted_at": datetime.now(UTC).isoformat(),
     }
 
@@ -490,7 +493,7 @@ def is_orphaned_admission_hold(record: dict[str, Any]) -> bool:
         record.get("status") in ACTIVE_STATUSES
         and "worktree_prep" not in record
         and is_admission_hold_record(record)
-        and worktree_prep.process_gone(hold.get("owner_pid"), hold.get("owner_start"))  # type: ignore[union-attr]
+        and worktree_prep.owner_gone(hold)  # type: ignore[arg-type]
     )
 
 
@@ -518,6 +521,7 @@ def scan_task_records(
     tasks_dir: Path,
     *,
     pid_alive: Callable[[int], bool] | None = None,
+    record_liveness: Callable[[dict[str, Any]], bool | None] | None = None,
     now: datetime | None = None,
 ) -> WorkerScan:
     """Live write workers, and every active record (any mode) whose owner is gone.
@@ -559,7 +563,13 @@ def scan_task_records(
                 # Held while the dispatcher lives, however long its worktree
                 # add runs. A missing pid is proof it is gone even on a host
                 # without /proc, where only the pid can be checked.
-                if alive(owner_pid):
+                if "owner_identity" in owner:
+                    from scripts.orchestration.dead_worker_state import worker_liveness
+
+                    owner_live = worker_liveness({"pid": owner_pid, "worker_identity": owner["owner_identity"]}) is not False
+                else:
+                    owner_live = alive(owner_pid)
+                if owner_live:
                     live.append(task_id)
                 continue
             age = _age_s(state.get("started_at"), clock)
@@ -572,7 +582,8 @@ def scan_task_records(
             elif age is not None and age <= PIDLESS_SPAWNING_GRACE_S:
                 live.append(task_id)
             continue
-        if alive(pid):
+        worker_live = record_liveness(state) is not False if record_liveness is not None else alive(pid)
+        if worker_live:
             if write_capable:
                 live.append(task_id)
         else:
@@ -585,6 +596,7 @@ def evaluate(
     tasks_dir: Path,
     *,
     pid_alive: Callable[[int], bool] | None = None,
+    record_liveness: Callable[[dict[str, Any]], bool | None] | None = None,
     on_dead: Callable[[Path, dict[str, Any]], None] | None = None,
     thresholds: Thresholds | None = None,
 ) -> AdmissionDecision:
@@ -598,7 +610,7 @@ def evaluate(
     if mode not in WRITE_CAPABLE_MODES:
         return AdmissionDecision(mode=mode, exempt=True, admitted=True)
     limits = thresholds or load_thresholds()
-    scan = scan_task_records(tasks_dir, pid_alive=pid_alive)
+    scan = scan_task_records(tasks_dir, pid_alive=pid_alive, record_liveness=record_liveness)
     if on_dead is not None:
         for path, state in scan.dead:
             on_dead(path, state)

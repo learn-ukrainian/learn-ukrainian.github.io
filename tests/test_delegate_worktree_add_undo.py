@@ -162,6 +162,9 @@ def test_reservation_recorded_before_git_and_a_leftover_is_reported_not_removed(
     assert isinstance(reserved["dir_ino"], int)
     assert reserved["owner_pid"] == os.getpid()
     assert isinstance(reserved["owner_start"], int)
+    from scripts.orchestration.dead_worker_state import capture_worker_identity
+
+    assert reserved["owner_identity"] == capture_worker_identity(os.getpid(), self_process=True)
     assert reserved["git_pid"] is None
 
     exc = caught.value

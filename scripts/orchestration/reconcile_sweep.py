@@ -3,7 +3,7 @@
 
 Runs:
 1. `dispatch_settle release-stale` (releases write-ownership claims for inactive tasks)
-2. Lazy heal path (`delegate.py status`) for running task records whose PID is dead,
+2. Explicit identity-aware healing for running task records whose worker is dead,
    and for pid-less worktree-prep records whose dispatcher is dead (#8663)
 3. Logs a one-line summary (counts) to stdout (journal)
 
@@ -14,7 +14,6 @@ from __future__ import annotations
 
 import argparse
 import contextlib
-import io
 import json
 import os
 import sqlite3
@@ -38,6 +37,7 @@ from scripts.guardrails.delegate_ownership import (
     default_ledger_path,
 )
 from scripts.orchestration import dispatch_admission, dispatch_settle
+from scripts.orchestration.dead_worker_state import worker_liveness
 
 
 def default_task_dir(repo_root: Path | None = None) -> Path:
@@ -113,7 +113,7 @@ def _probe_stale_claims(ledger: OwnershipLedger) -> list[str]:
 def _git_optional_locks_disabled() -> Iterator[None]:
     """Run git children with ``GIT_OPTIONAL_LOCKS=0`` for the sweep (#8874).
 
-    The sweep reaches git only through settle and the delegate status heal
+    The sweep reaches git only through settle and the delegate explicit heal
     path. Read-only commands there (``git status`` refreshing the index) must
     not take ``index.lock``: a sweep killed mid-call would leave it behind.
     An explicit operator value wins and is left untouched.
@@ -192,13 +192,16 @@ def _run_reconcile_sweep(
                     # admission and while its git worktree add runs; the
                     # dispatcher recorded in ``admission_hold`` or
                     # ``worktree_prep`` owns the record until a worker exists.
-                    pid_alive = not dispatch_admission.is_orphaned_pidless_record(state)
+                    pid_alive = (
+                        worker_liveness({"pid": os.getpid()}) is None
+                        or not dispatch_admission.is_orphaned_pidless_record(state)
+                    )
                 elif pid is None:
                     unparseable_tasks.append(task_id)
                     continue
                 else:
                     try:
-                        pid_alive = delegate._pid_alive(pid)
+                        pid_alive = worker_liveness(state, pid_alive=delegate._pid_alive) is not False
                     except Exception:
                         unparseable_tasks.append(task_id)
                         continue
@@ -206,20 +209,8 @@ def _run_reconcile_sweep(
                 if not pid_alive:
                     zombie_tasks.append(task_id)
                     if apply:
-                        # Invoke lazy heal path via delegate.cmd_status
-                        saved_tasks_dir = os.environ.get("LU_TASKS_DIR")
-                        try:
-                            os.environ["LU_TASKS_DIR"] = str(tdir)
-                            with (
-                                contextlib.redirect_stdout(io.StringIO()),
-                                contextlib.redirect_stderr(io.StringIO()),
-                            ):
-                                delegate.cmd_status(argparse.Namespace(task_id=task_id, run_nonce=None))
-                        finally:
-                            if saved_tasks_dir is None:
-                                os.environ.pop("LU_TASKS_DIR", None)
-                            else:
-                                os.environ["LU_TASKS_DIR"] = saved_tasks_dir
+                        # Re-prove the observed identity under the shared writer lock.
+                        delegate._heal_dead_task(state_file, state, source="reconcile_sweep")
                 else:
                     live_tasks.append(task_id)
         except Exception:
@@ -254,7 +245,7 @@ def build_parser() -> argparse.ArgumentParser:
             "  .venv/bin/python scripts/orchestration/reconcile_sweep.py --json\n\n"
             "Outputs:\n"
             "  Stdout: one-line summary line (and optional JSON payload).\n"
-            "  In --apply mode: updates batch_state/tasks/*.json statuses to 'crashed' via delegate.py status\n"
+            "  In --apply mode: explicitly heals proven-dead workers in batch_state/tasks/*.json to 'crashed'\n"
             "  (including worktree-prep records and admission holds whose dispatcher died:\n"
             "  dispatch_died_during_worktree_prep, dispatch_died_after_admission)\n"
             "  and removes stale rows from write-ownership.sqlite3.\n\n"
