@@ -3782,6 +3782,26 @@ curl -s http://localhost:8765/api/ops/v1/test-slots | python3 -m json.tool
 
 ---
 
+## High-load samples — `/api/ops/v1/load-samples`
+
+`GET /api/ops/v1/load-samples?limit=50` returns `load-samples.v1` with `samples` and `error`.
+The limit is 1–500; invalid values return 422. Samples are oldest first, each with:
+
+- `timestamp`: UTC ISO 8601;
+- `load_averages`: 1-, 5- and 15-minute load;
+- `top_processes`: at most five `{name, cpu_percent}` records, sorted by CPU usage;
+- `top_cpu_percent`: summed CPU usage of those processes, with one CPU equal to 100%;
+- `test_slots`: `{holders: [{task_id, slots}], enabled, error}` from the governor.
+
+The existing Monitor periodic collector samples only above `LU_LOAD_SAMPLE_THRESHOLD` (default 20),
+at most once per 60 seconds, and retains 500 lines in ignored runtime state. Process CPU usage uses
+a shared 0.1-second observation interval. It never collects arguments, paths, environments or PIDs.
+Malformed command names become `unknown`. Reads never trigger collection or create files.
+Missing state returns an empty list; unreadable state returns `error: "load_samples_unavailable"`.
+See [High-load attribution](runbooks/test-slots.md#high-load-attribution) for configuration and limits.
+
+---
+
 ## Atlas VPS Job Protocol — `/api/atlas-jobs`
 
 Lightweight Monitor facade for the Atlas VPS job execution protocol.

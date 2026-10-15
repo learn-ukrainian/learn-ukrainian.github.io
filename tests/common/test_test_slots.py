@@ -261,14 +261,22 @@ def test_more_live_tickets_than_the_scan_limit_are_still_refused(pool: Path, mon
 
 
 @pytest.mark.parametrize(
-    ("cpus", "expected"), [(16, 14), (8, 6), (4, 2), (3, 2), (1, 2), (None, 2)], ids=lambda value: str(value)
+    ("cpus", "expected"),
+    [(64, 32), (16, 8), (8, 4), (4, 2), (3, 2), (2, 2), (1, 2), (None, 2)],
+    ids=lambda value: str(value),
 )
-def test_default_pool_size_reserves_cpus_for_services_with_a_floor_of_two(
+def test_default_pool_size_is_half_the_cpus_with_a_floor_of_two(
     cpus: int | None, expected: int, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     monkeypatch.delenv(test_slots.COUNT_ENV)
     monkeypatch.setattr(test_slots.os, "cpu_count", lambda: cpus)
     assert test_slots.pool_size() == expected
+
+
+@pytest.mark.parametrize("value", ["1", "8", "64"])
+def test_explicit_pool_size_overrides_cpu_default(value: str, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(test_slots.os, "cpu_count", lambda: 16)
+    assert test_slots.pool_size({test_slots.COUNT_ENV: value}) == int(value)
 
 
 @pytest.mark.parametrize(
