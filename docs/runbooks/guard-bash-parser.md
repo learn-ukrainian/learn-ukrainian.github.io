@@ -126,11 +126,45 @@ lowercase bindings. Commands, labels, denominators and overblock budgets remain
 frozen. Oracle/scorer probes use the existing task-scratch allocator and preserve
 an interrupted probe for diagnosis. Successful probes remove their own lease.
 
-The heredoc backtick matcher uses disjoint escape and ordinary-character
-alternatives, including escaped newlines, following the [CodeQL ambiguity-removal
-guidance](https://codeql.github.com/codeql-query-help/python/py-redos/). The regression tests exercise both the
-bounded unterminated-input witness and extraction from executable substitutions.
-Actual CodeQL closure requires the fresh candidate's CI result.
+## Heredocs and ANSI-C words (#10521)
+
+Grammar 0.25 drops expansions that follow leading whitespace in an unquoted
+heredoc body, and fails on a body that starts with `\$`. The reader therefore
+reads every heredoc itself, as Bash 5.3 does, and hands the grammar only an
+opaque body under a quoted unique delimiter:
+
+- The body starts after the opener's command line. While an unquoted body is
+  read, backslash-newline pairs are joined, so a joined line can be the
+  delimiter. `<<-` strips leading tabs from every line, the delimiter line
+  included. The delimiter line holds the word alone: a trailing space or CR
+  does not end the body. An undelimited body refuses as a parse error, since a
+  harness may append input.
+- Any quoting of the delimiter word (`'`, `"` or `\`) makes the body literal.
+  Other delimiter spellings, such as `$'...'` or partial quoting, refuse.
+- In an unquoted body a backslash quotes only `$`, a backquote and another
+  backslash; quotes, `$'...'` and `$"..."` are plain text. Every `$(...)`,
+  backquote, `${...}`, `$((...))` and parameter is read as the same words
+  outside a heredoc, so its commands are collected. A single quote inside
+  `${...}` refuses, because Bash versions and modes read it differently. An
+  unquoted body fed to a shell with any expansion is a dynamic payload.
+
+`$'...'` words decode to bytes: an octal escape takes one to three digits and
+wraps to 8 bits (`\547` is `g`), `\xHH` takes one or two hex digits, `\cX` is a
+control byte (`\c?` is DEL), the first NUL ends the quoted text, and an unknown
+escape keeps its backslash. Locale- or version-dependent forms refuse: `\u` and
+`\U` above U+007F, `\x{...}`, and `\c` before a backslash, `i`, a non-ASCII byte
+or the end. A value that is not UTF-8 refuses too. `$"..."` refuses, because the
+locale's message catalog decides it, and so does an unquoted word that may
+brace-expand (`gh pr {merge,} 5`).
+
+The dependency-free prefilters wrap octal escapes to a byte as well. A command
+with an `$'` span holding a NUL-valued escape, `\x{`, `\c`, `\u` or `\U` always
+reaches the reader; without the reader such a command blocks.
+`tests/test_guard_bash_decoding.py` compares these rules byte for byte with the
+installed Bash and replays generated cases through `bash_oracle`. The held-out
+corpus keeps its 350 frozen rows and appends 51 heredoc and decoded-word rows,
+measured against the same frozen main SHA; class `decoded_word` carries their
+ruling attribution.
 
 
 #10521 preserves ten existing main refusals under the clarified acceptance
