@@ -1,4 +1,4 @@
-import { describe, expect, test } from "vitest";
+import { beforeAll, describe, expect, test } from "vitest";
 import type { APIRoute } from "astro";
 import { GET as getContract } from "@site/src/pages/api/lexicon/contract.json";
 import { GET as getDailyPool } from "@site/src/pages/api/lexicon/daily-pool.json";
@@ -35,22 +35,14 @@ async function routeJson<T>(
   return (await response.json()) as T;
 }
 
-let cachedSearch: unknown[] | null = null;
-let cachedDaily: unknown[] | null = null;
+// Hydrated CI carries the ~218 MB lexicon-manifest.json; building the committed
+// runtime status parses all of it (#10472: ~3 s on a quiet host, 7-11 s on a
+// starved 2-core runner). That one-time fixture cost is paid in beforeAll under
+// its own budget so it never lands inside a 5 s per-test budget.
+const FIXTURE_BUILD_TIMEOUT_MS = 60_000;
 
-async function getSharedSearch(): Promise<unknown[]> {
-  if (!cachedSearch) {
-    cachedSearch = await routeJson<unknown[]>(getSearchIndex);
-  }
-  return cachedSearch;
-}
-
-async function getSharedDaily(): Promise<unknown[]> {
-  if (!cachedDaily) {
-    cachedDaily = await routeJson<unknown[]>(getDailyPool);
-  }
-  return cachedDaily;
-}
+let sharedSearch: unknown[];
+let sharedDaily: unknown[];
 
 async function routePaths(getStaticPaths: () => ReturnType<typeof practiceApiStaticPaths>): Promise<string[]> {
   const paths = await getStaticPaths();
@@ -61,9 +53,17 @@ async function routePaths(getStaticPaths: () => ReturnType<typeof practiceApiSta
 }
 
 describe("lexicon static API routes", () => {
+  beforeAll(async () => {
+    // Status first: it primes the committed runtime-status cache that the status
+    // and contract routes (and the tests below) then read in milliseconds.
+    await routeJson(getStatus);
+    sharedSearch = await routeJson<unknown[]>(getSearchIndex);
+    sharedDaily = await routeJson<unknown[]>(getDailyPool);
+  }, FIXTURE_BUILD_TIMEOUT_MS);
+
   test("emits runtime status for public Atlas, Daily Word, and Practice", async () => {
-    const search = await getSharedSearch();
-    const daily = await getSharedDaily();
+    const search = sharedSearch;
+    const daily = sharedDaily;
     const status = await routeJson<{
       schema: string;
       status: string;
@@ -166,9 +166,9 @@ describe("lexicon static API routes", () => {
   });
 
   test("publishes separate article and alias search artifacts under /lexicon (with /api aliases)", async () => {
-    const search = await getSharedSearch();
+    const search = sharedSearch;
     const aliases = await routeJson<Array<{ a: string; s: string; h: string }>>(getSearchAliases);
-    const daily = await getSharedDaily();
+    const daily = sharedDaily;
 
     expect(search.length).toBeGreaterThan(5000);
     expect(aliases.length).toBeGreaterThan(5000);

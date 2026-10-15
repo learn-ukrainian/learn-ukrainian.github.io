@@ -742,6 +742,7 @@ def test_apply_bundles_verifies_receipts_then_deletes_local_refs_only(repo: Path
 
 
 def test_contending_archives_hold_lock_through_deletion(repo: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    frozen_now = datetime.now(UTC)
     heads = {name: commit_unique(repo, name, days=8) for name in ("codex/alpha", "codex/beta")}
     selected = by_name(run(repo))
     snapshot = sweep._archive_local_snapshot(repo)
@@ -756,7 +757,7 @@ def test_contending_archives_hold_lock_through_deletion(repo: Path, monkeypatch:
     class FrozenDatetime(datetime):
         @classmethod
         def now(cls, tz=None):
-            return datetime(2026, 10, 13, 12, tzinfo=UTC)
+            return frozen_now
 
     monkeypatch.setattr(sweep, "datetime", FrozenDatetime)
 

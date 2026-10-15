@@ -813,3 +813,21 @@ def test_gate_refuses_forced_admission_of_unparsed_markup(store, component):
     store._rows[citation.table, citation.row_key]["unparsed_annotation_markup"] = True
     with pytest.raises(BuildError, match="binding_literal"):
         gate.run(candidates)
+
+
+@pytest.mark.parametrize("separator", ["\u0085", "\u2028", "\u2029"], ids=["NEL", "LS", "PS"])
+def test_metadata_csv_keeps_unicode_separators_inside_fields(store, separator):
+    # #9556: CSV records end at physical newlines; separators are field text.
+    path = store.root / "data/metadata.csv"
+    with path.open(newline="") as f:
+        rows = list(csv.DictReader(f))
+    rows[0]["region"] = f"SYNTHETIC{separator}region"
+    rows[1]["occupation"] = "SYNTHETIC\nquoted"
+    with path.open("w", newline="") as f:
+        writer = csv.DictWriter(f, list(rows[0]))
+        writer.writeheader()
+        writer.writerows(rows)
+
+    reread = ua_gec_split.UaGecFileStore(store.root)
+
+    assert reread.metadata == rows

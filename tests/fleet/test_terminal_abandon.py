@@ -317,7 +317,12 @@ def succession(writer_fixture, monkeypatch):
     from agents_extensions.shared.session_streams.hooks import lease_from_environment
     from scripts.session_supervisor import remote
 
-    _, tree, tasks, creator, _, _, _ = writer_fixture
+    _, tree, tasks, creator, successor, _, _ = writer_fixture
+    # Unmerged abandonment uses terminal done records. needs_finalize now
+    # requires the merged-source proof, exercised separately in #10624.
+    for member in (creator, successor):
+        member["status"] = "done"
+        save(tasks, member)
     creator["initiator"] = "claude-monitor"
     save(tasks, creator)
     monkeypatch.setenv("LU_RUNTIME_INITIATOR", "muse-monitor")

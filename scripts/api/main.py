@@ -35,6 +35,7 @@ from fastapi.responses import FileResponse, JSONResponse, RedirectResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 import scripts.github_rest_cache as github_rest
+from scripts.common.jsonl import physical_lines
 from scripts.common.release_layout import is_release_root
 from scripts.common.safe_open import safe_open_below
 from scripts.github_check_rollup import group_collapsed_by_name
@@ -462,7 +463,8 @@ def _collect_git_orient_data(ctx: MonitorContext | None = None) -> dict:
         raise RuntimeError(log_proc.stderr.strip() or "git log failed")
 
     recent_commits = []
-    for line in log_proc.stdout.splitlines():
+    # One ``--oneline`` record per physical line; a subject may contain NEL/LS/PS.
+    for line in physical_lines(log_proc.stdout):
         line = line.strip()
         if not line:
             continue

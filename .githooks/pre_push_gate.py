@@ -46,7 +46,7 @@ import uuid
 from dataclasses import dataclass, field
 from pathlib import Path
 
-GATE_VERSION = 4
+GATE_VERSION = 5  # 5: per-stage execution allowances (#10642)
 REGISTRY_FILE = "tests/test_repo_wide_marker_invariant.py"
 REGISTRY_NAMES = ("KNOWN_REPO_WIDE_MODULES", "KNOWN_REPO_WIDE_FUNCTIONS")
 MAX_TEST_PROCESSES_ENV = "LU_PRE_PUSH_GATE_MAX_TEST_PROCESSES"
@@ -54,11 +54,14 @@ MAX_CONCURRENT_RUNS_ENV = "LU_PRE_PUSH_GATE_MAX_CONCURRENT_RUNS"
 MEASUREMENT_SCHEMA = "pre-push-measurement.v1"
 SCOPE_MEMORY_MAX = 6 * 1024**3
 CGROUP_ROOT = Path("/sys/fs/cgroup")
-RUN_BUDGET_S = 600.0
+# Each blocking stage (pre-commit, pytest) gets its own allowance from its own start, so time one
+# stage spends never shortens the next (#10642). The run budget caps their sum for the whole push.
+STAGE_BUDGET_S = 600.0
+RUN_BUDGET_S = 2 * STAGE_BUDGET_S
 SHADOW_BUDGET_S = 120.0
 CLEANUP_BUDGET_S = 10.0  # after a kill: reaping and the sweep for leftover descendants
 ADMISSION_WAIT_S = RUN_BUDGET_S + SHADOW_BUDGET_S + 2 * CLEANUP_BUDGET_S
-# Each predecessor gets one complete gate allowance. The 7,400 second ceiling covers a burst of
+# Each predecessor gets one complete gate allowance. The ceiling of ten allowances covers a burst of
 # ten predecessors, while bounding overload or a stuck holder. Environment overrides only shorten it.
 ADMISSION_MAX_WAIT_S = 10 * ADMISSION_WAIT_S
 MAX_QUEUE_ENTRIES = 256  # cap live tickets after reaping abandoned entries
@@ -83,6 +86,7 @@ SPARSE_TREE_NODES = {
 ZERO_SHA = "0" * 40
 EXIT_REFUSED = 1
 EXIT_INCOMPLETE = 75  # EX_TEMPFAIL: the push was not validated, not judged bad
+NO_TESTS_COLLECTED = 5  # pytest.ExitCode.NO_TESTS_COLLECTED
 FAILURE_RE = re.compile(r"^(?:FAILED|ERROR) (\S+?)(?: - .*)?$", re.MULTILINE)
 SUMMARY_RE = re.compile(r"^=+ .*\bin \d+(?:\.\d+)?s.*=+$|^\d+ \w+.* in \d+(?:\.\d+)?s", re.MULTILINE)
 PRE_COMMIT_FAILED_RE = re.compile(r"^(.+?)\.{3,}.*Failed$", re.MULTILINE)
@@ -694,7 +698,9 @@ class ResourceScope:
             child.close()
             self.setup_s = time.monotonic() - started
 
-    def execute(self, plan: Plan, config: str, deadline: float, event: dict[str, object]) -> None:
+    def execute(
+        self, plan: Plan, config: str, deadline: float, event: dict[str, object], *, stage_budget_s: float
+    ) -> None:
         assert self.stream is not None and self.channel is not None
         self.channel.settimeout(max(0.01, deadline - time.monotonic()) + SHADOW_BUDGET_S + 2 * CLEANUP_BUDGET_S)
         packet = {
@@ -703,6 +709,7 @@ class ResourceScope:
             "launcher": self.launcher,
             "config": config,
             "deadline": deadline,
+            "stage_budget_s": stage_budget_s,
         }
         try:
             self.channel.sendall((json.dumps(packet) + "\n").encode())
@@ -1188,14 +1195,27 @@ def test_process_limit() -> int:
         ) from None
 
 
-def parallel_options() -> list[str]:
-    """Use configured parallelism when available; keep whole files together."""
+def parallel_options(dist: str = "loadfile") -> list[str]:
+    """Use configured parallelism when available, scheduled by xdist mode ``dist``."""
     limit = test_process_limit()
     if limit == 1 or importlib.util.find_spec("xdist") is None:
         return []
     if os.environ.get("LEARN_UKRAINIAN_DISPATCH_TASK_ID", "").strip():
         limit = min(limit, 2)  # Match ci.pytest_dispatch_cap before recording the invocation.
-    return ["-n", str(limit), "--dist", "loadfile"]
+    return ["-n", str(limit), "--dist", dist]
+
+
+def pytest_invocations(plan: Plan) -> tuple[tuple[tuple[str, ...], str], ...]:
+    """Split the plan's node ids into ``(node_ids, xdist mode)`` runs that together cover every id once.
+
+    Changed test files are distributed per test (``worksteal``, as CI runs them) so one slow
+    changed file cannot pin a single worker for the whole stage (#10610); they run first, as the
+    likeliest to fail. Registered invariant nodes keep whole files on one worker (``loadfile``).
+    """
+    changed = set(plan.changed_tests)
+    distributed = tuple(node for node in plan.node_ids if node.split("::", 1)[0] in changed)
+    grouped = tuple(node for node in plan.node_ids if node.split("::", 1)[0] not in changed)
+    return tuple((nodes, dist) for nodes, dist in ((distributed, "worksteal"), (grouped, "loadfile")) if nodes)
 
 
 def run_pytest_stage(
@@ -1224,40 +1244,50 @@ def run_pytest_stage(
             reap_stale_node(stale)
     if not plan.node_ids:
         return "no tests selected"
+    invocations = pytest_invocations(plan)
     options = parallel_options()
     if diagnostics is not None:
         diagnostics.update(
             requested_test_processes=test_process_limit(),
             effective_test_processes=int(options[1]) if options else 1,
+            pytest_invocations=[{"dist": dist, "nodes": len(nodes)} for nodes, dist in invocations],
         )
-    with tempfile.TemporaryDirectory(prefix="pytest-", dir=state) as base_temp:
-        code, output = run_bounded(
-            [
-                "bash",
-                launcher,
-                "-m",
-                "pytest",
-                *plan.node_ids,
-                "-rfE",
-                "-q",
-                "--tb=short",
-                "-p",
-                "no:cacheprovider",
-                "--basetemp",
-                base_temp,
-                *options,
-            ],
-            cwd=root,
-            deadline=deadline,
-            label="pytest stage",
-            diagnostics=diagnostics,
-        )
-    failing = failing_node_ids(output)
-    if code == 0:
-        match = SUMMARY_RE.findall(output)
-        return match[-1].strip("= ") if match else "pytest passed"
-    if code == 1 or failing:
-        raise GateOutcome("tests_failed", tail(output), failing=failing)
+    # The runs share the stage deadline and stop at the first refusal; a green stage means every run passed.
+    summaries = []
+    for nodes, dist in invocations:
+        with tempfile.TemporaryDirectory(prefix="pytest-", dir=state) as base_temp:
+            code, output = run_bounded(
+                [
+                    "bash",
+                    launcher,
+                    "-m",
+                    "pytest",
+                    *nodes,
+                    "-rfE",
+                    "-q",
+                    "--tb=short",
+                    "-p",
+                    "no:cacheprovider",
+                    "--basetemp",
+                    base_temp,
+                    *parallel_options(dist),
+                ],
+                cwd=root,
+                deadline=deadline,
+                label="pytest stage",
+                diagnostics=diagnostics,
+            )
+        failing = failing_node_ids(output)
+        if code == 0:
+            match = SUMMARY_RE.findall(output)
+            summaries.append(match[-1].strip("= ") if match else "pytest passed")
+        elif code == 1 or failing:
+            raise GateOutcome("tests_failed", tail(output), failing=failing)
+        elif code != NO_TESTS_COLLECTED:
+            break
+    # One run collecting nothing is fine while the selection as a whole ran tests.
+    if summaries and code in (0, NO_TESTS_COLLECTED):
+        return "; ".join(summaries)
     raise GateOutcome("pytest_error", f"pytest exited {code} without a verdict\n{tail(output)}", incomplete=True)
 
 
@@ -1345,11 +1375,23 @@ def tail(output: str, lines: int = 40) -> str:
 
 
 class Budget:
-    """Shared push execution budget, starting at admission and excluding later admission waits."""
+    """Push execution budget: a total shared by every ref update, plus each stage's own allowance.
 
-    def __init__(self, seconds: float):
+    The total starts at admission and excludes later admission waits. Each blocking stage's allowance
+    starts when that stage starts and stays inside the total (#10642).
+    """
+
+    def __init__(self, seconds: float, stage_seconds: float = STAGE_BUDGET_S):
         self.seconds = seconds
+        self.stage_seconds = stage_seconds
         self._deadline: float | None = None
+
+    @classmethod
+    def configured(cls) -> Budget:
+        return cls(
+            bounded("LU_PRE_PUSH_GATE_RUN_BUDGET_S", RUN_BUDGET_S),
+            bounded("LU_PRE_PUSH_GATE_STAGE_BUDGET_S", STAGE_BUDGET_S),
+        )
 
     @property
     def deadline(self) -> float:
@@ -1374,6 +1416,8 @@ def stage_measurement(event: dict[str, object], name: str):
         "signal": None,
         "child_unavailable_reason": "stage_did_not_start_child",
         "output_tail": None,
+        "allowance_s": None,
+        "allowance_limited_by": None,
     }
     event.setdefault("stages", {})[name] = diagnostics
     try:
@@ -1390,6 +1434,17 @@ def stage_measurement(event: dict[str, object], name: str):
         diagnostics["elapsed_s"] = time.monotonic() - started
 
 
+def stage_deadline(deadline: float, stage_budget_s: float, diagnostics: dict[str, object]) -> float:
+    """Start a stage's own allowance now, inside the push's total deadline, and record which one binds."""
+    now = time.monotonic()
+    own = now + stage_budget_s
+    diagnostics.update(
+        allowance_s=max(0.0, min(own, deadline) - now),
+        allowance_limited_by="stage_budget" if own <= deadline else "run_budget",
+    )
+    return min(own, deadline)
+
+
 def execute_stages(
     plan: Plan,
     root: Path,
@@ -1398,6 +1453,7 @@ def execute_stages(
     deadline: float,
     event: dict[str, object],
     *,
+    stage_budget_s: float,
     persist_receipt: bool = True,
     admission: Admission | None = None,
 ) -> None:
@@ -1407,10 +1463,22 @@ def execute_stages(
     try:
         shadow = Shadow(plan, root, launcher)
         with stage_measurement(event, "pre_commit") as diagnostics:
-            run_pre_commit_stage(plan, root, launcher, config, deadline, diagnostics=diagnostics)
+            run_pre_commit_stage(
+                plan,
+                root,
+                launcher,
+                config,
+                stage_deadline(deadline, stage_budget_s, diagnostics),
+                diagnostics=diagnostics,
+            )
         with stage_measurement(event, "pytest") as diagnostics:
             event["pytest"] = run_pytest_stage(
-                plan, root, launcher, deadline, diagnostics=diagnostics, admission=admission
+                plan,
+                root,
+                launcher,
+                stage_deadline(deadline, stage_budget_s, diagnostics),
+                diagnostics=diagnostics,
+                admission=admission,
             )
         if persist_receipt:
             try:
@@ -1476,9 +1544,8 @@ def validate(
             scope_kwargs = {"scope": scope} if scope is not None else {}
             admission = Admission(state, wait_s, update=update, prior=head_admission, **scope_kwargs)
             admitted = locks.enter_context(admission)
-            deadline = (budget or Budget(bounded("LU_PRE_PUSH_GATE_RUN_BUDGET_S", RUN_BUDGET_S))).after_admission(
-                admitted.waited
-            )
+            budget = budget or Budget.configured()
+            deadline = budget.after_admission(admitted.waited)
             resources = scope.resources if getattr(admitted, "scope", None) is not None else admission_resources()
             event["resources_at_admission"] = resources
             event["scope"] = {
@@ -1493,11 +1560,13 @@ def validate(
             if receipt_is_fresh(state, plan, time.time()):
                 event.update(outcome="green", detail="valid receipt after admission")
                 return
+            # Name both bounds, so each stage's elapsed_s reads against its own allowance.
+            event.update(run_budget_s=budget.seconds, stage_budget_s=budget.stage_seconds)
             active_scope = getattr(admitted, "scope", None)
             if active_scope is not None:
                 event["scope"] = {"status": "supported", "unit": active_scope.unit}
                 event["peak_memory_unknown_reason"] = "scope_result_unavailable"
-                active_scope.execute(plan, config, deadline, event)
+                active_scope.execute(plan, config, deadline, event, stage_budget_s=budget.stage_seconds)
                 try:
                     write_receipt(state, plan, time.time())
                 except OSError as error:
@@ -1505,7 +1574,16 @@ def validate(
                         "receipt_unwritable", "cannot persist the green receipt", incomplete=True
                     ) from error
             else:
-                execute_stages(plan, root, launcher, config, deadline, event, admission=admitted)
+                execute_stages(
+                    plan,
+                    root,
+                    launcher,
+                    config,
+                    deadline,
+                    event,
+                    stage_budget_s=budget.stage_seconds,
+                    admission=admitted,
+                )
     except GateOutcome:
         raise
     except OSError as error:  # e.g. the admission lock or a stage's output file could not be created
@@ -1587,6 +1665,7 @@ def scope_child(arguments: list[str]) -> int:
                 packet["config"],
                 packet["deadline"],
                 event,
+                stage_budget_s=packet["stage_budget_s"],
                 persist_receipt=False,
             )
         except GateOutcome as caught:
@@ -1738,7 +1817,7 @@ def main(argv: list[str] | None = None, stdin: str | None = None) -> int:
                 raise GateOutcome(
                     "tree_mismatch", "one push carries several different commits; push them one at a time"
                 )
-            budget = Budget(bounded("LU_PRE_PUSH_GATE_RUN_BUDGET_S", RUN_BUDGET_S))
+            budget = Budget.configured()
             for index, update in enumerate(
                 updates
             ):  # equal commits can still have different outgoing ranges: validate each

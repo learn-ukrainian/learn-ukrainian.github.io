@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import contextlib
 import hashlib
+import io
 import json
 import os
 import re
@@ -18,6 +19,7 @@ import shutil
 import stat
 import subprocess
 import sys
+import tarfile
 import tempfile
 import uuid
 from collections.abc import Mapping
@@ -34,6 +36,9 @@ from scripts.orchestration.task_record_store import task_record_path
 # Bound automatic disk duplication. Larger outputs require owner disposition;
 # the complete source checkout survives rather than receiving a partial copy.
 MAX_PRESERVED_BYTES = 256 * 1024 * 1024
+# A detached bundle gets the same ceiling as the existing output payload budget.
+# It is a separate artifact; neither budget permits a partial preservation.
+MAX_DETACHED_BUNDLE_BYTES = MAX_PRESERVED_BYTES
 
 # Reviewed creator-initiator -> canonical stream map for lane succession (#10617).
 SUCCESSION_MAP = Path(__file__).resolve().parents[2] / "scripts/config/terminal_abandon_succession.yaml"
@@ -58,6 +63,147 @@ class SuccessionRefusal(ValueError):
     def __init__(self, code: str, reason: str):
         super().__init__(f"terminal-abandon succession {code}: {reason}")
         self.code = code
+
+
+class PreservationLimit(ValueError):
+    """A complete snapshot exceeds the existing automatic preservation budget."""
+
+
+def merged_abandon_proof(worktree: Path, creator: Mapping[str, Any], head: str) -> dict[str, Any]:
+    """Require an authoritative MERGED PR containing every checkout commit."""
+    from scripts.orchestration import reap_worktrees as rw
+    from scripts.orchestration.worktree_claims import checked_out_branch
+
+    branch = checked_out_branch(worktree) or creator.get("worktree_branch")
+    if not isinstance(branch, str) or not branch:
+        raise ValueError("merged terminal proof requires a recorded source branch")
+    states, error = rw._query_pr_states(worktree, branch)
+    if error is not None or any(pr.state == "OPEN" for pr in states):
+        raise ValueError("merged terminal proof unavailable or source PR is open")
+    info = rw.WorktreeInfo(worktree, branch, head)
+    for pr in states:
+        if (
+            pr.state == "MERGED"
+            and not pr.head_from_commit_search
+            and type(pr.number) is int
+            and pr.number > 0
+            and (rw._pr_matches_worktree_head(info, pr) or _abandon_merged_equivalent(info, pr))
+        ):
+            return {
+                "schema": "terminal-abandon-merged-pr.v1",
+                "number": pr.number,
+                "branch": branch,
+                "head_sha": pr.head_sha,
+                "tree_head_sha": head,
+                "relation": rw._merged_head_relation(info, pr),
+            }
+    raise ValueError("merged terminal proof does not contain checkout HEAD")
+
+
+def _abandon_merged_equivalent(info: Any, pr: Any) -> bool:
+    """Committed patch equivalence, with dirty bytes separately bound to the abandon manifest."""
+    from scripts.orchestration import reap_worktrees as rw
+
+    if not info.head or not pr.head_sha:
+        return False
+    for sha in (info.head, pr.head_sha):
+        obj = rw._run(["git", "cat-file", "-t", sha], cwd=info.path)
+        if obj.returncode != 0 or obj.stdout.strip() != "commit":
+            return False
+    merges = rw._run(["git", "rev-list", "--min-parents=2", f"{pr.head_sha}..{info.head}"], cwd=info.path)
+    if merges.returncode != 0 or merges.stdout.strip():
+        return False
+    cherry = rw._run(["git", "cherry", pr.head_sha, info.head], cwd=info.path)
+    return bool(
+        cherry.returncode == 0 and all(re.fullmatch(r"- [a-f0-9]{40}", line) for line in cherry.stdout.splitlines())
+    )
+
+
+def abandon_task_is_terminal(member: Mapping[str, Any], *, successor: bool, merged: bool) -> bool:
+    """Merge evidence substitutes only for terminal status and retention, never liveness."""
+    from scripts.orchestration import reap_worktrees as rw
+
+    return bool(
+        member.get("status") in rw._TERMINAL_DISPATCH_STATUSES
+        and (not member.get("keep_worktree") or merged)
+        and (not successor or member.get("status") != "needs_finalize" or merged)
+        and member.get("lease_state") != "active"
+        and not (isinstance(member.get("lease"), dict) and member["lease"].get("state") == "active")
+        and rw._pid_proven_absent(member)
+    )
+
+
+def recovered_creator(source: Mapping[str, Any], current: Mapping[str, Any], worktree: Path) -> dict[str, Any]:
+    """Restore creation evidence only from the same archived attempt and directory inode."""
+    baseline = source.get("ignored_output_baseline")
+    status = worktree.stat()
+    if (
+        not record_created_worktree(source)
+        or not isinstance(baseline, dict)
+        or baseline.get("schema") != "ignored-baseline.v1"
+        or baseline.get("directory_identity") != [status.st_dev, status.st_ino]
+        or baseline.get("task_id") != current.get("task_id")
+        or baseline.get("run_nonce") != current.get("run_nonce")
+        or not isinstance(baseline.get("paths"), list)
+        or not all(_baseline_entry_ok(entry) for entry in baseline["paths"])
+        or len({entry["path"] for entry in baseline["paths"]}) != len(baseline["paths"])
+        or not isinstance(current.get("run_nonce"), str)
+        or not current["run_nonce"].strip()
+        or not isinstance(current.get("initiator"), str)
+        or not current["initiator"].strip()
+        or (current.get("worktree_reused") is not None and current.get("worktree_reused") is not False)
+        or any(
+            source.get(key) != current.get(key)
+            for key in (
+                "task_id",
+                "run_nonce",
+                "initiator",
+                "worktree_path",
+                "cwd",
+                "worktree_branch",
+            )
+        )
+    ):
+        raise ValueError("creator recovery archived attempt or creation inventory unverifiable")
+    return dict(current, worktree_reused=False, ignored_output_baseline=baseline)
+
+
+def recovery_source_path(tasks: Path, task_id: str, path: Path) -> bool:
+    """Only canonical archives or delegate's exact force-new archive names are evidence."""
+    return path == task_record_path(tasks / "archive", task_id) or (
+        path.parent == tasks
+        and re.fullmatch(re.escape(task_id) + r"\.\d{8}T\d{6}\d*Z(?:\.\d+)?\.archived\.json", path.name) is not None
+    )
+
+
+def _recovery_source(
+    matches: list[tuple[Path, dict[str, Any]]], worktree: Path, *, primary: Path, tasks: Path
+) -> Path | None:
+    hosts = [
+        (path, member)
+        for path, member in matches
+        if isinstance(member.get("worktree_abandon"), dict) and "creator_recovery" in member["worktree_abandon"]
+    ]
+    if not hosts:
+        return None
+    if len(hosts) != 1:
+        raise ValueError("creator recovery attribution ambiguous")
+    host_path, host = hosts[0]
+    locator = host["worktree_abandon"]["creator_recovery"]
+    try:
+        source = json.loads(_abandon_file(primary, locator))
+    except (OSError, ValueError, RuntimeError):
+        raise ValueError("creator recovery archived source digest invalid") from None
+    source_path = primary / locator["path"]
+    if (
+        host_path != task_record_path(tasks, host.get("task_id", ""))
+        or not recovery_source_path(tasks, host["task_id"], source_path)
+        or not any(path == source_path and member == source for path, member in matches)
+        or not isinstance(source, dict)
+        or recovered_creator(source, host, worktree) != host
+    ):
+        raise ValueError("creator recovery source binding invalid")
+    return source_path
 
 
 def _identity_cache_path(tasks_dir: Path) -> Path:
@@ -460,7 +606,6 @@ def _verify_succession(
         or not isinstance(succession.get("mapping_sha256"), str)
         or not re.fullmatch(r"[a-f0-9]{64}", succession["mapping_sha256"])
         or succession.get("tree") != tree
-        or not isinstance(branch, str)
         or succession.get("branch") != branch
         or succession.get("head_sha") != receipt.get("head_sha")
         or succession.get("preservation_sha256") != (receipt.get("preservation") or {}).get("sha256")
@@ -472,6 +617,55 @@ def _verify_succession(
         raise ValueError("terminal-abandon succession receipt invalid")
     if mapping_digest != succession["mapping_sha256"]:
         raise ValueError("terminal-abandon succession MAPPING_CHANGED: reviewed mapping bytes changed")
+    if branch is None:
+        detached = artifacts.safe_git(
+            ["rev-parse", "--abbrev-ref", "HEAD"], cwd=worktree, capture_output=True, text=True, check=False, timeout=30
+        )
+        if detached.returncode != 0 or detached.stdout.strip() != "HEAD":
+            raise ValueError("terminal-abandon detached HEAD proof unavailable")
+        for revisions in (["--cached", receipt["head_sha"]], []):
+            clean = artifacts.safe_git(
+                ["diff", "--quiet", "--no-ext-diff", *revisions, "--"],
+                cwd=worktree,
+                capture_output=True,
+                check=False,
+                timeout=30,
+            )
+            if clean.returncode != 0:
+                raise ValueError("terminal-abandon detached tracked changes refuse")
+        # Git diff honors hidden index flags. Present flagged files must also
+        # equal the index blob; sparse absent skip-worktree entries are safe.
+        for tagged in artifacts._git_paths(worktree, "-v", "--cached"):
+            if len(tagged) < 3 or tagged[1] != " ":
+                raise ValueError("terminal-abandon detached index inventory invalid")
+            flag, name = tagged[0], tagged[2:]
+            if not (flag.islower() or flag == "S"):
+                continue
+            if flag.upper() == "S" and not os.path.lexists(worktree / name):
+                continue
+            leaf = artifacts._read_preserved_bytes(worktree / name, root=worktree)
+            blob = artifacts.safe_git(
+                ["cat-file", "blob", f":{name}"], cwd=worktree, capture_output=True, check=False, timeout=30
+            )
+            payload = os.fsencode(leaf.target) if leaf.file_type == "symlink" else leaf.payload
+            if blob.returncode != 0 or payload != blob.stdout:
+                raise ValueError("terminal-abandon detached concealed tracked changes refuse")
+        saved_bundle = manifest.get("detached_bundle")
+        _abandon_file(primary, saved_bundle, read_payload=False, max_bytes=MAX_DETACHED_BUNDLE_BYTES)
+        bundle_path = primary / saved_bundle["path"]
+        verify = artifacts.safe_git(
+            ["bundle", "verify", str(bundle_path)], cwd=primary, capture_output=True, check=False, timeout=30
+        )
+        listed = artifacts.safe_git(
+            ["bundle", "list-heads", str(bundle_path)],
+            cwd=primary,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=30,
+        )
+        if verify.returncode != 0 or listed.returncode != 0 or listed.stdout.strip() != f"{receipt['head_sha']} HEAD":
+            raise ValueError("terminal-abandon detached bundle does not preserve HEAD")
     from scripts.fleet.terminal_abandon import Refusal, verify_current_custody
 
     try:
@@ -505,6 +699,11 @@ def _abandon_candidates(worktree: Path, *, absent: list[dict[str, str]]) -> list
         if len(tagged) < 3 or tagged[1] != " ":
             raise ValueError("terminal-abandon tagged index inventory malformed")
         if tagged[0].islower() or tagged[0] == "S":
+            # Sparse checkout intentionally leaves skip-worktree entries
+            # absent. Only present hidden entries are output. A present path
+            # that vanishes later still changes the authorized inventory.
+            if tagged[0].upper() == "S" and not os.path.lexists(worktree / tagged[2:]):
+                continue
             candidates.append(tagged[2:])
     for name in candidates:
         try:
@@ -546,14 +745,14 @@ def capture_abandon_output(
     files = [entry["path"] for entry in paths]
     total = sum(entry["size"] for entry in paths)
     if total > MAX_PRESERVED_BYTES:
-        raise ValueError(f"ignored output exceeds preservation cap ({total} > {MAX_PRESERVED_BYTES} bytes)")
+        raise PreservationLimit(f"ignored output exceeds preservation cap ({total} > {MAX_PRESERVED_BYTES} bytes)")
     digest = hashlib.sha256(
         json.dumps([(entry["path"], entry["size"], entry["sha256"]) for entry in paths]).encode()
     ).hexdigest()
     parent = primary / "batch_state" / "preserved" / identity
     if parent.is_relative_to(worktree):
         raise ValueError("preservation destination is inside the worktree")
-    location = _reusable_copy(parent, worktree, files, digest)
+    location = _reusable_copy(parent, worktree, files, digest, require_archive=True)
     created = None
     try:
         if location is None:
@@ -570,11 +769,44 @@ def capture_abandon_output(
             "content_sha256": digest,
             "paths": paths,
         }
+        # Keep the ordinary retrieved copy for existing removers. The inert tar
+        # independently carries every byte, including link records, without
+        # extraction or following a link from an untrusted checkout.
+        archive = location.with_suffix(".tar")
+        if created is not None:
+            with contextlib.ExitStack() as held:
+                root_fd = artifacts._open_trusted_root(primary / "batch_state")
+                held.callback(os.close, root_fd)
+                parts = artifacts._relative_parts(archive, primary / "batch_state")
+                parent_fd, owned = artifacts._walk_parent(root_fd, parts[:-1])
+                if owned:
+                    held.callback(os.close, parent_fd)
+                fd = os.open(parts[-1], os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600, dir_fd=parent_fd)
+                stream = held.enter_context(os.fdopen(fd, "wb"))
+                tar = held.enter_context(tarfile.open(fileobj=stream, mode="w", format=tarfile.PAX_FORMAT))
+                for entry in paths:
+                    leaf = artifacts._read_preserved_bytes(location / entry["path"], root=location)
+                    item = tarfile.TarInfo(entry["path"])
+                    item.size = len(leaf.payload)
+                    item.mode = 0o600
+                    tar.addfile(item, io.BytesIO(leaf.payload))
+                stream.flush()
+            locator["archive"] = {
+                "path": archive.relative_to(primary).as_posix(),
+                "sha256": hashlib.sha256(
+                    artifacts._read_preserved_bytes(archive, root=primary / "batch_state").payload
+                ).hexdigest(),
+            }
+        else:
+            saved = json.loads(location.with_suffix(".manifest.json").read_bytes())
+            if "archive" in saved:
+                locator["archive"] = saved["archive"]
         verify_retrieval(primary, locator)
         verify_abandon_output(worktree, primary=primary, record=record, locator=locator)
     except BaseException:
         if created is not None:
             shutil.rmtree(created, ignore_errors=True)
+            created.with_suffix(".tar").unlink(missing_ok=True)
         raise
     return locator, created
 
@@ -607,7 +839,53 @@ def publish_abandon_output(
         manifest.write("\n")
 
 
-def _abandon_file(primary: Path, entry: Mapping[str, Any]) -> bytes:
+def _abandon_regular(
+    primary: Path, path: Path, *, read_payload: bool, max_bytes: int | None = None
+) -> tuple[bytes, str]:
+    """Hash a regular file in bounded reads, walking descriptor-relative without links."""
+    root = primary / "batch_state"
+    parts = artifacts._relative_parts(path, root)
+    with contextlib.ExitStack() as held:
+        root_fd = artifacts._open_trusted_root(root)
+        held.callback(os.close, root_fd)
+        parent_fd, owned = artifacts._walk_parent(root_fd, parts[:-1])
+        if owned:
+            held.callback(os.close, parent_fd)
+        fd = os.open(parts[-1], artifacts._LEAF_FLAGS, dir_fd=parent_fd)
+        held.callback(os.close, fd)
+        before = os.fstat(fd)
+        if not stat.S_ISREG(before.st_mode):
+            raise ValueError("terminal-abandon preservation must be regular")
+        if max_bytes is not None and before.st_size > max_bytes:
+            raise PreservationLimit(
+                f"detached bundle exceeds MAX_DETACHED_BUNDLE_BYTES ({before.st_size} > {max_bytes} bytes)"
+            )
+        digest = hashlib.sha256()
+        payload = bytearray()
+        remaining = before.st_size
+        while remaining:
+            chunk = os.read(fd, min(remaining, 1024 * 1024))
+            if not chunk:
+                raise ValueError("terminal-abandon preservation changed during hashing")
+            digest.update(chunk)
+            if read_payload:
+                payload.extend(chunk)
+            remaining -= len(chunk)
+        after = os.fstat(fd)
+        if (before.st_dev, before.st_ino, before.st_size, before.st_mtime_ns, before.st_ctime_ns) != (
+            after.st_dev,
+            after.st_ino,
+            after.st_size,
+            after.st_mtime_ns,
+            after.st_ctime_ns,
+        ):
+            raise ValueError("terminal-abandon preservation changed during hashing")
+        return bytes(payload), digest.hexdigest()
+
+
+def _abandon_file(
+    primary: Path, entry: Mapping[str, Any], *, read_payload: bool = True, max_bytes: int | None = None
+) -> bytes:
     """Read a hash-bound regular receipt below batch_state without following links."""
     if not isinstance(entry, Mapping):
         raise ValueError("terminal-abandon preservation locator invalid")
@@ -618,10 +896,10 @@ def _abandon_file(primary: Path, entry: Mapping[str, Any]) -> bytes:
     parts = artifacts._relative_parts(primary / name, root)
     if not parts:
         raise ValueError("terminal-abandon preservation locator invalid")
-    leaf = artifacts._read_preserved_bytes(root.joinpath(*parts), root=root)
-    if leaf.file_type != "regular" or hashlib.sha256(leaf.payload).hexdigest() != digest:
+    payload, observed = _abandon_regular(primary, root.joinpath(*parts), read_payload=read_payload, max_bytes=max_bytes)
+    if observed != digest:
         raise ValueError("terminal-abandon preservation digest invalid")
-    return leaf.payload
+    return payload
 
 
 def terminal_abandon_creator(
@@ -640,7 +918,8 @@ def terminal_abandon_creator(
     """
     from scripts.orchestration import reap_worktrees as rw
 
-    creators = [item for item in matches if record_created_worktree(item[1])]
+    recovery = _recovery_source(matches, worktree, primary=primary, tasks=tasks_dir)
+    creators = [item for item in matches if item[0] != recovery and record_created_worktree(item[1])]
     if len(creators) != 1 or not matches:
         raise ValueError("terminal-abandon owner attribution unavailable")
     path, creator = creators[0]
@@ -653,17 +932,22 @@ def terminal_abandon_creator(
         or path not in (task_record_path(tasks_dir, identity), task_record_path(tasks_dir / "archive", identity))
     ):
         raise ValueError("terminal-abandon owner identity unavailable")
+    receipt = creator.get("worktree_abandon")
+    merged = receipt.get("merged_pr") if isinstance(receipt, dict) else None
+    if merged is not None and (
+        not isinstance(receipt.get("succession"), dict)
+        or merged != merged_abandon_proof(worktree, creator, receipt.get("head_sha"))
+    ):
+        raise ValueError("terminal-abandon merged terminal proof changed")
     if any(
-        member.get("status") not in rw._TERMINAL_DISPATCH_STATUSES
-        or member.get("keep_worktree")
-        or member.get("lease_state") == "active"
-        or (isinstance(member.get("lease"), dict) and member["lease"].get("state") == "active")
-        or not rw._pid_proven_absent(member)
+        not abandon_task_is_terminal(
+            member, successor=isinstance(receipt, dict) and "succession" in receipt, merged=merged is not None
+        )
         or not isinstance(member.get("run_nonce"), str)
         or not member["run_nonce"].strip()
-        or (member is not creator and member.get("worktree_reused") is not True)
+        or (member is not creator and member_path != recovery and member.get("worktree_reused") is not True)
         or not _record_matches_worktree(member, worktree, repo_root=primary)
-        for _, member in matches
+        for member_path, member in matches
     ):
         raise ValueError("terminal-abandon task, PID, lease or retention proof unavailable")
     receipt = creator.get("worktree_abandon")
@@ -865,7 +1149,32 @@ def verify_retrieval(primary: Path, receipt: Mapping[str, Any]) -> str:
     digest = _content_digest(location, names)
     if digest != receipt["content_sha256"]:
         raise ValueError("retrieval digest mismatch")
+    if "archive" in receipt:
+        _verify_output_archive(primary, receipt)
     return digest
+
+
+def _verify_output_archive(primary: Path, receipt: Mapping[str, Any]) -> None:
+    """Verify the tar's digest, exact members and bytes without extracting it."""
+    locator = receipt["archive"]
+    expected = Path(receipt["location"]).with_suffix(".tar").as_posix()
+    if not isinstance(locator, dict) or locator.get("path") != expected:
+        raise ValueError("output archive location invalid")
+    raw = _abandon_file(primary, locator)
+    try:
+        with tarfile.open(fileobj=io.BytesIO(raw), mode="r:") as tar:
+            members = tar.getmembers()
+            paths = receipt["paths"]
+            if [member.name for member in members] != [entry["path"] for entry in paths]:
+                raise ValueError("output archive inventory mismatch")
+            for member, entry in zip(members, paths, strict=True):
+                if not member.isfile() or member.size != entry["size"]:
+                    raise ValueError("output archive member invalid")
+                stream = tar.extractfile(member)
+                if stream is None or hashlib.sha256(stream.read()).hexdigest() != entry["sha256"]:
+                    raise ValueError("output archive bytes mismatch")
+    except tarfile.TarError:
+        raise ValueError("output archive invalid") from None
 
 
 def _ignored_output_files(
@@ -1001,7 +1310,9 @@ def _content_digest(root: Path, files: list[str]) -> str:
     return hashlib.sha256(json.dumps(entries, ensure_ascii=True).encode()).hexdigest()
 
 
-def _reusable_copy(parent: Path, worktree: Path, files: list[str], digest: str) -> Path | None:
+def _reusable_copy(
+    parent: Path, worktree: Path, files: list[str], digest: str, *, require_archive: bool = False
+) -> Path | None:
     """A manifest is a locator; verify the complete copy's names and bytes again."""
     for manifest in sorted(parent.glob("*.manifest.json")):
         try:
@@ -1013,6 +1324,8 @@ def _reusable_copy(parent: Path, worktree: Path, files: list[str], digest: str) 
                 continue
             if saved.get("content_sha256") != digest:
                 continue
+            if require_archive and "archive" not in saved:
+                continue
             location = manifest.with_name(manifest.name.removesuffix(".manifest.json"))
             if location.resolve(strict=True) != location.absolute():
                 continue
@@ -1021,6 +1334,7 @@ def _reusable_copy(parent: Path, worktree: Path, files: list[str], digest: str) 
                 continue
             names = sorted(entry.relative_to(location).as_posix() for entry in entries if not entry.is_dir())
             if names == files and _content_digest(location, files) == digest:
+                verify_retrieval(parent.parents[2], saved)
                 return location
         except (OSError, ValueError, RuntimeError):
             continue  # Invalid or incomplete attempts never license removal.
@@ -1114,7 +1428,8 @@ def preserve_worktree_artifacts(
             else:
                 raise
         members = matching_worktree_records(worktree, tasks_dir, repo_root=repo_root, publish_cache=False)
-        kept = any(member.get("keep_worktree") for _, member in members)
+        merged_abandon = disposition == "abandon" and "merged_pr" in record["worktree_abandon"]
+        kept = any(member.get("keep_worktree") for _, member in members) and not merged_abandon
 
         files = output_files()
         if not files and not absent and not kept:
@@ -1160,6 +1475,10 @@ def preserve_worktree_artifacts(
             ).hexdigest()
             location = _reusable_copy(parent, worktree, files, digest)
             reused = location is not None
+            if reused:
+                saved = json.loads(location.with_suffix(".manifest.json").read_bytes())
+                if "archive" in saved:
+                    metadata["archive"] = saved["archive"]
             if location is None:
                 location = parent / uuid.uuid4().hex
                 metadata["next_condition"] = "owner completes verified copy and retrieval"
@@ -1231,7 +1550,7 @@ def preserve_worktree_artifacts(
                 or current.get("run_nonce") != record.get("run_nonce")
             ):
                 raise ValueError("task attribution changed during preservation")
-            if current.get("keep_worktree") or kept:
+            if (current.get("keep_worktree") or kept) and not merged_abandon:
                 metadata.update(
                     {
                         "retention_disposition": "retained",

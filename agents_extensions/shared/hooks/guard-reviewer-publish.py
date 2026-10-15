@@ -65,6 +65,10 @@ def blocked(command: str, parser=None, depth: int = 0) -> str | None:
     if depth > 8:
         return "nested shell command exceeds reviewer inspection depth"
     parser = parser or _shell_parser()
+    # The shared parser leaves $'...' undecoded (#10633), so an ANSI-C spelling
+    # of git or gh is not recognized below; refuse it here and in nested bodies.
+    if parser._has_ansi_c_quoting(command):
+        return "Bash ANSI-C quoting ($'...')"
     for segment in parser._expanded_segments(command):
         binary, index = parser._command_word(segment)
         args = [str(word) for word in segment[index + 1 :]]
