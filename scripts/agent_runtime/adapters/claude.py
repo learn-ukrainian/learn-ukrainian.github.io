@@ -162,12 +162,15 @@ Construction (probed on Claude Code 2.1.300 with fixtures only):
   process environment whatever the setting sources; every name in that map
   must be on ``CLAUDE_LABELLED_ENV_ALLOWLIST``. A legacy ``.config.json``,
   which Claude Code would read instead, is refused. The user
-  ``settings.json``, which the run does not load, must carry only allowlisted
-  keys and environment names. Refusals are value-free codes.
-- ``--setting-sources project,local``: nothing from the login directory's
-  user scope loads. Its env, key helper, hooks, permission rules, plugins and
-  user MCP servers do not apply, so a labelled run gets the harness flags and
-  the checkout's settings: no user-scope authority. (Dropping the user scope
+  ``settings.json``, whose scope the run turns off, must carry only
+  allowlisted keys and environment names. Refusals are value-free codes.
+- ``--setting-sources project,local`` turns the login directory's user scope
+  off: its env, key helper, hooks, permission rules, plugins and user MCP
+  servers are not loaded as settings, so a labelled run gets the harness
+  flags and the checkout's settings. The flag does not cover every reader:
+  Claude Code 2.1.300 still reads some names from that file directly
+  (``autoMode`` classifier rules among them), which is why the file is held
+  to the allowlist and ``autoMode`` refuses. (Dropping the user scope
   also drops any restrictive user rules, so this is not a claim of less
   authority than a default run.)
 - ``claude auth status`` runs with the run's settings arguments, working

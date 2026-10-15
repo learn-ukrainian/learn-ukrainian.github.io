@@ -58,13 +58,15 @@ the worker runs on. For label `b` the adapter
   applies over the process environment whatever the setting sources) must be on
   `CLAUDE_LABELLED_ENV_ALLOWLIST` (`claude_account_config_credential_source`);
   a legacy `.config.json`, which the CLI would read instead, is refused
-  (`claude_account_config_ambiguous`); the unloaded user `settings.json` may
-  carry only allowlisted keys and names (`claude_account_settings_credential_source`);
-- passes `--setting-sources project,local`, so the login directory's user
-  scope (env, key helper, hooks, permission rules, plugins, user MCP servers)
-  never applies: the worker gets the harness flags and checkout settings and no
-  user-scope authority. Restrictive user rules are dropped too; the task record
-  carries `claude_account_user_scope_omitted: true`;
+  (`claude_account_config_ambiguous`); the user `settings.json` may carry only
+  allowlisted keys and names (`claude_account_settings_credential_source`);
+- passes `--setting-sources project,local`, which turns the login directory's
+  user scope off: its env, key helper, hooks, permission rules, plugins and
+  user MCP servers are not loaded as settings, and the worker gets the harness
+  flags and checkout settings. The flag does not stop every reader: Claude Code
+  still reads some names from that file directly (`autoMode`, see below), which
+  is why the file is held to the allowlist. Restrictive user rules are dropped
+  too; the task record carries `claude_account_user_scope_omitted: true`;
 - runs `claude auth status` (JSON and text) with the worker's settings
   arguments, working directory and environment: the JSON must name the
   subscription login, first-party provider and bound directory with no other
@@ -103,6 +105,123 @@ failover chain. A token refresh between verification and launch (by another
 worker of the same account, or by the status probe for a token close to
 expiry) changes the credential record, so that launch refuses with
 `claude_account_settings_changed` (fail-closed; a new dispatch re-verifies).
+
+## Allowlisted login-directory names
+
+Two closed lists in `scripts/agent_runtime/attempt_boundary.py` hold the names
+a labelled login directory may carry. Names match exactly (no patterns, no
+case folding, no exception for a value, `null` included), and no value of an
+admitted name is read into a record or a refusal.
+
+- `CLAUDE_LABELLED_ENV_ALLOWLIST`: `env` names, one list for both the global
+  config (`.claude.json`, applied to the run) and the user `settings.json`
+  (scope off). Each name only tunes local behaviour: Bash and MCP timeouts and
+  output limits, output and thinking token budgets, auto-compaction, the
+  terminal title, or switching off the updater, telemetry, error reporting,
+  cost warnings, the bug command and nonessential traffic.
+- `_CLAUDE_LABELLED_USER_SETTINGS_KEYS`: top-level keys of the user
+  `settings.json`, whose scope a labelled run turns off. They configure display
+  (`theme`, `tui`, `outputStyle`, `language`, `statusLine`,
+  `spinnerTipsEnabled`, `verbose`), model and effort within the account
+  (`model`, `modelSettings`, `effortLevel`, `alwaysThinkingEnabled`),
+  permissions and automation (`permissions`,
+  `skipDangerousModePermissionPrompt`, `hooks`), plugins and MCP servers
+  (`enabledPlugins`, `extraKnownMarketplaces`, `enabledMcpjsonServers`,
+  `disabledMcpjsonServers`, `enableAllProjectMcpServers`), housekeeping
+  (`autoUpdatesChannel`, `cleanupPeriodDays`, `includeCoAuthoredBy`,
+  `$schema`) and `env` (held to the list above).
+
+None of them names a credential, key helper, endpoint, proxy, certificate or
+provider. Those names (`apiKeyHelper`, `awsAuthRefresh`,
+`ANTHROPIC_API_KEY`, `ANTHROPIC_BASE_URL`, `CLAUDE_CODE_USE_BEDROCK`,
+`HTTPS_PROXY` and the like), and every name not listed, still refuse.
+
+Of the four names a real second login carried, three were added after reading
+how Claude Code 2.1.300 (the installed binary, `claude --version`) defines and
+reads each one, by fixed-string search of that binary. The fourth, `autoMode`,
+refuses (next section).
+
+| Name | What 2.1.300 does with it | Why it is inert |
+| --- | --- | --- |
+| `modelSettings` | Per-model map; each entry is read only for `effortLevel`, `maxEffortLevel` and `autoCompactWindow`. | Effort and compaction for a model the account already runs; no route, endpoint or provider. |
+| `tui` | `"default"` or `"fullscreen"`: which terminal renderer to use. | Display only. |
+| `DISABLE_AUTO_COMPACT` (`env`) | Read once, as a switch that turns auto-compaction off. | Local behaviour only. In the global config it does apply: that labelled run does not auto-compact. |
+
+Reproduce with the installed binary, for example
+`grep -a -c -F "tui:()=>B([\"default\",\"fullscreen\"])" "$(readlink -f "$(command -v claude)")"`
+(the minified names are specific to 2.1.300). Behaviour proof:
+`tests/agent_runtime/test_claude_account_worker.py::test_real_cli_inert_user_settings_names_change_no_auth_source`
+loads the three names with the user scope on and shows the installed CLI's
+`auth status` JSON and text unchanged. That proves only that the credential
+source, endpoint, proxy and provider are unchanged: equal `auth status` output
+cannot show that classifier or permission policy is unchanged, which is why
+each name's readers were read in the binary too. Claude Code's own list of
+environment names safe to apply before workspace trust also holds
+`DISABLE_AUTO_COMPACT`, but that list admits provider switches too, so it is
+not used as evidence. Other Claude Code versions are not checked: re-check
+these names when the CLI changes how it reads them.
+
+### Why `autoMode` refuses
+
+`autoMode` holds the auto mode classifier's rule lists (`allow`, `soft_deny`,
+`hard_deny`, `environment`). In 2.1.300 the classifier's settings reader takes
+the user settings through a direct getter that does not check which setting
+sources are enabled; it filters only project and local settings ("only
+user/flag/managed settings may set classifier rules"). So
+`--setting-sources project,local` does not keep these lists out of a labelled
+run: they become its classifier policy, which the labelled contract forbids.
+Equal `auth status` output, with or without the key, says nothing about this.
+
+Evidence (2.1.300, 2026-10-15, synthetic values only). A fresh, credential-free
+login directory whose `settings.json` holds only
+
+```json
+{"autoMode": {"allow": ["FIXTURE_ALLOW_ONLY"], "soft_deny": ["FIXTURE_SOFT_ONLY"],
+              "hard_deny": ["FIXTURE_HARD_ONLY"], "environment": ["FIXTURE_ENV_ONLY"]}}
+```
+
+and an isolated, empty `HOME`, run from an empty working directory:
+
+```sh
+env -i PATH="$PATH" HOME=<empty dir> CLAUDE_CONFIG_DIR=<fixture login dir> \
+  claude --setting-sources project,local auto-mode config
+```
+
+prints a JSON object whose four lists are exactly the four fixture lists. With
+the fixture `settings.json` moved away, none of the fixture values appear.
+`tests/agent_runtime/test_claude_account_worker.py::test_real_cli_reads_auto_mode_whatever_the_setting_sources`
+runs the same check with the labelled run's own `--settings` and
+`--setting-sources` arguments, then requires the guard to refuse.
+
+If a labelled login refuses at dispatch with
+
+```text
+❌ CLAUDE_ACCOUNT_REFUSED: claude_account_settings_credential_source
+```
+
+the user `settings.json` (or the global config's `env` map, which has its own
+`claude_account_config_credential_source`) carries a name off the lists. Find
+it by name only, never printing values: `jq -r 'keys[]' settings.json` and
+`jq -r '.env // {} | keys[]' settings.json` in the login directory, compared
+with the two lists. For an `autoMode` hit, the remediation is: remove the
+top-level `autoMode` key from that `settings.json` (keep a backup beside it)
+and dispatch again.
+
+Other names 2.1.300 reads from the user file through the same direct getter
+include `model`, `hooks`, `permissions` (its `defaultMode`) and
+`skipDangerousModePermissionPrompt`. They were allowlisted before this change
+and were not re-reviewed by it.
+
+Where the lists apply (every labelled entry point uses the same two lists,
+through `_validated_claude_selection`):
+
+| Entry point | Check | `autoMode` refusal test |
+| --- | --- | --- |
+| Dispatch (`delegate.py`, `_resolve_dispatch_claude_account`) | `verify_claude_account`: both lists. | `tests/test_delegate.py::test_every_label_source_meets_every_refusal_of_an_explicit_b` (`user_settings_auto_mode*`, every label source, ordinary and sealed attempt) |
+| Ordinary worker launch preparation (`adapters/claude.py`, `_claude_account_binding`) | `verify_claude_account`: both lists. | `test_claude_account_worker.py::test_bound_label_auto_mode_is_refused` |
+| Launch guard (`env_sanitize.run_claude_launch_guard`) | No second name check: it recomputes the digest that binds the verified `settings.json` and global config `env` map, so any change refuses (`claude_account_settings_changed`). | `test_claude_account_worker.py::test_bound_label_auto_mode_written_after_verification_never_launches` |
+| Sealed attempt boundary (`attempt_boundary.linux_claude_auth`) | Both lists. | `test_attempt_boundary.py::test_second_claude_account_refuses_auto_mode` |
+| Usage probe (`scripts/api/claude_account_usage.py`) | Not applied: CodexBar's OAuth source reads only the credential file, and no Claude Code process loads that directory's settings. | Not applicable. |
 
 ## Fleet-wide default account file
 

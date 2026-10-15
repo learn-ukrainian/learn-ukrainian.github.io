@@ -115,6 +115,7 @@ CLAUDE_LABELLED_ENV_ALLOWLIST = frozenset(
         "CLAUDE_CODE_DISABLE_TERMINAL_TITLE",
         "CLAUDE_CODE_MAX_OUTPUT_TOKENS",
         "DISABLE_AUTOUPDATER",
+        "DISABLE_AUTO_COMPACT",
         "DISABLE_BUG_COMMAND",
         "DISABLE_COST_WARNINGS",
         "DISABLE_ERROR_REPORTING",
@@ -126,7 +127,9 @@ CLAUDE_LABELLED_ENV_ALLOWLIST = frozenset(
     }
 )
 # Top-level user settings keys the login directory may carry. A labelled run
-# does not load that scope at all; this guards a future CLI that would.
+# turns that scope off, but Claude Code still reads some names from it
+# directly: ``autoMode`` (auto mode classifier rules) is one, so it is not
+# here. Each key's reason is in docs/runbooks/claude-account-labels.md.
 _CLAUDE_LABELLED_USER_SETTINGS_KEYS = frozenset(
     {
         "$schema",
@@ -144,12 +147,14 @@ _CLAUDE_LABELLED_USER_SETTINGS_KEYS = frozenset(
         "includeCoAuthoredBy",
         "language",
         "model",
+        "modelSettings",
         "outputStyle",
         "permissions",
         "skipDangerousModePermissionPrompt",
         "spinnerTipsEnabled",
         "statusLine",
         "theme",
+        "tui",
         "verbose",
     }
 )
@@ -478,8 +483,9 @@ def _refuse_unlisted_env(data: dict, code: str) -> None:
 def _refuse_claude_settings_credential_source(directory: int) -> None:
     """Refuse a login directory whose user settings carry anything off the allowlist (#10619).
 
-    A labelled run does not load this scope, so this is defence in depth: a
-    key, helper, provider switch, endpoint or unknown setting refuses. Only
+    A labelled run turns this scope off, yet Claude Code reads some names
+    from it regardless (``autoMode``), so any key, helper, provider switch,
+    endpoint, classifier rule or unknown setting refuses. Only
     names are inspected; no value is kept or reported. The file may be
     readable by others, not writable by them.
     """
