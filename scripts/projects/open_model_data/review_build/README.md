@@ -513,5 +513,8 @@ headword names a sibling homonym but not the owning entry, are withheld as
 quarantine and operation bindings against the held snapshot before returning the
 candidate. The shared official attribution adapters authenticate the full forms
 in `docs/sources/permissions-register.yaml`. Synthetic tests cover extraction,
-projection equivalence and refusal cases; pilot assembly and host-only product
-verification remain the accountable driver's W1b/W3 work.
+projection equivalence and refusal cases. Iterating a whole harvest table takes
+more than ten minutes; the pilot assembler (`scripts/atlas/word_card_assembly.py`)
+runs these modules unchanged over a verbatim extract of the pilot entries, their
+homonym siblings and their sections (`word_card_sources.write_extract`, about
+three seconds).

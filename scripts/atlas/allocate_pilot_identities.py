@@ -49,6 +49,26 @@ def normalize_mwe_form(spelling: str) -> str:
     return " ".join("".join(chars).split())
 
 
+# ULIF grammatical label prefix -> VESUM coarse POS. Pronouns and abbreviations are decided from VESUM tags.
+LABEL_POS = (
+    ("іменник", "noun"), ("множинний іменник", "noun"), ("прізвище", "noun"), ("власна назва", "noun"),
+    ("прикметник", "adj"), ("прислівник", "adv"), ("дієслово", "verb"), ("числівник порядковий", "adj"),
+    ("числівник кількісний", "numr"), ("сполучник", "conj"), ("прийменник", "prep"),
+)
+PROPER_GLOSS_MARKERS = ("населений пункт", "річка", "селище", "місто", "ім'я")
+
+
+def label_pos(label):
+    """Coarse POS named by a ULIF grammatical label prefix, or None."""
+    return next((pos for prefix, pos in LABEL_POS if label.startswith(prefix)), None)
+
+
+def is_proper_name(label, spelling, gloss):
+    """A proper name by its label, or by a capitalised head glossed as a place or a given name."""
+    return label.startswith(("прізвище", "власна назва")) or (
+        spelling[:1].isupper() and any(marker in gloss for marker in PROPER_GLOSS_MARKERS))
+
+
 def creation(unit, records, vesum):
     anchor = records[unit["anchor_locator"]]
     raw = anchor["raw_row"]
@@ -64,10 +84,7 @@ def creation(unit, records, vesum):
     label = raw["grammatical_label"]
     gloss = raw.get("sense_gloss", "")
 
-    # Proper name determination
-    proper = label.startswith(("прізвище", "власна назва")) or (
-        spelling[:1].isupper() and any(marker in gloss for marker in (
-            "населений пункт", "річка", "селище", "місто", "ім'я")))
+    proper = is_proper_name(label, spelling, gloss)
 
     # Query VESUM forms for the headword spelling
     raw_proof = [dict(r) for r in vesum.execute(
@@ -88,13 +105,7 @@ def creation(unit, records, vesum):
         assert len(positions) == 1, f"Unresolved source-backed pronoun POS for {spelling}"
         pos = positions.pop()
     else:
-        pos = next((pos_candidate for prefix, pos_candidate in (
-            ("іменник", "noun"), ("множинний іменник", "noun"),
-            ("прізвище", "noun"), ("власна назва", "noun"),
-            ("прикметник", "adj"), ("прислівник", "adv"),
-            ("дієслово", "verb"), ("числівник порядковий", "adj"),
-            ("числівник кількісний", "numr"), ("сполучник", "conj"),
-            ("прийменник", "prep")) if label.startswith(prefix)), None)
+        pos = label_pos(label)
         assert pos is not None, f"Unresolved source-backed POS label {label} for {spelling}"
         proof = [r for r in raw_proof if r["pos"] == pos]
 
