@@ -149,16 +149,40 @@ class Inputs:
                        if unit["unit_key"] in foundation.source_keys(e) and e["created_in_build"] == build]
             need(len(matches) == 1, "Pilot unit has no single allocated card; run allocation first")
             self.entry_by_unit[unit["unit_key"]] = matches[0]
-        self.record_ids = {}
-        for sr in registry["source_records"]:
-            for correspondence in sr["correspondence"]:
-                if correspondence.get("locator") and correspondence["status"] == "unique":
-                    self.record_ids[(sr["source_id"], correspondence["locator"])] = sr
+        self.record_ids = {
+            (record["source_id"], record["locator"]): bound_source_record(registry, record)
+            for record in manifest["selection"]["source_records"]}
         # Seed senses (the pilot allocation) and appended holding senses (the registry's append-only step).
         self.sense_events = {}
         for event in registry["events"]:
             if event["kind"] == "sense_mint" and event["build_id"] in builds:
                 self.sense_events[event["to"][0]] = json.loads(event["evidence"])
+
+
+def bound_source_record(registry: dict, record: dict) -> dict:
+    """The persistent source record a frozen row is bound to, as observed in that row's own snapshot.
+
+    The binding is the registry correspondence whose source, locator AND snapshot are the frozen row's
+    (schema.md §12.1: locators are snapshot-local, so a later snapshot reusing a row number is history, never this
+    row). Exactly one record may claim the row in its snapshot; a missing, held or competing claim refuses before
+    anything is attached. The returned view keeps only that snapshot's aliases, so `source_record_key` is the
+    strongest alias at extraction time (schema.md §4).
+    """
+    snapshot, locator = record["snapshot_id"], record["locator"]
+
+    def claims(sr):
+        return [c for c in sr["correspondence"] if c["snapshot_id"] == snapshot and (
+            c.get("locator") == locator or locator in c.get("candidates", []))]
+    claimants = [(sr, c) for sr in registry["source_records"] for c in claims(sr)]
+    if not claimants:
+        raise MissingAllocation("Frozen source row has no correspondence in its own snapshot; run allocation first")
+    need(len(claimants) == 1 and claimants[0][1]["status"] == "unique"
+         and claimants[0][0]["source_id"] == record["source_id"],
+         "Frozen source row has a held, ambiguous or competing correspondence in its own snapshot")
+    sr = claimants[0][0]
+    aliases = [a for a in sr["aliases"] if a["snapshot_id"] == snapshot]
+    need(aliases, "Frozen source record has no alias observed in its own snapshot")
+    return {**sr, "aliases": aliases}
 
 
 def sha_of_file(path: Path) -> str:
@@ -758,7 +782,7 @@ def assemble_mwe(inputs: Inputs, unit: dict, entry: dict, ledger: Ledger, idiom_
                         locator=f"ulif:ulif_dictua_sections:id:{section_id}")
             continue
         entry_id = int(u.parent_key.rpartition("=")[2])
-        record = inputs.record_ids.get(("ulif", f"ulif:ulif_dictua_entries:id:{entry_id}"))
+        record = inputs.record_ids[("ulif", f"ulif:ulif_dictua_entries:id:{entry_id}")]
         locator = f"ulif:ulif_dictua_sections:id:{section_id} [payload_json#/raw_html]"
         snap = "ulif-section@sha256:" + definition.citations[0].field_sha256
         sense_map = mapping("high", "sense", note="same dictionary record: definition and quotation contained in "
@@ -964,18 +988,44 @@ def build_block(inputs: Inputs, suppressions: dict, build_id: str, consumed: str
 
 # --- suppression (takedown) ----------------------------------------------------------------------------
 
-def check_selector(selector: dict) -> None:
-    """Refuse a selector this build cannot evaluate before anything is matched (fail closed)."""
+def check_selector(selector: dict, records: dict[str, dict]) -> None:
+    """Refuse a selector this build cannot evaluate, or whose parts contradict each other, before anything is
+    matched (fail closed). `records` are the registry's persistent source records by id."""
     kind = selector["kind"]
     if kind == "assertion_id":
         need(selector.get("fallback", {}).get("kind") == "assertion_content",
              "An assertion_id selector needs a complete assertion_content fallback")
-        check_selector(selector["fallback"])
+        check_selector(selector["fallback"], records)
     elif kind == "assertion_content":
         need(selector["normaliser_version"] in NORMALISERS,
              "Suppression selector is pinned to a normaliser this build does not carry; re-pin it")
-    elif kind not in {"source", "source_record"}:
+    elif kind == "source_record":
+        record = records.get(selector["source_record_id"])
+        if record is None:
+            raise MissingAllocation("Suppression selector names a source record the registry does not allocate")
+        need(record["source_id"] == selector["source_id"],
+             "Suppression selector's source_id contradicts its source record; correct the selector")
+        need("alias_at_creation" not in selector
+             or selector["alias_at_creation"] in {a["key"] for a in record["aliases"]},
+             "Suppression selector's alias_at_creation is not an alias of its source record; correct the selector")
+    elif kind != "source":
         raise AssemblyError("Unsupported suppression selector kind")
+
+
+def resolve_selector(selector: dict, inventory: dict[str, tuple[dict, str]]) -> dict:
+    """The selector as it applies to this inventory (schema.md §12.1): an `assertion_id` selector is its id while
+    that id exists anywhere in the ORIGINAL assertion inventory and its content fallback only after the id is gone.
+    While the id exists, the fallback must still describe that assertion; otherwise the selector is inconsistent
+    and is refused rather than left to withdraw something else once the id disappears."""
+    if selector["kind"] != "assertion_id":
+        return selector
+    present = inventory.get(selector["assertion_id"])
+    if present is None:
+        return selector["fallback"]
+    assertion, spelling = present
+    need(selector_matches(selector["fallback"], assertion, spelling),
+         "Suppression selector's fallback does not describe its present assertion; correct the selector")
+    return {"kind": "assertion_id", "assertion_id": selector["assertion_id"]}
 
 
 def proposition(assertion: dict, normalise) -> str:
@@ -1004,11 +1054,13 @@ def selector_proposition(value_norm: str, assertion: dict, normalise) -> str:
 
 
 def selector_matches(selector: dict, assertion: dict, spelling: str) -> bool:
+    """One assertion against one RESOLVED selector (`resolve_selector`): an assertion_id selector is id-only here."""
     kind = selector["kind"]
     if kind == "source":
         return assertion["source_id"] == selector["source_id"]
     if kind == "source_record":
-        return assertion.get("source_record_id") == selector["source_record_id"]
+        return (assertion["source_id"], assertion.get("source_record_id")) == (
+            selector["source_id"], selector["source_record_id"])
     if kind == "assertion_content":
         if (assertion["source_id"], assertion["field"]) != (selector["source_id"], selector["field"]) or \
                 src.nfc(spelling) != src.nfc(selector["subject_spelling"]):
@@ -1018,31 +1070,40 @@ def selector_matches(selector: dict, assertion: dict, spelling: str) -> bool:
         normalise = NORMALISERS[selector["normaliser_version"]]
         return proposition(assertion, normalise) == selector_proposition(selector["value_norm"], assertion, normalise)
     if kind == "assertion_id":
-        return assertion["assertion_id"] == selector["assertion_id"] or selector_matches(
-            selector["fallback"], assertion, spelling)
+        need("fallback" not in selector, "An assertion_id selector must be resolved against the inventory first")
+        return assertion["assertion_id"] == selector["assertion_id"]
     raise AssemblyError("Unsupported suppression selector kind")
 
 
-def apply_suppressions(cards: dict[str, dict], suppressions: dict) -> list[dict]:
+def apply_suppressions(cards: dict[str, dict], suppressions: dict, source_records: list[dict]) -> list[dict]:
     """Match every selector against the ORIGINAL assertion inventory, suppress the union, then recompute
     resolutions, link states, sense maps and card states once (schema.md §12.1-§12.2).
 
-    Each selector must match something in the original inventory, whatever other selectors also match, so the
-    outcome never depends on selector order. Every match is credited to every selector that reached it; the
-    assertion's single `suppression_ref` is the smallest matching suppression id. Returns the takedown report.
+    Each selector is validated against the registry's source records and resolved against the original inventory
+    (existing assertion id or its fallback) before anything is matched, and must match something there, whatever
+    other selectors also match, so the outcome never depends on selector order. Every match is credited to every
+    selector that reached it; the assertion's single `suppression_ref` is the smallest matching suppression id.
+    Returns the takedown report.
     """
     entries = suppressions.get("entries", [])
     ids = [e["suppression_id"] for e in entries]
     need(len(ids) == len(set(ids)), "Duplicate suppression id")
+    records = {sr["source_record_id"]: sr for sr in source_records}
+    inventory = {}
+    for card in cards.values():
+        for a in card["assertions"]:
+            need(a["assertion_id"] not in inventory, "Assertion id is not unique across the build")
+            inventory[a["assertion_id"]] = (a, card["key_at_creation"]["spelling"])
     for entry in entries:
-        check_selector(entry["selector"])
+        check_selector(entry["selector"], records)
+    resolved = {entry["suppression_id"]: resolve_selector(entry["selector"], inventory) for entry in entries}
     report, owners = [], defaultdict(list)
     for entry in entries:
         touched = {"suppression_id": entry["suppression_id"], "assertions": set(), "cards": set(), "fields": set()}
         for card in cards.values():
             spelling = card["key_at_creation"]["spelling"]
             for a in card["assertions"]:
-                if selector_matches(entry["selector"], a, spelling):
+                if selector_matches(resolved[entry["suppression_id"]], a, spelling):
                     owners[(card["card_id"], a["assertion_id"])].append(entry["suppression_id"])
                     touched["assertions"].add(a["assertion_id"])
                     touched["cards"].add(card["card_id"])
@@ -1103,7 +1164,7 @@ def build(inputs: Inputs, suppressions: dict | None = None) -> dict:
     homograph_links(cards)
     for card in cards.values():
         _recompute(card)
-    takedown = apply_suppressions(cards, suppressions)
+    takedown = apply_suppressions(cards, suppressions, inputs.registry["source_records"])
     consumed = inputs.sources.consumed_digest()
     build_id = build_id_of(inputs, suppressions, consumed)
     block = build_block(inputs, suppressions, build_id, consumed, len(inputs.sources.consumed))

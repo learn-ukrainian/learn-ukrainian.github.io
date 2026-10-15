@@ -702,6 +702,174 @@ def test_every_exact_value_norm_selects_its_own_assertion(result):
             assert wa.selector_matches(selector, a, card["key_at_creation"]["spelling"]), a["assertion_id"]
 
 
+def alpha_ulif_spelling(result):
+    return next(a for a in card_of(result, "альфа", nth=0)["assertions"]
+                if a["source_id"] == "ulif" and a["field"] == "spelling")
+
+
+def suppressed_ids(build):
+    return sorted(a["assertion_id"] for c in build["cards"].values() for a in c["assertions"]
+                  if a["status"] == "suppressed")
+
+
+def test_present_assertion_id_withdraws_only_itself_whatever_its_fallback_reaches(inputs, result):
+    target = alpha_ulif_spelling(result)
+    fallback = content("spelling", "альфа")  # reaches the ULIF spelling of BOTH альфа homographs
+    reach = wa.build(inputs, suppression(fallback))["takedown"][0]
+    assert len(reach["assertions"]) == 2 and len(reach["cards"]) == 2
+    s = suppression({"kind": "assertion_id", "assertion_id": target["assertion_id"], "fallback": fallback})
+    withdrawn = wa.build(inputs, s)
+    assert suppressed_ids(withdrawn) == [target["assertion_id"]]
+    assert withdrawn["takedown"][0]["assertions"] == [target["assertion_id"]]
+    assert verify.verify(inputs, withdrawn, wa.build(inputs, s), s)["passed"]
+    # Mode is decided on the whole original inventory: once the id is gone the fallback reaches both cards.
+    gone = suppression({"kind": "assertion_id", "assertion_id": "wa_" + "0" * 24, "fallback": fallback})
+    assert suppressed_ids(wa.build(inputs, gone)) == sorted(reach["assertions"])
+    # Overlapping with a source selector, either order: the same union and the same per-selector credit.
+    by_id = entry(s["entries"][0]["selector"], "sup-b-id")
+    whole = entry({"kind": "source", "source_id": "ulif"}, "sup-a-ulif")
+    forward = wa.build(inputs, {"schema_version": "1", "entries": [by_id, whole]})
+    reverse = wa.build(inputs, {"schema_version": "1", "entries": [whole, by_id]})
+    assert strip_build(forward) == strip_build(reverse)
+    assert {t["suppression_id"]: t["assertions"] for t in forward["takedown"]}["sup-b-id"] == [target["assertion_id"]]
+    both = {"schema_version": "1", "entries": [by_id, whole]}
+    assert verify.verify(inputs, forward, None, both)["withdrawal"]["passed"]
+
+
+def test_present_assertion_id_whose_fallback_does_not_describe_it_is_refused(inputs, result):
+    target = alpha_ulif_spelling(result)
+    selector = {"kind": "assertion_id", "assertion_id": target["assertion_id"], "fallback": content("spelling", "бета")}
+    with pytest.raises(wa.AssemblyError, match="fallback does not describe"):
+        wa.build(inputs, suppression(selector))
+
+
+def test_source_record_selector_must_agree_with_its_registry_record(inputs, result):
+    good = selector_for(inputs, unit_by_head(inputs, f"а{A}льфа")["anchor_locator"])
+    record = next(sr for sr in inputs.registry["source_records"] if sr["source_record_id"] == good["source_record_id"])
+    with pytest.raises(wa.AssemblyError, match="source_id contradicts"):
+        wa.build(inputs, suppression(dict(good, source_id="puls")))
+    with pytest.raises(wa.MissingAllocation, match="does not allocate"):
+        wa.build(inputs, suppression(dict(good, source_record_id="sr_" + "0" * 12)))
+    with pytest.raises(wa.AssemblyError, match="alias_at_creation"):
+        wa.build(inputs, suppression(dict(good, alias_at_creation="ulif:row:not-this-record")))
+    pinned = suppression(dict(good, alias_at_creation=record["aliases"][0]["key"]))
+    withdrawn = wa.build(inputs, pinned)
+    assert {a["source_id"] for c in withdrawn["cards"].values() for a in c["assertions"]
+            if a["status"] == "suppressed"} == {"ulif"}
+    assert verify.verify(inputs, withdrawn, None, pinned)["withdrawal"]["passed"]
+
+
+def test_verify_recomputes_each_selector_scope_without_the_assembler(inputs, result, monkeypatch):
+    """The pre-repair matcher (id OR fallback, source_record id without its source) must not verify."""
+    target = alpha_ulif_spelling(result)
+
+    def unscoped(selector, assertion, spelling):
+        if selector["kind"] == "assertion_id":
+            return assertion["assertion_id"] == selector["assertion_id"] or unscoped(
+                selector["fallback"], assertion, spelling)
+        if selector["kind"] == "source_record":
+            return assertion.get("source_record_id") == selector["source_record_id"]
+        return original(selector, assertion, spelling)
+
+    original = wa.selector_matches
+    monkeypatch.setattr(wa, "selector_matches", unscoped)
+    monkeypatch.setattr(wa, "resolve_selector", lambda selector, inventory: selector)
+    monkeypatch.setattr(wa, "check_selector", lambda selector, records: None)
+    over = suppression({"kind": "assertion_id", "assertion_id": target["assertion_id"],
+                        "fallback": content("spelling", "альфа")})
+    widened = wa.build(inputs, over)
+    assert len(suppressed_ids(widened)) == 2
+    report = verify.verify(inputs, widened, None, over)["withdrawal"]
+    assert report["passed"] is False and {"selector_scope", "suppressed_outside_selectors"} <= set(report["errors"])
+    wrong_source = suppression(dict(selector_for(inputs, unit_by_head(inputs, f"а{A}льфа")["anchor_locator"]),
+                                    source_id="puls"))
+    report = verify.verify(inputs, wa.build(inputs, wrong_source), None, wrong_source)["withdrawal"]
+    assert report["passed"] is False and "selector_inconsistent" in report["errors"]
+
+
+def test_intended_matches_reads_stored_propositions_and_refuses_what_it_cannot_evaluate(inputs, result):
+    inventory = {a["assertion_id"]: (a, c["key_at_creation"]["spelling"])
+                 for c in result["cards"].values() for a in c["assertions"]}
+    records = {sr["source_record_id"]: sr for sr in inputs.registry["source_records"]}
+    target = alpha_ulif_spelling(result)
+    exact = content("spelling", "альфа", target["value_norm"] + ".")  # norm-v1 cuts trailing punctuation
+    assert target["assertion_id"] in verify.intended_matches(exact, inventory, records)
+    assert verify.intended_matches(content("spelling", "альфа", "інше"), inventory, records) == set()
+    assert verify.intended_matches(content("spelling", "альфа", normaliser="norm-v9"), inventory, records) is None
+    assert verify.intended_matches({"kind": "card"}, inventory, records) is None
+
+
+def ulif_entry_records(registry):
+    return [sr for sr in registry["source_records"] if sr["source_id"] == "ulif" and any(
+        c.get("locator", "").startswith("ulif:ulif_dictua_entries:id:") for c in sr["correspondence"])]
+
+
+def later_snapshot_registry(world):
+    """A copy of the registry where a later snapshot reuses record A's row locator for record B and observes a
+    stronger alias of A: history that must never rebind the frozen row or its extraction-time key."""
+    registry = copy.deepcopy({"schema_version": 1, "registry_version": 3, "entries": world.entries,
+                              "source_records": world.sr, "events": world.events})
+    a, b = ulif_entry_records(registry)[:2]
+    later = "later-snapshot@sha256:" + "f" * 64
+    b["aliases"].append({"kind": "table_row", "key": "ulif:row:later-local", "snapshot_id": later})
+    b["correspondence"].append({"snapshot_id": later, "status": "unique", "locator": a["correspondence"][0]["locator"]})
+    a["aliases"].append({"kind": "uid", "key": "ulif:uid:later", "snapshot_id": later})
+    return registry, a, b
+
+
+def test_frozen_rows_bind_through_their_own_snapshot_only(world, tmp_path, result):
+    registry, a, b = later_snapshot_registry(world)
+    inputs = make_inputs(world, tmp_path / "later", registry)
+    locator = a["correspondence"][0]["locator"]
+    assert inputs.record_ids[("ulif", locator)]["source_record_id"] == a["source_record_id"]
+    rebuilt = wa.build(inputs)
+    cited = [x for c in rebuilt["cards"].values() for x in c["assertions"] if x["locator"].split(" ")[0] == locator]
+    assert cited and {x["source_record_id"] for x in cited} == {a["source_record_id"]} != {b["source_record_id"]}
+    assert "ulif:uid:later" not in {x.get("source_record_key") for c in rebuilt["cards"].values()
+                                    for x in c["assertions"]}
+    assert strip_build(rebuilt) == strip_build(result)  # later history changes nothing in the frozen build
+    assert verify.verify(inputs, rebuilt)["passed"]
+
+
+@pytest.mark.parametrize("damage", ["missing", "held_own", "competing_unique", "competing_hold", "alias_elsewhere"])
+def test_unresolved_or_competing_frozen_correspondence_refuses_before_output(world, tmp_path, damage):
+    registry = copy.deepcopy({"schema_version": 1, "registry_version": 3, "entries": world.entries,
+                              "source_records": world.sr, "events": world.events})
+    a, b = ulif_entry_records(registry)[:2]
+    own = a["correspondence"][0]
+    if damage == "missing":
+        a["correspondence"] = []
+    elif damage == "held_own":
+        own.update(status="held", candidates=[own["locator"], b["correspondence"][0]["locator"]], hold="test")
+    elif damage == "competing_unique":
+        b["correspondence"].append({"snapshot_id": own["snapshot_id"], "status": "unique", "locator": own["locator"]})
+    elif damage == "competing_hold":
+        b["correspondence"].append({"snapshot_id": own["snapshot_id"], "status": "ambiguous", "hold": "test",
+                                    "candidates": [own["locator"], b["correspondence"][0]["locator"]]})
+    else:
+        for alias in a["aliases"]:
+            alias["snapshot_id"] = "other@sha256:" + "1" * 64
+    expected = wa.MissingAllocation if damage == "missing" else wa.AssemblyError
+    with pytest.raises(expected, match="own snapshot"):
+        make_inputs(world, tmp_path, registry)
+
+
+def test_verify_rejects_a_frozen_row_credited_to_another_record(inputs, result):
+    a, b = ulif_entry_records(inputs.registry)[:2]
+    locator = a["correspondence"][0]["locator"]
+    forged = copy.deepcopy(result)
+    for card in forged["cards"].values():
+        for x in card["assertions"]:
+            if x["locator"].split(" ")[0] == locator:
+                x["source_record_id"], x["source_record_key"] = b["source_record_id"], b["aliases"][0]["key"]
+    report = verify.verify(inputs, forged)["source_records"]
+    assert report["passed"] is False and report["errors"]["snapshot_binding"] > 0
+    rekeyed = copy.deepcopy(result)
+    victim = next(x for c in rekeyed["cards"].values() for x in c["assertions"] if x["locator"].split(" ")[0] == locator)
+    victim["source_record_key"] = "ulif:uid:later"
+    assert verify.verify(inputs, rekeyed)["source_records"]["errors"]["key_outside_snapshot"] == 1
+
+
 # --- verification ------------------------------------------------------------------------------------------
 
 def test_verify_passes_and_catches_a_forged_locator(inputs, result):
