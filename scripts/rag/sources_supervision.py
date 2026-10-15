@@ -289,6 +289,36 @@ TEMPLATE_PLACEHOLDERS = ("@REPO_ROOT@", "@VENV_ROOT@", "@PYTHON_ROOT@", "@DATA_R
 # read-only connection must create or write ``-shm`` beside it, so their
 # directory is the one writable bind.
 DATABASES = ("sources.db", "vesum.db")
+# StateDirectory= and RuntimeDirectory= of the server and its notifier.
+UNIT_DIRECTORY = "learn-ukrainian-sources"
+# Ignored state in the checkout that the server never opens and that may hold
+# credentials or private records: secrets, agent and harness state, task
+# results and transcripts, other worktrees, session handoffs, logs, scratch
+# and backup staging. The unit makes each one inaccessible
+# (InaccessiblePaths=) inside the read-only checkout and the writable data
+# directory.
+PRIVATE_CHECKOUT_PATHS = (
+    ".secrets",
+    ".agent",
+    ".agents",
+    ".claude",
+    ".codex",
+    ".cursor",
+    ".gemini",
+    ".opencode",
+    ".entire",
+    ".deploy-state",
+    ".runtime",
+    ".pids",
+    ".worktrees",
+    "batch_state",
+    "docs/session-state",
+    "logs",
+    "tmp",
+    "scratch",
+    "data/.backup-staging",
+)
+MAX_FINDINGS = 20
 _PLACEHOLDER = re.compile(r"@[A-Z_]+@")
 
 
@@ -312,6 +342,10 @@ class UnitPaths:
     @property
     def writable_binds(self) -> tuple[Path, ...]:
         return (self.data_root,)
+
+    @property
+    def masked(self) -> tuple[Path, ...]:
+        return tuple(self.repo_root / relative for relative in PRIVATE_CHECKOUT_PATHS)
 
     def substitutions(self) -> dict[str, str]:
         values = (self.repo_root, self.venv_root, self.python_root, self.data_root)
@@ -365,6 +399,8 @@ def resolve_unit_paths(repo_root: Path) -> tuple[UnitPaths, list[tuple[str, Path
 
 def bind_coverage(path: Path, writable: bool, paths: UnitPaths) -> str | None:
     """How ``path`` reaches the unit (the setting that exposes it), or None if it would not."""
+    if any(_within(path, root) for root in paths.masked):
+        return None
     if any(_within(path, root) for root in paths.writable_binds):
         return "BindPaths="
     if writable:
@@ -376,35 +412,125 @@ def bind_coverage(path: Path, writable: bool, paths: UnitPaths) -> str | None:
     return None
 
 
-def broad_binds(paths: UnitPaths) -> list[tuple[str, Path]]:
-    """Binds that would expose a whole hidden tree or home directory, or make the checkout writable."""
+def _owner(path: Path) -> int:
+    return path.stat().st_uid
+
+
+def broad_binds(paths: UnitPaths) -> list[tuple[str, Path, str]]:
+    """Binds that would expose more than the unit needs: (placeholder, path, reason)."""
     broad = []
     for placeholder, root in zip(TEMPLATE_PLACEHOLDERS, (*paths.read_only_binds, paths.data_root), strict=True):
-        # The tree itself, an ancestor of it, or an entry directly in it (a
-        # whole home directory).
-        if any(_within(hidden, root) or root.parent == hidden for hidden in PROTECT_HOME_HIDDEN):
-            broad.append((placeholder, root))
+        for hidden in PROTECT_HOME_HIDDEN:
+            if _within(hidden, root) or root.parent == hidden:
+                broad.append((placeholder, root, "a whole home directory or hidden tree"))
+            elif _within(root, hidden):
+                home = hidden / root.relative_to(hidden).parts[0]
+                if _owner(home) != os.getuid():
+                    broad.append((placeholder, root, "another user's tree"))
     if any(_within(root, paths.data_root) for root in paths.read_only_binds):
-        broad.append(("@DATA_ROOT@", paths.data_root))
+        broad.append(
+            ("@DATA_ROOT@", paths.data_root, "it would make the checkout, the environment or the interpreter writable")
+        )
     return broad
 
 
-def check_paths(repo_root: Path) -> tuple[UnitPaths | None, list[str]]:
+def escapes(root: Path, skip: tuple[Path, ...] = ()) -> list[str]:
+    """Ways a writable tree reaches files outside itself: links out, extra hard links, other file systems.
+
+    A symbolic link is followed inside the unit's view, where only the
+    writable binds are writable, but the scan refuses any that leaves the
+    tree so the tree alone is what the unit can write. A regular file with
+    several names may share them with a file anywhere on the same file
+    system, and a mount point inside the tree is bound writable with it.
+    Masked subtrees (``skip``) are inaccessible to the unit and not scanned.
+    """
+    findings: list[str] = []
+    device = root.stat().st_dev
+
+    def unreadable(error: OSError) -> None:
+        findings.append(f"UNREADABLE: {error.filename} ({type(error).__name__}); run check-paths as the service's user")
+
+    for directory, subdirectories, files in os.walk(root, onerror=unreadable):
+        here = Path(directory)
+        kept = []
+        for name in subdirectories:
+            path = here / name
+            if any(_within(path, masked) for masked in skip):
+                continue
+            info = path.lstat()
+            if path.is_symlink():
+                files.append(name)  # judged as a link below, never descended
+            elif info.st_dev != device:
+                findings.append(f"MOUNT: {path} is another file system, writable with the bind")
+            else:
+                kept.append(name)
+        subdirectories[:] = kept
+        for name in files:
+            path = here / name
+            info = path.lstat()
+            if path.is_symlink():
+                target = path.resolve(strict=False)
+                if not _within(target, root):
+                    findings.append(f"ESCAPE: {path} links to {target}, outside {root}")
+            elif info.st_nlink > 1 and not path.is_dir():
+                findings.append(f"LINKED: {path} has {info.st_nlink} names; another may be outside {root}")
+    if len(findings) > MAX_FINDINGS:
+        findings = [*findings[:MAX_FINDINGS], f"... and {len(findings) - MAX_FINDINGS} more"]
+    return findings
+
+
+def unit_directories(environ: Mapping[str, str], home: Path) -> list[tuple[str, Path, str]]:
+    """Where systemd puts the unit's writable state and runtime directories: (label, path, setting)."""
+    state_home = Path(environ.get("XDG_STATE_HOME") or home / ".local" / "state")
+    directories = [
+        ("state directory (system manager)", Path("/var/lib") / UNIT_DIRECTORY, "StateDirectory="),
+        ("state directory (user manager)", state_home / UNIT_DIRECTORY, "StateDirectory="),
+        ("runtime directory (system manager)", Path("/run") / UNIT_DIRECTORY, "RuntimeDirectory="),
+    ]
+    runtime_home = Path(environ.get("XDG_RUNTIME_DIR") or f"/run/user/{os.getuid()}")
+    directories.append(("runtime directory (user manager)", runtime_home / UNIT_DIRECTORY, "RuntimeDirectory="))
+    return directories
+
+
+def check_unit_directory(label: str, path: Path, setting: str, repo: Path) -> list[str]:
+    """Refuse a unit directory in the checkout or behind a link; scan an existing one like the data tree."""
+    resolved = path.resolve(strict=False)
+    if _within(resolved, repo):
+        return [f"INSIDE: {label} {path} resolves into the checkout {repo}, which must stay read-only"]
+    if path.is_symlink():
+        return [f"ESCAPE: {label} {path} is a symbolic link to {resolved}"]
+    if not path.exists():
+        return [f"ok: {label} {path} (writable, {setting}; systemd creates it)"]
+    return escapes(path) or [f"ok: {label} {path} (writable, {setting})"]
+
+
+def check_paths(
+    repo_root: Path, environ: Mapping[str, str] | None = None, home: Path | None = None
+) -> tuple[UnitPaths | None, list[str]]:
     """Report lines, and the resolved paths, or None when the rendered unit could not run or is too broad."""
     try:
         paths, needed = resolve_unit_paths(repo_root)
     except PathCheckError as error:
         return None, [f"error: {error}"]
-    lines, ok = [], True
+    lines = []
     for label, path, writable in needed:
         coverage = bind_coverage(path, writable, paths)
         access = "writable" if writable else "read-only"
         lines.append(f"{'ok' if coverage else 'HIDDEN'}: {label} {path} ({access}, {coverage or 'not exposed'})")
-        ok = ok and coverage is not None
-    for placeholder, root in broad_binds(paths):
-        lines.append(f"BROAD: {placeholder} {root} would expose more than the unit needs")
-        ok = False
-    lines.append("ok: state directory (writable, bound by StateDirectory=)")
+    for placeholder, root, reason in broad_binds(paths):
+        lines.append(f"BROAD: {placeholder} {root} would expose more than the unit needs: {reason}")
+    link = paths.repo_root / "data"
+    if link.is_symlink():
+        lines.append(
+            f"ESCAPE: data {link} is a symbolic link to {paths.data_root}; the writable bind must be the checkout's own directory"
+        )
+    else:
+        lines += escapes(paths.data_root, skip=paths.masked)
+    lines += [f"masked: {path} (InaccessiblePaths=)" for path in paths.masked if path.exists() or path.is_symlink()]
+    environ = os.environ if environ is None else environ
+    for label, path, setting in unit_directories(environ, Path.home() if home is None else home):
+        lines += check_unit_directory(label, path, setting, paths.repo_root)
+    ok = all(line.startswith(("ok: ", "masked: ")) for line in lines)
     lines += [f"{placeholder}={value}" for placeholder, value in paths.substitutions().items()]
     return (paths if ok else None), lines
 
@@ -427,8 +553,9 @@ def main(argv: list[str] | None = None) -> int:
         ),
         epilog=(
             'Example: .venv/bin/python -m scripts.rag.sources_supervision check-paths --repo-root "$(pwd -P)"\n'
-            "Exit codes: 0 every needed path resolves inside the unit's view; 1 a path is missing, hidden or "
-            "would be bound too broadly (each is listed); 2 usage."
+            "Exit codes: 0 every needed path resolves inside the unit's view and nothing else is writable; "
+            "1 a path is missing or hidden, a bind is too broad, a writable tree reaches outside itself "
+            "(link, extra hard link, mount) or a unit directory is in the checkout (each is listed); 2 usage."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )

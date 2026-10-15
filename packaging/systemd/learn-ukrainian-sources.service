@@ -42,6 +42,11 @@ SendSIGKILL=yes
 LimitCORE=0
 StateDirectory=learn-ukrainian-sources
 StateDirectoryMode=0700
+# A memory file system that outlives each run until reboot: a failure record
+# the state directory refuses (a full disk) is written here instead.
+RuntimeDirectory=learn-ukrainian-sources
+RuntimeDirectoryMode=0700
+RuntimeDirectoryPreserve=yes
 UMask=0077
 NoNewPrivileges=yes
 PrivateMounts=yes
@@ -52,13 +57,38 @@ ProtectSystem=strict
 # scripts.rag.sources_supervision check-paths` (which also renders this
 # file): the checkout, its virtual environment and the base interpreter's
 # installation read-only, and the data directory writable, because SQLite
-# must create the -shm file beside a WAL database even to read it.
-# StateDirectory= above is the only other writable path.
+# must create the -shm file beside a WAL database even to read it, and the
+# server writes its caches there. The writable set is that directory, the
+# state directory and the runtime directory (owner-only, created by systemd);
+# check-paths refuses a data directory that is a link or that reaches outside
+# itself (a link out, a file with other names, a mount).
 ProtectHome=tmpfs
 BindReadOnlyPaths=@REPO_ROOT@
 BindReadOnlyPaths=@VENV_ROOT@
 BindReadOnlyPaths=@PYTHON_ROOT@
 BindPaths=@DATA_ROOT@
+# Ignored state in the checkout that the server never opens and that may hold
+# credentials or private records stays hidden although the checkout is bound
+# ("-": a path that does not exist is skipped).
+InaccessiblePaths=-@REPO_ROOT@/.secrets
+InaccessiblePaths=-@REPO_ROOT@/.agent
+InaccessiblePaths=-@REPO_ROOT@/.agents
+InaccessiblePaths=-@REPO_ROOT@/.claude
+InaccessiblePaths=-@REPO_ROOT@/.codex
+InaccessiblePaths=-@REPO_ROOT@/.cursor
+InaccessiblePaths=-@REPO_ROOT@/.gemini
+InaccessiblePaths=-@REPO_ROOT@/.opencode
+InaccessiblePaths=-@REPO_ROOT@/.entire
+InaccessiblePaths=-@REPO_ROOT@/.deploy-state
+InaccessiblePaths=-@REPO_ROOT@/.runtime
+InaccessiblePaths=-@REPO_ROOT@/.pids
+InaccessiblePaths=-@REPO_ROOT@/.worktrees
+InaccessiblePaths=-@REPO_ROOT@/batch_state
+InaccessiblePaths=-@REPO_ROOT@/docs/session-state
+InaccessiblePaths=-@REPO_ROOT@/logs
+InaccessiblePaths=-@REPO_ROOT@/tmp
+InaccessiblePaths=-@REPO_ROOT@/scratch
+InaccessiblePaths=-@REPO_ROOT@/data/.backup-staging
 ProtectProc=invisible
 ProcSubset=pid
 SystemCallFilter=~@debug
@@ -74,7 +104,8 @@ Environment=PYTHONDONTWRITEBYTECODE=1
 Environment=LU_MCP_SOURCES_LOG_DIR=%S/learn-ukrainian-sources
 ExecStart=@REPO_ROOT@/.venv/bin/python .mcp/servers/sources/server.py --standalone --host 127.0.0.1 --port 8766
 # Runs after every run of the server, in that run's own stop path, so each
-# failed run is recorded whatever happens to the OnFailure= trigger. Local,
+# failed run is recorded whatever happens to the OnFailure= trigger: in the
+# state directory, or in the runtime directory when that write fails. Local,
 # under a second, never contacts Fleet Comms; "-": it never fails the unit.
 ExecStopPost=-@REPO_ROOT@/.venv/bin/python -m scripts.orchestration.sources_failure_alert record
 Restart=on-failure

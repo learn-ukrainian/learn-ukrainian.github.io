@@ -17,4 +17,9 @@ TimeoutStartSec=300
 UMask=0077
 StateDirectory=learn-ukrainian-sources
 StateDirectoryMode=0700
+# Shared with the server: records its recorder could not write to the state
+# directory wait here until this run moves or publishes them.
+RuntimeDirectory=learn-ukrainian-sources
+RuntimeDirectoryMode=0700
+RuntimeDirectoryPreserve=yes
 ExecStart=@REPO_ROOT@/.venv/bin/python -m scripts.orchestration.sources_failure_alert notify

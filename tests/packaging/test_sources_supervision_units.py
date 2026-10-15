@@ -103,6 +103,9 @@ def test_sources_unit_keeps_every_earlier_restriction() -> None:
     ]
     assert values(unit, "Service", "BindReadOnlyPaths") == ["@REPO_ROOT@", "@VENV_ROOT@", "@PYTHON_ROOT@"]
     assert values(unit, "Service", "BindPaths") == ["@DATA_ROOT@"]
+    assert values(unit, "Service", "InaccessiblePaths") == [
+        f"-@REPO_ROOT@/{relative}" for relative in sup.PRIVATE_CHECKOUT_PATHS
+    ]
     # Only a local recorder runs in the stop path; publishing never does.
     assert values(unit, "Service", "ExecStopPost") == [
         "-@REPO_ROOT@/.venv/bin/python -m scripts.orchestration.sources_failure_alert record"
@@ -124,7 +127,7 @@ WRITABLE_PATH_SETTINGS = (
 
 
 def test_the_rendered_unit_binds_back_exactly_the_narrow_paths(tmp_path: Path) -> None:
-    """Read-only: checkout, virtual environment, interpreter installation; writable: data and state only."""
+    """Read-only: checkout, virtual environment, interpreter installation; writable: data, state, runtime."""
     home = tmp_path / "home" / "op"
     paths = sup.UnitPaths(
         repo_root=home / "repo",
@@ -142,9 +145,26 @@ def test_the_rendered_unit_binds_back_exactly_the_narrow_paths(tmp_path: Path) -
         str(paths.python_root),
     ]
     granted = {key: values(unit, "Service", key) for key in WRITABLE_PATH_SETTINGS if values(unit, "Service", key)}
-    assert granted == {"BindPaths": [str(paths.data_root)], "StateDirectory": ["learn-ukrainian-sources"]}
-    for key in ("InaccessiblePaths", "ReadOnlyPaths", "RootDirectory", "PrivateUsers", "DynamicUser"):
+    assert granted == {
+        "BindPaths": [str(paths.data_root)],
+        "StateDirectory": [sup.UNIT_DIRECTORY],
+        "RuntimeDirectory": [sup.UNIT_DIRECTORY],
+    }
+    assert one(unit, "Service", "StateDirectoryMode") == one(unit, "Service", "RuntimeDirectoryMode") == "0700"
+    for key in ("ReadOnlyPaths", "RootDirectory", "PrivateUsers", "DynamicUser"):
         assert values(unit, "Service", key) == [], key
+    # No bind is a whole home directory or hidden tree, and the one writable
+    # bind lies inside the checkout without containing any read-only bind.
+    binds = [*values(unit, "Service", "BindReadOnlyPaths"), *values(unit, "Service", "BindPaths")]
+    for bind in map(Path, binds):
+        for tree in (Path("/home"), Path("/root"), Path("/run/user"), tmp_path / "home"):
+            # Not the tree, not a whole home directory in it, not an ancestor of it.
+            assert bind != tree and bind.parent != tree and bind not in tree.parents, bind
+    assert paths.data_root.parent == paths.repo_root
+    assert not any(paths.data_root == Path(bind) or paths.data_root in Path(bind).parents for bind in binds[:3])
+    # Private state in the checkout stays hidden although the checkout is bound.
+    assert values(unit, "Service", "InaccessiblePaths") == [f"-{path}" for path in paths.masked]
+    assert all(paths.repo_root in path.parents for path in paths.masked)
     assert "LU_MCP_SOURCES_LOG_DIR=%S/learn-ukrainian-sources" in values(unit, "Service", "Environment")
     # The data-volume drop-in replaces only the start command.
     dropin = parse_unit(PACKAGING / "dropins" / f"{SOURCES}.d" / "data-volume.conf")
@@ -181,6 +201,11 @@ def test_no_notice_depends_on_a_trigger_surviving() -> None:
     assert seconds(one(notifier, "Service", "TimeoutStartSec")) >= alert.PUBLISH_BUDGET_S + 120 + 10
     assert one(notifier, "Service", "StateDirectory") == one(sources, "Service", "StateDirectory")
     assert one(notifier, "Service", "StateDirectoryMode") == "0700"
+    # A record the server's recorder had to put in memory is in the notifier's view too, and survives both units' stops.
+    for unit in (sources, notifier):
+        assert one(unit, "Service", "RuntimeDirectory") == sup.UNIT_DIRECTORY
+        assert one(unit, "Service", "RuntimeDirectoryMode") == "0700"
+        assert one(unit, "Service", "RuntimeDirectoryPreserve") == "yes"
     assert one(notifier, "Service", "UMask") == "0077"
     timer = parse_unit(PACKAGING / TIMER)
     assert one(timer, "Timer", "Unit") == NOTIFIER

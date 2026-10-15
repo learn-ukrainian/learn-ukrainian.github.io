@@ -494,6 +494,16 @@ def _fake_checkout(root: Path, base_bin: Path, *, data: Path | None = None) -> P
 def hidden(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     home = tmp_path / "home"
     monkeypatch.setattr(sup, "PROTECT_HOME_HIDDEN", (home, tmp_path / "root", tmp_path / "run" / "user"))
+    # The unit's state and runtime directories, where systemd would put them on this test host.
+    state, runtime = tmp_path / "var" / "lib" / sup.UNIT_DIRECTORY, tmp_path / "run" / sup.UNIT_DIRECTORY
+    monkeypatch.setattr(
+        sup,
+        "unit_directories",
+        lambda _environ, _home: [
+            ("state directory", state, "StateDirectory="),
+            ("runtime directory", runtime, "RuntimeDirectory="),
+        ],
+    )
     return home
 
 
@@ -518,9 +528,15 @@ def test_a_checkout_in_a_home_directory_is_bound_back_narrowly(hidden: Path, cap
         "vesum.db directory": "BindPaths=",
     }
     assert sup.broad_binds(paths) == []
+    (repo / ".secrets").mkdir()
+    (repo / "batch_state").mkdir()
     assert sup.main(["check-paths", "--repo-root", str(repo)]) == 0
     out = capsys.readouterr().out.splitlines()
-    assert sum(line.startswith("ok: ") for line in out) == 8  # every needed path is printed
+    assert sum(line.startswith("ok: ") for line in out) == 9  # every needed path and both unit directories
+    assert [line for line in out if line.startswith("masked: ")] == [
+        f"masked: {repo / '.secrets'} (InaccessiblePaths=)",
+        f"masked: {repo / 'batch_state'} (InaccessiblePaths=)",
+    ]
     assert f"@PYTHON_ROOT@={paths.python_root}" in out and f"@DATA_ROOT@={repo / 'data'}" in out
 
 
@@ -532,11 +548,129 @@ def test_a_checkout_outside_the_home_trees_still_gets_a_writable_data_directory(
     assert sup.main(["check-paths", "--repo-root", str(repo)]) == 0
 
 
-def test_a_data_directory_elsewhere_is_bound_where_it_resolves(tmp_path: Path, hidden: Path) -> None:
+def test_a_data_directory_that_is_a_link_is_refused(tmp_path: Path, hidden: Path, capsys) -> None:
+    """systemd binds where a link resolves: the writable bind must be the checkout's own directory."""
     repo = _fake_checkout(hidden / "op" / "repo", hidden / "op" / "py" / "bin", data=tmp_path / "volume" / "data")
-    paths, _needed = sup.resolve_unit_paths(repo)
-    assert paths.data_root == tmp_path / "volume" / "data"
+    assert sup.main(["check-paths", "--repo-root", str(repo)]) == 1
+    assert (
+        f"ESCAPE: data {repo / 'data'} is a symbolic link to {tmp_path / 'volume' / 'data'}" in capsys.readouterr().out
+    )
+
+
+@pytest.mark.parametrize(
+    ("make", "finding"),
+    [
+        ("link_out", "ESCAPE: {data}/cache.db links to {outside}/secret, outside {data}"),
+        ("dangling_link_out", "ESCAPE: {data}/gone links to {outside}/missing, outside {data}"),
+        ("directory_link_out", "ESCAPE: {data}/tree links to {outside}, outside {data}"),
+        ("hard_link", "LINKED: {data}/rows.jsonl has 2 names; another may be outside {data}"),
+    ],
+)
+def test_a_data_directory_that_reaches_outside_itself_is_refused(
+    tmp_path: Path, hidden: Path, capsys, make: str, finding: str
+) -> None:
+    repo = _fake_checkout(hidden / "op" / "repo", hidden / "op" / "py" / "bin")
+    data, outside = repo / "data", hidden / "op" / "private"
+    outside.mkdir()
+    (outside / "secret").write_text("x")
+    (data / "lexicon").mkdir()
+    (data / "lexicon" / "inside").symlink_to(data / "sources.db")  # a link within the tree is fine
+    if make == "link_out":
+        (data / "cache.db").symlink_to(outside / "secret")
+    elif make == "dangling_link_out":
+        (data / "gone").symlink_to(outside / "missing")
+    elif make == "directory_link_out":
+        (data / "tree").symlink_to(outside)
+    else:
+        os.link(outside / "secret", data / "rows.jsonl")
+    assert sup.main(["check-paths", "--repo-root", str(repo)]) == 1
+    out = capsys.readouterr().out.splitlines()
+    assert finding.format(data=data, outside=outside) in out
+    assert not any("inside" in line for line in out if not line.startswith(("ok: ", "@")))
+
+
+def test_a_mount_inside_the_data_directory_is_refused(hidden: Path, capsys, monkeypatch: pytest.MonkeyPatch) -> None:
+    repo = _fake_checkout(hidden / "op" / "repo", hidden / "op" / "py" / "bin")
+    mounted = repo / "data" / "bulk"
+    mounted.mkdir()
+    real_lstat = Path.lstat
+
+    def lstat(path: Path):
+        info = real_lstat(path)
+        if path == mounted:
+            return os.stat_result((*info[:2], info.st_dev + 1, *info[3:]))
+        return info
+
+    monkeypatch.setattr(Path, "lstat", lstat)
+    assert sup.main(["check-paths", "--repo-root", str(repo)]) == 1
+    assert f"MOUNT: {mounted} is another file system, writable with the bind" in capsys.readouterr().out
+
+
+def test_masked_private_state_is_neither_scanned_nor_counted_as_reachable(hidden: Path, capsys) -> None:
+    repo = _fake_checkout(hidden / "op" / "repo", hidden / "op" / "py" / "bin")
+    staging = repo / "data" / ".backup-staging"
+    staging.mkdir()
+    (staging / "link").symlink_to(hidden / "op")  # inaccessible to the unit, so not an escape
     assert sup.main(["check-paths", "--repo-root", str(repo)]) == 0
+    assert f"masked: {staging} (InaccessiblePaths=)" in capsys.readouterr().out.splitlines()
+    # A database linked into a masked tree would be hidden from the server.
+    (repo / "batch_state").mkdir()
+    (repo / "batch_state" / "vesum.db").touch()
+    (repo / "data" / "vesum.db").unlink()
+    (repo / "data" / "vesum.db").symlink_to(repo / "batch_state" / "vesum.db")
+    assert sup.main(["check-paths", "--repo-root", str(repo)]) == 1
+    out = capsys.readouterr().out
+    assert f"HIDDEN: vesum.db directory {repo / 'batch_state'} (writable, not exposed)" in out
+
+
+@pytest.mark.parametrize("where", ["inside", "linked", "linking_out"])
+def test_a_unit_directory_in_the_checkout_or_behind_a_link_is_refused(
+    tmp_path: Path, hidden: Path, capsys, where: str
+) -> None:
+    repo = _fake_checkout(hidden / "op" / "repo", hidden / "op" / "py" / "bin")
+    state = tmp_path / "var" / "lib" / sup.UNIT_DIRECTORY
+    state.parent.mkdir(parents=True)
+    if where == "inside":
+        (repo / "state").mkdir()
+        state.symlink_to(repo / "state")
+        expected = f"INSIDE: state directory {state} resolves into the checkout {repo}, which must stay read-only"
+    elif where == "linked":
+        (tmp_path / "elsewhere").mkdir()
+        state.symlink_to(tmp_path / "elsewhere")
+        expected = f"ESCAPE: state directory {state} is a symbolic link to {tmp_path / 'elsewhere'}"
+    else:
+        state.mkdir(mode=0o700)
+        (state / "mcp-sources-requests.jsonl").symlink_to(hidden / "op" / ".bashrc")
+        expected = (
+            f"ESCAPE: {state / 'mcp-sources-requests.jsonl'} links to {hidden / 'op' / '.bashrc'}, outside {state}"
+        )
+    assert sup.main(["check-paths", "--repo-root", str(repo)]) == 1
+    assert expected in capsys.readouterr().out.splitlines()
+
+
+def test_unit_directories_follow_each_manager(tmp_path: Path) -> None:
+    environ = {"XDG_STATE_HOME": str(tmp_path / "state"), "XDG_RUNTIME_DIR": str(tmp_path / "run")}
+    found = {label: path for label, path, _setting in sup.unit_directories(environ, tmp_path / "home")}
+    assert found == {
+        "state directory (system manager)": Path("/var/lib/learn-ukrainian-sources"),
+        "state directory (user manager)": tmp_path / "state" / "learn-ukrainian-sources",
+        "runtime directory (system manager)": Path("/run/learn-ukrainian-sources"),
+        "runtime directory (user manager)": tmp_path / "run" / "learn-ukrainian-sources",
+    }
+    defaults = {label: path for label, path, _setting in sup.unit_directories({}, tmp_path / "home")}
+    assert defaults["state directory (user manager)"] == tmp_path / "home" / ".local" / "state" / sup.UNIT_DIRECTORY
+    assert defaults["runtime directory (user manager)"] == Path(f"/run/user/{os.getuid()}") / sup.UNIT_DIRECTORY
+
+
+def test_a_bind_into_another_users_tree_is_refused(hidden: Path, capsys, monkeypatch: pytest.MonkeyPatch) -> None:
+    repo = _fake_checkout(hidden / "op" / "repo", hidden / "other" / "py" / "bin")
+    real_owner = sup._owner
+    monkeypatch.setattr(sup, "_owner", lambda path: os.getuid() + 1 if path == hidden / "other" else real_owner(path))
+    assert sup.main(["check-paths", "--repo-root", str(repo)]) == 1
+    assert (
+        f"BROAD: @PYTHON_ROOT@ {hidden / 'other' / 'py'} would expose more than the unit needs: another user's tree"
+        in (capsys.readouterr().out.splitlines())
+    )
 
 
 @pytest.mark.parametrize("where", ["in_the_read_only_checkout", "in_another_hidden_directory"])
@@ -589,6 +723,7 @@ def test_render_fills_every_placeholder_and_refuses_after_a_failed_check(hidden:
     rendered = capsys.readouterr().out
     assert "@" not in rendered.replace("~@debug", "")
     assert f"BindReadOnlyPaths={repo}\n" in rendered and f"BindPaths={repo / 'data'}\n" in rendered
+    assert f"InaccessiblePaths=-{repo / '.secrets'}\n" in rendered
     paths, _needed = sup.resolve_unit_paths(repo)
     with pytest.raises(sup.PathCheckError, match="@UNKNOWN@"):
         sup.render_unit("ExecStart=@REPO_ROOT@/x @UNKNOWN@\n", paths)
