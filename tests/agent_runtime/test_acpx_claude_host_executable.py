@@ -30,6 +30,7 @@ from scripts.agent_runtime.adapters.base import InvocationPlan
 from scripts.agent_runtime.env_sanitize import build_agent_env
 from tests.agent_runtime import test_acpx_adapter as _acpx_tests
 from tests.agent_runtime.test_acpx_adapter import _stub_binary
+from tests.wait_helpers import wait_until
 
 # The suite's registered isolated worktree: ACPX refuses a primary-checkout cwd,
 # and pytest's basetemp may sit inside the primary checkout.
@@ -1544,12 +1545,16 @@ def test_launcher_refuses_a_same_size_edit_with_restored_mtime(tmp_path):
     """Only the nanosecond ctime records the edit; whole seconds would miss it."""
     for attempt in range(5):
         # Start early in a second, so the edit keeps the whole-second ctime.
-        if time.time() % 1.0 > 0.5:
-            time.sleep(1.0 - time.time() % 1.0 + 0.01)
+        wait_until(lambda: time.time() % 1.0 <= 0.5, timeout=2.0, message="the start of a wall-clock second")
         fake = _dumping_claude(tmp_path / f"host-{attempt}")
         before = fake.lstat()
         identity = acpx_module._claude_code_launch_identity(before)
-        time.sleep(0.01)
+        # The edit must land on a later clock tick than the creation, or the ctime would not move.
+        wait_until(
+            lambda created_ns=before.st_ctime_ns: time.time_ns() - created_ns >= 10_000_000,
+            timeout=2.0,
+            message="ctime tick",
+        )
         original = fake.read_bytes()
         edited = original.replace(b"import json, os, sys", b"import json,os, sys ")
         assert len(edited) == len(original) and edited != original

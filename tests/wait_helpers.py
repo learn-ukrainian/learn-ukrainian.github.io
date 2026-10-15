@@ -41,6 +41,28 @@ def wait_for_line(
     raise AssertionError(f"{path} did not contain a complete line within {timeout}s (last read: {content!r})")
 
 
+def wait_until(
+    predicate: Callable[[], bool],
+    *,
+    timeout: float = 60.0,
+    interval: float = 0.01,
+    message: str = "condition",
+) -> None:
+    """Poll ``predicate`` until it returns true, with a real deadline.
+
+    Raises ``AssertionError`` naming ``message`` if ``timeout`` elapses first.
+    The predicate is checked once more at the deadline, so a condition that
+    became true during the final interval is not reported as a timeout. An
+    ``AssertionError`` raised by the predicate propagates, so callers can fail
+    fast (e.g. a watched process exited) with their own diagnostics.
+    """
+    deadline = time.monotonic() + timeout
+    while not predicate():
+        if time.monotonic() >= deadline:
+            raise AssertionError(f"{message} not met within {timeout}s")
+        time.sleep(interval)
+
+
 def wait_for_pid_line(path: Path, *, timeout: float = 60.0) -> int:
     """Poll ``path`` until it holds a complete newline-terminated PID."""
     return int(wait_for_line(path, timeout=timeout))
