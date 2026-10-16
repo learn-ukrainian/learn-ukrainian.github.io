@@ -22,6 +22,7 @@ import math
 import os
 import re
 import sqlite3
+import stat
 import subprocess
 import sys
 import time
@@ -129,6 +130,30 @@ def _limited(reason, reset_at, **observation):
     return Result(status=429, error="github_rate_limited", reset_at=reset_at, reason=reason)
 
 
+def refusal_of(observed, *, injected=False):
+    """The typed refusal a client result, completed process or process error carries, else ``None``.
+
+    Adapters re-raise this instead of a generic failure. A command runner the caller
+    injected in place of the client may only serialize the refusal (exit 75, the detail on
+    stdout or stderr); that is read only when ``injected``, so an unrelated process's exit
+    75 is never taken for the client's refusal.
+    """
+    result = observed if isinstance(observed, Result) else getattr(observed, "github_result", None)
+    if isinstance(result, Result):
+        return GitHubRateLimited(result.reset_at, result.reason) if result.error == "github_rate_limited" else None
+    if not injected or getattr(observed, "returncode", None) != 75:
+        return None
+    for stream in (getattr(observed, "stdout", None), getattr(observed, "stderr", None)):
+        try:
+            detail = json.loads(stream)
+        except (TypeError, ValueError):
+            continue
+        if isinstance(detail, dict) and detail.get("error") == "github_rate_limited":
+            reason = detail.get("reason")
+            return GitHubRateLimited(detail.get("reset_at"), reason if reason in REFUSAL_REASONS else None)
+    return None
+
+
 # --- admission: one decision for every request path ---------------------------------------
 #
 # Holds share the budget table with GitHub's pool observations. GitHub's own Retry-After holds
@@ -211,6 +236,41 @@ def _retry_after_expiry(value, now):
     return int(now + seconds) if math.isfinite(seconds) and seconds >= 0 else None
 
 
+def _budget_headers(headers):
+    """GitHub's ``(remaining, reset)`` from lower-cased response headers, else ``None``."""
+    try:
+        return int(headers["x-ratelimit-remaining"]), int(headers["x-ratelimit-reset"])
+    except (KeyError, TypeError, ValueError):
+        return None
+
+
+def _limit_hold(response, resources, now):
+    """The hold GitHub's limit response asks for: ``(holds, reset, reason)``, else ``None``.
+
+    Every request path that sees GitHub's status and headers decides through this. Its
+    ``Retry-After`` holds every pool of the credential; its reset time after a primary-limit
+    403 or 429 holds that pool (``resources`` when GitHub names none). Any other limit
+    response is this client's inference: a synthetic hold that never refuses landing.
+    """
+    h = {key.lower(): value for key, value in response.headers.items()}
+    if not (
+        response.status == 429
+        or (
+            response.status == 403
+            and (h.get("x-ratelimit-remaining") == "0" or "retry-after" in h or b"rate limit" in response.body.lower())
+        )
+    ):
+        return None
+    retry = _retry_after_expiry(h.get("retry-after"), now)
+    if retry is not None:
+        return [_AUTHENTIC_HOLD], retry, "retry_after"
+    budget = _budget_headers(h)
+    if budget is not None and budget[0] == 0:
+        named = [h["x-ratelimit-resource"]] if h.get("x-ratelimit-resource") else list(resources)
+        return [f"{_AUTHENTIC_HOLD}:{resource}" for resource in named], budget[1], "retry_after"
+    return [_SYNTHETIC_HOLD], (budget[1] if budget is not None else None) or int(now + 60), "secondary_hold"
+
+
 # --- landing classification -----------------------------------------------------------------
 
 _REPOSITORY_PATH = r"repos/[^/]+/[^/]+/"
@@ -254,13 +314,24 @@ _GRAPHQL_TOKEN = re.compile(
 )
 
 
-def _graphql_root_fields(query):
-    """Operation type and root field names of a one-operation GraphQL document, else ``None``.
+_ROOT_TYPES = {"query": "Query", "mutation": "Mutation", "subscription": "Subscription"}
 
-    Strings, comments and aliases never name a field. Several operations, a fragment
-    spread at the root, or any shape this reader does not model has no answer.
+
+class _GraphQLUnread(ValueError):
+    """A GraphQL document this reader cannot parse or resolve."""
+
+
+def _graphql_root_fields(query, operation_name=None):
+    """Operation type and root field names of the operation a GraphQL request executes, else ``None``.
+
+    Follows the GraphQL specification's executable grammar and operation selection
+    (GetOperation): ``operationName`` picks one of several named operations, and a lone
+    operation needs none. Fragment spreads and inline fragments at the root expand into
+    their fields. Aliases, arguments, variables, directives, strings and comments never
+    name a field. A document this reader cannot parse, an ambiguous or missing operation,
+    an unknown or cyclic fragment, or a fragment on another root type has no answer.
     """
-    if not isinstance(query, str):
+    if not isinstance(query, str) or not (operation_name is None or isinstance(operation_name, str)):
         return None
     tokens, position = [], 0
     while position < len(query):
@@ -270,74 +341,133 @@ def _graphql_root_fields(query):
         position = match.end()
         if match.lastgroup:
             tokens.append((match.lastgroup, match.group()))
+    index = 0
 
-    def at(index, *values):
-        return index < len(tokens) and tokens[index][0] == "punct" and tokens[index][1] in values
+    def at(*values, kind="punct"):
+        return index < len(tokens) and tokens[index][0] == kind and (not values or tokens[index][1] in values)
 
-    def after_group(index, opening, closing):
-        depth = 0
-        for current in range(index, len(tokens)):
-            if at(current, opening):
-                depth += 1
-            elif at(current, closing):
-                depth -= 1
-                if depth == 0:
-                    return current + 1
-        return len(tokens) + 1
-
-    def after_directives(index):
-        while at(index, "@"):
-            index += 2
-            if at(index, "("):
-                index = after_group(index, "(", ")")
-        return index
-
-    operations, index = [], 0
-    while index < len(tokens):
-        kind, value = tokens[index]
-        if kind == "name" and value == "fragment":
-            index = after_directives(index + 4)
-            index = after_group(index, "{", "}") if at(index, "{") else len(tokens) + 1
-            continue
-        operation = "query"
-        if kind == "name" and value in {"query", "mutation", "subscription"}:
-            operation, index = value, index + 1
-            if index < len(tokens) and tokens[index][0] == "name":
-                index += 1
-            if at(index, "("):
-                index = after_group(index, "(", ")")
-            index = after_directives(index)
-        if not at(index, "{"):
-            return None
-        fields, index = [], index + 1
-        while not at(index, "}"):
-            if index >= len(tokens) or tokens[index][0] != "name":
-                return None
-            if at(index + 1, ":"):
-                index += 2
-                if index >= len(tokens) or tokens[index][0] != "name":
-                    return None
-            fields.append(tokens[index][1])
-            index += 1
-            if at(index, "("):
-                index = after_group(index, "(", ")")
-            index = after_directives(index)
-            if at(index, "{"):
-                index = after_group(index, "{", "}")
-        operations.append((operation, fields))
+    def take(*values, kind="punct"):
+        nonlocal index
+        if not at(*values, kind=kind):
+            raise _GraphQLUnread
         index += 1
-    return operations[0] if len(operations) == 1 else None
+        return tokens[index - 1][1]
+
+    def skip(opening, closing):
+        nonlocal index
+        depth = 0
+        while index < len(tokens):
+            kind, value = tokens[index]
+            index += 1
+            if kind == "punct":
+                depth += value == opening
+                depth -= value == closing
+                if depth == 0:
+                    return
+        raise _GraphQLUnread
+
+    def directives():
+        while at("@"):
+            take("@")
+            take(kind="name")
+            if at("("):
+                skip("(", ")")
+
+    def selection_set():
+        take("{")
+        selections = []
+        while not at("}"):
+            if at("..."):
+                take("...")
+                if at(kind="name") and not at("on", kind="name"):
+                    spread = take(kind="name")
+                    directives()
+                    selections.append(("spread", spread))
+                    continue
+                condition = None
+                if at("on", kind="name"):
+                    take("on", kind="name")
+                    condition = take(kind="name")
+                directives()
+                selections.append(("inline", condition, selection_set()))
+                continue
+            field = take(kind="name")
+            if at(":"):
+                take(":")
+                field = take(kind="name")
+            if at("("):
+                skip("(", ")")
+            directives()
+            if at("{"):
+                skip("{", "}")
+            selections.append(("field", field))
+        take("}")
+        if not selections:
+            raise _GraphQLUnread
+        return selections
+
+    try:
+        operations, fragments = [], {}
+        while index < len(tokens):
+            if at("fragment", kind="name"):
+                take("fragment", kind="name")
+                name = take(kind="name")
+                take("on", kind="name")
+                condition = take(kind="name")
+                directives()
+                if name == "on" or name in fragments:
+                    raise _GraphQLUnread
+                fragments[name] = (condition, selection_set())
+            elif at("{"):
+                operations.append(("query", None, selection_set()))
+            else:
+                operation = take(*_ROOT_TYPES, kind="name")
+                name = take(kind="name") if at(kind="name") else None
+                if at("("):
+                    skip("(", ")")
+                directives()
+                operations.append((operation, name, selection_set()))
+        names = [name for _, name, _ in operations]
+        if len(operations) > 1 and (None in names or len(set(names)) != len(names)):
+            return None
+        selected = [op for op in operations if operation_name is None or op[1] == operation_name]
+        if len(selected) != 1:
+            return None
+        operation, _, selections = selected[0]
+        root, fields = _ROOT_TYPES[operation], []
+
+        def expand(selections, spreading):
+            for selection in selections:
+                if selection[0] == "field":
+                    fields.append(selection[1])
+                elif selection[0] == "inline":
+                    if selection[1] not in (None, root):
+                        raise _GraphQLUnread
+                    expand(selection[2], spreading)
+                else:
+                    name = selection[1]
+                    if name in spreading or name not in fragments or fragments[name][0] != root:
+                        raise _GraphQLUnread
+                    expand(fragments[name][1], spreading | {name})
+
+        expand(selections, frozenset())
+    except (_GraphQLUnread, RecursionError):
+        return None
+    return operation, fields
 
 
 def _request_class(method, path, document=None):
     """``"landing"`` for a write that lands a PR, ``"exempt"`` for a budget or credential call.
 
-    Only the request's own shape counts; anything else is ``None``. A GraphQL document is
-    landing only when every root field of its one mutation is a landing mutation.
+    Only the request's own shape counts; anything else is ``None``. A GraphQL request is
+    landing only when every root field of the operation it executes is a landing mutation.
     """
     if path == "graphql":
-        query = document.get("query") if method == "POST" and isinstance(document, dict) else None
-        shape = _graphql_root_fields(query)
+        shape = (
+            _graphql_root_fields(document.get("query"), document.get("operationName"))
+            if method == "POST" and isinstance(document, dict)
+            else None
+        )
         landing = shape is not None and shape[0] == "mutation" and shape[1] and set(shape[1]) <= _LANDING_MUTATIONS
         return "landing" if landing else None
     return next(
@@ -733,8 +863,18 @@ class GitHubClient:
             else None
         )
         graphql = resource_path == "graphql"
-        document = json.loads(raw) if graphql and isinstance(payload, bytes) else payload
-        read = method == "GET" or (graphql and document and not re.search(r"\bmutation\b", document.get("query", "")))
+        document = payload
+        if graphql and isinstance(payload, bytes):
+            try:
+                document = json.loads(payload)
+            except ValueError:
+                document = None
+        read = method == "GET" or (
+            graphql
+            and isinstance(document, dict)
+            and document
+            and not re.search(r"\bmutation\b", str(document.get("query", "")))
+        )
         resource = _endpoint_bucket(resource_path)
         key = hashlib.sha256(
             (
@@ -796,30 +936,15 @@ class GitHubClient:
         for persist_attempt in range(2):
             try:
                 with self._db() as db:
-                    if "x-ratelimit-remaining" in h and "x-ratelimit-reset" in h:
-                        with suppress(ValueError):
-                            remaining, reset = int(h["x-ratelimit-remaining"]), int(h["x-ratelimit-reset"])
-                            _store_budget(db, self.scope, h.get("x-ratelimit-resource", resource), remaining, reset)
-                    if response.status == 429 or (
-                        response.status == 403
-                        and (
-                            h.get("x-ratelimit-remaining") == "0"
-                            or "retry-after" in h
-                            or b"rate limit" in response.body.lower()
-                        )
-                    ):
-                        retry = _retry_after_expiry(h.get("retry-after"), now)
-                        if retry is not None:
-                            # GitHub's own Retry-After: an authentic hold on every pool.
-                            reset, hold, reason = retry, _AUTHENTIC_HOLD, "retry_after"
-                        elif h.get("x-ratelimit-remaining") == "0" and reset is not None:
-                            # A primary limit with GitHub's reset time: an authentic hold on that pool.
-                            hold = f"{_AUTHENTIC_HOLD}:{h.get('x-ratelimit-resource', resource)}"
-                            reason = "retry_after"
-                        else:
-                            # This client's own inference: a synthetic hold that never refuses landing.
-                            reset, hold, reason = reset or int(now + 60), _SYNTHETIC_HOLD, "secondary_hold"
-                        _store_budget(db, self.scope, hold, 0, reset)
+                    budget = _budget_headers(h)
+                    if budget is not None:
+                        remaining, reset = budget
+                        _store_budget(db, self.scope, h.get("x-ratelimit-resource", resource), remaining, reset)
+                    limit = _limit_hold(response, (resource,), now)
+                    if limit is not None:
+                        holds, reset, reason = limit
+                        for hold in holds:
+                            _store_budget(db, self.scope, hold, 0, reset)
                         return deferred(reason, reset)
                     if response.status == 304:
                         if not cached:
@@ -2117,8 +2242,33 @@ def _native_buckets(args, host="github.com"):
     return frozenset(buckets)
 
 
-def _native_call_class(args, host="github.com"):
-    """:func:`_request_class` of a native ``gh api`` argv: its method, endpoint and query."""
+def _native_source(source, stdin, cwd):
+    """The bytes ``gh`` reads for an ``--input`` or ``-F key=@`` source, else ``None``.
+
+    ``-`` is the command's standard input. Only a regular file is read, so a device or pipe
+    path can neither block nor consume this process's input.
+    """
+    if source == "-":
+        if isinstance(stdin, str):
+            return stdin.encode()
+        return bytes(stdin) if isinstance(stdin, (bytes, bytearray, memoryview)) else None
+    try:
+        path = Path(source)
+        path = path if path.is_absolute() else Path(cwd or ".") / path
+        if not stat.S_ISREG(path.stat().st_mode):
+            return None
+        return path.read_bytes()
+    except (OSError, ValueError):
+        return None
+
+
+def _native_call_class(args, host="github.com", *, stdin=None, cwd=None):
+    """:func:`_request_class` of a native ``gh api`` argv: its method, endpoint and body.
+
+    The body is what ``gh`` sends: the ``--input`` file or standard input, else the
+    ``-f``/``-F`` fields (``-F key=@file`` reads the file). A body that cannot be read
+    classifies as nothing.
+    """
     if len(args) < 3 or args[1] != "api":
         return None
     options, positional = _options(args[2:])
@@ -2128,13 +2278,27 @@ def _native_call_class(args, host="github.com"):
     )
     if host_class in {"unknown", "rejected"}:
         return None
-    fields = {
-        key: value
-        for flag in ("-f", "--raw-field", "-F", "--field")
-        for key, _, value in (str(entry).partition("=") for entry in options.get(flag, []))
-    }
+    fields = {}
+    for flag in ("-f", "--raw-field", "-F", "--field"):
+        for key, _, value in (str(entry).partition("=") for entry in options.get(flag, [])):
+            if flag in {"-F", "--field"} and value.startswith("@"):
+                content = _native_source(value[1:], stdin, cwd)
+                try:
+                    value = content.decode() if content is not None else None
+                except UnicodeDecodeError:
+                    value = None
+            fields[key] = value
     method = _opt(options, "--method", "-X", default="POST" if fields or "--input" in options else "GET")
-    return _request_class(str(method).upper(), path, {"query": fields.get("query")})
+    if "--input" in options:
+        # With --input, gh sends that body; the fields become query parameters.
+        content = _native_source(str(_opt(options, "--input")), stdin, cwd)
+        try:
+            document = json.loads(content) if content is not None else None
+        except ValueError:
+            document = None
+    else:
+        document = {"query": fields.get("query"), "operationName": fields.get("operationName")}
+    return _request_class(str(method).upper(), path, document)
 
 
 def _argv_landing_flow(args):
@@ -2151,10 +2315,31 @@ def _argv_landing_flow(args):
     return "ci-status" if command == ("pr", "checks") or rollup else None
 
 
+def _native_response(args, output):
+    """GitHub's last response as ``gh api --include`` printed it on stdout, else ``None``.
+
+    With ``--include`` gh prints each response's status line and headers before its body,
+    on success and on HTTP errors alike; ``--paginate`` repeats that per page and stops at
+    the failing one. Without the flag, stdout is the body alone and is never read as headers.
+    """
+    if len(args) < 3 or args[1] != "api" or not {"-i", "--include"} & set(_options(args[2:])[0]):
+        return None
+    raw = ANSI.sub(b"", output.encode() if isinstance(output, str) else output)
+    starts = [match.start() for match in re.finditer(rb"(?m)^HTTP/\S+ \d{3}", raw)]
+    if not raw.startswith(b"HTTP/") or not starts:
+        return None
+    try:
+        return parse_http(raw[starts[-1] :])
+    except (RuntimeError, ValueError):
+        return None
+
+
 def _native_command(args, client, runner, kwargs):
     """Fall through once using the bounded, colour-safe native transport."""
     pools = sorted(_native_buckets(args, client.host) - {_SYNTHETIC_HOLD})
-    call_class = _native_call_class(args, client.host) or ("landing" if _landing_flow() else None)
+    call_class = _native_call_class(args, client.host, stdin=kwargs.get("input"), cwd=client.cwd) or (
+        "landing" if _landing_flow() else None
+    )
     with client._db() as db:
         refusal = _admission(db, client.scope, pools, call_class, client.clock())
     if refusal is not None:
@@ -2187,12 +2372,26 @@ def _native_command(args, client, runner, kwargs):
         native = (executor or _transport_process)([executable, *args[1:]], **call)
     output, error = native.stdout or b"", native.stderr or b""
     raw_error = error.encode() if isinstance(error, str) else error
-    if native.returncode and b"rate limit" in raw_error.lower():
-        # gh's stderr carries no Retry-After: a synthetic hold, never binding on landing.
-        reset = int(client.clock() + 60)
-        with client._db() as db:
-            _store_budget(db, client.scope, _SYNTHETIC_HOLD, 0, reset)
-        return _result_process(args, _limited("secondary_hold", reset), {}, kwargs)
+    if native.returncode:
+        now = client.clock()
+        response = _native_response(args, output)
+        if response is not None:
+            # gh api --include printed GitHub's own status and headers: decide as request() does.
+            limit = _limit_hold(response, pools, now)
+        elif b"rate limit" in raw_error.lower():
+            # gh's stderr carries no Retry-After: a synthetic hold, never binding on landing.
+            limit = [_SYNTHETIC_HOLD], int(now + 60), "secondary_hold"
+        else:
+            limit = None
+        if limit is not None:
+            holds, reset, reason = limit
+            budget = _budget_headers(response.headers) if response is not None else None
+            with client._db() as db:
+                if budget is not None and response.headers.get("x-ratelimit-resource"):
+                    _store_budget(db, client.scope, response.headers["x-ratelimit-resource"], *budget)
+                for hold in holds:
+                    _store_budget(db, client.scope, hold, 0, reset)
+            return _result_process(args, _limited(reason, reset), {}, kwargs)
     if client.max_response_bytes is not None and len(output) > client.max_response_bytes:
         return _result_process(args, Result(error="github_response_too_large"), {}, kwargs)
     text = kwargs.get("text") or kwargs.get("universal_newlines") or kwargs.get("encoding")
@@ -2415,11 +2614,14 @@ def http_open(request, *, timeout=30, opener=None, **kwargs):
             return Response(response.status, dict(response.headers.items()), response.read())
 
     client.transport = transport
+    # The opener sends ``request`` itself; its body is passed only so admission classifies
+    # the real request. A streamed body cannot be read without consuming it, so it is None.
+    body = request.data
     # POST/DELETE token endpoints contain sensitive responses and have no read cache.
     result = client.request(
         method,
         request.full_url,
-        payload=None,
+        payload=bytes(body) if isinstance(body, (bytes, bytearray, memoryview)) else None,
         timeout=timeout,
         fresh=True,
         raw_response=True,
@@ -2492,8 +2694,9 @@ def _rest_read(operation, repo, fields, *, runner=None, env=None, cwd=None, **kw
                     detail = json.loads(proc.stdout)
                     if detail.get("error") == "github_http_error" and detail.get("status") == 404:
                         return None
-            if getattr(proc, "github_result", None) and proc.github_result.error == "github_rate_limited":
-                raise GitHubRateLimited(proc.github_result.reset_at, proc.github_result.reason)
+            refusal = refusal_of(proc, injected=runner is not None)
+            if refusal is not None:
+                raise refusal
             raise RuntimeError("GitHub REST read failed")
         return json.loads(proc.stdout)
 
