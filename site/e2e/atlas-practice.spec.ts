@@ -12,20 +12,28 @@ function trackConsoleErrors(page: Page): string[] {
 }
 
 /**
- * Opus P0-1 folded Drive sync + deck filter behind a `<details>` disclosure
- * (`data-testid="practice-secondary-tools"`), below the mode grid. Deck chips,
- * the "Manage Decks" action, and the switch-session-offer it can surface all
- * live inside that fold — open it before touching any of them. Idempotent: a
- * caller can invoke it repeatedly across deck switches within one test.
+ * Drive sync + deck filter live in the Settings drawer (`practice-settings-drawer`,
+ * opened by the visible `practice-settings-toggle`); its `practice-secondary-tools`
+ * `<details>` is only visible and interactive while the drawer is open. Deck chips and
+ * the "Manage Decks" action live inside it — open it before touching either.
+ * Idempotent: a caller can invoke it repeatedly within one test.
  */
 async function openSecondaryTools(page: Page): Promise<void> {
-  const panel = page.getByTestId('practice-secondary-tools');
-  await expect(panel).toBeVisible();
-  const open = await panel.getAttribute('open');
-  if (open === null) {
-    await panel.locator('summary').click();
+  const drawer = page.getByTestId('practice-settings-drawer');
+  if (!(await drawer.isVisible())) {
+    await page.getByTestId('practice-settings-toggle').click();
   }
-  await expect(panel).toHaveAttribute('open', '');
+  await expect(drawer).toBeVisible();
+  await expect(drawer).not.toHaveAttribute('inert');
+  await expect(page.getByTestId('practice-secondary-tools')).toHaveAttribute('open', '');
+}
+
+/** Pick a deck chip inside the Settings drawer, then close it so its backdrop stops intercepting the dashboard. */
+async function selectDeckInSettings(page: Page, name: RegExp): Promise<void> {
+  await openSecondaryTools(page);
+  await page.getByTestId('practice-secondary-tools').getByRole('button', { name }).click();
+  await page.getByTestId('settings-drawer-close').click();
+  await expect(page.getByTestId('practice-settings-drawer')).toBeHidden();
 }
 
 test('browse supports search, category, and letter entry points without dumping all cards', async ({ page }) => {
@@ -150,6 +158,8 @@ test('practice page shows UA fallback when LexiconPractice island chunk fails to
   // (importWithRetry). A glob ending in `.js` misses that retry URL and the island
   // hydrates successfully — match on the LexiconPractice stem with or without query.
   await page.route(/LexiconPractice[^/]*\.js(?:\?|$)/, (route) => route.abort());
+  // The fallback is chrome text: pin the Ukrainian locale it must render in.
+  await page.addInitScript(() => window.localStorage.setItem('lu-chrome-locale', 'uk'));
 
   await page.goto('/practice/');
 
@@ -280,8 +290,10 @@ test('A4d: active-deck chip is visible above the fold without opening Sync & dec
   await expect(chip).toBeVisible();
   await expect(page.getByTestId('practice-active-deck-chip')).toContainText(/All Words|Всі слова/);
 
+  // The Settings drawer (and its secondary tools) is closed and inert until the learner opens it.
   const secondary = page.getByTestId('practice-secondary-tools');
-  await expect(secondary).toBeVisible();
+  await expect(page.getByTestId('practice-settings-drawer')).toHaveAttribute('inert', '');
+  await expect(secondary).toBeHidden();
   await expect(secondary).not.toHaveAttribute('open');
 
   const box = await chip.boundingBox();
@@ -317,12 +329,14 @@ test('Stress mode and ZNO decks remain available after choosing A2', async ({ pa
   await context.clearCookies();
   await page.goto('/practice/');
 
-  await page.getByRole('button', { name: 'A2' }).click();
+  await page.getByTestId('practice-dashboard-hero').getByRole('button', { name: 'A2', exact: true }).click();
   await expect(page.locator('button[data-mode="stress"]')).toBeVisible();
   // ZNO deck count tracks ZNO_PRACTICE_DECK_META (site/src/components/ZnoPractice.tsx);
   // update both counts together when decks are added/removed.
   await expect(page.locator('button[data-zno-deck="true"]')).toHaveCount(9);
-  await expect(page.locator('button[data-mode]')).toHaveCount(20);
+  // 20 vocab/grammar/ZNO mode cards, plus the later-added (#7961) culture error-correction card.
+  await expect(page.locator('button[data-mode]:not([data-mode="culture-error-correction"])')).toHaveCount(20);
+  await expect(page.locator('button[data-mode="culture-error-correction"]')).toBeVisible();
   await page.locator('button[data-mode="zno-orthography"]').click();
   await expect(page.getByTestId('practice-zno-session')).toBeVisible();
   await expect(page.getByTestId('zno-practice-item')).toBeVisible();
@@ -600,7 +614,7 @@ test('A5: switching level with a session in progress offers a fresh session; acc
   // #6544: the switch-session offer lives above the fold next to the active-deck chip
   // (no longer buried inside practice-secondary-tools).
 
-  await page.getByRole('button', { name: 'A2' }).click();
+  await page.getByTestId('practice-dashboard-hero').getByRole('button', { name: 'A2', exact: true }).click();
 
   const offer = page.getByTestId('practice-switch-session-offer');
   await expect(offer).toBeVisible();
@@ -640,7 +654,8 @@ test('A5c: choosing a deck from the custom-deck manager while a session is activ
   await openSecondaryTools(page);
 
   await page.getByRole('button', { name: /Manage Decks|Менеджер колод/ }).click();
-  await page.getByRole('button', { name: /Practice|Практика/ }).first().click();
+  // The manager is a modal dialog (it suspends the Settings drawer); its Practice action is the only one in scope.
+  await page.getByRole('dialog').getByRole('button', { name: /Practice|Практика/ }).click();
 
   // The custom-deck manager's own "Practice" action must route through the SAME guarded
   // switch flow as the level/deck chips — it must not silently swap the active deck out
@@ -760,8 +775,7 @@ test('A6b: dashboard session estimate narrows to the selected custom deck before
   // Before selecting the custom deck, the estimate reports the full-level soft-CEFR scope.
   await expect(estimate).toContainText('8 нових');
 
-  await openSecondaryTools(page);
-  await page.getByRole('button', { name: /E2E Scope Deck/ }).click();
+  await selectDeckInSettings(page, /E2E Scope Deck/);
 
   // F1-F3 (PR #5837) scoped the two SESSION-start paths to the chosen deck via
   // filterIndexByDeckFilter; the dashboard estimate — visible before a session even
@@ -871,9 +885,8 @@ test('A8a: an Atlas-only custom-deck key gets its gloss and route while a true o
   }, [catDeck, orphanDeck] as const);
 
   await page.goto('/practice/');
-  await openSecondaryTools(page);
 
-  await page.getByRole('button', { name: /E2E D10 Cat Deck/ }).click();
+  await selectDeckInSettings(page, /E2E D10 Cat Deck/);
   await expect(page.getByTestId('practice-daily-deck-title')).toContainText('E2E D10 Cat Deck');
   const catCard = page.locator('.daily-preview-card');
   await expect(catCard).toContainText('кіт');
@@ -885,12 +898,12 @@ test('A8a: an Atlas-only custom-deck key gets its gloss and route while a true o
   await expect(catCard).toContainText('cat');
   await expect(catCard).not.toContainText('noun');
 
-  await page.getByRole('button', { name: /E2E D10 Orphan Deck/ }).click();
+  await selectDeckInSettings(page, /E2E D10 Orphan Deck/);
   await expect(page.getByTestId('practice-daily-deck-title')).toContainText('E2E D10 Orphan Deck');
   await expect(page.locator('.daily-preview-card')).toContainText('вигаданий термін');
   await expect(page.getByTestId('practice-preview-atlas-link')).toHaveCount(0);
 
-  await page.getByRole('button', { name: /E2E D10 Cat Deck/ }).click();
+  await selectDeckInSettings(page, /E2E D10 Cat Deck/);
   // The daily card is only the preview path. Start a real flashcard session
   // and reveal its back so the deck's committed lexeme, not preview state,
   // proves the Atlas shard enrichment reached `cardData()`.
@@ -938,15 +951,14 @@ test('A8: two different custom decks show different daily-zone sets, each drawn 
   );
 
   await page.goto('/practice/');
-  await openSecondaryTools(page);
 
-  await page.getByRole('button', { name: /E2E D10 Alpha Deck/ }).click();
+  await selectDeckInSettings(page, /E2E D10 Alpha Deck/);
   await expect(page.getByTestId('practice-daily-deck-title')).toContainText('E2E D10 Alpha Deck');
   const alphaWords = await readDailyDeckWords(page);
   // Both fixture decks have fewer than 12 words — the zone shows all of them (D10 edge case).
   expect(new Set(alphaWords)).toEqual(new Set(deckAlpha.lemma_keys));
 
-  await page.getByRole('button', { name: /E2E D10 Beta Deck/ }).click();
+  await selectDeckInSettings(page, /E2E D10 Beta Deck/);
   await expect(page.getByTestId('practice-daily-deck-title')).toContainText('E2E D10 Beta Deck');
   const betaWords = await readDailyDeckWords(page);
   expect(new Set(betaWords)).toEqual(new Set(deckBeta.lemma_keys));
@@ -965,8 +977,7 @@ test('A9a: a deck-scoped daily set is stable within a day and rotates across day
   async function selectDeckAndReadWords(clockTime: string): Promise<string[]> {
     await page.clock.setFixedTime(new Date(clockTime));
     await page.goto('/practice/');
-    await openSecondaryTools(page);
-    await page.getByRole('button', { name: /E2E D10 Rotation Deck/ }).click();
+    await selectDeckInSettings(page, /E2E D10 Rotation Deck/);
     await expect(page.getByTestId('practice-daily-deck-title')).toContainText('E2E D10 Rotation Deck');
     return readDailyDeckWords(page);
   }
