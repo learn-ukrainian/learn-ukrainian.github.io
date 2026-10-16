@@ -359,7 +359,7 @@ function loadResearch() {
         <td>${count(t.has_research)} (${count(t.pct_coverage)}%)</td>
         <td>${qualityBar(t.quality, t.has_research)}</td>
         <td class="score-cell ${scoreClass(t.avg_score)}">${scoreStr(t.avg_score)}</td>
-        <td style="color:${t.needs_upgrade > 0 ? 'var(--red)' : 'var(--text3)'}">${count(t.needs_upgrade)}</td>
+        <td style="color:${numeric(t.needs_upgrade) && t.needs_upgrade > 0 ? 'var(--red)' : 'var(--text3)'}">${count(t.needs_upgrade)}</td>
       </tr>`).join('');
 
     document.getElementById('research-content').innerHTML = `
@@ -387,7 +387,8 @@ function loadReviews() {
     const tracks = Object.entries(data.tracks).filter(([, v]) => v.total_built > 0);
 
     const rows = tracks.map(([id, t]) => {
-      const passRateStr = numeric(t.pass_rate) && t.pass_rate <= 1 ? `${Math.round(t.pass_rate * 100)}%` : '—';
+      const passRate = numeric(t.pass_rate) && t.pass_rate <= 1 ? t.pass_rate : null;
+      const passRateStr = passRate !== null ? `${Math.round(passRate * 100)}%` : '—';
       const highlight = t.has_review === 0 && t.total_built > 0 ? 'style="color:var(--red)"' : '';
       const pr = t.plan_reviewed;
       const pp = t.plan_pass;
@@ -399,12 +400,12 @@ function loadReviews() {
         <td ${highlight}>${count(t.has_review)}</td>
         <td>${count(t.has_final_review)}</td>
         <td class="score-cell ${scoreClass(t.avg_score)}">${scoreStr(t.avg_score)}</td>
-        <td style="color:${t.pass_rate === null ? 'var(--text3)' : t.pass_rate >= 0.9 ? 'var(--green)' : 'var(--red)'}">${passRateStr}</td>
-        <td style="color:${t.total_issues_found > 0 ? 'var(--yellow)' : 'var(--text3)'}">${count(t.total_issues_found)}</td>
+        <td style="color:${passRate === null ? 'var(--text3)' : passRate >= 0.9 ? 'var(--green)' : 'var(--red)'}">${passRateStr}</td>
+        <td style="color:${numeric(t.total_issues_found) && t.total_issues_found > 0 ? 'var(--yellow)' : 'var(--text3)'}">${count(t.total_issues_found)}</td>
         <td>${count(pr)}</td>
-        <td style="color:${pp > 0 ? 'var(--green)' : 'var(--text3)'}">${count(pp)}</td>
-        <td style="color:${pnf > 0 ? 'var(--orange)' : 'var(--text3)'}">${count(pnf)}</td>
-        <td style="color:${pf > 0 ? 'var(--red)' : 'var(--text3)'}">${count(pf)}</td>
+        <td style="color:${numeric(pp) && pp > 0 ? 'var(--green)' : 'var(--text3)'}">${count(pp)}</td>
+        <td style="color:${numeric(pnf) && pnf > 0 ? 'var(--orange)' : 'var(--text3)'}">${count(pnf)}</td>
+        <td style="color:${numeric(pf) && pf > 0 ? 'var(--red)' : 'var(--text3)'}">${count(pf)}</td>
       </tr>`;
     }).join('');
 
@@ -559,13 +560,14 @@ function filterWeak() {
     const rsStr = scoreStr(m.research_score);
     const rsCls = scoreClass(m.research_score);
     const wordCount = numeric(m.word_count) ? m.word_count : null;
-    const wordsStr = m.word_target > 0 ? `${count(wordCount)}/${count(m.word_target)}` : count(wordCount);
+    const wordTarget = numeric(m.word_target) ? m.word_target : null;
+    const wordsStr = wordTarget > 0 ? `${count(wordCount)}/${count(wordTarget)}` : count(wordCount);
     return `<tr>
       <td style="font-weight:600">${escapeHtml(m.track)}</td>
       <td style="color:var(--text2)">${escapeHtml(m.num)}</td>
       <td>${escapeHtml(m.slug)}</td>
       <td><span class="score-cell ${rsCls}">${escapeHtml(rsStr)}</span></td>
-      <td style="color:${wordCount < m.word_target * 0.8 && m.word_target > 0 ? 'var(--red)' : 'var(--text2)'}">${escapeHtml(wordsStr)}</td>
+      <td style="color:${wordCount !== null && wordTarget > 0 && wordCount < wordTarget * 0.8 ? 'var(--red)' : 'var(--text2)'}">${escapeHtml(wordsStr)}</td>
       <td>${tags}</td>
     </tr>`;
   }).join('');

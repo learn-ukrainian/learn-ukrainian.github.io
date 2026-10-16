@@ -330,7 +330,7 @@ function loadTrackDetail(trackId) {
     container.querySelectorAll('.module-select').forEach((button, index) => {
       button.onclick = () => loadModuleDetail(trackId, data.modules[index].slug);
     });
-    if (selectedModule && !data.modules.some(m => m.slug === selectedModule)) clearDetail();
+    if (selectedModule && !data.modules.some(m => m.slug === selectedModule) && !data._partial && !data.meta?.error) clearDetail();
   });
 }
 function metadataCard(title, entries) {

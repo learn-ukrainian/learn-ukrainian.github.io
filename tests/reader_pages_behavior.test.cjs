@@ -43,12 +43,20 @@ const base = {
 before(async () => { browser = await puppeteer.launch({headless:true,args:['--no-sandbox']}); });
 after(async () => {
   await browser.close();
-  for (const [name, {text, covered}] of coverage) {
+  for (const [name, {text, covered, functions}] of coverage) {
     let total=0, used=0;
     for (let i=0;i<text.length;i++) if (/\S/.test(text[i])) {total++; if(covered[i]) used++;}
     const percent=100*used/total;
     console.log(`${name}: browser JS coverage ${percent.toFixed(1)}% (${used}/${total} non-whitespace characters)`);
     assert.ok(percent >= 80, name+' browser script coverage below 80%');
+    const critical=name==='/curriculum-dashboard.html'?['loadTrackDetail']:name==='/quality.html'?['loadResearch','loadReviews','filterWeak']:[];
+    for (const functionName of critical) {
+      const {startOffset,endOffset}=functions.get(functionName);
+      const used=covered.slice(startOffset,endOffset).reduce((sum,value)=>sum+value,0);
+      const percent=100*used/(endOffset-startOffset);
+      console.log(`${name} ${functionName}: V8 function span coverage ${percent.toFixed(1)}% (${used}/${endOffset-startOffset} code units)`);
+      assert.ok(percent>=80,functionName+' executable span coverage below 80%');
+    }
   }
 });
 function deferred() { let resolve; const promise = new Promise(r => {resolve=r;}); return {promise,resolve}; }
@@ -56,7 +64,7 @@ async function open(name, feeds={}) {
   const page = await browser.newPage();
   const errors = [], calls = [];
   page.on('pageerror', e => errors.push(e.message));
-  await page.coverage.startJSCoverage();
+  await page.coverage.startJSCoverage({includeRawScriptCoverage:true});
   await page.setRequestInterception(true);
   page.on('request', async request => {
     const url=new URL(request.url());
@@ -88,9 +96,10 @@ async function finish(ctx) {
   for (const entry of await ctx.page.coverage.stopJSCoverage()) {
     if (!entry.url.startsWith('http://reader.test/')) continue;
     const name=new URL(entry.url).pathname;
-    if (!coverage.has(name)) coverage.set(name,{text:entry.text,covered:new Uint8Array(entry.text.length)});
+    if (!coverage.has(name)) coverage.set(name,{text:entry.text,covered:new Uint8Array(entry.text.length),functions:new Map()});
     const merged=coverage.get(name);
     for (const {start,end} of entry.ranges) merged.covered.fill(1,start,end);
+    for (const fn of entry.rawScriptCoverage.functions) if (fn.functionName) merged.functions.set(fn.functionName,fn.ranges[0]);
   }
   await ctx.page.close();
 }
@@ -330,5 +339,98 @@ test('partial overview/status cannot clear a selected track absent from the inco
     assert.equal(await page.evaluate(()=>selectedTrack),'a1');
     assert.match(await text(page,curriculum?'overview-content-reader-status':'progress-content-reader-status'),/Partial/);
     await finish(ctx);
+  }
+});
+
+test('B3C partial/error track refresh and repeated click preserve selected module detail and Retry', async () => {
+  const ctx=await open('curriculum-dashboard'), {page,feeds}=ctx;
+  await settled(page,'overview-content');
+  await page.evaluate(()=>selectTrack('a1')); await settled(page,'track-detail');
+  await page.click('.module-select'); await settled(page,'right-panel');
+  const original=await page.$eval('#right-panel',n=>n.innerHTML);
+  const generation=await page.evaluate(()=>readerStates.get('right-panel').generation);
+  for (const payload of [
+    {track_id:'a1',modules:[moduleRow('two'),null]},
+    {track_id:'a1',partial:true,modules:[moduleRow('two')]},
+    {track_id:'a1',modules:[moduleRow('two')],meta:{error:'synthetic unavailable'}},
+  ]) {
+    feeds['/api/dashboard/track/a1']=payload;
+    await page.evaluate(()=>fetchOverview()); await settled(page,'overview-content'); await settled(page,'track-detail');
+    await page.evaluate(()=>selectTrack('a1')); await settled(page,'track-detail');
+    assert.equal(await page.evaluate(()=>selectedModule),'one');
+    assert.equal(await page.$eval('#right-panel',n=>n.innerHTML),original);
+    assert.equal(await page.evaluate(()=>readerStates.get('right-panel').generation),generation);
+    assert.equal(await page.$$eval('#right-panel-reader-status button',n=>n.length),1);
+    assert.match(await text(page,'track-detail-reader-status'),/Partial|Source unavailable/);
+  }
+  await page.click('#right-panel-reader-status button'); await settled(page,'right-panel');
+  assert.equal(await page.$eval('#right-panel h2',n=>n.textContent),'one');
+  const slow=deferred(); feeds['/api/dashboard/track/a1']=()=>slow.promise;
+  await page.evaluate(()=>{loadTrackDetail('a1');});
+  await page.evaluate(()=>selectTrack('a2')); await settled(page,'track-detail');
+  slow.resolve({track_id:'a1',modules:[]}); await page.waitForNetworkIdle({idleTime:50});
+  assert.equal(await page.evaluate(()=>selectedTrack),'a2');
+  assert.match(await text(page,'track-detail'),/second-track/);
+  feeds['/api/dashboard/track/a1']=base['/api/dashboard/track/a1'];
+  await page.evaluate(()=>selectTrack('a1')); await settled(page,'track-detail');
+  await page.evaluate(()=>loadModuleDetail('a1','one')); await settled(page,'right-panel');
+  feeds['/api/dashboard/track/a1']={track_id:'a1',modules:[moduleRow('two')]};
+  await page.evaluate(()=>loadTrackDetail('a1')); await settled(page,'track-detail');
+  assert.equal(await page.evaluate(()=>selectedModule),null);
+  assert.equal(await page.$$eval('#right-panel-reader-status',n=>n.length),0);
+  await page.evaluate(()=>loadModuleDetail('a1','two')); await settled(page,'right-panel');
+  const detail=deferred(); feeds['/api/dashboard/module/a1/two']=()=>detail.promise;
+  await page.evaluate(()=>{loadModuleDetail('a1','two');clearDetail();});
+  detail.resolve(moduleDetail('two')); await page.waitForNetworkIdle({idleTime:50});
+  assert.equal(await page.evaluate(()=>selectedModule),null);
+  assert.match(await text(page,'right-panel'),/Select a module/);
+  await finish(ctx);
+});
+
+test('B3C quality text and color agree for absent, invalid, zero and measured metrics', async () => {
+  const ctx=await open('quality'), {page,feeds}=ctx;
+  await settled(page,'reviews-content'); await settled(page,'weak-content');
+  const values=[undefined,null,'0.95',false,-1,5,0,0.5,0.9,1];
+  feeds['/api/state/review-coverage']={tracks:Object.fromEntries(values.map((value,i)=>['case'+i,{total_built:1,pass_rate:value}]))};
+  await page.evaluate(()=>loadReviews()); await settled(page,'reviews-content');
+  assert.deepEqual(await page.$$eval('#reviews-content tbody tr',rows=>rows.map(r=>({text:r.cells[5].textContent,color:r.cells[5].style.color}))),[
+    ...Array.from({length:6},()=>({text:'—',color:'var(--text3)'})),
+    {text:'0%',color:'var(--red)'},{text:'50%',color:'var(--red)'},
+    {text:'90%',color:'var(--green)'},{text:'100%',color:'var(--green)'},
+  ]);
+  const counts=[undefined,null,'10',false,-1,0,10,16,20];
+  feeds['/api/state/weak-points']={modules:counts.map((value,i)=>({...weak('a1','case'+i),word_count:value}))};
+  await page.evaluate(()=>loadWeak()); await settled(page,'weak-content');
+  assert.deepEqual(await page.$$eval('#weak-results tbody tr',rows=>rows.map(r=>({text:r.cells[4].textContent,color:r.cells[4].style.color}))),[
+    ...Array.from({length:5},()=>({text:'unknown/20',color:'var(--text2)'})),
+    {text:'0/20',color:'var(--red)'},{text:'10/20',color:'var(--red)'},
+    {text:'16/20',color:'var(--text2)'},{text:'20/20',color:'var(--text2)'},
+  ]);
+  // Count and target fields use the same nonnegative finite contract as their text.
+  feeds['/api/state/weak-points']={modules:[{...weak('a1','bad-target'),word_count:0,word_target:'20'}]};
+  feeds['/api/state/review-coverage']={tracks:{a1:{total_built:1,plan_pass:'1',plan_fail:'1',plan_needs_fixes:'1',total_issues_found:'1'}}};
+  feeds['/api/state/research-coverage']={tracks:{a1:{total_modules:1,needs_upgrade:'1'}}};
+  await page.evaluate(()=>Promise.all([loadWeak(),loadReviews(),loadResearch()]));
+  assert.deepEqual(await page.$$eval('#reviews-content tbody tr td',cells=>[6,8,9,10].map(i=>({text:cells[i].textContent,color:cells[i].style.color}))),Array.from({length:4},()=>({text:'unknown',color:'var(--text3)'})));
+  assert.equal(await page.$eval('#research-content tbody tr td:last-child',n=>n.style.color),'var(--text3)');
+  assert.deepEqual(await page.$eval('#weak-results tbody tr td:nth-child(5)',n=>({text:n.textContent,color:n.style.color})),{text:'0',color:'var(--text2)'});
+  await finish(ctx);
+});
+
+test('B3C direct shipped quality renderer rejects non-finite and coercible word measurements', () => {
+  const vm=require('node:vm');
+  const html=fs.readFileSync(path.join(root,'dashboards/quality.html'),'utf8');
+  const script=html.match(/<script>([\s\S]*?)<\/script>/)[1];
+  const results={innerHTML:''}, filter={value:''};
+  const context=vm.createContext({setInterval:()=>{},document:{getElementById:id=>id==='weak-results'?results:filter}});
+  vm.runInContext(script.slice(0,script.indexOf('// ---- Init ----')),context);
+  for (const value of [undefined,null,'10',false,-1,NaN,Infinity,0,10,16,20]) {
+    context.rows=[{...weak('a1','one'),word_count:value}];
+    vm.runInContext('allWeak=rows;filterWeak()',context);
+    const cell=results.innerHTML.match(/<td style="color:([^\"]+)">([^<]*\/20)<\/td>/);
+    const known=typeof value==='number' && Number.isFinite(value) && value>=0;
+    assert.ok(cell,results.innerHTML);
+    assert.equal(cell[1],known && value<16?'var(--red)':'var(--text2)',String(value));
+    assert.equal(cell[2],known?`${value}/20`:'unknown/20',String(value));
   }
 });
