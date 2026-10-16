@@ -110,16 +110,19 @@ def test_real_delegate_probe_refuses_without_default_substitution(model):
 
 
 @pytest.mark.parametrize("model", [*SLUGS, *LABELS])
-def test_review_route_denies_commands_and_writes_without_effort(tmp_path, monkeypatch, model):
+def test_review_route_denies_commands_and_writes_with_explicit_effort(tmp_path, monkeypatch, model):
     home = tmp_path / "home"
     (home / ".gemini" / "antigravity-cli").mkdir(parents=True)
     register_agy_hooks(tmp_path, home=home)
     monkeypatch.setattr(agy, "_require_background_wait_support", lambda *args: None)
+    monkeypatch.setattr(agy, "_agy_version", lambda _: (1, 2, 9))
+    monkeypatch.setattr(agy, "_agy_effort_choices", lambda _: frozenset({"low", "medium", "high", "xhigh", "max"}))
     monkeypatch.setattr(agy, "_build_log_path", lambda *args: tmp_path / "agy.log")
     plan = build(tmp_path, model, config={"review_profile": "code", "agy_home_override": str(home)})
     assert "--sandbox" in plan.cmd
     assert "--dangerously-skip-permissions" not in plan.cmd
-    assert "--effort" not in plan.cmd
+    assert plan.cmd.count("--effort") == 1
+    assert plan.cmd[plan.cmd.index("--effort") + 1] == "high"
     assert plan.cmd[plan.cmd.index("--model") + 1] == agy.AgyAdapter.resolve_model_slug(model)
     permissions = json.loads((home / ".gemini" / "antigravity-cli" / "settings.json").read_text())["permissions"]
     assert "command(*)" in permissions["deny"]
