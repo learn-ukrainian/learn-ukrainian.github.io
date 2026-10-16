@@ -1004,6 +1004,239 @@ def test_hook_leading_nowhere_from_the_start_is_still_refused_by_the_adapter(pri
     assert not (worktree / "batch_state" / "missing.json").exists()
 
 
+# --- Procfs magic links on the way to the guard (#10748 R1-F1) ---------------
+#
+# A link under /proc names an open file, working directory, root or program,
+# and the kernel jumps to it; its text need not be a path at all (a memfd
+# reads ``/memfd:guard (deleted)``). The adapter and provider read the guard
+# through it, so an unchanged layout settles done, while its bytes, a change
+# to them and a descriptor closed under the snapshot are still observed.
+
+linux_procfs = pytest.mark.skipif(
+    not sys.platform.startswith("linux") or not hasattr(os, "memfd_create"), reason="Linux procfs magic links"
+)
+
+
+@pytest.fixture
+def memfd_guard():
+    """An anonymous file, reachable only through its descriptor, open for the whole test."""
+    fd = os.memfd_create("guard", 0)
+    yield fd
+    os.close(fd)
+
+
+def _memfd_hook_layout(worktree: Path, fd: int) -> tuple[str, bytes]:
+    """The review's reproducer: the installed guard's bytes, behind ``/proc/<pid>/fd/<n>``."""
+    hooks.install_worktree_guard(worktree)
+    hook = worktree / HOOK
+    original = hook.read_bytes()
+    os.write(fd, original)
+    hook.unlink()
+    link = os.path.join(os.sep, "proc", str(os.getpid()), "fd", str(fd))
+    hook.symlink_to(link)
+    assert os.readlink(link) == "/memfd:guard (deleted)"
+    return link, original
+
+
+@linux_procfs
+def test_unchanged_guard_behind_a_memfd_descriptor_link_settles_done(primary, tmp_tasks_dir, fake_agy, memfd_guard):
+    """R1-F1 (#10748, procfs_magic_link): nothing was lost, so nothing may be reported lost."""
+    task_id = "ro-10748-memfd-unchanged"
+    worktree = _dispatch_worktree(primary, task_id)
+    _, original = _memfd_hook_layout(worktree, memfd_guard)
+    compare = f"assert open({HOOK!r}, 'rb').read() == {original!r}\n" + _READ
+
+    rc, state, launches = _launch(worktree, task_id, compare)
+
+    assert len(launches) == 1
+    assert launches[0]["hook_bytes"] == original
+    assert launches[0]["hook_check"] == hooks.HookConfigResult("PASS", "guard_registered")
+    assert state["read_only_checkout_snapshot_error"] is None
+    assert state["read_only_mutation_paths"] == []
+    assert state["status"] == "done"
+    assert rc == 0
+
+
+@linux_procfs
+def test_guard_rewritten_through_a_memfd_descriptor_link_fails(primary, tmp_tasks_dir, fake_agy, memfd_guard):
+    """The bytes behind a magic link stay fingerprinted: a valid-to-valid rewrite is a mutation."""
+    task_id = "ro-10748-memfd-rewrite"
+    worktree = _dispatch_worktree(primary, task_id)
+    link, original = _memfd_hook_layout(worktree, memfd_guard)
+    rewrite = (
+        "import json\n"
+        f"data = json.loads(open({link!r}, 'rb').read())\n"
+        f"open({link!r}, 'w', encoding='utf-8').write(json.dumps(data, indent=5) + '\\n')\n"
+    )
+
+    rc, state, launches = _launch(worktree, task_id, rewrite)
+
+    assert (worktree / HOOK).read_bytes() != original
+    _assert_hook_mutation(rc, state, launches)
+
+
+def _assert_procfs_fingerprint(root: Path, expected: bytes) -> dict:
+    """Acquired, stable, hashing what the kernel reads, and every procfs link followed by the kernel."""
+    import hashlib
+
+    assert (root / HOOK).read_bytes() == expected
+    fingerprint, error = delegate._read_only_agy_hook_fingerprint(root)
+    assert error is None
+    assert fingerprint["sha256"] == hashlib.sha256(expected).hexdigest()
+    procfs = os.lstat("/proc/self").st_dev
+    procfs_links = [link for link in fingerprint["links"] if os.lstat(link["path"]).st_dev == procfs]
+    assert procfs_links
+    for link in fingerprint["links"]:
+        assert ("target" in link) == (link in procfs_links)
+    assert delegate._read_only_agy_hook_fingerprint(root) == (fingerprint, None)
+    return fingerprint
+
+
+@linux_procfs
+def test_hook_behind_a_self_descriptor_link_is_acquired_and_its_loss_fails_closed(tmp_path):
+    """``/proc/self/fd/<n>`` to a memfd; once the descriptor closes, the observed link cannot be followed."""
+    import stat
+
+    (tmp_path / ".agents").mkdir()
+    fd = os.memfd_create("guard", 0)
+    try:
+        os.write(fd, _GUARD_BYTES)
+        (tmp_path / HOOK).symlink_to(f"/proc/self/fd/{fd}")
+        fingerprint = _assert_procfs_fingerprint(tmp_path, _GUARD_BYTES)
+        assert fingerprint["target"] == {"path": f"/proc/self/fd/{fd}", "file_type": stat.S_IFREG}
+    finally:
+        os.close(fd)
+    assert delegate._read_only_agy_hook_fingerprint(tmp_path) == (
+        None,
+        f"agy hook snapshot failed: {HOOK}: FileNotFoundError",
+    )
+
+
+@linux_procfs
+def test_descriptor_swapped_for_a_fifo_after_the_walk_is_never_opened_for_reading(tmp_path, monkeypatch):
+    """The read binds to the walked inode: a FIFO dup'ed onto the descriptor is a change, not a read."""
+    (tmp_path / ".agents").mkdir()
+    os.mkfifo(tmp_path / "fifo")
+    fifo = os.open(tmp_path / "fifo", os.O_RDONLY | os.O_NONBLOCK)
+    fd = os.memfd_create("guard", 0)
+    os.write(fd, _GUARD_BYTES)
+    (tmp_path / HOOK).symlink_to(f"/proc/self/fd/{fd}")
+    original_digest, original_open = delegate._read_only_agy_hook_digest, os.open
+    reads: list[str] = []
+
+    def swap_then_digest(identity, inode):
+        os.dup2(fifo, fd)
+        return original_digest(identity, inode)
+
+    def spy(path, flags, *args, **kwargs):
+        if not flags & os.O_PATH:
+            reads.append(os.fspath(path))
+        return original_open(path, flags, *args, **kwargs)
+
+    monkeypatch.setattr(delegate, "_read_only_agy_hook_digest", swap_then_digest)
+    monkeypatch.setattr(os, "open", spy)
+    try:
+        assert delegate._read_only_agy_hook_fingerprint(tmp_path) == (
+            None,
+            f"agy hook snapshot failed: {HOOK}: changed during snapshot",
+        )
+    finally:
+        os.close(fd)
+        os.close(fifo)
+    assert reads == []
+
+
+@linux_procfs
+def test_hook_behind_a_descriptor_of_a_deleted_file_is_acquired(tmp_path):
+    """The link text names a path that no longer exists, ``... (deleted)``; the open file is still the guard."""
+    (tmp_path / ".agents").mkdir()
+    deleted = tmp_path / "deleted-hooks.json"
+    deleted.write_bytes(_GUARD_BYTES)
+    fd = os.open(deleted, os.O_RDONLY)
+    try:
+        deleted.unlink()
+        (tmp_path / "deleted-hooks.json (deleted)").write_bytes(b"{}\n")  # What walking the text would read.
+        (tmp_path / HOOK).symlink_to(f"/proc/self/fd/{fd}")
+        assert os.readlink(f"/proc/self/fd/{fd}") == f"{deleted} (deleted)"
+        _assert_procfs_fingerprint(tmp_path, _GUARD_BYTES)
+    finally:
+        os.close(fd)
+
+
+@linux_procfs
+@pytest.mark.parametrize("entry", ["cwd", "root"])
+def test_guard_directory_reached_through_a_process_cwd_or_root_link_is_acquired(tmp_path, entry):
+    """``.agents`` -> ``/proc/<pid>/cwd`` or ``/proc/<pid>/root/...``: the rest of the path resolves through it."""
+    tmp_path = tmp_path.resolve()
+    guard = tmp_path / "guard"
+    guard.mkdir()
+    (guard / "hooks.json").write_bytes(_GUARD_BYTES)
+    process = subprocess.Popen([sys.executable, "-c", "import time; time.sleep(60)"], cwd=guard)
+    try:
+        link = f"/proc/{process.pid}/cwd" if entry == "cwd" else f"/proc/{process.pid}/root{guard}"
+        (tmp_path / ".agents").symlink_to(link)
+        fingerprint = _assert_procfs_fingerprint(tmp_path, _GUARD_BYTES)
+    finally:
+        process.kill()
+        process.wait()
+    assert (
+        fingerprint["target"]["path"]
+        == f"/proc/{process.pid}/{entry}" + ("" if entry == "cwd" else str(guard)) + "/hooks.json"
+    )
+
+
+@linux_procfs
+def test_hook_behind_the_program_link_of_a_process_whose_binary_was_deleted_is_acquired(tmp_path):
+    """``/proc/<pid>/exe`` keeps naming the running program after its file is removed."""
+    import shutil
+
+    sleep = shutil.which("sleep")
+    if sleep is None:
+        pytest.skip("no sleep program to copy")
+    program = tmp_path / "sleep"  # A multi-call coreutils binary picks its program by name.
+    shutil.copy2(sleep, program)
+    expected = program.read_bytes()
+    process = subprocess.Popen([str(program), "60"])
+    try:
+        program.unlink()
+        (tmp_path / ".agents").mkdir()
+        (tmp_path / HOOK).symlink_to(f"/proc/{process.pid}/exe")
+        assert os.readlink(f"/proc/{process.pid}/exe").endswith(" (deleted)")
+        _assert_procfs_fingerprint(tmp_path, expected)
+    finally:
+        process.kill()
+        process.wait()
+
+
+@linux_procfs
+def test_ordinary_chain_through_procfs_links_in_the_middle_is_acquired(tmp_path):
+    """A directory descriptor, ``..`` out of it and an ordinary link back to a memfd, all on one path."""
+    tmp_path = tmp_path.resolve()
+    guard = tmp_path / "guard"
+    (guard / "sub").mkdir(parents=True)
+    directory_fd = os.open(guard / "sub", os.O_RDONLY | os.O_DIRECTORY)
+    memfd = os.memfd_create("guard", 0)
+    try:
+        os.write(memfd, _GUARD_BYTES)
+        (guard / "alias.json").symlink_to(f"/proc/self/fd/{memfd}")
+        (guard / "hooks.json").symlink_to("alias.json")
+        (tmp_path / ".agents").symlink_to(f"/proc/self/fd/{directory_fd}/..")
+        fingerprint = _assert_procfs_fingerprint(tmp_path, _GUARD_BYTES)
+        assert [link["link_text"] for link in fingerprint["links"]] == [
+            f"/proc/self/fd/{directory_fd}/..",
+            str(os.getpid()),
+            str(guard / "sub"),
+            "alias.json",
+            f"/proc/self/fd/{memfd}",
+            str(os.getpid()),
+            "/memfd:guard (deleted)",
+        ]
+        assert fingerprint["target"]["path"] == f"/proc/self/fd/{memfd}"
+    finally:
+        os.close(directory_fd)
+        os.close(memfd)
+
+
 # --- Agent scope of the hook acquisition (#10727 review F3) ------------------
 #
 # Only AGY executes the workspace guard, so only an AGY read-only worker
