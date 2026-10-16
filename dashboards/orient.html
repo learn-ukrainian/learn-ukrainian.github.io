@@ -184,6 +184,16 @@ function escapeHtml(value) {
   }[ch]));
 }
 
+function finiteCounter(value) {
+  return typeof value === 'number' && Number.isFinite(value) && value >= 0 ? value : 'unknown';
+}
+
+function progressStyle(value) {
+  return typeof value === 'number' && Number.isFinite(value)
+    ? `width:${Math.max(0, Math.min(100, value))}%;background:${value >= 80 ? 'var(--green)' : value >= 50 ? 'var(--yellow)' : 'var(--red)'}`
+    : 'width:0%;background:var(--gray)';
+}
+
 function formatTimestamp(value) {
   if (!value) return '—';
   const date = new Date(value);
@@ -191,12 +201,12 @@ function formatTimestamp(value) {
 }
 
 function formatAgeDays(days) {
-  if (typeof days !== 'number') return '—';
+  if (finiteCounter(days) === 'unknown') return '—';
   return days === 0 ? '0d' : `${days}d`;
 }
 
 function formatAgeHours(hours) {
-  if (typeof hours !== 'number') return '—';
+  if (finiteCounter(hours) === 'unknown') return '—';
   if (hours < 1) return `${Math.round(hours * 60)}m`;
   return `${hours.toFixed(1)}h`;
 }
@@ -243,7 +253,7 @@ function renderGit(git) {
     <div class="kv-grid">
       <div class="kv"><div class="label">Branch</div><div class="value mono">${escapeHtml(git.branch || '—')}</div></div>
       <div class="kv"><div class="label">HEAD</div><div class="value mono">${escapeHtml(git.head || '—')}</div></div>
-      <div class="kv"><div class="label">Ahead</div><div class="value">${git.ahead_of_origin || 0}</div></div>
+      <div class="kv"><div class="label">Ahead</div><div class="value">${finiteCounter(git.ahead_of_origin)}</div></div>
     </div>
     ${commits.length ? `<ul class="list">${commits.map(commit => `<li class="mono"><strong>${escapeHtml(commit.sha || '—')}</strong> ${escapeHtml(truncate(commit.subject || '', 80))}</li>`).join('')}</ul>` : '<div class="empty">No recent commits</div>'}
   `;
@@ -270,22 +280,24 @@ function renderIssues(issues) {
 function renderPipeline(pipeline) {
   const tracks = Object.entries((pipeline && pipeline.summary && pipeline.summary.tracks) || {});
   const totals = pipeline && pipeline.summary && pipeline.summary.totals ? pipeline.summary.totals : {};
-  document.getElementById('pipeline-muted').textContent = totals.total ? `${totals.total} total modules` : '';
+  document.getElementById('pipeline-muted').textContent = `${finiteCounter(totals.total)} total modules`;
   if (!tracks.length) {
     document.getElementById('pipeline-content').innerHTML = '<div class="empty">No pipeline summary available</div>';
     return;
   }
   tracks.sort((a, b) => a[0].localeCompare(b[0]));
   document.getElementById('pipeline-content').innerHTML = `<div class="track-grid">${
-    tracks.map(([track, stats]) => {
-      const total = stats.total || 0;
-      const auditPct = total ? Math.round(((stats.audit_passing || 0) / total) * 100) : 0;
+    tracks.map(([track, raw]) => {
+      const stats = isObject(raw) ? raw : {};
+      const total = finiteCounter(stats.total);
+      const audit = finiteCounter(stats.audit_passing);
+      const auditPct = typeof total === 'number' && total > 0 && typeof audit === 'number' ? Math.round(audit / total * 100) : null;
       return `<div class="mini-card">
         <div class="title">${escapeHtml(track)}</div>
-        <div style="font-size:13px;color:var(--text2)">research ${stats.research_done || 0}/${total}</div>
-        <div style="font-size:13px;color:var(--text2)">content ${stats.content_done || 0}/${total}</div>
-        <div style="font-size:13px;color:var(--text2)">audit ${stats.audit_passing || 0}/${total}</div>
-        <div class="bar-track"><div class="bar-fill" style="width:${auditPct}%;background:${auditPct >= 80 ? 'var(--green)' : auditPct >= 50 ? 'var(--yellow)' : 'var(--red)'}"></div></div>
+        <div style="font-size:13px;color:var(--text2)">research ${finiteCounter(stats.research_done)}/${total}</div>
+        <div style="font-size:13px;color:var(--text2)">content ${finiteCounter(stats.content_done)}/${total}</div>
+        <div style="font-size:13px;color:var(--text2)">audit ${finiteCounter(stats.audit_passing)}/${total}</div>
+        <div class="bar-track"><div class="bar-fill" style="${progressStyle(auditPct)}"></div></div>
       </div>`;
     }).join('')
   }</div>`;
@@ -383,9 +395,9 @@ function renderRuntime(runtime) {
     agents.map(agent => {
       const hasHeadroom = getAgentHeadroom(runtime, agent);
       const outcomes = getAgentOutcomes(runtime, agent);
-      const okCount = typeof outcomes.ok === 'number' ? outcomes.ok : 0;
-      const errCount = typeof outcomes.error === 'number' ? outcomes.error : 0;
-      const rateCount = typeof outcomes.rate_limited === 'number' ? outcomes.rate_limited : 0;
+      const okCount = finiteCounter(outcomes.ok);
+      const errCount = finiteCounter(outcomes.error);
+      const rateCount = finiteCounter(outcomes.rate_limited);
       return `<div class="mini-card">
         <div class="title">${escapeHtml(agent)}</div>
         <div class="big" style="color:${hasHeadroom ? 'var(--green)' : 'var(--red)'}">${hasHeadroom ? '&#10003;' : '&#10007;'}</div>
@@ -401,31 +413,41 @@ function renderRuntime(runtime) {
 }
 
 async function renderDelegate(delegate) {
-  let recent = Array.isArray(delegate && delegate.recent) ? delegate.recent : [];
-  let activeCount = Number.isSafeInteger(delegate?.active_count) ? delegate.active_count : 'unknown';
+  const validTask = task => isObject(task) && typeof task.task_id === 'string' && task.task_id.length > 0
+    && (task.status == null || typeof task.status === 'string');
+  const snapshot = Array.isArray(delegate?.recent) ? delegate.recent : [];
+  let recent = snapshot.filter(validTask);
+  let omitted = snapshot.length - recent.length;
+  let activeCount = Number.isSafeInteger(delegate?.active_count) && delegate.active_count >= 0 ? delegate.active_count : 'unknown';
+  let coverage = 'Snapshot recent coverage unknown';
   let liveChecked = false;
+  let complete = false;
   if (!recent.length) {
-    // The /api/orient snapshot can lag or truncate; cross-check the live
-    // delegate list before claiming there is nothing recent (#7078).
+    // A limit-five window cannot establish the total without its denominator.
     try {
       const live = await fetchJson('/api/delegate/tasks?limit=5');
-      if (!Array.isArray(live.tasks) || !live.tasks.every(task => task && typeof task.task_id === 'string')) throw new Error('Malformed delegate cross-check');
-      const liveTasks = live.tasks;
+      if (!Array.isArray(live.tasks)) throw new Error('Malformed delegate cross-check');
+      recent = live.tasks.filter(validTask);
+      omitted += live.tasks.length - recent.length;
+      if (live.tasks.length && !recent.length) throw new Error('Malformed delegate rows');
       liveChecked = true;
-      if (liveTasks.length) {
-        recent = liveTasks;
-        activeCount = liveTasks.filter(task => ['running', 'spawning', 'zombie'].includes(task.status)).length;
-      }
-    } catch { /* live list unavailable — keep snapshot-honest copy below */ }
+      const knownStatuses = ['running', 'spawning', 'done', 'failed', 'blocked', 'timeout', 'rate_limited', 'cancelled', 'crashed', 'dry_run', 'needs_finalize', 'no_deliverable', 'zombie'];
+      complete = Number.isSafeInteger(live.total) && live.total === live.tasks.length && !omitted
+        && recent.every(task => knownStatuses.includes(task.status));
+      if (complete) activeCount = recent.filter(task => ['running', 'spawning'].includes(task.status)).length;
+      coverage = `${recent.length} of ${Number.isSafeInteger(live.total) && live.total >= live.tasks.length ? live.total : 'unknown'} task records loaded; coverage ${complete ? 'complete for this response' : 'incomplete / unknown'}`;
+    } catch { /* keep independently observed snapshot values */ }
   }
+  if (omitted) coverage += `; ${omitted} malformed rows omitted; coverage incomplete`;
   const emptyCopy = liveChecked
-    ? 'No recent delegate tasks returned; source age and complete coverage unknown'
+    ? (complete ? 'No recent delegate tasks in the complete response; source age unknown' : 'No recent delegate tasks returned; source age and complete coverage unknown')
     : 'Snapshot shows no recent tasks and the live delegate list is unavailable — open <a href="/delegate.html">Delegate</a>.';
   document.getElementById('delegate-muted').textContent = `${activeCount} active`;
   document.getElementById('delegate-content').innerHTML = `
     <div class="kv-grid">
       <div class="kv"><div class="label">Active Tasks</div><div class="value">${activeCount}</div></div>
     </div>
+    <p class="muted">${escapeHtml(coverage)}</p>
     ${recent.length ? `<table><thead><tr><th>Task</th><th>Agent</th><th>Status</th><th>Started</th></tr></thead><tbody>${
       recent.map(task => `<tr>
         <td class="mono">${escapeHtml(task.task_id || '—')}</td>
@@ -439,12 +461,13 @@ async function renderDelegate(delegate) {
 
 function renderBridgePending(bridgePending) {
   const rows = Object.entries(bridgePending || {})
-    .filter(([, item]) => item && typeof item.count === 'number' && item.count > 0)
+    .filter(([, item]) => item && finiteCounter(item.count) !== 'unknown' && item.count > 0)
     .sort((a, b) => (b[1].oldest_hours || 0) - (a[1].oldest_hours || 0));
-  const total = rows.reduce((sum, [, item]) => sum + (item.count || 0), 0);
-  document.getElementById('bridge-muted').textContent = `${total} pending`;
+  const total = rows.reduce((sum, [, item]) => sum + item.count, 0);
+  const complete = Object.values(bridgePending || {}).every(item => isObject(item) && finiteCounter(item.count) !== 'unknown');
+  document.getElementById('bridge-muted').textContent = `${complete ? finiteCounter(total) : 'unknown'} pending`;
   if (!rows.length) {
-    document.getElementById('bridge-content').innerHTML = '<div class="empty">No pending bridge deliveries</div>';
+    document.getElementById('bridge-content').innerHTML = `<div class="empty">${complete ? 'No pending bridge deliveries in returned observations; coverage unknown' : 'Pending bridge deliveries unknown'}</div>`;
     return;
   }
   document.getElementById('bridge-content').innerHTML = `<table><thead><tr><th>Agent</th><th>Pending</th><th>Oldest</th></tr></thead><tbody>${
@@ -466,11 +489,12 @@ function discussionAge(value) {
 }
 
 function renderDiscussions(data) {
-  const discussions = Array.isArray(data && data.discussions) ? data.discussions : [];
+  const raw = Array.isArray(data && data.discussions) ? data.discussions : [];
+  const discussions = raw.filter(isObject);
   const running = discussions.filter(item => item.status === 'running');
-  document.getElementById('discussions-muted').textContent = `${running.length} running · ${discussions.length} recent`;
+  document.getElementById('discussions-muted').textContent = `${running.length} running · ${discussions.length} recent · ${raw.length - discussions.length} malformed rows omitted; coverage unknown`;
   if (!discussions.length) {
-    document.getElementById('discussions-content').innerHTML = '<div class="empty">0 active discussions</div>';
+    document.getElementById('discussions-content').innerHTML = '<div class="empty">No discussion rows returned; complete coverage unknown</div>';
     return;
   }
   document.getElementById('discussions-content').innerHTML = `<table><thead><tr><th>Thread</th><th>Agents</th><th>Status</th><th>Last activity</th></tr></thead><tbody>${
@@ -479,7 +503,7 @@ function renderDiscussions(data) {
       const statusClass = item.status === 'running' ? 'warn' : item.status === 'converged' ? 'ok' : 'gray';
       return `<tr>
         <td><a href="${escapeHtml(url)}"><strong>#${escapeHtml(item.channel || '—')}</strong></a><div class="mono" style="color:var(--text3);font-size:12px">${escapeHtml(String(item.thread_id || '').slice(0, 12))}</div></td>
-        <td>${escapeHtml((item.agents || []).join(', ') || '—')}<div style="color:var(--text3);font-size:12px">round ${item.last_round || 0} · ${item.message_count || 0} messages</div></td>
+        <td>${escapeHtml((Array.isArray(item.agents) ? item.agents : []).join(', ') || '—')}<div style="color:var(--text3);font-size:12px">round ${finiteCounter(item.last_round)} · ${finiteCounter(item.message_count)} messages</div></td>
         <td><span class="pill ${statusClass}">${escapeHtml(item.status || 'unknown')}</span></td>
         <td>${discussionAge(item.last_message_at)}</td>
       </tr>`;
@@ -495,21 +519,23 @@ function renderWiki(wiki) {
     return;
   }
   tracks.sort((a, b) => a[0].localeCompare(b[0]));
-  document.getElementById('wiki-content').innerHTML = tracks.map(([track, stats]) => `
-    <div style="margin-bottom:12px">
+  document.getElementById('wiki-content').innerHTML = tracks.map(([track, raw]) => {
+    const stats = isObject(raw) ? raw : {};
+    const percent = finiteCounter(stats.pct);
+    return `<div style="margin-bottom:12px">
       <div style="display:flex;justify-content:space-between;gap:12px;font-size:13px;margin-bottom:6px">
         <strong>${escapeHtml(track)}</strong>
-        <span style="color:var(--text2)">${stats.compiled || 0}/${stats.total || 0} (${stats.pct || 0}%)</span>
+        <span style="color:var(--text2)">${finiteCounter(stats.compiled)}/${finiteCounter(stats.total)} (${percent}${percent === 'unknown' ? '' : '%'})</span>
       </div>
-      <div class="bar-track"><div class="bar-fill" style="width:${stats.pct || 0}%;background:${stats.pct >= 80 ? 'var(--green)' : stats.pct >= 50 ? 'var(--yellow)' : 'var(--red)'}"></div></div>
-    </div>
-  `).join('');
+      <div class="bar-track"><div class="bar-fill" style="${progressStyle(stats.pct)}"></div></div>
+    </div>`;
+  }).join('');
 }
 
 function renderHealth(health) {
   const items = [
     ['API', health?.api],
-    ['MCP', health?.mcp_sources ?? health?.mcp_rag],
+    ['MCP', health && Object.hasOwn(health, 'mcp_sources') ? health.mcp_sources : health?.mcp_rag],
     ['sources.db', health?.sources_db],
     ['broker', health?.message_broker],
   ];
@@ -562,11 +588,13 @@ function renderGlanceEpics(data) {
   if (!Array.isArray(data?.streams)) throw new Error('Invalid epics');
   const rows = data.streams.map(stream => {
     const lease = stream.lease;
-    let health = lease ? lease.state || 'unknown' : 'no lease';
+    const rawState = typeof lease?.state === 'string' ? lease.state : 'unknown';
+    let health = lease ? rawState.toLowerCase() : 'no lease';
     if (health === 'active') {
       const expiry = Date.parse(lease.expires_at);
       health = !Number.isFinite(expiry) ? 'unknown' : expiry <= Date.now() ? 'expired' : 'active';
     }
+    if (!['active', 'expired', 'released', 'none', 'no lease', 'unknown'].includes(health)) health = rawState;
     return [stream.stream_id || 'unknown', lease?.holder?.agent || 'unknown', opaqueHost(lease?.holder?.host_id), health];
   });
   return rows.length ? glanceTable(['Epic', 'Driver', 'Host', 'Lease'], rows) : 'No epics reported';

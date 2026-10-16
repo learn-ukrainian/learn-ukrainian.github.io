@@ -224,6 +224,7 @@ def test_epics_map_js_behavioral_membership_logic() -> None:
 
     // 4. Complete zero (known zero)
     env.state.data = {{
+      membership_complete: true,
       stale: false,
       issues_by_epic: {{
         "7919": {{ items: [], total_open: 0, truncated: false }},
@@ -236,6 +237,7 @@ def test_epics_map_js_behavioral_membership_logic() -> None:
 
     // 5. Complete nonzero (known nonzero)
     env.state.data = {{
+      membership_complete: true,
       stale: false,
       issues_by_epic: {{
         "7919": {{
@@ -248,6 +250,7 @@ def test_epics_map_js_behavioral_membership_logic() -> None:
     const completeOneFresh = env.renderIssueSection({{ number: 7919 }});
 
     env.state.data = {{
+      membership_complete: true,
       stale: false,
       issues_by_epic: {{
         "7919": {{
@@ -270,6 +273,7 @@ def test_epics_map_js_behavioral_membership_logic() -> None:
       state: "open",
     }}));
     env.state.data = {{
+      membership_complete: true,
       stale: false,
       issues_by_epic: {{
         "7919": {{
@@ -308,7 +312,7 @@ def test_epics_map_js_behavioral_membership_logic() -> None:
     h = out["helperResults"]
     assert h["nonNegValidNum"] == 0
     assert h["nonNegPositive"] == 42
-    assert h["nonNegStr"] == 7
+    assert h["nonNegStr"] is None  # Remote counters require numeric observations.
     assert h["nonNegNeg"] is None
     assert h["nonNegNullNoFallback"] is None
     assert h["nonNegNullWithFallback"] == 99

@@ -130,7 +130,13 @@ function validateFeed(key, data) {
   if (key === 'routing' && !isObject(data.agents)) throw new Error('Malformed routing agents');
   if (key === 'agents' && (!Array.isArray(data.agents) || !data.agents.every(row => isObject(row) && typeof row.name === 'string' && (row.supported_modes == null || (Array.isArray(row.supported_modes) && row.supported_modes.every(mode => typeof mode === 'string')))))) throw new Error('Malformed runtime agents');
   if (key === 'usage' && (!Number.isSafeInteger(data.records_total) || data.records_total < 0 || !isObject(data.by_agent))) throw new Error('Malformed runtime usage');
-  if (key === 'delegates' && (!Array.isArray(data.tasks) || !data.tasks.every(row => isObject(row) && typeof row.task_id === 'string'))) throw new Error('Malformed delegate tasks');
+  if (key === 'delegates') {
+    if (!Array.isArray(data.tasks)) throw new Error('Malformed delegate tasks');
+    const tasks = data.tasks.filter(row => isObject(row) && typeof row.task_id === 'string' && row.task_id.length > 0
+      && (row.status == null || typeof row.status === 'string'));
+    if (data.tasks.length && !tasks.length) throw new Error('Malformed delegate tasks');
+    return {...data, tasks, omitted: data.tasks.length - tasks.length};
+  }
   return data;
 }
 
@@ -178,7 +184,7 @@ function formatTs(value) {
 }
 
 function pct(value) {
-  const num = Number(value);
+  const num = typeof value === 'number' ? value : NaN;
   return Number.isFinite(num) ? Math.max(0, Math.min(100, num)) : 0;
 }
 
@@ -270,7 +276,8 @@ function renderSummary(routing, usage, delegates) {
   const warnings = recommendation.warnings;
   const warningsKnown = Array.isArray(routing.recommendation?.warnings);
   const counts = isObject(routing.in_flight) ? Object.values(routing.in_flight) : null;
-  const active = counts && counts.every(value => Number.isSafeInteger(value) && value >= 0) ? counts.reduce((sum, value) => sum + value, 0) : 'unknown';
+  const sum = counts?.length && counts.every(value => Number.isSafeInteger(value) && value >= 0) ? counts.reduce((total, value) => total + value, 0) : NaN;
+  const active = Number.isSafeInteger(sum) ? sum : 'unknown';
   const recentTasks = delegates?.tasks;
   const recentDone = recentTasks ? recentTasks.filter(task => task.status === 'done').length : 'unknown';
   document.getElementById('summary-grid').innerHTML = `
@@ -282,7 +289,7 @@ function renderSummary(routing, usage, delegates) {
     <div class="panel info">
       <h3>In Flight</h3>
       <div class="value">${active}</div>
-      <div class="sub">${Object.entries(routing.in_flight || {}).map(([k,v]) => `${escapeHtml(k)}: ${escapeHtml(v)}`).join(' | ') || 'In-flight state unknown'}</div>
+      <div class="sub">${Object.entries(isObject(routing.in_flight) ? routing.in_flight : {}).map(([k,v]) => `${escapeHtml(k)}: ${Number.isSafeInteger(v) && v >= 0 ? v : 'unknown'}`).join(' | ') || 'In-flight state unknown'}</div>
     </div>
     <div class="panel ${warnings.length ? 'warn' : 'ok'}">
       <h3>Warnings</h3>
@@ -321,8 +328,8 @@ function windowKindLabel(win) {
   if (win.label) return String(win.label);
   if (win.window) return String(win.window);
   const mins = win.window_minutes;
-  if (mins != null) {
-    const m = Number(mins);
+  if (typeof mins === 'number' && Number.isFinite(mins)) {
+    const m = mins;
     if (m <= 300) return '5h';
     if (m === 10080) return 'weekly';
     if (m >= 40000) return 'monthly';
@@ -341,9 +348,9 @@ function pctDisplay(used, remaining) {
 
 function renderWindowBlock(label, win, opts = {}) {
   const rawUsed = win?.used_pct;
-  const usedNum = (rawUsed === null || rawUsed === undefined) ? NaN : Number(rawUsed);
+  const usedNum = typeof rawUsed === 'number' ? rawUsed : NaN;
   const rawRemaining = win?.remaining_pct;
-  const remNum = (rawRemaining === null || rawRemaining === undefined) ? NaN : Number(rawRemaining);
+  const remNum = typeof rawRemaining === 'number' ? rawRemaining : NaN;
   const hasPct = Number.isFinite(usedNum);
   const display = hasPct ? pctDisplay(usedNum, remNum) : (opts.missingLabel || 'unknown');
   const barClass = hasPct ? 'bar' : `bar ${opts.barClass || 'unavailable'}`;
@@ -397,7 +404,7 @@ function renderFleetBurnCell(agent) {
   const parts = ['5h', '7d', '30d'].map(name => {
     const block = wins[name];
     const total = block?.counts?.total;
-    return `${name}: ${total == null ? '—' : escapeHtml(total)}`;
+    return `${name}: ${typeof total === 'number' && Number.isFinite(total) ? total : 'unknown'}`;
   });
   return `<div class="fleet-burn">${parts.join(' · ')}<br><span class="stale-note">dispatch JSONL</span></div>`;
 }
@@ -415,7 +422,7 @@ function renderLaneFreshness(agent) {
 }
 
 function formatUsd(value, currency = 'USD') {
-  const num = Number(value);
+  const num = typeof value === 'number' ? value : NaN;
   if (!Number.isFinite(num)) return null;
   try {
     return new Intl.NumberFormat(undefined, { style: 'currency', currency, maximumFractionDigits: 2 }).format(num);
@@ -450,9 +457,9 @@ function renderApiAccounts(routing) {
       const accountRemaining = account.account_remaining_usd;
       if (needProbe) {
         remainingHtml = `<span class="pill need_probe">NEED_PROBE</span>`;
-      } else if (limitRemaining != null && Number.isFinite(Number(limitRemaining))) {
+      } else if (typeof limitRemaining === 'number' && Number.isFinite(limitRemaining)) {
         remainingHtml = escapeHtml(formatUsd(limitRemaining) || String(limitRemaining));
-      } else if (accountRemaining != null && Number.isFinite(Number(accountRemaining))) {
+      } else if (typeof accountRemaining === 'number' && Number.isFinite(accountRemaining)) {
         remainingHtml = escapeHtml(formatUsd(accountRemaining) || String(accountRemaining));
       } else if (limitRemaining == null && probeState === 'OK') {
         remainingHtml = '<span class="stale-note">no per-key cap</span>';
@@ -460,10 +467,10 @@ function renderApiAccounts(routing) {
         remainingHtml = '<span class="pill unknown">unknown</span>';
       }
       const spendParts = [];
-      if (account.usage_usd != null) spendParts.push(`total ${formatUsd(account.usage_usd) || account.usage_usd}`);
-      if (account.usage_daily_usd != null) spendParts.push(`daily ${formatUsd(account.usage_daily_usd) || account.usage_daily_usd}`);
-      if (account.usage_weekly_usd != null) spendParts.push(`weekly ${formatUsd(account.usage_weekly_usd) || account.usage_weekly_usd}`);
-      if (account.usage_monthly_usd != null) spendParts.push(`monthly ${formatUsd(account.usage_monthly_usd) || account.usage_monthly_usd}`);
+      if (account.usage_usd != null) spendParts.push(`total ${formatUsd(account.usage_usd) || 'unknown'}`);
+      if (account.usage_daily_usd != null) spendParts.push(`daily ${formatUsd(account.usage_daily_usd) || 'unknown'}`);
+      if (account.usage_weekly_usd != null) spendParts.push(`weekly ${formatUsd(account.usage_weekly_usd) || 'unknown'}`);
+      if (account.usage_monthly_usd != null) spendParts.push(`monthly ${formatUsd(account.usage_monthly_usd) || 'unknown'}`);
       detailHtml = spendParts.length
         ? `<div class="fleet-burn">${escapeHtml(spendParts.join(' · '))}</div>`
         : '<span class="fleet-burn">—</span>';
@@ -472,14 +479,14 @@ function renderApiAccounts(routing) {
       const total = account.total_balance;
       if (needProbe) {
         remainingHtml = `<span class="pill need_probe">NEED_PROBE</span>`;
-      } else if (total != null && Number.isFinite(Number(total))) {
+      } else if (typeof total === 'number' && Number.isFinite(total)) {
         remainingHtml = escapeHtml(formatUsd(total, currency) || String(total));
       } else {
         remainingHtml = '<span class="pill unknown">unknown</span>';
       }
       const detailParts = [];
-      if (account.granted_balance != null) detailParts.push(`granted ${formatUsd(account.granted_balance, currency) || account.granted_balance}`);
-      if (account.topped_up_balance != null) detailParts.push(`topped-up ${formatUsd(account.topped_up_balance, currency) || account.topped_up_balance}`);
+      if (account.granted_balance != null) detailParts.push(`granted ${formatUsd(account.granted_balance, currency) || 'unknown'}`);
+      if (account.topped_up_balance != null) detailParts.push(`topped-up ${formatUsd(account.topped_up_balance, currency) || 'unknown'}`);
       if (account.is_available != null) detailParts.push(account.is_available ? 'available' : 'unavailable');
       detailHtml = `<div class="fleet-burn">${escapeHtml(detailParts.join(' · ') || '—')}<br><span class="stale-note">LOCAL-ONLY</span></div>`;
     }
@@ -501,7 +508,7 @@ function renderApiAccounts(routing) {
 }
 
 function accountPctCell(value, zeroNote) {
-  const num = (value === null || value === undefined) ? NaN : Number(value);
+  const num = typeof value === 'number' ? value : NaN;
   if (!Number.isFinite(num)) return '<span class="pill unknown">unknown</span>';
   const text = `${Math.round(num)}%`;
   return zeroNote && num === 0
@@ -557,8 +564,8 @@ function resolveSubscriptionAgent(agents, name) {
 }
 
 function resolveSubscriptionInFlight(inFlight, name) {
-  if (name === 'agy') return inFlight.agy ?? inFlight.gemini ?? 'unknown';
-  return inFlight[name] ?? 'unknown';
+  const value = name === 'agy' ? (Object.hasOwn(inFlight, 'agy') ? inFlight.agy : inFlight.gemini) : inFlight[name];
+  return Number.isSafeInteger(value) && value >= 0 ? value : 'unknown';
 }
 
 function renderSubscriptions(routing) {
@@ -624,9 +631,9 @@ function renderAgents(agents, usage) {
       <td>${escapeHtml(agent.default_model || '')}</td>
       <td>${escapeHtml(agent.binary || '')}</td>
       <td>${escapeHtml((agent.supported_modes || []).join(', '))}</td>
-      <td>${escapeHtml(stats.total ?? 'unknown')}</td>
-      <td>${escapeHtml(stats.ok ?? 'unknown')}</td>
-      <td>${escapeHtml(['error', 'timeout', 'rate_limited'].every(key => typeof stats[key] === 'number') ? stats.error + stats.timeout + stats.rate_limited : 'unknown')}</td>
+      <td>${escapeHtml(typeof stats.total === 'number' && Number.isFinite(stats.total) ? stats.total : 'unknown')}</td>
+      <td>${escapeHtml(typeof stats.ok === 'number' && Number.isFinite(stats.ok) ? stats.ok : 'unknown')}</td>
+      <td>${escapeHtml(['error', 'timeout', 'rate_limited'].every(key => typeof stats[key] === 'number' && Number.isFinite(stats[key])) ? stats.error + stats.timeout + stats.rate_limited : 'unknown')}</td>
     </tr>`;
   }).join('');
   document.getElementById('agent-table').innerHTML = `<table>
@@ -636,15 +643,17 @@ function renderAgents(agents, usage) {
 }
 
 function renderDelegates(delegates) {
-  const rows = (delegates.tasks || []).slice(0, 12).map(task => `<tr>
+  const tasks = delegates.tasks || [];
+  const coverage = `${Math.min(12, tasks.length)} of ${Number.isSafeInteger(delegates.total) && delegates.total >= tasks.length + (delegates.omitted || 0) ? delegates.total : 'unknown'} task records shown; ${delegates.omitted || 0} malformed rows omitted; coverage unknown`;
+  const rows = tasks.slice(0, 12).map(task => `<tr>
     <td class="mono">${escapeHtml(task.task_id)}</td>
     <td>${escapeHtml(task.agent || '')}</td>
     <td>${escapeHtml(task.model || '')}</td>
     <td>${statusPill(task.status)}</td>
-    <td>${task.duration_s == null ? '' : `${Number(task.duration_s).toFixed(1)}s`}</td>
+    <td>${typeof task.duration_s === 'number' && Number.isFinite(task.duration_s) && task.duration_s >= 0 ? `${task.duration_s.toFixed(1)}s` : 'unknown'}</td>
     <td>${escapeHtml(formatTs(task.started_at))}</td>
   </tr>`).join('');
-  document.getElementById('delegate-table').innerHTML = `<table>
+  document.getElementById('delegate-table').innerHTML = `<p class="stale-note">${escapeHtml(coverage)}</p><table>
     <tr><th>Task</th><th>Agent</th><th>Model</th><th>Status</th><th>Duration</th><th>Started</th></tr>
     ${rows || '<tr><td colspan="6">No task rows returned; coverage and source age unknown.</td></tr>'}
   </table>`;

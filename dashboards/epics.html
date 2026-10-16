@@ -306,14 +306,15 @@ button, input, select { font: inherit; }
     if (!stream || !Object.hasOwn(stream, 'lease')) return 'unknown';
     if (stream.lease === null) return 'none';
     const rawState = typeof stream.lease?.state === 'string' ? stream.lease.state : 'unknown';
-    if (rawState === 'active') {
+    const normalized = rawState.toLowerCase();
+    if (normalized === 'active') {
       if (!stream.lease.expires_at || !Number.isFinite(Date.parse(stream.lease.expires_at))) return 'unknown';
       const expiresAtMs = new Date(stream.lease.expires_at).getTime();
       if (!Number.isNaN(expiresAtMs) && Date.now() >= expiresAtMs) {
         return 'expired';
       }
     }
-    return rawState;
+    return ['active', 'expired', 'released', 'none'].includes(normalized) ? normalized : rawState;
   }
 
   function formatAge(ageSeconds) {

@@ -296,7 +296,7 @@ test('Retained source and heartbeat ages advance from their original observation
 });
 
 test('Populated graph detail keeps selected identity and known membership counts', async () => {
-  const data = graph();
+  const data = {...graph(), membership_complete:true};
   data.nodes.areas = [{id:'area:one', title:'Area one', stream_id:'one'}];
   data.nodes.epics = [{id:'epic:7', number:7, area_id:'one', title:'Epic seven', lease:{state:'released',holder:{agent:'seat-a'}}, open_issue_count:1}];
   data.issues_by_epic = {'7':{items:[{number:11,title:'Issue eleven'}],total_open:1,truncated:false}};
@@ -362,4 +362,252 @@ test('Malformed runtime modes cannot throw from an otherwise successful agent fe
   const p = page('routing', async url => url.includes('/agents') ? {agents:[{name:'seat-a',supported_modes:{}}]} : routingResponse(url)); await tick();
   assert.match(p.nodes.get('agent-table').innerHTML, /Malformed runtime agents/);
   assert.match(p.nodes.get('subscriptions-table').innerHTML, /Source age unknown/);
+});
+
+for (const completeness of [undefined, null, false, true]) {
+  test(`Correction: graph membership ${completeness} qualifies counts and complete empty`, async () => {
+    const data = {...graph(), membership_complete:completeness, incomplete_nodes:[],
+      issues_by_epic:{'7':{items:[],total_open:0,truncated:false}}};
+    data.nodes.epics = [{id:'epic:7',number:7,title:'Safe epic',lease:null,open_issue_count:0,closed_issue_count:0}];
+    const p = page('epics-map', async () => data); await tick();
+    p.run("selectEpic('epic:7')");
+    if (completeness === true) {
+      assert.match(p.nodes.get('map-content').innerHTML, /Open: 0/);
+      assert.match(p.nodes.get('detail-pane').innerHTML, /0 open issues in the cache/);
+    } else {
+      assert.match(p.nodes.get('map-content').innerHTML, /Open: unknown/);
+      assert.match(p.nodes.get('detail-pane').innerHTML, new RegExp(`membership is ${completeness === false ? 'incomplete' : 'unknown'}`));
+      assert.doesNotMatch(p.nodes.get('detail-pane').innerHTML, /0 open issues/);
+    }
+  });
+}
+
+test('Correction: graph validates its own bucket denominator and incomplete nodes', async () => {
+  const p = page('epics-map', async () => graph()); await tick();
+  for (const bucket of [null, {items:null,total_open:0,truncated:false}, {items:[null],total_open:0,truncated:false},
+    {items:[],total_open:'0',truncated:false}, {items:[],total_open:1,truncated:false},
+    {items:[],total_open:0,truncated:null}, {items:[{number:1}],total_open:0,truncated:false}]) {
+    p.context.sample = {...graph(),membership_complete:true,incomplete_nodes:[],issues_by_epic:{'7':bucket}};
+    p.run('state.data = sample');
+    assert.match(p.run('renderEpicNode({number:7,open_issue_count:0})'), /Open: unknown/);
+    assert.doesNotMatch(p.run('renderIssueSection({number:7})'), /0 open issues/);
+  }
+  p.context.sample = {...graph(),membership_complete:true,incomplete_nodes:[9],issues_by_epic:{'7':{items:[],total_open:0,truncated:false}}};
+  p.run('state.data = sample');
+  assert.match(p.run('renderIssueSection({number:7})'), /membership is incomplete/);
+});
+
+for (const [label, live, expected, omitted] of [
+  ['partial null', {total:8,tasks:[task('needs_finalize'),task('brand-new-status')]}, 'unknown', 0],
+  ['malformed sibling', {total:3,tasks:[null,task('running'),task('needs_finalize')]}, 'unknown', 1],
+  ['absent denominator', {tasks:[task('running')]}, 'unknown', 0],
+  ['complete unknown status', {total:1,tasks:[task('brand-new-status')]}, 'unknown', 0],
+  ['complete empty', {total:0,tasks:[]}, '0', 0],
+  ['complete running and attention', {total:2,tasks:[task('running'),task('needs_finalize')]}, '1', 0],
+]) {
+  test(`Correction: Orient delegate ${label} retains rows and qualifies totals`, async () => {
+    const p = page('orient', async url => orientResponse(url)); await tick();
+    p.context.sample = live; p.setResponder(async () => live);
+    await p.run('renderDelegate({recent:[],active_count:null})');
+    assert.equal(p.nodes.get('delegate-muted').textContent, `${expected} active`);
+    for (const row of live.tasks.filter(Boolean)) assert.match(p.nodes.get('delegate-content').innerHTML, new RegExp(`>${row.status}<`));
+    if (expected === 'unknown') assert.match(p.nodes.get('delegate-content').innerHTML, /coverage (unknown|incomplete)/);
+    if (omitted) assert.match(p.nodes.get('delegate-content').innerHTML, /1 malformed rows omitted/);
+  });
+}
+
+test('Correction: present null MCP never inherits legacy false; explicit false and legacy controls survive', async () => {
+  const p = page('orient', async url => orientResponse(url)); await tick();
+  for (const [health, expected] of [[{mcp_sources:null,mcp_rag:false},'unknown'], [{mcp_sources:false,mcp_rag:true},'down'], [{mcp_rag:false},'down'], [{mcp_rag:true},'healthy']]) {
+    p.context.sample = health; p.run('renderHealth(sample)');
+    assert.match(p.nodes.get('health-content').innerHTML, new RegExp(`MCP<\\/div><div[^>]*><span[^>]*><\\/span>${expected}`));
+  }
+});
+
+test('Correction: every Orient counter sink rejects strings and nonfinite values; numeric controls survive', async () => {
+  const p = page('orient', async url => orientResponse(url)); await tick();
+  for (const bad of [undefined,null,NaN,Infinity,false,'0','80%" data-injected="yes"><b data-injected>inert</b>']) {
+    p.context.bad = bad;
+    p.run(`renderGit({ahead_of_origin:bad}); renderWiki({by_track:{safe:{compiled:bad,total:bad,pct:bad},healthy:{compiled:0,total:2,pct:50}}});
+      renderPipeline({summary:{tracks:{safe:{total:bad,research_done:bad,content_done:bad,audit_passing:bad},healthy:{total:2,research_done:0,content_done:1,audit_passing:2}}}});
+      renderDiscussions({discussions:[{thread_id:'safe',last_round:bad,message_count:bad}]});
+      renderRuntime({agents:['safe'],by_agent:{safe:{ok:bad,error:bad,rate_limited:bad}}});`);
+    for (const id of ['git','wiki','pipeline','discussions','runtime']) {
+      const html = p.nodes.get(`${id}-content`).innerHTML;
+      assert.doesNotMatch(html, /data-injected|NaN|Infinity|width:unknown|width:false/);
+      assert.match(html, /unknown/);
+    }
+    assert.match(p.nodes.get('wiki-content').innerHTML, /0\/2 \(50%\)/);
+    assert.match(p.nodes.get('wiki-content').innerHTML, /width:50%/);
+    assert.match(p.nodes.get('pipeline-content').innerHTML, /research 0\/2/);
+  }
+  p.run('renderWiki({by_track:{bad:null,good:{compiled:0,total:0,pct:500}}})');
+  assert.match(p.nodes.get('wiki-content').innerHTML, /width:100%/);
+  p.run('renderPipeline({summary:{totals:{total:0},tracks:{bad:null,good:{total:0,audit_passing:0}}}})');
+  assert.equal(p.nodes.get('pipeline-muted').textContent, '0 total modules');
+  assert.match(p.nodes.get('pipeline-content').innerHTML, /audit 0\/0/);
+  p.run('renderDiscussions({discussions:[null,{thread_id:"good",last_round:0,message_count:0}]})');
+  assert.match(p.nodes.get('discussions-content').innerHTML, /round 0 · 0 messages/);
+});
+
+test('Correction: Routing empty flight is unknown and malformed delegate siblings retain healthy statuses', async () => {
+  const p = page('routing', async url => url.includes('/tasks') ? {total:8,tasks:[null,task('needs_finalize'),task('new-status')]} : routingResponse(url)); await tick();
+  assert.match(p.nodes.get('summary-grid').innerHTML, /In Flight<\/h3>\s*<div class="value">unknown/);
+  assert.match(p.nodes.get('delegate-table').innerHTML, /needs_finalize/);
+  assert.match(p.nodes.get('delegate-table').innerHTML, /new-status/);
+  assert.match(p.nodes.get('delegate-table').innerHTML, /1 malformed rows omitted/);
+  assert.match(p.nodes.get('delegate-table').innerHTML, /2 of 8/);
+  p.run('renderSummary({agents:{},in_flight:{safe:0}},null,null)');
+  assert.match(p.nodes.get('summary-grid').innerHTML, /In Flight<\/h3>\s*<div class="value">0/);
+});
+
+for (const name of ['epics', 'epics-map', 'orient']) {
+  test(`Correction: ${name} normalizes active leases before expiry qualification`, async () => {
+    const p = page(name); await tick();
+    for (const raw of ['active','Active','ACTIVE','aCtIvE']) {
+      for (const [expires_at, expected] of [[undefined,'unknown'],['invalid','unknown'],['2999-01-01','active'],['2000-01-01','expired']]) {
+        p.context.sample = {stream_id:'epic:7',lease:{state:raw,expires_at}};
+        if (name === 'orient') assert.match(p.run('renderGlanceEpics({streams:[sample]})'), new RegExp(`<td>${expected}</td>`));
+        else {
+          assert.equal(p.run('getLeaseState(sample)'), expected);
+          if (name === 'epics') {
+            p.run("state.streams = [sample]; els.filterState.value = 'active'");
+            assert.equal(p.run('filteredStreams().length'), expected === 'active' ? 1 : 0);
+            p.run("els.filterState.value = ''; renderTable()");
+            assert.match(p.nodes.get('epics-tbody').innerHTML, new RegExp(`pill ${expected}`));
+            assert.equal(p.run('displayLeaseState(sample)'), expected);
+          }
+        }
+      }
+    }
+  });
+}
+
+test('Correction: finite age and bridge counters keep zero and healthy siblings', async () => {
+  const p = page('orient', async url => orientResponse(url)); await tick();
+  for (const bad of [null,undefined,NaN,Infinity,-1,'5']) {
+    p.context.bad = bad;
+    assert.equal(p.run('formatAgeDays(bad)'), '—');
+    assert.equal(p.run('formatAgeHours(bad)'), '—');
+    p.run('renderBridgePending({bad:{count:bad},good:{count:2,oldest_hours:0.5}})');
+    assert.equal(p.nodes.get('bridge-muted').textContent, 'unknown pending');
+    assert.match(p.nodes.get('bridge-content').innerHTML, /<td class="mono">good/);
+    assert.match(p.nodes.get('bridge-content').innerHTML, /30m/);
+  }
+  assert.equal(p.run('formatAgeDays(0)'), '0d');
+  assert.equal(p.run('formatAgeHours(0)'), '0m');
+  assert.equal(p.run('formatAgeHours(2)'), '2.0h');
+  p.run('renderBridgePending({safe:{count:0}})');
+  assert.equal(p.nodes.get('bridge-muted').textContent, '0 pending');
+  p.run('renderBridgePending({bad:null})');
+  assert.match(p.nodes.get('bridge-content').innerHTML, /deliveries unknown/);
+  p.run('renderWiki({by_track:{safe:{compiled:1,total:2,pct:60}}})');
+  assert.match(p.nodes.get('wiki-content').innerHTML, /width:60%;background:var\(--yellow\)/);
+});
+
+test('Correction: Routing malformed-only feeds fail while nullable statuses stay visible', async () => {
+  const p = page('routing', async url => routingResponse(url)); await tick();
+  for (const [key, value] of [['routing',{}],['agents',{agents:[null]}],['usage',{records_total:null,by_agent:{}}],
+    ['delegates',{tasks:null}],['delegates',{tasks:[null]}],['delegates',{tasks:[{task_id:'',status:'done'}]}],
+    ['delegates',{tasks:[{task_id:'safe',status:7}]}]]) {
+    p.context.sample = value;
+    assert.throws(() => p.run(`validateFeed('${key}', sample)`), /Malformed/);
+  }
+  const delegateRows = html => [...html.matchAll(/<tr>\s*<td class="mono">([^<]*)<\/td>\s*<td>([^<]*)<\/td>\s*<td>([^<]*)<\/td>\s*<td>(<span class="pill [^"]*">[^<]*<\/span>)<\/td>\s*<td>([^<]*)<\/td>\s*<td>([^<]*)<\/td>\s*<\/tr>/g)].map(match => ({
+    taskId: match[1], statusCell: match[4], durationCell: match[5],
+  }));
+  p.context.sample = {total:2,tasks:[task(null,'nullable'),task('','blank')]};
+  p.run("renderDelegates(validateFeed('delegates', sample))");
+  const nullableHtml = p.nodes.get('delegate-table').innerHTML;
+  assert.match(nullableHtml, /<th>Status<\/th><th>Duration<\/th>/);
+  assert.match(nullableHtml, /nullable/);
+  assert.match(nullableHtml, /blank/);
+  const nullableRows = delegateRows(nullableHtml);
+  assert.equal(nullableRows.length, 2);
+  for (const id of ['nullable', 'blank']) {
+    const row = nullableRows.find(item => item.taskId === id);
+    assert.ok(row, id);
+    assert.equal(row.statusCell, '<span class="pill unknown">unknown</span>');
+    assert.equal(row.durationCell, 'unknown');
+  }
+  const hostile = 'new"><img';
+  p.context.sample = {total:7,tasks:[
+    null,
+    {task_id:'recognized',status:'done',agent:'seat-a',duration_s:1.5},
+    {task_id:'fresh',status:hostile,agent:'seat-a'},
+    {task_id:'zero',status:'running',agent:'seat-a',duration_s:0},
+    {task_id:'missing',status:'ok',agent:'seat-a'},
+    {task_id:'invalid',status:'cool',agent:'seat-a',duration_s:-1},
+    {task_id:'nonnumeric',status:'warm',agent:'seat-a',duration_s:'5'},
+  ]};
+  p.run("renderDelegates(validateFeed('delegates', sample))");
+  const mixedHtml = p.nodes.get('delegate-table').innerHTML;
+  const mixedRows = delegateRows(mixedHtml);
+  assert.equal(mixedRows.length, 6);
+  assert.match(mixedHtml, /6 of 7 task records shown; 1 malformed rows omitted/);
+  const byId = Object.fromEntries(mixedRows.map(row => [row.taskId, row]));
+  assert.equal(byId.recognized.statusCell, '<span class="pill done">done</span>');
+  assert.equal(byId.recognized.durationCell, '1.5s');
+  assert.equal(byId.fresh.statusCell, '<span class="pill unknown">new&quot;&gt;&lt;img</span>');
+  assert.equal(byId.fresh.durationCell, 'unknown');
+  assert.doesNotMatch(byId.fresh.statusCell, /<img/);
+  assert.equal(byId.zero.statusCell, '<span class="pill running">running</span>');
+  assert.equal(byId.zero.durationCell, '0.0s');
+  assert.equal(byId.missing.statusCell, '<span class="pill ok">ok</span>');
+  assert.equal(byId.missing.durationCell, 'unknown');
+  assert.equal(byId.invalid.statusCell, '<span class="pill cool">cool</span>');
+  assert.equal(byId.invalid.durationCell, 'unknown');
+  assert.equal(byId.nonnumeric.statusCell, '<span class="pill warm">warm</span>');
+  assert.equal(byId.nonnumeric.durationCell, 'unknown');
+});
+
+test('Correction: Routing numeric sibling readers refuse coerced strings, false and nonfinite counters', async () => {
+  const p = page('routing', async url => routingResponse(url)); await tick();
+  for (const bad of [null,undefined,true,false,'0',Infinity,NaN,'50%" data-injected="inert']) {
+    p.context.bad = bad;
+    p.run(`renderSubscriptions({agents:{cursor:{status:'cool',provider_windows:{auto:{used_pct:bad,remaining_pct:bad}},fleet_burn:{windows:{'7d':{counts:{total:bad}}}}}},in_flight:{cursor:bad}});
+      renderApiAccounts({api_accounts:{openrouter:{probe_state:'OK',limit_remaining_usd:bad,usage_usd:bad}}});
+      renderClaudeAccounts({claude_accounts:{'claude:a':{status:'ok',weekly:{left_pct:bad}}}});
+      renderAgents({agents:[{name:'safe'}]}, {by_agent:{safe:{total:bad,ok:bad,error:bad,timeout:bad,rate_limited:bad}}});
+      renderDelegates({tasks:[{task_id:'safe',duration_s:bad}]});`);
+    for (const id of ['subscriptions','api-accounts','claude-accounts','agent','delegate']) {
+      const html = p.nodes.get(`${id}-table`).innerHTML;
+      assert.match(html, /unknown|no per-key cap/);
+      assert.doesNotMatch(html, /NaN|Infinity|data-injected|1% used|0% used|0\.0s/);
+    }
+    assert.equal(p.run('windowKindLabel({window_minutes:bad})'), 'window');
+    assert.equal(p.run('formatUsd(bad)'), null);
+  }
+  assert.equal(p.run('windowKindLabel({window_minutes:300})'), '5h');
+  assert.equal(p.run('windowKindLabel({window_minutes:10080})'), 'weekly');
+  assert.equal(p.run('windowKindLabel({window_minutes:40000})'), 'monthly');
+  assert.equal(p.run('windowKindLabel({window_minutes:600})'), '600m');
+  assert.equal(p.run('pct(125)'), 100);
+  assert.equal(p.run('pct(-5)'), 0);
+  assert.equal(p.run('pct("20")'), 0);
+  assert.equal(p.run('resolveSubscriptionInFlight({gemini:0}, "agy")'), 0);
+  assert.equal(p.run('resolveSubscriptionInFlight({agy:null,gemini:1}, "agy")'), 'unknown');
+  p.run('renderDelegates({total:1,tasks:[{task_id:"safe",duration_s:0}]})');
+  assert.match(p.nodes.get('delegate-table').innerHTML, /0\.0s/);
+  p.run('renderSummary({agents:{},in_flight:{one:Number.MAX_SAFE_INTEGER,two:Number.MAX_SAFE_INTEGER}},null,null)');
+  assert.match(p.nodes.get('summary-grid').innerHTML, /In Flight<\/h3>\s*<div class="value">unknown/);
+  p.run(`renderApiAccounts({api_accounts:{openrouter:{usage_daily_usd:1,usage_weekly_usd:2,usage_monthly_usd:3}}})`);
+  let api = p.nodes.get('api-accounts-table').innerHTML;
+  assert.match(api, /<span class="pill need_probe">NEED_PROBE<\/span>/);
+  assert.match(api, /daily \$1\.00 · weekly \$2\.00 · monthly \$3\.00/);
+  p.run(`renderApiAccounts({api_accounts:{openrouter:{probe_state:'OK',account_remaining_usd:4.5,limit_remaining_usd:'no'}}})`);
+  api = p.nodes.get('api-accounts-table').innerHTML;
+  assert.match(api, /\$4\.50/);
+  assert.doesNotMatch(api, /no per-key cap|pill unknown/);
+  p.run(`renderApiAccounts({api_accounts:{deepseek:{probe_state:'OK',total_balance:8,granted_balance:3,topped_up_balance:1,is_available:false},other:{probe_state:'OK'},blank:null}})`);
+  api = p.nodes.get('api-accounts-table').innerHTML;
+  assert.match(api, /<td class="mono">deepseek<\/td>\s*<td><span class="pill near_cap">near_cap<\/span>/);
+  assert.match(api, /\$8\.00/);
+  assert.match(api, /granted \$3\.00 · topped-up \$1\.00 · unavailable/);
+  assert.match(api, /<td class="mono">other<\/td>\s*<td><span class="pill ok">ok<\/span><\/td>\s*<td><span class="pill unknown">unknown<\/span>/);
+  assert.match(api, /<td class="mono">blank<\/td>\s*<td><span class="pill need_probe">need_probe<\/span><\/td>\s*<td><span class="pill need_probe">NEED_PROBE<\/span>/);
+  p.run(`renderClaudeAccounts({claude_accounts:{'claude:zero':{status:'ok',weekly:{left_pct:40,leftover_pct:0},session5h:{left_pct:10}}}})`);
+  assert.match(p.nodes.get('claude-accounts-table').innerHTML, /0% <span class="stale-note">runs out before reset<\/span>/);
+  assert.equal(p.run('accountPctCell(12.6)'), '13%');
+  assert.equal(p.run('accountPctCell(0)'), '0%');
 });

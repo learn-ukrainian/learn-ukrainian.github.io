@@ -273,10 +273,6 @@ button { font: inherit; }
     if (typeof value === 'number' && Number.isSafeInteger(value) && value >= 0) {
       return value;
     }
-    if (typeof value === 'string' && /^\d+$/.test(value)) {
-      const number = Number(value);
-      if (Number.isSafeInteger(number) && number >= 0) return number;
-    }
     return fallback;
   }
 
@@ -493,6 +489,17 @@ button { font: inherit; }
     els.metricUnregistered.textContent = String(counts.unregistered);
   }
 
+  function membershipKnown(epic) {
+    const bucket = state.data?.issues_by_epic?.[String(epicNumber(epic))];
+    return state.data?.membership_complete === true
+      && (state.data.incomplete_nodes === undefined || (Array.isArray(state.data.incomplete_nodes) && !state.data.incomplete_nodes.length))
+      && state.data.status !== 'no-cache' && isObject(bucket) && Array.isArray(bucket.items)
+      && bucket.items.every(item => isObject(item) && positiveInteger(item.number) !== null)
+      && nonNegativeInteger(bucket.total_open) !== null
+      && (bucket.truncated === false ? bucket.total_open === bucket.items.length
+        : bucket.truncated === true && bucket.total_open > bucket.items.length);
+  }
+
   function renderEpicNode(epic) {
     const id = epicId(epic);
     const number = epicNumber(epic);
@@ -502,7 +509,7 @@ button { font: inherit; }
     const title = short(epic.title, 'Title unavailable');
     const stateText = entryBody(epic.last_state);
     const holder = isObject(epic.lease) ? formatHolder(epic.lease.holder) : 'Driver unknown';
-    const membershipKnown = state.data?.membership_complete !== false && !(state.data?.incomplete_nodes?.length);
+    const countsKnown = membershipKnown(epic);
     const ariaLabel = number === null
       ? title + ', ' + statusLabel(status)
       : 'Epic ' + String(number) + ': ' + title + ', ' + statusLabel(status);
@@ -510,7 +517,7 @@ button { font: inherit; }
     return '<button class="epic-node status-' + escapeHtml(status) + '" type="button" data-epic-id="' + escapeHtml(id) + '" aria-pressed="' + (selected ? 'true' : 'false') + '" aria-label="' + escapeHtml(ariaLabel) + '">' +
       '<span class="epic-node-top"><span class="epic-number">' + escapeHtml(numberLabel) + '</span><span class="status-chip status-' + escapeHtml(status) + '">' + escapeHtml(statusLabel(status)) + '</span></span>' +
       '<span class="epic-title">' + escapeHtml(title) + '</span>' +
-      '<span class="epic-meta"><span>Open: ' + escapeHtml(formatCount(membershipKnown ? epic.open_issue_count : null, 'unknown')) + '</span><span>Closed: ' + escapeHtml(formatCount(membershipKnown ? epic.closed_issue_count : null, 'unknown')) + '</span></span>' +
+      '<span class="epic-meta"><span>Open: ' + escapeHtml(formatCount(countsKnown ? epic.open_issue_count : null, 'unknown')) + '</span><span>Closed: ' + escapeHtml(formatCount(countsKnown ? epic.closed_issue_count : null, 'unknown')) + '</span></span>' +
       '<span class="epic-driver">Driver: ' + escapeHtml(holder) + '</span>' +
       (stateText ? '<span class="epic-state" title="' + escapeHtml(stateText) + '">Latest state: ' + escapeHtml(stateText) + '</span>' : '') +
       '</button>';
@@ -617,7 +624,7 @@ button { font: inherit; }
     const hasValidItems = Array.isArray(bucket.items);
     const items = hasValidItems ? bucket.items.filter(isObject) : [];
     const totalOpen = nonNegativeInteger(bucket.total_open);
-    const isComplete = !feedIncomplete && hasValidItems && totalOpen !== null;
+    const isComplete = membershipKnown(epic);
     const truncated = isComplete && bucket.truncated === true;
     const cacheLabel = state.data.stale === true ? 'in the stale cache.' : 'in the cache.';
     let summary;
@@ -672,7 +679,7 @@ button { font: inherit; }
       : '<span class="muted">GitHub issue number unavailable</span>';
     const stateText = entryBody(epic.last_state);
     const registryStatus = short(epic.registry_status, 'unknown');
-    const membershipKnown = state.data?.membership_complete !== false && !(state.data?.incomplete_nodes?.length);
+    const countsKnown = membershipKnown(epic);
 
     els.detailMeta.textContent = number === null ? 'Epic node' : 'Epic #' + String(number);
     els.detailPane.classList.remove('empty');
@@ -682,8 +689,8 @@ button { font: inherit; }
       '<dl class="detail-grid">' +
       '<div class="detail-field"><dt>Area</dt><dd>' + escapeHtml(area ? area.title : short(epic.area_id, 'Area unavailable')) + '</dd></div>' +
       '<div class="detail-field"><dt>Registry</dt><dd class="mono">' + escapeHtml(registryStatus) + '</dd></div>' +
-      '<div class="detail-field"><dt>Open issues</dt><dd>' + escapeHtml(formatCount(membershipKnown ? epic.open_issue_count : null, 'unknown')) + '</dd></div>' +
-      '<div class="detail-field"><dt>Closed issues</dt><dd>' + escapeHtml(formatCount(membershipKnown ? epic.closed_issue_count : null, 'unknown')) + '</dd></div>' +
+      '<div class="detail-field"><dt>Open issues</dt><dd>' + escapeHtml(formatCount(countsKnown ? epic.open_issue_count : null, 'unknown')) + '</dd></div>' +
+      '<div class="detail-field"><dt>Closed issues</dt><dd>' + escapeHtml(formatCount(countsKnown ? epic.closed_issue_count : null, 'unknown')) + '</dd></div>' +
       '</dl></section>' +
       renderLeaseSection(epic, status) +
       '<section class="detail-section"><h5>Latest state</h5><p class="detail-lede">' + escapeHtml(stateText || 'No latest state entry.') + '</p></section>' +
