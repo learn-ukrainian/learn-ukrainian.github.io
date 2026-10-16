@@ -31,6 +31,7 @@ from scripts.ci.ci_timings import (
     resolve_repository,
 )
 from scripts.common import github_client
+from scripts.common import github_payload as gp
 from scripts.publish.github import read
 
 
@@ -203,186 +204,280 @@ class MalformedPayload(RuntimeError):
 
 
 _PR_STATES = frozenset({"OPEN", "CLOSED", "MERGED"})
-_NOT_FOUND_MARKER = "Could not resolve to a PullRequest"
+RUNS_PAGE_SIZE = 30  # ``per_page=30`` in the REST runs request and ``-L 30`` in the fallback
+QUEUE_ENTRIES_PAGE_SIZE = 50  # ``entries(first: 50)`` in the ``queue-status`` query
 
 
-def _require(condition: bool, reason: str) -> None:
-    if not condition:
-        raise MalformedPayload(reason)
+def _opt_text(obj: dict[str, Any], key: str, what: str) -> str | None:
+    return gp.optional(obj, key, gp.require_str, what)
 
 
-def _is_int(value: Any, minimum: int) -> bool:
-    """An exact int (never a bool, float or string) that is at least ``minimum``."""
-    return isinstance(value, int) and not isinstance(value, bool) and value >= minimum
+def _opt_int(obj: dict[str, Any], key: str, what: str, minimum: int) -> int | None:
+    return gp.optional(obj, key, gp.require_int, what, minimum=minimum)
 
 
-def _is_text(value: Any) -> bool:
-    return isinstance(value, str) and bool(value)
+def _run_id(value: Any, what: str) -> str | int:
+    """A GraphQL run ``id`` is an opaque ID string; a REST or recorded run id is an int64."""
+    if isinstance(value, str):
+        return gp.require_str(value, what)
+    return gp.require_int(value, what, minimum=0, maximum=gp.INT64_MAX)
 
 
-def _optional(value: Any, check: Any) -> bool:
-    """``null`` (or an absent key) is allowed; anything else must pass ``check``."""
-    return value is None or bool(check(value))
+@dataclass(frozen=True)
+class QueueEntry:
+    position: int | None
+    state: str | None
+    enqueued_at: str | None
+    eta_seconds: int | None
 
 
-def _object(value: Any, reason: str) -> dict[str, Any]:
-    _require(isinstance(value, dict), reason)
-    return value
+def _entry(obj: dict[str, Any], what: str) -> QueueEntry:
+    """The queue-position fields shared by a pull request's own entry and a queue node."""
+    return QueueEntry(
+        position=_opt_int(obj, "position", f"{what}.position", 1),
+        state=_opt_text(obj, "state", f"{what}.state"),
+        enqueued_at=_opt_text(obj, "enqueuedAt", f"{what}.enqueuedAt"),
+        eta_seconds=_opt_int(obj, "estimatedTimeToMerge", f"{what}.estimatedTimeToMerge", 0),
+    )
 
 
-def _validate_check_suites(commit: Any) -> None:
-    """``headCommit`` is null or an object whose ``checkSuites.nodes`` is a list of suite objects."""
+def _suite_runs(commit: dict[str, Any] | None, pr_number: int) -> tuple[dict[str, Any], ...]:
+    """Candidate merge_group runs from ``headCommit.checkSuites.nodes``; every node is validated."""
     if commit is None:
-        return
-    suites = _object(commit, "headCommit")
-    check_suites = suites.get("checkSuites")
+        return ()
+    check_suites = gp.optional(commit, "checkSuites", gp.require_object, "checkSuites")
     if check_suites is None:
-        return
-    nodes = _object(check_suites, "checkSuites").get("nodes")
-    _require(nodes is None or isinstance(nodes, list), "checkSuites.nodes")
-    for node in nodes or []:
-        suite = _object(node, "checkSuites.nodes[]")
-        _require(_optional(suite.get("status"), _is_text), "checkSuite.status")
-        _require(_optional(suite.get("conclusion"), _is_text), "checkSuite.conclusion")
-        _require(_optional(suite.get("createdAt"), _is_text), "checkSuite.createdAt")
-        run = suite.get("workflowRun")
+        return ()
+    runs: list[dict[str, Any]] = []
+    for node in gp.optional(check_suites, "nodes", gp.require_list, "checkSuites.nodes") or []:
+        suite = gp.require_object(node, "checkSuites.nodes[]")
+        status = _opt_text(suite, "status", "checkSuite.status")
+        conclusion = _opt_text(suite, "conclusion", "checkSuite.conclusion")
+        suite_created = _opt_text(suite, "createdAt", "checkSuite.createdAt")
+        run = gp.optional(suite, "workflowRun", gp.require_object, "workflowRun")
         if run is None:
             continue
-        run = _object(run, "workflowRun")
-        _require(_is_text(run.get("url")), "workflowRun.url")
-        _require(_optional(run.get("event"), _is_text), "workflowRun.event")
-        _require(_optional(run.get("createdAt"), _is_text), "workflowRun.createdAt")
-        _require(_optional(run.get("id"), lambda v: _is_int(v, 0)), "workflowRun.id")
-        workflow = run.get("workflow")
-        _require(workflow is None or isinstance(workflow, dict), "workflowRun.workflow")
-        _require(_optional((workflow or {}).get("name"), _is_text), "workflow.name")
-
-
-def _validate_entry_fields(entry: dict[str, Any], reason: str) -> None:
-    """The queue-position fields shared by a pull request's own entry and a queue node."""
-    _require(_optional(entry.get("position"), lambda v: _is_int(v, 1)), f"{reason}.position")
-    _require(_optional(entry.get("state"), _is_text), f"{reason}.state")
-    _require(_optional(entry.get("enqueuedAt"), _is_text), f"{reason}.enqueuedAt")
-    _require(_optional(entry.get("estimatedTimeToMerge"), lambda v: _is_int(v, 0)), f"{reason}.estimatedTimeToMerge")
-
-
-def _validate_pull_request(pull: dict[str, Any], pr_number: int) -> None:
-    number = pull.get("number")
-    _require(_is_int(number, 1) and number == pr_number, "pullRequest.number")
-    state = pull.get("state")
-    _require(isinstance(state, str) and state in _PR_STATES, "pullRequest.state")
-    merged, in_queue = pull.get("merged"), pull.get("isInMergeQueue")
-    _require(isinstance(merged, bool), "pullRequest.merged")
-    _require(isinstance(in_queue, bool), "pullRequest.isInMergeQueue")
-    _require(merged == (state == "MERGED"), "pullRequest.merged/state")
-    _require(_optional(pull.get("mergeStateStatus"), _is_text), "pullRequest.mergeStateStatus")
-    entry = pull.get("mergeQueueEntry")
-    if entry is not None:
-        entry = _object(entry, "mergeQueueEntry")
-        _require(in_queue, "mergeQueueEntry/isInMergeQueue")
-        _validate_entry_fields(entry, "mergeQueueEntry")
-        _validate_check_suites(entry.get("headCommit"))
-
-
-def _validate_merge_queue(queue: Any) -> None:
-    if queue is None:
-        return
-    queue = _object(queue, "mergeQueue")
-    _require(_optional(queue.get("url"), _is_text), "mergeQueue.url")
-    _require(
-        _optional(queue.get("nextEntryEstimatedTimeToMerge"), lambda v: _is_int(v, 0)),
-        "mergeQueue.nextEntryEstimatedTimeToMerge",
-    )
-    entries = queue.get("entries")
-    if entries is None:
-        return
-    nodes = _object(entries, "mergeQueue.entries").get("nodes")
-    _require(nodes is None or isinstance(nodes, list), "mergeQueue.entries.nodes")
-    for node in nodes or []:
-        node = _object(node, "mergeQueue.entries.nodes[]")
-        _validate_entry_fields(node, "mergeQueue.entries.nodes[]")
-        pull = _object(node.get("pullRequest"), "mergeQueue.entries.nodes[].pullRequest")
-        _require(_is_int(pull.get("number"), 1), "mergeQueue.entries.nodes[].pullRequest.number")
+        url = gp.require_str(gp.field(run, "url", "workflowRun.url"), "workflowRun.url")
+        event = _opt_text(run, "event", "workflowRun.event")
+        created = _opt_text(run, "createdAt", "workflowRun.createdAt")
+        run_id = gp.optional(run, "id", _run_id, "workflowRun.id")
+        workflow = gp.optional(run, "workflow", gp.require_object, "workflowRun.workflow")
+        name = _opt_text(workflow, "name", "workflow.name") if workflow is not None else None
+        # Filter out non-merge_group runs (e.g. stale pull_request run)
+        if event and event != "merge_group":
+            continue
+        runs.append(
+            {
+                "id": run_id or 0,
+                "url": url,
+                "html_url": url,
+                "name": name or "",
+                "status": status,
+                "conclusion": conclusion,
+                "event": event or "merge_group",
+                "head_branch": f"gh-readonly-queue/main/pr-{pr_number}-suite",
+                "created_at": created or suite_created or "",
+            }
+        )
+    return tuple(runs)
 
 
 @dataclass(frozen=True)
 class QueueDocument:
-    """A GraphQL ``queue-status`` document that passed :func:`parse_queue_status`."""
+    """The typed fields of a GraphQL ``queue-status`` document that passed :func:`parse_queue_status`."""
 
-    pull_request: dict[str, Any]
-    merge_queue: dict[str, Any]
+    state: str
+    merged: bool
+    merge_state_status: str | None
+    in_queue: bool
+    entry: QueueEntry | None
+    suite_runs: tuple[dict[str, Any], ...]
+    queue_url: str | None
+    next_eta_seconds: int | None
+    queue_nodes: tuple[tuple[int, QueueEntry], ...]
 
 
-def parse_queue_status(
-    document: Any, pr_number: int, *, repo: str | None = None, null_data_is_not_found: bool = False
-) -> QueueDocument:
-    """The single choke point for a GraphQL ``queue-status`` document.
+def _queue_nodes(entries: dict[str, Any], *, consumed: bool) -> tuple[tuple[int, QueueEntry], ...]:
+    """Every queue node is validated; when the tool reads them they must be the complete first page."""
+    nodes = gp.optional(entries, "nodes", gp.require_list, "mergeQueue.entries.nodes")
+    total = _opt_int(entries, "totalCount", "mergeQueue.entries.totalCount", 0)
+    parsed = []
+    for node in nodes or []:
+        node = gp.require_object(node, "mergeQueue.entries.nodes[]")
+        pull = gp.require_object(gp.field(node, "pullRequest", "nodes[].pullRequest"), "nodes[].pullRequest")
+        number = gp.require_int(
+            gp.field(pull, "number", "nodes[].pullRequest.number"), "nodes[].pullRequest.number", minimum=1
+        )
+        parsed.append((number, _entry(node, "mergeQueue.entries.nodes[]")))
+    if consumed:
+        if nodes is None or total is None:
+            raise gp.UnavailablePayload("mergeQueue.entries")
+        gp.require_complete_page(nodes, total, "mergeQueue.entries", page_size=QUEUE_ENTRIES_PAGE_SIZE)
+    return tuple(parsed)
 
-    Returns the validated pull request and merge queue, or raises before anything is decided:
 
-    * ``ValueError`` - GraphQL positively reports the pull request unresolvable (an error naming
-      it, and ``pullRequest`` null);
-    * ``RuntimeError`` - GraphQL returned errors (a partial result is not trusted);
+def _not_found_error(error: Any, pr_number: int) -> bool:
+    """GitHub's own error for an unresolvable pull request, naming exactly the requested number."""
+    return (
+        isinstance(error, dict)
+        and error.get("message") == f"Could not resolve to a PullRequest with the number of {pr_number}."
+        and error.get("type", "NOT_FOUND") == "NOT_FOUND"
+        and error.get("path", ["repository", "pullRequest"]) == ["repository", "pullRequest"]
+    )
+
+
+def _positively_not_found(document: dict[str, Any], errors: list[dict[str, Any]], pr_number: int) -> bool:
+    """Every error is the not-found error for this number, and ``data.repository.pullRequest`` is null."""
+    if not all(_not_found_error(error, pr_number) for error in errors):
+        return False
+    try:
+        data = gp.require_object(gp.field(document, "data", "data"), "data")
+        repository = gp.require_object(gp.field(data, "repository", "data.repository"), "data.repository")
+        return gp.field(repository, "pullRequest", "data.repository.pullRequest") is None
+    except gp.UnavailablePayload:
+        return False
+
+
+def parse_queue_status(document: Any, pr_number: int, *, repo: str | None = None) -> QueueDocument:
+    """The single choke point for a GraphQL ``queue-status`` document, live or offline.
+
+    Returns the typed fields, or raises before anything is decided:
+
+    * ``ValueError`` - GraphQL positively reports the pull request unresolvable: every error is
+      the not-found error for exactly this number and ``data.repository.pullRequest`` is null;
+    * ``RuntimeError`` - GraphQL returned any other errors (a partial result is not trusted);
     * :class:`MalformedPayload` (a ``RuntimeError``) - the document is not exactly the whitelisted
-      shape: JSON object, ``data.repository.pullRequest`` an object whose number, state, merged and
-      isInMergeQueue are present with the expected types, and every optional field typed.
-
-    ``null_data_is_not_found`` keeps one recorded offline-fixture contract (a bare ``{"data": null}``
-    reads as "not found"); the live read never sets it.
+      shape, or it carries failure or paging evidence anywhere outside ``errors``
+      (:func:`scripts.common.github_payload.reject_failure_evidence`).
     """
-    document = _object(document, "document")
-    errors = document.get("errors")
-    _require(errors is None or isinstance(errors, list), "errors")
-    data = document.get("data")
-    repository = data.get("repository") if isinstance(data, dict) else None
-    pull = repository.get("pullRequest") if isinstance(repository, dict) else None
-    if errors:
-        messages = [e["message"] for e in errors if isinstance(e, dict) and _is_text(e.get("message"))]
-        if pull is None and any(_NOT_FOUND_MARKER in m for m in messages):
-            raise ValueError(_not_found_message(pr_number, repo))
-        raise RuntimeError(f"GraphQL error: {'; '.join(messages) if messages else 'no error message'}")
-    if data is None and null_data_is_not_found and "data" in document:
-        raise ValueError(_not_found_message(pr_number, repo))
-    _require(isinstance(data, dict), "data")
-    _require(isinstance(repository, dict), "data.repository")
-    _require(isinstance(pull, dict), "data.repository.pullRequest")
-    _validate_pull_request(pull, pr_number)
-    _validate_merge_queue(repository.get("mergeQueue"))
-    return QueueDocument(pull_request=pull, merge_queue=repository.get("mergeQueue") or {})
+    try:
+        document = gp.require_object(document, "document")
+        errors = gp.graphql_errors(document)
+        gp.reject_failure_evidence({key: value for key, value in document.items() if key != "errors"})
+        if errors:
+            if _positively_not_found(document, errors, pr_number):
+                raise ValueError(_not_found_message(pr_number, repo))
+            raise RuntimeError(f"GraphQL error: {'; '.join(error['message'] for error in errors)}")
+        return _queue_document(document, pr_number)
+    except gp.UnavailablePayload as exc:
+        raise MalformedPayload(exc.reason) from None
+
+
+def _queue_document(document: dict[str, Any], pr_number: int) -> QueueDocument:
+    data = gp.require_object(gp.field(document, "data", "data"), "data")
+    repository = gp.require_object(gp.field(data, "repository", "data.repository"), "data.repository")
+    pull = gp.require_object(
+        gp.field(repository, "pullRequest", "data.repository.pullRequest"), "data.repository.pullRequest"
+    )
+    number = gp.require_int(gp.field(pull, "number", "pullRequest.number"), "pullRequest.number", minimum=1)
+    if number != pr_number:
+        raise gp.UnavailablePayload("pullRequest.number")
+    state = gp.require_str(gp.field(pull, "state", "pullRequest.state"), "pullRequest.state")
+    if state not in _PR_STATES:
+        raise gp.UnavailablePayload("pullRequest.state")
+    merged = gp.require_bool(gp.field(pull, "merged", "pullRequest.merged"), "pullRequest.merged")
+    in_queue = gp.require_bool(
+        gp.field(pull, "isInMergeQueue", "pullRequest.isInMergeQueue"), "pullRequest.isInMergeQueue"
+    )
+    if merged != (state == "MERGED"):
+        raise gp.UnavailablePayload("pullRequest.merged/state")
+    merge_state_status = _opt_text(pull, "mergeStateStatus", "pullRequest.mergeStateStatus")
+
+    entry: QueueEntry | None = None
+    suite_runs: tuple[dict[str, Any], ...] = ()
+    entry_obj = gp.optional(pull, "mergeQueueEntry", gp.require_object, "mergeQueueEntry")
+    if entry_obj is not None:
+        if not in_queue:
+            raise gp.UnavailablePayload("mergeQueueEntry/isInMergeQueue")
+        entry = _entry(entry_obj, "mergeQueueEntry")
+        suite_runs = _suite_runs(gp.optional(entry_obj, "headCommit", gp.require_object, "headCommit"), pr_number)
+
+    queue_url: str | None = None
+    next_eta: int | None = None
+    queue_nodes: tuple[tuple[int, QueueEntry], ...] = ()
+    # The queue nodes are read only to place a queued pull request that has no entry of its own.
+    consumed = in_queue and entry is None
+    queue = gp.optional(repository, "mergeQueue", gp.require_object, "mergeQueue")
+    if queue is not None:
+        queue_url = _opt_text(queue, "url", "mergeQueue.url")
+        next_eta = _opt_int(queue, "nextEntryEstimatedTimeToMerge", "mergeQueue.nextEntryEstimatedTimeToMerge", 0)
+        entries = gp.optional(queue, "entries", gp.require_object, "mergeQueue.entries")
+        if entries is not None:
+            queue_nodes = _queue_nodes(entries, consumed=consumed)
+        elif consumed:
+            raise gp.UnavailablePayload("mergeQueue.entries")
+    return QueueDocument(
+        state=state,
+        merged=merged,
+        merge_state_status=merge_state_status,
+        in_queue=in_queue,
+        entry=entry,
+        suite_runs=suite_runs,
+        queue_url=queue_url,
+        next_eta_seconds=next_eta,
+        queue_nodes=queue_nodes,
+    )
 
 
 def _not_found_message(pr_number: int, repo: str | None) -> str:
     return f"Pull request #{pr_number} not found in repository{f' {repo}' if repo else ''}."
 
 
-def _valid_run(run: Any) -> bool:
-    """A usable Actions run names its page (``html_url`` or ``url``) and its ``status``; every other
-    field the tool reads is null/absent or of its expected type."""
-    if not isinstance(run, dict) or not _is_text(run.get("html_url") or run.get("url")):
+def _offline_fixture_not_found(document: Any, pr_number: int) -> bool:
+    """The one recorded offline-fixture contract: ``{"data": null}`` (optionally with only the
+    not-found error for this number) reads as "not found". Only :func:`evaluate_status_data` calls
+    it; a live read of the same document is unavailable."""
+    if not isinstance(document, dict) or "data" not in document or document["data"] is not None:
         return False
-    if not _is_text(run.get("status")):
+    if not document.keys() <= {"data", "errors", "actions_runs"}:
         return False
-    texts = ("html_url", "url", "conclusion", "event", "name", "head_branch", "headBranch")
-    texts += ("created_at", "createdAt", "updated_at", "updatedAt")
-    return all(_optional(run.get(k), lambda v: isinstance(v, str)) for k in texts) and all(
-        _optional(run.get(k), lambda v: _is_int(v, 0)) for k in ("id", "databaseId")
-    )
+    try:
+        errors = gp.graphql_errors(document)
+    except gp.UnavailablePayload:
+        return False
+    return all(_not_found_error(error, pr_number) for error in errors)
 
 
-def parse_actions_runs(data: Any, key: str | None) -> list[dict[str, Any]]:
+def _valid_run(run: Any, what: str) -> dict[str, Any]:
+    """A usable Actions run names its page (``html_url``/``url``), its ``status`` and the head branch
+    that matches it to a pull request (``head_branch``/``headBranch``); every other field the tool
+    reads is null/absent or of its expected type."""
+    run = gp.require_object(run, what)
+    for keys in (("html_url", "url"), ("head_branch", "headBranch")):
+        present = [gp.optional(run, key, gp.require_str, f"{what}.{key}") for key in keys]
+        if not any(present):
+            raise gp.UnavailablePayload(f"{what}.{keys[0]}")
+    gp.require_str(gp.field(run, "status", f"{what}.status"), f"{what}.status")
+    for key in ("conclusion", "event", "name", "created_at", "createdAt", "updated_at", "updatedAt"):
+        gp.optional(run, key, gp.require_str, f"{what}.{key}", nonempty=False)
+    for key in ("id", "databaseId"):
+        gp.optional(run, key, gp.require_int, f"{what}.{key}", minimum=0, maximum=gp.INT64_MAX)
+    return run
+
+
+def parse_actions_runs(data: Any, key: str | None, *, page_size: int | None = None) -> list[dict[str, Any]]:
     """The single choke point for an Actions run list; an unavailable read is never an empty list.
 
     ``key`` names the list inside a REST object; ``None`` means the payload is itself a list.
-    Every element must pass :func:`_valid_run`.
+    With ``page_size`` the object must declare ``total_count`` and carry the complete first page
+    (:func:`scripts.common.github_payload.require_complete_page`). Failure evidence anywhere in
+    the payload and any element that fails :func:`_valid_run` refuse the whole read.
     """
-    if key is None:
-        runs = data
-    else:
-        _require(isinstance(data, dict), "runs document")
-        runs = data.get(key)
-    _require(isinstance(runs, list), "runs list")
-    _require(all(_valid_run(r) for r in runs), "run element")
-    return runs
+    try:
+        gp.reject_failure_evidence(data)
+        if key is None:
+            runs = gp.require_list(data, "runs list")
+        else:
+            document = gp.require_object(data, "runs document")
+            runs = gp.require_list(gp.field(document, key, "runs list"), "runs list")
+            if page_size is not None:
+                total = gp.require_int(
+                    gp.field(document, "total_count", "runs total_count"), "runs total_count", minimum=0
+                )
+                gp.require_complete_page(runs, total, "runs page", page_size=page_size)
+        return [_valid_run(run, "run element") for run in runs]
+    except gp.UnavailablePayload as exc:
+        raise MalformedPayload(exc.reason) from None
 
 
 def evaluate_status_data(
@@ -390,99 +485,46 @@ def evaluate_status_data(
     pr_number: int,
     actions_runs: list[dict[str, Any]] | None = None,
 ) -> MergeQueueStatus:
-    """Evaluate a raw GraphQL document and Actions runs into MergeQueueStatus.
+    """Evaluate a recorded GraphQL document and Actions runs into MergeQueueStatus (offline).
 
     Both inputs are validated by the same choke points as the live read; a malformed document or
     run list raises (:class:`MalformedPayload`) instead of producing a status.
     """
-    document = parse_queue_status(graphql_data, pr_number, null_data_is_not_found=True)
+    if _offline_fixture_not_found(graphql_data, pr_number):
+        raise ValueError(_not_found_message(pr_number, None))
+    document = parse_queue_status(graphql_data, pr_number)
     runs = parse_actions_runs(actions_runs, None) if actions_runs is not None else []
     return _evaluate(document, pr_number, runs)
 
 
 def _evaluate(document: QueueDocument, pr_number: int, actions_runs: list[dict[str, Any]]) -> MergeQueueStatus:
-    pr_obj = document.pull_request
-    pr_state: str = pr_obj["state"]
-    pr_merged: bool = pr_obj["merged"]
-    merge_state_status = pr_obj.get("mergeStateStatus")
-    is_in_mq: bool = pr_obj["isInMergeQueue"]
-    mq_entry = pr_obj.get("mergeQueueEntry")
-
-    mq_obj = document.merge_queue
-    queue_url = mq_obj.get("url")
-    next_eta = mq_obj.get("nextEntryEstimatedTimeToMerge")
-
     position: int | None = None
     state: str | None = None
     enqueued_at: str | None = None
     eta_seconds: int | None = None
-    head_commit: dict[str, Any] | None = None
 
-    if mq_entry is not None:
-        position = mq_entry.get("position")
-        state = mq_entry.get("state")
-        enqueued_at = mq_entry.get("enqueuedAt")
-        eta_seconds = mq_entry.get("estimatedTimeToMerge")
-        head_commit = mq_entry.get("headCommit")
-    elif is_in_mq:
+    if document.entry is not None:
+        position = document.entry.position
+        state = document.entry.state
+        enqueued_at = document.entry.enqueued_at
+        eta_seconds = document.entry.eta_seconds
+    elif document.in_queue:
         # Check entries on mergeQueue object
-        for node in (mq_obj.get("entries") or {}).get("nodes") or []:
-            if node["pullRequest"]["number"] == pr_number:
-                position = node.get("position")
-                state = node.get("state")
-                enqueued_at = node.get("enqueuedAt")
-                eta_seconds = node.get("estimatedTimeToMerge")
+        for number, node in document.queue_nodes:
+            if number == pr_number:
+                position = node.position
+                state = node.state
+                enqueued_at = node.enqueued_at
+                eta_seconds = node.eta_seconds
                 break
         if position is None:
             # isInMergeQueue is true but position could not be resolved from entry
             state = "QUEUED"
-            if next_eta is not None:
-                eta_seconds = next_eta
+            if document.next_eta_seconds is not None:
+                eta_seconds = document.next_eta_seconds
 
-    # Collect candidate merge_group workflow runs from checkSuites and actions_runs
-    candidate_runs: list[dict[str, Any]] = []
-
-    if head_commit:
-        for cs in (head_commit.get("checkSuites") or {}).get("nodes") or []:
-            wf_run = cs.get("workflowRun")
-            if wf_run is None:
-                continue
-            wf_url = wf_run["url"]
-            wf_event = wf_run.get("event")
-            # Filter out non-merge_group runs (e.g. stale pull_request run)
-            if wf_event and wf_event != "merge_group":
-                continue
-            wf_name = (
-                (wf_run.get("workflow") or {}).get("name")
-                or wf_run.get("name")
-                or cs.get("name")
-                or ""
-            )
-            created_at = (
-                wf_run.get("createdAt")
-                or wf_run.get("created_at")
-                or cs.get("createdAt")
-                or cs.get("created_at")
-                or ""
-            )
-            run_id = wf_run.get("id") or wf_run.get("databaseId") or cs.get("id") or 0
-            candidate_runs.append(
-                {
-                    "id": run_id,
-                    "url": wf_url,
-                    "html_url": wf_url,
-                    "name": wf_name,
-                    "status": cs.get("status") or wf_run.get("status"),
-                    "conclusion": cs.get("conclusion") or wf_run.get("conclusion"),
-                    "event": wf_event or "merge_group",
-                    "head_branch": f"gh-readonly-queue/main/pr-{pr_number}-suite",
-                    "created_at": created_at,
-                }
-            )
-
-    candidate_runs.extend(actions_runs)
-
-    matched_run = find_latest_merge_group_run(candidate_runs, pr_number)
+    # Candidate merge_group workflow runs: the check suites first, then the Actions runs
+    matched_run = find_latest_merge_group_run([*document.suite_runs, *actions_runs], pr_number)
     run_url: str | None = None
     run_status: str | None = None
     run_conclusion: str | None = None
@@ -495,19 +537,19 @@ def _evaluate(document: QueueDocument, pr_number: int, actions_runs: list[dict[s
     eta_human = format_eta_human(eta_seconds)
     summary_line = build_summary_line(
         pr_number=pr_number,
-        queued=is_in_mq,
+        queued=document.in_queue,
         position=position,
         state=state,
         eta_human=eta_human,
         run_url=run_url,
-        pr_state=pr_state,
-        pr_merged=pr_merged,
-        merge_state_status=merge_state_status,
+        pr_state=document.state,
+        pr_merged=document.merged,
+        merge_state_status=document.merge_state_status,
     )
 
     return MergeQueueStatus(
         pr_number=pr_number,
-        queued=is_in_mq,
+        queued=document.in_queue,
         position=position,
         state=state,
         enqueued_at=enqueued_at,
@@ -516,10 +558,10 @@ def _evaluate(document: QueueDocument, pr_number: int, actions_runs: list[dict[s
         latest_merge_group_run_url=run_url,
         latest_merge_group_run_status=run_status,
         latest_merge_group_run_conclusion=run_conclusion,
-        pr_state=pr_state,
-        pr_merged=pr_merged,
-        pr_merge_state_status=merge_state_status,
-        queue_url=queue_url,
+        pr_state=document.state,
+        pr_merged=document.merged,
+        pr_merge_state_status=document.merge_state_status,
+        queue_url=document.queue_url,
         summary_line=summary_line,
     )
 
@@ -544,8 +586,9 @@ def _read_runs(
 ) -> list[dict[str, Any]]:
     """One Actions runs read. Any refusal or failure raises; it is never an empty list.
 
-    The return code is checked before the output is parsed. ``key`` names the
-    list inside a REST object; ``None`` means the output is itself a list.
+    The return code is checked before the output is parsed. ``key`` names the list inside a
+    REST object, which must carry its complete first page of ``RUNS_PAGE_SIZE``; ``None`` means
+    the output is itself a list.
     """
     try:
         proc = github_client.run(command, capture_output=True, text=True, env=env, timeout=timeout, check=False)
@@ -558,11 +601,11 @@ def _read_runs(
     if not _exit_ok(proc):
         raise RuntimeError(_unavailable_message(what, proc))
     try:
-        data = json.loads(proc.stdout)
-    except (TypeError, ValueError):
-        raise RuntimeError(_unavailable_message(what, proc)) from None
+        data = gp.decode(proc.stdout)
+    except gp.UnavailablePayload as exc:
+        raise RuntimeError(_unavailable_message(what, proc, reason=exc.reason)) from None
     try:
-        return parse_actions_runs(data, key)
+        return parse_actions_runs(data, key, page_size=None if key is None else RUNS_PAGE_SIZE)
     except MalformedPayload as exc:
         raise RuntimeError(_unavailable_message(what, proc, data, exc.reason)) from None
 
@@ -595,15 +638,13 @@ def fetch_live_status(
     except OSError as exc:
         raise RuntimeError(f"GraphQL request could not start: {type(exc).__name__}.") from exc
 
-    try:
-        data = json.loads(proc.stdout)
-    except (TypeError, ValueError) as exc:
-        err_msg = (proc.stderr or proc.stdout or "").strip() if isinstance(proc.stdout, str) else ""
-        raise RuntimeError(f"Failed to parse GraphQL response (exit {proc.returncode}): {err_msg}") from exc
-
     # The one parse-or-unavailable choke point: a refused read, a failed read, a partial result and
-    # every malformed shape end here, before any further request. Only a positively identified
-    # missing pull request keeps its own meaning (ValueError).
+    # every malformed shape (duplicate keys included) end here, before any further request. Only a
+    # positively identified missing pull request keeps its own meaning (ValueError).
+    try:
+        data = gp.decode(proc.stdout)
+    except gp.UnavailablePayload as exc:
+        raise RuntimeError(_unavailable_message("GraphQL", proc, reason=exc.reason)) from None
     try:
         document = parse_queue_status(data, pr_number, repo=repo)
     except MalformedPayload as exc:
@@ -611,9 +652,9 @@ def fetch_live_status(
     if not _exit_ok(proc):
         raise RuntimeError(_unavailable_message("GraphQL", proc, data))
 
-    # Fetch merge_group workflow runs. An unavailable read raises (no fallback
-    # request, never an empty list); only a successful empty list falls back.
-    runs_path = f"repos/{owner}/{name}/actions/runs?event=merge_group&per_page=30"
+    # Fetch merge_group workflow runs. An unavailable or incomplete read raises (no fallback
+    # request, never an empty list); only a successful, complete empty page falls back.
+    runs_path = f"repos/{owner}/{name}/actions/runs?event=merge_group&per_page={RUNS_PAGE_SIZE}"
     actions_runs = _read_runs(["gh", "api", runs_path], env, timeout, "Actions runs", "workflow_runs")
 
     if not actions_runs:
@@ -626,7 +667,7 @@ def fetch_live_status(
             "--event",
             "merge_group",
             "-L",
-            "30",
+            str(RUNS_PAGE_SIZE),
             "--json",
             "url,headBranch,status,conclusion,createdAt,name,event",
         ]
@@ -675,8 +716,8 @@ def check_and_report_pr_status(
 
     if fixture_file:
         try:
-            with open(fixture_file, encoding="utf-8") as f:
-                fix_data = json.load(f)
+            # Recorded fixtures pass the same strict decoder as a live read (duplicate keys refused).
+            fix_data = gp.decode(Path(fixture_file).read_text(encoding="utf-8"))
         except Exception as exc:
             if json_only:
                 print(
@@ -689,13 +730,15 @@ def check_and_report_pr_status(
         actions_runs: list[dict[str, Any]] = []
         if actions_fixture_file:
             try:
-                with open(actions_fixture_file, encoding="utf-8") as f:
-                    act_data = json.load(f)
-                # The same run-list choke point as the live read: a dict names its list by key.
+                act_data = gp.decode(Path(actions_fixture_file).read_text(encoding="utf-8"))
+                # The same run-list choke point as the live read: a dict names its list by key, and a
+                # recorded REST page that declares ``total_count`` must carry its complete first page.
                 act_key = None
+                page_size = None
                 if isinstance(act_data, dict):
                     act_key = "workflow_runs" if "workflow_runs" in act_data else "runs"
-                actions_runs = parse_actions_runs(act_data, act_key)
+                    page_size = RUNS_PAGE_SIZE if "total_count" in act_data else None
+                actions_runs = parse_actions_runs(act_data, act_key, page_size=page_size)
             except Exception as exc:
                 if json_only:
                     print(

@@ -20,6 +20,7 @@ from typing import Any
 
 import pytest
 
+import scripts.gh_merge_queue_status as mq
 from scripts.ci.ci_timings import main as ci_timings_main
 from scripts.gh_merge_queue_status import (
     build_summary_line,
@@ -623,6 +624,8 @@ _REFUSALS = {
     "refusal_json_with_zero_rc": (0, json.dumps({"error": "github_rate_limited", "reset_at": None})),
 }
 _REPO = "learn-ukrainian/learn-ukrainian.github.io"
+# A complete, empty REST runs page as GitHub documents it (``total_count`` is part of the schema).
+_EMPTY_RUNS = '{"total_count": 0, "workflow_runs": []}'
 _FOUND = {
     "data": {
         "repository": {
@@ -654,7 +657,7 @@ def _live(monkeypatch: pytest.MonkeyPatch, graphql: tuple[int, str], runs: list[
 def test_refused_graphql_read_is_unavailable_not_pr_not_found(
     monkeypatch: pytest.MonkeyPatch, shape: str
 ) -> None:
-    lookups = _live(monkeypatch, _REFUSALS[shape], [(0, '{"workflow_runs": []}')])
+    lookups = _live(monkeypatch, _REFUSALS[shape], [(0, _EMPTY_RUNS)])
     with pytest.raises(RuntimeError, match=r"unavailable|Failed to parse") as excinfo:
         fetch_live_status(123, _REPO)
     assert "not found" not in str(excinfo.value)
@@ -673,7 +676,7 @@ def test_refused_runs_read_is_unavailable_not_empty_and_has_no_fallback(
 
 def test_refused_fallback_run_list_is_unavailable_not_empty(monkeypatch: pytest.MonkeyPatch) -> None:
     lookups = _live(
-        monkeypatch, (0, json.dumps(_FOUND)), [(0, '{"workflow_runs": []}'), _REFUSALS["rate_refusal_reset_only"]]
+        monkeypatch, (0, json.dumps(_FOUND)), [(0, _EMPTY_RUNS), _REFUSALS["rate_refusal_reset_only"]]
     )
     with pytest.raises(RuntimeError, match="Actions run list read unavailable"):
         fetch_live_status(123, _REPO)
@@ -692,13 +695,18 @@ def test_cli_reports_unavailable_read_as_error_not_pr_not_found(
 
 
 def test_successful_live_reads_are_unchanged(monkeypatch: pytest.MonkeyPatch) -> None:
-    run = {"url": "https://example.invalid/run/1", "status": "completed", "conclusion": "success"}
-    lookups = _live(monkeypatch, (0, json.dumps(_FOUND)), [(0, json.dumps({"workflow_runs": [run]}))])
+    run = {
+        "url": "https://example.invalid/run/1",
+        "status": "completed",
+        "conclusion": "success",
+        "head_branch": "gh-readonly-queue/main/pr-123-abc",
+    }
+    lookups = _live(monkeypatch, (0, json.dumps(_FOUND)), [(0, json.dumps({"total_count": 1, "workflow_runs": [run]}))])
     status = fetch_live_status(123, _REPO)
     assert (status.pr_number, status.queued, status.pr_state) == (123, False, "OPEN")
     assert len(lookups) == 1
     # An empty (successful) runs list still falls back to the run list, as before.
-    lookups = _live(monkeypatch, (0, json.dumps(_FOUND)), [(0, '{"workflow_runs": []}'), (0, json.dumps([run]))])
+    lookups = _live(monkeypatch, (0, json.dumps(_FOUND)), [(0, _EMPTY_RUNS), (0, json.dumps([run]))])
     assert fetch_live_status(123, _REPO).pr_number == 123
     assert len(lookups) == 2
 
@@ -719,7 +727,7 @@ def test_failed_graphql_read_with_envelope_is_rejected_before_any_request(
     monkeypatch: pytest.MonkeyPatch, stdout: str
 ) -> None:
     """Return code 1 plus a data envelope once passed, or became "not found" after more requests."""
-    lookups = _live(monkeypatch, (1, stdout), [(0, '{"workflow_runs": []}')])
+    lookups = _live(monkeypatch, (1, stdout), [(0, _EMPTY_RUNS)])
     with pytest.raises(RuntimeError, match=r"unavailable|GraphQL error") as excinfo:
         fetch_live_status(123, _REPO)
     assert "not found" not in str(excinfo.value)
@@ -730,7 +738,7 @@ def test_positively_identified_not_found_keeps_its_meaning_with_no_further_reque
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     payload = {"data": {"repository": {"pullRequest": None}}, "errors": _NOT_FOUND_ERROR}
-    lookups = _live(monkeypatch, (1, json.dumps(payload)), [(0, '{"workflow_runs": []}')])
+    lookups = _live(monkeypatch, (1, json.dumps(payload)), [(0, _EMPTY_RUNS)])
     with pytest.raises(ValueError, match="Pull request #123 not found in repository"):
         fetch_live_status(123, _REPO)
     assert lookups == []
@@ -738,14 +746,14 @@ def test_positively_identified_not_found_keeps_its_meaning_with_no_further_reque
 
 def test_not_found_error_cannot_discard_a_resolved_pull_request(monkeypatch: pytest.MonkeyPatch) -> None:
     payload = {**_FOUND, "errors": _NOT_FOUND_ERROR}
-    lookups = _live(monkeypatch, (1, json.dumps(payload)), [(0, '{"workflow_runs": []}')])
+    lookups = _live(monkeypatch, (1, json.dumps(payload)), [(0, _EMPTY_RUNS)])
     with pytest.raises(RuntimeError, match="GraphQL error"):
         fetch_live_status(123, _REPO)
     assert lookups == []
 
 
 def test_successful_empty_envelope_is_unavailable_not_not_found(monkeypatch: pytest.MonkeyPatch) -> None:
-    lookups = _live(monkeypatch, (0, json.dumps({"data": None})), [(0, '{"workflow_runs": []}')])
+    lookups = _live(monkeypatch, (0, json.dumps({"data": None})), [(0, _EMPTY_RUNS)])
     with pytest.raises(RuntimeError, match="GraphQL read unavailable") as excinfo:
         fetch_live_status(123, _REPO)
     assert "not found" not in str(excinfo.value)
@@ -753,13 +761,14 @@ def test_successful_empty_envelope_is_unavailable_not_not_found(monkeypatch: pyt
 
 
 _MALFORMED_RUNS = {
-    "empty_element": {"workflow_runs": [{}]},
-    "null_element": {"workflow_runs": [None]},
-    "scalar_element": {"workflow_runs": ["x"]},
-    "no_status": {"workflow_runs": [{"html_url": "https://example.invalid/run/1"}]},
-    "no_url": {"workflow_runs": [{"status": "completed"}]},
+    "empty_element": {"total_count": 1, "workflow_runs": [{}]},
+    "null_element": {"total_count": 1, "workflow_runs": [None]},
+    "scalar_element": {"total_count": 1, "workflow_runs": ["x"]},
+    "no_status": {"total_count": 1, "workflow_runs": [{"html_url": "https://example.invalid/run/1"}]},
+    "no_url": {"total_count": 1, "workflow_runs": [{"status": "completed"}]},
     "one_bad_among_good": {
-        "workflow_runs": [{"html_url": "https://example.invalid/run/1", "status": "completed"}, {}]
+        "total_count": 2,
+        "workflow_runs": [{"html_url": "https://example.invalid/run/1", "status": "completed"}, {}],
     },
 }
 
@@ -773,7 +782,7 @@ def test_malformed_run_elements_are_unavailable_not_run_none(monkeypatch: pytest
 
 
 def test_malformed_fallback_run_list_elements_are_unavailable(monkeypatch: pytest.MonkeyPatch) -> None:
-    lookups = _live(monkeypatch, (0, json.dumps(_FOUND)), [(0, '{"workflow_runs": []}'), (0, "[{}]")])
+    lookups = _live(monkeypatch, (0, json.dumps(_FOUND)), [(0, _EMPTY_RUNS), (0, "[{}]")])
     with pytest.raises(RuntimeError, match="Actions run list read unavailable"):
         fetch_live_status(123, _REPO)
     assert len(lookups) == 2
@@ -827,7 +836,11 @@ def _without(pull: dict[str, Any], key: str) -> dict[str, Any]:
 
 _ENTRY = {"position": 2, "state": "QUEUED", "enqueuedAt": "2026-09-08T18:00:00Z", "estimatedTimeToMerge": 600}
 _SUITE = {"status": "completed", "conclusion": "success", "workflowRun": {"url": "https://example.invalid/r/1"}}
-_QUEUE = {"url": "https://example.invalid/q", "nextEntryEstimatedTimeToMerge": 300, "entries": {"nodes": []}}
+_QUEUE = {
+    "url": "https://example.invalid/q",
+    "nextEntryEstimatedTimeToMerge": 300,
+    "entries": {"totalCount": 0, "nodes": []},
+}
 
 
 def _queued(entry: Any = ..., **overrides: Any) -> dict[str, Any]:
@@ -866,6 +879,9 @@ _BAD_GRAPHQL: dict[str, Any] = {
     "errors_nested_object": _doc(errors={"message": "x"}),
     "errors_with_a_resolved_pull_request": _doc(errors=[{"message": "partial failure"}]),
     "errors_without_message": _doc(errors=[{"type": "X"}]),
+    # GraphQL: ``errors`` is absent when nothing failed and otherwise a non-empty list (Oct 2021 §7.1.2)
+    "errors_empty_list": _doc(errors=[]),
+    "errors_null": _doc(errors=None),
     # required keys: missing, null, wrong type, bool-as-int, out of domain
     **{f"missing_{k}": _doc(_without(_pr(), k)) for k in ("number", "state", "merged", "isInMergeQueue")},
     "number_null": _doc(_pr(number=None)),
@@ -944,7 +960,7 @@ _BAD_GRAPHQL: dict[str, Any] = {
 def test_graphql_matrix_is_unavailable_before_any_further_request(monkeypatch: pytest.MonkeyPatch, shape: str) -> None:
     """``{"data":{"repository":{}}}``, ``pullRequest=[]`` and ``pullRequest={}`` once ended as
     "not found" after two more requests, or as "queued=no (state=OPEN), run=none"."""
-    lookups = _live(monkeypatch, (0, json.dumps(_BAD_GRAPHQL[shape])), [(0, '{"workflow_runs": []}'), (0, "[]")])
+    lookups = _live(monkeypatch, (0, json.dumps(_BAD_GRAPHQL[shape])), [(0, _EMPTY_RUNS), (0, "[]")])
     with pytest.raises(RuntimeError, match=r"unavailable|GraphQL error") as excinfo:
         fetch_live_status(123, _REPO)
     assert "not found" not in str(excinfo.value)
@@ -976,7 +992,7 @@ def test_graphql_review_shapes_exit_nonzero_from_a_fixture_file(
 def test_graphql_review_shapes_with_a_failed_read_are_unavailable_too(
     monkeypatch: pytest.MonkeyPatch, shape: str, failed_rc: int
 ) -> None:
-    lookups = _live(monkeypatch, (failed_rc, json.dumps(_BAD_GRAPHQL[shape])), [(0, '{"workflow_runs": []}')])
+    lookups = _live(monkeypatch, (failed_rc, json.dumps(_BAD_GRAPHQL[shape])), [(0, _EMPTY_RUNS)])
     with pytest.raises(RuntimeError) as excinfo:
         fetch_live_status(123, _REPO)
     assert "not found" not in str(excinfo.value)
@@ -992,7 +1008,10 @@ _GOOD_GRAPHQL: dict[str, tuple[dict[str, Any], str]] = {
     "queued_position_resolved_from_the_queue_nodes": (
         _doc(
             _pr(isInMergeQueue=True),
-            queue={**_QUEUE, "entries": {"nodes": [{**_ENTRY, "position": 4, "pullRequest": {"number": 123}}]}},
+            queue={
+                **_QUEUE,
+                "entries": {"totalCount": 1, "nodes": [{**_ENTRY, "position": 4, "pullRequest": {"number": 123}}]},
+            },
         ),
         "PR #123: queued=yes, position=4 (QUEUED, ~10 min ETA), run=none",
     ),
@@ -1007,8 +1026,6 @@ _GOOD_GRAPHQL: dict[str, tuple[dict[str, Any], str]] = {
     "closed": (_doc(_pr(state="CLOSED")), "PR #123: queued=no (state=CLOSED), run=none"),
     "merge_queue_absent": ({"data": {"repository": {"pullRequest": _pr()}}}, None),
     "nullable_optional_fields": (_doc(_pr(mergeStateStatus=None, mergeQueueEntry=None), queue=None), None),
-    "empty_errors_list": (_doc(errors=[]), None),
-    "null_errors": (_doc(errors=None), None),
 }
 
 
@@ -1036,7 +1053,12 @@ def test_legacy_bare_null_data_fixture_keeps_its_not_found_contract() -> None:
         evaluate_status_data({"data": None}, 7814)
 
 
-_RUN = {"html_url": "https://example.invalid/run/1", "status": "completed", "conclusion": "success"}
+_RUN = {
+    "html_url": "https://example.invalid/run/1",
+    "status": "completed",
+    "conclusion": "success",
+    "head_branch": "gh-readonly-queue/main/pr-123-abc",
+}
 
 _BAD_RUN_ELEMENTS: dict[str, Any] = {
     "empty_object": {},
@@ -1070,7 +1092,7 @@ _BAD_RUN_ELEMENTS: dict[str, Any] = {
 def test_run_element_matrix_in_the_rest_list_is_unavailable_with_no_fallback(
     monkeypatch: pytest.MonkeyPatch, shape: str
 ) -> None:
-    runs = {"workflow_runs": [_RUN, _BAD_RUN_ELEMENTS[shape]]}  # one bad element spoils the whole read
+    runs = {"total_count": 2, "workflow_runs": [_RUN, _BAD_RUN_ELEMENTS[shape]]}  # one bad element spoils the read
     lookups = _live(monkeypatch, (0, json.dumps(_FOUND)), [(0, json.dumps(runs)), (0, "[]")])
     with pytest.raises(RuntimeError, match="Actions runs read unavailable"):
         fetch_live_status(123, _REPO)
@@ -1082,7 +1104,7 @@ def test_run_element_matrix_in_the_fallback_list_is_unavailable(monkeypatch: pyt
     lookups = _live(
         monkeypatch,
         (0, json.dumps(_FOUND)),
-        [(0, '{"workflow_runs": []}'), (0, json.dumps([_RUN, _BAD_RUN_ELEMENTS[shape]]))],
+        [(0, _EMPTY_RUNS), (0, json.dumps([_RUN, _BAD_RUN_ELEMENTS[shape]]))],
     )
     with pytest.raises(RuntimeError, match="Actions run list read unavailable"):
         fetch_live_status(123, _REPO)
@@ -1118,7 +1140,7 @@ def test_run_container_matrix_in_the_fallback_read_is_unavailable(
     monkeypatch: pytest.MonkeyPatch, shape: str
 ) -> None:
     payload = {"workflow_runs": []} if shape == "key_object" else _BAD_RUN_CONTAINERS[shape]
-    lookups = _live(monkeypatch, (0, json.dumps(_FOUND)), [(0, '{"workflow_runs": []}'), (0, json.dumps(payload))])
+    lookups = _live(monkeypatch, (0, json.dumps(_FOUND)), [(0, _EMPTY_RUNS), (0, json.dumps(payload))])
     with pytest.raises(RuntimeError, match="Actions run list read unavailable"):
         fetch_live_status(123, _REPO)
     assert len(lookups) == 2
@@ -1135,11 +1157,11 @@ def test_well_formed_runs_of_every_accepted_spelling_keep_their_meaning(monkeypa
         "event": "merge_group",
     }
     rest = {**_RUN, "id": 9, "head_branch": "gh-readonly-queue/main/pr-123-abc", "created_at": "2026-09-08T18:30:00Z"}
-    _live(monkeypatch, (0, json.dumps(_FOUND)), [(0, json.dumps({"workflow_runs": [rest]}))])
+    _live(monkeypatch, (0, json.dumps(_FOUND)), [(0, json.dumps({"total_count": 1, "workflow_runs": [rest]}))])
     assert fetch_live_status(123, _REPO).latest_merge_group_run_url == "https://example.invalid/run/1"
-    _live(monkeypatch, (0, json.dumps(_FOUND)), [(0, '{"workflow_runs": []}'), (0, json.dumps([camel]))])
+    _live(monkeypatch, (0, json.dumps(_FOUND)), [(0, _EMPTY_RUNS), (0, json.dumps([camel]))])
     assert fetch_live_status(123, _REPO).latest_merge_group_run_url == "https://example.invalid/run/2"
-    _live(monkeypatch, (0, json.dumps(_FOUND)), [(0, '{"workflow_runs": []}'), (0, "[]")])
+    _live(monkeypatch, (0, json.dumps(_FOUND)), [(0, _EMPTY_RUNS), (0, "[]")])
     assert fetch_live_status(123, _REPO).latest_merge_group_run_url is None
 
 
@@ -1190,3 +1212,204 @@ def test_offline_run_fixtures_that_are_well_formed_still_evaluate(
     runs = tmp_path / "runs.json"
     runs.write_text(json.dumps({"runs": [_RUN]}))
     assert main(["123", "--fixture", str(graphql), "--actions-fixture", str(runs), "--line"]) == 0
+
+
+# --- Round 4: every payload goes through the shared strict decoder (#10792) --------------------
+#
+# Raw stdout text, so duplicate keys and non-finite numbers reach the decoder as GitHub would send
+# them. Each case asserts the outcome and the total request count (GraphQL read + Actions reads).
+# The first rows of each matrix are the review's held-out classes.
+
+
+_BIG = "1" + "0" * 100
+_PULL_TEXT = '"number": 123, "state": "OPEN", "merged": false, "isInMergeQueue": false'
+_RUN_TEXT = '{"html_url": "https://example.invalid/run/1", "status": "completed", "head_branch": "gh-readonly-queue/main/pr-123-a"}'
+
+
+def _live_all(monkeypatch: pytest.MonkeyPatch, graphql: tuple[Any, Any], runs: list[tuple[Any, Any]]) -> list[str]:
+    """Like :func:`_live`, but records every request, the GraphQL read included."""
+    requests: list[str] = []
+
+    def read_stub(*args: Any, **kwargs: Any) -> subprocess.CompletedProcess[str]:
+        requests.append("graphql")
+        return subprocess.CompletedProcess(["gh", "api", "graphql"], graphql[0], graphql[1], "")
+
+    def run_stub(cmd: list[str], **kwargs: Any) -> subprocess.CompletedProcess[str]:
+        requests.append("rest" if cmd[1] == "api" else "run-list")
+        code, out = runs[min(len(requests) - 1, len(runs)) - 1]
+        return subprocess.CompletedProcess(cmd, code, out, "")
+
+    monkeypatch.setattr("scripts.gh_merge_queue_status.read", read_stub)
+    monkeypatch.setattr("scripts.gh_merge_queue_status.github_client.run", run_stub)
+    return requests
+
+
+def _queued_doc(entries: dict[str, Any]) -> str:
+    queue = {"url": "https://example.invalid/q", "nextEntryEstimatedTimeToMerge": 60, "entries": entries}
+    return json.dumps(_doc(_pr(isInMergeQueue=True), queue=queue))
+
+
+_NF_123 = {"type": "NOT_FOUND", "path": ["repository", "pullRequest"], "message": "Could not resolve to a PullRequest with the number of 123."}
+
+_HELD_OUT_GRAPHQL_TEXTS = {
+    "duplicate_number_replacing_an_error_object": (
+        '{"data": {"repository": {"pullRequest": {"number": {"error": "x"}, ' + _PULL_TEXT + "}}}}"
+    ),
+    "number_10_pow_100": '{"data": {"repository": {"pullRequest": {"number": ' + _BIG + ', "state": "OPEN", "merged": false, "isInMergeQueue": false}}}}',
+    "duplicate_pull_request_null_then_found": (
+        '{"data": {"repository": {"pullRequest": null, "pullRequest": {' + _PULL_TEXT + "}}}}"
+    ),
+    "duplicate_errors_key": '{"data": {"repository": {"pullRequest": null}}, "errors": [], "errors": [' + json.dumps(_NF_123) + "]}",
+    "nested_error_in_merge_queue": json.dumps(_doc(queue={**_QUEUE, "error": "github_http_error"})),
+    "error_envelope_with_valid_data": json.dumps({**_doc(), "message": "m", "documentation_url": "d"}),
+    "has_next_page_in_queue_entries": json.dumps(
+        _doc(queue={**_QUEUE, "entries": {"totalCount": 0, "nodes": [], "pageInfo": {"hasNextPage": True}}})
+    ),
+    "queue_entries_declare_more_than_they_carry": _queued_doc({"totalCount": 3, "nodes": []}),
+    "queue_entries_without_total_when_read": _queued_doc({"nodes": []}),
+    "nan_eta": '{"data": {"repository": {"pullRequest": {' + _PULL_TEXT + '}, "mergeQueue": {"nextEntryEstimatedTimeToMerge": NaN}}}}',
+    "overflow_eta": '{"data": {"repository": {"pullRequest": {' + _PULL_TEXT + '}, "mergeQueue": {"nextEntryEstimatedTimeToMerge": 1e400}}}}',
+    "entry_position_above_int32": json.dumps(_doc(_queued({**_ENTRY, "position": 2**31}))),
+    "not_found_error_for_another_number": json.dumps(
+        {"data": {"repository": {"pullRequest": None}}, "errors": [{**_NF_123, "message": _NF_123["message"].replace("123", "124")}]}
+    ),
+    "not_found_error_plus_nested_error_in_data": json.dumps(
+        {"data": {"repository": {"pullRequest": None, "mergeQueue": {"error": "x"}}}, "errors": [_NF_123]}
+    ),
+    "not_found_error_of_another_type": json.dumps(
+        {"data": {"repository": {"pullRequest": None}}, "errors": [{**_NF_123, "type": "FORBIDDEN"}]}
+    ),
+    "not_found_error_plus_another_error": json.dumps(
+        {"data": {"repository": {"pullRequest": None}}, "errors": [_NF_123, {"message": "rate limited"}]}
+    ),
+    "not_found_error_with_null_data": json.dumps({"data": None, "errors": [_NF_123]}),
+    "bare_null_data": '{"data": null}',
+    "trailing_garbage": json.dumps(_doc()) + " x",
+}
+
+
+@pytest.mark.parametrize("shape", _HELD_OUT_GRAPHQL_TEXTS)
+def test_held_out_graphql_documents_are_unavailable_with_one_request(monkeypatch: pytest.MonkeyPatch, shape: str) -> None:
+    requests = _live_all(monkeypatch, (0, _HELD_OUT_GRAPHQL_TEXTS[shape]), [(0, _EMPTY_RUNS), (0, "[]")])
+    with pytest.raises(RuntimeError, match=r"unavailable|GraphQL error") as excinfo:
+        fetch_live_status(123, _REPO)
+    assert "not found" not in str(excinfo.value)
+    assert requests == ["graphql"]
+
+
+_HELD_OUT_RUNS_TEXTS = {
+    "total_count_one_with_no_runs": '{"total_count": 1, "workflow_runs": []}',
+    "run_without_a_branch": '{"total_count": 1, "workflow_runs": [{"html_url": "https://example.invalid/run/1", "status": "completed"}]}',
+    "error_bearing_empty_runs_object": '{"total_count": 0, "workflow_runs": [], "error": "github_http_error"}',
+    "error_envelope_empty_runs_object": '{"total_count": 0, "workflow_runs": [], "message": "m", "documentation_url": "d"}',
+    "duplicate_total_count_30_then_0": '{"total_count": 30, "total_count": 0, "workflow_runs": []}',
+    "duplicate_workflow_runs_replacing_a_run": '{"total_count": 0, "workflow_runs": [' + _RUN_TEXT + '], "workflow_runs": []}',
+    "more_runs_than_total": '{"total_count": 0, "workflow_runs": [' + _RUN_TEXT + "]}",
+    "total_above_page_with_short_page": '{"total_count": 40, "workflow_runs": [' + _RUN_TEXT + "]}",
+    "missing_total_count": '{"workflow_runs": []}',
+    "total_count_10_pow_100": '{"total_count": ' + _BIG + ', "workflow_runs": []}',
+    "total_count_nan": '{"total_count": NaN, "workflow_runs": []}',
+    "run_id_above_int64": '{"total_count": 1, "workflow_runs": [' + _RUN_TEXT[:-1] + ', "id": 18446744073709551616}]}',
+    "nested_error_inside_a_run": '{"total_count": 1, "workflow_runs": [' + _RUN_TEXT[:-1] + ', "actor": {"error": "x"}}]}',
+    "incomplete_results_flag": '{"total_count": 0, "workflow_runs": [], "incomplete_results": true}',
+    "empty_head_branch": '{"total_count": 1, "workflow_runs": [{"html_url": "u", "status": "completed", "head_branch": ""}]}',
+    "duplicate_head_branch_inside_a_run": '{"total_count": 1, "workflow_runs": [' + _RUN_TEXT[:-1] + ', "head_branch": "x"}]}',
+}
+
+
+@pytest.mark.parametrize("shape", _HELD_OUT_RUNS_TEXTS)
+def test_held_out_rest_runs_are_unavailable_before_any_fallback(monkeypatch: pytest.MonkeyPatch, shape: str) -> None:
+    requests = _live_all(monkeypatch, (0, json.dumps(_FOUND)), [(0, _HELD_OUT_RUNS_TEXTS[shape]), (0, "[]")])
+    with pytest.raises(RuntimeError, match="Actions runs read unavailable"):
+        fetch_live_status(123, _REPO)
+    assert requests == ["graphql", "rest"]
+
+
+_HELD_OUT_RUN_LIST_TEXTS = {
+    "run_without_a_branch": '[{"url": "https://example.invalid/run/2", "status": "queued"}]',
+    "duplicate_head_branch": '[{"url": "u", "status": "queued", "headBranch": "gh-readonly-queue/main/pr-123-a", "headBranch": ""}]',
+    "nested_error": '[{"url": "u", "status": "queued", "headBranch": "b", "x": {"errors": []}}]',
+    "nan_sibling": '[{"url": "u", "status": "queued", "headBranch": "b", "x": NaN}]',
+    "error_object_root": '{"error": "github_rate_limited"}',
+}
+
+
+@pytest.mark.parametrize("shape", _HELD_OUT_RUN_LIST_TEXTS)
+def test_held_out_fallback_run_lists_are_unavailable(monkeypatch: pytest.MonkeyPatch, shape: str) -> None:
+    requests = _live_all(monkeypatch, (0, json.dumps(_FOUND)), [(0, _EMPTY_RUNS), (0, _HELD_OUT_RUN_LIST_TEXTS[shape])])
+    with pytest.raises(RuntimeError, match="Actions run list read unavailable"):
+        fetch_live_status(123, _REPO)
+    assert requests == ["graphql", "rest", "run-list"]
+
+
+def test_full_rest_page_of_a_larger_total_is_complete(monkeypatch: pytest.MonkeyPatch) -> None:
+    runs = [json.loads(_RUN_TEXT) | {"id": 10_000_000_000 + i, "created_at": f"2026-09-08T18:{i:02d}:00Z"} for i in range(30)]
+    requests = _live_all(monkeypatch, (0, json.dumps(_FOUND)), [(0, json.dumps({"total_count": 45, "workflow_runs": runs}))])
+    status = fetch_live_status(123, _REPO)
+    assert status.latest_merge_group_run_url == "https://example.invalid/run/1"
+    assert requests == ["graphql", "rest"]
+
+
+def test_a_complete_first_page_of_a_long_queue_still_places_by_position(monkeypatch: pytest.MonkeyPatch) -> None:
+    nodes = [{**_ENTRY, "position": i + 1, "pullRequest": {"number": 1000 + i}} for i in range(50)]
+    requests = _live_all(monkeypatch, (0, _queued_doc({"totalCount": 60, "nodes": nodes})), [(0, _EMPTY_RUNS), (0, "[]")])
+    status = fetch_live_status(123, _REPO)
+    assert (status.queued, status.position) == (True, None)  # beyond the first 50: position unknown, honestly
+    assert requests == ["graphql", "rest", "run-list"]
+
+
+def test_graphql_run_ids_are_opaque_id_strings(monkeypatch: pytest.MonkeyPatch) -> None:
+    suite = {**_SUITE, "workflowRun": {"id": "WFR_kwLOAbc", "url": "https://example.invalid/r/9", "event": "merge_group"}}
+    _live_all(monkeypatch, (0, json.dumps(_doc(_with_suites(suite)))), [(0, _EMPTY_RUNS), (0, "[]")])
+    assert fetch_live_status(123, _REPO).latest_merge_group_run_url == "https://example.invalid/r/9"
+
+
+def test_strict_positively_identified_not_found_keeps_its_meaning(monkeypatch: pytest.MonkeyPatch) -> None:
+    payload = {"data": {"repository": {"pullRequest": None, "mergeQueue": None}}, "errors": [_NF_123]}
+    requests = _live_all(monkeypatch, (1, json.dumps(payload)), [(0, _EMPTY_RUNS)])
+    with pytest.raises(ValueError, match="Pull request #123 not found in repository"):
+        fetch_live_status(123, _REPO)
+    assert requests == ["graphql"]
+
+
+_LIVE_SHAPES_FOR_THE_OFFLINE_CONTRACT = {
+    "bare_null_data": ((0, '{"data": null}'), RuntimeError),
+    "null_data_with_not_found_error": ((1, json.dumps({"data": None, "errors": [_NF_123]})), RuntimeError),
+    "null_data_with_actions_runs": ((0, '{"data": null, "actions_runs": []}'), RuntimeError),
+    "positively_not_found": ((1, json.dumps({"data": {"repository": {"pullRequest": None}}, "errors": [_NF_123]})), ValueError),
+    "found": ((0, json.dumps(_FOUND)), None),
+}
+
+
+@pytest.mark.parametrize("shape", _LIVE_SHAPES_FOR_THE_OFFLINE_CONTRACT)
+def test_live_path_never_reaches_the_lenient_offline_not_found_contract(monkeypatch: pytest.MonkeyPatch, shape: str) -> None:
+    """The offline ``{"data": null}`` -> "not found" contract must be unreachable from a live read."""
+    calls: list[Any] = []
+    real = mq._offline_fixture_not_found
+    monkeypatch.setattr(mq, "_offline_fixture_not_found", lambda *a, **kw: calls.append(a) or real(*a, **kw))
+    graphql, expected = _LIVE_SHAPES_FOR_THE_OFFLINE_CONTRACT[shape]
+    _live_all(monkeypatch, graphql, [(0, _EMPTY_RUNS), (0, "[]")])
+    if expected is None:
+        assert fetch_live_status(123, _REPO).pr_number == 123
+    else:
+        with pytest.raises(expected) as excinfo:
+            fetch_live_status(123, _REPO)
+        if expected is RuntimeError:
+            assert "not found" not in str(excinfo.value)
+    assert calls == []
+    # The spy is live: the offline evaluator does consult the contract.
+    with pytest.raises(ValueError, match="not found"):
+        evaluate_status_data({"data": None}, 123)
+    assert len(calls) == 1
+
+
+def test_fixture_file_with_duplicate_keys_is_an_error(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    fixture = tmp_path / "doc.json"
+    fixture.write_text('{"data": {"repository": {"pullRequest": null, "pullRequest": {' + _PULL_TEXT + "}}}}")
+    assert main(["123", "--fixture", str(fixture), "--json"]) == 1
+    assert json.loads(capsys.readouterr().out)["status"] == "error"
+    runs = tmp_path / "runs.json"
+    runs.write_text('{"total_count": 1, "workflow_runs": []}')
+    fixture.write_text(json.dumps(_doc()))
+    assert main(["123", "--fixture", str(fixture), "--actions-fixture", str(runs), "--json"]) == 1
+    assert json.loads(capsys.readouterr().out)["status"] == "error"

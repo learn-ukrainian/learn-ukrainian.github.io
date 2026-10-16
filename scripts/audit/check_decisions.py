@@ -17,7 +17,6 @@ Exit codes:
 from __future__ import annotations
 
 import argparse
-import json
 import re
 import subprocess
 import sys
@@ -31,6 +30,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 from scripts.common import github_client
+from scripts.common import github_payload as gp
 from scripts.opsec.prepublish import PublishBlocked, publication_cli
 from scripts.publish.github import Request, request_run
 
@@ -79,29 +79,18 @@ def check_budget(decisions: list[dict]) -> str | None:
     return None
 
 
-class InvalidPayload(ValueError):
-    """A GitHub payload that is not exactly the shape the stale-decision flow needs."""
-
-
 def parse_issue_list(stdout: Any) -> bool:
     """Whether ``gh issue list --json number`` output names at least one issue, or raise.
 
-    The only way an issue-list payload reaches a decision: text, a JSON list, and every element an
-    object whose ``number`` is a positive int (not bool). An error object, ``null``, a scalar or
-    ``{"number": 0}`` is not evidence that an issue exists, and not evidence that none does.
+    The payload goes through the shared strict decoder (:mod:`scripts.common.github_payload`):
+    a JSON list without duplicate keys or failure evidence at any depth, and every element an
+    object whose ``number`` is an exact positive 32-bit int. Anything else raises
+    :class:`~scripts.common.github_payload.UnavailablePayload`: it is not evidence that an issue
+    exists, and not evidence that none does.
     """
-    if not isinstance(stdout, str):
-        raise InvalidPayload("issue list output is not text")
-    try:
-        issues = json.loads(stdout)
-    except ValueError as exc:
-        raise InvalidPayload("issue list output is not JSON") from exc
-    if not isinstance(issues, list):
-        raise InvalidPayload("issue list is not a list")
+    issues = gp.parse(stdout, root=list)
     for issue in issues:
-        number = issue.get("number") if isinstance(issue, dict) else None
-        if isinstance(number, bool) or not isinstance(number, int) or number < 1:
-            raise InvalidPayload("issue element has no positive int number")
+        gp.require_int(gp.field(gp.require_object(issue, "issue"), "number", "issue.number"), "issue.number", minimum=1)
     return bool(issues)
 
 
@@ -110,11 +99,9 @@ _ISSUE_URL = re.compile(r"https://github\.com/[\w.-]+/[\w.-]+/issues/[1-9][0-9]*
 
 def parse_created_issue_url(stdout: Any) -> str:
     """The URL ``gh issue create`` printed, or raise: one line, an issue URL with a positive number."""
-    if not isinstance(stdout, str):
-        raise InvalidPayload("issue-create output is not text")
-    url = stdout.strip()
+    url = gp.require_str(stdout, "issue_create_output").strip()
     if not _ISSUE_URL.fullmatch(url):
-        raise InvalidPayload("issue-create output is not an issue URL")
+        raise gp.UnavailablePayload("issue_create_output")
     return url
 
 
@@ -133,11 +120,11 @@ def _gh_issue_exists(dec_id: str) -> bool | None:
         )
     except (subprocess.TimeoutExpired, OSError):
         return None
-    if result.returncode != 0:
+    if type(result.returncode) is not int or result.returncode != 0:
         return None
     try:
         return parse_issue_list(result.stdout)
-    except InvalidPayload:
+    except gp.UnavailablePayload:
         return None
 
 
@@ -204,7 +191,7 @@ def create_issue(dec: dict) -> str | None:
             return parse_created_issue_url(result.stdout)
     except PublishBlocked as exc:
         print(f"publish_blocked: {exc}", file=sys.stderr)
-    except (InvalidPayload, subprocess.TimeoutExpired, FileNotFoundError):
+    except (gp.UnavailablePayload, subprocess.TimeoutExpired, FileNotFoundError):
         pass
     return None
 

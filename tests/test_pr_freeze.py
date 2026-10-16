@@ -606,3 +606,110 @@ def test_branch_list_empty_and_single_valid_pull_keep_their_meaning(monkeypatch,
     _client(monkeypatch, [(0, json.dumps([{"number": 1, "state": "open", "head": {"ref": "x"}}]))])
     exempt = pr_freeze.evaluate(REPO, branch="codex/x", environ={}, fetch=fetch, cache_file=tmp_path / "c.json")
     assert (exempt.refused, exempt.unavailable) == (False, False)
+
+
+# --- Round 4: every payload and cache record goes through the shared strict decoder (#10792) ---
+#
+# Raw stdout text, so duplicate keys and non-finite numbers reach the decoder as GitHub would send
+# them. The first rows of each matrix are the review's held-out classes.
+
+_BIG = "1" + "0" * 100
+
+_HELD_OUT_COUNT_TEXTS = {
+    "duplicate_total_count_30_then_0": '{"total_count": 30, "total_count": 0, "incomplete_results": false}',
+    "zero_count_plus_nested_error": '{"total_count": 0, "incomplete_results": false, "items": [], "meta": {"error": "x"}}',
+    "total_count_10_pow_100": '{"total_count": ' + _BIG + ', "incomplete_results": false}',
+    "duplicate_incomplete_true_then_false": '{"total_count": 3, "incomplete_results": true, "incomplete_results": false}',
+    "total_count_above_int32": '{"total_count": 2147483648, "incomplete_results": false}',
+    "total_count_float_exponent": '{"total_count": 1e1, "incomplete_results": false}',
+    "total_count_overflow_infinity": '{"total_count": 1e400, "incomplete_results": false}',
+    "nan_sibling": '{"total_count": 3, "incomplete_results": false, "score": NaN}',
+    "count_declares_more_than_items": '{"total_count": 30, "incomplete_results": false, "items": []}',
+    "items_exceed_count": '{"total_count": 0, "incomplete_results": false, "items": [{"number": 1}]}',
+    "items_null": '{"total_count": 3, "incomplete_results": false, "items": null}',
+    "errors_member_empty": '{"total_count": 3, "incomplete_results": false, "errors": []}',
+    "error_envelope_with_count": '{"total_count": 3, "incomplete_results": false, "message": "m", "documentation_url": "d"}',
+    "nested_has_next_page": '{"total_count": 1, "incomplete_results": false, "items": [{"number": 1, "p": {"hasNextPage": true}}]}',
+    "nested_duplicate_in_item": '{"total_count": 1, "incomplete_results": false, "items": [{"number": 1, "number": 2}]}',
+}
+
+
+@pytest.mark.parametrize("shape", _HELD_OUT_COUNT_TEXTS)
+def test_held_out_count_documents_are_unavailable_with_one_request(monkeypatch, tmp_path, shape) -> None:
+    calls = _client(monkeypatch, [(0, _HELD_OUT_COUNT_TEXTS[shape])])
+    decision = pr_freeze.evaluate(REPO, branch="codex/x", environ={}, cache_file=tmp_path / "c.json")
+    assert (decision.refused, decision.open_prs, decision.unavailable) == (None, None, True)
+    assert decision.warning == "open-PR freeze check skipped: open_pr_count_unavailable"
+    assert len(calls) == 1  # no branch lookup after an unavailable count
+    assert not (tmp_path / "c.json").exists()
+
+
+_HELD_OUT_PULL_TEXTS = {
+    "positive_number_plus_nested_error": '[{"number": 5, "head": {"error": "github_http_error"}}]',
+    "duplicate_number_replacing_an_error_object": '[{"number": {"error": "github_rate_limited"}, "number": 5}]',
+    "number_10_pow_100": '[{"number": ' + _BIG + "}]",
+    "duplicate_number_zero_then_five": '[{"number": 0, "number": 5}]',
+    "number_above_int32": '[{"number": 2147483648}]',
+    "number_float_exponent": '[{"number": 5e0}]',
+    "nan_sibling": '[{"number": 5, "x": NaN}]',
+    "overflow_infinity_sibling": '[{"number": 5, "x": 1e400}]',
+    "errors_member_empty": '[{"number": 5, "errors": []}]',
+    "error_envelope_member": '[{"number": 5, "message": "m", "documentation_url": "d"}]',
+    "nested_incomplete_results": '[{"number": 5, "x": {"incomplete_results": true}}]',
+    "nested_has_next_page": '[{"number": 5, "x": {"hasNextPage": true}}]',
+    "nested_duplicate_head_ref": '[{"number": 5, "head": {"ref": "a", "ref": "b"}}]',
+    "object_root": '{"0": {"number": 5}}',
+    "trailing_garbage": '[{"number": 5}] ]',
+}
+
+
+@pytest.mark.parametrize("shape", _HELD_OUT_PULL_TEXTS)
+def test_held_out_branch_lists_are_unavailable_never_exempt(monkeypatch, tmp_path, shape) -> None:
+    fetch, _ = _fetch(30)
+    calls = _client(monkeypatch, [(0, _HELD_OUT_PULL_TEXTS[shape])])
+    decision = pr_freeze.evaluate(REPO, branch="codex/x", environ={}, fetch=fetch, cache_file=tmp_path / "c.json")
+    assert (decision.refused, decision.open_prs, decision.unavailable) == (None, 30, True)
+    assert decision.warning == "open-PR freeze check skipped: branch_pr_lookup_unavailable"
+    assert len(calls) == 1
+
+
+def _held_out_cache_texts(now: float) -> dict:
+    return {
+        "duplicate_count_30_then_0": f'{{"count": 30, "count": 0, "at": {now}}}',
+        "extra_key": f'{{"count": 3, "at": {now}, "source": "x"}}',
+        "error_member": f'{{"count": 3, "at": {now}, "error": "x"}}',
+        "nan_at": '{"count": 3, "at": NaN}',
+        "overflow_at": '{"count": 3, "at": 1e400}',
+        "count_10_pow_100": f'{{"count": {_BIG}, "at": {now}}}',
+        "count_above_int32": f'{{"count": 2147483648, "at": {now}}}',
+    }
+
+
+@pytest.mark.parametrize("shape", list(_held_out_cache_texts(0.0)))
+def test_held_out_cache_records_are_a_miss_followed_by_one_live_read(tmp_path, shape) -> None:
+    cache = tmp_path / "c.json"
+    cache.write_text(_held_out_cache_texts(time.time())[shape])
+    fetch, calls = _fetch(30)
+    decision = pr_freeze.evaluate(REPO, environ={}, fetch=fetch, cache_file=cache)
+    assert (decision.refused, decision.open_prs, decision.unavailable) == (True, 30, False)
+    assert len(calls) == 1
+    assert json.loads(cache.read_text()) == {"count": 30, "at": pytest.approx(time.time(), abs=60)}
+
+
+def test_real_search_page_shape_is_still_a_count(monkeypatch, tmp_path) -> None:
+    page = {"total_count": 30, "incomplete_results": False, "items": [{"number": 9, "title": "t", "body": "text"}]}
+    calls = _client(monkeypatch, [(0, json.dumps(page)), (0, "[]")])
+    decision = pr_freeze.evaluate(REPO, branch="codex/x", environ={}, cache_file=tmp_path / "c.json")
+    assert (decision.refused, decision.open_prs, decision.unavailable) == (True, 30, False)
+    assert len(calls) == 2
+    empty = {"total_count": 0, "incomplete_results": False, "items": []}
+    _client(monkeypatch, [(0, json.dumps(empty))])
+    assert pr_freeze.evaluate(REPO, environ={}, cache_file=tmp_path / "d.json").refused is False
+
+
+@pytest.mark.parametrize("returncode", [True, False, None, "0", 0.0])
+def test_count_read_return_code_must_be_exactly_zero_int(monkeypatch, tmp_path, returncode) -> None:
+    calls = _client(monkeypatch, [(returncode, json.dumps({"total_count": 3, "incomplete_results": False}))])
+    decision = pr_freeze.evaluate(REPO, environ={}, cache_file=tmp_path / "c.json")
+    assert decision.refused is None
+    assert len(calls) == 1

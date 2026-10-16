@@ -9,8 +9,9 @@ repositories are unaffected. A ``--branch`` with no open PR counts as new.
 
 ``LU_OPEN_PR_FREEZE_THRESHOLD`` overrides the threshold (default 15; ``0``
 disables the check). The count comes from the GitHub REST search API and is
-cached briefly (``LU_OPEN_PR_FREEZE_CACHE_S``, default 60s). Every count and branch
-list enters a decision through one strict validator (:func:`valid_count`,
+cached briefly (``LU_OPEN_PR_FREEZE_CACHE_S``, default 60s). Every payload and cache
+record is decoded by the shared strict parser (:mod:`scripts.common.github_payload`) and every
+count and branch list enters a decision through one validator (:func:`valid_count`,
 :func:`parse_search_count`, :func:`parse_branch_pulls`): a live read, a cached read and an
 injected reader alike. A cache record that fails it is a miss followed by a live read. When the
 count or the branch's PR cannot be fetched (a rate refusal, a failed read, or empty or
@@ -29,6 +30,11 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 from urllib.parse import quote
+
+try:
+    from scripts.common import github_payload as gp
+except ImportError:  # pragma: no cover - flat script path
+    from common import github_payload as gp  # type: ignore
 
 DEFAULT_THRESHOLD = 15
 DEFAULT_CACHE_S = 60.0
@@ -82,70 +88,70 @@ def _cache_path(repo: str) -> Path:
     return base / "learn-ukrainian" / f"open-pr-count-{repo.replace('/', '__')}.json"
 
 
+SEARCH_PAGE_SIZE = 1  # ``per_page=1`` in the count request
+PULLS_PAGE_SIZE = 1  # ``per_page=1`` in the branch request
+
+
 def _gh_get(endpoint: str) -> Any:
+    """One ``gh api`` read through the shared client, decoded by the shared strict parser.
+
+    The parse functions below check the container each endpoint must return.
+    """
     try:
         from scripts.common import github_client
     except ImportError:  # pragma: no cover - flat script path
         from common import github_client  # type: ignore
 
     proc = github_client.run(["gh", "api", endpoint], capture_output=True, text=True, timeout=20)
-    if proc.returncode != 0:
-        raise RuntimeError((proc.stderr or "").strip()[:200] or f"gh api rc {proc.returncode}")
-    return json.loads(proc.stdout)
-
-
-class InvalidPayload(ValueError):
-    """A GitHub payload or cache record that is not exactly the shape the freeze decision needs."""
-
-
-def _is_exact_int(value: Any) -> bool:
-    return isinstance(value, int) and not isinstance(value, bool)
+    if type(proc.returncode) is not int or proc.returncode != 0:
+        raise RuntimeError(f"gh api rc {proc.returncode!r}")
+    return gp.parse(proc.stdout)
 
 
 def valid_count(value: Any) -> int:
-    """The only way an open-PR count enters a decision: an exact int that is not bool and is >= 0.
+    """The only way an open-PR count enters a decision: an exact 32-bit int, not bool, >= 0.
 
     Live reads, cached reads and injected readers all pass through here; anything else raises.
     """
-    if not _is_exact_int(value) or value < 0:
-        raise InvalidPayload("open-PR count is not a non-negative int")
-    return value
+    return gp.require_int(value, "open_pr_count", minimum=0)
 
 
 def parse_search_count(data: Any) -> int:
-    """Open PR count from a REST search document, or raise :class:`InvalidPayload`.
+    """Open PR count from a REST search document, or raise ``UnavailablePayload``.
 
     Search may time out server-side and return a partial count flagged incomplete; a count that
-    is not known to be complete (``incomplete_results`` exactly ``False``) is not a count.
+    is not known to be complete (``incomplete_results`` exactly ``False``) is not a count. When
+    the document carries ``items`` they must be exactly the first page the count implies.
     """
-    if not isinstance(data, dict):
-        raise InvalidPayload("search response is not an object")
-    count = valid_count(data.get("total_count"))
-    if data.get("incomplete_results") is not False:
-        raise InvalidPayload("search results incomplete or unflagged")
+    obj = gp.require_object(data, "search")
+    gp.reject_failure_evidence(obj)
+    count = valid_count(gp.field(obj, "total_count", "search.total_count"))
+    if gp.require_bool(gp.field(obj, "incomplete_results", "search.incomplete_results"), "search.incomplete_results"):
+        raise gp.UnavailablePayload("search.incomplete_results")
+    if "items" in obj:
+        items = gp.require_list(obj["items"], "search.items")
+        gp.require_complete_page(items, count, "search.items", page_size=SEARCH_PAGE_SIZE)
     return count
 
 
 def parse_branch_pulls(data: Any) -> bool:
     """Whether the branch heads an open PR, from a ``pulls?per_page=1`` list, or raise.
 
-    The request asks for one element, so the list holds at most one, and each element names a
-    positive int PR number; an error object, a scalar or a ``0``/negative number is not a pull.
+    The request asks for one element, so the list holds at most one, and each element names an
+    exact positive 32-bit PR number; failure evidence at any depth refuses the whole list.
     """
-    if not isinstance(data, list) or len(data) > 1:
-        raise InvalidPayload("pulls response is not a list of at most one pull")
-    for pull in data:
-        number = pull.get("number") if isinstance(pull, dict) else None
-        if not _is_exact_int(number) or number < 1:
-            raise InvalidPayload("pull element has no positive int number")
-    return bool(data)
+    pulls = gp.require_list(data, "pulls")
+    gp.reject_failure_evidence(pulls)
+    if len(pulls) > PULLS_PAGE_SIZE:
+        raise gp.UnavailablePayload("pulls")
+    for pull in pulls:
+        gp.require_int(gp.field(gp.require_object(pull, "pull"), "number", "pull.number"), "pull.number", minimum=1)
+    return bool(pulls)
 
 
 def valid_exists(value: Any) -> bool:
     """An injected branch lookup must answer with a real bool."""
-    if not isinstance(value, bool):
-        raise InvalidPayload("branch lookup did not return a bool")
-    return value
+    return gp.require_bool(value, "branch_lookup")
 
 
 def fetch_open_pr_count(repo: str) -> int:
@@ -161,19 +167,14 @@ def branch_has_open_pr(repo: str, branch: str) -> bool:
 
 
 def _fresh_cached_count(path: Path, ttl_s: float, now: Callable[[], float]) -> int | None:
-    """The cached count when the record is a valid, unexpired ``{"count", "at"}``; else None (a miss)."""
+    """The cached count when the record is exactly a valid, unexpired ``{"count", "at"}``; else None."""
     try:
-        cached = json.loads(path.read_text())
-        if not isinstance(cached, dict):
-            return None
-        at = cached["at"]
-        if isinstance(at, bool) or not isinstance(at, (int, float)):
-            return None
-        age = now() - at
+        cached = gp.require_keys(gp.parse(path.read_text(), root=dict), "cache", ("count", "at"), exact=True)
+        age = now() - gp.require_number(cached["at"], "cache.at")
         if not 0 <= age < ttl_s:
             return None
         return valid_count(cached["count"])
-    except (OSError, ValueError, KeyError, TypeError):
+    except (OSError, ValueError):
         return None
 
 

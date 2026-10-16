@@ -1883,3 +1883,115 @@ def test_select_check_with_a_non_positive_pr_number_fails_closed(bound, monkeypa
     assert (seen["pr_text"], seen["pr_requested"]) == (None, True)
     assert calls == []
     assert not receipt.exists()
+
+
+# --- Round 4: the PR payload goes through the shared strict decoder (#10792) -------------------
+#
+# Raw stdout text, so duplicate keys and non-finite numbers reach the decoder as GitHub would send
+# them. The first rows are the review's held-out classes.
+
+_SECRET = "invented private destination"
+
+_HELD_OUT_PR_TEXTS = {
+    "duplicate_comments_replacing_a_secret_bearing_list": (
+        '{"title": "t", "body": "b", "comments": [{"body": "' + _SECRET + '"}], "comments": []}'
+    ),
+    "valid_text_fields_plus_error_member": '{"title": "t", "body": "b", "comments": [], "error": "github_rate_limited"}',
+    "empty_comments_with_has_next_page": '{"title": "t", "body": "b", "comments": [], "pageInfo": {"hasNextPage": true}}',
+    "has_next_page_inside_a_comment": '{"title": "t", "body": "b", "comments": [{"body": "c", "pageInfo": {"hasNextPage": true}}]}',
+    "duplicate_title": '{"title": "t", "title": "u", "body": "b", "comments": []}',
+    "duplicate_body_inside_a_comment": '{"title": "t", "body": "b", "comments": [{"body": "' + _SECRET + '", "body": "c"}]}',
+    "errors_member_inside_a_comment": '{"title": "t", "body": "b", "comments": [{"body": "c", "errors": []}]}',
+    "error_inside_comment_author": '{"title": "t", "body": "b", "comments": [{"body": "c", "author": {"login": "x", "error": "y"}}]}',
+    "error_envelope_plus_fields": (
+        '{"title": "t", "body": "b", "comments": [], "message": "m", "documentation_url": "d"}'
+    ),
+    "nan_in_a_comment": '{"title": "t", "body": "b", "comments": [{"body": "c", "x": NaN}]}',
+    "infinity_in_a_comment": '{"title": "t", "body": "b", "comments": [{"body": "c", "x": Infinity}]}',
+    "overflow_infinity_in_a_comment": '{"title": "t", "body": "b", "comments": [{"body": "c", "x": 1e400}]}',
+    "total_count_sibling": '{"title": "t", "body": "b", "comments": [], "totalCount": 3}',
+    "incomplete_results_inside_a_comment": '{"title": "t", "body": "b", "comments": [{"body": "c", "incomplete_results": true}]}',
+    "has_next_page_null": '{"title": "t", "body": "b", "comments": [{"body": "c", "p": {"hasNextPage": null}}]}',
+    "comments_as_a_connection": '{"title": "t", "body": "b", "comments": {"nodes": [], "totalCount": 0}}',
+    "array_root": '[{"title": "t", "body": "b", "comments": []}]',
+    "trailing_garbage": '{"title": "t", "body": "b", "comments": []} x',
+}
+
+
+@pytest.mark.parametrize("shape", _HELD_OUT_PR_TEXTS)
+def test_held_out_pr_payloads_are_unavailable_with_one_request(monkeypatch, shape):
+    calls = _pr_client(monkeypatch, 0, _HELD_OUT_PR_TEXTS[shape])
+    assert sense_cli.read_pr_text(7, Path.cwd()) is None
+    assert len(calls) == 1
+
+
+def test_real_gh_comment_shape_is_still_scanned(monkeypatch):
+    comment = {
+        "id": "IC_x",
+        "author": {"login": "someone"},
+        "authorAssociation": "MEMBER",
+        "body": "c1",
+        "createdAt": "2026-10-16T00:00:00Z",
+        "includesCreatedEdit": False,
+        "isMinimized": False,
+        "minimizedReason": "",
+        "reactionGroups": [],
+        "url": "https://github.com/o/r/pull/7#issuecomment-1",
+        "viewerDidAuthor": False,
+    }
+    calls = _pr_client(monkeypatch, 0, json.dumps({"title": "t", "body": "b", "comments": [comment]}))
+    assert sense_cli.read_pr_text(7, Path.cwd()) == "t b c1"
+    assert len(calls) == 1
+
+
+@pytest.mark.parametrize("pr", [2**31, 10**100])
+def test_read_pr_text_rejects_a_pr_number_outside_int32_before_any_request(monkeypatch, pr):
+    calls = _pr_client(monkeypatch, 0, json.dumps(_GOOD_PR))
+    assert sense_cli.read_pr_text(pr, Path.cwd()) is None
+    assert calls == []
+
+
+@pytest.mark.parametrize(
+    "shape",
+    [
+        "duplicate_comments_replacing_a_secret_bearing_list",
+        "valid_text_fields_plus_error_member",
+        "empty_comments_with_has_next_page",
+    ],
+)
+def test_select_check_with_held_out_pr_payload_fails_closed(bound, monkeypatch, capsys, shape):
+    root, api, _b = bound
+    (root / "_words.yaml").write_text(yaml.safe_dump({"level": "a1", "words": [WORD]}))
+    private = root / "private.jsonl"
+    private.write_text(json.dumps(FIXTURE["private"]) + "\n")
+    key = root / "key"
+    key.write_bytes(KEY)
+    receipt = root / "receipt"
+    monkeypatch.setattr(sources, "Sources", lambda **kw: api)
+    monkeypatch.setattr(bindings, "git", lambda repo, *args: b"" if args[0] == "status" else b"a" * 40)
+    calls = _pr_client(monkeypatch, 0, _HELD_OUT_PR_TEXTS[shape])
+    seen = {}
+
+    def scan(*args, **kwargs):
+        seen.update(kwargs)
+        unread = kwargs["pr_requested"] and kwargs["pr_text"] is None
+        return {"status": "unavailable" if unread else "checked", "pr_text": "x", "scope": {"kind": "diff"}}
+
+    monkeypatch.setattr(sense_cli, "leak_scan", scan)
+    book, _decisions = sense_cli.select_store(
+        {"level": "a1", "words": [WORD]},
+        bindings.public_entries(a1_reference.INVENTORY_PATH),
+        {FIXTURE["private"]["locator"]: FIXTURE["private"]},
+        api,
+        KEY,
+        "test-key",
+    )
+    bindings.write(root / bindings.BINDINGS, "a1", book)
+    args = ["a1", "--evidence-dir", str(root), "--private-input", str(private), "--pr", "7", "--check"]
+    args += ["--key-file", str(key), "--key-id", "test-key", "--receipt", str(receipt)]
+    assert sense_cli.main(args) == 1
+    out = capsys.readouterr().out
+    assert json.loads(out.strip().splitlines()[-1]) == {"status": "failed", "reason": "pr_text_unavailable"}
+    assert (seen["pr_text"], seen["pr_requested"]) == (None, True)
+    assert len(calls) == 1
+    assert not receipt.exists()

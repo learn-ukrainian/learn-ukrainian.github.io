@@ -14,6 +14,7 @@ from typing import Any
 import yaml
 
 from scripts.common import github_client
+from scripts.common import github_payload as gp
 from scripts.common.task_store_paths import tasks_dir
 
 from . import lock, registry, sources
@@ -278,22 +279,23 @@ def _head_blobs(repo: Path, paths: set[str] | None = None):
 def parse_pr_text(stdout: Any) -> str:
     """Title, body and comments of a ``gh pr view --json title,body,comments`` document, or raise.
 
-    The only way a PR payload becomes scan text: text output, a JSON object, a non-empty ``title``
-    and a ``body`` (may be empty) that are text, and ``comments`` a list of objects whose ``body``
-    is text. Anything else raises ``ValueError``: a wrong-typed ``comments`` would otherwise join
-    as "no comments" and let the scan report a PR it never fully read as ``scanned``.
+    The only way a PR payload becomes scan text, through the shared strict decoder
+    (:mod:`scripts.common.github_payload`): JSON text with no duplicate key and no failure or
+    paging evidence at any depth, an object with exactly the requested ``title``, ``body`` and
+    ``comments`` keys, a non-empty ``title`` and a ``body`` (may be empty) that are text, and
+    ``comments`` a list of objects whose ``body`` is text. Anything else raises
+    :class:`~scripts.common.github_payload.UnavailablePayload` (a ``ValueError``): a duplicate
+    ``comments`` key or a wrong-typed list would otherwise let the scan report a PR it never
+    fully read as ``scanned``.
     """
-    if not isinstance(stdout, str):
-        raise ValueError("pr_payload_not_text")
-    data = json.loads(stdout)
-    if not isinstance(data, dict):
-        raise ValueError("pr_payload_not_object")
-    title, body, comments = data.get("title"), data.get("body"), data.get("comments")
-    if not (isinstance(title, str) and title and isinstance(body, str) and isinstance(comments, list)):
-        raise ValueError("pr_payload_shape")
-    if not all(isinstance(c, dict) and isinstance(c.get("body"), str) for c in comments):
-        raise ValueError("pr_payload_comments_shape")
-    return " ".join([title, body, *(c["body"] for c in comments)])
+    data = gp.require_keys(gp.parse(stdout, root=dict), "pr", ("title", "body", "comments"), exact=True)
+    title = gp.require_str(data["title"], "pr.title")
+    body = gp.require_str(data["body"], "pr.body", nonempty=False)
+    comments = [
+        gp.require_str(gp.field(gp.require_object(c, "pr.comment"), "body", "pr.comment.body"), "pr.comment.body", nonempty=False)
+        for c in gp.require_list(data["comments"], "pr.comments")
+    ]
+    return " ".join([title, body, *comments])
 
 
 def read_pr_text(pr: int, repo: Path) -> str | None:
@@ -301,9 +303,11 @@ def read_pr_text(pr: int, repo: Path) -> str | None:
 
     A refusal arrives as a non-zero result whose stdout is error JSON, so the
     return code is checked before anything is parsed. One request, no fallback;
-    a PR number that is not a positive int is refused before any request.
+    a PR number that is not an exact positive 32-bit int is refused before any request.
     """
-    if isinstance(pr, bool) or not isinstance(pr, int) or pr < 1:
+    try:
+        gp.require_int(pr, "pr_number", minimum=1)
+    except gp.UnavailablePayload:
         return None
     try:
         proc = github_client.run(
@@ -319,7 +323,7 @@ def read_pr_text(pr: int, repo: Path) -> str | None:
         return None
     try:
         return parse_pr_text(proc.stdout)
-    except ValueError:
+    except gp.UnavailablePayload:
         return None
 
 

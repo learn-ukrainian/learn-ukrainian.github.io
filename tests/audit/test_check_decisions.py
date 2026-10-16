@@ -257,3 +257,59 @@ def test_created_issue_output_that_is_not_an_issue_url_is_a_failure(monkeypatch,
         lambda *a, **kw: subprocess.CompletedProcess(["gh"], 0, stdout, ""),
     )
     assert check_decisions.create_issue(_decision("D-1") | {"alternatives": []}) is None
+
+
+# --- Round 4: every issue-list payload goes through the shared strict decoder (#10792) ---------
+#
+# Raw stdout text, so duplicate keys and non-finite numbers reach the decoder as GitHub would send
+# them. The first three rows are the review's held-out classes; the rest extend the same class.
+
+_HELD_OUT_ISSUE_LISTS = {
+    "number_10_pow_100": '[{"number": ' + "1" + "0" * 100 + "}]",
+    "duplicate_number_replacing_an_error_object": '[{"number": {"error": "github_rate_limited"}, "number": 5}]',
+    "positive_number_plus_nested_error": '[{"number": 5, "labels": [{"error": "github_http_error"}]}]',
+    "duplicate_number_five_then_zero": '[{"number": 5, "number": 0}]',
+    "duplicate_number_in_second_element": '[{"number": 5}, {"number": 6, "number": 7}]',
+    "number_above_int32": '[{"number": 2147483648}]',
+    "number_float_exponent": '[{"number": 5e0}]',
+    "number_infinity_by_overflow": '[{"number": 1e400}]',
+    "nan_sibling": '[{"number": 5, "score": NaN}]',
+    "errors_member_empty": '[{"number": 5, "errors": []}]',
+    "error_envelope_member": '[{"number": 5, "message": "x", "documentation_url": "https://docs.github.com"}]',
+    "has_next_page": '[{"number": 5, "pageInfo": {"hasNextPage": true}}]',
+    "incomplete_results": '[{"number": 5, "incomplete_results": true}]',
+    "object_root_with_items": '{"items": [{"number": 5}], "total_count": 1}',
+    "trailing_garbage": '[{"number": 5}] x',
+}
+
+
+@pytest.mark.parametrize("shape", _HELD_OUT_ISSUE_LISTS)
+def test_held_out_issue_lists_are_unknown_with_one_request(monkeypatch, shape) -> None:
+    calls = _lookup_returning(monkeypatch, 0, _HELD_OUT_ISSUE_LISTS[shape])
+    assert check_decisions._gh_issue_exists("D-1") is None
+    assert len(calls) == 1
+
+
+@pytest.mark.parametrize("shape", _HELD_OUT_ISSUE_LISTS)
+def test_held_out_issue_lists_create_nothing_and_stop_lookups(monkeypatch, capsys, shape) -> None:
+    lookups, creates, rc = _run_main(
+        monkeypatch, [_decision("D-1"), _decision("D-2")], [(0, _HELD_OUT_ISSUE_LISTS[shape])]
+    )
+    out = capsys.readouterr().out
+    assert rc == 1
+    assert creates == []
+    assert len(lookups) == 1
+    assert "already exists" not in out
+    assert out.count("GH issue lookup unavailable") == 2
+
+
+@pytest.mark.parametrize("returncode", [True, False, None, "0", 0.0])
+def test_issue_lookup_return_code_must_be_exactly_zero_int(monkeypatch, returncode) -> None:
+    calls = _lookup_returning(monkeypatch, returncode, '[{"number": 5}]')
+    assert check_decisions._gh_issue_exists("D-1") is None
+    assert len(calls) == 1
+
+
+def test_largest_int32_issue_number_still_exists(monkeypatch) -> None:
+    _lookup_returning(monkeypatch, 0, '[{"number": 2147483647, "title": "x"}]')
+    assert check_decisions._gh_issue_exists("D-1") is True
