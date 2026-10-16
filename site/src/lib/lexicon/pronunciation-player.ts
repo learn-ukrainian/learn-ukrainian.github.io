@@ -105,7 +105,11 @@ export function mountPronunciationPlayer(root: HTMLElement): () => void {
     if (utterance) {
       utterance.onstart = utterance.onend = utterance.onerror = null;
       utterance = undefined;
-      synthesis.cancel();
+      try {
+        synthesis.cancel();
+      } catch {
+        // Platform cancellation failure must not interrupt local cleanup.
+      }
     }
     if (audio) {
       audio.onended = audio.onpause = audio.onerror = null;
