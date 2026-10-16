@@ -488,6 +488,15 @@ _GIT_PROBE_TIMEOUT_S = 30.0
 # ``git worktree remove`` of a large checkout (node_modules, a worker .venv)
 # can take a while; past this bound the removal is reported as an error.
 GIT_WORKTREE_REMOVE_TIMEOUT_S = 120.0
+# Prefix of the refusal a ``stage_removal`` hook raises; the removal is skipped.
+REMOVAL_STAGE_REFUSED = "removal stage refused: "
+
+
+class RemovalStageRefused(Exception):
+    """Raised by a ``stage_removal`` hook to keep the checkout (#10778)."""
+
+
+RemovalStager = Callable[[Path], contextlib.AbstractContextManager[Path]]
 
 
 @dataclasses.dataclass(frozen=True)
@@ -637,6 +646,7 @@ def git_worktree_remove(
     task_id: str | None = None,
     task_record: Mapping[str, Any] | None = None,
     preservation_receipt: dict[str, Any] | None = None,
+    stage_removal: RemovalStager | None = None,
 ) -> str | None:
     """Run the repository's only raw ``git worktree remove``; return an error or ``None``.
 
@@ -660,6 +670,12 @@ def git_worktree_remove(
     keep_worktree even when callers supply no task record. Baselines label
     attribution only; missing attribution and failed retrieval retain the tree.
     ``preservation_receipt`` receives retrieval or retention metadata.
+    ``stage_removal(target)``, when given, is entered after preservation and
+    immediately before destructive Git. It yields the path git removes (it may
+    have moved the checkout there) or raises :class:`RemovalStageRefused`,
+    which keeps the checkout and returns a refusal starting with
+    :data:`REMOVAL_STAGE_REFUSED`. Its exit runs after git returns, so it can
+    restore a checkout that git did not remove.
     """
     target = worktree
     if force:
@@ -691,26 +707,31 @@ def git_worktree_remove(
         preservation_receipt.update(metadata)
     if not ok:
         return refusal
-    argv = ["git", "worktree", "remove", *(["--force"] if force else []), str(target)]
     bound = GIT_WORKTREE_REMOVE_TIMEOUT_S if timeout is None else timeout
+    stager: RemovalStager = stage_removal if stage_removal is not None else contextlib.nullcontext
     try:
-        proc = safe_git(
-            argv[1:], cwd=repo_root, runner=git_runner, capture_output=True,
-            text=True, check=False, timeout=bound,
-        )
-    except subprocess.TimeoutExpired:
-        return f"git worktree remove timed out after {bound:g}s"
-    except PermissionError as exc:
-        return f"permission denied removing worktree: {exc}"
-    except OSError as exc:
-        return f"OS error removing worktree: {exc}"
-    if proc.returncode == 0:
-        return None
-    detail = (proc.stderr or proc.stdout or "").strip()
-    failure = detail.splitlines()[-1] if detail else f"exit {proc.returncode}"
-    if "permission" in failure.lower() or "denied" in failure.lower():
-        return f"permission denied removing worktree: {failure}"
-    return failure
+        with stager(target) as staged:
+            argv = ["git", "worktree", "remove", *(["--force"] if force else []), str(staged)]
+            try:
+                proc = safe_git(
+                    argv[1:], cwd=repo_root, runner=git_runner, capture_output=True,
+                    text=True, check=False, timeout=bound,
+                )
+            except subprocess.TimeoutExpired:
+                return f"git worktree remove timed out after {bound:g}s"
+            except PermissionError as exc:
+                return f"permission denied removing worktree: {exc}"
+            except OSError as exc:
+                return f"OS error removing worktree: {exc}"
+            if proc.returncode == 0:
+                return None
+            detail = (proc.stderr or proc.stdout or "").strip()
+            failure = detail.splitlines()[-1] if detail else f"exit {proc.returncode}"
+            if "permission" in failure.lower() or "denied" in failure.lower():
+                return f"permission denied removing worktree: {failure}"
+            return failure
+    except RemovalStageRefused as exc:
+        return f"{REMOVAL_STAGE_REFUSED}{exc}"
 
 
 def remove_unclaimed_worktree(
@@ -729,6 +750,8 @@ def remove_unclaimed_worktree(
     lock_timeout_s: float | None = None,
     git_runner: SafeGitRunner | None = None,
     task_record: Mapping[str, Any] | None = None,
+    settled_claim: Callable[[dict[str, Any]], bool] | None = None,
+    stage_removal: RemovalStager | None = None,
 ) -> WorktreeRemoval:
     """Remove ``worktree`` unless a live task claims it. Every remover comes here (#8610).
 
@@ -739,10 +762,13 @@ def remove_unclaimed_worktree(
        :func:`worktree_is_dirty`) must return ``False``: dirty or unknown
        refuses;
     3. :func:`active_worktree_claim_refusal`, which exempts only
-       ``owner_task_id``'s own record (``None`` exempts nothing);
+       ``owner_task_id``'s own record (``None`` exempts nothing) and a
+       ``needs_finalize`` claim that ``settled_claim`` proves settled;
     4. with ``unlock``, ``git worktree unlock``, for a caller that holds a git
        worktree lock of its own on the checkout (an ACP runtime);
-    5. :func:`git_worktree_remove`.
+    5. :func:`git_worktree_remove`, which enters ``stage_removal`` (when
+       given) after artifact preservation and right before destructive Git;
+       its :class:`RemovalStageRefused` skips the removal.
 
     Dispatch holds the same lock from before it touches a checkout until it
     publishes the record that names it, so every attachment is either visible
@@ -809,6 +835,7 @@ def remove_unclaimed_worktree(
                 repo_root=repo_root,
                 owner_task_id=owner_task_id,
                 owner_state_file=task_record_path(tasks_dir, owner_task_id) if owner_task_id is not None else None,
+                settled_claim=settled_claim,
             )
             if claim_refusal is not None:
                 return outcome("skipped", claim_refusal)
@@ -826,12 +853,13 @@ def remove_unclaimed_worktree(
                 task_id=owner_task_id,
                 task_record=task_record,
                 preservation_receipt=preservation_receipt,
+                stage_removal=stage_removal,
                 **runner_options,
             )
         except Exception as exc:
             return outcome("error", "worktree removal raised", error=f"{type(exc).__name__}: {exc}")
         if error is not None:
-            if error.startswith("artifact preservation failed:"):
+            if error.startswith(("artifact preservation failed:", REMOVAL_STAGE_REFUSED)):
                 return outcome("skipped", error)
             return outcome("error", "worktree removal failed", error=error)
         return outcome("removed", f"{reason} ({detail})" if detail else reason)
