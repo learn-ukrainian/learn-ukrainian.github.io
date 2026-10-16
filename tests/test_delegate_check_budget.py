@@ -2654,10 +2654,11 @@ def test_select_account_reads_only_a_non_default_label_and_keeps_the_payload(tmp
     lane = _unattributed_rate_limited_lane(tmp_path)
     budget = _accounts_budget(lane, {"b": _account_row(89.0)})
 
-    assert claude_account_lane.select_account(budget, account=HOST_ACCOUNT) == (
-        budget,
-        {"label": "a", "meter": "agents.claude"},
-    )
+    host_view, host_evidence = claude_account_lane.select_account(budget, account=HOST_ACCOUNT)
+    assert host_evidence == {"label": "a", "meter": "agents.claude"}
+    # #10770: the default account keeps its lane row and every shared fact; only b's meter is gone.
+    assert host_view["agents"] is budget["agents"] and host_view["agents"]["claude"] is lane
+    assert host_view == {**budget, "claude_accounts": {}}
     flat = {"claude": "healthy"}
     assert claude_account_lane.select_account(flat, account=account("b")) == (flat, {"label": "b", "meter": None})
 

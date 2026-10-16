@@ -10,6 +10,13 @@ that key and the only reads of the routing snapshot's claude meter:
   here: :func:`resolve_route_account` resolves and binds a dispatch's account
   before admission, :func:`account_from_record` reads a task record's, and
   :func:`no_claude_account` is the account of a route that reaches no claude seat.
+- :func:`bind_snapshot` turns a raw routing-budget payload into an
+  :class:`AccountSnapshot`: the snapshot a decision reads, holding one
+  account's claude meter and no other account's (#10770). Decision consumers
+  bind where a snapshot enters them; a decision helper that reaches the claude
+  lane of an unbound snapshot raises :class:`AccountRequired`. Display
+  consumers (``scripts.fleet.usage``, ``capacity_pick`` and the Monitor
+  endpoint) keep the plain payload.
 - :func:`select_account`, :func:`account_agents`, :func:`lane_record`,
   :func:`account_weekly_used_pct` and :func:`capacity_verdict` read the
   snapshot for a named account; none has a default, and a call without a
@@ -36,11 +43,15 @@ selected on it.
 from __future__ import annotations
 
 import math
-from collections.abc import Callable, Mapping
+from collections.abc import Callable, Iterator, Mapping
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, NoReturn
 
+CLAUDE_LANE = "claude"
 SHARED_ROUTE_FACT_KEYS = ("health", "runtime", "scheduler", "circuit_open", "eligible")
+# The meter fields of a ``ranked_by_headroom`` row; its ``lane``, ``type``,
+# ``in_flight`` and ``health`` are route facts.
+RANKED_METER_KEYS = ("status", "burn_pct_7d", "remaining_pct", "resets_at")
 ACCOUNT_RATE_LIMIT_FIELDS = frozenset(
     {"rate_limited", "last_rate_limited_at", "models_rate_limited", "headroom_blocked", "headroom_reason"}
 )
@@ -92,6 +103,92 @@ def require_account(account: object) -> ClaudeAccount:
     if not isinstance(account, ClaudeAccount):
         raise TypeError(f"the claude lane is read for a named ClaudeAccount (#10630), not {type(account).__name__}")
     return account
+
+
+class AccountRequired(BaseException):
+    """A claude meter was read from a snapshot not bound to a :class:`ClaudeAccount` (#10770).
+
+    A programming-contract failure, never missing data. Like
+    ``asyncio.CancelledError`` it derives from ``BaseException``, so the broad
+    ``except Exception`` and ``except ValueError`` handlers around snapshot
+    acquisition cannot turn it into an unknown reading: it reaches the caller.
+    """
+
+
+_BINDER = object()
+
+
+class AccountSnapshot(Mapping[str, Any]):
+    """A routing-budget snapshot read as one :class:`ClaudeAccount` (#10770).
+
+    Built only by :func:`bind_snapshot`. Its ``agents.claude`` is the account's
+    lane record: the default account's lane row unchanged, another account's
+    record rebuilt from its ``claude_accounts`` row (:func:`lane_view`), an
+    unresolved account's an unknown meter. No other account's meter remains:
+    ``claude_accounts`` keeps only the account's own row,
+    ``preferred_claude_account`` is gone, and the claude rows of
+    ``ranked_by_headroom`` carry the account's meter fields. Every other key
+    is the payload's own.
+
+    The view is immutable and is not a ``dict``: ``dict`` methods and
+    ``vars`` cannot reach a raw payload through it. It is never serialized
+    (JSON refuses it and pickling raises); a deserialized payload is bound
+    again.
+    """
+
+    __slots__ = ("_account", "_data", "_evidence")
+    _account: ClaudeAccount
+    _data: dict[str, Any]
+    _evidence: dict[str, Any]
+
+    def __init__(
+        self, data: Mapping[str, Any], account: ClaudeAccount, evidence: Mapping[str, Any], *, binder: object = None
+    ) -> None:
+        if binder is not _BINDER:
+            raise TypeError("an AccountSnapshot is built only by claude_account_lane.bind_snapshot (#10770)")
+        object.__setattr__(self, "_data", dict(data))
+        object.__setattr__(self, "_account", account)
+        object.__setattr__(self, "_evidence", dict(evidence))
+
+    @property
+    def account(self) -> ClaudeAccount:
+        """The account this snapshot's claude meter belongs to."""
+        return self._account
+
+    def evolve(self, **changes: Any) -> AccountSnapshot:
+        """This snapshot with top-level keys replaced, bound to the same account (a decision's derived view)."""
+        return AccountSnapshot({**self._data, **changes}, self._account, self._evidence, binder=_BINDER)
+
+    def __getitem__(self, key: str) -> Any:
+        return self._data[key]
+
+    def __iter__(self) -> Iterator[str]:
+        return iter(self._data)
+
+    def __len__(self) -> int:
+        return len(self._data)
+
+    def __repr__(self) -> str:
+        return f"AccountSnapshot(account={self._account.label!r}, keys={sorted(self._data)!r})"
+
+    def __setattr__(self, name: str, value: Any) -> NoReturn:
+        raise AttributeError("an AccountSnapshot is immutable")
+
+    def __delattr__(self, name: str) -> NoReturn:
+        raise AttributeError("an AccountSnapshot is immutable")
+
+    def __reduce_ex__(self, protocol: Any) -> NoReturn:
+        raise TypeError("an AccountSnapshot is never serialized; bind the deserialized payload again (#10770)")
+
+
+def require_bound(snapshot: object, *, reading: str) -> AccountSnapshot:
+    """``snapshot`` when it is bound to an account; a raw payload raises :class:`AccountRequired`."""
+    if not isinstance(snapshot, AccountSnapshot):
+        raise AccountRequired(
+            f"{reading} reads the claude lane of an unbound {type(snapshot).__name__}: "
+            "bind it with claude_account_lane.bind_snapshot (#10770)"
+        )
+    return snapshot
 
 
 def resolve_route_account(
@@ -251,33 +348,65 @@ def lane_view(row: Any, lane_row: Any) -> tuple[dict[str, Any], str | None]:
     }, None
 
 
-def select_account(payload: Mapping[str, Any], *, account: ClaudeAccount) -> tuple[Mapping[str, Any], dict[str, Any]]:
-    """``payload`` with its ``claude`` lane read as ``account``, and the account evidence.
+def _ranked_row(item: Any, record: Mapping[str, Any] | None) -> Any:
+    """A ``ranked_by_headroom`` claude row with the producer's meter fields taken from ``record``."""
+    if not isinstance(item, Mapping) or item.get("lane") != CLAUDE_LANE:
+        return item
+    lane = record or {}
+    meter = {key: lane.get(key) for key in RANKED_METER_KEYS}
+    return {**item, **meter, "status": lane.get("status", "unknown")}
+
+
+def select_account(payload: Mapping[str, Any], *, account: ClaudeAccount) -> tuple[AccountSnapshot, dict[str, Any]]:
+    """``payload`` bound to ``account`` (:class:`AccountSnapshot`), and the account evidence.
 
     The default account keeps the lane row (``meter`` ``agents.claude``).
-    Another resolved account gets a copy whose ``agents.claude`` is
-    :func:`lane_view` of its ``claude_accounts`` row; the evidence names that
-    ``meter``, its ``state`` (``ok``, ``stale`` or ``unknown``), the ``reason``
-    it is unknown, and the lane row's ``unattributed_rate_limits`` when they
-    blocked it. An unresolved account reads the lane's route facts with an
-    unknown meter, state ``unresolved`` and its refusal code as the reason. A
-    payload without lane records (no or an empty ``agents`` map) is returned
-    as is, with ``meter`` None.
+    Another resolved account's ``agents.claude`` is :func:`lane_view` of its
+    ``claude_accounts`` row; the evidence names that ``meter``, its ``state``
+    (``ok``, ``stale`` or ``unknown``), the ``reason`` it is unknown, and the
+    lane row's ``unattributed_rate_limits`` when they blocked it. An
+    unresolved account reads the lane's route facts with an unknown meter,
+    state ``unresolved`` and its refusal code as the reason. A payload without
+    lane records (no or an empty ``agents`` map) has ``meter`` None. Every
+    other account's meter is removed (:class:`AccountSnapshot`); the caller's
+    payload is not modified.
+
+    Selecting a snapshot again for its own account returns it unchanged with
+    its evidence (a fixed point); selecting it for another account raises
+    :class:`AccountRequired`, because it no longer holds that account's meter.
     """
     from scripts.agent_runtime.attempt_boundary import DEFAULT_CLAUDE_ACCOUNT
 
     account = require_account(account)
+    if isinstance(payload, AccountSnapshot):
+        if payload.account.label != account.label:
+            raise AccountRequired(
+                f"a snapshot bound to claude account {payload.account.label!r} is not read as "
+                f"{account.label!r}: bind the raw payload for that account (#10770)"
+            )
+        return payload, dict(payload._evidence)
+    if not isinstance(payload, Mapping):
+        raise TypeError(f"a routing snapshot is a mapping, not {type(payload).__name__}")
+    data = dict(payload)
+    data.pop("preferred_claude_account", None)
+    if "claude_accounts" in data:
+        rows = data["claude_accounts"]
+        row_key = f"claude:{account.label}"
+        own = isinstance(rows, Mapping) and account.resolved and row_key in rows
+        data["claude_accounts"] = {row_key: rows[row_key]} if own else {}
     if account.label == DEFAULT_CLAUDE_ACCOUNT:
-        return payload, {"label": account.label, "meter": "agents.claude"}
+        return _bound(data, account, {"label": account.label, "meter": "agents.claude"})
     unresolved = {} if account.resolved else {"state": "unresolved", "reason": account.refusal}
-    agents = payload.get("agents") if isinstance(payload, Mapping) else None
+    agents = payload.get("agents")
+    view: dict[str, Any] | None = None
     if not isinstance(agents, Mapping) or not agents:
-        return payload, {"label": account.label, "meter": None, **unresolved}
-    lane_row = agents.get("claude")
-    if account.label is None:
-        view: dict[str, Any] = {"status": "unknown", "freshness": "unavailable", **route_facts(lane_row)}
-        evidence: dict[str, Any] = {"label": None, "meter": None, **unresolved}
+        agents = {}
+        evidence: dict[str, Any] = {"label": account.label, "meter": None, **unresolved}
+    elif account.label is None:
+        view = {"status": "unknown", "freshness": "unavailable", **route_facts(agents.get(CLAUDE_LANE))}
+        evidence = {"label": None, "meter": None, **unresolved}
     else:
+        lane_row = agents.get(CLAUDE_LANE)
         row_key = f"claude:{account.label}"
         rows = payload.get("claude_accounts")
         view, unknown = lane_view(rows.get(row_key) if isinstance(rows, Mapping) else None, lane_row)
@@ -292,7 +421,22 @@ def select_account(payload: Mapping[str, Any], *, account: ClaudeAccount) -> tup
             evidence["unattributed_rate_limits"] = {
                 key: runtime[key] for key in sorted(ACCOUNT_RATE_LIMIT_FIELDS) if key in runtime
             }
-    return {**payload, "agents": {**agents, "claude": view}}, evidence
+    if view is not None:
+        data["agents"] = {**agents, CLAUDE_LANE: view}
+    if isinstance(data.get("ranked_by_headroom"), list):
+        data["ranked_by_headroom"] = [_ranked_row(item, view) for item in data["ranked_by_headroom"]]
+    return _bound(data, account, evidence)
+
+
+def _bound(
+    data: Mapping[str, Any], account: ClaudeAccount, evidence: dict[str, Any]
+) -> tuple[AccountSnapshot, dict[str, Any]]:
+    return AccountSnapshot(data, account, evidence, binder=_BINDER), dict(evidence)
+
+
+def bind_snapshot(payload: Mapping[str, Any], *, account: ClaudeAccount) -> AccountSnapshot:
+    """``payload`` bound to ``account``: :func:`select_account` without the evidence."""
+    return select_account(payload, account=account)[0]
 
 
 def account_agents(payload: Mapping[str, Any] | None, *, account: ClaudeAccount) -> Mapping[str, Any]:
@@ -309,9 +453,9 @@ def lane_record(payload: Mapping[str, Any] | None, lane: str, *, account: Claude
 
 
 def other_lane_record(payload: Any, lane: str) -> Mapping[str, Any]:
-    """A lane no Claude account owns, read without one; the claude lane raises ``ValueError``."""
-    if lane.strip().casefold() == "claude":
-        raise ValueError("the claude lane is read for a named account: use lane_record (#10630)")
+    """A lane no Claude account owns, read without one; the claude lane raises :class:`AccountRequired`."""
+    if lane.strip().casefold() == CLAUDE_LANE:
+        raise AccountRequired("the claude lane is read for a named account: use lane_record (#10630, #10770)")
     agents = payload.get("agents") if isinstance(payload, Mapping) else None
     record = agents.get(lane) if isinstance(agents, Mapping) else None
     return record if isinstance(record, Mapping) else {}
@@ -331,9 +475,10 @@ def account_weekly_used_pct(payload: Any, *, account: ClaudeAccount) -> float | 
     account = require_account(account)
     if not isinstance(payload, Mapping) or account.label is None:
         return None
+    payload = bind_snapshot(payload, account=account)
     if account.label == DEFAULT_CLAUDE_ACCOUNT:
         agents = payload.get("agents")
-        info = agents.get("claude") if isinstance(agents, Mapping) else None
+        info = agents.get(CLAUDE_LANE) if isinstance(agents, Mapping) else None
         if not isinstance(info, Mapping) or info.get("status") == "unknown":
             return None  # missing, or withdrawn as stale by Monitor
         codexbar = info.get("codexbar")

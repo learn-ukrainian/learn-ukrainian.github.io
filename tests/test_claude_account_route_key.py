@@ -76,7 +76,7 @@ def test_the_claude_lane_is_only_read_for_a_named_account():
     assert claude_account_lane.lane_record(budget, "claude", account=account("b"))["remaining_pct"] == 89.0
     assert claude_account_lane.other_lane_record(budget, "codex") is budget["agents"]["codex"]
     for lane in ("claude", " Claude "):
-        with pytest.raises(ValueError, match="named account"):
+        with pytest.raises(claude_account_lane.AccountRequired, match="named account"):
             claude_account_lane.other_lane_record(budget, lane)
     with pytest.raises(TypeError):
         claude_account_lane.select_account(budget, account("b"))  # keyword only

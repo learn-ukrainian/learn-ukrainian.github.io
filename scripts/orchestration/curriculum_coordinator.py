@@ -24,7 +24,7 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from scripts.common.repo_root import main_checkout_root
-from scripts.fleet import credit_lane
+from scripts.fleet import claude_account_lane, credit_lane
 from scripts.orchestration.curriculum_readiness import (
     ReadinessError,
     evaluate_preparation,
@@ -639,11 +639,10 @@ def default_health_probe() -> Mapping[str, Any]:
     (#10630); one that cannot be resolved or bound reads as unknown.
     """
     from scripts.api.state_router import compute_routing_budget
-    from scripts.fleet import claude_account_lane
 
     snapshot = compute_routing_budget(fresh_codexbar=True)
     account = claude_account_lane.resolve_route_account(None, strict=False)
-    return claude_account_lane.select_account(snapshot, account=account)[0]
+    return claude_account_lane.bind_snapshot(snapshot, account=account)
 
 
 # Health capability groups name lanes, not models (the config schema has no
@@ -719,6 +718,9 @@ def _health_assessment(
         lanes: list[dict[str, Any]] = []
         available = 0
         for lane in group["lanes"]:
+            if lane == claude_account_lane.CLAUDE_LANE:
+                # The claude lane is one account's meter: read only from a bound snapshot (#10770).
+                claude_account_lane.require_bound(snapshot, reading="the wave health gate")
             record = agents.get(lane)
             if not isinstance(record, Mapping):
                 lanes.append(
@@ -1147,7 +1149,10 @@ def _probe_health(probe: HealthProbe, config: Mapping[str, Any]) -> tuple[bool, 
         return False, {"reason": "health-probe-error", "error_type": type(exc).__name__, "groups": []}
     if not isinstance(snapshot, Mapping):
         return False, {"reason": "invalid-health-snapshot", "groups": []}
-    return _health_assessment(snapshot, config["health"])
+    # A probe's snapshot is read as the account the wave's claude dispatches run as (#10630, #10770):
+    # a raw payload is bound here, and one already bound to another account raises AccountRequired.
+    account = claude_account_lane.resolve_route_account(None, strict=False)
+    return _health_assessment(claude_account_lane.bind_snapshot(snapshot, account=account), config["health"])
 
 
 def acquire_next(

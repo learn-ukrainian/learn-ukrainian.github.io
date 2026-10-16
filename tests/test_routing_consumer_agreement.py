@@ -84,7 +84,7 @@ from scripts.review import reviewer_scheduler
 from scripts.review.model_catalog import retired_model_refusal
 from scripts.review.reviewer_resolver import OPENAI_FRONTIER, ResolverInputs, evaluate_candidate
 from tests.api.test_routing_budget import _configure_base
-from tests.claude_route_accounts import HOST_ACCOUNT
+from tests.claude_route_accounts import HOST_ACCOUNT, bound
 
 NOW = datetime(2026, 10, 5, 12, 0, tzinfo=UTC)
 FETCHED = "2026-10-05T11:59:30Z"
@@ -709,7 +709,7 @@ def test_scheduler_metrics_are_the_owner_readings(snapshot):
 def test_wave_gate_counts_only_what_the_owner_establishes(snapshot):
     _case, budget = snapshot
     config = coordinator.load_config()["health"]
-    passed, assessment = coordinator._health_assessment(budget, config, now=NOW)
+    passed, assessment = coordinator._health_assessment(bound(budget), config, now=NOW)
     group = next(g for g in assessment["groups"] if g["id"] == "curriculum-build")
     [lane] = group["lanes"]
     facts = owner(budget)
@@ -849,7 +849,7 @@ def test_credit_relief_control_is_granted_by_every_consumer(snapshot, monkeypatc
         OPENAI_FRONTIER, ResolverInputs(author_model="claude-opus-5-5", routing_snapshot=budget, claude_account=HOST_ACCOUNT)
     )
     assert result.status != "excluded", result.reason
-    _passed, assessment = coordinator._health_assessment(budget, coordinator.load_config()["health"], now=NOW)
+    _passed, assessment = coordinator._health_assessment(bound(budget), coordinator.load_config()["health"], now=NOW)
     group = next(g for g in assessment["groups"] if g["id"] == "curriculum-build")
     assert group["available"] == 1 and group["lanes"][0]["credit"]["state"] == credit_lane.CREDIT_BALANCE_PRESENT
     assert recommend(budget)["primary_agent_for_code"] == "codex"
@@ -880,7 +880,7 @@ def test_contradicted_credit_relief_is_avoided_by_every_consumer(snapshot, monke
         if result.credit is not None:
             assert result.credit["state"] == facts.credit["state"]
 
-    passed, assessment = coordinator._health_assessment(budget, coordinator.load_config()["health"], now=NOW)
+    passed, assessment = coordinator._health_assessment(bound(budget), coordinator.load_config()["health"], now=NOW)
     group = next(g for g in assessment["groups"] if g["id"] == "curriculum-build")
     assert not passed and group["available"] == 0
     [lane] = group["lanes"]
@@ -913,7 +913,7 @@ def test_missing_snapshot_staleness_is_unknown_in_the_wave_gate(snapshot):
     _case, budget = snapshot
     assert "stale" not in budget["diagnostics"]
     assert owner(budget).observation_freshness == credit_lane.UNKNOWN
-    passed, assessment = coordinator._health_assessment(budget, coordinator.load_config()["health"], now=NOW)
+    passed, assessment = coordinator._health_assessment(bound(budget), coordinator.load_config()["health"], now=NOW)
     assert assessment["fresh"] is False and not passed
     [lane] = next(g for g in assessment["groups"] if g["id"] == "curriculum-build")["lanes"]
     assert lane["freshness"] == credit_lane.UNKNOWN and lane["stale"] is False
@@ -952,7 +952,7 @@ def test_weekly_pace_hot_label_is_decided_by_the_owner_for_every_consumer(snapsh
     # The wave reads the owner's status; counting it is the wave's own acceptable-statuses rule
     # (the shipped config accepts ``hot``, a legitimate wave-local restriction).
     config = coordinator.load_config()["health"]
-    _passed, assessment = coordinator._health_assessment(budget, config, now=NOW)
+    _passed, assessment = coordinator._health_assessment(bound(budget), config, now=NOW)
     group = next(g for g in assessment["groups"] if g["id"] == "curriculum-build")
     [lane] = group["lanes"]
     assert lane["status"] == facts.status == ("cool" if clears else "hot")
@@ -995,7 +995,7 @@ def test_weekly_pace_hot_label_without_verified_freshness_stays_hot_for_every_co
     assert result.status == "eligible", result.reason
 
     config = coordinator.load_config()["health"]
-    _passed, assessment = coordinator._health_assessment(budget, config, now=NOW)
+    _passed, assessment = coordinator._health_assessment(bound(budget), config, now=NOW)
     group = next(g for g in assessment["groups"] if g["id"] == "curriculum-build")
     [lane] = group["lanes"]
     assert lane["status"] == facts.status == "hot"
@@ -1047,7 +1047,7 @@ def test_reset_covered_deficit_is_decided_by_the_owner_for_every_consumer(snapsh
     assert result.status == "eligible", result.reason
 
     config = coordinator.load_config()["health"]
-    _passed, assessment = coordinator._health_assessment(budget, config, now=NOW)
+    _passed, assessment = coordinator._health_assessment(bound(budget), config, now=NOW)
     group = next(g for g in assessment["groups"] if g["id"] == "curriculum-build")
     [lane] = group["lanes"]
     assert lane["status"] == facts.status

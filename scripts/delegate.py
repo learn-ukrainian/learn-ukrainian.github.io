@@ -17683,7 +17683,7 @@ def _resolve_agent_with_budget_guard(
         # #10733: no claude seat is selected on an account that was not resolved and bound.
         raise BudgetGuardRefuseError(f"CLAUDE_ACCOUNT_REFUSED: {claude_account.refusal}")
     try:
-        payload = _fetch_routing_budget()
+        routing_payload = _fetch_routing_budget()
     except MonitorApiUnavailable:
         if (requested == "deepseek" or provider == "openrouter") and not force_agent:
             raise BudgetGuardRefuseError(
@@ -17697,7 +17697,7 @@ def _resolve_agent_with_budget_guard(
     if prepaid:
         from scripts.api.state_router import _api_lane_status_from_account
 
-        accounts = payload.get("api_accounts") or {}
+        accounts = routing_payload.get("api_accounts") or {}
         account = accounts.get(prepaid) or {}
         prepaid_status = _api_lane_status_from_account(prepaid, account)
         blocked = (
@@ -17723,18 +17723,17 @@ def _resolve_agent_with_budget_guard(
             _publish_lane_diagnostics(
                 requested,
                 account if isinstance(account, dict) else None,
-                payload.get("diagnostics") if isinstance(payload.get("diagnostics"), dict) else None,
+                routing_payload.get("diagnostics") if isinstance(routing_payload.get("diagnostics"), dict) else None,
                 model=requested_model,
                 sink=diagnostic_sink,
             )
         return requested
 
-    diags = payload.get("diagnostics") or {}
-    rec = payload.get("recommendation") or {}
-    # #10619, #10630: every lane record below is read as the dispatch's claude account.
-    routing_payload = payload
-    view, account_evidence = claude_account_lane.select_account(payload, account=claude_account)
-    payload = dict(view)
+    diags = routing_payload.get("diagnostics") or {}
+    rec = routing_payload.get("recommendation") or {}
+    # #10619, #10630, #10770: every lane record below is read from the snapshot bound to the
+    # dispatch's claude account; the raw payload is kept only to bind the cooler-seat advice.
+    payload, account_evidence = claude_account_lane.select_account(routing_payload, account=claude_account)
     agents = claude_account_lane.account_agents(payload, account=claude_account)
     records_loaded = int(diags.get("records_loaded", 0) or 0)
     is_stale = bool(diags.get("stale", False))
@@ -17922,11 +17921,10 @@ def _resolve_agent_with_budget_guard(
             blocked, cause = review_capacity_action(candidate.route, info, diags, candidate.concrete_model)
             if blocked:
                 capacity_exclusions[candidate.name] = cause
-        review_snapshot = {
-            **payload,
-            "agents": {lane: info if isinstance(info, Mapping) else {} for lane, info in agents.items()},
-            "review_capacity_exclusions": capacity_exclusions,
-        }
+        review_snapshot = payload.evolve(
+            agents={lane: info if isinstance(info, Mapping) else {} for lane, info in agents.items()},
+            review_capacity_exclusions=capacity_exclusions,
+        )
         sub, chosen = review_select(review_snapshot, requested if needs_action else "")
         if sub == requested and chosen == requested_model:
             if not needs_action:
