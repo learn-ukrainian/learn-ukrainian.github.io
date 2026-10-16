@@ -729,6 +729,7 @@ def remove_unclaimed_worktree(
     lock_timeout_s: float | None = None,
     git_runner: SafeGitRunner | None = None,
     task_record: Mapping[str, Any] | None = None,
+    settled_claim: Callable[[dict[str, Any]], bool] | None = None,
 ) -> WorktreeRemoval:
     """Remove ``worktree`` unless a live task claims it. Every remover comes here (#8610).
 
@@ -739,7 +740,8 @@ def remove_unclaimed_worktree(
        :func:`worktree_is_dirty`) must return ``False``: dirty or unknown
        refuses;
     3. :func:`active_worktree_claim_refusal`, which exempts only
-       ``owner_task_id``'s own record (``None`` exempts nothing);
+       ``owner_task_id``'s own record (``None`` exempts nothing) and a
+       ``needs_finalize`` claim that ``settled_claim`` proves settled;
     4. with ``unlock``, ``git worktree unlock``, for a caller that holds a git
        worktree lock of its own on the checkout (an ACP runtime);
     5. :func:`git_worktree_remove`.
@@ -809,6 +811,7 @@ def remove_unclaimed_worktree(
                 repo_root=repo_root,
                 owner_task_id=owner_task_id,
                 owner_state_file=task_record_path(tasks_dir, owner_task_id) if owner_task_id is not None else None,
+                settled_claim=settled_claim,
             )
             if claim_refusal is not None:
                 return outcome("skipped", claim_refusal)

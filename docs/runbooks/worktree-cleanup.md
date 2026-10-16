@@ -452,6 +452,108 @@ PRIMARY_REPO="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir
 For regular dispatch worktrees, `post_task_reap` delegates automatic removal
 to this same P0 reaper rather than maintaining a second deletion path.
 
+## Clean, fully pushed, idle dispatch worktrees (#10778)
+
+The classes above retain many finished dispatch checkouts that hold nothing
+Git does not already keep (`unknown ownership`, `needs_finalize`), and they
+filled the dispatch host's disk. `reap_worktrees --clean-pushed` removes
+exactly those. It is a mode of the common reaper, not a second remover: it
+holds the reaper lock for the whole run and removes through
+`worktree_claims.remove_unclaimed_worktree`, so delegate's per-worktree lock,
+the shared claim scan and the ignored-output preservation gate all apply.
+
+A registered checkout is removed only when all of these hold. Each one is
+checked to select the candidate and again under the per-worktree lock,
+immediately before removal:
+
+- it is exactly `.worktrees/dispatch/<agent>/<task>/`, not an ACP runtime, not
+  the primary checkout, with no symlink anywhere in its registered path, and
+  it is a directory;
+- it is not `git worktree lock`ed and has no reap reservation, active rollover
+  lease or live write claim;
+- HEAD is unchanged since the listing, `git status --porcelain
+  --untracked-files=all` is empty (no change, no untracked file) and
+  `git rev-list HEAD --not --remotes=origin` is empty; a detached HEAD at a
+  commit contained in an origin ref counts as pushed;
+- no process uses it: `fuser -s <path>` (10 s bound) reports no user, and no
+  process visible in `/proc` has its working directory, root, executable, an
+  open file or a mapped file inside it. A missing, failing or timed-out
+  `fuser`, or an unlistable process table, counts as in use;
+- no task record in `batch_state/tasks/` whose `worktree_path` or `cwd` names
+  it is `spawning` or `running`, has any other unsettled status, or has a
+  worker that is live or unknown. `needs_finalize` and finished records pass
+  once their worker is proven gone. A record that cannot be read, or cannot be
+  parsed and may name the checkout, refuses;
+- the newest mtime of the checkout's `HEAD`, `index` and `logs/HEAD` (in
+  `.git/worktrees/<name>/`) and of every claiming task record, including
+  `<task>.json`, is more than 60 minutes old.
+
+Removal never passes `--force`, so Git itself also refuses a changed or
+locked checkout. Ignored output follows the existing preservation rules: it is
+copied to `batch_state/preserved/` within the 256 MiB cap, and a tree over the
+cap or without canonical attribution for its output is retained and reported.
+A failed removal is reported as `error` and never retried. Each removal is
+journalled (`clean-pushed-remove`) before it runs and appended afterwards to
+`batch_state/worktree-abandon-log.jsonl` with `ts`, `actor`, repository-relative
+`path`, `head`, `branch`, `task_status`, `reason` and `size_mb`. Branches are
+never deleted; `branch_sweep` owns branch retirement (#10763).
+`LU_REAPER_DISABLED=1` turns apply into a no-op. A run that waits 30 s for the
+reaper lock without getting it does nothing and reports `lock_busy`.
+
+Dispatch admission calls the same rule through
+`reap_clean_pushed(repo_root=..., dry_run=..., actor=..., lock_timeout_s=...)`,
+which returns a `CleanPushedReport` (`removed`, `skipped` with reasons,
+`freed_mb`, `lock_busy`, `refusal`).
+
+```bash
+# dry run (default): what would be removed, and why each other tree stays
+.venv/bin/python -m scripts.orchestration.reap_worktrees --clean-pushed
+# apply (what the timer runs)
+.venv/bin/python -m scripts.orchestration.reap_worktrees --clean-pushed --apply
+```
+
+### Timer: install and verify
+
+`packaging/systemd/learn-ukrainian-worktree-reaper.service` runs the apply
+command every 30 minutes from
+`learn-ukrainian-worktree-reaper.timer` (`OnCalendar=*:00/30`,
+`Persistent=false`). The service is a oneshot, so systemd never starts a
+second run while one is active, and `TimeoutStartSec=1200` bounds each run
+inside the cadence. It has no network access. Install it on the dispatch host
+from the primary checkout on `main`, after the change is merged:
+
+```bash
+repo_root=$(pwd -P)
+unit_dir="$HOME/.config/systemd/user"
+mkdir -p "$unit_dir/learn-ukrainian-worktree-reaper.service.d"
+sed -e "s|@REPO_ROOT@|$repo_root|g" packaging/systemd/learn-ukrainian-worktree-reaper.service \
+  > "$unit_dir/learn-ukrainian-worktree-reaper.service"
+cp packaging/systemd/learn-ukrainian-worktree-reaper.timer "$unit_dir/"
+sed -e "s|@REPO_ROOT@|$repo_root|g" \
+  packaging/systemd/dropins/learn-ukrainian-worktree-reaper.service.d/data-volume.conf \
+  > "$unit_dir/learn-ukrainian-worktree-reaper.service.d/data-volume.conf"
+systemd-analyze --user verify "$unit_dir/learn-ukrainian-worktree-reaper.service" \
+  "$unit_dir/learn-ukrainian-worktree-reaper.timer"
+.venv/bin/python -m scripts.orchestration.reap_worktrees --clean-pushed   # review the dry run first
+systemctl --user daemon-reload
+systemctl --user enable --now learn-ukrainian-worktree-reaper.timer
+```
+
+Verify:
+
+```bash
+systemctl --user list-timers learn-ukrainian-worktree-reaper.timer
+journalctl --user -u learn-ukrainian-worktree-reaper.service -n 50
+# no clean, fully pushed dispatch worktree idle for over an hour should remain:
+.venv/bin/python -m scripts.orchestration.reap_worktrees --clean-pushed
+```
+
+After a timer run, the dry run reports `0 would remove`; every remaining
+dispatch tree is listed as `SKIPPED` with the guard that keeps it. To stop
+removals immediately, `systemctl --user disable --now
+learn-ukrainian-worktree-reaper.timer`, or set `LU_REAPER_DISABLED=1` in a
+drop-in.
+
 ## Deletion ownership
 
 Every worktree removal goes through one guarded chokepoint (#8610): Python
