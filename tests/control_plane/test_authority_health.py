@@ -124,6 +124,31 @@ def test_existing_sqlite_file_is_not_proof_of_healthy_schema(tmp_path, state):
     assert target.read_bytes() == before
 
 
+def test_pg_privilege_denial_is_not_a_probe_failure(monkeypatch, tmp_path):
+    """SQLSTATE 42501 is its own code. The driver text stays off the payload."""
+    from scripts.control_plane.health import read_failure_code
+    from scripts.control_plane.storage import Authority
+
+    class PrivilegeDenied(Exception):
+        sqlstate = "42501"
+
+    marker = "SYNTHETIC_PRIVATE_DRIVER_DETAIL"
+    assert read_failure_code(PrivilegeDenied(marker), Authority.PG) == "pg_privilege_denied"
+
+    class Unreachable(Exception):
+        sqlstate = "08001"
+
+    assert read_failure_code(Unreachable(marker), Authority.PG) == "pg_probe_failed"
+
+    conn = PgRead(error=PrivilegeDenied(marker))
+    install_pg(monkeypatch, conn)
+    status = message_plane.read_plane_status(root=tmp_path)
+    assert status["schema"]["db_error"] == "pg_privilege_denied"
+    assert status["store"]["reachable"] is False
+    assert marker not in json.dumps(status)
+    assert conn.closed
+
+
 def test_missing_pg_dsn_is_not_component_refusal_or_missing_sqlite(monkeypatch, tmp_path):
     monkeypatch.setenv("LEARN_UKRAINIAN_CP_AUTHORITY_FLEET_COMMS", "pg")
     status = message_plane.read_plane_status(root=tmp_path / "absent")

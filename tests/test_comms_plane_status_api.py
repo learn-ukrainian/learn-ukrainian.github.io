@@ -136,9 +136,7 @@ def test_api_plane_status_invalid_mode(monkeypatch, tmp_path: Path) -> None:
     assert data["mode_error"] == "invalid_mode"
 
 
-def test_comms_v1_collectors_emit_store_not_db_path(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_comms_v1_collectors_emit_store_not_db_path(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("FLEET_COMMS_MESSAGE_PLANE", "off")  # #7486: pin legacy path
     client = _client(_message_ctx(tmp_path, tmp_path / "missing.db"))
     for path in ("/api/comms/v1/backlog", "/api/comms/v1/dead-letters", "/api/comms/v1/metrics"):
@@ -151,9 +149,7 @@ def test_comms_v1_collectors_emit_store_not_db_path(
         assert "db_path" not in payload
 
 
-def test_comms_v1_collectors_with_seeded_broker(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_comms_v1_collectors_with_seeded_broker(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("FLEET_COMMS_MESSAGE_PLANE", "off")  # #7486: pin legacy path
     broker = tmp_path / "messages.db"
     conn = sqlite3.connect(broker)
@@ -189,3 +185,74 @@ def test_comms_v1_collectors_with_seeded_broker(
         assert payload["store"]["kind"] == "legacy-broker"
         assert payload["store"]["reachable"] is True
         assert "db_path" not in payload
+
+
+def _stub_api_startup(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Keep lifespan tests on the authority guard, not warmup side effects."""
+    from scripts.api import main as api_main
+
+    async def _idle(*_args, **_kwargs):
+        return None
+
+    monkeypatch.setattr(api_main, "preload_all", lambda: None)
+    monkeypatch.setattr(api_main, "install_signal_logging", lambda: None)
+    monkeypatch.setattr(api_main, "ensure_broker_db_ready", lambda **_kwargs: None)
+    monkeypatch.setattr(api_main, "seed_manifest_inventory", lambda *_args, **_kwargs: None)
+    monkeypatch.setattr(api_main.isa, "schedule_refresh", lambda force=False: None)
+    monkeypatch.setattr(api_main, "warm_projection_cache", lambda **_kwargs: None)
+    monkeypatch.setattr(api_main, "schedule_state_scan_warmup", lambda _ctx: None)
+    monkeypatch.setattr(api_main, "refresh_projection_cache_periodically", _idle)
+    monkeypatch.setattr(api_main, "start_periodic_refresh", lambda: None)
+    monkeypatch.setattr(api_main, "stop_periodic_refresh", lambda: None)
+    monkeypatch.setattr(api_main, "drain_context_background_work", _idle)
+
+
+def _clear_fleet_comms_authority(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.delenv("LEARN_UKRAINIAN_CP_AUTHORITY", raising=False)
+    monkeypatch.delenv("LEARN_UKRAINIAN_CP_AUTHORITY_FLEET_COMMS", raising=False)
+    monkeypatch.delenv("LEARN_UKRAINIAN_CP_PG_DSN", raising=False)
+
+
+@pytest.mark.parametrize("authority", ["sqlite", "shadow"])
+def test_lifespan_authority_matches_plane_status(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, authority: str
+) -> None:
+    """A clean or shadow environment starts, and plane-status names that store."""
+    from scripts.api import main as api_main
+    from scripts.control_plane.storage import StoreId, resolve_authority
+
+    _clear_fleet_comms_authority(monkeypatch)
+    if authority == "shadow":
+        monkeypatch.setenv("LEARN_UKRAINIAN_CP_AUTHORITY_FLEET_COMMS", "shadow")
+    plane = tmp_path / "plane"
+    monkeypatch.setenv("FLEET_COMMS_ROOT", str(plane))
+    _stub_api_startup(monkeypatch)
+
+    app = api_main.create_app(fixture_context(tmp_path))
+    with TestClient(app):
+        resolved = resolve_authority(StoreId.FLEET_COMMS).value
+    status = read_plane_status(root=plane)
+    assert resolved == authority
+    assert status["authority"] == resolved
+
+
+def test_lifespan_refuses_pg_authority_the_seats_cannot_write(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    """Postgres is outside the authority-service interlock, so startup stops."""
+    from scripts.api import main as api_main
+    from scripts.control_plane.storage import ControlPlaneUnsupportedComponentError
+
+    _clear_fleet_comms_authority(monkeypatch)
+    monkeypatch.setenv("LEARN_UKRAINIAN_CP_AUTHORITY_FLEET_COMMS", "pg")
+    monkeypatch.setenv("LEARN_UKRAINIAN_CP_PG_DSN", "postgresql://ci:ci@127.0.0.1:1/refused")
+    _stub_api_startup(monkeypatch)
+
+    app = api_main.create_app(fixture_context(tmp_path))
+    with pytest.raises(ControlPlaneUnsupportedComponentError) as exc:
+        with TestClient(app):
+            pass
+    message = str(exc.value)
+    assert "fleet_comms" in message
+    assert "'pg'" in message
+    assert "authority_service" in message
+    assert "127.0.0.1" not in message
+    assert "postgresql" not in message

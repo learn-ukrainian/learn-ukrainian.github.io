@@ -14,6 +14,7 @@ from __future__ import annotations
 import os
 import sqlite3
 import time
+from contextlib import asynccontextmanager
 from pathlib import Path
 
 import pytest
@@ -130,14 +131,18 @@ def test_cluster_readiness_plain_python_fallback() -> None:
     assert "checked_at" in data
 
 
-def test_fails_closed_when_pg_dsn_missing(
-    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
-) -> None:
+def test_fails_closed_when_pg_dsn_missing(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     monkeypatch.setenv("LEARN_UKRAINIAN_CP_AUTHORITY_FLEET_COMMS", "pg")
     monkeypatch.delenv(_PG_DSN_ENV, raising=False)
     ctx = _ready_context(tmp_path)
 
-    data = TestClient(api_main.create_app(ctx)).get("/api/cluster/readiness").json()
+    @asynccontextmanager
+    async def _probe_lifespan(_app):
+        # Production startup refuses this authority. This test isolates the
+        # readiness probe, which still classifies a missing DSN on its own.
+        yield
+
+    data = TestClient(api_main.create_app(ctx, lifespan=_probe_lifespan)).get("/api/cluster/readiness").json()
     assert data["ready"] is False
     fleet = data["storage_seam"][StoreId.FLEET_COMMS.value]
     assert fleet["authority"] == "pg"
@@ -145,9 +150,7 @@ def test_fails_closed_when_pg_dsn_missing(
     assert fleet["reason"] == "pg_dsn_missing"
 
 
-def test_readiness_surfaces_component_interlock_refusal(
-    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
-) -> None:
+def test_readiness_surfaces_component_interlock_refusal(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     """#7482: operators can diagnose a rejected authority seam from readiness."""
     monkeypatch.setenv("LEARN_UKRAINIAN_CP_AUTHORITY_SESSION_STREAMS", "pg")
     monkeypatch.setenv(_PG_DSN_ENV, _UNREACHABLE_DSN)
@@ -163,9 +166,7 @@ def test_readiness_surfaces_component_interlock_refusal(
     assert "/" not in refusal["reason"] and "\\" not in refusal["reason"]
 
 
-def test_unreachable_pg_dsn_fails_closed_quickly(
-    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
-) -> None:
+def test_unreachable_pg_dsn_fails_closed_quickly(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     """DSN presence alone is never ready; the probe answers within its budget."""
     monkeypatch.setenv("LEARN_UKRAINIAN_CP_AUTHORITY_FLEET_COMMS", "pg")
     monkeypatch.setenv(_PG_DSN_ENV, _UNREACHABLE_DSN)
@@ -196,9 +197,7 @@ def test_live_pg_select_one(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> 
     assert fleet["accessible"] is True
 
 
-def test_hung_probe_does_not_block_past_the_deadline(
-    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
-) -> None:
+def test_hung_probe_does_not_block_past_the_deadline(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     """CF r1 (PR #7499): a wedged store probe must not hold the response —
     the executor is shut down without joining workers."""
     import scripts.api.cluster_router as cr

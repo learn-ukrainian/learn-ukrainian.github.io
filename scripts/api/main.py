@@ -38,6 +38,7 @@ import scripts.github_rest_cache as github_rest
 from scripts.common.jsonl import physical_lines
 from scripts.common.release_layout import is_release_root
 from scripts.common.safe_open import safe_open_below
+from scripts.control_plane.storage import StoreId, assert_component_supported
 from scripts.github_check_rollup import group_collapsed_by_name
 from scripts.guardrails import worktree_containment
 from scripts.research import registry as reg
@@ -134,10 +135,18 @@ async def _lifespan(_app: FastAPI):
 
     Without this, "Shutting down" lines in logs/api.log have no provenance.
     See scripts/api/_signal_log.py for the wrapper rationale.
+
+    Startup uses the authority-service interlock. An authority that component
+    cannot write refuses startup, so plane-status cannot report a store the
+    seats do not write. Sqlite and shadow stay allowed.
     """
     ctx = _app.state.ctx
     projection_refresh_task = None
     try:
+        # Reuse assert_component_supported; do not add a second allow-list.
+        # ControlPlaneUnsupportedComponentError names the store and authority
+        # and carries no connection string.
+        assert_component_supported(StoreId.FLEET_COMMS, "authority_service")
         preload_all()
         install_signal_logging()
         ensure_broker_db_ready(ctx=ctx)
