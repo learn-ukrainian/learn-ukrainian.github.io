@@ -8642,6 +8642,19 @@ def _codex_worker_result():
     )()
 
 
+def _pin_review_server_to_this_checkout(monkeypatch):
+    """Launch review attempts from the checkout under test, not the primary one.
+
+    A formal attempt refuses a launched server that differs from the runtime's
+    (``review_launched_sources_server_mismatch``). In a dispatch worktree the
+    default launch is the primary checkout's server, so a branch that edits the
+    server would fail these tests for the wrong reason (#10837).
+    """
+    monkeypatch.setattr(
+        "scripts.agent_runtime.review_mcp.review_server_checkout", lambda: Path(__file__).resolve().parents[1]
+    )
+
+
 def _prepare_codex_review(tmp_path, monkeypatch, extra_servers=()):
     """Provision a real Codex review attempt plus a fake ``codex`` printing the effective MCP set."""
     import json as _json
@@ -8649,6 +8662,7 @@ def _prepare_codex_review(tmp_path, monkeypatch, extra_servers=()):
 
     from scripts.agent_runtime.review_mcp import prepare_review_attempt
 
+    _pin_review_server_to_this_checkout(monkeypatch)
     user_home = tmp_path / "user-codex"
     user_home.mkdir()
     (user_home / "auth.json").write_text("{}\n", encoding="utf-8")
@@ -8859,6 +8873,7 @@ def _prepare_agy_review(tmp_path, monkeypatch, extra_rows=()):
 
     from scripts.agent_runtime.review_mcp import prepare_review_attempt
 
+    _pin_review_server_to_this_checkout(monkeypatch)
     register_agy_hooks(tmp_path)
     app_data = tmp_path / "user-agy" / ".gemini" / "antigravity-cli"
     app_data.mkdir(parents=True)
@@ -22174,9 +22189,10 @@ def test_full_claude_fixture_render_dispatch_ledger_record_and_stale(tmp_tasks_d
         Path(proof_path).write_text(json.dumps(proof, indent=2) + "\n")
 
 
-def test_full_claude_worker_keeps_normal_reviewer_profile(tmp_tasks_dir, tmp_path):
+def test_full_claude_worker_keeps_normal_reviewer_profile(tmp_tasks_dir, tmp_path, monkeypatch):
     from scripts.agent_runtime.review_mcp import prepare_review_attempt
 
+    _pin_review_server_to_this_checkout(monkeypatch)
     manifest = tmp_path / "manifest.yaml"
     manifest.write_text("kind: plan\n")
     plan = prepare_review_attempt(
