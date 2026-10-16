@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import asyncio
 import contextlib
+import errno
 import json
 import os
 import sqlite3
@@ -41,6 +42,9 @@ TASK_READ_RETRY_SECONDS = 0.01
 ACTIVE_FACT_CACHE_LIMIT = 16_384
 ACTIVE_FACT_STATUS_LIMIT = 64
 ACTIVE_TASK_STATUSES = {"running", "spawning"}
+# Record opens never follow a symlink or block on a special file.
+_RECORD_OPEN_FLAGS = os.O_RDONLY | os.O_CLOEXEC | os.O_NOFOLLOW | os.O_NONBLOCK
+_DIRECTORY_OPEN_FLAGS = os.O_RDONLY | os.O_CLOEXEC | os.O_DIRECTORY | os.O_NOFOLLOW
 # History listing cache only. Active observations share in-flight work but
 # always bypass completed snapshots.
 DELEGATE_LIST_TTL_S = 2.0
@@ -99,37 +103,86 @@ def _task_state_path(task_id: str, ctx: MonitorContext | None = None, *, archive
     return fullpath
 
 
-def _read_task_state(path: str, ctx: MonitorContext | None = None, root: str | None = None) -> dict[str, Any] | None:
-    """Read task JSON only after a local containment check (CodeQL sink guard)."""
-    # Active scans supply the already-resolved parent. Resolve only a link or
-    # a non-sibling, then refuse a leaf-link swap at open time.
+def _read_record_bytes(fd: int) -> bytes | None:
+    """Read a regular file to EOF; ``None`` for any other file type."""
+    info = os.fstat(fd)
+    if not stat.S_ISREG(info.st_mode):
+        return None
+    want = info.st_size + 1
+    chunks = [os.read(fd, want)]
+    # A short read of a regular file is EOF. A full one means the file grew
+    # after fstat, so read on. A truncated object cannot parse as another document.
+    while len(chunks[-1]) == want:
+        want = 1 << 16
+        chunks.append(os.read(fd, want))
+    return b"".join(chunks)
+
+
+def _read_task_state(
+    path: str,
+    ctx: MonitorContext | None = None,
+    root: str | None = None,
+    root_fd: int | None = None,
+) -> dict[str, Any] | None:
+    """Read task JSON only after a local containment check (CodeQL sink guard).
+
+    ``root`` is the resolved tasks directory. Before any filesystem access the
+    path must lie lexically under that root or under the configured unresolved
+    directory, so a store reached through a symlinked ancestor still reads.
+    The resolved path must then stay under ``root``. Every component below the
+    root opens from a directory descriptor without following a symlink, so a
+    parent swapped after resolution cannot redirect the read. Active scans pass
+    their resolved root and its held descriptor, and resolve a sibling leaf
+    only when it is itself a link.
+    """
     scan_root = root is not None
     if root is None:
         root = _tasks_root(ctx)
     fullpath = os.path.abspath(path)
     if not fullpath.startswith(root + os.sep):
-        return None
-    if not scan_root or os.path.dirname(fullpath) != root or os.path.islink(fullpath):
+        lexical = os.path.abspath(str(_tasks_dir(ctx)))
+        if not fullpath.startswith(lexical + os.sep):
+            return None
+    resolved = not scan_root or os.path.dirname(fullpath) != root
+    if resolved:
         fullpath = os.path.realpath(fullpath)
-    if not fullpath.startswith(root + os.sep):
-        return None
-    for attempt in range(TASK_READ_RETRIES):
+    failures = 0
+    while True:
+        if not fullpath.startswith(root + os.sep):
+            return None
+        parts = fullpath[len(root) + 1 :].split(os.sep)
+        owned: list[int] = []
         try:
-            fd = os.open(fullpath, os.O_RDONLY | os.O_CLOEXEC | os.O_NOFOLLOW | os.O_NONBLOCK)
-            try:
-                if not stat.S_ISREG(os.fstat(fd).st_mode):
-                    return None
-                with os.fdopen(fd, encoding="utf-8", closefd=False) as handle:
-                    data = json.loads(handle.read())
-            finally:
-                os.close(fd)
-        except (OSError, json.JSONDecodeError):
-            if attempt + 1 == TASK_READ_RETRIES:
+            parent = root_fd
+            if parent is None:
+                parent = os.open(root, _DIRECTORY_OPEN_FLAGS)
+                owned.append(parent)
+            for part in parts[:-1]:
+                parent = os.open(part, _DIRECTORY_OPEN_FLAGS, dir_fd=parent)
+                owned.append(parent)
+            fd = os.open(parts[-1], _RECORD_OPEN_FLAGS, dir_fd=parent)
+            owned.append(fd)
+            raw = _read_record_bytes(fd)
+            if raw is None:
                 return None
-            time.sleep(TASK_READ_RETRY_SECONDS)
-            continue
-        return data if isinstance(data, dict) else None
-    return None
+            data = json.loads(raw.decode("utf-8"))
+        except OSError as exc:
+            if exc.errno == errno.ELOOP and not resolved:
+                # A contained sibling link resolves once; its target opens the same way.
+                fullpath = os.path.realpath(fullpath)
+                resolved = True
+                continue
+            failures += 1
+        except ValueError:
+            failures += 1
+        else:
+            return data if isinstance(data, dict) else None
+        finally:
+            for descriptor in reversed(owned):
+                os.close(descriptor)
+        if failures == TASK_READ_RETRIES:
+            return None
+        time.sleep(TASK_READ_RETRY_SECONDS)
 
 
 def _read_result_file(result_file: str, ctx: MonitorContext | None = None) -> str | None:
@@ -770,6 +823,9 @@ def active_delegate_tasks(
         directory_before = tasks_dir.stat()
         names = _active_candidate_names(tasks_dir)
         paths = [os.path.join(str(tasks_dir), name) for name in names]
+        # Reads go through one held descriptor, so a parent swapped during
+        # the scan cannot redirect them; the path checks below detect it.
+        root_fd = os.open(root, _DIRECTORY_OPEN_FLAGS)
     except OSError:
         raise HTTPException(
             503,
@@ -778,93 +834,101 @@ def active_delegate_tasks(
                 "reason": "task_directory_unavailable",
             },
         ) from None
-
-    for path in paths:
+    try:
         try:
-            leaf = os.lstat(path)
-            if stat.S_ISLNK(leaf.st_mode):
-                link_signatures[path] = leaf
-                signatures[path] = os.stat(path)
-            else:
-                signatures[path] = leaf
+            held = os.fstat(root_fd)
         except OSError:
-            raise HTTPException(
-                503,
-                detail={
-                    "status": "unknown",
-                    "reason": "task_authority_changed",
-                },
-            ) from None
-        token = _observation_token(signatures[path])
-        key = str(path)
-        cached = facts.get(key) if path not in link_signatures else None
-        if cached is not None and cached[0] == token:
-            task = {"status": cached[1]} if cached[1] is not None else None
-            artifact = cached[1] is None
-        else:
+            held = None
+        if held is None or (held.st_dev, held.st_ino) != (directory_before.st_dev, directory_before.st_ino):
+            raise HTTPException(503, detail={"status": "unknown", "reason": "task_authority_changed"})
+        for name, path in zip(names, paths, strict=True):
             try:
-                task = _read_task_state(key, ctx, root)
-            except (OSError, UnicodeError):
-                task = None
-            artifact = task is not None and _is_closeout_artifact(task)
-        if artifact:
-            artifacts += 1
-        elif task is None or not isinstance(task.get("status"), str) or not task["status"]:
-            raise HTTPException(
-                503,
-                detail={
-                    "status": "unknown",
-                    "reason": "task_record_unreadable_or_invalid",
-                },
-            )
-        status = None if artifact else task["status"]
-        if status not in ACTIVE_TASK_STATUSES:
-            if len(next_facts) < ACTIVE_FACT_CACHE_LIMIT and (
-                status is None or len(status) <= ACTIVE_FACT_STATUS_LIMIT
-            ):
-                next_facts[key] = (token, status)
-            continue
-        if predicate is not None and _authoritative_task_repository(task) != predicate:
-            continue
-        record_observed = datetime.now(UTC)
-        alive, liveness_reason = _active_worker_liveness(task)
-        process_checks.append((task, (alive, liveness_reason)))
-        observed = datetime.now(UTC)
-        summary = {
-            "task_id": str(task.get("task_id") or Path(path).stem),
-            "agent": task.get("agent"),
-            "model": task.get("model"),
-            "effort": task.get("effort"),
-            "cli_version": task.get("cli_version"),
-            "substitution": task.get("substitution"),
-            "status": status,
-            "started_at": task.get("started_at"),
-            "duration_s": task.get("duration_s"),
-            "age_s": _task_age_seconds(task.get("started_at")),
-            "alive": alive,
-        }
-        linked_issues = _linked_issues_from_dor(task)
-        if linked_issues is not None:
-            summary["linked_issues"] = linked_issues
-        excluded = status == "running" and alive is False
-        observations.append(
-            {
-                "task_id": summary["task_id"],
-                "run_nonce": task.get("run_nonce"),
-                "record_status": status,
+                leaf = os.lstat(path)
+                if stat.S_ISLNK(leaf.st_mode):
+                    link_signatures[path] = leaf
+                    signatures[path] = os.stat(path)
+                else:
+                    signatures[path] = leaf
+            except OSError:
+                raise HTTPException(
+                    503,
+                    detail={
+                        "status": "unknown",
+                        "reason": "task_authority_changed",
+                    },
+                ) from None
+            token = _observation_token(signatures[path])
+            key = str(path)
+            cached = facts.get(key) if path not in link_signatures else None
+            if cached is not None and cached[0] == token:
+                task = {"status": cached[1]} if cached[1] is not None else None
+                artifact = cached[1] is None
+            else:
+                try:
+                    task = _read_task_state(root + os.sep + name, ctx, root, root_fd)
+                except (OSError, UnicodeError):
+                    task = None
+                artifact = task is not None and _is_closeout_artifact(task)
+            if artifact:
+                artifacts += 1
+            elif task is None or not isinstance(task.get("status"), str) or not task["status"]:
+                raise HTTPException(
+                    503,
+                    detail={
+                        "status": "unknown",
+                        "reason": "task_record_unreadable_or_invalid",
+                    },
+                )
+            status = None if artifact else task["status"]
+            if status not in ACTIVE_TASK_STATUSES:
+                if len(next_facts) < ACTIVE_FACT_CACHE_LIMIT and (
+                    status is None or len(status) <= ACTIVE_FACT_STATUS_LIMIT
+                ):
+                    next_facts[key] = (token, status)
+                continue
+            if predicate is not None and _authoritative_task_repository(task) != predicate:
+                continue
+            record_observed = datetime.now(UTC)
+            alive, liveness_reason = _active_worker_liveness(task)
+            process_checks.append((task, (alive, liveness_reason)))
+            observed = datetime.now(UTC)
+            summary = {
+                "task_id": str(task.get("task_id") or Path(path).stem),
+                "agent": task.get("agent"),
+                "model": task.get("model"),
+                "effort": task.get("effort"),
+                "cli_version": task.get("cli_version"),
+                "substitution": task.get("substitution"),
+                "status": status,
+                "started_at": task.get("started_at"),
+                "duration_s": task.get("duration_s"),
+                "age_s": _task_age_seconds(task.get("started_at")),
                 "alive": alive,
-                "excluded_dead_running": excluded,
-                "liveness_basis": "worker_identity"
-                if task.get("worker_identity") is not None
-                else "legacy_pid_namespace",
-                "liveness_reason": liveness_reason,
-                "liveness_observed_at": observed.isoformat(),
-                "record_observed_at": record_observed.isoformat(),
-                "record_updated_at": datetime.fromtimestamp(signatures[path].st_mtime, UTC).isoformat(),
             }
-        )
-        if not excluded:
-            rows.append(summary)
+            linked_issues = _linked_issues_from_dor(task)
+            if linked_issues is not None:
+                summary["linked_issues"] = linked_issues
+            excluded = status == "running" and alive is False
+            observations.append(
+                {
+                    "task_id": summary["task_id"],
+                    "run_nonce": task.get("run_nonce"),
+                    "record_status": status,
+                    "alive": alive,
+                    "excluded_dead_running": excluded,
+                    "liveness_basis": "worker_identity"
+                    if task.get("worker_identity") is not None
+                    else "legacy_pid_namespace",
+                    "liveness_reason": liveness_reason,
+                    "liveness_observed_at": observed.isoformat(),
+                    "record_observed_at": record_observed.isoformat(),
+                    "record_updated_at": datetime.fromtimestamp(signatures[path].st_mtime, UTC).isoformat(),
+                }
+            )
+            if not excluded:
+                rows.append(summary)
+    finally:
+        os.close(root_fd)
 
     changed = any(_active_worker_liveness(task) != sample for task, sample in process_checks)
     try:

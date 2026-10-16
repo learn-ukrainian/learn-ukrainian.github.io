@@ -189,21 +189,19 @@ def test_delegate_active_retries_transient_invalid_json(tmp_path, monkeypatch):
     _pin_tasks_dir(monkeypatch, tasks_dir)
     _write_task(task_path, _task_payload("running", status="running", pid=111))
 
-    # Inject one interrupted read through the descriptor's text wrapper.
-    from io import StringIO
-
-    original_open = delegate_router.os.fdopen
+    # Inject one interrupted read through the record descriptor.
+    original_read = delegate_router.os.read
     read_attempts = 0
     retry_delays = []
 
-    def flaky_open(file, *args, **kwargs):
+    def flaky_read(fd, size):
         nonlocal read_attempts
         if read_attempts == 0:
             read_attempts += 1
-            return StringIO("{")
-        return original_open(file, *args, **kwargs)
+            return b"{"
+        return original_read(fd, size)
 
-    monkeypatch.setattr(delegate_router.os, "fdopen", flaky_open)
+    monkeypatch.setattr(delegate_router.os, "read", flaky_read)
     monkeypatch.setattr(delegate_router.time, "sleep", retry_delays.append)
     monkeypatch.setattr(delegate_router.os, "kill", lambda pid, sig: None)
 

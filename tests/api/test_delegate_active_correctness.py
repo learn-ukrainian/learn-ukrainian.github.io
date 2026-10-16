@@ -594,8 +594,9 @@ def test_reader_preserves_nested_detail_and_contained_links(inventory, scan):
     assert response.json()["task"]["status"] == "done"
 
 
-@pytest.mark.parametrize("failure", ["none", "corrupt", "directory", "fifo", "fstat", "fdopen"])
-def test_reader_closes_every_opened_descriptor(inventory, monkeypatch, failure):
+@pytest.mark.parametrize("held", [False, True])
+@pytest.mark.parametrize("failure", ["none", "corrupt", "directory", "fifo", "fstat", "read"])
+def test_reader_closes_every_opened_descriptor(inventory, monkeypatch, failure, held):
     client, tasks = inventory
     path = tasks / "one.json"
     if failure == "directory":
@@ -604,13 +605,15 @@ def test_reader_closes_every_opened_descriptor(inventory, monkeypatch, failure):
         os.mkfifo(path)
     else:
         path.write_text("{" if failure == "corrupt" else '{"status":"done"}')
+    root = str(tasks.resolve())
+    root_fd = os.open(root, os.O_RDONLY | os.O_DIRECTORY) if held else None
     opened = []
     closed = []
     original_open, original_close = os.open, os.close
-    original_fstat, original_fdopen = os.fstat, os.fdopen
+    original_fstat, original_read = os.fstat, os.read
 
-    def open_record(name, flags):
-        fd = original_open(name, flags)
+    def open_record(name, flags, **kwargs):
+        fd = original_open(name, flags, **kwargs)
         opened.append(fd)
         return fd
 
@@ -623,20 +626,27 @@ def test_reader_closes_every_opened_descriptor(inventory, monkeypatch, failure):
             raise OSError("injected descriptor stat failure")
         return original_fstat(fd)
 
-    def fdopen(fd, **kwargs):
-        if failure == "fdopen":
-            raise OSError("injected text wrapper failure")
-        return original_fdopen(fd, **kwargs)
+    def read(fd, size):
+        if failure == "read":
+            raise OSError("injected descriptor read failure")
+        return original_read(fd, size)
 
-    with monkeypatch.context() as patch:
-        patch.setattr(delegate_router.os, "open", open_record)
-        patch.setattr(delegate_router.os, "close", close_record)
-        patch.setattr(delegate_router.os, "fstat", fstat)
-        patch.setattr(delegate_router.os, "fdopen", fdopen)
-        result = delegate_router._read_task_state(str(path), client.app.state.ctx, str(tasks.resolve()))
-    assert result == ({"status": "done"} if failure == "none" else None)
-    assert len(opened) == (2 if failure in {"corrupt", "fstat", "fdopen"} else 1)
-    assert closed == opened
+    try:
+        with monkeypatch.context() as patch:
+            patch.setattr(delegate_router.os, "open", open_record)
+            patch.setattr(delegate_router.os, "close", close_record)
+            patch.setattr(delegate_router.os, "fstat", fstat)
+            patch.setattr(delegate_router.os, "read", read)
+            result = delegate_router._read_task_state(str(path), client.app.state.ctx, root, root_fd)
+        # An unheld read opens the root descriptor too; a held one is never closed here.
+        per_attempt = 1 if held else 2
+        assert result == ({"status": "done"} if failure == "none" else None)
+        assert len(opened) == per_attempt * (2 if failure in {"corrupt", "fstat", "read"} else 1)
+        assert sorted(closed) == sorted(opened)
+        assert root_fd not in closed
+    finally:
+        if root_fd is not None:
+            os.close(root_fd)
 
 
 _NONREGULAR_FLIGHT = r"""
@@ -662,7 +672,7 @@ original_open = os.open
 swapped = False
 def replace_at_open(name, flags, *args, **kwargs):
     global swapped
-    if str(name) == str(path) and not swapped:
+    if os.path.basename(str(name)) == path.name and not swapped:
         swapped = True
         path.unlink()
         if variant == 'swap-link':
@@ -710,3 +720,149 @@ def test_nonregular_or_swapped_leaf_refuses_shared_flight_without_hanging(tmp_pa
         "recovered_status": 200,
         "recovered_total": 1,
     }
+
+
+def _linked_store(tmp_path):
+    """A store whose configured batch_state path runs through a symlinked ancestor."""
+    real = tmp_path / "real"
+    (real / "batch_state" / "tasks").mkdir(parents=True)
+    link = tmp_path / "link"
+    link.symlink_to(real, target_is_directory=True)
+    app = FastAPI()
+    app.state.ctx = fixture_context(real).with_roots(batch_state_dir=link / "batch_state")
+    app.include_router(delegate_router.router, prefix="/api/delegate")
+    return app, link / "batch_state" / "tasks"
+
+
+def test_symlinked_store_ancestor_serves_history_detail_and_active(tmp_path):
+    app, tasks = _linked_store(tmp_path)
+    write(tasks, "live")
+    write(tasks, "finished", status="done")
+    (tasks / "archive").mkdir()
+    write(tasks / "archive", "old", status="done")
+    with TestClient(app) as client:
+        active = client.get("/api/delegate/active")
+        assert active.status_code == 200
+        assert [row["task_id"] for row in active.json()["tasks"]] == ["live"]
+        assert active.json()["source"]["records_scanned"] == 2
+        history = client.get("/api/delegate/tasks", params={"status": "all"})
+        assert history.status_code == 200
+        assert sorted(row["task_id"] for row in history.json()["tasks"]) == ["finished", "live", "old"]
+        assert client.get("/api/delegate/tasks/old").json()["task"]["status"] == "done"
+    # The lexical configured path and the resolved path both read, with and without a scan root.
+    root = os.path.realpath(tasks)
+    for base in (tasks, tasks.resolve()):
+        for scan_root in (None, root):
+            state = delegate_router._read_task_state(str(base / "finished.json"), app.state.ctx, scan_root)
+            assert state["status"] == "done"
+
+
+@pytest.mark.parametrize("candidate", ["absolute", "traversal", "prefix-sibling"])
+def test_symlinked_ancestor_still_refuses_lexical_escape_before_filesystem_access(tmp_path, monkeypatch, candidate):
+    app, tasks = _linked_store(tmp_path)
+    paths = {
+        "absolute": tasks.parent / "outside.json",
+        "traversal": tasks / ".." / "outside.json",
+        "prefix-sibling": tasks.with_name("tasks-other") / "one.json",
+    }
+
+    def refuse(*args, **kwargs):
+        pytest.fail("escaped candidate reached a filesystem probe")
+
+    root = os.path.realpath(tasks)
+    for name in ("islink", "realpath"):
+        monkeypatch.setattr(delegate_router.os.path, name, refuse)
+    for name in ("lstat", "open", "stat"):
+        monkeypatch.setattr(delegate_router.os, name, refuse)
+    monkeypatch.setattr(delegate_router, "_tasks_root", lambda ctx: root)
+    for scan_root in (None, root):
+        assert delegate_router._read_task_state(str(paths[candidate]), app.state.ctx, scan_root) is None
+
+
+def test_parent_link_escaping_the_store_is_refused_and_contained_parent_link_reads(inventory):
+    client, tasks = inventory
+    outside = tasks.parent / "outside-archive"
+    outside.mkdir()
+    write(outside, "escaped", status="done")
+    (tasks / "archive").symlink_to(outside, target_is_directory=True)
+    write(tasks, "inside", status="done")
+    nested = tasks / "nested"
+    nested.mkdir()
+    write(nested, "kept", status="done")
+    (tasks / "alias").symlink_to(nested, target_is_directory=True)
+    history = client.get("/api/delegate/tasks", params={"status": "all"})
+    assert [row["task_id"] for row in history.json()["tasks"]] == ["inside"]
+    assert client.get("/api/delegate/tasks/escaped").status_code == 404
+    root = str(tasks.resolve())
+    ctx = client.app.state.ctx
+    for scan_root in (None, root):
+        assert delegate_router._read_task_state(str(tasks / "archive" / "escaped.json"), ctx, scan_root) is None
+        assert delegate_router._read_task_state(str(tasks / "alias" / "kept.json"), ctx, scan_root)["task_id"] == "kept"
+
+
+def test_parent_swapped_after_resolution_cannot_redirect_the_read(inventory, monkeypatch):
+    client, tasks = inventory
+    nested = tasks / "nested"
+    nested.mkdir()
+    write(nested, "kept", status="done")
+    decoy = tasks.parent / "decoy"
+    decoy.mkdir()
+    (decoy / "kept.json").write_text('{"status":"running"}', encoding="utf-8")
+    original = os.path.realpath
+
+    def swap_after_resolving(path, *args, **kwargs):
+        resolved = original(path, *args, **kwargs)
+        if resolved.endswith(os.path.join("nested", "kept.json")):
+            nested.rename(tasks / "moved")
+            nested.symlink_to(decoy, target_is_directory=True)
+        return resolved
+
+    monkeypatch.setattr(delegate_router.os.path, "realpath", swap_after_resolving)
+    monkeypatch.setattr(delegate_router.time, "sleep", lambda _seconds: None)
+    assert delegate_router._read_task_state(str(nested / "kept.json"), client.app.state.ctx) is None
+
+
+def test_active_reads_stay_in_the_held_directory_when_the_store_path_is_swapped(inventory, monkeypatch):
+    client, tasks = inventory
+    write(tasks, "one")
+    decoy = tasks.parent / "decoy"
+    decoy.mkdir()
+    (decoy / "one.json").write_text("{", encoding="utf-8")
+    original = os.lstat
+    swapped = False
+
+    def swap_before_first_record(path, *args, **kwargs):
+        nonlocal swapped
+        if not swapped and os.path.basename(str(path)) == "one.json":
+            swapped = True
+            tasks.rename(tasks.with_name("held"))
+            tasks.symlink_to(decoy, target_is_directory=True)
+        return original(path, *args, **kwargs)
+
+    monkeypatch.setattr(delegate_router.os, "lstat", swap_before_first_record)
+    response = client.get("/api/delegate/active")
+    assert swapped
+    # Following the swapped path would read the decoy's invalid record instead.
+    assert response.status_code == 503
+    assert response.json()["detail"] == {"status": "unknown", "reason": "task_authority_changed"}
+
+
+def test_store_replaced_between_listing_and_holding_is_refused(inventory, monkeypatch):
+    client, tasks = inventory
+    write(tasks, "one")
+    original = delegate_router._active_candidate_names
+    calls = 0
+
+    def replace_after_listing(directory):
+        nonlocal calls
+        calls += 1
+        names = original(directory)
+        if calls == 1:
+            tasks.rename(tasks.with_name("held"))
+            tasks.mkdir()
+        return names
+
+    monkeypatch.setattr(delegate_router, "_active_candidate_names", replace_after_listing)
+    response = client.get("/api/delegate/active")
+    assert response.status_code == 503
+    assert response.json()["detail"] == {"status": "unknown", "reason": "task_authority_changed"}
