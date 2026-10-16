@@ -5061,16 +5061,23 @@ def _dispatch_reuses_worktree(
     agent: str,
     task_id: str,
     repo_root: Path | None,
+    validated: Path | None = None,
 ) -> bool:
     """Read-only, no git: True when ``--worktree`` resolves to a checkout that already exists.
 
     ``--worktree auto`` or an explicit path reuses the checkout already at the
-    resolved path. A ``--cwd`` dispatch is not probed: proving that path is a
-    registered worktree runs git in it, which may happen only after the
-    post-lock re-check (#8775), so it keeps the disk guard.
+    resolved path. An explicit path passed as ``validated`` is probed as is,
+    never resolved again (#8775). A ``--cwd`` dispatch is not probed: proving
+    that path is a registered worktree runs git in it, which may happen only
+    after the post-lock re-check (#8775), so it keeps the disk guard.
     """
     if not worktree_arg:
         return False
+    if validated is not None:
+        try:
+            return (validated / ".git").exists()
+        except OSError:
+            return False
     raw = str(_auto_worktree_path(agent, task_id, repo_root=repo_root)) if worktree_arg == "auto" else worktree_arg
     return _is_existing_worktree(raw, repo_root=repo_root)
 
@@ -13679,7 +13686,7 @@ def _dispatch(
     # A dispatch that reuses an existing worktree adds no checkout, so the disk
     # guard and its reaper are skipped for it (#10776).
     disk_guard = not _dispatch_reuses_worktree(
-        worktree_arg, agent=dispatch_agent, task_id=task_id, repo_root=target_repo_root
+        worktree_arg, agent=dispatch_agent, task_id=task_id, repo_root=target_repo_root, validated=validated_worktree
     )
     try:
         live_dispatch = not bool(getattr(args, "dry_run", False))
@@ -14095,6 +14102,18 @@ def _dispatch(
         admission_refusal_exit = _ADMISSION_REFUSED_EXIT
         try:
             with dispatch_admission.admission_lock(tasks_dir()):
+                # #10776: the reuse exemption is decided again here, under the
+                # worktree lock held since base resolution and right before the
+                # worktree is created or reused. A checkout removed after the
+                # pre-lock probe is a fresh creation and gets the disk guard,
+                # which refuses at the threshold (the reaper never runs here).
+                disk_guard = not _dispatch_reuses_worktree(
+                    worktree_arg,
+                    agent=dispatch_agent,
+                    task_id=task_id,
+                    repo_root=target_repo_root,
+                    validated=validated_worktree,
+                )
                 admission = _evaluate_dispatch_admission(
                     args.mode, sweep=True, thresholds=admission.thresholds, disk_guard=disk_guard
                 )

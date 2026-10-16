@@ -95,6 +95,7 @@ import subprocess
 import sys
 import threading
 import time
+import urllib.parse
 from collections.abc import Callable, Iterator, Mapping
 from dataclasses import asdict, dataclass, field, replace
 from datetime import UTC, datetime
@@ -156,6 +157,9 @@ DISK_REAPER_LOCK_TIMEOUT_S = 5.0
 DISK_REAPER_ATTEMPT_LOCK_NAME = "dispatch-admission-disk-reaper.lock"
 DISK_REAPER_STATE_NAME = "dispatch-admission-disk-reaper.state"
 DISK_REAPER_COOLDOWN_S = 600.0
+# The attempt marker written before the reaper starts; it stays the recorded
+# outcome when the attempt's own outcome cannot be written.
+DISK_REAPER_STARTED = "reaper attempt started; its outcome was not recorded"
 # The reaper runs in a child process killed after this many seconds (SIGTERM,
 # then SIGKILL after the grace), so a stuck fetch or tree scan cannot hold the
 # dispatch. The reaper is crash-safe; its own lock dies with the process.
@@ -701,16 +705,31 @@ def worktrees_disk_path() -> Path:
 # ``~user/a``. A slash after a word character (``origin/main``, ``3/4``) is
 # not a path start.
 _PATH_IN_TEXT = re.compile(r"(?<![\w.\-/~])(?:~[\w.\-]*)?/[^\s'\"(),;\[\]<>]+")
+# A word holding percent escapes (``%2Fhome%2Fx``, ``file%3A%2F%2F%2Fx``).
+_PERCENT_ENCODED_WORD = re.compile(r"[^\s'\"(),;\[\]<>]*%[0-9A-Fa-f]{2}[^\s'\"(),;\[\]<>]*")
+# Decoding rounds for nested escapes (``%252F`` is ``%2F`` is ``/``).
+_PERCENT_DECODE_ROUNDS = 3
 REDACTED_PATH = "<path>"
+
+
+def _redact_encoded_word(match: re.Match[str]) -> str:
+    word = decoded = match.group(0)
+    for _ in range(_PERCENT_DECODE_ROUNDS):
+        decoded, previous = urllib.parse.unquote(decoded), decoded
+        if decoded == previous:
+            break
+    return REDACTED_PATH if _PATH_IN_TEXT.search(decoded) else word
 
 
 def redact_paths(text: str) -> str:
     """``text`` with absolute and home paths replaced by :data:`REDACTED_PATH`.
 
     Reaper, probe and alert details are printed, kept in task records and
-    published to Fleet Comms; host paths must not reach any of them.
+    published to Fleet Comms; host paths must not reach any of them. A word
+    whose percent-decoded form holds a path is replaced whole, so an
+    URL-encoded path is redacted too.
     """
-    return _PATH_IN_TEXT.sub(REDACTED_PATH, text)
+    return _PATH_IN_TEXT.sub(REDACTED_PATH, _PERCENT_ENCODED_WORD.sub(_redact_encoded_word, text))
 
 
 def read_disk(path: Path, usage: Callable[[Path], Any] = shutil.disk_usage) -> DiskProbe:
@@ -947,16 +966,35 @@ def _read_reaper_state(tasks_dir: Path) -> dict[str, Any] | None:
 
 
 def _write_reaper_state(tasks_dir: Path, state: Mapping[str, Any]) -> None:
-    """Replace the state file atomically: dispatches without the attempt lock read it."""
+    """Replace the state file atomically and durably: dispatches without the attempt lock read it.
+
+    Raises ``OSError`` when the state is not on disk (a full disk among others).
+    """
     target = tasks_dir / DISK_REAPER_STATE_NAME
     temporary = tasks_dir / f"{DISK_REAPER_STATE_NAME}.tmp-{os.getpid()}-{threading.get_ident()}"
     try:
-        temporary.write_text(json.dumps(dict(state), sort_keys=True) + "\n", encoding="utf-8")
+        with temporary.open("w", encoding="utf-8") as handle:
+            handle.write(json.dumps(dict(state), sort_keys=True) + "\n")
+            handle.flush()
+            os.fsync(handle.fileno())
         os.replace(temporary, target)
-    except OSError as exc:
-        _logger.warning("dispatch admission: disk reaper state not recorded: %s", exc)
+    except OSError:
         with contextlib.suppress(OSError):
             temporary.unlink()
+        raise
+    directory = os.open(tasks_dir, os.O_RDONLY | os.O_DIRECTORY)
+    try:
+        os.fsync(directory)
+    finally:
+        os.close(directory)
+
+
+def _record_reaper_state(tasks_dir: Path, state: Mapping[str, Any]) -> None:
+    """:func:`_write_reaper_state` for a state whose loss is safe: a failure is only logged."""
+    try:
+        _write_reaper_state(tasks_dir, state)
+    except OSError as exc:
+        _logger.warning("dispatch admission: disk reaper state not recorded: %s", redact_paths(str(exc)))
 
 
 def _recorded_attempt(state: Mapping[str, Any] | None, clock: float) -> str:
@@ -976,7 +1014,9 @@ def attempt_disk_reaper(
     freed nothing, does not run the reaper and returns the recorded outcome
     (``ran=False``). An attempt that freed space does not start a cooldown.
     A recorded attempt dated in the future (the clock stepped back) counts
-    as just made. Never raises.
+    as just made. Record, then act: the attempt is on disk before the reaper
+    starts, so the cooldown holds even when the outcome cannot be written;
+    an attempt that cannot be recorded is not made. Never raises.
     """
     try:
         tasks_dir.mkdir(parents=True, exist_ok=True)
@@ -996,12 +1036,28 @@ def attempt_disk_reaper(
         if state is not None and not state["freed"]:
             if state["last_attempt_at"] > clock:
                 state = {**state, "last_attempt_at": clock}
-                _write_reaper_state(tasks_dir, state)
+                _record_reaper_state(tasks_dir, state)
             if clock - state["last_attempt_at"] < limits.disk_reaper_cooldown_s:
                 return ReaperOutcome(ran=False, detail=_recorded_attempt(state, clock))
+        try:
+            _write_reaper_state(
+                tasks_dir,
+                {
+                    "last_attempt_at": clock,
+                    "detail": DISK_REAPER_STARTED,
+                    "ran": False,
+                    "removed": 0,
+                    "freed_mb": 0,
+                    "freed": False,
+                },
+            )
+        except OSError as exc:
+            return ReaperOutcome(
+                ran=False, detail=redact_paths(f"reaper not run: cannot record reaper attempt ({exc})")
+            )
         outcome = _attempt_reaper(reaper, limits.disk_reaper_timeout_s)
         freed = outcome.ran and (outcome.removed > 0 or outcome.freed_mb > 0)
-        _write_reaper_state(
+        _record_reaper_state(
             tasks_dir,
             {
                 # When the attempt ended, never before it started.

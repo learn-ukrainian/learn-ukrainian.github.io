@@ -424,6 +424,17 @@ def test_the_common_reaper_matches_the_reap_clean_pushed_contract():
     assert {field.name for field in dataclasses.fields(_CleanPushedOutcome)} <= outcome_fields
 
 
+@pytest.mark.xfail(
+    strict=True,
+    reason="#10778: reap_clean_pushed is not in the tree yet; whichever of #10776/#10778 lands second removes this marker",
+)
+def test_the_common_reaper_provides_reap_clean_pushed():
+    """Fails while ``reap_clean_pushed`` is missing; the strict marker turns its arrival into a required pass."""
+    from scripts.orchestration import reap_worktrees
+
+    assert callable(getattr(reap_worktrees, adm.REAPER_FUNCTION, None))
+
+
 def test_unimportable_reaper_module_is_reported_unavailable(monkeypatch):
     def fail():
         raise ImportError("no module")
@@ -704,6 +715,86 @@ def test_a_malformed_reaper_state_does_not_block_the_reaper(tmp_path, raw):
     assert len(reaper.calls) == 1
 
 
+def _state_writes_fail(monkeypatch, *, after: int = 0) -> list[str]:
+    """Every reaper state write after the first ``after`` fails with ENOSPC; returns the write log."""
+    real_open = Path.open
+    writes: list[str] = []
+
+    def open_(self, mode="r", *args, **kwargs):
+        if self.name.startswith(f"{adm.DISK_REAPER_STATE_NAME}.tmp") and "w" in mode:
+            writes.append(self.name)
+            if len(writes) > after:
+                raise OSError(28, "No space left on device", str(self))
+        return real_open(self, mode, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "open", open_)
+    return writes
+
+
+def _expired_attempt(tasks: Path) -> None:
+    (tasks / adm.DISK_REAPER_ATTEMPT_LOCK_NAME).touch()
+    (tasks / adm.DISK_REAPER_STATE_NAME).write_text(
+        json.dumps({"last_attempt_at": time.time() - 3600, "detail": _NOTHING_FREED, "freed": False})
+    )
+
+
+def test_a_reaper_attempt_that_cannot_be_recorded_is_not_made(tmp_path, host, monkeypatch):
+    """Review reproducer (round 3): ENOSPC on the state write, three immediate retries at 100%."""
+    host["readings"] = [_disk(100.0)]
+    _expired_attempt(tmp_path)
+    _state_writes_fail(monkeypatch)
+    reaper = _Reaper(adm.ReaperOutcome(ran=True, detail=_NOTHING_FREED))
+
+    decisions = [adm.evaluate("workspace-write", tmp_path, thresholds=_LIMITS, reaper=reaper) for _ in range(3)]
+
+    assert reaper.calls == []  # record, then act: no marker, no reaper
+    for decision in decisions:
+        assert not decision.admitted and decision.disk_refused
+        assert "reaper not run: cannot record reaper attempt (" in decision.failures[0]
+        assert "No space left on device" in decision.failures[0]
+        assert str(tmp_path) not in decision.failures[0]
+    assert [p.name for p in tmp_path.iterdir() if ".tmp" in p.name] == []
+
+
+def test_a_recorded_attempt_holds_the_cooldown_when_its_outcome_cannot_be_written(tmp_path, host, monkeypatch):
+    host["readings"] = [_disk(100.0)]
+    _expired_attempt(tmp_path)
+    writes = _state_writes_fail(monkeypatch, after=1)  # the marker is written; the outcome write fails
+    reaper = _Reaper(adm.ReaperOutcome(ran=True, detail=_NOTHING_FREED))
+
+    decisions = [adm.evaluate("workspace-write", tmp_path, thresholds=_LIMITS, reaper=reaper) for _ in range(3)]
+
+    assert len(reaper.calls) == 1
+    assert len(writes) == 2
+    assert not any(decision.admitted for decision in decisions)
+    for retry in decisions[1:]:
+        assert "reaper attempted 0 s ago: " in retry.failures[0]
+    state = json.loads((tmp_path / adm.DISK_REAPER_STATE_NAME).read_text())
+    assert state["freed"] is False and state["ran"] is False
+
+
+def test_the_attempt_marker_is_on_disk_before_the_reaper_runs(tmp_path):
+    seen: list[dict] = []
+
+    def reaper(_root: Path, _timeout_s: float | None = None) -> adm.ReaperOutcome:
+        seen.append(json.loads((tmp_path / adm.DISK_REAPER_STATE_NAME).read_text()))
+        return adm.ReaperOutcome(ran=True, detail=_NOTHING_FREED)
+
+    adm.attempt_disk_reaper(tmp_path, reaper, _LIMITS, now=lambda: 1_800_000_000.0)
+
+    assert seen == [
+        {
+            "last_attempt_at": 1_800_000_000.0,
+            "detail": adm.DISK_REAPER_STARTED,
+            "ran": False,
+            "removed": 0,
+            "freed_mb": 0,
+            "freed": False,
+        }
+    ]
+    assert json.loads((tmp_path / adm.DISK_REAPER_STATE_NAME).read_text())["detail"] == _NOTHING_FREED
+
+
 def test_disk_reaper_cooldown_and_timeout_default_to_config_and_honour_env_overrides():
     defaults = adm.load_thresholds({})
     assert (defaults.disk_reaper_cooldown_s, defaults.disk_reaper_timeout_s) == (600.0, 90.0)
@@ -880,6 +971,11 @@ def test_the_real_reaper_child_starts_and_reports_an_outcome(tmp_path, monkeypat
         ("see ~someone/x and /var/tmp/a:12", "see <path> and <path>"),
         ("origin/main is 3/4 behind; refs/heads/x", "origin/main is 3/4 behind; refs/heads/x"),
         ("reaper removed 0 worktree(s), freed 0 MB", "reaper removed 0 worktree(s), freed 0 MB"),
+        ("lock %2Fhome%2Fsomeone%2Frepo.lock is held", "lock <path> is held"),
+        ("url file%3A%2F%2F%2Fvar%2Ftmp%2Fa failed", "url <path> failed"),
+        ("double %252Fsrv%252Fdata%252Fx", "double <path>"),
+        ("held (%7E%2Frepo%2Fx.lock)", "held (<path>)"),
+        ("disk 50%25 used; origin%2Fmain; 100% full", "disk 50%25 used; origin%2Fmain; 100% full"),
     ],
 )
 def test_redact_paths(text, redacted):

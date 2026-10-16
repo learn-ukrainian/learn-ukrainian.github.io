@@ -1212,6 +1212,36 @@ def test_live_dispatch_reusing_an_existing_worktree_skips_the_disk_guard(tasks_d
     assert len(admitted) == 1 and "disk check skipped (dispatch reuses an existing worktree)" in admitted[0]
 
 
+def test_a_reused_worktree_removed_before_the_lock_gets_the_disk_guard_and_is_refused(tasks_dir, monkeypatch, capsys):
+    """Review reproducer (round 3): cleanup removes the checkout after reuse detection, at 95%."""
+    _stub_worktree(monkeypatch, tasks_dir)
+    monkeypatch.setattr(
+        delegate, "_ensure_worktree", lambda **_kwargs: pytest.fail("no worktree is created on a full disk")
+    )
+    disk = _full_disk(monkeypatch, 95.0)
+    args = _live_danger_args(tasks_dir, "adm-disk-reuse-gone")
+    checkout = _dispatch_worktree(tasks_dir) / ".git"
+    checkout.write_text("gitdir: elsewhere\n", encoding="utf-8")
+    detect = delegate._dispatch_reuses_worktree
+    probes: list[bool] = []
+
+    def detect_then_cleanup(*probe_args, **probe_kwargs):
+        reused = detect(*probe_args, **probe_kwargs)
+        probes.append(reused)
+        checkout.unlink(missing_ok=True)  # the cleanup lands right after detection
+        return reused
+
+    monkeypatch.setattr(delegate, "_dispatch_reuses_worktree", detect_then_cleanup)
+
+    assert delegate.cmd_dispatch(args) == delegate._ADMISSION_DISK_REFUSED_EXIT
+
+    assert probes == [True, False]  # decided again under the worktree lock, before creation
+    assert disk["reaper"] == []  # never under the lock
+    err = capsys.readouterr().err
+    assert "disk 95.0% used" in err and "reaper not run in this check" in err
+    assert not delegate._state_path("adm-disk-reuse-gone").exists()
+
+
 def test_dispatch_reuses_worktree_detects_existing_checkouts_without_git(tmp_path, monkeypatch):
     repo = tmp_path / "repo"
     existing = repo / ".worktrees" / "dispatch" / "codex" / "old"
@@ -1232,3 +1262,9 @@ def test_dispatch_reuses_worktree_detects_existing_checkouts_without_git(tmp_pat
     assert delegate._dispatch_reuses_worktree("auto", **kwargs)
     monkeypatch.setattr(delegate, "_auto_worktree_path", lambda agent, task_id, repo_root=None: repo / "new")
     assert not delegate._dispatch_reuses_worktree("auto", **kwargs)
+    # A validated explicit path is probed as is, never resolved again (#8775).
+    monkeypatch.setattr(
+        delegate, "_normalize_worktree_path", lambda *_a, **_k: pytest.fail("the validated path was resolved again")
+    )
+    assert delegate._dispatch_reuses_worktree(str(existing), validated=existing, **kwargs)
+    assert not delegate._dispatch_reuses_worktree(str(bare_dir), validated=bare_dir, **kwargs)
