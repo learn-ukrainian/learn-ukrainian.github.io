@@ -154,7 +154,7 @@ closed-output subcommand to the wrapper, with tests, in a reviewed PR.
 | Gate | When | Scope |
 | --- | --- | --- |
 | gitleaks (`.pre-commit-config.yaml`, `.gitleaks.toml`) | Every commit, staged files | Stops a secret before it is committed. |
-| TruffleHog in CI (`.github/workflows/ci.yml`, `scripts/ci/secret_scan_scope.py`) | Every PR, merge-queue and scheduled run | The event's range (full history on the nightly schedule), verified mode, `--results=verified,unknown`. Required. |
+| TruffleHog in CI (`.github/workflows/ci.yml`, `scripts/ci/secret_scan_scope.py`) | Every PR, merge-queue and scheduled run | The event's range (the last 48 hours on the nightly schedule, or the tip commit when nothing landed), verified mode, `--results=verified,unknown`. Required. |
 | OPSEC linter (`scripts/audit/lint_opsec_leaks.py`) | CI Secret scan job | Infrastructure identifiers (addresses, key headers) that are not credentials. |
 | This wrapper | On demand, as above | Offline; whole work tree or whole public history. |
 

@@ -1,9 +1,16 @@
 """Resolve bounded secret-scan ranges for landing events.
 
 GitHub's TruffleHog action has built-in range handling for ``push`` and
-``pull_request``, but not ``merge_group``.  This resolver supplies explicit
-base/head values for merge-queue and main-push runs, and deliberately selects
-the action's full-history path when a safe range cannot be established.
+``pull_request``, but not ``merge_group`` or ``schedule``.  This resolver
+supplies explicit base/head values for merge-queue, main-push, and scheduled
+runs, and deliberately selects the action's full-history path when a safe
+landing range cannot be established.
+
+A scheduled run has no ``before``/``after``.  Leaving both inputs empty makes
+the pinned action scan every commit (``--since-commit '' --branch ''``) and
+exit 183 when historical findings exist.  The schedule path therefore passes
+a 48-hour lookback, or the tip commit when nothing landed in that window,
+and never the same base and head.
 """
 
 from __future__ import annotations
@@ -12,13 +19,20 @@ import os
 import re
 import subprocess
 from dataclasses import dataclass
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 _SHA_RE = re.compile(r"[0-9a-fA-F]{40}\Z")
 _ZERO_SHA = "0" * 40
 _SCOPED_EVENTS = frozenset({"merge_group", "push"})
+# The nightly cron is 03:30 UTC.  Forty-eight hours covers that interval plus
+# one delayed or skipped night without re-scanning history that already failed
+# the full scan.
+SCHEDULE_LOOKBACK = timedelta(hours=48)
 GIT_CAT_FILE_TIMEOUT_SECONDS = 10
 GIT_IS_ANCESTOR_TIMEOUT_SECONDS = 30
+GIT_REV_PARSE_TIMEOUT_SECONDS = 10
+GIT_REV_LIST_TIMEOUT_SECONDS = 30
 
 
 @dataclass(frozen=True, slots=True)
@@ -73,6 +87,75 @@ def _commit_exists(repo_root: Path, sha: str) -> bool:
     return result.returncode == 0
 
 
+def _git_stdout(repo_root: Path, args: list[str], timeout: int) -> tuple[bool, str]:
+    """Return ``(ok, stdout)``.  A timeout or non-zero exit is not an empty success."""
+
+    try:
+        result = subprocess.run(
+            ["git", *args],
+            cwd=repo_root,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=timeout,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return False, ""
+    if result.returncode != 0:
+        return False, ""
+    return True, result.stdout.strip()
+
+
+def _sha(text: str) -> str | None:
+    raw = text.strip().lower()
+    if _SHA_RE.fullmatch(raw):
+        return raw
+    return None
+
+
+def _schedule_scope(repo_root: Path, now: datetime) -> ScanScope:
+    """Scan commits since the lookback, never an identical base and head.
+
+    ``--since-commit`` is exclusive.  The base is the newest commit at or
+    before the cutoff, so the scan starts with the first commit after it.
+    ``opsec_range`` stays empty: the public-identifier lint keeps walking the
+    whole checkout, which is what an unscoped schedule already did.
+    """
+
+    ok, head_text = _git_stdout(repo_root, ["rev-parse", "HEAD"], GIT_REV_PARSE_TIMEOUT_SECONDS)
+    head = _sha(head_text) if ok else None
+    if head is None:
+        return _full_scan_scope("unresolvable-head-sha")
+
+    cutoff = (now - SCHEDULE_LOOKBACK).strftime("%Y-%m-%dT%H:%M:%SZ")
+    listed, base_text = _git_stdout(
+        repo_root,
+        ["rev-list", "-n", "1", f"--before={cutoff}", "HEAD"],
+        GIT_REV_LIST_TIMEOUT_SECONDS,
+    )
+    base = _sha(base_text) if listed else None
+    parent_ok, parent_text = _git_stdout(
+        repo_root,
+        ["rev-parse", "--verify", "HEAD^"],
+        GIT_REV_PARSE_TIMEOUT_SECONDS,
+    )
+    parent = _sha(parent_text) if parent_ok else None
+
+    if listed and base and base != head:
+        return ScanScope(base, head, "", "schedule", "lookback")
+    if not listed and parent and parent != head:
+        # The lookback could not be resolved.  Scan the tip rather than every
+        # commit: an empty pair is what made the nightly job exit 183.
+        return ScanScope(parent, head, "", "schedule", "lookback-unresolved")
+    if parent and parent != head and base == head:
+        # Nothing landed inside the window.  The tip commit is still a real,
+        # non-identical range, and it does not reopen older history.
+        return ScanScope(parent, head, "", "schedule", "tip-commit")
+    # Every commit is inside the window, or this is the root commit.  An empty
+    # base with this head scans that branch and is not an identical pair.
+    return ScanScope("", head, "", "schedule", "branch-history")
+
+
 def _is_ancestor(repo_root: Path, base_sha: str, head_sha: str) -> bool:
     try:
         result = subprocess.run(
@@ -95,6 +178,7 @@ def resolve_scan_scope(
     push_before_sha: str = "",
     push_after_sha: str = "",
     repo_root: Path | None = None,
+    now: datetime | None = None,
 ) -> ScanScope:
     """Return a validated landing range or an explicit full-scan fallback.
 
@@ -104,9 +188,18 @@ def resolve_scan_scope(
     are accepted only when the commits exist locally and the base is an
     ancestor of the head; this rejects empty, first-run, force-push, and
     malformed ranges without ever turning a scan into a skip.
+
+    ``schedule`` uses ``now`` (UTC) minus :data:`SCHEDULE_LOOKBACK`.  Callers
+    omit ``now`` to read the clock.
     """
 
     event = event_name.strip()
+    root = repo_root or Path.cwd()
+    if event == "schedule":
+        moment = now if now is not None else datetime.now(UTC)
+        if moment.tzinfo is None:
+            moment = moment.replace(tzinfo=UTC)
+        return _schedule_scope(root, moment)
     if event not in _SCOPED_EVENTS:
         return ScanScope("", "", "", "unchanged", "event-not-scoped")
 
@@ -127,7 +220,6 @@ def resolve_scan_scope(
     if base_sha == head_sha:
         return _full_scan_scope("empty-range")
 
-    root = repo_root or Path.cwd()
     if not _commit_exists(root, base_sha):
         return _full_scan_scope("unresolvable-base-sha")
     if not _commit_exists(root, head_sha):

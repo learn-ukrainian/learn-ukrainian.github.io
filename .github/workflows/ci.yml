@@ -112,6 +112,10 @@ jobs:
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version-file: '.python-version'
+      # schedule has no before/after. An empty base and head makes the pinned
+      # action scan every commit and exit 183 on historical findings.
+      # secret_scan_scope passes a 48-hour lookback, or the tip commit when
+      # nothing landed, and never the same base and head.
       - name: Resolve secret scan commit scope
         id: secret-scan-scope
         env:
