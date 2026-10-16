@@ -380,3 +380,39 @@ A hold anywhere below a top-level directory makes the report show that whole
 directory as `held`, not `stale`. When the condition in `until` is met,
 remove the entry. A malformed list makes the report exit with code 2, so a
 hold is never ignored without notice.
+
+## Pytest run directories (#10779)
+
+At the end of every pytest session, `tests/conftest.py` keeps the newest
+`LU_PYTEST_TMP_KEEP_RUNS` (default 3, integer >= 1) `pytest-<N>` run
+directories under `pytest-of-<user>` and removes older ones, then prints
+`pytest-tmp: removed ...`. A directory is removed only when all of these hold:
+
+- Its parent is a real `pytest-of-<user>` directory and the current run is a
+  numbered `pytest-<N>` sibling (a custom `--basetemp` is left alone).
+- It is a real directory, not a symlink, owned by the agent user.
+- It is not the current run, and its pytest `.lock` does not name a live process.
+- `assert_delete_target` accepts its resolved path inside that parent.
+
+Runs rank by their number, newest first. An invalid value of the variable fails
+the session without deleting anything.
+
+## uv cache size line (#10779)
+
+`.venv/bin/python -m scripts.hygiene.uv_cache_status` prints one read-only line
+for `lu-driver-status` to show, for example
+`UV CACHE: 7.23 GiB, +0.40 GiB over 24h [WARN: ...]`. It never deletes from the
+cache. It keeps a small size history (one sample per 10 minutes at most, a week
+retained) in `uv-cache-size.jsonl` in the driver-keeper state directory that
+`lu-driver-status` already reads (override: `LU_DRIVER_STATUS_STATE_DIR`).
+Growth compares against the oldest sample at least an hour old inside the last
+24 hours and names the real span; before that it prints `growth n/a (history
+building)`. `--json` and `--no-record` are available.
+
+Warning thresholds: total size above `LU_UV_CACHE_WARN_GB` (default 10) or growth
+above `LU_UV_CACHE_GROWTH_WARN_GB` (default 2) per 24 hours. A warning is a
+prompt for a human to run `uv cache prune`, never an automatic action.
+
+The installed `lu-driver-status` consumer is private and owned by Infra (see
+`muse-usage.md`). It shows this line by running the module above with the
+project interpreter and printing its output.

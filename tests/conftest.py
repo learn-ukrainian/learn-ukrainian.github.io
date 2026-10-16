@@ -81,6 +81,7 @@ import linecache
 import shutil
 import socket
 import sqlite3
+import stat
 import subprocess
 import sys
 import threading
@@ -968,6 +969,88 @@ def _pytest_tmp_size(root: Path, stop_after_bytes: int | None = None) -> tuple[i
     return size, False
 
 
+_PYTEST_RUN_DIR_RE = re.compile(r"pytest-(\d+)")
+_PYTEST_TMP_KEEP_DEFAULT = 3
+
+
+def _pytest_tmp_keep_runs() -> int:
+    """Return the run-directory retention count from ``LU_PYTEST_TMP_KEEP_RUNS``.
+
+    Raises ``ValueError`` for anything but an integer >= 1: the current run's
+    directory always counts, so zero would mean "delete the live run".
+    """
+    raw = os.environ.get("LU_PYTEST_TMP_KEEP_RUNS")
+    if raw is None or not raw.strip():
+        return _PYTEST_TMP_KEEP_DEFAULT
+    keep = int(raw.strip())
+    if keep < 1:
+        raise ValueError(raw)
+    return keep
+
+
+def _pytest_run_dir_in_use(run_dir: Path) -> bool:
+    """True when pytest's cleanup lock in ``run_dir`` names a live process."""
+    try:
+        pid = int((run_dir / ".lock").read_text().strip())
+    except (OSError, ValueError):
+        return False
+    try:
+        os.kill(pid, 0)
+    except ProcessLookupError:
+        return False
+    except PermissionError:
+        return True
+    return True
+
+
+def _prune_pytest_run_dirs(basetemp: Path, keep: int) -> list[Path]:
+    """Remove all but the newest ``keep`` sibling run directories of ``basetemp``.
+
+    Only ``pytest-<N>`` directories directly under a real (non-symlink)
+    ``pytest-of-<user>`` root are considered. A candidate must be a real
+    directory (never a symlink) owned by this account and not locked by a live
+    process; the current run's directory is never removed. Deletion goes through
+    ``assert_delete_target`` so a resolved path outside the root is refused.
+    Returns the removed paths.
+    """
+    root = basetemp.parent
+    if not root.name.startswith("pytest-of-") or root.is_symlink() or not root.is_dir():
+        return []
+    if not _PYTEST_RUN_DIR_RE.fullmatch(basetemp.name):
+        return []
+    from scripts.path_safety import assert_delete_target
+
+    uid = os.geteuid()
+    runs: list[tuple[int, Path]] = []
+    with os.scandir(root) as entries:
+        for entry in entries:
+            match = _PYTEST_RUN_DIR_RE.fullmatch(entry.name)
+            if match is None:
+                continue
+            try:
+                info = entry.stat(follow_symlinks=False)
+            except OSError:
+                continue
+            if not stat.S_ISDIR(info.st_mode) or info.st_uid != uid:
+                continue
+            runs.append((int(match.group(1)), Path(entry.path)))
+    runs.sort(key=lambda run: run[0], reverse=True)
+    removed: list[Path] = []
+    for _number, run_dir in runs[keep:]:
+        if run_dir == basetemp or _pytest_run_dir_in_use(run_dir):
+            continue
+        try:
+            target = assert_delete_target(run_dir, repo_root=_REPO_ROOT, approved_temp_roots=[root])
+            if target.parent != root.resolve():
+                continue
+            shutil.rmtree(target)
+        except (OSError, ValueError):
+            # Best-effort hygiene: a vanished or unreadable old run is not a test failure.
+            continue
+        removed.append(run_dir)
+    return removed
+
+
 # =============================================================================
 # CONTENT-TREE POLLUTION GUARD (#8631)
 # =============================================================================
@@ -1141,6 +1224,20 @@ def pytest_sessionfinish(session: pytest.Session, exitstatus: int) -> None:
     if getattr(tmp_path_factory, "_basetemp", None) is None:
         return
     basetemp = tmp_path_factory.getbasetemp()
+    try:
+        keep_runs = _pytest_tmp_keep_runs()
+    except ValueError:
+        print(
+            f"pytest-tmp: invalid LU_PYTEST_TMP_KEEP_RUNS={os.environ.get('LU_PYTEST_TMP_KEEP_RUNS')!r} "
+            "(need an integer >= 1)"
+        )
+        session.exitstatus = pytest.ExitCode.TESTS_FAILED
+        return
+    pruned = _prune_pytest_run_dirs(basetemp, keep_runs)
+    if pruned:
+        print(
+            f"pytest-tmp: removed {len(pruned)} older run directories (keeping newest {keep_runs}) under {basetemp.parent}"
+        )
     budget_value = os.environ.get("LU_PYTEST_TMP_BUDGET_GB")
     if budget_value is not None and not budget_value.strip():
         budget_value = None
