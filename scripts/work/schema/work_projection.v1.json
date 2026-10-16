@@ -75,8 +75,8 @@
         "omissions"
       ],
       "properties": {
-        "issues_open": { "type": "integer", "minimum": 0 },
-        "prs_open": { "type": "integer", "minimum": 0 },
+        "issues_open": { "type": ["integer", "null"], "minimum": 0 },
+        "prs_open": { "type": ["integer", "null"], "minimum": 0 },
         "streams_complete": { "type": "boolean" },
         "class4": {
           "type": "object",
@@ -238,7 +238,9 @@
               "reason": { "type": "string" },
               "age_s": { "type": ["number", "null"] },
               "observed_at": { "type": ["string", "null"], "format": "date-time" },
-              "count": { "type": "integer", "minimum": 0 }
+              "count": { "type": ["integer", "null"], "minimum": 0 },
+              "truncated": { "type": "boolean" },
+              "scope": { "type": "string" }
             }
           }
         },

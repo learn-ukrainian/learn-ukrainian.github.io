@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import subprocess
 from pathlib import Path
 
@@ -16,6 +17,80 @@ from scripts.api.route_contracts import contract_for_page, contract_for_route
 
 ROOT = Path(__file__).resolve().parents[1]
 DASHBOARDS = ROOT / "dashboards"
+
+
+def test_work_reader_preserves_unknown_and_partial_inventory() -> None:
+    from scripts.work.normalize import build_projection
+    from scripts.work.sources_public import SectionResult
+
+    projection = build_projection(
+        {
+            "issues": SectionResult("issues", "timeout", reason="gh_issue_list_timeout"),
+            "prs": SectionResult("prs", "ok", payload=[]),
+            "streams": SectionResult("streams", "stale", payload={}),
+            "delegate_tasks": SectionResult("delegate_tasks", "truncated", count=500, truncated=True),
+        }
+    )
+    html = (DASHBOARDS / "work.html").read_text()
+    functions = []
+    for name in (
+        "isObject",
+        "isFiniteNonNegativeNumber",
+        "admitPublicDocument",
+        "sectionCount",
+        "publicStreamsComplete",
+        "denseAttention",
+        "attentionRowFromItem",
+        "mergeProjections",
+        "renderSources",
+        "formatAdmittedPrivateMeta",
+        "isPlaceholderPrivateSource",
+        "escapeHtml",
+        "escapeAttr",
+    ):
+        start = html.index(f"function {name}(")
+        functions.append(html[start : html.index("\n  }", start) + len("\n  }")])
+    script = (
+        "\n".join(functions)
+        + r"""
+const doc = JSON.parse(require('node:fs').readFileSync(0, 'utf8'));
+const PUBLIC_SOURCE_ID = 'public-monitor', PRIVATE_SOURCE_ID = 'private-local-adapter';
+const HEALTH_ORDER = {}, state = {};
+const els = Object.fromEntries(['publicMeta', 'privateMeta', 'foundation', 'attentionMeta', 'repo', 'source'].map(k => [k, {}]));
+renderSources(doc, 'unavailable');
+const priv = {items: [], attention: [], sources: [], denominator: {issues_open: 2, prs_open: 0},
+              capabilities: {private_source: {}}, cache_age_s: 0};
+const merged = mergeProjections(doc, priv);
+process.stdout.write(JSON.stringify({admitted: admitPublicDocument(doc).ok,
+  issues: sectionCount(doc.sources[0].sections, 'issues'),
+  prs: sectionCount(doc.sources[0].sections, 'prs'),
+  stale: sectionCount({issues: {status: 'stale', count: 0}}, 'issues'),
+  partial: sectionCount(doc.sources[0].sections, 'delegate_tasks'),
+  streams: publicStreamsComplete(doc.sources[0]), merged: merged.doc.denominator.issues_open,
+  meta: els.publicMeta.textContent}));
+"""
+    )
+    result = subprocess.run(
+        ["node", "-e", script],
+        input=json.dumps(projection),
+        capture_output=True,
+        text=True,
+        cwd=ROOT,
+        timeout=30,
+        check=False,
+    )
+    assert result.returncode == 0, result.stderr
+    data = json.loads(result.stdout)
+    assert data["admitted"] is True
+    assert data["issues"] == "unknown"
+    assert data["prs"] == "0"
+    assert data["stale"] == "unknown"
+    assert data["partial"] == "500+ (partial)"
+    assert data["streams"] is False
+    assert data["merged"] is None
+    assert "issues=unknown" in data["meta"]
+    assert "truncated=delegate_tasks" in data["meta"]
+    assert "formal review jobs=" in data["meta"]
 
 
 def test_fleet_page_is_a_read_only_consolidated_observer() -> None:

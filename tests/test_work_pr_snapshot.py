@@ -17,6 +17,27 @@ from scripts.work.schema import validate_projection
 REPO = sources.DEFAULT_PUBLIC_REPOSITORY
 
 
+@pytest.mark.parametrize("merged", [False, True])
+def test_malformed_rest_pr_rows_are_unknown_not_empty(monkeypatch, merged):
+    loader = "list_merged_prs" if merged else "list_open_prs"
+    monkeypatch.setattr(github_rest, loader, lambda *_a, **_kw: [{"number": "broken"}])
+    snapshot = sources._PRSnapshot(REPO, 1000, merged)
+    snapshot._refresh(sources._iso_now())
+    snapshot._started_at = time.monotonic()
+    section = snapshot.read()
+    assert section.status == "unavailable"
+    assert section.reason == "gh_pr_refresh_failed"
+    assert section.age_s is None and section.observed_at is None
+    projection = build_projection(
+        _sections(section)
+        if not merged
+        else {**_sections(sources.SectionResult("prs", "ok", payload=[])), "prs_merged": section}
+    )
+    validate_projection(projection)
+    assert projection["items"] == []
+    assert projection["denominator"]["prs_open"] == (0 if merged else None)
+
+
 def _sections(prs):
     return {
         "prs": prs,

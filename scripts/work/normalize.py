@@ -857,7 +857,7 @@ def build_projection(
         omissions.append(
             {"class": "prs_merged", "reason": history_section.reason or history_section.status, "count": 0}
         )
-    if issues_section.status in {"unavailable", "timeout", "degraded"}:
+    if issues_section.status not in {"ok", "truncated"}:
         omissions.append(
             {
                 "class": "issues",
@@ -865,7 +865,7 @@ def build_projection(
                 "count": 0,
             }
         )
-    if prs_section.status in {"unavailable", "timeout", "degraded", "stale"}:
+    if prs_section.status not in {"ok", "truncated"}:
         omissions.append(
             {
                 "class": "prs",
@@ -904,6 +904,8 @@ def build_projection(
         ("delegate_tasks", tasks_section),
         ("fleet_reviews", reviews_section),
     ):
+        if section.truncated:
+            omissions.append({"class": name, "reason": "enumeration_cap", "count": section.count})
         if section.status not in {"ok", "truncated"}:
             omissions.append(
                 {
@@ -920,8 +922,8 @@ def build_projection(
         }
     )
 
-    issues_open = issues_section.count if issues_section.status not in {"unavailable", "timeout"} else 0
-    prs_open = prs_section.count if prs_section.status not in {"unavailable", "timeout"} else 0
+    issues_open = issues_section.count if issues_section.status in {"ok", "truncated"} else None
+    prs_open = prs_section.count if prs_section.status in {"ok", "truncated"} else None
 
     payload: dict[str, Any] = {
         "schema_version": "work-projection.v1",
@@ -959,15 +961,31 @@ def build_projection(
 
 
 def qualify_pr_snapshot_age(payload: dict[str, Any]) -> dict[str, Any]:
-    """Age PR evidence even when its enclosing projection cache is still warm.
+    """Age source observations and revoke expired PR evidence on cache reads.
 
-    The observation belongs to the PR refresh, not to a later projection build.
+    Observation times belong to sources, never to a later projection build.
     Other sections keep their independent qualification. Never mutate the cache.
     """
     out = copy.deepcopy(payload)
     for source in out.get("sources") or []:
         if source.get("source_id") != SOURCE_PUBLIC:
             continue
+        for section in (source.get("sections") or {}).values():
+            observed = section.get("observed_at")
+            try:
+                section["age_s"] = max(0.0, (datetime.now(UTC) - datetime.fromisoformat(observed)).total_seconds())
+            except (TypeError, ValueError):
+                section["age_s"] = None
+                section["observed_at"] = None
+        metadata = list((source.get("sections") or {}).values())
+        source["freshness"] = {
+            "observed_at": min(s["observed_at"] for s in metadata)
+            if metadata and all(s.get("observed_at") for s in metadata)
+            else None,
+            "age_s": max(s["age_s"] for s in metadata)
+            if metadata and all(s.get("age_s") is not None for s in metadata)
+            else None,
+        }
         for name in ("prs", "prs_merged"):
             section = (source.get("sections") or {}).get(name)
             if not section:
@@ -975,10 +993,12 @@ def qualify_pr_snapshot_age(payload: dict[str, Any]) -> dict[str, Any]:
             observed_at = section.get("observed_at")
             age = None
             if observed_at:
-                age = max(0.0, (datetime.now(UTC) - datetime.fromisoformat(observed_at)).total_seconds())
+                age = section["age_s"]
             section["age_s"] = age
             stale = section.get("status") not in {"ok", "truncated"} or age is None or age > PR_SNAPSHOT_FRESHNESS_S
             if stale:
+                if name == "prs":
+                    out["denominator"]["prs_open"] = None
                 reason = "gh_pr_snapshot_missing" if age is None else "gh_pr_snapshot_stale"
                 if section.get("status") in {"ok", "truncated", "stale"}:
                     section["status"] = "stale"
@@ -988,7 +1008,7 @@ def qualify_pr_snapshot_age(payload: dict[str, Any]) -> dict[str, Any]:
                 omissions = out.get("denominator", {}).get("omissions", [])
                 reason = section.get("reason") or reason
                 if not any(o.get("class") == name and o.get("reason") == reason for o in omissions):
-                    omissions.append({"class": name, "reason": reason, "count": section.get("count", 0)})
+                    omissions.append({"class": name, "reason": reason, "count": section.get("count") or 0})
             for item in out.get("items") or []:
                 if item.get("resource_kind") != "pr":
                     continue
@@ -1089,6 +1109,16 @@ def downgrade_expired_projection(payload: dict[str, Any], *, age_s: float, fresh
     out["cache_age_s"] = float(age_s)
     if age_s <= freshness_s:
         return out
+    for source in out.get("sources") or []:
+        if source.get("status") in {"ok", "truncated"}:
+            source["status"] = "stale"
+        for name, section in (source.get("sections") or {}).items():
+            if section.get("status") in {"ok", "truncated"}:
+                section["status"] = "stale"
+                section["reason"] = _PROJECTION_STALE_REASON
+                out.get("denominator", {}).setdefault("omissions", []).append(
+                    {"class": name, "reason": _PROJECTION_STALE_REASON, "count": section.get("count") or 0}
+                )
     unknown_action = {
         "code": "INSPECT_UNKNOWN",
         "reason_codes": [_PROJECTION_STALE_REASON],
@@ -1149,6 +1179,10 @@ def downgrade_expired_projection(payload: dict[str, Any], *, age_s: float, fresh
     denominator = out.get("denominator")
     if isinstance(denominator, dict):
         denominator["streams_complete"] = False
+        denominator["issues_open"] = None
+        denominator["prs_open"] = None
+        if isinstance(denominator.get("class4"), dict):
+            denominator["class4"] = dict.fromkeys(denominator["class4"], False)
     return out
 
 

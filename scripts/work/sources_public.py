@@ -243,6 +243,11 @@ class SectionResult:
     count: int = 0
     truncated: bool = False
 
+    def __post_init__(self) -> None:
+        if self.status not in {"ok", "truncated", "stale"} and self.payload is None:
+            self.age_s = None
+            self.observed_at = None
+
 
 def _run_gh(args: list[str], timeout_s: float = SECTION_TIMEOUT_S) -> tuple[int, str, str]:
     try:
@@ -262,6 +267,7 @@ def _run_gh(args: list[str], timeout_s: float = SECTION_TIMEOUT_S) -> tuple[int,
 
 def _fetch_open_issues_rest(repo: str, limit: int) -> SectionResult:
     """Conditional REST issue list. Errors are not cached as a successful section."""
+    observed_at = _utc_now()
     try:
         payload = github_rest.list_open_issues(repo, limit=limit, timeout=SECTION_TIMEOUT_S)
     except github_rest.GitHubRestTimeout:
@@ -270,7 +276,10 @@ def _fetch_open_issues_rest(repo: str, limit: int) -> SectionResult:
         return SectionResult("issues", "unavailable", reason=str(exc)[:200])
     if not isinstance(payload, list):
         return SectionResult("issues", "degraded", reason="gh_issue_list_not_list")
+    if any(not isinstance(row, dict) or type(row.get("number")) is not int or row["number"] <= 0 for row in payload):
+        return SectionResult("issues", "degraded", reason="gh_issue_list_row")
     truncated = bool(getattr(payload, "truncated", False))
+    age = max(getattr(payload, "age_seconds", 0), max((row.get("age_seconds", 0) for row in payload), default=0))
     return SectionResult(
         "issues",
         "stale"
@@ -278,10 +287,8 @@ def _fetch_open_issues_rest(repo: str, limit: int) -> SectionResult:
         else "truncated"
         if truncated
         else "ok",
-        age_s=max(
-            getattr(payload, "age_seconds", 0),
-            max((row.get("age_seconds", 0) for row in payload if isinstance(row, dict)), default=0),
-        ),
+        age_s=age,
+        observed_at=(observed_at - timedelta(seconds=age)).isoformat(),
         payload=payload,
         count=len(payload),
         truncated=truncated,
@@ -340,6 +347,10 @@ class _PRSnapshot:
             payload = loader(self.repo, limit=self.limit, timeout=PR_REFRESH_TIMEOUT_S)
             if not isinstance(payload, list):
                 raise ValueError("gh_pr_list_not_list")
+            if any(
+                not isinstance(row, dict) or type(row.get("number")) is not int or row["number"] <= 0 for row in payload
+            ):
+                raise ValueError("gh_pr_list_row")
             truncated = bool(getattr(payload, "truncated", False))
             age = max(
                 getattr(payload, "age_seconds", 0),
@@ -451,11 +462,13 @@ def fetch_open_issues(
             reason=(stderr.strip() or "gh_issue_list_failed")[:200],
         )
     try:
-        payload = json.loads(stdout or "[]")
+        payload = json.loads(stdout)
     except json.JSONDecodeError as exc:
         return SectionResult("issues", "degraded", reason=f"invalid_gh_json:{exc}")
     if not isinstance(payload, list):
         return SectionResult("issues", "degraded", reason="gh_issue_list_not_list")
+    if any(not isinstance(row, dict) or type(row.get("number")) is not int or row["number"] <= 0 for row in payload):
+        return SectionResult("issues", "degraded", reason="gh_issue_list_row")
     truncated = len(payload) >= limit
     return SectionResult(
         "issues",
@@ -544,11 +557,13 @@ def _fetch_prs(
             observed_at=None,
         )
     try:
-        payload = json.loads(stdout or "[]")
+        payload = json.loads(stdout)
     except json.JSONDecodeError as exc:
         return SectionResult(name, "degraded", reason=f"invalid_gh_json:{exc}", age_s=None, observed_at=None)
     if not isinstance(payload, list):
         return SectionResult(name, "degraded", reason="gh_pr_list_not_list", age_s=None, observed_at=None)
+    if any(not isinstance(row, dict) or type(row.get("number")) is not int or row["number"] <= 0 for row in payload):
+        return SectionResult(name, "degraded", reason="gh_pr_list_row")
     truncated = len(payload) >= limit
     return SectionResult(
         name,
@@ -807,6 +822,8 @@ def fetch_streams_projection(
         payload = (loader or _default_loader)()
     except Exception as exc:
         return SectionResult("streams", "unavailable", reason=f"streams_error:{type(exc).__name__}")
+    if not isinstance(payload, dict):
+        return SectionResult("streams", "degraded", reason="streams_shape")
 
     status = str(payload.pop("_status", "ok"))
     # Injected loaders may hand up a raw audit report; derive the public-safe
@@ -847,6 +864,7 @@ def fetch_streams_projection(
         payload=payload,
         reason=str(payload.get("error") or "") or None,
         age_s=age_s,
+        observed_at=datetime.fromtimestamp(generated, UTC).isoformat() if age_s is not None else None,
         count=int(payload.get("open_total") or 0),
     )
 
@@ -884,6 +902,7 @@ def fetch_delegate_active(
 
         return active_delegate_tasks(repository=repository)
 
+    observed_at = _utc_now()
     try:
         page_fn = loader if loader is not None else _default_active
         payload = page_fn(allowed)
@@ -896,15 +915,16 @@ def fetch_delegate_active(
     tasks = payload.get("tasks") if isinstance(payload, dict) else None
     if not isinstance(tasks, list):
         return SectionResult("delegate_active", "degraded", reason="delegate_active_shape")
+    if any(not isinstance(row, dict) for row in tasks):
+        return SectionResult("delegate_active", "degraded", reason="delegate_active_row")
     # Active inventory is complete (no page budget). Preserve trusted upstream
     # scoped total; never invent truncation. Injected loaders derive total only
     # from admitted rows.
     upstream_total: int | None = None
     if trusted_scoped and isinstance(payload, dict) and payload.get("total") is not None:
-        try:
-            upstream_total = int(payload["total"])
-        except (TypeError, ValueError):
-            upstream_total = None
+        if type(payload["total"]) is not int or payload["total"] < len(tasks):
+            return SectionResult("delegate_active", "degraded", reason="delegate_active_total")
+        upstream_total = payload["total"]
     summary, total, truncated = filter_public_delegate_tasks(
         tasks,
         repository_id=allowed,
@@ -917,6 +937,8 @@ def fetch_delegate_active(
         payload={"total": total, "tasks": summary},
         count=total,
         truncated=truncated,
+        observed_at=observed_at.isoformat(),
+        age_s=max(0.0, (_utc_now() - observed_at).total_seconds()),
     )
 
 
@@ -954,6 +976,7 @@ def fetch_delegate_tasks(
 
         return list_delegate_tasks(status="all", limit=DELEGATE_TASK_LIMIT, repository=repository)
 
+    observed_at = _utc_now()
     try:
         page_fn = loader if loader is not None else _default_tasks
         payload = page_fn(allowed)
@@ -966,14 +989,15 @@ def fetch_delegate_tasks(
     tasks = payload.get("tasks") if isinstance(payload, dict) else None
     if not isinstance(tasks, list):
         return SectionResult("delegate_tasks", "degraded", reason="delegate_tasks_shape")
+    if any(not isinstance(row, dict) for row in tasks):
+        return SectionResult("delegate_tasks", "degraded", reason="delegate_tasks_row")
     # Trusted production: keep the scoped loader's public total. Injected
     # loaders: recompute total from admitted rows only (ignore payload total).
     upstream_total: int | None = None
     if trusted_scoped and isinstance(payload, dict) and payload.get("total") is not None:
-        try:
-            upstream_total = int(payload["total"])
-        except (TypeError, ValueError):
-            upstream_total = None
+        if type(payload["total"]) is not int or payload["total"] < len(tasks):
+            return SectionResult("delegate_tasks", "degraded", reason="delegate_tasks_total")
+        upstream_total = payload["total"]
     summary, total, truncated = filter_public_delegate_tasks(
         tasks,
         repository_id=allowed,
@@ -987,6 +1011,8 @@ def fetch_delegate_tasks(
         payload={"total": total, "tasks": summary},
         count=len(summary),
         truncated=truncated,
+        observed_at=observed_at.isoformat(),
+        age_s=max(0.0, (_utc_now() - observed_at).total_seconds()),
     )
 
 
@@ -1018,19 +1044,39 @@ def fetch_fleet_reviews(
     total = 0
     offset = 0
     raw_seen = 0
+    observed_at = _utc_now()
     try:
         while offset < FLEET_REVIEW_HARD_CAP:
             page = page_fn(FLEET_REVIEW_PAGE, offset, allowed)
             if not isinstance(page, dict):
                 return SectionResult("fleet_reviews", "degraded", reason="fleet_reviews_shape")
-            batch = page.get("reviews") or page.get("items") or []
+            availability = page.get("availability")
+            if availability is not None and availability not in {"available", "empty"}:
+                reason = (
+                    availability
+                    if availability
+                    in {
+                        "authority_unsupported_component",
+                        "db_unavailable",
+                        "db_missing",
+                        "table_missing",
+                        "schema_read_failed",
+                        "unavailable",
+                    }
+                    else "fleet_reviews_unavailable"
+                )
+                return SectionResult("fleet_reviews", "unavailable", reason=reason)
+            batch = page.get("reviews", page.get("items"))
             if not isinstance(batch, list):
                 return SectionResult("fleet_reviews", "degraded", reason="fleet_reviews_items")
             # Prefer the repository-scoped total from the loader / SQL count.
-            total = int(page.get("total") or total or len(batch))
+            page_total = page.get("total")
+            if type(page_total) is not int or page_total < raw_seen + len(batch):
+                return SectionResult("fleet_reviews", "degraded", reason="fleet_reviews_total")
+            total = page_total
             for row in batch:
                 if not isinstance(row, dict):
-                    continue
+                    return SectionResult("fleet_reviews", "degraded", reason="fleet_reviews_row")
                 raw_seen += 1
                 if str(row.get("repository") or "") != allowed:
                     # Defense in depth: a misbehaving loader must not leak foreign rows.
@@ -1069,6 +1115,8 @@ def fetch_fleet_reviews(
         payload={"total": len(items), "reviews": items},
         count=len(items),
         truncated=truncated,
+        observed_at=observed_at.isoformat(),
+        age_s=max(0.0, (_utc_now() - observed_at).total_seconds()),
     )
 
 
@@ -1147,8 +1195,19 @@ def public_source_envelope(sections: dict[str, SectionResult]) -> dict[str, Any]
     for name, section in sections.items():
         meta: dict[str, Any] = {
             "status": section.status,
-            "count": section.count,
+            "count": section.count if section.status in {"ok", "truncated", "stale"} else None,
             "observed_at": section.observed_at,
+            "age_s": section.age_s,
+            "truncated": section.truncated,
+            "scope": {
+                "issues": "public_repository_open_issues",
+                "prs": "public_repository_open_prs",
+                "prs_merged": "public_repository_bounded_merged_pr_history",
+                "streams": "public_issue_stream_membership",
+                "delegate_active": "public_repository_active_delegate_tasks",
+                "delegate_tasks": "public_repository_delegate_task_inventory",
+                "fleet_reviews": "public_repository_formal_review_jobs",
+            }[name],
         }
         if section.reason:
             meta["reason"] = section.reason
@@ -1171,8 +1230,10 @@ def public_source_envelope(sections: dict[str, SectionResult]) -> dict[str, Any]
         "source_id": SOURCE_PUBLIC,
         "status": source_status,
         "freshness": {
-            "observed_at": _iso_now(),
-            "age_s": max(ages) if ages else 0.0,
+            "observed_at": min(s.observed_at for s in sections.values())
+            if sections and all(s.observed_at for s in sections.values())
+            else None,
+            "age_s": max(ages) if ages and len(ages) == len(sections) else None,
         },
         "capabilities": {"mutation": False, "private_fields": False},
         "truncation": {

@@ -17,6 +17,143 @@ client = TestClient(app, raise_server_exceptions=False)
 REPO = "learn-ukrainian/learn-ukrainian.github.io"
 
 
+@pytest.mark.parametrize("kind", ["issues", "prs"])
+@pytest.mark.parametrize(
+    "reply,expected,status",
+    [
+        ((0, "[]", ""), 0, "ok"),
+        ((0, '[{"number": 9001}]', ""), 1, "ok"),
+        ((124, "", "timeout"), None, "timeout"),
+        ((1, "", "unavailable"), None, "unavailable"),
+        ((0, "{}", ""), None, "degraded"),
+        ((0, "", ""), None, "degraded"),
+        ((0, '[{"number": "broken"}]', ""), None, "degraded"),
+    ],
+)
+def test_source_enumeration_truth_through_projection_and_next(monkeypatch, kind, reply, expected, status):
+    from scripts.work.sources_public import fetch_open_issues, fetch_open_prs
+
+    section = (fetch_open_issues if kind == "issues" else fetch_open_prs)(runner=lambda *_a: reply)
+    sections = {
+        name: SectionResult(name, "ok", payload=[] if name in {"issues", "prs", "prs_merged"} else {})
+        for name in ("issues", "prs", "prs_merged", "streams", "delegate_active", "delegate_tasks", "fleet_reviews")
+    }
+    sections[kind] = section
+    monkeypatch.setattr(work_router, "build_public_projection", lambda **_kw: build_projection(sections))
+    projection = client.get("/api/work/v1/projection")
+    assert projection.status_code == 200, projection.text
+    next_response = client.get("/api/work/v1/next?stream=monitor")
+    assert next_response.status_code == 200, next_response.text
+    for data in (projection.json(), next_response.json()):
+        assert data["denominator"][f"{kind}_open"] == expected
+        source = next(s for s in data["sources"] if s["source_id"] == "public-monitor")
+        assert source["sections"][kind]["status"] == status
+        assert source["sections"][kind]["count"] == expected
+        if expected is None:
+            assert source["sections"][kind]["age_s"] is None
+            assert source["sections"][kind]["observed_at"] is None
+            assert any(o["class"] == kind for o in data["denominator"]["omissions"])
+
+
+def test_next_epic_selector_names_canonical_monitor(monkeypatch):
+    from scripts.api.state_helpers import cache_set
+
+    payload = build_projection({"issues": SectionResult("issues", "ok", payload=[])})
+    cache_set(work_router.projection_cache_key({}), payload)
+    invalid = client.get("/api/work/v1/next?stream=epic:7919")
+    assert invalid.status_code == 400
+    assert invalid.json()["error"] == "unknown_stream"
+    # designated-fixture: D20 requires this exact invalid selector regression.
+    assert invalid.json() == {
+        "error": "unknown_stream",
+        "message": "unknown stream 'epic:7919'",
+        "valid_streams": sorted(work_router.load_registry()),
+    }
+    assert "monitor" in invalid.json()["valid_streams"]
+    valid = client.get("/api/work/v1/next?stream=monitor")
+    assert valid.status_code == 200
+    assert valid.json()["stream"] == "monitor"
+    assert valid.json()["denominator"]["issues_open"] == 0
+
+
+@pytest.mark.parametrize("name", ["delegate_active", "delegate_tasks", "fleet_reviews"])
+@pytest.mark.parametrize("failure", ["unavailable", "malformed", "empty", "running"])
+def test_review_and_delegate_source_states_reach_both_handlers(monkeypatch, name, failure):
+    import scripts.api.fleet_router as fleet_router
+    from scripts.work.sources_public import fetch_delegate_active, fetch_delegate_tasks, fetch_fleet_reviews
+
+    sections = _next_sections()
+    row = {"repository": REPO, "task_id": "ordinary-native-review", "status": "running", "alive": True}
+    review = {"repository": REPO, "review_id": "formal-job", "state": "running"}
+    key = "reviews" if name == "fleet_reviews" else "tasks"
+    page = {"total": 0, key: []}
+    if failure == "unavailable":
+        if name == "fleet_reviews":
+            page["availability"] = "authority_unsupported_component"
+        else:
+
+            def unavailable(*_a):
+                raise TimeoutError("fixture")
+    elif failure == "malformed":
+        page[key] = None
+    elif failure == "running":
+        page = {"total": 1, key: [review if name == "fleet_reviews" else row]}
+    if name == "fleet_reviews":
+        monkeypatch.setattr(fleet_router, "fleet_reviews", lambda **_kw: page)
+        sections[name] = fetch_fleet_reviews()
+    else:
+        loader = unavailable if failure == "unavailable" else lambda *_a: page
+        sections[name] = (fetch_delegate_active if name == "delegate_active" else fetch_delegate_tasks)(loader=loader)
+    monkeypatch.setattr(work_router, "build_public_projection", lambda **_kw: build_projection(sections))
+    responses = [client.get("/api/work/v1/projection"), client.get("/api/work/v1/next?stream=monitor")]
+    for response in responses:
+        assert response.status_code == 200, response.text
+        data = response.json()
+        available = failure in {"empty", "running"}
+        assert data["denominator"]["class4"][name] is available
+        meta = data["sources"][0]["sections"][name]
+        assert meta["count"] == (1 if failure == "running" else 0 if available else None)
+        if not available:
+            assert meta["age_s"] is None and meta["observed_at"] is None
+            assert any(o["class"] == name for o in data["denominator"]["omissions"])
+    if name != "fleet_reviews" and failure == "running":
+        task = next(i for i in responses[0].json()["items"] if i["remote_id"] == "ordinary-native-review")
+        assert task["resource_kind"] == "task"
+        assert responses[0].json()["denominator"]["class4"]["fleet_reviews"] is True
+
+
+@pytest.mark.parametrize("stale,truncated,expected", [(False, False, 1), (False, True, 1), (True, True, None)])
+def test_rest_issue_age_and_coverage_survive_real_handlers(monkeypatch, stale, truncated, expected):
+    from datetime import UTC, datetime
+
+    from scripts import github_rest_cache as rest
+    from scripts.work.sources_public import fetch_open_issues
+
+    page = rest.RestPage([{"number": 9001}], truncated=truncated, stale=stale, age_seconds=95 if stale else 4)
+    monkeypatch.setattr(rest, "list_open_issues", lambda *_a, **_kw: page)
+    sections = _next_sections()
+    sections["issues"] = fetch_open_issues()
+    monkeypatch.setattr(work_router, "build_public_projection", lambda **_kw: build_projection(sections))
+    responses = [client.get("/api/work/v1/projection"), client.get("/api/work/v1/next?stream=monitor")]
+    for response in responses:
+        assert response.status_code == 200, response.text
+        data = response.json()
+        assert data["denominator"]["issues_open"] == expected
+        meta = data["sources"][0]["sections"]["issues"]
+        assert meta["count"] == 1
+        assert meta["truncated"] is truncated
+        assert meta["age_s"] >= (95 if stale else 4)
+        assert (datetime.now(UTC) - datetime.fromisoformat(meta["observed_at"])).total_seconds() >= (95 if stale else 4)
+        if truncated:
+            assert any(
+                o["class"] == "issues" and o["reason"] == "enumeration_cap" for o in data["denominator"]["omissions"]
+            )
+    assert (
+        responses[0].json()["sources"][0]["sections"]["issues"]["observed_at"]
+        == responses[1].json()["sources"][0]["sections"]["issues"]["observed_at"]
+    )
+
+
 def _reset_work_state():
     """Settle cache writers before invalidating shared state (#7768)."""
     ctx = app.state.ctx
@@ -507,10 +644,15 @@ def test_next_determinism_two_calls_identical(monkeypatch):
     assert [r["work_id"] for r in a["queue"]] == [r["work_id"] for r in b["queue"]]
     a.pop("cache_age_s")
     b.pop("cache_age_s")
-    # PR observations age independently even inside the warm projection TTL.
-    for result in (a, b):
-        for source in result["sources"]:
-            (source.get("sections", {}).get("prs") or {}).pop("age_s", None)
+    # Observation ages advance independently of stable queue ordering.
+    for left, right in zip(a["sources"], b["sources"], strict=True):
+        for key in left["sections"]:
+            before = left["sections"][key].pop("age_s", None)
+            after = right["sections"][key].pop("age_s", None)
+            assert (before is None and after is None) or after >= before
+        left_age = left["freshness"].pop("age_s", None)
+        right_age = right["freshness"].pop("age_s", None)
+        assert (left_age is None and right_age is None) or right_age >= left_age
     assert a == b
 
 
@@ -2041,4 +2183,4 @@ console.log(JSON.stringify({admitted: result.ok, actionable: doc.items.map(isAct
     )
     assert proc.returncode == 0, proc.stderr
     assert json.loads(proc.stdout) == {"admitted": True, "actionable": [False], "lifecycles": ["merged"]}
-    assert schema_digest_sha256() == "55bd2ebd6dbdbe80f2950d498e783fe2ef8d82fff24a4ad807ed934b66fa74f7"
+    assert schema_digest_sha256() == "e7e210b3c20fa34410a3e24c584f2590b54a8d2741f78eb3578e6b8ad6f22aab"

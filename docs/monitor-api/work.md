@@ -38,6 +38,8 @@ Machine contract for a lane's next actionable picks. Params:
 accepted and echoed (`?stream=infra` → `stream: "infra-harness"` +
 `requested_stream: "infra"`, via the same `fleet_taxonomy.yaml` resolver the
 session hooks use); ambiguous or unknown selectors still fail closed (#6984).
+`epic:7919` is an invalid selector and returns `400 unknown_stream` with
+`valid_streams`, including the canonical `monitor` key.
 
 - **Pick list is stream-scoped** (operator addendum on #6880): only actionable
   rows whose `projections.stream.streams` membership includes the requested
@@ -99,7 +101,9 @@ session hooks use); ambiguous or unknown selectors still fail closed (#6984).
 - **Stale projection timeout.** When `/projection` serves a cached payload
   older than its freshness bound because a rebuild timed out, every
   decision-bearing field in that response is `unknown` with reason
-  `projection_cache_past_freshness`. The row may remain as history.
+  `projection_cache_past_freshness`. Section status becomes stale, counts
+  become historical, current issue/PR denominators become null, and class-4
+  availability becomes false. The row may remain as history.
 - **Warm cache only**: serves strictly from the unfiltered projection cache
   (single-flight, #6861). Cold → wire body
   `503 {"error": "building", "retry_after_s": 3}` (no FastAPI `detail`
@@ -220,7 +224,8 @@ On dual admission success the browser:
 
 - replaces only the public `sources[]` member with `source_id=private-local-adapter`
 - concatenates admitted items
-- sums issue/PR denominators, ANDs `streams_complete`, preserves public class-4
+- sums known issue/PR denominators, propagates `null` when either count is
+  unknown, ANDs `streams_complete`, preserves public class-4
 - removes only `{class:"private_adapter",reason:"not_configured"}` from public
   denominator omissions and appends private omissions
 - installs the validated private `capabilities.private_source`
@@ -293,9 +298,15 @@ typed omission):
    with an older response.
 3. Complete public `GET /api/issues/streams` response (private cache keys stripped).
 4. Class-4 summaries only:
-   - `GET /api/delegate/active`
-   - `GET /api/delegate/tasks?status=all&limit<=500`
-   - `GET /api/fleet/reviews`
+   - `GET /api/delegate/active`: public-repository active delegate tasks
+   - `GET /api/delegate/tasks?status=all&limit<=500`: public-repository delegate
+     inventory, including ordinary native review dispatches
+   - `GET /api/fleet/reviews`: public-repository formal-review jobs only
+
+   Formal-review jobs and ordinary review dispatches are distinct populations.
+   An unsupported formal-review component sets `class4.fleet_reviews: false`
+   and an unavailable section with its reason. It does not claim zero reviews.
+   A supported successful empty read remains `status: ok`, count zero.
 
    Never delegate task detail bodies or sealed review blobs.
 
@@ -303,16 +314,23 @@ typed omission):
 
 `cache_age_s` measures the enclosing projection cache's age. It does not reset
 the age of a source observation. Public `sources[].sections` report each
-section's `status`, `observed_at`, count and available `age_s`/reason.
+section's `status`, `observed_at`, `age_s`, count, `scope`, `truncated` and
+available reason. Failed observations have null count, time and age. Stale
+observations retain their historical count and observation time. Aggregate
+freshness is unknown if any section's age or observation time is unknown.
 Item `authority[]` qualifies the relevant domains independently; missing
 sections have `age_s: null` and `stale: true`. The aggregate source status
 does not replace section and item qualification. Even `authority[].stale: false`
 can accompany a truncated section; completeness needs a separate check.
-Section status, `sources[].truncation` and `denominator.omissions` qualify
-coverage independently of the numeric count.
+Section `truncated` flags identify every capped population, even when a stale
+or unavailable section determines the aggregate status. The top-level
+`sources[].truncation.issues` and `.prs` flags describe only GitHub open
+issues and open PRs at the declared GitHub limit. They do not describe delegate
+or formal-review coverage. `denominator.omissions` names each truncated class.
 
-A warm projection can contain a stale PR snapshot. The router re-ages that
-snapshot on reads. Beyond `PR_SNAPSHOT_FRESHNESS_S` (30 seconds), or if already
+A warm projection can contain a stale PR snapshot. The router advances source
+ages from their original observation times on reads. Beyond
+`PR_SNAPSHOT_FRESHNESS_S` (30 seconds), or if already
 stale, PR rows get `gh_pr_snapshot_stale`, unknown health, CI, review decision
 and merge evidence, `source_ok: false`, and `INSPECT_UNKNOWN`. Other sections
 retain their independent qualification. A small `cache_age_s` therefore does
@@ -320,10 +338,12 @@ not prove that the PR's current head is cleared.
 
 A zero count is usable as absence evidence only within a successful, complete,
 current observation's scope. Failed, missing or truncated enumeration cannot
-establish absence. For example, `queue: []` with `denominator.issues_open: 0`
-and an issues section or omission reason `gh_issue_list_timeout` means issue
-enumeration was unavailable. The normalizer emits zero for that timeout;
-it has not established that there are no open issues.
+establish absence. `denominator.issues_open` and `.prs_open` are `null` for
+failed, malformed or stale enumeration. Successful complete empty reads retain
+zero. Truncated reads retain the observed count with explicit incomplete
+coverage. For example, `gh_issue_list_timeout` produces `issues_open: null`
+through both `/projection` and `/next`, even when `queue` is empty. The Work
+reader displays unknown counts as `unknown` and capped counts as partial.
 
 Even with complete enumeration, an empty `/next` queue means only that no
 observed actionable rows qualify for that stream. Other streams, unscoped

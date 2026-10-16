@@ -112,9 +112,20 @@ age. Health stays `UNKNOWN` because current readiness does not apply; their
 action is `NONE` and attention is false, including after cache expiry. They do
 not enter `/next` or increase `denominator.prs_open`. Accountable owner and
 canonical stream association remain unresolved. Existing saved-view filters
-and the schema digest are unchanged. Collection never waits for GitHub on a
-Work HTTP request. GitHub's [pull-request REST contract](https://docs.github.com/en/rest/pulls/pulls#list-pull-requests)
+are retained. PR collection runs in the background; Work HTTP requests
+read the last settled PR snapshot. GitHub's [pull-request REST contract](https://docs.github.com/en/rest/pulls/pulls#list-pull-requests)
 defines the closed-list and merge evidence fields.
+
+Work issue/PR denominators are nullable. Failed, malformed or stale enumeration
+returns `null`; successful complete empty reads return zero. Each public source
+section exposes its population `scope`, `truncated` flag and actual observation
+time and age. Unknown ages remain null across projection cache reads. GitHub
+open-issue/PR truncation flags retain their separate semantics. Delegate task
+inventory includes native review dispatches; `fleet_reviews` counts formal jobs
+only and is unavailable when the authority component is unsupported. `/next`
+preserves these qualifications and rejects `epic:7919` with `unknown_stream`
+and `valid_streams`, including `monitor`. The schema digest reflects the nullable
+count and section metadata contract.
 
 ## Fleet facade — `/api/fleet/facade`
 

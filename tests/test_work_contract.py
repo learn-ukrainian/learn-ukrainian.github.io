@@ -2548,9 +2548,14 @@ def test_build_projection_missing_target_lookup_failure_still_conservative():
     assert "blocked_by" in item["safe_next_action"]["reason_codes"]
 
 
-def test_fetch_fleet_reviews_production_default_loader():
+def test_fetch_fleet_reviews_production_default_loader(monkeypatch):
     """Default loader in fetch_fleet_reviews calls fleet_reviews directly without
     raising AttributeError on Query sentinels (#6849)."""
+    import scripts.api.fleet_router as fleet_router
+
+    monkeypatch.setattr(
+        fleet_router, "fleet_reviews", lambda **_kw: {"availability": "empty", "total": 0, "reviews": []}
+    )
     section = fetch_fleet_reviews(loader=None, repository_id=REPO)
     assert isinstance(section, SectionResult)
     assert section.status in {"ok", "truncated"}
@@ -2558,6 +2563,124 @@ def test_fetch_fleet_reviews_production_default_loader():
     assert isinstance(section.payload, dict)
     assert "reviews" in section.payload
     assert all(r["repository"] == REPO for r in section.payload["reviews"])
+
+
+@pytest.mark.parametrize(
+    "page,status,reason",
+    [
+        (
+            {"availability": "authority_unsupported_component", "total": 0, "reviews": []},
+            "unavailable",
+            "authority_unsupported_component",
+        ),
+        ({"availability": "db_unavailable", "total": 0, "reviews": []}, "unavailable", "db_unavailable"),
+        ({"availability": "empty", "total": 0, "reviews": []}, "ok", None),
+        ({"availability": "available", "total": 0, "reviews": []}, "ok", None),
+        ({}, "degraded", "fleet_reviews_items"),
+        ({"reviews": []}, "degraded", "fleet_reviews_total"),
+        ({"total": 0, "reviews": {}}, "degraded", "fleet_reviews_items"),
+        ({"total": 1, "reviews": [None]}, "degraded", "fleet_reviews_row"),
+        ({"total": -1, "reviews": []}, "degraded", "fleet_reviews_total"),
+        ({"total": 1, "reviews": []}, "truncated", None),
+    ],
+)
+def test_formal_review_coverage_is_not_delegate_review_coverage(page, status, reason):
+    section = fetch_fleet_reviews(loader=lambda *_a: page)
+    assert section.status == status
+    assert section.reason == reason
+    projection = build_projection(_empty_sections_9741(fleet_reviews=section), lifecycle_ledgers=[])
+    validate_projection(projection)
+    assert projection["denominator"]["class4"]["fleet_reviews"] is (status in {"ok", "truncated"})
+    meta = projection["sources"][0]["sections"]["fleet_reviews"]
+    assert meta["scope"] == "public_repository_formal_review_jobs"
+    assert meta["truncated"] is (status == "truncated")
+    assert meta["count"] == (0 if status in {"ok", "truncated"} else None)
+    if reason:
+        assert meta["age_s"] is None and meta["observed_at"] is None
+        assert {"class": "fleet_reviews", "reason": reason, "count": 0} in projection["denominator"]["omissions"]
+
+
+def test_aggregate_truncation_names_delegate_scope_and_unknown_age():
+    sections = _empty_sections_9741(
+        delegate_tasks=SectionResult("delegate_tasks", "truncated", payload={"tasks": []}, count=500, truncated=True),
+        fleet_reviews=SectionResult("fleet_reviews", "unavailable", reason="authority_unsupported_component"),
+    )
+    projection = build_projection(sections)
+    validate_projection(projection)
+    public = projection["sources"][0]
+    assert public["truncation"] == {"issues": False, "prs": False, "limit": 1000}
+    assert public["sections"]["delegate_tasks"]["scope"] == "public_repository_delegate_task_inventory"
+    assert public["sections"]["delegate_tasks"]["truncated"] is True
+    assert public["sections"]["fleet_reviews"]["age_s"] is None
+    assert public["freshness"] == {"observed_at": None, "age_s": None}
+    assert {"class": "delegate_tasks", "reason": "enumeration_cap", "count": 500} in projection["denominator"][
+        "omissions"
+    ]
+
+
+def test_stream_age_uses_audit_observation_and_malformed_stays_unknown():
+    from scripts.work.sources_public import fetch_streams_projection
+
+    section = fetch_streams_projection(loader=lambda: {"generated_at": 1792108800, "streams": {}})
+    assert section.observed_at == "2026-10-16T00:00:00+00:00"
+    assert section.age_s is not None and section.age_s >= 0
+    malformed = fetch_streams_projection(loader=lambda: None)
+    assert malformed.status == "degraded"
+    assert malformed.reason == "streams_shape"
+    assert malformed.observed_at is None and malformed.age_s is None
+
+
+@pytest.mark.parametrize("name", ["delegate_active", "delegate_tasks"])
+def test_malformed_delegate_row_cannot_be_a_healthy_empty_inventory(name):
+    from scripts.work.sources_public import fetch_delegate_active, fetch_delegate_tasks
+
+    fetch = fetch_delegate_active if name == "delegate_active" else fetch_delegate_tasks
+    section = fetch(loader=lambda *_a: {"tasks": [None]})
+    assert section.status == "degraded"
+    assert section.reason == f"{name}_row"
+    assert section.observed_at is None and section.age_s is None
+
+
+@pytest.mark.parametrize("name", ["delegate_active", "delegate_tasks"])
+@pytest.mark.parametrize("total", ["bad", -1, True])
+def test_malformed_authoritative_delegate_total_stays_unknown(monkeypatch, name, total):
+    import scripts.api.delegate_router as delegate_router
+    from scripts.work.sources_public import fetch_delegate_active, fetch_delegate_tasks
+
+    target = "active_delegate_tasks" if name == "delegate_active" else "list_delegate_tasks"
+    monkeypatch.setattr(delegate_router, target, lambda **_kw: {"tasks": [], "total": total})
+    fetch = fetch_delegate_active if name == "delegate_active" else fetch_delegate_tasks
+    section = fetch()
+    assert section.status == "degraded"
+    assert section.reason == f"{name}_total"
+    assert section.observed_at is None and section.age_s is None
+
+
+def test_expired_projection_never_retains_healthy_empty_source_sections():
+    from scripts.work.normalize import downgrade_expired_projection
+
+    sections = _empty_sections_9741()
+    sections["prs_merged"] = SectionResult("prs_merged", "ok", payload=[])
+    projection = build_projection(sections)
+    expired = downgrade_expired_projection(projection, age_s=31, freshness_s=30)
+    validate_projection(expired)
+    assert expired["denominator"]["issues_open"] is None
+    assert expired["denominator"]["prs_open"] is None
+    assert expired["denominator"]["class4"] == {
+        "delegate_active": False,
+        "delegate_tasks": False,
+        "fleet_reviews": False,
+    }
+    assert expired["sources"][0]["status"] == "stale"
+    assert expired["sources"][0]["sections"]["issues"]["status"] == "stale"
+    assert expired["sources"][0]["sections"]["issues"]["reason"] == "projection_cache_past_freshness"
+    assert expired["sources"][0]["sections"]["issues"]["count"] == 0
+    assert (
+        expired["sources"][0]["sections"]["issues"]["observed_at"]
+        == projection["sources"][0]["sections"]["issues"]["observed_at"]
+    )
+    assert projection["denominator"]["issues_open"] == 0
+    assert projection["sources"][0]["sections"]["issues"]["status"] == "ok"
 
 
 def test_public_source_envelope_independent_degradation_matrix():
@@ -3636,7 +3759,7 @@ def test_merged_history_source_statuses_never_launder_each_other(open_status, hi
     open_section = SectionResult("prs", open_status, payload=[_pr_raw_9741()], count=1)
     projection = build_projection(_empty_sections_9741(prs=open_section, prs_merged=history_section))
     rows = {i["remote_id"]: i for i in projection["items"]}
-    assert projection["denominator"]["prs_open"] == (0 if open_status in {"unavailable", "timeout"} else 1)
+    assert projection["denominator"]["prs_open"] == (1 if open_status in {"ok", "truncated"} else None)
     assert rows["77"]["projections"]["verification"]["ci_state"] == ("passing" if open_status == "ok" else "unknown")
     if history_status != "unavailable":
         row = rows["71"]
