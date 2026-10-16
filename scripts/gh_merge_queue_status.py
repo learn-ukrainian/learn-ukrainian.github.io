@@ -190,39 +190,225 @@ class MergeQueueStatus:
         }
 
 
+class MalformedPayload(RuntimeError):
+    """A GitHub payload that is not exactly the whitelisted shape this tool consumes.
+
+    It is an *unavailable* outcome: never a clean status, never "pull request absent", never an
+    empty run list. ``reason`` is a fixed, controlled string naming the failed field.
+    """
+
+    def __init__(self, reason: str) -> None:
+        super().__init__(f"unavailable: malformed payload ({reason})")
+        self.reason = reason
+
+
+_PR_STATES = frozenset({"OPEN", "CLOSED", "MERGED"})
+_NOT_FOUND_MARKER = "Could not resolve to a PullRequest"
+
+
+def _require(condition: bool, reason: str) -> None:
+    if not condition:
+        raise MalformedPayload(reason)
+
+
+def _is_int(value: Any, minimum: int) -> bool:
+    """An exact int (never a bool, float or string) that is at least ``minimum``."""
+    return isinstance(value, int) and not isinstance(value, bool) and value >= minimum
+
+
+def _is_text(value: Any) -> bool:
+    return isinstance(value, str) and bool(value)
+
+
+def _optional(value: Any, check: Any) -> bool:
+    """``null`` (or an absent key) is allowed; anything else must pass ``check``."""
+    return value is None or bool(check(value))
+
+
+def _object(value: Any, reason: str) -> dict[str, Any]:
+    _require(isinstance(value, dict), reason)
+    return value
+
+
+def _validate_check_suites(commit: Any) -> None:
+    """``headCommit`` is null or an object whose ``checkSuites.nodes`` is a list of suite objects."""
+    if commit is None:
+        return
+    suites = _object(commit, "headCommit")
+    check_suites = suites.get("checkSuites")
+    if check_suites is None:
+        return
+    nodes = _object(check_suites, "checkSuites").get("nodes")
+    _require(nodes is None or isinstance(nodes, list), "checkSuites.nodes")
+    for node in nodes or []:
+        suite = _object(node, "checkSuites.nodes[]")
+        _require(_optional(suite.get("status"), _is_text), "checkSuite.status")
+        _require(_optional(suite.get("conclusion"), _is_text), "checkSuite.conclusion")
+        _require(_optional(suite.get("createdAt"), _is_text), "checkSuite.createdAt")
+        run = suite.get("workflowRun")
+        if run is None:
+            continue
+        run = _object(run, "workflowRun")
+        _require(_is_text(run.get("url")), "workflowRun.url")
+        _require(_optional(run.get("event"), _is_text), "workflowRun.event")
+        _require(_optional(run.get("createdAt"), _is_text), "workflowRun.createdAt")
+        _require(_optional(run.get("id"), lambda v: _is_int(v, 0)), "workflowRun.id")
+        workflow = run.get("workflow")
+        _require(workflow is None or isinstance(workflow, dict), "workflowRun.workflow")
+        _require(_optional((workflow or {}).get("name"), _is_text), "workflow.name")
+
+
+def _validate_entry_fields(entry: dict[str, Any], reason: str) -> None:
+    """The queue-position fields shared by a pull request's own entry and a queue node."""
+    _require(_optional(entry.get("position"), lambda v: _is_int(v, 1)), f"{reason}.position")
+    _require(_optional(entry.get("state"), _is_text), f"{reason}.state")
+    _require(_optional(entry.get("enqueuedAt"), _is_text), f"{reason}.enqueuedAt")
+    _require(_optional(entry.get("estimatedTimeToMerge"), lambda v: _is_int(v, 0)), f"{reason}.estimatedTimeToMerge")
+
+
+def _validate_pull_request(pull: dict[str, Any], pr_number: int) -> None:
+    number = pull.get("number")
+    _require(_is_int(number, 1) and number == pr_number, "pullRequest.number")
+    state = pull.get("state")
+    _require(isinstance(state, str) and state in _PR_STATES, "pullRequest.state")
+    merged, in_queue = pull.get("merged"), pull.get("isInMergeQueue")
+    _require(isinstance(merged, bool), "pullRequest.merged")
+    _require(isinstance(in_queue, bool), "pullRequest.isInMergeQueue")
+    _require(merged == (state == "MERGED"), "pullRequest.merged/state")
+    _require(_optional(pull.get("mergeStateStatus"), _is_text), "pullRequest.mergeStateStatus")
+    entry = pull.get("mergeQueueEntry")
+    if entry is not None:
+        entry = _object(entry, "mergeQueueEntry")
+        _require(in_queue, "mergeQueueEntry/isInMergeQueue")
+        _validate_entry_fields(entry, "mergeQueueEntry")
+        _validate_check_suites(entry.get("headCommit"))
+
+
+def _validate_merge_queue(queue: Any) -> None:
+    if queue is None:
+        return
+    queue = _object(queue, "mergeQueue")
+    _require(_optional(queue.get("url"), _is_text), "mergeQueue.url")
+    _require(
+        _optional(queue.get("nextEntryEstimatedTimeToMerge"), lambda v: _is_int(v, 0)),
+        "mergeQueue.nextEntryEstimatedTimeToMerge",
+    )
+    entries = queue.get("entries")
+    if entries is None:
+        return
+    nodes = _object(entries, "mergeQueue.entries").get("nodes")
+    _require(nodes is None or isinstance(nodes, list), "mergeQueue.entries.nodes")
+    for node in nodes or []:
+        node = _object(node, "mergeQueue.entries.nodes[]")
+        _validate_entry_fields(node, "mergeQueue.entries.nodes[]")
+        pull = _object(node.get("pullRequest"), "mergeQueue.entries.nodes[].pullRequest")
+        _require(_is_int(pull.get("number"), 1), "mergeQueue.entries.nodes[].pullRequest.number")
+
+
+@dataclass(frozen=True)
+class QueueDocument:
+    """A GraphQL ``queue-status`` document that passed :func:`parse_queue_status`."""
+
+    pull_request: dict[str, Any]
+    merge_queue: dict[str, Any]
+
+
+def parse_queue_status(
+    document: Any, pr_number: int, *, repo: str | None = None, null_data_is_not_found: bool = False
+) -> QueueDocument:
+    """The single choke point for a GraphQL ``queue-status`` document.
+
+    Returns the validated pull request and merge queue, or raises before anything is decided:
+
+    * ``ValueError`` - GraphQL positively reports the pull request unresolvable (an error naming
+      it, and ``pullRequest`` null);
+    * ``RuntimeError`` - GraphQL returned errors (a partial result is not trusted);
+    * :class:`MalformedPayload` (a ``RuntimeError``) - the document is not exactly the whitelisted
+      shape: JSON object, ``data.repository.pullRequest`` an object whose number, state, merged and
+      isInMergeQueue are present with the expected types, and every optional field typed.
+
+    ``null_data_is_not_found`` keeps one recorded offline-fixture contract (a bare ``{"data": null}``
+    reads as "not found"); the live read never sets it.
+    """
+    document = _object(document, "document")
+    errors = document.get("errors")
+    _require(errors is None or isinstance(errors, list), "errors")
+    data = document.get("data")
+    repository = data.get("repository") if isinstance(data, dict) else None
+    pull = repository.get("pullRequest") if isinstance(repository, dict) else None
+    if errors:
+        messages = [e["message"] for e in errors if isinstance(e, dict) and _is_text(e.get("message"))]
+        if pull is None and any(_NOT_FOUND_MARKER in m for m in messages):
+            raise ValueError(_not_found_message(pr_number, repo))
+        raise RuntimeError(f"GraphQL error: {'; '.join(messages) if messages else 'no error message'}")
+    if data is None and null_data_is_not_found and "data" in document:
+        raise ValueError(_not_found_message(pr_number, repo))
+    _require(isinstance(data, dict), "data")
+    _require(isinstance(repository, dict), "data.repository")
+    _require(isinstance(pull, dict), "data.repository.pullRequest")
+    _validate_pull_request(pull, pr_number)
+    _validate_merge_queue(repository.get("mergeQueue"))
+    return QueueDocument(pull_request=pull, merge_queue=repository.get("mergeQueue") or {})
+
+
+def _not_found_message(pr_number: int, repo: str | None) -> str:
+    return f"Pull request #{pr_number} not found in repository{f' {repo}' if repo else ''}."
+
+
+def _valid_run(run: Any) -> bool:
+    """A usable Actions run names its page (``html_url`` or ``url``) and its ``status``; every other
+    field the tool reads is null/absent or of its expected type."""
+    if not isinstance(run, dict) or not _is_text(run.get("html_url") or run.get("url")):
+        return False
+    if not _is_text(run.get("status")):
+        return False
+    texts = ("html_url", "url", "conclusion", "event", "name", "head_branch", "headBranch")
+    texts += ("created_at", "createdAt", "updated_at", "updatedAt")
+    return all(_optional(run.get(k), lambda v: isinstance(v, str)) for k in texts) and all(
+        _optional(run.get(k), lambda v: _is_int(v, 0)) for k in ("id", "databaseId")
+    )
+
+
+def parse_actions_runs(data: Any, key: str | None) -> list[dict[str, Any]]:
+    """The single choke point for an Actions run list; an unavailable read is never an empty list.
+
+    ``key`` names the list inside a REST object; ``None`` means the payload is itself a list.
+    Every element must pass :func:`_valid_run`.
+    """
+    if key is None:
+        runs = data
+    else:
+        _require(isinstance(data, dict), "runs document")
+        runs = data.get(key)
+    _require(isinstance(runs, list), "runs list")
+    _require(all(_valid_run(r) for r in runs), "run element")
+    return runs
+
+
 def evaluate_status_data(
     graphql_data: dict[str, Any],
     pr_number: int,
     actions_runs: list[dict[str, Any]] | None = None,
 ) -> MergeQueueStatus:
-    """Evaluate raw GraphQL repository payload and Actions runs into MergeQueueStatus."""
-    raw_data = graphql_data.get("data") if isinstance(graphql_data, dict) else None
-    data_dict = (
-        raw_data
-        if isinstance(raw_data, dict)
-        else (graphql_data if isinstance(graphql_data, dict) and "repository" in graphql_data else {})
-    )
-    raw_repo = data_dict.get("repository") if isinstance(data_dict, dict) else None
-    repository = raw_repo if isinstance(raw_repo, dict) else {}
-    pr_obj = repository.get("pullRequest") if isinstance(repository, dict) else None
-    if not isinstance(pr_obj, dict):
-        if isinstance(graphql_data, dict) and "errors" in graphql_data:
-            errors = graphql_data.get("errors") or []
-            msgs = [e.get("message", "") for e in errors if isinstance(e, dict) and e.get("message")]
-            if any("Could not resolve to a PullRequest" in m for m in msgs):
-                raise ValueError(f"Pull request #{pr_number} not found in repository.")
-            err_msg = "; ".join(msgs) if msgs else json.dumps(errors)
-            raise RuntimeError(f"GraphQL error: {err_msg}")
-        raise ValueError(f"Pull request #{pr_number} not found in repository.")
+    """Evaluate a raw GraphQL document and Actions runs into MergeQueueStatus.
 
-    pr_state = str(pr_obj.get("state") or "OPEN")
-    pr_merged = bool(pr_obj.get("merged"))
+    Both inputs are validated by the same choke points as the live read; a malformed document or
+    run list raises (:class:`MalformedPayload`) instead of producing a status.
+    """
+    document = parse_queue_status(graphql_data, pr_number, null_data_is_not_found=True)
+    runs = parse_actions_runs(actions_runs, None) if actions_runs is not None else []
+    return _evaluate(document, pr_number, runs)
+
+
+def _evaluate(document: QueueDocument, pr_number: int, actions_runs: list[dict[str, Any]]) -> MergeQueueStatus:
+    pr_obj = document.pull_request
+    pr_state: str = pr_obj["state"]
+    pr_merged: bool = pr_obj["merged"]
     merge_state_status = pr_obj.get("mergeStateStatus")
-    is_in_mq = bool(pr_obj.get("isInMergeQueue"))
-    mq_entry = pr_obj.get("mergeQueueEntry") if isinstance(pr_obj.get("mergeQueueEntry"), dict) else None
+    is_in_mq: bool = pr_obj["isInMergeQueue"]
+    mq_entry = pr_obj.get("mergeQueueEntry")
 
-    raw_mq = repository.get("mergeQueue")
-    mq_obj = raw_mq if isinstance(raw_mq, dict) else {}
+    mq_obj = document.merge_queue
     queue_url = mq_obj.get("url")
     next_eta = mq_obj.get("nextEntryEstimatedTimeToMerge")
 
@@ -232,26 +418,21 @@ def evaluate_status_data(
     eta_seconds: int | None = None
     head_commit: dict[str, Any] | None = None
 
-    if isinstance(mq_entry, dict):
+    if mq_entry is not None:
         position = mq_entry.get("position")
         state = mq_entry.get("state")
         enqueued_at = mq_entry.get("enqueuedAt")
         eta_seconds = mq_entry.get("estimatedTimeToMerge")
-        head_commit = mq_entry.get("headCommit") if isinstance(mq_entry.get("headCommit"), dict) else None
+        head_commit = mq_entry.get("headCommit")
     elif is_in_mq:
         # Check entries on mergeQueue object
-        raw_entries = mq_obj.get("entries")
-        entries_dict = raw_entries if isinstance(raw_entries, dict) else {}
-        nodes = entries_dict.get("nodes", []) if isinstance(entries_dict.get("nodes"), list) else []
-        for node in nodes:
-            if isinstance(node, dict):
-                pr_sub = node.get("pullRequest")
-                if isinstance(pr_sub, dict) and pr_sub.get("number") == pr_number:
-                    position = node.get("position")
-                    state = node.get("state")
-                    enqueued_at = node.get("enqueuedAt")
-                    eta_seconds = node.get("estimatedTimeToMerge")
-                    break
+        for node in (mq_obj.get("entries") or {}).get("nodes") or []:
+            if node["pullRequest"]["number"] == pr_number:
+                position = node.get("position")
+                state = node.get("state")
+                enqueued_at = node.get("enqueuedAt")
+                eta_seconds = node.get("estimatedTimeToMerge")
+                break
         if position is None:
             # isInMergeQueue is true but position could not be resolved from entry
             state = "QUEUED"
@@ -261,51 +442,45 @@ def evaluate_status_data(
     # Collect candidate merge_group workflow runs from checkSuites and actions_runs
     candidate_runs: list[dict[str, Any]] = []
 
-    if head_commit and isinstance(head_commit, dict):
-        raw_cs = head_commit.get("checkSuites")
-        cs_dict = raw_cs if isinstance(raw_cs, dict) else {}
-        check_suites = cs_dict.get("nodes", []) if isinstance(cs_dict.get("nodes"), list) else []
-        for cs in check_suites:
-            if isinstance(cs, dict):
-                wf_run = cs.get("workflowRun")
-                if isinstance(wf_run, dict):
-                    wf_url = wf_run.get("url")
-                    if wf_url:
-                        wf_event = wf_run.get("event")
-                        # Filter out non-merge_group runs (e.g. stale pull_request run)
-                        if wf_event and wf_event != "merge_group":
-                            continue
-                        wf_obj = wf_run.get("workflow")
-                        wf_name = (
-                            (wf_obj.get("name") if isinstance(wf_obj, dict) else None)
-                            or wf_run.get("name")
-                            or cs.get("name")
-                            or ""
-                        )
-                        created_at = (
-                            wf_run.get("createdAt")
-                            or wf_run.get("created_at")
-                            or cs.get("createdAt")
-                            or cs.get("created_at")
-                            or ""
-                        )
-                        run_id = wf_run.get("id") or wf_run.get("databaseId") or cs.get("id") or 0
-                        candidate_runs.append(
-                            {
-                                "id": run_id,
-                                "url": wf_url,
-                                "html_url": wf_url,
-                                "name": wf_name,
-                                "status": cs.get("status") or wf_run.get("status"),
-                                "conclusion": cs.get("conclusion") or wf_run.get("conclusion"),
-                                "event": wf_event or "merge_group",
-                                "head_branch": f"gh-readonly-queue/main/pr-{pr_number}-suite",
-                                "created_at": created_at,
-                            }
-                        )
+    if head_commit:
+        for cs in (head_commit.get("checkSuites") or {}).get("nodes") or []:
+            wf_run = cs.get("workflowRun")
+            if wf_run is None:
+                continue
+            wf_url = wf_run["url"]
+            wf_event = wf_run.get("event")
+            # Filter out non-merge_group runs (e.g. stale pull_request run)
+            if wf_event and wf_event != "merge_group":
+                continue
+            wf_name = (
+                (wf_run.get("workflow") or {}).get("name")
+                or wf_run.get("name")
+                or cs.get("name")
+                or ""
+            )
+            created_at = (
+                wf_run.get("createdAt")
+                or wf_run.get("created_at")
+                or cs.get("createdAt")
+                or cs.get("created_at")
+                or ""
+            )
+            run_id = wf_run.get("id") or wf_run.get("databaseId") or cs.get("id") or 0
+            candidate_runs.append(
+                {
+                    "id": run_id,
+                    "url": wf_url,
+                    "html_url": wf_url,
+                    "name": wf_name,
+                    "status": cs.get("status") or wf_run.get("status"),
+                    "conclusion": cs.get("conclusion") or wf_run.get("conclusion"),
+                    "event": wf_event or "merge_group",
+                    "head_branch": f"gh-readonly-queue/main/pr-{pr_number}-suite",
+                    "created_at": created_at,
+                }
+            )
 
-    if actions_runs:
-        candidate_runs.extend(actions_runs)
+    candidate_runs.extend(actions_runs)
 
     matched_run = find_latest_merge_group_run(candidate_runs, pr_number)
     run_url: str | None = None
@@ -349,34 +524,19 @@ def evaluate_status_data(
     )
 
 
-def _is_graphql_response(data: Any) -> bool:
-    """True for a GraphQL document (``data`` and/or ``errors``), as opposed to a client refusal."""
-    return isinstance(data, dict) and ("data" in data or "errors" in data)
-
-
-def _is_run_element(run: Any) -> bool:
-    """A usable Actions run names its page (``html_url`` or ``url``) and its ``status``."""
-    return (
-        isinstance(run, dict)
-        and isinstance(run.get("html_url") or run.get("url"), str)
-        and bool(run.get("html_url") or run.get("url"))
-        and isinstance(run.get("status"), str)
-    )
-
-
-def _not_found_in(data: dict[str, Any]) -> bool:
-    """True when GraphQL positively reports the pull request as unresolvable."""
-    errors = data.get("errors")
-    return isinstance(errors, list) and any(
-        isinstance(e, dict) and "Could not resolve to a PullRequest" in str(e.get("message", "")) for e in errors
-    )
-
-
-def _unavailable_message(what: str, proc: subprocess.CompletedProcess[str], data: Any = None) -> str:
-    """One explicit unavailable diagnostic; only the controlled error code is echoed."""
+def _unavailable_message(
+    what: str, proc: subprocess.CompletedProcess[str], data: Any = None, reason: str | None = None
+) -> str:
+    """One explicit unavailable diagnostic; only the controlled error code and reason are echoed."""
     code = data.get("error") if isinstance(data, dict) else None
     detail = f": {code}" if isinstance(code, str) and re.fullmatch(r"[a-z_]{1,64}", code) else ""
-    return f"{what} read unavailable (exit {proc.returncode}){detail}."
+    why = f" [{reason}]" if reason else ""
+    return f"{what} read unavailable (exit {proc.returncode}){detail}{why}."
+
+
+def _exit_ok(proc: subprocess.CompletedProcess[str]) -> bool:
+    """Exactly the int ``0``; a bool, float or string return code is not success."""
+    return type(proc.returncode) is int and proc.returncode == 0
 
 
 def _read_runs(
@@ -395,16 +555,16 @@ def _read_runs(
         raise RuntimeError(f"{what} read timed out after {timeout}s.") from exc
     except OSError as exc:
         raise RuntimeError(f"{what} read could not start: {type(exc).__name__}.") from exc
-    if proc.returncode != 0:
+    if not _exit_ok(proc):
         raise RuntimeError(_unavailable_message(what, proc))
     try:
         data = json.loads(proc.stdout)
     except (TypeError, ValueError):
         raise RuntimeError(_unavailable_message(what, proc)) from None
-    runs = data.get(key) if key is not None and isinstance(data, dict) else data if key is None else None
-    if not isinstance(runs, list) or not all(_is_run_element(r) for r in runs):
-        raise RuntimeError(_unavailable_message(what, proc, data))
-    return runs
+    try:
+        return parse_actions_runs(data, key)
+    except MalformedPayload as exc:
+        raise RuntimeError(_unavailable_message(what, proc, data, exc.reason)) from None
 
 
 def fetch_live_status(
@@ -437,47 +597,19 @@ def fetch_live_status(
 
     try:
         data = json.loads(proc.stdout)
-    except json.JSONDecodeError as exc:
-        err_msg = (proc.stderr or proc.stdout or "").strip()
+    except (TypeError, ValueError) as exc:
+        err_msg = (proc.stderr or proc.stdout or "").strip() if isinstance(proc.stdout, str) else ""
         raise RuntimeError(f"Failed to parse GraphQL response (exit {proc.returncode}): {err_msg}") from exc
-    if not _is_graphql_response(data):
-        # A refused or failed read (rate refusal, generic non-zero result, error JSON)
-        # carries no GraphQL payload; it is unavailable, never an absent pull request.
+
+    # The one parse-or-unavailable choke point: a refused read, a failed read, a partial result and
+    # every malformed shape end here, before any further request. Only a positively identified
+    # missing pull request keeps its own meaning (ValueError).
+    try:
+        document = parse_queue_status(data, pr_number, repo=repo)
+    except MalformedPayload as exc:
+        raise RuntimeError(_unavailable_message("GraphQL", proc, data, exc.reason)) from None
+    if not _exit_ok(proc):
         raise RuntimeError(_unavailable_message("GraphQL", proc, data))
-
-    # Check GraphQL errors
-    raw_data = data.get("data") if isinstance(data, dict) else None
-    data_dict = raw_data if isinstance(raw_data, dict) else {}
-    raw_repo = data_dict.get("repository") if isinstance(data_dict, dict) else None
-    repo_dict = raw_repo if isinstance(raw_repo, dict) else {}
-    raw_pr = repo_dict.get("pullRequest") if isinstance(repo_dict, dict) else None
-    pr_dict = raw_pr if isinstance(raw_pr, dict) else None
-
-    if proc.returncode != 0 and not (pr_dict is None and _not_found_in(data)):
-        # A failed read is rejected before any further request, whatever envelope it carries;
-        # only a positively identified missing pull request keeps its own meaning (below).
-        errors = data.get("errors")
-        msgs = (
-            [e["message"] for e in errors if isinstance(e, dict) and e.get("message")]
-            if isinstance(errors, list)
-            else []
-        )
-        if msgs:
-            raise RuntimeError(f"GraphQL error: {'; '.join(msgs)}")
-        raise RuntimeError(_unavailable_message("GraphQL", proc, data))
-
-    if "errors" not in data and not isinstance(raw_repo, dict):
-        # No error and no repository to look the pull request up in: nothing was resolved,
-        # so this is not "pull request absent" either.
-        raise RuntimeError(_unavailable_message("GraphQL", proc, data))
-
-    if isinstance(data, dict) and "errors" in data and not pr_dict:
-        errors = data.get("errors") or []
-        msgs = [e.get("message", "") for e in errors if isinstance(e, dict) and e.get("message")]
-        if any("Could not resolve to a PullRequest" in m for m in msgs):
-            raise ValueError(f"Pull request #{pr_number} not found in repository {repo}.")
-        err_msg = "; ".join(msgs) if msgs else json.dumps(errors)
-        raise RuntimeError(f"GraphQL error: {err_msg}")
 
     # Fetch merge_group workflow runs. An unavailable read raises (no fallback
     # request, never an empty list); only a successful empty list falls back.
@@ -500,7 +632,7 @@ def fetch_live_status(
         ]
         actions_runs = _read_runs(rl_cmd, env, timeout, "Actions run list", None)
 
-    return evaluate_status_data(data, pr_number, actions_runs)
+    return _evaluate(document, pr_number, actions_runs)
 
 
 def render_output(
@@ -559,10 +691,11 @@ def check_and_report_pr_status(
             try:
                 with open(actions_fixture_file, encoding="utf-8") as f:
                     act_data = json.load(f)
-                    if isinstance(act_data, dict):
-                        actions_runs = act_data.get("workflow_runs") or act_data.get("runs") or []
-                    elif isinstance(act_data, list):
-                        actions_runs = act_data
+                # The same run-list choke point as the live read: a dict names its list by key.
+                act_key = None
+                if isinstance(act_data, dict):
+                    act_key = "workflow_runs" if "workflow_runs" in act_data else "runs"
+                actions_runs = parse_actions_runs(act_data, act_key)
             except Exception as exc:
                 if json_only:
                     print(
@@ -577,10 +710,11 @@ def check_and_report_pr_status(
                 else:
                     print(f"Error reading actions fixture {actions_fixture_file}: {exc}", file=sys.stderr)
                 return 1
-        elif isinstance(fix_data, dict) and "actions_runs" in fix_data:
-            actions_runs = fix_data["actions_runs"]
+        embedded_runs = not actions_fixture_file and isinstance(fix_data, dict) and "actions_runs" in fix_data
 
         try:
+            if embedded_runs:
+                actions_runs = parse_actions_runs(fix_data["actions_runs"], None)
             status = evaluate_status_data(fix_data, pr_number, actions_runs)
         except (ValueError, RuntimeError) as exc:
             if json_only:

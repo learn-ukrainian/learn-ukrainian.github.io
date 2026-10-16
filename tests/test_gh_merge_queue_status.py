@@ -12,6 +12,7 @@ Hermetic, offline test suite verifying:
 
 from __future__ import annotations
 
+import copy
 import json
 import subprocess
 from pathlib import Path
@@ -793,3 +794,399 @@ def test_process_failures_are_structured_unavailable_outcomes(
     monkeypatch.setattr("scripts.gh_merge_queue_status.github_client.run", broken)
     assert main(["123", "--repo", _REPO, "--json"]) == 1
     assert json.loads(capsys.readouterr().out)["status"] == "error"
+
+
+# --- Round 3: one strict parse-or-unavailable choke point per payload kind (#10792) -------------
+#
+# The GraphQL document and the Actions run lists are each validated by whitelist in one place; the
+# live read, the offline fixture evaluator and the run-list fallback all consume them through it.
+# The matrices cross payload kind x malformation and assert the unavailable outcome AND that no
+# further request was made.
+
+
+def _pr(**overrides: Any) -> dict[str, Any]:
+    pull: dict[str, Any] = {
+        "number": 123,
+        "state": "OPEN",
+        "merged": False,
+        "mergeStateStatus": "CLEAN",
+        "isInMergeQueue": False,
+    }
+    pull.update(overrides)
+    return pull
+
+
+def _doc(pull: Any = None, queue: Any = None, **extra: Any) -> dict[str, Any]:
+    repository = {"pullRequest": _pr() if pull is None else pull, "mergeQueue": queue}
+    return {"data": {"repository": repository}, **extra}
+
+
+def _without(pull: dict[str, Any], key: str) -> dict[str, Any]:
+    return {k: v for k, v in pull.items() if k != key}
+
+
+_ENTRY = {"position": 2, "state": "QUEUED", "enqueuedAt": "2026-09-08T18:00:00Z", "estimatedTimeToMerge": 600}
+_SUITE = {"status": "completed", "conclusion": "success", "workflowRun": {"url": "https://example.invalid/r/1"}}
+_QUEUE = {"url": "https://example.invalid/q", "nextEntryEstimatedTimeToMerge": 300, "entries": {"nodes": []}}
+
+
+def _queued(entry: Any = ..., **overrides: Any) -> dict[str, Any]:
+    return _pr(isInMergeQueue=True, mergeQueueEntry=_ENTRY if entry is ... else entry, **overrides)
+
+
+def _with_suites(*nodes: Any, head: Any = ...) -> dict[str, Any]:
+    commit = {"oid": "a" * 40, "checkSuites": {"nodes": list(nodes)}} if head is ... else head
+    return _queued({**_ENTRY, "headCommit": commit})
+
+
+_BAD_GRAPHQL: dict[str, Any] = {
+    # the exact shapes from the review
+    "repository_empty_object": {"data": {"repository": {}}},
+    "pull_request_empty_list": {"data": {"repository": {"pullRequest": []}}},
+    "pull_request_empty_object": {"data": {"repository": {"pullRequest": {}}}},
+    # containers
+    "document_list": [],
+    "document_null": None,
+    "document_string": "x",
+    "data_list": {"data": []},
+    "data_string": {"data": "x"},
+    "repository_list": {"data": {"repository": []}},
+    "repository_null": {"data": {"repository": None}},
+    "repository_string": {"data": {"repository": "x"}},
+    "pull_request_missing": {"data": {"repository": {"mergeQueue": None}}},
+    "pull_request_null_without_errors": {"data": {"repository": {"pullRequest": None}}},
+    "pull_request_string": {"data": {"repository": {"pullRequest": "x"}}},
+    "pull_request_list_of_valid": _doc([_pr()]),
+    "pull_request_true": _doc(True),
+    "pull_request_list_with_not_found_error": {
+        "data": {"repository": {"pullRequest": []}},
+        "errors": [{"message": "Could not resolve to a PullRequest with the number of 123."}],
+    },
+    "errors_not_a_list": _doc(errors="boom"),
+    "errors_nested_object": _doc(errors={"message": "x"}),
+    "errors_with_a_resolved_pull_request": _doc(errors=[{"message": "partial failure"}]),
+    "errors_without_message": _doc(errors=[{"type": "X"}]),
+    # required keys: missing, null, wrong type, bool-as-int, out of domain
+    **{f"missing_{k}": _doc(_without(_pr(), k)) for k in ("number", "state", "merged", "isInMergeQueue")},
+    "number_null": _doc(_pr(number=None)),
+    "number_zero": _doc(_pr(number=0)),
+    "number_negative": _doc(_pr(number=-1)),
+    "number_string": _doc(_pr(number="123")),
+    "number_bool": _doc(_pr(number=True)),
+    "number_for_another_pull_request": _doc(_pr(number=124)),
+    "state_null": _doc(_pr(state=None)),
+    "state_int": _doc(_pr(state=1)),
+    "state_lowercase": _doc(_pr(state="open")),
+    "state_unknown": _doc(_pr(state="DRAFT")),
+    "state_empty": _doc(_pr(state="")),
+    "merged_null": _doc(_pr(merged=None)),
+    "merged_string": _doc(_pr(merged="false")),
+    "merged_int": _doc(_pr(merged=0)),
+    "merged_with_open_state": _doc(_pr(merged=True, state="OPEN")),
+    "merged_state_without_merged": _doc(_pr(merged=False, state="MERGED")),
+    "in_queue_null": _doc(_pr(isInMergeQueue=None)),
+    "in_queue_string": _doc(_pr(isInMergeQueue="true")),
+    "in_queue_int": _doc(_pr(isInMergeQueue=1)),
+    "merge_state_status_int": _doc(_pr(mergeStateStatus=5)),
+    "merge_state_status_list": _doc(_pr(mergeStateStatus=["CLEAN"])),
+    # the queue entry
+    "entry_list": _doc(_queued([])),
+    "entry_string": _doc(_queued("x")),
+    "entry_without_membership": _doc(_pr(mergeQueueEntry=_ENTRY)),
+    "entry_position_zero": _doc(_queued({**_ENTRY, "position": 0})),
+    "entry_position_negative": _doc(_queued({**_ENTRY, "position": -1})),
+    "entry_position_bool": _doc(_queued({**_ENTRY, "position": True})),
+    "entry_position_string": _doc(_queued({**_ENTRY, "position": "2"})),
+    "entry_position_float": _doc(_queued({**_ENTRY, "position": 2.0})),
+    "entry_state_int": _doc(_queued({**_ENTRY, "state": 2})),
+    "entry_state_empty": _doc(_queued({**_ENTRY, "state": ""})),
+    "entry_enqueued_at_int": _doc(_queued({**_ENTRY, "enqueuedAt": 5})),
+    "entry_eta_negative": _doc(_queued({**_ENTRY, "estimatedTimeToMerge": -1})),
+    "entry_eta_bool": _doc(_queued({**_ENTRY, "estimatedTimeToMerge": True})),
+    "entry_eta_string": _doc(_queued({**_ENTRY, "estimatedTimeToMerge": "600"})),
+    "entry_head_commit_list": _doc(_queued({**_ENTRY, "headCommit": []})),
+    "entry_check_suites_list": _doc(_queued({**_ENTRY, "headCommit": {"checkSuites": []}})),
+    "entry_check_suite_nodes_object": _doc(_queued({**_ENTRY, "headCommit": {"checkSuites": {"nodes": {}}}})),
+    "entry_check_suite_node_null": _doc(_with_suites(None)),
+    "entry_check_suite_node_string": _doc(_with_suites("x")),
+    "entry_check_suite_good_then_null": _doc(_with_suites(_SUITE, None)),
+    "entry_check_suite_status_int": _doc(_with_suites({**_SUITE, "status": 1})),
+    "entry_check_suite_conclusion_int": _doc(_with_suites({**_SUITE, "conclusion": 1})),
+    "entry_check_suite_run_list": _doc(_with_suites({**_SUITE, "workflowRun": []})),
+    "entry_check_suite_run_without_url": _doc(_with_suites({**_SUITE, "workflowRun": {"event": "merge_group"}})),
+    "entry_check_suite_run_url_int": _doc(_with_suites({**_SUITE, "workflowRun": {"url": 5}})),
+    "entry_check_suite_run_event_int": _doc(
+        _with_suites({**_SUITE, "workflowRun": {"url": "https://example.invalid/r/1", "event": 5}})
+    ),
+    # the repository merge queue
+    "merge_queue_list": _doc(queue=[]),
+    "merge_queue_string": _doc(queue="x"),
+    "merge_queue_url_int": _doc(queue={**_QUEUE, "url": 5}),
+    "merge_queue_next_eta_negative": _doc(queue={**_QUEUE, "nextEntryEstimatedTimeToMerge": -1}),
+    "merge_queue_next_eta_bool": _doc(queue={**_QUEUE, "nextEntryEstimatedTimeToMerge": True}),
+    "merge_queue_entries_list": _doc(queue={**_QUEUE, "entries": []}),
+    "merge_queue_nodes_object": _doc(queue={**_QUEUE, "entries": {"nodes": {}}}),
+    "merge_queue_node_null": _doc(queue={**_QUEUE, "entries": {"nodes": [None]}}),
+    "merge_queue_node_pull_list": _doc(queue={**_QUEUE, "entries": {"nodes": [{"pullRequest": []}]}}),
+    "merge_queue_node_pull_number_zero": _doc(
+        queue={**_QUEUE, "entries": {"nodes": [{**_ENTRY, "pullRequest": {"number": 0}}]}}
+    ),
+    "merge_queue_node_pull_number_bool": _doc(
+        queue={**_QUEUE, "entries": {"nodes": [{**_ENTRY, "pullRequest": {"number": True}}]}}
+    ),
+    "merge_queue_node_position_negative": _doc(
+        queue={**_QUEUE, "entries": {"nodes": [{**_ENTRY, "position": -3, "pullRequest": {"number": 9}}]}}
+    ),
+}
+
+
+@pytest.mark.parametrize("shape", _BAD_GRAPHQL)
+def test_graphql_matrix_is_unavailable_before_any_further_request(monkeypatch: pytest.MonkeyPatch, shape: str) -> None:
+    """``{"data":{"repository":{}}}``, ``pullRequest=[]`` and ``pullRequest={}`` once ended as
+    "not found" after two more requests, or as "queued=no (state=OPEN), run=none"."""
+    lookups = _live(monkeypatch, (0, json.dumps(_BAD_GRAPHQL[shape])), [(0, '{"workflow_runs": []}'), (0, "[]")])
+    with pytest.raises(RuntimeError, match=r"unavailable|GraphQL error") as excinfo:
+        fetch_live_status(123, _REPO)
+    assert "not found" not in str(excinfo.value)
+    assert lookups == []
+
+
+@pytest.mark.parametrize("shape", _BAD_GRAPHQL)
+def test_graphql_matrix_is_unavailable_in_the_offline_evaluator_too(shape: str) -> None:
+    with pytest.raises(RuntimeError) as excinfo:
+        evaluate_status_data(_BAD_GRAPHQL[shape], 123)
+    assert "not found" not in str(excinfo.value)
+
+
+@pytest.mark.parametrize("shape", ["repository_empty_object", "pull_request_empty_list", "pull_request_empty_object"])
+def test_graphql_review_shapes_exit_nonzero_from_a_fixture_file(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str], shape: str
+) -> None:
+    fixture = tmp_path / "doc.json"
+    fixture.write_text(json.dumps(_BAD_GRAPHQL[shape]))
+    assert main(["123", "--fixture", str(fixture), "--json"]) == 1
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["status"] == "error"
+    assert "not found" not in payload["error"]
+    assert "queued=no" not in payload["error"]
+
+
+@pytest.mark.parametrize("failed_rc", [1, 75])
+@pytest.mark.parametrize("shape", ["repository_empty_object", "pull_request_empty_list", "pull_request_empty_object"])
+def test_graphql_review_shapes_with_a_failed_read_are_unavailable_too(
+    monkeypatch: pytest.MonkeyPatch, shape: str, failed_rc: int
+) -> None:
+    lookups = _live(monkeypatch, (failed_rc, json.dumps(_BAD_GRAPHQL[shape])), [(0, '{"workflow_runs": []}')])
+    with pytest.raises(RuntimeError) as excinfo:
+        fetch_live_status(123, _REPO)
+    assert "not found" not in str(excinfo.value)
+    assert lookups == []
+
+
+_GOOD_GRAPHQL: dict[str, tuple[dict[str, Any], str]] = {
+    "open_not_queued": (_doc(), "PR #123: queued=no (state=OPEN, mergeStateStatus=CLEAN), run=none"),
+    "queued_with_entry": (
+        _doc(_queued(), queue=_QUEUE),
+        "PR #123: queued=yes, position=2 (QUEUED, ~10 min ETA), run=none",
+    ),
+    "queued_position_resolved_from_the_queue_nodes": (
+        _doc(
+            _pr(isInMergeQueue=True),
+            queue={**_QUEUE, "entries": {"nodes": [{**_ENTRY, "position": 4, "pullRequest": {"number": 123}}]}},
+        ),
+        "PR #123: queued=yes, position=4 (QUEUED, ~10 min ETA), run=none",
+    ),
+    "queued_position_unknown": (
+        _doc(_pr(isInMergeQueue=True), queue=_QUEUE),
+        "PR #123: queued=yes, position=unknown (in queue, position unknown), run=none",
+    ),
+    "merged": (
+        _doc(_pr(merged=True, state="MERGED", mergeStateStatus="UNKNOWN")),
+        "PR #123: queued=no (merged=yes, state=MERGED), run=none",
+    ),
+    "closed": (_doc(_pr(state="CLOSED")), "PR #123: queued=no (state=CLOSED), run=none"),
+    "merge_queue_absent": ({"data": {"repository": {"pullRequest": _pr()}}}, None),
+    "nullable_optional_fields": (_doc(_pr(mergeStateStatus=None, mergeQueueEntry=None), queue=None), None),
+    "empty_errors_list": (_doc(errors=[]), None),
+    "null_errors": (_doc(errors=None), None),
+}
+
+
+@pytest.mark.parametrize("shape", _GOOD_GRAPHQL)
+def test_well_formed_graphql_documents_keep_their_meaning(shape: str) -> None:
+    document, line = _GOOD_GRAPHQL[shape]
+    status = evaluate_status_data(copy.deepcopy(document), 123)
+    assert status.pr_number == 123
+    if line is not None:
+        assert status.summary_line == line
+
+
+def test_well_formed_check_suite_run_is_reported() -> None:
+    suite = {**_SUITE, "workflowRun": {"url": "https://example.invalid/r/1", "event": "merge_group"}}
+    status = evaluate_status_data(_doc(_with_suites(suite)), 123)
+    assert status.latest_merge_group_run_url == "https://example.invalid/r/1"
+    assert status.latest_merge_group_run_status == "completed"
+    status = evaluate_status_data(_doc(_with_suites({"status": "queued", "workflowRun": None})), 123)
+    assert status.latest_merge_group_run_url is None
+
+
+def test_legacy_bare_null_data_fixture_keeps_its_not_found_contract() -> None:
+    """The one recorded offline contract kept as is; the live read never reaches it (it is unavailable)."""
+    with pytest.raises(ValueError, match="Pull request #7814 not found in repository"):
+        evaluate_status_data({"data": None}, 7814)
+
+
+_RUN = {"html_url": "https://example.invalid/run/1", "status": "completed", "conclusion": "success"}
+
+_BAD_RUN_ELEMENTS: dict[str, Any] = {
+    "empty_object": {},
+    "null": None,
+    "string": "x",
+    "list": [],
+    "int": 5,
+    "no_url": {"status": "completed"},
+    "no_status": {"html_url": "https://example.invalid/run/1"},
+    "url_empty": {**_RUN, "html_url": ""},
+    "url_int": {**_RUN, "html_url": 5},
+    "url_list": {**_RUN, "html_url": ["https://example.invalid/run/1"]},
+    "status_null": {**_RUN, "status": None},
+    "status_int": {**_RUN, "status": 1},
+    "status_empty": {**_RUN, "status": ""},
+    "conclusion_int": {**_RUN, "conclusion": 1},
+    "conclusion_list": {**_RUN, "conclusion": ["success"]},
+    "event_int": {**_RUN, "event": 5},
+    "head_branch_int": {**_RUN, "head_branch": 5},
+    "head_branch_camel_list": {**_RUN, "headBranch": []},
+    "name_int": {**_RUN, "name": 5},
+    "created_at_int": {**_RUN, "created_at": 5},
+    "created_at_camel_int": {**_RUN, "createdAt": 5},
+    "id_bool": {**_RUN, "id": True},
+    "id_negative": {**_RUN, "id": -1},
+    "id_list": {**_RUN, "id": [1]},
+}
+
+
+@pytest.mark.parametrize("shape", _BAD_RUN_ELEMENTS)
+def test_run_element_matrix_in_the_rest_list_is_unavailable_with_no_fallback(
+    monkeypatch: pytest.MonkeyPatch, shape: str
+) -> None:
+    runs = {"workflow_runs": [_RUN, _BAD_RUN_ELEMENTS[shape]]}  # one bad element spoils the whole read
+    lookups = _live(monkeypatch, (0, json.dumps(_FOUND)), [(0, json.dumps(runs)), (0, "[]")])
+    with pytest.raises(RuntimeError, match="Actions runs read unavailable"):
+        fetch_live_status(123, _REPO)
+    assert len(lookups) == 1
+
+
+@pytest.mark.parametrize("shape", _BAD_RUN_ELEMENTS)
+def test_run_element_matrix_in_the_fallback_list_is_unavailable(monkeypatch: pytest.MonkeyPatch, shape: str) -> None:
+    lookups = _live(
+        monkeypatch,
+        (0, json.dumps(_FOUND)),
+        [(0, '{"workflow_runs": []}'), (0, json.dumps([_RUN, _BAD_RUN_ELEMENTS[shape]]))],
+    )
+    with pytest.raises(RuntimeError, match="Actions run list read unavailable"):
+        fetch_live_status(123, _REPO)
+    assert len(lookups) == 2
+
+
+_BAD_RUN_CONTAINERS: dict[str, Any] = {
+    "list_for_the_rest_object": [_RUN],
+    "json_null": None,
+    "string": "x",
+    "int": 5,
+    "empty_object": {},
+    "key_missing": {"runs": [_RUN]},
+    "key_null": {"workflow_runs": None},
+    "key_object": {"workflow_runs": {}},
+    "key_string": {"workflow_runs": "[]"},
+    "nested_error_object": {"error": {"message": "x"}},
+}
+
+
+@pytest.mark.parametrize("shape", _BAD_RUN_CONTAINERS)
+def test_run_container_matrix_in_the_rest_read_is_unavailable_with_no_fallback(
+    monkeypatch: pytest.MonkeyPatch, shape: str
+) -> None:
+    lookups = _live(monkeypatch, (0, json.dumps(_FOUND)), [(0, json.dumps(_BAD_RUN_CONTAINERS[shape])), (0, "[]")])
+    with pytest.raises(RuntimeError, match="Actions runs read unavailable"):
+        fetch_live_status(123, _REPO)
+    assert len(lookups) == 1
+
+
+@pytest.mark.parametrize("shape", ["json_null", "string", "int", "empty_object", "key_object", "nested_error_object"])
+def test_run_container_matrix_in_the_fallback_read_is_unavailable(
+    monkeypatch: pytest.MonkeyPatch, shape: str
+) -> None:
+    payload = {"workflow_runs": []} if shape == "key_object" else _BAD_RUN_CONTAINERS[shape]
+    lookups = _live(monkeypatch, (0, json.dumps(_FOUND)), [(0, '{"workflow_runs": []}'), (0, json.dumps(payload))])
+    with pytest.raises(RuntimeError, match="Actions run list read unavailable"):
+        fetch_live_status(123, _REPO)
+    assert len(lookups) == 2
+
+
+def test_well_formed_runs_of_every_accepted_spelling_keep_their_meaning(monkeypatch: pytest.MonkeyPatch) -> None:
+    camel = {
+        "url": "https://example.invalid/run/2",
+        "status": "in_progress",
+        "conclusion": None,
+        "headBranch": "gh-readonly-queue/main/pr-123-abc",
+        "createdAt": "2026-09-08T18:00:00Z",
+        "name": "CI",
+        "event": "merge_group",
+    }
+    rest = {**_RUN, "id": 9, "head_branch": "gh-readonly-queue/main/pr-123-abc", "created_at": "2026-09-08T18:30:00Z"}
+    _live(monkeypatch, (0, json.dumps(_FOUND)), [(0, json.dumps({"workflow_runs": [rest]}))])
+    assert fetch_live_status(123, _REPO).latest_merge_group_run_url == "https://example.invalid/run/1"
+    _live(monkeypatch, (0, json.dumps(_FOUND)), [(0, '{"workflow_runs": []}'), (0, json.dumps([camel]))])
+    assert fetch_live_status(123, _REPO).latest_merge_group_run_url == "https://example.invalid/run/2"
+    _live(monkeypatch, (0, json.dumps(_FOUND)), [(0, '{"workflow_runs": []}'), (0, "[]")])
+    assert fetch_live_status(123, _REPO).latest_merge_group_run_url is None
+
+
+@pytest.mark.parametrize(
+    ("runs_fixture", "key"),
+    [
+        ({"workflow_runs": [{}]}, "actions"),
+        ({"runs": [None]}, "actions"),
+        ({"other": []}, "actions"),
+        ({"workflow_runs": {}}, "actions"),
+        ({"workflow_runs": "x"}, "actions"),
+        ([{}], "actions"),
+        (["x"], "actions"),
+        (None, "actions"),
+        ("x", "actions"),
+        (5, "actions"),
+        ([{}], "embedded"),
+        ({}, "embedded"),
+        (None, "embedded"),
+        ("x", "embedded"),
+        (5, "embedded"),
+        ([None], "embedded"),
+    ],
+)
+def test_offline_run_fixtures_are_validated_like_live_runs(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str], runs_fixture: Any, key: str
+) -> None:
+    graphql = tmp_path / "doc.json"
+    argv = ["123", "--fixture", str(graphql), "--json"]
+    if key == "actions":
+        graphql.write_text(json.dumps(_doc()))
+        runs = tmp_path / "runs.json"
+        runs.write_text(json.dumps(runs_fixture))
+        argv += ["--actions-fixture", str(runs)]
+    else:
+        graphql.write_text(json.dumps({**_doc(), "actions_runs": runs_fixture}))
+    assert main(argv) == 1
+    assert json.loads(capsys.readouterr().out)["status"] == "error"
+
+
+def test_offline_run_fixtures_that_are_well_formed_still_evaluate(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    graphql = tmp_path / "doc.json"
+    graphql.write_text(json.dumps({**_doc(), "actions_runs": []}))
+    assert main(["123", "--fixture", str(graphql), "--line"]) == 0
+    assert "queued=no" in capsys.readouterr().out
+    runs = tmp_path / "runs.json"
+    runs.write_text(json.dumps({"runs": [_RUN]}))
+    assert main(["123", "--fixture", str(graphql), "--actions-fixture", str(runs), "--line"]) == 0

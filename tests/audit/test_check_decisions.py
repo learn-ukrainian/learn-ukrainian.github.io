@@ -131,3 +131,129 @@ def test_issue_exists_is_unknown_on_any_process_error(monkeypatch) -> None:
 
     monkeypatch.setattr(check_decisions.github_client, "run", broken)
     assert check_decisions._gh_issue_exists("D-1") is None
+
+
+# --- Round 3: one strict parse-or-unknown choke point for the issue list (#10792) ---------------
+
+_BAD_ISSUE_LISTS = {
+    "number_zero": [{"number": 0}],
+    "number_negative": [{"number": -1}],
+    "number_string": [{"number": "5"}],
+    "number_float": [{"number": 5.0}],
+    "number_null": [{"number": None}],
+    "number_false": [{"number": False}],
+    "number_true": [{"number": True}],
+    "number_list": [{"number": [5]}],
+    "number_object": [{"number": {"value": 5}}],
+    "number_missing": [{"title": "x"}],
+    "valid_then_zero": [{"number": 5}, {"number": 0}],
+    "valid_then_null": [{"number": 5}, None],
+    "valid_then_nested_error": [{"number": 5}, {"error": {"message": "x"}}],
+    "object_container": {"number": 5},
+    "object_wrapping_list": {"items": [{"number": 5}]},
+    "nested_error_object": {"error": {"message": "x", "status": 502}},
+    "json_null": None,
+    "json_true": True,
+    "scalar_int": 5,
+    "scalar_string": "[]",
+    "nested_list": [[{"number": 5}]],
+    "bare_int_element": [5],
+    "bare_string_element": ["5"],
+}
+
+
+def _lookup_returning(monkeypatch, returncode, stdout):
+    calls = []
+
+    def run(command, **kwargs):
+        calls.append(command)
+        return subprocess.CompletedProcess(command, returncode, stdout, "")
+
+    monkeypatch.setattr(check_decisions.github_client, "run", run)
+    return calls
+
+
+@pytest.mark.parametrize("shape", _BAD_ISSUE_LISTS)
+def test_issue_list_matrix_is_unknown_never_exists(monkeypatch, shape) -> None:
+    """``[{"number": 0}]`` and ``[{"number": -1}]`` once reported that an issue already exists."""
+    calls = _lookup_returning(monkeypatch, 0, json.dumps(_BAD_ISSUE_LISTS[shape]))
+    assert check_decisions._gh_issue_exists("D-1") is None
+    assert len(calls) == 1
+
+
+@pytest.mark.parametrize("shape", _BAD_ISSUE_LISTS)
+def test_issue_list_matrix_skips_creation_and_stops_further_lookups(monkeypatch, capsys, shape) -> None:
+    lookups, creates, rc = _run_main(
+        monkeypatch, [_decision("D-1"), _decision("D-2")], [(0, json.dumps(_BAD_ISSUE_LISTS[shape]))]
+    )
+    out = capsys.readouterr().out
+    assert rc == 1
+    assert creates == []
+    assert len(lookups) == 1
+    assert "already exists" not in out
+    assert out.count("GH issue lookup unavailable") == 2
+
+
+@pytest.mark.parametrize("stdout", [None, b"[]", b'[{"number": 5}]', 5, ["x"]])
+def test_non_text_lookup_output_is_unknown(monkeypatch, stdout) -> None:
+    calls = _lookup_returning(monkeypatch, 0, stdout)
+    assert check_decisions._gh_issue_exists("D-1") is None
+    assert len(calls) == 1
+
+
+@pytest.mark.parametrize(
+    ("stdout", "expected"),
+    [
+        ("[]", False),
+        ('[{"number": 1}]', True),
+        ('[{"number": 5, "title": "x", "labels": []}]', True),
+        ('[{"number": 5}, {"number": 6}]', True),
+        (' [ ] \n', False),
+    ],
+)
+def test_valid_issue_lists_keep_their_meaning(monkeypatch, stdout, expected) -> None:
+    _lookup_returning(monkeypatch, 0, stdout)
+    assert check_decisions._gh_issue_exists("D-1") is expected
+
+
+@pytest.mark.parametrize(
+    "stdout",
+    [
+        "https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/123\n",
+        "  https://github.com/o/r/issues/1  ",
+    ],
+)
+def test_created_issue_url_is_accepted_only_in_its_exact_shape(monkeypatch, stdout) -> None:
+    monkeypatch.setattr(
+        check_decisions,
+        "request_run",
+        lambda *a, **kw: subprocess.CompletedProcess(["gh"], 0, stdout, ""),
+    )
+    assert check_decisions.create_issue(_decision("D-1") | {"alternatives": []}) == stdout.strip()
+
+
+@pytest.mark.parametrize(
+    "stdout",
+    [
+        "",
+        "\n",
+        "ok",
+        "https://github.com/o/r/issues/0",
+        "https://github.com/o/r/issues/-1",
+        "https://github.com/o/r/issues/abc",
+        "https://github.com/o/r/pull/5",
+        "http://github.com/o/r/issues/5",
+        "https://evil.example/o/r/issues/5",
+        "https://github.com/o/r/issues/5\nhttps://github.com/o/r/issues/6",
+        '{"error": "github_rate_limited"}',
+        None,
+        b"https://github.com/o/r/issues/5",
+    ],
+)
+def test_created_issue_output_that_is_not_an_issue_url_is_a_failure(monkeypatch, stdout) -> None:
+    monkeypatch.setattr(
+        check_decisions,
+        "request_run",
+        lambda *a, **kw: subprocess.CompletedProcess(["gh"], 0, stdout, ""),
+    )
+    assert check_decisions.create_issue(_decision("D-1") | {"alternatives": []}) is None

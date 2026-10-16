@@ -9,6 +9,7 @@ import subprocess
 import unicodedata
 from collections import Counter
 from pathlib import Path
+from typing import Any
 
 import yaml
 
@@ -274,14 +275,36 @@ def _head_blobs(repo: Path, paths: set[str] | None = None):
             raise ValueError("tracked_blob_unreadable")
 
 
+def parse_pr_text(stdout: Any) -> str:
+    """Title, body and comments of a ``gh pr view --json title,body,comments`` document, or raise.
+
+    The only way a PR payload becomes scan text: text output, a JSON object, a non-empty ``title``
+    and a ``body`` (may be empty) that are text, and ``comments`` a list of objects whose ``body``
+    is text. Anything else raises ``ValueError``: a wrong-typed ``comments`` would otherwise join
+    as "no comments" and let the scan report a PR it never fully read as ``scanned``.
+    """
+    if not isinstance(stdout, str):
+        raise ValueError("pr_payload_not_text")
+    data = json.loads(stdout)
+    if not isinstance(data, dict):
+        raise ValueError("pr_payload_not_object")
+    title, body, comments = data.get("title"), data.get("body"), data.get("comments")
+    if not (isinstance(title, str) and title and isinstance(body, str) and isinstance(comments, list)):
+        raise ValueError("pr_payload_shape")
+    if not all(isinstance(c, dict) and isinstance(c.get("body"), str) for c in comments):
+        raise ValueError("pr_payload_comments_shape")
+    return " ".join([title, body, *(c["body"] for c in comments)])
+
+
 def read_pr_text(pr: int, repo: Path) -> str | None:
-    """Title, body and comments of PR ``pr``; None when the read was refused or failed.
+    """Title, body and comments of PR ``pr``; None when the read was refused, failed or malformed.
 
     A refusal arrives as a non-zero result whose stdout is error JSON, so the
-    return code is checked before anything is parsed. One request, no fallback.
+    return code is checked before anything is parsed. One request, no fallback;
+    a PR number that is not a positive int is refused before any request.
     """
-    import subprocess
-
+    if isinstance(pr, bool) or not isinstance(pr, int) or pr < 1:
+        return None
     try:
         proc = github_client.run(
             ["gh", "pr", "view", str(pr), "--json", "title,body,comments"],
@@ -292,20 +315,12 @@ def read_pr_text(pr: int, repo: Path) -> str | None:
         )
     except (OSError, subprocess.TimeoutExpired):
         return None
-    if proc.returncode != 0:
+    if type(proc.returncode) is not int or proc.returncode != 0:
         return None
     try:
-        data = json.loads(proc.stdout)
-        title, body, comments = data["title"], data["body"], data["comments"]
-    except (ValueError, KeyError, TypeError):
+        return parse_pr_text(proc.stdout)
+    except ValueError:
         return None
-    # The whole nested shape must hold: a wrong-typed ``comments`` would otherwise join as "no
-    # comments" and let the scan report a PR it never fully read as ``scanned``.
-    if not (isinstance(title, str) and isinstance(body, str) and isinstance(comments, list)):
-        return None
-    if not all(isinstance(c, dict) and isinstance(c.get("body"), str) for c in comments):
-        return None
-    return " ".join([title, body, *(c["body"] for c in comments)])
 
 
 def leak_scan(
@@ -323,8 +338,10 @@ def leak_scan(
     """Gate changed blobs and level stores; optionally report the whole tree.
 
     ``pr_requested`` marks a PR the caller asked to scan: if its text could not
-    be read the scan is ``unavailable``, never ``checked``.
+    be read the scan is ``unavailable``, never ``checked``. ``pr_text`` is text or None.
     """
+    if pr_text is not None and not isinstance(pr_text, str):
+        raise ValueError("pr_text_invalid")
     if full_tree_report is not None:
         from scripts.ingest.build_ohoiko_a1_reference import require_private_path
 
@@ -717,7 +734,7 @@ def main(argv: list[str] | None = None, *, command: str = "select") -> int:
                 expected = {k: v for k, v in context.entries.items() if v["method"] == bindings.BOOK_METHOD}
                 if selected != expected:
                     raise ValueError("reference_binding_reselection_failed")
-                pr_text = read_pr_text(args.pr, repo) if args.pr else None
+                pr_text = read_pr_text(args.pr, repo) if args.pr is not None else None
                 scan = leak_scan(
                     repo,
                     private,
@@ -726,7 +743,7 @@ def main(argv: list[str] | None = None, *, command: str = "select") -> int:
                     api,
                     base=args.base,
                     pr_text=pr_text,
-                    pr_requested=bool(args.pr),
+                    pr_requested=args.pr is not None,
                     full_tree_report=args.full_tree_report,
                 )
                 print(json.dumps({"leak_scan": scan}))
@@ -768,6 +785,7 @@ def main(argv: list[str] | None = None, *, command: str = "select") -> int:
             "reference_binding_reselection_failed",
             "private_text_leak_suspected",
             "pr_text_unavailable",
+            "pr_text_invalid",
             "local_receipt_required",
             "local_receipt_stale_or_invalid",
             "receipt_requires_clean_head",

@@ -18,10 +18,12 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import subprocess
 import sys
 from datetime import date
 from pathlib import Path
+from typing import Any
 
 import yaml
 
@@ -77,13 +79,52 @@ def check_budget(decisions: list[dict]) -> str | None:
     return None
 
 
+class InvalidPayload(ValueError):
+    """A GitHub payload that is not exactly the shape the stale-decision flow needs."""
+
+
+def parse_issue_list(stdout: Any) -> bool:
+    """Whether ``gh issue list --json number`` output names at least one issue, or raise.
+
+    The only way an issue-list payload reaches a decision: text, a JSON list, and every element an
+    object whose ``number`` is a positive int (not bool). An error object, ``null``, a scalar or
+    ``{"number": 0}`` is not evidence that an issue exists, and not evidence that none does.
+    """
+    if not isinstance(stdout, str):
+        raise InvalidPayload("issue list output is not text")
+    try:
+        issues = json.loads(stdout)
+    except ValueError as exc:
+        raise InvalidPayload("issue list output is not JSON") from exc
+    if not isinstance(issues, list):
+        raise InvalidPayload("issue list is not a list")
+    for issue in issues:
+        number = issue.get("number") if isinstance(issue, dict) else None
+        if isinstance(number, bool) or not isinstance(number, int) or number < 1:
+            raise InvalidPayload("issue element has no positive int number")
+    return bool(issues)
+
+
+_ISSUE_URL = re.compile(r"https://github\.com/[\w.-]+/[\w.-]+/issues/[1-9][0-9]*")
+
+
+def parse_created_issue_url(stdout: Any) -> str:
+    """The URL ``gh issue create`` printed, or raise: one line, an issue URL with a positive number."""
+    if not isinstance(stdout, str):
+        raise InvalidPayload("issue-create output is not text")
+    url = stdout.strip()
+    if not _ISSUE_URL.fullmatch(url):
+        raise InvalidPayload("issue-create output is not an issue URL")
+    return url
+
+
 def _gh_issue_exists(dec_id: str) -> bool | None:
     """Whether a GH issue already exists for this stale decision.
 
-    ``None`` means the lookup was refused or failed: the answer is unknown, so
-    the caller must neither claim an issue exists nor create a duplicate. The
-    return code is checked before the output is parsed (a refusal is a non-zero
-    result whose stdout is error JSON).
+    ``None`` means the lookup was refused or failed or its payload failed validation: the answer
+    is unknown, so the caller must neither claim an issue exists nor create a duplicate. The return
+    code is checked before the output is parsed (a refusal is a non-zero result whose stdout is
+    error JSON).
     """
     try:
         result = github_client.run(
@@ -95,18 +136,9 @@ def _gh_issue_exists(dec_id: str) -> bool | None:
     if result.returncode != 0:
         return None
     try:
-        issues = json.loads(result.stdout)
-    except (TypeError, ValueError):
+        return parse_issue_list(result.stdout)
+    except InvalidPayload:
         return None
-    if not isinstance(issues, list):
-        return None
-    # Every element must be an issue (``--json number``); an error object or null is not evidence
-    # that an issue exists.
-    for issue in issues:
-        number = issue.get("number") if isinstance(issue, dict) else None
-        if isinstance(number, bool) or not isinstance(number, int):
-            return None
-    return bool(issues)
 
 
 def _ensure_label_exists() -> None:
@@ -169,10 +201,10 @@ def create_issue(dec: dict) -> str | None:
             timeout=30,
         )
         if result.returncode == 0:
-            return result.stdout.strip()
+            return parse_created_issue_url(result.stdout)
     except PublishBlocked as exc:
         print(f"publish_blocked: {exc}", file=sys.stderr)
-    except (subprocess.TimeoutExpired, FileNotFoundError):
+    except (InvalidPayload, subprocess.TimeoutExpired, FileNotFoundError):
         pass
     return None
 

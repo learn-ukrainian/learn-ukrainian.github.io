@@ -1776,3 +1776,110 @@ def test_read_pr_text_process_failure_is_unavailable(monkeypatch, failure):
 
     monkeypatch.setattr(sense_cli.github_client, "run", broken)
     assert sense_cli.read_pr_text(7, Path.cwd()) is None
+
+
+# --- Round 3: one strict parse-or-unavailable choke point for the PR text payload (#10792) ------
+
+_GOOD_PR = {"title": "t", "body": "b", "comments": [{"body": "c"}]}
+
+_BAD_PR_DOCUMENTS = {
+    "list_container": [_GOOD_PR],
+    "json_null": None,
+    "scalar_string": "t b",
+    "scalar_int": 7,
+    "scalar_bool": True,
+    "empty_object": {},
+    "nested_error_object": {"error": {"message": "x", "status": 502}},
+    "message_error_object": {"message": "Not Found", "documentation_url": "https://example.invalid"},
+    "missing_title": {"body": "b", "comments": []},
+    "missing_body": {"title": "t", "comments": []},
+    "missing_comments": {"title": "t", "body": "b"},
+    "empty_title": {"title": "", "body": "b", "comments": []},
+    "title_int": {"title": 5, "body": "b", "comments": []},
+    "title_list": {"title": ["t"], "body": "b", "comments": []},
+    "body_null": {"title": "t", "body": None, "comments": []},
+    "body_int": {"title": "t", "body": 0, "comments": []},
+    "comments_object": {"title": "t", "body": "b", "comments": {"nodes": []}},
+    "comments_string": {"title": "t", "body": "b", "comments": "c"},
+    "comments_false": {"title": "t", "body": "b", "comments": False},
+    "comment_list_element": {"title": "t", "body": "b", "comments": [["c"]]},
+    "comment_string_element": {"title": "t", "body": "b", "comments": ["c"]},
+    "comment_body_null": {"title": "t", "body": "b", "comments": [{"body": None}]},
+    "comment_body_list": {"title": "t", "body": "b", "comments": [{"body": ["c"]}]},
+    "good_then_bad_comment": {"title": "t", "body": "b", "comments": [{"body": "c"}, {"body": 3}]},
+}
+
+
+@pytest.mark.parametrize("shape", _BAD_PR_DOCUMENTS)
+def test_read_pr_text_document_matrix_is_unavailable_with_one_request(monkeypatch, shape):
+    calls = _pr_client(monkeypatch, 0, json.dumps(_BAD_PR_DOCUMENTS[shape]))
+    assert sense_cli.read_pr_text(7, Path.cwd()) is None
+    assert len(calls) == 1
+
+
+@pytest.mark.parametrize("stdout", [None, b'{"title": "t", "body": "b", "comments": []}', 5, ["x"]])
+def test_read_pr_text_non_text_output_is_unavailable(monkeypatch, stdout):
+    calls = _pr_client(monkeypatch, 0, stdout)
+    assert sense_cli.read_pr_text(7, Path.cwd()) is None
+    assert len(calls) == 1
+
+
+@pytest.mark.parametrize("pr", [0, -1, -7, True, False, None, "7", 7.0, [7]])
+def test_read_pr_text_rejects_a_non_positive_int_pr_number_before_any_request(monkeypatch, pr):
+    calls = _pr_client(monkeypatch, 0, json.dumps(_GOOD_PR))
+    assert sense_cli.read_pr_text(pr, Path.cwd()) is None
+    assert calls == []
+
+
+@pytest.mark.parametrize("returncode", [True, False, None, "0", 0.0])
+def test_read_pr_text_return_code_must_be_exactly_zero_int(monkeypatch, returncode):
+    _pr_client(monkeypatch, returncode, json.dumps(_GOOD_PR))
+    assert sense_cli.read_pr_text(7, Path.cwd()) is None
+
+
+@pytest.mark.parametrize("pr_text", [b"x", 5, ["x"], {"x": 1}, True])
+def test_leak_scan_refuses_pr_text_that_is_not_text(bound, tmp_path, pr_text):
+    root, api, _b = bound
+    context = bindings.Context.read("a1", root)
+    with pytest.raises(ValueError, match="pr_text_invalid"):
+        sense_cli.leak_scan(tmp_path, {}, context, {"words": [WORD]}, api, pr_text=pr_text, pr_requested=True)
+
+
+@pytest.mark.parametrize("pr", ["0", "-3"])
+def test_select_check_with_a_non_positive_pr_number_fails_closed(bound, monkeypatch, capsys, pr):
+    """``--pr 0`` used to read as "no PR requested": the scan ended ``checked``/``unverified``."""
+    root, api, _b = bound
+    (root / "_words.yaml").write_text(yaml.safe_dump({"level": "a1", "words": [WORD]}))
+    private = root / "private.jsonl"
+    private.write_text(json.dumps(FIXTURE["private"]) + "\n")
+    key = root / "key"
+    key.write_bytes(KEY)
+    receipt = root / "receipt"
+    monkeypatch.setattr(sources, "Sources", lambda **kw: api)
+    monkeypatch.setattr(bindings, "git", lambda repo, *args: b"" if args[0] == "status" else b"a" * 40)
+    calls = _pr_client(monkeypatch, 0, json.dumps(_GOOD_PR))
+    seen = {}
+
+    def scan(*args, **kwargs):
+        seen.update(kwargs)
+        unread = kwargs["pr_requested"] and kwargs["pr_text"] is None
+        return {"status": "unavailable" if unread else "checked", "pr_text": "x", "scope": {"kind": "diff"}}
+
+    monkeypatch.setattr(sense_cli, "leak_scan", scan)
+    book, _decisions = sense_cli.select_store(
+        {"level": "a1", "words": [WORD]},
+        bindings.public_entries(a1_reference.INVENTORY_PATH),
+        {FIXTURE["private"]["locator"]: FIXTURE["private"]},
+        api,
+        KEY,
+        "test-key",
+    )
+    bindings.write(root / bindings.BINDINGS, "a1", book)
+    args = ["a1", "--evidence-dir", str(root), "--private-input", str(private), "--pr", pr, "--check"]
+    args += ["--key-file", str(key), "--key-id", "test-key", "--receipt", str(receipt)]
+    assert sense_cli.main(args) == 1
+    out = capsys.readouterr().out
+    assert json.loads(out.strip().splitlines()[-1]) == {"status": "failed", "reason": "pr_text_unavailable"}
+    assert (seen["pr_text"], seen["pr_requested"]) == (None, True)
+    assert calls == []
+    assert not receipt.exists()

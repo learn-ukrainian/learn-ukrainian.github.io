@@ -9,11 +9,14 @@ repositories are unaffected. A ``--branch`` with no open PR counts as new.
 
 ``LU_OPEN_PR_FREEZE_THRESHOLD`` overrides the threshold (default 15; ``0``
 disables the check). The count comes from the GitHub REST search API and is
-cached briefly (``LU_OPEN_PR_FREEZE_CACHE_S``, default 60s). When the count or
-the branch's PR cannot be fetched (a rate refusal, a failed read, or empty or
-malformed output) the decision is *unavailable*: ``refused`` is ``None`` (not
-``False``) and ``warning`` names the reason. The caller owns what to do with
-an unknown admission; the PR count is never guessed.
+cached briefly (``LU_OPEN_PR_FREEZE_CACHE_S``, default 60s). Every count and branch
+list enters a decision through one strict validator (:func:`valid_count`,
+:func:`parse_search_count`, :func:`parse_branch_pulls`): a live read, a cached read and an
+injected reader alike. A cache record that fails it is a miss followed by a live read. When the
+count or the branch's PR cannot be fetched (a rate refusal, a failed read, or empty or
+malformed output) the decision is *unavailable*: ``refused`` is ``None`` (not ``False``) and
+``warning`` names the reason. The caller owns what to do with an unknown admission; the PR
+count is never guessed.
 """
 
 from __future__ import annotations
@@ -91,33 +94,87 @@ def _gh_get(endpoint: str) -> Any:
     return json.loads(proc.stdout)
 
 
-def fetch_open_pr_count(repo: str) -> int:
-    """Open PR count for ``repo`` via the REST search endpoint."""
-    data = _gh_get(f"search/issues?q=repo:{repo}+is:pr+is:open&per_page=1")
-    count = data.get("total_count") if isinstance(data, dict) else None
-    if isinstance(count, bool) or not isinstance(count, int) or count < 0:
-        raise RuntimeError("no valid total_count in response")
+class InvalidPayload(ValueError):
+    """A GitHub payload or cache record that is not exactly the shape the freeze decision needs."""
+
+
+def _is_exact_int(value: Any) -> bool:
+    return isinstance(value, int) and not isinstance(value, bool)
+
+
+def valid_count(value: Any) -> int:
+    """The only way an open-PR count enters a decision: an exact int that is not bool and is >= 0.
+
+    Live reads, cached reads and injected readers all pass through here; anything else raises.
+    """
+    if not _is_exact_int(value) or value < 0:
+        raise InvalidPayload("open-PR count is not a non-negative int")
+    return value
+
+
+def parse_search_count(data: Any) -> int:
+    """Open PR count from a REST search document, or raise :class:`InvalidPayload`.
+
+    Search may time out server-side and return a partial count flagged incomplete; a count that
+    is not known to be complete (``incomplete_results`` exactly ``False``) is not a count.
+    """
+    if not isinstance(data, dict):
+        raise InvalidPayload("search response is not an object")
+    count = valid_count(data.get("total_count"))
     if data.get("incomplete_results") is not False:
-        # Search may time out server-side and return a partial count flagged incomplete; a count
-        # that is not known to be complete is not a count.
-        raise RuntimeError("search results incomplete or unflagged")
+        raise InvalidPayload("search results incomplete or unflagged")
     return count
 
 
-def _is_pull(item: Any) -> bool:
-    """A pull request element names its number; an error object or scalar is not one."""
-    number = item.get("number") if isinstance(item, dict) else None
-    return isinstance(number, int) and not isinstance(number, bool)
+def parse_branch_pulls(data: Any) -> bool:
+    """Whether the branch heads an open PR, from a ``pulls?per_page=1`` list, or raise.
+
+    The request asks for one element, so the list holds at most one, and each element names a
+    positive int PR number; an error object, a scalar or a ``0``/negative number is not a pull.
+    """
+    if not isinstance(data, list) or len(data) > 1:
+        raise InvalidPayload("pulls response is not a list of at most one pull")
+    for pull in data:
+        number = pull.get("number") if isinstance(pull, dict) else None
+        if not _is_exact_int(number) or number < 1:
+            raise InvalidPayload("pull element has no positive int number")
+    return bool(data)
+
+
+def valid_exists(value: Any) -> bool:
+    """An injected branch lookup must answer with a real bool."""
+    if not isinstance(value, bool):
+        raise InvalidPayload("branch lookup did not return a bool")
+    return value
+
+
+def fetch_open_pr_count(repo: str) -> int:
+    """Open PR count for ``repo`` via the REST search endpoint."""
+    return parse_search_count(_gh_get(f"search/issues?q=repo:{repo}+is:pr+is:open&per_page=1"))
 
 
 def branch_has_open_pr(repo: str, branch: str) -> bool:
     """True when ``branch`` is the head of an open PR in ``repo``."""
     owner = repo.split("/", 1)[0]
     head = quote(f"{owner}:{branch}", safe="")
-    data = _gh_get(f"repos/{repo}/pulls?state=open&per_page=1&head={head}")
-    if not isinstance(data, list) or not all(_is_pull(p) for p in data):
-        raise RuntimeError("unexpected pulls response")
-    return bool(data)
+    return parse_branch_pulls(_gh_get(f"repos/{repo}/pulls?state=open&per_page=1&head={head}"))
+
+
+def _fresh_cached_count(path: Path, ttl_s: float, now: Callable[[], float]) -> int | None:
+    """The cached count when the record is a valid, unexpired ``{"count", "at"}``; else None (a miss)."""
+    try:
+        cached = json.loads(path.read_text())
+        if not isinstance(cached, dict):
+            return None
+        at = cached["at"]
+        if isinstance(at, bool) or not isinstance(at, (int, float)):
+            return None
+        age = now() - at
+        if not 0 <= age < ttl_s:
+            return None
+        return valid_count(cached["count"])
+    except (OSError, ValueError, KeyError, TypeError):
+        return None
 
 
 def cached_open_pr_count(
@@ -129,13 +186,10 @@ def cached_open_pr_count(
     now: Callable[[], float] = time.time,
 ) -> int:
     path = cache_file or _cache_path(repo)
-    try:
-        cached = json.loads(path.read_text())
-        if isinstance(cached.get("count"), int) and now() - float(cached["at"]) < ttl_s:
-            return int(cached["count"])
-    except (OSError, ValueError, KeyError, TypeError, AttributeError):
-        pass
-    count = fetch(repo)
+    cached = _fresh_cached_count(path, ttl_s, now)
+    if cached is not None:
+        return cached
+    count = valid_count(fetch(repo))
     try:
         path.parent.mkdir(parents=True, exist_ok=True)
         tmp = path.with_suffix(f".{os.getpid()}.tmp")
@@ -198,7 +252,7 @@ def evaluate(
         return FreezeDecision(refused=False, open_prs=count, threshold=threshold)
     if branch:
         try:
-            if has_open_pr(repo, branch):
+            if valid_exists(has_open_pr(repo, branch)):
                 return FreezeDecision(refused=False, open_prs=count, threshold=threshold)
         except Exception:
             return FreezeDecision(
