@@ -145,7 +145,7 @@ runner, and orchestrator hosts).
 - **What it does**: the backup service runs `scripts/orchestration/run_scheduled_backup.sh`, which executes `scripts/backup-data.sh backup --execute` (restic via the rclone remote) and records the outcome in `batch_state/backups/last-run.json`. The retention service uses the same wrapper's `retention` mode to run `scripts/backup-data.sh retention --execute`, applying the operator-approved `--keep-daily 7 --keep-weekly 4 --keep-monthly 6` policy run-aware to the `learn-ukrainian-data` tag only: completed runs are kept or dropped as a unit and snapshots are forgotten by explicit snapshot ID, so a retained receipt never loses a snapshot it references. Other snapshot families in the repository are untouched.
 - **Secrets**: both services pass `LU_BACKUP_ENV_FILE=%h/.secrets/learn-ukrainian-backup.env` to the wrapper. The wrapper opens the file once, refuses a symlink, requires a regular file owned by the service user with no group/world write bit, and requires its parent directory to be owned by that user and not group/world-writable. Mode `0600` is recommended for the file. The wrapper sources shell syntax with export enabled, expanding `$HOME` and variable references that systemd `EnvironmentFile=` cannot expand. The file's last command must succeed: sourcing checks its final exit status, so a failed earlier command can be missed. Manual runs can omit `LU_BACKUP_ENV_FILE` when the environment is already populated. Validation and sourcing errors name the variable and condition without its value. The wrapper redacts the configured repository, its rclone spec without the `rclone:` prefix, and the password-file path from both services' output before it reaches the journal. An unsafe or missing configured file fails the backup and writes a failure receipt.
 - **Disk safety**: `LU_BACKUP_TMPDIR=@REPO_ROOT@/data/.backup-staging` keeps SQLite staging on the same filesystem as `data/` (gitignored; see `scripts/backup-data.sh` — databases are staged sequentially and each staged copy is deleted before the next). `Nice=15` + `IOSchedulingClass=idle` keep the run off the fast path; `TimeoutStartSec=10800` allows one hour of lock wait plus two hours for backup or retention.
-- **Data-volume guard**: the two backup services have drop-ins among the fifteen in `packaging/systemd/dropins/`. Each checks the configured data volume before executing the redacting `run_scheduled_backup.sh` wrapper; a failed guard exits 78 and does not restart. Install the drop-ins as described in `docs/runbooks/storage-topology.md` before enabling the timers on a migrated data host.
+- **Data-volume guard**: the two backup services have drop-ins among the sixteen in `packaging/systemd/dropins/`. Each checks the configured data volume before executing the redacting `run_scheduled_backup.sh` wrapper; a failed guard exits 78 and does not restart. Install the drop-ins as described in `docs/runbooks/storage-topology.md` before enabling the timers on a migrated data host.
 - **Failure visibility**: a failed run exits non-zero, and a failed log capture or `last-run.json` write fails the backup service even when the backup succeeded. Monitor's `/api/orient?sections=health` reports `health.backup_last_run.status`, `exit_status`, and `finished_at_utc` from that receipt, so the next morning's health glance shows a failed night. A success older than 26 hours is `stale`, covering a timer or systemd preflight failure before the wrapper starts. `unknown` means the receipt is absent, unreadable, or invalid; check the unit journal. `last-run.json` also carries start/end, run id, snapshot count, and bytes added.
 - **Failure alert (change-only)**: both services set `OnFailure=learn-ukrainian-backup-alert@%n.service`. The template runs `scripts/orchestration/backup_failure_alert.py failed <unit>`, which posts one report to the Fleet Comms `cto` channel (`--sender sre-timers --kind report`) and records the unit under `batch_state/backups/alerts/`. Later failures of the same unit stay quiet. Each service's `ExecStartPost=-... recovered %n` runs only after a successful run; it posts one recovery report when the unit was recorded as failing and clears the record. A publish that fails leaves the record unchanged, so the next run retries, and the alert unit shows as failed. `install_backup_timer.py` installs the template with the other four units.
 - **Broken and batch_state symlinks**: a dangling symlink under a recovery root (`data/`, `batch_state/`, `.agent/`, `.claude/*-epic`) no longer aborts the backup. It is skipped with a `WARNING: Skipping broken symlink ...` line, excluded from the snapshot, and listed in the receipt's `exclusions` as `<path> broken symlink skipped`. Absolute or escaping symlinks under `batch_state/` (such as temporary test fixtures, mock binaries, and runtime links) are likewise skipped with a warning and excluded from the snapshot so they do not abort the nightly backup. Absolute or escaping symlinks in other recovery roots (`.agent/`, `.claude/*-epic`, `data/`) still fail closed.
@@ -198,3 +198,63 @@ After landing and approval, use `--apply`, or `--apply --enable` to start the
 timer. The installer uses `safe_unit_install` and refuses symlinked destinations.
 The data-volume drop-in is installed through the existing drop-in installer.
 No unit is installed or enabled by tests or by preparing this source candidate.
+
+## Driver lanes: context guard and boot relaunch
+
+Both read the one lane data file, `scripts/config/driver_lanes.json`, and
+address every lane by tmux session name (`=<session>:`), never by pane id.
+Host-specific launch wrappers and account directories come from the ignored
+local config described in `docs/runbooks/maintenance-window.md`.
+
+- `learn-ukrainian-context-guard.service` + `.timer`: every 5 minutes
+  (`OnCalendar=*:0/5`) runs `scripts.ops.context_guard tick`. Claude lanes
+  hand off at 70% context; Codex lanes after three compactions. A lane that
+  prints or posts `HANDOFF-DONE` before the prompt is exited without waiting
+  for the threshold. In the handoff phase the guard re-sends `HANDOFF NOW`
+  every 15 minutes, retries `/exit` or `/quit` every 10 minutes, logs
+  `ctx_pct` on every tick, and types nothing while a human typed into that
+  session within two minutes. Unknown state never acts: failed, timed-out
+  or unparseable pane, process or client telemetry makes the tick log and
+  retry, and a different agent process in a lane resets that lane to the
+  watch phase before any further input. The guard respawns or types only on
+  one consistent snapshot of the pane and the process table, re-taken right
+  before `respawn-pane -k`, the exit-dialog answer and `/exit` or `/quit`;
+  the one residual (owner: Infra) is a pane replaced after that re-check and
+  before the tmux call, since tmux has no compare-and-swap. State and log live under
+  `${XDG_STATE_HOME:-$HOME/.local/state}/learn-ukrainian/context-guard/`.
+  Keep-alive tools must skip the sessions printed by
+  `.venv/bin/python -m scripts.ops.context_guard handoff-sessions`. The
+  service has a data-volume drop-in like the other timer services, installed
+  with the rest by `scripts/storage/install_data_volume_dropins.py`.
+- `learn-ukrainian-lane-relaunch.service`: a oneshot wanted by
+  `default.target`. At boot it recreates each missing lane session in the
+  repository root and starts its launcher, CTO last. Existing sessions are
+  skipped, so a second run is a no-op, and it never types into a session. A
+  launcher that exits within 20 seconds (for example on a lease conflict) is
+  logged and the relaunch moves on; the unit then exits 3, as it does when a
+  lane's local config entry is refused (that lane is not started) or a new
+  pane cannot be read back. `--server-scope`
+  starts a missing tmux server in its own user scope so it outlives the
+  oneshot. Preview with `.venv/bin/python -m scripts.ops.lane_relaunch --dry-run`.
+
+Install from the primary checkout after review. Stop the transient guard timer
+first so two guards never act on the same lane, then render, verify and enable:
+
+```bash
+repo_root=$(pwd -P)
+unit_dir="$HOME/.config/systemd/user"
+systemctl --user stop lu-codex-context-guard.timer || true  # the transient guard it replaces
+for unit in learn-ukrainian-context-guard.service learn-ukrainian-context-guard.timer \
+    learn-ukrainian-lane-relaunch.service; do
+  sed -e "s|@REPO_ROOT@|$repo_root|g" "packaging/systemd/$unit" > "$unit_dir/$unit"
+done
+systemd-analyze --user verify "$unit_dir"/learn-ukrainian-context-guard.* \
+  "$unit_dir/learn-ukrainian-lane-relaunch.service"
+systemctl --user daemon-reload
+systemctl --user enable --now learn-ukrainian-context-guard.timer
+systemctl --user enable learn-ukrainian-lane-relaunch.service
+```
+
+Enable the relaunch without `--now`: on a running host every lane session
+exists, so starting it would only log skips. The guard starts with fresh state,
+so Codex compaction counts restart from zero.

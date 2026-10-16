@@ -279,3 +279,5 @@ exceptions:
   # scripts/utils/claude_version.py
   - {module: scripts/utils/claude_version.py, function: "run_version_probe", program: "cmd_prefix[0]", category: claude-probe, reason: "literal `<program> --version` probe shared by the version gates, the lane probe and the proxy health probes"}
   - {module: scripts/utils/claude_version.py, function: "run_version_probe", program: "npx", category: claude-probe, reason: "literal `npx @anthropic-ai/claude-code@latest --version` probe of the npx fallback"}
+  # scripts/ops/context_guard.py
+  - {module: scripts/ops/context_guard.py, function: "default_runner", program: "argv", category: generic-runner, reason: "the driver-lane guard's runner; Tmux methods and scripts/ops/lane_relaunch.py pass it only tmux, ps and systemd-run argv. Lane launchers run inside tmux panes (respawn-pane/new-session), never as a spawned Claude print-mode process (#10814)"}
