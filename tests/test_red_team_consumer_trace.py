@@ -22,7 +22,7 @@ HANDLING = {
     "scripts/orchestration/integration_sweep.py": "accept-as-approval",
     "scripts/publish/github.py": "accept-as-approval",
     "scripts/fleet_comms/review_publisher.py": "accept-as-approval",
-    "scripts/api/fleet_board/prs.py": "accept-as-approval",
+    "scripts/api/fleet_board/prs.py": "display-label",
     "scripts/fleet_comms/review_publication.py": "ignore",
     "scripts/lexicon/published_record_dispositions.py": "refuse",
     "scripts/orchestration/integration_sweep.py#CI-blocker-exclusion": "ignore",
@@ -61,7 +61,7 @@ def test_every_marker_or_status_consumer_has_a_fixed_handling_row():
         if _mentions_review_contract(ast.parse(path.read_text(encoding="utf-8")))
     }
     assert consumers == {path.split("#", 1)[0] for path in HANDLING}
-    assert set(HANDLING.values()) == {"accept-as-approval", "refuse", "ignore"}
+    assert set(HANDLING.values()) == {"accept-as-approval", "display-label", "refuse", "ignore"}
 
 
 @pytest.mark.parametrize(
@@ -100,6 +100,7 @@ def test_keeper_and_sweep_accept_red_team_approval(tmp_path):
 
 
 def test_fleet_board_counts_red_team_as_ready():
+    """#10452 AC-02: display the mode, and do not present it as an ordinary approval."""
     from scripts.api.fleet_board import prs
     from tests.api.test_fleet_board_prs import _mq, _pull, _view
     from tests.orchestration.test_integration_sweep import SHA
@@ -108,7 +109,13 @@ def test_fleet_board_counts_red_team_as_ready():
     comment = _comment(login="fleet")
     view = _view(pull, login="fleet", comments={pull.number: (comment,)})
     cf = prs._cf(pull, view)
-    assert cf == {"verdict": "APPROVED", "at_head": True}
+    ordinary = prs._cf(
+        pull,
+        _view(pull, login="fleet", comments={pull.number: (_comment("cross_family"),)}),
+    )
+    assert cf == {"verdict": "APPROVED", "at_head": True, "review_mode": "red_team"}
+    assert ordinary == {"verdict": "APPROVED", "at_head": True}
+    assert cf.keys() - ordinary.keys() == {"review_mode"}
     assert prs._verdict_at((comment,), "fleet") is not None
     _, ready, minutes = prs._ready_minutes(
         pull,
@@ -121,7 +128,7 @@ def test_fleet_board_counts_red_team_as_ready():
         threshold=30,
     )
     assert ready is True and minutes == 60
-    assert HANDLING["scripts/api/fleet_board/prs.py"] == "accept-as-approval"
+    assert HANDLING["scripts/api/fleet_board/prs.py"] == "display-label"
 
 
 def test_ci_blocker_exclusion_ignores_review_status():

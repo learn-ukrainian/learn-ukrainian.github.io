@@ -827,7 +827,12 @@ def _cf(pull: Pull, view: GithubView) -> dict[str, Any]:
     if comments is None or not view.login:
         return {"verdict": "unknown", "at_head": False}
     verdict = lookup_verdict(comments, pull.head_sha, view.login)
-    return {"verdict": verdict.state, "at_head": verdict.state in _AT_HEAD}
+    field: dict[str, Any] = {"verdict": verdict.state, "at_head": verdict.state in _AT_HEAD}
+    # Lookup fills a missing mode with cross_family. Only red_team is written
+    # on the marker, so copying the default would invent an ordinary label.
+    if verdict.review_mode == "red_team":
+        field["review_mode"] = verdict.review_mode
+    return field
 
 
 def _clean(pull: Pull) -> bool:
