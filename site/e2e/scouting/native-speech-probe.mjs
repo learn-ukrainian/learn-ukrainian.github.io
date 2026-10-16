@@ -11,8 +11,7 @@ export const PAGE = 'native-speech-check.html';
 export const TRANSITIONS = ['next', 'home', 'route', 'deck', 'level', 'locale'];
 export const OWNED = ['native-speech-probe.mjs', PAGE, 'README.md'].map((f) => `site/e2e/scouting/${f}`).concat('site/tests/unit/native-speech-probe.test.ts');
 const HERE = dirname(fileURLToPath(import.meta.url));
-const USAGE = `Usage:
-  node e2e/scouting/native-speech-probe.mjs prepare --source <clean checkout> --source-sha <40-hex> --out <static build> --manifest <new file>
+const USAGE = `Usage: node e2e/scouting/native-speech-probe.mjs prepare --source <clean checkout> --source-sha <40-hex> --out <static build> --manifest <new file>
   node e2e/scouting/native-speech-probe.mjs validate --manifest <file> --receipt <file|-> [--out <static build>]`;
 
 /** Shared by the page (injected as source text) and the off-device validator, so it must stay self-contained. */
@@ -50,8 +49,8 @@ export function evaluate(r, x) {
   return { status: why.length ? 'INCOMPLETE' : 'DEVICE_CONTROLS_PASSED', reasons: why };
 }
 
-/** Runs in the diagnostic page. Observes the same-origin practice frame; never substitutes voices, utterances or events. */
-export function browserProbe(win, frame, binding, evaluate) {
+/** Runs in the diagnostic page; observes, never substitutes, native speech in a practice window it opens (CourseLayout refuses frames). */
+export function browserProbe(win, binding, evaluate) {
   const SEL = { next: '[data-testid="practice-advance-button"]', home: '.stage-back', route: 'a[href]', deck: '[data-testid^="practice-deck-option-"]', level: '.k3-levels button', locale: '#lu-locale-toggle' };
   const LABEL = { next: 'Next (Далі), after rating the card', home: 'Home (Додому)', route: 'Any link to another page', deck: 'Deck choice', level: 'Level button', locale: 'Header EN/UK toggle' };
   const CHECKS = { audible: 'I heard Ukrainian speech', stoppedImmediately: 'It stopped at once', noResume: 'Nothing resumed for 3 s' };
@@ -66,7 +65,8 @@ export function browserProbe(win, frame, binding, evaluate) {
     exposure: each(false), transitions: each(null), status: 'INCOMPLETE' };
   win.practiceAudioProbe = receipt;
   let pending = null; // the attempt from a Play tap to the end of its quiet window
-  const seen = new WeakSet();
+  let practice = null;
+  const seen = new WeakSet(); // documents, speech objects and media prototypes already observed
   const leaves = (a, fw) => { const u = safe(() => new URL(a.getAttribute('href'), fw.location.href), null); return a.target !== '_blank' && u?.origin === fw.location.origin && u.pathname !== fw.location.pathname; };
   const ready = (fw, t) => Array.from(fw.document.querySelectorAll(SEL[t])).some((el) => !el.disabled && el.getClientRects().length > 0
     && fw.getComputedStyle(el).visibility !== 'hidden' && (t !== 'route' || leaves(el, fw)));
@@ -81,15 +81,14 @@ export function browserProbe(win, frame, binding, evaluate) {
     render();
   };
   const bind = (a, kind, event) => {
-    const r = a.rec;
-    Object.assign(a, { bound: true, kind, boundAt: now() });
+    const r = Object.assign(a, { bound: true, kind, boundAt: now() }).rec;
     Object.assign(r, { transitionTrusted: event.isTrusted === true, exposed: a.exposure?.[kind] === true,
       activeAtTransition: a.startedAt !== null && a.endedAt === null && safe(() => a.ss.speaking === true, false) });
     const srs = () => safe(() => a.fw.localStorage.getItem('lu-lexicon-srs'), undefined);
     const before = kind === 'next' ? srs() : undefined; // compared in memory; only the boolean is recorded
     win.setTimeout(() => {
       r.quietMs = Math.round(now() - a.boundAt);
-      const still = safe(() => frame.contentWindow.speechSynthesis.speaking, true) || safe(() => a.ss.speaking, false);
+      const still = safe(() => practice.speechSynthesis.speaking, true) || safe(() => a.ss.speaking, false);
       r.stopped = r.cancelCalls > 0 && !still;
       if (kind === 'next') r.srsConserved = before !== undefined && srs() === before;
       receipt.transitions[kind] = r;
@@ -124,15 +123,14 @@ export function browserProbe(win, frame, binding, evaluate) {
     for (const name of ['end', 'error']) u.addEventListener(name, () => { if (a.utterance === u && a.endedAt === null) a.endedAt = now(); });
   };
   const instrument = (fw) => {
+    const fresh = (o) => Boolean(o) && !seen.has(o) && Boolean(seen.add(o));
     const d = safe(() => (fw.location.href === 'about:blank' ? null : fw.document), null);
-    if (!d) return;
-    if (!seen.has(d)) { seen.add(d); d.addEventListener('click', (event) => onClick(fw, event), true); }
-    if (seen.has(fw)) return;
-    seen.add(fw);
-    const play = fw.HTMLMediaElement?.prototype.play;
-    if (play) fw.HTMLMediaElement.prototype.play = function (...args) { if (pending && !pending.bound) pending.rec.clip = true; late(); return play.apply(this, args); };
-    const ss = fw.speechSynthesis;
-    if (!ss) return;
+    if (fresh(d)) d.addEventListener('click', (event) => onClick(fw, event), true);
+    const media = safe(() => fw.HTMLMediaElement.prototype, null);
+    const play = media?.play;
+    if (d && play && fresh(media)) media.play = function (...args) { if (pending && !pending.bound) pending.rec.clip = true; late(); return play.apply(this, args); };
+    const ss = d && fw.speechSynthesis;
+    if (!fresh(ss)) return;
     const { speak, cancel, getVoices } = ss;
     ss.speak = function (...args) {
       const a = pending?.bound ? null : pending;
@@ -187,8 +185,13 @@ export function browserProbe(win, frame, binding, evaluate) {
     if (r && isTrusted) r.manual[box.dataset.check] = box.checked; else box.checked = false; // the page never ticks an attestation itself
     render();
   });
-  doc.getElementById('reload').addEventListener('click', () => { frame.src = '/practice/'; });
-  win.setInterval(() => instrument(frame.contentWindow), 50); // each new frame document is observed before it can be tapped
+  doc.getElementById('open').addEventListener('click', () => {
+    if (practice && !practice.closed) practice.close();
+    practice = win.open('/practice/', '_blank', 'popup,width=900,height=1000');
+    // A fresh window's first document reuses its initial Window, so this hook fires even if the opener's timers are throttled.
+    safe(() => practice.addEventListener('DOMContentLoaded', () => instrument(practice)), null);
+  });
+  win.setInterval(() => { if (practice && !practice.closed) instrument(practice); }, 50); // later documents (route departures)
   render();
   voices();
   void hashAll(win.isSecureContext ? safe(() => win.crypto.subtle, null) : null);
@@ -299,7 +302,7 @@ export function prepare({ source, sourceSha, out, manifest, helperRoot = git(HER
   const assets = Object.fromEntries(Object.entries(before.files).filter(([rel]) => rel === 'practice/index.html' || /^_astro\/[\w.-]+\.js$/.test(rel)).map(([rel, h]) => [`/${rel}`, h]));
   if (Object.keys(assets).length < 2) refuse('build serves no JavaScript under _astro/');
   const binding = { sourceSha, helperSha, buildDigest: before.digest, assets };
-  const script = `const evaluate = ${evaluate};\n(${browserProbe})(window, document.getElementById('app'), JSON.parse(document.getElementById('binding').textContent), evaluate);`;
+  const script = `const evaluate = ${evaluate};\n(${browserProbe})(window, JSON.parse(document.getElementById('binding').textContent), evaluate);`;
   const template = readFileSync(join(HERE, PAGE), 'utf8');
   if (template.split('__BINDING__').length !== 2 || template.split('__PROBE__').length !== 2 || /<\/script/i.test(script)) refuse('page template placeholders are malformed');
   const page = template.replace('__BINDING__', () => JSON.stringify(binding)).replace('__PROBE__', () => script);

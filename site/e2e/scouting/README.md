@@ -79,7 +79,11 @@ records whether it is installed (`npx playwright install webkit` to add it).
 immutable static build. An evaluator with a Mac or iPhone that already has a local Ukrainian voice
 uses it to record real native speech and its interruption through six app transitions: Next, Home,
 route, deck, level and locale. The pasted JSON (`window.practiceAudioProbe`) is then checked
-off-device against the frozen manifest. The page never changes the practice player.
+off-device against the frozen manifest. The page never changes the practice player. It opens the
+practice app in its own same-origin window, because the site's anti-clickjacking guard in
+`CourseLayout.astro` refuses to render inside a frame; the receipt stays in the page's memory
+(no storage, cookies or network submission). On iPhone the window opens as a new tab: switch back
+to the check page to tick boxes, and reopen the window after a route departure.
 
 ```bash
 cd site

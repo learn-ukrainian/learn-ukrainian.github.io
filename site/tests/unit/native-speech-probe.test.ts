@@ -160,8 +160,8 @@ class FakeUtterance extends EventTarget {
   constructor(public text: string) { super(); }
 }
 
-/** A same-origin frame with native-shaped objects; nothing here is injected into the observed APIs by the probe itself. */
-function harness({ secure = false, voices = [] as unknown[], outerSpeech = true } = {}) {
+/** A same-origin practice window with native-shaped objects; the probe only wraps what it finds there. */
+function harness({ secure = false, voices = [] as unknown[], outerSpeech = true, open = true } = {}) {
   let clock = 0;
   const timers: { at: number; fn: () => void }[] = [];
   const intervals: (() => void)[] = [];
@@ -176,31 +176,37 @@ function harness({ secure = false, voices = [] as unknown[], outerSpeech = true 
     }
     clock = end;
   };
-  document.body.innerHTML = '<p id="summary"></p><table><tbody id="rows"></tbody></table><p id="reasons"></p><button id="reload"></button><textarea id="json"></textarea>';
-  const frameDoc = document.implementation.createHTMLDocument('practice');
-  frameDoc.body.innerHTML = '<span data-pronunciation-lemma="x"><button id="play">Play</button></span>'
-    + '<button data-testid="practice-advance-button">Next</button><button class="stage-back">Home</button>'
-    + '<a id="away" href="/lexicon/">Atlas</a><a id="self" href="/practice/#top">Top</a><button id="lu-locale-toggle">EN</button>';
-  for (const el of Array.from(frameDoc.querySelectorAll('button, a'))) (el as any).getClientRects = () => [{}];
+  document.body.innerHTML = '<button id="open"></button><p id="summary"></p><table><tbody id="rows"></tbody></table><p id="reasons"></p><textarea id="json"></textarea>';
+  const practiceDoc = (): Document => {
+    const frameDoc = document.implementation.createHTMLDocument('practice');
+    frameDoc.body.innerHTML = '<span data-pronunciation-lemma="x"><button id="play">Play</button></span>'
+      + '<button data-testid="practice-advance-button">Next</button><button class="stage-back">Home</button>'
+      + '<a id="away" href="/lexicon/">Atlas</a><a id="self" href="/practice/#top">Top</a><button id="lu-locale-toggle">EN</button>';
+    for (const el of Array.from(frameDoc.querySelectorAll('button, a'))) (el as any).getClientRects = () => [{}];
+    frameDoc.addEventListener = ((_type: string, fn: Listener) => { listeners.push(fn); }) as any;
+    return frameDoc;
+  };
   const listeners: Listener[] = [];
-  frameDoc.addEventListener = ((_type: string, fn: Listener) => { listeners.push(fn); }) as any;
   const ukVoice = { name: 'Lesya', voiceURI: 'secret-voice-uri', lang: 'uk-UA', localService: true };
   const enVoice = { name: 'Alex', voiceURI: 'en-uri', lang: 'en-US', localService: true };
   const store = new Map([['lu-lexicon-srs', '{"або":{"due":1}}']]);
-  const native = {
+  const makeNative = () => ({
     speaking: false, calls: [] as unknown[], self: null as unknown, result: Symbol('native-return'), fail: null as Error | null,
     getVoices() { return [enVoice, ukVoice]; },
-    speak(u: unknown) { native.self = this; native.calls.push(u); if (native.fail) throw native.fail; return native.result; },
-    cancel() { native.speaking = false; return undefined; },
-  };
+    speak(u: unknown) { (this as any).self = this; (this as any).calls.push(u); if ((this as any).fail) throw (this as any).fail; return (this as any).result; },
+    cancel() { (this as any).speaking = false; return undefined; },
+  });
+  const native = makeNative();
   const played: unknown[] = [];
   class FakeMedia { play() { played.push(this); return Promise.resolve('native-play'); } }
+  const loaded: (() => void)[] = [];
   const fw: any = {
-    document: frameDoc, location: { href: 'http://127.0.0.1:4321/practice/', origin: 'http://127.0.0.1:4321', pathname: '/practice/' },
+    closed: false, close() { fw.closed = true; }, addEventListener: (type: string, fn: () => void) => { if (type === 'DOMContentLoaded') loaded.push(fn); },
+    document: practiceDoc(), location: { href: 'http://127.0.0.1:4321/practice/', origin: 'http://127.0.0.1:4321', pathname: '/practice/' },
     speechSynthesis: native, HTMLMediaElement: FakeMedia, localStorage: { getItem: (k: string) => store.get(k) ?? null },
     getComputedStyle: () => ({ visibility: 'visible' }),
   };
-  const frame: any = { contentWindow: fw, src: '/practice/' };
+  const opened: unknown[][] = [];
   const rowsEl = document.getElementById('rows')!;
   let change: ((e: { target: HTMLInputElement; isTrusted: boolean }) => void) | null = null;
   const realAdd = rowsEl.addEventListener.bind(rowsEl);
@@ -209,23 +215,23 @@ function harness({ secure = false, voices = [] as unknown[], outerSpeech = true 
   const win: any = {
     document, performance: { now: () => clock }, setTimeout: (fn: () => void, ms: number) => timers.push({ at: clock + ms, fn }),
     setInterval: (fn: () => void) => intervals.push(fn), isSecureContext: secure, crypto: globalThis.crypto, location: { pathname: `/${PAGE}` },
-    speechSynthesis: outerSpeech ? { getVoices: () => voices } : undefined,
+    speechSynthesis: outerSpeech ? { getVoices: () => voices } : undefined, open: (...args: unknown[]) => { opened.push(args); return fw; },
     fetch: async (path: string) => { fetched.push(path); return new Response(`bytes of ${path}`); },
   };
   const binding = { ...MANIFEST, pageSha: undefined };
-  const receipt = browserProbe(win, frame, binding, evaluate);
+  const receipt = browserProbe(win, binding, evaluate);
   const poll = () => intervals.forEach((fn) => fn());
-  poll();
-  const tap = (selector: string, isTrusted = true) => listeners.forEach((fn) => fn({ isTrusted, target: frameDoc.querySelector(selector)! }));
+  if (open) { document.getElementById('open')!.click(); poll(); }
+  const tap = (selector: string, isTrusted = true) => listeners.forEach((fn) => fn({ isTrusted, target: fw.document.querySelector(selector)! }));
   const speak = (voice: unknown = ukVoice) => { const u = new FakeUtterance('секретне слово'); u.voice = voice; fw.speechSynthesis.speak(u); return u; };
-  const start = (u: FakeUtterance) => { native.speaking = true; u.dispatchEvent(new Event('start')); };
+  const start = (u: FakeUtterance) => { fw.speechSynthesis.speaking = true; u.dispatchEvent(new Event('start')); };
   const tick = (kind: string, check: string, isTrusted = true) => {
     const box = document.querySelector(`input[data-row="${kind}"][data-check="${check}"]`) as HTMLInputElement;
     box.checked = true;
     change!({ target: box, isTrusted });
     return box;
   };
-  return { receipt, advance, poll, tap, speak, start, tick, native, fw, frame, store, played, fetched, ukVoice, enVoice, listeners };
+  return { receipt, advance, poll, tap, speak, start, tick, native, makeNative, practiceDoc, fw, opened, loaded, store, played, fetched, ukVoice, enVoice, listeners };
 }
 
 describe('in-page observer', () => {
@@ -333,6 +339,41 @@ describe('in-page observer', () => {
     h.advance(3000);
     expect(h.receipt.transitions.next).toBeNull();
     expect(h.receipt.transitions.route).toBeNull();
+  });
+
+  it('opens practice as its own top-level window and observes each new document there', () => {
+    const h = harness({ open: false });
+    expect(h.opened).toEqual([]);
+    const original = h.native.speak;
+    document.getElementById('open')!.click();
+    expect(h.opened).toEqual([['/practice/', '_blank', 'popup,width=900,height=1000']]);
+    h.loaded.forEach((fn) => fn()); // DOMContentLoaded of the first document, before any opener timer runs
+    expect(h.fw.speechSynthesis.speak).not.toBe(original);
+    expect(h.listeners).toHaveLength(1);
+    // A route departure gives the window a new document and a new speech object; both must be observed again.
+    const next = h.makeNative();
+    const nextSpeak = next.speak;
+    Object.assign(h.fw, { document: h.practiceDoc(), speechSynthesis: next });
+    h.poll();
+    h.poll();
+    expect(h.listeners).toHaveLength(2);
+    expect(next.speak).not.toBe(nextSpeak);
+    h.tap('#play');
+    h.start(h.speak());
+    h.tap('.stage-back');
+    h.fw.speechSynthesis.cancel();
+    h.advance(3000);
+    expect(h.receipt.transitions.home).toMatchObject({ speakCalls: 1, cancelCalls: 1, stopped: true, activeAtTransition: true });
+  });
+
+  it('leaves the initial blank document of the window alone', () => {
+    const h = harness({ open: false });
+    h.fw.location.href = 'about:blank';
+    document.getElementById('open')!.click();
+    h.poll();
+    expect(h.listeners).toEqual([]);
+    expect(Object.hasOwn(h.native, 'speak')).toBe(true);
+    expect(h.native.speak).toBe(h.native.speak);
   });
 
   it('waits for a stable catalog and reports aggregate counts only', () => {
