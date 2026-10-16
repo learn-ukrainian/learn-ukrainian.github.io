@@ -2668,10 +2668,11 @@ Query params:
 - `fresh=true` — invalidate orient-layer caches before gathering (see below).
 - `lean=true` — use the lightweight cold-start preset and omit the heavy
   `pipeline`, `issues`, and `wiki` sections. An explicit `sections` list wins.
-  `capacity` and `health` stay in the lean preset but are cache-first /
-  detached (#6983): a hung CodexBar or integrity canary returns
+  `capacity`, `health`, `delegate`, and `rollovers` stay in the lean preset
+  but are cache-first / detached (#6983, #10866): a hung collector returns
   `meta.error` plus the empty/default payload and must not stall the
-  rest of the gather.
+  rest of the gather. A later request inside the section TTL serves the
+  stored value without waiting on a new hang.
 - `sections=git,runtime` — comma-separated subset of section keys to
   collect. Valid keys: `git`, `issues`, `pipeline`, `runtime`,
   `idle_prs`, `delegate`, `bridge_pending`, `rollovers`, `wiki`, `governance`,
@@ -2730,9 +2731,9 @@ failure retries on the next call.
 | `idle_prs` | 60 | `gh` | green, reviewed, open PRs idle for more than one hour; detached refresh |
 | `pipeline` | 0 | `fs` | wraps `/api/state/summary`, which carries its **own** 60 s cache. Caching again at the orient layer would stack windows and label up-to-119 s-old data as fresh (#1309 reviewer BLOCKER B2). |
 | `runtime` | 60 | `fs` | agent registry + headroom + recent outcomes |
-| `delegate` | 30 | `fs` | active delegate/codex tasks |
+| `delegate` | 30 | `fs` | active delegate/codex tasks; cache-first detached worker so a hung collector never pins `/api/orient` (#10866) |
 | `capacity` | 15 | `fs` | routing-budget lane snapshot; cache-first detached worker so CodexBar never pins `/api/orient` (#6983) |
-| `rollovers` | 15 | `fs` | compact fleet rollover counts plus actionable pending or incompletely cleaned entries |
+| `rollovers` | 15 | `fs` | compact fleet rollover counts plus actionable pending or incompletely cleaned entries; cache-first detached worker (#10866) |
 | `wiki` | 120 | `fs` | per-track wiki compilation coverage |
 | `health` | 15 | `probe` | API/DB/MCP port + integrity canaries; cache-first detached worker (#6983) |
 | `session_hints` | 60 | `fs` | recent `docs/session-state/*.md` entries |

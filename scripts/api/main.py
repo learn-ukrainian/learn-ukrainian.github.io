@@ -303,13 +303,15 @@ _SERVER_START = datetime.now(UTC)
 # advisory — Python threads are not cancellable once started. Real
 # protection per sync collector:
 #   - ``git``, ``issues``     — subprocess timeout 2 s (``_run_command``)
-#   - ``runtime``, ``delegate``, ``wiki``, ``session_hints``
+#   - ``runtime``, ``wiki``, ``session_hints``
 #                            — pure-Python / filesystem, no inner
 #                              timeout; they rely on being cheap.
 #   - ``idle_prs``           — cache-first detached worker; ``gh`` never runs
 #                              in the request path.
 #   - ``capacity``, ``health`` — cache-first detached worker (#6983); CodexBar
 #                              / canaries never pin the lean gather.
+#   - ``delegate``, ``rollovers`` — cache-first detached worker (#10866); a hung
+#                              collector must not pin the lean gather.
 # If a sync collector ever starts to block (e.g. a network FS hang), it
 # will tie up a threadpool slot past the hard timeout. See
 # MONITOR-API.md for the full breakdown.
@@ -375,8 +377,9 @@ ORIENT_SECTION_KEYS: tuple[str, ...] = tuple(ORIENT_SECTION_TTLS.keys())
 # bridge asks, blocking decisions (governance), health, and the handoff pointers / current goal
 # (session_hints). Excludes the three heavy sections — ``pipeline`` (~2k module stats),
 # ``issues`` (full gh list), ``wiki`` (per-track coverage) — which are fetched on demand via
-# ``?sections=...``. ``capacity`` and ``health`` stay in the preset but are cache-first /
-# detached so CodexBar or a hung canary cannot pin the gather at 5 s (#6983).
+# ``?sections=...``. ``capacity``, ``health``, ``delegate``, and ``rollovers`` stay in the
+# preset but are cache-first / detached so a hung collector cannot pin the gather at 5 s
+# (#6983, #10866).
 LEAN_ORIENT_SECTIONS: tuple[str, ...] = (
     "git",
     "runtime",
@@ -399,11 +402,12 @@ _ORIENT_SYNC_EXECUTOR = ThreadPoolExecutor(
     thread_name_prefix="orient-sync",
 )
 
-# Lean ``capacity`` / ``health`` are cache-first and detached: CodexBar and
-# integrity canaries must not pin ``asyncio.gather`` at the 5 s section
-# wall (#6983). A short join lets cheap (test) collectors populate the
+# Lean ``capacity``, ``health``, ``delegate``, and ``rollovers`` are cache-first
+# and detached: CodexBar, integrity canaries, and hung delegate/rollover
+# collectors must not pin ``asyncio.gather`` at the 5 s section wall
+# (#6983, #10866). A short join lets cheap (test) collectors populate the
 # same request; a live hang returns fallback immediately after this wait.
-DETACHED_ORIENT_SECTION_KEYS: frozenset[str] = frozenset({"capacity", "health"})
+DETACHED_ORIENT_SECTION_KEYS: frozenset[str] = frozenset({"capacity", "health", "delegate", "rollovers"})
 DETACHED_ORIENT_INLINE_WAIT_S = 0.4
 _detached_orient_lock = threading.Lock()
 _detached_orient_threads: dict[str, threading.Thread] = {}
@@ -782,7 +786,7 @@ def _cached_idle_pr_section(
 
 
 def reset_detached_orient_state_for_tests() -> None:
-    """Drop capacity/health last-good so tests do not leak across cases."""
+    """Drop detached-orient last-good so tests do not leak across cases."""
     with _detached_orient_lock:
         threads = list(_detached_orient_threads.values())
     for thread in threads:
