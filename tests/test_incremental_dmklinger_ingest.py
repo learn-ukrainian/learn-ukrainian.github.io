@@ -1,6 +1,7 @@
 """Real SQLite and builder-oracle tests for the translations-only boundary."""
 import hashlib
 import json
+import select
 import sqlite3
 import subprocess
 import sys
@@ -236,6 +237,126 @@ def test_missing_files_and_receipt_collision_refused(staged):
     chunks.unlink()
     with pytest.raises(FileNotFoundError):
         run(staged)
+
+
+@pytest.mark.parametrize("apply", [False, True], ids=["dry-run", "apply"])
+@pytest.mark.parametrize("entrypoint", ["callable", "cli"])
+@pytest.mark.parametrize("target", ["database", "input", "-wal", "-shm", "-journal"])
+@pytest.mark.parametrize("alias", ["direct", "symlink", "hardlink"])
+def test_receipt_collisions_preserve_every_protected_file(staged, capsys, apply, entrypoint, target, alias):
+    db, chunks, _, independent_receipt = staged
+    sidecars = [Path(f"{db}{suffix}") for suffix in ("-wal", "-shm", "-journal")]
+    for sidecar in sidecars:
+        sidecar.write_bytes(b'{"status":"existing receipt-shaped sidecar"}\n')
+    protected = [db, chunks, *sidecars]
+    destination = {"database": db, "input": chunks}.get(target, Path(f"{db}{target}"))
+    receipt = destination
+    if alias != "direct":
+        receipt = db.parent / "receipt-alias.json"
+        if alias == "symlink":
+            receipt.symlink_to(destination)
+        else:
+            receipt.hardlink_to(destination)
+    before = {path: path.read_bytes() for path in [*protected, receipt]}
+    if entrypoint == "callable":
+        with pytest.raises(ingest.IngestError, match="receipt must not overwrite"):
+            ingest.ingest(db, chunks, input_sha256=ingest.INPUT_SHA256, receipt_path=receipt, apply=apply)
+    else:
+        args = ["--db", str(db), "--input", str(chunks), "--input-sha256", ingest.INPUT_SHA256,
+                "--receipt", str(receipt)]
+        assert ingest.main([*args, *(["--apply"] if apply else [])]) == 2
+        output = capsys.readouterr()
+        assert output.out == ""
+        assert "REFUSED: receipt must not overwrite" in output.err
+    assert {path: path.read_bytes() for path in before} == before
+    assert not independent_receipt.exists()
+    if alias == "symlink":
+        assert receipt.is_symlink()
+    elif alias == "hardlink":
+        assert receipt.samefile(destination)
+
+
+@pytest.mark.parametrize("apply", [False, True], ids=["dry-run", "apply"])
+@pytest.mark.parametrize("suffix", ["-wal", "-shm", "-journal"])
+@pytest.mark.parametrize("alias", ["direct", "receipt-symlink", "database-symlink", "parent-symlink"])
+def test_absent_sidecar_receipt_refused_before_reading_missing_input(staged, apply, suffix, alias):
+    db, chunks, _, _ = staged
+    sidecar = Path(f"{db}{suffix}")
+    receipt = sidecar
+    if alias == "receipt-symlink":
+        receipt = db.parent / "dangling-receipt.json"
+        receipt.symlink_to(sidecar)
+    elif alias == "database-symlink":
+        db_alias = db.parent / "database-alias.db"
+        db_alias.symlink_to(db)
+        db = db_alias
+    elif alias == "parent-symlink":
+        directory_alias = db.parent / "directory-alias"
+        directory_alias.symlink_to(db.parent, target_is_directory=True)
+        receipt = directory_alias / sidecar.name
+    before = db.read_bytes()
+    missing_input = chunks.parent / "missing.jsonl"
+    with pytest.raises(ingest.IngestError, match="receipt must not overwrite"):
+        ingest.ingest(db, missing_input, input_sha256="invalid", receipt_path=receipt, apply=apply)
+    assert db.read_bytes() == before
+    assert not sidecar.exists()
+    assert not receipt.exists()
+    assert not missing_input.exists()
+
+
+@pytest.mark.parametrize("apply", [False, True], ids=["dry-run", "apply"])
+@pytest.mark.parametrize("suffix", ["-wal", "-shm", "-journal"])
+def test_refusal_preserves_independent_wal_commit_after_writer_crash(staged, apply, suffix):
+    db, chunks, _, _ = staged
+    writer_code = """
+import sqlite3
+import sys
+conn = sqlite3.connect(sys.argv[1])
+assert conn.execute('PRAGMA journal_mode=WAL').fetchone() == ('wal',)
+conn.execute('PRAGMA wal_autocheckpoint=0')
+conn.execute('CREATE TABLE independent_marker (value INTEGER)')
+conn.execute('INSERT INTO independent_marker VALUES (42)')
+conn.commit()
+print('committed', flush=True)
+sys.stdin.read()
+"""
+    writer = subprocess.Popen([sys.executable, "-c", writer_code, str(db)],
+                              stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    try:
+        assert select.select([writer.stdout], [], [], 15)[0], "WAL writer did not report commit"
+        assert writer.stdout.readline() == "committed\n"
+        wal, shm, journal = (Path(f"{db}{ending}") for ending in ("-wal", "-shm", "-journal"))
+        assert wal.stat().st_size > 0 and shm.is_file()
+        protected = [db, chunks, wal, shm]
+        if suffix == "-journal":
+            journal.write_bytes(b'{"status":"existing receipt-shaped sidecar"}\n')
+            protected.append(journal)
+        before = {path: path.read_bytes() for path in protected}
+        with pytest.raises(ingest.IngestError, match="receipt must not overwrite"):
+            ingest.ingest(db, chunks, input_sha256=ingest.INPUT_SHA256,
+                          receipt_path=Path(f"{db}{suffix}"), apply=apply)
+        assert {path: path.read_bytes() for path in protected} == before
+    finally:
+        writer.kill()
+        writer.communicate(timeout=15)
+    with sqlite3.connect(db) as conn:
+        assert conn.execute("SELECT value FROM independent_marker").fetchall() == [(42,)]
+        assert conn.execute("PRAGMA integrity_check").fetchall() == [("ok",)]
+
+
+@pytest.mark.parametrize("apply, status", [(False, "dry_run"), (True, "committed")])
+def test_independent_receipt_with_absent_sidecars_succeeds(staged, apply, status):
+    db, chunks, oracle, receipt = staged
+    before = db.read_bytes(), chunks.read_bytes()
+    assert all(not Path(f"{db}{suffix}").exists() for suffix in ("-wal", "-shm", "-journal"))
+    result = run(staged, apply=apply)
+    assert result["status"] == status
+    assert json.loads(receipt.read_text())["status"] == status
+    assert chunks.read_bytes() == before[1]
+    if apply:
+        assert read_rows(db) == read_rows(oracle)
+    else:
+        assert db.read_bytes() == before[0]
 
 
 def test_postimage_pin_and_unexpected_delta_refused(staged, monkeypatch):

@@ -101,12 +101,14 @@ def ingest(
     committed_with_post_commit_error status, never a rollback claim.
     """
     db_path, input_path, receipt_path = map(Path, (db_path, input_path, receipt_path))
+    resolved_db = db_path.resolve()
+    protected_paths = (db_path, input_path, *(Path(f"{resolved_db}{suffix}") for suffix in ("-wal", "-shm", "-journal")))
+    if receipt_path.resolve() in {path.resolve() for path in protected_paths} or any(
+        receipt_path.exists() and path.exists() and receipt_path.samefile(path) for path in protected_paths
+    ):
+        raise IngestError("receipt must not overwrite database, input or SQLite sidecars")
     if not db_path.is_file():
         raise IngestError("database must already exist")
-    if receipt_path.resolve() in {db_path.resolve(), input_path.resolve()} or any(
-        receipt_path.exists() and receipt_path.samefile(path) for path in (db_path, input_path)
-    ):
-        raise IngestError("receipt must not overwrite database or input")
     expected, schema = _expected_input(input_path, input_sha256)
     conn = (
         sqlite3.connect(db_path.resolve().as_uri() + "?mode=rw", uri=True, isolation_level=None)
