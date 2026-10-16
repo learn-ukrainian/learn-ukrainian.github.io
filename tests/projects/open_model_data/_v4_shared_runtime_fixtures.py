@@ -17,6 +17,7 @@ import importlib.metadata
 import json
 import os
 import re
+import select
 import shlex
 import shutil
 import signal
@@ -24,7 +25,6 @@ import socket
 import subprocess
 import sys
 import tempfile
-import time
 import tomllib
 import uuid
 from dataclasses import replace
@@ -89,6 +89,7 @@ _SOCKET_NAME_WORST_CASE = ".s.PGSQL.65535"
 # The short directory a too-long scratch root falls back to, when it is writable.
 _SHORT_SYSTEM_TEMP = Path("/tmp")
 _PG_START_ATTEMPTS = 5
+_PG_STOP_WAIT_SECONDS = 30
 _PG_KILL_WAIT_SECONDS = 10
 _ISSUED_PORTS: set[int] = set()
 # What postgres or pg_ctl report when the chosen port or its Unix socket file is taken.
@@ -172,103 +173,128 @@ def _process_alive(pid: int) -> bool:
     return stat.rpartition(")")[2].split()[0] not in ("Z", "X")
 
 
-def _data_directory_argument(argv: list[str], cwd: str) -> str | None:
-    """The real path of the ``-D``/``--pgdata`` value on a postgres command line, if any."""
-    for index, argument in enumerate(argv):
-        if argument == "-D" and index + 1 < len(argv):
-            value = argv[index + 1]
-        elif argument.startswith("--pgdata="):
-            value = argument.partition("=")[2]
-        elif argument.startswith("-D") and len(argument) > 2:
-            value = argument[2:]
-        else:
-            continue
-        return os.path.realpath(os.path.join(cwd, value))
-    return None
+def _start_time(pid: int) -> str:
+    """Field 22 of ``/proc/<pid>/stat``, the start time that tells a reused pid apart."""
+    return Path(f"/proc/{pid}/stat").read_text().rpartition(")")[2].split()[19]
 
 
-def _identity_problem(pid: int, data: Path) -> str | None:
+def _identity_problem(pid: int, binary: Path, data: Path) -> str | None:
     """Why ``pid`` is not this fixture's own postgres server, or ``None`` when it is.
 
-    A pid read from ``postmaster.pid`` is only a claim: the file can be stale
-    and the number reused. The process must belong to this user, run a
-    postgres or postmaster binary, and serve this data directory.
+    A pid read from ``postmaster.pid`` is only a claim: the file can be stale,
+    replaced, or name a reused number, and a command line can say anything.
+    The process must belong to this user, execute this installation's server
+    binary, run in this data directory (the postmaster changes into it), and
+    the lock file must name it serving that directory.
     """
     proc = Path("/proc") / str(pid)
+    server = os.path.realpath(binary / "postgres")
+    wanted = os.path.realpath(data)
     try:
+        started = _start_time(pid)
         owner = proc.stat().st_uid
-        argv = [os.fsdecode(part) for part in (proc / "cmdline").read_bytes().split(b"\0") if part]
-        cwd = os.path.realpath(os.readlink(proc / "cwd"))
+        exe = os.readlink(proc / "exe")
+        cwd = os.readlink(proc / "cwd")
+        claim = (data / "postmaster.pid").read_text().splitlines()
+        if _start_time(pid) != started:
+            return "it was replaced while it was being checked"
     except OSError as error:
         return f"it cannot be inspected ({error})"
     if owner != os.getuid():
         return f"it belongs to uid {owner}, not uid {os.getuid()}"
-    if not argv or os.path.basename(argv[0]) not in ("postgres", "postmaster"):
-        return f"its command line {argv!r} does not name a postgres binary"
-    wanted = os.path.realpath(data)
-    if wanted not in (cwd, _data_directory_argument(argv[1:], cwd)):
-        return f"it serves a different data directory (cwd {cwd}, command line {argv!r}), not {wanted}"
+    if exe != server:
+        return f"it executes {exe}, not this installation's server binary {server}"
+    if cwd != wanted:
+        return f"it runs in a different data directory ({cwd}), not {wanted}"
+    if claim[:1] != [str(pid)] or len(claim) < 2 or os.path.realpath(claim[1]) != wanted:
+        return f"postmaster.pid does not name pid {pid} serving {wanted}"
     return None
 
 
-def _kill_own_server(pid: int, data: Path) -> None:
-    """SIGKILL ``pid`` only after proving it is this fixture's server; refuse otherwise.
+def _open_own_server(pid: int, binary: Path, data: Path) -> int | None:
+    """A pidfd for ``pid`` once it is proven to be this fixture's server; ``None`` when it no longer runs.
 
-    A pidfd opened before the check keeps the number from being reused between
-    the proof and the signal.
+    The pidfd is opened before the proof and checked alive after it, so the
+    proof and every later signal concern one process even if the number is
+    reused. Without pidfd support no bare pid is ever signaled: ``pg_ctl``
+    starts the server detached, so the fixture holds no child handle to fall
+    back to, and it refuses instead. A refused server shuts itself down once
+    teardown removes its data directory and lock file.
     """
+    refusal = f"refusing to signal pid {pid} from {data}/postmaster.pid"
     try:
+        pidfd_send_signal = signal.pidfd_send_signal
         pidfd = os.pidfd_open(pid)
     except ProcessLookupError:
-        return
-    except (AttributeError, OSError):
-        pidfd = None
+        return None
+    except (AttributeError, OSError) as error:
+        if not _process_alive(pid):
+            return None
+        raise RuntimeError(
+            f"{refusal}: pidfd support is unavailable ({error!r}) and a bare pid can be reused"
+        ) from error
+    owned = False
     try:
-        problem = _identity_problem(pid, data)
-        if problem is not None:
-            if not _process_alive(pid):
-                return
-            raise RuntimeError(f"refusing to signal pid {pid} from {data}/postmaster.pid: {problem}")
-        with contextlib.suppress(ProcessLookupError):
-            if pidfd is None:
-                os.kill(pid, signal.SIGKILL)
-            else:
-                signal.pidfd_send_signal(pidfd, signal.SIGKILL)
+        problem = _identity_problem(pid, binary, data)
+        if problem is None:
+            # Still alive, so the pid was never freed and every check above read this process.
+            pidfd_send_signal(pidfd, 0)
+            owned = True
+            return pidfd
+        if _process_alive(pid):
+            raise RuntimeError(f"{refusal}: {problem}")
+        return None
+    except ProcessLookupError:
+        return None
     finally:
-        if pidfd is not None:
+        if not owned:
             os.close(pidfd)
 
 
+def _wait_for_exit(pidfd: int, seconds: float) -> bool:
+    """Whether the process behind ``pidfd`` exits within ``seconds``."""
+    poller = select.poll()
+    poller.register(pidfd, select.POLLIN)
+    return bool(poller.poll(int(seconds * 1000)))
+
+
 def _stop_server(binary: Path, data: Path) -> None:
-    """Stop the server in ``data`` if one runs; kill it when ``pg_ctl`` cannot."""
+    """Stop the server in ``data`` if one runs, signaling only a process proven to be it.
+
+    ``pg_ctl stop`` signals whatever pid ``postmaster.pid`` names, so it is
+    not used. The verified pidfd gets SIGQUIT (``pg_ctl``'s immediate
+    shutdown), then SIGKILL if the server outlives the wait.
+    """
     pid = _postmaster_pid(data)
     if pid is None:
         return
-    try:
-        stopped = (
-            subprocess.run(
-                [str(binary / "pg_ctl"), "-D", str(data), "-m", "immediate", "-w", "-t", "30", "stop"],
-                check=False,
-                capture_output=True,
-                timeout=45,
-            ).returncode
-            == 0
-        )
-    except subprocess.TimeoutExpired:
-        stopped = False
-    if stopped:
+    pidfd = _open_own_server(pid, binary, data)
+    if pidfd is None:
         return
-    _kill_own_server(pid, data)
-    deadline = time.monotonic() + _PG_KILL_WAIT_SECONDS
-    while _process_alive(pid):
-        if time.monotonic() > deadline:
-            raise RuntimeError(f"PostgreSQL server {pid} survived pg_ctl stop and SIGKILL")
-        time.sleep(0.05)
+    try:
+        for signum, seconds in ((signal.SIGQUIT, _PG_STOP_WAIT_SECONDS), (signal.SIGKILL, _PG_KILL_WAIT_SECONDS)):
+            with contextlib.suppress(ProcessLookupError):
+                signal.pidfd_send_signal(pidfd, signum)
+            if _wait_for_exit(pidfd, seconds):
+                return
+        raise RuntimeError(f"PostgreSQL server {pid} survived SIGQUIT and SIGKILL")
+    finally:
+        os.close(pidfd)
 
 
 def _server_options(sock: Path, port: int) -> str:
     """The ``pg_ctl -o`` string. ``pg_ctl`` hands it to ``sh``, so every value is quoted."""
     return f"-k {shlex.quote(str(sock))} -h {shlex.quote('')} -p {port}"
+
+
+def _appended_text(log: Path, offset: int) -> str:
+    """What was written to ``log`` after byte ``offset``."""
+    try:
+        with log.open("rb") as handle:
+            handle.seek(offset)
+            return handle.read().decode(errors="replace")
+    except FileNotFoundError:
+        return ""
 
 
 def _start_server(binary: Path, work: Path, sock: Path) -> int:
@@ -278,6 +304,7 @@ def _start_server(binary: Path, work: Path, sock: Path) -> int:
     escaping them, so it runs inside ``work`` and gets the relative names.
     Only a clash on the port or its socket file is retried; any other startup
     failure is raised at once with ``pg_ctl``'s stderr and the server log.
+    Each attempt is judged by its own stderr and the log lines it appended.
     """
     data = work / "data"
     log = work / "server.log"
@@ -285,6 +312,7 @@ def _start_server(binary: Path, work: Path, sock: Path) -> int:
     for _ in range(_PG_START_ATTEMPTS):
         port = _free_tcp_port()
         attempted.append(port)
+        offset = log.stat().st_size if log.exists() else 0
         started = subprocess.run(
             [str(binary / "pg_ctl"), "-D", data.name, "-l", log.name, "-o", _server_options(sock, port), "-w", "start"],
             check=False,
@@ -295,7 +323,7 @@ def _start_server(binary: Path, work: Path, sock: Path) -> int:
         if started.returncode == 0:
             return port
         stderr = started.stderr.decode(errors="replace").strip()
-        tail = log.read_text(errors="replace")[-2000:] if log.exists() else ""
+        tail = _appended_text(log, offset)[-2000:]
         _stop_server(binary, data)
         if not _PORT_CLASH.search(stderr + tail):
             raise RuntimeError(
