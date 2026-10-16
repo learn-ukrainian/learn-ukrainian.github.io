@@ -803,6 +803,92 @@ def test_lean_orient_hung_capacity_and_health_do_not_stall_other_sections(monkey
         release.set()
 
 
+def test_lean_orient_hung_delegate_and_rollovers_do_not_stall(monkeypatch):
+    """#10866: a hung delegate or rollover collector must not pin lean orient.
+
+    Same release-event pattern as the capacity/health stall test: the
+    collectors wait with a timeout, and the test sets the event on the
+    way out so the detached threads do not outlive the case.
+    """
+    _patch_orient_sources(monkeypatch)
+    release = threading.Event()
+    entered = {"delegate": 0, "rollovers": 0}
+    delegate_cached = {"active_count": 7, "recent": [{"task_id": "detached-delegate-10866"}]}
+    rollovers_cached = {
+        "counts": {"total": 1, "marker": "detached-rollover-10866"},
+        "actionable": [{"id": "detached-rollover-10866"}],
+        "errors": [],
+    }
+
+    def hang_delegate(ctx=None):
+        entered["delegate"] += 1
+        release.wait(8)
+        return delegate_cached
+
+    def hang_rollovers(ctx=None):
+        entered["rollovers"] += 1
+        release.wait(8)
+        return rollovers_cached
+
+    monkeypatch.setattr(api_main, "_collect_delegate_orient_data", hang_delegate)
+    monkeypatch.setattr(api_main, "_collect_rollovers_orient_data", hang_rollovers)
+
+    sequence_start = time.perf_counter()
+    try:
+        start = time.perf_counter()
+        response = client.get("/api/orient?lean=true")
+        elapsed = time.perf_counter() - start
+        assert response.status_code == 200
+        assert_under_budget(
+            elapsed,
+            1.5,
+            f"lean orient stalled on delegate/rollovers, took {elapsed:.3f}s",
+        )
+        data = response.json()
+        assert data["git"]["branch"] == "main"
+        assert data["runtime"]["agents"] == ["codex"]
+        assert data["capacity"]["lanes"]["codex"]["status"] == "cool"
+        assert data["health"]["api"] is True
+        assert data["session_hints"][0]["file"] == "docs/session-state/example.md"
+        assert "bridge_pending" in data
+        assert "governance" in data
+        assert data["delegate"]["active_count"] == 0
+        assert data["rollovers"]["actionable"] == []
+        for key in ("delegate", "rollovers"):
+            assert "section_timeout" not in str(data["meta"][key].get("error", ""))
+
+        release.set()
+        with api_main._detached_orient_lock:
+            refresh_threads = list(api_main._detached_orient_threads.values())
+        for thread in refresh_threads:
+            thread.join(timeout=2.0)
+            assert not thread.is_alive()
+        assert entered == {"delegate": 1, "rollovers": 1}
+        stored_at = time.perf_counter()
+
+        release.clear()
+        start = time.perf_counter()
+        cached = client.get("/api/orient?lean=true")
+        cached_elapsed = time.perf_counter() - start
+        assert cached.status_code == 200
+        assert_under_budget(
+            cached_elapsed,
+            1.0,
+            f"warm lean orient waited on a re-blocked collector, took {cached_elapsed:.3f}s",
+        )
+        assert cached_elapsed < 8, "second request waited out the re-blocked collector"
+        assert time.perf_counter() - stored_at < api_main.ORIENT_SECTION_TTLS["rollovers"]
+        assert time.perf_counter() - sequence_start < api_main.ORIENT_SECTION_TTLS["rollovers"]
+        assert entered == {"delegate": 1, "rollovers": 1}
+        warm = cached.json()
+        assert warm["delegate"] == delegate_cached
+        assert warm["rollovers"] == rollovers_cached
+        assert warm["meta"]["delegate"]["cache"] == "hit"
+        assert warm["meta"]["rollovers"]["cache"] == "hit"
+    finally:
+        release.set()
+
+
 @pytest.mark.parametrize("separator", ["\u0085", "\u2028", "\u2029"], ids=["NEL", "LS", "PS"])
 def test_orient_recent_commits_keep_unicode_separators_inside_subjects(monkeypatch, tmp_path, separator):
     # #9556: ``git log --oneline`` has one record per physical line.
