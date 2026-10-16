@@ -108,6 +108,89 @@ These are the high-frequency / high-spike fixes. Disabling Claude-compat hooks f
 (`apply_grok_hook_profile --apply`) removes the **~162 ms/Bash** PreTool tax entirely for
 the Grok seat (Claude seats unchanged).
 
+## Fail-closed PreToolUse guards (2026-10-16, #10848)
+
+### Policy
+
+Claude Code lets a tool call proceed when its PreToolUse command hook times out, crashes,
+cannot start, exits with a code other than 0 or 2, or prints invalid JSON. The hooks
+reference says: "To block the call when a `command` or `http` hook times out, set
+`onFailure: "block"`" (Claude Code 2.1.295 or later; the default is `"continue"`).
+Under host load the guards used to time out, and the tool then ran unguarded.
+
+- Every refusing guard in `agents_extensions/shared/settings.json` sets
+  `"onFailure": "block"`: `enforce-venv.sh`, `guard-branch-switch-in-main.py`,
+  `guard-admin-merge.py`, `guard-pr-merge.py`, `guard-secret-print.py`,
+  `guard-primary-checkout-write.py` (Bash and Write/Edit/MultiEdit) and
+  `guard-public-github-text.py`.
+- Timeouts are 10 s for the local guards and 30 s for the two merge guards, which call
+  GitHub. Both are well above 4 × the loaded p99 below.
+- `heal-core-bare.py` stays fail-open. It refuses nothing, and blocking every git command
+  because a repair helper stalled would wedge the session. It now reads the shared git
+  config in-process and starts the checker only when `core.bare` may be on.
+- SessionStart, PostToolUse, UserPromptSubmit, Stop and the Entire hooks stay fail-open.
+- `tests/test_hook_failure_policy.py` enforces all of this. A new `guard-*.py` entry fails
+  the test until it is added to the fail-closed list.
+- A live Claude Code 2.1.301 canary (opt-in test, `LU_LIVE_CLAUDE_HOOK_CANARY=1`) confirmed
+  the behaviour. A stub hook that outlived its timeout blocked the Bash call only with
+  `onFailure: "block"`; without the field the command ran.
+
+### Measured latency (ms, spawn to exit, 200 calls per row)
+
+Host: 16 CPUs. "Ambient" is load 12–20. "Loaded" adds 16 busy loops, bringing load to about 40.
+"Group" runs the eight Bash hooks of one call in parallel, as Claude Code does. The guards
+run through `#!/usr/bin/env python3` (the project venv, Python 3.12) with
+`PYTHONDONTWRITEBYTECODE=1` and the agent command shims first on PATH, as in agent sessions.
+
+| Hook | Ambient p50 / p99 before | Ambient p50 / p99 after | Loaded group p99 before | Loaded group p99 after | Loaded seq p99 after |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| enforce-venv.sh | 13 / 20 | 16 / 33 | 963 | 230 | 111 |
+| heal-core-bare.py | 53 / 242 | 49 / 97 | 1299 | 377 | 596 |
+| guard-branch-switch-in-main.py | 93 / 129 | 59 / 95 | 1216 | 931 | 417 |
+| guard-admin-merge.py | 52 / 75 | 52 / 82 | 830 | 685 | 273 |
+| guard-pr-merge.py | 59 / 87 | 64 / 98 | 924 | 679 | 507 |
+| guard-secret-print.py | 60 / 93 | 63 / 116 | 1197 | 886 | 286 |
+| guard-primary-checkout-write.py (Bash) | 145 / 172 | 151 / 217 | 1190 | 666 | 447 |
+| guard-public-github-text.py | 53 / 69 | 60 / 122 | 665 | 510 | 286 |
+| Whole Bash group | 173 / 240 | 180 / 294 | 2193 (max 3355) | 1096 (max 1789) | — |
+
+Ambient load rose from 13 to 20 between the before and after runs, so compare the ambient
+columns loosely. Interpreter start-up is about 20 ms (`python3 -c pass`), or 11 ms with
+`-S`. That flag is not used: under `-S`, `guard-pr-merge.py` loses its merge-readiness
+dependency and refuses every merge, and the gain is small next to the tail. A bytecode cache outside the hooks directory
+was rejected, because a writable cache would let a same-user process replace guard code.
+
+Changes behind the "after" columns:
+
+- `guard-branch-switch-in-main.py` resolves the protected roots on first use and skips the
+  repository probes for git verbs that it can never refuse. A plain `ls` or `git status`
+  now spawns no git.
+- `guard-primary-checkout-write.py` and the branch guard send their own read-only git
+  probes to the real git instead of the agent shim (5 processes per call). If no other git
+  is on PATH they keep the shim.
+- `enforce-venv.sh` blocks when its payload cannot be read (for example, `jq` is missing).
+  Before, it let every command through.
+
+### Incident evidence
+
+In the 2026-10-16 driver session, 35 Bash calls had PreToolUse hooks cancelled. Each
+cancellation fired 0.3–2.7 s after its deadline, so the harness itself was late. Ten calls
+had a hook still pending after more than 10 s. Six had one pending after more than 30 s,
+including the merge guards, which exit in about 60 ms on a non-merge command. Those are
+whole-process stalls. Under fail-closed such a call is now refused and the agent retries.
+Before, the call ran unguarded.
+
+### Other harnesses
+
+| Harness | Hook surface | Failure semantics (official docs) | Fail-closed setting | State |
+| --- | --- | --- | --- | --- |
+| Claude Code | `.claude/settings.json` PreToolUse | Timeout, crash and other failures let the call proceed | `onFailure: "block"` | Set on every refusing guard |
+| Claude and Grok dispatch workers | Built from the shared settings by `adapters/claude.py` | As above / Grok: "timeouts, crashes, malformed output — is fail-open" | Claude: inherited. Grok: none; `grok_hook_bridge.py` denies at 10 s, before Grok's 15 s or longer timeout | Covered. Residual: the reviewer publish guard is added with timeout 5 and no `onFailure` |
+| Codex | `codex/hooks.json` → `codex_hook_policy.py` | No documented rule for a timed-out or crashed command hook; managed PreToolUse "error, timeout, or malformed response can fail the hook without blocking the tool" | None documented | The policy runner turns each guard deadline into a refusal; the 45 s entry timeout exceeds the 39 s inner chain (tested). An entry-script stall is uncovered |
+| Antigravity (AGY) | `agy/hooks.json`, secret guard only | Only a `deny` decision blocks; failure behaviour is undocumented | None documented | `secret_print_hook.py` denies at 5 s, before the 10 s hook timeout (tested). A wrapper stall is uncovered |
+| Cursor | Reads `.claude/settings.json` as third-party hooks | "Other exit codes: Hook failed, action proceeds (fail-open)"; whether `onFailure` is honoured is undocumented | Native `failClosed: true` per script | Unverified. No tracked native Cursor guard config exists |
+| Gemini CLI | Not used (Gemini runs through AGY) | Other exit codes are "Non-fatal ... proceeds" | None documented | Not applicable |
+
 ## Related
 
 - Runbook: `docs/runbooks/grok-hook-profile.md`

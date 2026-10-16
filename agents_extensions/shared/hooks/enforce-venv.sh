@@ -6,8 +6,12 @@
 # Read tool input from stdin
 INPUT=$(cat)
 
-# Extract the command from JSON
-COMMAND=$(echo "$INPUT" | jq -r '.tool_input.command // empty')
+# Extract the command from JSON. An unreadable payload or a missing jq must
+# block, not pass every command through unchecked.
+if ! COMMAND=$(printf '%s' "$INPUT" | jq -r '.tool_input.command // empty'); then
+  printf 'enforce-venv: hook payload could not be read; blocking.\n' >&2
+  exit 2
+fi
 
 if [ -z "$COMMAND" ]; then
   exit 0
