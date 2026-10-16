@@ -6,6 +6,7 @@ never a live host path, so it measures the profile and not local caches.
 
 from __future__ import annotations
 
+import ast
 import subprocess
 import sys
 from functools import cache
@@ -162,23 +163,56 @@ def test_every_exclusion_is_reincludable() -> None:
     assert cone_dirs
 
 
+_SOURCE_INVENTORY = ("registry/lexicon/source-inventory", "registry/lexicon/source-inventory-review-decisions")
+
+
 @pytest.mark.parametrize(
     ("owned", "expected"),
     [
         ("site/src/data/curriculum-stats.json", ("site/src/data",)),
         ("site/src/pages/index.astro", ("site/src/content", "site/src/data")),
         ("site", ("site/src/content", "site/src/data")),
-        (
-            "registry/lexicon",
-            ("registry/lexicon/source-inventory", "registry/lexicon/source-inventory-review-decisions"),
-        ),
+        ("registry/lexicon", _SOURCE_INVENTORY),
         ("data", ("data/datasets", "data/lexicon", "data/processed", "data/projects")),
         ("scripts/delegate.py", ()),
+        ("tests/test_preparation_api.py", ("site/src/content",)),
+        ("scripts/audit/check_static_practice_assets.py", ("site/src/data",)),
+        ("scripts/lexicon/lesson_atlas_link_census.py", (*_SOURCE_INVENTORY, "site/src/content", "site/src/data")),
         (".", ()),
     ],
 )
 def test_owned_path_includes_the_trees_it_needs(owned: str, expected: tuple[str, ...]) -> None:
     assert delegate._infer_sparse_include(None, owned_paths=[owned]) == expected
+
+
+def _site_tree_markers() -> set[tuple[str, str]]:
+    """``(test file, tree)`` for every needs_sparse_tree marker naming a site tree."""
+    found: set[tuple[str, str]] = set()
+    for path in sorted((REPO_ROOT / "tests").rglob("test_*.py")):
+        tree = ast.parse(path.read_text(encoding="utf-8"))
+        for node in ast.walk(tree):
+            if (
+                isinstance(node, ast.Call)
+                and isinstance(node.func, ast.Attribute)
+                and node.func.attr == "needs_sparse_tree"
+            ):
+                for arg in node.args:
+                    if isinstance(arg, ast.Constant) and str(arg.value).startswith("site/"):
+                        found.add((path.relative_to(REPO_ROOT).as_posix(), str(arg.value)))
+    return found
+
+
+def test_owning_a_marked_site_reader_includes_its_tree() -> None:
+    """A worker that owns a test marked for a site tree gets that tree, so the test runs instead of skipping."""
+    markers = _site_tree_markers()
+    assert ("tests/test_lesson_atlas_link_census.py", "site/src/data") in markers
+    missing = sorted(
+        (test_file, tree)
+        for test_file, tree in markers
+        if tree not in delegate._infer_sparse_include(None, owned_paths=[test_file])
+    )
+
+    assert not missing, f"add these readers to scripts/delegate.py _SPARSE_OWNED_PATH_REINCLUDE: {missing}"
 
 
 def test_worker_env_points_tool_caches_at_the_scratch_lease(tmp_path: Path) -> None:

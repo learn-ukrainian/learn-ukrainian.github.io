@@ -9202,8 +9202,28 @@ _SPARSE_OWNED_PATH_REINCLUDE: dict[str, tuple[str, ...]] = {
     ),
     "registry/lexicon/source-inventory": _SOURCE_INVENTORY_READERS,
     "registry/lexicon/source-inventory-review-decisions": _SOURCE_INVENTORY_READERS,
-    "site/src/content": ("site",),
-    "site/src/data": ("site",),
+    # Readers whose tests carry pytest.mark.needs_sparse_tree for the tree.
+    "site/src/content": (
+        "site",
+        "scripts/api/preparation_state.py",
+        "scripts/generate_landing_pages.py",
+        "scripts/generate_mdx/reading_links.py",
+        "scripts/lexicon/lesson_atlas_link_census.py",
+        "tests/build/test_fresh_provenance.py",
+        "tests/test_landings_use_levellanding.py",
+        "tests/test_lesson_atlas_link_census.py",
+        "tests/test_preparation_api.py",
+    ),
+    "site/src/data": (
+        "site",
+        "scripts/audit/check_static_practice_assets.py",
+        "scripts/lexicon/check_manifest_freshness.py",
+        "scripts/lexicon/lesson_atlas_link_census.py",
+        "tests/test_check_static_practice_assets.py",
+        "tests/test_landings_use_levellanding.py",
+        "tests/test_lesson_atlas_link_census.py",
+        "tests/test_lexicon_manifest_fingerprint.py",
+    ),
 }
 # Stem prefixes whose match still has to mention the tree in that file.
 _SPARSE_REINCLUDE_CONTENT_MARKERS: dict[str, tuple[str, ...]] = {

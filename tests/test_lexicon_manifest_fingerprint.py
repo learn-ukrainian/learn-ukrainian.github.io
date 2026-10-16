@@ -168,6 +168,7 @@ def test_manifest_freshness_check_passes_on_matching_sidecar(tmp_path: Path, cap
     assert "Atlas manifest freshness OK" in output
 
 
+@pytest.mark.needs_sparse_tree("site/src/data")
 def test_committed_manifest_fingerprint_matches_real_lexicon_tree(capsys) -> None:
     """The PR tier must catch drift in the committed sidecar itself."""
     assert check_freshness(root=REPO_ROOT) == 0
