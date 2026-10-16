@@ -3554,6 +3554,242 @@ def test_cursor_review_interrupt_before_backup_keeps_file(tmp_tasks_dir, tmp_pat
     assert mcp_path.read_bytes() == original
 
 
+# ---------------------------------------------------------------------------
+# Write-safe sources mirror for Cursor authors (#10837)
+# ---------------------------------------------------------------------------
+
+
+def _sources_dispatch_args(*extra, agent="cursor"):
+    return delegate.build_parser().parse_args(
+        ["dispatch", "--agent", agent, "--task-id", "sources-mirror", "--prompt", "author", *extra]
+    )
+
+
+@pytest.mark.parametrize(
+    "extra",
+    [
+        ("--sources-mcp",),
+        ("--language-lane",),
+        ("--research-track", "l2-uk-en"),
+        ("--rules-seat", "content"),
+    ],
+)
+def test_sources_mcp_flag_set_by_each_trigger(monkeypatch, extra):
+    monkeypatch.delenv(delegate.rules_core.SEAT_ENV, raising=False)
+    assert delegate._sources_mcp_state_fields(_sources_dispatch_args(*extra), "cursor") == {"sources_mcp": True}
+
+
+@pytest.mark.parametrize("extra", [(), ("--rules-seat", "core")])
+def test_sources_mcp_flag_off_without_a_trigger(monkeypatch, extra):
+    monkeypatch.delenv(delegate.rules_core.SEAT_ENV, raising=False)
+    assert delegate._sources_mcp_state_fields(_sources_dispatch_args(*extra), "cursor") == {}
+
+
+def test_sources_mcp_flag_ignores_the_session_rules_seat(monkeypatch):
+    """``$LU_RULES_SEAT=content`` is the launching session's default, not this dispatch's request."""
+    monkeypatch.setenv(delegate.rules_core.SEAT_ENV, "content")
+    args = _sources_dispatch_args()
+    assert args.rules_seat is None
+    assert delegate.rules_core.resolve_seat(args.rules_seat) == "content"
+    assert delegate._sources_mcp_state_fields(args, "cursor") == {}
+
+
+@pytest.mark.parametrize("agent", ["claude", "codex", "agy", "grok", "kimi"])
+def test_sources_mcp_flag_never_set_for_another_agent(monkeypatch, agent):
+    monkeypatch.delenv(delegate.rules_core.SEAT_ENV, raising=False)
+    args = _sources_dispatch_args("--sources-mcp", "--rules-seat", "content", "--language-lane", agent=agent)
+    assert delegate._sources_mcp_state_fields(args, agent) == {}
+
+
+@pytest.mark.parametrize(
+    "extra",
+    [
+        ("--require-review-verdict",),
+        ("--review-profile", "ukrainian"),
+        ("--review-risk", "high"),
+        ("--review-author-model", "gpt-6.1-sol"),
+    ],
+)
+def test_sources_mcp_flag_never_set_for_a_review_dispatch(monkeypatch, extra):
+    """Review dispatches keep their own MCP path, whatever else the command line says."""
+    monkeypatch.delenv(delegate.rules_core.SEAT_ENV, raising=False)
+    args = _sources_dispatch_args("--sources-mcp", *extra)
+    assert delegate._sources_mcp_state_fields(args, "cursor") == {}
+
+
+def test_sources_mcp_flag_follows_the_dispatched_agent_after_substitution(monkeypatch):
+    """The flag keys on the agent that runs, so a cursor request substituted to codex carries none."""
+    monkeypatch.delenv(delegate.rules_core.SEAT_ENV, raising=False)
+    assert delegate._sources_mcp_state_fields(_sources_dispatch_args("--sources-mcp"), "codex") == {}
+    args = _sources_dispatch_args("--sources-mcp", agent="codex")
+    assert delegate._sources_mcp_state_fields(args, "cursor") == {"sources_mcp": True}
+
+
+@pytest.mark.parametrize(
+    ("agent", "state", "strict", "expected"),
+    [
+        ("cursor", {"sources_mcp": True}, False, {"mcp_server_names": ["sources"], "sources_read_only": True}),
+        ("cursor", {"sources_mcp": True}, True, {}),
+        ("cursor", {"sources_mcp": "true"}, False, {}),
+        ("cursor", {}, False, {}),
+        ("claude", {"sources_mcp": True}, False, {}),
+        ("grok", {"sources_mcp": True}, False, {}),
+    ],
+)
+def test_cursor_sources_mirror_tool_config(agent, state, strict, expected):
+    assert delegate._cursor_sources_mirror(agent, state, strict_mcp_config=strict) == expected
+
+
+def _git_repo(path: Path) -> None:
+    for argv in (
+        ["init", "-q", "-b", "main"],
+        ["config", "user.email", "test@example.invalid"],
+        ["config", "user.name", "test"],
+        ["config", "commit.gpgsign", "false"],
+        ["config", "core.hooksPath", "/dev/null"],
+    ):
+        subprocess.run(["git", *argv], cwd=path, check=True, capture_output=True, timeout=30)
+
+
+def _git_commit(path: Path, message: str) -> None:
+    subprocess.run(["git", "add", "-A"], cwd=path, check=True, capture_output=True, timeout=30)
+    subprocess.run(["git", "commit", "-q", "-m", message], cwd=path, check=True, capture_output=True, timeout=30)
+
+
+_TRACKED_CURSOR_MCP = json.dumps({"mcpServers": {"sources": {"url": "http://127.0.0.1:8766/mcp"}}}, indent=2).encode()
+_MIRROR_CURSOR_MCP = json.dumps(
+    {"mcpServers": {"sources": {"command": "/usr/bin/env", "args": ["-i", "LU_SOURCES_READ_ONLY=1", "python"]}}}
+).encode()
+
+
+def _run_cursor_author_worker(tmp_tasks_dir, tmp_path, invoke, *, state=None, strict=False):
+    task_id = "cursor-author-sources"
+    state_path = delegate._state_path(task_id)
+    delegate._write_state_atomic(
+        state_path, {"task_id": task_id, "status": "spawning", **({"sources_mcp": True} if state is None else state)}
+    )
+    with patch("agent_runtime.runner.invoke", side_effect=invoke) as runtime:
+        rc = delegate._run_worker(
+            task_id=task_id,
+            agent="cursor",
+            prompt="author",
+            mode="read-only" if strict else "workspace-write",
+            cwd_str=str(tmp_path),
+            model="grok-4.7",
+            hard_timeout=60,
+            strict_mcp_config=strict,
+            mcp_config_path=str(tmp_path / "attempt.json") if strict else None,
+        )
+    return rc, delegate._read_state(state_path), runtime
+
+
+@pytest.fixture
+def cursor_author_checkout(tmp_path):
+    checkout = tmp_path / "checkout"
+    (checkout / ".cursor").mkdir(parents=True)
+    (checkout / ".cursor" / "mcp.json").write_bytes(_TRACKED_CURSOR_MCP)
+    (checkout / "README.md").write_text("x\n", encoding="utf-8")
+    _git_repo(checkout)
+    _git_commit(checkout, "base")
+    return checkout
+
+
+def test_cursor_author_worker_gets_the_write_safe_mirror_and_restores_the_file(tmp_tasks_dir, cursor_author_checkout):
+    mcp_path = cursor_author_checkout / ".cursor" / "mcp.json"
+    seen = {}
+
+    def invoke(*_args, **kwargs):
+        seen.update(kwargs["tool_config"])
+        mcp_path.write_bytes(_MIRROR_CURSOR_MCP)  # What the adapter writes for the run.
+        return _finalize_mock_result()
+
+    _rc, state, runtime = _run_cursor_author_worker(tmp_tasks_dir, cursor_author_checkout, invoke)
+    runtime.assert_called_once()
+    assert seen["mcp_server_names"] == ["sources"]
+    assert seen["sources_read_only"] is True
+    assert "strict_mcp_config" not in seen
+    assert mcp_path.read_bytes() == _TRACKED_CURSOR_MCP
+    assert "cursor_mcp_config_recorded" not in state
+
+
+@pytest.mark.parametrize("revert", [False, True])
+def test_cursor_author_worker_fails_a_run_that_commits_the_mirror(tmp_tasks_dir, cursor_author_checkout, revert):
+    """A copy committed during the run fails it, even when a later commit restores the file."""
+    mcp_path = cursor_author_checkout / ".cursor" / "mcp.json"
+
+    def invoke(*_args, **_kwargs):
+        mcp_path.write_bytes(_MIRROR_CURSOR_MCP)
+        _git_commit(cursor_author_checkout, "author work")
+        if revert:
+            mcp_path.write_bytes(_TRACKED_CURSOR_MCP)
+            _git_commit(cursor_author_checkout, "restore")
+        return _finalize_mock_result()
+
+    rc, state, _runtime = _run_cursor_author_worker(tmp_tasks_dir, cursor_author_checkout, invoke)
+    assert rc != 0
+    assert state["status"] == "failed"
+    assert len(state["cursor_mcp_config_recorded"]) == 1
+    assert "carries per-run keys ['args', 'command']" in state["cursor_mcp_config_recorded"][0]
+    assert state["stderr_excerpt"].startswith("cursor_mcp_config_recorded: ")
+    assert mcp_path.read_bytes() == _TRACKED_CURSOR_MCP
+
+
+def test_cursor_author_worker_fails_a_run_that_leaves_the_mirror_staged(tmp_tasks_dir, cursor_author_checkout):
+    mcp_path = cursor_author_checkout / ".cursor" / "mcp.json"
+
+    def invoke(*_args, **_kwargs):
+        mcp_path.write_bytes(_MIRROR_CURSOR_MCP)
+        subprocess.run(["git", "add", ".cursor/mcp.json"], cwd=cursor_author_checkout, check=True, timeout=30)
+        return _finalize_mock_result()
+
+    rc, state, _runtime = _run_cursor_author_worker(tmp_tasks_dir, cursor_author_checkout, invoke)
+    assert rc != 0
+    assert state["status"] == "failed"
+    assert state["cursor_mcp_config_recorded"][0].startswith(".cursor/mcp.json at index: ")
+
+
+def test_cursor_author_worker_without_the_flag_gets_no_mirror(tmp_tasks_dir, cursor_author_checkout):
+    seen = {}
+
+    def invoke(*_args, **kwargs):
+        seen.update(kwargs["tool_config"])
+        return _finalize_mock_result()
+
+    _run_cursor_author_worker(tmp_tasks_dir, cursor_author_checkout, invoke, state={})
+    assert "mcp_server_names" not in seen and "sources_read_only" not in seen
+
+
+@pytest.mark.parametrize(("extra", "expected"), [(("--sources-mcp",), True), ((), None)])
+def test_cursor_dry_run_records_the_sources_mcp_flag(tmp_tasks_dir, tmp_path, monkeypatch, extra, expected):
+    """End to end through cmd_dispatch; the session's content seat alone never sets the flag."""
+    monkeypatch.setenv("LU_SCRATCH_ROOT", str(tmp_path))
+    monkeypatch.setenv(delegate.rules_core.SEAT_ENV, "content")
+    monkeypatch.setattr(delegate, "_sweep_runtime_tmp_orphans", lambda: None)
+    args = delegate.build_parser().parse_args(
+        [
+            *("dispatch", "--agent", "cursor", "--model", "grok-4.7", "--task-id", "cursor-sources-dry"),
+            *("--initiator", "claude", "--prompt", "test", "--dry-run", *extra),
+        ]
+    )
+    assert delegate.cmd_dispatch(args) == 0
+    state = delegate._read_state(delegate._state_path("cursor-sources-dry"))
+    assert state["status"] == "dry_run"
+    assert state.get("sources_mcp") is expected
+
+
+def test_cursor_review_with_the_flag_keeps_its_strict_path(tmp_tasks_dir, tmp_path):
+    seen = {}
+
+    def invoke(*_args, **kwargs):
+        seen.update(kwargs["tool_config"])
+        return _finalize_mock_result()
+
+    _run_cursor_author_worker(tmp_tasks_dir, tmp_path, invoke, strict=True)
+    assert seen["strict_mcp_config"] is True
+    assert seen["mcp_server_names"] == ["sources"]
+    assert "sources_read_only" not in seen
+
+
 def test_run_worker_persists_cursor_resolved_model_companion(tmp_tasks_dir, tmp_path):
     state_path = delegate._state_path("cursor-resolved-model")
     delegate._write_state_atomic(

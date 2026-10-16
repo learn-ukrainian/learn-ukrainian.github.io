@@ -96,7 +96,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from scripts.agent_runtime.sources_read_only import sources_tool_sets
+from scripts.agent_runtime.sources_read_only import READ_ONLY_ENV, sources_tool_sets
 from scripts.common.repo_root import project_interpreter, resolve_repo_root
 from scripts.common.safe_open import UnsafeEntryError, safe_open_below
 from scripts.review.receipts.ledger import REVIEW_TOOLS, review_tools
@@ -829,9 +829,26 @@ def isolated_sources_mcp_config(python_bin: Path, sources_server: Path) -> dict[
     ``PYTHON*`` variable, the user site and the working directory on ``sys.path``, so the reviewed checkout
     (the server's working directory) cannot run code before the server initializes (#9551).
     """
-    assignments = [f"{key}={value}" for key, value in REVIEWER_SOURCES_ENV]
+    return {"mcpServers": {"sources": _isolated_sources_server(python_bin, sources_server, REVIEWER_SOURCES_ENV)}}
+
+
+def read_only_sources_mcp_server(python_bin: Path, sources_server: Path) -> dict[str, Any]:
+    """A Cursor author's write-safe ``sources`` server entry (#10837).
+
+    The isolated reviewer launch plus the server's read-only mode: the process lists and runs only
+    the tools annotated read-only, so none of the tools that persist a live fetch (the Wikipedia
+    cache, the DictUA store) is reachable. ``env -i`` keeps the author's session from unsetting the
+    mode, and the server runs from the primary checkout, not the author's worktree.
+    """
+    return _isolated_sources_server(python_bin, sources_server, (*REVIEWER_SOURCES_ENV, (READ_ONLY_ENV, "1")))
+
+
+def _isolated_sources_server(
+    python_bin: Path, sources_server: Path, environment: Sequence[tuple[str, str]]
+) -> dict[str, Any]:
+    assignments = [f"{key}={value}" for key, value in environment]
     args = ["-i", *assignments, str(python_bin), "-I", str(sources_server)]
-    return {"mcpServers": {"sources": {"command": _ENV_COMMAND, "args": args}}}
+    return {"command": _ENV_COMMAND, "args": args}
 
 
 def check_review_contract(

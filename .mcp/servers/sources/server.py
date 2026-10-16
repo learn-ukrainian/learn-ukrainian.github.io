@@ -78,6 +78,11 @@ _READ_ONLY_TOOL = ToolAnnotations(readOnlyHint=True, destructiveHint=False)
 # sources.db. Additive cache writes, so not destructive, but not read-only (#9551).
 # tests/mcp/test_sources_tool_side_effects.py checks this against observed writes.
 _PERSISTING_LOOKUP_TOOL = ToolAnnotations(readOnlyHint=False, destructiveHint=False)
+# Read-only mode (#10837): any non-empty value makes this process list and run only
+# the tools annotated read-only; every other call is refused before its handler.
+# The Cursor author mirror launches the server with it (review_mcp.read_only_sources_mcp_server),
+# after checking this declaration matches sources_read_only.READ_ONLY_ENV.
+READ_ONLY_ENV = "LU_SOURCES_READ_ONLY"
 SUM11_AUTHORITY_NOTICE = (
     "Soviet-occupation СУМ-11 (1970–1980) is for Sovietization contrast only; "
     "NEVER use it for meaning, stress, part of speech, or word validity. "
@@ -1776,6 +1781,21 @@ def _with_receipt(content: list[TextContent], receipt_id: str, outcome: str | No
     return updated
 
 
+def _read_only_mode() -> bool:
+    import os
+
+    return bool(os.environ.get(READ_ONLY_ENV))
+
+
+async def _read_only_tool_names() -> frozenset[str]:
+    """The tools annotated read-only; the side-effect audit checks each annotation against observed writes."""
+    return frozenset(
+        tool.name
+        for tool in await list_tools()
+        if tool.annotations is not None and tool.annotations.read_only_hint is True
+    )
+
+
 def _review_record(
     recorder: Any, name: str, arguments: dict[str, Any], content: list[TextContent], *, status: str
 ) -> tuple[list[TextContent], bool, str | None, str | None]:
@@ -1875,6 +1895,8 @@ async def _dispatch_tool_call(
         "inspect_lemma",
     }:
         return [TextContent(type="text", text="V4 tool capability refused")], True, None
+    if _read_only_mode() and name not in await _read_only_tool_names():
+        return [TextContent(type="text", text=f"Tool {name} is not served in read-only mode.")], True, None
     recorder = _review_recorder()
     review_arguments = arguments if isinstance(arguments, dict) else {}
     refused = _review_before_handler(recorder, name, review_arguments)
@@ -2001,6 +2023,9 @@ async def _on_list_tools(_ctx: Any, _params: Any) -> ListToolsResult:
 
         allowed = review_tools(recorder.review_access) if recorder.mode == "on" else frozenset()
         tools = [tool for tool in tools if tool.name in allowed]
+    if _read_only_mode():
+        read_only = await _read_only_tool_names()
+        tools = [tool for tool in tools if tool.name in read_only]
     return ListToolsResult(tools=tools)
 
 

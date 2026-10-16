@@ -703,3 +703,113 @@ def test_cursor_adapter_parse_response_separates_distinct_v2026_05_27_messages(a
 
     assert result.ok is True
     assert result.response == "First message.\n\nSecond message."
+
+
+# ---------------------------------------------------------------------------
+# Write-safe sources mirror for Cursor authors (#10837)
+# ---------------------------------------------------------------------------
+
+_THIS_SERVER = Path(__file__).resolve().parents[3] / ".mcp" / "servers" / "sources" / "server.py"
+
+
+@pytest.fixture
+def read_only_launch(monkeypatch):
+    """The launch this checkout's server would get (in a worktree the default is the primary checkout's)."""
+    from scripts.agent_runtime import review_mcp
+
+    python_bin = Path(sys.executable)
+    monkeypatch.setattr(review_mcp, "sources_server_launch", lambda: (python_bin, _THIS_SERVER))
+    return review_mcp.read_only_sources_mcp_server(python_bin, _THIS_SERVER)
+
+
+def _author_plan(adapter, tmp_path, tool_config, mode="workspace-write"):
+    return adapter.build_invocation(
+        prompt="author",
+        mode=mode,
+        cwd=tmp_path,
+        model="grok-4.7",
+        task_id="author-sources",
+        session_id=None,
+        tool_config=tool_config,
+    )
+
+
+def _author_sources_config():
+    return {"mcp_server_names": ["sources"], "sources_read_only": True}
+
+
+@pytest.mark.parametrize("mode", ["workspace-write", "danger", "read-only"])
+def test_cursor_author_mirror_is_only_the_write_safe_sources_server(adapter, tmp_path, read_only_launch, mode):
+    """No daemon URL, no other server from .mcp.json or the workspace file: exactly the read-only launch."""
+    (tmp_path / ".mcp.json").write_text(
+        json.dumps({"mcpServers": {"sources": {"url": "http://127.0.0.1:8766/mcp"}, "other": {"command": "x"}}}),
+        encoding="utf-8",
+    )
+    workspace_config = tmp_path / ".cursor" / "mcp.json"
+    workspace_config.parent.mkdir()
+    workspace_config.write_text(
+        json.dumps({"mcpServers": {"sources": {"url": "http://127.0.0.1:8766/mcp"}, "extra": {"url": "http://x"}}}),
+        encoding="utf-8",
+    )
+
+    plan = _author_plan(
+        adapter, tmp_path, {**_author_sources_config(), "mcp_config_path": str(tmp_path / ".mcp.json")}, mode
+    )
+
+    assert "--approve-mcps" in plan.cmd
+    written = json.loads(workspace_config.read_text(encoding="utf-8"))
+    assert written == {"mcpServers": {"sources": read_only_launch}}
+    assert read_only_launch["command"] == "/usr/bin/env"
+    assert read_only_launch["args"][:4] == ["-i", "PATH=/usr/bin:/bin", "LC_ALL=C.UTF-8", "LU_SOURCES_READ_ONLY=1"]
+    assert read_only_launch["args"][4:] == [sys.executable, "-I", str(_THIS_SERVER)]
+    assert "8766" not in workspace_config.read_text(encoding="utf-8")
+
+
+def test_cursor_author_mirror_never_falls_back_to_the_daemon(adapter, tmp_path, read_only_launch):
+    """No .mcp.json anywhere: the non-strict review-free path would use the daemon URL; the author mirror does not."""
+    _author_plan(adapter, tmp_path, _author_sources_config())
+    written = json.loads((tmp_path / ".cursor" / "mcp.json").read_text(encoding="utf-8"))
+    assert written == {"mcpServers": {"sources": read_only_launch}}
+
+
+@pytest.mark.parametrize(
+    ("server_text", "reason"),
+    [
+        (None, "missing server"),
+        ("import os\n", "a server without read-only mode"),
+        ('READ_ONLY_ENV = "LU_OTHER"\n', "a server declaring another variable"),
+    ],
+)
+def test_cursor_author_mirror_refuses_a_server_without_read_only_mode(
+    adapter, tmp_path, monkeypatch, server_text, reason
+):
+    """Fails closed, writes nothing and never substitutes the daemon."""
+    from scripts.agent_runtime import review_mcp
+
+    server = tmp_path / "server.py"
+    if server_text is not None:
+        server.write_text(server_text, encoding="utf-8")
+    monkeypatch.setattr(review_mcp, "sources_server_launch", lambda: (Path(sys.executable), server))
+    with pytest.raises(RuntimeError, match="no read-only mode"):
+        _author_plan(adapter, tmp_path, _author_sources_config())
+    assert not (tmp_path / ".cursor").exists(), reason
+
+
+@pytest.mark.parametrize(
+    ("extra", "match"),
+    [
+        ({"strict_mcp_config": True}, "not strict review configs"),
+        ({"mcp_server_names": ["sources", "other"]}, "exactly \\['sources'\\]"),
+        ({"mcp_server_names": []}, "exactly \\['sources'\\]"),
+    ],
+)
+def test_cursor_author_mirror_refuses_other_shapes(adapter, tmp_path, read_only_launch, extra, match):
+    with pytest.raises(RuntimeError, match=match):
+        _author_plan(adapter, tmp_path, {**_author_sources_config(), **extra})
+    assert not (tmp_path / ".cursor").exists()
+
+
+@pytest.mark.parametrize("tool_config", [None, {}, {"sources_read_only": False}])
+def test_cursor_author_without_names_writes_no_mcp_file(adapter, tmp_path, tool_config):
+    _author_plan(adapter, tmp_path, tool_config)
+    assert not (tmp_path / ".cursor" / "mcp.json").exists()

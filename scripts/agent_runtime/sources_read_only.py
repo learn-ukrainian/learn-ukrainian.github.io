@@ -12,6 +12,26 @@ from functools import lru_cache
 from pathlib import Path
 
 SERVER_PATH = Path(__file__).resolve().parents[2] / ".mcp/servers/sources/server.py"
+# The variable that puts the server in read-only mode (#10837); the server declares the same name.
+READ_ONLY_ENV = "LU_SOURCES_READ_ONLY"
+
+
+def server_read_only_env(server_path: Path) -> str | None:
+    """The read-only mode variable ``server_path`` declares (``READ_ONLY_ENV = "..."``), or None.
+
+    A launcher relying on read-only mode refuses a server that declares a different variable or
+    none, so an older server cannot silently serve every tool.
+    """
+    tree = ast.parse(server_path.read_text(encoding="utf-8"))
+    for node in tree.body:
+        if (
+            isinstance(node, ast.Assign)
+            and any(isinstance(target, ast.Name) and target.id == "READ_ONLY_ENV" for target in node.targets)
+            and isinstance(node.value, ast.Constant)
+            and isinstance(node.value.value, str)
+        ):
+            return node.value.value
+    return None
 
 
 @lru_cache(maxsize=1)

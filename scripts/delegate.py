@@ -73,6 +73,7 @@ State files live at ``batch_state/tasks/<task-id>.json``. Format:
         "review_profile": str | null,  # code (default) or ukrainian
         "review_language_lane": bool,  # dispatch's Ukrainian content classification
         "review_brief_warnings": [str] | absent,  # advisory brief checks, e.g. review_brief_no_dispositions (#10665)
+        "sources_mcp": bool | absent,  # cursor author: write-safe sources mirror (#10837); absent means off
         "sources_mcp_call_count": int | null,  # runtime evidence; null means unknown
         "failure_reason": str | null,  # named cause on failed verdict-required reviews
         "launch_mode": "scope" | "popen-fallback",  # #8645 part C
@@ -7580,6 +7581,7 @@ _RECORDED_FAILURE_FIELDS = (
     "kimi_content_refusal",
     "agy_oauth_link_error",
     "read_only_mutation_paths",
+    "cursor_mcp_config_recorded",
 )
 
 
@@ -10835,7 +10837,7 @@ def _run_worker(
     if advisory_refusal:
         print(f"❌ {advisory_refusal}", file=sys.stderr)
         return 1
-    from scripts.agent_runtime.adapters.cursor import CURSOR_AUTO_ADMITTED_KEY
+    from scripts.agent_runtime.adapters.cursor import CURSOR_AUTO_ADMITTED_KEY, CURSOR_READ_ONLY_SOURCES_KEY
     from scripts.agent_runtime.attempt_boundary import (
         CLAUDE_ACCOUNT_AUTH_KEY,
         CLAUDE_ACCOUNT_KEY,
@@ -10993,6 +10995,9 @@ def _run_worker(
     cursor_mcp_path: Path | None = None
     cursor_mcp_backup: bytes | None = None
     cursor_mcp_existed = False
+    # The author mirror's commit guard (#10837): the run's start, then what its commits recorded.
+    cursor_mcp_guard_start: str | None = None
+    cursor_mcp_recorded: list[str] = []
     from scripts.agent_runtime.result import AgyTelemetry
 
     agy_telemetry = AgyTelemetry(parent_task_id=task_id) if agent == "agy" else None
@@ -11054,6 +11059,7 @@ def _run_worker(
             if strict_mcp_config:
                 tool_config["strict_mcp_config"] = True
                 tool_config["mcp_server_names"] = ["sources"]
+            tool_config.update(_cursor_sources_mirror(agent, state, strict_mcp_config=strict_mcp_config))
             if review_id is not None:
                 tool_config["review_id"] = review_id
             if attempt_id is not None:
@@ -11128,7 +11134,7 @@ def _run_worker(
                     task_id=task_id,
                     tool_config=tool_config,
                 )
-            if strict_mcp_config and agent == "cursor":
+            if agent == "cursor" and (strict_mcp_config or tool_config.get(CURSOR_READ_ONLY_SOURCES_KEY) is True):
                 cursor_mcp_path = cwd / ".cursor" / "mcp.json"
                 if cursor_mcp_path.is_file():
                     cursor_mcp_existed = True
@@ -11136,6 +11142,10 @@ def _run_worker(
                         cursor_mcp_backup = cursor_mcp_path.read_bytes()
                     except OSError as exc:
                         raise RuntimeError(f"failed to back up {cursor_mcp_path}: {exc}") from exc
+                if tool_config.get(CURSOR_READ_ONLY_SOURCES_KEY) is True:
+                    from scripts.agent_runtime.cursor_mcp_guard import head as cursor_mcp_guard_head
+
+                    cursor_mcp_guard_start = cursor_mcp_guard_head(cwd)
 
             if strict_mcp_config and review_id is not None and attempt_id is not None and mcp_config_path is not None:
                 # Last check before the path strings reach the launcher: re-walk the attempt
@@ -11263,6 +11273,10 @@ def _run_worker(
                         cursor_mcp_path.unlink()
                 except OSError as exc:
                     print(f"⚠️  failed to restore {cursor_mcp_path}: {exc}", file=sys.stderr)
+            if cursor_mcp_guard_start is not None:
+                from scripts.agent_runtime.cursor_mcp_guard import recorded_config_problems
+
+                cursor_mcp_recorded = recorded_config_problems(cwd, cursor_mcp_guard_start)
             if runtime_tmp_root is not None or runtime_tmp_namespace_root is not None:
                 # This cleanup runs AFTER the worker has finished but BEFORE the
                 # guarded span below, and it catches Exception rather than the
@@ -11362,6 +11376,14 @@ def _run_worker(
                 stderr_excerpt = f"agy_oauth_link_replaced: {link_problem}\n{stderr_excerpt or ''}".strip()[:500]
                 final_status = "failed"
                 ok_outcome = False
+        if cursor_mcp_recorded:
+            # The run's commits or index hold the per-run Cursor MCP config (host paths). Never
+            # settled as done: the branch must drop that copy before anything lands (#10837).
+            final_state["cursor_mcp_config_recorded"] = cursor_mcp_recorded
+            recorded = "; ".join(cursor_mcp_recorded)
+            stderr_excerpt = f"cursor_mcp_config_recorded: {recorded}\n{stderr_excerpt or ''}".strip()[:500]
+            final_status = "failed"
+            ok_outcome = False
 
         if mode == "read-only":
             read_only_checkout_post, post_snapshot_error = _read_only_checkout_snapshot(
@@ -14228,6 +14250,7 @@ def _dispatch(
                 dry_run_state["admission"] = admission.to_record(force_reason=force_admission_reason)
             if lifecycle_carrier is not None:
                 dry_run_state["task_lifecycle"] = lifecycle_carrier
+            dry_run_state.update(_sources_mcp_state_fields(args, dispatch_agent))
             dry_run_state.update(_authoring_review_state_fields(args, authoring_admission))
             dry_run_state.update(advisory_admission.state_fields())
             if detached_read_only:
@@ -14765,6 +14788,7 @@ def _dispatch(
         if cursor_auto_admission is not None:
             # The Cursor adapter runs Auto only with this admission (#9274).
             initial_state[CURSOR_AUTO_ADMISSION_STATE_KEY] = cursor_auto_admission
+        initial_state.update(_sources_mcp_state_fields(args, dispatch_agent))
         initial_state.update(_authoring_review_state_fields(args, authoring_admission))
         if requested_harness is not None:
             initial_state["harness"] = requested_harness
@@ -15733,6 +15757,40 @@ def _dispatch_is_language_lane(args: argparse.Namespace) -> bool:
         if text.startswith("curriculum/") or text.startswith("scripts/curriculum/"):
             return True
     return False
+
+
+SOURCES_MCP_STATE_KEY = "sources_mcp"
+
+
+def _sources_mcp_state_fields(args: argparse.Namespace, dispatch_agent: str) -> dict[str, Any]:
+    """The task-record flag giving a Cursor author the write-safe Sources mirror (#10837).
+
+    Explicit signals only: ``--sources-mcp``, a Ukrainian language lane, or ``--rules-seat
+    content`` on this command line. ``$LU_RULES_SEAT`` alone does not count; it is the
+    launching session's default, not this dispatch's request. Review dispatches keep their
+    own MCP path, and no other agent's adapter reads the flag.
+    """
+    if dispatch_agent != "cursor" or _dispatch_is_review_typed(args):
+        return {}
+    requested = (
+        bool(getattr(args, "sources_mcp", False))
+        or _dispatch_is_language_lane(args)
+        or getattr(args, "rules_seat", None) == "content"
+    )
+    return {SOURCES_MCP_STATE_KEY: True} if requested else {}
+
+
+def _cursor_sources_mirror(agent: str, state: Mapping[str, Any], *, strict_mcp_config: bool) -> dict[str, Any]:
+    """The worker's tool_config for a flagged Cursor author: the write-safe ``sources`` server only.
+
+    No ``strict_mcp_config``: the adapter writes the read-only launch itself and never the shared
+    daemon. A strict review config keeps its own path.
+    """
+    from scripts.agent_runtime.adapters.cursor import CURSOR_READ_ONLY_SOURCES_KEY
+
+    if agent != "cursor" or strict_mcp_config or state.get(SOURCES_MCP_STATE_KEY) is not True:
+        return {}
+    return {"mcp_server_names": ["sources"], CURSOR_READ_ONLY_SOURCES_KEY: True}
 
 
 # Operator decision 2026-09-30 (#9274): Cursor Auto runs only a well-defined coding task,
@@ -19614,6 +19672,15 @@ def build_parser() -> argparse.ArgumentParser:
         help=(
             "Rules core the worker starts with: core, or content (core plus the curriculum "
             f"addendum) for curriculum seats. Default: ${rules_core.SEAT_ENV}, else core."
+        ),
+    )
+    d.add_argument(
+        "--sources-mcp",
+        action="store_true",
+        help=(
+            "Cursor authors only (#10837): give the worker the write-safe sources MCP server, which "
+            "serves only read-only lookups. Also on for a Ukrainian language lane or an explicit "
+            f"--rules-seat content (${rules_core.SEAT_ENV} alone does not turn it on). No other server is mirrored."
         ),
     )
     d.add_argument(

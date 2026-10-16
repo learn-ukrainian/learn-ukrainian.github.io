@@ -94,6 +94,9 @@ _MODEL_ID_KEYS = ("id", "modelId", "model_id", "name")
 # tool_config key delegate sets only after admitting a Cursor Auto dispatch as a
 # well-defined coding task (operator decision 2026-09-30, #9274).
 CURSOR_AUTO_ADMITTED_KEY = "cursor_auto_admitted"
+# tool_config key delegate sets for an author dispatch that may use Sources (#10837):
+# the workspace config then holds only the write-safe ``sources`` launch.
+CURSOR_READ_ONLY_SOURCES_KEY = "sources_read_only"
 
 
 def _effective_cursor_mode(mode: str, config: dict) -> str | None:
@@ -176,6 +179,9 @@ class CursorAdapter:
                 - ``mcp_config_path``: source `.mcp.json` to mirror into
                   ``{cursor_workspace}/.cursor/mcp.json``.
                 - ``mcp_server_names``: MCP servers to mirror/approve.
+                - ``sources_read_only``: True replaces the workspace config
+                  with the write-safe ``sources`` server only; requires
+                  ``mcp_server_names == ["sources"]`` and no strict config.
                 - ``cursor_mode``: "plan" | "ask", toggles ``--mode``.
                 - ``sandbox``: "enabled" | "disabled". Default for workspace-write
                   is ``disabled`` (the dispatch worktree is the write boundary).
@@ -317,6 +323,9 @@ class CursorAdapter:
 
     def _ensure_workspace_mcp_config(self, workspace: str, config: dict) -> None:
         """Mirror requested MCP servers into Cursor's workspace config."""
+        if config.get(CURSOR_READ_ONLY_SOURCES_KEY) is True:
+            self._write_read_only_sources_config(workspace, config)
+            return
         is_strict = bool(config.get("strict_mcp_config"))
         if is_strict:
             workspace_path = Path(workspace).resolve()
@@ -362,6 +371,32 @@ class CursorAdapter:
         servers.update(selected)
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_text(json.dumps(existing, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+    def _write_read_only_sources_config(self, workspace: str, config: dict) -> None:
+        """Make the write-safe ``sources`` server the workspace's only MCP server (#10837).
+
+        The shared daemon also serves tools that persist a live fetch, so an author never gets its
+        URL, not even as a fallback. The file is replaced, not merged, so no other server from
+        ``.mcp.json`` or the workspace reaches the author. Anything unexpected fails closed.
+        """
+        from scripts.agent_runtime.review_mcp import read_only_sources_mcp_server, sources_server_launch
+        from scripts.agent_runtime.sources_read_only import READ_ONLY_ENV, server_read_only_env
+
+        if config.get("strict_mcp_config"):
+            raise RuntimeError("CursorAdapter: the read-only sources mirror is for authors, not strict review configs")
+        if config.get("mcp_server_names") != ["sources"]:
+            raise RuntimeError("CursorAdapter: the read-only sources mirror serves exactly ['sources']")
+        python_bin, sources_server = sources_server_launch()
+        try:
+            declared = server_read_only_env(sources_server)
+        except (OSError, SyntaxError, UnicodeDecodeError):
+            declared = None
+        if declared != READ_ONLY_ENV:
+            raise RuntimeError("CursorAdapter: the sources server has no read-only mode; refusing the mirror")
+        payload = {"mcpServers": {"sources": read_only_sources_mcp_server(python_bin, sources_server)}}
+        target = Path(workspace) / ".cursor" / "mcp.json"
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
     def _read_mcp_servers(self, path: Path) -> dict[str, object]:
         data = self._read_mcp_file(path)

@@ -23,6 +23,12 @@ tools read the host's databases, refused writes included, and use the live netwo
 ``--inject-writer TOOL`` is the audit's own mutation test: it makes TOOL write to
 the sources DB after each successful lookup, which the audit must report.
 
+``--read-only-mode`` starts the server in its read-only mode (``LU_SOURCES_READ_ONLY``,
+#10837). ``--unaudited`` installs no audit, so writes really happen. With either, a
+last ``{"stores": {"before", "after"}}`` line follows the per-tool lines: the sha256 of
+every file under ``--scratch`` except the request log, taken just before the first
+call and after the last.
+
 Prints one JSON object per tool on stdout; in hermetic runs ``hit`` says whether
 the result shows the fixture row the call was meant to find.
 """
@@ -31,6 +37,7 @@ from __future__ import annotations
 
 import argparse
 import asyncio
+import hashlib
 import importlib.util
 import json
 import os
@@ -397,6 +404,15 @@ def _record_network(effects: SideEffects) -> None:
     requests.Session.request = recorded  # type: ignore[method-assign]
 
 
+def _store_digests(scratch: Path, log_dir: Path) -> dict[str, str]:
+    """sha256 of every file under ``scratch`` except the request log directory."""
+    digests = {}
+    for path in sorted(scratch.rglob("*")):
+        if path.is_file() and log_dir not in path.parents:
+            digests[str(path.relative_to(scratch))] = hashlib.sha256(path.read_bytes()).hexdigest()
+    return digests
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument(
@@ -404,6 +420,10 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument("--hermetic", action="store_true", help="Fake the network and use scratch stores.")
     parser.add_argument("--tool", action="append", default=[], help="Probe only this tool (repeatable).")
+    parser.add_argument(
+        "--read-only-mode", action="store_true", help="Run the server in read-only mode and digest the stores."
+    )
+    parser.add_argument("--unaudited", action="store_true", help="Let writes happen (no audit) and digest the stores.")
     parser.add_argument(
         "--inject-writer",
         metavar="TOOL",
@@ -419,6 +439,10 @@ def main(argv: list[str] | None = None) -> int:
     os.environ["LU_MCP_SOURCES_LOG_DIR"] = str(log_dir)
     for key in ("LU_REVIEW_ATTEMPT_ID", "LU_REVIEW_MANIFEST_SHA256", "LU_REVIEW_LEDGER_PATH", "LU_REVIEW_ACCESS"):
         os.environ.pop(key, None)
+    if args.read_only_mode:
+        os.environ["LU_SOURCES_READ_ONLY"] = "1"
+    else:
+        os.environ.pop("LU_SOURCES_READ_ONLY", None)
     sys.dont_write_bytecode = True
 
     if args.hermetic:
@@ -426,8 +450,9 @@ def main(argv: list[str] | None = None) -> int:
         # The store's own override, honoured by every resolver of the active sources DB.
         os.environ[ENV_SOURCES_DB] = str(scratch / "sources.db")
     effects = SideEffects([log_dir])
-    # Before the server import, so a module that binds ``connect`` at import is guarded too.
-    sqlite3.connect = effects.guard_connect(sqlite3.connect)  # type: ignore[assignment]
+    if not args.unaudited:
+        # Before the server import, so a module that binds ``connect`` at import is guarded too.
+        sqlite3.connect = effects.guard_connect(sqlite3.connect)  # type: ignore[assignment]
     spec = importlib.util.spec_from_file_location("sources_side_effects_server", SERVER_PATH)
     server = importlib.util.module_from_spec(spec)
     sys.modules[spec.name] = server
@@ -438,10 +463,12 @@ def main(argv: list[str] | None = None) -> int:
         _record_network(effects)
     for name in args.inject_writer:
         _inject_writer(server, name)
-    sys.addaudithook(effects.audit)
+    if not args.unaudited:
+        sys.addaudithook(effects.audit)
 
     tools = asyncio.run(server.list_tools())
     selected = [tool for tool in tools if not args.tool or tool.name in args.tool]
+    stores_before = _store_digests(scratch, log_dir)
     for tool in selected:
         effects.current = []
         effects.network = []
@@ -450,7 +477,7 @@ def main(argv: list[str] | None = None) -> int:
         arguments = _arguments(tool)
         content, is_error, _typed = asyncio.run(server._dispatch_tool_call(tool.name, dict(arguments)))
         text = "\n".join(block.text for block in content) if content else ""
-        if effects.unguarded():
+        if not args.unaudited and effects.unguarded():
             effects.current.append("sqlite-connection opened without the write authorizer")
         print(
             json.dumps(
@@ -470,6 +497,9 @@ def main(argv: list[str] | None = None) -> int:
             ),
             flush=True,
         )
+    if args.read_only_mode or args.unaudited:
+        stores = {"before": stores_before, "after": _store_digests(scratch, log_dir)}
+        print(json.dumps({"stores": stores}), flush=True)
     return 0
 
 

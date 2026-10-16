@@ -1016,6 +1016,18 @@ spawn. If neither the mapped model nor that default is valid for the
 substitute, dispatch refuses before spawn. Flag stays
 opt-in for hermetic tests; launchers should enable the env.
 
+**Sources for Cursor authors (#10837):** a non-review `--agent cursor` dispatch gets the
+write-safe `sources` MCP server when it passes `--sources-mcp`, is a Ukrainian language lane, or
+passes `--rules-seat content` on its own command line (`$LU_RULES_SEAT` alone does not count). The
+task record carries `sources_mcp: true`, and the worker replaces the workspace `.cursor/mcp.json`
+with that one server for the run: the primary checkout's `sources` server, started through
+`env -i` with `LU_SOURCES_READ_ONLY=1`, which lists and runs only the tools annotated read-only.
+The tools that persist a live fetch (`query_wikipedia` and the four DictUA `query_ulif*` lookups)
+are neither listed nor run, the shared daemon URL is never mirrored, and no other server from
+`.mcp.json` is. The file is restored after the run; a run whose commits or index record a
+non-URL `.cursor/mcp.json` settles `failed` with `cursor_mcp_config_recorded`. Cursor language
+lanes stay refused (#10835), so today the flag or the content seat is the trigger.
+
 **Credit-balance lanes (#9518):** `scripts/config/credit_lanes.yaml` lists the lanes that can show a
 prepaid credit balance once their plan allowance is used (the router does not verify the provider
 drawing it), and the models each may receive then (Codex: `gpt-6.1-sol`, `gpt-6-luna`). The router sees a credit balance, not the provider
