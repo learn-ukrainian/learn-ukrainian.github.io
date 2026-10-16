@@ -2184,3 +2184,217 @@ console.log(JSON.stringify({admitted: result.ok, actionable: doc.items.map(isAct
     assert proc.returncode == 0, proc.stderr
     assert json.loads(proc.stdout) == {"admitted": True, "actionable": [False], "lifecycles": ["merged"]}
     assert schema_digest_sha256() == "e7e210b3c20fa34410a3e24c584f2590b54a8d2741f78eb3578e6b8ad6f22aab"
+
+
+@pytest.mark.parametrize("kind", ["issues", "prs", "prs_merged"])
+@pytest.mark.parametrize("page", [[None], ["remote-private-text"], [{"number": 7}, None], []])
+def test_rest_page_admission_through_public_handlers(monkeypatch, kind, page):
+    import time
+
+    from scripts import github_rest_cache as rest
+    from scripts.work import sources_public as sources
+
+    cache = rest.GitHubRestCache(transport=lambda *_: (200, {}, json.dumps(page).encode()), identity="fixture")
+    monkeypatch.setattr(rest, "shared_cache", lambda: cache)
+    if kind == "issues":
+        section = sources.fetch_open_issues()
+    else:
+        snapshot = sources._PRSnapshot(REPO, 1000, merged=kind == "prs_merged")
+        snapshot._refresh(sources._iso_now())
+        snapshot._started_at = time.monotonic()
+        section = snapshot.read()
+    sections = _qualify_sections(prs_merged=SectionResult("prs_merged", "ok", payload=[]))
+    sections[kind] = section
+    _, projection, nxt = _projection_and_next(monkeypatch, sections)
+    for data in (projection, nxt):
+        meta = data["sources"][0]["sections"][kind]
+        assert meta["status"] == ("unavailable" if page else "ok")
+        assert meta["count"] == (None if page else 0)
+        if kind != "prs_merged":
+            assert data["denominator"][f"{kind}_open"] == (None if page else 0)
+        else:
+            assert data["denominator"]["prs_open"] == 0
+        if page:
+            assert meta["observed_at"] is None and meta["age_s"] is None
+            assert any(o["class"] == kind for o in data["denominator"]["omissions"])
+        assert "remote-private-text" not in json.dumps(data)
+    assert projection["items"] == []
+
+
+@pytest.mark.parametrize("open_second", [False, True])
+@pytest.mark.parametrize(
+    "history_status,merged_at",
+    [("ok", "2026-10-16T06:00:00Z"), ("stale", "2026-10-16T06:00:00Z"), ("ok", "invalid"), ("ok", None)],
+)
+@pytest.mark.parametrize("filtered", [False, True])
+def test_open_history_conflicts_keep_observations_and_unknown_denominator(
+    monkeypatch, open_second, history_status, merged_at, filtered
+):
+    from scripts.work import normalize
+    from scripts.work.schema import validate_projection
+
+    _literal_work_clock(monkeypatch)
+    opened_at = "2026-10-16T06:00:01Z" if open_second else "2026-10-16T05:59:59Z"
+    history_at = "2026-10-16T05:59:00Z" if history_status == "stale" else "2026-10-16T06:00:00Z"
+    sections = _qualify_sections(
+        prs=SectionResult(
+            "prs",
+            "ok",
+            count=1,
+            observed_at=opened_at,
+            payload=[{"number": 7, "state": "OPEN", "headRefOid": "a" * 40}],
+        ),
+        prs_merged=SectionResult(
+            "prs_merged",
+            history_status,
+            count=1,
+            observed_at=history_at,
+            payload=[{"number": 7, "mergedAt": merged_at, "headRefOid": "b" * 40}],
+        ),
+    )
+    _serve(monkeypatch, sections)
+    suffix = "?kind=issue" if filtered else ""
+    response = client.get("/api/work/v1/projection" + suffix)
+    assert response.status_code == 200, response.text
+    nxt = client.get("/api/work/v1/next?stream=monitor")
+    assert nxt.status_code == 200, nxt.text
+    expected = None if merged_at else 1
+    for data in (response.json(), nxt.json()):
+        assert data["denominator"]["prs_open"] == expected
+        meta = data["sources"][0]["sections"]
+        assert meta["prs"]["count"] == meta["prs_merged"]["count"] == 1
+        assert meta["prs"]["observed_at"] == opened_at
+        assert meta["prs_merged"]["observed_at"] == history_at
+        assert meta["prs_merged"]["status"] == history_status
+        if merged_at:
+            assert meta["prs"]["reason"] == "gh_pr_snapshot_conflict"
+            assert any(o["reason"] == "gh_pr_snapshot_conflict" for o in data["denominator"]["omissions"])
+    data = response.json()
+    validate_projection(data)
+    if filtered:
+        assert data["items"] == []
+    else:
+        assert len(data["items"]) == 1
+        row = data["items"][0]
+        assert row["remote_id"] == "7" and row["lifecycle"] == "open"
+        assert row["projections"]["verification"]["head_sha"] == "a" * 40
+        assert row["flags"]["pr_history"] is False
+        if merged_at:
+            assert row["health"] == "UNKNOWN" and row["safe_next_action"]["code"] == "INSPECT_UNKNOWN"
+    assert sections["prs"].status == "ok"
+    with pytest.raises(ValueError, match="public repository_id"):
+        normalize.build_projection(sections, repository_id="foreign/repository")
+
+
+def _literal_work_clock(monkeypatch):
+    from datetime import UTC, datetime
+
+    from scripts.work import normalize
+
+    class Clock:
+        @staticmethod
+        def now(tz):
+            return datetime(2026, 10, 16, 6, 0, 2, tzinfo=UTC)
+
+        fromisoformat = staticmethod(datetime.fromisoformat)
+
+    monkeypatch.setattr(normalize, "datetime", Clock)
+
+
+@pytest.mark.parametrize(
+    "observed,source_status,source_reason,cache_expired,age,reason",
+    [
+        ("2026-10-16T06:00:00Z", "ok", None, False, 2, None),
+        ("2026-10-16T05:59:31Z", "ok", None, False, 31, "gh_pr_snapshot_stale"),
+        ("2026-10-16T06:00:00Z", "ok", None, True, 2, "projection_cache_past_freshness"),
+        ("invalid", "ok", None, False, None, "gh_pr_snapshot_invalid_time"),
+        ("2026-10-16T06:00:03Z", "ok", None, False, None, "gh_pr_snapshot_future"),
+        ("2026-10-16T06:00:00Z", "stale", "gh_pr_refresh_failed", False, 2, "gh_pr_refresh_failed"),
+    ],
+)
+def test_pr_source_and_projection_cache_clocks_through_handlers(
+    monkeypatch, observed, source_status, source_reason, cache_expired, age, reason
+):
+    import time
+
+    from scripts.api.state_helpers import cache_set
+    from scripts.work.schema import validate_projection
+
+    _literal_work_clock(monkeypatch)
+    sections = _qualify_sections(
+        prs=SectionResult(
+            "prs",
+            source_status,
+            reason=source_reason,
+            observed_at=observed,
+            count=1,
+            payload=[
+                {
+                    "number": 7,
+                    "state": "OPEN",
+                    "headRefOid": "a" * 40,
+                    "reviewDecision": "APPROVED",
+                    "statusCheckRollup": [{"name": "CI Gate", "conclusion": "SUCCESS"}],
+                }
+            ],
+        ),
+        fleet_reviews=SectionResult(
+            "fleet_reviews",
+            "ok",
+            payload={
+                "reviews": [
+                    {
+                        "review_id": "same-head",
+                        "repository": REPO,
+                        "pr_number": 7,
+                        "head_sha": "a" * 40,
+                        "state": "completed",
+                        "sealed_verdict_available": True,
+                    }
+                ]
+            },
+        ),
+    )
+    stored = _serve(monkeypatch, sections)
+    if source_status == "ok":
+        assert stored["items"][0]["projections"]["review"]["sealed_verdict_available"] is True
+        assert stored["items"][0]["projections"]["verification"]["ci_state"] == "passing"
+    with monkeypatch.context() as fallback:
+        if cache_expired:
+            # Exercise the real timeout fallback, with literal cache and source ages.
+            fallback.setattr(
+                work_router, "cache_get_with_age", lambda _key, bound: None if bound == 30 else (stored, 31)
+            )
+            fallback.setattr(work_router, "TIMEOUT_S", 0.01)
+            fallback.setattr(work_router, "_build_sync", lambda *_a, **_k: time.sleep(0.05))
+        response = client.get("/api/work/v1/projection")
+        for key in list(app.state.ctx.stores.work_in_flight):
+            work_router.wait_for_in_flight_build(key, ctx=app.state.ctx)
+    assert response.status_code == 200, response.text
+    projection = response.json()
+    # Feed the actual fallback result through the warm /next qualification too.
+    if cache_expired:
+        cache_set(work_router.projection_cache_key({}), projection)
+    nxt = client.get("/api/work/v1/next?stream=monitor")
+    assert nxt.status_code == 200, nxt.text
+    for data in (projection, nxt.json()):
+        meta = data["sources"][0]["sections"]["prs"]
+        assert meta["age_s"] == age
+        assert meta["observed_at"] == (None if observed == "invalid" else observed)
+        assert data["denominator"]["prs_open"] == (1 if reason is None else None)
+        if reason:
+            assert meta["reason"] == reason
+            assert any(o["class"] == "prs" and o["reason"] == reason for o in data["denominator"]["omissions"])
+    validate_projection(projection)
+    row = projection["items"][0]
+    assert row["authority"][0]["age_s"] == age
+    if reason:
+        assert row["safe_next_action"]["reason_codes"] == [reason]
+        assert row["health"] == "UNKNOWN"
+        assert row["projections"]["verification"]["ci_state"] == "unknown"
+        assert row["projections"]["verification"]["merge_evidence"] == {"state": "unknown", "reason": reason}
+        assert row["projections"]["review"]["sealed_verdict_available"] is False
+        assert row["projections"]["review"]["review_decision"] == "UNKNOWN"
+    else:
+        assert row["projections"]["verification"]["ci_state"] == "passing"
+        assert row["projections"]["review"]["sealed_verdict_available"] is True

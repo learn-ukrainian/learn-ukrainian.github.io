@@ -3805,6 +3805,17 @@ def test_merged_history_identity_dedup_and_positive_merge_evidence_only():
     projection = build_projection(sections)
     assert [i["remote_id"] for i in projection["items"]] == ["77"]
     row = projection["items"][0]
+    assert row["lifecycle"] == "open"
+    assert row["safe_next_action"]["code"] == "INSPECT_UNKNOWN"
+    assert projection["denominator"]["prs_open"] is None
+    assert projection["sources"][0]["sections"]["prs"]["reason"] == "gh_pr_snapshot_conflict"
+    assert sections["prs"].status == "ok"
+    # Without the conflicting open observation, retained history stays terminal.
+    sections["prs"].payload = []
+    sections["prs"].count = 0
+    projection = build_projection(sections)
+    assert projection["denominator"]["prs_open"] == 0
+    row = projection["items"][0]
     assert row["lifecycle"] == "merged"
     assert row["authority"][0]["age_s"] == 80 and row["authority"][0]["stale"]
     assert row["safe_next_action"]["code"] == "NONE"

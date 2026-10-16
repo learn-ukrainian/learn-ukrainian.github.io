@@ -38,6 +38,19 @@ def _transport_from(script):
     return calls, transport
 
 
+@pytest.mark.parametrize("page", [[None], ["remote-private-text"], [{"number": 1}, None]])
+@pytest.mark.parametrize("kind", ["issues", "open", "merged"])
+def test_list_pages_reject_nonobjects_before_filtering_or_cap(page, kind):
+    cache = github_rest.GitHubRestCache(transport=lambda *_: (200, {}, json.dumps(page).encode()), identity="fixture")
+    loader = {
+        "issues": github_rest.list_open_issues,
+        "open": github_rest.list_open_prs,
+        "merged": github_rest.list_merged_prs,
+    }[kind]
+    with pytest.raises(github_rest.GitHubRestError, match=r"^expected JSON objects in GitHub REST list$"):
+        loader(REPO, limit=1, timeout=2, cache=cache)
+
+
 def test_etag_is_stored_and_sent_on_the_next_request():
     calls, transport = _transport_from(
         lambda path, headers, timeout, n: (

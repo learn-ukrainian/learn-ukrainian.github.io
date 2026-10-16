@@ -147,8 +147,8 @@ it is distinct from both accountable owner and authoritative stream membership.
 `projections.review.review_decision` is GitHub review state, not a verified
 exact-head cross-family verdict. The REST collector never synthesizes
 `APPROVED` from individual approvals. `sealed_verdict_available` only reports
-availability on matching repository/PR review summaries. That match does not
-check the PR head or reviewer independence and does not admit a sealed blob.
+availability on review summaries with matching repository, PR and nonblank
+head SHA. That match does not check reviewer independence or admit a sealed blob.
 Neither field alone clears the independent review gate.
 
 Current PR normalization sets `flags.has_blocker: false` and

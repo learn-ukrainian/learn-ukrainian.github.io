@@ -509,3 +509,66 @@ def test_expiry_revokes_same_head_sealed_verdict_availability(monkeypatch, expir
     assert pr["safe_next_action"]["code"] == "INSPECT_UNKNOWN"
     assert payload["items"][0]["projections"]["review"]["sealed_verdict_available"] is True
     assert payload["items"][0]["projections"]["review"]["review_decision"] == "APPROVED"
+
+
+@pytest.mark.parametrize("history_first", [False, True])
+def test_actual_rest_snapshots_keep_conflicting_observations_unknown(monkeypatch, history_first):
+    from datetime import UTC, datetime
+
+    from scripts.work import normalize
+
+    class Clock:
+        @staticmethod
+        def now(tz):
+            return datetime(2026, 10, 16, 6, 0, 2, tzinfo=UTC)
+
+        fromisoformat = staticmethod(datetime.fromisoformat)
+
+    monkeypatch.setattr(normalize, "datetime", Clock)
+    monkeypatch.setattr(sources, "_utc_now", lambda: Clock.now(UTC))
+    opened = {"number": 7, "state": "open", "head": {"sha": "a" * 40}}
+    merged = {"number": 7, "state": "closed", "merged_at": "2026-10-16T06:00:00Z"}
+    calls = []
+
+    def transport(path, *_args):
+        calls.append(path)
+        if "pulls?state=open" in path:
+            body = [opened]
+        elif "pulls?state=closed" in path:
+            body = [merged]
+        elif "/pulls/7?" not in path and path.endswith("/pulls/7"):
+            body = opened
+        elif "check-runs" in path:
+            body = {"total_count": 0, "check_runs": []}
+        elif path.endswith("/status"):
+            body = {"total_count": 0, "statuses": []}
+        elif "actions/runs" in path:
+            body = {"total_count": 0, "workflow_runs": []}
+        else:
+            body = []
+        return 200, {}, json.dumps(body).encode()
+
+    cache = github_rest.GitHubRestCache(transport=transport, identity="fixture")
+    monkeypatch.setattr(github_rest, "shared_cache", lambda: cache)
+    snapshots = {kind: sources._PRSnapshot(REPO, 1000, merged=kind) for kind in (False, True)}
+    observed = {}
+    for index, kind in enumerate((True, False) if history_first else (False, True)):
+        observed[kind] = f"2026-10-16T06:00:0{index}Z"
+        snapshots[kind]._refresh(observed[kind])
+        snapshots[kind]._started_at = time.monotonic()
+    opened_section, history_section = snapshots[False].read(), snapshots[True].read()
+    assert opened_section.status == history_section.status == "ok"
+    sections = {**_sections(opened_section), "prs_merged": history_section}
+    payload = qualify_pr_snapshot_age(build_projection(sections, lifecycle_ledgers=[]))
+    assert payload["denominator"]["prs_open"] is None
+    assert len(payload["items"]) == 1
+    row = payload["items"][0]
+    assert row["lifecycle"] == "open" and row["safe_next_action"]["code"] == "INSPECT_UNKNOWN"
+    assert row["projections"]["verification"]["head_sha"] == "a" * 40
+    for name, kind in (("prs", False), ("prs_merged", True)):
+        meta = payload["sources"][0]["sections"][name]
+        assert meta["count"] == 1 and meta["observed_at"] == observed[kind].replace("Z", "+00:00")
+    assert opened_section.payload[0]["state"] == "OPEN"
+    assert history_section.payload[0]["state"] == "MERGED"
+    assert len([p for p in calls if "pulls?state=" in p]) == 2
+    validate_projection(payload)

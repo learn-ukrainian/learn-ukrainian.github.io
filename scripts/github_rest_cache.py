@@ -424,12 +424,12 @@ def _collect_pages(
             raise GitHubRestError(f"GitHub REST 404 for {url}", status=404)
         if not isinstance(result.body, list):
             raise GitHubRestError(f"expected a JSON list from {url}")
+        if any(not isinstance(item, dict) for item in result.body):
+            raise GitHubRestError("expected JSON objects in GitHub REST list")
         rows.stale |= result.stale
         rows.age_seconds = max(rows.age_seconds, result.age_seconds)
         page = result.body
         for index, item in enumerate(page):
-            if not isinstance(item, dict):
-                continue
             if keep is not None and not keep(item):
                 continue
             if result.stale:

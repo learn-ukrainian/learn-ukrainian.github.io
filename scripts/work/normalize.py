@@ -726,6 +726,20 @@ def build_projection(
     task_rows, _task_total, _task_truncated = filter_public_delegate_tasks(raw_task_rows, repository_id=repo)
     review_rows = list((reviews_section.payload or {}).get("reviews") or [])
 
+    open_numbers = {r["number"] for r in prs_section.payload or [] if isinstance(r, dict) and "number" in r}
+    history_numbers = {
+        r["number"]
+        for r in history_section.payload or []
+        if isinstance(r, dict) and "number" in r and r.get("mergedAt")
+    }
+    if open_numbers & history_numbers:
+        # Keep both source populations as observed, but do not certify a current
+        # denominator or replace an open observation with conflicting history.
+        prs_section = copy.copy(prs_section)
+        prs_section.status = "stale"
+        prs_section.reason = "gh_pr_snapshot_conflict"
+        sections["prs"] = prs_section
+
     items: list[dict[str, Any]] = []
     if isinstance(issues_section.payload, list):
         for raw in issues_section.payload:
@@ -754,8 +768,8 @@ def build_projection(
     if isinstance(history_section.payload, list):
         for raw in history_section.payload:
             if isinstance(raw, dict) and raw.get("number") is not None and raw.get("mergedAt"):
-                # A proven terminal observation wins a mixed refresh race.
-                # Its authority stays bound to history, including stale/error.
+                if int(raw["number"]) in pr_items:
+                    continue
                 pr_items[int(raw["number"])] = _build_pr_item(
                     raw,
                     repository_id=repo,
@@ -970,13 +984,20 @@ def qualify_pr_snapshot_age(payload: dict[str, Any]) -> dict[str, Any]:
     for source in out.get("sources") or []:
         if source.get("source_id") != SOURCE_PUBLIC:
             continue
-        for section in (source.get("sections") or {}).values():
+        for name, section in (source.get("sections") or {}).items():
             observed = section.get("observed_at")
+            clock_reason = None
             try:
-                section["age_s"] = max(0.0, (datetime.now(UTC) - datetime.fromisoformat(observed)).total_seconds())
+                age = (datetime.now(UTC) - datetime.fromisoformat(observed)).total_seconds()
+                section["age_s"] = age if age >= 0 else None
+                if age < 0:
+                    clock_reason = "gh_pr_snapshot_future"
             except (TypeError, ValueError):
                 section["age_s"] = None
                 section["observed_at"] = None
+                clock_reason = "gh_pr_snapshot_invalid_time" if observed is not None else "gh_pr_snapshot_missing"
+            if clock_reason and name in {"prs", "prs_merged"}:
+                section["reason"] = section.get("reason") or clock_reason
         metadata = list((source.get("sections") or {}).values())
         source["freshness"] = {
             "observed_at": min(s["observed_at"] for s in metadata)
@@ -1026,12 +1047,12 @@ def qualify_pr_snapshot_age(payload: dict[str, Any]) -> dict[str, Any]:
                     terminal = item.get("lifecycle") in {"merged", "closed"}
                     item["safe_next_action"] = {
                         "code": "NONE" if terminal else "INSPECT_UNKNOWN",
-                        "reason_codes": ["pr_terminal_historical" if terminal else "gh_pr_snapshot_stale"],
+                        "reason_codes": ["pr_terminal_historical" if terminal else reason],
                         "state": "none" if terminal else "unknown",
                     }
                     verification = item["projections"]["verification"]
                     verification.update(state="unknown", ci_state="unknown", merge_state_status=None)
-                    verification["merge_evidence"] = {"state": "unknown", "reason": "gh_pr_snapshot_stale"}
+                    verification["merge_evidence"] = {"state": "unknown", "reason": reason}
                     item["projections"]["review"]["review_decision"] = "UNKNOWN"
                     item["projections"]["review"]["sealed_verdict_available"] = False
         pr_ids = {item["work_id"]: item for item in out.get("items") or [] if item.get("resource_kind") == "pr"}
