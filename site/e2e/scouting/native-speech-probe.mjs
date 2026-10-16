@@ -134,10 +134,11 @@ export function browserProbe(win, binding, evaluate) {
   const beginStop = (a, event) => {
     const kind = a.startedAt !== null ? 'postStart' : 'preStart';
     const caps = a.caps || capsOf(a.fw);
+    const clip = a.rec.clip === true; // playback observed before Stop stays on the retained record
     Object.assign(a, { bound: true, kind, mode: 'stop', boundAt: now() });
     a.rec = {
       playTrusted: event.isTrusted === true, started: a.startedAt !== null, cancelCalls: 0, cancelThrew: false, stopped: false,
-      quietMs: 0, lateStarts: 0, clip: false, media: caps.media === true, speech: caps.speech === true,
+      quietMs: 0, lateStarts: 0, clip, media: caps.media === true, speech: caps.speech === true,
     };
     win.setTimeout(() => {
       if (a.rec.media && a.rec.speech) {
@@ -329,7 +330,10 @@ export function validateReceipt(manifest, receipt, drift = []) {
   const observed = (t) => { const o = receipt.observation?.attempts?.[t]; return o?.media === true && o?.speech === true; };
   const mark = (ok) => (!global.length && ok ? 'PROVISIONAL_DEVICE_PASS' : 'UNKNOWN');
   const criteria = {
-    'P11-C02': mark(rows.length > 0 && rows.every(voiceOk)),
+    'P11-C02': mark(rows.length > 0 && TRANSITIONS.every((t) => {
+      const a = receipt.transitions[t];
+      return !a || (observed(t) && voiceOk(a));
+    })),
     'NA-07': mark(rowOk('next')),
     'NA-08': mark(['home', 'route', 'deck', 'level', 'locale'].every(rowOk)),
     'NA-09': mark(!shape.length && !reasons.some((r) => r.startsWith('NA-09:')) && TRANSITIONS.some((t) => {
@@ -337,7 +341,7 @@ export function validateReceipt(manifest, receipt, drift = []) {
       return a && observed(t) && a.playTrusted && !a.clip && !a.speakThrew && voiceOk(a) && a.startMs !== null && a.startMs <= 10000 && a.manual.audible;
     })),
   };
-  const residual = 'Provisional device checklist only, never the driver verdict or issue closure. NA-09 Stop/retry stays UNKNOWN until pre-start and post-start Stop and a fresh retry after each are observed. The other P11-C02 inventory classes stay UNKNOWN.';
+  const residual = 'Provisional device checklist only, never the driver verdict or issue closure. NA-09 Stop/retry stays UNKNOWN until pre-start and post-start Stop and a fresh retry after each are observed. P11-C02 stays UNKNOWN unless media and speech observation were available on every supporting row. The other P11-C02 inventory classes stay UNKNOWN.';
   return { result: reasons.length ? 'INCOMPLETE' : 'DEVICE_CONTROLS_PASSED', reasons, criteria, residual };
 }
 

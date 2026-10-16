@@ -119,12 +119,14 @@ What the page records, privacy-safe only (no voice names or URIs, spoken text, U
 - three manual checkboxes per row (heard speech, stopped at once, nothing resumed). They count only
   when the evaluator taps them, and are reset when that row is re-attempted;
 - separate Stop and retry outcomes: a second Play while the attempt is still open is Stop, kept as
-  `stops.preStart` (before native start) or `stops.postStart` (after it). The next Play that reaches
+  `stops.preStart` (before native start) or `stops.postStart` (after it). A clip already observed
+  on that attempt stays on the retained Stop record. The next Play that reaches
   native start is that phase's fresh retry, kept on `retries`, including when a later Home row is
   also recorded. Cancellation on the six transition rows is unchanged;
 - whether media and speech observation were available, once per practice document and again on each
   attempt. If either API is missing, that attempt's quiet-window duration, 3000 ms minimum and
-  success checks stay unmet, and the receipt says the observation was unavailable.
+  success checks stay unmet, and the receipt says the observation was unavailable. P11-C02 stays
+  UNKNOWN unless every row that supports it was observed;
 
 `DEVICE_CONTROLS_PASSED` needs every field to pass on all six rows, both Stop phases and both fresh
 retries. It is a provisional device checklist result, never the driver's verdict, issue closure or
@@ -132,5 +134,6 @@ proof that a voice is absent. The validator recomputes it, ignores the page's ow
 unknown fields and maps P11-C02, NA-07, NA-08 and NA-09 to `PROVISIONAL_DEVICE_PASS` or `UNKNOWN`.
 Deck and level controls are not shown during an active session, so those rows read NOT_EXPOSED.
 NA-09 Stop/retry stays UNKNOWN until a pre-start Stop, a post-start Stop, a fresh retry after each,
-and an audible native start are all present. The other P11-C02 inventory classes stay UNKNOWN.
+and an audible native start are all present. P11-C02 stays UNKNOWN when media or speech observation
+is missing on a supporting row. The other P11-C02 inventory classes stay UNKNOWN.
 Unit mocks (`tests/unit/native-speech-probe.test.ts`) prove only tool behaviour.

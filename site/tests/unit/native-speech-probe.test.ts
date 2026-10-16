@@ -151,6 +151,23 @@ describe('off-device validator', () => {
     expect(noRetry.reasons).toContain('NA-09: Stop/retry evidence missing');
   });
 
+  it('withholds P11-C02 when media or speech observation is missing on the supporting rows', () => {
+    const mediaOff = negative((r) => {
+      for (const t of TRANSITIONS) r.observation.attempts[t] = { media: false, speech: true };
+    });
+    expect(mediaOff.result).toBe('INCOMPLETE');
+    expect(mediaOff.criteria['NA-09']).toBe('UNKNOWN');
+    expect(mediaOff.criteria['P11-C02']).toBe('UNKNOWN');
+    expect(mediaOff.result).not.toBe('DEVICE_CONTROLS_PASSED');
+    const speechOff = negative((r) => {
+      for (const t of TRANSITIONS) r.observation.attempts[t] = { media: true, speech: false };
+    });
+    expect(speechOff.result).toBe('INCOMPLETE');
+    expect(speechOff.criteria['NA-09']).toBe('UNKNOWN');
+    expect(speechOff.criteria['P11-C02']).toBe('UNKNOWN');
+    expect(speechOff.criteria['P11-C02']).not.toBe('PROVISIONAL_DEVICE_PASS');
+  });
+
   it('keeps duration and success unmet when media observation is unavailable on every row', () => {
     const report = negative((r) => {
       r.observation.documents[0].media = false;
@@ -375,6 +392,42 @@ describe('in-page observer', () => {
     h.advance(3000);
     expect(h.receipt.transitions.home).toMatchObject({ clip: true, speakCalls: 0, startMs: null, stopped: false });
     expect(h.played).toHaveLength(1);
+  });
+
+  it('keeps a clip played before Stop on both retained Stop records', () => {
+    const h = harness();
+    h.tap('#play');
+    new (h.fw.HTMLMediaElement)().play();
+    h.tap('#play');
+    h.fw.speechSynthesis.cancel();
+    h.advance(3000);
+    expect(h.receipt.stops.preStart).toMatchObject({
+      started: false, stopped: true, cancelCalls: 1, cancelThrew: false, quietMs: 3000, clip: true,
+    });
+
+    h.tap('#play');
+    new (h.fw.HTMLMediaElement)().play();
+    const u = h.speak();
+    h.start(u);
+    h.tap('#play');
+    h.fw.speechSynthesis.cancel();
+    u.dispatchEvent(new Event('end'));
+    h.advance(3000);
+    expect(h.receipt.stops.postStart).toMatchObject({
+      started: true, stopped: true, cancelCalls: 1, cancelThrew: false, quietMs: 3000, clip: true,
+    });
+    expect(h.receipt.stops.preStart.clip).toBe(true);
+    expect(shapeErrors(h.receipt)).toEqual([]);
+
+    const report = negative((r) => {
+      r.stops.preStart!.clip = h.receipt.stops.preStart.clip;
+      r.stops.postStart!.clip = h.receipt.stops.postStart.clip;
+    });
+    expect(report.result).toBe('INCOMPLETE');
+    expect(report.reasons).toContain('NA-09: Stop/retry evidence missing');
+    expect(report.criteria['NA-09']).toBe('UNKNOWN');
+    expect(report.result).not.toBe('DEVICE_CONTROLS_PASSED');
+    expect(report.criteria['NA-09']).not.toBe('PROVISIONAL_DEVICE_PASS');
   });
 
   it('retains pre-start and post-start Stop, then a fresh retry that is not only a Home row', () => {
