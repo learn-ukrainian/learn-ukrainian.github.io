@@ -104,10 +104,20 @@ substitutions:
 # Per the 2026-10-09 resource-policy order, native Claude CLI workers are
 # eligible whenever task fit, provider health and subscription headroom admit
 # them. Budget substitutions apply on depletion, not as a standing prohibition.
+# The 2026-10-16 operator order adds the Sonnet worker default, the native Grok
+# measurement rule and the Gemini 4 hold (#10835).
 worker_resource_policy: |
   Sol is the default eligible code worker. Use native Claude CLI workers as
   heavily as their subscription allows, respecting task fit and hard gates.
-  Cursor Grok or Gemini routes are language-free overflow only; resolve admitted
-  models and transports from the live catalog, never infer route availability.
+  Operator 2026-10-16: native Claude workers use Sonnet 5.5 by default and
+  Opus 5.5 only for complex or security work; Claude-lane Ukrainian stays
+  Opus 5.5. Cursor Grok or Gemini routes are language-free overflow only;
+  resolve admitted models and transports from the live catalog, never infer
+  route availability. Native Grok may do all work, including Ukrainian, under
+  measurement; its Ukrainian work requires the Sources MCP, and language-lane
+  admission refuses it until the native Grok harness wires that server.
+  Gemini 4 is disabled until the provider fixes its cost. Critical and
+  security final sign-off stays Opus 5.5 or Sol 6.1 (2026-10-13 frozen eval:
+  Grok approved a change with 0 of 8 known blockers).
   Writer selection follows core rules and the canonical writer policy, with no
   excluded-writer recommendation in this substitution table.

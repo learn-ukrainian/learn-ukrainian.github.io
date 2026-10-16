@@ -234,6 +234,27 @@ def test_driver_dry_run_force_announces_release_then_claim() -> None:
     assert "then claim" in result.stdout
 
 
+@pytest.mark.parametrize(
+    ("epic", "session_epic"),
+    (("monitor", "monitor"), ("curriculum-upgrade", "curriculum-upgrade"), ("open-model-data", "open-model-data")),
+)
+def test_grok_driver_cold_prompt_names_lane_handoff_and_canary(epic: str, session_epic: str) -> None:
+    """Grok has no SessionStart hook, so its cold prompt names the shared handoff file and the canary (#10835)."""
+    result = run_launcher("start-grok-driver.sh", "--epic", epic)
+    assert result.returncode == 0, result.stderr
+    prompt = next(line for line in result.stdout.splitlines() if line.startswith("would exec grok ")).replace("\\", "")
+    assert f"read the lane handoff .claude/{session_epic}-epic/CLAUDE-DRIVER-HANDOFF.md" in prompt
+    assert "scripts.session_canary.grok_lane mint and score, run only within the thread-rollover skill" in prompt
+    assert f".claude/{session_epic}-epic/DRIVER-STATE.md" in prompt
+
+
+def test_non_grok_driver_cold_prompt_omits_grok_handoff_clause() -> None:
+    result = run_launcher("start-codex-driver.sh", "--epic", "infra")
+    assert result.returncode == 0, result.stderr
+    assert "would exec codex " in result.stdout
+    assert "Grok has no SessionStart hook" not in result.stdout.replace("\\", "")
+
+
 def test_driver_requires_certified_model_and_valid_epic() -> None:
     missing = run_launcher("start-claude-driver.sh")
     assert missing.returncode == 2

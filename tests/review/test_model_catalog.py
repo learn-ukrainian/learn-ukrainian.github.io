@@ -269,8 +269,81 @@ PRE_ARGON_HOST_BASELINE = approved_claude_account_dispatch_baseline(
         )
     )
 )
-APPROVED_BASELINE = approved_argon_trial_baseline(PRE_ARGON_HOST_BASELINE, "host-cli")
+GROK_LANGUAGE_OVERLAY_PATH = CAPACITY_FIXTURE / "routing-10835.json"
+GROK_LANGUAGE_OVERLAY = json.loads(GROK_LANGUAGE_OVERLAY_PATH.read_bytes())
+
+
+def approved_grok_language_seat_baseline(baseline):
+    """Apply #10835 (operator order 2026-10-16) last: two literal field edits.
+
+    ``grok-4.7`` gains the ``ukrainian_review`` role and the fallback
+    ``worker_resource_policy`` states the Sonnet worker default, the native Grok
+    measurement rule and the Gemini 4 hold. Each edit checks its recorded
+    ``before`` value, so a drifted baseline fails instead of being overwritten.
+    """
+    catalog = deepcopy(baseline["catalog"])
+    for row in GROK_LANGUAGE_OVERLAY["catalog_model_fields"]:
+        assert catalog["models"][row["model"]][row["field"]] == row["before"]
+        catalog["models"][row["model"]][row["field"]] = row["after"]
+    fallbacks = deepcopy(baseline["fallbacks"])
+    for row in GROK_LANGUAGE_OVERLAY["fallbacks_fields"]:
+        assert fallbacks[row["field"]] == row["before"]
+        fallbacks[row["field"]] = row["after"]
+    return {**baseline, "catalog": catalog, "fallbacks": fallbacks}
+
+
+ARGON_HOST_BASELINE = approved_argon_trial_baseline(PRE_ARGON_HOST_BASELINE, "host-cli")
+APPROVED_BASELINE = approved_grok_language_seat_baseline(ARGON_HOST_BASELINE)
 APPROVED_INPUTS = {**GEMINI_INPUTS, **SEATS_OVERLAY["inputs"], **ARGON_OVERLAY["inputs"]}
+
+
+def test_grok_language_overlay_records_only_the_two_field_delta():
+    """#10835 changes the grok-4.7 roles and the worker policy text; every other surface and field stays."""
+    assert hashlib.sha256(GROK_LANGUAGE_OVERLAY_PATH.read_bytes()).hexdigest() == (
+        "a2b3103dc0675299d54608ae94546a6802778f6c2b4320cfcf5cd1b1d507ae71"
+    )
+    assert set(GROK_LANGUAGE_OVERLAY) == {"issue", "order", "catalog_model_fields", "fallbacks_fields"}
+    before, after = ARGON_HOST_BASELINE, APPROVED_BASELINE
+    assert set(before) == set(after)
+    for surface in set(before) - {"catalog", "fallbacks"}:
+        assert before[surface] == after[surface], surface
+    old_models, new_models = before["catalog"]["models"], after["catalog"]["models"]
+    assert set(old_models) == set(new_models)
+    assert [model for model in old_models if old_models[model] != new_models[model]] == ["grok-4.7"]
+    old_grok, new_grok = old_models["grok-4.7"], new_models["grok-4.7"]
+    assert {k: v for k, v in old_grok.items() if k != "roles"} == {k: v for k, v in new_grok.items() if k != "roles"}
+    assert new_grok["roles"] == [*old_grok["roles"], "ukrainian_review"]
+    assert {k: v for k, v in after["catalog"].items() if k != "models"} == {
+        k: v for k, v in before["catalog"].items() if k != "models"
+    }
+    assert {k: v for k, v in after["fallbacks"].items() if k != "worker_resource_policy"} == {
+        k: v for k, v in before["fallbacks"].items() if k != "worker_resource_policy"
+    }
+    policy = " ".join(after["fallbacks"]["worker_resource_policy"].split())
+    for clause in (
+        "Sol is the default eligible code worker.",
+        "native Claude workers use Sonnet 5.5 by default and Opus 5.5 only for complex or security work",
+        "Claude-lane Ukrainian stays Opus 5.5.",
+        "Cursor Grok or Gemini routes are language-free overflow only",
+        "its Ukrainian work requires the Sources MCP",
+        "Gemini 4 is disabled until the provider fixes its cost.",
+        "Critical and security final sign-off stays Opus 5.5 or Sol 6.1",
+        "no excluded-writer recommendation",
+    ):
+        assert clause in policy, clause
+
+
+def test_grok_ukrainian_role_confers_no_ukrainian_review_route():
+    """The catalog role is descriptive: no Grok review route lists the ukrainian profile (#10835)."""
+    source = Path(__file__).resolve().parents[2]
+    catalog = yaml.safe_load((source / "scripts/config/model_catalog.yaml").read_text(encoding="utf-8"))
+    assert "ukrainian_review" in catalog["models"]["grok-4.7"]["roles"]
+    xai = [seat for seat in catalog["seats"].values() if seat.get("model_id") == "grok-4.7"]
+    assert xai, "grok-4.7 reviewer seat missing"
+    routes = [route for candidate in xai for route in candidate["routes"].values()]
+    assert {route["transport"] for route in routes} == {"native_grok", "cursor"}
+    for route in routes:
+        assert route["review_profiles"] == ["code", "infra"]
 
 
 def test_argon_trial_overlay_records_only_the_model_data_delta():
@@ -279,7 +352,7 @@ def test_argon_trial_overlay_records_only_the_model_data_delta():
         "efe9c9b9db2f651e421e42769cc1682c12b724122545d2e2e8b4b0d66d1148ba"
     )
     assert set(ARGON_OVERLAY) == {"adapter_patches", "inputs", "row_patches", "surfaces"}
-    before, after = PRE_ARGON_HOST_BASELINE, APPROVED_BASELINE
+    before, after = PRE_ARGON_HOST_BASELINE, ARGON_HOST_BASELINE
     assert set(before) == set(after)
     assert set(ARGON_OVERLAY["surfaces"]) == {"catalog", "approval", "reviewer"}
     assert set(ARGON_OVERLAY["inputs"]) == {"reviewer"}
@@ -521,9 +594,12 @@ def test_resource_policy_fixture_changes_only_approved_fallback_rows():
 
 
 def test_resource_policy_fallbacks_equal_approved_overlay():
+    """The live fallbacks equal #10263's overlay with #10835's policy text applied."""
     source = Path(__file__).resolve().parents[2]
     actual = yaml.safe_load((source / "scripts/config/agent_fallback_substitutions.yaml").read_text())
-    assert actual == RESOURCE_OVERLAY["surfaces"]["fallbacks"]
+    assert actual == approved_grok_language_seat_baseline(
+        {"catalog": ARGON_HOST_BASELINE["catalog"], "fallbacks": RESOURCE_OVERLAY["surfaces"]["fallbacks"]}
+    )["fallbacks"]
 
 
 def test_gemini_fixture_preserves_historical_cases_and_other_seat_eligibility():
@@ -1096,7 +1172,7 @@ def test_no_cli_capture_equals_separate_frozen_surface(tmp_path):
         assert hashlib.sha256((output / name).read_bytes()).hexdigest() == digest
     actual = json.loads(gzip.decompress((output / "baseline.json.gz").read_bytes()))
     original = json.loads(gzip.decompress((expected / "baseline.json.gz").read_bytes()))
-    assert actual == approved_argon_trial_baseline(
+    assert actual == approved_grok_language_seat_baseline(approved_argon_trial_baseline(
         approved_claude_account_dispatch_baseline(
             approved_cto_wrappers_baseline(
                 approved_claude_cap_baseline(
@@ -1115,7 +1191,7 @@ def test_no_cli_capture_equals_separate_frozen_surface(tmp_path):
             )
         ),
         "no-cli",
-    )
+    ))
     assert len(actual["launchers"]) == 70
     errors = [row.get("error", "") for row in actual["adapters"]]
     assert any("grok" in error and "PATH" in error for error in errors)

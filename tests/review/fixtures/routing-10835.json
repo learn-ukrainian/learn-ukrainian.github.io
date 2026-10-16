@@ -1,0 +1,32 @@
+{
+  "issue": 10835,
+  "order": "operator order 2026-10-16 (CTO order cto-grok-rule)",
+  "catalog_model_fields": [
+    {
+      "model": "grok-4.7",
+      "field": "roles",
+      "before": [
+        "coding",
+        "strong_review",
+        "adversarial_review",
+        "critical_review",
+        "debugging"
+      ],
+      "after": [
+        "coding",
+        "strong_review",
+        "adversarial_review",
+        "critical_review",
+        "debugging",
+        "ukrainian_review"
+      ]
+    }
+  ],
+  "fallbacks_fields": [
+    {
+      "field": "worker_resource_policy",
+      "before": "Sol is the default eligible code worker. Use native Claude CLI workers as\nheavily as their subscription allows, respecting task fit and hard gates.\nCursor Grok or Gemini routes are language-free overflow only; resolve admitted\nmodels and transports from the live catalog, never infer route availability.\nWriter selection follows core rules and the canonical writer policy, with no\nexcluded-writer recommendation in this substitution table.\n",
+      "after": "Sol is the default eligible code worker. Use native Claude CLI workers as\nheavily as their subscription allows, respecting task fit and hard gates.\nOperator 2026-10-16: native Claude workers use Sonnet 5.5 by default and\nOpus 5.5 only for complex or security work; Claude-lane Ukrainian stays\nOpus 5.5. Cursor Grok or Gemini routes are language-free overflow only;\nresolve admitted models and transports from the live catalog, never infer\nroute availability. Native Grok may do all work, including Ukrainian, under\nmeasurement; its Ukrainian work requires the Sources MCP, and language-lane\nadmission refuses it until the native Grok harness wires that server.\nGemini 4 is disabled until the provider fixes its cost. Critical and\nsecurity final sign-off stays Opus 5.5 or Sol 6.1 (2026-10-13 frozen eval:\nGrok approved a change with 0 of 8 known blockers).\nWriter selection follows core rules and the canonical writer policy, with no\nexcluded-writer recommendation in this substitution table.\n"
+    }
+  ]
+}
