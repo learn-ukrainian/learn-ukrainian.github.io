@@ -700,6 +700,144 @@ def test_lock_name_that_is_not_a_regular_file_is_refused(cache: Path, tmp_path: 
     assert sorted(path.name for path in state.iterdir()) == [uv.HISTORY_FILENAME + uv.LOCK_SUFFIX]
 
 
+def test_directory_shaped_lock_is_refused_cleanly(tmp_path: Path) -> None:
+    # Sol r3 follow-up: a directory at the lock name used to end in exit 1 with a traceback.
+    cache = tmp_path / "cache"
+    cache.mkdir()
+    state = tmp_path / "state"
+    lock = state / (uv.HISTORY_FILENAME + uv.LOCK_SUFFIX)
+    lock.mkdir(parents=True)
+
+    result = _run_as_file(tmp_path, cache, state)
+
+    assert result.returncode == 2, result.stderr
+    assert result.stdout == ""
+    assert "refusing to run: the history lock file is not a regular file" in result.stderr
+    assert "Traceback" not in result.stderr and str(tmp_path) not in result.stderr
+    assert str(Path.home()) not in result.stderr
+    assert lock.is_dir() and list(lock.iterdir()) == []
+    assert sorted(path.name for path in state.iterdir()) == [lock.name]
+
+
+def test_partial_write_rechecks_the_location_before_the_rest(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    # Sol r3 blocker 1: the kernel accepted 1 byte of the first write (RLIMIT_FSIZE), the
+    # directory then moved into the cache, and the unchecked next write put the rest there.
+    cache = tmp_path / "cache"
+    cache.mkdir()
+    state = tmp_path / "state"
+    state.mkdir()
+    monkeypatch.setenv("UV_CACHE_DIR", str(cache))
+    monkeypatch.setenv("LU_DRIVER_STATUS_STATE_DIR", str(state))
+    real_write = os.write
+    cache_real = cache.resolve()
+    writes: list[tuple[Path, int]] = []
+
+    def short_first_write(fd: int, data: object) -> int:
+        target = Path(os.readlink(f"/proc/self/fd/{fd}"))
+        if target.name.endswith(".tmp"):
+            if not writes:
+                written = real_write(fd, bytes(data)[:1])  # type: ignore[call-overload]
+                writes.append((target, written))
+                _move_state_into_cache(state, cache)
+                return written
+            writes.append((target, len(data)))  # type: ignore[arg-type]
+        return real_write(fd, data)  # type: ignore[arg-type]
+
+    monkeypatch.setattr(os, "write", short_first_write)
+
+    assert uv.main([]) == 2
+
+    assert "inside it" in capsys.readouterr().err
+    assert len(writes) == 1 and writes[0][1] == 1  # the short write happened before the move
+    assert [entry for entry in writes if cache_real in entry[0].parents] == []
+    assert _tree(cache) == ["moved-state"]
+    assert list(state.iterdir()) == []
+
+
+class _LockChurn:
+    """Real filesystem churn on the lock name: every exclusive create meets an existing
+    lock and the lock is gone again before the plain open. Stops after ``limit`` attempts
+    (or ``seconds``) so code without a deadline ends instead of spinning forever."""
+
+    def __init__(self, limit: int = 1_000_000, seconds: float = 5.0) -> None:
+        self.name = uv.HISTORY_FILENAME + uv.LOCK_SUFFIX
+        self.limit, self.stop_at = limit, time.monotonic() + seconds
+        self.attempts = 0
+        self.real_open = os.open
+
+    def churning(self) -> bool:
+        return self.attempts < self.limit and time.monotonic() < self.stop_at
+
+    def __call__(self, path: object, flags: int, *args: object, dir_fd: int | None = None, **kwargs: object) -> int:
+        if path == self.name and self.churning():
+            if flags & os.O_EXCL:
+                self.attempts += 1
+                os.close(self.real_open(path, os.O_WRONLY | os.O_CREAT, 0o600, dir_fd=dir_fd))  # type: ignore[arg-type]
+            else:
+                with contextlib.suppress(FileNotFoundError):
+                    os.unlink(path, dir_fd=dir_fd)  # type: ignore[arg-type]
+        return self.real_open(path, flags, *args, dir_fd=dir_fd, **kwargs)  # type: ignore[arg-type]
+
+
+def test_lock_creation_churn_is_bounded_by_the_lock_deadline(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    # Sol r3 blocker 2: 1,001 create/open retries took 0.328 s despite a 0.01 s deadline.
+    cache = tmp_path / "cache"
+    cache.mkdir()
+    state = tmp_path / "state"
+    state.mkdir()
+    monkeypatch.setenv("UV_CACHE_DIR", str(cache))
+    monkeypatch.setenv("LU_DRIVER_STATUS_STATE_DIR", str(state))
+    monkeypatch.setenv("LU_UV_CACHE_LOCK_TIMEOUT_S", "0.05")
+    churn = _LockChurn()
+    monkeypatch.setattr(os, "open", churn)
+
+    started = time.monotonic()
+    assert uv.main([]) == 0
+    elapsed = time.monotonic() - started
+
+    assert churn.churning(), "the retries outlived the churn instead of the deadline"
+    assert churn.attempts >= 2 and elapsed < 3
+    assert capsys.readouterr().out.startswith("UV CACHE: history busy (lock held by another writer for 0.05s)")
+    assert not (state / uv.HISTORY_FILENAME).exists()
+
+
+def test_one_deadline_covers_lock_creation_retries_and_the_lock_wait(tmp_path: Path) -> None:
+    # Churn uses most of the deadline, then another writer holds the lock: the wait gets
+    # only what is left, not a fresh deadline of its own.
+    state = tmp_path / "state"
+    state.mkdir()
+    timeout = 1.0
+    churn = _LockChurn(seconds=0.7 * timeout)
+    holder: list[int] = []
+
+    def churn_then_hold(path: object, flags: int, *args: object, dir_fd: int | None = None, **kwargs: object) -> int:
+        if path == churn.name and not churn.churning() and not holder:
+            held = churn.real_open(path, os.O_RDWR | os.O_CREAT, 0o600, dir_fd=dir_fd)  # type: ignore[arg-type]
+            fcntl.flock(held, fcntl.LOCK_EX)
+            holder.append(held)
+        return churn(path, flags, *args, dir_fd=dir_fd, **kwargs)
+
+    try:
+        with _dir_fd(state) as fd, pytest.MonkeyPatch.context() as patch:
+            patch.setattr(os, "open", churn_then_hold)
+            started = time.monotonic()
+            with pytest.raises(uv.HistoryBusy):
+                uv.record_sample(fd, NOW, GIB, lock_timeout_s=timeout)
+            elapsed = time.monotonic() - started
+    finally:
+        for held in holder:
+            os.close(held)
+
+    assert holder and churn.attempts >= 2
+    # A fresh deadline for the wait would end near 1.7 s.
+    assert timeout <= elapsed < 1.4 * timeout
+    assert not (state / uv.HISTORY_FILENAME).exists()
+
+
 def test_location_problem_checks_cache_path_expected_path_and_identity(tmp_path: Path) -> None:
     cache_real = tmp_path / "cache"
     expected = tmp_path / "state"

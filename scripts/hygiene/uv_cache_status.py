@@ -10,16 +10,17 @@ lock, and never inside the cache.
 The size comes from ``du -skH`` in its own process group with a deadline, so a
 huge or stalled cache cannot hang the status command; a timeout or a failed
 measurement prints an explicit line and records no sample. The history lock is
-taken without blocking and retried until its own deadline; when another writer
-holds it past that, the line says so and no sample is recorded.
+taken without blocking and retried until its own deadline, which also bounds
+opening the lock file; when another writer holds it (or keeps recreating it)
+past that, the line says so and no sample is recorded.
 
 The history directory is resolved and checked once, then held open; every
 history read and write is relative to that descriptor, so retargeting a
 symlink after the check cannot move the writes into the cache. A descriptor
 keeps the directory's identity, not its location, so its location is checked
-again before every write, each lock-creation retry included: the kernel's path
-of the descriptor must still be the resolved history path, name the same
-directory there, and lie outside the cache. A directory moved into the cache
+again before every write, each lock-creation retry and each partial write
+included: the kernel's path of the descriptor must still be the resolved
+history path, name the same directory there, and lie outside the cache. A directory moved into the cache
 (or anywhere else) is refused. The history is serialized before its temporary
 file exists, so only the last instant between a check and its write remains.
 
@@ -38,7 +39,7 @@ Environment (all optional):
 Exit codes: 0 status printed (including "size unavailable", "measurement
 failed" and "history busy"); 2 refused because the history directory is a
 symlink, the cache, inside it, or was moved after it was opened, or because
-its lock file is a symlink or not a regular file.
+its lock file is a symlink, a directory or not a regular file.
 """
 
 from __future__ import annotations
@@ -229,9 +230,8 @@ def read_history(dir_fd: int | None) -> list[dict[str, float]]:
     return samples
 
 
-def _lock_history(lock_fd: int, timeout_s: float) -> None:
-    """Take the exclusive history lock, never blocking past ``timeout_s``."""
-    deadline = time.monotonic() + timeout_s
+def _lock_history(lock_fd: int, deadline: float, timeout_s: float) -> None:
+    """Take the exclusive history lock, never blocking past the monotonic ``deadline``."""
     while True:
         try:
             fcntl.flock(lock_fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
@@ -243,12 +243,15 @@ def _lock_history(lock_fd: int, timeout_s: float) -> None:
             time.sleep(min(LOCK_RETRY_SECONDS, remaining))
 
 
-def _open_lock(dir_fd: int, check: LocationCheck) -> tuple[int, bool]:
+def _open_lock(dir_fd: int, check: LocationCheck, deadline: float, timeout_s: float) -> tuple[int, bool]:
     """Open the history lock file in ``dir_fd``; return ``(fd, created_here)``.
 
     ``check`` runs before every attempt that may create the file, retries
-    included. A lock name that is a symlink or not a regular file is refused
-    with ``HistoryLocationError``; nothing behind it is opened or changed.
+    included. A lock that keeps disappearing between the exclusive create and
+    the plain open is retried only until the monotonic ``deadline``, then
+    ``HistoryBusy`` is raised. A lock name that is a symlink, a directory or
+    not a regular file is refused with ``HistoryLocationError``; nothing behind
+    it is opened or changed.
     """
     base = os.O_RDWR | os.O_NOFOLLOW | os.O_NONBLOCK | os.O_CLOEXEC
     name = HISTORY_FILENAME + LOCK_SUFFIX
@@ -261,10 +264,15 @@ def _open_lock(dir_fd: int, check: LocationCheck) -> tuple[int, bool]:
         try:
             fd = os.open(name, base, dir_fd=dir_fd)
         except FileNotFoundError:
-            continue  # removed between the two opens; try to create it again
+            # Removed between the two opens; try to create it again while time remains.
+            if time.monotonic() >= deadline:
+                raise HistoryBusy(timeout_s) from None
+            continue
         except OSError as error:
             if error.errno == errno.ELOOP:
                 raise HistoryLocationError("the history lock file is a symlink") from None
+            if error.errno == errno.EISDIR:
+                raise HistoryLocationError("the history lock file is not a regular file") from None
             raise
         if not stat.S_ISREG(os.fstat(fd).st_mode):
             os.close(fd)
@@ -295,11 +303,14 @@ def record_sample(
     (see ``open_history_dir``). The read-modify-replace runs under an exclusive
     ``flock`` on a lock file beside the history, so concurrent writers
     serialize and none replaces the file with a copy that lacks another
-    writer's newer sample. Raises ``HistoryBusy`` when the lock stays held past
-    ``lock_timeout_s`` (default ``LU_UV_CACHE_LOCK_TIMEOUT_S``).
+    writer's newer sample. One monotonic deadline of ``lock_timeout_s``
+    (default ``LU_UV_CACHE_LOCK_TIMEOUT_S``) covers opening the lock file,
+    retries included, and waiting for the lock; ``HistoryBusy`` is raised when
+    it passes.
 
     ``location_check`` runs before each write: every attempt to create the lock
-    file, creating the temporary file, writing its contents, and renaming it
+    file, creating the temporary file, every ``write`` of its contents (a
+    partial write is followed by a check before the rest), and renaming it
     over the history. The contents are serialized in full before the temporary
     file exists, so no slow step separates a check from the write it guards.
     When the check raises ``HistoryLocationError`` nothing more is written, and
@@ -309,9 +320,10 @@ def record_sample(
     if lock_timeout_s is None:
         lock_timeout_s = lock_timeout_seconds()
     check = location_check or (lambda: None)
-    lock_fd, lock_created = _open_lock(dir_fd, check)
+    deadline = time.monotonic() + lock_timeout_s
+    lock_fd, lock_created = _open_lock(dir_fd, check, deadline, lock_timeout_s)
     try:
-        _lock_history(lock_fd, lock_timeout_s)
+        _lock_history(lock_fd, deadline, lock_timeout_s)
         history = read_history(dir_fd)
         if any(abs(now - sample["ts"]) < MIN_SAMPLE_INTERVAL_SECONDS for sample in history):
             return history
@@ -330,9 +342,9 @@ def record_sample(
         )
         try:
             try:
-                check()
                 view = memoryview(payload)
                 while view:
+                    check()
                     view = view[os.write(fd, view) :]
             finally:
                 os.close(fd)

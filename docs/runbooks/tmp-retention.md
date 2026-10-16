@@ -425,12 +425,13 @@ unreadable directory, which would make the total partial) it prints
 
 History updates hold an exclusive lock on `uv-cache-size.jsonl.lock` beside the
 history, so concurrent runs never drop each other's samples. The lock is never
-waited on indefinitely: it is retried without blocking for up to
-`LU_UV_CACHE_LOCK_TIMEOUT_S` (default 2 seconds). If another writer still holds
-it, the command prints `UV CACHE: history busy (...); <size> measured, no
+waited on indefinitely: one deadline of `LU_UV_CACHE_LOCK_TIMEOUT_S` (default
+2 seconds) covers opening the lock file, including retries when it disappears
+between attempts, and taking the lock without blocking. If another writer still
+holds it (or keeps recreating it) at the deadline, the command prints `UV CACHE: history busy (...); <size> measured, no
 sample recorded`, writes nothing and exits 0. The whole command therefore ends
-within the scan deadline plus the lock deadline. A lock name that is a symlink or
-not a regular file is refused with exit code 2; nothing behind it is opened or
+within the scan deadline plus the lock deadline. A lock name that is a symlink,
+a directory or not a regular file is refused with exit code 2; nothing behind it is opened or
 changed.
 
 The history directory is checked once and then held open. The configured
@@ -446,10 +447,11 @@ writes nothing. Directories it creates get mode 0700.
 
 An open directory keeps its identity, not its place, so it could be moved into
 the cache while the size is measured. Before every write (each attempt to create
-the lock file, retries included; creating the temporary file; writing its
-contents; renaming it over the history) the command checks the location again.
-The new history is serialized in full before the temporary file is created and
-written with one unbuffered write, so no slow step separates a check from the
+the lock file, retries included; creating the temporary file; every write of
+its contents, so a partial write is checked again before the rest; renaming it
+over the history) the command checks the location again. The new history is
+serialized in full before the temporary file is created and written unbuffered,
+so no slow step separates a check from the
 write it guards. Each check requires that the kernel's path of the open
 directory is still the resolved history path, that this path still names the
 same directory, and that it is not the cache or inside it, judged against the
