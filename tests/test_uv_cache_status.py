@@ -756,6 +756,133 @@ def test_partial_write_rechecks_the_location_before_the_rest(
     assert list(state.iterdir()) == []
 
 
+# Runs the tool with a real 1-byte short write (RLIMIT_FSIZE) of the temporary history file,
+# after which the limit is restored and the file is hard-linked into the cache.
+_SHORT_WRITE_THEN_HARDLINK = """
+import json, os, resource, signal, sys
+from pathlib import Path
+sys.path.insert(0, sys.argv[1])
+from scripts.hygiene import uv_cache_status as uv
+alias, report = Path(sys.argv[2]), Path(sys.argv[3])
+signal.signal(signal.SIGXFSZ, signal.SIG_IGN)
+real_write = os.write
+writes = []
+def write(fd, data):
+    target = os.readlink(f"/proc/self/fd/{fd}")
+    if not target.endswith(".tmp"):
+        return real_write(fd, data)
+    if writes:
+        written = real_write(fd, data)
+    else:
+        limits = resource.getrlimit(resource.RLIMIT_FSIZE)
+        resource.setrlimit(resource.RLIMIT_FSIZE, (1, limits[1]))
+        try:
+            written = real_write(fd, data)
+        finally:
+            resource.setrlimit(resource.RLIMIT_FSIZE, limits)
+        os.link(target, alias)
+    writes.append(written)
+    return written
+os.write = write
+code = uv.main([])
+report.write_text(json.dumps({"code": code, "writes": writes}), encoding="utf-8")
+"""
+
+
+def test_temporary_file_hard_linked_into_the_cache_after_a_short_write_gets_no_more_bytes(tmp_path: Path) -> None:
+    # Sol r4 blocker (a): the directory never moves, so only the link count shows the alias.
+    cache = tmp_path / "cache"
+    cache.mkdir()
+    state = tmp_path / "state"
+    state.mkdir()
+    alias = cache / "alias"
+    report = tmp_path / "report.json"
+    env = {key: value for key, value in os.environ.items() if key != "PYTHONPATH"}
+    env.update(UV_CACHE_DIR=str(cache), LU_DRIVER_STATUS_STATE_DIR=str(state))
+
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-c",
+            _SHORT_WRITE_THEN_HARDLINK,
+            str(Path(uv.__file__).resolve().parents[2]),
+            str(alias),
+            str(report),
+        ],
+        cwd=tmp_path,
+        env=env,
+        capture_output=True,
+        text=True,
+        timeout=60,
+        check=False,
+    )
+
+    outcome = json.loads(report.read_text(encoding="utf-8"))
+    assert outcome == {"code": 2, "writes": [1]}, result.stderr
+    assert "refusing to run: the temporary history file has more than one link" in result.stderr
+    assert "Traceback" not in result.stderr and str(tmp_path) not in result.stderr
+    assert alias.stat().st_size == 1 and alias.stat().st_nlink == 1  # the temporary file was removed
+    assert sorted(path.name for path in state.iterdir()) == []
+
+
+def test_lock_file_hard_linked_to_a_cache_file_is_refused_without_locking_it(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    # Sol r4 blocker (b): a pre-existing hard link made the command lock a cache inode.
+    cache = tmp_path / "cache"
+    cache.mkdir()
+    victim = cache / "victim"
+    victim.write_bytes(b"v" * 100)
+    state = tmp_path / "state"
+    state.mkdir()
+    lock = state / (uv.HISTORY_FILENAME + uv.LOCK_SUFFIX)
+    os.link(victim, lock)
+    monkeypatch.setenv("UV_CACHE_DIR", str(cache))
+    monkeypatch.setenv("LU_DRIVER_STATUS_STATE_DIR", str(state))
+    locked: list[int] = []
+    real_flock = fcntl.flock
+
+    def recording_flock(fd: int, operation: int) -> None:
+        locked.append(fd)
+        real_flock(fd, operation)
+
+    monkeypatch.setattr(fcntl, "flock", recording_flock)
+
+    assert uv.main([]) == 2
+
+    captured = capsys.readouterr()
+    assert captured.out == ""
+    assert "refusing to run: the history lock file has more than one link" in captured.err
+    assert str(tmp_path) not in captured.err
+    assert locked == []
+    assert victim.read_bytes() == b"v" * 100 and victim.stat().st_nlink == 2
+    assert sorted(path.name for path in state.iterdir()) == [lock.name]
+
+
+def test_lock_file_hard_linked_while_waiting_for_the_lock_is_refused(cache: Path, tmp_path: Path) -> None:
+    state = tmp_path / "state"
+    state.mkdir()
+    lock = state / (uv.HISTORY_FILENAME + uv.LOCK_SUFFIX)
+    alias = cache / "alias"
+    real_lock_history = uv._lock_history
+
+    def link_then_lock(lock_fd: int, deadline: float, timeout_s: float) -> None:
+        os.link(lock, alias)
+        real_lock_history(lock_fd, deadline, timeout_s)
+
+    with (
+        _dir_fd(state) as fd,
+        pytest.MonkeyPatch.context() as patch,
+        pytest.raises(uv.HistoryLocationError, match="history lock file has more than one link"),
+    ):
+        patch.setattr(uv, "_lock_history", link_then_lock)
+        uv.record_sample(fd, NOW, GIB, lock_timeout_s=0.2)
+
+    # This call created the lock, so it removes its own name; the alias is left alone.
+    assert sorted(path.name for path in state.iterdir()) == []
+    assert alias.stat().st_nlink == 1
+
+
 class _LockChurn:
     """Real filesystem churn on the lock name: every exclusive create meets an existing
     lock and the lock is gone again before the plain open. Stops after ``limit`` attempts

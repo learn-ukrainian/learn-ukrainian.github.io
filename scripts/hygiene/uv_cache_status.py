@@ -23,6 +23,10 @@ included: the kernel's path of the descriptor must still be the resolved
 history path, name the same directory there, and lie outside the cache. A directory moved into the cache
 (or anywhere else) is refused. The history is serialized before its temporary
 file exists, so only the last instant between a check and its write remains.
+A hard link can give the lock or temporary file a second name inside the
+cache without moving the directory, so both are refused when their open
+descriptor reports more than one link (at lock acquisition and before every
+write of the temporary file).
 
 Usage: ``.venv/bin/python -m scripts.hygiene.uv_cache_status [--json] [--no-record]``
 (or ``.venv/bin/python scripts/hygiene/uv_cache_status.py ...``)
@@ -39,7 +43,8 @@ Environment (all optional):
 Exit codes: 0 status printed (including "size unavailable", "measurement
 failed" and "history busy"); 2 refused because the history directory is a
 symlink, the cache, inside it, or was moved after it was opened, or because
-its lock file is a symlink, a directory or not a regular file.
+its lock file is a symlink, a directory or not a regular file, or because the
+lock or temporary history file has more than one link.
 """
 
 from __future__ import annotations
@@ -243,41 +248,53 @@ def _lock_history(lock_fd: int, deadline: float, timeout_s: float) -> None:
             time.sleep(min(LOCK_RETRY_SECONDS, remaining))
 
 
+def _require_single_link(fd: int, what: str) -> None:
+    """Refuse the open file ``fd`` when it has another name, which may lie inside the cache."""
+    if os.fstat(fd).st_nlink != 1:
+        raise HistoryLocationError(f"the {what} has more than one link")
+
+
 def _open_lock(dir_fd: int, check: LocationCheck, deadline: float, timeout_s: float) -> tuple[int, bool]:
     """Open the history lock file in ``dir_fd``; return ``(fd, created_here)``.
 
     ``check`` runs before every attempt that may create the file, retries
     included. A lock that keeps disappearing between the exclusive create and
     the plain open is retried only until the monotonic ``deadline``, then
-    ``HistoryBusy`` is raised. A lock name that is a symlink, a directory or
-    not a regular file is refused with ``HistoryLocationError``; nothing behind
-    it is opened or changed.
+    ``HistoryBusy`` is raised. A lock name that is a symlink, a directory, not
+    a regular file, or a file with more than one link (a hard link may be a
+    file in the cache) is refused with ``HistoryLocationError`` before it is
+    locked; nothing behind it is changed.
     """
     base = os.O_RDWR | os.O_NOFOLLOW | os.O_NONBLOCK | os.O_CLOEXEC
     name = HISTORY_FILENAME + LOCK_SUFFIX
     while True:
         check()
         try:
-            return os.open(name, base | os.O_CREAT | os.O_EXCL, 0o600, dir_fd=dir_fd), True
+            fd, created = os.open(name, base | os.O_CREAT | os.O_EXCL, 0o600, dir_fd=dir_fd), True
         except FileExistsError:
-            pass
+            try:
+                fd, created = os.open(name, base, dir_fd=dir_fd), False
+            except FileNotFoundError:
+                # Removed between the two opens; try to create it again while time remains.
+                if time.monotonic() >= deadline:
+                    raise HistoryBusy(timeout_s) from None
+                continue
+            except OSError as error:
+                if error.errno == errno.ELOOP:
+                    raise HistoryLocationError("the history lock file is a symlink") from None
+                if error.errno == errno.EISDIR:
+                    raise HistoryLocationError("the history lock file is not a regular file") from None
+                raise
         try:
-            fd = os.open(name, base, dir_fd=dir_fd)
-        except FileNotFoundError:
-            # Removed between the two opens; try to create it again while time remains.
-            if time.monotonic() >= deadline:
-                raise HistoryBusy(timeout_s) from None
-            continue
-        except OSError as error:
-            if error.errno == errno.ELOOP:
-                raise HistoryLocationError("the history lock file is a symlink") from None
-            if error.errno == errno.EISDIR:
-                raise HistoryLocationError("the history lock file is not a regular file") from None
-            raise
-        if not stat.S_ISREG(os.fstat(fd).st_mode):
+            if not stat.S_ISREG(os.fstat(fd).st_mode):
+                raise HistoryLocationError("the history lock file is not a regular file")
+            _require_single_link(fd, "history lock file")
+        except HistoryLocationError:
+            if created:
+                _unlink_if_same(name, fd, dir_fd)
             os.close(fd)
-            raise HistoryLocationError("the history lock file is not a regular file")
-        return fd, False
+            raise
+        return fd, created
 
 
 def _unlink_if_same(name: str, fd: int, dir_fd: int) -> None:
@@ -313,7 +330,10 @@ def record_sample(
     partial write is followed by a check before the rest), and renaming it
     over the history. The contents are serialized in full before the temporary
     file exists, so no slow step separates a check from the write it guards.
-    When the check raises ``HistoryLocationError`` nothing more is written, and
+    The lock file is refused when it has more than one link, checked on its
+    descriptor before and after the lock is taken, and so is the temporary file
+    before every ``write``: another name for either may be a file in the cache.
+    When a check raises ``HistoryLocationError`` nothing more is written, and
     the temporary file and a lock file created by this call are removed again
     before it propagates.
     """
@@ -324,6 +344,7 @@ def record_sample(
     lock_fd, lock_created = _open_lock(dir_fd, check, deadline, lock_timeout_s)
     try:
         _lock_history(lock_fd, deadline, lock_timeout_s)
+        _require_single_link(lock_fd, "history lock file")
         history = read_history(dir_fd)
         if any(abs(now - sample["ts"]) < MIN_SAMPLE_INTERVAL_SECONDS for sample in history):
             return history
@@ -345,6 +366,7 @@ def record_sample(
                 view = memoryview(payload)
                 while view:
                     check()
+                    _require_single_link(fd, "temporary history file")
                     view = view[os.write(fd, view) :]
             finally:
                 os.close(fd)

@@ -429,8 +429,11 @@ waited on indefinitely: one deadline of `LU_UV_CACHE_LOCK_TIMEOUT_S` (default
 2 seconds) covers opening the lock file, including retries when it disappears
 between attempts, and taking the lock without blocking. If another writer still
 holds it (or keeps recreating it) at the deadline, the command prints `UV CACHE: history busy (...); <size> measured, no
-sample recorded`, writes nothing and exits 0. The whole command therefore ends
-within the scan deadline plus the lock deadline. A lock name that is a symlink,
+sample recorded`, writes nothing and exits 0. Every retry and wait decision is
+bounded by these deadlines, but a single synchronous filesystem call (for
+example the `open` of the lock file) is not interrupted when a deadline passes,
+so the command can run past the scan deadline plus the lock deadline by the
+duration of one such call. A lock name that is a symlink,
 a directory or not a regular file is refused with exit code 2; nothing behind it is opened or
 changed.
 
@@ -458,6 +461,15 @@ same directory, and that it is not the cache or inside it, judged against the
 cache's real path both at start and now. On a mismatch it refuses with exit code 2, writes nothing
 more, and removes the temporary file and any lock file it created. A move in
 the instant between the last check and the write itself cannot be excluded.
+
+A hard link gives a file a second name, possibly inside the cache, without
+moving the directory, so the location check alone does not catch it. The
+command therefore also checks the link count on the open file: a lock file with
+more than one link is refused before and after the lock is taken, and the
+temporary history file is refused before every write of its contents. Either
+refusal exits with code 2 (`the history lock file has more than one link` or
+`the temporary history file has more than one link`), writes nothing more, and
+removes the temporary file. A lock file it did not create is left in place.
 
 Warning thresholds: total size above `LU_UV_CACHE_WARN_GB` (default 10) or growth
 above `LU_UV_CACHE_GROWTH_WARN_GB` (default 2) per 24 hours. A warning is a
