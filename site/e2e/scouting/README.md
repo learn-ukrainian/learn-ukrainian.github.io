@@ -72,3 +72,53 @@ Phone profiles use Playwright device descriptors (`iPhone 14`, `Pixel 7`, touch 
 **Chromium**. This is emulation only. It is not a substitute for a physical iPhone in Safari, real
 WebKit rendering, or on-screen-keyboard behaviour. The harness probes for Playwright WebKit and
 records whether it is installed (`npx playwright install webkit` to add it).
+
+## Native speech device check (#10706)
+
+`native-speech-probe.mjs` adds one diagnostic page, `native-speech-check.html`, to an existing
+immutable static build. An evaluator with a Mac or iPhone that already has a local Ukrainian voice
+uses it to record real native speech and its interruption through six app transitions: Next, Home,
+route, deck, level and locale. The pasted JSON (`window.practiceAudioProbe`) is then checked
+off-device against the frozen manifest. The page never changes the practice player.
+
+```bash
+cd site
+# 1. Build a clean checkout at the merged SHA into managed scratch (no Astro config change).
+npm run build -- --outDir "$OUT"
+# 2. Bind the page to that build; refuses dirty/moved/unknown source, symlinked or non-build output.
+node e2e/scouting/native-speech-probe.mjs prepare --source <clean checkout> --source-sha <merged sha> \
+  --out "$OUT" --manifest "$SCRATCH/native-manifest.json"
+# 3. Serve the same outDir on loopback only with the existing preview CLI.
+npx astro preview --outDir "$OUT" --host 127.0.0.1 --port 4321 --ignore-lock
+# 4. After the evaluator pastes the JSON back:
+node e2e/scouting/native-speech-probe.mjs validate --manifest "$SCRATCH/native-manifest.json" \
+  --receipt receipt.json --out "$OUT"; echo exit=$?   # 0 only for DEVICE_CONTROLS_PASSED
+```
+
+`prepare` hashes the whole output first, then requires that adding the page is the only change.
+The manifest records the merged source SHA, the helper SHA (whose branch diff must touch only this
+helper's four files), the committed helper bytes, the build digest and the served JS hashes. Keep
+the manifest and receipts in scratch; never publish private URLs, paths or topology. Reaching the
+page from the device needs an existing approved route, which the driver supplies. A local HTTP 200
+does not prove the device can reach it. On a plain-HTTP non-loopback origin the browser exposes no
+WebCrypto, so hashing reports `INSECURE` and the receipt can never pass.
+
+What the page records, privacy-safe only (no voice names or URIs, spoken text, URLs or raw SRS):
+
+- the voice catalog after it stops changing (8 identical reads 250 ms apart, at most 15 s): total,
+  Ukrainian, local Ukrainian and non-Ukrainian counts. An empty catalog stays UNKNOWN, never absence;
+- per transition: trusted Play and control taps, whether the control was one tap away at native
+  start, the selected voice's Ukrainian/local flags and match with the player's own filter, the
+  click-to-`start` latency against the 10000 ms budget, speech still active at the tap, the app's
+  `cancel()` call and silence, new starts in a fixed 3000 ms quiet window, a clip played instead of
+  speech, and for Next only whether `lu-lexicon-srs` stayed unchanged (a boolean);
+- three manual checkboxes per row (heard speech, stopped at once, nothing resumed). They count only
+  when the evaluator taps them, and are reset when that row is re-attempted.
+
+`DEVICE_CONTROLS_PASSED` needs every field to pass on all six rows. It is a provisional device
+checklist result, never the driver's verdict, issue closure or proof that a voice is absent. The
+validator recomputes it, ignores the page's own claim, refuses unknown fields and maps P11-C02,
+NA-07, NA-08 and NA-09 to `PROVISIONAL_DEVICE_PASS` or `UNKNOWN`. Known gaps stay open with the
+Atlas driver: deck and level controls are not shown during an active session, so those rows read
+NOT_EXPOSED; NA-09's Stop and fresh-retry subcases and the other P11-C02 inventory classes are not
+collected here. Unit mocks (`tests/unit/native-speech-probe.test.ts`) prove only tool behaviour.

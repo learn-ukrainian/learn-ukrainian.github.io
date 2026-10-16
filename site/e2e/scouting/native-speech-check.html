@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Native speech device check (#10706)</title>
+<style>
+  body { font: 15px/1.4 system-ui, sans-serif; margin: 0.75rem; } h1 { font-size: 1.15rem; } #summary { font-weight: 600; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.85rem; } th, td { border: 1px solid #999; padding: 0.3rem; text-align: left; }
+  label { display: inline-block; min-height: 32px; } #reasons { white-space: pre-wrap; font-size: 0.8rem; color: #8a1c1c; }
+  iframe { width: 100%; height: 70vh; border: 2px solid #333; } textarea { width: 100%; height: 12rem; font: 12px monospace; }
+</style>
+<h1>Native Ukrainian speech: six transition check</h1>
+<ol>
+  <li>Use a Mac or iPhone that already has a local Ukrainian voice, with sound on. Wait until the line below says the voices are STABLE and hashing is OK.</li>
+  <li>In the practice frame, start a session that shows a word card with a Play pronunciation button.</li>
+  <li>Pick one checklist row and make its control visible, one tap away (for Next, flip and rate the card first). Tap Play, and while you still hear speech, tap that control.</li>
+  <li>Listen for 3 seconds, then tick a box in that row only for what you actually heard. Use "Back to practice" if you left the practice page.</li>
+  <li>Repeat steps 3 and 4 for every row. If a row's control never appears while speech plays, leave it as NOT_EXPOSED and do not work around it.</li>
+  <li>paste this JSON back</li>
+</ol>
+<p id="summary">Loading…</p>
+<table><thead><tr><th>Transition</th><th>Your checks</th></tr></thead><tbody id="rows"></tbody></table>
+<p id="reasons"></p>
+<iframe id="app" src="/practice/" title="Practice app"></iframe>
+<p><button id="reload" type="button">Back to practice</button></p>
+<textarea id="json" readonly aria-label="Receipt JSON to paste back"></textarea>
+<script type="application/json" id="binding">__BINDING__</script>
+<script>__PROBE__</script>
