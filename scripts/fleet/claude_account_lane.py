@@ -163,12 +163,21 @@ def _refuse_mutation(*_args: Any, **_kwargs: Any) -> NoReturn:
     raise TypeError("a bound routing snapshot is immutable: derive a view with AccountSnapshot.evolve (#10770)")
 
 
+def _refuse_serialization() -> NoReturn:
+    # A pickled copy would come back as a plain value without its account, which binds as any account.
+    raise TypeError(
+        "a value taken from a bound routing snapshot is never pickled: it would lose its claude account; "
+        "pickle the raw payload and bind it again (#10770)"
+    )
+
+
 class _FrozenDict(dict[str, Any]):
     """A ``dict`` inside a bound snapshot: every mutator raises, and it remembers the account it was bound to.
 
     A ``dict`` subclass so the consumers' ``isinstance(record, dict)`` readings
     are unchanged; a copy (``dict(record)``, ``record.copy()``, ``record | x``)
-    is a plain ``dict`` whose nested values stay frozen.
+    is a plain ``dict`` whose nested values stay frozen. ``copy.copy`` and
+    ``copy.deepcopy`` return it unchanged, and pickling it raises.
     """
 
     __slots__ = ("_label",)
@@ -185,12 +194,12 @@ class _FrozenDict(dict[str, Any]):
     def __deepcopy__(self, memo: Any) -> _FrozenDict:
         return self
 
-    def __reduce_ex__(self, protocol: Any) -> tuple[Any, ...]:
-        return dict, (dict(self),)
+    def __reduce_ex__(self, protocol: Any) -> NoReturn:
+        _refuse_serialization()
 
 
 class _FrozenList(list[Any]):
-    """A ``list`` inside a bound snapshot: every mutator raises, and it remembers the account it was bound to."""
+    """A ``list`` inside a bound snapshot: frozen, account-remembering and never pickled, as :class:`_FrozenDict`."""
 
     __slots__ = ("_label",)
     _label: str | None
@@ -206,8 +215,8 @@ class _FrozenList(list[Any]):
     def __deepcopy__(self, memo: Any) -> _FrozenList:
         return self
 
-    def __reduce_ex__(self, protocol: Any) -> tuple[Any, ...]:
-        return list, (list(self),)
+    def __reduce_ex__(self, protocol: Any) -> NoReturn:
+        _refuse_serialization()
 
 
 def _freeze(value: Any, label: str | None) -> Any:
@@ -367,8 +376,11 @@ class AccountSnapshot(Mapping[str, Any]):
         alias, and ``claude_accounts``, ``ranked_by_headroom``,
         ``preferred_claude_account`` and :data:`BINDING_KEY` are not replaced.
         Such a change raises :class:`AccountRequired`; bind the raw payload
-        instead.
+        instead. So does deriving from a snapshot whose meter, label or
+        evidence no longer verifies (:func:`_verify_binding`).
         """
+        # Derive only from a snapshot that verifies: an altered meter or label would be sealed as this account's.
+        _verify_binding(self._data, self._account.label, self._evidence)
         _refuse_other_accounts(changes, self._account.label, path="evolve")
         data = {key: value for key, value in self._data.items() if key != BINDING_KEY}
         changed = {**data, **changes}

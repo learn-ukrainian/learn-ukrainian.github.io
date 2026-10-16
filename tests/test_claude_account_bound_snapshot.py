@@ -804,6 +804,79 @@ def test_a_plain_copy_is_bound_again_only_as_its_own_account_and_only_unaltered(
         bind_snapshot(forged, account=HOST_ACCOUNT)
 
 
+# --- round 3 (review-s2b-b105f5d6): derivation from an invalid view, nested serialization -----------
+
+
+def _lane_written(view, raw):
+    dict.__setitem__(view["agents"], "claude", raw["agents"]["claude"])
+
+
+def _relabelled(view, raw):
+    object.__setattr__(view, "_account", HOST_ACCOUNT)
+
+
+INVALIDATIONS = (_lane_written, _relabelled)
+
+
+@pytest.mark.parametrize("invalidate", INVALIDATIONS, ids=lambda invalidate: invalidate.__name__.lstrip("_"))
+def test_a_view_is_derived_only_from_a_snapshot_that_verifies(invalidate):
+    """Blocker 1: ``evolve`` resealed an altered meter or label as the view's account; it now verifies first."""
+    a_raw = _reversed()  # a's lane row has 90% left, b's row 0.5%
+    view = bind_snapshot(a_raw if invalidate is _lane_written else _a_exhausted_b_healthy(), account=B)
+    invalidate(view, a_raw)
+    with pytest.raises(AccountRequired, match="does not verify"):
+        derived = view.evolve(review_capacity_exclusions={})
+        # Reached only where the derivation is accepted (b105f5d62e): the resealed view selects a claude seat on
+        # a meter that is not its account's (a's 90% read as b's, or b's 89% read as the exhausted account a's).
+        assert not _claude_selected(derived, derived.account), invalidate.__name__
+
+
+def _pickled(value):
+    return pickle.loads(pickle.dumps(value))
+
+
+SPLICES = {
+    "agents": lambda b, raw: {"agents": _pickled(b["agents"])},
+    "lane_record": lambda b, raw: {**raw, "agents": {**raw["agents"], "claude": _pickled(b["agents"]["claude"])}},
+}
+
+
+@pytest.mark.parametrize("splice", SPLICES.values(), ids=SPLICES)
+def test_a_value_taken_from_a_bound_view_is_never_pickled(splice):
+    """Blocker 2: a pickled ``b["agents"]`` came back as a plain dict that bound b's meter as account a's."""
+    raw = _a_exhausted_b_healthy()
+    assert not _claude_selected(raw, HOST_ACCOUNT)  # account a is near cap: no claude reviewer for a
+    b = bind_snapshot(raw, account=B)
+    with pytest.raises(TypeError, match="never pickled"):
+        relabelled = bind_snapshot(splice(b, raw), account=HOST_ACCOUNT)
+        # Reached only where pickling strips the account (b105f5d62e): b's 89% selects a claude seat for account a.
+        assert not _claude_selected(relabelled, HOST_ACCOUNT)
+    view = bind_snapshot({**_reversed(), "lanes": ["claude", "codex"]}, account=B)
+    for part in (
+        view["ranked_by_headroom"],
+        view["lanes"],
+        view["claude_accounts"],
+        view["agents"]["claude"],
+        dict(view),
+    ):
+        with pytest.raises(TypeError, match="never pickled"):
+            pickle.dumps(part)
+
+
+def test_copies_of_a_bound_view_keep_its_account():
+    """Copying (not serializing) keeps provenance: a copy is bound again as its own account, never as another."""
+    raw = _a_exhausted_b_healthy()
+    b = bind_snapshot(raw, account=B)
+    for copied in (copy.copy(b["agents"]), copy.deepcopy(b["agents"])):
+        assert copied is b["agents"]  # frozen values are their own copies
+        with pytest.raises(AccountRequired, match="not read as 'a'"):
+            bind_snapshot({"agents": copied}, account=HOST_ACCOUNT)
+    for whole in (copy.copy(dict(b)), copy.deepcopy(dict(b))):
+        assert bind_snapshot(whole, account=B) == b
+        with pytest.raises(AccountRequired, match="not read as 'a'"):
+            bind_snapshot(whole, account=HOST_ACCOUNT)
+
+
 @pytest.mark.parametrize("label", ["a", "b"])
 def test_claude_alias_records_are_the_host_accounts_and_never_reach_another_accounts_decision(label):
     """Blocker 3: an alias-keyed copy of account a's lane row reached b's scheduler metrics; b's view drops it.
