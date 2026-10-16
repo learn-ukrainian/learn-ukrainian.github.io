@@ -4,19 +4,21 @@ A table-driven matrix: each representation of a request (``GitHubClient.request`
 ``urllib`` ``Request.data``, native and translated ``gh api`` argv), each GraphQL semantic
 case and each hold kind, crossed with the call's pool at remaining 0, unknown and 500. The
 expected class is a literal in each row, never computed by the code under test. Admitted
-rows assert one send of the exact request; refused rows assert zero sends and the exact
-typed reason and reset. The gh contract is verified against the installed gh 2.98.0 binary
-through a local recording proxy when it is present.
+rows assert one send carrying exactly the caller's bytes; refused rows assert zero sends and
+the exact typed reason and reset. The gh contract is verified against the installed gh 2.98.0
+binary through a local recording proxy when it is present.
 """
 
 from __future__ import annotations
 
 import email.utils
+import hashlib
 import http.server
 import io
 import json
 import os
 import subprocess
+import sys
 import threading
 import time
 from dataclasses import dataclass
@@ -45,10 +47,24 @@ CONDITIONAL = (
 )
 COUNTED = "mutation($n: Int!) { enqueuePullRequest(input: {pullRequestId: $n}) { clientMutationId } }"
 FRAGMENT = "fragment Landing on Mutation { enqueuePullRequest(input: {}) { clientMutationId } }"
+TYPENAME = 'mutation { __typename enqueuePullRequest(input: {pullRequestId: "PR_1"}) { clientMutationId } }'
 
 
 def envelope(document=M, **fields):
     return json.dumps({"query": document, **fields}).encode()
+
+
+def wire_json(payload):
+    """The bytes ``GitHubClient.request`` sends for a JSON payload (its documented serialization)."""
+    return json.dumps(payload, ensure_ascii=False).encode()
+
+
+def go_json(value):
+    """The bytes gh 2.98.0 sends for its parameters (Go ``encoding/json``: sorted, compact, HTML-safe)."""
+    text = json.dumps(value, ensure_ascii=False, separators=(",", ":"), sort_keys=True)
+    for char, escape in (("<", "\\u003c"), (">", "\\u003e"), ("&", "\\u0026"), (" ", "\\u2028"), (" ", "\\u2029")):
+        text = text.replace(char, escape)
+    return text.encode()
 
 
 # --- the wire -------------------------------------------------------------------------------
@@ -70,13 +86,15 @@ class Wire:
         return subprocess.CompletedProcess(command, 0, b"{}", b"")
 
     def opener(self, request, **kwargs):
-        """Send as Python 3.12 urllib does: it refuses str data before any connection."""
+        """Send as Python's http.client does: str data is refused, a file is read block by block until empty."""
         data = request.data
         if isinstance(data, str):
             raise TypeError("POST data should be bytes, an iterable of bytes, or a file object.")
         if hasattr(data, "read"):
-            sent = data.read()
-            sent = sent.encode("iso-8859-1") if isinstance(sent, str) else sent
+            blocks = []
+            while block := data.read(8192):
+                blocks.append(block.encode("iso-8859-1") if isinstance(block, str) else bytes(block))
+            sent = b"".join(blocks)
         elif data is None or isinstance(data, (bytes, bytearray, memoryview)):
             sent = None if data is None else bytes(data)
         else:
@@ -176,23 +194,38 @@ def opened(method, path, data):
     return call
 
 
-def native(*argv, input=None, files=None):
-    """``gh api`` through the native transport (``--template`` keeps it out of translation)."""
+@dataclass
+class Native:
+    """``gh <argv>`` through ``gh.run`` (``--template`` keeps a ``gh api`` out of translation)."""
 
-    def call(context):
-        for name, content in (files or {}).items():
+    argv: tuple
+    input: Any = None
+    files: dict | None = None
+
+    def __call__(self, context):
+        for name, content in (self.files or {}).items():
             path = context.tmp / name
             if content == "fifo":
                 os.mkfifo(path)
             else:
                 path.write_bytes(content.encode() if isinstance(content, str) else content)
-        return gh.run(["gh", *argv], client=context.client, capture_output=True, input=input)
-
-    return call
+        return gh.run(["gh", *self.argv], client=context.client, capture_output=True, input=self.input)
 
 
-def translated(*argv, input=None, files=None):
-    return native(*argv, input=input, files=files)
+def native(*argv, input=None, files=None):
+    return Native(argv, input, files)
+
+
+translated = native
+
+
+def runs(argv):
+    """The argv the native transport gives gh (#10730): a ``gh api`` command line that is neither
+    paginated, verbose nor already ``--include``d (``-iXPOST``) gets ``--include`` after its last
+    flag, so GitHub's status and headers come from gh's own framing; any other command is unchanged."""
+    if argv[0] != "api" or {"--paginate", "--verbose", "--include", "-iXPOST"} & set(argv):
+        return tuple(argv)
+    return (*argv, "--include")
 
 
 class Unseekable(io.RawIOBase):
@@ -224,6 +257,9 @@ def chunks(data):
 
 
 TEMPLATE = ("--template", "{{.}}")
+# gh reads this body itself from a source this client does not model (a pipe, a missing file, a
+# repository placeholder): only the command line and standard input are what the client passes on.
+GH_READS = object()
 
 
 @dataclass
@@ -232,7 +268,7 @@ class Row:
     pool: str
     expected: str  # "L" landing, "N" ordinary, "P:<reason>" refused unread when admission needs the body
     call: Any
-    sent: Any = None  # the exact body bytes the admitted request carries, when the row pins them
+    sent: Any  # the exact body bytes an admitted request carries (None: no body; native: what gh sends)
 
 
 ROWS = [
@@ -241,17 +277,35 @@ ROWS = [
     Row("request-bytes", "graphql", "L", request("POST", "graphql", envelope()), envelope()),
     Row("request-bytearray", "graphql", "L", request("POST", "graphql", bytearray(envelope())), envelope()),
     Row("request-memoryview", "graphql", "L", request("POST", "graphql", memoryview(envelope())), envelope()),
-    Row("request-bytes-read", "graphql", "N", request("POST", "graphql", envelope(R))),
+    Row("request-bytes-read", "graphql", "N", request("POST", "graphql", envelope(R)), envelope(R)),
     # A str payload is sent as a JSON string: it executes nothing, so it is never landing.
-    Row("request-str-is-a-json-string", "graphql", "N", request("POST", "graphql", envelope().decode())),
-    Row("rest-put-merge", "core", "L", request("PUT", "repos/o/r/pulls/1/merge", {"merge_method": "squash"})),
-    Row("rest-get-merge-shaped-url", "core", "N", request("GET", "repos/o/r/pulls/1/merge")),
+    Row(
+        "request-str-is-a-json-string",
+        "graphql",
+        "N",
+        request("POST", "graphql", envelope().decode()),
+        wire_json(envelope().decode()),
+    ),
+    Row(
+        "rest-put-merge",
+        "core",
+        "L",
+        request("PUT", "repos/o/r/pulls/1/merge", {"merge_method": "squash"}),
+        wire_json({"merge_method": "squash"}),
+    ),
+    Row("rest-get-merge-shaped-url", "core", "N", request("GET", "repos/o/r/pulls/1/merge"), None),
     # urllib Request.data, through http_open
     Row("data-bytes", "graphql", "L", opened("POST", "graphql", envelope()), envelope()),
-    Row("data-bytes-read", "graphql", "N", opened("POST", "graphql", envelope(R))),
-    Row("data-str", "graphql", "P:invalid_body_type", opened("POST", "graphql", envelope().decode())),
+    Row("data-bytes-read", "graphql", "N", opened("POST", "graphql", envelope(R)), envelope(R)),
+    Row("data-str", "graphql", "P:invalid_body_type", opened("POST", "graphql", envelope().decode()), None),
     Row("data-seekable-file", "graphql", "L", opened("POST", "graphql", lambda: io.BytesIO(envelope())), envelope()),
-    Row("data-seekable-file-read", "graphql", "N", opened("POST", "graphql", lambda: io.BytesIO(envelope(R)))),
+    Row(
+        "data-seekable-file-read",
+        "graphql",
+        "N",
+        opened("POST", "graphql", lambda: io.BytesIO(envelope(R))),
+        envelope(R),
+    ),
     Row(
         "data-text-file",
         "graphql",
@@ -259,17 +313,21 @@ ROWS = [
         opened("POST", "graphql", lambda: io.StringIO(envelope().decode())),
         envelope(),
     ),
+    # A stream that reading consumes is captured once and those bytes are sent.
     Row(
         "data-non-seekable-reader",
         "graphql",
-        "P:body_not_replayable",
+        "L",
         opened("POST", "graphql", lambda: Unseekable(envelope())),
+        envelope(),
     ),
+    Row("data-generator-chunks", "graphql", "L", opened("POST", "graphql", lambda: chunks(envelope())), envelope()),
     Row(
-        "data-generator-chunks",
+        "data-generator-chunks-read",
         "graphql",
-        "P:body_not_replayable",
-        opened("POST", "graphql", lambda: chunks(envelope())),
+        "N",
+        opened("POST", "graphql", lambda: chunks(envelope(R))),
+        envelope(R),
     ),
     Row(
         "data-list-chunks",
@@ -278,7 +336,13 @@ ROWS = [
         opened("POST", "graphql", lambda: [envelope()[:10], b"", envelope()[10:]]),
         envelope(),
     ),
-    Row("data-list-chunks-read", "graphql", "N", opened("POST", "graphql", lambda: [envelope(R)[:5], envelope(R)[5:]])),
+    Row(
+        "data-list-chunks-read",
+        "graphql",
+        "N",
+        opened("POST", "graphql", lambda: [envelope(R)[:5], envelope(R)[5:]]),
+        envelope(R),
+    ),
     # A landing REST write is landing by its shape: its streamed body is never read.
     Row(
         "data-generator-put-merge",
@@ -293,12 +357,14 @@ ROWS = [
         "graphql",
         "L",
         native("api", "graphql", "-f", "query=" + M, "-F", "operationName=null", *TEMPLATE),
+        go_json({"operationName": None, "query": M}),
     ),
     Row(
         "native-f-operationName-null-is-a-string",
         "graphql",
         "N",
         native("api", "graphql", "-f", "query=" + M, "-f", "operationName=null", *TEMPLATE),
+        go_json({"operationName": "null", "query": M}),
     ),
     Row(
         "native-operation-named-null",
@@ -313,155 +379,199 @@ ROWS = [
             "operationName=null",
             *TEMPLATE,
         ),
+        go_json({"operationName": "null", "query": M.replace("mutation", "mutation null")}),
     ),
     Row(
         "native-F-operationName-true",
         "graphql",
         "N",
         native("api", "graphql", "-f", "query=" + M, "-F", "operationName=true", *TEMPLATE),
+        go_json({"operationName": True, "query": M}),
     ),
     Row(
         "native-F-operationName-int",
         "graphql",
         "N",
         native("api", "graphql", "-f", "query=" + M, "-F", "operationName=7", *TEMPLATE),
+        go_json({"operationName": 7, "query": M}),
     ),
     Row(
         "native-F-true-skips",
         "graphql",
         "L",
         native("api", "graphql", "-f", "query=" + CONDITIONAL, "-F", "skip=true", *TEMPLATE),
+        go_json({"query": CONDITIONAL, "variables": {"skip": True}}),
     ),
     Row(
         "native-F-false-keeps",
         "graphql",
         "N",
         native("api", "graphql", "-f", "query=" + CONDITIONAL, "-F", "skip=false", *TEMPLATE),
+        go_json({"query": CONDITIONAL, "variables": {"skip": False}}),
     ),
     Row(
         "native-f-true-is-a-string",
         "graphql",
         "N",
         native("api", "graphql", "-f", "query=" + CONDITIONAL, "-f", "skip=true", *TEMPLATE),
+        go_json({"query": CONDITIONAL, "variables": {"skip": "true"}}),
     ),
     Row(
         "native-F-positive-int",
         "graphql",
         "L",
         native("api", "graphql", "-f", "query=" + COUNTED, "-F", "n=5", *TEMPLATE),
+        go_json({"query": COUNTED, "variables": {"n": 5}}),
     ),
     Row(
         "native-F-negative-int",
         "graphql",
         "L",
         native("api", "graphql", "-f", "query=" + COUNTED, "-F", "n=-5", *TEMPLATE),
+        go_json({"query": COUNTED, "variables": {"n": -5}}),
     ),
     Row(
         "native-F-at-file",
         "graphql",
         "L",
         native("api", "graphql", "-F", "query=@q.graphql", *TEMPLATE, files={"q.graphql": M}),
+        go_json({"query": M}),
     ),
     Row(
         "native-F-at-file-read",
         "graphql",
         "N",
         native("api", "graphql", "-F", "query=@q.graphql", *TEMPLATE, files={"q.graphql": R}),
+        go_json({"query": R}),
     ),
-    Row("native-F-at-stdin", "graphql", "L", native("api", "graphql", "-F", "query=@-", *TEMPLATE, input=M.encode())),
+    Row(
+        "native-F-at-stdin",
+        "graphql",
+        "L",
+        native("api", "graphql", "-F", "query=@-", *TEMPLATE, input=M.encode()),
+        go_json({"query": M}),
+    ),
     Row(
         "native-F-at-missing",
         "graphql",
         "P:body_unreadable",
         native("api", "graphql", "-F", "query=@missing", *TEMPLATE),
+        GH_READS,
     ),
     Row(
         "native-f-at-is-literal",
         "graphql",
         "N",
         native("api", "graphql", "-f", "query=@q.graphql", *TEMPLATE, files={"q.graphql": M}),
+        go_json({"query": "@q.graphql"}),
     ),
     Row(
         "native-F-placeholder-unresolved",
         "graphql",
         "N",
         native("api", "graphql", "-F", "query=" + M.replace("PR_1", "{owner}"), *TEMPLATE),
+        GH_READS,
     ),
-    Row("native-attached-short-flag", "graphql", "L", native("api", "graphql", "-fquery=" + M, *TEMPLATE)),
-    Row("native-combined-short-flags", "graphql", "L", native("api", "-iXPOST", "graphql", "-fquery=" + M, *TEMPLATE)),
+    Row(
+        "native-attached-short-flag",
+        "graphql",
+        "L",
+        native("api", "graphql", "-fquery=" + M, *TEMPLATE),
+        go_json({"query": M}),
+    ),
+    Row(
+        "native-combined-short-flags",
+        "graphql",
+        "L",
+        native("api", "-iXPOST", "graphql", "-fquery=" + M, *TEMPLATE),
+        go_json({"query": M}),
+    ),
     Row(
         "native-input-file",
         "graphql",
         "L",
         native("api", "graphql", "--input", "e.json", *TEMPLATE, files={"e.json": envelope()}),
+        envelope(),
     ),
     Row(
         "native-input-stdin-bytes",
         "graphql",
         "L",
         native("api", "graphql", "--input", "-", *TEMPLATE, input=envelope()),
+        envelope(),
     ),
     Row(
         "native-input-stdin-text",
         "graphql",
         "L",
         native("api", "graphql", "--input", "-", *TEMPLATE, input=envelope().decode()),
+        envelope(),
     ),
+    # A pipe gh reads itself: what this client read from it could not be what gh reads.
     Row(
         "native-input-fifo",
         "graphql",
         "P:body_not_replayable",
         native("api", "graphql", "--input", "pipe", *TEMPLATE, files={"pipe": "fifo"}),
+        GH_READS,
     ),
     Row(
         "native-input-read-field-to-url",
         "graphql",
         "N",
         native("api", "graphql", "--input", "r.json", "-f", "query=" + M, *TEMPLATE, files={"r.json": envelope(R)}),
+        envelope(R),
     ),
     Row(
         "native-stdin-taken-by-field",
         "graphql",
         "N",
         native("api", "graphql", "-F", "x=@-", "--input", "-", *TEMPLATE, input=envelope()),
+        None,
     ),
     Row(
         "native-explicit-get-mutation",
         "graphql",
         "N",
         native("api", "graphql", "-X", "GET", "-f", "query=" + M, *TEMPLATE),
+        None,
     ),
     Row(
         "native-explicit-post-read",
         "graphql",
         "N",
         native("api", "graphql", "-X", "POST", "-f", "query=" + R, *TEMPLATE),
+        go_json({"query": R}),
     ),
     Row(
         "native-duplicate-field-gh-refuses",
         "graphql",
         "N",
         native("api", "graphql", "-f", "query=" + M, "-F", "query=" + M, *TEMPLATE),
+        None,
     ),
     Row(
         "native-fake-landing-headers",
         "core",
         "N",
         native("api", "repos/o/r/pulls/1/reviews", "-H", "X-Landing-Flow: merge-queue-keeper", *TEMPLATE),
+        None,
     ),
-    Row("native-put-merge", "core", "L", native("api", "-X", "PUT", "repos/o/r/pulls/1/merge", *TEMPLATE)),
+    Row("native-put-merge", "core", "L", native("api", "-X", "PUT", "repos/o/r/pulls/1/merge", *TEMPLATE), None),
     # -F is a body file outside gh api: never read for admission, whatever it holds.
     Row(
         "native-issue-comment-F-body-file",
         "core",
         "N",
         native("issue", "comment", "1", "--repo", "o/r", "-F", "e.json", files={"e.json": envelope()}),
+        None,
     ),
     Row(
         "native-pr-review-F-body-file",
         "core",
         "L",
         native("pr", "review", "1", "--repo", "o/r", "--comment", "-F", "body.md", files={"body.md": "x"}),
+        None,
     ),
     # translated gh api: what is sent is what gh would send
     Row(
@@ -485,146 +595,104 @@ ROWS = [
         translated("api", "graphql", "--input", "e.json", files={"e.json": envelope()}),
         envelope(),
     ),
-    Row("translated-get-reads-merge-url", "core", "N", translated("api", "repos/o/r/pulls/1/merge")),
-    # GraphQL semantics (GitHubClient.request mappings)
-    Row(
-        "gql-alias-of-landing-field",
-        "graphql",
-        "L",
-        request("POST", "graphql", {"query": "mutation { a: enqueuePullRequest(input: {}) { clientMutationId } }"}),
-    ),
-    Row(
-        "gql-landing-alias-on-comment",
-        "graphql",
-        "N",
-        request(
-            "POST", "graphql", {"query": "mutation { enqueuePullRequest: addComment(input: {}) { clientMutationId } }"}
-        ),
-    ),
-    Row(
-        "gql-inline-fragment",
-        "graphql",
-        "L",
-        request(
-            "POST",
-            "graphql",
-            {"query": "mutation { ... on Mutation { enqueuePullRequest(input: {}) { clientMutationId } } }"},
-        ),
-    ),
-    Row(
-        "gql-named-fragment",
-        "graphql",
-        "L",
-        request("POST", "graphql", {"query": "mutation { ...Landing } " + FRAGMENT}),
-    ),
-    Row(
-        "gql-document-in-variables", "graphql", "N", request("POST", "graphql", {"query": R, "variables": {"query": M}})
-    ),
-    Row(
-        "gql-operationName-null-sole",
-        "graphql",
-        "L",
-        request("POST", "graphql", {"query": LAND, "operationName": None}),
-    ),
-    Row(
-        "gql-operationName-selects-landing",
-        "graphql",
-        "L",
-        request("POST", "graphql", {"query": SEVERAL, "operationName": "Land"}),
-    ),
-    Row(
-        "gql-operationName-selects-read",
-        "graphql",
-        "N",
-        request("POST", "graphql", {"query": SEVERAL, "operationName": "Read"}),
-    ),
-    Row("gql-several-without-name", "graphql", "N", request("POST", "graphql", {"query": SEVERAL})),
-    Row(
-        "gql-operationName-not-a-string",
-        "graphql",
-        "N",
-        request("POST", "graphql", {"query": LAND, "operationName": True}),
-    ),
-    Row(
-        "gql-mutation-nested-in-query",
-        "graphql",
-        "N",
-        request(
-            "POST", "graphql", {"query": "query { viewer { enqueuePullRequest(input: {}) { clientMutationId } } }"}
-        ),
-    ),
-    Row(
-        "gql-subscription",
-        "graphql",
-        "N",
-        request("POST", "graphql", {"query": "subscription { enqueuePullRequest(input: {}) { clientMutationId } }"}),
-    ),
-    Row("gql-batch", "graphql", "N", request("POST", "graphql", [{"query": M}])),
-    Row(
-        "gql-persisted-query",
-        "graphql",
-        "N",
-        request(
-            "POST",
-            "graphql",
-            {"operationName": "Land", "extensions": {"persistedQuery": {"version": 1, "sha256Hash": "0" * 64}}},
-        ),
-    ),
-    Row(
-        "gql-skip-literal-drops-comment",
-        "graphql",
-        "L",
-        request("POST", "graphql", {"query": CONDITIONAL.replace("($skip: Boolean!) ", "").replace("$skip", "true")}),
-    ),
-    Row(
-        "gql-include-false-drops-landing",
-        "graphql",
-        "N",
-        request(
-            "POST",
-            "graphql",
-            {"query": "mutation { enqueuePullRequest(input: {}) @include(if: false) { clientMutationId } }"},
-        ),
-    ),
-    Row(
-        "gql-skip-variable-default",
-        "graphql",
-        "L",
-        request("POST", "graphql", {"query": CONDITIONAL.replace("Boolean!", "Boolean = true")}),
-    ),
-    Row(
-        "gql-skip-undeclared-variable",
-        "graphql",
-        "N",
-        request(
-            "POST", "graphql", {"query": CONDITIONAL.replace("($skip: Boolean!) ", ""), "variables": {"skip": True}}
-        ),
-    ),
-    Row(
-        "gql-skip-variable-not-boolean",
-        "graphql",
-        "N",
-        request("POST", "graphql", {"query": CONDITIONAL, "variables": {"skip": "true"}}),
-    ),
-    Row("gql-introspection", "graphql", "N", request("POST", "graphql", {"query": "{ __schema { types { name } } }"})),
-    Row(
-        "gql-root-typename",
-        "graphql",
-        "N",
-        request(
-            "POST", "graphql", {"query": "mutation { __typename enqueuePullRequest(input: {}) { clientMutationId } }"}
-        ),
-    ),
+    Row("translated-get-reads-merge-url", "core", "N", translated("api", "repos/o/r/pulls/1/merge"), None),
 ]
 
 
-def assert_sent(context, row, before):
-    sends = context.wire.sent[before:]
-    assert len(sends) == 1, sends
-    if row.sent is not None:
-        kind = sends[0][0]
-        body = sends[0][3] if kind in {"http", "http_open"} else None
-        assert body == row.sent
+def _semantic(row_id, expected, payload):
+    """A GraphQL semantic case sent as a ``GitHubClient.request`` mapping."""
+    return Row(row_id, "graphql", expected, request("POST", "graphql", payload), wire_json(payload))
+
+
+ROWS += [
+    _semantic(
+        "gql-alias-of-landing-field",
+        "L",
+        {"query": "mutation { a: enqueuePullRequest(input: {}) { clientMutationId } }"},
+    ),
+    _semantic(
+        "gql-landing-alias-on-comment",
+        "N",
+        {"query": "mutation { enqueuePullRequest: addComment(input: {}) { clientMutationId } }"},
+    ),
+    _semantic(
+        "gql-inline-fragment",
+        "L",
+        {"query": "mutation { ... on Mutation { enqueuePullRequest(input: {}) { clientMutationId } } }"},
+    ),
+    _semantic("gql-named-fragment", "L", {"query": "mutation { ...Landing } " + FRAGMENT}),
+    _semantic("gql-document-in-variables", "N", {"query": R, "variables": {"query": M}}),
+    _semantic("gql-operationName-null-sole", "L", {"query": LAND, "operationName": None}),
+    _semantic("gql-operationName-selects-landing", "L", {"query": SEVERAL, "operationName": "Land"}),
+    _semantic("gql-operationName-selects-read", "N", {"query": SEVERAL, "operationName": "Read"}),
+    _semantic("gql-several-without-name", "N", {"query": SEVERAL}),
+    _semantic("gql-operationName-not-a-string", "N", {"query": LAND, "operationName": True}),
+    _semantic(
+        "gql-mutation-nested-in-query",
+        "N",
+        {"query": "query { viewer { enqueuePullRequest(input: {}) { clientMutationId } } }"},
+    ),
+    _semantic(
+        "gql-subscription",
+        "N",
+        {"query": "subscription { enqueuePullRequest(input: {}) { clientMutationId } }"},
+    ),
+    Row("gql-batch", "graphql", "N", request("POST", "graphql", [{"query": M}]), wire_json([{"query": M}])),
+    _semantic(
+        "gql-persisted-query",
+        "N",
+        {"operationName": "Land", "extensions": {"persistedQuery": {"version": 1, "sha256Hash": "0" * 64}}},
+    ),
+    _semantic(
+        "gql-skip-literal-drops-comment",
+        "L",
+        {"query": CONDITIONAL.replace("($skip: Boolean!) ", "").replace("$skip", "true")},
+    ),
+    _semantic(
+        "gql-include-false-drops-landing",
+        "N",
+        {"query": "mutation { enqueuePullRequest(input: {}) @include(if: false) { clientMutationId } }"},
+    ),
+    _semantic("gql-skip-variable-default", "L", {"query": CONDITIONAL.replace("Boolean!", "Boolean = true")}),
+    _semantic(
+        "gql-skip-undeclared-variable",
+        "N",
+        {"query": CONDITIONAL.replace("($skip: Boolean!) ", ""), "variables": {"skip": True}},
+    ),
+    _semantic("gql-skip-variable-not-boolean", "N", {"query": CONDITIONAL, "variables": {"skip": "true"}}),
+    _semantic("gql-introspection", "N", {"query": "{ __schema { types { name } } }"}),
+    # The root __typename meta-field writes nothing: beside a landing mutation it changes nothing.
+    _semantic("gql-root-typename", "L", {"query": TYPENAME}),
+    _semantic("gql-root-typename-aliased", "L", {"query": TYPENAME.replace("__typename", "kind: __typename")}),
+    _semantic("gql-root-typename-alone", "N", {"query": "mutation { __typename }"}),
+    _semantic(
+        "gql-typename-beside-comment",
+        "N",
+        {"query": 'mutation { __typename addComment(input: {subjectId: "X", body: "x"}) { clientMutationId } }'},
+    ),
+    # A document GitHub rejects executes nothing, so it is never landing.
+    _semantic("gql-unused-variable", "N", {"query": M.replace("mutation", "mutation($x: Int)")}),
+    _semantic("gql-unused-fragment", "N", {"query": M + " " + FRAGMENT}),
+    _semantic("gql-undefined-variable", "N", {"query": M.replace('"PR_1"', "$x")}),
+    _semantic("gql-duplicate-input-field", "N", {"query": M.replace('"PR_1"', '"PR_1", pullRequestId: "PR_2"')}),
+    _semantic("gql-unparsable", "N", {"query": M[:-1]}),
+]
+
+
+def assert_sent(context, row):
+    """One send, carrying exactly the bytes the caller's request means."""
+    [send] = context.wire.sent
+    if send[0] in {"http", "http_open"}:
+        assert send[3] == row.sent
+        return
+    call = row.call
+    _, argv, stdin = send
+    assert argv == runs(call.argv)
+    # Standard input reaches gh unchanged; gh builds the request from it and the argv.
+    assert stdin == (call.input.encode() if isinstance(call.input, str) else call.input)
+    if call.argv[0] == "api" and row.sent is not GH_READS:
+        model = gh._gh_api_call(list(call.argv[1:]), stdin=stdin, cwd=context.tmp)
+        assert (None if model is None else model.build()[1]) == row.sent
 
 
 @pytest.mark.parametrize("remaining", list(BUDGETS))
@@ -638,7 +706,7 @@ def test_request_matrix(context, row, remaining):
         return
     if row.expected == "L" or remaining != "0":
         assert result[0] == "ok", result
-        assert_sent(context, row, 0)
+        assert_sent(context, row)
         return
     if row.expected == "N":
         assert result == ("limited", REASON[row.pool], OPEN)
@@ -652,26 +720,25 @@ def test_matrix_has_the_required_denominator():
     assert len(ROWS) >= 40 and len(ids) == len(ROWS)
     kinds = {row.expected.split(":")[0] for row in ROWS}
     assert kinds == {"L", "N", "P"}
+    # Every row pins what it sends: bytes, no body, or a body gh reads itself.
+    assert all(row.sent is None or row.sent is GH_READS or isinstance(row.sent, bytes) for row in ROWS)
 
 
-# --- streams are never consumed to make a check possible -------------------------------------
+# --- bodies: captured once, whatever their size, and sent exactly --------------------------------
 
 
 @pytest.mark.parametrize("remaining", list(BUDGETS))
-def test_non_replayable_stream_is_never_read_by_admission(context, remaining):
+def test_a_stream_is_read_once_and_exactly_its_bytes_are_sent(context, remaining):
     seed(context, budget_rows("graphql", remaining))
     stream = Unseekable(envelope())
     result = outcome(opened("POST", "graphql", stream), context)
-    if remaining == "0":
-        assert result == ("unprepared", "body_not_replayable")
-        assert stream.consumed == 0 and context.wire.sent == []
-    else:
-        # Admission did not need it: the opener alone read it, once and whole.
-        assert result[0] == "ok" and stream.consumed == len(envelope())
-        assert context.wire.sent[0][3] == envelope()
+    # At remaining 0 admission captures it and the opener is given the captured bytes; otherwise
+    # the opener alone reads it. Either way it is read once and sent whole.
+    assert result[0] == "ok" and stream.consumed == len(envelope())
+    assert [send[3] for send in context.wire.sent] == [envelope()]
 
 
-def test_seekable_body_is_restored_and_sent_whole(context):
+def test_seekable_body_is_sent_from_its_position(context):
     seed(context, budget_rows("graphql", "0"))
     stream = io.BytesIO(b"prefix" + envelope())
     stream.seek(6)
@@ -679,35 +746,187 @@ def test_seekable_body_is_restored_and_sent_whole(context):
     assert context.wire.sent[0][3] == envelope()
 
 
-class Counting(io.BytesIO):
-    def __init__(self, data):
-        super().__init__(data)
-        self.read_bytes = 0
+def test_a_captured_body_goes_only_to_the_copy_the_opener_sends(context):
+    """The caller's Request keeps its data and headers; the opener's copy keeps the caller's Content-Length."""
+    seed(context, budget_rows("graphql", "0"))
+    data, received = chunks(envelope()), []
 
-    def read(self, size=-1):
-        chunk = super().read(size)
-        self.read_bytes += len(chunk)
-        return chunk
+    def opener(outgoing, **kwargs):
+        received.append((outgoing, outgoing.data.read(), dict(outgoing.headers)))
+        response = io.BytesIO(b'{"data":{}}')
+        response.status, response.headers = 200, {}
+        return response
+
+    headers = {**AUTH, "Content-Length": str(len(envelope()))}
+    original = Request("https://api.github.com/graphql", data=data, method="POST", headers=headers)
+    before = dict(original.headers)
+    with gh.http_open(original, opener=opener) as response:
+        assert response.status == 200
+    [(outgoing, body, sent_headers)] = received
+    assert outgoing is not original and body == envelope()
+    assert sent_headers["Content-length"] == str(len(envelope()))
+    assert original.data is data and dict(original.headers) == before
+
+
+class Recorded:
+    """Every spool the client opens, to prove each is closed on every path."""
+
+    def __init__(self, monkeypatch):
+        self.spools, spool = [], gh._spool
+
+        def recording():
+            self.spools.append(spool())
+            return self.spools[-1]
+
+        monkeypatch.setattr(gh, "_spool", recording)
 
 
 @pytest.mark.parametrize("remaining", list(BUDGETS))
-def test_body_over_the_request_cap_is_refused_without_reading_the_rest(context, monkeypatch, remaining):
-    monkeypatch.setattr(gh, "MAX_REQUEST_BYTES", 64)
+def test_bodies_beyond_the_spill_threshold_are_sent_whole(context, monkeypatch, remaining):
+    """The spill threshold moves a captured body to a private file; it never refuses one (#10730 blocker 1)."""
+    monkeypatch.setattr(gh, "SPILL_BYTES", 64)
+    recorded = Recorded(monkeypatch)
     seed(context, budget_rows("graphql", remaining))
-    big = envelope("query { " + "viewer { login } " * 20 + "}")
-    stream = Counting(big)
-    paths = [
-        opened("POST", "graphql", stream),
-        request("POST", "graphql", big),
-        native("api", "graphql", "--input", "big.json", *TEMPLATE, files={"big.json": big}),
-    ]
-    for call in paths:
-        result = outcome(call, context)
-        assert result == ("unprepared", "body_too_large") if remaining == "0" else result[0] == "ok"
-    if remaining == "0":
-        assert stream.read_bytes <= 65 and stream.tell() == 0 and context.wire.sent == []
+    big = envelope(M + " " * 200)
+    calls = {
+        "direct": request("POST", "graphql", big),
+        "urllib-bytes": opened("POST", "graphql", big),
+        "urllib-seekable": opened("POST", "graphql", lambda: io.BytesIO(big)),
+        "urllib-reader": opened("POST", "graphql", lambda: Unseekable(big)),
+        "urllib-iterator": opened("POST", "graphql", lambda: chunks(big)),
+        "native-file": native("api", "graphql", "--input", "big.json", *TEMPLATE, files={"big.json": big}),
+        "native-stdin": native("api", "graphql", "--input", "-", *TEMPLATE, input=big),
+    }
+    for path, call in calls.items():
+        before = len(context.wire.sent)
+        assert outcome(call, context)[0] == "ok", path
+        [send] = context.wire.sent[before:]
+        if send[0] == "native":
+            assert send[1] == runs(call.argv) and send[2] == call.input
+        else:
+            assert send[3] == big, path
+    # Streams were captured only where admission needed them, then spilled, and every spool is closed.
+    captured = 3 if remaining == "0" else 0
+    assert len(recorded.spools) == captured and all(spool._rolled and spool.closed for spool in recorded.spools)
+
+
+CAP = 8 * 1024 * 1024  # the former admission cap: a landing body one byte over it was refused (review of 55881a20)
+
+
+def padded(document, size):
+    """A valid request body of exactly ``size`` bytes: GraphQL whitespace pads the document."""
+    return envelope(document + " " * (size - len(envelope(document))))
+
+
+@pytest.mark.parametrize(
+    "path", ["direct", "urllib-bytes", "urllib-reader", "urllib-iterator", "native-stdin", "native-file"]
+)
+def test_a_landing_body_one_byte_over_the_former_cap_is_sent_intact(context, path):
+    seed(context, budget_rows("graphql", "0"))
+    body = padded(M, CAP + 1)
+    assert len(body) == CAP + 1
+    calls = {
+        "direct": request("POST", "graphql", body),
+        "urllib-bytes": opened("POST", "graphql", body),
+        "urllib-reader": opened("POST", "graphql", lambda: Unseekable(body)),
+        "urllib-iterator": opened("POST", "graphql", lambda: chunks(body)),
+        "native-stdin": native("api", "graphql", "--input", "-", *TEMPLATE, input=body),
+        "native-file": native("api", "graphql", "--input", "big.json", *TEMPLATE, files={"big.json": body}),
+    }
+    assert outcome(calls[path], context)[0] == "ok"
+    [send] = context.wire.sent
+    if send[0] == "native":
+        assert send[1] == runs(calls[path].argv)
+        sent = send[2] if path == "native-stdin" else (context.tmp / "big.json").read_bytes()
     else:
-        assert len(context.wire.sent) == 3
+        sent = send[3]
+    assert hashlib.sha256(sent).hexdigest() == hashlib.sha256(body).hexdigest()
+
+
+@pytest.mark.parametrize("path", ["direct", "urllib-reader", "native-stdin"])
+def test_an_ordinary_body_over_the_former_cap_keeps_its_typed_refusal(context, path):
+    seed(context, budget_rows("graphql", "0"))
+    body = padded(R, CAP + 1)
+    calls = {
+        "direct": request("POST", "graphql", body),
+        "urllib-reader": opened("POST", "graphql", lambda: Unseekable(body)),
+        "native-stdin": native("api", "graphql", "--input", "-", *TEMPLATE, input=body),
+    }
+    assert outcome(calls[path], context) == ("limited", "pool_exhausted", OPEN)
+    assert context.wire.sent == []
+
+
+class Failing(io.RawIOBase):
+    """A stream whose device fails after its first block."""
+
+    def __init__(self, data):
+        self.data, self.reads = data, 0
+
+    def readable(self):
+        return True
+
+    def readinto(self, buffer):
+        self.reads += 1
+        if self.reads > 1:
+            raise OSError("device gone")
+        buffer[:10] = self.data[:10]
+        return 10
+
+
+def broken_producer():
+    yield envelope()[:10]
+    raise RuntimeError("producer failed")
+
+
+@pytest.mark.parametrize(
+    ("data", "reason"),
+    [
+        (lambda: Failing(envelope()), "body_unreadable"),
+        (broken_producer, "body_unreadable"),
+        (lambda: [envelope(), "text chunk"], "invalid_body_type"),
+        (lambda: io.StringIO(M.replace("PR_1", "PR_☃")), "invalid_body_type"),
+        (lambda: 42, "invalid_body_type"),
+    ],
+    ids=["read-fails", "iteration-fails", "str-chunk", "text-beyond-latin-1", "not-a-body"],
+)
+def test_a_body_that_cannot_be_captured_is_typed_and_sends_nothing(context, monkeypatch, data, reason):
+    """Capture failure is its own outcome: never classified landing or ordinary, never sent."""
+    recorded = Recorded(monkeypatch)
+    seed(context, budget_rows("graphql", "0"))
+    assert outcome(opened("POST", "graphql", data), context) == ("unprepared", reason)
+    assert context.wire.sent == [] and all(spool.closed for spool in recorded.spools)
+    normalized = gh._normalize("POST", "graphql", ("graphql",), gh._DeferredBody(data()).capture)
+    with pytest.raises(gh.GitHubUnpreparedRequest):
+        normalized.inspect()
+    assert normalized.provenance == gh._Provenance("unprepared", refusal=reason) and normalized.call_class is None
+
+
+def test_a_spool_is_closed_when_the_send_fails(context, monkeypatch):
+    recorded = Recorded(monkeypatch)
+    seed(context, budget_rows("graphql", "0"))
+
+    def opener(outgoing, **kwargs):
+        raise ConnectionResetError("network down")
+
+    with pytest.raises(ConnectionResetError):
+        gh.http_open(
+            Request("https://api.github.com/graphql", data=chunks(envelope()), method="POST", headers=AUTH),
+            opener=opener,
+        )
+    assert len(recorded.spools) == 1 and recorded.spools[0].closed
+
+
+def test_the_spool_spills_into_an_unnamed_file_only_this_process_can_open(monkeypatch):
+    import stat
+
+    monkeypatch.setattr(gh, "SPILL_BYTES", 16)
+    with gh._spool() as spool:
+        spool.write(b"x" * 16)
+        assert not spool._rolled
+        spool.write(b"x")
+        status = os.fstat(spool.fileno())
+        assert spool._rolled and stat.S_IMODE(status.st_mode) == 0o600 and status.st_nlink == 0
+    assert spool.closed
 
 
 def test_landing_flow_never_reads_a_body(context):
@@ -977,23 +1196,24 @@ def test_provenance_holds_only_a_classification_length_digest_and_refusal(contex
         gh._Provenance("graphql_landing; " + secret)
     with pytest.raises(AssertionError, match="untyped"):
         gh._Provenance("unprepared", refusal="github_rate_limited")
+    # A one-shot iterator is captured once; its provenance is that of the captured bytes, never the bytes.
     deferred = gh._normalize("POST", "graphql", ("graphql",), gh._DeferredBody(iter([body])).capture)
-    with pytest.raises(gh.GitHubUnpreparedRequest):
-        deferred.inspect()
-    assert deferred.provenance == gh._Provenance("unprepared", refusal="body_not_replayable")
+    assert deferred.inspect() is True
+    assert deferred.provenance == gh._Provenance(
+        "graphql_landing", len(body), hashlib.sha256(body).hexdigest()
+    ) and secret not in repr(deferred.provenance)
+    with pytest.raises(gh.GitHubUnpreparedRequest) as refused:
+        gh._DeferredBody([body, secret]).capture()
+    assert secret not in str(refused.value) and secret not in repr(refused.value)
 
 
 def test_preparation_errors_are_a_closed_set():
-    assert {
-        "body_unreadable",
-        "body_not_replayable",
-        "body_too_large",
-        "invalid_body_type",
-    } == gh.PREPARATION_ERRORS
+    # Size is no reason: a body is captured whatever its size (the former cap is the spill threshold).
+    assert {"body_unreadable", "body_not_replayable", "invalid_body_type"} == gh.PREPARATION_ERRORS
     assert gh.PREPARATION_ERRORS.isdisjoint(gh.REFUSAL_REASONS)
     with pytest.raises(AssertionError, match="untyped"):
-        gh.GitHubUnpreparedRequest("retry_after")
-    assert gh.MAX_REQUEST_BYTES == 8 * 1024 * 1024
+        gh.GitHubUnpreparedRequest("body_too_large")
+    assert gh.SPILL_BYTES == 8 * 1024 * 1024 and not hasattr(gh, "MAX_REQUEST_BYTES")
 
 
 def test_graphql_queries_are_cached_and_nothing_else_is(context):
@@ -1040,7 +1260,11 @@ def needs_gh(test):
 
 
 class Proxy:
-    """A local HTTP proxy that records each request and answers with ``reply``."""
+    """A local HTTP proxy that records each request and answers with ``reply``.
+
+    ``reply`` is ``(status, headers, body)``, or a function of the request path returning one,
+    or ``None`` to drop the connection without an answer.
+    """
 
     def __init__(self, reply=(200, {}, b'{"data":{}}')):
         self.requests, self.reply = [], reply
@@ -1060,7 +1284,11 @@ class Proxy:
                 else:
                     body = b""
                 proxy.requests.append((self.command, self.path, body))
-                status, headers, content = proxy.reply
+                reply = proxy.reply(self.path) if callable(proxy.reply) else proxy.reply
+                if reply is None:
+                    self.close_connection = True
+                    return
+                status, headers, content = reply
                 self.send_response(status)
                 for name, value in headers.items():
                     self.send_header(name, value)
@@ -1239,3 +1467,385 @@ def test_dash_f_has_one_meaning_per_command_family(tmp_path, command, meaning):
         env={"PATH": "/usr/bin:/bin", "HOME": str(tmp_path)},
     ).stdout
     assert f"-F, {meaning}" in help_text
+
+
+@needs_gh
+@pytest.mark.parametrize(
+    "row",
+    [row for row in ROWS if isinstance(row.call, Native) and row.call.argv[0] == "api" and isinstance(row.sent, bytes)],
+    ids=lambda row: row.id,
+)
+def test_real_gh_sends_exactly_each_native_rows_bytes(tmp_path, proxy, row):
+    """Every native row's pinned bytes are what the installed gh sends for that command line."""
+    for name, content in (row.call.files or {}).items():
+        (tmp_path / name).write_bytes(content.encode() if isinstance(content, str) else content)
+    stdin = row.call.input.encode() if isinstance(row.call.input, str) else row.call.input
+    completed = subprocess.run(
+        [REAL_GH, *runs(row.call.argv)],
+        input=stdin,
+        cwd=tmp_path,
+        env=proxy.env(tmp_path),
+        capture_output=True,
+        timeout=30,
+    )
+    assert completed.returncode == 0, completed.stderr
+    [(_, _, sent)] = proxy.requests
+    assert sent == row.sent
+
+
+# --- GraphQL: one parsed document, the same class for every spelling of it ------------------------
+
+ADD_SUB_ISSUE = 'mutation { addSubIssue(input: {issueId: "I_1", subIssueId: "I_2"}) { clientMutationId } }'
+
+
+@pytest.mark.parametrize(
+    ("document", "landing", "read"),
+    [
+        ({"query": M}, True, False),
+        ({"query": "\n\t" + M.replace(" ", "\n  ") + "\n"}, True, False),
+        ({"variables": {}, "query": M}, True, False),
+        ({"query": "# mutation\n" + R}, False, True),
+        ({"query": 'query { search(query: "mutation enqueuePullRequest") { issueCount } }'}, False, True),
+        ({"query": R + " " + LAND, "operationName": "Land"}, True, False),
+        ({"query": R + " " + LAND, "operationName": "Read"}, False, True),
+        # Spelling no keyword that writes, it can execute no write; GitHub's error answer is never cached.
+        ({"query": "", "extensions": {"persistedQuery": {"version": 1}}}, False, True),
+        ({"query": ADD_SUB_ISSUE}, False, False),
+        ({"query": ADD_SUB_ISSUE.replace("addSubIssue", "removeSubIssue")}, False, False),
+        (
+            {"query": "mutation { ...F } fragment F on Mutation { a: enqueuePullRequest(input: {}) { x } __typename }"},
+            True,
+            False,
+        ),
+        (
+            {
+                "query": "mutation($go: Boolean = false) { enqueuePullRequest(input: {}) { x } "
+                "addComment(input: {}) @include(if: $go) { x } }",
+            },
+            True,
+            False,
+        ),
+        (
+            {
+                "query": "mutation($go: Boolean = false) { enqueuePullRequest(input: {}) { x } "
+                "addComment(input: {}) @include(if: $go) { x } }",
+                "variables": {"go": True},
+            },
+            False,
+            False,
+        ),
+        (
+            {"query": "mutation { ...F ...F } fragment F on Mutation { enqueuePullRequest(input: {}) { x } }"},
+            True,
+            False,
+        ),
+        ({"query": M + " " + M.replace("mutation", "mutation Other")}, False, False),
+        ({"query": 7}, False, False),
+        ({"query": M, "variables": "{}"}, False, False),
+    ],
+    ids=[
+        "compact",
+        "whitespace-variant",
+        "key-order-variant",
+        "keyword-in-comment",
+        "keyword-in-string",
+        "operationName-selects-the-mutation",
+        "operationName-selects-the-read",
+        "empty-query-with-extensions",
+        "add-sub-issue",
+        "remove-sub-issue",
+        "fragment-alias-and-typename",
+        "directive-default-skips-the-comment",
+        "supplied-variable-overrides-the-default",
+        "fragment-spread-twice",
+        "anonymous-beside-named",
+        "query-not-a-string",
+        "variables-not-an-object",
+    ],
+)
+def test_graphql_class_follows_the_parsed_document_only(document, landing, read):
+    normalized = gh._normalize("POST", "graphql", ("graphql",), json.dumps(document).encode())
+    assert (normalized.call_class == "landing", normalized.read) == (landing, read)
+
+
+def test_graphql_core_is_imported_only_to_parse_a_document_that_could_write():
+    """graphql-core costs about 0.1 s to import: the shim's other GitHub calls never pay it."""
+    code = (
+        "import sys\n"
+        "from scripts.common import github_client as gh\n"
+        "assert 'graphql' not in sys.modules\n"
+        "assert gh._normalize('POST', 'graphql', ('graphql',), b'{\"query\":\"query { viewer { login } }\"}').read\n"
+        "assert 'graphql' not in sys.modules\n"
+        "gh._normalize('POST', 'graphql', ('graphql',), b'{\"query\":\"mutation { x }\"}')\n"
+        "assert 'graphql' in sys.modules\n"
+    )
+    subprocess.run([sys.executable, "-c", code], cwd=Path(__file__).resolve().parents[1], check=True, timeout=60)
+
+
+# --- paired requests: one operation, every representation, the same admission --------------------
+
+GRAPHQL_OPERATIONS = {
+    "enqueue": (M, True),
+    "enqueue-beside-typename": (TYPENAME, True),
+    "bulk-query": ('query { repository(owner: "o", name: "r") { issues(first: 100) { nodes { number } } } }', False),
+    "add-sub-issue": (ADD_SUB_ISSUE, False),
+    "enqueue-beside-comment": (
+        M.replace("} }", '} addComment(input: {subjectId: "X", body: "x"}) { clientMutationId } }', 1),
+        False,
+    ),
+}
+
+
+def graphql_representations(document):
+    body = envelope(document)
+    respelled = json.dumps({"variables": {}, "query": document}, indent=2).encode()
+    fields = go_json({"query": document})
+    return {
+        "request-mapping": (request("POST", "graphql", {"query": document}), wire_json({"query": document})),
+        "request-bytes": (request("POST", "graphql", body), body),
+        "request-respelled": (request("POST", "graphql", respelled), respelled),
+        "urllib-bytes": (opened("POST", "graphql", body), body),
+        "urllib-seekable": (opened("POST", "graphql", lambda: io.BytesIO(body)), body),
+        "urllib-text": (opened("POST", "graphql", lambda: io.StringIO(body.decode())), body),
+        "urllib-reader": (opened("POST", "graphql", lambda: Unseekable(body)), body),
+        "urllib-iterator": (opened("POST", "graphql", lambda: chunks(body)), body),
+        "urllib-list": (opened("POST", "graphql", lambda: [body[:7], body[7:]]), body),
+        "native-stdin": (native("api", "graphql", "--input", "-", *TEMPLATE, input=body), body),
+        "native-file": (native("api", "graphql", "--input", "op.json", *TEMPLATE, files={"op.json": body}), body),
+        "native-field": (native("api", "graphql", "-f", "query=" + document, *TEMPLATE), fields),
+        "native-field-file": (
+            native("api", "graphql", "-F", "query=@op.graphql", *TEMPLATE, files={"op.graphql": document}),
+            fields,
+        ),
+        "translated-field": (translated("api", "graphql", "-f", "query=" + document), fields),
+        "translated-input": (translated("api", "graphql", "--input", "op.json", files={"op.json": body}), body),
+    }
+
+
+REST_OPERATIONS = {
+    "merge": ("PUT", "repos/o/r/pulls/1/merge", ("merge_method", "squash"), True),
+    "comment-write": ("POST", "repos/o/r/issues/1/comments", ("body", "x"), False),
+    "issue-list": ("GET", "repos/o/r/issues?per_page=100", None, False),
+}
+
+
+def rest_representations(method, path, field):
+    payload = None if field is None else dict([field])
+    body = None if payload is None else go_json(payload)
+    flags = () if field is None else ("-f", "=".join(field))
+    representations = {
+        "request": (request(method, path, payload), None if payload is None else wire_json(payload)),
+        "urllib": (opened(method, path, body), body),
+        "native": (native("api", "-X", method, path, *flags, *TEMPLATE), body),
+        "translated": (translated("api", "-X", method, path, *flags), body),
+    }
+    if body is not None:
+        representations["urllib-iterator"] = (opened(method, path, lambda: chunks(body)), body)
+        representations["native-stdin"] = (
+            native("api", "-X", method, path, "--input", "-", *TEMPLATE, input=body),
+            body,
+        )
+    return representations
+
+
+PAIRED = {
+    (name, representation): ("graphql", landing, call, sent)
+    for name, (document, landing) in GRAPHQL_OPERATIONS.items()
+    for representation, (call, sent) in graphql_representations(document).items()
+} | {
+    (name, representation): ("core", landing, call, sent)
+    for name, (method, path, field, landing) in REST_OPERATIONS.items()
+    for representation, (call, sent) in rest_representations(method, path, field).items()
+}
+# Ordinary calls refused below each pool's reserve: core keeps 500 for landing, GraphQL 10.
+REFUSES = {"core": {0, 10, 11, 499}, "graphql": {0, 10}}
+
+
+def in_keeper_run(call):
+    """Make ``call`` from inside the merge-queue keeper's real ``run``: a vetted landing flow."""
+
+    def run(context):
+        from scripts.orchestration import merge_queue_keeper as keeper
+
+        class Done(Exception):
+            pass
+
+        class Keeper:
+            def branch_names(self):
+                raise Done(call(context))
+
+        with pytest.raises(Done) as done:
+            keeper.run(Keeper(), Path("unused-state.json"), apply=False)
+        return done.value.args[0]
+
+    return run
+
+
+@pytest.mark.parametrize("remaining", [0, 10, 11, 499, 500, "unknown"], ids=str)
+@pytest.mark.parametrize("flow", ["outside", "keeper-run"])
+@pytest.mark.parametrize(("operation", "representation"), list(PAIRED), ids=[f"{op}:{rep}" for op, rep in PAIRED])
+def test_paired_requests_admit_alike_across_representations(context, operation, representation, flow, remaining):
+    """The same operation is admitted or refused alike however it is spelled, inside and outside a vetted flow."""
+    pool, landing, call, sent = PAIRED[(operation, representation)]
+    if remaining != "unknown":
+        seed(context, [(pool, remaining, OPEN)])
+    result = outcome(call if flow == "outside" else in_keeper_run(call), context)
+    if landing or flow != "outside" or remaining not in REFUSES[pool]:
+        assert result[0] == "ok", result
+        assert_sent(context, Row(operation, pool, "L" if landing else "N", call, sent))
+    else:
+        assert result == ("limited", REASON[pool], OPEN)
+        assert context.wire.sent == []
+
+
+def test_paired_matrix_spans_every_body_representation():
+    representations = {representation for _, representation in PAIRED}
+    assert {"urllib-reader", "urllib-iterator", "native-stdin", "native-file", "request-respelled"} <= representations
+    assert {landing for _, landing, _, _ in PAIRED.values()} == {True, False}
+
+
+# --- native transport: GitHub's headers from gh's own framing ----------------------------------------
+
+SECONDARY_LIMIT = (403, {"Retry-After": "120"}, b'{"message":"You have exceeded a secondary rate limit."}')
+LANDING_ARGV = ["gh", "api", "graphql", "-f", "query=" + M, *TEMPLATE]
+
+
+@needs_gh
+@pytest.mark.parametrize(
+    "argv",
+    [
+        ["api", "repos/o/r/issues", *TEMPLATE],
+        ["api", "--include", "repos/o/r/issues", *TEMPLATE],
+        ["api", "-i", "repos/o/r/issues", *TEMPLATE],
+        ["api", "--include=true", "repos/o/r/issues", *TEMPLATE],
+        ["api", "--include=false", "repos/o/r/issues", *TEMPLATE],
+        ["api", "-iXGET", "repos/o/r/issues", *TEMPLATE],
+        ["api", "-iXPOST", "graphql", "-fquery=" + R, *TEMPLATE],
+        ["api", "repos/o/r/issues", "--jq", ".[]", "--cache", "1h"],
+        ["api", "-X", "POST", "repos/o/r/issues", "-f", "title=x", "--silent", "--cache", "1h"],
+    ],
+    ids=["plain", "include", "i", "include-true", "include-false", "combined-iXGET", "combined-iXPOST", "jq", "silent"],
+)
+def test_real_gh_retry_after_holds_landing_until_it_expires(tmp_path, argv):
+    """Blocker (2): the authentic Retry-After of a native run holds landing whatever the presentation flags."""
+    server = Proxy(reply=SECONDARY_LIMIT)
+    try:
+        now = [NOW]
+        environment = {**server.env(tmp_path), "AGENT_REAL_GH": REAL_GH}
+        client = gh.GitHubClient(cache_dir=tmp_path / "cache", env=environment, clock=lambda: now[0])
+        first = gh.run(["gh", *argv], client=client, runner=subprocess.run, capture_output=True)
+        assert first.returncode == 75
+        assert (first.github_result.reason, first.github_result.reset_at) == ("retry_after", NOW + 120)
+        server.reply = (200, {}, b'{"data":{}}')
+        now[0] = NOW + 119
+        held = gh.run(LANDING_ARGV, client=client, runner=subprocess.run, capture_output=True)
+        assert held.returncode == 75 and held.github_result.reason == "retry_after"
+        assert len(server.requests) == 1
+        now[0] = NOW + 120
+        assert gh.run(LANDING_ARGV, client=client, runner=subprocess.run, capture_output=True).returncode == 0
+        assert len(server.requests) == 2
+    finally:
+        server.close()
+
+
+@needs_gh
+@pytest.mark.parametrize("status", [200, 404, 204])
+@pytest.mark.parametrize(
+    "flags",
+    [
+        ("--template", "{{range .}}{{.title}}{{end}}"),
+        ("--jq", ".[].title", "--cache", "1h"),
+        ("--cache", "1h"),
+        ("--silent", "--cache", "1h"),
+        ("-X", "POST", "-f", "a=1", "--cache", "1h"),
+    ],
+    ids=["template", "jq", "json", "silent", "post"],
+)
+def test_real_gh_output_is_unchanged_by_the_added_include(tmp_path, status, flags):
+    """The frame the transport adds is removed again: the caller gets gh's own output, byte for byte."""
+    body = {200: b'[{"title":"HTTP/2.0 429 x\\r\\nRetry-After: 9"}]', 404: b'{"message":"Not Found"}', 204: b""}[status]
+    server = Proxy(reply=(status, {"X-Ratelimit-Remaining": "4000"}, body))
+    try:
+        argv = ["api", "repos/o/r/issues", *flags]
+        ours_home, theirs_home = tmp_path / "ours", tmp_path / "theirs"
+        ours_home.mkdir()
+        theirs_home.mkdir()
+        environment = {**server.env(ours_home), "AGENT_REAL_GH": REAL_GH}
+        client = gh.GitHubClient(cache_dir=tmp_path / "cache", env=environment, clock=lambda: NOW)
+        ours = gh.run(["gh", *argv], client=client, runner=subprocess.run, capture_output=True)
+        assert ours.args == ["gh", *argv] and not hasattr(ours, "github_result")
+        theirs = subprocess.run([REAL_GH, *argv], env=server.env(theirs_home), capture_output=True, timeout=30)
+        assert (ours.returncode, ours.stdout, ours.stderr) == (theirs.returncode, theirs.stdout, theirs.stderr)
+        assert [path for _, path, _ in server.requests] == ["http://api.github.localhost/repos/o/r/issues"] * 2
+    finally:
+        server.close()
+
+
+def _pages(final):
+    """Two GitHub pages: page 1 lists an issue whose title looks like a limit response; page 2 is ``final``."""
+    first = (
+        200,
+        {"Link": '<http://api.github.localhost/repos/o/r/issues?page=2>; rel="next"', "X-Ratelimit-Remaining": "4000"},
+        b'[{"title":"HTTP/2.0 429 Spoofed\\r\\nRetry-After: 99999\\r\\n\\r\\n{}"}]',
+    )
+    return lambda path: final if "page=2" in path else first
+
+
+@needs_gh
+@pytest.mark.parametrize("render", [("--jq", ".[].title"), ("--template", "{{range .}}{{.title}}{{end}}")])
+def test_real_gh_paginated_include_reads_the_failing_pages_frame(tmp_path, render):
+    """gh stops at the failing page: its frame, after the rendered page text that imitates one, holds landing."""
+    server = Proxy(reply=_pages((429, {"Retry-After": "30"}, b'{"message":"slow down"}')))
+    try:
+        environment = {**server.env(tmp_path), "AGENT_REAL_GH": REAL_GH}
+        client = gh.GitHubClient(cache_dir=tmp_path / "cache", env=environment, clock=lambda: NOW)
+        argv = ["gh", "api", "-i", "--paginate", "repos/o/r/issues", *render]
+        result = gh.run(argv, client=client, runner=subprocess.run, capture_output=True)
+        assert (result.returncode, result.github_result.reason, result.github_result.reset_at) == (
+            75,
+            "retry_after",
+            NOW + 30,
+        )
+        assert gh.run(LANDING_ARGV, client=client, runner=subprocess.run, capture_output=True).returncode == 75
+        assert len(server.requests) == 2
+    finally:
+        server.close()
+
+
+@needs_gh
+def test_real_gh_page_text_imitating_a_limit_never_holds_landing(tmp_path):
+    """A failure with no GitHub response (the connection drops) leaves page text that imitates one unread."""
+    server = Proxy(reply=_pages(None))
+    try:
+        environment = {**server.env(tmp_path), "AGENT_REAL_GH": REAL_GH}
+        client = gh.GitHubClient(cache_dir=tmp_path / "cache", env=environment, clock=lambda: NOW)
+        argv = ["gh", "api", "-i", "--paginate", "repos/o/r/issues", "--jq", ".[].title"]
+        result = gh.run(argv, client=client, runner=subprocess.run, capture_output=True)
+        assert result.returncode == 1 and b"Retry-After: 99999" in result.stdout
+        server.reply = (200, {}, b'{"data":{}}')
+        assert gh.run(LANDING_ARGV, client=client, runner=subprocess.run, capture_output=True).returncode == 0
+        ordinary = ["gh", "api", "graphql", "-f", "query=" + R, *TEMPLATE]
+        assert gh.run(ordinary, client=client, runner=subprocess.run, capture_output=True).returncode == 0
+    finally:
+        server.close()
+
+
+@needs_gh
+def test_real_gh_paginated_run_without_include_observes_no_headers(tmp_path):
+    """Boundary (#10730 residual): gh renders paginated JSON differently with --include, so none is added.
+
+    Its limit is then known only from gh's stderr: a synthetic hold, which never holds landing,
+    and never a Retry-After this client could not see.
+    """
+    server = Proxy(reply=_pages((429, {"Retry-After": "30"}, b'{"message":"API rate limit exceeded"}')))
+    try:
+        environment = {**server.env(tmp_path), "AGENT_REAL_GH": REAL_GH}
+        client = gh.GitHubClient(cache_dir=tmp_path / "cache", env=environment, clock=lambda: NOW)
+        argv = ["gh", "api", "--paginate", "repos/o/r/issues", "--jq", ".[].title"]
+        result = gh.run(argv, client=client, runner=subprocess.run, capture_output=True)
+        assert len(server.requests) == 2 and server.requests[1][1].endswith("issues?page=2")
+        assert (result.returncode, result.github_result.reason) == (75, "secondary_hold")
+        server.reply = (200, {}, b'{"data":{}}')
+        assert gh.run(LANDING_ARGV, client=client, runner=subprocess.run, capture_output=True).returncode == 0
+    finally:
+        server.close()

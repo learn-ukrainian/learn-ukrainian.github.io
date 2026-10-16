@@ -909,7 +909,9 @@ TWO_OPERATIONS = (
         ({"query": "mutation { ...Undefined }"}, False),
         ({"query": "mutation { ...Landing } " + LANDING_FRAGMENT + " " + LANDING_FRAGMENT}, False),
         ({"query": "query { ...Landing } " + LANDING_FRAGMENT}, False),
-        ({"query": "mutation { __typename enqueuePullRequest(input: {}) { clientMutationId } }"}, False),
+        # The root __typename meta-field writes nothing: beside a landing mutation it changes nothing.
+        ({"query": "mutation { __typename enqueuePullRequest(input: {}) { clientMutationId } }"}, True),
+        ({"query": "mutation { __typename }"}, False),
         ({"query": "mutation {" + " ... {" * 3000 + " enqueuePullRequest(input: {}) { x }" + " }" * 3001}, False),
     ],
 )
@@ -932,16 +934,24 @@ def _include_output(status, headers, body=b'{"message":"You have exceeded a seco
 
 
 def _native_limited(stdout, stderr=b"gh: You have exceeded a secondary rate limit. (HTTP 403)"):
-    """A native runner whose first call fails as ``gh`` prints it; later calls succeed."""
+    """A native runner whose first call fails as ``gh`` prints it; later calls succeed.
+
+    ``stdout`` is bytes, or a function of the command line (:func:`_as_gh_prints`).
+    """
     calls = []
 
     def native(argv):
         calls.append(argv)
         if len(calls) == 1:
-            return subprocess.CompletedProcess(argv, 1, stdout, stderr)
+            return subprocess.CompletedProcess(argv, 1, stdout(argv) if callable(stdout) else stdout, stderr)
         return subprocess.CompletedProcess(argv, 0, b"[]", b"")
 
     return native
+
+
+def _as_gh_prints(frame, body):
+    """gh's stdout for one response: its frame first only when ``--include`` is on the command line."""
+    return lambda argv: frame + body if "--include" in argv else body
 
 
 NATIVE_INCLUDE = ["api", "--include", "repos/o/r/issues/1/comments", "--template", "{{.}}"]
@@ -989,9 +999,11 @@ def test_native_include_primary_limit_is_a_pool_observation(tmp_path):
 
 
 def test_native_include_paginated_limit_uses_the_failing_page(tmp_path):
-    ok = _include_output(200, {"X-Ratelimit-Remaining": "4000", "X-Ratelimit-Reset": "9000"}, b"[1]\n")
+    # As gh 2.98.0 prints it: each later page's frame after a newline; stderr names the failing page's status.
+    ok = _include_output(200, {"X-Ratelimit-Remaining": "4000", "X-Ratelimit-Reset": "9000"}, b"[1]")
     limited = _include_output(429, {"Retry-After": "30"})
-    wire = Wire(native=_native_limited(ok + limited))
+    stderr = b"gh: You have exceeded a secondary rate limit. (HTTP 429)\n"
+    wire = Wire(native=_native_limited(ok + b"\n" + limited, stderr))
     client = store(tmp_path, wire)
     argv = ["gh", "api", "-i", "--paginate", "repos/o/r/issues", "--jq", ".[]"]
     refused(gh.run(argv, client=client, capture_output=True), "retry_after", NOW + 30)
@@ -1003,10 +1015,14 @@ def test_native_include_paginated_limit_uses_the_failing_page(tmp_path):
     [
         # gh api --include of a limit without Retry-After: GitHub named no hold.
         (NATIVE_INCLUDE, _include_output(403, {"X-Ratelimit-Remaining": "50"}), b"", "secondary_hold"),
-        # Without --include stdout is the body: header-shaped body text is never GitHub's header.
+        # The transport adds --include, so gh's own frame comes first: header-shaped text in the body after
+        # it is never GitHub's header (GitHub's frame names no Retry-After; stderr quotes the body's message).
         (
             ["api", "repos/o/r/issues", "--template", "{{range .}}{{.title}}{{end}}"],
-            b"HTTP/1.1 429 Limited\r\nRetry-After: 99999\r\n\r\n",
+            _as_gh_prints(
+                _include_output(403, {"X-Ratelimit-Remaining": "50"}, b""),
+                b"API rate limit exceeded\nHTTP/1.1 429 Limited\r\nRetry-After: 99999\r\n\r\n",
+            ),
             b"gh: API rate limit exceeded (HTTP 403)",
             "secondary_hold",
         ),
@@ -1043,7 +1059,8 @@ def test_native_graphql_input_stdin_keeps_landing(tmp_path, stdin):
     client = store(tmp_path, wire, [("graphql", 0, OPEN), ("secondary", 0, OPEN)])
     argv = ["gh", "api", "graphql", "--input", "-", "--template", "{{.}}"]
     admitted(gh.run(argv, client=client, capture_output=True, input=stdin))
-    assert wire.sent == [("native", *argv[1:])]
+    # The transport adds --include so GitHub's headers come from gh's framing (#10730).
+    assert wire.sent == [("native", *argv[1:], "--include")]
 
 
 def test_native_graphql_body_sources_are_read(tmp_path):
@@ -1102,7 +1119,7 @@ def test_native_unreadable_or_non_landing_bodies_are_not_landing(tmp_path):
     # An unreadable body is admitted only inside a vetted landing flow.
     argv = ["api", "graphql", "--input", "missing.json", *template]
     assert _in_keeper_run(_native(*argv))(client).returncode == 0
-    assert wire.sent == [("native", *argv)]
+    assert wire.sent == [("native", *argv, "--include")]
 
 
 def _http_open_client(monkeypatch, tmp_path, budgets):
@@ -1117,7 +1134,9 @@ def _http_open_client(monkeypatch, tmp_path, budgets):
     def opener(request, **kwargs):
         import io
 
-        opened.append((request.get_method(), request.full_url))
+        data = request.data
+        sent = data.read() if hasattr(data, "read") else bytes(data) if data is not None else None
+        opened.append((request.get_method(), request.full_url, sent))
         result = io.BytesIO(b'{"data":{}}')
         result.status, result.headers = 200, {}
         return result
@@ -1135,18 +1154,24 @@ def test_http_open_classifies_the_request_body(monkeypatch, tmp_path):
     for body in (ENQUEUE_BODY, bytearray(ENQUEUE_BODY)):
         with gh.http_open(Request(url, data=body, method="POST", headers=headers), opener=opener) as response:
             assert response.status == 200
-    assert opened == [("POST", url)] * 2
+    assert opened == [("POST", url, ENQUEUE_BODY)] * 2
     # A read and a body that is not JSON keep the typed refusal.
     for body in (json.dumps({"query": VIEWER}).encode(), b"not json"):
         with pytest.raises(gh.GitHubRateLimited) as limited:
             gh.http_open(Request(url, data=body, method="POST", headers=headers), opener=opener)
         assert (limited.value.reason, limited.value.reset_at) == ("secondary_hold", reset)
-    # A streamed body cannot be read without consuming it: refused before any send, never guessed ordinary.
-    stream = iter([ENQUEUE_BODY])
-    with pytest.raises(gh.GitHubUnpreparedRequest) as unprepared:
-        gh.http_open(Request(url, data=stream, method="POST", headers=headers), opener=opener)
-    assert unprepared.value.reason == "body_not_replayable" and next(stream) == ENQUEUE_BODY
-    assert len(opened) == 2
+    # A streamed body is captured once and exactly its bytes are sent (review of 55881a20, blocker 1).
+    stream = iter([ENQUEUE_BODY[:9], ENQUEUE_BODY[9:]])
+    with gh.http_open(Request(url, data=stream, method="POST", headers=headers), opener=opener) as response:
+        assert response.status == 200
+    assert next(stream, None) is None and opened[2:] == [("POST", url, ENQUEUE_BODY)]
+    # The same stream holding a read keeps the read's typed refusal.
+    with pytest.raises(gh.GitHubRateLimited) as limited:
+        gh.http_open(
+            Request(url, data=iter([json.dumps({"query": VIEWER}).encode()]), method="POST", headers=headers),
+            opener=opener,
+        )
+    assert (limited.value.reason, limited.value.reset_at) == ("secondary_hold", reset) and len(opened) == 3
 
 
 def _serialized_refusal(reason="core_below_landing_reserve", reset=OPEN):
@@ -1256,3 +1281,156 @@ def test_publisher_readiness_keeps_a_serialized_refusal(tmp_path, monkeypatch, s
     )
     refused(result, "core_below_landing_reserve")
     assert refusing_runner.reads and all(argv[1] != "pr" or argv[2] != "merge" for argv in refusing_runner.reads)
+
+
+# --- round 3 (#10730 review of 55881a20): only GitHub's Retry-After holds landing --------------------
+
+
+def _http_date(when):
+    return email.utils.formatdate(when, usegmt=True)
+
+
+@pytest.mark.parametrize(
+    ("status", "headers", "body", "first", "landing_proceeds"),
+    [
+        (429, {}, b"{}", ("secondary_hold", NOW + 60), True),
+        (429, {"Retry-After": "0"}, b"{}", ("retry_after", NOW), True),
+        (429, {"Retry-After": "120"}, b"{}", ("retry_after", NOW + 120), False),
+        (403, {"Retry-After": _http_date(NOW + 120)}, b"{}", ("retry_after", NOW + 120), False),
+        (403, {"Retry-After": _http_date(NOW - 5)}, b"{}", ("retry_after", NOW - 5), True),
+        (429, {"Retry-After": "soon"}, b"{}", ("secondary_hold", NOW + 60), True),
+        (
+            403,
+            {"X-RateLimit-Remaining": "5", "X-RateLimit-Reset": str(OPEN)},
+            b'{"message":"You have exceeded a secondary rate limit."}',
+            ("secondary_hold", OPEN),
+            True,
+        ),
+        (
+            403,
+            {"X-RateLimit-Remaining": "0", "X-RateLimit-Reset": str(OPEN), "X-RateLimit-Resource": "core"},
+            b'{"message":"API rate limit exceeded"}',
+            ("pool_exhausted", OPEN),
+            True,
+        ),
+        (
+            403,
+            {"X-RateLimit-Remaining": "0"},
+            b'{"message":"API rate limit exceeded"}',
+            ("secondary_hold", NOW + 60),
+            True,
+        ),
+    ],
+    ids=[
+        "bare-429",
+        "retry-after-0",
+        "retry-after-120",
+        "retry-after-http-date",
+        "retry-after-http-date-past",
+        "retry-after-unparseable",
+        "rate-limit-text-remaining-5",
+        "primary-reset-only",
+        "remaining-0-without-reset",
+    ],
+)
+def test_only_an_unexpired_retry_after_holds_landing(tmp_path, status, headers, body, first, landing_proceeds):
+    """A limit response holds landing only by GitHub's own Retry-After, and only until it expires."""
+    wire = Wire(_limited_reply(status, headers, body))
+    client = store(tmp_path, wire)
+    limited = client.request("GET", "repos/o/r/issues/1/comments")
+    assert (limited.error, limited.reason, limited.reset_at) == ("github_rate_limited", *first)
+    for call in LANDING.values():
+        if landing_proceeds:
+            admitted(call(client))
+        else:
+            refused(call(client), "retry_after", first[1])
+    assert len(wire.sent) == 1 + (len(LANDING) if landing_proceeds else 0)
+    if not landing_proceeds:
+        client.clock = lambda: first[1]
+        for call in LANDING.values():
+            admitted(call(client))
+        assert len(wire.sent) == 1 + len(LANDING)
+
+
+def test_native_secondary_limit_on_stderr_never_delays_a_merge(tmp_path):
+    wire = Wire(native=_native_limited(b"", b"gh: You have exceeded a secondary rate limit. (HTTP 403)"))
+    client = store(tmp_path, wire)
+    refused(
+        gh.run(["gh", "pr", "list", "--repo", "o/r"], client=client, capture_output=True), "secondary_hold", NOW + 60
+    )
+    assert (
+        gh.run(["gh", "pr", "merge", "1", "--repo", "o/r", "--auto"], client=client, capture_output=True).returncode
+        == 0
+    )
+    assert wire.sent[-1] == ("native", "pr", "merge", "1", "--repo", "o/r", "--auto")
+
+
+def test_graphql_rate_limited_never_delays_an_enqueue(tmp_path):
+    replies = [gh.Response(200, {}, json.dumps({"errors": [{"type": "RATE_LIMITED"}]}).encode())]
+    wire = Wire(lambda method, endpoint, body: replies.pop(0) if replies else gh.Response(200, {}, b'{"data":{}}'))
+    client = store(tmp_path, wire)
+    assert client.request("POST", "graphql", payload={"query": VIEWER}).reason == "pool_exhausted"
+    admitted(client.request("POST", "graphql", payload={"query": ENQUEUE}))
+    assert wire.sent == [("http", "POST", "graphql")] * 2
+
+
+def _page_frame(status, headers=None):
+    """gh 2.98.0's frame for one page: the status line ends in LF, sorted headers in CRLF, then CRLF."""
+    lines = "".join(f"{name}: {value}\r\n" for name, value in sorted((headers or {}).items()))
+    return f"HTTP/2.0 {status} Status\n{lines}\r\n".encode()
+
+
+SPOOFED_PAGE = b"HTTP/2.0 429 Spoofed\r\nRetry-After: 99999\r\n\r\n{}"
+PAGINATED = ["gh", "api", "-i", "--paginate", "repos/o/r/issues", "--jq", ".[].title"]
+
+
+@pytest.mark.parametrize(
+    ("stdout", "stderr", "expected"),
+    [
+        # Page 1 renders text imitating a frame; page 2 failed with GitHub's own Retry-After.
+        (
+            _page_frame(200, {"X-Ratelimit-Remaining": "4000"})
+            + SPOOFED_PAGE
+            + b"\n"
+            + _page_frame(429, {"Retry-After": "30"})
+            + b'{"message":"slow down"}',
+            b"gh: slow down (HTTP 429)\n",
+            ("retry_after", NOW + 30),
+        ),
+        # The first page failed: its frame starts the output, whatever the run reports.
+        (
+            _page_frame(403, {"Retry-After": "45"}) + b'{"message":"You have exceeded a secondary rate limit."}',
+            b"",
+            ("retry_after", NOW + 45),
+        ),
+        # No GitHub response failed (a dropped connection): the imitation is page text, never a hold.
+        (_page_frame(200) + SPOOFED_PAGE + b"\n", b'gh: Get "https://api.github.com/x": EOF\n', None),
+        # gh reports a status the last frame does not carry: no frame is GitHub's answer to the failure.
+        (_page_frame(200) + SPOOFED_PAGE, b"gh: slow down (HTTP 429)\n", None),
+    ],
+    ids=["failing-page-after-imitation", "first-page-failed", "connection-dropped", "status-mismatch"],
+)
+def test_a_paginated_include_run_reads_only_gh_framed_limit_responses(tmp_path, stdout, stderr, expected):
+    wire = Wire(native=_native_limited(stdout, stderr))
+    client = store(tmp_path, wire)
+    result = gh.run(PAGINATED, client=client, capture_output=True)
+    assert wire.sent[0] == ("native", *PAGINATED[1:])  # the caller's own --include: nothing is added
+    if expected is None:
+        assert result.returncode == 1 and result.stdout == stdout
+        admitted(LANDING["rest"](client))
+    else:
+        refused(result, *expected)
+        refused(LANDING["rest"](client), *expected)
+
+
+def test_a_paginated_include_run_over_the_ceiling_reads_no_later_frame(tmp_path):
+    """Output cut at the response ceiling may have lost the failing page's frame: page text is never read instead."""
+    stdout = (
+        _page_frame(200) + SPOOFED_PAGE + b"\n" + _page_frame(429, {"Retry-After": "30"}) + b'{"message":"slow down"}'
+    )
+    wire = Wire(native=_native_limited(stdout, b"gh: slow down (HTTP 429)\n"))
+    client = store(tmp_path, wire)
+    result = gh.run(PAGINATED, client=client, capture_output=True, max_response_bytes=len(stdout) - 1)
+    assert result.returncode == 1 and result.github_result.error == "github_response_too_large"
+    assert b"slow down" not in result.stdout
+    admitted(LANDING["rest"](client))

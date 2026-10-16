@@ -74,6 +74,9 @@ yt-dlp>=2026.7.4
 # Build utilities
 jinja2>=3.1
 
+# GraphQL documents: which operation a GitHub request executes (#10730)
+graphql-core==3.3.0  # scripts/common/github_client.py (imported only when a document can write)
+
 # TypeSafe System One (Jev) — curriculum / open-model triage (#8177–#8179)
 typesafe-sdk>=0.7.0
 
