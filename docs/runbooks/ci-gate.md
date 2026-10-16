@@ -171,6 +171,43 @@ Because the pull_request run already executes every job, reuse applies
 whenever `main` has not moved between the PR's last green run and its queue
 entry.
 
+## Failed CodeQL Analyze: no same-head re-run (#10819)
+
+Symptom: `Analyze` fails on a `dynamic` run (default-setup CodeQL, path
+`dynamic/github-code-scanning/codeql`) with a transient GitHub-side cause, for
+example "API rate limit exceeded for installation". The merge-queue keeper
+needs a green Analyze at the PR head (`_check_state` in
+`scripts/orchestration/merge_queue_keeper.py`), so the PR stays blocked.
+
+GitHub documents no re-run for these runs. On 2026-10-16 the documented
+`rerun-failed-jobs` request returned HTTP 403 for an admin identity on run
+38891407434 and left the run unchanged, so the restriction is on the run type,
+not on our access. Never:
+
+- `scripts.publish run-rerun` the dynamic run: it returns 403 and changes
+  nothing;
+- push an empty commit to retrigger, admin-bypass the check, or re-run at the
+  old head.
+
+Fallback, in order:
+
+1. Read the failed job log (read-only) and confirm the cause is transient and
+   GitHub-side. A finding in the analysis itself is a real failure, not this
+   case.
+2. Move the head: `scripts.publish pr-update-branch --number <N>`, or push a
+   new commit when the change itself needs one.
+3. The moved head voids the previous approval: get a fresh exact-head
+   cross-family review at the new head.
+4. Wait for same-head green CI, Analyze included, then enqueue.
+
+One fallback per unchanged diff. If Analyze fails again at a fresh head, treat
+it as a real finding to diagnose or escalate, not a loop. Recurring rate-limit
+failures are a designated-approval proposal (advanced-setup CodeQL), not
+something to work around here.
+
+Leave one line on the PR: the failed run id(s), the head SHA before and after,
+and why the cause was transient.
+
 ## Frontend: one hydrate, one recorded build (#9718)
 
 The Frontend step runs `npm run hydrate` once, then
