@@ -90,3 +90,44 @@ def test_known_lookup_results_behave_as_before(monkeypatch, capsys) -> None:
     assert "GH issue already exists" in out
     assert "Created: url" in out
     assert "unavailable" not in out
+
+
+@pytest.mark.parametrize(
+    "stdout",
+    [
+        "[null]",
+        '[{"error": "github_rate_limited"}]',
+        '[{"error": "github_rate_limited", "reset_at": null}]',
+        "[{}]",
+        '["x"]',
+        '[{"number": true}]',
+        '[{"number": 5}, null]',
+        '[{"number": 5}, {"error": "github_http_error"}]',
+    ],
+)
+def test_malformed_list_elements_are_unknown_not_issue_exists(monkeypatch, stdout) -> None:
+    """``[null]`` and an error object in a list used to read as "issue exists" (#10792)."""
+    monkeypatch.setattr(
+        check_decisions.github_client,
+        "run",
+        lambda command, **kwargs: subprocess.CompletedProcess(command, 0, stdout, ""),
+    )
+    assert check_decisions._gh_issue_exists("D-1") is None
+
+
+def test_malformed_list_elements_skip_creation_in_main(monkeypatch, capsys) -> None:
+    lookups, creates, rc = _run_main(monkeypatch, [_decision("D-1"), _decision("D-2")], [(0, "[null]")])
+    out = capsys.readouterr().out
+    assert rc == 1
+    assert creates == []
+    assert len(lookups) == 1
+    assert "already exists" not in out
+    assert out.count("GH issue lookup unavailable") == 2
+
+
+def test_issue_exists_is_unknown_on_any_process_error(monkeypatch) -> None:
+    def broken(command, **kwargs):
+        raise PermissionError("gh")
+
+    monkeypatch.setattr(check_decisions.github_client, "run", broken)
+    assert check_decisions._gh_issue_exists("D-1") is None

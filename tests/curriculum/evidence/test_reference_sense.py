@@ -1741,3 +1741,38 @@ def test_select_check_with_refused_pr_read_fails_closed(bound, monkeypatch, caps
     assert (seen["pr_text"], seen["pr_requested"]) == (None, True)
     assert len(calls) == 1
     assert not receipt.exists()
+
+
+_MALFORMED_PR_PAYLOADS = {
+    "comments_empty_object": {"title": "t", "body": "b", "comments": {}},
+    "comments_empty_string": {"title": "t", "body": "b", "comments": ""},
+    "comments_null": {"title": "t", "body": "b", "comments": None},
+    "comment_element_null": {"title": "t", "body": "b", "comments": [None]},
+    "comment_element_without_body": {"title": "t", "body": "b", "comments": [{"author": "x"}]},
+    "comment_body_not_text": {"title": "t", "body": "b", "comments": [{"body": 5}]},
+    "title_not_text": {"title": None, "body": "b", "comments": []},
+    "body_not_text": {"title": "t", "body": ["b"], "comments": []},
+    "payload_not_object": [{"title": "t", "body": "b", "comments": []}],
+}
+
+
+@pytest.mark.parametrize("shape", _MALFORMED_PR_PAYLOADS)
+def test_read_pr_text_malformed_nested_payload_is_unverified(monkeypatch, shape):
+    """A wrong-typed ``comments`` once joined as "no comments" and scanned clean (#10792)."""
+    calls = _pr_client(monkeypatch, 0, json.dumps(_MALFORMED_PR_PAYLOADS[shape]))
+    assert sense_cli.read_pr_text(7, Path.cwd()) is None
+    assert len(calls) == 1
+
+
+def test_read_pr_text_accepts_empty_comment_list_and_empty_body(monkeypatch):
+    _pr_client(monkeypatch, 0, json.dumps({"title": "t", "body": "", "comments": []}))
+    assert sense_cli.read_pr_text(7, Path.cwd()) == "t "
+
+
+@pytest.mark.parametrize("failure", [subprocess.TimeoutExpired("gh", 60), PermissionError("gh")])
+def test_read_pr_text_process_failure_is_unavailable(monkeypatch, failure):
+    def broken(command, **kwargs):
+        raise failure
+
+    monkeypatch.setattr(sense_cli.github_client, "run", broken)
+    assert sense_cli.read_pr_text(7, Path.cwd()) is None

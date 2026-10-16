@@ -700,3 +700,96 @@ def test_successful_live_reads_are_unchanged(monkeypatch: pytest.MonkeyPatch) ->
     lookups = _live(monkeypatch, (0, json.dumps(_FOUND)), [(0, '{"workflow_runs": []}'), (0, json.dumps([run]))])
     assert fetch_live_status(123, _REPO).pr_number == 123
     assert len(lookups) == 2
+
+
+_NOT_FOUND_ERROR = [{"type": "NOT_FOUND", "message": "Could not resolve to a PullRequest with the number of 123."}]
+
+
+@pytest.mark.parametrize(
+    "stdout",
+    [
+        json.dumps(_FOUND),  # complete-shaped data, but the read failed
+        json.dumps({"data": None}),
+        json.dumps({"data": {"repository": {"pullRequest": None}}}),
+        json.dumps({**_FOUND, "errors": [{"message": "API rate limit exceeded for user."}]}),
+    ],
+)
+def test_failed_graphql_read_with_envelope_is_rejected_before_any_request(
+    monkeypatch: pytest.MonkeyPatch, stdout: str
+) -> None:
+    """Return code 1 plus a data envelope once passed, or became "not found" after more requests."""
+    lookups = _live(monkeypatch, (1, stdout), [(0, '{"workflow_runs": []}')])
+    with pytest.raises(RuntimeError, match=r"unavailable|GraphQL error") as excinfo:
+        fetch_live_status(123, _REPO)
+    assert "not found" not in str(excinfo.value)
+    assert lookups == []
+
+
+def test_positively_identified_not_found_keeps_its_meaning_with_no_further_request(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    payload = {"data": {"repository": {"pullRequest": None}}, "errors": _NOT_FOUND_ERROR}
+    lookups = _live(monkeypatch, (1, json.dumps(payload)), [(0, '{"workflow_runs": []}')])
+    with pytest.raises(ValueError, match="Pull request #123 not found in repository"):
+        fetch_live_status(123, _REPO)
+    assert lookups == []
+
+
+def test_not_found_error_cannot_discard_a_resolved_pull_request(monkeypatch: pytest.MonkeyPatch) -> None:
+    payload = {**_FOUND, "errors": _NOT_FOUND_ERROR}
+    lookups = _live(monkeypatch, (1, json.dumps(payload)), [(0, '{"workflow_runs": []}')])
+    with pytest.raises(RuntimeError, match="GraphQL error"):
+        fetch_live_status(123, _REPO)
+    assert lookups == []
+
+
+def test_successful_empty_envelope_is_unavailable_not_not_found(monkeypatch: pytest.MonkeyPatch) -> None:
+    lookups = _live(monkeypatch, (0, json.dumps({"data": None})), [(0, '{"workflow_runs": []}')])
+    with pytest.raises(RuntimeError, match="GraphQL read unavailable") as excinfo:
+        fetch_live_status(123, _REPO)
+    assert "not found" not in str(excinfo.value)
+    assert lookups == []
+
+
+_MALFORMED_RUNS = {
+    "empty_element": {"workflow_runs": [{}]},
+    "null_element": {"workflow_runs": [None]},
+    "scalar_element": {"workflow_runs": ["x"]},
+    "no_status": {"workflow_runs": [{"html_url": "https://example.invalid/run/1"}]},
+    "no_url": {"workflow_runs": [{"status": "completed"}]},
+    "one_bad_among_good": {
+        "workflow_runs": [{"html_url": "https://example.invalid/run/1", "status": "completed"}, {}]
+    },
+}
+
+
+@pytest.mark.parametrize("shape", _MALFORMED_RUNS)
+def test_malformed_run_elements_are_unavailable_not_run_none(monkeypatch: pytest.MonkeyPatch, shape: str) -> None:
+    lookups = _live(monkeypatch, (0, json.dumps(_FOUND)), [(0, json.dumps(_MALFORMED_RUNS[shape])), (0, "[]")])
+    with pytest.raises(RuntimeError, match="Actions runs read unavailable"):
+        fetch_live_status(123, _REPO)
+    assert len(lookups) == 1  # no run-list fallback after a malformed read
+
+
+def test_malformed_fallback_run_list_elements_are_unavailable(monkeypatch: pytest.MonkeyPatch) -> None:
+    lookups = _live(monkeypatch, (0, json.dumps(_FOUND)), [(0, '{"workflow_runs": []}'), (0, "[{}]")])
+    with pytest.raises(RuntimeError, match="Actions run list read unavailable"):
+        fetch_live_status(123, _REPO)
+    assert len(lookups) == 2
+
+
+@pytest.mark.parametrize("failure", [subprocess.TimeoutExpired("gh", 30), PermissionError("gh")])
+def test_process_failures_are_structured_unavailable_outcomes(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str], failure: Exception
+) -> None:
+    def broken(*args: Any, **kwargs: Any) -> Any:
+        raise failure
+
+    monkeypatch.setattr("scripts.gh_merge_queue_status.read", broken)
+    assert main(["123", "--repo", _REPO, "--json"]) == 1
+    assert json.loads(capsys.readouterr().out)["status"] == "error"
+
+    _live(monkeypatch, (0, json.dumps(_FOUND)), [])
+    monkeypatch.setattr("scripts.gh_merge_queue_status.github_client.run", broken)
+    assert main(["123", "--repo", _REPO, "--json"]) == 1
+    assert json.loads(capsys.readouterr().out)["status"] == "error"

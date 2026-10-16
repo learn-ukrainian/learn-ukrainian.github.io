@@ -95,9 +95,19 @@ def fetch_open_pr_count(repo: str) -> int:
     """Open PR count for ``repo`` via the REST search endpoint."""
     data = _gh_get(f"search/issues?q=repo:{repo}+is:pr+is:open&per_page=1")
     count = data.get("total_count") if isinstance(data, dict) else None
-    if not isinstance(count, int):
-        raise RuntimeError("no total_count in response")
+    if isinstance(count, bool) or not isinstance(count, int) or count < 0:
+        raise RuntimeError("no valid total_count in response")
+    if data.get("incomplete_results") is not False:
+        # Search may time out server-side and return a partial count flagged incomplete; a count
+        # that is not known to be complete is not a count.
+        raise RuntimeError("search results incomplete or unflagged")
     return count
+
+
+def _is_pull(item: Any) -> bool:
+    """A pull request element names its number; an error object or scalar is not one."""
+    number = item.get("number") if isinstance(item, dict) else None
+    return isinstance(number, int) and not isinstance(number, bool)
 
 
 def branch_has_open_pr(repo: str, branch: str) -> bool:
@@ -105,7 +115,7 @@ def branch_has_open_pr(repo: str, branch: str) -> bool:
     owner = repo.split("/", 1)[0]
     head = quote(f"{owner}:{branch}", safe="")
     data = _gh_get(f"repos/{repo}/pulls?state=open&per_page=1&head={head}")
-    if not isinstance(data, list):
+    if not isinstance(data, list) or not all(_is_pull(p) for p in data):
         raise RuntimeError("unexpected pulls response")
     return bool(data)
 

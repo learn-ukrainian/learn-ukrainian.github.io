@@ -90,7 +90,7 @@ def _gh_issue_exists(dec_id: str) -> bool | None:
             ["gh", "issue", "list", "--label", STALE_LABEL, "--search", dec_id, "--json", "number"],
             capture_output=True, text=True, timeout=15,
         )
-    except (subprocess.TimeoutExpired, FileNotFoundError):
+    except (subprocess.TimeoutExpired, OSError):
         return None
     if result.returncode != 0:
         return None
@@ -100,6 +100,12 @@ def _gh_issue_exists(dec_id: str) -> bool | None:
         return None
     if not isinstance(issues, list):
         return None
+    # Every element must be an issue (``--json number``); an error object or null is not evidence
+    # that an issue exists.
+    for issue in issues:
+        number = issue.get("number") if isinstance(issue, dict) else None
+        if isinstance(number, bool) or not isinstance(number, int):
+            return None
     return bool(issues)
 
 

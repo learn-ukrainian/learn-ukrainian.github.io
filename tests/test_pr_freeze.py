@@ -343,7 +343,7 @@ def test_refused_branch_lookup_is_unavailable_not_admitted(monkeypatch, tmp_path
 
 
 def test_successful_reads_keep_known_decisions(monkeypatch, tmp_path) -> None:
-    count = json.dumps({"total_count": 30})
+    count = json.dumps({"total_count": 30, "incomplete_results": False})
     calls = _client(monkeypatch, [(0, count), (0, json.dumps([{"number": 1}]))])
     exempt = pr_freeze.evaluate(REPO, branch="codex/x", environ={}, cache_file=tmp_path / "c.json")
     assert (exempt.refused, exempt.unavailable, exempt.warning) == (False, False, None)
@@ -351,7 +351,67 @@ def test_successful_reads_keep_known_decisions(monkeypatch, tmp_path) -> None:
     calls = _client(monkeypatch, [(0, count), (0, "[]")])
     frozen = pr_freeze.evaluate(REPO, branch="codex/y", environ={}, cache_file=tmp_path / "d.json")
     assert (frozen.refused, frozen.unavailable, frozen.open_prs) == (True, False, 30)
-    calls = _client(monkeypatch, [(0, json.dumps({"total_count": 3}))])
+    calls = _client(monkeypatch, [(0, json.dumps({"total_count": 3, "incomplete_results": False}))])
     below = pr_freeze.evaluate(REPO, branch="codex/z", environ={}, cache_file=tmp_path / "e.json")
     assert (below.refused, below.unavailable) == (False, False)
     assert len(calls) == 1
+
+
+def _unavailable_count(monkeypatch, tmp_path, payload, calls_expected=1):
+    calls = _client(monkeypatch, [(0, json.dumps(payload))])
+    decision = pr_freeze.evaluate(REPO, branch="codex/x", environ={}, cache_file=tmp_path / "c.json")
+    assert decision.refused is None
+    assert decision.unavailable
+    assert decision.warning == "open-PR freeze check skipped: open_pr_count_unavailable"
+    assert len(calls) == calls_expected
+    assert not (tmp_path / "c.json").exists()
+
+
+@pytest.mark.parametrize(
+    "payload",
+    [
+        {"total_count": 0, "incomplete_results": True},
+        {"total_count": 30, "incomplete_results": True},
+        {"total_count": 0},
+        {"total_count": 0, "incomplete_results": None},
+        {"total_count": True, "incomplete_results": False},
+        {"total_count": -1, "incomplete_results": False},
+        {"total_count": "3", "incomplete_results": False},
+        {"total_count": 3.0, "incomplete_results": False},
+    ],
+)
+def test_incomplete_or_malformed_count_is_unavailable_not_admitted(monkeypatch, tmp_path, payload) -> None:
+    _unavailable_count(monkeypatch, tmp_path, payload)
+
+
+@pytest.mark.parametrize(
+    "payload",
+    [
+        [{"error": "github_rate_limited"}],
+        [{"message": "Bad credentials"}],
+        [None],
+        ["x"],
+        [{"number": True}],
+        [{"number": 1}, {"error": "github_http_error"}],
+    ],
+)
+def test_malformed_branch_list_is_unavailable_not_exempt(monkeypatch, tmp_path, payload) -> None:
+    fetch, _ = _fetch(30)
+    calls = _client(monkeypatch, [(0, json.dumps(payload))])
+    decision = pr_freeze.evaluate(REPO, branch="codex/x", environ={}, fetch=fetch, cache_file=tmp_path / "c.json")
+    assert decision.refused is None
+    assert decision.unavailable
+    assert decision.warning == "open-PR freeze check skipped: branch_pr_lookup_unavailable"
+    assert len(calls) == 1
+
+
+def test_count_and_branch_reads_survive_a_process_failure(monkeypatch, tmp_path) -> None:
+    from scripts.common import github_client
+
+    def broken(command, **kwargs):
+        raise subprocess.TimeoutExpired("gh", 20)
+
+    monkeypatch.setattr(github_client, "run", broken)
+    decision = pr_freeze.evaluate(REPO, branch="codex/x", environ={}, cache_file=tmp_path / "c.json")
+    assert decision.refused is None
+    assert decision.warning == "open-PR freeze check skipped: open_pr_count_unavailable"

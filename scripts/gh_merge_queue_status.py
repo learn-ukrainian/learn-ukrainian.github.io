@@ -354,6 +354,24 @@ def _is_graphql_response(data: Any) -> bool:
     return isinstance(data, dict) and ("data" in data or "errors" in data)
 
 
+def _is_run_element(run: Any) -> bool:
+    """A usable Actions run names its page (``html_url`` or ``url``) and its ``status``."""
+    return (
+        isinstance(run, dict)
+        and isinstance(run.get("html_url") or run.get("url"), str)
+        and bool(run.get("html_url") or run.get("url"))
+        and isinstance(run.get("status"), str)
+    )
+
+
+def _not_found_in(data: dict[str, Any]) -> bool:
+    """True when GraphQL positively reports the pull request as unresolvable."""
+    errors = data.get("errors")
+    return isinstance(errors, list) and any(
+        isinstance(e, dict) and "Could not resolve to a PullRequest" in str(e.get("message", "")) for e in errors
+    )
+
+
 def _unavailable_message(what: str, proc: subprocess.CompletedProcess[str], data: Any = None) -> str:
     """One explicit unavailable diagnostic; only the controlled error code is echoed."""
     code = data.get("error") if isinstance(data, dict) else None
@@ -375,6 +393,8 @@ def _read_runs(
         raise RuntimeError("`gh` CLI tool is required but not installed or not on PATH.") from exc
     except subprocess.TimeoutExpired as exc:
         raise RuntimeError(f"{what} read timed out after {timeout}s.") from exc
+    except OSError as exc:
+        raise RuntimeError(f"{what} read could not start: {type(exc).__name__}.") from exc
     if proc.returncode != 0:
         raise RuntimeError(_unavailable_message(what, proc))
     try:
@@ -382,7 +402,7 @@ def _read_runs(
     except (TypeError, ValueError):
         raise RuntimeError(_unavailable_message(what, proc)) from None
     runs = data.get(key) if key is not None and isinstance(data, dict) else data if key is None else None
-    if not isinstance(runs, list):
+    if not isinstance(runs, list) or not all(_is_run_element(r) for r in runs):
         raise RuntimeError(_unavailable_message(what, proc, data))
     return runs
 
@@ -412,6 +432,8 @@ def fetch_live_status(
         raise RuntimeError("`gh` CLI tool is required but not installed or not on PATH.") from exc
     except subprocess.TimeoutExpired as exc:
         raise RuntimeError(f"GraphQL request timed out after {timeout}s.") from exc
+    except OSError as exc:
+        raise RuntimeError(f"GraphQL request could not start: {type(exc).__name__}.") from exc
 
     try:
         data = json.loads(proc.stdout)
@@ -430,6 +452,24 @@ def fetch_live_status(
     repo_dict = raw_repo if isinstance(raw_repo, dict) else {}
     raw_pr = repo_dict.get("pullRequest") if isinstance(repo_dict, dict) else None
     pr_dict = raw_pr if isinstance(raw_pr, dict) else None
+
+    if proc.returncode != 0 and not (pr_dict is None and _not_found_in(data)):
+        # A failed read is rejected before any further request, whatever envelope it carries;
+        # only a positively identified missing pull request keeps its own meaning (below).
+        errors = data.get("errors")
+        msgs = (
+            [e["message"] for e in errors if isinstance(e, dict) and e.get("message")]
+            if isinstance(errors, list)
+            else []
+        )
+        if msgs:
+            raise RuntimeError(f"GraphQL error: {'; '.join(msgs)}")
+        raise RuntimeError(_unavailable_message("GraphQL", proc, data))
+
+    if "errors" not in data and not isinstance(raw_repo, dict):
+        # No error and no repository to look the pull request up in: nothing was resolved,
+        # so this is not "pull request absent" either.
+        raise RuntimeError(_unavailable_message("GraphQL", proc, data))
 
     if isinstance(data, dict) and "errors" in data and not pr_dict:
         errors = data.get("errors") or []

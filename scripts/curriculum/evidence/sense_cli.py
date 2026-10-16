@@ -296,9 +296,16 @@ def read_pr_text(pr: int, repo: Path) -> str | None:
         return None
     try:
         data = json.loads(proc.stdout)
-        return " ".join([data["title"], data["body"], *(c["body"] for c in data["comments"])])
+        title, body, comments = data["title"], data["body"], data["comments"]
     except (ValueError, KeyError, TypeError):
         return None
+    # The whole nested shape must hold: a wrong-typed ``comments`` would otherwise join as "no
+    # comments" and let the scan report a PR it never fully read as ``scanned``.
+    if not (isinstance(title, str) and isinstance(body, str) and isinstance(comments, list)):
+        return None
+    if not all(isinstance(c, dict) and isinstance(c.get("body"), str) for c in comments):
+        return None
+    return " ".join([title, body, *(c["body"] for c in comments)])
 
 
 def leak_scan(
