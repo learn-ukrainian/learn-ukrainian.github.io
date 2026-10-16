@@ -1052,6 +1052,64 @@ beforeEach(() => {
 });
 
 describe('LexiconPractice', () => {
+  test.each([null, 49, 50])('#10706 audio: actual Next cancels same-item playback with resumed history %s without another review', async (historyLength) => {
+    const { resetManifestCacheForTesting } = await import('@site/src/lib/lexicon/pronunciation-player');
+    resetManifestCacheForTesting();
+    const pause = vi.fn();
+    class AudioBoundary {
+      currentTime = 0;
+      preload = '';
+      play = vi.fn().mockResolvedValue(undefined);
+      pause = pause;
+      load = vi.fn();
+      removeAttribute = vi.fn();
+    }
+    vi.stubGlobal('Audio', AudioBoundary);
+    vi.spyOn(globalThis, 'fetch').mockImplementation(async (input) => String(input).endsWith('manifest.json')
+      ? okJson({ schemaVersion: 1, entries: { 'книга': { file: `${'a'.repeat(64)}.wav` } } })
+      : notFoundResponse());
+    if (historyLength !== null) {
+      writePracticeSessionSnapshot('mixed', {
+        sessionSeed: 12345,
+        history: Array.from({ length: historyLength }, () => ({ itemId: 'knyha::flashcards', lemmaId: 'knyha', mode: 'flashcards' })),
+        budget: 'until-zero', completed: historyLength, plannedTotal: 100,
+        modeFilter: 'mixed', level: 'A1', deckId: 'all',
+        dateSeed: dateSeed(new Date()), startedAt: Date.now(),
+      });
+    }
+    const view = render(<LexiconPractice initialDeck={sampleDeckWithOnlyMode('knyha', 'flashcards')} autoStart={historyLength === null} initialMode={historyLength === null ? 'flashcards' : 'mixed'} />);
+    try {
+      if (historyLength !== null) fireEvent.click(await screen.findByTestId('practice-start-session'));
+      for (let round = 0; round < (historyLength === null ? 1 : 3); round++) {
+        const card = await waitFor(() => {
+          const element = view.container.querySelector<HTMLElement>('[data-activity="flashcard"]');
+          expect(element).toBeVisible();
+          return element!;
+        });
+        fireEvent.click(card);
+        fireEvent.click(view.container.querySelector<HTMLButtonElement>('[data-rate="again"]')!);
+        const answered = localStorage.getItem(SRS_STORAGE_KEY);
+        fireEvent.click(await screen.findByRole('button', { name: 'Послухати вимову' }));
+        await screen.findByRole('button', { name: 'Зупинити відтворення' });
+        pause.mockClear();
+        fireEvent.click(screen.getByTestId('practice-advance-button'));
+        await waitFor(() => expect(view.container.querySelector('[data-activity="flashcard"]')).toHaveAttribute('data-rated', 'false'));
+        expect(pause).toHaveBeenCalled();
+        expect(screen.getByRole('button', { name: 'Послухати вимову' })).toBeVisible();
+        expect(localStorage.getItem(SRS_STORAGE_KEY)).toBe(answered);
+        expect(JSON.parse(answered!).reviews).toHaveLength(round + 1);
+        expect(screen.getByTestId('practice-session-progress')).toHaveTextContent(`${(historyLength ?? 0) + round + 1}/`);
+      }
+      if (historyLength !== null) {
+        expect(JSON.parse(localStorage.getItem(PRACTICE_SESSION_STORAGE_KEY)!).byMode.mixed.history).toHaveLength(50);
+      }
+    } finally {
+      view.unmount();
+      vi.unstubAllGlobals();
+      resetManifestCacheForTesting();
+    }
+  });
+
   test('memoizes 10k curated-key membership checks instead of rebuilding their set', () => {
     const keys = Array.from({ length: 5_000 }, (_, index) => `Ключ-${index}`);
     const firstSet = getCachedLowercaseLemmaKeySet(keys);
@@ -2837,7 +2895,7 @@ describe('LexiconPractice', () => {
    * `selection?.itemId`, which (a) only took effect a render AFTER the card first mounted
    * (the very first paint used the salt left over from before mount) and (b) never re-fired
    * on a same-lemma SRS requeue, since `itemId` is unchanged. `presentationSeq` is now
-   * `history.length`, computed synchronously in the same render that produces `selection`.
+   * advanced synchronously by Next, independently of the bounded retained history.
    */
   test('#8733: a same-lemma requeue of a paronym card is a fresh presentation in the rendered component, not the frozen first order', async () => {
     // The deck has exactly ONE paronym-eligible lemma, so answering it (right or wrong)
@@ -2883,9 +2941,43 @@ describe('LexiconPractice', () => {
     // Pre-fix, the commit effect never re-fires for a same-itemId requeue, so every
     // requeue freezes at the exact order the first presentation already settled on —
     // `requeuePositions` would equal `initialPositions` element-for-element. Fixed
-    // behavior: history.length (and so the presentation key) advances on every requeue
+    // behavior: the presentation key advances on every explicit Next
     // regardless of itemId, so at least one requeue lands on a different order.
     expect(requeuePositions).not.toEqual(initialPositions);
+  });
+
+  test.each([49, 50])('#10706 F2 focused rendered resume at history %s preserves variation, feedback and review accounting', async (historyLength) => {
+    writePracticeSessionSnapshot('mixed', {
+      sessionSeed: 12345,
+      history: Array.from({ length: historyLength }, () => ({ itemId: 'bihate::paronym', lemmaId: 'bihate', mode: 'paronym' })),
+      budget: 'until-zero', completed: historyLength, plannedTotal: 100,
+      modeFilter: 'mixed', level: 'A1', deckId: 'all',
+      dateSeed: dateSeed(new Date()), startedAt: Date.now(),
+    });
+    const user = userEvent.setup();
+    const deck = paronymDeck();
+    const view = render(<LexiconPractice initialDeck={deck} initialMode="mixed" />);
+    await user.click(await screen.findByTestId('practice-start-session'));
+    const orders = new Set<string>();
+    for (let round = 0; round < 6; round++) {
+      const scope = within(await screen.findByTestId('practice-paronym'));
+      const labels = scope.getAllByRole('button').map((button) => button.textContent);
+      orders.add(JSON.stringify(labels));
+      expect([...labels].sort()).toEqual(['біжить', 'бігає'].sort());
+      view.rerender(<LexiconPractice initialDeck={deck} initialMode="mixed" />);
+      expect(within(screen.getByTestId('practice-paronym')).getAllByRole('button').map((button) => button.textContent)).toEqual(labels);
+      const reviews = storedState().reviews?.length ?? 0;
+      await user.click(scope.getByRole('button', { name: round === 5 ? /бігає/ : /біжить/ }));
+      expect(screen.getByTestId('practice-paronym-feedback')).toHaveTextContent(round === 5 ? 'Правильно!' : 'Неправильно.');
+      expect(storedState().reviews).toHaveLength(reviews + 1);
+      const answered = localStorage.getItem(SRS_STORAGE_KEY);
+      await user.click(screen.getByTestId('practice-advance-button'));
+      expect(localStorage.getItem(SRS_STORAGE_KEY)).toBe(answered);
+      expect(JSON.parse(localStorage.getItem(PRACTICE_SESSION_STORAGE_KEY)!).byMode.mixed.sessionSeed).toBe(12345);
+      expect(screen.getByTestId('practice-session-progress')).toHaveTextContent(`${historyLength + round + 1}/`);
+    }
+    expect(orders.size).toBeGreaterThan(1);
+    expect(JSON.parse(localStorage.getItem(PRACTICE_SESSION_STORAGE_KEY)!).byMode.mixed.history).toHaveLength(50);
   });
 
   test('paronym mode card is present in the K3 grid even when the deck has no paronym items', () => {
@@ -5248,7 +5340,7 @@ describe('LexiconPractice', () => {
 
     /**
      * #8732 (review round 2): the fix above pins the committed selection against a
-     * poolFilter-driven swap, but left `committedSelectionRef.current.historyLen` stale
+     * poolFilter-driven swap, but left `committedSelectionRef` stale
      * whenever the commit effect skipped a same-itemId requeue (see the presentationSeq
      * fix's own comment). Left unfixed, `committedStillValid` can misfire false the next
      * time that requeued card is rated, defeating the exact pin this test's sibling above

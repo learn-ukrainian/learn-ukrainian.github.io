@@ -95,6 +95,8 @@ For speech, each click rechecks available voices and selects an installed Ukrain
 (such as Microsoft Polina on Windows Edge and Google Ukrainian on Chrome). It never falls
 back to a non-Ukrainian voice. Unsupported browsers and audio/speech failures use the same
 feedback. Button and status labels follow the chrome locale.
+Each activation has 10000ms to start; expiry reports an attempt failure, not voice absence.
+Cancellation clears the budget; already-started CDN failure permits one fresh speech-start budget.
 
 Playback is explicit and exclusive across speech and pre-recorded audio clips (`.opus`, `.webm`,
 `.mp3`, `.wav`, optionally served via `PUBLIC_AUDIO_CDN_URL`). Stop, changing a
