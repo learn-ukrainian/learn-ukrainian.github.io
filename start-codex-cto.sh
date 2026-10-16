@@ -13,6 +13,9 @@ for arg in "$@"; do
       ;;
   esac
 done
+# The lane is a fixed wrapper option: scope re-entry and successors replay the
+# caller's argv, and this wrapper adds it exactly once.
+LC_WRAPPER_LAUNCHER_ARGS=(--epic epics)
 LAUNCHER_MODEL="${LAUNCHER_MODEL:-gpt-6.1-sol}" \
 LAUNCHER_EFFORT="${LAUNCHER_EFFORT:-high}" \
-launcher_main codex driver --epic epics "$@"
+launcher_main codex driver "$@"

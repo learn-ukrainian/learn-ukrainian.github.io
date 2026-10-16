@@ -1,9 +1,61 @@
 #!/usr/bin/env bash
-# Per-session user scopes. Sizing and install procedure: driver-memory-scope.md.
+# Per-session user scopes for driver and interactive launches. Sizing and
+# install procedure: driver-memory-scope.md.
 
 driver_scope_refuse() {
   printf 'DRIVER_SCOPE_REFUSED reason=%s; no unbounded override; restore the user manager and installed lu-driver.slice.\n' "$1" >&2
   return 6
+}
+
+# Tracked entry points a scope may replay, each with its provider, mode and
+# interactive unit label (drivers use their lane). Re-entry replays the wrapper
+# the caller invoked, never a name derived from the provider: start-glmcc.sh
+# must not become start-glm.sh, which selects another route (#9624).
+driver_scope_entrypoint() {
+  local row
+  case "$1" in
+    start-claude.sh) row='claude interactive claude' ;;
+    start-codex.sh) row='codex interactive codex' ;;
+    start-gemini.sh) row='gemini interactive gemini' ;;
+    start-grok.sh) row='grok interactive grok' ;;
+    start-kimi.sh) row='kimi interactive kimi' ;;
+    start-kimicc.sh) row='kimi interactive kimicc' ;;
+    start-glm.sh) row='glm interactive glm' ;;
+    start-glmcc.sh) row='glm interactive glmcc' ;;
+    scripts/start-bio-driver.sh) row='claude interactive bio' ;;
+    start-claude-driver.sh|start-claude-cto.sh) row='claude driver -' ;;
+    start-codex-driver.sh|start-codex-cto.sh) row='codex driver -' ;;
+    start-cursor-driver.sh) row='cursor driver -' ;;
+    start-gemini-driver.sh) row='gemini driver -' ;;
+    start-grok-driver.sh) row='grok driver -' ;;
+    start-muse-driver.sh) row='muse driver -' ;;
+    *) return 1 ;;
+  esac
+  read -r DS_ENTRY_PROVIDER DS_ENTRY_MODE DS_ENTRY_LABEL <<< "$row"
+}
+
+driver_scope_invoked_entry() {
+  # The wrapper this shell runs, as a path relative to the checkout. A copy or
+  # alias outside the checkout's root and scripts/ is not an entry point.
+  local dir root
+  dir="$(CDPATH='' cd -P -- "$(dirname -- "$0")" 2>/dev/null && pwd)" || return 1
+  root="$(CDPATH='' cd -P -- "${LC_ROOT:-}" 2>/dev/null && pwd)" || return 1
+  case "$dir" in
+    "$root") DS_ENTRY_PATH="${0##*/}" ;;
+    "$root/scripts") DS_ENTRY_PATH="scripts/${0##*/}" ;;
+    *) return 1 ;;
+  esac
+  driver_scope_entrypoint "$DS_ENTRY_PATH"
+}
+
+driver_scope_cgroup() {
+  # This shell's unified-hierarchy cgroup path, read from the kernel.
+  local line
+  DS_CGROUP=""
+  while IFS= read -r line; do
+    case "$line" in 0::*) DS_CGROUP="${line#0::}" ;; esac
+  done < "/proc/$$/cgroup"
+  [ -n "$DS_CGROUP" ]
 }
 
 # Generic, conservative fallbacks (bytes), not sized for any host. Each
@@ -83,15 +135,29 @@ driver_scope_bus() {
 }
 
 driver_scope_verify() {
-  local actual="" line props key value cg="" slice="" oom="" active="" identity=""
-  while IFS= read -r line; do
-    case "$line" in 0::*) actual="${line#0::}" ;; esac
-  done < "/proc/$$/cgroup"
+  # $1: the mode the scope must have been started for. $2 (re-entry only): the
+  # unit-name prefix the running wrapper's provider, mode and label produce.
+  local mode="$1" prefix="${2:-}" actual="" props key value cg="" slice="" oom="" active="" identity=""
+  driver_scope_cgroup 2>/dev/null && actual="$DS_CGROUP"
   case "$actual" in
-    */lu.slice/lu-driver.slice/lu-driver-*.scope) ;;
+    */lu.slice/lu-driver.slice/lu-*.scope) ;;
     *) driver_scope_refuse cgroup-mismatch; return 6 ;;
   esac
   [ "${actual##*/}" = "${LU_DRIVER_SCOPE_UNIT:-}" ] || { driver_scope_refuse unit-mismatch; return 6; }
+  # The unit name records the mode it was started for: a driver never adopts
+  # an interactive scope, nor the reverse.
+  local token='[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\.scope'
+  case "$mode" in driver|interactive) ;; *) driver_scope_refuse mode-mismatch; return 6 ;; esac
+  [[ "$LU_DRIVER_SCOPE_UNIT" =~ ^lu-${mode}-[a-z]+-[A-Za-z0-9_.:-]+-${token}$ ]] || {
+    driver_scope_refuse mode-mismatch; return 6;
+  }
+  # Exactly this provider and label, then the token: lanes may contain '-'.
+  if [ -n "$prefix" ]; then
+    case "$LU_DRIVER_SCOPE_UNIT" in
+      "$prefix"*) [[ "${LU_DRIVER_SCOPE_UNIT#"$prefix"}" =~ ^${token}$ ]] || { driver_scope_refuse identity-mismatch; return 6; } ;;
+      *) driver_scope_refuse identity-mismatch; return 6 ;;
+    esac
+  fi
   props="$(systemctl --user show "$LU_DRIVER_SCOPE_UNIT" -p Id -p ControlGroup -p Slice -p OOMPolicy -p ActiveState 2>/dev/null)" || {
     driver_scope_refuse unit-unverifiable; return 6;
   }
@@ -120,24 +186,89 @@ driver_scope_verify() {
   printf 'DRIVER_SCOPE_VERIFIED unit=%s parent_memory_current=%s parent_swap_current=%s\n' "$LU_DRIVER_SCOPE_UNIT" "$memory" "$swap" >&2
 }
 
+driver_scope_relay() {
+  # A completed provider owns its exit cause. In particular, a late TERM
+  # must not replace a collected OOM/SIGKILL status with 143.
+  if [ -n "${child:-}" ] && ! driver_scope_child_running "$child"; then return 0; fi
+  relayed="$1"
+  [ -z "${child:-}" ] || kill -"$1" "$child" 2>/dev/null || true
+}
+
+driver_scope_child_running() {
+  # True while process $1 exists and has not exited: a zombie, which bash has
+  # not reaped yet, is finished (state after the parenthesised command name,
+  # proc_pid_stat(5)).
+  local stat
+  local -a rows=()
+  # Also called from the relay trap: a nested read would cancel the timed
+  # read in driver_scope_wait_child. mapfile leaves that timeout intact and
+  # handles a vanished child without Bash 5.2's fatal $(< missing-file) error.
+  # The parenthesised command name can contain newlines; read the whole record.
+  { mapfile -d '' -t rows < "/proc/$1/stat"; } 2>/dev/null || return 1
+  stat="${rows[0]:-}"
+  [ -n "$stat" ] || return 1
+  stat="${stat##*) }"
+  case "${stat%% *}" in Z|X) return 1 ;; esac
+}
+
+driver_scope_wait_child() {
+  # Sets DS_CHILD_RC to the status of background child $1. Never blocks in
+  # `wait` while the child runs: a trapped signal that interrupts `wait` as the
+  # child exits leaves bash having reaped it and returning 128+signal, and
+  # every later `wait` reports 127 (not a child), so the provider's own status
+  # is lost. `wait` only collects a child that has already exited. The pause is
+  # a timed read on a pipe nothing writes to: a builtin, so the job gains no
+  # process, and traps still run at once. A trap must not run `read` itself:
+  # a nested read cancels this one's timeout.
+  local pid="$1" tick=""
+  { exec {tick}<> <(:); } 2>/dev/null || tick=""
+  while driver_scope_child_running "$pid"; do
+    if [ -n "$tick" ]; then read -r -t 0.1 -u "$tick" _ || true; else sleep 0.1; fi
+  done
+  [ -z "$tick" ] || exec {tick}<&-
+  wait "$pid" && DS_CHILD_RC=0 || DS_CHILD_RC=$?
+}
+
 launcher_enter_driver_scope() {
-  [ "$LC_MODE" = driver ] || return 0
+  local label
+  case "$LC_MODE" in driver|interactive) ;; *) driver_scope_refuse invalid-mode; return 6 ;; esac
+  driver_scope_invoked_entry || { driver_scope_refuse entrypoint-not-allowlisted; return 6; }
+  if [ "$DS_ENTRY_PROVIDER" != "$LC_PROVIDER" ] || [ "$DS_ENTRY_MODE" != "$LC_MODE" ]; then
+    driver_scope_refuse entrypoint-mismatch; return 6
+  fi
+  # Drivers label their unit with the lane; interactive sessions have none.
+  label="$DS_ENTRY_LABEL"
+  [ "$LC_MODE" = interactive ] || label="$LC_EPIC"
+  [[ "$label" =~ ^[A-Za-z0-9_.:-]+$ ]] || { driver_scope_refuse invalid-lane; return 6; }
   driver_scope_config || return 6
-  driver_scope_bus || return 6
-  # Same-PID re-entry only. A child driver inherits the environment but gets
+  # Same-PID re-entry only. A child launcher inherits the environment but gets
   # another scope. No environment variable alone is evidence of containment.
   if [ "${LU_DRIVER_SCOPE_PID:-}" = "$$" ]; then
-    driver_scope_verify || return 6
+    driver_scope_bus || return 6
+    driver_scope_verify "$LC_MODE" "lu-${LC_MODE}-${LC_PROVIDER}-${label}-" || return 6
     unset LC_SUPERVISORY_PREDECESSOR_GENERATION
     return 0
   fi
-  local token unit entry rc=0 child pending="" entrypoint="start-${LC_PROVIDER}-driver.sh"
-  case "${0##*/}" in
-    start-claude-cto.sh|start-codex-cto.sh) entrypoint="${0##*/}" ;;
+  # A worker in the dispatch slice must stay under that slice's cap; a new
+  # scope in lu-driver.slice would leave it.
+  driver_scope_cgroup 2>/dev/null || { driver_scope_refuse caller-cgroup-unavailable; return 6; }
+  case "$DS_CGROUP/" in
+    */lu-dispatch.slice/*) driver_scope_refuse inside-dispatch-slice; return 6 ;;
   esac
+  driver_scope_bus || return 6
+  local token unit entry rc=0 child relayed=""
   token="$(cat /proc/sys/kernel/random/uuid)" || { driver_scope_refuse identity-unavailable; return 6; }
-  [[ "$LC_EPIC" =~ ^[A-Za-z0-9_.:-]+$ ]] || { driver_scope_refuse invalid-lane; return 6; }
-  unit="lu-driver-${LC_PROVIDER}-${LC_EPIC}-${token}.scope"
+  unit="lu-${LC_MODE}-${LC_PROVIDER}-${label}-${token}.scope"
+  if [ "$LC_MODE" = interactive ]; then
+    printf 'DRIVER_SCOPE_START unit=%s high=%s max=%s swap=%s oom=continue\n' "$unit" "$DS_HIGH" "$DS_MAX" "$DS_SWAP" >&2
+    # Preserve direct-exec PID and signal delivery. No waiter, marker or relay;
+    # verification still runs in the helper before the wrapper is replayed.
+    exec systemd-run --user --scope --expand-environment=no --slice=lu-driver.slice --unit="$unit" --collect --quiet \
+      --property="MemoryHigh=$DS_HIGH" --property="MemoryMax=$DS_MAX" --property="MemorySwapMax=$DS_SWAP" \
+      --property=OOMPolicy=continue -- bash "$LC_ROOT/scripts/lib/driver_scope.sh" \
+      --entry "$LC_MODE" "$unit" - "$LC_ROOT/$DS_ENTRY_PATH" ${LC_SCOPE_ORIGINAL_ARGS[@]+"${LC_SCOPE_ORIGINAL_ARGS[@]}"}
+    exit 6
+  fi
   entry="$(mktemp)" || { driver_scope_refuse entry-marker-unavailable; return 6; }
   # The waiting launcher owns the marker. Distinct read/write offsets and
   # inherited descriptors preserve verified entry across unlink or namespaces.
@@ -150,25 +281,22 @@ launcher_enter_driver_scope() {
   printf 'DRIVER_SCOPE_START unit=%s high=%s max=%s swap=%s oom=continue\n' "$unit" "$DS_HIGH" "$DS_MAX" "$DS_SWAP" >&2
   # The outside shell only waits. All preparation/leases run after verified
   # entry. Keep stdin/TTY and the existing session/process group unchanged.
-  trap 'pending=INT; [ -z "${child:-}" ] || kill -INT "$child" 2>/dev/null || true' INT
-  trap 'pending=TERM; [ -z "${child:-}" ] || kill -TERM "$child" 2>/dev/null || true' TERM
-  trap 'pending=HUP; [ -z "${child:-}" ] || kill -HUP "$child" 2>/dev/null || true' HUP
+  trap 'driver_scope_relay INT' INT
+  trap 'driver_scope_relay TERM' TERM
+  trap 'driver_scope_relay HUP' HUP
   (
     trap - INT TERM HUP
     exec 218<&-
     exec systemd-run --user --scope --expand-environment=no --slice=lu-driver.slice --unit="$unit" --collect --quiet \
     --property="MemoryHigh=$DS_HIGH" --property="MemoryMax=$DS_MAX" --property="MemorySwapMax=$DS_SWAP" \
     --property=OOMPolicy=continue -- bash "$LC_ROOT/scripts/lib/driver_scope.sh" \
-    --entry "$unit" 219 "$LC_ROOT/$entrypoint" "${LC_SCOPE_ORIGINAL_ARGS[@]}"
+    --entry "$LC_MODE" "$unit" 219 "$LC_ROOT/$DS_ENTRY_PATH" ${LC_SCOPE_ORIGINAL_ARGS[@]+"${LC_SCOPE_ORIGINAL_ARGS[@]}"}
   ) 0<&0 &
   child=$!
   exec 219>&-
-  [ -z "$pending" ] || kill -"$pending" "$child" 2>/dev/null || true
-  while :; do
-    wait "$child" && rc=0 || rc=$?
-    kill -0 "$child" 2>/dev/null || break
-  done
-  trap - INT TERM HUP
+  [ -z "$relayed" ] || kill -"$relayed" "$child" 2>/dev/null || true
+  driver_scope_wait_child "$child"
+  rc="$DS_CHILD_RC"
   local verified=""
   IFS= read -r verified <&218 || true
   exec 218<&-
@@ -178,9 +306,11 @@ launcher_enter_driver_scope() {
     rc=6
   elif [ "$verified" != verified ]; then
     driver_scope_refuse scope-start-failed || true
-    # Only a supervisory successor carries a captured predecessor generation.
-    # This path has never claimed a lease and must never close one.
-    if [ -n "${SESSION_SUPERVISOR_WAKE_DELIVERY:-}" ] \
+    # Only a supervisory driver successor carries a captured predecessor
+    # generation; an interactive session never publishes, whatever it
+    # inherited. This path has never claimed a lease and must never close one.
+    if [ "$LC_MODE" = driver ] \
+        && [ -n "${SESSION_SUPERVISOR_WAKE_DELIVERY:-}" ] \
         && [ -n "${LC_SUPERVISORY_PREDECESSOR_GENERATION:-}" ]; then
       # shellcheck source=scripts/lib/session_supervisor.sh
       if source "$LC_ROOT/scripts/lib/session_supervisor.sh"; then
@@ -190,10 +320,13 @@ launcher_enter_driver_scope() {
     fi
     rc=6
   else
-    case "$pending" in INT) rc=130 ;; TERM) rc=143 ;; HUP) rc=129 ;; esac
+    # A signal this shell relayed ended the session; otherwise the status is
+    # the provider's own.
+    case "$relayed" in INT) rc=130 ;; TERM) rc=143 ;; HUP) rc=129 ;; esac
   fi
-  local exit_line
-  exit_line="DRIVER_SCOPE_EXIT epic=$LC_EPIC rc=$rc signal=${pending:-none} ts=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+  local exit_line stamp
+  stamp="rc=$rc signal=${relayed:-none} ts=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+  exit_line="DRIVER_SCOPE_EXIT epic=$LC_EPIC $stamp"
   # A closed stderr reader must not SIGPIPE the waiting launcher before the
   # journal write or replace the child's status. Isolate the write's signal.
   (printf '%s\n' "$exit_line" >&2) || true
@@ -203,14 +336,18 @@ launcher_enter_driver_scope() {
 
 if [ "${1:-}" = --entry ] && [ "${BASH_SOURCE[0]}" = "$0" ]; then
   shift
-  export LU_DRIVER_SCOPE_UNIT="$1" LU_DRIVER_SCOPE_PID="$$"
-  entry="$2"; shift 2
-  if ! { driver_scope_config && driver_scope_verify; }; then
-    printf 'refused\n' >&"$entry" || true
-    exec 219>&-
+  # The launcher's validated mode; the replayed wrapper checks its own again.
+  mode="$1"
+  export LU_DRIVER_SCOPE_UNIT="$2" LU_DRIVER_SCOPE_PID="$$"
+  entry="$3"; shift 3
+  if ! { driver_scope_config && driver_scope_verify "$mode"; }; then
+    if [ "$entry" != - ]; then
+      printf 'refused\n' >&"$entry" || true
+      exec 219>&-
+    fi
     exit 6
   fi
-  # #9624: pytest `-n auto`/`-n logical` inside a driver scope resolves to at
+  # #9624: pytest `-n auto`/`-n logical` inside a session scope resolves to at
   # most the deployment's worker cap, sized with the scope's MemoryHigh. An
   # inherited value from 0 (no xdist workers) up to the cap is kept; CI never
   # runs through this entry.
@@ -218,7 +355,9 @@ if [ "${1:-}" = --entry ] && [ "${BASH_SOURCE[0]}" = "$0" ]; then
   if ! [[ "$inherited" =~ ^[0-9]{1,4}$ ]] || (( 10#$inherited > DS_PYTEST_WORKERS )); then
     export PYTEST_XDIST_AUTO_NUM_WORKERS="$DS_PYTEST_WORKERS"
   fi
-  printf 'verified\n' >&"$entry"
-  exec 219>&-
+  if [ "$entry" != - ]; then
+    printf 'verified\n' >&"$entry"
+    exec 219>&-
+  fi
   exec bash "$@"
 fi

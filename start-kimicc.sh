@@ -28,4 +28,9 @@ for _arg in "$@"; do
 done
 unset _arg
 
-exec "$ROOT/start-kimi.sh" --harness claude-code "$@"
+# Run the shared kimi lifecycle in this process rather than through
+# start-kimi.sh: scope re-entry replays the wrapper the caller invoked, with
+# the caller's argv, and the harness is added here exactly once (#9624).
+source "$ROOT/scripts/lib/launcher_core.sh"
+LC_WRAPPER_LAUNCHER_ARGS=(--harness claude-code)
+launcher_main kimi interactive "$@"
