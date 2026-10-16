@@ -7,10 +7,13 @@ to Fleet Comms.
 
 from __future__ import annotations
 
+import dataclasses
+import inspect
 import json
 import logging
 import types
 from collections import namedtuple
+from dataclasses import dataclass
 from pathlib import Path
 
 import pytest
@@ -233,8 +236,179 @@ def test_missing_reaper_function_is_reported_unavailable_and_refuses(tmp_path, h
 
     assert not decision.admitted
     assert decision.failures[0].endswith(
-        "reaper unavailable: scripts.orchestration.reap_worktrees.reap_idle_dispatch_worktrees is not present"
+        "reaper unavailable: scripts.orchestration.reap_worktrees.reap_clean_pushed is not present"
     )
+
+
+@dataclass(frozen=True)
+class _CleanPushedOutcome:
+    """Test double with the field names of ``reap_worktrees.CleanPushedOutcome`` (#10778)."""
+
+    path: str
+    action: str
+    reason: str
+
+
+@dataclass(frozen=True)
+class _CleanPushedReport:
+    """Test double with the field names of ``reap_worktrees.CleanPushedReport`` (#10778)."""
+
+    dry_run: bool
+    removed: tuple[_CleanPushedOutcome, ...]
+    skipped: tuple[_CleanPushedOutcome, ...]
+    freed_mb: int
+    lock_busy: bool = False
+    refusal: str | None = None
+
+
+def _skip(path: str, reason: str) -> _CleanPushedOutcome:
+    return _CleanPushedOutcome(path=path, action="skipped", reason=reason)
+
+
+class _ReapCleanPushed:
+    """A fake ``reap_clean_pushed`` that records its calls and may free the disk."""
+
+    def __init__(self, report: _CleanPushedReport | Exception, *, host=None, frees_to=None):
+        self.calls: list[dict] = []
+        self.report = report
+        self.host = host
+        self.frees_to = frees_to
+
+    def __call__(self, **kwargs):
+        self.calls.append(kwargs)
+        if isinstance(self.report, Exception):
+            raise self.report
+        if self.frees_to is not None:
+            self.host["readings"] = [self.frees_to]
+        return self.report
+
+    def install(self, monkeypatch) -> None:
+        monkeypatch.setattr(adm, "load_reaper_module", lambda: types.SimpleNamespace(reap_clean_pushed=self))
+
+
+def test_reap_clean_pushed_is_called_once_as_an_apply_run_with_a_short_lock_timeout(monkeypatch, tmp_path):
+    fake = _ReapCleanPushed(_CleanPushedReport(dry_run=False, removed=(), skipped=(), freed_mb=0))
+    fake.install(monkeypatch)
+
+    outcome = adm.run_disk_reaper(tmp_path)
+
+    assert fake.calls == [{"repo_root": tmp_path, "dry_run": False, "lock_timeout_s": adm.DISK_REAPER_LOCK_TIMEOUT_S}]
+    assert adm.DISK_REAPER_LOCK_TIMEOUT_S == 5.0
+    assert outcome == adm.ReaperOutcome(ran=True, detail="reaper removed 0 worktree(s), freed 0 MB")
+
+
+def test_removed_trees_free_the_disk_and_the_dispatch_is_admitted(monkeypatch, tmp_path, host):
+    host["readings"] = [_disk(90.0)]
+    removed = tuple(
+        _CleanPushedOutcome(path=f".worktrees/dispatch/a/t{i}", action="removed", reason="ok") for i in (1, 2)
+    )
+    report = _CleanPushedReport(dry_run=False, removed=removed, skipped=(), freed_mb=3072)
+    fake = _ReapCleanPushed(report, host=host, frees_to=_disk(70.0))
+    fake.install(monkeypatch)
+    monkeypatch.setattr(adm, "primary_checkout", lambda: tmp_path)
+
+    decision = adm.evaluate("workspace-write", tmp_path, thresholds=_LIMITS, reaper=adm.run_disk_reaper)
+
+    assert decision.admitted
+    assert [call["repo_root"] for call in fake.calls] == [tmp_path]
+    assert "[reaper removed 2 worktree(s), freed 3072 MB, 90.0% before]" in decision.summary()
+
+
+def test_removals_that_leave_the_disk_full_refuse_with_counts_and_top_skip_reasons(monkeypatch, tmp_path, host):
+    host["readings"] = [_disk(92.0)]
+    removed = (_CleanPushedOutcome(path=".worktrees/dispatch/a/t1", action="removed", reason="ok"),)
+    skipped = (
+        _skip(".worktrees/dispatch/a/t2", "uncommitted or untracked changes"),
+        _skip(".worktrees/dispatch/a/t3", "unpublished_reflog_commit"),
+        _skip(".worktrees/dispatch/a/t4", "uncommitted or untracked changes"),
+        _skip(".worktrees/dispatch/a/t5", "late_change"),
+        _skip(".worktrees/dispatch/a/t6", "unpublished_reflog_commit"),
+        _skip(".worktrees/dispatch/a/t7", "uncommitted or untracked changes"),
+        _skip(".worktrees/dispatch/a/t8", "uninspectable"),
+        _skip(".worktrees/dispatch/a/t9", "x" * 200),
+    )
+    fake = _ReapCleanPushed(_CleanPushedReport(dry_run=False, removed=removed, skipped=skipped, freed_mb=512))
+    fake.install(monkeypatch)
+    monkeypatch.setattr(adm, "primary_checkout", lambda: tmp_path)
+
+    decision = adm.evaluate("workspace-write", tmp_path, thresholds=_LIMITS, reaper=adm.run_disk_reaper)
+
+    assert not decision.admitted
+    assert decision.failures[0].endswith(
+        "reaper removed 1 worktree(s), freed 512 MB; skipped 8: uncommitted or untracked changes (3); "
+        "unpublished_reflog_commit (2); late_change (1)"
+    )
+
+
+def test_skip_reasons_are_truncated():
+    report = _CleanPushedReport(dry_run=False, removed=(), skipped=(_skip("p", "x" * 200),), freed_mb=0)
+
+    assert adm._reaper_outcome(report).detail.endswith("skipped 1: " + "x" * 80 + " (1)")
+
+
+@pytest.mark.parametrize(
+    ("report", "detail"),
+    [
+        (
+            _CleanPushedReport(
+                dry_run=False,
+                removed=(),
+                skipped=(),
+                freed_mb=0,
+                lock_busy=True,
+                refusal="another cleanup holds the reaper lock",
+            ),
+            "reaper did not run: lock busy (another cleanup holds the reaper lock)",
+        ),
+        (
+            _CleanPushedReport(
+                dry_run=False, removed=(), skipped=(), freed_mb=0, refusal="refs_stale: git fetch origin timed out"
+            ),
+            "reaper refused (refs_stale: git fetch origin timed out)",
+        ),
+    ],
+)
+def test_a_busy_or_refusing_reaper_still_refuses_and_says_why(monkeypatch, tmp_path, host, report, detail):
+    host["readings"] = [_disk(90.0)]
+    _ReapCleanPushed(report).install(monkeypatch)
+    monkeypatch.setattr(adm, "primary_checkout", lambda: tmp_path)
+
+    decision = adm.evaluate("workspace-write", tmp_path, thresholds=_LIMITS, reaper=adm.run_disk_reaper)
+
+    assert not decision.admitted
+    assert decision.failures[0].endswith(detail)
+    assert host["probes"] == 2  # measured again after the reaper, never admitted on its say-so
+
+
+def test_reap_clean_pushed_that_raises_or_returns_a_wrong_shape_is_reaper_failed(monkeypatch, tmp_path):
+    _ReapCleanPushed(OSError("git lock busy")).install(monkeypatch)
+    assert adm.run_disk_reaper(tmp_path) == adm.ReaperOutcome(ran=False, detail="reaper failed: OSError: git lock busy")
+
+    _ReapCleanPushed([types.SimpleNamespace(action="removed")]).install(monkeypatch)  # type: ignore[arg-type]
+    outcome = adm.run_disk_reaper(tmp_path)
+    assert not outcome.ran
+    assert outcome.detail.startswith("reaper failed: AttributeError:")
+
+
+def test_the_common_reaper_matches_the_reap_clean_pushed_contract():
+    """The seam's contract with #10778; strict once ``reap_clean_pushed`` is in the tree."""
+    from scripts.orchestration import reap_worktrees
+
+    function = getattr(reap_worktrees, adm.REAPER_FUNCTION, None)
+    if function is None:
+        # #10778 has not landed: the seam must say so and never admit on it.
+        assert adm.run_disk_reaper(Path("/nonexistent")) == adm.ReaperOutcome(
+            ran=False,
+            detail="reaper unavailable: scripts.orchestration.reap_worktrees.reap_clean_pushed is not present",
+        )
+        return
+    parameters = inspect.signature(function).parameters
+    for name in ("repo_root", "dry_run", "lock_timeout_s"):
+        assert parameters[name].kind is inspect.Parameter.KEYWORD_ONLY, name
+    report_fields = {field.name for field in dataclasses.fields(reap_worktrees.CleanPushedReport)}
+    assert {field.name for field in dataclasses.fields(_CleanPushedReport)} <= report_fields
+    outcome_fields = {field.name for field in dataclasses.fields(reap_worktrees.CleanPushedOutcome)}
+    assert {field.name for field in dataclasses.fields(_CleanPushedOutcome)} <= outcome_fields
 
 
 def test_unimportable_reaper_module_is_reported_unavailable(monkeypatch):
@@ -248,23 +422,6 @@ def test_unimportable_reaper_module_is_reported_unavailable(monkeypatch):
     assert outcome == adm.ReaperOutcome(
         ran=False, detail="reaper unavailable: scripts.orchestration.reap_worktrees did not import (no module)"
     )
-
-
-def test_run_disk_reaper_calls_the_seam_with_the_primary_checkout_and_counts_removals(monkeypatch, tmp_path):
-    calls: list[dict] = []
-    result = types.SimpleNamespace
-
-    def reap_idle_dispatch_worktrees(**kwargs):
-        calls.append(kwargs)
-        return [result(action="removed"), result(action="skipped"), result(action="preserved_then_removed")]
-
-    module = types.SimpleNamespace(reap_idle_dispatch_worktrees=reap_idle_dispatch_worktrees)
-    monkeypatch.setattr(adm, "load_reaper_module", lambda: module)
-
-    outcome = adm.run_disk_reaper(tmp_path)
-
-    assert calls == [{"repo_root": tmp_path}]
-    assert outcome == adm.ReaperOutcome(ran=True, detail="reaper removed 2 worktree(s)", removed=2)
 
 
 def test_without_a_reaper_a_full_disk_refuses_and_says_the_reaper_did_not_run(tmp_path, host):

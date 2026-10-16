@@ -39,11 +39,13 @@ every check passes. Read-only dispatches are exempt.
   ``.worktrees/`` directory, in percent used as ``df`` reports it (used over
   used plus available). Below ``DISPATCH_DISK_REFUSE_USED_PERCENT`` (default
   85) the check passes. At or above it, a caller that passes ``reaper`` (the
-  real dispatch, through :func:`run_disk_reaper`) has the reaper remove clean,
-  fully pushed, idle dispatch worktrees once; the disk is measured again and
-  the dispatch is refused if it is still at or above the threshold. The
-  refusal names the percent used, the free GiB and the reaper outcome,
-  including "reaper unavailable" when the reaper cannot run. A caller without
+  real dispatch, through :func:`run_disk_reaper`) calls the common reaper's
+  ``reap_clean_pushed(dry_run=False)`` once, which removes clean, fully pushed,
+  idle dispatch worktrees; the disk is measured again and the dispatch is
+  refused if it is still at or above the threshold. The refusal names the
+  percent used, the free GiB and the reaper outcome: trees removed and MB
+  freed, the most frequent skip reasons, a busy reaper lock or the reaper's
+  own refusal, or "reaper unavailable" when it cannot run. A caller without
   a reaper (status queries, dry runs, the locked recheck) only measures. At or
   above ``DISPATCH_DISK_ALERT_USED_PERCENT`` (default 80) one alert is posted
   to the epics Fleet Comms channel per :data:`DISK_ALERT_INTERVAL_S`; the
@@ -123,13 +125,18 @@ DISK_ALERT_SENDER = "dispatch-admission"
 DISK_ALERT_PUBLISH_TIMEOUT_S = 30.0
 
 # The reaper seam (#10776 → #10778). :func:`run_disk_reaper` imports this
-# module lazily and calls ``reap_idle_dispatch_worktrees(repo_root=<primary
-# checkout>)``, an apply call that removes only clean, fully pushed, idle
-# dispatch worktrees and returns the reaper's results (objects with an
-# ``action`` attribute). A missing module or function is "reaper unavailable".
+# module lazily and calls ``reap_clean_pushed(repo_root=<primary checkout>,
+# dry_run=False, lock_timeout_s=DISK_REAPER_LOCK_TIMEOUT_S)``, which removes
+# only clean, fully pushed, idle dispatch worktrees and returns a
+# ``CleanPushedReport`` (``removed``, ``skipped``, ``freed_mb``, ``lock_busy``,
+# ``refusal``). A missing module or function is "reaper unavailable".
 REAPER_MODULE = "scripts.orchestration.reap_worktrees"
-REAPER_FUNCTION = "reap_idle_dispatch_worktrees"
-REAPER_REMOVED_ACTIONS = frozenset({"removed", "preserved_then_removed"})
+REAPER_FUNCTION = "reap_clean_pushed"
+# How long a dispatch waits for another reaper run's lock before giving up.
+DISK_REAPER_LOCK_TIMEOUT_S = 5.0
+# Distinct skip reasons named in the refusal text, most frequent first.
+DISK_REAPER_TOP_SKIP_REASONS = 3
+_DISK_REAPER_REASON_CHARS = 80
 
 # Deployment env file with the same variables (``NAME=value`` or
 # ``export NAME=value`` lines). Read only for the live environment, after the
@@ -207,6 +214,8 @@ class ReaperOutcome:
     ran: bool
     detail: str
     removed: int = 0
+    freed_mb: int = 0
+    lock_busy: bool = False
 
 
 DiskReaper = Callable[[Path], ReaperOutcome]
@@ -658,13 +667,13 @@ def load_reaper_module() -> Any:
 
 
 def run_disk_reaper(repo_root: Path) -> ReaperOutcome:
-    """Run the common reaper's idle dispatch-worktree removal once (#10778).
+    """Run the common reaper's clean-pushed worktree removal once (#10778).
 
-    The reaper must satisfy ``reap_idle_dispatch_worktrees(*, repo_root: Path)
-    -> Iterable[ReapResult]``: an apply call (no dry run) that removes only
-    clean, fully pushed, idle dispatch worktrees, returns promptly when another
-    reaper run holds its lock, and reports each tree with an ``action``. A
-    missing module or function, an exception or an unexpected result is an
+    Calls ``reap_clean_pushed(repo_root=repo_root, dry_run=False,
+    lock_timeout_s=DISK_REAPER_LOCK_TIMEOUT_S)``, which removes only clean,
+    fully pushed, idle dispatch worktrees and gives up after the lock timeout
+    when another reaper run holds its lock. A missing module or function, an
+    exception or a result without the ``CleanPushedReport`` fields is an
     outcome with ``ran=False`` that names the cause; it never raises.
     """
     try:
@@ -675,11 +684,31 @@ def run_disk_reaper(repo_root: Path) -> ReaperOutcome:
     if not callable(function):
         return ReaperOutcome(ran=False, detail=f"reaper unavailable: {REAPER_MODULE}.{REAPER_FUNCTION} is not present")
     try:
-        results = function(repo_root=repo_root)
-        removed = sum(1 for result in results if getattr(result, "action", None) in REAPER_REMOVED_ACTIONS)
+        report = function(repo_root=repo_root, dry_run=False, lock_timeout_s=DISK_REAPER_LOCK_TIMEOUT_S)
+        return _reaper_outcome(report)
     except Exception as exc:  # the reaper must never crash admission
         return ReaperOutcome(ran=False, detail=f"reaper failed: {type(exc).__name__}: {exc}")
-    return ReaperOutcome(ran=True, detail=f"reaper removed {removed} worktree(s)", removed=removed)
+
+
+def _reaper_outcome(report: Any) -> ReaperOutcome:
+    """Translate a ``CleanPushedReport``; raises when a field is missing or mistyped."""
+    removed = len(report.removed)
+    skipped = list(report.skipped)
+    freed_mb = int(report.freed_mb)
+    lock_busy = bool(report.lock_busy)
+    refusal = report.refusal
+    if refusal is not None:
+        what = "did not run: lock busy" if lock_busy else "refused"
+        return ReaperOutcome(ran=False, detail=f"reaper {what} ({refusal})", lock_busy=lock_busy)
+    detail = f"reaper removed {removed} worktree(s), freed {freed_mb} MB"
+    if skipped:
+        counts: dict[str, int] = {}
+        for outcome in skipped:
+            reason = str(getattr(outcome, "reason", "") or "no reason")[:_DISK_REAPER_REASON_CHARS]
+            counts[reason] = counts.get(reason, 0) + 1
+        top = sorted(counts.items(), key=lambda item: -item[1])[:DISK_REAPER_TOP_SKIP_REASONS]
+        detail += f"; skipped {len(skipped)}: " + "; ".join(f"{reason} ({count})" for reason, count in top)
+    return ReaperOutcome(ran=True, detail=detail, removed=removed, freed_mb=freed_mb)
 
 
 def _attempt_reaper(reaper: DiskReaper) -> ReaperOutcome:
