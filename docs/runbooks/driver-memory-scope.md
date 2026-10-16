@@ -152,11 +152,17 @@ designated approval, then routine host maintenance by the accountable driver.
 | `CPUQuotaPeriodSec` | `100ms` |
 | `CPUWeight` | `50` |
 
-Rationale, from the measurement on #10735: the measured host has 16 CPUs;
-`lu.slice` used a mean of about 3.8 CPU-equivalents, with bursts far above that.
-`1200%` leaves headroom for normal load, caps a burst at twelve of sixteen CPUs
-so interactive services keep the rest, and `CPUWeight=50` (default 100) makes
-the slice yield under contention. Re-measure before approval and after any
+Rationale: these are the reference values for the current host class. The host
+sizing and the measured evidence behind them live in the private operations
+notes (see "Limits are set per deployment"), not in this public tree.
+`CPUQuota=1200%` with `CPUQuotaPeriodSec=100ms` is an average cap per period: the
+slice and every descendant together may use up to 1.2 CPU-seconds in each 100 ms
+window, a long-run average of twelve CPUs. It does not reserve any CPUs for
+interactive services. On a host with more than twelve CPUs the slice can still
+run on all of them at once until its quota for the window is spent, and is then
+throttled until the next window. `CPUWeight=50` (default 100) is the only
+protection for interactive services: it makes the slice yield to its siblings,
+and only while the parent is contended. Re-measure before approval and after any
 workload change.
 
 Semantics: systemd percentages are per CPU, so `100%` is one CPU and `1200%` is
@@ -171,14 +177,22 @@ change, as below.
 
 ### Apply (after approval)
 
+First record the memory properties, so the verification can compare against them:
+
+```bash
+systemctl --user show lu.slice -p MemoryHigh -p MemoryMax -p MemorySwapMax
+```
+
+Then install the persistent drop-in. It is the only apply path; there is no
+`set-property` trial, because a runtime control drop-in outranks the unit
+directory and can mask a later `20-cpu.conf`.
+
 ```bash
 install -m 0644 packaging/systemd/dropins/lu.slice.d/20-cpu.conf.example \
   "$HOME/.config/systemd/user/lu.slice.d/20-cpu.conf"
 systemctl --user daemon-reload
 ```
 
-For a trial that does not persist, use instead
-`systemctl --user set-property --runtime lu.slice CPUAccounting=yes CPUQuota=1200% CPUQuotaPeriodSec=100ms CPUWeight=50`.
 `daemon-reload` updates the live cgroup without restarting or stopping scopes.
 
 ### Verify (effective values only)
@@ -190,8 +204,8 @@ systemctl --user show lu.slice -p CPUAccounting -p CPUQuotaPerSecUSec -p CPUQuot
 ```
 
 Expect `CPUAccounting=yes`, `CPUQuotaPerSecUSec=12s`, `CPUQuotaPeriodUSec=100ms`,
-`CPUWeight=50`, and `MemoryHigh`, `MemoryMax`, `MemorySwapMax` equal to the values
-read before the change. Then read the slice's cgroup: `cpu.max` must read
+`CPUWeight=50`, and `MemoryHigh`, `MemoryMax`, `MemorySwapMax` equal to the
+snapshot recorded before the change. Then read the slice's cgroup: `cpu.max` must read
 `1200000 100000` and `cpu.weight` must read `50`.
 
 ### Observe
@@ -212,12 +226,15 @@ report the measurements and propose weights only.
 ```bash
 rm "$HOME/.config/systemd/user/lu.slice.d/20-cpu.conf"
 systemctl --user daemon-reload
-systemctl --user set-property --runtime lu.slice CPUQuota= CPUWeight=
 systemctl --user show lu.slice -p CPUAccounting -p CPUQuotaPerSecUSec -p CPUQuotaPeriodUSec -p CPUWeight -p MemoryMax -p MemoryHigh -p MemorySwapMax
 ```
 
-Re-read: `CPUQuotaPerSecUSec=infinity` and the default weight, with the memory
-properties unchanged.
+Remove only `20-cpu.conf`; the `10-limits.conf` memory drop-in is never touched.
+Re-read the manager values and the slice's `cpu.max` and `cpu.weight`: they are
+expected to return to the unlimited defaults (`CPUQuotaPerSecUSec=infinity`,
+`cpu.max` reading `max`, the default weight), with the memory properties equal to
+the recorded snapshot. If `cpu.max` does not return to `max`, stop and report to
+the driver; do not add a runtime override.
 
 ## Death and admission behavior
 

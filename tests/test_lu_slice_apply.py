@@ -7,7 +7,9 @@ values here are synthetic test values, not any host's sizing.
 from __future__ import annotations
 
 import configparser
+import hashlib
 import os
+import re
 import subprocess
 from pathlib import Path
 
@@ -194,31 +196,70 @@ def test_cpu_example_is_inert_and_has_exactly_the_documented_keys() -> None:
     }
 
 
-def test_runbook_cpu_section_names_each_verification_property() -> None:
+# The tests below pin runbook and example prose. A deliberate procedure edit is
+# expected to update them in the same change.
+def _cpu_section() -> str:
     body = RUNBOOK.read_text()
-    section = body.split("## CPU-time containment", 1)[1].split("\n## ", 1)[0]
+    return body.split("## CPU-time containment", 1)[1].split("\n## ", 1)[0]
+
+
+def test_runbook_cpu_section_names_each_verification_property() -> None:
+    section = _cpu_section()
     for needle in (
         "CPUAccounting", "CPUQuotaPerSecUSec", "CPUQuotaPeriodUSec", "CPUWeight",
         "MemoryMax", "MemoryHigh", "MemorySwapMax", "cpu.max", "cpu.weight",
         "nr_throttled", "throttled_usec", "cpu.pressure", "/api/health",
-        "20-cpu.conf", "daemon-reload", "set-property --runtime", "CPUQuota= CPUWeight=",
-        "1200%", "100ms", "PROPOSED",
+        "20-cpu.conf", "daemon-reload", "1200%", "100ms", "PROPOSED",
     ):  # fmt: skip
         assert needle in section, needle
     assert "not a load-average bound and not a thread-count bound" in section
     assert "no script" in section
 
 
-def test_apply_script_is_unchanged_from_main() -> None:
-    """Guards the #10735 change: the apply script must not parse unit or drop-in text."""
-    ref = subprocess.run(
-        ["git", "rev-parse", "--verify", "--quiet", "origin/main"],
-        cwd=REPO, capture_output=True, text=True, timeout=30,
-    )  # fmt: skip
-    if ref.returncode != 0:
-        pytest.skip("origin/main is not available in this checkout")
-    diff = subprocess.run(
-        ["git", "diff", "--quiet", "origin/main", "--", "scripts/ops/lu_slice_apply.sh"],
-        cwd=REPO, capture_output=True, text=True, timeout=30,
-    )  # fmt: skip
-    assert diff.returncode == 0, "scripts/ops/lu_slice_apply.sh differs from origin/main"
+def test_runbook_records_memory_snapshot_before_the_change() -> None:
+    apply_step = _cpu_section().split("### Apply", 1)[1].split("### Verify", 1)[0]
+    snapshot = "systemctl --user show lu.slice -p MemoryHigh -p MemoryMax -p MemorySwapMax"
+    assert snapshot in apply_step
+    assert apply_step.index(snapshot) < apply_step.index("install -m 0644")
+
+
+def test_runbook_persistent_dropin_is_the_only_path() -> None:
+    section = _cpu_section()
+    assert "set-property --runtime" not in section
+    assert "CPUQuota= CPUWeight=" not in section
+    rollback = section.split("### Rollback", 1)[1]
+    assert rollback.count("rm ") == 1  # only 20-cpu.conf is removed
+    assert 'lu.slice.d/20-cpu.conf"' in rollback
+    assert "10-limits.conf" in rollback and "never touched" in rollback
+    assert "cpu.max" in rollback and "stop and report to" in rollback
+
+
+def test_runbook_quota_rationale_is_an_average_cap_not_a_reservation() -> None:
+    section = _cpu_section()
+    assert "average cap per period" in section
+    assert "does not reserve any CPUs" in section
+    assert "only while the parent is contended" in section
+
+
+def test_runbook_publishes_no_host_sizing() -> None:
+    body = RUNBOOK.read_text()
+    assert not re.search(r"\b(16|sixteen)\s+CPUs?\b|\bof sixteen\b", body, re.IGNORECASE)
+    assert not re.search(r"CPU-equivalents|\bmean of\b", body, re.IGNORECASE)
+    assert "private operations" in _cpu_section()
+
+
+def test_cpu_example_does_not_claim_accounting_enforces_the_quota() -> None:
+    text = " ".join(CPU_EXAMPLE.read_text().replace("# ", " ").split())
+    assert "and the quota are enforced" not in text
+    assert "enforced by CPUQuota= below, through cpu.max" in text
+
+
+# sha256 of scripts/ops/lu_slice_apply.sh at the #10735 base commit. The CPU
+# ceiling is documentation plus an inert example, so the apply script must not
+# change: it must not parse unit or drop-in text. A deliberate edit to the
+# script must update this recorded hash.
+APPLY_SCRIPT_SHA256 = "e7beafca407a619b6b96dbd0adce55371c69be84d931d69224cd92711c0c94fd"
+
+
+def test_apply_script_matches_recorded_hash() -> None:
+    assert hashlib.sha256(HELPER.read_bytes()).hexdigest() == APPLY_SCRIPT_SHA256

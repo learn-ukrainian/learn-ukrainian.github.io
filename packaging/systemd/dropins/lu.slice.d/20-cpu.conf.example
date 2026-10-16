@@ -6,7 +6,8 @@
 # docs/runbooks/driver-memory-scope.md, "CPU-time containment").
 # Leave the memory limits drop-in (10-limits.conf) untouched.
 [Slice]
-# Turn on CPU accounting so cpu.stat and the quota are enforced for the slice.
+# Turn on CPU accounting (cpu.stat). The quota itself is enforced by CPUQuota=
+# below, through cpu.max.
 CPUAccounting=yes
 # Percent of ONE CPU per 100%: 1200% is twelve CPUs' worth of CPU time across
 # every descendant. It caps CPU time, not load average or thread count.
