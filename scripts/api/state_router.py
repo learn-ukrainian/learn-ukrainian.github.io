@@ -1520,6 +1520,9 @@ def _compute_dispatch_routing_budget(
         if isinstance(cb_data, dict):
             for field in ("credit_balance", "reset_credits", "fable_weekly", "claude_gpt_windows"):
                 agents[lane][field] = cb_data.get(field)
+            # Grok product percents ride along. They are not a capacity window (#10864).
+            if lane == "grok" and isinstance(cb_data.get("product_usage"), list):
+                agents[lane]["product_usage"] = cb_data["product_usage"]
             agents[lane]["freshness"] = cb_data.get("freshness", "unavailable")
             agents[lane]["age_s"] = cb_data.get("age_s")
             if cb_data.get("error_kind") == "need_login" or cb_data.get("failure_kind") == "need_login":
@@ -1614,6 +1617,8 @@ def _compute_dispatch_routing_budget(
             }
             if isinstance(cb_data.get("provider_windows"), dict):
                 agents[lane]["provider_windows"] = cb_data["provider_windows"]
+            if lane == "grok" and isinstance(agents[lane].get("product_usage"), list):
+                agents[lane]["codexbar"]["product_usage"] = agents[lane]["product_usage"]
 
             # Update authoritative keys in agents
             if lane == "claude":

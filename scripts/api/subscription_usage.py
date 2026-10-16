@@ -1309,6 +1309,27 @@ def _probe_kimi_native(*, timeout_s: float) -> dict[str, Any]:
     )
 
 
+def _grok_product_usage(raw: Any) -> list[dict[str, Any]] | None:
+    """Public product percents from a Grok billing ``productUsage`` list.
+
+    Missing or non-list input is absent (``None``) so the weekly credit window
+    stays the only reading. A list always returns a list. Entries without a
+    non-empty string ``product`` are dropped. Names are copied unchanged.
+    ``usagePercent`` outside the closed 0–100 range, or non-numeric, is ``None``.
+    """
+    if not isinstance(raw, list):
+        return None
+    products: list[dict[str, Any]] = []
+    for entry in raw:
+        if not isinstance(entry, dict):
+            continue
+        name = entry.get("product")
+        if not isinstance(name, str) or name == "":
+            continue
+        products.append({"product": name, "usage_percent": _public_percent(entry.get("usagePercent"))})
+    return products
+
+
 def _probe_grok_native(*, timeout_s: float) -> dict[str, Any]:
     token = _load_grok_bearer()
     if not token:
@@ -1357,10 +1378,16 @@ def _probe_grok_native(*, timeout_s: float) -> dict[str, Any]:
         if isinstance(used_pct, (int, float))
         else None
     )
-    return _normalize_provider_data(
+    # Product percents are display-only. Attach them after the credit window
+    # so a product list cannot change creditUsagePercent's weekly number.
+    result = _normalize_provider_data(
         "grok",
         {"provider": "grok", "source": "grok_cli_proxy", "usage": {"secondary": weekly}},
     )
+    products = _grok_product_usage(config.get("productUsage"))
+    if products is not None:
+        result["product_usage"] = products
+    return result
 
 
 def _agy_cli_bin() -> str | None:
