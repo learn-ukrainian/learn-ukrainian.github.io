@@ -56,11 +56,28 @@ evidence is accepted as `pending_native_link`. Overflow containers remain
 ordinary issues. Conflicting roots, multiple owners, cycles and cross-repository
 parents refuse admission without an override. Read failures, depth exhaustion,
 timeouts and stale or incomplete audits are unknown, never proof of membership.
-Issue fetching and membership observation each have a 60-second budget. A
-membership timeout preserves the fetched card's DoR and DoD findings. A fetch
-failure reports `checker_error`, with all three sections unchecked. Only a
-dispatch target with no native parent triggers the full audit; it never writes
+After a live read confirms that the target itself has no native parent, dispatch
+tries the shared `batch_state/issue_stream_audit.json` cache. The existing audit
+validator must certify completeness, shape and freshness within 3600 seconds.
+The report must match the target repository and current stream registry, and
+the exact target number must have unique body membership for the claimed root.
+An invalid, conflicting, missing or unreadable cache cannot admit the target.
+It falls back to a live audit within the same membership budget. A failed
+fallback records both its typed refusal and the cache rejection reason. Native
+parent traversal does not read the cache or run the audit. Neither path writes
 the audit cache.
+
+Issue fetching and membership observation each have a 60-second budget,
+including cache validation and the entire live audit. Together they leave 15
+seconds for overhead inside dispatch's 135-second checker timeout. Timeout codes
+identify `membership_timeout_target_fetch`,
+`membership_timeout_cached_audit_validation`, `membership_timeout_live_audit_open_issues`,
+or `membership_timeout_live_audit_root_N_of_M_issue_K`, naming the root's position
+and the issue being read, including descendants. Native parent-read timeouts
+retain `membership_timeout`. A membership timeout preserves the fetched card's
+DoR and DoD findings. A target-fetch timeout adds its typed code to
+`checker_error`; other fetch failures report `checker_error`. Membership cannot
+be established when the target fetch fails.
 
 Implementation dispatch checks both workspace-write and danger modes; read-only
 triage stays exempt. Non-trivial malformed DoD and conflicting ancestry cannot

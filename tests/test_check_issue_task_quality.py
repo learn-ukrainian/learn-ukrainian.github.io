@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import json
+import time
+from unittest.mock import Mock
 
 import pytest
 
@@ -347,13 +349,14 @@ def test_read_failures_are_unknown(monkeypatch, failure, code):
     assert "private detail" not in json.dumps(result)
 
 
-def test_observation_audits_only_target_null_and_never_writes_cache(monkeypatch):
+def test_observation_audits_only_target_null_and_never_writes_cache(monkeypatch, tmp_path):
+    monkeypatch.setattr(checker, "ROOT", tmp_path)
     monkeypatch.setattr(checker, "registry_for", lambda r: REGISTRY)
     monkeypatch.setattr(checker, "read_parent", lambda r, n: {"number": 5703, "repository": REPO})
     monkeypatch.setattr(checker, "live_audit", lambda *a: pytest.fail("native parent must not audit"))
     assert checker.observe_membership({}, REPO, 123)["status"] == "PASS"
     monkeypatch.setattr(checker, "read_parent", lambda r, n: None)
-    monkeypatch.setattr(checker, "live_audit", lambda *a: audit_report(body=[123]))
+    monkeypatch.setattr(checker, "live_audit", lambda *a, **k: audit_report(body=[123]))
     assert checker.observe_membership({}, REPO, 123)["pending_native_link"] is True
 
 
@@ -361,10 +364,197 @@ def test_in_memory_audit(monkeypatch):
     monkeypatch.setattr(audit, "_repo_owner_name", lambda *a: tuple(REPO.split("/")))
     monkeypatch.setattr(audit, "run_audit", lambda *a: pytest.fail("cache writer forbidden"))
     monkeypatch.setattr(audit, "fetch_open_issues", lambda *a: [{"number": 123, "title": "target"}])
-    monkeypatch.setattr(audit, "fetch_tree_membership", lambda *a: {5703: (set(), {123})})
+    def fetch(cursors, *args):
+        return {n: {"body": "#123" if n == 5703 else "", "subIssues": {"nodes": []}} for n in cursors}
+
+    monkeypatch.setattr(audit, "_fetch_subissue_batch", fetch)
     report = checker.live_audit(REPO, REGISTRY)
     assert report["effective_membership"]["123"]["via"] == "body"
     assert report["repository"] == REPO
+
+
+def test_live_audit_retains_forest_ownership_and_incomplete_refusal(monkeypatch):
+    monkeypatch.setattr(audit, "_repo_owner_name", lambda *a: tuple(REPO.split("/")))
+    monkeypatch.setattr(audit, "fetch_open_issues", lambda *a: [{"number": 123, "title": "target"}])
+    tree = {5703: [6943, 321], 6943: [456, 321], 456: [123]}
+    unread = set()
+
+    def fetch(cursors, *args):
+        pages = {}
+        for number in cursors:
+            nodes = [{"number": n, "repository": {"nameWithOwner": REPO},
+                      "subIssuesSummary": {"total": len(tree.get(n, []))}} for n in tree.get(number, [])]
+            pages[number] = audit.INCOMPLETE_NODE if number in unread else {
+                "body": "#123 #777" if number == 5703 else "", "subIssues": {"nodes": nodes}}
+        return pages
+
+    monkeypatch.setattr(audit, "_fetch_subissue_batch", fetch)
+    report = checker.live_audit(REPO, REGISTRY)
+    assert report["membership_complete"] is True
+    assert report["effective_membership"] == {
+        "123": {"epics": [6943], "streams": ["harness"], "via": "native", "unique_stream": True},
+        "456": {"epics": [6943], "streams": ["harness"], "via": "native", "unique_stream": True},
+        "321": {"epics": [5703, 6943], "streams": ["devops", "harness"], "via": "native", "unique_stream": False},
+        "777": {"epics": [5703], "streams": ["devops"], "via": "body", "unique_stream": True},
+    }
+    unread.add(6943)
+    report = checker.live_audit(REPO, REGISTRY)
+    assert report["membership_complete"] is False
+    result = checker.evaluate_membership({}, REPO, 123, REGISTRY, {123: None}, report)
+    assert result["errors"][0]["code"] == "membership_audit_incomplete"
+
+
+@pytest.fixture
+def membership_cache(monkeypatch, tmp_path):
+    monkeypatch.setattr(checker, "ROOT", tmp_path)
+    path = tmp_path / "batch_state/issue_stream_audit.json"
+    path.parent.mkdir()
+    monkeypatch.setattr(checker, "registry_for", lambda r: REGISTRY)
+    monkeypatch.setattr(checker, "fetch_issue", lambda *a: {"body": COMPLETE, "title": "[5703] target"})
+    monkeypatch.setattr(checker, "read_parent", lambda *a: None)
+    return path
+
+
+def test_fresh_cached_membership_skips_slow_live_audit(monkeypatch, membership_cache, capsys):
+    membership_cache.write_text(json.dumps(audit_report(body=[123])))
+    live = Mock(side_effect=lambda *a, **k: time.sleep(6))
+    parent = Mock(return_value=None)
+    monkeypatch.setattr(checker, "live_audit", live)
+    monkeypatch.setattr(checker, "read_parent", parent)
+    started = time.monotonic()
+    assert checker.main(["--issue", "123", "--strict", "--json"]) == 0
+    assert time.monotonic() - started < 5
+    result = json.loads(capsys.readouterr().out)
+    assert result["verdict"] == "PASS"
+    assert result["membership"] == {"status": "PASS", "errors": [], "pending_native_link": True}
+    parent.assert_called_once_with(REPO, 123)
+    live.assert_not_called()
+
+
+@pytest.mark.parametrize(
+    "cache,reason",
+    [
+        ("stale", "membership_audit_stale"),
+        ("incomplete", "membership_audit_incomplete"),
+        ("conflicting", "membership_conflicting_ancestry"),
+        ("missing", "membership_audit_cache_missing"),
+        ("repository", "membership_audit_repository_mismatch"),
+        ("issue", "membership_missing_parent"),
+        ("registry", "membership_audit_registry_mismatch"),
+        ("malformed", "membership_audit_cache_unreadable"),
+        ("invalid_index", "membership_audit_stale"),
+        ("native_entry", "membership_unknown"),
+        ("unread_root", "membership_unknown"),
+    ],
+)
+@pytest.mark.parametrize("live_valid", [False, True])
+def test_rejected_cache_never_admits_without_live_proof(
+    monkeypatch, membership_cache, capsys, cache, reason, live_valid
+):
+    report = audit_report(body=[123])
+    if cache == "stale":
+        report["generated_at"] = 0
+    elif cache == "incomplete":
+        report["membership_complete"] = False
+    elif cache == "conflicting":
+        report["effective_membership"]["123"].update(epics=[5703, 6943], streams=["devops", "harness"], unique_stream=False)
+    elif cache == "repository":
+        report["repository"] = "other/repository"
+    elif cache == "issue":
+        report["effective_membership"]["124"] = report["effective_membership"].pop("123")
+    elif cache == "registry":
+        report["streams"] = {"devops": [5703]}
+    elif cache == "invalid_index":
+        report["effective_membership"]["123"]["unique_stream"] = "true"
+    elif cache == "native_entry":
+        report["effective_membership"]["123"]["via"] = "native"
+    elif cache == "unread_root":
+        report["warnings"] = [{"code": "unresolved_subissue", "issue": 6943}]
+    if cache != "missing":
+        membership_cache.write_text("{" if cache == "malformed" else json.dumps(report))
+    live_report = audit_report(body=[123])
+    if not live_valid:
+        live_report["membership_complete"] = False
+    live = Mock(return_value=live_report)
+    monkeypatch.setattr(checker, "live_audit", live)
+    assert checker.main(["--issue", "123", "--strict", "--json"]) == (0 if live_valid else 1)
+    live.assert_called_once()
+    result = json.loads(capsys.readouterr().out)
+    if live_valid:
+        assert result["membership"] == {"status": "PASS", "errors": [], "pending_native_link": True}
+    else:
+        assert result["membership"]["status"] == "WARN"
+        assert result["membership"]["errors"][0]["code"] == "membership_audit_incomplete"
+        assert result["membership"]["cache_rejection"] == reason
+
+
+def test_canonical_validator_must_accept_cache(monkeypatch, membership_cache, capsys):
+    membership_cache.write_text(json.dumps(audit_report(body=[123])))
+    validator = Mock(return_value=None)
+    monkeypatch.setattr(audit, "validate_membership_report", validator)
+    monkeypatch.setattr(checker, "live_audit", lambda *a, **k: audit_report())
+    assert checker.main(["--issue", "123", "--strict", "--json"]) == 1
+    result = json.loads(capsys.readouterr().out)
+    assert result["membership"]["cache_rejection"] == "membership_audit_stale"
+    assert validator.call_count == 2
+    assert validator.call_args.args[1] == 3600
+
+
+@pytest.mark.parametrize("stage", ["target_fetch", "cached_audit_validation", "live_audit_open_issues",
+                                      "live_audit_root_2_of_2_issue_6943", "live_audit_root_1_of_2_issue_999"])
+def test_slow_stage_times_out_inside_dispatch_deadline(monkeypatch, membership_cache, capsys, stage):
+    budget = checker.time_budget
+    monkeypatch.setattr(checker, "time_budget", lambda: budget(0.05))
+    monkeypatch.setattr(audit, "_repo_owner_name", lambda *a: tuple(REPO.split("/")))
+    membership_cache.write_text(json.dumps(audit_report(body=[123])))
+
+    def slow(*a, **k):
+        time.sleep(10)
+
+    if stage == "target_fetch":
+        monkeypatch.setattr(checker, "fetch_issue", slow)
+    elif stage == "cached_audit_validation":
+        monkeypatch.setattr(audit, "validate_membership_report", slow)
+    else:
+        membership_cache.write_text(json.dumps({**audit_report(), "generated_at": 0}))
+        monkeypatch.setattr(audit, "fetch_open_issues", slow if stage == "live_audit_open_issues" else lambda *a: [])
+
+        def fetch(cursors, *args):
+            number = next(iter(cursors))
+            if stage.endswith(f"issue_{number}"):
+                slow()
+            nodes = [{"number": 999, "repository": {"nameWithOwner": REPO}}] if number == 5703 else []
+            return {number: {"body": "#123", "subIssues": {"nodes": nodes}}}
+
+        monkeypatch.setattr(audit, "_fetch_subissue_batch", fetch)
+    started = time.monotonic()
+    assert checker.main(["--issue", "123", "--strict", "--json"]) == 1
+    assert time.monotonic() - started < 1  # Far inside delegate.py's 135s outer deadline.
+    result = json.loads(capsys.readouterr().out)
+    assert result["membership"]["errors"][0]["code"] == f"membership_timeout_{stage}"
+    if stage != "target_fetch":
+        assert result["dor"]["status"] == "PASS"
+        assert result["dod"]["status"] == "PASS"
+
+
+@pytest.mark.parametrize("parents,expected", [
+    ({123: {"number": 5703, "repository": REPO}}, "PASS"),
+    ({123: {"number": 456, "repository": REPO}, 456: {"number": 5703, "repository": REPO}}, "PASS"),
+    ({123: {"number": 6943, "repository": REPO}}, "membership_conflicting_ancestry"),
+    ({123: {"number": 5703, "repository": "other/repository"}}, "membership_conflicting_ancestry"),
+    ({123: {"number": 456, "repository": REPO}, 456: None}, "membership_unknown"),
+    ({123: {"number": 456, "repository": REPO}, 456: {"number": 123, "repository": REPO}}, "membership_conflicting_ancestry"),
+])
+def test_native_observation_never_uses_cached_or_live_audit(monkeypatch, membership_cache, parents, expected):
+    monkeypatch.setattr(checker, "read_parent", lambda r, n: parents[n])
+    cached = Mock(side_effect=AssertionError("native ancestry must not read the cache"))
+    live = Mock(side_effect=AssertionError("native ancestry must not audit"))
+    monkeypatch.setattr(checker, "cached_membership", cached)
+    monkeypatch.setattr(checker, "live_audit", live)
+    result = checker.observe_membership({"title": "[5703]"}, REPO, 123)
+    assert result["status"] == "PASS" if expected == "PASS" else result["errors"][0]["code"] == expected
+    cached.assert_not_called()
+    live.assert_not_called()
 
 
 @pytest.mark.parametrize("source", ["--body", "--body-file", "--issue"])
@@ -624,10 +814,15 @@ def test_fetch_failure_does_not_invent_card_findings(monkeypatch, capsys, failur
     assert checker.main(["--issue", "123", "--strict", "--json"]) == 1
     output = capsys.readouterr().out
     result = json.loads(output)
-    assert result["missing"] == ["input", "checker_error"]
+    timeout = isinstance(failure, (TimeoutError, checker.subprocess.TimeoutExpired))
+    assert result["missing"] == ["input", "checker_error"] + (["membership_timeout_target_fetch"] if timeout else [])
     assert result["dod"] == {"status": "unchecked", "errors": []}
     assert result["dor"] == {"status": "unchecked", "errors": []}
-    assert result["membership"] == {"status": "unchecked", "errors": []}
+    assert result["membership"]["status"] == "unchecked"
+    assert result["membership"]["errors"] == ([{
+        "section": "membership", "field": "ancestry", "code": "membership_timeout_target_fetch",
+        "message": "membership timeout target fetch",
+    }] if timeout else [])
     assert "PRIVATE_CANARY" not in output
 
 
