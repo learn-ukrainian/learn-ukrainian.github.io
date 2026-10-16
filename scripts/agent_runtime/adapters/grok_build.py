@@ -724,14 +724,7 @@ class GrokBuildAdapter:
             if resume_session_id:
                 cmd.extend(["--resume", resume_session_id])
 
-            _logger.debug(
-                "grok invocation: task=%s mode=%s permission=%s model=%s effort=%s",
-                task_id,
-                mode,
-                permission_mode,
-                requested_model,
-                effective_effort,
-            )
+            _logger.debug("grok invocation")
 
             snapshot = self._reset_per_invocation_state(
                 cwd=execution_cwd,

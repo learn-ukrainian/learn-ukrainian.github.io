@@ -3559,7 +3559,7 @@ class _AcpxDiscussionAdapter:
             # future adapter adds diagnostic metadata with a colliding key.
             metadata.update(_communication_metadata())
         if effort is not None and self.fixed_effort is None:
-            _logger.debug("%s: effort=%r has no ACPX flag equivalent; ignoring", type(self).__name__, effort)
+            _logger.debug("ACPX adapter effort has no ACPX flag equivalent; ignoring")
 
         return InvocationPlan(
             cmd=cmd,
