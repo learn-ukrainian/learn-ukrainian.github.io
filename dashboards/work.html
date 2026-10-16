@@ -356,6 +356,7 @@ setInterval(() => document.querySelectorAll('[data-retained-age]').forEach(node 
     attention: [],
     selectedId: null,
     selectedIndex: -1,
+    selectionCleared: false,
     privateStatusText: 'Checking capability…',
     publicStatusOverride: null,
     filteredCount: 0,
@@ -980,6 +981,7 @@ setInterval(() => document.querySelectorAll('[data-retained-age]').forEach(node 
 
   function selectIndex(index) {
     if (!state.attention.length) return;
+    state.selectionCleared = false;
     const clamped = Math.max(0, Math.min(state.attention.length - 1, index));
     state.selectedIndex = clamped;
     state.selectedId = state.attention[clamped].work_id;
@@ -1143,7 +1145,8 @@ setInterval(() => document.querySelectorAll('[data-retained-age]').forEach(node 
 
   function sectionCount(sections, key) {
     const sec = sections && sections[key];
-    return (sec && typeof sec.count === 'number') ? sec.count : 0;
+    const count = sec && sec.count;
+    return typeof count === 'number' && Number.isFinite(count) && count >= 0 ? count : 'unknown';
   }
 
   function publicStreamsComplete(pub) {
@@ -1175,7 +1178,8 @@ setInterval(() => document.querySelectorAll('[data-retained-age]').forEach(node 
     return false;
   }
 
-  function installView(projection) {
+  function installView(projection, options) {
+    const deferSelection = !!(options && options.deferSelection);
     state.merged = projection;
     state.projection = projection;
     const filters = controlsToFilters();
@@ -1186,8 +1190,15 @@ setInterval(() => document.querySelectorAll('[data-retained-age]').forEach(node 
     state.filteredCount = filtered.filteredCount || 0;
     state.totalMatching = filtered.totalMatching || 0;
     state.currentView = filters.view || 'actionable';
-    if (state.selectedId && state.itemsById.has(state.selectedId)) {
+    // A cleared selection stays cleared. An early public document must not
+    // choose a row before the private response for this generation settles.
+    if (state.selectionCleared) {
+      state.selectedIndex = -1;
+      state.selectedId = null;
+    } else if (state.selectedId && state.itemsById.has(state.selectedId)) {
       state.selectedIndex = state.attention.findIndex((a) => a.work_id === state.selectedId);
+    } else if (deferSelection) {
+      state.selectedIndex = -1;
     } else if (state.attention.length) {
       state.selectedIndex = 0;
       state.selectedId = state.attention[0].work_id;
@@ -1222,6 +1233,11 @@ setInterval(() => document.querySelectorAll('[data-retained-age]').forEach(node 
     const generation = ++projectionGeneration;
     retainedStatus('source-public-meta', 'Loading');
     retainedStatus('source-private-meta', 'Loading');
+    const privateBefore = retainedPanels.get('source-private-meta');
+    const privateClock = privateBefore
+      ? { fetched: privateBefore.fetched, received: privateBefore.received, sourceAge: privateBefore.sourceAge, cacheAge: privateBefore.cacheAge }
+      : null;
+    const privateReceivedAt = state.receivedAt.get(PRIVATE_SOURCE_ID);
     showError('');
     state.publicStatusOverride = null;
     const publicUrl = (opts && opts.fresh)
@@ -1235,7 +1251,7 @@ setInterval(() => document.querySelectorAll('[data-retained-age]').forEach(node 
         if (admitted.ok) {
           recordWorkFetch('source-public-meta', admitted.doc);
           state.privateStatusText = 'Checking capability…';
-          installView(admitted.doc);
+          installView(admitted.doc, { deferSelection: true });
         }
       }
       return doc;
@@ -1265,7 +1281,6 @@ setInterval(() => document.querySelectorAll('[data-retained-age]').forEach(node 
       const admitted = admitPrivateDocument(privateSettled.value);
       if (admitted.ok) {
         privateDoc = admitted.doc;
-        recordWorkFetch('source-private-meta', privateDoc);
         privateAdmittedStatus = admitted.sourceStatus;
       } else {
         privateFail = 'schema_mismatch';
@@ -1281,11 +1296,22 @@ setInterval(() => document.querySelectorAll('[data-retained-age]').forEach(node 
       if (!merged.ok) {
         privateFail = 'identity_collision';
         privateDoc = null;
+        const record = retainedPanels.get('source-private-meta');
+        if (record && privateClock) {
+          record.fetched = privateClock.fetched;
+          record.received = privateClock.received;
+          record.sourceAge = privateClock.sourceAge;
+          record.cacheAge = privateClock.cacheAge;
+        }
+        if (privateReceivedAt === undefined) state.receivedAt.delete(PRIVATE_SOURCE_ID);
+        else state.receivedAt.set(PRIVATE_SOURCE_ID, privateReceivedAt);
         state.privateStatusText = privateMetaFromCode(privateFail);
         state.publicStatusOverride = null;
+        retainedStatus('source-private-meta', 'Unavailable', { note: privateFail });
         installView(publicDoc);
         return;
       }
+      recordWorkFetch('source-private-meta', privateDoc);
       state.privateStatusText = privateMetaFromCode(null, privateAdmittedStatus);
       state.publicStatusOverride = null;
       installView(merged.doc);
@@ -1300,6 +1326,7 @@ setInterval(() => document.querySelectorAll('[data-retained-age]').forEach(node 
     }
 
     if (!publicDoc && privateDoc) {
+      recordWorkFetch('source-private-meta', privateDoc);
       state.privateStatusText = privateMetaFromCode(null, privateAdmittedStatus);
       state.publicStatusOverride = publicFail === 'schema_mismatch' ? 'schema_mismatch' : 'unavailable';
       // Private-only usable projection: wrap as a minimal document for rendering.
@@ -1424,6 +1451,7 @@ setInterval(() => document.querySelectorAll('[data-retained-age]').forEach(node 
         closePalette();
         return;
       }
+      state.selectionCleared = true;
       state.selectedId = null;
       state.selectedIndex = -1;
       renderList();

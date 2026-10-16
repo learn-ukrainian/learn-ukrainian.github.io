@@ -472,9 +472,9 @@ function segment(count, total, cls, label) {
 }
 
 function renderUsage(byAgent) {
-  const entries = Object.entries(byAgent || {});
-  if (!entries.length) {
-    document.getElementById('usage-content').innerHTML = '<div class="empty">No usage rows returned in the last 7 days; source age and coverage unknown</div>';
+  const entries = byAgent && typeof byAgent === 'object' && !Array.isArray(byAgent) ? Object.entries(byAgent) : null;
+  if (!entries || !entries.length) {
+    document.getElementById('usage-content').innerHTML = '<div class="empty">Usage count unknown; source age and coverage unknown</div>';
     return;
   }
   entries.sort((a, b) => b[1].total - a[1].total);
@@ -482,10 +482,10 @@ function renderUsage(byAgent) {
     <div class="usage-row">
       <div class="usage-name">${escapeHtml(agent)}</div>
       <div class="usage-bar">
-        ${segment(stats.ok || 0, stats.total || 0, 'ok', 'ok')}
-        ${segment(stats.error || 0, stats.total || 0, 'err', 'err')}
-        ${segment(stats.rate_limited || 0, stats.total || 0, 'warn', 'rate')}
-        ${segment(stats.timeout || 0, stats.total || 0, 'gray', 'timeout')}
+        ${segment(typeof stats.ok === 'number' ? stats.ok : 0, typeof stats.total === 'number' ? stats.total : 0, 'ok', 'ok')}
+        ${segment(typeof stats.error === 'number' ? stats.error : 0, typeof stats.total === 'number' ? stats.total : 0, 'err', 'err')}
+        ${segment(typeof stats.rate_limited === 'number' ? stats.rate_limited : 0, typeof stats.total === 'number' ? stats.total : 0, 'warn', 'rate')}
+        ${segment(typeof stats.timeout === 'number' ? stats.timeout : 0, typeof stats.total === 'number' ? stats.total : 0, 'gray', 'timeout')}
       </div>
       <div class="usage-tail">${typeof stats.total === 'number' ? stats.total : 'Unknown'} calls · ${formatDuration(stats.total_duration_s)}</div>
     </div>
@@ -890,7 +890,7 @@ async function loadRuntime() {
       (async () => {
         try {
           const data = await readRuntime('usage', '/api/runtime/usage?days=7');
-          renderUsage(data.by_agent || {});
+          renderUsage(data.by_agent);
           setBanner('usage-banner', '');
         } catch (error) {
           setBanner('usage-banner', `API unavailable: ${error.message}`);
@@ -967,11 +967,14 @@ startRefresh();
 
 <script>
 async function refreshAgentMonitor() {
+  const generation = (refreshAgentMonitor.generation = (refreshAgentMonitor.generation || 0) + 1);
   retainedStatus('agent-monitor-status-badge', 'Loading');
   try {
     const res = await fetch('/api/agent-monitor/status');
+    if (generation !== refreshAgentMonitor.generation) return;
     if (!res.ok) throw new Error('Monitor unavailable');
     const data = await res.json();
+    if (generation !== refreshAgentMonitor.generation) return;
     if (!data || !['healthy', 'warning', 'critical', 'degraded'].includes(data.severity) || !data.ram || !['available_mb', 'total_mb', 'used_percent'].every(key => typeof data.ram[key] === 'number' && Number.isFinite(data.ram[key])) || !data.capacity_reservations || !['active_leases_count', 'total_reserved_ram_mb'].every(key => typeof data.capacity_reservations[key] === 'number' && Number.isFinite(data.capacity_reservations[key])) || !Array.isArray(data.load_1m_5m_15m) || data.load_1m_5m_15m.length < 2 || data.load_1m_5m_15m.some(value => typeof value !== 'number' || !Number.isFinite(value))) throw new Error('Malformed monitor observation');
     retainedStatus('agent-monitor-status-badge', 'Unknown', { fetched: true, note: 'Existing monitor observation; source age unknown.' });
     const badge = document.getElementById('agent-monitor-status-badge');
@@ -988,6 +991,7 @@ async function refreshAgentMonitor() {
     const reserved = document.getElementById('reserved-ram');
     if (reserved) reserved.textContent = `${data.capacity_reservations.total_reserved_ram_mb} MB`;
   } catch (e) {
+    if (generation !== refreshAgentMonitor.generation) return;
     retainedStatus('agent-monitor-status-badge', 'Error');
     const badge = document.getElementById('agent-monitor-status-badge');
     if (badge) { badge.textContent = 'UNAVAILABLE'; badge.className = 'pill warn'; }

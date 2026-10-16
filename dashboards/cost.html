@@ -211,7 +211,7 @@ function renderTable(targetId, rows) {
 
 function renderWarnings(windowData) {
   const items = [...(windowData.warnings || []), ...(windowData.prompt_bloat_watch || []).map(item =>
-    `${item.phase}: median prompt_chars=${fmtInt(item.median_prompt_chars)} across ${item.calls} call(s)`)];
+    `${item.phase}: median prompt_chars=${fmtInt(item.median_prompt_chars)} across ${fmtInt(item.calls)} call(s)`)];
   document.getElementById('warnings').innerHTML = items.length
     ? `<div class="list">${items.map(item => `<div>${esc(item)}</div>`).join('')}</div>`
     : '<div class="empty">No warning rows returned; source coverage unknown</div>';
@@ -281,7 +281,9 @@ async function refresh() {
     renderSummary(payload);
     renderWindow(payload);
     setBanner('');
-    costTargets.forEach(id => retainedStatus(id, payload.windows[activeWindow].totals.calls === 0 ? 'Empty' : 'Unknown',
+    const windowCalls = payload.windows[activeWindow].totals.calls;
+    const measuredCalls = typeof windowCalls === 'number' && Number.isFinite(windowCalls) && windowCalls >= 0 ? windowCalls : null;
+    costTargets.forEach(id => retainedStatus(id, measuredCalls === 0 ? 'Empty' : 'Unknown',
       { fetched: true, note: 'Historical estimates; collection coverage and source age unknown. Spend is not account capacity.' }));
     document.getElementById('last-refresh').textContent = `Last successful fetch ${new Date().toLocaleTimeString()} · Source age unknown`;
   } catch (error) {

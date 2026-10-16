@@ -285,3 +285,174 @@ const privateMetaFromCode = code => code;
 })().catch(e => {console.error(e); process.exitCode = 1;});
 """
     )
+
+
+def test_cleared_work_selection_stays_clear_until_private_settles():
+    install = _script("work.html", "  function installView", "  function recordWorkFetch")
+    keyboard = _script("work.html", "  document.addEventListener('keydown'", "  applyFiltersToControls")
+    _node(
+        _DOM
+        + r"""
+const details = [];
+const state = {selectedId: null, selectedIndex: -1, selectionCleared: false, attention: [], itemsById: new Map()};
+const els = {cmd: {classList: {contains() { return false; }}}, list: {focus() {}}, cmdInput: {}};
+const listeners = {};
+document.addEventListener = (type, fn) => { listeners[type] = fn; };
+const controlsToFilters = () => ({view: 'all'});
+const writeFiltersToUrl = () => {};
+const applyLocalFilters = projection => ({items: projection.items, attention: projection.attention, filteredCount: 0, totalMatching: projection.items.length});
+const renderSources = () => {};
+const renderActionableBanner = () => {};
+const renderList = () => {};
+const renderDetail = item => details.push(item ? item.work_id : null);
+const selectIndex = () => { state.selectionCleared = false; state.selectedId = 'chosen'; };
+const openPalette = () => {};
+const closePalette = () => {};
+"""
+        + install
+        + keyboard
+        + r"""
+const doc = {items: [{work_id: 'public-row'}], attention: [{work_id: 'public-row'}]};
+installView(doc, {deferSelection: true});
+assert.equal(state.selectedId, null, 'public-first must not select before private settles');
+listeners.keydown({key: 'Escape', target: {tagName: 'DIV'}, preventDefault() {}});
+assert.equal(state.selectionCleared, true);
+assert.equal(state.selectedId, null);
+installView(doc);
+assert.equal(state.selectedId, null, 'cleared selection stays cleared');
+assert.equal(details.at(-1), null);
+state.selectionCleared = false;
+installView(doc);
+assert.equal(state.selectedId, 'public-row');
+"""
+    )
+
+
+def test_stale_monitor_failure_does_not_overwrite_newer_success():
+    code = _retained_script(
+        "runtime.html", "async function refreshAgentMonitor", "document.addEventListener('DOMContentLoaded'"
+    )
+    _node(
+        _DOM
+        + r"""
+let releaseOld;
+const oldFetch = new Promise(resolve => { releaseOld = resolve; });
+let calls = 0;
+const fetch = async () => {
+  calls += 1;
+  if (calls === 1) {
+    await oldFetch;
+    return {ok: false};
+  }
+  return {ok: true, json: async () => ({severity: 'healthy', ram: {available_mb: 1, total_mb: 2, used_percent: 10},
+    load_1m_5m_15m: [0, 0], capacity_reservations: {active_leases_count: 0, total_reserved_ram_mb: 0}})};
+};
+"""
+        + code
+        + r"""
+(async () => {
+  const older = refreshAgentMonitor();
+  const newer = refreshAgentMonitor();
+  await newer;
+  assert.equal(document.getElementById('agent-monitor-status-badge').textContent, 'HEALTHY');
+  assert.equal(String(document.getElementById('active-leases-count').textContent), '0');
+  releaseOld();
+  await older;
+  assert.equal(document.getElementById('agent-monitor-status-badge').textContent, 'HEALTHY');
+  assert.notEqual(document.getElementById('agent-monitor-status-badge').textContent, 'UNAVAILABLE');
+})().catch(e => {console.error(e); process.exitCode = 1;});
+"""
+    )
+
+
+def test_missing_counts_stay_unknown_and_observed_zero_stays_zero():
+    work = _script("work.html", "  function sectionCount", "  function publicStreamsComplete")
+    runtime = _script("runtime.html", "function segment", "function renderHeadroom")
+    fleet = _script("fleet.html", "function summaryDetail", "function renderHealth") + _script(
+        "fleet.html", "function renderOverview", "function renderContextHealth"
+    )
+    cost = _script("cost.html", "function fmtInt", "async function fetchJson") + _script(
+        "cost.html", "function renderWarnings", "function renderSummary"
+    )
+    _node(
+        _DOM
+        + "const escapeHtml = value => String(value ?? '');\nconst formatDuration = () => 'unknown';\nconst esc = value => String(value ?? '');\n"
+        + work
+        + runtime
+        + fleet
+        + cost
+        + r"""
+assert.equal(sectionCount({}, 'issues'), 'unknown');
+assert.equal(sectionCount({issues: {status: 'ok'}}, 'issues'), 'unknown');
+assert.equal(sectionCount({issues: {count: 0}}, 'issues'), 0);
+assert.equal(sectionCount({prs: {count: 2}}, 'prs'), 2);
+renderUsage({});
+assert.match(document.getElementById('usage-content').innerHTML, /Usage count unknown/);
+assert.doesNotMatch(document.getElementById('usage-content').innerHTML, /\b0\b/);
+renderUsage({safe: {total: 0, ok: 0}});
+assert.match(document.getElementById('usage-content').innerHTML, /0 calls/);
+renderOverview({counts: {}});
+assert.equal(document.getElementById('requests-total').textContent, 'Unknown');
+assert.equal(document.getElementById('requests-detail').textContent, 'Count unknown');
+renderOverview({counts: {requests: {total: 0, by_state: {open: 0}}}});
+assert.equal(document.getElementById('requests-total').textContent, '0');
+assert.equal(document.getElementById('requests-detail').textContent, 'open 0');
+renderWarnings({warnings: [], prompt_bloat_watch: [{phase: 'safe', median_prompt_chars: null, calls: null}]});
+assert.match(document.getElementById('warnings').innerHTML, /Unknown call/);
+assert.doesNotMatch(document.getElementById('warnings').innerHTML, /0 call/);
+renderWarnings({warnings: [], prompt_bloat_watch: [{phase: 'safe', median_prompt_chars: 1, calls: 0}]});
+assert.match(document.getElementById('warnings').innerHTML, /0 call/);
+assert.equal(fmtInt(0), '0');
+assert.equal(fmtInt(undefined), 'Unknown');
+"""
+    )
+
+
+def test_rejected_private_document_does_not_keep_a_certified_clock():
+    code = _retained_script("work.html", "  function recordWorkFetch", "\n  function refilterOnly")
+    _node(
+        _DOM
+        + r"""
+const pending = [];
+const PUBLIC_PROJECTION_URL = '/public', PRIVATE_PROJECTION_URL = '/private', PRIVATE_TIMEOUT_MS = 5000;
+const PUBLIC_SOURCE_ID = 'public-monitor', PRIVATE_SOURCE_ID = 'private-local-adapter';
+const state = {receivedAt: new Map(), privateStatusText: ''};
+const showError = () => {};
+const installView = () => {};
+const admitPublicDocument = doc => ({ok: true, doc});
+const admitPrivateDocument = doc => ({ok: true, doc, sourceStatus: 'ok'});
+const mergeProjections = () => ({ok: false});
+const fetchJson = () => new Promise((resolve, reject) => pending.push({resolve, reject}));
+const classifyPublicFailure = () => 'unreachable';
+const classifyPrivateFailure = () => 'unreachable';
+const privateMetaFromCode = code => code || 'admitted';
+const els = {publicMeta: {textContent: ''}, privateMeta: {textContent: ''}, list: {innerHTML: '', removeAttribute() {}}};
+const accepted = {cache_age_s: 30, sources: [{source_id: PRIVATE_SOURCE_ID, status: 'ok', freshness: {observed_at: '2020-01-01T00:00:00Z', age_s: 20}, sections: {}, truncation: {}}]};
+const rejected = {cache_age_s: 40, sources: [{source_id: PRIVATE_SOURCE_ID, status: 'ok', freshness: {observed_at: '2020-01-01T00:00:00Z', age_s: 99}, sections: {}, truncation: {}}]};
+const privateStatus = () => document.getElementById('source-private-meta').nextElementSibling.textContent;
+"""
+        + code
+        + r"""
+(async () => {
+  recordWorkFetch('source-private-meta', accepted);
+  assert.match(privateStatus(), /Source age 20s/);
+  assert.match(privateStatus(), /Cache\/read age 30s/);
+  assert.doesNotMatch(privateStatus(), /50s/);
+  const load = loadProjection();
+  pending[0].resolve({sources: [{source_id: PUBLIC_SOURCE_ID, status: 'ok'}]});
+  pending[1].resolve(rejected);
+  await load;
+  assert.match(privateStatus(), /Unavailable/);
+  assert.match(privateStatus(), /Source age 20s/);
+  assert.match(privateStatus(), /Cache\/read age 30s/);
+  assert.doesNotMatch(privateStatus(), /99s/);
+  assert.doesNotMatch(privateStatus(), /40s/);
+  assert.doesNotMatch(privateStatus(), /50s/);
+  const fresh = loadProjection();
+  pending[2].resolve({sources: [{source_id: PUBLIC_SOURCE_ID, status: 'ok'}]});
+  pending[3].resolve(rejected);
+  await fresh;
+  assert.match(privateStatus(), /Source age 20s/);
+})().catch(e => {console.error(e); process.exitCode = 1;});
+"""
+    )

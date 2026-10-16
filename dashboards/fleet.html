@@ -360,7 +360,11 @@ function setError(message) {
 }
 
 function summaryDetail(bucket) {
-  const parts = Object.entries(bucket || {}).map(([name, count]) => `${name} ${count}`);
+  if (!bucket || typeof bucket !== 'object' || Array.isArray(bucket)) return 'Count unknown';
+  const parts = Object.entries(bucket).map(([name, count]) => {
+    const shown = typeof count === 'number' && Number.isFinite(count) && count >= 0 ? String(count) : 'Unknown';
+    return `${name} ${shown}`;
+  });
   return parts.length ? parts.join(' · ') : 'No durable rows yet';
 }
 
@@ -380,7 +384,8 @@ function renderHealth(health) {
 
 function renderOverview(data) {
   const counts = data.counts || {};
-  const set = (id, value) => { document.getElementById(id).textContent = short(value, 'Unknown'); };
+  const totalText = value => typeof value === 'number' && Number.isFinite(value) && value >= 0 ? String(value) : 'Unknown';
+  const set = (id, value) => { document.getElementById(id).textContent = totalText(value); };
   set('requests-total', counts.requests?.total); set('messages-total', counts.messages?.total);
   set('reviews-total', counts.reviews?.total); set('acp-total', counts.acp_conversations?.total);
   set('dead-total', counts.dead_letters?.total);
@@ -390,7 +395,7 @@ function renderOverview(data) {
   document.getElementById('acp-detail').textContent = counts.acp_conversations?.total == null ? 'Conversation count unknown' : counts.acp_conversations.total > 0 ? 'Event timelines available' : 'No durable ACP rows returned; coverage unknown';
   document.getElementById('dead-detail').textContent = counts.dead_letters?.total == null ? 'Dead-letter count unknown' : counts.dead_letters.total > 0 ? 'Follow-up evidence available' : 'No dead-letter rows returned; coverage unknown';
   const legacy = counts.legacy_requests || {};
-  document.getElementById('legacy-requests-note').textContent = `${short(legacy.total, 'Unknown')} legacy request rows remain readable for compatibility and are excluded from current authority health.`;
+  document.getElementById('legacy-requests-note').textContent = `${totalText(legacy.total)} legacy request rows remain readable for compatibility and are excluded from current authority health.`;
 }
 
 function renderContextHealth(status) {
