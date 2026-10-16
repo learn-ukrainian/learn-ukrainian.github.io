@@ -343,6 +343,7 @@ def test_delegate_persistent_cache_invalidates_on_mtime_change(tmp_path, monkeyp
     _write_task(task_file, _task_payload("task-1", status="done", pid=None))
     future_mtime = task_file.stat().st_mtime + 5.0
     import os
+
     os.utime(str(task_file), (future_mtime, future_mtime))
 
     # Simulate restart

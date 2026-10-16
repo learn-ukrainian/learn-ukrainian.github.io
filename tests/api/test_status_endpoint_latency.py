@@ -62,7 +62,9 @@ def test_delegate_active_burst_shares_one_scan(tmp_path: Path, monkeypatch: pyte
         return {"total": 0, "tasks": []}
 
     monkeypatch.setattr(delegate_router, "active_delegate_tasks", slow)
-    elapsed, responses = asyncio.run(_burst(_mount(tmp_path, delegate_router.router, "/api/delegate"), "/api/delegate/active"))
+    elapsed, responses = asyncio.run(
+        _burst(_mount(tmp_path, delegate_router.router, "/api/delegate"), "/api/delegate/active")
+    )
     _assert_burst(elapsed, responses, calls)
 
 
@@ -182,9 +184,7 @@ def test_routing_budget_burst_shares_one_compute(tmp_path: Path, monkeypatch: py
     _assert_burst(elapsed, responses, calls)
 
 
-def test_warm_routing_budget_does_not_wait_on_the_worker_pool(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_warm_routing_budget_does_not_wait_on_the_worker_pool(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     calls = {"n": 0}
     hold = threading.Event()
 
@@ -224,9 +224,7 @@ def test_warm_routing_budget_does_not_wait_on_the_worker_pool(
         hold.set()
 
 
-def test_stale_routing_budget_returns_while_refresh_runs(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_stale_routing_budget_returns_while_refresh_runs(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     clock = {"t": 1_000.0}
     calls = {"n": 0}
     hold = threading.Event()
@@ -330,9 +328,7 @@ def _routing_snapshot(data_age_s: float) -> dict:
     }
 
 
-def test_cumulative_source_age_withdraws_routing_authorization(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_cumulative_source_age_withdraws_routing_authorization(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """Source age plus cache residence is the age compared to the threshold."""
     clock = {"t": 1_000.0}
     calls = {"n": 0}
@@ -472,3 +468,119 @@ def test_delegate_active_sequential_requests_reobserve_source(tmp_path, monkeypa
             assert second.json()["sample"] == 2
 
     asyncio.run(scenario())
+
+
+_REALISTIC_SERVER = r"""
+import json
+import os
+from pathlib import Path
+import socket
+import sys
+from fastapi import FastAPI
+import uvicorn
+from scripts.api import delegate_router
+from scripts.api.monitor_context import fixture_context
+from scripts.orchestration.dead_worker_state import capture_worker_identity
+root = Path(sys.argv[1])
+for i in range(8):
+    (root / 'batch_state/tasks' / f'active-{i}.json').write_text(json.dumps({
+        'task_id': f'active-{i}', 'status': 'running', 'agent': 'codex',
+        'pid': os.getpid(), 'worker_identity': capture_worker_identity(os.getpid()),
+    }))
+app = FastAPI()
+app.state.ctx = fixture_context(root)
+app.include_router(delegate_router.router, prefix='/api/delegate')
+sock = socket.socket(fileno=int(sys.argv[2]))
+uvicorn.Server(uvicorn.Config(app, log_level='critical', access_log=False)).run(sockets=[sock])
+"""
+
+
+@pytest.fixture(scope="module")
+def realistic_active_store(tmp_path_factory):
+    import json
+
+    root = tmp_path_factory.mktemp("active-realistic")
+    tasks = root / "batch_state/tasks"
+    tasks.mkdir(parents=True)
+    # A full 212 MB denominator, including nested dispatch metadata and output.
+    record = {
+        "status": "done",
+        "agent": "codex",
+        "task_id": "terminal",
+        "dispatch": [{"key": i, "value": "record metadata"} for i in range(50)],
+        "output": "task output " * 1200,
+    }
+    record["padding"] = ""
+    unpadded = json.dumps(record, ensure_ascii=False)
+    record["padding"] = "x" * (16995 - len(unpadded.encode()))
+    raw = json.dumps(record, ensure_ascii=False)
+    assert len(raw.encode()) == 16995
+    for i in range(12475):
+        (tasks / f"terminal-{i:05d}.json").write_text(raw)
+    assert sum(p.stat().st_size for p in tasks.iterdir()) == 212012625
+    return root
+
+
+@pytest.mark.parametrize("consumer", ["capacity", "fleet", "goal"])
+def test_realistic_active_cold_and_warm_actual_two_second_consumers(realistic_active_store, monkeypatch, consumer):
+    import json
+    import socket
+    import subprocess
+    import sys
+    import urllib.error
+    import urllib.request
+
+    from scripts.fleet import capacity_pick
+    from scripts.fleet_comms import cli as fleet_cli
+    from scripts.goal_driver import stop_hook
+
+    root = realistic_active_store
+    with socket.socket() as sock:
+        sock.bind(("127.0.0.1", 0))
+        sock.listen()
+        base = f"http://127.0.0.1:{sock.getsockname()[1]}"
+        process = subprocess.Popen(
+            [sys.executable, "-c", _REALISTIC_SERVER, str(root), str(sock.fileno())],
+            pass_fds=(sock.fileno(),),
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.PIPE,
+        )
+        try:
+            deadline = time.monotonic() + 15
+            while True:
+                try:
+                    # Readiness must never warm the active inventory.
+                    with urllib.request.urlopen(base + "/openapi.json", timeout=0.1) as response:
+                        assert response.status == 200
+                    break
+                except (OSError, urllib.error.URLError):
+                    assert time.monotonic() < deadline and process.poll() is None
+                    time.sleep(0.05)
+            monkeypatch.setattr(capacity_pick, "_monitor_base", lambda: base)
+            monkeypatch.setattr(stop_hook, "MONITOR_API", base)
+            for temperature in ("cold", "warm", "warm"):
+                started = time.perf_counter()
+                if consumer == "capacity":
+                    result = capacity_pick.fetch_active_in_flight()
+                    assert result == {"codex": 8}
+                elif consumer == "fleet":
+                    result = fleet_cli._fetch_json_fail_open(base + "/api/delegate/active")
+                    assert result["available"] is True
+                    assert result["payload"]["total"] == len(result["payload"]["tasks"]) == 8
+                    assert result["payload"]["source"]["records_scanned"] == 12483
+                else:
+                    result = stop_hook._query_active_dispatches()
+                    assert result is not None
+                    assert result["total"] == len(result["tasks"]) == 8
+                    assert result["source"]["records_scanned"] == 12483
+                elapsed = time.perf_counter() - started
+                print(json.dumps({"consumer": consumer, "temperature": temperature, "elapsed_s": elapsed}))
+                assert elapsed < 2.0
+        finally:
+            process.terminate()
+            try:
+                process.wait(timeout=5)
+            except subprocess.TimeoutExpired:
+                process.kill()
+                process.wait(timeout=5)
+            process.stderr.close()

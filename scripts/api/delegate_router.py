@@ -7,6 +7,7 @@ import contextlib
 import json
 import os
 import sqlite3
+import stat
 import threading
 import time
 from datetime import UTC, datetime
@@ -37,6 +38,8 @@ router = APIRouter(tags=["delegate"])
 RESULT_BYTES_LIMIT = 64 * 1024
 TASK_READ_RETRIES = 2
 TASK_READ_RETRY_SECONDS = 0.01
+ACTIVE_FACT_CACHE_LIMIT = 16_384
+ACTIVE_FACT_STATUS_LIMIT = 64
 ACTIVE_TASK_STATUSES = {"running", "spawning"}
 # History listing cache only. Active observations share in-flight work but
 # always bypass completed snapshots.
@@ -45,8 +48,6 @@ _TASK_SCAN_LOCK = threading.Lock()
 # Authoritative repository-attribution fields on task state. Paths, branch names,
 # cwd, worktree, and task_id are never used for repository matching.
 DELEGATE_REPOSITORY_ATTR_FIELDS = ("repository_id", "repository")
-
-
 
 
 def _tasks_dir(ctx: MonitorContext | None = None) -> Path:
@@ -98,15 +99,27 @@ def _task_state_path(task_id: str, ctx: MonitorContext | None = None, *, archive
     return fullpath
 
 
-def _read_task_state(path: str, ctx: MonitorContext | None = None) -> dict[str, Any] | None:
+def _read_task_state(path: str, ctx: MonitorContext | None = None, root: str | None = None) -> dict[str, Any] | None:
     """Read task JSON only after a local containment check (CodeQL sink guard)."""
-    root = _tasks_root(ctx)
-    fullpath = os.path.realpath(path)
+    # Active scans supply the already-resolved parent. Resolve only a link or
+    # a non-sibling, then refuse a leaf-link swap at open time.
+    opener = None
+    if root is None:
+        root = _tasks_root(ctx)
+        fullpath = os.path.realpath(path)
+    else:
+        fullpath = os.path.abspath(path)
+        if os.path.dirname(fullpath) != root or os.path.islink(fullpath):
+            fullpath = os.path.realpath(path)
+
+        def opener(name, flags):
+            return os.open(name, flags | os.O_NOFOLLOW)
+
     if not fullpath.startswith(root + os.sep):
         return None
     for attempt in range(TASK_READ_RETRIES):
         try:
-            with open(fullpath, encoding="utf-8") as handle:
+            with open(fullpath, encoding="utf-8", opener=opener) as handle:
                 data = json.loads(handle.read())
         except (OSError, json.JSONDecodeError):
             if attempt + 1 == TASK_READ_RETRIES:
@@ -193,9 +206,7 @@ def _authoritative_task_repository(task: dict[str, Any]) -> str | None:
     return claimed[0]
 
 
-_TASK_STATE_CACHE: dict[
-    str, tuple[float, dict[str, Any], str, bool, str | None, int | None]
-] = {}
+_TASK_STATE_CACHE: dict[str, tuple[float, dict[str, Any], str, bool, str | None, int | None]] = {}
 _LAST_TASKS_DIR_STR: str = ""
 
 
@@ -262,9 +273,7 @@ def _load_task_cache_from_db(
         )
         rows = cursor.fetchall()
         conn.close()
-        cache: dict[
-            str, tuple[float, dict[str, Any], str, bool, str | None, int | None]
-        ] = {}
+        cache: dict[str, tuple[float, dict[str, Any], str, bool, str | None, int | None]] = {}
         for row in rows:
             (
                 path_str,
@@ -541,11 +550,7 @@ def _delegate_task_rows_locked(
                 pid_int,
             )
             _TASK_STATE_CACHE[path_str] = cached_tuple
-            subst_str = (
-                json.dumps(subst)
-                if isinstance(subst, dict)
-                else (str(subst) if subst is not None else None)
-            )
+            subst_str = json.dumps(subst) if isinstance(subst, dict) else (str(subst) if subst is not None else None)
             dirty_records.append(
                 (
                     path_str,
@@ -572,9 +577,7 @@ def _delegate_task_rows_locked(
             continue
 
         # Scope applies on raw task state only — never re-emit repository identity.
-        if repo_predicate is not None and (
-            claimed_repo is None or claimed_repo != repo_predicate
-        ):
+        if repo_predicate is not None and (claimed_repo is None or claimed_repo != repo_predicate):
             continue
 
         task_id = summary["task_id"]
@@ -600,17 +603,14 @@ def _delegate_task_rows_locked(
     # Records archived (#8625) or removed since the last scan leave the cache too.
     # Only directories this query scanned are judged, so a hot-only query never
     # evicts the archive entries an all-history query cached.
-    vanished = [
-        path for path in _TASK_STATE_CACHE if path not in seen_paths and os.path.dirname(path) in scanned_dirs
-    ]
+    vanished = [path for path in _TASK_STATE_CACHE if path not in seen_paths and os.path.dirname(path) in scanned_dirs]
     if vanished:
         for path in vanished:
             del _TASK_STATE_CACHE[path]
         _delete_task_cache_entries(tasks_dir_str, vanished, resolved)
 
     rows.sort(
-        key=lambda item: _parse_iso_datetime(item.get("started_at"))
-        or datetime.min.replace(tzinfo=UTC),
+        key=lambda item: _parse_iso_datetime(item.get("started_at")) or datetime.min.replace(tzinfo=UTC),
         reverse=True,
     )
     return rows
@@ -619,8 +619,14 @@ def _delegate_task_rows_locked(
 def list_delegate_tasks(
     *,
     status: Literal[
-        "running", "done", "failed", "timeout", "spawning",
-        "needs_finalize", "no_deliverable", "all",
+        "running",
+        "done",
+        "failed",
+        "timeout",
+        "spawning",
+        "needs_finalize",
+        "no_deliverable",
+        "all",
     ] = "all",
     limit: int = 50,
     repository: str | None = None,
@@ -677,12 +683,16 @@ def get_delegate_task_detail(
                     result_text = result_text[:-1]
                 truncated = True
 
-    return task, {
-        "task": task,
-        "result": result_text,
-        "result_truncated": truncated,
-        "alive": alive,
-    }, False
+    return (
+        task,
+        {
+            "task": task,
+            "result": result_text,
+            "result_truncated": truncated,
+            "alive": alive,
+        },
+        False,
+    )
 
 
 def active_delegate_count(ctx: MonitorContext | None = None) -> int:
@@ -696,10 +706,36 @@ def _observation_token(stat: os.stat_result) -> tuple[int, ...]:
 
 def _active_worker_liveness(task: dict[str, Any]) -> tuple[bool | None, str | None]:
     """Qualify healer evidence for the API's task-attempt observation."""
-    alive = worker_liveness(task, pid_alive=_pid_alive)
+    try:
+        alive = worker_liveness(task, pid_alive=_pid_alive)
+    except (OverflowError, ValueError):
+        alive = None
     if alive is True and task.get("worker_identity") is None:
         return None, "legacy_worker_identity_unattested"
     return alive, "worker_identity_or_visibility_unknown" if alive is None else None
+
+
+def _is_closeout_artifact(record: dict[str, Any]) -> bool:
+    """Recognize the state written by review.closeout_cli, never by filename."""
+    fields = {"target", "target_args", "baseline", "behavior_proof", "cycle_outstanding_counts", "findings"}
+    return (
+        fields <= record.keys() <= fields | {"resolved_reviewer"}
+        and all(record[key] is None or isinstance(record[key], dict) for key in ("target", "target_args", "baseline"))
+        and isinstance(record["behavior_proof"], dict)
+        and isinstance(record["cycle_outstanding_counts"], list)
+        and isinstance(record["findings"], list)
+        and ("resolved_reviewer" not in record or isinstance(record["resolved_reviewer"], dict))
+    )
+
+
+def _active_candidate_names(tasks_dir: Path) -> list[str]:
+    """Use the same hot-record predicate for initial and final enumeration."""
+    with os.scandir(tasks_dir) as entries:
+        return sorted(
+            entry.name
+            for entry in entries
+            if entry.name.endswith(".json") and not entry.name.endswith(".snapshots.json")
+        )
 
 
 def active_delegate_tasks(
@@ -707,27 +743,31 @@ def active_delegate_tasks(
     repository: str | None = None,
     ctx: MonitorContext | None = None,
 ) -> dict[str, Any]:
-    """Observe hot running/spawning attempts without reusing task/route caches.
+    """Observe hot running/spawning attempts with fresh scope and liveness checks.
 
     Preserve the legacy active scope: proven-dead running attempts are excluded
     from tasks/total, but disclosed in observations. Unknown liveness stays None.
     A failed or changing authority refuses the inventory rather than returning zero.
     """
-    tasks_dir = _tasks_dir(resolve_context(ctx))
+    resolved = resolve_context(ctx)
+    tasks_dir = _tasks_dir(resolved)
+    root = os.path.realpath(str(tasks_dir))
+    # Immutable terminal facts only: never retain payloads or derived liveness.
+    holder = resolved.runtime.get_or_create_derived("delegate_active_facts", dict)
+    facts = holder.get("facts", {})
+    next_facts: dict[str, tuple[tuple[int, ...], str | None]] = {}
+    artifacts = 0
     started = datetime.now(UTC)
     predicate = _normalize_repository_predicate(repository)
     rows: list[dict[str, Any]] = []
     observations: list[dict[str, Any]] = []
-    signatures: dict[Path, os.stat_result] = {}
+    signatures: dict[str, os.stat_result] = {}
+    link_signatures: dict[str, os.stat_result] = {}
     process_checks: list[tuple[dict[str, Any], tuple[bool | None, str | None]]] = []
     try:
         directory_before = tasks_dir.stat()
-        with os.scandir(tasks_dir) as entries:
-            paths = sorted(
-                tasks_dir / entry.name
-                for entry in entries
-                if entry.name.endswith(".json") and not entry.name.endswith(".snapshots.json")
-            )
+        names = _active_candidate_names(tasks_dir)
+        paths = [os.path.join(str(tasks_dir), name) for name in names]
     except OSError:
         raise HTTPException(
             503,
@@ -739,7 +779,12 @@ def active_delegate_tasks(
 
     for path in paths:
         try:
-            signatures[path] = path.stat()
+            leaf = os.lstat(path)
+            if stat.S_ISLNK(leaf.st_mode):
+                link_signatures[path] = leaf
+                signatures[path] = os.stat(path)
+            else:
+                signatures[path] = leaf
         except OSError:
             raise HTTPException(
                 503,
@@ -748,11 +793,21 @@ def active_delegate_tasks(
                     "reason": "task_authority_changed",
                 },
             ) from None
-        try:
-            task = _read_task_state(str(path), ctx)
-        except (OSError, UnicodeError):
-            task = None
-        if task is None or not isinstance(task.get("status"), str) or not task["status"]:
+        token = _observation_token(signatures[path])
+        key = str(path)
+        cached = facts.get(key) if path not in link_signatures else None
+        if cached is not None and cached[0] == token:
+            task = {"status": cached[1]} if cached[1] is not None else None
+            artifact = cached[1] is None
+        else:
+            try:
+                task = _read_task_state(key, ctx, root)
+            except (OSError, UnicodeError):
+                task = None
+            artifact = task is not None and _is_closeout_artifact(task)
+        if artifact:
+            artifacts += 1
+        elif task is None or not isinstance(task.get("status"), str) or not task["status"]:
             raise HTTPException(
                 503,
                 detail={
@@ -760,8 +815,12 @@ def active_delegate_tasks(
                     "reason": "task_record_unreadable_or_invalid",
                 },
             )
-        status = task["status"]
+        status = None if artifact else task["status"]
         if status not in ACTIVE_TASK_STATUSES:
+            if len(next_facts) < ACTIVE_FACT_CACHE_LIMIT and (
+                status is None or len(status) <= ACTIVE_FACT_STATUS_LIMIT
+            ):
+                next_facts[key] = (token, status)
             continue
         if predicate is not None and _authoritative_task_repository(task) != predicate:
             continue
@@ -770,7 +829,7 @@ def active_delegate_tasks(
         process_checks.append((task, (alive, liveness_reason)))
         observed = datetime.now(UTC)
         summary = {
-            "task_id": str(task.get("task_id") or path.stem),
+            "task_id": str(task.get("task_id") or Path(path).stem),
             "agent": task.get("agent"),
             "model": task.get("model"),
             "effort": task.get("effort"),
@@ -805,17 +864,51 @@ def active_delegate_tasks(
         if not excluded:
             rows.append(summary)
 
+    changed = any(_active_worker_liveness(task) != sample for task, sample in process_checks)
     try:
         # Equality includes inode, nanosecond timestamps and size, so replacement
         # and in-place writes are detected, even if a writer restores mtime.
-        changed = _observation_token(directory_before) != _observation_token(tasks_dir.stat()) or any(
-            _observation_token(before) != _observation_token(path.stat()) for path, before in signatures.items()
+        directory_after = tasks_dir.stat()
+        changed = changed or (directory_before.st_dev, directory_before.st_ino) != (
+            directory_after.st_dev,
+            directory_after.st_ino,
         )
+        if _observation_token(directory_before) != _observation_token(directory_after):
+            changed = changed or names != _active_candidate_names(tasks_dir)
+        changed = changed or any(
+            _observation_token(before) != _observation_token(os.stat(path, follow_symlinks=path in link_signatures))
+            for path, before in signatures.items()
+        )
+        changed = changed or any(
+            _observation_token(before) != _observation_token(os.lstat(path)) for path, before in link_signatures.items()
+        )
+        # Directory metadata may also change while checking records. Recheck
+        # the same membership and tokens once, allowing only non-task changes.
+        if _observation_token(directory_after) != _observation_token(tasks_dir.stat()):
+            final_directory = tasks_dir.stat()
+            changed = changed or (directory_before.st_dev, directory_before.st_ino) != (
+                final_directory.st_dev,
+                final_directory.st_ino,
+            )
+            changed = changed or any(
+                _observation_token(before) != _observation_token(os.stat(path, follow_symlinks=path in link_signatures))
+                for path, before in signatures.items()
+            )
+            changed = changed or any(
+                _observation_token(before) != _observation_token(os.lstat(path))
+                for path, before in link_signatures.items()
+            )
+            changed = changed or names != _active_candidate_names(tasks_dir)
+            last_directory = tasks_dir.stat()
+            changed = changed or (directory_before.st_dev, directory_before.st_ino) != (
+                last_directory.st_dev,
+                last_directory.st_ino,
+            )
     except OSError:
         changed = True
-    changed = changed or any(_active_worker_liveness(task) != sample for task, sample in process_checks)
     if changed:
         raise HTTPException(503, detail={"status": "unknown", "reason": "task_authority_changed"})
+    holder["facts"] = next_facts
     finished = datetime.now(UTC)
     for observation in observations:
         observation["record_age_s"] = (
@@ -839,12 +932,12 @@ def active_delegate_tasks(
             "scan_started_at": started.isoformat(),
             "observed_at": finished.isoformat(),
             "age_s": 0.0,
-            "records_scanned": len(paths),
+            "records_scanned": len(paths) - artifacts,
+            "closeout_artifacts": artifacts,
             "records_in_scope": len(observations),
             "excluded_dead_running": sum(item["excluded_dead_running"] for item in observations),
         },
     }
-
 
 
 def seat_delegate_tasks(
@@ -894,8 +987,14 @@ def _delegate_list_cache_key(
 @router.get("/tasks")
 async def delegate_tasks(
     status: Literal[
-        "running", "done", "failed", "timeout", "spawning",
-        "needs_finalize", "no_deliverable", "all",
+        "running",
+        "done",
+        "failed",
+        "timeout",
+        "spawning",
+        "needs_finalize",
+        "no_deliverable",
+        "all",
     ] = Query("all"),
     limit: int = Query(50, ge=1, le=500),
     ctx: MonitorContext = Depends(get_ctx),

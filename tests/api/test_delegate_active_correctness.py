@@ -118,9 +118,7 @@ def test_legacy_unrelated_live_pid_is_unknown_and_dead_pid_is_proven(inventory, 
         assert response.status_code == 200
         body = response.json()
         assert body["total"] == 1
-        assert [(row["task_id"], row["status"], row["alive"]) for row in body["tasks"]] == [
-            ("legacy", status, None)
-        ]
+        assert [(row["task_id"], row["status"], row["alive"]) for row in body["tasks"]] == [("legacy", status, None)]
         observation = body["observations"][0]
         assert observation["task_id"] == "legacy"
         assert observation["alive"] is None
@@ -294,3 +292,259 @@ def test_internal_filtered_source_does_not_expose_foreign_attempts(inventory):
     assert [row["task_id"] for row in body["tasks"]] == ["public"]
     assert [row["task_id"] for row in body["observations"]] == ["public"]
     assert "private/project" not in json.dumps(body)
+
+
+def closeout_state():
+    return {
+        "target": None,
+        "target_args": None,
+        "baseline": None,
+        "behavior_proof": {},
+        "cycle_outstanding_counts": [],
+        "findings": [],
+        "resolved_reviewer": {},
+    }
+
+
+def test_validated_closeout_artifacts_are_counted_by_content(inventory):
+    client, tasks = inventory
+    for name in ("ordinary", "review.closeout", "review-resolve", "another"):
+        (tasks / f"{name}.json").write_text(json.dumps(closeout_state()))
+    write(tasks, "real.closeout")
+    body = client.get("/api/delegate/active").json()
+    assert body["total"] == 1
+    assert body["tasks"][0]["task_id"] == "real.closeout"
+    assert body["source"]["records_scanned"] == 1
+    assert body["source"]["closeout_artifacts"] == 4
+    assert client.get("/api/delegate/active").json()["source"]["closeout_artifacts"] == 4
+
+
+@pytest.mark.parametrize(
+    "record",
+    [
+        {"task_id": "impl-9447", "agent": "codex", "model": "unknown", "repository": "public/project"},
+        {**closeout_state(), "status": "running"},
+        {**closeout_state(), "task_id": "real-task"},
+        {**closeout_state(), "findings": None},
+        {**closeout_state(), "resolved_reviewer": []},
+        {"target": None},
+    ],
+)
+def test_unclassified_or_malformed_sidecar_cannot_hide_a_record(inventory, record):
+    client, tasks = inventory
+    # A status-bearing record remains a task even when it has closeout keys.
+    (tasks / "review.closeout.json").write_text(json.dumps(record))
+    response = client.get("/api/delegate/active")
+    if record.get("status") == "running":
+        assert response.status_code == 200
+        assert response.json()["total"] == 1
+        assert response.json()["source"]["closeout_artifacts"] == 0
+    else:
+        assert response.status_code == 503
+        assert response.json()["detail"]["reason"] == "task_record_unreadable_or_invalid"
+
+
+@pytest.mark.parametrize("identity", [False, True])
+def test_oversized_pid_has_explicit_unknown_liveness(inventory, identity):
+    client, tasks = inventory
+    changes = {"pid": 2**40, "worker_identity": None}
+    if identity:
+        changes["worker_identity"] = {**capture_worker_identity(os.getpid()), "pid": 2**40}
+    write(tasks, **changes)
+    body = client.get("/api/delegate/active").json()
+    assert body["total"] == 1
+    assert body["tasks"][0]["alive"] is None
+    assert body["observations"][0]["liveness_reason"] == "worker_identity_or_visibility_unknown"
+
+
+@pytest.mark.parametrize("error", [OverflowError, ValueError])
+def test_final_liveness_sample_contains_expected_probe_errors(inventory, monkeypatch, error):
+    client, tasks = inventory
+    write(tasks)
+    calls = 0
+
+    def probe(*args, **kwargs):
+        nonlocal calls
+        calls += 1
+        if calls == 1:
+            return True
+        raise error("invalid pid")
+
+    monkeypatch.setattr(delegate_router, "worker_liveness", probe)
+    response = client.get("/api/delegate/active")
+    assert response.status_code == 503
+    assert response.json()["detail"]["reason"] == "task_authority_changed"
+    assert calls == 2
+
+
+@pytest.mark.parametrize("phase", ["read", "final-sample"])
+@pytest.mark.parametrize("change", ["sqlite-sidecars", "added-task", "removed-task", "replacement"])
+def test_directory_changes_recheck_record_membership_and_tokens(inventory, monkeypatch, phase, change):
+    client, tasks = inventory
+    path = write(tasks)
+    original = delegate_router._read_task_state if phase == "read" else delegate_router._active_worker_liveness
+    calls = 0
+
+    def hooked(*args):
+        nonlocal calls
+        result = original(*args)
+        calls += 1
+        if calls == (1 if phase == "read" else 2):
+            if change == "sqlite-sidecars":
+                for name in (".task_cache.sqlite3", ".task_cache.sqlite3-wal", ".task_cache.sqlite3-shm"):
+                    (tasks / name).write_bytes(b"cache")
+            elif change == "added-task":
+                write(tasks, "new")
+            elif change == "removed-task":
+                path.unlink()
+            else:
+                before = path.stat()
+                replacement = tasks / "replacement.tmp"
+                replacement.write_bytes(path.read_bytes())
+                os.utime(replacement, ns=(before.st_atime_ns, before.st_mtime_ns))
+                replacement.replace(path)
+        return result
+
+    target = "_read_task_state" if phase == "read" else "_active_worker_liveness"
+    monkeypatch.setattr(delegate_router, target, hooked)
+    response = client.get("/api/delegate/active")
+    assert response.status_code == (200 if change == "sqlite-sidecars" else 503)
+    if response.status_code == 200:
+        assert response.json()["total"] == 1
+    else:
+        assert response.json()["detail"]["reason"] == "task_authority_changed"
+
+
+@pytest.mark.parametrize("change", ["restored-mtime", "replacement", "disappearance"])
+def test_terminal_fact_cache_revalidates_full_generation(inventory, change):
+    client, tasks = inventory
+    path = write(tasks, status="done")
+    assert client.get("/api/delegate/active").json()["total"] == 0
+    before = path.stat()
+    if change == "disappearance":
+        path.unlink()
+    else:
+        if change == "replacement":
+            path.unlink()
+        write(tasks, status="running", run_nonce="fresh-attempt")
+        os.utime(path, ns=(before.st_atime_ns, before.st_mtime_ns))
+    body = client.get("/api/delegate/active").json()
+    assert body["total"] == (0 if change == "disappearance" else 1)
+    if change != "disappearance":
+        assert body["observations"][0]["run_nonce"] == "fresh-attempt"
+    else:
+        assert client.app.state.ctx.runtime._derived["delegate_active_facts"]["facts"] == {}
+
+
+def test_terminal_fact_cache_is_compact_bounded_and_context_owned(inventory, monkeypatch):
+    client, tasks = inventory
+    monkeypatch.setattr(delegate_router, "ACTIVE_FACT_CACHE_LIMIT", 2)
+    for i in range(3):
+        write(tasks, str(i), status="done", payload="unretained" * 10000)
+    original = delegate_router._read_task_state
+    reads = []
+
+    def read(*args):
+        reads.append(args[0])
+        return original(*args)
+
+    monkeypatch.setattr(delegate_router, "_read_task_state", read)
+    for expected_reads in (3, 4):
+        body = client.get("/api/delegate/active").json()
+        assert body["total"] == 0
+        assert body["source"]["records_scanned"] == 3
+        assert len(reads) == expected_reads
+    cache = client.app.state.ctx.runtime._derived["delegate_active_facts"]["facts"]
+    assert len(cache) == 2
+    assert all(len(token) == 5 and status == "done" for token, status in cache.values())
+    # A second context over identical paths still starts without parsed facts.
+    other = fixture_context(tasks.parent.parent)
+    assert delegate_router.active_delegate_tasks(ctx=other)["source"]["records_scanned"] == 3
+    assert len(reads) == 7
+
+
+@pytest.mark.parametrize("outside", [False, True])
+def test_active_reader_resolves_contained_links_and_refuses_escapes(inventory, outside):
+    client, tasks = inventory
+    original = write(tasks, "target")
+    if outside:
+        destination = tasks.parent / "outside.json"
+        original.rename(destination)
+    else:
+        destination = original
+    (tasks / "linked.json").symlink_to(destination)
+    response = client.get("/api/delegate/active")
+    assert response.status_code == (503 if outside else 200)
+    if not outside:
+        assert response.json()["total"] == 2
+
+
+@pytest.mark.parametrize("change", ["cache-sidecar", "task", "directory"])
+def test_directory_change_during_final_token_walk_is_rechecked(inventory, monkeypatch, change):
+    client, tasks = inventory
+    path = write(tasks)
+    original = delegate_router.os.stat
+    fired = False
+
+    def probe(name, *args, **kwargs):
+        nonlocal fired
+        result = original(name, *args, **kwargs)
+        if str(name) == str(path) and kwargs.get("follow_symlinks") is False and not fired:
+            fired = True
+            if change == "cache-sidecar":
+                (tasks / ".task_cache.sqlite3-wal").write_bytes(b"cache")
+            elif change == "task":
+                write(tasks, "new")
+            else:
+                old = tasks.with_name("old-tasks")
+                tasks.rename(old)
+                tasks.mkdir()
+                # Preserve record tokens while changing directory identity.
+                os.link(old / path.name, path)
+        return result
+
+    monkeypatch.setattr(delegate_router.os, "stat", probe)
+    response = client.get("/api/delegate/active")
+    assert fired
+    assert response.status_code == (200 if change == "cache-sidecar" else 503)
+
+
+def test_cache_does_not_retain_unbounded_status_or_payload(inventory):
+    client, tasks = inventory
+    write(tasks, status="x" * 100000, payload="unretained" * 10000)
+    assert client.get("/api/delegate/active").json()["source"]["records_scanned"] == 1
+    assert client.app.state.ctx.runtime._derived["delegate_active_facts"]["facts"] == {}
+
+
+def test_cached_terminal_replaced_by_outside_symlink_is_refused(inventory):
+    client, tasks = inventory
+    path = write(tasks, status="done")
+    outside = tasks.parent / "outside.json"
+    os.link(path, outside)
+    assert client.get("/api/delegate/active").json()["total"] == 0
+    path.unlink()
+    path.symlink_to(outside)
+    response = client.get("/api/delegate/active")
+    assert response.status_code == 503
+    assert response.json()["detail"]["reason"] == "task_record_unreadable_or_invalid"
+
+
+def test_multiple_benign_sidecars_during_final_recheck_remain_qualified(inventory, monkeypatch):
+    client, tasks = inventory
+    write(tasks)
+    original = type(tasks).stat
+    calls = 0
+
+    def probe(path, *args, **kwargs):
+        nonlocal calls
+        if path == tasks:
+            calls += 1
+            if calls in (3, 5):
+                (tasks / f".task_cache.sqlite3-{calls}").write_bytes(b"cache")
+        return original(path, *args, **kwargs)
+
+    monkeypatch.setattr(type(tasks), "stat", probe)
+    response = client.get("/api/delegate/active")
+    assert response.status_code == 200
+    assert response.json()["total"] == 1
+    assert calls >= 5
