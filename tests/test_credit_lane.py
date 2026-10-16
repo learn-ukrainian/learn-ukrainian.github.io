@@ -25,6 +25,7 @@ import delegate
 from scripts.fleet import capacity_pick, credit_lane, reset_reserve
 from scripts.fleet.reset_reserve import unavailable_reserve
 from scripts.fleet.routing_policy import projected_unused_pct
+from tests.claude_route_accounts import HOST_ACCOUNT
 
 NOW = datetime(2026, 10, 2, 17, 0, tzinfo=UTC)
 POLICY = credit_lane.load_policy()
@@ -1200,7 +1201,9 @@ def _guard_budget(codex: dict) -> dict:
 def test_budget_guard_keeps_credit_balance_codex(monkeypatch, capsys):
     monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: _guard_budget(_live(_codex(age_s=10.0))))
     monkeypatch.setattr(delegate, "_load_reset_reserve", lambda *_args, **_kwargs: unavailable_reserve())
-    chosen = delegate._resolve_agent_with_budget_guard("codex", fallbacks={"codex": "cursor"})
+    chosen = delegate._resolve_agent_with_budget_guard(
+        "codex", fallbacks={"codex": "cursor"}, claude_account=HOST_ACCOUNT
+    )
     assert chosen == "codex"
     assert "lane codex has a credit balance present; draw not verified by the router" in capsys.readouterr().err
 
@@ -1211,20 +1214,29 @@ def test_budget_guard_substitutes_codex_after_a_recent_rate_limit(monkeypatch):
     monkeypatch.setattr(
         credit_lane, "read_recent_rate_limits", lambda *_a, **_k: {"count": 1, "last_rate_limited_at": None}
     )
-    assert delegate._resolve_agent_with_budget_guard("codex", fallbacks={"codex": "cursor"}) == "cursor"
+    assert (
+        delegate._resolve_agent_with_budget_guard("codex", fallbacks={"codex": "cursor"}, claude_account=HOST_ACCOUNT)
+        == "cursor"
+    )
 
 
 def test_budget_guard_keeps_todays_guard_on_unreadable_policy(monkeypatch, tmp_path):
     monkeypatch.setattr(credit_lane, "POLICY_PATH", tmp_path / "absent.yaml")
     monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: _guard_budget(_live(_codex(age_s=10.0))))
     monkeypatch.setattr(delegate, "_load_reset_reserve", lambda *_args, **_kwargs: unavailable_reserve())
-    assert delegate._resolve_agent_with_budget_guard("codex", fallbacks={"codex": "cursor"}) == "cursor"
+    assert (
+        delegate._resolve_agent_with_budget_guard("codex", fallbacks={"codex": "cursor"}, claude_account=HOST_ACCOUNT)
+        == "cursor"
+    )
 
 
 def test_budget_guard_substitutes_codex_without_usable_credits(monkeypatch):
     monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: _guard_budget(_codex(credit_balance=0.0)))
     monkeypatch.setattr(delegate, "_load_reset_reserve", lambda *_args, **_kwargs: unavailable_reserve())
-    assert delegate._resolve_agent_with_budget_guard("codex", fallbacks={"codex": "cursor"}) == "cursor"
+    assert (
+        delegate._resolve_agent_with_budget_guard("codex", fallbacks={"codex": "cursor"}, claude_account=HOST_ACCOUNT)
+        == "cursor"
+    )
 
 
 # --- the gate on the real dispatch path --------------------------------------

@@ -1049,7 +1049,10 @@ def test_codex_adapter_ignores_max_budget_usd_tool_config(tmp_path, caplog):
         )
 
     assert "--max-budget-usd" not in plan.cmd
-    assert any("non-claude adapter codex ignoring max_budget_usd=0.5" in rec.message for rec in caplog.records)
+    assert any(
+        rec.getMessage() == "non-claude adapter ignoring max_budget_usd; use hard-timeout/silence-timeout instead"
+        for rec in caplog.records
+    )
 
 
 def test_codex_adapter_omits_max_budget_usd_by_default(tmp_path):

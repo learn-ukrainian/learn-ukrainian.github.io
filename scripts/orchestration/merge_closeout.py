@@ -28,6 +28,7 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from scripts.common import github_client
+from scripts.orchestration import lifecycle_observation
 from scripts.orchestration import reap_worktrees as rw
 from scripts.orchestration import scheduled_worktree_cleanup as swc
 
@@ -65,6 +66,7 @@ class CloseoutResult:
     branch_status: BranchStatus | None
     ok: bool
     errors: list[str] = field(default_factory=list)
+    lifecycle_observations: list[dict[str, Any]] = field(default_factory=list)
 
 
 def _run_gh(
@@ -434,12 +436,26 @@ def run_merge_closeout(
     repo: str | None = None,
     apply: bool = False,
     live_cwds: set[Path] | None = None,
+    no_lifecycle_observation: str | None = None,
 ) -> CloseoutResult:
     pr = fetch_pr_info(repo_root, pr_number, repo=repo)
     if pr.state != "MERGED":
         raise MergeCloseoutError(f"PR #{pr_number} is not MERGED (state={pr.state or 'UNKNOWN'})")
 
     matches = find_matching_worktrees(repo_root, pr)
+    observations = []
+    if apply:
+        try:
+            for info in matches:
+                observations.extend(lifecycle_observation.before_reap(
+                    repo_root, info.path, no_lifecycle_observation=no_lifecycle_observation,
+                ))
+        except (OSError, ValueError, KeyError, TypeError, RuntimeError) as exc:
+            return CloseoutResult(
+                pr=pr, apply=apply, matched_worktrees=[str(info.path) for info in matches],
+                reap_results=[], branch_status=None, ok=False,
+                errors=[f"lifecycle observation refused: {exc}"], lifecycle_observations=observations,
+            )
     reap_results = reap_matched_worktrees(repo_root, matches, apply=apply, live_cwds=live_cwds)
 
     errored_paths = {result.path for result in reap_results if result.action == "error"}
@@ -483,6 +499,7 @@ def run_merge_closeout(
         branch_status=branch_status,
         ok=not errors and not residual,
         errors=errors,
+        lifecycle_observations=observations,
     )
 
 
@@ -495,6 +512,7 @@ def _result_to_dict(result: CloseoutResult) -> dict[str, Any]:
         "branch_status": asdict(result.branch_status) if result.branch_status else None,
         "ok": result.ok,
         "errors": result.errors,
+        "lifecycle_observations": result.lifecycle_observations,
     }
 
 
@@ -510,6 +528,8 @@ def _format_text(result: CloseoutResult) -> str:
         lines.append("matched worktrees: none")
     for entry in result.reap_results:
         lines.append(f"  reap {entry['action']}: {entry['path']} ({entry['reason']})")
+    for entry in result.lifecycle_observations:
+        lines.append(f"  lifecycle observation: {json.dumps(entry, sort_keys=True)}")
     if result.branch_status is not None:
         status = result.branch_status
         lines.append(
@@ -534,7 +554,14 @@ def build_parser() -> argparse.ArgumentParser:
             "reaper, and prove its remote and local branch are gone. "
             "Dry-run by default."
         ),
-        epilog="Related: docs/runbooks/worktree-cleanup.md § Immediate cleanup after merge.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""Examples:
+  .venv/bin/python -m scripts.orchestration.merge_closeout 123 --json
+  .venv/bin/python -m scripts.orchestration.merge_closeout 123 --apply
+Outputs: Cleanup report; apply records lifecycle observations, reaps trees and deletes branches.
+Exit codes: 0 = clean report; 1 = residual; 2 = PR state unavailable.
+Related: docs/runbooks/worktree-cleanup.md § Immediate cleanup after merge.
+""",
     )
     parser.add_argument("pr_number", type=int, help="Pull request number.")
     parser.add_argument("--repo", help="owner/name; defaults to the repo in the current directory.")
@@ -550,6 +577,10 @@ def build_parser() -> argparse.ArgumentParser:
         help="Reap matched worktrees and delete residual branches. Default is dry-run.",
     )
     parser.add_argument("--json", action="store_true", help="Emit machine-readable JSON.")
+    parser.add_argument(
+        "--no-lifecycle-observation", metavar="REASON",
+        help="Explicitly bypass lifecycle capture with a reason logged in the report (default: capture required).",
+    )
     return parser
 
 
@@ -563,7 +594,10 @@ def main(argv: list[str] | None = None) -> int:
     )
 
     try:
-        result = run_merge_closeout(repo_root, args.pr_number, repo=args.repo, apply=args.apply)
+        result = run_merge_closeout(
+            repo_root, args.pr_number, repo=args.repo, apply=args.apply,
+            **({"no_lifecycle_observation": args.no_lifecycle_observation} if args.no_lifecycle_observation is not None else {}),
+        )
     except MergeCloseoutError as exc:
         if args.json:
             print(json.dumps({"ok": False, "error": str(exc)}, indent=2))

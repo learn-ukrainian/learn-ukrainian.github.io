@@ -1002,6 +1002,59 @@ new dispatch.
 
 ## Immediate cleanup after merge
 
+On apply, `merge_closeout` and `post_task_reap` first capture local Git facts
+through the lifecycle API for each task carrying a lifecycle ledger. Capture
+runs while the dispatch worktree still exists, before invoking the common
+reaper. Existing valid local observations are reused. Tasks without a ledger
+keep their existing cleanup behavior. A capture or ledger-write failure
+retains the worktree and blocks cleanup. The exceptional
+`--no-lifecycle-observation "reason"` option logs its explicit reason in the
+cleanup report; it does not waive any common-reaper guard.
+
+For a merged task already removed without that observation, use the supported
+append-only recovery command. Rehearse on private copies of the ledger, task
+record, successful push record and complete preservation tree first. Keep the
+tree's `batch_state/preserved/<task>/<attempt>` layout within the copy root.
+
+```bash
+.venv/bin/python -m scripts.orchestration.task_closeout recover-local \
+  --state-file ledger.json \
+  --task-record task.json \
+  --preserved-manifest batch_state/preserved/example/attempt.manifest.json \
+  --push-record successful-push.json
+```
+
+The push JSON must record `status: pushed_exact_head`, equal `head` and
+`remote_head`, the task's worktree in `cwd`, and a `steps` entry named `push`
+with integer `exit_code: 0`. A failed push log is insufficient. The delegate
+record must bind the lifecycle, preservation receipt and merged PR reaper
+proof, including the task's branch/head member. Recovery validates every
+preserved file and appends a receipt marked `recovered_from_preserved` with
+SHA-256 references to all three source records. These new receipts store
+repository-relative input locators, `repo_root: .`, `primary_checkout: .`, and
+a repository-relative dispatch `worktree`. Absolute locators, `..` components,
+and symlinks escaping the repository are refused. Source records retain their
+original bytes and digests, including the original worktree's SHA-256 binding.
+
+Keep the source records and complete preservation tree under the repository's
+primary root for later validation. Private rehearsal copies must keep the
+relative layout within a copied repository containing the required commits.
+The repository and evidence can move together without changing the receipt.
+Validation resolves locators against the current repository, or the CLI's
+explicit `--repo-root`, rather than a stored host path.
+
+Existing observations are not rewritten. The shared `observe_local_git` API
+still returns the older absolute `primary_checkout` and `worktree` fields to
+other callers. Removing those pre-existing fields is a separate infra-owned
+residual; the new capture and recovery writers convert their own copies.
+
+Recovery never recreates a worktree, backdates an observation, edits previous
+receipts or calls GitHub. Repeating recovery returns the existing verified
+receipt. Missing inputs, changed digests, wrong task/branch and unavailable or
+unrelated commits produce typed `RECOVERY_*` refusals. Reconcile with current
+GitHub authority afterward; recovery alone does not close the issue or prove
+review, CI or delivery.
+
 The merge owner closes out the exact PR as soon as GitHub reports it `MERGED`, using
 `scripts.orchestration.merge_closeout` — not the P0 reaper directly. This is the one
 command that proves the PR MERGED, finds every worktree tied to it (by branch, by

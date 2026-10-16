@@ -109,8 +109,10 @@ State files live at ``batch_state/tasks/<task-id>.json``. Format:
         "advisory_binding_sha256": str | absent,    # the worker dispatch's advisory binding digest
         "advisory_seal": {result_sha256, envelope_sha256, advisor_model, run_nonce} | absent,
                               # advisor runs: a consistency checksum of the result as its worker wrote it
-        "routing_facts": object | absent,  # --force-agent with a budget check: the lane's routing_facts summary
-                                           # (quota, health, freshness). Missing telemetry is explicit unknown.
+        "routing_facts": object | absent,  # --force-agent with a budget check, or any budget-checked claude
+                                           # dispatch: the lane's routing_facts summary (quota, health, freshness);
+                                           # a claude dispatch adds claude_account, the account and meter it was
+                                           # judged on (#10619). Missing telemetry is explicit unknown.
     }
 
     Reason fields (``PUBLIC_RECORD_REASON_FIELDS`` and ``auto_finalize.error``)
@@ -216,7 +218,7 @@ from scripts.config import (
     DELEGATE_WORKTREE_ADD_STALL_S,
     DELEGATE_WORKTREE_ADD_TIMEOUT_S,
 )
-from scripts.fleet import credit_lane
+from scripts.fleet import claude_account_lane, credit_lane
 from scripts.fleet.regenerable_output import is_disposable_auto_finalize_path as _is_disposable_auto_finalize_path
 from scripts.fleet.reset_reserve import codex_is_threatened as _codex_is_threatened
 from scripts.fleet.reset_reserve import codex_reset_reserve_eligible as _codex_reset_reserve_eligible
@@ -4986,6 +4988,9 @@ def _heal_dead_task(state_path: Path, state: dict[str, Any], *, source: str) -> 
 # Exit code for a dispatch refused by host admission: retryable once a worker
 # finishes or the host recovers, unlike exit 2 (invalid request).
 _ADMISSION_REFUSED_EXIT = 3
+# A full .worktrees disk after the reaper (#10776): a hard stop that
+# --force-admission cannot override, so it has its own code.
+_ADMISSION_DISK_REFUSED_EXIT = 4
 
 
 def _evaluate_dispatch_admission(
@@ -4993,8 +4998,16 @@ def _evaluate_dispatch_admission(
     *,
     sweep: bool,
     thresholds: dispatch_admission.Thresholds | None = None,
+    reap_disk: bool = False,
+    disk_guard: bool = True,
 ) -> dispatch_admission.AdmissionDecision:
-    """Sweep proven dead workers only when admission explicitly requests it."""
+    """Sweep proven dead workers only when admission explicitly requests it.
+
+    ``reap_disk`` lets a full disk run the worktree reaper once (#10776); the
+    locked recheck never does, so the reaper never runs under the lock.
+    ``disk_guard=False`` skips the disk check for a dispatch that reuses an
+    existing worktree.
+    """
     return dispatch_admission.evaluate(
         mode,
         tasks_dir(),
@@ -5002,7 +5015,24 @@ def _evaluate_dispatch_admission(
         record_liveness=lambda record: worker_liveness(record, pid_alive=_pid_alive),
         on_dead=(lambda path, state: _heal_dead_task(path, state, source="admission")) if sweep else None,
         thresholds=thresholds,
+        reaper=dispatch_admission.run_disk_reaper if reap_disk else None,
+        disk_guard=disk_guard,
     )
+
+
+def _admission_allows_dispatch(decision: dispatch_admission.AdmissionDecision, *, force_reason: str | None) -> bool:
+    """May this dispatch proceed (and publish its admission hold)?
+
+    Admitted, or refused only by checks ``--force-admission`` may override.
+    A disk refusal (#10776) is a hard stop no force reason turns into an admit.
+    """
+    if decision.exempt or decision.admitted:
+        return True
+    return force_reason is not None and not decision.disk_refused
+
+
+def _admission_refused_exit(decision: dispatch_admission.AdmissionDecision) -> int:
+    return _ADMISSION_DISK_REFUSED_EXIT if decision.disk_refused else _ADMISSION_REFUSED_EXIT
 
 
 def _report_dispatch_admission(
@@ -5014,6 +5044,9 @@ def _report_dispatch_admission(
     if decision.admitted:
         print(f"🚦 dispatch admission: admitted — {decision.summary()}", file=sys.stderr)
         return None
+    if not _admission_allows_dispatch(decision, force_reason=force_reason):
+        print(f"❌ {decision.refusal_line()}", file=sys.stderr)
+        return _admission_refused_exit(decision)
     if force_reason is not None:
         print(
             f"⚠️  dispatch admission overridden by --force-admission ({force_reason!r}): {'; '.join(decision.failures)}",
@@ -5022,6 +5055,33 @@ def _report_dispatch_admission(
         return None
     print(f"❌ {decision.refusal_line()}", file=sys.stderr)
     return _ADMISSION_REFUSED_EXIT
+
+
+def _dispatch_reuses_worktree(
+    worktree_arg: str | None,
+    *,
+    agent: str,
+    task_id: str,
+    repo_root: Path | None,
+    validated: Path | None = None,
+) -> bool:
+    """Read-only, no git: True when ``--worktree`` resolves to a checkout that already exists.
+
+    ``--worktree auto`` or an explicit path reuses the checkout already at the
+    resolved path. An explicit path passed as ``validated`` is probed as is,
+    never resolved again (#8775). A ``--cwd`` dispatch is not probed: proving
+    that path is a registered worktree runs git in it, which may happen only
+    after the post-lock re-check (#8775), so it keeps the disk guard.
+    """
+    if not worktree_arg:
+        return False
+    if validated is not None:
+        try:
+            return (validated / ".git").exists()
+        except OSError:
+            return False
+    raw = str(_auto_worktree_path(agent, task_id, repo_root=repo_root)) if worktree_arg == "auto" else worktree_arg
+    return _is_existing_worktree(raw, repo_root=repo_root)
 
 
 def _is_existing_worktree(worktree: Any, *, repo_root: Path | None = None) -> bool:
@@ -5774,14 +5834,15 @@ class _AgyHookChangedDuringSnapshot(Exception):
 def _read_only_agy_hook_fingerprint(cwd: Path) -> tuple[dict[str, Any] | None, str | None]:
     """Fingerprint the AGY guard the adapter validates, through accepted links.
 
-    The adapter follows a symlinked ``.agents`` parent and a symlinked final
-    file and validates the bytes they lead to, so the record holds both link
-    texts, the effective file's real path and type, and its bytes (#10727).
-    Only a hook missing at the first ``lstat`` is absent: ``(None, None)``,
-    and Git status still reports a new ``.agents`` entry. A hook lost, made
-    unreadable or changed after that observation is an acquisition error,
-    never absence, and the snapshot then fails closed. Nothing but a regular
-    effective file is opened, so a FIFO or device cannot block the snapshot.
+    The adapter follows symlinks anywhere on the way to the guard and
+    validates the bytes they lead to, so the record holds every link crossed
+    (#10748), the effective file's real path and type, and its bytes
+    (#10727). Only a hook missing at the first ``lstat`` is absent:
+    ``(None, None)``, and Git status still reports a new ``.agents`` entry. A
+    hook or link target lost, made unreadable or changed after that
+    observation is an acquisition error, never absence, and the snapshot then
+    fails closed. Nothing but a regular effective file is opened, so a FIFO
+    or device cannot block the snapshot.
     """
     path = cwd / _READ_ONLY_AGY_HOOK_PATH
     try:
@@ -5791,10 +5852,10 @@ def _read_only_agy_hook_fingerprint(cwd: Path) -> tuple[dict[str, Any] | None, s
     except OSError as exc:
         return None, f"{_READ_ONLY_AGY_HOOK_SNAPSHOT_ERROR} {_READ_ONLY_AGY_HOOK_PATH}: {type(exc).__name__}"
     try:
-        identity, inode = _read_only_agy_hook_identity(path)
+        identity, inode = _read_only_agy_hook_identity(cwd)
         digest = _read_only_agy_hook_digest(identity, inode)
         # Re-observe: the links and target read above describe the hashed bytes.
-        if _read_only_agy_hook_identity(path) != (identity, inode):
+        if _read_only_agy_hook_identity(cwd) != (identity, inode):
             raise _AgyHookChangedDuringSnapshot
     except OSError as exc:
         return None, f"{_READ_ONLY_AGY_HOOK_SNAPSHOT_ERROR} {_READ_ONLY_AGY_HOOK_PATH}: {type(exc).__name__}"
@@ -5803,43 +5864,133 @@ def _read_only_agy_hook_fingerprint(cwd: Path) -> tuple[dict[str, Any] | None, s
     return {**identity, "sha256": digest}, None
 
 
-def _read_only_agy_hook_identity(path: Path) -> tuple[dict[str, Any], tuple[int, int] | None]:
-    """Return the guard's parent, final entry and effective target without reading it.
+# Linux MAXSYMLINKS: the kernel refuses a path that crosses more links (ELOOP).
+_READ_ONLY_AGY_HOOK_MAX_LINKS = 40
 
-    Every error propagates: the caller has already observed the hook. Only a
-    final symlink may lead to a missing target, which the adapter refuses as
-    a missing file; that is recorded as ``target: None``. The ``(st_dev,
-    st_ino)`` of the target binds the later read to this observation.
+
+def _read_only_agy_hook_identity(cwd: Path) -> tuple[dict[str, Any], tuple[int, int]]:
+    """Return every link to the guard and its effective target without reading it.
+
+    The guard path is resolved one component at a time, as the kernel does,
+    and each symlink crossed is recorded with its real path and link text.
+    ``os.path.realpath`` would collapse them, so a rewired middle link that
+    keeps the effective file would go unseen (#10748 F1). Every error
+    propagates: the caller has already observed the hook, so a link target
+    that is missing, looping or not a directory cannot be acquired and is
+    never recorded as a clean baseline (#10748 F2). A hook that leads nowhere
+    from the start fails here too, and the adapter still refuses it as a
+    missing file. The ``(st_dev, st_ino)`` of the target binds the later read
+    to this observation.
+
+    A procfs link (``/proc/<pid>/fd/<n>``, ``cwd``, ``root``, ``exe``) is a
+    magic link: the kernel jumps to the file or directory it names, and its
+    text, such as ``/memfd:guard (deleted)``, need not be a path at all. Such
+    a link is followed by the kernel instead of walked and records the
+    identity it leads to; the rest of the guard path is resolved through it.
     """
-    identity: dict[str, Any] = {}
-    for name, component in (("parent", path.parent), ("hook", path)):
-        info = component.lstat()
-        identity[name] = {"file_type": stat.S_IFMT(info.st_mode)}
-        if stat.S_ISLNK(info.st_mode):
-            identity[name]["link_text"] = os.readlink(component)
-    target = os.path.realpath(path)
-    try:
-        info = os.lstat(target)
-    except (FileNotFoundError, NotADirectoryError):
-        if identity["hook"]["file_type"] != stat.S_IFLNK:
-            raise  # The observed hook file itself is gone.
-        identity["target"] = None
-        return identity, None
-    identity["target"] = {"path": target, "file_type": stat.S_IFMT(info.st_mode)}
+    links: list[dict[str, Any]] = []
+    procfs = _procfs_devices()
+    resolved = os.path.realpath(cwd)
+    # Whether ``resolved`` crosses a procfs link, so that only the kernel can resolve it.
+    through_procfs = False
+    pending = _READ_ONLY_AGY_HOOK_PATH.split("/")[::-1]
+    while pending:
+        name = pending.pop()
+        if name in ("", ".", ".."):
+            # Like the kernel, refuse to step through or out of a non-directory.
+            if not stat.S_ISDIR(_read_only_agy_hook_stat(resolved, through_procfs).st_mode):
+                raise NotADirectoryError(errno.ENOTDIR, os.strerror(errno.ENOTDIR), resolved)
+            if name == "..":
+                resolved = os.path.join(resolved, name) if through_procfs else os.path.dirname(resolved)
+            continue
+        candidate = os.path.join(resolved, name)
+        info = os.lstat(candidate)
+        if not stat.S_ISLNK(info.st_mode):
+            resolved = candidate
+            continue
+        if len(links) == _READ_ONLY_AGY_HOOK_MAX_LINKS:
+            raise OSError(errno.ELOOP, os.strerror(errno.ELOOP), candidate)
+        link_text = os.readlink(candidate)
+        link: dict[str, Any] = {"path": candidate, "link_text": link_text, "file_type": stat.S_IFLNK}
+        links.append(link)
+        if info.st_dev in procfs:
+            # A procfs link that can no longer be followed, such as a closed descriptor, raises here.
+            target = os.stat(candidate)
+            link["target"] = {
+                "device": target.st_dev,
+                "inode": target.st_ino,
+                "file_type": stat.S_IFMT(target.st_mode),
+            }
+            resolved, through_procfs = candidate, True
+            continue
+        if link_text.startswith("/"):
+            resolved, through_procfs = "/", False
+        pending.extend(link_text.split("/")[::-1])
+    info = _read_only_agy_hook_stat(resolved, through_procfs)
+    identity = {"links": links, "target": {"path": resolved, "file_type": stat.S_IFMT(info.st_mode)}}
     return identity, (info.st_dev, info.st_ino)
 
 
-def _read_only_agy_hook_digest(identity: dict[str, Any], inode: tuple[int, int] | None) -> str | None:
+def _read_only_agy_hook_stat(path: str, through_procfs: bool) -> os.stat_result:
+    """Stat a walked path; through a procfs link, the entry the kernel jumps to."""
+    return os.stat(path) if through_procfs else os.lstat(path)
+
+
+def _procfs_devices() -> frozenset[int]:
+    """Return the device of every procfs mount, whose links are magic links.
+
+    Without a readable mount table no link counts as a magic link, so a
+    procfs link is walked by its text and fails closed where that is no path.
+    """
+    try:
+        with open("/proc/self/mountinfo", encoding="utf-8", errors="surrogateescape") as handle:
+            lines = handle.read().splitlines()
+    except OSError:
+        return frozenset()
+    devices = set()
+    for line in lines:
+        # Mount points escape their spaces, so " - " only separates the filesystem type.
+        mount, _, filesystem = line.partition(" - ")
+        fields = mount.split()
+        if filesystem.split(" ", 1)[0] == "proc" and len(fields) > 2:
+            major, _, minor = fields[2].partition(":")
+            devices.add(os.makedev(int(major), int(minor)))
+    return frozenset(devices)
+
+
+def _read_only_agy_hook_digest(identity: dict[str, Any], inode: tuple[int, int]) -> str | None:
     """Hash the effective guard bytes when the observed target is a regular file."""
     target = identity["target"]
-    if target is None or target["file_type"] != stat.S_IFREG:
+    if target["file_type"] != stat.S_IFREG:
         return None
-    fd = os.open(Path(target["path"]), os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK | os.O_CLOEXEC)
+    last_link = identity["links"][-1] if identity["links"] else None
+    if last_link is not None and last_link["path"] == target["path"] and "target" in last_link:
+        fd = _read_only_agy_hook_open_procfs_target(target["path"], inode)
+    else:
+        fd = os.open(Path(target["path"]), os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK | os.O_CLOEXEC)
     with os.fdopen(fd, "rb") as handle:
         info = os.fstat(handle.fileno())
         if not stat.S_ISREG(info.st_mode) or (info.st_dev, info.st_ino) != inode:
             raise _AgyHookChangedDuringSnapshot
         return hashlib.file_digest(handle, "sha256").hexdigest()
+
+
+def _read_only_agy_hook_open_procfs_target(path: str, inode: tuple[int, int]) -> int:
+    """Open the regular file a procfs link names for reading, never what replaced it.
+
+    The descriptor behind the link can change after the walk observed it, and
+    following the link would then open that, a device for one. ``O_PATH``
+    pins the entry without opening it, and only the observed regular file is
+    reopened for reading through the pin.
+    """
+    pinned = os.open(path, os.O_PATH | os.O_CLOEXEC)
+    try:
+        info = os.fstat(pinned)
+        if not stat.S_ISREG(info.st_mode) or (info.st_dev, info.st_ino) != inode:
+            raise _AgyHookChangedDuringSnapshot
+        return os.open(f"/proc/self/fd/{pinned}", os.O_RDONLY | os.O_NONBLOCK | os.O_CLOEXEC)
+    finally:
+        os.close(pinned)
 
 
 def _read_only_task_record_snapshot(
@@ -6974,6 +7125,7 @@ def _kimi_worker_refusal(
     that worktree's git config and hooks directory.
     """
     from scripts.agent_runtime import kimi_boundary
+    from scripts.agent_runtime.attempt_boundary import ClaudeAccountRefused
     from scripts.agent_runtime.kimi_admission import (
         ADMITTED_MODE,
         KimiAdmissionRefused,
@@ -6997,6 +7149,11 @@ def _kimi_worker_refusal(
             launch = _read_state_json(_state_path_no_create(task_id)) or {}
             scope = mechanical_worker_scope(launch, mode=mode, model=model, prompt=prompt)
             scope["review"] = review or bool(launch.get("review")) or bool(scope.get("review"))
+            # A worker re-checks headroom on the account its record names (#10619, #10630); a
+            # claude record naming an account this worker cannot honour is refused with its code.
+            account = claude_account_lane.account_from_record(launch, agent=agent)
+            if agent == "claude" and account.refusal is not None:
+                raise ClaudeAccountRefused(account.refusal)
             (target,) = resolve_and_admit(
                 (agent,),
                 model=model,
@@ -7005,17 +7162,21 @@ def _kimi_worker_refusal(
                 trees=lambda: _kimi_worktree_trees(cwd),
                 new_dispatch=True,
                 harness=harness,
+                claude_account=account,
                 **scope,
             )
-        except (MechanicalAdmissionRefused, ReviewAdmissionRefused, KimiAdmissionRefused) as exc:
+        except (MechanicalAdmissionRefused, ReviewAdmissionRefused, KimiAdmissionRefused, ClaudeAccountRefused) as exc:
             code = (
-                "mechanical_admission_refused"
+                exc.code
+                if isinstance(exc, ClaudeAccountRefused)
+                else "mechanical_admission_refused"
                 if isinstance(exc, MechanicalAdmissionRefused)
                 else "review_admission_refused"
                 if isinstance(exc, ReviewAdmissionRefused)
                 else "kimi_admission_refused"
             )
-            cause = _publish_cause(task_id, _TypedCause(code, diagnostic=str(exc)), source="worker")
+            detail = f"CLAUDE_ACCOUNT_REFUSED: {exc.code}" if isinstance(exc, ClaudeAccountRefused) else str(exc)
+            cause = _publish_cause(task_id, _TypedCause(code, diagnostic=detail), source="worker")
             if launch:
                 launch.update(
                     {
@@ -7026,7 +7187,7 @@ def _kimi_worker_refusal(
                         "returncode_reason": cause,
                         "returncode": None,
                         "exit_code": 1,
-                        "stderr_excerpt": str(exc),
+                        "stderr_excerpt": detail,
                     }
                 )
                 _write_state_atomic(_state_path_no_create(task_id), launch)
@@ -7035,7 +7196,15 @@ def _kimi_worker_refusal(
     try:
         if mode != ADMITTED_MODE or review:
             # Refused by mode or review alone: no need to read the task record (or create its directory).
-            resolve_and_admit((agent,), model=model, mode=mode, review=review, new_dispatch=True, harness=harness)
+            resolve_and_admit(
+                (agent,),
+                model=model,
+                mode=mode,
+                review=review,
+                new_dispatch=True,
+                harness=harness,
+                claude_account=claude_account_lane.account_from_record({}, agent=agent),
+            )
         # Read-only: a refused worker must leave no task directory or file behind.
         launch = _read_state_json(_state_path_no_create(task_id)) or {}
         owned = _declared_owned_paths(launch.get("owned_paths")) or ()
@@ -7049,6 +7218,7 @@ def _kimi_worker_refusal(
             new_dispatch=True,
             harness=harness,
             trees=lambda: _kimi_worktree_trees(cwd),
+            claude_account=claude_account_lane.account_from_record(launch, agent=agent),
         )
     except MechanicalAdmissionRefused as exc:
         # e.g. an operator model pause that began after dispatch. The task record
@@ -7079,9 +7249,12 @@ def _kimi_worker_refusal(
             # and a refused Kimi worker writes nothing.
             return _TypedCause("kimi_admission_refused").public(), None
         # A tree reader failed: the refusal names its class; the reader's message stays local.
-        cause = _exception_cause("kimi_admission_refused", exc.read_errors[0])
+        read_cause = _exception_cause("kimi_admission_refused", exc.read_errors[0])
         detail = "\n".join(f"{type(error).__name__}: {error}" for error in exc.read_errors)
-        return _publish_cause(task_id, dataclasses.replace(cause, diagnostic=f"{exc}\n{detail}"), source="worker"), None
+        return (
+            _publish_cause(task_id, dataclasses.replace(read_cause, diagnostic=f"{exc}\n{detail}"), source="worker"),
+            None,
+        )
     worktree = launch.get("worktree_path")
     if not worktree or Path(worktree).resolve() != cwd.resolve():
         return _TypedCause("kimi_worktree_mismatch").public(), None
@@ -12438,49 +12611,49 @@ def _recorded_claude_account(args: argparse.Namespace) -> str | None:
     return resolve_claude_account_label(record[CLAUDE_ACCOUNT_KEY])
 
 
-def _resolve_dispatch_claude_account(args: argparse.Namespace) -> tuple[str, str] | None:
-    """A claude dispatch's account label and its source, resolved once before any side effect (#10619).
+def _resolve_dispatch_claude_account(args: argparse.Namespace) -> claude_account_lane.ClaudeAccount:
+    """The account this dispatch's claude routes run as, resolved and bound before admission (#10619, #10733).
 
-    ``None`` for another seat, which takes no label and never reads the
-    default-account file. Otherwise the label is, in order: a ``--force-new``
-    re-run's recorded label (a conflicting ``--claude-account`` is refused),
-    ``--claude-account``, the default-account file, then the built-in default.
-    A non-default label from any source has its binding and credential
-    sources verified here and again where the worker authenticates: an
-    ordinary worker runs with the bound account's login directory, a formal
-    review attempt's sealed boundary selects that account's credential.
-    Raises ``ClaudeAccountRefused``.
+    It is the account part of every route key admission judges
+    (``claude_account_lane.resolve_route_account``): the label is, in order, a
+    ``--force-new`` re-run's recorded label (a conflicting ``--claude-account``
+    is refused), ``--claude-account``, the default-account file, then the
+    built-in default. A non-default label from any source has its binding and
+    credential sources verified here and again where the worker
+    authenticates: an ordinary worker runs with the bound account's login
+    directory, a formal review attempt's sealed boundary selects that
+    account's credential.
+
+    A claude request raises ``ClaudeAccountRefused``. A review dispatch for
+    another seat can still select a claude reviewer, so it resolves the
+    account too; a refusal there makes it unresolved, which removes the
+    claude seats and no other. Any other seat reaches no claude route (no
+    ``dispatch_fallbacks`` row maps onto claude) and reads no account file;
+    its account is unresolved. ``--claude-account`` other than the default
+    on another seat raises ``claude_account_seat_unsupported``.
     """
     from scripts.agent_runtime.attempt_boundary import (
         DEFAULT_CLAUDE_ACCOUNT,
         ClaudeAccountRefused,
         resolve_claude_account_label,
-        resolve_dispatch_claude_account,
-        verify_claude_account,
     )
 
     explicit = getattr(args, "claude_account", None)
-    if str(getattr(args, "agent", "") or "").strip().casefold() != "claude":
+    claude_request = str(getattr(args, "agent", "") or "").strip().casefold() == "claude"
+    if not claude_request:
         if resolve_claude_account_label(explicit) != DEFAULT_CLAUDE_ACCOUNT:
             raise ClaudeAccountRefused("claude_account_seat_unsupported")
-        return None
-    recorded = _recorded_claude_account(args)
-    if recorded is None:
-        label, source = resolve_dispatch_claude_account(explicit)
-    elif explicit is None:
-        label, source = recorded, "record"
-    elif resolve_claude_account_label(explicit) == recorded:
-        label, source = recorded, "explicit"
-    else:
-        raise ClaudeAccountRefused("claude_account_record_conflict")
-    verify_claude_account(label)
-    return label, source
+        if not _dispatch_is_review_typed(args):
+            return claude_account_lane.no_claude_account()
+    return claude_account_lane.resolve_route_account(
+        explicit, strict=claude_request, recorded=lambda: _recorded_claude_account(args)
+    )
 
 
 def _claude_account_forward_argv(
-    argv: list[str], args: argparse.Namespace, claude_account: tuple[str, str] | None
+    argv: list[str], args: argparse.Namespace, claude_account: claude_account_lane.ClaudeAccount
 ) -> list[str]:
-    """The argv a worker-host forward sends: a claude dispatch names the label resolved here (#10619).
+    """The argv a worker-host forward sends: a claude request names the label resolved here (#10619).
 
     The worker host would resolve an omitted ``--claude-account`` from its own
     default-account file and task records, and could run as another account.
@@ -12488,12 +12661,16 @@ def _claude_account_forward_argv(
     host admits it with every check; an explicit flag is sent as given. The
     argv is parsed back to prove it names that label; otherwise nothing is
     forwarded (``ClaudeAccountRefused``: ``claude_account_forward_unsupported``).
+    Another seat's request is forwarded as given: the worker host resolves and
+    binds its own claude account before its own admission.
     """
-    if claude_account is None:
+    if str(getattr(args, "agent", "") or "").strip().casefold() != "claude":
         return list(argv)
     from scripts.agent_runtime.attempt_boundary import ClaudeAccountRefused
 
-    label = claude_account[0]
+    label = claude_account.label
+    if label is None:
+        raise ClaudeAccountRefused(claude_account.refusal or "claude_account_unknown")
     forwarded = list(argv) if getattr(args, "claude_account", None) is not None else [*argv, "--claude-account", label]
     try:
         # A parse error may quote the argv; it is never shown.
@@ -12507,15 +12684,18 @@ def _claude_account_forward_argv(
 
 
 def _claude_account_state(
-    args: argparse.Namespace, claude_account: tuple[str, str] | None, dispatch_agent: str
+    args: argparse.Namespace, claude_account: claude_account_lane.ClaudeAccount, dispatch_agent: str
 ) -> dict[str, Any]:
     """A claude task record's account label and its source; the worker reads the label back from the record.
 
-    ``claude_account`` is what dispatch resolved before any side effect
-    (``_resolve_dispatch_claude_account``). An ordinary worker on a
-    non-default label, from any source, loads none of its login directory's
-    user settings (hooks, permission rules, MCP servers, plugins); the record
-    says so in ``claude_account_user_scope_omitted`` (#10619).
+    ``claude_account`` is what dispatch resolved and bound before admission
+    (``_resolve_dispatch_claude_account``), whichever step made the route
+    claude. An ordinary worker on a non-default label, from any source, loads
+    none of its login directory's user settings (hooks, permission rules, MCP
+    servers, plugins); the record says so in
+    ``claude_account_user_scope_omitted`` (#10619). An unresolved account
+    raises ``ClaudeAccountRefused``: admission never admits a claude route on
+    one (#10733), so no record names an account that was not resolved.
     """
     if dispatch_agent != "claude":
         return {}
@@ -12523,9 +12703,12 @@ def _claude_account_state(
         CLAUDE_ACCOUNT_KEY,
         CLAUDE_ACCOUNT_SOURCE_KEY,
         DEFAULT_CLAUDE_ACCOUNT,
+        ClaudeAccountRefused,
     )
 
-    label, source = claude_account or (DEFAULT_CLAUDE_ACCOUNT, "builtin")
+    label, source = claude_account.label, claude_account.source
+    if label is None:
+        raise ClaudeAccountRefused(claude_account.refusal or "claude_account_unknown")
     state: dict[str, Any] = {CLAUDE_ACCOUNT_KEY: label, CLAUDE_ACCOUNT_SOURCE_KEY: source}
     if label != DEFAULT_CLAUDE_ACCOUNT and not getattr(args, "review_attempt", None):
         state["claude_account_user_scope_omitted"] = True
@@ -12849,6 +13032,7 @@ def _dispatch(
         args,
         agent=original_agent,
         route=_dispatch_route(args, routing, language_lane=language_lane, review_attempt=review_attempt),
+        claude_account=claude_account,
         repo_role=fleet_repo.role,
         target_repo_root=target_repo_root,
         validated_worktree=validated_worktree,
@@ -13544,7 +13728,7 @@ def _dispatch(
     _warn_kimicc_oauth_token_life(requested_harness, args.hard_timeout)
 
     try:
-        _check_capacity_hint(dispatch_agent, args=args)
+        _check_capacity_hint(dispatch_agent, args=args, claude_account=claude_account)
     except CapacityGuardRefuseError as exc:
         print(f"❌ {exc}", file=sys.stderr)
         return 2
@@ -13624,9 +13808,17 @@ def _dispatch(
     # follows VPS forwarding. This check fails fast before the base fetch; the
     # authoritative one runs under the admission lock just before the first
     # worktree or task-record side effect. Dry-run reports dead-pid records
-    # without marking them.
+    # without marking them and never runs the disk reaper.
+    # A dispatch that reuses an existing worktree adds no checkout, so the disk
+    # guard and its reaper are skipped for it (#10776).
+    disk_guard = not _dispatch_reuses_worktree(
+        worktree_arg, agent=dispatch_agent, task_id=task_id, repo_root=target_repo_root, validated=validated_worktree
+    )
     try:
-        admission = _evaluate_dispatch_admission(args.mode, sweep=not bool(getattr(args, "dry_run", False)))
+        live_dispatch = not bool(getattr(args, "dry_run", False))
+        admission = _evaluate_dispatch_admission(
+            args.mode, sweep=live_dispatch, reap_disk=live_dispatch and disk_guard, disk_guard=disk_guard
+        )
     except ValueError as exc:
         print(f"❌ invalid dispatch admission threshold: {exc}", file=sys.stderr)
         return 2
@@ -14033,10 +14225,25 @@ def _dispatch(
         }
     if not admission.exempt:
         admission_refusal: str | None = None
+        admission_refusal_exit = _ADMISSION_REFUSED_EXIT
         try:
             with dispatch_admission.admission_lock(tasks_dir()):
-                admission = _evaluate_dispatch_admission(args.mode, sweep=True, thresholds=admission.thresholds)
-                if admission.admitted or force_admission_reason is not None:
+                # #10776: the reuse exemption is decided again here, under the
+                # worktree lock held since base resolution and right before the
+                # worktree is created or reused. A checkout removed after the
+                # pre-lock probe is a fresh creation and gets the disk guard,
+                # which refuses at the threshold (the reaper never runs here).
+                disk_guard = not _dispatch_reuses_worktree(
+                    worktree_arg,
+                    agent=dispatch_agent,
+                    task_id=task_id,
+                    repo_root=target_repo_root,
+                    validated=validated_worktree,
+                )
+                admission = _evaluate_dispatch_admission(
+                    args.mode, sweep=True, thresholds=admission.thresholds, disk_guard=disk_guard
+                )
+                if _admission_allows_dispatch(admission, force_reason=force_admission_reason):
                     admission_record = admission.to_record(force_reason=force_admission_reason)
                     _publish_admission_hold(
                         task_id, run_nonce, mode=args.mode, admission=admission_record, review_fields=review_fields
@@ -14044,6 +14251,7 @@ def _dispatch(
                     admission_holds.callback(_release_admission_hold, task_id, run_nonce)
                 else:
                     admission_refusal = admission.refusal_line()
+                    admission_refusal_exit = _admission_refused_exit(admission)
         except dispatch_admission.AdmissionLockTimeout as exc:
             admission_refusal = f"dispatch admission lock unavailable: {exc}; retry the dispatch"
         except (OSError, RuntimeError) as exc:
@@ -14051,7 +14259,7 @@ def _dispatch(
             return 1
         if admission_refusal is not None:
             print(f"❌ {admission_refusal}", file=sys.stderr)
-            return _ADMISSION_REFUSED_EXIT
+            return admission_refusal_exit
     elif review_fields is not None:
         try:
             _publish_admission_hold(task_id, run_nonce, mode=args.mode, admission=None, review_fields=review_fields)
@@ -16201,8 +16409,12 @@ def _authoring_require_route(
     from scripts.review.security_paths import effective_review_risk
 
     risk = str(planned_risk or AUTHORING_REVIEW_DEFAULT_RISK).strip().casefold()
+    # A claude reviewer would run as the account a review dispatch resolves and binds (#10630).
+    claude_account = claude_account_lane.resolve_route_account(None, strict=False)
     try:
-        resolution = structural_review_route(facts, risk=risk, review_mode=review_mode)
+        resolution = structural_review_route(
+            facts, risk=risk, review_mode=review_mode, claude_account=claude_account
+        )
     except ModelCatalogError as exc:
         raise _AuthoringReviewRefused(
             AUTHORING_REVIEW_CATALOG_UNKNOWN, f"model catalog unavailable ({exc}).", record
@@ -16685,8 +16897,8 @@ class _DispatchRouting:
     substitution: dict[str, Any] | None = None
 
     def __post_init__(self) -> None:
-        # Forced-lane routing_facts (#9673). Kept off the dataclass fields so the
-        # frozen dispatch surface stays the route decision; copied to the task record when set.
+        # Forced-lane (#9673) and claude-dispatch (#10619) routing_facts. Kept off the dataclass fields so
+        # the frozen dispatch surface stays the route decision; copied to the task record when set.
         self.budget_diagnostics: dict[str, Any] | None = None
 
 
@@ -16709,12 +16921,15 @@ def _dispatch_route(
     keeps the requested seat and still records quota and health; its model is
     mapped or defaulted (``_resolve_substitution_model``). Review routes use
     ``request.review_select`` instead, retaining the resolver's exact model.
-    Refusals raise
+    The guard judges every claude seat on ``request.claude_account``, the
+    account admission was given (#10619, #10630). Refusals raise
     ``_DispatchRouteRefused`` or ``BudgetGuardRefuseError``. Records what it
     decided in ``routing``.
     """
 
     def route(request: RouteRequest) -> tuple[str, str | None, str]:
+        if request.claude_account is None:
+            raise TypeError("a dispatch route is admitted with the ClaudeAccount its claude seats run as (#10630)")
         original_agent, original_model = request.seat, request.model
         model_resolution: dict[str, Any] = {}
         requested_agent = original_agent
@@ -16789,7 +17004,8 @@ def _dispatch_route(
                     getattr(args, "review_author_model", None) and getattr(args, "review_risk", None)
                 ),
                 force_agent=force_agent,
-                diagnostic_sink=diagnostic_sink if force_agent else None,
+                diagnostic_sink=diagnostic_sink,
+                claude_account=request.claude_account,
             )
             if diagnostic_sink:
                 routing.budget_diagnostics = diagnostic_sink
@@ -16833,6 +17049,7 @@ def _kimi_dispatch_gate(
     target_repo_root: Path,
     validated_worktree: Path | None,
     validated_cwd: Path | None,
+    claude_account: claude_account_lane.ClaudeAccount | None = None,
 ) -> tuple[str | None, str | None, Any]:
     """The dispatch-side gate: ``(refusal, start commit, admitted target)``.
 
@@ -16844,7 +17061,9 @@ def _kimi_dispatch_gate(
     owned paths were last read at — in the worktree of the seat resolved so
     far — which the worker's worktree must be created from or checked out at;
     None when the call is refused, is not Kimi, or owns no paths. The tree is
-    resolved only after every policy check admits.
+    resolved only after every policy check admits. ``claude_account`` is the
+    account dispatch resolved and bound for its claude routes (None: resolved
+    here from ``args``, see :func:`_admit_dispatch_target`).
     """
     from scripts.agent_runtime.target_admission import launch_seat
 
@@ -16871,7 +17090,9 @@ def _kimi_dispatch_gate(
         start.append(commit)
         return resolved
 
-    refusal, target = _admit_dispatch_target(args, agent=agent, repo_role=repo_role, trees=trees, route=routed)
+    refusal, target = _admit_dispatch_target(
+        args, agent=agent, repo_role=repo_role, trees=trees, route=routed, claude_account=claude_account
+    )
     return refusal, (start[-1] if start and refusal is None else None), target
 
 
@@ -16881,9 +17102,10 @@ def _kimi_admission_refusal(
     agent: str,
     trees: Any,
     repo_role: str | None = None,
+    claude_account: claude_account_lane.ClaudeAccount | None = None,
 ) -> str | None:
     """Refusal message when ``agent`` or ``--model`` is a Kimi seat and the dispatch is not admitted."""
-    return _admit_dispatch_target(args, agent=agent, trees=trees, repo_role=repo_role)[0]
+    return _admit_dispatch_target(args, agent=agent, trees=trees, repo_role=repo_role, claude_account=claude_account)[0]
 
 
 def _dispatch_review_changed_paths(args: argparse.Namespace) -> tuple[str, ...]:
@@ -17027,22 +17249,37 @@ def _admit_dispatch_target(
     trees: Any,
     repo_role: str | None = None,
     route: Route | None = None,
+    claude_account: claude_account_lane.ClaudeAccount | None = None,
 ) -> tuple[str | None, Any]:
     """``(refusal, admitted target)`` for launching ``agent`` with ``--model``; exactly one is None.
 
     The original request (``agent``, ``--model``) and the launch ``route``
     it resolves to (retired-CLI alias, budget substitution) are resolved and
     admitted in one step (``resolve_and_admit``); a route refusal is returned
-    like a Kimi refusal. ``--owned-path`` and ``--research-owned-path`` both
+    like a Kimi refusal. ``claude_account`` is the account the dispatch's
+    claude routes run as, the account part of every route key admission
+    judges (#10619, #10630): the launch route, reviewer selection, the
+    red-team initial snapshot and the plan-headroom stop read the claude lane
+    as that account. None resolves it from ``args`` first
+    (:func:`_resolve_dispatch_claude_account`); a refusal is returned as
+    ``CLAUDE_ACCOUNT_REFUSED``. ``--owned-path`` and ``--research-owned-path`` both
     declare task ownership, so every path from either flag must be on the
     Kimi allowlist and is read for Ukrainian content in ``trees`` (see
     ``refuse_kimi_if_disallowed``).
     """
+    from scripts.agent_runtime.attempt_boundary import ClaudeAccountRefused
     from scripts.agent_runtime.kimi_admission import KimiAdmissionRefused
     from scripts.agent_runtime.mechanical_admission import MechanicalAdmissionRefused
     from scripts.agent_runtime.target_admission import ReviewAdmissionRefused, resolve_and_admit
     from scripts.review.model_catalog import ModelCatalogError, apply_cursor_model_pins
     from scripts.review.target_resolution import TargetResolutionError, repository_target_error
+
+    if claude_account is None:
+        try:
+            claude_account = _resolve_dispatch_claude_account(args)
+        except ClaudeAccountRefused as exc:
+            return f"CLAUDE_ACCOUNT_REFUSED: {exc.code}", None
+    account = claude_account
 
     def flag_paths(attr: str) -> list[str]:
         value = getattr(args, attr, None) or []
@@ -17107,7 +17344,9 @@ def _admit_dispatch_target(
             review_mode=getattr(args, "review_mode", "cross_family"),
             review_task_id=getattr(args, "task_id", None),
             review_initial_snapshot=(
-                _fetch_routing_budget if getattr(args, "review_mode", "cross_family") == "red_team" else None
+                (lambda: claude_account_lane.select_account(_fetch_routing_budget(), account=account)[0])
+                if getattr(args, "review_mode", "cross_family") == "red_team"
+                else None
             ),
             review_alias_model_resolver=_resolve_substitution_model,
             review_owned_paths=tuple(declared),
@@ -17135,6 +17374,7 @@ def _admit_dispatch_target(
             task_family=getattr(args, "research_task_family", None),
             task_role=getattr(args, "research_role", None),
             task_prompt=getattr(args, "prompt", None),
+            claude_account=account,
         )
         _require_ukrainian_model_family(args, target.model, resolved=True)
         if mechanical_task != _mechanical_task_scope(args):
@@ -17444,7 +17684,7 @@ def _remember_agent_substitution(
     requested_agent: str,
     requested_model: str | None,
     actual_agent: str,
-    actual_model: str,
+    actual_model: str | None,
     how: str,
 ) -> None:
     if sink is None:
@@ -17493,7 +17733,7 @@ def _ranked_reports_lane_health(ranked: Any, lane: str) -> bool:
     return any(isinstance(item, dict) and item.get("lane") == lane and item.get("health") for item in ranked)
 
 
-def _publish_forced_lane_diagnostics(
+def _publish_lane_diagnostics(
     lane: str,
     record: Mapping[str, Any] | None,
     snapshot_metadata: Mapping[str, Any] | None,
@@ -17501,15 +17741,19 @@ def _publish_forced_lane_diagnostics(
     model: str | None,
     sink: dict[str, Any] | None,
     ranked: Any = None,
+    account: Mapping[str, Any] | None = None,
+    announce: bool = True,
 ) -> None:
-    """Print and retain one forced lane's quota and health (#9673).
+    """Print and retain one lane's quota and health: a forced lane's (#9673), or a claude dispatch's.
 
     The text reuses the guard's existing lines: the health-unknown sentence,
     and ``⚠ ROUTING CHECK:`` around the owner's ``capacity_reason``. A known
     remaining percent is added with the owner's ``% remaining`` phrase when
     that reason does not already include it. ``sink`` receives
     :meth:`credit_lane.RoutingFacts.summary`, whose missing quota, health and
-    freshness are explicit unknowns.
+    freshness are explicit unknowns, and for a claude dispatch the account
+    the decision read as ``claude_account`` (#10619). ``announce`` False (an
+    ordinary claude dispatch) retains them without printing.
     """
     facts = credit_lane.routing_facts(
         lane,
@@ -17517,6 +17761,13 @@ def _publish_forced_lane_diagnostics(
         model=model or _lane_default_model(lane) or "",
         snapshot_metadata=snapshot_metadata,
     )
+    if sink is not None:
+        sink.clear()
+        sink.update(facts.summary())
+        if account is not None:
+            sink["claude_account"] = dict(account)
+    if not announce:
+        return
     if facts.health == credit_lane.UNKNOWN and not _ranked_reports_lane_health(ranked, lane):
         print(
             f"⚠ lane {lane} health unknown ({facts.health_basis}); not counted as healthy",
@@ -17531,9 +17782,6 @@ def _publish_forced_lane_diagnostics(
     ):
         quota = f"{quota} ({remaining:g}% remaining)"
     print(f"⚠ ROUTING CHECK: lane {lane}: {quota}", file=sys.stderr)
-    if sink is not None:
-        sink.clear()
-        sink.update(facts.summary())
 
 
 def _resolve_agent_with_budget_guard(
@@ -17549,6 +17797,7 @@ def _resolve_agent_with_budget_guard(
     review_trusted_inputs: bool = False,
     force_agent: bool = False,
     diagnostic_sink: dict[str, Any] | None = None,
+    claude_account: claude_account_lane.ClaudeAccount,
 ) -> str:
     """Return possibly-substituted agent.
 
@@ -17564,13 +17813,48 @@ def _resolve_agent_with_budget_guard(
     Review routes use ``review_select`` before either coding fallback path;
     pace only orders equal fits and ``force_agent`` never bypasses review hard gates.
     A lane with a credit balance present (``scripts.fleet.credit_lane``) is not substituted.
+
+    ``claude_account`` is required: the account the dispatch's claude routes
+    run as, the account part of their route key (#10619, #10630). Every lane
+    record below is read through :func:`claude_account_lane.select_account`,
+    so the claude lane is that account's meter for every decision that reads
+    it, whichever seat is requested at that point: writer substitution, the
+    language-lane chain, and every review candidate, including a reviewer
+    reselected after another seat. The default account reads the lane row
+    as before; another reads its own ``claude_accounts`` row. A stale
+    account meter is advisory like a stale snapshot, an unknown one is
+    advisory and never healthy, and a claude request on an unresolved account
+    is refused. The evaluated account and its lane reading are kept in
+    ``diagnostic_sink`` for every claude request, forced or not.
     """
     requested = (agent or "").strip().lower()
+    claude_account_lane.require_account(claude_account)
+    # The account every claude-lane reading below is judged on (#10619).
+    evaluated_account: dict[str, Any] = {"label": claude_account.label, "meter": None}
+
+    def retain(record: Mapping[str, Any] | None, metadata: Any, ranked: Any = None) -> None:
+        # A forced lane prints and keeps its quota and health (#9673); a claude
+        # request keeps the account it was judged on and that reading (#10619).
+        if force_agent or (requested == "claude" and diagnostic_sink is not None):
+            _publish_lane_diagnostics(
+                requested,
+                record,
+                metadata if isinstance(metadata, dict) else None,
+                model=requested_model,
+                sink=diagnostic_sink,
+                ranked=ranked,
+                account=evaluated_account if requested == "claude" else None,
+                announce=force_agent,
+            )
+
     if language_lane and requested not in _LANGUAGE_LANES:
         raise BudgetGuardRefuseError(
             "ROUTING REFUSED: LANGUAGE-LANES RULE (operator 2026-09-27): "
             f"--agent {requested} is outside claude, codex (GPT), and agy (Gemini)."
         )
+    if requested == "claude" and not claude_account.resolved:
+        # #10733: no claude seat is selected on an account that was not resolved and bound.
+        raise BudgetGuardRefuseError(f"CLAUDE_ACCOUNT_REFUSED: {claude_account.refusal}")
     try:
         payload = _fetch_routing_budget()
     except MonitorApiUnavailable:
@@ -17579,14 +17863,7 @@ def _resolve_agent_with_budget_guard(
                 "NOTE: ROUTING REFUSED: prepaid capacity NEED_PROBE; Monitor API unreachable."
             ) from None
         print("⚠ ROUTING CHECK SKIPPED: Monitor API unreachable", file=sys.stderr)
-        if force_agent:
-            _publish_forced_lane_diagnostics(
-                requested,
-                None,
-                None,
-                model=requested_model,
-                sink=diagnostic_sink,
-            )
+        retain(None, None)
         return requested
 
     prepaid = "openrouter" if provider == "openrouter" else requested if requested == "deepseek" else None
@@ -17595,15 +17872,15 @@ def _resolve_agent_with_budget_guard(
 
         accounts = payload.get("api_accounts") or {}
         account = accounts.get(prepaid) or {}
-        status = _api_lane_status_from_account(prepaid, account)
+        prepaid_status = _api_lane_status_from_account(prepaid, account)
         blocked = (
-            status not in {"cool", "warm"}
+            prepaid_status not in {"cool", "warm"}
             or account.get("is_available") is False
             or account.get("status") == "near_cap"
         )
         if blocked and not force_agent:
             raise BudgetGuardRefuseError(
-                f"NOTE: ROUTING REFUSED: prepaid {prepaid} status={status}; "
+                f"NOTE: ROUTING REFUSED: prepaid {prepaid} status={prepaid_status}; "
                 f"probe_state={account.get('probe_state', 'NEED_PROBE')}; "
                 f"freshness={account.get('freshness', 'unavailable')}. "
                 "Verify funding with `python -m scripts.fleet.usage refresh` or pass --force-agent."
@@ -17611,12 +17888,12 @@ def _resolve_agent_with_budget_guard(
         if force_agent:
             if blocked:
                 print(
-                    f"⚠ ROUTING CHECK: prepaid {prepaid} status={status}; "
+                    f"⚠ ROUTING CHECK: prepaid {prepaid} status={prepaid_status}; "
                     f"probe_state={account.get('probe_state', 'NEED_PROBE')}; "
                     f"freshness={account.get('freshness', 'unavailable')}.",
                     file=sys.stderr,
                 )
-            _publish_forced_lane_diagnostics(
+            _publish_lane_diagnostics(
                 requested,
                 account if isinstance(account, dict) else None,
                 payload.get("diagnostics") if isinstance(payload.get("diagnostics"), dict) else None,
@@ -17627,7 +17904,11 @@ def _resolve_agent_with_budget_guard(
 
     diags = payload.get("diagnostics") or {}
     rec = payload.get("recommendation") or {}
-    agents = payload.get("agents") or {}
+    # #10619, #10630: every lane record below is read as the dispatch's claude account.
+    routing_payload = payload
+    view, account_evidence = claude_account_lane.select_account(payload, account=claude_account)
+    payload = dict(view)
+    agents = claude_account_lane.account_agents(payload, account=claude_account)
     records_loaded = int(diags.get("records_loaded", 0) or 0)
     is_stale = bool(diags.get("stale", False))
     codexbar_data_available = bool(diags.get("codexbar_data_available", False))
@@ -17648,15 +17929,41 @@ def _resolve_agent_with_budget_guard(
             "usage snapshots; lanes may be in deficit; no hard sub.",
             file=sys.stderr,
         )
-        if force_agent:
-            _publish_forced_lane_diagnostics(
-                requested,
-                None,
-                diags if isinstance(diags, dict) else None,
-                model=requested_model,
-                sink=diagnostic_sink,
-            )
+        retain(None, diags)
         return requested
+
+    account_stale = False
+    if requested == "claude":
+        # #10619: the lane row is the default account; a selected one is judged on its own meter.
+        evaluated_account = account_evidence
+        meter_state = account_evidence.get("state")
+        account_stale = meter_state == "stale"
+        if meter_state == "unknown":
+            # Policy (#10619, driver decision): an unknown or missing selected-account meter is
+            # advisory, exactly like unknown subscription data on every other lane: it is
+            # printed, recorded as capacity "unknown", never shown healthy, and never
+            # substitutes. The alternative, a typed refusal, would block every account-b
+            # dispatch while the Monitor's per-account rows are unknown; a KNOWN exhausted
+            # account is still substituted or refused below.
+            print(
+                f"⚠ ROUTING CHECK UNKNOWN: claude account {claude_account.label} meter unavailable "
+                f"({account_evidence['reason']}); no hard sub",
+                file=sys.stderr,
+            )
+        elif account_stale:
+            print(
+                f"⚠ ROUTING CHECK ADVISORY (stale claude account {claude_account.label} meter, "
+                f"age_s={(agents.get('claude') or {}).get('age_s')}) — verify manually; no hard sub",
+                file=sys.stderr,
+            )
+        unattributed = account_evidence.get("unattributed_rate_limits")
+        if isinstance(unattributed, Mapping) and unattributed:
+            print(
+                "⚠ ROUTING CHECK ADVISORY: lane claude runtime headroom blocked "
+                f"({unattributed.get('headroom_reason') or 'recent rate_limited cluster'}) is not attributed to "
+                f"an account; not counted against claude account {claude_account.label}",
+                file=sys.stderr,
+            )
 
     # Warn about demoted lanes and lanes whose health is unknown (#9740 F4: the owner's reading).
     for item in payload.get("ranked_by_headroom") or []:
@@ -17695,6 +18002,8 @@ def _resolve_agent_with_budget_guard(
             )
             if rec.get("rationale"):
                 print(f"Rationale: {rec['rationale']}", file=sys.stderr)
+    # A stale account meter follows the stale-snapshot rule from here on: advisory only.
+    is_stale = is_stale or account_stale
 
     agent_info = agents.get(requested, {}) or {}
     agent_dict = agent_info if isinstance(agent_info, dict) else {}
@@ -17765,17 +18074,9 @@ def _resolve_agent_with_budget_guard(
         review_blocked, review_reason = review_capacity_action(requested, agent_dict, diags, requested_model)
         if review_blocked:
             needs_action, reason = True, review_reason
-    if force_agent:
-        _publish_forced_lane_diagnostics(
-            requested,
-            agent_dict,
-            diags if isinstance(diags, dict) else None,
-            model=requested_model,
-            sink=diagnostic_sink,
-            ranked=payload.get("ranked_by_headroom"),
-        )
-        if review_select is None:
-            return requested
+    retain(agent_dict, diags, payload.get("ranked_by_headroom"))
+    if force_agent and review_select is None:
+        return requested
     if review_select is not None:
         # #9959: capacity is an exclusion before the resolver ranks candidates,
         # not a veto on its first pick. Keep coding fallbacks out of review
@@ -17848,17 +18149,18 @@ def _resolve_agent_with_budget_guard(
     if not needs_action:
         return requested
 
-    sub = fallbacks.get(requested)
+    fallback = fallbacks.get(requested)
     # The yaml `dispatch_fallbacks` map is the ONLY source for hard subs —
     # no inferred/hardcoded mappings (a deleted config entry must mean
     # refuse or advisory, not silently resurrect an old route).
-    if sub and sub not in _DISPATCH_AGENT_CHOICES:
+    if fallback and fallback not in _DISPATCH_AGENT_CHOICES:
         print(
-            f"⚠ ROUTING: dispatch_fallbacks maps {requested} → {sub}, not a known dispatch agent — ignoring hard sub.",
+            f"⚠ ROUTING: dispatch_fallbacks maps {requested} → {fallback}, not a known dispatch agent — "
+            "ignoring hard sub.",
             file=sys.stderr,
         )
-        sub = None
-    if sub and sub != requested:
+        fallback = None
+    if fallback and fallback != requested:
         if language_lane:
             return _language_lane_substitute(
                 requested,
@@ -17871,9 +18173,9 @@ def _resolve_agent_with_budget_guard(
                 model_resolution=model_resolution,
                 origin_agent=origin_agent or requested,
             )
-        chosen, how = _resolve_substitution_model(sub, requested_model)
+        chosen, how = _resolve_substitution_model(fallback, requested_model)
         note = (
-            f"🔄 HARD AUTO-SUBSTITUTE: --agent {requested} → {sub} "
+            f"🔄 HARD AUTO-SUBSTITUTE: --agent {requested} → {fallback} "
             f"{_substitution_model_phrase(chosen, how, requested_model)} "
             f"({reason}; "
             f"sub per agent_fallback_substitutions.yaml dispatch_fallbacks). "
@@ -17885,15 +18187,22 @@ def _resolve_agent_with_budget_guard(
             source="budget-guard",
             requested_agent=origin_agent or requested,
             requested_model=requested_model,
-            actual_agent=sub,
+            actual_agent=fallback,
             actual_model=chosen,
             how=how,
         )
         if burn is not None:
             print(f"  (burn_pct_7d was ~{burn}%; resets_at={agent_info.get('resets_at')})", file=sys.stderr)
-        return sub
+        return fallback
 
-    cooler = _budget_cooler_lanes(agents if isinstance(agents, dict) else {}, exclude=requested)
+    listed: Mapping[str, Any] = agents if isinstance(agents, dict) else {}
+    if not claude_account.resolved:
+        # This dispatch reaches no claude seat; a re-route to claude would run as the account
+        # that dispatch resolves and binds (#10630), so the advice reads the claude lane as it.
+        listed = claude_account_lane.account_agents(
+            routing_payload, account=claude_account_lane.resolve_route_account(None, strict=False)
+        )
+    cooler = _budget_cooler_lanes(dict(listed), exclude=requested)
     cooler_txt = ", ".join(cooler) if cooler else "(none marked cool/warm in snapshot)"
     raise BudgetGuardRefuseError(
         f"ROUTING REFUSED: --agent {requested} is {reason} and "
@@ -18104,8 +18413,15 @@ def _cursor_driver_lease_is_self_dispatch(lease: dict[str, Any]) -> bool:
         return False
 
 
-def _check_capacity_hint(dispatch_agent: str, args: argparse.Namespace | None = None) -> None:
-    """Refuse Cursor driver-lease self-dispatch; otherwise retain the busy-lane hint."""
+def _check_capacity_hint(
+    dispatch_agent: str,
+    args: argparse.Namespace | None = None,
+    claude_account: claude_account_lane.ClaudeAccount | None = None,
+) -> None:
+    """Refuse Cursor driver-lease self-dispatch; otherwise retain the busy-lane hint.
+
+    ``claude_account`` is the dispatch's (None: resolved from ``args``), which the Kimi suggestion admits with.
+    """
     target_norm = str(dispatch_agent or "").strip().lower()
     force_agent = bool(getattr(args, "force_agent", False)) if args is not None else False
 
@@ -18163,7 +18479,10 @@ def _check_capacity_hint(dispatch_agent: str, args: argparse.Namespace | None = 
         kimi_admissible = target_norm == "kimi" or (
             args is not None
             and getattr(args, "repo", None) is None
-            and _kimi_admission_refusal(args, agent="kimi", trees=(DirectoryTree(_REPO_ROOT),)) is None
+            and _kimi_admission_refusal(
+                args, agent="kimi", trees=(DirectoryTree(_REPO_ROOT),), claude_account=claude_account
+            )
+            is None
         )
         subscription_lanes = tuple(
             lane
@@ -18686,7 +19005,11 @@ def build_parser() -> argparse.ArgumentParser:
             f"{admission_defaults.min_mem_available_gib:g} GiB), or the 1-minute load per CPU\n"
             f"  exceeds DISPATCH_MAX_LOAD_PER_CPU (default {admission_defaults.max_load_per_cpu:g}), or more test runs "
             f"than DISPATCH_MAX_TEST_SLOT_QUEUE\n  (default {admission_defaults.max_test_slot_queue}) wait for host "
-            "test slots (scripts/common/test_slots.py). "
+            "test slots (scripts/common/test_slots.py), or the .worktrees filesystem is still at or above\n"
+            f"  DISPATCH_DISK_REFUSE_USED_PERCENT (default {admission_defaults.disk_refuse_used_percent:g}% used) "
+            "after one run of the worktree reaper;\n"
+            f"  at DISPATCH_DISK_ALERT_USED_PERCENT (default {admission_defaults.disk_alert_used_percent:g}%) "
+            "one alert per 6 hours goes to the epics channel. "
             "Environment variables override the scripts/config.py defaults.\n"
             "  Without /proc (macOS) memory and CPU are unknown and only the worker cap applies. Records whose pid\n"
             "  is dead are marked crashed first. The final check holds a host-wide lock until the spawning record\n"
@@ -18700,7 +19023,8 @@ def build_parser() -> argparse.ArgumentParser:
             "  LU_DISPATCH_ISOLATION=fallback forces the plain Popen path. See packaging/systemd/README.md.\n\n"
             "Exit codes:\n"
             "  0 dispatched, or --dry-run validated; 1 worktree, lease, or spawn failure;\n"
-            "  2 invalid request or another guard refused; 3 host admission refused (retry later or --force-admission).\n\n"
+            "  2 invalid request or another guard refused; 3 host admission refused (retry later or --force-admission);\n"
+            "  4 the .worktrees disk is still full after the reaper (free space; --force-admission cannot override).\n\n"
             "Claude account (#10619):\n"
             "  A claude dispatch runs as --claude-account, else the label in the default-account file read once at\n"
             "  dispatch (see --claude-account), else a. The task record keeps the label and its source\n"
@@ -18753,7 +19077,8 @@ def build_parser() -> argparse.ArgumentParser:
         help=(
             "Start a write-capable worker even when host admission refuses it (live write-worker cap, "
             "MemAvailable floor, or load per CPU; #8645). REASON is required and is recorded in the "
-            "task record under admission.force_reason."
+            "task record under admission.force_reason. A full .worktrees disk (#10776, exit 4) is never "
+            "overridden."
         ),
     )
     d.add_argument(

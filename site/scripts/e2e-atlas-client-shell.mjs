@@ -12,7 +12,9 @@
  *   node ./scripts/e2e-atlas-client-shell.mjs
  */
 
-import { cpSync, existsSync, readdirSync, rmSync } from "node:fs";
+import { cpSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
+import { createHash } from "node:crypto";
+import { gunzipSync } from "node:zlib";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { chromium } from "playwright";
@@ -37,17 +39,97 @@ function ok(msg) {
   console.log(`OK: ${msg}`);
 }
 
+function isPrerenderedArticle(slug) {
+  const path = resolve(DIST, "lexicon", slug, "index.html");
+  return existsSync(path) && readFileSync(path, "utf8").includes("data-word-atlas=");
+}
+
+// Repackage the committed runtime's exact search rows for the legacy typeahead
+// endpoints. Only the disposable dist tree changes; fixture bytes stay intact.
+function vendorFixtureSearch() {
+  const pointer = JSON.parse(readFileSync(resolve(FIXTURE_ATLAS, "current.json"), "utf8"));
+  const versionDir = dirname(resolve(FIXTURE_ATLAS, pointer.manifestUrl));
+  const runtime = JSON.parse(readFileSync(resolve(FIXTURE_ATLAS, pointer.manifestUrl), "utf8"));
+  const output = resolve(DIST, "lexicon");
+  mkdirSync(resolve(output, "search-shards"), { recursive: true });
+  const readRecords = (meta) => JSON.parse(gunzipSync(readFileSync(resolve(versionDir, meta.url))).toString("utf8")).records;
+  const unique = (records) => [...new Map(records.map((row) => [JSON.stringify(row), row])).values()];
+  const articles = unique(Object.values(runtime.search.articles.shards).flatMap(readRecords));
+  const aliases = unique(Object.values(runtime.search.aliases.shards).flatMap(readRecords));
+  const writeRows = (path, rows) => {
+    const body = JSON.stringify(rows);
+    writeFileSync(resolve(DIST, path.slice(1)), body);
+    return { path, count: rows.length, bytes: Buffer.byteLength(body), sha256: createHash("sha256").update(body).digest("hex") };
+  };
+  const fullIndex = writeRows("/lexicon/search-index.json", articles);
+  writeRows("/lexicon/search-aliases.json", aliases);
+  const shards = Object.fromEntries(Object.entries(runtime.search.articles.shards).map(([id, meta]) =>
+    [id, writeRows(`/lexicon/search-shards/${id}.json`, readRecords(meta))],
+  ));
+  const prefixMap = {};
+  const visit = (node) => {
+    if (node.shardId) prefixMap[node.prefix] = node.shardId;
+    for (const child of Object.values(node.children ?? {})) visit(child);
+  };
+  visit(runtime.search.articles.tree);
+  writeFileSync(resolve(output, "search-shards.json"), JSON.stringify({
+    schema: "atlas-search-shards", schemaVersion: 1, total: articles.length,
+    fullIndex, shardCount: Object.keys(shards).length, prefixMap, shards,
+  }));
+}
+
 function pickPrerenderedSlug() {
   const candidates = ["прапор", "кава", "дім", "я", "іван", "вид"];
   for (const slug of candidates) {
-    if (existsSync(resolve(DIST, "lexicon", slug, "index.html"))) return slug;
+    if (isPrerenderedArticle(slug)) return slug;
   }
   for (const ent of readdirSync(resolve(DIST, "lexicon"), { withFileTypes: true })) {
     if (!ent.isDirectory()) continue;
     if (["browse", "practice"].includes(ent.name)) continue;
-    if (existsSync(resolve(DIST, "lexicon", ent.name, "index.html"))) return ent.name;
+    if (isPrerenderedArticle(ent.name)) return ent.name;
   }
   return null;
+}
+
+// Both queries already exist in the public search artifact and fixture runtime.
+async function checkSearchNavigation(page, baseUrl, startPath, label) {
+  const input = page.locator("[data-atlas-typeahead-input]").first();
+  const list = page.locator("[data-atlas-typeahead-list]").first();
+  await input.fill("прапор");
+  const pointerResult = list.locator('a[href="/lexicon/%D0%BF%D1%80%D0%B0%D0%BF%D0%BE%D1%80/"]');
+  await pointerResult.waitFor({ state: "visible", timeout: 15_000 });
+  await pointerResult.click();
+  await page.waitForURL((url) => decodeURIComponent(url.pathname) === "/lexicon/прапор/");
+  await page.waitForSelector("[data-word-atlas]", { timeout: 20_000 });
+  if (!(await page.locator("[data-word-atlas]").innerText()).includes("прапор")) {
+    throw new Error(`${label}: pointer destination article missing`);
+  }
+  ok(`${label}: matching result link and pointer navigation open another article`);
+
+  await page.goto(`${baseUrl}${startPath}`, { waitUntil: "networkidle" });
+  await input.fill("прапор");
+  await list.locator("a").first().waitFor({ state: "visible", timeout: 15_000 });
+  await input.press("Escape");
+  if (await list.isVisible() || await input.inputValue() !== "прапор") {
+    throw new Error(`${label}: Escape must close results and preserve query`);
+  }
+  await input.press("Escape");
+  if (await input.inputValue() !== "") throw new Error(`${label}: second Escape must clear query`);
+  await input.fill("файний");
+  const keyboardResult = list.locator('a[href="/lexicon/%D1%84%D0%B0%D0%B9%D0%BD%D0%B8%D0%B9/"]');
+  await keyboardResult.waitFor({ state: "visible", timeout: 15_000 });
+  await input.press("ArrowDown");
+  const selected = await input.getAttribute("aria-activedescendant");
+  if (!selected || !(await page.locator(`[id="${selected}"][aria-selected="true"]`).count())) {
+    throw new Error(`${label}: ArrowDown must identify the selected result`);
+  }
+  await input.press("Enter");
+  await page.waitForURL((url) => decodeURIComponent(url.pathname) === "/lexicon/файний/");
+  await page.waitForSelector("[data-word-atlas]", { timeout: 20_000 });
+  if (!(await page.locator("[data-word-atlas]").innerText()).includes("файний")) {
+    throw new Error(`${label}: keyboard destination article missing`);
+  }
+  ok(`${label}: Escape, selected option and Enter open another article`);
 }
 
 async function main() {
@@ -62,6 +144,7 @@ async function main() {
 
   rmSync(DIST_ATLAS, { recursive: true, force: true });
   cpSync(FIXTURE_ATLAS, DIST_ATLAS, { recursive: true });
+  vendorFixtureSearch();
   ok(`vendored fixture atlas → ${DIST_ATLAS}`);
 
   const prerendered = pickPrerenderedSlug();
@@ -115,6 +198,10 @@ async function main() {
       ok("client shell article wrapper present");
     }
 
+    await checkSearchNavigation(page, baseUrl, `/lexicon/${TAIL_SLUG}/`, "404 word article");
+    await page.goto(`${baseUrl}/lexicon/`, { waitUntil: "networkidle" });
+    await checkSearchNavigation(page, baseUrl, "/lexicon/", "landing control");
+
     // Encoded Cyrillic of a fixture slug that is also commonly prerendered
     const encoded = encodeURIComponent("прапор");
     const praporPrerendered = existsSync(resolve(DIST, "lexicon", "прапор", "index.html"));
@@ -155,6 +242,7 @@ async function main() {
         );
       } else {
         ok("prerendered page has no atlas shell boot");
+        await checkSearchNavigation(page, baseUrl, `/lexicon/${prerendered}/`, "SSR control");
       }
     }
 

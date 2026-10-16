@@ -33,7 +33,7 @@ from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
 from types import SimpleNamespace
-from typing import Any
+from typing import TYPE_CHECKING, Any, cast
 
 from .kimi_admission import (
     BRIDGE_MODE,
@@ -42,6 +42,9 @@ from .kimi_admission import (
     effective_request_targets,
     refuse_kimi_if_disallowed,
 )
+
+if TYPE_CHECKING:
+    from scripts.fleet.claude_account_lane import ClaudeAccount
 
 # Legacy ``ask-<name>`` command names and the ACP participant each one selects.
 COMPAT_TARGETS: dict[str, str] = {
@@ -141,7 +144,9 @@ class RouteRequest:
     ``review_select`` instead selects or retains a reviewer using trusted
     author/profile/risk inputs and the canonical resolver. Pass the current
     over-budget seat with the snapshot, or a None snapshot for the initial check.
-    The route runs after the original request is gated.
+    The route runs after the original request is gated. ``claude_account`` is
+    the account every claude reading of the route is judged on: the one
+    ``resolve_and_admit`` was given (#10630).
 
     Known limitation: a route's own probes (a Monitor budget probe) run
     before the final gate, so a non-Kimi request that a fallback row mapped
@@ -156,6 +161,7 @@ class RouteRequest:
     fallbacks: Mapping[str, str]
     review_select: ReviewSelector | None = None
     retired_model_resolution: tuple[str, str] | None = None
+    claude_account: ClaudeAccount | None = None
 
 
 # A launch route: the ``(seat, model, reason)`` a request is launched as.
@@ -201,7 +207,7 @@ def require_admitted(target: Any) -> AdmittedTarget:
     cls = type(target)
     if cls.__name__ != "AdmittedTarget" or not cls.__module__.endswith("agent_runtime.target_admission"):
         raise TypeError(f"a delivery sink takes an AdmittedTarget from resolve_and_admit, not {cls.__name__}")
-    return target
+    return cast(AdmittedTarget, target)
 
 
 def resolve_and_admit(
@@ -237,6 +243,7 @@ def resolve_and_admit(
     task_prompt: str | None = None,
     new_dispatch: bool = False,
     harness: str | None = None,
+    claude_account: ClaudeAccount | None = None,
     **gate: Any,
 ) -> tuple[AdmittedTarget, ...]:
     """Resolve every recipient to its final seat, gate the result, and return one target per recipient.
@@ -288,7 +295,21 @@ def resolve_and_admit(
     returning one, collected at the same point) supplies the target's complete
     authorship and protected scope; reviewer evaluation then excludes every
     author family, not only ``review_author_model``'s (#9739).
+
+    ``claude_account`` is the account the request's claude routes run as: the
+    account part of every route key (#10619, #10630). A new or review dispatch
+    must name it (``TypeError`` otherwise); the launch route, reviewer
+    selection and the plan-headroom stop judge every claude reading on it, and
+    a final claude route on an unresolved account is refused
+    (``MechanicalAdmissionRefused``, ``CLAUDE_ACCOUNT_REFUSED``) before anything
+    is admitted (#10733). Other admissions make no claude reading and may omit it.
     """
+    if claude_account is not None:
+        from scripts.fleet.claude_account_lane import require_account
+
+        require_account(claude_account)
+    elif new_dispatch or review_dispatch:
+        raise TypeError("a new or review dispatch names the ClaudeAccount its claude routes run as (#10630)")
     raw = ["" if item is None else str(item) for item in recipients]
     explicit_model = model or None
     seats, models = effective_request_targets(raw, explicit_model, *attachments)
@@ -336,13 +357,16 @@ def resolve_and_admit(
     else:
         review_changed_paths = ()
         review_facts = None
-    if review_mode == "red_team" and callable(review_initial_snapshot):
-        review_initial_snapshot = review_initial_snapshot()
+    initial_snapshot: Mapping[str, Any] | None
+    if callable(review_initial_snapshot):
+        initial_snapshot = review_initial_snapshot() if review_mode == "red_team" else None
+    else:
+        initial_snapshot = review_initial_snapshot
     if review_mode == "red_team":
         from scripts.review.reviewer_resolver import normalize_routing_snapshot
 
         try:
-            normalize_routing_snapshot(review_initial_snapshot)
+            normalize_routing_snapshot(initial_snapshot)
         except ValueError as exc:
             raise ReviewAdmissionRefused("RED_TEAM_REFUSED: routing state unavailable") from exc
 
@@ -387,6 +411,8 @@ def resolve_and_admit(
             approved: set[tuple[str, str | None]] = approved_review_targets,
             admitted_models: dict[str, str | None] = admitted_review_models,
         ) -> tuple[str, str | None]:
+            if claude_account is None:
+                raise TypeError("reviewer selection names the ClaudeAccount its claude seats run as (#10630)")
             selected = _resolve_review_target(
                 requested_seat,
                 requested_model,
@@ -394,7 +420,7 @@ def resolve_and_admit(
                 risk=review_risk,
                 profile=review_profile or "code",
                 attempt=review_attempt,
-                snapshot=snapshot if snapshot is not None else review_initial_snapshot,
+                snapshot=snapshot if snapshot is not None else initial_snapshot,
                 budget_seat=budget_seat,
                 budget_model=admitted_models.get(budget_seat),
                 budget_substitute=fallbacks.get(budget_seat),
@@ -405,6 +431,7 @@ def resolve_and_admit(
                 facts=review_facts,
                 review_mode=review_mode,
                 reviewer_task_id=review_task_id,
+                claude_account=claude_account,
             )
             _require_agy_code_review_risk(selected[0], review_risk, review_profile or "code")
             approved.add(selected)
@@ -430,6 +457,7 @@ def resolve_and_admit(
                     fallbacks,
                     review_select if review_dispatch else None,
                     retired_model_resolution,
+                    claude_account,
                 )
             )
         if resolver is not None:
@@ -448,6 +476,15 @@ def resolve_and_admit(
                 "REVIEW_ROUTE_REFUSED: resolved review identity was not admitted by the reviewer resolver"
             )
 
+    if (
+        claude_account is not None
+        and not claude_account.resolved
+        and any(recipient == "claude" for recipient, _, _ in resolved)
+    ):
+        from .mechanical_admission import MechanicalAdmissionRefused
+
+        # #10733: whatever step chose it, no claude seat runs on an account that was not resolved and bound.
+        raise MechanicalAdmissionRefused(f"CLAUDE_ACCOUNT_REFUSED: {claude_account.refusal}")
     final = _gate_names(
         [*seats, *(recipient for recipient, _, _ in resolved)],
         [*models, *(target_model for _, target_model, _ in resolved)],
@@ -473,7 +510,7 @@ def resolve_and_admit(
         selected = [target_model or _seat_default_model(recipient, harness) for recipient, target_model, _ in resolved]
         # A new worker dispatch also answers for every model it asked for
         # (explicit, attached or also_models); reviewer selection only for what it picked.
-        _refuse_paused(selected if review_dispatch else [*models, *selected])
+        _refuse_paused(selected if review_dispatch else [*models, *selected], claude_account=claude_account)
     with _minting():
         return tuple(AdmittedTarget(recipient, target_model, reason) for recipient, target_model, reason in resolved)
 
@@ -504,15 +541,21 @@ def _seat_default_model(seat: str, harness: str | None = None) -> str | None:
         from .registry import AGENTS
     except Exception:  # no registry: nothing to resolve
         return None
-    raw = (AGENTS.get(seat) or {}).get("default_model")
+    entry = AGENTS.get(seat)
+    raw = entry.get("default_model") if entry is not None else None
     return str(raw).strip() if isinstance(raw, str) and raw.strip() else None
 
 
-def _refuse_paused(models: Iterable[str | None]) -> None:
-    """Operator model pauses and plan-headroom stops (``model_pause``) for new dispatches."""
-    from .model_pause import refuse_paused_models
+def _refuse_paused(models: Iterable[str | None], *, claude_account: ClaudeAccount | None) -> None:
+    """Operator model pauses and plan-headroom stops (``model_pause``) for new dispatches.
 
-    refuse_paused_models(models)
+    ``claude_account`` is required: the claude lane's headroom is that
+    account's meter (#10619, #10630); None names no account, so the claude
+    lane's usage is unknown and never blocks.
+    """
+    from .model_pause import account_used_pct, refuse_paused_models
+
+    refuse_paused_models(models, used_pct=account_used_pct(claude_account))
 
 
 def _refuse_non_review_models(models: Iterable[str | None]) -> None:
@@ -552,6 +595,7 @@ def _resolve_review_target(
     facts: Any = None,
     review_mode: str = "cross_family",
     reviewer_task_id: str | None = None,
+    claude_account: ClaudeAccount,
 ) -> tuple[str, str | None]:
     """Keep an eligible reviewer or select the canonical cross-family seat, never a coding fallback.
 
@@ -560,8 +604,14 @@ def _resolve_review_target(
     retained. This does not attest cross-family independence for those legacy calls.
     An existing attempt's seat AND model are immutable. ``facts`` (complete branch
     authorship and scope, #9739) stand in for a single ``author_model``; a given
-    ``author_model`` is added to them, never substituted.
+    ``author_model`` is added to them, never substituted. ``claude_account`` is
+    required: the account a claude reviewer runs as. ``snapshot`` is read as
+    that account's view first (``claude_account_lane.select_account``), so
+    every capacity reading below and the resolver's own readings judge the
+    claude lane on it, and the resolver excludes claude seats on an
+    unresolved one (``ResolverInputs.claude_account``).
     """
+    from scripts.fleet.claude_account_lane import lane_record, select_account
     from scripts.review.capacity import review_capacity_action
     from scripts.review.model_catalog import risk_reviewer_refusal
     from scripts.review.reviewer_resolver import (
@@ -583,6 +633,9 @@ def _resolve_review_target(
 
     from .telemetry import _default_model_for
 
+    if snapshot:
+        # #10630: a caller's snapshot is judged as the reviewer's account, already keyed or not.
+        snapshot, _ = select_account(snapshot, account=claude_account)
     if review_mode not in {"cross_family", "red_team"}:
         raise ReviewAdmissionRefused("REVIEW_ROUTE_REFUSED: unsupported review mode")
     if review_mode == "red_team":
@@ -600,9 +653,9 @@ def _resolve_review_target(
     if review_mode == "red_team":
         refusal = red_team_seat_refusal(
             (requested_model,),
-            author_models=facts.resolver_inputs(risk=risk).author_models,
+            author_models=facts.author_models,
             author_model=author_model,
-            author_task_models=facts.resolver_inputs(risk=risk).author_task_models,
+            author_task_models=facts.author_task_models,
         )
         if refusal:
             raise ReviewAdmissionRefused(refusal)
@@ -631,7 +684,10 @@ def _resolve_review_target(
             "Ukrainian reviews use --review-profile ukrainian without these flags"
         )
     attempt_blocked, _ = review_capacity_action(
-        seat, ((snapshot or {}).get("agents") or {}).get(seat, {}), (snapshot or {}).get("diagnostics"), requested_model
+        seat,
+        lane_record(snapshot, seat, account=claude_account),
+        (snapshot or {}).get("diagnostics"),
+        requested_model,
     )
     if attempt and snapshot is not None and budget_seat and attempt_blocked:
         if budget_substitute and budget_substitute != budget_seat:
@@ -657,6 +713,7 @@ def _resolve_review_target(
             review_profile=profile,
             author_model=author_model or "",
             routing_snapshot=snapshot,
+            claude_account=claude_account,
         )
     else:
         inputs = ResolverInputs(
@@ -670,6 +727,7 @@ def _resolve_review_target(
             subject_seats=subject.seats,
             subject_families=subject.families,
             subject_evidence=subject.evidence,
+            claude_account=claude_account,
         )
     author_family = resolve_author_family(author_model or "") if trusted and author_model else UNKNOWN_AUTHOR_FAMILY
     if (
@@ -718,7 +776,7 @@ def _resolve_review_target(
         raise ReviewAdmissionRefused(
             f"REVIEW_ATTEMPT_IDENTITY_REFUSED: review attempt refused for {seat}: {detail}{risk_note} (#8517)"
         )
-    lane_info = (snapshot.get("agents") or {}).get(seat, {}) if snapshot else {}
+    lane_info = lane_record(snapshot, seat, account=claude_account)
     blocked, _ = review_capacity_action(seat, lane_info, (snapshot or {}).get("diagnostics"), requested_model)
     eligible = eligible and not blocked
     if review_mode == "red_team" and eligible:
@@ -752,7 +810,7 @@ def _resolve_review_target(
     # The budget guard may be checking a reviewer already substituted during
     # initial admission. Its allowance and credit allowlist belong to that
     # admitted seat/model, independently of the original request.
-    lane_info = (snapshot.get("agents") or {}).get(budget_seat, {}) if snapshot else {}
+    lane_info = lane_record(snapshot, budget_seat, account=claude_account)
     budget_model = budget_model or (requested_model if budget_seat == seat else _default_model_for(budget_seat))
     budget_blocked, _ = review_capacity_action(
         budget_seat, lane_info, (snapshot or {}).get("diagnostics"), budget_model
@@ -844,9 +902,10 @@ def launch_seat(agent: str) -> str:
 
 
 def _retired_successor(seat: str | None) -> str | None:
-    from .agent_identity import resolve_retired_agent_alias
+    from learn_ukrainian_v4_runtime.agent_identity import resolve_retired_agent_alias
 
-    return resolve_retired_agent_alias(seat)
+    successor = resolve_retired_agent_alias(seat)
+    return successor if isinstance(successor, str) else None
 
 
 def _gate_names(seats: Iterable[str | None], models: Iterable[str | None]) -> tuple[list[Any], list[Any]]:

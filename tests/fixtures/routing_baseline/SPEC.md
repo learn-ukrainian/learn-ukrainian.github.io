@@ -1,5 +1,19 @@
 # Routing baseline v1 (#9302), approved Cursor revision (#9951)
 
+## Required Claude account in the capture driver (#10630)
+
+`ResolverInputs.claude_account` has no default (#10630): a construction
+without a `ClaudeAccount` raises `TypeError`. The capture driver now names the
+account a review dispatch resolves and binds
+(`claude_account_lane.resolve_route_account(None, strict=False)`), and only
+when the source root's `ResolverInputs` has that field, so the historical base
+checkout still captures unchanged. The capture environment has no
+default-account file, so every row resolves the built-in default account,
+which reads the claude lane row exactly as before. Every captured surface,
+input matrix, occurrence ledger and checksum manifest is byte-identical; only
+`capture.py` and this specification change, and their literal digests in
+`tests/review/test_model_catalog.py` are updated.
+
 ## Claude weekly cap help (#10355)
 
 `tests/review/fixtures/claude-cap-10355.json` records the launcher help lines

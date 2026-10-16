@@ -39,6 +39,7 @@ from scripts.review.model_catalog import (
     validate_glm_alias_consumers,
     validate_kimi_alias_consumers,
 )
+from tests.claude_route_accounts import HOST_ACCOUNT
 
 
 def test_committed_catalog_is_structurally_valid_and_current():
@@ -1567,6 +1568,7 @@ def test_argon_formal_code_review_is_refused_before_routing_or_launch(monkeypatc
             ("agy",), mode="read-only", model=f"gemini-4-argon-{tier}",
             review_dispatch=True, review_profile="code", review_risk=risk,
             review_author_model="gpt-6.1-sol", route=forbidden,
+            claude_account=HOST_ACCOUNT,
         )
 
 

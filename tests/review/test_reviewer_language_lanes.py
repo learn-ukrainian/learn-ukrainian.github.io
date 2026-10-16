@@ -18,6 +18,7 @@ from scripts.review.reviewer_resolver import (
     is_ukrainian_content_change,
     resolve_reviewer,
 )
+from tests.claude_route_accounts import HOST_ACCOUNT
 
 
 @pytest.mark.parametrize(
@@ -38,7 +39,7 @@ from scripts.review.reviewer_resolver import (
     ],
 )
 def test_each_ukrainian_content_path_is_classified(path):
-    assert is_ukrainian_content_change(ResolverInputs(author_model="codex", changed_paths=(path,)))
+    assert is_ukrainian_content_change(ResolverInputs(author_model="codex", changed_paths=(path,), claude_account=HOST_ACCOUNT))
 
 
 @pytest.fixture(autouse=True)
@@ -48,12 +49,12 @@ def isolated_live_snapshot(monkeypatch):
 
 def test_unrelated_paths_do_not_match_content_patterns():
     assert not is_ukrainian_content_change(
-        ResolverInputs(author_model="codex", changed_paths=("scripts/review/reviewer_resolver.py", "docs/infra.md"))
+        ResolverInputs(author_model="codex", changed_paths=("scripts/review/reviewer_resolver.py", "docs/infra.md"), claude_account=HOST_ACCOUNT)
     )
 
 
 def test_owned_path_classifies_ukrainian_content_without_changed_paths(tmp_path, capsys):
-    inputs = ResolverInputs(author_model="codex", owned_paths=("curriculum/a.mdx",))
+    inputs = ResolverInputs(author_model="codex", owned_paths=("curriculum/a.mdx",), claude_account=HOST_ACCOUNT)
     assert is_ukrainian_content_change(inputs)
     result = evaluate_candidate(GROK_4_7, inputs)
     assert result.status == "excluded"
@@ -93,8 +94,8 @@ def test_owned_path_classifies_ukrainian_content_without_changed_paths(tmp_path,
 @pytest.mark.parametrize(
     "inputs",
     [
-        ResolverInputs(author_model="codex", language_lane=True),
-        ResolverInputs(author_model="codex", review_profile="ukrainian"),
+        ResolverInputs(author_model="codex", language_lane=True, claude_account=HOST_ACCOUNT),
+        ResolverInputs(author_model="codex", review_profile="ukrainian", claude_account=HOST_ACCOUNT),
     ],
 )
 def test_explicit_ukrainian_signals_are_classified(inputs):
@@ -103,7 +104,7 @@ def test_explicit_ukrainian_signals_are_classified(inputs):
 
 @pytest.mark.parametrize("author,expected_family", [("codex", "anthropic"), ("claude", "openai")])
 def test_content_code_review_uses_only_cross_family_claude_or_gpt(author, expected_family):
-    resolution = resolve_reviewer(ResolverInputs(author_model=author, changed_paths=("scripts/lexicon/word_store.py",)))
+    resolution = resolve_reviewer(ResolverInputs(author_model=author, changed_paths=("scripts/lexicon/word_store.py",), claude_account=HOST_ACCOUNT))
     assert resolution.fail_closed_reason is None
     assert resolution.selected is not None
     assert resolution.selected.family == expected_family
@@ -115,7 +116,7 @@ def test_content_code_review_uses_only_cross_family_claude_or_gpt(author, expect
 
 
 def test_non_language_candidates_and_explicit_pin_are_excluded():
-    inputs = ResolverInputs(author_model="codex", changed_paths=("curriculum/A1/lesson.mdx",))
+    inputs = ResolverInputs(author_model="codex", changed_paths=("curriculum/A1/lesson.mdx",), claude_account=HOST_ACCOUNT)
     # Kimi is no longer a review candidate at all (web, UI and backend coding only).
     assert "kimi-k3" not in REVIEW_CANDIDATES
     # DeepSeek is excluded from every review, not just language review.
@@ -133,14 +134,14 @@ def test_non_language_candidates_and_explicit_pin_are_excluded():
             author_model="codex",
             changed_paths=("curriculum/A1/lesson.mdx",),
             pinned_candidate="grok-4.7",
-            pressure_override_reason="test pin",
+            pressure_override_reason="test pin", claude_account=HOST_ACCOUNT,
         )
     )
     assert pinned.selected is None
     assert pinned.fail_closed_reason
     deepseek_pin = resolve_reviewer(
         ResolverInputs(
-            author_model="codex", pinned_candidate="deepseek-v4.1-flash", pressure_override_reason="test pin"
+            author_model="codex", pinned_candidate="deepseek-v4.1-flash", pressure_override_reason="test pin", claude_account=HOST_ACCOUNT
         )
     )
     assert deepseek_pin.selected is None
@@ -155,7 +156,7 @@ def test_pure_infra_change_excludes_gemini_when_primary_lanes_are_unhealthy():
             review_profile="infra",
             domain="infra",
             changed_paths=("scripts/orchestration/worker.py",),
-            routing_snapshot={"claude": "unhealthy", "codex": "unhealthy"},
+            routing_snapshot={"claude": "unhealthy", "codex": "unhealthy"}, claude_account=HOST_ACCOUNT,
         ),
     )
     assert resolution.selected is not None
@@ -168,7 +169,7 @@ def test_pure_infra_change_excludes_gemini_when_primary_lanes_are_unhealthy():
             review_profile="infra",
             domain="infra",
             changed_paths=("scripts/orchestration/worker.py",),
-            routing_snapshot={"claude": "unhealthy", "codex": "unhealthy", "grok": "unhealthy", "cursor": "unhealthy", "agy": "unhealthy"},
+            routing_snapshot={"claude": "unhealthy", "codex": "unhealthy", "grok": "unhealthy", "cursor": "unhealthy", "agy": "unhealthy"}, claude_account=HOST_ACCOUNT,
         ),
     )
     assert dark.selected is None
@@ -251,7 +252,7 @@ def test_closeout_uses_target_changed_paths_and_language_flag(tmp_path, capsys):
 
 
 def test_ukrainian_semantic_profile_still_fails_closed():
-    resolution = resolve_reviewer(ResolverInputs(author_model="codex", review_profile="ukrainian"))
+    resolution = resolve_reviewer(ResolverInputs(author_model="codex", review_profile="ukrainian", claude_account=HOST_ACCOUNT))
     assert resolution.selected is None
     assert resolution.trace == ()
     assert "unsupported local-code-review profile" in resolution.fail_closed_reason
@@ -259,6 +260,6 @@ def test_ukrainian_semantic_profile_still_fails_closed():
 
 @pytest.mark.parametrize("author,expected", [("gpt-6.1-sol", "claude-opus-5-5"), ("claude-opus-5-5", "gpt-6.1-sol")])
 def test_critical_ukrainian_code_review_prefers_opus_and_sol(author, expected):
-    resolution = resolve_reviewer(ResolverInputs(author_model=author, risk="critical", language_lane=True))
+    resolution = resolve_reviewer(ResolverInputs(author_model=author, risk="critical", language_lane=True, claude_account=HOST_ACCOUNT))
     assert resolution.selected.concrete_model == expected
     assert resolution.selected.family in {"anthropic", "openai"}

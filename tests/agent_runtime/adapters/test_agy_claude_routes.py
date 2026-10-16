@@ -14,6 +14,7 @@ from scripts.agent_runtime.adapters.base import InvocationPlan
 from scripts.review.model_catalog import load_model_catalog
 from scripts.review.reviewer_resolver import REVIEW_CANDIDATES, ResolverInputs, evaluate_candidate
 from tests.agent_runtime.agy_hook_helpers import register_agy_hooks
+from tests.claude_route_accounts import HOST_ACCOUNT
 
 SLUGS = ("claude-sonnet-5-5-high", "claude-opus-5-5-high")
 LABELS = ("Claude Sonnet 5.5 (High)", "Claude Opus 5.5 (High)")
@@ -179,7 +180,7 @@ def test_anthropic_agy_fixture_candidate_cannot_review_anthropic_author(author):
         transport="agy",
         family="anthropic",
     )
-    result = evaluate_candidate(candidate, ResolverInputs(author_model=author, risk="low"))
+    result = evaluate_candidate(candidate, ResolverInputs(author_model=author, risk="low", claude_account=HOST_ACCOUNT))
     assert result.status == "excluded"
     assert "same family as author" in result.reason
 

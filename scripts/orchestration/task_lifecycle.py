@@ -1092,12 +1092,28 @@ def _verified_publisher_merge(repo_root: Path, sha: str, parents: list[str]) -> 
         return False
 
 
+def task_commit_range(repo_root: Path, head_sha: str, base_sha: str | None = None) -> str:
+    """Exclude integrated main history, retaining a proven linear FF range."""
+    main_base = _run_git(repo_root, ["merge-base", "origin/main", head_sha])
+    if base_sha:
+        _run_git(repo_root, ["merge-base", "--is-ancestor", base_sha, head_sha])
+        if main_base == head_sha:
+            # After a fast-forward landing main no longer marks the fork. A
+            # linear dispatch range cannot contain imported merge history.
+            dispatch_range = f"{base_sha}..{head_sha}"
+            if _run_git(repo_root, ["rev-list", "--merges", dispatch_range]):
+                raise LifecycleError("task range is ambiguous after main absorbed a merge-bearing head")
+            return dispatch_range
+    return f"{main_base}..{head_sha}"
+
+
 def observe_local_git(
     repo_root: Path,
     *,
     head_sha: str | None,
     branch: str | None,
     worktree: str | None,
+    base_sha: str | None = None,
 ) -> dict[str, Any]:
     """Collect deterministic local Git/worktree closeout facts.
 
@@ -1152,10 +1168,10 @@ def observe_local_git(
     changed_paths: list[str] = []
     if head_sha:
         try:
-            base = _run_git(root, ["merge-base", "origin/main", head_sha])
-            changed_raw = _run_git(root, ["diff", "--name-only", f"{base}..{head_sha}"])
+            commit_range = task_commit_range(root, head_sha, base_sha)
+            changed_raw = _run_git(root, ["diff", "--name-only", commit_range])
             changed_paths = [line for line in changed_raw.splitlines() if line]
-            log = _run_git(root, ["log", "--format=%H%x1f%s%x1f%P%x1f%B%x1e", f"{base}..{head_sha}"])
+            log = _run_git(root, ["log", "--format=%H%x1f%s%x1f%P%x1f%B%x1e", commit_range])
             for record in log.split("\x1e"):
                 if not record.strip() or "\x1f" not in record:
                     continue
@@ -1377,11 +1393,18 @@ def _criteria_due_blockers(
     return blockers
 
 
-def _latest_premerge_local(ledger: Mapping[str, Any]) -> Mapping[str, Any] | None:
+def _latest_premerge_local(
+    ledger: Mapping[str, Any], *, head_sha: str | None = None, branch: str | None = None,
+) -> Mapping[str, Any] | None:
     for receipt in reversed(ledger["observation_receipts"]):
         local = (receipt.get("observation") or {}).get("local")
         if not isinstance(local, dict):
             continue
+        if "recovered_from_preserved" in local:
+            from scripts.orchestration.lifecycle_observation import recovery_refusal
+
+            if recovery_refusal(ledger, local, head_sha=head_sha, branch=branch):
+                continue
         if (
             local.get("dispatch_worktree_used")
             and local.get("worktree_present")
@@ -1513,7 +1536,15 @@ def evaluate(payload: Mapping[str, Any], observation: Mapping[str, Any]) -> dict
     hard.extend(evidence_status["invalid_evidence"])
 
     readiness_local = local
-    prior_local = _latest_premerge_local(ledger)
+    prior_local = _latest_premerge_local(ledger, head_sha=head_sha, branch=pr.get("head_branch"))
+    for receipt in ledger["observation_receipts"]:
+        recovered = (receipt.get("observation") or {}).get("local") or {}
+        if "recovered_from_preserved" in recovered:
+            from scripts.orchestration.lifecycle_observation import recovery_refusal
+
+            refusal = recovery_refusal(ledger, recovered, head_sha=head_sha, branch=pr.get("head_branch"))
+            if refusal:
+                hard.append(refusal)
     if prior_local is not None and (
         not local.get("commits") or not local.get("worktree_present") or not local.get("worktree_branch_matches")
     ):

@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import ast
 import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -882,3 +883,167 @@ def test_rebound_reader_alias_still_reports_collection_access():
     assert len(findings) == 1
     assert findings[0].kind == 'test_import_access'
     assert findings[0].scope == '<module>'
+
+
+@pytest.mark.parametrize('enabled', [False, True])
+@pytest.mark.parametrize('source', ['value = 42', 'value = ('])
+def test_scan_restores_gc_state_with_valid_and_unreadable_source(tmp_path, monkeypatch, enabled, source):
+    import gc
+
+    original = ast.parse
+    states_during_parse = []
+
+    def observed(*args, **kwargs):
+        states_during_parse.append(gc.isenabled())
+        return original(*args, **kwargs)
+
+    monkeypatch.setattr(ast, 'parse', observed)
+    path = tmp_path / 'scripts' / 'input.py'
+    path.parent.mkdir()
+    path.write_text(source)
+    was_enabled = gc.isenabled()
+    (gc.enable if enabled else gc.disable)()
+    try:
+        expected_unreadable = ['scripts/input.py'] if source.endswith('(') else []
+        assert lint.find_violations(tmp_path, ()) == ([], expected_unreadable)
+        assert states_during_parse == [False]
+        assert gc.isenabled() is enabled
+    finally:
+        (gc.enable if was_enabled else gc.disable)()
+
+
+@pytest.mark.parametrize('enabled', [False, True])
+@pytest.mark.parametrize('error', [RuntimeError, KeyboardInterrupt])
+def test_scan_restores_gc_state_after_unexpected_error(tmp_path, monkeypatch, enabled, error):
+    import gc
+
+    def broken_paths(root):
+        assert gc.isenabled() is False
+        raise error('scan failed')
+
+    monkeypatch.setattr(lint, 'iter_scan_paths', broken_paths)
+    was_enabled = gc.isenabled()
+    (gc.enable if enabled else gc.disable)()
+    try:
+        with pytest.raises(error, match='scan failed'):
+            lint.find_violations(tmp_path, ())
+        assert gc.isenabled() is enabled
+    finally:
+        (gc.enable if was_enabled else gc.disable)()
+
+
+@pytest.mark.parametrize('enabled', [False, True])
+def test_scan_restores_gc_state_when_disable_is_interrupted(tmp_path, monkeypatch, enabled):
+    import gc
+
+    original_disable = gc.disable
+    calls = []
+
+    def interrupted_disable():
+        original_disable()
+        calls.append('disabled')
+        if len(calls) == 1:
+            raise KeyboardInterrupt('disable interrupted')
+
+    was_enabled = gc.isenabled()
+    (gc.enable if enabled else original_disable)()
+    monkeypatch.setattr(gc, 'disable', interrupted_disable)
+    try:
+        with pytest.raises(KeyboardInterrupt, match='disable interrupted'):
+            lint.find_violations(tmp_path, ())
+        assert gc.isenabled() is enabled
+    finally:
+        (gc.enable if was_enabled else original_disable)()
+
+
+@pytest.mark.parametrize('enabled', [False, True])
+def test_nested_scans_restore_each_gc_state(tmp_path, enabled):
+    import gc
+
+    @lint._without_cyclic_gc
+    def outer_scan():
+        assert gc.isenabled() is False
+        assert lint.find_violations(tmp_path, ()) == ([], [])
+        assert gc.isenabled() is False
+        return 'scanned'
+
+    was_enabled = gc.isenabled()
+    (gc.enable if enabled else gc.disable)()
+    try:
+        assert outer_scan() == 'scanned'
+        assert gc.isenabled() is enabled
+    finally:
+        (gc.enable if was_enabled else gc.disable)()
+
+
+@pytest.mark.parametrize('enabled', [False, True])
+def test_scan_restores_exact_gc_state_after_callable_changes_it(enabled):
+    import gc
+
+    @lint._without_cyclic_gc
+    def changes_gc():
+        gc.enable()
+
+    was_enabled = gc.isenabled()
+    (gc.enable if enabled else gc.disable)()
+    try:
+        changes_gc()
+        assert gc.isenabled() is enabled
+    finally:
+        (gc.enable if was_enabled else gc.disable)()
+
+
+@pytest.mark.parametrize('enabled', [False, True])
+def test_overlapping_scan_threads_restore_original_gc_state(enabled):
+    import gc
+    from concurrent.futures import ThreadPoolExecutor
+    from threading import Event
+
+    first_entered, second_attempted, second_entered = Event(), Event(), Event()
+    release_first, release_second = Event(), Event()
+
+    @lint._without_cyclic_gc
+    def scan(name):
+        assert gc.isenabled() is False
+        entered, release = ((first_entered, release_first) if name == 'first'
+                            else (second_entered, release_second))
+        entered.set()
+        assert release.wait(10), f'{name} scan was not released'
+        return name
+
+    def second_scan():
+        second_attempted.set()
+        return scan('second')
+
+    was_enabled = gc.isenabled()
+    (gc.enable if enabled else gc.disable)()
+    try:
+        with ThreadPoolExecutor(max_workers=2) as pool:
+            try:
+                first = pool.submit(scan, 'first')
+                assert first_entered.wait(10), 'first scan did not enter'
+                second = pool.submit(second_scan)
+                assert second_attempted.wait(10), 'second scan did not start'
+                release_first.set()
+                assert second_entered.wait(10), 'second scan did not enter'
+                assert first.result(timeout=10) == 'first'
+                assert gc.isenabled() is False
+                release_second.set()
+                assert second.result(timeout=10) == 'second'
+            finally:
+                release_first.set()
+                release_second.set()
+        assert gc.isenabled() is enabled
+    finally:
+        (gc.enable if was_enabled else gc.disable)()
+
+
+@pytest.mark.parametrize('entry', [
+    ['-m', 'scripts.hygiene.lint_source_db_writable_connects'],
+    ['scripts/hygiene/lint_source_db_writable_connects.py'],
+], ids=['module', 'script'])
+def test_cli_help_entrypoints(entry):
+    result = subprocess.run([sys.executable, *entry, '--help'], cwd=REPO_ROOT,
+                            capture_output=True, text=True, timeout=30)
+    assert result.returncode == 0, result.stderr
+    assert 'Structural SQLite boundary and store-access ratchet' in result.stdout

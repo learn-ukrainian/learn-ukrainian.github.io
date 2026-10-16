@@ -17,6 +17,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 
 import delegate
 from scripts.common.git_context import sanitized_git_env
+from tests.claude_route_accounts import HOST_ACCOUNT
 
 
 @pytest.fixture(autouse=True)
@@ -258,6 +259,7 @@ def test_admission_does_not_call_a_ukrainian_path_collector():
         review_profile="ukrainian",
         review_attempt=True,
         review_changed_paths=unexpected_paths,
+        claude_account=HOST_ACCOUNT,
     )
     assert (target.recipient, target.model) == ("claude", "claude-sonnet-5-5")
 

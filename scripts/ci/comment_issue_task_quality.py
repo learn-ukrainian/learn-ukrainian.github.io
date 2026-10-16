@@ -3,12 +3,16 @@
 
 from __future__ import annotations
 
+import argparse
 import json
 import os
 import sys
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
+
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from scripts.ci.check_issue_task_quality import (
     FIELDS,
@@ -121,6 +125,20 @@ def main() -> int:
 
 
 if __name__ == "__main__":
+    argparse.ArgumentParser(
+        description=(
+            "Synchronize one advisory task-quality comment on the current GitHub issue.\n"
+            "Use from issue-event CI; --help runs without GitHub credentials or an event."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""Example:
+  .venv/bin/python -m scripts.ci.comment_issue_task_quality
+Inputs: GITHUB_TOKEN, GITHUB_REPOSITORY and GITHUB_EVENT_PATH from issue-event CI.
+Outputs: Creates or updates the advisory issue comment and removes duplicate bot comments.
+Exit codes: 0 = synchronized or rate-limited; 1 = quality finding or execution failure; 2 = invalid usage.
+Related: scripts/ci/check_issue_task_quality.py; docs/best-practices/task-quality.md.
+""",
+    ).parse_args()
     try:
         sys.exit(main())
     except GitHubRateLimited as exc:

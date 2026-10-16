@@ -3,6 +3,15 @@
 The allowlist key is ``path::qualname::callee::shape``. ``shape`` is a
 location-independent hash of the call AST so a different timeout-less call
 cannot rotate into a vacated slot under the same qualname (review F4).
+
+Prefilter rule (#10782): a file is parsed unless it provably cannot import
+``subprocess``. The visitor only flags names bound by ``import subprocess`` /
+``from subprocess import ...`` (found anywhere via ``ast.walk``), and the
+module name is one token, so a source without the substring ``subprocess``
+cannot be flagged. Python NFKC-normalises identifiers, so non-ASCII sources
+are also tested after NFKC normalisation. Import *syntax* is never inspected
+by the prefilter: ``if x: import subprocess``, ``a = 1; import subprocess`` and
+``import \\`` line continuations are all parsed. The AST walk stays the authority.
 """
 
 from __future__ import annotations
@@ -12,8 +21,10 @@ import ast
 import hashlib
 import re
 import sys
+import unicodedata
 from collections import Counter, defaultdict
 from collections.abc import Mapping, Sequence
+from functools import lru_cache
 from pathlib import Path
 from typing import NamedTuple
 
@@ -23,7 +34,7 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 BOUNDED_FUNCS = frozenset({"run", "check_output", "call", "check_call"})
 SHAPE_HASH_HEX_LEN = 16
 ALLOWLIST_KEY_PARTS = 4
-_SUBPROCESS_IMPORT_RE = re.compile(r"(?m)^\s*(?:import subprocess|from subprocess import)\b")
+_SUBPROCESS_TOKEN = "subprocess"
 _SHAPE_RE = re.compile(rf"^[0-9a-f]{{{SHAPE_HASH_HEX_LEN}}}$")
 
 TESTS_TIMEOUT_PREAMBLE = (
@@ -172,17 +183,30 @@ def timeout_less_calls_from_tree(tree: ast.AST) -> list[TimeoutLessCall]:
     return visitor.hits
 
 
+def _may_import_subprocess(src: str) -> bool:
+    """Sound prefilter: False only when no ``import subprocess`` can exist in ``src``."""
+    if _SUBPROCESS_TOKEN in src:
+        return True
+    return not src.isascii() and _SUBPROCESS_TOKEN in unicodedata.normalize("NFKC", src)
+
+
 def timeout_less_calls_from_source(src: str, *, filename: str = "<mem>") -> list[TimeoutLessCall]:
-    if "subprocess" not in src or not _SUBPROCESS_IMPORT_RE.search(src):
+    if not _may_import_subprocess(src):
         return []
     return timeout_less_calls_from_tree(ast.parse(src, filename=filename))
 
 
 def timeout_less_calls(path: Path) -> list[TimeoutLessCall]:
     src = read_test_source(path)
-    if "subprocess" not in src or not _SUBPROCESS_IMPORT_RE.search(src):
+    if not _may_import_subprocess(src):
         return []
-    return timeout_less_calls_from_tree(parse_test_source(path))
+    return list(_timeout_less_calls_for_content(src, parse_test_source(path)))
+
+
+@lru_cache(maxsize=4096)
+def _timeout_less_calls_for_content(src: str, tree: ast.AST) -> tuple[TimeoutLessCall, ...]:
+    """Reuse visitor results only for exact source content and parse identity."""
+    return tuple(timeout_less_calls_from_tree(tree))
 
 
 def scan_scripts(scripts_root: Path, repo_root: Path) -> tuple[dict[str, list[TimeoutLessCall]], list[str]]:
