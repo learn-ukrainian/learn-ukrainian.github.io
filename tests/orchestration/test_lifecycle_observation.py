@@ -500,3 +500,69 @@ def test_existing_absolute_observation_still_reads_without_rewrite(observation_c
     assert lo.before_reap(repo, worktree) == []
     assert ledger.read_bytes() == before
     assert tl._latest_premerge_local(tl.load_lifecycle(ledger)) == local
+
+
+@pytest.mark.parametrize("operation", ["capture", "recover"])
+@pytest.mark.parametrize("history", ["unchanged_main", "advanced_main", "merged_main", "fast_forward"])
+def test_observation_counts_only_task_history(observation_case, operation, history):
+    from scripts.orchestration import lifecycle_observation as lo
+
+    repo, worktree, state_file, task_file, manifest, push_file, first = observation_case
+    if history in {"advanced_main", "merged_main"}:
+        for count in (2, 4):
+            name = f"main-only-{count}"
+            (repo / name).write_text("unrelated PR\n")
+            git(repo, "add", name)
+            git(repo, "commit", "-m", "squashed PR\n\n" + "\n".join(
+                f"X-Agent: claude/unrelated-{i}" for i in range(count)
+            ))
+        git(repo, "push", "origin", "main")
+    if history == "merged_main":
+        # This task's second commit includes the main integration. Its own
+        # change and trailer must still be observed and validated.
+        git(worktree, "merge", "--no-ff", "--no-commit", "origin/main")
+    (worktree / "second-change").write_text("second task change\n")
+    git(worktree, "add", "second-change")
+    git(worktree, "commit", "-m", "second implementation\n\nX-Agent: codex/example")
+    head = git(worktree, "rev-parse", "HEAD")
+    if history == "fast_forward":
+        git(repo, "merge", "--ff-only", head)
+        git(repo, "update-ref", "refs/remotes/origin/main", head)
+    task = json.loads(task_file.read_bytes())
+    task["final_branch_head_commit"] = head
+    task["worktree_reap_proof"]["pr_head_sha"] = head
+    task["worktree_reap_proof"]["members"][0]["head_sha"] = head
+    task_file.write_text(json.dumps(task))
+    push = json.loads(push_file.read_bytes())
+    push.update(head=head, remote_head=head)
+    push_file.write_text(json.dumps(push))
+
+    if operation == "capture":
+        assert lo.before_reap(repo, worktree)[0]["status"] == "recorded"
+    else:
+        git(repo, "worktree", "remove", str(worktree))
+        lo.recover(repo, state_file=state_file, task_file=task_file, manifest_file=manifest, push_file=push_file, now=NOW)
+    local = tl._latest_premerge_local(tl.load_lifecycle(state_file))
+    assert [commit["sha"] for commit in local["commits"]] == [head, first]
+    assert local["changed_paths"] == ["change", "second-change"]
+    assert tl._local_readiness(local) == []
+
+
+def test_task_commit_range_refuses_ambiguous_absorbed_merge(observation_case):
+    repo, worktree, _, task_file, *_ = observation_case
+    base = json.loads(task_file.read_bytes())["worktree_base_sha"]
+    (repo / "main-only").write_text("unrelated PR\n")
+    git(repo, "add", "main-only")
+    git(repo, "commit", "-m", "main update\n\nX-Agent: claude/unrelated")
+    git(repo, "push", "origin", "main")
+    git(worktree, "merge", "--no-ff", "origin/main", "-m", "integration\n\nX-Agent: codex/example")
+    head = git(worktree, "rev-parse", "HEAD")
+    git(repo, "merge", "--ff-only", head)
+    git(repo, "update-ref", "refs/remotes/origin/main", head)
+
+    with pytest.raises(tl.LifecycleError, match="task range is ambiguous"):
+        tl.task_commit_range(repo, head, base)
+    local = tl.observe_local_git(repo, head_sha=head, branch="codex/42-closeout", worktree=str(worktree), base_sha=base)
+    assert local["commits"] == []
+    assert local["changed_paths"] == []
+    assert tl._local_readiness(local) == ["no task commits were available for X-Agent validation"]

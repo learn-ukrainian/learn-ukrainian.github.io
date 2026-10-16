@@ -1092,6 +1092,21 @@ def _verified_publisher_merge(repo_root: Path, sha: str, parents: list[str]) -> 
         return False
 
 
+def task_commit_range(repo_root: Path, head_sha: str, base_sha: str | None = None) -> str:
+    """Exclude integrated main history, retaining a proven linear FF range."""
+    main_base = _run_git(repo_root, ["merge-base", "origin/main", head_sha])
+    if base_sha:
+        _run_git(repo_root, ["merge-base", "--is-ancestor", base_sha, head_sha])
+        if main_base == head_sha:
+            # After a fast-forward landing main no longer marks the fork. A
+            # linear dispatch range cannot contain imported merge history.
+            dispatch_range = f"{base_sha}..{head_sha}"
+            if _run_git(repo_root, ["rev-list", "--merges", dispatch_range]):
+                raise LifecycleError("task range is ambiguous after main absorbed a merge-bearing head")
+            return dispatch_range
+    return f"{main_base}..{head_sha}"
+
+
 def observe_local_git(
     repo_root: Path,
     *,
@@ -1153,12 +1168,10 @@ def observe_local_git(
     changed_paths: list[str] = []
     if head_sha:
         try:
-            base = base_sha or _run_git(root, ["merge-base", "origin/main", head_sha])
-            if base_sha:
-                _run_git(root, ["merge-base", "--is-ancestor", base, head_sha])
-            changed_raw = _run_git(root, ["diff", "--name-only", f"{base}..{head_sha}"])
+            commit_range = task_commit_range(root, head_sha, base_sha)
+            changed_raw = _run_git(root, ["diff", "--name-only", commit_range])
             changed_paths = [line for line in changed_raw.splitlines() if line]
-            log = _run_git(root, ["log", "--format=%H%x1f%s%x1f%P%x1f%B%x1e", f"{base}..{head_sha}"])
+            log = _run_git(root, ["log", "--format=%H%x1f%s%x1f%P%x1f%B%x1e", commit_range])
             for record in log.split("\x1e"):
                 if not record.strip() or "\x1f" not in record:
                     continue
