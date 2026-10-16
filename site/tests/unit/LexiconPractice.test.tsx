@@ -2946,6 +2946,40 @@ describe('LexiconPractice', () => {
     expect(requeuePositions).not.toEqual(initialPositions);
   });
 
+  test.each([49, 50])('#10706 F2 focused rendered resume at history %s preserves variation, feedback and review accounting', async (historyLength) => {
+    writePracticeSessionSnapshot('mixed', {
+      sessionSeed: 12345,
+      history: Array.from({ length: historyLength }, () => ({ itemId: 'bihate::paronym', lemmaId: 'bihate', mode: 'paronym' })),
+      budget: 'until-zero', completed: historyLength, plannedTotal: 100,
+      modeFilter: 'mixed', level: 'A1', deckId: 'all',
+      dateSeed: dateSeed(new Date()), startedAt: Date.now(),
+    });
+    const user = userEvent.setup();
+    const deck = paronymDeck();
+    const view = render(<LexiconPractice initialDeck={deck} initialMode="mixed" />);
+    await user.click(await screen.findByTestId('practice-start-session'));
+    const orders = new Set<string>();
+    for (let round = 0; round < 6; round++) {
+      const scope = within(await screen.findByTestId('practice-paronym'));
+      const labels = scope.getAllByRole('button').map((button) => button.textContent);
+      orders.add(JSON.stringify(labels));
+      expect([...labels].sort()).toEqual(['біжить', 'бігає'].sort());
+      view.rerender(<LexiconPractice initialDeck={deck} initialMode="mixed" />);
+      expect(within(screen.getByTestId('practice-paronym')).getAllByRole('button').map((button) => button.textContent)).toEqual(labels);
+      const reviews = storedState().reviews?.length ?? 0;
+      await user.click(scope.getByRole('button', { name: round === 5 ? /бігає/ : /біжить/ }));
+      expect(screen.getByTestId('practice-paronym-feedback')).toHaveTextContent(round === 5 ? 'Правильно!' : 'Неправильно.');
+      expect(storedState().reviews).toHaveLength(reviews + 1);
+      const answered = localStorage.getItem(SRS_STORAGE_KEY);
+      await user.click(screen.getByTestId('practice-advance-button'));
+      expect(localStorage.getItem(SRS_STORAGE_KEY)).toBe(answered);
+      expect(JSON.parse(localStorage.getItem(PRACTICE_SESSION_STORAGE_KEY)!).byMode.mixed.sessionSeed).toBe(12345);
+      expect(screen.getByTestId('practice-session-progress')).toHaveTextContent(`${historyLength + round + 1}/`);
+    }
+    expect(orders.size).toBeGreaterThan(1);
+    expect(JSON.parse(localStorage.getItem(PRACTICE_SESSION_STORAGE_KEY)!).byMode.mixed.history).toHaveLength(50);
+  });
+
   test('paronym mode card is present in the K3 grid even when the deck has no paronym items', () => {
     const { container } = render(<LexiconPractice initialDeck={paronymDeck({ includeItems: false })} />);
 

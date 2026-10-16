@@ -1289,8 +1289,8 @@ async function assertNativeFallback(page: Page) {
     await expect(audioButton(page)).toHaveAttribute('aria-busy', 'true');
     await expect(page.locator('[data-pronunciation-lemma] [role="status"]')).toBeEmpty();
     expect(await page.evaluate(() => window.practiceAudioProbe.speech)).toEqual([]);
-    test.info().annotations.push({ type: 'native-empty-catalog', description: 'UNKNOWN: the API cannot distinguish an empty catalog from one still loading; request stays cancellable' });
-    await audioButton(page).click();
+    test.info().annotations.push({ type: 'native-empty-catalog', description: 'UNKNOWN native Ukrainian capability: empty inventory is not absence proof; finite attempt expiry is observed separately' });
+    await expect(page.locator('[data-pronunciation-lemma] [role="status"]')).toHaveText('Audio did not start. Try again.', { timeout: 12000 });
     await expect(audioButton(page)).toHaveText('Play pronunciation');
     await expect(audioButton(page)).toHaveAttribute('aria-busy', 'false');
   } else {
@@ -1636,6 +1636,7 @@ test.describe('#10706 audio:', () => {
     await observePracticeAudio(page);
     await page.route('**/audio/pronunciation/manifest.json', (route) => route.fulfill({ json: { schemaVersion: 1, entries: {} } }));
     await openAudioPractice(page);
+    test.setTimeout(60000);
     const nativeInventory = await assertNativeFallback(page);
     if (!nativeInventory.voices.some((voice) => voice.local && voice.lang.toLowerCase().startsWith('uk'))) {
       test.info().annotations.push({ type: 'native-local-positive', description: 'N/A: observed device inventory offers no local Ukrainian voice; empty catalog capability remains UNKNOWN; no remote speech requested' });
@@ -1660,8 +1661,8 @@ test.describe('#10706 audio:', () => {
     } else if (!nativeInventory.supported || nativeInventory.voices.length > 0) {
       await expect(page.locator('[data-pronunciation-lemma] [role="status"]')).toHaveText('Audio unavailable. Try again.');
     } else {
-      await expect(audioButton(page)).toHaveAttribute('aria-busy', 'true');
-      await audioButton(page).click();
+      await expect(page.locator('[data-pronunciation-lemma] [role="status"]')).toHaveText('Audio did not start. Try again.', { timeout: 12000 });
+      await expect(audioButton(page)).toHaveAttribute('aria-busy', 'false');
     }
     await assertNativeFallback(page);
     expect(await audioLearningState(page)).toEqual(before);
@@ -1913,6 +1914,209 @@ test.describe('#10706 audio:', () => {
     await expect.poll(() => page.evaluate(() => window.practiceAudioProbe.media[0].promises)).toContain('AbortError');
     await nativePlaying(page);
     expect(await root!.evaluate((element) => element.isConnected)).toBe(true);
+    expect(await audioLearningState(page)).toEqual(before);
+  });
+});
+
+
+test('#10706 A3 D01 actual native empty catalog expires and permits retry', async ({ page }) => {
+  await observePracticeAudio(page);
+  await page.route('**/manifest.json', (route) => route.fulfill({ json: { schemaVersion: 1, entries: {} } }));
+  await openAudioPractice(page);
+  const inventory = await observedAudioVoices(page);
+  await test.info().attach('actual-native-inventory.json', { body: JSON.stringify(inventory), contentType: 'application/json' });
+  // This host-path check must expose its applicability, never inject native availability.
+  test.skip(!inventory.supported || inventory.voices.length !== 0, 'Requires actual empty native inventory');
+  const before = await audioLearningState(page);
+  await audioButton(page).click();
+  await expect(audioButton(page)).toHaveAttribute('aria-busy', 'true');
+  await expect(page.locator('[data-pronunciation-lemma] [role="status"]')).toHaveText('Audio did not start. Try again.', { timeout: 12000 });
+  await expect(audioButton(page)).toHaveAccessibleName('Play pronunciation');
+  await expect(audioButton(page)).toHaveAttribute('aria-busy', 'false');
+  expect(await page.evaluate(() => window.practiceAudioProbe.speech)).toEqual([]);
+  await audioButton(page).click();
+  await expect(audioButton(page)).toHaveAttribute('aria-busy', 'true');
+  await audioButton(page).click();
+  await expect(audioButton(page)).toHaveAccessibleName('Play pronunciation');
+  expect(await audioLearningState(page)).toEqual(before);
+});
+
+// A3 controls exercise the built consumer. Injected availability is never native speech proof.
+async function a3SpeechControl(page: Page, preloaded = false, media = false) {
+  await observePracticeAudio(page);
+  await page.addInitScript(({ preloaded, media }) => {
+    if (media) {
+      const attempts: { element: HTMLMediaElement; resolve: () => void; reject: () => void; error: () => void }[] = [];
+      HTMLMediaElement.prototype.play = function () {
+        const error = this.onerror;
+        return new Promise<void>((resolve, reject) => {
+          attempts.push({ element: this, resolve, reject: () => reject(new Error('injected media failure')), error: () => error?.call(this, new Event('error')) });
+        });
+      };
+      Reflect.set(window, 'a3Media', {
+        signal: (action: 'resolve' | 'reject' | 'error', index = 0) => attempts[index][action](),
+        snapshot: () => attempts.map(({ element }) => ({ paused: element.paused, time: element.currentTime })),
+      });
+    }
+    let available = preloaded;
+    let cancels = 0;
+    const submitted: SpeechSynthesisUtterance[] = [];
+    const voice = { default: false, lang: 'uk-UA', localService: true, name: 'A3 injected Ukrainian', voiceURI: 'a3-control' };
+    class ControlledUtterance {
+      lang = '';
+      voice: SpeechSynthesisVoice | null = null;
+      onstart: (() => void) | null = null;
+      onend: (() => void) | null = null;
+      onerror: (() => void) | null = null;
+      constructor(public text: string) {}
+    }
+    Reflect.set(window, 'SpeechSynthesisUtterance', ControlledUtterance);
+    speechSynthesis.getVoices = () => available ? [voice] : [];
+    speechSynthesis.speak = (utterance) => {
+      submitted.push(utterance);
+      // Capture the actual submitted callback too, to challenge invalidation after detachment.
+      Reflect.set(utterance, 'savedStart', utterance.onstart);
+    };
+    speechSynthesis.cancel = () => { cancels++; };
+    Reflect.set(window, 'a3Control', {
+      voices: (value = true) => { available = value; speechSynthesis.dispatchEvent(new Event('voiceschanged')); },
+      start: (index = submitted.length - 1) => Reflect.get(submitted[index], 'savedStart')?.(),
+      error: () => Reflect.apply(submitted.at(-1)!.onerror!, submitted.at(-1)!, []),
+      snapshot: () => ({ count: submitted.length, cancels, selected: submitted.map((utterance) => ({ text: utterance.text, lang: utterance.lang, voice: utterance.voice?.name })) }),
+    });
+  }, { preloaded, media });
+  await page.route('**/manifest.json', (route) => route.fulfill({ json: { schemaVersion: 1, entries: {} } }));
+  if (media) await routeGoodAudio(page);
+  await openAudioPractice(page);
+  await page.clock.install({ time: 0 });
+  await page.clock.pauseAt(0);
+}
+async function a3Signal(page: Page, signal: 'voices' | 'start' | 'error', index?: number) {
+  await page.evaluate(({ signal, index }) => Reflect.get(window, 'a3Control')[signal](index), { signal, index });
+}
+async function a3Snapshot(page: Page) {
+  return page.evaluate(() => Reflect.get(window, 'a3Control').snapshot());
+}
+async function a3Expired(page: Page) {
+  await expect(audioButton(page)).toHaveAccessibleName('Play pronunciation');
+  await expect(audioButton(page)).toHaveAttribute('aria-busy', 'false');
+  await expect(page.locator('[data-pronunciation-lemma] [role="status"]')).toHaveText('Audio did not start. Try again.');
+}
+
+test.describe('#10706 A3 injected startup controls:', () => {
+  for (const scenario of ['D02 preactivation empty', 'D03 repeated empty', 'D04 voice before boundary', 'D05 voice after boundary', 'D06 cancel', 'D07 supersession', 'D08 stale retry', 'D09 speech never starts', 'D10 start at 9999', 'D11 duplicate voices', 'D12 error and retry']) {
+    test(scenario, async ({ page }) => {
+      await a3SpeechControl(page, ['D08', 'D09', 'D10', 'D12'].some((id) => scenario.startsWith(id)));
+      const before = await audioLearningState(page);
+      if (scenario.startsWith('D02')) {
+        await page.evaluate(() => speechSynthesis.dispatchEvent(new Event('voiceschanged')));
+        await page.clock.runFor(20000);
+        expect((await a3Snapshot(page)).count).toBe(0);
+      }
+      await audioButton(page).click();
+      await expect(audioButton(page)).toHaveAttribute('aria-busy', 'true');
+      if (scenario.startsWith('D03')) {
+        for (const elapsed of [3000, 4000, 2999]) {
+          await page.clock.runFor(elapsed);
+          await page.evaluate(() => speechSynthesis.dispatchEvent(new Event('voiceschanged')));
+          await expect(audioButton(page)).toHaveAttribute('aria-busy', 'true');
+        }
+      } else await page.clock.runFor(9999);
+      if (scenario.startsWith('D04') || scenario.startsWith('D11')) {
+        await a3Signal(page, 'voices');
+        if (scenario.startsWith('D11')) await a3Signal(page, 'voices');
+        expect((await a3Snapshot(page)).count).toBe(1);
+      }
+      if (scenario.startsWith('D04') || scenario.startsWith('D10')) {
+        await a3Signal(page, 'start');
+        expect((await a3Snapshot(page)).selected).toEqual([{ text: 'або́', lang: 'uk-UA', voice: 'A3 injected Ukrainian' }]);
+        await page.clock.runFor(20000);
+        await expect(audioButton(page)).toHaveAttribute('aria-busy', 'false');
+        await expect(audioButton(page)).toHaveAccessibleName('Stop pronunciation');
+        await expect(page.locator('[data-pronunciation-lemma] [role="status"]')).toBeEmpty();
+      } else if (scenario.startsWith('D06') || scenario.startsWith('D07')) {
+        if (scenario.startsWith('D06')) await audioButton(page).click();
+        else {
+          await page.locator('[data-activity="flashcard"]').click();
+          await page.locator('[data-rate="again"]').click();
+          const answered = (await audioLearningState(page)).saved.srs;
+          await page.getByTestId('practice-advance-button').click();
+          expect((await audioLearningState(page)).saved.srs).toBe(answered);
+        }
+        await page.clock.runFor(20000);
+        await a3Signal(page, 'voices');
+        expect((await a3Snapshot(page)).count).toBe(0);
+        await expect(audioButton(page)).toHaveAccessibleName('Play pronunciation');
+        await expect(page.locator('[data-pronunciation-lemma] [role="status"]')).toBeEmpty();
+      } else if (scenario.startsWith('D12')) {
+        await a3Signal(page, 'error');
+        await expect(page.locator('[data-pronunciation-lemma] [role="status"]')).toHaveText('Audio unavailable. Try again.');
+        await audioButton(page).click();
+        await page.clock.runFor(9999);
+        await expect(audioButton(page)).toHaveAttribute('aria-busy', 'true');
+        await page.clock.runFor(1);
+        await a3Expired(page);
+      } else {
+        await expect(audioButton(page)).toHaveAttribute('aria-busy', 'true');
+        await page.clock.runFor(1);
+        await a3Expired(page);
+        if (scenario.startsWith('D05')) {
+          await a3Signal(page, 'voices');
+          expect((await a3Snapshot(page)).count).toBe(0);
+        }
+        if (scenario.startsWith('D08')) {
+          await audioButton(page).click();
+          await a3Signal(page, 'start', 0);
+          await expect(audioButton(page)).toHaveAttribute('aria-busy', 'true');
+          await page.clock.runFor(9999);
+          await expect(audioButton(page)).toHaveAttribute('aria-busy', 'true');
+          await page.clock.runFor(1);
+          await a3Expired(page);
+          expect((await a3Snapshot(page)).cancels).toBe(2);
+        }
+        if (scenario.startsWith('D09')) expect((await a3Snapshot(page)).cancels).toBe(1);
+        if (scenario.startsWith('D11')) expect((await a3Snapshot(page)).count).toBe(1);
+      }
+      if (!scenario.startsWith('D07')) expect(await audioLearningState(page)).toEqual(before);
+    });
+  }
+});
+
+
+async function a3MediaSignal(page: Page, action: 'resolve' | 'reject' | 'error', index = 0) {
+  await page.evaluate(({ action, index }) => Reflect.get(window, 'a3Media').signal(action, index), { action, index });
+}
+test.describe('#10706 A3 injected media controls:', () => {
+  for (const settlement of ['resolve', 'reject'] as const) {
+    test(`D13 stalled media expiry and late ${settlement} cannot affect retry`, async ({ page }) => {
+      await a3SpeechControl(page, true, true);
+      const before = await audioLearningState(page);
+      await audioButton(page).click();
+      await page.clock.runFor(9999);
+      await expect(audioButton(page)).toHaveAttribute('aria-busy', 'true');
+      await page.clock.runFor(1);
+      await a3Expired(page);
+      expect(await page.evaluate(() => Reflect.get(window, 'a3Media').snapshot())).toEqual([{ paused: true, time: 0 }]);
+      await audioButton(page).click();
+      await a3MediaSignal(page, settlement);
+      await page.clock.runFor(9999);
+      await expect(audioButton(page)).toHaveAttribute('aria-busy', 'true');
+      expect((await a3Snapshot(page)).count).toBe(0);
+      await page.clock.runFor(1);
+      await a3Expired(page);
+      expect(await audioLearningState(page)).toEqual(before);
+    });
+  }
+  test('D13 media resolved at 9999 survives startup boundary', async ({ page }) => {
+    await a3SpeechControl(page, true, true);
+    const before = await audioLearningState(page);
+    await audioButton(page).click();
+    await page.clock.runFor(9999);
+    await a3MediaSignal(page, 'resolve');
+    await page.clock.runFor(20000);
+    await expect(audioButton(page)).toHaveAccessibleName('Stop pronunciation');
+    await expect(audioButton(page)).toHaveAttribute('aria-busy', 'false');
+    await expect(page.locator('[data-pronunciation-lemma] [role="status"]')).toBeEmpty();
     expect(await audioLearningState(page)).toEqual(before);
   });
 });

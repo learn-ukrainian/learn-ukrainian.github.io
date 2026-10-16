@@ -13,8 +13,8 @@ let active: (() => void) | undefined;
 const mounted = new WeakMap<HTMLElement, () => void>();
 
 const COPY = {
-  en: { play: 'Play pronunciation', stop: 'Stop pronunciation', error: 'Audio unavailable. Try again.' },
-  uk: { play: 'Послухати вимову', stop: 'Зупинити відтворення', error: 'Аудіо недоступне. Спробуйте ще раз.' },
+  en: { play: 'Play pronunciation', stop: 'Stop pronunciation', error: 'Audio unavailable. Try again.', expired: 'Audio did not start. Try again.' },
+  uk: { play: 'Послухати вимову', stop: 'Зупинити відтворення', error: 'Аудіо недоступне. Спробуйте ще раз.', expired: 'Відтворення не почалося. Спробуйте ще раз.' },
 };
 
 let manifestUnavailable = false;
@@ -85,7 +85,8 @@ export function mountPronunciationPlayer(root: HTMLElement): () => void {
   let phase: 'idle' | 'pending' | 'playing' = 'idle';
   let audioUsed = false;
   let audioSource = '';
-  let hasError = false;
+  let failure: 'error' | 'expired' | undefined;
+  let startupTimer: number | undefined;
   let attempt = 0;
   let fallbackHandledAttempt = 0;
   const copy = () => COPY[(root.dataset.locale || document.documentElement.dataset.chromeLocale) === 'en' ? 'en' : 'uk'];
@@ -94,10 +95,11 @@ export function mountPronunciationPlayer(root: HTMLElement): () => void {
     button.lang = status.lang = locale;
     button.textContent = phase === 'idle' ? copy().play : copy().stop;
     button.setAttribute('aria-busy', String(phase === 'pending'));
-    status.textContent = hasError ? copy().error : '';
+    status.textContent = failure ? copy()[failure] : '';
   };
   const stop = () => {
     attempt++;
+    window.clearTimeout(startupTimer);
     cancelVoiceWait?.();
     if (active === stop) active = undefined;
     if (utterance) {
@@ -113,10 +115,15 @@ export function mountPronunciationPlayer(root: HTMLElement): () => void {
     phase = 'idle';
     label();
   };
-  const failed = () => {
+  const failed = (reason: 'error' | 'expired' = 'error') => {
     if (disposed) return;
-    hasError = true;
+    failure = reason;
     stop();
+  };
+  const startBudget = (current: number) => {
+    startupTimer = window.setTimeout(() => {
+      if (!disposed && current === attempt && phase === 'pending') failed('expired');
+    }, 10000);
   };
   const speakWithSynthesis = (current: number) => {
     if (disposed || current !== attempt) return;
@@ -150,11 +157,13 @@ export function mountPronunciationPlayer(root: HTMLElement): () => void {
     utterance.voice = voice;
     utterance.onstart = () => {
       if (disposed || current !== attempt) return;
+      window.clearTimeout(startupTimer);
       phase = 'playing';
       label();
     };
     utterance.onend = () => {
       if (disposed || current !== attempt) return;
+      window.clearTimeout(startupTimer);
       utterance = undefined;
       if (active === stop) active = undefined;
       attempt++;
@@ -176,6 +185,7 @@ export function mountPronunciationPlayer(root: HTMLElement): () => void {
         audio.pause();
         audio.currentTime = 0;
       }
+      if (phase === 'playing') startBudget(current);
       phase = 'pending';
       label();
       speakWithSynthesis(current);
@@ -188,10 +198,11 @@ export function mountPronunciationPlayer(root: HTMLElement): () => void {
     if (phase !== 'idle') { stop(); return; }
     active?.();
     active = stop;
-    hasError = false;
+    failure = undefined;
     phase = 'pending';
     label();
     const current = ++attempt;
+    startBudget(current);
     try {
       if (audio) {
         if (audioUsed) {
@@ -206,6 +217,7 @@ export function mountPronunciationPlayer(root: HTMLElement): () => void {
         const media = audio;
         const finished = () => {
           if (disposed || current !== attempt) return;
+          window.clearTimeout(startupTimer);
           attempt++;
           if (active === stop) active = undefined;
           phase = 'idle';
@@ -216,10 +228,11 @@ export function mountPronunciationPlayer(root: HTMLElement): () => void {
         media.onerror = () => handlePlaybackFailure(current, isCdn);
         media.currentTime = 0;
         await media.play();
-        if (disposed || current !== attempt || active !== stop) {
+        if (disposed || current !== attempt || active !== stop || fallbackHandledAttempt === current) {
           media.pause();
           return;
         }
+        window.clearTimeout(startupTimer);
         phase = 'playing';
         label();
       } else {
