@@ -1404,6 +1404,7 @@ def _hermetic_dispatch_admission_host(monkeypatch):
         "DISPATCH_MAX_LOAD_PER_CPU",
         "DISPATCH_WORKER_MEM_RESERVE_GIB",
         "DISPATCH_MAX_TEST_SLOT_QUEUE",
+        "DISPATCH_DISK_REAP_USED_PERCENT",
         "DISPATCH_DISK_REFUSE_USED_PERCENT",
         "DISPATCH_DISK_ALERT_USED_PERCENT",
         "LU_SLICE_CGROUP",

@@ -1027,8 +1027,8 @@ def test_live_dispatch_on_a_full_disk_reaps_once_then_refuses_with_no_side_effec
     refusal = [line for line in capsys.readouterr().err.splitlines() if "admission refused" in line]
     assert len(refusal) == 1
     assert (
-        "disk 90.0% used, 40.0 GiB free on the .worktrees filesystem is at or above the refuse threshold of 85% "
-        "(DISPATCH_DISK_REFUSE_USED_PERCENT=85); reaper removed 0 worktree(s)"
+        "disk 90.0% used, 40.0 GiB free on the .worktrees filesystem is at or above the refuse threshold of 90% "
+        "(DISPATCH_DISK_REFUSE_USED_PERCENT=90); reaper removed 0 worktree(s)"
     ) in refusal[0]
     assert not delegate._state_path("adm-disk-full").exists()
 
@@ -1051,7 +1051,7 @@ def test_live_dispatch_admitted_after_the_reaper_frees_space_reaps_only_outside_
     assert disk["alerts"] == []
     admitted = [line for line in capsys.readouterr().err.splitlines() if "dispatch admission: admitted" in line]
     assert len(admitted) == 1
-    assert "disk 60.0% used, 160.0 GiB free (refuse at 85%, alert at 80%) [reaper removed 0 worktree(s), 88.0% before]" in (
+    assert "disk 60.0% used, 160.0 GiB free (reap at 85%, refuse at 90%, alert at 80%) [reaper removed 0 worktree(s), 88.0% before]" in (
         admitted[0]
     )
     state = delegate._read_state(delegate._state_path("adm-disk-reaped"))
@@ -1094,7 +1094,7 @@ def test_capacity_pick_shows_the_disk_decision_without_reaping(tmp_path, monkeyp
 
     assert capacity_pick.main([]) == 0
     assert capsys.readouterr().out.splitlines()[-1].endswith(
-        "disk 82.0% used, 72.0 GiB free (refuse at 85%, alert at 80%) [epics alert posted]"
+        "disk 82.0% used, 72.0 GiB free (reap at 85%, refuse at 90%, alert at 80%) [epics alert posted]"
     )
 
     disk["readings"] = [91.0]
@@ -1103,7 +1103,7 @@ def test_capacity_pick_shows_the_disk_decision_without_reaping(tmp_path, monkeyp
     assert admission["admitted"] is False
     assert admission["line"].startswith(
         "admission (write dispatch): would REFUSE now: disk 91.0% used, 36.0 GiB free on the .worktrees "
-        "filesystem is at or above the refuse threshold of 85% (DISPATCH_DISK_REFUSE_USED_PERCENT=85); "
+        "filesystem is at or above the refuse threshold of 90% (DISPATCH_DISK_REFUSE_USED_PERCENT=90); "
         "reaper not run in this check"
     )
     assert admission["disk_used_percent"] == 91.0
