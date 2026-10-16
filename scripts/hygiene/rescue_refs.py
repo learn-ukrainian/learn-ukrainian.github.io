@@ -10,11 +10,26 @@ The patch-id window is ``origin/main`` commits with a committer date after
 2026-10-16 census. A matching commit older than that window is not a match, so
 the rescue ref stays UNIQUE. Main's patch-ids are loaded once per run.
 
-Patch-ids are read through :func:`scripts.hygiene.branch_sweep._load_patch_ids`
-(``git patch-id --stable``). Ancestry of one tip uses ``git merge-base
---is-ancestor``, the same command branch sweep uses. The batch form of that
-fact is membership in ``git rev-list refs/remotes/origin/main``; reachability
-from any other origin ref is membership in ``git rev-list --remotes=origin``.
+Patch equivalence uses :func:`scripts.hygiene.branch_sweep._load_patch_ids`
+with ``git patch-id --verbatim`` and ``git --no-lazy-fetch``. Verbatim keeps
+whitespace and line numbers, so two Python files that differ only by
+indentation do not match. Every off-main commit must match a distinct
+in-window main commit: a patch-id that occurs twice on the rescue tip and
+once on main is not a match.
+
+The run refreshes origin first. ``git fetch origin`` must exit 0, or
+``FETCH_HEAD`` must already hold a non-empty recorded fetch younger than
+:data:`ORIGIN_FETCH_MAX_AGE_S`. Otherwise every ref stays UNIQUE and the
+creation guard still pins the tip. Under the lock, immediately before each
+deletion, the preserving origin ref must still exist at the recorded SHA and,
+for ancestry, still contain the tip.
+
+A shallow repository, a graft file, or a replace ref means the commit walk is
+incomplete, so nothing is deletable. A missing blob needed for a patch-id is
+UNIQUE, never a match and never an empty diff. Containment is different:
+parent links live on the commit objects, so a ``blob:none`` clone may omit
+blobs and still prove that a tip is an ancestor of a fresh ``origin/main``
+when that commit walk itself is complete.
 """
 
 from __future__ import annotations
@@ -22,6 +37,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import stat
 import subprocess
 import tempfile
 import time
@@ -30,6 +46,7 @@ from dataclasses import asdict, dataclass
 from datetime import UTC, datetime
 from pathlib import Path
 
+from scripts.common.git_context import sanitized_git_env
 from scripts.hygiene import branch_sweep
 from scripts.orchestration import reap_worktrees as reaper
 from scripts.orchestration.reaper_lifecycle import append_journal
@@ -41,8 +58,12 @@ DELETABLE = frozenset({CLASS_CONTAINED, CLASS_PATCH})
 # git --since is "after this date". Commits at or before 2026-08-01 00:00:00
 # are outside the window and cannot prove a rescue commit.
 MAIN_PATCH_SINCE = "2026-08-01"
+# A non-empty FETCH_HEAD younger than this is a recorded successful fetch.
+# A failed fetch leaves an empty file and does not qualify.
+ORIGIN_FETCH_MAX_AGE_S = 120
 _RESCUE_PREFIX = "refs/reaper-rescue/"
-# 40 commits of `git log -p | git patch-id --stable` took 0.42s on 2026-10-16.
+_ORIGIN_MAIN = "refs/remotes/origin/main"
+# 40 commits of `git log -p | git patch-id` took 0.42s on 2026-10-16.
 # Stay under that rate so a creation check fits the reap lock.
 _PATCH_SECONDS_PER_COMMIT = 0.02
 DeleteFn = Callable[[Path, str, str], None]
@@ -72,6 +93,8 @@ class RescueRef:
     sha: str
     classification: str
     proof: str
+    preserving_ref: str = ""
+    preserving_sha: str = ""
 
 
 @dataclass(frozen=True)
@@ -90,6 +113,7 @@ def decide(
     unique: list[str],
     patch_of: dict[str, str | None],
     main_ids: set[str],
+    main_counts: dict[str, int] | None = None,
     since: str = MAIN_PATCH_SINCE,
 ) -> Preservation:
     """One classification for the batch tool and the reaper's creation guard."""
@@ -107,13 +131,31 @@ def decide(
         return Preservation(
             CLASS_UNIQUE,
             (
-                f"{len(unmatched)} of {len(unique)} off-main commits have no stable patch-id "
+                f"{len(unmatched)} of {len(unique)} off-main commits have no verbatim patch-id "
                 f"on origin/main since {since}; first {unmatched[0]}"
+            ),
+        )
+    counts = main_counts if main_counts is not None else {patch: 1 for patch in main_ids}
+    # Occurrence counts apply only to commits that emitted a patch-id.
+    present = [sha for sha in unique if patch_of.get(sha)]
+    need: dict[str, int] = {}
+    for sha in present:
+        patch = patch_of[sha]
+        if patch is None:
+            continue
+        need[patch] = need.get(patch, 0) + 1
+    short = [sha for sha in present if (patch := patch_of[sha]) is not None and need[patch] > counts.get(patch, 0)]
+    if short:
+        return Preservation(
+            CLASS_UNIQUE,
+            (
+                f"{len(short)} of {len(unique)} off-main commits repeat a verbatim patch-id "
+                f"more often than origin/main since {since}; first {short[0]}"
             ),
         )
     return Preservation(
         CLASS_PATCH,
-        f"all {len(unique)} off-main commits match a stable patch-id on origin/main since {since}",
+        (f"all {len(unique)} off-main commits match a distinct verbatim patch-id on origin/main since {since}"),
     )
 
 
@@ -175,13 +217,275 @@ def _seconds(deadline: float) -> int:
     return max(1, int(remaining))
 
 
+def _fetch_head_path(repo: Path) -> Path | None:
+    result = branch_sweep._git(
+        repo,
+        "rev-parse",
+        "--path-format=absolute",
+        "--git-path",
+        "FETCH_HEAD",
+        timeout=10,
+    )
+    if result.returncode != 0:
+        return None
+    text = result.stdout.strip()
+    if not text:
+        return None
+    return Path(text)
+
+
+def _recorded_fetch_is_fresh(repo: Path) -> bool:
+    """True when FETCH_HEAD is a non-empty successful fetch inside the bound."""
+    path = _fetch_head_path(repo)
+    if path is None or not path.is_file():
+        return False
+    try:
+        info = path.stat()
+        if not stat.S_ISREG(info.st_mode) or info.st_size <= 0:
+            return False
+        if time.time() - info.st_mtime >= ORIGIN_FETCH_MAX_AGE_S:
+            return False
+        # A failed fetch creates an empty file. Read a bounded prefix and require
+        # the leading object name a successful fetch writes.
+        descriptor = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_CLOEXEC)
+    except OSError:
+        return False
+    try:
+        chunk = os.read(descriptor, 80)
+    finally:
+        os.close(descriptor)
+    token = chunk.split()[0].decode("ascii", errors="replace") if chunk.split() else ""
+    return branch_sweep.SHA_RE.fullmatch(token) is not None
+
+
+def refresh_origin(repo: Path, *, timeout: int) -> tuple[bool, str]:
+    """Fetch origin, or accept a recorded fetch younger than the stated bound.
+
+    A non-zero fetch does not become fresh because the attempt touched
+    ``FETCH_HEAD``. Only a fetch that exited 0, or a non-empty recorded
+    fetch that was already young before this call, counts.
+    """
+    if _recorded_fetch_is_fresh(repo):
+        return True, f"recorded origin fetch is younger than {ORIGIN_FETCH_MAX_AGE_S}s"
+    try:
+        result = branch_sweep._git(repo, "fetch", "origin", timeout=timeout)
+    except subprocess.TimeoutExpired:
+        return False, "origin is not fresh: git fetch origin timed out"
+    if result.returncode == 0:
+        return True, "git fetch origin exited 0"
+    return False, f"origin is not fresh: git fetch origin exited {result.returncode}"
+
+
+def _history_block(repo: Path, *, timeout: int) -> str | None:
+    """Why this repository's commit walk cannot prove preservation, if it cannot."""
+    result = branch_sweep._git(repo, "rev-parse", "--is-shallow-repository", timeout=timeout)
+    if result.returncode != 0:
+        return "could not tell whether the repository is shallow"
+    if result.stdout.strip() == "true":
+        return "repository is shallow; the commit walk is incomplete"
+    common = branch_sweep._git(
+        repo,
+        "rev-parse",
+        "--path-format=absolute",
+        "--git-common-dir",
+        timeout=timeout,
+    )
+    if common.returncode != 0:
+        return "could not resolve the common git directory"
+    grafts = Path(common.stdout.strip()) / "info" / "grafts"
+    try:
+        if grafts.is_file() and grafts.read_text(encoding="utf-8").strip():
+            return "repository has grafts; the commit walk is not the stored history"
+    except OSError:
+        return "repository grafts file is unreadable"
+    replace = branch_sweep._git(repo, "replace", "-l", timeout=timeout)
+    if replace.returncode != 0:
+        return "could not list replace refs"
+    if replace.stdout.strip():
+        return "repository has replace refs; the commit walk is not the stored history"
+    return None
+
+
+def _commit_parents(repo: Path, shas: list[str], *, timeout: int) -> dict[str, list[str] | None]:
+    """Parents stored on each commit object. ``None`` means the object is missing.
+
+    ``git log`` hides a shallow-boundary parent. ``git cat-file`` still prints
+    the parent SHA recorded in the commit, which is how a truncated walk is caught.
+    """
+    if not shas:
+        return {}
+    proc = subprocess.run(
+        ["git", "--no-lazy-fetch", "cat-file", "--batch"],
+        cwd=repo,
+        env=sanitized_git_env(),
+        input="".join(f"{sha}\n" for sha in shas).encode(),
+        capture_output=True,
+        timeout=timeout,
+        check=False,
+    )
+    if proc.returncode != 0:
+        detail = proc.stderr.decode("utf-8", errors="replace").strip()
+        raise RuntimeError(f"git cat-file --batch failed: {detail}")
+    found: dict[str, list[str] | None] = {}
+    blob = proc.stdout
+    pos = 0
+    while pos < len(blob):
+        newline = blob.find(b"\n", pos)
+        if newline < 0:
+            raise RuntimeError("git cat-file --batch returned a truncated header")
+        header = blob[pos:newline].decode("ascii", errors="replace")
+        pos = newline + 1
+        parts = header.split()
+        if len(parts) == 2 and parts[1] == "missing":
+            found[parts[0]] = None
+            continue
+        if len(parts) != 3 or not parts[2].isdecimal():
+            raise RuntimeError("git cat-file --batch returned an unreadable header")
+        sha, _kind, size_text = parts
+        size = int(size_text)
+        body = blob[pos : pos + size]
+        pos += size
+        if pos < len(blob) and blob[pos : pos + 1] == b"\n":
+            pos += 1
+        parents: list[str] = []
+        for line in body.split(b"\n"):
+            if line.startswith(b"parent "):
+                parent = line.split()[1].decode("ascii", errors="replace")
+                if not branch_sweep.SHA_RE.fullmatch(parent):
+                    raise RuntimeError("git cat-file returned an invalid parent SHA")
+                parents.append(parent)
+            elif line == b"":
+                break
+        found[sha] = parents
+    if any(sha not in found for sha in shas):
+        raise RuntimeError("git cat-file --batch omitted a commit")
+    return found
+
+
+def _hidden_parent(repo: Path, commits: list[str], on_main: set[str], *, timeout: int) -> str | None:
+    """A parent that rev-list did not enumerate and that is not on origin/main."""
+    if not commits:
+        return None
+    parents = _commit_parents(repo, commits, timeout=timeout)
+    known = set(commits) | on_main
+    for sha in commits:
+        listed = parents.get(sha)
+        if listed is None:
+            return sha
+        for parent in listed:
+            if parent not in known:
+                return parent
+    return None
+
+
+def _diff_blob_ids(repo: Path, shas: list[str], *, timeout: int) -> dict[str, list[str]]:
+    """Blob ids in each commit's raw diff. Empty means the commit changed no blob."""
+    found: dict[str, list[str]] = {sha: [] for sha in shas}
+    for start in range(0, len(shas), 40):
+        chunk = shas[start : start + 40]
+        log = branch_sweep._git(
+            repo,
+            "--no-lazy-fetch",
+            "log",
+            "--no-walk",
+            "--raw",
+            "--abbrev=64",
+            "--format=format:commit %H",
+            *chunk,
+            timeout=timeout,
+        )
+        if log.returncode != 0:
+            detail = (log.stderr or log.stdout).strip()
+            raise RuntimeError(f"git log --raw failed: {detail}")
+        current: str | None = None
+        for line in log.stdout.splitlines():
+            if line.startswith("commit "):
+                current = line.split()[1]
+                if current not in found:
+                    raise RuntimeError("git log --raw returned an unexpected commit")
+                continue
+            if not line.startswith(":") or current is None:
+                continue
+            meta, _sep, _path = line.partition("\t")
+            parts = meta.split()
+            if len(parts) < 4:
+                raise RuntimeError("git log --raw returned an unreadable diff line")
+            for blob in parts[2:4]:
+                if set(blob) <= {"0"}:
+                    continue
+                if not branch_sweep.SHA_RE.fullmatch(blob):
+                    raise RuntimeError("git log --raw returned an unreadable blob id")
+                found[current].append(blob)
+    return found
+
+
+def _absent_objects(repo: Path, names: list[str], *, timeout: int) -> set[str]:
+    if not names:
+        return set()
+    proc = subprocess.run(
+        ["git", "--no-lazy-fetch", "cat-file", "--batch-check"],
+        cwd=repo,
+        env=sanitized_git_env(),
+        input=("\n".join(names) + "\n").encode(),
+        capture_output=True,
+        timeout=timeout,
+        check=False,
+    )
+    if proc.returncode != 0:
+        detail = proc.stderr.decode("utf-8", errors="replace").strip()
+        raise RuntimeError(f"git cat-file --batch-check failed: {detail}")
+    absent: set[str] = set()
+    for raw in proc.stdout.splitlines():
+        parts = raw.decode("ascii", errors="replace").split()
+        if len(parts) >= 2 and parts[1] == "missing":
+            absent.add(parts[0])
+    return absent
+
+
+def _commits_missing_diff_blobs(repo: Path, shas: list[str], *, timeout: int) -> dict[str, str]:
+    """Map a commit to one diff blob that is not in the local object store."""
+    if not shas:
+        return {}
+    blobs_of = _diff_blob_ids(repo, shas, timeout=timeout)
+    wanted = sorted({blob for blobs in blobs_of.values() for blob in blobs})
+    absent = _absent_objects(repo, wanted, timeout=timeout)
+    missing: dict[str, str] = {}
+    for sha, blobs in blobs_of.items():
+        for blob in blobs:
+            if blob in absent:
+                missing[sha] = blob
+                break
+    return missing
+
+
+def _patch_counts(shas: list[str], patch_of: dict[str, str | None]) -> dict[str, int]:
+    counts: dict[str, int] = {}
+    for sha in shas:
+        patch = patch_of.get(sha)
+        if patch:
+            counts[patch] = counts.get(patch, 0) + 1
+    return counts
+
+
+def _preserving_pair(repo: Path, ref: str, *, timeout: int) -> tuple[str, str] | None:
+    result = branch_sweep._git(repo, "rev-parse", "--verify", "--quiet", ref, timeout=timeout)
+    if result.returncode != 0:
+        return None
+    sha = result.stdout.strip()
+    if not branch_sweep.SHA_RE.fullmatch(sha):
+        raise RuntimeError("git rev-parse returned an invalid preserving SHA")
+    return ref, sha
+
+
 def preservation_for_creation(repo: Path, tip: str, *, budget_s: float) -> Preservation | None:
     """Prove one tip cheaply, or return ``None`` when the proof did not finish.
 
-    Ancestry runs first. Patch-ids run only when the tip is not already on an
-    origin ref. The main side of that comparison is ``merge-base..origin/main``
-    after 2026-08-01, which is a subset of the batch window: a match is real,
-    and a miss only means "not proven", so the caller still creates the ref.
+    Origin is refreshed first. A failed fetch, a shallow or grafted repository,
+    a hidden parent, or a missing diff blob is not preservation: the caller
+    still creates the ref. Ancestry runs before patch-ids. The main side of
+    that comparison is ``merge-base..origin/main`` after 2026-08-01, which is
+    a subset of the batch window: a match is real, and a miss only means "not
+    proven", so the caller still creates the ref.
     """
     if budget_s < 0.4 or not branch_sweep.SHA_RE.fullmatch(tip):
         return None
@@ -189,7 +493,13 @@ def preservation_for_creation(repo: Path, tip: str, *, budget_s: float) -> Prese
         if _checkout(repo) != repo.resolve():
             return None
         deadline = time.monotonic() + budget_s
-        if _is_ancestor(repo, tip, "refs/remotes/origin/main", timeout=_seconds(deadline)):
+        fresh, fresh_proof = refresh_origin(repo, timeout=_seconds(deadline))
+        if not fresh:
+            return Preservation(CLASS_UNIQUE, fresh_proof)
+        blocked = _history_block(repo, timeout=_seconds(deadline))
+        if blocked:
+            return Preservation(CLASS_UNIQUE, blocked)
+        if _is_ancestor(repo, tip, _ORIGIN_MAIN, timeout=_seconds(deadline)):
             return decide(on_main=True, other_origin_ref=None, unique=[], patch_of={}, main_ids=set())
         other = _origin_ref_containing(repo, tip, timeout=_seconds(deadline))
         if other:
@@ -197,27 +507,45 @@ def preservation_for_creation(repo: Path, tip: str, *, budget_s: float) -> Prese
         base = _merge_base(repo, tip, timeout=_seconds(deadline))
         if base is None:
             return None
-        unique = branch_sweep._rev_list(repo, tip, "--not", "refs/remotes/origin/main", timeout=_seconds(deadline))
+        unique = branch_sweep._rev_list(repo, tip, "--not", _ORIGIN_MAIN, timeout=_seconds(deadline))
         if not unique:
             return decide(on_main=True, other_origin_ref=None, unique=[], patch_of={}, main_ids=set())
+        on_main = set(branch_sweep._rev_list(repo, _ORIGIN_MAIN, timeout=_seconds(deadline)))
+        hidden = _hidden_parent(repo, unique, on_main, timeout=_seconds(deadline))
+        if hidden:
+            return Preservation(CLASS_UNIQUE, f"off-main history stops at {hidden}; refusing a partial walk")
+        missing_blobs = _commits_missing_diff_blobs(repo, unique, timeout=_seconds(deadline))
+        if missing_blobs:
+            sha, blob = next(iter(missing_blobs.items()))
+            return Preservation(CLASS_UNIQUE, f"commit {sha} is missing blob {blob}; refusing patch equivalence")
         candidates = branch_sweep._rev_list(
             repo,
             f"--since={MAIN_PATCH_SINCE}",
-            f"{base}..refs/remotes/origin/main",
+            f"{base}..{_ORIGIN_MAIN}",
             timeout=_seconds(deadline),
         )
         cap = int(max(0.0, deadline - time.monotonic()) / _PATCH_SECONDS_PER_COMMIT)
         if len(unique) + len(candidates) > cap:
             return None
+        missing_main = _commits_missing_diff_blobs(repo, candidates, timeout=_seconds(deadline))
+        usable = [sha for sha in candidates if sha not in missing_main]
         patch_of: dict[str, str | None] = {}
-        branch_sweep._load_patch_ids(repo, patch_of, unique + candidates, timeout=_seconds(deadline))
-        main_ids = {patch for sha in candidates if (patch := patch_of.get(sha))}
+        branch_sweep._load_patch_ids(
+            repo,
+            patch_of,
+            unique + usable,
+            mode="verbatim",
+            lazy_fetch=False,
+            timeout=_seconds(deadline),
+        )
+        counts = _patch_counts(usable, patch_of)
         return decide(
             on_main=False,
             other_origin_ref=None,
             unique=unique,
             patch_of=patch_of,
-            main_ids=main_ids,
+            main_ids=set(counts),
+            main_counts=counts,
         )
     except (OSError, RuntimeError, subprocess.TimeoutExpired):
         return None
@@ -246,62 +574,110 @@ def _commits(repo: Path, *revs: str) -> set[str]:
     return set(branch_sweep._rev_list(repo, *revs, timeout=180))
 
 
+def _unique_rows(rows: list[tuple[str, str, str]], proof: str) -> list[RescueRef]:
+    return [RescueRef(ref, sha, CLASS_UNIQUE, proof) for ref, sha, _kind in rows]
+
+
 def classify_rescue_refs(repo: Path) -> list[RescueRef]:
-    """Classify every rescue ref. Main's in-window patch-ids are loaded once."""
+    """Classify every rescue ref. Main's in-window verbatim patch-ids are loaded once."""
     rows = _rescue_rows(repo)
-    on_main = _commits(repo, "refs/remotes/origin/main")
+    fresh, fresh_proof = refresh_origin(repo, timeout=180)
+    if not fresh:
+        return _unique_rows(rows, fresh_proof)
+    blocked = _history_block(repo, timeout=30)
+    if blocked:
+        return _unique_rows(rows, blocked)
+    on_main = _commits(repo, _ORIGIN_MAIN)
     on_origin = _commits(repo, "--remotes=origin")
     if not on_main:
         raise RuntimeError("origin/main is unavailable")
+    main_pair = _preserving_pair(repo, _ORIGIN_MAIN, timeout=30)
+    if main_pair is None:
+        raise RuntimeError("origin/main is unavailable")
     pending: dict[str, list[str]] = {}
-    classified: list[tuple[str, str, Preservation]] = []
+    classified: list[RescueRef] = []
     for ref, sha, kind in rows:
         if kind != "commit":
-            classified.append((ref, sha, Preservation(CLASS_UNIQUE, f"ref object type is {kind}")))
+            classified.append(RescueRef(ref, sha, CLASS_UNIQUE, f"ref object type is {kind}"))
             continue
         if sha in on_main:
-            classified.append(
-                (ref, sha, decide(on_main=True, other_origin_ref=None, unique=[], patch_of={}, main_ids=set()))
-            )
+            verdict = decide(on_main=True, other_origin_ref=None, unique=[], patch_of={}, main_ids=set())
+            classified.append(RescueRef(ref, sha, verdict.classification, verdict.proof, main_pair[0], main_pair[1]))
             continue
         if sha in on_origin:
-            classified.append(
-                (
-                    ref,
-                    sha,
-                    decide(
-                        on_main=False,
-                        other_origin_ref="an origin/* ref other than origin/main",
-                        unique=[],
-                        patch_of={},
-                        main_ids=set(),
-                    ),
-                )
-            )
+            other = _origin_ref_containing(repo, sha, timeout=60)
+            pair = _preserving_pair(repo, other, timeout=30) if other else None
+            if pair is None:
+                classified.append(RescueRef(ref, sha, CLASS_UNIQUE, "no origin ref still contains the tip"))
+                continue
+            verdict = decide(on_main=False, other_origin_ref=pair[0], unique=[], patch_of={}, main_ids=set())
+            classified.append(RescueRef(ref, sha, verdict.classification, verdict.proof, pair[0], pair[1]))
             continue
         pending.setdefault(sha, []).append(ref)
 
-    window = branch_sweep._rev_list(repo, f"--since={MAIN_PATCH_SINCE}", "refs/remotes/origin/main", timeout=180)
-    patch_of: dict[str, str | None] = {}
-    branch_sweep._load_patch_ids(repo, patch_of, window, timeout=180)
-    main_ids = {patch for sha in window if (patch := patch_of.get(sha))}
+    window = branch_sweep._rev_list(repo, f"--since={MAIN_PATCH_SINCE}", _ORIGIN_MAIN, timeout=180)
     off_main: dict[str, list[str]] = {}
     for tip in pending:
-        off_main[tip] = branch_sweep._rev_list(repo, tip, "--not", "refs/remotes/origin/main", timeout=120)
-    extra = [sha for commits in off_main.values() for sha in commits if sha not in patch_of]
-    branch_sweep._load_patch_ids(repo, patch_of, extra, timeout=180)
+        off_main[tip] = branch_sweep._rev_list(repo, tip, "--not", _ORIGIN_MAIN, timeout=120)
+    off_commits = sorted({sha for commits in off_main.values() for sha in commits})
+    missing_blobs = _commits_missing_diff_blobs(repo, off_commits + window, timeout=180)
+    patch_of: dict[str, str | None] = {}
+    usable_window = [sha for sha in window if sha not in missing_blobs]
+    branch_sweep._load_patch_ids(
+        repo,
+        patch_of,
+        usable_window,
+        mode="verbatim",
+        lazy_fetch=False,
+        timeout=180,
+    )
+    counts = _patch_counts(usable_window, patch_of)
+    main_ids = set(counts)
+    ready: list[str] = []
+    refused: dict[str, Preservation] = {}
+    for tip, commits in off_main.items():
+        hidden = _hidden_parent(repo, commits, on_main, timeout=60)
+        if hidden:
+            refused[tip] = Preservation(CLASS_UNIQUE, f"off-main history stops at {hidden}; refusing a partial walk")
+            continue
+        missing = [sha for sha in commits if sha in missing_blobs]
+        if missing:
+            blob = missing_blobs[missing[0]]
+            refused[tip] = Preservation(
+                CLASS_UNIQUE,
+                f"commit {missing[0]} is missing blob {blob}; refusing patch equivalence",
+            )
+            continue
+        ready.extend(sha for sha in commits if sha not in patch_of)
+    branch_sweep._load_patch_ids(repo, patch_of, ready, mode="verbatim", lazy_fetch=False, timeout=180)
     for tip, refs in pending.items():
-        verdict = decide(
-            on_main=False,
-            other_origin_ref=None,
-            unique=off_main[tip],
-            patch_of=patch_of,
-            main_ids=main_ids,
-        )
+        patch_verdict = refused.get(tip)
+        if patch_verdict is None:
+            patch_verdict = decide(
+                on_main=False,
+                other_origin_ref=None,
+                unique=off_main[tip],
+                patch_of=patch_of,
+                main_ids=main_ids,
+                main_counts=counts,
+            )
+        if patch_verdict.classification in DELETABLE:
+            preserving_ref, preserving_sha = main_pair
+        else:
+            preserving_ref, preserving_sha = "", ""
         for ref in refs:
-            classified.append((ref, tip, verdict))
-    classified.sort(key=lambda item: item[0])
-    return [RescueRef(ref, sha, verdict.classification, verdict.proof) for ref, sha, verdict in classified]
+            classified.append(
+                RescueRef(
+                    ref,
+                    tip,
+                    patch_verdict.classification,
+                    patch_verdict.proof,
+                    preserving_ref,
+                    preserving_sha,
+                )
+            )
+    classified.sort(key=lambda item: item.ref)
+    return classified
 
 
 def _counts(rows: list[RescueRef]) -> dict[str, int]:
@@ -339,8 +715,9 @@ def _write_listing(repo: Path, path: Path, rows: list[RescueRef], *, elapsed_s: 
         "since": MAIN_PATCH_SINCE,
         "window": (
             "origin/main commits with a committer date after 2026-08-01; "
-            "an older main commit is not a patch-id match, so the ref is UNIQUE"
+            "an older main commit is not a verbatim patch-id match, so the ref is UNIQUE"
         ),
+        "origin_fetch_max_age_s": ORIGIN_FETCH_MAX_AGE_S,
     }
     encoded = (json.dumps(payload, sort_keys=True) + "\n").encode()
     temporary = path.with_name(f".{path.name}.{os.getpid()}.tmp")
@@ -381,6 +758,30 @@ def _journal_root(repo: Path) -> Path:
     return reaper.control_plane_root(repo)
 
 
+def _preservation_skip_reason(repo: Path, row: RescueRef) -> str | None:
+    """Why this row must not be deleted, after the preserving ref is re-read."""
+    if not row.preserving_ref or not row.preserving_sha:
+        return "classification recorded no preserving ref"
+    current = _current_sha(repo, row.preserving_ref)
+    if current is None:
+        return "preserving ref removed"
+    if current != row.preserving_sha:
+        return "preserving ref changed"
+    if row.classification == CLASS_CONTAINED:
+        try:
+            holds = _is_ancestor(repo, row.sha, row.preserving_ref, timeout=30)
+        except RuntimeError as exc:
+            return f"preserving ref could not be rechecked: {exc}"
+        if not holds:
+            return "preserving ref no longer contains the tip"
+        return None
+    if row.classification == CLASS_PATCH:
+        # The preserving ref is still the commit whose history held the matching
+        # patch-ids. A moved ref was refused above.
+        return None
+    return "classification is not deletable"
+
+
 def _apply(
     repo: Path,
     rows: list[RescueRef],
@@ -399,6 +800,21 @@ def _apply(
         for row in chosen:
             if row.classification not in DELETABLE:
                 continue
+            reason = _preservation_skip_reason(repo, row)
+            if reason:
+                append_journal(
+                    journal_at,
+                    "rescue-ref-skipped",
+                    ref=row.ref,
+                    sha=row.sha,
+                    classification=row.classification,
+                    proof=row.proof,
+                    preserving_ref=row.preserving_ref,
+                    preserving_sha=row.preserving_sha,
+                    reason=reason,
+                )
+                skipped += 1
+                continue
             current = _current_sha(repo, row.ref)
             if current != row.sha:
                 append_journal(
@@ -409,6 +825,8 @@ def _apply(
                     current=current,
                     classification=row.classification,
                     proof=row.proof,
+                    preserving_ref=row.preserving_ref,
+                    preserving_sha=row.preserving_sha,
                     reason="ref moved",
                 )
                 skipped += 1
@@ -420,6 +838,8 @@ def _apply(
                 sha=row.sha,
                 classification=row.classification,
                 proof=row.proof,
+                preserving_ref=row.preserving_ref,
+                preserving_sha=row.preserving_sha,
             )
             try:
                 deleter(repo, row.ref, row.sha)
@@ -431,6 +851,8 @@ def _apply(
                     sha=row.sha,
                     classification=row.classification,
                     proof=row.proof,
+                    preserving_ref=row.preserving_ref,
+                    preserving_sha=row.preserving_sha,
                     reason=f"compare-and-delete refused: {exc}",
                 )
                 skipped += 1
@@ -505,8 +927,12 @@ def build_parser() -> argparse.ArgumentParser:
             "(default: $TMPDIR/rescue-refs-<utc>.json). "
             "--apply appends batch_state/worktree-reaper/journal.jsonl on the control-plane "
             "checkout before each compare-and-delete, then deletes at most --limit refs.\n"
-            "The patch-id window is origin/main commits after 2026-08-01. "
-            "A match only on an older main commit leaves the ref UNIQUE.\n"
+            "The patch-id window is origin/main commits after 2026-08-01, compared with "
+            "git patch-id --verbatim so whitespace is part of the proof. Each off-main "
+            "commit must match a distinct main commit. The run fetches origin first "
+            "(or accepts a recorded fetch younger than 120 seconds) and re-checks the "
+            "preserving ref under the lock. A shallow repository, a graft, or a missing "
+            "diff blob stays UNIQUE. A match only on an older main commit leaves the ref UNIQUE.\n"
             "Exit codes: 0 = classified (and deleted, when --apply); "
             "1 = git, lock, or native-operation failure (no partial success is hidden; "
             "a moved ref is skipped and does not fail the run); 2 = invalid arguments.\n"

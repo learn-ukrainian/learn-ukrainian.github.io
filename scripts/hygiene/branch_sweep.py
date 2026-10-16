@@ -411,11 +411,19 @@ def _rev_list(repo: Path, *revs: str, timeout: int = 60) -> list[str]:
     return shas
 
 
-def _parse_patch_ids(repo: Path, patch_text: str, *, timeout: int = 120) -> dict[str, str]:
+def _parse_patch_ids(
+    repo: Path,
+    patch_text: str,
+    *,
+    mode: str = "stable",
+    timeout: int = 120,
+) -> dict[str, str]:
+    if mode not in {"stable", "verbatim"}:
+        raise ValueError(f"unknown patch-id mode: {mode}")
     if not patch_text.strip():
         return {}
     proc = subprocess.run(
-        ["git", "patch-id", "--stable"],
+        ["git", "patch-id", f"--{mode}"],
         cwd=repo,
         env=sanitized_git_env(),
         input=patch_text,
@@ -435,14 +443,25 @@ def _parse_patch_ids(repo: Path, patch_text: str, *, timeout: int = 120) -> dict
     return found
 
 
-def _load_patch_ids(repo: Path, cache: dict[str, str | None], shas: list[str], *, timeout: int = 120) -> None:
+def _load_patch_ids(
+    repo: Path,
+    cache: dict[str, str | None],
+    shas: list[str],
+    *,
+    mode: str = "stable",
+    lazy_fetch: bool = True,
+    timeout: int = 120,
+) -> None:
     missing = [sha for sha in shas if sha not in cache]
     for start in range(0, len(missing), 40):
         chunk = missing[start : start + 40]
-        log = _git(repo, "log", "-p", "--no-walk", "--pretty=format:%H", *chunk, timeout=timeout)
+        log_args = ["log", "-p", "--no-walk", "--pretty=format:%H", *chunk]
+        if not lazy_fetch:
+            log_args = ["--no-lazy-fetch", *log_args]
+        log = _git(repo, *log_args, timeout=timeout)
         if log.returncode:
             raise RuntimeError(f"git log failed: {(log.stderr or log.stdout).strip()}")
-        found = _parse_patch_ids(repo, log.stdout, timeout=timeout)
+        found = _parse_patch_ids(repo, log.stdout, mode=mode, timeout=timeout)
         for sha in chunk:
             cache[sha] = found.get(sha)
 

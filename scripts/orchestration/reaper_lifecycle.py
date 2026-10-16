@@ -316,9 +316,11 @@ def create_recovery_ref(
     passes the time left on its locked-region deadline.
 
     Returns ``(None, None)`` when the tip is already preserved (contained in
-    an origin ref, or patch-equivalent to ``origin/main``). That skip is
-    journaled as ``rescue-skipped``. An unproven tip still gets a ref: a
-    timed-out or unaffordable proof is not preservation.
+    an origin ref, or patch-equivalent to ``origin/main``) and that proof used
+    a fresh origin plus a complete commit walk. That skip is journaled as
+    ``rescue-skipped``. A stale fetch, a shallow or grafted repository, a
+    hidden parent, or a missing diff blob is not preservation. An unproven tip
+    still gets a ref: a timed-out or unaffordable proof is not preservation.
     """
     # Imported here so this module can load before the hygiene package.
     from scripts.hygiene.rescue_refs import preservation_for_creation

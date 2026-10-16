@@ -2428,6 +2428,45 @@ def test_merged_flag_does_not_remove_settled_dispatch_without_merged_pr(
     assert worktree.exists()
 
 
+def test_p0_merged_dispatch_reap_journals_recovery_and_restores(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """UNIQUE work is pinned, the worktree is removed, and restore returns that same HEAD."""
+    repo = init_repo(tmp_path)
+    task_id = "p0-round-trip"
+    worktree = repo / ".worktrees" / "dispatch" / "codex" / task_id
+    add_worktree(repo, "codex/p0-round-trip", path=worktree)
+    (worktree / "unique-only.txt").write_text("not on origin\n", encoding="utf-8")
+    git(worktree, "add", "unique-only.txt")
+    git(worktree, "commit", "-m", "unique work that must be rescued")
+    head = git(worktree, "rev-parse", "HEAD")
+    patch_gh(monkeypatch, {"codex/p0-round-trip": [{"number": 71, "state": "MERGED"}]})
+
+    result = result_for(
+        rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set()),
+        worktree,
+    )
+
+    assert result.action == "removed"
+    assert result.recovery_ref is not None
+    assert not worktree.exists()
+    assert reaper_lifecycle.is_reap_pending(repo, worktree) is False
+    journal = reaper_lifecycle.journal_path(repo).read_text(encoding="utf-8")
+    assert '"event": "plan"' in journal
+    assert '"event": "reap"' in journal
+
+    restored, error = reaper_lifecycle.restore_worktree(
+        repo,
+        recovery_ref=result.recovery_ref,
+        branch="codex/p0-round-trip",
+        worktree_path=worktree,
+    )
+    assert restored is True
+    assert error is None
+    assert git(worktree, "rev-parse", "HEAD") == head
+
+
 def test_p0_merged_dispatch_reap_skips_a_rescue_ref_already_on_main(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,

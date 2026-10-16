@@ -419,16 +419,29 @@ to disable only this optional scheduled class during an incident; merged-clean
 reaping remains enabled. Before removal the reaper writes an
 append-only local journal, reserves the path as reap-pending, and creates a
 `refs/reaper-rescue/...` ref unless that tip is already preserved. Preservation
-is the same proof `scripts.hygiene.rescue_refs` uses: the tip is an ancestor of
-`origin/main`, or it is reachable from another `origin/*` ref, or every commit
-in `git rev-list <tip> --not origin/main` has a `git patch-id --stable` match
-among `origin/main` commits whose committer date is after 2026-08-01. A commit
-older than that window is not a match, and a commit that emits no patch-id is
-not a match. Those tips stay UNIQUE and still get a rescue ref. A preserved tip
-is journaled as `rescue-skipped` and no ref is created. The creation check tries
-ancestry first and runs the patch-id proof only when ancestry does not already
-hold; if that proof would scan more main history than the reap lock can afford,
-the tip is treated as unproven and the ref is still created.
+is the same proof `scripts.hygiene.rescue_refs` uses, and both the creation
+guard and the deletion tool refresh origin in that invocation. `git fetch
+origin` must exit 0, or `FETCH_HEAD` must already be a non-empty recorded fetch
+younger than 120 seconds. Otherwise the tip is UNIQUE and the rescue ref is
+still created. A shallow repository, a graft file, or a replace ref makes the
+commit walk incomplete, so the tip is UNIQUE. The tip is CONTAINED when that
+walk is complete and the tip is an ancestor of `origin/main`, or reachable from
+another `origin/*` ref. A missing blob does not void that ancestry proof:
+parent links live on the commit objects, and a partial clone may omit blobs
+while the commit walk stays complete. A graft or a shallow boundary is not a
+complete walk. It is PATCH-EQUIVALENT only when every commit in `git rev-list
+<tip> --not origin/main` has its own `git patch-id --verbatim` match among
+`origin/main` commits whose committer date is after 2026-08-01, and every blob
+in those diffs is present locally. Verbatim keeps whitespace and line numbers.
+A patch-id that occurs more times on the rescue tip than on main is not a
+match, so revert-then-reapply stays UNIQUE. A missing diff blob is UNIQUE,
+never an empty diff and never a match. A commit older than the window is not a
+match, and a commit that emits no patch-id is not a match. Those tips stay
+UNIQUE and still get a rescue ref. A preserved tip is journaled as
+`rescue-skipped` and no ref is created. The creation check tries ancestry
+first and runs the patch-id proof only when ancestry does not already hold; if
+that proof would scan more main history than the reap lock can afford, the tip
+is treated as unproven and the ref is still created.
 
 `python -m scripts.hygiene.rescue_refs` classifies every `refs/reaper-rescue/*`
 ref. Dry-run is the default: it prints the three counts and writes a JSON
@@ -436,8 +449,10 @@ listing outside the repository. `--apply --limit N` deletes at most N
 CONTAINED and PATCH-EQUIVALENT refs. It holds the same `worktree-reaper.lock`
 as the other reaper tools, refuses the batch when any registered worktree has a
 native git operation in progress, and appends a journal line (ref, sha, class,
-proof, time) before each `git update-ref -d <ref> <expected-sha>`. A ref that
-moved is skipped. UNIQUE refs are never deleted.
+proof, preserving ref, preserving sha, time) before each `git update-ref -d
+<ref> <expected-sha>`. Under the lock, and immediately before each deletion, it
+re-reads that preserving ref. A removed or moved preserving ref is skipped and
+journaled. A rescue ref that moved is skipped. UNIQUE refs are never deleted.
 
 Set `LU_REAPER_DISABLED=1` to stop automatic
 reaps immediately. Apply mode also recovers interrupted reap reservations:
