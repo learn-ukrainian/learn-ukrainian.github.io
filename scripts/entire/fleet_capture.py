@@ -5,7 +5,7 @@ model label.  Native Entire hosts therefore never enter this module.  The
 private transcript spool exists only while synchronous ``entire hooks`` calls
 need it and is deleted after the terminal hook attempt.
 
-The pinned Entire CLI (0.8.42) ships no built-in ``fleet`` hook agent; the
+The pinned Entire CLI (0.11.5) ships no built-in ``fleet`` hook agent; the
 optional external plugin is present only when
 ``scripts/entire/install_fleet_external_agent.sh`` has placed the
 ``entire-agent-fleet`` binary on PATH.  Hook delivery therefore fails open:
@@ -269,7 +269,7 @@ class FleetCapture:
         if not entire:
             return False
         if shutil.which("entire-agent-fleet") is None:
-            # Entire 0.8.42 has no built-in "fleet" hook agent; without the
+            # Entire 0.11.5 has no built-in "fleet" hook agent; without the
             # external plugin binary the call can only fail with
             # ``unknown agent "fleet"``.  Fail open and keep the local spool.
             _LOGGER.debug("Entire fleet hook %s skipped: entire-agent-fleet not installed", hook)

@@ -39,9 +39,9 @@ guard is a prerequisite, not a follow-up.
 
 ## Decision
 
-Entire 0.8.42 is an optional, read-only context and provenance index. It never
-owns task state, coordination, leases, recovery, review eligibility, or source
-content. An LLM may use an Entire search result only as a locator; before any
+Entire (pinned by the 0.11.5 amendment below) is an optional, read-only context
+and provenance index. It never owns task state, coordination, leases, recovery,
+review eligibility, or source content. An LLM may use an Entire search result only as a locator; before any
 context is injected, the locator is resolved against the authoritative local
 system and its digest is verified.
 
@@ -58,7 +58,9 @@ The operator authorizes body-bearing Entire retrieval because checkpoint
 storage is separated from the public product origin. Native recall is allowed
 only after a live preflight proves all of these facts:
 
-- CLI remains pinned to 0.8.42 and Entire authentication is valid;
+- CLI remains pinned to the version the 0.11.5 amendment below names, and
+  Entire authentication is valid;
+- Entire's own status reports the dedicated private checkpoint route;
 - `learn-ukrainian/entire-checkpoints-private` is private and contains the
   canonical checkpoint ref;
 - the public product origin contains zero `entire/*` branches;
@@ -76,6 +78,82 @@ explain stays within the root's private working context; raw-transcript flags
 remain prohibited. Generated recap/dispatch and worktree-mutating
 resume/rewind remain operator-directed. Native Entire remains optional and
 non-authoritative.
+
+### Amendment: Entire 0.11.5 (2026-10-16)
+
+Recorded under [#10846](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/10846);
+it replaces the earlier rule that this decision does not authorize moving
+beyond 0.8.42.
+
+Entire is pinned to 0.11.5. An upgrade requires exact-version compatibility and privacy evidence, independent cross-family review, and a reviewed rollback procedure. Review expiry does not authorize an upgrade or weaken this ADR's boundaries.
+
+What the upgrade changes in this repository:
+
+- **Control-plane calls.** 0.11.0 removed `repo mirror collaborators list`
+  without an alias, and 0.11.3 removed its successor `repo access list`. The
+  preflight now reads each mirror's ACL with
+  `entire repo grant list /gh/<owner>/<repo> --json` (rows carry `granteeName`,
+  `role` and `source: "github"`) and each mirror's readiness with
+  `entire repo view /gh/<owner>/<repo> --json`. The provider takes the dispatch
+  jurisdiction from that `repo view` row's ready placements instead of the old
+  `repo mirror list` row shape. `search`, `checkpoint explain`,
+  `api --jurisdiction`, `status --json`, `recap`, `dispatch` and
+  `session resume` keep the shapes `.entire/private-recall.json` lists.
+- **Route proof.** The preflight compares the version's first line exactly and
+  requires `entire status --json` to report
+  `checkpoint_sync_remote_source: "dedicated"` for the private repository with no
+  `checkpoint_remote_ignored`. When `checkpoint_remote` is judged not to belong
+  to the checkout (for example an `origin` owned by another account), both 0.8.42
+  and 0.11.5 push checkpoints to the push remote instead; 0.11.5 reports that in
+  `status --json`, so the preflight now fails closed on it.
+- **Checkpoint backend.** It stays `branch`. The settings carry no
+  `checkpoints` block, which 0.11.5 resolves to the branch backend, and
+  `entire enable --force` did not add one in the canary. Migrating to the
+  git-refs backend is a separate decision.
+- **Hooks.** Claude Code Stop and post-task timeouts follow the 0.11.5 template
+  (120 s); the other Entire hooks keep 30 s, which matches the template. Entire
+  git hook wrappers without a chain are byte-identical in both versions; the
+  0.11.5 chained form differs, and `scripts/install_git_hooks.sh` now writes
+  that form and still recognizes the 0.8.42 form (see `hook-audit.md`).
+- **External agents.** Since 0.10.6, `external_agents` is honored only from an
+  untracked `.entire/settings.local.json`. No `entire-agent-*` binary is
+  installed today, so nothing changes until one is.
+
+Canary evidence (#10846). A throwaway clone of `main` with 32,597 tracked and
+463,000 gitignored files ran each binary with an isolated home directory and
+no credentials, inside a network namespace with no route out. Its public and
+private remotes were local bare repositories behind GitHub-shaped URLs. The
+1-minute load average was 13.7–17.8 throughout.
+
+| Measurement (n = 20 each) | 0.8.42 p50 / p95 | 0.11.5 p50 / p95 |
+| --- | --- | --- |
+| `hooks claude-code user-prompt-submit` | 8.33 s / 9.31 s | 1.68 s / 1.94 s |
+| `hooks claude-code stop` | 7.20 s / 7.45 s | 2.15 s / 2.36 s |
+| `checkpoint explain <id> --json` | 0.10 s / 0.16 s | 0.09 s / 0.12 s |
+
+No hook call failed (80 of 80). In the live-shaped topology, every checkpoint
+push from either version reached only the private remote; the public remote
+held only `main`. A push to a remote owned by another account carried no
+checkpoint data. 0.11.5 explained a checkpoint written by 0.8.42 with the same
+core fields and fast-forwarded the 0.8.42 checkpoint branch. After 0.11.5,
+0.8.42 again captured a turn, pushed only to the private remote, and read a
+0.11.5 checkpoint. A non-interactive `entire doctor` changed no hook, setting
+or ref. Authenticated cloud search was not run, because the canary used no
+credentials; its JSON count fields are unchanged in the 0.11.5 source, and the
+install runbook checks it live.
+
+Install and rollback:
+[`docs/runbooks/entire-cli-upgrade.md`](../../runbooks/entire-cli-upgrade.md).
+Rollback reinstalls the kept 0.8.42 binary and reverts the PR. Downgrading
+discards pending, uncommitted agent session state, and legacy shadow branches
+are not removed automatically (Entire 0.11.5 release notes); leave them for a
+separate, operator-approved cleanup.
+
+Residuals, owned by the infra lane: the repository-managed Claude Code hooks
+keep the `Task` and `TodoWrite` matchers, which never fire (0.11.5 uses `Agent`
+and `Skill`), and add none of the 0.11.5 StopFailure or Subagent hooks; the
+OpenCode plugin differs from the 0.11.5 template. `entire doctor` reports both
+as "OUT OF DATE". Changing which hooks run is outside this amendment.
 
 ### Authority boundary
 
@@ -135,7 +213,7 @@ The first implementation stores these relationships in an existing
 authoritative receipt path or a rebuildable local projection after a separate
 schema review. It does not invent synthetic Entire sessions. Arbitrary
 metadata-card ingestion into Entire itself is optional and may be added only if
-a 0.8.42 canary proves a documented path. Native session capture stores
+a canary on the pinned CLI proves a documented path. Native session capture stores
 redacted prompt and transcript bodies in the private checkpoint repository;
 that is permitted by the operator amendment and remains isolated from the
 shared automatic corpus.
@@ -234,8 +312,7 @@ plugin could technically be written.
 - The production gate in #5880 remains independent and closed until its full
   atomic/fenced/idempotent closure, traps, successor recovery, and TTL reroute
   contract is proved.
-- CLI upgrades require a new compatibility review; this decision does not
-  authorize moving beyond 0.8.42.
+- CLI upgrades follow the 0.11.5 amendment below.
 
 ### Implemented slice (2026-08-02)
 

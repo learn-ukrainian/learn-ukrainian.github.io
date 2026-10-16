@@ -1,4 +1,4 @@
-"""Contracts for non-destructive Entire 0.8.42 native harness onboarding."""
+"""Contracts for non-destructive Entire native harness onboarding (pinned 0.11.5)."""
 
 from __future__ import annotations
 
@@ -158,7 +158,8 @@ def test_claude_hosted_models_share_seven_composed_claude_code_hooks() -> None:
     entire_hooks = _entire_hooks(settings, "claude-code")
 
     assert len(entire_hooks) == 7
-    assert all(command["timeout"] == 30 for command in entire_hooks)
+    assert {command["timeout"] for command in entire_hooks if "claude-code stop" in command["command"]} == {120}
+    assert sorted(command["timeout"] for command in entire_hooks) == [30, 30, 30, 30, 30, 120, 120]
     assert all("if ! command -v entire" in command["command"] for command in entire_hooks)
     assert settings["permissions"]["deny"][0] == "Read(./.entire/metadata/**)"
 

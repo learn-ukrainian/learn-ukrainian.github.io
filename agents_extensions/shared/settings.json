@@ -816,7 +816,7 @@
           {
             "type": "command",
             "command": "sh -c 'if ! command -v entire >/dev/null 2>&1; then exit 0; fi; entire hooks claude-code post-task || true'",
-            "timeout": 30
+            "timeout": 120
           }
         ]
       },
@@ -930,7 +930,7 @@
           {
             "type": "command",
             "command": "sh -c 'if ! command -v entire >/dev/null 2>&1; then exit 0; fi; entire hooks claude-code stop || true'",
-            "timeout": 30
+            "timeout": 120
           }
         ]
       }

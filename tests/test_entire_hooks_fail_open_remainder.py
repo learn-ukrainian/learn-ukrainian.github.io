@@ -103,7 +103,19 @@ def test_claude_entire_hooks_manifest_structure() -> None:
         "stop",
         "session-end",
     }
-    assert all(hook["timeout"] == 30 for hook in hooks)
+    # Entire 0.11.5's Claude Code template gives stop and post-task 120s, the rest 30s.
+    assert {
+        re.search(r"entire hooks claude-code (\S+)", hook["command"]).group(1): hook["timeout"]
+        for hook in hooks
+    } == {
+        "session-start": 30,
+        "pre-task": 30,
+        "post-task": 120,
+        "post-todo": 30,
+        "user-prompt-submit": 30,
+        "stop": 120,
+        "session-end": 30,
+    }
     assert all("if ! command -v entire" in hook["command"] for hook in hooks)
     assert all("exec entire" not in hook["command"] for hook in hooks)
     assert all(hook["command"].endswith("|| true'") for hook in hooks)
