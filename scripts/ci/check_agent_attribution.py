@@ -1,13 +1,28 @@
 """Fail a landed or proposed commit that carries no ``X-Agent`` attribution (#10736).
 
-The contract is a LINE, not a Git trailer: ``^X-Agent: <agent>/<task-id>$`` somewhere
-in the landed message. GitHub appends its own ``Co-authored-by`` paragraph to a squash
-message, so the attribution is never the final paragraph and ``%(trailers)`` parsing
-cannot see it; a line match can.
+The contract is a declaration PARAGRAPH, not a Git trailer block. GitHub appends its own
+``Co-authored-by`` paragraph to a squash message and copies each source body verbatim, so
+an attribution is rarely the final paragraph and ``%(trailers)`` parsing cannot see it.
 
-Only a line of the plain message body counts. A line inside a fenced code block
-(backtick or tilde), an indented code block, a quoted block (``>``, including its lazy
-continuation) or an HTML comment is an example, never a declaration.
+Declaration grammar
+===================
+1. The whole message is refused when it is larger than ``MAX_MESSAGE_BYTES``, contains
+   NUL, VT, FF, U+001C-U+001E, NEL, U+2028 or U+2029, a bare CR (CRLF is normalised to
+   LF first), the literal ``<!--`` or ``-->`` anywhere, or any raw HTML block. Refusal
+   comes before every exemption.
+2. The message is parsed with markdown-it-py's CommonMark preset. A declaration paragraph
+   is a top-level paragraph whose every source line has the trailer shape
+   ``Key: value`` (ASCII key ``[A-Za-z][A-Za-z0-9-]*``, one space, no outer whitespace),
+   taken from the parser's line map over ``text.split("\\n")``, never rendered text.
+3. Each exact ``X-Agent: <agent>/<task-id>`` line in a declaration paragraph is one
+   value, unless an inline construct (code span, link, emphasis, image, multi-line HTML)
+   spans into that line. Declaration paragraphs may appear anywhere; repeated values
+   count once. ``X-Agent-Model`` and other keys may share the paragraph.
+4. Any line whose key (the text before its first ``:``) lowercases to ``x-agent`` and is
+   not an exact line is malformed, wherever it sits.
+
+Fenced, indented, quoted, listed, heading and link-reference text is therefore an
+example, never a declaration. Inline HTML outside a declaration line is allowed.
 
 Modes
 =====
@@ -36,15 +51,17 @@ Fail closed
 ===========
 A git or fetch error, a missing ``(#N)``, an empty chain, a non-ancestor base, a
 non-squash commit shape, a source history that cannot be tied to the squash
-(``UNVERIFIABLE_SOURCE``), an unverifiable exemption or a malformed value is a typed
-violation. Messages carry codes, counts, PR numbers and short SHAs only; no message
-content (task ids included) is ever echoed.
+(``UNVERIFIABLE_SOURCE``), an unverifiable exemption, a refused message
+(``REFUSED_MESSAGE`` and its reason) or a malformed value is a typed violation. Messages
+carry codes, counts, PR numbers and short SHAs only; no message content (task ids
+included) is ever echoed.
 
 Report-only switch
 ==================
 Violations fail the run (exit 1) only when ``ATTRIBUTION_ENFORCE=1``. Any other value
-prints the same findings as warnings and exits 0 until the repository setting that
-produces the line is restored; invalid usage always exits 2. The step is documented in
+prints the same findings as warnings and exits 0; invalid usage always exits 2. The
+switch downgrades violations only: a crash of the checker itself (an import error, an
+unexpected exception) exits non-zero in every mode. The step is documented in
 ``docs/runbooks/agent-attribution.md``.
 
 Examples
@@ -71,6 +88,9 @@ _REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
 
+from markdown_it import MarkdownIt
+from markdown_it.token import Token
+
 from scripts.common import github_client
 from scripts.review.app_bot_authorship import verified_app_bot_login
 
@@ -79,11 +99,17 @@ GIT_TIMEOUT_SECONDS = 120
 API_TIMEOUT_SECONDS = 30
 _GITHUB_HTTPS = "https://github.com/"
 
-# Any body line that claims to be attribution; the grammar below decides whether it is one.
-_CANDIDATE_PREFIX = "X-Agent:"
-_FENCE_OPEN = re.compile(r"^ {0,3}(?P<fence>`{3,}|~{3,})(?P<info>.*)$")
-_QUOTE_LINE = re.compile(r"^ {0,3}>")
+# The largest landed message seen is under 48 KiB; the parser is quadratic on some inputs
+# (a 64 KiB run of "*[" takes about a second), so larger messages are refused unparsed.
+MAX_MESSAGE_BYTES = 64 * 1024
+# Characters that some tool treats as a line break (or rewrites) while the parser does not.
+_FORBIDDEN_CHARACTERS = re.compile("[\x00\x0b\x0c\x1c\x1d\x1e\x85  ]")
+_COMMENT_MARKERS = ("<!--", "-->")
+_MARKDOWN = MarkdownIt("commonmark")
+_TRAILER_LINE = re.compile(r"[A-Za-z][A-Za-z0-9-]*: \S(?:.*\S)?", re.ASCII)
+_ATTRIBUTION_KEY = "x-agent"
 _WELL_FORMED = re.compile(r"^X-Agent: (?P<value>[a-z][a-z0-9]*(?:-[a-z0-9]+)*/[A-Za-z0-9._-]+)$")
+_LINE_BREAKS = ("softbreak", "hardbreak")
 # The squash headline ends in the PR number; earlier "(#N)" references are issues.
 _PR_SUFFIX = re.compile(r"\(#(?P<number>[1-9][0-9]*)\)$")
 _SHA = re.compile(r"^[0-9a-f]{40}$")
@@ -116,10 +142,20 @@ class Violation:
 
 @dataclass(frozen=True)
 class Attribution:
-    """Attribution lines of one message: well-formed values and the count of malformed lines."""
+    """One message's well-formed values, malformed-line count and whole-message refusal code."""
 
     values: tuple[str, ...]
     malformed: int
+    refusal: str | None = None
+
+
+@dataclass(frozen=True)
+class Paragraph:
+    """A declaration paragraph: its parser line map and the LF-split source lines it covers."""
+
+    map: tuple[int, int]
+    lines: tuple[str, ...]
+    declared: tuple[int, ...]  # indexes into ``lines`` outside every multi-line inline construct
 
 
 @dataclass
@@ -129,82 +165,106 @@ class Report:
     violations: list[Violation] = field(default_factory=list)
 
 
-def _closes_fence(line: str, fence: str) -> bool:
-    stripped = line.lstrip(" ")
-    if len(line) - len(stripped) > 3 or not stripped.startswith(fence):
-        return False
-    return stripped.rstrip(" \t").strip(fence[0]) == ""
+def _normalised(message: str) -> str:
+    return message.replace("\r\n", "\n")
 
 
-def _body_lines(message: str) -> list[str]:
-    """Lines of ``message`` that sit in the plain body, outside every example context.
+def _refusal(message: str) -> str | None:
+    """The whole-message refusal code that needs no parse, else None."""
+    if len(message.encode("utf-8", "surrogatepass")) > MAX_MESSAGE_BYTES:
+        return "MESSAGE_TOO_LARGE"
+    if _FORBIDDEN_CHARACTERS.search(message):
+        return "FORBIDDEN_CHARACTER"
+    if "\r" in _normalised(message):
+        return "BARE_CR"
+    if any(marker in message for marker in _COMMENT_MARKERS):
+        return "COMMENT_MARKER"
+    return None
 
-    A line is dropped when it is inside a fenced code block (an unclosed fence runs to the
-    end), an HTML comment (an unclosed comment runs to the end), a quoted block or the lazy
-    continuation of one (until the next blank line), or is an indented code line. A kept
-    line is returned raw; a kept line containing a comment marker (``<!--`` or ``-->``) is
-    returned empty, so a comment can never be stripped into a well-formed line.
+
+def _declared_indexes(children: list[Token], count: int) -> tuple[int, ...]:
+    """Lines of an inline token that no multi-line inline construct opens before or closes after.
+
+    A code span, image or inline HTML that spans a line break swallows it, so the break count
+    no longer matches the line count and no line of the paragraph is trusted. Links and
+    emphasis keep their breaks as children; a line counts only at nesting depth zero on both
+    of its ends.
     """
-    kept: list[str] = []
-    fence: str | None = None
-    in_comment = False
-    in_quote = False
-    for line in message.split("\n"):
-        if fence is not None:
-            if _closes_fence(line, fence):
-                fence = None
+    if sum(child.type in _LINE_BREAKS for child in children) != count - 1:
+        return ()
+    declared: list[int] = []
+    line = depth = depth_at_start = 0
+    for child in children:
+        if child.type in _LINE_BREAKS:
+            if depth_at_start == depth == 0:
+                declared.append(line)
+            line, depth_at_start = line + 1, depth
+        else:
+            depth += child.nesting
+    if depth_at_start == depth == 0:
+        declared.append(line)
+    return tuple(declared)
+
+
+def _parse(text: str) -> list[Token] | None:
+    """CommonMark block tokens of a normalised message, or None when it holds an HTML block."""
+    tokens = _MARKDOWN.parse(text)
+    return None if any(token.type == "html_block" for token in tokens) else tokens
+
+
+def _paragraphs(tokens: list[Token], lines: list[str]) -> list[Paragraph]:
+    paragraphs: list[Paragraph] = []
+    for index, token in enumerate(tokens):
+        if token.type != "paragraph_open" or token.level != 0 or token.map is None:
             continue
-        if in_comment:
-            # What follows the comment's end shares the line with comment text: never column 0.
-            in_comment = "-->" not in line
+        start, end = token.map
+        source = tuple(lines[start:end])
+        inline = tokens[index + 1]
+        if not source or not all(_TRAILER_LINE.fullmatch(line) for line in source):
             continue
-        if not line.strip():
-            in_quote = False
-            kept.append(line)
+        # The parser's own text for the paragraph must be these exact lines; anything else
+        # means its line numbering and ours disagree, and nothing in it is trusted.
+        if inline.type != "inline" or inline.content != "\n".join(source):
             continue
-        if in_quote or _QUOTE_LINE.match(line):
-            in_quote = True
-            continue
-        if line.startswith(("    ", "\t")):
-            continue
-        opening = _FENCE_OPEN.match(line)
-        if opening and not (opening.group("fence")[0] == "`" and "`" in opening.group("info")):
-            fence = opening.group("fence")
-            continue
-        if "<!--" not in line and "-->" not in line:
-            kept.append(line)
-            continue
-        # A line that carries a comment marker is never an attribution line and is never
-        # rewritten into one; only whether a comment stays open past it is tracked.
-        kept.append("")
-        remainder = line
-        while True:
-            start = remainder.find("<!--")
-            if start == -1:
-                break
-            end = remainder.find("-->", start + 4)
-            if end == -1:
-                in_comment = True
-                break
-            remainder = remainder[end + 3 :]
-    return kept
+        declared = _declared_indexes(inline.children or [], len(source))
+        paragraphs.append(Paragraph((start, end), source, declared))
+    return paragraphs
+
+
+def declaration_paragraphs(message: str) -> tuple[Paragraph, ...]:
+    """Every top-level paragraph of ``message`` made only of ``Key: value`` lines."""
+    if _refusal(message) is not None:
+        return ()
+    text = _normalised(message)
+    tokens = _parse(text)
+    return () if tokens is None else tuple(_paragraphs(tokens, text.split("\n")))
+
+
+def _is_candidate(line: str) -> bool:
+    key, colon, _ = line.partition(":")
+    return bool(colon) and key.lower() == _ATTRIBUTION_KEY
 
 
 def extract_attribution(message: str) -> Attribution:
-    """Well-formed ``X-Agent`` values (first-seen order, distinct) and the malformed-line count.
+    """Declared ``X-Agent`` values (first-seen order, distinct), malformed count and refusal.
 
-    Only plain-body lines count; fenced, indented, quoted and commented lines are examples.
+    See "Declaration grammar" in the module docstring.
     """
+    refusal = _refusal(message)
+    if refusal is not None:
+        return Attribution((), 0, refusal)
+    text = _normalised(message)
+    lines = text.split("\n")
+    malformed = sum(1 for line in lines if _is_candidate(line) and not _WELL_FORMED.fullmatch(line))
+    tokens = _parse(text)
+    if tokens is None:
+        return Attribution((), malformed, "HTML_BLOCK")
     values: list[str] = []
-    malformed = 0
-    for line in _body_lines(message):
-        if not line.startswith(_CANDIDATE_PREFIX):
-            continue
-        strict = _WELL_FORMED.fullmatch(line)
-        if strict is None:
-            malformed += 1
-        elif strict.group("value") not in values:
-            values.append(strict.group("value"))
+    for paragraph in _paragraphs(tokens, lines):
+        for index in paragraph.declared:
+            strict = _WELL_FORMED.fullmatch(paragraph.lines[index])
+            if strict is not None and strict.group("value") not in values:
+                values.append(strict.group("value"))
     return Attribution(tuple(values), malformed)
 
 
@@ -214,12 +274,11 @@ def pr_number_from_subject(subject: str) -> int | None:
     return int(match.group("number")) if match else None
 
 
-def _git(*args: str, env: dict[str, str] | None = None, cwd: Path | None = None) -> str:
+def _git_bytes(*args: str, env: dict[str, str] | None = None, cwd: Path | None = None) -> bytes:
     try:
         result = subprocess.run(
             ["git", *args],
             capture_output=True,
-            text=True,
             check=False,
             timeout=GIT_TIMEOUT_SECONDS,
             env=env,
@@ -232,6 +291,11 @@ def _git(*args: str, env: dict[str, str] | None = None, cwd: Path | None = None)
     return result.stdout
 
 
+def _git(*args: str, env: dict[str, str] | None = None, cwd: Path | None = None) -> str:
+    """Decoded output of a git command whose output is ours to parse (SHAs, trees, URLs)."""
+    return _git_bytes(*args, env=env, cwd=cwd).decode("utf-8", "replace")
+
+
 def _resolve_commit(ref: str) -> str:
     sha = _git("rev-parse", "--verify", "--quiet", f"{ref}^{{commit}}").strip()
     if not _SHA.fullmatch(sha):
@@ -240,13 +304,22 @@ def _resolve_commit(ref: str) -> str:
 
 
 def _commit(sha: str) -> tuple[tuple[str, ...], str]:
-    """(parents, raw message) of ``sha`` from the commit object, byte for byte."""
-    raw = _git("cat-file", "commit", sha)
-    header, separator, message = raw.partition("\n\n")
+    """(parents, raw message) of ``sha`` from the commit object, byte for byte.
+
+    Read as bytes: a text-mode read would translate a bare CR into LF before the refusal
+    rules could see it.
+    """
+    raw = _git_bytes("cat-file", "commit", sha)
+    header, separator, message = raw.partition(b"\n\n")
     if not separator:
         raise GitFailure("commit object has no message separator")
-    parents = tuple(line.split(" ", 1)[1] for line in header.split("\n") if line.startswith("parent "))
-    return parents, message
+    parents = tuple(
+        line.split(b" ", 1)[1].decode("ascii") for line in header.split(b"\n") if line.startswith(b"parent ")
+    )
+    try:
+        return parents, message.decode("utf-8")
+    except UnicodeDecodeError as exc:
+        raise GitFailure("commit message is not UTF-8") from exc
 
 
 def _bot_verified(get: GitHubGet | None, repository: str | None, sha: str) -> bool:
@@ -303,6 +376,13 @@ def _source_is_squash_of(squash: str, parent: str, head: str) -> bool:
 
 
 def _bad_attribution(attribution: Attribution, sha: str, pr: int | None) -> Violation | None:
+    if attribution.refusal is not None:
+        return Violation(
+            "REFUSED_MESSAGE",
+            f"{attribution.refusal} (see the declaration grammar in docs/runbooks/agent-attribution.md)",
+            sha,
+            pr,
+        )
     if attribution.malformed:
         return Violation(
             "MALFORMED_ATTRIBUTION",

@@ -4,37 +4,74 @@ Every commit that lands on `main` carries the `X-Agent` attribution of its
 author(s). `scripts/ci/check_agent_attribution.py` fails a merge-group commit (and a
 pull request) that does not. Parent program: #9737 (A1).
 
-## Contract: a line, not a trailer
+## Contract: a declaration paragraph, not a trailer block
 
-Attribution is a **line** in the landed message that matches
+Attribution is an exact line
 
 ```text
-^X-Agent: <agent>/<task-id>$
+X-Agent: <agent>/<task-id>
 ```
 
-Do not promise `git interpret-trailers` or `%(trailers:key=X-Agent)` parsing. GitHub
-ends every squash message with its own `---------` block of `Co-authored-by` lines, so
-an `X-Agent` line is never in the final paragraph and Git's trailer parser returns
-nothing for it. The check matches lines with a regular expression instead.
+inside a **declaration paragraph** of the message. Do not promise
+`git interpret-trailers` or `%(trailers:key=X-Agent)` parsing: GitHub ends every squash
+message with its own `---------` block of `Co-authored-by` lines and copies each source
+body verbatim, so an `X-Agent` line is rarely in the final paragraph and Git's trailer
+parser (a backward walk from the end) returns nothing for it. The check does not use
+that walk.
 
 - `<agent>` is lowercase letters, digits and single hyphens, starting with a letter.
   The closed agent roster stays with the pre-push lint
   (`scripts/audit/lint_agent_trailer.py`); this check proves presence, shape and
   completeness.
 - `<task-id>` is letters, digits, `.`, `_` and `-`.
-- Exactly one space after the colon, no trailing whitespace. A line that starts with
-  `X-Agent:` and does not match is **malformed**, even when another line is valid.
-- Only a line of the **plain message body** counts. A line inside a backtick or tilde
-  fenced block (an unclosed fence runs to the end of the message), an indented code
-  block, a quoted block (`>`, including its lazy continuation up to the next blank
-  line) or an HTML comment (`<!-- ... -->`, unclosed runs to the end) is an example,
-  never a declaration: it satisfies nothing and is not required of the landed message.
-  A line is matched raw: a line containing a comment marker (`<!--` or `-->`) is never an
-  attribution line, so a comment is never stripped to leave a well-formed one.
-  A real line beside a fenced example counts; the example does not.
+- Exactly one space after the colon, no trailing whitespace, ASCII only.
 
-Source commits keep writing the trailer as today (`X-Agent: <agent>/<task-id>`).
-The repository setting below is what carries those lines into the landed message.
+The check applies this grammar (the module docstring of
+`scripts/ci/check_agent_attribution.py` is the normative copy):
+
+1. **Whole-message refusal**, before any exemption (bot commits included), with the
+   reason in `REFUSED_MESSAGE`:
+   - `MESSAGE_TOO_LARGE`: more than 64 KiB of UTF-8. The parser is quadratic on some
+     inputs; the largest landed message seen is under 48 KiB.
+   - `FORBIDDEN_CHARACTER`: NUL, VT, FF, U+001C–U+001E, NEL, U+2028 or U+2029. Other
+     tools treat these as line breaks (or rewrite them) while the parser does not, so
+     they could shift a line into or out of a code block.
+   - `BARE_CR`: a CR that is not part of CRLF. CRLF is normalised to LF; the message is
+     read from the commit object as bytes, so nothing else rewrites it first.
+   - `COMMENT_MARKER`: the literal `<!--` or `-->` anywhere, even a harmless comment
+     or prose such as `"-->" in a name`. Write *HTML comment marker* in prose instead.
+   - `HTML_BLOCK`: any raw HTML block (`<div>`, `<pre>`, `<details>`, a tag alone on a
+     line, …).
+2. **Parse** the LF-normalised message with markdown-it-py's CommonMark preset (pinned
+   `markdown-it-py==4.2.0`, `mdurl==0.1.2`). A **declaration paragraph** is a top-level
+   paragraph (not inside a list, quote, heading, code block or link reference) whose every
+   source line is `Key: value` (`[A-Za-z][A-Za-z0-9-]*`, colon, one space, no leading or
+   trailing whitespace). Lines come from the parser's line map over `text.split("\n")`,
+   never from rendered text, and must equal the parser's own paragraph text.
+3. Each exact `X-Agent` line of a declaration paragraph is one value, unless an inline
+   construct (code span, link, emphasis, image or multi-line inline HTML) spans into that
+   line. Declaration paragraphs may appear anywhere in the message; a value repeated on
+   several lines counts once. Other keys share the paragraph freely:
+   `Co-Authored-By: … <…>`, `X-Agent-Model: …`, `Refs: #N`. Inline HTML elsewhere (for
+   example a `<pid>` placeholder in prose) is allowed.
+4. **Malformed**: any line, anywhere in the message (code blocks included), whose key
+   (the text before its first `:`) lowercases to `x-agent` and that is not an exact line.
+   `X-Agent-Model` is a different key.
+
+So a fenced, indented, quoted, listed, heading or link-reference line is an example,
+never a declaration: it satisfies nothing and is not required of the landed message.
+A paragraph that mixes prose and attribution does not declare:
+
+```text
+Refs #10549              <- not "Key: value": the X-Agent line below does not count
+X-Agent: codex/task-1
+```
+
+Write `Refs: #10549`, or put a blank line between the two.
+
+Source commits keep writing the trailer as today (`X-Agent: <agent>/<task-id>` in its own
+paragraph or beside other `Key: value` trailers). The repository setting below is what
+carries those lines into the landed message.
 
 ## The repository setting
 
@@ -119,7 +156,8 @@ a malformed line, and not a task id (`omits 1 of 2 PR value(s)` names no value).
 | `FETCH_FAILED` | `refs/pull/N/head` could not be fetched or read. |
 | `EMPTY_SOURCE` | The PR head adds no non-merge commit to the squash parent. |
 | `UNVERIFIABLE_SOURCE` | The fetched PR head is not verifiably the squash's source (merge-group), or `--pr` BASE and HEAD share no history. |
-| `MALFORMED_ATTRIBUTION` | An `X-Agent:` line does not match the grammar. |
+| `REFUSED_MESSAGE` | The whole message is refused; the detail names the reason (`MESSAGE_TOO_LARGE`, `FORBIDDEN_CHARACTER`, `BARE_CR`, `COMMENT_MARKER`, `HTML_BLOCK`). |
+| `MALFORMED_ATTRIBUTION` | A line keyed `x-agent` (any case) is not an exact line. |
 | `MISSING_ATTRIBUTION` | No line and no verified app-bot authorship. |
 | `SOURCE_UNATTRIBUTED` | A PR commit has no line and no verified app-bot authorship. |
 | `INCOMPLETE_ATTRIBUTION` | The landed message omits a value present on the PR's commits. |
@@ -128,62 +166,77 @@ a malformed line, and not a task id (`omits 1 of 2 PR value(s)` names no value).
 
 `ATTRIBUTION_ENFORCE=1` makes violations fail the run (exit 1). Any other value,
 including unset, prints the same findings as `::warning` and exits 0, with the log line
-`report-only (ATTRIBUTION_ENFORCE!=1)`. Bad usage always exits 2. Until the operator's
-setting change is read back, the workflow keeps `ATTRIBUTION_ENFORCE: '0'`, because
-the landing is gated on that readback.
+`report-only (ATTRIBUTION_ENFORCE!=1)`. Bad usage always exits 2.
+
+The switch downgrades **violations only**, including the typed fail-closed ones
+(`GIT_ERROR`, `FETCH_FAILED`, …). A crash of the checker itself (the parser missing, an
+unexpected exception) exits 1 with a traceback in every mode, so the step fails even
+while report-only. The step runs under `set -euo pipefail` and calls the checker last,
+with no `|| true` and no `continue-on-error`.
+
+In CI the value comes from the **repository variable** `ATTRIBUTION_ENFORCE`
+(Settings → Secrets and variables → Actions → Variables), passed to the step as
+`ATTRIBUTION_ENFORCE: ${{ vars.ATTRIBUTION_ENFORCE }}`. Unset means report-only. Do not
+set it to `1` until the replay below has zero unexplained rejections and the operator's
+setting readback is recorded.
 
 ## CI Gate step
 
-Add to the existing `ci-gate` job in `.github/workflows/ci.yml`, after the
-`Check large files guard` step. It reuses that job's checkout (`fetch-depth: 0`, queue
-head ref) and Python setup, and runs on every `pull_request` and `merge_group`, outside
-the reuse path. The job also needs the permission block shown.
+`Check agent attribution` is a step of the `ci-gate` job in `.github/workflows/ci.yml`
+(the job behind the one required context, `CI Gate`). It runs after
+`Check large files guard` and `Require every job`, on every `pull_request` and
+`merge_group` event, including merge-group runs that reuse an earlier run's tree: the
+queue commit's message is new even when its tree is not. It reuses that job's checkout
+(`fetch-depth: 0`; the queue head on `merge_group`, the PR merge ref on `pull_request`)
+and Python setup.
 
-```yaml
-  ci-gate:
-    permissions:
-      contents: read
-      pull-requests: read
-    # ...
-    steps:
-      # ... checkout, setup-python (id: setup-python-gate), Check large files guard ...
-      - name: Check agent attribution
-        if: github.event_name == 'pull_request' || github.event_name == 'merge_group'
-        env:
-          # Report-only until the squash_merge_commit_message readback is recorded
-          # (docs/runbooks/agent-attribution.md). Set to '1' to enforce.
-          ATTRIBUTION_ENFORCE: '0'
-          EVENT_NAME: ${{ github.event_name }}
-          BASE_SHA: ${{ github.event_name == 'merge_group' && github.event.merge_group.base_sha || github.event.pull_request.base.sha }}
-          HEAD_SHA: ${{ github.event_name == 'merge_group' && github.event.merge_group.head_sha || github.event.pull_request.head.sha }}
-          GITHUB_TOKEN: ${{ github.token }}
-          GITHUB_REPOSITORY: ${{ github.repository }}
-          PYTHON_BIN: ${{ steps.setup-python-gate.outputs.python-path }}
-        run: |
-          if [ -z "$BASE_SHA" ] || [ -z "$HEAD_SHA" ]; then
-            echo "::error::Missing base or head SHA for agent attribution in $EVENT_NAME"
-            [ "$ATTRIBUTION_ENFORCE" = 1 ] && exit 1
-            exit 0
-          fi
-          if [ "$EVENT_NAME" = "merge_group" ]; then
-            "$PYTHON_BIN" scripts/ci/check_agent_attribution.py --merge-group "$BASE_SHA" "$HEAD_SHA"
-          else
-            "$PYTHON_BIN" scripts/ci/check_agent_attribution.py --pr "$BASE_SHA" "$HEAD_SHA"
-          fi
-```
+| Event | Mode | `BASE_SHA` | `HEAD_SHA` |
+| --- | --- | --- | --- |
+| `merge_group` | `--merge-group` | `merge_group.base_sha` | `merge_group.head_sha` |
+| `pull_request` | `--pr` | `pull_request.base.sha` | `pull_request.head.sha` |
 
-Notes:
+A missing SHA fails the step in every mode. The job has no project environment, so the
+step installs exactly the locked parser first:
+`pip install --no-deps --only-binary=:all: markdown-it-py==4.2.0 mdurl==0.1.2` (keep in
+step with `requirements-lock.txt`; a test pins the pair). The rest of the checker's import
+closure is the standard library and `scripts/` itself.
 
-- The script needs no `pip install`; its GitHub REST read goes through `scripts/common/github_client.py` (`gh api`, credential from `GITHUB_TOKEN`).
-- `persist-credentials: false` stays. The repository is public, so
-  `refs/pull/N/head` fetches anonymously; when `GITHUB_TOKEN` is set the script also
-  sends it to a `https://github.com/` remote through `GIT_CONFIG_*` environment
-  variables (never argv, never written to config).
-- Pin any new action the way the file does (full SHA with a version comment). This step
-  uses none.
-- Do not add the step to a job that can be skipped or reused. A skipped required check
+- Permissions stay `contents: read`. History comes from the checkout (`fetch-depth: 0`),
+  never from API calls. The repository is public, so `refs/pull/N/head` fetches
+  anonymously; with `GITHUB_TOKEN` set the script also sends it to a
+  `https://github.com/` remote through `GIT_CONFIG_*` environment variables (never argv,
+  never written to config). The bot-exemption read goes through
+  `scripts/common/github_client.py` (`gh api`, credential from `GITHUB_TOKEN`).
+- On `pull_request` the PR head is reachable as the merge ref's second parent. If GitHub's
+  merge ref lags a just-pushed head, the run reports `GIT_ERROR`; the next synchronize
+  run checks the new head.
+- Do not move the step to a job that can be skipped or reused. A skipped required check
   counts as passing.
-- When the step lands, mention it in `docs/runbooks/ci-gate.md`.
+
+## Replay before enforcing
+
+Run the checker over real history and explain every rejection before setting
+`ATTRIBUTION_ENFORCE=1`. Classes: **LANDED** (`git rev-list --first-parent origin/main`
+since the window start), **SOURCE** (the non-merge commits of `refs/pull/N/head` for each
+landed PR, which the merge-group completeness check reads), **QUEUE** (the current
+merge-group head, if any). Unmerged branches, tags, `gh-readonly-queue/*` and
+`ci-queue-metadata` refs are reported separately and never count against the bar.
+
+Replay of 2026-10-16 (window from 2026-10-10, attributed commits only):
+
+| Class | Commits | Attributed | Accepted | Rejected |
+| --- | --- | --- | --- | --- |
+| LANDED | 173 | 22 | 22 | 0 |
+| SOURCE | 559 | 552 | 548 | 4 |
+| QUEUE | 0 | 0 | 0 | 0 |
+| Other refs (not counted) | 403 | 319 | 317 | 2 |
+
+Every rejection is explained: two `X-Agent: sre-platform` values without a task id
+(malformed before this grammar too), one `Refs #10549` line in the attribution paragraph
+(prose and attribution mixed), and one literal `-->` in prose (comment-marker veto). The
+two uncounted rejections are one of each of the first two classes. A merge-group replay
+of the 173 landed squashes reports the same violations as the previous checker except
+PR #10726, which now fails on its source's `-->` rather than on its landed message.
 
 ## Controlled landing (S0)
 
@@ -203,15 +256,18 @@ report-only.
 6. **Prove** after `MERGED`: `git show -s --format=%B <mergeCommit.oid>` contains both
    values as whole lines, and the merge-group run's `Check agent attribution` log shows
    `violations=0`.
-7. **Enforce.** A follow-up PR changes `ATTRIBUTION_ENFORCE` to `'1'`; it lands through
-   the same gates.
+7. **Enforce.** After a fresh replay with zero unexplained rejections, the operator sets
+   the repository variable `ATTRIBUTION_ENFORCE` to `1` and records the readback. No
+   workflow change is needed.
 
 Also inspect source messages and PR bodies for `Closes #N` text: with
 `COMMIT_MESSAGES` it is carried onto `main`, where GitHub acts on it.
 
 ## Rollback
 
-1. Set `ATTRIBUTION_ENFORCE` back to `'0'` (report-only) if the check blocks the queue.
+1. Delete the repository variable `ATTRIBUTION_ENFORCE` (or set it to anything but `1`)
+   to return to report-only if the check blocks the queue. A checker crash still fails
+   the step; fix or revert the checker instead.
 2. If the setting misbehaves, the operator sets
    `squash_merge_commit_message=BLANK` again and records the readback. This is
    containment, not repair: attribution is lost again.
@@ -236,3 +292,14 @@ Also inspect source messages and PR bodies for `Closes #N` text: with
   shaped like GitHub's, not a live Dependabot landing.
 - **Declaration, not identity.** An `X-Agent` line records who claims authorship; it is
   not cryptographic proof.
+- **Pre-push lint alignment (DevOps).** `scripts/audit/lint_agent_trailer.py` still
+  accepts an `X-Agent` line anywhere in the message, so a commit can pass pre-push and
+  then be refused here (for example `Refs #N` directly above the line). Aligning it with
+  this grammar is a recorded follow-up.
+- **Inline HTML around a declaration line.** Non-comment inline HTML on the other lines
+  of a declaration paragraph (`Refs: <span hidden>` … `Note: </span>`) is not refused.
+  Commit messages are shown as plain text on GitHub, and the check defines syntax, not
+  browser visibility.
+- **Live CI evidence.** Both event paths and the reused-tree path must be shown on real
+  runs (run and job IDs) before #10736 closes; `docs/runbooks/ci-gate.md` should then
+  list this step.

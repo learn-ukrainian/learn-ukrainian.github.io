@@ -11,11 +11,15 @@ from __future__ import annotations
 import os
 import subprocess
 import sys
+import time
 from pathlib import Path
 
 import pytest
+import yaml
+from markdown_it import MarkdownIt
 
 from scripts.ci import check_agent_attribution as check
+from tests.test_ci_pr_triggers import _condition, _interpolate
 
 _GIT_BIN = os.environ.get("AGENT_REAL_GIT", "git")  # the agent shim refuses branch switches
 REPOSITORY = "owner/repo"
@@ -707,14 +711,18 @@ _WRAPPED = {
     "tilde-fence": f"~~~\n{_EXAMPLE}\n~~~",
     "indented-fence": f"  ```\n{_EXAMPLE}\n  ```",
     "unclosed-fence": f"```\n{_EXAMPLE}",
-    "html-comment": f"<!--\n{_EXAMPLE}\n-->",
-    "one-line-comment": f"<!-- {_EXAMPLE} -->",
-    "unclosed-comment": f"<!--\n{_EXAMPLE}",
-    "comment-then-fence-marker": f"<!-- ``` -->\n<!--\n{_EXAMPLE}\n-->",
     "indented-code": f"    {_EXAMPLE}",
     "tab-code": f"\t{_EXAMPLE}",
     "blockquote": f"> {_EXAMPLE}",
     "lazy-quote-continuation": f"> quoted\n{_EXAMPLE}",
+}
+# r5 contract: a comment marker anywhere refuses the whole message (REFUSED_MESSAGE
+# COMMENT_MARKER); before r5 these were dropped as examples (MISSING_ATTRIBUTION).
+_COMMENTED = {
+    "html-comment": f"<!--\n{_EXAMPLE}\n-->",
+    "one-line-comment": f"<!-- {_EXAMPLE} -->",
+    "unclosed-comment": f"<!--\n{_EXAMPLE}",
+    "comment-then-fence-marker": f"<!-- ``` -->\n<!--\n{_EXAMPLE}\n-->",
 }
 
 
@@ -748,10 +756,40 @@ def test_wrapped_example_does_not_satisfy_pr_mode(queue: Queue, capsys: pytest.C
     assert f"MISSING_ATTRIBUTION commit={sha[:12]}" in out
 
 
-def test_malformed_line_inside_a_fence_is_not_counted() -> None:
+@pytest.mark.parametrize("name", sorted(_COMMENTED))
+def test_commented_example_refuses_the_message(name: str) -> None:
+    message = f"subject (#12)\n\nExample:\n{_COMMENTED[name]}\n"
+
+    assert check.extract_attribution(message) == check.Attribution((), 0, "COMMENT_MARKER")
+
+
+@pytest.mark.parametrize("name", sorted(_COMMENTED))
+def test_commented_example_fails_the_merge_group(queue: Queue, capsys: pytest.CaptureFixture[str], name: str) -> None:
+    queue.open_pr(12, [f"source\n\n{_EXAMPLE}\n"])
+    queue.land(12, f"land (#12)\n\nExample:\n{_COMMENTED[name]}\n")
+
+    code, out = _run_group(queue, capsys)
+
+    assert code == 1
+    assert "REFUSED_MESSAGE pr=#12" in out
+    assert "COMMENT_MARKER" in out
+
+
+@pytest.mark.parametrize("name", sorted(_COMMENTED))
+def test_commented_example_fails_pr_mode(queue: Queue, capsys: pytest.CaptureFixture[str], name: str) -> None:
+    (sha,) = queue.open_pr(12, [f"source\n\nExample:\n{_COMMENTED[name]}\n"])
+
+    code, out = _run_pr(queue, capsys, sha)
+
+    assert code == 1
+    assert f"REFUSED_MESSAGE commit={sha[:12]} COMMENT_MARKER" in out
+
+
+def test_malformed_line_inside_a_fence_still_counts_as_malformed() -> None:
+    # r5: a line keyed x-agent that is not exact is malformed wherever it sits (before r5: 0).
     message = "s\n\n```\nX-Agent: oops\n```\n\nX-Agent: codex/a\n"
 
-    assert check.extract_attribution(message) == check.Attribution(("codex/a",), 0)
+    assert check.extract_attribution(message) == check.Attribution(("codex/a",), 1)
 
 
 def test_real_line_beside_a_fenced_example_counts_only_the_real_line() -> None:
@@ -784,10 +822,17 @@ def test_fenced_value_in_the_landed_message_does_not_cover_a_real_source_value(
     assert "omits 1 of 2 PR value(s)" in out
 
 
-def test_attribution_after_a_closed_fence_and_comment_counts() -> None:
-    message = "s\n\n~~~\ncode\n~~~\n\n<!-- note -->\n\nX-Agent: codex/a\n"
+def test_attribution_after_a_closed_fence_counts() -> None:
+    message = "s\n\n~~~\ncode\n~~~\n\nX-Agent: codex/a\n"
 
     assert check.extract_attribution(message) == check.Attribution(("codex/a",), 0)
+
+
+def test_a_closed_comment_refuses_a_message_with_a_real_line() -> None:
+    # r5: refused (COMMENT_MARKER); before r5 the real line after the comment counted.
+    message = "s\n\n~~~\ncode\n~~~\n\n<!-- note -->\n\nX-Agent: codex/a\n"
+
+    assert check.extract_attribution(message) == check.Attribution((), 0, "COMMENT_MARKER")
 
 
 # --- a comment is never stripped into an attribution line --------------------------------------
@@ -800,24 +845,25 @@ _COMMENT_SPELLINGS = {
 }
 
 
+# r5 contract: each spelling refuses the message (REFUSED_MESSAGE COMMENT_MARKER); before r5
+# it yielded no value (MISSING_ATTRIBUTION).
 @pytest.mark.parametrize("name", sorted(_COMMENT_SPELLINGS))
 def test_comment_spelling_is_not_an_attribution_line(name: str) -> None:
     message = f"subject (#12)\n\n{_COMMENT_SPELLINGS[name]}\n"
 
-    assert check.extract_attribution(message).values == ()
+    assert check.extract_attribution(message) == check.Attribution((), 0, "COMMENT_MARKER")
 
 
 @pytest.mark.parametrize("name", sorted(_COMMENT_SPELLINGS))
-def test_comment_spelling_fails_the_merge_group(
-    queue: Queue, capsys: pytest.CaptureFixture[str], name: str
-) -> None:
+def test_comment_spelling_fails_the_merge_group(queue: Queue, capsys: pytest.CaptureFixture[str], name: str) -> None:
     queue.open_pr(12, [f"source\n\n{_EXAMPLE}\n"])
     queue.land(12, f"land (#12)\n\n{_COMMENT_SPELLINGS[name]}\n")
 
     code, out = _run_group(queue, capsys)
 
     assert code == 1
-    assert "MISSING_ATTRIBUTION pr=#12" in out
+    assert "REFUSED_MESSAGE pr=#12" in out
+    assert "COMMENT_MARKER" in out
 
 
 @pytest.mark.parametrize("name", sorted(_COMMENT_SPELLINGS))
@@ -827,15 +873,28 @@ def test_comment_spelling_fails_pr_mode(queue: Queue, capsys: pytest.CaptureFixt
     code, out = _run_pr(queue, capsys, sha)
 
     assert code == 1
-    assert f"MISSING_ATTRIBUTION commit={sha[:12]}" in out
+    assert f"REFUSED_MESSAGE commit={sha[:12]} COMMENT_MARKER" in out
 
 
+def test_well_formed_line_passes_both_modes(queue: Queue, capsys: pytest.CaptureFixture[str]) -> None:
+    (sha,) = queue.open_pr(12, ["source\n\nX-Agent: codex/a\n"])
+    queue.land(12, "land (#12)\n\nX-Agent: codex/a\n")
+
+    pr_code, pr_out = _run_pr(queue, capsys, sha)
+    group_code, group_out = _run_group(queue, capsys)
+
+    assert pr_code == 0, pr_out
+    assert group_code == 0, group_out
+
+
+# r5 contract: a harmless comment next to a real line refuses both modes (exit 1,
+# REFUSED_MESSAGE COMMENT_MARKER); before r5 both modes passed (exit 0).
 @pytest.mark.parametrize(
     "body",
-    ["X-Agent: codex/a\n", "<!-- note -->\n\nX-Agent: codex/a\n", "X-Agent: codex/a\n\nsee <!-- note --> here\n"],
-    ids=["plain", "comment-before", "comment-after"],
+    ["<!-- note -->\n\nX-Agent: codex/a\n", "X-Agent: codex/a\n\nsee <!-- note --> here\n"],
+    ids=["comment-before", "comment-after"],
 )
-def test_well_formed_line_passes_both_modes_beside_a_comment(
+def test_well_formed_line_beside_a_comment_is_refused_in_both_modes(
     queue: Queue, capsys: pytest.CaptureFixture[str], body: str
 ) -> None:
     (sha,) = queue.open_pr(12, [f"source\n\n{body}"])
@@ -844,8 +903,10 @@ def test_well_formed_line_passes_both_modes_beside_a_comment(
     pr_code, pr_out = _run_pr(queue, capsys, sha)
     group_code, group_out = _run_group(queue, capsys)
 
-    assert pr_code == 0, pr_out
-    assert group_code == 0, group_out
+    assert pr_code == 1
+    assert f"REFUSED_MESSAGE commit={sha[:12]} COMMENT_MARKER" in pr_out
+    assert group_code == 1
+    assert "REFUSED_MESSAGE pr=#12" in group_out
 
 
 # --- source relation: the fetched PR head must be the squash's own source ---------------------
@@ -1016,3 +1077,392 @@ def test_diagnostics_never_echo_message_content(plumbing: Plumbing, capsys: pyte
     assert "INCOMPLETE_ATTRIBUTION pr=#12" in out
     assert canary not in out
     assert "omits 1 of 1 PR value(s)" in out
+
+
+# --- frozen declaration matrix (#10736 r5) -------------------------------------------------------
+#
+# Frozen before the implementation from the approved design and amendments A1-A4. ``A`` is
+# ``X-Agent: codex/a``; every message is ``s\n\n`` plus the body. A refusal row names why the
+# message yields no attribution: a whole-message refusal code, ``MALFORMED`` (an ``x-agent``
+# keyed line that is not exact) or ``NONE`` (no qualifying declaration paragraph).
+
+A = "X-Agent: codex/a"
+LANDED_10756 = (  # `git show -s --format=%B 2b3cf16b91`, byte for byte
+    "docs(runbooks): controlled two-commit landing proof for X-Agent attribution (#10736) (#10756)\n"
+    "\n"
+    "* docs(runbooks): add agent attribution landing proof stub (#10736)\n"
+    "\n"
+    "Create the proof page for the squash-merge attribution check, with the\n"
+    "contract and the repository setting readback. The result is pending landing.\n"
+    "\n"
+    "X-Agent: claude/impl-10736-a1-proof-c1\n"
+    "\n"
+    "Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>\n"
+    "\n"
+    "* docs(runbooks): add attribution landing verification recipe (#10736)\n"
+    "\n"
+    "Replace the pending marker with the post-merge check recipe. The driver\n"
+    "records the actual outcome on the issue after merge.\n"
+    "\n"
+    "X-Agent: claude/impl-10736-a1-proof-c2\n"
+    "\n"
+    "Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>\n"
+    "\n"
+    "---------\n"
+    "\n"
+    "Co-authored-by: Claude <claude@local.invalid>\n"
+    "Co-authored-by: Claude Sonnet 5.5 <noreply@anthropic.com>\n"
+)
+FENCE = "```"
+OVERSIZE = f"{A}\n\n" + "*[" * 32768
+
+REFUSE: dict[str, tuple[str, str]] = {
+    # whole-message comment-marker veto, before any exemption
+    "comment-closed-then-reopened": (f"<!-- first\n--> <!-- second\n{A}\n-->", "COMMENT_MARKER"),
+    "comment-closed-between-openers": (f"<!-- first\n--> <!-- x --> <!-- second\n{A}", "COMMENT_MARKER"),
+    "comment-prefix": (f"<!-- x -->{A}", "COMMENT_MARKER"),
+    "comment-suffix": (f"{A}<!-- x -->", "COMMENT_MARKER"),
+    "comment-inside-value": ("X-Agent: codex/<!-- x -->a", "COMMENT_MARKER"),
+    "stray-closer": (f"{A}\n\ntext -->", "COMMENT_MARKER"),
+    "empty-comment": (f"<!-->\n\n{A}", "COMMENT_MARKER"),
+    "harmless-comment": (f"{A}\n\n<!-- harmless -->", "COMMENT_MARKER"),
+    # raw HTML blocks anywhere (CommonMark types 1, 6 and 7)
+    "hidden-div": (f"<div hidden>\n\n{A}\n\n</div>", "HTML_BLOCK"),
+    "pre-block": (f"<pre>\n\n{A}", "HTML_BLOCK"),
+    "div-interrupts": (f"<div>\n{A}", "HTML_BLOCK"),
+    "br-type-7": (f"<br/>\n{A}", "HTML_BLOCK"),
+    # containers: lists, lazy continuations, quotes
+    "nested-list-lazy": (f"- outer\n  - inner\n{A}", "NONE"),
+    "ordered-nested-list-lazy": (f"1. outer\n   - inner\n{A}", "NONE"),
+    "list-lazy": (f"- note\n{A}", "NONE"),
+    "list-marker-then-four-spaces": (f"-     {A}", "NONE"),
+    "blockquote": (f"> {A}", "NONE"),
+    "lazy-quote": (f"> quoted\n{A}", "NONE"),
+    # code: fenced, unclosed, indented, inline
+    "backtick-fence": (f"{FENCE}\n{A}\n{FENCE}", "NONE"),
+    "tilde-fence": (f"~~~\n{A}\n~~~", "NONE"),
+    "unclosed-fence": (f"{FENCE}\n\n{A}", "NONE"),
+    "multiline-code-span": (f"`code\n{A}\n`", "NONE"),
+    "multiline-code-span-in-trailer-paragraph": (f"Refs: `x\n{A}\nNote: y`", "NONE"),
+    "four-space-indent": (f"    {A}", "NONE"),
+    "tab-indent": (f"\t{A}", "NONE"),
+    # other inline constructs spanning the line
+    "multiline-link-text": (f"Refs: [x\n{A}\nNote: y](https://example.com)", "NONE"),
+    "multiline-emphasis": (f"Refs: *x\n{A}\nNote: y*", "NONE"),
+    "multiline-image-alt": (f"Refs: ![x\n{A}\nNote: y](https://example.com)", "NONE"),
+    # other block constructs
+    "setext-h2": (f"{A}\n---", "NONE"),
+    "setext-h1": (f"{A}\n===", "NONE"),
+    "break-then-setext": (f"---\n{A}\n---", "NONE"),
+    "link-reference-title": (f'[x]: /u "t\n{A}\n"', "NONE"),
+    "link-reference-label": (f"[{A}]: https://example.com", "NONE"),
+    "table-row": (f"| k | v |\n| --- | --- |\n| {A} |", "NONE"),
+    # spelling: exact ASCII only
+    "trailing-space": (f"{A} ", "MALFORMED"),
+    "cyrillic-x": ("Х-Agent: codex/a", "NONE"),
+    "unicode-hyphen": ("X‐Agent: codex/a", "NONE"),
+    "fullwidth-colon": ("X-Agent： codex/a", "NONE"),
+    "entity-hyphen": ("X&#45;Agent: codex/a", "NONE"),
+    "zero-width-space-in-value": ("X-Agent: codex/​a", "MALFORMED"),
+    "rtl-override-prefix": (f"‮{A}", "NONE"),
+    "malformed-beside-exact": (f"{A}\nX-Agent: codex", "MALFORMED"),
+    # line separators other than LF, and characters the parser rewrites
+    "form-feed": (f"\x0c{A}", "FORBIDDEN_CHARACTER"),
+    "bare-cr": (f"\r{A}", "BARE_CR"),
+    "u2028-fenced-forgery": (f"{FENCE}\n   {A}\n{FENCE}\n\nP", "FORBIDDEN_CHARACTER"),
+    "nul": (f"{A}\x00", "FORBIDDEN_CHARACTER"),
+    # bounded parse cost: refused before the parser runs
+    "oversize-quadratic-run": (OVERSIZE, "MESSAGE_TOO_LARGE"),
+}
+
+ACCEPT: dict[str, tuple[str, tuple[str, ...]]] = {
+    "duplicate-lines": (f"s\n\n{A}\n{A}\n", ("codex/a",)),
+    "crlf-throughout": (f"s\r\n\r\n{A}\r\n", ("codex/a",)),
+    "co-authored-by-same-paragraph": (f"s\n\n{A}\nCo-Authored-By: x <y>\n", ("codex/a",)),
+    "co-authored-by-first": (f"s\n\nCo-Authored-By: x <y@example.com>\n{A}\n", ("codex/a",)),
+    "x-agent-model-same-paragraph": (f"s\n\n{A}\nX-Agent-Model: m\n", ("codex/a",)),
+    "inline-html-outside-the-paragraph": (f"s\n\nkill <pid> first.\n\n{A}\n", ("codex/a",)),
+    "thematic-break-after": (f"s\n\n{A}\n***\n", ("codex/a",)),
+    "landed-10756": (LANDED_10756, ("claude/impl-10736-a1-proof-c1", "claude/impl-10736-a1-proof-c2")),
+}
+
+
+def _refusal_class(attribution: check.Attribution) -> str | None:
+    """None when the message declares attribution; otherwise why it does not."""
+    if attribution.refusal is not None:
+        return attribution.refusal
+    if attribution.malformed:
+        return "MALFORMED"
+    return None if attribution.values else "NONE"
+
+
+@pytest.mark.parametrize("name", sorted(REFUSE))
+def test_matrix_refuses(name: str) -> None:
+    body, reason = REFUSE[name]
+
+    attribution = check.extract_attribution(f"s\n\n{body}")
+
+    assert _refusal_class(attribution) == reason
+    if reason not in ("NONE", "MALFORMED"):
+        assert attribution.values == ()
+
+
+@pytest.mark.parametrize("name", sorted(ACCEPT))
+def test_matrix_accepts(name: str) -> None:
+    message, values = ACCEPT[name]
+
+    attribution = check.extract_attribution(message)
+
+    assert attribution == check.Attribution(values, 0)
+
+
+def test_oversize_message_is_refused_without_parsing(monkeypatch: pytest.MonkeyPatch) -> None:
+    def explode(_text: str) -> list[object]:
+        raise AssertionError("the parser must not see an oversize message")
+
+    monkeypatch.setattr(check._MARKDOWN, "parse", explode)
+
+    assert check.extract_attribution(f"s\n\n{OVERSIZE}").refusal == "MESSAGE_TOO_LARGE"
+    assert len(f"s\n\n{OVERSIZE}".encode()) > check.MAX_MESSAGE_BYTES
+
+
+def test_largest_admitted_message_parses_within_budget() -> None:
+    # Worst measured shape: the quadratic `*[` run, filled to the size bound.
+    payload = f"s\n\n{A}\n\n" + "*[" * ((check.MAX_MESSAGE_BYTES - 32) // 2)
+    assert len(payload.encode()) <= check.MAX_MESSAGE_BYTES
+    started = time.perf_counter()
+
+    attribution = check.extract_attribution(payload)
+
+    assert attribution == check.Attribution(("codex/a",), 0)
+    assert time.perf_counter() - started < 10
+
+
+_SPLIT_PROBES = [f"s\n\n{body}" for body, _ in REFUSE.values()] + [message for message, _ in ACCEPT.values()]
+
+
+@pytest.mark.parametrize("message", _SPLIT_PROBES)
+def test_declaration_lines_are_lf_split_source_lines(message: str) -> None:
+    """Every candidate paragraph's lines are ``text.split("\\n")[map]`` and agree with the parser."""
+    text = message.replace("\r\n", "\n")
+    for paragraph in check.declaration_paragraphs(message):
+        start, end = paragraph.map
+        assert paragraph.lines == tuple(text.split("\n")[start:end])
+        # An independent parse: the paragraph's inline content is exactly those lines.
+        tokens = MarkdownIt("commonmark").parse(text)
+        (inline,) = [
+            tokens[i + 1]
+            for i, token in enumerate(tokens)
+            if token.type == "paragraph_open" and token.level == 0 and tuple(token.map or ()) == paragraph.map
+        ]
+        assert inline.content == "\n".join(paragraph.lines)
+
+
+def test_u2028_probe_would_forge_a_fenced_line_under_splitlines() -> None:
+    # Why the split is "\n" only: the parser numbers lines on LF, splitlines() on U+2028 too.
+    message = f"s\n\n{FENCE}\n   {A}\n{FENCE}\n\nP"
+    tokens = MarkdownIt("commonmark").parse(message)
+    (paragraph,) = [t for t in tokens if t.type == "paragraph_open" and t.level == 0][1:]
+    start, _ = paragraph.map
+    assert message.splitlines()[start] == A  # the forgery a splitlines() indexer would accept
+    assert message.split("\n")[start] == "P"
+    assert check.extract_attribution(message).refusal == "FORBIDDEN_CHARACTER"
+
+
+def _commit_safe(message: str) -> bool:
+    return "\x00" not in message  # git refuses NUL in a commit message
+
+
+@pytest.mark.parametrize("name", sorted(name for name in REFUSE if _commit_safe(REFUSE[name][0])))
+def test_matrix_refusals_fail_both_cli_modes(queue: Queue, capsys: pytest.CaptureFixture[str], name: str) -> None:
+    body, _ = REFUSE[name]
+    (sha,) = queue.open_pr(12, [f"s\n\n{body}"])
+    pr_code, pr_out = _run_pr(queue, capsys, sha)
+
+    # The source is well attributed; only the landed message carries the refused body.
+    queue.open_pr(13, [f"source\n\n{A}\n"])
+    queue.land(13, f"s (#13)\n\n{body}")
+    group_code, group_out = _run_group(queue, capsys)
+
+    assert pr_code == 1, pr_out
+    assert group_code == 1, group_out
+    assert "violations=0" not in pr_out + group_out
+
+
+@pytest.mark.parametrize("name", sorted(name for name in ACCEPT if name != "landed-10756"))
+def test_matrix_accepts_pass_both_cli_modes(queue: Queue, capsys: pytest.CaptureFixture[str], name: str) -> None:
+    message, _ = ACCEPT[name]
+    (sha,) = queue.open_pr(12, [message])
+    pr_code, pr_out = _run_pr(queue, capsys, sha)
+
+    queue.land(12, message.replace("s", "s (#12)", 1))
+    group_code, group_out = _run_group(queue, capsys)
+
+    assert pr_code == 0, pr_out
+    assert group_code == 0, group_out
+
+
+def test_landed_10756_passes_the_merge_group_with_both_source_values(
+    queue: Queue, capsys: pytest.CaptureFixture[str]
+) -> None:
+    queue.open_pr(
+        10756,
+        [
+            "docs(runbooks): add agent attribution landing proof stub (#10736)\n\n"
+            "X-Agent: claude/impl-10736-a1-proof-c1\n\n"
+            "Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>\n",
+            "docs(runbooks): add attribution landing verification recipe (#10736)\n\n"
+            "X-Agent: claude/impl-10736-a1-proof-c2\n\n"
+            "Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>\n",
+        ],
+    )
+    queue.land(10756, LANDED_10756)
+
+    code, out = _run_group(queue, capsys)
+
+    assert code == 0, out
+    assert "commits=1 violations=0 enforce" in out
+
+
+def test_bare_cr_reaches_the_checker_byte_for_byte(queue: Queue, capsys: pytest.CaptureFixture[str]) -> None:
+    # Text-mode subprocess reads would turn the CR into LF and hide it; the message is read as bytes.
+    (sha,) = queue.open_pr(12, [f"s\n\n```\r{A}\r```\n"])
+
+    code, out = _run_pr(queue, capsys, sha)
+
+    assert code == 1
+    assert f"REFUSED_MESSAGE commit={sha[:12]} BARE_CR" in out
+
+
+# --- CI Gate wiring ------------------------------------------------------------------------------
+
+_REPO = Path(__file__).resolve().parents[2]
+
+
+def _gate_steps() -> list[dict]:
+    workflow = yaml.safe_load((_REPO / ".github/workflows/ci.yml").read_text(encoding="utf-8"))
+    return workflow["jobs"]["ci-gate"]["steps"]
+
+
+def _attribution_step() -> dict:
+    (step,) = [step for step in _gate_steps() if step.get("name") == "Check agent attribution"]
+    return step
+
+
+_PR_EVENT = {
+    "github": {
+        "event_name": "pull_request",
+        "event": {"pull_request": {"base": {"sha": "pr-base"}, "head": {"sha": "pr-head"}}},
+    },
+    "vars": {},
+}
+_QUEUE_EVENT = {
+    "github": {"event_name": "merge_group", "event": {"merge_group": {"base_sha": "mg-base", "head_sha": "mg-head"}}},
+    "vars": {"ATTRIBUTION_ENFORCE": "1"},
+}
+
+
+def test_attribution_runs_in_ci_gate_after_the_large_file_guard_on_both_events() -> None:
+    names = [step.get("name") for step in _gate_steps()]
+    step = _attribution_step()
+
+    assert names.index("Check agent attribution") > names.index("Check large files guard")
+    assert names.index("Check agent attribution") > names.index("Require every job")
+    assert not step.get("continue-on-error")
+    assert _condition(step["if"], _PR_EVENT) is True
+    assert _condition(step["if"], _QUEUE_EVENT) is True
+    for event in ("schedule", "workflow_dispatch", "push"):
+        assert _condition(step["if"], {"github": {"event_name": event}}) is False
+
+
+def test_attribution_step_binds_each_event_shape() -> None:
+    env = _attribution_step()["env"]
+
+    assert [_interpolate(env[key], _PR_EVENT) for key in ("BASE_SHA", "HEAD_SHA")] == ["pr-base", "pr-head"]
+    assert [_interpolate(env[key], _QUEUE_EVENT) for key in ("BASE_SHA", "HEAD_SHA")] == ["mg-base", "mg-head"]
+    assert _interpolate(env["ATTRIBUTION_ENFORCE"], _PR_EVENT) == ""
+    assert _interpolate(env["ATTRIBUTION_ENFORCE"], _QUEUE_EVENT) == "1"
+    assert env["GITHUB_TOKEN"] == "${{ github.token }}"
+
+
+def test_attribution_step_installs_exactly_the_locked_parser() -> None:
+    script = _attribution_step()["run"]
+    locked = (_REPO / "requirements-lock.txt").read_text(encoding="utf-8").split("\n")
+
+    for pin in ("markdown-it-py==4.2.0", "mdurl==0.1.2"):
+        assert pin in script
+        assert pin in locked
+
+
+def _fake_python(tmp_path: Path, checker_prefix: str) -> Path:
+    """A PYTHON_BIN that skips pip and runs the real checker, optionally with a broken parser import."""
+    broken = tmp_path / "broken"
+    (broken / "markdown_it").mkdir(parents=True)
+    (broken / "markdown_it" / "__init__.py").write_text("raise ImportError('simulated missing parser')\n")
+    wrapper = tmp_path / "python"
+    wrapper.write_text(
+        "#!/bin/bash\n"
+        '[ "$1" != -m ] || exit 0\n'
+        f'shift; {checker_prefix} exec "{sys.executable}" "{SCRIPT}" "$@"\n'.replace("{broken}", str(broken))
+    )
+    wrapper.chmod(0o755)
+    return wrapper
+
+
+@pytest.mark.parametrize(
+    ("prefix", "expected"),
+    [("", 0), ("PYTHONPATH={broken}", 1)],
+    ids=["violations-are-warnings", "crash-fails-the-step"],
+)
+def test_report_only_step_downgrades_violations_but_never_a_crash(
+    queue: Queue, tmp_path: Path, prefix: str, expected: int
+) -> None:
+    (sha,) = queue.open_pr(12, ["no attribution\n"])
+    env = {
+        "PATH": "/usr/bin:/bin",
+        "HOME": str(queue.repo),
+        "EVENT_NAME": "pull_request",
+        "BASE_SHA": queue.base,
+        "HEAD_SHA": sha,
+        "PYTHON_BIN": str(_fake_python(tmp_path, prefix)),
+        "ATTRIBUTION_ENFORCE": "",
+    }
+
+    result = subprocess.run(
+        ["bash", "-c", _attribution_step()["run"]],
+        cwd=queue.repo,
+        env=env,
+        capture_output=True,
+        text=True,
+        timeout=60,
+        check=False,
+    )
+
+    assert result.returncode == expected, result.stdout + result.stderr
+    if expected == 0:
+        assert "::warning title=agent-attribution::MISSING_ATTRIBUTION" in result.stdout
+    else:
+        assert "simulated missing parser" in result.stderr
+
+
+@pytest.mark.parametrize("missing", ["BASE_SHA", "HEAD_SHA"])
+def test_attribution_step_fails_without_event_shas(tmp_path: Path, missing: str) -> None:
+    env = {"PATH": "/usr/bin:/bin", "EVENT_NAME": "merge_group", "BASE_SHA": "b", "HEAD_SHA": "h", missing: ""}
+
+    result = subprocess.run(
+        ["bash", "-c", _attribution_step()["run"]], env=env, capture_output=True, text=True, timeout=30, check=False
+    )
+
+    assert result.returncode == 1
+    assert "Missing base or head SHA" in result.stdout
+
+
+def test_refused_bot_commit_is_not_exempt(queue: Queue, capsys: pytest.CaptureFixture[str]) -> None:
+    # The refusal comes before any exemption: a verified bot commit with a comment marker still fails.
+    (sha,) = queue.open_pr(117, [("Bump pytest from 8 to 9\n\n<!-- note -->\n", BOT_AUTHOR)])
+
+    code, out = _run_pr(queue, capsys, sha, get=_api({sha: _bot_commit(sha)}))
+
+    assert code == 1
+    assert "REFUSED_MESSAGE" in out
+    assert "COMMENT_MARKER" in out

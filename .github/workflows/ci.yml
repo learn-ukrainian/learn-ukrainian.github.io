@@ -472,3 +472,28 @@ jobs:
             [ "$expected" = success ] || echo "${job%%:*} reused from run ${REUSED_RUN}: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${REUSED_RUN}"
           done
           [ "$status" != 0 ] || echo "CI Gate green"; exit "$status"
+      # docs/runbooks/agent-attribution.md. Runs on reused-tree queue runs too: the queue
+      # commit's message is new even when its tree's run is reused. Report-only until the
+      # repository variable ATTRIBUTION_ENFORCE is exactly 1; report-only downgrades
+      # attribution violations only, so a crash of the checker still fails this step.
+      - name: Check agent attribution
+        if: github.event_name == 'pull_request' || github.event_name == 'merge_group'
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_SHA: ${{ github.event_name == 'merge_group' && github.event.merge_group.base_sha || github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event_name == 'merge_group' && github.event.merge_group.head_sha || github.event.pull_request.head.sha }}
+          PYTHON_BIN: ${{ steps.setup-python-gate.outputs.python-path }}
+          GITHUB_TOKEN: ${{ github.token }}
+          ATTRIBUTION_ENFORCE: ${{ vars.ATTRIBUTION_ENFORCE }}
+        run: |
+          set -euo pipefail
+          if [ -z "$BASE_SHA" ] || [ -z "$HEAD_SHA" ]; then
+            echo "::error::Missing base or head SHA for agent attribution in $EVENT_NAME"
+            exit 1
+          fi
+          # The parser pins from requirements-lock.txt; this job has no project environment.
+          "$PYTHON_BIN" -m pip install --disable-pip-version-check --quiet --no-deps --only-binary=:all: \
+            markdown-it-py==4.2.0 mdurl==0.1.2
+          mode=--pr
+          [ "$EVENT_NAME" != merge_group ] || mode=--merge-group
+          "$PYTHON_BIN" scripts/ci/check_agent_attribution.py "$mode" "$BASE_SHA" "$HEAD_SHA"
