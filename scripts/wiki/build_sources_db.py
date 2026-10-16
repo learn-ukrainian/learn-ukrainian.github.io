@@ -54,6 +54,8 @@ except ModuleNotFoundError:
         require_production_eligible_entry,
     )
 
+from scripts.lib.readonly_sqlite import open_readonly
+
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 EXTERNAL_DIR = PROJECT_ROOT / "data" / "external_articles"
 DB_PATH = PROJECT_ROOT / "data" / "sources.db"
@@ -497,6 +499,33 @@ def _ingest_jsonl(conn: sqlite3.Connection, table: str, jsonl_path: Path,
         conn.executemany(sql, batch)
     print(f"  📥 {label}: {len(batch)} entries")
     return len(batch)
+
+
+def _guard_dmklinger_conservation(db: Path, proposed: sqlite3.Connection) -> None:
+    """Refuse rebuilds that discard existing ordered dictionary rows or items."""
+    if not db.exists():
+        return
+    with contextlib.closing(open_readonly(db)) as current:
+        current.execute("BEGIN")
+        if not current.execute(
+            "SELECT 1 FROM sqlite_master WHERE type='table' AND name='dmklinger_uk_en'"
+        ).fetchone():
+            return
+        old_rows = current.execute(
+            "SELECT word, pos, translations FROM dmklinger_uk_en ORDER BY id"
+        ).fetchall()
+    if not old_rows:
+        return
+    new_rows = proposed.execute(
+        "SELECT word, pos, translations FROM dmklinger_uk_en ORDER BY id"
+    ).fetchall()
+    if [row[:2] for row in old_rows] != [row[:2] for row in new_rows]:
+        raise BuildValidationError("dmklinger conservation: missing input or lost/reordered word/POS rows")
+    for old, new in zip(old_rows, new_rows, strict=True):
+        old_items, new_items = json.loads(old[2]), json.loads(new[2])
+        if (not isinstance(old_items, list) or not isinstance(new_items, list)
+                or old_items != new_items[:len(old_items)]):
+            raise BuildValidationError("dmklinger conservation: lost/reordered/shrinking translations")
 
 
 def _ingest_external_articles(conn: sqlite3.Connection, ext_dir: Path) -> int:
@@ -1002,6 +1031,7 @@ def build(db_path: Path | None = None,
         expected_counts["dmklinger_uk_en"] = _ingest_jsonl(
             conn, "dmklinger_uk_en", gd / "dmklinger-uk-en" / "chunks.jsonl",
             ["word", "pos", "translations", "text", "source"], "DMKlinger UK→EN")
+        _guard_dmklinger_conservation(db, conn)
         expected_counts["ukrajinet"] = _ingest_jsonl(
             conn, "ukrajinet", gd / "ukrajinet" / "chunks.jsonl",
             ["synset_id", "words", "text", "source"], "Ukrajinet WordNet")
@@ -1092,13 +1122,19 @@ def build(db_path: Path | None = None,
 def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Build the unified sources.db (textbooks + literary + "
-                    "dictionaries + wikipedia passthrough).",
+                    "dictionaries + wikipedia passthrough).\n"
+                    "Use staged complete sources; populated targets require --force and dictionary conservation.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "By default, refuses to destroy an existing populated DB. "
             "Use --force to rebuild. --dry-run shows the plan without "
             "touching anything. --no-preserve-wiki also wipes the "
-            "wikipedia table (use sparingly — refetching is slow)."
+            "wikipedia table (use sparingly — refetching is slow).\n"
+            "Examples:\n  .venv/bin/python scripts/wiki/build_sources_db.py --dry-run\n"
+            "  .venv/bin/python scripts/wiki/build_sources_db.py --force --db-path staged.db\n"
+            "Outputs: rebuilt SQLite DB, embedding reservation and validation report.\n"
+            "Exit codes: 0 = success/preview; 1 = build validation error; 2 = populated target refused.\n"
+            "Related: #8959; scripts/rag/convert_phase2.py."
         ),
     )
     parser.add_argument(

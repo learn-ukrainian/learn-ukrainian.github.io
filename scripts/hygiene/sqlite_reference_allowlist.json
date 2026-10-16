@@ -330,6 +330,17 @@
     ]
   },
   {
+    "path": "scripts/ingest/incremental_dmklinger_ingest.py",
+    "reference_count": 4,
+    "kind": "writer",
+    "target_db": ":memory: builder oracle; existing sources.db (--db, mode=rw)",
+    "reason": "restores pinned dmklinger translations in an explicit existing target after transactional preimage validation (#8959)",
+    "calls": [
+      "sqlite3.connect(db_path.resolve().as_uri() + '?mode=rw', uri=True, isolation_level=None)",
+      "sqlite3.connect(':memory:')"
+    ]
+  },
+  {
     "path": "scripts/ingest/incremental_historical_source_ingest.py",
     "reference_count": 2,
     "kind": "writer",
@@ -1050,7 +1061,7 @@
   },
   {
     "path": "scripts/wiki/build_sources_db.py",
-    "reference_count": 13,
+    "reference_count": 14,
     "kind": "writer",
     "target_db": "sources.db; temporary rebuild DB",
     "reason": "builds source database before atomic replacement",
