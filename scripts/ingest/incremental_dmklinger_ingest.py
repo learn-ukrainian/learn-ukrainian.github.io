@@ -17,6 +17,7 @@ from pathlib import Path
 if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
+from scripts.common.scratch import ensure_scratch_root
 from scripts.lib.readonly_sqlite import open_readonly
 from scripts.projects.open_model_data.textbook_native_exactness import atomic_write
 from scripts.wiki.build_sources_db import SCHEMA, _ingest_jsonl
@@ -57,9 +58,10 @@ def _expected_input(input_path: Path, input_sha256: str) -> tuple[list[tuple], l
     payload = input_path.read_bytes()
     if input_sha256 != INPUT_SHA256 or hashlib.sha256(payload).hexdigest() != INPUT_SHA256:
         raise IngestError("corrected input SHA256 does not match the reviewed pin")
-    # Snapshot exactly the hashed bytes. The builder reads this private snapshot,
-    # so a replacement of the caller's input cannot race its second open.
-    with tempfile.TemporaryDirectory(prefix="dmklinger-input-") as directory:
+    # Snapshot exactly the hashed bytes on the managed scratch root. The builder
+    # reads this private snapshot, so a replacement of the caller's input cannot
+    # race its second open.
+    with tempfile.TemporaryDirectory(prefix="dmklinger-input-", dir=ensure_scratch_root()) as directory:
         snapshot = Path(directory) / "chunks.jsonl"
         snapshot.write_bytes(payload)
         with closing(sqlite3.connect(":memory:")) as oracle:

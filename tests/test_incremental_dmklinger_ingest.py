@@ -9,6 +9,7 @@ from pathlib import Path
 
 import pytest
 
+from scripts.common.scratch import ensure_scratch_root
 from scripts.ingest import incremental_dmklinger_ingest as ingest
 from scripts.wiki import build_sources_db as builder
 
@@ -369,6 +370,76 @@ def test_postimage_pin_and_unexpected_delta_refused(staged, monkeypatch):
     with pytest.raises(ingest.IngestError, match="changed-row"):
         run(staged, apply=True)
     assert staged[0].read_bytes() == before
+
+
+def track_staging(monkeypatch):
+    original = ingest.tempfile.TemporaryDirectory
+    seen = {}
+
+    class RecordingTemporaryDirectory(original):
+        def __init__(self, *args, **kwargs):
+            seen["dir"] = kwargs.get("dir")
+            super().__init__(*args, **kwargs)
+
+        def __enter__(self):
+            path = super().__enter__()
+            seen["path"] = Path(path).resolve()
+            return path
+
+    monkeypatch.setattr(ingest.tempfile, "TemporaryDirectory", RecordingTemporaryDirectory)
+    return seen
+
+
+def test_hashed_snapshot_ignores_caller_replacement_on_managed_scratch(staged, monkeypatch):
+    db, chunks, oracle, receipt = staged
+    original = chunks.read_bytes()
+    before = db.read_bytes()
+    seen = track_staging(monkeypatch)
+    real_ingest = ingest._ingest_jsonl
+
+    def replace_caller(conn, table, jsonl_path, columns, label):
+        snapshot = Path(jsonl_path)
+        assert snapshot.resolve().parent == seen["path"]
+        assert snapshot.name == "chunks.jsonl"
+        assert snapshot.read_bytes() == original
+        chunks.write_bytes(b'{"id":"replaced"}\n')
+        count = real_ingest(conn, table, snapshot, columns, label)
+        seen["rows"] = ingest.table_rows(conn)
+        return count
+
+    monkeypatch.setattr(ingest, "_ingest_jsonl", replace_caller)
+    result = run(staged)
+    managed = ensure_scratch_root().resolve()
+    assert result["status"] == "dry_run"
+    assert result["changed_rows"] == 2 and result["restored_items"] == 4
+    assert seen["rows"] == read_rows(oracle)
+    assert Path(seen["dir"]).resolve() == managed
+    assert seen["path"].is_relative_to(managed)
+    assert seen["path"].name.startswith("dmklinger-input-")
+    assert not seen["path"].exists()
+    assert chunks.read_bytes() != original
+    assert db.read_bytes() == before
+    assert json.loads(receipt.read_text())["status"] == "dry_run"
+
+
+def test_injected_staging_failure_cleans_managed_dir_without_target_writes(staged, monkeypatch):
+    db, chunks, _, receipt = staged
+    before = {db: db.read_bytes(), chunks: chunks.read_bytes()}
+    seen = track_staging(monkeypatch)
+
+    def fail(*_args, **_kwargs):
+        raise RuntimeError("injected staging failure")
+
+    monkeypatch.setattr(ingest, "_ingest_jsonl", fail)
+    with pytest.raises(RuntimeError, match="injected staging failure"):
+        run(staged, apply=True)
+    managed = ensure_scratch_root().resolve()
+    assert Path(seen["dir"]).resolve() == managed
+    assert seen["path"].is_relative_to(managed)
+    assert seen["path"].name.startswith("dmklinger-input-")
+    assert not seen["path"].exists()
+    assert {path: path.read_bytes() for path in before} == before
+    assert not receipt.exists()
 
 
 def test_direct_cli_help_and_missing_required_arguments():
