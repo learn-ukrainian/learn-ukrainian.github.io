@@ -725,42 +725,49 @@
           {
             "type": "command",
             "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/enforce-venv.sh",
-            "timeout": 3
+            "timeout": 10,
+            "onFailure": "block"
           },
           {
             "type": "command",
             "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/heal-core-bare.py",
-            "timeout": 3
+            "timeout": 10
           },
           {
             "type": "command",
             "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/guard-branch-switch-in-main.py",
-            "timeout": 3
+            "timeout": 10,
+            "onFailure": "block"
           },
           {
             "type": "command",
             "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/guard-admin-merge.py",
-            "timeout": 30
+            "timeout": 30,
+            "onFailure": "block"
           },
           {
             "type": "command",
             "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/guard-pr-merge.py",
-            "timeout": 30
+            "timeout": 30,
+            "onFailure": "block"
           },
           {
             "type": "command",
             "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/guard-secret-print.py",
-            "timeout": 5
+            "timeout": 10,
+            "onFailure": "block"
           },
           {
             "type": "command",
             "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/guard-primary-checkout-write.py",
-            "timeout": 5
+            "timeout": 10,
+            "onFailure": "block"
           },
           {
             "type": "command",
             "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/guard-public-github-text.py",
-            "timeout": 5
+            "timeout": 10,
+            "onFailure": "block"
           }
         ]
       },
@@ -770,7 +777,8 @@
           {
             "type": "command",
             "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/guard-primary-checkout-write.py",
-            "timeout": 5
+            "timeout": 10,
+            "onFailure": "block"
           }
         ]
       },
