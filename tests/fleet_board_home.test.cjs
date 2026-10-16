@@ -11,8 +11,6 @@ const js = fs.readFileSync(path.join(root, "dashboards/fleet-board.js"), "utf8")
 
 const context = {
   URLSearchParams,
-  encodeURIComponent,
-  decodeURIComponent,
   Number,
   String,
   Math,
@@ -714,7 +712,7 @@ function mountedBoard() {
   }
   ["fb-app", "fb-drawer", "fb-ago", "fb-stamp-label", "fb-stamp", "fb-stale",
     "fb-search", "fb-theme", "fb-help", "fb-help-close", "fb-help-modal", "drawer-close",
-    "card-one", "card-two"].forEach((id) => nodes.set(id, node(id)));
+    "card-one", "card-two", "fb-status"].forEach((id) => nodes.set(id, node(id)));
   const nav = ["home", "prs"].map((view) => {
     const link = node(view); link.attrs["data-nav"] = view; return link;
   });
@@ -736,6 +734,7 @@ function mountedBoard() {
   };
   const sandbox = {
     URLSearchParams, document, location, window, Date,
+    console: { error(...args) { errors.push(args); } },
     history: { replaceState(a, b, hash) { location.hash = hash; } },
     localStorage: { setItem(key, value) { sandbox.savedTheme = value; } },
     AbortSignal: { timeout: () => ({}) },
@@ -753,10 +752,11 @@ function mountedBoard() {
       } };
     },
   };
+  const errors = [];
   vm.createContext(sandbox);
   vm.runInContext(js, sandbox, { filename: path.join(root, "dashboards/fleet-board.js") });
   return {
-    nodes, location, document, nav, requests, intervals, timeouts, sandbox,
+    nodes, location, document, nav, requests, intervals, timeouts, sandbox, errors,
     setMode(value) { mode = value; },
     overrides,
     async settle() { await new Promise(setImmediate); },
@@ -879,7 +879,7 @@ function sampleBodies() {
       { host_id: 'host-c', freshness: 'unknown', workers_status: 'unreported', workers: [{ id: 'worker-d', state: 'starting' }] },
     ] },
     tasks: { total: 22, tasks: ['running','spawning','done','failed','timeout','rate_limited','cancelled','crashed','needs_finalize','no_deliverable','dry_run'].map((status,i) => ({task_id: 'task-' + i, status})) },
-    slots: { schema: 'test-slots.status.v1', enabled: true, pool_size: 2, slots_in_use: 2, slots_free: 0, queue_depth: 0, error: null },
+    slots: { schema: 'test-slots.status.v1', enabled: true, pool_exists: true, pool_size: 2, slots_in_use: 2, slots_free: 0, queue_depth: 0, error: null },
     accounts: { claude_accounts: { 'claude:a': {status: 'ok', updated: at(10), session5h: {left_pct: 0, pace: 'on pace'}, weekly: {left_pct: 40}}, 'claude:b': {status: 'unknown', reason: 'account_ambiguous', updated: null, session5h: {left_pct: 99}} } },
     proposals: { pending: [{ source_module: 'Sample proposal', root_cause_summary: 'A proposal is not an operator decision', queued_at: at(40) }], count: 1 },
     messages: { messages: [], availability: 'available', total: 5 },
@@ -1167,4 +1167,229 @@ test('board cards distinguish their focus from registry links to the same epic',
   const out=FB.cardHtml(cedar);
   assert.match(out,/data-focus-key="board:cedar"/);
   assert.match(out,/href="#\/epic\/cedar"/);
+});
+
+function pipelineCells(reads) {
+  const tables = queryAll(parseHtml(operator(reads, 'prs')), 'fb-table');
+  const cells = [];
+  walk(tables[0], el => {
+    if (el.tag === 'tr' && el.children.some(c => c.tag === 'td'))
+      cells.push(el.children.filter(c => c.tag === 'td').map(textContent));
+  });
+  return cells;
+}
+function currentPipeline() {
+  const reads = sampleReads();
+  const f = reads.prs.body.data.prs[0];
+  Object.assign(f, {head_sha:'head-new', hours_idle:0, draft:false, stale_green:false,
+    stacked_base:{state:'open'}, flake_grant:{decision:'grant'}});
+  return reads;
+}
+
+test('qualified Fleet alone supplies CF, CI and gate, independently of unusable Work', () => {
+  for (const state of ['absent','stale','failed','source-failed','empty-head']) {
+    const reads = currentPipeline();
+    if (state === 'absent') delete reads.work;
+    else {
+      const i = reads.work.body.items[0];
+      if (state === 'stale') {
+        i.authority[0].stale = true;
+        i.projections.verification.head_sha = 'historical-head';
+      }
+      if (state === 'failed') reads.work.error = 'Request failed';
+      if (state === 'source-failed') i.flags.source_ok = false;
+      if (state === 'empty-head') i.projections.verification.head_sha = '';
+    }
+    const row = pipelineCells(reads)[0];
+    assert.equal(row[4], 'CF APPROVE at observed head', state);
+    assert.equal(row[5], 'green', state);
+    assert.equal(row[6], 'green', state);
+    if (state === 'stale') assert.match(row[9], /Head disagreement: Work historical-head \/ Fleet head-new/);
+  }
+});
+
+test('Fleet status, age, partial and retained reads cannot borrow a Work witness', () => {
+  for (const state of ['missing','stale','failed','partial','unknown-age','source-error','retained','expired']) {
+    const reads = currentPipeline();
+    if (state === 'missing') reads.prs.body.sources = [];
+    if (state === 'stale') reads.prs.body.sources[0].status = 'stale';
+    if (state === 'failed') reads.prs.body.sources[0].status = 'unavailable';
+    if (state === 'partial') reads.prs.omitted = 1;
+    if (state === 'unknown-age') reads.prs.body.sources[0].age_s = null;
+    if (state === 'source-error') reads.prs.body.sources[0].error = 'read failed';
+    if (state === 'retained') reads.prs.error = 'Request failed';
+    if (state === 'expired') reads.prs.fetchedAt = NOW - FB.STALE_MS - 1;
+    const row = pipelineCells(reads)[0];
+    assert.doesNotMatch(row[4], /CF APPROVE/, state);
+    assert.equal(row[6], 'unknown', state);
+    assert.match(row[8], /Idle unknown h/, state);
+    const keeperObserved = ['stale','failed','unknown-age','source-error'].includes(state);
+    assert.match(row[8], new RegExp('Draft unknown; stale green unknown; stacked unknown; flake ' + (keeperObserved ? 'grant' : 'unknown')), state);
+  }
+});
+
+test('Work fallback needs its own authority and an exact nonempty selected head', () => {
+  for (const state of ['ok','stale','read-error','section-error','future','missing-head','disagree']) {
+    const reads = currentPipeline();
+    reads.prs.body.sources[0].status = 'unavailable';
+    const i = reads.work.body.items[0];
+    if (state === 'stale') i.authority[0].stale = true;
+    if (state === 'read-error') reads.work.error = 'Request failed';
+    if (state === 'section-error') reads.work.body.sources[0].sections.prs.status = 'unavailable';
+    if (state === 'future') i.authority[0].observed_at = at(-1);
+    if (state === 'missing-head') i.projections.verification.head_sha = '';
+    if (state === 'disagree') i.projections.verification.head_sha = 'different-head';
+    const row = pipelineCells(reads)[0];
+    assert.equal(row[5], state === 'ok' ? 'green' : 'unknown', state);
+    assert.doesNotMatch(row[4], /CF APPROVE/, state);
+  }
+  const reads = currentPipeline();
+  reads.work.body.items[0].projections.verification.head_sha = 'different-head';
+  const row = pipelineCells(reads)[0];
+  assert.match(row[9], /Head disagreement.*different-head.*head-new/);
+  assert.equal(row[5], 'unknown');
+  assert.equal(row[6], 'unknown');
+});
+
+test('duplicate PR observations retain every row without conflicting or borrowed clearance', () => {
+  for (const duplicateSource of ['prs','work']) {
+    const reads = currentPipeline();
+    if (duplicateSource === 'prs') reads.prs.body.data.prs.push({
+      ...reads.prs.body.data.prs[0],head_sha:'head-old',ci:'red',gate:'red'});
+    else reads.work.body.items.push({...reads.work.body.items[0],work_id:'second-observation'});
+    const rows = pipelineCells(reads);
+    assert.equal(rows.length, 3);
+    for (const row of rows) {
+      assert.doesNotMatch(row[4], /CF APPROVE/);
+      assert.equal(row[5], 'unknown');
+      assert.equal(row[6], 'unknown');
+      assert.match(row[9], /Duplicate PR observations/);
+      assert.match(row[1], /unknown \(D04/);
+    }
+  }
+});
+
+test('queue, hold, stale-green and flake use the keeper source rather than Work or GitHub clocks', () => {
+  for (const state of ['ok','stale','not_configured','missing-age','error']) {
+    const reads = currentPipeline();
+    const mq = reads.prs.body.sources[1];
+    if (['stale','not_configured'].includes(state)) mq.status = state;
+    if (state === 'missing-age') mq.age_s = null;
+    if (state === 'error') mq.error = 'read failed';
+    const row = pipelineCells(reads)[0];
+    assert.equal(row[7], state === 'ok' ? 'queued / hold false unknown' : 'unknown', state);
+    assert.match(row[8], state === 'ok' ? /stale green false; stacked open; flake grant/ : /stale green unknown; stacked open; flake unknown/, state);
+    assert.match(row[8], /Idle 0 h.*Draft false/, state);
+    assert.match(row[9], /github.*mq_state/);
+  }
+  const reads = currentPipeline();
+  delete reads.work;
+  reads.prs.body.sources[0].status = 'stale';
+  assert.equal(pipelineCells(reads)[0][7], 'queued / hold false unknown');
+  const absent = currentPipeline();
+  delete absent.work;
+  for (const field of ['hours_idle','draft','stale_green','stacked_base','flake_grant']) delete absent.prs.body.data.prs[0][field];
+  assert.match(pipelineCells(absent)[0][8], /Idle unknown h.*Draft unknown; stale green unknown; stacked unknown; flake unknown/);
+});
+
+test('slot observation marker separates an observed empty pool from backend defaults', () => {
+  for (const marker of [true,false,undefined,null,'true',1]) {
+    const reads = sampleReads();
+    Object.assign(reads.slots.body, {pool_exists:marker,slots_in_use:0,slots_free:2,queue_depth:0});
+    const out = operator(reads, 'capacity');
+    if (marker === true) assert.match(out, /Pool 2; occupied 0; free 2; queued 0/);
+    else {
+      assert.match(out, /Pool observation unknown/);
+      assert.doesNotMatch(out, /Pool 2; occupied 0|free 2; queued 0/);
+    }
+    assert.match(out, /Source age unknown/);
+  }
+});
+
+test('idle activity retained from a stale optional source cannot borrow a fresh GitHub clock', () => {
+  for (const status of ['ok','not_configured','stale','unavailable','missing-age','error']) {
+    const reads = currentPipeline();
+    const activity = source('stale_prs', ['missing-age','error'].includes(status) ? 'ok' : status);
+    if (status === 'missing-age') activity.age_s = null;
+    if (status === 'error') activity.error = 'read failed';
+    reads.prs.body.sources.push(activity);
+    const row = pipelineCells(reads)[0];
+    assert.match(row[8], ['ok','not_configured'].includes(status) ? /Idle 0 h/ : /Idle unknown h/);
+    assert.match(row[8], /Draft false; stale green false; stacked open; flake grant/);
+    assert.equal(row[6], 'green');
+  }
+});
+
+test('isolated surrogate identifiers remain escaped text across every URL sibling', () => {
+  for (const bad of ['\ud800','\udfff','prefix\ud800"><img src=x>']) {
+    const reads = sampleReads();
+    reads.registry.body.streams[0].stream_id = bad;
+    reads.registry.body.streams[0].stream_name = bad;
+    reads.work.body.items[0].remote_id = bad;
+    const out = operator(reads);
+    assert.ok(out.includes(bad.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')));
+    assert.doesNotMatch(out, /<img|%EF%BF%BD/);
+    assert.equal(FB.attentionHref({target:{type:'epic',id:bad}}), null);
+    assert.equal(FB.attentionHref({target:{type:'pr',id:bad}}), null);
+    assert.doesNotMatch(FB.cardHtml({...cedar,epic:bad}), /href=|<img/);
+    assert.doesNotMatch(FB.renderAgent({agent_id:bad,epic:bad}), /href=|<img/);
+    const home = FB.renderHome({epics:[{...cedar,epic:bad}],attention:[{target:{type:'pr',id:bad},title:bad}],sources:[]},new URLSearchParams());
+    assert.doesNotMatch(home, /href="null|href="undefined|<img/);
+  }
+});
+
+test('mounted surrogate metadata renders and the next valid refresh replaces the DOM', async () => {
+  const board = mountedBoard(); await board.settle();
+  for (const [key,body] of Object.entries(sampleBodies())) board.overrides[FB.READS[key]] = body;
+  board.overrides[FB.READS.registry].streams[0].stream_id = '\ud800';
+  board.overrides['/api/fleet/v1/epics'] = {...epicsEnvelope,data:{epics:[{...cedar,epic:'\udfff'}]}};
+  board.intervals.get(30000)(); await board.settle();
+  const app = board.nodes.get('fb-app');
+  assert.match(app.innerHTML, /Cedar registry/);
+  assert.equal(board.errors.length, 0);
+  board.overrides[FB.READS.registry].streams[0].title = 'Next valid observation';
+  board.overrides[FB.READS.registry].streams[0].stream_id = 'epic:next';
+  board.overrides['/api/fleet/v1/epics'] = epicsEnvelope;
+  board.intervals.get(30000)(); await board.settle();
+  assert.match(app.innerHTML, /Next valid observation/);
+  await board.navigate('#/epic/\ud800');
+  assert.ok(!board.requests.some(r => r.url.includes('\ud800') || r.url.includes('%EF%BF%BD')));
+  await board.navigate('#/home');
+  assert.match(app.innerHTML, /Next valid observation/);
+});
+
+test('paint failure is announced and logged, pending refresh is released and later updates succeed', async () => {
+  const board = mountedBoard(); await board.settle();
+  const app = board.nodes.get('fb-app');
+  const previous = app.innerHTML;
+  let content = previous, rejectPaint = true;
+  Object.defineProperty(app,'innerHTML', {get:()=>content,set(value){
+    if (rejectPaint) throw new Error('Synthetic DOM paint failure');
+    content = value;
+  }});
+  for (const [key,body] of Object.entries(sampleBodies())) board.overrides[FB.READS[key]] = body;
+  board.intervals.get(30000)();
+  board.intervals.get(30000)();
+  await board.settle();
+  assert.equal(content, previous);
+  assert.match(board.nodes.get('fb-status').textContent, /Display update failed/);
+  assert.ok(board.errors.length > 0);
+  rejectPaint = false;
+  board.overrides[FB.READS.registry].streams[0].title = 'Recovered observation';
+  const before = board.requests.length;
+  board.intervals.get(30000)(); await board.settle();
+  assert.ok(board.requests.length > before);
+  assert.match(content, /Recovered observation/);
+  assert.doesNotMatch(board.nodes.get('fb-status').textContent, /Display update failed/);
+});
+
+test('scalar source sections are harmless; empty and partial section objects remain usable', () => {
+  assert.deepEqual(Object.entries(1), []);
+  assert.deepEqual(Object.entries(true), []);
+  for (const sections of [1,true,{}, {prs:{status:'unavailable',count:0}}]) {
+    const reads = sampleReads();
+    reads.work.body.sources[0].sections = sections;
+    assert.equal(FB.validRead('work', reads.work.body), true);
+    assert.match(operator(reads), /Source qualifications/);
+  }
 });

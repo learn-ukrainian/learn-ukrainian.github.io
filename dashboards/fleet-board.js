@@ -23,6 +23,20 @@
     }[ch]));
   }
 
+  function identifierHref(prefix, id) {
+    try {
+      return prefix + encodeURIComponent(id);
+    } catch (error) {
+      if (error instanceof URIError) return null;
+      throw error;
+    }
+  }
+
+  function identifierLink(prefix, id, label, attrs = '') {
+    const href = identifierHref(prefix, id);
+    return href === null ? esc(label) : `<a${attrs} href="${esc(href)}">${esc(label)}</a>`;
+  }
+
   function isFleetPath(path) {
     if (typeof path !== "string") return false;
     if (path.includes("://") || path.includes("\\") || path.includes("..")) return false;
@@ -301,7 +315,7 @@
               )
               .join('<br>') || 'unknown';
           return [
-            `<a href="/epics.html#${esc(encodeURIComponent(s.stream_id))}">${esc(s.title || s.stream_name || s.stream_id)}</a> <a href="#/epic/${esc(encodeURIComponent(s.stream_name || s.stream_id))}">Board detail</a>`,
+            `${identifierLink('/epics.html#', s.stream_id, s.title || s.stream_name || s.stream_id)} ${identifierLink('#/epic/', s.stream_name || s.stream_id, 'Board detail')}`,
             s.registered === true ? 'registered' : 'unregistered',
             `${valueText(holder.agent)} / ${valueText(holder.task_id)}<br>Harness ${valueText(holder.harness)}`,
             `${valueText(lease.state)} / heartbeat age ${ageText(elapsedSeconds(lease.heartbeat_at, now))}; expires ${valueText(lease.expires_at)}`,
@@ -390,6 +404,7 @@
     if (b.error) return '<p>Unavailable: governor read failed. Counts unknown.</p>';
     if (!b.enabled)
       return '<p>Governor disabled. Governed occupancy, free slots and queue are unknown.</p>';
+    if (b.pool_exists !== true) return '<p>Pool observation unknown. Occupied, free and queued counts unknown.</p>';
     return `<p>Pool ${b.pool_size}; occupied ${b.slots_in_use}; free ${b.slots_free}; queued ${b.queue_depth}. Source observation time is not supplied.</p>`;
   }
 
@@ -457,19 +472,33 @@
     const selected = params?.get('pr');
     const workRows = (work?.items || []).filter((r) => r.resource_kind === 'pr');
     const optional = fleet?.data?.prs || [];
+    const samePR = (item, f) => f.repo === item.repository_id && String(f.number) === String(item.remote_id);
+    const duplicate = (repo, id) =>
+      workRows.filter(i => i.repository_id === repo && String(i.remote_id) === String(id)).length > 1 ||
+      optional.filter(f => f.repo === repo && String(f.number) === String(id)).length > 1;
+    const observed = (e) => !e?.error && !e?.omitted && number(e?.fetchedAt) &&
+      now >= e.fetchedAt && now - e.fetchedAt <= STALE_MS;
+    const qualified = (name) => {
+      const reports = sourcesOf(fleet).filter(s => s.name === name);
+      return observed(entries.prs) && reports.length > 0 &&
+        reports.every(s => s.status === 'ok' && s.error === null && number(s.age_s));
+    };
     const rows = workRows.map((item) => {
       const p = item.projections || {},
         v = p.verification || {};
       const f = optional.find(
-        (f) => f.repo === item.repository_id && String(f.number) === String(item.remote_id),
+        (f) => samePR(item, f) && !duplicate(f.repo, f.number),
       );
       return { item, f, v, p };
     });
     optional
       .filter((f) => !rows.some((r) => r.f === f))
       .forEach((f) => rows.push({ f, item: null, p: {}, v: {} }));
-    const gh = sourceStatus(sourcesOf(fleet), 'github');
-    const mq = sourceStatus(sourcesOf(fleet), 'mq_state');
+    const gh = qualified('github');
+    const mq = qualified('mq_state');
+    const activity = sourcesOf(fleet).filter(s => s.name === 'stale_prs');
+    const activityUsable = activity.every(s => !s.error &&
+      (s.status === 'not_configured' || s.status === 'ok' && number(s.age_s)));
     const shown = rows.filter(
       (r) => !selected || String(r.item?.remote_id || r.f?.number) === selected,
     );
@@ -490,19 +519,25 @@
           'Source qualification',
         ],
         shown.map(({ item: i, f, p, v }) => {
+          const ambiguous = duplicate(i?.repository_id || f?.repo, i?.remote_id || f?.number);
+          const authority = (Array.isArray(i?.authority) ? i.authority : []).filter(a => a?.domain === 'github');
           const usable =
             i?.flags?.source_ok === true &&
-            !entries.work?.error &&
-            Array.isArray(i.authority) &&
-            i.authority.some(
+            observed(entries.work) && !ambiguous && text(v.head_sha) &&
+            sourcesOf(work).every(s => ['ok', 'truncated'].includes(s.sections?.prs?.status || s.status)) &&
+            authority.length > 0 &&
+            authority.every(
               (a) =>
                 record(a) &&
                 a.domain === 'github' &&
                 a.stale === false &&
                 elapsedSeconds(a.observed_at, now) !== null,
             );
-          const headMatch = !i || f?.head_sha === v.head_sha;
-          const fleetUsable = gh === 'ok' && !entries.prs?.error && headMatch;
+          const disagreement = i && f && text(v.head_sha) && text(f.head_sha) && f.head_sha !== v.head_sha;
+          const headMatch = !f || (text(v.head_sha) && text(f.head_sha) && f.head_sha === v.head_sha);
+          const fleetUsable = !!f && gh && !ambiguous && !(usable && disagreement);
+          const workUsable = usable && headMatch;
+          const queueUsable = !!f && mq && !ambiguous && !(usable && disagreement);
           const currentCF = fleetUsable && f?.cf?.at_head === true;
           const id = i?.remote_id || f?.number;
           const title = i?.title || f?.title;
@@ -512,22 +547,22 @@
                 (Array.isArray(f.blocker.checks) ? ': ' + f.blocker.checks.map(esc).join(', ') : '')
               : 'unknown; Work PR flags carry no blocker evidence';
           return [
-            `<a data-focus-key="pr:${esc(i?.repository_id || f?.repo)}:${esc(id)}" href="#/prs?pr=${esc(encodeURIComponent(id))}">#${esc(id)} ${esc(title)}</a><br>${valueText(i?.repository_id || f?.repo)}<br>Head ${valueText(v.head_sha || f?.head_sha)}<br>${valueText(i?.lifecycle || (f?.draft ? 'draft' : 'open observation'))}`,
+            `${identifierLink('#/prs?pr=', id, '#' + id + ' ' + (title || ''), ` data-focus-key="pr:${esc(i?.repository_id || f?.repo)}:${esc(id)}"`)}<br>${valueText(i?.repository_id || f?.repo)}<br>Head ${valueText(usable ? v.head_sha : f?.head_sha || v.head_sha)}<br>${valueText(workUsable ? i.lifecycle : fleetUsable && f ? (f.draft === true ? 'draft' : 'open observation') : null)}`,
             'unknown (D04; canonical PR association unavailable)',
             'unknown (D04; canonical PR membership unavailable)',
             `${valueText(f?.owner_lane)}; provenance unverified`,
             currentCF
               ? `CF ${valueText(f.cf.verdict)} at observed head`
               : `CF unknown; Work review ${valueText(usable ? p.review?.review_decision : null)} is not exact-head approval`,
-            fleetUsable ? valueText(f?.ci) : valueText(usable ? v.ci_state : null),
+            fleetUsable && f ? valueText(f.ci) : valueText(workUsable ? v.ci_state : null),
             fleetUsable ? valueText(f?.gate) : 'unknown',
-            fleetUsable && mq === 'ok'
+            queueUsable
               ? `${valueText(f?.mq)} / hold ${valueText(f?.keeper?.hold)} ${valueText(f?.keeper?.reason)}`
               : 'unknown',
-            `Idle ${valueText(f?.hours_idle)} h (activity clock); ${blocker}<br>Draft ${valueText(f?.draft ?? i?.flags?.is_draft)}; stale green ${valueText(f?.stale_green)}; stacked ${valueText(f?.stacked_base?.state)}; flake ${valueText(f?.flake_grant?.decision)}`,
-            i
+            `Idle ${valueText(fleetUsable && activityUsable ? f?.hours_idle : null)} h (activity clock); ${blocker}<br>Draft ${valueText(fleetUsable ? f?.draft : workUsable ? i?.flags?.is_draft : null)}; stale green ${valueText(fleetUsable && queueUsable ? f?.stale_green : null)}; stacked ${valueText(fleetUsable ? f?.stacked_base?.state : null)}; flake ${valueText(queueUsable ? f?.flake_grant?.decision : null)}`,
+            `${ambiguous ? 'Duplicate PR observations; current attributes unknown.<br>' : ''}${disagreement ? `Head disagreement: Work ${esc(v.head_sha)} / Fleet ${esc(f.head_sha)}.<br>` : ''}${f ? `Fleet github: ${valueText(sourceStatus(sourcesOf(fleet), 'github'))}; mq_state: ${valueText(sourceStatus(sourcesOf(fleet), 'mq_state'))}; source ages in qualifications, separate from activity.<br>` : ''}` + (i
               ? workQualifications(i, entries.work, now)
-              : 'Optional Fleet observation; Work association unknown',
+              : 'Optional Fleet observation; Work association unknown'),
           ];
         }),
       ) +
@@ -946,8 +981,8 @@
   function attentionHref(item) {
     const target = item && item.target;
     if (!target || typeof target.id !== "string" || !target.id) return "#/home";
-    if (target.type === "epic") return "#/epic/" + encodeURIComponent(target.id);
-    if (target.type === "pr") return "#/prs?pr=" + encodeURIComponent(target.id);
+    if (target.type === "epic") return identifierHref("#/epic/", target.id);
+    if (target.type === "pr") return identifierHref("#/prs?pr=", target.id);
     return "#/home";
   }
 
@@ -959,7 +994,8 @@
     const severity = item && item.severity === "bad" ? "bad" : "warn";
     const title = item && item.title ? item.title : "Needs attention";
     const summary = item && item.summary ? item.summary : "";
-    return `<a class="fb-attn-item ${severity}" href="${esc(attentionHref(item))}">
+    const href = attentionHref(item);
+    return `<a class="fb-attn-item ${severity}"${href === null ? '' : ` href="${esc(href)}"`}>
       <div class="fb-k">${esc(kindLabel(item && item.kind))}</div>
       <div class="fb-t">${esc(title)}</div>
       <div class="fb-s">${esc(summary)}</div>
@@ -969,12 +1005,12 @@
   function cardHtml(epic) {
     const state = stateClass(epic.state);
     const id = String(epic.epic || "");
-    const href = "#/epic/" + encodeURIComponent(id);
+    const href = identifierHref("#/epic/", id);
     const driver = epic.driver;
     const driverLine = driver
       ? `<p class="fb-sub">driver: <b>${esc(driver.cli || "unknown cli")}</b> · ${esc(driver.model || "unknown model")}</p>`
       : `<p class="fb-sub">driver unknown</p>`;
-    return `<a class="fb-card is-${state}" data-focus-key="board:${esc(id)}" href="${esc(href)}">
+    return `<a class="fb-card is-${state}" data-focus-key="board:${esc(id)}"${href === null ? '' : ` href="${esc(href)}"`}>
       <div class="fb-card-top"><div><h3>${esc(epic.title || id || "Untitled")}</h3>
         <p class="fb-sub">${esc(subtitle(epic))}</p></div>${statePill(epic.state)}</div>
       <p class="fb-reason">${esc(epic.state_reason || "unknown reason")} <span class="fb-sub">since ${esc(sinceLabel(epic.since))}</span></p>
@@ -1235,7 +1271,7 @@
     const close = `<button type="button" class="fb-btn" data-action="close">Close</button>`;
     if (!agent) return `${close}<p class="fb-empty">This agent is not on the board.</p>`;
     const epic = agent.epic
-      ? `<a href="#/epic/${esc(encodeURIComponent(agent.epic))}">${esc(agent.epic)}</a>`
+      ? identifierLink('#/epic/', agent.epic, agent.epic)
       : "none";
     return `${close}
       <p class="fb-crumbs">Agent</p>
@@ -1523,6 +1559,15 @@
   }
 
   function paint() {
+    try { paintView(); }
+    catch (error) {
+      const live = document.getElementById('fb-status');
+      if (live) live.textContent = 'Display update failed. Retrying on next refresh.';
+      console.error('Fleet Board display update failed', error);
+    }
+  }
+
+  function paintView() {
     const app = document.getElementById("fb-app");
     if (!app) return;
     const route = parseRoute(location.hash || "#/home");
@@ -1661,9 +1706,9 @@
     const incoming = {};
     try {
       if (route.view === "epic" && route.epicId) {
-        const epicPath = "/api/fleet/v1/epics/" + encodeURIComponent(route.epicId);
+        const epicPath = identifierHref("/api/fleet/v1/epics/", route.epicId);
         const [epicBody, agentsBody] = await Promise.all([
-          fetchJson(epicPath),
+          epicPath === null ? Promise.resolve(null) : fetchJson(epicPath),
           fetchJson("/api/fleet/v1/agents"),
         ]);
         incoming.epic = epicBody;
@@ -1677,33 +1722,36 @@
         incoming.epics = epicsBody;
       }
     } finally {
-      const current = parseRoute(location.hash || "#/home");
-      if (responseCurrent(ticket, refreshGen, current)) {
-        const committed = commitBoard(
-          { generation: refreshGen, route: current, snapshot, freshAt, failures },
-          ticket,
-          incoming,
-          Date.now(),
-        );
-        Object.keys(snapshot).forEach((key) => {
-          snapshot[key] = committed.snapshot[key];
-        });
-        Object.keys(freshAt).forEach((key) => {
-          freshAt[key] = committed.freshAt[key] || 0;
-        });
-        Object.keys(failures).forEach((key) => {
-          failures[key] = !!committed.failures[key];
-        });
-        const slots = routeSlots(current);
-        const anyBody = slots.some((slot) => incoming[slot]);
-        const anyShown = slots.some((slot) => snapshot[slot]);
-        failed = !anyBody && !anyShown;
-        appliedKey = ticket.key;
-        paint();
+      try {
+        const current = parseRoute(location.hash || "#/home");
+        if (responseCurrent(ticket, refreshGen, current)) {
+          const committed = commitBoard(
+            { generation: refreshGen, route: current, snapshot, freshAt, failures },
+            ticket,
+            incoming,
+            Date.now(),
+          );
+          Object.keys(snapshot).forEach((key) => {
+            snapshot[key] = committed.snapshot[key];
+          });
+          Object.keys(freshAt).forEach((key) => {
+            freshAt[key] = committed.freshAt[key] || 0;
+          });
+          Object.keys(failures).forEach((key) => {
+            failures[key] = !!committed.failures[key];
+          });
+          const slots = routeSlots(current);
+          const anyBody = slots.some((slot) => incoming[slot]);
+          const anyShown = slots.some((slot) => snapshot[slot]);
+          failed = !anyBody && !anyShown;
+          appliedKey = ticket.key;
+          paint();
+        }
+        await extraReads;
+      } finally {
+        refreshRunning = false;
+        if (pendingRefresh) { pendingRefresh = false; refresh(); }
       }
-      await extraReads;
-      refreshRunning = false;
-      if (pendingRefresh) { pendingRefresh = false; refresh(); }
     }
   }
 
