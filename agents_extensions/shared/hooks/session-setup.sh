@@ -337,35 +337,36 @@ ROOT_GUARD_JSON=$(run_bounded 3 env "PYTHONPATH=$PROJECT_DIR" "$BOUNDED_PYTHON" 
   -m scripts.hygiene.root_entry_guard --repo-root "$CANONICAL_ROOT" --json 2>/dev/null) || ROOT_GUARD_RC=$?
 if [ "$ROOT_GUARD_RC" -eq 0 ] && [ -n "$ROOT_GUARD_JSON" ]; then
   ROOT_GUARD_COUNT=$(printf '%s' "$ROOT_GUARD_JSON" | _hook_deadline 2 jq -r '.unexpected_count // 0' 2>/dev/null || echo 0)
-  if [ "${ROOT_GUARD_COUNT:-0}" -gt 0 ]; then
-    ROOT_GUARD_NAMES=$(printf '%s' "$ROOT_GUARD_JSON" | _hook_deadline 2 jq -r '[.unexpected[].name] | join(", ")' 2>/dev/null || true)
-    # Ordinary Codex SessionStart context is contracted under 500 bytes.
-    # Joined entry names are unbounded (#6863: a garbage directory can be a
-    # whole JSON line). The fixed hygiene line is 486 bytes, which leaves
-    # 13 bytes under that contract; keep at most 11 (two bytes of headroom
-    # for a wider count). A longer list is cut to 8 bytes on a UTF-8
-    # boundary, then "...". The full list goes to stderr.
-    if [ -x "${BOUNDED_PYTHON:-}" ]; then
-      ROOT_GUARD_NAMES=$(printf '%s' "$ROOT_GUARD_NAMES" | "$BOUNDED_PYTHON" -c '
-import sys
-raw = sys.stdin.buffer.read()
-limit = int(sys.argv[1])
-prefix = int(sys.argv[2])
-if len(raw) > limit:
-    sys.stderr.buffer.write(
-        b"ROOT HYGIENE names (full, concise context keeps "
-        + str(limit).encode() + b" bytes): " + raw + b"\n"
-    )
-    cut = raw[:prefix]
-    while cut and (cut[-1] & 0xC0) == 0x80:
-        cut = cut[:-1]
-    raw = cut + b"..."
-sys.stdout.buffer.write(raw)
-' 11 8)
+  if [[ "$ROOT_GUARD_COUNT" =~ ^[0-9]+$ ]] && [ "$ROOT_GUARD_COUNT" -gt 0 ]; then
+    # Ordinary Codex SessionStart context is contracted under 500 bytes, and
+    # entry names are unbounded attacker-shaped text (#6863: a garbage
+    # directory can be a whole JSON line, terminal escapes included). The
+    # names stay inline only when the whole joined list is printable ASCII
+    # of at most 11 bytes; otherwise the line carries a fixed marker and
+    # stderr gets every name on one ascii()-escaped line. The count shows at
+    # most "99+", so the line is fixed-width at worst.
+    ROOT_GUARD_SHOWN="$ROOT_GUARD_COUNT"
+    if [ "$ROOT_GUARD_COUNT" -gt 99 ]; then
+      ROOT_GUARD_SHOWN="99+"
     fi
-    ISSUES+=("ROOT HYGIENE: $ROOT_GUARD_COUNT unexpected top-level entries in the primary checkout ($ROOT_GUARD_NAMES). Inspect and remove MANUALLY — the guard never auto-deletes (evidence preservation, #6863). Detail: .venv/bin/python -m scripts.hygiene.root_entry_guard")
+    ROOT_GUARD_NAMES=""
+    if [ -x "${BOUNDED_PYTHON:-}" ]; then
+      ROOT_GUARD_NAMES=$(printf '%s' "$ROOT_GUARD_JSON" | _hook_deadline 2 "$BOUNDED_PYTHON" -c '
+import json
+import sys
+names = [str(entry.get("name", "")) for entry in json.load(sys.stdin)["unexpected"]]
+joined = ", ".join(names)
+if joined.isascii() and joined.isprintable() and len(joined) <= int(sys.argv[1]):
+    sys.stdout.write(joined)
+else:
+    sys.stderr.write("ROOT HYGIENE unexpected entries (escaped): " + ascii(names) + "\n")
+    sys.stdout.write("names on stderr")
+' 11) || ROOT_GUARD_NAMES=""
+    fi
+    ROOT_GUARD_NAMES="${ROOT_GUARD_NAMES:-names unavailable}"
+    ISSUES+=("ROOT HYGIENE: $ROOT_GUARD_SHOWN unexpected primary-checkout root entries ($ROOT_GUARD_NAMES). Remove manually; never auto-deleted (#6863). Detail: .venv/bin/python -m scripts.hygiene.root_entry_guard")
   fi
-  unset ROOT_GUARD_COUNT ROOT_GUARD_NAMES
+  unset ROOT_GUARD_COUNT ROOT_GUARD_SHOWN ROOT_GUARD_NAMES
 else
   # Alert-only means output ONLY on findings: a skipped canary is not a
   # finding, so it goes to stderr and must not eat the concise-session
