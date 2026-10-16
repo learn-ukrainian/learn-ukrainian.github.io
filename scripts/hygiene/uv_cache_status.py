@@ -7,7 +7,7 @@ history, and renders one status line with a warning threshold. It never deletes
 anything from the cache; the only files it writes are the size history and its
 lock, and never inside the cache.
 
-The size comes from ``du -sk`` in its own process group with a deadline, so a
+The size comes from ``du -skH`` in its own process group with a deadline, so a
 huge or stalled cache cannot hang the status command; a timeout or a failed
 measurement prints an explicit line and records no sample. The history lock is
 taken without blocking and retried until its own deadline; when another writer
@@ -17,11 +17,14 @@ The history directory is resolved and checked once, then held open; every
 history read and write is relative to that descriptor, so retargeting a
 symlink after the check cannot move the writes into the cache. A descriptor
 keeps the directory's identity, not its location, so its location is checked
-again before every write: the kernel's path of the descriptor must still be the
-resolved history path, name the same directory there, and lie outside the
-cache. A directory moved into the cache (or anywhere else) is refused.
+again before every write, each lock-creation retry included: the kernel's path
+of the descriptor must still be the resolved history path, name the same
+directory there, and lie outside the cache. A directory moved into the cache
+(or anywhere else) is refused. The history is serialized before its temporary
+file exists, so only the last instant between a check and its write remains.
 
 Usage: ``.venv/bin/python -m scripts.hygiene.uv_cache_status [--json] [--no-record]``
+(or ``.venv/bin/python scripts/hygiene/uv_cache_status.py ...``)
 
 Environment (all optional):
 - ``UV_CACHE_DIR`` / ``XDG_CACHE_HOME``: where the cache lives (uv's own rules).
@@ -34,13 +37,15 @@ Environment (all optional):
 
 Exit codes: 0 status printed (including "size unavailable", "measurement
 failed" and "history busy"); 2 refused because the history directory is a
-symlink, the cache, inside it, or was moved after it was opened.
+symlink, the cache, inside it, or was moved after it was opened, or because
+its lock file is a symlink or not a regular file.
 """
 
 from __future__ import annotations
 
 import argparse
 import contextlib
+import errno
 import fcntl
 import json
 import os
@@ -52,6 +57,12 @@ import time
 from collections.abc import Callable
 from pathlib import Path
 from typing import NamedTuple
+
+REPO_ROOT = Path(__file__).resolve().parents[2]
+
+# Ensure repo scripts/ is importable when invoked as a file path.
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
 
 from scripts.common.jsonl import jsonl_lines
 
@@ -100,7 +111,7 @@ class HistoryBusy(Exception):
 
 
 class HistoryLocationError(Exception):
-    """The history directory is a symlink, the cache, or inside the cache."""
+    """The history directory (or its lock file) may not be written where it is."""
 
 
 def uv_cache_dir() -> Path:
@@ -148,8 +159,9 @@ def _du_reason(stderr: str) -> str:
 def measure_bytes(root: Path, timeout_s: float | None = None) -> int:
     """Allocated bytes under ``root`` via ``du -sk``, within ``timeout_s``.
 
-    ``du`` counts hardlinks once and never follows symlinks below ``root``. It
-    runs in its own process group; on timeout the group is killed while the
+    ``du`` counts hardlinks once and never follows symlinks below ``root``;
+    ``root`` itself is followed (``-H``), so a symlinked cache is measured
+    where it points rather than as the link. It runs in its own process group; on timeout the group is killed while the
     leader is still unreaped (so its id cannot have been reused) and
     ``ScanTimeout`` is raised. Any error from ``du``, including an unreadable
     directory that would make the total partial, raises ``MeasurementError``.
@@ -158,7 +170,7 @@ def measure_bytes(root: Path, timeout_s: float | None = None) -> int:
         timeout_s = scan_timeout_seconds()
     try:
         process = subprocess.Popen(
-            ["du", "-sk", "--", str(root)],
+            ["du", "-skH", "--", str(root)],
             stdin=subprocess.DEVNULL,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
@@ -231,19 +243,33 @@ def _lock_history(lock_fd: int, timeout_s: float) -> None:
             time.sleep(min(LOCK_RETRY_SECONDS, remaining))
 
 
-def _open_lock(dir_fd: int) -> tuple[int, bool]:
-    """Open the history lock file in ``dir_fd``; return ``(fd, created_here)``."""
-    base = os.O_RDWR | os.O_NOFOLLOW | os.O_CLOEXEC
+def _open_lock(dir_fd: int, check: LocationCheck) -> tuple[int, bool]:
+    """Open the history lock file in ``dir_fd``; return ``(fd, created_here)``.
+
+    ``check`` runs before every attempt that may create the file, retries
+    included. A lock name that is a symlink or not a regular file is refused
+    with ``HistoryLocationError``; nothing behind it is opened or changed.
+    """
+    base = os.O_RDWR | os.O_NOFOLLOW | os.O_NONBLOCK | os.O_CLOEXEC
     name = HISTORY_FILENAME + LOCK_SUFFIX
     while True:
+        check()
         try:
             return os.open(name, base | os.O_CREAT | os.O_EXCL, 0o600, dir_fd=dir_fd), True
         except FileExistsError:
             pass
         try:
-            return os.open(name, base, dir_fd=dir_fd), False
+            fd = os.open(name, base, dir_fd=dir_fd)
         except FileNotFoundError:
             continue  # removed between the two opens; try to create it again
+        except OSError as error:
+            if error.errno == errno.ELOOP:
+                raise HistoryLocationError("the history lock file is a symlink") from None
+            raise
+        if not stat.S_ISREG(os.fstat(fd).st_mode):
+            os.close(fd)
+            raise HistoryLocationError("the history lock file is not a regular file")
+        return fd, False
 
 
 def _unlink_if_same(name: str, fd: int, dir_fd: int) -> None:
@@ -272,16 +298,18 @@ def record_sample(
     writer's newer sample. Raises ``HistoryBusy`` when the lock stays held past
     ``lock_timeout_s`` (default ``LU_UV_CACHE_LOCK_TIMEOUT_S``).
 
-    ``location_check`` runs before each write (creating the lock file, creating
-    the temporary file, renaming it over the history). When it raises
-    ``HistoryLocationError`` nothing more is written, and the temporary file and
-    a lock file created by this call are removed again before it propagates.
+    ``location_check`` runs before each write: every attempt to create the lock
+    file, creating the temporary file, writing its contents, and renaming it
+    over the history. The contents are serialized in full before the temporary
+    file exists, so no slow step separates a check from the write it guards.
+    When the check raises ``HistoryLocationError`` nothing more is written, and
+    the temporary file and a lock file created by this call are removed again
+    before it propagates.
     """
     if lock_timeout_s is None:
         lock_timeout_s = lock_timeout_seconds()
     check = location_check or (lambda: None)
-    check()
-    lock_fd, lock_created = _open_lock(dir_fd)
+    lock_fd, lock_created = _open_lock(dir_fd, check)
     try:
         _lock_history(lock_fd, lock_timeout_s)
         history = read_history(dir_fd)
@@ -292,15 +320,22 @@ def record_sample(
             (sample for sample in history if now - sample["ts"] <= RETENTION_SECONDS),
             key=lambda sample: sample["ts"],
         )
+        payload = "".join(
+            json.dumps({"ts": sample["ts"], "bytes": int(sample["bytes"])}) + "\n" for sample in history
+        ).encode("utf-8")
         tmp_name = f".{HISTORY_FILENAME}.{os.getpid()}.{os.urandom(6).hex()}.tmp"
         check()
         fd = os.open(
             tmp_name, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW | os.O_CLOEXEC, 0o600, dir_fd=dir_fd
         )
         try:
-            with os.fdopen(fd, "w", encoding="utf-8") as handle:
-                for sample in history:
-                    handle.write(json.dumps({"ts": sample["ts"], "bytes": int(sample["bytes"])}) + "\n")
+            try:
+                check()
+                view = memoryview(payload)
+                while view:
+                    view = view[os.write(fd, view) :]
+            finally:
+                os.close(fd)
             check()
             os.replace(tmp_name, HISTORY_FILENAME, src_dir_fd=dir_fd, dst_dir_fd=dir_fd)
         except BaseException:

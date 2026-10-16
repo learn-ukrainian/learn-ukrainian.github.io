@@ -414,9 +414,12 @@ Growth compares against the oldest sample at least an hour old inside the last
 24 hours and names the real span; before that it prints `growth n/a (history
 building)`. `--json` and `--no-record` are available.
 
-The size comes from `du -sk` in its own process group, bounded by
-`LU_UV_CACHE_SCAN_TIMEOUT_S` (default 8 seconds). On timeout it prints
-`UV CACHE: size unavailable (scan exceeded 8s)`; if `du` fails (for example an
+The command also runs as a plain file
+(`.venv/bin/python scripts/hygiene/uv_cache_status.py`). The size comes from
+`du -skH` in its own process group, bounded by
+`LU_UV_CACHE_SCAN_TIMEOUT_S` (default 8 seconds). A symlinked cache directory
+is measured where it points; symlinks below it are never followed. On timeout
+it prints `UV CACHE: size unavailable (scan exceeded 8s)`; if `du` fails (for example an
 unreadable directory, which would make the total partial) it prints
 `UV CACHE: measurement failed (...)`. Both exit 0 and record no sample.
 
@@ -426,7 +429,9 @@ waited on indefinitely: it is retried without blocking for up to
 `LU_UV_CACHE_LOCK_TIMEOUT_S` (default 2 seconds). If another writer still holds
 it, the command prints `UV CACHE: history busy (...); <size> measured, no
 sample recorded`, writes nothing and exits 0. The whole command therefore ends
-within the scan deadline plus the lock deadline.
+within the scan deadline plus the lock deadline. A lock name that is a symlink or
+not a regular file is refused with exit code 2; nothing behind it is opened or
+changed.
 
 The history directory is checked once and then held open. The configured
 directory must not itself be a symlink. Its path is resolved once and opened
@@ -440,12 +445,15 @@ changes while it is being opened, the command refuses with exit code 2 and
 writes nothing. Directories it creates get mode 0700.
 
 An open directory keeps its identity, not its place, so it could be moved into
-the cache while the size is measured. Before every write (creating the lock
-file, creating the temporary file, renaming it over the history) the command
-checks the location again: the kernel's path of the open directory must still
-be the resolved history path, that path must still name the same directory, and
-it must not be the cache or lie inside it, judged against the cache's real path
-both at start and now. On a mismatch it refuses with exit code 2, writes nothing
+the cache while the size is measured. Before every write (each attempt to create
+the lock file, retries included; creating the temporary file; writing its
+contents; renaming it over the history) the command checks the location again.
+The new history is serialized in full before the temporary file is created and
+written with one unbuffered write, so no slow step separates a check from the
+write it guards. Each check requires that the kernel's path of the open
+directory is still the resolved history path, that this path still names the
+same directory, and that it is not the cache or inside it, judged against the
+cache's real path both at start and now. On a mismatch it refuses with exit code 2, writes nothing
 more, and removes the temporary file and any lock file it created. A move in
 the instant between the last check and the write itself cannot be excluded.
 

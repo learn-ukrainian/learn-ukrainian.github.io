@@ -428,7 +428,9 @@ def _move_into_cache_on_check(
     return check
 
 
-@pytest.mark.parametrize("at_call", [1, 2, 3], ids=["before-lock", "before-temp-file", "before-rename"])
+@pytest.mark.parametrize(
+    "at_call", [1, 2, 3, 4], ids=["before-lock", "before-temp-file", "before-write", "before-rename"]
+)
 def test_every_history_write_rechecks_the_location(cache: Path, tmp_path: Path, at_call: int) -> None:
     bound = uv.open_history_dir(cache, tmp_path / "state", create=True)
     assert bound is not None
@@ -536,6 +538,166 @@ def test_refusal_never_removes_a_lock_file_that_replaced_the_one_it_created(cach
         os.close(bound.fd)
 
     assert (cache / "moved-state" / lock).read_text(encoding="utf-8") == "another writer's lock"
+
+
+def _move_state_into_cache(state: Path, cache: Path) -> None:
+    state.rename(cache / "moved-state")
+    state.mkdir()
+
+
+def test_lock_creation_retry_after_the_directory_moved_into_the_cache_is_refused(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    # Sol round-4 reproducer: exclusive creation meets an existing lock; the held
+    # directory then moves into the cache, its pathname is recreated, and the old
+    # lock is removed, so the plain open fails and the creation is retried.
+    cache = tmp_path / "cache"
+    cache.mkdir()
+    state = tmp_path / "state"
+    state.mkdir()
+    lock = uv.HISTORY_FILENAME + uv.LOCK_SUFFIX
+    _write_history(state / uv.HISTORY_FILENAME, (time.time(), 4096))  # recent: the run would only dedupe
+    (state / lock).touch()
+    monkeypatch.setenv("UV_CACHE_DIR", str(cache))
+    monkeypatch.setenv("LU_DRIVER_STATUS_STATE_DIR", str(state))
+    real_open = os.open
+    moved = False
+
+    def open_then_move(path: object, flags: int, *args: object, **kwargs: object) -> int:
+        nonlocal moved
+        try:
+            return real_open(path, flags, *args, **kwargs)  # type: ignore[arg-type]
+        except FileExistsError:
+            if path == lock and not moved:
+                moved = True
+                _move_state_into_cache(state, cache)
+                (cache / "moved-state" / lock).unlink()
+            raise
+
+    monkeypatch.setattr(os, "open", open_then_move)
+
+    assert uv.main([]) == 2
+
+    captured = capsys.readouterr()
+    assert moved and captured.out == "" and "inside it" in captured.err
+    assert _tree(cache) == ["moved-state", "moved-state/" + uv.HISTORY_FILENAME]  # no lock created in the cache
+    assert list(state.iterdir()) == []
+
+
+def test_history_directory_moved_during_serialization_gets_no_bytes_inside_the_cache(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    # Sol round-4 reproducer: the directory moves while the samples are serialized.
+    cache = tmp_path / "cache"
+    cache.mkdir()
+    state = tmp_path / "state"
+    state.mkdir()
+    monkeypatch.setenv("UV_CACHE_DIR", str(cache))
+    monkeypatch.setenv("LU_DRIVER_STATUS_STATE_DIR", str(state))
+    real_dumps, real_open, real_unlink = json.dumps, os.open, os.unlink
+    created: list[Path] = []
+    discarded: list[tuple[Path, int]] = []
+
+    def _where(path: object, dir_fd: int | None) -> Path:
+        base = Path(os.readlink(f"/proc/self/fd/{dir_fd}")) if dir_fd is not None else Path.cwd()
+        return base / os.fsdecode(path)  # type: ignore[arg-type]
+
+    def dumps_then_move(*args: object, **kwargs: object) -> str:
+        # Only the history sample; harness hooks serialize other objects meanwhile.
+        is_sample = bool(args) and isinstance(args[0], dict) and "ts" in args[0]
+        if is_sample and not (cache / "moved-state").exists():
+            _move_state_into_cache(state, cache)
+        return real_dumps(*args, **kwargs)  # type: ignore[arg-type]
+
+    def recording_open(path: object, flags: int, *args: object, dir_fd: int | None = None, **kwargs: object) -> int:
+        if flags & os.O_CREAT:
+            created.append(_where(path, dir_fd))
+        return real_open(path, flags, *args, dir_fd=dir_fd, **kwargs)  # type: ignore[arg-type]
+
+    def recording_unlink(path: object, *, dir_fd: int | None = None) -> None:
+        with contextlib.suppress(OSError):
+            discarded.append((_where(path, dir_fd), os.stat(path, dir_fd=dir_fd).st_size))  # type: ignore[arg-type]
+        real_unlink(path, dir_fd=dir_fd)  # type: ignore[arg-type]
+
+    monkeypatch.setattr(json, "dumps", dumps_then_move)
+    monkeypatch.setattr(os, "open", recording_open)
+    monkeypatch.setattr(os, "unlink", recording_unlink)
+
+    assert uv.main([]) == 2
+
+    assert "inside it" in capsys.readouterr().err
+    cache_real = cache.resolve()
+    assert [path for path in created if cache_real in path.parents] == []
+    assert [entry for entry in discarded if cache_real in entry[0].parents and entry[1] > 0] == []
+    assert _tree(cache) == ["moved-state"]
+
+
+def test_symlinked_cache_root_is_measured_where_it_points(tmp_path: Path) -> None:
+    real = tmp_path / "real-cache"
+    real.mkdir()
+    (real / "wheel.bin").write_bytes(b"w" * 1_000_000)
+    link = tmp_path / "cache-link"
+    link.symlink_to(real, target_is_directory=True)
+
+    assert uv.measure_bytes(link) == uv.measure_bytes(real) >= 1_000_000
+
+
+def _run_as_file(tmp_path: Path, cache: Path, state: Path, *args: str) -> subprocess.CompletedProcess[str]:
+    """Launch the tool as a plain file from outside the repository, without PYTHONPATH."""
+    env = {key: value for key, value in os.environ.items() if key != "PYTHONPATH"}
+    env.update(UV_CACHE_DIR=str(cache), LU_DRIVER_STATUS_STATE_DIR=str(state))
+    script = Path(uv.__file__).resolve()
+    return subprocess.run(
+        [sys.executable, str(script), *args],
+        cwd=tmp_path,
+        env=env,
+        capture_output=True,
+        text=True,
+        timeout=60,
+        check=False,
+    )
+
+
+def test_tool_runs_as_a_plain_file_outside_the_repository(cache: Path, tmp_path: Path) -> None:
+    state = tmp_path / "state"
+
+    result = _run_as_file(tmp_path, cache, state)
+
+    assert result.returncode == 0, result.stderr
+    assert result.stdout.startswith("UV CACHE: 0.00 GiB, growth n/a (history building)")
+    assert len(_read(state / uv.HISTORY_FILENAME)) == 1
+
+
+def test_symlinked_lock_file_is_refused_and_its_target_left_intact(tmp_path: Path) -> None:
+    cache = tmp_path / "cache"
+    (cache / "wheels").mkdir(parents=True)
+    payload = cache / "wheels" / "pkg.whl"
+    payload.write_bytes(b"w" * 5000)
+    state = tmp_path / "state"
+    state.mkdir()
+    lock = state / (uv.HISTORY_FILENAME + uv.LOCK_SUFFIX)
+    lock.symlink_to(payload)
+
+    result = _run_as_file(tmp_path, cache, state)
+
+    assert result.returncode == 2
+    assert result.stdout == ""
+    assert "refusing to run: the history lock file is a symlink" in result.stderr
+    assert "Traceback" not in result.stderr and str(tmp_path) not in result.stderr
+    assert str(Path.home()) not in result.stderr
+    assert payload.read_bytes() == b"w" * 5000 and lock.is_symlink()
+    assert sorted(path.name for path in state.iterdir()) == [lock.name]
+
+
+def test_lock_name_that_is_not_a_regular_file_is_refused(cache: Path, tmp_path: Path) -> None:
+    state = tmp_path / "state"
+    state.mkdir()
+    os.mkfifo(state / (uv.HISTORY_FILENAME + uv.LOCK_SUFFIX))
+
+    with _dir_fd(state) as fd, pytest.raises(uv.HistoryLocationError, match="not a regular file"):
+        uv.record_sample(fd, NOW, GIB, lock_timeout_s=0.2)
+
+    assert sorted(path.name for path in state.iterdir()) == [uv.HISTORY_FILENAME + uv.LOCK_SUFFIX]
 
 
 def test_location_problem_checks_cache_path_expected_path_and_identity(tmp_path: Path) -> None:
