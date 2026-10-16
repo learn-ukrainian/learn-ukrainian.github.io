@@ -12,6 +12,12 @@ Completion vocabulary:
   exact-head cross-family approval, and green repository checks. It does **not**
   mean mutation, hosted deployment, or private proxying.
 
+These milestone labels establish neither source completeness nor deployment
+health, #10667 completion, or independent B6 acceptance. Documentation does not
+supply the missing PR ownership/history (D04), posted-blocker/operator-decision
+semantics (D05), image search (D10), download aliases (D12), or safe private
+destination delivery (D13). Those dependencies need their own evidence.
+
 Base URL (public Monitor): `http://127.0.0.1:8765` (prefer loopback IP).
 
 ## Endpoints (public server)
@@ -25,8 +31,8 @@ Base URL (public Monitor): `http://127.0.0.1:8765` (prefer loopback IP).
 
 ### `GET /api/work/v1/next` (next-queue, #6880)
 
-Machine contract for "what should this lane do next" — a driver never needs the
-586-row projection dump. Params: `stream=<stream key>` (required; keys from
+Machine contract for a lane's next actionable picks. Params:
+`stream=<stream key>` (required; keys from
 `scripts/config/issue_streams.yaml`, unknown keys 400 with `valid_streams`) and
 `limit` (default 7, max 25). Unambiguous fleet-taxonomy area aliases are
 accepted and echoed (`?stream=infra` → `stream: "infra-harness"` +
@@ -79,8 +85,9 @@ session hooks use); ambiguous or unknown selectors still fail closed (#6984).
   stay visible with their own reasons. A running or spawning task whose
   liveness is dead or unknown is not healthy execution. Task runtime age
   comes from `started_at` and is not the delegate section's observation age.
-  The accountable owner stays `unknown` (`owner_reason: owner_unknown`) until
-  a lease-backed stream driver record exists.
+  Current normalization always emits `accountable_owner: "unknown"` and
+  `owner_reason: "owner_unknown"`; a lease-backed record does not automatically
+  populate the owner. See [Ownership and membership evidence](#ownership-and-membership-evidence).
 - **Task association** is `linked_issues` on the delegate summary, copied from
   the DoR-checked `dor_preflight` issues. A task name that merely ends in an
   issue or PR number does not attach.
@@ -98,15 +105,15 @@ session hooks use); ambiguous or unknown selectors still fail closed (#6984).
   `503 {"error": "building", "retry_after_s": 3}` (no FastAPI `detail`
   wrapper — machine-consumable as documented) and never triggers a build;
   expired-but-present entries are served with an honest `cache_age_s` while
-  the shared background refresh runs, until age exceeds `max_stale_s` (300s)
+  the shared background refresh runs, until age reaches `max_stale_s` (300s)
   → `503 {"error": "stale", "cache_age_s", "max_stale_s", "retry_after_s"}`.
   The background build is bounded (`NEXT_BUILD_TIMEOUT_S`, 20s) so a hung
   collector frees the single-flight slot and the next caller's refresh can
   succeed instead of wedging the lane at 503 stale (#6984).
   An unreadable `issue_streams.yaml` registry →
   `503 {"error": "registry_unavailable", "retry_after_s"}` (fail closed —
-  never 200 + empty queue for a stream typo). Warm calls measure ~1ms
-  locally.
+  never 200 + empty queue for a stream typo). These are source-defined bounds,
+  not measured production performance guarantees.
 - **Stream-name allowlist**: derive-time membership and any pre-set
   `open_stream_membership` are re-validated against registry keys before they
   enter the public projection (#6890).
@@ -116,6 +123,42 @@ session hooks use); ambiguous or unknown selectors still fail closed (#6984).
 
 UI: [`/work.html`](../../dashboards/work.html) — Evidence rail attention list
 (Monitor paper language).
+
+## Ownership and membership evidence
+
+In [`normalize.py`](../../scripts/work/normalize.py),
+`projections.dispatch.accountable_owner` is always `unknown` with
+`owner_reason: owner_unknown`. A lease, caller, model family, GitHub author or
+assignee does not establish an accountable-owner association.
+
+PR rows have `projections.stream.status: "n/a"`, no `streams` membership, and
+an empty dispatch association. Their branch names and task-name digits do not
+attach them to a stream or task. Issue membership comes from the independently
+qualified streams observation described above. The optional Fleet PR
+`owner_lane` is a recorded lane or a fallback to the first branch segment;
+it is distinct from both accountable owner and authoritative stream membership.
+
+## Review, blocker and action evidence
+
+`projections.review.review_decision` is GitHub review state, not a verified
+exact-head cross-family verdict. The REST collector never synthesizes
+`APPROVED` from individual approvals. `sealed_verdict_available` only reports
+availability on matching repository/PR review summaries. That match does not
+check the PR head or reviewer independence and does not admit a sealed blob.
+Neither field alone clears the independent review gate.
+
+Current PR normalization sets `flags.has_blocker: false` and
+`relationships: []`. It does not enumerate posted blocker reports, so `false`
+cannot prove that none were posted. Issue blocker flags derive from recognized
+`blocked_by` relationships; confirmed closed targets no longer count as live
+blockers, while unresolved targets still count. Those flags and
+`RESOLVE_BLOCKER` describe derived impediments, not a complete posted-blocker
+inventory or a typed pending operator decision.
+
+`safe_next_action`, including `MERGE_WHEN_READY`, is advice derived from
+observations. It does not admit, lease, execute, merge, certify, or complete work.
+The exact-head independent cross-family review, same-head green CI, driver
+enqueue, confirmed merge and closeout gates still apply.
 
 ## Browser-local private adapter boundary
 
@@ -256,6 +299,39 @@ typed omission):
 
    Never delegate task detail bodies or sealed review blobs.
 
+### Freshness, coverage and empty results
+
+`cache_age_s` measures the enclosing projection cache's age. It does not reset
+the age of a source observation. Public `sources[].sections` report each
+section's `status`, `observed_at`, count and available `age_s`/reason.
+Item `authority[]` qualifies the relevant domains independently; missing
+sections have `age_s: null` and `stale: true`. The aggregate source status
+does not replace section and item qualification. Even `authority[].stale: false`
+can accompany a truncated section; completeness needs a separate check.
+Section status, `sources[].truncation` and `denominator.omissions` qualify
+coverage independently of the numeric count.
+
+A warm projection can contain a stale PR snapshot. The router re-ages that
+snapshot on reads. Beyond `PR_SNAPSHOT_FRESHNESS_S` (30 seconds), or if already
+stale, PR rows get `gh_pr_snapshot_stale`, unknown health, CI, review decision
+and merge evidence, `source_ok: false`, and `INSPECT_UNKNOWN`. Other sections
+retain their independent qualification. A small `cache_age_s` therefore does
+not prove that the PR's current head is cleared.
+
+A zero count is usable as absence evidence only within a successful, complete,
+current observation's scope. Failed, missing or truncated enumeration cannot
+establish absence. For example, `queue: []` with `denominator.issues_open: 0`
+and an issues section or omission reason `gh_issue_list_timeout` means issue
+enumeration was unavailable. The normalizer emits zero for that timeout;
+it has not established that there are no open issues.
+
+Even with complete enumeration, an empty `/next` queue means only that no
+observed actionable rows qualify for that stream. Other streams, unscoped
+actionable rows, unknown rows and non-actionable issues can remain. The
+denominator, omissions and digests above qualify the queue; they do not turn
+it into a complete work inventory. The public issue and PR collectors enumerate
+open resources. Disappearance from them is not evidence of delivery or merge.
+
 ## Identity
 
 `work_id = wp1:{source_id}:{repository_id}:{resource_kind}:{remote_id}`
@@ -264,11 +340,14 @@ typed omission):
 
 ## Budgets
 
-- Warm response target: **≤2s** (warm cache ~30s).
-- Optional/failing section → typed degraded/unknown within **≤5s** without hiding
-  healthy sources.
+- Warm response target: **≤2s** (`CACHE_TTL_S`: 30s).
+- Projection request budget: **5s**; section timeout: **4.5s**, leaving headroom
+  for typed degradation without hiding healthy sources.
 - Private browser fetch budget: **5s** hard abort.
 - `cache_age_s` is always present on admitted projections.
+
+These values are configured targets and bounds, not current latency measurements
+or deployment-health proof.
 
 ## Privacy
 

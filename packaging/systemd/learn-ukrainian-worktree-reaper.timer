@@ -1,0 +1,11 @@
+[Unit]
+Description=Learn Ukrainian clean, fully pushed, idle dispatch worktree reaper every 30 minutes
+
+[Timer]
+OnCalendar=*:00/30
+AccuracySec=1min
+Persistent=false
+Unit=learn-ukrainian-worktree-reaper.service
+
+[Install]
+WantedBy=timers.target

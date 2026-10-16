@@ -2654,17 +2654,27 @@ def test_select_account_reads_only_a_non_default_label_and_keeps_the_payload(tmp
     lane = _unattributed_rate_limited_lane(tmp_path)
     budget = _accounts_budget(lane, {"b": _account_row(89.0)})
 
-    assert claude_account_lane.select_account(budget, account=HOST_ACCOUNT) == (
-        budget,
-        {"label": "a", "meter": "agents.claude"},
-    )
+    host_view, host_evidence = claude_account_lane.select_account(budget, account=HOST_ACCOUNT)
+    assert host_evidence == {"label": "a", "meter": "agents.claude"}
+    # #10770: the default account keeps its lane row and every shared fact; only b's meter is gone.
+    # The view holds frozen copies and its binding entry (round 2), so "kept" is equality.
+    assert host_view["agents"] == budget["agents"] and host_view["agents"]["claude"] == lane
+    binding = host_view[claude_account_lane.BINDING_KEY]
+    assert binding["label"] == "a" and binding["evidence"] == host_evidence
+    assert {key: value for key, value in host_view.items() if key != claude_account_lane.BINDING_KEY} == {
+        **budget,
+        "claude_accounts": {},
+    }
     flat = {"claude": "healthy"}
     assert claude_account_lane.select_account(flat, account=account("b")) == (flat, {"label": "b", "meter": None})
 
     selected, evidence = claude_account_lane.select_account(budget, account=account("b"))
 
     assert selected["agents"]["claude"]["remaining_pct"] == pytest.approx(89.0)
-    assert selected["agents"]["codex"] is budget["agents"]["codex"]
+    # #10770 round 2: every other lane is the payload's own record, held as a deeply immutable copy.
+    assert selected["agents"]["codex"] == budget["agents"]["codex"]
+    with pytest.raises(TypeError, match="immutable"):
+        selected["agents"]["codex"]["status"] = "hot"
     assert budget["agents"]["claude"] is lane  # the caller's payload is not modified
     assert evidence["unattributed_rate_limits"] == {
         key: lane["runtime"][key] for key in sorted(claude_account_lane.ACCOUNT_RATE_LIMIT_FIELDS)

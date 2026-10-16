@@ -1,0 +1,23 @@
+[Unit]
+Description=Learn Ukrainian reaper of clean, fully pushed, idle dispatch worktrees (#10778)
+
+[Service]
+Type=oneshot
+WorkingDirectory=@REPO_ROOT@
+Environment=PYTHONUNBUFFERED=1
+# Removes only .worktrees/dispatch/<agent>/<task>/ checkouts that are clean,
+# have no untracked files, have every commit on origin, are used by no process
+# or live task and were idle for 60 minutes; never forces, never deletes
+# branches. A oneshot unit never runs twice at once, and the reaper lock makes
+# any other concurrent run a no-op. Set LU_REAPER_DISABLED=1 to stop removals.
+ExecStart=@REPO_ROOT@/.venv/bin/python -m scripts.orchestration.reap_worktrees --clean-pushed --apply
+# Bounded well inside the 30-minute cadence.
+TimeoutStartSec=1200
+TimeoutStopSec=120
+Nice=15
+IOSchedulingClass=idle
+# Network only for the bounded `git fetch --prune origin` and the
+# `git ls-remote --heads --tags origin` census before the run (no GitHub API
+# call). The seccomp
+# address-family filter, which a user manager enforces, allows nothing else.
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6

@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { State } from 'ts-fsrs';
+import { renderToString } from 'react-dom/server';
 import { act, render, screen, waitFor, within, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import LexiconPractice, {
@@ -516,12 +517,25 @@ function heritageDeck({ includeItems = true } = {}): PracticeDeckData {
   };
 }
 
+function mockP14ContextShards() {
+  const deck = heritageDeck();
+  vi.spyOn(globalThis, 'fetch').mockImplementation(async (input) => {
+    const url = String(input);
+    const level = url.match(/practice-(?:index|lexemes)\.([A-C][12])\.json/)?.[1];
+    if (url.includes('practice-index.')) return okJson({ deckVersion: deck.deckVersion, level, items: deck.index });
+    if (url.includes('practice-lexemes.')) return okJson({ deckVersion: deck.deckVersion, level, lexemes: deck.lexemes });
+    if (url.includes('practice-heritage.')) return okJson({ heritage: deck.heritage });
+    if (url.includes('daily-pool.json')) return okJson([]);
+    return notFoundResponse();
+  });
+}
+
 function seedForHeritagePresentation(
   kind: 'error-correction' | 'unjumble' | 'fill-in' | 'match-up' | 'mark-the-words',
   availableItems: readonly PracticeHeritageItem[] = [],
 ): number {
   for (let seed = 0; seed < 512; seed += 1) {
-    if (selectHeritagePracticePresentation(heritagePracticeItem(), seed, availableItems).kind === kind) return seed;
+    if (selectHeritagePracticePresentation(heritagePracticeItem(), seed, availableItems, { source: 'stored', level: 'A2' }).kind === kind) return seed;
   }
   throw new Error(`no deterministic ${kind} presentation seed found`);
 }
@@ -1052,6 +1066,224 @@ beforeEach(() => {
 });
 
 describe('LexiconPractice', () => {
+  test('#10705 no browser storage keeps SSR presentation context unknown', () => {
+    useHeritagePresentationSeed('unjumble');
+    vi.stubGlobal('window', undefined);
+    let html: string;
+    try {
+      html = renderToString(<LexiconPractice initialDeck={heritageDeck()} autoStart initialMode="mixed" />);
+    } finally {
+      vi.unstubAllGlobals();
+    }
+    expect(html).toContain('data-testid="practice-heritage"');
+    expect(html).not.toContain('data-testid="practice-heritage-unjumble"');
+  });
+
+  test.each([
+    ['A1', true], [' a2 ', true], ['B1', true],
+    ['B2', false], ['C1', false], ['C2', false],
+    [null, false], ['', false], ['   ', false], ['Z9', false],
+    ['all', false], ['b1-core', false], ['a1-checkpoint', false],
+  ])('#10705 stored context %s determines P14 independently of item and deck', (stored, eligible) => {
+    if (stored !== null) localStorage.setItem(LEARNER_LEVEL_STORAGE_KEY, stored);
+    useHeritagePresentationSeed('unjumble');
+    render(<LexiconPractice initialDeck={heritageDeck()} autoStart initialMode="mixed" />);
+    expect(Boolean(screen.queryByTestId('practice-heritage-unjumble'))).toBe(eligible);
+    if (!eligible) expect(screen.getByTestId('practice-heritage')).toBeInTheDocument();
+    expect(loadState().reviews).toHaveLength(0);
+  });
+
+  test.each(['throws', 'unavailable'] as const)('#10705 storage %s leaves P14 context unknown', (failure) => {
+    useHeritagePresentationSeed('unjumble');
+    let restore: () => void;
+    if (failure === 'throws') {
+      const getItem = localStorage.getItem.bind(localStorage);
+      const read = vi.spyOn(localStorage, 'getItem').mockImplementation((key) => {
+        if (key === LEARNER_LEVEL_STORAGE_KEY) throw new Error('fixture read failure');
+        return getItem(key);
+      });
+      restore = () => read.mockRestore();
+    } else {
+      const storage = localStorage;
+      const accessor = vi.spyOn(window, 'localStorage', 'get')
+        .mockImplementationOnce(() => { throw new Error('fixture unavailable'); })
+        .mockReturnValue(storage);
+      restore = () => accessor.mockRestore();
+    }
+    try {
+      render(<LexiconPractice initialDeck={heritageDeck()} autoStart initialMode="mixed" />);
+    } finally {
+      restore();
+    }
+    expect(screen.queryByTestId('practice-heritage-unjumble')).not.toBeInTheDocument();
+    expect(screen.getByTestId('practice-heritage')).toBeInTheDocument();
+  });
+
+  test.each([['A2', 'B2', true, false], ['B2', 'A2', false, true], [null, 'A2', false, true]] as const)(
+    '#10705 same mount retains %s despite external %s, remount rereads', (initial, external, before, after) => {
+      if (initial !== null) localStorage.setItem(LEARNER_LEVEL_STORAGE_KEY, initial);
+      useHeritagePresentationSeed('unjumble');
+      const deck = heritageDeck();
+      const view = render(<LexiconPractice initialDeck={deck} autoStart initialMode="mixed" />);
+      const original = screen.queryByTestId('practice-heritage-unjumble');
+      expect(Boolean(original)).toBe(before);
+      localStorage.setItem(LEARNER_LEVEL_STORAGE_KEY, external);
+      fireEvent(window, new StorageEvent('storage', { key: LEARNER_LEVEL_STORAGE_KEY, newValue: external }));
+      view.rerender(<LexiconPractice initialDeck={deck} autoStart initialMode="mixed" />);
+      expect(screen.queryByTestId('practice-heritage-unjumble')).toBe(original);
+      view.unmount();
+      render(<LexiconPractice initialDeck={deck} autoStart initialMode="mixed" />);
+      expect(Boolean(screen.queryByTestId('practice-heritage-unjumble'))).toBe(after);
+      expect(loadState().reviews).toHaveLength(0);
+    },
+  );
+
+  test.each([['A2', false, true], ['A2', true, true], ['B2', false, false]] as const)(
+    '#10705 local commit %s with failed save %s drives P14', async (level, failSave, eligible) => {
+      useHeritagePresentationSeed('unjumble');
+      mockP14ContextShards();
+      const setItem = localStorage.setItem.bind(localStorage);
+      const save = vi.spyOn(localStorage, 'setItem');
+      if (failSave) save.mockImplementation((key, value) => {
+        if (key === LEARNER_LEVEL_STORAGE_KEY) throw new Error('fixture save failure');
+        setItem(key, value);
+      });
+      const user = userEvent.setup();
+      const view = render(<LexiconPractice initialDeck={heritageDeck()} />);
+      try {
+        await user.click(screen.getByRole('button', { name: level }));
+      } finally {
+        save.mockRestore();
+      }
+      expect(localStorage.getItem(LEARNER_LEVEL_STORAGE_KEY)).toBe(failSave ? null : level);
+      await user.click(screen.getByTestId('practice-start-session'));
+      await screen.findByTestId(eligible ? 'practice-heritage-unjumble' : 'practice-heritage');
+      expect(Boolean(screen.queryByTestId('practice-heritage-unjumble'))).toBe(eligible);
+      expect(loadState().reviews).toHaveLength(0);
+      if (failSave) {
+        view.unmount();
+        render(<LexiconPractice initialDeck={heritageDeck()} autoStart initialMode="mixed" />);
+        expect(screen.queryByTestId('practice-heritage-unjumble')).not.toBeInTheDocument();
+        expect(screen.getByTestId('practice-heritage')).toBeInTheDocument();
+      }
+    },
+  );
+
+  test('#10705 same fallback and unpublished local choices do not create context', async () => {
+    useHeritagePresentationSeed('unjumble');
+    const user = userEvent.setup();
+    render(<LexiconPractice initialDeck={heritageDeck()} />);
+    await user.click(screen.getByRole('button', { name: 'A1' }));
+    const c2 = screen.getByRole('button', { name: /C2/ });
+    expect(c2).toBeDisabled();
+    await user.click(c2);
+    expect(localStorage.getItem(LEARNER_LEVEL_STORAGE_KEY)).toBeNull();
+    await user.click(screen.getByTestId('practice-start-session'));
+    expect(await screen.findByTestId('practice-heritage')).toBeInTheDocument();
+    expect(screen.queryByTestId('practice-heritage-unjumble')).not.toBeInTheDocument();
+  });
+
+  test.each([null, 'A2'] as const)('#10705 pending and declined switch retain stored %s', async (stored) => {
+    mockP14ContextShards();
+    if (stored !== null) localStorage.setItem(LEARNER_LEVEL_STORAGE_KEY, stored);
+    useHeritagePresentationSeed('unjumble');
+    const user = userEvent.setup();
+    const { container } = render(<LexiconPractice initialDeck={heritageDeck()} autoStart initialMode="mixed" />);
+    await user.click(container.querySelector<HTMLButtonElement>('button.stage-back')!);
+    await user.click(screen.getByRole('button', { name: 'B1' }));
+    expect(screen.getByTestId('practice-switch-session-offer')).toBeInTheDocument();
+    expect(localStorage.getItem(LEARNER_LEVEL_STORAGE_KEY)).toBe(stored);
+    // Starting a session while the offer is still pending must not commit B1.
+    await user.click(screen.getByTestId('practice-start-session'));
+    await screen.findByTestId(stored === 'A2' ? 'practice-heritage-unjumble' : 'practice-heritage');
+    expect(Boolean(screen.queryByTestId('practice-heritage-unjumble'))).toBe(stored === 'A2');
+    await user.click(container.querySelector<HTMLButtonElement>('button.stage-back')!);
+    await user.click(screen.getByTestId('practice-switch-session-decline'));
+    await user.click(screen.getByTestId('practice-start-session'));
+    await screen.findByTestId(stored === 'A2' ? 'practice-heritage-unjumble' : 'practice-heritage');
+    expect(Boolean(screen.queryByTestId('practice-heritage-unjumble'))).toBe(stored === 'A2');
+    expect(localStorage.getItem(LEARNER_LEVEL_STORAGE_KEY)).toBe(stored);
+    expect(loadState().reviews).toHaveLength(0);
+  });
+
+  test.each(['B1', 'B2'] as const)('#10705 accepting pending %s commits context before restart', async (level) => {
+    useHeritagePresentationSeed('unjumble');
+    mockP14ContextShards();
+    const user = userEvent.setup();
+    const { container } = render(<LexiconPractice initialDeck={heritageDeck()} autoStart initialMode="mixed" />);
+    await user.click(container.querySelector<HTMLButtonElement>('button.stage-back')!);
+    await user.click(screen.getByRole('button', { name: level }));
+    expect(localStorage.getItem(LEARNER_LEVEL_STORAGE_KEY)).toBeNull();
+    await user.click(screen.getByTestId('practice-switch-session-accept'));
+    expect(localStorage.getItem(LEARNER_LEVEL_STORAGE_KEY)).toBe(level);
+    expect(await screen.findByTestId(level === 'B1' ? 'practice-heritage-unjumble' : 'practice-heritage')).toBeInTheDocument();
+    expect(loadState().reviews).toHaveLength(0);
+  });
+
+  test.each([null, 'A2'] as const)('#10705 deck-only acceptance retains stored %s context', async (stored) => {
+    if (stored !== null) localStorage.setItem(LEARNER_LEVEL_STORAGE_KEY, stored);
+    localStorage.setItem(CUSTOM_SETS_STORAGE_KEY, JSON.stringify([{
+      id: 'p14-context', title: 'P14 fixture', description: '', lemma_keys: ['дім'],
+      created_at: NOW.toISOString(), updated_at: NOW.toISOString(), device_id: 'fixture', revision: 1,
+    }]));
+    useHeritagePresentationSeed('unjumble');
+    mockP14ContextShards();
+    const user = userEvent.setup();
+    const { container } = render(<LexiconPractice initialDeck={heritageDeck()} autoStart initialMode="mixed" />);
+    await user.click(container.querySelector<HTMLButtonElement>('button.stage-back')!);
+    await user.click(screen.getByTestId('practice-settings-toggle'));
+    await user.click(screen.getByRole('button', { name: /P14 fixture/ }));
+    await user.click(screen.getByTestId('practice-switch-session-accept'));
+    expect(await screen.findByTestId(stored === 'A2' ? 'practice-heritage-unjumble' : 'practice-heritage')).toBeInTheDocument();
+    expect(localStorage.getItem(LEARNER_LEVEL_STORAGE_KEY)).toBe(stored);
+    expect(loadState().reviews).toHaveLength(0);
+  });
+
+  test('#10705 same card context changes invalidate the actual presentation memo without grading', () => {
+    const deck = heritageDeck();
+    const selection = selectNextPracticeItem(deck, { modeFilter: 'heritage', now: NOW });
+    if (!selection) throw new Error('fixture requires a scheduled heritage card');
+    const complete = vi.fn();
+    const props = {
+      selection, deck, pairs: [], sessionSeed: 1, presentationSeq: 0, answerLocked: false,
+      clozeInput: '', clozeFeedback: null, heritageFeedback: null, paronymFeedback: null,
+      choiceFeedback: null, stressSelectedPosition: null, paradigmSelectedLabel: null,
+      paronymSelectedLabel: null, heritageSelectedLabel: null, choiceSelectedLabel: null,
+      onClozeInput: vi.fn(), onFlashcardRating: vi.fn(), onChoice: vi.fn(), onStressSelect: vi.fn(),
+      onMatchingComplete: vi.fn(), onClozeSubmit: vi.fn(), onHeritageActivityComplete: complete,
+      presentationVariants: true, onBackToModes: vi.fn(), showEnglishSubtitles: true,
+      chromeLocale: 'uk', learnerLevel: 'A1', heritageContext: { source: 'unknown' },
+    } satisfies Parameters<typeof PracticeItem>[0];
+    const view = render(<PracticeItem {...props} />);
+    expect(screen.getByTestId('practice-heritage')).toBeInTheDocument();
+    view.rerender(<PracticeItem {...props} heritageContext={{ source: 'local', level: 'A2' }} />);
+    const ordering = screen.getByTestId('practice-heritage-unjumble');
+    view.rerender(<PracticeItem {...props} heritageContext={{ source: 'stored', level: 'A2' }} />);
+    expect(screen.getByTestId('practice-heritage-unjumble')).toBe(ordering);
+    view.rerender(<PracticeItem {...props} heritageContext={{ source: 'local', level: 'B2' }} />);
+    expect(screen.getByTestId('practice-heritage')).toBeInTheDocument();
+    view.rerender(<PracticeItem {...props} heritageContext={{ source: 'stored', level: 'A2' }} presentationVariants={false} />);
+    expect(screen.getByTestId('practice-heritage')).toBeInTheDocument();
+    const companions = heritageMatchDeck().heritage;
+    const seed = seedForHeritagePresentation('match-up', companions);
+    view.rerender(<PracticeItem {...props} sessionSeed={seed} deck={{ ...deck, heritage: companions }}
+      heritageContext={{ source: 'stored', level: 'A2' }} />);
+    expect(screen.getByTestId('practice-heritage-match-up')).toBeInTheDocument();
+    view.rerender(<PracticeItem {...props} sessionSeed={seed} deck={{ ...deck, heritage: [] }}
+      heritageContext={{ source: 'stored', level: 'A2' }} />);
+    expect(screen.queryByTestId('practice-heritage-match-up')).not.toBeInTheDocument();
+    expect(complete).not.toHaveBeenCalled();
+    expect(loadState().reviews).toHaveLength(0);
+    expect(selection.cardKey).toBe('dim::heritage');
+  });
+
+  test.each([null, 'B2'])('#10705 P14 baseline: rendered caller excludes ordering for stored %s', (stored) => {
+    if (stored !== null) localStorage.setItem(LEARNER_LEVEL_STORAGE_KEY, stored);
+    useHeritagePresentationSeed('unjumble');
+    render(<LexiconPractice initialDeck={heritageDeck()} autoStart initialMode="mixed" />);
+    expect(screen.queryByTestId('practice-heritage-unjumble')).not.toBeInTheDocument();
+    expect(loadState().reviews).toHaveLength(0);
+  });
   test.each([null, 49, 50])('#10706 audio: actual Next cancels same-item playback with resumed history %s without another review', async (historyLength) => {
     const { resetManifestCacheForTesting } = await import('@site/src/lib/lexicon/pronunciation-player');
     resetManifestCacheForTesting();
@@ -1092,7 +1324,9 @@ describe('LexiconPractice', () => {
         fireEvent.click(await screen.findByRole('button', { name: 'Послухати вимову' }));
         await screen.findByRole('button', { name: 'Зупинити відтворення' });
         pause.mockClear();
-        fireEvent.click(screen.getByTestId('practice-advance-button'));
+        // The advance button mounts once the rated outcome commits; a synchronous getBy
+        // here lost that race under CPU contention (#10517), so wait for it.
+        fireEvent.click(await screen.findByTestId('practice-advance-button'));
         await waitFor(() => expect(view.container.querySelector('[data-activity="flashcard"]')).toHaveAttribute('data-rated', 'false'));
         expect(pause).toHaveBeenCalled();
         expect(screen.getByRole('button', { name: 'Послухати вимову' })).toBeVisible();
@@ -2488,6 +2722,7 @@ describe('LexiconPractice', () => {
   });
 
   test('mixed heritage renders error correction, keeps red feedback visible, and records again on failure', async () => {
+    localStorage.setItem(LEARNER_LEVEL_STORAGE_KEY, 'A2');
     useHeritagePresentationSeed('error-correction');
     const user = userEvent.setup();
     render(<LexiconPractice initialDeck={heritageDeck()} autoStart initialMode="mixed" />);
@@ -2508,6 +2743,7 @@ describe('LexiconPractice', () => {
   });
 
   test('mixed heritage renders unjumble, keeps green feedback visible, and records good on success', async () => {
+    localStorage.setItem(LEARNER_LEVEL_STORAGE_KEY, 'A2');
     useHeritagePresentationSeed('unjumble');
     const user = userEvent.setup();
     render(<LexiconPractice initialDeck={heritageDeck()} autoStart initialMode="mixed" />);
@@ -2522,15 +2758,21 @@ describe('LexiconPractice', () => {
     expect(activity.querySelector('[data-activity="feedback"]')).toHaveAttribute('data-correct', 'true');
     expect(screen.getByTestId('practice-advance-button')).toBeInTheDocument();
     await waitFor(() => {
+      expect(storedState().reviews).toHaveLength(1);
       expect(storedState().reviews[0]).toMatchObject({
         cardKey: cardKey('dim', 'heritage'),
         mode: 'heritage',
         rating: 'good',
       });
     });
+    localStorage.setItem(LEARNER_LEVEL_STORAGE_KEY, 'B2');
+    fireEvent(window, new StorageEvent('storage', { key: LEARNER_LEVEL_STORAGE_KEY, newValue: 'B2' }));
+    expect(screen.getByTestId('practice-heritage-unjumble')).toBe(activity);
+    expect(storedState().reviews).toHaveLength(1);
   });
 
   test('mixed heritage renders FillIn, locks after a wrong chip, and records again', async () => {
+    localStorage.setItem(LEARNER_LEVEL_STORAGE_KEY, 'A2');
     useHeritagePresentationSeed('fill-in');
     const user = userEvent.setup();
     render(<LexiconPractice initialDeck={heritageDeck()} autoStart initialMode="mixed" />);
@@ -2550,6 +2792,7 @@ describe('LexiconPractice', () => {
   });
 
   test('mixed heritage renders MarkTheWords, keeps green feedback visible, and records good', async () => {
+    localStorage.setItem(LEARNER_LEVEL_STORAGE_KEY, 'A2');
     useHeritagePresentationSeed('mark-the-words');
     const user = userEvent.setup();
     render(<LexiconPractice initialDeck={heritageDeck()} autoStart initialMode="mixed" />);
@@ -2570,6 +2813,7 @@ describe('LexiconPractice', () => {
   });
 
   test('mixed heritage renders a source-backed MatchUp board and records good after every pair', async () => {
+    localStorage.setItem(LEARNER_LEVEL_STORAGE_KEY, 'A2');
     const deck = heritageMatchDeck();
     useHeritagePresentationSeed('match-up', deck.heritage);
     const user = userEvent.setup();
@@ -6095,6 +6339,7 @@ describe('LexiconPractice', () => {
           onClozeSubmit={() => {}}
           onHeritageActivityComplete={() => {}}
           presentationVariants={false}
+          heritageContext={{ source: 'unknown' }}
           onBackToModes={() => {}}
           showEnglishSubtitles={false}
           chromeLocale="uk"
@@ -6657,24 +6902,42 @@ describe('LexiconPractice', () => {
       );
     });
 
-    test('#6132 mixed-mode session started from a custom deck never draws a lemma outside it', async () => {
-      // 'knyha'/'robota' are IN the deck; 'misto'/'shkola' (sampleDeck's other two
-      // lemmas) are NOT. Only 'knyha' carries cloze — proving the MIXED path (not
-      // just a single mode card, already covered above) respects the deck filter
-      // whichever of its modes gets drawn.
-      const customSet: CustomSet = {
-        id: 'test_custom_deck_mixed',
-        title: 'Дві слова',
-        lemma_keys: ['книга', 'робота'],
-        cloze_items: [],
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-        device_id: 'test_device',
-        revision: 1,
-      };
-      localStorage.setItem(CUSTOM_SETS_STORAGE_KEY, JSON.stringify([customSet]));
+    // #10517 AC-01 measurement (vitest 5.0.2, happy-dom, this file alone, 228 tests):
+    //  - This was ONE test looping 10 full render + settings + mixed-start draws. Per draw
+    //    (instrumented): render 40-160 ms, getByRole('button', {name}) 105-150 ms (the
+    //    accessible-name scan dominates, even on a 51-node DOM), three clicks 15-90 ms
+    //    each => ~350-420 ms, so 3.5-4.2 s per test unloaded (3 runs: 3594/4220/3515 ms),
+    //    already 70-85% of the 5 s budget. It was the only test over 1 s unloaded; the
+    //    next slowest is 0.6-1.0 s.
+    //  - Slow path = test structure (the loop), not the code under test: no store seeding
+    //    or per-test setup cost (localStorage writes are microseconds). Pinned to CPUs 0,1
+    //    with 4 busy loops, every draw slows ~1.4x and the test lands at 5140-5343 ms =>
+    //    "Test timed out in 5000ms" in 3/3 runs, and the zombie loop kept running into the
+    //    next test ("#6132 mode grid ..." then failed to find /Лічильник/, 1/3 runs).
+    //    Every other test stayed under 2.7 s under the same contention.
+    //  - Fix: the 10 draws are independent random picks, so each is now its own test
+    //    (same 10 draws, identical assertions, ~0.4 s each, timeouts isolated per draw).
+    //  - lexicon-api-routes.test.ts / atlas-db-read.test.ts had a different instance of
+    //    the same class (a ~3-11 s cold fixture build inside a 5 s test); they already
+    //    hoist it into beforeAll (#10640/#10645) and stay under 1.6 s per test contended.
+    describe('#6132 mixed-mode session started from a custom deck never draws a lemma outside it', () => {
+      test.each(Array.from({ length: 10 }, (_unused, index) => index + 1))('draw %i of 10', async () => {
+        // 'knyha'/'robota' are IN the deck; 'misto'/'shkola' (sampleDeck's other two
+        // lemmas) are NOT. Only 'knyha' carries cloze — proving the MIXED path (not
+        // just a single mode card, already covered above) respects the deck filter
+        // whichever of its modes gets drawn.
+        const customSet: CustomSet = {
+          id: 'test_custom_deck_mixed',
+          title: 'Дві слова',
+          lemma_keys: ['книга', 'робота'],
+          cloze_items: [],
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+          device_id: 'test_device',
+          revision: 1,
+        };
+        localStorage.setItem(CUSTOM_SETS_STORAGE_KEY, JSON.stringify([customSet]));
 
-      for (let attempt = 0; attempt < 10; attempt += 1) {
         const user = userEvent.setup();
         const { container, unmount } = render(
           <LexiconPractice initialDeck={customDeckMixedFixture()} autoStart={false} />,
@@ -6694,7 +6957,7 @@ describe('LexiconPractice', () => {
         }
 
         unmount();
-      }
+      });
     });
 
     test('#6132 mode grid shows a real per-mode count, honest about which modes are empty', async () => {
