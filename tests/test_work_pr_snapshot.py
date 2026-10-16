@@ -11,7 +11,7 @@ import pytest
 
 from scripts import github_rest_cache as github_rest
 from scripts.work import sources_public as sources
-from scripts.work.normalize import build_projection, qualify_pr_snapshot_age
+from scripts.work.normalize import build_projection, downgrade_expired_projection, qualify_pr_snapshot_age
 from scripts.work.schema import validate_projection
 
 REPO = sources.DEFAULT_PUBLIC_REPOSITORY
@@ -416,3 +416,75 @@ def test_history_empty_success_is_not_missing_and_open_failure_behavior_is_prese
     projection = build_projection({**_sections(result), "prs_merged": history.read()})
     assert projection["sources"][0]["sections"]["prs_merged"]["status"] == "ok"
     assert not any(o["class"] == "prs_merged" for o in projection["denominator"]["omissions"])
+
+
+@pytest.mark.parametrize("expiry", ["pr_snapshot", "projection_cache"])
+def test_expiry_revokes_same_head_sealed_verdict_availability(monkeypatch, expiry):
+    from scripts.work import normalize
+
+    observed = sources._utc_now()
+    head = "a" * 40
+    raw = [
+        {
+            "number": 1,
+            "headRefOid": head,
+            "reviewDecision": "APPROVED",
+            "statusCheckRollup": [{"name": "CI Gate", "conclusion": "SUCCESS"}],
+        }
+    ]
+    sections = _sections(
+        sources.SectionResult(
+            "prs",
+            "ok",
+            payload=raw,
+            count=1,
+            observed_at=observed.isoformat(),
+            age_s=0,
+        )
+    )
+    sections["fleet_reviews"] = sources.SectionResult(
+        "fleet_reviews",
+        "ok",
+        payload={
+            "reviews": [
+                {
+                    "review_id": "same-head",
+                    "repository": REPO,
+                    "pr_number": 1,
+                    "head_sha": head,
+                    "state": "completed",
+                    "sealed_verdict_available": True,
+                }
+            ]
+        },
+    )
+    payload = build_projection(sections, lifecycle_ledgers=[])
+    assert payload["items"][0]["projections"]["review"]["sealed_verdict_available"] is True
+
+    class Clock:
+        @staticmethod
+        def now(tz):
+            return observed + timedelta(seconds=31)
+
+        fromisoformat = staticmethod(sources.datetime.fromisoformat)
+
+    monkeypatch.setattr(normalize, "datetime", Clock)
+    if expiry == "pr_snapshot":
+        qualified = qualify_pr_snapshot_age(payload)
+    else:
+        qualified = downgrade_expired_projection(payload, age_s=31, freshness_s=30)
+    validate_projection(qualified)
+    pr = qualified["items"][0]
+    assert pr["projections"]["review"] == {
+        "review_ids": ["same-head"],
+        "states": ["completed"],
+        "latest_attempt_states": [],
+        "sealed_verdict_available": False,
+        "review_decision": "UNKNOWN",
+    }
+    assert pr["projections"]["verification"]["head_sha"] == head
+    assert pr["projections"]["verification"]["merge_evidence"]["state"] == "unknown"
+    assert pr["health"] == "UNKNOWN"
+    assert pr["safe_next_action"]["code"] == "INSPECT_UNKNOWN"
+    assert payload["items"][0]["projections"]["review"]["sealed_verdict_available"] is True
+    assert payload["items"][0]["projections"]["review"]["review_decision"] == "APPROVED"

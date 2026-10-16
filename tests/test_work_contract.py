@@ -210,7 +210,12 @@ def test_pr_matrix_leftover_projection_routes_to_review_or_merge(
     action,
 ):
     item = _build_pr_item(
-        {"number": 7691, "reviewDecision": decision, "statusCheckRollup": green_rollup_with_matrix_leftover},
+        {
+            "number": 7691,
+            "headRefOid": "a" * 40,
+            "reviewDecision": decision,
+            "statusCheckRollup": green_rollup_with_matrix_leftover,
+        },
         repository_id=REPO,
         tasks=[],
         reviews=[],
@@ -3762,3 +3767,234 @@ def test_actual_public_collection_includes_independent_history(monkeypatch):
     assert projection["items"][0]["lifecycle"] == "merged"
     assert projection["denominator"]["prs_open"] == 0
     validate_projection(projection)
+
+
+def test_pr_review_projection_does_not_reuse_old_head_verdict():
+    """An old-head sealed verdict stays identifiable without qualifying the PR."""
+    sections = _empty_sections_9741(
+        prs=SectionResult("prs", "ok", payload=[_pr_raw_9741()], count=1),
+        fleet_reviews=SectionResult(
+            "fleet_reviews",
+            "ok",
+            payload={
+                "reviews": [
+                    {
+                        "review_id": "old-head",
+                        "repository": REPO,
+                        "pr_number": 77,
+                        "head_sha": "b" * 40,
+                        "state": "completed",
+                        "latest_attempt_state": "completed",
+                        "sealed_verdict_available": True,
+                    }
+                ]
+            },
+            count=1,
+        ),
+    )
+    projection = build_projection(sections, repository_id=REPO, lifecycle_ledgers=[])
+    validate_projection(projection)
+    pr = next(row for row in projection["items"] if row["resource_kind"] == "pr")
+    assert pr["projections"]["review"] == {
+        "review_ids": [],
+        "states": [],
+        "sealed_verdict_available": False,
+        "latest_attempt_states": [],
+        "review_decision": "APPROVED",
+    }
+    assert pr["projections"]["verification"]["merge_evidence"] == {"state": "unknown", "reason": "no_ledger"}
+    history = next(row for row in projection["items"] if row["resource_kind"] == "review")
+    assert history["remote_id"] == "old-head"
+    assert history["projections"]["review"]["head_sha"] == "b" * 40
+    assert history["projections"]["review"]["sealed_verdict_available"] is True
+    assert history["relationships"] == [
+        {
+            "type": "related",
+            "target_id": f"wp1:public-monitor:{REPO}:pr:77",
+            "evidence": "fleet_review_pr_number",
+        }
+    ]
+
+
+@pytest.mark.parametrize(
+    ("pr_head", "review_repo", "review_pr", "review_head", "state", "sealed", "matched"),
+    [
+        (_HEAD_9741, REPO, 77, _HEAD_9741, "completed", True, True),
+        (_HEAD_9741, REPO, 77, _HEAD_9741, "running", False, True),
+        (_HEAD_9741, REPO, 77, _HEAD_9741, "failed", False, True),
+        ("b" * 40, REPO, 77, _HEAD_9741, "completed", True, False),
+        (None, REPO, 77, _HEAD_9741, "completed", True, False),
+        ("", REPO, 77, _HEAD_9741, "completed", True, False),
+        (" ", REPO, 77, " ", "completed", True, False),
+        (_HEAD_9741, REPO, 77, 123, "completed", True, False),
+        (_HEAD_9741, REPO, 77, None, "completed", True, False),
+        (_HEAD_9741, REPO, 77, "", "completed", True, False),
+        (_HEAD_9741, None, 77, _HEAD_9741, "completed", True, False),
+        (_HEAD_9741, "other/public", 77, _HEAD_9741, "completed", True, False),
+        (_HEAD_9741, REPO, 78, _HEAD_9741, "completed", True, False),
+        (_HEAD_9741, REPO, None, _HEAD_9741, "completed", True, False),
+    ],
+)
+def test_pr_review_projection_requires_all_source_identities(
+    pr_head, review_repo, review_pr, review_head, state, sealed, matched
+):
+    review = {
+        "review_id": "identity-case",
+        "repository": review_repo,
+        "pr_number": review_pr,
+        "head_sha": review_head,
+        "state": state,
+        "latest_attempt_state": state,
+        "sealed_verdict_available": sealed,
+    }
+    sections = _empty_sections_9741(
+        prs=SectionResult("prs", "ok", payload=[_pr_raw_9741(headRefOid=pr_head)], count=1),
+        fleet_reviews=SectionResult("fleet_reviews", "ok", payload={"reviews": [review]}, count=1),
+    )
+    projection = build_projection(sections, repository_id=REPO, lifecycle_ledgers=[])
+    validate_projection(projection)
+    pr = next(row for row in projection["items"] if row["resource_kind"] == "pr")
+    assert pr["projections"]["review"] == {
+        "review_ids": ["identity-case"] if matched else [],
+        "states": [state] if matched else [],
+        "latest_attempt_states": [state] if matched else [],
+        "sealed_verdict_available": sealed if matched else False,
+        "review_decision": "APPROVED" if isinstance(pr_head, str) and pr_head.strip() else "UNKNOWN",
+    }
+    history = [row for row in projection["items"] if row["resource_kind"] == "review"]
+    assert [row["remote_id"] for row in history] == (["identity-case"] if not matched and review_repo == REPO else [])
+    if history:
+        assert history[0]["projections"]["review"]["head_sha"] == review_head
+    assert pr["projections"]["verification"]["merge_evidence"] == {"state": "unknown", "reason": "no_ledger"}
+
+
+def test_pr_review_projection_requalifies_mixed_reviews_after_head_change():
+    rows = [
+        {
+            "review_id": "old",
+            "repository": REPO,
+            "pr_number": 77,
+            "head_sha": _HEAD_9741,
+            "state": "completed",
+            "latest_attempt_state": "completed",
+            "sealed_verdict_available": True,
+        },
+        {
+            "review_id": "new-running",
+            "repository": REPO,
+            "pr_number": 77,
+            "head_sha": "b" * 40,
+            "state": "running",
+            "latest_attempt_state": "running",
+            "sealed_verdict_available": False,
+        },
+        {
+            "review_id": "new-failed",
+            "repository": REPO,
+            "pr_number": 77,
+            "head_sha": "b" * 40,
+            "state": "failed",
+            "latest_attempt_state": "failed",
+            "sealed_verdict_available": False,
+        },
+        {
+            "review_id": "missing-head",
+            "repository": REPO,
+            "pr_number": 77,
+            "state": "completed",
+            "sealed_verdict_available": True,
+        },
+        {
+            "review_id": "other-pr",
+            "repository": REPO,
+            "pr_number": 78,
+            "head_sha": "b" * 40,
+            "state": "completed",
+            "sealed_verdict_available": True,
+        },
+        {
+            "review_id": "foreign",
+            "repository": "other/public",
+            "pr_number": 77,
+            "head_sha": "b" * 40,
+            "state": "completed",
+            "sealed_verdict_available": True,
+        },
+        {
+            "review_id": "missing-repo",
+            "pr_number": 77,
+            "head_sha": "b" * 40,
+            "state": "completed",
+            "sealed_verdict_available": True,
+        },
+    ]
+    raw = _pr_raw_9741()
+    sections = _empty_sections_9741(
+        prs=SectionResult("prs", "ok", payload=[raw], count=1),
+        fleet_reviews=SectionResult("fleet_reviews", "ok", payload={"reviews": rows}, count=len(rows)),
+    )
+    before = build_projection(sections, repository_id=REPO, lifecycle_ledgers=[])
+    old_pr = next(row for row in before["items"] if row["resource_kind"] == "pr")
+    assert old_pr["projections"]["review"]["review_ids"] == ["old"]
+    assert old_pr["projections"]["review"]["sealed_verdict_available"] is True
+    raw["headRefOid"] = "b" * 40
+    raw["reviewDecision"] = "REVIEW_REQUIRED"
+    after = build_projection(sections, repository_id=REPO, lifecycle_ledgers=[])
+    validate_projection(after)
+    pr = next(row for row in after["items"] if row["resource_kind"] == "pr")
+    assert pr["projections"]["review"] == {
+        "review_ids": ["new-running", "new-failed"],
+        "states": ["running", "failed"],
+        "latest_attempt_states": ["running", "failed"],
+        "sealed_verdict_available": False,
+        "review_decision": "REVIEW_REQUIRED",
+    }
+    history = {row["remote_id"]: row for row in after["items"] if row["resource_kind"] == "review"}
+    assert set(history) == {"old", "missing-head", "other-pr"}
+    assert history["old"]["projections"]["review"]["head_sha"] == _HEAD_9741
+    assert history["missing-head"]["projections"]["review"]["head_sha"] is None
+    assert history["other-pr"]["projections"]["review"]["pr_number"] == 78
+    assert pr["projections"]["verification"]["merge_evidence"] == {"state": "unknown", "reason": "no_ledger"}
+
+
+@pytest.mark.parametrize(
+    ("pr_status", "detail_complete", "review_status", "expected_ids", "expected_decision", "available"),
+    [
+        ("ok", True, "ok", ["same-head"], "APPROVED", True),
+        ("truncated", True, "truncated", ["same-head"], "APPROVED", True),
+        ("stale", True, "ok", [], "UNKNOWN", False),
+        ("ok", False, "ok", [], "UNKNOWN", False),
+        ("ok", True, "stale", ["same-head"], "APPROVED", False),
+        ("ok", True, "unavailable", ["same-head"], "APPROVED", False),
+    ],
+)
+def test_pr_review_projection_respects_contributing_source_status(
+    pr_status, detail_complete, review_status, expected_ids, expected_decision, available
+):
+    sections = _empty_sections_9741(
+        prs=SectionResult("prs", pr_status, payload=[_pr_raw_9741(detailReadComplete=detail_complete)], count=1),
+        fleet_reviews=SectionResult(
+            "fleet_reviews",
+            review_status,
+            payload={
+                "reviews": [
+                    {
+                        "review_id": "same-head",
+                        "repository": REPO,
+                        "pr_number": 77,
+                        "head_sha": _HEAD_9741,
+                        "state": "completed",
+                        "sealed_verdict_available": True,
+                    }
+                ]
+            },
+            count=1,
+        ),
+    )
+    projection = build_projection(sections, repository_id=REPO, lifecycle_ledgers=[])
+    validate_projection(projection)
+    pr = next(row for row in projection["items"] if row["resource_kind"] == "pr")
+    assert pr["projections"]["review"]["review_ids"] == expected_ids
+    assert pr["projections"]["review"]["sealed_verdict_available"] is available
+    assert pr["projections"]["review"]["review_decision"] == expected_decision
+    assert pr["projections"]["verification"]["merge_evidence"]["state"] == "unknown"
