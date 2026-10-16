@@ -2031,12 +2031,12 @@ def _sweep_stale_claude_acp_launcher_copies(base_fd: int, base: Path) -> None:
         return
     for name in stale:
         if name in held:
-            _logger.info("Claude ACP launcher sweep kept stale copy %s: a live process holds it", name)
+            _logger.info("Claude ACP launcher sweep kept a stale copy: a live process holds it")
             continue
         try:
             _remove_claude_acp_copy_entry(base_fd, name)
-        except OSError as exc:
-            _logger.warning("Claude ACP launcher sweep could not remove stale copy %s: %s", name, exc.strerror)
+        except OSError:
+            _logger.warning("Claude ACP launcher sweep could not remove a stale copy")
 
 
 def _remove_claude_acp_copy_dir(name: str, *, adapter_label: str) -> None:
@@ -2050,14 +2050,14 @@ def _remove_claude_acp_copy_dir(name: str, *, adapter_label: str) -> None:
         error = ClaudeAcpLauncherCleanupError(
             f"{adapter_label}: cannot remove private launcher copy {name}: {exc}", reason="cleanup_failed"
         )
-        _logger.error("%s", error)
+        _logger.error("Claude ACP launcher cleanup refused the private copy base")
         raise error from exc
     except OSError as exc:
         error = ClaudeAcpLauncherCleanupError(
             f"{adapter_label}: cannot remove private launcher copy {name}: {exc.strerror or type(exc).__name__}",
             reason="cleanup_failed",
         )
-        _logger.error("%s", error)
+        _logger.error("Claude ACP launcher cleanup could not open the private copy base")
         raise error from exc
     try:
         try:
@@ -2085,7 +2085,13 @@ def _remove_claude_acp_copy_dir(name: str, *, adapter_label: str) -> None:
                 reason="cleanup_failed",
             ) from exc
     except ClaudeAcpLauncherCleanupError as error:
-        _logger.error("%s", error)
+        _logger.error(
+            "Claude ACP launcher cleanup left the private launcher copy in place: "
+            "a live process still holds it, or the process table is unreadable"
+            if error.reason == "cleanup_busy"
+            else "Claude ACP launcher cleanup failed: cannot remove private launcher copy "
+            "(it is not removable, or not a 0700 directory the caller owns)"
+        )
         raise
     finally:
         os.close(base_fd)

@@ -11,11 +11,13 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 
+from agent_runtime.adapters.base import InvocationPlan
 from agent_runtime.adapters.cursor import CursorAdapter
 from agent_runtime.adapters.deepseek import DeepSeekAdapter
 from agent_runtime.adapters.gemini import GeminiAdapter
 from agent_runtime.adapters.glm import GlmAdapter
 from agent_runtime.adapters.grok_build import GrokBuildAdapter
+from agent_runtime.adapters.hermes_common import HERMES_SUBSTITUTION_MARKER
 from agent_runtime.adapters.hermes_deepseek import HermesDeepSeekAdapter
 from agent_runtime.adapters.hermes_grok import HermesGrokAdapter
 from agent_runtime.adapters.hermes_qwen import HermesQwenAdapter
@@ -340,3 +342,38 @@ def test_agy_interim_language_warning_is_constant(caplog):
     _assert_constant_record(
         caplog, AgyAdapter, logging.WARNING, agy_module.AGY_INTERIM_LANGUAGE_WARNING, "secret-looking-reply-excerpt"
     )
+
+
+def test_hermes_substitution_marker_is_constant(tmp_path, caplog, capsys):
+    """Requested and captured-output route values never reach the marker log record."""
+    requested_secret = "secret-looking-requested-model"
+    actual_model_secret = "secret-looking-actual-model"
+    actual_provider_secret = "secret-looking-actual-provider"
+    plan = InvocationPlan(
+        cmd=["hermes", "-z", "hi", "-m", requested_secret],
+        cwd=tmp_path,
+        metadata={"hermes": {"requested_provider": "deepseek", "requested_model": requested_secret}},
+    )
+    with caplog.at_level(logging.DEBUG):
+        result = HermesDeepSeekAdapter().parse_response(
+            stdout=f"↻ Switched to fallback: {actual_model_secret} ({actual_provider_secret})\nok",
+            stderr="",
+            returncode=0,
+            output_file=None,
+            plan=plan,
+        )
+    assert result.substitution is not None
+    assert result.substitution["substituted"] is True
+    assert result.substitution["actual_model"] == actual_model_secret
+    assert result.substitution["actual_provider"] == actual_provider_secret
+    warnings = [record for record in caplog.records if record.levelno == logging.WARNING]
+    assert len(warnings) == 1
+    record = warnings[0]
+    assert record.getMessage() == f"{HERMES_SUBSTITUTION_MARKER}: configured and actual provider/model differ"
+    assert record.args == ()
+    assert record.exc_info is None
+    for secret in (requested_secret, actual_model_secret, actual_provider_secret):
+        assert secret not in record.getMessage()
+        assert secret not in repr(vars(record))
+    # The stderr marker line is not a log record and is unchanged.
+    assert HERMES_SUBSTITUTION_MARKER in capsys.readouterr().err
