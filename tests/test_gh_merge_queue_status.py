@@ -1413,3 +1413,112 @@ def test_fixture_file_with_duplicate_keys_is_an_error(tmp_path: Path, capsys: py
     fixture.write_text(json.dumps(_doc()))
     assert main(["123", "--fixture", str(fixture), "--actions-fixture", str(runs), "--json"]) == 1
     assert json.loads(capsys.readouterr().out)["status"] == "error"
+
+
+# --- Round 5: failure evidence inside errors, and contradictory branch aliases (#10792) --------
+
+
+def _not_found_with(extra: dict[str, Any]) -> dict[str, Any]:
+    return {"data": {"repository": {"pullRequest": None}}, "errors": [{**_NF_123, **extra}]}
+
+
+_FAILURE_INSIDE_NOT_FOUND: dict[str, dict[str, Any]] = {
+    "extensions_error": {"extensions": {"error": "github_rate_limited"}},
+    "nested_errors": {"errors": [{"message": "nested"}]},
+    "extensions_errors": {"extensions": {"errors": [{"message": "nested"}]}},
+    "incomplete_results": {"incomplete_results": True},
+    "has_next_page": {"extensions": {"pageInfo": {"hasNextPage": True}}},
+    "nested_error_envelope": {"extensions": {"message": "slow down", "documentation_url": "https://docs.github.com"}},
+}
+
+
+@pytest.mark.parametrize("shape", _FAILURE_INSIDE_NOT_FOUND)
+def test_failure_evidence_inside_not_found_errors_is_unavailable(monkeypatch: pytest.MonkeyPatch, shape: str) -> None:
+    """A not-found error that also carries failure evidence is unavailable, before not-found."""
+    payload = json.dumps(_not_found_with(_FAILURE_INSIDE_NOT_FOUND[shape]))
+    requests = _live_all(monkeypatch, (1, payload), [(0, _EMPTY_RUNS)])
+    with pytest.raises(RuntimeError, match="unavailable") as excinfo:
+        fetch_live_status(123, _REPO)
+    assert "not found" not in str(excinfo.value)
+    assert requests == ["graphql"]
+
+
+@pytest.mark.parametrize(
+    "extra",
+    [
+        {},
+        {"extensions": {"code": "NOT_FOUND"}},
+        {"incomplete_results": False},
+        {"extensions": {"pageInfo": {"hasNextPage": False}}},
+    ],
+)
+def test_clean_not_found_error_keeps_its_meaning(monkeypatch: pytest.MonkeyPatch, extra: dict[str, Any]) -> None:
+    payload = json.dumps(_not_found_with(extra))
+    requests = _live_all(monkeypatch, (1, payload), [(0, _EMPTY_RUNS)])
+    with pytest.raises(ValueError, match="Pull request #123 not found in repository"):
+        fetch_live_status(123, _REPO)
+    assert requests == ["graphql"]
+
+
+def test_offline_null_data_with_failure_inside_errors_is_unavailable() -> None:
+    document = {"data": None, "errors": [{**_NF_123, "extensions": {"error": "github_rate_limited"}}]}
+    with pytest.raises(RuntimeError, match="unavailable") as excinfo:
+        evaluate_status_data(document, 123)
+    assert "not found" not in str(excinfo.value)
+
+
+_BRANCH_123 = "gh-readonly-queue/main/pr-123-abc"
+_BRANCH_124 = "gh-readonly-queue/main/pr-124-abc"
+
+
+def _aliased_run(head_branch: str, head_branch_camel: str) -> dict[str, Any]:
+    return {
+        "html_url": "https://example.invalid/run/9",
+        "status": "completed",
+        "event": "merge_group",
+        "head_branch": head_branch,
+        "headBranch": head_branch_camel,
+    }
+
+
+_CONFLICTING_BRANCHES = {
+    "different_pull_requests": (_BRANCH_124, _BRANCH_123),
+    "unnumbered_branch_versus_pull_request": ("main", _BRANCH_123),
+}
+
+
+@pytest.mark.parametrize("shape", _CONFLICTING_BRANCHES)
+def test_conflicting_branch_aliases_are_unavailable_on_rest(monkeypatch: pytest.MonkeyPatch, shape: str) -> None:
+    run = _aliased_run(*_CONFLICTING_BRANCHES[shape])
+    payload = json.dumps({"total_count": 1, "workflow_runs": [run]})
+    requests = _live_all(monkeypatch, (0, json.dumps(_FOUND)), [(0, payload), (0, "[]")])
+    with pytest.raises(RuntimeError, match="Actions runs read unavailable"):
+        fetch_live_status(123, _REPO)
+    assert requests == ["graphql", "rest"]
+
+
+@pytest.mark.parametrize("shape", _CONFLICTING_BRANCHES)
+def test_conflicting_branch_aliases_are_unavailable_on_fallback(monkeypatch: pytest.MonkeyPatch, shape: str) -> None:
+    run = _aliased_run(*_CONFLICTING_BRANCHES[shape])
+    requests = _live_all(monkeypatch, (0, json.dumps(_FOUND)), [(0, _EMPTY_RUNS), (0, json.dumps([run]))])
+    with pytest.raises(RuntimeError, match="Actions run list read unavailable"):
+        fetch_live_status(123, _REPO)
+    assert requests == ["graphql", "rest", "run-list"]
+
+
+@pytest.mark.parametrize(
+    ("head_branch", "head_branch_camel"),
+    [
+        (_BRANCH_123, _BRANCH_123),
+        ("gh-readonly-queue/main/pr-123-aaa", "gh-readonly-queue/main/pr-123-bbb"),
+    ],
+)
+def test_agreeing_branch_aliases_report_the_run(
+    monkeypatch: pytest.MonkeyPatch, head_branch: str, head_branch_camel: str
+) -> None:
+    run = _aliased_run(head_branch, head_branch_camel)
+    requests = _live_all(
+        monkeypatch, (0, json.dumps(_FOUND)), [(0, json.dumps({"total_count": 1, "workflow_runs": [run]}))]
+    )
+    assert fetch_live_status(123, _REPO).latest_merge_group_run_url == "https://example.invalid/run/9"
+    assert requests == ["graphql", "rest"]

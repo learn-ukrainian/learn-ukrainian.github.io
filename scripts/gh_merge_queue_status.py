@@ -347,13 +347,16 @@ def parse_queue_status(document: Any, pr_number: int, *, repo: str | None = None
       the not-found error for exactly this number and ``data.repository.pullRequest`` is null;
     * ``RuntimeError`` - GraphQL returned any other errors (a partial result is not trusted);
     * :class:`MalformedPayload` (a ``RuntimeError``) - the document is not exactly the whitelisted
-      shape, or it carries failure or paging evidence anywhere outside ``errors``
-      (:func:`scripts.common.github_payload.reject_failure_evidence`).
+      shape, or it carries failure or paging evidence anywhere, including inside ``errors``
+      (:func:`scripts.common.github_payload.reject_failure_evidence`). The ``errors`` key itself is
+      the GraphQL errors entry; a clean not-found error with no such evidence keeps its meaning.
     """
     try:
         document = gp.require_object(document, "document")
         errors = gp.graphql_errors(document)
+        # The key is the GraphQL errors entry. Its contents are still failure evidence.
         gp.reject_failure_evidence({key: value for key, value in document.items() if key != "errors"})
+        gp.reject_failure_evidence(errors)
         if errors:
             if _positively_not_found(document, errors, pr_number):
                 raise ValueError(_not_found_message(pr_number, repo))
@@ -425,14 +428,15 @@ def _not_found_message(pr_number: int, repo: str | None) -> str:
 
 def _offline_fixture_not_found(document: Any, pr_number: int) -> bool:
     """The one recorded offline-fixture contract: ``{"data": null}`` (optionally with only the
-    not-found error for this number) reads as "not found". Only :func:`evaluate_status_data` calls
-    it; a live read of the same document is unavailable."""
+    not-found error for this number, and no failure evidence inside that error) reads as "not found".
+    Only :func:`evaluate_status_data` calls it; a live read of the same document is unavailable."""
     if not isinstance(document, dict) or "data" not in document or document["data"] is not None:
         return False
     if not document.keys() <= {"data", "errors", "actions_runs"}:
         return False
     try:
         errors = gp.graphql_errors(document)
+        gp.reject_failure_evidence(errors)
     except gp.UnavailablePayload:
         return False
     return all(_not_found_error(error, pr_number) for error in errors)
@@ -441,12 +445,20 @@ def _offline_fixture_not_found(document: Any, pr_number: int) -> bool:
 def _valid_run(run: Any, what: str) -> dict[str, Any]:
     """A usable Actions run names its page (``html_url``/``url``), its ``status`` and the head branch
     that matches it to a pull request (``head_branch``/``headBranch``); every other field the tool
-    reads is null/absent or of its expected type."""
+    reads is null/absent or of its expected type.
+
+    The two branch spellings are one matching fact. When both are present they must name the same
+    pull request; contradictory numbers refuse the read instead of keeping the first spelling.
+    """
     run = gp.require_object(run, what)
     for keys in (("html_url", "url"), ("head_branch", "headBranch")):
         present = [gp.optional(run, key, gp.require_str, f"{what}.{key}") for key in keys]
         if not any(present):
             raise gp.UnavailablePayload(f"{what}.{keys[0]}")
+        if keys == ("head_branch", "headBranch"):
+            named = {extract_pr_number(value) for value in present if value is not None}
+            if len(named) > 1:
+                raise gp.UnavailablePayload(f"{what}.head_branch")
     gp.require_str(gp.field(run, "status", f"{what}.status"), f"{what}.status")
     for key in ("conclusion", "event", "name", "created_at", "createdAt", "updated_at", "updatedAt"):
         gp.optional(run, key, gp.require_str, f"{what}.{key}", nonempty=False)
