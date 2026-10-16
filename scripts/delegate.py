@@ -5117,20 +5117,30 @@ def _dispatch_may_forward() -> bool:
     return any((root / job_host_exec.RETIRED_LOCAL_MARKER).is_file() for root in (fleet_comms / "v1", fleet_comms))
 
 
-def _early_host_refusal(args: argparse.Namespace) -> int | None:
+def _early_host_refusal(args: argparse.Namespace, *, enforce_local: bool = False) -> int | None:
     """Exit code when this host's memory or load already refuses the dispatch (#10799), else ``None``.
 
-    Read-only: runs before the costly preflights, the runtime tmp sweep and
-    the capacity hint, which a refused dispatch would otherwise pay for. It
-    applies only where the worker would run: a dry run never forwards, and a
-    live dispatch is checked only when it cannot be forwarded. A client that
-    may forward, or a ``--force-admission`` request, is left to the full
-    admission, which stays authoritative.
+    Read-only: runs before the costly preflights, the open-PR freeze (which
+    calls ``gh`` on a cache miss), the runtime tmp sweep and the capacity
+    hint. It applies only where the worker would run. A dry run never
+    forwards. A live dispatch is checked only when it cannot be forwarded,
+    unless ``enforce_local`` (placement fell back to this host after every
+    remote host failed). A client that may still be forwarded, or a
+    ``--force-admission`` request, is left to the full admission, which stays
+    authoritative.
+
+    An argument validated before this call exits 2 when the host is
+    overloaded. An argument validated after it exits 3 when this call
+    refuses, including a retired model and a missing rules core, which sit
+    after the open-PR freeze. That exit 3 was accepted and stays with this
+    call placed ahead of the freeze. A malformed pre-admission bound is
+    exit 2: it is rejected when the bound is armed, before this call.
     """
     if getattr(args, "force_admission", None) is not None:
         return None
-    if not bool(getattr(args, "dry_run", False)) and _dispatch_may_forward():
+    if not enforce_local and not bool(getattr(args, "dry_run", False)) and _dispatch_may_forward():
         return None
+    dispatch_admission.preadmission_checkpoint()
     try:
         decision = dispatch_admission.precheck(args.mode)
     except ValueError as exc:
@@ -12778,8 +12788,23 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     # releases it once the task record is published; every earlier return or
     # exception releases it here (#8610). ``admission_holds`` drops an
     # admission hold that no later record replaced (#8717).
-    with contextlib.ExitStack() as worktree_locks, contextlib.ExitStack() as admission_holds:
-        return _dispatch(args, worktree_locks=worktree_locks, admission_holds=admission_holds)
+    # The pre-admission bound (#10816) covers every mode until admission
+    # decides. ``_dispatch`` disarms it at that point so worktree creation
+    # keeps its own budget; a breach exits with the typed code.
+    try:
+        bounds = dispatch_admission.PreadmissionBounds.from_environ()
+    except ValueError as exc:
+        print(f"❌ invalid pre-admission bound: {exc}", file=sys.stderr)
+        return 2
+    try:
+        bounds.arm()
+        with contextlib.ExitStack() as worktree_locks, contextlib.ExitStack() as admission_holds:
+            return _dispatch(args, worktree_locks=worktree_locks, admission_holds=admission_holds)
+    except dispatch_admission.PreadmissionBoundExceeded as exc:
+        print(f"❌ {exc}", file=sys.stderr)
+        return exc.exit_code
+    finally:
+        bounds.disarm()
 
 
 def _dispatch(
@@ -12933,6 +12958,13 @@ def _dispatch(
         return 2
     fleet_repo_meta = fleet_repo_as_dict(fleet_repo, target_repo_root)
 
+    # #10799/#10816: an overloaded host refuses before the open-PR freeze, which
+    # calls gh on a cache miss, and before routing, the DoR and authoring
+    # preflights, the runtime tmp sweep and the capacity hint.
+    early_refusal_rc = _early_host_refusal(args)
+    if early_refusal_rc is not None:
+        return early_refusal_rc
+
     # Open-PR freeze: refuse before any task record, archive, forward or worktree side effect.
     freeze_rc = _check_open_pr_freeze(args, fleet_repo, target_repo_root)
     if freeze_rc is not None:
@@ -12955,12 +12987,6 @@ def _dispatch(
     except rules_core.RulesCoreMissing as exc:
         print(f"❌ dispatch refused: {exc}; the rules core is required.", file=sys.stderr)
         return 2
-
-    # #10799: an overloaded host refuses here, before routing, the DoR and
-    # authoring preflights, the runtime tmp sweep and the capacity hint.
-    early_refusal_rc = _early_host_refusal(args)
-    if early_refusal_rc is not None:
-        return early_refusal_rc
 
     # The launch route (the retired-CLI alias and any budget substitution; #8517: a review
     # attempt never takes a substitute) is resolved inside ``resolve_and_admit``, which gates
@@ -13864,8 +13890,16 @@ def _dispatch(
                 f"⚠️  VPS forward failed ({why}); spawning on notebook",
                 file=sys.stderr,
             )
+            # The early precheck was skipped because this dispatch might have
+            # been forwarded. This host is now the one that would spawn (#10816).
+            fallback_rc = _early_host_refusal(args, enforce_local=True)
+            if fallback_rc is not None:
+                return fallback_rc
         elif reason in {"unavailable", "full"}:
             print(f"⚠️  every VPS worker host is {reason}; spawning on notebook", file=sys.stderr)
+            fallback_rc = _early_host_refusal(args, enforce_local=True)
+            if fallback_rc is not None:
+                return fallback_rc
 
     # Host admission (#8645 part A) for the host that spawns the worker, so it
     # follows VPS forwarding. This check fails fast before the base fetch; the
@@ -13877,6 +13911,7 @@ def _dispatch(
     disk_guard = not _dispatch_reuses_worktree(
         worktree_arg, agent=dispatch_agent, task_id=task_id, repo_root=target_repo_root, validated=validated_worktree
     )
+    dispatch_admission.preadmission_checkpoint()
     try:
         live_dispatch = not bool(getattr(args, "dry_run", False))
         admission = _evaluate_dispatch_admission(
@@ -13886,6 +13921,9 @@ def _dispatch(
         print(f"❌ invalid dispatch admission threshold: {exc}", file=sys.stderr)
         return 2
     admission_rc = _report_dispatch_admission(admission, force_reason=force_admission_reason)
+    # Admission has decided. Later work (worktree add, up to its own budget)
+    # is not pre-admission (#10816).
+    dispatch_admission.disarm_preadmission_bounds()
     if admission_rc is not None:
         return admission_rc
 
@@ -18523,9 +18561,9 @@ def _check_capacity_hint(
 
     with contextlib.suppress(Exception):
         try:
-            from scripts.api.lane_health import compute_lane_health, normalize_agent_name
+            from scripts.api.lane_health import normalize_agent_name
         except ImportError:
-            from api.lane_health import compute_lane_health, normalize_agent_name
+            from api.lane_health import normalize_agent_name
 
         from agent_runtime.agent_identity import RETIRED_AGENT_ALIASES
         from scripts.agent_runtime.kimi_admission import DirectoryTree
@@ -18552,7 +18590,8 @@ def _check_capacity_hint(
         )
 
         in_flight: dict[str, int] = {lane: 0 for lane in subscription_lanes}
-        # Stored fields only (#10799): the hint needs no snapshot sidecar.
+        # Stored fields on active records only (#10799, #10816). Spawn-failure
+        # health is a history scan; this hint does not run it when the lane is busy.
         for _state_file, state in dispatch_admission.iter_active_records(tasks_dir()):
             pid = state.get("pid")
             if pid and not _pid_alive(int(pid)):
@@ -18565,15 +18604,7 @@ def _check_capacity_hint(
         if busy_count <= 0:
             return
 
-        health: dict[str, Any] = {}
-        with contextlib.suppress(Exception):
-            health = compute_lane_health(tasks_dir())
-
-        idle_lanes = [
-            lane
-            for lane in subscription_lanes
-            if lane != target_norm and in_flight.get(lane, 0) == 0 and health.get(lane, {}).get("healthy", True)
-        ]
+        idle_lanes = [lane for lane in subscription_lanes if lane != target_norm and in_flight.get(lane, 0) == 0]
 
         if idle_lanes:
             idle_str = ", ".join(idle_lanes)

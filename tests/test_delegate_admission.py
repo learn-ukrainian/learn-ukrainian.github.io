@@ -11,8 +11,10 @@ import json
 import os
 import resource
 import shutil
+import signal
 import subprocess
 import sys
+import time
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -1602,3 +1604,242 @@ def test_early_host_refusal_costs_under_two_cpu_seconds_in_a_fresh_process(tmp_p
         assert "dispatch admission refused for a workspace-write worker: MemAvailable" in proc.stderr
         assert cpu_s < 2.0, f"refusal used {cpu_s:.2f} CPU s"
     assert {name: _tree_state(tmp_path / name) for name in ("tasks", "scratch")} == before
+
+
+def test_precheck_refuses_a_long_test_slot_queue_with_the_admission_text(tasks_dir, monkeypatch):
+    monkeypatch.setenv("DISPATCH_MAX_TEST_SLOT_QUEUE", "4")
+    monkeypatch.setattr(
+        dispatch_admission,
+        "probe_host",
+        lambda: dispatch_admission.HostProbe(mem_available_bytes=64 * _GIB, load1=1.0, cpu_count=8, proc_available=True),
+    )
+    monkeypatch.setattr(dispatch_admission, "probe_test_slots", lambda: dispatch_admission.SlotQueueProbe(depth=9, pool_size=2))
+    monkeypatch.setattr(dispatch_admission, "probe_disk", lambda: dispatch_admission.DiskProbe(used_bytes=10, free_bytes=90))
+
+    early = dispatch_admission.precheck("danger")
+    full = dispatch_admission.evaluate("danger", tasks_dir)
+
+    assert early is not None and not early.admitted
+    assert early.failures == full.failures
+    assert early.failures == (
+        "test-slot queue 9 is longer than 4 waiting runs (DISPATCH_MAX_TEST_SLOT_QUEUE=4)",
+    )
+
+
+def test_precheck_still_steps_aside_when_the_disk_is_full(monkeypatch):
+    """A long queue does not skip the reaper: a full disk still belongs to evaluate (#10776)."""
+    monkeypatch.setattr(
+        dispatch_admission,
+        "probe_host",
+        lambda: dispatch_admission.HostProbe(mem_available_bytes=64 * _GIB, load1=1.0, cpu_count=8, proc_available=True),
+    )
+    monkeypatch.setattr(dispatch_admission, "probe_test_slots", lambda: dispatch_admission.SlotQueueProbe(depth=9, pool_size=2))
+    monkeypatch.setattr(dispatch_admission, "probe_disk", lambda: dispatch_admission.DiskProbe(used_bytes=90, free_bytes=10))
+
+    assert dispatch_admission.precheck("workspace-write") is None
+
+
+def test_preadmission_bounds_use_a_fake_clock_and_a_fake_rss():
+    clock = {"t": 0.0}
+    rss = {"n": 0}
+    bounds = dispatch_admission.PreadmissionBounds(
+        timeout_s=5, memory_max_bytes=100, clock=lambda: clock["t"], resident=lambda: rss["n"]
+    )
+    bounds.arm(alarm=False)
+    clock["t"] = 4.9
+    bounds.check()
+    clock["t"] = 5
+    with pytest.raises(dispatch_admission.PreadmissionBoundExceeded) as timed:
+        bounds.check()
+    assert timed.value.kind == "timeout"
+    assert timed.value.exit_code == dispatch_admission.PREADMISSION_TIMEOUT_EXIT
+
+    clock["t"] = 0.0
+    bounds.arm(alarm=False)
+    rss["n"] = 100
+    bounds.check()
+    rss["n"] = 101
+    with pytest.raises(dispatch_admission.PreadmissionBoundExceeded) as grown:
+        bounds.check()
+    assert grown.value.kind == "memory"
+    assert grown.value.exit_code == dispatch_admission.PREADMISSION_MEMORY_EXIT
+    bounds.disarm()
+
+
+def test_invalid_preadmission_bound_is_an_invalid_request(monkeypatch, capsys):
+    monkeypatch.setenv("DISPATCH_PREADMISSION_TIMEOUT_S", "0")
+    assert delegate.cmd_dispatch(_dry_run_args(mode="read-only", task_id="bound-invalid")) == 2
+    err = capsys.readouterr().err
+    assert "invalid pre-admission bound" in err
+    assert "greater than zero" in err
+
+
+def test_preadmission_bound_restores_sigalrm(tasks_dir, monkeypatch):
+    previous = signal.getsignal(signal.SIGALRM)
+    timer = signal.getitimer(signal.ITIMER_REAL)
+    _local_placement(monkeypatch)
+    monkeypatch.setattr(dispatch_admission, "probe_host", lambda: _OVERLOADED)
+
+    assert delegate.cmd_dispatch(_write_dispatch_args("bound-restore")) == delegate._ADMISSION_REFUSED_EXIT
+
+    assert signal.getsignal(signal.SIGALRM) == previous
+    assert signal.getitimer(signal.ITIMER_REAL)[1] == timer[1]
+
+
+def _hang_before_admission(*_args, **_kwargs):
+    time.sleep(5)
+    raise RuntimeError("pre-admission hang was not stopped")
+
+
+@pytest.mark.parametrize("mode", ["read-only", "workspace-write", "danger"])
+def test_preadmission_hang_ends_at_the_timeout_in_every_mode(monkeypatch, capsys, mode):
+    monkeypatch.setenv("DISPATCH_PREADMISSION_TIMEOUT_S", "0.5")
+    monkeypatch.setattr(dispatch_admission, "resident_bytes", lambda: 0)
+    monkeypatch.setattr("scripts.agent_runtime.attribution.resolve_invocation_attribution", _hang_before_admission)
+    started = time.monotonic()
+
+    rc = delegate.cmd_dispatch(_dry_run_args(mode=mode, task_id=f"bound-hang-{mode}"))
+
+    elapsed = time.monotonic() - started
+    assert rc == dispatch_admission.PREADMISSION_TIMEOUT_EXIT
+    assert elapsed < 3
+    assert "pre-admission timed out after 0.5s" in capsys.readouterr().err
+
+
+@pytest.mark.parametrize("mode", ["read-only", "workspace-write", "danger"])
+def test_preadmission_memory_cap_refuses_every_mode(monkeypatch, capsys, mode):
+    rss = {"n": 0}
+    monkeypatch.setenv("DISPATCH_PREADMISSION_MEMORY_MAX_BYTES", "1024")
+    monkeypatch.setattr(dispatch_admission, "resident_bytes", lambda: rss["n"])
+
+    def grow(*_args, **_kwargs):
+        rss["n"] = 10_000
+        time.sleep(5)
+        raise RuntimeError("pre-admission memory cap did not stop the dispatch")
+
+    monkeypatch.setattr("scripts.agent_runtime.attribution.resolve_invocation_attribution", grow)
+    started = time.monotonic()
+
+    rc = delegate.cmd_dispatch(_dry_run_args(mode=mode, task_id=f"bound-mem-{mode}"))
+
+    elapsed = time.monotonic() - started
+    assert rc == dispatch_admission.PREADMISSION_MEMORY_EXIT
+    assert elapsed < 3
+    err = capsys.readouterr().err
+    assert "pre-admission memory grew by" in err
+    assert "1024 byte cap" in err
+
+
+def test_overloaded_host_refuses_before_the_open_pr_freeze(tasks_dir, monkeypatch, capsys):
+    _local_placement(monkeypatch)
+    monkeypatch.setattr(dispatch_admission, "probe_host", lambda: _OVERLOADED)
+
+    def freeze(*_args, **_kwargs):
+        raise AssertionError("open-PR freeze ran on an overloaded host")
+
+    monkeypatch.setattr("scripts.orchestration.pr_freeze.evaluate", freeze)
+    args = _write_dispatch_args("early-before-freeze", "--model", "gpt-6-astra")
+
+    assert delegate.cmd_dispatch(args) == delegate._ADMISSION_REFUSED_EXIT
+    err = capsys.readouterr().err
+    assert "admission refused" in err
+    assert "retired" not in err
+
+
+def test_invalid_initiator_on_an_overloaded_host_exits_2(tasks_dir, monkeypatch, capsys):
+    _local_placement(monkeypatch)
+    monkeypatch.setattr(dispatch_admission, "probe_host", lambda: _OVERLOADED)
+    args = _write_dispatch_args("early-initiator")
+    args.initiator = "bad id"
+
+    assert delegate.cmd_dispatch(args) == 2
+    err = capsys.readouterr().err
+    assert "invalid --initiator" in err
+    assert "admission refused" not in err
+
+
+@pytest.mark.parametrize("reason", ["full", "unavailable"])
+def test_local_fallback_after_remote_hosts_fail_reruns_precheck(tasks_dir, monkeypatch, capsys, reason):
+    _stub_worktree(monkeypatch, tasks_dir)
+    monkeypatch.setattr(delegate, "_dispatch_may_forward", lambda: True)
+    monkeypatch.setattr(dispatch_admission, "probe_host", lambda: _OVERLOADED)
+    monkeypatch.setattr(job_host_exec, "decide_dispatch_placement", lambda **_kwargs: ("notebook", reason, None))
+    monkeypatch.setattr(delegate.subprocess, "Popen", lambda *_args, **_kwargs: pytest.fail("a refused dispatch must not spawn"))
+    prechecks: list[str] = []
+    real_precheck = dispatch_admission.precheck
+
+    def wrapped(mode, **kwargs):
+        prechecks.append(mode)
+        return real_precheck(mode, **kwargs)
+
+    monkeypatch.setattr(dispatch_admission, "precheck", wrapped)
+
+    assert delegate.cmd_dispatch(_live_danger_args(tasks_dir, f"fallback-{reason}")) == delegate._ADMISSION_REFUSED_EXIT
+    assert prechecks == ["danger"]
+    err = capsys.readouterr().err
+    assert "admission refused" in err
+    assert f"every VPS worker host is {reason}" in err
+
+
+def test_ssh_fallback_reruns_precheck(tasks_dir, monkeypatch, capsys):
+    _stub_worktree(monkeypatch, tasks_dir)
+    monkeypatch.setattr(sys, "argv", ["scripts/delegate.py", "dispatch", "--agent", "codex"])
+    monkeypatch.setattr(delegate, "_dispatch_may_forward", lambda: True)
+    monkeypatch.setattr(dispatch_admission, "probe_host", lambda: _OVERLOADED)
+    monkeypatch.setattr(job_host_exec, "decide_dispatch_placement", lambda **_kwargs: ("vps", "available", "host-job"))
+
+    def fail(**_kwargs):
+        raise job_host_exec.SshTransportError("down")
+
+    monkeypatch.setattr(job_host_exec, "forward_dispatch", fail)
+    monkeypatch.setattr(delegate.subprocess, "Popen", lambda *_args, **_kwargs: pytest.fail("a refused dispatch must not spawn"))
+    prechecks: list[str] = []
+    real_precheck = dispatch_admission.precheck
+    monkeypatch.setattr(
+        dispatch_admission,
+        "precheck",
+        lambda mode, **kwargs: prechecks.append(mode) or real_precheck(mode, **kwargs),
+    )
+
+    assert delegate.cmd_dispatch(_live_danger_args(tasks_dir, "fallback-ssh")) == delegate._ADMISSION_REFUSED_EXIT
+    assert prechecks == ["danger"]
+    err = capsys.readouterr().err
+    assert "VPS forward failed" in err
+    assert "admission refused" in err
+
+
+def test_capacity_hint_does_not_scan_history_when_the_lane_is_busy(tasks_dir, tmp_path, monkeypatch, capsys):
+    from scripts.api import lane_health
+
+    _seed_history(tasks_dir, tmp_path / "scratch", records=20)
+    now = datetime.now(UTC).isoformat()
+    for index in range(2):
+        (tasks_dir / f"claude-fail-{index}.json").write_text(
+            json.dumps(
+                {
+                    "task_id": f"claude-fail-{index}",
+                    "status": "failed",
+                    "agent": "claude",
+                    "returncode": 1,
+                    "duration_s": 1,
+                    "started_at": now,
+                    "stderr_excerpt": "spawn failed",
+                }
+            ),
+            encoding="utf-8",
+        )
+
+    calls: list[str] = []
+
+    def boom(*_args, **_kwargs):
+        calls.append("scan")
+        return {"claude": {"healthy": False}}
+
+    monkeypatch.setattr(lane_health, "compute_lane_health", boom)
+
+    delegate._check_capacity_hint("codex")
+
+    assert calls == []
+    err = capsys.readouterr().err
+    assert "lane 'codex' has 2 task(s) in flight" in err
+    assert "claude" in err

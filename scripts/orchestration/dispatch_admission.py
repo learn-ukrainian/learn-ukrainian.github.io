@@ -77,9 +77,21 @@ no task record (#8717); the dispatch's later records replace it in place and
 keep the slot until the worker's pid is written.
 
 Before its costly preflights, a dispatch that would spawn on this host calls
-:func:`precheck`: memory and load only, read-only, and able only to refuse,
-so an overloaded host turns a dispatch away cheaply (#10799). It steps aside
-for a full disk, whose reaper attempt and hard stop stay with :func:`evaluate`.
+:func:`precheck`: memory, load and the test-slot queue, read-only, and able
+only to refuse, so an overloaded host turns a dispatch away cheaply (#10799).
+It steps aside for a full disk, whose reaper attempt and hard stop stay with
+:func:`evaluate`. A cheap disk refusal that skipped that reaper would change
+which dispatches get a reap attempt; the last reaper outcome is not a shared
+record here (#10816 residual).
+
+Separately, :class:`PreadmissionBounds` caps this process's own memory growth
+and wall-clock until admission decides (#10816). Every mode, read-only
+included, is under that cap. It is not an admission check:
+``--force-admission`` does not bypass it, and the thresholds above do not
+change. The bound is in-process (RSS growth and an interval timer) because
+the existing scope launcher holds a child for its whole life, and this cap
+has to come off once admission has decided so worktree creation keeps its
+own budget.
 
 Stdlib-only apart from sibling helpers, so capacity_pick and delegate can
 import it cheaply.
@@ -1477,16 +1489,217 @@ def host_failures(probe: HostProbe, limits: Thresholds) -> list[str]:
     return failures
 
 
-def precheck(mode: str, *, thresholds: Thresholds | None = None) -> AdmissionDecision | None:
-    """A refusal when this host's memory or load already fails, else ``None`` (#10799).
+def slot_queue_failure(slots: SlotQueueProbe, limits: Thresholds) -> str | None:
+    """The test-slot queue refusal :func:`evaluate` uses, or ``None`` when the queue is fine or unknown."""
+    if slots.depth is None or slots.depth <= limits.max_test_slot_queue:
+        return None
+    return (
+        f"test-slot queue {slots.depth} is longer than {limits.max_test_slot_queue} waiting runs "
+        f"({ENV_MAX_TEST_SLOT_QUEUE}={limits.max_test_slot_queue})"
+    )
 
-    Read-only and refusal-only: it reads the thresholds, ``/proc`` and the
-    disk usage and nothing else (no task record, sweep, pool or slot probe),
-    so dispatch can refuse an overloaded host before its costly preflights.
-    The refusal carries the failure text :func:`evaluate` gives. A disk at or
-    above its refuse threshold steps aside: :func:`evaluate` then runs the
-    reaper once and keeps its hard stop (#10776). ``None`` (an exempt mode,
-    memory and load pass or are unknown, or a full disk) admits nothing:
+
+# Pre-admission process bounds (#10816). Not admission checks: they stop this
+# process from growing without a limit or hanging, including a read-only
+# dispatch, which admission exempts. ``--force-admission`` does not bypass
+# them. The bound ends once admission has decided.
+ENV_PREADMISSION_TIMEOUT_S = "DISPATCH_PREADMISSION_TIMEOUT_S"
+ENV_PREADMISSION_MEMORY_MAX_BYTES = "DISPATCH_PREADMISSION_MEMORY_MAX_BYTES"
+PREADMISSION_TIMEOUT_S = 600.0
+PREADMISSION_MEMORY_MAX_BYTES = 2 * _GIB
+PREADMISSION_CHECK_INTERVAL_S = 0.25
+# 124 is the conventional timeout status this repository already uses.
+PREADMISSION_TIMEOUT_EXIT = 124
+PREADMISSION_MEMORY_EXIT = 125
+
+
+class PreadmissionBoundExceeded(BaseException):
+    """This process exceeded its pre-admission memory or wall-clock bound.
+
+    A ``BaseException`` so a broad ``except Exception`` in a preflight cannot
+    swallow the stop. ``cmd_dispatch`` turns it into :attr:`exit_code`.
+    """
+
+    def __init__(self, kind: str, exit_code: int, message: str) -> None:
+        self.kind = kind
+        self.exit_code = exit_code
+        super().__init__(message)
+
+
+def resident_bytes() -> int | None:
+    """Current RSS in bytes from ``/proc/self/status``, or ``None`` when it cannot be read."""
+    try:
+        text = Path("/proc/self/status").read_text(encoding="ascii", errors="replace")
+    except OSError:
+        return None
+    for line in text.splitlines():
+        if line.startswith("VmRSS:"):
+            fields = line.split()
+            try:
+                return int(fields[1]) * 1024
+            except (IndexError, ValueError):
+                return None
+    return None
+
+
+def _preadmission_alarm(_signum: int, _frame: Any) -> None:
+    bounds = _ACTIVE_BOUNDS
+    if bounds is not None and bounds.armed:
+        bounds.check()
+
+
+class PreadmissionBounds:
+    """RSS-growth cap and wall-clock deadline for the work before admission (#10816).
+
+    The sample is ``VmRSS``. An interval timer checks it, and
+    :func:`preadmission_checkpoint` checks it at the gates dispatch already
+    passes. Either breach raises :class:`PreadmissionBoundExceeded`. The
+    timer is restored on :meth:`disarm`, which dispatch calls once admission
+    has decided. Off the main thread, where ``signal.signal`` is illegal, the
+    checkpoints alone enforce the bound.
+    """
+
+    def __init__(
+        self,
+        *,
+        timeout_s: float,
+        memory_max_bytes: int,
+        clock: Callable[[], float] | None = None,
+        resident: Callable[[], int | None] | None = None,
+        interval_s: float = PREADMISSION_CHECK_INTERVAL_S,
+    ) -> None:
+        if timeout_s <= 0 or not math.isfinite(timeout_s):
+            raise ValueError(
+                f"{ENV_PREADMISSION_TIMEOUT_S}={timeout_s!r} must be a finite number of seconds greater than zero"
+            )
+        if memory_max_bytes <= 0:
+            raise ValueError(f"{ENV_PREADMISSION_MEMORY_MAX_BYTES}={memory_max_bytes!r} must be a positive byte count")
+        self.timeout_s = timeout_s
+        self.memory_max_bytes = memory_max_bytes
+        self.clock = clock or time.monotonic
+        self.resident = resident or resident_bytes
+        self.interval_s = interval_s
+        self.deadline = 0.0
+        self.baseline: int | None = None
+        self.armed = False
+        self._timer_installed = False
+        self._previous_handler: Any = None
+        self._previous_timer: tuple[float, float] = (0.0, 0.0)
+
+    @classmethod
+    def from_environ(cls, environ: Mapping[str, str] | None = None) -> PreadmissionBounds:
+        """Bounds from the process environment. Invalid values raise ``ValueError``."""
+        env = os.environ if environ is None else environ
+        timeout = _env_number(env, ENV_PREADMISSION_TIMEOUT_S, PREADMISSION_TIMEOUT_S, integer=False)
+        memory = int(_env_number(env, ENV_PREADMISSION_MEMORY_MAX_BYTES, PREADMISSION_MEMORY_MAX_BYTES, integer=True))
+        return cls(timeout_s=float(timeout), memory_max_bytes=memory)
+
+    def arm(self, *, alarm: bool = True) -> None:
+        """Start the deadline and the RSS baseline. ``alarm=False`` is the fake-clock seam."""
+        global _ACTIVE_BOUNDS
+        self.baseline = self.resident()
+        self.deadline = self.clock() + self.timeout_s
+        _ACTIVE_BOUNDS = self
+        self.armed = True
+        if alarm:
+            self._install_timer()
+        self.check()
+
+    def disarm(self) -> None:
+        """Stop the timer and restore whatever ``SIGALRM`` handler was in place."""
+        global _ACTIVE_BOUNDS
+        if _ACTIVE_BOUNDS is self:
+            _ACTIVE_BOUNDS = None
+        self.armed = False
+        self._restore_timer()
+
+    def check(self) -> None:
+        """Raise when the deadline has passed or RSS has grown past the cap."""
+        if not self.armed:
+            return
+        if self.clock() >= self.deadline:
+            raise PreadmissionBoundExceeded(
+                "timeout",
+                PREADMISSION_TIMEOUT_EXIT,
+                (
+                    f"pre-admission timed out after {self.timeout_s:g}s before host admission; "
+                    "the dispatch was stopped so it cannot freeze the caller"
+                ),
+            )
+        current = self.resident()
+        if current is None or self.baseline is None:
+            return
+        growth = current - self.baseline
+        if growth > self.memory_max_bytes:
+            raise PreadmissionBoundExceeded(
+                "memory",
+                PREADMISSION_MEMORY_EXIT,
+                (
+                    f"pre-admission memory grew by {growth} bytes, past the {self.memory_max_bytes} byte cap, "
+                    "before host admission; the dispatch was stopped so it cannot freeze the caller"
+                ),
+            )
+
+    def _install_timer(self) -> None:
+        try:
+            previous = signal.signal(signal.SIGALRM, _preadmission_alarm)
+        except (ValueError, OSError):
+            return
+        self._previous_handler = previous
+        self._timer_installed = True
+        try:
+            self._previous_timer = signal.getitimer(signal.ITIMER_REAL)
+            interval = min(self.interval_s, self.timeout_s)
+            signal.setitimer(signal.ITIMER_REAL, interval, interval)
+        except (ValueError, OSError):
+            self._timer_installed = False
+            self._previous_handler = None
+            with contextlib.suppress(ValueError, OSError):
+                signal.signal(signal.SIGALRM, previous)
+
+    def _restore_timer(self) -> None:
+        if not self._timer_installed:
+            return
+        self._timer_installed = False
+        try:
+            signal.setitimer(signal.ITIMER_REAL, 0)
+            if self._previous_handler is not None:
+                signal.signal(signal.SIGALRM, self._previous_handler)
+            delay, interval = self._previous_timer
+            if delay or interval:
+                signal.setitimer(signal.ITIMER_REAL, delay, interval)
+        except (ValueError, OSError):
+            return
+
+
+_ACTIVE_BOUNDS: PreadmissionBounds | None = None
+
+
+def preadmission_checkpoint() -> None:
+    """Check the active pre-admission bound, if dispatch has armed one."""
+    bounds = _ACTIVE_BOUNDS
+    if bounds is not None:
+        bounds.check()
+
+
+def disarm_preadmission_bounds() -> None:
+    """Disarm the active bound. A second call is a no-op."""
+    bounds = _ACTIVE_BOUNDS
+    if bounds is not None:
+        bounds.disarm()
+
+
+def precheck(mode: str, *, thresholds: Thresholds | None = None) -> AdmissionDecision | None:
+    """A refusal when this host's memory, load or test-slot queue already fails, else ``None`` (#10799).
+
+    Read-only and refusal-only: it reads the thresholds, ``/proc``, the
+    test-slot queue depth and the disk usage, and nothing else (no task
+    record, sweep or pool probe), so dispatch can refuse an overloaded host
+    before its costly preflights. The refusal carries the failure text
+    :func:`evaluate` gives. A disk at or above its refuse threshold steps
+    aside even when another check would refuse: :func:`evaluate` then runs
+    the reaper once and keeps its hard stop (#10776). ``None`` (an exempt
+    mode, the checks pass or are unknown, or a full disk) admits nothing:
     :func:`evaluate` under :func:`admission_lock` stays the decision. Invalid
     threshold environment variables raise ``ValueError``.
     """
@@ -1495,6 +1708,9 @@ def precheck(mode: str, *, thresholds: Thresholds | None = None) -> AdmissionDec
     limits = thresholds or load_thresholds()
     probe = probe_host()
     failures = host_failures(probe, limits)
+    slot_failure = slot_queue_failure(probe_test_slots(), limits)
+    if slot_failure is not None:
+        failures.append(slot_failure)
     if not failures:
         return None
     disk_used = probe_disk().used_percent
@@ -1554,11 +1770,9 @@ def evaluate(
     elif not pool.fits:
         failures.append(f"{pool.failure()} ({ENV_WORKER_MEM_RESERVE_GIB}={limits.worker_mem_reserve_gib:g})")
     slots = probe_test_slots()
-    if slots.depth is not None and slots.depth > limits.max_test_slot_queue:
-        failures.append(
-            f"test-slot queue {slots.depth} is longer than {limits.max_test_slot_queue} waiting runs "
-            f"({ENV_MAX_TEST_SLOT_QUEUE}={limits.max_test_slot_queue})"
-        )
+    slot_failure = slot_queue_failure(slots, limits)
+    if slot_failure is not None:
+        failures.append(slot_failure)
     if not disk_guard:
         disk, disk_failure = DiskCheck(probe=DiskProbe(skipped=DISK_GUARD_REUSE_SKIP)), None
     else:
