@@ -10,6 +10,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import WordAtlasArticle from "./WordAtlasArticle";
+import { bindAtlasTypeaheads } from "../lib/lexicon/atlas-typeahead";
 import {
   parseLexiconArticleSlug,
 } from "../lib/lexicon/atlas-lexicon-path";
@@ -352,9 +353,11 @@ export default function WordAtlasClientShell({
 
   useEffect(() => {
     if (!state || state.status !== "ready") return;
+    const cleanupSearch = bindAtlasTypeaheads(articleHostRef.current);
     const cleanupEty = bindEtymologyHandlers(articleHostRef.current);
     const cleanupHet = bindHeteronymHandlers(articleHostRef.current);
     return () => {
+      cleanupSearch();
       cleanupEty();
       cleanupHet();
     };

@@ -18,6 +18,8 @@ import delegate
 from scripts.agent_runtime import target_admission
 from scripts.agent_runtime.target_admission import ReviewAdmissionRefused, resolve_and_admit
 from scripts.review import reviewer_resolver
+from tests.claude_route_accounts import HOST_ACCOUNT
+from tests.claude_route_accounts import account as route_account
 
 
 @pytest.mark.parametrize("risk", ["low", "medium"])
@@ -31,6 +33,7 @@ def test_native_gemini_low_medium_review_retains_requested_seat(risk):
         attempt=False,
         snapshot=None,
         budget_seat="agy",
+        claude_account=HOST_ACCOUNT,
     )
     assert result == ("agy", "gemini-3.8-flash-high")
 
@@ -56,6 +59,7 @@ def test_gemini_review_attempt_refuses_high_risk_and_security(risk, path):
             snapshot=None,
             budget_seat="agy",
             changed_paths=(path,),
+            claude_account=HOST_ACCOUNT,
         )
 
 
@@ -1179,6 +1183,95 @@ def test_9959_no_capacity_refusal_lists_entire_resolver_trace(monkeypatch):
     assert "author" in refusal
 
 
+def test_10619_reselected_claude_reviewer_is_judged_on_the_selected_account(monkeypatch):
+    """Finding 1 through the real resolver: a b-bound request first selects codex, then returns to claude.
+
+    Sonnet is no high-risk reviewer, so admission first selects codex; codex is
+    near cap, and on 15a2840e reselection returned to claude on account a's
+    lane row (90% remaining) while b, the account the worker runs as, had 0.5%.
+    """
+    from tests.test_delegate_check_budget import _account_row, _accounts_budget, _default_claude_lane
+
+    budget = _accounts_budget(_default_claude_lane("healthy"), {"b": _account_row(0.5)})
+    budget["agents"]["codex"] = {"status": "near_cap", "remaining_pct": 0.5}
+    args = _args(
+        "--agent",
+        "claude",
+        "--model",
+        "claude-sonnet-5-5",
+        "--review-author-model",
+        "gemini-3.8-flash-high",
+        "--review-risk",
+        "high",
+        "--check-budget",
+    )
+    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: budget)
+    monkeypatch.setattr(delegate, "_load_reset_reserve", lambda *_a, **_k: {})
+    routing = delegate._DispatchRouting()
+
+    refusal, target = delegate._admit_dispatch_target(
+        args,
+        agent=args.agent,
+        trees=None,
+        route=delegate._dispatch_route(args, routing, language_lane=False, review_attempt=None),
+        claude_account=route_account("b"),
+    )
+
+    assert routing.requested_agent == "claude"
+    assert target is None, (target, routing.substitution)
+    assert "REVIEW_CAPACITY_UNAVAILABLE" in refusal and "claude-opus-5-5: quota bucket is near cap" in refusal
+
+
+@pytest.mark.parametrize(
+    ("account", "selected"), [("b", ("claude", "claude-opus-5-5")), ("a", ("codex", "gpt-6.1-sol"))]
+)
+def test_10619_review_headroom_stop_reads_the_selected_account(monkeypatch, tmp_path, account, selected):
+    """Finding 3 for reviewer selection: a's 84% weekly use excluded b's claude reviewers at an 80% cap."""
+    from tests.test_delegate_check_budget import _serve_headroom
+
+    _serve_headroom(tmp_path, monkeypatch, a_used=84.0, b_left=89.0)
+    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: _budget(codex="cool"))
+    monkeypatch.setattr(delegate, "_load_reset_reserve", lambda *_a, **_k: {})
+    args = _9959_review_args("claude", "claude-opus-5-5", "grok-4.7")
+    routing = delegate._DispatchRouting()
+
+    refusal, target = delegate._admit_dispatch_target(
+        args,
+        agent=args.agent,
+        trees=None,
+        route=delegate._dispatch_route(args, routing, language_lane=False, review_attempt=None),
+        claude_account=route_account(account),
+    )
+
+    assert refusal is None
+    assert (target.recipient, target.model) == selected
+
+
+def test_10619_red_team_initial_snapshot_reads_the_selected_account(monkeypatch):
+    """The red-team initial selection reads its snapshot through the selected account too."""
+    from tests.test_delegate_check_budget import _account_row, _accounts_budget, _default_claude_lane
+
+    budget = _accounts_budget(_default_claude_lane("healthy"), {"b": _account_row(0.5)})
+    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: budget)
+    seen: list = []
+
+    def admit(*_recipients, review_initial_snapshot=None, **_kwargs):
+        seen.append(review_initial_snapshot() if callable(review_initial_snapshot) else review_initial_snapshot)
+        raise ReviewAdmissionRefused("REVIEW_ROUTE_REFUSED: stop after the snapshot")
+
+    monkeypatch.setattr(target_admission, "resolve_and_admit", admit)
+    args = _9959_review_args("claude", "claude-opus-5-5", "grok-4.7")
+    args.review_mode = "red_team"
+
+    refusal, target = delegate._admit_dispatch_target(
+        args, agent=args.agent, trees=None, claude_account=route_account("b")
+    )
+
+    assert target is None and refusal
+    (snapshot,) = seen
+    assert snapshot["agents"]["claude"]["remaining_pct"] == pytest.approx(0.5)
+
+
 @pytest.mark.parametrize("flags", [(), ("--check-budget",), ("--check-budget", "--force-agent")])
 def test_9959_explicit_eligible_pick_keeps_model_and_seat(monkeypatch, flags):
     budget = _budget(claude="near_cap", codex="cool")
@@ -1327,7 +1420,12 @@ def test_9312_alias_without_model_records_only_the_alias(monkeypatch, capsys):
 def test_9312_ineligible_ukrainian_reviewer_has_no_code_substitution_hint():
     with pytest.raises(ReviewAdmissionRefused) as refused:
         resolve_and_admit(
-            ("grok",), model="grok-4.7", mode="read-only", review_dispatch=True, review_profile="ukrainian"
+            ("grok",),
+            model="grok-4.7",
+            mode="read-only",
+            review_dispatch=True,
+            review_profile="ukrainian",
+            claude_account=HOST_ACCOUNT,
         )
     assert "--review-profile ukrainian" in str(refused.value)
     assert "--review-author-model" not in str(refused.value)
@@ -1565,6 +1663,7 @@ def _review_target(model, *, attempt=False, seat="cursor", author="claude-opus-5
         attempt=attempt,
         snapshot=None,
         budget_seat=seat,
+        claude_account=HOST_ACCOUNT,
     )
 
 
@@ -1593,9 +1692,13 @@ def test_security_owned_path_direct_admission_applies_floor(risk, attempt):
     )
     if attempt:
         with pytest.raises(ReviewAdmissionRefused, match="ineligible"):
-            target_admission._resolve_review_target("claude", "claude-sonnet-5-5", **kwargs)
+            target_admission._resolve_review_target(
+                "claude", "claude-sonnet-5-5", **kwargs, claude_account=HOST_ACCOUNT
+            )
     else:
-        assert target_admission._resolve_review_target("claude", "claude-sonnet-5-5", **kwargs) == (
+        assert target_admission._resolve_review_target(
+            "claude", "claude-sonnet-5-5", **kwargs, claude_account=HOST_ACCOUNT
+        ) == (
             "claude",
             "claude-opus-5-5",
         )
@@ -1613,6 +1716,7 @@ def test_security_dispatch_public_admission_refuses_weak_attempt(risk):
             review_risk=risk,
             review_attempt=True,
             review_owned_paths=("scripts/delegate.py",),
+            claude_account=HOST_ACCOUNT,
         )
 
 
@@ -1628,6 +1732,7 @@ def test_security_changed_paths_cannot_be_hidden_by_ordinary_owned_paths():
             review_attempt=True,
             review_owned_paths=("ordinary.py",),
             review_changed_paths=("scripts/ocr/_credentials.py",),
+            claude_account=HOST_ACCOUNT,
         )
 
 
@@ -1643,6 +1748,7 @@ def test_security_direct_admission_without_author_refuses_weak_reviewer():
             snapshot=None,
             budget_seat="claude",
             owned_paths=("scripts/delegate.py",),
+            claude_account=HOST_ACCOUNT,
         )
 
 
@@ -2114,7 +2220,13 @@ def test_retired_review_attempt_refuses_before_route_and_budget_probe(monkeypatc
     monkeypatch.setattr(delegate, "_fetch_routing_budget", fail)
     with pytest.raises(ReviewAdmissionRefused) as refused:
         resolve_and_admit(
-            ("gemini",), mode="read-only", review_dispatch=True, review_attempt=True, review_risk=risk, route=fail
+            ("gemini",),
+            mode="read-only",
+            review_dispatch=True,
+            review_attempt=True,
+            review_risk=risk,
+            route=fail,
+            claude_account=HOST_ACCOUNT,
         )
     assert str(refused.value) == (
         "REVIEW_ATTEMPT_IDENTITY_REFUSED: review attempt refused: "
@@ -2139,6 +2251,7 @@ def test_review_admission_refuses_a_route_ignoring_the_reviewer_selector():
             model="gpt-6.1-sol",
             review_dispatch=True,
             route=lambda request: ("cursor", "grok-4.7", "budget"),
+            claude_account=HOST_ACCOUNT,
         )
 
 
@@ -2308,6 +2421,7 @@ def test_review_substitution_disabled_notice_no_dangling_separator(
         fallbacks={},
         review_select=lambda _p, _r: ("claude", "claude-opus-5-5"),
         review_trusted_inputs=review_trusted_inputs,
+        claude_account=HOST_ACCOUNT,
     )
     assert res == "claude"
     err = capsys.readouterr().err.strip()
@@ -3540,8 +3654,64 @@ def test_review_facts_pr_lookup_is_bound_to_the_frozen_head(tmp_path, monkeypatc
     if metadata == "intact":
         facts = delegate._dispatch_review_facts(args, ())
         assert facts.head_sha == head and facts.existing_families == {"openai"}
-        assert facts.resolver_inputs(risk="critical").author_models == ("gpt-6.1-sol",)
+        assert facts.author_models == ("gpt-6.1-sol",)
     else:
         with pytest.raises(recorder.BranchFactsError) as refused:
             delegate._dispatch_review_facts(args, ())
         assert refused.value.code == recorder.FACTS_TARGET_UNKNOWN
+
+
+class _AdmittedRoute(Exception):
+    """Raised right after admission: the dispatch's admitted seat and model."""
+
+
+def _dispatch_until_admitted(monkeypatch, args):
+    """Run ``cmd_dispatch`` through admission and stop before any side effect; return the admitted route."""
+
+    def stop(agent, model):
+        raise _AdmittedRoute(agent, model)
+
+    monkeypatch.setattr(delegate, "_credit_period_refusal", stop)
+    monkeypatch.setattr(delegate, "_load_reset_reserve", lambda *_a, **_k: {})
+    try:
+        rc = delegate.cmd_dispatch(args)
+    except _AdmittedRoute as admitted:
+        return admitted.args
+    return rc
+
+
+def test_10733_reselected_claude_reviewer_resolves_its_account_before_admission(tmp_path, monkeypatch, capsys):
+    """#10733 P1: a critical codex review for a GPT author must not select Claude on an unresolved account.
+
+    The default-account file is invalid (``claude_account_default_file_invalid``). On
+    ef19215956 the codex request skipped account resolution, reviewer admission
+    selected claude-opus-5-5 with zero resolution calls, and the record would have
+    named the built-in account a. Every final Claude route resolves its account first;
+    an unresolved one removes the Claude seats, so the next eligible reviewer is chosen.
+    """
+    from scripts.agent_runtime import attempt_boundary
+    from tests.test_delegate import _invalid_default_file
+
+    _invalid_default_file(tmp_path, monkeypatch, "unknown_label")
+    with pytest.raises(attempt_boundary.ClaudeAccountRefused, match="claude_account_default_file_invalid"):
+        attempt_boundary.resolve_dispatch_claude_account(None)
+    calls: list[object] = []
+    resolve = attempt_boundary.resolve_dispatch_claude_account
+
+    def counted(explicit, **kwargs):
+        calls.append(explicit)
+        return resolve(explicit, **kwargs)
+
+    monkeypatch.setattr(attempt_boundary, "resolve_dispatch_claude_account", counted)
+    budget = _budget(claude="cool", codex="cool")
+    budget["agents"]["grok"] = {"status": "cool", "remaining_pct": 60}
+    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: budget)
+    args = _args("--review-author-model", "gpt-6.1-sol", "--review-risk", "critical", "--dry-run")
+
+    admitted = _dispatch_until_admitted(monkeypatch, args)
+
+    err = capsys.readouterr().err
+    assert calls, "the dispatch never resolved the account its claude routes run as"
+    assert isinstance(admitted, tuple), (admitted, err)
+    assert admitted[0] != "claude", (admitted, err)
+    assert admitted == ("grok", "grok-4.7"), err

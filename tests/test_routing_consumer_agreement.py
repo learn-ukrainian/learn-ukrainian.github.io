@@ -84,6 +84,7 @@ from scripts.review import reviewer_scheduler
 from scripts.review.model_catalog import retired_model_refusal
 from scripts.review.reviewer_resolver import OPENAI_FRONTIER, ResolverInputs, evaluate_candidate
 from tests.api.test_routing_budget import _configure_base
+from tests.claude_route_accounts import HOST_ACCOUNT
 
 NOW = datetime(2026, 10, 5, 12, 0, tzinfo=UTC)
 FETCHED = "2026-10-05T11:59:30Z"
@@ -618,7 +619,7 @@ def test_picker_cli_reports_the_same_rows(snapshot, monkeypatch, capsys):
 
 def _guard(budget: dict[str, Any], monkeypatch: pytest.MonkeyPatch, model: str) -> str:
     monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: budget)
-    return delegate._resolve_agent_with_budget_guard("codex", requested_model=model, fallbacks={"codex": "claude"})
+    return delegate._resolve_agent_with_budget_guard("codex", requested_model=model, fallbacks={"codex": "claude"}, claude_account=HOST_ACCOUNT)
 
 
 @pytest.mark.parametrize("snapshot", CASE_PARAMS, indirect=True)
@@ -641,7 +642,7 @@ def test_budget_guard_honours_the_hot_label_source(snapshot, monkeypatch):
     _case, budget = snapshot
     monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: budget)
     facts = owner(budget, "cursor")
-    chosen = delegate._resolve_agent_with_budget_guard("cursor", requested_model=None, fallbacks={"cursor": "claude"})
+    chosen = delegate._resolve_agent_with_budget_guard("cursor", requested_model=None, fallbacks={"cursor": "claude"}, claude_account=HOST_ACCOUNT)
     if budget["diagnostics"].get("stale") or facts.capacity != credit_lane.CAPACITY_AVOID:
         assert chosen == "cursor"
     else:
@@ -678,7 +679,7 @@ def test_catalog_disallowed_route_is_refused_before_any_provider_call(snapshot):
 def test_resolver_agrees_with_owner_route_facts(snapshot):
     case, budget = snapshot
     result = evaluate_candidate(
-        OPENAI_FRONTIER, ResolverInputs(author_model="claude-opus-5-5", routing_snapshot=budget)
+        OPENAI_FRONTIER, ResolverInputs(author_model="claude-opus-5-5", routing_snapshot=budget, claude_account=HOST_ACCOUNT)
     )
     # AC-01 separates review eligibility from writer pace forecasts. These
     # fixtures retain real window exhaustion, runtime and contradicted fresh credit gates.
@@ -845,7 +846,7 @@ def test_credit_relief_control_is_granted_by_every_consumer(snapshot, monkeypatc
     facts = owner(budget, model=ROUTE_MODEL)
     assert facts.capacity == credit_lane.CAPACITY_VERIFIED and facts.credit_relief
     result = evaluate_candidate(
-        OPENAI_FRONTIER, ResolverInputs(author_model="claude-opus-5-5", routing_snapshot=budget)
+        OPENAI_FRONTIER, ResolverInputs(author_model="claude-opus-5-5", routing_snapshot=budget, claude_account=HOST_ACCOUNT)
     )
     assert result.status != "excluded", result.reason
     _passed, assessment = coordinator._health_assessment(budget, coordinator.load_config()["health"], now=NOW)
@@ -870,7 +871,7 @@ def test_contradicted_credit_relief_is_avoided_by_every_consumer(snapshot, monke
     assert facts.credit["state"] == RELIEF_CONTRADICTIONS[case.mutate]
 
     result = evaluate_candidate(
-        OPENAI_FRONTIER, ResolverInputs(author_model="claude-opus-5-5", routing_snapshot=budget)
+        OPENAI_FRONTIER, ResolverInputs(author_model="claude-opus-5-5", routing_snapshot=budget, claude_account=HOST_ACCOUNT)
     )
     if case.mutate == "probe_relabelled_stale_after_publication":
         assert result.status == "eligible" and result.credit is None
@@ -902,7 +903,7 @@ def test_cursor_auto_hot_label_is_not_cleared_by_an_on_pace_weekly_window(snapsh
     assert facts.capacity == credit_lane.CAPACITY_AVOID
     assert _rows(budget)["cursor"]["avoid"] is True
     monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: budget)
-    chosen = delegate._resolve_agent_with_budget_guard("cursor", requested_model=None, fallbacks={"cursor": "claude"})
+    chosen = delegate._resolve_agent_with_budget_guard("cursor", requested_model=None, fallbacks={"cursor": "claude"}, claude_account=HOST_ACCOUNT)
     assert chosen == "claude"
 
 
@@ -944,7 +945,7 @@ def test_weekly_pace_hot_label_is_decided_by_the_owner_for_every_consumer(snapsh
     assert ("codex" in capacity_pick.cooler_lanes(list(rows.values()))) is clears
 
     result = evaluate_candidate(
-        OPENAI_FRONTIER, ResolverInputs(author_model="claude-opus-5-5", routing_snapshot=budget)
+        OPENAI_FRONTIER, ResolverInputs(author_model="claude-opus-5-5", routing_snapshot=budget, claude_account=HOST_ACCOUNT)
     )
     assert result.status == "eligible", result.reason
 
@@ -989,7 +990,7 @@ def test_weekly_pace_hot_label_without_verified_freshness_stays_hot_for_every_co
     assert "codex" not in capacity_pick.cooler_lanes(list(rows.values()))
 
     result = evaluate_candidate(
-        OPENAI_FRONTIER, ResolverInputs(author_model="claude-opus-5-5", routing_snapshot=budget)
+        OPENAI_FRONTIER, ResolverInputs(author_model="claude-opus-5-5", routing_snapshot=budget, claude_account=HOST_ACCOUNT)
     )
     assert result.status == "eligible", result.reason
 
@@ -1041,7 +1042,7 @@ def test_reset_covered_deficit_is_decided_by_the_owner_for_every_consumer(snapsh
     assert ("codex" in capacity_pick.cooler_lanes(list(rows.values()))) is covered
 
     result = evaluate_candidate(
-        OPENAI_FRONTIER, ResolverInputs(author_model="claude-opus-5-5", routing_snapshot=budget)
+        OPENAI_FRONTIER, ResolverInputs(author_model="claude-opus-5-5", routing_snapshot=budget, claude_account=HOST_ACCOUNT)
     )
     assert result.status == "eligible", result.reason
 

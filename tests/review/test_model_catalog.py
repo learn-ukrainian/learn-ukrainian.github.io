@@ -767,13 +767,14 @@ def test_review_capacity_fixture_is_pinned_and_scope_bounded():
 
 
 # Literal digests bind the #10205 Cursor wire pin and allowlist revision and
-# the #10262 explicit AGY review-risk refusals in both configurations; see SPEC.md.
+# the #10262 explicit AGY review-risk refusals in both configurations, and the #10630
+# capture-driver account; see SPEC.md.
 PINNED_DIGESTS = {
     "routing-10263.json.gz": "3385853a0070ab9a2f77e1fb40d9178ce195e44e7fd6b8c8245702ec529b7d16",
     "SHA256SUMS": "4cba22dff8338f75c8ae96b35119c3da2bea3b3d7d6418c49e466ddc0ddf73a8",
-    "SPEC.md": "958f43d7368d0552cbf1b5706df35da56cdc9408e4834e05bb0911754ae58455",
+    "SPEC.md": "7a9f8d2e02c422edf21582162c0e516f637fc6c2e11ce16688c8f3b898f863f5",
     "baseline.json.gz": "2cf8945084c13d7ce0b55e98a91522e897baee5ba53648f21ec7ae7b66cdaa5d",
-    "capture.py": "4593850ca030a5e25fe7b0d09d629bc8014322a1c574070fb0b317e3bc368b3b",
+    "capture.py": "7571955c784ecf973931ba3b3a86c50bc4ee9f5bf2c2bdcfdbcbe096381222ea",
     "inputs.json": "4f9d9dd89acff3872a9e627a9627516c65b7e410da28464a4dda9105c0ec34b0",
     "no-cli/SHA256SUMS": "7e5b78a91bd237a012805983da7d40f854c9802eae969d0f5e4fabcc0d2afea8",
     "no-cli/baseline.json.gz": "d3b4e4776f701d3f1304a48de75c0e9bb1d488a1837000bb9113957eace9896d",

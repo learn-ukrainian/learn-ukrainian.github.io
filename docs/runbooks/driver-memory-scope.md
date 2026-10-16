@@ -137,6 +137,112 @@ cap is kept), so `pytest -n auto` and `-n logical` stay within the cap. An expli
 `-n <number>` is not rewritten. CI does not enter a driver scope and keeps its
 own worker count.
 
+## CPU-time containment
+
+**Status: PROPOSED (#10735).** The ceiling below is not applied anywhere. It needs
+designated approval, then routine host maintenance by the accountable driver.
+`packaging/systemd/dropins/lu.slice.d/20-cpu.conf.example` carries the keys; the
+`.example` suffix is never loaded, and no script (including
+`scripts/ops/lu_slice_apply.sh`) installs it. Installation is manual, below.
+
+| Key | Proposed value |
+| --- | --- |
+| `CPUAccounting` | `yes` |
+| `CPUQuota` | `1200%` |
+| `CPUQuotaPeriodSec` | `100ms` |
+| `CPUWeight` | `50` |
+
+Rationale: these are the reference values for the current host class. The host
+sizing and the measured evidence behind them live in the private operations
+notes (see "Limits are set per deployment"), not in this public tree.
+`CPUQuota=1200%` with `CPUQuotaPeriodSec=100ms` is an average cap per period: the
+slice and every descendant together may use up to 1.2 CPU-seconds in each 100 ms
+window, a long-run average of twelve CPUs. It does not reserve any CPUs for
+interactive services. On a host with more than twelve CPUs the slice can still
+run on all of them at once until its quota for the window is spent, and is then
+throttled until the next window. That quota (1.2 CPU-seconds per 100 ms, then
+throttle) is the real cap. `CPUWeight=50` (default 100) is not a cap: it only
+makes the slice yield CPU to its siblings while the parent cgroup is contended,
+and does nothing when the parent has idle CPU. Re-measure before approval and
+after any workload change.
+
+Semantics: systemd percentages are per CPU, so `100%` is one CPU and `1200%` is
+twelve. `CPUQuota` caps CPU time per `CPUQuotaPeriodSec` for the whole slice and
+every descendant; it is not a load-average bound and not a thread-count bound
+(many threads share the same quota). `CPUWeight` only matters under contention.
+The memory limits are separate and unchanged.
+
+**Do not touch the existing memory limits drop-in** (`lu.slice.d/10-limits.conf`).
+Add only the new file beside it, and re-verify the memory properties after every
+change, as below.
+
+### Apply (after approval)
+
+First record the memory properties, so the verification can compare against them:
+
+```bash
+systemctl --user show lu.slice -p MemoryHigh -p MemoryMax -p MemorySwapMax
+```
+
+Then install the persistent drop-in. It is the only apply path; there is no
+`set-property` trial, because a runtime control drop-in outranks the unit
+directory and can mask a later `20-cpu.conf`.
+
+```bash
+install -m 0644 packaging/systemd/dropins/lu.slice.d/20-cpu.conf.example \
+  "$HOME/.config/systemd/user/lu.slice.d/20-cpu.conf"
+systemctl --user daemon-reload
+```
+
+`daemon-reload` updates the live cgroup without restarting or stopping scopes.
+
+### Verify (effective values only)
+
+Never judge from the drop-in text. Read what the manager and the kernel report:
+
+```bash
+systemctl --user show lu.slice -p CPUAccounting -p CPUQuotaPerSecUSec -p CPUQuotaPeriodUSec -p CPUWeight -p MemoryMax -p MemoryHigh -p MemorySwapMax
+```
+
+Expect `CPUAccounting=yes`, `CPUQuotaPerSecUSec=12s`, `CPUQuotaPeriodUSec=100ms`,
+`CPUWeight=50`, and `MemoryHigh`, `MemoryMax`, `MemorySwapMax` equal to the
+snapshot recorded before the change. Then read the slice's cgroup: `cpu.max` is
+`<quota> <period>`, and the apply-time expected line is `1200000 100000`;
+`cpu.weight` must read `50`.
+
+### Observe
+
+Sample every 60 s for at least 24 hours of normal fleet operation and across a
+controlled 10-worker pytest burst:
+
+- `cpu.stat`: `nr_throttled` and `throttled_usec` (growth shows the ceiling bites);
+- `cpu.pressure` (PSI) on the slice;
+- test-slot waits (`TEST SLOTS: waiting`) and their duration;
+- Monitor `/api/health` latency, which must stay responsive during the burst.
+
+If a ceiling that contains the burst also starves interactive services, stop,
+report the measurements and propose weights only.
+
+### Rollback
+
+```bash
+rm "$HOME/.config/systemd/user/lu.slice.d/20-cpu.conf"
+systemctl --user daemon-reload
+systemctl --user show lu.slice -p CPUAccounting -p CPUQuotaPerSecUSec -p CPUQuotaPeriodUSec -p CPUWeight -p MemoryMax -p MemoryHigh -p MemorySwapMax
+```
+
+Remove only `20-cpu.conf`; the `10-limits.conf` memory drop-in is never touched.
+Re-read the manager values and the slice's `cpu.max` and `cpu.weight`. They are
+expected to return to the unlimited defaults: `CPUQuotaPerSecUSec=infinity`,
+`cpu.weight` back to the default `100`, and `cpu.max` unlimited. On cgroup v2
+`cpu.max` is `<quota> <period>`, so an unlimited slice reads `max 100000` (the
+period is kept); compare the first field with `max` and treat `max <period>` as
+cleared. The memory properties must equal the snapshot recorded before the change.
+
+If the first field of `cpu.max` is not `max`, or if `MemoryHigh`, `MemoryMax` or
+`MemorySwapMax` differ from that snapshot, stop and report to the driver; do not
+add a runtime override.
+
 ## Death and admission behavior
 
 `OOMPolicy=continue` prevents systemd from terminating every survivor after a

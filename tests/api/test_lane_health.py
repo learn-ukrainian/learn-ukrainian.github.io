@@ -20,6 +20,7 @@ from scripts.api.lane_health import (
     scan_lane_health,
 )
 from scripts.delegate import _resolve_agent_with_budget_guard
+from tests.claude_route_accounts import HOST_ACCOUNT
 
 
 def test_normalize_agent_name():
@@ -344,7 +345,7 @@ def test_delegate_prints_warning(monkeypatch, capsys):
 
     monkeypatch.setattr("scripts.delegate._fetch_routing_budget", lambda: mock_payload)
 
-    res = _resolve_agent_with_budget_guard("codex", fallbacks={})
+    res = _resolve_agent_with_budget_guard("codex", fallbacks={}, claude_account=HOST_ACCOUNT)
     assert res == "codex"
 
     # Capture outputs

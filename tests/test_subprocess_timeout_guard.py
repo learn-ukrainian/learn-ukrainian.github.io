@@ -17,14 +17,17 @@ different timeout-less call cannot rotate into a vacated qualname slot (#7213).
 
 from __future__ import annotations
 
+import ast
 import os
 import re
 import subprocess
+import sys
 import textwrap
 from pathlib import Path
 
 import pytest
 
+from scripts.ci import subprocess_timeout_guard as guard
 from scripts.ci.subprocess_timeout_guard import (
     ALLOWLIST_KEY_PARTS,
     SHAPE_HASH_HEX_LEN,
@@ -101,6 +104,148 @@ def test_subprocess_timeout_allowlist_is_sorted_and_valid() -> None:
     assert entries == sort_allowlist_entries(entries), SORT_ADVICE
     for entry in entries:
         validate_allowlist_entry(entry, _REPO_ROOT)
+
+
+def test_cached_parse_identity_is_hashable_in_project_interpreter(tmp_path: Path) -> None:
+    path = tmp_path / "calls.py"
+    path.write_text("import subprocess\nsubprocess.run(['same'])\n", encoding="utf-8")
+    result = subprocess.run(
+        [sys.executable, "-c", textwrap.dedent("""\
+            import ast
+            import sys
+            from pathlib import Path
+            from scripts.ci.test_source_cache import parse_test_source, read_test_source
+
+            path = Path(sys.argv[1])
+            source = read_test_source(path)
+            tree = parse_test_source(path)
+            assert isinstance(hash((source, tree)), int)
+            assert parse_test_source(path) is tree
+            assert ast.parse(source) != tree
+            print("hashable key; reused parse identity")
+            """), str(path)],
+        cwd=_REPO_ROOT, capture_output=True, text=True, timeout=30,
+    )
+    assert result.returncode == 0, result.stderr
+    assert result.stdout == "hashable key; reused parse identity\n"
+
+
+def test_cached_findings_refresh_after_edit_and_cannot_be_mutated(tmp_path: Path) -> None:
+    path = tmp_path / "calls.py"
+    source = "import subprocess\nsubprocess.run(['old'])\n"
+    path.write_text(source, encoding="utf-8")
+    tree = guard.parse_test_source(path)
+    expected = timeout_less_calls_from_source(source)
+    first = timeout_less_calls(path)
+    second = timeout_less_calls(path)
+    assert len(expected) == 1
+    assert isinstance(first, list) and isinstance(second, list)
+    assert first == second == expected
+    assert first is not second
+    assert guard.parse_test_source(path) is tree
+    first.clear()
+    third = timeout_less_calls(path)
+    assert third == second == expected
+    assert third is not second
+
+    path.write_text("import subprocess\nsubprocess.run(['new'], timeout=30)\n", encoding="utf-8")
+    assert timeout_less_calls(path) == []
+    assert guard.parse_test_source(path) is not tree
+    changed_source = "import subprocess\nsubprocess.run(['other'])\n"
+    path.write_text(changed_source, encoding="utf-8")
+    changed = timeout_less_calls(path)
+    assert len(changed) == 1
+    assert changed == timeout_less_calls_from_source(changed_source)
+    assert changed[0].shape_hash != expected[0].shape_hash
+
+
+def test_cached_findings_preserve_syntax_errors_and_path_identity(tmp_path: Path) -> None:
+    good = tmp_path / "good.py"
+    broken = tmp_path / "broken.py"
+    source = "import subprocess\nsubprocess.call(['same'])\n"
+    good.write_text(source, encoding="utf-8")
+    broken.write_text(source, encoding="utf-8")
+    assert timeout_less_calls(good) == timeout_less_calls(broken)
+    broken.write_text("import subprocess\nsubprocess.call(\n", encoding="utf-8")
+    with pytest.raises(SyntaxError) as exc:
+        timeout_less_calls(broken)
+    assert exc.value.filename == str(broken)
+
+
+@pytest.mark.parametrize("root", [_SCRIPTS_ROOT, _TESTS_ROOT], ids=["scripts", "tests"])
+def test_cached_findings_equal_uncached_findings_on_full_tree(root: Path) -> None:
+    for path in sorted(root.rglob("*.py")):
+        source = path.read_text(encoding="utf-8")
+        expected = timeout_less_calls_from_source(source, filename=str(path))
+        assert timeout_less_calls(path) == expected, path
+        assert timeout_less_calls(path) == expected, path
+
+
+# Import shapes the former line-anchored prefilter skipped (#10782).
+_NON_LINE_ANCHORED_IMPORTS = {
+    "nested-block": "if True: import subprocess\nsubprocess.run(['echo'])\n",
+    "semicolon": "x = 1; import subprocess\nsubprocess.run(['echo'])\n",
+    "backslash-continuation": "import \\\nsubprocess\nsubprocess.run(['echo'])\n",
+    "from-import-after-semicolon": "x = 1; from subprocess import run\nrun(['echo'])\n",
+    "nfkc-normalised-identifier": "import \uff53ubprocess\nsubprocess.run(['echo'])\n",
+}
+
+
+@pytest.mark.parametrize("source", _NON_LINE_ANCHORED_IMPORTS.values(), ids=_NON_LINE_ANCHORED_IMPORTS.keys())
+def test_non_line_anchored_subprocess_imports_are_reported_by_both_entry_points(
+    source: str, tmp_path: Path
+) -> None:
+    from_source = timeout_less_calls_from_source(source)
+    path = tmp_path / "calls.py"
+    path.write_text(source, encoding="utf-8")
+    from_path = timeout_less_calls(path)
+    assert len(from_source) == 1
+    assert from_path == from_source
+
+
+@pytest.mark.parametrize("source", _NON_LINE_ANCHORED_IMPORTS.values(), ids=_NON_LINE_ANCHORED_IMPORTS.keys())
+def test_non_line_anchored_subprocess_import_fails_the_cli(
+    source: str, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    test_file = tmp_path / "tests" / "test_shape.py"
+    test_file.parent.mkdir(parents=True)
+    test_file.write_text(source, encoding="utf-8")
+    assert main([str(test_file), "--root", str(tmp_path)]) == 1
+    assert "tests/test_shape.py" in capsys.readouterr().err
+
+
+def test_prefilter_still_skips_sources_that_cannot_import_subprocess() -> None:
+    assert timeout_less_calls_from_source("import os\nos.system('true')\n") == []
+    assert timeout_less_calls_from_source("") == []
+
+
+@pytest.mark.parametrize("root", [_SCRIPTS_ROOT, _TESTS_ROOT], ids=["scripts", "tests"])
+def test_prefilter_findings_equal_unfiltered_ast_findings_on_full_tree(root: Path) -> None:
+    """The prefilter may only skip files the AST visitor would not flag (#10782)."""
+    for path in sorted(root.rglob("*.py")):
+        source = path.read_text(encoding="utf-8")
+        unfiltered = guard.timeout_less_calls_from_tree(ast.parse(source, filename=str(path)))
+        assert timeout_less_calls(path) == unfiltered, path
+        assert timeout_less_calls_from_source(source, filename=str(path)) == unfiltered, path
+
+
+def test_cached_findings_reuse_the_visitor(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    path = tmp_path / "calls.py"
+    source = "import subprocess\nsubprocess.run(['same'])\n"
+    path.write_text(source, encoding="utf-8")
+    expected = timeout_less_calls_from_source(source)
+    assert len(expected) == 1
+    calls = []
+    original = guard.timeout_less_calls_from_tree
+
+    def counted(tree):
+        calls.append(tree)
+        return original(tree)
+
+    monkeypatch.setattr(guard, "timeout_less_calls_from_tree", counted)
+    assert timeout_less_calls(path) == expected
+    assert timeout_less_calls(path) == expected
+    assert len(calls) == 1
 
 
 def test_no_unallowlisted_timeout_less_subprocess_calls_under_scripts() -> None:

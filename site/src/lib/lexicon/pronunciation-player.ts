@@ -105,7 +105,11 @@ export function mountPronunciationPlayer(root: HTMLElement): () => void {
     if (utterance) {
       utterance.onstart = utterance.onend = utterance.onerror = null;
       utterance = undefined;
-      synthesis.cancel();
+      try {
+        synthesis.cancel();
+      } catch {
+        // Platform cancellation failure must not interrupt local cleanup.
+      }
     }
     if (audio) {
       audio.onended = audio.onpause = audio.onerror = null;
@@ -188,7 +192,7 @@ export function mountPronunciationPlayer(root: HTMLElement): () => void {
       if (phase === 'playing') startBudget(current);
       phase = 'pending';
       label();
-      speakWithSynthesis(current);
+      try { speakWithSynthesis(current); } catch { failed(); }
     } else {
       failed();
     }

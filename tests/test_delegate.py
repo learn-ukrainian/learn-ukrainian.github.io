@@ -50,6 +50,7 @@ from scripts.orchestration import job_host_exec, worktree_claims
 from scripts.review.receipts.ledger import REVIEW_TOOLS
 from tests import _worktree_artifact_links as worktree_artifact_links
 from tests.agent_runtime.adapters.kimi_admitted import admitted_tool_config
+from tests.claude_route_accounts import HOST_ACCOUNT, account
 from tests.rules_core_view import rules_core_absent_when_marked  # noqa: F401  (autouse: serves @rules_core_absent)
 from tests.test_ask_review_admission_floor import ordinary_review_scope as ordinary_review_scope
 from tests.test_ask_review_admission_floor import write_code_review_manifest
@@ -7304,6 +7305,129 @@ def test_explicit_label_is_not_blocked_by_an_invalid_default_file(tmp_tasks_dir,
     assert _dry_run_claude_dispatch(tmp_path, monkeypatch, "claude-explicit-over-invalid", "--claude-account", "a") == 0
 
 
+@pytest.mark.parametrize("source", ["explicit", "default-file"])
+def test_check_budget_judges_the_selected_claude_account(tmp_tasks_dir, tmp_path, monkeypatch, capsys, source):
+    """#10619: b with headroom keeps an explicit Opus dispatch while the default account a is exhausted.
+
+    On 50016b7b2e this refused: the guard read only the lane row (account a),
+    hard-substituted codex, and codex cannot run Opus.
+    """
+    from tests.test_delegate_check_budget import _UNVERIFIED_ROW, _account_row, _accounts_budget, _default_claude_lane
+
+    _bind_claude_account_b(tmp_path, monkeypatch)
+    extra = ["--claude-account", "b"] if source == "explicit" else []
+    if source == "default-file":
+        _default_account_file(tmp_path, monkeypatch, b"b\n")
+    budget = _accounts_budget(_default_claude_lane("hot"), {"a": _UNVERIFIED_ROW, "b": _account_row(89.0)})
+    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: budget)
+    task_id = f"claude-budget-account-{source}"
+
+    rc = _dry_run_claude_dispatch(
+        tmp_path, monkeypatch, task_id, "--model", "claude-opus-5-5", "--check-budget", *extra
+    )
+
+    err = capsys.readouterr().err
+    assert rc == 0, err
+    assert "HARD AUTO-SUBSTITUTE" not in err and "ROUTING REFUSED" not in err
+    state = delegate._read_state(delegate._state_path(task_id))
+    assert (state["status"], state["agent"], state["model"]) == ("dry_run", "claude", "claude-opus-5-5")
+    assert state["substitution"] is None
+    assert (state["claude_account"], state["claude_account_source"]) == ("b", source)
+
+
+@pytest.mark.parametrize(
+    ("extra", "b_left"), [(["--claude-account", "a"], 89.0), ([], 89.0), (["--claude-account", "b"], 0.5)]
+)
+def test_check_budget_refuses_an_exhausted_claude_account_as_before(
+    tmp_tasks_dir, tmp_path, monkeypatch, capsys, extra, b_left
+):
+    """The default label still reads the lane row, and a b as exhausted as a is refused the same way."""
+    from tests.test_delegate_check_budget import _account_row, _accounts_budget, _default_claude_lane
+
+    _bind_claude_account_b(tmp_path, monkeypatch)
+    budget = _accounts_budget(_default_claude_lane("near_cap"), {"b": _account_row(b_left)})
+    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: budget)
+
+    rc = _dry_run_claude_dispatch(
+        tmp_path, monkeypatch, "claude-budget-exhausted", "--model", "claude-opus-5-5", "--check-budget", *extra
+    )
+
+    assert rc == 2
+    assert (
+        "❌ ROUTING REFUSED: substitute --agent codex rejects explicit --model claude-opus-5-5"
+        in capsys.readouterr().err
+    )
+    assert not delegate._state_path_no_create("claude-budget-exhausted").exists()
+
+
+@pytest.mark.parametrize(
+    ("extra", "b_left", "admitted"),
+    [
+        (["--claude-account", "b"], 89.0, True),
+        (["--claude-account", "b"], 15.0, False),
+        (["--claude-account", "a"], 89.0, False),
+        ([], 89.0, False),
+    ],
+)
+def test_headroom_stop_reads_the_selected_claude_account(
+    tmp_tasks_dir, tmp_path, monkeypatch, capsys, extra, b_left, admitted
+):
+    """#10619 finding 3: a's 84% weekly use held b (89% left) at an 80% cap after the route admitted b.
+
+    On 15a2840e every case here refused with MODEL_HEADROOM; b is now held only by its own meter.
+    """
+    from tests.test_delegate_check_budget import _serve_headroom
+
+    _bind_claude_account_b(tmp_path, monkeypatch)
+    _serve_headroom(tmp_path, monkeypatch, a_used=84.0, b_left=b_left)
+    task_id = "claude-headroom-account"
+
+    rc = _dry_run_claude_dispatch(tmp_path, monkeypatch, task_id, "--model", "claude-opus-5-5", *extra)
+
+    err = capsys.readouterr().err
+    if admitted:
+        assert rc == 0, err
+        state = delegate._read_state(delegate._state_path(task_id))
+        assert (state["status"], state["agent"], state["model"], state["claude_account"]) == (
+            "dry_run",
+            "claude",
+            "claude-opus-5-5",
+            "b",
+        )
+    else:
+        assert rc == 2
+        assert "MODEL_HEADROOM: claude-opus-5-5 is held for plan headroom" in err
+        assert not delegate._state_path_no_create(task_id).exists()
+
+
+def test_ordinary_check_budget_dispatch_records_the_unknown_account(tmp_tasks_dir, tmp_path, monkeypatch, capsys):
+    """#10619 finding 4: without --force-agent the record keeps the account evaluated and capacity unknown."""
+    from tests.test_delegate_check_budget import _UNVERIFIED_ROW, _accounts_budget, _default_claude_lane
+
+    _bind_claude_account_b(tmp_path, monkeypatch)
+    budget = _accounts_budget(_default_claude_lane("hot"), {"a": _UNVERIFIED_ROW, "b": _UNVERIFIED_ROW})
+    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: budget)
+    task_id = "claude-budget-unknown-account"
+
+    rc = _dry_run_claude_dispatch(
+        tmp_path, monkeypatch, task_id, "--model", "claude-opus-5-5", "--check-budget", "--claude-account", "b"
+    )
+
+    err = capsys.readouterr().err
+    assert rc == 0, err
+    assert "⚠ ROUTING CHECK UNKNOWN: claude account b meter unavailable (claude_account_unverified); no hard sub" in err
+    state = delegate._read_state(delegate._state_path(task_id))
+    assert (state["agent"], state["substitution"]) == ("claude", None)
+    facts = state["routing_facts"]
+    assert facts["claude_account"] == {
+        "label": "b",
+        "meter": "claude_accounts.claude:b",
+        "state": "unknown",
+        "reason": "claude_account_unverified",
+    }
+    assert facts["capacity"] == "unknown" and facts["plan_remaining_pct"] is None
+
+
 def _invalid_default_file(tmp_path: Path, monkeypatch, case: str) -> None:
     path = _default_account_file(tmp_path, monkeypatch)
     if case == "unknown_label":
@@ -7408,16 +7532,29 @@ def test_default_file_does_not_apply_to_another_seat(tmp_path, monkeypatch):
     assert _claude_account_refusal(_claude_account_args("--agent", "codex")) is None
 
 
-def test_a_claude_route_for_another_seats_request_records_the_builtin_default(monkeypatch, tmp_path):
-    """A request naming another seat takes no label (an explicit one is refused), so a route to claude runs as a."""
-    _default_account_file(tmp_path, monkeypatch, b"b\n")
-    args = _claude_account_args("--agent", "codex")
+def test_a_claude_route_for_another_seats_request_runs_on_the_account_it_resolved(monkeypatch, tmp_path):
+    """#10733: a claude route reached from another seat's request is never recorded on an account it did not bind.
 
-    assert delegate._resolve_dispatch_claude_account(args) is None
-    assert delegate._claude_account_state(args, None, "claude") == {
-        "claude_account": "a",
-        "claude_account_source": "builtin",
+    On ef19215956 the request resolved nothing and the claude route was recorded as the built-in a. A review
+    for another seat can select a claude reviewer, so it resolves and binds the account a claude dispatch
+    would run as; another seat's ordinary dispatch reaches no claude route, so a claude record on it is refused.
+    """
+    from scripts.agent_runtime.attempt_boundary import ClaudeAccountRefused
+
+    _bind_claude_account_b(tmp_path, monkeypatch)
+    _default_account_file(tmp_path, monkeypatch, b"b\n")
+    review = _claude_account_args("--agent", "codex", "--mode", "read-only", "--require-review-verdict")
+    resolved = delegate._resolve_dispatch_claude_account(review)
+
+    assert resolved == account("b", "default-file")
+    assert delegate._claude_account_state(review, resolved, "claude") == {
+        "claude_account": "b",
+        "claude_account_source": "default-file",
+        "claude_account_user_scope_omitted": True,
     }
+    ordinary = _claude_account_args("--agent", "codex")
+    with pytest.raises(ClaudeAccountRefused, match="claude_account_seat_unsupported"):
+        delegate._claude_account_state(ordinary, delegate._resolve_dispatch_claude_account(ordinary), "claude")
 
 
 def _break_claude_account_b(tmp_path: Path, monkeypatch, selected: Path, case: str) -> None:
@@ -7564,7 +7701,7 @@ def test_every_label_source_meets_every_refusal_of_an_explicit_b(
         before = {path.name: path.read_bytes() for path in tmp_tasks_dir.iterdir()}
         extra.append("--force-new")
     args = _claude_account_args("--agent", "claude", *extra)
-    assert delegate._resolve_dispatch_claude_account(args) == ("b", source)  # positive control
+    assert delegate._resolve_dispatch_claude_account(args) == account("b", source)  # positive control
     _break_claude_account_b(tmp_path, monkeypatch, Path(selected), case)
     spawn = _forbid_dispatch_side_effects(monkeypatch)
 
@@ -7597,7 +7734,9 @@ def test_dispatch_admits_b_with_the_inert_user_settings_names(tmp_path, monkeypa
     else:
         _default_account_file(tmp_path, monkeypatch, b"b\n")
 
-    assert delegate._resolve_dispatch_claude_account(_claude_account_args("--agent", "claude", *extra)) == ("b", source)
+    assert delegate._resolve_dispatch_claude_account(_claude_account_args("--agent", "claude", *extra)) == account(
+        "b", source
+    )
 
 
 def test_worker_refuses_a_default_file_label_when_machine_policy_appears_after_dispatch(
@@ -7928,7 +8067,8 @@ def _received_claude_account(command: list[str], tmp_path: Path, monkeypatch, *,
     args = delegate.build_parser().parse_args(command[1:])
     if record is not None:
         _terminal_claude_record(args.task_id, record, "explicit")
-    return delegate._resolve_dispatch_claude_account(args)
+    resolved = delegate._resolve_dispatch_claude_account(args)
+    return resolved.label, resolved.source
 
 
 def _account_flags(command: list[str]) -> list[str]:
@@ -7942,7 +8082,9 @@ def test_forwarded_default_file_label_is_kept_when_the_worker_host_has_no_defaul
     _bind_claude_account_b(tmp_path, monkeypatch)
     _default_account_file(tmp_path, monkeypatch, b"b\n")
     task_id = "claude-forward-default-file"
-    assert delegate._resolve_dispatch_claude_account(_claude_account_args("--agent", "claude")) == ("b", "default-file")
+    assert delegate._resolve_dispatch_claude_account(_claude_account_args("--agent", "claude")) == account(
+        "b", "default-file"
+    )
 
     rc, command = _forward_claude_dispatch(monkeypatch, task_id)
 
@@ -17187,7 +17329,8 @@ def _patch_admitted_codex_review_substitution(monkeypatch):
         )
         routing.substitution = resolution["record"]
         (target,) = resolve_and_admit(
-            ("codex",), model="gpt-6.1-sol", mode=args.mode, review_dispatch=True, review_attempt=True
+            ("codex",), model="gpt-6.1-sol", mode=args.mode, review_dispatch=True, review_attempt=True,
+            claude_account=HOST_ACCOUNT,
         )
         return None, None, target
 

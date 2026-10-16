@@ -45,6 +45,25 @@ afterEach(() => { cleanup(); vi.unstubAllGlobals(); vi.unstubAllEnvs(); });
 async function player() { return (await import('../../src/components/PronunciationPlayer')).default; }
 
 describe('#10706 audio:', () => {
+  it('a cancellation-only exception still settles local Stop and permits a healthy retry', async () => {
+    vi.mocked(fetch).mockRejectedValue(new Error('no manifest'));
+    const Player = await player();
+    render(<Player lemma="автобус" locale="en" />);
+    const button = screen.getByRole('button');
+    fireEvent.click(button);
+    expect(button).toHaveAccessibleName('Stop pronunciation');
+    speech.cancel.mockImplementationOnce(() => { throw new Error('speech cancellation failed'); });
+    fireEvent.click(button);
+    expect(button).toHaveAccessibleName('Play pronunciation');
+    expect(button).toHaveAttribute('aria-busy', 'false');
+    expect(screen.getByRole('status')).toBeEmptyDOMElement();
+    fireEvent.click(button);
+    expect(button).toHaveAccessibleName('Stop pronunciation');
+    fireEvent.click(button);
+    expect(speech.cancel).toHaveBeenCalledTimes(2);
+    expect(button).toHaveAccessibleName('Play pronunciation');
+  });
+
   it.each(['ended', 'pause'] as const)('native %s restores Play and its late callbacks cannot end the retry', async (event) => {
     const Player = await player();
     render(<Player lemma="автобус" locale="en" />);
@@ -560,6 +579,103 @@ describe('CDN distribution and resilient fallback', () => {
 
   beforeEach(() => {
     vi.stubEnv('PUBLIC_AUDIO_CDN_URL', CDN_URL);
+  });
+
+  describe('F1 synchronous fallback failures', () => {
+    it.each(['play rejection', 'media error'] as const)('combined speak/cancel throws settle %s without escaping and permit retry/Stop', async (ingress) => {
+      const Player = await player();
+      const view = render(<Player lemma="автобус" locale="en" />);
+      await waitFor(() => expect(instances).toHaveLength(1));
+      vi.useFakeTimers();
+      try {
+        const listen = vi.spyOn(speech, 'addEventListener');
+        const staleSpeech: Array<() => void> = [];
+        speech.speak.mockImplementationOnce((value: FakeUtterance) => {
+          staleSpeech.push(value.onstart!, value.onend!, value.onerror!);
+          throw new Error('speech submission failed');
+        });
+        speech.cancel.mockImplementationOnce(() => { throw new Error('speech cancellation failed'); });
+        const media = instances[0];
+        if (ingress === 'play rejection') media.play.mockRejectedValueOnce(new Error('CDN unavailable'));
+        else media.play.mockImplementationOnce(() => new Promise<void>(() => {}));
+        const button = screen.getByRole('button');
+        fireEvent.click(button);
+        const lateMediaError = media.onerror!;
+        if (ingress === 'media error') expect(() => lateMediaError()).not.toThrow();
+        await Promise.resolve();
+        await Promise.resolve();
+        expect(speech.speak).toHaveBeenCalledOnce();
+        expect(speech.cancel).toHaveBeenCalledOnce();
+        expect(button).toHaveAccessibleName('Play pronunciation');
+        expect(button).toHaveAttribute('aria-busy', 'false');
+        expect(screen.getByRole('status')).toHaveTextContent(/^Audio unavailable\. Try again\.$/);
+        expect(vi.getTimerCount()).toBe(0);
+        expect(media.onended).toBeNull();
+        expect(media.onpause).toBeNull();
+        expect(media.onerror).toBeNull();
+        const oldUtterance = speech.speak.mock.calls[0][0];
+        expect(oldUtterance.onstart).toBeNull();
+        expect(oldUtterance.onend).toBeNull();
+        expect(oldUtterance.onerror).toBeNull();
+        speech.dispatchEvent(new Event('voiceschanged'));
+        expect(speech.speak).toHaveBeenCalledOnce();
+        expect(listen.mock.calls.filter(([type]) => type === 'voiceschanged')).toHaveLength(0);
+
+        fireEvent.click(button);
+        instances[1].onerror?.();
+        await Promise.resolve();
+        for (const callback of staleSpeech) callback();
+        lateMediaError();
+        expect(button).toHaveAccessibleName('Stop pronunciation');
+        expect(button).toHaveAttribute('aria-busy', 'false');
+        expect(screen.getByRole('status')).toBeEmptyDOMElement();
+        expect(speech.speak).toHaveBeenCalledTimes(2);
+        expect(vi.getTimerCount()).toBe(0);
+        fireEvent.click(button);
+        expect(speech.cancel).toHaveBeenCalledTimes(2);
+        expect(button).toHaveAccessibleName('Play pronunciation');
+        view.unmount();
+        expect(vi.getTimerCount()).toBe(0);
+      } finally {
+        vi.useRealTimers();
+      }
+    });
+
+    for (const ingress of ['play rejection', 'media error'] as const) {
+      it.each(['getVoices', 'utterance construction', 'speak'] as const)(`${ingress} reports %s failure immediately and permits retry/Stop`, async (boundary) => {
+        const Player = await player();
+        render(<Player lemma="автобус" locale="en" />);
+        await waitFor(() => expect(instances).toHaveLength(1));
+        if (boundary === 'getVoices') speech.getVoices.mockImplementationOnce(() => { throw new Error('voice catalog failed'); });
+        else if (boundary === 'utterance construction') {
+          vi.stubGlobal('SpeechSynthesisUtterance', class {
+            constructor() { throw new Error('utterance failed'); }
+          });
+        } else speech.speak.mockImplementationOnce(() => { throw new Error('speech submission failed'); });
+        const media = instances[0];
+        const button = screen.getByRole('button');
+        if (ingress === 'play rejection') media.play.mockRejectedValueOnce(new Error('CDN unavailable'));
+        else media.play.mockImplementationOnce(() => new Promise<void>(() => {}));
+        fireEvent.click(button);
+        if (ingress === 'media error') {
+          expect(button).toHaveAttribute('aria-busy', 'true');
+          expect(() => media.onerror?.()).not.toThrow();
+        }
+        await waitFor(() => expect(screen.getByRole('status')).toHaveTextContent(/^Audio unavailable\. Try again\.$/));
+        expect(button).toHaveAccessibleName('Play pronunciation');
+        expect(button).toHaveAttribute('aria-busy', 'false');
+        vi.stubGlobal('SpeechSynthesisUtterance', FakeUtterance);
+        // A fresh media attempt fails too, but its healthy speech fallback starts.
+        fireEvent.click(button);
+        instances[1].onerror?.();
+        await waitFor(() => expect(button).toHaveAccessibleName('Stop pronunciation'));
+        expect(button).toHaveAttribute('aria-busy', 'false');
+        expect(screen.getByRole('status')).toBeEmptyDOMElement();
+        fireEvent.click(button);
+        expect(button).toHaveAccessibleName('Play pronunciation');
+        expect(speech.cancel).toHaveBeenCalled();
+      });
+    }
   });
 
   it('uses CDN base URL for manifest-backed audio entries', async () => {

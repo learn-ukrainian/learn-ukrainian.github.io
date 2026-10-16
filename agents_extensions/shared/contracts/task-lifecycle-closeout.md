@@ -163,6 +163,29 @@ is `BLOCKED_WITH_RECEIPT` with an owner, reason, evidence, and next action.
 
 ## Git and review gates
 
+Before post-merge removal, `merge_closeout` and `post_task_reap` append local
+observations through the lifecycle API while the task's dispatch worktree is
+still present. A valid earlier observation makes capture a no-op. Capture
+failure retains the worktree; an explicit `--no-lifecycle-observation REASON`
+is logged in the cleanup report. Tasks without a lifecycle ledger retain their
+existing cleanup path.
+
+An already-reaped task may append a recovered local observation using
+`task_closeout recover-local`. The receipt's `local.recovered_from_preserved`
+contains the task ID and SHA-256 locators for the preservation manifest,
+delegate task record and successful push record. Validation retrieves the
+entire bundle, checks every file, binds task/lifecycle/attempt/worktree/branch,
+and verifies the task commits against the merged PR head ancestry. The reader
+re-verifies these inputs before accepting the historical local facts. Missing
+or changed inputs and mismatched ancestry remain typed refusals, not evidence.
+A second recovery for the task returns its existing verified receipt.
+
+Recovered dispatch facts describe the historical worktree. Primary cleanliness
+is observed at recovery time. The receipt timestamp is the recovery time, and
+its local-only observation requires a fresh authoritative reconciliation for
+closure. It supplies no review, CI, merge or issue-close approval. See
+`docs/runbooks/worktree-cleanup.md` for the CLI and rehearsal procedure.
+
 Readiness requires a dispatch worktree, a clean primary checkout, valid
 `X-Agent` trailers on every task commit, no protected/generated artifacts, a
 current-head independent outside-author-family review, no unresolved requested

@@ -118,7 +118,7 @@ import {
 } from '../lib/lexicon/custom-decks';
 import { syncCustomSetsToDrive, requestGoogleAccessToken, setInMemoryAccessToken, getInMemoryAccessToken, isGoogleSyncConfigured } from '../lib/lexicon/google-drive-sync';
 import { usablePracticeSentenceEnglish } from '../lib/lexicon/practice-sentence-en';
-import { selectHeritagePracticePresentation } from '../lib/lexicon/practice-activity-adapters';
+import { selectHeritagePracticePresentation, type HeritagePracticeContext } from '../lib/lexicon/practice-activity-adapters';
 import { searchShardForQuery, type SearchRow, type SearchShardManifest } from '../lib/lexicon/search';
 import {
   appendDrillFields,
@@ -1823,13 +1823,14 @@ function resolveDeckLemmaKeys(deckFilter: string, customSets: CustomSet[]): stri
   return customSets.find((s) => s.id === deckFilter)?.lemma_keys ?? [];
 }
 
-/** Learner level persisted in the shared `lu-learner-level` key (also used by Words of the Day). */
-function readLearnerLevel(fallback: CefrLevel): CefrLevel {
-  if (typeof window === 'undefined') return fallback;
+/** Capture explicit context separately from the display-level fallback. */
+function readLearnerContext(): HeritagePracticeContext {
+  if (typeof window === 'undefined') return { source: 'unknown' };
   try {
-    return normalizeCefrLevel(window.localStorage.getItem(LEARNER_LEVEL_STORAGE_KEY), fallback);
+    const level = parseCefrLevel(window.localStorage.getItem(LEARNER_LEVEL_STORAGE_KEY));
+    return level ? { source: 'stored', level } : { source: 'unknown' };
   } catch {
-    return fallback;
+    return { source: 'unknown' };
   }
 }
 
@@ -2405,8 +2406,9 @@ function LexiconPracticeIsland({
    */
   const [sessionMisses, setSessionMisses] = useState<SessionMissItem[]>([]);
   const [resumeSnapshots, setResumeSnapshots] = useState<PracticeSessionSnapshots>({});
+  const [heritageContext, setHeritageContext] = useState<HeritagePracticeContext>(readLearnerContext);
   const [learnerLevel, setLearnerLevel] = useState<CefrLevel>(() =>
-    readLearnerLevel(normalizeCefrLevel(deckLevel)),
+    heritageContext.source === 'unknown' ? normalizeCefrLevel(deckLevel) : heritageContext.level,
   );
   const [focusedLemmaId, setFocusedLemmaId] = useState<string | null>(null);
   const [focusLookupMiss, setFocusLookupMiss] = useState(false);
@@ -4101,6 +4103,7 @@ function LexiconPracticeIsland({
   async function changeLevel(nextLevel: CefrLevel) {
     if (nextLevel === learnerLevel || !publishedLevels.has(nextLevel)) return;
     setLearnerLevel(nextLevel);
+    setHeritageContext({ source: 'local', level: nextLevel });
     writeLearnerLevel(nextLevel);
     setClozeLoaded(false);
     setHistory([]);
@@ -4183,6 +4186,7 @@ function LexiconPracticeIsland({
       setSelectedDeckFilter(change.value);
     } else {
       setLearnerLevel(change.value);
+      setHeritageContext({ source: 'local', level: change.value });
       writeLearnerLevel(change.value);
     }
     await startSession(sessionBudget, 'mixed', null, overrides);
@@ -5454,6 +5458,7 @@ function LexiconPracticeIsland({
                     onClozeSubmit={submitCloze}
                     onHeritageActivityComplete={handleHeritageActivityComplete}
                     presentationVariants={mode === 'mixed'}
+                    heritageContext={heritageContext}
                     onBackToModes={finishPractice}
                     showEnglishSubtitles={showEnglishSubtitles}
                     chromeLocale={chromeLocale}
@@ -5551,6 +5556,7 @@ export function PracticeItem({
   onClozeSubmit,
   onHeritageActivityComplete,
   presentationVariants,
+  heritageContext,
   onBackToModes,
   showEnglishSubtitles,
   chromeLocale,
@@ -5581,6 +5587,7 @@ export function PracticeItem({
   onClozeSubmit(value: string, source: 'typed' | 'chip'): void;
   onHeritageActivityComplete(correct: boolean): void;
   presentationVariants: boolean;
+  heritageContext: HeritagePracticeContext;
   /** P0-2: option-build failures (empty matching/choice pools) get a real exit, not just prose. */
   onBackToModes(): void;
   showEnglishSubtitles: boolean;
@@ -5596,10 +5603,10 @@ export function PracticeItem({
   const heritagePresentation = useMemo(
     () => (
       selection.mode === 'heritage' && selection.heritage && presentationVariants
-        ? selectHeritagePracticePresentation(selection.heritage, sessionSeed, deck.heritage ?? [])
+        ? selectHeritagePracticePresentation(selection.heritage, sessionSeed, deck.heritage ?? [], heritageContext)
         : { kind: 'mc' as const }
     ),
-    [deck.heritage, presentationVariants, selection.heritage, selection.mode, sessionSeed],
+    [deck.heritage, heritageContext, presentationVariants, selection.heritage, selection.mode, sessionSeed],
   );
 
   if (selection.mode === 'flashcards') {

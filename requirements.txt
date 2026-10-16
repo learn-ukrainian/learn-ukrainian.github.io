@@ -61,8 +61,8 @@ pypdf>=6.19.0       # scripts/projects/open_model_data/*.py, scripts/rag/scrape_
 PyMuPDF>=1.28.2     # scripts/rag/{extract_images,annotate_images,poc_pair_page}.py, scripts/tools/analyze_textbook_pages.py
 ruamel.yaml>=0.19 # scripts/tools/{fix_plan_latin_refs,convert_seminar_plans_v6}.py
 
-# MCP protocol (sources + trails MCP servers ported to 2.0 API)
-mcp>=2,<3
+# MCP protocol (sources + trails MCP servers ported to 2.0 API); >=2.2 clears CVE-2026-59951
+mcp>=2.2,<3
 
 # Web scraping (for resource discovery)
 beautifulsoup4>=4.15.0

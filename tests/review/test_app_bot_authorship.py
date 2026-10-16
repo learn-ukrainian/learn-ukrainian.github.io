@@ -15,6 +15,7 @@ from scripts.review.app_bot_authorship import (
     verified_app_bot_login,
 )
 from scripts.review.reviewer_resolver import ResolverInputs, complete_author_families
+from tests.claude_route_accounts import HOST_ACCOUNT
 
 SHA = "a" * 40
 OTHER = "b" * 40
@@ -180,9 +181,9 @@ def test_trailered_commit_never_asks_for_bot_proof(tmp_path):
 
 
 def test_resolver_treats_a_verified_bot_as_complete_authorship_excluding_no_family():
-    inputs = ResolverInputs(author_model="", author_families=frozenset({VERIFIED_APP_BOT}))
+    inputs = ResolverInputs(author_model="", author_families=frozenset({VERIFIED_APP_BOT}), claude_account=HOST_ACCOUNT)
     assert complete_author_families(inputs, "unknown") == {VERIFIED_APP_BOT}
-    mixed = ResolverInputs(author_model="", author_families=frozenset({VERIFIED_APP_BOT, "anthropic"}))
+    mixed = ResolverInputs(author_model="", author_families=frozenset({VERIFIED_APP_BOT, "anthropic"}), claude_account=HOST_ACCOUNT)
     assert complete_author_families(mixed, "unknown") == {VERIFIED_APP_BOT, "anthropic"}
 
 

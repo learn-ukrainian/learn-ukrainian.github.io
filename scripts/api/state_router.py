@@ -2096,8 +2096,9 @@ def compute_routing_budget(
         batch_state_dir=batch_state_dir,
     )
     budget["transport"] = transport
-    # Per-account view (#10630): additive, display only. ``agents.claude`` stays
-    # the default-account lane and no routing decision reads these rows. The
+    # Per-account view (#10630): additive. ``agents.claude`` stays the
+    # default-account lane; routing decisions read these rows only through
+    # ``scripts.fleet.claude_account_lane`` for a named account (#10619). The
     # endpoint re-reads them on every serve (``_with_live_claude_accounts``).
     budget.update(claude_account_routing_fields())
     if transport == "dispatch":

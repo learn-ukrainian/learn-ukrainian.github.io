@@ -20,6 +20,7 @@ from scripts.review.reviewer_resolver import (
     evaluate_candidate,
     resolve_reviewer,
 )
+from tests.claude_route_accounts import HOST_ACCOUNT
 
 # #9769: native Grok counts outside xAI at every risk; the runtime-attested
 # Cursor fallback additionally excludes Moonshot authors.
@@ -62,7 +63,7 @@ def test_bench_health_default_snapshot_closes_the_anthropic_shortfall_below_crit
     critical = check_bench_health(routing_snapshot=snapshot, data_egress_policy="local_interactive", risk="critical")
     assert critical["anthropic"] == ["openai_frontier", NATIVE_GROK, GROK]
     assert len(critical["anthropic"]) >= bench_health.MIN_ELIGIBLE_SEATS
-    automatic = resolve_reviewer(ResolverInputs(author_model="claude", data_egress_policy="local_interactive"))
+    automatic = resolve_reviewer(ResolverInputs(author_model="claude", data_egress_policy="local_interactive", claude_account=HOST_ACCOUNT))
     assert automatic.selected.name == "openai_frontier"
     assert "glm-5.3" not in {entry.name for entry in automatic.trace}
 
@@ -87,7 +88,7 @@ def test_bench_exclusions_match_automatic_resolver(risk, profile, capsys):
                 review_profile=profile,
                 risk=risk,
                 data_egress_policy="local_interactive",
-                routing_snapshot={},
+                routing_snapshot={}, claude_account=HOST_ACCOUNT,
             )
         )
         assert set(seats) == {entry.name for entry in resolution.trace if entry.status in {"selected", "eligible"}}
@@ -158,7 +159,7 @@ def test_composer_and_pool_exclusions_are_resolver_gates(risk, snapshot):
         snapshot, data_egress_policy="local_interactive", review_profile="code", risk=risk
     )
     inputs = ResolverInputs(
-        author_model="claude", risk=risk, routing_snapshot=snapshot, data_egress_policy="local_interactive"
+        author_model="claude", risk=risk, routing_snapshot=snapshot, data_egress_policy="local_interactive", claude_account=HOST_ACCOUNT
     )
     resolution = resolve_reviewer(inputs)
     expected_reasons = {
@@ -189,7 +190,7 @@ def test_retired_route_never_counts_even_if_pin_eligible_on_ladder(monkeypatch, 
             author_model="claude",
             pinned_candidate="glm-5.3",
             data_egress_policy="local_interactive",
-            routing_snapshot={"glm": "healthy"},
+            routing_snapshot={"glm": "healthy"}, claude_account=HOST_ACCOUNT,
         ),
     )
     assert pinned.status == "eligible"
@@ -227,7 +228,7 @@ def test_bench_health_preserves_egress_gate(policy, monkeypatch):
         ResolverInputs(
             author_model="claude",
             pinned_candidate="glm-5.3",
-            data_egress_policy=policy,
+            data_egress_policy=policy, claude_account=HOST_ACCOUNT,
         ),
     )
     assert pinned.status == "excluded"
