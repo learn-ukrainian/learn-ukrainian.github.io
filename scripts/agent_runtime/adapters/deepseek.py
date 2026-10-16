@@ -158,13 +158,7 @@ class DeepSeekAdapter:
         cmd.append("--")
         cmd.append(prompt)
 
-        _logger.debug(
-            "deepseek invocation: task=%s mode=%s model=%s effort=%s",
-            task_id,
-            mode,
-            target_model,
-            effective_effort,
-        )
+        _logger.debug("deepseek invocation")
 
         return InvocationPlan(
             cmd=cmd,

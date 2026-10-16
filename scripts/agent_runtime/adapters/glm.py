@@ -141,13 +141,7 @@ class GlmAdapter:
         cmd.append("--")
         cmd.append(prompt)
 
-        _logger.debug(
-            "glm invocation: task=%s mode=%s model=%s effort=%s",
-            task_id,
-            mode,
-            target_model,
-            effective_effort,
-        )
+        _logger.debug("glm invocation")
 
         return InvocationPlan(
             cmd=cmd,
