@@ -54,6 +54,19 @@ class GitHubRestError(RuntimeError):
         self.status = status
 
 
+class GitHubRestRateLimited(GitHubRestError):
+    """The shared client refused or GitHub limited this read: its typed refusal, never a cache entry."""
+
+    code = "github_rate_limited"
+
+    def __init__(self, reset_at: int | None, reason: str | None) -> None:
+        super().__init__(
+            f"github_rate_limited reset_at={reset_at}" + (f" reason={reason}" if reason else ""), status=429
+        )
+        self.reset_at = reset_at
+        self.reason = reason
+
+
 class GitHubRestTimeout(Exception):
     """The REST deadline elapsed. Not a :class:`TimeoutError` (orient maps those separately)."""
 
@@ -138,10 +151,12 @@ def _gh_api_transport(path: str, headers: dict[str, str], timeout: float) -> tup
         result = github_client.GitHubClient().request("GET", path, timeout=timeout)
     except subprocess.TimeoutExpired as exc:
         raise GitHubRestTimeout(timeout) from exc
+    except github_client.GitHubRateLimited as exc:
+        raise GitHubRestRateLimited(exc.reset_at, exc.reason) from exc
     except (OSError, RuntimeError) as exc:
         raise GitHubRestError(str(exc)) from exc
     if result.error == "github_rate_limited":
-        raise GitHubRestError(f"github_rate_limited reset_at={result.reset_at}", status=429)
+        raise GitHubRestRateLimited(result.reset_at, result.reason)
     if result.error and result.status != 404:
         raise GitHubRestError(result.error, status=result.status)
     response_headers = dict(result.headers)

@@ -373,7 +373,8 @@ def test_reads_and_other_calls_are_never_landing_by_url(tmp_path, method, endpoi
         'mutation { enqueuePullRequest: addComment(input: {subjectId: "X", body: "x"}) { clientMutationId } }',
         ENQUEUE.replace("} }", '} addComment(input: {subjectId: "X", body: "x"}) { clientMutationId } }', 1),
         '# enqueuePullRequest\nmutation { addComment(input: {subjectId: "X", body: "x"}) { clientMutationId } }',
-        "mutation { ...Landing } fragment Landing on Mutation { enqueuePullRequest(input: {}) { clientMutationId } }",
+        # A root spread is expanded: one non-landing field in the fragment makes it non-landing.
+        "mutation { ...Landing } fragment Landing on Mutation { enqueuePullRequest(input: {}) { clientMutationId } addComment(input: {}) { clientMutationId } }",
         "mutation A { enqueuePullRequest(input: {}) { clientMutationId } } mutation B { addComment(input: {}) { clientMutationId } }",
     ],
     ids=[
@@ -856,3 +857,380 @@ def test_every_refusal_reason_is_from_the_closed_set():
     for untyped in (None, "", "github_rate_limited", "landing"):
         with pytest.raises(AssertionError, match="untyped"):
             gh._limited(untyped, OPEN)
+
+
+# --- fix round 1 (#10730 review): held-out failures, each with an edge beyond the report --------
+
+LANDING_FRAGMENT = "fragment Landing on Mutation { enqueuePullRequest(input: {}) { clientMutationId } }"
+TWO_OPERATIONS = (
+    "mutation Land { enqueuePullRequest(input: {}) { clientMutationId } } "
+    "mutation Comment { addComment(input: {}) { clientMutationId } } "
+    "query Read { viewer { login } }"
+)
+
+
+@pytest.mark.parametrize(
+    ("document", "landing"),
+    [
+        ({"query": "mutation { ...Landing } " + LANDING_FRAGMENT}, True),
+        ({"query": LANDING_FRAGMENT + " mutation M { ...Landing }"}, True),
+        ({"query": "mutation { ...Landing @include(if: true) } " + LANDING_FRAGMENT}, True),
+        ({"query": "mutation { ... on Mutation { a: mergePullRequest(input: {}) { clientMutationId } } }"}, True),
+        ({"query": "mutation { ... { dequeuePullRequest(input: {}) { clientMutationId } } }"}, True),
+        ({"query": TWO_OPERATIONS, "operationName": "Land"}, True),
+        (
+            {
+                "query": 'mutation($i: EnablePullRequestAutoMergeInput! = {a: "(}"}) @x(y: [1]) '
+                "{ enablePullRequestAutoMerge(input: $i) @include(if: true) { clientMutationId } }",
+                "variables": {"i": {}},
+            },
+            True,
+        ),
+        ({"query": TWO_OPERATIONS, "operationName": "Comment"}, False),
+        ({"query": TWO_OPERATIONS, "operationName": "Read"}, False),
+        ({"query": TWO_OPERATIONS}, False),
+        ({"query": TWO_OPERATIONS, "operationName": None}, False),
+        ({"query": TWO_OPERATIONS, "operationName": "Missing"}, False),
+        ({"query": TWO_OPERATIONS, "operationName": ["Land"]}, False),
+        (
+            {"query": "mutation { enqueuePullRequest(input: {}) { x } } mutation B { addComment(input: {}) { x } }"},
+            False,
+        ),
+        ({"query": "mutation { ...Landing } fragment Landing on Query { viewer { login } }"}, False),
+        ({"query": "mutation { ... on Query { viewer { login } } }"}, False),
+        ({"query": "mutation { ...Landing } fragment Landing on Mutation { ...Landing }"}, False),
+        ({"query": "mutation { ...Undefined }"}, False),
+        ({"query": "mutation { ...Landing } " + LANDING_FRAGMENT + " " + LANDING_FRAGMENT}, False),
+        ({"query": "query { ...Landing } " + LANDING_FRAGMENT}, False),
+        ({"query": "mutation { __typename enqueuePullRequest(input: {}) { clientMutationId } }"}, False),
+        ({"query": "mutation {" + " ... {" * 3000 + " enqueuePullRequest(input: {}) { x }" + " }" * 3001}, False),
+    ],
+)
+def test_graphql_landing_follows_operation_selection_and_fragments(tmp_path, document, landing):
+    """Held-out (3): valid root fragments and operationName-selected landing mutations were refused."""
+    wire = Wire()
+    client = store(tmp_path, wire, [("graphql", 0, OPEN)])
+    result = client.request("POST", "graphql", payload=document)
+    if landing:
+        admitted(result)
+        assert wire.sent == [("http", "POST", "graphql")]
+    else:
+        refused(result, "pool_exhausted")
+        assert wire.sent == []
+
+
+def _include_output(status, headers, body=b'{"message":"You have exceeded a secondary rate limit."}'):
+    head = "".join(f"{name}: {value}\r\n" for name, value in headers.items())
+    return f"HTTP/2.0 {status} Limited\r\n{head}\r\n".encode() + body
+
+
+def _native_limited(stdout, stderr=b"gh: You have exceeded a secondary rate limit. (HTTP 403)"):
+    """A native runner whose first call fails as ``gh`` prints it; later calls succeed."""
+    calls = []
+
+    def native(argv):
+        calls.append(argv)
+        if len(calls) == 1:
+            return subprocess.CompletedProcess(argv, 1, stdout, stderr)
+        return subprocess.CompletedProcess(argv, 0, b"[]", b"")
+
+    return native
+
+
+NATIVE_INCLUDE = ["api", "--include", "repos/o/r/issues/1/comments", "--template", "{{.}}"]
+
+
+@pytest.mark.parametrize(
+    ("status", "retry_after"),
+    [(403, "120"), (429, "120"), (429, lambda: email.utils.formatdate(NOW + 120, usegmt=True))],
+    ids=["403-seconds", "429-seconds", "429-http-date"],
+)
+def test_native_include_retry_after_is_an_authentic_hold(tmp_path, status, retry_after):
+    """Held-out (1): gh api --include printed GitHub's Retry-After, but the native path stored a synthetic hold."""
+    value = retry_after() if callable(retry_after) else retry_after
+    stdout = _include_output(status, {"Retry-After": value, "X-Ratelimit-Remaining": "77", "X-Ratelimit-Reset": "9000"})
+    wire = Wire(native=_native_limited(stdout))
+    client = store(tmp_path, wire)
+    refused(gh.run(["gh", *NATIVE_INCLUDE], client=client, capture_output=True), "retry_after", NOW + 120)
+    # During GitHub's hold, landing is refused on every path and ordinary reads say why.
+    for call in LANDING.values():
+        refused(call(client), "retry_after", NOW + 120)
+    refused(client.request("GET", "repos/o/r/issues/1/comments"), "retry_after", NOW + 120)
+    refused(gh.run(["gh", "pr", "status"], client=client, capture_output=True), "retry_after", NOW + 120)
+    assert len(wire.sent) == 1
+    client.clock = lambda: NOW + 121
+    for call in LANDING.values():
+        admitted(call(client))
+    assert len(wire.sent) == 1 + len(LANDING)
+
+
+def test_native_include_primary_limit_holds_its_pool(tmp_path):
+    headers = {"X-Ratelimit-Remaining": "0", "X-Ratelimit-Reset": str(OPEN), "X-Ratelimit-Resource": "core"}
+    stdout = _include_output(403, headers, b'{"message":"API rate limit exceeded for user ID 1."}')
+    wire = Wire(native=_native_limited(stdout, b"gh: API rate limit exceeded for user ID 1. (HTTP 403)"))
+    client = store(tmp_path, wire)
+    refused(gh.run(["gh", *NATIVE_INCLUDE], client=client, capture_output=True), "retry_after")
+    refused(LANDING["rest"](client), "retry_after")
+    refused(LANDING["native"](client), "retry_after")
+    refused(client.request("GET", "repos/o/r/issues/1/timeline"), "retry_after")
+    admitted(LANDING["graphql"](client))
+    assert wire.sent[1:] == [("http", "POST", "graphql")]
+
+
+def test_native_include_paginated_limit_uses_the_failing_page(tmp_path):
+    ok = _include_output(200, {"X-Ratelimit-Remaining": "4000", "X-Ratelimit-Reset": "9000"}, b"[1]\n")
+    limited = _include_output(429, {"Retry-After": "30"})
+    wire = Wire(native=_native_limited(ok + limited))
+    client = store(tmp_path, wire)
+    argv = ["gh", "api", "-i", "--paginate", "repos/o/r/issues", "--jq", ".[]"]
+    refused(gh.run(argv, client=client, capture_output=True), "retry_after", NOW + 30)
+    refused(LANDING["rest"](client), "retry_after", NOW + 30)
+
+
+@pytest.mark.parametrize(
+    ("argv", "stdout", "stderr", "reason"),
+    [
+        # gh api --include of a limit without Retry-After: GitHub named no hold.
+        (NATIVE_INCLUDE, _include_output(403, {"X-Ratelimit-Remaining": "50"}), b"", "secondary_hold"),
+        # Without --include stdout is the body: header-shaped body text is never GitHub's header.
+        (
+            ["api", "repos/o/r/issues", "--template", "{{range .}}{{.title}}{{end}}"],
+            b"HTTP/1.1 429 Limited\r\nRetry-After: 99999\r\n\r\n",
+            b"gh: API rate limit exceeded (HTTP 403)",
+            "secondary_hold",
+        ),
+        # A non-api command has no headers: stderr alone is only a synthetic hold.
+        (["pr", "status"], b"", b"GraphQL: API rate limit exceeded for user ID 1.", "secondary_hold"),
+    ],
+    ids=["include-without-retry-after", "body-shaped-like-headers", "stderr-only"],
+)
+def test_native_limits_without_github_retry_after_stay_synthetic(tmp_path, argv, stdout, stderr, reason):
+    wire = Wire(native=_native_limited(stdout, stderr))
+    client = store(tmp_path, wire)
+    refused(gh.run(["gh", *argv], client=client, capture_output=True), reason, NOW + 60)
+    for call in LANDING.values():
+        admitted(call(client))
+    refused(client.request("GET", "repos/o/r/issues/1/comments"), "secondary_hold", NOW + 60)
+
+
+def test_native_include_error_that_is_not_a_limit_creates_no_hold(tmp_path):
+    stdout = _include_output(404, {"X-Ratelimit-Remaining": "4000"}, b'{"message":"Not Found"}')
+    wire = Wire(native=_native_limited(stdout, b"gh: Not Found (HTTP 404)"))
+    client = store(tmp_path, wire)
+    result = gh.run(["gh", *NATIVE_INCLUDE], client=client, capture_output=True)
+    assert result.returncode == 1 and result.stdout == stdout
+    admitted(client.request("GET", "repos/o/r/issues/1/comments"))
+
+
+ENQUEUE_BODY = json.dumps({"query": ENQUEUE}).encode()
+
+
+@pytest.mark.parametrize("stdin", [ENQUEUE_BODY, ENQUEUE_BODY.decode()], ids=["bytes", "text"])
+def test_native_graphql_input_stdin_keeps_landing(tmp_path, stdin):
+    """Held-out (2): an enqueue sent as ``gh api graphql --input -`` was refused before transport."""
+    wire = Wire()
+    client = store(tmp_path, wire, [("graphql", 0, OPEN), ("secondary", 0, OPEN)])
+    argv = ["gh", "api", "graphql", "--input", "-", "--template", "{{.}}"]
+    admitted(gh.run(argv, client=client, capture_output=True, input=stdin))
+    assert wire.sent == [("native", *argv[1:])]
+
+
+def test_native_graphql_body_sources_are_read(tmp_path):
+    wire = Wire()
+    client = store(tmp_path / "cache", wire, [("graphql", 0, OPEN)])
+    client.cwd = tmp_path
+    (tmp_path / "enqueue.json").write_bytes(ENQUEUE_BODY)
+    (tmp_path / "enqueue.graphql").write_text(ENQUEUE)
+    (tmp_path / "two.json").write_text(json.dumps({"query": TWO_OPERATIONS, "operationName": "Land"}))
+    landing = [
+        ["api", "graphql", "--input", "enqueue.json", "--template", "{{.}}"],
+        ["api", "graphql", "--input", str(tmp_path / "two.json"), "--template", "{{.}}"],
+        ["api", "graphql", "-F", "query=@enqueue.graphql", "--template", "{{.}}"],
+        ["api", "graphql", "-f", "query=" + TWO_OPERATIONS, "-f", "operationName=Land", "--template", "{{.}}"],
+    ]
+    for argv in landing:
+        admitted(gh.run(["gh", *argv], client=client, capture_output=True))
+    admitted(
+        gh.run(
+            ["gh", "api", "graphql", "-F", "query=@-", "--template", "{{.}}"],
+            client=client,
+            capture_output=True,
+            input=ENQUEUE,
+        )
+    )
+    assert len(wire.sent) == len(landing) + 1
+
+
+def test_native_unreadable_or_non_landing_bodies_are_not_landing(tmp_path):
+    wire = Wire()
+    client = store(tmp_path / "cache", wire, [("graphql", 0, OPEN)])
+    client.cwd = tmp_path
+    (tmp_path / "viewer.json").write_text(json.dumps({"query": VIEWER}))
+    (tmp_path / "broken.json").write_text("{not json")
+    os.mkfifo(tmp_path / "pipe")  # never opened: a device or pipe path can neither block nor consume input
+    template = ["--template", "{{.}}"]
+    for argv in (
+        ["api", "graphql", "--input", "viewer.json", *template],
+        ["api", "graphql", "--input", "missing.json", *template],
+        ["api", "graphql", "--input", "broken.json", *template],
+        ["api", "graphql", "--input", "pipe", *template],
+        ["api", "graphql", "--input", "-", *template],
+        ["api", "graphql", "-F", "query=@missing.graphql", *template],
+        ["api", "graphql", "-f", "query=" + TWO_OPERATIONS, "-f", "operationName=Read", *template],
+        # -f never reads a file: the literal text is the query.
+        ["api", "graphql", "-f", "query=@enqueue.graphql", *template],
+    ):
+        refused(gh.run(["gh", *argv], client=client, capture_output=True), "pool_exhausted")
+    assert wire.sent == []
+    # An unreadable body is admitted only inside a vetted landing flow.
+    argv = ["api", "graphql", "--input", "missing.json", *template]
+    assert _in_keeper_run(_native(*argv))(client).returncode == 0
+    assert wire.sent == [("native", *argv)]
+
+
+def _http_open_client(monkeypatch, tmp_path, budgets):
+    monkeypatch.setenv("LU_GITHUB_CACHE_DIR", str(tmp_path / "http-cache"))
+    reset = int(time.time()) + 3600
+    seeded = gh.GitHubClient(env={"GH_TOKEN": "Bearer synthetic-jwt"})
+    with seeded._db() as db:
+        for resource in budgets:
+            gh._store_budget(db, seeded.scope, resource, 0, reset)
+    opened = []
+
+    def opener(request, **kwargs):
+        import io
+
+        opened.append((request.get_method(), request.full_url))
+        result = io.BytesIO(b'{"data":{}}')
+        result.status, result.headers = 200, {}
+        return result
+
+    return opener, opened, reset
+
+
+def test_http_open_classifies_the_request_body(monkeypatch, tmp_path):
+    """Held-out (4): http_open classified without ``Request.data`` and refused an enqueue."""
+    from urllib.request import Request
+
+    opener, opened, reset = _http_open_client(monkeypatch, tmp_path, ["graphql", "secondary"])
+    url = "https://api.github.com/graphql"
+    headers = {"Authorization": "Bearer synthetic-jwt"}
+    for body in (ENQUEUE_BODY, bytearray(ENQUEUE_BODY)):
+        with gh.http_open(Request(url, data=body, method="POST", headers=headers), opener=opener) as response:
+            assert response.status == 200
+    assert opened == [("POST", url)] * 2
+    # A read, a body that is not JSON, and a streamed body that cannot be read without consuming it.
+    for body in (json.dumps({"query": VIEWER}).encode(), b"not json", iter([ENQUEUE_BODY])):
+        with pytest.raises(gh.GitHubRateLimited) as limited:
+            gh.http_open(Request(url, data=body, method="POST", headers=headers), opener=opener)
+        assert (limited.value.reason, limited.value.reset_at) == ("secondary_hold", reset)
+    assert len(opened) == 2
+
+
+def _serialized_refusal(reason="core_below_landing_reserve", reset=OPEN):
+    return json.dumps({"error": "github_rate_limited", "reset_at": reset, "reason": reason})
+
+
+@pytest.mark.parametrize("stream", ["stdout", "stderr"])
+def test_rest_read_keeps_a_serialized_refusal(stream):
+    """Held-out (5): an injected runner's serialized refusal became github_read_failed, exit 1."""
+
+    def runner(argv, **kwargs):
+        detail = _serialized_refusal("pool_exhausted")
+        return subprocess.CompletedProcess(
+            argv, 75, detail if stream == "stdout" else "", detail if stream == "stderr" else ""
+        )
+
+    result = gh.rest_read("issue-states", "o/r", {"numbers": [1]}, runner=runner, capture_output=True, text=True)
+    refused(result, "pool_exhausted")
+    with pytest.raises(subprocess.CalledProcessError) as raised:
+        gh.rest_read("issue-states", "o/r", {"numbers": [1]}, runner=runner, capture_output=True, check=True)
+    assert raised.value.returncode == 75 and raised.value.github_result.reason == "pool_exhausted"
+
+
+def test_rest_read_never_takes_an_unrelated_failure_for_a_refusal():
+    def runner(argv, **kwargs):
+        return subprocess.CompletedProcess(argv, 1, _serialized_refusal(), "")
+
+    result = gh.rest_read("issue-states", "o/r", {"numbers": [1]}, runner=runner, capture_output=True, text=True)
+    assert result.returncode == 1 and result.github_result.error == "github_read_failed"
+    # The client's own refusal object is attributed; an unrelated exit 75 without one is not.
+    assert gh.refusal_of(subprocess.CompletedProcess([], 75, _serialized_refusal(), "")) is None
+
+
+def test_rest_cache_adapter_keeps_reason_and_reset(tmp_path, monkeypatch):
+    from scripts import github_rest_cache as rest
+
+    wire = Wire()
+    client = store(tmp_path, wire, [("core", 0, OPEN)])
+    monkeypatch.setattr(gh, "GitHubClient", lambda **kwargs: client)
+    with pytest.raises(rest.GitHubRestError) as raised:
+        rest._gh_api_transport("repos/o/r/pulls?state=open", {}, 5)
+    error = raised.value
+    assert isinstance(error, rest.GitHubRestRateLimited) and error.status == 429
+    assert (error.code, error.reason, error.reset_at) == ("github_rate_limited", "core_below_landing_reserve", OPEN)
+    assert "reason=core_below_landing_reserve" in str(error)
+    # Through the cache, the typed refusal is what the caller sees and nothing is cached.
+    cache = rest.GitHubRestCache(identity="unit")
+    with pytest.raises(rest.GitHubRestRateLimited) as through:
+        cache.get_json("repos/o/r/issues/1", timeout=5)
+    assert through.value.reason == "core_below_landing_reserve" and not cache._entries
+    assert wire.sent == []
+
+
+@pytest.fixture
+def refusing_runner():
+    """An injected publisher command runner whose GitHub reads are refused, as the client serializes it."""
+    reads = []
+
+    def runner(argv, **kwargs):
+        reads.append(argv)
+        detail = _serialized_refusal()
+        if kwargs.get("check"):
+            raise subprocess.CalledProcessError(75, argv, output=detail, stderr=detail)
+        return subprocess.CompletedProcess(argv, 75, detail, detail)
+
+    runner.reads = reads
+    return runner
+
+
+@pytest.mark.parametrize("check", [False, True])
+def test_publisher_recovery_lookup_keeps_a_refusal(tmp_path, monkeypatch, synthetic_opsec, refusing_runner, check):
+    from scripts.publish import github as pub
+
+    monkeypatch.setattr(pub.gate, "catalog", lambda: CATALOG)
+    monkeypatch.setattr(pub.recovery, "ledger_path", lambda cwd: tmp_path / "recovery.sqlite3")
+    runner = refusing_runner
+    if not check:
+
+        def runner(argv, **kwargs):
+            return refusing_runner(argv, **{**kwargs, "check": False})
+
+    with pytest.raises(gh.GitHubRateLimited) as raised:
+        pub._prepare_recovery("run-rerun", {"number": 123}, "unit/public", tmp_path, {}, runner)
+    assert (raised.value.reason, raised.value.reset_at) == ("core_below_landing_reserve", OPEN)
+    result = pub.publish(
+        "run-rerun", number=123, repo="unit/public", cwd=tmp_path, env={}, runner=runner, capture_output=True, text=True
+    )
+    refused(result, "core_below_landing_reserve")
+
+
+def test_publisher_readiness_keeps_a_serialized_refusal(tmp_path, monkeypatch, synthetic_opsec, refusing_runner):
+    from scripts.publish import github as pub
+
+    monkeypatch.setattr(pub.gate, "catalog", lambda: CATALOG)
+    monkeypatch.delenv("AGENT_NO_MERGE", raising=False)
+    result = pub.publish(
+        "pr-merge",
+        repo="unit/public",
+        number=1,
+        subject="clean",
+        body="clean",
+        cwd=tmp_path,
+        env={"PATH": os.defpath},
+        runner=refusing_runner,
+        capture_output=True,
+        text=True,
+    )
+    refused(result, "core_below_landing_reserve")
+    assert refusing_runner.reads and all(argv[1] != "pr" or argv[2] != "merge" for argv in refusing_runner.reads)
