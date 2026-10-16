@@ -9120,7 +9120,7 @@ def _provision_data_symlinks(worktree_path: Path, main_repo_root: Path, *, read_
 # source-inventory-review-decisions (49.3 MiB), site/src/data (51.7 MiB,
 # mostly generated lexicon JSON), site/src/content (26.9 MiB, published
 # lessons), data/processed (23.4 MiB, ESUM volumes) and data/datasets
-# (14.4 MiB). Excluding them, with the anchors below, leaves 195.8 MiB;
+# (14.4 MiB). Excluding them, with the anchors below, leaves 196.3 MiB;
 # tests/test_dispatch_checkout_size.py holds the ceiling. data/lexicon moved
 # to registry/lexicon in #8853 and is no longer tracked; it stays a valid
 # --sparse-include name. ``pytest -m repo_wide`` in a default checkout built
@@ -9138,11 +9138,14 @@ def _provision_data_symlinks(worktree_path: Path, main_repo_root: Path, *, read_
 # - curriculum/l2-uk-en/plans/a1 (0.5 MiB):
 #   tests/audit/test_track_deterministic_audit.py launches review_plan.py
 #   on a real A1 plan.
+# - curriculum/l2-uk-direct/a1 (0.5 MiB):
+#   tests/test_ohoiko_source_inventory_scope.py checks the Ohoiko inventory
+#   against the committed abetka key words.
 # - No anchor for site/src/data (its largest files sit directly in it, so
 #   any anchor brings them back) or site/src/content (its readers read the
-#   published lessons themselves). Tests that read them skip in a sparse
-#   checkout through tests/conftest.py _SPARSE_TREE_DIRS, naming the
-#   --sparse-include to use.
+#   published lessons themselves). The repo_wide tests that read them carry
+#   pytest.mark.needs_sparse_tree and skip in a sparse checkout, naming the
+#   --sparse-include to use (tests/conftest.py).
 _DISPATCH_SPARSE_EXCLUDE_DEFAULT = frozenset(
     {
         "curriculum",
@@ -9163,7 +9166,11 @@ _DISPATCH_SPARSE_EXCLUDE_DEFAULT = frozenset(
 # collection) still find the files they read. Each anchor is added only
 # when that directory exists at HEAD.
 _DISPATCH_SPARSE_ANCHORS: dict[str, tuple[str, ...]] = {
-    "curriculum": ("curriculum/l2-uk-en/lesson-plans", "curriculum/l2-uk-en/plans/a1"),
+    "curriculum": (
+        "curriculum/l2-uk-direct/a1",
+        "curriculum/l2-uk-en/lesson-plans",
+        "curriculum/l2-uk-en/plans/a1",
+    ),
     "registry/lexicon/source-inventory": ("registry/lexicon/source-inventory/grade-01",),
     "registry/projects": ("registry/projects/open_model_data/integrations",),
 }
@@ -9446,6 +9453,8 @@ def _dispatch_sparse_cone_dirs(
     ``site/src/data``) is expressed by listing the sibling directories at
     every level down to it instead of their parent. Cone mode then keeps
     files directly in each parent and preserves the other sibling trees.
+    A parent whose every child directory is excluded keeps its own files
+    only when an anchor sits below it, since cone mode has no file entries.
     """
     exclude_set = {name.strip("/") for name in exclude}
     cone: list[str] = []

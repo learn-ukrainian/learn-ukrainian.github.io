@@ -21,7 +21,7 @@ pytestmark = pytest.mark.repo_wide
 
 MIB = 1024 * 1024
 # Measured 2026-10-16 on main c0f3aaf4639 (tracked bytes, git ls-tree):
-# the previous default profile kept 408.9 MiB; this profile keeps 195.8 MiB.
+# the previous default profile kept 408.9 MiB; this profile keeps 196.3 MiB.
 # The ceiling sits 45% below that baseline and leaves room for ordinary
 # growth of scripts/, tests/ and docs/.
 DEFAULT_PROFILE_CEILING_BYTES = 225 * MIB
@@ -31,6 +31,7 @@ DEFAULT_PROFILE_CEILING_BYTES = 225 * MIB
 # module that reads at import aborts collection of the whole run when the
 # file is missing.
 ANCHORED_READS = (
+    ("curriculum/l2-uk-direct/a1/abetka-1.yaml", "tests/test_ohoiko_source_inventory_scope.py", "abetka-*.yaml"),
     ("curriculum/l2-uk-en/curriculum.yaml", "tests/test_landings_use_levellanding.py", "curriculum.yaml"),
     ("curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml", "scripts/curriculum/arc/loader.py", "_arc.yaml"),
     ("curriculum/l2-uk-en/plans/a1/a1-finale.yaml", "tests/audit/test_track_deterministic_audit.py", '"plans" / "a1"'),
@@ -148,7 +149,7 @@ def test_conftest_skips_tests_for_every_unanchored_exclusion() -> None:
     )
     expected = set(delegate._DISPATCH_SPARSE_EXCLUDE_DEFAULT) - set(delegate._DISPATCH_SPARSE_ANCHORS) - {"wiki"}
 
-    assert set(conftest._SPARSE_TREE_DIRS) == expected
+    assert set(conftest._SPARSE_TREES) == expected
 
 
 def test_every_exclusion_is_reincludable() -> None:

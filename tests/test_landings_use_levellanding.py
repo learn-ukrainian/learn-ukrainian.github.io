@@ -101,6 +101,7 @@ def test_dynamic_route_uses_every_track_index_mdx_as_landing_doc() -> None:
     assert "showHero={props.kind !== 'landingDoc' && props.kind !== 'track' && !arcFrontmatter}" in text
 
 
+@pytest.mark.needs_sparse_tree("site/src/content")
 @pytest.mark.repo_wide
 def test_arc_landings_are_generated_pages_the_router_mounts_from_frontmatter() -> None:
     text = ROUTER_PATH.read_text(encoding="utf-8")
@@ -154,6 +155,7 @@ def _tracks_with_modules() -> list[str]:
     "track",
     _tracks_with_modules(),
 )
+@pytest.mark.needs_sparse_tree("site/src/content", "site/src/data")
 def test_track_landing_module_count_matches_curriculum_stats(track: str) -> None:
     stats = json.loads(STATS_PATH.read_text(encoding="utf-8"))
     text = (DOCS_ROOT / track / "index.mdx").read_text(encoding="utf-8")

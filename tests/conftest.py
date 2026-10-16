@@ -2024,10 +2024,13 @@ _SPARSE_TREE_DIRS: dict[str, tuple[str, ...]] = {
     "data/datasets": (),
     "data/processed": (),
     "registry/lexicon/source-inventory-review-decisions": (),
-    "site/src/content": (),
-    "site/src/data": (),
 }
-_SPARSE_TREES = frozenset(_SPARSE_TREE_DIRS)
+# Site trees skip only through pytest.mark.needs_sparse_tree. Build and
+# review tests lay out tmp_path/site/src/content as fixtures, so a path match
+# is no evidence of a read: derived needs skipped 400 tests that pass
+# without the trees (#10777).
+_SPARSE_MARKER_ONLY_TREES = frozenset({"site/src/content", "site/src/data"})
+_SPARSE_TREES = frozenset(_SPARSE_TREE_DIRS) | _SPARSE_MARKER_ONLY_TREES
 _SPARSE_READ_ATTRS = frozenset(
     {
         "read_text",
@@ -2087,7 +2090,7 @@ def _path_trees(text: str, *, allow_bare: bool = False) -> set[str]:
     """
     normalized = text.replace("\\", "/")
     found: set[str] = set()
-    for tree in _SPARSE_TREES:
+    for tree in _SPARSE_TREE_DIRS:
         into_tree = f"{tree}/" in normalized
         bare_tree = allow_bare and (normalized == tree or normalized.endswith(f"/{tree}"))
         if into_tree or bare_tree:
