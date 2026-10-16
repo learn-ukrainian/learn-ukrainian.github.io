@@ -29,23 +29,31 @@ export function evaluate(r, x) {
   }
   need(r.voices?.state === 'STABLE', `voice catalog ${r.voices?.state || 'missing'}: UNKNOWN`);
   need(r.voices?.ukLocal > 0, 'no local Ukrainian voice observed');
+  const seen = (o) => o?.media === true && o?.speech === true;
   for (const t of ['next', 'home', 'route', 'deck', 'level', 'locale']) {
     const a = r.transitions?.[t];
     if (!a) { why.push(`${t}: ${r.exposure?.[t] ? 'not attempted' : 'NOT_EXPOSED during native speech'}`); continue; }
     const f = (ok, reason) => need(ok, `${t}: ${reason}`);
     f(a.exposed, 'control was not one tap away at native start (NOT_EXPOSED)');
     f(a.playTrusted && a.transitionTrusted, 'synthetic click is not physical evidence');
-    f(!a.clip, 'recorded clip played instead of native speech');
-    f(a.speakCalls > 0 && !a.speakThrew, 'native speak missing or threw');
-    f(a.voice?.uk && a.voice.local && a.voice.filterMatch, 'selected voice is not the local Ukrainian filter choice');
-    f(typeof a.startMs === 'number' && a.startMs >= 0, 'native start not observed');
-    f(!(a.startMs > 10000), 'native start over the 10000 ms budget');
-    f(a.activeAtTransition, 'speech not active at transition (not started or already ended)');
-    f(!a.cancelThrew && a.stopped, 'cancellation and stopped state not observed');
-    f(a.quietMs >= 3000 && a.lateStarts === 0, 'quiet window incomplete or speech started again');
+    // Duration, the 3000 ms minimum and success checks are unmet when this attempt could not be observed.
+    if (!seen(r.observation?.attempts?.[t])) f(false, 'observation was unavailable');
+    else {
+      f(!a.clip, 'recorded clip played instead of native speech');
+      f(a.speakCalls > 0 && !a.speakThrew, 'native speak missing or threw');
+      f(a.voice?.uk && a.voice.local && a.voice.filterMatch, 'selected voice is not the local Ukrainian filter choice');
+      f(typeof a.startMs === 'number' && a.startMs >= 0, 'native start not observed');
+      f(!(a.startMs > 10000), 'native start over the 10000 ms budget');
+      f(a.activeAtTransition, 'speech not active at transition (not started or already ended)');
+      f(!a.cancelThrew && a.stopped, 'cancellation and stopped state not observed');
+      f(a.quietMs >= 3000 && a.lateStarts === 0, 'quiet window incomplete or speech started again');
+    }
     f(a.manual?.audible && a.manual.stoppedImmediately && a.manual.noResume, 'manual attestation missing');
     f(t === 'next' ? a.srsConserved === true : a.srsConserved === null, 'SRS state not conserved');
   }
+  const stopOk = (s, started) => Boolean(s && seen(s) && s.playTrusted && s.started === started && s.stopped && !s.cancelThrew && s.quietMs >= 3000 && s.lateStarts === 0 && !s.clip);
+  const retryOk = (s) => Boolean(s && seen(s) && s.playTrusted && !s.clip && !s.speakThrew && s.voice?.uk && s.voice.local && s.voice.filterMatch && typeof s.startMs === 'number' && s.startMs >= 0 && s.startMs <= 10000);
+  if (!(stopOk(r.stops?.preStart, false) && stopOk(r.stops?.postStart, true) && retryOk(r.retries?.preStart) && retryOk(r.retries?.postStart))) why.push('NA-09: Stop/retry evidence missing');
   return { status: why.length ? 'INCOMPLETE' : 'DEVICE_CONTROLS_PASSED', reasons: why };
 }
 
@@ -62,11 +70,15 @@ export function browserProbe(win, binding, evaluate) {
   const each = (value) => Object.fromEntries(T.map((t) => [t, value]));
   const receipt = { schema: 'native-speech-probe.v1', binding: { sourceSha: binding.sourceSha, helperSha: binding.helperSha, buildDigest: binding.buildDigest },
     hashing: { state: 'PENDING', page: null, assets: {} }, voices: { state: 'PENDING', total: 0, uk: 0, ukLocal: 0, nonUk: 0, waitedMs: 0 },
+    observation: { documents: [], attempts: each(null) }, stops: { preStart: null, postStart: null }, retries: { preStart: null, postStart: null },
     exposure: each(false), transitions: each(null), status: 'INCOMPLETE' };
   win.practiceAudioProbe = receipt;
   let pending = null; // the attempt from a Play tap to the end of its quiet window
+  let openRetry = null; // the next Play after a retained Stop is that phase's fresh retry
   let practice = null;
   const seen = new WeakSet(); // documents, speech objects and media prototypes already observed
+  const docCaps = new WeakMap(); // per document: whether media and speech could be observed
+  const capsOf = (fw) => docCaps.get(safe(() => fw.document, null)) || { media: false, speech: false };
   const leaves = (a, fw) => { const u = safe(() => new URL(a.getAttribute('href'), fw.location.href), null); return a.target !== '_blank' && u?.origin === fw.location.origin && u.pathname !== fw.location.pathname; };
   const ready = (fw, t) => Array.from(fw.document.querySelectorAll(SEL[t])).some((el) => !el.disabled && el.getClientRects().length > 0
     && fw.getComputedStyle(el).visibility !== 'hidden' && (t !== 'route' || leaves(el, fw)));
@@ -78,18 +90,31 @@ export function browserProbe(win, binding, evaluate) {
     a.rec.startMs = Math.round(a.startedAt - a.t0);
     a.exposure = Object.fromEntries(T.map((t) => [t, safe(() => ready(a.fw, t), false)]));
     for (const t of T) if (a.exposure[t]) receipt.exposure[t] = true;
+    if (a.retryOf) receipt.retries[a.retryOf] = {
+      playTrusted: a.rec.playTrusted, startMs: a.rec.startMs, speakCalls: a.rec.speakCalls, speakThrew: a.rec.speakThrew,
+      voice: a.rec.voice, clip: a.rec.clip === true, media: a.caps?.media === true, speech: a.caps?.speech === true,
+    };
     render();
   };
   const bind = (a, kind, event) => {
+    const caps = a.caps || capsOf(a.fw);
+    const usable = caps.media === true && caps.speech === true;
     const r = Object.assign(a, { bound: true, kind, boundAt: now() }).rec;
+    receipt.observation.attempts[kind] = { media: caps.media === true, speech: caps.speech === true };
     Object.assign(r, { transitionTrusted: event.isTrusted === true, exposed: a.exposure?.[kind] === true,
-      activeAtTransition: a.startedAt !== null && a.endedAt === null && safe(() => a.ss.speaking === true, false) });
+      activeAtTransition: usable && a.startedAt !== null && a.endedAt === null && safe(() => a.ss.speaking === true, false) });
     const srs = () => safe(() => a.fw.localStorage.getItem('lu-lexicon-srs'), undefined);
     const before = kind === 'next' ? srs() : undefined; // compared in memory; only the boolean is recorded
     win.setTimeout(() => {
-      r.quietMs = Math.round(now() - a.boundAt);
-      const still = safe(() => practice.speechSynthesis.speaking, true) || safe(() => a.ss.speaking, false);
-      r.stopped = r.cancelCalls > 0 && !still;
+      // An unobserved API must not look like a completed quiet window or a successful stop.
+      if (usable) {
+        r.quietMs = Math.round(now() - a.boundAt);
+        const still = safe(() => practice.speechSynthesis.speaking, true) || safe(() => a.ss.speaking, false);
+        r.stopped = r.cancelCalls > 0 && !still;
+      } else {
+        r.quietMs = 0;
+        r.stopped = false;
+      }
       if (kind === 'next') r.srsConserved = before !== undefined && srs() === before;
       receipt.transitions[kind] = r;
       pending = null;
@@ -98,15 +123,42 @@ export function browserProbe(win, binding, evaluate) {
     }, 3000);
     render();
   };
+  const attempt = (fw, event) => {
+    const retryOf = openRetry;
+    openRetry = null;
+    return { t0: now(), fw, caps: capsOf(fw), retryOf, startedAt: null, endedAt: null, rec: {
+      exposed: false, playTrusted: event.isTrusted === true, transitionTrusted: false, clip: false, speakCalls: 0, speakThrew: false, voice: null, startMs: null,
+      activeAtTransition: false, cancelCalls: 0, cancelThrew: false, stopped: false, quietMs: 0, lateStarts: 0, srsConserved: null,
+      manual: { audible: false, stoppedImmediately: false, noResume: false } } };
+  };
+  const beginStop = (a, event) => {
+    const kind = a.startedAt !== null ? 'postStart' : 'preStart';
+    const caps = a.caps || capsOf(a.fw);
+    Object.assign(a, { bound: true, kind, mode: 'stop', boundAt: now() });
+    a.rec = {
+      playTrusted: event.isTrusted === true, started: a.startedAt !== null, cancelCalls: 0, cancelThrew: false, stopped: false,
+      quietMs: 0, lateStarts: 0, clip: false, media: caps.media === true, speech: caps.speech === true,
+    };
+    win.setTimeout(() => {
+      if (a.rec.media && a.rec.speech) {
+        a.rec.quietMs = Math.round(now() - a.boundAt);
+        const still = safe(() => practice.speechSynthesis.speaking, true) || safe(() => a.ss.speaking, false);
+        a.rec.stopped = a.rec.cancelCalls > 0 && !still;
+      }
+      receipt.stops[kind] = a.rec;
+      openRetry = kind;
+      pending = null;
+      render();
+    }, 3000);
+    render();
+  };
   const onClick = (fw, event) => {
     const el = event.target?.closest ? event.target : null;
     if (!el || pending?.bound) return;
     if (el.closest('[data-pronunciation-lemma] button')) {
-      // A tap on the player while speech is active is its Stop control, not a new attempt.
-      pending = pending && pending.startedAt !== null && pending.endedAt === null ? null : { t0: now(), fw, startedAt: null, endedAt: null, rec: {
-        exposed: false, playTrusted: event.isTrusted === true, transitionTrusted: false, clip: false, speakCalls: 0, speakThrew: false, voice: null, startMs: null,
-        activeAtTransition: false, cancelCalls: 0, cancelThrew: false, stopped: false, quietMs: 0, lateStarts: 0, srsConserved: null,
-        manual: { audible: false, stoppedImmediately: false, noResume: false } } };
+      // A second tap while this attempt is open is Stop, before start and after start, not a discarded row.
+      if (pending && pending.endedAt === null) { beginStop(pending, event); return; }
+      pending = attempt(fw, event);
       return;
     }
     const kind = T.find((t) => { const hit = el.closest(SEL[t]); return hit && (t !== 'route' || leaves(hit, fw)); });
@@ -125,10 +177,26 @@ export function browserProbe(win, binding, evaluate) {
   const instrument = (fw) => {
     const fresh = (o) => Boolean(o) && !seen.has(o) && Boolean(seen.add(o));
     const d = safe(() => (fw.location.href === 'about:blank' ? null : fw.document), null);
-    if (fresh(d)) d.addEventListener('click', (event) => onClick(fw, event), true);
+    if (fresh(d)) {
+      d.addEventListener('click', (event) => {
+        const target = event.target;
+        if (target && target !== d && !safe(() => d.contains(target), false)) return; // a replaced document must not see the new one's taps
+        onClick(fw, event);
+      }, true);
+      const mediaApi = safe(() => fw.HTMLMediaElement.prototype, null);
+      const speechApi = fw.speechSynthesis;
+      const caps = { media: Boolean(mediaApi && mediaApi.play), speech: Boolean(speechApi && speechApi.speak && speechApi.cancel) };
+      docCaps.set(d, caps);
+      receipt.observation.documents.push(caps);
+    }
     const media = safe(() => fw.HTMLMediaElement.prototype, null);
     const play = media?.play;
-    if (d && play && fresh(media)) media.play = function (...args) { if (pending && !pending.bound) pending.rec.clip = true; late(); return play.apply(this, args); };
+    if (d && play && fresh(media)) media.play = function (...args) {
+      if (pending && !pending.bound) pending.rec.clip = true;
+      else if (pending?.mode === 'stop') pending.rec.clip = true;
+      late();
+      return play.apply(this, args);
+    };
     const ss = d && fw.speechSynthesis;
     if (!fresh(ss)) return;
     const { speak, cancel, getVoices } = ss;
@@ -206,10 +274,19 @@ const ATTEMPT = {
   startMs: nul('n'), activeAtTransition: 'b', cancelCalls: 'n', cancelThrew: 'b', stopped: 'b', quietMs: 'n', lateStarts: 'n', srsConserved: nul('b'),
   manual: { audible: 'b', stoppedImmediately: 'b', noResume: 'b' },
 };
+const OBS = { media: 'b', speech: 'b' };
+const STOP = {
+  playTrusted: 'b', started: 'b', cancelCalls: 'n', cancelThrew: 'b', stopped: 'b', quietMs: 'n', lateStarts: 'n', clip: 'b', media: 'b', speech: 'b',
+};
+const RETRY = {
+  playTrusted: 'b', startMs: nul('n'), speakCalls: 'n', speakThrew: 'b', voice: nul({ uk: 'b', local: 'b', filterMatch: 'b' }), clip: 'b', media: 'b', speech: 'b',
+};
 export const RECEIPT = {
   schema: ['native-speech-probe.v1'], binding: { sourceSha: 'h', helperSha: 'h', buildDigest: 'h' },
   hashing: { state: ['PENDING', 'OK', 'INSECURE', 'UNAVAILABLE'], page: nul('h'), assets: { map: nul('h') } },
   voices: { state: ['PENDING', 'STABLE', 'EMPTY', 'UNSTABLE', 'UNSUPPORTED'], total: 'n', uk: 'n', ukLocal: 'n', nonUk: 'n', waitedMs: 'n' },
+  observation: { documents: { list: OBS }, attempts: each(nul(OBS)) },
+  stops: { preStart: nul(STOP), postStart: nul(STOP) }, retries: { preStart: nul(RETRY), postStart: nul(RETRY) },
   exposure: each('b'), transitions: each(nul(ATTEMPT)), status: ['INCOMPLETE', 'DEVICE_CONTROLS_PASSED'],
 };
 const MANIFEST = { sourceSha: 'h', helperSha: 'h', buildDigest: 'h', pageSha: 'h', assets: { map: 'h' } };
@@ -218,6 +295,11 @@ const KINDS = { b: ['boolean', (v) => typeof v === 'boolean'], n: ['non-negative
 /** Strict shape check: unknown fields (names, text, URLs, raw state) and wrong types are refused; values are never echoed. */
 export function shapeErrors(value, spec = RECEIPT, at = 'receipt', out = [], open = false) {
   if (spec.nul) return value === null ? out : shapeErrors(value, spec.nul, at, out);
+  if (spec.list) {
+    if (!Array.isArray(value)) { out.push(`${at}: expected list`); return out; }
+    for (let i = 0; i < value.length; i += 1) shapeErrors(value[i], spec.list, `${at}[${i}]`, out);
+    return out;
+  }
   if (Array.isArray(spec)) { if (!spec.includes(value)) out.push(`${at}: unexpected value`); return out; }
   if (typeof spec === 'string') { if (!KINDS[spec][1](value)) out.push(`${at}: expected ${KINDS[spec][0]}`); return out; }
   if (!value || typeof value !== 'object' || Array.isArray(value)) { out.push(`${at}: expected object`); return out; }
@@ -241,17 +323,21 @@ export function validateReceipt(manifest, receipt, drift = []) {
     if (receipt.status !== out.status) reasons.push('page status disagrees with the off-device evaluation');
   }
   const rows = shape.length ? [] : TRANSITIONS.map((t) => receipt.transitions[t]).filter(Boolean);
-  const global = reasons.filter((r) => !TRANSITIONS.some((t) => r.startsWith(`${t}: `)));
+  const global = reasons.filter((r) => !TRANSITIONS.some((t) => r.startsWith(`${t}: `)) && !r.startsWith('NA-09:'));
   const rowOk = (t) => !reasons.some((r) => r.startsWith(`${t}: `));
   const voiceOk = (a) => a.voice?.uk && a.voice.local && a.voice.filterMatch;
+  const observed = (t) => { const o = receipt.observation?.attempts?.[t]; return o?.media === true && o?.speech === true; };
   const mark = (ok) => (!global.length && ok ? 'PROVISIONAL_DEVICE_PASS' : 'UNKNOWN');
   const criteria = {
     'P11-C02': mark(rows.length > 0 && rows.every(voiceOk)),
     'NA-07': mark(rowOk('next')),
     'NA-08': mark(['home', 'route', 'deck', 'level', 'locale'].every(rowOk)),
-    'NA-09': mark(rows.some((a) => a.playTrusted && !a.clip && !a.speakThrew && voiceOk(a) && a.startMs !== null && a.startMs <= 10000 && a.manual.audible)),
+    'NA-09': mark(!shape.length && !reasons.some((r) => r.startsWith('NA-09:')) && TRANSITIONS.some((t) => {
+      const a = receipt.transitions[t];
+      return a && observed(t) && a.playTrusted && !a.clip && !a.speakThrew && voiceOk(a) && a.startMs !== null && a.startMs <= 10000 && a.manual.audible;
+    })),
   };
-  const residual = 'Provisional device checklist only, never the driver verdict or issue closure. NA-09 Stop/retry and the other P11-C02 inventory classes stay UNKNOWN.';
+  const residual = 'Provisional device checklist only, never the driver verdict or issue closure. NA-09 Stop/retry stays UNKNOWN until pre-start and post-start Stop and a fresh retry after each are observed. The other P11-C02 inventory classes stay UNKNOWN.';
   return { result: reasons.length ? 'INCOMPLETE' : 'DEVICE_CONTROLS_PASSED', reasons, criteria, residual };
 }
 

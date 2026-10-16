@@ -30,12 +30,32 @@ function row(kind: string) {
   };
 }
 
+function stopOutcome(started: boolean) {
+  return {
+    playTrusted: true, started, cancelCalls: 1, cancelThrew: false, stopped: true, quietMs: 3000, lateStarts: 0, clip: false, media: true, speech: true,
+  };
+}
+
+function retryOutcome() {
+  return {
+    playTrusted: true, startMs: 360 as number | null, speakCalls: 1, speakThrew: false,
+    voice: { uk: true, local: true, filterMatch: true } as { uk: boolean; local: boolean; filterMatch: boolean } | null,
+    clip: false, media: true, speech: true,
+  };
+}
+
 function passingReceipt() {
   return {
     schema: 'native-speech-probe.v1',
     binding: { sourceSha: MANIFEST.sourceSha, helperSha: MANIFEST.helperSha, buildDigest: MANIFEST.buildDigest } as Record<string, string>,
     hashing: { state: 'OK', page: MANIFEST.pageSha as string | null, assets: { ...MANIFEST.assets } as Record<string, string | null> },
     voices: { state: 'STABLE', total: 4, uk: 1, ukLocal: 1, nonUk: 3, waitedMs: 2250 },
+    observation: {
+      documents: [{ media: true, speech: true }],
+      attempts: Object.fromEntries(TRANSITIONS.map((t: string) => [t, { media: true, speech: true }])) as Record<string, { media: boolean; speech: boolean } | null>,
+    },
+    stops: { preStart: stopOutcome(false) as ReturnType<typeof stopOutcome> | null, postStart: stopOutcome(true) as ReturnType<typeof stopOutcome> | null },
+    retries: { preStart: retryOutcome() as ReturnType<typeof retryOutcome> | null, postStart: retryOutcome() as ReturnType<typeof retryOutcome> | null },
     exposure: Object.fromEntries(TRANSITIONS.map((t: string) => [t, true])) as Record<string, boolean>,
     transitions: Object.fromEntries(TRANSITIONS.map((t: string) => [t, row(t)])) as Record<string, ReturnType<typeof row> | null>,
     status: 'DEVICE_CONTROLS_PASSED',
@@ -114,6 +134,34 @@ describe('off-device validator', () => {
     expect(Object.values(report.criteria)).toEqual(['UNKNOWN', 'UNKNOWN', 'UNKNOWN', 'UNKNOWN']);
   });
 
+  it('withholds NA-09 until pre-start Stop, post-start Stop and both retries exist', () => {
+    const audibleOnly = negative((r) => {
+      r.stops.preStart = null;
+      r.stops.postStart = null;
+      r.retries.preStart = null;
+      r.retries.postStart = null;
+    });
+    expect(audibleOnly.result).toBe('INCOMPLETE');
+    expect(audibleOnly.reasons).toContain('NA-09: Stop/retry evidence missing');
+    expect(audibleOnly.criteria).toEqual({ 'P11-C02': 'PROVISIONAL_DEVICE_PASS', 'NA-07': 'PROVISIONAL_DEVICE_PASS', 'NA-08': 'PROVISIONAL_DEVICE_PASS', 'NA-09': 'UNKNOWN' });
+    const postOnly = negative((r) => { r.stops.preStart = null; });
+    expect(postOnly.criteria['NA-09']).toBe('UNKNOWN');
+    const noRetry = negative((r) => { r.retries.postStart = null; });
+    expect(noRetry.criteria['NA-09']).toBe('UNKNOWN');
+    expect(noRetry.reasons).toContain('NA-09: Stop/retry evidence missing');
+  });
+
+  it('keeps duration and success unmet when media observation is unavailable on every row', () => {
+    const report = negative((r) => {
+      r.observation.documents[0].media = false;
+      for (const t of TRANSITIONS) r.observation.attempts[t] = { media: false, speech: true };
+    });
+    expect(report.result).toBe('INCOMPLETE');
+    expect(report.criteria['NA-09']).toBe('UNKNOWN');
+    for (const t of TRANSITIONS) expect(report.reasons).toContain(`${t}: observation was unavailable`);
+    expect(report.result).not.toBe('DEVICE_CONTROLS_PASSED');
+  });
+
   it('scopes a single-row defect to its own criterion', () => {
     const report = negative((r) => { r.transitions.next!.lateStarts = 1; });
     expect(report.criteria).toEqual({ 'P11-C02': 'PROVISIONAL_DEVICE_PASS', 'NA-07': 'UNKNOWN', 'NA-08': 'PROVISIONAL_DEVICE_PASS', 'NA-09': 'PROVISIONAL_DEVICE_PASS' });
@@ -161,7 +209,7 @@ class FakeUtterance extends EventTarget {
 }
 
 /** A same-origin practice window with native-shaped objects; the probe only wraps what it finds there. */
-function harness({ secure = false, voices = [] as unknown[], outerSpeech = true, open = true } = {}) {
+function harness({ secure = false, voices = [] as unknown[], outerSpeech = true, open = true, media = true, speech = true } = {}) {
   let clock = 0;
   const timers: { at: number; fn: () => void }[] = [];
   const intervals: (() => void)[] = [];
@@ -203,7 +251,7 @@ function harness({ secure = false, voices = [] as unknown[], outerSpeech = true,
   const fw: any = {
     closed: false, close() { fw.closed = true; }, addEventListener: (type: string, fn: () => void) => { if (type === 'DOMContentLoaded') loaded.push(fn); },
     document: practiceDoc(), location: { href: 'http://127.0.0.1:4321/practice/', origin: 'http://127.0.0.1:4321', pathname: '/practice/' },
-    speechSynthesis: native, HTMLMediaElement: FakeMedia, localStorage: { getItem: (k: string) => store.get(k) ?? null },
+    speechSynthesis: speech ? native : undefined, HTMLMediaElement: media ? FakeMedia : undefined, localStorage: { getItem: (k: string) => store.get(k) ?? null },
     getComputedStyle: () => ({ visibility: 'visible' }),
   };
   const opened: unknown[][] = [];
@@ -327,6 +375,73 @@ describe('in-page observer', () => {
     h.advance(3000);
     expect(h.receipt.transitions.home).toMatchObject({ clip: true, speakCalls: 0, startMs: null, stopped: false });
     expect(h.played).toHaveLength(1);
+  });
+
+  it('retains pre-start and post-start Stop, then a fresh retry that is not only a Home row', () => {
+    const h = harness();
+    h.tap('#play');
+    h.speak();
+    h.tap('#play');
+    h.fw.speechSynthesis.cancel();
+    h.advance(3000);
+    expect(h.receipt.stops.preStart).toMatchObject({ started: false, stopped: true, cancelCalls: 1, quietMs: 3000, media: true, speech: true });
+    expect(Object.values(h.receipt.transitions).every((entry) => entry === null)).toBe(true);
+
+    h.tap('#play');
+    const first = h.speak();
+    h.start(first);
+    expect(h.receipt.retries.preStart).toMatchObject({ playTrusted: true, speakCalls: 1, media: true, speech: true, clip: false });
+
+    h.tap('#play');
+    h.fw.speechSynthesis.cancel();
+    first.dispatchEvent(new Event('end'));
+    h.advance(3000);
+    expect(h.receipt.stops.postStart).toMatchObject({ started: true, stopped: true, cancelCalls: 1, quietMs: 3000 });
+    expect(h.receipt.transitions.next).toBeNull();
+
+    h.tap('#play');
+    const second = h.speak();
+    h.start(second);
+    expect(h.receipt.retries.postStart).toMatchObject({ playTrusted: true, speakCalls: 1, clip: false });
+    h.tap('.stage-back');
+    h.fw.speechSynthesis.cancel();
+    second.dispatchEvent(new Event('end'));
+    h.advance(3000);
+    expect(h.receipt.transitions.home).toMatchObject({ cancelCalls: 1, stopped: true, activeAtTransition: true, quietMs: 3000 });
+    expect(h.receipt.retries.postStart?.startMs).toEqual(expect.any(Number));
+    expect(shapeErrors(h.receipt)).toEqual([]);
+  });
+
+  it('does not record a passing quiet window when speech observation is unavailable', () => {
+    const h = harness({ speech: false });
+    h.tap('#play');
+    h.tap('.stage-back');
+    h.advance(3000);
+    expect(h.receipt.observation.documents).toEqual([{ media: true, speech: false }]);
+    expect(h.receipt.observation.attempts.home).toEqual({ media: true, speech: false });
+    expect(h.receipt.transitions.home).toMatchObject({ quietMs: 0, stopped: false, clip: false });
+    expect(evaluate(h.receipt, MANIFEST).reasons).toContain('home: observation was unavailable');
+  });
+
+  it('does not treat a missing media element as a silent successful stop', () => {
+    const h = harness({ media: false });
+    h.tap('#play');
+    const u = h.speak();
+    h.start(u);
+    h.tap('.stage-back');
+    h.fw.speechSynthesis.cancel();
+    h.advance(3000);
+    expect(h.receipt.observation.documents).toEqual([{ media: false, speech: true }]);
+    expect(h.receipt.observation.attempts.home).toEqual({ media: false, speech: true });
+    expect(h.receipt.transitions.home).toMatchObject({ quietMs: 0, stopped: false, clip: false });
+    expect(evaluate(h.receipt, MANIFEST).reasons).toContain('home: observation was unavailable');
+    const crafted = passingReceipt();
+    for (const t of TRANSITIONS) crafted.observation.attempts[t] = { media: false, speech: true };
+    crafted.status = evaluate(crafted, MANIFEST).status;
+    const report = validateReceipt(MANIFEST, crafted);
+    expect(report.result).toBe('INCOMPLETE');
+    expect(report.criteria['NA-09']).toBe('UNKNOWN');
+    expect(report.result).not.toBe('DEVICE_CONTROLS_PASSED');
   });
 
   it('treats a tap on the active player as Stop and ignores same-page links', () => {
