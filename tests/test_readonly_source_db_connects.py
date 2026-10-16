@@ -264,6 +264,7 @@ SOURCE_INGEST_BUILD_WRITERS = {
     "scripts/ingest/dictionary_ingest.py",
     "scripts/ingest/esum_load.py",
     "scripts/ingest/goroh_etymology_ingest.py",
+    "scripts/ingest/incremental_dmklinger_ingest.py",
     "scripts/ingest/incremental_historical_source_ingest.py",
     "scripts/ingest/incremental_textbook_ingest.py",
     "scripts/ingest/ohoiko_books_ingest.py",
