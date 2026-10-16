@@ -188,7 +188,7 @@ export function mountPronunciationPlayer(root: HTMLElement): () => void {
       if (phase === 'playing') startBudget(current);
       phase = 'pending';
       label();
-      speakWithSynthesis(current);
+      try { speakWithSynthesis(current); } catch { failed(); }
     } else {
       failed();
     }
