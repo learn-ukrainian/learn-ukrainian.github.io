@@ -133,7 +133,10 @@ Under host load the guards used to time out, and the tool then ran unguarded.
   the test until it is added to the fail-closed list.
 - A live Claude Code 2.1.301 canary (opt-in test, `LU_LIVE_CLAUDE_HOOK_CANARY=1`) confirmed
   the behaviour. A stub hook that outlived its timeout blocked the Bash call only with
-  `onFailure: "block"`; without the field the command ran.
+  `onFailure: "block"`; without the field the command ran. Both cases are tests.
+- The SchemaStore `claude-code-settings.json` schema (fetched 2026-10-16) predates
+  `onFailure` and does not list it, so a strict validator reports these entries as
+  unknown. Claude Code itself accepts the field, as the live canary shows.
 
 ### Measured latency (ms, spawn to exit, 200 calls per row)
 
@@ -160,6 +163,23 @@ columns loosely. Interpreter start-up is about 20 ms (`python3 -c pass`), or 11 
 dependency and refuses every merge, and the gain is small next to the tail. A bytecode cache outside the hooks directory
 was rejected, because a writable cache would let a same-user process replace guard code.
 
+A second sequential run on the final code (200 calls per guard, no command shims on PATH)
+gave these p50 / p99 values. The ambient run had load 15–18. The loaded run added 16 busy
+loops, for load 23–33.
+
+| Hook | Ambient p50 / p99 | Loaded p50 / p99 (max) |
+| --- | ---: | ---: |
+| enforce-venv.sh | 14 / 19 | 32 / 238 (248) |
+| heal-core-bare.py | 44 / 64 | 95 / 215 (217) |
+| guard-branch-switch-in-main.py | 60 / 86 | 126 / 310 (356) |
+| guard-admin-merge.py | 56 / 96 | 107 / 228 (253) |
+| guard-pr-merge.py | 74 / 133 | 126 / 258 (807) |
+| guard-secret-print.py | 64 / 146 | 118 / 530 (1159) |
+| guard-primary-checkout-write.py (Bash) | 100 / 128 | 208 / 582 (907) |
+| guard-public-github-text.py | 47 / 69 | 106 / 310 (1185) |
+
+Interpreter start-up was 18 ms in the ambient run and 55 ms in the loaded run.
+
 Changes behind the "after" columns:
 
 - `guard-branch-switch-in-main.py` resolves the protected roots on first use and skips the
@@ -182,14 +202,15 @@ Before, the call ran unguarded.
 
 ### Other harnesses
 
-| Harness | Hook surface | Failure semantics (official docs) | Fail-closed setting | State |
+| Harness | Hook surface | Failure semantics (official docs) | Enforced fail-closed | Only documented or unknown |
 | --- | --- | --- | --- | --- |
-| Claude Code | `.claude/settings.json` PreToolUse | Timeout, crash and other failures let the call proceed | `onFailure: "block"` | Set on every refusing guard |
-| Claude and Grok dispatch workers | Built from the shared settings by `adapters/claude.py` | As above / Grok: "timeouts, crashes, malformed output — is fail-open" | Claude: inherited. Grok: none; `grok_hook_bridge.py` denies at 10 s, before Grok's 15 s or longer timeout | Covered. Residual: the reviewer publish guard is added with timeout 5 and no `onFailure` |
-| Codex | `codex/hooks.json` → `codex_hook_policy.py` | No documented rule for a timed-out or crashed command hook; managed PreToolUse "error, timeout, or malformed response can fail the hook without blocking the tool" | None documented | The policy runner turns each guard deadline into a refusal; the 45 s entry timeout exceeds the 39 s inner chain (tested). An entry-script stall is uncovered |
-| Antigravity (AGY) | `agy/hooks.json`, secret guard only | Only a `deny` decision blocks; failure behaviour is undocumented | None documented | `secret_print_hook.py` denies at 5 s, before the 10 s hook timeout (tested). A wrapper stall is uncovered |
-| Cursor | Reads `.claude/settings.json` as third-party hooks | "Other exit codes: Hook failed, action proceeds (fail-open)"; whether `onFailure` is honoured is undocumented | Native `failClosed: true` per script | Unverified. No tracked native Cursor guard config exists |
-| Gemini CLI | Not used (Gemini runs through AGY) | Other exit codes are "Non-fatal ... proceeds" | None documented | Not applicable |
+| Claude Code (seats and dispatch workers) | `.claude/settings.json` PreToolUse; workers get the same entries through `adapters/claude.py` | Timeout, crash, failure to start, other exit codes and invalid JSON let the call proceed unless `onFailure: "block"` | Every refusing guard sets `onFailure: "block"`; live canary blocks a timed-out guard | Residual: the reviewer publish guard that `adapters/claude.py` adds has timeout 5 and no `onFailure` (strict-xfail test) |
+| Grok dispatch workers | Agent definitions from `adapters/grok_build.py`, each guard behind `grok_hook_bridge.py` | Grok 1.0.62: "All hook failures (timeouts, crashes, malformed output) are fail-open"; a hook that cannot start fails open "even for a deny hook" | The bridge turns a guard that runs past 10 s, crashes or exits non-zero into a deny, before Grok's 15 s or longer timeout (tested) | A bridge that stalls or cannot start fails open; no Grok setting closes this |
+| Grok interactive seats | Project `.claude/settings.json` merged as Claude-compat hooks, or none once `apply_grok_hook_profile` turns compat off | As above; `onFailure` is not a Grok field | Nothing | Residual: guards are fail-open, or absent under the recommended profile (strict-xfail test). No compensating control is verified here |
+| Codex | `codex/hooks.json` → `codex_hook_entry.sh` → `codex_hook_policy.py` | No documented rule for a timed-out or crashed command hook | The policy runner turns each guard deadline into exit 2, a refusal (tested); the 45 s entry timeout exceeds the 39 s inner chain (tested) | What Codex does when the 45 s outer timeout fires is undocumented, so an entry-script stall is uncovered |
+| Antigravity (AGY) | `agy/hooks.json`, secret guard only | Only a `deny` decision blocks | `secret_print_hook.py` returns a deny at 5 s, before the 10 s hook timeout (tested) | Timeout and crash disposition is unknown; no coverage is claimed for a wrapper stall |
+| Cursor | No native guard config is tracked; Cursor can read project `.claude/settings.json` as third-party hooks | Exit codes other than 0 and 2 "fail open by default unless `failClosed: true`" | Contract test: any tracked Cursor `hooks.json` guard must set `failClosed: true` | Whether Cursor honours `onFailure` in the Claude settings is unverified |
+| Gemini CLI | Not used (Gemini runs through AGY) | Other exit codes are "Non-fatal ... proceeds" | Not applicable | Not applicable |
 
 ## Related
 
