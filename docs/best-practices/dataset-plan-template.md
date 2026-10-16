@@ -17,11 +17,13 @@ Standard: [dataset engineering](dataset-engineering.md). All blanks block their 
 
 - Record, source unit, independent cluster, identity and field definitions: <each>.
 - Frozen universe, source/field/stratum counts and dispositions: <manifest/digest>.
+- Member coverage: <independently frozen ledger/schema, literal fields/paths/containers, unknown INCOMPLETE, exported deferred FAIL, exhaustive recomputation; word-card [contract](../projects/open-model-data/WORD_CARDS_DATASET_ENGINEERING_PLAN.md#2-n1-total-member-disposition-δ)>.
 - Unknown denominator: <owner, event, blocked operation; never an invented total>.
 - Sources: <edition/snapshot/checksum, locator, facet, provenance/licence record>.
-- Rights: <internal-use disposition; separate redistribution/permission evidence>.
+- Rights: <decided internal use; private-transfer owner/authority/scope receipt; public review; project licence decision; upstream grants/attribution survive access terms>.
 - Mixed fields and derivatives: <field-level licence, attribution, dependencies>.
-- Splits: <source/author/book/lexeme boundaries, applicability, weights>.
+- Consumer train/test splits: <source/author/book/lexeme boundaries, applicability>.
+- Protected audit partitions: <independent closures, ordinary release dispositions, no membership-revealing release complement; private draw state, public resampling seed only>.
 - Exact/near dedup and contamination: <algorithm, threshold, scope, unresolveds>.
 
 ## Human gold and measurement
@@ -30,14 +32,18 @@ Standard: [dataset engineering](dataset-engineering.md). All blanks block their 
 - Seal: <authority/signature, manifest SHA, UTC date, isolation/access receipts>.
 - Custody: <separate control, denied author membership/answers, alias closure>.
 - Disclosed development/training: <manifest, disjointness, no final-test use>.
-- Sealed calibration: <n/units/strata, candidate judges/rubrics, selection rule>.
+- Sealed calibration: <n/units/cells; complete two-family/tool/rule/screener workflows; shared errors, selection rule>.
 - Pilot-certification inputs: <separate n/units/strata, evaluator and custody>.
 - Untouched final release test: <separate n/units/strata, evaluator and custody>.
 - Rubric and critical failures: <fixed version, error/abstention costs>.
-- Numeric thresholds: <overall and per field/source, sample-size/precision rationale>.
-- IAA: <statistic, prevalence/marginals, raw agreement, human adjudication>.
+- Acceptance plan: <AQL/rejectable rate, producer/consumer risks, n/c, OC pass probabilities/dependence, exact c>0 bounds, familywise confidence, finite-pool feasibility; distinct estimation>.
+- Numeric thresholds: <all structural count and field-quality gates pass; denominators, no silent precedence or quality-bar reduction>.
+- Human-negative test: <conditional false acceptance, independent enrichment/minimum cells, inclusion probabilities/weights, prevalence limits/CIs, sensitivity/specificity; accept-all and abstain-all must fail>.
+- Human labels: <rating unit/task, two independent humans, reliability CI/prevalence/skew/undefined cases; blind unlabelled dispute readjudication, preserve originals and audit agreements>.
+- Human capacity: <distinct closures/appearances/screens/cases/expansion/tasks/labels/hours; measured timing upper limits and actual-design count quantiles, named staffing receipt; no historical-hour or marginal-percentile adequacy claim>.
 - Denominators: <all sampled, missing labels/abstentions, eligible label pairs>.
-- CIs: <method/confidence, seed/resamples, clusters, multiplicity, rare errors>.
+- CIs: <target/law M or C/conditioning/N/inclusion probability per claim; full frame vs post-development remainder, slice sizes only for supply; method/confidence, seed/resamples, clusters, multiplicity, rare errors; statistician ratification>.
+- Whole-release estimate: <sampled remainder + reserved census + development mass; unresolved worst-case interval; resolved-mass point denominator; no accepted unresolved facts>.
 - Freeze selection before evaluation: <judge/prompt/parser/config/tool digests>.
 
 ## Stage receipts
@@ -52,13 +58,13 @@ Standard: [dataset engineering](dataset-engineering.md). All blanks block their 
 
 ## Release, stopping, and completion
 
-- Card/Croissant/RAI: <substantive fields, pinned validators and receipts>.
+- Card/Croissant/RAI: <substantive fields, synthetic-data status, group vs record rates, pinned validators/receipts>.
 - Rebuild: <pinned sources/code/config/tools/seeds, clean-room command/comparison>.
-- Visibility/access: <private default, namespace verified, gold separately isolated>.
+- Visibility/access: <private default, verified namespace, effective repo grants/entitlement dependency and operator topology decision; gold separately isolated>.
 - Public-only conditions: <per-source redistribution review and current operator GO>.
 - Capacity/retention: <measured bytes/versions/reserve, overage stop, release archive>.
-- Maintenance/takedown: <source-change trigger, access suppression, replacement>.
+- Maintenance/takedown: <named owner/response target, scope/evidence; withdrawal vs body purge, supported history/LFS/ref action, separate operator authorization per destructive event, retired-ref verification and client-copy residual>.
 - Stop/residual: <failures, two-round limit, owner and exact unblocking event>.
 - DoD: <untouched-test semantic proof, same-artifact review, release/hygiene evidence>.
 - Receipt schema: <criterion, status, actor/time, inputs/artifact/code, metric/CI, digest>.
-- Documentation approval: <Sol/Opus, exact-head CF, CI, merge and cleanup receipts>.
+- Documentation approval: <conditional Sol/Opus agreement; separate precommitted held-out execution; fresh critical full-scope exact-head CF, same-head CI, merge and cleanup receipts>.
