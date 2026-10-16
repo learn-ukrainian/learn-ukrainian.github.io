@@ -380,3 +380,79 @@ A hold anywhere below a top-level directory makes the report show that whole
 directory as `held`, not `stale`. When the condition in `until` is met,
 remove the entry. A malformed list makes the report exit with code 2, so a
 hold is never ignored without notice.
+
+## Pytest run directories (#10779): not removed automatically yet
+
+This project adds no removal of old `pytest-of-<user>/pytest-<N>` run
+directories. Only pytest's own cleanup applies, under the settings in
+`pyproject.toml` (`tmp_path_retention_count`, `tmp_path_retention_policy`), and
+the end of each session prints the size of the current run (`pytest-tmp: ...`).
+Remove leftover runs by hand when the disk needs it.
+
+A hook in `tests/conftest.py` that deleted older runs at the end of each
+session was tried for #10779 and left out. From inside a session it cannot tell
+a live run from a finished one: a session that writes no `.lock` and then goes
+quiet looks the same as one that has ended, so any age limit can delete a live
+run. Review reproduced this with a real `TempPathFactory`. The planned
+replacement is a sweeper that runs outside pytest and deletes an old run only
+when no process holds a file or working directory inside it, as the worktree
+reaper does. It is tracked as a follow-up of #10779.
+
+Launcher tests in `tests/test_start_muse_driver.py` start each launcher as its
+own process group and kill the whole group before collecting the launcher, so a
+looping provider stub cannot outlive its test.
+
+## uv cache size line (#10779)
+
+`.venv/bin/python -m scripts.hygiene.uv_cache_status` prints one read-only line
+for `lu-driver-status` to show, for example
+`UV CACHE: 7.23 GiB, +0.40 GiB over 24h [WARN: ...]`. It never deletes from the
+cache. It keeps a small size history (one sample per 10 minutes at most, a week
+retained) in `uv-cache-size.jsonl` in the driver-keeper state directory that
+`lu-driver-status` already reads (override: `LU_DRIVER_STATUS_STATE_DIR`).
+Growth compares against the oldest sample at least an hour old inside the last
+24 hours and names the real span; before that it prints `growth n/a (history
+building)`. `--json` and `--no-record` are available.
+
+The size comes from `du -sk` in its own process group, bounded by
+`LU_UV_CACHE_SCAN_TIMEOUT_S` (default 8 seconds). On timeout it prints
+`UV CACHE: size unavailable (scan exceeded 8s)`; if `du` fails (for example an
+unreadable directory, which would make the total partial) it prints
+`UV CACHE: measurement failed (...)`. Both exit 0 and record no sample.
+
+History updates hold an exclusive lock on `uv-cache-size.jsonl.lock` beside the
+history, so concurrent runs never drop each other's samples. The lock is never
+waited on indefinitely: it is retried without blocking for up to
+`LU_UV_CACHE_LOCK_TIMEOUT_S` (default 2 seconds). If another writer still holds
+it, the command prints `UV CACHE: history busy (...); <size> measured, no
+sample recorded`, writes nothing and exits 0. The whole command therefore ends
+within the scan deadline plus the lock deadline.
+
+The history directory is checked once and then held open. The configured
+directory must not itself be a symlink. Its path is resolved once and opened
+one directory at a time without following symlinks; every directory on the way
+is compared with the cache's device and inode before anything is created in it,
+and the kernel's path of the opened directory is checked too. Every history
+read and write (lock, history file, temporary file, rename) is relative to that
+open directory, so retargeting a symlink afterwards cannot move the writes into
+the cache. If the directory is a symlink, the cache, or inside it, or its path
+changes while it is being opened, the command refuses with exit code 2 and
+writes nothing. Directories it creates get mode 0700.
+
+An open directory keeps its identity, not its place, so it could be moved into
+the cache while the size is measured. Before every write (creating the lock
+file, creating the temporary file, renaming it over the history) the command
+checks the location again: the kernel's path of the open directory must still
+be the resolved history path, that path must still name the same directory, and
+it must not be the cache or lie inside it, judged against the cache's real path
+both at start and now. On a mismatch it refuses with exit code 2, writes nothing
+more, and removes the temporary file and any lock file it created. A move in
+the instant between the last check and the write itself cannot be excluded.
+
+Warning thresholds: total size above `LU_UV_CACHE_WARN_GB` (default 10) or growth
+above `LU_UV_CACHE_GROWTH_WARN_GB` (default 2) per 24 hours. A warning is a
+prompt for a human to run `uv cache prune`, never an automatic action.
+
+The installed `lu-driver-status` consumer is private and owned by Infra (see
+`muse-usage.md`). It shows this line by running the module above with the
+project interpreter and printing its output.

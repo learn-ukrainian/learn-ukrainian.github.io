@@ -2,19 +2,23 @@
 
 from __future__ import annotations
 
+import contextlib
 import os
 import shutil
 import signal
 import subprocess
 import sys
+import threading
+import time
 from pathlib import Path
+from typing import Any
 
 import pytest
 
 from tests.test_launcher_contract import (
+    _LAUNCHER_READY_TIMEOUT_S,
     _blocking_signal_provider,
     _core_driver_exit_fixture,
-    _wait_for_launcher_readiness,
 )
 
 REPO = Path(__file__).resolve().parents[1]
@@ -65,6 +69,266 @@ def launch(env: dict[str, str], *args: str, dry: bool = True) -> subprocess.Comp
     )
     assert not Path(env["MUSE_TEST_CALLS"]).exists(), "admission/dry-run started the Muse binary"
     return result
+
+
+class LauncherGroup:
+    """A launcher started as its own process-group leader, with its output drained.
+
+    The Muse provider stub is a looping bash child of the launcher. Killing only
+    the launcher (the old ``process.kill()`` / ``subprocess.run`` timeout path)
+    orphans that loop, and it then runs forever, so teardown SIGKILLs the whole
+    group (#10779).
+
+    The leader is never reaped before the group signal: a zombie leader keeps its
+    pid, and so the process-group id, reserved. Exit is observed with
+    ``waitid(WNOWAIT)``, never ``poll``/``wait``/``communicate``, so ``killpg``
+    can never reach an unrelated group that reused the id.
+    """
+
+    def __init__(self, argv: list[str], *, cwd: Path, env: dict[str, str]) -> None:
+        self.argv = argv
+        self.process = subprocess.Popen(
+            argv,
+            cwd=cwd,
+            env=env,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            start_new_session=True,
+        )
+        self.pid = self.process.pid
+        self._chunks: dict[str, list[str]] = {"stdout": [], "stderr": []}
+        self._readers = [
+            threading.Thread(target=self._drain, args=(stream, self._chunks[name]), daemon=True)
+            for name, stream in (("stdout", self.process.stdout), ("stderr", self.process.stderr))
+        ]
+        for reader in self._readers:
+            reader.start()
+        self._result: subprocess.CompletedProcess[str] | None = None
+
+    @staticmethod
+    def _drain(stream: Any, sink: list[str]) -> None:
+        with stream:
+            sink.append(stream.read())
+
+    def exited(self) -> bool:
+        """True once the leader has exited; it stays an unreaped zombie."""
+        assert self.process.returncode is None, "launcher leader was reaped before its group was signalled"
+        return os.waitid(os.P_PID, self.pid, os.WEXITED | os.WNOWAIT | os.WNOHANG) is not None
+
+    def signal_leader(self, sig: int) -> None:
+        """Signal only the leader; it is unreaped, so its pid is still ours."""
+        assert self.process.returncode is None, "launcher leader was reaped before it was signalled"
+        os.kill(self.pid, sig)
+
+    def wait_done(self, timeout: float) -> bool:
+        """Wait for leader exit and output EOF (like ``communicate``) without reaping."""
+        deadline = time.monotonic() + timeout
+        while not self.exited():
+            if time.monotonic() >= deadline:
+                return False
+            time.sleep(0.02)
+        for reader in self._readers:
+            reader.join(max(0.0, deadline - time.monotonic()))
+        return not any(reader.is_alive() for reader in self._readers)
+
+    def reap(self, *, timeout: float = 10.0) -> subprocess.CompletedProcess[str]:
+        """SIGKILL the group while the leader is unreaped, prove it empty, then reap the leader."""
+        if self._result is not None:
+            return self._result
+        survivors: list[int] = []
+        try:
+            with contextlib.suppress(ProcessLookupError):
+                os.killpg(self.pid, signal.SIGKILL)
+            deadline = time.monotonic() + timeout
+            while (not self.exited() or live_group_members(self.pid)) and time.monotonic() < deadline:
+                time.sleep(0.05)
+            # Checked before the reap below, while the zombie leader still reserves the id.
+            survivors = live_group_members(self.pid)
+        finally:
+            self.process.wait(timeout=timeout)
+            for reader in self._readers:
+                reader.join(timeout)
+            self._result = subprocess.CompletedProcess(
+                self.argv, self.process.returncode, "".join(self._chunks["stdout"]), "".join(self._chunks["stderr"])
+            )
+        assert not survivors, f"launcher stub processes survived teardown: {survivors}"
+        return self._result
+
+    def finish(self, timeout: float) -> subprocess.CompletedProcess[str]:
+        """``communicate`` for a launcher group: wait, reap the group, raise on timeout."""
+        done = self.wait_done(timeout)
+        result = self.reap()
+        if not done:
+            raise subprocess.TimeoutExpired(self.argv, timeout, result.stdout, result.stderr)
+        return result
+
+    def wait_for_readiness(self, ready_paths: list[Path], *, timeout: float = 60) -> None:
+        """``_wait_for_launcher_readiness`` without ``poll()``, which would reap the leader."""
+        deadline = time.monotonic() + timeout
+        while time.monotonic() < deadline:
+            if all(path.is_file() for path in ready_paths):
+                return
+            if self.exited():
+                break
+            time.sleep(0.05)
+        result = self.reap()
+        missing = ", ".join(os.fspath(path) for path in ready_paths if not path.is_file())
+        pytest.fail(
+            f"timed out waiting for launcher readiness (missing {missing}, rc={result.returncode}):\n"
+            f"{result.stdout}{result.stderr}"
+        )
+
+
+def start_launcher_group(argv: list[str], *, cwd: Path, env: dict[str, str]) -> LauncherGroup:
+    """Start a launcher as its own process-group leader so teardown can reap its stubs."""
+    return LauncherGroup(argv, cwd=cwd, env=env)
+
+
+def live_group_members(pgid: int) -> list[int]:
+    """Pids of non-zombie processes still in process group ``pgid`` (Linux /proc)."""
+    members = []
+    for entry in Path("/proc").iterdir():
+        if not entry.name.isdigit():
+            continue
+        try:
+            fields = (entry / "stat").read_text().rsplit(")", 1)[1].split()
+        except (OSError, IndexError):
+            continue
+        # fields: state, ppid, pgrp, ...
+        if fields[0] != "Z" and int(fields[2]) == pgid:
+            members.append(int(entry.name))
+    return members
+
+
+def run_launcher(
+    argv: list[str], *, cwd: Path, env: dict[str, str], timeout: float = 60
+) -> subprocess.CompletedProcess[str]:
+    """``subprocess.run`` for a launcher whose stub children must not outlive the test."""
+    return start_launcher_group(argv, cwd=cwd, env=env).finish(timeout)
+
+
+_LOOPING_STUB = "while :; do sleep 0.1; done"
+
+
+def _pid_running(pid: int) -> bool:
+    try:
+        return Path(f"/proc/{pid}/stat").read_text().rsplit(")", 1)[1].split()[0] != "Z"
+    except (OSError, IndexError):
+        return False
+
+
+def _wait_for_pid_file(path: Path) -> int:
+    deadline = time.monotonic() + 30
+    while time.monotonic() < deadline:
+        if path.is_file() and path.read_text().strip():
+            return int(path.read_text())
+        time.sleep(0.02)
+    pytest.fail(f"stub never published its pid at {path}")
+
+
+def test_killing_only_the_launcher_orphans_the_stub_and_group_reap_removes_it(tmp_path: Path) -> None:
+    # The old teardown (killing only the launcher) is the leak premise; LauncherGroup.reap is the fix.
+    pid_file = tmp_path / "stub.pid"
+    group = start_launcher_group(
+        ["bash", "-c", f'bash -c \'echo $$ > "$1"; {_LOOPING_STUB}\' stub "$1" & wait', "launcher", str(pid_file)],
+        cwd=tmp_path,
+        env=dict(os.environ),
+    )
+    try:
+        stub_pid = _wait_for_pid_file(pid_file)
+        group.signal_leader(signal.SIGKILL)
+        deadline = time.monotonic() + 10
+        while not group.exited() and time.monotonic() < deadline:
+            time.sleep(0.02)
+        assert group.exited()
+        assert _pid_running(stub_pid), "premise: killing only the launcher must orphan the looping stub"
+    finally:
+        group.reap()
+    assert not _pid_running(stub_pid)
+    assert live_group_members(group.pid) == []
+
+
+def test_run_launcher_reaps_a_stub_that_outlives_the_launcher(tmp_path: Path) -> None:
+    pid_file = tmp_path / "stub.pid"
+    result = run_launcher(
+        [
+            "bash",
+            "-c",
+            # Exit only once the stub has published its pid, so it provably outlives the launcher.
+            f'(echo $BASHPID > "$1"; {_LOOPING_STUB}) >/dev/null 2>&1 & while [ ! -s "$1" ]; do sleep 0.02; done; exit 3',
+            "launcher",
+            str(pid_file),
+        ],
+        cwd=tmp_path,
+        env=dict(os.environ),
+    )
+    assert result.returncode == 3
+    stub_pid = _wait_for_pid_file(pid_file)
+    assert not _pid_running(stub_pid), "run_launcher teardown left the stub running"
+
+
+@pytest.fixture
+def signal_reap_order(monkeypatch: pytest.MonkeyPatch) -> list[tuple[str, int, bool]]:
+    """Record group signals and leader reaps, with whether the id was still reserved when signalled."""
+    events: list[tuple[str, int, bool]] = []
+    real_killpg, real_waitpid = os.killpg, os.waitpid
+
+    def spy_killpg(pgid: int, sig: int) -> None:
+        events.append(("killpg", pgid, Path(f"/proc/{pgid}").exists()))
+        real_killpg(pgid, sig)
+
+    def spy_waitpid(pid: int, options: int) -> tuple[int, int]:
+        result = real_waitpid(pid, options)
+        if result[0] == pid and pid > 0:
+            events.append(("reaped", pid, True))
+        return result
+
+    monkeypatch.setattr(os, "killpg", spy_killpg)
+    monkeypatch.setattr(os, "waitpid", spy_waitpid)
+    return events
+
+
+def _assert_signalled_before_reaped(events: list[tuple[str, int, bool]], pid: int) -> None:
+    mine = [event for event in events if event[1] == pid]
+    kinds = [kind for kind, _pid, _reserved in mine]
+    assert "killpg" in kinds and "reaped" in kinds, mine
+    assert kinds.index("killpg") < kinds.index("reaped"), f"group signalled after the leader was reaped: {mine}"
+    assert all(reserved for kind, _pid, reserved in mine if kind == "killpg"), mine
+
+
+def test_run_launcher_signals_the_group_before_reaping_the_leader(
+    tmp_path: Path, signal_reap_order: list[tuple[str, int, bool]]
+) -> None:
+    result = run_launcher(["bash", "-c", "exit 3"], cwd=tmp_path, env=dict(os.environ))
+
+    assert result.returncode == 3
+    reaped = {pid for kind, pid, _reserved in signal_reap_order if kind == "reaped"}
+    assert len(reaped) == 1, signal_reap_order
+    _assert_signalled_before_reaped(signal_reap_order, reaped.pop())
+
+
+def test_teardown_of_a_running_launcher_signals_before_reaping(
+    tmp_path: Path, signal_reap_order: list[tuple[str, int, bool]]
+) -> None:
+    group = start_launcher_group(["bash", "-c", _LOOPING_STUB], cwd=tmp_path, env=dict(os.environ))
+
+    result = group.reap()
+
+    assert result.returncode == -signal.SIGKILL
+    _assert_signalled_before_reaped(signal_reap_order, group.pid)
+
+
+def test_run_launcher_timeout_reaps_the_group_and_raises(tmp_path: Path) -> None:
+    pid_file = tmp_path / "stub.pid"
+    with pytest.raises(subprocess.TimeoutExpired):
+        run_launcher(
+            ["bash", "-c", f'echo $$ > "$1"; {_LOOPING_STUB}', "launcher", str(pid_file)],
+            cwd=tmp_path,
+            env=dict(os.environ),
+            timeout=1,
+        )
+    assert not _pid_running(_wait_for_pid_file(pid_file))
 
 
 def test_help_needs_no_provider_or_visibility_probe(muse_env: dict[str, str]) -> None:
@@ -344,13 +608,10 @@ def test_shared_lease_claim_exec_close_order(muse_env: dict[str, str], tmp_path:
     fixture_dir.mkdir()
     launcher, attempts, closed = lifecycle_fixture(fixture_dir, f"exit {exit_code}")
     events = tmp_path / "events"
-    result = subprocess.run(
+    result = run_launcher(
         ["bash", str(launcher), "--epic", "devops"],
         cwd=launcher.parent,
         env={**muse_env, "PATH": f"{fixture_dir / 'bin'}:{muse_env['PATH']}", "MUSE_TEST_EVENTS": str(events)},
-        capture_output=True,
-        text=True,
-        check=False,
         timeout=60,
     )
     assert result.returncode == exit_code, result.stdout + result.stderr
@@ -375,26 +636,21 @@ def test_shared_signal_closes_muse_lease(
         ready,
     )
     events = tmp_path / "events"
-    process = subprocess.Popen(
+    group = start_launcher_group(
         ["bash", str(launcher), "--epic", "devops"],
         cwd=launcher.parent,
         env={**muse_env, "PATH": f"{fixture_dir / 'bin'}:{muse_env['PATH']}", "MUSE_TEST_EVENTS": str(events)},
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        text=True,
     )
     try:
-        _wait_for_launcher_readiness(process, [ready, child_ready])
-        process.send_signal(sig)
-        stdout, stderr = process.communicate(timeout=60)
-        assert process.returncode == exit_code, stdout + stderr
+        group.wait_for_readiness([ready, child_ready], timeout=_LAUNCHER_READY_TIMEOUT_S)
+        group.signal_leader(sig)
+        result = group.finish(60)
+        assert result.returncode == exit_code, result.stdout + result.stderr
         assert received.is_file() and closed.is_file()
         assert attempts.read_text().strip() == "1"
         assert events.read_text().splitlines() == ["claim", "canary", "exec", "close"]
     finally:
-        if process.poll() is None:
-            process.kill()
-        process.communicate(timeout=10)
+        group.reap()
 
 
 def test_occupied_lease_refuses_before_canary_and_exec(muse_env: dict[str, str], tmp_path: Path) -> None:
@@ -409,14 +665,11 @@ def test_occupied_lease_refuses_before_canary_and_exec(muse_env: dict[str, str],
     )
     python_stub.write_text(body)
     events = tmp_path / "events"
-    result = subprocess.run(
+    result = run_launcher(
         ["bash", str(launcher), "--epic", "devops"],
         cwd=launcher.parent,
         env={**muse_env, "PATH": f"{fixture_dir / 'bin'}:{muse_env['PATH']}", "MUSE_TEST_EVENTS": str(events)},
-        capture_output=True,
-        text=True,
         timeout=60,
-        check=False,
     )
     assert result.returncode == 1
     assert "already has live session" in result.stderr
@@ -436,14 +689,11 @@ def test_canary_failure_closes_claim_without_provider(muse_env: dict[str, str], 
         )
     )
     events = tmp_path / "events"
-    result = subprocess.run(
+    result = run_launcher(
         ["bash", str(launcher), "--epic", "devops"],
         cwd=launcher.parent,
         env={**muse_env, "PATH": f"{fixture_dir / 'bin'}:{muse_env['PATH']}", "MUSE_TEST_EVENTS": str(events)},
-        capture_output=True,
-        text=True,
         timeout=60,
-        check=False,
     )
     assert result.returncode == 2, result.stdout + result.stderr
     assert events.read_text().splitlines() == ["claim", "canary", "close"]
@@ -475,7 +725,7 @@ def test_shared_renewal_precedes_close_and_stops_on_lease_loss(
     )
     python_stub.write_text(first + "\n" + heartbeat + rest)
     events = tmp_path / "events"
-    result = subprocess.run(
+    result = run_launcher(
         ["bash", str(launcher), "--epic", "devops"],
         cwd=launcher.parent,
         env={
@@ -485,10 +735,7 @@ def test_shared_renewal_precedes_close_and_stops_on_lease_loss(
             "SESSION_STREAM_RENEW_INTERVAL_SECONDS": "1",
             "SESSION_STREAM_RENEW_JITTER_SECONDS": "0",
         },
-        capture_output=True,
-        text=True,
         timeout=60,
-        check=False,
     )
     assert result.returncode == 0, result.stdout + result.stderr
     assert events.read_text().splitlines() == ["claim", "canary", "exec", "renew", "close"]
