@@ -145,6 +145,8 @@ def test_successful_scrape_validates_stage_then_replaces_complete_output(
     rows = [json.loads(line) for line in output_path.read_text(encoding="utf-8").splitlines()]
     assert len(rows) == 3
     assert all(row.keys() >= scrape.JSONL_REQUIRED_FIELDS for row in rows)
+    assert rows[0]["year"] == 1900
+    assert all(row["year"] is None for row in rows[1:])
     assert replacements == [(validated_paths[0], output_path)]
     assert not validated_paths[0].exists()
     assert (tmp_path / ".ukrlib_progress" / "test-author.done").exists()
@@ -198,6 +200,52 @@ def test_recovery_after_marker_failure_does_not_duplicate_chunks(
     assert output_path.read_bytes() == published
 
 
+def test_new_chunks_keep_work_year_unknown_and_do_not_rewrite_history(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A lifespan start is not a work date, and a resumed row stays byte-stable."""
+    output_path = _configure_author_scrape(monkeypatch, tmp_path)
+    info = {
+        "id": 4242,
+        "name": "Fixture A.",
+        "full_name": "Fixture Author",
+        "years": "1847-",
+        "genre_default": "prose",
+        "period": "modern",
+    }
+    monkeypatch.setattr(
+        scrape,
+        "get_author_works",
+        lambda _author_id: ([{"tid": 11, "title": "Untitled fixture"}], []),
+    )
+    monkeypatch.setattr(scrape, "chunk_text", _chunk_for_source)
+    previous = {
+        "chunk_id": "chunk-kept",
+        "text": "Existing historical row. " * 8,
+        "source_url": "https://example.test/kept",
+        "work": "Fixture Author. Kept work",
+        "author": "Fixture A.",
+        "year": 1900,
+        "genre": "prose",
+        "language_period": "modern",
+    }
+    output_path.write_text(json.dumps(previous) + "\n", encoding="utf-8")
+
+    assert scrape.scrape_author("test-author", info) == 2
+
+    raw_lines = output_path.read_text(encoding="utf-8").splitlines()
+    rows = [json.loads(line) for line in raw_lines]
+    assert rows[0] == previous
+    assert '"year": 1900' in raw_lines[0]
+    assert rows[1]["year"] is None
+    assert '"year": null' in raw_lines[1]
+    assert "1847" not in raw_lines[1]
+    assert rows[1]["author"] == "Fixture A."
+    assert rows[1]["work"] == "Fixture Author. Untitled fixture"
+    assert rows[1]["genre"] == "prose"
+    assert rows[1]["language_period"] == "modern"
+
+
 def test_staged_validation_rejects_invalid_json(tmp_path: Path) -> None:
     staged_path = tmp_path / "invalid.jsonl"
     staged_path.write_text("not json\n", encoding="utf-8")
@@ -249,6 +297,7 @@ def test_author_whole_loop_retention_resume_and_ordinary_failures(tmp_path, monk
         rows = [json.loads(line) for line in output.read_text().splitlines()]
         assert rows[-1]["genre"] == "biography"
         assert rows[-1]["source_url"] == "https://example.test/?tid=3"
+        assert all(row["year"] is None for row in rows)
     _assert_no_staging_file(tmp_path, output)
 
 

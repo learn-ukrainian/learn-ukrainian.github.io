@@ -1584,10 +1584,14 @@ def scrape_author(slug: str, author_info: dict, dry_run: bool = False,
                 chunks = chunk_text(text, work_title, source_url)
 
                 for chunk in chunks:
+                    # `author_info["years"]` is a lifespan, not a work date.
+                    # JSON null is the loader unknown (`_coerce_year` → NULL).
+                    # Work listings carry tid and title only, so there is no
+                    # source work-date to copy. Resumed rows are left as-is.
                     chunk.update({
                         "work": work_title,
                         "author": author_name,
-                        "year": int(author_info["years"].split("-")[0]),
+                        "year": None,
                         "genre": genre,
                         "language_period": period,
                     })
