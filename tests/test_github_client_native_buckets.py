@@ -436,9 +436,19 @@ def test_exhausted_bucket_gates_exactly_the_classified_shapes(no_jq, tmp_path, a
 
 @pytest.mark.parametrize("bucket", ALL_BUCKETS)
 def test_budget_above_reserve_never_blocks(no_jq, tmp_path, bucket):
-    store, runner, translated, native = seeded(tmp_path, [bucket], gh.RESERVE + 1)
+    # Core keeps a landing reserve (#10730); every other bucket refuses only at RESERVE or below.
+    above = gh.LANDING_RESERVE if bucket == "core" else gh.RESERVE + 1
+    store, runner, translated, native = seeded(tmp_path, [bucket], above)
     result = gh.run(api("--jq", "search/code", "repos/o/r/issues"), client=store, runner=runner, capture_output=True)
     assert not blocked(result) and (translated or native)
+
+
+@pytest.mark.parametrize("remaining", [gh.RESERVE + 1, gh.LANDING_RESERVE - 1])
+def test_core_below_landing_reserve_blocks_non_landing_with_typed_reason(no_jq, tmp_path, remaining):
+    store, runner, translated, native = seeded(tmp_path, ["core"], remaining)
+    result = gh.run(api("--jq", "search/code", "repos/o/r/issues"), client=store, runner=runner, capture_output=True)
+    assert blocked(result) and result.github_result.reason == "core_below_landing_reserve"
+    assert not translated and not native
 
 
 @pytest.mark.parametrize(
