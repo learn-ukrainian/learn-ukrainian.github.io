@@ -102,6 +102,9 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
 from scripts.common import test_slots
 from scripts.orchestration import pool_headroom, task_record_store, worktree_prep
 from scripts.orchestration.dispatch_isolation import slice_usage_clause
@@ -913,8 +916,12 @@ def _reaper_child_main(argv: list[str]) -> int:
     Prints the :class:`ReaperOutcome` as one JSON line on stdout; anything
     the reaper itself prints goes to stderr.
     """
+    usage = f"usage: python -m {_MODULE_NAME} {_DISK_REAPER_CHILD_FLAG} <repo_root>"
+    if argv in (["--help"], ["-h"]):
+        print(usage)
+        return 0
     if len(argv) != 2 or argv[0] != _DISK_REAPER_CHILD_FLAG:
-        print(f"usage: python -m {_MODULE_NAME} {_DISK_REAPER_CHILD_FLAG} <repo_root>", file=sys.stderr)
+        print(usage, file=sys.stderr)
         return 2
     with contextlib.redirect_stdout(sys.stderr):
         outcome = reap_clean_pushed_once(Path(argv[1]))

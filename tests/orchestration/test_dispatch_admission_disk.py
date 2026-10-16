@@ -951,6 +951,14 @@ def test_the_child_entry_prints_one_json_outcome_and_keeps_reaper_output_off_std
     assert adm._reaper_child_main([]) == 2
 
 
+@pytest.mark.parametrize("flag", ["--help", "-h"])
+def test_reaper_child_help_prints_usage_and_exits_zero(flag, capsys):
+    assert adm._reaper_child_main([flag]) == 0
+    captured = capsys.readouterr()
+    assert captured.out.startswith("usage: python -m scripts.orchestration.dispatch_admission")
+    assert captured.err == ""
+
+
 def test_the_real_reaper_child_starts_and_reports_an_outcome(tmp_path, monkeypatch):
     # The real reaper (once #10778 lands) refuses to touch anything with this set.
     monkeypatch.setenv("LU_REAPER_DISABLED", "1")
@@ -968,7 +976,7 @@ def test_the_real_reaper_child_starts_and_reports_an_outcome(tmp_path, monkeypat
     [
         ("lock /home/someone/repo/.reaper.lock is held", "lock <path> is held"),
         ("held (~/learn-ukrainian/x.lock)", "held (<path>)"),
-        ("see ~someone/x and /var/tmp/a:12", "see <path> and <path>"),
+        ("see ~someone/x and /srv/data/a:12", "see <path> and <path>"),
         ("origin/main is 3/4 behind; refs/heads/x", "origin/main is 3/4 behind; refs/heads/x"),
         ("reaper removed 0 worktree(s), freed 0 MB", "reaper removed 0 worktree(s), freed 0 MB"),
         ("lock %2Fhome%2Fsomeone%2Frepo.lock is held", "lock <path> is held"),
