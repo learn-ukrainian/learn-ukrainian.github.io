@@ -684,7 +684,7 @@ test("epic workers come from the current epic when agents fail or are older", ()
   assert.doesNotMatch(current, /worker-fresh/);
 });
 
-function mountedBoard() {
+function mountedBoard(hooks) {
   const nodes = new Map();
   const timeouts = new Map();
   const intervals = new Map();
@@ -753,6 +753,7 @@ function mountedBoard() {
     },
   };
   const errors = [];
+  if (hooks && hooks.beforeBoot) hooks.beforeBoot(nodes, document);
   vm.createContext(sandbox);
   vm.runInContext(js, sandbox, { filename: path.join(root, "dashboards/fleet-board.js") });
   return {
@@ -1223,8 +1224,8 @@ test('Fleet status, age, partial and retained reads cannot borrow a Work witness
     assert.doesNotMatch(row[4], /CF APPROVE/, state);
     assert.equal(row[6], 'unknown', state);
     assert.match(row[8], /Idle unknown h/, state);
-    const keeperObserved = ['stale','failed','unknown-age','source-error'].includes(state);
-    assert.match(row[8], new RegExp('Draft unknown; stale green unknown; stacked unknown; flake ' + (keeperObserved ? 'grant' : 'unknown')), state);
+    assert.equal(row[7], 'unknown', state);
+    assert.match(row[8], /Draft unknown; stale green unknown; stacked unknown; flake unknown/, state);
   }
 });
 
@@ -1249,6 +1250,8 @@ test('Work fallback needs its own authority and an exact nonempty selected head'
   assert.match(row[9], /Head disagreement.*different-head.*head-new/);
   assert.equal(row[5], 'unknown');
   assert.equal(row[6], 'unknown');
+  assert.equal(row[7], 'unknown');
+  assert.match(row[8], /flake unknown/);
 });
 
 test('duplicate PR observations retain every row without conflicting or borrowed clearance', () => {
@@ -1285,7 +1288,12 @@ test('queue, hold, stale-green and flake use the keeper source rather than Work 
   const reads = currentPipeline();
   delete reads.work;
   reads.prs.body.sources[0].status = 'stale';
-  assert.equal(pipelineCells(reads)[0][7], 'queued / hold false unknown');
+  assert.equal(pipelineCells(reads)[0][7], 'unknown');
+  assert.match(pipelineCells(reads)[0][8], /flake unknown/);
+  const qualifiedWithoutWork = currentPipeline();
+  delete qualifiedWithoutWork.work;
+  assert.equal(pipelineCells(qualifiedWithoutWork)[0][7], 'queued / hold false unknown');
+  assert.match(pipelineCells(qualifiedWithoutWork)[0][8], /flake grant/);
   const absent = currentPipeline();
   delete absent.work;
   for (const field of ['hours_idle','draft','stale_green','stacked_base','flake_grant']) delete absent.prs.body.data.prs[0][field];
@@ -1381,6 +1389,96 @@ test('paint failure is announced and logged, pending refresh is released and lat
   assert.ok(board.requests.length > before);
   assert.match(content, /Recovered observation/);
   assert.doesNotMatch(board.nodes.get('fb-status').textContent, /Display update failed/);
+});
+
+test('non-primitive labels stay unknown and one failing section leaves its siblings', () => {
+  const throwing = { toString() { throw new TypeError('label'); }, valueOf() { throw new TypeError('label'); } };
+  assert.equal(FB.esc(null), '');
+  assert.equal(FB.esc(undefined), '');
+  assert.equal(FB.esc(throwing), 'unknown');
+  assert.equal(FB.esc(Symbol('label')), 'unknown');
+  assert.equal(FB.esc({ bad: true }), 'unknown');
+  assert.equal(FB.esc(['a', 'b']), 'unknown');
+  assert.doesNotMatch(FB.esc(throwing), /\[object Object\]/);
+  const card = FB.cardHtml({ ...cedar, title: throwing, since: throwing, focus: throwing, parent: throwing, layer: throwing, intended: throwing, task: { kind: 'pr', number: 4, title: throwing } });
+  assert.match(card, /unknown/);
+  assert.doesNotMatch(card, /\[object Object\]/);
+  const home = FB.renderHome({
+    epics: [{ ...cedar, title: throwing }],
+    attention: [{ title: throwing, summary: throwing, target: { type: 'epic', id: 'cedar' } }],
+    sources: [{ name: throwing, status: 'stale' }, { name: Symbol('source'), status: 'unavailable' }],
+  }, new URLSearchParams());
+  assert.match(home, /unknown/);
+  assert.doesNotMatch(home, /\[object Object\]/);
+  const reads = sampleReads();
+  reads.work.body.items[0].remote_id = Symbol('pr');
+  const out = operator(reads);
+  assert.match(out, /Cedar registry/);
+  assert.match(out, /Section update failed/);
+  assert.match(out, /Host and test capacity/);
+  assert.doesNotMatch(out, /\[object Object\]/);
+});
+
+test('a paint that does not commit does not mark the board fetched', async () => {
+  const board = mountedBoard({
+    beforeBoot(nodes) {
+      const app = nodes.get('fb-app');
+      let content = '';
+      Object.defineProperty(app, 'innerHTML', {
+        configurable: true,
+        get() { return content; },
+        set() { throw new Error('Synthetic DOM paint failure'); },
+      });
+    },
+  });
+  await board.settle();
+  board.intervals.get(1000)();
+  assert.equal(board.nodes.get('fb-stamp-label').hidden, true);
+  assert.equal(board.nodes.get('fb-ago').textContent, 'waiting');
+  assert.match(board.nodes.get('fb-status').textContent, /Display update failed/);
+});
+
+test('a throwing launchpad card clears busy and a later load replaces it', async () => {
+  const page = mountedIndex();
+  await page.settle();
+  const summary = page.eval('taskSummary([{task_id:"t", status:{bad:true}}, {task_id:"u", status:"done"}], 2)');
+  assert.match(summary, /1 attention \(unknown\)/);
+  assert.match(summary, /1 done/);
+  assert.doesNotMatch(summary, /\[object Object\]/);
+  const throwing = {};
+  Object.defineProperty(throwing, 'status', { get() { throw new TypeError('status'); } });
+  page.sandbox.badTask = throwing;
+  assert.match(page.eval('taskSummary([badTask], 1)'), /unknown/);
+  assert.doesNotMatch(page.eval('taskSummary([badTask], 1)'), /\[object Object\]/);
+  page.overrides['/api/delegate/tasks?limit=100'] = { tasks: [{ task_id: 't1', status: { bad: true } }], total: 1 };
+  page.overrides['/api/wiki/status'] = { tracks: [{ track: 'l2', compiled: 1, total: 2 }] };
+  page.overrides['/api/analytics/cost'] = { windows: { last_7_days: { ledger_empty: true, runtime_calls_total: 3 } } };
+  const wiki = page.nodes.get('card-stat-wiki');
+  let failedWiki = false;
+  Object.defineProperty(wiki, 'textContent', {
+    configurable: true,
+    get() { return this._text || ''; },
+    set(value) {
+      if (!failedWiki && String(value).includes('compiled')) {
+        failedWiki = true;
+        throw new TypeError('wiki text');
+      }
+      this._text = value;
+    },
+  });
+  await page.eval('loadStats()');
+  await page.settle();
+  assert.equal(page.nodes.get('stats-row').attrs['aria-busy'], 'false');
+  assert.match(page.nodes.get('card-stat-delegate').textContent, /unknown/);
+  assert.doesNotMatch(page.nodes.get('card-stat-delegate').textContent, /\[object Object\]/);
+  assert.match(wiki.textContent, /Unavailable: summary failed/);
+  assert.match(page.nodes.get('card-stat-cost').textContent, /ledger empty/);
+  assert.match(page.nodes.get('fetch-status').textContent, /A summary failed/);
+  await page.eval('loadStats()');
+  await page.settle();
+  assert.equal(page.nodes.get('stats-row').attrs['aria-busy'], 'false');
+  assert.match(wiki.textContent, /1\/2 compiled/);
+  assert.match(page.nodes.get('fetch-status').textContent, /Fetch completed/);
 });
 
 test('scalar source sections are harmless; empty and partial section objects remain usable', () => {

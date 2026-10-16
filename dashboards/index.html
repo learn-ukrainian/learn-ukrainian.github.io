@@ -262,13 +262,27 @@ function applyIndependentSummary(path, body) {
   };
   if (values[path]) setStat(SUMMARY_TARGETS[path], values[path]() + '; source age/coverage unknown; fetched ' + new Date().toISOString());
 }
+function acceptedText(value) {
+  if (typeof value === 'boolean') return String(value);
+  if (typeof value === 'number') return Number.isFinite(value) ? String(value) : null;
+  if (typeof value === 'string' && value.length > 0) return value;
+  return null;
+}
+function taskStatus(task) {
+  try {
+    return acceptedText(task && task.status) ?? 'unknown';
+  } catch (error) {
+    return 'unknown';
+  }
+}
 function taskSummary(tasks, total) {
-  const active = tasks.filter(t => ['running', 'spawning'].includes(t.status)).length;
-  const done = tasks.filter(t => t.status === 'done').length;
-  const attention = tasks.filter(t => !['running', 'spawning', 'done'].includes(t.status));
-  const statuses = [...new Set(attention.map(t => t.status || 'unknown'))];
-  const finishedToday = tasks.filter(t => t.status === 'done' && taskTouchedToday(t)).length;
-  return `${active} active · ${done} done · ${attention.length} attention (${statuses.join(', ') || 'none returned'}) · ${finishedToday} finished today · ${tasks.length} loaded / ${Number.isFinite(total) ? total : 'unknown'} total; source age/coverage unknown`;
+  const rows = Array.isArray(tasks) ? tasks : [];
+  const active = rows.filter(t => taskStatus(t) === 'running' || taskStatus(t) === 'spawning').length;
+  const done = rows.filter(t => taskStatus(t) === 'done').length;
+  const attention = rows.filter(t => !['running', 'spawning', 'done'].includes(taskStatus(t)));
+  const statuses = [...new Set(attention.map(taskStatus))];
+  const finishedToday = rows.filter(t => taskStatus(t) === 'done' && taskTouchedToday(t)).length;
+  return `${active} active · ${done} done · ${attention.length} attention (${statuses.join(', ') || 'none returned'}) · ${finishedToday} finished today · ${rows.length} loaded / ${Number.isFinite(total) ? total : 'unknown'} total; source age/coverage unknown`;
 }
 
 function taskTouchedToday(task) {
@@ -415,10 +429,19 @@ async function loadOrientStat() {
 }
 
 let statsRunning = false;
+function summaryFailure(id) {
+  try {
+    setStat(id, 'Unavailable: summary failed; source age unknown');
+  } catch (error) { /* the card node failed; the launchpad latch still clears */ }
+}
 async function loadStats() {
   if (statsRunning) return;
   statsRunning = true;
-  document.getElementById('stats-row').setAttribute('aria-busy', 'true');
+  const statsRow = document.getElementById('stats-row');
+  statsRow.setAttribute('aria-busy', 'true');
+  let summaryFailed = false;
+  const failCard = (id) => { summaryFailed = true; summaryFailure(id); };
+  try {
   Object.values(SUMMARY_TARGETS).forEach(id => setStat(id, 'Loading; source age unknown'));
   let buildState = { pending: true, current: null, backlog: null, builtPct: null };
   let pendingConsultations = null;
@@ -485,40 +508,52 @@ async function loadStats() {
       `${displayBuildCount(buildState.current)} current · ${formatBacklogSegment(buildState)} · ${t.dossier_done ?? 'unknown'} dossiers · ${t.published_mdx ?? 'unknown'} published${stale}`;
   } catch(e) {}
 
-  if (cMetrics) setStat('consultation-stat', `${cMetrics.pending_queue} returned proposals; source age/coverage unknown`);
-  if (runtimeAgents) {
-    setStat('card-stat-runtime', `${(runtimeAgents.agents || []).length} agents`);
-  }
-
-  if (delegate) {
-    setStat('card-stat-delegate', taskSummary(delegate.tasks, delegate.total));
-  }
-
-  if (buildEvents) {
-    setStat('card-stat-build-events', `${(buildEvents.active || []).length} active`);
-  }
-
-  if (wiki) {
-    const operationalIds = operationalTrackIdSetFromSummary(summary);
-    const tracks = (wiki.tracks || []).filter(track => !operationalIds || operationalIds.has(track.track));
-    const totals = tracks.reduce((acc, track) => {
-      acc.compiled += track.compiled || 0;
-      acc.total += track.total || 0;
-      return acc;
-    }, { compiled: 0, total: 0 });
-    const complete = tracks.length && tracks.every(t => Number.isFinite(t.compiled) && Number.isFinite(t.total));
-    setStat('card-stat-wiki', complete ? `${totals.compiled}/${totals.total} compiled` : 'Compilation totals unknown; coverage incomplete');
-  }
-
-  if (cost) {
-    const week = cost.windows?.last_7_days || {};
-    if (week.ledger_empty) {
-      setStat('card-stat-cost', `ledger empty · ${Number.isFinite(week.runtime_calls_total) ? week.runtime_calls_total : 'unknown'} runtime calls (7d)`);
-    } else {
-      const amount = week.totals?.cost_usd_est;
-      setStat('card-stat-cost', Number.isFinite(amount) ? `~$${amount.toFixed(2)} last 7d` : 'Cost unknown; no measured amount');
+  try {
+    if (cMetrics) setStat('consultation-stat', `${cMetrics.pending_queue} returned proposals; source age/coverage unknown`);
+  } catch (e) { failCard('consultation-stat'); }
+  try {
+    if (runtimeAgents) {
+      setStat('card-stat-runtime', `${(runtimeAgents.agents || []).length} agents`);
     }
-  }
+  } catch (e) { failCard('card-stat-runtime'); }
+
+  try {
+    if (delegate) {
+      setStat('card-stat-delegate', taskSummary(delegate.tasks, delegate.total));
+    }
+  } catch (e) { failCard('card-stat-delegate'); }
+
+  try {
+    if (buildEvents) {
+      setStat('card-stat-build-events', `${(buildEvents.active || []).length} active`);
+    }
+  } catch (e) { failCard('card-stat-build-events'); }
+
+  try {
+    if (wiki) {
+      const operationalIds = operationalTrackIdSetFromSummary(summary);
+      const tracks = (wiki.tracks || []).filter(track => !operationalIds || operationalIds.has(track.track));
+      const totals = tracks.reduce((acc, track) => {
+        acc.compiled += track.compiled || 0;
+        acc.total += track.total || 0;
+        return acc;
+      }, { compiled: 0, total: 0 });
+      const complete = tracks.length && tracks.every(t => Number.isFinite(t.compiled) && Number.isFinite(t.total));
+      setStat('card-stat-wiki', complete ? `${totals.compiled}/${totals.total} compiled` : 'Compilation totals unknown; coverage incomplete');
+    }
+  } catch (e) { failCard('card-stat-wiki'); }
+
+  try {
+    if (cost) {
+      const week = cost.windows?.last_7_days || {};
+      if (week.ledger_empty) {
+        setStat('card-stat-cost', `ledger empty · ${Number.isFinite(week.runtime_calls_total) ? week.runtime_calls_total : 'unknown'} runtime calls (7d)`);
+      } else {
+        const amount = week.totals?.cost_usd_est;
+        setStat('card-stat-cost', Number.isFinite(amount) ? `~$${amount.toFixed(2)} last 7d` : 'Cost unknown; no measured amount');
+      }
+    }
+  } catch (e) { failCard('card-stat-cost'); }
 
   // Visualize the contracts (definition authority for public surface) per Claude review.
   try {
@@ -536,13 +571,20 @@ async function loadStats() {
         `Full contracts: /api/contracts/routes. API documentation: /docs. ` +
         `See definition authority in route_contracts.py and MONITOR-API.md.`;
     }
-  } catch (e) { /* Contracts are independent of the other summaries. */ }
-  document.getElementById('stats-row').setAttribute('aria-busy', 'false');
-  statsRunning = false;
-  document.getElementById('fetch-status').textContent = 'Fetch completed ' + new Date().toISOString() + '. Source age/coverage unknown.';
+  } catch (e) { summaryFailed = true; /* Contracts are independent of the other summaries. */ }
+  const fetchStatus = document.getElementById('fetch-status');
+  if (fetchStatus) {
+    fetchStatus.textContent = summaryFailed
+      ? 'A summary failed. Source age/coverage unknown.'
+      : 'Fetch completed ' + new Date().toISOString() + '. Source age/coverage unknown.';
+  }
   for (const [path, id] of Object.entries(SUMMARY_TARGETS)) {
     const el = document.getElementById(id), state = summaryFetches[path];
     if (el && state?.at && !state.error) el.textContent += ' · fetched ' + new Date(state.at).toISOString();
+  }
+  } finally {
+    statsRow.setAttribute('aria-busy', 'false');
+    statsRunning = false;
   }
 }
 

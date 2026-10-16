@@ -14,8 +14,17 @@
   };
   const STATUS_RANK = { ok: 0, stale: 1, unavailable: 2, not_configured: 3 };
 
+  function acceptedText(value) {
+    if (typeof value === "boolean") return String(value);
+    if (typeof value === "number") return Number.isFinite(value) ? String(value) : null;
+    if (typeof value === "string" && value.length > 0) return value;
+    return null;
+  }
+
   function esc(value) {
-    return String(value ?? "").replace(/[&<>"]/g, (ch) => ({
+    if (value == null) return "";
+    const accepted = acceptedText(value);
+    return (accepted == null ? "unknown" : accepted).replace(/[&<>"]/g, (ch) => ({
       "&": "&amp;",
       "<": "&lt;",
       ">": "&gt;",
@@ -24,11 +33,12 @@
   }
 
   function identifierHref(prefix, id) {
+    const accepted = acceptedText(id);
+    if (accepted == null) return null;
     try {
-      return prefix + encodeURIComponent(id);
+      return prefix + encodeURIComponent(accepted);
     } catch (error) {
-      if (error instanceof URIError) return null;
-      throw error;
+      return null;
     }
   }
 
@@ -275,8 +285,17 @@
     if (e?.omitted) status = 'Partial: ' + e.omitted + ' malformed rows omitted';
     const busy = !e || e.pending ? 'true' : 'false';
     const fetchAge = e?.fetchedAt ? ageText((now - e.fetchedAt) / 1000) + ' ago' : 'none';
+    let rendered = '<p>No values available.</p>';
+    if (b) {
+      try {
+        rendered = render(b, e);
+      } catch (error) {
+        console.error('Fleet Board section failed', error);
+        rendered = '<p>Section update failed. Other sections from this refresh are shown.</p>';
+      }
+    }
     return `<section class="fb-panel" data-read="${key}" aria-busy="${busy}"><h3>${esc(title)}</h3><p class="fb-read-state">${esc(status)}</p>
-        ${b ? render(b, e) : '<p>No values available.</p>'}${extra || ''}
+        ${rendered}${extra || ''}
         <p class="fb-src">Source age unknown unless qualified below. Last successful fetch: ${esc(fetchAge)}. Read: ${esc(READS[key])}</p>
         ${sourceNotes(e, now, "source:" + key + ":" + title)}<button type="button" class="fb-btn" data-focus-key="${esc(key + ":" + title)}" data-retry="${key}">Retry ${esc(title)}</button></section>`;
   }
@@ -537,7 +556,7 @@
           const headMatch = !f || (text(v.head_sha) && text(f.head_sha) && f.head_sha === v.head_sha);
           const fleetUsable = !!f && gh && !ambiguous && !(usable && disagreement);
           const workUsable = usable && headMatch;
-          const queueUsable = !!f && mq && !ambiguous && !(usable && disagreement);
+          const queueUsable = fleetUsable && mq;
           const currentCF = fleetUsable && f?.cf?.at_head === true;
           const id = i?.remote_id || f?.number;
           const title = i?.title || f?.title;
@@ -837,27 +856,51 @@
     return `<span class="fb-state is-${stateClass(state)}">${esc(known ? state : "unknown")}</span>`;
   }
 
+  function readValue(read) {
+    try {
+      return read();
+    } catch (error) {
+      return undefined;
+    }
+  }
+
+  function fieldText(read, missing) {
+    const value = readValue(read);
+    if (value == null || value === "") return missing;
+    return acceptedText(value) ?? "unknown";
+  }
+
   function sinceLabel(value) {
-    if (!value) return "unknown";
-    const match = /^(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2}):\d{2}Z$/.exec(String(value));
-    if (!match) return String(value);
-    return match[2] + " UTC";
+    let accepted;
+    try {
+      accepted = acceptedText(value);
+    } catch (error) {
+      accepted = null;
+    }
+    if (accepted == null) return "unknown";
+    const match = /^(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2}):\d{2}Z$/.exec(accepted);
+    return match ? match[2] + " UTC" : accepted;
   }
 
   function taskText(task) {
-    if (!task || (task.kind !== "pr" && task.kind !== "issue")) return "current task unknown";
-    const label = task.kind === "pr" ? "PR" : "Issue";
-    const number = Number.isInteger(task.number) ? " #" + task.number : "";
-    const title = task.title ? " · " + task.title : "";
-    return label + number + title;
+    const kind = readValue(() => task && task.kind);
+    if (kind !== "pr" && kind !== "issue") return "current task unknown";
+    const label = kind === "pr" ? "PR" : "Issue";
+    const rawNumber = readValue(() => task && task.number);
+    const number = Number.isInteger(rawNumber) ? " #" + rawNumber : "";
+    const title = fieldText(() => task.title, "");
+    return label + number + (title ? " · " + title : "");
   }
 
   function subtitle(epic) {
-    const parts = [epic.epic || "no epic id"];
-    if (epic.focus) parts.push(epic.focus);
-    if (epic.parent) parts.push("parent " + epic.parent);
-    parts.push(epic.layer == null ? "layer unknown" : "layer " + epic.layer);
-    parts.push("intended " + (epic.intended || "unknown"));
+    const parts = [fieldText(() => epic && epic.epic, "no epic id")];
+    const focus = fieldText(() => epic && epic.focus, "");
+    if (focus) parts.push(focus);
+    const parent = fieldText(() => epic && epic.parent, "");
+    if (parent) parts.push("parent " + parent);
+    const layer = readValue(() => epic && epic.layer);
+    parts.push(layer == null ? "layer unknown" : "layer " + (acceptedText(layer) ?? "unknown"));
+    parts.push("intended " + fieldText(() => epic && epic.intended, "unknown"));
     return parts.join(" · ");
   }
 
@@ -884,7 +927,9 @@
   }
 
   function titleOf(epic) {
-    return String((epic && (epic.title || epic.epic)) || "");
+    const value = readValue(() => epic && (epic.title || epic.epic));
+    if (value == null || value === "") return "";
+    return acceptedText(value) ?? "unknown";
   }
 
   function compareEpics(a, b, sort) {
@@ -1102,9 +1147,13 @@
   function notableSources(sources) {
     const byName = Object.create(null);
     (sources || []).forEach((row) => {
-      if (!row || !row.name) return;
-      const prev = byName[row.name];
-      if (!prev || (STATUS_RANK[row.status] || 0) > (STATUS_RANK[prev.status] || 0)) byName[row.name] = row;
+      const name = readValue(() => row && row.name);
+      if (name == null || name === "") return;
+      const accepted = acceptedText(name);
+      const key = accepted || "unknown";
+      const stored = accepted ? row : { name: "unknown", status: readValue(() => row.status) };
+      const prev = byName[key];
+      if (!prev || (STATUS_RANK[stored.status] || 0) > (STATUS_RANK[prev.status] || 0)) byName[key] = stored;
     });
     return Object.keys(byName).map((name) => byName[name]).filter((row) => row.status && row.status !== "ok");
   }
@@ -1113,7 +1162,8 @@
     const rows = notableSources(sources);
     if (!rows.length) return "";
     const items = rows.map((row) => {
-      const name = String(row.name).replace(/_/g, " ");
+      const accepted = acceptedText(readValue(() => row.name));
+      const name = accepted == null ? "unknown" : accepted.replace(/_/g, " ");
       return `<li><span>${esc(name)}</span> <b>${esc(sourceLabel(row.status))}</b></li>`;
     });
     return `<ul class="fb-source-list">${items.join("")}</ul>`;
@@ -1161,14 +1211,25 @@
     return !!(options && options[key]);
   }
 
+  function guardSection(render) {
+    try {
+      return render();
+    } catch (error) {
+      console.error('Fleet Board section failed', error);
+      return '<section class="fb-panel"><h3>Section update failed</h3><p>This section failed. Other sections from this refresh are shown.</p></section>';
+    }
+  }
+
   function renderHome(model, params, options) {
     const query = params instanceof URLSearchParams ? params : new URLSearchParams(params || "");
     const epics = Array.isArray(model.epics) ? model.epics : [];
     const attention = Array.isArray(model.attention) ? model.attention : [];
     const sources = model.sources || [];
+    const attentionHtml = attention.map((item) => guardSection(() => attentionItem(item))).join("") || '<p>No derived attention rows returned; coverage unknown.</p>';
+    const cards = filterEpics(epics, query).map((epic) => guardSection(() => cardHtml(epic))).join("") || '<p>No epics match these filters; source coverage unknown.</p>';
     return `${staleBanner(staleState(sources, ageOption(options), optionFlag(options, "failed")))}
-      <section><h2>Derived Fleet attention</h2><div class="fb-attn">${attention.map(attentionItem).join("") || '<p>No derived attention rows returned; coverage unknown.</p>'}</div></section>
-      <section><h2>Optional Fleet board observations</h2>${toolbar(epics, query)}${harnessCaption(sources)}<div class="fb-grid">${filterEpics(epics, query).map(cardHtml).join("") || '<p>No epics match these filters; source coverage unknown.</p>'}</div></section>${sourceList(sources)}`;
+      <section><h2>Derived Fleet attention</h2><div class="fb-attn">${attentionHtml}</div></section>
+      <section><h2>Optional Fleet board observations</h2>${toolbar(epics, query)}${harnessCaption(sources)}<div class="fb-grid">${cards}</div></section>${guardSection(() => sourceList(sources))}`;
   }
 
   function liveness(driver) {
@@ -1559,17 +1620,19 @@
   }
 
   function paint() {
-    try { paintView(); }
-    catch (error) {
+    try {
+      return paintView();
+    } catch (error) {
       const live = document.getElementById('fb-status');
       if (live) live.textContent = 'Display update failed. Retrying on next refresh.';
       console.error('Fleet Board display update failed', error);
+      return false;
     }
   }
 
   function paintView() {
     const app = document.getElementById("fb-app");
-    if (!app) return;
+    if (!app) return false;
     const route = parseRoute(location.hash || "#/home");
     const expandedSources = new Set(Array.from(app.querySelectorAll ? app.querySelectorAll('details[open] summary[data-focus-key]') : []).map(el => el.getAttribute('data-focus-key')));
     const focused = document.activeElement;
@@ -1598,48 +1661,59 @@
       const matches = snapshot.epicId === route.epicId && snapshot.epic && (id === route.epicId || data === null);
       const registered = reads.registry?.body?.streams.find(s => s.stream_id === route.epicId || s.stream_name === route.epicId);
       if (registered) {
-        html = `<p class="fb-crumbs"><a href="#/home">Home</a> / stream</p><h2>${esc(registered.title || registered.stream_id)}</h2>` +
-          readPanel('registry', 'Selected session-store stream', reads, Date.now(), () => registryRows({streams:[registered]}, reads, Date.now()));
-        if (matches && data) html += renderEpic(snapshot.epic, snapshot.agents, options);
+        html = guardSection(() => `<p class="fb-crumbs"><a href="#/home">Home</a> / stream</p><h2>${esc(registered.title || registered.stream_id)}</h2>` +
+          readPanel('registry', 'Selected session-store stream', reads, Date.now(), () => registryRows({streams:[registered]}, reads, Date.now())));
+        if (matches && data) html += guardSection(() => renderEpic(snapshot.epic, snapshot.agents, options));
         else html += '<p>Optional board detail unavailable. Registry lease evidence is separate from current activity. <a href="#/prs">PR pipeline</a></p>';
       }
-      else if (matches) html = renderEpic(snapshot.epic, snapshot.agents, options);
+      else if (matches) html = guardSection(() => renderEpic(snapshot.epic, snapshot.agents, options));
       else if (failed && snapshot.epicId === route.epicId) html = `<p class="fb-empty">The board could not be read.</p>`;
       else html = `<p class="fb-empty">Loading the board…</p>`;
     } else {
       reads.epics = { body: snapshot.epics, fetchedAt: freshAt.epics };
-      html = renderOperator(reads, route, Date.now());
+      html = guardSection(() => renderOperator(reads, route, Date.now()));
       if (route.view === "home") {
         const model = homeModel(snapshot.now, snapshot.epics);
-        html += renderHome(model, route.params, options);
+        html += guardSection(() => renderHome(model, route.params, options));
       }
     }
     const statusText = Object.entries(reads).filter(([key]) => READS[key]).map(([key,e]) => key + ': ' + (e.error || (e.pending ? 'loading' : 'observed'))).join('; ');
     const live = document.getElementById('fb-status');
     if (live && live.textContent !== statusText) live.textContent = statusText;
-    app.innerHTML = html;
-    if (app.querySelectorAll) app.querySelectorAll('details summary[data-focus-key]').forEach(summary => {
-      if (expandedSources.has(summary.getAttribute('data-focus-key'))) summary.parentElement.open = true;
-    });
-    markNav(route.view);
-    syncStamp(route);
-    if (focusId || focusKey || focusAgent || focusRetry || focusFilter || focusHref) {
-      // Match attributes directly; untrusted identities never enter a CSS selector.
-      const candidates = Array.from(app.querySelectorAll ? app.querySelectorAll('a, button, input, select, summary') : []);
-      const replacement = candidates.find(el => focusId ? el.id === focusId : focusKey ? el.getAttribute("data-focus-key") === focusKey : focusAgent ? el.getAttribute('data-agent') === focusAgent : focusRetry ? el.getAttribute('data-retry') === focusRetry : focusFilter ? el.getAttribute('data-filter') === focusFilter : el.getAttribute('href') === focusHref);
-      if (replacement) { preserveFocusedRow(replacement, focusedIndex); replacement.focus(); }
+    try {
+      app.innerHTML = html;
+    } catch (error) {
+      if (live) live.textContent = 'Display update failed. Retrying on next refresh.';
+      console.error('Fleet Board display update failed', error);
+      return false;
     }
-    if (draft != null) {
-      const field = document.getElementById("fb-search");
-      if (field) {
-        field.value = draft;
-        field.focus();
-        const pos = selection == null ? draft.length : selection;
-        if (field.setSelectionRange) field.setSelectionRange(pos, selectionEnd ?? pos);
+    try {
+      if (app.querySelectorAll) app.querySelectorAll('details summary[data-focus-key]').forEach(summary => {
+        if (expandedSources.has(summary.getAttribute('data-focus-key'))) summary.parentElement.open = true;
+      });
+      markNav(route.view);
+      syncStamp(route);
+      if (focusId || focusKey || focusAgent || focusRetry || focusFilter || focusHref) {
+        // Match attributes directly; untrusted identities never enter a CSS selector.
+        const candidates = Array.from(app.querySelectorAll ? app.querySelectorAll('a, button, input, select, summary') : []);
+        const replacement = candidates.find(el => focusId ? el.id === focusId : focusKey ? el.getAttribute("data-focus-key") === focusKey : focusAgent ? el.getAttribute('data-agent') === focusAgent : focusRetry ? el.getAttribute('data-retry') === focusRetry : focusFilter ? el.getAttribute('data-filter') === focusFilter : el.getAttribute('href') === focusHref);
+        if (replacement) { preserveFocusedRow(replacement, focusedIndex); replacement.focus(); }
       }
+      if (draft != null) {
+        const field = document.getElementById("fb-search");
+        if (field) {
+          field.value = draft;
+          field.focus();
+          const pos = selection == null ? draft.length : selection;
+          if (field.setSelectionRange) field.setSelectionRange(pos, selectionEnd ?? pos);
+        }
+      }
+      window.scrollTo(0, y);
+      if (openAgentId && !(document.getElementById("fb-drawer")?.contains?.(document.activeElement))) fillDrawer(openAgentId);
+    } catch (error) {
+      console.error('Fleet Board display update failed', error);
     }
-    window.scrollTo(0, y);
-    if (openAgentId && !(document.getElementById("fb-drawer")?.contains?.(document.activeElement))) fillDrawer(openAgentId);
+    return true;
   }
 
   async function fetchJson(path, detailed) {
@@ -1734,6 +1808,10 @@
           Object.keys(snapshot).forEach((key) => {
             snapshot[key] = committed.snapshot[key];
           });
+          const priorFresh = {};
+          Object.keys(freshAt).forEach((key) => {
+            priorFresh[key] = freshAt[key];
+          });
           Object.keys(freshAt).forEach((key) => {
             freshAt[key] = committed.freshAt[key] || 0;
           });
@@ -1745,7 +1823,12 @@
           const anyShown = slots.some((slot) => snapshot[slot]);
           failed = !anyBody && !anyShown;
           appliedKey = ticket.key;
-          paint();
+          if (!paint()) {
+            Object.keys(freshAt).forEach((key) => {
+              freshAt[key] = priorFresh[key] || 0;
+            });
+            syncStamp(current);
+          }
         }
         await extraReads;
       } finally {
