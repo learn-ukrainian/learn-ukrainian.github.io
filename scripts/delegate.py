@@ -1525,29 +1525,46 @@ def _build_runtime_tmp_legacy_stem_index() -> dict[str, str]:
     return index
 
 
+# Present in a legacy stem index once the task-id scan has added every record's
+# lease name. No lease name contains "/" (``_runtime_tmp_lease_name``).
+_RUNTIME_TMP_LEGACY_TASK_IDS_SCANNED = "/task-ids-scanned"
+
+
+def _add_runtime_tmp_legacy_task_id_owners(legacy_stem_index: dict[str, str]) -> None:
+    """Add each record's task-id lease name to the index, once per index (#10799).
+
+    A record's file stem can differ from its task id, so a lease the stem
+    index misses is resolved by task id. One scan serves every later miss
+    of the same sweep. A stem match keeps precedence; among task-id matches
+    the first record in glob order wins.
+    """
+    legacy_stem_index[_RUNTIME_TMP_LEGACY_TASK_IDS_SCANNED] = ""
+    try:
+        state_files = tuple(tasks_dir().glob("*.json")) if tasks_dir().is_dir() else ()
+    except OSError:
+        return
+    for state_path in state_files:
+        if state_path.name.endswith(".tmp") or ".tmp." in state_path.name:
+            continue
+        state = _read_state_json(state_path)
+        task_id = state.get("task_id") if isinstance(state, dict) else None
+        if isinstance(task_id, str):
+            legacy_stem_index.setdefault(_runtime_tmp_lease_name(task_id), state_path.stem)
+
+
 def _read_runtime_tmp_state_for_legacy_lease(
     lease_name: str,
     *,
     legacy_stem_index: dict[str, str],
 ) -> dict[str, Any] | None:
-    """Resolve one marker-less lease, falling back to a bounded record scan."""
+    """Resolve one marker-less lease by file stem, then by task id."""
     stem = legacy_stem_index.get(lease_name)
-    if stem is not None:
-        return _read_state_json(tasks_dir() / f"{stem}.json")
-    try:
-        state_files = tuple(tasks_dir().glob("*.json")) if tasks_dir().is_dir() else ()
-    except OSError:
+    if stem is None and _RUNTIME_TMP_LEGACY_TASK_IDS_SCANNED not in legacy_stem_index:
+        _add_runtime_tmp_legacy_task_id_owners(legacy_stem_index)
+        stem = legacy_stem_index.get(lease_name)
+    if stem is None:
         return None
-    for state_path in state_files:
-        if state_path.name.endswith(".tmp") or ".tmp." in state_path.name:
-            continue
-        state = _read_state_json(state_path)
-        if not isinstance(state, dict):
-            continue
-        task_id = state.get("task_id")
-        if isinstance(task_id, str) and _runtime_tmp_lease_name(task_id) == lease_name:
-            return state
-    return None
+    return _read_state_json(tasks_dir() / f"{stem}.json")
 
 
 def _runtime_tmp_state_for_lease(
@@ -5082,6 +5099,46 @@ def _dispatch_reuses_worktree(
             return False
     raw = str(_auto_worktree_path(agent, task_id, repo_root=repo_root)) if worktree_arg == "auto" else worktree_arg
     return _is_existing_worktree(raw, repo_root=repo_root)
+
+
+def _dispatch_may_forward() -> bool:
+    """Read-only, no network: True when placement could forward this dispatch to a VPS worker host.
+
+    The occupancy-free half of ``job_host_exec.decide_dispatch_placement``:
+    only the retire marker, without the notebook opt-in, lets a dispatch
+    leave this host. Placement itself is not called, so a refused dispatch
+    never consults it.
+    """
+    from scripts.orchestration import job_host_exec
+
+    if os.environ.get(job_host_exec.ENV_ALLOW_NOTEBOOK, "").strip() == "1":
+        return False
+    fleet_comms = _REPO_ROOT / "batch_state" / "fleet-comms"
+    return any((root / job_host_exec.RETIRED_LOCAL_MARKER).is_file() for root in (fleet_comms / "v1", fleet_comms))
+
+
+def _early_host_refusal(args: argparse.Namespace) -> int | None:
+    """Exit code when this host's memory or load already refuses the dispatch (#10799), else ``None``.
+
+    Read-only: runs before the costly preflights, the runtime tmp sweep and
+    the capacity hint, which a refused dispatch would otherwise pay for. It
+    applies only where the worker would run: a dry run never forwards, and a
+    live dispatch is checked only when it cannot be forwarded. A client that
+    may forward, or a ``--force-admission`` request, is left to the full
+    admission, which stays authoritative.
+    """
+    if getattr(args, "force_admission", None) is not None:
+        return None
+    if not bool(getattr(args, "dry_run", False)) and _dispatch_may_forward():
+        return None
+    try:
+        decision = dispatch_admission.precheck(args.mode)
+    except ValueError as exc:
+        print(f"❌ invalid dispatch admission threshold: {exc}", file=sys.stderr)
+        return 2
+    if decision is None:
+        return None
+    return _report_dispatch_admission(decision, force_reason=None)
 
 
 def _is_existing_worktree(worktree: Any, *, repo_root: Path | None = None) -> bool:
@@ -12899,6 +12956,12 @@ def _dispatch(
         print(f"❌ dispatch refused: {exc}; the rules core is required.", file=sys.stderr)
         return 2
 
+    # #10799: an overloaded host refuses here, before routing, the DoR and
+    # authoring preflights, the runtime tmp sweep and the capacity hint.
+    early_refusal_rc = _early_host_refusal(args)
+    if early_refusal_rc is not None:
+        return early_refusal_rc
+
     # The launch route (the retired-CLI alias and any budget substitution; #8517: a review
     # attempt never takes a substitute) is resolved inside ``resolve_and_admit``, which gates
     # the original request before the route probes anything and the resolved route after it.
@@ -18491,17 +18554,14 @@ def _check_capacity_hint(
         )
 
         in_flight: dict[str, int] = {lane: 0 for lane in subscription_lanes}
-        if tasks_dir().is_dir():
-            for state_file in tasks_dir().glob("*.json"):
-                state = _read_state(state_file)
-                if not state or state.get("status") not in ("running", "spawning"):
-                    continue
-                pid = state.get("pid")
-                if pid and not _pid_alive(int(pid)):
-                    continue
-                agent_norm = normalize_agent_name(state.get("agent"))
-                if agent_norm in in_flight:
-                    in_flight[agent_norm] += 1
+        # Stored fields only (#10799): the hint needs no snapshot sidecar.
+        for _state_file, state in dispatch_admission.iter_active_records(tasks_dir()):
+            pid = state.get("pid")
+            if pid and not _pid_alive(int(pid)):
+                continue
+            agent_norm = normalize_agent_name(state.get("agent"))
+            if agent_norm in in_flight:
+                in_flight[agent_norm] += 1
 
         busy_count = in_flight.get(target_norm, 0)
         if busy_count <= 0:

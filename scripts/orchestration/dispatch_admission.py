@@ -76,6 +76,11 @@ published before the worktree is created, so a refusal leaves no worktree and
 no task record (#8717); the dispatch's later records replace it in place and
 keep the slot until the worker's pid is written.
 
+Before its costly preflights, a dispatch that would spawn on this host calls
+:func:`precheck`: memory and load only, read-only, and able only to refuse,
+so an overloaded host turns a dispatch away cheaply (#10799). It steps aside
+for a full disk, whose reaper attempt and hard stop stay with :func:`evaluate`.
+
 Stdlib-only apart from sibling helpers, so capacity_pick and delegate can
 import it cheaply.
 """
@@ -1370,6 +1375,29 @@ class WorkerScan:
     dead: tuple[tuple[Path, dict[str, Any]], ...]
 
 
+def iter_active_records(tasks_dir: Path) -> Iterator[tuple[Path, dict[str, Any]]]:
+    """Every hot ``running`` or ``spawning`` task record, as stored.
+
+    Each record file is read once and parsed only when its bytes name an
+    active status, so terminal history costs a read, not a JSON parse.
+    Snapshot sidecars are never loaded. Unreadable or malformed records are
+    skipped.
+    """
+    for path in task_record_store.iter_task_records(tasks_dir, include_archive=False):
+        try:
+            raw = path.read_bytes()
+        except OSError:
+            continue
+        if not any(marker in raw for marker in _ACTIVE_STATUS_MARKERS):
+            continue
+        try:
+            state = json.loads(raw)
+        except ValueError:
+            continue
+        if isinstance(state, dict) and state.get("status") in ACTIVE_STATUSES:
+            yield path, state
+
+
 def scan_task_records(
     tasks_dir: Path,
     *,
@@ -1387,20 +1415,7 @@ def scan_task_records(
     clock = now or datetime.now(UTC)
     live: list[str] = []
     dead: list[tuple[Path, dict[str, Any]]] = []
-    for path in task_record_store.iter_task_records(tasks_dir, include_archive=False):
-        try:
-            raw = path.read_bytes()
-        except OSError:
-            continue
-        # Most records are terminal; skip the JSON parse for them.
-        if not any(marker in raw for marker in _ACTIVE_STATUS_MARKERS):
-            continue
-        try:
-            state = json.loads(raw)
-        except ValueError:
-            continue
-        if not isinstance(state, dict) or state.get("status") not in ACTIVE_STATUSES:
-            continue
+    for path, state in iter_active_records(tasks_dir):
         task_id = str(state.get("task_id") or path.stem)
         write_capable = state.get("mode") in WRITE_CAPABLE_MODES
         pid = _parse_pid(state.get("pid"))
@@ -1444,6 +1459,52 @@ def scan_task_records(
     return WorkerScan(live_task_ids=tuple(live), dead=tuple(dead))
 
 
+def host_failures(probe: HostProbe, limits: Thresholds) -> list[str]:
+    """The memory-floor and load-limit failures for ``probe``; an unknown value never fails."""
+    failures: list[str] = []
+    mem = probe.mem_available_gib
+    if mem is not None and mem < limits.min_mem_available_gib:
+        failures.append(
+            f"MemAvailable {mem:.1f} GiB is below the floor of {limits.min_mem_available_gib:g} GiB "
+            f"({ENV_MIN_MEM_AVAILABLE_GIB}={limits.min_mem_available_gib:g})"
+        )
+    load = probe.load_per_cpu
+    if load is not None and load > limits.max_load_per_cpu:
+        failures.append(
+            f"load {load:.2f} per CPU (1-minute load {probe.load1:.2f} on {probe.cpu_count} CPU{'' if probe.cpu_count == 1 else 's'}) is above the "
+            f"limit of {limits.max_load_per_cpu:.2f} ({ENV_MAX_LOAD_PER_CPU}={limits.max_load_per_cpu:g})"
+        )
+    return failures
+
+
+def precheck(mode: str, *, thresholds: Thresholds | None = None) -> AdmissionDecision | None:
+    """A refusal when this host's memory or load already fails, else ``None`` (#10799).
+
+    Read-only and refusal-only: it reads the thresholds, ``/proc`` and the
+    disk usage and nothing else (no task record, sweep, pool or slot probe),
+    so dispatch can refuse an overloaded host before its costly preflights.
+    The refusal carries the failure text :func:`evaluate` gives. A disk at or
+    above its refuse threshold steps aside: :func:`evaluate` then runs the
+    reaper once and keeps its hard stop (#10776). ``None`` (an exempt mode,
+    memory and load pass or are unknown, or a full disk) admits nothing:
+    :func:`evaluate` under :func:`admission_lock` stays the decision. Invalid
+    threshold environment variables raise ``ValueError``.
+    """
+    if mode not in WRITE_CAPABLE_MODES:
+        return None
+    limits = thresholds or load_thresholds()
+    probe = probe_host()
+    failures = host_failures(probe, limits)
+    if not failures:
+        return None
+    disk_used = probe_disk().used_percent
+    if disk_used is not None and disk_used >= limits.disk_refuse_used_percent:
+        return None
+    return AdmissionDecision(
+        mode=mode, exempt=False, admitted=False, thresholds=limits, probe=probe, failures=tuple(failures)
+    )
+
+
 def evaluate(
     mode: str,
     tasks_dir: Path,
@@ -1482,18 +1543,7 @@ def evaluate(
             f"live write workers {live}/{limits.max_live_write_workers} reached the cap "
             f"({ENV_MAX_LIVE_WRITE_WORKERS}={limits.max_live_write_workers})"
         )
-    mem = probe.mem_available_gib
-    if mem is not None and mem < limits.min_mem_available_gib:
-        failures.append(
-            f"MemAvailable {mem:.1f} GiB is below the floor of {limits.min_mem_available_gib:g} GiB "
-            f"({ENV_MIN_MEM_AVAILABLE_GIB}={limits.min_mem_available_gib:g})"
-        )
-    load = probe.load_per_cpu
-    if load is not None and load > limits.max_load_per_cpu:
-        failures.append(
-            f"load {load:.2f} per CPU (1-minute load {probe.load1:.2f} on {probe.cpu_count} CPU{'' if probe.cpu_count == 1 else 's'}) is above the "
-            f"limit of {limits.max_load_per_cpu:.2f} ({ENV_MAX_LOAD_PER_CPU}={limits.max_load_per_cpu:g})"
-        )
+    failures.extend(host_failures(probe, limits))
     pool = probe_pool(limits.worker_mem_reserve_gib)
     if pool.skipped is not None:
         # WARNING, not INFO: callers such as delegate.py configure no logging,
