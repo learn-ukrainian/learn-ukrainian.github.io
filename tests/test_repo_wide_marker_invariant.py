@@ -1159,11 +1159,29 @@ def _collect_repo_wide_marks(
 
 
 @lru_cache(maxsize=1)
+def _repository_candidates() -> frozenset[Path]:
+    return _candidate_test_files(_REPO_ROOT, _repository_python_sources(), _test_module_paths(), _global_plugin_names())
+
+
+@lru_cache(maxsize=1)
 def _repository_marks() -> tuple[frozenset[str], frozenset[str]]:
-    candidates = _candidate_test_files(
-        _REPO_ROOT, _repository_python_sources(), _test_module_paths(), _global_plugin_names()
+    return _collect_repo_wide_marks(_REPO_ROOT, _repository_candidates())
+
+
+def test_the_prefilter_leaves_most_test_modules_out() -> None:
+    """A mark source that tests/conftest.py or a global plugin loads makes every test a candidate (#10777).
+
+    Collecting them all outlasts the 120 s test timeout on a loaded host, and
+    the registry checks below then time out instead of checking anything. A
+    test file name in a module that loads modules dynamically reads as a load
+    of that test, as one in scripts/delegate.py did.
+    """
+    candidates, test_modules = _repository_candidates(), frozenset(_test_module_paths())
+
+    assert len(candidates) * 2 < len(test_modules), (
+        f"{len(candidates)} of {len(test_modules)} test modules are repo_wide candidates; find the "
+        "mark source that tests/conftest.py or the -p plugins import and break that chain"
     )
-    return _collect_repo_wide_marks(_REPO_ROOT, candidates)
 
 
 def _unregistered_repo_wide_nodes(

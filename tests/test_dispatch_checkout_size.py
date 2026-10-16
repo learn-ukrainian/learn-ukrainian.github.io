@@ -166,6 +166,13 @@ def test_every_exclusion_is_reincludable() -> None:
 _SOURCE_INVENTORY = ("registry/lexicon/source-inventory", "registry/lexicon/source-inventory-review-decisions")
 
 
+@pytest.fixture
+def owned_files_here(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Read owned files from this checkout; delegate's root is the primary checkout, which may be behind it."""
+    monkeypatch.setattr(delegate, "_REPO_ROOT", REPO_ROOT)
+
+
+@pytest.mark.usefixtures("owned_files_here")
 @pytest.mark.parametrize(
     ("owned", "expected"),
     [
@@ -176,6 +183,9 @@ _SOURCE_INVENTORY = ("registry/lexicon/source-inventory", "registry/lexicon/sour
         ("data", ("data/datasets", "data/lexicon", "data/processed", "data/projects")),
         ("scripts/delegate.py", ()),
         ("tests/test_preparation_api.py", ("site/src/content",)),
+        ("tests/test_landings_use_levellanding.py", ("curriculum", "site/src/content", "site/src/data")),
+        ("tests/test_env_sanitize.py", ()),
+        ("scripts/generate_landing_pages.py", ("curriculum", "site/src/content")),
         ("scripts/audit/check_static_practice_assets.py", ("site/src/data",)),
         ("scripts/lexicon/lesson_atlas_link_census.py", (*_SOURCE_INVENTORY, "site/src/content", "site/src/data")),
         (".", ()),
@@ -202,6 +212,46 @@ def _site_tree_markers() -> set[tuple[str, str]]:
     return found
 
 
+def test_an_owned_test_gets_the_excluded_trees_its_marks_name(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    test_file = tmp_path / "tests" / "test_reader.py"
+    test_file.parent.mkdir()
+    test_file.write_text(
+        "import pytest\n"
+        'needs_data = pytest.mark.needs_sparse_tree("site/src/data")\n'
+        '@pytest.mark.needs_sparse_tree("data/projects", "not/excluded")\n'
+        "def test_x(): pass\n",
+        encoding="utf-8",
+    )
+    (tmp_path / "tests" / "test_broken.py").write_text("def (\n", encoding="utf-8")
+    monkeypatch.setattr(delegate, "_REPO_ROOT", tmp_path)
+
+    assert delegate._owned_test_marked_trees("tests/test_reader.py") == ("data/projects", "site/src/data")
+    assert delegate._owned_test_marked_trees("tests/test_broken.py") == ()
+    assert delegate._owned_test_marked_trees("tests/test_missing.py") == ()
+    # Only test files are read for marks.
+    assert delegate._owned_test_marked_trees("scripts/test_reader.py") == ()
+
+
+def test_delegate_names_no_test_file() -> None:
+    """A test file name in scripts/delegate.py makes every test a repo_wide candidate (#10777).
+
+    The prefilter in tests/test_repo_wide_marker_invariant.py reads it as a
+    load of that test, and tests/conftest.py imports delegate.py.
+    """
+    tree = ast.parse((REPO_ROOT / "scripts" / "delegate.py").read_text(encoding="utf-8"))
+    named = sorted(
+        node.value
+        for node in ast.walk(tree)
+        if isinstance(node, ast.Constant)
+        and isinstance(node.value, str)
+        and node.value.rpartition("/")[2].startswith("test_")
+        and node.value.endswith(".py")
+    )
+
+    assert not named, f"read owned test readers from their needs_sparse_tree marks instead: {named}"
+
+
+@pytest.mark.usefixtures("owned_files_here")
 def test_owning_a_marked_site_reader_includes_its_tree() -> None:
     """A worker that owns a test marked for a site tree gets that tree, so the test runs instead of skipping."""
     markers = _site_tree_markers()
