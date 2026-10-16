@@ -16,7 +16,13 @@ import pytest
 from scripts.opsec import prepublish as gate
 from scripts.opsec.gh_snapshot import READ_GRAMMARS, admit
 from scripts.publish import github as pub
+from tests.common.github_cache_isolation import isolate_github_client_cache
 from tests.opsec_fixtures import CATALOG, ROOT, TOKEN
+
+
+@pytest.fixture(autouse=True)
+def _isolate_github_client_cache(tmp_path, monkeypatch):
+    yield from isolate_github_client_cache(tmp_path, monkeypatch)
 
 
 @pytest.fixture(autouse=True)
