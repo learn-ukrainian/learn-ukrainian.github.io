@@ -42,7 +42,7 @@ if str(REPO_ROOT) not in sys.path:
 
 DATA_FILE = REPO_ROOT / "scripts" / "config" / "driver_lanes.json"
 LOCAL_ENV = "LU_DRIVER_LANES_LOCAL"
-KINDS = frozenset({"claude", "codex"})
+KINDS = frozenset({"claude", "codex", "grok"})
 SESSION_RE = re.compile(r"[A-Za-z0-9][A-Za-z0-9_-]*\Z")
 ENV_KEY_RE = re.compile(r"[A-Z_][A-Z0-9_]*\Z")
 # One wrapper word: only the characters shlex leaves unquoted, so no shell syntax, whitespace or

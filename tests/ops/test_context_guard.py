@@ -166,15 +166,15 @@ def test_handoff_done_in_watch_phase_starts_the_exit_without_waiting_for_the_thr
 
 
 def test_handoff_done_posted_to_fleet_in_watch_phase_is_honoured(tmp_path: Path) -> None:
-    h = Harness(tmp_path, **{"harness": codex_pane(40)})
-    h.tick("harness")
+    h = Harness(tmp_path, **{"open-model-data": codex_pane(40)})
+    h.tick("open-model-data")
     h.advance(5)
-    h.posted["codex-monitor"] = cg.iso(h.moment)
-    h.tick("harness")
-    assert h.state["harness"]["phase"] == "handoff"
+    h.posted["codex-open-model-data"] = cg.iso(h.moment)
+    h.tick("open-model-data")
+    assert h.state["open-model-data"]["phase"] == "handoff"
     h.advance(5)
-    h.tick("harness")
-    assert h.fake.typed("harness") == ["/quit"]
+    h.tick("open-model-data")
+    assert h.fake.typed("open-model-data") == ["/quit"]
 
 
 def test_previous_sessions_handoff_done_does_not_end_a_fresh_session(tmp_path: Path) -> None:
@@ -225,27 +225,30 @@ def test_lane_in_handoff_is_listed_for_keepalive_suppression(tmp_path: Path) -> 
     cg.save_state(state_dir / "state.json", h.state)
     result = subprocess.run(
         [sys.executable, str(REPO / "scripts/ops/context_guard.py"), "handoff-sessions", "--state-dir", str(state_dir)],
-        capture_output=True, text=True, check=True, timeout=60,
+        capture_output=True,
+        text=True,
+        check=True,
+        timeout=60,
     )
     assert json.loads(result.stdout) == ["devops-muse"]
 
 
 def test_codex_quit_is_retried_when_the_first_is_swallowed(tmp_path: Path) -> None:
-    h = Harness(tmp_path, **{"atlas": codex_pane(40)})
-    h.tick("atlas")
-    h.posted["codex-atlas"] = cg.iso(h.moment)
+    h = Harness(tmp_path, **{"open-model-data": codex_pane(40)})
+    h.tick("open-model-data")
+    h.posted["codex-open-model-data"] = cg.iso(h.moment)
     h.advance(5)
-    h.tick("atlas")  # watch: HANDOFF-DONE posted -> handoff (done)
+    h.tick("open-model-data")  # watch: HANDOFF-DONE posted -> handoff (done)
     h.advance(5)
-    h.tick("atlas")
-    assert h.fake.typed("atlas") == ["/quit"]
+    h.tick("open-model-data")
+    assert h.fake.typed("open-model-data") == ["/quit"]
     h.advance(5)
-    h.tick("atlas")
-    assert h.fake.typed("atlas") == ["/quit"]  # 5 minutes: not yet
+    h.tick("open-model-data")
+    assert h.fake.typed("open-model-data") == ["/quit"]  # 5 minutes: not yet
     h.advance(5)
-    h.tick("atlas")
-    assert h.fake.typed("atlas") == ["/quit", "/quit"]
-    assert h.state["atlas"]["quit_attempts"] == 2
+    h.tick("open-model-data")
+    assert h.fake.typed("open-model-data") == ["/quit", "/quit"]
+    assert h.state["open-model-data"]["quit_attempts"] == 2
 
 
 def test_ctx_pct_is_logged_on_every_handoff_tick(tmp_path: Path) -> None:
@@ -290,7 +293,7 @@ def test_exited_codex_lane_is_respawned_with_shims_first(tmp_path: Path) -> None
     assert respawn[respawn.index("-c") + 1] == str(tmp_path / "repo")
     path = respawn[respawn.index("-e") + 1]
     assert path.startswith(f"PATH={tmp_path / 'repo' / 'scripts/agent_runtime/shims'}:")
-    command = respawn[respawn.index("bash"):]
+    command = respawn[respawn.index("bash") :]
     assert command[:4] == ["bash", "-c", PANE_SCRIPT, "lane-launch"]
     assert command[4:7] == ["./start-codex-driver.sh", "--epic", "open-model-data"]
     assert ["tmux", "clear-history", "-t", "=open-model-data:"] in h.fake.calls
@@ -298,31 +301,31 @@ def test_exited_codex_lane_is_respawned_with_shims_first(tmp_path: Path) -> None
 
 
 def test_relaunch_waits_until_the_launcher_has_exited(tmp_path: Path) -> None:
-    h = Harness(tmp_path, **{"harness": codex_pane(40)})
-    h.tick("harness")
-    h.posted["codex-monitor"] = cg.iso(h.moment)
+    h = Harness(tmp_path, **{"open-model-data": codex_pane(40)})
+    h.tick("open-model-data")
+    h.posted["codex-open-model-data"] = cg.iso(h.moment)
     h.advance(5)
-    h.tick("harness")
-    pane = h.pane("harness")
+    h.tick("open-model-data")
+    pane = h.pane("open-model-data")
     pane.agent, pane.launcher_running = None, True
     h.advance(5)
-    h.tick("harness")
+    h.tick("open-model-data")
     assert not any(call[:2] == ["tmux", "respawn-pane"] for call in h.fake.calls)
     assert h.logs[-1].endswith("agent gone, launcher still exiting; relaunch next tick")
     pane.launcher_running = False
     h.advance(5)
-    h.tick("harness")
+    h.tick("open-model-data")
     assert any(call[:2] == ["tmux", "respawn-pane"] for call in h.fake.calls)
 
 
 def test_codex_compactions_trigger_handoff(tmp_path: Path) -> None:
-    h = Harness(tmp_path, **{"harness": codex_pane(60)})
+    h = Harness(tmp_path, **{"open-model-data": codex_pane(60)})
     for pct in (60, 20, 50, 10, 45, 5):
-        h.pane("harness").text = codex_text(pct)
+        h.pane("open-model-data").text = codex_text(pct)
         h.tick()
         h.advance(5)
-    assert h.state["harness"]["compactions"] == 3
-    assert h.fake.typed("harness")[0].startswith("HANDOFF NOW")
+    assert h.state["open-model-data"]["compactions"] == 3
+    assert h.fake.typed("open-model-data")[0].startswith("HANDOFF NOW")
 
 
 def test_tick_main_writes_state_and_log(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -347,7 +350,11 @@ def test_comms_reader_counts_only_standalone_posts_from_the_lane(tmp_path: Path)
             [
                 ("codex-devops", "2026-10-16T12:05:00Z", "will post HANDOFF-DONE soon"),
                 ("claude-infra", "2026-10-16T11:00:00Z", "HANDOFF-DONE infra .claude/infra-epic/DRIVER-STATE.md"),
-                ("claude-devops", "2026-10-16T12:06:00Z", "status\nHANDOFF-DONE devops .claude/devops-epic/DRIVER-STATE.md"),
+                (
+                    "claude-devops",
+                    "2026-10-16T12:06:00Z",
+                    "status\nHANDOFF-DONE devops .claude/devops-epic/DRIVER-STATE.md",
+                ),
             ],
         )
     logs: list[str] = []
@@ -406,13 +413,13 @@ def test_exit_dialog_is_answered_with_exit_and_stop_tasks(tmp_path: Path) -> Non
 
 # ---- unknown telemetry never acts (review of 69264fbb, #10814) ---------------------
 def handoff_with_agent_gone(tmp_path: Path, *, launcher_running: bool) -> Harness:
-    """The harness lane in the handoff phase (done) whose agent has just exited."""
-    h = Harness(tmp_path, **{"harness": codex_pane(40)})
-    h.tick("harness")
-    h.posted["codex-monitor"] = cg.iso(h.moment)
+    """The Codex lane in the handoff phase (done) whose agent has just exited."""
+    h = Harness(tmp_path, **{"open-model-data": codex_pane(40)})
+    h.tick("open-model-data")
+    h.posted["codex-open-model-data"] = cg.iso(h.moment)
     h.advance(5)
-    h.tick("harness")  # watch -> handoff (done)
-    pane = h.pane("harness")
+    h.tick("open-model-data")  # watch -> handoff (done)
+    pane = h.pane("open-model-data")
     pane.agent, pane.launcher_running = None, launcher_running
     h.advance(5)
     return h
@@ -441,16 +448,16 @@ def test_unknown_process_telemetry_never_respawns(tmp_path: Path, command: str, 
     h = handoff_with_agent_gone(tmp_path, launcher_running=True)
     h.fake.override[command] = answer  # type: ignore[assignment]
     h.logs.clear()
-    h.tick("harness")
+    h.tick("open-model-data")
     assert respawns(h) == []
     assert h.fake.typed() == []
-    assert h.state["harness"]["phase"] == "handoff"
+    assert h.state["open-model-data"]["phase"] == "handoff"
     assert len(h.logs) == 1 and "telemetry unavailable" in h.logs[0] and h.logs[0].endswith("retry next tick")
     # Readable telemetry again: the launcher has exited, so the pane is respawned on the next tick.
     del h.fake.override[command]
-    h.pane("harness").launcher_running = False
+    h.pane("open-model-data").launcher_running = False
     h.advance(5)
-    h.tick("harness")
+    h.tick("open-model-data")
     assert len(respawns(h)) == 1
 
 
@@ -534,13 +541,13 @@ def test_refused_local_wrapper_blocks_only_that_relaunch(tmp_path: Path) -> None
     from scripts.ops.driver_lanes import load_local_config
 
     local = tmp_path / "local.json"
-    local.write_text(json.dumps({"lanes": {"harness": {"wrapper": "printf expected; printf INJECTED"}}}))
+    local.write_text(json.dumps({"lanes": {"open-model-data": {"wrapper": "printf expected; printf INJECTED"}}}))
     local.chmod(0o600)
     h = handoff_with_agent_gone(tmp_path, launcher_running=False)
     h.guard.local = load_local_config(local)
-    h.tick("harness")
+    h.tick("open-model-data")
     assert respawns(h) == []
-    assert h.state["harness"]["phase"] == "handoff"
+    assert h.state["open-model-data"]["phase"] == "handoff"
     assert "relaunch refused" in h.logs[-1] and "shell syntax" in h.logs[-1]
 
 
@@ -589,7 +596,7 @@ def test_snapshot_of_a_pane_missing_from_the_process_table_is_unknown() -> None:
 def test_a_tick_reads_the_process_table_once(tmp_path: Path) -> None:
     h = handoff_with_agent_gone(tmp_path, launcher_running=True)
     h.fake.calls.clear()
-    h.tick("harness")
+    h.tick("open-model-data")
     assert h.logs[-1].endswith("agent gone, launcher still exiting; relaunch next tick")
     assert [call for call in h.fake.calls if call[0] == "env"] == [cg.PS_ARGV]
 
@@ -602,57 +609,57 @@ def test_pane_replaced_during_the_snapshot_is_never_respawned(
     tmp_path: Path, command: str, nth: int, launcher: bool
 ) -> None:
     h = handoff_with_agent_gone(tmp_path, launcher_running=False)
-    before_call(h.guard.tmux, command, replace_pane(h.pane("harness"), launcher=launcher), nth)
+    before_call(h.guard.tmux, command, replace_pane(h.pane("open-model-data"), launcher=launcher), nth)
     h.logs.clear()
-    h.tick("harness")
+    h.tick("open-model-data")
     assert respawns(h) == []
     assert "telemetry unavailable (pane pid changed 100 -> 101" in h.logs[0]
     h.advance(5)
-    h.tick("harness")  # a consistent read now shows a pane the handoff never saw
-    assert h.state["harness"]["phase"] == "watch" and "pane changed" in h.logs[-1]
+    h.tick("open-model-data")  # a consistent read now shows a pane the handoff never saw
+    assert h.state["open-model-data"]["phase"] == "watch" and "pane changed" in h.logs[-1]
     for _ in range(3):
         h.advance(5)
-        h.tick("harness")
+        h.tick("open-model-data")
     assert respawns(h) == []
 
 
 @pytest.mark.parametrize("replace", [{"pane_pid": "101"}, {"pane_start": REPLACED}], ids=["new-pid", "reused-pid"])
 def test_replaced_pane_resets_the_handoff_and_is_never_respawned(tmp_path: Path, replace: dict[str, str]) -> None:
     h = handoff_with_agent_gone(tmp_path, launcher_running=False)
-    pane = h.pane("harness")
+    pane = h.pane("open-model-data")
     for key, value in replace.items():
         setattr(pane, key, value)
-    h.tick("harness")
+    h.tick("open-model-data")
     assert respawns(h) == []
-    state = h.state["harness"]
+    state = h.state["open-model-data"]
     assert state["phase"] == "watch" and state["agent_id"] is None
     assert state["pane_id"] == f"{pane.pane_pid}@{dt.datetime.strptime(pane.pane_start, cg.LSTART_FORMAT).isoformat()}"  # type: ignore[attr-defined]
     assert not {"done_seen", "quit_sent", "quit_attempts", "since", "nudges"} & set(state)
     assert "pane changed 100@2026-10-16T06:00:00 -> " in h.logs[-1]
     for _ in range(3):
         h.advance(5)
-        h.tick("harness")
+        h.tick("open-model-data")
     assert respawns(h) == []
 
 
 @pytest.mark.parametrize("change", ["pane-replaced", "launcher-started"])
 def test_pane_changed_after_the_snapshot_is_not_respawned(tmp_path: Path, change: str) -> None:
     h = handoff_with_agent_gone(tmp_path, launcher_running=False)
-    pane = h.pane("harness")
+    pane = h.pane("open-model-data")
     if change == "pane-replaced":
         perturb = replace_pane(pane, launcher=True)
     else:
         perturb = lambda: setattr(pane, "launcher_running", True)  # noqa: E731
     before_call(h.guard.tmux, "list-clients", perturb)  # the human check, after the snapshot and before the re-check
-    h.tick("harness")
+    h.tick("open-model-data")
     assert respawns(h) == []
     assert "pane changed before respawn-pane -k" in h.logs[-1] and h.logs[-1].endswith("retry next tick")
-    assert h.state["harness"]["phase"] == "handoff"
+    assert h.state["open-model-data"]["phase"] == "handoff"
     pane.launcher_running = False
     h.advance(5)
-    h.tick("harness")
+    h.tick("open-model-data")
     if change == "pane-replaced":  # a pane the handoff never saw is a new session, never respawned
-        assert h.state["harness"]["phase"] == "watch" and "pane changed" in h.logs[-1]
+        assert h.state["open-model-data"]["phase"] == "watch" and "pane changed" in h.logs[-1]
         assert respawns(h) == []
     else:  # the same pane, once its launcher has exited, is relaunched
         assert len(respawns(h)) == 1
@@ -690,3 +697,74 @@ def test_exit_is_not_typed_into_an_agent_the_tick_did_not_snapshot(tmp_path: Pat
     assert h.state["infra-muse"].get("quit_sent") is None
     expected = "pane changed before /exit" if change == "agent-replaced" else "telemetry unavailable (process table"
     assert expected in h.logs[-1]
+
+
+# ---- Grok lanes: running, unmeasured, never typed (#10855) -------------------------
+GROK_SCROLLBACK = "\n".join(
+    [
+        "⏺ HANDOFF-DONE harness .claude/monitor-epic/DRIVER-STATE.md",
+        "Context 90% used",
+        "ctx: 90.0K/100.0K (90%)",
+        "Ready",
+    ]
+)
+
+
+def test_grok_context_percentage_is_never_taken_from_scrollback() -> None:
+    assert cg.context_pct("grok", GROK_SCROLLBACK) is None
+    assert cg.context_pct("claude", "ctx: 10.0K/100.0K (80%)") == 80
+    assert cg.context_pct("codex", "Context 80% used") == 80
+
+
+def test_grok_process_under_the_pane_shell_is_the_running_agent() -> None:
+    """``grok`` under the pane's bash (the launcher wrapper) is the agent, not 'not running'."""
+    fake = ShellTmux(sessions={"harness": Pane(agent="grok", agent_pid="4242", agent_start="Fri Oct  2 09:05:01 2026")})
+    tmux = cg.Tmux(run=fake.run)
+    assert cg.AGENT_COMMANDS["grok"] == "grok"
+    found = tmux.snapshot("=harness:", cg.AGENT_COMMANDS["grok"])
+    assert found.agent == "4242@2026-10-02T09:05:01"
+    assert tmux.snapshot("=harness:", "codex").agent is None
+
+
+def test_running_grok_lane_is_unmeasured_and_never_typed(tmp_path: Path) -> None:
+    panes = {
+        "harness": Pane(text=GROK_SCROLLBACK, agent="grok"),
+        "atlas": Pane(text=GROK_SCROLLBACK, agent="grok"),
+    }
+    h = Harness(tmp_path, **panes)
+    h.posted["grok-monitor"] = cg.iso(START)
+    h.posted["grok-atlas"] = cg.iso(START)
+    h.tick("harness")
+    h.tick("atlas")
+    assert h.fake.typed() == []
+    assert h.logs == [
+        "harness watch: context unmeasured (grok)",
+        "atlas watch: context unmeasured (grok)",
+    ]
+    assert h.state["harness"]["phase"] == "watch"
+    assert h.state["atlas"]["phase"] == "watch"
+    assert "agent not running" not in "\n".join(h.logs)
+
+
+def test_grok_lane_without_a_process_is_not_called_unmeasured(tmp_path: Path) -> None:
+    h = Harness(tmp_path, **{"atlas": Pane(text="idle", agent=None)})
+    h.tick("atlas")
+    assert h.logs == ["atlas watch: agent not running in session atlas"]
+    assert h.fake.typed() == []
+
+
+def test_grok_handoff_phase_stays_listed_and_types_nothing(tmp_path: Path) -> None:
+    h = Harness(tmp_path, **{"harness": Pane(text=GROK_SCROLLBACK, agent="grok")})
+    h.tick("harness")
+    h.state["harness"]["phase"] = "handoff"
+    h.state["harness"]["since"] = cg.iso(h.moment)
+    h.state["harness"]["done_seen"] = True
+    h.logs.clear()
+    h.fake.calls.clear()
+    h.advance(20)
+    h.tick("harness")
+    assert h.fake.typed() == []
+    assert not any(call[:2] == ["tmux", "respawn-pane"] for call in h.fake.calls)
+    assert h.state["harness"]["phase"] == "handoff"
+    assert cg.sessions_in_handoff(h.state) == ["harness"]
+    assert h.logs == ["harness handoff: context unmeasured (grok); no input"]

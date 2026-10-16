@@ -1,4 +1,4 @@
-"""Hand driver lanes to a fresh session before their context grows too large (#10814).
+"""Hand driver lanes to a fresh session before their context grows too large (#10814, #10855).
 
 Runs every 5 minutes from ``learn-ukrainian-context-guard.timer``. Lanes come from
 ``scripts/config/driver_lanes.json`` and are resolved by tmux session name.
@@ -12,6 +12,11 @@ watch
     ``HANDOFF NOW`` (and posts it to Fleet Comms) and enters ``handoff``. A
     lane that already printed or posted ``HANDOFF-DONE`` enters ``handoff``
     at once, done, so it does not idle until the next threshold.
+    Grok lanes publish no context percentage on the pane. Each tick logs
+    ``<name> watch: context unmeasured (grok)`` and types nothing, including
+    when the scrollback contains a Claude or Codex context line. The Grok TUI
+    accepts ``/quit`` (alias ``/exit``); that command is not sent while context
+    is unmeasured.
 handoff
     ``HANDOFF NOW`` is re-sent every ``handoff_renudge_seconds`` until
     ``HANDOFF-DONE`` arrives; once it has, and the pane is idle, the guard types
@@ -19,7 +24,8 @@ handoff
     ``quit_retry_seconds``. When the agent and its launcher have exited, the pane is respawned with
     the lane's launcher (fresh session; it reads its goal file). The guard
     never kills a driver; it alerts ``epics`` once after
-    ``handoff_alert_seconds``.
+    ``handoff_alert_seconds``. A Grok lane left in ``handoff`` stays listed by
+    ``handoff-sessions`` and still receives no input and no respawn.
 
 ``HANDOFF-DONE`` counts only as a standalone response line, never as the echo
 of the guard's own prompt. ``ctx_pct`` is logged on every tick in both phases.
@@ -77,7 +83,8 @@ from scripts.ops.driver_lanes import (
 
 STATE_ENV = "LU_CONTEXT_GUARD_STATE_DIR"
 CAPTURE_LINES = 80
-AGENT_COMMANDS = {"claude": "claude", "codex": "codex"}
+# ``grok`` is the process name under the ``start-grok-driver.sh`` bash wrapper.
+AGENT_COMMANDS = {"claude": "claude", "codex": "codex", "grok": "grok"}
 CLAUDE_PCT_RE = re.compile(r"ctx: [0-9.]+K/[0-9.]+K \((\d+)%\)")
 CODEX_PCT_RE = re.compile(r"Context (\d+)% used")
 CLAUDE_BUSY_RE = re.compile(r"esc to interrupt|ing… \(")
@@ -127,7 +134,17 @@ def done_lines(text: str) -> int:
 
 
 def context_pct(kind: str, text: str) -> int | None:
-    found = (CLAUDE_PCT_RE if kind == "claude" else CODEX_PCT_RE).findall(text)
+    """The pane's own context percentage, or None when this kind does not publish one.
+
+    Grok's status line has no ``ctx:`` / ``Context N% used`` reading. A matching
+    line in the scrollback is conversation text, not a measurement.
+    """
+    if kind == "claude":
+        found = CLAUDE_PCT_RE.findall(text)
+    elif kind == "codex":
+        found = CODEX_PCT_RE.findall(text)
+    else:
+        return None
     return int(found[-1]) if found else None
 
 
@@ -163,7 +180,9 @@ class Tmux:
         return result.stdout or ""
 
     def capture(self, target: str) -> str:
-        return self._query(["tmux", "capture-pane", "-p", "-J", "-S", f"-{CAPTURE_LINES}", "-t", target], "capture-pane")
+        return self._query(
+            ["tmux", "capture-pane", "-p", "-J", "-S", f"-{CAPTURE_LINES}", "-t", target], "capture-pane"
+        )
 
     def pane_pid(self, target: str) -> str:
         pid = self._query(["tmux", "display-message", "-p", "-t", target, "#{pane_pid}"], "pane pid").strip()
@@ -271,15 +290,19 @@ class Guard:
     def _reason(self, lane: Lane, s: dict[str, Any], pct: int | None) -> str:
         if lane.kind == "claude":
             return f"your context is {pct}% (hand off at {self.setting('claude_handoff_pct')}%)."
-        return (
-            f"this session has compacted {s.get('compactions', 0)} times; the operator wants a fresh "
-            "session instead of an ever-growing history."
-        )
+        if lane.kind == "codex":
+            return (
+                f"this session has compacted {s.get('compactions', 0)} times; the operator wants a fresh "
+                "session instead of an ever-growing history."
+            )
+        return "context is unmeasured; the guard will not type."
 
     def _human(self, lane: Lane) -> bool:
         reason = self.tmux.human_activity(lane.session, self.setting("human_active_seconds"))
         if reason:
-            self.log(f"{lane.name} deferred: human possibly active in session {lane.session} ({reason}); retry next tick")
+            self.log(
+                f"{lane.name} deferred: human possibly active in session {lane.session} ({reason}); retry next tick"
+            )
             return True
         return False
 
@@ -366,6 +389,12 @@ class Guard:
             s["watch_since"] = iso(self.now())
             s.pop("compactions", None)
             s.pop("last_pct", None)
+        if lane.kind == "grok":
+            # Remember the process so the next tick is the same session, and do not
+            # treat a HANDOFF-DONE line as a reason to type.
+            s.update(agent_id=snap.agent, pane_id=snap.pane)
+            self.log(f"{lane.name} watch: context unmeasured (grok)")
+            return
         extra = ""
         if lane.kind == "codex":
             prev = s.get("last_pct")
@@ -382,8 +411,10 @@ class Guard:
             return
         if lane.kind == "claude":
             due = pct is not None and pct >= self.setting("claude_handoff_pct")
-        else:
+        elif lane.kind == "codex":
             due = s.get("compactions", 0) >= self.setting("codex_max_compactions") and "Compacting context" not in text
+        else:
+            due = False
         if not due or self._human(lane):
             return
         self._enter_handoff(s, pct, done=False)
@@ -394,7 +425,21 @@ class Guard:
         tail = "\n".join(text.splitlines()[-8:])
         if lane.kind == "claude":
             return CLAUDE_BUSY_RE.search(tail) is None
-        return "Ready" in tail and "Working" not in tail
+        if lane.kind == "codex":
+            return "Ready" in tail and "Working" not in tail
+        return False
+
+    def _exit_command(self, lane: Lane) -> str | None:
+        """The slash command that ends this kind, or None when the guard must not type one.
+
+        Grok's TUI accepts ``/quit`` (alias ``/exit``). Context is unmeasured for
+        that kind, so the command is withheld.
+        """
+        if lane.kind == "claude":
+            return "/exit"
+        if lane.kind == "codex":
+            return "/quit"
+        return None
 
     def _handoff(
         self, lane: Lane, st: dict[str, Any], s: dict[str, Any], text: str, pct: int | None, snap: PaneSnapshot
@@ -417,6 +462,9 @@ class Guard:
                 "pane_id": snap.pane,
                 "done_marks": done_lines(text),
             }
+            return
+        if lane.kind == "grok":
+            self.log(f"{lane.name} handoff: context unmeasured (grok); no input")
             return
         if snap.agent is None:
             if snap.busy:
@@ -441,7 +489,10 @@ class Guard:
             "quit_retry_seconds"
         )
         if done and idle and quit_due and not self._human(lane):
-            command = "/exit" if lane.kind == "claude" else "/quit"
+            command = self._exit_command(lane)
+            if command is None:
+                self.log(f"{lane.name} handoff: context unmeasured ({lane.kind}); no exit typed")
+                return
             if not self._unchanged(lane, snap, command, pct):
                 return
             self.tmux.type_into(lane.target, command)

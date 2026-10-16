@@ -34,7 +34,7 @@ def run(fake: FakeTmux, tmp_path: Path, registry: Registry | None = None, **kwar
 def created(fake: FakeTmux) -> list[str]:
     out = []
     for call in fake.calls:
-        argv = call[call.index("tmux"):] if call[0] == "systemd-run" else call
+        argv = call[call.index("tmux") :] if call[0] == "systemd-run" else call
         if argv[:2] == ["tmux", "new-session"]:
             out.append(argv[argv.index("-s") + 1])
     return out
@@ -77,17 +77,24 @@ def test_launcher_exit_is_logged_and_relaunch_moves_on(tmp_path: Path) -> None:
     assert not any("--force" in arg for call in fake.calls for arg in call)
 
 
-def test_codex_lanes_get_shims_first_and_repo_root_cwd(tmp_path: Path) -> None:
+def test_grok_lanes_launch_grok_and_codex_lanes_get_shims(tmp_path: Path) -> None:
     fake = FakeTmux()
     run(fake, tmp_path)
     by_session = {c[c.index("-s") + 1]: c for c in fake.calls if c[:2] == ["tmux", "new-session"]}
-    for session in ("harness", "atlas", "open-model-data"):
+    for session, epic in (("harness", "monitor"), ("atlas", "atlas")):
         call = by_session[session]
         assert call[call.index("-c") + 1] == str(tmp_path)
-        assert call[call.index("-e") + 1].startswith(f"PATH={tmp_path / 'scripts/agent_runtime/shims'}:")
-        command = call[call.index("bash"):]
+        assert not any(arg.startswith("PATH=") for arg in call)
+        command = call[call.index("bash") :]
         assert command[:4] == ["bash", "-c", PANE_SCRIPT, "lane-launch"]
-        assert command[4:6] == ["./start-codex-driver.sh", "--epic"]
+        assert command[4:10] == ["./start-grok-driver.sh", "--epic", epic, "--model", "grok-4.7", "--effort"]
+        assert command[10] == "high"
+    codex = by_session["open-model-data"]
+    assert codex[codex.index("-c") + 1] == str(tmp_path)
+    assert codex[codex.index("-e") + 1].startswith(f"PATH={tmp_path / 'scripts/agent_runtime/shims'}:")
+    codex_command = codex[codex.index("bash") :]
+    assert codex_command[:4] == ["bash", "-c", PANE_SCRIPT, "lane-launch"]
+    assert codex_command[4:6] == ["./start-codex-driver.sh", "--epic"]
     assert "-e" not in by_session["infra-muse"]  # no local config: launcher default account
 
 
@@ -108,21 +115,40 @@ def test_dry_run_prints_full_plan_and_starts_nothing(tmp_path: Path) -> None:
         stub.write_text(f"#!/bin/sh\necho \"$0 $*\" >> '{marker}'\n", encoding="utf-8")
         stub.chmod(0o755)
     local = tmp_path / "lanes.local.json"
-    local.write_text(json.dumps({"lanes": {
-        "cto": {"wrapper": ["lane-wrapper-cto", "--here"], "env": {"CLAUDE_CONFIG_DIR": "secret-account-dir"}},
-    }}), encoding="utf-8")
+    local.write_text(
+        json.dumps(
+            {
+                "lanes": {
+                    "cto": {
+                        "wrapper": ["lane-wrapper-cto", "--here"],
+                        "env": {"CLAUDE_CONFIG_DIR": "secret-account-dir"},
+                    },
+                }
+            }
+        ),
+        encoding="utf-8",
+    )
     local.chmod(0o600)
     env = dict(os.environ, PATH=f"{bin_dir}:{os.environ.get('PATH', '')}", LU_DRIVER_LANES_LOCAL=str(local))
     result = subprocess.run(
         [sys.executable, str(REPO / "scripts/ops/lane_relaunch.py"), "--dry-run"],
-        capture_output=True, text=True, env=env, check=True, timeout=60,
+        capture_output=True,
+        text=True,
+        env=env,
+        check=True,
+        timeout=60,
     )
     plan = json.loads(result.stdout)
     assert [entry["session"] for entry in plan] == SESSIONS
     assert all(set(entry) == {"session", "command", "cwd", "env_keys", "source"} for entry in plan)
     assert all(entry["cwd"] == str(REPO) for entry in plan)
     assert plan[-1]["command"] == "lane-wrapper-cto --here" and plan[-1]["env_keys"] == ["CLAUDE_CONFIG_DIR"]
-    assert plan[2]["env_keys"] == ["PATH"]
+    by_session = {entry["session"]: entry for entry in plan}
+    assert by_session["harness"]["command"] == "./start-grok-driver.sh --epic monitor --model grok-4.7 --effort high"
+    assert by_session["atlas"]["command"] == "./start-grok-driver.sh --epic atlas --model grok-4.7 --effort high"
+    assert by_session["harness"]["env_keys"] == [] and by_session["atlas"]["env_keys"] == []
+    assert by_session["open-model-data"]["env_keys"] == ["PATH"]
+    assert by_session["open-model-data"]["command"].startswith("./start-codex-driver.sh --epic open-model-data ")
     assert "secret-account-dir" not in result.stdout
     assert not marker.exists()
 
@@ -139,7 +165,9 @@ def test_main_exit_code_reports_failed_lanes(tmp_path: Path, monkeypatch: pytest
 # ---- refused or unreadable lanes (review of 69264fbb, #10814) ----------------------
 def refusing_local(tmp_path: Path) -> Path:
     local = tmp_path / "lanes.local.json"
-    local.write_text(json.dumps({"lanes": {"atlas": {"wrapper": "printf expected; printf INJECTED"}}}), encoding="utf-8")
+    local.write_text(
+        json.dumps({"lanes": {"atlas": {"wrapper": "printf expected; printf INJECTED"}}}), encoding="utf-8"
+    )
     local.chmod(0o600)
     return local
 

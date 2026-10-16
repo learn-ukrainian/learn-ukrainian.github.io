@@ -41,28 +41,24 @@
     {
       "session": "harness",
       "name": "harness",
-      "kind": "codex",
+      "kind": "grok",
       "epic": "monitor",
-      "sender": "codex-monitor",
+      "sender": "grok-monitor",
       "goal": ".claude/monitor-epic/DRIVER-STATE.md",
-      "launcher": "start-codex-driver.sh",
-      "model": "gpt-6.1-sol",
-      "effort": "high",
-      "account_env": ["CODEX_HOME"],
-      "path_prepend": ["scripts/agent_runtime/shims"]
+      "launcher": "start-grok-driver.sh",
+      "model": "grok-4.7",
+      "effort": "high"
     },
     {
       "session": "atlas",
       "name": "atlas",
-      "kind": "codex",
+      "kind": "grok",
       "epic": "atlas",
-      "sender": "codex-atlas",
+      "sender": "grok-atlas",
       "goal": ".claude/atlas-epic/DRIVER-STATE.md",
-      "launcher": "start-codex-driver.sh",
-      "model": "gpt-6.1-sol",
-      "effort": "high",
-      "account_env": ["CODEX_HOME"],
-      "path_prepend": ["scripts/agent_runtime/shims"]
+      "launcher": "start-grok-driver.sh",
+      "model": "grok-4.7",
+      "effort": "high"
     },
     {
       "session": "open-model-data",

@@ -20,7 +20,12 @@ REPO = Path(__file__).resolve().parents[2]
 def test_registry_holds_the_six_lanes_with_generic_launchers() -> None:
     registry = dl.load_registry()
     assert [lane.session for lane in registry.lanes] == [
-        "infra-muse", "devops-muse", "harness", "atlas", "open-model-data", "cto",
+        "infra-muse",
+        "devops-muse",
+        "harness",
+        "atlas",
+        "open-model-data",
+        "cto",
     ]
     assert [lane.session for lane in registry.lanes if lane.lead] == ["cto"]
     for lane in registry.lanes:
@@ -28,6 +33,12 @@ def test_registry_holds_the_six_lanes_with_generic_launchers() -> None:
         assert lane.target == f"={lane.session}:"
         if lane.kind == "codex":
             assert lane.path_prepend[0] == "scripts/agent_runtime/shims"
+        if lane.kind == "grok":
+            assert lane.path_prepend == ()
+            assert lane.account_env == ()
+            assert lane.launcher == "start-grok-driver.sh"
+            assert lane.model == "grok-4.7"
+            assert lane.sender.startswith("grok-")
     assert_no_host_facts(dl.DATA_FILE.read_text(encoding="utf-8"), dl.DATA_FILE.name)
 
 
@@ -41,17 +52,28 @@ def test_lane_models_are_active_catalog_models() -> None:
 
 
 def test_generic_command_is_repo_relative() -> None:
-    lane = dl.load_registry().by_session("harness")
-    argv = dl.generic_argv(lane)
-    assert argv[:4] == ("./start-codex-driver.sh", "--epic", "monitor", "--model")
-    assert argv[-2:] == ("--effort", lane.effort)
+    harness = dl.generic_argv(dl.load_registry().by_session("harness"))
+    assert harness == ("./start-grok-driver.sh", "--epic", "monitor", "--model", "grok-4.7", "--effort", "high")
+    atlas = dl.generic_argv(dl.load_registry().by_session("atlas"))
+    assert atlas == ("./start-grok-driver.sh", "--epic", "atlas", "--model", "grok-4.7", "--effort", "high")
     claude = dl.generic_argv(dl.load_registry().by_session("infra-muse"))
     assert claude[-2:] == ("--", "--dangerously-skip-permissions")
 
 
+def test_launcher_name_implies_kind() -> None:
+    """A lane's launcher script names its kind. Every lane in the registry agrees."""
+    implied = (("start-claude", "claude"), ("start-codex", "codex"), ("start-grok", "grok"))
+    for lane in dl.load_registry().lanes:
+        name = Path(lane.launcher).name
+        matches = [kind for prefix, kind in implied if name.startswith(prefix)]
+        assert matches == [lane.kind], lane.session
+
+
 def test_local_wrapper_and_env_override_the_generic_launch(tmp_path: Path) -> None:
     local = tmp_path / "local.json"
-    local.write_text(json.dumps({"lanes": {"infra-muse": {"wrapper": "lane-wrapper-infra", "env": {"CLAUDE_CONFIG_DIR": "x"}}}}))
+    local.write_text(
+        json.dumps({"lanes": {"infra-muse": {"wrapper": "lane-wrapper-infra", "env": {"CLAUDE_CONFIG_DIR": "x"}}}})
+    )
     local.chmod(0o600)
     overrides = dl.load_local_config(local)
     plan = dl.launch_plan(dl.load_registry().by_session("infra-muse"), repo_root=tmp_path, local=overrides)
@@ -85,7 +107,9 @@ def test_symlinked_local_config_is_refused(tmp_path: Path) -> None:
 
 
 def test_local_config_path_defaults_to_xdg_config_home() -> None:
-    assert dl.default_local_config_path({"XDG_CONFIG_HOME": "/cfg"}) == Path("/cfg/learn-ukrainian/driver-lanes.local.json")
+    assert dl.default_local_config_path({"XDG_CONFIG_HOME": "/cfg"}) == Path(
+        "/cfg/learn-ukrainian/driver-lanes.local.json"
+    )
     assert dl.default_local_config_path({"LU_DRIVER_LANES_LOCAL": "/x.json"}) == Path("/x.json")
 
 
@@ -110,7 +134,12 @@ def test_invalid_lane_data_is_rejected(mutate, message: str) -> None:
 def test_cli_prints_the_registry_both_ways(style: str) -> None:
     argv = [str(REPO / "scripts/ops/driver_lanes.py")] if style == "file" else ["-m", "scripts.ops.driver_lanes"]
     result = subprocess.run(
-        [sys.executable, *argv], cwd=REPO, capture_output=True, text=True, check=True, timeout=60,
+        [sys.executable, *argv],
+        cwd=REPO,
+        capture_output=True,
+        text=True,
+        check=True,
+        timeout=60,
         env={**os.environ, "PYTHONPATH": ""},
     )
     payload = json.loads(result.stdout)
@@ -151,10 +180,15 @@ def write_local(tmp_path: Path, lanes: dict) -> Path:
     ],
 )
 def test_wrapper_with_shell_syntax_is_refused_for_that_lane_only(tmp_path: Path, wrapper: object) -> None:
-    overrides = dl.load_local_config(write_local(tmp_path, {
-        "cto": {"wrapper": wrapper},
-        "harness": {"wrapper": ["lane-wrapper-harness", "--profile=monitor"]},
-    }))
+    overrides = dl.load_local_config(
+        write_local(
+            tmp_path,
+            {
+                "cto": {"wrapper": wrapper},
+                "harness": {"wrapper": ["lane-wrapper-harness", "--profile=monitor"]},
+            },
+        )
+    )
     registry = dl.load_registry()
     with pytest.raises(dl.LaneConfigError, match="local lane config: cto: "):
         dl.launch_plan(registry.by_session("cto"), repo_root=tmp_path, local=overrides)
@@ -188,7 +222,12 @@ def test_pane_command_runs_launcher_words_without_shell_parsing(tmp_path: Path) 
     words = ("printf", "%s|", "expected; printf INJECTED", f"$(touch {marker})", f"`touch {marker}`", ">out", "a b\nc")
     plan = dl.LaunchPlan(session="cto", argv=words, cwd=str(tmp_path))
     result = subprocess.run(
-        plan.pane_argv(), cwd=tmp_path, stdin=subprocess.DEVNULL, capture_output=True, text=True, timeout=30,
+        plan.pane_argv(),
+        cwd=tmp_path,
+        stdin=subprocess.DEVNULL,
+        capture_output=True,
+        text=True,
+        timeout=30,
         check=False,
     )
     assert result.stdout == "|".join(words[2:]) + f"|\n{dl.EXIT_MARKER}0\n"

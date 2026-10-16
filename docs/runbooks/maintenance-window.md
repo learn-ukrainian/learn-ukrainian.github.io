@@ -22,13 +22,16 @@ relaunch, and keepers read the same file
 | --- | --- | --- | --- |
 | `infra-muse` | infra | Claude | `start-claude-driver.sh --epic infra` |
 | `devops-muse` | devops | Claude | `start-claude-driver.sh --epic devops` |
-| `harness` | harness | Codex | `start-codex-driver.sh --epic monitor` |
-| `atlas` | atlas | Codex | `start-codex-driver.sh --epic atlas` |
+| `harness` | harness | Grok | `start-grok-driver.sh --epic monitor --model grok-4.7 --effort high` |
+| `atlas` | atlas | Grok | `start-grok-driver.sh --epic atlas --model grok-4.7 --effort high` |
 | `open-model-data` | open-model-data | Codex | `start-codex-driver.sh --epic open-model-data` |
 | `cto` | cto (lead, started last) | Claude | `start-claude-cto.sh --epic epics` |
 
 Models and effort per lane are in the data file. Codex lanes run with
-`scripts/agent_runtime/shims` first on `PATH`. The session names
+`scripts/agent_runtime/shims` first on `PATH`. The harness and atlas lanes
+run Grok. The context guard logs their context as unmeasured and does not
+type into those panes (Grok's TUI accepts `/quit`, alias `/exit`, and the
+pane footer does not publish a context percentage). The session names
 `infra-muse` and `devops-muse` are historical; Claude runs in them now.
 
 ### Host-specific wrappers and accounts
@@ -46,7 +49,7 @@ world-writable (mode `0600`):
     "cto": {"wrapper": "<cto launcher path>"},
     "infra-muse": {"wrapper": ["<infra launcher path>", "<argument>"]},
     "devops-muse": {"env": {"CLAUDE_CONFIG_DIR": "<claude account directory>"}},
-    "harness": {"env": {"CODEX_HOME": "<codex home>"}}
+    "open-model-data": {"env": {"CODEX_HOME": "<codex home>"}}
   }
 }
 ```
