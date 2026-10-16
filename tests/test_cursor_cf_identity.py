@@ -38,6 +38,7 @@ from scripts.review.reviewer_resolver import (
     resolve_author_family,
     resolve_reviewer,
 )
+from tests.claude_route_accounts import HOST_ACCOUNT
 
 _EXACT_HEAD = "6957cf" + "a" * 34  # 40-hex exact PR head
 
@@ -50,7 +51,7 @@ def test_cursor_attested_composer_author_refuses_same_family_review():
 
     Kimi is no longer a review candidate at all (web, UI and backend coding only).
     """
-    inputs = ResolverInputs(author_model="cursor:composer-2.5", risk="medium")
+    inputs = ResolverInputs(author_model="cursor:composer-2.5", risk="medium", claude_account=HOST_ACCOUNT)
     assert resolve_author_family(inputs.author_model) == "moonshot"
     assert "kimi-k3" not in REVIEW_CANDIDATES
 
@@ -69,7 +70,7 @@ def test_cursor_attested_composer_author_refuses_same_family_review():
 
 def test_cursor_attested_grok_author_refuses_same_family_review():
     """Both Grok transports refuse an attested xAI author (#9769)."""
-    inputs = ResolverInputs(author_model="cursor:grok-4.7", risk="medium")
+    inputs = ResolverInputs(author_model="cursor:grok-4.7", risk="medium", claude_account=HOST_ACCOUNT)
     assert resolve_author_family(inputs.author_model) == "xai"
     for name in ("grok-4.7", "grok-4.7-cursor-fallback"):
         result = evaluate_candidate(REVIEW_CANDIDATES[name], inputs)
@@ -87,7 +88,7 @@ def test_cursor_attested_grok_author_refuses_same_family_review():
 
 def test_cursor_attested_author_allows_other_family_exact_head_review():
     for token, forbidden_family in (("cursor:composer-2.5", "moonshot"), ("cursor:grok-4.7", "xai")):
-        inputs = ResolverInputs(author_model=token, risk="medium", exact_head=_EXACT_HEAD)
+        inputs = ResolverInputs(author_model=token, risk="medium", exact_head=_EXACT_HEAD, claude_account=HOST_ACCOUNT)
         resolution = resolve_reviewer(inputs)
         assert resolution.fail_closed_reason is None, token
         assert resolution.selected is not None, token
@@ -162,7 +163,7 @@ def test_cursor_unattested_auto_is_not_a_single_reviewer_cf_identity():
         if candidate.transport == "cursor" or candidate.route == "cursor":
             assert candidate.concrete_model not in CURSOR_AUTO_MODEL_TOKENS, candidate.name
 
-    resolution = resolve_reviewer(ResolverInputs(author_model="cursor:auto", risk="medium"))
+    resolution = resolve_reviewer(ResolverInputs(author_model="cursor:auto", risk="medium", claude_account=HOST_ACCOUNT))
     assert resolution.fail_closed_reason is None
     assert resolution.selected is not None
     assert resolution.selected.family != "cursor"
@@ -192,7 +193,7 @@ def test_cursor_unattested_author_dual_family_quorum_path_is_retained(monkeypatc
     )
 
     resolution = reviewer_resolver.resolve_reviewer(
-        ResolverInputs(author_model="generic-unattested-harness", risk="medium", exact_head=_EXACT_HEAD)
+        ResolverInputs(author_model="generic-unattested-harness", risk="medium", exact_head=_EXACT_HEAD, claude_account=HOST_ACCOUNT)
     )
     assert resolution.fail_closed_reason is None
     # There is no single reviewer of record: BOTH quorum seats must pass.
@@ -215,7 +216,7 @@ def test_cursor_unattested_quorum_fail_closed_and_pin_cannot_substitute(monkeypa
 
     # Fewer than two eligible distinct families fails closed — no quorum.
     one_family = reviewer_resolver.resolve_reviewer(
-        ResolverInputs(author_model="generic-unattested-harness"),
+        ResolverInputs(author_model="generic-unattested-harness", claude_account=HOST_ACCOUNT),
         ladder=((OPENAI_FRONTIER,),),
     )
     assert one_family.selected is None
@@ -227,7 +228,7 @@ def test_cursor_unattested_quorum_fail_closed_and_pin_cannot_substitute(monkeypa
         ResolverInputs(
             author_model="generic-unattested-harness",
             pinned_candidate="claude-sonnet-5-5",
-            pressure_override_reason="probe",
+            pressure_override_reason="probe", claude_account=HOST_ACCOUNT,
         )
     )
     assert pinned.selected is None

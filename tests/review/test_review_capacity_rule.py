@@ -11,6 +11,7 @@ from scripts.fleet import credit_lane
 from scripts.review import closeout_cli
 from scripts.review.capacity import review_capacity, review_capacity_action
 from scripts.review.reviewer_resolver import REVIEW_CANDIDATES, ResolverInputs, evaluate_candidate, resolve_reviewer
+from tests.claude_route_accounts import HOST_ACCOUNT
 
 
 def snapshot(*, remaining=54, short=96, stale=False, **lane):
@@ -34,7 +35,7 @@ def snapshot(*, remaining=54, short=96, stale=False, **lane):
 
 
 def inputs(data):
-    return ResolverInputs(author_model="gpt-6.1-sol", risk="critical", language_lane=True, routing_snapshot=data)
+    return ResolverInputs(author_model="gpt-6.1-sol", risk="critical", language_lane=True, routing_snapshot=data, claude_account=HOST_ACCOUNT)
 
 
 def test_c6b_pace_only_selects_opus_without_attesting_missing_health():
@@ -122,7 +123,7 @@ def test_stale_or_missing_allowance_is_advisory_and_recorded(data):
 def test_pace_pressure_orders_only_equal_fits():
     data = snapshot()
     data["agents"]["codex"] = {"status": "cool", "remaining_pct": 40}
-    result = resolve_reviewer(ResolverInputs(author_model="grok-4.7", risk="critical", routing_snapshot=data))
+    result = resolve_reviewer(ResolverInputs(author_model="grok-4.7", risk="critical", routing_snapshot=data, claude_account=HOST_ACCOUNT))
     assert result.selected.concrete_model == "gpt-6.1-sol"
     # Suitability/tier remains ahead of pressure: Sonnet cannot replace Opus at critical.
     assert resolve_reviewer(inputs(data)).selected.concrete_model == "claude-opus-5-5"
@@ -131,7 +132,7 @@ def test_pace_pressure_orders_only_equal_fits():
 def test_10016_known_capacity_with_pace_pressure_precedes_unknown_capacity():
     data = snapshot(remaining=80, status="cool", health={"healthy": True})
     data["agents"]["claude"]["codexbar"]["weekly_pace_delta_pct"] = 1
-    result = resolve_reviewer(ResolverInputs(author_model="grok-4.7", risk="critical", routing_snapshot=data))
+    result = resolve_reviewer(ResolverInputs(author_model="grok-4.7", risk="critical", routing_snapshot=data, claude_account=HOST_ACCOUNT))
 
     assert result.selected.concrete_model == "claude-opus-5-5"
     assert result.selected.health == "healthy"
@@ -256,7 +257,7 @@ def test_legacy_normalization_keeps_writer_policy_and_hot_orders_equal_review_fi
 
     data = {"claude": "hot", "codex": "healthy"}
     assert normalize_routing_snapshot(data) == {"claude": "near_cap", "codex": "healthy"}
-    result = resolve_reviewer(ResolverInputs(author_model="grok-4.7", risk="critical", routing_snapshot=data))
+    result = resolve_reviewer(ResolverInputs(author_model="grok-4.7", risk="critical", routing_snapshot=data, claude_account=HOST_ACCOUNT))
     assert result.selected.concrete_model == "gpt-6.1-sol"
     assert next(item for item in result.trace if item.concrete_model == "claude-opus-5-5").status == "eligible"
 
@@ -335,3 +336,165 @@ def test_sole_pace_only_reviewer_cannot_exceed_durable_reservation_limits(tmp_pa
                 with pytest.raises(RoutingReservationUnavailable, match=r"(credential|quota)_bucket_exhausted"):
                     ledger.reserve_selection(request, select)
     assert len(reads) == limit + 1
+
+
+# --- #10619: resolve-reviewer judges claude seats on the account a claude dispatch runs as ---
+
+
+def _account_row(left):
+    window = {"left_pct": left, "resets_at": None, "pace": None, "pace_delta_pct": None, "leftover_pct": None}
+    return {
+        "session5h": dict(window, left_pct=100.0),
+        "weekly": window,
+        "updated": None,
+        "age_s": 60.0,
+        "stale": False,
+        "status": "ok",
+        "reason": None,
+    }
+
+
+def _default_account(tmp_path, monkeypatch, label: str | None, *, bound: bool = True) -> None:
+    """The default-account file naming ``label``; account b is bound like a real login (#10733: closeout binds it)."""
+    if label is None:
+        monkeypatch.setenv("LU_CLAUDE_DEFAULT_ACCOUNT_FILE", "")
+        return
+    if label == "b":
+        from tests.test_delegate import _bind_claude_account_b
+
+        _bind_claude_account_b(tmp_path, monkeypatch, bound=bound)
+    path = tmp_path / "claude-default-account"
+    path.write_bytes(f"{label}\n".encode())
+    path.chmod(0o600)
+    monkeypatch.setenv("LU_CLAUDE_DEFAULT_ACCOUNT_FILE", str(path))
+
+
+@pytest.mark.parametrize(
+    ("label", "code", "selected", "account"),
+    [
+        (
+            "b",
+            0,
+            "claude-opus-5-5",
+            {
+                "label": "b",
+                "source": "default-file",
+                "meter": "claude_accounts.claude:b",
+                "state": "ok",
+                "reason": None,
+            },
+        ),
+        (None, 1, None, None),
+    ],
+)
+def test_resolve_reviewer_reads_the_default_claude_account(
+    tmp_path, capsys, monkeypatch, label, code, selected, account
+):
+    """Account a's lane row is at 5% remaining; account b, which the default-account file names, has 89%."""
+    _default_account(tmp_path, monkeypatch, label)
+    path = tmp_path / "snapshot.json"
+    path.write_text(json.dumps(snapshot(remaining=5) | {"claude_accounts": {"claude:b": _account_row(89.0)}}))
+
+    result_code, result = run_cli(tmp_path, capsys, "--routing-snapshot-file", str(path))
+
+    assert result_code == code
+    assert (result["selected"] or {}).get("name") == selected
+    # The default account reads the lane row, and its output is unchanged: no claude_account key.
+    assert result.get("claude_account") == account
+    assert result["routing_snapshot"]["source"] == "file"
+
+
+@pytest.mark.parametrize(("label", "selected"), [("b", "claude-opus-5-5"), (None, None)])
+def test_resolve_reviewer_headroom_stop_reads_the_default_claude_account(
+    tmp_path, capsys, monkeypatch, label, selected
+):
+    """At an 80% cap, a's 84% weekly use no longer excludes claude reviewers that run as b (11% used)."""
+    import io
+
+    _default_account(tmp_path, monkeypatch, label)
+    policy = tmp_path / "pause.json"
+    policy.write_text(json.dumps({"headroom": [{"lane": "claude", "pattern": "claude-*", "max_weekly_used_pct": 80}]}))
+    monkeypatch.setenv("LU_MODEL_PAUSE_FILE", str(policy))
+    live = {
+        "agents": {
+            "claude": {"status": "hot", "codexbar": {"stale": False, "freshness": "fresh", "weekly_used_pct": 84}}
+        },
+        "claude_accounts": {"claude:b": _account_row(89.0)},
+    }
+    monkeypatch.setattr("urllib.request.urlopen", lambda *a, **k: io.StringIO(json.dumps(live)))
+    path = tmp_path / "snapshot.json"
+    path.write_text(json.dumps(snapshot() | {"claude_accounts": {"claude:b": _account_row(89.0)}}))
+
+    _code, result = run_cli(tmp_path, capsys, "--routing-snapshot-file", str(path))
+
+    assert (result["selected"] or {}).get("name") == selected
+    if selected is None:
+        opus = next(item for item in result["trace"] if item["name"] == "claude-opus-5-5")
+        assert "MODEL_HEADROOM" in opus["reason"]
+
+
+def _claude_author_cli(tmp_path, capsys, data):
+    path = tmp_path / "snapshot.json"
+    path.write_text(json.dumps(data))
+    code = closeout_cli.main(
+        [
+            "--state-file",
+            str(tmp_path / "state.json"),
+            "resolve-reviewer",
+            "--author-model",
+            "claude-opus-5-5",
+            "--risk",
+            "critical",
+            "--owned-path",
+            "ordinary.py",
+            "--language-lane",
+            "--routing-snapshot-file",
+            str(path),
+        ]
+    )
+    return code, json.loads(capsys.readouterr().out)
+
+
+def test_unresolved_default_account_removes_only_claude_seats(tmp_path, capsys, monkeypatch):
+    """A broken default-account file must not block a reviewer that never runs as a claude account."""
+    _default_account(tmp_path, monkeypatch, "c")
+    data = snapshot()
+    data["agents"]["codex"] = {"status": "cool", "remaining_pct": 40}
+
+    code, result = _claude_author_cli(tmp_path, capsys, data)
+
+    assert code == 0
+    assert result["selected"]["concrete_model"] == "gpt-6.1-sol"
+    assert result["claude_account_unresolved"] == "claude_account_default_file_invalid"
+    assert result["fail_closed_reason"] is None
+    # The default-account output keys are untouched: no claude_account block.
+    assert "claude_account" not in result
+
+
+def test_unbound_default_account_removes_only_claude_seats(tmp_path, capsys, monkeypatch):
+    """#10733: the default file names b, but b has no binding: claude seats are removed before selection."""
+    _default_account(tmp_path, monkeypatch, "b", bound=False)
+    data = snapshot(remaining=90) | {"claude_accounts": {"claude:b": _account_row(89.0)}}
+    data["agents"]["codex"] = {"status": "cool", "remaining_pct": 40}
+
+    code, result = _claude_author_cli(tmp_path, capsys, data)
+
+    assert code == 0
+    assert result["selected"]["concrete_model"] == "gpt-6.1-sol"
+    assert result["claude_account_unresolved"] == "claude_account_binding_missing"
+    assert "claude_account" not in result
+
+
+def test_resolve_reviewer_fails_closed_on_an_unreadable_default_account(tmp_path, capsys, monkeypatch):
+    _default_account(tmp_path, monkeypatch, "c")
+    path = tmp_path / "snapshot.json"
+    path.write_text(json.dumps(snapshot()))
+
+    code, result = run_cli(tmp_path, capsys, "--routing-snapshot-file", str(path))
+
+    assert code == 1 and result["selected"] is None
+    # Only claude seats are eligible for a gpt-6.1-sol author, and they cannot be judged.
+    assert result["fail_closed_reason"] == "claude account unresolved: claude_account_default_file_invalid"
+    assert result["claude_account_unresolved"] == "claude_account_default_file_invalid"
+    opus = next(item for item in result["trace"] if item["name"] == "claude-opus-5-5")
+    assert opus["status"] == "excluded" and "claude account unresolved" in opus["reason"]

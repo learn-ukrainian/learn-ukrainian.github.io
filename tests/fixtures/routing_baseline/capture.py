@@ -20,7 +20,7 @@ import subprocess
 import sys
 import tempfile
 import uuid
-from dataclasses import asdict, is_dataclass
+from dataclasses import asdict, fields, is_dataclass
 from datetime import UTC, datetime
 from functools import lru_cache, partial
 from pathlib import Path
@@ -268,6 +268,13 @@ def _capture_surfaces(source, scratch, project_python):
     }
     cases = reviewer_inputs(legacy)
     outputs = {"catalog": legacy, "registry": plain(AGENTS), "reviewer": []}
+    # #10630: where ResolverInputs requires the Claude account, name the one a
+    # review dispatch resolves and binds; an older source root has no such field.
+    account = {}
+    if "claude_account" in {field.name for field in fields(ResolverInputs)}:
+        from scripts.fleet.claude_account_lane import resolve_route_account
+
+        account["claude_account"] = resolve_route_account(None, strict=False)
     for case in cases:
         typed = dict(case)
         for key in ("required_capabilities", "subject_seats", "subject_families", "author_families"):
@@ -285,7 +292,9 @@ def _capture_surfaces(source, scratch, project_python):
                 credit_lane, "published_credit_relief", partial(credit_lane.published_credit_relief, now=FIXED_NOW)
             ),
         ):
-            outputs["reviewer"].append(observed(lambda typed=typed: resolve_reviewer(ResolverInputs(**typed))))
+            outputs["reviewer"].append(
+                observed(lambda typed=typed: resolve_reviewer(ResolverInputs(**typed, **account)))
+            )
 
     from scripts.review.role_resolution import resolve_role
 

@@ -25,6 +25,9 @@ pytestmark = pytest.mark.usefixtures("hermetic_monitor")
 @pytest.fixture(autouse=True)
 def reader_clock(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("LU_MONITOR_LOOPBACK", "https://configured.invalid")
+    # The reader judges the launch's own account (#10630): these cases launch as the default account.
+    monkeypatch.delenv("CLAUDE_CONFIG_DIR", raising=False)
+    monkeypatch.setenv("LU_CLAUDE_ACCOUNTS_FILE", "")
     clock = Mock(wraps=datetime)
     clock.now.return_value = datetime(2030, 1, 1, tzinfo=UTC)
     monkeypatch.setattr(claude_weekly_used, "datetime", clock)
@@ -444,6 +447,80 @@ def test_weekly_reader_rejects_untrusted_response_age(
     claude_weekly_used.main()
 
     assert capsys.readouterr().out == f"{expected}\n"
+
+
+# --- #10630: the stop reads the meter of the account the launch runs as ---------------------
+
+
+def _account_row(left: object, *, status: str = "ok", stale: bool = False) -> dict:
+    window = {"left_pct": left, "resets_at": None}
+    return {"session5h": dict(window, left_pct=100.0), "weekly": window, "status": status, "stale": stale}
+
+
+def _accounts_payload(b_row: dict | None, *, a_used: float = 99.5) -> dict:
+    return {
+        "generated_at": "2030-01-01T00:00:00Z",
+        "agents": {"claude": {"codexbar": {"stale": False, "weekly_used_pct": a_used}}},
+        "claude_accounts": {} if b_row is None else {"claude:b": b_row},
+    }
+
+
+def _launch_as(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, directory: str, *, mode: int = 0o600) -> Path:
+    """A home with a default login, account b bound to ``selected``, and ``CLAUDE_CONFIG_DIR`` set to ``directory``."""
+    home, selected = tmp_path / "home", tmp_path / "selected"
+    (home / ".claude").mkdir(parents=True)
+    selected.mkdir()
+    bindings = tmp_path / "claude_accounts.json"
+    bindings.write_text(
+        json.dumps({"schema_version": 1, "accounts": {"b": {"config_dir": str(selected), "account_uuid": "x"}}})
+    )
+    bindings.chmod(mode)
+    monkeypatch.setenv("HOME", str(home))
+    monkeypatch.setenv("LU_CLAUDE_ACCOUNTS_FILE", str(bindings))
+    target = {"default": home / ".claude", "bound": selected, "unbound": tmp_path / "other"}[directory]
+    target.mkdir(exist_ok=True)
+    monkeypatch.setenv("CLAUDE_CONFIG_DIR", str(target))
+    return target
+
+
+@pytest.mark.parametrize(
+    ("directory", "b_row", "expected"),
+    (
+        # The host's default login directory is account a: the lane row's 99.5%.
+        ("default", _account_row(88.0), "99.5"),
+        # A login directory the bindings name is that account: b has 12% used, not a's 99.5%.
+        ("bound", _account_row(88.0), "12"),
+        ("bound", _account_row(0.0), "100"),
+        ("bound", _account_row(88.0, status="stale", stale=True), "unknown"),
+        ("bound", _account_row(88.0, status="unknown"), "unknown"),
+        ("bound", _account_row(None), "unknown"),
+        ("bound", _account_row(101.0), "unknown"),
+        ("bound", None, "unknown"),
+    ),
+)
+def test_weekly_reader_reads_the_launch_accounts_meter(
+    directory, b_row, expected, tmp_path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    _launch_as(tmp_path, monkeypatch, directory)
+    _mock_request(monkeypatch, io.BytesIO(json.dumps(_accounts_payload(b_row)).encode()))
+
+    claude_weekly_used.main()
+
+    assert capsys.readouterr().out == f"{expected}\n"
+
+
+@pytest.mark.parametrize(("directory", "mode"), (("unbound", 0o600), ("bound", 0o640), ("bound", 0o602)))
+def test_weekly_reader_cannot_name_an_unbound_launch_account(
+    directory, mode, tmp_path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """A login directory no private binding names is never judged on another account's meter."""
+    _launch_as(tmp_path, monkeypatch, directory, mode=mode)
+    request, _ = _mock_request(monkeypatch, io.BytesIO(json.dumps(_accounts_payload(_account_row(88.0))).encode()))
+
+    claude_weekly_used.main()
+
+    request.assert_not_called()
+    assert capsys.readouterr().out == "unknown\n"
 
 
 def test_fresh_claude_usage_blocks_launch_when_other_provider_is_stale(
