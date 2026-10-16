@@ -52,15 +52,30 @@ def test_client_without_cache_dir_stays_on_the_test_override():
     assert production is None or store.cache_dir.resolve() != Path(production).resolve()
 
 
+def _production_cache_writable(production):
+    """True when the production cache directory, or its parent, can be written.
+
+    ``_cache_directory`` returns ``None`` when that directory is not writable.
+    A cache path that does not exist yet is writable when its parent is.
+    """
+    if production is None:
+        return False
+    path = Path(production)
+    target = path if path.exists() else path.parent
+    return target.is_dir() and os.access(target, os.W_OK)
+
+
 def test_production_cache_connect_is_refused():
     """The guard raises before sqlite opens the shared cache.
 
     Reverting the autouse fixture removes ``guards_production_github_cache``,
-    so this assertion fails before ``connect`` is called.
+    so this assertion fails before ``connect`` is called. A read-only sandbox
+    has no writable production cache; that is a skip, not a failed guard.
     """
     assert getattr(gh.sqlite3.connect, "guards_production_github_cache", False)
     production = production_github_cache_directory()
-    assert production is not None
+    if not _production_cache_writable(production):
+        pytest.skip("production GitHub cache directory is not writable")
     with pytest.raises(AssertionError, match="production GitHub cache"):
         gh.sqlite3.connect(Path(production) / "cache.sqlite3")
 
@@ -129,6 +144,35 @@ def test_reset_exactly_at_horizon_still_keeps_the_landing_reserve(tmp_path):
     assert result.reset_at == horizon and calls == []
 
 
+def test_primary_reset_one_second_inside_the_horizon_keeps_the_reserve(tmp_path):
+    """now+7199 is still a primary window. The clamp starts after two hours."""
+    now = 1_700_000_000
+    reset = now + gh.BUDGET_RESET_HORIZON_SECONDS - 1
+    store, calls = _client(tmp_path, now)
+    with store._db() as db:
+        gh._store_budget(db, store.scope, "core", 77, reset, now=now)
+    result = store.request("GET", "user")
+    assert (result.error, result.reason, result.reset_at) == (
+        "github_rate_limited",
+        "core_below_landing_reserve",
+        reset,
+    )
+    assert calls == []
+
+
+def test_primary_reset_one_second_past_the_horizon_is_ignored(tmp_path):
+    """now+7201 is not a primary window, on write or when a row is already stored."""
+    now = 1_700_000_000
+    reset = now + gh.BUDGET_RESET_HORIZON_SECONDS + 1
+    store, calls = _client(tmp_path, now)
+    with store._db() as db:
+        gh._store_budget(db, store.scope, "core", 0, reset, now=now)
+    assert _rows(store) == []
+    with store._db() as db:
+        db.execute("INSERT INTO budget VALUES (?,?,?,?)", (store.scope, "core", 0, reset))
+    assert store.request("GET", "user").error is None and calls == ["user"]
+
+
 def test_healthy_low_core_budget_still_refuses(tmp_path):
     now = 1_700_000_000
     reset = now + 60
@@ -182,3 +226,98 @@ def test_implausible_budget_rows_lists_reset_and_remaining_only(tmp_path):
         assert gh.implausible_budget_rows(ro, now=now) == found
     finally:
         ro.close()
+
+
+@pytest.mark.parametrize(
+    ("resource", "method", "endpoint", "reason"),
+    [
+        ("core", "GET", "user", "core_below_landing_reserve"),
+        ("graphql", "POST", "graphql", "pool_exhausted"),
+        ("search", "GET", "search/issues", "pool_exhausted"),
+    ],
+)
+def test_healthy_observation_replaces_a_poisoned_reset(tmp_path, resource, method, endpoint, reason):
+    """A year-2096 reset must not outlive a later remaining-0 window.
+
+    The read clamp ignores the poisoned row. Requiring ``excluded.reset >=
+    budget.reset`` then drops the healthy window, and the next call reaches
+    transport. Without the poison that next call is refused.
+    """
+    now = 1_700_000_000
+    healthy = now + 3599
+    calls = []
+
+    def transport(verb, path, headers, body, timeout):
+        calls.append(path)
+        return gh.Response(
+            200,
+            {
+                "X-RateLimit-Remaining": "0",
+                "X-RateLimit-Reset": str(healthy),
+                "X-RateLimit-Resource": resource,
+            },
+            b'{"ok":true}',
+        )
+
+    store = gh.GitHubClient(
+        cache_dir=tmp_path / "cache",
+        env={"GH_TOKEN": "unit-token"},
+        clock=lambda: now,
+        transport=transport,
+    )
+    with store._db() as db:
+        db.execute("INSERT INTO budget VALUES (?,?,?,?)", (store.scope, resource, 0, 4_000_000_000))
+    observed = store.request(method, endpoint)
+    assert observed.error is None and calls == [endpoint]
+    assert _rows(store) == [(resource, 0, healthy)]
+    refused = store.request(method, endpoint)
+    assert (refused.error, refused.reason, refused.reset_at) == ("github_rate_limited", reason, healthy)
+    assert calls == [endpoint]
+
+
+def test_retry_after_longer_than_the_primary_window_holds_landing(tmp_path):
+    """HTTP 429 ``Retry-After: 10800`` refuses the next landing call until that expiry.
+
+    The primary-window clamp used to drop this hold on write and on read.
+    ``now + 7199`` stays inside the clamp; this hold is three hours and is not.
+    """
+    now = 1_700_000_000
+    expiry = now + 10_800
+    clock = {"now": now}
+    calls = []
+
+    def transport(verb, path, headers, body, timeout):
+        calls.append((verb, path))
+        if len(calls) == 1:
+            return gh.Response(429, {"Retry-After": "10800"}, b'{"message":"slow down"}')
+        return gh.Response(
+            200,
+            {"X-RateLimit-Remaining": "5000", "X-RateLimit-Reset": str(clock["now"] + 60)},
+            b'{"ok":true}',
+        )
+
+    store = gh.GitHubClient(
+        cache_dir=tmp_path / "cache",
+        env={"GH_TOKEN": "unit-token"},
+        clock=lambda: clock["now"],
+        transport=transport,
+    )
+    limited = store.request("GET", "user")
+    assert (limited.error, limited.reason, limited.reset_at) == ("github_rate_limited", "retry_after", expiry)
+    assert _rows(store) == [("retry_after", 0, expiry)]
+    with store._db() as db:
+        assert gh.implausible_budget_rows(db, now=now) == []
+
+    landing = ("PUT", "repos/o/r/pulls/1/merge")
+    refused = store.request(*landing, payload={"merge_method": "squash"})
+    assert (refused.error, refused.reason, refused.reset_at) == ("github_rate_limited", "retry_after", expiry)
+    assert calls == [("GET", "user")]
+
+    clock["now"] = expiry - 1
+    still = store.request(*landing, payload={"merge_method": "squash"})
+    assert (still.error, still.reason, still.reset_at) == ("github_rate_limited", "retry_after", expiry)
+    assert calls == [("GET", "user")]
+
+    clock["now"] = expiry
+    admitted = store.request(*landing, payload={"merge_method": "squash"})
+    assert admitted.error is None and calls == [("GET", "user"), landing]

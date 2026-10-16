@@ -44,7 +44,10 @@ RESERVE = 10
 LANDING_RESERVE = 500
 """Core pool: below this many remaining, what is left is kept for calls that land a PR."""
 BUDGET_RESET_HORIZON_SECONDS = 2 * 60 * 60
-"""GitHub resets a primary window within an hour. A stored reset further ahead than this is not a budget."""
+"""GitHub resets a primary window within an hour. A stored primary reset further ahead than this is not a budget.
+
+Retry-After expiries are not primary windows. :func:`_observation_reset_ignored` keeps them.
+"""
 MAX_BUDGET_REMAINING = 15_000
 """Inclusive ceiling for a plausible remaining count. GitHub's highest published primary limit is 15_000."""
 _IMPLAUSIBLE_RESET_LOGGED = False
@@ -251,7 +254,7 @@ def _refusal(budgets, pools, *, call_class, now):
 
 
 def _budget_reset_implausible(reset, now):
-    """True when ``reset`` cannot be a live GitHub window relative to ``now``.
+    """True when ``reset`` cannot be a live GitHub primary window relative to ``now``.
 
     A window lasts at most an hour. Non-finite, non-integer, non-positive, and
     far-future values are not budgets: a year-2096 reset would otherwise refuse
@@ -267,6 +270,19 @@ def _budget_remaining_implausible(remaining, limit):
     return type(remaining) is not int or remaining < 0 or remaining > limit
 
 
+def _observation_reset_ignored(resource, reset, now):
+    """True when a stored or incoming reset must not act as this resource's budget.
+
+    The primary-window horizon applies to pool observations only. GitHub's
+    Retry-After expiry is the duration it named, which can outlast that window,
+    so a long authentic hold is kept. A non-positive or non-integer expiry is
+    still not a hold.
+    """
+    if resource == _AUTHENTIC_HOLD:
+        return type(reset) is not int or reset <= 0
+    return _budget_reset_implausible(reset, now)
+
+
 def _log_implausible_reset_once(reset):
     """Debug-log the first implausible reset in this process and stay quiet after that."""
     global _IMPLAUSIBLE_RESET_LOGGED
@@ -279,15 +295,16 @@ def _log_implausible_reset_once(reset):
 def implausible_budget_rows(connection, *, now, remaining_limit=MAX_BUDGET_REMAINING):
     """Budget rows that cannot be a live GitHub observation.
 
-    ``connection`` is only read. A row is listed when its reset is implausible
-    relative to ``now`` (:func:`_budget_reset_implausible`) or its remaining
-    falls outside ``[0, remaining_limit]``.
+    ``connection`` is only read. A row is listed when its reset is ignored
+    (:func:`_observation_reset_ignored`) or its remaining falls outside
+    ``[0, remaining_limit]``. A Retry-After expiry beyond the primary-window
+    horizon is a live hold, not a poisoned reset.
     """
     found = []
     query = "SELECT scope, resource, remaining, reset FROM budget ORDER BY resource"
     for scope, resource, remaining, reset in connection.execute(query):
         reasons = []
-        if _budget_reset_implausible(reset, now):
+        if _observation_reset_ignored(resource, reset, now):
             reasons.append("reset")
         if _budget_remaining_implausible(remaining, remaining_limit):
             reasons.append("remaining")
@@ -316,7 +333,7 @@ def _admission(db, scope, pools, call_class, now):
     ).fetchall()
     budgets = {}
     for resource, remaining, reset in rows:
-        if _budget_reset_implausible(reset, now):
+        if _observation_reset_ignored(resource, reset, now):
             _log_implausible_reset_once(reset)
             continue
         budgets[resource] = (remaining, reset)
@@ -1025,18 +1042,30 @@ def _cached_value(cached):
 
 
 def _store_budget(db, scope, resource, remaining, reset, now=None):
-    """Record one observation. An implausible reset is not written."""
+    """Record one observation.
+
+    An implausible primary-window reset is not written. GitHub's Retry-After
+    expiry is not that window, so a hold longer than it is kept. A stored row
+    the reader ignores loses to a later plausible observation: the upsert used
+    to require ``excluded.reset >= budget.reset``, and a year-2096 reset then
+    blocked every healthy write. The extra ``WHERE`` terms are that ignore
+    rule (:func:`_observation_reset_ignored`) applied to the stored row.
+    """
     if now is None:
         now = time.time()
-    if _budget_reset_implausible(reset, now):
+    if _observation_reset_ignored(resource, reset, now):
         _log_implausible_reset_once(reset)
         return
     db.execute(
         """INSERT INTO budget VALUES(?,?,?,?)
         ON CONFLICT(scope,resource) DO UPDATE SET
         remaining=CASE WHEN excluded.reset=budget.reset THEN min(budget.remaining,excluded.remaining) ELSE excluded.remaining END,
-        reset=excluded.reset WHERE excluded.reset>=budget.reset""",
-        (scope, resource, remaining, reset),
+        reset=excluded.reset
+        WHERE excluded.reset>=budget.reset
+           OR typeof(budget.reset)!='integer'
+           OR budget.reset<=0
+           OR (budget.resource!=? AND budget.reset>?)""",
+        (scope, resource, remaining, reset, _AUTHENTIC_HOLD, now + BUDGET_RESET_HORIZON_SECONDS),
     )
 
 
