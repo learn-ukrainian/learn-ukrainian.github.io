@@ -217,7 +217,7 @@ class Fixture:
         value["schema_version"] = "source-index.v1"
         row["index"]["sha256"] = write(self.root / row["index"]["path"], value)
 
-    def cli(self, out="output", *, extra=None):
+    def cli(self, out="output", *, extra=None, tmpdir=None):
         args = [sys.executable, "-m", MODULE]
         for name, path in self.paths.items():
             args += ["--" + name.replace("_", "-"), str(path)]
@@ -226,7 +226,7 @@ class Fixture:
             args + (extra or []),
             capture_output=True,
             text=True,
-            env={**os.environ, "TMPDIR": str(self.root)},
+            env={**os.environ, "TMPDIR": str(tmpdir or self.root)},
             check=False,
             timeout=60,
         )
@@ -846,8 +846,10 @@ def test_float_occurrence_cannot_create_duplicate_identity(fixture, boundary, oc
     assert not (fixture.root / "output").exists()
 
 
+@pytest.mark.parametrize("path", ["capture\x00.txt", "loop"], ids=["embedded-nul", "symlink-loop"])
 @pytest.mark.parametrize("kind", ["source-index", "lexical-index", "legacy-index", "evidence", "absence"])
-def test_embedded_nul_reference_is_invalid_evidence_without_publication(fixture, kind):
+def test_unresolvable_reference_is_invalid_evidence_without_publication(fixture, kind, path):
+    (fixture.root / "loop").symlink_to("loop")
     if kind == "source-index":
         ref = fixture.docs["source_manifest"]["ranges"][0]["index"]
     elif kind in ("lexical-index", "legacy-index"):
@@ -857,10 +859,42 @@ def test_embedded_nul_reference_is_invalid_evidence_without_publication(fixture,
         ref = fixture.docs["stage_evidence"]["records"][0]["evidence"][0]
     else:
         ref = absence(fixture)["absence_evidence"]
-    ref["path"] = "capture\x00.txt"
+    ref["path"] = path
     fixture.save()
     result = fixture.cli()
     assert result.returncode == 3, result.stdout + result.stderr
     assert result.stdout == ""
     assert result.stderr == "INVALID_EVIDENCE: referenced artifact unavailable\n"
     assert not (fixture.root / "output").exists()
+
+
+def test_symlink_loop_top_level_input_is_invalid_evidence_without_publication(fixture):
+    (fixture.root / "loop").symlink_to("loop")
+    fixture.paths["stage_evidence"] = fixture.root / "loop"
+    result = fixture.cli()
+    assert result.returncode == 3, result.stdout + result.stderr
+    assert result.stdout == ""
+    assert result.stderr == "INVALID_EVIDENCE: unreadable or invalid JSON input\n"
+    assert not (fixture.root / "output").exists()
+
+
+@pytest.mark.parametrize("loop", ["output", "tmpdir"])
+def test_unresolvable_publication_path_is_publication_failure_without_receipt(fixture, loop):
+    prior = {name: path.read_bytes() for name, path in fixture.paths.items()}
+    (fixture.root / "loop").symlink_to("loop")
+    result = fixture.cli(out="loop/output") if loop == "output" else fixture.cli(tmpdir=fixture.root / "loop")
+    assert result.returncode == 4, result.stdout + result.stderr
+    assert result.stdout == ""
+    assert result.stderr == "PUBLICATION_FAILURE: path cannot be resolved\n"
+    assert not (fixture.root / "output").exists()
+    assert not list(fixture.root.rglob("manifest-receipt.json"))
+    assert prior == {name: path.read_bytes() for name, path in fixture.paths.items()}
+
+
+def test_embedded_nul_output_dir_is_publication_oserror(fixture, monkeypatch):
+    # Process arguments cannot carry NUL, so the callable is the only entry point.
+    outputs, receipt = manifest.account(fixture.paths)
+    monkeypatch.setenv("TMPDIR", str(fixture.root))
+    with pytest.raises(OSError, match=r"^path cannot be resolved$"):
+        manifest.publish(fixture.root / "out\x00put", outputs, receipt)
+    assert not list(fixture.root.rglob("manifest-receipt.json"))

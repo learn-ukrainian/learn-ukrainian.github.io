@@ -174,6 +174,15 @@ def _validate(value: Any, schema: dict, label: str) -> None:
         raise InvalidEvidence(f"{label}.{location}: {error.validator} failed")
 
 
+def _resolve(path: Path) -> Path:
+    """Resolve a path, reporting every resolution failure as OSError for the caller's exit boundary."""
+    try:
+        return path.resolve()
+    except (OSError, RuntimeError, ValueError) as exc:
+        # Python 3.12 raises RuntimeError for symlink loops and ValueError for embedded NULs.
+        raise OSError("path cannot be resolved") from exc
+
+
 def _distinct(values: list[Any], label: str) -> None:
     keys = [_bytes(value) for value in values]
     if len(set(keys)) != len(keys):
@@ -190,7 +199,7 @@ class Inputs:
         for name, path in paths.items():
             raw, value = _read(path)
             _validate(value, SCHEMAS[name], name)
-            self.paths.add(path.resolve())
+            self.paths.add(_resolve(path))
             self.documents[name] = value
             self.bindings[name] = {"sha256": _sha(raw), "bytes": len(raw), "schema_version": value["schema_version"]}
         self.artifacts: list[dict] = []
@@ -198,7 +207,7 @@ class Inputs:
 
     def reference(self, ref: dict, base: Path, *, structured: bool = False) -> Any:
         try:
-            path = (base / ref["path"]).resolve()
+            path = _resolve(base / ref["path"])
             raw = path.read_bytes()
         except (OSError, ValueError) as exc:
             raise InvalidEvidence("referenced artifact unavailable") from exc
@@ -578,8 +587,8 @@ def publish(output_dir: Path, outputs: dict[str, bytes], receipt: dict) -> None:
     public_receipt = {k: v for k, v in receipt.items() if k != "_input_paths"}
     managed = os.environ.get("TMPDIR")
     reports = ROOT / "batch_state/reports"
-    resolved = output_dir.resolve()
-    roots = [reports.resolve()] + ([Path(managed).resolve()] if managed else [])
+    resolved = _resolve(output_dir)
+    roots = [_resolve(reports)] + ([_resolve(Path(managed))] if managed else [])
     if not any(resolved.is_relative_to(root) and resolved != root for root in roots):
         raise OSError("output directory must be below managed TMPDIR or ignored reports")
     if any(p == resolved or resolved in p.parents for p in protected):
