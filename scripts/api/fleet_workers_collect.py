@@ -80,6 +80,7 @@ def reset_workers_payload_cache() -> None:
 def _workers_payload_cache_key(host_id: str | None) -> str:
     return host_id if host_id is not None else ""
 
+
 MARKER_KIND_NORMALIZE = {
     "worker": "service",
     "service": "service",
@@ -557,11 +558,7 @@ def _selected_host_ids(host_id: str | None) -> list[str]:
     mapping = parse_host_id_map()
     reverse = {opaque: canonical for canonical, opaque in mapping.items()}
     if host_id is not None:
-        if (
-            host_id in reverse
-            or host_id in QUERYABLE_DEFAULT_HOST_IDS
-            or host_id == CLOUD_OBSERVER_HOST_ID
-        ):
+        if host_id in reverse or host_id in QUERYABLE_DEFAULT_HOST_IDS or host_id == CLOUD_OBSERVER_HOST_ID:
             return [host_id]
         return []
     selected: list[str] = []
@@ -648,7 +645,9 @@ def reconcile_worker_counts(payload: dict[str, Any]) -> None:
         live=sum(
             row["state"] == "live"
             for host in hosts
-            if host["freshness"] == "fresh" and host["workers_status"] == "reported"
+            if host["host_id"] != UNATTRIBUTED_HOST_ID
+            and host["freshness"] == "fresh"
+            and host["workers_status"] == "reported"
             for row in host["workers"]
         ),
         hosts_unknown=sum(host["freshness"] == "unknown" for host in hosts),
@@ -692,9 +691,7 @@ def _build_workers_payload(
             presence_store=presence_store,
             report_store=report_store,
         )
-        workers_status, reported = _reported_workers(
-            opaque, now_mono=stamp, tally=tally, report_store=report_store
-        )
+        workers_status, reported = _reported_workers(opaque, now_mono=stamp, tally=tally, report_store=report_store)
         host_workers: list[CollectedWorker] = []
         unattributed_burn: dict[str, Any] = {}
         reason: str | None = None
@@ -726,11 +723,7 @@ def _build_workers_payload(
                 }
         elif opaque == CLOUD_OBSERVER_HOST_ID:
             workers_status = "reported"
-            host_workers.extend(
-                collect_observer_workers(
-                    now_mono=stamp, tally=tally, presence_store=presence_store
-                )
-            )
+            host_workers.extend(collect_observer_workers(now_mono=stamp, tally=tally, presence_store=presence_store))
         else:
             if workers_status == "unreported":
                 attention.append(f"unreported:{opaque}")
@@ -792,9 +785,7 @@ def workers_payload(
 
     Explicit fixture paths / ``now_mono`` bypass the cache so tests stay hermetic.
     """
-    use_cache = (
-        tasks_dir is None and session_db is None and markers_root is None and now_mono is None
-    )
+    use_cache = tasks_dir is None and session_db is None and markers_root is None and now_mono is None
     key = _workers_payload_cache_key(host_id)
     if use_cache:
         now = time.monotonic()
