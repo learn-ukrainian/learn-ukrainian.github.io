@@ -18,8 +18,10 @@ that key and the only reads of the routing snapshot's claude meter:
   consumers (``scripts.fleet.usage``, ``capacity_pick`` and the Monitor
   endpoint) keep the plain payload. A bound snapshot is deeply immutable, and
   its account identity survives conversion to a plain mapping
-  (:data:`BINDING_KEY`): no derivation, copy or splice turns one account's
-  meter into another's.
+  (:data:`BINDING_KEY`) and, in another account's claude meter records,
+  conversion of any part of it to plain data (:data:`STAMP_KEY`): no
+  derivation, copy, serialization or splice turns one account's meter into
+  another's.
 - :func:`select_account`, :func:`account_agents`, :func:`lane_record`,
   :func:`account_weekly_used_pct` and :func:`capacity_verdict` read the
   snapshot for a named account; none has a default, and a call without a
@@ -60,6 +62,12 @@ CLAUDE_LANE = "claude"
 # meter seal. It survives ``dict(view)``, ``{**view}`` and a JSON round trip, so such a copy is bound
 # again only unaltered and only as its own account (#10770).
 BINDING_KEY = "claude_account_binding"
+# The reserved field of every claude meter record (``agents.claude``, a claude ``ranked_by_headroom`` row) in a
+# view bound to an account other than the host's: its account label and a seal over (label, record). It is
+# ordinary data, so any plain-data copy of any part of the view (``dict``, JSON, marshal, ``copy``) keeps it, and
+# such a part is bound again only as its own account and only unaltered (#10770). The host account's records
+# are its raw payload's own and carry none; readers take a record's fields by name, so it is never displayed.
+STAMP_KEY = "claude_account_stamp"
 # The top-level fields that carry a Claude account's meter.
 METER_FIELDS = frozenset({"agents", "claude_accounts", "ranked_by_headroom", "preferred_claude_account"})
 # An ``agents`` key denoting a Claude seat's meter: ``claude``, a ``claude-<model>`` or other ``claude-<seat>``
@@ -253,11 +261,46 @@ def _bound_label(value: object) -> tuple[bool, str | None]:
     return False, None
 
 
-def _other_account_value(value: Any, label: str | None) -> tuple[str, str | None] | None:
-    """``(path, owner)`` of the first value in ``value`` taken from a snapshot bound to another account, else None."""
+def _record_seal(label: Any, record: Mapping[str, Any]) -> str:
+    """The keyed digest of ``label`` and ``record`` without its :data:`STAMP_KEY`."""
+    body = {key: item for key, item in record.items() if key != STAMP_KEY}
+    material = json.dumps(_material({"stamp": label, "record": body}), sort_keys=True, separators=(",", ":"))
+    return hmac.new(_SEAL_KEY, material.encode("utf-8"), hashlib.sha256).hexdigest()
+
+
+def _stamped(record: Mapping[str, Any], label: str | None) -> dict[str, Any]:
+    """``record`` carrying the :data:`STAMP_KEY` of ``label``'s view (any earlier stamp replaced)."""
+    body = {key: item for key, item in record.items() if key != STAMP_KEY}
+    return {**body, STAMP_KEY: {"label": label, "seal": _record_seal(label, body)}}
+
+
+def _stamp_mismatch(record: Mapping[str, Any], label: str | None) -> str | None:
+    """Why the stamped ``record`` is not read as ``label`` (its stamp does not verify, or names another account)."""
+    stamp = record[STAMP_KEY]
+    owner = stamp.get("label") if isinstance(stamp, Mapping) else None
+    seal = stamp.get("seal") if isinstance(stamp, Mapping) else None
+    if not (
+        isinstance(seal, str) and hmac.compare_digest(seal.encode("utf-8"), _record_seal(owner, record).encode("utf-8"))
+    ):
+        # Refused for every account: an altered record, or one stamped in another process (the seal is process-local).
+        return f"is a claude meter record stamped for claude account {owner!r} whose stamp does not verify"
+    return None if owner == label else f"is a claude meter record stamped for claude account {owner!r}"
+
+
+def _other_account_value(value: Any, label: str | None) -> tuple[str, str] | None:
+    """``(path, provenance)`` of the first value in ``value`` that is another account's, else None.
+
+    That is a value taken from a snapshot bound to another account (its
+    frozen type remembers it) or a mapping whose :data:`STAMP_KEY` names
+    another account or does not verify (plain data copied from such a view).
+    """
     bound, owner = _bound_label(value)
-    if bound:
-        return None if owner == label else ("", owner)  # a value bound to this account holds nothing else
+    if bound:  # a value bound to this account holds nothing else
+        return None if owner == label else ("", f"was taken from a snapshot bound to claude account {owner!r}")
+    if isinstance(value, Mapping) and STAMP_KEY in value:
+        mismatch = _stamp_mismatch(value, label)
+        if mismatch is not None:
+            return "", mismatch
     items = value.items() if isinstance(value, Mapping) else enumerate(value) if isinstance(value, list | tuple) else ()
     for key, item in items:
         found = _other_account_value(item, label)
@@ -267,17 +310,18 @@ def _other_account_value(value: Any, label: str | None) -> tuple[str, str | None
 
 
 def _refuse_other_accounts(value: Any, label: str | None, *, path: str = "payload") -> None:
-    """Raise :class:`AccountRequired` when ``value`` holds anything taken from a snapshot bound to another account.
+    """Raise :class:`AccountRequired` when ``value`` holds anything that is another account's.
 
     A bound snapshot's frozen values remember their account, so a plain
     mapping spliced from another account's view (``{**view}`` without its
-    binding, ``{"agents": view["agents"]}``) is never read as ``label``.
+    binding, ``{"agents": view["agents"]}``) is never read as ``label``; its
+    stamped meter records (:data:`STAMP_KEY`) keep their account through any
+    plain-data copy (``json.loads(json.dumps(view["agents"]))``).
     """
     found = _other_account_value(value, label)
     if found is not None:
         raise AccountRequired(
-            f"{path}{found[0]} was taken from a snapshot bound to claude account {found[1]!r} and is not read as "
-            f"{label!r}: bind the raw payload for that account (#10770)"
+            f"{path}{found[0]} {found[1]} and is not read as {label!r}: bind the raw payload for that account (#10770)"
         )
 
 
@@ -583,13 +627,13 @@ def lane_view(row: Any, lane_row: Any) -> tuple[dict[str, Any], str | None]:
     }, None
 
 
-def _ranked_row(item: Any, record: Mapping[str, Any] | None) -> Any:
-    """A ``ranked_by_headroom`` claude row with the producer's meter fields taken from ``record``."""
+def _ranked_row(item: Any, record: Mapping[str, Any] | None, label: str | None) -> Any:
+    """A ``ranked_by_headroom`` claude row with the producer's meter fields taken from ``record``, stamped for ``label``."""
     if not isinstance(item, Mapping) or item.get("lane") != CLAUDE_LANE:
         return item
     lane = record or {}
     meter = {key: lane.get(key) for key in RANKED_METER_KEYS}
-    return {**item, **meter, "status": lane.get("status", "unknown")}
+    return _stamped({**item, **meter, "status": lane.get("status", "unknown")}, label)
 
 
 def select_account(payload: Mapping[str, Any], *, account: ClaudeAccount) -> tuple[AccountSnapshot, dict[str, Any]]:
@@ -620,6 +664,10 @@ def select_account(payload: Mapping[str, Any], *, account: ClaudeAccount) -> tup
     (a copy of a bound snapshot) is bound again only as that account and only
     with its meter seal intact, and a mapping holding a value taken from a
     snapshot bound to another account is refused (:class:`AccountRequired`).
+    A view for an account other than the host's stamps its claude meter
+    records (:data:`STAMP_KEY`), so a plain-data copy of any part of it is
+    refused as another account's, and as any account's once altered; the
+    host account's view is its payload's and is not stamped.
     """
     from scripts.agent_runtime.attempt_boundary import DEFAULT_CLAUDE_ACCOUNT
 
@@ -683,9 +731,9 @@ def select_account(payload: Mapping[str, Any], *, account: ClaudeAccount) -> tup
                 key: runtime[key] for key in sorted(ACCOUNT_RATE_LIMIT_FIELDS) if key in runtime
             }
     if view is not None:
-        data["agents"] = {**agents, CLAUDE_LANE: view}
+        data["agents"] = {**agents, CLAUDE_LANE: _stamped(view, account.label)}
     if isinstance(ranked, list):
-        data["ranked_by_headroom"] = [_ranked_row(item, view) for item in ranked]
+        data["ranked_by_headroom"] = [_ranked_row(item, view, account.label) for item in ranked]
     return _bound(data, account, evidence)
 
 

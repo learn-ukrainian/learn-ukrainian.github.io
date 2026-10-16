@@ -22,9 +22,11 @@ import ast
 import copy
 import io
 import json
+import marshal
 import operator
 import pickle
 from collections.abc import Callable, Mapping
+from datetime import UTC, datetime
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Any
@@ -875,6 +877,124 @@ def test_copies_of_a_bound_view_keep_its_account():
         assert bind_snapshot(whole, account=B) == b
         with pytest.raises(AccountRequired, match="not read as 'a'"):
             bind_snapshot(whole, account=HOST_ACCOUNT)
+
+
+# --- round 4 (review-s2b-684f5fa8): plain-data copies of any part of a bound view --------------------
+
+
+def _plain(value):
+    """``value`` as built-in data, as a recursive ``dict``/``list`` conversion copies it."""
+    if isinstance(value, Mapping):
+        return {key: _plain(item) for key, item in value.items()}
+    if isinstance(value, list):
+        return [_plain(item) for item in value]
+    return value
+
+
+def _json(value):
+    return json.loads(json.dumps(value))
+
+
+def _lane_spliced(raw, record):
+    return {**raw, "agents": {**raw["agents"], "claude": record}}
+
+
+PART_COPIES = {
+    "json_agents": lambda b, raw: {"agents": _json(b["agents"])},
+    "json_lane_record": lambda b, raw: _lane_spliced(raw, _json(b["agents"]["claude"])),
+    "dict_agents": lambda b, raw: {"agents": _plain(b["agents"])},
+    "dict_lane_record": lambda b, raw: _lane_spliced(raw, _plain(b["agents"]["claude"])),
+    "marshal_agents": lambda b, raw: {"agents": marshal.loads(marshal.dumps(_plain(b["agents"])))},
+    "marshal_lane_record": lambda b, raw: _lane_spliced(
+        raw, marshal.loads(marshal.dumps(_plain(b["agents"]["claude"])))
+    ),
+    "deepcopy_then_json_agents": lambda b, raw: {"agents": _json(copy.deepcopy(b["agents"]))},
+}
+
+
+@pytest.mark.parametrize("part_copy", PART_COPIES.values(), ids=PART_COPIES)
+def test_a_plain_data_copy_of_any_part_of_a_bound_view_keeps_its_account(part_copy):
+    """Blocker: ``json.loads(json.dumps(b["agents"]))`` bound as account a read b's meter as a's; it is refused now."""
+    raw = _a_exhausted_b_healthy()
+    assert not _claude_selected(raw, HOST_ACCOUNT)  # account a is near cap: no claude reviewer for a
+    b = bind_snapshot(raw, account=B)
+    copied = part_copy(b, raw)
+    with pytest.raises(AccountRequired, match="stamped for claude account 'b' and is not read as 'a'"):
+        relabelled = bind_snapshot(copied, account=HOST_ACCOUNT)
+        # Reached only where the copy is accepted (684f5fa86d): b's 89% selects a claude seat for account a.
+        assert not _claude_selected(relabelled, HOST_ACCOUNT)
+    with pytest.raises(AccountRequired, match="not read as 'a'"):
+        ResolverInputs(author_model="gpt-6.1-sol", routing_snapshot=copied, claude_account=HOST_ACCOUNT)
+    # Bound again as its own account, the copy is accepted and b reads its own meter.
+    assert bind_snapshot(copied, account=B).account is B
+
+
+def test_every_claude_meter_record_of_another_accounts_view_is_stamped_and_the_hosts_never():
+    stamp = claude_account_lane.STAMP_KEY
+    raw = _reversed()
+    host = bind_snapshot(raw, account=HOST_ACCOUNT)
+    assert stamp not in host["agents"]["claude"] and all(stamp not in row for row in host["ranked_by_headroom"])
+    for route_account in (B, unresolved("claude_account_unknown")):
+        view = bind_snapshot(raw, account=route_account)
+        record = view["agents"]["claude"]
+        claude_rows = [row for row in view["ranked_by_headroom"] if row["lane"] == "claude"]
+        assert record[stamp]["label"] == route_account.label
+        assert claude_rows and all(row[stamp]["label"] == route_account.label for row in claude_rows)
+        assert all(stamp not in row for row in view["ranked_by_headroom"] if row["lane"] != "claude")
+        # A reader takes fields by name, so the stamp changes no reading.
+        unstamped = {key: value for key, value in record.items() if key != stamp}
+        now = datetime.now(UTC)
+        readings = [credit_lane.routing_facts("claude", lane, model=None, now=now) for lane in (record, unstamped)]
+        assert readings[0].summary() == readings[1].summary()
+        # Any copied part of the view, a ranked row included, is refused as the host account's.
+        for part in (
+            {"agents": _json(view["agents"])},
+            {**raw, "ranked_by_headroom": _json(view["ranked_by_headroom"])},
+        ):
+            with pytest.raises(AccountRequired, match=f"stamped for claude account {route_account.label!r}"):
+                bind_snapshot(part, account=HOST_ACCOUNT)
+    unresolved_part = {"agents": _json(bind_snapshot(raw, account=unresolved("claude_account_unknown"))["agents"])}
+    with pytest.raises(AccountRequired, match="stamped for claude account None and is not read as 'b'"):
+        bind_snapshot(unresolved_part, account=B)
+
+
+def _altered_meter(record):
+    record["remaining_pct"] = A_REMAINING
+
+
+def _relabelled_stamp(record):
+    record[claude_account_lane.STAMP_KEY]["label"] = "a"
+
+
+def _dropped_seal(record):
+    del record[claude_account_lane.STAMP_KEY]["seal"]
+
+
+def _non_ascii_seal(record):
+    record[claude_account_lane.STAMP_KEY]["seal"] = "é" * 64
+
+
+STAMP_TAMPERING = (_altered_meter, _relabelled_stamp, _dropped_seal, _non_ascii_seal)
+
+
+@pytest.mark.parametrize("tamper", STAMP_TAMPERING, ids=lambda tamper: tamper.__name__.lstrip("_"))
+def test_a_stamped_record_whose_stamp_does_not_verify_is_refused_for_every_account(tamper):
+    raw = _a_exhausted_b_healthy()
+    record = _json(bind_snapshot(raw, account=B)["agents"]["claude"])
+    tamper(record)
+    for route_account in (HOST_ACCOUNT, B, unresolved("claude_account_unknown")):
+        with pytest.raises(AccountRequired, match="whose stamp does not verify"):
+            bind_snapshot(_lane_spliced(raw, record), account=route_account)
+
+
+def test_a_record_stamped_in_another_process_is_refused(monkeypatch):
+    """The seal is process-local: a record stamped elsewhere verifies nowhere here, even as its own account."""
+    raw = _a_exhausted_b_healthy()
+    record = _json(bind_snapshot(raw, account=B)["agents"]["claude"])
+    monkeypatch.setattr(claude_account_lane, "_SEAL_KEY", b"another process".ljust(32, b"\0"))
+    for route_account in (HOST_ACCOUNT, B):
+        with pytest.raises(AccountRequired, match="whose stamp does not verify"):
+            bind_snapshot(_lane_spliced(raw, record), account=route_account)
 
 
 @pytest.mark.parametrize("label", ["a", "b"])
