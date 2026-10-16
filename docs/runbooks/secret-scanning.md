@@ -154,9 +154,21 @@ closed-output subcommand to the wrapper, with tests, in a reviewed PR.
 | Gate | When | Scope |
 | --- | --- | --- |
 | gitleaks (`.pre-commit-config.yaml`, `.gitleaks.toml`) | Every commit, staged files | Stops a secret before it is committed. |
-| TruffleHog in CI (`.github/workflows/ci.yml`, `scripts/ci/secret_scan_scope.py`) | Every PR, merge-queue and scheduled run | The event's range (the last 48 hours on the nightly schedule, or the tip commit when nothing landed), verified mode, `--results=verified,unknown`. Required. |
+| TruffleHog in CI (`.github/workflows/ci.yml`, `scripts/ci/secret_scan_scope.py`) | Every PR, merge-queue and scheduled run | The event's range. The nightly schedule is an ancestry window, not a commit-date window (below). Verified mode, `--results=verified,unknown`. Required. |
 | OPSEC linter (`scripts/audit/lint_opsec_leaks.py`) | CI Secret scan job | Infrastructure identifiers (addresses, key headers) that are not credentials. |
 | This wrapper | On demand, as above | Offline; whole work tree or whole public history. |
+
+The nightly schedule scans `base..HEAD` for a fixed first-parent depth
+(`SCHEDULE_FIRST_PARENT_STEPS` in `scripts/ci/secret_scan_scope.py`, 400 as of
+the 2026-10-16 measurement). That range includes every commit reachable from
+HEAD and not from the base, merges and side branches included, with no commit
+date involved. 400 is more than twice the measured peak of 156 first-parent
+commits in any 48 hours (`git rev-list --count --first-parent --since=...` was
+73 for the 48 hours ending 2026-10-16 18:05 UTC). History shorter than 400
+steps scans the whole branch, including the root. A git failure fails the job
+instead of narrowing the window. A never-scanned older range after a long
+outage is recovered by a manual full scan; that recovery gap is a named
+follow-up and is not part of this schedule.
 
 The action SHA pins the workflow script only. Both TruffleHog steps set the
 action input `version` to one exact release (`3.99.0` as of #10056). Omitting

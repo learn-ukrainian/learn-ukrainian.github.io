@@ -8,9 +8,10 @@ landing range cannot be established.
 
 A scheduled run has no ``before``/``after``.  Leaving both inputs empty makes
 the pinned action scan every commit (``--since-commit '' --branch ''``) and
-exit 183 when historical findings exist.  The schedule path therefore passes
-a 48-hour lookback, or the tip commit when nothing landed in that window,
-and never the same base and head.
+exit 183 when historical findings exist.  The schedule path therefore walks
+a fixed first-parent ancestry window, or the whole branch when history is
+shorter, and never the same base and head.  Commit dates are not consulted.
+A git failure exits non-zero instead of narrowing that window.
 """
 
 from __future__ import annotations
@@ -18,21 +19,34 @@ from __future__ import annotations
 import os
 import re
 import subprocess
+import sys
 from dataclasses import dataclass
-from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 _SHA_RE = re.compile(r"[0-9a-fA-F]{40}\Z")
 _ZERO_SHA = "0" * 40
 _SCOPED_EVENTS = frozenset({"merge_group", "push"})
-# The nightly cron is 03:30 UTC.  Forty-eight hours covers that interval plus
-# one delayed or skipped night without re-scanning history that already failed
-# the full scan.
-SCHEDULE_LOOKBACK = timedelta(hours=48)
+# Ancestry depth for the nightly schedule (cron 03:30 UTC).  ``base..HEAD``
+# already includes every commit reachable from HEAD and not from base, so
+# merges and side branches need no extra walk and no commit date.
+#
+# Sized from this repository's first-parent history, measured 2026-10-16
+# 18:09:05 UTC at 756599a9a492:
+#   git rev-list --count --first-parent --since=2026-10-14T18:05:00Z HEAD → 73
+#   the same count over the prior 7 days → 244
+#   peak 48-hour first-parent count across the prior 90 days → 156
+# 400 is more than twice that peak, so one nightly run still covers well
+# over 48 hours at the observed rate.  A longer outage can leave older
+# commits unscanned; recovering that range is a manual full scan, and that
+# gap is a follow-up, not this window.
+SCHEDULE_FIRST_PARENT_STEPS = 400
 GIT_CAT_FILE_TIMEOUT_SECONDS = 10
 GIT_IS_ANCESTOR_TIMEOUT_SECONDS = 30
-GIT_REV_PARSE_TIMEOUT_SECONDS = 10
 GIT_REV_LIST_TIMEOUT_SECONDS = 30
+
+
+class SecretScanScopeError(RuntimeError):
+    """A scheduled range could not be resolved without narrowing coverage."""
 
 
 @dataclass(frozen=True, slots=True)
@@ -87,9 +101,17 @@ def _commit_exists(repo_root: Path, sha: str) -> bool:
     return result.returncode == 0
 
 
-def _git_stdout(repo_root: Path, args: list[str], timeout: int) -> tuple[bool, str]:
-    """Return ``(ok, stdout)``.  A timeout or non-zero exit is not an empty success."""
+def _sha(text: str) -> str | None:
+    raw = text.strip().lower()
+    if _SHA_RE.fullmatch(raw):
+        return raw
+    return None
 
+
+def _require_git_stdout(repo_root: Path, args: list[str], timeout: int) -> str:
+    """Return git stdout, or raise so the scheduled scan cannot shrink quietly."""
+
+    command = " ".join(args)
     try:
         result = subprocess.run(
             ["git", *args],
@@ -99,61 +121,61 @@ def _git_stdout(repo_root: Path, args: list[str], timeout: int) -> tuple[bool, s
             check=False,
             timeout=timeout,
         )
-    except (OSError, subprocess.SubprocessError):
-        return False, ""
+    except subprocess.TimeoutExpired as exc:
+        raise SecretScanScopeError(
+            f"git {command} timed out after {timeout}s; refusing to narrow the scheduled scan"
+        ) from exc
+    except (OSError, subprocess.SubprocessError) as exc:
+        raise SecretScanScopeError(f"git {command} failed; refusing to narrow the scheduled scan") from exc
     if result.returncode != 0:
-        return False, ""
-    return True, result.stdout.strip()
+        detail = (result.stderr or "").strip().splitlines()
+        suffix = f": {detail[0][:200]}" if detail else ""
+        raise SecretScanScopeError(
+            f"git {command} exited {result.returncode}{suffix}; refusing to narrow the scheduled scan"
+        )
+    return result.stdout
 
 
-def _sha(text: str) -> str | None:
-    raw = text.strip().lower()
-    if _SHA_RE.fullmatch(raw):
-        return raw
-    return None
+def _schedule_scope(repo_root: Path) -> ScanScope:
+    """Scan the last N first-parent steps, or the whole branch if history is shorter.
 
-
-def _schedule_scope(repo_root: Path, now: datetime) -> ScanScope:
-    """Scan commits since the lookback, never an identical base and head.
-
-    ``--since-commit`` is exclusive.  The base is the newest commit at or
-    before the cutoff, so the scan starts with the first commit after it.
+    The base is ``HEAD~N`` along ``--first-parent``.  ``base..HEAD`` includes
+    every commit reachable from HEAD and not from that base, merges and side
+    branches included.  No commit date and no wall clock is involved.
     ``opsec_range`` stays empty: the public-identifier lint keeps walking the
     whole checkout, which is what an unscoped schedule already did.
+
+    History shorter than N steps cannot name that ancestor.  An empty base
+    with the resolved head then scans the whole branch, including the root.
+    A git failure raises :class:`SecretScanScopeError` instead of falling
+    back to a narrower range.  The returned base and head are never equal.
     """
 
-    ok, head_text = _git_stdout(repo_root, ["rev-parse", "HEAD"], GIT_REV_PARSE_TIMEOUT_SECONDS)
-    head = _sha(head_text) if ok else None
-    if head is None:
-        return _full_scan_scope("unresolvable-head-sha")
-
-    cutoff = (now - SCHEDULE_LOOKBACK).strftime("%Y-%m-%dT%H:%M:%SZ")
-    listed, base_text = _git_stdout(
+    depth = SCHEDULE_FIRST_PARENT_STEPS
+    text = _require_git_stdout(
         repo_root,
-        ["rev-list", "-n", "1", f"--before={cutoff}", "HEAD"],
+        ["rev-list", "--first-parent", f"--max-count={depth + 1}", "HEAD"],
         GIT_REV_LIST_TIMEOUT_SECONDS,
     )
-    base = _sha(base_text) if listed else None
-    parent_ok, parent_text = _git_stdout(
-        repo_root,
-        ["rev-parse", "--verify", "HEAD^"],
-        GIT_REV_PARSE_TIMEOUT_SECONDS,
-    )
-    parent = _sha(parent_text) if parent_ok else None
+    shas: list[str] = []
+    for line in text.splitlines():
+        if not line.strip():
+            continue
+        sha = _sha(line)
+        if sha is None:
+            raise SecretScanScopeError("git rev-list returned a non-commit; refusing to narrow the scheduled scan")
+        shas.append(sha)
+    if not shas:
+        raise SecretScanScopeError("git rev-list returned no commits; refusing to narrow the scheduled scan")
 
-    if listed and base and base != head:
-        return ScanScope(base, head, "", "schedule", "lookback")
-    if not listed and parent and parent != head:
-        # The lookback could not be resolved.  Scan the tip rather than every
-        # commit: an empty pair is what made the nightly job exit 183.
-        return ScanScope(parent, head, "", "schedule", "lookback-unresolved")
-    if parent and parent != head and base == head:
-        # Nothing landed inside the window.  The tip commit is still a real,
-        # non-identical range, and it does not reopen older history.
-        return ScanScope(parent, head, "", "schedule", "tip-commit")
-    # Every commit is inside the window, or this is the root commit.  An empty
-    # base with this head scans that branch and is not an identical pair.
-    return ScanScope("", head, "", "schedule", "branch-history")
+    head = shas[0]
+    if len(shas) <= depth:
+        return ScanScope("", head, "", "schedule", "branch-history")
+
+    base = shas[depth]
+    if base == head:
+        raise SecretScanScopeError("refusing an identical scheduled base and head")
+    return ScanScope(base, head, "", "schedule", "ancestry-window")
 
 
 def _is_ancestor(repo_root: Path, base_sha: str, head_sha: str) -> bool:
@@ -178,7 +200,6 @@ def resolve_scan_scope(
     push_before_sha: str = "",
     push_after_sha: str = "",
     repo_root: Path | None = None,
-    now: datetime | None = None,
 ) -> ScanScope:
     """Return a validated landing range or an explicit full-scan fallback.
 
@@ -189,17 +210,15 @@ def resolve_scan_scope(
     ancestor of the head; this rejects empty, first-run, force-push, and
     malformed ranges without ever turning a scan into a skip.
 
-    ``schedule`` uses ``now`` (UTC) minus :data:`SCHEDULE_LOOKBACK`.  Callers
-    omit ``now`` to read the clock.
+    ``schedule`` walks :data:`SCHEDULE_FIRST_PARENT_STEPS` first-parent steps.
+    Commit dates are not used.  A git failure raises
+    :class:`SecretScanScopeError` and the CLI exits non-zero.
     """
 
     event = event_name.strip()
     root = repo_root or Path.cwd()
     if event == "schedule":
-        moment = now if now is not None else datetime.now(UTC)
-        if moment.tzinfo is None:
-            moment = moment.replace(tzinfo=UTC)
-        return _schedule_scope(root, moment)
+        return _schedule_scope(root)
     if event not in _SCOPED_EVENTS:
         return ScanScope("", "", "", "unchanged", "event-not-scoped")
 
@@ -254,13 +273,17 @@ def _write_outputs(scope: ScanScope, output_path: Path | None) -> None:
 
 
 def main() -> int:
-    scope = resolve_scan_scope(
-        os.environ.get("EVENT_NAME", ""),
-        merge_group_base_sha=os.environ.get("MERGE_GROUP_BASE_SHA", ""),
-        merge_group_head_sha=os.environ.get("MERGE_GROUP_HEAD_SHA", ""),
-        push_before_sha=os.environ.get("PUSH_BEFORE_SHA", ""),
-        push_after_sha=os.environ.get("PUSH_AFTER_SHA", ""),
-    )
+    try:
+        scope = resolve_scan_scope(
+            os.environ.get("EVENT_NAME", ""),
+            merge_group_base_sha=os.environ.get("MERGE_GROUP_BASE_SHA", ""),
+            merge_group_head_sha=os.environ.get("MERGE_GROUP_HEAD_SHA", ""),
+            push_before_sha=os.environ.get("PUSH_BEFORE_SHA", ""),
+            push_after_sha=os.environ.get("PUSH_AFTER_SHA", ""),
+        )
+    except SecretScanScopeError as exc:
+        print(f"secret-scan-scope: {exc}", file=sys.stderr)
+        return 1
     output = os.environ.get("GITHUB_OUTPUT")
     _write_outputs(scope, Path(output) if output else None)
     print(f"secret-scan-scope: mode={scope.mode} reason={scope.reason}")

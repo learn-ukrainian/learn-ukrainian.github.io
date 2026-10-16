@@ -2,8 +2,9 @@
 
 The pinned action treats an empty base and head on ``schedule`` as a full
 history scan (``--since-commit '' --branch ''``) and exits 183 when that
-history has findings.  The workflow keeps passing the scope step's outputs;
-those outputs are a lookback, or the tip commit, and never the same value.
+history has findings.  The workflow keeps passing the scope step's outputs.
+A short history scans the whole branch; the base and head are never the same
+value.  Pull-request and push ranges stay on the action's own inputs.
 """
 
 from __future__ import annotations
@@ -11,7 +12,6 @@ from __future__ import annotations
 import os
 import re
 import subprocess
-from datetime import UTC, datetime
 from pathlib import Path
 
 import yaml
@@ -21,7 +21,6 @@ from scripts.ci.secret_scan_scope import resolve_scan_scope
 _REPO_ROOT = Path(__file__).resolve().parents[2]
 _CI = _REPO_ROOT / ".github" / "workflows" / "ci.yml"
 _SHA = re.compile(r"[0-9a-f]{40}\Z")
-_NOW = datetime(2026, 10, 16, 16, 0, tzinfo=UTC)
 
 
 def _workflow() -> dict:
@@ -73,10 +72,13 @@ def test_scheduled_scan_uses_a_real_range_and_leaves_pr_and_push_alone(tmp_path:
     subprocess.check_call(["git", "commit", "-am", "new"], cwd=tmp_path, env=env, timeout=30)
     head_sha = _git(tmp_path, "rev-parse", "HEAD")
 
-    scheduled = resolve_scan_scope("schedule", repo_root=tmp_path, now=_NOW)
-    assert scheduled.trufflehog_base == old
+    scheduled = resolve_scan_scope("schedule", repo_root=tmp_path)
+    assert scheduled.mode == "schedule"
+    assert scheduled.reason == "branch-history"
+    assert scheduled.trufflehog_base == ""
     assert scheduled.trufflehog_head == head_sha
     assert scheduled.trufflehog_base != scheduled.trufflehog_head
+    assert scheduled.trufflehog_base != old
 
     pull_request = resolve_scan_scope("pull_request", repo_root=tmp_path)
     assert pull_request.trufflehog_base == ""

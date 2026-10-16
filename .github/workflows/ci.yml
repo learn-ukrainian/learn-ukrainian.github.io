@@ -114,8 +114,9 @@ jobs:
           python-version-file: '.python-version'
       # schedule has no before/after. An empty base and head makes the pinned
       # action scan every commit and exit 183 on historical findings.
-      # secret_scan_scope passes a 48-hour lookback, or the tip commit when
-      # nothing landed, and never the same base and head.
+      # secret_scan_scope walks a fixed first-parent ancestry window, or the
+      # whole branch when history is shorter, and never the same base and head.
+      # A git failure exits non-zero instead of narrowing that window.
       - name: Resolve secret scan commit scope
         id: secret-scan-scope
         env:
