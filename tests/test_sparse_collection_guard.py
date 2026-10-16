@@ -325,11 +325,57 @@ def _assert_targets_reported(
     assert not unallowed_skips, f"unallowed module-level skip: {unallowed_skips}\n{output[-2000:]}"
 
 
+def _unmaterialized_anchors(root: Path) -> list[str]:
+    """Anchors tracked at HEAD that this sparse checkout has not checked out.
+
+    A worktree created before an anchor joined the default profile lacks the
+    files the anchor brings, so the child cannot collect their readers there.
+    """
+    # A pre-push hook runs with GIT_DIR and friends set for the pushing checkout.
+    env = {name: value for name, value in os.environ.items() if not name.startswith("GIT_")}
+    missing: list[str] = []
+    for anchor in _VISIBLE_ANCHORS:
+        listed = subprocess.run(
+            ["git", "-C", str(root), "ls-tree", "-d", "--name-only", "HEAD", anchor],
+            capture_output=True,
+            text=True,
+            check=False,
+            env=env,
+            timeout=30,
+        )
+        if listed.returncode == 0 and listed.stdout.strip() == anchor and not (root / anchor).is_dir():
+            missing.append(anchor)
+    return missing
+
+
 @pytest.mark.slow
 def test_tree_referencing_modules_collect_when_sparse_trees_are_absent() -> None:
+    missing = _unmaterialized_anchors(_REPO_ROOT)
+    assert not missing, (
+        "this sparse checkout predates the default dispatch profile and lacks its anchors; run "
+        f"`git sparse-checkout add {' '.join(missing)}` and push again (#10777)"
+    )
     targets = _collection_targets()
     completed, outcomes = collect_with_absent_trees(targets)
     _assert_targets_reported(completed, outcomes, targets)
+
+
+def test_unmaterialized_anchor_names_the_command_to_run(tmp_path: Path) -> None:
+    repo = tmp_path / "repo"
+    anchor = _VISIBLE_ANCHORS[0]
+    (repo / anchor).mkdir(parents=True)
+    (repo / anchor / "kept.txt").write_text("x\n", encoding="utf-8")
+    env = {"GIT_CEILING_DIRECTORIES": str(tmp_path), "HOME": str(tmp_path), "PATH": os.environ.get("PATH", "")}
+    for args in (
+        ["init", "-q", "-b", "main"],
+        ["add", "."],
+        ["-c", "user.name=t", "-c", "user.email=t@example.com", "commit", "-q", "-m", "init"],
+    ):
+        subprocess.run(["git", *args], cwd=repo, check=True, capture_output=True, env=env, timeout=30)
+
+    assert _unmaterialized_anchors(repo) == []
+    shutil.rmtree(repo / anchor)
+    assert _unmaterialized_anchors(repo) == [anchor]
 
 
 def test_small_tree_referencing_modules_collect_when_sparse_trees_are_absent(
