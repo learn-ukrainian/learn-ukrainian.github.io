@@ -440,6 +440,33 @@ def test_comment_main_rate_limit_skip(monkeypatch, capsys):
     assert "rate_limited" in capsys.readouterr().out
 
 
+@pytest.mark.parametrize("script", [
+    "scripts/ci/comment_issue_task_quality.py",
+    "scripts/orchestration/issue_quality_report.py",
+])
+def test_issue_quality_file_help_without_repository_import_path(script, tmp_path):
+    import os
+    import subprocess
+    import sys
+    from pathlib import Path
+
+    result = subprocess.run(
+        [sys.executable, "-I", str(Path(__file__).resolve().parents[1] / script), "--help"],
+        cwd=tmp_path,
+        env={key: value for key, value in os.environ.items() if key not in {
+            "PYTHONPATH", "GITHUB_TOKEN", "GITHUB_REPOSITORY", "GITHUB_EVENT_PATH",
+        }},
+        capture_output=True,
+        text=True,
+        timeout=30,
+        check=False,
+    )
+    assert result.returncode == 0, result.stderr
+    assert "--help" in result.stdout
+    assert "Outputs:" in result.stdout
+    assert "Exit codes:" in result.stdout
+
+
 def test_cli_stub_entrypoint_and_safe_errors(tmp_path, monkeypatch, capsys):
     import subprocess
     import sys

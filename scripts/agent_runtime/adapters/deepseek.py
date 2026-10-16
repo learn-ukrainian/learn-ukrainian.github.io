@@ -113,11 +113,7 @@ class DeepSeekAdapter:
 
         max_budget_usd = (tool_config or {}).get("max_budget_usd")
         if max_budget_usd is not None:
-            _logger.warning(
-                "non-claude adapter %s ignoring max_budget_usd=%s; use hard-timeout/silence-timeout instead",
-                self.name,
-                max_budget_usd,
-            )
+            _logger.warning("deepseek: max_budget_usd ignored; use hard-timeout/silence-timeout instead")
 
         binary = shutil.which("opencode") or "opencode"
         target_model = model or self.default_model
@@ -158,13 +154,7 @@ class DeepSeekAdapter:
         cmd.append("--")
         cmd.append(prompt)
 
-        _logger.debug(
-            "deepseek invocation: task=%s mode=%s model=%s effort=%s",
-            task_id,
-            mode,
-            target_model,
-            effective_effort,
-        )
+        _logger.debug("deepseek invocation")
 
         return InvocationPlan(
             cmd=cmd,

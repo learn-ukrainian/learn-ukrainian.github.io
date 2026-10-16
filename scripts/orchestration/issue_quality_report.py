@@ -7,9 +7,13 @@ import contextlib
 import json
 import os
 import subprocess
+import sys
 import uuid
 from datetime import UTC, date, datetime
 from pathlib import Path
+
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from scripts.ci import check_issue_task_quality as checker
 from scripts.common import github_client
