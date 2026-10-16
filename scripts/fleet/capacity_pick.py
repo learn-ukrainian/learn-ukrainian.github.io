@@ -681,7 +681,8 @@ def cooler_lanes(rows: list[dict[str, Any]]) -> list[str]:
 
 
 def admission_status(tasks_dir: Path | None = None) -> dict[str, Any]:
-    """Would ``delegate.py dispatch`` admit a write worker now? Report only: dead pids are not swept."""
+    """Would ``delegate.py dispatch`` admit a write worker now? Report only: dead pids are not swept
+    and the disk reaper does not run, so a disk at the refuse threshold reads as a refusal."""
     try:
         decision = dispatch_admission.evaluate("workspace-write", tasks_dir or default_tasks_dir())
     except ValueError as exc:
@@ -867,7 +868,8 @@ def main(argv: list[str] | None = None) -> int:
             "  .venv/bin/python -m scripts.fleet.capacity_pick --transport acp --strict\n\n"
             "Outputs: routing table or JSON; no provider prompts. The last line (JSON: `admission`) says whether\n"
             "a write dispatch would pass host admission now: live write workers vs cap, MemAvailable vs floor,\n"
-            "load per CPU vs limit (thresholds: DISPATCH_* in scripts/config.py, env-overridable). When\n"
+            "load per CPU vs limit, disk used percent and free GiB of the .worktrees filesystem vs the refuse\n"
+            "and alert levels (thresholds: DISPATCH_* in scripts/config.py, env-overridable). When\n"
             "lu-dispatch.slice is active the same line adds its memory use against MemoryMax.\n"
             "Credit lanes (scripts/config/credit_lanes.yaml): a lane near its plan cap with a fresh positive\n"
             "credit balance and no rate limit in the evidence window reads `credit_balance_present` (usable;\n"
@@ -889,7 +891,7 @@ def main(argv: list[str] | None = None) -> int:
             "(JSON `write_success`). DeepSeek (prepaid API) is shown but never picked.\n"
             "Exit codes: 0 success; 2 invalid arguments or no admissible lane with --strict.\n"
             "Related: /api/state/routing-budget?transport=acp; scripts/orchestration/dispatch_admission.py;\n"
-            "issues #7812, #8645, #9518, #9615, #9740."
+            "issues #7812, #8645, #9518, #9615, #9740, #10776."
         ),
     )
     parser.add_argument(

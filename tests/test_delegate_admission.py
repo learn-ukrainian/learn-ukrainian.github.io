@@ -958,8 +958,8 @@ def test_capacity_pick_prints_the_admission_line(tmp_path, monkeypatch, capsys):
     assert capsys.readouterr().out.splitlines()[-1] == (
         "admission (write dispatch): would admit now | live write workers 1/2, "
         "MemAvailable 64.0 GiB (floor 8.5 GiB), load 0.00 per CPU (limit 1.00), "
-        "lu.slice pool check skipped (test host), test-slot queue check skipped (test host); "
-        "1 record(s) dead pid, not counted: gone"
+        "lu.slice pool check skipped (test host), test-slot queue check skipped (test host), "
+        "disk check skipped (test host); 1 record(s) dead pid, not counted: gone"
     )
 
     monkeypatch.setenv("DISPATCH_MAX_LIVE_WRITE_WORKERS", "1")
@@ -990,3 +990,123 @@ def test_live_dispatch_admitted_line_shows_a_skipped_pool_check(tasks_dir, tmp_p
     state = delegate._read_state(delegate._state_path("adm-pool-skip"))
     assert state is not None
     assert "memory.current unavailable" in state["admission"]["pool_check_skipped"]
+
+
+def _full_disk(monkeypatch, *readings: float) -> dict[str, list]:
+    """Disk readings in order (the last repeats); a fake reaper and alert publisher (#10776)."""
+    seen: dict[str, list] = {"readings": list(readings), "reaper": [], "alerts": []}
+
+    def probe():
+        values = seen["readings"]
+        used = values.pop(0) if len(values) > 1 else values[0]
+        used_bytes = int(400 * _GIB * used / 100)
+        return dispatch_admission.DiskProbe(used_bytes=used_bytes, free_bytes=400 * _GIB - used_bytes)
+
+    def reaper(repo_root):
+        seen["reaper"].append(repo_root)
+        return dispatch_admission.ReaperOutcome(ran=True, detail="reaper removed 0 worktree(s)")
+
+    monkeypatch.setattr(dispatch_admission, "probe_disk", probe)
+    monkeypatch.setattr(dispatch_admission, "run_disk_reaper", reaper)
+    monkeypatch.setattr(dispatch_admission, "post_disk_alert", lambda body, _key: seen["alerts"].append(body))
+    return seen
+
+
+def test_live_dispatch_on_a_full_disk_reaps_once_then_refuses_with_no_side_effects(tasks_dir, monkeypatch, capsys):
+    _stub_worktree(monkeypatch, tasks_dir)
+    monkeypatch.setattr(
+        delegate.subprocess, "Popen", lambda *_args, **_kwargs: pytest.fail("a refused dispatch must not spawn")
+    )
+    disk = _full_disk(monkeypatch, 90.0)
+
+    rc = delegate.cmd_dispatch(_live_danger_args(tasks_dir, "adm-disk-full"))
+
+    assert rc == delegate._ADMISSION_REFUSED_EXIT
+    assert len(disk["reaper"]) == 1
+    assert len(disk["alerts"]) == 1
+    refusal = [line for line in capsys.readouterr().err.splitlines() if "admission refused" in line]
+    assert len(refusal) == 1
+    assert (
+        "disk 90.0% used, 40.0 GiB free on the .worktrees filesystem is at or above the refuse threshold of 85% "
+        "(DISPATCH_DISK_REFUSE_USED_PERCENT=85); reaper removed 0 worktree(s)"
+    ) in refusal[0]
+    assert not delegate._state_path("adm-disk-full").exists()
+
+
+def test_live_dispatch_admitted_after_the_reaper_frees_space_reaps_only_outside_the_lock(
+    tasks_dir, monkeypatch, capsys
+):
+    _stub_worktree(monkeypatch, tasks_dir)
+
+    class _Proc:
+        pid = 13581
+        stdin = _FakeStdin()
+
+    monkeypatch.setattr(delegate.subprocess, "Popen", lambda cmd, **_kwargs: _Proc())
+    disk = _full_disk(monkeypatch, 88.0, 60.0)
+
+    assert delegate.cmd_dispatch(_live_danger_args(tasks_dir, "adm-disk-reaped")) == 0
+
+    assert len(disk["reaper"]) == 1  # the locked recheck measures again but never reaps
+    assert disk["alerts"] == []
+    admitted = [line for line in capsys.readouterr().err.splitlines() if "dispatch admission: admitted" in line]
+    assert len(admitted) == 1
+    assert "disk 60.0% used, 160.0 GiB free (refuse at 85%, alert at 80%) [reaper removed 0 worktree(s), 88.0% before]" in (
+        admitted[0]
+    )
+    state = delegate._read_state(delegate._state_path("adm-disk-reaped"))
+    assert state is not None
+    assert state["admission"]["disk_used_percent"] == 60.0
+    assert state["admission"]["disk_free_gib"] == 160.0
+
+
+def test_dry_run_on_a_full_disk_refuses_without_running_the_reaper(tasks_dir, monkeypatch, capsys):
+    _pin_origin_main_to_head(monkeypatch)
+    disk = _full_disk(monkeypatch, 92.0)
+
+    assert delegate.cmd_dispatch(_dry_run_args()) == delegate._ADMISSION_REFUSED_EXIT
+
+    assert disk["reaper"] == []
+    assert "92.0% used, 32.0 GiB free" in capsys.readouterr().err
+
+
+def test_read_only_dispatch_is_exempt_from_the_disk_guard(tasks_dir, monkeypatch, capsys):
+    disk = _full_disk(monkeypatch, 99.0)
+
+    assert delegate.cmd_dispatch(_dry_run_args(mode="read-only", task_id="adm-disk-reader")) == 0
+
+    assert disk["reaper"] == [] and disk["alerts"] == []
+    assert "admission" not in capsys.readouterr().err
+
+
+def test_capacity_pick_shows_the_disk_decision_without_reaping(tmp_path, monkeypatch, capsys):
+    from scripts.fleet import usage
+
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
+    monkeypatch.setattr(dispatch_admission, "slice_usage_clause", lambda: None)
+    monkeypatch.setattr(capacity_pick, "fetch_active_in_flight", lambda **_kwargs: {})
+    monkeypatch.setattr(
+        usage,
+        "read_budget",
+        lambda **_kwargs: {"agents": {}, "recommendation": {"warnings": []}, "diagnostics": {}},
+    )
+    disk = _full_disk(monkeypatch, 82.0)
+
+    assert capacity_pick.main([]) == 0
+    assert capsys.readouterr().out.splitlines()[-1].endswith(
+        "disk 82.0% used, 72.0 GiB free (refuse at 85%, alert at 80%) [epics alert posted]"
+    )
+
+    disk["readings"] = [91.0]
+    assert capacity_pick.main(["--json"]) == 0
+    admission = json.loads(capsys.readouterr().out)["admission"]
+    assert admission["admitted"] is False
+    assert admission["line"].startswith(
+        "admission (write dispatch): would REFUSE now: disk 91.0% used, 36.0 GiB free on the .worktrees "
+        "filesystem is at or above the refuse threshold of 85% (DISPATCH_DISK_REFUSE_USED_PERCENT=85); "
+        "reaper not run in this check"
+    )
+    assert admission["disk_used_percent"] == 91.0
+    assert admission["disk_free_gib"] == 36.0
+    assert disk["reaper"] == []  # capacity_pick only reports
+    assert len(disk["alerts"]) == 1  # rate-limited across both calls

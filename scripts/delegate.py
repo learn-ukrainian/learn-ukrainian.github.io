@@ -4993,8 +4993,13 @@ def _evaluate_dispatch_admission(
     *,
     sweep: bool,
     thresholds: dispatch_admission.Thresholds | None = None,
+    reap_disk: bool = False,
 ) -> dispatch_admission.AdmissionDecision:
-    """Sweep proven dead workers only when admission explicitly requests it."""
+    """Sweep proven dead workers only when admission explicitly requests it.
+
+    ``reap_disk`` lets a full disk run the worktree reaper once (#10776); the
+    locked recheck never does, so the reaper never runs under the lock.
+    """
     return dispatch_admission.evaluate(
         mode,
         tasks_dir(),
@@ -5002,6 +5007,7 @@ def _evaluate_dispatch_admission(
         record_liveness=lambda record: worker_liveness(record, pid_alive=_pid_alive),
         on_dead=(lambda path, state: _heal_dead_task(path, state, source="admission")) if sweep else None,
         thresholds=thresholds,
+        reaper=dispatch_admission.run_disk_reaper if reap_disk else None,
     )
 
 
@@ -13624,9 +13630,10 @@ def _dispatch(
     # follows VPS forwarding. This check fails fast before the base fetch; the
     # authoritative one runs under the admission lock just before the first
     # worktree or task-record side effect. Dry-run reports dead-pid records
-    # without marking them.
+    # without marking them and never runs the disk reaper.
     try:
-        admission = _evaluate_dispatch_admission(args.mode, sweep=not bool(getattr(args, "dry_run", False)))
+        live_dispatch = not bool(getattr(args, "dry_run", False))
+        admission = _evaluate_dispatch_admission(args.mode, sweep=live_dispatch, reap_disk=live_dispatch)
     except ValueError as exc:
         print(f"❌ invalid dispatch admission threshold: {exc}", file=sys.stderr)
         return 2
@@ -18686,7 +18693,11 @@ def build_parser() -> argparse.ArgumentParser:
             f"{admission_defaults.min_mem_available_gib:g} GiB), or the 1-minute load per CPU\n"
             f"  exceeds DISPATCH_MAX_LOAD_PER_CPU (default {admission_defaults.max_load_per_cpu:g}), or more test runs "
             f"than DISPATCH_MAX_TEST_SLOT_QUEUE\n  (default {admission_defaults.max_test_slot_queue}) wait for host "
-            "test slots (scripts/common/test_slots.py). "
+            "test slots (scripts/common/test_slots.py), or the .worktrees filesystem is still at or above\n"
+            f"  DISPATCH_DISK_REFUSE_USED_PERCENT (default {admission_defaults.disk_refuse_used_percent:g}% used) "
+            "after one run of the worktree reaper;\n"
+            f"  at DISPATCH_DISK_ALERT_USED_PERCENT (default {admission_defaults.disk_alert_used_percent:g}%) "
+            "one alert per 6 hours goes to the epics channel. "
             "Environment variables override the scripts/config.py defaults.\n"
             "  Without /proc (macOS) memory and CPU are unknown and only the worker cap applies. Records whose pid\n"
             "  is dead are marked crashed first. The final check holds a host-wide lock until the spawning record\n"

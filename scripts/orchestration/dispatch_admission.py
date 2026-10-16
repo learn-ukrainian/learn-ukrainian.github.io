@@ -35,6 +35,20 @@ every check passes. Read-only dispatches are exempt.
   More waiting runs than ``DISPATCH_MAX_TEST_SLOT_QUEUE`` means the host's CPUs
   are already spoken for, so no new worker starts. A disabled or unreadable
   pool skips this check; the reason is shown.
+* **Disk (#10776).** The filesystem holding the primary checkout's
+  ``.worktrees/`` directory, in percent used as ``df`` reports it (used over
+  used plus available). Below ``DISPATCH_DISK_REFUSE_USED_PERCENT`` (default
+  85) the check passes. At or above it, a caller that passes ``reaper`` (the
+  real dispatch, through :func:`run_disk_reaper`) has the reaper remove clean,
+  fully pushed, idle dispatch worktrees once; the disk is measured again and
+  the dispatch is refused if it is still at or above the threshold. The
+  refusal names the percent used, the free GiB and the reaper outcome,
+  including "reaper unavailable" when the reaper cannot run. A caller without
+  a reaper (status queries, dry runs, the locked recheck) only measures. At or
+  above ``DISPATCH_DISK_ALERT_USED_PERCENT`` (default 80) one alert is posted
+  to the epics Fleet Comms channel per :data:`DISK_ALERT_INTERVAL_S`; the
+  state file lives beside the admission lock. A disk probe that fails, or an
+  alert that fails, never refuses: the reason is logged and shown.
 * **Slice use is reported, not enforced.** When ``lu-dispatch.slice`` is
   active, the admission line adds its current memory against ``MemoryMax``.
   An inactive or missing slice omits that clause. The floor and the caps
@@ -63,9 +77,11 @@ import fcntl
 import json
 import logging
 import os
+import shutil
+import subprocess
 import time
 from collections.abc import Callable, Iterator, Mapping
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -89,8 +105,32 @@ ENV_MIN_MEM_AVAILABLE_GIB = "DISPATCH_MIN_MEM_AVAILABLE_GIB"
 ENV_MAX_LOAD_PER_CPU = "DISPATCH_MAX_LOAD_PER_CPU"
 ENV_WORKER_MEM_RESERVE_GIB = "DISPATCH_WORKER_MEM_RESERVE_GIB"
 ENV_MAX_TEST_SLOT_QUEUE = "DISPATCH_MAX_TEST_SLOT_QUEUE"
+ENV_DISK_REFUSE_USED_PERCENT = "DISPATCH_DISK_REFUSE_USED_PERCENT"
+ENV_DISK_ALERT_USED_PERCENT = "DISPATCH_DISK_ALERT_USED_PERCENT"
 _DEFAULT_WORKER_MEM_RESERVE_GIB = 2.5
 _DEFAULT_MAX_TEST_SLOT_QUEUE = 4
+_DEFAULT_DISK_REFUSE_USED_PERCENT = 85.0
+_DEFAULT_DISK_ALERT_USED_PERCENT = 80.0
+
+# Disk alert (#10776): one post per interval; a failed post is retried after
+# the shorter backoff. The state file sits beside the admission lock and has
+# no ``.json`` suffix, so task-record scans never read it.
+DISK_ALERT_STATE_NAME = "dispatch-admission-disk-alert.state"
+DISK_ALERT_INTERVAL_S = 6 * 3600.0
+DISK_ALERT_RETRY_S = 15 * 60.0
+DISK_ALERT_CHANNEL = "epics"
+DISK_ALERT_SENDER = "dispatch-admission"
+DISK_ALERT_PUBLISH_TIMEOUT_S = 30.0
+
+# The reaper seam (#10776 → #10778). :func:`run_disk_reaper` imports this
+# module lazily and calls ``reap_idle_dispatch_worktrees(repo_root=<primary
+# checkout>)``, an apply call that removes only clean, fully pushed, idle
+# dispatch worktrees and returns the reaper's results (objects with an
+# ``action`` attribute). A missing module or function is "reaper unavailable".
+REAPER_MODULE = "scripts.orchestration.reap_worktrees"
+REAPER_FUNCTION = "reap_idle_dispatch_worktrees"
+REAPER_REMOVED_ACTIONS = frozenset({"removed", "preserved_then_removed"})
+
 # Deployment env file with the same variables (``NAME=value`` or
 # ``export NAME=value`` lines). Read only for the live environment, after the
 # process environment, so a long-running session started before the host set
@@ -104,6 +144,8 @@ _THRESHOLD_ENV_NAMES = (
     ENV_MAX_LOAD_PER_CPU,
     ENV_WORKER_MEM_RESERVE_GIB,
     ENV_MAX_TEST_SLOT_QUEUE,
+    ENV_DISK_REFUSE_USED_PERCENT,
+    ENV_DISK_ALERT_USED_PERCENT,
 )
 
 # Pid-less ``spawning`` record naming the dispatcher that holds an admitted
@@ -126,6 +168,75 @@ class Thresholds:
     max_load_per_cpu: float
     worker_mem_reserve_gib: float = _DEFAULT_WORKER_MEM_RESERVE_GIB
     max_test_slot_queue: int = _DEFAULT_MAX_TEST_SLOT_QUEUE
+    disk_refuse_used_percent: float = _DEFAULT_DISK_REFUSE_USED_PERCENT
+    disk_alert_used_percent: float = _DEFAULT_DISK_ALERT_USED_PERCENT
+
+
+@dataclass(frozen=True)
+class DiskProbe:
+    """Usage of the filesystem holding ``.worktrees/``, or why it is unknown (``skipped``)."""
+
+    used_bytes: int | None = None
+    free_bytes: int | None = None
+    skipped: str | None = None
+
+    @property
+    def used_percent(self) -> float | None:
+        """Percent used as ``df`` reports it: used over used plus available."""
+        if self.used_bytes is None or self.free_bytes is None:
+            return None
+        usable = self.used_bytes + self.free_bytes
+        return 100.0 * self.used_bytes / usable if usable > 0 else None
+
+    @property
+    def free_gib(self) -> float | None:
+        return None if self.free_bytes is None else self.free_bytes / _GIB
+
+    def text(self) -> str:
+        used = self.used_percent
+        free = self.free_gib
+        if used is None or free is None:
+            return f"disk check skipped ({self.skipped or 'no usage reported'})"
+        return f"disk {used:.1f}% used, {free:.1f} GiB free"
+
+
+@dataclass(frozen=True)
+class ReaperOutcome:
+    """What one reaper attempt did; ``ran`` is False when it could not run or failed."""
+
+    ran: bool
+    detail: str
+    removed: int = 0
+
+
+DiskReaper = Callable[[Path], ReaperOutcome]
+
+
+@dataclass(frozen=True)
+class DiskCheck:
+    """The disk measurement admission decided on, and what it did about it."""
+
+    probe: DiskProbe
+    # Set only when the reaper was attempted: the measurement before it ran.
+    before_reaper: DiskProbe | None = None
+    reaper: ReaperOutcome | None = None
+    alert: str | None = None
+
+    def clause(self, limits: Thresholds) -> str:
+        if self.probe.used_percent is None:
+            text = self.probe.text()
+        else:
+            text = (
+                f"{self.probe.text()} (refuse at {limits.disk_refuse_used_percent:g}%, "
+                f"alert at {limits.disk_alert_used_percent:g}%)"
+            )
+        if self.reaper is not None:
+            before = self.before_reaper.used_percent if self.before_reaper is not None else None
+            was = f", {before:.1f}% before" if before is not None else ""
+            text += f" [{self.reaper.detail}{was}]"
+        if self.alert is not None:
+            text += f" [{self.alert}]"
+        return text
 
 
 @dataclass(frozen=True)
@@ -170,6 +281,7 @@ class AdmissionDecision:
     failures: tuple[str, ...] = field(default_factory=tuple)
     pool: pool_headroom.PoolCheck | None = None
     slots: SlotQueueProbe | None = None
+    disk: DiskCheck | None = None
 
     @property
     def live_write_workers(self) -> int:
@@ -208,6 +320,8 @@ class AdmissionDecision:
                 else f"test-slot queue {self.slots.depth} (limit {limits.max_test_slot_queue}, "
                 f"pool {self.slots.pool_size})"
             )
+        if self.disk is not None:
+            parts.append(self.disk.clause(limits))
         text = ", ".join(parts)
         if not probe.proc_available:
             text += " — /proc is not available on this platform, so only the worker cap is enforced"
@@ -235,6 +349,10 @@ class AdmissionDecision:
         pool = self.pool
         pool_memory = pool.memory if pool else None
         pool_limit = pool_memory.limit if pool_memory else None
+        disk = self.disk
+        disk_used = disk.probe.used_percent if disk else None
+        disk_free = disk.probe.free_gib if disk else None
+        disk_before = disk.before_reaper.used_percent if disk and disk.before_reaper else None
         return {
             "checked_at": datetime.now(UTC).isoformat(),
             "admitted": self.admitted,
@@ -262,6 +380,14 @@ class AdmissionDecision:
             "test_slot_queue_depth": self.slots.depth if self.slots else None,
             "max_test_slot_queue": limits.max_test_slot_queue if limits else None,
             "test_slot_queue_skipped": self.slots.skipped if self.slots else None,
+            "disk_used_percent": round(disk_used, 2) if disk_used is not None else None,
+            "disk_free_gib": round(disk_free, 2) if disk_free is not None else None,
+            "disk_refuse_used_percent": limits.disk_refuse_used_percent if limits else None,
+            "disk_alert_used_percent": limits.disk_alert_used_percent if limits else None,
+            "disk_check_skipped": disk.probe.skipped if disk else None,
+            "disk_used_percent_before_reaper": round(disk_before, 2) if disk_before is not None else None,
+            "disk_reaper": disk.reaper.detail if disk and disk.reaper else None,
+            "disk_alert": disk.alert if disk else None,
             "swept_crashed": list(self.dead_task_ids) if self.swept else [],
         }
 
@@ -278,6 +404,8 @@ def config_defaults() -> Thresholds:
         max_load_per_cpu=float(config.DISPATCH_MAX_LOAD_PER_CPU),
         worker_mem_reserve_gib=float(config.DISPATCH_WORKER_MEM_RESERVE_GIB),
         max_test_slot_queue=int(config.DISPATCH_MAX_TEST_SLOT_QUEUE),
+        disk_refuse_used_percent=float(config.DISPATCH_DISK_REFUSE_USED_PERCENT),
+        disk_alert_used_percent=float(config.DISPATCH_DISK_ALERT_USED_PERCENT),
     )
 
 
@@ -350,6 +478,9 @@ def load_thresholds(environ: Mapping[str, str] | None = None) -> Thresholds:
         **{k: v for k, v in process_env.items() if k in _THRESHOLD_ENV_NAMES and v.strip()},
     }
     defaults = config_defaults()
+    for name in (ENV_DISK_REFUSE_USED_PERCENT, ENV_DISK_ALERT_USED_PERCENT):
+        if _env_number(env, name, 0.0, integer=False) > 100:
+            raise ValueError(f"{name}={env[name]!r} must be a percentage of at most 100")
     return Thresholds(
         max_live_write_workers=int(
             _env_number(env, ENV_MAX_LIVE_WRITE_WORKERS, defaults.max_live_write_workers, integer=True)
@@ -362,6 +493,12 @@ def load_thresholds(environ: Mapping[str, str] | None = None) -> Thresholds:
             env, ENV_WORKER_MEM_RESERVE_GIB, defaults.worker_mem_reserve_gib, integer=False
         ),
         max_test_slot_queue=int(_env_number(env, ENV_MAX_TEST_SLOT_QUEUE, defaults.max_test_slot_queue, integer=True)),
+        disk_refuse_used_percent=_env_number(
+            env, ENV_DISK_REFUSE_USED_PERCENT, defaults.disk_refuse_used_percent, integer=False
+        ),
+        disk_alert_used_percent=_env_number(
+            env, ENV_DISK_ALERT_USED_PERCENT, defaults.disk_alert_used_percent, integer=False
+        ),
     )
 
 
@@ -471,6 +608,262 @@ def probe_test_slots() -> SlotQueueProbe:
     if not report["enabled"]:
         return SlotQueueProbe(skipped="pool disabled")
     return SlotQueueProbe(depth=int(report["queue_depth"]), pool_size=int(report["pool_size"]))  # type: ignore[call-overload]
+
+
+def primary_checkout() -> Path:
+    """The primary checkout that owns ``.worktrees/``, also from a linked worktree."""
+    from scripts.common.repo_root import main_checkout_root
+
+    return main_checkout_root(Path(__file__).resolve().parents[2])
+
+
+def worktrees_disk_path() -> Path:
+    """``.worktrees/`` of the primary checkout, or the checkout when it does not exist yet."""
+    root = primary_checkout()
+    worktrees = root / ".worktrees"
+    return worktrees if worktrees.is_dir() else root
+
+
+def read_disk(path: Path, usage: Callable[[Path], Any] = shutil.disk_usage) -> DiskProbe:
+    """``usage(path)`` as a :class:`DiskProbe`; a failure is ``skipped`` with its reason."""
+    try:
+        result = usage(path)
+        used, free = int(result.used), int(result.free)
+    except (OSError, AttributeError, TypeError, ValueError) as exc:
+        return DiskProbe(skipped=f"disk usage unreadable: {type(exc).__name__}: {exc}")
+    if used < 0 or free < 0 or used + free <= 0:
+        return DiskProbe(skipped=f"disk usage invalid: used={used} free={free}")
+    return DiskProbe(used_bytes=used, free_bytes=free)
+
+
+def probe_disk() -> DiskProbe:
+    """Usage of the filesystem holding ``.worktrees/``. The seam disk tests replace.
+
+    Under pytest with the healthy-host fixture, the host's disk is not read.
+    """
+    if os.environ.get("PYTEST_CURRENT_TEST") and os.environ.get("LU_TEST_DISPATCH_HEALTHY_HOST") == "1":
+        return DiskProbe(skipped=TEST_HOST_POOL_SKIP)
+    try:
+        path = worktrees_disk_path()
+    except OSError as exc:
+        return DiskProbe(skipped=f"worktrees path unresolved: {exc}")
+    return read_disk(path)
+
+
+def load_reaper_module() -> Any:
+    """Import the common reaper lazily; the seam reaper tests replace."""
+    from scripts.orchestration import reap_worktrees
+
+    return reap_worktrees
+
+
+def run_disk_reaper(repo_root: Path) -> ReaperOutcome:
+    """Run the common reaper's idle dispatch-worktree removal once (#10778).
+
+    The reaper must satisfy ``reap_idle_dispatch_worktrees(*, repo_root: Path)
+    -> Iterable[ReapResult]``: an apply call (no dry run) that removes only
+    clean, fully pushed, idle dispatch worktrees, returns promptly when another
+    reaper run holds its lock, and reports each tree with an ``action``. A
+    missing module or function, an exception or an unexpected result is an
+    outcome with ``ran=False`` that names the cause; it never raises.
+    """
+    try:
+        module = load_reaper_module()
+    except Exception as exc:  # any import failure means the reaper is unavailable
+        return ReaperOutcome(ran=False, detail=f"reaper unavailable: {REAPER_MODULE} did not import ({exc})")
+    function = getattr(module, REAPER_FUNCTION, None)
+    if not callable(function):
+        return ReaperOutcome(ran=False, detail=f"reaper unavailable: {REAPER_MODULE}.{REAPER_FUNCTION} is not present")
+    try:
+        results = function(repo_root=repo_root)
+        removed = sum(1 for result in results if getattr(result, "action", None) in REAPER_REMOVED_ACTIONS)
+    except Exception as exc:  # the reaper must never crash admission
+        return ReaperOutcome(ran=False, detail=f"reaper failed: {type(exc).__name__}: {exc}")
+    return ReaperOutcome(ran=True, detail=f"reaper removed {removed} worktree(s)", removed=removed)
+
+
+def _attempt_reaper(reaper: DiskReaper) -> ReaperOutcome:
+    try:
+        root = primary_checkout()
+        outcome = reaper(root)
+    except Exception as exc:  # an injected reaper must not crash admission either
+        return ReaperOutcome(ran=False, detail=f"reaper failed: {type(exc).__name__}: {exc}")
+    if not isinstance(outcome, ReaperOutcome):
+        return ReaperOutcome(ran=False, detail=f"reaper failed: returned {type(outcome).__name__}, not ReaperOutcome")
+    return outcome
+
+
+def post_disk_alert(body: str, idempotency_key: str) -> None:
+    """Publish one alert to the epics Fleet Comms channel. The seam alert tests replace.
+
+    Raises ``RuntimeError`` naming the cause when the publish fails. Under
+    pytest with the healthy-host fixture nothing is published.
+    """
+    if os.environ.get("PYTEST_CURRENT_TEST") and os.environ.get("LU_TEST_DISPATCH_HEALTHY_HOST") == "1":
+        raise RuntimeError("test host: alerts are not published")
+    from scripts.common.repo_root import project_interpreter
+
+    root = primary_checkout()
+    try:
+        interpreter = project_interpreter(root)
+    except FileNotFoundError as exc:
+        raise RuntimeError(f"fleet_comms publish could not run: {exc}") from exc
+    command = [
+        str(interpreter),
+        "-m",
+        "scripts.fleet_comms",
+        "channel",
+        "publish",
+        DISK_ALERT_CHANNEL,
+        "-",
+        "--sender",
+        DISK_ALERT_SENDER,
+        "--source",
+        DISK_ALERT_SENDER,
+        "--kind",
+        "report",
+        "--idempotency-key",
+        idempotency_key,
+    ]
+    try:
+        result = subprocess.run(
+            command,
+            input=body,
+            cwd=root,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=DISK_ALERT_PUBLISH_TIMEOUT_S,
+        )
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        raise RuntimeError(f"fleet_comms publish could not run: {exc}") from exc
+    if result.returncode != 0:
+        detail = (result.stderr or result.stdout).strip().splitlines()
+        raise RuntimeError(f"fleet_comms publish exited {result.returncode}: {detail[-1] if detail else 'no output'}")
+
+
+def _read_alert_state(descriptor: int) -> dict[str, Any]:
+    os.lseek(descriptor, 0, os.SEEK_SET)
+    raw = b""
+    while chunk := os.read(descriptor, 65536):
+        raw += chunk
+    try:
+        state = json.loads(raw) if raw.strip() else {}
+    except ValueError:
+        # An unreadable record must not silence alerts: treat it as none.
+        return {}
+    return state if isinstance(state, dict) else {}
+
+
+def _write_alert_state(descriptor: int, state: Mapping[str, Any]) -> None:
+    data = (json.dumps(dict(state), sort_keys=True) + "\n").encode()
+    os.ftruncate(descriptor, 0)
+    os.lseek(descriptor, 0, os.SEEK_SET)
+    os.write(descriptor, data)
+
+
+def _iso_utc(epoch: float) -> str:
+    return datetime.fromtimestamp(epoch, UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def _alert_number(state: Mapping[str, Any], key: str) -> float | None:
+    value = state.get(key)
+    return float(value) if isinstance(value, int | float) and not isinstance(value, bool) else None
+
+
+def maybe_alert_disk(
+    tasks_dir: Path,
+    check: DiskCheck,
+    limits: Thresholds,
+    *,
+    refused: bool,
+    now: float | None = None,
+    publish: Callable[[str, str], None] | None = None,
+) -> str:
+    """Post one epics alert per :data:`DISK_ALERT_INTERVAL_S`; return what happened.
+
+    The state file is locked without waiting: a concurrent admission that holds
+    it is already alerting. A failed post is logged and retried after
+    :data:`DISK_ALERT_RETRY_S`; nothing here raises.
+    """
+    clock = time.time() if now is None else now
+    send = publish or post_disk_alert
+    used = check.probe.used_percent
+    free = check.probe.free_gib
+    try:
+        tasks_dir.mkdir(parents=True, exist_ok=True)
+        descriptor = os.open(tasks_dir / DISK_ALERT_STATE_NAME, os.O_CREAT | os.O_RDWR, 0o600)
+    except OSError as exc:
+        _logger.warning("dispatch admission: disk alert state unavailable: %s", exc)
+        return f"epics alert not sent: state unavailable ({exc})"
+    try:
+        try:
+            fcntl.flock(descriptor, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError:
+            return "epics alert in progress in another admission"
+        state = _read_alert_state(descriptor)
+        posted = _alert_number(state, "posted_at")
+        if posted is not None and 0 <= clock - posted < DISK_ALERT_INTERVAL_S:
+            return f"epics alert already posted at {_iso_utc(posted)}"
+        failed = _alert_number(state, "failed_at")
+        if failed is not None and 0 <= clock - failed < DISK_ALERT_RETRY_S:
+            return f"epics alert failed at {_iso_utc(failed)}; retry after {DISK_ALERT_RETRY_S / 60:g} min"
+        verdict = "new write dispatches are REFUSED" if refused else "new write dispatches are still admitted"
+        lines = [
+            f"[dispatch-admission] disk {used:.1f}% used, {free:.1f} GiB free on the .worktrees filesystem "
+            f"at {_iso_utc(clock)} (alert at {limits.disk_alert_used_percent:g}%, "
+            f"refuse at {limits.disk_refuse_used_percent:g}%); {verdict}.",
+        ]
+        if check.reaper is not None:
+            lines.append(f"Reaper attempt: {check.reaper.detail}.")
+        lines.append(
+            "Act: reap settled dispatch worktrees with the common reaper and clear other disk use. "
+            f"Next alert no sooner than {DISK_ALERT_INTERVAL_S / 3600:g} h from now."
+        )
+        try:
+            send("\n".join(lines) + "\n", f"dispatch-admission-disk:{_iso_utc(clock)}")
+        except Exception as exc:  # an alert failure never blocks admission
+            _logger.warning("dispatch admission: disk alert to %s failed: %s", DISK_ALERT_CHANNEL, exc)
+            _write_alert_state(descriptor, {**state, "failed_at": clock, "last_error": str(exc)[:300]})
+            return f"epics alert failed: {exc}"
+        _write_alert_state(descriptor, {"posted_at": clock, "used_percent": round(used or 0.0, 2)})
+        return "epics alert posted"
+    except OSError as exc:
+        _logger.warning("dispatch admission: disk alert state unavailable: %s", exc)
+        return f"epics alert not sent: state unavailable ({exc})"
+    finally:
+        os.close(descriptor)
+
+
+def check_disk(limits: Thresholds, *, reaper: DiskReaper | None) -> tuple[DiskCheck, str | None]:
+    """Measure the disk, reaping once at the refuse threshold; return the check and any failure."""
+    probe = probe_disk()
+    used = probe.used_percent
+    if used is None:
+        log = _logger.debug if probe.skipped == TEST_HOST_POOL_SKIP else _logger.warning
+        log("dispatch admission: disk check skipped: %s", probe.skipped)
+        return DiskCheck(probe=probe), None
+    if used < limits.disk_refuse_used_percent:
+        return DiskCheck(probe=probe), None
+    if reaper is None:
+        outcome = ReaperOutcome(ran=False, detail="reaper not run in this check")
+        check = DiskCheck(probe=probe, before_reaper=None, reaper=outcome)
+    else:
+        outcome = _attempt_reaper(reaper)
+        after = probe_disk()
+        check = DiskCheck(probe=after, before_reaper=probe, reaper=outcome)
+        after_used = after.used_percent
+        if after_used is None:
+            _logger.warning("dispatch admission: disk check skipped after the reaper: %s", after.skipped)
+            return check, None
+        if after_used < limits.disk_refuse_used_percent:
+            return check, None
+    final = check.probe
+    return check, (
+        f"{final.text()} on the .worktrees filesystem is at or above the refuse threshold of "
+        f"{limits.disk_refuse_used_percent:g}% ({ENV_DISK_REFUSE_USED_PERCENT}={limits.disk_refuse_used_percent:g}); "
+        f"{outcome.detail}"
+    )
 
 
 def process_alive(pid: int) -> bool:
@@ -652,13 +1045,16 @@ def evaluate(
     record_liveness: Callable[[dict[str, Any]], bool | None] | None = None,
     on_dead: Callable[[Path, dict[str, Any]], None] | None = None,
     thresholds: Thresholds | None = None,
+    reaper: DiskReaper | None = None,
 ) -> AdmissionDecision:
     """Decide whether a ``mode`` dispatch may start a worker on this host now.
 
     ``on_dead`` receives every active record whose pid is dead or whose
     dispatcher is provably gone (the caller marks it ``crashed``); without it
-    the records are only reported. Invalid threshold
-    environment variables raise ``ValueError``.
+    the records are only reported. ``reaper`` (normally
+    :func:`run_disk_reaper`) is called at most once, when the disk is at or
+    above the refuse threshold; without it the disk is only measured. Invalid
+    threshold environment variables raise ``ValueError``.
     """
     if mode not in WRITE_CAPABLE_MODES:
         return AdmissionDecision(mode=mode, exempt=True, admitted=True)
@@ -702,6 +1098,13 @@ def evaluate(
             f"test-slot queue {slots.depth} is longer than {limits.max_test_slot_queue} waiting runs "
             f"({ENV_MAX_TEST_SLOT_QUEUE}={limits.max_test_slot_queue})"
         )
+    disk, disk_failure = check_disk(limits, reaper=reaper)
+    if disk_failure is not None:
+        failures.append(disk_failure)
+    disk_used = disk.probe.used_percent
+    if disk_used is not None and disk_used >= limits.disk_alert_used_percent:
+        alert = maybe_alert_disk(tasks_dir, disk, limits, refused=disk_failure is not None)
+        disk = replace(disk, alert=alert)
     return AdmissionDecision(
         mode=mode,
         exempt=False,
@@ -714,6 +1117,7 @@ def evaluate(
         failures=tuple(failures),
         pool=pool,
         slots=slots,
+        disk=disk,
     )
 
 

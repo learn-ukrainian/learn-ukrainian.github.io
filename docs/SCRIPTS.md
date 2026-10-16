@@ -1150,6 +1150,7 @@ private operations docs):
 | `DISPATCH_MIN_MEM_AVAILABLE_GIB` | `MemAvailable` in `/proc/meminfo` is below the floor |
 | `DISPATCH_MAX_LOAD_PER_CPU` | the 1-minute load average divided by the CPU count is above the limit |
 | `DISPATCH_WORKER_MEM_RESERVE_GIB` | the shared `lu.slice` pool's non-cache use plus this per-worker reserve would exceed its `memory.high` (#9975) |
+| `DISPATCH_DISK_REFUSE_USED_PERCENT` | the filesystem holding `.worktrees/` is at or above this percent used (default 85, as `df` reports it) after the worktree reaper has run once (#10776) |
 
 A refusal exits 3 and prints one line that names each failed check with its measured value
 and threshold. Retry once a worker finishes or the host recovers, or override one dispatch
@@ -1164,7 +1165,7 @@ and only the worker cap applies. The pool check reads `memory.current`, `memory.
 `memory.stat` from the `lu.slice` cgroup (or `$LU_SLICE_CGROUP`) and subtracts
 `active_file`/`inactive_file`, so reclaimable page cache does not count. When those files are
 missing (CI, macOS) the check is skipped, logged, and recorded as `admission.pool_check_skipped`. `python -m scripts.fleet.capacity_pick` prints the same
-decision as its last line (JSON key `admission`). Write task records keep the `admission`
+decision as its last line (JSON key `admission`). The disk check (#10776) runs the reaper only for a live dispatch's first check, never under the lock, in `--dry-run` or in `capacity_pick`; those report a full disk as a refusal with "reaper not run in this check". At or above `DISPATCH_DISK_ALERT_USED_PERCENT` (default 80) one alert goes to the epics Fleet Comms channel per 6 hours (state: `dispatch-admission-disk-alert.state` beside the lock). An unreadable disk probe or a failed alert never refuses; the reason is shown on the admission line. Write task records keep the `admission`
 snapshot, and every terminal record keeps `peak_rss_mib`. That value is the largest single
 process the worker reaped, from `getrusage(RUSAGE_CHILDREN)`. Use both fields to tune the
 thresholds.
