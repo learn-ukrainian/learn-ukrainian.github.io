@@ -79,6 +79,16 @@ against the index; existing unversioned audit reports retain their canonical
 validation. No new process or timer is required. Daily publication retries
 reuse the saved report bytes and do not renew the membership timestamp.
 
+The Monitor serves this same file at `/api/issues/streams`, so every
+publication is a complete hygiene report. The writer appends the closed-epic and
+milestone warnings that `run_audit` adds, from the same shared helper. If that
+lookup fails, nothing is written. `root_results` is private like the
+membership index: both the route and the Work projection strip every key in
+`PRIVATE_CACHE_KEYS`. A checker's verdict is final before publication, so a
+deadline or write failure during publication keeps the verdict and records
+`cache_write_error` (`membership_audit_cache_write_timeout` or
+`membership_audit_cache_write_failed`).
+
 A parentless issue resolves only when the audit records exact unique body
 membership, even if its own title or body has no parent claim. A valid audit
 that observed the open target but found no stream returns

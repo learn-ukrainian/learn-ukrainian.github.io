@@ -109,7 +109,7 @@ def collect_repository(repo) -> tuple[list[dict] | None, int | None, dict | None
         ):
             try:
                 checker.write_membership_cache(report, repo.github, registry, root=ROOT)
-            except OSError:
+            except Exception:  # includes the writer's milestone lookups; never leak diagnostics
                 codes.append("membership_audit_cache_write_failed")
     return issues, count, report, codes
 

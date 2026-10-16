@@ -248,17 +248,27 @@ def _membership_root_results(report: dict, registry: dict) -> dict | None:
 
 
 def write_membership_cache(report: dict, repository: str, registry: dict, *, root: Path | None = None) -> bool:
-    """Publish only fresh, complete, conflict-free evidence beside the shared cache."""
+    """Publish only fresh, complete, conflict-free evidence beside the shared cache.
+
+    ``report`` is a membership audit from ``live_audit``. The Monitor serves this
+    shared file as its hygiene report, so the writer appends the same closed-epic
+    and milestone warnings ``run_audit`` adds; a failed lookup writes nothing.
+    """
     if _audit_refusal(report, repository, registry):
         return False
     root_results = _membership_root_results(report, registry)
     if root_results is None:
         return False
+    checkout = ROOT if root is None else root
+    warnings = [*(report.get("warnings") or ()), *audit.hygiene_warnings(checkout, set(report["open_issue_numbers"]))]
     payload = json.dumps(
-        {**report, "schema_version": MEMBERSHIP_CACHE_SCHEMA_VERSION, "root_results": root_results},
+        {
+            **report, "warnings": warnings,
+            "schema_version": MEMBERSHIP_CACHE_SCHEMA_VERSION, "root_results": root_results,
+        },
         ensure_ascii=False, sort_keys=True,
     ) + "\n"
-    path = main_checkout_root(ROOT if root is None else root) / "batch_state/issue_stream_audit.json"
+    path = main_checkout_root(checkout) / "batch_state/issue_stream_audit.json"
     path.parent.mkdir(parents=True, exist_ok=True)
     descriptor, temporary = tempfile.mkstemp(prefix=".issue-stream-audit-", suffix=".json", dir=path.parent)
     try:
@@ -389,9 +399,13 @@ def observe_membership(issue: dict, repository: str, number: int, *, audit_orpha
             result["status"] == "PASS" or result["errors"][0]["code"] == "membership_unregistered_parentless"
         ):
             progress.stage = "live_audit_cache_write"
+            # The verdict is final. Publication, including its milestone lookups,
+            # is best effort: no deadline or failure there may change the verdict.
             try:
                 write_membership_cache(report, repository, registry)
-            except OSError:
+            except (_DeadlineExpired, TimeoutError, subprocess.TimeoutExpired):
+                result["cache_write_error"] = "membership_audit_cache_write_timeout"
+            except Exception:
                 result["cache_write_error"] = "membership_audit_cache_write_failed"
     except (_DeadlineExpired, TimeoutError, subprocess.TimeoutExpired):
         code = "membership_timeout" if progress.stage.startswith("parent_") else f"membership_timeout_{progress.stage}"

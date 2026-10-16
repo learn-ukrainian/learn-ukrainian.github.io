@@ -11,7 +11,7 @@ import pytest
 
 from scripts.orchestration import issue_quality_report as report
 from scripts.orchestration.fleet_repos import FleetRepo
-from tests.test_check_issue_task_quality import COMPLETE, REGISTRY, REPO, audit_report
+from tests.test_check_issue_task_quality import COMPLETE, HYGIENE, REGISTRY, REPO, audit_report
 
 PUBLIC = FleetRepo("public", REPO, "public", "public-monorepo", True)
 PRIVATE = FleetRepo("infra-private", "unit/private", "private", "private-infra")
@@ -150,6 +150,7 @@ def stub_collection(monkeypatch, tmp_path, *, count=1, membership=None):
     snapshot = membership if membership is not None else audit_report(body=[123])
     live = Mock(return_value=snapshot)
     monkeypatch.setattr(report.checker, "live_audit", live)
+    monkeypatch.setattr(report.audit, "hygiene_warnings", Mock(side_effect=lambda *a, **k: [dict(w) for w in HYGIENE]))
     return live
 
 
@@ -158,11 +159,14 @@ def test_daily_report_writes_cache_consumed_by_parentless_checker(monkeypatch, t
     issues, count, membership, codes = report.collect_repository(PUBLIC)
     assert issues == [{"number": 123}] and count == 1 and codes == []
     live.assert_called_once_with(REPO, REGISTRY, root=tmp_path)
+    report.audit.hygiene_warnings.assert_called_once_with(tmp_path, {123})
     path = tmp_path / "batch_state/issue_stream_audit.json"
     payload = json.loads(path.read_text())
     assert payload["schema_version"] == 1
     assert payload["generated_at"] == membership["generated_at"]
     assert payload["membership_complete"] is True
+    # The Monitor serves this file: keep run_audit's milestone warnings (#10793).
+    assert payload["warnings"] == HYGIENE
     monkeypatch.setattr(report.checker, "read_parent", lambda *a: None)
     live.reset_mock()
     assert report.checker.observe_membership({}, REPO, 123) == {
@@ -194,6 +198,15 @@ def test_daily_report_cache_failure_is_typed_and_redacted(monkeypatch, tmp_path)
     assert result["coverage"] == "incomplete"
     assert result["incomplete_codes"] == codes
     assert "CANARY" not in json.dumps(result)
+
+
+def test_daily_report_hygiene_lookup_failure_publishes_nothing(monkeypatch, tmp_path):
+    stub_collection(monkeypatch, tmp_path)
+    report.audit.hygiene_warnings.side_effect = ValueError("PRIVATE_CANARY")
+    issues, count, membership, codes = report.collect_repository(PUBLIC)
+    assert codes == ["membership_audit_cache_write_failed"]
+    assert not (tmp_path / "batch_state/issue_stream_audit.json").exists()
+    assert "CANARY" not in json.dumps(summarize(issues, count, membership, codes))
 
 
 def test_collection_redacts_exception_data(monkeypatch):

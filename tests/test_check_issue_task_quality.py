@@ -262,6 +262,19 @@ def audit_report(*, native=(), body=()):
     return result
 
 
+# #10793: publication appends run_audit's closed-epic and milestone warnings.
+HYGIENE = [{"code": "milestone_closed_issue", "stream": "devops", "issue": 77}]
+REAL_HYGIENE_WARNINGS = audit.hygiene_warnings
+
+
+@pytest.fixture(autouse=True)
+def hygiene_lookup(monkeypatch):
+    """Never look up live milestone state from a unit test."""
+    lookup = Mock(side_effect=lambda *a, **k: [dict(w) for w in HYGIENE])
+    monkeypatch.setattr(audit, "hygiene_warnings", lookup)
+    return lookup
+
+
 def test_dod_structure_uses_canonical_grammar():
     from scripts.orchestration.task_lifecycle import parse_issue_acceptance_criteria
 
@@ -423,7 +436,7 @@ def test_fresh_cached_membership_skips_slow_live_audit(monkeypatch, membership_c
     assert checker.write_membership_cache(report, REPO, REGISTRY)
     payload = json.loads(membership_cache.read_text())
     assert payload == {
-        **report, "schema_version": 1,
+        **report, "warnings": HYGIENE, "schema_version": 1,
         "root_results": {"5703": {"native": [], "body": [123]}, "6943": {"native": [], "body": []}},
     }
     live = Mock(side_effect=lambda *a, **k: time.sleep(6))
@@ -511,8 +524,7 @@ def test_canonical_validator_must_accept_cache(monkeypatch, membership_cache, ca
 
 
 @pytest.mark.parametrize("stage", ["target_fetch", "cached_audit_validation", "live_audit_open_issues",
-                                      "live_audit_root_2_of_2_issue_6943", "live_audit_root_1_of_2_issue_999",
-                                      "live_audit_cache_write"])
+                                      "live_audit_root_2_of_2_issue_6943", "live_audit_root_1_of_2_issue_999"])
 def test_slow_stage_times_out_inside_dispatch_deadline(monkeypatch, membership_cache, capsys, stage):
     budget = checker.time_budget
     monkeypatch.setattr(checker, "time_budget", lambda: budget(0.05))
@@ -526,10 +538,6 @@ def test_slow_stage_times_out_inside_dispatch_deadline(monkeypatch, membership_c
         monkeypatch.setattr(checker, "fetch_issue", slow)
     elif stage == "cached_audit_validation":
         monkeypatch.setattr(audit, "validate_membership_report", slow)
-    elif stage == "live_audit_cache_write":
-        membership_cache.write_text(json.dumps({**audit_report(), "generated_at": 0}))
-        monkeypatch.setattr(checker, "live_audit", lambda *a, **k: audit_report(body=[123]))
-        monkeypatch.setattr(checker, "write_membership_cache", slow)
     else:
         membership_cache.write_text(json.dumps({**audit_report(), "generated_at": 0}))
         monkeypatch.setattr(audit, "fetch_open_issues", slow if stage == "live_audit_open_issues" else lambda *a: [])
@@ -701,6 +709,26 @@ def test_versioned_cache_schema_is_validated(monkeypatch, membership_cache, chan
     assert result["cache_rejection"] == "membership_audit_cache_schema"
 
 
+def test_truncated_published_cache_never_admits(monkeypatch, membership_cache):
+    assert checker.write_membership_cache(audit_report(body=[123]), REPO, REGISTRY)
+    published = membership_cache.read_bytes()
+    monkeypatch.setattr(checker, "live_audit", lambda *a, **k: {**audit_report(), "membership_complete": False})
+    for cut in range(1, len(published) - 1, max(1, len(published) // 60)):
+        membership_cache.write_bytes(published[:cut])
+        assert checker.observe_membership({}, REPO, 123)["status"] == "WARN", cut
+
+
+def test_tampered_index_without_matching_root_results_is_refused(monkeypatch, membership_cache):
+    assert checker.write_membership_cache(audit_report(), REPO, REGISTRY)
+    payload = json.loads(membership_cache.read_text())
+    payload["effective_membership"]["123"] = audit_report(body=[123])["effective_membership"]["123"]
+    membership_cache.write_text(json.dumps(payload))
+    monkeypatch.setattr(checker, "live_audit", lambda *a, **k: {**audit_report(), "membership_complete": False})
+    result = checker.observe_membership({}, REPO, 123)
+    assert result["status"] == "WARN"
+    assert result["cache_rejection"] == "membership_audit_cache_schema"
+
+
 def test_live_cache_write_failure_does_not_discard_verified_membership(monkeypatch, membership_cache):
     monkeypatch.setattr(checker, "live_audit", lambda *a, **k: audit_report(body=[123]))
 
@@ -713,6 +741,90 @@ def test_live_cache_write_failure_does_not_discard_verified_membership(monkeypat
         "status": "PASS", "errors": [], "pending_native_link": True,
         "cache_write_error": "membership_audit_cache_write_failed",
     }
+
+
+def test_live_check_publication_matches_run_audit_report(monkeypatch, tmp_path):
+    """The Monitor serves this file: a live-check write carries all of run_audit's report."""
+    monkeypatch.setattr(audit, "hygiene_warnings", REAL_HYGIENE_WARNINGS)
+    (tmp_path / "scripts/config").mkdir(parents=True)
+    (tmp_path / "scripts/config/issue_streams.yaml").write_text(
+        "streams:\n  devops:\n    epics: [5703, 4000]\n    closed_epics: [4000]\n  harness:\n    epics: [6943]\n"
+    )
+    (tmp_path / "docs").mkdir()
+    (tmp_path / "docs/WORKSTREAMS.md").write_text(
+        "## Stream milestones (the focus layer)\n\n| Stream | State | Current milestone | Done when |\n"
+        "| --- | --- | --- | --- |\n| devops | STALE | #77 cache writer | merged |\n"
+    )
+    monkeypatch.setattr(checker, "ROOT", tmp_path)
+    monkeypatch.setattr(checker, "registry_for", lambda r: REGISTRY)
+    monkeypatch.setattr(checker, "read_parent", lambda *a: None)
+    monkeypatch.setattr(audit, "_repo_owner_name", lambda *a: tuple(REPO.split("/")))
+    open_issues = [{"number": n, "title": f"issue {n}"} for n in (123, 5703, 6943)]
+    monkeypatch.setattr(audit, "fetch_open_issues", lambda *a: open_issues)
+    states = Mock(return_value=({77: "CLOSED", 4000: "OPEN"}, set()))
+    monkeypatch.setattr(audit, "fetch_issue_states", states)
+    children = {
+        5703: [{"number": 456, "repository": {"nameWithOwner": REPO}, "subIssuesSummary": {"total": 0}}],
+        6943: [{"number": 9, "repository": {"nameWithOwner": "other/repository"}}],
+    }
+
+    def fetch(cursors, *args):
+        return {n: {"body": "- [ ] #123" if n == 5703 else "", "subIssues": {"nodes": children[n]}} for n in cursors}
+
+    monkeypatch.setattr(audit, "_fetch_subissue_batch", fetch)
+    expected = json.loads(json.dumps(audit.run_audit(tmp_path)))
+    assert [w["code"] for w in expected["warnings"]] == [
+        "cross_repo_subissue", "closed_epic_reopened", "milestone_row_marked", "milestone_closed_issue",
+    ]
+    cache = tmp_path / "batch_state/issue_stream_audit.json"
+    cache.unlink()  # A missing cache sends the parentless target to the bounded live audit.
+    assert checker.observe_membership({}, REPO, 123) == {"status": "PASS", "errors": [], "pending_native_link": True}
+    published = json.loads(cache.read_text())
+    assert published.pop("schema_version") == 1
+    assert published.pop("root_results") == {"5703": {"native": [456], "body": [123]}, "6943": {"native": [], "body": []}}
+    published.pop("generated_at"), expected.pop("generated_at")
+    assert published == expected
+    assert states.call_count == 2 and states.call_args_list[0] == states.call_args_list[1]
+
+
+def test_slow_cache_publication_keeps_verified_verdict_inside_deadline(
+    monkeypatch, membership_cache, capsys, hygiene_lookup
+):
+    budget = checker.time_budget
+    monkeypatch.setattr(checker, "time_budget", lambda: budget(0.05))
+    stale = json.dumps({**audit_report(), "generated_at": 0})
+    membership_cache.write_text(stale)
+    monkeypatch.setattr(checker, "live_audit", lambda *a, **k: audit_report(body=[123]))
+    hygiene_lookup.side_effect = lambda *a, **k: time.sleep(10)
+    started = time.monotonic()
+    assert checker.main(["--issue", "123", "--strict", "--json"]) == 0
+    assert time.monotonic() - started < 1  # Far inside delegate.py's 135s outer deadline.
+    assert json.loads(capsys.readouterr().out)["membership"] == {
+        "status": "PASS", "errors": [], "pending_native_link": True,
+        "cache_write_error": "membership_audit_cache_write_timeout",
+    }
+    assert membership_cache.read_text() == stale
+    assert list(membership_cache.parent.iterdir()) == [membership_cache]
+
+
+@pytest.mark.parametrize("failure", [FileNotFoundError("docs/WORKSTREAMS.md"), ValueError("PRIVATE_CANARY")])
+def test_failed_hygiene_lookup_publishes_nothing_and_keeps_verdict(
+    monkeypatch, membership_cache, hygiene_lookup, failure
+):
+    stale = json.dumps({**audit_report(), "generated_at": 0})
+    membership_cache.write_text(stale)
+    monkeypatch.setattr(checker, "live_audit", lambda *a, **k: audit_report(body=[123]))
+    hygiene_lookup.side_effect = failure
+    result = checker.observe_membership({}, REPO, 123)
+    assert result == {
+        "status": "PASS", "errors": [], "pending_native_link": True,
+        "cache_write_error": "membership_audit_cache_write_failed",
+    }
+    assert membership_cache.read_text() == stale
+    assert list(membership_cache.parent.iterdir()) == [membership_cache]
+    with pytest.raises(type(failure)):
+        checker.write_membership_cache(audit_report(body=[123]), REPO, REGISTRY)
+    assert membership_cache.read_text() == stale
 
 
 @pytest.mark.parametrize("source", ["--body", "--body-file", "--issue"])
