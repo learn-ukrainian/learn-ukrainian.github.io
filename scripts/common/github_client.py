@@ -694,11 +694,14 @@ def _spool():
     """A private spool: up to ``SPILL_BYTES`` in memory, then a temporary file no other process can open.
 
     ``tempfile`` creates that file with mode 0600 and never names it (or unlinks it at once), in
-    the temporary directory, never the cache: closing the spool, on any path, removes every byte.
+    the fleet scratch root (:func:`scripts.common.scratch.ensure_scratch_root`), never the cache:
+    closing the spool, on any path, removes every byte.
     """
     import tempfile
 
-    return tempfile.SpooledTemporaryFile(max_size=SPILL_BYTES, mode="w+b")
+    from scripts.common.scratch import ensure_scratch_root
+
+    return tempfile.SpooledTemporaryFile(max_size=SPILL_BYTES, mode="w+b", dir=ensure_scratch_root())
 
 
 def _http_client_blocks(data):

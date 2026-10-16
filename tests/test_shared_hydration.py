@@ -659,30 +659,52 @@ def test_terminating_process_group_escalates_after_200ms(monkeypatch: pytest.Mon
 
 
 def test_gh_queries_are_new_sessions_and_timeout_reaps(monkeypatch: pytest.MonkeyPatch) -> None:
+    def pipe(mode):
+        """A real pipe end whose other end is closed: reads see end of file, writes break."""
+        read, write = hydration.os.pipe()
+        hydration.os.close(write if mode == "rb" else read)
+        return hydration.os.fdopen(read if mode == "rb" else write, mode)
+
     class Process:
+        """A ``gh`` that closes its output but is still running at the deadline."""
+
         pid = 4242
         returncode = None
+
+        def __init__(self, stdin):
+            self.args = ["gh"]
+            self.stdin = pipe("wb") if stdin == hydration.subprocess.PIPE else None
+            self.stdout, self.stderr = pipe("rb"), pipe("rb")
 
         def __enter__(self):
             return self
 
         def __exit__(self, *args):
+            for stream in (self.stdin, self.stdout, self.stderr):
+                if stream is not None:
+                    stream.close()
             return False
 
-        def communicate(self, *, input=None, timeout=None):
+        def wait(self, timeout=None):
+            events.append(("wait", timeout))
             if timeout is not None:
                 raise hydration.subprocess.TimeoutExpired("gh", timeout)
-            return b"", b""
+            self.returncode = -signal.SIGKILL
+            return self.returncode
 
     launched = {}
-    signals = []
+    events = []
     monkeypatch.setenv("GH_REPO", "fixture/project")
-    monkeypatch.setattr(hydration.subprocess, "Popen", lambda *args, **kwargs: launched.update(kwargs) or Process())
-    monkeypatch.setattr(hydration.os, "killpg", lambda pid, signum: signals.append((pid, signum)))
+    monkeypatch.setattr(
+        hydration.subprocess, "Popen", lambda *args, **kwargs: launched.update(kwargs) or Process(kwargs["stdin"])
+    )
+    monkeypatch.setattr(hydration.os, "killpg", lambda pid, signum: events.append(("killpg", pid, signum)))
     monkeypatch.setattr(hydration.time, "monotonic", lambda: 1.0)
     assert hydration.run_gh_json(["issue", "view", "5512", "--json", "title"], deadline=1.1) is None
     assert launched["start_new_session"] is True
-    assert signals == [(4242, signal.SIGKILL)]
+    # The bounded wait times out, the whole group is killed, and only then is the process reaped.
+    assert events[0][0] == "wait" and events[0][1] is not None and 0 < events[0][1] <= 0.1 + 1e-9
+    assert events[1:] == [("killpg", 4242, signal.SIGKILL), ("wait", None)]
 
 
 @pytest.mark.parametrize(

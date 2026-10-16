@@ -916,16 +916,19 @@ def test_a_spool_is_closed_when_the_send_fails(context, monkeypatch):
     assert len(recorded.spools) == 1 and recorded.spools[0].closed
 
 
-def test_the_spool_spills_into_an_unnamed_file_only_this_process_can_open(monkeypatch):
+def test_the_spool_spills_into_an_unnamed_file_only_this_process_can_open(monkeypatch, tmp_path):
     import stat
 
     monkeypatch.setattr(gh, "SPILL_BYTES", 16)
+    monkeypatch.setenv("LU_SCRATCH_ROOT", str(tmp_path / "scratch"))
     with gh._spool() as spool:
         spool.write(b"x" * 16)
         assert not spool._rolled
         spool.write(b"x")
         status = os.fstat(spool.fileno())
         assert spool._rolled and stat.S_IMODE(status.st_mode) == 0o600 and status.st_nlink == 0
+        # The spill lands in the managed fleet scratch root, never the system temporary directory.
+        assert os.readlink(f"/proc/self/fd/{spool.fileno()}").startswith(str(tmp_path / "scratch") + "/")
     assert spool.closed
 
 
