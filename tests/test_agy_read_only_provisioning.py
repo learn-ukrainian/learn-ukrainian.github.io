@@ -376,10 +376,10 @@ def test_unreadable_hook_fails_closed_instead_of_settling_done(primary, tmp_task
 
 
 def test_hook_fingerprint_distinguishes_bytes_links_and_file_types(tmp_path):
-    """Absent stays absent; content, link texts, target and file type are each recorded."""
+    """Absent stays absent; content, every link crossed, target and file type are each recorded."""
     import stat
 
-    directory = {"file_type": stat.S_IFDIR}
+    tmp_path = tmp_path.resolve()
     regular = {"file_type": stat.S_IFREG}
     empty_sha = "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356"
     assert delegate._read_only_agy_hook_fingerprint(tmp_path) == (None, None)
@@ -390,35 +390,90 @@ def test_hook_fingerprint_distinguishes_bytes_links_and_file_types(tmp_path):
     hook = tmp_path / HOOK
     hook.write_bytes(b"{}\n")
     assert delegate._read_only_agy_hook_fingerprint(tmp_path) == (
-        {"parent": directory, "hook": regular, "target": {"path": str(hook), **regular}, "sha256": empty_sha},
+        {"links": [], "target": {"path": str(hook), **regular}, "sha256": empty_sha},
         None,
     )
     hook.unlink()
     hook.symlink_to("elsewhere.json")
-    link = {"file_type": stat.S_IFLNK, "link_text": "elsewhere.json"}
-    assert delegate._read_only_agy_hook_fingerprint(tmp_path) == (
-        {"parent": directory, "hook": link, "target": None, "sha256": None},
-        None,
-    )
+    final_link = {"path": str(hook), "link_text": "elsewhere.json", "file_type": stat.S_IFLNK}
     (tmp_path / ".agents" / "elsewhere.json").write_bytes(b"{}\n")
     target = {"path": str(tmp_path / ".agents" / "elsewhere.json"), **regular}
     assert delegate._read_only_agy_hook_fingerprint(tmp_path) == (
-        {"parent": directory, "hook": link, "target": target, "sha256": empty_sha},
+        {"links": [final_link], "target": target, "sha256": empty_sha},
         None,
     )
+    # Every link of a chain, absolute or relative, is kept even though the target is the same.
+    (tmp_path / ".agents").rename(tmp_path / "guard")
+    (tmp_path / "current").symlink_to(str(tmp_path / "guard"))
+    (tmp_path / ".agents").symlink_to("./current/../current")
+    target = {"path": str(tmp_path / "guard" / "elsewhere.json"), **regular}
+    assert delegate._read_only_agy_hook_fingerprint(tmp_path) == (
+        {
+            "links": [
+                {"path": str(tmp_path / ".agents"), "link_text": "./current/../current", "file_type": stat.S_IFLNK},
+                {"path": str(tmp_path / "current"), "link_text": str(tmp_path / "guard"), "file_type": stat.S_IFLNK},
+                # ``..`` leaves the directory the link led to, not the link's own directory.
+                {"path": str(tmp_path / "current"), "link_text": str(tmp_path / "guard"), "file_type": stat.S_IFLNK},
+                {**final_link, "path": str(tmp_path / "guard" / "hooks.json")},
+            ],
+            "target": target,
+            "sha256": empty_sha,
+        },
+        None,
+    )
+    (tmp_path / ".agents").unlink()
+    (tmp_path / "current").unlink()
+    (tmp_path / "guard").rename(tmp_path / ".agents")
     hook.unlink()
     os.mkfifo(hook)
     fifo = {"file_type": stat.S_IFIFO}
     assert delegate._read_only_agy_hook_fingerprint(tmp_path) == (
-        {"parent": directory, "hook": fifo, "target": {"path": str(hook), **fifo}, "sha256": None},
+        {"links": [], "target": {"path": str(hook), **fifo}, "sha256": None},
         None,
     )
-    hook.unlink()
-    hook.symlink_to("hooks.json")  # A loop the adapter cannot load either; never opened.
+
+
+@pytest.mark.parametrize(
+    ("link_text", "error"),
+    [
+        ("elsewhere.json", "FileNotFoundError"),  # Leads nowhere from the start.
+        ("hooks.json", "OSError"),  # A loop: more links than the kernel follows.
+        ("../.agents/hooks.json", "OSError"),
+        ("../not-a-directory/hooks.json", "NotADirectoryError"),
+        ("../not-a-directory/.", "NotADirectoryError"),
+        ("../not-a-directory/", "NotADirectoryError"),
+        ("../not-a-directory/../not-a-directory", "NotADirectoryError"),
+    ],
+)
+def test_hook_whose_link_target_cannot_be_acquired_is_an_error(tmp_path, link_text, error):
+    """F2 (#10748): an observed link whose target cannot be acquired is never a clean baseline."""
+    (tmp_path / ".agents").mkdir()
+    (tmp_path / "not-a-directory").write_text("file\n", encoding="utf-8")
+    (tmp_path / HOOK).symlink_to(link_text)
+    with pytest.raises(OSError):  # The kernel cannot open it either.
+        (tmp_path / HOOK).read_bytes()
+    assert delegate._read_only_agy_hook_fingerprint(tmp_path) == (None, f"agy hook snapshot failed: {HOOK}: {error}")
+
+
+def test_hook_chain_at_the_kernel_link_limit_is_still_acquired(tmp_path):
+    """The walk follows exactly as many links as the kernel: forty pass, a forty-first is a loop."""
+    (tmp_path / ".agents").mkdir()
+    (tmp_path / "guard.json").write_bytes(b"{}\n")
+    previous = "guard.json"
+    for index in range(39):
+        (tmp_path / f"link-{index}").symlink_to(previous)
+        previous = f"link-{index}"
+    (tmp_path / HOOK).symlink_to(f"../{previous}")
+    assert (tmp_path / HOOK).read_bytes() == b"{}\n"
     fingerprint, error = delegate._read_only_agy_hook_fingerprint(tmp_path)
     assert error is None
-    assert fingerprint["hook"] == {"file_type": stat.S_IFLNK, "link_text": "hooks.json"}
-    assert fingerprint["sha256"] is None
+    assert len(fingerprint["links"]) == 40
+    (tmp_path / HOOK).unlink()
+    (tmp_path / "link-39").symlink_to(previous)
+    (tmp_path / HOOK).symlink_to("../link-39")
+    with pytest.raises(OSError):
+        (tmp_path / HOOK).read_bytes()
+    assert delegate._read_only_agy_hook_fingerprint(tmp_path) == (None, f"agy hook snapshot failed: {HOOK}: OSError")
 
 
 def test_hook_behind_a_looping_parent_is_an_error_not_absence(tmp_path):
@@ -775,6 +830,178 @@ def test_parent_link_lost_around_readlink_fails_closed(primary, tmp_tasks_dir, f
     rc, state, launches = _launch(worktree, task_id, _READ)
 
     _assert_acquisition_failed(rc, state, launches, raised, errno.ENOENT)
+
+
+# --- Every link of an accepted chain, and its acquisition (#10748 F1/F2) ------
+#
+# ``realpath`` collapses a chain to its effective file, so a provider could
+# rewire a middle link to an equal alias without changing the target, bytes
+# or Git status. The snapshot records each link crossed instead. A link whose
+# target cannot be acquired after the hook was observed fails closed.
+
+
+def _three_link_chain_layout(worktree: Path) -> None:
+    """``.agents`` -> ``batch_state/current`` -> ``stage`` -> ``guard``: two intermediate links."""
+    _guard_dir(worktree, "guard")
+    (worktree / "batch_state" / "stage").symlink_to("guard")
+    (worktree / "batch_state" / "current").symlink_to("stage")
+    (worktree / ".agents").symlink_to("batch_state/current")
+
+
+def _final_link_through_a_middle_link_layout(worktree: Path) -> None:
+    """``.agents/hooks.json`` -> ``batch_state/current.json`` -> ``effective-hooks.json``."""
+    target = _final_link_layout(worktree)
+    (worktree / HOOK).unlink()
+    (target.parent / "current.json").symlink_to(target.name)
+    (worktree / HOOK).symlink_to("../batch_state/current.json")
+
+
+def _relink(path: str, text: str) -> str:
+    return f"import os\nos.remove({path!r})\nos.symlink({text!r}, {path!r})\n"
+
+
+@pytest.mark.parametrize(
+    ("link", "alias"),
+    [
+        ("batch_state/stage", "./guard"),  # The reviewer's middle_alias_rewire, one level deeper.
+        ("batch_state/current", "./stage"),
+        ("batch_state/current", "../batch_state/stage"),
+    ],
+)
+def test_middle_link_rewired_to_an_equal_alias_fails(primary, tmp_tasks_dir, fake_agy, link, alias):
+    """F1 (#10748): effective path, bytes and Git status stay equal, yet the chain moved."""
+    task_id = f"ro-10748-middle-alias-{link.rsplit('/', 1)[-1]}-{len(alias)}"
+    worktree = _dispatch_worktree(primary, task_id)
+    _three_link_chain_layout(worktree)
+    effective = os.path.realpath(worktree / HOOK)
+
+    rc, state, launches = _launch(worktree, task_id, _relink(link, alias))
+
+    assert os.readlink(worktree / link) == alias
+    assert os.path.realpath(worktree / HOOK) == effective
+    assert (worktree / HOOK).read_bytes() == _GUARD_BYTES
+    _assert_hook_mutation(rc, state, launches)
+
+
+def test_middle_link_swapped_for_an_equal_regular_file_fails(primary, tmp_tasks_dir, fake_agy):
+    """F1 sibling: replacing a middle link by a copy of the bytes it led to is a mutation."""
+    task_id = "ro-10748-middle-to-file"
+    worktree = _dispatch_worktree(primary, task_id)
+    _final_link_through_a_middle_link_layout(worktree)
+    swap = (
+        "import os, shutil\n"
+        "os.remove('batch_state/current.json')\n"
+        "shutil.copyfile('batch_state/effective-hooks.json', 'batch_state/current.json')\n"
+    )
+
+    rc, state, launches = _launch(worktree, task_id, swap)
+
+    assert not (worktree / "batch_state" / "current.json").is_symlink()
+    assert (worktree / HOOK).read_bytes() == _GUARD_BYTES
+    _assert_hook_mutation(rc, state, launches)
+
+
+def test_middle_link_rewired_and_restored_during_the_run_settles_done(primary, tmp_tasks_dir, fake_agy):
+    """F1 boundary: a rewire undone before the post-snapshot leaves nothing to compare, and nothing crashes."""
+    task_id = "ro-10748-rewire-restored"
+    worktree = _dispatch_worktree(primary, task_id)
+    _three_link_chain_layout(worktree)
+    script = _relink("batch_state/stage", "./guard") + _relink("batch_state/stage", "guard")
+
+    rc, state, launches = _launch(worktree, task_id, script)
+
+    assert len(launches) == 1
+    assert os.readlink(worktree / "batch_state" / "stage") == "guard"
+    assert state["read_only_checkout_snapshot_error"] is None
+    assert state["read_only_mutation_paths"] == []
+    assert state["status"] == "done"
+    assert rc == 0
+
+
+@pytest.mark.parametrize("layout", [_three_link_chain_layout, _final_link_through_a_middle_link_layout])
+def test_untouched_multi_link_chains_still_settle_done(primary, tmp_tasks_dir, fake_agy, layout):
+    """F1 control: recording every link is not a new restriction on accepted chains."""
+    task_id = f"ro-10748-chain-{layout.__name__.strip('_')}"
+    worktree = _dispatch_worktree(primary, task_id)
+    layout(worktree)
+
+    rc, state, launches = _launch(worktree, task_id, _READ)
+
+    assert len(launches) == 1
+    assert launches[0]["hook_check"] == hooks.HookConfigResult("PASS", "guard_registered")
+    assert state["read_only_checkout_snapshot_error"] is None
+    assert state["read_only_mutation_paths"] == []
+    assert state["status"] == "done"
+    assert rc == 0
+
+
+def test_linked_target_lost_around_lstat_fails_closed(primary, tmp_tasks_dir, fake_agy, monkeypatch):
+    """F2 (#10748, linked_target_enoent): the observed link's target is gone for the snapshot only."""
+    import errno
+
+    task_id = "ro-10748-target-enoent"
+    worktree = _dispatch_worktree(primary, task_id)
+    target = _final_link_layout(worktree)
+    away = target.with_name("effective-hooks.away")
+
+    raised = _race_snapshot_call(
+        monkeypatch,
+        worktree,
+        "lstat",
+        {str(target), os.path.realpath(target)},
+        lose=lambda: os.rename(target, away),
+        restore=lambda _saved: os.rename(away, target),
+    )
+    rc, state, launches = _launch(worktree, task_id, _READ)
+
+    _assert_acquisition_failed(rc, state, launches, raised, errno.ENOENT)
+    assert target.read_bytes() == _GUARD_BYTES
+
+
+def test_middle_link_parent_replaced_by_a_file_around_lstat_fails_closed(primary, tmp_tasks_dir, fake_agy, monkeypatch):
+    """F2 sibling: ENOTDIR while crossing an intermediate link is an acquisition failure."""
+    import errno
+
+    task_id = "ro-10748-middle-enotdir"
+    worktree = _dispatch_worktree(primary, task_id)
+    _final_link_through_a_middle_link_layout(worktree)
+    middle = worktree / "batch_state" / "current.json"
+    directory = worktree / "batch_state"
+    away = worktree / "batch_state.away"
+
+    def lose():
+        os.rename(directory, away)
+        directory.write_text("not a directory\n", encoding="utf-8")
+
+    def restore(_saved):
+        directory.unlink()
+        os.rename(away, directory)
+
+    raised = _race_snapshot_call(
+        monkeypatch, worktree, "lstat", {str(middle), os.path.realpath(middle)}, lose=lose, restore=restore
+    )
+    rc, state, launches = _launch(worktree, task_id, _READ)
+
+    _assert_acquisition_failed(rc, state, launches, raised, errno.ENOTDIR)
+    assert os.readlink(middle) == "effective-hooks.json"
+
+
+def test_hook_leading_nowhere_from_the_start_is_still_refused_by_the_adapter(primary, tmp_tasks_dir, fake_agy):
+    """F2 control: a dangling guard link is neither provisioned over nor run; the adapter refuses it."""
+    task_id = "ro-10748-dangling-from-start"
+    worktree = _dispatch_worktree(primary, task_id)
+    (worktree / ".agents").mkdir()
+    (worktree / HOOK).symlink_to("../batch_state/missing.json")
+
+    rc, state, launches = _launch(worktree, task_id, _READ)
+
+    assert launches == []
+    assert "adapter_rejected" in state["last_error"]
+    assert state["read_only_checkout_snapshot_error"] == f"agy hook snapshot failed: {HOOK}: FileNotFoundError"
+    assert state["status"] == "failed"
+    assert rc == 1
+    assert os.readlink(worktree / HOOK) == "../batch_state/missing.json"
+    assert not (worktree / "batch_state" / "missing.json").exists()
 
 
 # --- Agent scope of the hook acquisition (#10727 review F3) ------------------

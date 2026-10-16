@@ -5774,14 +5774,15 @@ class _AgyHookChangedDuringSnapshot(Exception):
 def _read_only_agy_hook_fingerprint(cwd: Path) -> tuple[dict[str, Any] | None, str | None]:
     """Fingerprint the AGY guard the adapter validates, through accepted links.
 
-    The adapter follows a symlinked ``.agents`` parent and a symlinked final
-    file and validates the bytes they lead to, so the record holds both link
-    texts, the effective file's real path and type, and its bytes (#10727).
-    Only a hook missing at the first ``lstat`` is absent: ``(None, None)``,
-    and Git status still reports a new ``.agents`` entry. A hook lost, made
-    unreadable or changed after that observation is an acquisition error,
-    never absence, and the snapshot then fails closed. Nothing but a regular
-    effective file is opened, so a FIFO or device cannot block the snapshot.
+    The adapter follows symlinks anywhere on the way to the guard and
+    validates the bytes they lead to, so the record holds every link crossed
+    (#10748), the effective file's real path and type, and its bytes
+    (#10727). Only a hook missing at the first ``lstat`` is absent:
+    ``(None, None)``, and Git status still reports a new ``.agents`` entry. A
+    hook or link target lost, made unreadable or changed after that
+    observation is an acquisition error, never absence, and the snapshot then
+    fails closed. Nothing but a regular effective file is opened, so a FIFO
+    or device cannot block the snapshot.
     """
     path = cwd / _READ_ONLY_AGY_HOOK_PATH
     try:
@@ -5791,10 +5792,10 @@ def _read_only_agy_hook_fingerprint(cwd: Path) -> tuple[dict[str, Any] | None, s
     except OSError as exc:
         return None, f"{_READ_ONLY_AGY_HOOK_SNAPSHOT_ERROR} {_READ_ONLY_AGY_HOOK_PATH}: {type(exc).__name__}"
     try:
-        identity, inode = _read_only_agy_hook_identity(path)
+        identity, inode = _read_only_agy_hook_identity(cwd)
         digest = _read_only_agy_hook_digest(identity, inode)
         # Re-observe: the links and target read above describe the hashed bytes.
-        if _read_only_agy_hook_identity(path) != (identity, inode):
+        if _read_only_agy_hook_identity(cwd) != (identity, inode):
             raise _AgyHookChangedDuringSnapshot
     except OSError as exc:
         return None, f"{_READ_ONLY_AGY_HOOK_SNAPSHOT_ERROR} {_READ_ONLY_AGY_HOOK_PATH}: {type(exc).__name__}"
@@ -5803,36 +5804,56 @@ def _read_only_agy_hook_fingerprint(cwd: Path) -> tuple[dict[str, Any] | None, s
     return {**identity, "sha256": digest}, None
 
 
-def _read_only_agy_hook_identity(path: Path) -> tuple[dict[str, Any], tuple[int, int] | None]:
-    """Return the guard's parent, final entry and effective target without reading it.
+# Linux MAXSYMLINKS: the kernel refuses a path that crosses more links (ELOOP).
+_READ_ONLY_AGY_HOOK_MAX_LINKS = 40
 
-    Every error propagates: the caller has already observed the hook. Only a
-    final symlink may lead to a missing target, which the adapter refuses as
-    a missing file; that is recorded as ``target: None``. The ``(st_dev,
-    st_ino)`` of the target binds the later read to this observation.
+
+def _read_only_agy_hook_identity(cwd: Path) -> tuple[dict[str, Any], tuple[int, int]]:
+    """Return every link to the guard and its effective target without reading it.
+
+    The guard path is resolved one component at a time, as the kernel does,
+    and each symlink crossed is recorded with its real path and link text.
+    ``os.path.realpath`` would collapse them, so a rewired middle link that
+    keeps the effective file would go unseen (#10748 F1). Every error
+    propagates: the caller has already observed the hook, so a link target
+    that is missing, looping or not a directory cannot be acquired and is
+    never recorded as a clean baseline (#10748 F2). A hook that leads nowhere
+    from the start fails here too, and the adapter still refuses it as a
+    missing file. The ``(st_dev, st_ino)`` of the target binds the later read
+    to this observation.
     """
-    identity: dict[str, Any] = {}
-    for name, component in (("parent", path.parent), ("hook", path)):
-        info = component.lstat()
-        identity[name] = {"file_type": stat.S_IFMT(info.st_mode)}
-        if stat.S_ISLNK(info.st_mode):
-            identity[name]["link_text"] = os.readlink(component)
-    target = os.path.realpath(path)
-    try:
-        info = os.lstat(target)
-    except (FileNotFoundError, NotADirectoryError):
-        if identity["hook"]["file_type"] != stat.S_IFLNK:
-            raise  # The observed hook file itself is gone.
-        identity["target"] = None
-        return identity, None
-    identity["target"] = {"path": target, "file_type": stat.S_IFMT(info.st_mode)}
+    links: list[dict[str, Any]] = []
+    resolved = os.path.realpath(cwd)
+    pending = _READ_ONLY_AGY_HOOK_PATH.split("/")[::-1]
+    while pending:
+        name = pending.pop()
+        if name in ("", ".", ".."):
+            # Like the kernel, refuse to step through or out of a non-directory.
+            if not stat.S_ISDIR(os.lstat(resolved).st_mode):
+                raise NotADirectoryError(errno.ENOTDIR, os.strerror(errno.ENOTDIR), resolved)
+            if name == "..":
+                resolved = os.path.dirname(resolved)
+            continue
+        candidate = os.path.join(resolved, name)
+        if not stat.S_ISLNK(os.lstat(candidate).st_mode):
+            resolved = candidate
+            continue
+        if len(links) == _READ_ONLY_AGY_HOOK_MAX_LINKS:
+            raise OSError(errno.ELOOP, os.strerror(errno.ELOOP), candidate)
+        link_text = os.readlink(candidate)
+        links.append({"path": candidate, "link_text": link_text, "file_type": stat.S_IFLNK})
+        if link_text.startswith("/"):
+            resolved = "/"
+        pending.extend(link_text.split("/")[::-1])
+    info = os.lstat(resolved)
+    identity = {"links": links, "target": {"path": resolved, "file_type": stat.S_IFMT(info.st_mode)}}
     return identity, (info.st_dev, info.st_ino)
 
 
-def _read_only_agy_hook_digest(identity: dict[str, Any], inode: tuple[int, int] | None) -> str | None:
+def _read_only_agy_hook_digest(identity: dict[str, Any], inode: tuple[int, int]) -> str | None:
     """Hash the effective guard bytes when the observed target is a regular file."""
     target = identity["target"]
-    if target is None or target["file_type"] != stat.S_IFREG:
+    if target["file_type"] != stat.S_IFREG:
         return None
     fd = os.open(Path(target["path"]), os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK | os.O_CLOEXEC)
     with os.fdopen(fd, "rb") as handle:
