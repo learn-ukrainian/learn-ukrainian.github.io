@@ -199,6 +199,7 @@ def test_cpu_examples_are_inert_and_have_exactly_the_documented_keys() -> None:
     assert _slice_keys(QUOTA_EXAMPLE) == {"CPUQuota": "1200%", "CPUQuotaPeriodSec": "100ms"}
 
 
+@pytest.mark.repo_wide
 def test_cpu_examples_are_the_only_cpu_dropins_and_leave_the_memory_dropin_alone() -> None:
     names = sorted(path.name for path in CPU_DROPIN_DIR.iterdir())
     assert names == ["20-cpu-weight.conf.example", "30-cpu-quota.conf.example"]

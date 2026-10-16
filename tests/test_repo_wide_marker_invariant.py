@@ -182,6 +182,7 @@ KNOWN_REPO_WIDE_FUNCTIONS = (
     "tests/test_launcher_contract.py::test_retired_names_are_absent_from_tracked_content",
     "tests/test_live_driver_message_consumption.py::test_drive_epic_skill_keeps_all_required_live_inbox_boundaries",
     "tests/test_llm_reviewer_dispatch.py::test_no_production_entrypoint_constructs_bare_bakeoff_arm",
+    "tests/test_lu_slice_apply.py::test_cpu_examples_are_the_only_cpu_dropins_and_leave_the_memory_dropin_alone",
     "tests/test_manifest_io.py::test_lexicon_scripts_do_not_open_manifest_inplace",
     "tests/test_no_hardcoded_venv_interpreter.py::test_no_executing_hardcoded_venv_interpreter",
     "tests/test_ohoiko_source_inventory_scope.py::test_ohoiko_abetka_inventory_covers_all_committed_key_words",
