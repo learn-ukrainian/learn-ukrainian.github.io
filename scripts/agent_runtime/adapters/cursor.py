@@ -182,7 +182,7 @@ class CursorAdapter:
             effort: Logged and ignored (no cursor equivalent today).
         """
         if effort:
-            _logger.debug("cursor adapter ignoring effort=%s (not supported by CLI)", effort)
+            _logger.debug("cursor adapter ignoring effort (not supported by CLI)")
         try:
             model = apply_cursor_model_pins(model) or self.default_model
         except ModelCatalogError as exc:

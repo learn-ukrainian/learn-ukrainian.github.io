@@ -420,7 +420,7 @@ def emit_hermes_substitution_marker(
         f"{substitution.get('actual_model')} "
         f"source={substitution.get('source')}"
     )
-    logger.warning(message)
+    logger.warning(f"{HERMES_SUBSTITUTION_MARKER}: configured and actual provider/model differ")
     print(message, file=sys.stderr)
 
 

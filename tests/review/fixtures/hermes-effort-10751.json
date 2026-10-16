@@ -1,0 +1,34 @@
+{
+  "adapter_stderr_replacements": [
+    {
+      "rows": [
+        40,
+        41,
+        42,
+        43
+      ],
+      "before": "Hermes DeepSeek effort='high' requested, but no readable",
+      "after": "Hermes DeepSeek effort requested, but no readable"
+    },
+    {
+      "rows": [
+        44,
+        45,
+        46,
+        47
+      ],
+      "before": "Hermes Grok effort='high' requested, but no readable",
+      "after": "Hermes Grok effort requested, but no readable"
+    },
+    {
+      "rows": [
+        48,
+        49,
+        50,
+        51
+      ],
+      "before": "Hermes Qwen effort='high' requested, but no readable",
+      "after": "Hermes Qwen effort requested, but no readable"
+    }
+  ]
+}
