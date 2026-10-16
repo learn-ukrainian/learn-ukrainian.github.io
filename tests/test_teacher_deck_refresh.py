@@ -735,8 +735,12 @@ class FakeGh:
     """The `gh release` CLI in memory (no network); every other command runs for real."""
 
     def __init__(
-        self, monkeypatch: pytest.MonkeyPatch, *, release_exists: bool = False,
-        fail_upload: bool = False, fail_at: str | None = None,
+        self,
+        monkeypatch: pytest.MonkeyPatch,
+        *,
+        release_exists: bool = False,
+        fail_upload: bool = False,
+        fail_at: str | None = None,
     ):
         self.assets: dict[str, bytes] | None = {} if release_exists else None
         self.fail_upload = fail_upload
@@ -753,7 +757,7 @@ class FakeGh:
         if verb in {"create", "upload"}:
             # Typed writes pin the repository, freeze payloads and put the tag
             # after --; reads retain their existing positional shape.
-            operands = command[command.index("--") + 1:]
+            operands = command[command.index("--") + 1 :]
             assert operands[0] == teacher_deck.RELEASE_TAG
             assert command[3:5] == ["--repo", teacher_deck.release.DEFAULT_REPO]
         else:
@@ -892,13 +896,21 @@ def test_a_failed_publish_changes_nothing_committed_facing(
     assert leftovers == []
 
 
-@pytest.mark.parametrize("step,expected", [
-    ("create", ["view", "create"]),
-    ("view --json", ["view", "view --json"]),
-    ("upload", ["view", "view --json", "view", "upload"]),
-])
+@pytest.mark.parametrize(
+    "step,expected",
+    [
+        ("create", ["view", "create"]),
+        ("view --json", ["view", "view --json"]),
+        ("upload", ["view", "view --json", "view", "upload"]),
+    ],
+)
 def test_release_publish_failure_preserves_the_set_and_stops_the_sequence(
-    world, tmp_path, monkeypatch, capsys, step, expected,
+    world,
+    tmp_path,
+    monkeypatch,
+    capsys,
+    step,
+    expected,
 ):
     assert _refresh(world) == 0
     before = _committed(world)
@@ -1418,9 +1430,7 @@ def checked_world(world: dict[str, Path], tmp_path: Path) -> dict[str, Path]:
     return world
 
 
-def _check_main(
-    world: dict[str, Path], report: Path, *, publication: bool, with_sources: bool
-) -> int:
+def _check_main(world: dict[str, Path], report: Path, *, publication: bool, with_sources: bool) -> int:
     args = ["--deck-dir", str(world["out"]), "--json", str(report)]
     if publication or with_sources:
         args += ["--withheld", str(world["withheld"])]
@@ -1436,8 +1446,12 @@ def _check_main(
 @pytest.mark.parametrize("payload", _NON_OBJECT_JSON)
 @pytest.mark.parametrize("publication", [False, True], ids=["normal", "publication"])
 def test_checker_rejects_required_non_object_json(
-    checked_world: dict[str, Path], tmp_path: Path, capsys: pytest.CaptureFixture[str],
-    artifact: str, payload: object, publication: bool,
+    checked_world: dict[str, Path],
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+    artifact: str,
+    payload: object,
+    publication: bool,
 ) -> None:
     world = checked_world
     (world["out"] / artifact).write_text(json.dumps(payload), encoding="utf-8")
@@ -1455,7 +1469,10 @@ def test_checker_rejects_required_non_object_json(
 
 @pytest.mark.parametrize("publication", [False, True], ids=["normal", "publication"])
 def test_checker_accepts_required_object_json(
-    checked_world: dict[str, Path], tmp_path: Path, capsys: pytest.CaptureFixture[str], publication: bool,
+    checked_world: dict[str, Path],
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+    publication: bool,
 ) -> None:
     capsys.readouterr()
     for with_sources in (False, True):
@@ -1472,8 +1489,12 @@ def test_checker_accepts_required_object_json(
 @pytest.mark.parametrize("damage", ["missing", "malformed"])
 @pytest.mark.parametrize("publication", [False, True], ids=["normal", "publication"])
 def test_checker_preserves_required_json_read_failures(
-    checked_world: dict[str, Path], tmp_path: Path, capsys: pytest.CaptureFixture[str],
-    artifact: str, damage: str, publication: bool,
+    checked_world: dict[str, Path],
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+    artifact: str,
+    damage: str,
+    publication: bool,
 ) -> None:
     path = checked_world["out"] / artifact
     if damage == "missing":
@@ -1493,11 +1514,17 @@ def test_checker_preserves_required_json_read_failures(
 
 
 @pytest.mark.parametrize("artifact", _REQUIRED_JSON_ARTIFACTS)
-@pytest.mark.parametrize("payload", [[], "shape-control", 0, False, None], ids=["array", "string", "number", "boolean", "null"])
+@pytest.mark.parametrize(
+    "payload", [[], "shape-control", 0, False, None], ids=["array", "string", "number", "boolean", "null"]
+)
 @pytest.mark.parametrize("publication", [False, True], ids=["normal", "publication"])
 def test_refresh_propagates_required_json_shape_failure(
-    checked_world: dict[str, Path], monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str],
-    artifact: str, payload: object, publication: bool,
+    checked_world: dict[str, Path],
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+    artifact: str,
+    payload: object,
+    publication: bool,
 ) -> None:
     world = checked_world
     before = _committed(world)
@@ -1519,3 +1546,135 @@ def test_refresh_propagates_required_json_shape_failure(
     assert _committed(world) == before
     assert not world["pointer"].exists()
     assert not world["out"].with_name(f".{world['out'].name}.check").exists()
+
+
+@pytest.mark.parametrize("publication", [False, True], ids=["normal", "publication"])
+@pytest.mark.parametrize(
+    ("case", "content", "diagnostic"),
+    [
+        (name, content, "invalid artifact coverage.json: expected JSON object")
+        for name, content in (
+            ("array", "[]"),
+            ("string", '"optional"'),
+            ("number", "42"),
+            ("bool", "true"),
+            ("null", "null"),
+        )
+    ]
+    + [
+        (
+            "invalid-syntax",
+            "{",
+            "unreadable artifact coverage.json: "
+            "Expecting property name enclosed in double quotes: line 1 column 2 (char 1)",
+        ),
+        ("present", None, None),
+        ("absent", None, None),
+        ("missing", None, "manifest file missing: coverage.json"),
+    ],
+)
+def test_checker_optional_manifest_json_cli(
+    checked_world: dict[str, Path],
+    tmp_path: Path,
+    publication: bool,
+    case: str,
+    content: str | None,
+    diagnostic: str | None,
+) -> None:
+    world = checked_world
+    artifact = world["out"] / checker.COVERAGE_FILE
+    manifest_path = world["out"] / checker.MANIFEST_FILE
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    record = next(record for record in manifest["files"] if record["path"] == artifact.name)
+    if content is not None:
+        artifact.write_text(content, encoding="utf-8")
+        data = artifact.read_bytes()
+        record.update(sha256=hashlib.sha256(data).hexdigest(), bytes=len(data))
+    if case == "absent":
+        manifest["files"].remove(record)
+    if case in ("absent", "missing"):
+        artifact.unlink()
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+    report = tmp_path / "optional-report.json"
+    args = [
+        sys.executable,
+        str(ROOT / "scripts/audit/check_teacher_deck.py"),
+        "--deck-dir",
+        str(world["out"]),
+        "--json",
+        str(report),
+    ]
+    if publication:
+        args += ["--publication", "--withheld", str(world["withheld"])]
+        for flag, key in (("docx", "docx"), ("vesum-db", "vesum"), ("sources-db", "sources"), ("atlas-db", "atlas")):
+            args += [f"--{flag}", str(world[key])]
+    result = subprocess.run(args, capture_output=True, text=True, check=False, timeout=120)
+    assert result.returncode == (1 if diagnostic else 0), result
+    assert result.stderr == ""
+    payload = json.loads(report.read_text(encoding="utf-8"))
+    assert payload["ok"] is (diagnostic is None)
+    assert payload["errors"] == ([diagnostic] if diagnostic else [])
+    assert payload["entries"] == 16
+    assert payload["aspectVerified"] is publication
+    assert payload["atlasVerified"] is publication
+    assert payload["reviewRequired"] is publication
+    assert f"teacher deck check: {'FAIL (1 errors)' if diagnostic else 'PASS (0 errors)'}" in result.stdout
+    if diagnostic:
+        assert diagnostic in result.stdout
+
+
+@pytest.mark.parametrize(
+    ("damage", "diagnostic"),
+    [
+        ("hash", "manifest hash/size mismatch: extra.json"),
+        ("size", "manifest hash/size mismatch: extra.json"),
+        ("schema", "manifest schema mismatch: extra.json"),
+        ("schemaVersion", "manifest schema mismatch: extra.json"),
+        ("gzip", "extra.json: gzip 54 B exceeds budget 0 B"),
+        ("missing", "manifest file missing: extra.json"),
+        ("reference", "manifest does not reference practice-deck.teacher.json"),
+        ("nonobject", "invalid artifact extra.json: expected JSON object"),
+        (
+            "syntax",
+            "unreadable artifact extra.json: "
+            "Expecting property name enclosed in double quotes: line 1 column 2 (char 1)",
+        ),
+    ],
+)
+def test_manifest_preserves_artifact_validation(tmp_path: Path, damage: str, diagnostic: str) -> None:
+    data = b'{"schema": "fixture", "schemaVersion": 1}'
+    records = []
+    for name in (checker.DECK_FILE, checker.CLOZE_FILE, checker.FROZEN_FILE, "extra.json"):
+        (tmp_path / name).write_bytes(data)
+        records.append(
+            {
+                "path": name,
+                "schema": "fixture",
+                "schemaVersion": 1,
+                "sha256": hashlib.sha256(data).hexdigest(),
+                "bytes": len(data),
+                "gzipBudget": 100,
+            }
+        )
+    optional = tmp_path / "extra.json"
+    record = records[-1]
+    if damage in ("hash", "size", "schema", "schemaVersion", "gzip"):
+        key, value = {
+            "hash": ("sha256", "0" * 64),
+            "size": ("bytes", 0),
+            "schema": ("schema", "other"),
+            "schemaVersion": ("schemaVersion", 2),
+            "gzip": ("gzipBudget", 0),
+        }[damage]
+        record[key] = value
+    elif damage == "missing":
+        optional.unlink()
+    elif damage == "reference":
+        records.pop(0)
+    else:
+        data = b"[]" if damage == "nonobject" else b"{"
+        optional.write_bytes(data)
+        record.update(sha256=hashlib.sha256(data).hexdigest(), bytes=len(data))
+    report = checker.Report()
+    checker.check_manifest(tmp_path, {"files": records}, report)
+    assert report.errors == [diagnostic]
