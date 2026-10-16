@@ -199,9 +199,13 @@ driver_scope_child_running() {
   # not reaped yet, is finished (state after the parenthesised command name,
   # proc_pid_stat(5)).
   local stat
+  local -a rows=()
   # Also called from the relay trap: a nested read would cancel the timed
-  # read in driver_scope_wait_child, so use Bash's file-read expansion.
-  { stat="$(< "/proc/$1/stat")"; } 2>/dev/null || return 1
+  # read in driver_scope_wait_child. mapfile leaves that timeout intact and
+  # handles a vanished child without Bash 5.2's fatal $(< missing-file) error.
+  # The parenthesised command name can contain newlines; read the whole record.
+  { mapfile -d '' -t rows < "/proc/$1/stat"; } 2>/dev/null || return 1
+  stat="${rows[0]:-}"
   [ -n "$stat" ] || return 1
   stat="${stat##*) }"
   case "${stat%% *}" in Z|X) return 1 ;; esac
@@ -263,6 +267,7 @@ launcher_enter_driver_scope() {
       --property="MemoryHigh=$DS_HIGH" --property="MemoryMax=$DS_MAX" --property="MemorySwapMax=$DS_SWAP" \
       --property=OOMPolicy=continue -- bash "$LC_ROOT/scripts/lib/driver_scope.sh" \
       --entry "$LC_MODE" "$unit" - "$LC_ROOT/$DS_ENTRY_PATH" ${LC_SCOPE_ORIGINAL_ARGS[@]+"${LC_SCOPE_ORIGINAL_ARGS[@]}"}
+    exit 6
   fi
   entry="$(mktemp)" || { driver_scope_refuse entry-marker-unavailable; return 6; }
   # The waiting launcher owns the marker. Distinct read/write offsets and
@@ -292,7 +297,6 @@ launcher_enter_driver_scope() {
   [ -z "$relayed" ] || kill -"$relayed" "$child" 2>/dev/null || true
   driver_scope_wait_child "$child"
   rc="$DS_CHILD_RC"
-  trap - INT TERM HUP QUIT
   local verified=""
   IFS= read -r verified <&218 || true
   exec 218<&-
@@ -318,7 +322,7 @@ launcher_enter_driver_scope() {
   else
     # A signal this shell relayed ended the session; otherwise the status is
     # the provider's own.
-    case "$relayed" in INT) rc=130 ;; TERM) rc=143 ;; HUP) rc=129 ;; QUIT) rc=131 ;; esac
+    case "$relayed" in INT) rc=130 ;; TERM) rc=143 ;; HUP) rc=129 ;; esac
   fi
   local exit_line stamp
   stamp="rc=$rc signal=${relayed:-none} ts=$(date -u +%Y-%m-%dT%H:%M:%SZ)"

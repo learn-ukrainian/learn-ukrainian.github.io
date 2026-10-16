@@ -52,6 +52,65 @@ DEADLINE_S = 60
 # separator, an empty value, a newline and unexpanded shell syntax.
 TRICKY = ("a b", "q'\"uote", "", "--", "line\nbreak", "$HOME", "*")
 
+
+def _test_processes(tmp_path: Path) -> list[int]:
+    """Find processes still using this test's checkout or exported fixture paths."""
+    root = os.fsencode(tmp_path)
+    survivors = []
+    for entry in Path("/proc").iterdir():
+        if not entry.name.isdigit() or int(entry.name) == os.getpid():
+            continue
+        try:
+            cwd = os.fsencode(os.readlink(entry / "cwd"))
+        except OSError:
+            cwd = b""
+        try:
+            environ = (entry / "environ").read_bytes()
+        except OSError:
+            environ = b""
+        if cwd == root or cwd.startswith(root + b"/") or root + b"/" in environ or b"=" + root + b"\0" in environ:
+            survivors.append(int(entry.name))
+    return sorted(survivors)
+
+
+def _assert_no_test_processes(tmp_path: Path) -> None:
+    survivors = _test_processes(tmp_path)
+    assert not survivors, f"test left running processes: {survivors}"
+
+
+@pytest.fixture(autouse=True)
+def _no_surviving_test_processes(tmp_path: Path):
+    yield
+    try:
+        wait_until(lambda: not _test_processes(tmp_path), timeout=5, message="test processes to exit")
+    except AssertionError:
+        try:
+            _assert_no_test_processes(tmp_path)
+        finally:
+            for pid in _test_processes(tmp_path):
+                with suppress(ProcessLookupError):
+                    os.kill(pid, signal.SIGKILL)
+
+
+@pytest.mark.parametrize("locator", ["cwd", "environ"])
+def test_process_leak_check_rejects_a_surviving_process(tmp_path: Path, locator: str) -> None:
+    env = {"PATH": os.environ["PATH"]}
+    if locator == "environ":
+        env["LAUNCHER_FIXTURE_ROOT"] = str(tmp_path / "repo")
+    process = subprocess.Popen(
+        [sys.executable, "-I", "-c", "import time; time.sleep(300)"],
+        cwd=tmp_path if locator == "cwd" else REPO,
+        env=env,
+        start_new_session=True,
+    )
+    try:
+        with pytest.raises(AssertionError, match=rf"test left running processes: \[{process.pid}\]"):
+            _assert_no_test_processes(tmp_path)
+    finally:
+        os.killpg(process.pid, signal.SIGKILL)
+        process.wait(timeout=10)
+    _assert_no_test_processes(tmp_path)
+
 # Every tracked wrapper, its provider and the label its unit carries (the lane
 # for drivers). Each is executed below; the completeness guard compares this
 # table with `git ls-files`.
@@ -552,6 +611,19 @@ def test_help_and_dry_run_make_no_manager_calls(tmp_path: Path, wrapper: str, re
     assert not Path(env["TEST_ARGV"]).exists()
 
 
+def test_failed_interactive_exec_with_execfail_refuses_without_driver_fallback(tmp_path: Path) -> None:
+    root, env = _checkout(tmp_path)
+    manager = Path(env["PATH"].split(":")[0]) / "systemd-run"
+    manager.write_text("#!/nonexistent-launcher-test-interpreter\n")
+    result = _launch(root, env, "start-claude.sh", BASHOPTS="execfail")
+    assert result.returncode == 6, result.stdout + result.stderr
+    assert result.stderr.count("DRIVER_SCOPE_START ") == 1
+    assert str(manager) in result.stderr
+    assert "DRIVER_SCOPE_EXIT" not in result.stderr
+    assert "scope-start-failed" not in result.stderr
+    assert _events(env) == []
+
+
 @pytest.mark.parametrize(
     ("extra", "reason"),
     [
@@ -891,6 +963,7 @@ class _Terminal:
         self.master, slave = os.openpty()
         fcntl.ioctl(slave, termios.TIOCSWINSZ, struct.pack("HHHH", 24, 80, 0, 0))
         self.output = b""
+        self.closed = False
         self.process = subprocess.Popen(
             [sys.executable, "-I", str(jobshell), str(self.status), *argv],
             stdin=slave,
@@ -938,24 +1011,62 @@ class _Terminal:
         return self.process.returncode
 
     def close(self) -> None:
-        job = next((line.split()[1] for line in _lines(self.status) if line.startswith("job ")), None)
-        if job is not None:
-            with suppress(ProcessLookupError, PermissionError):
-                os.killpg(int(job), signal.SIGKILL)
+        if self.closed:
+            return
+        # Stop the shell before scanning so it cannot fork a new job after the
+        # scan. Session membership survives reparenting and a missing status file.
         if self.process.poll() is None:
             self.process.kill()
         self.process.wait(timeout=10)
+        groups = set()
+        job = next((line.split()[1] for line in _lines(self.status) if line.startswith("job ")), None)
+        if job is not None:
+            groups.add(int(job))
+        for entry in Path("/proc").iterdir():
+            if not entry.name.isdigit():
+                continue
+            try:
+                fields = (entry / "stat").read_text().rsplit(")", 1)[1].split()
+            except OSError:
+                continue
+            if int(fields[3]) == self.process.pid:
+                groups.add(int(fields[2]))
+        for group in groups:
+            with suppress(ProcessLookupError, PermissionError):
+                os.killpg(group, signal.SIGKILL)
         os.close(self.master)
+        self.closed = True
 
 
 def _signal_session(tmp_path: Path, wrapper: str, *args: str) -> tuple[_Terminal, dict[str, str]]:
     root, env = _checkout(tmp_path)
     env = {**env, "TEST_PROVIDER": env["TEST_SIGNAL_PROVIDER"]}
     terminal = _Terminal(tmp_path, ["bash", str(root / wrapper), *args], env, root)
-    terminal.wait_for(
-        lambda: any(line.startswith("ready ") for line in _lines(env["TEST_SIGNAL_LOG"])), "provider readiness"
-    )
+    try:
+        terminal.wait_for(
+            lambda: any(line.startswith("ready ") for line in _lines(env["TEST_SIGNAL_LOG"])), "provider readiness"
+        )
+    except BaseException:
+        terminal.close()
+        raise
     return terminal, env
+
+
+def test_signal_session_failure_closes_the_terminal_and_job_group(tmp_path: Path, monkeypatch) -> None:
+    """Fail readiness after the provider and a second group member are running."""
+    original = _Terminal.wait_for
+
+    def fail_readiness(terminal, predicate, what):
+        original(terminal, predicate, what)
+        # Cleanup must still find the job if status publication was lost.
+        terminal.status.unlink()
+        pytest.fail("injected readiness failure")
+
+    monkeypatch.setattr(_Terminal, "wait_for", fail_readiness)
+    with pytest.raises(pytest.fail.Exception, match="injected readiness failure"):
+        _signal_session(tmp_path, "start-claude-driver.sh", "--epic", "devops")
+    wait_until(lambda: not _test_processes(tmp_path), timeout=5, message="failed session cleanup")
+    _assert_no_test_processes(tmp_path)
 
 
 def _signal_log(env: dict[str, str]) -> list[str]:
@@ -1142,6 +1253,23 @@ def test_driver_keyboard_interrupt_cleans_the_lease_once(tmp_path: Path) -> None
     names = [name for name, _ in _events(env)]
     assert names.count("lease-open") == names.count("lease-close") == 1, names
     assert _signal_log(env).count("INT") >= 1
+
+
+def test_driver_quit_is_not_relayed_or_used_to_replace_provider_status(tmp_path: Path) -> None:
+    terminal, env = _signal_session(tmp_path, "start-claude-driver.sh", "--epic", "devops")
+    try:
+        job = int(next(line.split()[1] for line in _lines(terminal.status) if line.startswith("job ")))
+        os.kill(job, signal.SIGQUIT)
+        terminal.send(b"after quit\n")
+        terminal.wait_for(lambda: "LINE after quit" in _signal_log(env), "input after ignored QUIT")
+        terminal.send(b"done\n")
+        assert terminal.finish() == PROVIDER_RC
+    finally:
+        terminal.close()
+    assert "QUIT" not in _signal_log(env)
+    assert f"rc={PROVIDER_RC} signal=none " in terminal.output.decode(errors="replace")
+    names = [name for name, _ in _events(env)]
+    assert names.count("lease-open") == names.count("lease-close") == 1
 
 
 @pytest.mark.xfail(

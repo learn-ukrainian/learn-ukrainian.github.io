@@ -72,10 +72,10 @@ tracked name running another provider or mode), `mode-mismatch` and
 
 ## Signals and the terminal
 
-Drivers: INT, TERM and HUP are forwarded; when trapped, their conventional
-statuses (130, 143 and 129) replace the inner status. SIGQUIT remains ignored
-throughout the scoped driver tree because Bash launches the scope wrapper as a
-background job without job control.
+Drivers: when a trap observes the child still running, it forwards INT, TERM
+or HUP and selects the conventional status (130, 143 or 129). The driver waiter ignores
+SIGQUIT and neither relays it nor synthesizes status 131. An inner command may
+restore or trap SIGQUIT; the waiter preserves that command's own status.
 
 Interactive sessions preserve direct-execution signal delivery and the
 provider's own exit status. Signals sent to the launcher PID reach the provider
@@ -93,10 +93,11 @@ logging on stderr and in the journal is unchanged.
 The driver waiter never blocks in `wait` while its child runs: a trapped signal
 that interrupts `wait` as the child exits makes Bash drop the child's status
 (a later `wait` reports 127). It polls the child's process state with a timed
-read and collects the status only after the child has exited. Once the child
-has exited, the relay leaves its status and recorded signal unchanged,
-including when a later TERM arrives after status collection. Interactive
-sessions have no collector whose completed status can be overwritten.
+read and collects the status only after the child has exited. The INT, TERM
+and HUP relay traps remain installed until the waiter exits. If a trap observes
+that the child has exited, it leaves the collected status and recorded signal
+unchanged, including during exit logging. Interactive sessions have no
+collector whose completed status can be overwritten.
 
 Driver residuals remain owned by DevOps. A terminal Ctrl-C reaches a driver's
 provider twice, once from the terminal and once from the supervisor shell

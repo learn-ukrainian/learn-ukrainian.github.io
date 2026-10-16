@@ -15,6 +15,8 @@ from pathlib import Path
 
 import pytest
 
+from tests.wait_helpers import wait_until
+
 pytestmark = pytest.mark.usefixtures("hermetic_monitor")
 
 REPO = Path(__file__).resolve().parents[1]
@@ -393,9 +395,66 @@ def test_waiting_launcher_collects_status_without_waiting_on_a_running_child(
     assert "No such file" not in result.stderr
 
 
+def test_reaped_child_probe_does_not_exit_the_waiting_shell() -> None:
+    """A vanished /proc entry is an ordinary false result, including on Bash 5.2."""
+    result = subprocess.run(
+        ["bash", "-eu", "-c", '''
+source "$1"
+( exit 0 ) &
+child=$!
+wait "$child"
+if driver_scope_child_running "$child"; then exit 99; fi
+printf 'reaped child; waiter alive\\n'
+''', "bash", str(REPO / "scripts/lib/driver_scope.sh")],
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+    assert result.returncode == 0, result.stderr
+    assert result.stdout == "reaped child; waiter alive\n"
+    assert result.stderr == ""
+
+
+@pytest.mark.parametrize("name", ["plain child", "child) \nexit"])
+def test_child_probe_recognizes_a_zombie_with_a_multiline_command_name(name: str) -> None:
+    """Keep the child unreaped so its real kernel state remains Z during the probe."""
+    child = subprocess.Popen(
+        [sys.executable, "-I", "-c", """
+import ctypes, sys
+raise SystemExit(0 if ctypes.CDLL(None).prctl(15, sys.argv[1].encode(), 0, 0, 0) == 0 else 1)
+""", name],
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.PIPE,
+    )
+    stat = Path(f"/proc/{child.pid}/stat")
+    try:
+        wait_until(
+            lambda: stat.read_text().rsplit(")", 1)[1].split()[0] == "Z",
+            timeout=5,
+            message="unreaped child to become a zombie",
+        )
+        assert f"({name}) Z " in stat.read_text()
+        result = subprocess.run(
+            ["bash", "-eu", "-c", '''
+source "$1"
+if driver_scope_child_running "$2"; then echo running; else echo exited; fi
+''', "bash", str(REPO / "scripts/lib/driver_scope.sh"), str(child.pid)],
+            capture_output=True,
+            text=True,
+            timeout=10,
+        )
+        assert result.returncode == 0, result.stderr
+        assert result.stdout == "exited\n"
+        assert result.stderr == ""
+    finally:
+        _, stderr = child.communicate(timeout=10)
+    assert child.returncode == 0, stderr.decode()
+
+
+@pytest.mark.parametrize("phase", ["collector", "logger"])
 @pytest.mark.parametrize("provider_exit", ["exit 42", "kill -KILL $$"])
-def test_late_term_preserves_the_collected_provider_status(tmp_path: Path, provider_exit: str) -> None:
-    """Hold the real collector after wait, then deliver TERM before final logging."""
+def test_late_term_preserves_the_collected_provider_status(tmp_path: Path, provider_exit: str, phase: str) -> None:
+    """Deliver TERM both after wait and during the final journal write."""
     from tests.test_launcher_interactive_scope import DEADLINE_S, _checkout, _lines, _Terminal, _write
 
     root, env = _checkout(tmp_path)
@@ -403,16 +462,20 @@ def test_late_term_preserves_the_collected_provider_status(tmp_path: Path, provi
     release = tmp_path / "release"
     os.mkfifo(release)
     release_fd = os.open(release, os.O_RDWR | os.O_NONBLOCK)
-    helper = root / "scripts/lib/driver_scope.sh"
-    body = helper.read_text().replace("driver_scope_wait_child() {", "original_wait_child() {")
-    helper.write_text(
-        body
-        + "\ndriver_scope_wait_child() {\n"
-        + '  original_wait_child "$@"\n'
-        + f"  printf 'collected\\n' > {shlex.quote(str(collected))}\n"
-        + f"  IFS= read -r -t {DEADLINE_S} _ < {shlex.quote(str(release))}\n"
-        + "}\n"
+    hold = (
+        f"printf 'collected\\n' > {shlex.quote(str(collected))}\n"
+        + f"IFS= read -r -t {DEADLINE_S} _ < {shlex.quote(str(release))}\n"
     )
+    if phase == "collector":
+        helper = root / "scripts/lib/driver_scope.sh"
+        body = helper.read_text().replace("driver_scope_wait_child() {", "original_wait_child() {")
+        helper.write_text(
+            body + '\ndriver_scope_wait_child() {\n  original_wait_child "$@"\n' + hold + "}\n"
+        )
+    else:
+        logger = Path(env["PATH"].split(":")[0]) / "logger"
+        first, body = logger.read_text().split("\n", 1)
+        logger.write_text(first + "\n" + hold + body)
     _write(Path(env["TEST_PROVIDER"]), f"#!/usr/bin/env bash\n{provider_exit}\n", 0o755)
     terminal = _Terminal(tmp_path, ["bash", str(root / "start-claude-driver.sh"), "--epic", "devops"], env, root)
     try:
