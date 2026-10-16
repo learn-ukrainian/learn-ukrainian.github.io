@@ -171,6 +171,7 @@ def init_repo(
         "scripts/common/nofollow_walk.py",
         "scripts/common/git_context.py",
         "scripts/common/github_client.py",
+        "scripts/common/scratch.py",
         "scripts/common/repo_root.py",
         "scripts/opsec/__init__.py",
         "scripts/opsec/gh_snapshot.py",
