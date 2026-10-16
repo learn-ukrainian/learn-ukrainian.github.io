@@ -804,7 +804,6 @@ def test_published_pseudorefs_and_free_text_files_do_not_refuse(repo: Path, free
     git(worktree, "fetch", "origin")  # FETCH_HEAD names published commits
     git(worktree, "reset", "--hard", "HEAD")  # ORIG_HEAD names HEAD
     (admin_dir(worktree) / "COMMIT_EDITMSG").write_text("a message, not an object id\n", encoding="utf-8")
-    (admin_dir(worktree) / "BISECT_START").write_text("main\n", encoding="utf-8")
     git(worktree, "tag", "-a", "-m", "annotated", "wt-tag", "HEAD")
     git(worktree, "update-ref", "refs/worktree/tagged", git(worktree, "rev-parse", "wt-tag"))  # a tag of a commit
     git(worktree, "tag", "-d", "wt-tag")
@@ -876,6 +875,168 @@ def test_missing_or_non_commit_recovery_object_keeps_the_tree(
     age_tree(worktree, repo, "task-a")
 
     assert_kept_for_history(repo, worktree, reason)
+
+
+PENDING = "pending_operation_state"
+
+
+def published_fork(worktree: Path) -> tuple[str, str]:
+    """Two published commits on ``main`` that both change README.md; the detached checkout stays at ``mine``."""
+    commits = []
+    for name in ("theirs", "mine"):
+        git(worktree, "checkout", "-q", "--detach", "main")
+        (worktree / "README.md").write_text(f"{name}\n", encoding="utf-8")
+        git(worktree, "commit", "-qam", name)
+        git(worktree, "push", "-q", "origin", f"HEAD:refs/heads/{name}")
+        commits.append(git(worktree, "rev-parse", "HEAD"))
+    return commits[0], commits[1]
+
+
+def assert_kept_for_pending_operation(repo: Path, worktree: Path, entries: str) -> None:
+    assert git(worktree, "status", "--porcelain", "--untracked-files=all") == ""
+    age_tree(worktree, repo, "task-a")
+    report = rw.reap_clean_pushed(repo_root=repo, dry_run=False)
+    outcome = outcome_for(report, worktree, repo)
+    assert (outcome.action, outcome.reason) == ("skipped", f"{PENDING}: {entries}"), outcome
+    assert report.unpublished_reflog_commit == ()  # every commit the history scan reads is published
+    assert worktree.is_dir() and abandon_log(repo) == []
+
+
+@pytest.mark.parametrize("stop", ["conflict", "exec"])
+def test_rebase_autostash_keeps_the_tree(repo: Path, free_fuser: Path, stop: str) -> None:
+    """The round-4 blocker: the only pointer to the stashed edit is ``rebase-merge/autostash``."""
+    worktree = dispatch_tree(repo, detached=True)
+    theirs, _mine = published_fork(worktree)
+    (worktree / "README.md").write_text("UNPUBLISHED AUTOSTASH CONTENT\n", encoding="utf-8")
+    args = [theirs] if stop == "conflict" else ["--exec", "false", "HEAD~1"]
+    proc = subprocess.run(
+        ["git", "rebase", "--autostash", *args],
+        cwd=worktree,
+        capture_output=True,
+        env=git_env(),
+        check=False,
+        timeout=30,
+    )
+    assert proc.returncode != 0  # stopped
+    if stop == "conflict":
+        git(worktree, "reset", "-q", "--hard")  # the conflict discarded; the rebase stays pending
+    autostash = (admin_dir(worktree) / "rebase-merge" / "autostash").read_text(encoding="utf-8").strip()
+    assert git(worktree, "show", f"{autostash}:README.md") == "UNPUBLISHED AUTOSTASH CONTENT"
+
+    assert_kept_for_pending_operation(
+        repo, worktree, "REBASE_HEAD, rebase-merge" if stop == "conflict" else "rebase-merge"
+    )
+    assert (admin_dir(worktree) / "rebase-merge" / "autostash").read_text(encoding="utf-8").strip() == autostash
+
+
+def test_interrupted_cherry_pick_sequence_keeps_the_tree(repo: Path, free_fuser: Path) -> None:
+    worktree = dispatch_tree(repo, detached=True)
+    theirs, mine = published_fork(worktree)
+    proc = subprocess.run(
+        ["git", "cherry-pick", theirs, mine], cwd=worktree, capture_output=True, env=git_env(), check=False, timeout=30
+    )
+    assert proc.returncode != 0  # the first pick conflicts
+    git(worktree, "reset", "-q", "--hard")  # drops CHERRY_PICK_HEAD; the sequence stays pending
+
+    assert_kept_for_pending_operation(repo, worktree, "sequencer")
+
+
+def test_bisect_in_progress_keeps_the_tree(repo: Path, free_fuser: Path) -> None:
+    worktree = dispatch_tree(repo, detached=True)
+    _theirs, mine = published_fork(worktree)
+    git(worktree, "bisect", "start", mine, "main")
+
+    entries = sorted(path.name for path in admin_dir(worktree).iterdir() if path.name.startswith("BISECT_"))
+    assert {"BISECT_LOG", "BISECT_START"} <= set(entries)
+    assert_kept_for_pending_operation(repo, worktree, ", ".join(entries))
+
+
+@pytest.mark.parametrize(
+    ("relative", "content"),
+    [
+        ("MERGE_HEAD", "{main}\n"),
+        ("CHERRY_PICK_HEAD", "{main}\n"),
+        ("REVERT_HEAD", "{main}\n"),
+        ("REBASE_HEAD", "{main}\n"),
+        ("BISECT_LOG", "git bisect start\n"),
+        ("BISECT_START", "main\n"),
+        ("MERGE_MSG", "Merge branch 'x'\n"),
+        ("rebase-apply/autostash", "{main}\n"),
+        ("rebase-merge/autostash", "{main}\n"),
+        ("sequencer/todo", "pick {main} base\n"),
+        ("index.lock", ""),
+        ("logs/HEAD.lock", ""),
+        ("refs/worktree/keep.lock", "{main}\n"),  # a ref being written: the history scan reads it
+        ("info/attributes", "* -text\n"),
+        ("some-tool-state", "unknown\n"),
+        ("some-tool-dir/state", "unknown\n"),
+    ],
+)
+def test_operation_state_or_unknown_entry_keeps_the_tree(
+    repo: Path, free_fuser: Path, relative: str, content: str
+) -> None:
+    worktree = dispatch_tree(repo, detached=True)
+    target = admin_dir(worktree) / relative
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text(content.format(main=git(worktree, "rev-parse", "main")), encoding="utf-8")
+    first = relative.split("/")[0]
+    shown = relative if first in {"logs", "refs", "info"} else first
+
+    assert_kept_for_pending_operation(repo, worktree, shown)
+
+
+@pytest.mark.parametrize(
+    ("relative", "kind"),
+    [
+        ("info", "file"),
+        ("info/sparse-checkout", "directory"),
+        ("config.worktree", "directory"),
+        ("config.worktree", "symlink"),
+    ],
+)
+def test_inert_name_of_the_wrong_kind_keeps_the_tree(repo: Path, free_fuser: Path, relative: str, kind: str) -> None:
+    worktree = dispatch_tree(repo, detached=True)
+    entry = admin_dir(worktree) / relative
+    entry.parent.mkdir(exist_ok=True)
+    if kind == "file":
+        entry.write_text("not a directory\n", encoding="utf-8")
+    elif kind == "directory":
+        entry.mkdir()
+    else:
+        entry.symlink_to(admin_dir(worktree) / "HEAD")
+
+    assert_kept_for_pending_operation(repo, worktree, relative)
+
+
+def test_sparse_checkout_layout_is_removable(repo: Path, free_fuser: Path) -> None:
+    """Positive control: the inert entries of a finished dispatch checkout (sparse, fetched, reset, committed)."""
+    worktree = dispatch_tree(repo)
+    git(worktree, "sparse-checkout", "set", "--no-cone", "/*")
+    (worktree / "README.md").write_text("pushed\n", encoding="utf-8")
+    git(worktree, "commit", "-qam", "pushed")  # COMMIT_EDITMSG
+    git(worktree, "push", "-q", "-u", "origin", "codex/task-a")
+    git(worktree, "fetch", "-q", "origin")  # FETCH_HEAD
+    git(worktree, "reset", "-q", "--hard", "HEAD")  # ORIG_HEAD
+    admin = admin_dir(worktree)
+    assert {path.name for path in admin.iterdir()} == {
+        "COMMIT_EDITMSG",
+        "FETCH_HEAD",
+        "HEAD",
+        "ORIG_HEAD",
+        "commondir",
+        "config.worktree",
+        "gitdir",
+        "index",
+        "info",
+        "logs",
+        "refs",
+    }
+    assert [path.name for path in (admin / "info").iterdir()] == ["sparse-checkout"]
+    age_tree(worktree, repo, "task-a")
+
+    report = rw.reap_clean_pushed(repo_root=repo, dry_run=False)
+
+    assert outcome_for(report, worktree, repo).action == "removed", report
 
 
 _NON_DUMPABLE_HOLDER = (

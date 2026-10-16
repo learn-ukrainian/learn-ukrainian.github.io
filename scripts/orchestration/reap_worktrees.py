@@ -5628,6 +5628,7 @@ _QUARANTINE_SCHEMA = "clean-pushed-quarantine.v1"
 # ``removing``: Git removal may have started; never restored automatically.
 _QUARANTINE_STAGES = frozenset({"intent", "removing"})
 UNPUBLISHED_REFLOG_COMMIT = "unpublished_reflog_commit"
+PENDING_OPERATION_STATE = "pending_operation_state"
 UNINSPECTABLE_PROCESS = "uninspectable_process"
 LATE_CHANGE = "late_change"
 REFS_STALE = "refs_stale"
@@ -6314,6 +6315,59 @@ def _reflog_refusal(path: Path, census: _OriginCensus) -> str | None:
     return None
 
 
+# What the private git directory of a finished checkout holds: ``git worktree
+# add``, commits, fetches, resets and a sparse checkout. ``logs/`` and
+# ``refs/`` are read by :func:`_private_history`; ``info/`` holds only the
+# sparse-checkout patterns.
+_INERT_PRIVATE_FILES = frozenset(
+    {"HEAD", "index", "commondir", "gitdir", "ORIG_HEAD", "FETCH_HEAD", "COMMIT_EDITMSG", "config.worktree"}
+)
+_INERT_PRIVATE_DIRS = frozenset({"logs", "refs", "info"})
+_INERT_INFO_FILES = frozenset({"sparse-checkout"})
+
+
+def _pending_entries(private: Path) -> list[str]:
+    """Entries of ``private`` not known to be inert, relative to it; raises ``OSError``."""
+    pending: list[str] = []
+    for entry in private.iterdir():
+        mode = entry.lstat().st_mode
+        if entry.name in _INERT_PRIVATE_FILES and stat.S_ISREG(mode):
+            continue
+        if entry.name not in _INERT_PRIVATE_DIRS or not stat.S_ISDIR(mode):
+            pending.append(entry.name)
+        elif entry.name == "info":
+            for leaf in entry.iterdir():
+                if leaf.name not in _INERT_INFO_FILES or not stat.S_ISREG(leaf.lstat().st_mode):
+                    pending.append(f"info/{leaf.name}")
+        else:
+            for directory, dirs, names in os.walk(entry, onerror=_raise):
+                for name in (*dirs, *names):
+                    if name.endswith(".lock"):  # a Git command is writing that ref or reflog
+                        pending.append((Path(directory) / name).relative_to(private).as_posix())
+    return sorted(pending)
+
+
+def _pending_operation_refusal(path: Path) -> str | None:
+    """Refuse when the checkout's private git directory holds anything a finished checkout does not (#10778).
+
+    A stopped rebase, merge, cherry-pick, revert or bisect leaves its state
+    there (``rebase-merge/``, ``rebase-apply/``, ``sequencer/``,
+    ``MERGE_HEAD``, ``BISECT_LOG`` ...), and ``git rebase --autostash`` keeps
+    the only pointer to the stashed edits in ``rebase-merge/autostash``. A
+    ``*.lock`` file means a Git command is writing. Removal deletes all of
+    it, so any entry not known to be inert keeps the tree.
+    """
+    private, _width, failure = _private_git_dir(path)
+    if failure:
+        return f"{PENDING_OPERATION_STATE}: private git directory unknown ({failure})"
+    assert private is not None
+    try:
+        pending = _pending_entries(private)
+    except OSError:
+        return f"{PENDING_OPERATION_STATE}: private git directory unreadable"
+    return f"{PENDING_OPERATION_STATE}: {', '.join(pending)}" if pending else None
+
+
 def _git_refusal(path: Path, expected_head: str | None, census: _OriginCensus) -> str | None:
     """HEAD unchanged, the tree clean (flagged index entries included) and every commit on an origin head or tag."""
     try:
@@ -6340,7 +6394,7 @@ def _git_refusal(path: Path, expected_head: str | None, census: _OriginCensus) -
             return "unpushed-commit check failed"
         if unpushed:
             return _publication_unproven(census, "commits not on origin")
-        return _reflog_refusal(path, census)
+        return _reflog_refusal(path, census) or _pending_operation_refusal(path)
     except subprocess.TimeoutExpired:
         return "git probe timed out"
 

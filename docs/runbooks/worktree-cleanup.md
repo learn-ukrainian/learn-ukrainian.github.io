@@ -512,6 +512,22 @@ third time after the checkout is moved into the quarantine (below):
   keeps the tree too. The stash is shared by every checkout and survives
   removal. A tree whose history was amended or rebased after a push keeps the
   superseded commits in its reflog and therefore stays;
+- no Git operation is pending in that private git directory. A stopped
+  rebase, merge, cherry-pick, revert or bisect leaves its state there
+  (`rebase-merge/`, `rebase-apply/`, `sequencer/`, `MERGE_HEAD`,
+  `CHERRY_PICK_HEAD`, `REVERT_HEAD`, `REBASE_HEAD`, `BISECT_LOG`,
+  `BISECT_START` ...), and `git rebase --autostash` keeps the only pointer to
+  the stashed edits in `rebase-merge/autostash`, so a clean status proves
+  nothing. The reaper accepts only the entries a finished checkout has:
+  the regular files `HEAD`, `index`, `commondir`, `gitdir`, `ORIG_HEAD`,
+  `FETCH_HEAD`, `COMMIT_EDITMSG` and `config.worktree`, the directories
+  `logs/` and `refs/` (read by the history check above) without any `*.lock`
+  file, and `info/` holding only the regular file `sparse-checkout`. Any
+  other entry, an expected name of the wrong kind (a symbolic link, say), a
+  lock file such as `index.lock`, or a directory that cannot be read keeps
+  the tree as `pending_operation_state: <entries>`. Finish or abort the
+  operation (`git rebase --abort` restores an autostash) to clear this
+  reason;
 - no process uses it: `fuser -s <path>` (10 s bound) reports no user, and no
   process visible in `/proc` has its working directory (by path or by the
   tree's inode), root, executable, an open file or a mapped file inside it. A
