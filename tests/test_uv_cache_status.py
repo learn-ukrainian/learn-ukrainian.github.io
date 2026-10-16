@@ -2,10 +2,15 @@
 
 from __future__ import annotations
 
+import contextlib
+import fcntl
 import json
 import os
+import subprocess
+import sys
 import threading
 import time
+from collections.abc import Iterator
 from pathlib import Path
 
 import pytest
@@ -23,6 +28,7 @@ def _clean_env(monkeypatch: pytest.MonkeyPatch) -> None:
         "LU_UV_CACHE_WARN_GB",
         "LU_UV_CACHE_GROWTH_WARN_GB",
         "LU_UV_CACHE_SCAN_TIMEOUT_S",
+        "LU_UV_CACHE_LOCK_TIMEOUT_S",
         "UV_CACHE_DIR",
         "LU_DRIVER_STATUS_STATE_DIR",
     ):
@@ -40,12 +46,29 @@ def _write_history(path: Path, *samples: tuple[float, int]) -> None:
     path.write_text("".join(json.dumps({"ts": ts, "bytes": size}) + "\n" for ts, size in samples), encoding="utf-8")
 
 
+@contextlib.contextmanager
+def _dir_fd(directory: Path) -> Iterator[int]:
+    fd = os.open(directory, os.O_RDONLY | os.O_DIRECTORY)
+    try:
+        yield fd
+    finally:
+        os.close(fd)
+
+
 def _status(cache: Path, history: Path, size: int, now: float = NOW, **kwargs: object) -> dict[str, object]:
-    return uv.build_status(cache=cache, history_path=history, now=now, size_fn=lambda _root: size, **kwargs)
+    """``build_status`` with the history file's directory bound as the history directory."""
+    history.parent.mkdir(parents=True, exist_ok=True)
+    with _dir_fd(history.parent) as fd:
+        return uv.build_status(cache=cache, history_dir_fd=fd, now=now, size_fn=lambda _root: size, **kwargs)
+
+
+def _read(history: Path) -> list[dict[str, float]]:
+    with _dir_fd(history.parent) as fd:
+        return uv.read_history(fd)
 
 
 def test_growth_uses_oldest_sample_inside_24h_and_reports_real_span(cache: Path, tmp_path: Path) -> None:
-    history = tmp_path / "h.jsonl"
+    history = tmp_path / uv.HISTORY_FILENAME
     _write_history(
         history,
         (NOW - 30 * HOUR, 1 * GIB),  # outside the window: ignored
@@ -61,14 +84,14 @@ def test_growth_uses_oldest_sample_inside_24h_and_reports_real_span(cache: Path,
 
 
 def test_full_24h_window_is_labelled_24h(cache: Path, tmp_path: Path) -> None:
-    history = tmp_path / "h.jsonl"
+    history = tmp_path / uv.HISTORY_FILENAME
     _write_history(history, (NOW - 24 * HOUR, 4 * GIB))
 
     assert uv.format_line(_status(cache, history, 5 * GIB)) == "UV CACHE: 5.00 GiB, +1.00 GiB over 24h"
 
 
 def test_shrinking_cache_reports_negative_growth_without_warning(cache: Path, tmp_path: Path) -> None:
-    history = tmp_path / "h.jsonl"
+    history = tmp_path / uv.HISTORY_FILENAME
     _write_history(history, (NOW - 24 * HOUR, 9 * GIB))
 
     status = _status(cache, history, 4 * GIB)
@@ -78,7 +101,7 @@ def test_shrinking_cache_reports_negative_growth_without_warning(cache: Path, tm
 
 
 def test_no_usable_baseline_reports_history_building(cache: Path, tmp_path: Path) -> None:
-    history = tmp_path / "h.jsonl"
+    history = tmp_path / uv.HISTORY_FILENAME
     _write_history(history, (NOW - 600, 3 * GIB))  # too young to say anything about growth
 
     status = _status(cache, history, 3 * GIB)
@@ -88,7 +111,7 @@ def test_no_usable_baseline_reports_history_building(cache: Path, tmp_path: Path
 
 
 def test_first_run_creates_history_and_second_run_dedupes_inside_interval(cache: Path, tmp_path: Path) -> None:
-    history = tmp_path / "state" / "h.jsonl"
+    history = tmp_path / "state" / uv.HISTORY_FILENAME
 
     _status(cache, history, GIB)
     _status(cache, history, 2 * GIB, now=NOW + 60)
@@ -100,25 +123,25 @@ def test_first_run_creates_history_and_second_run_dedupes_inside_interval(cache:
 
 
 def test_samples_older_than_retention_are_dropped(cache: Path, tmp_path: Path) -> None:
-    history = tmp_path / "h.jsonl"
+    history = tmp_path / uv.HISTORY_FILENAME
     _write_history(history, (NOW - uv.RETENTION_SECONDS - 1, GIB), (NOW - 3 * HOUR, 2 * GIB))
 
     _status(cache, history, 3 * GIB)
 
-    assert [row["bytes"] for row in uv.read_history(history)] == [2 * GIB, 3 * GIB]
+    assert [row["bytes"] for row in _read(history)] == [2 * GIB, 3 * GIB]
 
 
 def test_corrupt_history_lines_are_skipped(cache: Path, tmp_path: Path) -> None:
-    history = tmp_path / "h.jsonl"
+    history = tmp_path / uv.HISTORY_FILENAME
     history.write_text('not json\n{"ts": "x"}\n{"ts": 1, "bytes": 2}\n[1]\n', encoding="utf-8")
 
-    assert uv.read_history(history) == [{"ts": 1.0, "bytes": 2.0}]
+    assert _read(history) == [{"ts": 1.0, "bytes": 2.0}]
 
 
 def test_absolute_size_warning_uses_default_and_env_threshold(
     cache: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    history = tmp_path / "h.jsonl"
+    history = tmp_path / uv.HISTORY_FILENAME
 
     status = _status(cache, history, 11 * GIB, record=False)
     assert status["warnings"] == ["size above 10 GiB"]
@@ -131,7 +154,7 @@ def test_absolute_size_warning_uses_default_and_env_threshold(
 def test_growth_warning_uses_default_and_env_threshold(
     cache: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    history = tmp_path / "h.jsonl"
+    history = tmp_path / uv.HISTORY_FILENAME
     _write_history(history, (NOW - 24 * HOUR, 5 * GIB))
 
     status = _status(cache, history, 8 * GIB, record=False)
@@ -143,21 +166,33 @@ def test_growth_warning_uses_default_and_env_threshold(
     assert _status(cache, history, 8 * GIB, record=False)["warnings"] == ["growth above 2 GiB per 24 h"]
 
 
-def test_no_record_leaves_no_history_file(cache: Path, tmp_path: Path) -> None:
-    history = tmp_path / "state" / "h.jsonl"
+def test_no_record_leaves_no_history_file(
+    cache: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    state = tmp_path / "state"
+    monkeypatch.setenv("UV_CACHE_DIR", str(cache))
+    monkeypatch.setenv("LU_DRIVER_STATUS_STATE_DIR", str(state))
 
-    _status(cache, history, GIB, record=False)
+    assert uv.main(["--no-record"]) == 0
 
-    assert not history.exists() and not history.parent.exists()
+    assert capsys.readouterr().out.startswith("UV CACHE: 0.00 GiB")
+    assert not state.exists()
 
 
-def test_missing_cache_is_reported_without_touching_history(tmp_path: Path) -> None:
-    history = tmp_path / "h.jsonl"
+def test_missing_cache_is_reported_without_touching_history(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    state = tmp_path / "state"
+    monkeypatch.setenv("UV_CACHE_DIR", str(tmp_path / "absent"))
+    monkeypatch.setenv("LU_DRIVER_STATUS_STATE_DIR", str(state))
 
-    status = uv.build_status(cache=tmp_path / "absent", history_path=history, now=NOW)
+    assert uv.main([]) == 0
 
-    assert uv.format_line(status) == "UV CACHE: not present"
-    assert not history.exists()
+    assert capsys.readouterr().out == "UV CACHE: not present\n"
+    assert not state.exists()
+    assert uv.format_line(uv.build_status(cache=tmp_path / "absent", history_dir_fd=None, now=NOW)) == (
+        "UV CACHE: not present"
+    )
 
 
 def test_measure_bytes_counts_hardlinks_once_and_never_follows_symlinks(tmp_path: Path) -> None:
@@ -255,6 +290,96 @@ def test_sibling_history_with_a_cache_name_prefix_is_allowed(tmp_path: Path) -> 
     assert uv.history_inside_cache(cache, cache / "a" / "b")
 
 
+def _retargeting_du(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, link: Path, target: Path) -> None:
+    """Put a ``du`` on PATH that retargets ``link`` to ``target`` mid-measurement, then reports 4 KiB."""
+    bindir = tmp_path / "retarget-bin"
+    bindir.mkdir()
+    du = bindir / "du"
+    du.write_text(f'#!/bin/sh\nln -sfn "{target}" "{link}"\nprintf "4\\t%s\\n" "$3"\n', encoding="utf-8")
+    du.chmod(0o755)
+    monkeypatch.setenv("PATH", f"{bindir}{os.pathsep}{os.environ['PATH']}")
+
+
+def test_symlinked_history_directory_is_refused_before_measuring(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    # Sol r2 blocker 4: a history symlink retargeted into the cache during measurement.
+    cache = tmp_path / "cache"
+    cache.mkdir()
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    link = tmp_path / "history-link"
+    link.symlink_to(outside, target_is_directory=True)
+    _retargeting_du(tmp_path, monkeypatch, link, cache)
+    monkeypatch.setenv("UV_CACHE_DIR", str(cache))
+    monkeypatch.setenv("LU_DRIVER_STATUS_STATE_DIR", str(link))
+
+    assert uv.main([]) == 2
+
+    assert "history directory is a symlink" in capsys.readouterr().err
+    assert list(cache.iterdir()) == [] and list(outside.iterdir()) == []
+
+
+def test_history_writes_stay_bound_when_a_parent_symlink_is_retargeted_into_the_cache(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    cache = tmp_path / "cache"
+    cache.mkdir()
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    link = tmp_path / "parent-link"
+    link.symlink_to(outside, target_is_directory=True)
+    _retargeting_du(tmp_path, monkeypatch, link, cache)
+    monkeypatch.setenv("UV_CACHE_DIR", str(cache))
+    monkeypatch.setenv("LU_DRIVER_STATUS_STATE_DIR", str(link / "state"))
+
+    assert uv.main([]) == 0
+
+    assert capsys.readouterr().out.startswith("UV CACHE: 0.00 GiB")
+    assert link.resolve() == cache.resolve()  # the retarget did happen mid-measurement
+    assert list(cache.iterdir()) == []
+    assert len(_read(outside / "state" / uv.HISTORY_FILENAME)) == 1
+
+
+def test_cache_swapped_onto_the_history_path_after_resolving_is_refused_without_writing(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    cache = tmp_path / "cache"
+    cache.mkdir()
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    monkeypatch.setenv("UV_CACHE_DIR", str(cache))
+    monkeypatch.setenv("LU_DRIVER_STATUS_STATE_DIR", str(outside / "state"))
+    real_check = uv.history_inside_cache
+
+    def check_then_swap(cache_path: Path, history_dir: Path) -> bool:
+        inside = real_check(cache_path, history_dir)
+        # Between the path check and the open, the cache takes the history parent's place.
+        outside.rename(tmp_path / "outside-moved")
+        cache.rename(outside)
+        return inside
+
+    monkeypatch.setattr(uv, "history_inside_cache", check_then_swap)
+
+    assert uv.main([]) == 2
+
+    assert "inside it" in capsys.readouterr().err
+    assert list(outside.iterdir()) == []  # the cache, now at the old path, gained nothing
+
+
+def test_bound_dir_inside_cache_checks_both_inode_chain_and_kernel_path(tmp_path: Path) -> None:
+    cache_real = tmp_path / "cache"
+    cache_id = (1, 2)
+    elsewhere = tmp_path / "state"
+
+    assert uv.bound_dir_inside_cache([(1, 1), (1, 2), (1, 3)], elsewhere, cache_id, cache_real)
+    assert uv.bound_dir_inside_cache([(1, 1)], cache_real, cache_id, cache_real)
+    assert uv.bound_dir_inside_cache([(1, 1)], cache_real / "a" / "b", cache_id, cache_real)
+    assert uv.bound_dir_inside_cache([(1, 1)], cache_real / "a", None, cache_real)
+    assert not uv.bound_dir_inside_cache([(1, 1), (1, 3)], elsewhere, cache_id, cache_real)
+    assert not uv.bound_dir_inside_cache([(1, 1)], tmp_path / "cache-state", None, cache_real)
+
+
 @pytest.mark.skipif(os.geteuid() == 0, reason="root reads directories regardless of mode")
 def test_unreadable_cache_reports_measurement_failed_and_records_nothing(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
@@ -277,12 +402,13 @@ def test_unreadable_cache_reports_measurement_failed_and_records_nothing(
 
 
 def test_measuring_error_is_not_a_zero_sample(cache: Path, tmp_path: Path) -> None:
-    history = tmp_path / "h.jsonl"
+    history = tmp_path / uv.HISTORY_FILENAME
 
     def unreadable(_root: Path) -> int:
         raise PermissionError(13, "Permission denied")
 
-    status = uv.build_status(cache=cache, history_path=history, now=NOW, size_fn=unreadable)
+    with _dir_fd(tmp_path) as fd:
+        status = uv.build_status(cache=cache, history_dir_fd=fd, now=NOW, size_fn=unreadable)
 
     assert uv.format_line(status) == "UV CACHE: measurement failed ([Errno 13] Permission denied)"
     assert "bytes" not in status and not history.exists()
@@ -304,36 +430,110 @@ def test_missing_du_reports_measurement_failed(
 
 
 def test_concurrent_writers_never_drop_a_newer_sample(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    history = tmp_path / "state" / "h.jsonl"
+    history = tmp_path / "state" / uv.HISTORY_FILENAME
     history.parent.mkdir()
     _write_history(history, (1000.0, GIB))
     original_read = uv.read_history
     older_has_read = threading.Event()
     newer_done = threading.Event()
 
-    def racing_read(path: Path) -> list[dict[str, float]]:
-        rows = original_read(path)
+    def racing_read(dir_fd: int | None) -> list[dict[str, float]]:
+        rows = original_read(dir_fd)
         if threading.current_thread().name == "older":
             older_has_read.set()
             # Unserialized writers let the newer one read, write and finish in this window.
             newer_done.wait(timeout=2)
         return rows
 
-    def newer_writer() -> None:
-        uv.record_sample(history, 3000.0, 3 * GIB)
-        newer_done.set()
+    def writer(ts: float, size: int) -> None:
+        with _dir_fd(history.parent) as fd:
+            uv.record_sample(fd, ts, size, lock_timeout_s=30)
+        if ts == 3000.0:
+            newer_done.set()
 
     monkeypatch.setattr(uv, "read_history", racing_read)
-    older = threading.Thread(target=uv.record_sample, args=(history, 2000.0, 2 * GIB), name="older")
-    newer = threading.Thread(target=newer_writer, name="newer")
+    older = threading.Thread(target=writer, args=(2000.0, 2 * GIB), name="older")
+    newer = threading.Thread(target=writer, args=(3000.0, 3 * GIB), name="newer")
     older.start()
     assert older_has_read.wait(timeout=30)
     newer.start()
     older.join(timeout=30)
     newer.join(timeout=30)
 
-    assert [row["ts"] for row in original_read(history)] == [1000.0, 2000.0, 3000.0]
+    assert [row["ts"] for row in _read(history)] == [1000.0, 2000.0, 3000.0]
     assert (history.parent / (history.name + uv.LOCK_SUFFIX)).is_file()
+
+
+@contextlib.contextmanager
+def _held_history_lock(state: Path) -> Iterator[None]:
+    """Hold the history lock the way another writer would (its own open file description)."""
+    state.mkdir(parents=True, exist_ok=True)
+    fd = os.open(state / (uv.HISTORY_FILENAME + uv.LOCK_SUFFIX), os.O_RDWR | os.O_CREAT, 0o600)
+    try:
+        fcntl.flock(fd, fcntl.LOCK_EX)
+        yield
+    finally:
+        os.close(fd)
+
+
+def test_busy_history_lock_is_bounded_and_reports_the_measurement(cache: Path, tmp_path: Path) -> None:
+    history = tmp_path / "state" / uv.HISTORY_FILENAME
+
+    with _held_history_lock(history.parent), _dir_fd(history.parent) as fd:
+        started = time.monotonic()
+        with pytest.raises(uv.HistoryBusy):
+            uv.record_sample(fd, NOW, GIB, lock_timeout_s=0.2)
+        elapsed = time.monotonic() - started
+        status = uv.build_status(cache=cache, history_dir_fd=fd, now=NOW, size_fn=lambda _root: GIB)
+
+    assert 0.2 <= elapsed < 2
+    assert status["bytes"] == GIB
+    assert uv.format_line(status) == (
+        "UV CACHE: history busy (lock held by another writer for 2s); 1.00 GiB measured, no sample recorded"
+    )
+    assert not history.exists()
+
+
+def test_cli_with_a_held_history_lock_finishes_within_both_deadlines(tmp_path: Path) -> None:
+    # Sol r2 blocker 3: a held lock used to stall the status command until it was released.
+    cache = tmp_path / "cache"
+    cache.mkdir()
+    state = tmp_path / "state"
+    env = {
+        **os.environ,
+        "UV_CACHE_DIR": str(cache),
+        "LU_DRIVER_STATUS_STATE_DIR": str(state),
+        "LU_UV_CACHE_SCAN_TIMEOUT_S": "5",
+        "LU_UV_CACHE_LOCK_TIMEOUT_S": "0.3",
+    }
+    repo = Path(uv.__file__).resolve().parents[2]
+
+    with _held_history_lock(state):
+        started = time.monotonic()
+        result = subprocess.run(
+            [sys.executable, "-m", "scripts.hygiene.uv_cache_status"],
+            cwd=repo,
+            env=env,
+            capture_output=True,
+            text=True,
+            timeout=60,
+            check=False,
+        )
+        elapsed = time.monotonic() - started
+
+    assert result.returncode == 0, result.stderr
+    assert result.stdout.startswith("UV CACHE: history busy (lock held by another writer for 0.3s); 0.00 GiB measured")
+    assert elapsed < 0.3 + 5 + 20  # both deadlines plus interpreter start-up
+    assert not (state / uv.HISTORY_FILENAME).exists()
+
+
+def test_lock_timeout_default_and_override(monkeypatch: pytest.MonkeyPatch) -> None:
+    assert uv.lock_timeout_seconds() == 2
+    monkeypatch.setenv("LU_UV_CACHE_LOCK_TIMEOUT_S", "0.25")
+    assert uv.lock_timeout_seconds() == 0.25
+    for bad in ("0", "-1", "soon", "inf", "nan"):
+        monkeypatch.setenv("LU_UV_CACHE_LOCK_TIMEOUT_S", bad)
+        assert uv.lock_timeout_seconds() == 2
 
 
 def test_cli_prints_line_records_history_and_deletes_nothing(
@@ -352,7 +552,7 @@ def test_cli_prints_line_records_history_and_deletes_nothing(
     out = capsys.readouterr().out
     assert out.startswith("UV CACHE: 0.00 GiB, growth n/a (history building)")
     assert str(cache) not in out
-    assert len(uv.read_history(state / uv.HISTORY_FILENAME)) == 1
+    assert len(_read(state / uv.HISTORY_FILENAME)) == 1
     assert keep.read_bytes() == b"w" * 5000
 
 

@@ -393,18 +393,36 @@ directories under `pytest-of-<user>` and removes older ones, then prints
   left alone).
 - It is a real directory, not a symlink, owned by the agent user, and it is not
   the current run.
-- Nothing in it changed recently: neither the directory nor any entry directly
-  inside it is younger than `LU_PYTEST_TMP_GRACE_HOURS` (default 12, a number
-  >= 0). This also protects active sessions that write no lock (retention
-  count 0).
+- Nothing anywhere in it changed recently: the newest modification time or
+  inode change time of the directory and everything below it is older than
+  `LU_PYTEST_TMP_GRACE_HOURS` (default 12, a number >= 1). Inode change time
+  counts, so files extracted with old modification times still look new. The
+  scan is bounded: all scans of one session end share a 10-second deadline, and
+  each run may hold at most 200,000 entries. A run whose scan is cut short or
+  hits an error (for example an unreadable subdirectory) is kept, as is any run
+  not reached before the deadline. Delete such a run by hand once you know it
+  is finished.
 - Its pytest `.lock` is absent or names a dead process. An unreadable, empty,
   malformed or non-file lock is unknown, and the run is kept. A process owned
   by another account counts as live.
-- Deletion is bound to the directory found at enumeration: the entry is renamed
-  to a unique reaping name in the same parent, opened without following
-  symlinks, and must have the same device and inode; its contents are deleted
-  through that descriptor. On any mismatch the name is restored and nothing is
-  deleted. `assert_delete_target` must also accept the reaping path.
+- Deletion acts only on the directory that was checked. The candidate is opened
+  without following symlinks, and that descriptor stays open from the idle
+  check until deletion ends, so its inode number cannot be handed to a new
+  directory meanwhile. Just before and after renaming it to a unique reaping
+  name in the same parent, and again before the final `rmdir`, the name must
+  still be that directory. Its contents are deleted only through the open
+  descriptor. A directory that replaced it under either name is left alone
+  (an empty replacement removed in the last instant is recreated), and on an
+  error the original name is restored when it is free.
+  `assert_delete_target` must also accept the reaping path.
+
+Age cannot prove that a session has ended. A session that writes no `.lock`
+(retention count 0) and then goes quiet looks exactly like a finished one, so a
+paused or slow session that writes nothing for longer than the grace window can
+lose its directory. The 1-hour floor keeps that window from shrinking to
+something any ordinary pause could cross: a grace below 1 hour (including 0 and
+negative values) is refused. Keep the default of 12 hours unless the disk is
+under real pressure.
 
 Runs rank by their number, newest first. An invalid value of either variable
 fails the session without deleting anything.
@@ -425,11 +443,26 @@ The size comes from `du -sk` in its own process group, bounded by
 `LU_UV_CACHE_SCAN_TIMEOUT_S` (default 8 seconds). On timeout it prints
 `UV CACHE: size unavailable (scan exceeded 8s)`; if `du` fails (for example an
 unreadable directory, which would make the total partial) it prints
-`UV CACHE: measurement failed (...)`. Both exit 0 and record no sample. History
-updates hold an exclusive lock on `uv-cache-size.jsonl.lock` beside the history,
-so concurrent runs never drop each other's samples. If the history directory is
-the cache or inside it (symlinks resolved), the command refuses with exit code 2
-and writes nothing.
+`UV CACHE: measurement failed (...)`. Both exit 0 and record no sample.
+
+History updates hold an exclusive lock on `uv-cache-size.jsonl.lock` beside the
+history, so concurrent runs never drop each other's samples. The lock is never
+waited on indefinitely: it is retried without blocking for up to
+`LU_UV_CACHE_LOCK_TIMEOUT_S` (default 2 seconds). If another writer still holds
+it, the command prints `UV CACHE: history busy (...); <size> measured, no
+sample recorded`, writes nothing and exits 0. The whole command therefore ends
+within the scan deadline plus the lock deadline.
+
+The history directory is checked once and then held open. The configured
+directory must not itself be a symlink. Its path is resolved once and opened
+one directory at a time without following symlinks; every directory on the way
+is compared with the cache's device and inode before anything is created in it,
+and the kernel's path of the opened directory is checked too. Every history
+read and write (lock, history file, temporary file, rename) is relative to that
+open directory, so retargeting a symlink afterwards cannot move the writes into
+the cache. If the directory is a symlink, the cache, or inside it, or its path
+changes while it is being opened, the command refuses with exit code 2 and
+writes nothing. Directories it creates get mode 0700.
 
 Warning thresholds: total size above `LU_UV_CACHE_WARN_GB` (default 10) or growth
 above `LU_UV_CACHE_GROWTH_WARN_GB` (default 2) per 24 hours. A warning is a
