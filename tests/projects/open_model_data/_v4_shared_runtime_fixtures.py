@@ -17,14 +17,13 @@ import importlib.metadata
 import json
 import os
 import re
-import select
-import shlex
 import shutil
 import signal
 import socket
 import subprocess
 import sys
 import tempfile
+import time
 import tomllib
 import uuid
 from dataclasses import replace
@@ -89,10 +88,12 @@ _SOCKET_NAME_WORST_CASE = ".s.PGSQL.65535"
 # The short directory a too-long scratch root falls back to, when it is writable.
 _SHORT_SYSTEM_TEMP = Path("/tmp")
 _PG_START_ATTEMPTS = 5
+_PG_READY_SECONDS = 60
 _PG_STOP_WAIT_SECONDS = 30
 _PG_KILL_WAIT_SECONDS = 10
+_PG_POLL_SECONDS = 0.05
 _ISSUED_PORTS: set[int] = set()
-# What postgres or pg_ctl report when the chosen port or its Unix socket file is taken.
+# What postgres reports when the chosen port or its Unix socket file is taken.
 _PORT_CLASH = re.compile(r"Address already in use|lock file \".*\.s\.PGSQL\.\d+\.lock\" already exists")
 
 
@@ -149,7 +150,7 @@ def _postgres_bindir() -> Path:
         (
             path
             for path in (reported, Path("/usr/lib/postgresql/16/bin"))
-            if all((path / tool).is_file() for tool in ("initdb", "pg_ctl"))
+            if all((path / tool).is_file() for tool in ("initdb", "postgres"))
         ),
         None,
     )
@@ -157,134 +158,78 @@ def _postgres_bindir() -> Path:
     return binary
 
 
-def _postmaster_pid(data: Path) -> int | None:
-    try:
-        return int((data / "postmaster.pid").read_text().splitlines()[0])
-    except (OSError, ValueError, IndexError):
-        return None
+def _refuse_existing_data_dir(work: Path) -> None:
+    """Fail unless ``work/data`` is fresh: neither a symlink nor a non-empty directory.
 
-
-def _process_alive(pid: int) -> bool:
-    """Whether ``pid`` is a live process; an exited but unreaped zombie is not."""
-    try:
-        stat = Path(f"/proc/{pid}/stat").read_text()
-    except OSError:
-        return False
-    return stat.rpartition(")")[2].split()[0] not in ("Z", "X")
-
-
-def _start_time(pid: int) -> str:
-    """Field 22 of ``/proc/<pid>/stat``, the start time that tells a reused pid apart."""
-    return Path(f"/proc/{pid}/stat").read_text().rpartition(")")[2].split()[19]
-
-
-def _identity_problem(pid: int, binary: Path, data: Path) -> str | None:
-    """Why ``pid`` is not this fixture's own postgres server, or ``None`` when it is.
-
-    A pid read from ``postmaster.pid`` is only a claim: the file can be stale,
-    replaced, or name a reused number, and a command line can say anything.
-    The process must belong to this user, execute this installation's server
-    binary, run in this data directory (the postmaster changes into it), and
-    the lock file must name it serving that directory.
+    A link or an existing cluster there may belong to another server; the
+    fixture never initializes, starts or removes anything it did not create.
     """
-    proc = Path("/proc") / str(pid)
-    server = os.path.realpath(binary / "postgres")
-    wanted = os.path.realpath(data)
-    try:
-        started = _start_time(pid)
-        owner = proc.stat().st_uid
-        exe = os.readlink(proc / "exe")
-        cwd = os.readlink(proc / "cwd")
-        claim = (data / "postmaster.pid").read_text().splitlines()
-        if _start_time(pid) != started:
-            return "it was replaced while it was being checked"
-    except OSError as error:
-        return f"it cannot be inspected ({error})"
-    if owner != os.getuid():
-        return f"it belongs to uid {owner}, not uid {os.getuid()}"
-    if exe != server:
-        return f"it executes {exe}, not this installation's server binary {server}"
-    if cwd != wanted:
-        return f"it runs in a different data directory ({cwd}), not {wanted}"
-    if claim[:1] != [str(pid)] or len(claim) < 2 or os.path.realpath(claim[1]) != wanted:
-        return f"postmaster.pid does not name pid {pid} serving {wanted}"
-    return None
+    data = work / "data"
+    for path in (work, data):
+        if path.is_symlink():
+            raise RuntimeError(f"refusing to set up PostgreSQL: {path} is a symlink")
+    if data.exists() and (not data.is_dir() or any(data.iterdir())):
+        raise RuntimeError(f"refusing to set up PostgreSQL: {data} already exists and is not an empty directory")
 
 
-def _open_own_server(pid: int, binary: Path, data: Path) -> int | None:
-    """A pidfd for ``pid`` once it is proven to be this fixture's server; ``None`` when it no longer runs.
+def _server_argv(binary: Path, data: Path, sock: Path, port: int) -> list[str]:
+    """The server command line. It is passed to ``exec`` directly, never through a shell."""
+    return [str(binary / "postgres"), "-D", str(data), "-k", str(sock), "-c", "listen_addresses=", "-p", str(port)]
 
-    The pidfd is opened before the proof and checked alive after it, so the
-    proof and every later signal concern one process even if the number is
-    reused. Without pidfd support no bare pid is ever signaled: ``pg_ctl``
-    starts the server detached, so the fixture holds no child handle to fall
-    back to, and it refuses instead. A refused server shuts itself down once
-    teardown removes its data directory and lock file.
+
+def _launch_server(argv: list[str], log: Path) -> subprocess.Popen:
+    """Start the server as this process's child, leading its own process group, logging to ``log``."""
+    with log.open("ab") as output:
+        return subprocess.Popen(
+            argv,
+            cwd=log.parent,
+            stdin=subprocess.DEVNULL,
+            stdout=output,
+            stderr=subprocess.STDOUT,
+            start_new_session=True,
+        )
+
+
+def _has_exited(server: subprocess.Popen) -> bool:
+    """Whether the child has exited, without reaping it.
+
+    ``Popen.poll`` would reap it and free its pid for reuse. Left unreaped,
+    the exited child keeps its pid, which is also its process group id, so
+    signals sent to either cannot reach another process.
     """
-    refusal = f"refusing to signal pid {pid} from {data}/postmaster.pid"
-    try:
-        pidfd_send_signal = signal.pidfd_send_signal
-        pidfd = os.pidfd_open(pid)
-    except ProcessLookupError:
-        return None
-    except (AttributeError, OSError) as error:
-        if not _process_alive(pid):
-            return None
-        raise RuntimeError(
-            f"{refusal}: pidfd support is unavailable ({error!r}) and a bare pid can be reused"
-        ) from error
-    owned = False
-    try:
-        problem = _identity_problem(pid, binary, data)
-        if problem is None:
-            # Still alive, so the pid was never freed and every check above read this process.
-            pidfd_send_signal(pidfd, 0)
-            owned = True
-            return pidfd
-        if _process_alive(pid):
-            raise RuntimeError(f"{refusal}: {problem}")
-        return None
-    except ProcessLookupError:
-        return None
-    finally:
-        if not owned:
-            os.close(pidfd)
+    return os.waitid(os.P_PID, server.pid, os.WEXITED | os.WNOHANG | os.WNOWAIT) is not None
 
 
-def _wait_for_exit(pidfd: int, seconds: float) -> bool:
-    """Whether the process behind ``pidfd`` exits within ``seconds``."""
-    poller = select.poll()
-    poller.register(pidfd, select.POLLIN)
-    return bool(poller.poll(int(seconds * 1000)))
+def _wait_for_exit(server: subprocess.Popen, seconds: float) -> bool:
+    """Whether the child exits within ``seconds``; it stays unreaped either way."""
+    deadline = time.monotonic() + seconds
+    while not _has_exited(server):
+        if time.monotonic() >= deadline:
+            return False
+        time.sleep(_PG_POLL_SECONDS)
+    return True
 
 
-def _stop_server(binary: Path, data: Path) -> None:
-    """Stop the server in ``data`` if one runs, signaling only a process proven to be it.
+def _stop_server(server: subprocess.Popen) -> None:
+    """Stop and reap a server this fixture started, signaling it only through its own handle.
 
-    ``pg_ctl stop`` signals whatever pid ``postmaster.pid`` names, so it is
-    not used. The verified pidfd gets SIGQUIT (``pg_ctl``'s immediate
-    shutdown), then SIGKILL if the server outlives the wait.
+    No pid is read from disk or ``/proc`` and ``pg_ctl stop`` is not used.
+    The child gets SIGQUIT (immediate shutdown: the postmaster waits for its
+    backends before it exits). Its process group then gets SIGKILL, which
+    also covers a server that outlived the wait. The child is reaped last,
+    so until then neither number can name another process.
     """
-    pid = _postmaster_pid(data)
-    if pid is None:
+    if server.returncode is not None:
         return
-    pidfd = _open_own_server(pid, binary, data)
-    if pidfd is None:
-        return
+    if not _has_exited(server):
+        os.kill(server.pid, signal.SIGQUIT)
+        _wait_for_exit(server, _PG_STOP_WAIT_SECONDS)
+    with contextlib.suppress(ProcessLookupError):
+        os.killpg(server.pid, signal.SIGKILL)
     try:
-        for signum, seconds in ((signal.SIGQUIT, _PG_STOP_WAIT_SECONDS), (signal.SIGKILL, _PG_KILL_WAIT_SECONDS)):
-            with contextlib.suppress(ProcessLookupError):
-                signal.pidfd_send_signal(pidfd, signum)
-            if _wait_for_exit(pidfd, seconds):
-                return
-        raise RuntimeError(f"PostgreSQL server {pid} survived SIGQUIT and SIGKILL")
-    finally:
-        os.close(pidfd)
-
-
-def _server_options(sock: Path, port: int) -> str:
-    """The ``pg_ctl -o`` string. ``pg_ctl`` hands it to ``sh``, so every value is quoted."""
-    return f"-k {shlex.quote(str(sock))} -h {shlex.quote('')} -p {port}"
+        server.wait(timeout=_PG_KILL_WAIT_SECONDS)
+    except subprocess.TimeoutExpired as error:
+        raise RuntimeError(f"PostgreSQL server {server.pid} survived SIGQUIT and SIGKILL") from error
 
 
 def _appended_text(log: Path, offset: int) -> str:
@@ -297,14 +242,33 @@ def _appended_text(log: Path, offset: int) -> str:
         return ""
 
 
-def _start_server(binary: Path, work: Path, sock: Path) -> int:
-    """Start the server in ``work/data``, retrying on another port after a port clash; return the port.
+def _await_ready(server: subprocess.Popen, sock: Path, port: int, log: Path, offset: int) -> psycopg.Connection | None:
+    """A superuser connection once the server accepts one; ``None`` when the server exited first.
 
-    ``pg_ctl`` also builds a shell command from ``-D`` and ``-l`` without
-    escaping them, so it runs inside ``work`` and gets the relative names.
-    Only a clash on the port or its socket file is retried; any other startup
-    failure is raised at once with ``pg_ctl``'s stderr and the server log.
-    Each attempt is judged by its own stderr and the log lines it appended.
+    The socket directory is private, so whatever answers there is this child.
+    """
+    deadline = time.monotonic() + _PG_READY_SECONDS
+    while not _has_exited(server):
+        try:
+            return psycopg.connect(
+                host=str(sock), port=port, dbname="postgres", autocommit=True, row_factory=dict_row, connect_timeout=5
+            )
+        except psycopg.OperationalError:
+            if time.monotonic() >= deadline:
+                raise RuntimeError(
+                    f"PostgreSQL did not accept connections on port {port} within {_PG_READY_SECONDS} s; "
+                    f"server log tail:\n{_appended_text(log, offset)[-2000:]}"
+                ) from None
+            time.sleep(_PG_POLL_SECONDS)
+    return None
+
+
+def _start_server(binary: Path, work: Path, sock: Path) -> tuple[subprocess.Popen, psycopg.Connection]:
+    """Start the server in ``work/data`` and connect to it, retrying on another port after a port clash.
+
+    Each attempt's child is stopped and reaped before the next one starts.
+    Only a clash on the port or its socket file is retried; any other early
+    exit is raised at once with the log lines that attempt appended.
     """
     data = work / "data"
     log = work / "server.log"
@@ -313,50 +277,47 @@ def _start_server(binary: Path, work: Path, sock: Path) -> int:
         port = _free_tcp_port()
         attempted.append(port)
         offset = log.stat().st_size if log.exists() else 0
-        started = subprocess.run(
-            [str(binary / "pg_ctl"), "-D", data.name, "-l", log.name, "-o", _server_options(sock, port), "-w", "start"],
-            check=False,
-            capture_output=True,
-            cwd=work,
-            timeout=60,
-        )
-        if started.returncode == 0:
-            return port
-        stderr = started.stderr.decode(errors="replace").strip()
+        server = _launch_server(_server_argv(binary, data, sock, port), log)
+        try:
+            conn = _await_ready(server, sock, port, log, offset)
+        except BaseException:
+            _stop_server(server)
+            raise
+        if conn is not None:
+            return server, conn
+        _stop_server(server)
         tail = _appended_text(log, offset)[-2000:]
-        _stop_server(binary, data)
-        if not _PORT_CLASH.search(stderr + tail):
+        if not _PORT_CLASH.search(tail):
             raise RuntimeError(
-                f"PostgreSQL failed to start on port {port} (pg_ctl exit {started.returncode}, not a port clash); "
-                f"pg_ctl stderr:\n{stderr}\nserver log tail:\n{tail}"
+                f"PostgreSQL failed to start on port {port} (exit {server.returncode}, not a port clash); "
+                f"server log tail:\n{tail}"
             )
-    raise RuntimeError(
-        f"PostgreSQL did not start on ports {attempted}; pg_ctl stderr:\n{stderr}\nserver log tail:\n{tail}"
-    )
+    raise RuntimeError(f"PostgreSQL did not start on ports {attempted}; server log tail:\n{tail}")
 
 
 @contextlib.contextmanager
 def _running_pg_server(scratch_root: Path, work: Path):
     """Yield a superuser connection to a fresh server holding a schema-applied template.
 
-    The socket directory lives under ``scratch_root``, the server runs on a
-    port chosen for this run, and teardown stops the server and removes both
-    directories, also when setup fails midway.
+    The socket directory lives under ``scratch_root`` and the server runs on
+    a port chosen for this run. Teardown stops only the child this fixture
+    started, and removes both directories once that child is reaped, also
+    when setup fails midway. A ``work/data`` that is not fresh fails setup
+    before anything is created, started or removed.
     """
-    data = work / "data"
+    _refuse_existing_data_dir(work)
     sock = None
-    binary = None
+    server = None
     try:
         binary = _postgres_bindir()
         sock = _make_socket_dir(scratch_root)
         subprocess.run(
-            [str(binary / "initdb"), "-D", str(data), "--encoding=UTF8", "--locale=C", "--auth=trust"],
+            [str(binary / "initdb"), "-D", str(work / "data"), "--encoding=UTF8", "--locale=C", "--auth=trust"],
             check=True,
             capture_output=True,
             timeout=60,
         )
-        port = _start_server(binary, work, sock)
-        conn = psycopg.connect(host=str(sock), port=port, dbname="postgres", autocommit=True, row_factory=dict_row)
+        server, conn = _start_server(binary, work, sock)
         try:
             conn.execute("CREATE DATABASE v4_test_template")
             with psycopg.connect(
@@ -368,13 +329,11 @@ def _running_pg_server(scratch_root: Path, work: Path):
         finally:
             conn.close()
     finally:
-        try:
-            if binary is not None:
-                _stop_server(binary, data)
-        finally:
-            if sock is not None:
-                shutil.rmtree(sock, ignore_errors=True)
-            shutil.rmtree(work, ignore_errors=True)
+        if server is not None:
+            _stop_server(server)
+        if sock is not None:
+            shutil.rmtree(sock, ignore_errors=True)
+        shutil.rmtree(work, ignore_errors=True)
 
 
 @pytest.fixture(scope="module")
