@@ -6,24 +6,38 @@ Conditional GETs follow GitHub's documented ETag protocol. No request is retried
 Only fully modelled argv/JSON fields translate; other commands retain their
 native gh semantics through the same bounded, colour-safe process transport.
 Stale JSON reads require allow_stale=True; binary responses are never cached.
+
+Every request path (REST, injected transports and native gh) is admitted by one
+decision, ``_refusal``. Only an authentic GitHub hold refuses a call that lands a
+PR; every local refusal is ``github_rate_limited`` (exit 75) with a typed reason.
 """
 
 from __future__ import annotations
 
+import contextvars
+import email.utils
 import hashlib
 import json
+import math
 import os
 import re
 import sqlite3
 import subprocess
+import sys
 import time
 from contextlib import contextmanager, suppress
 from dataclasses import dataclass, field
+from datetime import UTC
 from pathlib import Path
 from typing import Any
 from urllib.parse import quote, urlencode, urlsplit
 
 RESERVE = 10
+"""GraphQL and search pools: a non-landing call is refused at or below this many remaining."""
+LANDING_RESERVE = 500
+"""Core pool: below this many remaining, what is left is kept for calls that land a PR."""
+REFUSAL_REASONS = frozenset({"retry_after", "secondary_hold", "core_below_landing_reserve", "pool_exhausted"})
+"""The closed set of reasons; every local refusal names exactly one."""
 ANSI = re.compile(rb"\x1b\[[0-?]*[ -/]*[@-~]")
 
 
@@ -79,21 +93,333 @@ class Result:
     error: str | None = None
     reset_at: int | None = None
     headers: dict[str, str] = field(default_factory=dict)
+    reason: str | None = None
 
     def require_fresh(self):
         if self.error == "github_rate_limited" or self.stale:
-            raise GitHubRateLimited(self.reset_at)
+            raise GitHubRateLimited(self.reset_at, self.reason)
         if self.error:
             raise RuntimeError(self.error)
         return self.value
 
 
+# The most recent refusal in this context, as (reset_at, reason).
+_LAST_REFUSAL = contextvars.ContextVar("github_last_refusal", default=None)
+
+
 class GitHubRateLimited(RuntimeError):
     code = "github_rate_limited"
 
-    def __init__(self, reset_at):
-        self.reset_at = reset_at
-        super().__init__(f"github_rate_limited reset_at={reset_at}")
+    def __init__(self, reset_at, reason=None):
+        if reason is None:
+            # Adapters re-raise a refusal from its reset alone; keep that refusal's reason.
+            last = _LAST_REFUSAL.get()
+            reason = last[1] if last is not None and last[0] == reset_at else None
+        self.reset_at, self.reason = reset_at, reason
+        super().__init__(f"github_rate_limited reset_at={reset_at}" + (f" reason={reason}" if reason else ""))
+
+
+def _limited(reason, reset_at, **observation):
+    """Build every rate-limit result this client originates; remember its reason for re-raising adapters."""
+    if reason not in REFUSAL_REASONS:
+        raise AssertionError(f"untyped GitHub refusal reason: {reason!r}")
+    _LAST_REFUSAL.set((reset_at, reason))
+    if observation.get("stale"):
+        return Result(reset_at=reset_at, reason=reason, **observation)
+    return Result(status=429, error="github_rate_limited", reset_at=reset_at, reason=reason)
+
+
+# --- admission: one decision for every request path ---------------------------------------
+#
+# Holds share the budget table with GitHub's pool observations. GitHub's own Retry-After holds
+# every pool of a credential ("retry_after"); its reset time after a primary-limit 403 or 429
+# holds that pool ("retry_after:<pool>"). "secondary" is this client's own inference (gh stderr,
+# a limit response without Retry-After); it never refuses a landing call.
+_AUTHENTIC_HOLD = "retry_after"
+_SYNTHETIC_HOLD = "secondary"
+_FLOORED_POOLS = frozenset({"graphql", "search", "code_search"})
+
+
+def _refusal(budgets, pools, *, call_class, now):
+    """The single local admission decision of every request path; ``None`` admits.
+
+    ``budgets`` maps one credential scope's stored resources to ``(remaining, reset)``,
+    ``pools`` are the rate-limit buckets the call can spend and ``call_class`` is
+    ``"landing"``, ``"exempt"`` or ``None``. The first match wins:
+
+    1. an authentic GitHub hold refuses every class: ``retry_after``;
+    2. a landing or exempt call is admitted;
+    3. a live synthetic or secondary hold: ``secondary_hold``;
+    4. core with its window open and ``0 <= remaining < LANDING_RESERVE``: ``core_below_landing_reserve``;
+    5. graphql or search with its window open and ``remaining <= RESERVE``: ``pool_exhausted``.
+
+    An unknown or expired budget never refuses. A refusal is ``(reason, reset_at)``, the
+    latest reset among the rows that refuse.
+    """
+
+    def latest(names, refuses):
+        resets = [
+            budgets[name][1]
+            for name in names
+            if name in budgets and budgets[name][1] > now and refuses(budgets[name][0])
+        ]
+        return max(resets, default=None)
+
+    checks = [("retry_after", [_AUTHENTIC_HOLD, *(f"{_AUTHENTIC_HOLD}:{pool}" for pool in pools)], lambda _: True)]
+    if call_class is None:
+        checks += [
+            ("secondary_hold", [_SYNTHETIC_HOLD], lambda remaining: remaining <= RESERVE),
+            (
+                "core_below_landing_reserve",
+                ["core"] if "core" in pools else [],
+                lambda remaining: 0 <= remaining < LANDING_RESERVE,
+            ),
+            ("pool_exhausted", sorted(_FLOORED_POOLS & set(pools)), lambda remaining: remaining <= RESERVE),
+        ]
+    for reason, names, refuses in checks:
+        reset = latest(names, refuses)
+        if reset is not None:
+            return reason, reset
+    return None
+
+
+def _admission(db, scope, pools, call_class, now):
+    """Apply :func:`_refusal` to the scope's stored budgets and holds."""
+    names = [*pools, _SYNTHETIC_HOLD, _AUTHENTIC_HOLD, *(f"{_AUTHENTIC_HOLD}:{pool}" for pool in pools)]
+    rows = db.execute(
+        "SELECT resource,remaining,reset FROM budget WHERE scope=? AND resource IN ("
+        + ",".join("?" * len(names))
+        + ")",
+        (scope, *names),
+    ).fetchall()
+    budgets = {resource: (remaining, reset) for resource, remaining, reset in rows}
+    return _refusal(budgets, pools, call_class=call_class, now=now)
+
+
+def _retry_after_expiry(value, now):
+    """Expiry of GitHub's ``Retry-After`` (delay-seconds or HTTP-date, RFC 9110 §10.2.3), else ``None``."""
+    if value is None:
+        return None
+    try:
+        seconds = float(value)
+    except ValueError:
+        try:
+            when = email.utils.parsedate_to_datetime(value)
+        except (TypeError, ValueError, IndexError):
+            return None
+        return int((when if when.tzinfo else when.replace(tzinfo=UTC)).timestamp())
+    return int(now + seconds) if math.isfinite(seconds) and seconds >= 0 else None
+
+
+# --- landing classification -----------------------------------------------------------------
+
+_REPOSITORY_PATH = r"repos/[^/]+/[^/]+/"
+# Writes that land a PR, and the budget and credential calls that are exempt. A read is
+# never landing by its URL: it is landing only inside a vetted landing operation.
+_CLASSIFIED_REST = tuple(
+    (method, re.compile(pattern), call_class)
+    for method, pattern, call_class in (
+        ("PUT", _REPOSITORY_PATH + r"pulls/\d+/merge", "landing"),
+        ("PUT", _REPOSITORY_PATH + r"pulls/\d+/update-branch", "landing"),
+        ("POST", _REPOSITORY_PATH + r"pulls/\d+/reviews", "landing"),
+        ("POST", _REPOSITORY_PATH + r"pulls/\d+/reviews/\d+/events", "landing"),
+        ("POST", _REPOSITORY_PATH + r"actions/runs/\d+/rerun-failed-jobs", "landing"),
+        ("POST", _REPOSITORY_PATH + r"actions/jobs/\d+/rerun", "landing"),
+        ("POST", _REPOSITORY_PATH + r"check-runs/\d+/rerequest", "landing"),
+        ("POST", _REPOSITORY_PATH + r"statuses/[^/]+", "landing"),
+        ("GET", r"rate_limit", "exempt"),
+        ("POST", r"app/installations/\d+/access_tokens", "exempt"),
+        ("DELETE", r"installation/token", "exempt"),
+    )
+)
+# Merge, update-branch, review, merge-queue and auto-merge mutations.
+_LANDING_MUTATIONS = frozenset(
+    {
+        "mergePullRequest",
+        "updatePullRequestBranch",
+        "addPullRequestReview",
+        "submitPullRequestReview",
+        "enqueuePullRequest",
+        "dequeuePullRequest",
+        "enablePullRequestAutoMerge",
+        "disablePullRequestAutoMerge",
+    }
+)
+_GRAPHQL_TOKEN = re.compile(
+    r"[\s,﻿]+|#[^\n\r]*"
+    r'|(?P<string>"""(?:\\"""|[^"]|"(?!""))*"""|"(?:\\.|[^"\\\n\r])*")'
+    r"|(?P<name>[_A-Za-z][_0-9A-Za-z]*)"
+    r"|(?P<number>-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?)"
+    r"|(?P<punct>\.\.\.|[!$&():=@\[\]{|}])"
+)
+
+
+def _graphql_root_fields(query):
+    """Operation type and root field names of a one-operation GraphQL document, else ``None``.
+
+    Strings, comments and aliases never name a field. Several operations, a fragment
+    spread at the root, or any shape this reader does not model has no answer.
+    """
+    if not isinstance(query, str):
+        return None
+    tokens, position = [], 0
+    while position < len(query):
+        match = _GRAPHQL_TOKEN.match(query, position)
+        if match is None:
+            return None
+        position = match.end()
+        if match.lastgroup:
+            tokens.append((match.lastgroup, match.group()))
+
+    def at(index, *values):
+        return index < len(tokens) and tokens[index][0] == "punct" and tokens[index][1] in values
+
+    def after_group(index, opening, closing):
+        depth = 0
+        for current in range(index, len(tokens)):
+            if at(current, opening):
+                depth += 1
+            elif at(current, closing):
+                depth -= 1
+                if depth == 0:
+                    return current + 1
+        return len(tokens) + 1
+
+    def after_directives(index):
+        while at(index, "@"):
+            index += 2
+            if at(index, "("):
+                index = after_group(index, "(", ")")
+        return index
+
+    operations, index = [], 0
+    while index < len(tokens):
+        kind, value = tokens[index]
+        if kind == "name" and value == "fragment":
+            index = after_directives(index + 4)
+            index = after_group(index, "{", "}") if at(index, "{") else len(tokens) + 1
+            continue
+        operation = "query"
+        if kind == "name" and value in {"query", "mutation", "subscription"}:
+            operation, index = value, index + 1
+            if index < len(tokens) and tokens[index][0] == "name":
+                index += 1
+            if at(index, "("):
+                index = after_group(index, "(", ")")
+            index = after_directives(index)
+        if not at(index, "{"):
+            return None
+        fields, index = [], index + 1
+        while not at(index, "}"):
+            if index >= len(tokens) or tokens[index][0] != "name":
+                return None
+            if at(index + 1, ":"):
+                index += 2
+                if index >= len(tokens) or tokens[index][0] != "name":
+                    return None
+            fields.append(tokens[index][1])
+            index += 1
+            if at(index, "("):
+                index = after_group(index, "(", ")")
+            index = after_directives(index)
+            if at(index, "{"):
+                index = after_group(index, "{", "}")
+        operations.append((operation, fields))
+        index += 1
+    return operations[0] if len(operations) == 1 else None
+
+
+def _request_class(method, path, document=None):
+    """``"landing"`` for a write that lands a PR, ``"exempt"`` for a budget or credential call.
+
+    Only the request's own shape counts; anything else is ``None``. A GraphQL document is
+    landing only when every root field of its one mutation is a landing mutation.
+    """
+    if path == "graphql":
+        query = document.get("query") if method == "POST" and isinstance(document, dict) else None
+        shape = _graphql_root_fields(query)
+        landing = shape is not None and shape[0] == "mutation" and shape[1] and set(shape[1]) <= _LANDING_MUTATIONS
+        return "landing" if landing else None
+    return next(
+        (
+            call_class
+            for verb, pattern, call_class in _CLASSIFIED_REST
+            if method == verb and isinstance(path, str) and pattern.fullmatch(path)
+        ),
+        None,
+    )
+
+
+# The current landing operation, opened only by this module's vetted sites.
+_LANDING_FLOW = contextvars.ContextVar("github_landing_flow", default=None)
+_THIS_MODULE = os.path.realpath(__file__)
+_REPOSITORY = Path(__file__).resolve().parents[2]
+# Vetted landing entry points outside this module, by repository file and function. Every
+# request made while one runs on the current thread belongs to its landing flow, and the
+# declaration ends when the function returns. No tag, flag, header or environment value a
+# caller passes can add to this list; only an edit here can.
+_LANDING_ENTRY_POINTS = {
+    ("scripts/orchestration/merge_queue_keeper.py", "run"): "merge-queue-keeper",
+    ("scripts/fleet_comms/review_publisher.py", "fetch_pr_head_sha"): "verdict-publication",
+    ("scripts/fleet_comms/review_publisher.py", "execute_publication"): "verdict-publication",
+    ("scripts/fleet_comms/review_publisher.py", "publish_sealed_verdict"): "verdict-publication",
+    ("scripts/review/record_cf_verdict.py", "record"): "verdict-publication",
+}
+# The publisher's ``publish`` (wrapped by rate_limited_command) and its verbs that land a PR:
+# such a verb's readiness and recovery reads belong to it.
+_PUBLISHER_ENTRY_POINT = ("scripts/publish/github.py", "publish")
+_PUBLISHER_LANDING_VERBS = frozenset(
+    {"pr-merge", "pr-update-branch", "pr-review", "run-rerun", "commit-status", "pr-dequeue", "pr-disarm"}
+)
+_ENTRY_POINT_CODE = {
+    (os.path.realpath(_REPOSITORY / path), name): flow for (path, name), flow in _LANDING_ENTRY_POINTS.items()
+}
+_ENTRY_POINT_NAMES = frozenset(name for _, name in _LANDING_ENTRY_POINTS)
+_VETTED_CODE = {}
+
+
+def _code_identity(code):
+    """``(real absolute file, function name)`` of a code object; relative files have none."""
+    filename = code.co_filename
+    return (os.path.realpath(filename), code.co_qualname) if os.path.isabs(filename) else None
+
+
+def _landing_flow():
+    """The vetted landing operation the current call belongs to, else ``None``.
+
+    This module opened one, or a vetted entry point's frame is executing on this thread.
+    Work handed to another thread is not landing.
+    """
+    flow = _LANDING_FLOW.get()
+    frame = sys._getframe(1)
+    while flow is None and frame is not None:
+        code = frame.f_code
+        if code.co_qualname in _ENTRY_POINT_NAMES:
+            if code not in _VETTED_CODE:
+                _VETTED_CODE[code] = _ENTRY_POINT_CODE.get(_code_identity(code))
+            flow = _VETTED_CODE[code]
+        frame = frame.f_back
+    return flow
+
+
+def _landing_operation(flow):
+    """Run a block as landing flow ``flow``; ``None`` opens nothing and an outer flow stays.
+
+    Only this module's vetted sites open one; a caller anywhere else is refused.
+    """
+    if (_code_identity(sys._getframe(1).f_code) or ("",))[0] != _THIS_MODULE:
+        raise PermissionError("landing operations open only inside the GitHub client")
+
+    @contextmanager
+    def opened():
+        token = _LANDING_FLOW.set(flow) if flow is not None and _LANDING_FLOW.get() is None else None
+        try:
+            yield
+        finally:
+            if token is not None:
+                _LANDING_FLOW.reset(token)
+
+    return opened()
 
 
 def _cache_directory():
@@ -430,6 +756,7 @@ class GitHubClient:
             )
             and not re.search(r"/(?:releases/assets/\d+|artifacts/\d+/zip)$", resource_path)
         )
+        call_class = _request_class(method, resource_path, document) or ("landing" if _landing_flow() else None)
         now = self.clock()
         with self._db() as db:
             cached = (
@@ -442,25 +769,22 @@ class GitHubClient:
             )
             if not cacheable or (cached and json.loads(cached[1]).get("_github_binary")):
                 cached = None
-            budget = db.execute(
-                "SELECT remaining,reset FROM budget WHERE scope=? AND resource IN (?, 'secondary') ORDER BY reset DESC",
-                (self.scope, resource),
-            ).fetchall()
-        limited = next((reset for remaining, reset in budget if remaining <= RESERVE and reset > now), None)
+            refusal = _admission(db, self.scope, (resource,), call_class, now)
 
-        def deferred(reset):
+        def deferred(reason, reset):
             if allow_stale and cached and not fresh:
-                return Result(
-                    _cached_value(cached),
+                return _limited(
+                    reason,
+                    reset,
+                    value=_cached_value(cached),
                     stale=True,
                     age_seconds=max(0, now - cached[2]),
-                    reset_at=reset,
                     headers=json.loads(cached[1]),
                 )
-            return Result(status=429, error="github_rate_limited", reset_at=reset)
+            return _limited(reason, reset)
 
-        if limited is not None:
-            return deferred(limited)
+        if refusal is not None:
+            return deferred(*refusal)
         headers = {"Accept": "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28", **(headers or {})}
         if cached and method == "GET":
             old_headers = json.loads(cached[1])
@@ -484,16 +808,19 @@ class GitHubClient:
                             or b"rate limit" in response.body.lower()
                         )
                     ):
-                        with suppress(ValueError):
-                            reset = int(now + float(h["retry-after"])) if "retry-after" in h else reset
-                        reset = reset or int(now + 60)
-                        blocked_resource = (
-                            "secondary"
-                            if "retry-after" in h or h.get("x-ratelimit-remaining") != "0"
-                            else h.get("x-ratelimit-resource", resource)
-                        )
-                        _store_budget(db, self.scope, blocked_resource, 0, reset)
-                        return deferred(reset)
+                        retry = _retry_after_expiry(h.get("retry-after"), now)
+                        if retry is not None:
+                            # GitHub's own Retry-After: an authentic hold on every pool.
+                            reset, hold, reason = retry, _AUTHENTIC_HOLD, "retry_after"
+                        elif h.get("x-ratelimit-remaining") == "0" and reset is not None:
+                            # A primary limit with GitHub's reset time: an authentic hold on that pool.
+                            hold = f"{_AUTHENTIC_HOLD}:{h.get('x-ratelimit-resource', resource)}"
+                            reason = "retry_after"
+                        else:
+                            # This client's own inference: a synthetic hold that never refuses landing.
+                            reset, hold, reason = reset or int(now + 60), _SYNTHETIC_HOLD, "secondary_hold"
+                        _store_budget(db, self.scope, hold, 0, reset)
+                        return deferred(reason, reset)
                     if response.status == 304:
                         if not cached:
                             return Result(status=304, error="github_cache_miss", headers=h)
@@ -529,7 +856,7 @@ class GitHubClient:
                     ):
                         reset = reset or int(now + 60)
                         _store_budget(db, self.scope, resource, 0, reset)
-                        return deferred(reset)
+                        return deferred("pool_exhausted", reset)
                     if graphql and isinstance(value, dict) and value.get("errors"):
                         return Result(value, status=response.status, error="github_graphql_error", headers=h)
                     if not 200 <= response.status < 300:
@@ -768,6 +1095,8 @@ def _merge_observation(result, *observations):
         result.age_seconds = max(result.age_seconds, other.age_seconds)
         if other.reset_at is not None:
             result.reset_at = other.reset_at
+        if other.reason is not None:
+            result.reason = other.reason
     return result
 
 
@@ -1788,17 +2117,48 @@ def _native_buckets(args, host="github.com"):
     return frozenset(buckets)
 
 
+def _native_call_class(args, host="github.com"):
+    """:func:`_request_class` of a native ``gh api`` argv: its method, endpoint and query."""
+    if len(args) < 3 or args[1] != "api":
+        return None
+    options, positional = _options(args[2:])
+    hostname = _opt(options, "--hostname")
+    host_class, path = _canonical_endpoint(
+        positional[0] if len(positional) == 1 else None, hostname if isinstance(hostname, str) else host
+    )
+    if host_class in {"unknown", "rejected"}:
+        return None
+    fields = {
+        key: value
+        for flag in ("-f", "--raw-field", "-F", "--field")
+        for key, _, value in (str(entry).partition("=") for entry in options.get(flag, []))
+    }
+    method = _opt(options, "--method", "-X", default="POST" if fields or "--input" in options else "GET")
+    return _request_class(str(method).upper(), path, {"query": fields.get("query")})
+
+
+def _argv_landing_flow(args):
+    """The landing flow a ``gh`` command line opens: a landing verb or a CI status read."""
+    if len(args) < 3 or Path(str(args[0])).name not in {"gh", "gh.real"}:
+        return None
+    command = (str(args[1]), str(args[2]))
+    if command in {("pr", "merge"), ("pr", "review")}:
+        return "landing-verb"
+    options, _ = _options([str(arg) for arg in args[3:]])
+    if command == ("run", "rerun") and (True in options.get("--failed", []) or {"--job", "-j"} & set(options)):
+        return "landing-verb"
+    rollup = command == ("pr", "view") and "statusCheckRollup" in str(_opt(options, "--json", default="")).split(",")
+    return "ci-status" if command == ("pr", "checks") or rollup else None
+
+
 def _native_command(args, client, runner, kwargs):
     """Fall through once using the bounded, colour-safe native transport."""
-    buckets = sorted(_native_buckets(args, client.host))
+    pools = sorted(_native_buckets(args, client.host) - {_SYNTHETIC_HOLD})
+    call_class = _native_call_class(args, client.host) or ("landing" if _landing_flow() else None)
     with client._db() as db:
-        budgets = db.execute(
-            "SELECT remaining,reset FROM budget WHERE scope=? AND resource IN (" + ",".join("?" * len(buckets)) + ")",
-            (client.scope, *buckets),
-        ).fetchall()
-    reset = next((reset for remaining, reset in budgets if remaining <= RESERVE and reset > client.clock()), None)
-    if reset is not None:
-        return _result_process(args, Result(error="github_rate_limited", reset_at=reset), {}, kwargs)
+        refusal = _admission(db, client.scope, pools, call_class, client.clock())
+    if refusal is not None:
+        return _result_process(args, _limited(*refusal), {}, kwargs)
     executable = client.env.get("AGENT_REAL_GH", "gh")
     executor = runner or client.runner
     if executor is None:
@@ -1828,10 +2188,11 @@ def _native_command(args, client, runner, kwargs):
     output, error = native.stdout or b"", native.stderr or b""
     raw_error = error.encode() if isinstance(error, str) else error
     if native.returncode and b"rate limit" in raw_error.lower():
+        # gh's stderr carries no Retry-After: a synthetic hold, never binding on landing.
         reset = int(client.clock() + 60)
         with client._db() as db:
-            _store_budget(db, client.scope, "secondary", 0, reset)
-        return _result_process(args, Result(error="github_rate_limited", reset_at=reset), {}, kwargs)
+            _store_budget(db, client.scope, _SYNTHETIC_HOLD, 0, reset)
+        return _result_process(args, _limited("secondary_hold", reset), {}, kwargs)
     if client.max_response_bytes is not None and len(output) > client.max_response_bytes:
         return _result_process(args, Result(error="github_response_too_large"), {}, kwargs)
     text = kwargs.get("text") or kwargs.get("universal_newlines") or kwargs.get("encoding")
@@ -2004,9 +2365,14 @@ def _run_command(args, *, runner=None, client=None, fresh=False, allow_stale=Fal
 
 
 def run(args, *, runner=None, client=None, fresh=False, allow_stale=False, **kwargs):
-    """Return command/configuration errors through the subprocess contract."""
+    """Return command/configuration errors through the subprocess contract.
+
+    A landing verb or CI status read is one landing operation: the reads it makes (the
+    merge's queue lookup, the pull request behind a check rollup) share its landing class.
+    """
     try:
-        return _run_command(args, runner=runner, client=client, fresh=fresh, allow_stale=allow_stale, **kwargs)
+        with _landing_operation(_argv_landing_flow(args) if args else None):
+            return _run_command(args, runner=runner, client=client, fresh=fresh, allow_stale=allow_stale, **kwargs)
     except ValueError:
         return _result_process(args, Result(error="github_invalid_command"), {}, kwargs)
 
@@ -2085,7 +2451,12 @@ def command(args, *, runner=None, **kwargs):
 
 
 def rest_read(operation, repo, fields, *, runner=None, env=None, cwd=None, **kwargs):
-    """REST equivalents of former named GraphQL reads, with legacy shapes."""
+    """REST equivalents of former named GraphQL reads, with legacy shapes; merge facts are a landing flow."""
+    with _landing_operation("merge-facts" if operation == "merge-facts" else None):
+        return _rest_read(operation, repo, fields, runner=runner, env=env, cwd=cwd, **kwargs)
+
+
+def _rest_read(operation, repo, fields, *, runner=None, env=None, cwd=None, **kwargs):
     client = GitHubClient(env=env, cwd=cwd)
     observed = []
 
@@ -2122,7 +2493,7 @@ def rest_read(operation, repo, fields, *, runner=None, env=None, cwd=None, **kwa
                     if detail.get("error") == "github_http_error" and detail.get("status") == 404:
                         return None
             if getattr(proc, "github_result", None) and proc.github_result.error == "github_rate_limited":
-                raise GitHubRateLimited(proc.github_result.reset_at)
+                raise GitHubRateLimited(proc.github_result.reset_at, proc.github_result.reason)
             raise RuntimeError("GitHub REST read failed")
         return json.loads(proc.stdout)
 
@@ -2256,7 +2627,7 @@ def rest_read(operation, repo, fields, *, runner=None, env=None, cwd=None, **kwa
         else:
             raise ValueError("unknown REST read")
     except GitHubRateLimited as exc:
-        result = Result(error=exc.code, reset_at=exc.reset_at, status=429)
+        result = Result(error=exc.code, reset_at=exc.reset_at, status=429, reason=exc.reason)
     except (ValueError, KeyError, TypeError):
         result = Result(error="github_invalid_read")
     except RuntimeError:
@@ -2267,12 +2638,18 @@ def rest_read(operation, repo, fields, *, runner=None, env=None, cwd=None, **kwa
             stale=any(r.stale for r in observed if r),
             age_seconds=max((r.age_seconds for r in observed if r), default=0),
             reset_at=next((r.reset_at for r in observed if r and r.reset_at), None),
+            reason=next((r.reason for r in observed if r and r.reason), None),
         )
     return _result_process(["github", operation], result, {}, kwargs)
 
 
 def queue_read(operation, repo, fields, *, env=None, cwd=None, **kwargs):
-    """Queue-only GraphQL fields joined to ordinary conditional REST reads."""
+    """Queue-only GraphQL fields joined to ordinary conditional REST reads; a landing flow."""
+    with _landing_operation("queue-read"):
+        return _queue_read(operation, repo, fields, env=env, cwd=cwd, **kwargs)
+
+
+def _queue_read(operation, repo, fields, *, env=None, cwd=None, **kwargs):
     client = GitHubClient(env=env, cwd=cwd)
     timeout = kwargs.get("timeout") or 30
     owner, name = repo.split("/", 1)
@@ -2364,6 +2741,7 @@ def queue_read(operation, repo, fields, *, env=None, cwd=None, **kwargs):
         stale=any(r.stale for r in observations),
         age_seconds=max(r.age_seconds for r in observations),
         reset_at=next((r.reset_at for r in observations if r.reset_at), None),
+        reason=next((r.reason for r in observations if r.reason), None),
     )
     return _result_process(["github", operation], result, {}, kwargs)
 
@@ -2391,7 +2769,9 @@ def _graphql_error_detail(value):
 def _result_process(args, result, options, kwargs, *, api=True):
     if result.error:
         detail = {"error": result.error, "reset_at": result.reset_at}
-        if result.error == "github_http_error":
+        if result.error == "github_rate_limited":
+            detail["reason"] = result.reason
+        elif result.error == "github_http_error":
             detail["status"] = result.status
         elif result.error == "github_graphql_error":
             detail["errors"] = _graphql_error_detail(result.value)
@@ -2512,7 +2892,7 @@ def timer(function):
         try:
             return function(*args, **kwargs)
         except GitHubRateLimited as exc:
-            print(f"GitHub timer: skipped github_rate_limited reset_at={exc.reset_at}")
+            print(f"GitHub timer: skipped github_rate_limited reset_at={exc.reset_at} reason={exc.reason}")
             return 0
         except subprocess.CalledProcessError as exc:
             observation = getattr(exc, "github_result", None)
@@ -2523,22 +2903,35 @@ def timer(function):
             ):
                 raise
             reset = observation.reset_at
-            print(f"GitHub timer: skipped github_rate_limited reset_at={reset}")
+            print(f"GitHub timer: skipped github_rate_limited reset_at={reset} reason={observation.reason}")
             return 0
 
     return wrapped
 
 
 def rate_limited_command(function):
-    """Keep an exhausted publishing preflight in the typed command contract."""
+    """Keep an exhausted publishing preflight in the typed command contract.
+
+    On the publisher's vetted ``publish`` entry point, a verb that lands a PR runs as one
+    landing operation, so its readiness and recovery reads share the verb's landing class.
+    """
     from functools import wraps
+
+    code = getattr(function, "__code__", None)
+    vetted = code is not None and _code_identity(code) == (
+        os.path.realpath(_REPOSITORY / _PUBLISHER_ENTRY_POINT[0]),
+        _PUBLISHER_ENTRY_POINT[1],
+    )
 
     @wraps(function)
     def wrapped(*args, **kwargs):
+        verb = args[0] if args else kwargs.get("verb")
+        landing = vetted and isinstance(verb, str) and verb in _PUBLISHER_LANDING_VERBS
         try:
-            return function(*args, **kwargs)
+            with _landing_operation("publisher-landing-verb" if landing else None):
+                return function(*args, **kwargs)
         except GitHubRateLimited as exc:
-            result = Result(error=exc.code, reset_at=exc.reset_at, status=429)
+            result = Result(error=exc.code, reset_at=exc.reset_at, status=429, reason=exc.reason)
             return _result_process(["github", "publish"], result, {}, kwargs)
 
     return wrapped

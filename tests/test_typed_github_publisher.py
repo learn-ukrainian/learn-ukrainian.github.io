@@ -1017,7 +1017,7 @@ def test_real_matcher_cli_overhead_median_20_writes(gh_shim_sandbox, tmp_path):
     shutil.copyfile(source / "matcher.py", tooling / "matcher.py")
     shutil.copyfile(source / "rules.json", tooling / "rules.json")
     executable = tmp_path / "real-gh"
-    executable.write_text('#!/bin/sh\nprintf "HTTP/2.0 200 OK\\r\\nX-RateLimit-Remaining: 100\\r\\nX-RateLimit-Reset: 2000000000\\r\\n\\r\\n{}"\n')
+    executable.write_text('#!/bin/sh\nprintf "HTTP/2.0 200 OK\\r\\nX-RateLimit-Remaining: 5000\\r\\nX-RateLimit-Reset: 2000000000\\r\\n\\r\\n{}"\n')
     executable.chmod(0o755)
     body = tmp_path / "clean.md"
     body.write_text("a" * 10_240)
