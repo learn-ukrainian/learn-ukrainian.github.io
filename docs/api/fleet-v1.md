@@ -271,9 +271,9 @@ Open pull requests. `schema` is `fleet.v1.prs`.
 | `epic` | Keep rows whose epic token matches. A token is an `epic:` label or marker, or a closing reference. `12` and `epic:12` match the same token. |
 | `state` | `open`, `stale`, `held`, `red`, `green`, `pending`, `queued`, `not_queued`, or `dropped`. An unknown value matches nothing. |
 
-Each row has `number`, `repo`, `title`, `draft`, `head_sha`, `epics`, `ci` (`green`, `red`, or `pending`), `cf` (`verdict`, `at_head`), `gate` (the CI Gate check), `mq` (`queued`, `not_queued`, or `dropped`), `keeper` (`hold`, `reason`), `flake_grant` (`decision` `grant` or `deny`, `used`, `at`), `ready_since`, `stale_green`, `minutes`, `stacked_base`, `hours_idle`, `blocker`, `owner_lane`, `idle_24h`, and `idle_48h`.
+Each row has `number`, `repo`, `title`, `draft`, `head_sha`, `epics`, `ci` (`green`, `red`, or `pending`), `cf` (`verdict`, `at_head`, and `review_mode` when the marker carries `red_team`), `gate` (the CI Gate check), `mq` (`queued`, `not_queued`, or `dropped`), `keeper` (`hold`, `reason`), `flake_grant` (`decision` `grant` or `deny`, `used`, `at`), `ready_since`, `stale_green`, `minutes`, `stacked_base`, `hours_idle`, `blocker`, `owner_lane`, `idle_24h`, and `idle_48h`.
 
-`at_head` is true only when the cross-family verdict was recorded for the current head. An approval recorded for an older head does not count.
+`at_head` is true only when the verdict was recorded for the current head. An approval recorded for an older head does not count. `review_mode` is `red_team` only when that current-head marker says so. A marker without the mode omits the key.
 
 `stale_green` is true when the pull request is approved at the current head, CI is green, there is no merge conflict, the hold is known to be absent, its base is the repository default branch (`main` by default), and it has stayed out of the queue for at least `FLEET_PR_STALE_MIN` minutes (default 60). `minutes` is that age. A hold, including a requeue hold, or an unknown hold, keeps `stale_green` false and `minutes` null. Without a recorded ready time, `minutes` is null. A pull request whose base is not the repository default branch is never ready: `stale_green` is false and `minutes` is null.
 
