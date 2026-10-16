@@ -551,7 +551,10 @@ def _load(path: Path, report: Report) -> dict[str, Any] | None:
     except (OSError, json.JSONDecodeError) as exc:
         report.fail(f"unreadable artifact {path.name}: {exc}")
         return None
-    return payload if isinstance(payload, dict) else None
+    if not isinstance(payload, dict):
+        report.fail(f"invalid artifact {path.name}: expected JSON object")
+        return None
+    return payload
 
 
 def check_manifest(deck_dir: Path, manifest: dict[str, Any], report: Report) -> None:
