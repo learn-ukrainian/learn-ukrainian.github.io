@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import contextlib
 import os
+import shlex
 import shutil
 import subprocess
 import tempfile
@@ -115,20 +117,42 @@ def test_setup_failure_after_start_stops_the_server_and_removes_directories(scra
     assert not (tmp_path / "work").exists()
 
 
-def test_start_failure_retries_on_new_ports_then_cleans_up(scratch, tmp_path, monkeypatch):
-    attempts = []
+def _fake_bindir(tmp_path, pg_ctl_body):
+    """A server bin directory whose ``pg_ctl`` is a script; ``initdb`` is the real one."""
+    fake = tmp_path / "fakebin"
+    fake.mkdir()
+    (fake / "initdb").symlink_to(fixtures._postgres_bindir() / "initdb")
+    pg_ctl = fake / "pg_ctl"
+    pg_ctl.write_text(f"#!/bin/sh\n{pg_ctl_body}\n")
+    pg_ctl.chmod(0o700)
+    return fake
 
-    def invalid_port():
-        attempts.append(99999)  # outside 1..65535, so the server refuses to start
-        return 99999
 
-    monkeypatch.setattr(fixtures, "_free_tcp_port", invalid_port)
-    with pytest.raises(RuntimeError, match="PostgreSQL did not start on ports"):
+def _run_failing_start(scratch, tmp_path, monkeypatch, diagnostic):
+    """Start through a ``pg_ctl`` that prints ``diagnostic`` to stderr and exits 2; count its calls."""
+    calls = tmp_path / "calls"
+    fake = _fake_bindir(tmp_path, f"echo call >> {calls}\necho '{diagnostic}' >&2\nexit 2")
+    monkeypatch.setattr(fixtures, "_postgres_bindir", lambda: fake)
+    with pytest.raises(RuntimeError) as failure:
         with fixtures._running_pg_server(scratch, tmp_path / "work"):
             pytest.fail("setup must not yield")
-    assert len(attempts) == fixtures._PG_START_ATTEMPTS
     assert list(scratch.iterdir()) == []
     assert not (tmp_path / "work").exists()
+    return str(failure.value), len(calls.read_text().split())
+
+
+def test_port_clash_retries_on_new_ports_then_cleans_up(scratch, tmp_path, monkeypatch):
+    message, calls = _run_failing_start(scratch, tmp_path, monkeypatch, "FATAL: could not bind: Address already in use")
+    assert calls == fixtures._PG_START_ATTEMPTS
+    assert "PostgreSQL did not start on ports" in message
+    assert "Address already in use" in message
+
+
+def test_other_startup_failure_is_not_retried_and_keeps_pg_ctl_stderr(scratch, tmp_path, monkeypatch):
+    message, calls = _run_failing_start(scratch, tmp_path, monkeypatch, "SENTINEL-pg_ctl-diagnostic")
+    assert calls == 1
+    assert "SENTINEL-pg_ctl-diagnostic" in message
+    assert "not a port clash" in message
 
 
 def test_failure_before_the_server_binary_is_found_still_removes_the_work_directory(scratch, tmp_path, monkeypatch):
@@ -144,28 +168,101 @@ def test_failure_before_the_server_binary_is_found_still_removes_the_work_direct
     assert list(scratch.iterdir()) == []
 
 
-def test_stop_server_kills_a_server_pg_ctl_cannot_stop(tmp_path):
+@pytest.fixture
+def failing_pg_ctl(tmp_path):
     fake = tmp_path / "bin"
     fake.mkdir()
     pg_ctl = fake / "pg_ctl"
     pg_ctl.write_text("#!/bin/sh\nexit 1\n")
     pg_ctl.chmod(0o700)
-    # The shell exits at once, so init adopts the sleeper and reaps it after the kill.
-    pid = int(
-        subprocess.run(
-            ["sh", "-c", "sleep 60 >/dev/null 2>&1 & echo $!"], check=True, capture_output=True, text=True, timeout=30
-        ).stdout
-    )
+    return fake
+
+
+@pytest.fixture
+def processes():
+    """Start sleeping processes in their own sessions; kill what the test leaves behind."""
+    started = []
+
+    def start(argv0, *arguments, cwd=None):
+        process = subprocess.Popen(
+            [argv0, "-c", "sleep 60; true", "sh", *arguments],
+            executable="/bin/sh",
+            cwd=cwd,
+            start_new_session=True,
+            stdin=subprocess.DEVNULL,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        )
+        started.append(process)
+        return process
+
+    yield start
+    for process in started:
+        with contextlib.suppress(ProcessLookupError):
+            os.killpg(process.pid, 9)
+        process.wait()
+
+
+def _claim(data, pid):
+    data.mkdir(exist_ok=True)
+    (data / "postmaster.pid").write_text(f"{pid}\n{data}\n")
+
+
+@pytest.mark.parametrize("name", ["postgres", "postmaster"])
+def test_stop_server_kills_its_own_server_found_by_command_line(tmp_path, failing_pg_ctl, processes, name):
+    data = tmp_path / "data"
+    elsewhere = tmp_path / "elsewhere"
+    elsewhere.mkdir()
+    server = processes(f"/usr/lib/postgresql/16/bin/{name}", "-D", str(data), "-p", "1", cwd=elsewhere)
+    _claim(data, server.pid)
+    fixtures._stop_server(failing_pg_ctl, data)
+    assert server.wait(timeout=10) == -9
+
+
+def test_stop_server_kills_its_own_server_found_by_working_directory(tmp_path, failing_pg_ctl, processes):
     data = tmp_path / "data"
     data.mkdir()
-    (data / "postmaster.pid").write_text(f"{pid}\n{data}\n")
-    try:
-        assert _alive(pid)
-        fixtures._stop_server(fake, data)
-        assert not _alive(pid)
-    finally:
-        if _alive(pid):
-            os.kill(pid, 9)
+    server = processes("postgres", "-p", "1", cwd=data)
+    _claim(data, server.pid)
+    fixtures._stop_server(failing_pg_ctl, data)
+    assert server.wait(timeout=10) == -9
+
+
+def test_stop_server_never_signals_an_unrelated_process(tmp_path, failing_pg_ctl, processes):
+    """A pid in ``postmaster.pid`` that is not our postgres is left alone and reported."""
+    bystander = processes("sleeper")
+    _claim(tmp_path / "data", bystander.pid)
+    with pytest.raises(RuntimeError, match="refusing to signal"):
+        fixtures._stop_server(failing_pg_ctl, tmp_path / "data")
+    assert bystander.poll() is None and _alive(bystander.pid)
+
+
+def test_stop_server_never_signals_a_postgres_serving_another_data_directory(tmp_path, failing_pg_ctl, processes):
+    other = tmp_path / "other"
+    other.mkdir()
+    foreign = processes("postgres", "-D", str(other), cwd=other)
+    _claim(tmp_path / "data", foreign.pid)
+    with pytest.raises(RuntimeError, match="different data directory"):
+        fixtures._stop_server(failing_pg_ctl, tmp_path / "data")
+    assert foreign.poll() is None and _alive(foreign.pid)
+
+
+def test_stop_server_never_signals_another_users_postgres(tmp_path, failing_pg_ctl, processes, monkeypatch):
+    data = tmp_path / "data"
+    server = processes("postgres", "-D", str(data), cwd=tmp_path)
+    _claim(data, server.pid)
+    real_uid = os.getuid()
+    monkeypatch.setattr(os, "getuid", lambda: real_uid + 1)
+    with pytest.raises(RuntimeError, match="belongs to uid"):
+        fixtures._stop_server(failing_pg_ctl, data)
+    assert server.poll() is None and _alive(server.pid)
+
+
+def test_stop_server_ignores_a_stale_pid_file_of_a_dead_process(tmp_path, failing_pg_ctl):
+    dead = subprocess.Popen(["true"])
+    dead.wait()
+    _claim(tmp_path / "data", dead.pid)
+    fixtures._stop_server(failing_pg_ctl, tmp_path / "data")
 
 
 def test_stop_server_without_a_running_server_does_nothing(tmp_path):
@@ -231,3 +328,47 @@ def test_the_pg_server_fixture_yields_a_working_template_connection(_pg_server):
     assert _pg_server.execute("SELECT 1 AS one").fetchone() == {"one": 1}
     assert Path(_pg_server.info.host).name.startswith("v4pg-")
     assert _pg_server.info.port != 55439
+
+
+HOSTILE = "$(>x) `;'\""  # command substitution, backtick, space, quotes and a separator
+
+
+def test_server_options_reach_postgres_as_literal_values_through_sh(tmp_path, monkeypatch):
+    """``pg_ctl`` passes ``-o`` to ``sh``: the values must come out unchanged and run nothing."""
+    clean = tmp_path / "clean"
+    clean.mkdir()
+    monkeypatch.chdir(clean)
+    options = fixtures._server_options(tmp_path / HOSTILE, 54321)
+    assert shlex.split(options) == ["-k", str(tmp_path / HOSTILE), "-h", "", "-p", "54321"]
+    out = subprocess.run(
+        ["sh", "-c", f"printf '<%s>' {options}"], check=True, capture_output=True, text=True, timeout=30
+    )
+    assert out.stdout == f"<-k><{tmp_path / HOSTILE}><-h><><-p><54321>"
+    assert list(clean.iterdir()) == []
+
+
+def test_hostile_directory_names_start_a_server_and_run_nothing(scratch, tmp_path, monkeypatch):
+    """A scratch root, work directory and socket directory full of shell syntax still work."""
+    root = scratch / HOSTILE
+    root.mkdir(mode=0o700)
+    work = tmp_path / ("w " + HOSTILE) / "work"
+    clean = tmp_path / "clean"
+    clean.mkdir()
+    monkeypatch.chdir(clean)
+    seen = {}
+    real_apply = fixtures.apply_pg_schema
+
+    def record(template):
+        seen["work"] = sorted(path.name for path in work.iterdir())
+        seen["root"] = [path.parent for path in root.iterdir()]
+        return real_apply(template)
+
+    monkeypatch.setattr(fixtures, "apply_pg_schema", record)
+    with fixtures._running_pg_server(root, work) as conn:
+        assert conn.execute("SELECT 1 AS one").fetchone() == {"one": 1}
+        assert Path(conn.info.host).parent == root
+    assert seen["work"] == ["data", "server.log"]
+    assert seen["root"] == [root]
+    assert list(clean.iterdir()) == [], "no shell command in a path may run"
+    assert list(root.iterdir()) == []
+    assert not work.exists()

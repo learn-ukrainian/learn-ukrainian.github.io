@@ -17,6 +17,7 @@ import importlib.metadata
 import json
 import os
 import re
+import shlex
 import shutil
 import signal
 import socket
@@ -90,6 +91,8 @@ _SHORT_SYSTEM_TEMP = Path("/tmp")
 _PG_START_ATTEMPTS = 5
 _PG_KILL_WAIT_SECONDS = 10
 _ISSUED_PORTS: set[int] = set()
+# What postgres or pg_ctl report when the chosen port or its Unix socket file is taken.
+_PORT_CLASH = re.compile(r"Address already in use|lock file \".*\.s\.PGSQL\.\d+\.lock\" already exists")
 
 
 def _free_tcp_port() -> int:
@@ -161,13 +164,79 @@ def _postmaster_pid(data: Path) -> int | None:
 
 
 def _process_alive(pid: int) -> bool:
+    """Whether ``pid`` is a live process; an exited but unreaped zombie is not."""
     try:
-        os.kill(pid, 0)
-    except ProcessLookupError:
+        stat = Path(f"/proc/{pid}/stat").read_text()
+    except OSError:
         return False
-    except PermissionError:
-        return True
-    return True
+    return stat.rpartition(")")[2].split()[0] not in ("Z", "X")
+
+
+def _data_directory_argument(argv: list[str], cwd: str) -> str | None:
+    """The real path of the ``-D``/``--pgdata`` value on a postgres command line, if any."""
+    for index, argument in enumerate(argv):
+        if argument == "-D" and index + 1 < len(argv):
+            value = argv[index + 1]
+        elif argument.startswith("--pgdata="):
+            value = argument.partition("=")[2]
+        elif argument.startswith("-D") and len(argument) > 2:
+            value = argument[2:]
+        else:
+            continue
+        return os.path.realpath(os.path.join(cwd, value))
+    return None
+
+
+def _identity_problem(pid: int, data: Path) -> str | None:
+    """Why ``pid`` is not this fixture's own postgres server, or ``None`` when it is.
+
+    A pid read from ``postmaster.pid`` is only a claim: the file can be stale
+    and the number reused. The process must belong to this user, run a
+    postgres or postmaster binary, and serve this data directory.
+    """
+    proc = Path("/proc") / str(pid)
+    try:
+        owner = proc.stat().st_uid
+        argv = [os.fsdecode(part) for part in (proc / "cmdline").read_bytes().split(b"\0") if part]
+        cwd = os.path.realpath(os.readlink(proc / "cwd"))
+    except OSError as error:
+        return f"it cannot be inspected ({error})"
+    if owner != os.getuid():
+        return f"it belongs to uid {owner}, not uid {os.getuid()}"
+    if not argv or os.path.basename(argv[0]) not in ("postgres", "postmaster"):
+        return f"its command line {argv!r} does not name a postgres binary"
+    wanted = os.path.realpath(data)
+    if wanted not in (cwd, _data_directory_argument(argv[1:], cwd)):
+        return f"it serves a different data directory (cwd {cwd}, command line {argv!r}), not {wanted}"
+    return None
+
+
+def _kill_own_server(pid: int, data: Path) -> None:
+    """SIGKILL ``pid`` only after proving it is this fixture's server; refuse otherwise.
+
+    A pidfd opened before the check keeps the number from being reused between
+    the proof and the signal.
+    """
+    try:
+        pidfd = os.pidfd_open(pid)
+    except ProcessLookupError:
+        return
+    except (AttributeError, OSError):
+        pidfd = None
+    try:
+        problem = _identity_problem(pid, data)
+        if problem is not None:
+            if not _process_alive(pid):
+                return
+            raise RuntimeError(f"refusing to signal pid {pid} from {data}/postmaster.pid: {problem}")
+        with contextlib.suppress(ProcessLookupError):
+            if pidfd is None:
+                os.kill(pid, signal.SIGKILL)
+            else:
+                signal.pidfd_send_signal(pidfd, signal.SIGKILL)
+    finally:
+        if pidfd is not None:
+            os.close(pidfd)
 
 
 def _stop_server(binary: Path, data: Path) -> None:
@@ -189,8 +258,7 @@ def _stop_server(binary: Path, data: Path) -> None:
         stopped = False
     if stopped:
         return
-    with contextlib.suppress(ProcessLookupError):
-        os.kill(pid, signal.SIGKILL)
+    _kill_own_server(pid, data)
     deadline = time.monotonic() + _PG_KILL_WAIT_SECONDS
     while _process_alive(pid):
         if time.monotonic() > deadline:
@@ -198,33 +266,45 @@ def _stop_server(binary: Path, data: Path) -> None:
         time.sleep(0.05)
 
 
-def _start_server(binary: Path, data: Path, log: Path, sock: Path) -> int:
-    """Start the server on a fresh port, retrying on another port; return the port."""
+def _server_options(sock: Path, port: int) -> str:
+    """The ``pg_ctl -o`` string. ``pg_ctl`` hands it to ``sh``, so every value is quoted."""
+    return f"-k {shlex.quote(str(sock))} -h {shlex.quote('')} -p {port}"
+
+
+def _start_server(binary: Path, work: Path, sock: Path) -> int:
+    """Start the server in ``work/data``, retrying on another port after a port clash; return the port.
+
+    ``pg_ctl`` also builds a shell command from ``-D`` and ``-l`` without
+    escaping them, so it runs inside ``work`` and gets the relative names.
+    Only a clash on the port or its socket file is retried; any other startup
+    failure is raised at once with ``pg_ctl``'s stderr and the server log.
+    """
+    data = work / "data"
+    log = work / "server.log"
     attempted = []
     for _ in range(_PG_START_ATTEMPTS):
         port = _free_tcp_port()
         attempted.append(port)
         started = subprocess.run(
-            [
-                str(binary / "pg_ctl"),
-                "-D",
-                str(data),
-                "-l",
-                str(log),
-                "-o",
-                f'-k {sock} -h "" -p {port}',
-                "-w",
-                "start",
-            ],
+            [str(binary / "pg_ctl"), "-D", data.name, "-l", log.name, "-o", _server_options(sock, port), "-w", "start"],
             check=False,
             capture_output=True,
+            cwd=work,
             timeout=60,
         )
         if started.returncode == 0:
             return port
+        stderr = started.stderr.decode(errors="replace").strip()
+        tail = log.read_text(errors="replace")[-2000:] if log.exists() else ""
         _stop_server(binary, data)
-    tail = log.read_text(errors="replace")[-2000:] if log.exists() else ""
-    raise RuntimeError(f"PostgreSQL did not start on ports {attempted}; server log tail:\n{tail}")
+        if not _PORT_CLASH.search(stderr + tail):
+            raise RuntimeError(
+                f"PostgreSQL failed to start on port {port} (pg_ctl exit {started.returncode}, not a port clash); "
+                f"pg_ctl stderr:\n{stderr}\nserver log tail:\n{tail}"
+            )
+    raise RuntimeError(
+        f"PostgreSQL did not start on ports {attempted}; pg_ctl stderr:\n{stderr}\nserver log tail:\n{tail}"
+    )
 
 
 @contextlib.contextmanager
@@ -247,7 +327,7 @@ def _running_pg_server(scratch_root: Path, work: Path):
             capture_output=True,
             timeout=60,
         )
-        port = _start_server(binary, data, work / "server.log", sock)
+        port = _start_server(binary, work, sock)
         conn = psycopg.connect(host=str(sock), port=port, dbname="postgres", autocommit=True, row_factory=dict_row)
         try:
             conn.execute("CREATE DATABASE v4_test_template")
