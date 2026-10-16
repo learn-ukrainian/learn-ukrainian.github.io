@@ -159,21 +159,14 @@ def _claude_canary_enabled() -> bool:
     return os.environ.get("LU_LIVE_CLAUDE_HOOK_CANARY") == "1" and shutil.which("claude") is not None
 
 
-@pytest.mark.skipif(
+_LIVE_CANARY = pytest.mark.skipif(
     not _claude_canary_enabled(),
     reason="live Claude Code canary: set LU_LIVE_CLAUDE_HOOK_CANARY=1 with the claude CLI on PATH (one model call)",
 )
-def test_live_claude_blocks_a_tool_call_when_a_guard_times_out(tmp_path: Path) -> None:
-    """Rewire the real guard entry to a stub that outlives its timeout, then ask Claude to run Bash.
 
-    The stub keeps the guard's own ``onFailure`` field, so reverting the policy
-    lets the command run and this test fails. The repository has no other
-    Claude Code hook runner; CI cannot run this without the CLI and a model.
-    """
-    entry = next(
-        hook for matcher, hook in _pre_tool_hooks() if matcher == "Bash" and _is_refusing_guard(_deployed_name(hook))
-    )
-    stub = {**entry, "command": "sleep 6", "timeout": 2}
+
+def _run_live_canary(tmp_path: Path, stub: dict) -> tuple[subprocess.CompletedProcess[str], Path]:
+    """Ask Claude Code to run one Bash command behind ``stub`` as its only PreToolUse hook."""
     (tmp_path / "settings.json").write_text(
         json.dumps({"hooks": {"PreToolUse": [{"matcher": "Bash", "hooks": [stub]}]}}), encoding="utf-8"
     )
@@ -203,8 +196,35 @@ def test_live_claude_blocks_a_tool_call_when_a_guard_times_out(tmp_path: Path) -
         timeout=180,
     )
     assert '"tool_use"' in result.stdout, "the model never attempted the Bash call; the canary proved nothing"
+    return result, marker
+
+
+def _timing_out_stub() -> dict:
+    """The real Bash guard entry, rewired to a command that outlives its timeout."""
+    entry = next(
+        hook for matcher, hook in _pre_tool_hooks() if matcher == "Bash" and _is_refusing_guard(_deployed_name(hook))
+    )
+    return {**entry, "command": "sleep 6", "timeout": 2}
+
+
+@_LIVE_CANARY
+def test_live_claude_blocks_a_tool_call_when_a_guard_times_out(tmp_path: Path) -> None:
+    """The stub keeps the guard's own ``onFailure`` field, so reverting the policy fails this test.
+
+    The repository has no other Claude Code hook runner; CI cannot run this
+    without the CLI and a model.
+    """
+    result, marker = _run_live_canary(tmp_path, _timing_out_stub())
     assert not marker.exists(), "the tool call ran although its guard timed out"
     assert 'blocking because onFailure is \\"block\\"' in result.stdout
+
+
+@_LIVE_CANARY
+def test_live_claude_runs_the_tool_call_when_a_fail_open_guard_times_out(tmp_path: Path) -> None:
+    """Negative control: without the field the same timeout lets the call run, so the field is what blocks."""
+    stub = {key: value for key, value in _timing_out_stub().items() if key != "onFailure"}
+    _, marker = _run_live_canary(tmp_path, stub)
+    assert marker.exists(), "a fail-open timeout did not run the call; the positive canary proves nothing"
 
 
 # --- Guards fail closed when their own dependencies fail ---------------------
@@ -480,3 +500,75 @@ def test_grok_outer_timeout_exceeds_the_bridge_deadline() -> None:
     source = (REPO / "scripts/agent_runtime/adapters/grok_build.py").read_text(encoding="utf-8")
     assert "timeout: {max(15, int(hook.get('timeout', 5)))}" in source
     assert deadlines[0] + 2 <= 15
+
+
+@pytest.mark.parametrize(
+    ("guard_code", "reason"),
+    [("import time; time.sleep(30)", "TimeoutExpired"), ("raise SystemExit(1)", None)],
+)
+def test_grok_bridge_denies_a_guard_that_times_out_or_crashes(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str], guard_code: str, reason: str | None
+) -> None:
+    """Grok fails open on any hook failure, so the bridge itself must turn one into a deny."""
+    import io
+
+    from scripts.agent_runtime import grok_hook_bridge as bridge
+
+    real_run = subprocess.run
+
+    def short_deadline(*args, **kwargs):
+        # The real bridge call, with its fixed deadline shortened so the test stays fast.
+        assert kwargs["timeout"] == 10
+        return real_run(*args, **{**kwargs, "timeout": 0.5})
+
+    monkeypatch.setattr(bridge, "guard_argv", lambda _: [sys.executable, "-c", guard_code])
+    monkeypatch.setattr(bridge.subprocess, "run", short_deadline)
+    monkeypatch.setattr(sys, "argv", ["grok_hook_bridge.py", "guard"])
+    event = {"hook_event_name": "PreToolUse", "toolName": "run_terminal_command", "toolInput": {"command": "ls"}}
+    monkeypatch.setattr(sys, "stdin", io.StringIO(json.dumps(event)))
+    assert bridge.main() == 2
+    if reason:
+        assert reason in capsys.readouterr().err
+
+
+@pytest.mark.xfail(
+    strict=True,
+    reason="#10848 residual: Grok fails open on every hook failure and has no fail-closed field for command hooks; "
+    "interactive Grok seats run the Claude-compat guards fail-open, or none under the recommended hook profile",
+)
+def test_grok_interactive_seats_run_guards_through_a_deadline_to_deny_runner() -> None:
+    """Visible gap: passes only once the Grok seat profile wires the guards through the bridge."""
+    profile = (REPO / "scripts/hooks/apply_grok_hook_profile.py").read_text(encoding="utf-8")
+    assert "grok_hook_bridge" in profile
+
+
+def _cursor_fail_open_guards(config: dict) -> list[str]:
+    """Commands of guard hooks in a Cursor ``hooks.json`` that do not set ``failClosed: true``."""
+    return [
+        hook.get("command", "")
+        for hooks in config.get("hooks", {}).values()
+        for hook in hooks
+        if "guard" in hook.get("command", "") and hook.get("failClosed") is not True
+    ]
+
+
+def test_cursor_fail_open_detector_flags_a_guard_without_fail_closed() -> None:
+    config = {"version": 1, "hooks": {"beforeShellExecution": [{"command": "./hooks/guard-secret-print.py"}]}}
+    assert _cursor_fail_open_guards(config) == ["./hooks/guard-secret-print.py"]
+    config["hooks"]["beforeShellExecution"][0]["failClosed"] = True
+    assert _cursor_fail_open_guards(config) == []
+
+
+def test_tracked_cursor_guard_hooks_fail_closed() -> None:
+    """Cursor fails open on exit codes other than 0 and 2 unless a hook sets ``failClosed: true``."""
+    tracked = subprocess.run(
+        ["git", "ls-files", "--", ".cursor/hooks.json", "agents_extensions/cursor/**/hooks.json"],
+        cwd=REPO,
+        capture_output=True,
+        text=True,
+        check=True,
+        timeout=30,
+    ).stdout.split()
+    for path in tracked:
+        config = json.loads((REPO / path).read_text(encoding="utf-8"))
+        assert _cursor_fail_open_guards(config) == [], path
