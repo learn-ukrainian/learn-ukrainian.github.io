@@ -52,6 +52,9 @@ LOADED_P99_MS = {
     "guard-public-github-text.py": 510,
     "guard-secret-print.py": 887,
 }
+# Guards the Claude adapter adds outside the shared settings, with loaded p99
+# measured the same way (sequential, 200 calls, 16 busy loops, load about 23).
+ADAPTER_GUARD_LOADED_P99_MS = {"guard-reviewer-publish.py": 226}
 TIMEOUT_FLOOR_S = 10
 NETWORK_GUARDS = frozenset({"guard-admin-merge.py", "guard-pr-merge.py"})
 NETWORK_TIMEOUT_S = 30
@@ -137,19 +140,34 @@ def test_claude_worker_settings_inherit_the_failure_policy() -> None:
     assert all(hook.get("onFailure") == "block" for hook in guards)
 
 
-@pytest.mark.xfail(
-    strict=True,
-    reason="#10848 residual: the reviewer publish guard is added by scripts/agent_runtime/adapters/claude.py "
-    "with timeout 5 and no onFailure, outside this change's owned paths",
-)
 def test_reviewer_publish_guard_blocks_on_failure() -> None:
+    """The adapter adds this guard to read-only runs; it follows the shared guards' failure policy."""
     from scripts.agent_runtime.adapters import claude
 
     groups = json.loads(claude._worker_guard_settings(publish_guard=True))["hooks"]["PreToolUse"]
     publish = [
         hook for group in groups for hook in group["hooks"] if hook["command"].endswith("guard-reviewer-publish.py")
     ]
-    assert publish and all(hook.get("onFailure") == "block" for hook in publish)
+    assert len(publish) == 1
+    hook = publish[0]
+    assert hook["type"] == "command"
+    assert hook.get("onFailure") == "block", "the reviewer publish guard fails open on timeout or crash"
+    assert not hook.get("async") and not hook.get("asyncRewake")
+    timeout = hook["timeout"]
+    assert isinstance(timeout, int) and timeout >= TIMEOUT_FLOOR_S
+    assert timeout * 1000 >= 4 * ADAPTER_GUARD_LOADED_P99_MS["guard-reviewer-publish.py"]
+
+
+def test_every_adapter_added_guard_blocks_on_failure() -> None:
+    """Any refusing guard the adapter adds beyond the shared settings must carry the policy too."""
+    from scripts.agent_runtime.adapters import claude
+
+    groups = json.loads(claude._worker_guard_settings(publish_guard=True))["hooks"]["PreToolUse"]
+    guards = [hook for group in groups for hook in group["hooks"] if _is_refusing_guard(Path(hook["command"]).name)]
+    assert {Path(hook["command"]).name for hook in guards} == REFUSING_GUARDS | set(ADAPTER_GUARD_LOADED_P99_MS)
+    for hook in guards:
+        assert hook.get("onFailure") == "block", hook["command"]
+        assert hook["timeout"] >= TIMEOUT_FLOOR_S, hook["command"]
 
 
 # --- Forced timeout through the real runner (opt-in live canary) -------------

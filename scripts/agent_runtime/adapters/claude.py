@@ -633,9 +633,10 @@ def _worker_guard_settings(*, publish_guard: bool = False) -> str:
         guard = source_root / "agents_extensions/shared/hooks/guard-reviewer-publish.py"
         if not guard.is_file():
             raise RuntimeError(f"Claude reviewer publish guard unavailable: {guard}")
-        groups.append(
-            {"matcher": "Bash", "hooks": [{"type": "command", "command": shlex.quote(str(guard)), "timeout": 5}]}
-        )
+        # Same failure policy as the shared refusing guards (#10848): a timeout
+        # or failed start refuses the call instead of letting it run unguarded.
+        hook = {"type": "command", "command": shlex.quote(str(guard)), "timeout": 10, "onFailure": "block"}
+        groups.append({"matcher": "Bash", "hooks": [hook]})
     if not groups:
         raise RuntimeError("Claude worker PreToolUse guards unavailable")
     settings: dict[str, Any] = {"hooks": {"PreToolUse": groups}}
