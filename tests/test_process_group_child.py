@@ -1,9 +1,10 @@
 """No process of a test's child command outlives it (#10777, tests/process_group_child.py).
 
-Each case starts a child that starts a long-lived grandchild and records both
-pids, then ends the call a different way: timeout, an exception in the
-caller, a normal exit, and the death of the calling process itself (what
-pytest-timeout's thread method does to an xdist worker).
+Each case starts a child that starts a long-lived grandchild and records the
+pids of its supervisor, itself and the grandchild, then ends the call a
+different way: timeout, an exception in the caller, a normal exit, and the
+death of the calling process itself (what pytest-timeout's thread method does
+to an xdist worker).
 """
 
 from __future__ import annotations
@@ -36,7 +37,7 @@ _CHILD = textwrap.dedent(
 
     grandchild = subprocess.Popen([sys.executable, "-c", "import time; time.sleep(300)"])
     with open(sys.argv[1] + ".tmp", "w") as handle:
-        handle.write(f"{os.getpid()} {grandchild.pid}")
+        handle.write(f"{os.getppid()} {os.getpid()} {grandchild.pid}")
     os.replace(sys.argv[1] + ".tmp", sys.argv[1])
     print("child-out", flush=True)
     print("child-err", file=sys.stderr, flush=True)
@@ -64,6 +65,7 @@ def _wait_for_pids(pid_file: Path, timeout: float = 60) -> list[int]:
 
 
 def _assert_all_gone(pids: list[int], timeout: float = 20) -> None:
+    assert os.getpid() not in pids, "the command ran as a child of the test process, not of a supervisor"
     deadline = time.monotonic() + timeout
     while any(_alive(pid) for pid in pids) and time.monotonic() < deadline:
         time.sleep(0.05)
@@ -78,7 +80,7 @@ def pid_file(tmp_path: Path) -> Iterator[Path]:
     yield path
     if path.is_file():
         for pid in (int(pid) for pid in path.read_text().split()):
-            if _alive(pid):
+            if pid != os.getpid() and _alive(pid):
                 os.kill(pid, signal.SIGKILL)
 
 
