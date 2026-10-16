@@ -12,6 +12,16 @@ cannot be flagged. Python NFKC-normalises identifiers, so non-ASCII sources
 are also tested after NFKC normalisation. Import *syntax* is never inspected
 by the prefilter: ``if x: import subprocess``, ``a = 1; import subprocess`` and
 ``import \\`` line continuations are all parsed. The AST walk stays the authority.
+
+Wildcard imports (#10791): ``from subprocess import *`` binds ``run``,
+``check_output``, ``call``, ``check_call`` and ``Popen`` as bare names for the
+whole module, exactly like the explicit ``from subprocess import run`` form, so a
+bare timeout-less ``run([...])`` is reported. ``Popen`` is bound but, as for
+``subprocess.Popen``, is not a bounded callable and is never reported. A wildcard
+import inside a function is a ``SyntaxError`` at compile time but parses, so the
+walk binds it module-wide like any other import. Rebinding a bound name (a local
+``def run`` in a file that also wildcard-imports subprocess) is not tracked; a
+file that does not import subprocess is never affected.
 """
 
 from __future__ import annotations
@@ -32,6 +42,8 @@ from scripts.ci.test_source_cache import parse_test_source, read_test_source
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 BOUNDED_FUNCS = frozenset({"run", "check_output", "call", "check_call"})
+# Names ``from subprocess import *`` binds that the visitor can match (all in ``subprocess.__all__``).
+_WILDCARD_NAMES = BOUNDED_FUNCS | {"Popen"}
 SHAPE_HASH_HEX_LEN = 16
 ALLOWLIST_KEY_PARTS = 4
 _SUBPROCESS_TOKEN = "subprocess"
@@ -169,7 +181,10 @@ def _collect_aliases(tree: ast.AST) -> dict[str, str | None]:
     for node in ast.walk(tree):
         if isinstance(node, ast.ImportFrom) and node.module == "subprocess":
             for alias in node.names:
-                aliases[alias.asname or alias.name] = alias.name
+                if alias.name == "*":
+                    aliases.update({name: name for name in _WILDCARD_NAMES})
+                else:
+                    aliases[alias.asname or alias.name] = alias.name
         elif isinstance(node, ast.Import):
             for alias in node.names:
                 if alias.name == "subprocess":

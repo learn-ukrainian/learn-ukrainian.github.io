@@ -214,6 +214,56 @@ def test_non_line_anchored_subprocess_import_fails_the_cli(
     assert "tests/test_shape.py" in capsys.readouterr().err
 
 
+def _both_entry_points(source: str, tmp_path: Path) -> tuple[list[guard.TimeoutLessCall], list[str]]:
+    """Findings from the per-file entry and the allowlist keys from the tree-scan entry."""
+    path = tmp_path / "scripts" / "wild.py"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(source, encoding="utf-8")
+    from_path = timeout_less_calls(path)
+    assert timeout_less_calls_from_source(source) == from_path
+    hits_by_key, errors = scan_scripts(tmp_path / "scripts", tmp_path)
+    assert errors == []
+    return from_path, sorted(hits_by_key)
+
+
+@pytest.mark.parametrize("func", ["run", "check_output", "call", "check_call"])
+def test_wildcard_import_bare_timeout_less_bounded_call_is_reported(func: str, tmp_path: Path) -> None:
+    hits, keys = _both_entry_points(f"from subprocess import *\n{func}(['x'])\n", tmp_path)
+    assert [hit.name for hit in hits] == [f"subprocess.{func}"]
+    assert len(keys) == 1
+    assert keys[0].startswith(f"scripts/wild.py::<module>::subprocess.{func}::")
+
+
+def test_wildcard_import_bare_popen_matches_qualified_popen(tmp_path: Path) -> None:
+    """Popen is bound by the wildcard but, like ``subprocess.Popen``, is not a bounded callable."""
+    wild, wild_keys = _both_entry_points("from subprocess import *\nPopen(['x'])\n", tmp_path)
+    qualified, qualified_keys = _both_entry_points("import subprocess\nsubprocess.Popen(['x'])\n", tmp_path)
+    explicit, explicit_keys = _both_entry_points("from subprocess import Popen\nPopen(['x'])\n", tmp_path)
+    assert (wild, wild_keys) == (qualified, qualified_keys) == (explicit, explicit_keys) == ([], [])
+
+
+def test_wildcard_import_bare_call_with_timeout_is_not_reported(tmp_path: Path) -> None:
+    source = "from subprocess import *\nrun(['x'], timeout=5)\ncheck_output(['x'], timeout=5)\n"
+    assert _both_entry_points(source, tmp_path) == ([], [])
+
+
+def test_wildcard_import_inside_function_binds_like_other_imports(tmp_path: Path) -> None:
+    """``import *`` in a function is a compile-time SyntaxError but parses; pin that it is not mishandled."""
+    source = "def f():\n    from subprocess import *\n    run(['x'])\n"
+    with pytest.raises(SyntaxError, match="only allowed at module level"):
+        compile(source, "<mem>", "exec")
+    hits, keys = _both_entry_points(source, tmp_path)
+    assert [(hit.name, hit.qualname) for hit in hits] == [("subprocess.run", "f")]
+    assert len(keys) == 1
+
+
+def test_local_run_without_wildcard_subprocess_import_is_not_reported(tmp_path: Path) -> None:
+    source = "def run(cmd):\n    return cmd\n\n\nrun(['x'])\ncall(['x'])\n"
+    assert _both_entry_points(source, tmp_path) == ([], [])
+    source_other = "from os import *\nimport shlex\nrun(['x'])\ncheck_output(['x'])\n"
+    assert _both_entry_points(source_other, tmp_path) == ([], [])
+
+
 def test_prefilter_still_skips_sources_that_cannot_import_subprocess() -> None:
     assert timeout_less_calls_from_source("import os\nos.system('true')\n") == []
     assert timeout_less_calls_from_source("") == []
