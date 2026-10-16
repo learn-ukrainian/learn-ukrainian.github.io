@@ -16,6 +16,7 @@ from pathlib import Path
 from typing import Any, Literal
 
 from fastapi import APIRouter, Depends, HTTPException, Query
+from pydantic import BaseModel, ConfigDict, ValidationError
 
 try:
     from scripts.lib.readonly_sqlite import SQLiteConnection
@@ -52,6 +53,14 @@ _TASK_SCAN_LOCK = threading.Lock()
 # Authoritative repository-attribution fields on task state. Paths, branch names,
 # cwd, worktree, and task_id are never used for repository matching.
 DELEGATE_REPOSITORY_ATTR_FIELDS = ("repository_id", "repository")
+
+
+class _RecordStatus(BaseModel):
+    """A task record's top-level status; validation skips every other member."""
+
+    model_config = ConfigDict(strict=True, extra="ignore")
+
+    status: str
 
 
 def _tasks_dir(ctx: MonitorContext | None = None) -> Path:
@@ -108,23 +117,23 @@ def _read_record_bytes(fd: int) -> bytes | None:
     info = os.fstat(fd)
     if not stat.S_ISREG(info.st_mode):
         return None
+    chunks = []
     want = info.st_size + 1
-    chunks = [os.read(fd, want)]
-    # A short read of a regular file is EOF. A full one means the file grew
-    # after fstat, so read on. A truncated object cannot parse as another document.
-    while len(chunks[-1]) == want:
+    # Only an empty read is EOF. A short nonempty read can end anywhere, even
+    # just after a complete object, so read on until the file reports EOF.
+    while chunk := os.read(fd, want):
+        chunks.append(chunk)
         want = 1 << 16
-        chunks.append(os.read(fd, want))
     return b"".join(chunks)
 
 
-def _read_task_state(
+def _read_task_bytes(
     path: str,
     ctx: MonitorContext | None = None,
     root: str | None = None,
     root_fd: int | None = None,
-) -> dict[str, Any] | None:
-    """Read task JSON only after a local containment check (CodeQL sink guard).
+) -> bytes | None:
+    """Read task record bytes only after a local containment check (CodeQL sink guard).
 
     ``root`` is the resolved tasks directory. Before any filesystem access the
     path must lie lexically under that root or under the configured unresolved
@@ -134,6 +143,9 @@ def _read_task_state(
     parent swapped after resolution cannot redirect the read. Active scans pass
     their resolved root and its held descriptor, and resolve a sibling leaf
     only when it is itself a link.
+
+    Returns ``None`` for a refused path or a non-regular file; a failed read
+    raises ``OSError`` so the caller can retry it.
     """
     scan_root = root is not None
     if root is None:
@@ -146,7 +158,6 @@ def _read_task_state(
     resolved = not scan_root or os.path.dirname(fullpath) != root
     if resolved:
         fullpath = os.path.realpath(fullpath)
-    failures = 0
     while True:
         if not fullpath.startswith(root + os.sep):
             return None
@@ -162,27 +173,66 @@ def _read_task_state(
                 owned.append(parent)
             fd = os.open(parts[-1], _RECORD_OPEN_FLAGS, dir_fd=parent)
             owned.append(fd)
-            raw = _read_record_bytes(fd)
-            if raw is None:
-                return None
-            data = json.loads(raw.decode("utf-8"))
+            return _read_record_bytes(fd)
         except OSError as exc:
-            if exc.errno == errno.ELOOP and not resolved:
-                # A contained sibling link resolves once; its target opens the same way.
-                fullpath = os.path.realpath(fullpath)
-                resolved = True
-                continue
-            failures += 1
-        except ValueError:
-            failures += 1
-        else:
-            return data if isinstance(data, dict) else None
+            if exc.errno != errno.ELOOP or resolved:
+                raise
+            # A contained sibling link resolves once; its target opens the same way.
+            fullpath = os.path.realpath(fullpath)
+            resolved = True
         finally:
             for descriptor in reversed(owned):
                 os.close(descriptor)
-        if failures == TASK_READ_RETRIES:
-            return None
-        time.sleep(TASK_READ_RETRY_SECONDS)
+
+
+def _read_task_state(
+    path: str,
+    ctx: MonitorContext | None = None,
+    root: str | None = None,
+    root_fd: int | None = None,
+    prefetched: bytes | None = None,
+) -> dict[str, Any] | None:
+    """Parse a task record read by :func:`_read_task_bytes`, retrying a failed read.
+
+    ``prefetched`` stands in for the first read when the caller already holds
+    the record bytes.
+    """
+    for attempt in range(TASK_READ_RETRIES):
+        try:
+            raw = prefetched if attempt == 0 and prefetched is not None else _read_task_bytes(path, ctx, root, root_fd)
+            if raw is None:
+                return None
+            data = json.loads(raw.decode("utf-8"))
+        except (OSError, ValueError):
+            if attempt + 1 == TASK_READ_RETRIES:
+                return None
+            time.sleep(TASK_READ_RETRY_SECONDS)
+            continue
+        return data if isinstance(data, dict) else None
+    return None
+
+
+def _scan_task_state(path: str, ctx: MonitorContext | None, root: str, root_fd: int) -> dict[str, Any] | None:
+    """Read one hot record for the active scan, parsing it only when it may be active.
+
+    The status-only schema validates the whole document, so a partial or
+    malformed record fails here exactly as it fails to parse, but no object is
+    built except the status. Anything it cannot classify as not active goes
+    through :func:`_read_task_state`, which reuses these bytes as its first read.
+    """
+    try:
+        raw = _read_task_bytes(path, ctx, root, root_fd)
+    except OSError:
+        return _read_task_state(path, ctx, root, root_fd)
+    if raw is None:
+        return None
+    try:
+        status = _RecordStatus.model_validate_json(raw).status
+    except ValidationError:
+        status = None
+    if status and status not in ACTIVE_TASK_STATUSES:
+        return {"status": status}
+    return _read_task_state(path, ctx, root, root_fd, raw)
 
 
 def _read_result_file(result_file: str, ctx: MonitorContext | None = None) -> str | None:
@@ -865,7 +915,7 @@ def active_delegate_tasks(
                 artifact = cached[1] is None
             else:
                 try:
-                    task = _read_task_state(root + os.sep + name, ctx, root, root_fd)
+                    task = _scan_task_state(root + os.sep + name, ctx, root, root_fd)
                 except (OSError, UnicodeError):
                     task = None
                 artifact = task is not None and _is_closeout_artifact(task)

@@ -442,14 +442,15 @@ def test_terminal_fact_cache_is_compact_bounded_and_context_owned(inventory, mon
     monkeypatch.setattr(delegate_router, "ACTIVE_FACT_CACHE_LIMIT", 2)
     for i in range(3):
         write(tasks, str(i), status="done", payload="unretained" * 10000)
-    original = delegate_router._read_task_state
+    # Every uncached record is read once, whether or not it is then parsed.
+    original = delegate_router._read_task_bytes
     reads = []
 
     def read(*args):
         reads.append(args[0])
         return original(*args)
 
-    monkeypatch.setattr(delegate_router, "_read_task_state", read)
+    monkeypatch.setattr(delegate_router, "_read_task_bytes", read)
     for expected_reads in (3, 4):
         body = client.get("/api/delegate/active").json()
         assert body["total"] == 0
@@ -866,3 +867,76 @@ def test_store_replaced_between_listing_and_holding_is_refused(inventory, monkey
     response = client.get("/api/delegate/active")
     assert response.status_code == 503
     assert response.json()["detail"] == {"status": "unknown", "reason": "task_authority_changed"}
+
+
+@pytest.mark.parametrize("contents", ['{"status":"done"} trailing-invalid-data', None])
+def test_short_reads_continue_until_eof(inventory, monkeypatch, contents):
+    client, tasks = inventory
+    if contents is None:
+        path = write(tasks)
+    else:
+        path = tasks / "one.json"
+        path.write_text(contents, encoding="utf-8")
+    original = os.read
+    # A reader may return fewer bytes than asked before the end of a regular file.
+    monkeypatch.setattr(delegate_router.os, "read", lambda fd, size: original(fd, min(size, 17)))
+    monkeypatch.setattr(delegate_router.time, "sleep", lambda _seconds: None)
+    state = delegate_router._read_task_state(str(path), client.app.state.ctx)
+    response = client.get("/api/delegate/active")
+    if contents is None:
+        assert state == json.loads(path.read_text(encoding="utf-8"))
+        assert response.status_code == 200
+        assert response.json()["total"] == 1
+    else:
+        assert state is None
+        assert response.status_code == 503
+        assert response.json()["detail"]["reason"] == "task_record_unreadable_or_invalid"
+
+
+def test_cold_inventory_parses_only_possibly_active_records(inventory, monkeypatch):
+    _, tasks = inventory
+    statuses = ["done", "failed", "needs_finalize", "blocked", "cancelled"]
+    for i in range(50):
+        write(tasks, f"terminal-{i}", status=statuses[i % 5], dispatch=[{"status": "running", "note": "}"}] * 3)
+    live = write(tasks, "live").read_text(encoding="utf-8")
+    # Duplicate keys keep the last value, as the full parse does.
+    duplicate = live.replace('"live"', '"duplicate"')
+    duplicate = duplicate.replace('"status": "running"', '"status": "done", "status": "running"')
+    assert duplicate.count('"status"') == 2
+    (tasks / "duplicate.json").write_text(duplicate, encoding="utf-8")
+    original_loads, original_read = json.loads, delegate_router._read_task_state
+    parsed, parsed_records = [], []
+
+    def loads(*args, **kwargs):
+        parsed.append(args[0])
+        return original_loads(*args, **kwargs)
+
+    def read(*args):
+        parsed_records.append(os.path.basename(args[0]))
+        return original_read(*args)
+
+    with monkeypatch.context() as patch:
+        patch.setattr(delegate_router.json, "loads", loads)
+        patch.setattr(delegate_router, "_read_task_state", read)
+        body = delegate_router.active_delegate_tasks(ctx=fixture_context(tasks.parent.parent))
+    assert sorted(row["task_id"] for row in body["tasks"]) == ["duplicate", "live"]
+    assert body["source"]["records_scanned"] == 52
+    assert sorted(parsed_records) == ["duplicate.json", "live.json"]
+    assert len(parsed) == 2
+
+
+def test_partial_or_extended_terminal_document_is_never_terminal(inventory):
+    client, tasks = inventory
+    record = json.dumps({"status": "done", "dispatch": [{"key": 1}, {"note": "a}b"}], "tail": {"x": "}"}})
+    candidates = [record[:end] for end in range(len(record))]
+    candidates += [record + " trailing", record + "{}", record + record, "[" + record + "]"]
+    path = tasks / "one.json"
+    for contents in candidates:
+        path.write_text(contents, encoding="utf-8")
+        response = client.get("/api/delegate/active")
+        assert response.status_code == 503, contents
+        assert response.json()["detail"]["reason"] == "task_record_unreadable_or_invalid"
+    path.write_text(record, encoding="utf-8")
+    response = client.get("/api/delegate/active")
+    assert response.status_code == 200
+    assert response.json()["source"]["records_scanned"] == 1
