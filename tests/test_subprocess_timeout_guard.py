@@ -17,6 +17,7 @@ different timeout-less call cannot rotate into a vacated qualname slot (#7213).
 
 from __future__ import annotations
 
+import ast
 import os
 import re
 import subprocess
@@ -178,6 +179,54 @@ def test_cached_findings_equal_uncached_findings_on_full_tree(root: Path) -> Non
         expected = timeout_less_calls_from_source(source, filename=str(path))
         assert timeout_less_calls(path) == expected, path
         assert timeout_less_calls(path) == expected, path
+
+
+# Import shapes the former line-anchored prefilter skipped (#10782).
+_NON_LINE_ANCHORED_IMPORTS = {
+    "nested-block": "if True: import subprocess\nsubprocess.run(['echo'])\n",
+    "semicolon": "x = 1; import subprocess\nsubprocess.run(['echo'])\n",
+    "backslash-continuation": "import \\\nsubprocess\nsubprocess.run(['echo'])\n",
+    "from-import-after-semicolon": "x = 1; from subprocess import run\nrun(['echo'])\n",
+    "nfkc-normalised-identifier": "import \uff53ubprocess\nsubprocess.run(['echo'])\n",
+}
+
+
+@pytest.mark.parametrize("source", _NON_LINE_ANCHORED_IMPORTS.values(), ids=_NON_LINE_ANCHORED_IMPORTS.keys())
+def test_non_line_anchored_subprocess_imports_are_reported_by_both_entry_points(
+    source: str, tmp_path: Path
+) -> None:
+    from_source = timeout_less_calls_from_source(source)
+    path = tmp_path / "calls.py"
+    path.write_text(source, encoding="utf-8")
+    from_path = timeout_less_calls(path)
+    assert len(from_source) == 1
+    assert from_path == from_source
+
+
+@pytest.mark.parametrize("source", _NON_LINE_ANCHORED_IMPORTS.values(), ids=_NON_LINE_ANCHORED_IMPORTS.keys())
+def test_non_line_anchored_subprocess_import_fails_the_cli(
+    source: str, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    test_file = tmp_path / "tests" / "test_shape.py"
+    test_file.parent.mkdir(parents=True)
+    test_file.write_text(source, encoding="utf-8")
+    assert main([str(test_file), "--root", str(tmp_path)]) == 1
+    assert "tests/test_shape.py" in capsys.readouterr().err
+
+
+def test_prefilter_still_skips_sources_that_cannot_import_subprocess() -> None:
+    assert timeout_less_calls_from_source("import os\nos.system('true')\n") == []
+    assert timeout_less_calls_from_source("") == []
+
+
+@pytest.mark.parametrize("root", [_SCRIPTS_ROOT, _TESTS_ROOT], ids=["scripts", "tests"])
+def test_prefilter_findings_equal_unfiltered_ast_findings_on_full_tree(root: Path) -> None:
+    """The prefilter may only skip files the AST visitor would not flag (#10782)."""
+    for path in sorted(root.rglob("*.py")):
+        source = path.read_text(encoding="utf-8")
+        unfiltered = guard.timeout_less_calls_from_tree(ast.parse(source, filename=str(path)))
+        assert timeout_less_calls(path) == unfiltered, path
+        assert timeout_less_calls_from_source(source, filename=str(path)) == unfiltered, path
 
 
 def test_cached_findings_reuse_the_visitor(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
