@@ -21612,6 +21612,40 @@ def test_dispatch_records_only_explicit_owned_paths(tmp_tasks_dir, tmp_path, mon
     assert owned["owned_paths"] == ["scripts/fleet/", "docs/x.md"]
 
 
+@pytest.mark.usefixtures("isolated_dispatch_repo")
+def test_dispatch_checks_out_the_excluded_trees_its_owned_paths_need(tmp_tasks_dir, tmp_path, monkeypatch):
+    """--owned-path keeps the excluded tree it owns without research flags; research paths only add (#10777)."""
+    monkeypatch.setattr(delegate, "_build_research_context", lambda args: None)
+    ensure = delegate._ensure_worktree
+    sparse_includes: dict[str, tuple[str, ...]] = {}
+
+    def recording_ensure(**kwargs):
+        sparse_includes[kwargs["task_id"]] = tuple(kwargs["sparse_include"])
+        return ensure(**kwargs)
+
+    monkeypatch.setattr(delegate, "_ensure_worktree", recording_ensure)
+    for task_id, extra in (
+        ("sparse-owned", ["--owned-path", "site/src/data/curriculum-stats.json"]),
+        ("sparse-owned-alias", ["--owned-path", "./site/src/data/curriculum-stats.json"]),
+        (
+            "sparse-owned-and-research",
+            [
+                "--owned-path",
+                "site/src/data/curriculum-stats.json",
+                "--research-owned-path",
+                "registry/projects/open_model_data/x.json",
+            ],
+        ),
+    ):
+        _dispatch_recording_the_worker_prompt(tmp_path, monkeypatch, task_id, ["--mode", "read-only", *extra])
+
+    assert sparse_includes == {
+        "sparse-owned": ("site/src/data",),
+        "sparse-owned-alias": ("site/src/data",),
+        "sparse-owned-and-research": ("site/src/data", "registry/projects"),
+    }
+
+
 @pytest.mark.parametrize("bad", ["/etc", "../outside", ".", "", "scripts/../docs", "./**", "**", "*", "*/**"])
 def test_dispatch_refuses_an_owned_path_that_could_never_own_a_file(tmp_tasks_dir, tmp_path, monkeypatch, capsys, bad):
     monkeypatch.setenv("LU_SCRATCH_ROOT", str(tmp_path))

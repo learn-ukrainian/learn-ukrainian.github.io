@@ -2016,8 +2016,9 @@ _install_socket_guard()
 # mentions the tree name is not a read. Every default exclusion in
 # scripts/delegate.py is listed except wiki and the trees with a cone anchor
 # (_DISPATCH_SPARSE_ANCHORS): their directory exists in a default checkout,
-# so absence is not detectable here (#10777,
-# tests/test_dispatch_checkout_size.py).
+# so a directory check cannot see them absent (#10777,
+# tests/test_dispatch_checkout_size.py). _SPARSE_ANCHORED_TREES below reads
+# that absence from the sparse cone instead.
 _SPARSE_TREE_DIRS: dict[str, tuple[str, ...]] = {
     "data/projects": ("tests/projects/open_model_data",),
     "data/lexicon": ("tests/lexicon",),
@@ -2029,7 +2030,11 @@ _SPARSE_TREE_DIRS: dict[str, tuple[str, ...]] = {
 # review tests lay out tmp_path/site/src/content as fixtures, so a path match
 # is no evidence of a read: derived needs skipped 400 tests that pass
 # without the trees (#10777).
-_SPARSE_MARKER_ONLY_TREES = frozenset({"site/src/content", "site/src/data"})
+# An anchored tree is absent when the sparse cone does not hold all of it
+# (_sparse_cone_holds); its anchors keep the directory. It also skips only
+# through the marker, so tests that read just the anchored files keep running.
+_SPARSE_ANCHORED_TREES = frozenset({"registry/lexicon/source-inventory"})
+_SPARSE_MARKER_ONLY_TREES = frozenset({"site/src/content", "site/src/data"}) | _SPARSE_ANCHORED_TREES
 _SPARSE_TREES = frozenset(_SPARSE_TREE_DIRS) | _SPARSE_MARKER_ONLY_TREES
 _SPARSE_READ_ATTRS = frozenset(
     {
@@ -2443,9 +2448,45 @@ def _sparse_missing_trees() -> frozenset[str]:
         return frozenset(forced)
     missing = set(forced)
     for rel in _SPARSE_TREES:
-        if not (_REPO_ROOT / rel).is_dir():
+        present = _sparse_cone_holds(rel) if rel in _SPARSE_ANCHORED_TREES else (_REPO_ROOT / rel).is_dir()
+        if not present:
             missing.add(rel)
     return frozenset(missing)
+
+
+@functools.lru_cache(maxsize=1)
+def _sparse_cone_dirs() -> tuple[str, ...] | None:
+    """Directories of this checkout's sparse cone; None when it is not in cone mode or git fails."""
+    try:
+        cone_mode = subprocess.run(
+            ["git", "-C", str(_REPO_ROOT), "config", "--get", "--type=bool", "core.sparseCheckoutCone"],
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=30,
+        )
+        if cone_mode.stdout.strip().lower() != "true":
+            return None
+        listing = subprocess.run(
+            ["git", "-C", str(_REPO_ROOT), "sparse-checkout", "list"],
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=30,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return None
+    if listing.returncode != 0:
+        return None
+    return tuple(line.strip().strip("/") for line in listing.stdout.splitlines() if line.strip())
+
+
+def _sparse_cone_holds(tree: str) -> bool:
+    """Whether the sparse cone holds all of ``tree``; an unknown cone reads as holding it, so the test runs."""
+    cone = _sparse_cone_dirs()
+    if cone is None:
+        return True
+    return any(tree == entry or tree.startswith(entry + "/") for entry in cone)
 
 
 def _item_repo_rel(item: pytest.Item) -> str:

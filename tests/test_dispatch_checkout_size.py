@@ -137,20 +137,150 @@ def test_every_anchor_lies_inside_its_excluded_tree_and_exists() -> None:
             assert anchor in _list_dirs(anchor.rpartition("/")[0]), f"anchor {anchor} is not a directory at HEAD"
 
 
-def test_conftest_skips_tests_for_every_unanchored_exclusion() -> None:
-    """A test reading an excluded tree skips with its --sparse-include, not a bare FileNotFoundError.
-
-    Anchored trees keep their directory, so the conftest cannot see them as
-    absent; wiki has no test readers.
-    """
-    conftest = next(
+def _conftest():
+    return next(
         module
         for module in list(sys.modules.values())
         if str(getattr(module, "__file__", "") or "").endswith("tests/conftest.py")
     )
+
+
+def test_conftest_skips_tests_for_every_unanchored_exclusion() -> None:
+    """A test reading an excluded tree skips with its --sparse-include, not a bare FileNotFoundError.
+
+    Anchored trees keep their directory; the conftest sees one absent through
+    the sparse cone only when it is listed in _SPARSE_ANCHORED_TREES. wiki has
+    no test readers.
+    """
+    conftest = _conftest()
     expected = set(delegate._DISPATCH_SPARSE_EXCLUDE_DEFAULT) - set(delegate._DISPATCH_SPARSE_ANCHORS) - {"wiki"}
 
-    assert set(conftest._SPARSE_TREES) == expected
+    assert set(delegate._DISPATCH_SPARSE_ANCHORS) >= conftest._SPARSE_ANCHORED_TREES
+    assert set(conftest._SPARSE_TREES) == expected | conftest._SPARSE_ANCHORED_TREES
+
+
+_DECISIONS = "registry/lexicon/source-inventory-review-decisions"
+# Tests that read a tree the default profile dropped in #10777 and passed in
+# a full checkout but failed in a default one: (test file, test item, tree).
+# A parametrized test whose cases come from the absent tree collects one
+# empty-parameter item, ``[ledger_path0]``; it must skip naming the include
+# too, not as ``got empty parameter set``.
+EXCLUDED_TREE_READERS = (
+    (
+        "tests/test_source_inventory_review_decisions.py",
+        "test_committed_first_source_inventory_review_batch_validates",
+        _DECISIONS,
+    ),
+    (
+        "tests/test_source_inventory_review_decisions.py",
+        "test_default_committed_decision_file_parametrization_is_complete",
+        _DECISIONS,
+    ),
+    (
+        "tests/test_source_inventory_review_decisions.py",
+        "test_default_committed_decision_files_keep_aggregate_floors",
+        _DECISIONS,
+    ),
+    (
+        "tests/test_source_inventory_review_decisions.py",
+        "test_default_committed_decision_files_validate[ledger_path0]",
+        _DECISIONS,
+    ),
+    ("tests/test_source_inventory_review_decisions.py", "test_committed_ohoiko_batch_ledgers_validate", _DECISIONS),
+    (
+        "tests/test_source_inventory_promotion_plan.py",
+        "test_plan_maps_approved_decision_to_manifest_addition",
+        _DECISIONS,
+    ),
+    ("tests/test_scrub_decision_ledger_keys.py", "test_shards_independently_pass_validation", _DECISIONS),
+    (
+        "tests/test_ohoiko_source_inventory_scope.py",
+        "test_ohoiko_abetka_inventory_has_review_decisions_for_all_rows",
+        _DECISIONS,
+    ),
+    (
+        "tests/test_promote_teacher_lesson_intake.py",
+        "test_private_teacher_lesson_delta_inventory_is_privacy_safe",
+        "registry/lexicon/source-inventory",
+    ),
+    (
+        "tests/test_generate_search_index.py",
+        "test_committed_usage_sources_are_bound_to_their_passages",
+        "site/src/data",
+    ),
+    ("tests/audit/test_check_mdx_source_parity.py", "test_real_generated_a1_pages_pass_parity", "site/src/content"),
+)
+
+
+@pytest.mark.parametrize(("test_file", "item_name", "tree"), EXCLUDED_TREE_READERS)
+def test_excluded_tree_readers_skip_naming_their_include(test_file: str, item_name: str, tree: str) -> None:
+    reason = _conftest().sparse_missing_tree_skip_reason(
+        test_file, sparse_enabled=True, missing_trees={tree}, item_name=item_name
+    )
+
+    assert reason == f"{tree} is absent from this sparse worktree; re-include it with --sparse-include {tree}"
+
+
+def test_ledger_tests_that_build_their_own_ledgers_still_run_without_the_ledgers() -> None:
+    """Marks stay on the readers: the tmp_path unit tests beside them keep their coverage."""
+    reason = _conftest().sparse_missing_tree_skip_reason(
+        "tests/test_source_inventory_review_decisions.py",
+        sparse_enabled=True,
+        missing_trees=set(_conftest()._SPARSE_TREES),
+        item_name="test_decision_validator_rejects_bad_source_key",
+    )
+
+    assert reason is None
+
+
+@pytest.fixture
+def conftest_on_repo(monkeypatch: pytest.MonkeyPatch):
+    """Point the conftest's sparse checks at another checkout; reset its caches on both sides."""
+    conftest = _conftest()
+    caches = (conftest._sparse_checkout_enabled, conftest._sparse_cone_dirs)
+
+    def use(root: Path):
+        monkeypatch.setattr(conftest, "_REPO_ROOT", root)
+        for lru in caches:
+            lru.cache_clear()
+        return conftest
+
+    monkeypatch.delenv("SPARSE_TEST_FORCE_MISSING_TREES", raising=False)
+    yield use
+    for lru in caches:
+        lru.cache_clear()
+
+
+def test_conftest_sees_an_anchored_tree_absent_through_the_sparse_cone(tmp_path: Path, conftest_on_repo) -> None:
+    repo = tmp_path / "repo"
+    inventory = "registry/lexicon/source-inventory"
+    for relative in (f"{inventory}/loose.yaml", f"{inventory}/grade-01/g.yaml", f"{inventory}/oneshot/o.yaml"):
+        (repo / relative).parent.mkdir(parents=True, exist_ok=True)
+        (repo / relative).write_text("x\n", encoding="utf-8")
+    env = {"GIT_CEILING_DIRECTORIES": str(tmp_path), "HOME": str(tmp_path), "PATH": "/usr/bin:/bin"}
+
+    def git(*args: str) -> None:
+        subprocess.run(["git", *args], cwd=repo, check=True, capture_output=True, env=env, timeout=30)
+
+    git("init", "-q", "-b", "main")
+    git("add", ".")
+    git("-c", "user.name=t", "-c", "user.email=t@example.com", "commit", "-q", "-m", "init")
+    git("sparse-checkout", "set", "--cone", f"{inventory}/grade-01")
+
+    conftest = conftest_on_repo(repo)
+    # The anchor keeps the directory, so only the cone shows the tree is absent.
+    assert (repo / inventory).is_dir()
+    assert not (repo / inventory / "oneshot").exists()
+    assert inventory in conftest._sparse_missing_trees()
+
+    git("sparse-checkout", "add", inventory)
+    conftest = conftest_on_repo(repo)
+    assert inventory not in conftest._sparse_missing_trees()
+
+    # A checkout that is not in cone mode reads as holding the tree, so the test runs.
+    git("sparse-checkout", "set", "--no-cone", "/registry/lexicon/source-inventory/grade-01/")
+    conftest = conftest_on_repo(repo)
+    assert inventory not in conftest._sparse_missing_trees()
 
 
 def test_every_exclusion_is_reincludable() -> None:
@@ -193,6 +323,69 @@ def owned_files_here(monkeypatch: pytest.MonkeyPatch) -> None:
 )
 def test_owned_path_includes_the_trees_it_needs(owned: str, expected: tuple[str, ...]) -> None:
     assert delegate._infer_sparse_include(None, owned_paths=[owned]) == expected
+
+
+@pytest.mark.parametrize(
+    ("alias", "canonical"),
+    [
+        ("./site/src/data/curriculum-stats.json", "site/src/data/curriculum-stats.json"),
+        ("registry/./projects/open_model_data/x.json", "registry/projects/open_model_data/x.json"),
+        ("site//src//data/curriculum-stats.json", "site/src/data/curriculum-stats.json"),
+        ("site/src/data/", "site/src/data"),
+        ("site/src/data/**", "site/src/data"),
+        ("./registry/lexicon/", "registry/lexicon"),
+        (".\\site\\src\\data\\curriculum-stats.json", "site/src/data/curriculum-stats.json"),
+    ],
+)
+def test_owned_path_aliases_include_what_their_canonical_spelling_includes(alias: str, canonical: str) -> None:
+    """Every spelling ownership admission accepts names the same trees (#10777)."""
+    from scripts.guardrails.delegate_ownership import owned_path_matcher
+
+    assert owned_path_matcher(alias) is not None
+    expected = delegate._infer_sparse_include(None, owned_paths=[canonical])
+
+    assert expected
+    assert delegate._infer_sparse_include(None, owned_paths=[alias]) == expected
+
+
+@pytest.mark.parametrize(
+    ("glob", "expected"),
+    [
+        ("curriculum/l2-uk-en/evidence/a1/**/lessons.lock.yaml", ("curriculum",)),
+        ("site/src/data/lexicon-*.json", ("site/src/data",)),
+        # fnmatch's ``*`` crosses ``/``: this glob can own files in both site trees.
+        ("site/*.json", ("site/src/content", "site/src/data")),
+        ("./registry/projects/*/x.json", ("registry/projects",)),
+        ("scripts/*.py", ()),
+    ],
+)
+def test_owned_glob_includes_the_trees_its_literal_directories_reach(glob: str, expected: tuple[str, ...]) -> None:
+    assert delegate._infer_sparse_include(None, owned_paths=[glob]) == expected
+
+
+@pytest.mark.parametrize(
+    "owned",
+    [
+        "site-extra/src/data/x.json",
+        "site-extra",
+        "registry/projects2/x.json",
+        "registry/projects2",
+        "data/projects-old/x",
+        "curriculum2/a1.yaml",
+        "registry/lexicon/source-inventory-old/x.yaml",
+    ],
+)
+def test_owned_path_prefix_confusion_includes_nothing(owned: str) -> None:
+    assert delegate._infer_sparse_include(None, owned_paths=[owned]) == ()
+
+
+@pytest.mark.parametrize("owned", ["", ".", "./", "/site/src/data", "site/../site/src/data", "**", "./**", "*/x"])
+def test_an_owned_path_that_owns_nothing_includes_nothing(owned: str) -> None:
+    """Admission refuses these claims; inference reads them the same way."""
+    from scripts.guardrails.delegate_ownership import owned_path_matcher
+
+    assert owned_path_matcher(owned) is None
+    assert delegate._infer_sparse_include(None, owned_paths=[owned]) == ()
 
 
 def _site_tree_markers() -> set[tuple[str, str]]:

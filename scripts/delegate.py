@@ -9389,8 +9389,37 @@ def _infer_sparse_include_from_text(text: str | None) -> tuple[str, ...]:
     return tuple(found)
 
 
+def _sparse_owned_path_root(raw: str) -> str | None:
+    """The repo-relative path an owned-path claim covers, read as ownership admission reads it.
+
+    ``./site/src/data/x.json``, ``registry/./projects/x`` and ``a//b`` name
+    the same path as their canonical spelling (``normalize_claim``). A glob
+    covers the literal directories before its first wildcard segment
+    (``curriculum/l2-uk-en/**/lessons.lock.yaml`` covers
+    ``curriculum/l2-uk-en``). A claim that owns nothing (empty, ``.``,
+    absolute, ``..``) covers nothing.
+    """
+    try:
+        from scripts.guardrails.delegate_ownership import ClaimKind, normalize_claim, owned_path_matcher
+    except ImportError:  # pragma: no cover - flat script path
+        from guardrails.delegate_ownership import ClaimKind, normalize_claim, owned_path_matcher  # type: ignore
+
+    if owned_path_matcher(raw) is None:
+        return None
+    claim = normalize_claim(raw)
+    if claim.kind is ClaimKind.SUBTREE:
+        return claim.norm
+    literal: list[str] = []
+    for segment in claim.norm.split("/"):
+        if any(ch in segment for ch in "*?["):
+            break
+        literal.append(segment)
+    root = normalize_claim("/".join(literal))
+    return root.norm if root.kind is ClaimKind.SUBTREE else None
+
+
 def _sparse_trees_for_owned_path(raw: str) -> tuple[str, ...]:
-    """Return the excluded trees a research-owned path requires.
+    """Return the excluded trees an owned path (``--owned-path`` or research) requires.
 
     A path inside an excluded tree needs that tree. A directory that holds
     excluded trees (``site``, ``registry/lexicon``) needs all of them. A
@@ -9398,8 +9427,8 @@ def _sparse_trees_for_owned_path(raw: str) -> tuple[str, ...]:
     name in ``_SPARSE_OWNED_PATH_REINCLUDE`` and, for a test file, the trees
     its ``needs_sparse_tree`` marks name.
     """
-    path = str(raw).strip().strip("/")
-    if not path or path == ".":
+    path = _sparse_owned_path_root(str(raw))
+    if path is None:
         return ()
     for name in _DISPATCH_SPARSE_EXCLUDE_DEFAULT:
         if _sparse_path_has_prefix(path, name):
@@ -9431,11 +9460,11 @@ def _infer_sparse_include(
 ) -> tuple[str, ...]:
     """Merge explicit includes with owned-path prefixes and prompt path references.
 
-    A dispatch that already declares ``--research-owned-path curriculum/...``,
-    ``scripts/projects/open_model_data/...``, or a lexicon reader such as
-    ``scripts/lexicon/...`` materializes the matching excluded tree without a
-    second flag. ``site/...`` does not: the frontend reads runtime JSON under
-    ``site/src/data/``, not raw ``data/lexicon/``.
+    ``owned_paths`` holds the dispatch's ``--owned-path`` claims and its
+    ``--research-owned-path`` values. An owned path such as
+    ``curriculum/...``, ``scripts/projects/open_model_data/...`` or a lexicon
+    reader such as ``scripts/lexicon/...`` materializes the matching excluded
+    tree without a second flag.
     """
     merged: list[str] = list(_normalize_sparse_include(explicit))
     seen = set(merged)
@@ -13409,9 +13438,14 @@ def _dispatch(
     requested_branch = getattr(args, "branch", None)
     full_checkout = bool(getattr(args, "full_checkout", False))
     try:
+        # Declared ownership keeps the trees it owns; research paths only add
+        # to it, and a dispatch without research flags still gets them (#10777).
         sparse_include = _infer_sparse_include(
             getattr(args, "sparse_include", None),
-            owned_paths=getattr(args, "research_owned_path", None),
+            owned_paths=[
+                *(_declared_owned_paths(getattr(args, "owned_path", None)) or ()),
+                *(getattr(args, "research_owned_path", None) or ()),
+            ],
             prompt_text=early_prompt,
         )
     except ValueError as exc:

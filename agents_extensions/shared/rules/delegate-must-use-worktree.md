@@ -50,7 +50,7 @@ Default sparse checkout: dispatch worktrees exclude `curriculum/`, `wiki/`,
 `data/datasets/` and `data/processed/` (about 200 MB of tracked files per
 worktree; the list is `_DISPATCH_SPARSE_EXCLUDE_DEFAULT` in
 `scripts/delegate.py`); re-include with `--sparse-include <dir>`
-(repeatable) or matching `--research-owned-path`; `--full-checkout`
+(repeatable) or a matching `--owned-path` or `--research-owned-path`; `--full-checkout`
 disables sparse; inside a worktree `git sparse-checkout add <dir>` adds a
 tree later. Workers' mypy, ruff and bytecode caches live in the task's
 scratch lease, not the worktree.

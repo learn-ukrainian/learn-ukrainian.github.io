@@ -248,6 +248,7 @@ def test_checker_is_independent_of_the_generator() -> None:
     assert not any(str(name).startswith("scripts") for name in imported), imported
 
 
+@pytest.mark.needs_sparse_tree("site/src/data")
 def test_committed_frozen_key_list_pins_the_denominator() -> None:
     frozen = json.loads((ROOT / "site/src/data/lexicon-teacher-deck-frozen-keys.json").read_text(encoding="utf-8"))
     assert frozen["docxSha256"].startswith("35da757f")
