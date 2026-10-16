@@ -85,6 +85,7 @@ import stat
 import subprocess
 import sys
 import threading
+import time
 import warnings
 import weakref
 from collections.abc import Callable, Collection, Generator, Mapping
@@ -971,6 +972,8 @@ def _pytest_tmp_size(root: Path, stop_after_bytes: int | None = None) -> tuple[i
 
 _PYTEST_RUN_DIR_RE = re.compile(r"pytest-(\d+)")
 _PYTEST_TMP_KEEP_DEFAULT = 3
+# A run touched more recently than this is never removed, lock or not.
+_PYTEST_TMP_GRACE_HOURS_DEFAULT = 12.0
 
 
 def _pytest_tmp_keep_runs() -> int:
@@ -988,29 +991,152 @@ def _pytest_tmp_keep_runs() -> int:
     return keep
 
 
-def _pytest_run_dir_in_use(run_dir: Path) -> bool:
-    """True when pytest's cleanup lock in ``run_dir`` names a live process."""
-    try:
-        pid = int((run_dir / ".lock").read_text().strip())
-    except (OSError, ValueError):
-        return False
+def _pytest_tmp_grace_seconds() -> float:
+    """Return the minimum idle age (seconds) from ``LU_PYTEST_TMP_GRACE_HOURS``.
+
+    Raises ``ValueError`` for anything but a finite number of hours >= 0.
+    """
+    raw = os.environ.get("LU_PYTEST_TMP_GRACE_HOURS")
+    if raw is None or not raw.strip():
+        return _PYTEST_TMP_GRACE_HOURS_DEFAULT * 3600
+    hours = float(raw.strip())
+    if not 0 <= hours < float("inf"):
+        raise ValueError(raw)
+    return hours * 3600
+
+
+# pytest writes the owning pid as ASCII digits; anything larger is not a lock it wrote.
+_PYTEST_LOCK_MAX_BYTES = 64
+
+_RunIdentity = tuple[int, int]
+
+
+def _pid_is_live(pid: int) -> bool:
+    """False only when ``pid`` provably names no process.
+
+    A process owned by another account (``EPERM``) is live.
+    """
     try:
         os.kill(pid, 0)
     except ProcessLookupError:
         return False
-    except PermissionError:
+    except (PermissionError, OverflowError):
         return True
     return True
 
 
-def _prune_pytest_run_dirs(basetemp: Path, keep: int) -> list[Path]:
+def _pytest_run_dir_in_use(
+    root_fd: int, name: str, identity: _RunIdentity, *, now: float, grace_seconds: float
+) -> bool:
+    """True unless run directory ``name`` under ``root_fd`` is provably idle.
+
+    Idle means: it is still the directory seen at enumeration; its pytest
+    ``.lock`` is absent or names a dead process; and nothing directly inside it
+    (nor the directory itself) changed within ``grace_seconds``. The grace
+    window also covers active sessions that create no lock (retention count 0).
+    An unreadable, empty or malformed lock, or any error, is UNKNOWN and keeps
+    the run.
+    """
+    try:
+        run_fd = os.open(name, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW, dir_fd=root_fd)
+    except OSError:
+        return True
+    try:
+        info = os.fstat(run_fd)
+        if (info.st_dev, info.st_ino) != identity:
+            return True
+        newest = info.st_mtime
+        with os.scandir(run_fd) as entries:
+            for entry in entries:
+                newest = max(newest, entry.stat(follow_symlinks=False).st_mtime)
+        if now - newest < grace_seconds:
+            return True
+        try:
+            lock_fd = os.open(".lock", os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=run_fd)
+        except FileNotFoundError:
+            return False
+        try:
+            if not stat.S_ISREG(os.fstat(lock_fd).st_mode):
+                return True
+            text = os.read(lock_fd, _PYTEST_LOCK_MAX_BYTES + 1)
+        finally:
+            os.close(lock_fd)
+    except OSError:
+        return True
+    finally:
+        os.close(run_fd)
+    if len(text) > _PYTEST_LOCK_MAX_BYTES or not re.fullmatch(rb"\s*[0-9]+\s*", text):
+        return True
+    pid = int(text)
+    return pid <= 0 or _pid_is_live(pid)
+
+
+def _reap_pytest_run_dir(root_fd: int, name: str, identity: _RunIdentity, uid: int, root: Path) -> bool:
+    """Delete run directory ``name`` only if it is still the enumerated directory.
+
+    The entry is first renamed to a unique reaping name inside the same parent;
+    ``rename`` acts on the entry itself, so a directory swapped in (or a
+    symlink substituted) after enumeration moves instead of being followed.
+    The renamed entry is then opened without following symlinks and must be a
+    real directory owned by ``uid`` with the enumerated ``(st_dev, st_ino)``;
+    its contents are deleted through that descriptor. On any mismatch or error
+    the original name is restored when it is still free, and nothing else is
+    removed.
+    """
+    from scripts.path_safety import assert_delete_target
+
+    reaping = f".{name}.reaping-{os.getpid()}-{os.urandom(8).hex()}"
+    try:
+        os.rename(name, reaping, src_dir_fd=root_fd, dst_dir_fd=root_fd)
+    except OSError:
+        return False
+    try:
+        target = assert_delete_target(root / reaping, repo_root=_REPO_ROOT, approved_temp_roots=[root])
+        if target != root.resolve() / reaping:
+            raise ValueError("reaping target left the run root")
+        reap_fd = os.open(reaping, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW, dir_fd=root_fd)
+        try:
+            info = os.fstat(reap_fd)
+            if (info.st_dev, info.st_ino) != identity or info.st_uid != uid:
+                raise ValueError("run directory changed after enumeration")
+            with os.scandir(reap_fd) as entries:
+                children = [(entry.name, entry.is_dir(follow_symlinks=False)) for entry in entries]
+            for child, is_dir in children:
+                if is_dir:
+                    shutil.rmtree(child, dir_fd=reap_fd)
+                else:
+                    os.unlink(child, dir_fd=reap_fd)
+        finally:
+            os.close(reap_fd)
+        os.rmdir(reaping, dir_fd=root_fd)
+    except (OSError, ValueError):
+        _restore_run_dir_name(root_fd, reaping, name)
+        return False
+    return True
+
+
+def _restore_run_dir_name(root_fd: int, reaping: str, name: str) -> None:
+    """Keep data: move ``reaping`` back to ``name`` unless something else took that name."""
+    try:
+        os.lstat(name, dir_fd=root_fd)
+    except FileNotFoundError:
+        with contextlib.suppress(OSError):
+            os.rename(reaping, name, src_dir_fd=root_fd, dst_dir_fd=root_fd)
+    except OSError:
+        pass
+
+
+def _prune_pytest_run_dirs(
+    basetemp: Path, keep: int, *, grace_seconds: float | None = None, now: float | None = None
+) -> list[Path]:
     """Remove all but the newest ``keep`` sibling run directories of ``basetemp``.
 
     Only ``pytest-<N>`` directories directly under a real (non-symlink)
-    ``pytest-of-<user>`` root are considered. A candidate must be a real
-    directory (never a symlink) owned by this account and not locked by a live
-    process; the current run's directory is never removed. Deletion goes through
-    ``assert_delete_target`` so a resolved path outside the root is refused.
+    ``pytest-of-<user>`` root owned by this account are considered. A candidate
+    must be a real directory (never a symlink) owned by this account and
+    provably idle (see ``_pytest_run_dir_in_use``); the current run's directory
+    is never removed. Every operation is relative to a descriptor of the root,
+    and deletion revalidates the directory identity (``_reap_pytest_run_dir``).
     Returns the removed paths.
     """
     root = basetemp.parent
@@ -1018,36 +1144,43 @@ def _prune_pytest_run_dirs(basetemp: Path, keep: int) -> list[Path]:
         return []
     if not _PYTEST_RUN_DIR_RE.fullmatch(basetemp.name):
         return []
-    from scripts.path_safety import assert_delete_target
+    if grace_seconds is None:
+        grace_seconds = _PYTEST_TMP_GRACE_HOURS_DEFAULT * 3600
+    if now is None:
+        now = time.time()
 
     uid = os.geteuid()
-    runs: list[tuple[int, Path]] = []
-    with os.scandir(root) as entries:
-        for entry in entries:
-            match = _PYTEST_RUN_DIR_RE.fullmatch(entry.name)
-            if match is None:
-                continue
-            try:
-                info = entry.stat(follow_symlinks=False)
-            except OSError:
-                continue
-            if not stat.S_ISDIR(info.st_mode) or info.st_uid != uid:
-                continue
-            runs.append((int(match.group(1)), Path(entry.path)))
-    runs.sort(key=lambda run: run[0], reverse=True)
+    try:
+        root_fd = os.open(root, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
+    except OSError:
+        return []
     removed: list[Path] = []
-    for _number, run_dir in runs[keep:]:
-        if run_dir == basetemp or _pytest_run_dir_in_use(run_dir):
-            continue
-        try:
-            target = assert_delete_target(run_dir, repo_root=_REPO_ROOT, approved_temp_roots=[root])
-            if target.parent != root.resolve():
+    try:
+        if os.fstat(root_fd).st_uid != uid:
+            return []
+        runs: list[tuple[int, str, _RunIdentity]] = []
+        with os.scandir(root_fd) as entries:
+            for entry in entries:
+                match = _PYTEST_RUN_DIR_RE.fullmatch(entry.name)
+                if match is None:
+                    continue
+                try:
+                    info = entry.stat(follow_symlinks=False)
+                except OSError:
+                    continue
+                if not stat.S_ISDIR(info.st_mode) or info.st_uid != uid:
+                    continue
+                runs.append((int(match.group(1)), entry.name, (info.st_dev, info.st_ino)))
+        runs.sort(key=lambda run: run[0], reverse=True)
+        for _number, name, identity in runs[keep:]:
+            if name == basetemp.name:
                 continue
-            shutil.rmtree(target)
-        except (OSError, ValueError):
-            # Best-effort hygiene: a vanished or unreadable old run is not a test failure.
-            continue
-        removed.append(run_dir)
+            if _pytest_run_dir_in_use(root_fd, name, identity, now=now, grace_seconds=grace_seconds):
+                continue
+            if _reap_pytest_run_dir(root_fd, name, identity, uid, root):
+                removed.append(root / name)
+    finally:
+        os.close(root_fd)
     return removed
 
 
@@ -1233,7 +1366,16 @@ def pytest_sessionfinish(session: pytest.Session, exitstatus: int) -> None:
         )
         session.exitstatus = pytest.ExitCode.TESTS_FAILED
         return
-    pruned = _prune_pytest_run_dirs(basetemp, keep_runs)
+    try:
+        grace_seconds = _pytest_tmp_grace_seconds()
+    except ValueError:
+        print(
+            f"pytest-tmp: invalid LU_PYTEST_TMP_GRACE_HOURS={os.environ.get('LU_PYTEST_TMP_GRACE_HOURS')!r} "
+            "(need a number of hours >= 0)"
+        )
+        session.exitstatus = pytest.ExitCode.TESTS_FAILED
+        return
+    pruned = _prune_pytest_run_dirs(basetemp, keep_runs, grace_seconds=grace_seconds)
     if pruned:
         print(
             f"pytest-tmp: removed {len(pruned)} older run directories (keeping newest {keep_runs}) under {basetemp.parent}"

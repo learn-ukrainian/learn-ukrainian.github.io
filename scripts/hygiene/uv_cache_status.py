@@ -4,7 +4,12 @@
 The uv cache grows without bound on a busy host (every resolved wheel and
 sdist build stays). This module measures it, keeps a small timestamped size
 history, and renders one status line with a warning threshold. It never deletes
-anything from the cache; the only file it writes is the size history.
+anything from the cache; the only files it writes are the size history and its
+lock, and never inside the cache.
+
+The size comes from ``du -sk`` in its own process group with a deadline, so a
+huge or stalled cache cannot hang the status command; a timeout or a failed
+measurement prints an explicit line and records no sample.
 
 Usage: ``.venv/bin/python -m scripts.hygiene.uv_cache_status [--json] [--no-record]``
 
@@ -14,13 +19,21 @@ Environment (all optional):
   state directory that ``lu-driver-status`` already reads).
 - ``LU_UV_CACHE_WARN_GB``: absolute-size warning threshold (default 10).
 - ``LU_UV_CACHE_GROWTH_WARN_GB``: 24-hour growth warning threshold (default 2).
+- ``LU_UV_CACHE_SCAN_TIMEOUT_S``: measurement deadline in seconds (default 8).
+
+Exit codes: 0 status printed (including "size unavailable" and "measurement
+failed"); 2 refused because the history directory is the cache or inside it.
 """
 
 from __future__ import annotations
 
 import argparse
+import contextlib
+import fcntl
 import json
 import os
+import signal
+import subprocess
 import sys
 import tempfile
 import time
@@ -30,6 +43,7 @@ from pathlib import Path
 from scripts.common.jsonl import jsonl_lines
 
 HISTORY_FILENAME = "uv-cache-size.jsonl"
+LOCK_SUFFIX = ".lock"
 WINDOW_SECONDS = 24 * 3600
 # Keep a week of samples; the status line only needs the last day.
 RETENTION_SECONDS = 7 * 24 * 3600
@@ -39,9 +53,24 @@ MIN_SAMPLE_INTERVAL_SECONDS = 600
 MIN_BASELINE_AGE_SECONDS = 3600
 DEFAULT_WARN_GB = 10.0
 DEFAULT_GROWTH_WARN_GB = 2.0
+DEFAULT_SCAN_TIMEOUT_S = 8.0
+# After a timeout the killed du gets this long to exit before it is abandoned.
+KILL_GRACE_SECONDS = 1.0
 GIB = 1024**3
 
 SizeFn = Callable[[Path], int]
+
+
+class ScanTimeout(Exception):
+    """The size measurement did not finish before its deadline."""
+
+    def __init__(self, timeout_s: float) -> None:
+        super().__init__(f"scan exceeded {timeout_s:g}s")
+        self.timeout_s = timeout_s
+
+
+class MeasurementError(Exception):
+    """The size measurement failed; its result is not a usable sample."""
 
 
 def uv_cache_dir() -> Path:
@@ -61,33 +90,61 @@ def state_dir() -> Path:
     return Path.home() / ".local/state/learn-ukrainian/driver-keeper"
 
 
-def tree_size(root: Path) -> int:
-    """Allocated bytes under ``root``; symlinks not followed, hardlinks counted once."""
-    size = 0
-    seen: set[tuple[int, int]] = set()
-    pending = [root]
-    while pending:
-        directory = pending.pop()
-        try:
-            entries_context = os.scandir(directory)
-        except (FileNotFoundError, PermissionError):
-            continue
-        with entries_context as entries:
-            for entry in entries:
-                try:
-                    if entry.is_dir(follow_symlinks=False):
-                        pending.append(Path(entry.path))
-                        continue
-                    info = entry.stat(follow_symlinks=False)
-                except FileNotFoundError:
-                    continue
-                if info.st_nlink > 1:
-                    key = (info.st_dev, info.st_ino)
-                    if key in seen:
-                        continue
-                    seen.add(key)
-                size += getattr(info, "st_blocks", 0) * 512 or info.st_size
-    return size
+def scan_timeout_seconds() -> float:
+    raw = os.environ.get("LU_UV_CACHE_SCAN_TIMEOUT_S")
+    if raw is None or not raw.strip():
+        return DEFAULT_SCAN_TIMEOUT_S
+    try:
+        value = float(raw)
+    except ValueError:
+        return DEFAULT_SCAN_TIMEOUT_S
+    return value if 0 < value < float("inf") else DEFAULT_SCAN_TIMEOUT_S
+
+
+def _du_reason(stderr: str) -> str:
+    """The error text of du's last message, without the path it names."""
+    lines = [line for line in stderr.strip().split("\n") if line.strip()]
+    return lines[-1].rsplit(": ", 1)[-1].strip() if lines else "no diagnostic"
+
+
+def measure_bytes(root: Path, timeout_s: float | None = None) -> int:
+    """Allocated bytes under ``root`` via ``du -sk``, within ``timeout_s``.
+
+    ``du`` counts hardlinks once and never follows symlinks below ``root``. It
+    runs in its own process group; on timeout the group is killed while the
+    leader is still unreaped (so its id cannot have been reused) and
+    ``ScanTimeout`` is raised. Any error from ``du``, including an unreadable
+    directory that would make the total partial, raises ``MeasurementError``.
+    """
+    if timeout_s is None:
+        timeout_s = scan_timeout_seconds()
+    try:
+        process = subprocess.Popen(
+            ["du", "-sk", "--", str(root)],
+            stdin=subprocess.DEVNULL,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            env={**os.environ, "LC_ALL": "C"},
+            start_new_session=True,
+        )
+    except OSError as error:
+        raise MeasurementError(f"du: {error.strerror or error}") from error
+    try:
+        stdout, stderr = process.communicate(timeout=timeout_s)
+    except subprocess.TimeoutExpired:
+        with contextlib.suppress(ProcessLookupError):
+            os.killpg(process.pid, signal.SIGKILL)
+        # A du stuck in uninterruptible I/O is abandoned rather than waited for.
+        with contextlib.suppress(subprocess.TimeoutExpired):
+            process.communicate(timeout=KILL_GRACE_SECONDS)
+        raise ScanTimeout(timeout_s) from None
+    if process.returncode != 0:
+        raise MeasurementError(f"du exit {process.returncode}: {_du_reason(stderr)}")
+    try:
+        return int(stdout.split(None, 1)[0]) * 1024
+    except (IndexError, ValueError):
+        raise MeasurementError("du printed no size") from None
 
 
 def read_history(path: Path) -> list[dict[str, float]]:
@@ -109,23 +166,36 @@ def read_history(path: Path) -> list[dict[str, float]]:
 
 
 def record_sample(path: Path, now: float, size: int) -> list[dict[str, float]]:
-    """Append a sample (rate-limited), drop expired ones, and return the history."""
-    history = read_history(path)
-    if history and 0 <= now - history[-1]["ts"] < MIN_SAMPLE_INTERVAL_SECONDS:
-        return history
-    history.append({"ts": now, "bytes": float(size)})
-    history = [sample for sample in history if now - sample["ts"] <= RETENTION_SECONDS]
+    """Add a sample (rate-limited), drop expired ones, and return the history.
+
+    The read-modify-replace runs under an exclusive ``flock`` on a lock file
+    beside the history, so concurrent writers serialize and none replaces the
+    file with a copy that lacks another writer's newer sample.
+    """
     path.parent.mkdir(parents=True, exist_ok=True)
-    fd, tmp_name = tempfile.mkstemp(dir=path.parent, prefix=f".{path.name}.", suffix=".tmp")
+    lock_fd = os.open(path.with_name(path.name + LOCK_SUFFIX), os.O_RDWR | os.O_CREAT | os.O_NOFOLLOW, 0o600)
     try:
-        with os.fdopen(fd, "w", encoding="utf-8") as handle:
-            for sample in history:
-                handle.write(json.dumps({"ts": sample["ts"], "bytes": int(sample["bytes"])}) + "\n")
-        os.replace(tmp_name, path)
-    except BaseException:
-        Path(tmp_name).unlink(missing_ok=True)
-        raise
-    return history
+        fcntl.flock(lock_fd, fcntl.LOCK_EX)
+        history = read_history(path)
+        if any(abs(now - sample["ts"]) < MIN_SAMPLE_INTERVAL_SECONDS for sample in history):
+            return history
+        history.append({"ts": now, "bytes": float(size)})
+        history = sorted(
+            (sample for sample in history if now - sample["ts"] <= RETENTION_SECONDS),
+            key=lambda sample: sample["ts"],
+        )
+        fd, tmp_name = tempfile.mkstemp(dir=path.parent, prefix=f".{path.name}.", suffix=".tmp")
+        try:
+            with os.fdopen(fd, "w", encoding="utf-8") as handle:
+                for sample in history:
+                    handle.write(json.dumps({"ts": sample["ts"], "bytes": int(sample["bytes"])}) + "\n")
+            os.replace(tmp_name, path)
+        except BaseException:
+            Path(tmp_name).unlink(missing_ok=True)
+            raise
+        return history
+    finally:
+        os.close(lock_fd)
 
 
 def growth_over_window(history: list[dict[str, float]], now: float, current: int) -> tuple[int, float] | None:
@@ -151,18 +221,34 @@ def _gb_from_env(name: str, default: float) -> float:
     return value if 0 <= value < float("inf") else default
 
 
+def history_inside_cache(cache: Path, history_dir: Path) -> bool:
+    """True when ``history_dir`` is ``cache`` or lies inside it, symlinks resolved."""
+    resolved_cache = cache.resolve()
+    resolved_history = history_dir.resolve()
+    return resolved_history == resolved_cache or resolved_cache in resolved_history.parents
+
+
 def build_status(
     *,
     cache: Path,
     history_path: Path,
     now: float,
-    size_fn: SizeFn = tree_size,
+    size_fn: SizeFn | None = None,
     record: bool = True,
 ) -> dict[str, object]:
-    """Measure the cache, update the history, and evaluate the warning thresholds."""
+    """Measure the cache, update the history, and evaluate the warning thresholds.
+
+    A timed-out or failed measurement returns an ``unavailable`` or ``error``
+    status and records no sample.
+    """
     if not cache.is_dir():
         return {"present": False, "cache": str(cache), "warnings": []}
-    size = size_fn(cache)
+    try:
+        size = (size_fn or measure_bytes)(cache)
+    except ScanTimeout as timeout:
+        return {"present": True, "cache": str(cache), "unavailable": str(timeout), "warnings": []}
+    except (MeasurementError, OSError) as error:
+        return {"present": True, "cache": str(cache), "error": str(error), "warnings": []}
     history = record_sample(history_path, now, size) if record else read_history(history_path)
     # The sample just recorded is "now"; growth compares against earlier samples only.
     growth = growth_over_window([s for s in history if s["ts"] < now], now, size)
@@ -191,6 +277,10 @@ def format_line(status: dict[str, object]) -> str:
     """One human line; the cache path is intentionally not printed."""
     if not status["present"]:
         return "UV CACHE: not present"
+    if "unavailable" in status:
+        return f"UV CACHE: size unavailable ({status['unavailable']})"
+    if "error" in status:
+        return f"UV CACHE: measurement failed ({status['error']})"
     size = float(status["bytes"])  # type: ignore[arg-type]
     growth = status["growth_bytes"]
     if growth is None:
@@ -211,9 +301,17 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--json", action="store_true", help="print the status as JSON")
     parser.add_argument("--no-record", action="store_true", help="do not append a history sample")
     args = parser.parse_args(argv)
+    cache, history_dir = uv_cache_dir(), state_dir()
+    if history_inside_cache(cache, history_dir):
+        print(
+            "UV CACHE: refusing to run: the history directory (LU_DRIVER_STATUS_STATE_DIR) is the uv cache "
+            "or inside it",
+            file=sys.stderr,
+        )
+        return 2
     status = build_status(
-        cache=uv_cache_dir(),
-        history_path=state_dir() / HISTORY_FILENAME,
+        cache=cache,
+        history_path=history_dir / HISTORY_FILENAME,
         now=time.time(),
         record=not args.no_record,
     )

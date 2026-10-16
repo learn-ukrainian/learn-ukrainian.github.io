@@ -388,14 +388,26 @@ At the end of every pytest session, `tests/conftest.py` keeps the newest
 directories under `pytest-of-<user>` and removes older ones, then prints
 `pytest-tmp: removed ...`. A directory is removed only when all of these hold:
 
-- Its parent is a real `pytest-of-<user>` directory and the current run is a
-  numbered `pytest-<N>` sibling (a custom `--basetemp` is left alone).
-- It is a real directory, not a symlink, owned by the agent user.
-- It is not the current run, and its pytest `.lock` does not name a live process.
-- `assert_delete_target` accepts its resolved path inside that parent.
+- Its parent is a real `pytest-of-<user>` directory owned by the agent user, and
+  the current run is a numbered `pytest-<N>` sibling (a custom `--basetemp` is
+  left alone).
+- It is a real directory, not a symlink, owned by the agent user, and it is not
+  the current run.
+- Nothing in it changed recently: neither the directory nor any entry directly
+  inside it is younger than `LU_PYTEST_TMP_GRACE_HOURS` (default 12, a number
+  >= 0). This also protects active sessions that write no lock (retention
+  count 0).
+- Its pytest `.lock` is absent or names a dead process. An unreadable, empty,
+  malformed or non-file lock is unknown, and the run is kept. A process owned
+  by another account counts as live.
+- Deletion is bound to the directory found at enumeration: the entry is renamed
+  to a unique reaping name in the same parent, opened without following
+  symlinks, and must have the same device and inode; its contents are deleted
+  through that descriptor. On any mismatch the name is restored and nothing is
+  deleted. `assert_delete_target` must also accept the reaping path.
 
-Runs rank by their number, newest first. An invalid value of the variable fails
-the session without deleting anything.
+Runs rank by their number, newest first. An invalid value of either variable
+fails the session without deleting anything.
 
 ## uv cache size line (#10779)
 
@@ -408,6 +420,16 @@ retained) in `uv-cache-size.jsonl` in the driver-keeper state directory that
 Growth compares against the oldest sample at least an hour old inside the last
 24 hours and names the real span; before that it prints `growth n/a (history
 building)`. `--json` and `--no-record` are available.
+
+The size comes from `du -sk` in its own process group, bounded by
+`LU_UV_CACHE_SCAN_TIMEOUT_S` (default 8 seconds). On timeout it prints
+`UV CACHE: size unavailable (scan exceeded 8s)`; if `du` fails (for example an
+unreadable directory, which would make the total partial) it prints
+`UV CACHE: measurement failed (...)`. Both exit 0 and record no sample. History
+updates hold an exclusive lock on `uv-cache-size.jsonl.lock` beside the history,
+so concurrent runs never drop each other's samples. If the history directory is
+the cache or inside it (symlinks resolved), the command refuses with exit code 2
+and writes nothing.
 
 Warning thresholds: total size above `LU_UV_CACHE_WARN_GB` (default 10) or growth
 above `LU_UV_CACHE_GROWTH_WARN_GB` (default 2) per 24 hours. A warning is a
