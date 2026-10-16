@@ -4218,35 +4218,120 @@ def test_only_explicit_experiment_adds_a_reservation(value, expected, monkeypatc
     assert gate.concurrent_run_limit() == expected
 
 
+def _cpu_pressure(avg10: str, avg60: str) -> str:
+    return f"some avg10={avg10} avg60={avg60} avg300=1.00 total=10\nfull avg10=0.00 avg60=0.00 avg300=0.00 total=0\n"
+
+
+def _patch_admission_proc(monkeypatch, pressure, memory) -> None:
+    """Feed /proc pressure and meminfo. Load average must not decide the second slot."""
+    original = Path.read_text
+
+    def read_text(path, *args, **kwargs):
+        name = str(path)
+        if name == "/proc/pressure/cpu":
+            if isinstance(pressure, BaseException):
+                raise pressure
+            return pressure
+        if name == "/proc/meminfo":
+            if isinstance(memory, BaseException):
+                raise memory
+            return memory
+        return original(path, *args, **kwargs)
+
+    def load_must_not_decide():
+        raise OSError("load average must not decide admission")
+
+    monkeypatch.setattr(Path, "read_text", read_text)
+    monkeypatch.setattr(gate.os, "getloadavg", load_must_not_decide)
+
+
+_EIGHT_GIB = 8 * 1024**3
+
+
 @pytest.mark.parametrize(
-    "load,memory,qualified",
+    "pressure,memory,expected",
     [
-        (0.0, "MemAvailable: 8388608 kB\n", True),
-        (11.99, "MemAvailable: 8388608 kB\n", True),
-        (12.0, "MemAvailable: 8388608 kB\n", False),
-        (float("nan"), "MemAvailable: 8388608 kB\n", False),
-        (float("inf"), "MemAvailable: 8388608 kB\n", False),
-        (-1.0, "MemAvailable: 8388608 kB\n", False),
-        (0.0, "MemAvailable: 8388607 kB\n", False),
-        (0.0, "MemAvailable: garbage kB\n", False),
-        (0.0, "", False),
+        pytest.param(
+            _cpu_pressure("10.00", "5.00"),
+            "MemAvailable: 8388608 kB\n",
+            {"cpu_some_avg10": 10.0, "cpu_some_avg60": 5.0, "mem_available_bytes": _EIGHT_GIB, "qualified": True},
+            id="qualify",
+        ),
+        pytest.param(
+            _cpu_pressure("34.00", "24.00"),
+            "MemAvailable: 8388608 kB\n",
+            {"cpu_some_avg10": 34.0, "cpu_some_avg60": 24.0, "mem_available_bytes": _EIGHT_GIB, "qualified": True},
+            id="qualify-under-caps",
+        ),
+        pytest.param(
+            _cpu_pressure("35.00", "5.00"),
+            "MemAvailable: 8388608 kB\n",
+            {"cpu_some_avg10": 35.0, "cpu_some_avg60": 5.0, "mem_available_bytes": _EIGHT_GIB, "qualified": False},
+            id="cpu-busy-avg10",
+        ),
+        pytest.param(
+            _cpu_pressure("10.00", "25.00"),
+            "MemAvailable: 8388608 kB\n",
+            {"cpu_some_avg10": 10.0, "cpu_some_avg60": 25.0, "mem_available_bytes": _EIGHT_GIB, "qualified": False},
+            id="cpu-busy-avg60",
+        ),
+        pytest.param(
+            _cpu_pressure("100.00", "100.00"),
+            "MemAvailable: 8388608 kB\n",
+            {
+                "cpu_some_avg10": 100.0,
+                "cpu_some_avg60": 100.0,
+                "mem_available_bytes": _EIGHT_GIB,
+                "qualified": False,
+            },
+            id="cpu-saturated",
+        ),
+        pytest.param(
+            _cpu_pressure("10.00", "5.00"),
+            "MemAvailable: 8388607 kB\n",
+            {
+                "cpu_some_avg10": 10.0,
+                "cpu_some_avg60": 5.0,
+                "mem_available_bytes": 8388607 * 1024,
+                "qualified": False,
+            },
+            id="low-memory",
+        ),
+        pytest.param(
+            "not-a-pressure-file\n",
+            "MemAvailable: 8388608 kB\n",
+            {"cpu_some_avg10": None, "cpu_some_avg60": None, "mem_available_bytes": None, "qualified": False},
+            id="unreadable-pressure",
+        ),
+        pytest.param(
+            _cpu_pressure("101.00", "5.00"),
+            "MemAvailable: 8388608 kB\n",
+            {"cpu_some_avg10": None, "cpu_some_avg60": None, "mem_available_bytes": None, "qualified": False},
+            id="pressure-outside-percent",
+        ),
+        pytest.param(
+            _cpu_pressure("10.00", "5.00"),
+            "MemAvailable: garbage kB\n",
+            {"cpu_some_avg10": None, "cpu_some_avg60": None, "mem_available_bytes": None, "qualified": False},
+            id="unreadable-memory",
+        ),
+        pytest.param(
+            "",
+            "MemAvailable: 8388608 kB\n",
+            {"cpu_some_avg10": None, "cpu_some_avg60": None, "mem_available_bytes": None, "qualified": False},
+            id="empty-pressure",
+        ),
+        pytest.param(
+            OSError("cpu pressure unavailable"),
+            "MemAvailable: 8388608 kB\n",
+            {"cpu_some_avg10": None, "cpu_some_avg60": None, "mem_available_bytes": None, "qualified": False},
+            id="pressure-oserror",
+        ),
     ],
 )
-def test_parallel_admission_qualifies_only_current_numeric_resources(load, memory, qualified, monkeypatch):
-    original = Path.read_text
-    monkeypatch.setattr(gate.os, "getloadavg", lambda: (load, load, load))
-    monkeypatch.setattr(
-        Path, "read_text", lambda path, *a, **kw: memory if str(path) == "/proc/meminfo" else original(path, *a, **kw)
-    )
-    assert gate.admission_resources()["qualified"] is qualified
-
-
-def test_resource_read_failure_is_unknown(monkeypatch):
-    def unavailable():
-        raise OSError("load unavailable")
-
-    monkeypatch.setattr(gate.os, "getloadavg", unavailable)
-    assert gate.admission_resources() == {"load_1m": None, "mem_available_bytes": None, "qualified": False}
+def test_parallel_admission_uses_cpu_pressure_not_load(pressure, memory, expected, monkeypatch):
+    _patch_admission_proc(monkeypatch, pressure, memory)
+    assert gate.admission_resources() == expected
 
 
 def _raw_measurements(repo):
