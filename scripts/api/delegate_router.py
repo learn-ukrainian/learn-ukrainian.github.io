@@ -22,6 +22,7 @@ except ModuleNotFoundError as exc:
         raise
     from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
 
+from scripts.orchestration.dead_worker_state import worker_liveness
 from scripts.orchestration.task_record_store import ARCHIVE_DIR_NAME as TASK_ARCHIVE_DIR_NAME
 from scripts.orchestration.task_record_store import iter_task_records
 from scripts.orchestration.worktree_claims import RELEASED_TASK_STATUSES
@@ -37,8 +38,8 @@ RESULT_BYTES_LIMIT = 64 * 1024
 TASK_READ_RETRIES = 2
 TASK_READ_RETRY_SECONDS = 0.01
 ACTIVE_TASK_STATUSES = {"running", "spawning"}
-# Short enough that a dead pid drops off the active list quickly, long enough
-# that a burst of dashboard polls shares one directory scan.
+# History listing cache only. Active observations share in-flight work but
+# always bypass completed snapshots.
 DELEGATE_LIST_TTL_S = 2.0
 _TASK_SCAN_LOCK = threading.Lock()
 # Authoritative repository-attribution fields on task state. Paths, branch names,
@@ -685,7 +686,12 @@ def get_delegate_task_detail(
 
 
 def active_delegate_count(ctx: MonitorContext | None = None) -> int:
-    return len(_delegate_task_rows(ACTIVE_TASK_STATUSES, ctx=ctx))
+    return active_delegate_tasks(ctx=ctx)["total"]
+
+
+def _observation_token(stat: os.stat_result) -> tuple[int, ...]:
+    """Bind an observation to content generation, ignoring read-induced atime."""
+    return (stat.st_dev, stat.st_ino, stat.st_mtime_ns, stat.st_ctime_ns, stat.st_size)
 
 
 def active_delegate_tasks(
@@ -693,15 +699,144 @@ def active_delegate_tasks(
     repository: str | None = None,
     ctx: MonitorContext | None = None,
 ) -> dict[str, Any]:
-    """Return active (running/spawning) task summaries.
+    """Observe hot running/spawning attempts without reusing task/route caches.
 
-    Optional *repository* filters task state before total construction. Internal
-    only — the HTTP ``/active`` route remains unscoped for other Monitor consumers.
-    Returned rows keep the legacy summary shape and never include repository
-    attribution fields.
+    Preserve the legacy active scope: proven-dead running attempts are excluded
+    from tasks/total, but disclosed in observations. Unknown liveness stays None.
+    A failed or changing authority refuses the inventory rather than returning zero.
     """
-    active = _delegate_task_rows(ACTIVE_TASK_STATUSES, repository=repository, ctx=ctx)
-    return {"total": len(active), "tasks": active}
+    tasks_dir = _tasks_dir(resolve_context(ctx))
+    started = datetime.now(UTC)
+    predicate = _normalize_repository_predicate(repository)
+    rows: list[dict[str, Any]] = []
+    observations: list[dict[str, Any]] = []
+    signatures: dict[Path, os.stat_result] = {}
+    process_checks: list[tuple[dict[str, Any], bool | None]] = []
+    try:
+        directory_before = tasks_dir.stat()
+        with os.scandir(tasks_dir) as entries:
+            paths = sorted(
+                tasks_dir / entry.name
+                for entry in entries
+                if entry.name.endswith(".json") and not entry.name.endswith(".snapshots.json")
+            )
+    except OSError:
+        raise HTTPException(
+            503,
+            detail={
+                "status": "unknown",
+                "reason": "task_directory_unavailable",
+            },
+        ) from None
+
+    for path in paths:
+        try:
+            signatures[path] = path.stat()
+        except OSError:
+            raise HTTPException(
+                503,
+                detail={
+                    "status": "unknown",
+                    "reason": "task_authority_changed",
+                },
+            ) from None
+        try:
+            task = _read_task_state(str(path), ctx)
+        except (OSError, UnicodeError):
+            task = None
+        if task is None or not isinstance(task.get("status"), str) or not task["status"]:
+            raise HTTPException(
+                503,
+                detail={
+                    "status": "unknown",
+                    "reason": "task_record_unreadable_or_invalid",
+                },
+            )
+        status = task["status"]
+        if status not in ACTIVE_TASK_STATUSES:
+            continue
+        if predicate is not None and _authoritative_task_repository(task) != predicate:
+            continue
+        record_observed = datetime.now(UTC)
+        alive = worker_liveness(task, pid_alive=_pid_alive)
+        process_checks.append((task, alive))
+        observed = datetime.now(UTC)
+        summary = {
+            "task_id": str(task.get("task_id") or path.stem),
+            "agent": task.get("agent"),
+            "model": task.get("model"),
+            "effort": task.get("effort"),
+            "cli_version": task.get("cli_version"),
+            "substitution": task.get("substitution"),
+            "status": status,
+            "started_at": task.get("started_at"),
+            "duration_s": task.get("duration_s"),
+            "age_s": _task_age_seconds(task.get("started_at")),
+            "alive": alive,
+        }
+        linked_issues = _linked_issues_from_dor(task)
+        if linked_issues is not None:
+            summary["linked_issues"] = linked_issues
+        excluded = status == "running" and alive is False
+        observations.append(
+            {
+                "task_id": summary["task_id"],
+                "run_nonce": task.get("run_nonce"),
+                "record_status": status,
+                "alive": alive,
+                "excluded_dead_running": excluded,
+                "liveness_basis": "worker_identity"
+                if task.get("worker_identity") is not None
+                else "legacy_pid_namespace",
+                "liveness_reason": "worker_identity_or_visibility_unknown" if alive is None else None,
+                "liveness_observed_at": observed.isoformat(),
+                "record_observed_at": record_observed.isoformat(),
+                "record_updated_at": datetime.fromtimestamp(signatures[path].st_mtime, UTC).isoformat(),
+            }
+        )
+        if not excluded:
+            rows.append(summary)
+
+    try:
+        # Equality includes inode, nanosecond timestamps and size, so replacement
+        # and in-place writes are detected, even if a writer restores mtime.
+        changed = _observation_token(directory_before) != _observation_token(tasks_dir.stat()) or any(
+            _observation_token(before) != _observation_token(path.stat()) for path, before in signatures.items()
+        )
+    except OSError:
+        changed = True
+    changed = changed or any(worker_liveness(task, pid_alive=_pid_alive) is not alive for task, alive in process_checks)
+    if changed:
+        raise HTTPException(503, detail={"status": "unknown", "reason": "task_authority_changed"})
+    finished = datetime.now(UTC)
+    for observation in observations:
+        observation["record_age_s"] = (
+            finished - datetime.fromisoformat(observation["record_updated_at"])
+        ).total_seconds()
+        observation["liveness_age_s"] = (
+            finished - datetime.fromisoformat(observation["liveness_observed_at"])
+        ).total_seconds()
+    rows.sort(
+        key=lambda row: _parse_iso_datetime(row.get("started_at")) or datetime.min.replace(tzinfo=UTC), reverse=True
+    )
+    return {
+        "total": len(rows),
+        "tasks": rows,
+        "observations": observations,
+        "cache_age_s": 0.0,
+        "source": {
+            "status": "ok",
+            "scope": "hot running/spawning records, excluding proven-dead running attempts; no archive or snapshot sidecars",
+            "filtered": predicate is not None,
+            "scan_started_at": started.isoformat(),
+            "observed_at": finished.isoformat(),
+            "age_s": 0.0,
+            "records_scanned": len(paths),
+            "records_in_scope": len(observations),
+            "excluded_dead_running": sum(item["excluded_dead_running"] for item in observations),
+        },
+    }
+
 
 
 def seat_delegate_tasks(
@@ -772,6 +907,7 @@ async def delegate_active(ctx: MonitorContext = Depends(get_ctx)):
         cache_key,
         DELEGATE_LIST_TTL_S,
         lambda: active_delegate_tasks(ctx=ctx),
+        force=True,
     )
 
 

@@ -452,3 +452,23 @@ def test_delegate_list_replaces_the_previous_generation(tmp_path: Path, monkeypa
     asyncio.run(scenario())
     keys = [key for key in state_helpers._ttl_cache if ":delegate:" in key]
     assert len(keys) == 1
+
+
+def test_delegate_active_sequential_requests_reobserve_source(tmp_path, monkeypatch):
+    calls = {"n": 0}
+
+    def scan(**_kwargs):
+        calls["n"] += 1
+        return {"total": 0, "tasks": [], "sample": calls["n"]}
+
+    monkeypatch.setattr(delegate_router, "active_delegate_tasks", scan)
+    app = _mount(tmp_path, delegate_router.router, "/api/delegate")
+
+    async def scenario():
+        async with httpx.AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
+            first = await client.get("/api/delegate/active")
+            second = await client.get("/api/delegate/active")
+            assert first.json()["sample"] == 1
+            assert second.json()["sample"] == 2
+
+    asyncio.run(scenario())

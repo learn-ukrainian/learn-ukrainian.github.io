@@ -191,3 +191,12 @@ def test_launchpad_and_orient_page_contracts_match_post_7976_timeouts():
     assert "fresh=true" not in index.freshness.lower() or "no per-load" in index.freshness
     assert "singleflight" in contract_for_route("/api/state").freshness
     assert "20s" in orient.freshness
+
+
+def test_delegate_contract_describes_distinct_active_and_history_freshness():
+    contract = contract_for_route("/api/delegate/active")
+    assert contract is not None
+    assert "worker_liveness" in contract.source_of_truth
+    assert "503 unknown" in contract.freshness
+    assert "2s" in contract.freshness
+    assert "uncached source scans" in contract.freshness

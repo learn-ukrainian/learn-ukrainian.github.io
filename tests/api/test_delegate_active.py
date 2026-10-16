@@ -134,7 +134,7 @@ def test_delegate_active_includes_spawning_task_without_pid(tmp_path, monkeypatc
     assert orient["delegate"]["active_count"] == active["total"]
     assert [task["task_id"] for task in active["tasks"]] == ["spawning", "running"]
     assert active["tasks"][0]["status"] == "spawning"
-    assert active["tasks"][0]["alive"] is False
+    assert active["tasks"][0]["alive"] is None
 
 
 def test_delegate_active_filters_before_limit_truncation(tmp_path, monkeypatch):
@@ -297,8 +297,8 @@ def test_delegate_persistent_cache_survives_restart_and_avoids_reparsing(tmp_pat
     # 1. First run populates persistent SQLite cache
     delegate_router._TASK_STATE_CACHE.clear()
     delegate_router._LAST_TASKS_DIR_STR = ""
-    res1 = delegate_router.active_delegate_tasks()
-    assert res1["total"] == 1
+    res1 = delegate_router.list_delegate_tasks(status="all")
+    assert res1["total"] == 51
     assert res1["tasks"][0]["task_id"] == "active"
 
     # Verify SQLite cache exists on disk
@@ -312,14 +312,14 @@ def test_delegate_persistent_cache_survives_restart_and_avoids_reparsing(tmp_pat
     read_calls = []
     real_read = delegate_router._read_task_state
 
-    def spy_read(path):
+    def spy_read(path, ctx=None):
         read_calls.append(path)
-        return real_read(path)
+        return real_read(path, ctx)
 
     monkeypatch.setattr(delegate_router, "_read_task_state", spy_read)
 
-    res2 = delegate_router.active_delegate_tasks()
-    assert res2["total"] == 1
+    res2 = delegate_router.list_delegate_tasks(status="all")
+    assert res2["total"] == 51
     assert res2["tasks"][0]["task_id"] == "active"
     # None of the 50 cached done files were opened/parsed
     assert len(read_calls) == 0
@@ -335,6 +335,7 @@ def test_delegate_persistent_cache_invalidates_on_mtime_change(tmp_path, monkeyp
 
     delegate_router._TASK_STATE_CACHE.clear()
     delegate_router._LAST_TASKS_DIR_STR = ""
+    delegate_router.list_delegate_tasks(status="all")
     res1 = delegate_router.active_delegate_tasks()
     assert res1["total"] == 1
 
@@ -366,6 +367,7 @@ def test_delegate_persistent_cache_detects_dead_pid_on_restart(tmp_path, monkeyp
     monkeypatch.setattr(delegate_router, "_pid_alive", lambda pid: True)
     delegate_router._TASK_STATE_CACHE.clear()
     delegate_router._LAST_TASKS_DIR_STR = ""
+    delegate_router.list_delegate_tasks(status="all")
     res1 = delegate_router.active_delegate_tasks()
     assert res1["total"] == 1
     assert res1["tasks"][0]["status"] == "running"
