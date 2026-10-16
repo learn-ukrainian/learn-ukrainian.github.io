@@ -189,28 +189,21 @@ def test_delegate_active_retries_transient_invalid_json(tmp_path, monkeypatch):
     _pin_tasks_dir(monkeypatch, tasks_dir)
     _write_task(task_path, _task_payload("running", status="running", pid=111))
 
-    # _read_task_state opens via builtins.open (CodeQL sink-colocated guard),
-    # not Path.read_text — patch the real sink.
-    import builtins
+    # Inject one interrupted read through the descriptor's text wrapper.
     from io import StringIO
 
-    original_open = builtins.open
+    original_open = delegate_router.os.fdopen
     read_attempts = 0
     retry_delays = []
-    target = task_path.resolve()
 
     def flaky_open(file, *args, **kwargs):
         nonlocal read_attempts
-        try:
-            opened = Path(file).resolve()
-        except OSError:
-            opened = None
-        if opened == target and read_attempts == 0:
+        if read_attempts == 0:
             read_attempts += 1
             return StringIO("{")
         return original_open(file, *args, **kwargs)
 
-    monkeypatch.setattr(builtins, "open", flaky_open)
+    monkeypatch.setattr(delegate_router.os, "fdopen", flaky_open)
     monkeypatch.setattr(delegate_router.time, "sleep", retry_delays.append)
     monkeypatch.setattr(delegate_router.os, "kill", lambda pid, sig: None)
 

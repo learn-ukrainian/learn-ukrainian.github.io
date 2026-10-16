@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import os
 import subprocess
+import sys
 from datetime import UTC, datetime
 
 import pytest
@@ -548,3 +549,164 @@ def test_multiple_benign_sidecars_during_final_recheck_remain_qualified(inventor
     assert response.status_code == 200
     assert response.json()["total"] == 1
     assert calls >= 5
+
+
+@pytest.mark.parametrize("scan", [False, True])
+@pytest.mark.parametrize("candidate", ["absolute", "traversal", "prefix-sibling"])
+def test_reader_refuses_lexical_escape_before_filesystem_access(inventory, monkeypatch, scan, candidate):
+    client, tasks = inventory
+    paths = {
+        "absolute": tasks.parent / "outside.json",
+        "traversal": tasks / ".." / "outside.json",
+        "prefix-sibling": tasks.with_name("tasks-other") / "one.json",
+    }
+
+    def refuse(*args, **kwargs):
+        pytest.fail("escaped candidate reached a filesystem probe")
+
+    root = str(tasks.resolve())
+    if not scan:
+        monkeypatch.setattr(delegate_router, "_tasks_root", lambda ctx: root)
+    for name in ("islink", "realpath"):
+        monkeypatch.setattr(delegate_router.os.path, name, refuse)
+    for name in ("lstat", "open"):
+        monkeypatch.setattr(delegate_router.os, name, refuse)
+    assert delegate_router._read_task_state(str(paths[candidate]), client.app.state.ctx, root if scan else None) is None
+
+
+@pytest.mark.parametrize("scan", [False, True])
+def test_reader_preserves_nested_detail_and_contained_links(inventory, scan):
+    client, tasks = inventory
+    nested = tasks / "archive"
+    nested.mkdir()
+    target = write(nested, status="done")
+    link = tasks / "linked.json"
+    link.symlink_to(target)
+    for path in (target, link):
+        assert (
+            delegate_router._read_task_state(str(path), client.app.state.ctx, str(tasks.resolve()) if scan else None)[
+                "task_id"
+            ]
+            == "one"
+        )
+    response = client.get("/api/delegate/tasks/one")
+    assert response.status_code == 200
+    assert response.json()["task"]["status"] == "done"
+
+
+@pytest.mark.parametrize("failure", ["none", "corrupt", "directory", "fifo", "fstat", "fdopen"])
+def test_reader_closes_every_opened_descriptor(inventory, monkeypatch, failure):
+    client, tasks = inventory
+    path = tasks / "one.json"
+    if failure == "directory":
+        path.mkdir()
+    elif failure == "fifo":
+        os.mkfifo(path)
+    else:
+        path.write_text("{" if failure == "corrupt" else '{"status":"done"}')
+    opened = []
+    closed = []
+    original_open, original_close = os.open, os.close
+    original_fstat, original_fdopen = os.fstat, os.fdopen
+
+    def open_record(name, flags):
+        fd = original_open(name, flags)
+        opened.append(fd)
+        return fd
+
+    def close_record(fd):
+        closed.append(fd)
+        return original_close(fd)
+
+    def fstat(fd):
+        if failure == "fstat":
+            raise OSError("injected descriptor stat failure")
+        return original_fstat(fd)
+
+    def fdopen(fd, **kwargs):
+        if failure == "fdopen":
+            raise OSError("injected text wrapper failure")
+        return original_fdopen(fd, **kwargs)
+
+    with monkeypatch.context() as patch:
+        patch.setattr(delegate_router.os, "open", open_record)
+        patch.setattr(delegate_router.os, "close", close_record)
+        patch.setattr(delegate_router.os, "fstat", fstat)
+        patch.setattr(delegate_router.os, "fdopen", fdopen)
+        result = delegate_router._read_task_state(str(path), client.app.state.ctx, str(tasks.resolve()))
+    assert result == ({"status": "done"} if failure == "none" else None)
+    assert len(opened) == (2 if failure in {"corrupt", "fstat", "fdopen"} else 1)
+    assert closed == opened
+
+
+_NONREGULAR_FLIGHT = r"""
+import asyncio
+import json
+import os
+from pathlib import Path
+import sys
+import httpx
+from fastapi import FastAPI
+from scripts.api import delegate_router
+from scripts.api.monitor_context import fixture_context
+root, variant = Path(sys.argv[1]), sys.argv[2]
+tasks = root / 'batch_state/tasks'
+tasks.mkdir(parents=True)
+path = tasks / 'one.json'
+record = '{"task_id":"one","status":"spawning"}'
+path.write_text(record)
+app = FastAPI()
+app.state.ctx = fixture_context(root)
+app.include_router(delegate_router.router, prefix='/api/delegate')
+original_open = os.open
+swapped = False
+def replace_at_open(name, flags, *args, **kwargs):
+    global swapped
+    if str(name) == str(path) and not swapped:
+        swapped = True
+        path.unlink()
+        if variant == 'swap-link':
+            outside = root / 'outside.json'
+            outside.write_text(record)
+            path.symlink_to(outside)
+        else:
+            os.mkfifo(path)
+    return original_open(name, flags, *args, **kwargs)
+async def run():
+    async with httpx.AsyncClient(transport=httpx.ASGITransport(app=app), base_url='http://test') as client:
+        if variant == 'cached-fifo':
+            path.write_text('{"status":"done"}')
+            assert (await client.get('/api/delegate/active')).status_code == 200
+        if variant in {'fifo', 'cached-fifo'}:
+            path.unlink()
+            os.mkfifo(path)
+        else:
+            delegate_router.os.open = replace_at_open
+        responses = await asyncio.gather(*[client.get('/api/delegate/active') for _ in range(2)])
+        responses.append(await client.get('/api/delegate/active'))
+        delegate_router.os.open = original_open
+        path.unlink()
+        path.write_text(record)
+        recovered = await client.get('/api/delegate/active')
+        print(json.dumps({'statuses': [r.status_code for r in responses],
+            'details': [r.json()['detail'] for r in responses],
+            'recovered_status': recovered.status_code, 'recovered_total': recovered.json()['total']}))
+asyncio.run(run())
+"""
+
+
+@pytest.mark.parametrize("variant", ["fifo", "swap-fifo", "cached-fifo", "swap-link"])
+def test_nonregular_or_swapped_leaf_refuses_shared_flight_without_hanging(tmp_path, variant):
+    result = subprocess.run(
+        [sys.executable, "-c", _NONREGULAR_FLIGHT, str(tmp_path), variant],
+        capture_output=True,
+        text=True,
+        timeout=10,
+        check=True,
+    )
+    assert json.loads(result.stdout) == {
+        "statuses": [503, 503, 503],
+        "details": [{"status": "unknown", "reason": "task_record_unreadable_or_invalid"}] * 3,
+        "recovered_status": 200,
+        "recovered_total": 1,
+    }

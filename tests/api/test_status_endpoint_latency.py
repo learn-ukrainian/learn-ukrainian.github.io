@@ -8,8 +8,10 @@ compute.
 from __future__ import annotations
 
 import asyncio
+import json
 import threading
 import time
+from contextlib import contextmanager
 from pathlib import Path
 
 import httpx
@@ -521,6 +523,76 @@ def realistic_active_store(tmp_path_factory):
     return root
 
 
+@contextmanager
+def _observe_consumer_http(evidence, opener, *args, **kwargs):
+    try:
+        with opener(*args, **kwargs) as response:
+            evidence["http_status"] = response.status
+
+            class ObservedResponse:
+                def read(self, *args, **kwargs):
+                    raw = response.read(*args, **kwargs)
+                    evidence["_body"] = raw
+                    return raw
+
+            yield ObservedResponse()
+    except Exception as exc:
+        evidence.update(exception=type(exc).__name__, reason_class=type(getattr(exc, "reason", None)).__name__)
+        evidence["errno"] = exc.errno if isinstance(getattr(exc, "errno", None), int) else None
+        if isinstance(getattr(exc, "code", None), int):
+            evidence["http_status"] = exc.code
+        raise
+
+
+def _consumer_evidence(evidence):
+    raw = evidence.pop("_body", None)
+    if raw is not None:
+        try:
+            payload = json.loads(raw.decode("utf-8"))
+            evidence["json_shape"] = type(payload).__name__
+            if isinstance(payload, dict):
+                source, tasks = payload.get("source"), payload.get("tasks")
+                scanned = source.get("records_scanned") if isinstance(source, dict) else None
+                evidence["records_scanned"] = scanned if type(scanned) is int else None
+                evidence["total"] = payload.get("total") if type(payload.get("total")) is int else None
+                evidence["tasks_count"] = len(tasks) if isinstance(tasks, list) else None
+        except (ValueError, UnicodeError) as exc:
+            evidence["parse_exception"] = type(exc).__name__
+    return evidence
+
+
+@pytest.mark.parametrize("failure", [None, "open", "read"])
+def test_consumer_http_observer_preserves_operations(failure):
+    from io import BytesIO
+
+    evidence, calls, error = {}, [], OSError(5, "synthetic private detail")
+    raw = b'{"total":8,"tasks":[{},{},{},{},{},{},{},{}],"source":{"records_scanned":12483}}'
+    response = BytesIO(raw)
+    response.status = 200
+
+    def opener(*args, **kwargs):
+        calls.append((args, kwargs))
+        if failure == "open":
+            raise error
+        return response
+
+    def consume():
+        with _observe_consumer_http(evidence, opener, "synthetic", timeout=2.0) as observed:
+            if failure == "read":
+                response.close()
+            return observed.read()
+
+    if failure:
+        with pytest.raises(OSError if failure == "open" else ValueError) as caught:
+            consume()
+        assert caught.value is error if failure == "open" else evidence["exception"] == "ValueError"
+    else:
+        assert consume() == raw
+        assert list(_consumer_evidence(evidence).values()) == [200, "dict", 12483, 8, 8]
+    assert calls == [(("synthetic",), {"timeout": 2.0})]
+    assert response.closed if failure != "open" else not response.closed
+
+
 @pytest.mark.parametrize("consumer", ["capacity", "fleet", "goal"])
 def test_realistic_active_cold_and_warm_actual_two_second_consumers(realistic_active_store, monkeypatch, consumer):
     import json
@@ -558,23 +630,35 @@ def test_realistic_active_cold_and_warm_actual_two_second_consumers(realistic_ac
                     time.sleep(0.05)
             monkeypatch.setattr(capacity_pick, "_monitor_base", lambda: base)
             monkeypatch.setattr(stop_hook, "MONITOR_API", base)
-            for temperature in ("cold", "warm", "warm"):
+            opener = urllib.request.urlopen
+            monkeypatch.setattr(
+                urllib.request, "urlopen", lambda *a, **kw: _observe_consumer_http(evidence, opener, *a, **kw)
+            )
+            for attempt, temperature in enumerate(("cold", "warm", "warm"), 1):
+                evidence = dict.fromkeys(("http_status", "exception", "errno", "reason_class"))
+                evidence.update(consumer=consumer, temperature=temperature, attempt=attempt)
                 started = time.perf_counter()
+                try:
+                    if consumer == "capacity":
+                        result = capacity_pick.fetch_active_in_flight()
+                    elif consumer == "fleet":
+                        result = fleet_cli._fetch_json_fail_open(base + "/api/delegate/active")
+                    else:
+                        result = stop_hook._query_active_dispatches()
+                finally:
+                    elapsed = time.perf_counter() - started
+                    evidence["elapsed_s"] = elapsed
+                    print(json.dumps(_consumer_evidence(evidence)), flush=True)
                 if consumer == "capacity":
-                    result = capacity_pick.fetch_active_in_flight()
                     assert result == {"codex": 8}
                 elif consumer == "fleet":
-                    result = fleet_cli._fetch_json_fail_open(base + "/api/delegate/active")
                     assert result["available"] is True
                     assert result["payload"]["total"] == len(result["payload"]["tasks"]) == 8
                     assert result["payload"]["source"]["records_scanned"] == 12483
                 else:
-                    result = stop_hook._query_active_dispatches()
                     assert result is not None
                     assert result["total"] == len(result["tasks"]) == 8
                     assert result["source"]["records_scanned"] == 12483
-                elapsed = time.perf_counter() - started
-                print(json.dumps({"consumer": consumer, "temperature": temperature, "elapsed_s": elapsed}))
                 assert elapsed < 2.0
         finally:
             process.terminate()
@@ -583,4 +667,8 @@ def test_realistic_active_cold_and_warm_actual_two_second_consumers(realistic_ac
             except subprocess.TimeoutExpired:
                 process.kill()
                 process.wait(timeout=5)
+            stderr = process.stderr.read(8192)
+            diagnostic = dict(consumer=consumer, server_returncode=process.returncode)
+            diagnostic.update(stderr_bytes_captured=len(stderr), stderr_limit=8192)
+            print(json.dumps(diagnostic), flush=True)
             process.stderr.close()

@@ -155,7 +155,9 @@ _PATH_MUTATION_EVENTS = {
     "shutil.move": (0, 1),
     "shutil.rmtree": (0,),
 }
-_SPAWN_EVENTS = frozenset({"os.exec", "os.fork", "os.forkpty", "os.posix_spawn", "os.spawn", "os.system", "subprocess.Popen"})
+_SPAWN_EVENTS = frozenset(
+    {"os.exec", "os.fork", "os.forkpty", "os.posix_spawn", "os.spawn", "os.system", "subprocess.Popen"}
+)
 
 
 class _MutationSideEffectGuard:
@@ -336,7 +338,7 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
     # canonical root for every fixture seam.
     root = (tmp_path / PATH_CANARY).resolve()
     root.mkdir()
-    for relative in ("batch_state", "stores", "curriculum", "dashboards", "data", "logs"):
+    for relative in ("batch_state/tasks", "stores", "curriculum", "dashboards", "data", "logs"):
         (root / relative).mkdir(parents=True, exist_ok=True)
 
     # The API cache is process-global, while pytest-xdist gives each worker a
@@ -560,7 +562,9 @@ def _validate_known_leaks(rows: list[dict[str, str]], findings: list[opsec_scan.
         assert row.get("owner"), f"known leak row has no owner: {row['id']}"
         assert row.get("operation"), f"known leak row has no operation: {row['id']}"
         assert row.get("field"), f"known leak row has no field: {row['id']}"
-        tracking_issues.assert_cites_open_issue(f"known leak row {row['id']}", row.get("issue"), row["expiry"], tracking)
+        tracking_issues.assert_cites_open_issue(
+            f"known leak row {row['id']}", row.get("issue"), row["expiry"], tracking
+        )
 
 
 def _load_approved_exemptions() -> list[dict[str, str]]:

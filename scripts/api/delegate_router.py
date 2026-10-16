@@ -103,24 +103,26 @@ def _read_task_state(path: str, ctx: MonitorContext | None = None, root: str | N
     """Read task JSON only after a local containment check (CodeQL sink guard)."""
     # Active scans supply the already-resolved parent. Resolve only a link or
     # a non-sibling, then refuse a leaf-link swap at open time.
-    opener = None
+    scan_root = root is not None
     if root is None:
         root = _tasks_root(ctx)
-        fullpath = os.path.realpath(path)
-    else:
-        fullpath = os.path.abspath(path)
-        if os.path.dirname(fullpath) != root or os.path.islink(fullpath):
-            fullpath = os.path.realpath(path)
-
-        def opener(name, flags):
-            return os.open(name, flags | os.O_NOFOLLOW)
-
+    fullpath = os.path.abspath(path)
+    if not fullpath.startswith(root + os.sep):
+        return None
+    if not scan_root or os.path.dirname(fullpath) != root or os.path.islink(fullpath):
+        fullpath = os.path.realpath(fullpath)
     if not fullpath.startswith(root + os.sep):
         return None
     for attempt in range(TASK_READ_RETRIES):
         try:
-            with open(fullpath, encoding="utf-8", opener=opener) as handle:
-                data = json.loads(handle.read())
+            fd = os.open(fullpath, os.O_RDONLY | os.O_CLOEXEC | os.O_NOFOLLOW | os.O_NONBLOCK)
+            try:
+                if not stat.S_ISREG(os.fstat(fd).st_mode):
+                    return None
+                with os.fdopen(fd, encoding="utf-8", closefd=False) as handle:
+                    data = json.loads(handle.read())
+            finally:
+                os.close(fd)
         except (OSError, json.JSONDecodeError):
             if attempt + 1 == TASK_READ_RETRIES:
                 return None
