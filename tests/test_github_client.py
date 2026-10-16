@@ -17,6 +17,16 @@ from scripts.common import github_client as gh
 REAL_CLIENT = gh.GitHubClient
 
 
+def natively_runs(args):
+    """The command line the native transport runs for ``args`` (#10730): a ``gh api`` that is neither
+    paginated, verbose nor already ``--include``d gets ``--include`` after its last flag, so GitHub's
+    status and headers come from gh's own framing; any other command line is unchanged."""
+    tokens = list(args)
+    if tokens[1:2] != ["api"] or {"--paginate", "--verbose", "--include", "-i"} & set(tokens):
+        return tokens
+    return [*tokens, "--include"]
+
+
 # A healthy default budget: above the core landing reserve, so ordinary calls are admitted.
 def response(value, *, status=200, remaining=5000, reset=2000, etag='"one"'):
     return gh.Response(
@@ -966,6 +976,135 @@ def test_cli_timeout_reaps_a_real_descendant(tmp_path):
     assert _observe_reaped_descendant(int(pid_file.read_text())) in {"disappeared", "reaped"}
 
 
+def _script(tmp_path, name, body):
+    """An executable Python script standing in for a CLI process."""
+    import sys
+
+    path = tmp_path / name
+    path.write_text(f"#!{sys.executable}\n{body}")
+    path.chmod(0o700)
+    return str(path)
+
+
+def test_transport_keeps_at_most_its_limit_and_never_blocks_the_process(tmp_path):
+    """Standard output past the kept bytes is read and dropped: the spool never grows beyond the limit."""
+    script = _script(
+        tmp_path,
+        "big",
+        "import sys\nsys.stdout.buffer.write(b'x' * (3 << 20))\nsys.stdout.flush()\nprint('done', file=sys.stderr)\n",
+    )
+    completed = gh._transport_process([script], input=None, env=None, cwd=None, timeout=30, limit=99)
+    assert (completed.returncode, completed.stdout, completed.stderr) == (0, b"x" * 100, b"done\n")
+
+
+def test_transport_output_under_its_limit_is_byte_identical(tmp_path):
+    import os
+
+    script = _script(tmp_path, "echo", "import sys\nsys.stdout.buffer.write(sys.stdin.buffer.read())\n")
+    payload = os.urandom(300_000)
+    for limit in (None, len(payload) - 1, len(payload)):
+        completed = gh._transport_process([script], input=payload, env=None, cwd=None, timeout=30, limit=limit)
+        assert completed.stdout == payload
+    # Standard input of any size arrives whole: the former 8 MiB request cap is no limit.
+    big = os.urandom(9 << 20)
+    assert gh._transport_process([script], input=big, env=None, cwd=None, timeout=60).stdout == big
+
+
+def test_a_bounded_request_never_kills_the_process_group_after_a_completed_wait(tmp_path):
+    """A descendant the CLI left running, on its own stdio, survives a run that completed (pin 2, #10730)."""
+    import os
+
+    import psutil
+
+    pid_file = tmp_path / "descendant.pid"
+    executable = _script(
+        tmp_path,
+        "gh",
+        "import subprocess, sys\n"
+        "child = subprocess.Popen([sys.executable, '-c', 'import time; time.sleep(30)'], "
+        "stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)\n"
+        f"open({str(pid_file)!r}, 'w').write(str(child.pid))\n"
+        "sys.stdout.write('HTTP/2.0 200 OK\\nX-Ratelimit-Remaining: 4000\\r\\n\\r\\n[]')\n",
+    )
+    store = gh.GitHubClient(
+        cache_dir=tmp_path / "cache", env={**os.environ, "AGENT_REAL_GH": executable}, max_response_bytes=1024
+    )
+    result = store.request("GET", "repos/o/r/issues")
+    descendant = psutil.Process(int(pid_file.read_text()))
+    try:
+        assert (result.error, result.value) == (None, [])
+        assert descendant.status() not in {psutil.STATUS_ZOMBIE, psutil.STATUS_DEAD}
+    finally:
+        descendant.kill()
+
+
+@pytest.mark.parametrize("limit", [None, 6000, 4999])
+def test_native_output_is_the_processs_own_bytes_until_the_ceiling(tmp_path, limit):
+    """Under the ceiling the caller gets gh's body byte for byte; over it, a typed result carrying none of it."""
+    import os
+
+    body = os.urandom(5000)
+    (tmp_path / "body").write_bytes(body)
+    executable = _script(
+        tmp_path,
+        "gh",
+        "import sys\n"
+        "assert sys.argv[-1] == '--include', sys.argv\n"
+        "sys.stdout.buffer.write(b'HTTP/2.0 200 OK\\nX-Ratelimit-Remaining: 4000\\r\\n\\r\\n')\n"
+        f"sys.stdout.buffer.write(open({str(tmp_path / 'body')!r}, 'rb').read())\n",
+    )
+    environment = {**os.environ, "AGENT_REAL_GH": executable}
+    argv = ["gh", "api", "repos/o/r/issues", "--template", "{{.}}"]
+    result = gh.run(argv, env=environment, capture_output=True, max_response_bytes=limit)
+    if limit is None or limit >= len(body):
+        assert (result.returncode, result.stdout) == (0, body)
+    else:
+        assert result.returncode == 1 and result.github_result.error == "github_response_too_large"
+        assert json.loads(result.stdout) == {"error": "github_response_too_large", "reset_at": None}
+
+
+@pytest.mark.parametrize("block", [1, 2, 3, 7, 4096])
+def test_a_framed_ceiling_keeps_the_frame_and_counts_only_the_body(block):
+    """gh's frame is kept to its empty line; then at most ceiling + 1 body bytes, whatever the read sizes."""
+    import io
+
+    for frame in (b"HTTP/2.0 200 OK\nX-Ratelimit-Remaining: 4000\r\n\r\n", b"HTTP/2.0 204 No Content\n\r\n"):
+        output, spool = frame + b"b" * 100, io.BytesIO()
+        kept = gh._Kept(spool, 9, framed=True)
+        for start in range(0, len(output), block):
+            kept.write(output[start : start + block])
+        assert spool.getvalue() == frame + b"b" * 10
+
+
+def test_output_with_no_frame_end_within_the_frame_limit_is_body(monkeypatch):
+    import io
+
+    monkeypatch.setattr(gh, "_FRAME_BYTES", 16)
+    spool = io.BytesIO()
+    kept = gh._Kept(spool, 4, framed=True)
+    for block in (b"HTTP/2.0 200 OK ", b"and no header end", b"x" * 50):
+        kept.write(block)
+    assert spool.getvalue() == b"HTTP/2.0 200 OK and no header end" + b"x" * 5
+
+
+def test_a_bounded_cli_request_keeps_its_frame_and_refuses_the_oversized_body(tmp_path):
+    import os
+
+    executable = _script(
+        tmp_path,
+        "gh",
+        "import sys\n"
+        "sys.stdout.buffer.write(b'HTTP/2.0 200 OK\\nX-Ratelimit-Remaining: 4000\\r\\nX-Ratelimit-Reset: 2000\\r\\n\\r\\n')\n"
+        "sys.stdout.buffer.write(b'b' * 50000)\n",
+    )
+    store = gh.GitHubClient(
+        cache_dir=tmp_path / "cache", env={**os.environ, "AGENT_REAL_GH": executable}, max_response_bytes=100
+    )
+    result = store.request("GET", "repos/o/r/actions/artifacts/1/zip")
+    assert (result.status, result.value) == (413, {"message": "github_response_too_large"})
+    assert result.headers["x-ratelimit-remaining"] == "4000"
+
+
 def test_low_keeper_budget_skips_identity_checks_and_state_write(tmp_path):
     from scripts.orchestration import merge_queue_keeper as keeper
 
@@ -1534,7 +1673,7 @@ def test_host_boundary_option_normalization_preserves_flag_values(tmp_path):
 
     args = ["gh", "api", "--template", "--hostname", "user", "--hostname", "GITHUB.COM."]
     assert gh.run(args, client=store, runner=runner, capture_output=True).returncode == 0
-    assert commands == [["gh", "api", "--template", "--hostname", "user", "--hostname", "github.com"]]
+    assert commands == [natively_runs(["gh", "api", "--template", "--hostname", "user", "--hostname", "github.com"])]
     assert args[-1] == "GITHUB.COM."
 
 
@@ -2043,7 +2182,7 @@ def test_every_shim_admitted_read_translates_or_falls_through(tmp_path, args):
     assert result.returncode == 0
     assert bool(translated) != bool(native)
     if native:
-        assert native == [args]
+        assert native == [natively_runs(args)]
     else:
         assert gh._translation_options(args) is not None
 
@@ -2174,7 +2313,7 @@ def test_unmodelled_api_flag_semantics_fall_through(tmp_path, suffix):
         return subprocess.CompletedProcess(command, 0, b"[]", b"")
 
     assert gh.run(args, client=store, runner=native, capture_output=True).returncode == 0
-    assert seen == [args] and not calls
+    assert seen == [natively_runs(args)] and not calls
 
 
 @pytest.mark.parametrize("flag", ["-a", "--approve", "--approve=true"])
@@ -2337,7 +2476,7 @@ def test_every_admitted_api_read_translates_exactly_or_falls_through(tmp_path, a
     assert result.returncode == 0
     assert bool(translated) != bool(native)
     if native:
-        assert native == [args]
+        assert native == [natively_runs(args)]
     else:
         assert gh._translation_options(args) is not None
         assert result.stdout == _native_api_shape(args)

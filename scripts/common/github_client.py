@@ -11,8 +11,9 @@ Every request path (REST, injected transports and native gh) is normalized once
 (``_normalize``) and admitted by one decision, ``_refusal``. Only GitHub's own
 Retry-After hold refuses a call that lands a PR; every local refusal is
 ``github_rate_limited`` (exit 75) with a typed reason. A body is read only when that
-decision depends on it; one that cannot then be read exactly is refused before any
-send as ``github_invalid_request`` with a typed reason, never classified by guess.
+decision depends on it, whatever its size: it is captured once and exactly those bytes
+are sent. One that cannot be captured is refused before any send as
+``github_invalid_request`` with a typed reason, never classified by guess.
 """
 
 from __future__ import annotations
@@ -43,15 +44,18 @@ LANDING_RESERVE = 500
 """Core pool: below this many remaining, what is left is kept for calls that land a PR."""
 REFUSAL_REASONS = frozenset({"retry_after", "secondary_hold", "core_below_landing_reserve", "pool_exhausted"})
 """The closed set of reasons; every local refusal names exactly one."""
-MAX_REQUEST_BYTES = 8 * 1024 * 1024
-"""Most bytes of a request body this client reads to classify it, separate from ``max_response_bytes``.
+SPILL_BYTES = 8 * 1024 * 1024
+"""Most bytes a spool (:func:`_spool`) keeps in memory before it moves to a private temporary file.
 
-A body admission needs that is larger is refused without reading the rest. A body admission
-does not need is never read, whatever its size.
+It never limits a request: a body of any size is captured and sent whole.
 """
-PREPARATION_ERRORS = frozenset({"body_unreadable", "body_not_replayable", "body_too_large", "invalid_body_type"})
+PREPARATION_ERRORS = frozenset({"body_unreadable", "body_not_replayable", "invalid_body_type"})
 """The closed set of reasons a request whose admission needs its body is refused before any send."""
 ANSI = re.compile(rb"\x1b\[[0-?]*[ -/]*[@-~]")
+# One response's status line and headers as ``gh api --include`` frames them, within the
+# limits ``http.client`` reads headers with: lines of at most 65536 bytes, at most 100 headers.
+_FRAME_LINE, _FRAME_HEADERS = 65536, 100
+_FRAME_BYTES = (_FRAME_HEADERS + 2) * (_FRAME_LINE + 2)
 
 
 class GitHubInvalidHost(ValueError):
@@ -353,268 +357,163 @@ _LANDING_MUTATIONS = frozenset(
         "disablePullRequestAutoMerge",
     }
 )
-_GRAPHQL_TOKEN = re.compile(
-    r"[\s,﻿]+|#[^\n\r]*"
-    r'|(?P<string>"""(?:\\"""|[^"]|"(?!""))*"""|"(?:\\.|[^"\\\n\r])*")'
-    r"|(?P<name>[_A-Za-z][_0-9A-Za-z]*)"
-    r"|(?P<number>-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?)"
-    r"|(?P<punct>\.\.\.|[!$&():=@\[\]{|}])"
-)
-
-
 _ROOT_TYPES = {"query": "Query", "mutation": "Mutation", "subscription": "Subscription"}
 _CONDITIONS = frozenset({"skip", "include"})
-_ABSENT = object()
-
-
-class _GraphQLUnread(ValueError):
-    """A GraphQL document this reader cannot parse, or no single operation it selects."""
+# Every GraphQL validation rule (September 2025, §5) that needs no schema, as graphql-core
+# implements it. Operation selection and root field collection rely on them; a document they
+# reject executes nothing on GitHub, so it is never landing.
+_DOCUMENT_RULES = (
+    "ExecutableDefinitionsRule",
+    "LoneAnonymousOperationRule",
+    "UniqueOperationNamesRule",
+    "UniqueFragmentNamesRule",
+    "KnownFragmentNamesRule",
+    "NoUnusedFragmentsRule",
+    "NoFragmentCyclesRule",
+    "UniqueArgumentNamesRule",
+    "UniqueInputFieldNamesRule",
+    "UniqueVariableNamesRule",
+    "NoUndefinedVariablesRule",
+    "NoUnusedVariablesRule",
+    "UniqueDirectivesPerLocationRule",
+)
+_GRAPHQL = {}
 
 
 class _Undecided(ValueError):
     """Which root fields of the selected GraphQL operation execute cannot be decided."""
 
 
+def _graphql():
+    """graphql-core's language and validation API, imported once on first use (it is not cheap to import)."""
+    if not _GRAPHQL:
+        import graphql
+        from graphql import language, validation
+        from graphql.utilities import get_operation_ast
+
+        # Only schema-free rules run, so a schema with nothing in it suffices.
+        schema = graphql.GraphQLSchema(
+            query=graphql.GraphQLObjectType("Query", {"_": graphql.GraphQLField(graphql.GraphQLBoolean)})
+        )
+        _GRAPHQL.update(
+            language=language,
+            error=graphql.GraphQLError,
+            select=get_operation_ast,
+            validate=lambda document: validation.validate(
+                schema, document, [getattr(validation, rule) for rule in _DOCUMENT_RULES]
+            ),
+        )
+    return _GRAPHQL
+
+
 def _graphql_operation(query, operation_name=None, variables=None):
     """``(operation type, root fields)`` of the operation a GraphQL request executes, else ``None``.
 
-    Follows the GraphQL specification (September 2025): operation selection (GetOperation),
-    then root field collection (CollectFields). ``operationName`` picks one of several named
-    operations; an absent or null one selects only a sole operation. Root fragment spreads and
-    inline fragments expand into their fields, and ``@skip``/``@include`` are resolved from
-    literals, ``variables`` and the operation's defaults. Aliases, arguments, strings and
-    comments never name a field. The fields are ``None`` when which ones execute cannot be
-    decided: an unknown or cyclic fragment, a fragment on another root type, or a condition
-    that is not a declared ``Boolean`` value. A document this reader cannot parse, or no
-    single selected operation, is ``None``.
+    graphql-core parses the document. The operation is selected as the specification's
+    GetOperation does (``operationName``, else the sole operation) once every schema-free
+    validation rule holds (``_DOCUMENT_RULES``); its root fields are then collected as
+    CollectFields does: fragment spreads and inline fragments on the root type expand, and
+    ``@skip``/``@include`` resolve from literals, ``variables`` and the operation's defaults.
+    Aliases, arguments, strings and comments never name a field. The fields are ``None`` when
+    which ones execute cannot be decided (a fragment on another type, or a condition that is not
+    a declared ``Boolean`` value). A document that does not parse or validate, or selects no
+    operation, is ``None``. One that never spells ``mutation`` or ``subscription`` can execute
+    nothing but a query, so it is a query without being parsed.
     """
     if not isinstance(query, str) or not (operation_name is None or isinstance(operation_name, str)):
         return None
-    tokens, position = [], 0
-    while position < len(query):
-        match = _GRAPHQL_TOKEN.match(query, position)
-        if match is None:
-            return None
-        position = match.end()
-        if match.lastgroup:
-            tokens.append((match.lastgroup, match.group()))
-    index = 0
-
-    def at(*values, kind="punct"):
-        return index < len(tokens) and tokens[index][0] == kind and (not values or tokens[index][1] in values)
-
-    def take(*values, kind="punct"):
-        nonlocal index
-        if not at(*values, kind=kind):
-            raise _GraphQLUnread
-        index += 1
-        return tokens[index - 1][1]
-
-    def skip(opening, closing):
-        nonlocal index
-        depth = 0
-        while index < len(tokens):
-            kind, value = tokens[index]
-            index += 1
-            if kind == "punct":
-                depth += value == opening
-                depth -= value == closing
-                if depth == 0:
-                    return
-        raise _GraphQLUnread
-
-    def value(const):
-        """A value: its boolean, ``("variable", name)``, or ``_ABSENT`` for any other value."""
-        if at("$"):
-            if const:
-                raise _GraphQLUnread
-            take("$")
-            return ("variable", take(kind="name"))
-        if at("[") or at("{"):
-            closing = "]" if take() == "[" else "}"
-            names = set()
-            while not at(closing):
-                if closing == "}":
-                    name = take(kind="name")
-                    if name in names:
-                        raise _GraphQLUnread
-                    names.add(name)
-                    take(":")
-                value(const)
-            take(closing)
-            return _ABSENT
-        if at(kind="string") or at(kind="number"):
-            take(kind=tokens[index][0])
-            return _ABSENT
-        name = take(kind="name")
-        return name == "true" if name in ("true", "false") else _ABSENT
-
-    def arguments(const=False):
-        take("(")
-        found = {}
-        while not at(")"):
-            name = take(kind="name")
-            if name in found:
-                raise _GraphQLUnread
-            take(":")
-            found[name] = value(const)
-        take(")")
-        if not found:
-            raise _GraphQLUnread
-        return found
-
-    def directives(const=False):
-        found = []
-        while at("@"):
-            take("@")
-            name = take(kind="name")
-            found.append((name, arguments(const) if at("(") else {}))
-        return found
-
-    def type_reference():
-        if at("["):
-            take("[")
-            type_reference()
-            take("]")
-            named = None
-        else:
-            named = take(kind="name")
-        non_null = at("!")
-        if non_null:
-            take("!")
-        return named, non_null
-
-    def variable_definitions():
-        take("(")
-        found = {}
-        while not at(")"):
-            take("$")
-            name = take(kind="name")
-            take(":")
-            named, non_null = type_reference()
-            default = _ABSENT
-            if at("="):
-                take("=")
-                default = value(True)
-            directives(True)
-            if name in found:
-                raise _GraphQLUnread
-            found[name] = (named, non_null, default)
-        take(")")
-        if not found:
-            raise _GraphQLUnread
-        return found
-
-    def selection_set():
-        take("{")
-        selections = []
-        while not at("}"):
-            if at("..."):
-                take("...")
-                if at(kind="name") and not at("on", kind="name"):
-                    selections.append(("spread", take(kind="name"), directives()))
-                    continue
-                condition = None
-                if at("on", kind="name"):
-                    take("on", kind="name")
-                    condition = take(kind="name")
-                marks = directives()
-                selections.append(("inline", condition, marks, selection_set()))
-                continue
-            field = take(kind="name")
-            if at(":"):
-                take(":")
-                field = take(kind="name")
-            if at("("):
-                arguments()
-            marks = directives()
-            if at("{"):
-                skip("{", "}")
-            selections.append(("field", field, marks))
-        take("}")
-        if not selections:
-            raise _GraphQLUnread
-        return selections
-
+    if "mutation" not in query and "subscription" not in query:
+        return "query", None
+    graphql = _graphql()
+    ast = graphql["language"]
     try:
-        operations, fragments = [], {}
-        while index < len(tokens):
-            if at("fragment", kind="name"):
-                take("fragment", kind="name")
-                name = take(kind="name")
-                take("on", kind="name")
-                condition = take(kind="name")
-                marks = directives()
-                if name == "on" or name in fragments:
-                    raise _GraphQLUnread
-                fragments[name] = (condition, marks, selection_set())
-            elif at("{"):
-                operations.append(("query", None, {}, [], selection_set()))
-            else:
-                operation = take(*_ROOT_TYPES, kind="name")
-                name = take(kind="name") if at(kind="name") else None
-                definitions = variable_definitions() if at("(") else {}
-                operations.append((operation, name, definitions, directives(), selection_set()))
-        names = [name for _, name, *_ in operations]
-        if len(operations) > 1 and (None in names or len(set(names)) != len(names)):
+        document = ast.parse(query, no_location=True)
+        if graphql["validate"](document):
             return None
-        selected = [op for op in operations if operation_name is None or op[1] == operation_name]
-        if len(selected) != 1:
-            return None
-    except (_GraphQLUnread, RecursionError):
+    except (graphql["error"], RecursionError):
         return None
-    operation, _, definitions, marks, selections = selected[0]
-    root, fields = _ROOT_TYPES[operation], []
-    # Coerced variable values: a supplied value, else the operation's default.
+    operation = graphql["select"](document, operation_name)
+    if operation is None:
+        return None
+    kind = operation.operation.value
+    root, fields = _ROOT_TYPES[kind], []
+    fragments = {
+        definition.name.value: definition
+        for definition in document.definitions
+        if isinstance(definition, ast.FragmentDefinitionNode)
+    }
+    declared = {definition.variable.name.value: definition for definition in operation.variable_definitions or ()}
     supplied = variables if isinstance(variables, dict) else {}
-    coerced = {name: supplied.get(name, default) for name, (_, _, default) in definitions.items()}
 
-    def executes(marks):
-        """Whether a selection with these directives executes (CollectFields' @skip and @include)."""
-        conditions = [(name, arguments) for name, arguments in marks if name in _CONDITIONS]
-        if len({name for name, _ in conditions}) != len(conditions):
+    def condition(value):
+        """The Boolean an ``if:`` argument coerces to: a literal, or a declared Boolean variable's value."""
+        if isinstance(value, ast.BooleanValueNode):
+            return value.value
+        definition = declared.get(value.name.value) if isinstance(value, ast.VariableNode) else None
+        if definition is None:
             raise _Undecided
+        # A variable in a Boolean! position: declared Boolean!, or Boolean with a default.
+        non_null = isinstance(definition.type, ast.NonNullTypeNode)
+        named = definition.type.type if non_null else definition.type
+        default = definition.default_value
+        if (
+            not isinstance(named, ast.NamedTypeNode)
+            or named.name.value != "Boolean"
+            or not (non_null or default is not None)
+        ):
+            raise _Undecided
+        name = value.name.value
+        if name in supplied:
+            flag = supplied[name]
+        elif isinstance(default, ast.BooleanValueNode):
+            flag = default.value
+        else:
+            raise _Undecided
+        if not isinstance(flag, bool):
+            raise _Undecided
+        return flag
+
+    def executes(directives):
+        """Whether a selection with these directives executes (CollectFields' @skip and @include)."""
         result = True
-        for name, arguments in conditions:
-            if set(arguments) != {"if"}:
-                raise _Undecided
-            flag = arguments["if"]
-            if isinstance(flag, tuple):
-                # A variable in a Boolean! position: declared Boolean!, or Boolean with a default.
-                named, non_null, default = definitions.get(flag[1], (None, False, _ABSENT))
-                if named != "Boolean" or not (non_null or default is not _ABSENT):
+        for directive in directives or ():
+            name = directive.name.value
+            if name in _CONDITIONS:
+                arguments = {argument.name.value: argument.value for argument in directive.arguments or ()}
+                if set(arguments) != {"if"}:
                     raise _Undecided
-                flag = coerced.get(flag[1], _ABSENT)
-            if not isinstance(flag, bool):
-                raise _Undecided
-            result = result and (not flag if name == "skip" else flag)
+                flag = condition(arguments["if"])
+                result = result and flag is (name == "include")
         return result
 
-    def expand(selections, spreading):
-        for selection in selections:
-            if not executes(selection[2]):
+    def collect(selection_set, visited):
+        for selection in selection_set.selections:
+            if not executes(selection.directives):
                 continue
-            if selection[0] == "field":
-                fields.append(selection[1])
-            elif selection[0] == "inline":
-                if selection[1] not in (None, root):
+            if isinstance(selection, ast.FieldNode):
+                fields.append(selection.name.value)
+            elif isinstance(selection, ast.InlineFragmentNode):
+                if selection.type_condition is not None and selection.type_condition.name.value != root:
                     raise _Undecided
-                expand(selection[3], spreading)
-            else:
-                name = selection[1]
-                if name in spreading or name not in fragments or fragments[name][0] != root:
+                collect(selection.selection_set, visited)
+            elif selection.name.value not in visited:
+                visited.add(selection.name.value)
+                fragment = fragments[selection.name.value]
+                # @skip and @include never apply to a fragment definition: GitHub rejects the document.
+                if fragment.type_condition.name.value != root or any(
+                    directive.name.value in _CONDITIONS for directive in fragment.directives or ()
+                ):
                     raise _Undecided
-                if any(mark in _CONDITIONS for mark, _ in fragments[name][1]):
-                    raise _Undecided
-                expand(fragments[name][2], spreading | {name})
+                collect(fragment.selection_set, visited)
 
     try:
-        if any(name in _CONDITIONS for name, _ in marks):
+        # Nor to an operation.
+        if any(directive.name.value in _CONDITIONS for directive in operation.directives or ()):
             raise _Undecided
-        expand(selections, frozenset())
+        collect(operation.selection_set, set())
     except (_Undecided, RecursionError):
-        return operation, None
-    return operation, fields
+        return kind, None
+    return kind, fields
 
 
 def _graphql_request(document):
@@ -626,7 +525,8 @@ def _graphql_request(document):
     ``"persisted"`` for an object with no document whose extensions name a persisted query;
     ``"opaque"`` for anything else no operation can be selected from. A document inside
     variables, extensions or a string never executes. Only a selected mutation whose every
-    executing root field is a landing mutation is landing.
+    executing root field is a landing mutation is landing; the root ``__typename`` meta-field
+    writes nothing, so beside landing mutations it changes nothing.
     """
     if isinstance(document, list):
         return "batch", False
@@ -642,7 +542,8 @@ def _graphql_request(document):
     if operation is None:
         return "opaque", False
     kind, fields = operation
-    return kind, kind == "mutation" and bool(fields) and set(fields) <= _LANDING_MUTATIONS
+    writes = {field for field in fields or () if field != "__typename"}
+    return kind, kind == "mutation" and bool(writes) and writes <= _LANDING_MUTATIONS
 
 
 def _reject_constant(name):
@@ -730,11 +631,14 @@ class _Request:
     provenance: _Provenance = _Provenance("uninspected")
 
     def classify(self, body):
-        """Classify a GraphQL POST body (exact bytes, ``None``, or a reader of them): whether it lands a PR."""
+        """Classify a GraphQL POST body: whether it lands a PR.
+
+        ``body`` is the exact bytes sent, ``None`` for none, or a zero-argument capture of them. A
+        capture that fails raises :class:`GitHubUnpreparedRequest`: the request is then neither
+        landing nor ordinary, and its provenance records the typed reason.
+        """
         try:
             data = body() if callable(body) else body
-            if data is not None and data is not _UNRESOLVED_BODY and len(data) > MAX_REQUEST_BYTES:
-                raise GitHubUnpreparedRequest("body_too_large")
         except GitHubUnpreparedRequest as refused:
             self.provenance = _Provenance("unprepared", refusal=refused.reason)
             raise
@@ -752,7 +656,7 @@ def _normalize(method, path, pools, body=None):
     """The one interpretation of a request that admission, caching and every transport share.
 
     ``path`` is the canonical resource path (:func:`_canonical_endpoint`). ``body`` is the
-    exact bytes sent, ``None`` for none, or a zero-argument reader of them that admission calls
+    exact bytes sent, ``None`` for none, or a zero-argument capture of them that admission calls
     only if its decision depends on the body (:func:`_admit`). The class comes from the
     request's own shape (a REST landing or exempt call, or a GraphQL POST whose selected
     operation is a landing mutation), else from a vetted landing flow; a read is never landing
@@ -772,34 +676,9 @@ def _normalize(method, path, pools, body=None):
         if flow is None:
             request.inspect = lambda: request.classify(body)
         return request
-    try:
-        landing = request.classify(body)
-    except GitHubUnpreparedRequest as refused:
-        reason = refused.reason
-        if flow is None:
-
-            def inspect():
-                raise GitHubUnpreparedRequest(reason)
-
-            request.inspect = inspect
-        return request
-    request.call_class = "landing" if landing else flow
+    request.call_class = "landing" if request.classify(body) else flow
     request.read = request.provenance.classification == "graphql_query"
     return request
-
-
-def _read_limited(stream, limit):
-    """At most ``limit + 1`` bytes or characters of ``stream``, read to its end; ``None`` if it would block."""
-    parts, size = [], 0
-    while size <= limit:
-        part = stream.read(limit + 1 - size)
-        if part is None:
-            return None
-        if not part:
-            break
-        parts.append(part)
-        size += len(part)
-    return parts[0][:0].join(parts) if parts else b""
 
 
 def _payload_bytes(payload):
@@ -811,79 +690,112 @@ def _payload_bytes(payload):
     return json.dumps(payload, ensure_ascii=False).encode()
 
 
-class _DeferredBody:
-    """A ``urllib.request.Request`` body its opener sends itself; read only if admission needs it."""
+def _spool():
+    """A private spool: up to ``SPILL_BYTES`` in memory, then a temporary file no other process can open.
 
-    def __init__(self, data):
-        self.data = data
+    ``tempfile`` creates that file with mode 0600 and never names it (or unlinks it at once), in
+    the temporary directory, never the cache: closing the spool, on any path, removes every byte.
+    """
+    import tempfile
 
-    def capture(self):
-        """The exact bytes urllib sends for this body (Python 3.12 ``http.client``), without consuming it.
+    return tempfile.SpooledTemporaryFile(max_size=SPILL_BYTES, mode="w+b")
 
-        Bytes-like data is sent as is; a file object from its current position (a text file
-        encoded ISO-8859-1); a list or tuple chunk by chunk. Only what can be read and then sent
-        unchanged is read: a seekable file is read up to ``MAX_REQUEST_BYTES`` and its position
-        restored. A one-shot iterator or non-seekable stream is refused unread, never buffered;
-        ``str`` and other types urllib rejects are refused, never encoded by guess.
-        """
-        data = self.data
-        if hasattr(data, "read"):
-            try:
-                if not data.seekable():
-                    raise GitHubUnpreparedRequest("body_not_replayable")
-                position = data.tell()
-            except (AttributeError, OSError, ValueError):
-                raise GitHubUnpreparedRequest("body_not_replayable") from None
-            try:
-                content = _read_limited(data, MAX_REQUEST_BYTES)
-            except (OSError, ValueError):
-                content = None
-            try:
-                data.seek(position)
-            except (OSError, ValueError):
-                # The original can no longer be sent unchanged.
-                raise GitHubUnpreparedRequest("body_unreadable") from None
-            if content is None:
-                raise GitHubUnpreparedRequest("body_unreadable")
-            if isinstance(content, str) and isinstance(data, io.TextIOBase):
-                try:
-                    content = content.encode("iso-8859-1")
-                except UnicodeEncodeError:
-                    raise GitHubUnpreparedRequest("invalid_body_type") from None
-            if not isinstance(content, (bytes, bytearray)):
-                raise GitHubUnpreparedRequest("invalid_body_type")
-            if len(content) > MAX_REQUEST_BYTES:
-                raise GitHubUnpreparedRequest("body_too_large")
-            return bytes(content)
-        if isinstance(data, str):
-            raise GitHubUnpreparedRequest("invalid_body_type")
+
+def _http_client_blocks(data):
+    """The byte blocks Python's ``http.client`` sends for urllib ``data`` that is not bytes-like.
+
+    As Python 3.12 to 3.14 send them: a file object from its current position, block by block
+    until a block is empty (a text file encoded ISO-8859-1); any other iterable chunk by chunk,
+    empty chunks skipped. Each block must then be bytes-like. ``str`` and other values urllib
+    rejects are ``invalid_body_type``; a read or iteration that fails is ``body_unreadable``.
+    """
+    if hasattr(data, "read"):
+        text = isinstance(data, io.TextIOBase)
+
+        def reads():
+            while block := data.read(8192):
+                yield block.encode("iso-8859-1") if text else block
+
+        source = reads()
+    elif isinstance(data, str):
+        raise GitHubUnpreparedRequest("invalid_body_type")
+    else:
         try:
-            view = memoryview(data)
-        except TypeError:
-            view = None
-        if view is not None:
-            if view.nbytes > MAX_REQUEST_BYTES:
-                raise GitHubUnpreparedRequest("body_too_large")
-            return view.tobytes()
-        if isinstance(data, (list, tuple)):
-            chunks, size = [], 0
-            for chunk in data:
-                if isinstance(chunk, str):
-                    raise GitHubUnpreparedRequest("invalid_body_type")
-                try:
-                    view = memoryview(chunk)
-                except TypeError:
-                    raise GitHubUnpreparedRequest("invalid_body_type") from None
-                size += view.nbytes
-                if size > MAX_REQUEST_BYTES:
-                    raise GitHubUnpreparedRequest("body_too_large")
-                chunks.append(view.tobytes())
-            return b"".join(chunks)
-        try:
-            iter(data)
+            source = iter(data)
         except TypeError:
             raise GitHubUnpreparedRequest("invalid_body_type") from None
-        raise GitHubUnpreparedRequest("body_not_replayable")
+    while True:
+        try:
+            block = next(source)
+            if not block:
+                continue
+        except StopIteration:
+            return
+        except UnicodeEncodeError:
+            raise GitHubUnpreparedRequest("invalid_body_type") from None
+        except Exception:
+            raise GitHubUnpreparedRequest("body_unreadable") from None
+        try:
+            yield memoryview(block).tobytes()
+        except TypeError:
+            raise GitHubUnpreparedRequest("invalid_body_type") from None
+
+
+class _DeferredBody:
+    """A ``urllib.request.Request`` body: its opener sends it, unless admission needed its bytes.
+
+    Admission reads it only through :meth:`capture`, exactly once, into a spool (:func:`_spool`);
+    the opener is then given those bytes (:meth:`request_for`), never the consumed original.
+    Whatever its size or representation, what is sent is what was classified.
+    """
+
+    def __init__(self, data):
+        self.data, self.spool = data, None
+
+    def capture(self):
+        """The exact bytes urllib sends for this body (bytes-like data whole, else :func:`_http_client_blocks`)."""
+        if self.spool is None:
+            if not hasattr(self.data, "read") and not isinstance(self.data, str):
+                with suppress(TypeError):
+                    # Sent as it is: there is nothing to replay.
+                    return memoryview(self.data).tobytes()
+            spool = _spool()
+            try:
+                for block in _http_client_blocks(self.data):
+                    spool.write(block)
+            except BaseException:
+                spool.close()
+                raise
+            self.spool = spool
+        self.spool.seek(0)
+        return self.spool.read()
+
+    def request_for(self, request):
+        """The request the opener sends: ``request`` itself, or a copy whose body is the captured bytes.
+
+        The copy keeps every attribute and header of ``request``, a caller's ``Content-Length``
+        included, and leaves ``request`` unchanged.
+        """
+        if self.spool is None:
+            return request
+        import copy
+
+        outgoing = copy.copy(request)
+        outgoing.headers, outgoing.unredirected_hdrs = dict(request.headers), dict(request.unredirected_hdrs)
+        lengths = [
+            (headers, headers["Content-length"])
+            for headers in (outgoing.headers, outgoing.unredirected_hdrs)
+            if "Content-length" in headers
+        ]
+        self.spool.seek(0)
+        outgoing.data = self.spool  # the setter drops a Content-Length: restore the caller's
+        for headers, value in lengths:
+            headers["Content-length"] = value
+        return outgoing
+
+    def close(self):
+        if self.spool is not None:
+            self.spool.close()
 
 
 # The current landing operation, opened only by this module's vetted sites.
@@ -997,18 +909,46 @@ def _cache_directory():
     return None
 
 
+_STATUS_LINE = re.compile(rb"HTTP/[0-9]+(?:\.[0-9]+)? ([0-9]{3})(?: .*)?")
+_HEADER_NAME = re.compile(rb"[!#$%&'*+.^_`|~0-9A-Za-z-]+")
+
+
+def _frame(raw, start=0):
+    """``(response, end)`` of the one response ``gh api --include`` frames at ``start``, else ``None``.
+
+    gh 2.98.0 writes the status line (``<proto> <status>``) and a newline, each header as
+    ``Name: value`` and CRLF, then an empty line; the body follows. A line that is not a header,
+    a line over ``_FRAME_LINE`` bytes or more than ``_FRAME_HEADERS`` headers is not gh's frame.
+    Colour codes are ignored. The response's body is everything after the frame.
+    """
+    position, status, headers, count = start, None, {}, 0
+    while True:
+        newline = raw.find(b"\n", position, position + _FRAME_LINE + 1)
+        if newline < 0 or count > _FRAME_HEADERS:
+            return None
+        line = ANSI.sub(b"", raw[position:newline]).removesuffix(b"\r")
+        position = newline + 1
+        if status is None:
+            match = _STATUS_LINE.fullmatch(line)
+            if match is None:
+                return None
+            status = int(match[1])
+        elif not line:
+            return Response(status, headers, raw[position:]), position
+        else:
+            name, colon, value = line.partition(b":")
+            if not colon or not _HEADER_NAME.fullmatch(name):
+                return None
+            headers[name.decode().lower()] = value.strip().decode("latin-1")
+            count += 1
+
+
 def parse_http(raw):
-    separator = b"\r\n\r\n" if b"\r\n\r\n" in raw else b"\n\n"
-    head, sep, body = raw.partition(separator)
-    lines = ANSI.sub(b"", head).splitlines()
-    if not sep or not lines or not re.match(rb"HTTP/\S+ \d{3}", lines[0]):
+    """The response ``gh api --include`` printed for one request: the frame at its start (:func:`_frame`)."""
+    framed = _frame(raw)
+    if framed is None:
         raise RuntimeError("GitHub transport omitted response headers")
-    headers = {}
-    for line in lines[1:]:
-        key, colon, value = line.partition(b":")
-        if colon:
-            headers[key.decode().lower().strip()] = value.decode().strip()
-    return Response(int(lines[0].split()[1]), headers, body)
+    return framed[0]
 
 
 def _cached_value(cached):
@@ -1034,20 +974,106 @@ def _store_cache(db, scope, key, body, headers, at):
     )
 
 
-def _transport_process(command, *, input, env, cwd, timeout, output_file=None, **_kwargs):
-    """Bound one CLI process and its descendants without polling or retrying."""
+class _Kept:
+    """Standard output kept in a spool: with a ``limit``, at most ``limit + 1`` bytes of body.
+
+    When the output is ``framed`` (``gh api --include``), its frame is kept whole up to its empty
+    line (at most ``_FRAME_BYTES``) and the limit counts the body after it. The rest is dropped.
+    """
+
+    def __init__(self, output, limit, framed):
+        self.output, self.room = output, None if limit is None else limit + 1
+        self.frame = bytearray() if framed and limit is not None else None
+
+    def write(self, data):
+        if self.frame is not None:
+            start = max(0, len(self.frame) - 2)
+            self.frame += data
+            ends = [
+                found + size
+                for found, size in ((self.frame.find(b"\n\n", start), 2), (self.frame.find(b"\n\r\n", start), 3))
+                if found >= 0
+            ]
+            if not ends and len(self.frame) <= _FRAME_BYTES:
+                self.output.write(data)
+                return
+            # The frame ends in this block; with no end within the frame limit, it is not gh's frame.
+            head = len(data) - (len(self.frame) - min(ends, default=len(self.frame)))
+            self.output.write(data[:head])
+            data, self.frame = data[head:], None
+        if self.room is None:
+            self.output.write(data)
+        elif self.room:
+            self.output.write(data[: self.room])
+            self.room -= min(len(data), self.room)
+
+
+def _exchange(child, input, kept, deadline, timeout):
+    """``communicate()``, with standard output written through ``kept`` (:class:`_Kept`): its standard error.
+
+    Output past what ``kept`` keeps is still read, so the process never blocks on a full pipe.
+    """
+    import select
+    import selectors
+
+    errors, pending = [], memoryview(input or b"")
+    with selectors.DefaultSelector() as selector:
+        if child.stdin is not None:
+            if pending:
+                selector.register(child.stdin, selectors.EVENT_WRITE)
+            else:
+                child.stdin.close()
+        selector.register(child.stdout, selectors.EVENT_READ)
+        selector.register(child.stderr, selectors.EVENT_READ)
+        while selector.get_map():
+            remaining = None if deadline is None else deadline - time.monotonic()
+            if remaining is not None and remaining <= 0:
+                raise subprocess.TimeoutExpired(child.args, timeout)
+            for key, _events in selector.select(remaining):
+                if key.fileobj is child.stdin:
+                    try:
+                        pending = pending[os.write(key.fd, pending[: select.PIPE_BUF]) :]
+                    except BrokenPipeError:
+                        pending = pending[:0]
+                    if not pending:
+                        selector.unregister(key.fileobj)
+                        key.fileobj.close()
+                    continue
+                data = os.read(key.fd, 32768)
+                if not data:
+                    selector.unregister(key.fileobj)
+                    key.fileobj.close()
+                elif key.fileobj is child.stderr:
+                    errors.append(data)
+                else:
+                    kept.write(data)
+    return b"".join(errors)
+
+
+def _transport_process(command, *, input, env, cwd, timeout, limit=None, framed=False, **_kwargs):
+    """Bound one CLI process and its descendants without polling or retrying.
+
+    Standard output passes through one spool (:func:`_spool`); with a response ``limit`` at
+    most ``limit + 1`` bytes of body are kept (:class:`_Kept`), and under the limit they are
+    exactly what the process wrote. Signals are forwarded to the process group, which is killed
+    only on a timeout or an exception, never after a completed wait.
+    """
     import signal
     import threading
 
-    with subprocess.Popen(
-        command,
-        stdin=subprocess.PIPE if input is not None else subprocess.DEVNULL,
-        stdout=output_file if output_file is not None else subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        env=env,
-        cwd=cwd,
-        start_new_session=True,
-    ) as child:
+    deadline = None if timeout is None else time.monotonic() + timeout
+    with (
+        _spool() as output,
+        subprocess.Popen(
+            command,
+            stdin=subprocess.PIPE if input is not None else subprocess.DEVNULL,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            env=env,
+            cwd=cwd,
+            start_new_session=True,
+        ) as child,
+    ):
         previous = {}
 
         def forward(signum, _frame):
@@ -1060,43 +1086,22 @@ def _transport_process(command, *, input, env, cwd, timeout, output_file=None, *
             }
         try:
             try:
-                output, error = child.communicate(input=input, timeout=timeout)
-                if output_file is not None:
-                    with suppress(ProcessLookupError):
-                        os.killpg(child.pid, signal.SIGKILL)
+                error = _exchange(child, input, _Kept(output, limit, framed), deadline, timeout)
+                try:
+                    child.wait(None if deadline is None else max(0, deadline - time.monotonic()))
+                except subprocess.TimeoutExpired:
+                    raise subprocess.TimeoutExpired(command, timeout) from None
             except BaseException:
+                # The process is not yet reaped, so its group cannot have been reused.
                 with suppress(ProcessLookupError):
                     os.killpg(child.pid, signal.SIGKILL)
-                child.communicate()
+                child.wait()
                 raise
-            return subprocess.CompletedProcess(command, child.returncode, output, error)
+            output.seek(0)
+            return subprocess.CompletedProcess(command, child.returncode, output.read(), error)
         finally:
             for signum, handler in previous.items():
                 signal.signal(signum, handler)
-
-
-def _spooled_transport_process(command, *, max_response_bytes, **kwargs):
-    """Keep an existing caller's byte ceiling before materializing its body."""
-    import http.client
-    import tempfile
-
-    with tempfile.TemporaryFile() as output:
-        proc = _transport_process(command, output_file=output, **kwargs)
-        output.seek(0)
-        status = output.readline(http.client._MAXLINE + 1)
-        if not re.match(rb"HTTP/\S+ \d{3}", status):
-            proc.stdout = b""
-            return proc
-        try:
-            http.client.parse_headers(output)
-        except http.client.HTTPException:
-            proc.stdout = b""
-            return proc
-        body_offset = output.tell()
-        body = output.read(max_response_bytes + 1)
-        output.seek(0)
-        proc.stdout = output.read(body_offset) + body
-        return proc
 
 
 class GitHubClient:
@@ -1217,12 +1222,11 @@ class GitHubClient:
         if body is not None:
             command.extend(["--input", "-"])
         executor = self.runner or _transport_process
-        if self.runner is None and self.max_response_bytes is not None:
-            executor = _spooled_transport_process
-        limit = {"max_response_bytes": self.max_response_bytes} if executor is _spooled_transport_process else {}
+        # The response ceiling bounds the body; its frame comes first (:func:`_frame`).
+        bounds = {"limit": self.max_response_bytes, "framed": True} if executor is _transport_process else {}
         proc = executor(
             command,
-            **limit,
+            **bounds,
             input=body,
             capture_output=True,
             env=self.env,
@@ -1235,9 +1239,10 @@ class GitHubClient:
         # provide the HTTP status and budget headers.
         if self.runner and not ANSI.sub(b"", raw).startswith(b"HTTP/"):
             return self._bounded_response(Response(200 if proc.returncode == 0 else 500, {}, raw))
-        if not ANSI.sub(b"", raw).startswith(b"HTTP/"):
+        framed = _frame(raw)
+        if framed is None:
             return Response(599, {}, b'{"message":"github_transport_unavailable"}')
-        return self._bounded_response(parse_http(raw))
+        return self._bounded_response(framed[0])
 
     def _bounded_response(self, response):
         if self.max_response_bytes is not None and len(response.body) > self.max_response_bytes:
@@ -2676,17 +2681,19 @@ _UNRESOLVED = object()
 
 
 def _gh_api_argv(tokens):
-    """``(flags, positional)`` of ``gh api`` arguments as gh 2.98.0's pflag parser reads them, else ``None``.
+    """``(flags, positional, end)`` of ``gh api`` arguments as gh 2.98.0's pflag parser reads them, else ``None``.
 
-    ``flags`` maps a flag's name to its values in order. A long flag takes ``--name=value`` or
-    the next argument; shorthands combine (``-iXPOST``), attach (``-Fkey=value``) or take
-    ``-F=value``; ``-`` is positional and ``--`` ends the flags. An unknown flag, a missing value
-    or help is ``None``: gh sends no request.
+    ``flags`` maps a flag's name to its values in order; ``end`` is the index of the ``--`` that
+    ends the flags, else ``len(tokens)``. A long flag takes ``--name=value`` or the next
+    argument; shorthands combine (``-iXPOST``), attach (``-Fkey=value``) or take ``-F=value``;
+    ``-`` is positional. An unknown flag, a missing value or help is ``None``: gh sends no request.
     """
     flags, positional, queue = {}, [], [str(token) for token in tokens]
+    end = len(queue)
     while queue:
         token = queue.pop(0)
         if token == "--":
+            end -= len(queue) + 1
             positional.extend(queue)
             break
         if not token.startswith("-") or token == "-":
@@ -2727,7 +2734,7 @@ def _gh_api_argv(tokens):
             else:
                 return None
             flags.setdefault(name, []).append(value)
-    return flags, positional
+    return flags, positional, end
 
 
 def _go_atoi(text):
@@ -2910,17 +2917,16 @@ class _Stdin:
         data, self.data = self.data, b""
         if data is None:
             raise GitHubUnpreparedRequest("invalid_body_type")
-        if len(data) > MAX_REQUEST_BYTES:
-            raise GitHubUnpreparedRequest("body_too_large")
         return data
 
 
 def _source_bytes(source, stdin, cwd):
-    """The exact bytes gh reads from a ``--input`` or ``@`` source, up to ``MAX_REQUEST_BYTES``.
+    """The exact bytes gh reads from a ``--input`` or ``@`` source, whatever its size.
 
-    ``-`` is the command's standard input (:class:`_Stdin`). A path, relative to the command's
-    working directory, is opened without blocking and read only if it is a regular file; a
-    pipe or device is refused unread, so it can neither block nor be consumed.
+    ``-`` is the command's standard input (:class:`_Stdin`), which gh is given unchanged. A
+    path, relative to the command's working directory, is opened without blocking and read only
+    if it is a regular file, which gh then reads itself. A pipe or device is refused unread: what
+    this client read from it could not be what gh reads, and it can neither block nor be consumed.
     """
     if source == "-":
         return stdin.take()
@@ -2935,14 +2941,9 @@ def _source_bytes(source, stdin, cwd):
         if not stat.S_ISREG(mode):
             raise GitHubUnpreparedRequest("body_unreadable" if stat.S_ISDIR(mode) else "body_not_replayable")
         try:
-            data = _read_limited(handle, MAX_REQUEST_BYTES)
+            return handle.read()
         except OSError:
             raise GitHubUnpreparedRequest("body_unreadable") from None
-    if data is None:
-        raise GitHubUnpreparedRequest("body_unreadable")
-    if len(data) > MAX_REQUEST_BYTES:
-        raise GitHubUnpreparedRequest("body_too_large")
-    return data
 
 
 @dataclass
@@ -2975,7 +2976,7 @@ def _gh_api_call(tokens, *, stdin, cwd):
     parsed = _gh_api_argv(tokens)
     if parsed is None:
         return None
-    flags, positional = parsed
+    flags, positional, _ = parsed
 
     def last(name, default=None):
         return flags[name][-1] if name in flags else default
@@ -3018,10 +3019,7 @@ def _gh_api_call(tokens, *, stdin, cwd):
             return endpoint, None
         if method == "GET":
             return _gh_add_query(endpoint, params), None
-        data = _go_json(_gh_group(params) if endpoint == "graphql" else params)
-        if len(data) > MAX_REQUEST_BYTES:
-            raise GitHubUnpreparedRequest("body_too_large")
-        return endpoint, data
+        return endpoint, _go_json(_gh_group(params) if endpoint == "graphql" else params)
 
     unresolved = fields_unresolved or _GH_PLACEHOLDER.search(endpoint) is not None
     return _GhApiCall(method, endpoint, last("hostname"), flags, unresolved, build)
@@ -3062,27 +3060,86 @@ def _argv_landing_flow(args):
     return "ci-status" if command == ("pr", "checks") or rollup else None
 
 
-def _native_response(args, output):
-    """GitHub's last response as ``gh api --include`` printed it on stdout, else ``None``.
+@dataclass(frozen=True)
+class _Presentation:
+    """How a ``gh api`` command line presents GitHub's response, read by :func:`_gh_api_argv`.
 
-    With ``--include`` gh prints each response's status line and headers before its body,
-    on success and on HTTP errors alike; ``--paginate`` repeats that per page and stops at
-    the failing one. Without the flag, stdout is the body alone and is never read as headers.
+    ``end`` is where its flags end among the arguments after ``api``.
     """
-    if len(args) < 3 or args[1] != "api" or not {"-i", "--include"} & set(_options(args[2:])[0]):
+
+    include: bool
+    paginate: bool
+    verbose: bool
+    end: int
+
+
+def _gh_api_presentation(args):
+    """The response-presentation flags of a ``gh api`` command line, else ``None`` (gh sends no request)."""
+    if len(args) < 2 or str(args[1]) != "api":
         return None
-    raw = ANSI.sub(b"", output.encode() if isinstance(output, str) else output)
-    starts = [match.start() for match in re.finditer(rb"(?m)^HTTP/\S+ \d{3}", raw)]
-    if not raw.startswith(b"HTTP/") or not starts:
+    parsed = _gh_api_argv(args[2:])
+    if parsed is None:
         return None
+    flags, _, end = parsed
+
+    def given(name):
+        return flags.get(name, [False])[-1] is True
+
+    return _Presentation(given("include"), given("paginate"), given("verbose"), end)
+
+
+# gh's report of a failing response on standard error (pkg/cmd/api): its message and HTTP status.
+_GH_HTTP_ERROR = re.compile(rb"^gh: (?:(.*) \(HTTP ([0-9]{3})\)|HTTP ([0-9]{3}))\r?$", re.MULTILINE)
+
+
+def _gh_reported(response, report):
+    """Whether ``report`` (a :data:`_GH_HTTP_ERROR` match) is gh's report of ``response``.
+
+    gh names the status, after the error body's ``message`` when it has one.
+    """
+    message, status = report[0], int(report[1] or report[2])
     try:
-        return parse_http(raw[starts[-1] :])
-    except (RuntimeError, ValueError):
-        return None
+        body = json.loads(response.body)
+    except (ValueError, RecursionError):
+        body = None
+    stated = body.get("message") if isinstance(body, dict) and isinstance(body.get("message"), str) else ""
+    return response.status == status and stated.encode() == message
+
+
+def _native_response(output, error, *, paginate, complete):
+    """GitHub's response to a ``gh api --include`` run, from gh's own framing: ``(response, end)``, else ``None``.
+
+    gh writes each response's frame (:func:`_frame`) before its body, on success and on HTTP
+    errors alike, so the first frame starts standard output. Without ``--paginate`` it is the
+    only response. A paginated run repeats a frame per page, each after a newline, and stops at
+    the first page that fails: a first page that failed is the first frame. Otherwise the
+    failing page's frame is the last one, followed only by GitHub's own error body, and gh
+    reports its status (after that body's message) on standard error; it is read only when that
+    report matches it and the output is ``complete`` (not cut short by the response ceiling).
+    Frame-like text anywhere else is a body (what ``--jq`` or ``--template`` rendered from
+    GitHub's data) and is never read as GitHub's headers.
+    """
+    first = _frame(output)
+    if first is None or not paginate or not 200 <= first[0].status < 300:
+        return first
+    reports = _GH_HTTP_ERROR.findall(error)
+    start = output.rfind(b"\nHTTP/")
+    while complete and reports and start > 0:
+        framed = _frame(output, start + 1)
+        if framed is not None:
+            return framed if _gh_reported(framed[0], reports[-1]) else None
+        start = output.rfind(b"\nHTTP/", 0, start)
+    return None
 
 
 def _native_command(args, client, runner, kwargs):
-    """Fall through once using the bounded, colour-safe native transport, inside the same admission."""
+    """Fall through once using the bounded, colour-safe native transport, inside the same admission.
+
+    A ``gh api`` command line that is neither paginated nor verbose, and does not print
+    GitHub's headers itself, runs with ``--include`` after its last flag, so GitHub's status and
+    headers (a Retry-After included) come from gh's own framing (:func:`_native_response`).
+    That frame is then removed: the caller's output is exactly what gh prints without it.
+    """
     pools = sorted(_native_buckets(args, client.host) - {_SYNTHETIC_HOLD})
     request = _normalize_native(args, client.host, pools, stdin=kwargs.get("input"), cwd=client.cwd)
     try:
@@ -3101,6 +3158,13 @@ def _native_command(args, client, runner, kwargs):
             executable = real_gh({**client.env, "AGENT_ORIGINAL_PATH": client.env.get("PATH", os.defpath)})
         except PublishBlocked:
             return _result_process(args, Result(error="github_transport_unavailable"), {}, kwargs)
+    presentation = _gh_api_presentation(args)
+    # gh merges paginated JSON pages only without --include, and --verbose prints no frame.
+    injected = presentation is not None and not (presentation.include or presentation.paginate or presentation.verbose)
+    command = [executable, *args[1:]]
+    if injected:
+        flags_end = 2 + presentation.end
+        command = [executable, *args[1:flags_end], "--include", *args[flags_end:]]
     call = dict(
         input=kwargs.get("input").encode() if isinstance(kwargs.get("input"), str) else kwargs.get("input"),
         env=client.env,
@@ -3109,24 +3173,33 @@ def _native_command(args, client, runner, kwargs):
         capture_output=True,
         check=False,
     )
-    if executor is None and client.max_response_bytes is not None:
-        import tempfile
-
-        with tempfile.TemporaryFile() as output_file:
-            native = _transport_process([executable, *args[1:]], output_file=output_file, **call)
-            output_file.seek(0)
-            native.stdout = output_file.read(client.max_response_bytes + 1)
+    if executor is None:
+        # An added frame is removed again: the ceiling bounds what the caller gets.
+        native = _transport_process(command, limit=client.max_response_bytes, framed=injected, **call)
     else:
-        native = (executor or _transport_process)([executable, *args[1:]], **call)
-    output, error = native.stdout or b"", native.stderr or b""
-    raw_error = error.encode() if isinstance(error, str) else error
+        native = executor(command, **call)
+    output, error = (
+        value.encode() if isinstance(value, str) else value or b"" for value in (native.stdout, native.stderr)
+    )
+    framed = (
+        _native_response(
+            output,
+            error,
+            paginate=presentation.paginate,
+            complete=client.max_response_bytes is None or len(output) <= client.max_response_bytes,
+        )
+        if presentation is not None and (presentation.include or injected)
+        else None
+    )
+    response = framed[0] if framed is not None else None
+    if injected and framed is not None:
+        output = output[framed[1] :]
     if native.returncode:
         now = client.clock()
-        response = _native_response(args, output)
         if response is not None:
-            # gh api --include printed GitHub's own status and headers: decide as request() does.
+            # GitHub's own status and headers: decide as request() does.
             limit = _limit_hold(response, now)
-        elif b"rate limit" in raw_error.lower():
+        elif b"rate limit" in error.lower():
             # gh's stderr carries no Retry-After: a synthetic hold, never binding on landing.
             limit = [_SYNTHETIC_HOLD], int(now + 60), "secondary_hold"
         else:
@@ -3151,11 +3224,7 @@ def _native_command(args, client, runner, kwargs):
     text = kwargs.get("text") or kwargs.get("universal_newlines") or kwargs.get("encoding")
     for key, value in (("stdout", output), ("stderr", error)):
         value = (
-            value.decode(kwargs.get("encoding") or "utf-8", errors=kwargs.get("errors") or "strict")
-            if text and isinstance(value, bytes)
-            else value.encode()
-            if not text and isinstance(value, str)
-            else value
+            value.decode(kwargs.get("encoding") or "utf-8", errors=kwargs.get("errors") or "strict") if text else value
         )
         setattr(native, key, value)
         target = kwargs.get(key)
@@ -3340,33 +3409,37 @@ def http_open(request, *, timeout=30, opener=None, **kwargs):
     if client.host in _api_hosts("github.com"):
         client._configure_host("github.com")
     method = request.get_method()
+    # The opener sends ``request`` itself. Admission reads its body only if the decision needs
+    # it, capturing it once (:class:`_DeferredBody`); the opener then sends exactly those bytes.
+    body = _DeferredBody(request.data) if request.data is not None else None
 
-    def transport(_method, endpoint, headers, body, request_timeout):
+    def transport(_method, endpoint, headers, _body, request_timeout):
+        outgoing = body.request_for(request) if body is not None else request
         for key, value in headers.items():
-            if key.lower() not in {k.lower() for k in request.headers}:
-                request.add_header(key, value)
+            if key.lower() not in {k.lower() for k in outgoing.headers}:
+                outgoing.add_header(key, value)
         try:
-            opened = (opener or urllib.request.urlopen)(request, timeout=request_timeout, **kwargs)
+            opened = (opener or urllib.request.urlopen)(outgoing, timeout=request_timeout, **kwargs)
         except urllib.error.HTTPError as exc:
             opened = exc
         with opened as response:
             return Response(response.status, dict(response.headers.items()), response.read())
 
     client.transport = transport
-    # The opener sends ``request`` itself; its body is passed only so admission classifies
-    # the real request, and only if the decision needs it (:class:`_DeferredBody`): the request
-    # is sent unchanged, or refused before any send.
-    body = _DeferredBody(request.data) if request.data is not None else None
-    # POST/DELETE token endpoints contain sensitive responses and have no read cache.
-    result = client.request(
-        method,
-        request.full_url,
-        payload=body,
-        timeout=timeout,
-        fresh=True,
-        raw_response=True,
-        headers=dict(request.header_items()),
-    )
+    try:
+        # POST/DELETE token endpoints contain sensitive responses and have no read cache.
+        result = client.request(
+            method,
+            request.full_url,
+            payload=body,
+            timeout=timeout,
+            fresh=True,
+            raw_response=True,
+            headers=dict(request.header_items()),
+        )
+    finally:
+        if body is not None:
+            body.close()
     if result.error == GitHubUnpreparedRequest.code:
         raise GitHubUnpreparedRequest(result.reason)
     if result.error and result.error != "github_rate_limited":

@@ -13,6 +13,16 @@ NOW = 1000
 FUTURE = 2000
 
 
+def natively_runs(args):
+    """The command line the native transport runs for ``args`` (#10730): a ``gh api`` that is neither
+    paginated, verbose nor already ``--include``d gets ``--include`` after its last flag, so GitHub's
+    status and headers come from gh's own framing; any other command line is unchanged."""
+    tokens = list(args)
+    if tokens[1:2] != ["api"] or {"--paginate", "--verbose", "--include", "-i"} & set(tokens):
+        return tokens
+    return [*tokens, "--include"]
+
+
 def seeded(tmp_path, exhausted, remaining=0, *, host="github.com"):
     """Client whose named buckets are at ``remaining`` with a future reset, plus call recorders."""
     translated, native = [], []
@@ -228,7 +238,7 @@ def test_relative_endpoint_spellings_never_select_a_host(tmp_path, endpoint, pat
     store, runner, translated, native = seeded(tmp_path / "native", [])
     args = api(endpoint, "--template", "{{.}}")
     assert gh.run(args, client=store, runner=runner, capture_output=True).returncode == 0
-    assert native == [args] and not translated
+    assert native == [natively_runs(args)] and not translated
     store, runner, translated, native = seeded(tmp_path / "limited", [bucket])
     assert blocked(gh.run(args, client=store, runner=runner, capture_output=True))
     assert not translated and not native
@@ -247,7 +257,7 @@ def test_absolute_scheme_position_preserves_native_admission(tmp_path, endpoint,
     store, runner, translated, native = seeded(tmp_path, [])
     args = api(endpoint, "--template", "{{.}}")
     assert gh.run(args, client=store, runner=runner, capture_output=True).returncode == 0
-    assert native == [args] and not translated
+    assert native == [natively_runs(args)] and not translated
 
 
 @pytest.mark.parametrize("native", [False, True])
@@ -603,7 +613,7 @@ def test_normalized_native_shapes_gate_runner(no_jq, tmp_path, args, expected, b
         expected_args = list(args)
         if "--hostname" in expected_args:
             expected_args[expected_args.index("--hostname") + 1] = gh.canonical_host(host)
-        assert result.returncode == 0 and native == [expected_args]
+        assert result.returncode == 0 and native == [natively_runs(expected_args)]
 
 
 @pytest.mark.parametrize(
