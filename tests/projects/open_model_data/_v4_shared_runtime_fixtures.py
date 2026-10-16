@@ -11,15 +11,19 @@ module stay private to that module once the module is collected on the worker.
 
 from __future__ import annotations
 
+import contextlib
 import fcntl
 import importlib.metadata
 import json
 import os
 import re
 import shutil
+import signal
+import socket
 import subprocess
 import sys
 import tempfile
+import time
 import tomllib
 import uuid
 from dataclasses import replace
@@ -78,12 +82,61 @@ def role_connection(pg, role):
     return connection
 
 
-@pytest.fixture(scope="module")
-def _pg_server(tmp_path_factory):
-    """Keep one server and a closed, schema-applied template per module."""
-    root = tmp_path_factory.mktemp("v4-pg")
-    data = root / "data"
-    sock = Path(tempfile.mkdtemp(prefix="v4pg-", dir="/tmp"))
+# Unix socket paths are limited to about 107 bytes; stay well below that.
+_MAX_SOCKET_PATH_BYTES = 100
+_SOCKET_NAME_WORST_CASE = ".s.PGSQL.65535"
+# The short directory a too-long scratch root falls back to, when it is writable.
+_SHORT_SYSTEM_TEMP = Path("/tmp")
+_PG_START_ATTEMPTS = 5
+_PG_KILL_WAIT_SECONDS = 10
+_ISSUED_PORTS: set[int] = set()
+
+
+def _free_tcp_port() -> int:
+    """Return a port nobody holds right now and this process has not handed out before."""
+    for _ in range(100):
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as probe:
+            probe.bind(("127.0.0.1", 0))
+            port = probe.getsockname()[1]
+        if port not in _ISSUED_PORTS:
+            _ISSUED_PORTS.add(port)
+            return port
+    raise RuntimeError("no unissued free TCP port after 100 attempts")
+
+
+def _scratch_root(basetemp: Path) -> Path:
+    """``LU_SCRATCH_ROOT`` when it is a writable directory, else the pytest base temp."""
+    override = os.environ.get("LU_SCRATCH_ROOT", "").strip()
+    if override and os.path.isdir(override) and os.access(override, os.W_OK | os.X_OK):
+        return Path(override)
+    return basetemp
+
+
+def _socket_path_fits(directory: Path) -> bool:
+    return len(os.fsencode(directory / _SOCKET_NAME_WORST_CASE)) < _MAX_SOCKET_PATH_BYTES
+
+
+def _make_socket_dir(scratch_root: Path) -> Path:
+    """Create a private ``v4pg-<8 chars>`` directory whose socket path fits the OS limit.
+
+    The scratch root comes first; the short system temp directory is only a
+    fallback for a root that is unwritable or makes the socket path too long.
+    """
+    for parent in (scratch_root, _SHORT_SYSTEM_TEMP):
+        try:
+            directory = Path(tempfile.mkdtemp(prefix="v4pg-", dir=parent))
+        except OSError:
+            continue
+        if _socket_path_fits(directory):
+            return directory
+        directory.rmdir()
+    raise RuntimeError(
+        f"no writable directory keeps the PostgreSQL socket path under {_MAX_SOCKET_PATH_BYTES} bytes; "
+        "set LU_SCRATCH_ROOT to a shorter private writable directory"
+    )
+
+
+def _postgres_bindir() -> Path:
     reported = Path(
         subprocess.run(["pg_config", "--bindir"], check=True, capture_output=True, text=True, timeout=30).stdout.strip()
     )
@@ -97,30 +150,105 @@ def _pg_server(tmp_path_factory):
         None,
     )
     assert binary is not None, "install the PostgreSQL server test dependency"
-    subprocess.run(
-        [str(binary / "initdb"), "-D", str(data), "--encoding=UTF8", "--locale=C", "--auth=trust"],
-        check=True,
-        capture_output=True,
-        timeout=60,
-    )
-    subprocess.run(
-        [
-            str(binary / "pg_ctl"),
-            "-D",
-            str(data),
-            "-l",
-            str(root / "server.log"),
-            "-o",
-            f'-k {sock} -h "" -p 55439',
-            "-w",
-            "start",
-        ],
-        check=True,
-        capture_output=True,
-        timeout=60,
-    )
+    return binary
+
+
+def _postmaster_pid(data: Path) -> int | None:
     try:
-        conn = psycopg.connect(host=str(sock), port=55439, dbname="postgres", autocommit=True, row_factory=dict_row)
+        return int((data / "postmaster.pid").read_text().splitlines()[0])
+    except (OSError, ValueError, IndexError):
+        return None
+
+
+def _process_alive(pid: int) -> bool:
+    try:
+        os.kill(pid, 0)
+    except ProcessLookupError:
+        return False
+    except PermissionError:
+        return True
+    return True
+
+
+def _stop_server(binary: Path, data: Path) -> None:
+    """Stop the server in ``data`` if one runs; kill it when ``pg_ctl`` cannot."""
+    pid = _postmaster_pid(data)
+    if pid is None:
+        return
+    try:
+        stopped = (
+            subprocess.run(
+                [str(binary / "pg_ctl"), "-D", str(data), "-m", "immediate", "-w", "-t", "30", "stop"],
+                check=False,
+                capture_output=True,
+                timeout=45,
+            ).returncode
+            == 0
+        )
+    except subprocess.TimeoutExpired:
+        stopped = False
+    if stopped:
+        return
+    with contextlib.suppress(ProcessLookupError):
+        os.kill(pid, signal.SIGKILL)
+    deadline = time.monotonic() + _PG_KILL_WAIT_SECONDS
+    while _process_alive(pid):
+        if time.monotonic() > deadline:
+            raise RuntimeError(f"PostgreSQL server {pid} survived pg_ctl stop and SIGKILL")
+        time.sleep(0.05)
+
+
+def _start_server(binary: Path, data: Path, log: Path, sock: Path) -> int:
+    """Start the server on a fresh port, retrying on another port; return the port."""
+    attempted = []
+    for _ in range(_PG_START_ATTEMPTS):
+        port = _free_tcp_port()
+        attempted.append(port)
+        started = subprocess.run(
+            [
+                str(binary / "pg_ctl"),
+                "-D",
+                str(data),
+                "-l",
+                str(log),
+                "-o",
+                f'-k {sock} -h "" -p {port}',
+                "-w",
+                "start",
+            ],
+            check=False,
+            capture_output=True,
+            timeout=60,
+        )
+        if started.returncode == 0:
+            return port
+        _stop_server(binary, data)
+    tail = log.read_text(errors="replace")[-2000:] if log.exists() else ""
+    raise RuntimeError(f"PostgreSQL did not start on ports {attempted}; server log tail:\n{tail}")
+
+
+@contextlib.contextmanager
+def _running_pg_server(scratch_root: Path, work: Path):
+    """Yield a superuser connection to a fresh server holding a schema-applied template.
+
+    The socket directory lives under ``scratch_root``, the server runs on a
+    port chosen for this run, and teardown stops the server and removes both
+    directories, also when setup fails midway.
+    """
+    data = work / "data"
+    sock = None
+    binary = None
+    try:
+        binary = _postgres_bindir()
+        sock = _make_socket_dir(scratch_root)
+        subprocess.run(
+            [str(binary / "initdb"), "-D", str(data), "--encoding=UTF8", "--locale=C", "--auth=trust"],
+            check=True,
+            capture_output=True,
+            timeout=60,
+        )
+        port = _start_server(binary, data, work / "server.log", sock)
+        conn = psycopg.connect(host=str(sock), port=port, dbname="postgres", autocommit=True, row_factory=dict_row)
         try:
             conn.execute("CREATE DATABASE v4_test_template")
             with psycopg.connect(
@@ -132,14 +260,21 @@ def _pg_server(tmp_path_factory):
         finally:
             conn.close()
     finally:
-        subprocess.run(
-            [str(binary / "pg_ctl"), "-D", str(data), "-m", "immediate", "-w", "stop"],
-            check=True,
-            capture_output=True,
-            timeout=60,
-        )
-        shutil.rmtree(sock, ignore_errors=True)
-        shutil.rmtree(root, ignore_errors=True)
+        try:
+            if binary is not None:
+                _stop_server(binary, data)
+        finally:
+            if sock is not None:
+                shutil.rmtree(sock, ignore_errors=True)
+            shutil.rmtree(work, ignore_errors=True)
+
+
+@pytest.fixture(scope="module")
+def _pg_server(tmp_path_factory):
+    """Keep one server and a closed, schema-applied template per module."""
+    work = tmp_path_factory.mktemp("v4-pg")
+    with _running_pg_server(_scratch_root(tmp_path_factory.getbasetemp()), work) as conn:
+        yield conn
 
 
 @pytest.fixture
