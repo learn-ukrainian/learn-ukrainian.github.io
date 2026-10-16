@@ -1143,6 +1143,8 @@ def _repo_result_unlocked(repo_root: Path, *, apply: bool) -> dict[str, Any]:
             f"{row['branch']}: {row.get('error') or row['reason']}" for row in branches if row["action"] == "error"
         )
         result["orphans"] = find_orphaned_worktree_directories(repo_root)
+        # #10856: git gc --auto rewrites every worktree logs/HEAD. The reaper
+        # above has already judged activity; this stays after it.
         maintenance = _git_maintenance(repo_root, apply=apply)
         result["maintenance"] = maintenance
         if not maintenance["ok"]:

@@ -117,11 +117,47 @@ def admin_dir(worktree: Path) -> Path:
     return Path(pointer)
 
 
+_REFLOG_STAMP = re.compile(r"^((?:[0-9a-f]{40} [0-9a-f]{40}|[0-9a-f]{64} [0-9a-f]{64}) .+ )([0-9]+) ([+-][0-9]{4})$")
+
+
+def _rewrite_reflog_stamps(path: Path, stamp: int) -> None:
+    """Move each ``logs/HEAD`` entry's committer time; the file mtime is set by the caller."""
+    text = path.read_text(encoding="utf-8")
+    if not text.strip():
+        return
+    rewritten: list[str] = []
+    for line in text.splitlines():
+        header, sep, message = line.partition("\t")
+        match = _REFLOG_STAMP.fullmatch(header)
+        if match is None:
+            rewritten.append(line)
+            continue
+        rewritten.append(f"{match.group(1)}{stamp} {match.group(3)}" + (sep + message if sep else ""))
+    body = "\n".join(rewritten)
+    if text.endswith("\n"):
+        body += "\n"
+    path.write_text(body, encoding="utf-8")
+
+
 def age(paths: list[Path], seconds: float = TWO_HOURS) -> None:
     stamp = time.time() - seconds
     for path in paths:
-        if path.exists():
-            os.utime(path, (stamp, stamp))
+        if not path.exists():
+            continue
+        if path.name == "HEAD" and path.parent.name == "logs":
+            _rewrite_reflog_stamps(path, int(stamp))
+        os.utime(path, (stamp, stamp))
+
+
+def write_published_head_reflog(worktree: Path) -> None:
+    """Replace an emptied ``logs/HEAD`` with one entry that names only the current HEAD."""
+    head = git(worktree, "rev-parse", "HEAD")
+    log = admin_dir(worktree) / "logs" / "HEAD"
+    log.parent.mkdir(parents=True, exist_ok=True)
+    log.write_text(
+        f"{head} {head} Test User <tester@example.com> 1700000000 +0000\treset: moving to HEAD\n",
+        encoding="utf-8",
+    )
 
 
 def age_tree(worktree: Path, repo: Path, task_id: str | None = None) -> None:
@@ -410,6 +446,74 @@ def test_fresh_checkout_refuses(repo: Path, free_fuser: Path) -> None:
     worktree.parent.mkdir(parents=True)
     git(repo, "worktree", "add", "-b", "codex/fresh", str(worktree), "main")
     assert _refusal(repo, worktree) == "last activity 0 min ago (< 60 min)"
+
+
+def test_reflog_file_rewritten_in_place_is_still_reaped(repo: Path, free_fuser: Path) -> None:
+    """A gc-style rewrite refreshes ``logs/HEAD`` mtime and leaves old entries."""
+    worktree = dispatch_tree(repo)
+    log = admin_dir(worktree) / "logs" / "HEAD"
+    original = log.read_bytes()
+    assert b"\n" in original
+    log.write_bytes(original)
+    assert time.time() - log.stat().st_mtime < 60
+
+    report = rw.reap_clean_pushed(repo_root=repo, dry_run=False)
+
+    assert outcome_for(report, worktree, repo).action == "removed"
+    assert not worktree.exists()
+
+
+def test_new_reflog_entry_stays_active_when_the_file_mtime_is_old(repo: Path, free_fuser: Path) -> None:
+    worktree = dispatch_tree(repo)
+    log = admin_dir(worktree) / "logs" / "HEAD"
+    text = log.read_text(encoding="utf-8")
+    lines = text.splitlines()
+    header, sep, message = lines[-1].partition("\t")
+    match = _REFLOG_STAMP.fullmatch(header)
+    assert match is not None
+    lines[-1] = f"{match.group(1)}{int(time.time())} {match.group(3)}" + (sep + message if sep else "")
+    body = "\n".join(lines)
+    if text.endswith("\n"):
+        body += "\n"
+    log.write_text(body, encoding="utf-8")
+    old = time.time() - TWO_HOURS
+    os.utime(log, (old, old))
+
+    assert _refusal(repo, worktree) == "last activity 0 min ago (< 60 min)"
+
+
+@pytest.mark.parametrize("name", ["index", "HEAD"])
+def test_fresh_head_or_index_mtime_stays_active(repo: Path, free_fuser: Path, name: str) -> None:
+    worktree = dispatch_tree(repo)
+    os.utime(admin_dir(worktree) / name)
+
+    assert _refusal(repo, worktree) == "last activity 0 min ago (< 60 min)"
+
+
+@pytest.mark.parametrize(
+    ("content", "reason"),
+    [
+        ("", "logs/HEAD empty; activity unknown"),
+        ("\n", "logs/HEAD empty; activity unknown"),
+        ("not a reflog line\n", "logs/HEAD unparseable; activity unknown"),
+        ("deadbeef 1700000000 +0000\n", "logs/HEAD unparseable; activity unknown"),
+    ],
+)
+def test_empty_or_unparseable_head_reflog_is_not_reaped(
+    repo: Path, free_fuser: Path, content: str, reason: str
+) -> None:
+    worktree = dispatch_tree(repo)
+    log = admin_dir(worktree) / "logs" / "HEAD"
+    log.write_text(content, encoding="utf-8")
+    age(
+        [
+            admin_dir(worktree) / "HEAD",
+            admin_dir(worktree) / "index",
+            repo / "batch_state" / "tasks" / "task-a.json",
+        ]
+    )
+
+    assert _refusal(repo, worktree) == reason
 
 
 def test_unparsable_task_record_refuses(repo: Path, free_fuser: Path) -> None:
@@ -742,6 +846,7 @@ def test_commit_only_in_a_per_worktree_ref_reflog_refuses(repo: Path, free_fuser
     git(worktree, "reset", "--hard", "main")
     git(worktree, "update-ref", "--create-reflog", ref, "HEAD")
     git(worktree, "reflog", "expire", "--expire=all", "HEAD")
+    write_published_head_reflog(worktree)  # expire leaves logs/HEAD empty; activity would otherwise be unknown
     (admin_dir(worktree) / "ORIG_HEAD").unlink()  # isolate the per-worktree reflog as the only record
     assert unique not in git(worktree, "rev-list", "--walk-reflogs", "HEAD").split()
     assert unique in (admin_dir(worktree) / "logs" / ref).read_text(encoding="utf-8")
@@ -772,6 +877,7 @@ def test_commit_only_in_orig_head_refuses(repo: Path, free_fuser: Path) -> None:
     git(worktree, "reset", "--hard", "main")  # ORIG_HEAD now names the unique commit
     git(worktree, "reflog", "expire", "--expire=all", "HEAD")
     assert (admin_dir(worktree) / "ORIG_HEAD").read_text(encoding="utf-8").strip() == unique
+    write_published_head_reflog(worktree)  # expire leaves logs/HEAD empty; activity would otherwise be unknown
     age_tree(worktree, repo, "task-a")
 
     assert_kept_for_history(repo, worktree)

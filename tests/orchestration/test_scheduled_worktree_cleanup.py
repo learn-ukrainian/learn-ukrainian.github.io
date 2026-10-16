@@ -809,6 +809,44 @@ def test_main_records_read_only_home_session_policy_and_prints_hard_warning(
     assert "HARD WARNING: stale home session" in capsys.readouterr().err
 
 
+def test_reaper_runs_before_git_gc(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """``git gc --auto`` rewrites reflogs, so it stays after the reaper (#10856)."""
+    repo = _repo(tmp_path)
+    order: list[str] = []
+    real_run_git = cleanup._run_git
+
+    def spy_run_git(repo_root: Path, *args: str) -> subprocess.CompletedProcess[str]:
+        if args[:2] == ("gc", "--auto"):
+            order.append("gc")
+        return real_run_git(repo_root, *args)
+
+    monkeypatch.setattr(cleanup, "_run_git", spy_run_git)
+    monkeypatch.setattr(cleanup, "_worktree_prune", lambda _repo, *, apply: {"ok": True})
+    monkeypatch.setattr(cleanup.reap_worktrees, "_live_cwd_paths", lambda _repo: set())
+    monkeypatch.setattr(cleanup.reap_worktrees, "reap_worktrees", lambda **_kwargs: order.append("reaper") or [])
+    monkeypatch.setattr(cleanup, "cleanup_gone_local_branches", lambda *_args, **_kwargs: [])
+    monkeypatch.setattr(cleanup, "cleanup_stale_origin_branches", lambda *_args, **_kwargs: [])
+    monkeypatch.setattr(cleanup, "cleanup_untracked_local_branches", lambda *_args, **_kwargs: [])
+    monkeypatch.setattr(cleanup, "find_orphaned_worktree_directories", lambda _repo: [])
+    monkeypatch.setattr(cleanup, "sweep_review_temp_orphans", lambda: {"errors": 0})
+    monkeypatch.setattr(
+        cleanup,
+        "sweep_tmp_leaks",
+        lambda apply=False: {"errors": 0, "roots_reaped": 0, "bytes_freed": 0, "candidates": 0, "skipped_live": 0},
+    )
+    monkeypatch.setattr(
+        cleanup,
+        "recover_task_scratch",
+        lambda apply=False: {"errors": 0, "candidates": 0, "reaped": 0, "bytes_freed": 0, "preserved": 0},
+    )
+
+    result = cleanup._repo_result(repo, apply=True)
+
+    assert order == ["reaper", "gc"]
+    assert result["maintenance"]["action"] == "ran"
+    assert result["maintenance"]["ok"] is True
+
+
 def test_git_maintenance_failure_is_reported(
     tmp_path: Path,
     monkeypatch,

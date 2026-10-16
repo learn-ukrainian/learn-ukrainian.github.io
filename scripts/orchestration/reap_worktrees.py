@@ -5787,20 +5787,61 @@ def _reread_claims(claims: list[_TaskClaim], path: Path, repo_root: Path) -> tup
     return fresh, None
 
 
-def _tree_mtime_sources(path: Path, common_git_dir: Path) -> tuple[list[Path], str | None]:
-    """The checkout's HEAD, index and HEAD reflog, inside the shared ``.git/worktrees/``."""
+# Last ``logs/HEAD`` line: two object ids, an identity, then the committer
+# timestamp and a ``+HHMM`` timezone. The message after the tab is ignored.
+_HEAD_REFLOG_ENTRY = re.compile(r"^(?:[0-9a-f]{40} [0-9a-f]{40}|[0-9a-f]{64} [0-9a-f]{64}) .+ ([0-9]+) ([+-][0-9]{4})$")
+
+
+def _head_reflog_entry_time(reflog: Path) -> tuple[float | None, str | None]:
+    """Committer timestamp of the last ``logs/HEAD`` line, or a refusal.
+
+    The file mtime is not used. ``git gc`` runs ``reflog expire --all``, which
+    rewrites every worktree ``logs/HEAD`` at one instant and leaves the entries
+    unchanged, so the file mtime would make every checkout look active. Activity
+    is the committer timestamp on the last line (seconds since the epoch, the
+    field before the timezone).
+
+    ``(None, None)`` when the file is absent. A present file that is empty,
+    unreadable, or not a reflog entry is activity unknown, and the tree is kept.
+    """
+    try:
+        info = reflog.lstat()
+    except FileNotFoundError:
+        return None, None
+    except OSError:
+        return None, "logs/HEAD unreadable; activity unknown"
+    if not stat.S_ISREG(info.st_mode):
+        return None, "logs/HEAD unreadable; activity unknown"
+    try:
+        text = reflog.read_text(encoding="utf-8", errors="replace")
+    except OSError:
+        return None, "logs/HEAD unreadable; activity unknown"
+    lines = text.splitlines()
+    while lines and not lines[-1].strip():
+        lines.pop()
+    if not lines:
+        return None, "logs/HEAD empty; activity unknown"
+    match = _HEAD_REFLOG_ENTRY.fullmatch(lines[-1].split("\t", 1)[0])
+    if match is None:
+        return None, "logs/HEAD unparseable; activity unknown"
+    return float(match.group(1)), None
+
+
+def _tree_mtime_sources(path: Path, common_git_dir: Path) -> tuple[list[Path], Path | None, str | None]:
+    """The checkout's ``HEAD`` and ``index``, and its git directory.
+
+    ``logs/HEAD`` is not a file-mtime source. :func:`_head_reflog_entry_time`
+    reads the newest reflog entry instead, because a ``git gc`` rewrite would
+    otherwise look like activity.
+    """
     git_dir = _worktree_git_dir(path)
     if git_dir is None:
-        return [], "git admin directory unresolvable"
+        return [], None, "git admin directory unresolvable"
     try:
         git_dir.resolve(strict=True).relative_to((common_git_dir / "worktrees").resolve(strict=True))
     except (OSError, ValueError):
-        return [], "git admin directory is outside the repository's .git/worktrees/"
-    sources = [git_dir / "HEAD", git_dir / "index"]
-    reflog = git_dir / "logs" / "HEAD"
-    if reflog.exists():
-        sources.append(reflog)
-    return sources, None
+        return [], None, "git admin directory is outside the repository's .git/worktrees/"
+    return [git_dir / "HEAD", git_dir / "index"], git_dir, None
 
 
 def _newest_mtime(paths: list[Path], *, required: int) -> tuple[float | None, str | None]:
@@ -6476,16 +6517,26 @@ def _clean_pushed_refusal(
         refusal = _task_claim_refusal(claim.name, claim.record)
         if refusal:
             return refusal, claims
-    sources, refusal = _tree_mtime_sources(tree, ctx.common_git_dir)
-    if refusal:
-        return refusal, claims
+    sources, git_dir, refusal = _tree_mtime_sources(tree, ctx.common_git_dir)
+    if refusal or git_dir is None:
+        return refusal or "activity unknown", claims
     required = len(sources[:2])
-    sources += [claim.path for claim in claims]
-    if task_id:
-        sources.append(ctx.tasks_dir / f"{task_id}.json")
     newest, refusal = _newest_mtime(sources, required=required)
     if refusal or newest is None:
         return refusal or "activity unknown", claims
+    entry_time, refusal = _head_reflog_entry_time(git_dir / "logs" / "HEAD")
+    if refusal:
+        return refusal, claims
+    if entry_time is not None:
+        newest = max(newest, entry_time)
+    extras = [claim.path for claim in claims]
+    if task_id:
+        extras.append(ctx.tasks_dir / f"{task_id}.json")
+    extra_newest, refusal = _newest_mtime(extras, required=0)
+    if refusal:
+        return refusal, claims
+    if extra_newest is not None:
+        newest = max(newest, extra_newest)
     idle_s = (ctx.now if ctx.now is not None else time.time()) - newest
     if idle_s < CLEAN_PUSHED_MIN_IDLE_S:
         return f"last activity {max(0, int(idle_s // 60))} min ago (< 60 min)", claims
@@ -7020,8 +7071,10 @@ def reap_clean_pushed(
     live process of this user denies inspection (a probe failure counts as
     in use; an uninspectable process keeps every tree for the run); no task
     record claiming it is ``spawning``, ``running``, unsettled, unreadable or
-    has a live worker; and its HEAD, index and claiming task records are all
-    older than 60 minutes. Removal goes through
+    has a live worker; and the newest of its HEAD and index mtimes, the
+    committer timestamp of the last ``logs/HEAD`` entry (not that file's
+    mtime; ``git gc`` rewrites the file without changing entries), and its
+    claiming task records is more than 60 minutes ago. Removal goes through
     :func:`worktree_claims.remove_unclaimed_worktree` without ``force``, so
     the shared claim scan and ignored-output preservation (256 MiB cap) still
     apply. Right before git removes it, the checkout is recorded and moved to

@@ -550,9 +550,12 @@ third time after the checkout is moved into the quarantine (below):
   worker that is live or unknown. `needs_finalize` and finished records pass
   once their worker is proven gone. A record that cannot be read, or cannot be
   parsed and may name the checkout, refuses;
-- the newest mtime of the checkout's `HEAD`, `index` and `logs/HEAD` (in
-  `.git/worktrees/<name>/`) and of every claiming task record, including
-  `<task>.json`, is more than 60 minutes old.
+- the newest of the checkout's `HEAD` and `index` mtimes, the committer
+  timestamp of the last `logs/HEAD` entry (seconds since the epoch, the field
+  before the timezone; not the file's mtime — `git gc` rewrites that file
+  without changing entries), and every claiming task record, including
+  `<task>.json`, is more than 60 minutes old. An empty, unreadable, or
+  unparseable `logs/HEAD` is activity unknown and the tree is kept.
 
 Under the per-worktree lock, once the re-check passes and before artifact
 preservation, the reaper records a manifest of the checkout and of its
@@ -1149,7 +1152,8 @@ Each run performs the following in both repository roots:
    on the same containment evidence (`entire/` refs are preserved);
 6. preserves and reports unproven gone branches and orphaned worktree
    directories;
-7. runs `git gc --auto`;
+7. runs `git gc --auto` after the reaper (gc rewrites every worktree
+   `logs/HEAD`);
 8. writes an immutable JSON receipt.
 
 Dirty worktrees, open PRs, active/non-terminal tasks, checked-out branches, and
