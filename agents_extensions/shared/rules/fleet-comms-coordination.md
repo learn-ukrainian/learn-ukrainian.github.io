@@ -58,10 +58,8 @@ Remote leases remain live until `expires_at`; a local PID is not remote liveness
 proof. Wait for expiry or an attributed operator release through the existing
 supervisor flow.
 
-The live driver reads and applies its inbox, then acknowledges consumption with
-`ack --consumed-by-live-driver <message-id>` through the project bridge CLI.
-Plain `ack` and detached worker receipts do not prove live-driver consumption.
-Use the launcher's `SESSION_HANDOFF_AGENT` identity; do not borrow another seat's
+Use the launcher's `SESSION_HANDOFF_AGENT` identity for the
+[live delivery drain](#drain-live-deliveries). Do not borrow another seat's
 identity or infer it from the provider/model name.
 
 ## Plane modes
@@ -89,6 +87,107 @@ or another control plane; existing stream ownership remains binding.
 
 Forbidden: inventing a third message bus; encoding only file-handoff folklore in new
 cold-prompts; silent plane flips; “for now” cutovers.
+
+## Drain live deliveries
+
+Run this procedure in the live driver at cycle start, before dispatch, after
+settle, and before handoff. Detached worker receipts and wake signals do not
+prove live-driver consumption. Check `plane-status` first.
+
+From the assigned checkout, locate the shared interpreter for either mode:
+
+```bash
+PRIMARY_REPO=$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")
+: "${SESSION_HANDOFF_AGENT:?launcher identity required}"
+```
+
+In `authority` mode, use the following per-delivery procedure. Legacy inboxes
+and API projections are read-only inputs; an empty legacy inbox does not prove
+the authority queue empty. A delivery claim leases one message delivery, not
+the launcher-owned stream. Never claim, renew, or replace the stream lease.
+
+1. Claim one delivery for your exact launcher identity. Keep the same configured plane
+   for every command and the reader; `FLEET_COMMS_ROOT`, when set, selects it.
+
+```bash
+"$PRIMARY_REPO/.venv/bin/python" -m scripts.fleet_comms deliveries claim \
+  --recipient "$SESSION_HANDOFF_AGENT" --worker-id "$SESSION_HANDOFF_AGENT"
+```
+
+   Exit 0 returns one running delivery's metadata, including `delivery_id`,
+   `message_id`, `body_artifact_id`, `lease_owner`, and `fence_token`, never its
+   body. Exit 1 with `delivery: null` means no claimable delivery for that
+   recipient now, not that every delivery is acknowledged. Exit 2 is usage
+   error; exit 3 is refusal or storage error. Stop on errors.
+
+2. Export `DELIVERY_ID` and `FENCE_TOKEN` from that claim's `delivery_id` and
+   `fence_token`. Read the actual body in the private live seat with the
+   supported `ArtifactStore.read_bytes` reader below. It resolves the claimed
+   delivery to its message and checks the stored artifact digest. Metadata is
+   not the body. Do not copy bodies into reports, public evidence, or logs.
+
+```bash
+"$PRIMARY_REPO/.venv/bin/python" - <<'PY'
+import os
+import sys
+from scripts.fleet_comms.artifacts import ArtifactStore
+from scripts.fleet_comms.authority import AuthorityService
+
+with ArtifactStore(readonly=True) as store:
+    with AuthorityService(store=store) as service:
+        delivery = service.get_delivery(os.environ["DELIVERY_ID"])
+        message = service.get_message(delivery.message_id)
+        print(f"kind={message.kind}", file=sys.stderr)
+        sys.stdout.buffer.write(store.read_bytes(message.body_artifact_id))
+PY
+```
+
+3. If the reader reports `kind=supervisory-request`, record consumption before
+   any side effect, using the launcher's current `SESSION_STREAM_GENERATION`.
+   Consumption records intent, not completion. On `replay` or `reconciliation`,
+   inspect the external outcome before repeating an action. Ordinary messages
+   skip this step; `consume` refuses them with `not_supervisory_delivery`.
+
+```bash
+: "${SESSION_STREAM_GENERATION:?launcher generation required}"
+"$PRIMARY_REPO/.venv/bin/python" -m scripts.fleet_comms deliveries consume "$DELIVERY_ID" \
+  --worker-id "$SESSION_HANDOFF_AGENT" --fence-token "$FENCE_TOKEN" \
+  --driver-generation "$SESSION_STREAM_GENERATION"
+```
+
+4. Apply the authorized instruction in the live driver and verify the outcome
+   before acknowledging this delivery. Never batch-acknowledge unread or
+   unapplied items. Ordinary `ack` does not enforce a recorded read or action;
+   apply-before-ack is the driver's procedure. Supervisory `ack` refuses without
+   current-fence consumption with `supervisory_consumption_required`.
+
+```bash
+"$PRIMARY_REPO/.venv/bin/python" -m scripts.fleet_comms deliveries ack "$DELIVERY_ID" \
+  --worker-id "$SESSION_HANDOFF_AGENT" --fence-token "$FENCE_TOKEN"
+```
+
+   Reuse the claim's worker identity and current fence for `consume` and `ack`.
+   For a running delivery, a wrong worker, stale fence, or expired lease is
+   refused with `stale_delivery_lease`. Reconcile before a successor acts.
+   The optional `--acknowledgment-artifact-id` accepts an existing sealed
+   outcome artifact; omission is supported. An idempotent terminal ack must
+   repeat the same outcome, including that artifact choice, or it fails with
+   `terminalization_conflict`.
+
+5. Confirm `state: acknowledged` in the ack response or with
+   `deliveries status "$DELIVERY_ID"`. Only then claim the next item and repeat.
+   Keep unresolved deliveries explicit; do not turn a refusal into success.
+
+For legacy operation outside `authority` mode, retain the bridge procedure:
+
+```bash
+"$PRIMARY_REPO/.venv/bin/python" -m scripts.ai_agent_bridge inbox --for "$SESSION_HANDOFF_AGENT"
+"$PRIMARY_REPO/.venv/bin/python" -m scripts.ai_agent_bridge ack --consumed-by-live-driver <message-id>
+```
+
+Read, apply, and verify each item before its legacy ack. Plain bridge `ack`
+does not prove live-driver consumption. Never use these legacy writes in
+`authority` mode.
 
 ## Required primitives (tool-backed)
 
@@ -239,8 +338,8 @@ scripts.fleet_comms acp-discuss` surface remains available to operators.
 Selection starts no process at cold start and does not change `delegate.py`.
 The default is two rounds and the hard maximum is three.
 
-**ACP is intercommunication only — never review** (operator 2026-08-23,
-#7155). Its `--deny-all --no-fs --no-terminal` chat transport cannot run
+**ACP is intercommunication only — never review** (operator 2026-08-23, #7155).
+Its `--deny-all --no-fs --no-terminal` chat transport cannot run
 `gh`/pytest/fs, so a reviewer seated there cannot ground a verdict (live
 proof: `ask-codex --review --pr 7155` ABSTAINed via ACP with `gh auth`
 unavailable; the same review via headless dispatch with tools approved).

@@ -89,11 +89,10 @@ handoff creates a competing authority.
   privacy seam holding by design, not evidence the private adapter is down —
   do not read `not_configured` as an outage, and do not try to reach, guess,
   or configure a private endpoint from this seat.
-- **Live delivery:** the live driver reads and applies its own inbox, then runs
-  the project bridge `ack --consumed-by-live-driver <message-id>`. Plain `ack`,
-  detached worker processing, and a wake signal are not live-consumption proof.
-  Continue the required inbox drain in `drive-epic`; do not launch another
-  supervisor to wake the current one.
+- **Live delivery:** follow the canonical [live delivery drain](../../agents_extensions/shared/rules/fleet-comms-coordination.md#drain-live-deliveries)
+  at the four `drive-epic` inbox boundaries. It covers authority deliveries and
+  the legacy `ack --consumed-by-live-driver` procedure by plane mode.
+  Do not launch another supervisor to wake the current one.
 - **Privacy:** public guidance and PR evidence remain environment-neutral.
   Keep host topology, concrete execution paths, endpoint configuration,
   credentials, and operational transcripts in private operational evidence.

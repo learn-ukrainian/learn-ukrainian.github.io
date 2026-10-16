@@ -64,8 +64,11 @@ are in scope; two residuals remain visible:
 
 - Behavior 1, the authority-plane delivery drain procedure. Owner: infra/harness.
   Reopen when `fleet-comms-coordination.md` and the seat-onboarding live-delivery
-  paragraph name the authority drain in their own change. The existing core inbox
-  block and its legacy counts stay exactly as they are.
+  paragraph name the authority drain in their own change. For #10439 only, the
+  core inbox block and its legacy counts stay exactly as they are. Follow-up
+  #10441 owns the canonical procedure, onboarding link, and mode-aware core inbox
+  block. Its residual remains until deployment and fresh-driver live queue proof;
+  codex-monitor owns those gates and final disposition.
 - Behavior 9's executing-review-at-first-push half. Owner: harness lane. Reopen
   when the review-route policy names it. The existing launcher/hook test step and
   execution-dependent review route remain binding.

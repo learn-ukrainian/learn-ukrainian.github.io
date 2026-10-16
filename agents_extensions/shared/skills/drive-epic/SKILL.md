@@ -79,22 +79,26 @@ commits, and PRs happen only in `.worktrees/dispatch/<agent>/<task>/`; every com
 
 ## The loop — run it every cycle
 
-**Inbox drain** (at §0a, §4a, §5a, and §8a below). The live loop itself — never a
-detached `process-*` or `ask-*` worker — reads and applies every message marked `unread`
-or `read-but-not-live-consumed`, then records that consumption:
+**Inbox drain** (at §0a, §4a, §5a, and §8a below). The live loop follows the canonical
+[live delivery drain](../../rules/fleet-comms-coordination.md#drain-live-deliveries).
+In `authority` mode, claim, read the actual body, consume supervisory intent, apply,
+verify, and acknowledge each delivery there. Empty legacy projections do not prove
+the authority queue empty. Detached workers and wake receipts are not consumption.
+For legacy mode only, read and apply each `unread` or `read-but-not-live-consumed`
+message, then record live-driver consumption with the existing bridge commands:
 
 ```bash
 .venv/bin/python -m scripts.ai_agent_bridge inbox --for "$SESSION_HANDOFF_AGENT"
-.venv/bin/python -m scripts.ai_agent_bridge ack --consumed-by-live-driver <message-id> [<message-id> ...]
+.venv/bin/python -m scripts.ai_agent_bridge ack --consumed-by-live-driver <message-id>
 ```
 
-Never use a plain `ack` for these: it also records one-shot or headless processing and is
-not delivery proof for the live driver.
+Never use a plain `ack` for legacy live-driver consumption. Never batch-ack unread
+or unapplied items or write legacy acknowledgements in `authority` mode.
 
 1. **§0 Orient.** Run the cold-start board, lean orient, the Work API projection and your
    stream's `next` list, and `.venv/bin/python -m scripts.fleet_comms plane-status`. The launcher already holds your lease; never
    claim it. Detail and the optional §0b inbox watcher: [orient](references/orient.md).
-2. **§0a Inbox drain — cycle start.**
+2. **§0a Inbox drain — cycle start.** Follow the canonical drain linked above.
 3. **§0c / §0d Epic-specific rules.** Hramatka (#4542) and the core fresh build (#7994)
    add binding rules; read [epic-specific](references/epic-specific.md) before acting on
    those epics.
@@ -110,20 +114,20 @@ not delivery proof for the live driver.
    `capacity_pick`, usage pace). Write a ROUTING_CARD_V1 before every implement dispatch;
    no card, no dispatch (§3-routing). Substantive phase or epic prompts first pass §3a
    pre-dispatch outcome adequacy: [routing-and-dispatch](references/routing-and-dispatch.md).
-7. **§4a Inbox drain — immediately before dispatch.** Apply every message before the
-   launch.
+7. **§4a Inbox drain — immediately before dispatch.** Follow the canonical drain
+   linked above; apply every message before the launch.
 8. **§4 Dispatch** only when the task card and dispatch preflight are both green; chat
    "ready" is not DoR. Use `--check-budget`, research flags, and `--owned-path`.
 9. **§5 Settle.** Arm `delegate.py wait <task-id>` (or the Monitor tool) in the same turn
    as the dispatch. State a worker's status only after `delegate.py status <task-id>` in
    this turn, and keep its task id, status, and branch head. When the wait returns, act on
    the result. After a terminal status, run `post_task_reap`.
-10. **§5a Inbox drain — after settle.**
+10. **§5a Inbox drain — after settle.** Follow the canonical drain linked above.
 11. **§6 Cross-family review, §7 merge, §7a closeout, §7-rollout proof** — in the order of
     the Definition of done above. The mechanics (review commands, merge-queue status,
     queue kicks, red main, junit diagnosis, launcher tests, rollout authority):
     [review-merge-cleanup](references/review-merge-cleanup.md).
-12. **§8a Inbox drain — before handoff.**
+12. **§8a Inbox drain — before handoff.** Follow the canonical drain linked above.
 13. **§8 Handoff.** The file handoff stays authoritative; add the Entire dual-write and
     fleet receipt:
     [handoff](references/handoff.md).
