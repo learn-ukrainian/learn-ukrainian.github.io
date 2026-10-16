@@ -159,7 +159,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
-            "Example: scripts/entire/capture_guard.sh --budget 25 hooks claude-code user-prompt-submit\n"
+            "Example: scripts/entire/capture_guard.sh --budget 25 hooks git pre-push origin\n"
             "Outputs: Entire's own output when capture runs; one '[entire]' stderr line when\n"
             "capture is refused or fails. Writes nothing itself.\n"
             "Exit codes: 0 always (capture is optional and never blocks the host or git).\n"

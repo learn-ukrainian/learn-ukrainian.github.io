@@ -1,0 +1,76 @@
+{
+  "public": {
+    "objects_scanned": 34272,
+    "objects_containing": {
+      "A_prompt": 0,
+      "B_uncommitted_file": 0,
+      "C_committed_code": 17
+    },
+    "refs": [
+      "refs/heads/main"
+    ]
+  },
+  "private": {
+    "objects_scanned": 89,
+    "objects_containing": {
+      "A_prompt": 23,
+      "B_uncommitted_file": 0,
+      "C_committed_code": 16
+    },
+    "refs": [
+      "refs/heads/entire/checkpoints/v1"
+    ],
+    "checkpoint_tree": {
+      "checkpoint_tree_files": 48,
+      "file_kinds": {
+        "content_hash.txt": 8,
+        "full.jsonl": 8,
+        "metadata.json": 16,
+        "prompt.txt": 8,
+        "transcript.jsonl": 8
+      },
+      "planted_string_file_kinds": {
+        "A_prompt": [
+          [
+            "full.jsonl",
+            8
+          ],
+          [
+            "prompt.txt",
+            8
+          ],
+          [
+            "transcript.jsonl",
+            8
+          ]
+        ],
+        "C_committed_code": [
+          [
+            "full.jsonl",
+            8
+          ],
+          [
+            "transcript.jsonl",
+            8
+          ]
+        ]
+      }
+    }
+  },
+  "fork": {
+    "objects_scanned": 34240,
+    "objects_containing": {
+      "A_prompt": 0,
+      "B_uncommitted_file": 0,
+      "C_committed_code": 9
+    },
+    "refs": [
+      "refs/heads/main"
+    ]
+  },
+  "verdict": {
+    "public_and_fork_entire_refs": [],
+    "public_and_fork_hold_prompt_or_uncommitted_body": false,
+    "private_holds_uncommitted_body": false
+  }
+}

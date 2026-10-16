@@ -172,6 +172,7 @@ KNOWN_REPO_WIDE_FUNCTIONS = (
     "tests/test_driver_work_api_onboarding.py::test_skill_teaches_grok_bot_with_hard_exclusions",
     "tests/test_driver_work_api_onboarding.py::test_skill_teaches_the_full_health_enum",
     "tests/test_driver_work_api_onboarding.py::test_skill_teaches_work_api_projection_semantics",
+    "tests/test_entire_capture_guard.py::test_canary_evidence_bundle_carries_no_local_absolute_paths",
     "tests/test_headless_claude_background_controls.py::test_controls_have_a_single_source",
     "tests/test_headless_claude_background_controls.py::test_every_spawn_in_a_claude_referencing_module_is_a_wrapper_or_a_reviewed_exception",
     "tests/test_headless_claude_background_controls.py::test_exceptions_are_live_categorised_and_justified",

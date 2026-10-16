@@ -1,0 +1,110 @@
+    assert receipt["issues"] == ["pinned_cli_failed"]
+E   AssertionError: assert ['pinned_cli_...ready_failed'] == ['pinned_cli_failed']
+E     Left contains 2 more items, first extra item: 'private_mirror_ready_failed'
+    assert receipt["issues"] == ["pinned_cli_failed"]
+E   AssertionError: assert ['pinned_cli_...ready_failed'] == ['pinned_cli_failed']
+E     Left contains 2 more items, first extra item: 'private_mirror_ready_failed'
+    assert receipt["issues"] == ["checkpoint_repository_private_failed"]
+E   AssertionError: assert ['checkpoint_...ready_failed'] == ['checkpoint_...ivate_failed']
+E     Left contains 2 more items, first extra item: 'private_mirror_ready_failed'
+    assert receipt["issues"] == ["public_origin_clean_failed"]
+E   AssertionError: assert ['public_orig...ready_failed'] == ['public_origin_clean_failed']
+E     Left contains 2 more items, first extra item: 'private_mirror_ready_failed'
+    assert receipt["issues"] == ["pinned_cli_failed"]
+E   AssertionError: assert ['pinned_cli_...ready_failed'] == ['pinned_cli_failed']
+E     Left contains 2 more items, first extra item: 'private_mirror_ready_failed'
+    assert receipt["issues"] == ["pinned_cli_failed"]
+E   AssertionError: assert ['pinned_cli_...ready_failed'] == ['pinned_cli_failed']
+E     Left contains 2 more items, first extra item: 'private_mirror_ready_failed'
+    assert receipt["issues"] == ["entire_authenticated_failed"]
+E   AssertionError: assert ['entire_auth...ready_failed'] == ['entire_auth...cated_failed']
+E     Left contains 2 more items, first extra item: 'private_mirror_ready_failed'
+    assert receipt["issues"] == ["pinned_cli_failed"]
+E   AssertionError: assert ['pinned_cli_...ready_failed'] == ['pinned_cli_failed']
+E     Left contains 2 more items, first extra item: 'private_mirror_ready_failed'
+    assert receipt["issues"] == ["entire_authenticated_failed"]
+E   AssertionError: assert ['entire_auth...ready_failed'] == ['entire_auth...cated_failed']
+E     Left contains 2 more items, first extra item: 'private_mirror_ready_failed'
+    assert receipt["issues"] == ["private_checkpoint_ref_failed"]
+E   AssertionError: assert ['private_che...ready_failed'] == ['private_che...t_ref_failed']
+E     Left contains 2 more items, first extra item: 'private_mirror_ready_failed'
+    assert receipt["issues"] == ["private_mirror_ready_failed"]
+E   AssertionError: assert ['private_mir...ready_failed'] == ['private_mir...ready_failed']
+E     Left contains one more item: 'source_mirror_ready_failed'
+    assert receipt["issues"] == ["entire_authenticated_failed"]
+E   AssertionError: assert ['entire_auth...ready_failed'] == ['entire_auth...cated_failed']
+E     Left contains 2 more items, first extra item: 'private_mirror_ready_failed'
+    assert receipt["issues"] == ["private_mirror_ready_failed"]
+E   AssertionError: assert ['private_mir...ready_failed'] == ['private_mir...ready_failed']
+E     Left contains one more item: 'source_mirror_ready_failed'
+    assert receipt["issues"] == ["entire_authenticated_failed"]
+E   AssertionError: assert ['entire_auth...ready_failed'] == ['entire_auth...cated_failed']
+E     Left contains 2 more items, first extra item: 'private_mirror_ready_failed'
+    assert receipt["issues"] == ["private_mirror_ready_failed"]
+E   AssertionError: assert ['private_mir...ready_failed'] == ['private_mir...ready_failed']
+E     Left contains one more item: 'source_mirror_ready_failed'
+    assert receipt["issues"] == ["entire_authenticated_failed"]
+E   AssertionError: assert ['entire_auth...ready_failed'] == ['entire_auth...cated_failed']
+E     Left contains 2 more items, first extra item: 'private_mirror_ready_failed'
+    assert receipt["issues"] == ["private_mirror_ready_failed"]
+E   AssertionError: assert ['private_mir...ready_failed'] == ['private_mir...ready_failed']
+E     Left contains one more item: 'source_mirror_ready_failed'
+    assert receipt["issues"] == ["entire_authenticated_failed"]
+E   AssertionError: assert ['entire_auth...ready_failed'] == ['entire_auth...cated_failed']
+E     Left contains 2 more items, first extra item: 'private_mirror_ready_failed'
+    assert receipt["issues"] == ["entire_authenticated_failed"]
+E   AssertionError: assert ['entire_auth...ready_failed'] == ['entire_auth...cated_failed']
+E     Left contains 2 more items, first extra item: 'private_mirror_ready_failed'
+    assert receipt["issues"] == ["private_mirror_ready_failed"]
+E   AssertionError: assert ['private_mir...ready_failed'] == ['private_mir...ready_failed']
+E     Left contains one more item: 'source_mirror_ready_failed'
+FAILED tests/test_entire_private_mode.py::test_private_mode_preflight_fails_closed_on_version_mismatch[Go version: go1.27.1\nEntire CLI 0.11.5\n]
+FAILED tests/test_entire_private_mode.py::test_private_mode_preflight_accepts_the_full_private_boundary
+FAILED tests/test_entire_private_mode.py::test_private_mode_preflight_fails_closed_on_version_mismatch[]
+FAILED tests/test_entire_private_mode.py::test_private_mode_preflight_fails_closed_when_version_command_fails
+FAILED tests/test_entire_private_mode.py::test_private_mode_preflight_fails_closed_without_private_visibility
+FAILED tests/test_entire_private_mode.py::test_private_mode_preflight_requires_the_dedicated_checkpoint_route[{"enabled": true, "agents": ["Claude Code"], "active_sessions": [], "checkpoint_sync_remote": "origin", "checkpoint_sync_remote_source": "default", "checkpoint_remote_ignored": "learn-ukrainian/entire-checkpoints-private", "checkpoint_remote_ignored_verdict": "disproved"}]
+FAILED tests/test_entire_private_mode.py::test_private_mode_preflight_fails_closed_when_public_refs_exist
+FAILED tests/test_entire_private_mode.py::test_private_mode_preflight_requires_the_dedicated_checkpoint_route[{"enabled": true, "agents": ["Claude Code"], "active_sessions": [], "checkpoint_sync_remote": "learn-ukrainian/other-store", "checkpoint_sync_remote_source": "dedicated"}]
+FAILED tests/test_entire_private_mode.py::test_private_mode_preflight_fails_closed_on_version_mismatch[Entire CLI 0.8.42\nGo version: go1.26.4\n]
+FAILED tests/test_entire_private_mode.py::test_private_mode_preflight_requires_the_dedicated_checkpoint_route[{"enabled": true, "agents": ["Claude Code"], "active_sessions": [], "checkpoint_sync_remote": "learn-ukrainian/entire-checkpoints-private", "checkpoint_sync_remote_source": "dedicated", "checkpoint_remote_ignored": "learn-ukrainian/entire-checkpoints-private"}]
+FAILED tests/test_entire_private_mode.py::test_private_mode_preflight_fails_closed_on_version_mismatch[Entire CLI 0.11.4\n]
+FAILED tests/test_entire_private_mode.py::test_private_mode_preflight_fails_closed_on_version_mismatch[Entire CLI 0.11.50\n]
+FAILED tests/test_entire_private_mode.py::test_private_mode_preflight_requires_the_dedicated_checkpoint_route[{"enabled": true, "agents": ["Claude Code"], "active_sessions": [], "checkpoint_sync_remote": "learn-ukrainian/entire-checkpoints-private", "checkpoint_sync_remote_source": "dedicated", "checkpoint_sync_error": "checkpoint_push_remote has no configured fetch URL"}]
+FAILED tests/test_entire_private_mode.py::test_private_mode_preflight_fails_closed_on_version_mismatch[Entire CLI 0.11.5-nightly.20261015\n]
+FAILED tests/test_entire_private_mode.py::test_private_mode_preflight_requires_the_dedicated_checkpoint_route[{"enabled": true, "agents": ["Claude Code"], "active_sessions": []}]
+FAILED tests/test_entire_private_mode.py::test_private_mode_preflight_requires_the_dedicated_checkpoint_route[[]]
+FAILED tests/test_entire_private_mode.py::test_private_mode_preflight_requires_the_dedicated_checkpoint_route[not json]
+FAILED tests/test_entire_private_mode.py::test_private_mode_preflight_rejects_logged_out_success[Run 'entire login' to authenticate.\n]
+FAILED tests/test_entire_private_mode.py::test_private_mode_preflight_returns_body_free_failure_on_command_timeout
+FAILED tests/test_entire_private_mode.py::test_private_mode_preflight_rejects_logged_out_success[RUN 'ENTIRE LOGIN' TO AUTHENTICATE.\n]
+FAILED tests/test_entire_private_mode.py::test_private_mode_preflight_fails_closed_without_checkpoint_ref
+FAILED tests/test_entire_private_mode.py::test_private_mode_preflight_fails_closed_without_ready_private_mirror[{"repo": "/gh/learn-ukrainian/entire-checkpoints-private", "private": true, "status": "processing", "placements": [{"cluster": "cluster.example", "clusterSlug": "cluster-eu", "jurisdiction": "eu", "status": "processing"}]}]
+FAILED tests/test_entire_private_mode.py::test_private_mode_preflight_fails_closed_without_entire_auth
+FAILED tests/test_entire_private_mode.py::test_private_mode_preflight_fails_closed_without_ready_private_mirror[{"repo": "/gh/learn-ukrainian/entire-checkpoints-private", "private": true, "status": "mixed", "placements": [{"cluster": "cluster.example", "clusterSlug": "cluster-eu", "jurisdiction": "eu", "status": "mixed"}]}]
+FAILED tests/test_entire_private_mode.py::test_private_mode_preflight_rejects_logged_out_success[\u25cb Not logged in\nRun 'entire login' to authenticate.\n]
+FAILED tests/test_entire_private_mode.py::test_private_mode_preflight_fails_closed_without_ready_private_mirror[{"repo": "/gh/learn-ukrainian/entire-checkpoints-private", "private": false, "status": "ready", "placements": [{"cluster": "cluster.example", "clusterSlug": "cluster-eu", "jurisdiction": "eu", "status": "ready"}]}]
+FAILED tests/test_entire_private_mode.py::test_private_mode_preflight_rejects_logged_out_success[Not logged in.\nRun 'entire login' to authenticate.\n]
+FAILED tests/test_entire_private_mode.py::test_private_mode_preflight_fails_closed_without_ready_private_mirror[{"repo": "/gh/learn-ukrainian/entire-checkpoints-private-old", "private": true, "status": "ready", "placements": [{"cluster": "cluster.example", "clusterSlug": "cluster-eu", "jurisdiction": "eu", "status": "ready"}]}]
+FAILED tests/test_entire_private_mode.py::test_private_mode_preflight_rejects_logged_out_success[Not logged in.\n]
+FAILED tests/test_entire_private_mode.py::test_private_mode_preflight_rejects_logged_out_success[NOT LOGGED IN.\n]
+FAILED tests/test_entire_private_mode.py::test_private_mode_preflight_fails_closed_without_ready_private_mirror[{"clusterHost": "cluster.example", "owner": "learn-ukrainian", "repo": "entire-checkpoints-private", "isPrivate": true, "status": "ready"}]
+FAILED tests/test_entire_private_mode.py::test_private_mode_preflight_rejects_unexpected_source_mirror_access[grant_rows0]
+FAILED tests/test_entire_private_mode.py::test_private_mode_preflight_rejects_unexpected_source_mirror_access[grant_rows1]
+FAILED tests/test_entire_private_mode.py::test_private_mode_preflight_rejects_unexpected_source_mirror_access[grant_rows2]
+FAILED tests/test_entire_private_mode.py::test_private_mode_preflight_rejects_unexpected_source_mirror_access[grant_rows3]
+FAILED tests/test_entire_private_mode.py::test_private_mode_preflight_rejects_unexpected_source_mirror_access[grant_rows4]
+FAILED tests/test_entire_private_mode.py::test_private_mode_preflight_fails_closed_when_grant_list_is_rejected
+FAILED tests/test_entire_context_live.py::test_dispatch_jurisdiction_reads_the_0_11_5_repo_view
+FAILED tests/test_entire_context_live.py::test_provider_capability_refresh_is_body_free_and_deletes_eu_dispatch
+FAILED tests/test_entire_context_live.py::test_provider_capability_refresh_reports_empty_index_and_region_failure
+FAILED tests/test_entire_context_live.py::test_dispatch_requires_source_mirror_jurisdiction[[{"owner":"learn-ukrainian","repo":"learn-ukrainian.github.io","status":"ready","jurisdiction":"eu"}]]
+FAILED tests/test_entire_context_live.py::test_dispatch_cleanup_and_failures[{"totals":{"checkpoints":12}}-Location: /api/v1/me/dispatches/test-id\n-204-None]
+FAILED tests/test_entire_context_live.py::test_dispatch_cleanup_and_failures[{"totals":{"checkpoints":0}}-Location: https://example.com/api/v1/me/dispatches/test-id\n-204-no_checkpoint_history]
+FAILED tests/test_entire_context_live.py::test_dispatch_cleanup_and_failures[not json-Location: /api/v1/me/dispatches/test-id\n-204-provider_error]
+FAILED tests/test_entire_context_live.py::test_dispatch_cleanup_and_failures[{"id":"test-id","totals":{"checkpoints":12}}--500-provider_error]
+FAILED tests/test_entire_context_live.py::test_dispatch_cleanup_and_failures[{"id":"test-id","totals":{"checkpoints":12}}--timeout-provider_error]
+FAILED tests/test_entire_context_live.py::test_dispatch_cleanup_and_failures[{"totals":{"checkpoints":12}}--204-provider_error]
+FAILED tests/test_entire_context_live.py::test_dispatch_post_failure_does_not_delete[404-repository_unavailable_or_region]
+FAILED tests/test_entire_context_live.py::test_dispatch_post_failure_does_not_delete[422-provider_error]
+======================== 49 failed, 26 passed in 7.93s =========================

@@ -1,0 +1,24 @@
+{
+  "bin": "bin-0.11.5",
+  "label": "s2-0115-fork",
+  "push_remote": "fork",
+  "prompt_rc": 0,
+  "stop_rc": 0,
+  "commit_rc": 0,
+  "commit_seconds": 0.315,
+  "checkpoint_trailer": "5060e7537fc5",
+  "push_rc": 0,
+  "push_seconds": 7.591,
+  "push_stderr_tail": "To github.com:someone-else/learn-ukrainian.github.io.git\n * [new branch]        HEAD -> main\n",
+  "refs": {
+    "public": [
+      "refs/heads/main 39af70e0"
+    ],
+    "private": [
+      "refs/heads/entire/checkpoints/v1 903e7e4"
+    ],
+    "fork": [
+      "refs/heads/main 7ad26635"
+    ]
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "bin": "bin-0.8.42",
+  "label": "r2-02-v0842",
+  "agent_hooks": "configured guarded commands",
+  "commit_rc": 0,
+  "commit_seconds": 0.567,
+  "commit_guard_lines": [
+    "[entire] capture refused (cli_version_not_accepted): no checkpoint written; see docs/runbooks/entire-cli-upgrade.md"
+  ],
+  "commit_sha": "a14b5ccca142a7613f817b4ed34e2b6d8f2f0a31",
+  "checkpoint_trailer": "",
+  "local_v1_before": "983f768d8f74",
+  "local_v1_after_commit": "983f768d8f74",
+  "push_remote": "origin",
+  "gate_exit": 0,
+  "push_rc": 0,
+  "push_seconds": 0.211,
+  "push_stderr_tail": "[entire] capture refused (cli_version_not_accepted): no checkpoint written; see docs/runbooks/entire-cli-upgrade.md\nTo github.com:learn-ukrainian/learn-ukrainian.github.io.git\n   b1d22a40..a14b5ccc  HEAD -> main\n",
+  "agent_hook_results": [
+    {
+      "verb": "session-start",
+      "rc": 0,
+      "seconds": 0.23,
+      "guard": [
+        "[entire] capture refused (cli_version_not_accepted): no checkpoint written; see docs/runbooks/entire-cli-upgrade.md"
+      ]
+    },
+    {
+      "verb": "user-prompt-submit",
+      "rc": 0,
+      "seconds": 0.115,
+      "guard": [
+        "[entire] capture refused (cli_version_not_accepted): no checkpoint written; see docs/runbooks/entire-cli-upgrade.md"
+      ]
+    },
+    {
+      "verb": "stop",
+      "rc": 0,
+      "seconds": 0.105,
+      "guard": [
+        "[entire] capture refused (cli_version_not_accepted): no checkpoint written; see docs/runbooks/entire-cli-upgrade.md"
+      ]
+    },
+    {
+      "verb": "session-end",
+      "rc": 0,
+      "seconds": 0.101,
+      "guard": [
+        "[entire] capture refused (cli_version_not_accepted): no checkpoint written; see docs/runbooks/entire-cli-upgrade.md"
+      ]
+    }
+  ],
+  "repo_gate_calls": [
+    "gate:pre-commit",
+    "gate:commit-msg",
+    "gate:post-commit",
+    "gate:pre-push"
+  ],
+  "refs_after": {
+    "public": [
+      "refs/heads/main a14b5ccc"
+    ],
+    "private": [
+      "refs/heads/entire/checkpoints/v1 983f768"
+    ],
+    "fork": [
+      "refs/heads/main 48c9cfef"
+    ]
+  },
+  "public_entire_refs": []
+}

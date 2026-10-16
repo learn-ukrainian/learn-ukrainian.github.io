@@ -328,3 +328,62 @@ def test_configured_hooks_refuse_outside_a_guarded_checkout(tmp_path: Path) -> N
         assert result.returncode == 0
         assert "capture refused (guard_missing)" in result.stderr
     assert _calls(env) == []
+
+
+ADR = REPO_ROOT / "docs" / "architecture" / "adr" / "adr-018-entire-acp-context-layer.md"
+EVIDENCE = REPO_ROOT / "docs" / "architecture" / "adr" / "evidence" / "entire-0115-canary"
+# Stack-currency policy v3 consequence for ADR-018, required verbatim (#10846).
+STACK_CURRENCY_CONSEQUENCE = (
+    "The last accepted Entire CLI version is recorded in stack_pins.yaml; it is an acceptance record, "
+    "not an expiry. A newer CLI is allowed only after a compatibility review re-proves the "
+    "version-sensitive canaries (fail-closed version preflight, private-destination allowlist, zero "
+    "public entire/* refs, body-leakage scan, fail-open outage behaviour, locator digest checks), with "
+    "independent cross-family review and a reviewed rollback procedure. Until that review is recorded, "
+    "automated calls prove the accepted version. A version probe is not that review. After approval, "
+    "the native-recall preflight and the runtime version guard move to the new version in the same change."
+)
+CANARIES = (
+    "Fail-closed version preflight",
+    "Private-destination allowlist",
+    "Zero public `entire/*` refs",
+    "Body-leakage scan",
+    "Fail-open outage behaviour",
+    "Locator digest checks",
+)
+
+
+def test_adr_018_carries_the_stack_currency_consequence_and_the_accepted_version() -> None:
+    text = ADR.read_text(encoding="utf-8")
+
+    assert STACK_CURRENCY_CONSEQUENCE in text
+    assert "Entire is pinned to 0.11.5. An upgrade requires" not in text
+    # Until stack_pins.yaml lands, the ADR is the acceptance record the guard must match.
+    assert not (REPO_ROOT / "stack_pins.yaml").exists()
+    assert f"**Entire CLI {capture_guard.ACCEPTED_VERSION}**" in text
+
+
+def test_adr_018_names_a_receipt_for_every_canary_and_each_receipt_exists() -> None:
+    text = ADR.read_text(encoding="utf-8")
+    table = text.split("The six version-sensitive canaries")[1].split("Wrapper bytes:")[0]
+    rows = [line for line in table.splitlines() if line.startswith("| ") and not line.startswith("| Canary")]
+
+    assert [row.split(" | ")[0].removeprefix("| ") for row in rows if not row.startswith("| ---")] == list(CANARIES)
+    named = re.findall(
+        r"`((?:round-[12]/)?(?:log|status|refs|tool|wrapper|mutation|explain|CANARY)[\w.-]*\.(?:json|txt))`",
+        text,
+    )
+    assert len(named) >= 15
+    for name in named:
+        path = EVIDENCE / name if name.startswith("round-") else EVIDENCE / "round-2" / name
+        assert path.is_file(), name
+
+
+@pytest.mark.repo_wide
+def test_canary_evidence_bundle_carries_no_local_absolute_paths() -> None:
+    absolute = re.compile(r"(^|[\s'\"=:(\[])/(home|var/tmp|run/user|tmp)/")
+    files = sorted(path for path in EVIDENCE.rglob("*") if path.is_file())
+
+    assert len(files) > 80
+    for path in files:
+        for number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+            assert not absolute.search(line), f"{path.relative_to(EVIDENCE)}:{number}"

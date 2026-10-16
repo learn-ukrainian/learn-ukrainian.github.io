@@ -1,0 +1,58 @@
+21:40:05.235501331 PROBE ssh-variant
+21:40:05.245257867 ALLOW host=github.com verb=git-upload-pack repo=learn-ukrainian/entire-checkpoints-private.git
+21:40:05.940667082 PROBE ssh-variant
+21:40:05.952432327 ALLOW host=github.com verb=git-upload-pack repo=learn-ukrainian/entire-checkpoints-private.git
+21:41:17.157077930 PROBE ssh-variant
+21:41:17.167524413 ALLOW host=github.com verb=git-receive-pack repo=learn-ukrainian/learn-ukrainian.github.io.git
+21:41:17.374629718 REFUSED host=github.com verb=git@github.com repo=git@github.com.git argv=[-o BatchMode=yes -G git@github.com]
+21:41:17.386321636 ALLOW host=github.com verb=git-receive-pack repo=learn-ukrainian/entire-checkpoints-private.git
+21:41:39.483694568 PROBE ssh-variant
+21:41:39.491840015 ALLOW host=github.com verb=git-receive-pack repo=learn-ukrainian/learn-ukrainian.github.io.git
+21:41:40.863386416 PROBE ssh-variant
+21:41:40.875049134 ALLOW host=github.com verb=git-receive-pack repo=learn-ukrainian/learn-ukrainian.github.io.git
+21:41:42.146884471 PROBE ssh-variant
+21:41:42.156035711 ALLOW host=github.com verb=git-receive-pack repo=learn-ukrainian/learn-ukrainian.github.io.git
+21:41:43.493401149 PROBE ssh-variant
+21:41:43.503390222 ALLOW host=github.com verb=git-receive-pack repo=learn-ukrainian/learn-ukrainian.github.io.git
+21:42:44.850260589 PROBE ssh-variant
+21:42:44.858385043 ALLOW host=github.com verb=git-receive-pack repo=learn-ukrainian/learn-ukrainian.github.io.git
+21:43:06.266314086 PROBE ssh-variant
+21:43:06.276983307 ALLOW host=github.com verb=git-receive-pack repo=learn-ukrainian/learn-ukrainian.github.io.git
+21:43:09.497886659 PROBE ssh-variant
+21:43:09.509244895 ALLOW host=github.com verb=git-receive-pack repo=learn-ukrainian/learn-ukrainian.github.io.git
+21:43:12.273048588 PROBE ssh-variant
+21:43:12.283717027 ALLOW host=github.com verb=git-receive-pack repo=someone-else/learn-ukrainian.github.io.git
+21:43:13.949151744 PROBE ssh-variant
+21:43:13.965529523 ALLOW host=github.com verb=git-receive-pack repo=learn-ukrainian/learn-ukrainian.github.io.git
+21:43:20.070981912 PROBE ssh-variant
+21:43:20.080371921 ALLOW host=github.com verb=git-receive-pack repo=learn-ukrainian/learn-ukrainian.github.io.git
+21:43:26.421979772 PROBE ssh-variant
+21:43:26.432524612 ALLOW host=github.com verb=git-receive-pack repo=learn-ukrainian/learn-ukrainian.github.io.git
+21:45:23.268366435 PROBE ssh-variant
+21:45:23.278424056 ALLOW host=github.com verb=git-receive-pack repo=learn-ukrainian/learn-ukrainian.github.io.git
+21:45:23.542244841 REFUSED host=github.com verb=git@github.com repo=git@github.com.git argv=[-o BatchMode=yes -G git@github.com]
+21:45:23.555235510 REFUSED host=github.com verb=git-receive-pack repo=learn-ukrainian/entire-checkpoints-private.git argv=[-o BatchMode=yes git@github.com git-receive-pack 'learn-ukrainian/entire-checkpoints-private.git']
+21:45:23.581232288 REFUSED host=github.com verb=git@github.com repo=git@github.com.git argv=[-o BatchMode=yes -G -o SendEnv=GIT_PROTOCOL git@github.com]
+21:45:23.592422646 REFUSED host=github.com verb=git-upload-pack repo=learn-ukrainian/entire-checkpoints-private.git argv=[-o BatchMode=yes git@github.com git-upload-pack 'learn-ukrainian/entire-checkpoints-private.git']
+21:45:30.289381959 PROBE ssh-variant
+21:45:30.302436325 ALLOW host=github.com verb=git-receive-pack repo=learn-ukrainian/learn-ukrainian.github.io.git
+21:45:36.804944223 PROBE ssh-variant
+21:45:36.815760070 ALLOW host=github.com verb=git-receive-pack repo=learn-ukrainian/learn-ukrainian.github.io.git
+21:45:37.030335784 REFUSED host=github.com verb=git@github.com repo=git@github.com.git argv=[-o BatchMode=yes -G git@github.com]
+21:45:37.040934504 ALLOW host=github.com verb=git-receive-pack repo=learn-ukrainian/entire-checkpoints-private.git
+21:45:56.803643101 PROBE ssh-variant
+21:45:56.815019053 ALLOW host=github.com verb=git-receive-pack repo=learn-ukrainian/learn-ukrainian.github.io.git
+21:45:57.042267888 REFUSED host=github.com verb=git@github.com repo=git@github.com.git argv=[-o BatchMode=yes -G git@github.com]
+21:45:57.053392975 REFUSED host=github.com verb=git-receive-pack repo=learn-ukrainian/entire-checkpoints-private.git argv=[-o BatchMode=yes git@github.com git-receive-pack 'learn-ukrainian/entire-checkpoints-private.git']
+21:45:57.073097252 REFUSED host=github.com verb=git@github.com repo=git@github.com.git argv=[-o BatchMode=yes -G -o SendEnv=GIT_PROTOCOL git@github.com]
+21:45:57.085371689 REFUSED host=github.com verb=git-upload-pack repo=learn-ukrainian/entire-checkpoints-private.git argv=[-o BatchMode=yes git@github.com git-upload-pack 'learn-ukrainian/entire-checkpoints-private.git']
+21:46:03.224417841 PROBE ssh-variant
+21:46:03.233561404 ALLOW host=github.com verb=git-receive-pack repo=learn-ukrainian/learn-ukrainian.github.io.git
+21:46:03.441011452 REFUSED host=github.com verb=git@github.com repo=git@github.com.git argv=[-o BatchMode=yes -G git@github.com]
+21:46:03.451163284 ALLOW host=github.com verb=git-receive-pack repo=learn-ukrainian/entire-checkpoints-private.git
+21:47:14.889547262 PROBE ssh-variant
+21:47:14.901388669 ALLOW host=github.com verb=git-upload-pack repo=learn-ukrainian/entire-checkpoints-private.git
+21:47:22.832196634 PROBE ssh-variant
+21:47:22.840246318 ALLOW host=github.com verb=git-upload-pack repo=learn-ukrainian/entire-checkpoints-private.git
+21:47:23.515092970 PROBE ssh-variant
+21:47:23.524442407 ALLOW host=github.com verb=git-upload-pack repo=learn-ukrainian/entire-checkpoints-private.git

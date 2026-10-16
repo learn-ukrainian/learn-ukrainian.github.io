@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# Run the branch private-mode preflight inside the throwaway clone against the
+# real 0.11.5 binary (no network, no credentials).
+set -uo pipefail
+C=<scratch>/canary
+WT=<worktree>
+cd "$C/clone"
+git remote -v | head -n 2
+cp "$WT/.entire/private-recall.json" .entire/private-recall.json
+calls="$C/logs/preflight-calls.txt"
+: >"$calls"
+"$C/tools/cenv.sh" "$C/bin-0.11.5" <primary>/.venv/bin/python \
+  "$WT/scripts/entire/private_mode_preflight.py" --repo-root "$C/clone" \
+  >"$C/logs/preflight-canary.json" 2>"$C/logs/preflight-canary.err"
+echo "preflight rc=$?"
+cat "$C/logs/preflight-canary.json"
+tail -n 3 "$C/logs/preflight-canary.err"
+git checkout -q -- .entire/private-recall.json
+git status --porcelain | head -n 3

@@ -1,0 +1,11 @@
+  Agent: Claude Code
+
+Note: pre-commit detected (.pre-commit-config.yaml)
+
+  If pre-commit reinstalls hooks, run 'entire enable' to restore Entire's hooks.
+
+  Installed 10 hooks for Claude Code - Anthropic's CLI coding assistant
+  ✓ Configured project
+    .entire/settings.json
+
+Ready.

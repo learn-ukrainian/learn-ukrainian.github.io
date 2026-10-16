@@ -1,0 +1,61 @@
+{
+  "bin": "bin-prepushfail",
+  "label": "r2-14-gate-refuses",
+  "agent_hooks": "configured guarded commands",
+  "commit_rc": 0,
+  "commit_seconds": 1.113,
+  "commit_guard_lines": [],
+  "commit_sha": "06e81ec5db16bc596237b6c8218e146623e6f975",
+  "checkpoint_trailer": "2341fbb80451",
+  "local_v1_before": "24b3d1566985",
+  "local_v1_after_commit": "7c9b4fcd287e",
+  "push_remote": "origin",
+  "gate_exit": 1,
+  "push_rc": 1,
+  "push_seconds": 0.221,
+  "push_stderr_tail": "entire: simulated pre-push outage\n[entire] capture failed (exit 1); continuing without capture\nerror: failed to push some refs to 'github.com:learn-ukrainian/learn-ukrainian.github.io.git'\n",
+  "agent_hook_results": [
+    {
+      "verb": "session-start",
+      "rc": 0,
+      "seconds": 0.284,
+      "guard": []
+    },
+    {
+      "verb": "user-prompt-submit",
+      "rc": 0,
+      "seconds": 2.126,
+      "guard": []
+    },
+    {
+      "verb": "stop",
+      "rc": 0,
+      "seconds": 2.363,
+      "guard": []
+    },
+    {
+      "verb": "session-end",
+      "rc": 0,
+      "seconds": 0.247,
+      "guard": []
+    }
+  ],
+  "repo_gate_calls": [
+    "gate:pre-commit",
+    "gate:commit-msg",
+    "gate:post-commit",
+    "gate:pre-push"
+  ],
+  "refs_after": {
+    "public": [
+      "refs/heads/main 308c9fbe"
+    ],
+    "private": [
+      "refs/heads/entire/checkpoints/v1 983f768"
+    ],
+    "fork": [
+      "refs/heads/main 517a9ff5"
+    ]
+  },
+  "public_entire_refs": []
+}

@@ -1,0 +1,16 @@
+bin-0.8.42 | repo mirror collaborators list github.com/learn-ukrainian/entire-checkpoints-private cluster.example --json | connect to Entire control plane: resolve control-plane target for cluster "cluster.example": cluster.example doesn't look like a cluster, or it is unreachable: cluster un
+bin-0.11.5 | repo mirror collaborators list github.com/learn-ukrainian/entire-checkpoints-private cluster.example --json | Usage:   entire [flags]
+bin-0.8.42 | repo grant list /gh/learn-ukrainian/entire-checkpoints-private --json |
+bin-0.11.5 | repo grant list /gh/learn-ukrainian/entire-checkpoints-private --json | connect to Entire control plane: resolve control-plane target for cluster "<entire-cluster>": <entire-cluster> doesn't look like a cluster, or it is unreach
+bin-0.8.42 | repo access list github.com/learn-ukrainian/entire-checkpoints-private --cluster cluster.example --json | Usage:   entire
+bin-0.11.5 | repo access list github.com/learn-ukrainian/entire-checkpoints-private --cluster cluster.example --json | Usage:   entire [flags]
+bin-0.8.42 | repo mirror list --name learn-ukrainian --json | connect to Entire control plane: resolve control-plane target: not logged in; run `entire login`
+bin-0.11.5 | repo mirror list --name learn-ukrainian --json | connect to Entire control plane: resolve control-plane target: not logged in; run `entire login`
+bin-0.8.42 | repo view /gh/learn-ukrainian/learn-ukrainian.github.io --json |
+bin-0.11.5 | repo view /gh/learn-ukrainian/learn-ukrainian.github.io --json | connect to Entire control plane: resolve control-plane target: not logged in; run `entire login`
+bin-0.8.42 | search canary --json --limit 10 --repo learn-ukrainian/learn-ukrainian.github.io | reading credentials: entire.io does not advertise its trusted login servers (/.well-known/entire-api.json missing or unreachable); cannot authenticate: api discovery unav
+bin-0.11.5 | search canary --json --limit 10 --repo learn-ukrainian/learn-ukrainian.github.io | search failed: not authenticated. Run 'entire login' to authenticate
+bin-0.8.42 | api --jurisdiction us -X GET /api/v1/me --include | entire.io does not advertise its trusted login servers (/.well-known/entire-api.json missing or unreachable); cannot authenticate: api discovery unavailable: cluster unre
+bin-0.11.5 | api --jurisdiction us -X GET /api/v1/me --include | not logged in (run 'entire login' first): not logged in
+bin-0.8.42 | auth status |
+bin-0.11.5 | auth status |

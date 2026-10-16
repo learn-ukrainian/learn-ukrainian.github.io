@@ -1,0 +1,55 @@
+{
+  "bin": "bin-0.8.42",
+  "label": "r2-17-legacy-0842",
+  "agent_hooks": "direct entire hooks",
+  "commit_rc": 0,
+  "commit_seconds": 0.881,
+  "commit_guard_lines": [],
+  "commit_sha": "de3fc0535c819b78d6b39fff6fcbd7fab106c2ae",
+  "checkpoint_trailer": "582d78005054",
+  "local_v1_before": "60301c94b126",
+  "local_v1_after_commit": "454cdabb0f93",
+  "agent_hook_results": [
+    {
+      "verb": "session-start",
+      "rc": 0,
+      "seconds": 0.076,
+      "guard": []
+    },
+    {
+      "verb": "user-prompt-submit",
+      "rc": 0,
+      "seconds": 10.152,
+      "guard": []
+    },
+    {
+      "verb": "stop",
+      "rc": 0,
+      "seconds": 7.51,
+      "guard": []
+    },
+    {
+      "verb": "session-end",
+      "rc": 0,
+      "seconds": 0.061,
+      "guard": []
+    }
+  ],
+  "repo_gate_calls": [
+    "gate:pre-commit",
+    "gate:commit-msg",
+    "gate:post-commit"
+  ],
+  "refs_after": {
+    "public": [
+      "refs/heads/main 576d76ce"
+    ],
+    "private": [
+      "refs/heads/entire/checkpoints/v1 60301c9"
+    ],
+    "fork": [
+      "refs/heads/main 517a9ff5"
+    ]
+  },
+  "public_entire_refs": []
+}

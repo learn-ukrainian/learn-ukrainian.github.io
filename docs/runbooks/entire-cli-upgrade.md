@@ -6,7 +6,12 @@ Decision: [ADR-018 § Amendment: Entire 0.11.5](../architecture/adr/adr-018-enti
 Run this after the PR that pins 0.11.5 has merged, from the primary checkout on
 `main` at the merged commit. Do not install earlier: until the merge, the
 repository code pins 0.8.42 and its preflight fails closed against a 0.11.5
-binary. A failed step in **Verify** means **Rollback**, not a fix in place.
+binary. Install promptly after the merge: from then on every Entire entry point
+runs through `scripts/entire/capture_guard.sh`, which refuses capture on a
+0.8.42 binary. Each hook prints one
+`[entire] capture refused (cli_version_not_accepted)` line, and commits and
+pushes are not affected. A failed step in **Verify** means **Rollback**, not a
+fix in place.
 
 Never run `entire enable --force`, `entire agent add`, `entire doctor --force`,
 `entire clean` or `entire disable --uninstall` as part of this procedure. They
@@ -54,7 +59,14 @@ legacy shadow branches.
    ```
 
 4. Deploy the merged agent configuration, which carries the 0.11.5 hook
-   timeouts (Stop and post-task 120 s): `npm run agents:deploy`.
+   timeouts (Stop and post-task 120 s) and the guarded hook commands:
+   `npm run agents:deploy`.
+5. Rerun the hook installer. It routes each Entire git hook wrapper's
+   `entire hooks git` call through the capture guard: `scripts/install_git_hooks.sh`.
+   It refuses, and changes nothing, when the hooks directory or a hook file is a
+   symlink; replace the link with a regular file and rerun it. Rerun it after
+   anything rewrites Entire's wrappers, for example an `entire enable` an
+   operator runs outside this procedure.
 
 ## Verify
 
@@ -72,7 +84,9 @@ entire doctor </dev/null
 .venv/bin/python -m scripts.entire_context refresh-provider-status
 # "available": true, "version": "0.11.5"
 scripts/install_git_hooks.sh --check
-# every declared stage ok
+# every declared stage ok; no UNGUARDED or UNSAFE line
+scripts/entire/capture_guard.sh --budget 20 version
+# exactly: Entire CLI 0.11.5 (and its Go line), with no "[entire] capture refused" line
 git ls-remote --heads origin 'entire/*'
 # no output
 ```
@@ -114,8 +128,9 @@ entire version | head -n 1
 
 Then revert the 0.11.5 PR through a normal reviewed PR
 (`git revert <merged-commit-sha>` on a new branch). Until that revert lands, the
-merged code pins 0.11.5 and the preflight fails closed against 0.8.42, which
-disables native recall but not capture.
+merged code pins 0.11.5: the preflight and the capture guard both fail closed
+against 0.8.42, so native recall and capture stay off (commits and pushes are
+unaffected) until the revert lands.
 
 Downgrading discards pending, uncommitted agent session state (Entire 0.11.5
 release notes). Legacy shadow branches that 0.8.42 wrote are not removed
