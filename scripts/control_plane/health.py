@@ -17,13 +17,44 @@ from scripts.control_plane.storage import (
 
 # Postgres SQLSTATE for insufficient_privilege. A denial is not a dead probe.
 _SQLSTATE_INSUFFICIENT_PRIVILEGE = "42501"
+# Connect failures are re-raised, and the driver may wrap them again.
+# The cap stops a cause/context cycle from walking forever.
+_SQLSTATE_CHAIN_LIMIT = 8
 
 
-def _postgres_sqlstate(error: Exception) -> str | None:
-    """Return a five-character SQLSTATE, never driver text."""
+def _exception_sqlstate(error: BaseException) -> str | None:
+    """Return a five-character SQLSTATE from ``error`` itself, never its text."""
     code = getattr(error, "sqlstate", None)
     if isinstance(code, str) and len(code) == 5 and code.isalnum():
         return code
+    return None
+
+
+def _postgres_sqlstate(error: Exception) -> str | None:
+    """Return the first SQLSTATE on ``error`` or its ``__cause__`` / ``__context__`` chain.
+
+    Connection failures arrive wrapped, with the driver exception on
+    ``__cause__``. The walk is bounded and remembers identities it has already
+    visited, so a cycle returns instead of hanging. Only the code is returned.
+    """
+    pending: list[BaseException] = [error]
+    seen: set[int] = set()
+    index = 0
+    inspected = 0
+    while index < len(pending) and inspected < _SQLSTATE_CHAIN_LIMIT:
+        current = pending[index]
+        index += 1
+        identity = id(current)
+        if identity in seen:
+            continue
+        seen.add(identity)
+        inspected += 1
+        code = _exception_sqlstate(current)
+        if code is not None:
+            return code
+        for linked in (current.__cause__, current.__context__):
+            if isinstance(linked, BaseException) and id(linked) not in seen:
+                pending.append(linked)
     return None
 
 

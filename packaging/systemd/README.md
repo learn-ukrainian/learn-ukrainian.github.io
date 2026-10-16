@@ -84,7 +84,7 @@ uses `./services.sh supervise api` / launchd.
 Public fixtures use opaque ids `host-teacher` (and mapped `host-job` only when needed).
 
 Available service templates:
-- `learn-ukrainian-api.service`: Monitor API service (`scripts/api/main.py`).
+- `learn-ukrainian-api.service`: Monitor API service (`scripts/api/main.py`). A refused API startup makes every endpoint unavailable until the cause is fixed; the unit retries every five seconds.
 - `learn-ukrainian-astro.service`: Astro frontend UI.
 - `learn-ukrainian-sources.service`: Sources lookup service.
 - `learn-ukrainian-work.service`: Work projection adapter.
