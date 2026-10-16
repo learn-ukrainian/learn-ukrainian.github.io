@@ -20,6 +20,7 @@ from __future__ import annotations
 import os
 import re
 import subprocess
+import sys
 import textwrap
 from pathlib import Path
 
@@ -104,20 +105,56 @@ def test_subprocess_timeout_allowlist_is_sorted_and_valid() -> None:
         validate_allowlist_entry(entry, _REPO_ROOT)
 
 
+def test_cached_parse_identity_is_hashable_in_project_interpreter(tmp_path: Path) -> None:
+    path = tmp_path / "calls.py"
+    path.write_text("import subprocess\nsubprocess.run(['same'])\n", encoding="utf-8")
+    result = subprocess.run(
+        [sys.executable, "-c", textwrap.dedent("""\
+            import ast
+            import sys
+            from pathlib import Path
+            from scripts.ci.test_source_cache import parse_test_source, read_test_source
+
+            path = Path(sys.argv[1])
+            source = read_test_source(path)
+            tree = parse_test_source(path)
+            assert isinstance(hash((source, tree)), int)
+            assert parse_test_source(path) is tree
+            assert ast.parse(source) != tree
+            print("hashable key; reused parse identity")
+            """), str(path)],
+        cwd=_REPO_ROOT, capture_output=True, text=True, timeout=30,
+    )
+    assert result.returncode == 0, result.stderr
+    assert result.stdout == "hashable key; reused parse identity\n"
+
+
 def test_cached_findings_refresh_after_edit_and_cannot_be_mutated(tmp_path: Path) -> None:
     path = tmp_path / "calls.py"
-    path.write_text("import subprocess\nsubprocess.run(['old'])\n", encoding="utf-8")
+    source = "import subprocess\nsubprocess.run(['old'])\n"
+    path.write_text(source, encoding="utf-8")
+    tree = guard.parse_test_source(path)
+    expected = timeout_less_calls_from_source(source)
     first = timeout_less_calls(path)
-    expected = first.copy()
+    second = timeout_less_calls(path)
     assert len(expected) == 1
+    assert isinstance(first, list) and isinstance(second, list)
+    assert first == second == expected
+    assert first is not second
+    assert guard.parse_test_source(path) is tree
     first.clear()
-    assert timeout_less_calls(path) == expected
+    third = timeout_less_calls(path)
+    assert third == second == expected
+    assert third is not second
 
     path.write_text("import subprocess\nsubprocess.run(['new'], timeout=30)\n", encoding="utf-8")
     assert timeout_less_calls(path) == []
-    path.write_text("import subprocess\nsubprocess.run(['other'])\n", encoding="utf-8")
+    assert guard.parse_test_source(path) is not tree
+    changed_source = "import subprocess\nsubprocess.run(['other'])\n"
+    path.write_text(changed_source, encoding="utf-8")
     changed = timeout_less_calls(path)
     assert len(changed) == 1
+    assert changed == timeout_less_calls_from_source(changed_source)
     assert changed[0].shape_hash != expected[0].shape_hash
 
 

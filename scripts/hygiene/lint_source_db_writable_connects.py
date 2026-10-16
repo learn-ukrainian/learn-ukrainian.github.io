@@ -30,25 +30,28 @@ from collections import Counter
 from dataclasses import dataclass
 from functools import cached_property, lru_cache, wraps
 from pathlib import Path
+from threading import RLock
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 READER_BOUNDARY = "scripts/lib/readonly_sqlite.py"
 REFERENCE_MANIFEST = Path(__file__).with_name("sqlite_reference_allowlist.json")
 SQLITE_MODULES = frozenset({"sqlite3", "sqlite3.dbapi2", "_sqlite3"})
 CONSTRUCTORS = frozenset({"connect", "Connection"})
+_SCAN_GC_LOCK = RLock()
 
 
 def _without_cyclic_gc(scan):
     """Release per-file ASTs before collection visits unrelated cached trees."""
     @wraps(scan)
     def run(*args, **kwargs):
-        was_enabled = gc.isenabled()
-        gc.disable()
-        try:
-            return scan(*args, **kwargs)
-        finally:
-            if was_enabled:
-                gc.enable()
+        # GC state is process-wide; serialize scans, allowing nested calls.
+        with _SCAN_GC_LOCK:
+            was_enabled = gc.isenabled()
+            try:
+                gc.disable()
+                return scan(*args, **kwargs)
+            finally:
+                (gc.enable if was_enabled else gc.disable)()
     return run
 
 

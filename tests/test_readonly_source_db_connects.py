@@ -913,19 +913,126 @@ def test_scan_restores_gc_state_with_valid_and_unreadable_source(tmp_path, monke
 
 
 @pytest.mark.parametrize('enabled', [False, True])
-def test_scan_restores_gc_state_after_unexpected_error(tmp_path, monkeypatch, enabled):
+@pytest.mark.parametrize('error', [RuntimeError, KeyboardInterrupt])
+def test_scan_restores_gc_state_after_unexpected_error(tmp_path, monkeypatch, enabled, error):
     import gc
 
     def broken_paths(root):
         assert gc.isenabled() is False
-        raise RuntimeError('scan failed')
+        raise error('scan failed')
 
     monkeypatch.setattr(lint, 'iter_scan_paths', broken_paths)
     was_enabled = gc.isenabled()
     (gc.enable if enabled else gc.disable)()
     try:
-        with pytest.raises(RuntimeError, match='scan failed'):
+        with pytest.raises(error, match='scan failed'):
             lint.find_violations(tmp_path, ())
+        assert gc.isenabled() is enabled
+    finally:
+        (gc.enable if was_enabled else gc.disable)()
+
+
+@pytest.mark.parametrize('enabled', [False, True])
+def test_scan_restores_gc_state_when_disable_is_interrupted(tmp_path, monkeypatch, enabled):
+    import gc
+
+    original_disable = gc.disable
+    calls = []
+
+    def interrupted_disable():
+        original_disable()
+        calls.append('disabled')
+        if len(calls) == 1:
+            raise KeyboardInterrupt('disable interrupted')
+
+    was_enabled = gc.isenabled()
+    (gc.enable if enabled else original_disable)()
+    monkeypatch.setattr(gc, 'disable', interrupted_disable)
+    try:
+        with pytest.raises(KeyboardInterrupt, match='disable interrupted'):
+            lint.find_violations(tmp_path, ())
+        assert gc.isenabled() is enabled
+    finally:
+        (gc.enable if was_enabled else original_disable)()
+
+
+@pytest.mark.parametrize('enabled', [False, True])
+def test_nested_scans_restore_each_gc_state(tmp_path, enabled):
+    import gc
+
+    @lint._without_cyclic_gc
+    def outer_scan():
+        assert gc.isenabled() is False
+        assert lint.find_violations(tmp_path, ()) == ([], [])
+        assert gc.isenabled() is False
+        return 'scanned'
+
+    was_enabled = gc.isenabled()
+    (gc.enable if enabled else gc.disable)()
+    try:
+        assert outer_scan() == 'scanned'
+        assert gc.isenabled() is enabled
+    finally:
+        (gc.enable if was_enabled else gc.disable)()
+
+
+@pytest.mark.parametrize('enabled', [False, True])
+def test_scan_restores_exact_gc_state_after_callable_changes_it(enabled):
+    import gc
+
+    @lint._without_cyclic_gc
+    def changes_gc():
+        gc.enable()
+
+    was_enabled = gc.isenabled()
+    (gc.enable if enabled else gc.disable)()
+    try:
+        changes_gc()
+        assert gc.isenabled() is enabled
+    finally:
+        (gc.enable if was_enabled else gc.disable)()
+
+
+@pytest.mark.parametrize('enabled', [False, True])
+def test_overlapping_scan_threads_restore_original_gc_state(enabled):
+    import gc
+    from concurrent.futures import ThreadPoolExecutor
+    from threading import Event
+
+    first_entered, second_attempted, second_entered = Event(), Event(), Event()
+    release_first, release_second = Event(), Event()
+
+    @lint._without_cyclic_gc
+    def scan(name):
+        assert gc.isenabled() is False
+        entered, release = ((first_entered, release_first) if name == 'first'
+                            else (second_entered, release_second))
+        entered.set()
+        assert release.wait(10), f'{name} scan was not released'
+        return name
+
+    def second_scan():
+        second_attempted.set()
+        return scan('second')
+
+    was_enabled = gc.isenabled()
+    (gc.enable if enabled else gc.disable)()
+    try:
+        with ThreadPoolExecutor(max_workers=2) as pool:
+            try:
+                first = pool.submit(scan, 'first')
+                assert first_entered.wait(10), 'first scan did not enter'
+                second = pool.submit(second_scan)
+                assert second_attempted.wait(10), 'second scan did not start'
+                release_first.set()
+                assert second_entered.wait(10), 'second scan did not enter'
+                assert first.result(timeout=10) == 'first'
+                assert gc.isenabled() is False
+                release_second.set()
+                assert second.result(timeout=10) == 'second'
+            finally:
+                release_first.set()
+                release_second.set()
         assert gc.isenabled() is enabled
     finally:
         (gc.enable if was_enabled else gc.disable)()
