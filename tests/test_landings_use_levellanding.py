@@ -56,7 +56,17 @@ def _has_prop(text: str, prop: str) -> bool:
     return re.search(rf"\b{re.escape(prop)}\s*=", text) is not None
 
 
-@pytest.mark.parametrize("path", _track_landings(), ids=lambda path: path.parent.name)
+def _track_landing_cases() -> list[Path]:
+    # Default dispatch checkouts exclude site/src/content (#10777). An empty
+    # parameter set would skip without naming the include, so a missing tree
+    # yields one placeholder case that fails when it runs instead.
+    if not DOCS_ROOT.is_dir():
+        return [DOCS_ROOT / "content-docs-missing" / "index.mdx"]
+    return _track_landings()
+
+
+@pytest.mark.parametrize("path", _track_landing_cases(), ids=lambda path: path.parent.name)
+@pytest.mark.needs_sparse_tree("site/src/content")
 def test_track_landing_uses_levellanding_contract(path: Path) -> None:
     text = path.read_text(encoding="utf-8")
     track = path.parent.name
@@ -116,6 +126,7 @@ def test_arc_landings_are_generated_pages_the_router_mounts_from_frontmatter() -
         assert body == "", f"{path} is generated with an empty body; the router renders it from the arc JSON"
 
 
+@pytest.mark.needs_sparse_tree("site/src/content")
 def test_content_collection_loads_track_index_mdx_files() -> None:
     text = CONTENT_CONFIG_PATH.read_text(encoding="utf-8")
     tracks = {path.parent.name for path in _track_landings()}
