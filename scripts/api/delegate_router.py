@@ -694,6 +694,14 @@ def _observation_token(stat: os.stat_result) -> tuple[int, ...]:
     return (stat.st_dev, stat.st_ino, stat.st_mtime_ns, stat.st_ctime_ns, stat.st_size)
 
 
+def _active_worker_liveness(task: dict[str, Any]) -> tuple[bool | None, str | None]:
+    """Qualify healer evidence for the API's task-attempt observation."""
+    alive = worker_liveness(task, pid_alive=_pid_alive)
+    if alive is True and task.get("worker_identity") is None:
+        return None, "legacy_worker_identity_unattested"
+    return alive, "worker_identity_or_visibility_unknown" if alive is None else None
+
+
 def active_delegate_tasks(
     *,
     repository: str | None = None,
@@ -711,7 +719,7 @@ def active_delegate_tasks(
     rows: list[dict[str, Any]] = []
     observations: list[dict[str, Any]] = []
     signatures: dict[Path, os.stat_result] = {}
-    process_checks: list[tuple[dict[str, Any], bool | None]] = []
+    process_checks: list[tuple[dict[str, Any], tuple[bool | None, str | None]]] = []
     try:
         directory_before = tasks_dir.stat()
         with os.scandir(tasks_dir) as entries:
@@ -758,8 +766,8 @@ def active_delegate_tasks(
         if predicate is not None and _authoritative_task_repository(task) != predicate:
             continue
         record_observed = datetime.now(UTC)
-        alive = worker_liveness(task, pid_alive=_pid_alive)
-        process_checks.append((task, alive))
+        alive, liveness_reason = _active_worker_liveness(task)
+        process_checks.append((task, (alive, liveness_reason)))
         observed = datetime.now(UTC)
         summary = {
             "task_id": str(task.get("task_id") or path.stem),
@@ -788,7 +796,7 @@ def active_delegate_tasks(
                 "liveness_basis": "worker_identity"
                 if task.get("worker_identity") is not None
                 else "legacy_pid_namespace",
-                "liveness_reason": "worker_identity_or_visibility_unknown" if alive is None else None,
+                "liveness_reason": liveness_reason,
                 "liveness_observed_at": observed.isoformat(),
                 "record_observed_at": record_observed.isoformat(),
                 "record_updated_at": datetime.fromtimestamp(signatures[path].st_mtime, UTC).isoformat(),
@@ -805,7 +813,7 @@ def active_delegate_tasks(
         )
     except OSError:
         changed = True
-    changed = changed or any(worker_liveness(task, pid_alive=_pid_alive) is not alive for task, alive in process_checks)
+    changed = changed or any(_active_worker_liveness(task) != sample for task, sample in process_checks)
     if changed:
         raise HTTPException(503, detail={"status": "unknown", "reason": "task_authority_changed"})
     finished = datetime.now(UTC)

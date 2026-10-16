@@ -26,12 +26,16 @@ Neither record status nor a successful scan confirms that every task is running.
 
 Each observation names `task_id`, the persisted `run_nonce`, `record_status`,
 and `alive`. A null nonce means the record supplies no attempt nonce.
-`liveness_basis` distinguishes identity records from the shared helper's legacy
-PID namespace behavior. `liveness_reason` explicitly identifies unknown identity
-or visibility. `worker_liveness` checks namespace and process start identity for
-identity-bearing records. Its established legacy migration behavior still allows
-signal zero in a confirmed initial PID namespace. That legacy exception cannot
-prove process identity against PID reuse.
+`liveness_basis` distinguishes identity records from legacy PID namespace evidence.
+`worker_liveness` checks namespace and process start identity for identity-bearing
+records. Its shared healer migration fallback still permits a positive signal-zero
+result in a confirmed initial PID namespace. The active API qualifies that result
+as `alive: null` with `liveness_reason: legacy_worker_identity_unattested` because
+PID existence cannot bind the process to the recorded task attempt. Proven-dead
+legacy results remain `false`; other unknown identity or visibility results retain
+`worker_identity_or_visibility_unknown`. Both process samples use the same API
+qualification. This changes no shared healing or terminalization policy, and
+unknown legacy records remain in `tasks`, `total`, and `observations`.
 
 `record_updated_at` is the file's actual modification time, not task start time.
 `record_observed_at` is the read observation time. `record_age_s` measures the

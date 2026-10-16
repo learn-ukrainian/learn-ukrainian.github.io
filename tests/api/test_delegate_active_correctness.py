@@ -105,6 +105,70 @@ def test_live_dead_unknown_attempts_are_explicit(inventory, status):
     assert body["source"]["excluded_dead_running"] == (1 if status == "running" else 0)
 
 
+@pytest.mark.parametrize("status", ["running", "spawning"])
+def test_legacy_unrelated_live_pid_is_unknown_and_dead_pid_is_proven(inventory, status):
+    client, tasks = inventory
+    process = subprocess.Popen(["sleep", "30"])
+    path = tasks / "legacy.json"
+    try:
+        # No identity or launch binding: this durable record names an unrelated process.
+        contents = json.dumps({"task_id": "legacy", "status": status, "pid": process.pid})
+        path.write_text(contents, encoding="utf-8")
+        response = client.get("/api/delegate/active")
+        assert response.status_code == 200
+        body = response.json()
+        assert body["total"] == 1
+        assert [(row["task_id"], row["status"], row["alive"]) for row in body["tasks"]] == [
+            ("legacy", status, None)
+        ]
+        observation = body["observations"][0]
+        assert observation["task_id"] == "legacy"
+        assert observation["alive"] is None
+        assert observation["liveness_reason"] == "legacy_worker_identity_unattested"
+        assert observation["liveness_basis"] == "legacy_pid_namespace"
+        assert observation["excluded_dead_running"] is False
+        assert body["source"]["records_scanned"] == body["source"]["records_in_scope"] == 1
+        assert body["source"]["excluded_dead_running"] == 0
+        assert path.read_text(encoding="utf-8") == contents
+    finally:
+        process.terminate()
+        process.wait(timeout=5)
+
+    # The same namespace-qualified legacy record now has proof of process absence.
+    response = client.get("/api/delegate/active")
+    assert response.status_code == 200
+    body = response.json()
+    assert body["observations"][0]["alive"] is False
+    assert body["observations"][0]["liveness_reason"] is None
+    assert body["observations"][0]["record_status"] == status
+    if status == "running":
+        assert body["total"] == 0
+        assert body["tasks"] == []
+        assert body["source"]["excluded_dead_running"] == 1
+    else:
+        assert body["total"] == 1
+        assert body["tasks"][0]["alive"] is False
+        assert body["source"]["excluded_dead_running"] == 0
+    assert body["source"]["records_in_scope"] == 1
+    assert path.read_text(encoding="utf-8") == contents
+
+
+@pytest.mark.parametrize("identity_change", [{"start_time": None}, {"pid_namespace": "pid:[0]"}])
+def test_identity_bound_unverifiable_live_process_stays_unknown(inventory, identity_change):
+    client, tasks = inventory
+    identity = capture_worker_identity(os.getpid())
+    identity.update(identity_change)
+    write(tasks, worker_identity=identity)
+    response = client.get("/api/delegate/active")
+    assert response.status_code == 200
+    body = response.json()
+    assert body["total"] == 1
+    assert body["tasks"][0]["alive"] is None
+    assert body["observations"][0]["alive"] is None
+    assert body["observations"][0]["liveness_basis"] == "worker_identity"
+    assert body["observations"][0]["liveness_reason"] == "worker_identity_or_visibility_unknown"
+
+
 def test_in_place_status_and_nonce_update_inside_old_ttl(inventory):
     client, tasks = inventory
     path = write(tasks)
