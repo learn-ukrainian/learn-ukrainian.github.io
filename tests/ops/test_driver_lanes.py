@@ -97,6 +97,8 @@ def test_local_config_path_defaults_to_xdg_config_home() -> None:
         (lambda d: d["lanes"][1].update(session="infra-muse"), "duplicate"),
         (lambda d: d["lanes"][0].update(kind="gemini"), "kind"),
         (lambda d: d.update(claude_handoff_pct=0), "claude_handoff_pct"),
+        (lambda d: d.pop("exit_wait_seconds"), "exit_wait_seconds must be a positive integer"),
+        (lambda d: d.update(exit_poll_seconds=91), "exit_poll_seconds must not exceed exit_wait_seconds"),
     ],
 )
 def test_invalid_lane_data_is_rejected(mutate, message: str) -> None:

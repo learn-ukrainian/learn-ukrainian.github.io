@@ -9,6 +9,8 @@
   "quit_retry_seconds": 600,
   "handoff_alert_seconds": 1500,
   "human_active_seconds": 120,
+  "exit_wait_seconds": 90,
+  "exit_poll_seconds": 3,
   "lanes": [
     {
       "session": "infra-muse",

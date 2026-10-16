@@ -62,6 +62,8 @@ SETTINGS = (
     "quit_retry_seconds",
     "handoff_alert_seconds",
     "human_active_seconds",
+    "exit_wait_seconds",
+    "exit_poll_seconds",
 )
 
 
@@ -166,6 +168,8 @@ def parse_registry(data: Any) -> Registry:
         if not isinstance(value, int) or isinstance(value, bool) or value <= 0:
             raise LaneConfigError(f"lane data: {key} must be a positive integer")
         settings[key] = value
+    if settings["exit_poll_seconds"] > settings["exit_wait_seconds"]:
+        raise LaneConfigError("lane data: exit_poll_seconds must not exceed exit_wait_seconds")
     guard_sender = _string(data, "guard_sender", "lane data")
     raw_lanes = data.get("lanes")
     if not isinstance(raw_lanes, list) or not raw_lanes:

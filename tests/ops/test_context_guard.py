@@ -8,7 +8,7 @@ import re
 import subprocess
 import sys
 from collections.abc import Callable
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 
 import pytest
@@ -51,8 +51,8 @@ class ShellTmux(FakeTmux):
 
 
 class Harness:
-    def __init__(self, tmp_path: Path, **panes: FakePane) -> None:
-        self.fake = ShellTmux(sessions=dict(panes), now=START.timestamp())
+    def __init__(self, tmp_path: Path, fake: ShellTmux | None = None, **panes: FakePane) -> None:
+        self.fake = fake or ShellTmux(sessions=dict(panes), now=START.timestamp())
         self.moment = START
         self.logs: list[str] = []
         self.sent: list[tuple[str, str]] = []
@@ -67,6 +67,9 @@ class Harness:
             handoff_posted=lambda sender, since: sender in self.posted and self.posted[sender] >= since,
             now=lambda: self.moment,
         )
+        # The bounded wait after an exit step polls on the guard's own clock: each poll advances the test clock.
+        self.guard.sleep = lambda seconds: self.advance(seconds / 60)
+        self.guard.monotonic = lambda: self.moment.timestamp()
 
     def tick(self, *only: str) -> None:
         self.guard.run(self.state, list(only))
@@ -235,13 +238,11 @@ def test_codex_quit_is_retried_when_the_first_is_swallowed(tmp_path: Path) -> No
     h.tick("atlas")
     h.posted["codex-atlas"] = cg.iso(h.moment)
     h.advance(5)
-    h.tick("atlas")  # watch: HANDOFF-DONE posted -> handoff (done)
-    h.advance(5)
-    h.tick("atlas")
+    h.tick("atlas")  # watch: HANDOFF-DONE posted -> handoff (done) -> /quit, then the agent never exits
     assert h.fake.typed("atlas") == ["/quit"]
     h.advance(5)
     h.tick("atlas")
-    assert h.fake.typed("atlas") == ["/quit"]  # 5 minutes: not yet
+    assert h.fake.typed("atlas") == ["/quit"]  # 6.5 minutes (with the 90 s exit wait): not yet
     h.advance(5)
     h.tick("atlas")
     assert h.fake.typed("atlas") == ["/quit", "/quit"]
@@ -411,7 +412,9 @@ def handoff_with_agent_gone(tmp_path: Path, *, launcher_running: bool) -> Harnes
     h.tick("harness")
     h.posted["codex-monitor"] = cg.iso(h.moment)
     h.advance(5)
-    h.tick("harness")  # watch -> handoff (done)
+    h.tick("harness")  # watch -> handoff (done) -> /quit; the agent outlives the exit wait
+    assert h.fake.typed("harness") == ["/quit"]
+    h.fake.calls.clear()
     pane = h.pane("harness")
     pane.agent, pane.launcher_running = None, launcher_running
     h.advance(5)
@@ -690,3 +693,255 @@ def test_exit_is_not_typed_into_an_agent_the_tick_did_not_snapshot(tmp_path: Pat
     assert h.state["infra-muse"].get("quit_sent") is None
     expected = "pane changed before /exit" if change == "agent-replaced" else "telemetry unavailable (process table"
     assert expected in h.logs[-1]
+
+
+# ---- HANDOFF-DONE to relaunch in one tick (#10875) ---------------------------------
+DIALOG = ("1. Exit and stop tasks", "2. Move to background and exit")
+DONE = {
+    "infra-muse": "⏺ HANDOFF-DONE infra .claude/infra-epic/DRIVER-STATE.md",
+    "cto": "⏺ HANDOFF-DONE 0a1b2c3d .claude/epics-epic/DRIVER-STATE.md",
+    "devops-muse": "⏺ HANDOFF-DONE devops .claude/devops-epic/DRIVER-STATE.md",
+    "harness": "• HANDOFF-DONE harness .claude/monitor-epic/DRIVER-STATE.md",
+}
+Change = Callable[[], None]
+
+
+@dataclass
+class ReactiveTmux(ShellTmux):
+    """A CLI that answers typed keys on the harness clock: ``reactions[session][text]`` lists (delay s, change)."""
+
+    clock_now: Callable[[], float] = lambda: START.timestamp()
+    reactions: dict[str, dict[str, list[tuple[float, Change]]]] = field(default_factory=dict)
+    due: list[tuple[float, Change]] = field(default_factory=list)
+
+    def run(self, argv: list[str]) -> subprocess.CompletedProcess:
+        now = self.clock_now()
+        for item in sorted((item for item in self.due if item[0] <= now), key=lambda item: item[0]):
+            self.due.remove(item)
+            item[1]()
+        result = super().run(argv)
+        if argv[:2] == ["tmux", "send-keys"] and "-l" in argv:
+            session = argv[argv.index("-t") + 1].strip("=").split(":")[0]
+            for delay, change in self.reactions.get(session, {}).get(argv[argv.index("-l") + 1], []):
+                self.due.append((now + delay, change))
+        return result
+
+
+def show_dialog(pane: FakePane) -> Change:
+    return lambda: setattr(pane, "text", "\n".join(["Exiting with background tasks running", *DIALOG]))
+
+
+def agent_exits(pane: FakePane) -> Change:
+    def change() -> None:
+        pane.agent, pane.launcher_running = None, True
+
+    return change
+
+
+def launcher_exits(pane: FakePane) -> Change:
+    def change() -> None:
+        pane.launcher_running = False
+        pane.text += "\nlane-relaunch: launcher exited rc=0\n$"
+
+    return change
+
+
+def claude_exit(pane: FakePane) -> dict[str, list[tuple[float, Change]]]:
+    """``/exit`` shows the dialog after 2 s; ``1`` ends the agent after 4 s and its launcher after 12 s."""
+    return {"/exit": [(2, show_dialog(pane))], "1": [(4, agent_exits(pane)), (12, launcher_exits(pane))]}
+
+
+def codex_quit(pane: FakePane) -> dict[str, list[tuple[float, Change]]]:
+    return {"/quit": [(3, agent_exits(pane)), (10, launcher_exits(pane))]}
+
+
+def reactive(tmp_path: Path, **panes: Pane) -> Harness:
+    fake = ReactiveTmux(sessions=dict(panes), now=START.timestamp())
+    h = Harness(tmp_path, fake=fake)
+    fake.clock_now = lambda: h.moment.timestamp()
+    for session, pane in panes.items():
+        fake.reactions[session] = claude_exit(pane) if pane.agent == "claude" else codex_quit(pane)
+    return h
+
+
+def ticks_to_respawn(h: Harness, session: str, limit: int = 6) -> int:
+    for count in range(1, limit + 1):
+        h.tick(session)
+        if respawns(h):
+            return count
+        h.advance(5)
+    return 0
+
+
+def in_handoff_after_nudge(tmp_path: Path, session: str) -> Harness:
+    """``session`` was sent HANDOFF NOW one tick ago; it has now printed HANDOFF-DONE and is idle."""
+    pane = claude_pane(70) if session != "harness" else codex_pane(40)
+    h = reactive(tmp_path, **{session: pane})
+    if session == "harness":
+        for pct in (60, 20, 50, 10, 45, 5):  # three compactions -> HANDOFF NOW
+            pane.text = codex_text(pct)
+            h.tick(session)
+            h.advance(5)
+        pane.text = codex_text(8, DONE[session])
+    else:
+        h.tick(session)
+        h.advance(5)
+        pane.text = claude_text(72, ECHO, DONE[session])
+    assert h.state[session]["phase"] == "handoff" and h.fake.typed(session)[-1].startswith("HANDOFF NOW")
+    return h
+
+
+@pytest.mark.parametrize("session", ["infra-muse", "harness"])
+def test_handoff_done_to_relaunch_takes_one_tick_and_under_two_minutes(tmp_path: Path, session: str) -> None:
+    h = in_handoff_after_nudge(tmp_path, session)
+    started, stamps = h.moment, []
+    before_call(h.guard.tmux, "respawn-pane", lambda: stamps.append(h.moment))
+    ticks = ticks_to_respawn(h, session)
+    assert ticks == 1, f"HANDOFF-DONE -> relaunch took {ticks} ticks (0 = none in 6):\n" + "\n".join(h.logs)
+    expected = ["/exit", "1"] if session == "infra-muse" else ["/quit"]
+    assert h.fake.typed(session)[1:] == expected
+    assert (stamps[0] - started).total_seconds() < 120
+    assert h.state[session]["phase"] == "watch" and h.state[session]["last_handoff"]
+    assert "relaunch ctx_pct=" in h.logs[-1]
+
+
+def test_handoff_done_before_the_prompt_is_relaunched_in_the_same_tick(tmp_path: Path) -> None:
+    pane = claude_pane(66)
+    h = reactive(tmp_path, cto=pane)
+    h.tick("cto")
+    h.advance(5)
+    pane.text = claude_text(66, DONE["cto"])
+    started, stamps = h.moment, []
+    before_call(h.guard.tmux, "respawn-pane", lambda: stamps.append(h.moment))
+    assert ticks_to_respawn(h, "cto") == 1, "\n".join(h.logs)
+    assert h.fake.typed("cto") == ["/exit", "1"]  # no HANDOFF NOW: the lane had already handed off
+    assert (stamps[0] - started).total_seconds() < 120
+
+
+@pytest.mark.parametrize("when", ["/exit", "1"], ids=["before-the-dialog-answer", "before-the-relaunch"])
+def test_human_typing_during_the_exit_wait_stops_the_next_step(tmp_path: Path, when: str) -> None:
+    h = in_handoff_after_nudge(tmp_path, "cto")
+    fake = h.fake
+    assert isinstance(fake, ReactiveTmux)
+    if when == "1":  # the dialog is answered with no human present; the human arrives as the agent exits
+        fake.reactions["cto"]["1"].append((3, lambda: fake.clients.append(("cto", int(h.moment.timestamp())))))
+    else:
+        fake.reactions["cto"]["/exit"].append((1, lambda: fake.clients.append(("cto", int(h.moment.timestamp())))))
+    h.tick("cto")
+    assert h.fake.typed("cto")[1:] == ["/exit", *(["1"] if when == "1" else [])]
+    assert respawns(h) == []
+    assert "deferred: human possibly active in session cto" in h.logs[-1]
+    assert h.state["cto"]["phase"] == "handoff"
+
+
+def test_a_pane_changed_before_the_relaunch_still_refuses_it(tmp_path: Path) -> None:
+    h = in_handoff_after_nudge(tmp_path, "infra-muse")
+    pane = h.pane("infra-muse")
+    run, perturbed = h.guard.tmux.run, []
+
+    def launcher_restarts_at_the_relaunch_check(argv: list[str]) -> subprocess.CompletedProcess:
+        # The relaunch's human check runs after the poll's snapshot and before its fresh re-check.
+        if argv[:2] == ["tmux", "list-clients"] and pane.agent is None and not perturbed:
+            perturbed.append(True)
+            pane.launcher_running = True
+        return run(argv)
+
+    h.guard.tmux.run = launcher_restarts_at_the_relaunch_check
+    h.tick("infra-muse")
+    assert perturbed and respawns(h) == []
+    assert "pane changed before respawn-pane -k" in h.logs[-1] and h.logs[-1].endswith("retry next tick")
+    assert h.state["infra-muse"]["phase"] == "handoff"
+
+
+def test_an_agent_replaced_during_the_exit_wait_resets_the_lane(tmp_path: Path) -> None:
+    h = in_handoff_after_nudge(tmp_path, "cto")
+    pane = h.pane("cto")
+    fake = h.fake
+    assert isinstance(fake, ReactiveTmux)
+    fake.reactions["cto"]["/exit"] = [(5, lambda: setattr(pane, "agent_pid", "201"))]  # a human relaunch
+    h.tick("cto")
+    assert h.fake.typed("cto")[1:] == ["/exit"] and respawns(h) == []
+    assert h.state["cto"]["phase"] == "watch" and "agent changed" in h.logs[-1]
+
+
+@pytest.mark.parametrize(
+    ("stuck", "typed", "shows"),
+    [
+        ({"1": []}, ["/exit", "1"], "exit dialog still shown"),
+        ({"/exit": []}, ["/exit"], "agent still running"),
+        ("launcher", ["/exit", "1"], "agent gone, launcher still exiting"),
+    ],
+    ids=["at-the-dialog", "exit-swallowed", "launcher-never-exits"],
+)
+def test_no_progress_stops_at_the_bound_with_one_log_line(tmp_path: Path, stuck: object, typed: list[str], shows: str) -> None:
+    h = in_handoff_after_nudge(tmp_path, "infra-muse")
+    fake = h.fake
+    assert isinstance(fake, ReactiveTmux)
+    if stuck == "launcher":
+        fake.reactions["infra-muse"]["1"] = [(4, agent_exits(h.pane("infra-muse")))]
+    else:
+        fake.reactions["infra-muse"].update(stuck)  # type: ignore[arg-type]
+    started = h.moment
+    h.logs.clear()
+    h.tick("infra-muse")
+    assert h.fake.typed("infra-muse")[1:] == typed
+    assert respawns(h) == []
+    assert (h.moment - started).total_seconds() == 90
+    assert h.logs[-1] == f"infra handoff: no exit within 90s after {typed[-1]} ({shows}); left for the next tick"
+    assert sum("no exit within" in line for line in h.logs) == 1
+    assert h.state["infra-muse"]["phase"] == "handoff"
+
+
+def test_lanes_share_one_exit_window_and_never_starve_each_other(tmp_path: Path) -> None:
+    panes = {session: claude_pane(70) for session in ("infra-muse", "devops-muse", "cto")}
+    for index, pane in enumerate(panes.values()):  # one shell and one agent per pane
+        pane.pane_pid, pane.agent_pid = f"10{index}", f"20{index}"
+    h = reactive(tmp_path, **panes)
+    h.tick()
+    h.advance(5)
+    for session, pane in panes.items():
+        pane.text = claude_text(72, ECHO, DONE[session])
+    fake = h.fake
+    assert isinstance(fake, ReactiveTmux)
+    fake.reactions["infra-muse"]["1"] = []  # stuck at its dialog; it comes first in the lane order
+    fake.reactions["devops-muse"]["1"] = []
+    started, stamps = h.moment, []
+    before_call(h.guard.tmux, "respawn-pane", lambda: stamps.append(h.moment))
+    h.tick()
+    assert [call[call.index("-t") + 1] for call in respawns(h)] == ["=cto:"]
+    assert (stamps[0] - started).total_seconds() < 30  # cto's relaunch does not wait behind the stuck lanes
+    assert (h.moment - started).total_seconds() == 90  # one shared window, not 90 s per stuck lane
+    assert [line.split()[0] for line in h.logs if "no exit within" in line] == ["infra", "devops"]
+
+
+def test_unknown_telemetry_during_the_exit_wait_stops_without_input(tmp_path: Path) -> None:
+    h = in_handoff_after_nudge(tmp_path, "cto")
+    fake = h.fake
+    assert isinstance(fake, ReactiveTmux)
+    failed = subprocess.CompletedProcess([], 1, "", "process table unavailable")
+    fake.reactions["cto"]["/exit"].append((1, lambda: fake.override.update(ps=failed)))
+    h.tick("cto")
+    assert h.fake.typed("cto")[1:] == ["/exit"] and respawns(h) == []
+    assert "telemetry unavailable (process table" in h.logs[-1] and h.logs[-1].endswith("retry next tick")
+    assert h.state["cto"]["phase"] == "handoff"
+
+
+def test_state_is_saved_before_the_exit_wait(tmp_path: Path) -> None:
+    h = in_handoff_after_nudge(tmp_path, "infra-muse")
+    saved: list[dict] = []
+    h.guard.checkpoint = lambda state: saved.append(json.loads(json.dumps(state)))
+    h.tick("infra-muse")
+    assert len(saved) == 1
+    assert saved[0]["infra-muse"]["phase"] == "handoff" and saved[0]["infra-muse"]["quit_attempts"] == 1
+    assert respawns(h)  # the wait then carried the lane through to its relaunch
+
+
+def test_tick_main_checkpoints_to_the_state_file(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    fake, guards = FakeTmux(), []
+    real_tmux, real_guard = cg.Tmux, cg.Guard
+    monkeypatch.setattr(cg, "Tmux", lambda: real_tmux(run=fake.run, sleep=fake.sleep, clock=fake.clock))
+    monkeypatch.setattr(cg, "Guard", lambda **kwargs: guards.append(real_guard(**kwargs)) or guards[-1])
+    monkeypatch.setenv("LU_DRIVER_LANES_LOCAL", str(tmp_path / "absent.json"))
+    assert cg.main(["tick", "--state-dir", str(tmp_path / "s")]) == 0
+    guards[0].checkpoint({"cto": {"phase": "handoff"}})
+    assert cg.load_state(tmp_path / "s" / "state.json") == {"cto": {"phase": "handoff"}}

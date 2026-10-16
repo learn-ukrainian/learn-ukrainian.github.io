@@ -11,13 +11,17 @@ watch
     ``codex_drop_pct`` points between ticks). Either way the guard types
     ``HANDOFF NOW`` (and posts it to Fleet Comms) and enters ``handoff``. A
     lane that already printed or posted ``HANDOFF-DONE`` enters ``handoff``
-    at once, done, so it does not idle until the next threshold.
+    at once, done, and takes its first exit step in the same tick.
 handoff
     ``HANDOFF NOW`` is re-sent every ``handoff_renudge_seconds`` until
     ``HANDOFF-DONE`` arrives; once it has, and the pane is idle, the guard types
     ``/exit`` (Claude) or ``/quit`` (Codex) and retries it every
     ``quit_retry_seconds``. When the agent and its launcher have exited, the pane is respawned with
-    the lane's launcher (fresh session; it reads its goal file). The guard
+    the lane's launcher (fresh session; it reads its goal file). After typing
+    ``/exit``, ``/quit`` or the exit-dialog answer the guard re-reads the pane
+    every ``exit_poll_seconds`` for up to ``exit_wait_seconds`` (one window
+    shared by all lanes in the run) and takes the next step in the same run, so
+    a lane goes from HANDOFF-DONE to its relaunch in one tick (#10875). The guard
     never kills a driver; it alerts ``epics`` once after
     ``handoff_alert_seconds``.
 
@@ -85,6 +89,7 @@ CLAUDE_BUSY_RE = re.compile(r"esc to interrupt|ing… \(")
 # prompt quotes the token mid-sentence, so its echo never starts a line with it.
 DONE_LINE_RE = re.compile(r"^\s*(?:[●⏺•✦]\s*)?HANDOFF-DONE(?=\s|:|$)")
 EXIT_DIALOG = ("Move to background and exit", "Exit and stop tasks")
+DIALOG_ANSWER = "1"  # "Exit and stop tasks"
 # lstart is five words (``Fri Oct 16 12:10:40 2026``) only in the C locale; comm stays last.
 PS_ARGV = ["env", "LC_ALL=C", "ps", "-eo", "pid=,ppid=,lstart=,comm="]
 LSTART_FORMAT = "%a %b %d %H:%M:%S %Y"
@@ -253,6 +258,11 @@ class Guard:
     handoff_posted: Callable[[str, str], bool]
     local: dict[str, dict[str, Any]] = field(default_factory=dict)
     now: Callable[[], dt.datetime] = utcnow
+    # The bounded wait after an exit step (``_follow``) polls on these.
+    sleep: Callable[[float], None] = time.sleep
+    monotonic: Callable[[], float] = time.monotonic
+    # Persists the state before that wait, so a run stopped during it keeps the steps already typed.
+    checkpoint: Callable[[dict[str, Any]], None] = lambda _state: None
 
     def setting(self, key: str) -> int:
         return self.registry.settings[key]
@@ -322,6 +332,15 @@ class Guard:
             last_nudge=None,
         )
 
+    @staticmethod
+    def _changed(s: dict[str, Any], snap: PaneSnapshot) -> str:
+        """Why ``snap`` is not the pane and agent this handoff started with, or "" when it is."""
+        if s.get("pane_id") != snap.pane:
+            return f"pane changed {s.get('pane_id')} -> {snap.pane}"
+        if snap.agent is not None and s.get("agent_id") != snap.agent:
+            return f"agent changed {s.get('agent_id')} -> {snap.agent}"
+        return ""
+
     def _unchanged(self, lane: Lane, snap: PaneSnapshot, action: str, pct: int | None) -> bool:
         """Re-read pane and process table right before ``action``; True only if they still match ``snap``.
 
@@ -339,27 +358,30 @@ class Guard:
         return False
 
     # ---- one lane ------------------------------------------------------
-    def tick(self, lane: Lane, st: dict[str, Any]) -> None:
+    def tick(self, lane: Lane, st: dict[str, Any]) -> str | None:
+        """One step for ``lane``; returns the exit step typed (``/exit``, ``/quit`` or the dialog answer), if any."""
         s = st.setdefault(lane.session, {"phase": "watch"})
         s.setdefault("watch_since", iso(self.now()))
         if not self.tmux.session_exists(lane.session):
             self.log(f"{lane.name} {s['phase']}: tmux session {lane.session} missing")
-            return
+            return None
         try:
             text = self.tmux.capture(lane.target)
             pct = context_pct(lane.kind, text)
             snap = self.tmux.snapshot(lane.target, AGENT_COMMANDS[lane.kind])
             if s["phase"] == "watch":
-                self._watch(lane, s, text, pct, snap)
-            else:
-                self._handoff(lane, st, s, text, pct, snap)
+                return self._watch(lane, st, s, text, pct, snap)
+            return self._handoff(lane, st, s, text, pct, snap)
         except TelemetryUnavailable as exc:
             self.log(f"{lane.name} {s['phase']}: telemetry unavailable ({exc}); no input or respawn, retry next tick")
+            return None
 
-    def _watch(self, lane: Lane, s: dict[str, Any], text: str, pct: int | None, snap: PaneSnapshot) -> None:
+    def _watch(
+        self, lane: Lane, st: dict[str, Any], s: dict[str, Any], text: str, pct: int | None, snap: PaneSnapshot
+    ) -> str | None:
         if snap.agent is None:
             self.log(f"{lane.name} watch: agent not running in session {lane.session}")
-            return
+            return None
         if (s.get("agent_id"), s.get("pane_id")) != (snap.agent, snap.pane):
             # A new agent process (or pane) is a new session: earlier HANDOFF-DONE posts and compactions were
             # its predecessor's.
@@ -379,16 +401,18 @@ class Guard:
         if pane_done or self.handoff_posted(lane.sender, s["watch_since"]):
             self.log(f"{lane.name} watch: HANDOFF-DONE seen before the prompt -> handoff (done)")
             self._enter_handoff(s, pct, done=True)
-            return
+            # The lane has already handed off: take the first exit step now, not one timer period later.
+            return self._handoff(lane, st, s, text, pct, snap)
         if lane.kind == "claude":
             due = pct is not None and pct >= self.setting("claude_handoff_pct")
         else:
             due = s.get("compactions", 0) >= self.setting("codex_max_compactions") and "Compacting context" not in text
         if not due or self._human(lane):
-            return
+            return None
         self._enter_handoff(s, pct, done=False)
         self._nudge(lane, s, pct)
         self.log(f"{lane.name} watch -> handoff: HANDOFF NOW sent")
+        return None
 
     def _idle(self, lane: Lane, text: str) -> bool:
         tail = "\n".join(text.splitlines()[-8:])
@@ -398,13 +422,10 @@ class Guard:
 
     def _handoff(
         self, lane: Lane, st: dict[str, Any], s: dict[str, Any], text: str, pct: int | None, snap: PaneSnapshot
-    ) -> None:
+    ) -> str | None:
+        """One handoff step; returns the exit step typed (``/exit``, ``/quit`` or ``DIALOG_ANSWER``), if any."""
         waited = int(self._seconds_since(s.get("since")))
-        change = ""
-        if s.get("pane_id") != snap.pane:
-            change = f"pane changed {s.get('pane_id')} -> {snap.pane}"
-        elif snap.agent is not None and s.get("agent_id") != snap.agent:
-            change = f"agent changed {s.get('agent_id')} -> {snap.agent}"
+        change = self._changed(s, snap)
         if change:
             # A different pane or agent (a human relaunch, or a reused pid with a new start time) is a new
             # session: its predecessor's HANDOFF-DONE, exit attempts, timers and relaunch must not reach it.
@@ -417,22 +438,22 @@ class Guard:
                 "pane_id": snap.pane,
                 "done_marks": done_lines(text),
             }
-            return
+            return None
         if snap.agent is None:
             if snap.busy:
                 # Respawning now would kill the launcher's own exit path (lease release, handoff writes).
                 self.log(f"{lane.name} handoff ctx_pct={pct}: agent gone, launcher still exiting; relaunch next tick")
-                return
+                return None
             self._relaunch(lane, st, s, pct, snap)
-            return
-        tail = "\n".join(text.splitlines()[-8:])
-        if lane.kind == "claude" and any(marker in tail for marker in EXIT_DIALOG):
+            return None
+        if self._exit_dialog(lane, text):
             # "Move to background" keeps a lease-holding fork alive; always "Exit and stop tasks".
             # Delegate workers are separate tasks and keep running.
             if not self._human(lane) and self._unchanged(lane, snap, "the exit-dialog answer", pct):
-                self.tmux.type_into(lane.target, "1")
+                self.tmux.type_into(lane.target, DIALOG_ANSWER)
                 self.log(f"{lane.name} handoff ctx_pct={pct}: exit dialog -> chose Exit and stop tasks")
-            return
+                return DIALOG_ANSWER
+            return None
         pane_done = self._pane_done(s, done_lines(text), snap)
         done = bool(s.get("done_seen")) or pane_done or self.handoff_posted(lane.sender, s["since"])
         s["done_seen"] = done
@@ -443,7 +464,7 @@ class Guard:
         if done and idle and quit_due and not self._human(lane):
             command = "/exit" if lane.kind == "claude" else "/quit"
             if not self._unchanged(lane, snap, command, pct):
-                return
+                return None
             self.tmux.type_into(lane.target, command)
             s["quit_sent"] = iso(self.now())
             s["quit_attempts"] = int(s.get("quit_attempts", 0)) + 1
@@ -451,12 +472,12 @@ class Guard:
                 f"{lane.name} handoff ctx_pct={pct}: HANDOFF-DONE seen, pane idle -> {command} sent "
                 f"(attempt {s['quit_attempts']})"
             )
-            return
+            return command
         renudge_due = self._seconds_since(s.get("last_nudge")) >= self.setting("handoff_renudge_seconds")
         if not done and renudge_due and not self._human(lane):
             self._nudge(lane, s, pct)
             self.log(f"{lane.name} handoff ctx_pct={pct}: HANDOFF NOW re-sent (reminder {s['nudges']})")
-            return
+            return None
         self.log(
             f"{lane.name} handoff ctx_pct={pct} waited={waited}s done={done} idle={idle} "
             f"quit_sent={s.get('quit_sent')} nudges={s.get('nudges', 0)}"
@@ -469,6 +490,11 @@ class Guard:
                 f"handoff-alert-{lane.name}-{iso(self.now())}",
             )
             s["alerted"] = True
+        return None
+
+    def _exit_dialog(self, lane: Lane, text: str) -> bool:
+        tail = "\n".join(text.splitlines()[-8:])
+        return lane.kind == "claude" and any(marker in tail for marker in EXIT_DIALOG)
 
     def _relaunch(self, lane: Lane, st: dict[str, Any], s: dict[str, Any], pct: int | None, snap: PaneSnapshot) -> None:
         if self._human(lane):
@@ -497,13 +523,77 @@ class Guard:
         }
 
     def run(self, st: dict[str, Any], only: list[str] | None = None) -> None:
+        exiting: dict[str, tuple[Lane, str]] = {}
         for lane in self.registry.lanes:
             if only and lane.session not in only and lane.name not in only:
                 continue
             try:
-                self.tick(lane, st)
+                step = self.tick(lane, st)
             except Exception as exc:  # one lane must not block the others
                 self.log(f"{lane.name} error {type(exc).__name__}: {exc}")
+                continue
+            if step:
+                exiting[lane.session] = (lane, step)
+        self._follow(st, exiting)
+
+    def _follow(self, st: dict[str, Any], exiting: dict[str, tuple[Lane, str]]) -> None:
+        """Carry lanes just sent an exit step on to the dialog answer and the relaunch in this run (#10875).
+
+        Every ``exit_poll_seconds`` each lane is re-read; once its pane shows the exit
+        dialog, a different pane or agent, or an agent gone with nothing left running,
+        ``_handoff`` takes the next step with all of its checks (human activity, the
+        fresh-snapshot re-check, the launcher-still-exiting wait, refused lane config).
+        All lanes share one window of ``exit_wait_seconds``, so the wait adds at most
+        that much to a run however many lanes are exiting, and a lane stuck at its
+        dialog never holds up another. A lane with no next step by the end of the window
+        is logged once and left for the next tick; nothing is forced or killed.
+        """
+        if not exiting:
+            return
+        self.checkpoint(st)
+        wait = self.setting("exit_wait_seconds")
+        deadline = self.monotonic() + wait
+        seen: dict[str, str] = {}
+        while exiting:
+            remaining = deadline - self.monotonic()
+            if remaining <= 0:
+                for session, (lane, step) in exiting.items():
+                    self.log(
+                        f"{lane.name} handoff: no exit within {wait}s after {step} ({seen.get(session, 'not read')}); "
+                        "left for the next tick"
+                    )
+                return
+            self.sleep(min(self.setting("exit_poll_seconds"), remaining))
+            for session, (lane, step) in list(exiting.items()):
+                try:
+                    step, seen[session] = self._poll(lane, st, step)
+                except TelemetryUnavailable as exc:
+                    self.log(
+                        f"{lane.name} handoff: telemetry unavailable ({exc}); no input or respawn, retry next tick"
+                    )
+                    step = None
+                except Exception as exc:  # one lane must not block the others
+                    self.log(f"{lane.name} error {type(exc).__name__}: {exc}")
+                    step = None
+                if step:
+                    exiting[session] = (lane, step)
+                else:
+                    del exiting[session]
+
+    def _poll(self, lane: Lane, st: dict[str, Any], step: str) -> tuple[str | None, str]:
+        """Re-read a lane waiting after ``step``: (the step it still waits on or None when done, what it shows)."""
+        s = st[lane.session]
+        text = self.tmux.capture(lane.target)
+        pct = context_pct(lane.kind, text)
+        snap = self.tmux.snapshot(lane.target, AGENT_COMMANDS[lane.kind])
+        dialog = self._exit_dialog(lane, text)
+        gone = snap.agent is None and not snap.busy
+        # The dialog stays on screen for a moment after it is answered; it is never answered twice in one run.
+        if self._changed(s, snap) or gone or (dialog and step != DIALOG_ANSWER):
+            return self._handoff(lane, st, s, text, pct, snap), "next step taken"
+        if snap.agent is None:
+            return step, "agent gone, launcher still exiting"
+        return step, "exit dialog still shown" if dialog else "agent still running"
 
 
 # ---- state, log, Fleet Comms ------------------------------------------------
@@ -674,6 +764,7 @@ def main(argv: list[str] | None = None) -> int:
             send=fleet_sender(registry.guard_sender, log),
             handoff_posted=comms_reader(comms_db(log), log),
             local=local,
+            checkpoint=lambda current: save_state(state_path, current),
         )
         guard.run(state, args.lane)
         save_state(state_path, state)

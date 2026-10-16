@@ -209,8 +209,18 @@ local config described in `docs/runbooks/maintenance-window.md`.
 - `learn-ukrainian-context-guard.service` + `.timer`: every 5 minutes
   (`OnCalendar=*:0/5`) runs `scripts.ops.context_guard tick`. Claude lanes
   hand off at 70% context; Codex lanes after three compactions. A lane that
-  prints or posts `HANDOFF-DONE` before the prompt is exited without waiting
-  for the threshold. In the handoff phase the guard re-sends `HANDOFF NOW`
+  prints or posts `HANDOFF-DONE` before the prompt is sent `/exit` or `/quit`
+  in that same tick, without waiting for the threshold. After typing `/exit`,
+  `/quit` or the exit-dialog answer, the guard re-reads the pane every 3
+  seconds (`exit_poll_seconds`) for up to 90 seconds (`exit_wait_seconds`)
+  and takes the next step (the dialog answer, then the relaunch) in the same
+  run, so a lane goes from the tick that sees `HANDOFF-DONE` to its relaunch
+  in one tick, under 2 minutes (#10875). The 90 seconds are one window shared
+  by all lanes in the run, which keeps the run well inside the service's
+  `TimeoutStartSec=4min`; a lane with no progress by then is logged once
+  (`no exit within 90s after …`) and continues on the next tick. Seeing
+  `HANDOFF-DONE` still waits for the timer: a line printed just after a tick
+  is seen up to 5 minutes later. In the handoff phase the guard re-sends `HANDOFF NOW`
   every 15 minutes, retries `/exit` or `/quit` every 10 minutes, logs
   `ctx_pct` on every tick, and types nothing while a human typed into that
   session within two minutes. Unknown state never acts: failed, timed-out

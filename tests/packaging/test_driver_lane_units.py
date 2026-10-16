@@ -3,12 +3,15 @@
 from __future__ import annotations
 
 import os
+import re
 import shutil
 import subprocess
 import sys
 from pathlib import Path
 
 import pytest
+
+from scripts.ops.driver_lanes import load_registry
 
 PACKAGING = Path(__file__).resolve().parents[2] / "packaging" / "systemd"
 UNITS = (
@@ -60,3 +63,14 @@ def test_rendered_units_pass_systemd_analyze_verify(tmp_path: Path) -> None:
         assert result.returncode == 0, (mode, result.stderr)
         assert "learn-ukrainian-context-guard" not in result.stderr
         assert "learn-ukrainian-lane-relaunch" not in result.stderr
+
+
+def test_guard_exit_wait_fits_inside_the_service_start_timeout() -> None:
+    """The bounded exit wait (#10875) is one window per run; it must leave the rest of the run inside the timeout."""
+    service = _text("learn-ukrainian-context-guard.service")
+    timeout = re.search(r"^TimeoutStartSec=(\d+)min$", service, re.MULTILINE)
+    assert timeout, "TimeoutStartSec must be set in whole minutes"
+    settings = load_registry().settings
+    # At most half the start timeout goes to the exit wait; the lane passes and final steps get the rest.
+    assert settings["exit_wait_seconds"] * 2 <= int(timeout.group(1)) * 60
+    assert 0 < settings["exit_poll_seconds"] <= settings["exit_wait_seconds"]
