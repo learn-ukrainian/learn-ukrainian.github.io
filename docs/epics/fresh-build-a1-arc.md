@@ -73,9 +73,7 @@ The slug `when-and-where` and the position number stay.
 
 **D5 — A pronunciation strand runs through the whole level**, not only the first four modules:
 a short trainer inside a lesson roughly every sixth module (и; soft consonants; р; intonation;
-`-шся` / `-ться`), using the ULP trainer videos that are in the corpus. Position 3 owns
-syllables (`:588`). Position 6 owns stressed/unstressed vowel pronunciation, including
-[е], [и] (`:578-579`); positions 20 and 28 recycle this pronunciation duty. Each trainer uses taught inventory.
+`-шся` / `-ться`; unstressed е / и), using the ULP trainer videos that are in the corpus.
 
 ## 3. Grammar at A1: system or chunk
 
@@ -125,7 +123,7 @@ pedagogy grounds the progression only and is never copied as learner text.
 | 2 | `sounds-letters-and-hello` | A1.1 | Greet and take a first spoken turn; connect useful words with letters and supported writing | **12 letters**: А Е И І О М Н В П Р Т Я; stress and intonation from first speech; statement, question and exclamation contours (`:586`, `:596`) | Li, S, W (supported copying) | 5 |
 | 3 | `who-am-i` | A1.1 | Introduce yourself and ask identity; common professions and origin phrases | **9 letters**: Д З К Л С У Х ь Г; hard/soft contrast and hardness before [е]; introduce voiced/voiceless base-pair families д–т, з–с, г–х; recycle stress and intonation; syllables (`:588`) | Li, S, W (`:485`) | 4 |
 | 4 | `my-family` | A1.1 | Introduce people in a chosen family photo or equivalent using supported possessive phrases | **5 letters**: Б Й Ї Ю Є; apostrophe; continue voiced/voiceless base-pair family б–п; recycle stress and intonation | Li, S, W (captions) | 4 |
-| 5 | `reading-ukrainian` | A1.1 | Complete the alphabet through useful labels and short exchanges; decode unfamiliar combinations of taught letters | **7 letters**: Ґ Ж Ч Ш Щ Ц Ф; дж and дз; complete voiced/voiceless base-pair families ґ–к, ж–ш, дж–ч, дз–ц; alphabet order and letter names; capital/small letters and recognising handwritten letters (`:571-572`) | Li, S, R, W (match printed/handwritten capitals and small letters; use capitals in Київ/київський and Україна/українець; complete writing own and other names/surnames; copy familiar labels; `:571-572`, `:343-344`, `:362-365`) | 5 |
+| 5 | `reading-ukrainian` | A1.1 | Complete the alphabet through useful labels and short exchanges; decode unfamiliar combinations of taught letters | **7 letters**: Ґ Ж Ч Ш Щ Ц Ф; дж and дз; complete voiced/voiceless base-pair families ґ–к, ж–ш, дж–ч, дз–ц; alphabet order and letter names; capital/small letters and recognising handwritten letters (`:571-572`) | Li, S, R, W (match printed/handwritten capitals and small letters; use capitals in Київ/київський and Україна/українець; complete writing own and other names/surnames; copy familiar labels; `:343-344`, `:362-365`) | 5 |
 
 All 33 letters are introduced exactly once at positions 2–5. Later positions recycle
 them. Printed words follow their constituent letter introductions inside each module;
@@ -149,7 +147,7 @@ Skills duty = the Standard skill the module must exercise beyond its language po
 | 7 | `checkpoint-first-contact` | A1.1 | Complete an integrated first-contact task with previously introduced language | Li, S, R, W | 2 |
 | 8 | `things-have-gender` | A1.2 | Identify familiar belongings using noun gender and the complete singular possessive set, including наш, ваш, їхній | Li, S, R (`:661-662`) | 3 |
 | 9 | `what-is-it-like` | A1.2 | Describe and identify familiar objects using nominative adjective agreement | Li, S, R, W (describe a familiar object with 1-2 features; `:358-360`) | 3 |
-| 10 | `colors` | A1.2 | Use colours and agreeing hard/soft-group nominative descriptions of objects and appearance | Li, S, R, W (short description of a friend or parent; `:355-357`) (`:484`, `:355-357`) | 2 |
+| 10 | `colors` | A1.2 | Use colours and agreeing hard/soft-group nominative descriptions of objects and appearance | Li, S, R, W (short description of a friend or parent; `:355-357`) (`:484`) | 2 |
 | 11 | `how-many` | A1.2 | Understand and say numbers for prices, age, phone numbers | Li (numbers by ear) | 4 |
 | 12 | `this-and-that` | A1.2 | Point at things: цей / той in three genders | — | 2 |
 | 13 | `many-things` | A1.2 | Go from one to many: nominative nouns with vowel alternation, agreeing adjectives, possessives and demonstratives | — (`:606-609`, `:636-638`, `:666-667`) | 3 |
@@ -287,7 +285,7 @@ No lesson prose or replacement plan is authorized by this revision.
 Listening and speaking begin at position 2, with stress and intonation. Hard/soft
 contrast belongs to 3; the apostrophe to 4; дж and дз, alphabet order, letter names,
 capital/small letters and recognising handwritten letters to 5. Line breaking
-(`:588`) remains owned by the writing strand at position 20, outside the tables.
+(`:588`) remains owned by the writing strand at position 20, in the §5 table.
 Prosody and useful exchanges recycle through 6–10. Printed words follow the
 introduction of their constituent letters; supported oral chunks may precede decoding.
 

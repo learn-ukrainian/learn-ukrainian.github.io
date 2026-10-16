@@ -85,7 +85,7 @@ def test_opening_rows_own_phase_and_skills() -> None:
 def test_standard_line_refs_parsing() -> None:
     records = {r["position"]: r for r in _records()}
     assert records[3]["standard_line_refs"] == [[588, 588], [485, 485]]
-    assert records[5]["standard_line_refs"] == [[571, 572], [571, 572], [343, 344], [362, 365]]
+    assert records[5]["standard_line_refs"] == [[571, 572], [343, 344], [362, 365]]
     assert records[34]["standard_line_refs"] == [[523, 525], [345, 346], [352, 352], [361, 361], [377, 377]]
     assert records[28]["standard_line_refs"] == []
 
@@ -288,7 +288,7 @@ def test_loader_raises_on_inverted_line_ref_range(tmp_path: Path) -> None:
     """The schema cannot express start <= end with prefixItems; the loader checks it."""
     data = yaml.safe_load(ARC_YAML.read_text(encoding="utf-8"))
     refs = data["positions"][4]["standard_line_refs"]
-    assert refs == [[571, 572], [571, 572], [343, 344], [362, 365]]
+    assert refs == [[571, 572], [343, 344], [362, 365]]
     refs[0] = [572, 571]
     inverted = tmp_path / "_arc.yaml"
     inverted.write_text(yaml.safe_dump(data, allow_unicode=True), encoding="utf-8")
