@@ -234,11 +234,36 @@ def test_runbook_persistent_dropin_is_the_only_path() -> None:
     assert "cpu.max" in rollback and "stop and report to" in rollback
 
 
+def test_runbook_rollback_checks_first_cpu_max_field_and_snapshots() -> None:
+    rollback = " ".join(_cpu_section().split("### Rollback", 1)[1].split())
+    assert "`max 100000`" in rollback
+    assert "compare the first field with `max`" in rollback
+    assert "treat `max <period>` as cleared" in rollback
+    assert "`cpu.weight` back to the default `100`" in rollback
+    assert "equal the snapshot recorded before the change" in rollback
+    condition, action = rollback.split("stop and report to the driver", 1)
+    condition = condition.rsplit("If the first field", 1)[1]
+    for needle in ("of `cpu.max` is not `max`", "`MemoryHigh`", "`MemoryMax`", "`MemorySwapMax`"):
+        assert needle in condition, needle
+    assert "do not add a runtime override" in action
+
+
+def test_runbook_verify_states_the_apply_time_cpu_max_line() -> None:
+    verify = " ".join(_cpu_section().split("### Verify", 1)[1].split("### Observe", 1)[0].split())
+    assert "`<quota> <period>`" in verify
+    assert "apply-time expected line is `1200000 100000`" in verify
+    assert "`cpu.weight` must read `50`" in verify
+
+
 def test_runbook_quota_rationale_is_an_average_cap_not_a_reservation() -> None:
     section = _cpu_section()
     assert "average cap per period" in section
     assert "does not reserve any CPUs" in section
-    assert "only while the parent is contended" in section
+    assert "only makes the slice yield CPU to its siblings while the parent cgroup is contended" in " ".join(
+        section.split()
+    )
+    assert "is not a cap" in section
+    assert "1.2 CPU-seconds per 100 ms, then" in " ".join(section.split())
 
 
 def test_runbook_publishes_no_host_sizing() -> None:
@@ -252,6 +277,9 @@ def test_cpu_example_does_not_claim_accounting_enforces_the_quota() -> None:
     text = " ".join(CPU_EXAMPLE.read_text().replace("# ", " ").split())
     assert "and the quota are enforced" not in text
     assert "enforced by CPUQuota= below, through cpu.max" in text
+    assert "only while the parent cgroup is contended" in text
+    assert "not a cap" in text
+    assert "host is busy" not in text
 
 
 # sha256 of scripts/ops/lu_slice_apply.sh at the #10735 base commit. The CPU

@@ -160,10 +160,11 @@ slice and every descendant together may use up to 1.2 CPU-seconds in each 100 ms
 window, a long-run average of twelve CPUs. It does not reserve any CPUs for
 interactive services. On a host with more than twelve CPUs the slice can still
 run on all of them at once until its quota for the window is spent, and is then
-throttled until the next window. `CPUWeight=50` (default 100) is the only
-protection for interactive services: it makes the slice yield to its siblings,
-and only while the parent is contended. Re-measure before approval and after any
-workload change.
+throttled until the next window. That quota (1.2 CPU-seconds per 100 ms, then
+throttle) is the real cap. `CPUWeight=50` (default 100) is not a cap: it only
+makes the slice yield CPU to its siblings while the parent cgroup is contended,
+and does nothing when the parent has idle CPU. Re-measure before approval and
+after any workload change.
 
 Semantics: systemd percentages are per CPU, so `100%` is one CPU and `1200%` is
 twelve. `CPUQuota` caps CPU time per `CPUQuotaPeriodSec` for the whole slice and
@@ -205,8 +206,9 @@ systemctl --user show lu.slice -p CPUAccounting -p CPUQuotaPerSecUSec -p CPUQuot
 
 Expect `CPUAccounting=yes`, `CPUQuotaPerSecUSec=12s`, `CPUQuotaPeriodUSec=100ms`,
 `CPUWeight=50`, and `MemoryHigh`, `MemoryMax`, `MemorySwapMax` equal to the
-snapshot recorded before the change. Then read the slice's cgroup: `cpu.max` must read
-`1200000 100000` and `cpu.weight` must read `50`.
+snapshot recorded before the change. Then read the slice's cgroup: `cpu.max` is
+`<quota> <period>`, and the apply-time expected line is `1200000 100000`;
+`cpu.weight` must read `50`.
 
 ### Observe
 
@@ -230,11 +232,16 @@ systemctl --user show lu.slice -p CPUAccounting -p CPUQuotaPerSecUSec -p CPUQuot
 ```
 
 Remove only `20-cpu.conf`; the `10-limits.conf` memory drop-in is never touched.
-Re-read the manager values and the slice's `cpu.max` and `cpu.weight`: they are
-expected to return to the unlimited defaults (`CPUQuotaPerSecUSec=infinity`,
-`cpu.max` reading `max`, the default weight), with the memory properties equal to
-the recorded snapshot. If `cpu.max` does not return to `max`, stop and report to
-the driver; do not add a runtime override.
+Re-read the manager values and the slice's `cpu.max` and `cpu.weight`. They are
+expected to return to the unlimited defaults: `CPUQuotaPerSecUSec=infinity`,
+`cpu.weight` back to the default `100`, and `cpu.max` unlimited. On cgroup v2
+`cpu.max` is `<quota> <period>`, so an unlimited slice reads `max 100000` (the
+period is kept); compare the first field with `max` and treat `max <period>` as
+cleared. The memory properties must equal the snapshot recorded before the change.
+
+If the first field of `cpu.max` is not `max`, or if `MemoryHigh`, `MemoryMax` or
+`MemorySwapMax` differ from that snapshot, stop and report to the driver; do not
+add a runtime override.
 
 ## Death and admission behavior
 
