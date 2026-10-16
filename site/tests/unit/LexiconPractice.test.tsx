@@ -1092,7 +1092,9 @@ describe('LexiconPractice', () => {
         fireEvent.click(await screen.findByRole('button', { name: 'Послухати вимову' }));
         await screen.findByRole('button', { name: 'Зупинити відтворення' });
         pause.mockClear();
-        fireEvent.click(screen.getByTestId('practice-advance-button'));
+        // The advance button mounts once the rated outcome commits; a synchronous getBy
+        // here lost that race under CPU contention (#10517), so wait for it.
+        fireEvent.click(await screen.findByTestId('practice-advance-button'));
         await waitFor(() => expect(view.container.querySelector('[data-activity="flashcard"]')).toHaveAttribute('data-rated', 'false'));
         expect(pause).toHaveBeenCalled();
         expect(screen.getByRole('button', { name: 'Послухати вимову' })).toBeVisible();
@@ -6657,24 +6659,42 @@ describe('LexiconPractice', () => {
       );
     });
 
-    test('#6132 mixed-mode session started from a custom deck never draws a lemma outside it', async () => {
-      // 'knyha'/'robota' are IN the deck; 'misto'/'shkola' (sampleDeck's other two
-      // lemmas) are NOT. Only 'knyha' carries cloze — proving the MIXED path (not
-      // just a single mode card, already covered above) respects the deck filter
-      // whichever of its modes gets drawn.
-      const customSet: CustomSet = {
-        id: 'test_custom_deck_mixed',
-        title: 'Дві слова',
-        lemma_keys: ['книга', 'робота'],
-        cloze_items: [],
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-        device_id: 'test_device',
-        revision: 1,
-      };
-      localStorage.setItem(CUSTOM_SETS_STORAGE_KEY, JSON.stringify([customSet]));
+    // #10517 AC-01 measurement (vitest 5.0.2, happy-dom, this file alone, 228 tests):
+    //  - This was ONE test looping 10 full render + settings + mixed-start draws. Per draw
+    //    (instrumented): render 40-160 ms, getByRole('button', {name}) 105-150 ms (the
+    //    accessible-name scan dominates, even on a 51-node DOM), three clicks 15-90 ms
+    //    each => ~350-420 ms, so 3.5-4.2 s per test unloaded (3 runs: 3594/4220/3515 ms),
+    //    already 70-85% of the 5 s budget. It was the only test over 1 s unloaded; the
+    //    next slowest is 0.6-1.0 s.
+    //  - Slow path = test structure (the loop), not the code under test: no store seeding
+    //    or per-test setup cost (localStorage writes are microseconds). Pinned to CPUs 0,1
+    //    with 4 busy loops, every draw slows ~1.4x and the test lands at 5140-5343 ms =>
+    //    "Test timed out in 5000ms" in 3/3 runs, and the zombie loop kept running into the
+    //    next test ("#6132 mode grid ..." then failed to find /Лічильник/, 1/3 runs).
+    //    Every other test stayed under 2.7 s under the same contention.
+    //  - Fix: the 10 draws are independent random picks, so each is now its own test
+    //    (same 10 draws, identical assertions, ~0.4 s each, timeouts isolated per draw).
+    //  - lexicon-api-routes.test.ts / atlas-db-read.test.ts had a different instance of
+    //    the same class (a ~3-11 s cold fixture build inside a 5 s test); they already
+    //    hoist it into beforeAll (#10640/#10645) and stay under 1.6 s per test contended.
+    describe('#6132 mixed-mode session started from a custom deck never draws a lemma outside it', () => {
+      test.each(Array.from({ length: 10 }, (_unused, index) => index + 1))('draw %i of 10', async () => {
+        // 'knyha'/'robota' are IN the deck; 'misto'/'shkola' (sampleDeck's other two
+        // lemmas) are NOT. Only 'knyha' carries cloze — proving the MIXED path (not
+        // just a single mode card, already covered above) respects the deck filter
+        // whichever of its modes gets drawn.
+        const customSet: CustomSet = {
+          id: 'test_custom_deck_mixed',
+          title: 'Дві слова',
+          lemma_keys: ['книга', 'робота'],
+          cloze_items: [],
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+          device_id: 'test_device',
+          revision: 1,
+        };
+        localStorage.setItem(CUSTOM_SETS_STORAGE_KEY, JSON.stringify([customSet]));
 
-      for (let attempt = 0; attempt < 10; attempt += 1) {
         const user = userEvent.setup();
         const { container, unmount } = render(
           <LexiconPractice initialDeck={customDeckMixedFixture()} autoStart={false} />,
@@ -6694,7 +6714,7 @@ describe('LexiconPractice', () => {
         }
 
         unmount();
-      }
+      });
     });
 
     test('#6132 mode grid shows a real per-mode count, honest about which modes are empty', async () => {
