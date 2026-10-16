@@ -19,9 +19,12 @@ from typing import Any
 
 import pytest
 import yaml
+from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
 import scripts.api.main as api_main
+from scripts.api.knowledge_router import router as knowledge_router
+from scripts.api.monitor_context import fixture_context
 from scripts.audit import check_research_registry as crr
 from scripts.research import registry as reg
 
@@ -96,6 +99,92 @@ def _write_registry(root: Path, records: list[dict[str, Any]], *, header: str = 
     refs.mkdir(parents=True, exist_ok=True)
     doc = yaml.safe_dump({"schema_version": 1, "records": records}, sort_keys=False, allow_unicode=True)
     (refs / "research-registry.yaml").write_text(header + doc, "utf-8")
+
+
+def _assert_registry_unavailable(response):
+    assert response.status_code == 503
+    payload = response.json()
+    assert payload["detail"] == {"status": "unknown", "reason": "registry_unavailable"}
+    assert set(payload) <= {"detail", "error", "error_id"}
+    if "error" in payload:
+        assert payload["error"] == "http_error"
+    assert "etag" not in response.headers
+
+
+@pytest.mark.parametrize("route", ["manifest", "cold-start"])
+@pytest.mark.parametrize(
+    "failure", ["missing", "unreadable", "malformed", "schema", "semantic", "read_fault", "unexpected"]
+)
+def test_discovery_authority_failure_overrides_success_etag(tmp_path, monkeypatch, route, failure):
+    app = FastAPI()
+    app.state.ctx = fixture_context(tmp_path)
+    app.include_router(knowledge_router, prefix="/api/knowledge")
+    isolated = TestClient(app)
+    monkeypatch.setenv(reg.ENV_FLAG, "true")
+    record = _make_record(tmp_path, "public", cold_start_roles=["quality"])
+    _write_registry(tmp_path, [record])
+    path = tmp_path / "docs/references/research-registry.yaml"
+    url = f"/api/knowledge/{route}?role=quality"
+    healthy = isolated.get(url)
+    assert healthy.status_code == 200
+    assert [r["id"] for r in healthy.json()["records"]] == ["public"]
+    etags = [healthy.headers["etag"]]
+    empty = isolated.get(f"/api/knowledge/{route}?role=unmatched")
+    assert empty.status_code == 200
+    assert empty.content == b'{"enabled":true,"records":[]}'
+    etags.append(empty.headers["etag"])
+    if failure == "missing":
+        path.unlink()
+    elif failure == "unreadable":
+        path.unlink()
+        path.mkdir()
+    elif failure == "malformed":
+        path.write_text("this: [is not: valid: yaml", "utf-8")
+    elif failure == "schema":
+        _write_registry(tmp_path, [{"id": "private-id", "not": "a valid record"}])
+    elif failure == "semantic":
+        record["state"] = "adopted"
+        record["reason"] = None
+        _write_registry(tmp_path, [record])
+    elif failure == "read_fault":
+        original = Path.read_text
+
+        def read_text(self, *args, **kwargs):
+            if self == path:
+                raise PermissionError("private content /private/location credential")
+            return original(self, *args, **kwargs)
+
+        monkeypatch.setattr(Path, "read_text", read_text)
+    else:
+        def broken_loader(**kwargs):
+            raise RuntimeError("private content /private/location credential")
+
+        monkeypatch.setattr(reg, "load_runtime", broken_loader)
+    for etag in (None, *etags):
+        headers = {"If-None-Match": etag} if etag else {}
+        _assert_registry_unavailable(isolated.get(url, headers=headers))
+    record_response = isolated.get("/api/knowledge/record/public")
+    assert record_response.status_code == 404
+    assert record_response.json() == {"detail": "Not Found"}
+
+
+@pytest.mark.parametrize("route", ["manifest", "cold-start"])
+@pytest.mark.parametrize("records", [False, True])
+def test_healthy_discovery_empty_context_and_no_match(tmp_path, monkeypatch, route, records):
+    app = FastAPI()
+    app.state.ctx = fixture_context(tmp_path)
+    app.include_router(knowledge_router, prefix="/api/knowledge")
+    isolated = TestClient(app)
+    monkeypatch.setenv(reg.ENV_FLAG, "true")
+    _write_registry(tmp_path, [_make_record(tmp_path, "public", cold_start_roles=["quality"])] if records else [])
+    for query in ("", "?role=unmatched"):
+        url = f"/api/knowledge/{route}{query}"
+        response = isolated.get(url)
+        assert response.status_code == 200
+        assert response.content == b'{"enabled":true,"records":[]}'
+        cached = isolated.get(url, headers={"If-None-Match": response.headers["etag"]})
+        assert cached.status_code == 304
+        assert cached.content == b""
 
 
 @pytest.fixture
@@ -212,7 +301,10 @@ def test_disabled_loader_not_invoked(tmp_path, monkeypatch):
         raise AssertionError("load_runtime must not be called while disabled")
 
     monkeypatch.setattr(reg, "load_runtime", _boom)
-    assert client.get("/api/knowledge/manifest").status_code == 200
+    for route in ("manifest", "cold-start"):
+        response = client.get(f"/api/knowledge/{route}")
+        assert response.status_code == 200
+        assert response.content == b'{"enabled":false,"records":[]}'
     assert client.get("/api/knowledge/record/x").status_code == 404
     assert reg.research_manifest_component() is None
 
@@ -220,21 +312,20 @@ def test_disabled_loader_not_invoked(tmp_path, monkeypatch):
 # --------------------------------------------------------------------------- #
 # 3. Fail-open: enabled + missing/malformed registry or loader exception
 # --------------------------------------------------------------------------- #
-def test_enabled_missing_registry_fails_open(reg_root):
+def test_enabled_missing_registry_reports_unknown(reg_root):
     # No registry file written at all.
     km = client.get("/api/knowledge/manifest?role=quality")
-    assert km.status_code == 200
-    assert km.json() == {"enabled": True, "records": []}
+    _assert_registry_unavailable(km)
     assert client.get("/api/knowledge/record/anything").status_code == 404
     assert reg.research_manifest_component() is None
 
 
-def test_enabled_malformed_registry_fails_open(reg_root):
+def test_enabled_malformed_registry_reports_unknown(reg_root):
     refs = reg_root / "docs" / "references"
     refs.mkdir(parents=True, exist_ok=True)
     (refs / "research-registry.yaml").write_text("this: [is not: valid: yaml", "utf-8")
     assert reg.load_runtime(root=reg_root) is None
-    assert client.get("/api/knowledge/manifest").status_code == 200
+    _assert_registry_unavailable(client.get("/api/knowledge/manifest"))
 
 
 def test_enabled_schema_invalid_fails_open(reg_root):
@@ -675,7 +766,7 @@ def test_select_bodies_inherits_toctou_refusal(reg_root):
 # 17. Fix 2 (PR #4988 review): fail-open containment — a pathological parser
 # failure or an unexpected loader exception must never surface as an API 500.
 # --------------------------------------------------------------------------- #
-def test_enabled_deeply_nested_yaml_recursion_fails_open_not_500(reg_root):
+def test_enabled_deeply_nested_yaml_recursion_reports_unknown(reg_root):
     refs = reg_root / "docs" / "references"
     refs.mkdir(parents=True, exist_ok=True)
     depth = 20000
@@ -684,8 +775,7 @@ def test_enabled_deeply_nested_yaml_recursion_fails_open_not_500(reg_root):
     assert reg.load_runtime(root=reg_root) is None
 
     km = client.get("/api/knowledge/manifest")
-    assert km.status_code == 200
-    assert km.json() == {"enabled": True, "records": []}
+    _assert_registry_unavailable(km)
 
     assert client.get("/api/knowledge/record/anything").status_code == 404
 
@@ -694,15 +784,14 @@ def test_enabled_deeply_nested_yaml_recursion_fails_open_not_500(reg_root):
     assert "research" not in sm.json()
 
 
-def test_enabled_injected_loader_exception_fails_open_not_500(reg_root, monkeypatch):
+def test_enabled_injected_loader_exception_reports_unknown(reg_root, monkeypatch):
     def _boom(**_kwargs):
         raise RuntimeError("injected failure")
 
     monkeypatch.setattr(reg, "load_runtime", _boom)
 
     km = client.get("/api/knowledge/manifest")
-    assert km.status_code == 200
-    assert km.json() == {"enabled": True, "records": []}
+    _assert_registry_unavailable(km)
 
     assert client.get("/api/knowledge/record/anything").status_code == 404
 
@@ -738,8 +827,7 @@ def test_adopted_null_consumer_hides_whole_registry(reg_root):
     assert reg.load_runtime(root=reg_root) is None
     assert reg.research_manifest_component() is None
     resp = client.get("/api/knowledge/manifest?role=quality")
-    assert resp.status_code == 200
-    assert resp.json() == {"enabled": True, "records": []}
+    _assert_registry_unavailable(resp)
     assert client.get("/api/knowledge/record/aaa").status_code == 404
 
 
@@ -751,7 +839,7 @@ def test_duplicate_record_id_hides_whole_registry(reg_root):
     assert reg.load_runtime(root=reg_root) is None
     assert reg.research_manifest_component() is None
     resp = client.get("/api/knowledge/manifest?role=quality")
-    assert resp.json() == {"enabled": True, "records": []}
+    _assert_registry_unavailable(resp)
     assert client.get("/api/knowledge/record/aaa").status_code == 404
 
 

@@ -1,4 +1,4 @@
-"""Sources browse/search endpoints backed by SQLite source helpers."""
+"""Sources browse/search endpoints; unavailable search authority returns a sanitized 503."""
 
 from __future__ import annotations
 
@@ -8,7 +8,7 @@ import sys
 from collections.abc import Callable
 from pathlib import Path
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.responses import JSONResponse
 
 from .config import PROJECT_ROOT
@@ -32,15 +32,16 @@ def _image_dir(ctx: MonitorContext) -> Path:
 
 
 def _run_sources_query[T](ctx: MonitorContext, callback: Callable[[], T]) -> T:
-    """Run a RAG query against the context-owned sources handle."""
+    """Run a RAG query with a noncreating, read-only context-owned connection."""
     from rag.query import sources_db as query_sources_db  # noqa: PLC0415 — optional RAG dependency
 
     handle = ctx.stores.sources_db
     if handle is None or not handle.path.exists():
         raise FileNotFoundError("data/sources.db not found")
-    connection = handle.connect()
+    connection = handle.connect(read_only=True)
     connection.row_factory = sqlite3.Row
     try:
+        connection.execute("PRAGMA schema_version").fetchone()
         with query_sources_db.using_connection(connection):
             return callback()
     finally:
@@ -65,8 +66,10 @@ async def search_text(
                 q, grade=grade, subject=subject, trust_tier=trust_tier, limit=limit
             ),
         )
-    except FileNotFoundError:
-        return []
+    except (OSError, sqlite3.DatabaseError) as exc:
+        if isinstance(exc, sqlite3.ProgrammingError):
+            raise
+        raise HTTPException(status_code=503, detail={"status": "unknown", "reason": "sources_unavailable"}) from None
 
 
 @router.get("/search_literary")
@@ -85,8 +88,10 @@ async def search_literary(
             ctx,
             lambda: _search_literary(q, work=work, genre=genre, period=period, limit=limit),
         )
-    except FileNotFoundError:
-        return []
+    except (OSError, sqlite3.DatabaseError) as exc:
+        if isinstance(exc, sqlite3.ProgrammingError):
+            raise
+        raise HTTPException(status_code=503, detail={"status": "unknown", "reason": "sources_unavailable"}) from None
 
 
 @router.get("/stats")

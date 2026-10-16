@@ -280,10 +280,14 @@ def test_cold_start_endpoint_disabled_and_missing_role(tmp_path, monkeypatch):
     monkeypatch.setattr(api_main.app.state, "ctx", _ctx_with_live_repo_root(tmp_path))
     monkeypatch.setenv(reg.ENV_FLAG, "false")
     _write_registry(tmp_path, [_make_record(tmp_path, "r1", cold_start_roles=["quality"])])
-    assert client.get("/api/knowledge/cold-start", params={"role": "quality"}).json() == {
-        "enabled": False,
-        "records": [],
-    }
+
+    def forbidden_loader(**kwargs):
+        pytest.fail("disabled cold-start called the registry loader")
+
+    monkeypatch.setattr(reg, "load_runtime_safe", forbidden_loader)
+    response = client.get("/api/knowledge/cold-start", params={"role": "quality"})
+    assert response.status_code == 200
+    assert response.content == b'{"enabled":false,"records":[]}'
 
 
 def test_cold_start_endpoint_etag_304(reg_root):
@@ -294,6 +298,8 @@ def test_cold_start_endpoint_etag_304(reg_root):
         "/api/knowledge/cold-start", params={"role": "quality"}, headers={"If-None-Match": etag}
     )
     assert second.status_code == 304
+    assert second.content == b""
+    assert second.headers["ETag"] == etag
 
 
 # --------------------------------------------------------------------------- #

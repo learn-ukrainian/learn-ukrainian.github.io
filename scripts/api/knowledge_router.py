@@ -23,8 +23,9 @@ serving disable:
                                             tracked names and readable tracked text.
                                             [ungated; never behind the kill switch]
 
-The registry endpoints are deterministic and fail-open: disabled or a failed registry
-load yields an empty/disabled projection (or a degraded monitor section), never a 500.
+Discovery is deterministic: disabled yields its disabled projection; an unavailable
+enabled registry yields a sanitized 503. Records retain generic 404 privacy, and
+the monitor retains degraded sections on load failure.
 ``/find`` shares only the URL prefix with the registry, not its schema or kill switch:
 it reports an invalid catalogue or a cut-off search inside its result, a bad request as
 a typed 422 and an unreadable repository as a typed 503.
@@ -72,6 +73,7 @@ def knowledge_manifest(
     top-5 / ≤1.5 KB pointers, sorted by record id, with a strong ETag over the exact
     response bytes. No task context yields zero records. Supports ``If-None-Match``
     for a bodyless 304.
+    An unavailable enabled registry returns a sanitized 503 before ETag matching.
     """
     root = monitor_ctx.roots.live_repo_root
     if not reg.is_enabled(root=root):
@@ -84,10 +86,9 @@ def knowledge_manifest(
 
     runtime = reg.load_runtime_safe(root=root)
     if runtime is None:
-        result = reg.empty_manifest_response()
-    else:
-        ctx = reg.normalize_context(role, task_family, track, owned_path)
-        result = reg.filtered_manifest(runtime, ctx)
+        raise HTTPException(status_code=503, detail={"status": "unknown", "reason": "registry_unavailable"})
+    ctx = reg.normalize_context(role, task_family, track, owned_path)
+    result = reg.filtered_manifest(runtime, ctx)
 
     if _matches_etag(request.headers.get("If-None-Match"), result.etag_hex):
         return Response(status_code=304, headers={"ETag": f'"{result.etag_hex}"'})
@@ -108,14 +109,16 @@ def knowledge_cold_start(
     ``cold_start_roles``. Disabled → HTTP 200 ``{"enabled":false,"records":[]}``.
     Enabled → pointers from ``cold_start_roles`` only, top-5 / ≤1.5 KB, sorted by
     record id, strong ETag over the exact response bytes, ``If-None-Match`` gives a
-    bodyless 304.
+    bodyless 304. An unavailable enabled registry returns a sanitized 503 first.
     """
     root = monitor_ctx.roots.live_repo_root
     if not reg.is_enabled(root=root):
         return _json_response(reg.disabled_manifest_bytes())
 
     runtime = reg.load_runtime_safe(root=root)
-    result = reg.empty_manifest_response() if runtime is None else reg.filtered_cold_start(runtime, role)
+    if runtime is None:
+        raise HTTPException(status_code=503, detail={"status": "unknown", "reason": "registry_unavailable"})
+    result = reg.filtered_cold_start(runtime, role)
 
     if _matches_etag(request.headers.get("If-None-Match"), result.etag_hex):
         return Response(status_code=304, headers={"ETag": f'"{result.etag_hex}"'})
