@@ -6,25 +6,56 @@ Conditional GETs follow GitHub's documented ETag protocol. No request is retried
 Only fully modelled argv/JSON fields translate; other commands retain their
 native gh semantics through the same bounded, colour-safe process transport.
 Stale JSON reads require allow_stale=True; binary responses are never cached.
+
+Every request path (REST, injected transports and native gh) is normalized once
+(``_normalize``) and admitted by one decision, ``_refusal``. Only GitHub's own
+Retry-After hold refuses a call that lands a PR; every local refusal is
+``github_rate_limited`` (exit 75) with a typed reason. A body is read only when that
+decision depends on it, whatever its size: it is captured once and exactly those bytes
+are sent. One that cannot be captured is refused before any send as
+``github_invalid_request`` with a typed reason, never classified by guess.
 """
 
 from __future__ import annotations
 
+import contextvars
+import email.utils
 import hashlib
+import io
 import json
+import math
 import os
 import re
 import sqlite3
+import stat
 import subprocess
+import sys
 import time
 from contextlib import contextmanager, suppress
 from dataclasses import dataclass, field
+from datetime import UTC
 from pathlib import Path
 from typing import Any
-from urllib.parse import quote, urlencode, urlsplit
+from urllib.parse import quote, quote_plus, urlencode, urlsplit
 
 RESERVE = 10
+"""GraphQL and search pools: a non-landing call is refused at or below this many remaining."""
+LANDING_RESERVE = 500
+"""Core pool: below this many remaining, what is left is kept for calls that land a PR."""
+REFUSAL_REASONS = frozenset({"retry_after", "secondary_hold", "core_below_landing_reserve", "pool_exhausted"})
+"""The closed set of reasons; every local refusal names exactly one."""
+SPILL_BYTES = 8 * 1024 * 1024
+"""Most bytes a spool (:func:`_spool`) keeps in memory before it moves to a private temporary file.
+
+It never limits a request: a body of any size is captured and sent whole.
+"""
+PREPARATION_ERRORS = frozenset({"body_unreadable", "body_not_replayable", "invalid_body_type"})
+"""The closed set of reasons a request whose admission needs its body is refused before any send."""
 ANSI = re.compile(rb"\x1b\[[0-?]*[ -/]*[@-~]")
+# One response's status line and headers as ``gh api --include`` frames them, within the
+# limits ``http.client`` reads headers with: lines of at most 65536 bytes, at most 100 headers.
+_FRAME_LINE, _FRAME_HEADERS = 65536, 100
+_FRAME_BYTES = (_FRAME_HEADERS + 2) * (_FRAME_LINE + 2)
 
 
 class GitHubInvalidHost(ValueError):
@@ -79,21 +110,767 @@ class Result:
     error: str | None = None
     reset_at: int | None = None
     headers: dict[str, str] = field(default_factory=dict)
+    reason: str | None = None
 
     def require_fresh(self):
         if self.error == "github_rate_limited" or self.stale:
-            raise GitHubRateLimited(self.reset_at)
+            raise GitHubRateLimited(self.reset_at, self.reason)
         if self.error:
             raise RuntimeError(self.error)
         return self.value
 
 
+# The most recent refusal in this context, as (reset_at, reason).
+_LAST_REFUSAL = contextvars.ContextVar("github_last_refusal", default=None)
+
+
 class GitHubRateLimited(RuntimeError):
     code = "github_rate_limited"
 
-    def __init__(self, reset_at):
-        self.reset_at = reset_at
-        super().__init__(f"github_rate_limited reset_at={reset_at}")
+    def __init__(self, reset_at, reason=None):
+        if reason is None:
+            # Adapters re-raise a refusal from its reset alone; keep that refusal's reason.
+            last = _LAST_REFUSAL.get()
+            reason = last[1] if last is not None and last[0] == reset_at else None
+        self.reset_at, self.reason = reset_at, reason
+        super().__init__(f"github_rate_limited reset_at={reset_at}" + (f" reason={reason}" if reason else ""))
+
+
+def _limited(reason, reset_at, **observation):
+    """Build every rate-limit result this client originates; remember its reason for re-raising adapters."""
+    if reason not in REFUSAL_REASONS:
+        raise AssertionError(f"untyped GitHub refusal reason: {reason!r}")
+    _LAST_REFUSAL.set((reset_at, reason))
+    if observation.get("stale"):
+        return Result(reset_at=reset_at, reason=reason, **observation)
+    return Result(status=429, error="github_rate_limited", reset_at=reset_at, reason=reason)
+
+
+class GitHubUnpreparedRequest(RuntimeError):
+    """Admission needed a request body this client cannot read exactly; nothing was sent."""
+
+    code = "github_invalid_request"
+
+    def __init__(self, reason):
+        if reason not in PREPARATION_ERRORS:
+            raise AssertionError(f"untyped GitHub preparation error: {reason!r}")
+        self.reason = reason
+        super().__init__(f"github_invalid_request reason={reason}")
+
+
+def _unprepared(reason):
+    """The result of a request refused before any send because admission could not read its body."""
+    if reason not in PREPARATION_ERRORS:
+        raise AssertionError(f"untyped GitHub preparation error: {reason!r}")
+    return Result(status=400, error=GitHubUnpreparedRequest.code, reason=reason)
+
+
+def refusal_of(observed, *, injected=False):
+    """The typed refusal a client result, completed process or process error carries, else ``None``.
+
+    Adapters re-raise this instead of a generic failure. A command runner the caller
+    injected in place of the client may only serialize the refusal (exit 75, the detail on
+    stdout or stderr); that is read only when ``injected``, so an unrelated process's exit
+    75 is never taken for the client's refusal.
+    """
+    result = observed if isinstance(observed, Result) else getattr(observed, "github_result", None)
+    if isinstance(result, Result):
+        return GitHubRateLimited(result.reset_at, result.reason) if result.error == "github_rate_limited" else None
+    if not injected or getattr(observed, "returncode", None) != 75:
+        return None
+    for stream in (getattr(observed, "stdout", None), getattr(observed, "stderr", None)):
+        try:
+            detail = json.loads(stream)
+        except (TypeError, ValueError):
+            continue
+        if isinstance(detail, dict) and detail.get("error") == "github_rate_limited":
+            reason = detail.get("reason")
+            return GitHubRateLimited(detail.get("reset_at"), reason if reason in REFUSAL_REASONS else None)
+    return None
+
+
+# --- admission: one decision for every request path ---------------------------------------
+#
+# Holds share the budget table with GitHub's pool observations. Only GitHub's own Retry-After
+# holds, every pool of a credential ("retry_after"). A primary-limit 403 or 429 is a pool
+# observation (remaining 0 until GitHub's reset), never a hold: ordinary calls honour it and
+# landing calls do not. "secondary" is this client's own inference (gh stderr, a limit response
+# without Retry-After); it never refuses a landing call.
+_AUTHENTIC_HOLD = "retry_after"
+_SYNTHETIC_HOLD = "secondary"
+_FLOORED_POOLS = frozenset({"graphql", "search", "code_search"})
+
+
+def _refusal(budgets, pools, *, call_class, now):
+    """The single local admission decision of every request path; ``None`` admits.
+
+    ``budgets`` maps one credential scope's stored resources to ``(remaining, reset)``,
+    ``pools`` are the rate-limit buckets the call can spend and ``call_class`` is
+    ``"landing"``, ``"exempt"`` or ``None``. The first match wins:
+
+    1. GitHub's own Retry-After hold refuses every class: ``retry_after``;
+    2. a landing or exempt call is admitted;
+    3. a live synthetic or secondary hold: ``secondary_hold``;
+    4. core with its window open and ``0 <= remaining < LANDING_RESERVE``: ``core_below_landing_reserve``;
+    5. graphql or search with its window open and ``remaining <= RESERVE``: ``pool_exhausted``.
+
+    An unknown or expired budget never refuses. A refusal is ``(reason, reset_at)``, the
+    latest reset among the rows that refuse.
+    """
+
+    def latest(names, refuses):
+        resets = [
+            budgets[name][1]
+            for name in names
+            if name in budgets and budgets[name][1] > now and refuses(budgets[name][0])
+        ]
+        return max(resets, default=None)
+
+    checks = [("retry_after", [_AUTHENTIC_HOLD], lambda _: True)]
+    if call_class is None:
+        checks += [
+            ("secondary_hold", [_SYNTHETIC_HOLD], lambda remaining: remaining <= RESERVE),
+            (
+                "core_below_landing_reserve",
+                ["core"] if "core" in pools else [],
+                lambda remaining: 0 <= remaining < LANDING_RESERVE,
+            ),
+            ("pool_exhausted", sorted(_FLOORED_POOLS & set(pools)), lambda remaining: remaining <= RESERVE),
+        ]
+    for reason, names, refuses in checks:
+        reset = latest(names, refuses)
+        if reset is not None:
+            return reason, reset
+    return None
+
+
+def _admission(db, scope, pools, call_class, now):
+    """Apply :func:`_refusal` to the scope's stored budgets and holds."""
+    names = [*pools, _SYNTHETIC_HOLD, _AUTHENTIC_HOLD]
+    rows = db.execute(
+        "SELECT resource,remaining,reset FROM budget WHERE scope=? AND resource IN ("
+        + ",".join("?" * len(names))
+        + ")",
+        (scope, *names),
+    ).fetchall()
+    budgets = {resource: (remaining, reset) for resource, remaining, reset in rows}
+    return _refusal(budgets, pools, call_class=call_class, now=now)
+
+
+def _admit(db, scope, request, now):
+    """Admit one normalized request (:func:`_normalize`): ``None`` or a ``(reason, reset)`` refusal.
+
+    The decision is :func:`_refusal`'s. A body is read only when that decision depends on it:
+    an ordinary call would be refused (steps 3-5) where a landing one would not, and neither
+    the request's own shape nor a vetted landing flow has decided its class. A body that cannot
+    then be read exactly raises :class:`GitHubUnpreparedRequest`; it is never guessed ordinary.
+    """
+    if request.inspect is None:
+        return _admission(db, scope, request.pools, request.call_class, now)
+    refusal = _admission(db, scope, request.pools, None, now)
+    if refusal is None or refusal[0] == "retry_after":
+        return refusal
+    return None if request.inspect() else refusal
+
+
+def _retry_after_expiry(value, now):
+    """Expiry of GitHub's ``Retry-After`` (delay-seconds or HTTP-date, RFC 9110 §10.2.3), else ``None``."""
+    if value is None:
+        return None
+    try:
+        seconds = float(value)
+    except ValueError:
+        try:
+            when = email.utils.parsedate_to_datetime(value)
+        except (TypeError, ValueError, IndexError):
+            return None
+        return int((when if when.tzinfo else when.replace(tzinfo=UTC)).timestamp())
+    return int(now + seconds) if math.isfinite(seconds) and seconds >= 0 else None
+
+
+def _budget_headers(headers):
+    """GitHub's ``(remaining, reset)`` from lower-cased response headers, else ``None``."""
+    try:
+        return int(headers["x-ratelimit-remaining"]), int(headers["x-ratelimit-reset"])
+    except (KeyError, TypeError, ValueError):
+        return None
+
+
+def _limit_hold(response, now):
+    """The hold GitHub's limit response asks for: ``(holds, reset, reason)``, else ``None``.
+
+    Every request path that sees GitHub's status and headers decides through this. Only its
+    ``Retry-After`` is a hold, on every pool of the credential. A primary-limit 403 or 429
+    (remaining ``0`` with GitHub's reset) holds nothing: the caller stores that remaining and
+    reset as the pool's budget, which ordinary calls honour and landing calls do not. Any other
+    limit response is this client's inference: a synthetic hold that never refuses landing.
+    """
+    h = {key.lower(): value for key, value in response.headers.items()}
+    if not (
+        response.status == 429
+        or (
+            response.status == 403
+            and (h.get("x-ratelimit-remaining") == "0" or "retry-after" in h or b"rate limit" in response.body.lower())
+        )
+    ):
+        return None
+    retry = _retry_after_expiry(h.get("retry-after"), now)
+    if retry is not None:
+        return [_AUTHENTIC_HOLD], retry, "retry_after"
+    budget = _budget_headers(h)
+    if budget is not None and budget[0] == 0:
+        return [], budget[1], "pool_exhausted"
+    return [_SYNTHETIC_HOLD], (budget[1] if budget is not None else None) or int(now + 60), "secondary_hold"
+
+
+# --- landing classification -----------------------------------------------------------------
+
+_REPOSITORY_PATH = r"repos/[^/]+/[^/]+/"
+# Writes that land a PR, and the budget and credential calls that are exempt. A read is
+# never landing by its URL: it is landing only inside a vetted landing operation.
+_CLASSIFIED_REST = tuple(
+    (method, re.compile(pattern), call_class)
+    for method, pattern, call_class in (
+        ("PUT", _REPOSITORY_PATH + r"pulls/\d+/merge", "landing"),
+        ("PUT", _REPOSITORY_PATH + r"pulls/\d+/update-branch", "landing"),
+        ("POST", _REPOSITORY_PATH + r"pulls/\d+/reviews", "landing"),
+        ("POST", _REPOSITORY_PATH + r"pulls/\d+/reviews/\d+/events", "landing"),
+        ("POST", _REPOSITORY_PATH + r"actions/runs/\d+/rerun-failed-jobs", "landing"),
+        ("POST", _REPOSITORY_PATH + r"actions/jobs/\d+/rerun", "landing"),
+        ("POST", _REPOSITORY_PATH + r"check-runs/\d+/rerequest", "landing"),
+        ("POST", _REPOSITORY_PATH + r"statuses/[^/]+", "landing"),
+        ("GET", r"rate_limit", "exempt"),
+        ("POST", r"app/installations/\d+/access_tokens", "exempt"),
+        ("DELETE", r"installation/token", "exempt"),
+    )
+)
+# Merge, update-branch, review, merge-queue and auto-merge mutations.
+_LANDING_MUTATIONS = frozenset(
+    {
+        "mergePullRequest",
+        "updatePullRequestBranch",
+        "addPullRequestReview",
+        "submitPullRequestReview",
+        "enqueuePullRequest",
+        "dequeuePullRequest",
+        "enablePullRequestAutoMerge",
+        "disablePullRequestAutoMerge",
+    }
+)
+_ROOT_TYPES = {"query": "Query", "mutation": "Mutation", "subscription": "Subscription"}
+_CONDITIONS = frozenset({"skip", "include"})
+# Every GraphQL validation rule (September 2025, §5) that needs no schema, as graphql-core
+# implements it. Operation selection and root field collection rely on them; a document they
+# reject executes nothing on GitHub, so it is never landing.
+_DOCUMENT_RULES = (
+    "ExecutableDefinitionsRule",
+    "LoneAnonymousOperationRule",
+    "UniqueOperationNamesRule",
+    "UniqueFragmentNamesRule",
+    "KnownFragmentNamesRule",
+    "NoUnusedFragmentsRule",
+    "NoFragmentCyclesRule",
+    "UniqueArgumentNamesRule",
+    "UniqueInputFieldNamesRule",
+    "UniqueVariableNamesRule",
+    "NoUndefinedVariablesRule",
+    "NoUnusedVariablesRule",
+    "UniqueDirectivesPerLocationRule",
+)
+_GRAPHQL = {}
+
+
+class _Undecided(ValueError):
+    """Which root fields of the selected GraphQL operation execute cannot be decided."""
+
+
+def _graphql():
+    """graphql-core's language and validation API, imported once on first use (it is not cheap to import)."""
+    if not _GRAPHQL:
+        import graphql
+        from graphql import language, validation
+        from graphql.utilities import get_operation_ast
+
+        # Only schema-free rules run, so a schema with nothing in it suffices.
+        schema = graphql.GraphQLSchema(
+            query=graphql.GraphQLObjectType("Query", {"_": graphql.GraphQLField(graphql.GraphQLBoolean)})
+        )
+        _GRAPHQL.update(
+            language=language,
+            error=graphql.GraphQLError,
+            select=get_operation_ast,
+            validate=lambda document: validation.validate(
+                schema, document, [getattr(validation, rule) for rule in _DOCUMENT_RULES]
+            ),
+        )
+    return _GRAPHQL
+
+
+def _graphql_operation(query, operation_name=None, variables=None):
+    """``(operation type, root fields)`` of the operation a GraphQL request executes, else ``None``.
+
+    graphql-core parses the document. The operation is selected as the specification's
+    GetOperation does (``operationName``, else the sole operation) once every schema-free
+    validation rule holds (``_DOCUMENT_RULES``); its root fields are then collected as
+    CollectFields does: fragment spreads and inline fragments on the root type expand, and
+    ``@skip``/``@include`` resolve from literals, ``variables`` and the operation's defaults.
+    Aliases, arguments, strings and comments never name a field. The fields are ``None`` when
+    which ones execute cannot be decided (a fragment on another type, or a condition that is not
+    a declared ``Boolean`` value). A document that does not parse or validate, or selects no
+    operation, is ``None``. One that never spells ``mutation`` or ``subscription`` can execute
+    nothing but a query, so it is a query without being parsed.
+    """
+    if not isinstance(query, str) or not (operation_name is None or isinstance(operation_name, str)):
+        return None
+    if "mutation" not in query and "subscription" not in query:
+        return "query", None
+    graphql = _graphql()
+    ast = graphql["language"]
+    try:
+        document = ast.parse(query, no_location=True)
+        if graphql["validate"](document):
+            return None
+    except (graphql["error"], RecursionError):
+        return None
+    operation = graphql["select"](document, operation_name)
+    if operation is None:
+        return None
+    kind = operation.operation.value
+    root, fields = _ROOT_TYPES[kind], []
+    fragments = {
+        definition.name.value: definition
+        for definition in document.definitions
+        if isinstance(definition, ast.FragmentDefinitionNode)
+    }
+    declared = {definition.variable.name.value: definition for definition in operation.variable_definitions or ()}
+    supplied = variables if isinstance(variables, dict) else {}
+
+    def condition(value):
+        """The Boolean an ``if:`` argument coerces to: a literal, or a declared Boolean variable's value."""
+        if isinstance(value, ast.BooleanValueNode):
+            return value.value
+        definition = declared.get(value.name.value) if isinstance(value, ast.VariableNode) else None
+        if definition is None:
+            raise _Undecided
+        # A variable in a Boolean! position: declared Boolean!, or Boolean with a default.
+        non_null = isinstance(definition.type, ast.NonNullTypeNode)
+        named = definition.type.type if non_null else definition.type
+        default = definition.default_value
+        if (
+            not isinstance(named, ast.NamedTypeNode)
+            or named.name.value != "Boolean"
+            or not (non_null or default is not None)
+        ):
+            raise _Undecided
+        name = value.name.value
+        if name in supplied:
+            flag = supplied[name]
+        elif isinstance(default, ast.BooleanValueNode):
+            flag = default.value
+        else:
+            raise _Undecided
+        if not isinstance(flag, bool):
+            raise _Undecided
+        return flag
+
+    def executes(directives):
+        """Whether a selection with these directives executes (CollectFields' @skip and @include)."""
+        result = True
+        for directive in directives or ():
+            name = directive.name.value
+            if name in _CONDITIONS:
+                arguments = {argument.name.value: argument.value for argument in directive.arguments or ()}
+                if set(arguments) != {"if"}:
+                    raise _Undecided
+                flag = condition(arguments["if"])
+                result = result and flag is (name == "include")
+        return result
+
+    def collect(selection_set, visited):
+        for selection in selection_set.selections:
+            if not executes(selection.directives):
+                continue
+            if isinstance(selection, ast.FieldNode):
+                fields.append(selection.name.value)
+            elif isinstance(selection, ast.InlineFragmentNode):
+                if selection.type_condition is not None and selection.type_condition.name.value != root:
+                    raise _Undecided
+                collect(selection.selection_set, visited)
+            elif selection.name.value not in visited:
+                visited.add(selection.name.value)
+                fragment = fragments[selection.name.value]
+                # @skip and @include never apply to a fragment definition: GitHub rejects the document.
+                if fragment.type_condition.name.value != root or any(
+                    directive.name.value in _CONDITIONS for directive in fragment.directives or ()
+                ):
+                    raise _Undecided
+                collect(fragment.selection_set, visited)
+
+    try:
+        # Nor to an operation.
+        if any(directive.name.value in _CONDITIONS for directive in operation.directives or ()):
+            raise _Undecided
+        collect(operation.selection_set, set())
+    except (_Undecided, RecursionError):
+        return kind, None
+    return kind, fields
+
+
+def _graphql_request(document):
+    """``(kind, landing)`` of the GraphQL request a decoded JSON body makes.
+
+    GraphQL over HTTP: an object whose ``query`` is the one executable document, an optional
+    ``operationName`` (absent or null selects a sole operation) and ``variables`` (an object).
+    kind is the selected operation's type; ``"batch"`` for a JSON array of requests;
+    ``"persisted"`` for an object with no document whose extensions name a persisted query;
+    ``"opaque"`` for anything else no operation can be selected from. A document inside
+    variables, extensions or a string never executes. Only a selected mutation whose every
+    executing root field is a landing mutation is landing; the root ``__typename`` meta-field
+    writes nothing, so beside landing mutations it changes nothing.
+    """
+    if isinstance(document, list):
+        return "batch", False
+    if not isinstance(document, dict):
+        return "opaque", False
+    query, variables = document.get("query"), document.get("variables")
+    if query is None:
+        extensions = document.get("extensions")
+        return ("persisted" if isinstance(extensions, dict) and "persistedQuery" in extensions else "opaque"), False
+    if not (variables is None or isinstance(variables, dict)):
+        return "opaque", False
+    operation = _graphql_operation(query, document.get("operationName"), variables)
+    if operation is None:
+        return "opaque", False
+    kind, fields = operation
+    writes = {field for field in fields or () if field != "__typename"}
+    return kind, kind == "mutation" and bool(writes) and writes <= _LANDING_MUTATIONS
+
+
+def _reject_constant(name):
+    raise ValueError(f"not JSON: {name}")
+
+
+def _json_body(data):
+    """The JSON value a request body's exact bytes encode (strict UTF-8, no NaN or Infinity), else ``None``."""
+    try:
+        return json.loads(data.decode("utf-8"), parse_constant=_reject_constant)
+    except (UnicodeDecodeError, ValueError, RecursionError):
+        return None
+
+
+def _rest_class(method, path):
+    """``"landing"`` for a REST write that lands a PR, ``"exempt"`` for a budget or credential call, else ``None``."""
+    return next(
+        (
+            call_class
+            for verb, pattern, call_class in _CLASSIFIED_REST
+            if method == verb and isinstance(path, str) and pattern.fullmatch(path)
+        ),
+        None,
+    )
+
+
+# --- the request normalizer: one interpretation of a request for every transport ------------
+
+_CLASSIFICATIONS = frozenset(
+    {
+        "rest",
+        "rest_landing",
+        "rest_exempt",
+        "graphql_get",
+        "graphql_query",
+        "graphql_mutation",
+        "graphql_landing",
+        "graphql_subscription",
+        "graphql_batch",
+        "graphql_persisted",
+        "graphql_opaque",
+        "uninspected",
+        "unprepared",
+        "command",
+        "invalid",
+    }
+)
+# A body gh fills from repository context (a placeholder in a typed field): its bytes are
+# gh's to compute, so it can never establish landing.
+_UNRESOLVED_BODY = object()
+
+
+@dataclass(frozen=True)
+class _Provenance:
+    """How a request was classified. Only these four fields: never a header, token, body,
+    document, variable, path or argv, so the record can neither leak nor correlate them."""
+
+    classification: str
+    length: int | None = None
+    digest: str | None = None
+    refusal: str | None = None
+
+    def __post_init__(self):
+        if self.classification not in _CLASSIFICATIONS or not (
+            self.refusal is None or self.refusal in PREPARATION_ERRORS
+        ):
+            raise AssertionError("untyped GitHub request provenance")
+
+
+@dataclass(eq=False)
+class _Request:
+    """One request as admission sees it, whatever transport sends it (see :func:`_normalize`).
+
+    ``call_class`` is ``"landing"``, ``"exempt"`` or ``None``; ``read`` marks a cacheable read;
+    ``inspect`` is set only while the class still depends on an unread body: it reads the body
+    and answers whether it lands a PR, or raises :class:`GitHubUnpreparedRequest`.
+    """
+
+    method: str
+    path: str | None
+    pools: tuple
+    call_class: str | None
+    read: bool = False
+    inspect: Any = None
+    provenance: _Provenance = _Provenance("uninspected")
+
+    def classify(self, body):
+        """Classify a GraphQL POST body: whether it lands a PR.
+
+        ``body`` is the exact bytes sent, ``None`` for none, or a zero-argument capture of them. A
+        capture that fails raises :class:`GitHubUnpreparedRequest`: the request is then neither
+        landing nor ordinary, and its provenance records the typed reason.
+        """
+        try:
+            data = body() if callable(body) else body
+        except GitHubUnpreparedRequest as refused:
+            self.provenance = _Provenance("unprepared", refusal=refused.reason)
+            raise
+        known = isinstance(data, bytes)
+        kind, landing = _graphql_request(_json_body(data) if known else None)
+        self.provenance = _Provenance(
+            "graphql_landing" if landing else "graphql_" + kind,
+            len(data) if known else None,
+            hashlib.sha256(data).hexdigest() if known else None,
+        )
+        return landing
+
+
+def _normalize(method, path, pools, body=None):
+    """The one interpretation of a request that admission, caching and every transport share.
+
+    ``path`` is the canonical resource path (:func:`_canonical_endpoint`). ``body`` is the
+    exact bytes sent, ``None`` for none, or a zero-argument capture of them that admission calls
+    only if its decision depends on the body (:func:`_admit`). The class comes from the
+    request's own shape (a REST landing or exempt call, or a GraphQL POST whose selected
+    operation is a landing mutation), else from a vetted landing flow; a read is never landing
+    by its URL. A GraphQL request is a cacheable read only when it selects a query.
+    """
+    method = method.upper()
+    flow = "landing" if _landing_flow() else None
+    if path != "graphql":
+        shape = _rest_class(method, path)
+        provenance = _Provenance("rest_" + shape if shape else "rest")
+        return _Request(method, path, tuple(pools), shape or flow, method == "GET", provenance=provenance)
+    if method != "POST":
+        # GraphQL over GET never executes a mutation (GraphQL over HTTP); it is never cached.
+        return _Request(method, path, tuple(pools), flow, provenance=_Provenance("graphql_get"))
+    request = _Request(method, path, tuple(pools), flow)
+    if callable(body):
+        if flow is None:
+            request.inspect = lambda: request.classify(body)
+        return request
+    request.call_class = "landing" if request.classify(body) else flow
+    request.read = request.provenance.classification == "graphql_query"
+    return request
+
+
+def _payload_bytes(payload):
+    """The exact bytes :meth:`GitHubClient.request` sends for ``payload``: bytes-like data as given, else its JSON."""
+    if payload is None:
+        return None
+    if isinstance(payload, (bytes, bytearray, memoryview)):
+        return bytes(payload)
+    return json.dumps(payload, ensure_ascii=False).encode()
+
+
+def _spool():
+    """A private spool: up to ``SPILL_BYTES`` in memory, then a temporary file no other process can open.
+
+    ``tempfile`` creates that file with mode 0600 and never names it (or unlinks it at once), in
+    the fleet scratch root (:func:`scripts.common.scratch.ensure_scratch_root`), never the cache:
+    closing the spool, on any path, removes every byte.
+    """
+    import tempfile
+
+    from scripts.common.scratch import ensure_scratch_root
+
+    return tempfile.SpooledTemporaryFile(max_size=SPILL_BYTES, mode="w+b", dir=ensure_scratch_root())
+
+
+def _http_client_blocks(data):
+    """The byte blocks Python's ``http.client`` sends for urllib ``data`` that is not bytes-like.
+
+    As Python 3.12 to 3.14 send them: a file object from its current position, block by block
+    until a block is empty (a text file encoded ISO-8859-1); any other iterable chunk by chunk,
+    empty chunks skipped. Each block must then be bytes-like. ``str`` and other values urllib
+    rejects are ``invalid_body_type``; a read or iteration that fails is ``body_unreadable``.
+    """
+    if hasattr(data, "read"):
+        text = isinstance(data, io.TextIOBase)
+
+        def reads():
+            while block := data.read(8192):
+                yield block.encode("iso-8859-1") if text else block
+
+        source = reads()
+    elif isinstance(data, str):
+        raise GitHubUnpreparedRequest("invalid_body_type")
+    else:
+        try:
+            source = iter(data)
+        except TypeError:
+            raise GitHubUnpreparedRequest("invalid_body_type") from None
+    while True:
+        try:
+            block = next(source)
+            if not block:
+                continue
+        except StopIteration:
+            return
+        except UnicodeEncodeError:
+            raise GitHubUnpreparedRequest("invalid_body_type") from None
+        except Exception:
+            raise GitHubUnpreparedRequest("body_unreadable") from None
+        try:
+            yield memoryview(block).tobytes()
+        except TypeError:
+            raise GitHubUnpreparedRequest("invalid_body_type") from None
+
+
+class _DeferredBody:
+    """A ``urllib.request.Request`` body: its opener sends it, unless admission needed its bytes.
+
+    Admission reads it only through :meth:`capture`, exactly once, into a spool (:func:`_spool`);
+    the opener is then given those bytes (:meth:`request_for`), never the consumed original.
+    Whatever its size or representation, what is sent is what was classified.
+    """
+
+    def __init__(self, data):
+        self.data, self.spool = data, None
+
+    def capture(self):
+        """The exact bytes urllib sends for this body (bytes-like data whole, else :func:`_http_client_blocks`)."""
+        if self.spool is None:
+            if not hasattr(self.data, "read") and not isinstance(self.data, str):
+                with suppress(TypeError):
+                    # Sent as it is: there is nothing to replay.
+                    return memoryview(self.data).tobytes()
+            spool = _spool()
+            try:
+                for block in _http_client_blocks(self.data):
+                    spool.write(block)
+            except BaseException:
+                spool.close()
+                raise
+            self.spool = spool
+        self.spool.seek(0)
+        return self.spool.read()
+
+    def request_for(self, request):
+        """The request the opener sends: ``request`` itself, or a copy whose body is the captured bytes.
+
+        The copy keeps every attribute and header of ``request``, a caller's ``Content-Length``
+        included, and leaves ``request`` unchanged.
+        """
+        if self.spool is None:
+            return request
+        import copy
+
+        outgoing = copy.copy(request)
+        outgoing.headers, outgoing.unredirected_hdrs = dict(request.headers), dict(request.unredirected_hdrs)
+        lengths = [
+            (headers, headers["Content-length"])
+            for headers in (outgoing.headers, outgoing.unredirected_hdrs)
+            if "Content-length" in headers
+        ]
+        self.spool.seek(0)
+        outgoing.data = self.spool  # the setter drops a Content-Length: restore the caller's
+        for headers, value in lengths:
+            headers["Content-length"] = value
+        return outgoing
+
+    def close(self):
+        if self.spool is not None:
+            self.spool.close()
+
+
+# The current landing operation, opened only by this module's vetted sites.
+_LANDING_FLOW = contextvars.ContextVar("github_landing_flow", default=None)
+_THIS_MODULE = os.path.realpath(__file__)
+_REPOSITORY = Path(__file__).resolve().parents[2]
+# Vetted landing entry points outside this module, by repository file and function. Every
+# request made while one runs on the current thread belongs to its landing flow, and the
+# declaration ends when the function returns. No tag, flag, header or environment value a
+# caller passes can add to this list; only an edit here can.
+_LANDING_ENTRY_POINTS = {
+    ("scripts/orchestration/merge_queue_keeper.py", "run"): "merge-queue-keeper",
+    ("scripts/fleet_comms/review_publisher.py", "fetch_pr_head_sha"): "verdict-publication",
+    ("scripts/fleet_comms/review_publisher.py", "execute_publication"): "verdict-publication",
+    ("scripts/fleet_comms/review_publisher.py", "publish_sealed_verdict"): "verdict-publication",
+    ("scripts/review/record_cf_verdict.py", "record"): "verdict-publication",
+}
+# The publisher's ``publish`` (wrapped by rate_limited_command) and its verbs that land a PR:
+# such a verb's readiness and recovery reads belong to it.
+_PUBLISHER_ENTRY_POINT = ("scripts/publish/github.py", "publish")
+_PUBLISHER_LANDING_VERBS = frozenset(
+    {"pr-merge", "pr-update-branch", "pr-review", "run-rerun", "commit-status", "pr-dequeue", "pr-disarm"}
+)
+_ENTRY_POINT_CODE = {
+    (os.path.realpath(_REPOSITORY / path), name): flow for (path, name), flow in _LANDING_ENTRY_POINTS.items()
+}
+_ENTRY_POINT_NAMES = frozenset(name for _, name in _LANDING_ENTRY_POINTS)
+_VETTED_CODE = {}
+
+
+def _code_identity(code):
+    """``(real absolute file, function name)`` of a code object; relative files have none."""
+    filename = code.co_filename
+    return (os.path.realpath(filename), code.co_qualname) if os.path.isabs(filename) else None
+
+
+def _landing_flow():
+    """The vetted landing operation the current call belongs to, else ``None``.
+
+    This module opened one, or a vetted entry point's frame is executing on this thread.
+    Work handed to another thread is not landing.
+    """
+    flow = _LANDING_FLOW.get()
+    frame = sys._getframe(1)
+    while flow is None and frame is not None:
+        code = frame.f_code
+        if code.co_qualname in _ENTRY_POINT_NAMES:
+            if code not in _VETTED_CODE:
+                _VETTED_CODE[code] = _ENTRY_POINT_CODE.get(_code_identity(code))
+            flow = _VETTED_CODE[code]
+        frame = frame.f_back
+    return flow
+
+
+def _landing_operation(flow):
+    """Run a block as landing flow ``flow``; ``None`` opens nothing and an outer flow stays.
+
+    Only this module's vetted sites open one; a caller anywhere else is refused.
+    """
+    if (_code_identity(sys._getframe(1).f_code) or ("",))[0] != _THIS_MODULE:
+        raise PermissionError("landing operations open only inside the GitHub client")
+
+    @contextmanager
+    def opened():
+        token = _LANDING_FLOW.set(flow) if flow is not None and _LANDING_FLOW.get() is None else None
+        try:
+            yield
+        finally:
+            if token is not None:
+                _LANDING_FLOW.reset(token)
+
+    return opened()
 
 
 def _cache_directory():
@@ -135,18 +912,46 @@ def _cache_directory():
     return None
 
 
+_STATUS_LINE = re.compile(rb"HTTP/[0-9]+(?:\.[0-9]+)? ([0-9]{3})(?: .*)?")
+_HEADER_NAME = re.compile(rb"[!#$%&'*+.^_`|~0-9A-Za-z-]+")
+
+
+def _frame(raw, start=0):
+    """``(response, end)`` of the one response ``gh api --include`` frames at ``start``, else ``None``.
+
+    gh 2.98.0 writes the status line (``<proto> <status>``) and a newline, each header as
+    ``Name: value`` and CRLF, then an empty line; the body follows. A line that is not a header,
+    a line over ``_FRAME_LINE`` bytes or more than ``_FRAME_HEADERS`` headers is not gh's frame.
+    Colour codes are ignored. The response's body is everything after the frame.
+    """
+    position, status, headers, count = start, None, {}, 0
+    while True:
+        newline = raw.find(b"\n", position, position + _FRAME_LINE + 1)
+        if newline < 0 or count > _FRAME_HEADERS:
+            return None
+        line = ANSI.sub(b"", raw[position:newline]).removesuffix(b"\r")
+        position = newline + 1
+        if status is None:
+            match = _STATUS_LINE.fullmatch(line)
+            if match is None:
+                return None
+            status = int(match[1])
+        elif not line:
+            return Response(status, headers, raw[position:]), position
+        else:
+            name, colon, value = line.partition(b":")
+            if not colon or not _HEADER_NAME.fullmatch(name):
+                return None
+            headers[name.decode().lower()] = value.strip().decode("latin-1")
+            count += 1
+
+
 def parse_http(raw):
-    separator = b"\r\n\r\n" if b"\r\n\r\n" in raw else b"\n\n"
-    head, sep, body = raw.partition(separator)
-    lines = ANSI.sub(b"", head).splitlines()
-    if not sep or not lines or not re.match(rb"HTTP/\S+ \d{3}", lines[0]):
+    """The response ``gh api --include`` printed for one request: the frame at its start (:func:`_frame`)."""
+    framed = _frame(raw)
+    if framed is None:
         raise RuntimeError("GitHub transport omitted response headers")
-    headers = {}
-    for line in lines[1:]:
-        key, colon, value = line.partition(b":")
-        if colon:
-            headers[key.decode().lower().strip()] = value.decode().strip()
-    return Response(int(lines[0].split()[1]), headers, body)
+    return framed[0]
 
 
 def _cached_value(cached):
@@ -172,20 +977,106 @@ def _store_cache(db, scope, key, body, headers, at):
     )
 
 
-def _transport_process(command, *, input, env, cwd, timeout, output_file=None, **_kwargs):
-    """Bound one CLI process and its descendants without polling or retrying."""
+class _Kept:
+    """Standard output kept in a spool: with a ``limit``, at most ``limit + 1`` bytes of body.
+
+    When the output is ``framed`` (``gh api --include``), its frame is kept whole up to its empty
+    line (at most ``_FRAME_BYTES``) and the limit counts the body after it. The rest is dropped.
+    """
+
+    def __init__(self, output, limit, framed):
+        self.output, self.room = output, None if limit is None else limit + 1
+        self.frame = bytearray() if framed and limit is not None else None
+
+    def write(self, data):
+        if self.frame is not None:
+            start = max(0, len(self.frame) - 2)
+            self.frame += data
+            ends = [
+                found + size
+                for found, size in ((self.frame.find(b"\n\n", start), 2), (self.frame.find(b"\n\r\n", start), 3))
+                if found >= 0
+            ]
+            if not ends and len(self.frame) <= _FRAME_BYTES:
+                self.output.write(data)
+                return
+            # The frame ends in this block; with no end within the frame limit, it is not gh's frame.
+            head = len(data) - (len(self.frame) - min(ends, default=len(self.frame)))
+            self.output.write(data[:head])
+            data, self.frame = data[head:], None
+        if self.room is None:
+            self.output.write(data)
+        elif self.room:
+            self.output.write(data[: self.room])
+            self.room -= min(len(data), self.room)
+
+
+def _exchange(child, input, kept, deadline, timeout):
+    """``communicate()``, with standard output written through ``kept`` (:class:`_Kept`): its standard error.
+
+    Output past what ``kept`` keeps is still read, so the process never blocks on a full pipe.
+    """
+    import select
+    import selectors
+
+    errors, pending = [], memoryview(input or b"")
+    with selectors.DefaultSelector() as selector:
+        if child.stdin is not None:
+            if pending:
+                selector.register(child.stdin, selectors.EVENT_WRITE)
+            else:
+                child.stdin.close()
+        selector.register(child.stdout, selectors.EVENT_READ)
+        selector.register(child.stderr, selectors.EVENT_READ)
+        while selector.get_map():
+            remaining = None if deadline is None else deadline - time.monotonic()
+            if remaining is not None and remaining <= 0:
+                raise subprocess.TimeoutExpired(child.args, timeout)
+            for key, _events in selector.select(remaining):
+                if key.fileobj is child.stdin:
+                    try:
+                        pending = pending[os.write(key.fd, pending[: select.PIPE_BUF]) :]
+                    except BrokenPipeError:
+                        pending = pending[:0]
+                    if not pending:
+                        selector.unregister(key.fileobj)
+                        key.fileobj.close()
+                    continue
+                data = os.read(key.fd, 32768)
+                if not data:
+                    selector.unregister(key.fileobj)
+                    key.fileobj.close()
+                elif key.fileobj is child.stderr:
+                    errors.append(data)
+                else:
+                    kept.write(data)
+    return b"".join(errors)
+
+
+def _transport_process(command, *, input, env, cwd, timeout, limit=None, framed=False, **_kwargs):
+    """Bound one CLI process and its descendants without polling or retrying.
+
+    Standard output passes through one spool (:func:`_spool`); with a response ``limit`` at
+    most ``limit + 1`` bytes of body are kept (:class:`_Kept`), and under the limit they are
+    exactly what the process wrote. Signals are forwarded to the process group, which is killed
+    only on a timeout or an exception, never after a completed wait.
+    """
     import signal
     import threading
 
-    with subprocess.Popen(
-        command,
-        stdin=subprocess.PIPE if input is not None else subprocess.DEVNULL,
-        stdout=output_file if output_file is not None else subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        env=env,
-        cwd=cwd,
-        start_new_session=True,
-    ) as child:
+    deadline = None if timeout is None else time.monotonic() + timeout
+    with (
+        _spool() as output,
+        subprocess.Popen(
+            command,
+            stdin=subprocess.PIPE if input is not None else subprocess.DEVNULL,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            env=env,
+            cwd=cwd,
+            start_new_session=True,
+        ) as child,
+    ):
         previous = {}
 
         def forward(signum, _frame):
@@ -198,43 +1089,22 @@ def _transport_process(command, *, input, env, cwd, timeout, output_file=None, *
             }
         try:
             try:
-                output, error = child.communicate(input=input, timeout=timeout)
-                if output_file is not None:
-                    with suppress(ProcessLookupError):
-                        os.killpg(child.pid, signal.SIGKILL)
+                error = _exchange(child, input, _Kept(output, limit, framed), deadline, timeout)
+                try:
+                    child.wait(None if deadline is None else max(0, deadline - time.monotonic()))
+                except subprocess.TimeoutExpired:
+                    raise subprocess.TimeoutExpired(command, timeout) from None
             except BaseException:
+                # The process is not yet reaped, so its group cannot have been reused.
                 with suppress(ProcessLookupError):
                     os.killpg(child.pid, signal.SIGKILL)
-                child.communicate()
+                child.wait()
                 raise
-            return subprocess.CompletedProcess(command, child.returncode, output, error)
+            output.seek(0)
+            return subprocess.CompletedProcess(command, child.returncode, output.read(), error)
         finally:
             for signum, handler in previous.items():
                 signal.signal(signum, handler)
-
-
-def _spooled_transport_process(command, *, max_response_bytes, **kwargs):
-    """Keep an existing caller's byte ceiling before materializing its body."""
-    import http.client
-    import tempfile
-
-    with tempfile.TemporaryFile() as output:
-        proc = _transport_process(command, output_file=output, **kwargs)
-        output.seek(0)
-        status = output.readline(http.client._MAXLINE + 1)
-        if not re.match(rb"HTTP/\S+ \d{3}", status):
-            proc.stdout = b""
-            return proc
-        try:
-            http.client.parse_headers(output)
-        except http.client.HTTPException:
-            proc.stdout = b""
-            return proc
-        body_offset = output.tell()
-        body = output.read(max_response_bytes + 1)
-        output.seek(0)
-        proc.stdout = output.read(body_offset) + body
-        return proc
 
 
 class GitHubClient:
@@ -355,12 +1225,11 @@ class GitHubClient:
         if body is not None:
             command.extend(["--input", "-"])
         executor = self.runner or _transport_process
-        if self.runner is None and self.max_response_bytes is not None:
-            executor = _spooled_transport_process
-        limit = {"max_response_bytes": self.max_response_bytes} if executor is _spooled_transport_process else {}
+        # The response ceiling bounds the body; its frame comes first (:func:`_frame`).
+        bounds = {"limit": self.max_response_bytes, "framed": True} if executor is _transport_process else {}
         proc = executor(
             command,
-            **limit,
+            **bounds,
             input=body,
             capture_output=True,
             env=self.env,
@@ -373,9 +1242,10 @@ class GitHubClient:
         # provide the HTTP status and budget headers.
         if self.runner and not ANSI.sub(b"", raw).startswith(b"HTTP/"):
             return self._bounded_response(Response(200 if proc.returncode == 0 else 500, {}, raw))
-        if not ANSI.sub(b"", raw).startswith(b"HTTP/"):
+        framed = _frame(raw)
+        if framed is None:
             return Response(599, {}, b'{"message":"github_transport_unavailable"}')
-        return self._bounded_response(parse_http(raw))
+        return self._bounded_response(framed[0])
 
     def _bounded_response(self, response):
         if self.max_response_bytes is not None and len(response.body) > self.max_response_bytes:
@@ -399,17 +1269,12 @@ class GitHubClient:
         host_class, resource_path = _canonical_endpoint(endpoint, self.host)
         if host_class == "rejected":
             raise ValueError("GitHub endpoint host mismatch")
-        raw = (
-            payload
-            if isinstance(payload, bytes)
-            else json.dumps(payload, ensure_ascii=False).encode()
-            if payload is not None
-            else None
-        )
+        # A body the opener sends itself (http_open) is read only if admission needs it.
+        deferred_body = payload.capture if isinstance(payload, _DeferredBody) else None
+        raw = None if deferred_body else _payload_bytes(payload)
         graphql = resource_path == "graphql"
-        document = json.loads(raw) if graphql and isinstance(payload, bytes) else payload
-        read = method == "GET" or (graphql and document and not re.search(r"\bmutation\b", document.get("query", "")))
         resource = _endpoint_bucket(resource_path)
+        normalized = _normalize(method, resource_path, (resource,), deferred_body or raw)
         key = hashlib.sha256(
             (
                 method
@@ -422,7 +1287,7 @@ class GitHubClient:
             + (raw or b"")
         ).hexdigest()
         cacheable = (
-            read
+            normalized.read
             and not raw_response
             and not any(
                 name.lower() == "accept" and value == "application/octet-stream"
@@ -431,36 +1296,36 @@ class GitHubClient:
             and not re.search(r"/(?:releases/assets/\d+|artifacts/\d+/zip)$", resource_path)
         )
         now = self.clock()
-        with self._db() as db:
-            cached = (
-                db.execute(
-                    "SELECT body,headers,at FROM cache WHERE scope=? AND key=? AND (? IS NULL OR length(body)<=?)",
-                    (self.scope, key, self.max_response_bytes, self.max_response_bytes),
-                ).fetchone()
-                if cacheable
-                else None
-            )
-            if not cacheable or (cached and json.loads(cached[1]).get("_github_binary")):
-                cached = None
-            budget = db.execute(
-                "SELECT remaining,reset FROM budget WHERE scope=? AND resource IN (?, 'secondary') ORDER BY reset DESC",
-                (self.scope, resource),
-            ).fetchall()
-        limited = next((reset for remaining, reset in budget if remaining <= RESERVE and reset > now), None)
+        try:
+            with self._db() as db:
+                cached = (
+                    db.execute(
+                        "SELECT body,headers,at FROM cache WHERE scope=? AND key=? AND (? IS NULL OR length(body)<=?)",
+                        (self.scope, key, self.max_response_bytes, self.max_response_bytes),
+                    ).fetchone()
+                    if cacheable
+                    else None
+                )
+                if not cacheable or (cached and json.loads(cached[1]).get("_github_binary")):
+                    cached = None
+                refusal = _admit(db, self.scope, normalized, now)
+        except GitHubUnpreparedRequest as refused:
+            return _unprepared(refused.reason)
 
-        def deferred(reset):
+        def deferred(reason, reset):
             if allow_stale and cached and not fresh:
-                return Result(
-                    _cached_value(cached),
+                return _limited(
+                    reason,
+                    reset,
+                    value=_cached_value(cached),
                     stale=True,
                     age_seconds=max(0, now - cached[2]),
-                    reset_at=reset,
                     headers=json.loads(cached[1]),
                 )
-            return Result(status=429, error="github_rate_limited", reset_at=reset)
+            return _limited(reason, reset)
 
-        if limited is not None:
-            return deferred(limited)
+        if refusal is not None:
+            return deferred(*refusal)
         headers = {"Accept": "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28", **(headers or {})}
         if cached and method == "GET":
             old_headers = json.loads(cached[1])
@@ -472,28 +1337,16 @@ class GitHubClient:
         for persist_attempt in range(2):
             try:
                 with self._db() as db:
-                    if "x-ratelimit-remaining" in h and "x-ratelimit-reset" in h:
-                        with suppress(ValueError):
-                            remaining, reset = int(h["x-ratelimit-remaining"]), int(h["x-ratelimit-reset"])
-                            _store_budget(db, self.scope, h.get("x-ratelimit-resource", resource), remaining, reset)
-                    if response.status == 429 or (
-                        response.status == 403
-                        and (
-                            h.get("x-ratelimit-remaining") == "0"
-                            or "retry-after" in h
-                            or b"rate limit" in response.body.lower()
-                        )
-                    ):
-                        with suppress(ValueError):
-                            reset = int(now + float(h["retry-after"])) if "retry-after" in h else reset
-                        reset = reset or int(now + 60)
-                        blocked_resource = (
-                            "secondary"
-                            if "retry-after" in h or h.get("x-ratelimit-remaining") != "0"
-                            else h.get("x-ratelimit-resource", resource)
-                        )
-                        _store_budget(db, self.scope, blocked_resource, 0, reset)
-                        return deferred(reset)
+                    budget = _budget_headers(h)
+                    if budget is not None:
+                        remaining, reset = budget
+                        _store_budget(db, self.scope, h.get("x-ratelimit-resource", resource), remaining, reset)
+                    limit = _limit_hold(response, now)
+                    if limit is not None:
+                        holds, reset, reason = limit
+                        for hold in holds:
+                            _store_budget(db, self.scope, hold, 0, reset)
+                        return deferred(reason, reset)
                     if response.status == 304:
                         if not cached:
                             return Result(status=304, error="github_cache_miss", headers=h)
@@ -529,7 +1382,7 @@ class GitHubClient:
                     ):
                         reset = reset or int(now + 60)
                         _store_budget(db, self.scope, resource, 0, reset)
-                        return deferred(reset)
+                        return deferred("pool_exhausted", reset)
                     if graphql and isinstance(value, dict) and value.get("errors"):
                         return Result(value, status=response.status, error="github_graphql_error", headers=h)
                     if not 200 <= response.status < 300:
@@ -768,6 +1621,8 @@ def _merge_observation(result, *observations):
         result.age_seconds = max(result.age_seconds, other.age_seconds)
         if other.reset_at is not None:
             result.reset_at = other.reset_at
+        if other.reason is not None:
+            result.reason = other.reason
     return result
 
 
@@ -1788,17 +2643,515 @@ def _native_buckets(args, host="github.com"):
     return frozenset(buckets)
 
 
+# --- gh api: the request a native command line makes, as gh 2.98.0 builds it -----------------
+#
+# ``-F`` has one meaning per gh 2.98.0 command family (``gh <family> <command> --help``): a typed
+# ``gh api`` field, the release notes file of ``gh release create|edit``, the body file of
+# ``gh issue|pr comment|create|edit`` and ``gh pr review|merge``. Only ``gh api`` fields shape a
+# request this client classifies; a body or notes file is never read for admission.
+_DASH_F = {"api": "--field", "release": "--notes-file", "issue": "--body-file", "pr": "--body-file"}
+# gh 2.98.0 ``gh api`` flags (pkg/cmd/api/api.go) by pflag spelling: (name, takes a value).
+_GH_API_FLAGS = {
+    "--hostname": ("hostname", True),
+    "--method": ("method", True),
+    "-X": ("method", True),
+    "--field": ("field", True),
+    "-F": ("field", True),
+    "--raw-field": ("raw-field", True),
+    "-f": ("raw-field", True),
+    "--header": ("header", True),
+    "-H": ("header", True),
+    "--preview": ("preview", True),
+    "-p": ("preview", True),
+    "--input": ("input", True),
+    "--template": ("template", True),
+    "-t": ("template", True),
+    "--jq": ("jq", True),
+    "-q": ("jq", True),
+    "--cache": ("cache", True),
+    "--include": ("include", False),
+    "-i": ("include", False),
+    "--slurp": ("slurp", False),
+    "--paginate": ("paginate", False),
+    "--silent": ("silent", False),
+    "--verbose": ("verbose", False),
+    "--allow-escape-sequences": ("allow-escape-sequences", False),
+}
+# gh fills these from the current repository (fillPlaceholders); this client does not.
+_GH_PLACEHOLDER = re.compile(r":(?:owner|repo|branch)\b|\{(?:owner|repo|branch)\}", re.ASCII)
+_GO_TRUE, _GO_FALSE = {"1", "t", "T", "TRUE", "true", "True"}, {"0", "f", "F", "FALSE", "false", "False"}
+_UNRESOLVED = object()
+
+
+def _gh_api_argv(tokens):
+    """``(flags, positional, end)`` of ``gh api`` arguments as gh 2.98.0's pflag parser reads them, else ``None``.
+
+    ``flags`` maps a flag's name to its values in order; ``end`` is the index of the ``--`` that
+    ends the flags, else ``len(tokens)``. A long flag takes ``--name=value`` or the next
+    argument; shorthands combine (``-iXPOST``), attach (``-Fkey=value``) or take ``-F=value``;
+    ``-`` is positional. An unknown flag, a missing value or help is ``None``: gh sends no request.
+    """
+    flags, positional, queue = {}, [], [str(token) for token in tokens]
+    end = len(queue)
+    while queue:
+        token = queue.pop(0)
+        if token == "--":
+            end -= len(queue) + 1
+            positional.extend(queue)
+            break
+        if not token.startswith("-") or token == "-":
+            positional.append(token)
+            continue
+        if token.startswith("--"):
+            spelling, eq, value = token.partition("=")
+            if spelling not in _GH_API_FLAGS:
+                return None
+            name, valued = _GH_API_FLAGS[spelling]
+            if valued and not eq:
+                if not queue:
+                    return None
+                value = queue.pop(0)
+            elif not valued:
+                value = True if not eq else True if value in _GO_TRUE else False if value in _GO_FALSE else None
+                if value is None:
+                    return None
+            flags.setdefault(name, []).append(value)
+            continue
+        shorthands = token[1:]
+        while shorthands:
+            if "-" + shorthands[0] not in _GH_API_FLAGS:
+                return None
+            name, valued = _GH_API_FLAGS["-" + shorthands[0]]
+            if len(shorthands) > 2 and shorthands[1] == "=":
+                value, shorthands = shorthands[2:], ""
+                if not valued:
+                    value = True if value in _GO_TRUE else False if value in _GO_FALSE else None
+                    if value is None:
+                        return None
+            elif not valued:
+                value, shorthands = True, shorthands[1:]
+            elif len(shorthands) > 1:
+                value, shorthands = shorthands[1:], ""
+            elif queue:
+                value, shorthands = queue.pop(0), ""
+            else:
+                return None
+            flags.setdefault(name, []).append(value)
+    return flags, positional, end
+
+
+def _go_atoi(text):
+    """Go's ``strconv.Atoi``: an optionally signed ASCII decimal within int64, else ``None``."""
+    match = re.fullmatch(r"([+-]?)0*([0-9]+)", text, re.ASCII)
+    if match is None or len(match[2]) > 19:
+        return None
+    number = int(match[1] + match[2])
+    return number if -(2**63) <= number < 2**63 else None
+
+
+def _gh_typed(text, read):
+    """gh 2.98.0 ``magicFieldValue`` of a ``-F`` value (pkg/cmd/api/fields.go).
+
+    ``@path`` and ``@-`` are a file's or standard input's text (``read``); then an int, a
+    boolean or null; any other value is the string, unless gh would fill a repository
+    placeholder into it.
+    """
+    if text.startswith("@"):
+        return read(text[1:])
+    number = _go_atoi(text)
+    if number is not None:
+        return number
+    if text in ("true", "false"):
+        return text == "true"
+    if text == "null":
+        return None
+    return _UNRESOLVED if _GH_PLACEHOLDER.search(text) else text
+
+
+def _gh_fields(raw, typed, value_of):
+    """gh 2.98.0 ``parseFields``: raw fields, then typed ones, into nested parameters, else ``None``.
+
+    Bracketed keys nest objects (``a[b]=1``) and append to arrays (``a[]=1``); a key without
+    ``=`` is an empty array only when it ends in ``[]``. Overriding a field, or a type
+    conflict, is gh's error: no request.
+    """
+    params = {}
+    for entry, magic in [*((entry, False) for entry in raw), *((entry, True) for entry in typed)]:
+        value_index, keystack, key_start = 0, [], 0
+        for position, char in enumerate(entry):
+            if char == "[":
+                if key_start == 0:
+                    keystack.append(entry[:position])
+                key_start = position + 1
+            elif char == "]":
+                keystack.append(entry[key_start:position])
+            elif char == "=":
+                if key_start == 0:
+                    keystack.append(entry[:position])
+                value_index = position + 1
+                break
+        if not keystack:
+            return None
+        if value_index == 0:
+            if keystack[-1] != "":
+                return None
+            value = None
+        else:
+            value = entry[value_index:]
+            if magic:
+                value = value_of(value)
+        target, is_array, subkey = params, False, ""
+        for key in keystack:
+            if key == "":
+                is_array = True
+                continue
+            if subkey != "":
+                target = _gh_slice(target, subkey, key) if is_array else _gh_map(target, subkey)
+                is_array = False
+                if target is None:
+                    return None
+            subkey = key
+        if is_array:
+            if value is None:
+                target[subkey] = []
+            elif subkey not in target:
+                target[subkey] = [value]
+            elif isinstance(target[subkey], list):
+                target[subkey].append(value)
+            else:
+                return None
+        elif subkey in target:
+            return None
+        else:
+            target[subkey] = value
+    return params
+
+
+def _gh_map(params, key):
+    if key not in params:
+        params[key] = {}
+    return params[key] if isinstance(params[key], dict) else None
+
+
+def _gh_slice(params, previous, key):
+    if previous not in params:
+        params[previous] = [{}]
+        return params[previous][0]
+    existing = params[previous]
+    if not isinstance(existing, list):
+        return None
+    if existing and isinstance(existing[-1], dict):
+        if key not in existing[-1]:
+            return existing[-1]
+        if existing[-1][key] is None:
+            return None  # gh's reflect.TypeOf(nil).Kind() panics: no request
+        if isinstance(existing[-1][key], list):
+            return existing[-1]
+    existing.append({})
+    return existing[-1]
+
+
+def _gh_contains_unresolved(value):
+    if value is _UNRESOLVED:
+        return True
+    if isinstance(value, dict):
+        return any(_gh_contains_unresolved(item) for item in value.values())
+    return isinstance(value, list) and any(_gh_contains_unresolved(item) for item in value)
+
+
+def _gh_group(params):
+    """gh 2.98.0 ``groupGraphQLVariables``: ``query`` and ``operationName`` stay top-level, every other field is a variable."""
+    top = {key: value for key, value in params.items() if key in ("query", "operationName")}
+    variables = {key: value for key, value in params.items() if key not in top}
+    return {**top, "variables": variables} if variables else top
+
+
+def _go_json(value):
+    """The bytes Go's ``encoding/json.Marshal`` writes for gh's parameters: sorted keys, compact, HTML-safe."""
+    text = json.dumps(value, ensure_ascii=False, separators=(",", ":"), sort_keys=True)
+    for char, escape in (("<", "\\u003c"), (">", "\\u003e"), ("&", "\\u0026"), (" ", "\\u2028"), (" ", "\\u2029")):
+        text = text.replace(char, escape)
+    return text.encode()
+
+
+def _gh_add_query(path, params):
+    """gh 2.98.0 ``addQuery`` (pkg/cmd/api/http.go): parameters as ``url.Values``, keys sorted."""
+    if not params:
+        return path
+    pairs = []
+
+    def add(key, value):
+        if isinstance(value, str):
+            pairs.append((key, value))
+        elif value is None:
+            pairs.append((key, ""))
+        elif isinstance(value, bool):
+            pairs.append((key, "true" if value else "false"))
+        elif isinstance(value, int):
+            pairs.append((key, str(value)))
+        elif isinstance(value, dict):
+            for subkey, item in value.items():
+                add(subkey, item)
+        elif isinstance(value, list):
+            for item in value:
+                add(key + "[]", item)
+
+    add("", params)
+    pairs.sort(key=lambda pair: pair[0])
+    query = "&".join(quote_plus(key, safe="") + "=" + quote_plus(value, safe="") for key, value in pairs)
+    return path + ("&" if "?" in path else "?") + query
+
+
+class _Stdin:
+    """A command's standard input as gh reads it: once, whole (:func:`_gh_api_call` refuses a second reader)."""
+
+    def __init__(self, data):
+        self.data = (
+            b""
+            if data is None
+            else data.encode()
+            if isinstance(data, str)
+            else bytes(data)
+            if isinstance(data, (bytes, bytearray, memoryview))
+            else None
+        )
+
+    def take(self):
+        data, self.data = self.data, b""
+        if data is None:
+            raise GitHubUnpreparedRequest("invalid_body_type")
+        return data
+
+
+def _source_bytes(source, stdin, cwd):
+    """The exact bytes gh reads from a ``--input`` or ``@`` source, whatever its size.
+
+    ``-`` is the command's standard input (:class:`_Stdin`), which gh is given unchanged. A
+    path, relative to the command's working directory, is opened without blocking and read only
+    if it is a regular file, which gh then reads itself. A pipe or device is refused unread: what
+    this client read from it could not be what gh reads, and it can neither block nor be consumed.
+    """
+    if source == "-":
+        return stdin.take()
+    path = Path(source)
+    path = path if path.is_absolute() else Path(cwd or ".") / path
+    try:
+        descriptor = os.open(path, os.O_RDONLY | os.O_NONBLOCK | os.O_CLOEXEC)
+    except (OSError, ValueError):
+        raise GitHubUnpreparedRequest("body_unreadable") from None
+    with open(descriptor, "rb", closefd=True) as handle:
+        mode = os.fstat(descriptor).st_mode
+        if not stat.S_ISREG(mode):
+            raise GitHubUnpreparedRequest("body_unreadable" if stat.S_ISDIR(mode) else "body_not_replayable")
+        try:
+            return handle.read()
+        except OSError:
+            raise GitHubUnpreparedRequest("body_unreadable") from None
+
+
+@dataclass
+class _GhApiCall:
+    """The request one ``gh api`` command line makes, as gh 2.98.0 builds it (pkg/cmd/api)."""
+
+    method: str
+    endpoint: str
+    host: str | None
+    flags: dict
+    unresolved: bool
+    build: Any
+
+    def body(self):
+        """The exact body bytes, ``None`` for none, or ``_UNRESOLVED_BODY``; raises when gh's sources cannot be read."""
+        return self.build()[1]
+
+
+def _gh_api_call(tokens, *, stdin, cwd):
+    """The request ``gh api <tokens>`` sends, else ``None`` when gh 2.98.0 would send none.
+
+    One reading for admission and translation: pflag argv (:func:`_gh_api_argv`), gh's own
+    argument checks, fields (:func:`_gh_fields`, raw before typed) and the method gh defaults
+    to (POST once there are fields or ``--input``). ``build()`` reads every source gh reads,
+    in gh's order, and returns ``(url, body)``: ``--input`` is the body verbatim and the fields
+    become query parameters; otherwise a GET carries the fields as query parameters and any
+    other method as gh's JSON (``graphql`` keeps ``query`` and ``operationName`` top-level and
+    groups every other field under ``variables``).
+    """
+    parsed = _gh_api_argv(tokens)
+    if parsed is None:
+        return None
+    flags, positional, _ = parsed
+
+    def last(name, default=None):
+        return flags[name][-1] if name in flags else default
+
+    if len(positional) != 1:
+        return None
+    endpoint, given_method, input_file = positional[0], last("method", "GET"), last("input") or None
+    paginate, slurp = last("paginate") is True, last("slurp") is True
+    outputs = [last("verbose") is True, last("silent") is True, bool(last("jq")), bool(last("template"))]
+    if (
+        (paginate and given_method.upper() != "GET" and endpoint != "graphql")
+        or (paginate and input_file)
+        or (slurp and (last("jq") or last("template") or not paginate))
+        or sum(outputs) > 1
+    ):
+        return None
+    raw, typed = flags.get("raw-field", []), flags.get("field", [])
+    shape = _gh_fields(raw, typed, lambda text: _gh_typed(text, lambda _source: ""))
+    # gh reads standard input once and closes it: a second reader fails before any request.
+    stdin_readers = sum(entry.partition("=")[2] == "@-" for entry in typed if "=" in entry) + (input_file == "-")
+    if shape is None or stdin_readers > 1:
+        return None
+    method = given_method if "method" in flags else "POST" if shape or input_file else "GET"
+    method = method.upper() or "GET"
+    fields_unresolved = _gh_contains_unresolved(shape)
+
+    def build():
+        if fields_unresolved and not input_file and method != "GET":
+            return endpoint, _UNRESOLVED_BODY
+        stream = _Stdin(stdin)
+
+        def text_of(source):
+            return _source_bytes(source, stream, cwd).decode(errors="replace")
+
+        # gh reads the fields' sources first (``@-`` takes standard input), then ``--input``.
+        params = _gh_fields(raw, typed, lambda text: _gh_typed(text, text_of))
+        if input_file:
+            return _gh_add_query(endpoint, params), _source_bytes(input_file, stream, cwd)
+        if not params:
+            return endpoint, None
+        if method == "GET":
+            return _gh_add_query(endpoint, params), None
+        return endpoint, _go_json(_gh_group(params) if endpoint == "graphql" else params)
+
+    unresolved = fields_unresolved or _GH_PLACEHOLDER.search(endpoint) is not None
+    return _GhApiCall(method, endpoint, last("hostname"), flags, unresolved, build)
+
+
+def _normalize_native(args, host, pools, *, stdin=None, cwd=None):
+    """:func:`_normalize` of a native ``gh`` command line.
+
+    A ``gh api`` request is what gh builds (:func:`_gh_api_call`); its body is read only if
+    admission needs it. Any other command, and argv gh would refuse, is classified by its vetted
+    landing flow alone (:data:`_DASH_F`: its ``-F`` names a body or notes file, never a field).
+    """
+    call = (
+        _gh_api_call(args[2:], stdin=stdin, cwd=cwd)
+        if len(args) > 2 and _DASH_F.get(str(args[1])) == "--field"
+        else None
+    )
+    if call is not None:
+        host_class, path = _canonical_endpoint(call.endpoint, call.host or host)
+        if host_class not in {"unknown", "rejected"}:
+            return _normalize(call.method, path, pools, call.body)
+    flow = "landing" if _landing_flow() else None
+    classification = "invalid" if len(args) > 1 and args[1] == "api" else "command"
+    return _Request("", None, tuple(pools), flow, provenance=_Provenance(classification))
+
+
+def _argv_landing_flow(args):
+    """The landing flow a ``gh`` command line opens: a landing verb or a CI status read."""
+    if len(args) < 3 or Path(str(args[0])).name not in {"gh", "gh.real"}:
+        return None
+    command = (str(args[1]), str(args[2]))
+    if command in {("pr", "merge"), ("pr", "review")}:
+        return "landing-verb"
+    options, _ = _options([str(arg) for arg in args[3:]])
+    if command == ("run", "rerun") and (True in options.get("--failed", []) or {"--job", "-j"} & set(options)):
+        return "landing-verb"
+    rollup = command == ("pr", "view") and "statusCheckRollup" in str(_opt(options, "--json", default="")).split(",")
+    return "ci-status" if command == ("pr", "checks") or rollup else None
+
+
+@dataclass(frozen=True)
+class _Presentation:
+    """How a ``gh api`` command line presents GitHub's response, read by :func:`_gh_api_argv`.
+
+    ``end`` is where its flags end among the arguments after ``api``.
+    """
+
+    include: bool
+    paginate: bool
+    verbose: bool
+    end: int
+
+
+def _gh_api_presentation(args):
+    """The response-presentation flags of a ``gh api`` command line, else ``None`` (gh sends no request)."""
+    if len(args) < 2 or str(args[1]) != "api":
+        return None
+    parsed = _gh_api_argv(args[2:])
+    if parsed is None:
+        return None
+    flags, _, end = parsed
+
+    def given(name):
+        return flags.get(name, [False])[-1] is True
+
+    return _Presentation(given("include"), given("paginate"), given("verbose"), end)
+
+
+# gh's report of a failing response on standard error (pkg/cmd/api): its message and HTTP status.
+_GH_HTTP_ERROR = re.compile(rb"^gh: (?:(.*) \(HTTP ([0-9]{3})\)|HTTP ([0-9]{3}))\r?$", re.MULTILINE)
+
+
+def _gh_reported(response, report):
+    """Whether ``report`` (a :data:`_GH_HTTP_ERROR` match) is gh's report of ``response``.
+
+    gh names the status, after the error body's ``message`` when it has one.
+    """
+    message, status = report[0], int(report[1] or report[2])
+    try:
+        body = json.loads(response.body)
+    except (ValueError, RecursionError):
+        body = None
+    stated = body.get("message") if isinstance(body, dict) and isinstance(body.get("message"), str) else ""
+    return response.status == status and stated.encode() == message
+
+
+def _native_response(output, error, *, paginate, complete):
+    """GitHub's response to a ``gh api --include`` run, from gh's own framing: ``(response, end)``, else ``None``.
+
+    gh writes each response's frame (:func:`_frame`) before its body, on success and on HTTP
+    errors alike, so the first frame starts standard output. Without ``--paginate`` it is the
+    only response. A paginated run repeats a frame per page, each after a newline, and stops at
+    the first page that fails: a first page that failed is the first frame. Otherwise the
+    failing page's frame is the last one, followed only by GitHub's own error body, and gh
+    reports its status (after that body's message) on standard error; it is read only when that
+    report matches it and the output is ``complete`` (not cut short by the response ceiling).
+    Frame-like text anywhere else is a body (what ``--jq`` or ``--template`` rendered from
+    GitHub's data) and is never read as GitHub's headers.
+    """
+    first = _frame(output)
+    if first is None or not paginate or not 200 <= first[0].status < 300:
+        return first
+    reports = _GH_HTTP_ERROR.findall(error)
+    start = output.rfind(b"\nHTTP/")
+    while complete and reports and start > 0:
+        framed = _frame(output, start + 1)
+        if framed is not None:
+            return framed if _gh_reported(framed[0], reports[-1]) else None
+        start = output.rfind(b"\nHTTP/", 0, start)
+    return None
+
+
 def _native_command(args, client, runner, kwargs):
-    """Fall through once using the bounded, colour-safe native transport."""
-    buckets = sorted(_native_buckets(args, client.host))
-    with client._db() as db:
-        budgets = db.execute(
-            "SELECT remaining,reset FROM budget WHERE scope=? AND resource IN (" + ",".join("?" * len(buckets)) + ")",
-            (client.scope, *buckets),
-        ).fetchall()
-    reset = next((reset for remaining, reset in budgets if remaining <= RESERVE and reset > client.clock()), None)
-    if reset is not None:
-        return _result_process(args, Result(error="github_rate_limited", reset_at=reset), {}, kwargs)
+    """Fall through once using the bounded, colour-safe native transport, inside the same admission.
+
+    A ``gh api`` command line that is neither paginated nor verbose, and does not print
+    GitHub's headers itself, runs with ``--include`` after its last flag, so GitHub's status and
+    headers (a Retry-After included) come from gh's own framing (:func:`_native_response`).
+    That frame is then removed: the caller's output is exactly what gh prints without it.
+    """
+    pools = sorted(_native_buckets(args, client.host) - {_SYNTHETIC_HOLD})
+    request = _normalize_native(args, client.host, pools, stdin=kwargs.get("input"), cwd=client.cwd)
+    try:
+        with client._db() as db:
+            refusal = _admit(db, client.scope, request, client.clock())
+    except GitHubUnpreparedRequest as refused:
+        return _result_process(args, _unprepared(refused.reason), {}, kwargs)
+    if refusal is not None:
+        return _result_process(args, _limited(*refusal), {}, kwargs)
     executable = client.env.get("AGENT_REAL_GH", "gh")
     executor = runner or client.runner
     if executor is None:
@@ -1808,6 +3161,13 @@ def _native_command(args, client, runner, kwargs):
             executable = real_gh({**client.env, "AGENT_ORIGINAL_PATH": client.env.get("PATH", os.defpath)})
         except PublishBlocked:
             return _result_process(args, Result(error="github_transport_unavailable"), {}, kwargs)
+    presentation = _gh_api_presentation(args)
+    # gh merges paginated JSON pages only without --include, and --verbose prints no frame.
+    injected = presentation is not None and not (presentation.include or presentation.paginate or presentation.verbose)
+    command = [executable, *args[1:]]
+    if injected:
+        flags_end = 2 + presentation.end
+        command = [executable, *args[1:flags_end], "--include", *args[flags_end:]]
     call = dict(
         input=kwargs.get("input").encode() if isinstance(kwargs.get("input"), str) else kwargs.get("input"),
         env=client.env,
@@ -1816,32 +3176,58 @@ def _native_command(args, client, runner, kwargs):
         capture_output=True,
         check=False,
     )
-    if executor is None and client.max_response_bytes is not None:
-        import tempfile
-
-        with tempfile.TemporaryFile() as output_file:
-            native = _transport_process([executable, *args[1:]], output_file=output_file, **call)
-            output_file.seek(0)
-            native.stdout = output_file.read(client.max_response_bytes + 1)
+    if executor is None:
+        # An added frame is removed again: the ceiling bounds what the caller gets.
+        native = _transport_process(command, limit=client.max_response_bytes, framed=injected, **call)
     else:
-        native = (executor or _transport_process)([executable, *args[1:]], **call)
-    output, error = native.stdout or b"", native.stderr or b""
-    raw_error = error.encode() if isinstance(error, str) else error
-    if native.returncode and b"rate limit" in raw_error.lower():
-        reset = int(client.clock() + 60)
-        with client._db() as db:
-            _store_budget(db, client.scope, "secondary", 0, reset)
-        return _result_process(args, Result(error="github_rate_limited", reset_at=reset), {}, kwargs)
+        native = executor(command, **call)
+    output, error = (
+        value.encode() if isinstance(value, str) else value or b"" for value in (native.stdout, native.stderr)
+    )
+    framed = (
+        _native_response(
+            output,
+            error,
+            paginate=presentation.paginate,
+            complete=client.max_response_bytes is None or len(output) <= client.max_response_bytes,
+        )
+        if presentation is not None and (presentation.include or injected)
+        else None
+    )
+    response = framed[0] if framed is not None else None
+    if injected and framed is not None:
+        output = output[framed[1] :]
+    if native.returncode:
+        now = client.clock()
+        if response is not None:
+            # GitHub's own status and headers: decide as request() does.
+            limit = _limit_hold(response, now)
+        elif b"rate limit" in error.lower():
+            # gh's stderr carries no Retry-After: a synthetic hold, never binding on landing.
+            limit = [_SYNTHETIC_HOLD], int(now + 60), "secondary_hold"
+        else:
+            limit = None
+        if limit is not None:
+            holds, reset, reason = limit
+            budget = _budget_headers(response.headers) if response is not None else None
+            # GitHub's pool observation: the resource it names, else the one pool the command spends.
+            resource = (
+                (response.headers.get("x-ratelimit-resource") or (pools[0] if len(pools) == 1 else None))
+                if budget is not None
+                else None
+            )
+            with client._db() as db:
+                if resource is not None:
+                    _store_budget(db, client.scope, resource, *budget)
+                for hold in holds:
+                    _store_budget(db, client.scope, hold, 0, reset)
+            return _result_process(args, _limited(reason, reset), {}, kwargs)
     if client.max_response_bytes is not None and len(output) > client.max_response_bytes:
         return _result_process(args, Result(error="github_response_too_large"), {}, kwargs)
     text = kwargs.get("text") or kwargs.get("universal_newlines") or kwargs.get("encoding")
     for key, value in (("stdout", output), ("stderr", error)):
         value = (
-            value.decode(kwargs.get("encoding") or "utf-8", errors=kwargs.get("errors") or "strict")
-            if text and isinstance(value, bytes)
-            else value.encode()
-            if not text and isinstance(value, str)
-            else value
+            value.decode(kwargs.get("encoding") or "utf-8", errors=kwargs.get("errors") or "strict") if text else value
         )
         setattr(native, key, value)
         target = kwargs.get(key)
@@ -1930,33 +3316,18 @@ def _run_command(args, *, runner=None, client=None, fresh=False, allow_stale=Fal
         for raw_header in options.get("-H", []) + options.get("--header", []):
             name, _, value = raw_header.partition(":")
             request_headers[name.strip()] = value.strip()
-        endpoint = positional[0]
-        payload = None
-        frozen_input = None
+        # What is sent is what gh would send: the one reading admission also uses.
+        call = _gh_api_call(args[2:], stdin=kwargs.get("input"), cwd=client.cwd)
+        if call is None or call.unresolved:
+            return _native_command(args, client, runner, kwargs)
+        try:
+            endpoint, payload = call.build()
+        except GitHubUnpreparedRequest:
+            # A source this client will not read stays gh's own, inside the same admission.
+            return _native_command(args, client, runner, kwargs)
         if "--input" in options:
-            source = _opt(options, "--input")
-            raw = kwargs.get("input") if source == "-" else Path(source).read_bytes()
-            payload = json.loads(raw)
-            frozen_input = raw.encode() if isinstance(raw, str) else raw
-        for flag in ("-f", "--raw-field", "-F", "--field"):
-            for value in options.get(flag, []):
-                key, _, data = value.partition("=")
-                frozen_input = None
-                payload = payload or {}
-                payload[key] = (
-                    data
-                    if flag in {"-f", "--raw-field"}
-                    else json.loads(data)
-                    if data.isdigit() or data in {"true", "false", "null"}
-                    else data
-                )
-        method = _opt(options, "--method", "-X", default="POST" if payload else "GET")
-        if method == "GET" and payload:
-            endpoint += ("&" if "?" in endpoint else "?") + urlencode(payload)
-            payload = None
-            frozen_input = None
-        elif frozen_input is not None:
-            payload = frozen_input
+            json.loads(payload)
+        method = call.method
         if "--paginate" in options and method == "GET":
             # gh applies --jq to each page, and prints a non-list page as its
             # own document. A merged value is a different result, so those
@@ -2004,9 +3375,14 @@ def _run_command(args, *, runner=None, client=None, fresh=False, allow_stale=Fal
 
 
 def run(args, *, runner=None, client=None, fresh=False, allow_stale=False, **kwargs):
-    """Return command/configuration errors through the subprocess contract."""
+    """Return command/configuration errors through the subprocess contract.
+
+    A landing verb or CI status read is one landing operation: the reads it makes (the
+    merge's queue lookup, the pull request behind a check rollup) share its landing class.
+    """
     try:
-        return _run_command(args, runner=runner, client=client, fresh=fresh, allow_stale=allow_stale, **kwargs)
+        with _landing_operation(_argv_landing_flow(args) if args else None):
+            return _run_command(args, runner=runner, client=client, fresh=fresh, allow_stale=allow_stale, **kwargs)
     except ValueError:
         return _result_process(args, Result(error="github_invalid_command"), {}, kwargs)
 
@@ -2036,29 +3412,39 @@ def http_open(request, *, timeout=30, opener=None, **kwargs):
     if client.host in _api_hosts("github.com"):
         client._configure_host("github.com")
     method = request.get_method()
+    # The opener sends ``request`` itself. Admission reads its body only if the decision needs
+    # it, capturing it once (:class:`_DeferredBody`); the opener then sends exactly those bytes.
+    body = _DeferredBody(request.data) if request.data is not None else None
 
-    def transport(_method, endpoint, headers, body, request_timeout):
+    def transport(_method, endpoint, headers, _body, request_timeout):
+        outgoing = body.request_for(request) if body is not None else request
         for key, value in headers.items():
-            if key.lower() not in {k.lower() for k in request.headers}:
-                request.add_header(key, value)
+            if key.lower() not in {k.lower() for k in outgoing.headers}:
+                outgoing.add_header(key, value)
         try:
-            opened = (opener or urllib.request.urlopen)(request, timeout=request_timeout, **kwargs)
+            opened = (opener or urllib.request.urlopen)(outgoing, timeout=request_timeout, **kwargs)
         except urllib.error.HTTPError as exc:
             opened = exc
         with opened as response:
             return Response(response.status, dict(response.headers.items()), response.read())
 
     client.transport = transport
-    # POST/DELETE token endpoints contain sensitive responses and have no read cache.
-    result = client.request(
-        method,
-        request.full_url,
-        payload=None,
-        timeout=timeout,
-        fresh=True,
-        raw_response=True,
-        headers=dict(request.header_items()),
-    )
+    try:
+        # POST/DELETE token endpoints contain sensitive responses and have no read cache.
+        result = client.request(
+            method,
+            request.full_url,
+            payload=body,
+            timeout=timeout,
+            fresh=True,
+            raw_response=True,
+            headers=dict(request.header_items()),
+        )
+    finally:
+        if body is not None:
+            body.close()
+    if result.error == GitHubUnpreparedRequest.code:
+        raise GitHubUnpreparedRequest(result.reason)
     if result.error and result.error != "github_rate_limited":
         encoded = json.dumps(result.value).encode()
         raise urllib.error.HTTPError(
@@ -2085,7 +3471,12 @@ def command(args, *, runner=None, **kwargs):
 
 
 def rest_read(operation, repo, fields, *, runner=None, env=None, cwd=None, **kwargs):
-    """REST equivalents of former named GraphQL reads, with legacy shapes."""
+    """REST equivalents of former named GraphQL reads, with legacy shapes; merge facts are a landing flow."""
+    with _landing_operation("merge-facts" if operation == "merge-facts" else None):
+        return _rest_read(operation, repo, fields, runner=runner, env=env, cwd=cwd, **kwargs)
+
+
+def _rest_read(operation, repo, fields, *, runner=None, env=None, cwd=None, **kwargs):
     client = GitHubClient(env=env, cwd=cwd)
     observed = []
 
@@ -2121,8 +3512,9 @@ def rest_read(operation, repo, fields, *, runner=None, env=None, cwd=None, **kwa
                     detail = json.loads(proc.stdout)
                     if detail.get("error") == "github_http_error" and detail.get("status") == 404:
                         return None
-            if getattr(proc, "github_result", None) and proc.github_result.error == "github_rate_limited":
-                raise GitHubRateLimited(proc.github_result.reset_at)
+            refusal = refusal_of(proc, injected=runner is not None)
+            if refusal is not None:
+                raise refusal
             raise RuntimeError("GitHub REST read failed")
         return json.loads(proc.stdout)
 
@@ -2256,7 +3648,7 @@ def rest_read(operation, repo, fields, *, runner=None, env=None, cwd=None, **kwa
         else:
             raise ValueError("unknown REST read")
     except GitHubRateLimited as exc:
-        result = Result(error=exc.code, reset_at=exc.reset_at, status=429)
+        result = Result(error=exc.code, reset_at=exc.reset_at, status=429, reason=exc.reason)
     except (ValueError, KeyError, TypeError):
         result = Result(error="github_invalid_read")
     except RuntimeError:
@@ -2267,12 +3659,18 @@ def rest_read(operation, repo, fields, *, runner=None, env=None, cwd=None, **kwa
             stale=any(r.stale for r in observed if r),
             age_seconds=max((r.age_seconds for r in observed if r), default=0),
             reset_at=next((r.reset_at for r in observed if r and r.reset_at), None),
+            reason=next((r.reason for r in observed if r and r.reason), None),
         )
     return _result_process(["github", operation], result, {}, kwargs)
 
 
 def queue_read(operation, repo, fields, *, env=None, cwd=None, **kwargs):
-    """Queue-only GraphQL fields joined to ordinary conditional REST reads."""
+    """Queue-only GraphQL fields joined to ordinary conditional REST reads; a landing flow."""
+    with _landing_operation("queue-read"):
+        return _queue_read(operation, repo, fields, env=env, cwd=cwd, **kwargs)
+
+
+def _queue_read(operation, repo, fields, *, env=None, cwd=None, **kwargs):
     client = GitHubClient(env=env, cwd=cwd)
     timeout = kwargs.get("timeout") or 30
     owner, name = repo.split("/", 1)
@@ -2364,6 +3762,7 @@ def queue_read(operation, repo, fields, *, env=None, cwd=None, **kwargs):
         stale=any(r.stale for r in observations),
         age_seconds=max(r.age_seconds for r in observations),
         reset_at=next((r.reset_at for r in observations if r.reset_at), None),
+        reason=next((r.reason for r in observations if r.reason), None),
     )
     return _result_process(["github", operation], result, {}, kwargs)
 
@@ -2391,8 +3790,12 @@ def _graphql_error_detail(value):
 def _result_process(args, result, options, kwargs, *, api=True):
     if result.error:
         detail = {"error": result.error, "reset_at": result.reset_at}
-        if result.error == "github_http_error":
+        if result.error == "github_rate_limited":
+            detail["reason"] = result.reason
+        elif result.error == "github_http_error":
             detail["status"] = result.status
+        elif result.error == GitHubUnpreparedRequest.code:
+            detail["reason"] = result.reason
         elif result.error == "github_graphql_error":
             detail["errors"] = _graphql_error_detail(result.value)
         output = json.dumps(detail).encode()
@@ -2512,7 +3915,7 @@ def timer(function):
         try:
             return function(*args, **kwargs)
         except GitHubRateLimited as exc:
-            print(f"GitHub timer: skipped github_rate_limited reset_at={exc.reset_at}")
+            print(f"GitHub timer: skipped github_rate_limited reset_at={exc.reset_at} reason={exc.reason}")
             return 0
         except subprocess.CalledProcessError as exc:
             observation = getattr(exc, "github_result", None)
@@ -2523,22 +3926,35 @@ def timer(function):
             ):
                 raise
             reset = observation.reset_at
-            print(f"GitHub timer: skipped github_rate_limited reset_at={reset}")
+            print(f"GitHub timer: skipped github_rate_limited reset_at={reset} reason={observation.reason}")
             return 0
 
     return wrapped
 
 
 def rate_limited_command(function):
-    """Keep an exhausted publishing preflight in the typed command contract."""
+    """Keep an exhausted publishing preflight in the typed command contract.
+
+    On the publisher's vetted ``publish`` entry point, a verb that lands a PR runs as one
+    landing operation, so its readiness and recovery reads share the verb's landing class.
+    """
     from functools import wraps
+
+    code = getattr(function, "__code__", None)
+    vetted = code is not None and _code_identity(code) == (
+        os.path.realpath(_REPOSITORY / _PUBLISHER_ENTRY_POINT[0]),
+        _PUBLISHER_ENTRY_POINT[1],
+    )
 
     @wraps(function)
     def wrapped(*args, **kwargs):
+        verb = args[0] if args else kwargs.get("verb")
+        landing = vetted and isinstance(verb, str) and verb in _PUBLISHER_LANDING_VERBS
         try:
-            return function(*args, **kwargs)
+            with _landing_operation("publisher-landing-verb" if landing else None):
+                return function(*args, **kwargs)
         except GitHubRateLimited as exc:
-            result = Result(error=exc.code, reset_at=exc.reset_at, status=429)
+            result = Result(error=exc.code, reset_at=exc.reset_at, status=429, reason=exc.reason)
             return _result_process(["github", "publish"], result, {}, kwargs)
 
     return wrapped

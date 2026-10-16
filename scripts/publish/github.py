@@ -10,6 +10,7 @@ import argparse
 import json
 import os
 import re
+import subprocess
 import sys
 import tempfile
 from pathlib import Path
@@ -291,6 +292,9 @@ def _prepare_recovery(verb, fields, dest, cwd, environment, runner, *, queue=Fal
                 slurp=name in {"comments", "timeline", "jobs"},
                 **selectors,
             )
+            refusal = github_client.refusal_of(result, injected=runner is not None)
+            if refusal is not None:
+                raise refusal
             value = json.loads(result.stdout)
             if name in {"comments", "timeline"}:
                 return [item for page in value for item in page]
@@ -299,6 +303,11 @@ def _prepare_recovery(verb, fields, dest, cwd, environment, runner, *, queue=Fal
             return value
         except github_client.GitHubRateLimited:
             raise
+        except subprocess.CalledProcessError as exc:
+            refusal = github_client.refusal_of(exc, injected=runner is not None)
+            if refusal is not None:
+                raise refusal from None
+            raise gate.PublishBlocked("RECOVERY_LOOKUP_UNKNOWN: live evidence unavailable") from None
         except Exception:
             raise gate.PublishBlocked("RECOVERY_LOOKUP_UNKNOWN: live evidence unavailable") from None
 
@@ -457,8 +466,11 @@ def publish(
                 kwargs["fresh"] = True
             result = _send(args, environment=kwargs.pop("env"), runner=runner, cwd=kwargs.pop("cwd"), **kwargs)
             observation = getattr(result, "github_result", None)
-            if observation is not None and (observation.stale or observation.error == "github_rate_limited"):
-                raise github_client.GitHubRateLimited(observation.reset_at)
+            if observation is not None and observation.stale:
+                raise github_client.GitHubRateLimited(observation.reset_at, observation.reason)
+            refusal = github_client.refusal_of(result, injected=runner is not None)
+            if refusal is not None:
+                raise refusal
             return result
 
         recovery_queue = False
