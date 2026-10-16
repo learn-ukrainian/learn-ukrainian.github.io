@@ -257,7 +257,7 @@
     - зва́ти
     - до́бре
     - день
-  - sentence: Ме́не ____ Анна.
+  - sentence: Мене́ ____ Анна.
     answer: зва́ти
     options:
     - зва́ти
@@ -428,9 +428,9 @@
       so call А, О, У letters that mark vowel sounds.
   - sentence: Do not say м[а]локо for молоко.
     error: м[а]локо
-    correction: молоко
+    correction: молоко́
     options:
-    - молоко
+    - моло́ко
     - молоко́
     explanation: >-
       Safer habit: keep Ukrainian о clean. Say молоко́ with three clear о
