@@ -1,0 +1,11 @@
+# PROPOSED CPU weight for lu.slice (#10735, stage 1). INERT: the .example suffix
+# is never loaded by systemd, and no script installs this file. Nothing here is
+# applied until the host maintenance in docs/runbooks/driver-memory-scope.md
+# ("CPU-time containment") copies it next to the existing limits drop-in as
+# ~/.config/systemd/user/lu.slice.d/20-cpu-weight.conf.
+# Leave the memory limits drop-in (10-limits.conf) untouched.
+[Slice]
+# Relative share (default 100). It matters only while the parent cgroup is
+# contended, where half weight makes this slice yield CPU to its siblings; it is
+# not a cap. The cap is CPUQuota= in 30-cpu-quota.conf.example.
+CPUWeight=50

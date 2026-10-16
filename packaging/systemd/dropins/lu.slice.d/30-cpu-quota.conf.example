@@ -1,0 +1,15 @@
+# PROPOSED CPU-time ceiling for lu.slice (#10735, stage 2, only after gate G2).
+# INERT: the .example suffix is never loaded by systemd, and no script installs
+# this file. It is a separate file so the quota rolls back independently of the
+# weight in 20-cpu-weight.conf.example. Host maintenance copies it next to the
+# existing limits drop-in as ~/.config/systemd/user/lu.slice.d/30-cpu-quota.conf
+# (procedure and rollback: docs/runbooks/driver-memory-scope.md, "CPU-time
+# containment").
+# Leave the memory limits drop-in (10-limits.conf) untouched.
+[Slice]
+# Percent of ONE CPU per 100%: 1200% is twelve CPUs' worth of CPU time across
+# every descendant. It caps CPU time, not load average or thread count. It is
+# enforced through cpu.max.
+CPUQuota=1200%
+# Enforcement window; a short period limits how long a burst can run at full speed.
+CPUQuotaPeriodSec=100ms

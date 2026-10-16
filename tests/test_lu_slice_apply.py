@@ -178,22 +178,31 @@ def test_never_restarts_or_stops_units(tmp_path: Path) -> None:
 
 
 # CPU-time containment (#10735): the ceiling is documentation plus an inert example.
-CPU_EXAMPLE = REPO / "packaging/systemd/dropins/lu.slice.d/20-cpu.conf.example"
+CPU_DROPIN_DIR = REPO / "packaging/systemd/dropins/lu.slice.d"
+WEIGHT_EXAMPLE = CPU_DROPIN_DIR / "20-cpu-weight.conf.example"
+QUOTA_EXAMPLE = CPU_DROPIN_DIR / "30-cpu-quota.conf.example"
 RUNBOOK = REPO / "docs/runbooks/driver-memory-scope.md"
 
 
-def test_cpu_example_is_inert_and_has_exactly_the_documented_keys() -> None:
-    assert CPU_EXAMPLE.name.endswith(".example")  # systemd never loads it
+def _slice_keys(path: Path) -> dict[str, str]:
+    assert path.name.endswith(".example")  # systemd never loads it
     parser = configparser.ConfigParser(interpolation=None)
     parser.optionxform = str  # type: ignore[assignment,method-assign]
-    parser.read_string(CPU_EXAMPLE.read_text())
+    parser.read_string(path.read_text())
     assert parser.sections() == ["Slice"]
-    assert dict(parser["Slice"]) == {
-        "CPUAccounting": "yes",
-        "CPUQuota": "1200%",
-        "CPUQuotaPeriodSec": "100ms",
-        "CPUWeight": "50",
-    }
+    return dict(parser["Slice"])
+
+
+def test_cpu_examples_are_inert_and_have_exactly_the_documented_keys() -> None:
+    # CPUAccounting= is deprecated since systemd 258 (no effect), so it is absent.
+    assert _slice_keys(WEIGHT_EXAMPLE) == {"CPUWeight": "50"}
+    assert _slice_keys(QUOTA_EXAMPLE) == {"CPUQuota": "1200%", "CPUQuotaPeriodSec": "100ms"}
+
+
+def test_cpu_examples_are_the_only_cpu_dropins_and_leave_the_memory_dropin_alone() -> None:
+    names = sorted(path.name for path in CPU_DROPIN_DIR.iterdir())
+    assert names == ["20-cpu-weight.conf.example", "30-cpu-quota.conf.example"]
+    assert not (CPU_DROPIN_DIR / "10-limits.conf").exists()
 
 
 # The tests below pin runbook and example prose. A deliberate procedure edit is
@@ -206,10 +215,10 @@ def _cpu_section() -> str:
 def test_runbook_cpu_section_names_each_verification_property() -> None:
     section = _cpu_section()
     for needle in (
-        "CPUAccounting", "CPUQuotaPerSecUSec", "CPUQuotaPeriodUSec", "CPUWeight",
+        "CPUQuotaPerSecUSec", "CPUQuotaPeriodUSec", "CPUWeight",
         "MemoryMax", "MemoryHigh", "MemorySwapMax", "cpu.max", "cpu.weight",
         "nr_throttled", "throttled_usec", "cpu.pressure", "/api/health",
-        "20-cpu.conf", "daemon-reload", "1200%", "100ms", "PROPOSED",
+        "20-cpu-weight.conf", "30-cpu-quota.conf", "daemon-reload", "1200%", "100ms",
     ):  # fmt: skip
         assert needle in section, needle
     assert "not a load-average bound and not a thread-count bound" in section
@@ -217,10 +226,10 @@ def test_runbook_cpu_section_names_each_verification_property() -> None:
 
 
 def test_runbook_records_memory_snapshot_before_the_change() -> None:
-    apply_step = _cpu_section().split("### Apply", 1)[1].split("### Verify", 1)[0]
+    section = _cpu_section()
     snapshot = "systemctl --user show lu.slice -p MemoryHigh -p MemoryMax -p MemorySwapMax"
-    assert snapshot in apply_step
-    assert apply_step.index(snapshot) < apply_step.index("install -m 0644")
+    assert snapshot in section
+    assert section.index(snapshot) < section.index("install -m 0644")
 
 
 def test_runbook_persistent_dropin_is_the_only_path() -> None:
@@ -228,8 +237,10 @@ def test_runbook_persistent_dropin_is_the_only_path() -> None:
     assert "set-property --runtime" not in section
     assert "CPUQuota= CPUWeight=" not in section
     rollback = section.split("### Rollback", 1)[1]
-    assert rollback.count("rm ") == 1  # only 20-cpu.conf is removed
-    assert 'lu.slice.d/20-cpu.conf"' in rollback
+    assert rollback.count("rm ") == 2  # one CPU file per stage, never both at once
+    assert 'rm "$D/30-cpu-quota.conf"' in rollback
+    assert 'rm "$D/20-cpu-weight.conf"' in rollback
+    assert "Never run `systemctl --user revert lu.slice`" in " ".join(section.split())
     assert "10-limits.conf" in rollback and "never touched" in rollback
     assert "cpu.max" in rollback and "stop and report to" in rollback
 
@@ -252,7 +263,9 @@ def test_runbook_verify_states_the_apply_time_cpu_max_line() -> None:
     verify = " ".join(_cpu_section().split("### Verify", 1)[1].split("### Observe", 1)[0].split())
     assert "`<quota> <period>`" in verify
     assert "apply-time expected line is `1200000 100000`" in verify
-    assert "`cpu.weight` must read `50`" in verify
+    assert "`cpu.weight` `50`" in verify
+    assert "`CPUQuotaPerSecUSec=12s`" in verify and "`CPUQuotaPeriodUSec=100ms`" in verify
+    assert "There is no `CPUAccounting` property" in verify
 
 
 def test_runbook_quota_rationale_is_an_average_cap_not_a_reservation() -> None:
@@ -273,13 +286,62 @@ def test_runbook_publishes_no_host_sizing() -> None:
     assert "private operations" in _cpu_section()
 
 
-def test_cpu_example_does_not_claim_accounting_enforces_the_quota() -> None:
-    text = " ".join(CPU_EXAMPLE.read_text().replace("# ", " ").split())
-    assert "and the quota are enforced" not in text
-    assert "enforced by CPUQuota= below, through cpu.max" in text
-    assert "only while the parent cgroup is contended" in text
-    assert "not a cap" in text
-    assert "host is busy" not in text
+def test_runbook_cpu_section_is_staged_with_gates_and_the_approved_scope() -> None:
+    section = " ".join(_cpu_section().split())
+    for needle in (
+        "weight approved now, quota approved only after gate G2",
+        "Stage 0: sampler (read-only",
+        "Stage 1: weight only",
+        "Gate G1: the PR that added these files is merged and stage 0 has at least 1 hour of samples",
+        "rehearse the stage 1 rollback once",
+        "controlled 10-worker pytest burst once under weight only",
+        "Stage 2: quota",
+        "Gate G2",
+        "24 hours of samples under weight 50",
+        "at or below 12.0 CPUs",
+        "no stage 1 stop trigger fired",
+        "do not apply the quota",
+        "report the distribution to the advisors or the operator",
+        "rerun the same burst, and observe for 24 hours",
+    ):
+        assert needle in section, needle
+
+
+def test_runbook_cpu_section_lists_the_five_stop_triggers() -> None:
+    triggers = _cpu_section().split("### Stop triggers", 1)[1].split("### Rollback", 1)[0]
+    flat = " ".join(triggers.split())
+    assert len(re.findall(r"^\d\. ", triggers, re.MULTILINE)) == 5
+    for needle in (
+        "`/api/health` call takes over 1 s",
+        "more than 2x the stage 1 burst's",
+        "3600 s wait limit",
+        "pre-push gate stage times out",
+        "`throttled_usec` is growing",
+        "exceeds 25% over any hour",
+        "`lu-driver.slice` CPU-pressure rate is more than 2x",
+        "A memory limit differs from the snapshot",
+        "`cpu.max` / `cpu.weight` do not read as expected",
+    ):
+        assert needle in flat, needle
+
+
+def test_runbook_cpu_section_notes_work_outside_the_slice_and_the_sampler() -> None:
+    section = " ".join(_cpu_section().split())
+    assert "About 1.4 CPUs on average of fleet work" in section
+    assert "runs outside `lu.slice` and is uncapped" in section
+    assert "Moving that work into the slice is a separate approval" in section
+    assert "sleep 10; done >> batch_state/reports/10735-cpu-samples.log" in section
+    assert "never add a runtime override" in section
+
+
+def test_cpu_examples_do_not_claim_accounting_enforces_the_quota() -> None:
+    weight = " ".join(WEIGHT_EXAMPLE.read_text().replace("# ", " ").split())
+    quota = " ".join(QUOTA_EXAMPLE.read_text().replace("# ", " ").split())
+    assert "CPUAccounting" not in weight + quota
+    assert "It is enforced through cpu.max" in quota
+    assert "only while the parent cgroup is contended" in weight
+    assert "not a cap" in weight
+    assert "host is busy" not in weight + quota
 
 
 # sha256 of scripts/ops/lu_slice_apply.sh at the #10735 base commit. The CPU

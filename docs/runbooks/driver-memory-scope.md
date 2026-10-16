@@ -139,18 +139,27 @@ own worker count.
 
 ## CPU-time containment
 
-**Status: PROPOSED (#10735).** The ceiling below is not applied anywhere. It needs
-designated approval, then routine host maintenance by the accountable driver.
-`packaging/systemd/dropins/lu.slice.d/20-cpu.conf.example` carries the keys; the
-`.example` suffix is never loaded, and no script (including
-`scripts/ops/lu_slice_apply.sh`) installs it. Installation is manual, below.
+**Status: weight approved now, quota approved only after gate G2 (#10735).**
+Designated approval (2026-10-16) covers `CPUWeight=50` now (stage 1) and
+`CPUQuota=1200%` with `CPUQuotaPeriodSec=100ms` only after gate G2 passes
+(stage 2). Applying both in one step, or skipping a gate, needs a new approval.
+Nothing is applied by the repository: the two files
+`packaging/systemd/dropins/lu.slice.d/20-cpu-weight.conf.example` and
+`packaging/systemd/dropins/lu.slice.d/30-cpu-quota.conf.example` are inert (the
+`.example` suffix is never loaded), and no script (including
+`scripts/ops/lu_slice_apply.sh`) installs them. Installation is manual, below, as
+routine host maintenance by the accountable driver. The quota is a separate file
+so it rolls back independently of the weight.
 
-| Key | Proposed value |
-| --- | --- |
-| `CPUAccounting` | `yes` |
-| `CPUQuota` | `1200%` |
-| `CPUQuotaPeriodSec` | `100ms` |
-| `CPUWeight` | `50` |
+| File | Key | Value | Stage |
+| --- | --- | --- | --- |
+| `20-cpu-weight.conf.example` | `CPUWeight` | `50` | 1 |
+| `30-cpu-quota.conf.example` | `CPUQuota` | `1200%` | 2 (after G2) |
+| `30-cpu-quota.conf.example` | `CPUQuotaPeriodSec` | `100ms` | 2 (after G2) |
+
+`CPUAccounting=` is not set: it is deprecated since systemd 258, has no effect on
+the host's systemd and is never shown by `systemctl --user show`. The kernel
+counters (`cpu.stat`) are readable without it.
 
 Rationale: these are the reference values for the current host class. The host
 sizing and the measured evidence behind them live in the private operations
@@ -163,8 +172,10 @@ run on all of them at once until its quota for the window is spent, and is then
 throttled until the next window. That quota (1.2 CPU-seconds per 100 ms, then
 throttle) is the real cap. `CPUWeight=50` (default 100) is not a cap: it only
 makes the slice yield CPU to its siblings while the parent cgroup is contended,
-and does nothing when the parent has idle CPU. Re-measure before approval and
-after any workload change.
+and does nothing when the parent has idle CPU. The interactive services (Monitor
+API, Sources, Work) run in a sibling slice, so the weight alone gives them a 2:1
+share under contention. Drivers run inside `lu.slice`, so the quota throttles
+drivers together with workers.
 
 Semantics: systemd percentages are per CPU, so `100%` is one CPU and `1200%` is
 twelve. `CPUQuota` caps CPU time per `CPUQuotaPeriodSec` for the whole slice and
@@ -173,24 +184,76 @@ every descendant; it is not a load-average bound and not a thread-count bound
 The memory limits are separate and unchanged.
 
 **Do not touch the existing memory limits drop-in** (`lu.slice.d/10-limits.conf`).
-Add only the new file beside it, and re-verify the memory properties after every
-change, as below.
+Add only the new files beside it, and re-verify the memory properties after every
+change, as below. **Never run `systemctl --user revert lu.slice`** (it would also
+delete `10-limits.conf`) and never add a runtime override (`set-property
+--runtime` or a control drop-in): a runtime override outranks the unit directory
+and can mask the persistent drop-ins.
 
-### Apply (after approval)
+**Outside the pool.** About 1.4 CPUs on average of fleet work (detached
+`systemd-run` pushes, pre-push gates and tmux scopes) runs outside `lu.slice`
+and is uncapped; the weight gives it priority over drivers and workers in the
+pool. Moving that work into the slice is a separate approval (the governed
+wrapper in #10662 is the route), as is any `CPUWeight` on `lu-driver.slice`.
 
-First record the memory properties, so the verification can compare against them:
+### Rollout stages and gates
+
+Set the cgroup path and the drop-in directory once, and record the memory
+properties, so every verification can compare against them:
 
 ```bash
-systemctl --user show lu.slice -p MemoryHigh -p MemoryMax -p MemorySwapMax
+cg="/sys/fs/cgroup$(systemctl --user show lu.slice -p ControlGroup --value)"
+D="$HOME/.config/systemd/user/lu.slice.d"
+systemctl --user show lu.slice -p MemoryHigh -p MemoryMax -p MemorySwapMax   # snapshot; keep it
 ```
 
-Then install the persistent drop-in. It is the only apply path; there is no
-`set-property` trial, because a runtime control drop-in outranks the unit
-directory and can mask a later `20-cpu.conf`.
+**Stage 0: sampler (read-only, start now).** Run this detached (its own tmux
+session or transient unit); it appends one line every 10 seconds to a log under
+`batch_state/reports/` and stops only when you stop it (plan for 25 hours):
 
 ```bash
-install -m 0644 packaging/systemd/dropins/lu.slice.d/20-cpu.conf.example \
-  "$HOME/.config/systemd/user/lu.slice.d/20-cpu.conf"
+P=$(systemctl --user show lu.slice -p ControlGroup --value); R=/sys/fs/cgroup${P%/lu.slice}
+while :; do printf '%s' "$(date -u +%s)"
+ for g in lu.slice lu.slice/lu-dispatch.slice lu.slice/lu-driver.slice app.slice; do
+  awk -v g="${g##*/}" '/^(usage_usec|nr_periods|nr_throttled|throttled_usec) /{printf " %s.%s=%s",g,$1,$2}' "$R/$g/cpu.stat"
+  awk -v g="${g##*/}" '/^some/{printf " %s.psi_some_%s",g,$5}' "$R/$g/cpu.pressure"; done
+ awk '/^usage_usec /{printf " host.usage_usec=%s",$2}' /sys/fs/cgroup/cpu.stat
+ awk '/^some/{printf " host.psi_some_%s",$5}' /proc/pressure/cpu
+ curl -sS --max-time 5 -o /dev/null -w ' api_s=%{time_total}\n' http://127.0.0.1:8765/api/health || echo ' api_s=timeout'
+ sleep 10; done >> batch_state/reports/10735-cpu-samples.log
+```
+
+**Stage 1: weight only.** Gate G1: the PR that added these files is merged and
+stage 0 has at least 1 hour of samples. Then:
+
+1. Apply the weight (below), verify, and rehearse the stage 1 rollback once
+   straight away; reinstall the weight afterwards.
+2. Run the controlled 10-worker pytest burst once under weight only. It is the
+   reference for stage 2.
+
+**Stage 2: quota.** Gate G2, all of: 24 hours of samples under weight 50; the
+95th percentile of 10-second `lu.slice` usage (from `usage_usec` deltas) at or
+below 12.0 CPUs; no stage 1 stop trigger fired; the memory limits equal the
+snapshot. Then apply the quota (below), rerun the same burst, and observe for 24
+hours. If the 95th percentile is above 12.0 CPUs, do not apply the quota: report
+the distribution to the advisors or the operator, because the number is then a
+throughput-policy choice.
+
+### Apply
+
+Stage 1 (weight):
+
+```bash
+install -m 0644 packaging/systemd/dropins/lu.slice.d/20-cpu-weight.conf.example \
+  "$D/20-cpu-weight.conf"
+systemctl --user daemon-reload
+```
+
+Stage 2 (quota, only after G2):
+
+```bash
+install -m 0644 packaging/systemd/dropins/lu.slice.d/30-cpu-quota.conf.example \
+  "$D/30-cpu-quota.conf"
 systemctl --user daemon-reload
 ```
 
@@ -201,43 +264,68 @@ systemctl --user daemon-reload
 Never judge from the drop-in text. Read what the manager and the kernel report:
 
 ```bash
-systemctl --user show lu.slice -p CPUAccounting -p CPUQuotaPerSecUSec -p CPUQuotaPeriodUSec -p CPUWeight -p MemoryMax -p MemoryHigh -p MemorySwapMax
+systemctl --user show lu.slice -p CPUWeight -p CPUQuotaPerSecUSec -p CPUQuotaPeriodUSec -p MemoryMax -p MemoryHigh -p MemorySwapMax
+cat "$cg/cpu.weight" "$cg/cpu.max"
 ```
 
-Expect `CPUAccounting=yes`, `CPUQuotaPerSecUSec=12s`, `CPUQuotaPeriodUSec=100ms`,
-`CPUWeight=50`, and `MemoryHigh`, `MemoryMax`, `MemorySwapMax` equal to the
-snapshot recorded before the change. Then read the slice's cgroup: `cpu.max` is
-`<quota> <period>`, and the apply-time expected line is `1200000 100000`;
-`cpu.weight` must read `50`.
+After stage 1 expect `CPUWeight=50`, `CPUQuotaPerSecUSec=infinity`, `cpu.weight`
+`50` and `cpu.max` `max 100000`. After stage 2 expect `CPUWeight=50`,
+`CPUQuotaPerSecUSec=12s`, `CPUQuotaPeriodUSec=100ms`, `cpu.weight` `50`, and
+`cpu.max` `<quota> <period>`; the apply-time expected line is `1200000 100000`. In
+both stages `MemoryHigh`, `MemoryMax` and `MemorySwapMax` must equal the snapshot
+recorded before the change. There is no `CPUAccounting` property to look for.
 
 ### Observe
 
-Sample every 60 s for at least 24 hours of normal fleet operation and across a
+Sample every 10 s (stage 0 sampler) for the periods above, and across the
 controlled 10-worker pytest burst:
 
 - `cpu.stat`: `nr_throttled` and `throttled_usec` (growth shows the ceiling bites);
-- `cpu.pressure` (PSI) on the slice;
+- `cpu.pressure` (PSI) on the slice and on `lu-driver.slice`;
 - test-slot waits (`TEST SLOTS: waiting`) and their duration;
 - Monitor `/api/health` latency, which must stay responsive during the burst.
 
-If a ceiling that contains the burst also starves interactive services, stop,
-report the measurements and propose weights only.
+### Stop triggers
+
+Any one of these means: roll back the current stage (below), then report.
+
+1. Any `/api/health` call takes over 1 s, or the burst's 95th-percentile latency
+   under the quota is more than 2x the stage 1 burst's.
+2. A test slot is refused after the 3600 s wait limit, a pre-push gate stage
+   times out, or a worker misses its deadline while `throttled_usec` is growing.
+3. Outside the controlled burst, `lu.slice` `nr_throttled` / `nr_periods` exceeds
+   25% over any hour.
+4. `lu-driver.slice` CPU-pressure rate is more than 2x the previous stage's.
+5. A memory limit differs from the snapshot, or `cpu.max` / `cpu.weight` do not
+   read as expected.
 
 ### Rollback
 
+Stage 2 rollback (the weight stays):
+
 ```bash
-rm "$HOME/.config/systemd/user/lu.slice.d/20-cpu.conf"
+rm "$D/30-cpu-quota.conf"
 systemctl --user daemon-reload
-systemctl --user show lu.slice -p CPUAccounting -p CPUQuotaPerSecUSec -p CPUQuotaPeriodUSec -p CPUWeight -p MemoryMax -p MemoryHigh -p MemorySwapMax
+cat "$cg/cpu.max"
 ```
 
-Remove only `20-cpu.conf`; the `10-limits.conf` memory drop-in is never touched.
-Re-read the manager values and the slice's `cpu.max` and `cpu.weight`. They are
-expected to return to the unlimited defaults: `CPUQuotaPerSecUSec=infinity`,
-`cpu.weight` back to the default `100`, and `cpu.max` unlimited. On cgroup v2
-`cpu.max` is `<quota> <period>`, so an unlimited slice reads `max 100000` (the
-period is kept); compare the first field with `max` and treat `max <period>` as
-cleared. The memory properties must equal the snapshot recorded before the change.
+Stage 1 rollback:
+
+```bash
+rm "$D/20-cpu-weight.conf"
+systemctl --user daemon-reload
+cat "$cg/cpu.weight"
+```
+
+Remove only the CPU file of the stage being rolled back; the `10-limits.conf`
+memory drop-in is never touched. Re-read the manager values (the `show` command
+under Verify) and the slice's `cpu.max` and `cpu.weight`. They are expected to
+return to the unlimited defaults: `CPUQuotaPerSecUSec=infinity`, `cpu.weight`
+back to the default `100` (after the stage 1 rollback), and `cpu.max` unlimited.
+On cgroup v2 `cpu.max` is `<quota> <period>`, so an unlimited slice reads `max
+100000` (the period is kept); compare the first field with `max` and treat `max
+<period>` as cleared. The memory properties must equal the snapshot recorded
+before the change.
 
 If the first field of `cpu.max` is not `max`, or if `MemoryHigh`, `MemoryMax` or
 `MemorySwapMax` differ from that snapshot, stop and report to the driver; do not
