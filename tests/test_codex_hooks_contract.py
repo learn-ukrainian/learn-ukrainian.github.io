@@ -213,6 +213,72 @@ def test_ordinary_codex_start_is_concise_and_compact_session_start_is_silent(
     assert compacted.stdout == ""
 
 
+def test_ordinary_codex_start_caps_unbounded_root_hygiene_names(tmp_path: Path) -> None:
+    """A 139-byte unexpected root name is what made CI report 625 bytes.
+
+    The concise line keeps at most 11 bytes of joined names (8-byte prefix
+    plus ``...`` when truncated). The full list stays on stderr.
+    """
+    project = tmp_path / "primary"
+    project.mkdir()
+    _run(["git", "init", "-b", "main"], cwd=project)
+    _run(["git", "config", "user.email", "hooks@example.invalid"], cwd=project)
+    _run(["git", "config", "user.name", "Hook Tests"], cwd=project)
+    (project / ".gitignore").write_text(".venv\nscripts\n", encoding="utf-8")
+    (project / ".python-version").write_text(
+        (REPO_ROOT / ".python-version").read_text(encoding="utf-8"),
+        encoding="utf-8",
+    )
+    (project / "README.md").write_text("hook test\n", encoding="utf-8")
+    (project / ".venv").symlink_to(PRIMARY_ROOT / ".venv")
+    (project / "scripts").symlink_to(REPO_ROOT / "scripts")
+    _run(["git", "add", ".gitignore", ".python-version", "README.md"], cwd=project)
+    _run(["git", "commit", "-m", "fixture"], cwd=project)
+    long_name = "n" * 139
+    (project / long_name).mkdir()
+
+    deployed = tmp_path / ".codex" / "hooks"
+    deployed.mkdir(parents=True)
+    session_hook = deployed / "session-setup.sh"
+    shutil.copy2(SESSION_SETUP_HOOK, session_hook)
+    environment = os.environ.copy()
+    for key in tuple(environment):
+        if (
+            key.startswith("LEARN_UKRAINIAN_")
+            or key.startswith("CODEX_")
+            or key.startswith("SESSION_")
+            or key == "CLAUDE_CODE_FILE_READ_MAX_OUTPUT_TOKENS"
+        ):
+            environment.pop(key, None)
+    environment.update(
+        {
+            "CLAUDE_PROJECT_DIR": os.fspath(project),
+            "CODEX_CANONICAL_REPO_ROOT": os.fspath(project),
+            "CLAUDE_PROFILE_RESOLVER_SH": os.fspath(REPO_ROOT / "scripts/lib/profile_resolver.sh"),
+            "CLAUDE_PROFILE_RESOLVER_PY": os.fspath(REPO_ROOT / "scripts/lib/context_profiles.py"),
+            "HOME": os.fspath(tmp_path / "home"),
+        }
+    )
+    started = subprocess.run(
+        ["bash", os.fspath(session_hook)],
+        input=json.dumps({"source": "startup", "model": "gpt-6.1-sol"}),
+        text=True,
+        capture_output=True,
+        check=False,
+        env=environment,
+        timeout=30,
+    )
+
+    assert started.returncode == 0, started.stderr
+    context = json.loads(started.stdout)["hookSpecificOutput"]["additionalContext"]
+    assert len(context.encode()) < 500
+    assert long_name not in context
+    assert "primary checkout (nnnnnnnn...)" in context
+    assert long_name in started.stderr
+    assert "profile=native_codex" in context
+    assert "Native compaction is runtime-owned" in context
+
+
 def test_explicit_non_driver_codex_compact_session_start_is_silent(tmp_path: Path) -> None:
     compact_hook = tmp_path / ".codex" / "hooks" / "post-compact.sh"
     compact_hook.parent.mkdir(parents=True)
