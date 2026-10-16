@@ -495,6 +495,42 @@ def test_the_dispatch_guard_judges_the_bound_accounts_meter(monkeypatch, capsys,
     assert "preferred" not in capsys.readouterr().err
 
 
+def test_the_dispatch_guards_only_unbound_payload_is_refused_by_the_scheduler(monkeypatch):
+    """The guard's only unbound value is the fetched payload; the scheduler refuses that object.
+
+    ``_held_by_delegate_guard`` sees the snapshot after ``select_account``. This
+    test takes the raw payload the guard itself binds — the only plain mapping
+    ``select_account`` is given — and requires ``_route_record`` and
+    ``metrics_for`` to raise ``AccountRequired`` on it.
+    """
+    raw = _reversed()
+    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: raw)
+    monkeypatch.setattr(delegate, "_load_reset_reserve", lambda *_a, **_k: {})
+    unbound: list[Any] = []
+    original = claude_account_lane.select_account
+
+    def spy(snapshot, *, account):
+        if not isinstance(snapshot, AccountSnapshot):
+            unbound.append(snapshot)
+        return original(snapshot, account=account)
+
+    monkeypatch.setattr(claude_account_lane, "select_account", spy)
+    held: list[Any] = []
+
+    def review_select(snapshot, _seat):
+        held.append(snapshot)
+        return "claude", None
+
+    delegate._resolve_agent_with_budget_guard("claude", fallbacks={}, review_select=review_select, claude_account=B)
+
+    assert unbound == [raw]
+    assert held and all(isinstance(snapshot, AccountSnapshot) and snapshot.account.label == "b" for snapshot in held)
+    with pytest.raises(AccountRequired, match="reviewer candidate claude-opus-5-5"):
+        reviewer_scheduler._route_record(CLAUDE, raw)
+    with pytest.raises(AccountRequired):
+        reviewer_scheduler.metrics_for(CLAUDE, raw)
+
+
 def test_model_pause_binds_the_fetched_snapshot_and_lets_account_required_through(monkeypatch):
     raw = _reversed()
     monkeypatch.setattr(model_pause.urllib.request, "urlopen", lambda *a, **k: io.StringIO(json.dumps(raw)))
@@ -549,6 +585,84 @@ def test_bench_health_binds_injected_and_produced_snapshots(monkeypatch, tmp_pat
         bench_health._bench_inventory(
             None, data_egress_policy="local_interactive", review_profile="code", risk="medium"
         )
+
+
+def _spy_entry_binding(monkeypatch) -> tuple[list[tuple[Any, Any, Any]], list[Any]]:
+    """Record ``select_account`` calls, and what ``ResolverInputs`` holds before it binds.
+
+    ``bind_snapshot`` calls ``select_account`` too. The snapshot recorded at the
+    start of ``ResolverInputs.__post_init__`` is what the entry handed over, so
+    an entry that skips its own ``select_account`` shows up as a plain payload
+    there rather than as the object that call returned.
+    """
+    select_calls: list[tuple[Any, Any, Any]] = []
+    inputs_received: list[Any] = []
+    original_select = claude_account_lane.select_account
+    original_init = ResolverInputs.__post_init__
+
+    def spy_select(snapshot, *, account):
+        result = original_select(snapshot, account=account)
+        select_calls.append((snapshot, account, result[0]))
+        return result
+
+    def spy_init(self) -> None:
+        inputs_received.append(self.routing_snapshot)
+        original_init(self)
+
+    monkeypatch.setattr(claude_account_lane, "select_account", spy_select)
+    monkeypatch.setattr(ResolverInputs, "__post_init__", spy_init)
+    return select_calls, inputs_received
+
+
+def _assert_entry_select_account_precedes_resolver(select_calls, inputs_received) -> None:
+    assert select_calls, "select_account was never called"
+    snapshot_in, route_account, snapshot_out = select_calls[0]
+    assert not isinstance(snapshot_in, AccountSnapshot)
+    assert snapshot_in["agents"]["claude"]["remaining_pct"] == A_REMAINING
+    assert route_account.label == "b"
+    assert isinstance(snapshot_out, AccountSnapshot) and snapshot_out.account.label == "b"
+    assert inputs_received, "ResolverInputs was not constructed"
+    assert all(received is snapshot_out for received in inputs_received)
+
+
+@pytest.mark.parametrize("source", ["live", "file"])
+def test_closeout_binds_through_its_own_select_account_before_resolver_inputs(source, monkeypatch, tmp_path, capsys):
+    """``_cmd_resolve_reviewer`` binds before ``ResolverInputs``; removing that call fails this test."""
+    raw = _reversed()
+    assert _route_key_for(tmp_path, monkeypatch, b"b\n").label == "b"
+    select_calls, inputs_received = _spy_entry_binding(monkeypatch)
+    argv = [
+        "--state-file",
+        str(tmp_path / "state.json"),
+        "resolve-reviewer",
+        "--author-model",
+        "gpt-6.1-sol",
+        "--risk",
+        "critical",
+        "--owned-path",
+        "ordinary.py",
+    ]
+    if source == "file":
+        path = tmp_path / "snapshot.json"
+        path.write_text(json.dumps(raw))
+        argv += ["--routing-snapshot-file", str(path)]
+    else:
+        monkeypatch.setattr(credit_lane, "read_routing_budget", lambda **_k: raw)
+    closeout_cli.main(argv)
+    capsys.readouterr()
+    _assert_entry_select_account_precedes_resolver(select_calls, inputs_received)
+    if source == "live":
+        assert select_calls[0][0] is raw
+
+
+def test_bench_inventory_binds_through_its_own_select_account_before_resolver_inputs(monkeypatch, tmp_path):
+    """``_bench_inventory`` binds before ``ResolverInputs``; removing that call fails this test."""
+    raw = _reversed()
+    assert _route_key_for(tmp_path, monkeypatch, b"b\n").label == "b"
+    select_calls, inputs_received = _spy_entry_binding(monkeypatch)
+    bench_health._bench_inventory(raw, data_egress_policy="local_interactive", review_profile="code", risk="medium")
+    _assert_entry_select_account_precedes_resolver(select_calls, inputs_received)
+    assert select_calls[0][0] is raw
 
 
 def test_the_coordinator_binds_probe_snapshots_and_refuses_unbound_or_rebound_ones(monkeypatch, tmp_path):
