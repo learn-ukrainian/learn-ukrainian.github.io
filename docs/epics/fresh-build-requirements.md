@@ -60,6 +60,9 @@ Each requirement has an id so plans, prompts, gates and reviews can cite it.
 - **R-11 No context poisoning.** Old builds and old plans are never given to the writer or to the
   engine. The arc author may mine old plans for textbook citations only, and re-verifies each one
   through the MCP before using it.
+
+**A1-only exception (2026-10-16, #10881).** For the single-lesson pilot defined in [A1-v1 input to the fresh lesson engine](fresh-build-a1-v1-import.md), the import stage may read only the named, hash-pinned repaired blocks and activity items from `curriculum/l2-uk-en/a1-v1/` selected for that lesson by the reviewed block map; the initial lesson-writer stage receives that labelled selection to produce a per-lesson baseline, and later eligible repair stages receive the persisted baseline under repair mode r3. Provenance labels the inherited content `a1_v1_import` with original and repaired hashes and exact block/item locators, separately from verified evidence records. The new plan, locked evidence pack, word store, Sources MCP verification, and every existing gate remain required; old plans stay excluded. A2–B2 are unchanged. The fresh engine is not used for A1 unless this one lesson is better than the current A1-v1 lesson in the required blind comparison.
+
 - **R-12 No hand edits.** `module.md` and its siblings are produced by the engine. A defect is fixed
   in the plan, prompt, gate or code that caused it.
 - **R-13 Fast tools.** The sources MCP must support heavy batch use: many words per call, compact
