@@ -2,8 +2,8 @@
 
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { afterEach, describe, expect, test } from "vitest";
-import { cleanup, render, screen, waitFor } from "@testing-library/react";
+import { afterEach, describe, expect, test, vi } from "vitest";
+import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { createElement } from "react";
 import {
@@ -71,6 +71,8 @@ function fixtureFetchImpl(overrides?: {
 
 afterEach(() => {
   cleanup();
+  vi.restoreAllMocks();
+  vi.unstubAllGlobals();
   document.title = "";
   delete document.documentElement.dataset.atlasShell;
 });
@@ -271,4 +273,27 @@ describe("WordAtlasClientShell React mount", () => {
     expect(requested.some((url) => url.includes("current.json"))).toBe(false);
     expect(requested.some((url) => url.includes("search-index.json"))).toBe(true);
   });
+});
+
+// Real React mount and shared search, without an Astro child.
+test("mounted word article searches actual results after mount and remount", async () => {
+  const searchRows = JSON.parse(readFileSync(resolve(process.cwd(), "src/data/lexicon-search-index.json"), "utf8"));
+  vi.stubGlobal("fetch", async (input: RequestInfo | URL) => {
+    const path = String(input);
+    return path.endsWith("search-index.json")
+      ? new Response(JSON.stringify(searchRows))
+      : new Response("missing", { status: 404 });
+  });
+  const props = { pathname: "/lexicon/прапор/", assetBaseUrl: "/atlas", fetchImpl: fixtureFetchImpl() };
+  for (let mount = 0; mount < 2; mount++) {
+    const view = render(createElement(WordAtlasClientShell, props));
+    const input = await screen.findByRole("combobox");
+    fireEvent.input(input, { target: { value: "прапор" } });
+    await waitFor(() => expect(view.container.querySelector('[data-atlas-typeahead-list] a[href="/lexicon/%D0%BF%D1%80%D0%B0%D0%BF%D0%BE%D1%80/"]')).not.toBeNull());
+    fireEvent.keyDown(input, { key: "Escape" });
+    expect(input).toHaveAttribute("aria-expanded", "false");
+    view.unmount();
+    fireEvent.input(input, { target: { value: "прапор" } });
+    expect(input).toHaveAttribute("aria-expanded", "false");
+  }
 });
