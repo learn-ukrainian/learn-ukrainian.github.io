@@ -211,17 +211,10 @@ class GeminiAdapter:
 
         max_budget_usd = (tool_config or {}).get("max_budget_usd")
         if max_budget_usd is not None:
-            _logger.warning(
-                "non-claude adapter %s ignoring max_budget_usd=%s; use hard-timeout/silence-timeout instead",
-                self.name,
-                max_budget_usd,
-            )
+            _logger.warning("non-claude adapter ignoring max_budget_usd; use hard-timeout/silence-timeout instead")
 
         if effort is not None:
-            _logger.debug(
-                "gemini effort %r not yet wired through CLI — using adapter default (#1396 follow-up)",
-                effort,
-            )
+            _logger.debug("gemini effort not yet wired through CLI — using adapter default (#1396 follow-up)")
         self._reset_per_invocation_state(plan_cwd=cwd)
         gemini_bin = shutil.which("gemini") or "gemini"
 

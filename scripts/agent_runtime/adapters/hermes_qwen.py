@@ -96,11 +96,7 @@ class HermesQwenAdapter:
 
         max_budget_usd = (tool_config or {}).get("max_budget_usd")
         if max_budget_usd is not None:
-            _logger.warning(
-                "non-claude adapter %s ignoring max_budget_usd=%s; use hard-timeout/silence-timeout instead",
-                self.name,
-                max_budget_usd,
-            )
+            _logger.warning("non-claude adapter ignoring max_budget_usd; use hard-timeout/silence-timeout instead")
 
         requested_model = model or self.default_model
         requested_provider, requested_model, provider_forced = resolve_hermes_requested_route(
@@ -119,17 +115,14 @@ class HermesQwenAdapter:
         configured_effort = top_level_agent_effort(config)
         if effort and configured_effort and configured_effort != effort:
             _logger.warning(
-                "Hermes Qwen effort=%r requested, but ~/.hermes/config.yaml "
-                "agent.reasoning_effort=%r; using Hermes config without mutation",
-                effort,
-                configured_effort,
+                "Hermes Qwen requested effort differs from ~/.hermes/config.yaml "
+                "agent.reasoning_effort; using Hermes config without mutation"
             )
         elif effort and configured_effort is None:
             _logger.warning(
-                "Hermes Qwen effort=%r requested, but no readable top-level "
+                "Hermes Qwen effort requested, but no readable top-level "
                 "agent.reasoning_effort was found in ~/.hermes/config.yaml; "
-                "using Hermes config without mutation",
-                effort,
+                "using Hermes config without mutation"
             )
 
         if not sources_mcp_registered(config):
