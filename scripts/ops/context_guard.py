@@ -26,6 +26,13 @@ of the guard's own prompt. ``ctx_pct`` is logged on every tick in both phases.
 No input is typed while a human typed into that tmux session within
 ``human_active_seconds``. Keep-alive tools skip lanes listed by the
 ``handoff-sessions`` subcommand.
+
+Unknown never acts. Pane or process telemetry that fails, times out or does not
+parse makes the tick log and retry; it never types, exits or respawns.
+Unreadable client telemetry counts as a human present. An agent is identified
+by pid and start time; a different agent in a lane in ``handoff`` (for example a
+human relaunch) is a new session, so the lane returns to ``watch`` with fresh
+timers before any further input.
 """
 
 from __future__ import annotations
@@ -71,6 +78,13 @@ CLAUDE_BUSY_RE = re.compile(r"esc to interrupt|ing… \(")
 # prompt quotes the token mid-sentence, so its echo never starts a line with it.
 DONE_LINE_RE = re.compile(r"^\s*(?:[●⏺•✦]\s*)?HANDOFF-DONE(?=\s|:|$)")
 EXIT_DIALOG = ("Move to background and exit", "Exit and stop tasks")
+# lstart is five words (``Fri Oct 16 12:10:40 2026``) only in the C locale; comm stays last.
+PS_ARGV = ["env", "LC_ALL=C", "ps", "-eo", "pid=,ppid=,lstart=,comm="]
+LSTART_FORMAT = "%a %b %d %H:%M:%S %Y"
+
+
+class TelemetryUnavailable(RuntimeError):
+    """Pane or process telemetry failed, timed out or did not parse: the state is unknown."""
 
 
 def utcnow() -> dt.datetime:
@@ -116,54 +130,84 @@ class Tmux:
     def session_exists(self, session: str) -> bool:
         return self.tmux("has-session", "-t", f"={session}").returncode == 0
 
+    def _query(self, argv: list[str], what: str) -> str:
+        """Run a telemetry command; any failure raises ``TelemetryUnavailable``."""
+        try:
+            result = self.run(argv)
+        except (subprocess.SubprocessError, OSError) as exc:
+            raise TelemetryUnavailable(f"{what}: {type(exc).__name__}") from exc
+        if result.returncode != 0:
+            raise TelemetryUnavailable(f"{what}: rc={result.returncode} {(result.stderr or '').strip()[-120:]}")
+        return result.stdout or ""
+
     def capture(self, target: str) -> str:
-        return self.tmux("capture-pane", "-p", "-J", "-S", f"-{CAPTURE_LINES}", "-t", target).stdout
+        return self._query(["tmux", "capture-pane", "-p", "-J", "-S", f"-{CAPTURE_LINES}", "-t", target], "capture-pane")
 
     def pane_pid(self, target: str) -> str:
-        return self.tmux("display-message", "-p", "-t", target, "#{pane_pid}").stdout.strip()
+        pid = self._query(["tmux", "display-message", "-p", "-t", target, "#{pane_pid}"], "pane pid").strip()
+        if not pid.isdigit():
+            raise TelemetryUnavailable(f"pane pid: unparseable {pid[:40]!r}")
+        return pid
 
-    def _children(self) -> dict[str, list[tuple[str, str]]]:
-        children: dict[str, list[tuple[str, str]]] = {}
-        for row in self.run(["ps", "-eo", "pid=,ppid=,comm="]).stdout.splitlines():
-            parts = row.split(None, 2)
-            if len(parts) == 3:
-                children.setdefault(parts[1], []).append((parts[0], parts[2].strip()))
+    def _children(self) -> dict[str, list[tuple[str, str, str]]]:
+        """Parent pid -> [(pid, start time, comm)] for the whole process table."""
+        rows = self._query(PS_ARGV, "process table").splitlines()
+        if not rows:
+            raise TelemetryUnavailable("process table: empty")
+        children: dict[str, list[tuple[str, str, str]]] = {}
+        for row in rows:
+            parts = row.split(None, 7)
+            try:
+                if len(parts) != 8 or not (parts[0].isdigit() and parts[1].isdigit()):
+                    raise ValueError(row)
+                start = dt.datetime.strptime(" ".join(parts[2:7]), LSTART_FORMAT).isoformat()
+            except ValueError as exc:
+                raise TelemetryUnavailable(f"process table: unparseable row {row[:80]!r}") from exc
+            children.setdefault(parts[1], []).append((parts[0], start, parts[7].strip()))
         return children
 
     def shell_has_children(self, target: str) -> bool:
         """True while anything (a launcher finishing its exit path) still runs under the pane's shell."""
-        root = self.pane_pid(target)
-        return root.isdigit() and bool(self._children().get(root))
+        return bool(self._children().get(self.pane_pid(target)))
 
-    def agent_pid(self, target: str, command: str) -> str | None:
-        """The pid of the first process named ``command`` under the pane's shell."""
+    def agent_identity(self, target: str, command: str) -> str | None:
+        """``<pid>@<start time>`` of the first process named ``command`` under the pane's shell.
+
+        None means the process table was read and holds no such process; a
+        failed read raises ``TelemetryUnavailable`` instead.
+        """
         root = self.pane_pid(target)
-        if not root.isdigit():
-            return None
         children = self._children()
         stack = [root]
         while stack:
-            for pid, comm in children.get(stack.pop(), []):
+            for pid, start, comm in children.get(stack.pop(), []):
                 if comm == command:
-                    return pid
+                    return f"{pid}@{start}"
                 stack.append(pid)
         return None
 
-    def human_active(self, session: str, window_s: int) -> bool:
-        """True when a client of ``session`` had input within ``window_s``.
+    def human_activity(self, session: str, window_s: int) -> str | None:
+        """Why a human may be using ``session``, or None when no client of it had input within ``window_s``.
 
-        Unreadable client telemetry counts as a human present (fail closed),
-        except when no tmux server runs at all.
+        Failed or unparseable client telemetry counts as a human present (fail
+        closed), except when no tmux server runs at all.
         """
-        result = self.tmux("list-clients", "-F", "#{client_session}\t#{client_activity}")
+        try:
+            result = self.tmux("list-clients", "-F", "#{client_session}\t#{client_activity}")
+        except (subprocess.SubprocessError, OSError) as exc:
+            return f"client telemetry unavailable ({type(exc).__name__})"
         if result.returncode != 0:
-            return "no server running" not in (result.stderr or "")
+            if "no server running" in (result.stderr or ""):
+                return None
+            return f"client telemetry unavailable (rc={result.returncode})"
         now = self.clock()
-        for row in result.stdout.splitlines():
-            name, _, activity = row.partition("\t")
-            if name == session and activity.isdigit() and now - int(activity) < window_s:
-                return True
-        return False
+        for row in (result.stdout or "").splitlines():
+            name, tab, activity = row.rpartition("\t")
+            if not tab or not activity.isdigit():
+                return f"client telemetry unparseable ({row[:60]!r})"
+            if name == session and now - int(activity) < window_s:
+                return f"input {int(now - int(activity))}s ago"
+        return None
 
     def type_into(self, target: str, text: str) -> None:
         self.tmux("send-keys", "-t", target, "-l", text)
@@ -205,8 +249,9 @@ class Guard:
         )
 
     def _human(self, lane: Lane) -> bool:
-        if self.tmux.human_active(lane.session, self.setting("human_active_seconds")):
-            self.log(f"{lane.name} deferred: human active in session {lane.session}")
+        reason = self.tmux.human_activity(lane.session, self.setting("human_active_seconds"))
+        if reason:
+            self.log(f"{lane.name} deferred: human possibly active in session {lane.session} ({reason}); retry next tick")
             return True
         return False
 
@@ -223,14 +268,14 @@ class Guard:
             return float("inf")
         return (self.now() - parse_iso(value)).total_seconds()
 
-    def _pane_done(self, s: dict[str, Any], marks: int, pid: str | None) -> bool:
+    def _pane_done(self, s: dict[str, Any], marks: int, agent: str | None) -> bool:
         """A new standalone HANDOFF-DONE line from the current agent process.
 
-        The baseline is the lowest count seen for this agent pid, so lines from
-        a previous session, or lines that scrolled out, never count as new.
+        The baseline is the lowest count seen for this agent, so lines from a
+        previous session, or lines that scrolled out, never count as new.
         """
-        if pid is None or s.get("agent_pid") != pid:
-            s.update(agent_pid=pid, done_marks=marks)
+        if agent is None or s.get("agent_id") != agent:
+            s.update(agent_id=agent, done_marks=marks)
             return False
         baseline = min(int(s.get("done_marks", marks)), marks)
         s["done_marks"] = baseline
@@ -256,19 +301,22 @@ class Guard:
         if not self.tmux.session_exists(lane.session):
             self.log(f"{lane.name} {s['phase']}: tmux session {lane.session} missing")
             return
-        text = self.tmux.capture(lane.target)
-        pct = context_pct(lane.kind, text)
-        pid = self.tmux.agent_pid(lane.target, AGENT_COMMANDS[lane.kind])
-        if s["phase"] == "watch":
-            self._watch(lane, s, text, pct, pid)
-        else:
-            self._handoff(lane, st, s, text, pct, pid)
+        try:
+            text = self.tmux.capture(lane.target)
+            pct = context_pct(lane.kind, text)
+            agent = self.tmux.agent_identity(lane.target, AGENT_COMMANDS[lane.kind])
+            if s["phase"] == "watch":
+                self._watch(lane, s, text, pct, agent)
+            else:
+                self._handoff(lane, st, s, text, pct, agent)
+        except TelemetryUnavailable as exc:
+            self.log(f"{lane.name} {s['phase']}: telemetry unavailable ({exc}); no input or respawn, retry next tick")
 
-    def _watch(self, lane: Lane, s: dict[str, Any], text: str, pct: int | None, pid: str | None) -> None:
-        if pid is None:
+    def _watch(self, lane: Lane, s: dict[str, Any], text: str, pct: int | None, agent: str | None) -> None:
+        if agent is None:
             self.log(f"{lane.name} watch: agent not running in session {lane.session}")
             return
-        if s.get("agent_pid") != pid:
+        if s.get("agent_id") != agent:
             # A new agent process is a new session: earlier HANDOFF-DONE posts and compactions were its
             # predecessor's.
             s["watch_since"] = iso(self.now())
@@ -283,7 +331,7 @@ class Guard:
                 s["last_pct"] = pct
             extra = f" compactions={s.get('compactions', 0)} compacting_now={'Compacting context' in text}"
         self.log(f"{lane.name} watch ctx_pct={pct}{extra}")
-        pane_done = self._pane_done(s, done_lines(text), pid)
+        pane_done = self._pane_done(s, done_lines(text), agent)
         if pane_done or self.handoff_posted(lane.sender, s["watch_since"]):
             self.log(f"{lane.name} watch: HANDOFF-DONE seen before the prompt -> handoff (done)")
             self._enter_handoff(s, pct, done=True)
@@ -305,15 +353,30 @@ class Guard:
         return "Ready" in tail and "Working" not in tail
 
     def _handoff(
-        self, lane: Lane, st: dict[str, Any], s: dict[str, Any], text: str, pct: int | None, pid: str | None
+        self, lane: Lane, st: dict[str, Any], s: dict[str, Any], text: str, pct: int | None, agent: str | None
     ) -> None:
         waited = int(self._seconds_since(s.get("since")))
-        if pid is None:
+        if agent is None:
             if self.tmux.shell_has_children(lane.target):
                 # Respawning now would kill the launcher's own exit path (lease release, handoff writes).
                 self.log(f"{lane.name} handoff ctx_pct={pct}: agent gone, launcher still exiting; relaunch next tick")
                 return
             self._relaunch(lane, st, s, pct)
+            return
+        if s.get("agent_id") != agent:
+            # A different agent (a human relaunch, or a reused pid with a new start time) is a new session:
+            # its predecessor's HANDOFF-DONE, exit attempts and timers must not reach it.
+            self.log(
+                f"{lane.name} handoff ctx_pct={pct}: agent changed {s.get('agent_id')} -> {agent}; "
+                "handoff state reset -> watch"
+            )
+            st[lane.session] = {
+                **{key: s[key] for key in ("last_handoff", "last_pct_at_trigger") if key in s},
+                "phase": "watch",
+                "watch_since": iso(self.now()),
+                "agent_id": agent,
+                "done_marks": done_lines(text),
+            }
             return
         tail = "\n".join(text.splitlines()[-8:])
         if lane.kind == "claude" and any(marker in tail for marker in EXIT_DIALOG):
@@ -323,7 +386,7 @@ class Guard:
                 self.tmux.type_into(lane.target, "1")
                 self.log(f"{lane.name} handoff ctx_pct={pct}: exit dialog -> chose Exit and stop tasks")
             return
-        pane_done = self._pane_done(s, done_lines(text), pid)
+        pane_done = self._pane_done(s, done_lines(text), agent)
         done = bool(s.get("done_seen")) or pane_done or self.handoff_posted(lane.sender, s["since"])
         s["done_seen"] = done
         idle = self._idle(lane, text)
@@ -361,11 +424,13 @@ class Guard:
     def _relaunch(self, lane: Lane, st: dict[str, Any], s: dict[str, Any], pct: int | None) -> None:
         if self._human(lane):
             return
-        plan = launch_plan(lane, repo_root=self.repo_root, local=self.local)
+        try:
+            plan = launch_plan(lane, repo_root=self.repo_root, local=self.local)
+        except LaneConfigError as exc:
+            self.log(f"{lane.name} relaunch refused ctx_pct={pct}: {exc}; pane left as is, retry next tick")
+            return
         env_args = [arg for key, value in sorted(plan.env.items()) for arg in ("-e", f"{key}={value}")]
-        result = self.tmux.tmux(
-            "respawn-pane", "-k", "-t", lane.target, "-c", plan.cwd, *env_args, plan.shell_command()
-        )
+        result = self.tmux.tmux("respawn-pane", "-k", "-t", lane.target, "-c", plan.cwd, *env_args, *plan.pane_argv())
         # Clear the old session's scrollback so its HANDOFF-DONE line cannot end the fresh session.
         self.tmux.tmux("clear-history", "-t", lane.target)
         self.log(

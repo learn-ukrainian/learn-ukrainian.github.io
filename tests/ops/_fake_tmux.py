@@ -1,13 +1,16 @@
 """A fake tmux/ps/systemd-run runner for the context guard and lane relaunch tests (#10814).
 
 It answers the argv the code builds, records every call, and never runs a real
-process, so no test touches a live tmux server or the user manager.
+process, so no test touches a live tmux server or the user manager. ``override``
+injects a failed, malformed or raising answer for one command.
 """
 
 from __future__ import annotations
 
 import subprocess
 from dataclasses import dataclass, field
+
+BOOT = "Fri Oct 16 06:00:00 2026"  # ps lstart (C locale) of long-running processes
 
 
 @dataclass
@@ -16,6 +19,7 @@ class FakePane:
     pane_pid: str = "100"
     agent: str | None = None  # comm of the agent process under the pane, or None
     agent_pid: str = "200"
+    agent_start: str = "Fri Oct 16 11:00:00 2026"
     launcher_running: bool = False  # a launcher still exiting after its agent quit
 
 
@@ -27,23 +31,27 @@ class FakeTmux:
     exit_on_create: dict[str, int] = field(default_factory=dict)
     now: float = 1_000_000.0
     calls: list[list[str]] = field(default_factory=list)
+    # Injected answers keyed by "ps" or a tmux command: a CompletedProcess to return, or an exception to raise.
+    override: dict[str, subprocess.CompletedProcess | Exception] = field(default_factory=dict)
 
     def run(self, argv: list[str]) -> subprocess.CompletedProcess:
         self.calls.append(list(argv))
         if argv[0] == "systemd-run":
             argv = argv[argv.index("tmux"):]
+        if argv[0] == "env":
+            argv = argv[argv.index("ps"):]
+        key = argv[0] if argv[0] == "ps" else argv[1]
+        if key in self.override:
+            injected = self.override[key]
+            if isinstance(injected, Exception):
+                raise injected
+            return injected
         if argv[0] == "ps":
-            rows = []
-            for pane in self.sessions.values():
-                if pane.agent:
-                    rows.append(f"{pane.agent_pid} {pane.pane_pid} {pane.agent}")
-                if pane.launcher_running:
-                    rows.append(f"300 {pane.pane_pid} bash")
-            return self._ok("\n".join(rows))
+            return self._ok("\n".join(self._ps_rows(with_start="lstart" in argv[-1])))
         assert argv[0] == "tmux", argv
         command, args = argv[1], argv[2:]
         target = args[args.index("-t") + 1] if "-t" in args else None
-        session = target.strip("=").split(":")[0] if target else None
+        session = target.strip("=").split(":")[0] if target else ""
         pane_commands = {"has-session", "capture-pane", "display-message", "send-keys", "respawn-pane", "clear-history"}
         if command in pane_commands and session not in self.sessions:
             return self._fail(f"can't find session: {session}")
@@ -71,6 +79,16 @@ class FakeTmux:
         if command in {"send-keys", "respawn-pane", "clear-history"}:
             return self._ok("")
         raise AssertionError(f"unexpected tmux call {argv}")
+
+    def _ps_rows(self, *, with_start: bool) -> list[str]:
+        """``pid ppid [lstart] comm`` rows for the format the caller asked for, pid 1 included."""
+        rows = [("1", "0", BOOT, "systemd")]
+        for pane in self.sessions.values():
+            if pane.agent:
+                rows.append((pane.agent_pid, pane.pane_pid, pane.agent_start, pane.agent))
+            if pane.launcher_running:
+                rows.append(("300", pane.pane_pid, BOOT, "bash"))
+        return [" ".join((pid, ppid, start, comm) if with_start else (pid, ppid, comm)) for pid, ppid, start, comm in rows]
 
     def sleep(self, seconds: float) -> None:
         self.now += seconds

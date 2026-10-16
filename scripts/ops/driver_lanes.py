@@ -11,11 +11,16 @@ machine-specific wrappers and account directories in an ignored local config
 (``LU_DRIVER_LANES_LOCAL``, default
 ``$XDG_CONFIG_HOME/learn-ukrainian/driver-lanes.local.json``)::
 
-    {"lanes": {"cto": {"wrapper": "<launcher command>",
+    {"lanes": {"cto": {"wrapper": ["<launcher path>", "<argument>"],
                        "env": {"CLAUDE_CONFIG_DIR": "<account directory>"}}}}
 
-A ``wrapper`` replaces the generic launcher command; ``env`` adds environment
-variables to the lane's tmux session. Values never appear in printed plans.
+A ``wrapper`` replaces the generic launcher command: one executable path, or a
+list of command words. Every word must be plain (letters, digits and
+``_@%+=:,./-``), so shell syntax in the config is refused, and the words reach
+the pane as an argument vector that no shell parses. A malformed lane entry is
+refused for that lane only: it is logged and the lane is not started. ``env``
+adds environment variables to the lane's tmux session. Values never appear in
+printed plans.
 """
 
 from __future__ import annotations
@@ -40,8 +45,15 @@ LOCAL_ENV = "LU_DRIVER_LANES_LOCAL"
 KINDS = frozenset({"claude", "codex"})
 SESSION_RE = re.compile(r"[A-Za-z0-9][A-Za-z0-9_-]*\Z")
 ENV_KEY_RE = re.compile(r"[A-Z_][A-Z0-9_]*\Z")
+# One wrapper word: only the characters shlex leaves unquoted, so no shell syntax, whitespace or
+# control character can appear.
+WRAPPER_WORD_RE = re.compile(r"[A-Za-z0-9_@%+=:,./-]+\Z")
 # The marker the relaunch looks for when a launcher exits (for example on a lease conflict).
 EXIT_MARKER = "lane-relaunch: launcher exited rc="
+# The pane runs the launcher's argument vector as "$@" under this fixed script, so no config or lane
+# value is ever parsed as shell syntax. It reports the exit status, then keeps a shell open.
+PANE_SCRIPT = f'"$@"; printf "\\n{EXIT_MARKER}%s\\n" "$?"; exec bash'
+PANE_ARGV0 = "lane-launch"
 SETTINGS = (
     "claude_handoff_pct",
     "codex_max_compactions",
@@ -96,14 +108,23 @@ class Registry:
 @dataclass(frozen=True)
 class LaunchPlan:
     session: str
-    command: str
+    argv: tuple[str, ...]
     cwd: str
     env: dict[str, str] = field(default_factory=dict)
     wrapper: bool = False
 
-    def shell_command(self) -> str:
-        """The pane command: run the launcher, report its exit status, keep a shell open."""
-        return f"{self.command}; printf '\\n{EXIT_MARKER}%s\\n' \"$?\"; exec bash"
+    @property
+    def command(self) -> str:
+        """The launcher as one quoted line, for display only; it is never executed."""
+        return shlex.join(self.argv)
+
+    def pane_argv(self) -> list[str]:
+        """The pane command as an argument vector, which tmux executes directly without a shell.
+
+        The fixed ``PANE_SCRIPT`` runs the launcher words as ``"$@"``, reports the
+        exit status and keeps a shell open; the words are never parsed as shell syntax.
+        """
+        return ["bash", "-c", PANE_SCRIPT, PANE_ARGV0, *self.argv]
 
     def describe(self) -> dict[str, Any]:
         """A printable plan: environment keys only, never their values."""
@@ -208,11 +229,42 @@ def default_local_config_path(environ: dict[str, str] | None = None) -> Path:
     return Path(base) / "learn-ukrainian" / "driver-lanes.local.json"
 
 
+def parse_wrapper(value: Any) -> tuple[str, ...]:
+    """Validate a local ``wrapper``: one executable path, or a list of command words.
+
+    Raises ``LaneConfigError`` for anything else, including any shell syntax,
+    whitespace or control character in a word.
+    """
+    words = [value] if isinstance(value, str) else value
+    if not isinstance(words, list) or not words or not all(isinstance(word, str) for word in words):
+        raise LaneConfigError("wrapper must be an executable path or a non-empty list of command words")
+    for word in words:
+        if not WRAPPER_WORD_RE.match(word):
+            raise LaneConfigError(f"wrapper word {word!r} holds whitespace or shell syntax")
+    if words[0].startswith("-"):
+        raise LaneConfigError(f"wrapper executable {words[0]!r} must not start with '-'")
+    return tuple(words)
+
+
+def _local_entry(entry: Any) -> dict[str, Any]:
+    if not isinstance(entry, dict):
+        raise LaneConfigError("must be an object")
+    wrapper = entry.get("wrapper")
+    env = entry.get("env", {})
+    if not isinstance(env, dict) or not all(
+        isinstance(k, str) and ENV_KEY_RE.match(k) and isinstance(v, str) for k, v in env.items()
+    ):
+        raise LaneConfigError("env must map variable names to strings")
+    return {"wrapper": None if wrapper is None else parse_wrapper(wrapper), "env": dict(env)}
+
+
 def load_local_config(path: Path) -> dict[str, dict[str, Any]]:
     """Read the ignored per-host overrides; a missing file means no overrides.
 
     The file can name commands to run, so a symlink, a file owned by another
-    user, or a group/world-writable file is refused.
+    user, or a group/world-writable file is refused as a whole. A malformed lane
+    entry is kept as ``{"refused": <reason>}``: ``launch_plan`` raises for that
+    lane only, so it is logged and never started while the other lanes run.
     """
     try:
         info = path.lstat()
@@ -231,27 +283,20 @@ def load_local_config(path: Path) -> dict[str, dict[str, Any]]:
         raise LaneConfigError("local lane config: lanes must be an object keyed by session")
     out: dict[str, dict[str, Any]] = {}
     for session, entry in lanes.items():
-        if not isinstance(entry, dict):
-            raise LaneConfigError(f"local lane config: {session} must be an object")
-        wrapper = entry.get("wrapper")
-        if wrapper is not None and (not isinstance(wrapper, str) or not wrapper.strip()):
-            raise LaneConfigError(f"local lane config: {session}.wrapper must be a non-empty string")
-        env = entry.get("env", {})
-        if not isinstance(env, dict) or not all(
-            isinstance(k, str) and ENV_KEY_RE.match(k) and isinstance(v, str) for k, v in env.items()
-        ):
-            raise LaneConfigError(f"local lane config: {session}.env must map variable names to strings")
-        out[session] = {"wrapper": wrapper, "env": dict(env)}
+        try:
+            out[session] = _local_entry(entry)
+        except LaneConfigError as exc:
+            out[session] = {"refused": f"local lane config: {session}: {exc}"}
     return out
 
 
-def generic_command(lane: Lane) -> str:
+def generic_argv(lane: Lane) -> tuple[str, ...]:
     argv = [f"./{lane.launcher}", "--epic", lane.epic, "--model", lane.model, "--effort", lane.effort]
     if lane.kick:
         argv.append(lane.kick)
     if lane.provider_args:
         argv += ["--", *lane.provider_args]
-    return shlex.join(argv)
+    return tuple(argv)
 
 
 def launch_plan(
@@ -261,8 +306,13 @@ def launch_plan(
     local: dict[str, dict[str, Any]] | None = None,
     base_path: str | None = None,
 ) -> LaunchPlan:
-    """Build the lane's launch: generic launcher unless the local config names a wrapper."""
+    """Build the lane's launch: generic launcher unless the local config names a wrapper.
+
+    Raises ``LaneConfigError`` when the lane's local entry was refused.
+    """
     override = (local or {}).get(lane.session, {})
+    if "refused" in override:
+        raise LaneConfigError(override["refused"])
     env = dict(override.get("env") or {})
     if lane.path_prepend:
         inherited = os.environ.get("PATH", "") if base_path is None else base_path
@@ -271,7 +321,7 @@ def launch_plan(
     wrapper = override.get("wrapper")
     return LaunchPlan(
         session=lane.session,
-        command=wrapper or generic_command(lane),
+        argv=wrapper or generic_argv(lane),
         cwd=str(repo_root),
         env=env,
         wrapper=bool(wrapper),

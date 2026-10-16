@@ -43,15 +43,20 @@ world-writable (mode `0600`):
 ```json
 {
   "lanes": {
-    "cto": {"wrapper": "<cto launcher command>"},
-    "infra-muse": {"wrapper": "<infra launcher command>"},
+    "cto": {"wrapper": "<cto launcher path>"},
+    "infra-muse": {"wrapper": ["<infra launcher path>", "<argument>"]},
     "devops-muse": {"env": {"CLAUDE_CONFIG_DIR": "<claude account directory>"}},
     "harness": {"env": {"CODEX_HOME": "<codex home>"}}
   }
 }
 ```
 
-A `wrapper` replaces the generic launcher command; `env` adds variables to the
+A `wrapper` replaces the generic launcher command. It is one executable path
+or a list of command words, each made only of letters, digits and `_@%+=:,./-`;
+the words are passed to the pane as arguments and never parsed by a shell. A
+lane entry with any other character (spaces, `;`, `&&`, `$(...)`, backticks,
+redirections, newlines) is refused: that lane is logged and not started, and
+`--dry-run` shows it as `refused`. `env` adds variables to the
 lane's tmux session. The CTO lane needs a wrapper on a host where the CTO role
 prompt is a private file, because the generic command carries no role prompt.
 `--dry-run` prints which source each lane uses and only the env keys, never

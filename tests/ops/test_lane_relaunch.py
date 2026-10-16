@@ -12,7 +12,7 @@ import pytest
 
 from scripts.ops import context_guard as cg
 from scripts.ops import lane_relaunch as lr
-from scripts.ops.driver_lanes import Registry, load_registry
+from scripts.ops.driver_lanes import PANE_SCRIPT, Registry, load_local_config, load_registry
 from tests.ops._fake_tmux import FakePane, FakeTmux
 
 REPO = Path(__file__).resolve().parents[2]
@@ -85,8 +85,9 @@ def test_codex_lanes_get_shims_first_and_repo_root_cwd(tmp_path: Path) -> None:
         call = by_session[session]
         assert call[call.index("-c") + 1] == str(tmp_path)
         assert call[call.index("-e") + 1].startswith(f"PATH={tmp_path / 'scripts/agent_runtime/shims'}:")
-        assert call[-1].startswith("./start-codex-driver.sh --epic ")
-        assert call[-1].endswith("exec bash")
+        command = call[call.index("bash"):]
+        assert command[:4] == ["bash", "-c", PANE_SCRIPT, "lane-launch"]
+        assert command[4:6] == ["./start-codex-driver.sh", "--epic"]
     assert "-e" not in by_session["infra-muse"]  # no local config: launcher default account
 
 
@@ -108,7 +109,7 @@ def test_dry_run_prints_full_plan_and_starts_nothing(tmp_path: Path) -> None:
         stub.chmod(0o755)
     local = tmp_path / "lanes.local.json"
     local.write_text(json.dumps({"lanes": {
-        "cto": {"wrapper": "lane-wrapper-cto --here", "env": {"CLAUDE_CONFIG_DIR": "secret-account-dir"}},
+        "cto": {"wrapper": ["lane-wrapper-cto", "--here"], "env": {"CLAUDE_CONFIG_DIR": "secret-account-dir"}},
     }}), encoding="utf-8")
     local.chmod(0o600)
     env = dict(os.environ, PATH=f"{bin_dir}:{os.environ.get('PATH', '')}", LU_DRIVER_LANES_LOCAL=str(local))
@@ -133,3 +134,50 @@ def test_main_exit_code_reports_failed_lanes(tmp_path: Path, monkeypatch: pytest
     monkeypatch.setenv("LU_DRIVER_LANES_LOCAL", str(tmp_path / "absent.json"))
     assert lr.main(["--settle-seconds", "2"]) == 3
     assert lr.main(["--settle-seconds", "2"]) == 0  # every session exists now
+
+
+# ---- refused or unreadable lanes (review of 69264fbb, #10814) ----------------------
+def refusing_local(tmp_path: Path) -> Path:
+    local = tmp_path / "lanes.local.json"
+    local.write_text(json.dumps({"lanes": {"atlas": {"wrapper": "printf expected; printf INJECTED"}}}), encoding="utf-8")
+    local.chmod(0o600)
+    return local
+
+
+def test_refused_wrapper_lane_is_logged_and_not_started(tmp_path: Path) -> None:
+    fake = FakeTmux()
+    logs: list[str] = []
+    outcomes = lr.relaunch(
+        load_registry(),
+        repo_root=tmp_path,
+        tmux=cg.Tmux(run=fake.run, sleep=fake.sleep, clock=fake.clock),
+        local=load_local_config(refusing_local(tmp_path)),
+        log=logs.append,
+        settle_s=2,
+    )
+    assert created(fake) == [s for s in SESSIONS if s != "atlas"]
+    assert {o.session: o.status for o in outcomes}["atlas"] == "config-refused"
+    assert any(line.startswith("atlas: not started, local lane config: atlas: wrapper word") for line in logs)
+    assert not any("INJECTED" in arg for call in fake.calls for arg in call)
+
+
+def test_refused_lane_fails_main_and_shows_in_dry_run(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    fake = FakeTmux()
+    real = cg.Tmux
+    monkeypatch.setattr(lr, "Tmux", lambda: real(run=fake.run, sleep=fake.sleep, clock=fake.clock))
+    monkeypatch.setenv("LU_DRIVER_LANES_LOCAL", str(refusing_local(tmp_path)))
+    assert lr.main(["--dry-run"]) == 0
+    plan = {entry["session"]: entry for entry in json.loads(capsys.readouterr().out)}
+    assert set(plan["atlas"]) == {"session", "refused"} and "shell syntax" in plan["atlas"]["refused"]
+    assert fake.calls == []
+    assert lr.main(["--settle-seconds", "2"]) == 3
+    assert "atlas" not in created(fake)
+
+
+def test_unreadable_new_pane_is_unverified_and_relaunch_moves_on(tmp_path: Path) -> None:
+    fake = FakeTmux(override={"capture-pane": subprocess.CompletedProcess([], 1, "", "can't find pane")})
+    outcomes = run(fake, tmp_path)
+    assert [o.status for o in outcomes] == ["unverified"] * 6
+    assert created(fake) == SESSIONS

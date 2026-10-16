@@ -7,7 +7,9 @@ detached session is created in the repository root running the lane's
 launcher. The relaunch never types into an existing session, so it cannot
 disturb a lane a human is using. A launcher that exits within the settle
 window (for example a lease conflict: the launcher fails closed) is logged and
-the relaunch moves on; it never forces a lease.
+the relaunch moves on; it never forces a lease. A lane whose local config
+entry is refused (for example a wrapper holding shell syntax) is logged and
+not started.
 """
 
 from __future__ import annotations
@@ -25,10 +27,12 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from scripts.ops.context_guard import Tmux
+from scripts.ops.context_guard import TelemetryUnavailable, Tmux
 from scripts.ops.driver_lanes import (
     EXIT_MARKER,
+    Lane,
     LaneConfigError,
+    LaunchPlan,
     Registry,
     default_local_config_path,
     launch_plan,
@@ -44,12 +48,19 @@ DEFAULT_SETTLE_S = 20
 @dataclass
 class Outcome:
     session: str
-    status: str  # exists | started | launcher-exited | create-failed
+    status: str  # exists | started | launcher-exited | create-failed | config-refused | unverified
     detail: str = ""
 
 
-def plans(registry: Registry, repo_root: Path, local: dict) -> list:
-    return [launch_plan(lane, repo_root=repo_root, local=local) for lane in relaunch_order(registry)]
+def plans(registry: Registry, repo_root: Path, local: dict) -> list[tuple[Lane, LaunchPlan | LaneConfigError]]:
+    """Each lane in relaunch order with its launch plan, or the reason its local entry was refused."""
+    out: list[tuple[Lane, LaunchPlan | LaneConfigError]] = []
+    for lane in relaunch_order(registry):
+        try:
+            out.append((lane, launch_plan(lane, repo_root=repo_root, local=local)))
+        except LaneConfigError as exc:
+            out.append((lane, exc))
+    return out
 
 
 def relaunch(
@@ -63,14 +74,18 @@ def relaunch(
     server_scope: bool = False,
 ) -> list[Outcome]:
     outcomes = []
-    for plan in plans(registry, repo_root, local):
-        if tmux.session_exists(plan.session):
-            log(f"{plan.session}: session exists, skipped")
-            outcomes.append(Outcome(plan.session, "exists"))
+    for lane, plan in plans(registry, repo_root, local):
+        if tmux.session_exists(lane.session):
+            log(f"{lane.session}: session exists, skipped")
+            outcomes.append(Outcome(lane.session, "exists"))
+            continue
+        if isinstance(plan, LaneConfigError):
+            log(f"{lane.session}: not started, {plan}")
+            outcomes.append(Outcome(lane.session, "config-refused", str(plan)))
             continue
         argv = ["tmux", "new-session", "-d", "-s", plan.session, "-c", plan.cwd]
         argv += [arg for key, value in sorted(plan.env.items()) for arg in ("-e", f"{key}={value}")]
-        argv.append(plan.shell_command())
+        argv += plan.pane_argv()
         if server_scope and tmux.tmux("list-sessions").returncode != 0:
             # No tmux server yet: start it in its own scope so it outlives this oneshot service.
             argv = ["systemd-run", "--user", "--scope", "--collect", "--quiet",
@@ -89,7 +104,12 @@ def _settle(tmux: Tmux, session: str, settle_s: float, log: Callable[[str], None
     """Wait up to ``settle_s`` for an early launcher exit (lease conflict or launch error)."""
     deadline = tmux.clock() + settle_s
     while True:
-        found = EXIT_RE.search(tmux.capture(f"={session}:"))
+        try:
+            text = tmux.capture(f"={session}:")
+        except TelemetryUnavailable as exc:
+            log(f"{session}: pane unreadable after start ({exc}), outcome unknown, moving on")
+            return Outcome(session, "unverified", str(exc))
+        found = EXIT_RE.search(text)
         if found:
             log(f"{session}: launcher exited rc={found.group(1)} (fail closed; lease conflict or launch "
                 "error), session kept for inspection, moving on")
@@ -114,7 +134,8 @@ def main(argv: list[str] | None = None) -> int:
             "Outputs: --dry-run prints the JSON plan (session, command, cwd, env keys without values) and\n"
             "  starts nothing; otherwise creates detached tmux sessions and prints one JSON outcome per lane.\n"
             "Exit codes: 0 every lane exists or started; 1 invalid lane data; 2 invalid arguments;\n"
-            "  3 at least one lane failed to start (logged; the others still ran).\n"
+            "  3 at least one lane failed, was refused by its local config, or is unverified (logged; the\n"
+            "  others still ran).\n"
             "Related: scripts/config/driver_lanes.json, packaging/systemd/learn-ukrainian-lane-relaunch.service,\n"
             "  docs/runbooks/maintenance-window.md, issue #10814."
         ),
@@ -142,7 +163,11 @@ def main(argv: list[str] | None = None) -> int:
         print(f"invalid lane data: {exc}", file=sys.stderr)
         return 1
     if args.dry_run:
-        print(json.dumps([plan.describe() for plan in plans(registry, REPO_ROOT, local)], indent=1))
+        entries = [
+            {"session": lane.session, "refused": str(plan)} if isinstance(plan, LaneConfigError) else plan.describe()
+            for lane, plan in plans(registry, REPO_ROOT, local)
+        ]
+        print(json.dumps(entries, indent=1))
         return 0
 
     def log(message: str) -> None:
@@ -158,7 +183,7 @@ def main(argv: list[str] | None = None) -> int:
         server_scope=args.server_scope,
     )
     print(json.dumps([outcome.__dict__ for outcome in outcomes]))
-    return 3 if any(o.status in {"launcher-exited", "create-failed"} for o in outcomes) else 0
+    return 0 if all(o.status in {"exists", "started"} for o in outcomes) else 3
 
 
 if __name__ == "__main__":

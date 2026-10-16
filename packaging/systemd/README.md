@@ -207,7 +207,10 @@ local config described in `docs/runbooks/maintenance-window.md`.
   for the threshold. In the handoff phase the guard re-sends `HANDOFF NOW`
   every 15 minutes, retries `/exit` or `/quit` every 10 minutes, logs
   `ctx_pct` on every tick, and types nothing while a human typed into that
-  session within two minutes. State and log live under
+  session within two minutes. Unknown state never acts: failed, timed-out
+  or unparseable pane, process or client telemetry makes the tick log and
+  retry, and a different agent process in a lane resets that lane to the
+  watch phase before any further input. State and log live under
   `${XDG_STATE_HOME:-$HOME/.local/state}/learn-ukrainian/context-guard/`.
   Keep-alive tools must skip the sessions printed by
   `.venv/bin/python -m scripts.ops.context_guard handoff-sessions`. The
@@ -218,7 +221,9 @@ local config described in `docs/runbooks/maintenance-window.md`.
   repository root and starts its launcher, CTO last. Existing sessions are
   skipped, so a second run is a no-op, and it never types into a session. A
   launcher that exits within 20 seconds (for example on a lease conflict) is
-  logged and the relaunch moves on; the unit then exits 3. `--server-scope`
+  logged and the relaunch moves on; the unit then exits 3, as it does when a
+  lane's local config entry is refused (that lane is not started) or a new
+  pane cannot be read back. `--server-scope`
   starts a missing tmux server in its own user scope so it outlives the
   oneshot. Preview with `.venv/bin/python -m scripts.ops.lane_relaunch --dry-run`.
 

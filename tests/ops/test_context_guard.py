@@ -12,7 +12,7 @@ from pathlib import Path
 import pytest
 
 from scripts.ops import context_guard as cg
-from scripts.ops.driver_lanes import load_registry
+from scripts.ops.driver_lanes import PANE_SCRIPT, load_registry
 from tests.ops._fake_tmux import FakePane, FakeTmux
 
 REPO = Path(__file__).resolve().parents[2]
@@ -255,7 +255,7 @@ def test_no_input_while_a_human_is_typing_in_the_session(tmp_path: Path) -> None
 def test_unreadable_client_telemetry_fails_closed() -> None:
     fake = FakeTmux()
     fake.run = lambda argv: subprocess.CompletedProcess(argv, 1, "", "permission denied")  # type: ignore[method-assign]
-    assert cg.Tmux(run=fake.run).human_active("cto", 120) is True
+    assert cg.Tmux(run=fake.run).human_activity("cto", 120) == "client telemetry unavailable (rc=1)"
 
 
 def test_exited_codex_lane_is_respawned_with_shims_first(tmp_path: Path) -> None:
@@ -272,7 +272,9 @@ def test_exited_codex_lane_is_respawned_with_shims_first(tmp_path: Path) -> None
     assert respawn[respawn.index("-c") + 1] == str(tmp_path / "repo")
     path = respawn[respawn.index("-e") + 1]
     assert path.startswith(f"PATH={tmp_path / 'repo' / 'scripts/agent_runtime/shims'}:")
-    assert "./start-codex-driver.sh --epic open-model-data" in respawn[-1]
+    command = respawn[respawn.index("bash"):]
+    assert command[:4] == ["bash", "-c", PANE_SCRIPT, "lane-launch"]
+    assert command[4:7] == ["./start-codex-driver.sh", "--epic", "open-model-data"]
     assert ["tmux", "clear-history", "-t", "=open-model-data:"] in h.fake.calls
     assert h.state["open-model-data"]["phase"] == "watch"
 
@@ -382,3 +384,138 @@ def test_exit_dialog_is_answered_with_exit_and_stop_tasks(tmp_path: Path) -> Non
     h.advance(5)
     h.tick("cto")
     assert h.fake.typed("cto")[-1] == "1"
+
+
+# ---- unknown telemetry never acts (review of 69264fbb, #10814) ---------------------
+def handoff_with_agent_gone(tmp_path: Path, *, launcher_running: bool) -> Harness:
+    """The harness lane in the handoff phase (done) whose agent has just exited."""
+    h = Harness(tmp_path, **{"harness": codex_pane(40)})
+    h.tick("harness")
+    h.posted["codex-monitor"] = cg.iso(h.moment)
+    h.advance(5)
+    h.tick("harness")  # watch -> handoff (done)
+    pane = h.pane("harness")
+    pane.agent, pane.launcher_running = None, launcher_running
+    h.advance(5)
+    return h
+
+
+def respawns(h: Harness) -> list[list[str]]:
+    return [call for call in h.fake.calls if call[:2] == ["tmux", "respawn-pane"]]
+
+
+@pytest.mark.parametrize(
+    ("command", "answer"),
+    [
+        ("ps", subprocess.CompletedProcess([], 1, "", "process table unavailable")),
+        ("ps", subprocess.TimeoutExpired(["ps"], 30)),
+        ("ps", FileNotFoundError("ps")),
+        ("ps", subprocess.CompletedProcess([], 0, "", "")),
+        ("ps", subprocess.CompletedProcess([], 0, "garbage\n", "")),
+        ("ps", subprocess.CompletedProcess([], 0, "1 0 Fri Oct 16 06:00:00 2026 systemd\n300 100 bash\n", "")),
+        ("ps", subprocess.CompletedProcess([], 0, "1 0 Xyz Oct 16 06:00:00 2026 systemd\n", "")),
+        ("display-message", subprocess.CompletedProcess([], 1, "", "can't find pane")),
+        ("display-message", subprocess.CompletedProcess([], 0, "\n", "")),
+        ("capture-pane", subprocess.CompletedProcess([], 1, "", "can't find pane")),
+    ],
+)
+def test_unknown_process_telemetry_never_respawns(tmp_path: Path, command: str, answer: object) -> None:
+    h = handoff_with_agent_gone(tmp_path, launcher_running=True)
+    h.fake.override[command] = answer  # type: ignore[assignment]
+    h.logs.clear()
+    h.tick("harness")
+    assert respawns(h) == []
+    assert h.fake.typed() == []
+    assert h.state["harness"]["phase"] == "handoff"
+    assert len(h.logs) == 1 and "telemetry unavailable" in h.logs[0] and h.logs[0].endswith("retry next tick")
+    # Readable telemetry again: the launcher has exited, so the pane is respawned on the next tick.
+    del h.fake.override[command]
+    h.pane("harness").launcher_running = False
+    h.advance(5)
+    h.tick("harness")
+    assert len(respawns(h)) == 1
+
+
+def test_unknown_process_telemetry_in_watch_types_nothing(tmp_path: Path) -> None:
+    h = Harness(tmp_path, **{"cto": claude_pane(80)})
+    h.fake.override["ps"] = subprocess.CompletedProcess([], 1, "", "process table unavailable")
+    h.tick("cto")
+    assert h.fake.typed() == [] and h.sent == []
+    assert h.state["cto"]["phase"] == "watch"
+
+
+def test_process_table_rows_parse_with_start_time() -> None:
+    fake = FakeTmux(sessions={"cto": FakePane(agent="claude", agent_pid="4242", agent_start="Fri Oct  2 09:05:01 2026")})
+    tmux = cg.Tmux(run=fake.run)
+    assert tmux.agent_identity("=cto:", "claude") == "4242@2026-10-02T09:05:01"
+    assert tmux.agent_identity("=cto:", "codex") is None
+    assert ["env", "LC_ALL=C", "ps", "-eo", "pid=,ppid=,lstart=,comm="] in fake.calls
+
+
+# ---- a changed agent gets none of its predecessor's handoff ---------------------
+@pytest.mark.parametrize(
+    "replace",
+    [
+        {"agent_pid": "201"},  # a human relaunched the lane
+        {"agent_start": "Fri Oct 16 12:07:00 2026"},  # same pid reused by a new process
+    ],
+)
+def test_replacement_agent_gets_no_exit_from_the_previous_handoff(tmp_path: Path, replace: dict[str, str]) -> None:
+    done = "⏺ HANDOFF-DONE infra .claude/infra-epic/DRIVER-STATE.md"
+    h = Harness(tmp_path, **{"infra-muse": claude_pane(70)})
+    h.tick("infra-muse")
+    h.pane("infra-muse").text = claude_text(72, ECHO, done)
+    h.advance(5)
+    h.posted["claude-infra"] = cg.iso(h.moment)
+    h.tick("infra-muse")
+    assert h.fake.typed("infra-muse")[-1] == "/exit"
+    pane = h.pane("infra-muse")
+    for key, value in replace.items():
+        setattr(pane, key, value)
+    pane.text = claude_text(10, ECHO, done)  # the old session's lines are still in the scrollback
+    h.advance(10)
+    h.tick("infra-muse")
+    state = h.state["infra-muse"]
+    assert state["phase"] == "watch"
+    assert not {"done_seen", "quit_sent", "quit_attempts", "since", "last_nudge", "nudges", "alerted"} & set(state)
+    assert "agent changed" in h.logs[-1]
+    for _ in range(6):  # 30 more minutes at low context: no input of any kind
+        h.advance(5)
+        h.tick("infra-muse")
+    assert h.fake.typed("infra-muse").count("/exit") == 1
+    assert len(h.fake.typed("infra-muse")) == 2  # the first HANDOFF NOW and the first /exit only
+    assert h.state["infra-muse"]["phase"] == "watch"
+
+
+# ---- malformed client telemetry counts as a human present -------------------------
+@pytest.mark.parametrize("rows", ["cto\tUNKNOWN", "cto", "cto\t", "infra-muse\tsoon", "cto\t12a"])
+def test_unparseable_client_activity_types_nothing(tmp_path: Path, rows: str) -> None:
+    h = Harness(tmp_path, **{"cto": claude_pane(75)})
+    h.fake.override["list-clients"] = subprocess.CompletedProcess([], 0, rows + "\n", "")
+    h.tick("cto")
+    assert h.fake.typed() == [] and h.sent == []
+    assert h.state["cto"]["phase"] == "watch"
+    assert "client telemetry unparseable" in h.logs[-1] and h.logs[-1].endswith("retry next tick")
+    del h.fake.override["list-clients"]
+    h.advance(5)
+    h.tick("cto")
+    assert h.fake.typed("cto")[0].startswith("HANDOFF NOW")
+
+
+def test_client_telemetry_timeout_counts_as_a_human() -> None:
+    fake = FakeTmux(override={"list-clients": subprocess.TimeoutExpired(["tmux"], 30)})
+    assert cg.Tmux(run=fake.run).human_activity("cto", 120) == "client telemetry unavailable (TimeoutExpired)"
+
+
+def test_refused_local_wrapper_blocks_only_that_relaunch(tmp_path: Path) -> None:
+    from scripts.ops.driver_lanes import load_local_config
+
+    local = tmp_path / "local.json"
+    local.write_text(json.dumps({"lanes": {"harness": {"wrapper": "printf expected; printf INJECTED"}}}))
+    local.chmod(0o600)
+    h = handoff_with_agent_gone(tmp_path, launcher_running=False)
+    h.guard.local = load_local_config(local)
+    h.tick("harness")
+    assert respawns(h) == []
+    assert h.state["harness"]["phase"] == "handoff"
+    assert "relaunch refused" in h.logs[-1] and "shell syntax" in h.logs[-1]
