@@ -424,12 +424,8 @@ def test_the_common_reaper_matches_the_reap_clean_pushed_contract():
     assert {field.name for field in dataclasses.fields(_CleanPushedOutcome)} <= outcome_fields
 
 
-@pytest.mark.xfail(
-    strict=True,
-    reason="#10778: reap_clean_pushed is not in the tree yet; whichever of #10776/#10778 lands second removes this marker",
-)
 def test_the_common_reaper_provides_reap_clean_pushed():
-    """Fails while ``reap_clean_pushed`` is missing; the strict marker turns its arrival into a required pass."""
+    """The common reaper provides ``reap_clean_pushed`` (#10778), the function the admission seam calls."""
     from scripts.orchestration import reap_worktrees
 
     assert callable(getattr(reap_worktrees, adm.REAPER_FUNCTION, None))
