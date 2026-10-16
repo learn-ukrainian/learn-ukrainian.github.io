@@ -17,6 +17,7 @@ Exit codes:
 from __future__ import annotations
 
 import argparse
+import json
 import subprocess
 import sys
 from datetime import date
@@ -76,16 +77,30 @@ def check_budget(decisions: list[dict]) -> str | None:
     return None
 
 
-def _gh_issue_exists(dec_id: str) -> bool:
-    """Check if a GH issue already exists for this stale decision."""
+def _gh_issue_exists(dec_id: str) -> bool | None:
+    """Whether a GH issue already exists for this stale decision.
+
+    ``None`` means the lookup was refused or failed: the answer is unknown, so
+    the caller must neither claim an issue exists nor create a duplicate. The
+    return code is checked before the output is parsed (a refusal is a non-zero
+    result whose stdout is error JSON).
+    """
     try:
         result = github_client.run(
             ["gh", "issue", "list", "--label", STALE_LABEL, "--search", dec_id, "--json", "number"],
             capture_output=True, text=True, timeout=15,
         )
-        return bool(result.stdout.strip() and result.stdout.strip() != "[]")
     except (subprocess.TimeoutExpired, FileNotFoundError):
-        return False
+        return None
+    if result.returncode != 0:
+        return None
+    try:
+        issues = json.loads(result.stdout)
+    except (TypeError, ValueError):
+        return None
+    if not isinstance(issues, list):
+        return None
+    return bool(issues)
 
 
 def _ensure_label_exists() -> None:
@@ -199,10 +214,16 @@ def main() -> int:
         return 0
 
     print(f"\n  {len(stale)} stale decision(s):\n")
+    lookups_unavailable = False
     for dec in stale:
         print(f"  {dec['id']} | expired {dec['expires']} | {dec['title']}")
         if args.create_issues:
-            if _gh_issue_exists(dec["id"]):
+            # After one refused or failed lookup the rest would meet the same refusal: ask no more.
+            exists = None if lookups_unavailable else _gh_issue_exists(dec["id"])
+            if exists is None:
+                lookups_unavailable = True
+                print("    GH issue lookup unavailable — skipping issue creation (rerun later)")
+            elif exists:
                 print("    GH issue already exists — skipping")
             else:
                 _ensure_label_exists()

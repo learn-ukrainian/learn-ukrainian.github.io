@@ -429,7 +429,11 @@ def test_fetch_live_status_error_handling(monkeypatch: pytest.MonkeyPatch) -> No
             )
         return subprocess.CompletedProcess(args=cmd, returncode=0, stdout="{}", stderr="")
 
-    monkeypatch.setattr(subprocess, "run", fake_subprocess_run)
+    # Patch the typed read the function calls. Patching subprocess.run never reached it: the real
+    # client answered with its own refusal and the "not found" below was produced by that refusal.
+    monkeypatch.setattr(
+        "scripts.gh_merge_queue_status.read", lambda *a, **kw: fake_subprocess_run(["gh", "api", "graphql"])
+    )
 
     with pytest.raises(ValueError, match="Pull request #123 not found in repository"):
         fetch_live_status(123, "learn-ukrainian/learn-ukrainian.github.io")
@@ -608,3 +612,91 @@ def test_cli_main_null_data_diagnostics(tmp_path: Path, capsys: pytest.CaptureFi
 @pytest.fixture(autouse=True)
 def _publisher_transport(publisher_transport):
     """Inject the subprocess spy into typed GitHub read transport."""
+
+
+_REFUSALS = {
+    "rate_refusal_reset_only": (75, json.dumps({"error": "github_rate_limited", "reset_at": 1790000000})),
+    "generic_non_zero": (1, json.dumps({"error": "github_http_error", "reset_at": None, "status": 502})),
+    "empty_output": (0, ""),
+    "malformed_output": (0, "not json"),
+    "refusal_json_with_zero_rc": (0, json.dumps({"error": "github_rate_limited", "reset_at": None})),
+}
+_REPO = "learn-ukrainian/learn-ukrainian.github.io"
+_FOUND = {
+    "data": {
+        "repository": {
+            "pullRequest": {"number": 123, "state": "OPEN", "merged": False, "isInMergeQueue": False},
+            "mergeQueue": None,
+        }
+    }
+}
+
+
+def _live(monkeypatch: pytest.MonkeyPatch, graphql: tuple[int, str], runs: list[tuple[int, str]]) -> list[list[str]]:
+    """Canned graphql read and ordered Actions-run reads; returns the later lookups issued."""
+    lookups: list[list[str]] = []
+
+    def read_stub(*args: Any, **kwargs: Any) -> subprocess.CompletedProcess[str]:
+        return subprocess.CompletedProcess(["gh", "api", "graphql"], graphql[0], graphql[1], "")
+
+    def run_stub(cmd: list[str], **kwargs: Any) -> subprocess.CompletedProcess[str]:
+        lookups.append(cmd)
+        code, out = runs[min(len(lookups), len(runs)) - 1]
+        return subprocess.CompletedProcess(cmd, code, out, "")
+
+    monkeypatch.setattr("scripts.gh_merge_queue_status.read", read_stub)
+    monkeypatch.setattr("scripts.gh_merge_queue_status.github_client.run", run_stub)
+    return lookups
+
+
+@pytest.mark.parametrize("shape", _REFUSALS)
+def test_refused_graphql_read_is_unavailable_not_pr_not_found(
+    monkeypatch: pytest.MonkeyPatch, shape: str
+) -> None:
+    lookups = _live(monkeypatch, _REFUSALS[shape], [(0, '{"workflow_runs": []}')])
+    with pytest.raises(RuntimeError, match=r"unavailable|Failed to parse") as excinfo:
+        fetch_live_status(123, _REPO)
+    assert "not found" not in str(excinfo.value)
+    assert lookups == []  # no Actions lookup after the refusal
+
+
+@pytest.mark.parametrize("shape", _REFUSALS)
+def test_refused_runs_read_is_unavailable_not_empty_and_has_no_fallback(
+    monkeypatch: pytest.MonkeyPatch, shape: str
+) -> None:
+    lookups = _live(monkeypatch, (0, json.dumps(_FOUND)), [_REFUSALS[shape], (0, "[]")])
+    with pytest.raises(RuntimeError, match="unavailable"):
+        fetch_live_status(123, _REPO)
+    assert len(lookups) == 1  # the `gh run list` fallback is never attempted
+
+
+def test_refused_fallback_run_list_is_unavailable_not_empty(monkeypatch: pytest.MonkeyPatch) -> None:
+    lookups = _live(
+        monkeypatch, (0, json.dumps(_FOUND)), [(0, '{"workflow_runs": []}'), _REFUSALS["rate_refusal_reset_only"]]
+    )
+    with pytest.raises(RuntimeError, match="Actions run list read unavailable"):
+        fetch_live_status(123, _REPO)
+    assert len(lookups) == 2
+
+
+def test_cli_reports_unavailable_read_as_error_not_pr_not_found(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    _live(monkeypatch, _REFUSALS["rate_refusal_reset_only"], [])
+    assert main(["123", "--repo", _REPO, "--json"]) == 1
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["status"] == "error"
+    assert "unavailable" in payload["error"]
+    assert "not found" not in payload["error"]
+
+
+def test_successful_live_reads_are_unchanged(monkeypatch: pytest.MonkeyPatch) -> None:
+    run = {"url": "https://example.invalid/run/1", "status": "completed", "conclusion": "success"}
+    lookups = _live(monkeypatch, (0, json.dumps(_FOUND)), [(0, json.dumps({"workflow_runs": [run]}))])
+    status = fetch_live_status(123, _REPO)
+    assert (status.pr_number, status.queued, status.pr_state) == (123, False, "OPEN")
+    assert len(lookups) == 1
+    # An empty (successful) runs list still falls back to the run list, as before.
+    lookups = _live(monkeypatch, (0, json.dumps(_FOUND)), [(0, '{"workflow_runs": []}'), (0, json.dumps([run]))])
+    assert fetch_live_status(123, _REPO).pr_number == 123
+    assert len(lookups) == 2

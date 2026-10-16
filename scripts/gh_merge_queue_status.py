@@ -349,6 +349,44 @@ def evaluate_status_data(
     )
 
 
+def _is_graphql_response(data: Any) -> bool:
+    """True for a GraphQL document (``data`` and/or ``errors``), as opposed to a client refusal."""
+    return isinstance(data, dict) and ("data" in data or "errors" in data)
+
+
+def _unavailable_message(what: str, proc: subprocess.CompletedProcess[str], data: Any = None) -> str:
+    """One explicit unavailable diagnostic; only the controlled error code is echoed."""
+    code = data.get("error") if isinstance(data, dict) else None
+    detail = f": {code}" if isinstance(code, str) and re.fullmatch(r"[a-z_]{1,64}", code) else ""
+    return f"{what} read unavailable (exit {proc.returncode}){detail}."
+
+
+def _read_runs(
+    command: list[str], env: dict[str, str], timeout: int, what: str, key: str | None
+) -> list[dict[str, Any]]:
+    """One Actions runs read. Any refusal or failure raises; it is never an empty list.
+
+    The return code is checked before the output is parsed. ``key`` names the
+    list inside a REST object; ``None`` means the output is itself a list.
+    """
+    try:
+        proc = github_client.run(command, capture_output=True, text=True, env=env, timeout=timeout, check=False)
+    except FileNotFoundError as exc:
+        raise RuntimeError("`gh` CLI tool is required but not installed or not on PATH.") from exc
+    except subprocess.TimeoutExpired as exc:
+        raise RuntimeError(f"{what} read timed out after {timeout}s.") from exc
+    if proc.returncode != 0:
+        raise RuntimeError(_unavailable_message(what, proc))
+    try:
+        data = json.loads(proc.stdout)
+    except (TypeError, ValueError):
+        raise RuntimeError(_unavailable_message(what, proc)) from None
+    runs = data.get(key) if key is not None and isinstance(data, dict) else data if key is None else None
+    if not isinstance(runs, list):
+        raise RuntimeError(_unavailable_message(what, proc, data))
+    return runs
+
+
 def fetch_live_status(
     pr_number: int,
     repo: str,
@@ -380,6 +418,10 @@ def fetch_live_status(
     except json.JSONDecodeError as exc:
         err_msg = (proc.stderr or proc.stdout or "").strip()
         raise RuntimeError(f"Failed to parse GraphQL response (exit {proc.returncode}): {err_msg}") from exc
+    if not _is_graphql_response(data):
+        # A refused or failed read (rate refusal, generic non-zero result, error JSON)
+        # carries no GraphQL payload; it is unavailable, never an absent pull request.
+        raise RuntimeError(_unavailable_message("GraphQL", proc, data))
 
     # Check GraphQL errors
     raw_data = data.get("data") if isinstance(data, dict) else None
@@ -397,55 +439,26 @@ def fetch_live_status(
         err_msg = "; ".join(msgs) if msgs else json.dumps(errors)
         raise RuntimeError(f"GraphQL error: {err_msg}")
 
-    # Fetch merge_group workflow runs (best effort)
-    actions_runs: list[dict[str, Any]] = []
+    # Fetch merge_group workflow runs. An unavailable read raises (no fallback
+    # request, never an empty list); only a successful empty list falls back.
     runs_path = f"repos/{owner}/{name}/actions/runs?event=merge_group&per_page=30"
-    runs_cmd = ["gh", "api", runs_path]
-    try:
-        runs_proc = github_client.run(
-            runs_cmd,
-            capture_output=True,
-            text=True,
-            env=env,
-            timeout=timeout,
-            check=False,
-        )
-        if runs_proc.returncode == 0 and runs_proc.stdout.strip():
-            runs_data = json.loads(runs_proc.stdout)
-            if isinstance(runs_data, dict):
-                actions_runs = runs_data.get("workflow_runs", [])
-    except Exception:
-        actions_runs = []
+    actions_runs = _read_runs(["gh", "api", runs_path], env, timeout, "Actions runs", "workflow_runs")
 
     if not actions_runs:
-        try:
-            rl_cmd = [
-                "gh",
-                "run",
-                "list",
-                "-R",
-                f"{owner}/{name}",
-                "--event",
-                "merge_group",
-                "-L",
-                "30",
-                "--json",
-                "url,headBranch,status,conclusion,createdAt,name,event",
-            ]
-            rl_proc = github_client.run(
-                rl_cmd,
-                capture_output=True,
-                text=True,
-                env=env,
-                timeout=timeout,
-                check=False,
-            )
-            if rl_proc.returncode == 0 and rl_proc.stdout.strip():
-                rl_data = json.loads(rl_proc.stdout)
-                if isinstance(rl_data, list):
-                    actions_runs = rl_data
-        except Exception:
-            actions_runs = []
+        rl_cmd = [
+            "gh",
+            "run",
+            "list",
+            "-R",
+            f"{owner}/{name}",
+            "--event",
+            "merge_group",
+            "-L",
+            "30",
+            "--json",
+            "url,headBranch,status,conclusion,createdAt,name,event",
+        ]
+        actions_runs = _read_runs(rl_cmd, env, timeout, "Actions run list", None)
 
     return evaluate_status_data(data, pr_number, actions_runs)
 

@@ -1631,3 +1631,113 @@ def test_store_gloss_is_public_only_as_an_open_atom_of_its_own_lemma(bound, tmp_
     if expected == "failed":
         assert result["signals"] == {"distinctive_wording": 0, "mapping_copy": 1}
     assert meaning not in json.dumps(result)
+
+
+REFUSALS = {
+    "rate_refusal_reset_only": (75, json.dumps({"error": "github_rate_limited", "reset_at": 1790000000})),
+    "generic_non_zero": (1, json.dumps({"error": "github_http_error", "reset_at": None, "status": 502})),
+    "empty_output": (0, ""),
+    "malformed_output": (0, "not json"),
+    "refusal_json_with_zero_rc": (0, json.dumps({"error": "github_rate_limited", "reset_at": None})),
+}
+
+
+def _pr_client(monkeypatch, returncode, stdout):
+    calls = []
+
+    def run(command, **kwargs):
+        calls.append(command)
+        return subprocess.CompletedProcess(command, returncode, stdout, "")
+
+    monkeypatch.setattr(sense_cli.github_client, "run", run)
+    return calls
+
+
+@pytest.mark.parametrize("shape", REFUSALS)
+def test_read_pr_text_refusal_is_unavailable_with_one_request(monkeypatch, shape):
+    calls = _pr_client(monkeypatch, *REFUSALS[shape])
+    assert sense_cli.read_pr_text(1, Path.cwd()) is None
+    assert len(calls) == 1
+
+
+def test_read_pr_text_success_joins_title_body_comments(monkeypatch):
+    payload = {"title": "t", "body": "b", "comments": [{"body": "c1"}, {"body": "c2"}]}
+    calls = _pr_client(monkeypatch, 0, json.dumps(payload))
+    assert sense_cli.read_pr_text(7, Path.cwd()) == "t b c1 c2"
+    assert calls == [["gh", "pr", "view", "7", "--json", "title,body,comments"]]
+
+
+def test_leak_scan_requested_pr_without_text_is_unavailable_not_checked(bound, tmp_path):
+    root, api, b = bound
+    repo = tmp_path / "git-probe"
+    repo.mkdir()
+    git(repo, "init", "-q")
+    git(repo, "config", "user.email", "fixture@example.invalid")
+    git(repo, "config", "user.name", "Fixture")
+    (repo / "baseline").write_text("baseline\n")
+    git(repo, "add", ".")
+    git(repo, "commit", "-qm", "baseline")
+    base = git(repo, "rev-parse", "HEAD").strip()
+    path = repo / "curriculum/l2-uk-en/evidence/a1"
+    path.mkdir(parents=True)
+    bindings.write(path / bindings.BINDINGS, "a1", {"W-001": b})
+    git(repo, "add", ".")
+    git(repo, "commit", "-qm", "public binding")
+    context = bindings.Context.read("a1", root)
+    store = {"words": [WORD]}
+    private = {FIXTURE["private"]["locator"]: {**FIXTURE["private"], "meaning": "invented private destination"}}
+    unread = sense_cli.leak_scan(repo, private, context, store, api, base=base, pr_requested=True)
+    assert unread["status"] == "unavailable"
+    assert unread["pr_text"] == "unavailable"
+    assert sum(unread["counts"].values()) == 0
+    # No PR requested keeps the existing meaning; a read PR is scanned and clean.
+    none_requested = sense_cli.leak_scan(repo, private, context, store, api, base=base)
+    assert (none_requested["status"], none_requested["pr_text"]) == ("checked", "unverified")
+    read = sense_cli.leak_scan(repo, private, context, store, api, base=base, pr_text="public", pr_requested=True)
+    assert (read["status"], read["pr_text"]) == ("checked", "scanned")
+    # A real leak still outranks an unreadable PR.
+    (repo / "leak.txt").write_text("invented private destination\n")
+    git(repo, "add", ".")
+    git(repo, "commit", "-qm", "invented private destination")
+    leaked = sense_cli.leak_scan(repo, private, context, store, api, base=base, pr_requested=True)
+    assert leaked["status"] == "failed"
+
+
+@pytest.mark.parametrize("shape", REFUSALS)
+def test_select_check_with_refused_pr_read_fails_closed(bound, monkeypatch, capsys, shape):
+    root, api, _b = bound
+    (root / "_words.yaml").write_text(yaml.safe_dump({"level": "a1", "words": [WORD]}))
+    private = root / "private.jsonl"
+    private.write_text(json.dumps(FIXTURE["private"]) + "\n")
+    key = root / "key"
+    key.write_bytes(KEY)
+    receipt = root / "receipt"
+    monkeypatch.setattr(sources, "Sources", lambda **kw: api)
+    monkeypatch.setattr(bindings, "git", lambda repo, *args: b"" if args[0] == "status" else b"a" * 40)
+    calls = _pr_client(monkeypatch, *REFUSALS[shape])
+    seen = {}
+
+    def scan(*args, **kwargs):
+        # Same contract as the real scan: a requested PR without text is never "checked".
+        seen.update(kwargs)
+        unread = kwargs["pr_requested"] and kwargs["pr_text"] is None
+        return {"status": "unavailable" if unread else "checked", "pr_text": "x", "scope": {"kind": "diff"}}
+
+    monkeypatch.setattr(sense_cli, "leak_scan", scan)
+    book, _decisions = sense_cli.select_store(
+        {"level": "a1", "words": [WORD]},
+        bindings.public_entries(a1_reference.INVENTORY_PATH),
+        {FIXTURE["private"]["locator"]: FIXTURE["private"]},
+        api,
+        KEY,
+        "test-key",
+    )
+    bindings.write(root / bindings.BINDINGS, "a1", book)
+    args = ["a1", "--evidence-dir", str(root), "--private-input", str(private), "--pr", "1", "--check"]
+    args += ["--key-file", str(key), "--key-id", "test-key", "--receipt", str(receipt)]
+    assert sense_cli.main(args) == 1
+    out = capsys.readouterr().out
+    assert json.loads(out.strip().splitlines()[-1]) == {"status": "failed", "reason": "pr_text_unavailable"}
+    assert (seen["pr_text"], seen["pr_requested"]) == (None, True)
+    assert len(calls) == 1
+    assert not receipt.exists()

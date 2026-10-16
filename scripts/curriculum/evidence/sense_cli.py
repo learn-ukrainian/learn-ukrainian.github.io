@@ -274,6 +274,33 @@ def _head_blobs(repo: Path, paths: set[str] | None = None):
             raise ValueError("tracked_blob_unreadable")
 
 
+def read_pr_text(pr: int, repo: Path) -> str | None:
+    """Title, body and comments of PR ``pr``; None when the read was refused or failed.
+
+    A refusal arrives as a non-zero result whose stdout is error JSON, so the
+    return code is checked before anything is parsed. One request, no fallback.
+    """
+    import subprocess
+
+    try:
+        proc = github_client.run(
+            ["gh", "pr", "view", str(pr), "--json", "title,body,comments"],
+            cwd=repo,
+            capture_output=True,
+            text=True,
+            timeout=60,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return None
+    if proc.returncode != 0:
+        return None
+    try:
+        data = json.loads(proc.stdout)
+        return " ".join([data["title"], data["body"], *(c["body"] for c in data["comments"])])
+    except (ValueError, KeyError, TypeError):
+        return None
+
+
 def leak_scan(
     repo: Path,
     private: dict,
@@ -283,9 +310,14 @@ def leak_scan(
     *,
     base: str = "origin/main",
     pr_text: str | None = None,
+    pr_requested: bool = False,
     full_tree_report: Path | None = None,
 ) -> dict:
-    """Gate changed blobs and level stores; optionally report the whole tree."""
+    """Gate changed blobs and level stores; optionally report the whole tree.
+
+    ``pr_requested`` marks a PR the caller asked to scan: if its text could not
+    be read the scan is ``unavailable``, never ``checked``.
+    """
     if full_tree_report is not None:
         from scripts.ingest.build_ohoiko_a1_reference import require_private_path
 
@@ -463,8 +495,10 @@ def leak_scan(
         "tracked_files": files,
         "tracked_bytes": byte_count,
         "patterns": {"distinctive_wording": len(distinctive), "mapping_copy": len(mapping_meanings)},
-        "pr_text": "unverified" if pr_text is None else "scanned",
-        "status": "failed" if sum(leaks.values()) else "checked",
+        "pr_text": "scanned" if pr_text is not None else "unavailable" if pr_requested else "unverified",
+        "status": (
+            "failed" if sum(leaks.values()) else "unavailable" if pr_text is None and pr_requested else "checked"
+        ),
     }
 
 
@@ -510,7 +544,9 @@ def parser(command: str) -> argparse.ArgumentParser:
             help="Optional full HEAD tree ids/paths/counts JSON outside the repository, e.g. /tmp/tree-report.json; report only, requires --check",
         )
         p.add_argument(
-            "--pr", type=int, help="PR number whose title/body/comments are scanned; absent means unverified"
+            "--pr",
+            type=int,
+            help="PR number whose title/body/comments are scanned; absent means unverified, an unreadable PR fails the check",
         )
     else:
         p.add_argument("--word", required=True, help="W-id whose candidate list is the subject")
@@ -674,26 +710,7 @@ def main(argv: list[str] | None = None, *, command: str = "select") -> int:
                 expected = {k: v for k, v in context.entries.items() if v["method"] == bindings.BOOK_METHOD}
                 if selected != expected:
                     raise ValueError("reference_binding_reselection_failed")
-                pr_text = None
-                if args.pr:
-                    import subprocess
-
-                    try:
-                        pr = github_client.run(
-                            ["gh", "pr", "view", str(args.pr), "--json", "title,body,comments"],
-                            cwd=repo,
-                            capture_output=True,
-                            text=True,
-                            timeout=60,
-                        )
-                    except (OSError, subprocess.TimeoutExpired):
-                        pr = None
-                    if pr is not None and pr.returncode == 0:
-                        try:
-                            data = json.loads(pr.stdout)
-                            pr_text = " ".join([data["title"], data["body"], *(c["body"] for c in data["comments"])])
-                        except (ValueError, KeyError, TypeError):
-                            pr_text = None
+                pr_text = read_pr_text(args.pr, repo) if args.pr else None
                 scan = leak_scan(
                     repo,
                     private,
@@ -702,9 +719,12 @@ def main(argv: list[str] | None = None, *, command: str = "select") -> int:
                     api,
                     base=args.base,
                     pr_text=pr_text,
+                    pr_requested=bool(args.pr),
                     full_tree_report=args.full_tree_report,
                 )
                 print(json.dumps({"leak_scan": scan}))
+                if scan["status"] == "unavailable":
+                    raise ValueError("pr_text_unavailable")
                 if scan["status"] != "checked":
                     raise ValueError("private_text_leak_suspected")
                 if not args.receipt:
@@ -740,6 +760,7 @@ def main(argv: list[str] | None = None, *, command: str = "select") -> int:
             "commitment_key_invalid",
             "reference_binding_reselection_failed",
             "private_text_leak_suspected",
+            "pr_text_unavailable",
             "local_receipt_required",
             "local_receipt_stale_or_invalid",
             "receipt_requires_clean_head",

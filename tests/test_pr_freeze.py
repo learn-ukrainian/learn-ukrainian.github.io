@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import subprocess
 import sys
 from pathlib import Path
 from types import SimpleNamespace
@@ -291,3 +292,66 @@ def test_relative_worktree_resolves_against_target_repo(monkeypatch, tmp_path) -
     real.mkdir(parents=True)
     (real / ".git").write_text("gitdir: x\n")
     assert delegate._check_open_pr_freeze(args, repo, target_root) is None
+
+
+_REFUSALS = {
+    "rate_refusal_reset_only": (75, json.dumps({"error": "github_rate_limited", "reset_at": 1790000000})),
+    "generic_non_zero": (1, json.dumps({"error": "github_http_error", "reset_at": None, "status": 502})),
+    "empty_output": (0, ""),
+    "malformed_output": (0, "not json"),
+    "refusal_json_with_zero_rc": (0, json.dumps({"error": "github_rate_limited", "reset_at": None})),
+}
+
+
+def _client(monkeypatch, responses):
+    """Route the shared client to canned results; ``responses`` is a list consumed in order."""
+    from scripts.common import github_client
+
+    calls = []
+
+    def run(command, **kwargs):
+        calls.append(command[-1])
+        returncode, stdout = responses[min(len(calls), len(responses)) - 1]
+        return subprocess.CompletedProcess(command, returncode, stdout, "")
+
+    monkeypatch.setattr(github_client, "run", run)
+    return calls
+
+
+@pytest.mark.parametrize("shape", _REFUSALS)
+def test_refused_count_read_is_unavailable_not_admitted(monkeypatch, tmp_path, shape) -> None:
+    calls = _client(monkeypatch, [_REFUSALS[shape]])
+    decision = pr_freeze.evaluate(REPO, branch="codex/x", environ={}, cache_file=tmp_path / "c.json")
+    assert decision.refused is None
+    assert decision.unavailable
+    assert decision.open_prs is None
+    assert decision.warning == "open-PR freeze check skipped: open_pr_count_unavailable"
+    assert len(calls) == 1  # no branch lookup, no retry after the refusal
+    assert not (tmp_path / "c.json").exists()
+
+
+@pytest.mark.parametrize("shape", _REFUSALS)
+def test_refused_branch_lookup_is_unavailable_not_admitted(monkeypatch, tmp_path, shape) -> None:
+    fetch, _ = _fetch(30)
+    calls = _client(monkeypatch, [_REFUSALS[shape]])
+    decision = pr_freeze.evaluate(REPO, branch="codex/x", environ={}, fetch=fetch, cache_file=tmp_path / "c.json")
+    assert decision.refused is None
+    assert decision.unavailable
+    assert decision.open_prs == 30
+    assert decision.warning == "open-PR freeze check skipped: branch_pr_lookup_unavailable"
+    assert len(calls) == 1
+
+
+def test_successful_reads_keep_known_decisions(monkeypatch, tmp_path) -> None:
+    count = json.dumps({"total_count": 30})
+    calls = _client(monkeypatch, [(0, count), (0, json.dumps([{"number": 1}]))])
+    exempt = pr_freeze.evaluate(REPO, branch="codex/x", environ={}, cache_file=tmp_path / "c.json")
+    assert (exempt.refused, exempt.unavailable, exempt.warning) == (False, False, None)
+    assert len(calls) == 2
+    calls = _client(monkeypatch, [(0, count), (0, "[]")])
+    frozen = pr_freeze.evaluate(REPO, branch="codex/y", environ={}, cache_file=tmp_path / "d.json")
+    assert (frozen.refused, frozen.unavailable, frozen.open_prs) == (True, False, 30)
+    calls = _client(monkeypatch, [(0, json.dumps({"total_count": 3}))])
+    below = pr_freeze.evaluate(REPO, branch="codex/z", environ={}, cache_file=tmp_path / "e.json")
+    assert (below.refused, below.unavailable) == (False, False)
+    assert len(calls) == 1

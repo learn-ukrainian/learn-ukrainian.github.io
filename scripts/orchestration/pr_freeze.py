@@ -10,7 +10,10 @@ repositories are unaffected. A ``--branch`` with no open PR counts as new.
 ``LU_OPEN_PR_FREEZE_THRESHOLD`` overrides the threshold (default 15; ``0``
 disables the check). The count comes from the GitHub REST search API and is
 cached briefly (``LU_OPEN_PR_FREEZE_CACHE_S``, default 60s). When the count or
-the branch's PR cannot be fetched the check fails open with a warning.
+the branch's PR cannot be fetched (a rate refusal, a failed read, or empty or
+malformed output) the decision is *unavailable*: ``refused`` is ``None`` (not
+``False``) and ``warning`` names the reason. The caller owns what to do with
+an unknown admission; the PR count is never guessed.
 """
 
 from __future__ import annotations
@@ -33,10 +36,16 @@ WRITE_MODES = frozenset({"workspace-write", "danger"})
 
 @dataclass(frozen=True)
 class FreezeDecision:
-    refused: bool
+    """``refused`` is True/False when known and ``None`` when the lookup was unavailable."""
+
+    refused: bool | None
     open_prs: int | None
     threshold: int
     warning: str | None = None
+
+    @property
+    def unavailable(self) -> bool:
+        return self.refused is None
 
     def refusal_line(self, repo: str) -> str:
         return (
@@ -170,7 +179,7 @@ def evaluate(
         count = cached_open_pr_count(repo, fetch=fetch, cache_file=cache_file, ttl_s=_cache_s(env))
     except Exception:
         return FreezeDecision(
-            refused=False,
+            refused=None,
             open_prs=None,
             threshold=threshold,
             warning="open-PR freeze check skipped: open_pr_count_unavailable",
@@ -183,7 +192,7 @@ def evaluate(
                 return FreezeDecision(refused=False, open_prs=count, threshold=threshold)
         except Exception:
             return FreezeDecision(
-                refused=False,
+                refused=None,
                 open_prs=count,
                 threshold=threshold,
                 warning="open-PR freeze check skipped: branch_pr_lookup_unavailable",
