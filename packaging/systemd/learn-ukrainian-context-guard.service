@@ -1,0 +1,14 @@
+[Unit]
+Description=Learn Ukrainian driver-lane context guard (hands tmux driver lanes to a fresh session)
+After=learn-ukrainian-lane-relaunch.service
+
+[Service]
+Type=oneshot
+WorkingDirectory=@REPO_ROOT@
+Environment=PYTHONUNBUFFERED=1
+Environment=LANG=C.UTF-8
+# Codex lanes are respawned with the shims first, then this PATH (#10814).
+Environment=PATH=%h/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+ExecStart=@REPO_ROOT@/.venv/bin/python -m scripts.ops.context_guard tick
+TimeoutStartSec=4min
+Nice=5
