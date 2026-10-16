@@ -1389,3 +1389,133 @@ def test_record_review_folds_results_into_a_text_free_ledger(tmp_path: Path) -> 
                               "--positions", "3-3", "--reviewer", "r2"]) == 1  # fmt: skip
     assert teacher_deck.main(["record-review", *common, "--results", str(tmp_path / "part2.tsv"),
                               "--positions", "0-9", "--reviewer", "r2"]) == 1  # fmt: skip
+
+
+_REQUIRED_JSON_ARTIFACTS = (
+    checker.MANIFEST_FILE,
+    checker.DECK_FILE,
+    checker.CLOZE_FILE,
+    checker.FROZEN_FILE,
+)
+_NON_OBJECT_JSON = (
+    pytest.param([], id="array-empty"),
+    pytest.param([1], id="array-nonempty"),
+    pytest.param("", id="string-empty"),
+    pytest.param("shape-control", id="string-nonempty"),
+    pytest.param(0, id="number-zero"),
+    pytest.param(-1, id="number-negative"),
+    pytest.param(1.5, id="number-fraction"),
+    pytest.param(True, id="boolean-true"),
+    pytest.param(False, id="boolean-false"),
+    pytest.param(None, id="null"),
+)
+
+
+@pytest.fixture
+def checked_world(world: dict[str, Path], tmp_path: Path) -> dict[str, Path]:
+    _review_all(world, tmp_path / "shape-review")
+    assert _refresh(world) == 0
+    return world
+
+
+def _check_main(
+    world: dict[str, Path], report: Path, *, publication: bool, with_sources: bool
+) -> int:
+    args = ["--deck-dir", str(world["out"]), "--json", str(report)]
+    if publication or with_sources:
+        args += ["--withheld", str(world["withheld"])]
+    if publication:
+        args += ["--publication"]
+    if with_sources:
+        for flag, key in (("docx", "docx"), ("vesum-db", "vesum"), ("sources-db", "sources"), ("atlas-db", "atlas")):
+            args += [f"--{flag}", str(world[key])]
+    return checker.main(args)
+
+
+@pytest.mark.parametrize("artifact", _REQUIRED_JSON_ARTIFACTS)
+@pytest.mark.parametrize("payload", _NON_OBJECT_JSON)
+@pytest.mark.parametrize("publication", [False, True], ids=["normal", "publication"])
+def test_checker_rejects_required_non_object_json(
+    checked_world: dict[str, Path], tmp_path: Path, capsys: pytest.CaptureFixture[str],
+    artifact: str, payload: object, publication: bool,
+) -> None:
+    world = checked_world
+    (world["out"] / artifact).write_text(json.dumps(payload), encoding="utf-8")
+    capsys.readouterr()
+    for with_sources in (False, True):
+        report = tmp_path / f"shape-report-{with_sources}.json"
+        code = _check_main(world, report, publication=publication, with_sources=with_sources)
+        output = capsys.readouterr()
+        diagnostic = f"invalid artifact {artifact}: expected JSON object"
+        assert code == 1, output
+        assert diagnostic in output.out and "FAIL" in output.out and "PASS" not in output.out
+        assert output.err == ""
+        assert json.loads(report.read_text(encoding="utf-8")) == {"ok": False, "errors": [diagnostic]}
+
+
+@pytest.mark.parametrize("publication", [False, True], ids=["normal", "publication"])
+def test_checker_accepts_required_object_json(
+    checked_world: dict[str, Path], tmp_path: Path, capsys: pytest.CaptureFixture[str], publication: bool,
+) -> None:
+    capsys.readouterr()
+    for with_sources in (False, True):
+        report = tmp_path / f"valid-report-{with_sources}.json"
+        assert _check_main(checked_world, report, publication=publication, with_sources=with_sources) == 0
+        output = capsys.readouterr()
+        payload = json.loads(report.read_text(encoding="utf-8"))
+        assert payload["ok"] is True and payload["errors"] == []
+        assert payload["entries"] > 0 and "PASS (0 errors)" in output.out
+        assert output.err == ""
+
+
+@pytest.mark.parametrize("artifact", _REQUIRED_JSON_ARTIFACTS)
+@pytest.mark.parametrize("damage", ["missing", "malformed"])
+@pytest.mark.parametrize("publication", [False, True], ids=["normal", "publication"])
+def test_checker_preserves_required_json_read_failures(
+    checked_world: dict[str, Path], tmp_path: Path, capsys: pytest.CaptureFixture[str],
+    artifact: str, damage: str, publication: bool,
+) -> None:
+    path = checked_world["out"] / artifact
+    if damage == "missing":
+        path.unlink()
+    else:
+        path.write_text("{", encoding="utf-8")
+    capsys.readouterr()
+    for with_sources in (False, True):
+        report = tmp_path / f"read-report-{with_sources}.json"
+        assert _check_main(checked_world, report, publication=publication, with_sources=with_sources) == 1
+        output = capsys.readouterr()
+        payload = json.loads(report.read_text(encoding="utf-8"))
+        prefix = f"missing artifact: {artifact}" if damage == "missing" else f"unreadable artifact {artifact}:"
+        assert payload["ok"] is False and len(payload["errors"]) == 1
+        assert payload["errors"][0].startswith(prefix)
+        assert prefix in output.out and "FAIL" in output.out and output.err == ""
+
+
+@pytest.mark.parametrize("artifact", _REQUIRED_JSON_ARTIFACTS)
+@pytest.mark.parametrize("payload", [[], "shape-control", 0, False, None], ids=["array", "string", "number", "boolean", "null"])
+@pytest.mark.parametrize("publication", [False, True], ids=["normal", "publication"])
+def test_refresh_propagates_required_json_shape_failure(
+    checked_world: dict[str, Path], monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str],
+    artifact: str, payload: object, publication: bool,
+) -> None:
+    world = checked_world
+    before = _committed(world)
+    fake = FakeGh(monkeypatch)
+    real_render = shard.render_published_set
+
+    def corrupt_required_artifact(*args, **kwargs):
+        files = real_render(*args, **kwargs)
+        files[artifact] = json.dumps(payload).encode("utf-8")
+        return files
+
+    monkeypatch.setattr(shard, "render_published_set", corrupt_required_artifact)
+    capsys.readouterr()
+    assert _refresh(world, *(["--publish"] if publication else [])) == 1
+    output = capsys.readouterr()
+    assert "independent checker failed; published set left unchanged" in output.err
+    assert f"invalid artifact {artifact}: expected JSON object" in output.err
+    assert fake.calls == []
+    assert _committed(world) == before
+    assert not world["pointer"].exists()
+    assert not world["out"].with_name(f".{world['out'].name}.check").exists()
