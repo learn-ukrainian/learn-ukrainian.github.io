@@ -16,7 +16,10 @@ that key and the only reads of the routing snapshot's claude meter:
   bind where a snapshot enters them; a decision helper that reaches the claude
   lane of an unbound snapshot raises :class:`AccountRequired`. Display
   consumers (``scripts.fleet.usage``, ``capacity_pick`` and the Monitor
-  endpoint) keep the plain payload.
+  endpoint) keep the plain payload. A bound snapshot is deeply immutable, and
+  its account identity survives conversion to a plain mapping
+  (:data:`BINDING_KEY`): no derivation, copy or splice turns one account's
+  meter into another's.
 - :func:`select_account`, :func:`account_agents`, :func:`lane_record`,
   :func:`account_weekly_used_pct` and :func:`capacity_verdict` read the
   snapshot for a named account; none has a default, and a call without a
@@ -42,12 +45,29 @@ selected on it.
 
 from __future__ import annotations
 
+import hashlib
+import hmac
+import json
 import math
+import re
+import secrets
 from collections.abc import Callable, Iterator, Mapping
 from dataclasses import dataclass
 from typing import Any, NoReturn
 
 CLAUDE_LANE = "claude"
+# The reserved entry of a bound snapshot that carries a claude meter: its account label, evidence and
+# meter seal. It survives ``dict(view)``, ``{**view}`` and a JSON round trip, so such a copy is bound
+# again only unaltered and only as its own account (#10770).
+BINDING_KEY = "claude_account_binding"
+# The top-level fields that carry a Claude account's meter.
+METER_FIELDS = frozenset({"agents", "claude_accounts", "ranked_by_headroom", "preferred_claude_account"})
+# An ``agents`` key denoting a Claude seat's meter: ``claude``, a ``claude-<model>`` or other ``claude-<seat>``
+# key, a ``claude:<account>`` key, or the ``anthropic`` family key the reviewer scheduler also searches.
+_CLAUDE_LANE_KEY = re.compile(r"claude(?:$|[^a-z0-9])|anthropic$")
+_ACCOUNT_LANE_KEY = re.compile(r"claude:(.*)$")
+# Process-local: a snapshot's meter seal verifies only in the process that bound it.
+_SEAL_KEY = secrets.token_bytes(32)
 SHARED_ROUTE_FACT_KEYS = ("health", "runtime", "scheduler", "circuit_open", "eligible")
 # The meter fields of a ``ranked_by_headroom`` row; its ``lane``, ``type``,
 # ``in_flight`` and ``health`` are route facts.
@@ -118,6 +138,185 @@ class AccountRequired(BaseException):
 _BINDER = object()
 
 
+def is_claude_lane_key(key: object) -> bool:
+    """Whether an ``agents`` key (or ``ranked_by_headroom`` lane) denotes a Claude seat's meter, canonical or alias."""
+    return isinstance(key, str) and _CLAUDE_LANE_KEY.match(key.strip().casefold()) is not None
+
+
+def _in_account_view(key: object, account: ClaudeAccount, *, host: bool) -> bool:
+    """Whether the ``agents`` record (or ``ranked_by_headroom`` row) under ``key`` stays in ``account``'s view.
+
+    A record that names no Claude seat, and the canonical ``claude`` lane
+    (rebuilt for another account), stay. A claude alias carries no account
+    label, so it is the meter of the host account whose payload it is, like
+    the lane row: the host account (``host``) keeps it and every other account
+    drops it. A ``claude:<account>`` key is kept only by the host account and
+    only when it names that account.
+    """
+    if key == CLAUDE_LANE or not is_claude_lane_key(key):
+        return True
+    named = _ACCOUNT_LANE_KEY.match(str(key).strip().casefold())
+    return host and (named is None or named.group(1) == account.label)
+
+
+def _refuse_mutation(*_args: Any, **_kwargs: Any) -> NoReturn:
+    raise TypeError("a bound routing snapshot is immutable: derive a view with AccountSnapshot.evolve (#10770)")
+
+
+class _FrozenDict(dict[str, Any]):
+    """A ``dict`` inside a bound snapshot: every mutator raises, and it remembers the account it was bound to.
+
+    A ``dict`` subclass so the consumers' ``isinstance(record, dict)`` readings
+    are unchanged; a copy (``dict(record)``, ``record.copy()``, ``record | x``)
+    is a plain ``dict`` whose nested values stay frozen.
+    """
+
+    __slots__ = ("_label",)
+    _label: str | None
+    __setitem__ = __delitem__ = __ior__ = _refuse_mutation  # type: ignore[assignment]
+    clear = pop = popitem = setdefault = update = _refuse_mutation  # type: ignore[assignment]
+
+    def __setattr__(self, name: str, value: Any) -> NoReturn:
+        _refuse_mutation()
+
+    def __copy__(self) -> _FrozenDict:
+        return self
+
+    def __deepcopy__(self, memo: Any) -> _FrozenDict:
+        return self
+
+    def __reduce_ex__(self, protocol: Any) -> tuple[Any, ...]:
+        return dict, (dict(self),)
+
+
+class _FrozenList(list[Any]):
+    """A ``list`` inside a bound snapshot: every mutator raises, and it remembers the account it was bound to."""
+
+    __slots__ = ("_label",)
+    _label: str | None
+    __setitem__ = __delitem__ = __iadd__ = __imul__ = _refuse_mutation  # type: ignore[assignment]
+    append = extend = insert = pop = remove = clear = sort = reverse = _refuse_mutation  # type: ignore[assignment]
+
+    def __setattr__(self, name: str, value: Any) -> NoReturn:
+        _refuse_mutation()
+
+    def __copy__(self) -> _FrozenList:
+        return self
+
+    def __deepcopy__(self, memo: Any) -> _FrozenList:
+        return self
+
+    def __reduce_ex__(self, protocol: Any) -> tuple[Any, ...]:
+        return list, (list(self),)
+
+
+def _freeze(value: Any, label: str | None) -> Any:
+    """``value`` with every mapping and list replaced by a frozen copy bound to ``label``; tuples stay tuples."""
+    frozen: _FrozenDict | _FrozenList
+    if isinstance(value, _FrozenDict | _FrozenList) and value._label == label:
+        return value  # already frozen for this account
+    if isinstance(value, Mapping):
+        frozen = _FrozenDict((key, _freeze(item, label)) for key, item in value.items())
+    elif isinstance(value, list):
+        frozen = _FrozenList(_freeze(item, label) for item in value)
+    elif type(value) is tuple:
+        return tuple(_freeze(item, label) for item in value)
+    else:
+        return value
+    object.__setattr__(frozen, "_label", label)
+    return frozen
+
+
+def _thaw(value: Any) -> Any:
+    if isinstance(value, Mapping):
+        return {key: _thaw(item) for key, item in value.items()}
+    if isinstance(value, list):
+        return [_thaw(item) for item in value]
+    return value
+
+
+def _bound_label(value: object) -> tuple[bool, str | None]:
+    """``(True, label)`` for a value taken from a bound snapshot, else ``(False, None)``."""
+    if isinstance(value, AccountSnapshot):
+        return True, value._account.label
+    if isinstance(value, _FrozenDict | _FrozenList):
+        return True, value._label
+    return False, None
+
+
+def _other_account_value(value: Any, label: str | None) -> tuple[str, str | None] | None:
+    """``(path, owner)`` of the first value in ``value`` taken from a snapshot bound to another account, else None."""
+    bound, owner = _bound_label(value)
+    if bound:
+        return None if owner == label else ("", owner)  # a value bound to this account holds nothing else
+    items = value.items() if isinstance(value, Mapping) else enumerate(value) if isinstance(value, list | tuple) else ()
+    for key, item in items:
+        found = _other_account_value(item, label)
+        if found is not None:
+            return f"[{key!r}]{found[0]}", found[1]
+    return None
+
+
+def _refuse_other_accounts(value: Any, label: str | None, *, path: str = "payload") -> None:
+    """Raise :class:`AccountRequired` when ``value`` holds anything taken from a snapshot bound to another account.
+
+    A bound snapshot's frozen values remember their account, so a plain
+    mapping spliced from another account's view (``{**view}`` without its
+    binding, ``{"agents": view["agents"]}``) is never read as ``label``.
+    """
+    found = _other_account_value(value, label)
+    if found is not None:
+        raise AccountRequired(
+            f"{path}{found[0]} was taken from a snapshot bound to claude account {found[1]!r} and is not read as "
+            f"{label!r}: bind the raw payload for that account (#10770)"
+        )
+
+
+def _material(value: Any) -> Any:
+    """``value`` as canonical JSON-ready data: mappings keyed by ``str``, sequences as lists, the rest as ``repr``."""
+    if isinstance(value, Mapping):
+        return {str(key): _material(item) for key, item in value.items()}
+    if isinstance(value, list | tuple):
+        return [_material(item) for item in value]
+    if value is None or isinstance(value, str | int | float):
+        return value
+    return repr(value)
+
+
+def _meter_seal(label: str | None, evidence: Mapping[str, Any], data: Mapping[str, Any]) -> str:
+    """The keyed digest of ``label``, ``evidence`` and every claude meter in ``data``.
+
+    The meter is every ``agents`` record of a Claude seat (canonical or alias), the
+    claude rows of ``ranked_by_headroom``, ``claude_accounts`` and
+    ``preferred_claude_account``. Another top-level field (a decision's
+    ``review_capacity_exclusions``) or another lane's record is not part of it.
+    """
+    agents = data.get("agents")
+    ranked = data.get("ranked_by_headroom")
+    # An empty or non-mapping claude record carries no meter, as an absent one.
+    meter = {
+        "agents": {
+            str(key): record
+            for key, record in agents.items()
+            if is_claude_lane_key(key) and isinstance(record, Mapping) and record
+        }
+        if isinstance(agents, Mapping)
+        else agents,
+        "ranked_by_headroom": [
+            row for row in ranked if not isinstance(row, Mapping) or is_claude_lane_key(row.get("lane"))
+        ]
+        if isinstance(ranked, list | tuple)
+        else ranked,
+        **{field: data[field] for field in ("claude_accounts", "preferred_claude_account") if field in data},
+    }
+    material = json.dumps(
+        _material({"label": label, "evidence": evidence, "meter": meter}),
+        sort_keys=True,
+        separators=(",", ":"),
+    )
+    return hmac.new(_SEAL_KEY, material.encode("utf-8"), hashlib.sha256).hexdigest()
+
+
 class AccountSnapshot(Mapping[str, Any]):
     """A routing-budget snapshot read as one :class:`ClaudeAccount` (#10770).
 
@@ -126,27 +325,32 @@ class AccountSnapshot(Mapping[str, Any]):
     record rebuilt from its ``claude_accounts`` row (:func:`lane_view`), an
     unresolved account's an unknown meter. No other account's meter remains:
     ``claude_accounts`` keeps only the account's own row,
-    ``preferred_claude_account`` is gone, and the claude rows of
-    ``ranked_by_headroom`` carry the account's meter fields. Every other key
-    is the payload's own.
+    ``preferred_claude_account`` and every other account's claude alias
+    record are gone (:func:`_in_account_view`), and
+    the claude rows of ``ranked_by_headroom`` carry the account's meter
+    fields. Every other key is the payload's own. A snapshot holding a meter
+    field carries :data:`BINDING_KEY`: its account label, evidence and meter
+    seal.
 
-    The view is immutable and is not a ``dict``: ``dict`` methods and
-    ``vars`` cannot reach a raw payload through it. It is never serialized
-    (JSON refuses it and pickling raises); a deserialized payload is bound
-    again.
+    The view is deeply immutable and is not a ``dict``: every nested mapping
+    and list raises on mutation, and ``dict`` methods and ``vars`` cannot
+    reach a raw payload through it. It is never serialized (JSON refuses it
+    and pickling raises). A plain copy of it (``dict(view)``, a JSON round
+    trip) is bound again only as its own account and only with its meter
+    unaltered; a derived view comes from :meth:`evolve`.
     """
 
     __slots__ = ("_account", "_data", "_evidence")
     _account: ClaudeAccount
-    _data: dict[str, Any]
+    _data: _FrozenDict
     _evidence: dict[str, Any]
 
     def __init__(
-        self, data: Mapping[str, Any], account: ClaudeAccount, evidence: Mapping[str, Any], *, binder: object = None
+        self, data: _FrozenDict, account: ClaudeAccount, evidence: Mapping[str, Any], *, binder: object = None
     ) -> None:
         if binder is not _BINDER:
             raise TypeError("an AccountSnapshot is built only by claude_account_lane.bind_snapshot (#10770)")
-        object.__setattr__(self, "_data", dict(data))
+        object.__setattr__(self, "_data", data)
         object.__setattr__(self, "_account", account)
         object.__setattr__(self, "_evidence", dict(evidence))
 
@@ -156,8 +360,26 @@ class AccountSnapshot(Mapping[str, Any]):
         return self._account
 
     def evolve(self, **changes: Any) -> AccountSnapshot:
-        """This snapshot with top-level keys replaced, bound to the same account (a decision's derived view)."""
-        return AccountSnapshot({**self._data, **changes}, self._account, self._evidence, binder=_BINDER)
+        """This snapshot with top-level keys replaced, bound to the same account (a decision's derived view).
+
+        A change may not alter the account's meter (:func:`_meter_seal`): an
+        ``agents`` map keeps the claude record unchanged and adds no claude
+        alias, and ``claude_accounts``, ``ranked_by_headroom``,
+        ``preferred_claude_account`` and :data:`BINDING_KEY` are not replaced.
+        Such a change raises :class:`AccountRequired`; bind the raw payload
+        instead.
+        """
+        _refuse_other_accounts(changes, self._account.label, path="evolve")
+        data = {key: value for key, value in self._data.items() if key != BINDING_KEY}
+        changed = {**data, **changes}
+        if BINDING_KEY in changes or _meter_seal(self._account.label, self._evidence, changed) != _meter_seal(
+            self._account.label, self._evidence, data
+        ):
+            raise AccountRequired(
+                f"a view derived from a snapshot bound to claude account {self._account.label!r} may not change "
+                "its claude meter: bind the raw payload (#10770)"
+            )
+        return _bound(changed, self._account, self._evidence)[0]
 
     def __getitem__(self, key: str) -> Any:
         return self._data[key]
@@ -182,12 +404,13 @@ class AccountSnapshot(Mapping[str, Any]):
 
 
 def require_bound(snapshot: object, *, reading: str) -> AccountSnapshot:
-    """``snapshot`` when it is bound to an account; a raw payload raises :class:`AccountRequired`."""
+    """``snapshot`` when it is bound to an account and its meter verifies; anything else raises :class:`AccountRequired`."""
     if not isinstance(snapshot, AccountSnapshot):
         raise AccountRequired(
             f"{reading} reads the claude lane of an unbound {type(snapshot).__name__}: "
             "bind it with claude_account_lane.bind_snapshot (#10770)"
         )
+    _verify_binding(snapshot._data, snapshot._account.label, snapshot._evidence)
     return snapshot
 
 
@@ -371,9 +594,20 @@ def select_account(payload: Mapping[str, Any], *, account: ClaudeAccount) -> tup
     other account's meter is removed (:class:`AccountSnapshot`); the caller's
     payload is not modified.
 
+    A claude alias (an ``agents`` key or ``ranked_by_headroom`` row denoting a
+    Claude seat other than ``claude`` itself, :func:`is_claude_lane_key`)
+    carries no account label, so it is the host account's meter, as the lane
+    row is: the default account keeps it as the payload has it, and every
+    other account's view drops it. A ``claude:<account>`` key naming another
+    account is dropped from every view (:func:`_in_account_view`).
+
     Selecting a snapshot again for its own account returns it unchanged with
-    its evidence (a fixed point); selecting it for another account raises
-    :class:`AccountRequired`, because it no longer holds that account's meter.
+    its evidence (a fixed point) once its meter seal verifies; selecting it
+    for another account raises :class:`AccountRequired`, because it no longer
+    holds that account's meter. A plain mapping carrying :data:`BINDING_KEY`
+    (a copy of a bound snapshot) is bound again only as that account and only
+    with its meter seal intact, and a mapping holding a value taken from a
+    snapshot bound to another account is refused (:class:`AccountRequired`).
     """
     from scripts.agent_runtime.attempt_boundary import DEFAULT_CLAUDE_ACCOUNT
 
@@ -384,9 +618,13 @@ def select_account(payload: Mapping[str, Any], *, account: ClaudeAccount) -> tup
                 f"a snapshot bound to claude account {payload.account.label!r} is not read as "
                 f"{account.label!r}: bind the raw payload for that account (#10770)"
             )
+        _verify_binding(payload._data, payload._account.label, payload._evidence)
         return payload, dict(payload._evidence)
     if not isinstance(payload, Mapping):
         raise TypeError(f"a routing snapshot is a mapping, not {type(payload).__name__}")
+    _refuse_other_accounts(payload, account.label)
+    if BINDING_KEY in payload:
+        return _rebind_copy(payload, account)
     data = dict(payload)
     data.pop("preferred_claude_account", None)
     if "claude_accounts" in data:
@@ -394,10 +632,21 @@ def select_account(payload: Mapping[str, Any], *, account: ClaudeAccount) -> tup
         row_key = f"claude:{account.label}"
         own = isinstance(rows, Mapping) and account.resolved and row_key in rows
         data["claude_accounts"] = {row_key: rows[row_key]} if own else {}
-    if account.label == DEFAULT_CLAUDE_ACCOUNT:
+    host = account.label == DEFAULT_CLAUDE_ACCOUNT
+    agents = payload.get("agents")
+    if isinstance(agents, Mapping):
+        agents = {key: record for key, record in agents.items() if _in_account_view(key, account, host=host)}
+        data["agents"] = agents
+    ranked = data.get("ranked_by_headroom")
+    if isinstance(ranked, list):
+        data["ranked_by_headroom"] = ranked = [
+            item
+            for item in ranked
+            if not isinstance(item, Mapping) or _in_account_view(item.get("lane"), account, host=host)
+        ]
+    if host:
         return _bound(data, account, {"label": account.label, "meter": "agents.claude"})
     unresolved = {} if account.resolved else {"state": "unresolved", "reason": account.refusal}
-    agents = payload.get("agents")
     view: dict[str, Any] | None = None
     if not isinstance(agents, Mapping) or not agents:
         agents = {}
@@ -423,15 +672,62 @@ def select_account(payload: Mapping[str, Any], *, account: ClaudeAccount) -> tup
             }
     if view is not None:
         data["agents"] = {**agents, CLAUDE_LANE: view}
-    if isinstance(data.get("ranked_by_headroom"), list):
-        data["ranked_by_headroom"] = [_ranked_row(item, view) for item in data["ranked_by_headroom"]]
+    if isinstance(ranked, list):
+        data["ranked_by_headroom"] = [_ranked_row(item, view) for item in ranked]
     return _bound(data, account, evidence)
+
+
+def _rebind_copy(payload: Mapping[str, Any], account: ClaudeAccount) -> tuple[AccountSnapshot, dict[str, Any]]:
+    """A plain copy of a bound snapshot, bound again as ``account``: only its own account, only unaltered."""
+    binding = payload[BINDING_KEY]
+    owner = binding.get("label") if isinstance(binding, Mapping) else None
+    if not isinstance(binding, Mapping) or owner != account.label:
+        raise AccountRequired(
+            f"a copy of a snapshot bound to claude account {owner!r} is not read as {account.label!r}: "
+            "bind the raw payload for that account (#10770)"
+        )
+    evidence = _thaw(binding.get("evidence"))
+    data = {key: value for key, value in payload.items() if key != BINDING_KEY}
+    if not isinstance(evidence, dict):
+        evidence = {}
+    _verify_binding({**data, BINDING_KEY: binding}, owner, evidence)
+    return _bound(data, account, evidence)
+
+
+def _verify_binding(data: Mapping[str, Any], label: str | None, evidence: Mapping[str, Any]) -> None:
+    """Raise :class:`AccountRequired` unless ``data``'s claude meter is the one bound to ``label`` with ``evidence``.
+
+    A snapshot without a meter field has no binding to verify. The seal is
+    keyed by this process, so a copy bound in another process, or a meter
+    altered after binding, is refused: bind the raw payload.
+    """
+    binding = data.get(BINDING_KEY)
+    unsealed = {key: value for key, value in data.items() if key != BINDING_KEY}
+    if binding is None and not METER_FIELDS.intersection(unsealed):
+        return
+    seal = binding.get("seal") if isinstance(binding, Mapping) else None
+    if not (
+        isinstance(binding, Mapping)
+        and binding.get("label") == label
+        and isinstance(seal, str)
+        and hmac.compare_digest(seal, _meter_seal(label, evidence, unsealed))
+    ):
+        raise AccountRequired(
+            f"the claude meter of a snapshot bound to claude account {label!r} does not verify: it was altered "
+            "after binding or bound in another process; bind the raw payload (#10770)"
+        )
 
 
 def _bound(
     data: Mapping[str, Any], account: ClaudeAccount, evidence: dict[str, Any]
 ) -> tuple[AccountSnapshot, dict[str, Any]]:
-    return AccountSnapshot(data, account, evidence, binder=_BINDER), dict(evidence)
+    label = account.label
+    frozen = {key: _freeze(value, label) for key, value in data.items() if key != BINDING_KEY}
+    if METER_FIELDS.intersection(frozen):
+        seal = _meter_seal(label, evidence, frozen)
+        frozen[BINDING_KEY] = {"label": label, "evidence": evidence, "seal": seal}
+    snapshot = AccountSnapshot(_freeze(frozen, label), account, evidence, binder=_BINDER)
+    return snapshot, dict(evidence)
 
 
 def bind_snapshot(payload: Mapping[str, Any], *, account: ClaudeAccount) -> AccountSnapshot:

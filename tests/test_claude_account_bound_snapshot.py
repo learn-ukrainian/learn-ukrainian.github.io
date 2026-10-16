@@ -26,6 +26,7 @@ import operator
 import pickle
 from collections.abc import Callable, Mapping
 from pathlib import Path
+from types import SimpleNamespace
 from typing import Any
 
 import pytest
@@ -88,9 +89,10 @@ def test_the_view_holds_only_the_bound_accounts_meter(label):
     assert set(view["claude_accounts"]) == ({f"claude:{label}"} if label else set())
     claude = view["agents"]["claude"]
     ranked = {row["lane"]: row for row in view["ranked_by_headroom"]}
+    # The view holds frozen copies (deeply immutable), so "unchanged" is equality, not identity.
     if label == "a":
-        assert claude is raw["agents"]["claude"]  # the default account keeps its lane row unchanged
-        assert view["ranked_by_headroom"] is raw["ranked_by_headroom"]
+        assert claude == raw["agents"]["claude"]  # the default account keeps its lane row unchanged
+        assert view["ranked_by_headroom"] == raw["ranked_by_headroom"]
     elif label == "b":
         assert claude["remaining_pct"] == pytest.approx(B_REMAINING)
         assert ranked["claude"]["remaining_pct"] == pytest.approx(B_REMAINING)
@@ -101,7 +103,7 @@ def test_the_view_holds_only_the_bound_accounts_meter(label):
     # Route facts and every other lane are the payload's own.
     assert claude["health"] == raw["agents"]["claude"]["health"]
     assert ranked["claude"]["health"] == raw["ranked_by_headroom"][0]["health"]
-    assert view["agents"]["codex"] is raw["agents"]["codex"] and ranked["codex"] is raw["ranked_by_headroom"][1]
+    assert view["agents"]["codex"] == raw["agents"]["codex"] and ranked["codex"] == raw["ranked_by_headroom"][1]
     assert {key: view[key] for key in ("diagnostics", "recommendation")} == {
         key: raw[key] for key in ("diagnostics", "recommendation")
     }
@@ -582,6 +584,265 @@ def test_display_consumers_keep_the_plain_payload(monkeypatch, capsys):
     assert rows["claude"]["remaining_pct"] == A_REMAINING  # the display shows the host lane row as before
 
 
+# --- round 2 (review-s2b-adbd73eb): derivation, conversion and alias bypasses ---------------------
+
+
+def _claude_selected(snapshot: Any, route_account: Any) -> bool:
+    """Whether the resolver selects a claude reviewer for a GPT author at critical risk on ``snapshot``."""
+    result = resolve_reviewer(
+        ResolverInputs(
+            author_model="gpt-6.1-sol", risk="critical", routing_snapshot=snapshot, claude_account=route_account
+        )
+    )
+    return result.selected is not None and result.selected.route == "claude"
+
+
+def _a_exhausted_b_healthy() -> dict:
+    """The mirror of :func:`_reversed`: account a near cap on its lane row, account b with 89% left."""
+    raw = _agreement_snapshot("near_cap", _account_row(89.0))
+    raw["claude_accounts"]["claude:a"] = _account_row(0.5)
+    return raw
+
+
+def test_a_derived_view_cannot_carry_another_accounts_meter():
+    """Blocker 1: ``evolve`` may not replace b's meter with the raw payload's (account a's) meter."""
+    raw = _reversed()
+    b = bind_snapshot(raw, account=B)
+    assert not _claude_selected(b, B)  # b has 0.5% left: no claude reviewer
+    derivations = {
+        "agents": lambda: b.evolve(agents=raw["agents"]),
+        "alias_record": lambda: b.evolve(agents={**b["agents"], "claude-opus-5-5": raw["agents"]["claude"]}),
+        "claude_accounts": lambda: b.evolve(claude_accounts=raw["claude_accounts"]),
+        "ranked_by_headroom": lambda: b.evolve(ranked_by_headroom=raw["ranked_by_headroom"]),
+        "preferred_claude_account": lambda: b.evolve(preferred_claude_account="a"),
+        "dropped_meter": lambda: b.evolve(agents={"codex": raw["agents"]["codex"]}),
+    }
+    for name, derive in derivations.items():
+        with pytest.raises(AccountRequired, match="may not change its claude meter"):
+            contaminated = derive()
+            # Reached only where the derivation is accepted (adbd73eb98): a's 90% then selects a claude seat.
+            assert not _claude_selected(contaminated, B), name
+    # Nor may a derivation carry values taken from another account's view, which would relabel them as b's.
+    with pytest.raises(AccountRequired, match="taken from a snapshot bound to claude account 'a'"):
+        b.evolve(stash=bind_snapshot(raw, account=HOST_ACCOUNT)["agents"])
+    # A decision's derived view that keeps the meter is still allowed, bound to the same account.
+    derived = b.evolve(agents=dict(b["agents"].items()), review_capacity_exclusions={"x": "y"})
+    assert derived.account is B and derived["agents"]["claude"] == b["agents"]["claude"]
+    assert derived["review_capacity_exclusions"] == {"x": "y"} and not _claude_selected(derived, B)
+
+
+def _assign_lane(view, raw):
+    view["agents"]["claude"] = raw["agents"]["claude"]
+
+
+def _assign_meter(view, raw):
+    view["agents"]["claude"]["remaining_pct"] = A_REMAINING
+
+
+def _assign_codexbar(view, raw):
+    view["agents"]["claude"]["codexbar"]["weekly_remaining_pct"] = A_REMAINING
+
+
+def _update_agents(view, raw):
+    view["agents"].update(claude=raw["agents"]["claude"])
+
+
+def _merge_agents(view, raw):
+    agents = view["agents"]
+    agents |= {"claude": raw["agents"]["claude"]}
+
+
+def _setdefault_alias(view, raw):
+    view["agents"].setdefault("claude-opus-5-5", raw["agents"]["claude"])
+
+
+def _pop_lane(view, raw):
+    view["agents"].pop("claude")
+
+
+def _delete_lane(view, raw):
+    del view["agents"]["claude"]
+
+
+def _clear_agents(view, raw):
+    view["agents"].clear()
+
+
+def _add_account_row(view, raw):
+    view["claude_accounts"]["claude:a"] = raw["claude_accounts"]["claude:a"]
+
+
+def _append_ranked(view, raw):
+    view["ranked_by_headroom"].append(raw["ranked_by_headroom"][0])
+
+
+def _replace_ranked(view, raw):
+    view["ranked_by_headroom"][0] = raw["ranked_by_headroom"][0]
+
+
+def _extend_ranked(view, raw):
+    rows = view["ranked_by_headroom"]
+    rows += [raw["ranked_by_headroom"][0]]
+
+
+def _assign_ranked_meter(view, raw):
+    view["ranked_by_headroom"][0]["remaining_pct"] = A_REMAINING
+
+
+NESTED_MUTATIONS = (
+    _assign_lane,
+    _assign_meter,
+    _assign_codexbar,
+    _update_agents,
+    _merge_agents,
+    _setdefault_alias,
+    _pop_lane,
+    _delete_lane,
+    _clear_agents,
+    _add_account_row,
+    _append_ranked,
+    _replace_ranked,
+    _extend_ranked,
+    _assign_ranked_meter,
+)
+
+
+@pytest.mark.parametrize("mutate", NESTED_MUTATIONS, ids=lambda mutate: mutate.__name__.lstrip("_"))
+def test_a_bound_view_is_deeply_immutable(mutate):
+    """Blocker 1: ``b["agents"]["claude"] = raw["agents"]["claude"]`` (and every other nested write) is refused."""
+    raw = _reversed()
+    b = bind_snapshot(raw, account=B)
+    with pytest.raises(TypeError, match="immutable"):
+        mutate(b, raw)
+    assert b["agents"]["claude"]["remaining_pct"] == pytest.approx(B_REMAINING)
+    assert set(b["claude_accounts"]) == {"claude:b"} and not _claude_selected(b, B)
+    # A copy is a plain, mutable dict; writing it never reaches the view.
+    copied = dict(b["agents"])
+    copied["claude"] = raw["agents"]["claude"]
+    assert b["agents"]["claude"]["remaining_pct"] == pytest.approx(B_REMAINING)
+
+
+def test_trusting_a_bound_view_verifies_its_meter_not_its_label():
+    """An existing view is trusted only when its meter seal verifies, never by its label alone."""
+    raw = _reversed()
+    b = bind_snapshot(raw, account=B)
+    # An unbound C-level write the frozen type cannot intercept, then a relabelled view.
+    dict.__setitem__(b["agents"], "claude", raw["agents"]["claude"])
+    for trust in (
+        lambda: bind_snapshot(b, account=B),
+        lambda: ResolverInputs(author_model="gpt-6.1-sol", routing_snapshot=b, claude_account=B),
+        lambda: reviewer_scheduler.metrics_for(CLAUDE, b),
+    ):
+        with pytest.raises(AccountRequired, match="does not verify"):
+            trust()
+    relabelled = bind_snapshot(raw, account=B)
+    object.__setattr__(relabelled, "_account", HOST_ACCOUNT)
+    with pytest.raises(AccountRequired, match="does not verify"):
+        bind_snapshot(relabelled, account=HOST_ACCOUNT)
+
+
+def _plain_copy(view):
+    return dict(view)
+
+
+def _unpacked(view):
+    return {**view}
+
+
+def _json_copy(view):
+    return json.loads(json.dumps(dict(view)))
+
+
+def _without_binding(view):
+    return {key: value for key, value in view.items() if key != getattr(claude_account_lane, "BINDING_KEY", None)}
+
+
+def _spliced_lane(view):
+    raw = _a_exhausted_b_healthy()
+    return {**raw, "agents": {**raw["agents"], "claude": view["agents"]["claude"]}}
+
+
+def _spliced_agents(view):
+    return {**_a_exhausted_b_healthy(), "agents": view["agents"]}
+
+
+CONVERSIONS = (_plain_copy, _unpacked, _json_copy, _without_binding, _spliced_lane, _spliced_agents)
+
+
+@pytest.mark.parametrize("convert", CONVERSIONS, ids=lambda convert: convert.__name__.lstrip("_"))
+def test_a_plain_copy_of_a_bound_view_is_never_bound_as_another_account(convert):
+    """Blocker 2: ``bind_snapshot(dict(b), account=a)`` relabelled b's meter as a; it is refused now."""
+    raw = _a_exhausted_b_healthy()
+    assert not _claude_selected(raw, HOST_ACCOUNT)  # account a is near cap: no claude reviewer for a
+    b = bind_snapshot(raw, account=B)
+    assert _claude_selected(b, B)  # b has 89% left
+    converted = convert(b)
+    with pytest.raises(AccountRequired, match="not read as 'a'"):
+        relabelled = bind_snapshot(converted, account=HOST_ACCOUNT)
+        # Reached only where the copy is accepted (adbd73eb98): b's 89% selects a claude seat for account a.
+        assert not _claude_selected(relabelled, HOST_ACCOUNT)
+    with pytest.raises(AccountRequired, match="not read as 'a'"):
+        ResolverInputs(author_model="gpt-6.1-sol", routing_snapshot=converted, claude_account=HOST_ACCOUNT)
+
+
+def test_a_plain_copy_is_bound_again_only_as_its_own_account_and_only_unaltered():
+    raw = _reversed()
+    b = bind_snapshot(raw, account=B)
+    for copy_of_b in (dict(b), {**b}, json.loads(json.dumps(dict(b)))):
+        again = bind_snapshot(copy_of_b, account=B)
+        assert again == b and again.account is B
+        assert select_account(copy_of_b, account=B)[1] == select_account(b, account=B)[1]
+    # A top-level field that is no meter may change; the meter may not.
+    assert bind_snapshot({**b, "review_capacity_exclusions": {}}, account=B)["review_capacity_exclusions"] == {}
+    altered = json.loads(json.dumps(dict(b)))
+    altered["agents"]["claude"] = raw["agents"]["claude"]
+    for tampered in (altered, {**b, "claude_accounts": {"claude:b": raw["claude_accounts"]["claude:a"]}}):
+        with pytest.raises(AccountRequired, match="does not verify"):
+            bind_snapshot(tampered, account=B)
+    forged = {**raw, claude_account_lane.BINDING_KEY: {"label": "a", "evidence": {}, "seal": "0" * 64}}
+    with pytest.raises(AccountRequired, match="does not verify"):
+        bind_snapshot(forged, account=HOST_ACCOUNT)
+
+
+@pytest.mark.parametrize("label", ["a", "b"])
+def test_claude_alias_records_are_the_host_accounts_and_never_reach_another_accounts_decision(label):
+    """Blocker 3: an alias-keyed copy of account a's lane row reached b's scheduler metrics; b's view drops it.
+
+    An alias names no account, so it is the host account's meter, as the lane
+    row is: account a keeps it as on main (``test_review_capacity_rule``), and
+    a ``claude:<account>`` key naming another account is dropped everywhere.
+    """
+    raw = _reversed()
+    raw["claude_accounts"]["claude:b"] = _account_row(80.0)
+    aliases = ("claude-opus-5-5", "claude:a", "Claude", "anthropic")
+    for alias in (*aliases, "claude:b"):
+        raw["agents"][alias] = raw["agents"]["claude"]  # account a's 90%
+    raw["ranked_by_headroom"].append({**raw["ranked_by_headroom"][0], "lane": "claude-opus-5-5"})
+    view = bind_snapshot(raw, account=account(label))
+
+    expected = A_REMAINING if label == "a" else 80.0
+    assert reviewer_scheduler.metrics_for(CLAUDE, view).quota_remaining_pct == pytest.approx(expected)
+    assert reviewer_scheduler._route_record(CLAUDE, view, prefer_route=True)["remaining_pct"] == pytest.approx(expected)
+    kept = set(aliases) if label == "a" else set()
+    assert set(view["agents"]) == {"claude", "codex", "grok", "cursor"} | kept
+    ranked_aliases = [row["lane"] for row in view["ranked_by_headroom"]].count("claude-opus-5-5")
+    assert ranked_aliases == (1 if label == "a" else 0)
+
+
+def test_a_candidate_reaching_any_claude_record_reads_only_a_bound_snapshot():
+    """A candidate whose keys name a claude alias, on any route, never reads an unbound payload's claude record."""
+    raw = _reversed()
+    agents = {"claude-opus-5-5": raw["agents"]["claude"], "cursor": raw["agents"]["cursor"]}
+    hosted = SimpleNamespace(
+        name="claude-opus-5-5", route="cursor", concrete_model="claude-opus-5-5", family="", health_keys=()
+    )
+    for candidate in (hosted, CLAUDE):
+        with pytest.raises(AccountRequired, match="reviewer candidate claude-opus-5-5"):
+            reviewer_scheduler._route_record(candidate, {"agents": agents})
+    # Bound to b, the alias is gone: the hosted route reads its own lane.
+    assert reviewer_scheduler._route_record(hosted, bind_snapshot({"agents": agents}, account=B)) == agents["cursor"]
+
+
 # --- source inventory: where a decision module receives a raw routing snapshot -------------------
 
 DECISION_MODULES = (
@@ -617,28 +878,91 @@ RAW_SNAPSHOT_SOURCES: dict[tuple[str, str], str | None] = {
 }
 
 
+_FUNCTIONS = (ast.FunctionDef, ast.AsyncFunctionDef)
+
+
+def _fetcher_named(node: ast.AST, names: frozenset[str]) -> str | None:
+    """The fetcher (or alias) ``node`` names: a name, an attribute, or a string such as ``getattr``'s."""
+    if isinstance(node, ast.Name) and node.id in names:
+        return node.id
+    if isinstance(node, ast.Attribute) and node.attr in names:
+        return node.attr
+    if isinstance(node, ast.Constant) and isinstance(node.value, str) and node.value in names:
+        return node.value
+    return None
+
+
+def _in_scope(scope: ast.AST) -> list[ast.AST]:
+    """Every node of ``scope`` outside its nested functions (which have their own scope)."""
+    nodes: list[ast.AST] = []
+    pending = list(ast.iter_child_nodes(scope))
+    while pending:
+        node = pending.pop()
+        nodes.append(node)
+        if not isinstance(node, _FUNCTIONS):
+            pending.extend(ast.iter_child_nodes(node))
+    return nodes
+
+
+def _aliases(scope: ast.AST, names: frozenset[str]) -> frozenset[str]:
+    """``names`` plus every name ``scope`` binds to a fetcher itself rather than to its result.
+
+    ``fetch = credit_lane.read_routing_budget``, ``import ... as fetch``, a
+    walrus, ``functools.partial(fetcher)`` and ``getattr(module, "fetcher")``
+    bind the reader; ``payload = fetcher()`` binds a payload and is not an
+    alias. Chains (``first = fetcher; second = first``) resolve to a fixpoint.
+    """
+    found = set(names)
+    while True:
+        before = len(found)
+        current = frozenset(found)
+        for node in _in_scope(scope):
+            if isinstance(node, ast.ImportFrom):
+                found.update(alias.asname or alias.name for alias in node.names if alias.name in current)
+                continue
+            if not isinstance(node, ast.Assign | ast.AnnAssign | ast.NamedExpr) or node.value is None:
+                continue
+            called = {id(sub.func) for sub in ast.walk(node.value) if isinstance(sub, ast.Call)}
+            if any(_fetcher_named(sub, current) and id(sub) not in called for sub in ast.walk(node.value)):
+                targets = node.targets if isinstance(node, ast.Assign) else [node.target]
+                for target in targets:
+                    found.update(
+                        sub.id if isinstance(sub, ast.Name) else sub.attr
+                        for sub in ast.walk(target)
+                        if isinstance(sub, ast.Name | ast.Attribute)
+                    )
+        if len(found) == before:
+            return frozenset(found)
+
+
 def _raw_snapshot_sources(module: str) -> dict[str, set[str]]:
-    """``{function: names}`` for every fetch call, constructed routing-budget URL or snapshot-file read."""
+    """``{function: names}`` for every fetcher reference (call or alias), routing-budget URL or snapshot-file read.
+
+    A reference to a fetcher, or to a name the scope (or an enclosing one)
+    binds to it, marks the function it appears in, so an aliased fetch
+    (``fetch = credit_lane.read_routing_budget; fetch()``) is found too.
+    """
     found: dict[str, set[str]] = {}
 
-    def visit(node: ast.AST, scope: str) -> None:
-        for child in ast.iter_child_nodes(node):
-            inner = child.name if isinstance(child, ast.FunctionDef | ast.AsyncFunctionDef) else scope
-            source = None
-            if isinstance(child, ast.Call):
-                func = child.func
-                name = func.id if isinstance(func, ast.Name) else func.attr if isinstance(func, ast.Attribute) else ""
-                if name in FETCHERS:
-                    source = name
-            elif isinstance(child, ast.JoinedStr | ast.BinOp) and "/routing-budget" in ast.unparse(child):
+    def visit(scope: ast.AST, label: str, inherited: frozenset[str]) -> None:
+        names = _aliases(scope, inherited)
+        for node in _in_scope(scope):
+            if isinstance(node, _FUNCTIONS):
+                visit(node, node.name, names)
+                continue
+            source = _fetcher_named(node, names)
+            if (
+                source is None
+                and isinstance(node, ast.JoinedStr | ast.BinOp)
+                and "/routing-budget" in ast.unparse(node)
+            ):
                 source = "routing-budget URL"
-            elif isinstance(child, ast.Attribute) and child.attr == "routing_snapshot_file":
+            elif isinstance(node, ast.Attribute) and node.attr == "routing_snapshot_file":
                 source = "routing snapshot file"
             if source:
-                found.setdefault(scope, set()).add(source)
-            visit(child, inner)
+                found.setdefault(label, set()).add(source)
 
-    visit(ast.parse((REPO_ROOT / module).read_text(encoding="utf-8")), "<module>")
+    visit(ast.parse((REPO_ROOT / module).read_text(encoding="utf-8")), "<module>", FETCHERS)
     return found
 
 
@@ -666,3 +990,54 @@ def test_raw_snapshot_sources_in_decision_modules_are_inventoried():
     for (module, function), how in RAW_SNAPSHOT_SOURCES.items():
         if how is not None:
             assert _binder_calls(module)[function], f"{module}:{function} receives a raw snapshot but never binds it"
+
+
+_PREAMBLE = "import functools\n\nfrom scripts.fleet import credit_lane\n\n"
+INJECTED_READERS = {
+    "direct_call": "def reader():\n    return credit_lane.read_routing_budget()['agents']['claude']\n",
+    # review-s2b-adbd73eb follow-up: the round-1 guard missed this one.
+    "attribute_alias": (
+        "def reader():\n    fetch = credit_lane.read_routing_budget\n    return fetch()['agents']['claude']\n"
+    ),
+    "chained_alias": (
+        "def reader():\n    first = credit_lane.read_routing_budget\n    second = first\n"
+        "    return second()['agents']['claude']\n"
+    ),
+    "import_alias": (
+        "from scripts.fleet.credit_lane import read_routing_budget as fetch\n\n"
+        "def reader():\n    return fetch()['agents']['claude']\n"
+    ),
+    "module_alias": "FETCH = credit_lane.read_routing_budget\n\ndef reader():\n    return FETCH()['agents']['claude']\n",
+    "getattr_name": "def reader():\n    return getattr(credit_lane, 'read_routing_budget')()['agents']['claude']\n",
+    "partial": (
+        "def reader():\n    fetch = functools.partial(credit_lane.read_routing_budget)\n"
+        "    return fetch()['agents']['claude']\n"
+    ),
+    "walrus": (
+        "def reader():\n    if (fetch := credit_lane.read_routing_budget) is not None:\n"
+        "        return fetch()['agents']['claude']\n"
+    ),
+    "default_argument": (
+        "def reader(fetch=credit_lane.read_routing_budget):\n    return fetch()['agents']['claude']\n"
+    ),
+}
+
+
+@pytest.mark.parametrize("name", sorted(INJECTED_READERS))
+def test_the_inventory_finds_an_injected_reader_however_it_names_the_fetch(name, tmp_path):
+    module = tmp_path / "injected_reader.py"
+    module.write_text(_PREAMBLE + INJECTED_READERS[name], encoding="utf-8")
+    assert "reader" in _raw_snapshot_sources(str(module))
+
+
+def test_an_alias_is_scoped_and_a_fetched_payload_is_not_an_alias(tmp_path):
+    module = tmp_path / "scoped.py"
+    module.write_text(
+        _PREAMBLE
+        + "def first():\n    fetch = credit_lane.read_routing_budget\n    return fetch\n\n"
+        + "def second(fetch):\n    return fetch()\n\n"
+        + "def third():\n    payload = credit_lane.read_routing_budget()\n    return payload\n\n"
+        + "def fourth(payload):\n    return payload['agents']\n",
+        encoding="utf-8",
+    )
+    assert set(_raw_snapshot_sources(str(module))) == {"first", "third"}

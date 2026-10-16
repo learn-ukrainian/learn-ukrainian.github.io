@@ -15,7 +15,7 @@ from hashlib import sha256
 from typing import Any
 
 from scripts.fleet import credit_lane
-from scripts.fleet.claude_account_lane import CLAUDE_LANE, require_bound
+from scripts.fleet.claude_account_lane import CLAUDE_LANE, is_claude_lane_key, require_bound
 from scripts.review.capacity import review_capacity
 
 
@@ -61,9 +61,11 @@ def _route_record(
 
     A routing-budget snapshot's claude lane is one account's meter, so a
     candidate whose keys reach it reads only an account-bound snapshot
-    (``claude_account_lane.bind_snapshot``); an unbound one raises
-    ``AccountRequired`` rather than reading a meter or its absence (#10770).
-    A flat health map holds no meter and is read as is.
+    (``claude_account_lane.bind_snapshot``), whose claude records, canonical
+    or alias (``claude-<model>``, ``anthropic``), are all the bound account's
+    (#10770). A candidate with any such key raises ``AccountRequired`` on an
+    unbound snapshot rather than reading a meter or its absence. A flat
+    health map holds no meter and is read as is.
     """
     if not isinstance(snapshot, Mapping):
         return {}
@@ -84,7 +86,7 @@ def _route_record(
             if isinstance(status, str):
                 return {"status": status.strip().lower()}
         return {}
-    if CLAUDE_LANE in keys:
+    if candidate.route == CLAUDE_LANE or any(is_claude_lane_key(key) for key in keys):
         require_bound(snapshot, reading=f"reviewer candidate {candidate.name}")
     for key in keys:
         record = agents.get(key)
