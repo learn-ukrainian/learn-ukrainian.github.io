@@ -70,9 +70,10 @@ it, so a genuine cancellation after such a header is not lost.
 
 Differences from the kubedojo source:
 
-- ``effort: str | None = None`` parameter added on ``build_invocation``
-  to match this repo's ``AgentAdapter`` protocol; treated as a no-op with
-  a debug log (mirrors the Gemini adapter; follow-up #1396).
+- Explicit ``effort`` is validated against the resolved CLI's version and
+  root help before passing ``--effort``. Omission keeps the CLI default.
+  These flags describe configuration, not backend model or effort attestation;
+  the CLI may resolve model variants based on effort.
 """
 
 from __future__ import annotations
@@ -900,10 +901,15 @@ class AgyAdapter:
         Slugs and display strings resolve to an allowlisted ``--model`` slug.
         Missing models use the configured default; unknown explicit models
         fail before subprocesses. Claude pins require the permission-denied
-        review route. ``effort`` remains a no-op (#1396).
+        review route. Explicit ``effort`` requires verified CLI support;
+        omission leaves the CLI default unchanged.
         """
         if mode not in self.supported_modes:
             raise ValueError(f"AgyAdapter: unsupported mode {mode!r}")
+        if effort is not None and (
+            not isinstance(effort, str) or effort not in {"low", "medium", "high", "xhigh", "max"}
+        ):
+            raise ValueError("agy_effort_invalid: expected low|medium|high|xhigh|max or None")
 
         # Unknown explicit models raise here, before `agy --version`. Dispatch
         # probes this method to refuse before spawn, and that probe must not
@@ -920,15 +926,7 @@ class AgyAdapter:
         max_budget_usd = (tool_config or {}).get("max_budget_usd")
         if max_budget_usd is not None:
             _logger.warning(
-                "non-claude adapter %s ignoring max_budget_usd=%s; use hard-timeout/silence-timeout instead",
-                self.name,
-                max_budget_usd,
-            )
-
-        if effort is not None:
-            _logger.debug(
-                "agy effort %r not yet wired through CLI — using TUI-selected model default (#1396 follow-up)",
-                effort,
+                "agy ignores max_budget_usd; use hard-timeout/silence-timeout instead"
             )
 
         review_isolation = bool(tc.get("review_isolation"))
@@ -952,6 +950,8 @@ class AgyAdapter:
         # Prefer absolute binary for isolation policy / sandbox argv0 rules.
         with contextlib.suppress(OSError):
             agy_bin = str(Path(agy_bin).resolve())
+        if effort is not None:
+            _require_effort_support(agy_bin, effort)
         if not (tc.get("review_attempt_boundary") and tc.get("review_access") == "full"):
             _require_background_wait_support(agy_bin)
         if (review_isolation or tc.get("review_attempt_boundary")) and tc.get("review_write_root"):
@@ -998,6 +998,8 @@ class AgyAdapter:
 
         if resolved_model:
             cmd += ["--model", resolved_model]
+        if effort is not None:
+            cmd += ["--effort", effort]
 
         if session_id and not review_isolation:
             cmd.append(f"--conversation={session_id}")
@@ -1108,7 +1110,8 @@ class AgyAdapter:
             bound = None
             read_reason = "transcript_read_refused"
         killed, _excused = _model_killed_tasks(bound.events) if bound is not None else ([], set())
-        # Identity evidence comes only from the provider's init event.
+        # The native CLI's init event reports its selection, not independent
+        # backend attestation. Configuration alone cannot establish identity.
         model_identity: dict[str, Any] = {
             "requested_provider": "agy",
             "requested_model": (plan.metadata.get("entire_fleet") or {}).get("requested_model") if plan else None,
@@ -2064,7 +2067,8 @@ def _stream_result(
     except ValueError:
         resolved_expected = None
     argon_identity = resolved_expected in _AGY_ARGON_SLUGS
-    check_identity = argon_identity or resolved_expected in _AGY_CLAUDE_REVIEW_SLUGS
+    explicit_effort = bool(plan and "--effort" in plan.cmd)
+    check_identity = explicit_effort or argon_identity or resolved_expected in _AGY_CLAUDE_REVIEW_SLUGS
     identity_seen = False
     if not stdout or not stdout.strip():
         return None, "agy_stream_output_invalid: missing terminal result"
@@ -2119,7 +2123,7 @@ def _stream_result(
         ) and error else "agy_stream_result_error"
     if not result.get("response", "").strip() and "structured_output" not in result:
         return result, "agy_stream_output_invalid: empty terminal response"
-    if argon_identity and not identity_seen:
+    if (argon_identity or explicit_effort) and not identity_seen:
         return None, "agy_model_identity_missing"
     return result, None
 
@@ -2337,12 +2341,55 @@ def _agy_version(agy_bin: str) -> tuple[int, int, int] | None:
             timeout=_AGY_VERSION_PROBE_TIMEOUT_S,
             check=False,
         )
-    except (OSError, subprocess.SubprocessError):
+    except (OSError, subprocess.SubprocessError, UnicodeError):
         return None
     match = _AGY_VERSION_RE.search(completed.stdout or "")
     if completed.returncode != 0 or match is None:
         return None
     return (int(match.group("major")), int(match.group("minor")), int(match.group("patch")))
+
+
+@functools.lru_cache(maxsize=8)
+def _agy_effort_choices(agy_bin: str) -> frozenset[str]:
+    """Read explicit effort choices from the resolved binary's root help."""
+    try:
+        completed = subprocess.run(
+            [agy_bin, "--help"],
+            capture_output=True,
+            text=True,
+            timeout=_AGY_VERSION_PROBE_TIMEOUT_S,
+            check=False,
+        )
+    except (OSError, subprocess.SubprocessError, UnicodeError) as exc:
+        raise ValueError("agy_effort_unverified: root help could not be read") from exc
+    streams = (completed.stdout, getattr(completed, "stderr", ""))
+    if completed.returncode != 0 or any(not isinstance(stream, str) for stream in streams):
+        raise ValueError("agy_effort_unverified: root help did not succeed")
+    # Go-style CLIs can successfully print root usage on stderr. Neither
+    # stream from this local probe provides backend attestation.
+    help_text = "\n".join(streams)
+    if not help_text.strip():
+        raise ValueError("agy_effort_unverified: root help was empty")
+    lines = [line for line in help_text.splitlines() if re.search(r"(?<!\S)--effort(?=[\s=,]|$)", line)]
+    if not lines:
+        raise ValueError("agy_effort_unsupported: root help has no --effort flag")
+    groups = re.findall(r"\(([a-z]+(?:\|[a-z]+)*)\)", lines[0]) if len(lines) == 1 else []
+    if len(groups) != 1:
+        raise ValueError("agy_effort_unverified: root help has no unambiguous effort choice group")
+    return frozenset(groups[0].split("|"))
+
+
+def _require_effort_support(agy_bin: str, effort: str) -> None:
+    """Refuse unknown support and builds predating the headless effort fix."""
+    version = _agy_version(agy_bin)
+    if version is None:
+        raise ValueError("agy_effort_unverified: CLI version could not be verified")
+    # 1.1.10 fixed headless --effort being ignored. Full review's
+    # background-wait exemption does not exempt this capability check.
+    if version < (1, 1, 10):
+        raise ValueError("agy_effort_unsupported: CLI predates the headless effort fix in 1.1.10")
+    if effort not in _agy_effort_choices(agy_bin):
+        raise ValueError(f"agy_effort_unsupported: root help does not list {effort}")
 
 
 def _require_background_wait_support(agy_bin: str) -> None:

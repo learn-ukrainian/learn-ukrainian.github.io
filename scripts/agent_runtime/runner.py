@@ -1595,6 +1595,7 @@ def _execute_invocation_plan(
     v4_authorization_id: str | None = None,
     agy_budget: _AgyLaunchBudget | None = None,
     cli_version: str = "unknown",
+    effort: str | None = None,
 ) -> _ExecutionOutcome:
     """Two launches maximum; cancellation, eligibility and provider faults share it."""
     kwargs = dict(
@@ -1786,6 +1787,7 @@ def _execute_invocation_plan(
                 task_id=task_id,
                 session_id=None,
                 tool_config=tool_config,
+                effort=effort,
             )
         except (OSError, ValueError, AgentRuntimeError):
             budget.retry_disposition = "preparation_failed"
@@ -2748,6 +2750,7 @@ def _invoke_gemini_with_fallback(
                 initial_response_timeout=initial_response_timeout,
                 agy_budget=agy_budget,
                 cli_version=last_telemetry.cli_version,
+                effort=effort,
             )
         except AgentUnavailableError as exc:
             if rung.cli == "agy-cli":
@@ -3247,6 +3250,7 @@ def _invoke_with_runner_failover(
             initial_response_timeout=initial_response_timeout,
             agy_budget=agy_budget,
             cli_version=telemetry.cli_version,
+            effort=effort,
         )
         parse = execution.parse
         trigger = None
@@ -3667,6 +3671,7 @@ def _invoke_impl(
         initial_response_timeout=initial_response_timeout,
         v4_authorization_id=v4_authorization_id,
         cli_version=telemetry.cli_version,
+        effort=effort,
     )
     parse = execution.parse
 

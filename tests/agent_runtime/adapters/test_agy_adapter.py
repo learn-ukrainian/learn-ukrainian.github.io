@@ -2,8 +2,11 @@ from __future__ import annotations
 
 import json
 import re
+import subprocess
 import time
 from pathlib import Path
+from types import SimpleNamespace
+from unittest.mock import Mock
 
 import pytest
 
@@ -1332,7 +1335,12 @@ def test_parse_response_rejects_live_write_canary_cut_before_task_finished(tmp_p
 def _fake_agy(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, version_output: str) -> Path:
     fake = tmp_path / "bin" / "agy"
     fake.parent.mkdir()
-    fake.write_text(f"#!/bin/sh\nprintf '%s\\n' '{version_output}'\n", encoding="utf-8")
+    fake.write_text(
+        "#!/bin/sh\nif [ \"$1\" = --help ]; then\n"
+        "  printf '%s\\n' '  --effort Reasoning effort (low|medium|high|xhigh|max)'\n"
+        f"else\n  printf '%s\\n' '{version_output}'\nfi\n",
+        encoding="utf-8",
+    )
     fake.chmod(0o755)
     original_which = agy_module.shutil.which
     monkeypatch.setattr(
@@ -1341,6 +1349,7 @@ def _fake_agy(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, version_output: s
         lambda name, *args, **kwargs: str(fake) if name == "agy" else original_which(name, *args, **kwargs),
     )
     agy_module._agy_version.cache_clear()
+    agy_module._agy_effort_choices.cache_clear()
     return fake
 
 
@@ -2588,3 +2597,219 @@ def test_hook_gate_before_any_provider_subprocess(tmp_path, monkeypatch, scoped,
         assert calls == []
     agy_module._agy_version.cache_clear()
     assert [hook_file_state(path) for path in real_hook_paths] == real_hook_states
+
+
+@pytest.fixture
+def effort_cli(tmp_path, monkeypatch):
+    binary = tmp_path / "agy-effort-fixture"
+    binary.write_text("fixture binary; never executed", encoding="utf-8")
+    state = {
+        "version": "1.2.9",
+        "help": "  --effort string  Reasoning effort (low|medium|high|xhigh|max)\n",
+        "help_code": 0,
+        "help_error": None,
+        "help_stderr": "",
+        "version_code": 0,
+        "version_error": None,
+    }
+
+    def probe(cmd, **kwargs):
+        assert cmd[0] == str(binary.resolve())
+        assert kwargs == {
+            "capture_output": True,
+            "text": True,
+            "timeout": agy_module._AGY_VERSION_PROBE_TIMEOUT_S,
+            "check": False,
+        }
+        if cmd[1] == "--version":
+            if state["version_error"]:
+                raise state["version_error"]
+            return SimpleNamespace(returncode=state["version_code"], stdout=state["version"])
+        assert cmd[1] == "--help"
+        if state["help_error"]:
+            raise state["help_error"]
+        return SimpleNamespace(returncode=state["help_code"], stdout=state["help"], stderr=state["help_stderr"])
+
+    run = Mock(side_effect=probe)
+    monkeypatch.setattr(agy_module.shutil, "which", lambda _: str(binary))
+    monkeypatch.setattr(agy_module.subprocess, "run", run)
+    version_probe = agy_module._agy_version
+    version_probe.cache_clear()
+    agy_module._agy_effort_choices.cache_clear()
+    yield state, run, binary
+    version_probe.cache_clear()
+    agy_module._agy_effort_choices.cache_clear()
+
+
+def _effort_plan(tmp_path, effort, tool_config=None):
+    return AgyAdapter().build_invocation(
+        prompt="offline effort regression",
+        mode="read-only",
+        cwd=tmp_path,
+        model="gemini-3.8-flash-high",
+        task_id="effort-test",
+        session_id=None,
+        tool_config=tool_config,
+        effort=effort,
+    )
+
+
+@pytest.mark.parametrize("effort", ["low", "medium", "high", "xhigh", "max"])
+def test_explicit_effort_is_passed_once_after_capability_check(tmp_path, effort_cli, effort):
+    _, run, binary = effort_cli
+    plan = _effort_plan(tmp_path, effort)
+    assert plan.cmd.count("--effort") == 1
+    assert plan.cmd[plan.cmd.index("--effort") + 1] == effort
+    assert plan.cmd[0] == str(binary.resolve())
+    assert [call.args[0][1] for call in run.call_args_list] == ["--version", "--help"]
+    _effort_plan(tmp_path, effort)
+    assert run.call_count == 2  # Both probes are cached by resolved binary.
+
+
+@pytest.mark.parametrize("effort", ["", "High", "HIGH", " high", "high ", "ultra", 1, True, [], {}])
+def test_invalid_effort_is_refused_before_any_subprocess(tmp_path, effort_cli, effort):
+    _, run, _ = effort_cli
+    with pytest.raises(ValueError, match=r"^agy_effort_invalid:"):
+        _effort_plan(tmp_path, effort)
+    run.assert_not_called()
+
+
+@pytest.mark.parametrize(
+    "help_text,code,reason",
+    [
+        ("Usage: agy\n --model string", 0, "unsupported"),
+        (" --effort string (low|medium)", 0, "unsupported"),
+        (" --effort string", 0, "unverified"),
+        (" --effort string (low, medium, high)", 0, "unverified"),
+        (" --effort string (low|high) (xhigh|max)", 0, "unverified"),
+        (" --effort (high)\n --effort (max)", 0, "unverified"),
+        ("", 0, "unverified"),
+        (None, 0, "unverified"),
+        (" --effort (low|medium|high|xhigh|max)", 1, "unverified"),
+    ],
+)
+def test_explicit_effort_refuses_unproven_help(tmp_path, effort_cli, help_text, code, reason):
+    state, run, _ = effort_cli
+    state.update(help=help_text, help_code=code)
+    with pytest.raises(ValueError, match=rf"^agy_effort_{reason}:"):
+        _effort_plan(tmp_path, "high")
+    assert run.call_count == 2
+
+
+@pytest.mark.parametrize(
+    "error",
+    [OSError("unreadable"), subprocess.TimeoutExpired("agy", 5), UnicodeDecodeError("utf-8", b"\xff", 0, 1, "invalid")],
+)
+def test_explicit_effort_refuses_unreadable_help(tmp_path, effort_cli, error):
+    state, _, _ = effort_cli
+    state["help_error"] = error
+    with pytest.raises(ValueError, match=r"^agy_effort_unverified:"):
+        _effort_plan(tmp_path, "high")
+
+
+@pytest.mark.parametrize("version,reason", [("1.1.9", "unsupported"), ("unknown", "unverified")])
+@pytest.mark.parametrize("full_review", [False, True])
+def test_explicit_effort_does_not_trust_old_or_unknown_version(
+    tmp_path,
+    monkeypatch,
+    effort_cli,
+    version,
+    reason,
+    full_review,
+):
+    state, run, _ = effort_cli
+    state["version"] = version
+    monkeypatch.setattr(agy_module, "_write_review_permissions", lambda *_, **__: None)
+    tc = {"review_attempt_boundary": True, "review_access": "full"} if full_review else None
+    with pytest.raises(ValueError, match=rf"^agy_effort_{reason}:"):
+        _effort_plan(tmp_path, "high", tc)
+    assert [call.args[0][1] for call in run.call_args_list] == ["--version"]
+
+
+def test_full_review_requires_explicit_effort_capability(tmp_path, monkeypatch, effort_cli):
+    state, _, _ = effort_cli
+    state["version"] = "1.1.10"  # Full-review exemption still permits the headless effort fix.
+    monkeypatch.setattr(agy_module, "_write_review_permissions", lambda *_, **__: None)
+    tc = {"review_attempt_boundary": True, "review_access": "full"}
+    assert "--effort" in _effort_plan(tmp_path, "high", tc).cmd
+    agy_module._agy_effort_choices.cache_clear()
+    state["help"] = "Usage: agy"
+    with pytest.raises(ValueError, match=r"^agy_effort_unsupported:"):
+        _effort_plan(tmp_path, "high", tc)
+
+
+def test_omitted_effort_preserves_default_without_help_probe(tmp_path, effort_cli):
+    state, run, _ = effort_cli
+    state["help_error"] = AssertionError("omission must not probe help")
+    assert "--effort" not in _effort_plan(tmp_path, None).cmd
+    assert [call.args[0][1] for call in run.call_args_list] == ["--version"]
+
+
+def test_effort_capability_cache_is_bound_to_resolved_binary(tmp_path, monkeypatch, effort_cli):
+    _, run, _ = effort_cli
+    _effort_plan(tmp_path, "high")
+    other = tmp_path / "other-agy"
+    monkeypatch.setattr(agy_module.shutil, "which", lambda _: str(other))
+    monkeypatch.setattr(agy_module, "_agy_version", lambda _: (1, 2, 9))
+    run.side_effect = lambda *_, **__: SimpleNamespace(returncode=0, stdout="Usage: agy")
+    with pytest.raises(ValueError, match=r"^agy_effort_unsupported:"):
+        _effort_plan(tmp_path, "high")
+    assert run.call_args.args[0] == [str(other.resolve()), "--help"]
+
+
+@pytest.mark.parametrize("error", [None, OSError("missing CLI"), UnicodeDecodeError("utf-8", b"\xff", 0, 1, "invalid")])
+def test_explicit_effort_refuses_failed_version_probe(tmp_path, effort_cli, error):
+    state, run, _ = effort_cli
+    state.update(version_error=error, version_code=1)
+    with pytest.raises(ValueError, match=r"^agy_effort_unverified:"):
+        _effort_plan(tmp_path, "high")
+    assert [call.args[0][1] for call in run.call_args_list] == ["--version"]
+
+
+@pytest.mark.parametrize("stdout", ["", "AGY CLI help\n"])
+def test_effort_capability_accepts_successful_help_on_stderr(tmp_path, effort_cli, stdout):
+    state, run, _ = effort_cli
+    state.update(help=stdout, help_stderr="Usage of agy:\n --effort Reasoning effort (low|medium|high|xhigh|max)\n")
+    plan = _effort_plan(tmp_path, "high")
+    assert plan.cmd[plan.cmd.index("--effort") + 1] == "high"
+    assert run.call_count == 2
+
+
+@pytest.mark.parametrize("observed", ["gemini-3.8-flash-high", "gemini-3.8-flash-low", "unknown-model", None])
+def test_explicit_effort_requires_matching_cli_selected_identity(tmp_path, observed):
+    plan = _background_plan(tmp_path, _FINISHED_CONVERSATION_ID, [_prompt(), _reply("EFFORT_REPLY")])
+    plan.cmd.extend(["--output-format", "stream-json", "--model", "gemini-3.8-flash-high", "--effort", "high"])
+    events = [] if observed is None else [{"event": "init", "init": {"model": observed}}]
+    events.append({"event": "result", "result": {
+        "status": "SUCCESS", "response": "EFFORT_REPLY", "conversation_id": _FINISHED_CONVERSATION_ID,
+    }})
+    parsed = AgyAdapter().parse_response(
+        stdout="\n".join(json.dumps(event) for event in events), stderr="", returncode=0, output_file=None, plan=plan,
+    )
+    if observed == "gemini-3.8-flash-high":
+        assert parsed.ok
+        assert parsed.response == "EFFORT_REPLY"
+        assert parsed.model_identity == {
+            "actual_model": observed, "actual_model_known": True, "source": "provider-init", "substituted": False,
+        }
+    else:
+        assert not parsed.ok
+        assert parsed.response == ""
+        assert parsed.failure_code == "provider_policy_refusal"
+        assert parsed.stderr_excerpt == (
+            "agy_model_identity_missing" if observed is None else "agy_model_event_mismatch"
+        )
+        if observed is not None:
+            assert parsed.model_identity["actual_model"] == observed
+            assert parsed.model_identity["substituted"] is True
+    assert not hasattr(parsed, "backend_observed_effort")
+    assert not hasattr(parsed, "backend_observed_model")
+
+
+def test_budget_warning_is_constant_and_excludes_caller_values(tmp_path, effort_cli, caplog):
+    caplog.set_level("WARNING", logger=agy_module._logger.name)
+    _effort_plan(tmp_path, "high", {"max_budget_usd": "PRIVATE_BUDGET_VALUE"})
+    record, = [record for record in caplog.records if record.name == agy_module._logger.name]
+    assert record.msg == "agy ignores max_budget_usd; use hard-timeout/silence-timeout instead"
+    assert record.args == ()
+    assert "PRIVATE_BUDGET_VALUE" not in caplog.text

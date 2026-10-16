@@ -27,7 +27,6 @@ from ._ask_contract import (
     requested_effort,
     resolve_model_selection,
     response_provenance,
-    unsupported_effort_note,
 )
 from ._ask_lifecycle import launch_background_ask, record_ask_failure, record_ask_reply, register_ask
 from ._config import REPO_ROOT
@@ -607,11 +606,6 @@ def process_for_agy(
     timeout_val = _resolve_agy_bridge_timeout(no_timeout)
     model = _extract_target_model(msg) or _default_agy_model()
     effort = requested_effort(msg)
-    effort_applied, effort_reason = unsupported_effort_note(
-        lane="agy",
-        effort=effort,
-        reason="the Antigravity CLI has no per-invocation effort control",
-    )
 
     review_target = review_target_from_message(msg) if review else None
     if review or review_target is not None:
@@ -731,8 +725,12 @@ def process_for_agy(
         msg,
         actual_model=getattr(result, "model", None) or model,
         harness="agy",
-        effort_applied=effort_applied,
-        effort_reason=effort_reason,
+        # Runtime telemetry reads the configured flag, not backend observation.
+        effort_applied=(
+            result.effort
+            if effort is not None and getattr(result, "effort", None) in {"low", "medium", "high", "xhigh", "max"}
+            else None
+        ),
     )
     reply_id = send_message(
         content=response,
