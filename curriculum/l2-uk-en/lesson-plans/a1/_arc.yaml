@@ -2,7 +2,7 @@ arc_schema: 1
 level: a1
 source:
   path: docs/epics/fresh-build-a1-arc.md
-  sha256: e7649ae5f811fde3e81454530c0a46f3b6dc4a192d532552ced53790209abe45
+  sha256: f184c5359669c131b3ac8afc0c0ee5e69da187e018d0c1f5f170d2e6aac01499
 est_lessons_total: 162
 positions:
 - position: 1
@@ -20,14 +20,18 @@ positions:
   slug: sounds-letters-and-hello
   est_lessons: 5
   job: Greet and take a first spoken turn; connect useful words with letters and supported writing
-  inventory_text: '**12 letters**: А Е И І О М Н В П Р Т Я; stress and intonation from first speech'
+  inventory_text: '**12 letters**: А Е И І О М Н В П Р Т Я; stress and intonation from first speech; statement, question and exclamation contours (`:586`, `:596`)'
   phase: A1.1
   skills_text: Li, S, W (supported copying)
   skills:
   - Li
   - S
   - W
-  standard_line_refs: []
+  standard_line_refs:
+  - - 586
+    - 586
+  - - 596
+    - 596
   letters:
   - А
   - Е
@@ -45,7 +49,7 @@ positions:
   slug: who-am-i
   est_lessons: 4
   job: Introduce yourself and ask identity; common professions and origin phrases
-  inventory_text: '**9 letters**: Д З К Л С У Х ь Г; hard/soft contrast and hardness before [е]; introduce voiced/voiceless base-pair families д–т, з–с, г–х; recycle stress and intonation'
+  inventory_text: '**9 letters**: Д З К Л С У Х ь Г; hard/soft contrast and hardness before [е]; introduce voiced/voiceless base-pair families д–т, з–с, г–х; recycle stress and intonation; syllables (`:588`)'
   phase: A1.1
   skills_text: Li, S, W (`:485`)
   skills:
@@ -53,6 +57,8 @@ positions:
   - S
   - W
   standard_line_refs:
+  - - 588
+    - 588
   - - 485
     - 485
   letters:
@@ -89,7 +95,7 @@ positions:
   job: Complete the alphabet through useful labels and short exchanges; decode unfamiliar combinations of taught letters
   inventory_text: '**7 letters**: Ґ Ж Ч Ш Щ Ц Ф; дж and дз; complete voiced/voiceless base-pair families ґ–к, ж–ш, дж–ч, дз–ц; alphabet order and letter names; capital/small letters and recognising handwritten letters (`:571-572`)'
   phase: A1.1
-  skills_text: Li, S, R, W
+  skills_text: Li, S, R, W (match printed/handwritten capitals and small letters; use capitals in Київ/київський and Україна/українець; complete writing own and other names/surnames; copy familiar labels; `:571-572`, `:343-344`, `:362-365`)
   skills:
   - Li
   - S
@@ -98,6 +104,12 @@ positions:
   standard_line_refs:
   - - 571
     - 572
+  - - 571
+    - 572
+  - - 343
+    - 344
+  - - 362
+    - 365
   letters:
   - Ґ
   - Ж
@@ -109,16 +121,26 @@ positions:
 - position: 6
   slug: first-conversations
   est_lessons: 3
-  job: Sustain a scaffolded conversation using greetings, identity, family and familiar belongings
+  job: Sustain a scaffolded 4-6-turn conversation with greetings, Добраніч, personal data, family and belongings; practise stressed/unstressed [е], [и]
   inventory_text: null
   phase: A1.1
-  skills_text: Li, S, R, W
+  skills_text: Li, S, R, W (`:459`, `:239-243`, `:268-270`, `:410-432`, `:578-579`)
   skills:
   - Li
   - S
   - R
   - W
-  standard_line_refs: []
+  standard_line_refs:
+  - - 459
+    - 459
+  - - 239
+    - 243
+  - - 268
+    - 270
+  - - 410
+    - 432
+  - - 578
+    - 579
 - position: 7
   slug: checkpoint-first-contact
   est_lessons: 2
@@ -135,39 +157,51 @@ positions:
 - position: 8
   slug: things-have-gender
   est_lessons: 3
-  job: Identify familiar belongings using noun gender and matching pronoun and possessive forms
+  job: Identify familiar belongings using noun gender and the complete singular possessive set, including наш, ваш, їхній
   inventory_text: null
   phase: A1.2
-  skills_text: Li, S, R
+  skills_text: Li, S, R (`:661-662`)
   skills:
   - Li
   - S
   - R
-  standard_line_refs: []
+  standard_line_refs:
+  - - 661
+    - 662
 - position: 9
   slug: what-is-it-like
   est_lessons: 3
   job: Describe and identify familiar objects using nominative adjective agreement
   inventory_text: null
   phase: A1.2
-  skills_text: Li, S, R
+  skills_text: Li, S, R, W (describe a familiar object with 1-2 features; `:358-360`)
   skills:
   - Li
   - S
   - R
-  standard_line_refs: []
+  - W
+  standard_line_refs:
+  - - 358
+    - 360
 - position: 10
   slug: colors
   est_lessons: 2
-  job: Use colours and agreeing descriptions to distinguish objects; soft-group adjectives
+  job: Use colours and agreeing hard/soft-group nominative descriptions of objects and appearance
   inventory_text: null
   phase: A1.2
-  skills_text: Li, S, R
+  skills_text: Li, S, R, W (short description of a friend or parent; `:355-357`) (`:484`, `:355-357`)
   skills:
   - Li
   - S
   - R
-  standard_line_refs: []
+  - W
+  standard_line_refs:
+  - - 355
+    - 357
+  - - 484
+    - 484
+  - - 355
+    - 357
 - position: 11
   slug: how-many
   est_lessons: 4
@@ -190,12 +224,18 @@ positions:
 - position: 13
   slug: many-things
   est_lessons: 3
-  job: 'Go from one to many: nominative plural'
+  job: 'Go from one to many: nominative nouns with vowel alternation, agreeing adjectives, possessives and demonstratives'
   inventory_text: null
   phase: A1.2
-  skills_text: —
+  skills_text: — (`:606-609`, `:636-638`, `:666-667`)
   skills: []
-  standard_line_refs: []
+  standard_line_refs:
+  - - 606
+    - 609
+  - - 636
+    - 638
+  - - 666
+    - 667
 - position: 14
   slug: checkpoint-my-world
   est_lessons: 2
@@ -218,30 +258,36 @@ positions:
 - position: 16
   slug: verbs-group-one
   est_lessons: 3
-  job: Conjugate first-conjugation verbs in the present
+  job: Conjugate читати, працювати, іти, їхати in the present
   inventory_text: null
   phase: A1.3
-  skills_text: —
+  skills_text: — (`:704-708`)
   skills: []
-  standard_line_refs: []
+  standard_line_refs:
+  - - 704
+    - 708
 - position: 17
   slug: verbs-group-two
   est_lessons: 3
-  job: Conjugate second-conjugation verbs; tell the two apart
+  job: Conjugate сидіти and дивитися in the present, including the reflexive paradigm; distinguish the two conjugations
   inventory_text: null
   phase: A1.3
-  skills_text: —
+  skills_text: — (`:708-709`)
   skills: []
-  standard_line_refs: []
+  standard_line_refs:
+  - - 708
+    - 709
 - position: 18
   slug: i-want-i-can
   est_lessons: 3
-  job: Say what you want, can and must do
+  job: Say what you want, can and must do using modal plus infinitive; conjugate могти in the present
   inventory_text: null
   phase: A1.3
-  skills_text: —
+  skills_text: — (`:706-707`)
   skills: []
-  standard_line_refs: []
+  standard_line_refs:
+  - - 706
+    - 707
 - position: 19
   slug: questions
   est_lessons: 3
@@ -255,13 +301,15 @@ positions:
 - position: 20
   slug: my-morning
   est_lessons: 3
-  job: Describe a morning routine with reflexive verbs
+  job: Describe a morning routine with reflexive verbs; divide written words at line breaks using syllables from position 3
   inventory_text: null
   phase: A1.3
-  skills_text: W (short note)
+  skills_text: W (short note) (`:588`)
   skills:
   - W
-  standard_line_refs: []
+  standard_line_refs:
+  - - 588
+    - 588
 - position: 21
   slug: checkpoint-actions
   est_lessons: 2
@@ -275,14 +323,18 @@ positions:
 - position: 22
   slug: what-time
   est_lessons: 3
-  job: Ask and tell the time
+  job: Ask and tell the time using ordinal forms in all three genders, including first, second and third; reuse date phrases at 23
   inventory_text: null
   phase: A1.4
-  skills_text: Li, R (timetable)
+  skills_text: Li, R (timetable) (`:652-654`, `:664-665`)
   skills:
   - Li
   - R
-  standard_line_refs: []
+  standard_line_refs:
+  - - 652
+    - 654
+  - - 664
+    - 665
 - position: 23
   slug: days-and-months
   est_lessons: 4
@@ -296,35 +348,63 @@ positions:
 - position: 24
   slug: weather
   est_lessons: 3
-  job: 'Talk about the weather and the natural world around you: animals, plants, landscape'
+  job: Talk about weather, plants, pets and landscape
   inventory_text: null
   phase: A1.4
-  skills_text: Li (forecast; `:549-551`)
+  skills_text: Li (forecast; `:549-551`), S, W (describe weather or an animal with 1-2 features; `:358-360`, `:401-404`) (`:547-551`)
   skills:
   - Li
+  - S
+  - W
   standard_line_refs:
   - - 549
+    - 551
+  - - 358
+    - 360
+  - - 401
+    - 404
+  - - 547
     - 551
 - position: 25
   slug: my-day
   est_lessons: 3
-  job: Tell your day in order
+  job: Tell your day in order, including a work day, a day off, lunch break, and the start and end of work
   inventory_text: null
   phase: A1.4
-  skills_text: W
+  skills_text: Li, S, R, W (work-day/day-off information and colleague exchanges; `:239-243`, `:277-288`, `:325-336`, `:379-388`, `:511-515`)
   skills:
+  - Li
+  - S
+  - R
   - W
-  standard_line_refs: []
+  standard_line_refs:
+  - - 239
+    - 243
+  - - 277
+    - 288
+  - - 325
+    - 336
+  - - 379
+    - 388
+  - - 511
+    - 515
 - position: 26
   slug: free-time
   est_lessons: 3
-  job: Talk about leisure; invite someone
+  job: Talk about hobbies, sports and leisure venues; invite someone
   inventory_text: null
   phase: A1.4
-  skills_text: W (SMS invitation)
+  skills_text: R, W (read and write an SMS invitation; `:323`, `:348-351`) (`:517-519`)
   skills:
+  - R
   - W
-  standard_line_refs: []
+  standard_line_refs:
+  - - 323
+    - 323
+  - - 348
+    - 351
+  - - 517
+    - 519
 - position: 27
   slug: checkpoint-time-nature
   est_lessons: 2
@@ -347,42 +427,81 @@ positions:
 - position: 29
   slug: where-is-it
   est_lessons: 4
-  job: 'Say where something is: locative of nouns with agreeing adjectives'
+  job: 'Say where something is: locative nouns and agreeing hard/soft-group adjectives in all three genders'
   inventory_text: null
   phase: A1.5
-  skills_text: —
+  skills_text: — (`:610-630`, `:639-650`, `:690-692`)
   skills: []
-  standard_line_refs: []
+  standard_line_refs:
+  - - 610
+    - 630
+  - - 639
+    - 650
+  - - 690
+    - 692
 - position: 30
   slug: my-city
   est_lessons: 3
-  job: Name places in a city and say what is where
+  job: Name city institutions, worship buildings, public facilities and streets; say what is where
   inventory_text: null
   phase: A1.5
-  skills_text: R (signs, map)
+  skills_text: Li, S, R, W (city signs/map, short city description and captions; `:372-376`, `:496-503`) (`:496-498`, `:499-500`, `:503`)
   skills:
+  - Li
+  - S
   - R
-  standard_line_refs: []
+  - W
+  standard_line_refs:
+  - - 372
+    - 376
+  - - 496
+    - 503
+  - - 496
+    - 498
+  - - 499
+    - 500
+  - - 503
+    - 503
 - position: 31
   slug: where-to
   est_lessons: 3
-  job: 'Say where you are going: accusative of direction; де vs куди'
+  job: 'Say where you are going: accusative direction with в, у, на and agreeing hard/soft-group adjectives in all three genders; де vs куди'
   inventory_text: null
   phase: A1.5
-  skills_text: —
+  skills_text: — (`:610-630`, `:639-650`, `:683-684`)
   skills: []
-  standard_line_refs: []
+  standard_line_refs:
+  - - 610
+    - 630
+  - - 639
+    - 650
+  - - 683
+    - 684
 - position: 32
   slug: transport
   est_lessons: 3
-  job: 'Get around: transport phrases'
+  job: 'Get around: travel hubs including автовокзал, public transport and taxi; іти, їхати in basic phrases'
   inventory_text: null
   phase: A1.5
-  skills_text: R (tickets, stops), Li
+  skills_text: Li, S, R, W (traveller/passenger roles; tickets, timetables, illustrated advertisements; slow clear announcements for topic/detail; `:245-252`, `:310-321`, `:379-388`) (`:522`, `:501-502`, `:524`)
   skills:
-  - R
   - Li
-  standard_line_refs: []
+  - S
+  - R
+  - W
+  standard_line_refs:
+  - - 245
+    - 252
+  - - 310
+    - 321
+  - - 379
+    - 388
+  - - 522
+    - 522
+  - - 501
+    - 502
+  - - 524
+    - 524
 - position: 33
   slug: around-the-city
   est_lessons: 3
@@ -396,17 +515,23 @@ positions:
 - position: 34
   slug: where-from
   est_lessons: 3
-  job: Say where you and things are from; compass points; at the border
+  job: Say where you and things are from; parts of the world (continents); at the border
   inventory_text: null
   phase: A1.5
-  skills_text: 'W (`:523-525`; form: country, city; address an envelope `:361`)'
+  skills_text: 'W (`:523-525`; full address: country, city, street, house/building-section/apartment numbers; form and envelope; `:345-346`, `:352`, `:361`, `:377`)'
   skills:
   - W
   standard_line_refs:
   - - 523
     - 525
+  - - 345
+    - 346
+  - - 352
+    - 352
   - - 361
     - 361
+  - - 377
+    - 377
 - position: 35
   slug: checkpoint-places
   est_lessons: 2
@@ -430,45 +555,79 @@ positions:
 - position: 37
   slug: i-eat-i-drink
   est_lessons: 3
-  job: 'Say what you eat and drink: accusative, inanimate, with agreeing adjectives'
+  job: 'Say what you eat and drink: accusative inanimate nouns and agreeing hard/soft-group adjectives in all three genders'
   inventory_text: null
   phase: A1.6
-  skills_text: —
+  skills_text: — (`:610-630`, `:639-650`, `:680`)
   skills: []
-  standard_line_refs: []
+  standard_line_refs:
+  - - 610
+    - 630
+  - - 639
+    - 650
+  - - 680
+    - 680
 - position: 38
   slug: at-the-cafe
   est_lessons: 3
-  job: Order and pay in a café
+  job: Order and pay in a café; request dishes, drinks, crockery and cutlery
   inventory_text: null
   phase: A1.6
-  skills_text: Li, R (menu, bill)
+  skills_text: Li, S, R, W (guest/customer exchanges and short notes; extract menu/bill information; `:310-311`, `:379-388`) (`:536-539`, `:272-275`)
   skills:
   - Li
+  - S
   - R
-  standard_line_refs: []
+  - W
+  standard_line_refs:
+  - - 310
+    - 311
+  - - 379
+    - 388
+  - - 536
+    - 539
+  - - 272
+    - 275
 - position: 39
   slug: shopping
   est_lessons: 3
-  job: 'Ask prices and buy things: food, toiletries, stationery; weight and volume'
+  job: Ask prices and buy food, toiletries including шампунь, and stationery; use weight, volume and money
   inventory_text: null
   phase: A1.6
-  skills_text: R (price tags; `:531-533`), Li
+  skills_text: Li, S, R, W (customer roles; seller in speaking; price tags; `:531-533`; illustrated advertisements, promotions and product-choice instructions; `:261-266`, `:318-321`, `:379-388`, `:447-448`) (`:528-534`)
   skills:
-  - R
   - Li
+  - S
+  - R
+  - W
   standard_line_refs:
   - - 531
     - 533
+  - - 261
+    - 266
+  - - 318
+    - 321
+  - - 379
+    - 388
+  - - 447
+    - 448
+  - - 528
+    - 534
 - position: 40
   slug: people-around-me
   est_lessons: 3
-  job: 'Talk about people you see, know and think about: accusative, animate; мене / тебе / нас / вас; `про` + accusative'
+  job: 'Talk about people you see, know and think about: accusative animate nouns and agreeing hard/soft-group adjectives in all three genders; мене, тебе, нас, вас; `про` + accusative'
   inventory_text: null
   phase: A1.6
-  skills_text: —
+  skills_text: — (`:610-650`, `:656-657`, `:687-688`)
   skills: []
-  standard_line_refs: []
+  standard_line_refs:
+  - - 610
+    - 650
+  - - 656
+    - 657
+  - - 687
+    - 688
 - position: 41
   slug: checkpoint-food-shopping
   est_lessons: 2
@@ -491,13 +650,30 @@ positions:
 - position: 43
   slug: please-do-this
   est_lessons: 3
-  job: 'Ask someone to do something: imperative, ти and ви'
+  job: Ask someone to do something and prohibit an action; all Standard imperative pairs, second person singular and plural
   inventory_text: null
   phase: A1.7
-  skills_text: R (signs, prohibitions)
+  skills_text: Li, S, R, W (illustrated instructions and prohibitions; copy familiar signs; `:264-266`, `:299`, `:314-315`, `:362-364`) (`:721-725`, `:314-315`, `:475`)
   skills:
+  - Li
+  - S
   - R
-  standard_line_refs: []
+  - W
+  standard_line_refs:
+  - - 264
+    - 266
+  - - 299
+    - 299
+  - - 314
+    - 315
+  - - 362
+    - 364
+  - - 721
+    - 725
+  - - 314
+    - 315
+  - - 475
+    - 475
 - position: 44
   slug: linking-ideas
   est_lessons: 2
@@ -514,22 +690,38 @@ positions:
   job: 'Build first complex sentences with що, де, коли — talking about your home: housing, rooms, furniture, what is where'
   inventory_text: null
   phase: A1.7
-  skills_text: W (describe your room; `:489-493`)
+  skills_text: R, W (read an illustrated short description for gist, topic and details; describe your room; `:294-311`, `:358-360`, `:489-493`)
   skills:
+  - R
   - W
   standard_line_refs:
+  - - 294
+    - 311
+  - - 358
+    - 360
   - - 489
     - 493
 - position: 46
   slug: holidays
   est_lessons: 3
-  job: Greet people on holidays; family and state holidays
+  job: Greet people on holidays; state and religious holidays, birthdays, weddings and gifts
   inventory_text: null
   phase: A1.7
-  skills_text: W (postcard)
+  skills_text: Li, S, R, W (read postcards, SMS and email; write or copy greetings, wishes, thanks and a greeting from a place; `:300`, `:323`, `:348-351`, `:553-556`)
   skills:
+  - Li
+  - S
+  - R
   - W
-  standard_line_refs: []
+  standard_line_refs:
+  - - 300
+    - 300
+  - - 323
+    - 323
+  - - 348
+    - 351
+  - - 553
+    - 556
 - position: 47
   slug: checkpoint-communication
   est_lessons: 2
@@ -544,12 +736,14 @@ positions:
 - position: 48
   slug: what-happened
   est_lessons: 4
-  job: 'Say what happened: past tense and gender'
+  job: Say what happened using past forms, including reflexive verbs and бути
   inventory_text: null
   phase: A1.8
-  skills_text: —
+  skills_text: — (`:713-714`)
   skills: []
-  standard_line_refs: []
+  standard_line_refs:
+  - - 713
+    - 714
 - position: 49
   slug: yesterday
   est_lessons: 3
@@ -563,64 +757,110 @@ positions:
 - position: 50
   slug: what-will-happen
   est_lessons: 3
-  job: 'Say what will happen: compound future'
+  job: Say what will happen using all future forms of бути and the compound imperfective future
   inventory_text: null
   phase: A1.8
-  skills_text: —
+  skills_text: — (`:710-711`, `:715-717`)
   skills: []
-  standard_line_refs: []
+  standard_line_refs:
+  - - 710
+    - 711
+  - - 715
+    - 717
 - position: 51
   slug: my-plans
   est_lessons: 3
-  job: Make plans and arrange to meet
+  job: Make plans and arrange to meet using selected perfective futures зможу, скажете, прочитають; recycle at 52
   inventory_text: null
   phase: A1.8
-  skills_text: W (SMS)
+  skills_text: W (SMS) (`:718-719`)
   skills:
   - W
-  standard_line_refs: []
+  standard_line_refs:
+  - - 718
+    - 719
 - position: 52
   slug: my-story
   est_lessons: 3
-  job: Tell your life in three tenses
+  job: Tell your life in three tenses and complete a personal profile, including gender, date/place of birth and education
   inventory_text: null
   phase: A1.8
-  skills_text: W (short biography, form)
+  skills_text: R, W, S (read and complete a personal-data form, write and tell a short biography, retell a simple text; `:322`, `:352-353`, `:405-406`, `:422-436`) (`:343-347`, `:370-377`, `:482-485`)
   skills:
+  - R
   - W
-  standard_line_refs: []
+  - S
+  standard_line_refs:
+  - - 322
+    - 322
+  - - 352
+    - 353
+  - - 405
+    - 406
+  - - 422
+    - 436
+  - - 343
+    - 347
+  - - 370
+    - 377
+  - - 482
+    - 485
 - position: 53
   slug: health
   est_lessons: 3
-  job: Say what hurts; at the pharmacy and doctor
+  job: Say what hurts, including injury and high temperature; at the pharmacy and doctor
   inventory_text: null
   phase: A1.8
-  skills_text: Li, R
+  skills_text: Li, S, R, W (patient exchanges, signs and short personal-data notes; `:287`, `:335`, `:387`, `:449`, `:541-545`) (`:541-545`)
   skills:
   - Li
+  - S
   - R
-  standard_line_refs: []
+  - W
+  standard_line_refs:
+  - - 287
+    - 287
+  - - 335
+    - 335
+  - - 387
+    - 387
+  - - 449
+    - 449
+  - - 541
+    - 545
+  - - 541
+    - 545
 - position: 54
   slug: emergencies
   est_lessons: 2
   job: Get help in an emergency
   inventory_text: null
   phase: A1.8
-  skills_text: Li, R (signs)
+  skills_text: Li, S, R, W (help requests and important written phrases; `:272-275`, `:368-369`)
   skills:
   - Li
+  - S
   - R
-  standard_line_refs: []
+  - W
+  standard_line_refs:
+  - - 272
+    - 275
+  - - 368
+    - 369
 - position: 55
   slug: a1-finale
   est_lessons: 3
-  job: 'One full day in a Ukrainian city: everything together'
+  job: 'Spend one full day in a Ukrainian city: integrated reuse of all taught Standard A1 intentions, themes and speech skills; no new language'
   inventory_text: null
   phase: A1.8
-  skills_text: all
+  skills_text: all (Standard section 1 verification using taught inventory; source section 11) (`:228-451`, `:453-556`)
   skills:
   - W
   - Li
   - R
   - S
-  standard_line_refs: []
+  standard_line_refs:
+  - - 228
+    - 451
+  - - 453
+    - 556

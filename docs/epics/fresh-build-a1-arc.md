@@ -6,9 +6,9 @@
 > verified findings 1 and 3 against the Standard text and folded all nine in. **r3:** operator ruled
 > the Standard is a minimum and ULP is the schedule (D0); position 45 restored on ULP evidence (D6). Requirements: [`fresh-build-requirements.md`](fresh-build-requirements.md);
 > schema: [`fresh-build-plan-schema.md`](fresh-build-plan-schema.md). This document becomes
-> `curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml` once accepted. It contains no Ukrainian word facts
-> beyond module titles already published in the reviewed v1 plans; every form, stress and example
-> is settled later, in the evidence packs, by tools and the language lanes.
+> `curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml` once accepted. Ownership examples in the
+> amendment (§11) come from the State Standard A1. Lesson-level forms, stress and examples
+> are settled in the evidence packs by tools and the language lanes.
 
 ## 1. Evidence this arc is built on
 
@@ -73,7 +73,9 @@ The slug `when-and-where` and the position number stay.
 
 **D5 — A pronunciation strand runs through the whole level**, not only the first four modules:
 a short trainer inside a lesson roughly every sixth module (и; soft consonants; р; intonation;
-`-шся` / `-ться`; unstressed е / и), using the ULP trainer videos that are in the corpus.
+`-шся` / `-ться`), using the ULP trainer videos that are in the corpus. Position 3 owns
+syllables (`:588`). Position 6 owns stressed/unstressed vowel pronunciation, including
+[е], [и] (`:578-579`); positions 20 and 28 recycle this pronunciation duty. Each trainer uses taught inventory.
 
 ## 3. Grammar at A1: system or chunk
 
@@ -83,11 +85,11 @@ a short trainer inside a lesson roughly every sixth module (и; soft consonants;
 | Adjective agreement in the **locative** and **accusative** (hard and soft group) | system | locative 29–30; accusative 31, 37, 40 | `:633-650`, examples `:680`, `:691` |
 | Personal pronouns 1st / 2nd person, accusative forms (мене, тебе, нас, вас) | system | 40 (first met in the chunk `мене звати` at 3) | `:656-657` |
 | Personal pronouns 1st / 2nd person, dative forms (мені, тобі, нам, вам) | **forms taught as pronoun forms inside their constructions** (`мені подобається`, `мені … років`, and the "I need" chunk); no noun dative | 11, 15, 43, 54 | `:656-657`; noun dative stays A2 (mapping `:97-102`) |
-| Demonstratives, possessives, nominative | system | 8, 12 (chunks at 4) | `:659-667` |
-| Nominative plural (nouns, adjectives, demonstratives) | system | 13 | `:603-631` |
-| Present tense, conjugations I and II, modal + infinitive, reflexive verbs | system | 15–20 | `:703-719` |
+| Possessive gender forms мій, моя, моє; твій, твоя, твоє; наш, наша, наше; ваш, ваша, ваше; їхній, їхня, їхнє; demonstratives | system | possessives 8 (chunks at 4); demonstratives 12; plurals 13 | `:659-667` |
+| Nominative plural: nouns with vowel alternation рік – роки, ніж – ножі, палець – пальці, будинок – будинки, річ – речі; agreeing adjectives; мої, твої, наші, ваші, їхні, ті, ці | system | 13 | `:606-609`, `:636-638`, `:666-667` |
+| Present tense: читати, працювати, іти, їхати at 16; сидіти, дивитися at 17; могти at 18; modal + infinitive and reflexive routines | system | 15–20; named paradigms 16–18 | `:704-709` |
 | Questions (question words, чи, intonation), negation | system | 19 | `:729-739` |
-| Ordinal numerals (time, dates) | system | 22–23 | `:652-654` |
+| Ordinal gender forms перший, перша, перше; другий, друга, друге; третій, третя, третє (time, dates) | system; oblique date forms remain chunks | 22; dates recycled 23 | `:652-654`, `:664-665` |
 | Cardinal numerals | **lexical items only** (prices, age, phone numbers) — no numeral + noun agreement system | 11, 39 | cardinals with nouns are A2 `:1271-1272` |
 | Locative: place | system | 29–30 | `:690-695` |
 | Accusative: direction, inanimate object, animate object | system | 31, 37, 40 | `:678-688` |
@@ -100,9 +102,9 @@ a short trainer inside a lesson roughly every sixth module (и; soft consonants;
 | Imperative, 2nd person singular and plural | system | 43 (first met as chunks at 33) | `:721-725` |
 | Coordination і (й) / а / але; cause бо / тому що | system | 44 | `:741-747` |
 | Clauses with що, де / куди / звідки, коли | met unexplained in texts from early on (ULP S1 L5 / L17 / L20); **system at 45** | 45 | beyond the Standard's A1 minimum (A2 `:1408-1411`, коли B1 `:2406`); taught here on ULP evidence (D0, D6) |
-| Past tense | system | 48–49 | `:713-714` |
-| Compound future (буду + infinitive) | system | 50–51 | `:715-717` — the Standard's A1 names only the compound form; the synthetic future is B1 (`:2287-2289`) and ULP S3 L98 |
-| A few perfective futures | chunk | 50–52 | `:718-719` |
+| Past tense, including reflexive сміявся, сміялася, сміялося, сміялися and був, була, було, були | system | 48; recycle 49 | `:713-714` |
+| Future forms of бути; compound future (буду + infinitive) | system | 50–51 | `:710-711`, `:715-717` — the Standard's A1 names only the compound imperfective form; the synthetic future is B1 (`:2287-2289`) and ULP S3 L98 |
+| A few perfective futures: зможу, скажете, прочитають | chunk; no full aspect system | 51; recycle 52 | `:718-719` |
 | Genitive (`у мене є`, `з України`, `без …`, quantities) | **chunk only** | 4, 34, 36, 39 | first systematic at A2; ULP uses it as a chunk from S1 L6 (`у мене є`) and L15, system at S2 L46–49 |
 | Dative (`мені подобається`, `мені … років`, the "I need" chunk) | **chunk only** | 11, 15, 54 | noun dative is A2 (mapping `:97-102`); ULP S1 L14 (`подобається` + dative pronouns), system at S2 L51–53 |
 | Instrumental (`автобусом`, `з молоком`, `вітаю з …`) | **chunk only** | 32, 36, 46 | noun instrumental is A2; ULP S1 L21 (`українською`), system at S2 L61–62 |
@@ -120,10 +122,10 @@ pedagogy grounds the progression only and is never copied as learner text.
 | Pos | Slug | Phase | Job | Inventory (letters / signs) | Skills duty | Est. lessons |
 | --- | --- | --- | --- | --- | --- | --- |
 | 1 | `introduction-to-ukrainian` | A1.1 | Orient yourself in English: language identity, brief history, where spoken, alphabet overview, study method and outcomes | Overview only; no acquired letters | — | 2 |
-| 2 | `sounds-letters-and-hello` | A1.1 | Greet and take a first spoken turn; connect useful words with letters and supported writing | **12 letters**: А Е И І О М Н В П Р Т Я; stress and intonation from first speech | Li, S, W (supported copying) | 5 |
-| 3 | `who-am-i` | A1.1 | Introduce yourself and ask identity; common professions and origin phrases | **9 letters**: Д З К Л С У Х ь Г; hard/soft contrast and hardness before [е]; introduce voiced/voiceless base-pair families д–т, з–с, г–х; recycle stress and intonation | Li, S, W (`:485`) | 4 |
+| 2 | `sounds-letters-and-hello` | A1.1 | Greet and take a first spoken turn; connect useful words with letters and supported writing | **12 letters**: А Е И І О М Н В П Р Т Я; stress and intonation from first speech; statement, question and exclamation contours (`:586`, `:596`) | Li, S, W (supported copying) | 5 |
+| 3 | `who-am-i` | A1.1 | Introduce yourself and ask identity; common professions and origin phrases | **9 letters**: Д З К Л С У Х ь Г; hard/soft contrast and hardness before [е]; introduce voiced/voiceless base-pair families д–т, з–с, г–х; recycle stress and intonation; syllables (`:588`) | Li, S, W (`:485`) | 4 |
 | 4 | `my-family` | A1.1 | Introduce people in a chosen family photo or equivalent using supported possessive phrases | **5 letters**: Б Й Ї Ю Є; apostrophe; continue voiced/voiceless base-pair family б–п; recycle stress and intonation | Li, S, W (captions) | 4 |
-| 5 | `reading-ukrainian` | A1.1 | Complete the alphabet through useful labels and short exchanges; decode unfamiliar combinations of taught letters | **7 letters**: Ґ Ж Ч Ш Щ Ц Ф; дж and дз; complete voiced/voiceless base-pair families ґ–к, ж–ш, дж–ч, дз–ц; alphabet order and letter names; capital/small letters and recognising handwritten letters (`:571-572`) | Li, S, R, W | 5 |
+| 5 | `reading-ukrainian` | A1.1 | Complete the alphabet through useful labels and short exchanges; decode unfamiliar combinations of taught letters | **7 letters**: Ґ Ж Ч Ш Щ Ц Ф; дж and дз; complete voiced/voiceless base-pair families ґ–к, ж–ш, дж–ч, дз–ц; alphabet order and letter names; capital/small letters and recognising handwritten letters (`:571-572`) | Li, S, R, W (match printed/handwritten capitals and small letters; use capitals in Київ/київський and Україна/українець; complete writing own and other names/surnames; copy familiar labels; `:571-572`, `:343-344`, `:362-365`) | 5 |
 
 All 33 letters are introduced exactly once at positions 2–5. Later positions recycle
 them. Printed words follow their constituent letter introductions inside each module;
@@ -143,56 +145,56 @@ Skills duty = the Standard skill the module must exercise beyond its language po
 
 | Pos | Slug | Phase | One-sentence job | Skills duty | L |
 | --- | --- | --- | --- | --- | --- |
-| 6 | `first-conversations` | A1.1 | Sustain a scaffolded conversation using greetings, identity, family and familiar belongings | Li, S, R, W | 3 |
+| 6 | `first-conversations` | A1.1 | Sustain a scaffolded 4-6-turn conversation with greetings, Добраніч, personal data, family and belongings; practise stressed/unstressed [е], [и] | Li, S, R, W (`:459`, `:239-243`, `:268-270`, `:410-432`, `:578-579`) | 3 |
 | 7 | `checkpoint-first-contact` | A1.1 | Complete an integrated first-contact task with previously introduced language | Li, S, R, W | 2 |
-| 8 | `things-have-gender` | A1.2 | Identify familiar belongings using noun gender and matching pronoun and possessive forms | Li, S, R | 3 |
-| 9 | `what-is-it-like` | A1.2 | Describe and identify familiar objects using nominative adjective agreement | Li, S, R | 3 |
-| 10 | `colors` | A1.2 | Use colours and agreeing descriptions to distinguish objects; soft-group adjectives | Li, S, R | 2 |
+| 8 | `things-have-gender` | A1.2 | Identify familiar belongings using noun gender and the complete singular possessive set, including наш, ваш, їхній | Li, S, R (`:661-662`) | 3 |
+| 9 | `what-is-it-like` | A1.2 | Describe and identify familiar objects using nominative adjective agreement | Li, S, R, W (describe a familiar object with 1-2 features; `:358-360`) | 3 |
+| 10 | `colors` | A1.2 | Use colours and agreeing hard/soft-group nominative descriptions of objects and appearance | Li, S, R, W (short description of a friend or parent; `:355-357`) (`:484`, `:355-357`) | 2 |
 | 11 | `how-many` | A1.2 | Understand and say numbers for prices, age, phone numbers | Li (numbers by ear) | 4 |
 | 12 | `this-and-that` | A1.2 | Point at things: цей / той in three genders | — | 2 |
-| 13 | `many-things` | A1.2 | Go from one to many: nominative plural | — | 3 |
+| 13 | `many-things` | A1.2 | Go from one to many: nominative nouns with vowel alternation, agreeing adjectives, possessives and demonstratives | — (`:606-609`, `:636-638`, `:666-667`) | 3 |
 | 14 | `checkpoint-my-world` | A1.2 | Self-check: describe, count, point | R | 2 |
 | 15 | `what-i-like` | A1.3 | Say what you like doing: infinitive, люблю + infinitive | — | 3 |
-| 16 | `verbs-group-one` | A1.3 | Conjugate first-conjugation verbs in the present | — | 3 |
-| 17 | `verbs-group-two` | A1.3 | Conjugate second-conjugation verbs; tell the two apart | — | 3 |
-| 18 | `i-want-i-can` | A1.3 | Say what you want, can and must do | — | 3 |
+| 16 | `verbs-group-one` | A1.3 | Conjugate читати, працювати, іти, їхати in the present | — (`:704-708`) | 3 |
+| 17 | `verbs-group-two` | A1.3 | Conjugate сидіти and дивитися in the present, including the reflexive paradigm; distinguish the two conjugations | — (`:708-709`) | 3 |
+| 18 | `i-want-i-can` | A1.3 | Say what you want, can and must do using modal plus infinitive; conjugate могти in the present | — (`:706-707`) | 3 |
 | 19 | `questions` | A1.3 | Ask and answer simple questions; negate | Li | 3 |
-| 20 | `my-morning` | A1.3 | Describe a morning routine with reflexive verbs | W (short note) | 3 |
+| 20 | `my-morning` | A1.3 | Describe a morning routine with reflexive verbs; divide written words at line breaks using syllables from position 3 | W (short note) (`:588`) | 3 |
 | 21 | `checkpoint-actions` | A1.3 | Self-check: say what you do, want, ask | R | 2 |
-| 22 | `what-time` | A1.4 | Ask and tell the time | Li, R (timetable) | 3 |
+| 22 | `what-time` | A1.4 | Ask and tell the time using ordinal forms in all three genders, including first, second and third; reuse date phrases at 23 | Li, R (timetable) (`:652-654`, `:664-665`) | 3 |
 | 23 | `days-and-months` | A1.4 | Use days, months, seasons and dates in set phrases | R (calendar) | 4 |
-| 24 | `weather` | A1.4 | Talk about the weather and the natural world around you: animals, plants, landscape | Li (forecast; `:549-551`) | 3 |
-| 25 | `my-day` | A1.4 | Tell your day in order | W | 3 |
-| 26 | `free-time` | A1.4 | Talk about leisure; invite someone | W (SMS invitation) | 3 |
+| 24 | `weather` | A1.4 | Talk about weather, plants, pets and landscape | Li (forecast; `:549-551`), S, W (describe weather or an animal with 1-2 features; `:358-360`, `:401-404`) (`:547-551`) | 3 |
+| 25 | `my-day` | A1.4 | Tell your day in order, including a work day, a day off, lunch break, and the start and end of work | Li, S, R, W (work-day/day-off information and colleague exchanges; `:239-243`, `:277-288`, `:325-336`, `:379-388`, `:511-515`) | 3 |
+| 26 | `free-time` | A1.4 | Talk about hobbies, sports and leisure venues; invite someone | R, W (read and write an SMS invitation; `:323`, `:348-351`) (`:517-519`) | 3 |
 | 27 | `checkpoint-time-nature` | A1.4 | Self-check: time, week plan, weather | R | 2 |
 | 28 | `euphony` | A1.5 | Choose у / в, і / й, з / із / зі | — | 2 |
-| 29 | `where-is-it` | A1.5 | Say where something is: locative of nouns with agreeing adjectives | — | 4 |
-| 30 | `my-city` | A1.5 | Name places in a city and say what is where | R (signs, map) | 3 |
-| 31 | `where-to` | A1.5 | Say where you are going: accusative of direction; де vs куди | — | 3 |
-| 32 | `transport` | A1.5 | Get around: transport phrases | R (tickets, stops), Li | 3 |
+| 29 | `where-is-it` | A1.5 | Say where something is: locative nouns and agreeing hard/soft-group adjectives in all three genders | — (`:610-630`, `:639-650`, `:690-692`) | 4 |
+| 30 | `my-city` | A1.5 | Name city institutions, worship buildings, public facilities and streets; say what is where | Li, S, R, W (city signs/map, short city description and captions; `:372-376`, `:496-503`) (`:496-498`, `:499-500`, `:503`) | 3 |
+| 31 | `where-to` | A1.5 | Say where you are going: accusative direction with в, у, на and agreeing hard/soft-group adjectives in all three genders; де vs куди | — (`:610-630`, `:639-650`, `:683-684`) | 3 |
+| 32 | `transport` | A1.5 | Get around: travel hubs including автовокзал, public transport and taxi; іти, їхати in basic phrases | Li, S, R, W (traveller/passenger roles; tickets, timetables, illustrated advertisements; slow clear announcements for topic/detail; `:245-252`, `:310-321`, `:379-388`) (`:522`, `:501-502`, `:524`) | 3 |
 | 33 | `around-the-city` | A1.5 | Ask for and follow directions | Li | 3 |
-| 34 | `where-from` | A1.5 | Say where you and things are from; compass points; at the border | W (`:523-525`; form: country, city; address an envelope `:361`) | 3 |
+| 34 | `where-from` | A1.5 | Say where you and things are from; parts of the world (continents); at the border | W (`:523-525`; full address: country, city, street, house/building-section/apartment numbers; form and envelope; `:345-346`, `:352`, `:361`, `:377`) | 3 |
 | 35 | `checkpoint-places` | A1.5 | Self-check: find your way | R | 2 |
 | 36 | `food-and-drink` | A1.6 | Name food and drink; say what Ukrainians eat | R (menu) | 3 |
-| 37 | `i-eat-i-drink` | A1.6 | Say what you eat and drink: accusative, inanimate, with agreeing adjectives | — | 3 |
-| 38 | `at-the-cafe` | A1.6 | Order and pay in a café | Li, R (menu, bill) | 3 |
-| 39 | `shopping` | A1.6 | Ask prices and buy things: food, toiletries, stationery; weight and volume | R (price tags; `:531-533`), Li | 3 |
-| 40 | `people-around-me` | A1.6 | Talk about people you see, know and think about: accusative, animate; мене / тебе / нас / вас; `про` + accusative | — | 3 |
+| 37 | `i-eat-i-drink` | A1.6 | Say what you eat and drink: accusative inanimate nouns and agreeing hard/soft-group adjectives in all three genders | — (`:610-630`, `:639-650`, `:680`) | 3 |
+| 38 | `at-the-cafe` | A1.6 | Order and pay in a café; request dishes, drinks, crockery and cutlery | Li, S, R, W (guest/customer exchanges and short notes; extract menu/bill information; `:310-311`, `:379-388`) (`:536-539`, `:272-275`) | 3 |
+| 39 | `shopping` | A1.6 | Ask prices and buy food, toiletries including шампунь, and stationery; use weight, volume and money | Li, S, R, W (customer roles; seller in speaking; price tags; `:531-533`; illustrated advertisements, promotions and product-choice instructions; `:261-266`, `:318-321`, `:379-388`, `:447-448`) (`:528-534`) | 3 |
+| 40 | `people-around-me` | A1.6 | Talk about people you see, know and think about: accusative animate nouns and agreeing hard/soft-group adjectives in all three genders; мене, тебе, нас, вас; `про` + accusative | — (`:610-650`, `:656-657`, `:687-688`) | 3 |
 | 41 | `checkpoint-food-shopping` | A1.6 | Self-check: order and buy | R | 2 |
 | 42 | `hey-friend` | A1.7 | Address people by name: vocative | — | 2 |
-| 43 | `please-do-this` | A1.7 | Ask someone to do something: imperative, ти and ви | R (signs, prohibitions) | 3 |
+| 43 | `please-do-this` | A1.7 | Ask someone to do something and prohibit an action; all Standard imperative pairs, second person singular and plural | Li, S, R, W (illustrated instructions and prohibitions; copy familiar signs; `:264-266`, `:299`, `:314-315`, `:362-364`) (`:721-725`, `:314-315`, `:475`) | 3 |
 | 44 | `linking-ideas` | A1.7 | Join ideas: і, а, але, бо, тому що | W | 2 |
-| 45 | `when-and-where` | A1.7 | Build first complex sentences with що, де, коли — talking about your home: housing, rooms, furniture, what is where | W (describe your room; `:489-493`) | 4 |
-| 46 | `holidays` | A1.7 | Greet people on holidays; family and state holidays | W (postcard) | 3 |
+| 45 | `when-and-where` | A1.7 | Build first complex sentences with що, де, коли — talking about your home: housing, rooms, furniture, what is where | R, W (read an illustrated short description for gist, topic and details; describe your room; `:294-311`, `:358-360`, `:489-493`) | 4 |
+| 46 | `holidays` | A1.7 | Greet people on holidays; state and religious holidays, birthdays, weddings and gifts | Li, S, R, W (read postcards, SMS and email; write or copy greetings, wishes, thanks and a greeting from a place; `:300`, `:323`, `:348-351`, `:553-556`) | 3 |
 | 47 | `checkpoint-communication` | A1.7 | Self-check: address, ask, connect | R, W | 2 |
-| 48 | `what-happened` | A1.8 | Say what happened: past tense and gender | — | 4 |
+| 48 | `what-happened` | A1.8 | Say what happened using past forms, including reflexive verbs and бути | — (`:713-714`) | 4 |
 | 49 | `yesterday` | A1.8 | Tell yesterday as a connected story | W | 3 |
-| 50 | `what-will-happen` | A1.8 | Say what will happen: compound future | — | 3 |
-| 51 | `my-plans` | A1.8 | Make plans and arrange to meet | W (SMS) | 3 |
-| 52 | `my-story` | A1.8 | Tell your life in three tenses | W (short biography, form) | 3 |
-| 53 | `health` | A1.8 | Say what hurts; at the pharmacy and doctor | Li, R | 3 |
-| 54 | `emergencies` | A1.8 | Get help in an emergency | Li, R (signs) | 2 |
-| 55 | `a1-finale` | A1.8 | One full day in a Ukrainian city: everything together | all | 3 |
+| 50 | `what-will-happen` | A1.8 | Say what will happen using all future forms of бути and the compound imperfective future | — (`:710-711`, `:715-717`) | 3 |
+| 51 | `my-plans` | A1.8 | Make plans and arrange to meet using selected perfective futures зможу, скажете, прочитають; recycle at 52 | W (SMS) (`:718-719`) | 3 |
+| 52 | `my-story` | A1.8 | Tell your life in three tenses and complete a personal profile, including gender, date/place of birth and education | R, W, S (read and complete a personal-data form, write and tell a short biography, retell a simple text; `:322`, `:352-353`, `:405-406`, `:422-436`) (`:343-347`, `:370-377`, `:482-485`) | 3 |
+| 53 | `health` | A1.8 | Say what hurts, including injury and high temperature; at the pharmacy and doctor | Li, S, R, W (patient exchanges, signs and short personal-data notes; `:287`, `:335`, `:387`, `:449`, `:541-545`) (`:541-545`) | 3 |
+| 54 | `emergencies` | A1.8 | Get help in an emergency | Li, S, R, W (help requests and important written phrases; `:272-275`, `:368-369`) | 2 |
+| 55 | `a1-finale` | A1.8 | Spend one full day in a Ukrainian city: integrated reuse of all taught Standard A1 intentions, themes and speech skills; no new language | all (Standard section 1 verification using taught inventory; source section 11) (`:228-451`, `:453-556`) | 3 |
 
 **Sizing (operator, 2026-09-21): nothing is forced.** The lesson counts above are estimates for
 orientation only and total 162. A module gets the lessons its content needs — not compressed to hit
@@ -203,10 +205,23 @@ recap and checkpoint lessons are a large share of the total is a drag risk to wa
 may close with a recap *section* of its last lesson rather than a separate recap lesson, if the
 plan review agrees.
 
-**Theme coverage against the Standard's 12:** Людина 3–4 · Дім 8–9, 12 · Місто 29–33 · Побут 20, 25 ·
-Діяльність 15–18 · Дозвілля 26 · Подорожі 32–34 · Купівля 39 · Ресторан / кафе 36–38 ·
-Здоров'я 53–54 · Природне середовище 24 · Традиції / свята 46 · Дім / помешкання 45 (D6), with
-household objects already met at 9 and 12.
+**Theme coverage against the Standard's 12:** Людина: identity, origin and professions 3,
+family 4, appearance 10, age 11, address 34, people around you 40, full personal profile
+including gender, date/place of birth and education 52 (`:343-347`, `:481-487`).
+Дім, помешкання: housing, rooms and furniture 45; household objects first met at 8–9, 12.
+Місто: places 30, including синагога, мечеть, перукарня, пункт обміну валют (`:496-500`);
+place/direction 29, 31, 33; public transport and taxi 32 (`:501-503`).
+Побут: routines 20, daily objects 8–9, calendar/time 22–23, daily sequence 25.
+Діяльність: work day, day off, lunch break and start/end of work 25 (`:511-515`);
+verb preparation at 15–18 is not the theme's delivery. Дозвілля: hobbies, sports and
+стадіон, спортзал, басейн 26 (`:517-519`). Подорожі: вокзал, автовокзал, аеропорт
+(летовище) 32; border and parts of the world (continents) 34 (`:525`); attractions 30, 33 (`:521-526`).
+Купівля: shops, groceries, мило, шампунь, зубна паста, stationery, measures and money 39
+(`:528-534`). Ресторан, кафе: food/drink 36–37; service, посуд і столові прибори 38
+(`:536-539`). Здоров'я: body, illness, травма and pharmacy 53; emergency help 54 (`:541-545`).
+Природне середовище: weather, plants дерево, квітка, кущ; pets кіт, собака; landscape
+ліс, озеро, річка, гори, море 24 (`:547-551`). Традиції, звичаї, свята: state/religious
+holidays, birthdays, весілля and gifts 46 (`:553-556`).
 
 ## 6. Decisions on the six open questions (operator accepted the driver's proposals, 2026-09-21; the reviewer independently recommended the same on 2–6)
 
@@ -345,3 +360,172 @@ for early hard/soft and contextual voicing rehearsal; Голуб
 Historical accepted sections 2, 6, 8 and 9 remain verbatim; the ten jobs, 33 letters,
 55 positions, 162 estimated lessons, retirement, recap, and vocabulary-selected
 immersion remain intact.
+
+
+## 11. A1 floor ownership amendment (#10108)
+
+This amendment records ownership; it does not certify lesson delivery.
+All 55 positions, slugs and letter inventories/order remain. Early lessons introduce
+2-3 letters at most, with the existing one-letter remainder lessons retained; new
+facets are short teaching/practice steps before the recap. Recaps introduce nothing.
+Appearance at 10 uses nominative descriptions, not an oblique-pronoun system.
+Position 3 owns syllables; 6 owns unstressed [е]/[и]; 20 owns line breaking.
+Position 5 completes writing one's own and others' names (`:343-344`) and capital-letter
+use, including Київ/київський and Україна/українець (`:571-572`), alongside printed
+and handwritten letter recognition. Position 6 explicitly teaches
+Добраніч (`:459`). Positions 29, 31, 37 and 40 cover both adjective groups in all
+three genders; 48 explicitly includes the reflexive past at `:714`; 50 includes
+all future forms of бути (`:710-711`); 51 owns the selected perfective futures.
+Present-tense paradigms belong to 16 (читати, працювати, іти, їхати),
+17 (сидіти, дивитися, including reflexive forms), and 18 (могти) (`:704-709`).
+Position 34 owns parts of the world (continents), the Standard's назви частин світу
+(`:525`), as well as the border topic.
+No whole aspect system or additional noun case system is introduced.
+
+The following Standard speech duties bind the named positions in addition to
+section 5. Position 55 verifies their integrated reuse with previously taught
+inventory; it is not a first-teaching substitute. Letter gating and A1 English
+support remain. Standard `:560-567` governs every grammar application task.
+
+| Standard id | Lines | Required performance or text | Owning positions |
+| --- | --- | --- | --- |
+| 1.1.1.1 | 234-237 | Recognise familiar self/family words and direct intentions | 3-4, 6 |
+| 1.1.1.2 | 239-243 | Understand short everyday dialogue and a short thematic monologue | 6, 24 |
+| 1.1.1.3 | 245-252 | Identify topic and needed detail in slow, clear, repeated announcements | 32 |
+| 1.1.2.1.1 | 258-259 | Listen to a short adapted description | 24 |
+| 1.1.2.1.2 | 261-266 | Listen to information/promotions and direction/study/product instructions | 39, 33, 43 |
+| 1.1.2.2 | 268-275 | Listen to personal-data dialogue, directions, food/water and first-aid requests | 6, 33, 38, 54 |
+| 1.1.3 | 277-288 | Listening roles, roster below | 6, 25, 32, 38-39, 43, 46, 53 |
+| 1.2.1.1 | 294-302 | Understand labels, illustrated descriptions/instructions, greetings and key details | 5, 43, 45-46 |
+| 1.2.1.2 | 304-311 | Read for gist/topic and select needed receipt/ticket/menu information | 45, 32, 38 |
+| 1.2.2 | 313-323 | Signs, announcements, illustrated original fragments, forms, postcards, SMS, email | 5, 32, 39, 43, 46, 52 |
+| 1.2.3 | 325-336 | Reading roles, roster below | 6, 25, 32, 38-39, 43, 46, 53 |
+| 1.3.1.1/a | 343-344 | Write own and other names/surnames | supported practice 3-4; completion 5 |
+| 1.3.1.1/b | 345-346 | Write country, city, street, house/building-section/apartment numbers | 34 |
+| 1.3.1.1/c | 347 | Write nationality, education and age | 52 |
+| 1.3.1.1/d | 348-351 | Write/copy postcard or SMS greetings, wishes, thanks and greetings from a place | 46 |
+| 1.3.1.1/e | 352 | Complete a simple form | 34, 52 |
+| 1.3.1.1/f | 353 | Write about oneself | 52 |
+| 1.3.1.1/g | 355-357 | Write a short description of a friend/parent | 10 |
+| 1.3.1.1/h | 358-360 | Describe an object, animal, room and weather with 1-2 features | 9, 24, 45 |
+| 1.3.1.1/i | 361 | Address an envelope | 34 |
+| 1.3.1.1/j | 362-364 | Copy familiar labels, signs and instructions | 5, 43 |
+| 1.3.1.1/k | 365 | Use soft sign/apostrophe in familiar written words | 3-5 |
+| 1.3.2 | 367-377 | Important words/phrases; profiles; family/home/city/country descriptions; captions; hotel form | 3-5, 10, 30, 34, 43, 45, 52, 54 |
+| 1.3.3 | 379-388 | Writing roles, roster below, excluding stranger/acquaintance | 25, 32, 38-39, 43, 46, 53; family/friend 4, 10 |
+| 1.4.1.1.1 | 396-406 | Short thematic utterances, pictured descriptions and simple-text retelling | 10, 24, 45, 52 |
+| 1.4.1.2.1 | 410-413 | Understand a slow, clear partner who repeats/rephrases | 6 |
+| 1.4.1.2.2 | 415-429 | Etiquette, basic dialogue, formulas, personal/theme talk, questions and requests | 6, 19, 25-26, 33, 38, 43, 45-46, 52 |
+| 1.4.2 | 431-436 | 4-6-turn dialogue, short personal/thematic account and elementary description | 6; accounts/descriptions 10, 24-26, 30, 45, 52 |
+| 1.4.3 | 438-451 | Speaking roles, roster below, including seller at 39 | 6, 25, 32, 38-39, 43, 46, 53 |
+
+Role roster, with the learner taking each listed role: stranger, acquaintance,
+friend and family member at 6 (family/friend writing first at 4, 10); colleague at 25;
+tourist and passenger at 32; customer and seller at 39; student at 43;
+patient at 53; guest at 38 and 46. Apply only the roles listed for each skill in
+the Standard; the seller is an extra speaking role, not an added listening duty.
+The roles are communicative contexts, not extra grammar lessons.
+
+Plan acceptance requires a clause-to-lesson/task check of Standard `:221-747`,
+including every bullet within the grouped rows above. Missing audio, genuine
+handwriting samples, taught inventory or observable learner work blocks delivery
+of its owning module. A separate evaluator uses unseen prompts/texts within taught
+inventory; an ownership table, moved v1 block or passed parser is not learner proof.
+The curriculum-upgrade driver owns these build/asset/evaluation residuals.
+
+### Closing ownership ledger
+
+The first 51 rows retain the mapping-item denominator. The next 29 cover
+speech-performance groups; the final row covers communicative application.
+Each grouped row includes every constituent clause. Lettered writing suffixes
+are local clause identifiers, not official Standard numbering.
+
+| Standard item id | Standard lines | Owning position after amendment |
+|---|---:|---|
+| `intentions[1]` contact/attention | 454–455 | 6; reuse 33, 43 |
+| `intentions[2]` introductions | 456–457 | 3–4 |
+| `intentions[3]` greeting | 458 | 2 |
+| `intentions[4]` farewell | 459 | 6 |
+| `intentions[5]` thanks | 460 | 2, 6 |
+| `intentions[6]` apology | 461 | 6 |
+| `intentions[7]` congratulations | 462 | 46 |
+| `intentions[8]` wishes | 463 | 46 |
+| `intentions[9]` asking questions | 464–465 | 19; first identity questions 3 |
+| `intentions[10]` answering questions | 466–467 | 19 |
+| `intentions[11]` requesting information | 468–469 | 33, 43 |
+| `intentions[12]` confirmation/denial | 470–471 | 19 |
+| `intentions[13]` preferences | 472–473 | 15 |
+| `intentions[14]` requests for action | 474 | 43 |
+| `intentions[15]` prohibition | 475 | 43 |
+| `intentions[16]` spatial meanings | 476 | 29–33 |
+| `intentions[17]` temporal meanings | 477 | 23, 25, 48–51 |
+| `phonetics.alphabet` | 571–572 | 2–5; capital-letter use and handwriting 5 |
+| `phonetics.apostrophe` | 574 | 4 |
+| `phonetics.soft_sign` | 575 | 3 |
+| `phonetics.vowels_consonants` | 577–584 | Hardness 3; stressed/unstressed vowels [е]/[и] 6; staged voicing 3–5; дж/дз 5 |
+| `phonetics.stress` | 586 | 2; subsequent recycling |
+| `phonetics.syllable` | 588 | Syllables 3; line breaking 20 |
+| `phonetics.euphony` | 590–594 | 28 |
+| `phonetics.intonation` | 596 | 2; subsequent recycling |
+| `morphology.noun_declension` | 603–631 | Gender 8; plural/alternation 13; locative 29; accusative 31, 37, 40; vocative 42 |
+| `morphology.adjective_declension` | 633–650 | Nominative 9–10; plural 13; locative 29; accusative 31, 37, 40 |
+| `morphology.numeral` | 652–654 | Gender forms 22; date chunks 23 |
+| `morphology.pronoun` | 656–657 | Accusative 40; dative forms inside constructions 11, 15, 43, 54 |
+| `morphology.pronoun_gender_number` | 659–667 | Possessives 8; demonstratives 12; plurals 13; ordinals 22 |
+| `cases.nominative` | 672–676 | 8–10; active-subject use 16 |
+| `cases.accusative` | 678–688 | Object 37, 40; direction 31; weekdays 23; про 40 |
+| `cases.locative` | 690–695 | Place 29–30; months 23 |
+| `cases.vocative` | 697–699 | 42 |
+| `verbs.indicative` | 703–719 | Present 16–18; past 48; future бути/compound 50; selected perfectives 51 |
+| `verbs.imperative` | 721–725 | 43 |
+| `REQ-A1-REFLEXIVE` | 709, 714 | Present 17, routine 20; past 48 |
+| `syntax.simple_sentence` | 729–739 | Statements/questions/negation 19; requests 43 |
+| `syntax.complex_sentence` | 741–747 | 44 |
+| `theme.Людина` / §3.1 | 481–487 | Identity/origin/profession 3; family 4; appearance 10; age 11; address 34; surrounding people 40; complete profile 52 |
+| `theme.Дім` / §3.2 | 489–493 | 45; objects introduced 8–9, 12 |
+| `theme.Місто` / §3.3 | 495–503 | Places 30; transport/taxi 32; spatial use 29, 31, 33 |
+| `theme.Побут` / §3.4 | 505–509 | Objects 8–9; routines 20; time/calendar 22–23; day sequence 25 |
+| `theme.Діяльність` / §3.5 | 511–515 | 25 |
+| `theme.Дозвілля` / §3.6 | 517–519 | 26 |
+| `theme.Подорожі` / §3.7 | 521–526 | Hubs/movement 32; border and parts of the world (continents) 34; attractions 30, 33 |
+| `theme.Купівля` / §3.8 | 528–534 | 39 |
+| `theme.Ресторан` / §3.9 | 536–539 | Food/drink 36–37; service/crockery/cutlery 38 |
+| `theme.Здоров’я` / §3.10 | 541–545 | 53; emergency application 54 |
+| `theme.Природа` / §3.11 | 547–551 | 24 |
+| `theme.Традиції` / §3.12 | 553–556 | 46 |
+| `1.1.1.1` | 234–237 | 3–4, 6 |
+| `1.1.1.2` | 239–243 | 6, 24 |
+| `1.1.1.3` | 245–252 | 32 |
+| `1.1.2.1.1` | 258–259 | 24 |
+| `1.1.2.1.2` | 261–266 | 39, 33, 43 |
+| `1.1.2.2` | 268–275 | 6, 33, 38, 54 |
+| `1.1.3` listening roles | 277–288 | 6, 25, 32, 38–39, 43, 46, 53 |
+| `1.2.1.1` | 294–302 | 5, 43, 45–46 |
+| `1.2.1.2` | 304–311 | 45, 32, 38 |
+| `1.2.2` reading text types | 313–323 | 5, 32, 39, 43, 46, 52 |
+| `1.2.3` reading roles | 325–336 | 6, 25, 32, 38–39, 43, 46, 53 |
+| `1.3.1.1/a` names | 343–344 | Supported practice 3–4; completion 5 |
+| `1.3.1.1/b` complete address | 345–346 | 34 |
+| `1.3.1.1/c` nationality/education/age | 347 | 52 |
+| `1.3.1.1/d` short correspondence | 348–351 | 46 |
+| `1.3.1.1/e` forms | 352 | 34, 52 |
+| `1.3.1.1/f` self-description | 353 | 52 |
+| `1.3.1.1/g` friend/parent description | 355–357 | 10 |
+| `1.3.1.1/h` object/animal/room/weather | 358–360 | 9, 24, 45 |
+| `1.3.1.1/i` envelope | 361 | 34 |
+| `1.3.1.1/j` copying | 362–364 | 5, 43 |
+| `1.3.1.1/k` apostrophe/soft sign in writing | 365 | 3–5 |
+| `1.3.2` writing text types | 367–377 | 3–5, 10, 30, 34, 43, 45, 52, 54 |
+| `1.3.3` writing roles | 379–388 | Family/friend 4, 10; colleague 25; tourist/passenger 32; customer 39; student 43; guest 38, 46; patient 53 |
+| `1.4.1.1.1` monologue | 396–406 | 10, 24, 45, 52 |
+| `1.4.1.2.1` understanding a supported partner | 410–413 | 6 |
+| `1.4.1.2.2` dialogue performances | 415–429 | 6, 19, 25–26, 33, 38, 43, 45–46, 52 |
+| `1.4.2` speaking text types | 431–436 | Dialogue 6; accounts/descriptions 10, 24–26, 30, 45, 52 |
+| `1.4.3` speaking roles | 438–451 | 6, 25, 32, 38–39, 43, 46, 53; seller specifically 39 |
+| `§4` communicative application of grammar | 560–567 | Grammar-owning positions listed above; integrated verification 55 |
+
+**Count: 51 mapping items + 29 speech groups + 1 application requirement = 81 ownership-ledger rows; 0 unowned rows.**
+This grouped ledger is not an official 81-item Standard checklist. The level
+descriptor (`:223-226`) governs difficulty, with first-contact performance at 6
+and integrated performance at 55. Lesson delivery, handwriting/audio assets
+and independent unseen-task evaluation remain with the curriculum-upgrade driver.
