@@ -104,6 +104,10 @@ files = [
     "scripts/api/main.py",
     "scripts/api/state_helpers.py",
     "scripts/agent_runtime",
+    # The Claude account route key (#10630): its owner and the decision consumers outside agent_runtime.
+    "scripts/fleet/claude_account_lane.py",
+    "scripts/review/closeout_cli.py",
+    "scripts/lib/claude_weekly_used.py",
 ]
 
 [tool.coverage.run]

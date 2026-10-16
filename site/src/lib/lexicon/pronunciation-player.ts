@@ -13,8 +13,8 @@ let active: (() => void) | undefined;
 const mounted = new WeakMap<HTMLElement, () => void>();
 
 const COPY = {
-  en: { play: 'Play pronunciation', stop: 'Stop pronunciation', error: 'Audio unavailable. Try again.' },
-  uk: { play: 'Послухати вимову', stop: 'Зупинити відтворення', error: 'Аудіо недоступне. Спробуйте ще раз.' },
+  en: { play: 'Play pronunciation', stop: 'Stop pronunciation', error: 'Audio unavailable. Try again.', expired: 'Audio did not start. Try again.' },
+  uk: { play: 'Послухати вимову', stop: 'Зупинити відтворення', error: 'Аудіо недоступне. Спробуйте ще раз.', expired: 'Відтворення не почалося. Спробуйте ще раз.' },
 };
 
 let manifestUnavailable = false;
@@ -78,44 +78,80 @@ export function mountPronunciationPlayer(root: HTMLElement): () => void {
   const lemma = pronunciationKey(rawSpoken);
   const synthesis = window.speechSynthesis;
   let utterance: SpeechSynthesisUtterance | undefined;
+  let cancelVoiceWait: (() => void) | undefined;
   let disposed = false;
   let audio: HTMLAudioElement | undefined;
   let isCdn = false;
-  let playing = false;
-  let hasError = false;
+  let phase: 'idle' | 'pending' | 'playing' = 'idle';
+  let audioUsed = false;
+  let audioSource = '';
+  let failure: 'error' | 'expired' | undefined;
+  let startupTimer: number | undefined;
   let attempt = 0;
   let fallbackHandledAttempt = 0;
   const copy = () => COPY[(root.dataset.locale || document.documentElement.dataset.chromeLocale) === 'en' ? 'en' : 'uk'];
   const label = () => {
     const locale = copy() === COPY.en ? 'en' : 'uk';
     button.lang = status.lang = locale;
-    button.textContent = playing ? copy().stop : copy().play;
-    status.textContent = hasError ? copy().error : '';
+    button.textContent = phase === 'idle' ? copy().play : copy().stop;
+    button.setAttribute('aria-busy', String(phase === 'pending'));
+    status.textContent = failure ? copy()[failure] : '';
   };
   const stop = () => {
     attempt++;
+    window.clearTimeout(startupTimer);
+    cancelVoiceWait?.();
     if (active === stop) active = undefined;
     if (utterance) {
-      utterance.onend = utterance.onerror = null;
+      utterance.onstart = utterance.onend = utterance.onerror = null;
       utterance = undefined;
-      synthesis.cancel();
+      try {
+        synthesis.cancel();
+      } catch {
+        // Platform cancellation failure must not interrupt local cleanup.
+      }
     }
-    audio?.pause();
-    if (audio) audio.currentTime = 0;
-    playing = false;
+    if (audio) {
+      audio.onended = audio.onpause = audio.onerror = null;
+      audio.pause();
+      audio.currentTime = 0;
+    }
+    phase = 'idle';
     label();
   };
-  const failed = () => {
+  const failed = (reason: 'error' | 'expired' = 'error') => {
     if (disposed) return;
-    hasError = true;
+    failure = reason;
     stop();
+  };
+  const startBudget = (current: number) => {
+    startupTimer = window.setTimeout(() => {
+      if (!disposed && current === attempt && phase === 'pending') failed('expired');
+    }, 10000);
   };
   const speakWithSynthesis = (current: number) => {
     if (disposed || current !== attempt) return;
-    const voices = synthesis?.getVoices() ?? [];
+    if (!synthesis || !window.SpeechSynthesisUtterance) { failed(); return; }
+    const voices = synthesis.getVoices();
+    // An empty catalog can still be loading; the API has no catalog-complete flag.
+    if (voices.length === 0) {
+      if (!cancelVoiceWait) {
+        const voicesChanged = () => {
+          if (disposed || current !== attempt) return;
+          try { speakWithSynthesis(current); } catch { failed(); }
+        };
+        synthesis.addEventListener('voiceschanged', voicesChanged);
+        cancelVoiceWait = () => {
+          synthesis.removeEventListener('voiceschanged', voicesChanged);
+          cancelVoiceWait = undefined;
+        };
+      }
+      return;
+    }
+    cancelVoiceWait?.();
     const ukVoices = voices.filter((v) => v.lang.toLowerCase().startsWith('uk'));
     const voice = ukVoices.find((v) => v.localService) ?? ukVoices[0];
-    if (!voice || !window.SpeechSynthesisUtterance) { failed(); return; }
+    if (!voice) { failed(); return; }
     if (synthesis?.speaking || utterance) {
       synthesis?.cancel();
       utterance = undefined;
@@ -123,11 +159,19 @@ export function mountPronunciationPlayer(root: HTMLElement): () => void {
     utterance = new SpeechSynthesisUtterance(spoken);
     utterance.lang = 'uk-UA';
     utterance.voice = voice;
+    utterance.onstart = () => {
+      if (disposed || current !== attempt) return;
+      window.clearTimeout(startupTimer);
+      phase = 'playing';
+      label();
+    };
     utterance.onend = () => {
       if (disposed || current !== attempt) return;
+      window.clearTimeout(startupTimer);
       utterance = undefined;
       if (active === stop) active = undefined;
-      playing = false;
+      attempt++;
+      phase = 'idle';
       label();
     };
     utterance.onerror = () => {
@@ -140,25 +184,61 @@ export function mountPronunciationPlayer(root: HTMLElement): () => void {
     if (fallbackHandledAttempt === current) return;
     fallbackHandledAttempt = current;
     if (fromCdnFallback) {
-      speakWithSynthesis(current);
+      if (audio) {
+        audio.onended = audio.onpause = audio.onerror = null;
+        audio.pause();
+        audio.currentTime = 0;
+      }
+      if (phase === 'playing') startBudget(current);
+      phase = 'pending';
+      label();
+      try { speakWithSynthesis(current); } catch { failed(); }
     } else {
       failed();
     }
   };
   const click = async (event: Event) => {
     event.stopPropagation();
-    if (playing) { stop(); return; }
+    if (phase !== 'idle') { stop(); return; }
     active?.();
     active = stop;
-    hasError = false;
-    playing = true;
+    failure = undefined;
+    phase = 'pending';
     label();
     const current = ++attempt;
+    startBudget(current);
     try {
       if (audio) {
-        audio.currentTime = 0;
-        await audio.play();
-        if (disposed || !playing || active !== stop) audio.pause();
+        if (audioUsed) {
+          // Media events carry no attempt ID; retries need their own native element.
+          audio.onended = audio.onpause = audio.onerror = null;
+          audio.removeAttribute('src');
+          audio.load();
+          audio = new Audio(audioSource);
+          audio.preload = 'none';
+        }
+        audioUsed = true;
+        const media = audio;
+        const finished = () => {
+          if (disposed || current !== attempt) return;
+          window.clearTimeout(startupTimer);
+          attempt++;
+          if (active === stop) active = undefined;
+          phase = 'idle';
+          label();
+        };
+        media.onended = finished;
+        media.onpause = () => { if (phase === 'playing' && media.paused) finished(); };
+        media.onerror = () => handlePlaybackFailure(current, isCdn);
+        media.currentTime = 0;
+        await media.play();
+        if (disposed || current !== attempt || active !== stop || fallbackHandledAttempt === current) {
+          media.pause();
+          return;
+        }
+        window.clearTimeout(startupTimer);
+        phase = 'playing';
+        label();
       } else {
         speakWithSynthesis(current);
       }
@@ -194,23 +274,18 @@ export function mountPronunciationPlayer(root: HTMLElement): () => void {
   status.textContent = '';
   button.addEventListener('click', click);
   button.addEventListener('keydown', keydown);
+  window.addEventListener('pagehide', stop);
+  document.addEventListener('astro:before-swap', stop);
   const localeObserver = new MutationObserver(label);
   localeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-chrome-locale'] });
   if (lemma) {
     const attachAudio = (file: string, fromCdn: boolean) => {
-      audio = new Audio(`${getAudioBase()}${file}`);
+      audioSource = `${getAudioBase()}${file}`;
+      audio = new Audio(audioSource);
       isCdn = fromCdn;
       audio.preload = 'none';
-      audio.onended = () => { attempt++; playing = false; label(); };
-      audio.onpause = () => { attempt++; playing = false; label(); };
       audio.onerror = () => {
-        if (fromCdn) {
-          if (playing) {
-            handlePlaybackFailure(attempt, true);
-          }
-        } else {
-          failed();
-        }
+        if (!fromCdn) failed();
       };
       label();
       button.hidden = false;
@@ -265,6 +340,8 @@ export function mountPronunciationPlayer(root: HTMLElement): () => void {
     }
     button.removeEventListener('click', click);
     button.removeEventListener('keydown', keydown);
+    window.removeEventListener('pagehide', stop);
+    document.removeEventListener('astro:before-swap', stop);
     localeObserver.disconnect();
     mounted.delete(root);
   };

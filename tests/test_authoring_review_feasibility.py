@@ -25,6 +25,7 @@ import delegate
 from scripts.orchestration import job_host_exec
 from scripts.review import record_cf_verdict as recorder
 from scripts.review.model_catalog import ModelCatalogError
+from tests.claude_route_accounts import HOST_ACCOUNT
 
 REPOSITORY = "learn-ukrainian/learn-ukrainian.github.io"
 CLAUDE_ADAPTER = "scripts/agent_runtime/adapters/claude.py"
@@ -213,7 +214,7 @@ def facts(repo: MiniRepo, tasks: Path, *, writer: str | None = None, owned=("doc
 
 
 def selected(fact, risk: str) -> str | None:
-    resolution = recorder.structural_review_route(fact, risk=risk)
+    resolution = recorder.structural_review_route(fact, risk=risk, claude_account=HOST_ACCOUNT)
     return resolution.selected.name if resolution.selected else None
 
 
@@ -453,7 +454,7 @@ def test_cursor_auto_incoming_writer_adds_only_cursor_family(repo, tasks):
     # AGY remains independent; native Grok also remains eligible while its
     # Cursor transport cannot review a Cursor-authored branch.
     assert selected(facts(repo, tasks, writer=OPUS), "medium") == "gemini-3.8-flash-high"
-    resolution = recorder.structural_review_route(auto, risk="medium")
+    resolution = recorder.structural_review_route(auto, risk="medium", claude_account=HOST_ACCOUNT)
     assert resolution.selected.name == "gemini-3.8-flash-high"
     trace = {entry.name: entry for entry in resolution.trace}
     assert trace["grok-4.7"].status == "eligible"
@@ -483,7 +484,7 @@ def test_claude_adapter_raises_risk_and_excludes_every_claude_reviewer(repo, tas
     repo.commit(GROK)
     repo.commit(SOL, path=CLAUDE_ADAPTER)
     fact = facts(repo, tasks, writer=SOL, owned=(CLAUDE_ADAPTER,))
-    resolution = recorder.structural_review_route(fact, risk="low")
+    resolution = recorder.structural_review_route(fact, risk="low", claude_account=HOST_ACCOUNT)
 
     assert fact.subject_seats == {"claude"}
     assert resolution.resolved_risk == "critical" and resolution.selected is None
@@ -2314,7 +2315,7 @@ def test_pr_review_facts_drop_a_main_squash_merged_onto_a_stale_base(repo, tasks
 
 
 def _assert_admits_a_reviewer_outside(fact):
-    resolution = recorder.structural_review_route(fact, risk="medium")
+    resolution = recorder.structural_review_route(fact, risk="medium", claude_account=HOST_ACCOUNT)
     assert resolution.fail_closed_reason is None
     assert resolution.selected is not None
     assert resolution.selected.family != fact.incoming_family
@@ -2615,9 +2616,9 @@ def test_verified_dependabot_branch_is_attributed_reviewed_and_recorded_without_
     assert fact.existing_families == {"verified_app_bot"} and fact.app_bot_commits == (head,)
     assert fact.receipt()["app_bot_commits"] == [head] and "authorship" not in fact.receipt()
     # A bot has no model and no model family: no reviewer family is excluded, the risk floor still binds.
-    inputs = fact.resolver_inputs(risk="critical")
+    inputs = fact.resolver_inputs(risk="critical", claude_account=HOST_ACCOUNT)
     assert inputs.author_models == ()
-    trace = {entry.name: entry for entry in recorder.structural_review_route(fact, risk="critical").trace}
+    trace = {entry.name: entry for entry in recorder.structural_review_route(fact, risk="critical", claude_account=HOST_ACCOUNT).trace}
     assert {trace["claude-opus-5-5"].status, trace["openai_frontier"].status} <= {"selected", "eligible"}
     assert "same family" not in " ".join(str(entry.reason) for entry in trace.values())
     assert selected(fact, "critical") is not None

@@ -6,6 +6,7 @@ import {
   heritageToMatchUp,
   heritageToUnjumble,
   selectHeritagePracticePresentation,
+  type HeritagePracticeContext,
 } from '@site/src/lib/lexicon/practice-activity-adapters';
 import { cardKey, type PracticeHeritageItem } from '@site/src/lib/lexicon/srs';
 
@@ -32,6 +33,75 @@ function heritage(overrides: Partial<PracticeHeritageItem> = {}): PracticeHerita
 }
 
 describe('heritage practice activity adapters', () => {
+  test('#10705 P14 baseline: unknown and disallowed contexts exclude sentence ordering', () => {
+    for (const context of [{ source: 'unknown' }, { source: 'stored', level: 'B2' }] as const) {
+      const kinds = new Set(Array.from({ length: 64 }, (_, seed) =>
+        selectHeritagePracticePresentation(heritage(), seed, [], context).kind));
+      expect(kinds).toEqual(new Set(['mc', 'error-correction', 'fill-in', 'mark-the-words']));
+    }
+  });
+  test.each(['A1', 'A2', 'B1'] as const)('#10705 preserves literal allowed-context seed choices for %s', (level) => {
+    const context: HeritagePracticeContext = { source: 'stored', level };
+    expect(Array.from({ length: 16 }, (_, seed) =>
+      selectHeritagePracticePresentation(heritage(), seed, [], context).kind)).toEqual([
+      'fill-in', 'unjumble', 'unjumble', 'mc',
+      'mark-the-words', 'unjumble', 'fill-in', 'mark-the-words',
+      'mc', 'mark-the-words', 'fill-in', 'error-correction',
+      'mark-the-words', 'error-correction', 'unjumble', 'mc',
+    ]);
+    expect(selectHeritagePracticePresentation(heritage(), 1, [], context)).toEqual({
+      kind: 'unjumble',
+      item: {
+        words: 'дім / щодня. / бачу / Я',
+        answer: 'Я бачу дім щодня.',
+        hint: 'Потрібне питоме українське слово.',
+        wordsAreJumbled: true,
+      },
+    });
+  });
+
+  test.each(['B2', 'C1', 'C2', null] as const)('#10705 filters before modulo for %s and retains every alternative', (level) => {
+    const context: HeritagePracticeContext = level === null
+      ? { source: 'unknown' } : { source: 'stored', level };
+    expect(Array.from({ length: 16 }, (_, seed) =>
+      selectHeritagePracticePresentation(heritage(), seed, [], context).kind)).toEqual([
+      'error-correction', 'mc', 'mark-the-words', 'mc',
+      'mark-the-words', 'fill-in', 'mark-the-words', 'mark-the-words',
+      'mark-the-words', 'error-correction', 'error-correction', 'mc',
+      'fill-in', 'fill-in', 'mc', 'fill-in',
+    ]);
+    const companions = [heritage(), heritage({
+      heritageId: 'heritage-adapter-fixture-2', lemmaId: 'knyha', srsKey: cardKey('knyha', 'heritage'),
+      prompt: 'Я читаю ___ щодня.', answer: 'книгу', calque: 'кнігу',
+      options: [{ label: 'книгу' }, { label: 'кнігу' }, { label: 'газету' }],
+    })];
+    expect(new Set(Array.from({ length: 128 }, (_, seed) =>
+      selectHeritagePracticePresentation(companions[0]!, seed, companions, context).kind)))
+      .toEqual(new Set(['mc', 'error-correction', 'fill-in', 'match-up', 'mark-the-words']));
+    expect(selectHeritagePracticePresentation(heritage({ prompt: '___ і ___' }), 1, [], context))
+      .toEqual({ kind: 'mc' });
+  });
+
+  test('#10705 explicit context never overrides structural eligibility and default context fails closed', () => {
+    for (let seed = 0; seed < 64; seed += 1) {
+      expect(selectHeritagePracticePresentation(heritage({ prompt: 'Це ___.' }), seed, [],
+        { source: 'local', level: 'A1' }).kind).not.toBe('unjumble');
+      expect(selectHeritagePracticePresentation(heritage(), seed).kind).not.toBe('unjumble');
+    }
+  });
+
+  test('#10705 conditional resume uses the same context and presentation inputs', () => {
+    const item = heritage();
+    const context: HeritagePracticeContext = { source: 'local', level: 'A2' };
+    expect(selectHeritagePracticePresentation(item, 1, [], context))
+      .toEqual(selectHeritagePracticePresentation({ ...item }, 1, [], { ...context }));
+    expect(selectHeritagePracticePresentation(item, 1, [], { source: 'unknown' }))
+      .toEqual({ kind: 'mc' });
+    expect(selectHeritagePracticePresentation({ ...item, prompt: 'Це ___.', }, 1, [], context).kind)
+      .not.toBe('unjumble');
+    expect(item.srsKey).toBe('dim::heritage');
+  });
+
   // Exact source frames from registry/lexicon/heritage_pairs.yaml at issue #7769.
   test.each([
     ["Ти вже хочби пильнував вилову, а ___ розтрусив на подвір'ї найліпшу рибу.", 'тим', 'то'],
@@ -46,7 +116,7 @@ describe('heritage practice activity adapters', () => {
     expect(heritageToMatchUp(item, [item, heritage()], 42)).toBeNull();
     for (let seed = 0; seed < 64; seed += 1) {
       expect(['mc', 'unjumble']).toContain(
-        selectHeritagePracticePresentation(item, seed, [item, heritage()]).kind,
+        selectHeritagePracticePresentation(item, seed, [item, heritage()], { source: 'stored', level: 'A2' }).kind,
       );
     }
   });
@@ -212,7 +282,7 @@ describe('heritage practice activity adapters', () => {
     const kinds = new Set(
       Array.from(
         { length: 64 },
-        (_unused, seed) => selectHeritagePracticePresentation(heritage(), seed).kind,
+        (_unused, seed) => selectHeritagePracticePresentation(heritage(), seed, [], { source: 'stored', level: 'A2' }).kind,
       ),
     );
     expect(kinds).toEqual(
@@ -240,7 +310,7 @@ describe('heritage practice activity adapters', () => {
       Array.from(
         { length: 128 },
         (_unused, seed) =>
-          selectHeritagePracticePresentation(companions[0]!, seed, companions).kind,
+          selectHeritagePracticePresentation(companions[0]!, seed, companions, { source: 'stored', level: 'A2' }).kind,
       ),
     );
     expect(kinds).toContain('match-up');

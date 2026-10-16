@@ -5,6 +5,8 @@ from __future__ import annotations
 import json
 import subprocess
 import sys
+import urllib.request
+from copy import deepcopy
 from dataclasses import asdict
 from pathlib import Path
 from unittest.mock import patch
@@ -15,6 +17,21 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 
 import delegate
 from scripts.common.git_context import sanitized_git_env
+from tests.claude_route_accounts import HOST_ACCOUNT
+
+
+@pytest.fixture(autouse=True)
+def fixed_reviewer_headroom(monkeypatch, reviewer_headroom_snapshot):
+    """Exercise the admission floor with fixed capacity, never host quota (#10764)."""
+    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: deepcopy(reviewer_headroom_snapshot))
+
+
+@pytest.mark.parametrize("as_request", [False, True])
+def test_uninjected_routing_snapshot_fails_before_network(as_request):
+    url = "https://example.invalid/api/state/routing-budget?fresh_codexbar=true"
+    request = urllib.request.Request(url) if as_request else url
+    with pytest.raises(pytest.fail.Exception, match="live reviewer routing snapshot read: inject a fixed snapshot"):
+        urllib.request.urlopen(request, timeout=1)
 
 
 def _git(repo, *args):
@@ -242,6 +259,7 @@ def test_admission_does_not_call_a_ukrainian_path_collector():
         review_profile="ukrainian",
         review_attempt=True,
         review_changed_paths=unexpected_paths,
+        claude_account=HOST_ACCOUNT,
     )
     assert (target.recipient, target.model) == ("claude", "claude-sonnet-5-5")
 

@@ -27,6 +27,7 @@ from scripts.agent_runtime.target_admission import (
 )
 from scripts.ai_agent_bridge import _channels, _db
 from scripts.orchestration import slot_routing
+from tests.claude_route_accounts import HOST_ACCOUNT
 
 _TOKEN = "KIMI CODING-ONLY"
 _KIMI_HOLDERS = ("kimi", "kimicc", "kimi-infra", "acpx-kimi-shadow")
@@ -281,6 +282,7 @@ def test_explicit_review_risk_dispatch_refuses_before_target_reads(seat, model, 
             review_facts=unexpected,
             review_alias_model_resolver=unexpected,
             route=unexpected,
+            claude_account=HOST_ACCOUNT,
         )
     assert all(value in str(refused.value) for value in ("low", "medium", "high", "critical"))
 
@@ -316,6 +318,7 @@ def test_explicit_review_risk_direct_agy_requires_valid_declaration(tmp_path, mo
             snapshot=None,
             budget_seat="agy",
             facts=facts,
+            claude_account=HOST_ACCOUNT,
         )
     assert all(value in str(refused.value) for value in ("low", "medium", "high", "critical"))
 
@@ -348,6 +351,7 @@ def test_explicit_review_risk_selected_agy_cannot_bypass_declaration(monkeypatch
             review_dispatch=True,
             route=None if stage == "registry" else route,
             resolver=(lambda _seat: "agy") if stage == "registry" else None,
+            claude_account=HOST_ACCOUNT,
         )
     if stage == "budget":
         assert calls == [None, {"agents": {}}]
@@ -368,6 +372,7 @@ def test_explicit_review_risk_security_floor_excludes_agy(risk, path_kind):
             review_risk=risk,
             review_attempt=True,
             **paths,
+            claude_account=HOST_ACCOUNT,
         )
 
 
@@ -395,6 +400,7 @@ def test_explicit_review_risk_other_work_remains_unaffected(seat, model, entry, 
         review=entry == "flag",
         review_dispatch=entry == "dispatch",
         review_profile=profile,
+        claude_account=HOST_ACCOUNT,
     )
     assert (target.recipient, target.model) == (seat, model)
 
@@ -543,11 +549,15 @@ def test_review_admission_uses_complete_branch_authorship_like_the_recorder(tmp_
     }
 
     # Without the facts, the latest author alone admits an earlier author's family.
-    (legacy,) = resolve_and_admit(("claude",), model="claude-opus-5-5", **trusted)
+    (legacy,) = resolve_and_admit(("claude",), model="claude-opus-5-5", **trusted, claude_account=HOST_ACCOUNT)
     assert legacy.recipient == "claude"
     with pytest.raises(ReviewAdmissionRefused, match="REVIEW_ROUTE_REFUSED"):
-        resolve_and_admit(("claude",), model="claude-opus-5-5", review_facts=facts, **trusted)
-    (grok,) = resolve_and_admit(("cursor",), model="grok-4.7-high", review_facts=lambda: facts, **trusted)
+        resolve_and_admit(
+            ("claude",), model="claude-opus-5-5", review_facts=facts, **trusted, claude_account=HOST_ACCOUNT
+        )
+    (grok,) = resolve_and_admit(
+        ("cursor",), model="grok-4.7-high", review_facts=lambda: facts, **trusted, claude_account=HOST_ACCOUNT
+    )
     assert (grok.recipient, grok.model) == ("cursor", "grok-4.7-high")
 
     # The recorder reaches the same verdicts on the same facts.
@@ -571,6 +581,7 @@ def test_review_mode_requires_known_mode_and_complete_task_facts(mode):
             review_author_model="gpt-6.1-sol",
             review_risk="critical",
             review_mode=mode,
+            claude_account=HOST_ACCOUNT,
         )
 
 
@@ -603,6 +614,7 @@ def test_red_team_author_identity_refused_before_qualification(monkeypatch, revi
             review_mode="red_team",
             review_task_id=reviewer_id,
             review_facts=facts,
+            claude_account=HOST_ACCOUNT,
         )
 
 
@@ -628,6 +640,7 @@ def test_red_team_different_same_family_model_keeps_qualification_floor(monkeypa
             review_mode="red_team",
             review_task_id="other-task",
             review_facts=facts_for({"openai"}),
+            claude_account=HOST_ACCOUNT,
         )
     assert reached == []
 
@@ -656,6 +669,7 @@ def test_red_team_cross_seat_author_identity_refused(monkeypatch, seat, reviewer
             review_mode="red_team",
             review_task_id=reviewer_id,
             review_facts=facts,
+            claude_account=HOST_ACCOUNT,
         )
 
 
@@ -676,6 +690,7 @@ def test_red_team_language_lane_refused(scope):
             review_author_model="gpt-6.1-sol",
             review_risk="critical",
             **scope,
+            claude_account=HOST_ACCOUNT,
         )
 
 
@@ -720,6 +735,7 @@ def test_red_team_author_record_own_id_refused(tmp_path, monkeypatch, archived):
             review_mode="red_team",
             review_task_id="original-author",
             review_facts=facts,
+            claude_account=HOST_ACCOUNT,
         )
 
 
@@ -739,6 +755,7 @@ def test_red_team_same_model_any_harness_refused(seat, model):
             review_task_id="other-task",
             review_author_model="codex:gpt-6.1-sol-high",
             review_facts=facts_for({"openai"}),
+            claude_account=HOST_ACCOUNT,
         )
 
 
@@ -758,6 +775,7 @@ def test_red_team_no_validated_author_refused_without_comparison_model():
             review_mode="red_team",
             review_task_id="other-task",
             review_facts=facts,
+            claude_account=HOST_ACCOUNT,
         )
 
 
@@ -791,9 +809,9 @@ def test_red_team_admission_known_author_with_unknown_history(monkeypatch, expli
     if explicit in {"claude-opus-5-5", "unlisted-model"}:
         reason = "conflicting author identity" if explicit == "claude-opus-5-5" else "is not a catalog model"
         with pytest.raises(ReviewAdmissionRefused, match=reason):
-            resolve_and_admit(("codex",), **options)
+            resolve_and_admit(("codex",), **options, claude_account=HOST_ACCOUNT)
     else:
-        (target,) = resolve_and_admit(("codex",), **options)
+        (target,) = resolve_and_admit(("codex",), **options, claude_account=HOST_ACCOUNT)
         assert target.recipient == "codex" and target.model == "gpt-6.1-sol"
 
 
@@ -811,4 +829,5 @@ def test_red_team_malformed_routing_diagnostics_is_typed_refusal():
             review_task_id="other-review",
             review_facts=facts_for({"openai"}),
             review_initial_snapshot={"diagnostics": {}},
+            claude_account=HOST_ACCOUNT,
         )

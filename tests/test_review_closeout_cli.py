@@ -51,6 +51,8 @@ def _run_cli(state_file: Path, *args: str, real_process: bool = False) -> subpro
     project_root = Path(__file__).resolve().parent.parent
     command = [str(project_python()), "-m", "scripts.review.closeout_cli", "--state-file", str(state_file), *args]
     if real_process:
+        if args[0] == "resolve-reviewer" and "--routing-snapshot-file" not in args:
+            pytest.fail("real-process reviewer tests must inject --routing-snapshot-file")
         return subprocess.run(command, cwd=str(project_root), capture_output=True, text=True, timeout=30)
 
     # Every command still enters the CLI parser and checks its own result and
@@ -160,9 +162,19 @@ def test_resolve_reviewer_persists_resolution_to_state_file(tmp_path):
     just print JSON to stdout — drivers read the resolution back from disk."""
     state_file = tmp_path / "state.json"
     assert not state_file.exists()
+    snapshot_file = tmp_path / "routing-snapshot.json"
+    snapshot_file.write_text(json.dumps({"codex": "healthy", "claude": "healthy"}), encoding="utf-8")
 
     proc = _run_cli(
-        state_file, "resolve-reviewer", "--author-model", "claude", "--owned-path", "ordinary.py", real_process=True
+        state_file,
+        "resolve-reviewer",
+        "--author-model",
+        "claude",
+        "--owned-path",
+        "ordinary.py",
+        "--routing-snapshot-file",
+        str(snapshot_file),
+        real_process=True,
     )
     assert proc.returncode == 0, proc.stderr
 
@@ -176,6 +188,11 @@ def test_resolve_reviewer_persists_resolution_to_state_file(tmp_path):
     assert resolution["policy_version"] == "deterministic-formal-routing.v2"
     # On-disk receipt matches the stdout payload exactly.
     assert resolution == json.loads(proc.stdout)
+
+
+def test_real_process_reviewer_requires_injected_snapshot(tmp_path):
+    with pytest.raises(pytest.fail.Exception, match="must inject --routing-snapshot-file"):
+        _run_cli(tmp_path / "state.json", "resolve-reviewer", "--author-model", "claude", real_process=True)
 
 
 def test_code_reviewer_without_target_or_owned_path_refuses_with_typed_reason(tmp_path):

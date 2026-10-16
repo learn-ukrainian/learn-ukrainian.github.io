@@ -28,7 +28,13 @@ from typing import Any
 from scripts.common.repo_root import main_checkout_root
 from scripts.common.task_store_paths import tasks_dir as default_tasks_dir
 from scripts.fleet import ignored_task_output, pr_identity
-from scripts.orchestration import reap_worktrees, reaper_lifecycle, worktree_claims, worktree_paths
+from scripts.orchestration import (
+    lifecycle_observation,
+    reap_worktrees,
+    reaper_lifecycle,
+    worktree_claims,
+    worktree_paths,
+)
 from scripts.orchestration.execution_safe_git import run_git as safe_git
 
 ROOT = main_checkout_root(Path(__file__).resolve().parents[2])
@@ -339,6 +345,7 @@ def _reap_main_worktree(
     repo_root: Path,
     apply: bool,
     tasks_dir: Path | None = None,
+    no_lifecycle_observation: str | None = None,
 ) -> dict[str, Any]:
     """Evaluate and optionally reap the dispatch worktree bound to task_id."""
     tasks_dir = default_tasks_dir() if tasks_dir is None else tasks_dir
@@ -480,6 +487,8 @@ def _reap_main_worktree(
             bound_path=bound_path,
             apply=apply,
             include_terminal_dispatches=True,
+            tasks_dir=tasks_dir,
+            no_lifecycle_observation=no_lifecycle_observation,
         )
         if row is None:
             return {
@@ -542,6 +551,8 @@ def _reap_main_worktree(
         bound_path=bound_path,
         apply=apply,
         include_terminal_dispatches=True,
+        tasks_dir=tasks_dir,
+        no_lifecycle_observation=no_lifecycle_observation,
     )
     if row is None:
         return {
@@ -636,9 +647,15 @@ def _reap_via_canonical(
     bound_path: Path,
     apply: bool,
     include_terminal_dispatches: bool,
+    tasks_dir: Path | None = None,
+    no_lifecycle_observation: str | None = None,
 ) -> dict[str, Any] | None:
     """Delegate to the canonical P0 reaper for one bound dispatch worktree."""
     try:
+        observations = lifecycle_observation.before_reap(
+            repo_root, bound_path, tasks_dir=tasks_dir,
+            no_lifecycle_observation=no_lifecycle_observation,
+        ) if apply else []
         rows = reap_worktrees.reap_worktrees(
             repo_root=repo_root,
             apply=apply,
@@ -649,7 +666,7 @@ def _reap_via_canonical(
             include_terminal_dispatches=include_terminal_dispatches,
             require_activity_probe=apply,
         )
-    except RuntimeError as exc:
+    except (OSError, ValueError, KeyError, TypeError, RuntimeError) as exc:
         return {
             "path": str(bound_path),
             "action": "retained",
@@ -661,6 +678,7 @@ def _reap_via_canonical(
     row = rows[0]
     return {
         "path": row.path,
+        "lifecycle_observations": observations,
         "action": row.action,
         "reason": row.reason,
         "error": row.error,
@@ -905,6 +923,7 @@ def post_task_reap(
     apply: bool = False,
     include_acp_runtime: bool = True,
     release_retention: bool = False,
+    no_lifecycle_observation: str | None = None,
 ) -> dict[str, Any]:
     """Return a reap report for ``task_id``; delete only when ``apply`` is True."""
     tasks_dir = tasks_dir or default_tasks_dir()
@@ -950,6 +969,7 @@ def post_task_reap(
         repo_root=repo_root,
         apply=apply,
         tasks_dir=tasks_dir,
+        **({"no_lifecycle_observation": no_lifecycle_observation} if no_lifecycle_observation is not None else {}),
     )
     acp_results: list[dict[str, Any]] = []
     if include_acp_runtime:
@@ -1150,6 +1170,10 @@ Related: #9934; scripts/orchestration/reap_worktrees.py; docs/runbooks/worktree-
     )
     parser.add_argument("--task-id", required=True, help="Task id whose worktree should be reaped")
     parser.add_argument(
+        "--no-lifecycle-observation", metavar="REASON",
+        help="Bypass lifecycle capture with an explicit reason logged in the report (default: capture required).",
+    )
+    parser.add_argument(
         "--release-retention",
         action="store_true",
         help="Release creator and settled reused successors after current-byte retrieval (requires --apply; default: off)",
@@ -1186,6 +1210,7 @@ Related: #9934; scripts/orchestration/reap_worktrees.py; docs/runbooks/worktree-
         apply=args.apply,
         include_acp_runtime=args.include_acp_runtime,
         release_retention=args.release_retention,
+        no_lifecycle_observation=args.no_lifecycle_observation,
     )
 
     print(json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True))

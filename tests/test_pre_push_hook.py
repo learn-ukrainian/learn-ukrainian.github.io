@@ -18,6 +18,8 @@ GUARD_PATH = REPO_ROOT / ".githooks" / "check-pytest-stamp.py"
 STAMP_PATH = REPO_ROOT / "agents_extensions" / "shared" / "hooks" / "stamp-pytest.sh"
 PYTHON = project_python()
 ZERO_SHA = "0" * 40
+# Disposable-remote tests exercise their own hooks, without the agent shell's push wrapper.
+GIT = os.environ.get("AGENT_REAL_GIT") or "git"
 
 
 def _load_hook_module():
@@ -52,7 +54,7 @@ def _git_environment(extra_env: dict[str, str] | None = None) -> dict[str, str]:
 
 def _git(repo: Path, *args: str, env: dict[str, str] | None = None) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
-        ["git", *args],
+        [GIT, *args],
         capture_output=True,
         check=True,
         cwd=repo,
@@ -728,7 +730,7 @@ def test_no_verify_skips_hook_for_an_actual_push(tmp_path):
     repo, _, _ = _repo_with_change(tmp_path)
     remote = tmp_path / "remote.git"
     subprocess.run(
-        ["git", "init", "--bare", str(remote)],
+        [GIT, "init", "--bare", str(remote)],
         check=True,
         capture_output=True,
         env=_git_environment(),
@@ -739,7 +741,7 @@ def test_no_verify_skips_hook_for_an_actual_push(tmp_path):
     _configure_guard_only_hook(repo, tmp_path)
 
     result = subprocess.run(
-        ["git", "push", "--no-verify", "origin", "HEAD:main"],
+        [GIT, "push", "--no-verify", "origin", "HEAD:main"],
         capture_output=True,
         check=False,
         cwd=repo,
@@ -755,7 +757,7 @@ def test_actual_head_to_main_push_is_blocked_from_a_non_main_branch(tmp_path):
     repo, _, _ = _repo_with_change(tmp_path)
     remote = tmp_path / "remote.git"
     subprocess.run(
-        ["git", "init", "--bare", str(remote)],
+        [GIT, "init", "--bare", str(remote)],
         check=True,
         capture_output=True,
         env=_git_environment(),
@@ -771,7 +773,7 @@ def test_actual_head_to_main_push_is_blocked_from_a_non_main_branch(tmp_path):
     _git(repo, "commit", "-m", "second change")
 
     result = subprocess.run(
-        ["git", "push", "origin", "HEAD:main"],
+        [GIT, "push", "origin", "HEAD:main"],
         capture_output=True,
         check=False,
         cwd=repo,
@@ -789,7 +791,7 @@ def test_actual_head_to_main_push_accepts_stamp_for_the_invoking_worktree(tmp_pa
     remote = tmp_path / "remote.git"
     stamp_dir = tmp_path / "stamps"
     subprocess.run(
-        ["git", "init", "--bare", str(remote)],
+        [GIT, "init", "--bare", str(remote)],
         check=True,
         capture_output=True,
         env=_git_environment(),
@@ -814,7 +816,7 @@ def test_actual_head_to_main_push_accepts_stamp_for_the_invoking_worktree(tmp_pa
     )
 
     result = subprocess.run(
-        ["git", "push", "origin", "HEAD:main"],
+        [GIT, "push", "origin", "HEAD:main"],
         capture_output=True,
         check=False,
         cwd=repo,

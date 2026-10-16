@@ -15,6 +15,7 @@ from scripts.fleet.reset_reserve import unavailable_reserve
 from scripts.review.reviewer_resolver import OPENAI_FRONTIER, ResolverInputs, evaluate_candidate, resolve_reviewer
 from tests.api.test_routing_budget import _configure_base
 from tests.api.test_routing_budget_endpoint import _record
+from tests.claude_route_accounts import HOST_ACCOUNT
 
 
 @pytest.mark.parametrize(
@@ -131,7 +132,7 @@ def test_claude_headroom_reaches_routing_consumers(visible, monkeypatch, tmp_pat
     )
     assert recommendation["primary_agent_for_code"] == ("claude" if visible else "codex")
     result = resolve_reviewer(
-        ResolverInputs(author_model="gpt-6.1-sol", review_profile="code", risk="critical", routing_snapshot=data)
+        ResolverInputs(author_model="gpt-6.1-sol", review_profile="code", risk="critical", routing_snapshot=data, claude_account=HOST_ACCOUNT)
     )
     assert result.selected is not None
     assert result.selected.route == "claude"
@@ -278,6 +279,7 @@ def test_delegate_budget_guard_covered_deficit(reserve_case, monkeypatch):
         "codex",
         requested_model="gpt-6.1-sol",
         fallbacks={"codex": "claude"},
+        claude_account=HOST_ACCOUNT,
     )
     assert result == ("codex" if covered else "claude")
     assert ("codex" in delegate._budget_cooler_lanes({"codex": info}, exclude="claude")) is covered
@@ -308,7 +310,7 @@ def test_reviewer_resolver_covered_deficit(reserve_case, grok_status):
             author_model="claude-opus-5-5",
             review_profile="code",
             risk="critical",
-            routing_snapshot={"agents": agents},
+            routing_snapshot={"agents": agents}, claude_account=HOST_ACCOUNT,
         )
     )
     sol = next(candidate for candidate in result.trace if candidate.name == "openai_frontier")
@@ -362,7 +364,7 @@ def test_credit_relief_is_model_specific(reserve_case, monkeypatch):
         OPENAI_FRONTIER,
         ResolverInputs(
             author_model="claude-opus-5-5",
-            routing_snapshot={"agents": {"codex": info}},
+            routing_snapshot={"agents": {"codex": info}}, claude_account=HOST_ACCOUNT,
         ),
     )
     assert result.status == "eligible" and result.credit is None
@@ -440,7 +442,7 @@ def test_cover_never_relaxes_hot_from_other_sources(reserve_case, source):
     assert capacity_pick.is_avoid_lane(info, lane="codex")
     result = evaluate_candidate(
         OPENAI_FRONTIER,
-        ResolverInputs(author_model="claude-opus-5-5", routing_snapshot={"agents": {"codex": info}}),
+        ResolverInputs(author_model="claude-opus-5-5", routing_snapshot={"agents": {"codex": info}}, claude_account=HOST_ACCOUNT),
     )
     assert result.status == "eligible" and result.credit is None
 
@@ -565,5 +567,7 @@ def test_delegate_credit_relief_checks_lane_default(reserve_case, monkeypatch, d
         },
     )
     monkeypatch.setattr(delegate, "_load_reset_reserve", lambda *_a, **_k: unavailable_reserve())
-    result = delegate._resolve_agent_with_budget_guard("codex", fallbacks={"codex": "claude"})
+    result = delegate._resolve_agent_with_budget_guard(
+        "codex", fallbacks={"codex": "claude"}, claude_account=HOST_ACCOUNT
+    )
     assert result == ("codex" if covered and default_model == "gpt-6.1-sol" else "claude")

@@ -4,6 +4,15 @@ import type { MatchPair } from '../../components/MatchUp';
 import type { MarkTheWordsActivityProps } from '../../components/MarkTheWords';
 import type { UnjumbleQuestionProps } from '../../components/Unjumble';
 import { seededPracticeHash, type PracticeHeritageItem } from './srs';
+import type { CefrLevel } from './levels';
+
+export type HeritagePracticeContext =
+  | { source: 'unknown' }
+  | { source: 'stored' | 'local'; level: CefrLevel };
+
+// Mirrors unjumble in scripts/pipeline/config_tables.py ACTIVITY_CONFIGS:
+// base rows a1, a2 and b1-core allow it; b2, c1-core and c2 forbid it.
+const UNJUMBLE_LEVELS = new Set<CefrLevel>(['A1', 'A2', 'B1']);
 
 export type HeritagePracticePresentation =
   | { kind: 'mc' }
@@ -265,13 +274,16 @@ export function heritageToMatchUp(
 }
 
 /**
- * A presentation is derived from the persisted session seed, so a resumed card
- * keeps its interaction while sharing the untouched heritage card key and SRS state.
+ * A resumed heritage card preserves its presentation only when the session seed,
+ * presentation input, version and explicit learner context match. It shares the
+ * existing heritage card key and SRS state; one-review accounting holds even when
+ * those presentation inputs differ.
  */
 export function selectHeritagePracticePresentation(
   item: PracticeHeritageItem,
   sessionSeed: number,
   availableItems: readonly PracticeHeritageItem[] = [],
+  context: HeritagePracticeContext = { source: 'unknown' },
 ): HeritagePracticePresentation {
   const presentations: HeritagePracticePresentation[] = [{ kind: 'mc' }];
   const errorCorrection = heritageToErrorCorrection(item);
@@ -284,7 +296,10 @@ export function selectHeritagePracticePresentation(
   if (matchUp) presentations.push({ kind: 'match-up', item: matchUp });
   const markTheWords = heritageToMarkTheWords(item);
   if (markTheWords) presentations.push({ kind: 'mark-the-words', item: markTheWords });
-  return presentations[
-    seededPracticeHash(sessionSeed, `heritage-presentation:${item.srsKey}`) % presentations.length
+  const eligible = context.source !== 'unknown' && UNJUMBLE_LEVELS.has(context.level)
+    ? presentations
+    : presentations.filter((presentation) => presentation.kind !== 'unjumble');
+  return eligible[
+    seededPracticeHash(sessionSeed, `heritage-presentation:${item.srsKey}`) % eligible.length
   ];
 }

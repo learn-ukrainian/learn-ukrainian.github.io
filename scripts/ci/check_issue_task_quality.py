@@ -21,6 +21,7 @@ if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from scripts.common import github_client
+from scripts.common.repo_root import main_checkout_root
 from scripts.orchestration import fleet_repos
 from scripts.orchestration import issue_stream_audit as audit
 from scripts.orchestration import task_lifecycle as lifecycle
@@ -28,11 +29,18 @@ from scripts.publish.github import read
 
 ROOT = Path(__file__).resolve().parents[2]
 MAX_AGE_S = 3600
+# delegate.py gives --issue --strict 135 seconds: 60 for the issue, 60 for
+# membership (cache validation and any live audit included), 15 for overhead.
 NON_OVERRIDABLE = frozenset({"dod_structure_malformed", "membership_conflicting_ancestry"})
 
 
 class _DeadlineExpired(BaseException):
     """Escape the auditor's retry handlers, then translate at the I/O boundary."""
+
+
+@dataclass
+class MembershipProgress:
+    stage: str = "registry"
 
 
 def error(section: str, field: str, code: str, message: str) -> dict:
@@ -49,7 +57,7 @@ def membership_error(code: str) -> dict:
 
 @contextmanager
 def time_budget(seconds: float = 60):
-    """Bound membership observation, including audit retries."""
+    """Bound issue fetching or membership observation, including audit retries."""
 
     def expired(_signum, _frame):
         raise _DeadlineExpired
@@ -83,14 +91,45 @@ def registry_absence(repository: str) -> dict:
     return membership_error("membership_registry_absent")
 
 
-def live_audit(repository: str, registry: dict, *, root: Path = ROOT) -> dict:
+def live_audit(
+    repository: str, registry: dict, *, root: Path = ROOT, progress: MembershipProgress | None = None
+) -> dict:
     """Compose the existing live auditor in memory. Never write its shared cache."""
+    progress = progress or MembershipProgress()
+    progress.stage = "live_audit_repository"
     observed_repository = "/".join(audit._repo_owner_name(root))
     if observed_repository.casefold() != repository.casefold():
         raise ValueError("audit repository does not match target")
+    progress.stage = "live_audit_open_issues"
     issues = audit.fetch_open_issues(root)
     warnings: list[dict] = []
-    membership = audit.fetch_tree_membership({n for ns in registry.values() for n in ns}, root, warnings)
+    roots = {n for ns in registry.values() for n in ns}
+    root_positions = {n: i for i, n in enumerate(sorted(roots), 1)}
+    branch_positions = dict(root_positions)
+    retry_budget = audit._RetryBudget()
+
+    def fetch_batch(cursors):
+        pages = {}
+        for number, cursor in cursors.items():
+            position = branch_positions[number]
+            progress.stage = f"live_audit_root_{position}_of_{len(roots)}_issue_{number}"
+            page = audit._fetch_subissue_batch({number: cursor}, root, roots, retry_budget)
+            pages.update(page)
+            node = page.get(number)
+            if isinstance(node, dict):
+                for child in (node.get("subIssues") or {}).get("nodes") or ():
+                    if not isinstance(child, dict) or type(child.get("number")) is not int:
+                        continue
+                    child_repo = (child.get("repository") or {}).get("nameWithOwner")
+                    if isinstance(child_repo, str) and child_repo.casefold() != repository.casefold():
+                        continue
+                    branch_positions.setdefault(child["number"], position)
+        return pages
+
+    # Keep the auditor's shared forest traversal and completeness semantics.
+    # Split transport batches so a timeout identifies the root and exact call.
+    membership = audit._tree_membership(roots, fetch_batch, warnings, repo_slug=repository)
+    progress.stage = "live_audit_classification"
     report = audit.classify(issues, registry, membership, incomplete_nodes=audit._unread_warning_nodes(warnings))
     report.update(repository=observed_repository, warnings=warnings)
     if len(issues) >= 500:
@@ -157,12 +196,17 @@ def evaluate_membership(
     roots = [n for ns in registry.values() for n in ns]
     if number in roots:
         return section("root_exempt")
-    index = (report or {}).get("effective_membership", {})
     if report is not None:
         if not audit.membership_report_is_complete(report):
             return membership_error("membership_audit_incomplete")
         if audit.validate_membership_report(report, MAX_AGE_S) is None:
             return membership_error("membership_audit_stale")
+        observed_repository = report.get("repository")
+        if not isinstance(observed_repository, str) or observed_repository.casefold() != repository.casefold():
+            return membership_error("membership_audit_repository_mismatch")
+        if report.get("streams") != {k: sorted(v) for k, v in registry.items()}:
+            return membership_error("membership_audit_registry_mismatch")
+    index = (report or {}).get("effective_membership", {})
     entry = index.get(str(number), {})
     if entry and entry.get("unique_stream") is not True:
         return membership_error("membership_conflicting_ancestry")
@@ -201,8 +245,22 @@ def evaluate_membership(
     return membership_error(code)
 
 
+def cached_membership(issue: dict, repository: str, number: int, registry: dict, parents: dict) -> dict:
+    """Read shared audit evidence, then apply the canonical validator and resolver."""
+    path = main_checkout_root(ROOT) / "batch_state" / "issue_stream_audit.json"
+    try:
+        report = json.loads(path.read_text(encoding="utf-8"))
+    except FileNotFoundError:
+        return membership_error("membership_audit_cache_missing")
+    except (OSError, ValueError):
+        return membership_error("membership_audit_cache_unreadable")
+    return evaluate_membership(issue, repository, number, registry, parents, report)
+
+
 def observe_membership(issue: dict, repository: str, number: int, *, audit_orphans: bool = True) -> dict:
-    """Walk bounded native ancestry; dispatch also audits targets with no parent."""
+    """Walk native ancestry; qualify cached or bounded live evidence for orphans."""
+    progress = MembershipProgress()
+    cache_rejection = None
     try:
         registry = registry_for(repository)
         if registry is None:
@@ -215,6 +273,7 @@ def observe_membership(issue: dict, repository: str, number: int, *, audit_orpha
         parents: dict = {}
         current = number
         for _ in range(8):
+            progress.stage = f"parent_{current}"
             parent = read_parent(repository, current)
             parents[current] = parent
             if (
@@ -227,14 +286,26 @@ def observe_membership(issue: dict, repository: str, number: int, *, audit_orpha
             if type(parent.get("number")) is not int:
                 raise ValueError("malformed parent")
             current = parent["number"]
-        report = live_audit(repository, registry) if audit_orphans and parents.get(number) is None else None
-        return evaluate_membership(issue, repository, number, registry, parents, report)
-    except (TimeoutError, subprocess.TimeoutExpired):
-        return membership_error("membership_timeout")
+        report = None
+        if audit_orphans and parents.get(number) is None:
+            progress.stage = "cached_audit_validation"
+            cached = cached_membership(issue, repository, number, registry, parents)
+            if cached["status"] == "PASS":
+                return cached
+            cache_rejection = cached["errors"][0]["code"]
+            progress.stage = "live_audit"
+            report = live_audit(repository, registry, progress=progress)
+        result = evaluate_membership(issue, repository, number, registry, parents, report)
+    except (_DeadlineExpired, TimeoutError, subprocess.TimeoutExpired):
+        code = "membership_timeout" if progress.stage.startswith("parent_") else f"membership_timeout_{progress.stage}"
+        result = membership_error(code)
     except github_client.GitHubRateLimited:
-        return membership_error("membership_rate_limited")
+        result = membership_error("membership_rate_limited")
     except (OSError, ValueError, KeyError, TypeError, RuntimeError, subprocess.SubprocessError):
-        return membership_error("membership_unknown")
+        result = membership_error("membership_unknown")
+    if cache_rejection and result["status"] != "PASS":
+        result["cache_rejection"] = cache_rejection
+    return result
 
 
 HTML_COMMENT_RE = re.compile(r"(?s)<!--.*?-->")
@@ -499,6 +570,8 @@ def main(argv: list[str] | None = None) -> int:
         epilog="Examples:\n  .venv/bin/python -m scripts.ci.check_issue_task_quality --issue 10565 --strict --json\n"
         "  .venv/bin/python -m scripts.ci.check_issue_task_quality --body-file card.md\n"
         "Outputs: stdout only; no audit cache writes. Issue fetch and membership each have a 60-second budget.\n"
+        "Parentless targets try a validated audit cache (maximum age 3600s) before a live audit.\n"
+        "Timeout codes identify the target fetch, cache validation, or live audit root and issue.\n"
         "Exit codes: 0 = advisory or PASS; 1 = strict WARN; 2 = invalid arguments.\n"
         "Related: docs/best-practices/task-quality.md, issue #10565.",
     )
@@ -526,7 +599,8 @@ def main(argv: list[str] | None = None) -> int:
 
     try:
         if args.issue is not None:
-            issue = fetch_issue(args.repo, args.issue)
+            with time_budget():
+                issue = fetch_issue(args.repo, args.issue)
             if args.trivial:
                 issue = {**issue, "labels": [{"name": "trivial"}]}
             try:
@@ -551,16 +625,18 @@ def main(argv: list[str] | None = None) -> int:
         UnicodeError,
         ValueError,
         RuntimeError,
-    ):
+    ) as exc:
+        timeout = isinstance(exc, (TimeoutError, subprocess.TimeoutExpired))
+        timeout_code = "membership_timeout_target_fetch"
         result = {
             "verdict": "WARN",
             "trivial": False,
-            "missing": ["input", "checker_error"],
+            "missing": ["input", "checker_error", *([timeout_code] if timeout else [])],
             "present": [],
             "notes": ["input_error"],
             "dor": section("unchecked"),
             "dod": section("unchecked"),
-            "membership": section("unchecked"),
+            "membership": section("unchecked", membership_error(timeout_code)["errors"] if timeout else []),
         }
 
     if args.json:

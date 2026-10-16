@@ -6,7 +6,10 @@ values here are synthetic test values, not any host's sizing.
 
 from __future__ import annotations
 
+import configparser
+import hashlib
 import os
+import re
 import subprocess
 from pathlib import Path
 
@@ -172,3 +175,119 @@ def test_never_restarts_or_stops_units(tmp_path: Path) -> None:
     calls = (tmp_path / "systemctl.log").read_text()
     for verb in ("restart", "stop", "kill", "start "):
         assert verb not in calls
+
+
+# CPU-time containment (#10735): the ceiling is documentation plus an inert example.
+CPU_EXAMPLE = REPO / "packaging/systemd/dropins/lu.slice.d/20-cpu.conf.example"
+RUNBOOK = REPO / "docs/runbooks/driver-memory-scope.md"
+
+
+def test_cpu_example_is_inert_and_has_exactly_the_documented_keys() -> None:
+    assert CPU_EXAMPLE.name.endswith(".example")  # systemd never loads it
+    parser = configparser.ConfigParser(interpolation=None)
+    parser.optionxform = str  # type: ignore[assignment,method-assign]
+    parser.read_string(CPU_EXAMPLE.read_text())
+    assert parser.sections() == ["Slice"]
+    assert dict(parser["Slice"]) == {
+        "CPUAccounting": "yes",
+        "CPUQuota": "1200%",
+        "CPUQuotaPeriodSec": "100ms",
+        "CPUWeight": "50",
+    }
+
+
+# The tests below pin runbook and example prose. A deliberate procedure edit is
+# expected to update them in the same change.
+def _cpu_section() -> str:
+    body = RUNBOOK.read_text()
+    return body.split("## CPU-time containment", 1)[1].split("\n## ", 1)[0]
+
+
+def test_runbook_cpu_section_names_each_verification_property() -> None:
+    section = _cpu_section()
+    for needle in (
+        "CPUAccounting", "CPUQuotaPerSecUSec", "CPUQuotaPeriodUSec", "CPUWeight",
+        "MemoryMax", "MemoryHigh", "MemorySwapMax", "cpu.max", "cpu.weight",
+        "nr_throttled", "throttled_usec", "cpu.pressure", "/api/health",
+        "20-cpu.conf", "daemon-reload", "1200%", "100ms", "PROPOSED",
+    ):  # fmt: skip
+        assert needle in section, needle
+    assert "not a load-average bound and not a thread-count bound" in section
+    assert "no script" in section
+
+
+def test_runbook_records_memory_snapshot_before_the_change() -> None:
+    apply_step = _cpu_section().split("### Apply", 1)[1].split("### Verify", 1)[0]
+    snapshot = "systemctl --user show lu.slice -p MemoryHigh -p MemoryMax -p MemorySwapMax"
+    assert snapshot in apply_step
+    assert apply_step.index(snapshot) < apply_step.index("install -m 0644")
+
+
+def test_runbook_persistent_dropin_is_the_only_path() -> None:
+    section = _cpu_section()
+    assert "set-property --runtime" not in section
+    assert "CPUQuota= CPUWeight=" not in section
+    rollback = section.split("### Rollback", 1)[1]
+    assert rollback.count("rm ") == 1  # only 20-cpu.conf is removed
+    assert 'lu.slice.d/20-cpu.conf"' in rollback
+    assert "10-limits.conf" in rollback and "never touched" in rollback
+    assert "cpu.max" in rollback and "stop and report to" in rollback
+
+
+def test_runbook_rollback_checks_first_cpu_max_field_and_snapshots() -> None:
+    rollback = " ".join(_cpu_section().split("### Rollback", 1)[1].split())
+    assert "`max 100000`" in rollback
+    assert "compare the first field with `max`" in rollback
+    assert "treat `max <period>` as cleared" in rollback
+    assert "`cpu.weight` back to the default `100`" in rollback
+    assert "equal the snapshot recorded before the change" in rollback
+    condition, action = rollback.split("stop and report to the driver", 1)
+    condition = condition.rsplit("If the first field", 1)[1]
+    for needle in ("of `cpu.max` is not `max`", "`MemoryHigh`", "`MemoryMax`", "`MemorySwapMax`"):
+        assert needle in condition, needle
+    assert "do not add a runtime override" in action
+
+
+def test_runbook_verify_states_the_apply_time_cpu_max_line() -> None:
+    verify = " ".join(_cpu_section().split("### Verify", 1)[1].split("### Observe", 1)[0].split())
+    assert "`<quota> <period>`" in verify
+    assert "apply-time expected line is `1200000 100000`" in verify
+    assert "`cpu.weight` must read `50`" in verify
+
+
+def test_runbook_quota_rationale_is_an_average_cap_not_a_reservation() -> None:
+    section = _cpu_section()
+    assert "average cap per period" in section
+    assert "does not reserve any CPUs" in section
+    assert "only makes the slice yield CPU to its siblings while the parent cgroup is contended" in " ".join(
+        section.split()
+    )
+    assert "is not a cap" in section
+    assert "1.2 CPU-seconds per 100 ms, then" in " ".join(section.split())
+
+
+def test_runbook_publishes_no_host_sizing() -> None:
+    body = RUNBOOK.read_text()
+    assert not re.search(r"\b(16|sixteen)\s+CPUs?\b|\bof sixteen\b", body, re.IGNORECASE)
+    assert not re.search(r"CPU-equivalents|\bmean of\b", body, re.IGNORECASE)
+    assert "private operations" in _cpu_section()
+
+
+def test_cpu_example_does_not_claim_accounting_enforces_the_quota() -> None:
+    text = " ".join(CPU_EXAMPLE.read_text().replace("# ", " ").split())
+    assert "and the quota are enforced" not in text
+    assert "enforced by CPUQuota= below, through cpu.max" in text
+    assert "only while the parent cgroup is contended" in text
+    assert "not a cap" in text
+    assert "host is busy" not in text
+
+
+# sha256 of scripts/ops/lu_slice_apply.sh at the #10735 base commit. The CPU
+# ceiling is documentation plus an inert example, so the apply script must not
+# change: it must not parse unit or drop-in text. A deliberate edit to the
+# script must update this recorded hash.
+APPLY_SCRIPT_SHA256 = "e7beafca407a619b6b96dbd0adce55371c69be84d931d69224cd92711c0c94fd"
+
+
+def test_apply_script_matches_recorded_hash() -> None:
+    assert hashlib.sha256(HELPER.read_bytes()).hexdigest() == APPLY_SCRIPT_SHA256

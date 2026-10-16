@@ -118,7 +118,7 @@ import {
 } from '../lib/lexicon/custom-decks';
 import { syncCustomSetsToDrive, requestGoogleAccessToken, setInMemoryAccessToken, getInMemoryAccessToken, isGoogleSyncConfigured } from '../lib/lexicon/google-drive-sync';
 import { usablePracticeSentenceEnglish } from '../lib/lexicon/practice-sentence-en';
-import { selectHeritagePracticePresentation } from '../lib/lexicon/practice-activity-adapters';
+import { selectHeritagePracticePresentation, type HeritagePracticeContext } from '../lib/lexicon/practice-activity-adapters';
 import { searchShardForQuery, type SearchRow, type SearchShardManifest } from '../lib/lexicon/search';
 import {
   appendDrillFields,
@@ -1823,13 +1823,14 @@ function resolveDeckLemmaKeys(deckFilter: string, customSets: CustomSet[]): stri
   return customSets.find((s) => s.id === deckFilter)?.lemma_keys ?? [];
 }
 
-/** Learner level persisted in the shared `lu-learner-level` key (also used by Words of the Day). */
-function readLearnerLevel(fallback: CefrLevel): CefrLevel {
-  if (typeof window === 'undefined') return fallback;
+/** Capture explicit context separately from the display-level fallback. */
+function readLearnerContext(): HeritagePracticeContext {
+  if (typeof window === 'undefined') return { source: 'unknown' };
   try {
-    return normalizeCefrLevel(window.localStorage.getItem(LEARNER_LEVEL_STORAGE_KEY), fallback);
+    const level = parseCefrLevel(window.localStorage.getItem(LEARNER_LEVEL_STORAGE_KEY));
+    return level ? { source: 'stored', level } : { source: 'unknown' };
   } catch {
-    return fallback;
+    return { source: 'unknown' };
   }
 }
 
@@ -2405,8 +2406,9 @@ function LexiconPracticeIsland({
    */
   const [sessionMisses, setSessionMisses] = useState<SessionMissItem[]>([]);
   const [resumeSnapshots, setResumeSnapshots] = useState<PracticeSessionSnapshots>({});
+  const [heritageContext, setHeritageContext] = useState<HeritagePracticeContext>(readLearnerContext);
   const [learnerLevel, setLearnerLevel] = useState<CefrLevel>(() =>
-    readLearnerLevel(normalizeCefrLevel(deckLevel)),
+    heritageContext.source === 'unknown' ? normalizeCefrLevel(deckLevel) : heritageContext.level,
   );
   const [focusedLemmaId, setFocusedLemmaId] = useState<string | null>(null);
   const [focusLookupMiss, setFocusLookupMiss] = useState(false);
@@ -2418,12 +2420,8 @@ function LexiconPracticeIsland({
   const [feedback, setFeedback] = useState<{ uk: string; en?: string } | null>(null);
   const [revision, setRevision] = useState(0);
   const [history, setHistory] = useState<SelectionHistoryItem[]>([]);
-  // #8733: derived synchronously from the session history position, not bumped in a
-  // post-render effect — the first paint of a fresh card already has the final salt,
-  // and an immediate same-lemma requeue (a new history entry, same itemId) still gets
-  // a new value since history.length itself advances, so Paronym's per-presentation
-  // option shuffle never reorders in front of the learner or replays the prior order.
-  const presentationSeq = history.length;
+  // Advance only when Next presents another item; retained history is capped at 50.
+  const [presentationSeq, setPresentationSeq] = useState(0);
   const [answerLocked, setAnswerLocked] = useState(false);
   // After ANY answer (correct or wrong), park the scored outcome here instead of
   // auto-advancing so the learner explicitly continues via «Далі →» or Enter.
@@ -2696,9 +2694,9 @@ function LexiconPracticeIsland({
   const pendingCompletionRef = useRef<number | null>(null);
   const advanceButtonRef = useRef<HTMLButtonElement | null>(null);
   // Selection ref used to stabilize the in-flight item across live deck merges (pool growth from
-  // background level shards). While history length is unchanged we keep returning the
+  // background level shards). Within one presentation we keep returning the
   // prior selection object so a B1 card is not yanked when an A1/A2 shard lands mid-item.
-  const committedSelectionRef = useRef<{ selection: PracticeSelection; historyLen: number } | null>(null);
+  const committedSelectionRef = useRef<{ selection: PracticeSelection; presentationSeq: number } | null>(null);
   // Deduping cache for shard JSON fetches (by full URL) so index shards fetched by the eager
   // due-count effect are not re-fetched by ensure, and no shard is fetched twice.
   const shardJsonCacheRef = useRef(new Map<string, Promise<unknown>>());
@@ -3384,13 +3382,13 @@ function LexiconPracticeIsland({
     });
     // Stabilize in-flight selection across live merges from background level shards.
     // The selector cache (per deck identity) produces a new pool, but we keep the exact
-    // prior selection object (for same history length) so the user is not yanked mid-item
-    // and #4740/#4744 flows are unperturbed. Once history advances on complete, fresh pick
+    // prior selection object (for the same presentation) so the user is not yanked mid-item
+    // and #4740/#4744 flows are unperturbed. Once Next advances the presentation, a fresh pick
     // uses the grown pool.
     const committed = committedSelectionRef.current;
     const committedStillValid =
       committed &&
-      committed.historyLen === history.length &&
+      committed.presentationSeq === presentationSeq &&
       itemIdPresentInDeck(selectionDeck, committed.selection.itemId);
     // #8732: while an answer dwells (rated, waiting for «Далі →»/Enter), the rating
     // itself bumps `revision`/`reviewsCompleted`/`sessionNewIntroduced` synchronously —
@@ -3415,6 +3413,7 @@ function LexiconPracticeIsland({
     history,
     mode,
     pendingOutcome,
+    presentationSeq,
     poolFilter,
     revision,
     selectionDeck,
@@ -3439,15 +3438,11 @@ function LexiconPracticeIsland({
     resetItemFeedback();
     if (selection) {
       // Record for stabilization across future deck swaps (bg merges).
-      committedSelectionRef.current = { selection, historyLen: history.length };
+      committedSelectionRef.current = { selection, presentationSeq };
       window.setTimeout(() => stageRef.current?.focus({ preventScroll: true }), 0);
     }
-    // #8732/#8733: `history.length` (not just `selection?.itemId`) is a dependency so a
-    // same-lemma requeue — a new history entry that happens to pick the same itemId
-    // again — still re-commits here. Without it, `committedSelectionRef.current.historyLen`
-    // is left stale, `committedStillValid` misfires false on the very next rating, and the
-    // card can swap out from under the learner before they click Next.
-  }, [selection?.itemId, history.length, resetItemFeedback]);
+    // A same-item Next must re-commit even after retained history reaches its cap.
+  }, [selection?.itemId, presentationSeq, resetItemFeedback]);
 
   // Rate the selected lemma if matched but never completed (due to session abort/unmount)
   useEffect(() => {
@@ -4108,6 +4103,7 @@ function LexiconPracticeIsland({
   async function changeLevel(nextLevel: CefrLevel) {
     if (nextLevel === learnerLevel || !publishedLevels.has(nextLevel)) return;
     setLearnerLevel(nextLevel);
+    setHeritageContext({ source: 'local', level: nextLevel });
     writeLearnerLevel(nextLevel);
     setClozeLoaded(false);
     setHistory([]);
@@ -4190,6 +4186,7 @@ function LexiconPracticeIsland({
       setSelectedDeckFilter(change.value);
     } else {
       setLearnerLevel(change.value);
+      setHeritageContext({ source: 'local', level: change.value });
       writeLearnerLevel(change.value);
     }
     await startSession(sessionBudget, 'mixed', null, overrides);
@@ -4302,6 +4299,9 @@ function LexiconPracticeIsland({
       extensionUsed,
       unresolvedCount: outcome.nextUnresolved.size,
     });
+    if (decision === 'continue' || decision === 'extend') {
+      setPresentationSeq((value) => value + 1);
+    }
     if (decision === 'continue') return;
     if (decision === 'extend') {
       setExtensionUsed((value) => value + 1);
@@ -5432,7 +5432,7 @@ function LexiconPracticeIsland({
               )}
               {selection ? (
                 <PracticeItem
-                    key={selection.cardKey}
+                    key={`${selection.cardKey}:${presentationSeq}`}
                     selection={selection}
                     deck={deck}
                     pairs={pairs}
@@ -5458,6 +5458,7 @@ function LexiconPracticeIsland({
                     onClozeSubmit={submitCloze}
                     onHeritageActivityComplete={handleHeritageActivityComplete}
                     presentationVariants={mode === 'mixed'}
+                    heritageContext={heritageContext}
                     onBackToModes={finishPractice}
                     showEnglishSubtitles={showEnglishSubtitles}
                     chromeLocale={chromeLocale}
@@ -5555,6 +5556,7 @@ export function PracticeItem({
   onClozeSubmit,
   onHeritageActivityComplete,
   presentationVariants,
+  heritageContext,
   onBackToModes,
   showEnglishSubtitles,
   chromeLocale,
@@ -5585,6 +5587,7 @@ export function PracticeItem({
   onClozeSubmit(value: string, source: 'typed' | 'chip'): void;
   onHeritageActivityComplete(correct: boolean): void;
   presentationVariants: boolean;
+  heritageContext: HeritagePracticeContext;
   /** P0-2: option-build failures (empty matching/choice pools) get a real exit, not just prose. */
   onBackToModes(): void;
   showEnglishSubtitles: boolean;
@@ -5600,10 +5603,10 @@ export function PracticeItem({
   const heritagePresentation = useMemo(
     () => (
       selection.mode === 'heritage' && selection.heritage && presentationVariants
-        ? selectHeritagePracticePresentation(selection.heritage, sessionSeed, deck.heritage ?? [])
+        ? selectHeritagePracticePresentation(selection.heritage, sessionSeed, deck.heritage ?? [], heritageContext)
         : { kind: 'mc' as const }
     ),
-    [deck.heritage, presentationVariants, selection.heritage, selection.mode, sessionSeed],
+    [deck.heritage, heritageContext, presentationVariants, selection.heritage, selection.mode, sessionSeed],
   );
 
   if (selection.mode === 'flashcards') {

@@ -30,6 +30,7 @@ from learn_ukrainian_v4_runtime.identity import _VALID_CONCRETE_FAMILIES
 from learn_ukrainian_v4_runtime.model_families import canonical_cursor_model, is_cursor_auto_selector
 
 from scripts.common.jsonl import jsonl_lines
+from scripts.fleet.claude_account_lane import ClaudeAccount, account_from_record
 from scripts.fleet_comms.review_publication import (
     DEFAULT_STATUS_CONTEXT,
     REVIEW_SCHEMA_VERSION,
@@ -587,25 +588,41 @@ class BranchReviewFacts:
         """Literal branch changes (both rename sides, deletions) plus the proposed owned paths."""
         return tuple(dict.fromkeys((*self.changed_paths, *self.owned_paths)))
 
-    def resolver_inputs(self, *, risk: str, review_profile: str = "code", **overrides: Any) -> ResolverInputs:
-        """Reviewer-resolver inputs carrying these facts; ``overrides`` set the remaining fields."""
+    @property
+    def author_models(self) -> tuple[str | None, ...]:
+        """Every committed author model; an unattributed commit adds None."""
+        return tuple(
+            model
+            for commit in self.commits
+            # A clean merge authors nothing; a verified app bot has no model.
+            if commit.source not in {"clean-base-merge", VERIFIED_APP_BOT}
+            for model in (commit.author_models or (None,))
+        )
+
+    @property
+    def author_task_models(self) -> tuple[str, ...]:
+        """The head commit's task-record author models."""
+        return tuple(
+            model
+            for commit in self.commits
+            if commit.sha == self.head_sha and commit.source in {"task-record", "task-record-archived"}
+            for model in commit.author_models
+        )
+
+    def resolver_inputs(
+        self, *, risk: str, claude_account: ClaudeAccount, review_profile: str = "code", **overrides: Any
+    ) -> ResolverInputs:
+        """Reviewer-resolver inputs carrying these facts; ``overrides`` set the remaining fields.
+
+        ``claude_account`` is the account a claude reviewer runs as (#10630); it has no default.
+        """
         overrides.setdefault("domain", review_profile)
         overrides.setdefault("author_model", "")
         return ResolverInputs(
             author_families=self.excluded_families,
-            author_models=tuple(
-                model
-                for commit in self.commits
-                # A clean merge authors nothing; a verified app bot has no model.
-                if commit.source not in {"clean-base-merge", VERIFIED_APP_BOT}
-                for model in (commit.author_models or (None,))
-            ),
-            author_task_models=tuple(
-                model
-                for commit in self.commits
-                if commit.sha == self.head_sha and commit.source in {"task-record", "task-record-archived"}
-                for model in commit.author_models
-            ),
+            author_models=self.author_models,
+            author_task_models=self.author_task_models,
+            claude_account=claude_account,
             review_profile=review_profile,
             risk=risk,
             changed_paths=self.changed_paths,
@@ -852,14 +869,23 @@ def collect_branch_review_facts(
 
 
 def structural_review_route(
-    facts: BranchReviewFacts, *, risk: str, review_profile: str = "code", review_mode: str = "cross_family"
+    facts: BranchReviewFacts,
+    *,
+    risk: str,
+    claude_account: ClaudeAccount,
+    review_profile: str = "code",
+    review_mode: str = "cross_family",
 ) -> ReviewerResolution:
     """Resolve a formal reviewer outside every author family under the live catalog floors.
 
     Structural only (A2): no routing snapshot, so health and quota never decide
     feasibility; the resolver's own health semantics stay unchanged.
+    ``claude_account`` is the account a claude reviewer would run as: an
+    unresolved one removes the claude seats (#10630).
     """
-    inputs = facts.resolver_inputs(risk=risk, review_profile=review_profile)
+    inputs = facts.resolver_inputs(
+        risk=risk, review_profile=review_profile, claude_account=claude_account, structural=True
+    )
     if review_mode == "red_team" and facts.incoming_writer:
         # This is the declared new writer, never an assumed historical model.
         inputs = replace(inputs, author_models=(*inputs.author_models, facts.incoming_writer))
@@ -1181,6 +1207,9 @@ def _require_qualified_reviewer(
         risk=str(task.get("review_risk") or "medium"),
         review_profile=profile,
         author_model=task.get("review_author_model") or "" if review_mode == "red_team" else "",
+        # The reviewer ran as the account its own task record names (#10630); no quota decides a finished review.
+        claude_account=account_from_record(task, agent=agent),
+        structural=True,
     )
     results = [evaluate_candidate(candidate, inputs, review_mode=review_mode) for candidate in candidates]
     if not any(result.status == "eligible" for result in results):
@@ -1716,9 +1745,9 @@ def record(
             raise RecordError("SELF_REVIEW_DETECTED: reviewer task equals a branch author task")
         refusal = red_team_seat_refusal(
             (task.get("model"), task.get("resolved_model"), model),
-            author_models=facts.resolver_inputs(risk="medium").author_models,
+            author_models=facts.author_models,
             author_model=task.get("review_author_model"),
-            author_task_models=facts.resolver_inputs(risk="medium").author_task_models,
+            author_task_models=facts.author_task_models,
         )
         if refusal:
             raise RecordError(refusal)

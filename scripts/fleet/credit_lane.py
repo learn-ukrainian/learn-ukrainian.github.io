@@ -1298,9 +1298,12 @@ def dispatch_refusal(lane: str, model: str | None, *, policy: CreditPolicy | Non
     budget = read_routing_budget()
     if budget is None:
         return None
-    agents = budget.get("agents") if isinstance(budget.get("agents"), dict) else {}
+    from scripts.fleet.claude_account_lane import other_lane_record
+
+    # A credit lane is one no Claude account owns; the claude lane is never read without its account (#10630).
+    record = other_lane_record(budget, lane_key)
     diagnostics = budget.get("diagnostics") if isinstance(budget.get("diagnostics"), dict) else {}
-    state = lane_credit_state(lane_key, agents.get(lane_key), policy, snapshot_stale=bool(diagnostics.get("stale")))
+    state = lane_credit_state(lane_key, record or None, policy, snapshot_stale=bool(diagnostics.get("stale")))
     if not allowlist_applies(state):
         return None
     return refusal_text(lane_key, model, state, policy)

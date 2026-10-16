@@ -17,6 +17,7 @@ import pytest
 from scripts.common.git_context import GIT_REDIRECT_ENV_KEYS, sanitized_git_env
 from scripts.common.scratch import ensure_scratch_root
 from scripts.review import record_cf_verdict as recorder
+from tests.claude_route_accounts import HOST_ACCOUNT
 
 SHA = "a" * 40
 OTHER = "b" * 40
@@ -2618,7 +2619,7 @@ def test_10016_quota_does_not_change_exact_head_verdict_qualification(monkeypatc
         ),
     )
     facts = facts_for({"google"})
-    route = recorder.structural_review_route(facts, risk="critical")
+    route = recorder.structural_review_route(facts, risk="critical", claude_account=HOST_ACCOUNT)
     assert route.selected is not None and route.selected.capacity.remaining_pct is None
     tasks, _, _ = setup_record(monkeypatch, tmp_path, head=head)
     if head == SHA:
@@ -2902,10 +2903,10 @@ def test_unknown_history_excludes_all_possible_author_families():
         "unknown",
     } <= facts.excluded_families
     assert facts.receipt()["excluded_families"] == sorted(facts.excluded_families)
-    default = resolve_reviewer(facts.resolver_inputs(risk="critical"))
+    default = resolve_reviewer(facts.resolver_inputs(risk="critical", claude_account=HOST_ACCOUNT))
     assert default.selected is None
     assert default.trace and all(row.status not in {"eligible", "selected"} for row in default.trace)
-    red_team = resolve_reviewer(facts.resolver_inputs(risk="critical"), review_mode="red_team")
+    red_team = resolve_reviewer(facts.resolver_inputs(risk="critical", claude_account=HOST_ACCOUNT), review_mode="red_team")
     assert red_team.selected is not None
     assert red_team.review_mode == "red_team"
     assert red_team.limitation
