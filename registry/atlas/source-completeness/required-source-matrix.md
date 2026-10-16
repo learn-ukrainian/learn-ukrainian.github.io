@@ -113,3 +113,13 @@ provide regression evidence only. No public deployment or cutover is authorized.
 
 Generated inventories, diagnostics, and reconciliation receipts remain ignored
 under `batch_state/reports/`; do not commit them as authored registry inputs.
+
+## Structural accounting procedure
+
+Use the [ordered manifest contract](manifest-contract.md) and
+`scripts.projects.open_model_data.source_completeness_manifest` to bind supplied
+source-side indexes and account independently for stages and consumer projections.
+Unknown whole ranges and the unavailable original 123-case membership remain
+explicit diagnostic obligations. The producer's structural receipt does not freeze
+this matrix's unresolved choices, establish authentic source completeness or
+satisfy any of the five acceptance criteria without their independent evidence.
