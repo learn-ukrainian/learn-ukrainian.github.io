@@ -9,7 +9,9 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import shutil
+import stat
 import subprocess
 import sys
 import time
@@ -824,6 +826,24 @@ def late_file(tree: Path) -> None:
     (tree / "late.txt").write_text("late\n", encoding="utf-8")
 
 
+def late_ignored(tree: Path) -> None:
+    """Ignored output written after artifact preservation: no Git guard sees it."""
+    (tree / "out").mkdir(exist_ok=True)
+    (tree / "out" / "evidence.txt").write_text("unpreserved evidence\n", encoding="utf-8")
+
+
+def late_hidden(tree: Path) -> None:
+    """An edit behind assume-unchanged (see ``flag_for``): Git status and Git removal both trust the flag."""
+    (tree / "README.md").write_text("unsaved hidden edit\n", encoding="utf-8")
+
+
+def flag_for(change: Any, worktree: Path, repo: Path) -> None:
+    """``late_hidden`` edits a file that was flagged assume-unchanged before the tree went idle."""
+    if change is late_hidden:
+        git(worktree, "update-index", "--assume-unchanged", "README.md")
+        age_tree(worktree, repo, "task-a")
+
+
 _HOLDERS: list[subprocess.Popen[bytes]] = []
 
 
@@ -847,6 +867,8 @@ def holders():
         (late_commit, "late_change: last activity 0 min ago (< 60 min)"),  # the commit wrote HEAD
         (late_file, "late_change: dirty or untracked files"),
         (late_process, "late_change: in use: a process works inside the checkout"),
+        (late_hidden, f"late_change: {HIDDEN}"),
+        (late_ignored, "late_change: final re-check: content changed since the pre-preservation manifest"),
     ],
 )
 def test_late_change_around_the_quarantine_move_keeps_the_tree(
@@ -859,6 +881,7 @@ def test_late_change_around_the_quarantine_move_keeps_the_tree(
     reason: str,
 ) -> None:
     worktree = dispatch_tree(repo, detached=True)
+    flag_for(change, worktree, repo)
     moves = wrap_moves(monkeypatch, **{window.removesuffix("_move"): change})
 
     report = rw.reap_clean_pushed(repo_root=repo, dry_run=False)
@@ -871,12 +894,16 @@ def test_late_change_around_the_quarantine_move_keeps_the_tree(
     assert str(worktree) in git(repo, "worktree", "list", "--porcelain")
     if change is late_commit:
         assert git(worktree, "log", "-1", "--format=%s") == "late commit"
+    if change is late_ignored:
+        assert (worktree / "out" / "evidence.txt").read_text(encoding="utf-8") == "unpreserved evidence\n"
+    if change is late_hidden:
+        assert (worktree / "README.md").read_text(encoding="utf-8") == "unsaved hidden edit\n"
     assert abandon_log(repo) == []
     events = [json.loads(line)["event"] for line in reaper_lifecycle.journal_path(repo).read_text().splitlines()]
     assert events == ["clean-pushed-remove"]  # intent only: never confirmed
 
 
-def test_failed_move_back_keeps_the_tree_in_the_quarantine_and_later_runs_report_it(
+def test_failed_move_back_keeps_the_tree_in_the_quarantine_and_a_later_run_restores_it(
     repo: Path, free_fuser: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     worktree = dispatch_tree(repo, detached=True)
@@ -897,12 +924,29 @@ def test_failed_move_back_keeps_the_tree_in_the_quarantine_and_later_runs_report
     staged = holder / worktree.name
     assert (staged / "late.txt").exists() and (staged / "README.md").exists()
 
-    worktree.rmdir()
     monkeypatch.setattr(rw, "safe_git", real_safe_git)
-    later = rw.reap_clean_pushed(repo_root=repo)
-    [kept] = [item for item in later.skipped if item.path.startswith(".worktrees/.reaping/")]
-    assert kept.reason == "left in the reaper quarantine by an interrupted run; restore it (runbook)"
-    assert staged.is_dir()
+    (worktree / "replacement.txt").write_text("a new checkout\n", encoding="utf-8")
+    occupied = rw.reap_clean_pushed(repo_root=repo, dry_run=False)
+    [kept] = [item for item in occupied.skipped if item.path.startswith(".worktrees/.reaping/")]
+    assert (
+        kept.reason == "quarantine: kept: its original path exists again and is never overwritten; inspect it (runbook)"
+    )
+    assert staged.is_dir() and (worktree / "replacement.txt").exists()  # the replacement is untouched
+
+    (worktree / "replacement.txt").unlink()
+    worktree.rmdir()
+    dry = rw.reap_clean_pushed(repo_root=repo)
+    assert outcome_for(dry, worktree, repo).reason == "would restore it from the reaper quarantine (interrupted run)"
+    assert staged.is_dir() and not worktree.exists()
+
+    restored = rw.reap_clean_pushed(repo_root=repo, dry_run=False)
+    outcome = outcome_for(restored, worktree, repo)
+    assert (outcome.action, outcome.reason) == (
+        "skipped",
+        "restored from the reaper quarantine (interrupted run); kept this run",
+    )
+    assert (worktree / "late.txt").exists() and str(worktree) in git(repo, "worktree", "list", "--porcelain")
+    assert quarantine_entries(repo) == []
 
 
 def origin(repo: Path) -> Path:
@@ -978,7 +1022,7 @@ def test_fetch_runs_before_the_reaper_lock_and_once(
     real_enter = rw._ReapLock.__enter__
 
     def spy_run(args: list[str], **kwargs: Any) -> Any:
-        if args[:2] == ["git", "fetch"]:
+        if args[:2] in (["git", "fetch"], ["git", "ls-remote"]):
             events.append(" ".join(args))
         return real_run(args, **kwargs)
 
@@ -991,8 +1035,11 @@ def test_fetch_runs_before_the_reaper_lock_and_once(
 
     assert rw.main(["--clean-pushed", "--repo-root", str(repo)]) == 0
 
-    assert events == ["git fetch --no-tags origin --prune", "lock"]
-    assert "origin refs refreshed (git fetch --prune origin)" in capsys.readouterr().out
+    assert events == ["git fetch --no-tags origin --prune", "git ls-remote --heads --tags origin", "lock"]
+    assert (
+        "origin refs refreshed (git fetch --prune origin); "
+        "origin census: 1 heads and tags (git ls-remote), 0 missing locally"
+    ) in capsys.readouterr().out
 
 
 @pytest.mark.parametrize(
@@ -1009,3 +1056,488 @@ def test_safe_git_admits_only_a_plain_absolute_worktree_move(tmp_path: Path, arg
 
     with pytest.raises(ValueError, match="unsupported worktree move operation"):
         run_git(args, cwd=tmp_path)
+
+
+# Round 3 (#10778): publication proof from a fresh census of origin, a final
+# re-check before Git, crash recovery from the quarantine record, and the
+# documented residual of arrivals during the Git removal call itself.
+
+
+def narrow_fetch(repo: Path) -> None:
+    """Fetch only main: every other remote-tracking ref goes stale."""
+    git(repo, "config", "--replace-all", "remote.origin.fetch", "+refs/heads/main:refs/remotes/origin/main")
+
+
+@pytest.mark.parametrize("change", ["delete", "force_move"])
+def test_narrowed_fetch_refspec_cannot_prove_a_commit_gone_from_origin(
+    repo: Path, free_fuser: Path, change: str
+) -> None:
+    worktree, head = pushed_detached_tree(repo)
+    narrow_fetch(repo)
+    if change == "delete":
+        git(origin(repo), "update-ref", "-d", "refs/heads/side")
+    else:
+        git(origin(repo), "update-ref", "refs/heads/side", git(repo, "rev-parse", "main"))
+
+    assert _refusal(repo, worktree) == "commits not on origin"
+    assert git(repo, "rev-parse", "refs/remotes/origin/side") == head  # the fetch left the stale proof in place
+
+
+def test_narrowed_fetch_refspec_cannot_prove_a_reflog_commit(repo: Path, free_fuser: Path) -> None:
+    worktree, pushed = pushed_detached_tree(repo)
+    git(worktree, "checkout", "--detach", "main")  # the side commit stays in the HEAD reflog only
+    age_tree(worktree, repo, "task-a")
+    narrow_fetch(repo)
+    git(origin(repo), "update-ref", "refs/heads/side", git(repo, "rev-parse", "main"))
+    assert git(repo, "rev-parse", "refs/remotes/origin/side") == pushed
+
+    assert _refusal(repo, worktree) == REFLOG
+
+
+def test_commit_published_only_by_an_annotated_tag_is_removed(repo: Path, free_fuser: Path) -> None:
+    worktree, head = pushed_detached_tree(repo)
+    git(worktree, "tag", "-a", "v-side", "-m", "release", head)
+    git(worktree, "push", "origin", "refs/tags/v-side")
+    git(origin(repo), "update-ref", "-d", "refs/heads/side")
+    narrow_fetch(repo)
+    assert git(repo, "cat-file", "-t", "v-side") == "tag"  # proof needs the peeled commit
+
+    report = rw.reap_clean_pushed(repo_root=repo, dry_run=False)
+
+    assert outcome_for(report, worktree, repo).action == "removed"
+    assert report.census_refs == 2 and report.census_missing == 0  # main and v-side
+
+
+def test_advertised_object_missing_locally_keeps_the_tree_as_refs_stale(
+    repo: Path, free_fuser: Path, tmp_path: Path
+) -> None:
+    worktree, head = pushed_detached_tree(repo)
+    other = tmp_path / "other"
+    git(tmp_path, "clone", "--quiet", str(origin(repo)), str(other))
+    git(other, "checkout", "--quiet", "side")
+    (other / "README.md").write_text("built on the side commit elsewhere\n", encoding="utf-8")
+    git(other, "-c", "user.email=o@example.com", "-c", "user.name=Other", "commit", "-qam", "on top")
+    git(other, "push", "--quiet", "origin", "side")  # origin's side now contains the tree's HEAD, unseen here
+    narrow_fetch(repo)
+    assert git(repo, "rev-parse", "refs/remotes/origin/side") == head
+
+    report = rw.reap_clean_pushed(repo_root=repo, dry_run=False)
+
+    outcome = outcome_for(report, worktree, repo)
+    assert (outcome.action, outcome.reason) == (
+        "skipped",
+        "refs_stale: publication unproven; 1 advertised origin object(s) missing locally",
+    )
+    assert report.census_missing == 1 and worktree.is_dir()
+
+
+@pytest.mark.parametrize(
+    ("stdout", "returncode", "reason"),
+    [
+        ("", 128, "refs_stale: git ls-remote --heads --tags origin failed (exit 128)"),
+        (
+            "not-an-oid\trefs/heads/main\n",
+            0,
+            "refs_stale: git ls-remote --heads --tags origin printed an unexpected line",
+        ),
+        (
+            f"{'a' * 40}\trefs/pull/1/head\n",
+            0,
+            "refs_stale: git ls-remote --heads --tags origin printed an unexpected line",
+        ),
+    ],
+)
+def test_failed_or_unexpected_census_skips_the_whole_run(
+    repo: Path, free_fuser: Path, monkeypatch: pytest.MonkeyPatch, stdout: str, returncode: int, reason: str
+) -> None:
+    worktree = dispatch_tree(repo)
+    real_run = rw._run
+
+    def census(args: list[str], **kwargs: Any) -> Any:
+        if args[:2] == ["git", "ls-remote"]:
+            return subprocess.CompletedProcess(args, returncode, stdout, "")
+        return real_run(args, **kwargs)
+
+    monkeypatch.setattr(rw, "_run", census)
+    report = rw.reap_clean_pushed(repo_root=repo, dry_run=False)
+    assert report.refs_stale and report.refusal == reason
+    assert report.removed == () and report.skipped == () and worktree.is_dir()
+
+
+def test_census_timeout_skips_the_whole_run(repo: Path, free_fuser: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    worktree = dispatch_tree(repo)
+    real_run = rw._run
+
+    def slow(args: list[str], **kwargs: Any) -> Any:
+        if args[:2] == ["git", "ls-remote"]:
+            assert kwargs["timeout"] == 60.0
+            raise subprocess.TimeoutExpired(args, kwargs["timeout"])
+        return real_run(args, **kwargs)
+
+    monkeypatch.setattr(rw, "_run", slow)
+    report = rw.reap_clean_pushed(repo_root=repo, dry_run=False)
+    assert report.refusal == "refs_stale: git ls-remote --heads --tags origin timed out after 60s"
+    assert worktree.is_dir()
+
+
+def wrap_final_recheck(monkeypatch: pytest.MonkeyPatch, change: Any) -> None:
+    """Run ``change(quarantined)`` after every guard re-ran on the quarantined tree, just before the final re-check."""
+    real = rw._final_recheck
+
+    def spy(tree: Path, baseline: Any) -> str | None:
+        change(tree)
+        return real(tree, baseline)
+
+    monkeypatch.setattr(rw, "_final_recheck", spy)
+
+
+@pytest.mark.parametrize(
+    ("change", "reason"),
+    [
+        (late_hidden, "late_change: final re-check: content changed since the pre-preservation manifest"),
+        (late_ignored, "late_change: final re-check: content changed since the pre-preservation manifest"),
+        (late_commit, "late_change: final re-check: content changed since the pre-preservation manifest"),
+        (late_process, "late_change: final re-check: in use: a process works inside the checkout"),
+    ],
+)
+def test_final_recheck_keeps_a_tree_that_changed_after_the_full_reverification(
+    repo: Path, free_fuser: Path, monkeypatch: pytest.MonkeyPatch, holders: list[Any], change: Any, reason: str
+) -> None:
+    worktree = dispatch_tree(repo, detached=True)
+    flag_for(change, worktree, repo)
+    wrap_final_recheck(monkeypatch, change)
+
+    report = rw.reap_clean_pushed(repo_root=repo, dry_run=False)
+
+    outcome = outcome_for(report, worktree, repo)
+    assert (outcome.action, outcome.reason) == ("skipped", reason)
+    assert worktree.is_dir() and quarantine_entries(repo) == []  # moved back, record cleared
+    if change is late_ignored:
+        assert (worktree / "out" / "evidence.txt").exists()
+    if change is late_hidden:
+        assert (worktree / "README.md").read_text(encoding="utf-8") == "unsaved hidden edit\n"
+    if change is late_commit:
+        assert git(worktree, "log", "-1", "--format=%s") == "late commit"
+    assert abandon_log(repo) == []
+
+
+def test_final_recheck_refuses_unknown_process_visibility(repo: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    worktree = dispatch_tree(repo)
+    baseline = rw._manifest(worktree)
+    assert rw._final_recheck(worktree, baseline) is None
+
+    monkeypatch.setattr(rw, "_proc_users_inside", lambda root, **kwargs: None)
+    assert rw._final_recheck(worktree, baseline) == "process visibility unknown"
+
+    def denied(root: Path, *, uninspectable: list[int], **kwargs: Any) -> bool:
+        uninspectable.append(4242)
+        return False
+
+    monkeypatch.setattr(rw, "_proc_users_inside", denied)
+    assert rw._final_recheck(worktree, baseline) == (
+        "uninspectable_process 4242: a process of this user cannot be inspected"
+    )
+
+
+def test_final_recheck_never_counts_the_reapers_own_handles(repo: Path) -> None:
+    worktree = dispatch_tree(repo)
+    git(worktree, "update-index", "--assume-unchanged", "README.md")
+    baseline = rw._manifest(worktree)
+    assert rw._hidden_change_refusal(worktree) is None  # the reaper just opened and hashed the flagged file
+
+    assert rw._final_recheck(worktree, baseline) is None
+
+    # A handle the caller's process holds is not the reaper's: dispatch admission
+    # runs the reaper in-process, so it still counts.
+    with (worktree / "README.md").open("rb"):
+        assert rw._final_recheck(worktree, baseline) == "in use: a process works inside the checkout"
+
+
+def at_the_git_call(monkeypatch: pytest.MonkeyPatch, change: Any) -> list[Path]:
+    """Run ``change(quarantined)`` once every check has passed, as the non-forced ``git worktree remove`` starts."""
+    real = worktree_claims.safe_git
+    seen: list[Path] = []
+
+    def spy(args: list[str], **kwargs: Any) -> Any:
+        if args[:2] == ["worktree", "remove"]:
+            assert "--force" not in args
+            seen.append(Path(args[-1]))
+            change(Path(args[-1]))
+        return real(args, **kwargs)
+
+    monkeypatch.setattr(worktree_claims, "safe_git", spy)
+    return seen
+
+
+@pytest.mark.parametrize("change", [late_hidden, late_ignored, late_process])
+def test_arrival_during_the_git_removal_call_is_lost_documented_residual(
+    repo: Path, free_fuser: Path, monkeypatch: pytest.MonkeyPatch, holders: list[Any], change: Any
+) -> None:
+    """Residual risk, not a guarantee (runbook): no privilege-free check excludes a same-user writer.
+
+    Bytes or a process that arrive after the final re-check, while the
+    non-forced ``git worktree remove`` runs, are not seen: Git trusts
+    assume-unchanged, deletes ignored files and ignores processes.
+    """
+    worktree = dispatch_tree(repo, detached=True)
+    flag_for(change, worktree, repo)
+    seen = at_the_git_call(monkeypatch, change)
+
+    report = rw.reap_clean_pushed(repo_root=repo, dry_run=False)
+
+    assert outcome_for(report, worktree, repo).action == "removed"
+    [staged] = seen
+    assert not worktree.exists() and not staged.exists()
+    if change is late_process:
+        [process] = holders
+        assert process.poll() is None  # still running, its working directory deleted
+        assert os.readlink(f"/proc/{process.pid}/cwd").endswith(" (deleted)")
+
+
+def test_tracked_edit_at_the_git_call_is_refused_by_git_and_restored(
+    repo: Path, free_fuser: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    worktree = dispatch_tree(repo, detached=True)
+    at_the_git_call(monkeypatch, lambda tree: (tree / "README.md").write_text("unsaved\n", encoding="utf-8"))
+
+    report = rw.reap_clean_pushed(repo_root=repo, dry_run=False)
+
+    outcome = outcome_for(report, worktree, repo)
+    assert outcome.action == "error" and "worktree removal failed" in outcome.reason
+    assert (worktree / "README.md").read_text(encoding="utf-8") == "unsaved\n"  # nothing deleted: moved back
+    assert quarantine_entries(repo) == []
+
+
+def holder_record(repo: Path) -> dict[str, Any]:
+    [holder] = quarantine_entries(repo)
+    return json.loads((holder / rw.QUARANTINE_RECORD).read_text(encoding="utf-8"))
+
+
+def test_record_of_path_and_identity_is_durable_before_the_move(
+    repo: Path, free_fuser: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    worktree = dispatch_tree(repo)
+    identity = worktree.stat()
+    records: list[dict[str, Any]] = []
+    real_move = rw._move_worktree
+
+    def spy(primary: Path, source: Path, destination: Path) -> str | None:
+        if not records:
+            records.append(json.loads((destination / rw.QUARANTINE_RECORD).read_text(encoding="utf-8")))
+            assert stat.S_IMODE(destination.stat().st_mode) == 0o700
+            assert stat.S_IMODE(destination.parent.stat().st_mode) == 0o700
+            assert re.fullmatch(r"codex-[0-9a-f]{32}", destination.name)  # 128 random bits
+        return real_move(primary, source, destination)
+
+    monkeypatch.setattr(rw, "_move_worktree", spy)
+    report = rw.reap_clean_pushed(repo_root=repo, dry_run=False)
+
+    assert outcome_for(report, worktree, repo).action == "removed"
+    [record] = records
+    assert {key: record[key] for key in ("schema", "original", "task", "dev", "ino", "stage")} == {
+        "schema": "clean-pushed-quarantine.v1",
+        "original": SHOWN,
+        "task": "task-a",
+        "dev": identity.st_dev,
+        "ino": identity.st_ino,
+        "stage": "intent",
+    }
+    assert quarantine_entries(repo) == []
+
+
+def test_per_worktree_lock_is_held_through_the_git_call(
+    repo: Path, free_fuser: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    worktree = dispatch_tree(repo)
+    _key, lock_file = worktree_claims.lock_path(worktree, lock_dir=worktree_claims.repository_lock_dir(repo))
+    probe = "import fcntl, sys; fcntl.flock(open(sys.argv[1], 'a'), fcntl.LOCK_EX | fcntl.LOCK_NB)"
+    results: list[int] = []
+
+    def try_lock(tree: Path) -> None:
+        probed = subprocess.run([sys.executable, "-c", probe, str(lock_file)], capture_output=True, timeout=30)
+        results.append(probed.returncode)
+
+    at_the_git_call(monkeypatch, try_lock)
+    report = rw.reap_clean_pushed(repo_root=repo, dry_run=False)
+
+    assert outcome_for(report, worktree, repo).action == "removed"
+    assert results == [1]  # BlockingIOError: the reservation is held across quarantine, re-checks and removal
+
+
+def test_partial_removal_is_kept_in_the_quarantine_and_never_restored(
+    repo: Path, free_fuser: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    worktree = dispatch_tree(repo, detached=True)
+    real = worktree_claims.safe_git
+
+    def partial(args: list[str], **kwargs: Any) -> Any:
+        if args[:2] != ["worktree", "remove"]:
+            return real(args, **kwargs)
+        (Path(args[-1]) / ".gitignore").unlink()  # Git deleted some entries, then failed
+        return subprocess.CompletedProcess(args, 1, "", "error: simulated failure partway")
+
+    monkeypatch.setattr(worktree_claims, "safe_git", partial)
+    report = rw.reap_clean_pushed(repo_root=repo, dry_run=False)
+
+    outcome = outcome_for(report, worktree, repo)
+    assert outcome.action == "error" and "stopped partway" in outcome.reason
+    assert not worktree.exists()
+    assert holder_record(repo)["stage"] == "removing"
+
+    monkeypatch.setattr(worktree_claims, "safe_git", real)
+    later = rw.reap_clean_pushed(repo_root=repo, dry_run=False)
+    [kept] = [item for item in later.skipped if item.path.startswith(".worktrees/.reaping/")]
+    assert kept.reason == (
+        "quarantine: kept: Git removal may have started, so it may be partially deleted; inspect it (runbook)"
+    )
+    assert not worktree.exists() and len(quarantine_entries(repo)) == 1
+
+
+_CRASH = """
+import os, sys
+from pathlib import Path
+from scripts.orchestration import reap_worktrees as rw
+rw._FUSER = sys.argv[2]
+rw._uninspectable_same_user = lambda base, proc_root: False
+point = sys.argv[3]
+if point == "verify":
+    real = rw._clean_pushed_refusal
+    def crash(info, ctx, claims, *, recheck, tree=None):
+        if tree is not None and ".reaping" in tree.parts:
+            os._exit(9)
+        return real(info, ctx, claims, recheck=recheck, tree=tree)
+    rw._clean_pushed_refusal = crash
+else:
+    rw._final_recheck = lambda tree, baseline: os._exit(9)
+rw.reap_clean_pushed(repo_root=Path(sys.argv[1]), dry_run=False)
+"""
+
+
+@pytest.mark.parametrize(
+    ("point", "stage", "restored"),
+    [("verify", "intent", True), ("final_recheck", "removing", False)],
+)
+def test_crash_in_the_quarantine_is_recovered_only_when_removal_never_started(
+    repo: Path, free_fuser: Path, point: str, stage: str, restored: bool
+) -> None:
+    worktree = dispatch_tree(repo, detached=True)
+    crashed = subprocess.run(
+        [sys.executable, "-c", _CRASH, str(repo), str(free_fuser), point],
+        cwd=PROJECT_ROOT,
+        capture_output=True,
+        text=True,
+        timeout=120,
+    )
+    assert crashed.returncode == 9, crashed.stderr
+    assert not worktree.exists() and holder_record(repo)["stage"] == stage
+
+    dry = rw.reap_clean_pushed(repo_root=repo)
+    assert not worktree.exists() and len(quarantine_entries(repo)) == 1  # a dry run moves nothing
+
+    report = rw.reap_clean_pushed(repo_root=repo, dry_run=False)
+
+    if restored:
+        assert outcome_for(dry, worktree, repo).reason.startswith("would restore")
+        outcome = outcome_for(report, worktree, repo)
+        assert outcome.reason == "restored from the reaper quarantine (interrupted run); kept this run"
+        assert worktree.is_dir() and (worktree / "README.md").exists() and quarantine_entries(repo) == []
+    else:
+        [kept] = [item for item in report.skipped if item.path.startswith(".worktrees/.reaping/")]
+        assert "Git removal may have started" in kept.reason
+        assert not worktree.exists() and len(quarantine_entries(repo)) == 1
+    assert report.removed == ()
+
+
+def crashed_quarantine(repo: Path, **record: Any) -> tuple[Path, Path]:
+    """The state a run that died between the move and Git leaves: record, then the checkout in the holder."""
+    worktree = dispatch_tree(repo, detached=True)
+    identity = worktree.stat()
+    holder = repo / ".worktrees" / ".reaping" / f"codex-{'0' * 32}"
+    holder.parent.mkdir(mode=0o700)
+    holder.mkdir(mode=0o700)
+    (holder / rw.QUARANTINE_RECORD).write_text(
+        json.dumps(
+            {
+                "schema": "clean-pushed-quarantine.v1",
+                "original": SHOWN,
+                "task": "task-a",
+                "dev": identity.st_dev,
+                "ino": identity.st_ino,
+                "stage": "intent",
+                **record,
+            }
+        ),
+        encoding="utf-8",
+    )
+    git(repo, "worktree", "move", str(worktree), str(holder))
+    return worktree, holder / "task-a"
+
+
+@pytest.mark.parametrize(
+    ("record", "reason"),
+    [
+        ({"ino": 1}, "kept: directory identity differs from the record"),
+        ({"stage": "removing"}, "kept: Git removal may have started, so it may be partially deleted"),
+        ({"schema": "other"}, "no readable quarantine record"),
+        ({"original": ".worktrees/dispatch/../../outside/task-a"}, "no readable quarantine record"),
+    ],
+)
+def test_ambiguous_quarantine_entries_are_kept(
+    repo: Path, free_fuser: Path, record: dict[str, Any], reason: str
+) -> None:
+    worktree, staged = crashed_quarantine(repo, **record)
+
+    report = rw.reap_clean_pushed(repo_root=repo, dry_run=False)
+
+    [kept] = [item for item in report.skipped if item.path.startswith(".worktrees/.reaping/")]
+    assert kept.reason == f"quarantine: {reason}; inspect it (runbook)"
+    assert staged.is_dir() and not worktree.exists()
+    assert report.removed == ()
+
+
+def test_record_left_without_a_checkout_is_cleared(repo: Path, free_fuser: Path) -> None:
+    worktree, staged = crashed_quarantine(repo)
+    git(repo, "worktree", "move", str(staged), str(worktree))  # e.g. moved back by hand
+
+    rw.reap_clean_pushed(repo_root=repo)
+    assert len(quarantine_entries(repo)) == 1  # a dry run clears nothing
+    report = rw.reap_clean_pushed(repo_root=repo, dry_run=False)
+
+    assert quarantine_entries(repo) == []
+    assert outcome_for(report, worktree, repo).action == "removed", report  # an ordinary candidate again
+
+
+def test_quarantine_root_open_to_others_is_refused(repo: Path, free_fuser: Path) -> None:
+    worktree = dispatch_tree(repo)
+    root = repo / ".worktrees" / ".reaping"
+    root.mkdir()
+    root.chmod(0o755)
+
+    reason = _refusal(repo, worktree)
+
+    assert reason == "quarantine unavailable (quarantine directory is not a private real directory)"
+    assert list(root.iterdir()) == []
+
+
+def test_move_back_never_nests_the_checkout_in_a_path_that_reappeared(
+    repo: Path, free_fuser: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    worktree = dispatch_tree(repo, detached=True)
+    real_move = rw._move_worktree
+
+    def reappear_then_move(primary: Path, source: Path, destination: Path) -> str | None:
+        if ".reaping" in source.parts:  # the move back, after the late file refused removal
+            worktree.mkdir()  # a new checkout appears after the existence check, before Git renames
+            (worktree / "new.txt").write_text("someone else's work\n", encoding="utf-8")
+        return real_move(primary, source, destination)
+
+    monkeypatch.setattr(rw, "_move_worktree", reappear_then_move)
+    wrap_moves(monkeypatch, after=late_file)
+
+    report = rw.reap_clean_pushed(repo_root=repo, dry_run=False)
+
+    outcome = outcome_for(report, worktree, repo)
+    assert outcome.action == "error" and "already exists" in outcome.reason, outcome
+    assert list(worktree.iterdir()) == [worktree / "new.txt"]  # not moved inside the new directory
+    [holder] = quarantine_entries(repo)
+    assert (holder / worktree.name / "late.txt").exists()

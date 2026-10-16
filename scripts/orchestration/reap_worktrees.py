@@ -30,12 +30,12 @@ import hashlib
 import json
 import os
 import re
+import secrets
 import shutil
 import signal
 import stat
 import subprocess
 import sys
-import tempfile
 import time
 from collections.abc import Callable, Iterator
 from dataclasses import asdict, dataclass, field, replace
@@ -5616,10 +5616,17 @@ _CLEAN_PUSHED_WORKTREE_LOCK_TIMEOUT_S = 5.0
 _CLEAN_PUSHED_LIVE_STATUSES = frozenset({"spawning", "running"})
 _CLEAN_PUSHED_FETCH_TIMEOUT_S = 60.0
 _CLEAN_PUSHED_MOVE_TIMEOUT_S = 60.0
+_CLEAN_PUSHED_CENSUS_TIMEOUT_S = 60.0
 # Same depth as ``.worktrees/dispatch/<agent>/<task>/``: a checkout waits here
 # as ``.worktrees/.reaping/<agent>-<random>/<task>/`` between its last check
-# and its removal.
+# and its removal. ``<random>`` is 128 bits; the directory is 0700.
 QUARANTINE_RELATIVE = Path(".worktrees") / ".reaping"
+# Written into the holder before the move; a later run recovers from it.
+QUARANTINE_RECORD = ".reaper-quarantine.json"
+_QUARANTINE_SCHEMA = "clean-pushed-quarantine.v1"
+# ``intent``: moved (or about to be), Git removal not started; restorable.
+# ``removing``: Git removal may have started; never restored automatically.
+_QUARANTINE_STAGES = frozenset({"intent", "removing"})
 UNPUBLISHED_REFLOG_COMMIT = "unpublished_reflog_commit"
 UNINSPECTABLE_PROCESS = "uninspectable_process"
 LATE_CHANGE = "late_change"
@@ -5652,7 +5659,7 @@ class CleanPushedReport:
     be. ``skipped`` holds every refusal and failed removal with its reason.
     ``refusal`` is set when the whole run did nothing, for example because
     another cleanup held the reaper lock (``lock_busy``) or ``git fetch
-    --prune origin`` failed (``refs_stale``). ``uninspectable`` lists pids of
+    --prune origin`` or the ``git ls-remote`` census failed (``refs_stale``). ``uninspectable`` lists pids of
     this user's processes whose open files could not be read (every tree is
     then kept), ``late_change`` the trees that changed between their last
     check and removal, and ``unpublished_reflog_commit`` the trees whose HEAD
@@ -5669,6 +5676,8 @@ class CleanPushedReport:
     uninspectable: tuple[int, ...] = ()
     late_change: tuple[str, ...] = ()
     unpublished_reflog_commit: tuple[str, ...] = ()
+    census_refs: int = 0
+    census_missing: int = 0
 
     def as_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -6037,7 +6046,98 @@ def _hidden_change_refusal(path: Path) -> str | None:
     return None
 
 
-def _reflog_refusal(path: Path) -> str | None:
+@dataclass(frozen=True)
+class _OriginCensus:
+    """What ``git ls-remote origin`` advertised for heads and tags at the start of the run (#10778).
+
+    ``tips`` are the advertised commits (annotated tags peeled) present in
+    the local object store; ``missing`` counts advertised objects that are
+    not, which leaves any commit they might contain unproven. Local
+    remote-tracking refs are never consulted: a narrowed fetch refspec
+    leaves them stale.
+    """
+
+    tips: tuple[str, ...]
+    missing: int
+    refs: int
+
+
+def _origin_census(primary: Path) -> tuple[_OriginCensus | None, str | None]:
+    """Census of origin's heads and tags (bounded); ``(census, None)`` or ``(None, failure)``."""
+    label = "git ls-remote --heads --tags origin"
+    try:
+        proc = _run(
+            ["git", "ls-remote", "--heads", "--tags", "origin"], cwd=primary, timeout=_CLEAN_PUSHED_CENSUS_TIMEOUT_S
+        )
+    except subprocess.TimeoutExpired:
+        return None, f"{label} timed out after {_CLEAN_PUSHED_CENSUS_TIMEOUT_S:g}s"
+    except (OSError, ValueError, subprocess.SubprocessError) as exc:
+        return None, f"{label} failed ({type(exc).__name__})"
+    if proc.returncode != 0:
+        return None, f"{label} failed (exit {proc.returncode})"
+    form = _run(["git", "rev-parse", "--show-object-format"], cwd=primary, timeout=_CLEAN_PUSHED_PROBE_TIMEOUT_S)
+    width = {"sha1": 40, "sha256": 64}.get((form.stdout or "").strip()) if form.returncode == 0 else None
+    if width is None:
+        return None, "object format unknown"
+    advertised: dict[str, str] = {}
+    peeled: dict[str, str] = {}
+    for line in (proc.stdout or "").splitlines():
+        oid, tab, ref = line.partition("\t")
+        if (
+            not tab
+            or len(oid) != width
+            or oid.strip("0123456789abcdef")
+            or not ref.startswith(("refs/heads/", "refs/tags/"))
+        ):
+            return None, f"{label} printed an unexpected line"
+        if ref.endswith("^{}"):
+            peeled[ref.removesuffix("^{}")] = oid
+        else:
+            advertised[ref] = oid
+    if not advertised:
+        return _OriginCensus(tips=(), missing=0, refs=0), None
+    proofs = sorted({peeled.get(ref, oid) for ref, oid in advertised.items()})
+    check = _run(
+        ["git", "cat-file", "--batch-check=%(objectname) %(objecttype)"],
+        cwd=primary,
+        timeout=_CLEAN_PUSHED_PROBE_TIMEOUT_S,
+        input_text="\n".join(proofs) + "\n",
+    )
+    rows = [row.split() for row in (check.stdout or "").splitlines()]
+    if check.returncode != 0 or len(rows) != len(proofs) or any(len(row) != 2 for row in rows):
+        return None, "advertised objects could not be looked up locally"
+    tips = tuple(oid for oid, kind in rows if kind == "commit")
+    missing = sum(1 for _oid, kind in rows if kind == "missing")
+    return _OriginCensus(tips=tips, missing=missing, refs=len(advertised)), None
+
+
+def _unpublished(path: Path, revisions: list[str], census: _OriginCensus) -> bool:
+    """True when a commit reachable from ``revisions`` is reachable from no census tip.
+
+    Raises ``RuntimeError`` when Git cannot answer.
+    """
+    if not revisions:
+        return False
+    stdin = [*revisions, *(f"^{tip}" for tip in census.tips)]
+    proc = _run(
+        ["git", "rev-list", "--max-count=1", "--stdin"],
+        cwd=path,
+        timeout=_CLEAN_PUSHED_PROBE_TIMEOUT_S,
+        input_text="\n".join(stdin) + "\n",
+    )
+    if proc.returncode != 0:
+        raise RuntimeError("rev-list failed")
+    return bool((proc.stdout or "").strip())
+
+
+def _publication_unproven(census: _OriginCensus, refusal: str) -> str:
+    """``refusal``, or ``refs_stale`` when advertised objects missing locally might contain the commit."""
+    if census.missing:
+        return f"{REFS_STALE}: publication unproven; {census.missing} advertised origin object(s) missing locally"
+    return refusal
+
+
+def _reflog_refusal(path: Path, census: _OriginCensus) -> str | None:
     """Refuse when a commit this checkout alone records is on no origin ref (#10778).
 
     Removal deletes the checkout's HEAD reflog and its per-worktree refs
@@ -6051,32 +6151,22 @@ def _reflog_refusal(path: Path) -> str | None:
         cwd=path,
         timeout=_CLEAN_PUSHED_PROBE_TIMEOUT_S,
     )
-    tips = _run(
-        ["git", "for-each-ref", "--format=%(objectname)", "refs/remotes/origin/"],
-        cwd=path,
-        timeout=_CLEAN_PUSHED_PROBE_TIMEOUT_S,
-    )
-    if reflog.returncode != 0 or local.returncode != 0 or tips.returncode != 0:
+    if reflog.returncode != 0 or local.returncode != 0:
         return "reflog check failed"
-    named = dict.fromkeys((reflog.stdout or "").split() + (local.stdout or "").split())
-    if not named:
-        return None
-    revisions = [*named, *(f"^{tip}" for tip in dict.fromkeys((tips.stdout or "").split()))]
-    unpublished = _run(
-        ["git", "rev-list", "--max-count=1", "--stdin"],
-        cwd=path,
-        timeout=_CLEAN_PUSHED_PROBE_TIMEOUT_S,
-        input_text="\n".join(revisions) + "\n",
-    )
-    if unpublished.returncode != 0:
+    named = list(dict.fromkeys((reflog.stdout or "").split() + (local.stdout or "").split()))
+    try:
+        unpublished = _unpublished(path, named, census)
+    except RuntimeError:
         return "reflog check failed"
-    if (unpublished.stdout or "").strip():
-        return f"{UNPUBLISHED_REFLOG_COMMIT}: the HEAD reflog names a commit no origin ref contains"
+    if unpublished:
+        return _publication_unproven(
+            census, f"{UNPUBLISHED_REFLOG_COMMIT}: the HEAD reflog names a commit no origin ref contains"
+        )
     return None
 
 
-def _git_refusal(path: Path, expected_head: str | None) -> str | None:
-    """HEAD unchanged, the tree clean (flagged index entries included) and no commit missing from origin."""
+def _git_refusal(path: Path, expected_head: str | None, census: _OriginCensus) -> str | None:
+    """HEAD unchanged, the tree clean (flagged index entries included) and every commit on an origin head or tag."""
     try:
         head = _run(["git", "rev-parse", "--verify", "HEAD"], cwd=path, timeout=_CLEAN_PUSHED_PROBE_TIMEOUT_S)
         if head.returncode != 0:
@@ -6095,16 +6185,13 @@ def _git_refusal(path: Path, expected_head: str | None) -> str | None:
         refusal = _hidden_change_refusal(path)
         if refusal:
             return refusal
-        unpushed = _run(
-            ["git", "rev-list", "--max-count=1", "HEAD", "--not", "--remotes=origin"],
-            cwd=path,
-            timeout=_CLEAN_PUSHED_PROBE_TIMEOUT_S,
-        )
-        if unpushed.returncode != 0:
+        try:
+            unpushed = _unpublished(path, [expected_head], census)
+        except RuntimeError:
             return "unpushed-commit check failed"
-        if (unpushed.stdout or "").strip():
-            return "commits not on origin"
-        return _reflog_refusal(path)
+        if unpushed:
+            return _publication_unproven(census, "commits not on origin")
+        return _reflog_refusal(path, census)
     except subprocess.TimeoutExpired:
         return "git probe timed out"
 
@@ -6116,6 +6203,7 @@ class _CleanPushedContext:
     common_git_dir: Path
     tasks_dir: Path
     index: _TaskIndex
+    census: _OriginCensus
     now: float | None = None
     uninspectable: set[int] = field(default_factory=set)
 
@@ -6198,7 +6286,7 @@ def _clean_pushed_refusal(
     idle_s = (ctx.now if ctx.now is not None else time.time()) - newest
     if idle_s < CLEAN_PUSHED_MIN_IDLE_S:
         return f"last activity {max(0, int(idle_s // 60))} min ago (< 60 min)", claims
-    refusal = _git_refusal(tree, info.head)
+    refusal = _git_refusal(tree, info.head, ctx.census)
     if refusal:
         return refusal, claims
     return _process_refusal(tree, ctx.uninspectable), claims
@@ -6271,9 +6359,10 @@ def append_abandon_log(control_root: Path, entry: dict[str, Any]) -> None:
 def _refresh_origin_refs(primary: Path) -> str | None:
     """``git fetch --prune origin`` (no tags, no submodules, bounded); the failure, or ``None``.
 
-    Stale remote-tracking refs would prove a deleted or force-moved commit
-    still on origin. Runs before the reaper lock is taken: no remote read
-    may happen under it.
+    It brings origin's objects here, so the census tips can be checked for
+    ancestry; the refs it updates prove nothing (a narrowed fetch refspec
+    leaves some stale), :func:`_origin_census` does. Runs before the reaper
+    lock is taken: no remote read may happen under it.
     """
     try:
         proc = _run(
@@ -6306,55 +6395,392 @@ def _move_worktree(primary: Path, source: Path, destination: Path) -> str | None
     return None
 
 
-def _quarantine_stager(
-    primary: Path, original: Path, verify: Callable[[Path], str | None]
-) -> worktree_claims.RemovalStager:
-    """Move the checkout out of reach, then re-run every guard on it there (#10778).
+_Entry = tuple[int, ...]
+# Rewritten by ``git worktree move`` (the checkout's ``.git`` pointer, the admin
+# ``gitdir``) or refreshed by any Git command (``index``): only their type counts.
+_VOLATILE_TREE = frozenset({".git"})
+_VOLATILE_ADMIN = frozenset({"gitdir", "index"})
 
-    After the move no dispatch, shell or worker can reach the checkout by its
-    known path, and a process already inside now shows the quarantine path
-    in ``/proc``, so the guards that pass here are the last word before git
-    removes the quarantined path. A refusal, or a checkout git did not
-    remove, is moved back to ``original``. A failed move-back raises and
-    leaves the checkout, intact, in the quarantine.
+
+@dataclass(frozen=True)
+class _Manifest:
+    """Metadata of every entry of a checkout and of its Git admin directory (#10778).
+
+    Paths are relative, so a manifest taken before the quarantine move
+    compares equal to one taken after it. A write changes a file's ctime,
+    which no process can set back, so any change since the manifest shows.
+    """
+
+    admin: Path
+    tree: dict[str, _Entry]
+    admin_entries: dict[str, _Entry]
+
+
+def _entries(root: Path, volatile: frozenset[str]) -> dict[str, _Entry]:
+    """Every entry below ``root`` (not ``root`` itself), symlinks not followed; raises ``OSError``."""
+    entries: dict[str, _Entry] = {}
+    stack = [(root, "")]
+    while stack:
+        directory, prefix = stack.pop()
+        with os.scandir(directory) as listing:
+            for entry in listing:
+                name = prefix + entry.name
+                info = entry.stat(follow_symlinks=False)
+                kind = stat.S_IFMT(info.st_mode)
+                if name in volatile:
+                    entries[name] = (kind,)
+                    continue
+                entries[name] = (
+                    kind,
+                    stat.S_IMODE(info.st_mode),
+                    info.st_dev,
+                    info.st_ino,
+                    info.st_nlink,
+                    info.st_size,
+                    info.st_mtime_ns,
+                    info.st_ctime_ns,
+                )
+                if kind == stat.S_IFDIR:
+                    stack.append((Path(entry.path), f"{name}/"))
+    return entries
+
+
+def _manifest(tree: Path) -> _Manifest:
+    """The manifest of ``tree`` and its admin directory; raises ``OSError`` when either is unreadable."""
+    admin = _worktree_git_dir(tree)
+    if admin is None:
+        raise OSError("git admin directory unresolvable")
+    return _Manifest(admin=admin, tree=_entries(tree, _VOLATILE_TREE), admin_entries=_entries(admin, _VOLATILE_ADMIN))
+
+
+def _missing_entries(tree: Path, manifest: _Manifest) -> int:
+    """How many entries of ``manifest`` no longer exist: a failed Git removal deleted some of them."""
+    gone = sum(1 for name in manifest.tree if not os.path.lexists(tree / name))
+    return gone + sum(1 for name in manifest.admin_entries if not os.path.lexists(manifest.admin / name))
+
+
+def _final_recheck(tree: Path, baseline: _Manifest) -> str | None:
+    """The last look at the quarantined ``tree`` before Git removes it (#10778).
+
+    The tree and its admin directory must be exactly as they were before
+    artifact preservation, and no visible process may use it; unknown
+    visibility (an unlistable process table, an exhausted budget, a process
+    of this user that denies inspection) refuses. The reaper holds no handle
+    inside the tree here: every file it hashed and every directory it listed
+    is closed. This narrows the window between the guards and removal; it
+    cannot close it (runbook: residual risk).
+    """
+    try:
+        current = _manifest(tree)
+    except OSError:
+        return "content unreadable"
+    if current != baseline:
+        return "content changed since the pre-preservation manifest"
+    budget = _effective_timeout(_CLEAN_PUSHED_PROBE_TIMEOUT_S)
+    denied: list[int] = []
+    users = _proc_users_inside(tree, deadline=time.monotonic() + (budget or 0.0), uninspectable=denied)
+    if users is None:
+        return "process visibility unknown"
+    if users:
+        return "in use: a process works inside the checkout"
+    if denied:
+        return f"{UNINSPECTABLE_PROCESS} {denied[0]}: a process of this user cannot be inspected"
+    return None
+
+
+def _fsync_directory(path: Path) -> None:
+    fd = os.open(path, os.O_RDONLY | os.O_DIRECTORY)
+    try:
+        os.fsync(fd)
+    finally:
+        os.close(fd)
+
+
+def _write_quarantine_record(holder: Path, record: dict[str, Any]) -> None:
+    """Durably replace ``holder``'s record: write and fsync a temporary file, rename it, fsync ``holder``."""
+    temporary = holder / f"{QUARANTINE_RECORD}.tmp"
+    fd = os.open(temporary, os.O_WRONLY | os.O_CREAT | os.O_TRUNC | os.O_NOFOLLOW, 0o600)
+    with os.fdopen(fd, "w", encoding="utf-8") as handle:
+        handle.write(json.dumps(record, sort_keys=True) + "\n")
+        handle.flush()
+        os.fsync(handle.fileno())
+    os.replace(temporary, holder / QUARANTINE_RECORD)
+    _fsync_directory(holder)
+
+
+def _clear_quarantine(holder: Path) -> None:
+    """Drop the record and the empty holder. A failure leaves a record with no checkout, which a later run clears."""
+    with contextlib.suppress(OSError):
+        (holder / QUARANTINE_RECORD).unlink()
+        holder.rmdir()
+        _fsync_directory(holder.parent)
+
+
+def _new_holder(root: Path, agent: str) -> Path:
+    """A fresh 0700 holder with a 128-bit random name inside the private quarantine root."""
+    root.mkdir(mode=0o700, parents=True, exist_ok=True)
+    info = root.lstat()
+    if _real_directory(root) is None or info.st_uid != os.getuid() or info.st_mode & 0o077:
+        raise OSError("quarantine directory is not a private real directory")
+    holder = root / f"{agent}-{secrets.token_hex(16)}"
+    holder.mkdir(mode=0o700)
+    _fsync_directory(root)
+    return holder
+
+
+def _move_back(primary: Path, staged: Path, original: Path) -> str | None:
+    """Move ``staged`` to ``original`` by naming its parent: Git then refuses when ``original`` exists again.
+
+    Naming ``original`` itself would move the checkout *into* a directory that
+    reappeared there.
+    """
+    if staged.name != original.name:
+        return "quarantined name differs from the original"
+    return _move_worktree(primary, staged, original.parent)
+
+
+def _settle_quarantine(
+    primary: Path,
+    holder: Path,
+    staged: Path,
+    original: Path,
+    record: dict[str, Any],
+    baseline: _Manifest,
+    removal_started: bool,
+) -> None:
+    """After Git ran or a guard refused: clear, restore, or keep the quarantined checkout.
+
+    Git removed it: clear the record. Git started and some entry is gone: keep
+    the remains in the quarantine (the record stays ``removing``). Otherwise
+    nothing was deleted: mark the record restorable and move the checkout back,
+    never over a path that exists again.
+    """
+    if not os.path.lexists(staged):
+        _clear_quarantine(holder)
+        return
+    if removal_started and _missing_entries(staged, baseline):
+        raise RuntimeError("git removal stopped partway; the remains are kept in the quarantine (runbook)")
+    with contextlib.suppress(OSError):  # left at ``removing``, a later run keeps the checkout
+        _write_quarantine_record(holder, record)
+    if os.path.lexists(original):
+        raise RuntimeError(f"cannot move the checkout back: {original.name} exists again; kept in quarantine")
+    failure = _move_back(primary, staged, original)
+    if failure is not None:
+        raise RuntimeError(f"cannot move the checkout back ({failure}); it is kept in the quarantine")
+    _clear_quarantine(holder)
+
+
+def _quarantine_stager(
+    primary: Path,
+    original: Path,
+    verify: Callable[[Path], str | None],
+    baseline: Callable[[], _Manifest | None],
+) -> worktree_claims.RemovalStager:
+    """Move the checkout out of reach, re-run every guard there, then one final re-check (#10778).
+
+    Before the move a record of the checkout's original path and directory
+    identity is written durably into the holder, so a later run can recover
+    from a crash at any point. After the move no dispatch, shell or worker
+    reaches the checkout by its known path, and a process already inside
+    shows the quarantine path in ``/proc``. Every guard runs again on the
+    quarantined path; the record then turns ``removing`` and
+    :func:`_final_recheck` compares the tree with ``baseline()`` (taken
+    before artifact preservation) and looks for holders once more,
+    immediately before Git. A refusal, or a checkout Git did not remove, is
+    moved back to ``original`` (:func:`_settle_quarantine`).
     """
 
     @contextlib.contextmanager
     def stage(target: Path) -> Iterator[Path]:
-        root = primary / QUARANTINE_RELATIVE
+        manifest = baseline()
+        if manifest is None:
+            raise worktree_claims.RemovalStageRefused("no pre-preservation manifest")
+        holder: Path | None = None
         try:
-            root.mkdir(mode=0o700, parents=True, exist_ok=True)
-            if _real_directory(root) is None:
-                raise OSError("quarantine directory is not a real directory")
-            holder = Path(tempfile.mkdtemp(prefix=f"{original.parent.name}-", dir=root))
-        except OSError as exc:
-            raise worktree_claims.RemovalStageRefused(f"quarantine unavailable ({type(exc).__name__})") from None
+            holder = _new_holder(primary / QUARANTINE_RELATIVE, original.parent.name)
+            identity = target.lstat()
+            record: dict[str, Any] = {
+                "schema": _QUARANTINE_SCHEMA,
+                "original": original.relative_to(primary.resolve()).as_posix(),
+                "task": original.name,
+                "dev": identity.st_dev,
+                "ino": identity.st_ino,
+                "stage": "intent",
+                "at": reaper_lifecycle.utc_now().isoformat(),
+            }
+            _write_quarantine_record(holder, record)
+        except (OSError, ValueError) as exc:
+            if holder is not None:
+                _clear_quarantine(holder)
+            detail = exc.strerror if isinstance(exc, OSError) and exc.strerror else str(exc.args[0] if exc.args else "")
+            raise worktree_claims.RemovalStageRefused(f"quarantine unavailable ({detail})") from None
         staged = holder / original.name
         failure = _move_worktree(primary, target, holder)
         if failure is not None:
-            with contextlib.suppress(OSError):
-                holder.rmdir()
             if os.path.lexists(staged) or not os.path.lexists(target):
                 raise RuntimeError(f"{failure}; checkout state after the failed move needs inspection")
+            _clear_quarantine(holder)
             raise worktree_claims.RemovalStageRefused(failure)
+        removal_started = False
         try:
+            _fsync_directory(holder)
+            _fsync_directory(original.parent)
             refusal = verify(staged)
             if refusal:
                 raise worktree_claims.RemovalStageRefused(f"{LATE_CHANGE}: {refusal}")
+            _write_quarantine_record(holder, {**record, "stage": "removing"})
+            refusal = _final_recheck(staged, manifest)
+            if refusal:
+                raise worktree_claims.RemovalStageRefused(f"{LATE_CHANGE}: final re-check: {refusal}")
+            removal_started = True
             yield staged
         finally:
-            if os.path.lexists(staged):
-                if os.path.lexists(original):
-                    raise RuntimeError(
-                        f"cannot move the checkout back: {original.name} exists again; kept in quarantine"
-                    )
-                failure = _move_worktree(primary, staged, original)
-                if failure is not None:
-                    raise RuntimeError(f"cannot move the checkout back ({failure}); it is kept in the quarantine")
-            with contextlib.suppress(OSError):
-                holder.rmdir()
+            _settle_quarantine(primary, holder, staged, original, record, manifest, removal_started)
 
     return stage
+
+
+def _read_quarantine_record(holder: Path) -> dict[str, Any] | None:
+    """The holder's record when it is a regular file of the current schema naming a dispatch path; else ``None``."""
+    path = holder / QUARANTINE_RECORD
+    try:
+        if not stat.S_ISREG(path.lstat().st_mode):
+            return None
+        record = json.loads(path.read_bytes())
+    except (OSError, ValueError, RecursionError):
+        return None
+    if not isinstance(record, dict) or record.get("schema") != _QUARANTINE_SCHEMA:
+        return None
+    original, task = record.get("original"), record.get("task")
+    if not isinstance(original, str) or not isinstance(task, str) or record.get("stage") not in _QUARANTINE_STAGES:
+        return None
+    if not all(isinstance(record.get(key), int) and not isinstance(record.get(key), bool) for key in ("dev", "ino")):
+        return None
+    parts = Path(original).parts
+    if len(parts) != 4 or parts[:2] != (".worktrees", "dispatch") or parts[3] != task:
+        return None
+    if any(part in {"", ".", ".."} or "/" in part for part in parts) or "/" in task:
+        return None
+    return record
+
+
+def _restore_refusal(
+    record: dict[str, Any], staged: Path, original: Path, registered: dict[Path, WorktreeInfo], ctx: _CleanPushedContext
+) -> str | None:
+    """Why a quarantined checkout may not be moved back; ``None`` when every restore guard passes."""
+    if record["stage"] != "intent":
+        return "Git removal may have started, so it may be partially deleted"
+    if _real_directory(staged) is None:
+        return "not a real directory"
+    try:
+        info = staged.lstat()
+    except OSError:
+        return "unreadable"
+    if (info.st_dev, info.st_ino) != (record["dev"], record["ino"]):
+        return "directory identity differs from the record"
+    entry = registered.get(staged.resolve())
+    if entry is None:
+        return "not a registered worktree"
+    if entry.locked_reason is not None:
+        return "git worktree is locked"
+    if os.path.lexists(original):
+        return "its original path exists again and is never overwritten"
+    if original.parent.parent != ctx.dispatch_root or _real_directory(original.parent) is None:
+        return "its original parent directory is missing or not a real directory"
+    return None
+
+
+def _recover_quarantine(
+    primary: Path, ctx: _CleanPushedContext, listing: list[WorktreeInfo], *, control_root: Path, dry_run: bool
+) -> tuple[list[CleanPushedOutcome], set[Path], bool]:
+    """Judge what an interrupted run left in ``.worktrees/.reaping/`` (#10778).
+
+    A checkout whose record says Git removal never started is moved back,
+    under delegate's per-worktree lock of its original path, when every
+    restore guard passes (:func:`_restore_refusal`). Everything
+    else is kept and reported: no or an unreadable record, removal possibly
+    started, another directory under the recorded name, an occupied
+    original path. A record left with no checkout is cleared. Returns
+    ``(outcomes, paths judged, whether a checkout moved)``.
+    """
+    root = primary.resolve() / QUARANTINE_RELATIVE
+    outcomes: list[CleanPushedOutcome] = []
+    handled: set[Path] = set()
+    if not os.path.lexists(root):
+        return outcomes, handled, False
+    registered = {info.path.resolve(): info for info in listing}
+    if _real_directory(root) is None:
+        handled.update(path for path in registered if path.parent.parent == root)
+        reason = "quarantine: the quarantine directory is not a real directory; inspect it (runbook)"
+        return (
+            [CleanPushedOutcome(path=_display_path(root, primary.resolve()), action="skipped", reason=reason)],
+            handled,
+            False,
+        )
+    moved = False
+    for holder in sorted(root.iterdir()):
+        handled.update(path for path in registered if path.parent == holder)
+
+        def keep(why: str, where: Path = holder) -> None:
+            outcomes.append(
+                CleanPushedOutcome(
+                    path=_display_path(where, primary.resolve()),
+                    action="skipped",
+                    reason=f"quarantine: {why}; inspect it (runbook)",
+                )
+            )
+
+        if holder.is_symlink() or not holder.is_dir():
+            keep("not a directory")
+            continue
+        record = _read_quarantine_record(holder)
+        if record is None:
+            keep("no readable quarantine record")
+            continue
+        staged = holder / record["task"]
+        original = primary.resolve() / record["original"]
+        if not os.path.lexists(staged):
+            try:
+                contents = os.listdir(holder)
+            except OSError:
+                contents = []
+            if contents != [QUARANTINE_RECORD]:
+                keep("unexpected entries next to the record")
+            elif not dry_run:
+                _clear_quarantine(holder)
+            continue
+        refusal = _restore_refusal(record, staged, original, registered, ctx)
+        if refusal:
+            keep(f"kept: {refusal}", staged)
+            continue
+        handled.add(original)
+        shown = _display_path(original, primary.resolve())
+        if dry_run:
+            reason = "would restore it from the reaper quarantine (interrupted run)"
+            outcomes.append(CleanPushedOutcome(path=shown, action="skipped", reason=reason))
+            continue
+        try:
+            with worktree_claims.worktree_lock(
+                original,
+                lock_dir=worktree_claims.repository_lock_dir(control_root),
+                timeout_s=_CLEAN_PUSHED_WORKTREE_LOCK_TIMEOUT_S,
+            ):
+                refusal = _restore_refusal(record, staged, original, registered, ctx)
+                failure = refusal or _move_back(primary, staged, original)
+        except worktree_claims.WorktreeLockError as exc:
+            failure = worktree_claims.lock_refusal(exc)
+        if failure is not None:
+            keep(f"restore failed: {failure}", staged)
+            continue
+        moved = True
+        _clear_quarantine(holder)
+        reason = "restored from the reaper quarantine (interrupted run); kept this run"
+        try:
+            reaper_lifecycle.append_journal(primary, "clean-pushed-restored", path=shown)
+        except OSError as exc:
+            reason += f"; journal write failed ({exc})"
+        outcomes.append(CleanPushedOutcome(path=shown, action="skipped", reason=reason))
+    return outcomes, handled, moved
 
 
 def reap_clean_pushed(
@@ -6366,17 +6792,20 @@ def reap_clean_pushed(
 ) -> CleanPushedReport:
     """Remove clean, fully pushed, idle dispatch worktrees; dry run by default (#10778).
 
-    First ``git fetch --prune origin`` refreshes the remote-tracking refs,
-    outside the reaper lock; if it fails the run does nothing
-    (``refs_stale``). A registered checkout is then removed only when all of
+    First ``git fetch --prune origin`` refreshes local objects and
+    ``git ls-remote --heads --tags origin`` takes the census that alone
+    proves publication (:class:`_OriginCensus`), both outside the reaper
+    lock; if either fails the run does nothing (``refs_stale``). A
+    registered checkout is then removed only when all of
     these hold, each checked again under delegate's per-worktree lock
     immediately before removal: it is exactly
     ``.worktrees/dispatch/<agent>/<task>/`` (not ACP, not a symlink, not
     locked, not reserved); ``git status --porcelain --untracked-files=all``
     is empty and no assume-unchanged or skip-worktree file on disk differs
-    from the index; ``git rev-list HEAD --not --remotes=origin`` is empty and
-    every commit in the checkout's HEAD reflog and per-worktree refs is on an
-    origin ref; neither ``fuser`` nor the process table shows a user, and no
+    from the index; HEAD and every commit in the checkout's HEAD reflog and
+    per-worktree refs are ancestors of an advertised origin head or tag
+    present locally (unproven while an advertised object is missing:
+    ``refs_stale``); neither ``fuser`` nor the process table shows a user, and no
     live process of this user denies inspection (a probe failure counts as
     in use; an uninspectable process keeps every tree for the run); no task
     record claiming it is ``spawning``, ``running``, unsettled, unreadable or
@@ -6384,10 +6813,13 @@ def reap_clean_pushed(
     older than 60 minutes. Removal goes through
     :func:`worktree_claims.remove_unclaimed_worktree` without ``force``, so
     the shared claim scan and ignored-output preservation (256 MiB cap) still
-    apply. Right before git removes it, the checkout is moved to
-    ``.worktrees/.reaping/`` and every guard runs again there; a change
-    since the last check (``late_change``) moves it back. A failed removal
-    is reported and never retried. Each removal is journalled as intent and
+    apply. Right before git removes it, the checkout is recorded and moved to
+    ``.worktrees/.reaping/``, every guard runs again there, and one final
+    re-check compares it with its pre-preservation manifest and scans for
+    holders (:func:`_quarantine_stager`); a change since the last check
+    (``late_change``) moves it back. What an interrupted run left in the
+    quarantine is judged first (:func:`_recover_quarantine`). A failed
+    removal is reported and never retried. Each removal is journalled as intent and
     as confirmed, then appended to ``batch_state/worktree-abandon-log.jsonl``.
     Branches are never touched.
 
@@ -6407,6 +6839,9 @@ def reap_clean_pushed(
     fetch_failure = _refresh_origin_refs(primary)
     if fetch_failure is not None:
         return refused(f"{REFS_STALE}: {fetch_failure}", stale=True)
+    census, census_failure = _origin_census(primary)
+    if census is None:
+        return refused(f"{REFS_STALE}: {census_failure}", stale=True)
     try:
         lock = _ReapLock(primary, timeout_s=lock_timeout_s)
         lock.__enter__()
@@ -6431,8 +6866,20 @@ def reap_clean_pushed(
             common_git_dir=common_git_dir,
             tasks_dir=tasks_dir,
             index=_build_task_index(tasks_dir, primary),
+            census=census,
         )
+        recovered, handled, moved = _recover_quarantine(
+            primary, ctx, listing, control_root=control_root, dry_run=dry_run
+        )
+        skipped.extend(recovered)
+        if moved:
+            try:
+                listing = list_git_worktrees(primary, resolve_paths=False)
+            except RuntimeError as exc:
+                return refused(str(exc))
         for info in listing:
+            if info.path.resolve() in handled:
+                continue
             shown = _display_path(info.path, primary)
             claims = list(ctx.index.by_path.get(info.path.resolve(), ()))
             refusal, claims = _clean_pushed_refusal(info, ctx, claims, recheck=False)
@@ -6462,9 +6909,26 @@ def reap_clean_pushed(
                     why = "re-check timed out"
                 return why
 
-            def recheck(guards: Callable[[], str | None] = guards) -> tuple[bool, str]:
+            baseline: dict[str, _Manifest] = {}
+
+            def recheck(
+                guards: Callable[[], str | None] = guards,
+                info: WorktreeInfo = info,
+                baseline: dict[str, _Manifest] = baseline,
+            ) -> tuple[bool, str]:
                 why = guards()
-                return (False, f"re-check: {why}") if why else (True, "")
+                if why:
+                    return False, f"re-check: {why}"
+                # Under the per-worktree lock and before artifact preservation:
+                # what the final re-check compares the quarantined tree with.
+                try:
+                    baseline["tree"] = _manifest(info.path)
+                except OSError:
+                    return False, "re-check: content unreadable"
+                return True, ""
+
+            def taken(baseline: dict[str, _Manifest] = baseline) -> _Manifest | None:
+                return baseline.get("tree")
 
             try:
                 reaper_lifecycle.append_journal(
@@ -6491,7 +6955,7 @@ def reap_clean_pushed(
                 tasks_dir=tasks_dir,
                 lock_timeout_s=_CLEAN_PUSHED_WORKTREE_LOCK_TIMEOUT_S,
                 settled_claim=_worker_proven_gone,
-                stage_removal=_quarantine_stager(primary, info.path, guards),
+                stage_removal=_quarantine_stager(primary, info.path, guards, taken),
             )
             if removal.action != "removed":
                 detail = f"{removal.reason}: {removal.error}" if removal.error else removal.reason
@@ -6534,6 +6998,8 @@ def reap_clean_pushed(
         unpublished_reflog_commit=tuple(
             outcome.path for outcome in skipped if UNPUBLISHED_REFLOG_COMMIT in outcome.reason
         ),
+        census_refs=census.refs,
+        census_missing=census.missing,
     )
 
 
@@ -6545,7 +7011,8 @@ def format_clean_pushed_report(report: CleanPushedReport) -> str:
     errors = sum(1 for outcome in report.skipped if outcome.action == "error")
     lines = [
         f"{mode} clean-pushed: {len(report.removed)} {verb} ({report.freed_mb} MB), "
-        f"{len(report.skipped) - errors} skipped, {errors} error(s); origin refs refreshed (git fetch --prune origin)"
+        f"{len(report.skipped) - errors} skipped, {errors} error(s); origin refs refreshed (git fetch --prune origin); "
+        f"origin census: {report.census_refs} heads and tags (git ls-remote), {report.census_missing} missing locally"
     ]
     if report.uninspectable:
         lines.append(f"{UNINSPECTABLE_PROCESS}: pid(s) {', '.join(map(str, report.uninspectable))}; every tree kept")

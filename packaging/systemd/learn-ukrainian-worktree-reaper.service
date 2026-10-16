@@ -16,7 +16,8 @@ TimeoutStartSec=1200
 TimeoutStopSec=120
 Nice=15
 IOSchedulingClass=idle
-# Network only for the one bounded `git fetch --prune origin` that refreshes
-# the remote-tracking refs before the run (no GitHub API call). The seccomp
+# Network only for the bounded `git fetch --prune origin` and the
+# `git ls-remote --heads --tags origin` census before the run (no GitHub API
+# call). The seccomp
 # address-family filter, which a user manager enforces, allows nothing else.
 RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
