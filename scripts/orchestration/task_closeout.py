@@ -1104,6 +1104,17 @@ def cmd_carrier(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_recover_local(args: argparse.Namespace) -> int:
+    from scripts.orchestration.lifecycle_observation import recover
+
+    receipt, replayed = recover(
+        args.repo_root, state_file=Path(args.state_file), task_file=Path(args.task_record),
+        manifest_file=Path(args.preserved_manifest), push_file=Path(args.push_record), now=args.now or utc_now(),
+    )
+    print(json.dumps({"receipt": receipt, "replayed": replayed}, ensure_ascii=False, indent=2))
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description="Verify typed task closeout evidence.\nUse read-only observation first; mutations need explicit authorization.",
@@ -1112,6 +1123,23 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument("--repo-root", type=Path, default=repo_root_from_file(), help='Repository worktree root; defaults to this checkout.')
     sub = parser.add_subparsers(dest="command", required=True)
+    recover = sub.add_parser(
+        "recover-local", help="Append a verified local observation for an already-reaped merged task.",
+        description="Recover historical dispatch facts from a verified preservation bundle. Use only after removal; no GitHub calls.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""Example:
+  .venv/bin/python -m scripts.orchestration.task_closeout recover-local --state-file ledger.json --task-record task.json --preserved-manifest batch_state/preserved/task/attempt.manifest.json --push-record push.json
+Outputs: One append-only lifecycle receipt, or the existing verified receipt on retry.
+Exit codes: 0 = recovered/replayed; 2 = typed refusal; no GitHub mutation.
+Related: docs/runbooks/worktree-cleanup.md; #10752.
+""",
+    )
+    recover.add_argument("--state-file", required=True, help="Existing lifecycle ledger, e.g. ledger.json.")
+    recover.add_argument("--task-record", required=True, help="Delegate task JSON with lifecycle and merged reaper proof, e.g. task.json.")
+    recover.add_argument("--preserved-manifest", required=True, help="Canonical preservation manifest, e.g. batch_state/preserved/task/attempt.manifest.json.")
+    recover.add_argument("--push-record", required=True, help="Successful pushed_exact_head JSON record with head, remote_head, cwd and push step exit_code=0.")
+    recover.add_argument("--now", help="UTC recovery timestamp in ISO 8601; default: current UTC, never backdated.")
+    recover.set_defaults(func=cmd_recover_local)
 
     init = sub.add_parser(
         "init", help="Snapshot authoritative issue ACs into a new lifecycle ledger.",
@@ -1193,9 +1221,12 @@ def build_parser() -> argparse.ArgumentParser:
 
 @publication_cli(task_lifecycle.LifecycleError)
 def main(argv: list[str] | None = None) -> int:
+    from scripts.orchestration.lifecycle_observation import repository_context
+
     args = build_parser().parse_args(argv)
     try:
-        return args.func(args)
+        with repository_context(args.repo_root):
+            return args.func(args)
     except (task_lifecycle.LifecycleError, json.JSONDecodeError, OSError) as exc:
         print(json.dumps({"error": str(exc)}, ensure_ascii=False, indent=2), file=sys.stderr)
         return 2
