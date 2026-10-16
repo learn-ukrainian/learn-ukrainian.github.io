@@ -1,8 +1,12 @@
-# Epic #6321 — word-card data, dataset-first (plan v1.1.2)
+# Epic #6321 — word-card data, dataset-first (plan v1.2)
 
 Status: APPROVED — designated approval: author Claude Opus 5.5 (open-model-data driver), GPT-6.1 Sol APPROVE on v1.1
 (`design-cards-plan-sol-r2`, sha256 0dd10f0d…) after v1 REQUEST_CHANGES (`design-cards-plan-sol`; §8 maps each finding).
 v1.1.1: editorial — §7 ВТС residual reworded to match §6 (the one non-blocking residual of round 2). v1.1.2: §7 duplicate ВТС entry removed (doc-review residual).
+v1.2: execution policy. The existing Atlas backed by atlas.db remains live. Improving and publishing that Atlas
+proceeds now, separate from the later switch of Atlas pages to word-card records. The Atlas lane owns presentation
+and publication; the open-model-data lane owns card and data work. This amendment neither deploys nor certifies
+anything. Detail: §9.
 Authority: operator decisions 2026-10-06 on #6321 — (1) word-level dataset components come from the word cards,
 superseding RB-1 design §6(b); (2) the open-model-data lane owns word-card DATA end to end, the Atlas lane keeps
 presentation. No deadline ("no drift, no rush").
@@ -14,10 +18,13 @@ presentation. No deadline ("no drift, no rush").
   (`scripts/atlas/word_card_foundation.py`: `freeze`/`allocate`/`verify`), the frozen pilot
   (`registry/atlas/pilot/pilot-v1.json`, 150 units) and its 114 allocated identities
   (`registry/atlas/identity/registry.json`). RB-1 P1–P6 and its gate (§4) are unchanged.
-- **Changed:** order and first consumer. `migration.md` starts from today's `atlas.db` and proves Atlas pages and
-  practice first; this plan builds the card fields the dataset needs first, from held sources only (M3
-  "re-extract, do not copy"), with the dataset projection (#8988) as the first consumer. Atlas presentation and
-  practice consume the same cards later (Atlas lane).
+- **Changed:** order and first consumer of word-card records. This plan builds the card fields the dataset
+  needs first, from held sources only (M3 "re-extract, do not copy"), with the dataset projection (#8988)
+  as the first card consumer. Atlas pages and practice consume those cards later, and only through the
+  switch gate in §9. The existing Atlas backed by `atlas.db` stays live: the Atlas lane improves and
+  publishes that Atlas now. That current delivery is separate from the dataset release and from the later
+  switch to word-card records. `migration.md` still starts from today's `atlas.db` as the page baseline
+  the cards must meet; it does not park current `atlas.db` improvements.
 - **RB-1 components:** C2 (forms, stress), C3 (synonyms/antonyms by sense, СУМ-20 meanings), C4 (phraseology) and
   C7 (Russification contrast) become projections of the cards. C1, C5, C6, C9 continue directly (REVIEW_BUILD.md
   v1.4 records this; §6(b) is withdrawn).
@@ -27,6 +34,9 @@ presentation. No deadline ("no drift, no rush").
 | Data lane (this epic) | Atlas lane (#4387) |
 | --- | --- |
 | card store, ingestion (ULIF, VESUM, СУМ-20, phraseology, PULS, …), identities and registry events, citations, sense binding, suppression/takedown (#8980), the Russification data model and gate (#8982 AC-01/AC-03), field gates, dataset projection (#8988, #8989), Gate 1 data checks, Gate 2 golden set | Atlas pages, practice eligibility and decks (#8983, #8984), site, the reviewed Atlas page section for Russification (#8982 AC-02), lesson links |
+
+Current `atlas.db` presentation and publication proceed now under the Atlas lane. Card and dataset work
+stay with this lane. Switching Atlas pages to word-card records waits for §9.
 
 Issue membership moves after the Atlas lane replies (msgs 261/262; default 2026-10-06T14:00Z).
 
@@ -81,6 +91,7 @@ contrast pairs. Every unit ends in exactly one disposition (accepted, held, with
   golden set's 15 Russification cases).
 - **W6 Gate 1 complete.** Gate 1 passes only when the Atlas lane's part (rendering, applicable/ineligible practice
   combinations, generated-item semantic review, progress behaviour) also passes on the same pilot build.
+  That check gates the card pilot. It does not hold current `atlas.db` publication (§9).
 - **W7 Gate 2 golden set.** Implement the missing evaluation contract (today `verify --for-evaluation` refuses:
   no authenticated operator authority/signature or thresholds) — the operator signs the sealed manifest and sets
   the thresholds; two blind adjudicators outside the author's family; used held-out cases move to replay and are
@@ -125,3 +136,36 @@ C2 MemoryError (W9, this lane); 46 % form disagreement (W2, this lane); ВТС a
 5. (should) Held-out membership frozen before development; evaluation contract is W7 work → W0, W7.
 6. (should) Vertical slice first; unit-grain denominators; unit-by-unit equivalence → W1a, §4 intro, W3.
 7. (should) Card-store placement vs dataset output containment → §5.
+
+## 9. Current Atlas delivery and the word-card page switch (v1.2)
+
+The existing Atlas backed by `atlas.db` remains live. Improving and publishing that Atlas proceeds now.
+That delivery is separate from the open dataset release and from the later switch of Atlas pages to
+word-card records. The Atlas lane owns presentation and publication. The open-model-data lane owns card
+and data work. This documentation amendment neither deploys nor certifies anything.
+
+Programme Phase 5 certification and programme Phase 6 full coverage, as recorded on #8977, continue to
+gate the open dataset release and the switch of Atlas pages to word-card records. Existing source, field,
+provenance, licence, withdrawal, source-fidelity and certification obligations are unchanged. This
+amendment does not reduce the source denominator, treat the pilot as gold, or accept uncertified cards
+or exports. Dataset certification gates and licence gates are unchanged. The open-model-data driver
+priority order remains #10512, then #8959, then #10853.
+
+### Switch gate
+
+Before Atlas pages switch from the current `atlas.db` pages to word-card records:
+
+1. Freeze a lemma sample and both the current and candidate page and data versions. This plan does not
+   set the sample size and does not certify that a switch has been executed.
+2. Compare the current page and the candidate page side by side for every currently displayed field,
+   for every sample member: forms, stress, senses, examples, citations. Examples stay in this comparison
+   whether or not they are in the current card slice (§3).
+3. The candidate must be equal or better on every one of those fields for every sample member. It must
+   never carry fewer facts, and it must never carry a wrong form. Missing comparison evidence is not a pass.
+4. Record the expected evidence, the current page evidence, the candidate page evidence, and any
+   unresolved findings.
+5. Independent cross-family review, and a Ukrainian-qualified check with source verification, are
+   required before the switch.
+
+Passing this comparison does not replace Phase 5 certification or full coverage. Editing this plan is
+not the switch proof.
