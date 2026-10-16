@@ -2061,7 +2061,10 @@ def sparse_missing_tree_skip_reason(
         return None
     normalized = rel_path.replace("\\", "/").lstrip("./")
     needed = _trees_needed_by_test(normalized, item_name)
-    for tree in sorted(_SPARSE_TREES):
+    # Declaration order names data/projects before data/lexicon, which is no
+    # longer tracked (#8853), so a test that reads both names the include
+    # that brings files.
+    for tree in (*_SPARSE_TREE_DIRS, *sorted(_SPARSE_MARKER_ONLY_TREES)):
         if tree in missing_trees and tree in needed:
             return f"{tree} is absent from this sparse worktree; re-include it with --sparse-include {tree}"
     return None
