@@ -54,8 +54,8 @@ def refuse_quarantined_package(dataset_dir: Path) -> None:
 def main() -> int:
     parser = argparse.ArgumentParser(
         description=(
-            "Upload a previously built unified ULDR dataset to Hugging Face.\n"
-            "Use only after checking the external package and its intended repository."
+            "Upload a previously built dataset to a private Hugging Face repository.\n"
+            "Use only after checking the external package and its intended repository; public targets are refused."
         ),
         epilog=(
             "Example: /home/ops/learn-ukrainian/.venv/bin/python "
@@ -84,12 +84,13 @@ def main() -> int:
         "--token",
         type=str,
         default=None,
-        help="Hugging Face API token (defaults to HF_TOKEN env variable or ~/.cache/huggingface/token)",
+        help="Hugging Face API token (default: HF_TOKEN environment variable; never saved locally)",
     )
     parser.add_argument(
         "--private",
         action="store_true",
-        help="Make repository private (default is public)",
+        default=True,
+        help="Create a private repository (default: private; existing public repositories are refused)",
     )
     args = parser.parse_args()
 
@@ -105,47 +106,59 @@ def main() -> int:
         return 1
 
     token = args.token or os.environ.get("HF_TOKEN")
+    if not token or not token.strip():
+        print("ERROR: Provide a Hugging Face token via --token or HF_TOKEN.")
+        return 1
 
     try:
-        from huggingface_hub import HfApi, login
+        from huggingface_hub import HfApi
+        from huggingface_hub.errors import RepositoryNotFoundError
     except ImportError:
         print("ERROR: huggingface_hub is not installed. Install via: pip install huggingface_hub")
         return 1
 
-    if token:
-        login(token=token)
-
-    api = HfApi(token=token)
-
     try:
-        user_info = api.whoami()
-        print(f"Authenticated as Hugging Face user: {user_info.get('name')} (Pro: {user_info.get('isPro', False)})")
-    except Exception as e:
-        print(f"Authentication error: {e}")
-        print("\nPlease provide a valid Hugging Face token:")
-        print("  export HF_TOKEN='hf_...'")
-        print("  or pass --token 'hf_...'")
+        api = HfApi(token=token)
+        api.whoami()
+    except Exception:
+        print("ERROR: Hugging Face authentication failed.")
         return 1
 
-    print(f"Ensuring Hugging Face dataset repository exists: {args.repo_id}...")
-    api.create_repo(
-        repo_id=args.repo_id,
-        repo_type="dataset",
-        private=args.private,
-        exist_ok=True,
-    )
+    try:
+        try:
+            info = api.repo_info(repo_id=args.repo_id, repo_type="dataset")
+        except RepositoryNotFoundError as exc:
+            # The Hub also uses this class for authentication failures and gated repos.
+            if type(exc) is not RepositoryNotFoundError or getattr(exc.response, "status_code", None) != 404:
+                raise
+            api.create_repo(
+                repo_id=args.repo_id,
+                repo_type="dataset",
+                private=args.private,
+                exist_ok=True,
+            )
+            # A concurrent creator may have won with a public repo; create_repo does not change it.
+            info = api.repo_info(repo_id=args.repo_id, repo_type="dataset")
+        if getattr(info, "private", None) is not True:
+            print("ERROR: Target repository is public or its privacy could not be verified; refusing upload.")
+            return 1
+    except Exception:
+        print("ERROR: Could not prepare and verify a private Hugging Face dataset repository.")
+        return 1
 
-    print(f"Uploading files from {dataset_dir} to {args.repo_id}...")
-    api.upload_folder(
-        folder_path=str(dataset_dir),
-        repo_id=args.repo_id,
-        repo_type="dataset",
-        commit_message="Release Unified Ukrainian Language Decolonization & Reasoning (ULDR) Master Dataset",
-    )
+    try:
+        api.upload_folder(
+            folder_path=str(dataset_dir),
+            repo_id=args.repo_id,
+            repo_type="dataset",
+            commit_message="Release Unified Ukrainian Language Decolonization & Reasoning (ULDR) Master Dataset",
+        )
+    except Exception:
+        print("ERROR: Hugging Face dataset upload failed.")
+        return 1
 
     print("\n" + "=" * 70)
     print("✓ SUCCESS: Dataset successfully uploaded to Hugging Face Hub!")
-    print(f"Repository URL: https://huggingface.co/datasets/{args.repo_id}")
     print("=" * 70)
     return 0
 
