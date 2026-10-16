@@ -14,7 +14,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-from jsonschema import Draft202012Validator
+from jsonschema import Draft202012Validator, validators
 
 ROOT = Path(__file__).resolve().parents[3]
 MATRIX = ROOT / "registry/atlas/source-completeness/required-source-matrix.md"
@@ -23,6 +23,10 @@ STAGES = ("acquisition", "raw_custody", "parsing", "admission")
 VERSION = "source-completeness.v1"
 TEXT = {"type": "string", "minLength": 1, "pattern": r"\S"}
 DIGEST = {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+EvidenceValidator = validators.extend(
+    Draft202012Validator,
+    type_checker=Draft202012Validator.TYPE_CHECKER.redefine("integer", lambda _checker, value: type(value) is int),
+)
 
 
 class InvalidEvidence(ValueError):
@@ -163,7 +167,7 @@ def _bad_constant(value: str) -> None:
 
 
 def _validate(value: Any, schema: dict, label: str) -> None:
-    errors = list(Draft202012Validator(schema).iter_errors(value))
+    errors = list(EvidenceValidator(schema).iter_errors(value))
     if errors:
         error = errors[0]
         location = ".".join(map(str, error.absolute_path)) or "root"
@@ -193,10 +197,10 @@ class Inputs:
         self._artifact_keys: set[bytes] = set()
 
     def reference(self, ref: dict, base: Path, *, structured: bool = False) -> Any:
-        path = (base / ref["path"]).resolve()
         try:
+            path = (base / ref["path"]).resolve()
             raw = path.read_bytes()
-        except OSError as exc:
+        except (OSError, ValueError) as exc:
             raise InvalidEvidence("referenced artifact unavailable") from exc
         if _sha(raw) != ref["sha256"]:
             raise InvalidEvidence("referenced artifact digest mismatch")
@@ -354,6 +358,7 @@ def _records(inputs: Inputs, base: Path, ranges: dict, requirements: dict) -> di
             if record["absence_evidence"] is None:
                 raise InvalidEvidence("absence requires positive source evidence")
             evidence = inputs.reference(record["absence_evidence"], base, structured=True)
+            _validate(evidence.get("identity"), IDENTITY, "source-absence.identity")
             expected = {
                 "schema_version": "source-absence.v1",
                 "source_manifest_sha256": inputs.bindings["source_manifest"]["sha256"],

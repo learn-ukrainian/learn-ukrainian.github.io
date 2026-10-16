@@ -406,8 +406,8 @@ def test_stage_identity_order_and_digest_rejection(fixture, drift):
     assert not (fixture.root / "output/manifest-receipt.json").exists()
 
 
-def absence(fixture):
-    record = fixture.docs["stage_evidence"]["records"][2]
+def absence(fixture, ordinal=0):
+    record = fixture.docs["stage_evidence"]["records"][ordinal * len(STAGES) + 2]
     source_sha = digest(fixture.paths["source_manifest"].read_bytes())
     content = {
         "schema_version": "source-absence.v1",
@@ -752,3 +752,115 @@ def test_date_without_time_is_not_a_retrieval_timestamp(fixture):
     fixture.docs["source_manifest"]["ranges"][0]["retrieved_at"] = "2026-09-28Z"
     fixture.save()
     assert fixture.cli().returncode == 3
+
+
+@pytest.mark.parametrize("occurrence", [0.0, -0.0, 1.0])
+@pytest.mark.parametrize(
+    "boundary",
+    [
+        "source-manifest",
+        "source-index",
+        "stage",
+        "lexical_universe",
+        "lexical_universe-index",
+        "legacy_membership",
+        "legacy_membership-index",
+        "absence",
+    ],
+)
+def test_occurrence_requires_integer_at_every_identity_boundary(fixture, boundary, occurrence):
+    ordinal = int(occurrence)
+    if boundary == "source-manifest":
+        # Shared source/stage/member identities drift together, unlike retained indexes.
+        fixture.docs["source_manifest"]["ranges"][0]["units"][ordinal]["identity"]["occurrence"] = occurrence
+    elif boundary == "source-index":
+        ref = fixture.docs["source_manifest"]["ranges"][0]["index"]
+        path = fixture.root / ref["path"]
+        value = json.loads(path.read_text())
+        value["units"][ordinal]["identity"]["occurrence"] = occurrence
+        ref["sha256"] = write(path, value)
+    elif boundary == "stage":
+        record = fixture.docs["stage_evidence"]["records"][ordinal * len(STAGES)]
+        record["identity"] = {**record["identity"], "occurrence": occurrence}
+    elif boundary == "absence":
+        record = absence(fixture, ordinal)
+        path = fixture.root / record["absence_evidence"]["path"]
+        value = json.loads(path.read_text())
+        value["identity"] = {**record["identity"], "occurrence": occurrence}
+        record["absence_evidence"]["sha256"] = write(path, value)
+    else:
+        name = boundary.removesuffix("-index")
+        document = fixture.docs[name]
+        if boundary.endswith("-index"):
+            path = fixture.root / document["index"]["path"]
+            value = json.loads(path.read_text())
+            value["members"][ordinal]["source_units"][0]["identity"]["occurrence"] = occurrence
+            document["index"]["sha256"] = write(path, value)
+        else:
+            link = document["members"][ordinal]["source_units"][0]
+            link["identity"] = {**link["identity"], "occurrence": occurrence}
+    fixture.save()
+    result = fixture.cli()
+    assert result.returncode == 3, result.stdout + result.stderr
+    assert result.stderr.startswith("INVALID_EVIDENCE:")
+    assert "type failed" in result.stderr
+    assert "Traceback" not in result.stderr
+    assert not (fixture.root / "output").exists()
+
+
+@pytest.mark.parametrize("occurrence", [0.0, -0.0])
+@pytest.mark.parametrize("boundary", ["source", "stage", "member"])
+def test_float_occurrence_cannot_create_duplicate_identity(fixture, boundary, occurrence):
+    if boundary == "source":
+        row = fixture.docs["source_manifest"]["ranges"][0]
+        duplicate = copy.deepcopy(row["units"][0])
+        duplicate["identity"]["occurrence"] = occurrence
+        duplicate["locator"] = "fixture:duplicate"
+        row["units"].append(duplicate)
+        fixture.source_index(0)
+        records = fixture.docs["stage_evidence"]["records"]
+        for record in copy.deepcopy(records[: len(STAGES)]):
+            record["identity"] = duplicate["identity"]
+            records.append(record)
+    elif boundary == "stage":
+        records = fixture.docs["stage_evidence"]["records"]
+        duplicate = copy.deepcopy(records[0])
+        duplicate["identity"]["occurrence"] = occurrence
+        records.append(duplicate)
+    else:
+        document = fixture.docs["lexical_universe"]
+        links = document["members"][0]["source_units"]
+        duplicate = copy.deepcopy(links[0])
+        duplicate["identity"]["occurrence"] = occurrence
+        links.append(duplicate)
+        path = fixture.root / document["index"]["path"]
+        value = json.loads(path.read_text())
+        value["members"] = document["members"]
+        document["index"]["sha256"] = write(path, value)
+    fixture.save()
+    result = fixture.cli()
+    assert result.returncode == 3, result.stdout + result.stderr
+    assert result.stderr.startswith("INVALID_EVIDENCE:")
+    assert "type failed" in result.stderr
+    assert "Traceback" not in result.stderr
+    assert not (fixture.root / "output").exists()
+
+
+@pytest.mark.parametrize("kind", ["source-index", "lexical-index", "legacy-index", "evidence", "absence"])
+def test_embedded_nul_reference_is_invalid_evidence_without_publication(fixture, kind):
+    if kind == "source-index":
+        ref = fixture.docs["source_manifest"]["ranges"][0]["index"]
+    elif kind in ("lexical-index", "legacy-index"):
+        name = "lexical_universe" if kind == "lexical-index" else "legacy_membership"
+        ref = fixture.docs[name]["index"]
+    elif kind == "evidence":
+        ref = fixture.docs["stage_evidence"]["records"][0]["evidence"][0]
+    else:
+        ref = absence(fixture)["absence_evidence"]
+    ref["path"] = "capture\x00.txt"
+    fixture.save()
+    result = fixture.cli()
+    assert result.returncode == 3, result.stdout + result.stderr
+    assert result.stdout == ""
+    assert result.stderr == "INVALID_EVIDENCE: referenced artifact unavailable\n"
+    assert not (fixture.root / "output").exists()
