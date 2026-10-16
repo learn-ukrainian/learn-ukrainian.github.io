@@ -495,13 +495,23 @@ third time after the checkout is moved into the quarantine (below):
   hashes each flagged file that exists on disk (its raw bytes, or its symlink
   target) and compares type, exec bit and blob. A sparse checkout's excluded
   entries have no file on disk and pass;
-- every commit in the checkout's HEAD reflog and its per-worktree refs
-  (`refs/worktree/`, `refs/bisect/`, `refs/rewritten/`) is proven published by
-  the origin census. Removal deletes those, and they may be the last reference to a
-  commit that was reset away; otherwise the tree is kept as
-  `unpublished_reflog_commit`. The stash is shared by every checkout and
-  survives removal. A tree whose history was amended or rebased after a push
-  keeps the superseded commits in its reflog and therefore stays;
+- every object the checkout's private git directory (found with `git
+  rev-parse --git-dir`, `.git/worktrees/<name>/`) records is a commit present
+  locally and proven published by the origin census. Removal deletes that
+  directory, and its records may be the last reference to a commit that was
+  reset away. The reaper reads all of it: HEAD and every per-worktree ref
+  (`refs/worktree/`, `refs/bisect/`, `refs/rewritten/`), the whole `logs/`
+  tree (the reflog of HEAD and of each per-worktree ref, both the old and the
+  new side of every entry), and the top-level pseudorefs (`ORIG_HEAD`,
+  `MERGE_HEAD`, `CHERRY_PICK_HEAD`, `REVERT_HEAD`, `REBASE_HEAD`,
+  `AUTO_MERGE`, each object line of `FETCH_HEAD`, and any other all-caps file
+  that holds one object id). An unpublished commit, an object missing
+  locally, an object that is not a commit (such as the tree `AUTO_MERGE`
+  names), or a record that cannot be read or parsed keeps the tree as
+  `unpublished_reflog_commit`. A reftable ref store is not inspected and
+  keeps the tree too. The stash is shared by every checkout and survives
+  removal. A tree whose history was amended or rebased after a push keeps the
+  superseded commits in its reflog and therefore stays;
 - no process uses it: `fuser -s <path>` (10 s bound) reports no user, and no
   process visible in `/proc` has its working directory (by path or by the
   tree's inode), root, executable, an open file or a mapped file inside it. A
@@ -509,7 +519,11 @@ third time after the checkout is moved into the quarantine (below):
   counts as in use. A live process of this user that denies inspection (it
   made itself non-dumpable) might be using any tree, so every tree
   is kept for the rest of the run and the pid is reported as
-  `uninspectable_process`. Zombies and kernel threads are ignored, and so is
+  `uninspectable_process`. Zombies (state `Z` in `/proc/<pid>/stat`) and
+  kernel threads (the `PF_KTHREAD` bit in that file's `flags` field) are
+  ignored; a pid number proves nothing, because in a PID namespace pid 2 and
+  its children are ordinary processes. A process of this user whose `stat`
+  cannot be read or parsed counts as uninspectable. Also ignored is
   the session infrastructure that is always non-dumpable, identified by kernel
   facts: the user's systemd manager and `(sd-pam)` (the only members of
   `user@<uid>.service/init.scope`) and OpenSSH's `sshd-session` whose parent is
@@ -586,9 +600,12 @@ it would do and changes nothing):
   may be partially deleted), a missing, unreadable or invalid record, an
   identity mismatch, an occupied original path, or unexpected entries are
   kept and reported as `quarantine: … inspect it (runbook)`; later runs never
-  remove them;
+  remove them. Any entry in the holder other than the record and the
+  recorded checkout is unexpected: the holder is neither restored nor
+  cleared, and the record stays;
 - a record whose checkout is gone (Git removed it, or it was moved back) is
-  cleared with its empty holder.
+  cleared with its empty holder. A record is never deleted while anything
+  else is in its holder.
 
 A plain move back is not enough for a kept entry. Inspect it by hand:
 compare the record's `dev`/`ino` with `stat -c '%d %i'` of the quarantined

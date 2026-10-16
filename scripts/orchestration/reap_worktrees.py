@@ -5855,22 +5855,56 @@ def _session_infrastructure(base: Path, status: dict[str, str], uid: int, proc_r
     return parent is not None and parent.get("Name") in sshd and parent.get("Uid", "").split()[:1] == ["0"]
 
 
+# ``PF_KTHREAD`` in the ``flags`` field (field 9) of ``/proc/<pid>/stat``.
+_PF_KTHREAD = 0x00200000
+_STAT_HEAD = re.compile(r"\d+ \(")
+
+
+def _stat_kind(base: Path) -> str:
+    """``gone``, ``zombie``, ``kernel``, ``user`` or ``unknown``, from ``/proc/<pid>/stat`` (#10778).
+
+    The kernel sets ``PF_KTHREAD`` on kernel threads; a pid number proves
+    nothing, because in a PID namespace pid 2 and its children are ordinary
+    userspace processes. ``comm`` may hold spaces and parentheses, so the
+    fields are read after the last ``)``.
+    """
+    try:
+        text = (base / "stat").read_text(encoding="utf-8", errors="replace")
+    except (FileNotFoundError, ProcessLookupError):
+        return "gone"
+    except OSError:
+        return "unknown"
+    head, closing, tail = text.rpartition(")")
+    fields = tail.split()
+    if not closing or not _STAT_HEAD.match(head) or len(fields) < 7:
+        return "unknown"
+    try:
+        flags = int(fields[6])
+    except ValueError:
+        return "unknown"
+    if fields[0] in {"Z", "X"}:
+        return "zombie"
+    return "kernel" if flags & _PF_KTHREAD else "user"
+
+
 def _uninspectable_same_user(base: Path, proc_root: Path) -> bool:
     """True when a live process of this user denied inspection (it is not dumpable).
 
-    Zombies and kernel threads have nothing to inspect. A process whose
-    real, effective or saved uid differs is another user's, which this scan
-    cannot see, exactly as ``fuser`` cannot.
+    Zombies and kernel threads (``PF_KTHREAD``) have nothing to inspect. A
+    process whose real, effective or saved uid differs is another user's,
+    which this scan cannot see, exactly as ``fuser`` cannot. A process of
+    this user whose ``stat`` cannot be read or parsed is unknown and counts.
     """
     status = _proc_status(base)
     if status is None:
         return False
-    if status.get("State", "")[:1] in {"Z", "X"} or status.get("PPid") == "2" or base.name == "2":
-        return False
     uid = os.getuid()
     if status.get("Uid", "").split()[:3] != [str(uid)] * 3:
         return False
-    return not _session_infrastructure(base, status, uid, proc_root)
+    kind = _stat_kind(base)
+    if kind in {"gone", "zombie", "kernel"}:
+        return False
+    return kind == "unknown" or not _session_infrastructure(base, status, uid, proc_root)
 
 
 def _proc_users_inside(
@@ -6137,30 +6171,145 @@ def _publication_unproven(census: _OriginCensus, refusal: str) -> str:
     return refusal
 
 
-def _reflog_refusal(path: Path, census: _OriginCensus) -> str | None:
-    """Refuse when a commit this checkout alone records is on no origin ref (#10778).
+_PSEUDOREF_NAME = re.compile(r"[A-Z][A-Z_]*")
+# Pseudorefs that name only objects (one per line); any other content is unknown.
+_OBJECT_PSEUDOREFS = frozenset(
+    {"ORIG_HEAD", "MERGE_HEAD", "CHERRY_PICK_HEAD", "REVERT_HEAD", "REBASE_HEAD", "AUTO_MERGE"}
+)
 
-    Removal deletes the checkout's HEAD reflog and its per-worktree refs
-    (``refs/worktree/``, ``refs/bisect/``, ``refs/rewritten/``), which may be
-    the last references to a commit that was reset away. The stash is shared
-    by every checkout and survives removal.
-    """
-    reflog = _run(["git", "rev-list", "--walk-reflogs", "HEAD"], cwd=path, timeout=_CLEAN_PUSHED_PROBE_TIMEOUT_S)
-    local = _run(
-        ["git", "for-each-ref", "--format=%(objectname)", "refs/worktree/", "refs/bisect/", "refs/rewritten/"],
+
+def _is_oid(text: str, width: int) -> bool:
+    return len(text) == width and not text.strip("0123456789abcdef")
+
+
+def _private_git_dir(path: Path) -> tuple[Path | None, int | None, str | None]:
+    """The checkout's own git directory (``git rev-parse --git-dir``) and object id width; else a failure."""
+    proc = _run(
+        ["git", "rev-parse", "--path-format=absolute", "--git-dir", "--git-common-dir", "--show-object-format"],
         cwd=path,
         timeout=_CLEAN_PUSHED_PROBE_TIMEOUT_S,
     )
-    if reflog.returncode != 0 or local.returncode != 0:
+    lines = (proc.stdout or "").splitlines()
+    if proc.returncode != 0 or len(lines) != 3:
+        return None, None, "git directory unresolvable"
+    width = {"sha1": 40, "sha256": 64}.get(lines[2])
+    if width is None:
+        return None, None, "object format unknown"
+    private, common = Path(lines[0]), Path(lines[1])
+    if not private.is_absolute() or _real_directory(private) is None or private.resolve() == common.resolve():
+        return None, None, "the checkout has no private git directory of its own"
+    if (private / "reftable").exists() or (common / "reftable").exists():
+        return None, None, "reftable ref storage is not inspected"
+    return private, width, None
+
+
+def _named_in_file(file: Path, relative: str, width: int) -> list[str] | None:
+    """Object ids ``file`` names: a reflog, a loose ref or a pseudoref; ``[]`` for none, ``None`` when unknown."""
+    try:
+        if not stat.S_ISREG(file.lstat().st_mode):
+            return None
+        lines = file.read_text(encoding="utf-8", errors="replace").splitlines()
+    except OSError:
+        return None
+    if relative.startswith("logs/"):
+        named = []
+        for line in lines:
+            fields = line.split(" ", 2)
+            if len(fields) != 3 or not (_is_oid(fields[0], width) and _is_oid(fields[1], width)):
+                return None
+            named.extend(fields[:2])
+        return named
+    if relative == "FETCH_HEAD":
+        heads = [line.partition("\t")[0] for line in lines if line]
+        return heads if all(_is_oid(oid, width) for oid in heads) else None
+    if relative.startswith("refs/") or relative == "HEAD" or relative in _OBJECT_PSEUDOREFS:
+        if len(lines) == 1 and lines[0].startswith("ref: ") and relative not in _OBJECT_PSEUDOREFS:
+            return []  # a symbolic ref: its target is a shared branch, which survives removal
+        if not lines or not all(_is_oid(line, width) for line in lines):
+            return None
+        return lines
+    return lines if len(lines) == 1 and _is_oid(lines[0], width) else []
+
+
+def _raise(error: OSError) -> None:
+    raise error
+
+
+def _private_history(path: Path) -> tuple[list[str], str | None]:
+    """Every object id the checkout's private git directory records; ``([], failure)`` when not all are readable.
+
+    Removal deletes that directory: HEAD and every per-worktree ref
+    (``refs/worktree/``, ``refs/bisect/``, ``refs/rewritten/``), the
+    reflog of each (``logs/``, both sides of every entry), and the
+    top-level pseudorefs (``ORIG_HEAD``, ``FETCH_HEAD``, ``MERGE_HEAD``,
+    ``AUTO_MERGE`` and any other all-caps file holding one object id).
+    """
+    private, width, failure = _private_git_dir(path)
+    if failure:
+        return [], failure
+    assert private is not None and width is not None
+    files: list[tuple[Path, str]] = []
+    try:
+        for top in private.iterdir():
+            if top.name in {"logs", "refs"}:
+                if top.is_symlink() or not top.is_dir():
+                    return [], f"{top.name} is not a real directory"
+                for directory, dirs, names in os.walk(top, onerror=_raise):
+                    for name in dirs:
+                        if (Path(directory) / name).is_symlink():
+                            return [], "a symbolic link in the ref store"
+                    for name in names:
+                        file = Path(directory) / name
+                        files.append((file, file.relative_to(private).as_posix()))
+            elif _PSEUDOREF_NAME.fullmatch(top.name):
+                files.append((top, top.name))
+    except OSError:
+        return [], "private git directory unreadable"
+    null = "0" * width
+    named: list[str] = []
+    for file, relative in files:
+        oids = _named_in_file(file, relative, width)
+        if oids is None:
+            return [], f"{relative} unreadable or unparseable"
+        named.extend(oid for oid in oids if oid != null)
+    return list(dict.fromkeys(named)), None
+
+
+def _reflog_refusal(path: Path, census: _OriginCensus) -> str | None:
+    """Refuse when an object this checkout alone records is on no origin ref (#10778).
+
+    Removal deletes the checkout's private git directory, whose reflogs,
+    per-worktree refs and pseudorefs may be the last records of a commit
+    that was reset away (:func:`_private_history`). Each must be a commit
+    present locally and contained in an advertised head or tag; anything
+    unreadable, missing or not a commit keeps the tree. The stash is shared
+    by every checkout and survives removal.
+    """
+    named, failure = _private_history(path)
+    if failure:
+        return f"{UNPUBLISHED_REFLOG_COMMIT}: recovery history unknown ({failure})"
+    if not named:
+        return None
+    kinds = _run(  # peeled: a tag counts only when it names a commit
+        ["git", "cat-file", "--batch-check=%(objecttype)"],
+        cwd=path,
+        timeout=_CLEAN_PUSHED_PROBE_TIMEOUT_S,
+        input_text="".join(f"{oid}^{{}}\n" for oid in named),
+    )
+    rows = (kinds.stdout or "").splitlines()
+    if kinds.returncode != 0 or len(rows) != len(named):
         return "reflog check failed"
-    named = list(dict.fromkeys((reflog.stdout or "").split() + (local.stdout or "").split()))
+    if any(row.split()[-1:] == ["missing"] for row in rows):
+        return f"{UNPUBLISHED_REFLOG_COMMIT}: the recovery history names an object missing locally"
+    if any(row != "commit" for row in rows):
+        return f"{UNPUBLISHED_REFLOG_COMMIT}: the recovery history names an object that is not a commit"
     try:
         unpublished = _unpublished(path, named, census)
     except RuntimeError:
         return "reflog check failed"
     if unpublished:
         return _publication_unproven(
-            census, f"{UNPUBLISHED_REFLOG_COMMIT}: the HEAD reflog names a commit no origin ref contains"
+            census, f"{UNPUBLISHED_REFLOG_COMMIT}: the recovery history names a commit no origin ref contains"
         )
     return None
 
@@ -6509,8 +6658,14 @@ def _write_quarantine_record(holder: Path, record: dict[str, Any]) -> None:
 
 
 def _clear_quarantine(holder: Path) -> None:
-    """Drop the record and the empty holder. A failure leaves a record with no checkout, which a later run clears."""
+    """Drop the record and the empty holder. A failure leaves a record with no checkout, which a later run clears.
+
+    The record is kept while anything else is in the holder: a later run
+    reports that entry instead of losing track of it (#10778).
+    """
     with contextlib.suppress(OSError):
+        if os.listdir(holder) != [QUARANTINE_RECORD]:
+            return
         (holder / QUARANTINE_RECORD).unlink()
         holder.rmdir()
         _fsync_directory(holder.parent)
@@ -6739,14 +6894,16 @@ def _recover_quarantine(
             continue
         staged = holder / record["task"]
         original = primary.resolve() / record["original"]
+        try:
+            contents = set(os.listdir(holder))
+        except OSError:
+            keep("unreadable holder")
+            continue
+        if contents - {QUARANTINE_RECORD, record["task"]}:
+            keep("unexpected entries next to the record")
+            continue
         if not os.path.lexists(staged):
-            try:
-                contents = os.listdir(holder)
-            except OSError:
-                contents = []
-            if contents != [QUARANTINE_RECORD]:
-                keep("unexpected entries next to the record")
-            elif not dry_run:
+            if not dry_run:
                 _clear_quarantine(holder)
             continue
         refusal = _restore_refusal(record, staged, original, registered, ctx)
@@ -6802,9 +6959,9 @@ def reap_clean_pushed(
     ``.worktrees/dispatch/<agent>/<task>/`` (not ACP, not a symlink, not
     locked, not reserved); ``git status --porcelain --untracked-files=all``
     is empty and no assume-unchanged or skip-worktree file on disk differs
-    from the index; HEAD and every commit in the checkout's HEAD reflog and
-    per-worktree refs are ancestors of an advertised origin head or tag
-    present locally (unproven while an advertised object is missing:
+    from the index; HEAD and every object its private git directory records
+    (per-worktree refs, every reflog, pseudorefs) are commits that are
+    ancestors of an advertised origin head or tag present locally (unproven while an advertised object is missing:
     ``refs_stale``); neither ``fuser`` nor the process table shows a user, and no
     live process of this user denies inspection (a probe failure counts as
     in use; an uninspectable process keeps every tree for the run); no task

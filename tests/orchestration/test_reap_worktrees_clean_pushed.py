@@ -634,7 +634,7 @@ def test_systemd_service_and_timer_text() -> None:
 # 513a2591. Each failed (the tree was removed) on that commit.
 
 HIDDEN = "hidden change: a file flagged assume-unchanged or skip-worktree differs from the index"
-REFLOG = "unpublished_reflog_commit: the HEAD reflog names a commit no origin ref contains"
+REFLOG = "unpublished_reflog_commit: the recovery history names a commit no origin ref contains"
 SHOWN = ".worktrees/dispatch/codex/task-a"
 
 
@@ -717,6 +717,167 @@ def test_reflog_of_pushed_commits_does_not_refuse(repo: Path, free_fuser: Path) 
     assert report.unpublished_reflog_commit == ()
 
 
+def unique_commit(worktree: Path) -> str:
+    """An unpublished commit no ref names; only the HEAD reflog records it until that is expired."""
+    tree = git(worktree, "rev-parse", "HEAD^{tree}")
+    return git(worktree, "commit-tree", tree, "-p", "HEAD", "-m", "unique unpublished work")
+
+
+def assert_kept_for_history(repo: Path, worktree: Path, reason: str = REFLOG) -> None:
+    report = rw.reap_clean_pushed(repo_root=repo, dry_run=False)
+    outcome = outcome_for(report, worktree, repo)
+    assert (outcome.action, outcome.reason) == ("skipped", reason)
+    assert report.unpublished_reflog_commit == (SHOWN,)
+    assert worktree.is_dir() and abandon_log(repo) == []
+
+
+@pytest.mark.parametrize("ref", ["refs/worktree/recovery", "refs/bisect/bad", "refs/rewritten/onto"])
+def test_commit_only_in_a_per_worktree_ref_reflog_refuses(repo: Path, free_fuser: Path, ref: str) -> None:
+    """The round-3 reproducer: the ref's tip is published, its reflog still names the unique commit."""
+    worktree = dispatch_tree(repo, detached=True)
+    (worktree / "README.md").write_text("unique\n", encoding="utf-8")
+    git(worktree, "commit", "-am", "unique")
+    unique = git(worktree, "rev-parse", "HEAD")
+    git(worktree, "update-ref", "--create-reflog", ref, unique)
+    git(worktree, "reset", "--hard", "main")
+    git(worktree, "update-ref", "--create-reflog", ref, "HEAD")
+    git(worktree, "reflog", "expire", "--expire=all", "HEAD")
+    (admin_dir(worktree) / "ORIG_HEAD").unlink()  # isolate the per-worktree reflog as the only record
+    assert unique not in git(worktree, "rev-list", "--walk-reflogs", "HEAD").split()
+    assert unique in (admin_dir(worktree) / "logs" / ref).read_text(encoding="utf-8")
+    age_tree(worktree, repo, "task-a")
+
+    assert_kept_for_history(repo, worktree)
+    assert unique in (admin_dir(worktree) / "logs" / ref).read_text(encoding="utf-8")
+
+
+def test_commit_only_on_the_old_side_of_a_reflog_entry_refuses(repo: Path, free_fuser: Path) -> None:
+    """Expiring older entries leaves the first remaining entry's old value as the only record."""
+    worktree = dispatch_tree(repo, detached=True)
+    unique = unique_commit(worktree)
+    main = git(worktree, "rev-parse", "main")
+    log = admin_dir(worktree) / "logs" / "refs" / "worktree" / "recovery"
+    log.parent.mkdir(parents=True)
+    log.write_text(f"{unique} {main} Test User <tester@example.com> 1700000000 +0000\treset\n", encoding="utf-8")
+    age_tree(worktree, repo, "task-a")
+
+    assert_kept_for_history(repo, worktree)
+
+
+def test_commit_only_in_orig_head_refuses(repo: Path, free_fuser: Path) -> None:
+    worktree = dispatch_tree(repo, detached=True)
+    (worktree / "README.md").write_text("unique\n", encoding="utf-8")
+    git(worktree, "commit", "-am", "unique")
+    unique = git(worktree, "rev-parse", "HEAD")
+    git(worktree, "reset", "--hard", "main")  # ORIG_HEAD now names the unique commit
+    git(worktree, "reflog", "expire", "--expire=all", "HEAD")
+    assert (admin_dir(worktree) / "ORIG_HEAD").read_text(encoding="utf-8").strip() == unique
+    age_tree(worktree, repo, "task-a")
+
+    assert_kept_for_history(repo, worktree)
+
+
+@pytest.mark.parametrize(
+    ("name", "content"),
+    [
+        ("MERGE_HEAD", "{main}\n{unique}\n"),
+        ("CHERRY_PICK_HEAD", "{unique}\n"),
+        ("REVERT_HEAD", "{unique}\n"),
+        ("REBASE_HEAD", "{unique}\n"),
+        ("FETCH_HEAD", "{main}\t\tbranch 'main' of origin\n{unique}\tnot-for-merge\tbranch 'gone' of origin\n"),
+        ("BISECT_EXPECTED_REV", "{unique}\n"),  # any other all-caps file holding one object id
+    ],
+)
+def test_commit_only_in_a_pseudoref_refuses(repo: Path, free_fuser: Path, name: str, content: str) -> None:
+    worktree = dispatch_tree(repo, detached=True)
+    unique = unique_commit(worktree)
+    main = git(worktree, "rev-parse", "main")
+    (admin_dir(worktree) / name).write_text(content.format(main=main, unique=unique), encoding="utf-8")
+    age_tree(worktree, repo, "task-a")
+
+    assert_kept_for_history(repo, worktree)
+
+
+def test_published_pseudorefs_and_free_text_files_do_not_refuse(repo: Path, free_fuser: Path) -> None:
+    worktree = dispatch_tree(repo, detached=True)
+    main = git(worktree, "rev-parse", "main")
+    git(worktree, "fetch", "origin")  # FETCH_HEAD names published commits
+    git(worktree, "reset", "--hard", "HEAD")  # ORIG_HEAD names HEAD
+    (admin_dir(worktree) / "COMMIT_EDITMSG").write_text("a message, not an object id\n", encoding="utf-8")
+    (admin_dir(worktree) / "BISECT_START").write_text("main\n", encoding="utf-8")
+    git(worktree, "tag", "-a", "-m", "annotated", "wt-tag", "HEAD")
+    git(worktree, "update-ref", "refs/worktree/tagged", git(worktree, "rev-parse", "wt-tag"))  # a tag of a commit
+    git(worktree, "tag", "-d", "wt-tag")
+    assert (admin_dir(worktree) / "ORIG_HEAD").read_text(encoding="utf-8").strip() == main
+    assert (admin_dir(worktree) / "FETCH_HEAD").is_file()
+    age_tree(worktree, repo, "task-a")
+
+    report = rw.reap_clean_pushed(repo_root=repo, dry_run=False)
+
+    assert outcome_for(report, worktree, repo).action == "removed", report
+    assert report.unpublished_reflog_commit == ()
+
+
+@pytest.mark.parametrize(
+    ("relative", "content", "why"),
+    [
+        ("logs/refs/worktree/recovery", "not a reflog line\n", "logs/refs/worktree/recovery unreadable or unparseable"),
+        ("ORIG_HEAD", "deadbeef\n", "ORIG_HEAD unreadable or unparseable"),
+        ("FETCH_HEAD", "garbage\tbranch 'main' of origin\n", "FETCH_HEAD unreadable or unparseable"),
+        ("refs/worktree/broken", "not an object id\n", "refs/worktree/broken unreadable or unparseable"),
+    ],
+)
+def test_unparseable_recovery_record_keeps_the_tree(
+    repo: Path, free_fuser: Path, relative: str, content: str, why: str
+) -> None:
+    worktree = dispatch_tree(repo, detached=True)
+    target = admin_dir(worktree) / relative
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text(content, encoding="utf-8")
+    age_tree(worktree, repo, "task-a")
+
+    assert_kept_for_history(repo, worktree, f"unpublished_reflog_commit: recovery history unknown ({why})")
+
+
+@pytest.mark.skipif(os.geteuid() == 0, reason="root reads mode-000 files")
+def test_unreadable_reflog_keeps_the_tree(repo: Path, free_fuser: Path) -> None:
+    worktree = dispatch_tree(repo, detached=True)
+    log = admin_dir(worktree) / "logs" / "HEAD"
+    age_tree(worktree, repo, "task-a")
+    log.chmod(0)
+    try:
+        report = rw.reap_clean_pushed(repo_root=repo, dry_run=False)
+    finally:
+        log.chmod(0o644)
+    outcome = outcome_for(report, worktree, repo)
+    assert outcome.action == "skipped" and "logs/HEAD unreadable" in outcome.reason, outcome
+    assert worktree.is_dir()
+
+
+@pytest.mark.parametrize(
+    ("kind", "reason"),
+    [
+        ("missing", "unpublished_reflog_commit: the recovery history names an object missing locally"),
+        ("tree", "unpublished_reflog_commit: the recovery history names an object that is not a commit"),
+        ("tag_of_tree", "unpublished_reflog_commit: the recovery history names an object that is not a commit"),
+    ],
+)
+def test_missing_or_non_commit_recovery_object_keeps_the_tree(
+    repo: Path, free_fuser: Path, kind: str, reason: str
+) -> None:
+    """``git rev-list`` accepts a tree, or a tag of one, and prints nothing: it would look published."""
+    worktree = dispatch_tree(repo, detached=True)
+    oid = "1" * 40 if kind == "missing" else git(worktree, "rev-parse", "HEAD^{tree}")
+    if kind == "tag_of_tree":
+        git(worktree, "tag", "-a", "-m", "a tree", "tree-tag", oid)
+        oid = git(worktree, "rev-parse", "tree-tag")
+        git(worktree, "tag", "-d", "tree-tag")
+    (admin_dir(worktree) / "AUTO_MERGE").write_text(f"{oid}\n", encoding="utf-8")
+    age_tree(worktree, repo, "task-a")
+
+    assert_kept_for_history(repo, worktree, reason)
+
+
 _NON_DUMPABLE_HOLDER = (
     "import ctypes, sys, time\n"
     "held = open(sys.argv[1], 'rb')\n"
@@ -757,37 +918,134 @@ def test_uninspectable_same_user_process_keeps_every_tree(repo: Path, free_fuser
     assert report.uninspectable == (holder.pid,)
 
 
+@pytest.mark.skipif(not sys.platform.startswith("linux"), reason="prctl and /proc are Linux")
+@pytest.mark.skipif(os.geteuid() == 0, reason="root inspects non-dumpable processes")
+def test_uninspectable_process_that_is_pid_2_of_a_namespace_keeps_every_tree(
+    repo: Path, free_fuser: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """In a PID namespace pid 2 is an ordinary process (#10778 round 4 reproducer).
+
+    The process table is a view in which the non-dumpable holder is pid 2,
+    as it is for a runner started second in a container.
+    """
+    worktree = dispatch_tree(repo)
+    other = dispatch_tree(repo, "task-b")
+    proc = tmp_path / "namespace-proc"
+    proc.mkdir()
+    real_scan = rw._proc_users_inside
+    monkeypatch.setattr(rw, "_proc_users_inside", lambda root, **kw: real_scan(root, **{**kw, "proc_root": proc}))
+    holder = subprocess.Popen(
+        [sys.executable, "-c", _NON_DUMPABLE_HOLDER, str(worktree / "README.md")],
+        cwd=tmp_path,
+        stdout=subprocess.PIPE,
+        text=True,
+    )
+    try:
+        assert holder.stdout is not None and holder.stdout.readline().strip() == "ready"
+        (proc / "2").symlink_to(f"/proc/{holder.pid}")
+        _UNINSPECTABLE_IN_SCOPE.add(2)
+
+        report = rw.reap_clean_pushed(repo_root=repo, dry_run=False)
+    finally:
+        holder.kill()
+        holder.wait(timeout=30)
+
+    for tree in (worktree, other):
+        outcome = outcome_for(report, tree, repo)
+        assert (outcome.action, outcome.reason) == (
+            "skipped",
+            "uninspectable_process 2: a process of this user cannot be inspected",
+        )
+        assert tree.is_dir()
+    assert report.uninspectable == (2,)
+
+
+def fake_process(
+    proc: Path,
+    pid: int,
+    *,
+    name: str,
+    ppid: int,
+    uids: int,
+    state: str = "S",
+    cgroup: str = "/lu.scope",
+    flags: int = 0x00400100,  # PF_RANDOMIZE | PF_FORKNOEXEC: an ordinary userspace process
+    stat_line: str | None = None,
+) -> Path:
+    """A ``/proc/<pid>`` with the ``status``, ``stat`` and ``cgroup`` files the classification reads."""
+    base = proc / str(pid)
+    base.mkdir(parents=True)
+    (base / "status").write_text(
+        f"Name:\t{name}\nState:\t{state} (x)\nPPid:\t{ppid}\nUid:\t{uids}\t{uids}\t{uids}\t{uids}\n",
+        encoding="utf-8",
+    )
+    if stat_line is None:
+        stat_line = f"{pid} ({name}) {state} {ppid} {pid} {pid} 0 -1 {flags} 0 0 0 0 0 0 0 0 20 0 1 0 100\n"
+    (base / "stat").write_text(stat_line, encoding="utf-8")
+    (base / "cgroup").write_text(f"0::{cgroup}\n", encoding="utf-8")
+    return base
+
+
 @pytest.mark.skipif(not sys.platform.startswith("linux"), reason="/proc is Linux")
 def test_session_infrastructure_and_dead_or_foreign_processes_are_not_uninspectable(tmp_path: Path) -> None:
     proc = tmp_path / "proc"
     uid = os.getuid()
-
-    def fake(pid: int, *, name: str, ppid: int, uids: int, state: str = "S", cgroup: str = "/lu.scope") -> Path:
-        base = proc / str(pid)
-        base.mkdir(parents=True)
-        (base / "status").write_text(
-            f"Name:\t{name}\nState:\t{state} (x)\nPPid:\t{ppid}\nUid:\t{uids}\t{uids}\t{uids}\t{uids}\n",
-            encoding="utf-8",
-        )
-        (base / "cgroup").write_text(f"0::{cgroup}\n", encoding="utf-8")
-        return base
-
     manager = f"/user.slice/user-{uid}.slice/user@{uid}.service/init.scope"
-    fake(10, name="sshd-session", ppid=1, uids=0)
+    fake_process(proc, 10, name="sshd-session", ppid=1, uids=0)
     cases = {
-        fake(20, name="systemd", ppid=1, uids=uid, cgroup=manager): False,
-        fake(21, name="(sd-pam)", ppid=20, uids=uid, cgroup=manager): False,
-        fake(22, name="sshd-session", ppid=10, uids=uid): False,
-        fake(23, name="bash", ppid=1, uids=uid, state="Z"): False,
-        fake(24, name="kworker", ppid=2, uids=uid): False,
-        fake(25, name="other", ppid=1, uids=uid + 1): False,
-        fake(30, name="codex", ppid=1, uids=uid): True,  # an orphan is not session infrastructure
-        fake(31, name="sshd-session", ppid=30, uids=uid): True,  # its parent is not the root sshd
-        fake(32, name="worker", ppid=20, uids=uid, cgroup=manager.replace("init.scope", "a.scope")): True,
+        fake_process(proc, 20, name="systemd", ppid=1, uids=uid, cgroup=manager): False,
+        fake_process(proc, 21, name="(sd-pam)", ppid=20, uids=uid, cgroup=manager): False,
+        fake_process(proc, 22, name="sshd-session", ppid=10, uids=uid): False,
+        fake_process(proc, 23, name="bash", ppid=1, uids=uid, state="Z"): False,
+        fake_process(proc, 24, name="kworker/0:1", ppid=2, uids=uid, flags=0x04208060): False,  # PF_KTHREAD set
+        fake_process(proc, 25, name="other", ppid=1, uids=uid + 1): False,
+        fake_process(proc, 30, name="codex", ppid=1, uids=uid): True,  # an orphan is not session infrastructure
+        fake_process(proc, 31, name="sshd-session", ppid=30, uids=uid): True,  # its parent is not the root sshd
+        fake_process(proc, 32, name="worker", ppid=20, uids=uid, cgroup=manager.replace("init.scope", "a.scope")): True,
     }
     assert {base.name: _REAL_UNINSPECTABLE(base, proc) for base in cases} == {
         base.name: expected for base, expected in cases.items()
     }
+
+
+@pytest.mark.skipif(not sys.platform.startswith("linux"), reason="/proc is Linux")
+def test_kernel_threads_are_identified_by_the_stat_flag_never_by_pid_number(tmp_path: Path) -> None:
+    """A PID namespace's pid 2 and its children are userspace; only ``PF_KTHREAD`` marks a kernel thread."""
+    proc = tmp_path / "proc"
+    uid = os.getuid()
+    cases = {
+        fake_process(proc, 2, name="pytest", ppid=1, uids=uid): True,  # namespace pid 2
+        fake_process(proc, 40, name="python", ppid=2, uids=uid): True,  # a child of namespace pid 2
+        fake_process(proc, 41, name="kthreadd", ppid=0, uids=uid, flags=0x00208040): False,
+        # ``comm`` with spaces and parentheses: the fields follow the LAST ``)``. A parser
+        # splitting at the first ``)`` would read state ``Z`` (zombie) here.
+        fake_process(
+            proc, 42, name="x", ppid=1, uids=uid, stat_line="42 (x) Z 1 (y) S 1 42 42 0 -1 4194560 0 0 0 0\n"
+        ): True,
+        # ... and would read the PF_KTHREAD bit in the flags position here.
+        fake_process(
+            proc, 43, name="x", ppid=1, uids=uid, stat_line="43 (a) S 1 1 1 0 -1 2097152 b) S 1 43 43 0 -1 0 0 0\n"
+        ): True,
+        fake_process(proc, 44, name="x", ppid=1, uids=uid, stat_line="44 (no closing parenthesis S 1\n"): True,
+        fake_process(proc, 45, name="x", ppid=1, uids=uid, stat_line="45 (x) S 1 45 45 0 -1 notanumber\n"): True,
+        fake_process(proc, 46, name="x", ppid=1, uids=uid, stat_line="46 (x) Z 1 46 46 0 -1 4194560 0\n"): False,
+    }
+    gone = fake_process(proc, 47, name="x", ppid=1, uids=uid)
+    (gone / "stat").unlink()  # exited between the two reads
+    cases[gone] = False
+    assert {base.name: _REAL_UNINSPECTABLE(base, proc) for base in cases} == {
+        base.name: expected for base, expected in cases.items()
+    }
+    assert rw._stat_kind(proc / "41") == "kernel" and rw._stat_kind(proc / "42") == "user"
+
+
+@pytest.mark.skipif(not Path("/proc/2/stat").exists(), reason="no host kernel thread visible")
+def test_a_real_kernel_thread_stat_line_is_a_kernel_thread() -> None:
+    real = Path("/proc/2/stat").read_text(encoding="utf-8")
+    flags = int(real.rpartition(")")[2].split()[6])
+    if not flags & rw._PF_KTHREAD:
+        pytest.skip("pid 2 is not kthreadd here (a PID namespace)")
+    assert rw._stat_kind(Path("/proc/2")) == "kernel"
 
 
 def wrap_moves(
@@ -1505,6 +1763,41 @@ def test_record_left_without_a_checkout_is_cleared(repo: Path, free_fuser: Path)
 
     assert quarantine_entries(repo) == []
     assert outcome_for(report, worktree, repo).action == "removed", report  # an ordinary candidate again
+
+
+@pytest.mark.parametrize("checkout", [True, False])
+def test_unexpected_entry_in_a_holder_keeps_the_record_and_is_reported(
+    repo: Path, free_fuser: Path, checkout: bool
+) -> None:
+    """Runbook: unexpected entries are kept and reported, never restored past or cleared (#10778)."""
+    worktree, staged = crashed_quarantine(repo)
+    if not checkout:
+        git(repo, "worktree", "move", str(staged), str(worktree))
+    holder = staged.parent
+    (holder / "unexpected.txt").write_text("someone's file\n", encoding="utf-8")
+
+    report = rw.reap_clean_pushed(repo_root=repo, dry_run=False)
+
+    [kept] = [item for item in report.skipped if item.path.startswith(".worktrees/.reaping/")]
+    assert kept.reason == "quarantine: unexpected entries next to the record; inspect it (runbook)"
+    assert (holder / rw.QUARANTINE_RECORD).is_file() and (holder / "unexpected.txt").is_file()
+    if checkout:
+        assert staged.is_dir() and not worktree.exists()  # not restored past the unexpected entry
+        assert report.removed == ()
+
+
+def test_clearing_a_holder_keeps_the_record_while_anything_else_is_there(tmp_path: Path) -> None:
+    holder = tmp_path / "holder"
+    holder.mkdir()
+    (holder / rw.QUARANTINE_RECORD).write_text("{}", encoding="utf-8")
+    (holder / "late.txt").write_text("x\n", encoding="utf-8")
+
+    rw._clear_quarantine(holder)
+    assert sorted(path.name for path in holder.iterdir()) == sorted([rw.QUARANTINE_RECORD, "late.txt"])
+
+    (holder / "late.txt").unlink()
+    rw._clear_quarantine(holder)
+    assert not holder.exists()
 
 
 def test_quarantine_root_open_to_others_is_refused(repo: Path, free_fuser: Path) -> None:
