@@ -7,13 +7,15 @@ import json
 import re
 import subprocess
 import sys
+from collections.abc import Callable
+from dataclasses import dataclass
 from pathlib import Path
 
 import pytest
 
 from scripts.ops import context_guard as cg
 from scripts.ops.driver_lanes import PANE_SCRIPT, load_registry
-from tests.ops._fake_tmux import FakePane, FakeTmux
+from tests.ops._fake_tmux import BOOT, FakePane, FakeTmux
 
 REPO = Path(__file__).resolve().parents[2]
 START = dt.datetime(2026, 10, 16, 12, 0, tzinfo=dt.UTC)
@@ -32,9 +34,25 @@ def codex_text(pct: int, *lines: str, ready: bool = True) -> str:
     return "\n".join([*lines, "Ready" if ready else "Working (3s)", f"Context {pct}% used"])
 
 
+@dataclass
+class Pane(FakePane):
+    pane_start: str = BOOT  # ps lstart of the pane's own shell
+
+
+@dataclass
+class ShellTmux(FakeTmux):
+    """The fake with each pane's own shell in the process table, as ``ps`` lists it."""
+
+    def _ps_rows(self, *, with_start: bool) -> list[str]:
+        rows = super()._ps_rows(with_start=with_start)
+        shells = {pane.pane_pid: getattr(pane, "pane_start", BOOT) for pane in self.sessions.values()}
+        shell_rows = [f"{pid} 1 {start} bash" if with_start else f"{pid} 1 bash" for pid, start in shells.items()]
+        return rows[:1] + shell_rows + rows[1:]
+
+
 class Harness:
     def __init__(self, tmp_path: Path, **panes: FakePane) -> None:
-        self.fake = FakeTmux(sessions=dict(panes), now=START.timestamp())
+        self.fake = ShellTmux(sessions=dict(panes), now=START.timestamp())
         self.moment = START
         self.logs: list[str] = []
         self.sent: list[tuple[str, str]] = []
@@ -60,12 +78,12 @@ class Harness:
         return self.fake.sessions[session]
 
 
-def claude_pane(pct: int, *lines: str, busy: bool = False) -> FakePane:
-    return FakePane(text=claude_text(pct, *lines, busy=busy), agent="claude")
+def claude_pane(pct: int, *lines: str, busy: bool = False) -> Pane:
+    return Pane(text=claude_text(pct, *lines, busy=busy), agent="claude")
 
 
-def codex_pane(pct: int, *lines: str, ready: bool = True) -> FakePane:
-    return FakePane(text=codex_text(pct, *lines, ready=ready), agent="codex")
+def codex_pane(pct: int, *lines: str, ready: bool = True) -> Pane:
+    return Pane(text=codex_text(pct, *lines, ready=ready), agent="codex")
 
 
 # ---- lane resolution ------------------------------------------------------------
@@ -444,12 +462,17 @@ def test_unknown_process_telemetry_in_watch_types_nothing(tmp_path: Path) -> Non
     assert h.state["cto"]["phase"] == "watch"
 
 
-def test_process_table_rows_parse_with_start_time() -> None:
-    fake = FakeTmux(sessions={"cto": FakePane(agent="claude", agent_pid="4242", agent_start="Fri Oct  2 09:05:01 2026")})
+def test_snapshot_reads_pane_pid_then_the_table_once_then_pane_pid_again() -> None:
+    fake = ShellTmux(sessions={"cto": Pane(agent="claude", agent_pid="4242", agent_start="Fri Oct  2 09:05:01 2026")})
     tmux = cg.Tmux(run=fake.run)
-    assert tmux.agent_identity("=cto:", "claude") == "4242@2026-10-02T09:05:01"
-    assert tmux.agent_identity("=cto:", "codex") is None
-    assert ["env", "LC_ALL=C", "ps", "-eo", "pid=,ppid=,lstart=,comm="] in fake.calls
+    shell = "100@2026-10-16T06:00:00"
+    assert tmux.snapshot("=cto:", "claude") == cg.PaneSnapshot(shell, "4242@2026-10-02T09:05:01", busy=True)
+    assert tmux.snapshot("=cto:", "codex") == cg.PaneSnapshot(shell, None, busy=True)
+    assert [call[1] if call[0] == "tmux" else call for call in fake.calls] == [
+        "display-message",
+        ["env", "LC_ALL=C", "ps", "-eo", "pid=,ppid=,lstart=,comm="],
+        "display-message",
+    ] * 2
 
 
 # ---- a changed agent gets none of its predecessor's handoff ---------------------
@@ -519,3 +542,151 @@ def test_refused_local_wrapper_blocks_only_that_relaunch(tmp_path: Path) -> None
     assert respawns(h) == []
     assert h.state["harness"]["phase"] == "handoff"
     assert "relaunch refused" in h.logs[-1] and "shell syntax" in h.logs[-1]
+
+
+# ---- respawn or type only on one consistent pane + process snapshot (review of 0b9a61a7, #10814) ----
+REPLACED = "Fri Oct 16 12:09:00 2026"  # ps lstart of a pane shell started during the handoff
+
+
+def before_call(tmux: cg.Tmux, command: str, change: Callable[[], None], nth: int = 1) -> None:
+    """Run ``change`` right before the ``nth`` ``command`` call (``ps`` or a tmux command) from now on."""
+    run, seen = tmux.run, [0]
+
+    def wrapped(argv: list[str]) -> subprocess.CompletedProcess:
+        if (argv[1] if argv[0] == "tmux" else "ps") == command:
+            seen[0] += 1
+            if seen[0] == nth:
+                change()
+        return run(argv)
+
+    tmux.run = wrapped
+
+
+def replace_pane(pane: FakePane, *, launcher: bool) -> Callable[[], None]:
+    """A new pane shell (a human respawn), optionally already running a launcher."""
+
+    def change() -> None:
+        pane.pane_pid, pane.launcher_running = "101", launcher
+        pane.pane_start = REPLACED  # type: ignore[attr-defined]
+
+    return change
+
+
+def test_snapshot_of_a_pane_replaced_between_the_reads_is_unknown() -> None:
+    fake = ShellTmux(sessions={"cto": Pane(agent="claude")})
+    tmux = cg.Tmux(run=fake.run)
+    before_call(tmux, "display-message", replace_pane(fake.sessions["cto"], launcher=False), nth=2)
+    with pytest.raises(cg.TelemetryUnavailable, match="pane pid changed 100 -> 101 while reading the process table"):
+        tmux.snapshot("=cto:", "claude")
+
+
+def test_snapshot_of_a_pane_missing_from_the_process_table_is_unknown() -> None:
+    fake = FakeTmux(sessions={"cto": FakePane(agent="claude")})  # lists the agent but not the pane's shell
+    with pytest.raises(cg.TelemetryUnavailable, match="pane pid 100 not in the process table"):
+        cg.Tmux(run=fake.run).snapshot("=cto:", "claude")
+
+
+def test_a_tick_reads_the_process_table_once(tmp_path: Path) -> None:
+    h = handoff_with_agent_gone(tmp_path, launcher_running=True)
+    h.fake.calls.clear()
+    h.tick("harness")
+    assert h.logs[-1].endswith("agent gone, launcher still exiting; relaunch next tick")
+    assert [call for call in h.fake.calls if call[0] == "env"] == [cg.PS_ARGV]
+
+
+@pytest.mark.parametrize("launcher", [False, True], ids=["bare-shell", "launcher"])
+@pytest.mark.parametrize(
+    ("command", "nth"), [("ps", 1), ("display-message", 2)], ids=["before-table", "before-second-pid"]
+)
+def test_pane_replaced_during_the_snapshot_is_never_respawned(
+    tmp_path: Path, command: str, nth: int, launcher: bool
+) -> None:
+    h = handoff_with_agent_gone(tmp_path, launcher_running=False)
+    before_call(h.guard.tmux, command, replace_pane(h.pane("harness"), launcher=launcher), nth)
+    h.logs.clear()
+    h.tick("harness")
+    assert respawns(h) == []
+    assert "telemetry unavailable (pane pid changed 100 -> 101" in h.logs[0]
+    h.advance(5)
+    h.tick("harness")  # a consistent read now shows a pane the handoff never saw
+    assert h.state["harness"]["phase"] == "watch" and "pane changed" in h.logs[-1]
+    for _ in range(3):
+        h.advance(5)
+        h.tick("harness")
+    assert respawns(h) == []
+
+
+@pytest.mark.parametrize("replace", [{"pane_pid": "101"}, {"pane_start": REPLACED}], ids=["new-pid", "reused-pid"])
+def test_replaced_pane_resets_the_handoff_and_is_never_respawned(tmp_path: Path, replace: dict[str, str]) -> None:
+    h = handoff_with_agent_gone(tmp_path, launcher_running=False)
+    pane = h.pane("harness")
+    for key, value in replace.items():
+        setattr(pane, key, value)
+    h.tick("harness")
+    assert respawns(h) == []
+    state = h.state["harness"]
+    assert state["phase"] == "watch" and state["agent_id"] is None
+    assert state["pane_id"] == f"{pane.pane_pid}@{dt.datetime.strptime(pane.pane_start, cg.LSTART_FORMAT).isoformat()}"  # type: ignore[attr-defined]
+    assert not {"done_seen", "quit_sent", "quit_attempts", "since", "nudges"} & set(state)
+    assert "pane changed 100@2026-10-16T06:00:00 -> " in h.logs[-1]
+    for _ in range(3):
+        h.advance(5)
+        h.tick("harness")
+    assert respawns(h) == []
+
+
+@pytest.mark.parametrize("change", ["pane-replaced", "launcher-started"])
+def test_pane_changed_after_the_snapshot_is_not_respawned(tmp_path: Path, change: str) -> None:
+    h = handoff_with_agent_gone(tmp_path, launcher_running=False)
+    pane = h.pane("harness")
+    if change == "pane-replaced":
+        perturb = replace_pane(pane, launcher=True)
+    else:
+        perturb = lambda: setattr(pane, "launcher_running", True)  # noqa: E731
+    before_call(h.guard.tmux, "list-clients", perturb)  # the human check, after the snapshot and before the re-check
+    h.tick("harness")
+    assert respawns(h) == []
+    assert "pane changed before respawn-pane -k" in h.logs[-1] and h.logs[-1].endswith("retry next tick")
+    assert h.state["harness"]["phase"] == "handoff"
+    pane.launcher_running = False
+    h.advance(5)
+    h.tick("harness")
+    if change == "pane-replaced":  # a pane the handoff never saw is a new session, never respawned
+        assert h.state["harness"]["phase"] == "watch" and "pane changed" in h.logs[-1]
+        assert respawns(h) == []
+    else:  # the same pane, once its launcher has exited, is relaunched
+        assert len(respawns(h)) == 1
+
+
+def test_exit_dialog_answer_is_not_typed_into_a_replaced_agent(tmp_path: Path) -> None:
+    h = Harness(tmp_path, **{"cto": claude_pane(70)})
+    h.tick("cto")
+    pane = h.pane("cto")
+    pane.text = claude_text(71, "1. Exit and stop tasks", "2. Move to background and exit")
+    h.advance(5)
+    before_call(h.guard.tmux, "list-clients", lambda: setattr(pane, "agent_pid", "201"))
+    h.tick("cto")
+    assert h.fake.typed("cto") == [h.fake.typed("cto")[0]]  # the HANDOFF NOW only
+    assert "pane changed before the exit-dialog answer" in h.logs[-1]
+    assert "agent 200@2026-10-16T11:00:00 -> 201@2026-10-16T11:00:00" in h.logs[-1]
+
+
+@pytest.mark.parametrize("change", ["agent-replaced", "telemetry-unavailable"])
+def test_exit_is_not_typed_into_an_agent_the_tick_did_not_snapshot(tmp_path: Path, change: str) -> None:
+    done = "⏺ HANDOFF-DONE infra .claude/infra-epic/DRIVER-STATE.md"
+    h = Harness(tmp_path, **{"infra-muse": claude_pane(70)})
+    h.tick("infra-muse")
+    pane = h.pane("infra-muse")
+    pane.text = claude_text(72, ECHO, done)
+    h.advance(5)
+    h.posted["claude-infra"] = cg.iso(h.moment)
+    if change == "agent-replaced":
+        perturb = lambda: setattr(pane, "agent_pid", "201")  # noqa: E731
+    else:
+        perturb = lambda: h.fake.override.update(ps=subprocess.CompletedProcess([], 1, "", "ps failed"))  # noqa: E731
+    before_call(h.guard.tmux, "list-clients", perturb)
+    h.tick("infra-muse")
+    assert "/exit" not in h.fake.typed("infra-muse")
+    assert h.state["infra-muse"].get("quit_sent") is None
+    expected = "pane changed before /exit" if change == "agent-replaced" else "telemetry unavailable (process table"
+    assert expected in h.logs[-1]

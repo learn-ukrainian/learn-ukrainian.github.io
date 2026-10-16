@@ -210,7 +210,11 @@ local config described in `docs/runbooks/maintenance-window.md`.
   session within two minutes. Unknown state never acts: failed, timed-out
   or unparseable pane, process or client telemetry makes the tick log and
   retry, and a different agent process in a lane resets that lane to the
-  watch phase before any further input. State and log live under
+  watch phase before any further input. The guard respawns or types only on
+  one consistent snapshot of the pane and the process table, re-taken right
+  before `respawn-pane -k`, the exit-dialog answer and `/exit` or `/quit`;
+  the one residual (owner: Infra) is a pane replaced after that re-check and
+  before the tmux call, since tmux has no compare-and-swap. State and log live under
   `${XDG_STATE_HOME:-$HOME/.local/state}/learn-ukrainian/context-guard/`.
   Keep-alive tools must skip the sessions printed by
   `.venv/bin/python -m scripts.ops.context_guard handoff-sessions`. The
