@@ -2,8 +2,8 @@
 // #10706 native speech device check: `prepare` adds one page to an immutable static build; `validate` checks the pasted receipt off-device.
 import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
-import { lstatSync, readFileSync, readdirSync, realpathSync, writeFileSync } from 'node:fs';
-import { dirname, join, relative, resolve, sep } from 'node:path';
+import nodeFs, { lstatSync, readFileSync, realpathSync, writeFileSync } from 'node:fs';
+import { dirname, join, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseArgs } from 'node:util';
 
@@ -353,18 +353,43 @@ const present = (p) => attempt(() => lstatSync(p)) !== null;
 const knows = (cwd, sha) => attempt(() => git(cwd, 'cat-file', '-e', `${sha}^{commit}`)) !== null;
 const realDir = (p) => attempt(() => lstatSync(p).isDirectory() && realpathSync(p) === p) === true;
 
+const ENTRY_FLAGS = nodeFs.constants.O_RDONLY | nodeFs.constants.O_NOFOLLOW | nodeFs.constants.O_NONBLOCK | nodeFs.constants.O_NOCTTY;
+
+function openEntry(path, rel) {
+  try {
+    return nodeFs.openSync(path, ENTRY_FLAGS);
+  } catch (error) {
+    // O_NOFOLLOW fails a symlink with ELOOP; a socket fails with ENXIO. A fifo opens, then fstat refuses it.
+    if (error?.code === 'ELOOP' || error?.code === 'ENXIO' || error?.code === 'EAGAIN' || error?.code === 'EWOULDBLOCK') {
+      refuse(`build contains a symlink or special file: ${rel}`);
+    }
+    throw error;
+  }
+}
+
+/** Hash the descriptor that identified each entry. A later replacement of its path is not what gets read. */
 export function treeDigest(root, skip = null) {
   const files = {};
-  const walk = (dir) => {
-    for (const name of readdirSync(dir).sort()) {
-      const p = join(dir, name);
-      const st = lstatSync(p);
-      if (st.isSymbolicLink() || !(st.isDirectory() || st.isFile())) refuse(`build contains a symlink or special file: ${relative(root, p)}`);
-      if (st.isDirectory()) walk(p);
-      else files[relative(root, p).split(sep).join('/')] = sha256(readFileSync(p));
+  const consider = (parentFd, name, rel) => {
+    const fd = openEntry(`/proc/self/fd/${parentFd}/${name}`, rel);
+    try {
+      const st = nodeFs.fstatSync(fd);
+      if (st.isSymbolicLink() || !(st.isDirectory() || st.isFile())) refuse(`build contains a symlink or special file: ${rel}`);
+      if (st.isDirectory()) {
+        for (const child of nodeFs.readdirSync(`/proc/self/fd/${fd}`).sort()) consider(fd, child, `${rel}/${child}`);
+      } else files[rel] = sha256(nodeFs.readFileSync(fd));
+    } finally {
+      nodeFs.closeSync(fd);
     }
   };
-  walk(root);
+  const rootFd = openEntry(root, '.');
+  try {
+    const st = nodeFs.fstatSync(rootFd);
+    if (!st.isDirectory()) refuse(`build contains a symlink or special file: ${root}`);
+    for (const name of nodeFs.readdirSync(`/proc/self/fd/${rootFd}`).sort()) consider(rootFd, name, name);
+  } finally {
+    nodeFs.closeSync(rootFd);
+  }
   return { digest: sha256(Object.entries(files).filter(([rel]) => rel !== skip).map(([rel, h]) => `${h}  ${rel}\n`).join('')), files };
 }
 

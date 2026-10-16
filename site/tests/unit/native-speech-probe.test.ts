@@ -2,10 +2,10 @@
  * #10706 native speech device check: tool behaviour only. These mocks prove the observer,
  * evaluator and CLI behave as specified; they never certify physical audibility or voice absence.
  */
-import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { execFileSync, spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { cpSync, mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
+import fs, { cpSync, fstatSync, mkdirSync, mkdtempSync, openSync, readFileSync, renameSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import {
@@ -571,6 +571,77 @@ describe('in-page observer', () => {
     expect(secure.fetched).toEqual([`/${PAGE}`, '/practice/index.html', '/_astro/player.js']);
     expect(secure.receipt.hashing.page).toBe(sha(`bytes of /${PAGE}`));
     expect(secure.receipt.hashing.assets['/_astro/player.js']).toBe(sha('bytes of /_astro/player.js'));
+  });
+});
+
+describe('treeDigest', () => {
+  const realOpen = openSync;
+
+  it('hashes the opened file when its pathname is replaced before the read', () => {
+    const root = mkdtempSync(join(tmpdir(), 'tree-digest-file-'));
+    mkdirSync(join(root, 'nested'));
+    writeFileSync(join(root, 'nested/page.txt'), 'original bytes');
+    let replaced = false;
+    const spy = vi.spyOn(fs, 'openSync').mockImplementation((path, flags, mode) => {
+      const fd = realOpen(path, flags, mode);
+      if (!replaced && String(path).endsWith('/page.txt')) {
+        replaced = true;
+        renameSync(path, `${path}.kept`);
+        writeFileSync(path, 'replacement bytes');
+      }
+      return fd;
+    });
+    try {
+      const digest = treeDigest(root);
+      expect(replaced).toBe(true);
+      expect(digest.files['nested/page.txt']).toBe(sha('original bytes'));
+      expect(readFileSync(join(root, 'nested/page.txt'), 'utf8')).toBe('replacement bytes');
+      expect(spy.mock.calls.every((call) => typeof call[1] === 'number' && (call[1] & fs.constants.O_NOFOLLOW) !== 0)).toBe(true);
+    } finally {
+      spy.mockRestore();
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it('hashes the opened directory when its pathname is replaced before the listing', () => {
+    const root = mkdtempSync(join(tmpdir(), 'tree-digest-dir-'));
+    const tree = join(root, 'tree');
+    const nested = join(tree, 'nested');
+    const other = join(root, 'other');
+    mkdirSync(nested, { recursive: true });
+    writeFileSync(join(nested, 'page.txt'), 'original bytes');
+    mkdirSync(other);
+    writeFileSync(join(other, 'page.txt'), 'replacement bytes');
+    let swapped = false;
+    const spy = vi.spyOn(fs, 'openSync').mockImplementation((path, flags, mode) => {
+      const fd = realOpen(path, flags, mode);
+      if (!swapped && fstatSync(fd).isDirectory() && String(path).endsWith('/nested')) {
+        swapped = true;
+        renameSync(nested, join(tree, 'nested-original'));
+        renameSync(other, nested);
+      }
+      return fd;
+    });
+    try {
+      const digest = treeDigest(tree);
+      expect(swapped).toBe(true);
+      expect(digest.files['nested/page.txt']).toBe(sha('original bytes'));
+      expect(readFileSync(join(nested, 'page.txt'), 'utf8')).toBe('replacement bytes');
+      expect(digest.files['nested-original/page.txt']).toBeUndefined();
+    } finally {
+      spy.mockRestore();
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it('refuses a fifo instead of blocking on it', () => {
+    const root = mkdtempSync(join(tmpdir(), 'tree-digest-fifo-'));
+    try {
+      execFileSync('mkfifo', [join(root, 'pipe')]);
+      expect(() => treeDigest(root)).toThrow(/symlink or special file: pipe/);
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
   });
 });
 
