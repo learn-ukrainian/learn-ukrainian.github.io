@@ -287,3 +287,58 @@ def test_shared_connection_makes_progress_without_python_callbacks(database):
     except subprocess.TimeoutExpired:
         pytest.fail("16-thread shared SQLite connection stalled: subprocess exceeded 12 seconds")
     assert result.returncode == 0, result.stdout + result.stderr
+
+
+SHARED_READER_LOAD = """\
+import faulthandler, random, sqlite3, sys, threading, time
+from pathlib import Path
+
+sys.path.insert(0, sys.argv[1])
+from scripts.lib.readonly_sqlite import open_readonly
+
+# A deadlock freezes every thread, so only faulthandler's C watchdog can end it.
+faulthandler.dump_traceback_later(20, exit=True)
+conn = open_readonly(Path(sys.argv[2]), check_same_thread=False)
+conn.row_factory = sqlite3.Row
+done = [0]
+
+def reader(seed):
+    rnd = random.Random(seed)
+    while True:
+        n = rnd.randint(1, 200)  # a new IN-list width misses the statement cache
+        words = [f"w{rnd.randint(0, 5000)}" for _ in range(n)]
+        sql = f"SELECT word, lemma FROM forms WHERE word IN ({','.join('?' * n)})"
+        [dict(row) for row in conn.execute(sql, words).fetchall()]
+        done[0] += 1
+
+for seed in range(8):
+    threading.Thread(target=reader, args=(seed,), daemon=True).start()
+time.sleep(3)
+print(f"completed {done[0]}", flush=True)
+"""
+
+
+def test_shared_connection_survives_concurrent_threads(tmp_path):
+    """#10674: a connection shared across threads must not deadlock.
+
+    A Python callback on the connection (the old ATTACH authorizer) runs while
+    SQLite holds the connection mutex with the GIL released; another thread
+    holding the GIL then waits for that mutex. Every thread blocks forever.
+    """
+    path = tmp_path / "forms.db"
+    with closing(sqlite3.connect(path)) as conn:
+        conn.execute("CREATE TABLE forms (word TEXT, lemma TEXT)")
+        conn.executemany("INSERT INTO forms VALUES (?, ?)", [(f"w{i}", f"l{i % 97}") for i in range(5000)])
+        conn.execute("CREATE INDEX forms_word ON forms(word)")
+        conn.commit()
+    root = Path(__file__).resolve().parents[1]
+    result = subprocess.run(
+        [sys.executable, "-c", SHARED_READER_LOAD, str(root), str(path)],
+        capture_output=True,
+        text=True,
+        timeout=60,
+        check=False,
+    )
+    assert result.returncode == 0, f"shared reader deadlocked:\n{result.stderr[-3000:]}"
+    completed = int(result.stdout.split()[-1])
+    assert completed > 100
