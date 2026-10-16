@@ -142,7 +142,19 @@ def test_unmocked_local_host_driver_lease_in_unattributed_bucket(tmp_path: Path,
     assert unattributed["reason"] == "lease has no host claim"
     worker_ids = {row["id"] for row in unattributed["workers"]}
     assert worker_ids == {"inst-local-7265"}
-    assert payload["counts"]["live"] >= 1
+    assert unattributed["freshness"] == "unknown"
+    filtered_response = client.get("/api/fleet/workers/v1?host_id=unattributed")
+    assert filtered_response.status_code == 200
+    filtered = filtered_response.json()
+    assert [host["host_id"] for host in filtered["hosts"]] == [UNATTRIBUTED_HOST_ID]
+    assert {row["id"] for row in filtered["hosts"][0]["workers"]} == {"inst-local-7265"}
+    assert filtered["counts"] == {
+        "live": 0,
+        "hosts_unknown": 1,
+        "workers_total": 1,
+        "attention": 0,
+        "skipped": 0,
+    }
     teacher = _host_by_id(payload, "host-teacher")
     assert not any(row.get("id") == "inst-local-7265" for row in teacher["workers"])
 

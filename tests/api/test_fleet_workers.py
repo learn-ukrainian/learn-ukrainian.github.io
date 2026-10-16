@@ -16,13 +16,15 @@ import pytest
 from fastapi.testclient import TestClient
 
 from scripts.api import fleet_workers_collect as collect_mod
+from scripts.api import fleet_workers_router as router_mod
+from scripts.api import project_state_router as state_router_mod
 from scripts.api.fleet_workers_collect import UNATTRIBUTED_HOST_ID, workers_payload
 from scripts.api.fleet_workers_models import WorkerRow
 from scripts.api.fleet_workers_sanitize import validate_workers_list
 from scripts.api.main import app
 from scripts.api.observer_presence import PresenceRequest, reset_observer_presence, upsert_presence
 from scripts.api.occupancy_local import OccupancyRead, _marker_fresh
-from scripts.api.project_state_router import reset_local_document_cache
+from scripts.api.project_state_router import LocalDocumentSnapshot, reset_local_document_cache
 from scripts.api.project_state_sanitize import ProjectStateValidationError
 from scripts.api.project_state_store import get_stored_report, reset_project_state_store
 from tests import _host_path_guard as guard
@@ -175,6 +177,288 @@ def test_remote_reported_workers_surface(monkeypatch: pytest.MonkeyPatch) -> Non
     assert host["workers"][0]["id"] == "monitor-7187"
 
 
+@pytest.mark.parametrize("self_host_id", ["host-worker", "unattributed-worker"])
+@pytest.mark.parametrize("freshness,age_s", [("stale", 65.0), ("unknown", None)])
+def test_workers_route_recounts_final_host_freshness_on_warm_cache(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    freshness: str,
+    age_s: float | None,
+    self_host_id: str,
+) -> None:
+    tasks = tmp_path / "tasks"
+    tasks.mkdir()
+    (tasks / "local-task.json").write_text(
+        json.dumps(
+            {
+                "task_id": "local-task",
+                "agent": "cursor",
+                "status": "running",
+                "pid": os.getpid(),
+                "started_at": datetime.now(UTC).isoformat(),
+                "run_nonce": "local-task-nonce",
+            }
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", f"teach-box=host-teacher,worker-box={self_host_id}")
+    monkeypatch.setattr(collect_mod, "_self_host_ids", lambda: {self_host_id})
+    monkeypatch.setattr("scripts.api.delegate_router._tasks_dir", lambda ctx=None: tasks)
+    monkeypatch.setattr(collect_mod, "collect_driver_workers", lambda **_: ([], []))
+    monkeypatch.setattr(collect_mod, "collect_job_workers", lambda **_: ([], None))
+    monkeypatch.setattr(collect_mod, "collect_marker_workers", lambda **_: [])
+    monkeypatch.setattr(collect_mod, "read_session_streams", lambda **_: OccupancyRead([], True, 0.0))
+    snapshot = LocalDocumentSnapshot(_document(), 12.5, "fresh")
+    monkeypatch.setattr(router_mod, "get_cached_local_document", lambda _: snapshot)
+    assert (
+        loop_client.post(
+            "/api/fleet/projects/v1/report",
+            json=_document("host-teacher", workers=[_worker_row(id="remote-task", age_s=7200)]),
+        ).status_code
+        == 200
+    )
+    builds = 0
+    build = collect_mod._build_workers_payload
+
+    def counted_build(**kwargs: Any) -> dict[str, Any]:
+        nonlocal builds
+        builds += 1
+        return build(**kwargs)
+
+    monkeypatch.setattr(collect_mod, "_build_workers_payload", counted_build)
+    first = client.get("/api/fleet/workers/v1")
+    assert first.status_code == 200
+    initial = first.json()
+    assert initial["counts"]["live"] == 2
+    assert initial["counts"]["workers_total"] == 2
+    local_rows = _host_by_id(initial, self_host_id)["workers"]
+    assert _host_by_id(initial, self_host_id)["age_s"] == 12.5
+    unknown_before = initial["counts"]["hosts_unknown"]
+
+    snapshot = LocalDocumentSnapshot(None, age_s, freshness)
+    second = client.get("/api/fleet/workers/v1")
+    assert second.status_code == 200
+    final = second.json()
+    assert builds == 1
+    assert final["counts"] == {
+        "live": 1,
+        "hosts_unknown": unknown_before + (freshness == "unknown"),
+        "workers_total": 2,
+        "attention": initial["counts"]["attention"],
+        "skipped": 0,
+    }
+    local = _host_by_id(final, self_host_id)
+    assert local["freshness"] == freshness
+    assert local["age_s"] == age_s
+    assert local["workers"] == local_rows
+    remote = _host_by_id(final, "host-teacher")
+    assert remote["freshness"] == "fresh"
+    assert remote["workers"][0]["age_s"] == 7200
+
+    filtered = client.get(f"/api/fleet/workers/v1?host_id={self_host_id}").json()
+    assert [host["host_id"] for host in filtered["hosts"]] == [self_host_id]
+    assert filtered["counts"] == {
+        "live": 0,
+        "hosts_unknown": int(freshness == "unknown"),
+        "workers_total": 1,
+        "attention": 0,
+        "skipped": 0,
+    }
+
+    snapshot = LocalDocumentSnapshot(_document(), 0.75, "fresh")
+    recovered = client.get("/api/fleet/workers/v1").json()
+    assert builds == 2  # The filtered request has its own cache entry.
+    assert recovered["counts"] == initial["counts"]
+    assert _host_by_id(recovered, self_host_id)["age_s"] == 0.75
+    assert _host_by_id(recovered, self_host_id)["workers"] == local_rows
+
+
+@pytest.mark.parametrize("freshness", ["fresh", "stale", "unknown"])
+@pytest.mark.parametrize("workers_status", ["reported", "unreported"])
+@pytest.mark.parametrize("host_id", ["host-worker", UNATTRIBUTED_HOST_ID, "unattributed-worker"])
+def test_reconcile_worker_counts_preserves_rows_and_coverage(
+    freshness: str,
+    workers_status: str,
+    host_id: str,
+) -> None:
+    rows = [
+        _worker_row(id="live-task"),
+        _worker_row(id="starting-task", state="starting"),
+        _worker_row(id="zombie-task", state="zombie"),
+        _worker_row(id="attention-task", state="needs_attention"),
+    ]
+    hosts = [
+        {
+            "host_id": host_id,
+            "freshness": freshness,
+            "workers_status": workers_status,
+            "workers": rows,
+            "age_s": None,
+            "reason": "lease has no host claim",
+            "unattributed_burn": {"driver": {"state": "unknown", "count": 0}},
+        }
+    ]
+    original_hosts = json.loads(json.dumps(hosts))
+    payload = {
+        "hosts": hosts,
+        "counts": {
+            "live": 99,
+            "hosts_unknown": 99,
+            "workers_total": 99,
+            "attention": 2,
+            "skipped": 3,
+        },
+    }
+    collect_mod.reconcile_worker_counts(payload)
+    assert payload["counts"] == {
+        "live": int(host_id != UNATTRIBUTED_HOST_ID and freshness == "fresh" and workers_status == "reported"),
+        "hosts_unknown": int(freshness == "unknown"),
+        "workers_total": 4,
+        "attention": 2,
+        "skipped": 3,
+    }
+    assert payload["hosts"] == original_hosts
+    assert hosts[0]["workers"] == rows
+    assert hosts[0]["age_s"] is None
+
+
+@pytest.mark.parametrize("receipt_age", [10, 600])
+def test_reported_worker_counts_follow_receipt_age(
+    monkeypatch: pytest.MonkeyPatch,
+    receipt_age: int,
+) -> None:
+    monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", _PLACEHOLDER_MAP)
+    monkeypatch.setattr(collect_mod, "_self_host_ids", lambda: set())
+    monkeypatch.setattr(collect_mod, "collect_driver_workers", lambda **_: ([], []))
+    assert (
+        loop_client.post(
+            "/api/fleet/projects/v1/report",
+            json=_document(workers=[_worker_row(age_s=7200)]),
+        ).status_code
+        == 200
+    )
+    stored = get_stored_report("host-worker")
+    assert stored is not None
+    payload = workers_payload(host_id="host-worker", now_mono=stored.received_at_mono + receipt_age)
+    assert payload["counts"] == {
+        "live": 1,
+        "hosts_unknown": 0,
+        "workers_total": 1,
+        "attention": 0,
+        "skipped": 0,
+    }
+    host = _host_by_id(payload, "host-worker")
+    assert host["freshness"] == "fresh"
+    assert host["workers"][0]["id"] == "monitor-7187"
+    assert host["workers"][0]["age_s"] == 7200
+    assert "age_s" not in host  # The existing remote contract has no report-age field.
+
+    expired = workers_payload(host_id="host-worker", now_mono=stored.expires_at_mono)
+    assert expired["counts"] == {
+        "live": 0,
+        "hosts_unknown": 1,
+        "workers_total": 0,
+        "attention": 1,
+        "skipped": 0,
+    }
+    expired_host = _host_by_id(expired, "host-worker")
+    assert expired_host["freshness"] == "unknown"
+    assert expired_host["workers_status"] == "unreported"
+    assert expired_host["workers"] == []
+
+
+def test_reconcile_worker_counts_empty() -> None:
+    payload = {"hosts": [], "counts": {"attention": 0, "skipped": 1}}
+    collect_mod.reconcile_worker_counts(payload)
+    assert payload["counts"] == {
+        "live": 0,
+        "hosts_unknown": 0,
+        "workers_total": 0,
+        "attention": 0,
+        "skipped": 1,
+    }
+
+
+@pytest.mark.parametrize("missing_heartbeat", [False, True])
+@pytest.mark.parametrize("self_identity", ["explicit", "alias"])
+@pytest.mark.parametrize("remote_worker", [False, True])
+@pytest.mark.parametrize("query", ["?host_id=unattributed", ""])
+def test_workers_route_keeps_unattributed_unknown_with_fresh_self_snapshot(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    missing_heartbeat: bool,
+    self_identity: str,
+    remote_worker: bool,
+    query: str,
+) -> None:
+    db = _driver_lease_db(tmp_path)
+    now = datetime.now(UTC)
+    _insert_driver_lease(
+        db,
+        holder_host_id=None,
+        heartbeat=None if missing_heartbeat else (now - timedelta(hours=2)).isoformat(),
+        expires=(now + timedelta(minutes=5)).isoformat(),
+    )
+    monkeypatch.setattr(collect_mod, "session_streams_db_path", lambda: db)
+    monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", "fixture-local=unattributed,teach-box=host-teacher")
+    monkeypatch.setenv("LU_MONITOR_HOST_ID", "unattributed" if self_identity == "explicit" else "local")
+    monkeypatch.setattr(
+        collect_mod.atlas_job, "is_self_host", lambda alias: self_identity == "alias" and alias == "fixture-local"
+    )
+    assert collect_mod._self_host_ids() == {UNATTRIBUTED_HOST_ID}
+    monkeypatch.setattr(state_router_mod, "collect_local_document", lambda host_id: _document(host_id, workers=[]))
+    snapshot = state_router_mod.get_cached_local_document(UNATTRIBUTED_HOST_ID)
+    assert snapshot.freshness == "fresh"
+    assert snapshot.age_s is not None
+    if remote_worker:
+        response = loop_client.post(
+            "/api/fleet/projects/v1/report",
+            json=_document("host-teacher", workers=[_worker_row(id="remote-task", age_s=7200)]),
+        )
+        assert response.status_code == 200
+
+    retained = None
+    for _ in range(2):  # Repeat each filter against the warm payload cache.
+        response = client.get(f"/api/fleet/workers/v1{query}")
+        assert response.status_code == 200
+        payload = response.json()
+        host = _host_by_id(payload, UNATTRIBUTED_HOST_ID)
+        print("UNATTRIBUTED_ROUTE_PROBE", query or "unfiltered", host["freshness"], payload["counts"])
+        assert host["freshness"] == "unknown"
+        assert host["workers_status"] == "reported"
+        assert host["reason"] == "lease has no host claim"
+        assert host["unattributed_burn"] == {}
+        assert "age_s" not in host
+        assert len(host["workers"]) == 1
+        row = host["workers"][0]
+        assert (row["id"], row["source"], row["state"]) == ("inst-alpha", "driver", "live")
+        assert row["age_s"] == 0 if missing_heartbeat else row["age_s"] >= 7200
+        if retained is not None:
+            assert host == retained
+        retained = host
+        if query:
+            assert payload["hosts"] == [host]
+            assert payload["counts"] == {
+                "live": 0,
+                "hosts_unknown": 1,
+                "workers_total": 1,
+                "attention": 0,
+                "skipped": 0,
+            }
+        else:
+            assert payload["counts"] == {
+                "live": int(remote_worker),
+                "hosts_unknown": 2 if remote_worker else 3,
+                "workers_total": 2 if remote_worker else 1,
+                "attention": 0 if remote_worker else 1,
+                "skipped": 0,
+            }
+            if remote_worker:
+                remote = _host_by_id(payload, "host-teacher")
+                assert remote["freshness"] == "fresh"
+                assert remote["workers"][0]["age_s"] == 7200
+
+
 def test_same_task_id_different_run_id_two_rows(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", _PLACEHOLDER_MAP)
     monkeypatch.setattr(collect_mod, "_self_host_ids", lambda: set())
@@ -301,7 +585,9 @@ def test_validate_workers_list_rejects_none() -> None:
 
 def test_marker_without_timestamps_not_live() -> None:
     now = datetime.now(UTC)
-    assert _marker_fresh({"host_id": "host-worker", "kind": "service", "task_id": "x", "agent": "codex"}, now=now) is False
+    assert (
+        _marker_fresh({"host_id": "host-worker", "kind": "service", "task_id": "x", "agent": "codex"}, now=now) is False
+    )
 
 
 def test_marker_within_ttl_is_live() -> None:
@@ -422,7 +708,7 @@ def _insert_driver_lease(
     db: Path,
     *,
     holder_host_id: str | None,
-    heartbeat: str,
+    heartbeat: str | None,
     expires: str,
     instance_id: str = "inst-alpha",
     stream_id: str = "epic:7177",
@@ -468,7 +754,9 @@ def test_driver_missing_host_claim_unattributed_bucket(
     assert host["reason"] == "lease has no host claim"
     worker_ids = {row["id"] for row in host["workers"]}
     assert worker_ids == {instance_id}
-    assert payload["counts"]["live"] == 1
+    assert host["freshness"] == "unknown"
+    assert payload["counts"]["live"] == 0
+    assert payload["counts"]["workers_total"] == 1
 
 
 def test_driver_opaque_host_claim_not_unattributed(tmp_path: Path) -> None:
@@ -658,11 +946,7 @@ def test_workers_payload_warm_cache_skips_delegate_collector(
 
     first = workers_payload()
     assert calls["delegate"] == 1
-    assert any(
-        row.get("id") == "warm-task"
-        for host in first["hosts"]
-        for row in host.get("workers", [])
-    )
+    assert any(row.get("id") == "warm-task" for host in first["hosts"] for row in host.get("workers", []))
 
     t0 = time.perf_counter()
     second = workers_payload()
