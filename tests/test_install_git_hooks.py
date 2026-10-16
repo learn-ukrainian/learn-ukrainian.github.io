@@ -226,6 +226,45 @@ ENTIRE_WRAPPERS = {
 }
 
 
+# Entire's own wrappers for the two managed hooks with no tracked repo hook.
+ENTIRE_UNCHAINED_WRAPPERS = {
+    "prepare-commit-msg": (
+        "#!/bin/sh\n"
+        "# Entire CLI hooks\n"
+        'if command -v entire >/dev/null 2>&1; then entire hooks git prepare-commit-msg "$1" "$2" 2>/dev/null || true; '
+        "else :; fi\n"
+    ),
+    "post-rewrite": (
+        "#!/bin/sh\n"
+        "# Entire CLI hooks\n"
+        "# Post-rewrite hook: remap session linkage after amend/rebase rewrites\n"
+        'if command -v entire >/dev/null 2>&1; then entire hooks git post-rewrite "$1" 2>/dev/null || true; else :; fi\n'
+    ),
+}
+# The installer reroutes each wrapper's Entire call through the capture guard (#10846).
+GUARDED_CALL = (
+    "then sh -c 'g=\"$(git rev-parse --show-toplevel)/scripts/entire/capture_guard.sh\"; "
+    'if [ -x "$g" ]; then exec "$g" "$@"; fi; '
+    'echo "[entire] capture refused (guard_missing): no checkpoint written" >&2\' entire-capture-guard hooks git '
+)
+GUARD_FILES = (
+    "scripts/__init__.py",
+    "scripts/entire/capture_guard.sh",
+    "scripts/entire/capture_guard.py",
+    "scripts/entire/validate_checkpoint_routing.py",
+    ".entire/settings.json",
+    ".entire/phase05-allowlist.json",
+    ".entire/private-recall.json",
+)
+# The live CLI usually lives in a user bin directory; a fixed system PATH keeps it out.
+SYSTEM_PATH = "/usr/local/bin:/usr/bin:/bin"
+
+
+def _guarded(wrapper: str) -> str:
+    assert wrapper.count("then entire hooks git ") == 1
+    return wrapper.replace("then entire hooks git ", GUARDED_CALL)
+
+
 def _entire_chained(hook_name: str) -> str:
     guard = "ENTIRE_CHAINING_" + hook_name.upper().replace("-", "_")
     status = (
@@ -263,17 +302,38 @@ def _entire_0842_chained(hook_name: str) -> str:
     )
 
 
-def _install_entire_wrappers(repo: Path, env: dict[str, str], tmp_path: Path) -> Path:
-    """Install Entire's unchained wrappers plus a stub `entire` that logs its calls."""
+def _install_entire_wrappers(
+    repo: Path,
+    env: dict[str, str],
+    tmp_path: Path,
+    *,
+    version: str = "Entire CLI 0.11.5",
+    hook_exit: int = 0,
+) -> Path:
+    """Install Entire's unchained wrappers, the capture guard and a stub `entire`.
+
+    The stub answers the guard's probes (``version``, ``status --json`` with the
+    dedicated private route) and logs every call; ``hooks`` calls exit ``hook_exit``.
+    """
     hooks_dir = repo / ".git/hooks"
-    for hook_name, content in ENTIRE_WRAPPERS.items():
+    for hook_name, content in {**ENTIRE_WRAPPERS, **ENTIRE_UNCHAINED_WRAPPERS}.items():
         _write_executable(hooks_dir / hook_name, content)
+    for relative in GUARD_FILES:
+        (repo / relative).parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(REPO_ROOT / relative, repo / relative)
+    status = '{"checkpoint_sync_remote":"learn-ukrainian/entire-checkpoints-private","checkpoint_sync_remote_source":"dedicated"}'
     stub_bin = tmp_path / "bin"
     _write_executable(
         stub_bin / "entire",
-        '#!/bin/sh\nprintf "entire:%s\\n" "$*" >> "$HOOK_LOG"\n',
+        "#!/bin/sh\n"
+        'printf "entire:%s\\n" "$*" >> "$HOOK_LOG"\n'
+        'case "$1" in\n'
+        f"  version) echo '{version}';;\n"
+        f"  status) echo '{status}';;\n"
+        f"  hooks) exit {hook_exit};;\n"
+        "esac\n",
     )
-    env["PATH"] = f"{stub_bin}{os.pathsep}{os.environ['PATH']}"
+    env["PATH"] = f"{stub_bin}{os.pathsep}{SYSTEM_PATH}"
     return hooks_dir
 
 
@@ -285,8 +345,8 @@ def test_entire_wrappers_gain_entire_chain_block(tmp_path: Path) -> None:
     for hook_name in ENTIRE_WRAPPERS:
         assert f"{hook_name}: added Entire chain to {hook_name}.pre-entire" in result.stdout
         assert f"{hook_name}: chained-under-entire" in result.stdout
-        # Byte-identical to what Entire itself writes once <name>.pre-entire exists.
-        assert (hooks_dir / hook_name).read_text(encoding="utf-8") == _entire_chained(hook_name)
+        # What Entire itself writes once <name>.pre-entire exists, with the Entire call guarded.
+        assert (hooks_dir / hook_name).read_text(encoding="utf-8") == _guarded(_entire_chained(hook_name))
         assert os.access(hooks_dir / hook_name, os.X_OK)
         pre_entire = hooks_dir / f"{hook_name}.pre-entire"
         assert os.access(pre_entire, os.X_OK)
@@ -296,10 +356,14 @@ def test_entire_wrappers_gain_entire_chain_block(tmp_path: Path) -> None:
     assert "added Entire chain" not in rerun.stdout
     for hook_name in ENTIRE_WRAPPERS:
         assert f"{hook_name}: chained-under-entire" in rerun.stdout
-        assert (hooks_dir / hook_name).read_text(encoding="utf-8") == _entire_chained(hook_name)
+        assert (hooks_dir / hook_name).read_text(encoding="utf-8") == _guarded(_entire_chained(hook_name))
 
     worktree = tmp_path / "worktree"
     _git(repo, "worktree", "add", "-b", "feature-entire", str(worktree), env=env)
+    # The guard is tracked in the real repository, so every worktree carries it.
+    for relative in GUARD_FILES:
+        (worktree / relative).parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(repo / relative, worktree / relative)
     (worktree / "wt-file.txt").write_text("entire payload\n", encoding="utf-8")
     _git(worktree, "add", "wt-file.txt", env=env)
     _git(worktree, "commit", "-m", "chained commit in worktree", env=env)
@@ -324,7 +388,7 @@ def test_entire_0842_chain_is_recognized_without_a_second_chain(tmp_path: Path) 
 
     assert "added Entire chain" not in rerun.stdout
     for hook_name in ENTIRE_WRAPPERS:
-        assert (hooks_dir / hook_name).read_text(encoding="utf-8") == _entire_0842_chained(hook_name)
+        assert (hooks_dir / hook_name).read_text(encoding="utf-8") == _guarded(_entire_0842_chained(hook_name))
     assert "commit-msg: ok (chained under Entire)" in check.stdout
     assert "pre-push: ok (chained under Entire)" in check.stdout
 
@@ -380,6 +444,148 @@ def test_failing_repo_hooks_block_commit_and_push_under_entire(tmp_path: Path) -
     assert "entire:hooks git pre-push origin" in hook_log
     # The repo pre-push still receives git's ref list on stdin after Entire's hook ran.
     assert "pre-push-stdin:1" in hook_log
+
+
+def _push_fixture(tmp_path: Path, **stub: object) -> tuple[Path, dict[str, str], Path]:
+    """Installed Entire wrappers over a fixture whose repo pre-push gate logs and exits $GATE_EXIT."""
+    repo, env = _fixture_repository(tmp_path)
+    _install_entire_wrappers(repo, env, tmp_path, **stub)  # type: ignore[arg-type]
+    remote = tmp_path / "remote.git"
+    _git(tmp_path, "init", "--bare", "-b", "main", str(remote))
+    _git(repo, "remote", "add", "origin", str(remote))
+    _run(["bash", "scripts/install_git_hooks.sh"], cwd=repo, env=env)
+    _write_executable(
+        repo / ".githooks/pre-push",
+        '#!/usr/bin/env bash\nprintf "repo-pre-push\\n" >> "$HOOK_LOG"\nexit "${GATE_EXIT:-0}"\n',
+    )
+    return repo, env, remote
+
+
+@pytest.mark.parametrize("gate_exit", [0, 1])
+def test_entire_outage_still_runs_the_repository_gate_which_decides_the_push(tmp_path: Path, gate_exit: int) -> None:
+    """Review reproducer: an installed CLI that fails must not decide or skip the push gate."""
+    repo, env, remote = _push_fixture(tmp_path, hook_exit=1)
+
+    push = _git(repo, "push", "origin", "HEAD:refs/heads/probe", env={**env, "GATE_EXIT": str(gate_exit)}, check=False)
+
+    hook_log = Path(env["HOOK_LOG"]).read_text(encoding="utf-8").splitlines()
+    assert "entire:hooks git pre-push origin" in hook_log
+    assert hook_log.count("repo-pre-push") == 1
+    assert "capture failed (exit 1); continuing without capture" in push.stderr
+    assert (push.returncode == 0) is (gate_exit == 0)
+    pushed = _git(remote, "for-each-ref", "refs/heads/probe", env=env).stdout
+    assert bool(pushed) is (gate_exit == 0)
+
+
+@pytest.mark.parametrize("gate_exit", [0, 1])
+def test_privacy_refusal_skips_capture_and_the_gate_decides_the_push(tmp_path: Path, gate_exit: int) -> None:
+    repo, env, remote = _push_fixture(tmp_path, version="Entire CLI 0.8.42")
+
+    push = _git(repo, "push", "origin", "HEAD:refs/heads/probe", env={**env, "GATE_EXIT": str(gate_exit)}, check=False)
+
+    hook_log = Path(env["HOOK_LOG"]).read_text(encoding="utf-8").splitlines()
+    assert "entire:version" in hook_log
+    assert not any(line.startswith("entire:hooks ") for line in hook_log)
+    assert hook_log.count("repo-pre-push") == 1
+    assert "capture refused (cli_version_not_accepted)" in push.stderr
+    assert (push.returncode == 0) is (gate_exit == 0)
+    assert bool(_git(remote, "for-each-ref", "refs/heads/probe", env=env).stdout) is (gate_exit == 0)
+
+
+def test_every_entire_wrapper_is_guarded_and_check_catches_a_regenerated_one(tmp_path: Path) -> None:
+    repo, env = _fixture_repository(tmp_path)
+    _write_pre_commit_config(repo, "default_install_hook_types: [commit-msg, pre-push]\nrepos: []\n")
+    hooks_dir = _install_entire_wrappers(repo, env, tmp_path)
+
+    install = _run(["bash", "scripts/install_git_hooks.sh"], cwd=repo, env=env)
+    for hook_name, content in ENTIRE_UNCHAINED_WRAPPERS.items():
+        assert f"{hook_name}: Entire capture routed through scripts/entire/capture_guard.sh" in install.stdout
+        assert (hooks_dir / hook_name).read_text(encoding="utf-8") == _guarded(content)
+    assert _run(["bash", "scripts/install_git_hooks.sh", "--check"], cwd=repo, env=env).returncode == 0
+
+    # `entire enable --force` rewrites the wrapper with a bare Entire call.
+    _write_executable(hooks_dir / "post-rewrite", ENTIRE_UNCHAINED_WRAPPERS["post-rewrite"])
+    check = _run(["bash", "scripts/install_git_hooks.sh", "--check"], cwd=repo, env=env, check=False)
+    assert check.returncode == 1
+    assert "post-rewrite: UNGUARDED" in check.stderr
+
+    rerun = _run(["bash", "scripts/install_git_hooks.sh"], cwd=repo, env=env)
+    assert "post-rewrite: Entire capture routed" in rerun.stdout
+    assert "pre-push: Entire capture routed" not in rerun.stdout
+    assert _run(["bash", "scripts/install_git_hooks.sh", "--check"], cwd=repo, env=env).returncode == 0
+
+
+def test_unrecognized_entire_invocation_fails_the_installer(tmp_path: Path) -> None:
+    repo, env = _fixture_repository(tmp_path)
+    hooks_dir = _install_entire_wrappers(repo, env, tmp_path)
+    absolute = ENTIRE_UNCHAINED_WRAPPERS["post-rewrite"].replace(
+        "if command -v entire >/dev/null 2>&1; then entire hooks git",
+        "if [ -x '/opt/entire/entire' ]; then '/opt/entire/entire' hooks git",
+    )
+    _write_executable(hooks_dir / "post-rewrite", absolute)
+
+    install = _run(["bash", "scripts/install_git_hooks.sh"], cwd=repo, env=env, check=False)
+
+    assert install.returncode == 1
+    assert "post-rewrite runs Entire in a form this installer does not recognize" in install.stderr
+    assert (hooks_dir / "post-rewrite").read_text(encoding="utf-8") == absolute
+
+
+def _hooks_snapshot(hooks_dir: Path) -> dict[str, str]:
+    return {
+        path.name: (f"-> {os.readlink(path)}" if path.is_symlink() else path.read_text(encoding="utf-8"))
+        for path in sorted(hooks_dir.iterdir())
+    }
+
+
+@pytest.mark.parametrize("link_name", ["pre-push", "pre-push.pre-entire", "post-rewrite"])
+@pytest.mark.parametrize("dangling", [False, True], ids=["live-link", "dangling-link"])
+def test_installer_refuses_symlinked_hook_destinations_without_mutation(
+    tmp_path: Path, link_name: str, dangling: bool
+) -> None:
+    """Review reproducer: a symlinked hook must not let the installer write outside .git/hooks."""
+    repo, env = _fixture_repository(tmp_path)
+    hooks_dir = _install_entire_wrappers(repo, env, tmp_path)
+    _git(repo, "config", "core.hooksPath", ".githooks", env=env)
+    outside = tmp_path / "outside" / "hook"
+    outside.parent.mkdir()
+    if not dangling:
+        _write_executable(outside, ENTIRE_WRAPPERS["pre-push"])
+    (hooks_dir / link_name).unlink(missing_ok=True)
+    (hooks_dir / link_name).symlink_to(outside)
+    before = _hooks_snapshot(hooks_dir)
+
+    install = _run(["bash", "scripts/install_git_hooks.sh"], cwd=repo, env=env, check=False)
+
+    assert install.returncode == 1
+    assert f"REFUSED: {hooks_dir / link_name} is a symlink" in install.stderr
+    assert _hooks_snapshot(hooks_dir) == before
+    assert outside.exists() is not dangling
+    if not dangling:
+        assert outside.read_text(encoding="utf-8") == ENTIRE_WRAPPERS["pre-push"]
+    assert _git(repo, "config", "--get", "core.hooksPath", env=env).stdout.strip() == ".githooks"
+
+    _git(repo, "config", "--unset", "core.hooksPath", env=env)
+    _write_pre_commit_config(repo, "default_install_hook_types: [pre-push]\nrepos: []\n")
+    check = _run(["bash", "scripts/install_git_hooks.sh", "--check"], cwd=repo, env=env, check=False)
+    assert check.returncode == 1
+    assert f"UNSAFE — {hooks_dir / link_name}" in check.stderr or (
+        link_name == "pre-push.pre-entire" and "pre-push: UNSAFE" in check.stderr
+    )
+
+
+def test_installer_refuses_a_symlinked_hooks_directory(tmp_path: Path) -> None:
+    repo, env = _fixture_repository(tmp_path)
+    real_hooks = tmp_path / "elsewhere-hooks"
+    shutil.move(repo / ".git/hooks", real_hooks)
+    (repo / ".git/hooks").symlink_to(real_hooks)
+    before = _hooks_snapshot(real_hooks)
+
+    install = _run(["bash", "scripts/install_git_hooks.sh"], cwd=repo, env=env, check=False)
+
+    assert install.returncode == 1
+    assert "is a symlink; replace it with a regular file and rerun" in install.stderr
+    assert _hooks_snapshot(real_hooks) == before
 
 
 def _write_pre_commit_config(repo: Path, text: str) -> None:

@@ -13,7 +13,7 @@
           },
           {
             "type": "command",
-            "command": "sh -c 'if ! command -v entire >/dev/null 2>&1; then printf \"%s\\n\" \"{\\\"systemMessage\\\":\\\"Entire CLI is enabled but not installed or not on PATH. Installation guide: https://docs.entire.io/cli/installation#installation-methods\\\"}\"; exit 0; fi; entire hooks codex session-start || true'",
+            "command": "sh -c 'if ! command -v entire >/dev/null 2>&1; then printf \"%s\\n\" \"{\\\"systemMessage\\\":\\\"Entire CLI is enabled but not installed or not on PATH. Installation guide: https://docs.entire.io/cli/installation#installation-methods\\\"}\"; exit 0; fi; g=\"$(git rev-parse --show-toplevel 2>/dev/null)/scripts/entire/capture_guard.sh\"; if [ -x \"$g\" ]; then \"$g\" --budget 25 hooks codex session-start; else echo \"[entire] capture refused (guard_missing): no checkpoint written\" >&2; fi'",
             "timeout": 30,
             "statusMessage": "Starting optional Entire checkpoint capture"
           }
@@ -57,7 +57,7 @@
           },
           {
             "type": "command",
-            "command": "sh -c 'if ! command -v entire >/dev/null 2>&1; then exit 0; fi; entire hooks codex post-tool-use || true'",
+            "command": "sh -c 'if ! command -v entire >/dev/null 2>&1; then exit 0; fi; g=\"$(git rev-parse --show-toplevel 2>/dev/null)/scripts/entire/capture_guard.sh\"; if [ -x \"$g\" ]; then \"$g\" --budget 25 hooks codex post-tool-use; else echo \"[entire] capture refused (guard_missing): no checkpoint written\" >&2; fi'",
             "timeout": 30,
             "statusMessage": "Recording optional Entire tool context"
           }
@@ -75,7 +75,7 @@
           },
           {
             "type": "command",
-            "command": "sh -c 'if ! command -v entire >/dev/null 2>&1; then exit 0; fi; entire hooks codex user-prompt-submit || true'",
+            "command": "sh -c 'if ! command -v entire >/dev/null 2>&1; then exit 0; fi; g=\"$(git rev-parse --show-toplevel 2>/dev/null)/scripts/entire/capture_guard.sh\"; if [ -x \"$g\" ]; then \"$g\" --budget 25 hooks codex user-prompt-submit; else echo \"[entire] capture refused (guard_missing): no checkpoint written\" >&2; fi'",
             "timeout": 30,
             "statusMessage": "Recording optional Entire turn context"
           }
@@ -93,7 +93,7 @@
           },
           {
             "type": "command",
-            "command": "sh -c 'if ! command -v entire >/dev/null 2>&1; then exit 0; fi; entire hooks codex stop || true'",
+            "command": "sh -c 'if ! command -v entire >/dev/null 2>&1; then exit 0; fi; g=\"$(git rev-parse --show-toplevel 2>/dev/null)/scripts/entire/capture_guard.sh\"; if [ -x \"$g\" ]; then \"$g\" --budget 25 hooks codex stop; else echo \"[entire] capture refused (guard_missing): no checkpoint written\" >&2; fi'",
             "timeout": 30,
             "statusMessage": "Closing optional Entire checkpoint capture"
           }

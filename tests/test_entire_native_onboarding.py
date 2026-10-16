@@ -27,7 +27,7 @@ def _hook_commands(payload: dict, event: str) -> list[dict]:
 
 
 def _entire_hooks(payload: dict, harness: str) -> list[dict]:
-    needle = f"entire hooks {harness}"
+    needle = f"hooks {harness} "
     return [
         hook
         for event in payload["hooks"]
@@ -122,7 +122,7 @@ def test_codex_cli_and_desktop_share_four_composed_entire_hooks() -> None:
     assert config["features"]["hooks"] is True
     assert len(entire_hooks) == 4
     assert {
-        re.search(r"entire hooks codex (\S+)", command["command"]).group(1)
+        re.search(r"hooks codex ([a-z-]+)", command["command"]).group(1)
         for command in entire_hooks
     } == {
         "session-start",
@@ -132,9 +132,10 @@ def test_codex_cli_and_desktop_share_four_composed_entire_hooks() -> None:
     }
     assert all(command["timeout"] == 30 for command in entire_hooks)
     assert all("if ! command -v entire" in command["command"] for command in entire_hooks)
-    # Entire capture is optional: an installed CLI that fails (hook parse or
-    # agent errors) must exit 0 so Codex exec is never poisoned by it.
-    assert all(command["command"].endswith("|| true'") for command in entire_hooks)
+    # Entire capture is optional and runs only behind the capture guard, which
+    # always exits 0, so Codex exec is never poisoned by it (#10846).
+    assert all("/scripts/entire/capture_guard.sh" in command["command"] for command in entire_hooks)
+    assert not any("entire hooks codex" in command["command"] for command in entire_hooks)
 
     # Existing project hook semantics must survive onboarding unchanged. The
     # stock 0.8.42 installer rewrites these objects and drops this metadata.
@@ -167,7 +168,7 @@ def test_claude_hosted_models_share_seven_composed_claude_code_hooks() -> None:
         hook["command"]: hook
         for event in settings["hooks"]
         for hook in _hook_commands(settings, event)
-        if "entire hooks" not in hook["command"]
+        if "hooks claude-code " not in hook["command"]
     }
     assert existing["$CLAUDE_PROJECT_DIR/.claude/hooks/session-setup.sh"]["timeout"] == 10
     assert existing["$CLAUDE_PROJECT_DIR/.claude/hooks/guard-primary-checkout-write.py"]["timeout"] == 5

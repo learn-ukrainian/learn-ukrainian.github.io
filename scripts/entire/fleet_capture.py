@@ -31,6 +31,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 from scripts.common.repo_root import main_checkout_root
+from scripts.entire import capture_guard
 
 _LOGGER = logging.getLogger(__name__)
 _OWNED_HOSTS = frozenset({"agy", "cursor-headless", "grok", "hermes"})
@@ -274,6 +275,11 @@ class FleetCapture:
             # ``unknown agent "fleet"``.  Fail open and keep the local spool.
             _LOGGER.debug("Entire fleet hook %s skipped: entire-agent-fleet not installed", hook)
             return False
+        timeout = _SESSION_END_TIMEOUT_SECONDS if hook == "session-end" else _HOOK_TIMEOUT_SECONDS
+        reason = capture_guard.refusal(self.repo_path, entire, time.monotonic() + timeout)
+        if reason is not None:
+            _LOGGER.warning("[entire] capture refused (%s): no checkpoint written", reason)
+            return False
         payload: dict[str, object] = {
             "hook_type": hook,
             "session_id": self.session_id,
@@ -292,11 +298,7 @@ class FleetCapture:
                 input=json.dumps(payload, ensure_ascii=False),
                 text=True,
                 capture_output=True,
-                timeout=(
-                    _SESSION_END_TIMEOUT_SECONDS
-                    if hook == "session-end"
-                    else _HOOK_TIMEOUT_SECONDS
-                ),
+                timeout=timeout,
                 env=env,
                 cwd=str(self.repo_path),
             )

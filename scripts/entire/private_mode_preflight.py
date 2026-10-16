@@ -14,18 +14,14 @@ if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from scripts.common import github_client
+from scripts.entire.capture_guard import ACCEPTED_VERSION, route_private, version_accepted
+from scripts.entire.validate_checkpoint_routing import validate
 
-try:
-    from scripts.entire.validate_checkpoint_routing import validate
-except ModuleNotFoundError:  # Direct script execution from the repository root.
-    from validate_checkpoint_routing import validate
-
-PINNED_VERSION = "0.11.5"
+# Capture (scripts/entire/capture_guard.py) and recall share one accepted version
+# and one private-route predicate.
+PINNED_VERSION = ACCEPTED_VERSION
 CHECKPOINT_REF = "refs/heads/entire/checkpoints/v1"
 SOURCE_REPOSITORY = "learn-ukrainian/learn-ukrainian.github.io"
-# `entire status --json` names the route checkpoints take; "dedicated" means the
-# configured checkpoint_remote, not a git remote of this checkout.
-DEDICATED_ROUTE = "dedicated"
 
 Runner = Callable[[Sequence[str], Path], subprocess.CompletedProcess[str]]
 
@@ -96,19 +92,10 @@ def preflight(root: Path, *, runner: Runner = _run) -> dict[str, Any]:
     checkpoint_repo = settings["strategy_options"]["checkpoint_remote"]["repo"]
     expected_principals = policy["entire_access_principals"]
 
-    version = _invoke(runner, ("entire", "version"), root)
-    # Exact first line: a substring match would also admit e.g. 0.11.50.
-    version_line = next(iter(version.stdout.splitlines()), "").strip()
-    checks["pinned_cli"] = version.returncode == 0 and version_line == f"Entire CLI {PINNED_VERSION}"
+    checks["pinned_cli"] = version_accepted(_invoke(runner, ("entire", "version"), root))
     if checks["pinned_cli"]:
         status = _load_json(_invoke(runner, ("entire", "status", "--json"), root))
-        checks["checkpoint_route_private"] = bool(
-            isinstance(status, dict)
-            and status.get("checkpoint_sync_remote_source") == DEDICATED_ROUTE
-            and status.get("checkpoint_sync_remote") == checkpoint_repo
-            and not status.get("checkpoint_remote_ignored")
-            and not status.get("checkpoint_sync_error")
-        )
+        checks["checkpoint_route_private"] = route_private(status, checkpoint_repo)
 
     private_repo = _load_json(
         _invoke(
