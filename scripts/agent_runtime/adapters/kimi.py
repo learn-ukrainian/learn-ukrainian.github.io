@@ -106,10 +106,7 @@ class KimiAdapter:
         requested_model = resolve_kimi_model(model)
 
         if effort and requested_model == KIMI_MODEL_ALIASES["k3"] and effort != "max":
-            _logger.warning(
-                "Kimi K3 exposes max effort only; ignoring requested effort=%s",
-                effort,
-            )
+            _logger.warning("kimi: effort ignored for full K3, which exposes max effort only")
 
         kimi_bin = _resolve_kimi_binary()
         cmd: list[str] = [
