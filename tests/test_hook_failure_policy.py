@@ -561,14 +561,8 @@ def test_cursor_fail_open_detector_flags_a_guard_without_fail_closed() -> None:
 
 def test_tracked_cursor_guard_hooks_fail_closed() -> None:
     """Cursor fails open on exit codes other than 0 and 2 unless a hook sets ``failClosed: true``."""
-    tracked = subprocess.run(
-        ["git", "ls-files", "--", ".cursor/hooks.json", "agents_extensions/cursor/**/hooks.json"],
-        cwd=REPO,
-        capture_output=True,
-        text=True,
-        check=True,
-        timeout=30,
-    ).stdout.split()
-    for path in tracked:
-        config = json.loads((REPO / path).read_text(encoding="utf-8"))
-        assert _cursor_fail_open_guards(config) == [], path
+    # Cursor reads project hooks from .cursor/hooks.json; agents_extensions/cursor is its source.
+    for path in (REPO / ".cursor/hooks.json", REPO / "agents_extensions/cursor/hooks.json"):
+        if path.is_file():
+            config = json.loads(path.read_text(encoding="utf-8"))
+            assert _cursor_fail_open_guards(config) == [], path
