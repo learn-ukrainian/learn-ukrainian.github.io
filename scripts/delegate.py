@@ -4986,6 +4986,9 @@ def _heal_dead_task(state_path: Path, state: dict[str, Any], *, source: str) -> 
 # Exit code for a dispatch refused by host admission: retryable once a worker
 # finishes or the host recovers, unlike exit 2 (invalid request).
 _ADMISSION_REFUSED_EXIT = 3
+# A full .worktrees disk after the reaper (#10776): a hard stop that
+# --force-admission cannot override, so it has its own code.
+_ADMISSION_DISK_REFUSED_EXIT = 4
 
 
 def _evaluate_dispatch_admission(
@@ -4994,11 +4997,14 @@ def _evaluate_dispatch_admission(
     sweep: bool,
     thresholds: dispatch_admission.Thresholds | None = None,
     reap_disk: bool = False,
+    disk_guard: bool = True,
 ) -> dispatch_admission.AdmissionDecision:
     """Sweep proven dead workers only when admission explicitly requests it.
 
     ``reap_disk`` lets a full disk run the worktree reaper once (#10776); the
     locked recheck never does, so the reaper never runs under the lock.
+    ``disk_guard=False`` skips the disk check for a dispatch that reuses an
+    existing worktree.
     """
     return dispatch_admission.evaluate(
         mode,
@@ -5008,7 +5014,23 @@ def _evaluate_dispatch_admission(
         on_dead=(lambda path, state: _heal_dead_task(path, state, source="admission")) if sweep else None,
         thresholds=thresholds,
         reaper=dispatch_admission.run_disk_reaper if reap_disk else None,
+        disk_guard=disk_guard,
     )
+
+
+def _admission_allows_dispatch(decision: dispatch_admission.AdmissionDecision, *, force_reason: str | None) -> bool:
+    """May this dispatch proceed (and publish its admission hold)?
+
+    Admitted, or refused only by checks ``--force-admission`` may override.
+    A disk refusal (#10776) is a hard stop no force reason turns into an admit.
+    """
+    if decision.exempt or decision.admitted:
+        return True
+    return force_reason is not None and not decision.disk_refused
+
+
+def _admission_refused_exit(decision: dispatch_admission.AdmissionDecision) -> int:
+    return _ADMISSION_DISK_REFUSED_EXIT if decision.disk_refused else _ADMISSION_REFUSED_EXIT
 
 
 def _report_dispatch_admission(
@@ -5020,6 +5042,9 @@ def _report_dispatch_admission(
     if decision.admitted:
         print(f"🚦 dispatch admission: admitted — {decision.summary()}", file=sys.stderr)
         return None
+    if not _admission_allows_dispatch(decision, force_reason=force_reason):
+        print(f"❌ {decision.refusal_line()}", file=sys.stderr)
+        return _admission_refused_exit(decision)
     if force_reason is not None:
         print(
             f"⚠️  dispatch admission overridden by --force-admission ({force_reason!r}): {'; '.join(decision.failures)}",
@@ -5028,6 +5053,26 @@ def _report_dispatch_admission(
         return None
     print(f"❌ {decision.refusal_line()}", file=sys.stderr)
     return _ADMISSION_REFUSED_EXIT
+
+
+def _dispatch_reuses_worktree(
+    worktree_arg: str | None,
+    *,
+    agent: str,
+    task_id: str,
+    repo_root: Path | None,
+) -> bool:
+    """Read-only, no git: True when ``--worktree`` resolves to a checkout that already exists.
+
+    ``--worktree auto`` or an explicit path reuses the checkout already at the
+    resolved path. A ``--cwd`` dispatch is not probed: proving that path is a
+    registered worktree runs git in it, which may happen only after the
+    post-lock re-check (#8775), so it keeps the disk guard.
+    """
+    if not worktree_arg:
+        return False
+    raw = str(_auto_worktree_path(agent, task_id, repo_root=repo_root)) if worktree_arg == "auto" else worktree_arg
+    return _is_existing_worktree(raw, repo_root=repo_root)
 
 
 def _is_existing_worktree(worktree: Any, *, repo_root: Path | None = None) -> bool:
@@ -13631,9 +13676,16 @@ def _dispatch(
     # authoritative one runs under the admission lock just before the first
     # worktree or task-record side effect. Dry-run reports dead-pid records
     # without marking them and never runs the disk reaper.
+    # A dispatch that reuses an existing worktree adds no checkout, so the disk
+    # guard and its reaper are skipped for it (#10776).
+    disk_guard = not _dispatch_reuses_worktree(
+        worktree_arg, agent=dispatch_agent, task_id=task_id, repo_root=target_repo_root
+    )
     try:
         live_dispatch = not bool(getattr(args, "dry_run", False))
-        admission = _evaluate_dispatch_admission(args.mode, sweep=live_dispatch, reap_disk=live_dispatch)
+        admission = _evaluate_dispatch_admission(
+            args.mode, sweep=live_dispatch, reap_disk=live_dispatch and disk_guard, disk_guard=disk_guard
+        )
     except ValueError as exc:
         print(f"❌ invalid dispatch admission threshold: {exc}", file=sys.stderr)
         return 2
@@ -14040,10 +14092,13 @@ def _dispatch(
         }
     if not admission.exempt:
         admission_refusal: str | None = None
+        admission_refusal_exit = _ADMISSION_REFUSED_EXIT
         try:
             with dispatch_admission.admission_lock(tasks_dir()):
-                admission = _evaluate_dispatch_admission(args.mode, sweep=True, thresholds=admission.thresholds)
-                if admission.admitted or force_admission_reason is not None:
+                admission = _evaluate_dispatch_admission(
+                    args.mode, sweep=True, thresholds=admission.thresholds, disk_guard=disk_guard
+                )
+                if _admission_allows_dispatch(admission, force_reason=force_admission_reason):
                     admission_record = admission.to_record(force_reason=force_admission_reason)
                     _publish_admission_hold(
                         task_id, run_nonce, mode=args.mode, admission=admission_record, review_fields=review_fields
@@ -14051,6 +14106,7 @@ def _dispatch(
                     admission_holds.callback(_release_admission_hold, task_id, run_nonce)
                 else:
                     admission_refusal = admission.refusal_line()
+                    admission_refusal_exit = _admission_refused_exit(admission)
         except dispatch_admission.AdmissionLockTimeout as exc:
             admission_refusal = f"dispatch admission lock unavailable: {exc}; retry the dispatch"
         except (OSError, RuntimeError) as exc:
@@ -14058,7 +14114,7 @@ def _dispatch(
             return 1
         if admission_refusal is not None:
             print(f"❌ {admission_refusal}", file=sys.stderr)
-            return _ADMISSION_REFUSED_EXIT
+            return admission_refusal_exit
     elif review_fields is not None:
         try:
             _publish_admission_hold(task_id, run_nonce, mode=args.mode, admission=None, review_fields=review_fields)
@@ -18711,7 +18767,8 @@ def build_parser() -> argparse.ArgumentParser:
             "  LU_DISPATCH_ISOLATION=fallback forces the plain Popen path. See packaging/systemd/README.md.\n\n"
             "Exit codes:\n"
             "  0 dispatched, or --dry-run validated; 1 worktree, lease, or spawn failure;\n"
-            "  2 invalid request or another guard refused; 3 host admission refused (retry later or --force-admission).\n\n"
+            "  2 invalid request or another guard refused; 3 host admission refused (retry later or --force-admission);\n"
+            "  4 the .worktrees disk is still full after the reaper (free space; --force-admission cannot override).\n\n"
             "Claude account (#10619):\n"
             "  A claude dispatch runs as --claude-account, else the label in the default-account file read once at\n"
             "  dispatch (see --claude-account), else a. The task record keeps the label and its source\n"
@@ -18764,7 +18821,8 @@ def build_parser() -> argparse.ArgumentParser:
         help=(
             "Start a write-capable worker even when host admission refuses it (live write-worker cap, "
             "MemAvailable floor, or load per CPU; #8645). REASON is required and is recorded in the "
-            "task record under admission.force_reason."
+            "task record under admission.force_reason. A full .worktrees disk (#10776, exit 4) is never "
+            "overridden."
         ),
     )
     d.add_argument(

@@ -45,7 +45,15 @@ every check passes. Read-only dispatches are exempt.
   refused if it is still at or above the threshold. The refusal names the
   percent used, the free GiB and the reaper outcome: trees removed and MB
   freed, the most frequent skip reasons, a busy reaper lock or the reaper's
-  own refusal, or "reaper unavailable" when it cannot run. A caller without
+  own refusal, or "reaper unavailable" when it cannot run. The reaper runs
+  in a child process killed after ``DISPATCH_DISK_REAPER_TIMEOUT_S`` (default
+  90 s; "reaper timed out"). One attempt runs per host at a time: a dispatch
+  that does not get the attempt lock, or that arrives within
+  ``DISPATCH_DISK_REAPER_COOLDOWN_S`` (default 600 s) of an attempt that freed
+  nothing, does not run it and reports the recorded outcome. A disk refusal
+  is a hard stop: ``--force-admission`` overrides the other checks, never
+  this one. A dispatch that reuses an existing worktree skips the disk check.
+  Paths in reaper, probe and alert details are redacted. A caller without
   a reaper (status queries, dry runs, the locked recheck) only measures. At or
   above ``DISPATCH_DISK_ALERT_USED_PERCENT`` (default 80) one alert is posted
   to the epics Fleet Comms channel per :data:`DISK_ALERT_INTERVAL_S`; the
@@ -78,12 +86,17 @@ import contextlib
 import fcntl
 import json
 import logging
+import math
 import os
+import re
 import shutil
+import signal
 import subprocess
+import sys
+import threading
 import time
 from collections.abc import Callable, Iterator, Mapping
-from dataclasses import dataclass, field, replace
+from dataclasses import asdict, dataclass, field, replace
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -109,6 +122,8 @@ ENV_WORKER_MEM_RESERVE_GIB = "DISPATCH_WORKER_MEM_RESERVE_GIB"
 ENV_MAX_TEST_SLOT_QUEUE = "DISPATCH_MAX_TEST_SLOT_QUEUE"
 ENV_DISK_REFUSE_USED_PERCENT = "DISPATCH_DISK_REFUSE_USED_PERCENT"
 ENV_DISK_ALERT_USED_PERCENT = "DISPATCH_DISK_ALERT_USED_PERCENT"
+ENV_DISK_REAPER_COOLDOWN_S = "DISPATCH_DISK_REAPER_COOLDOWN_S"
+ENV_DISK_REAPER_TIMEOUT_S = "DISPATCH_DISK_REAPER_TIMEOUT_S"
 _DEFAULT_WORKER_MEM_RESERVE_GIB = 2.5
 _DEFAULT_MAX_TEST_SLOT_QUEUE = 4
 _DEFAULT_DISK_REFUSE_USED_PERCENT = 85.0
@@ -134,6 +149,23 @@ REAPER_MODULE = "scripts.orchestration.reap_worktrees"
 REAPER_FUNCTION = "reap_clean_pushed"
 # How long a dispatch waits for another reaper run's lock before giving up.
 DISK_REAPER_LOCK_TIMEOUT_S = 5.0
+# One reaper attempt per host at a time (#10776). The attempt lock is taken
+# without waiting: a dispatch that does not get it, or that arrives within the
+# cooldown of an attempt that freed nothing, does not run the reaper and
+# reports the recorded outcome. Both files sit beside the admission lock.
+DISK_REAPER_ATTEMPT_LOCK_NAME = "dispatch-admission-disk-reaper.lock"
+DISK_REAPER_STATE_NAME = "dispatch-admission-disk-reaper.state"
+DISK_REAPER_COOLDOWN_S = 600.0
+# The reaper runs in a child process killed after this many seconds (SIGTERM,
+# then SIGKILL after the grace), so a stuck fetch or tree scan cannot hold the
+# dispatch. The reaper is crash-safe; its own lock dies with the process.
+DISK_REAPER_TIMEOUT_S = 90.0
+DISK_REAPER_KILL_GRACE_S = 5.0
+# The disk guard protects worktree creation; a dispatch that reuses an
+# existing worktree adds no checkout and skips it.
+DISK_GUARD_REUSE_SKIP = "dispatch reuses an existing worktree"
+_DISK_REAPER_CHILD_FLAG = "--run-disk-reaper"
+_MODULE_NAME = "scripts.orchestration.dispatch_admission"
 # Distinct skip reasons named in the refusal text, most frequent first.
 DISK_REAPER_TOP_SKIP_REASONS = 3
 _DISK_REAPER_REASON_CHARS = 80
@@ -153,6 +185,8 @@ _THRESHOLD_ENV_NAMES = (
     ENV_MAX_TEST_SLOT_QUEUE,
     ENV_DISK_REFUSE_USED_PERCENT,
     ENV_DISK_ALERT_USED_PERCENT,
+    ENV_DISK_REAPER_COOLDOWN_S,
+    ENV_DISK_REAPER_TIMEOUT_S,
 )
 
 # Pid-less ``spawning`` record naming the dispatcher that holds an admitted
@@ -177,6 +211,8 @@ class Thresholds:
     max_test_slot_queue: int = _DEFAULT_MAX_TEST_SLOT_QUEUE
     disk_refuse_used_percent: float = _DEFAULT_DISK_REFUSE_USED_PERCENT
     disk_alert_used_percent: float = _DEFAULT_DISK_ALERT_USED_PERCENT
+    disk_reaper_cooldown_s: float = DISK_REAPER_COOLDOWN_S
+    disk_reaper_timeout_s: float = DISK_REAPER_TIMEOUT_S
 
 
 @dataclass(frozen=True)
@@ -218,7 +254,8 @@ class ReaperOutcome:
     lock_busy: bool = False
 
 
-DiskReaper = Callable[[Path], ReaperOutcome]
+# Called with the primary checkout and the deadline in seconds.
+DiskReaper = Callable[[Path, float], ReaperOutcome]
 
 
 @dataclass(frozen=True)
@@ -230,6 +267,8 @@ class DiskCheck:
     before_reaper: DiskProbe | None = None
     reaper: ReaperOutcome | None = None
     alert: str | None = None
+    # A full-disk refusal is a hard stop: --force-admission never overrides it.
+    refused: bool = False
 
     def clause(self, limits: Thresholds) -> str:
         if self.probe.used_percent is None:
@@ -343,11 +382,22 @@ class AdmissionDecision:
 
     def refusal_line(self) -> str:
         """One line: the failed checks with value and threshold, and how to override."""
+        if self.disk_refused:
+            return (
+                f"dispatch admission refused for a {self.mode} worker: {'; '.join(self.failures)}. "
+                "Free space on the .worktrees filesystem (reap settled dispatch worktrees with the common reaper) "
+                "and retry; --force-admission cannot override a full disk."
+            )
         return (
             f"dispatch admission refused for a {self.mode} worker: {'; '.join(self.failures)}. "
             "Wait for a worker to finish or for the host to recover, raise the threshold through the named "
             'environment variable, or pass --force-admission "<reason>" to override.'
         )
+
+    @property
+    def disk_refused(self) -> bool:
+        """The disk check refused: a hard stop no force flag or hold condition can turn into an admit."""
+        return self.disk is not None and self.disk.refused
 
     def to_record(self, *, force_reason: str | None = None) -> dict[str, Any]:
         """Task-record snapshot: what admission saw, and any override."""
@@ -397,6 +447,7 @@ class AdmissionDecision:
             "disk_used_percent_before_reaper": round(disk_before, 2) if disk_before is not None else None,
             "disk_reaper": disk.reaper.detail if disk and disk.reaper else None,
             "disk_alert": disk.alert if disk else None,
+            "disk_refused": self.disk_refused,
             "swept_crashed": list(self.dead_task_ids) if self.swept else [],
         }
 
@@ -415,6 +466,8 @@ def config_defaults() -> Thresholds:
         max_test_slot_queue=int(config.DISPATCH_MAX_TEST_SLOT_QUEUE),
         disk_refuse_used_percent=float(config.DISPATCH_DISK_REFUSE_USED_PERCENT),
         disk_alert_used_percent=float(config.DISPATCH_DISK_ALERT_USED_PERCENT),
+        disk_reaper_cooldown_s=float(config.DISPATCH_DISK_REAPER_COOLDOWN_S),
+        disk_reaper_timeout_s=float(config.DISPATCH_DISK_REAPER_TIMEOUT_S),
     )
 
 
@@ -490,6 +543,11 @@ def load_thresholds(environ: Mapping[str, str] | None = None) -> Thresholds:
     for name in (ENV_DISK_REFUSE_USED_PERCENT, ENV_DISK_ALERT_USED_PERCENT):
         if _env_number(env, name, 0.0, integer=False) > 100:
             raise ValueError(f"{name}={env[name]!r} must be a percentage of at most 100")
+    for name in (ENV_DISK_REAPER_COOLDOWN_S, ENV_DISK_REAPER_TIMEOUT_S):
+        if not math.isfinite(_env_number(env, name, 1.0, integer=False)):
+            raise ValueError(f"{name}={env[name]!r} must be a finite number of seconds")
+    if _env_number(env, ENV_DISK_REAPER_TIMEOUT_S, 1.0, integer=False) <= 0:
+        raise ValueError(f"{ENV_DISK_REAPER_TIMEOUT_S}={env[ENV_DISK_REAPER_TIMEOUT_S]!r} must be more than zero")
     return Thresholds(
         max_live_write_workers=int(
             _env_number(env, ENV_MAX_LIVE_WRITE_WORKERS, defaults.max_live_write_workers, integer=True)
@@ -507,6 +565,12 @@ def load_thresholds(environ: Mapping[str, str] | None = None) -> Thresholds:
         ),
         disk_alert_used_percent=_env_number(
             env, ENV_DISK_ALERT_USED_PERCENT, defaults.disk_alert_used_percent, integer=False
+        ),
+        disk_reaper_cooldown_s=_env_number(
+            env, ENV_DISK_REAPER_COOLDOWN_S, defaults.disk_reaper_cooldown_s, integer=False
+        ),
+        disk_reaper_timeout_s=_env_number(
+            env, ENV_DISK_REAPER_TIMEOUT_S, defaults.disk_reaper_timeout_s, integer=False
         ),
     )
 
@@ -633,13 +697,29 @@ def worktrees_disk_path() -> Path:
     return worktrees if worktrees.is_dir() else root
 
 
+# An absolute or home-relative path inside free text: ``/a/b``, ``~/a``,
+# ``~user/a``. A slash after a word character (``origin/main``, ``3/4``) is
+# not a path start.
+_PATH_IN_TEXT = re.compile(r"(?<![\w.\-/~])(?:~[\w.\-]*)?/[^\s'\"(),;\[\]<>]+")
+REDACTED_PATH = "<path>"
+
+
+def redact_paths(text: str) -> str:
+    """``text`` with absolute and home paths replaced by :data:`REDACTED_PATH`.
+
+    Reaper, probe and alert details are printed, kept in task records and
+    published to Fleet Comms; host paths must not reach any of them.
+    """
+    return _PATH_IN_TEXT.sub(REDACTED_PATH, text)
+
+
 def read_disk(path: Path, usage: Callable[[Path], Any] = shutil.disk_usage) -> DiskProbe:
     """``usage(path)`` as a :class:`DiskProbe`; a failure is ``skipped`` with its reason."""
     try:
         result = usage(path)
         used, free = int(result.used), int(result.free)
     except (OSError, AttributeError, TypeError, ValueError) as exc:
-        return DiskProbe(skipped=f"disk usage unreadable: {type(exc).__name__}: {exc}")
+        return DiskProbe(skipped=redact_paths(f"disk usage unreadable: {type(exc).__name__}: {exc}"))
     if used < 0 or free < 0 or used + free <= 0:
         return DiskProbe(skipped=f"disk usage invalid: used={used} free={free}")
     return DiskProbe(used_bytes=used, free_bytes=free)
@@ -655,7 +735,7 @@ def probe_disk() -> DiskProbe:
     try:
         path = worktrees_disk_path()
     except OSError as exc:
-        return DiskProbe(skipped=f"worktrees path unresolved: {exc}")
+        return DiskProbe(skipped=redact_paths(f"worktrees path unresolved: {exc}"))
     return read_disk(path)
 
 
@@ -666,8 +746,8 @@ def load_reaper_module() -> Any:
     return reap_worktrees
 
 
-def run_disk_reaper(repo_root: Path) -> ReaperOutcome:
-    """Run the common reaper's clean-pushed worktree removal once (#10778).
+def reap_clean_pushed_once(repo_root: Path) -> ReaperOutcome:
+    """Run the common reaper's clean-pushed worktree removal once, in this process (#10778).
 
     Calls ``reap_clean_pushed(repo_root=repo_root, dry_run=False,
     lock_timeout_s=DISK_REAPER_LOCK_TIMEOUT_S)``, which removes only clean,
@@ -675,6 +755,8 @@ def run_disk_reaper(repo_root: Path) -> ReaperOutcome:
     when another reaper run holds its lock. A missing module or function, an
     exception or a result without the ``CleanPushedReport`` fields is an
     outcome with ``ran=False`` that names the cause; it never raises.
+    Admission runs it only in the child process :func:`run_disk_reaper`
+    starts, because the call itself has no overall deadline.
     """
     try:
         module = load_reaper_module()
@@ -711,15 +793,229 @@ def _reaper_outcome(report: Any) -> ReaperOutcome:
     return ReaperOutcome(ran=True, detail=detail, removed=removed, freed_mb=freed_mb)
 
 
-def _attempt_reaper(reaper: DiskReaper) -> ReaperOutcome:
+def disk_reaper_command(repo_root: Path) -> tuple[list[str], Path]:
+    """The child command that runs :func:`reap_clean_pushed_once`, and its working directory.
+
+    The child runs this module from the checkout this code was loaded from,
+    with the project interpreter. Raises ``FileNotFoundError`` when no
+    project interpreter is found. The seam deadline tests replace.
+    """
+    from scripts.common.repo_root import project_interpreter
+
+    code_root = Path(__file__).resolve().parents[2]
+    interpreter = project_interpreter(code_root)
+    return [str(interpreter), "-m", _MODULE_NAME, _DISK_REAPER_CHILD_FLAG, str(repo_root)], code_root
+
+
+def _signal_group(process: subprocess.Popen[str], signum: int) -> None:
+    with contextlib.suppress(ProcessLookupError, PermissionError):
+        os.killpg(process.pid, signum)
+
+
+def _parse_child_outcome(stdout: str) -> ReaperOutcome | None:
+    # Split on newlines only: str.splitlines would also split on Unicode line
+    # separators inside the JSON record (#9556).
+    lines = [line for line in stdout.split("\n") if line.strip()]
+    if not lines:
+        return None
+    try:
+        data = json.loads(lines[-1])
+    except ValueError:
+        return None
+    if not isinstance(data, dict):
+        return None
+    ran, detail = data.get("ran"), data.get("detail")
+    removed, freed_mb, lock_busy = data.get("removed"), data.get("freed_mb"), data.get("lock_busy")
+    if not (isinstance(ran, bool) and isinstance(detail, str) and isinstance(lock_busy, bool)):
+        return None
+    if type(removed) is not int or type(freed_mb) is not int:
+        return None
+    return ReaperOutcome(ran=ran, detail=detail, removed=removed, freed_mb=freed_mb, lock_busy=lock_busy)
+
+
+def run_disk_reaper(repo_root: Path, timeout_s: float = DISK_REAPER_TIMEOUT_S) -> ReaperOutcome:
+    """Run :func:`reap_clean_pushed_once` in a child process with a hard deadline.
+
+    The child gets its own process group. When ``timeout_s`` passes, the group
+    gets SIGTERM and, after :data:`DISK_REAPER_KILL_GRACE_S`, SIGKILL, and the
+    outcome is "reaper timed out": the caller regains control within about
+    ``timeout_s`` plus twice the grace. A child that cannot start, exits
+    non-zero or prints no outcome is "reaper failed". Never raises.
+    """
+    try:
+        command, cwd = disk_reaper_command(repo_root)
+    except (FileNotFoundError, OSError) as exc:
+        return ReaperOutcome(ran=False, detail=f"reaper unavailable: {exc}")
+    try:
+        process = subprocess.Popen(
+            command,
+            cwd=cwd,
+            stdin=subprocess.DEVNULL,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            start_new_session=True,
+        )
+    except OSError as exc:
+        return ReaperOutcome(ran=False, detail=f"reaper failed: could not start the reaper process: {exc}")
+    try:
+        stdout, stderr = process.communicate(timeout=timeout_s)
+    except subprocess.TimeoutExpired:
+        _signal_group(process, signal.SIGTERM)
+        try:
+            process.communicate(timeout=DISK_REAPER_KILL_GRACE_S)
+        except subprocess.TimeoutExpired:
+            _signal_group(process, signal.SIGKILL)
+            # A descendant that left the group may still hold the pipes: do
+            # not wait for them, only for the child itself.
+            for stream in (process.stdout, process.stderr):
+                if stream is not None:
+                    with contextlib.suppress(OSError):
+                        stream.close()
+            with contextlib.suppress(subprocess.TimeoutExpired):
+                process.wait(timeout=DISK_REAPER_KILL_GRACE_S)
+        _logger.warning("dispatch admission: disk reaper timed out after %gs; its process group was stopped", timeout_s)
+        return ReaperOutcome(ran=False, detail=f"reaper timed out after {timeout_s:g} s and was stopped")
+    if process.returncode != 0:
+        last = (stderr or "").strip().splitlines()
+        return ReaperOutcome(
+            ran=False,
+            detail=f"reaper failed: the reaper process exited {process.returncode}: {last[-1] if last else 'no output'}",
+        )
+    outcome = _parse_child_outcome(stdout)
+    if outcome is None:
+        return ReaperOutcome(ran=False, detail="reaper failed: the reaper process printed no outcome")
+    return outcome
+
+
+def _reaper_child_main(argv: list[str]) -> int:
+    """``python -m scripts.orchestration.dispatch_admission --run-disk-reaper <repo_root>``.
+
+    Prints the :class:`ReaperOutcome` as one JSON line on stdout; anything
+    the reaper itself prints goes to stderr.
+    """
+    if len(argv) != 2 or argv[0] != _DISK_REAPER_CHILD_FLAG:
+        print(f"usage: python -m {_MODULE_NAME} {_DISK_REAPER_CHILD_FLAG} <repo_root>", file=sys.stderr)
+        return 2
+    with contextlib.redirect_stdout(sys.stderr):
+        outcome = reap_clean_pushed_once(Path(argv[1]))
+    print(json.dumps(asdict(outcome), sort_keys=True))
+    return 0
+
+
+def _attempt_reaper(reaper: DiskReaper, timeout_s: float) -> ReaperOutcome:
     try:
         root = primary_checkout()
-        outcome = reaper(root)
+        outcome = reaper(root, timeout_s)
     except Exception as exc:  # an injected reaper must not crash admission either
-        return ReaperOutcome(ran=False, detail=f"reaper failed: {type(exc).__name__}: {exc}")
+        outcome = ReaperOutcome(ran=False, detail=f"reaper failed: {type(exc).__name__}: {exc}")
     if not isinstance(outcome, ReaperOutcome):
-        return ReaperOutcome(ran=False, detail=f"reaper failed: returned {type(outcome).__name__}, not ReaperOutcome")
-    return outcome
+        outcome = ReaperOutcome(
+            ran=False, detail=f"reaper failed: returned {type(outcome).__name__}, not ReaperOutcome"
+        )
+    return replace(outcome, detail=redact_paths(outcome.detail))
+
+
+def _finite_time(state: Mapping[str, Any], key: str) -> float | None:
+    """``state[key]`` as epoch seconds; ``None`` when absent. Raises ``ValueError`` when malformed."""
+    if key not in state:
+        return None
+    value = state[key]
+    if isinstance(value, bool) or not isinstance(value, int | float):
+        raise ValueError(f"{key} is not a number")
+    try:
+        number = float(value)
+    except OverflowError:
+        raise ValueError(f"{key} is out of range") from None
+    if not math.isfinite(number):
+        raise ValueError(f"{key} is not finite")
+    return number
+
+
+def _read_reaper_state(tasks_dir: Path) -> dict[str, Any] | None:
+    """The last recorded attempt, or ``None`` when there is none or it is malformed."""
+    try:
+        state = json.loads((tasks_dir / DISK_REAPER_STATE_NAME).read_text(encoding="utf-8"))
+        if not isinstance(state, dict):
+            return None
+        last = _finite_time(state, "last_attempt_at")
+    except (OSError, ValueError):
+        return None
+    if last is None or not isinstance(state.get("detail"), str) or not isinstance(state.get("freed"), bool):
+        return None
+    return {**state, "last_attempt_at": last}
+
+
+def _write_reaper_state(tasks_dir: Path, state: Mapping[str, Any]) -> None:
+    """Replace the state file atomically: dispatches without the attempt lock read it."""
+    target = tasks_dir / DISK_REAPER_STATE_NAME
+    temporary = tasks_dir / f"{DISK_REAPER_STATE_NAME}.tmp-{os.getpid()}-{threading.get_ident()}"
+    try:
+        temporary.write_text(json.dumps(dict(state), sort_keys=True) + "\n", encoding="utf-8")
+        os.replace(temporary, target)
+    except OSError as exc:
+        _logger.warning("dispatch admission: disk reaper state not recorded: %s", exc)
+        with contextlib.suppress(OSError):
+            temporary.unlink()
+
+
+def _recorded_attempt(state: Mapping[str, Any] | None, clock: float) -> str:
+    if state is None:
+        return "no earlier attempt recorded"
+    age = max(0.0, clock - float(state["last_attempt_at"]))
+    return f"reaper attempted {age:.0f} s ago: {state['detail']}"
+
+
+def attempt_disk_reaper(
+    tasks_dir: Path, reaper: DiskReaper, limits: Thresholds, *, now: Callable[[], float] = time.time
+) -> ReaperOutcome:
+    """Run ``reaper`` at most once per host at a time and once per cooldown (#10776).
+
+    Takes the attempt lock without waiting. A dispatch that does not get it,
+    or that finds an attempt within ``limits.disk_reaper_cooldown_s`` that
+    freed nothing, does not run the reaper and returns the recorded outcome
+    (``ran=False``). An attempt that freed space does not start a cooldown.
+    A recorded attempt dated in the future (the clock stepped back) counts
+    as just made. Never raises.
+    """
+    try:
+        tasks_dir.mkdir(parents=True, exist_ok=True)
+        descriptor = os.open(tasks_dir / DISK_REAPER_ATTEMPT_LOCK_NAME, os.O_CREAT | os.O_RDWR, 0o600)
+    except OSError as exc:
+        return ReaperOutcome(ran=False, detail=redact_paths(f"reaper not run: attempt lock unavailable ({exc})"))
+    try:
+        try:
+            fcntl.flock(descriptor, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError:
+            recorded = _recorded_attempt(_read_reaper_state(tasks_dir), now())
+            return ReaperOutcome(ran=False, detail=f"reaper attempt in progress in another dispatch; {recorded}")
+        except OSError as exc:
+            return ReaperOutcome(ran=False, detail=redact_paths(f"reaper not run: attempt lock unavailable ({exc})"))
+        state = _read_reaper_state(tasks_dir)
+        clock = now()
+        if state is not None and not state["freed"]:
+            if state["last_attempt_at"] > clock:
+                state = {**state, "last_attempt_at": clock}
+                _write_reaper_state(tasks_dir, state)
+            if clock - state["last_attempt_at"] < limits.disk_reaper_cooldown_s:
+                return ReaperOutcome(ran=False, detail=_recorded_attempt(state, clock))
+        outcome = _attempt_reaper(reaper, limits.disk_reaper_timeout_s)
+        freed = outcome.ran and (outcome.removed > 0 or outcome.freed_mb > 0)
+        _write_reaper_state(
+            tasks_dir,
+            {
+                # When the attempt ended, never before it started.
+                "last_attempt_at": max(clock, now()),
+                "detail": outcome.detail,
+                "ran": outcome.ran,
+                "removed": outcome.removed,
+                "freed_mb": outcome.freed_mb,
+                "freed": freed,
+            },
+        )
+        return outcome
+    finally:
+        os.close(descriptor)
 
 
 def post_disk_alert(body: str, idempotency_key: str) -> None:
@@ -795,11 +1091,6 @@ def _iso_utc(epoch: float) -> str:
     return datetime.fromtimestamp(epoch, UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
-def _alert_number(state: Mapping[str, Any], key: str) -> float | None:
-    value = state.get(key)
-    return float(value) if isinstance(value, int | float) and not isinstance(value, bool) else None
-
-
 def maybe_alert_disk(
     tasks_dir: Path,
     check: DiskCheck,
@@ -813,7 +1104,10 @@ def maybe_alert_disk(
 
     The state file is locked without waiting: a concurrent admission that holds
     it is already alerting. A failed post is logged and retried after
-    :data:`DISK_ALERT_RETRY_S`; nothing here raises.
+    :data:`DISK_ALERT_RETRY_S`. A malformed ``posted_at`` or ``failed_at``
+    counts as a failed post. A time dated in the future (the clock stepped
+    back) counts as now and is stored so, so the window cannot reopen early.
+    Nothing here raises.
     """
     clock = time.time() if now is None else now
     send = publish or post_disk_alert
@@ -824,18 +1118,29 @@ def maybe_alert_disk(
         descriptor = os.open(tasks_dir / DISK_ALERT_STATE_NAME, os.O_CREAT | os.O_RDWR, 0o600)
     except OSError as exc:
         _logger.warning("dispatch admission: disk alert state unavailable: %s", exc)
-        return f"epics alert not sent: state unavailable ({exc})"
+        return redact_paths(f"epics alert not sent: state unavailable ({exc})")
     try:
         try:
             fcntl.flock(descriptor, fcntl.LOCK_EX | fcntl.LOCK_NB)
         except BlockingIOError:
             return "epics alert in progress in another admission"
         state = _read_alert_state(descriptor)
-        posted = _alert_number(state, "posted_at")
-        if posted is not None and 0 <= clock - posted < DISK_ALERT_INTERVAL_S:
+        try:
+            posted = _finite_time(state, "posted_at")
+            failed = _finite_time(state, "failed_at")
+        except ValueError as exc:
+            _logger.warning("dispatch admission: disk alert state malformed: %s", exc)
+            _write_alert_state(descriptor, {"failed_at": clock, "last_error": f"alert state malformed: {exc}"})
+            return f"epics alert failed: alert state malformed ({exc}); retry after {DISK_ALERT_RETRY_S / 60:g} min"
+        if posted is not None and posted > clock:
+            state, posted = {**state, "posted_at": clock}, clock
+            _write_alert_state(descriptor, state)
+        if posted is not None and clock - posted < DISK_ALERT_INTERVAL_S:
             return f"epics alert already posted at {_iso_utc(posted)}"
-        failed = _alert_number(state, "failed_at")
-        if failed is not None and 0 <= clock - failed < DISK_ALERT_RETRY_S:
+        if failed is not None and failed > clock:
+            state, failed = {**state, "failed_at": clock}, clock
+            _write_alert_state(descriptor, state)
+        if failed is not None and clock - failed < DISK_ALERT_RETRY_S:
             return f"epics alert failed at {_iso_utc(failed)}; retry after {DISK_ALERT_RETRY_S / 60:g} min"
         verdict = "new write dispatches are REFUSED" if refused else "new write dispatches are still admitted"
         lines = [
@@ -844,7 +1149,7 @@ def maybe_alert_disk(
             f"refuse at {limits.disk_refuse_used_percent:g}%); {verdict}.",
         ]
         if check.reaper is not None:
-            lines.append(f"Reaper attempt: {check.reaper.detail}.")
+            lines.append(f"Reaper attempt: {redact_paths(check.reaper.detail)}.")
         lines.append(
             "Act: reap settled dispatch worktrees with the common reaper and clear other disk use. "
             f"Next alert no sooner than {DISK_ALERT_INTERVAL_S / 3600:g} h from now."
@@ -852,20 +1157,28 @@ def maybe_alert_disk(
         try:
             send("\n".join(lines) + "\n", f"dispatch-admission-disk:{_iso_utc(clock)}")
         except Exception as exc:  # an alert failure never blocks admission
-            _logger.warning("dispatch admission: disk alert to %s failed: %s", DISK_ALERT_CHANNEL, exc)
-            _write_alert_state(descriptor, {**state, "failed_at": clock, "last_error": str(exc)[:300]})
-            return f"epics alert failed: {exc}"
+            error = redact_paths(str(exc))
+            _logger.warning("dispatch admission: disk alert to %s failed: %s", DISK_ALERT_CHANNEL, error)
+            _write_alert_state(descriptor, {**state, "failed_at": clock, "last_error": error[:300]})
+            return f"epics alert failed: {error}"
         _write_alert_state(descriptor, {"posted_at": clock, "used_percent": round(used or 0.0, 2)})
         return "epics alert posted"
-    except OSError as exc:
+    except (OSError, ValueError, OverflowError) as exc:
         _logger.warning("dispatch admission: disk alert state unavailable: %s", exc)
-        return f"epics alert not sent: state unavailable ({exc})"
+        return redact_paths(f"epics alert not sent: state unavailable ({exc})")
     finally:
         os.close(descriptor)
 
 
-def check_disk(limits: Thresholds, *, reaper: DiskReaper | None) -> tuple[DiskCheck, str | None]:
-    """Measure the disk, reaping once at the refuse threshold; return the check and any failure."""
+def check_disk(
+    limits: Thresholds, *, reaper: DiskReaper | None, tasks_dir: Path | None = None
+) -> tuple[DiskCheck, str | None]:
+    """Measure the disk, reaping once at the refuse threshold; return the check and any failure.
+
+    With a ``reaper`` the attempt goes through :func:`attempt_disk_reaper`
+    (one per host, cooldown, deadline), which keeps its state in
+    ``tasks_dir``. A failure sets ``DiskCheck.refused``: a hard stop.
+    """
     probe = probe_disk()
     used = probe.used_percent
     if used is None:
@@ -878,7 +1191,9 @@ def check_disk(limits: Thresholds, *, reaper: DiskReaper | None) -> tuple[DiskCh
         outcome = ReaperOutcome(ran=False, detail="reaper not run in this check")
         check = DiskCheck(probe=probe, before_reaper=None, reaper=outcome)
     else:
-        outcome = _attempt_reaper(reaper)
+        if tasks_dir is None:
+            raise ValueError("check_disk needs tasks_dir when it may run the reaper")
+        outcome = attempt_disk_reaper(tasks_dir, reaper, limits)
         after = probe_disk()
         check = DiskCheck(probe=after, before_reaper=probe, reaper=outcome)
         after_used = after.used_percent
@@ -888,7 +1203,7 @@ def check_disk(limits: Thresholds, *, reaper: DiskReaper | None) -> tuple[DiskCh
         if after_used < limits.disk_refuse_used_percent:
             return check, None
     final = check.probe
-    return check, (
+    return replace(check, refused=True), (
         f"{final.text()} on the .worktrees filesystem is at or above the refuse threshold of "
         f"{limits.disk_refuse_used_percent:g}% ({ENV_DISK_REFUSE_USED_PERCENT}={limits.disk_refuse_used_percent:g}); "
         f"{outcome.detail}"
@@ -1075,15 +1390,19 @@ def evaluate(
     on_dead: Callable[[Path, dict[str, Any]], None] | None = None,
     thresholds: Thresholds | None = None,
     reaper: DiskReaper | None = None,
+    disk_guard: bool = True,
 ) -> AdmissionDecision:
     """Decide whether a ``mode`` dispatch may start a worker on this host now.
 
     ``on_dead`` receives every active record whose pid is dead or whose
     dispatcher is provably gone (the caller marks it ``crashed``); without it
     the records are only reported. ``reaper`` (normally
-    :func:`run_disk_reaper`) is called at most once, when the disk is at or
-    above the refuse threshold; without it the disk is only measured. Invalid
-    threshold environment variables raise ``ValueError``.
+    :func:`run_disk_reaper`) is attempted at most once, through
+    :func:`attempt_disk_reaper`, when the disk is at or above the refuse
+    threshold; without it the disk is only measured. ``disk_guard=False``
+    (a dispatch that reuses an existing worktree) skips the disk check, the
+    reaper and the alert. Invalid threshold environment variables raise
+    ``ValueError``.
     """
     if mode not in WRITE_CAPABLE_MODES:
         return AdmissionDecision(mode=mode, exempt=True, admitted=True)
@@ -1127,7 +1446,10 @@ def evaluate(
             f"test-slot queue {slots.depth} is longer than {limits.max_test_slot_queue} waiting runs "
             f"({ENV_MAX_TEST_SLOT_QUEUE}={limits.max_test_slot_queue})"
         )
-    disk, disk_failure = check_disk(limits, reaper=reaper)
+    if not disk_guard:
+        disk, disk_failure = DiskCheck(probe=DiskProbe(skipped=DISK_GUARD_REUSE_SKIP)), None
+    else:
+        disk, disk_failure = check_disk(limits, reaper=reaper, tasks_dir=tasks_dir)
     if disk_failure is not None:
         failures.append(disk_failure)
     disk_used = disk.probe.used_percent
@@ -1173,3 +1495,7 @@ def admission_lock(tasks_dir: Path, *, timeout_s: float = DEFAULT_LOCK_TIMEOUT_S
             fcntl.flock(descriptor, fcntl.LOCK_UN)
     finally:
         os.close(descriptor)
+
+
+if __name__ == "__main__":
+    raise SystemExit(_reaper_child_main(sys.argv[1:]))

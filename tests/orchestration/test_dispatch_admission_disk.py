@@ -11,6 +11,10 @@ import dataclasses
 import inspect
 import json
 import logging
+import os
+import sys
+import threading
+import time
 import types
 from collections import namedtuple
 from dataclasses import dataclass
@@ -56,15 +60,22 @@ def host(monkeypatch):
     return state
 
 
+def _in_process(repo_root: Path, _timeout_s: float) -> adm.ReaperOutcome:
+    """The reaper call without the child process, so a fake ``reap_clean_pushed`` is visible."""
+    return adm.reap_clean_pushed_once(repo_root)
+
+
 class _Reaper:
     def __init__(self, outcome: adm.ReaperOutcome | None = None, *, frees_to: adm.DiskProbe | None = None, host=None):
         self.calls: list[Path] = []
+        self.timeouts: list[float | None] = []
         self.outcome = outcome or adm.ReaperOutcome(ran=True, detail="reaper removed 3 worktree(s)", removed=3)
         self.frees_to = frees_to
         self.host = host
 
-    def __call__(self, repo_root: Path) -> adm.ReaperOutcome:
+    def __call__(self, repo_root: Path, timeout_s: float | None = None) -> adm.ReaperOutcome:
         self.calls.append(repo_root)
+        self.timeouts.append(timeout_s)
         if self.frees_to is not None:
             self.host["readings"] = [self.frees_to]
         return self.outcome
@@ -215,8 +226,8 @@ def test_admitted_after_the_reaper_frees_space(tmp_path, host):
 @pytest.mark.parametrize(
     ("reaper", "detail"),
     [
-        (lambda _root: (_ for _ in ()).throw(OSError("git lock busy")), "reaper failed: OSError: git lock busy"),
-        (lambda _root: "not an outcome", "reaper failed: returned str, not ReaperOutcome"),
+        (lambda _root, _t: (_ for _ in ()).throw(OSError("git lock busy")), "reaper failed: OSError: git lock busy"),
+        (lambda _root, _t: "not an outcome", "reaper failed: returned str, not ReaperOutcome"),
     ],
 )
 def test_a_reaper_that_raises_or_misbehaves_still_refuses_and_says_so(tmp_path, host, reaper, detail):
@@ -232,7 +243,7 @@ def test_missing_reaper_function_is_reported_unavailable_and_refuses(tmp_path, h
     host["readings"] = [_disk(90.0)]
     monkeypatch.setattr(adm, "load_reaper_module", types.SimpleNamespace)
 
-    decision = adm.evaluate("workspace-write", tmp_path, thresholds=_LIMITS, reaper=adm.run_disk_reaper)
+    decision = adm.evaluate("workspace-write", tmp_path, thresholds=_LIMITS, reaper=_in_process)
 
     assert not decision.admitted
     assert decision.failures[0].endswith(
@@ -290,7 +301,7 @@ def test_reap_clean_pushed_is_called_once_as_an_apply_run_with_a_short_lock_time
     fake = _ReapCleanPushed(_CleanPushedReport(dry_run=False, removed=(), skipped=(), freed_mb=0))
     fake.install(monkeypatch)
 
-    outcome = adm.run_disk_reaper(tmp_path)
+    outcome = adm.reap_clean_pushed_once(tmp_path)
 
     assert fake.calls == [{"repo_root": tmp_path, "dry_run": False, "lock_timeout_s": adm.DISK_REAPER_LOCK_TIMEOUT_S}]
     assert adm.DISK_REAPER_LOCK_TIMEOUT_S == 5.0
@@ -307,7 +318,7 @@ def test_removed_trees_free_the_disk_and_the_dispatch_is_admitted(monkeypatch, t
     fake.install(monkeypatch)
     monkeypatch.setattr(adm, "primary_checkout", lambda: tmp_path)
 
-    decision = adm.evaluate("workspace-write", tmp_path, thresholds=_LIMITS, reaper=adm.run_disk_reaper)
+    decision = adm.evaluate("workspace-write", tmp_path, thresholds=_LIMITS, reaper=_in_process)
 
     assert decision.admitted
     assert [call["repo_root"] for call in fake.calls] == [tmp_path]
@@ -331,7 +342,7 @@ def test_removals_that_leave_the_disk_full_refuse_with_counts_and_top_skip_reaso
     fake.install(monkeypatch)
     monkeypatch.setattr(adm, "primary_checkout", lambda: tmp_path)
 
-    decision = adm.evaluate("workspace-write", tmp_path, thresholds=_LIMITS, reaper=adm.run_disk_reaper)
+    decision = adm.evaluate("workspace-write", tmp_path, thresholds=_LIMITS, reaper=_in_process)
 
     assert not decision.admitted
     assert decision.failures[0].endswith(
@@ -373,7 +384,7 @@ def test_a_busy_or_refusing_reaper_still_refuses_and_says_why(monkeypatch, tmp_p
     _ReapCleanPushed(report).install(monkeypatch)
     monkeypatch.setattr(adm, "primary_checkout", lambda: tmp_path)
 
-    decision = adm.evaluate("workspace-write", tmp_path, thresholds=_LIMITS, reaper=adm.run_disk_reaper)
+    decision = adm.evaluate("workspace-write", tmp_path, thresholds=_LIMITS, reaper=_in_process)
 
     assert not decision.admitted
     assert decision.failures[0].endswith(detail)
@@ -382,10 +393,12 @@ def test_a_busy_or_refusing_reaper_still_refuses_and_says_why(monkeypatch, tmp_p
 
 def test_reap_clean_pushed_that_raises_or_returns_a_wrong_shape_is_reaper_failed(monkeypatch, tmp_path):
     _ReapCleanPushed(OSError("git lock busy")).install(monkeypatch)
-    assert adm.run_disk_reaper(tmp_path) == adm.ReaperOutcome(ran=False, detail="reaper failed: OSError: git lock busy")
+    assert adm.reap_clean_pushed_once(tmp_path) == adm.ReaperOutcome(
+        ran=False, detail="reaper failed: OSError: git lock busy"
+    )
 
     _ReapCleanPushed([types.SimpleNamespace(action="removed")]).install(monkeypatch)  # type: ignore[arg-type]
-    outcome = adm.run_disk_reaper(tmp_path)
+    outcome = adm.reap_clean_pushed_once(tmp_path)
     assert not outcome.ran
     assert outcome.detail.startswith("reaper failed: AttributeError:")
 
@@ -397,7 +410,7 @@ def test_the_common_reaper_matches_the_reap_clean_pushed_contract():
     function = getattr(reap_worktrees, adm.REAPER_FUNCTION, None)
     if function is None:
         # #10778 has not landed: the seam must say so and never admit on it.
-        assert adm.run_disk_reaper(Path("/nonexistent")) == adm.ReaperOutcome(
+        assert adm.reap_clean_pushed_once(Path("/nonexistent")) == adm.ReaperOutcome(
             ran=False,
             detail="reaper unavailable: scripts.orchestration.reap_worktrees.reap_clean_pushed is not present",
         )
@@ -417,7 +430,7 @@ def test_unimportable_reaper_module_is_reported_unavailable(monkeypatch):
 
     monkeypatch.setattr(adm, "load_reaper_module", fail)
 
-    outcome = adm.run_disk_reaper(Path("/nonexistent"))
+    outcome = adm.reap_clean_pushed_once(Path("/nonexistent"))
 
     assert outcome == adm.ReaperOutcome(
         ran=False, detail="reaper unavailable: scripts.orchestration.reap_worktrees did not import (no module)"
@@ -438,7 +451,7 @@ def test_without_a_reaper_a_full_disk_refuses_and_says_the_reaper_did_not_run(tm
 def test_read_only_dispatch_is_exempt_from_the_disk_check(tmp_path, monkeypatch, mode):
     monkeypatch.setattr(adm, "probe_disk", lambda: pytest.fail("read-only must not read the disk"))
 
-    decision = adm.evaluate(mode, tmp_path, reaper=lambda _root: pytest.fail("read-only must not reap"))
+    decision = adm.evaluate(mode, tmp_path, reaper=lambda _root, _t: pytest.fail("read-only must not reap"))
 
     assert decision.exempt and decision.admitted
 
@@ -568,3 +581,393 @@ def test_publish_runs_the_fleet_comms_channel_publish_command(monkeypatch, tmp_p
     )
     with pytest.raises(RuntimeError, match="fleet_comms publish exited 2: no channel"):
         adm.post_disk_alert("disk full\n", "k")
+
+
+# --- Round 3 (#10776): hard stop, one shared reaper attempt, deadline, redaction, alert state ----------
+
+_NOTHING_FREED = "reaper removed 0 worktree(s), freed 0 MB"
+
+
+def test_a_disk_refusal_is_marked_as_a_hard_stop_and_does_not_offer_the_force_flag(tmp_path, host):
+    host["readings"] = [_disk(90.0)]
+
+    decision = adm.evaluate("workspace-write", tmp_path, thresholds=_LIMITS, reaper=_Reaper())
+
+    assert decision.disk_refused and decision.disk is not None and decision.disk.refused
+    assert decision.to_record()["disk_refused"] is True
+    assert "--force-admission cannot override a full disk" in decision.refusal_line()
+    assert 'pass --force-admission "<reason>"' not in decision.refusal_line()
+
+
+def test_other_refusals_are_not_disk_refusals(tmp_path, host):
+    host["readings"] = [_disk(50.0)]
+    capped = dataclasses.replace(_LIMITS, max_live_write_workers=0)
+
+    decision = adm.evaluate("workspace-write", tmp_path, thresholds=capped, reaper=_Reaper())
+
+    assert not decision.admitted and not decision.disk_refused
+    assert 'pass --force-admission "<reason>" to override' in decision.refusal_line()
+
+
+def test_six_concurrent_checks_share_one_reaper_attempt(tmp_path, host):
+    host["readings"] = [_disk(90.0)]
+    release = threading.Event()
+    entries: list[Path] = []
+    start = threading.Barrier(6)
+    decisions: list[adm.AdmissionDecision] = []
+
+    def blocking_reaper(repo_root: Path, _timeout_s: float | None = None) -> adm.ReaperOutcome:
+        entries.append(repo_root)
+        release.wait(10)
+        return adm.ReaperOutcome(ran=True, detail=_NOTHING_FREED)
+
+    def check() -> None:
+        start.wait(10)
+        decisions.append(adm.evaluate("workspace-write", tmp_path, thresholds=_LIMITS, reaper=blocking_reaper))
+
+    threads = [threading.Thread(target=check) for _ in range(6)]
+    for thread in threads:
+        thread.start()
+    deadline = time.monotonic() + 10
+    while sum(not thread.is_alive() for thread in threads) < 5 and time.monotonic() < deadline:
+        time.sleep(0.01)
+    release.set()
+    for thread in threads:
+        thread.join(10)
+
+    assert len(entries) == 1
+    assert len(decisions) == 6 and not any(decision.admitted for decision in decisions)
+    waiting = [d for d in decisions if "reaper attempt in progress in another dispatch" in d.failures[0]]
+    assert len(waiting) == 5
+
+
+def test_retries_within_the_cooldown_reuse_the_recorded_outcome(tmp_path, host):
+    host["readings"] = [_disk(90.0)]
+    reaper = _Reaper(adm.ReaperOutcome(ran=True, detail=_NOTHING_FREED))
+
+    decisions = [adm.evaluate("workspace-write", tmp_path, thresholds=_LIMITS, reaper=reaper) for _ in range(3)]
+
+    assert len(reaper.calls) == 1
+    assert not any(decision.admitted for decision in decisions)
+    for retry in decisions[1:]:
+        assert retry.failures[0].endswith(f"reaper attempted 0 s ago: {_NOTHING_FREED}")
+    state = json.loads((tmp_path / adm.DISK_REAPER_STATE_NAME).read_text())
+    assert state["detail"] == _NOTHING_FREED and state["freed"] is False
+
+
+def test_the_cooldown_expires_and_an_attempt_that_freed_space_resets_it(tmp_path):
+    limits = dataclasses.replace(_LIMITS, disk_reaper_cooldown_s=600.0)
+    clock = {"t": 1_800_000_000.0}
+    nothing = _Reaper(adm.ReaperOutcome(ran=True, detail=_NOTHING_FREED))
+
+    assert adm.attempt_disk_reaper(tmp_path, nothing, limits, now=lambda: clock["t"]).ran
+    clock["t"] += 599
+    held = adm.attempt_disk_reaper(tmp_path, nothing, limits, now=lambda: clock["t"])
+    assert held == adm.ReaperOutcome(ran=False, detail=f"reaper attempted 599 s ago: {_NOTHING_FREED}")
+    clock["t"] += 1
+    assert adm.attempt_disk_reaper(tmp_path, nothing, limits, now=lambda: clock["t"]).ran
+    assert len(nothing.calls) == 2
+
+    freeing = _Reaper(adm.ReaperOutcome(ran=True, detail="reaper removed 2 worktree(s), freed 900 MB", removed=2))
+    clock["t"] += 700
+    adm.attempt_disk_reaper(tmp_path, freeing, limits, now=lambda: clock["t"])
+    clock["t"] += 1
+    adm.attempt_disk_reaper(tmp_path, freeing, limits, now=lambda: clock["t"])
+    assert len(freeing.calls) == 2
+    assert freeing.timeouts == [adm.DISK_REAPER_TIMEOUT_S, adm.DISK_REAPER_TIMEOUT_S]
+
+
+def test_a_last_attempt_dated_in_the_future_counts_as_just_made(tmp_path):
+    (tmp_path / adm.DISK_REAPER_STATE_NAME).write_text(
+        json.dumps({"last_attempt_at": 1_900_000_000.0, "detail": _NOTHING_FREED, "freed": False})
+    )
+    clock = {"t": 1_800_000_000.0}
+    reaper = _Reaper()
+
+    held = adm.attempt_disk_reaper(tmp_path, reaper, _LIMITS, now=lambda: clock["t"])
+
+    assert held == adm.ReaperOutcome(ran=False, detail=f"reaper attempted 0 s ago: {_NOTHING_FREED}")
+    assert json.loads((tmp_path / adm.DISK_REAPER_STATE_NAME).read_text())["last_attempt_at"] == clock["t"]
+    clock["t"] += adm.DISK_REAPER_COOLDOWN_S
+    assert adm.attempt_disk_reaper(tmp_path, reaper, _LIMITS, now=lambda: clock["t"]).ran
+    assert len(reaper.calls) == 1
+
+
+@pytest.mark.parametrize(
+    "raw", ["{not json", '{"last_attempt_at": 1' + "0" * 400 + ', "detail": "x", "freed": false}', "[]"]
+)
+def test_a_malformed_reaper_state_does_not_block_the_reaper(tmp_path, raw):
+    (tmp_path / adm.DISK_REAPER_STATE_NAME).write_text(raw)
+    reaper = _Reaper()
+
+    assert adm.attempt_disk_reaper(tmp_path, reaper, _LIMITS).ran
+    assert len(reaper.calls) == 1
+
+
+def test_disk_reaper_cooldown_and_timeout_default_to_config_and_honour_env_overrides():
+    defaults = adm.load_thresholds({})
+    assert (defaults.disk_reaper_cooldown_s, defaults.disk_reaper_timeout_s) == (600.0, 90.0)
+    assert (adm.DISK_REAPER_COOLDOWN_S, adm.DISK_REAPER_TIMEOUT_S) == (600.0, 90.0)
+
+    custom = adm.load_thresholds({"DISPATCH_DISK_REAPER_COOLDOWN_S": "0", "DISPATCH_DISK_REAPER_TIMEOUT_S": "30"})
+    assert (custom.disk_reaper_cooldown_s, custom.disk_reaper_timeout_s) == (0.0, 30.0)
+
+
+@pytest.mark.parametrize(
+    ("name", "raw"),
+    [
+        ("DISPATCH_DISK_REAPER_TIMEOUT_S", "0"),
+        ("DISPATCH_DISK_REAPER_TIMEOUT_S", "inf"),
+        ("DISPATCH_DISK_REAPER_TIMEOUT_S", "-5"),
+        ("DISPATCH_DISK_REAPER_COOLDOWN_S", "inf"),
+        ("DISPATCH_DISK_REAPER_COOLDOWN_S", "soon"),
+    ],
+)
+def test_invalid_disk_reaper_timing_env_is_rejected(name, raw):
+    with pytest.raises(ValueError, match=name):
+        adm.load_thresholds({name: raw})
+
+
+def _gone(pid: int) -> bool:
+    """The pid has exited (a zombie awaiting its new parent counts as gone)."""
+    deadline = time.monotonic() + 5
+    while time.monotonic() < deadline:
+        try:
+            os.kill(pid, 0)
+        except ProcessLookupError:
+            return True
+        try:
+            if Path(f"/proc/{pid}/stat").read_text().rsplit(")", 1)[1].split()[0] == "Z":
+                return True
+        except (OSError, IndexError):
+            pass
+        time.sleep(0.05)
+    return False
+
+
+def test_a_stuck_reaper_is_stopped_at_the_deadline_and_admission_refuses(tmp_path, host, monkeypatch):
+    host["readings"] = [_disk(90.0)]
+    monkeypatch.setattr(
+        adm, "disk_reaper_command", lambda _root: ([sys.executable, "-c", "import time; time.sleep(60)"], tmp_path)
+    )
+    monkeypatch.setattr(adm, "primary_checkout", lambda: tmp_path)
+    limits = dataclasses.replace(_LIMITS, disk_reaper_timeout_s=1.0)
+
+    started = time.monotonic()
+    decision = adm.evaluate("workspace-write", tmp_path, thresholds=limits, reaper=adm.run_disk_reaper)
+    elapsed = time.monotonic() - started
+
+    assert elapsed < 1.0 + 2 * adm.DISK_REAPER_KILL_GRACE_S
+    assert not decision.admitted and decision.disk_refused
+    assert decision.failures[0].endswith("reaper timed out after 1 s and was stopped")
+
+
+def test_the_reaper_process_group_is_killed_even_when_it_ignores_sigterm(tmp_path, monkeypatch):
+    pid_file = tmp_path / "grandchild.pid"
+    ignore = "import signal, time; signal.signal(signal.SIGTERM, signal.SIG_IGN); "
+    script = (
+        "import signal, subprocess, sys, time\n"
+        "signal.signal(signal.SIGTERM, signal.SIG_IGN)\n"
+        f"child = subprocess.Popen([sys.executable, '-c', {ignore + 'time.sleep(60)'!r}])\n"
+        "open(sys.argv[1], 'w').write(str(child.pid))\n"
+        "time.sleep(60)\n"
+    )
+    monkeypatch.setattr(
+        adm, "disk_reaper_command", lambda _root: ([sys.executable, "-c", script, str(pid_file)], tmp_path)
+    )
+    monkeypatch.setattr(adm, "DISK_REAPER_KILL_GRACE_S", 0.5)
+
+    started = time.monotonic()
+    outcome = adm.run_disk_reaper(tmp_path, timeout_s=2.0)
+
+    assert time.monotonic() - started < 2.0 + 2 * 0.5 + 1.0
+    assert outcome == adm.ReaperOutcome(ran=False, detail="reaper timed out after 2 s and was stopped")
+    assert _gone(int(pid_file.read_text()))
+
+
+@pytest.mark.parametrize(
+    ("script", "expected"),
+    [
+        (
+            "print('chatter'); print("
+            + repr(
+                json.dumps(
+                    {
+                        "ran": True,
+                        "detail": "reaper removed 1 worktree(s), freed 5 MB",
+                        "removed": 1,
+                        "freed_mb": 5,
+                        "lock_busy": False,
+                    }
+                )
+            )
+            + ")",
+            adm.ReaperOutcome(ran=True, detail="reaper removed 1 worktree(s), freed 5 MB", removed=1, freed_mb=5),
+        ),
+        (
+            "import sys; sys.stderr.write('boom\\nfatal: index locked\\n'); sys.exit(3)",
+            adm.ReaperOutcome(ran=False, detail="reaper failed: the reaper process exited 3: fatal: index locked"),
+        ),
+        (
+            "print('not json')",
+            adm.ReaperOutcome(ran=False, detail="reaper failed: the reaper process printed no outcome"),
+        ),
+        (
+            "print('{\"ran\": true}')",
+            adm.ReaperOutcome(ran=False, detail="reaper failed: the reaper process printed no outcome"),
+        ),
+    ],
+)
+def test_the_reaper_child_outcome_is_parsed_or_reported_failed(tmp_path, monkeypatch, script, expected):
+    monkeypatch.setattr(adm, "disk_reaper_command", lambda _root: ([sys.executable, "-c", script], tmp_path))
+
+    assert adm.run_disk_reaper(tmp_path, timeout_s=30.0) == expected
+
+
+def test_a_reaper_child_that_cannot_start_is_unavailable_or_failed(tmp_path, monkeypatch):
+    def no_interpreter(_root):
+        raise FileNotFoundError("project interpreter not found")
+
+    monkeypatch.setattr(adm, "disk_reaper_command", no_interpreter)
+    assert adm.run_disk_reaper(tmp_path) == adm.ReaperOutcome(
+        ran=False, detail="reaper unavailable: project interpreter not found"
+    )
+
+    monkeypatch.setattr(adm, "disk_reaper_command", lambda _root: ([str(tmp_path / "missing-python")], tmp_path))
+    outcome = adm.run_disk_reaper(tmp_path)
+    assert not outcome.ran and outcome.detail.startswith("reaper failed: could not start the reaper process:")
+
+
+def test_the_default_child_command_runs_this_module_from_its_own_checkout():
+    command, cwd = adm.disk_reaper_command(Path("/srv/checkout"))
+
+    assert command[1:] == ["-m", "scripts.orchestration.dispatch_admission", "--run-disk-reaper", "/srv/checkout"]
+    assert cwd == Path(adm.__file__).resolve().parents[2]
+
+
+def test_the_child_entry_prints_one_json_outcome_and_keeps_reaper_output_off_stdout(monkeypatch, tmp_path, capsys):
+    def noisy(**_kwargs):
+        print("reaper chatter")
+        return _CleanPushedReport(dry_run=False, removed=(), skipped=(), freed_mb=0)
+
+    monkeypatch.setattr(adm, "load_reaper_module", lambda: types.SimpleNamespace(reap_clean_pushed=noisy))
+
+    assert adm._reaper_child_main(["--run-disk-reaper", str(tmp_path)]) == 0
+    captured = capsys.readouterr()
+    assert len(captured.out.splitlines()) == 1
+    assert "reaper chatter" in captured.err
+    assert adm._parse_child_outcome(captured.out) == adm.ReaperOutcome(ran=True, detail=_NOTHING_FREED)
+    assert adm._reaper_child_main([]) == 2
+
+
+def test_the_real_reaper_child_starts_and_reports_an_outcome(tmp_path, monkeypatch):
+    # The real reaper (once #10778 lands) refuses to touch anything with this set.
+    monkeypatch.setenv("LU_REAPER_DISABLED", "1")
+
+    outcome = adm.run_disk_reaper(tmp_path / "no-checkout", timeout_s=60.0)
+
+    assert outcome.detail.startswith("reaper ")
+    assert not outcome.detail.startswith(
+        ("reaper timed out", "reaper failed: the reaper process", "reaper failed: could not start")
+    ), outcome.detail
+
+
+@pytest.mark.parametrize(
+    ("text", "redacted"),
+    [
+        ("lock /home/someone/repo/.reaper.lock is held", "lock <path> is held"),
+        ("held (~/learn-ukrainian/x.lock)", "held (<path>)"),
+        ("see ~someone/x and /var/tmp/a:12", "see <path> and <path>"),
+        ("origin/main is 3/4 behind; refs/heads/x", "origin/main is 3/4 behind; refs/heads/x"),
+        ("reaper removed 0 worktree(s), freed 0 MB", "reaper removed 0 worktree(s), freed 0 MB"),
+    ],
+)
+def test_redact_paths(text, redacted):
+    assert adm.redact_paths(text) == redacted
+
+
+def test_reaper_paths_are_redacted_from_the_refusal_record_state_and_alert(monkeypatch, tmp_path, host):
+    host["readings"] = [_disk(90.0)]
+    lock = "/home/someone/learn-ukrainian/batch_state/reaper.lock"
+    report = _CleanPushedReport(
+        dry_run=False, removed=(), skipped=(), freed_mb=0, lock_busy=True, refusal=f"another cleanup holds {lock}"
+    )
+    _ReapCleanPushed(report).install(monkeypatch)
+    monkeypatch.setattr(adm, "primary_checkout", lambda: tmp_path)
+
+    decision = adm.evaluate("workspace-write", tmp_path, thresholds=_LIMITS, reaper=_in_process)
+
+    assert decision.failures[0].endswith("reaper did not run: lock busy (another cleanup holds <path>)")
+    published = host["alerts"][0][0]
+    recorded = (tmp_path / adm.DISK_REAPER_STATE_NAME).read_text()
+    for text in (decision.refusal_line(), decision.summary(), json.dumps(decision.to_record()), published, recorded):
+        assert "/home" not in text and "someone" not in text
+
+
+def test_a_failed_alert_publish_is_redacted(tmp_path):
+    def broken(_body, _key):
+        raise RuntimeError(
+            "fleet_comms publish could not run: [Errno 2] No such file: '/home/someone/.venv/bin/python'"
+        )
+
+    outcome = adm.maybe_alert_disk(tmp_path, adm.DiskCheck(probe=_disk(82.0)), _LIMITS, refused=False, publish=broken)
+
+    assert "/home" not in outcome and "<path>" in outcome
+    assert "/home" not in (tmp_path / adm.DISK_ALERT_STATE_NAME).read_text()
+
+
+@pytest.mark.parametrize("key", ["posted_at", "failed_at"])
+@pytest.mark.parametrize("value", ["1" + "0" * 400, '"yesterday"', "true"])
+def test_a_malformed_alert_time_counts_as_an_alert_failure(tmp_path, key, value):
+    (tmp_path / adm.DISK_ALERT_STATE_NAME).write_text(f'{{"{key}": {value}}}')
+    sent: list[str] = []
+    start = 1_800_000_000.0
+    publish = lambda body, _key: sent.append(body)  # noqa: E731
+    check = adm.DiskCheck(probe=_disk(82.0))
+
+    outcome = adm.maybe_alert_disk(tmp_path, check, _LIMITS, refused=False, now=start, publish=publish)
+
+    assert outcome.startswith(f"epics alert failed: alert state malformed ({key} ")
+    assert sent == []
+    state = json.loads((tmp_path / adm.DISK_ALERT_STATE_NAME).read_text())
+    assert state["failed_at"] == start and state["last_error"].startswith("alert state malformed")
+    later = start + adm.DISK_ALERT_RETRY_S
+    assert adm.maybe_alert_disk(tmp_path, check, _LIMITS, refused=False, now=later, publish=publish) == (
+        "epics alert posted"
+    )
+    assert len(sent) == 1
+
+
+def test_a_backward_clock_step_does_not_allow_a_second_alert_within_the_window(tmp_path):
+    check = adm.DiskCheck(probe=_disk(81.0))
+    sent: list[str] = []
+    publish = lambda body, _key: sent.append(body)  # noqa: E731
+    start = 1_800_000_000.0
+
+    assert adm.maybe_alert_disk(tmp_path, check, _LIMITS, refused=False, now=start, publish=publish) == (
+        "epics alert posted"
+    )
+    stepped_back = start - 1
+    assert adm.maybe_alert_disk(tmp_path, check, _LIMITS, refused=False, now=stepped_back, publish=publish).startswith(
+        "epics alert already posted at "
+    )
+    within = stepped_back + adm.DISK_ALERT_INTERVAL_S - 1
+    assert adm.maybe_alert_disk(tmp_path, check, _LIMITS, refused=False, now=within, publish=publish).startswith(
+        "epics alert already posted at "
+    )
+    after = stepped_back + adm.DISK_ALERT_INTERVAL_S
+    assert adm.maybe_alert_disk(tmp_path, check, _LIMITS, refused=False, now=after, publish=publish) == (
+        "epics alert posted"
+    )
+    assert len(sent) == 2
+
+
+def test_a_dispatch_that_reuses_a_worktree_skips_the_disk_guard(tmp_path, host):
+    host["readings"] = [_disk(99.0)]
+    reaper = _Reaper()
+
+    decision = adm.evaluate("workspace-write", tmp_path, thresholds=_LIMITS, reaper=reaper, disk_guard=False)
+
+    assert decision.admitted and not decision.disk_refused
+    assert reaper.calls == [] and host["probes"] == 0 and host["alerts"] == []
+    assert "disk check skipped (dispatch reuses an existing worktree)" in decision.summary()

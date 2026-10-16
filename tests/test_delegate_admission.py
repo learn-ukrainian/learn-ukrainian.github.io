@@ -1002,7 +1002,7 @@ def _full_disk(monkeypatch, *readings: float) -> dict[str, list]:
         used_bytes = int(400 * _GIB * used / 100)
         return dispatch_admission.DiskProbe(used_bytes=used_bytes, free_bytes=400 * _GIB - used_bytes)
 
-    def reaper(repo_root):
+    def reaper(repo_root, _timeout_s=None):
         seen["reaper"].append(repo_root)
         return dispatch_admission.ReaperOutcome(ran=True, detail="reaper removed 0 worktree(s)")
 
@@ -1021,7 +1021,7 @@ def test_live_dispatch_on_a_full_disk_reaps_once_then_refuses_with_no_side_effec
 
     rc = delegate.cmd_dispatch(_live_danger_args(tasks_dir, "adm-disk-full"))
 
-    assert rc == delegate._ADMISSION_REFUSED_EXIT
+    assert rc == delegate._ADMISSION_DISK_REFUSED_EXIT == 4
     assert len(disk["reaper"]) == 1
     assert len(disk["alerts"]) == 1
     refusal = [line for line in capsys.readouterr().err.splitlines() if "admission refused" in line]
@@ -1064,7 +1064,7 @@ def test_dry_run_on_a_full_disk_refuses_without_running_the_reaper(tasks_dir, mo
     _pin_origin_main_to_head(monkeypatch)
     disk = _full_disk(monkeypatch, 92.0)
 
-    assert delegate.cmd_dispatch(_dry_run_args()) == delegate._ADMISSION_REFUSED_EXIT
+    assert delegate.cmd_dispatch(_dry_run_args()) == delegate._ADMISSION_DISK_REFUSED_EXIT
 
     assert disk["reaper"] == []
     assert "92.0% used, 32.0 GiB free" in capsys.readouterr().err
@@ -1110,3 +1110,125 @@ def test_capacity_pick_shows_the_disk_decision_without_reaping(tmp_path, monkeyp
     assert admission["disk_free_gib"] == 36.0
     assert disk["reaper"] == []  # capacity_pick only reports
     assert len(disk["alerts"]) == 1  # rate-limited across both calls
+
+
+# --- Round 3 (#10776): a disk refusal is a hard stop in both gates; reuse skips the guard -----------
+
+
+def test_a_force_reason_never_turns_a_disk_refusal_into_an_admit(tasks_dir, monkeypatch, capsys):
+    """Review reproducer: a 90% disk passed to the pre-lock report with a force reason."""
+    _full_disk(monkeypatch, 90.0)
+    decision = delegate._evaluate_dispatch_admission("danger", sweep=False)
+    assert not decision.admitted
+
+    rc = delegate._report_dispatch_admission(decision, force_reason="hotfix while the disk drains")
+
+    assert rc == delegate._ADMISSION_DISK_REFUSED_EXIT
+    assert not delegate._admission_allows_dispatch(decision, force_reason="hotfix while the disk drains")
+    err = capsys.readouterr().err
+    assert "--force-admission cannot override a full disk" in err
+    assert "overridden by --force-admission" not in err
+
+
+def test_a_force_reason_still_overrides_the_other_checks(tasks_dir, monkeypatch, capsys):
+    _full_disk(monkeypatch, 50.0)
+    monkeypatch.setenv("DISPATCH_MAX_LIVE_WRITE_WORKERS", "0")
+    decision = delegate._evaluate_dispatch_admission("danger", sweep=False)
+
+    assert delegate._report_dispatch_admission(decision, force_reason="drain") is None
+    assert delegate._admission_allows_dispatch(decision, force_reason="drain")
+    assert not delegate._admission_allows_dispatch(decision, force_reason=None)
+    assert delegate._report_dispatch_admission(decision, force_reason=None) == delegate._ADMISSION_REFUSED_EXIT
+    assert "overridden by --force-admission ('drain')" in capsys.readouterr().err
+
+
+def test_live_forced_dispatch_on_a_full_disk_stops_at_the_first_gate(tasks_dir, monkeypatch, capsys):
+    _stub_worktree(monkeypatch, tasks_dir)
+    monkeypatch.setattr(
+        delegate.subprocess, "Popen", lambda *_args, **_kwargs: pytest.fail("a refused dispatch must not spawn")
+    )
+    disk = _full_disk(monkeypatch, 90.0)
+    args = _live_danger_args(tasks_dir, "adm-disk-forced")
+    args.force_admission = "hotfix while the disk drains"
+
+    assert delegate.cmd_dispatch(args) == delegate._ADMISSION_DISK_REFUSED_EXIT
+
+    assert len(disk["reaper"]) == 1
+    assert "--force-admission cannot override a full disk" in capsys.readouterr().err
+    assert not delegate._state_path("adm-disk-forced").exists()
+
+
+def test_locked_recheck_holds_a_disk_refusal_against_a_force_reason(tasks_dir, monkeypatch, capsys):
+    """The pre-lock check passes; the disk fills before the locked recheck; force must not publish a hold."""
+    _stub_worktree(monkeypatch, tasks_dir)
+    monkeypatch.setattr(
+        delegate, "_ensure_worktree", lambda **_kwargs: pytest.fail("a refused dispatch must not create a worktree")
+    )
+    monkeypatch.setattr(
+        delegate.subprocess, "Popen", lambda *_args, **_kwargs: pytest.fail("a refused dispatch must not spawn")
+    )
+    monkeypatch.setattr(
+        delegate, "_publish_admission_hold", lambda *_args, **_kwargs: pytest.fail("no hold after a disk refusal")
+    )
+    disk = _full_disk(monkeypatch, 60.0, 90.0)
+    args = _live_danger_args(tasks_dir, "adm-disk-locked")
+    args.force_admission = "hotfix while the disk drains"
+
+    assert delegate.cmd_dispatch(args) == delegate._ADMISSION_DISK_REFUSED_EXIT
+
+    assert disk["reaper"] == []  # never under the lock
+    err = capsys.readouterr().err
+    assert "disk 90.0% used" in err and "--force-admission cannot override a full disk" in err
+    assert not delegate._state_path("adm-disk-locked").exists()
+
+
+def test_forced_dry_run_on_a_full_disk_is_refused(tasks_dir, monkeypatch, capsys):
+    _pin_origin_main_to_head(monkeypatch)
+    disk = _full_disk(monkeypatch, 92.0)
+
+    rc = delegate.cmd_dispatch(_dry_run_args("--force-admission", "hotfix"))
+
+    assert rc == delegate._ADMISSION_DISK_REFUSED_EXIT
+    assert disk["reaper"] == []
+    assert "--force-admission cannot override a full disk" in capsys.readouterr().err
+
+
+def test_live_dispatch_reusing_an_existing_worktree_skips_the_disk_guard(tasks_dir, monkeypatch, capsys):
+    _stub_worktree(monkeypatch, tasks_dir)
+
+    class _Proc:
+        pid = 13583
+        stdin = _FakeStdin()
+
+    monkeypatch.setattr(delegate.subprocess, "Popen", lambda cmd, **_kwargs: _Proc())
+    disk = _full_disk(monkeypatch, 95.0)
+    args = _live_danger_args(tasks_dir, "adm-disk-reuse")
+    (_dispatch_worktree(tasks_dir) / ".git").write_text("gitdir: elsewhere\n", encoding="utf-8")
+
+    assert delegate.cmd_dispatch(args) == 0
+
+    assert disk["reaper"] == [] and disk["alerts"] == []
+    admitted = [line for line in capsys.readouterr().err.splitlines() if "dispatch admission: admitted" in line]
+    assert len(admitted) == 1 and "disk check skipped (dispatch reuses an existing worktree)" in admitted[0]
+
+
+def test_dispatch_reuses_worktree_detects_existing_checkouts_without_git(tmp_path, monkeypatch):
+    repo = tmp_path / "repo"
+    existing = repo / ".worktrees" / "dispatch" / "codex" / "old"
+    (existing / ".git").parent.mkdir(parents=True)
+    (existing / ".git").write_text("gitdir: x\n", encoding="utf-8")
+    bare_dir = repo / ".worktrees" / "dispatch" / "codex" / "empty"
+    bare_dir.mkdir(parents=True)
+    kwargs = {"agent": "codex", "task_id": "old", "repo_root": repo}
+    monkeypatch.setattr(
+        delegate, "_resolve_verified_worktree_path", lambda _path: pytest.fail("the reuse probe must not run git")
+    )
+
+    assert delegate._dispatch_reuses_worktree(str(existing), **kwargs)
+    assert not delegate._dispatch_reuses_worktree(str(bare_dir), **kwargs)
+    assert not delegate._dispatch_reuses_worktree(str(repo / "nope"), **kwargs)
+    assert not delegate._dispatch_reuses_worktree(None, **kwargs)  # --cwd dispatches keep the guard (#8775)
+    monkeypatch.setattr(delegate, "_auto_worktree_path", lambda agent, task_id, repo_root=None: existing)
+    assert delegate._dispatch_reuses_worktree("auto", **kwargs)
+    monkeypatch.setattr(delegate, "_auto_worktree_path", lambda agent, task_id, repo_root=None: repo / "new")
+    assert not delegate._dispatch_reuses_worktree("auto", **kwargs)

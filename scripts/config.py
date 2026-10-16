@@ -68,6 +68,11 @@ DISPATCH_MAX_TEST_SLOT_QUEUE = 4
 # level one alert is posted to the epics channel per 6 hours.
 DISPATCH_DISK_REFUSE_USED_PERCENT = 85.0
 DISPATCH_DISK_ALERT_USED_PERCENT = 80.0
+# The reaper run a full disk triggers (#10776): one attempt per host at a time,
+# none again within the cooldown unless the last one freed space, and a child
+# process that is killed after the timeout so admission always regains control.
+DISPATCH_DISK_REAPER_COOLDOWN_S = 600.0
+DISPATCH_DISK_REAPER_TIMEOUT_S = 90.0
 
 # =============================================================================
 # TRACK CONFIGURATION
