@@ -5799,6 +5799,19 @@ _HEAD_REFLOG_MAX_BYTES = 1_048_576
 # ``int`` of the idle duration raises. Negative stamps are not in the pattern.
 _HEAD_REFLOG_TIME_MAX = 253_402_300_799
 _HEAD_REFLOG_WATCH_NAME = "head-reflog-watch.json"
+_HEAD_REFLOG_WATCH_SCHEMA = "worktree-reaper-head-reflog.v1"
+_WATCH_SUBJECT = "head reflog watch"
+_WATCH_MISSING = f"{_WATCH_SUBJECT} missing; activity unknown"
+_WATCH_UNREADABLE = f"{_WATCH_SUBJECT} unreadable; activity unknown"
+_WATCH_OVERSIZED = f"{_WATCH_SUBJECT} oversized; activity unknown"
+_WATCH_UNPARSEABLE = f"{_WATCH_SUBJECT} unparseable; activity unknown"
+_WATCH_SCHEMA = f"{_WATCH_SUBJECT} schema invalid; activity unknown"
+_WATCH_LOCK_UNAVAILABLE = f"{_WATCH_SUBJECT} lock unavailable; activity unknown"
+_WATCH_LOCK_BUSY = f"{_WATCH_SUBJECT} lock busy; activity unknown"
+# Long enough for a concurrent reaper to finish one read-modify-write, short
+# enough that a stuck holder cannot stall the sweep.
+_HEAD_REFLOG_LOCK_WAIT_S = 2.0
+_HEAD_REFLOG_LOCK_POLL_S = 0.05
 # ``git -c`` overrides that disable the maintenance fetch would otherwise run.
 GIT_NO_AUTO_MAINTENANCE = ("-c", "maintenance.auto=false", "-c", "gc.auto=0")
 
@@ -5809,24 +5822,32 @@ class _HeadReflog(NamedTuple):
     fingerprint: tuple[str, int] | None
 
 
-def _read_bounded_regular(path: Path, limit: int) -> tuple[bytes | None, str | None]:
+class _ReflogWatch(NamedTuple):
+    """Parsed fingerprints, or a refusal. An empty map with no refusal is first sight."""
+
+    trees: dict[str, dict[str, Any]] | None
+    refusal: str | None
+
+
+def _read_bounded_regular(path: Path, limit: int, *, label: str = "logs/HEAD") -> tuple[bytes | None, str | None]:
     """Bytes of a regular ``path``, or an activity-unknown reason.
 
     ``O_NOFOLLOW`` refuses a symlink and ``O_NONBLOCK`` refuses a FIFO without
     blocking. A directory fails to open. A missing path is its own reason.
+    ``label`` names the subject of that reason.
     """
     try:
-        descriptor = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+        descriptor = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK | os.O_CLOEXEC)
     except FileNotFoundError:
-        return None, "logs/HEAD missing; activity unknown"
+        return None, f"{label} missing; activity unknown"
     except OSError:
-        return None, "logs/HEAD unreadable; activity unknown"
+        return None, f"{label} unreadable; activity unknown"
     try:
         info = os.fstat(descriptor)
         if not stat.S_ISREG(info.st_mode):
-            return None, "logs/HEAD unreadable; activity unknown"
+            return None, f"{label} unreadable; activity unknown"
         if info.st_size > limit:
-            return None, "logs/HEAD oversized; activity unknown"
+            return None, f"{label} oversized; activity unknown"
         chunks: list[bytes] = []
         remaining = limit + 1
         while remaining > 0:
@@ -5836,12 +5857,12 @@ def _read_bounded_regular(path: Path, limit: int) -> tuple[bytes | None, str | N
             chunks.append(block)
             remaining -= len(block)
     except OSError:
-        return None, "logs/HEAD unreadable; activity unknown"
+        return None, f"{label} unreadable; activity unknown"
     finally:
         os.close(descriptor)
     raw = b"".join(chunks)
     if len(raw) > limit:
-        return None, "logs/HEAD oversized; activity unknown"
+        return None, f"{label} oversized; activity unknown"
     return raw, None
 
 
@@ -5899,17 +5920,84 @@ def _watch_entry_ok(value: object) -> bool:
     return changed is None or (type(changed) is int and 0 <= changed <= _HEAD_REFLOG_TIME_MAX)
 
 
-def _load_reflog_watch(path: Path) -> dict[str, dict[str, Any]]:
+def _load_reflog_watch(path: Path) -> _ReflogWatch:
+    """Prior fingerprints, or a refusal.
+
+    A missing file is the only first sight (``({}, None)``). A valid file
+    with no entry for one git directory is also first sight for that
+    directory: the read succeeded and there is no prior fingerprint. Every
+    other failure — unreadable, not a regular file, oversized, malformed, or
+    a wrong schema — refuses. A bad entry is not dropped. Dropping it would
+    look like first sight and allow removal after a backdated reset.
+    """
+    raw, refusal = _read_bounded_regular(path, _HEAD_REFLOG_MAX_BYTES, label=_WATCH_SUBJECT)
+    if refusal == _WATCH_MISSING:
+        return _ReflogWatch({}, None)
+    if refusal or raw is None:
+        return _ReflogWatch(None, refusal or _WATCH_UNREADABLE)
     try:
-        if path.lstat().st_size > _HEAD_REFLOG_MAX_BYTES or not stat.S_ISREG(path.lstat().st_mode):
-            return {}
-        loaded = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, UnicodeError, json.JSONDecodeError, ValueError):
-        return {}
-    trees = loaded.get("trees") if isinstance(loaded, dict) else None
+        loaded = json.loads(raw.decode("utf-8"))
+    except (UnicodeError, json.JSONDecodeError, ValueError, RecursionError):
+        return _ReflogWatch(None, _WATCH_UNPARSEABLE)
+    if not isinstance(loaded, dict) or loaded.get("schema_version") != _HEAD_REFLOG_WATCH_SCHEMA:
+        return _ReflogWatch(None, _WATCH_SCHEMA)
+    trees = loaded.get("trees")
     if not isinstance(trees, dict):
-        return {}
-    return {key: value for key, value in trees.items() if isinstance(key, str) and _watch_entry_ok(value)}
+        return _ReflogWatch(None, _WATCH_SCHEMA)
+    clean: dict[str, dict[str, Any]] = {}
+    for key, value in trees.items():
+        if not isinstance(key, str) or not isinstance(value, dict) or not _watch_entry_ok(value):
+            return _ReflogWatch(None, _WATCH_SCHEMA)
+        clean[key] = value
+    return _ReflogWatch(clean, None)
+
+
+def _acquire_head_reflog_lock(path: Path, *, create: bool) -> tuple[int, str | None]:
+    """An exclusive lock fd, or ``(-1, refusal)``.
+
+    A missing lock is not a failure when ``create`` is false: a dry run
+    before any apply has not created one. Opening fails closed for an
+    unreadable, non-regular, or otherwise unopenable lock (a FIFO is opened
+    ``O_NONBLOCK`` and then rejected, so it cannot block). A lock still held
+    after :data:`_HEAD_REFLOG_LOCK_WAIT_S` refuses. The fd is ``O_CLOEXEC``.
+    """
+    lock_path = path.with_suffix(".lock")
+    flags = os.O_RDWR | os.O_NOFOLLOW | os.O_NONBLOCK | os.O_CLOEXEC
+    if create:
+        flags |= os.O_CREAT
+    try:
+        descriptor = os.open(lock_path, flags, 0o600)
+    except FileNotFoundError:
+        if not create:
+            return -1, None
+        return -1, _WATCH_LOCK_UNAVAILABLE
+    except OSError:
+        return -1, _WATCH_LOCK_UNAVAILABLE
+    try:
+        info = os.fstat(descriptor)
+        if not stat.S_ISREG(info.st_mode):
+            os.close(descriptor)
+            return -1, _WATCH_LOCK_UNAVAILABLE
+        if create:
+            os.fchmod(descriptor, 0o600)
+    except OSError:
+        os.close(descriptor)
+        return -1, _WATCH_LOCK_UNAVAILABLE
+    deadline = time.monotonic() + _HEAD_REFLOG_LOCK_WAIT_S
+    while True:
+        try:
+            fcntl.flock(descriptor, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            return descriptor, None
+        except BlockingIOError:
+            pass
+        except OSError:
+            os.close(descriptor)
+            return -1, _WATCH_LOCK_UNAVAILABLE
+        remaining = deadline - time.monotonic()
+        if remaining <= 0:
+            os.close(descriptor)
+            return -1, _WATCH_LOCK_BUSY
+        time.sleep(min(_HEAD_REFLOG_LOCK_POLL_S, remaining))
 
 
 def _write_private_json(path: Path, payload: dict[str, Any]) -> None:
@@ -5938,38 +6026,49 @@ def _note_head_reflog(
     *,
     now: float,
     remember: bool,
-) -> float | None:
-    """When this reflog's bytes last changed, if a prior observation exists.
+) -> tuple[float | None, str | None]:
+    """When these bytes last changed, or a refusal when the watch is unknown.
 
-    No record yet is first sight: entry times decide, and nothing here counts
-    as activity. A later observation with the same digest and entry count is
-    not activity, including a ``git gc`` rewrite of identical bytes. A different
-    digest or entry count is activity at ``now`` (and that time is what a later
-    run uses, so the checkout stays for the idle window). Apply runs store the
-    record; a dry run only reads it.
+    A missing watch file, or a valid file with no entry for this git
+    directory, is first sight: ``(None, None)``. Entry times still decide,
+    and nothing here counts as activity. A later observation with the same
+    digest and entry count is not activity, including a ``git gc`` rewrite
+    of identical bytes. A different digest or entry count is activity at
+    ``now`` (and that time is what a later run uses, so the checkout stays
+    for the idle window).
+
+    An unreadable, non-regular, oversized, malformed, or wrongly typed watch
+    is not first sight. Neither is a lock that cannot be opened or is still
+    held after the bounded wait. Those return a typed activity-unknown reason
+    and do not replace the watch file. Apply runs store a successful record;
+    a dry run takes the lock when it already exists and only reads.
     """
     path = _head_reflog_watch_path(repo_root)
     digest, entries = fingerprint
     lock_fd = -1
-    activity: float | None = None
     try:
         key = str(git_dir.resolve())
         if remember:
             path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
-            lock_fd = os.open(path.with_suffix(".lock"), os.O_RDWR | os.O_CREAT | os.O_NOFOLLOW, 0o600)
-            fcntl.flock(lock_fd, fcntl.LOCK_EX)
-        trees = _load_reflog_watch(path)
+            os.chmod(path.parent, 0o700)
+        lock_fd, lock_refusal = _acquire_head_reflog_lock(path, create=remember)
+        if lock_refusal:
+            return None, lock_refusal
+        loaded = _load_reflog_watch(path)
+        if loaded.refusal or loaded.trees is None:
+            return None, loaded.refusal or _WATCH_UNREADABLE
+        trees = loaded.trees
         prior = trees.get(key)
-        same = isinstance(prior, dict) and prior.get("sha256") == digest and prior.get("entries") == entries
-        if same and isinstance(prior, dict):
+        activity: float | None = None
+        if prior is None:
+            changed_at: int | None = None
+        elif prior.get("sha256") == digest and prior.get("entries") == entries:
             raw_changed = prior.get("changed_at")
             changed_at = raw_changed if type(raw_changed) is int else None
             activity = float(changed_at) if changed_at is not None else None
-        elif prior is not None:
+        else:
             activity = now
             changed_at = int(now) if math.isfinite(now) and 0 <= now <= _HEAD_REFLOG_TIME_MAX else None
-        else:
-            changed_at = None
         if remember:
             kept: dict[str, dict[str, Any]] = {}
             for stored, value in trees.items():
@@ -5979,10 +6078,10 @@ def _note_head_reflog(
                 except OSError:
                     kept[stored] = value
             kept[key] = {"sha256": digest, "entries": entries, "changed_at": changed_at}
-            _write_private_json(path, {"schema_version": "worktree-reaper-head-reflog.v1", "trees": kept})
-        return activity
+            _write_private_json(path, {"schema_version": _HEAD_REFLOG_WATCH_SCHEMA, "trees": kept})
+        return activity, None
     except OSError:
-        return activity
+        return None, _WATCH_UNREADABLE
     finally:
         if lock_fd >= 0:
             os.close(lock_fd)
@@ -6691,9 +6790,11 @@ def _clean_pushed_refusal(
     if observed.refusal:
         return observed.refusal, claims
     if observed.fingerprint is not None:
-        change_time = _note_head_reflog(
+        change_time, watch_refusal = _note_head_reflog(
             ctx.primary, git_dir, observed.fingerprint, now=now, remember=ctx.remember_reflog
         )
+        if watch_refusal:
+            return watch_refusal, claims
         if change_time is not None:
             newest = max(newest, change_time)
     if observed.newest is not None:
@@ -7255,6 +7356,10 @@ def reap_clean_pushed(
     mtime, and not only its last line), the time that file's bytes last
     changed after a prior observation, and its claiming task records is more
     than 60 minutes ago. A missing or unusable reflog is activity unknown.
+    A missing reflog watch is first sight, so entry times still decide. An
+    unreadable, non-regular, oversized, malformed, or wrongly typed watch, or
+    a lock that cannot be opened or is still held after a bounded wait, is
+    activity unknown and keeps the tree.
     Removal goes through
     :func:`worktree_claims.remove_unclaimed_worktree` without ``force``, so
     the shared claim scan and ignored-output preservation (256 MiB cap) still
