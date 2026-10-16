@@ -551,6 +551,155 @@ test('proposal dialogs retain focus and failed read retries after malformed JSON
   assert.equal(await page.$eval('#detail-modal', el => el.classList.contains('visible')), false);
 });
 
+test('in-flight proposal decisions survive dismiss and accept only the matching outcome', async () => {
+  const { page, routes, requests } = await open('consultation');
+  routes['/api/consultation/queue/safe.yml'] = detail('Safe proposal');
+  const queueGets = () => requests.filter(url => url === '/api/consultation/queue').length;
+  const held = deferred();
+  routes['/api/consultation/queue/safe.yml/approve'] = () => held.promise;
+  await page.evaluate(() => loadDetail('safe.yml'));
+  await page.click('[data-action="approve"]');
+  await page.click('#confirm-action-btn');
+  await page.waitForFunction(() => document.getElementById('confirm-action-btn').disabled);
+  await page.evaluate(() => closeConfirm());
+  assert.equal(await page.$eval('#confirm-modal', el => el.classList.contains('visible')), false);
+  assert.equal(await page.$eval('#detail-modal', el => el.classList.contains('visible')), true);
+  const queued = queueGets();
+  held.resolve({ $status: 403, data: {} });
+  await page.waitForFunction(() => document.getElementById('detail-outcome').textContent.includes('403'));
+  assert.equal(await page.$eval('#detail-modal', el => el.classList.contains('visible')), true);
+  assert.equal(queueGets(), queued);
+
+  const heldErrors = deferred();
+  routes['/api/consultation/queue/safe.yml/approve'] = () => heldErrors.promise;
+  await page.click('[data-action="approve"]');
+  await page.click('#confirm-action-btn');
+  await page.waitForFunction(() => document.getElementById('confirm-action-btn').disabled);
+  await page.evaluate(() => closeConfirm());
+  heldErrors.resolve({ status: 'approved', errors: ['patch failed'] });
+  await page.waitForFunction(() => document.getElementById('detail-outcome').textContent.includes('patch failed'));
+  assert.match(await text(page, '#detail-outcome'), /Outcome kept on screen: approved/);
+  assert.equal(await page.$eval('#detail-modal', el => el.classList.contains('visible')), true);
+  assert.equal(queueGets(), queued);
+
+  const heldText = deferred();
+  routes['/api/consultation/queue/safe.yml/approve'] = () => heldText.promise;
+  await page.click('[data-action="approve"]');
+  await page.click('#confirm-action-btn');
+  await page.waitForFunction(() => document.getElementById('confirm-action-btn').disabled);
+  heldText.resolve({ status: 'approved', errors: 'patch failed again' });
+  await page.waitForFunction(() => document.getElementById('detail-outcome').textContent.includes('patch failed again'));
+  assert.equal(await page.$eval('#detail-modal', el => el.classList.contains('visible')), true);
+  assert.equal(queueGets(), queued);
+
+  routes['/api/consultation/queue/safe.yml/approve'] = { status: 'rejected' };
+  await page.click('#confirm-action-btn');
+  await page.waitForFunction(() => document.getElementById('detail-outcome').textContent.includes('Mutation result unknown'));
+  assert.equal(await page.$eval('#detail-modal', el => el.classList.contains('visible')), true);
+  assert.match(await text(page, '#action-error'), /Mutation result unknown/);
+
+  routes['/api/consultation/queue/safe.yml/approve'] = { status: 'already_applied', errors: '' };
+  await page.click('#confirm-action-btn');
+  await page.waitForFunction(() => !document.getElementById('detail-modal').classList.contains('visible'));
+  await page.waitForNetworkIdle();
+  assert.ok(queueGets() > queued);
+
+  const heldReject = deferred();
+  routes['/api/consultation/queue/safe.yml/reject'] = () => heldReject.promise;
+  await page.evaluate(() => loadDetail('safe.yml'));
+  await page.click('[data-action="reject"]');
+  await page.click('#confirm-action-btn');
+  await page.waitForFunction(() => document.getElementById('confirm-action-btn').disabled);
+  await page.evaluate(() => closeConfirm());
+  heldReject.resolve({ status: 'already_rejected' });
+  await page.waitForFunction(() => !document.getElementById('detail-modal').classList.contains('visible'));
+
+  await page.evaluate(() => loadDetail('safe.yml'));
+  routes['/api/consultation/queue/safe.yml/reject'] = { status: 'approved' };
+  await page.click('[data-action="reject"]');
+  await page.click('#confirm-action-btn');
+  await page.waitForFunction(() => document.getElementById('detail-outcome').textContent.includes('Mutation result unknown'));
+  assert.equal(await page.$eval('#detail-modal', el => el.classList.contains('visible')), true);
+
+  const heldStale = deferred();
+  routes['/api/consultation/queue/safe.yml/reject'] = () => heldStale.promise;
+  await page.click('#confirm-action-btn');
+  await page.waitForFunction(() => document.getElementById('confirm-action-btn').disabled);
+  const during = queueGets();
+  await page.evaluate(() => { actionRequest = { token: {} }; });
+  heldStale.resolve({ status: 'rejected' });
+  await page.waitForNetworkIdle();
+  assert.equal(await page.$eval('#detail-modal', el => el.classList.contains('visible')), true);
+  assert.equal(queueGets(), during);
+});
+
+test('omitted annotation fields are a malformed list and are not sent as empty clears', async () => {
+  const { page, routes, mutations } = await open('image-explorer', {}, '#annotations');
+  const omitted = { ...annotation };
+  delete omitted.teaching_value;
+  routes['/api/images/annotations'] = annotations([omitted]);
+  await page.evaluate(() => loadAnnotations());
+  assert.match(await text(page, '#ann-list-status'), /Malformed successful response/);
+  assert.equal(await page.$$eval('.save-btn', els => els.length), 0);
+  assert.equal(mutations.length, 0);
+  routes['/api/images/annotations'] = annotations([{ ...annotation, element_type: null }]);
+  await page.evaluate(() => loadAnnotations());
+  assert.match(await text(page, '#ann-list-status'), /Malformed successful response/);
+  routes['/api/images/annotations'] = annotations([annotation]);
+  await page.evaluate(() => loadAnnotations());
+  await page.waitForSelector('.save-btn');
+  await page.evaluate(() => document.querySelector('[data-field="description_uk"]').remove());
+  await page.click('.save-btn');
+  assert.equal(mutations.length, 0);
+  assert.match(await text(page, '.save-status'), /omitted annotation field is malformed and was not sent/);
+});
+
+test('cleanup reload requires every selected id deleted and an empty not_found list', async () => {
+  const { page, routes } = await open('image-explorer', {}, '#annotations');
+  await page.click('#select-all');
+  await page.evaluate(() => { window.confirm = () => true; });
+  for (const body of [
+    { status: 'ok', deleted_count: 0, not_found: [] },
+    { status: 'ok', deleted_count: 2, not_found: [] },
+    { status: 'ok', deleted_count: 1, not_found: [hostile] },
+    { status: 'ok', deleted_count: 1 },
+  ]) {
+    routes['/api/images/cleanup'] = body;
+    await page.evaluate(() => bulkDelete());
+    assert.equal(await text(page, '#sel-count'), '1 selected', JSON.stringify(body));
+    assert.match(await text(page, '#toast'), /Cleanup unconfirmed/);
+  }
+});
+
+test('lightbox keys apply only while the preview is open', async () => {
+  const { page, routes, requests } = await open('image-explorer');
+  const stem = 'sample';
+  routes['/api/images/textbooks'] = [{ stem, page_count: 2, image_count: 1 }];
+  routes['/api/images/page/sample/1'] = pageData(stem, 1);
+  routes['/api/images/page/sample/2'] = pageData(stem, 2, 'Second page');
+  await page.evaluate(() => loadTextbooks());
+  await page.select('#textbook-select', stem);
+  await page.waitForSelector('#row-0');
+  await page.click('#row-0 button');
+  assert.equal(await page.$eval('#lightbox', el => el.classList.contains('visible')), true);
+  const pageTwo = () => requests.filter(url => url.includes('/page/sample/2')).length;
+  const before = pageTwo();
+  await page.keyboard.press('ArrowRight');
+  await page.keyboard.press('Tab');
+  assert.equal(pageTwo(), before);
+  assert.equal(await page.$eval('#page-input', el => el.value), '1');
+  assert.equal(await page.evaluate(() => document.activeElement.id), 'lightbox');
+  await page.keyboard.press('Escape');
+  assert.equal(await page.$eval('#lightbox', el => el.classList.contains('visible')), false);
+  await page.keyboard.press('ArrowRight');
+  assert.equal(await page.$eval('#page-input', el => el.value), '2');
+  await page.focus('#page-input');
+  await page.keyboard.press('Escape');
+  assert.equal(await page.evaluate(() => document.activeElement.id), 'page-input');
+  await page.evaluate(() => closeLightbox());
+  assert.equal(await page.evaluate(() => document.activeElement.id), 'page-input');
+});
+
 test('image distribution and per-grade controls preserve discovery filters', async () => {
   const { page } = await open('image-explorer', {}, '#stats');
   await page.click('#stats-content .dist-bar .seg');

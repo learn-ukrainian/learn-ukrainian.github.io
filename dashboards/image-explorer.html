@@ -530,7 +530,7 @@ async function loadAnnotations() {
   try {
     const data = await apiFetch(`${API}/annotations?${params}`);
     if (generation !== annGeneration) return;
-    if (!record(data) || !Array.isArray(data.items) || !Number.isInteger(data.total_pages) || data.total_pages < 1 || !count(data.total) || !data.items.every(i => record(i) && typeof i.image_id === 'string' && i.image_id && ['description_uk', 'teaching_value', 'element_type'].every(k => i[k] == null || typeof i[k] === 'string'))) throw new Error('Malformed successful response');
+    if (!record(data) || !Array.isArray(data.items) || !Number.isInteger(data.total_pages) || data.total_pages < 1 || !count(data.total) || !data.items.every(i => record(i) && typeof i.image_id === 'string' && i.image_id && ['description_uk', 'teaching_value', 'element_type'].every(k => typeof i[k] === 'string'))) throw new Error('Malformed successful response');
     ensureGradeFilters();
     listEl.replaceChildren();
     visibleIds = new Set(data.items.map(i => i.image_id));
@@ -584,7 +584,15 @@ function setFilter(key, value, button) {
 
 async function saveAnnotation(imageId, row) {
   const body = {};
-  ['description_uk', 'teaching_value', 'element_type'].forEach(key => { body[key] = row.querySelector(`[data-field="${key}"]`).value; });
+  for (const key of ['description_uk', 'teaching_value', 'element_type']) {
+    const control = row.querySelector(`[data-field="${key}"]`);
+    if (!control || typeof control.value !== 'string') {
+      const omitted = row.querySelector('.save-status');
+      if (omitted) omitted.textContent = 'Save failed: omitted annotation field is malformed and was not sent.';
+      return;
+    }
+    body[key] = control.value;
+  }
   const message = row.querySelector('.save-status');
   const button = row.querySelector('.save-btn');
   if (button.disabled) return;
@@ -636,8 +644,7 @@ async function bulkDelete() {
   const generation = annGeneration;
   try {
     const result = await apiFetch(`${API}/cleanup`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ image_ids: ids }) });
-    if (!record(result) || result.status !== 'ok' || !count(result.deleted_count) || !Array.isArray(result.not_found)) throw new Error('Cleanup confirmation unknown');
-    if (result.not_found.length) throw new Error('Some deletions are unconfirmed; selection preserved');
+    if (!record(result) || result.status !== 'ok' || result.deleted_count !== ids.length || !Array.isArray(result.not_found) || result.not_found.length !== 0) throw new Error('Cleanup unconfirmed; selection preserved');
     toast(`Deleted ${result.deleted_count} images`);
     if (generation === annGeneration) await loadAnnotations();
   } catch (error) { toast(`Error: ${error.message}`, true); }
@@ -821,15 +828,25 @@ function openLightbox(src) {
   document.getElementById('lightbox').focus();
 }
 function closeLightbox() {
-  document.getElementById('lightbox').classList.remove('visible');
-  if (lightboxFocus?.isConnected) lightboxFocus.focus();
+  const lightbox = document.getElementById('lightbox');
+  if (!lightbox.classList.contains('visible')) return;
+  lightbox.classList.remove('visible');
+  const restore = lightboxFocus;
+  lightboxFocus = null;
+  if (restore?.isConnected) restore.focus();
 }
 document.getElementById('annotation-query').addEventListener('keydown', event => { if (event.key === 'Enter') { annPage = 0; loadAnnotations(); } });
 document.getElementById('search-input').addEventListener('keydown', event => { if (event.key === 'Enter') doSearch(); });
 document.getElementById('search-input').addEventListener('input', invalidateSearch);
 document.addEventListener('keydown', event => {
-  if (event.key === 'Escape') closeLightbox();
-  if (event.key === 'Tab' && document.getElementById('lightbox').classList.contains('visible')) { event.preventDefault(); return; }
+  const open = document.getElementById('lightbox').classList.contains('visible');
+  if (event.key === 'Escape' || event.key === 'Tab') {
+    if (!open) return;
+    if (event.key === 'Escape') closeLightbox();
+    else event.preventDefault();
+    return;
+  }
+  if (open) return;
   if (['INPUT', 'SELECT', 'TEXTAREA'].includes(event.target.tagName)) return;
   if (currentTab === 'context') {
     if (event.key === 'ArrowLeft') prevPage();

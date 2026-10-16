@@ -197,6 +197,7 @@ p, td, .meta, .card-path, .refresh-info { overflow-wrap: anywhere; }
   <div class="modal">
     <button aria-label="Close proposal detail" class="close-btn" onclick="closeModal()">&times;</button>
     <div id="modal-content"></div>
+    <p id="detail-outcome" role="alert"></p>
   </div>
 </div>
 
@@ -218,6 +219,7 @@ let detailGeneration = 0;
 let returnFocus = null;
 let confirmFocus = null;
 let pendingAction = null;
+let actionRequest = null;
 const reads = new Map();
 const record = value => value !== null && typeof value === 'object' && !Array.isArray(value);
 const count = value => typeof value === 'number' && Number.isFinite(value) && value >= 0;
@@ -316,6 +318,7 @@ document.getElementById('queue-list').addEventListener('click', event => {
 async function loadDetail(filename) {
   const generation = ++detailGeneration;
   closeConfirm();
+  document.getElementById('detail-outcome').textContent = '';
   const modal = document.getElementById('detail-modal');
   if (!modal.classList.contains('visible')) returnFocus = document.activeElement;
   modal.classList.add('visible');
@@ -356,6 +359,7 @@ function closeModal() {
   ++detailGeneration;
   closeConfirm();
   document.getElementById('detail-modal').classList.remove('visible');
+  document.getElementById('detail-outcome').textContent = '';
   currentDetail = null;
   if (returnFocus?.isConnected) returnFocus.focus();
 }
@@ -375,9 +379,25 @@ function confirmAction(action, filename) {
 }
 
 function closeConfirm() {
+  // Dismiss hides the dialog only. actionRequest still owns the in-flight response.
   document.getElementById('confirm-modal').classList.remove('visible');
   pendingAction = null;
   if (confirmFocus?.isConnected) confirmFocus.focus();
+}
+
+function blockingErrors(errors) {
+  if (Array.isArray(errors)) return errors.length > 0;
+  return errors != null && errors !== '';
+}
+
+function acceptedMutation(action, status) {
+  return action === 'approve' ? status === 'approved' || status === 'already_applied' : status === 'rejected' || status === 'already_rejected';
+}
+
+function showActionFailure(message) {
+  document.getElementById('detail-outcome').textContent = message;
+  document.getElementById('detail-modal').classList.add('visible');
+  if (document.getElementById('confirm-modal').classList.contains('visible')) document.getElementById('action-error').textContent = message;
 }
 
 async function executeAction() {
@@ -386,20 +406,31 @@ async function executeAction() {
   const { action, filename } = actionState;
   const btn = document.getElementById('confirm-action-btn');
   if (btn.disabled) return;
+  const token = {};
+  actionRequest = { token, action, filename };
   btn.disabled = true;
   btn.textContent = action === 'approve' ? 'Applying…' : 'Rejecting…';
+  const matches = () => actionRequest?.token === token;
   try {
     const data = await fetchJson(`${API}/queue/${encodeURIComponent(filename)}/${action}?confirm=true`, { method: 'POST' });
-    if (!record(data) || !['approved', 'already_applied', 'rejected', 'already_rejected'].includes(data.status)) throw new Error('Mutation result unknown; reload proposal before retrying');
-    if (pendingAction !== actionState) return;
+    if (!matches()) return;
+    if (!record(data) || !acceptedMutation(action, data.status)) throw new Error('Mutation result unknown; reload proposal before retrying');
+    if (blockingErrors(data.errors)) {
+      const detail = Array.isArray(data.errors) ? data.errors.map(item => String(item)).join('; ') : String(data.errors);
+      showActionFailure(`Outcome kept on screen: ${data.status}. ${detail}`);
+      return;
+    }
     closeConfirm();
     closeModal();
     await loadQueue();
   } catch (error) {
-    if (pendingAction === actionState) document.getElementById('action-error').textContent = `Request failed: ${error.message}`;
+    if (!matches()) return;
+    showActionFailure(`Request failed: ${error.message}`);
   } finally {
-    btn.disabled = false;
-    btn.textContent = action === 'approve' ? 'Approve' : 'Reject';
+    if (matches()) {
+      btn.disabled = false;
+      btn.textContent = action === 'approve' ? 'Approve' : 'Reject';
+    }
   }
 }
 
