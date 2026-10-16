@@ -809,21 +809,96 @@ def test_main_records_read_only_home_session_policy_and_prints_hard_warning(
     assert "HARD WARNING: stale home session" in capsys.readouterr().err
 
 
+def _git_env() -> dict[str, str]:
+    return {
+        key: value
+        for key, value in os.environ.items()
+        if not key.startswith("GIT_") and not key.startswith("PRE_COMMIT") and key != "AGENT_NO_MERGE"
+    }
+
+
+def _trace_children(payload: bytes) -> list[list[str]]:
+    children: list[list[str]] = []
+    for line in payload.splitlines():
+        try:
+            event = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        argv = event.get("argv")
+        if event.get("event") == "child_start" and isinstance(argv, list):
+            children.append([str(part) for part in argv])
+    return children
+
+
+def _maintenance_child(argv: list[str]) -> bool:
+    return "maintenance" in argv or argv[1:3] == ["reflog", "expire"] or argv[1:3] == ["gc", "--auto"]
+
+
+def _arm_auto_maintenance(repo: Path) -> None:
+    """Enough loose objects that an ordinary fetch starts ``maintenance run --auto``."""
+    _git(repo, "config", "gc.autoDetach", "false")
+    _git(repo, "config", "maintenance.autoDetach", "false")
+    _git(repo, "config", "gc.auto", "1")
+    _git(repo, "config", "gc.autoPackLimit", "1")
+    _git(repo, "config", "maintenance.auto", "true")
+    env = _git_env()
+    for index in range(20):
+        proc = subprocess.run(
+            ["git", "hash-object", "-w", "--stdin"],
+            cwd=repo,
+            input=f"loose-{index}-{time.time_ns()}\n",
+            text=True,
+            capture_output=True,
+            check=False,
+            env=env,
+            timeout=30,
+        )
+        assert proc.returncode == 0, proc.stderr
+
+
 def test_reaper_runs_before_git_gc(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    """``git gc --auto`` rewrites reflogs, so it stays after the reaper (#10856)."""
+    """Fetch must not start maintenance before the reaper; explicit gc stays after (#10856)."""
     repo = _repo(tmp_path)
-    order: list[str] = []
+    _arm_auto_maintenance(repo)
+    control = tmp_path / "control.trace"
+    control_env = _git_env()
+    control_env["GIT_TRACE2_EVENT"] = str(control)
+    probed = subprocess.run(
+        ["git", "fetch", "--prune", "origin"],
+        cwd=repo,
+        env=control_env,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=60,
+    )
+    assert probed.returncode == 0, probed.stderr
+    assert any(_maintenance_child(argv) for argv in _trace_children(control.read_bytes()))
+    _arm_auto_maintenance(repo)
+
+    timeline: list[str] = []
+    fetched: list[tuple[str, ...]] = []
+    fetch_traces: list[bytes] = []
+    trace = tmp_path / "scheduler.trace"
     real_run_git = cleanup._run_git
+    monkeypatch.setenv("GIT_TRACE2_EVENT", str(trace))
 
     def spy_run_git(repo_root: Path, *args: str) -> subprocess.CompletedProcess[str]:
+        if "fetch" in args:
+            timeline.append("fetch")
+            fetched.append(args)
+            before = trace.stat().st_size if trace.exists() else 0
+            result = real_run_git(repo_root, *args)
+            fetch_traces.append(trace.read_bytes()[before:])
+            return result
         if args[:2] == ("gc", "--auto"):
-            order.append("gc")
+            timeline.append("gc")
         return real_run_git(repo_root, *args)
 
     monkeypatch.setattr(cleanup, "_run_git", spy_run_git)
     monkeypatch.setattr(cleanup, "_worktree_prune", lambda _repo, *, apply: {"ok": True})
     monkeypatch.setattr(cleanup.reap_worktrees, "_live_cwd_paths", lambda _repo: set())
-    monkeypatch.setattr(cleanup.reap_worktrees, "reap_worktrees", lambda **_kwargs: order.append("reaper") or [])
+    monkeypatch.setattr(cleanup.reap_worktrees, "reap_worktrees", lambda **_kwargs: timeline.append("reaper") or [])
     monkeypatch.setattr(cleanup, "cleanup_gone_local_branches", lambda *_args, **_kwargs: [])
     monkeypatch.setattr(cleanup, "cleanup_stale_origin_branches", lambda *_args, **_kwargs: [])
     monkeypatch.setattr(cleanup, "cleanup_untracked_local_branches", lambda *_args, **_kwargs: [])
@@ -842,7 +917,9 @@ def test_reaper_runs_before_git_gc(tmp_path: Path, monkeypatch: pytest.MonkeyPat
 
     result = cleanup._repo_result(repo, apply=True)
 
-    assert order == ["reaper", "gc"]
+    assert timeline == ["fetch", "reaper", "fetch", "gc"]
+    assert fetched == [("-c", "maintenance.auto=false", "-c", "gc.auto=0", "fetch", "--prune", "origin")] * 2
+    assert fetch_traces and not any(_maintenance_child(argv) for blob in fetch_traces for argv in _trace_children(blob))
     assert result["maintenance"]["action"] == "ran"
     assert result["maintenance"]["ok"] is True
 

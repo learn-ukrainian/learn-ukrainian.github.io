@@ -40,6 +40,20 @@ def git_env() -> dict[str, str]:
     }
 
 
+def _git_subcommand(args: list[str]) -> str | None:
+    """The git verb in ``args``, skipping a leading ``git`` and ``-c`` overrides."""
+    index = 1 if args[:1] == ["git"] else 0
+    while index < len(args):
+        if args[index] == "-c":
+            index += 2
+            continue
+        if args[index].startswith("-"):
+            index += 1
+            continue
+        return args[index]
+    return None
+
+
 def git(cwd: Path, *args: str) -> str:
     proc = subprocess.run(
         ["git", *args], cwd=cwd, capture_output=True, text=True, check=False, env=git_env(), timeout=30
@@ -514,6 +528,168 @@ def test_empty_or_unparseable_head_reflog_is_not_reaped(
     )
 
     assert _refusal(repo, worktree) == reason
+
+
+def _append_reflog_stamp(log: Path, stamp: int) -> None:
+    text = log.read_text(encoding="utf-8")
+    lines = [line for line in text.splitlines() if line.strip()]
+    header, separator, message = lines[-1].partition("\t")
+    match = _REFLOG_STAMP.fullmatch(header)
+    assert match is not None
+    entry = f"{match.group(1)}{stamp} {match.group(3)}"
+    if separator:
+        entry += f"{separator}{message}"
+    log.write_text(text if text.endswith("\n") else text + "\n", encoding="utf-8")
+    with log.open("a", encoding="utf-8") as handle:
+        handle.write(entry + "\n")
+
+
+def _keep_once(repo: Path, worktree: Path) -> None:
+    """Apply once while the index is fresh so the reflog fingerprint is stored."""
+    os.utime(admin_dir(worktree) / "index")
+    report = rw.reap_clean_pushed(repo_root=repo, dry_run=False)
+    outcome = outcome_for(report, worktree, repo)
+    assert outcome.action == "skipped" and outcome.reason.startswith("last activity"), outcome
+    watch = repo / "batch_state" / "worktree-reaper" / "head-reflog-watch.json"
+    assert watch.is_file()
+    assert watch.stat().st_mode & 0o777 == 0o600
+
+
+def test_backdated_soft_reset_cannot_hide_reflog_activity(repo: Path, free_fuser: Path) -> None:
+    """A backdated append on an already-old log is activity once the bytes were observed."""
+    worktree = dispatch_tree(repo)
+    _keep_once(repo, worktree)
+    admin = admin_dir(worktree)
+    env = git_env()
+    env["GIT_COMMITTER_DATE"] = "2001-01-01T00:00:00+0000"
+    proc = subprocess.run(
+        ["git", "reset", "--soft", "HEAD"],
+        cwd=worktree,
+        env=env,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+    assert proc.returncode == 0, proc.stderr
+    age([admin / "HEAD", admin / "index", repo / "batch_state" / "tasks" / "task-a.json"])
+
+    assert _refusal(repo, worktree).startswith("last activity")
+
+
+def test_recent_entry_then_backdated_entry_stays_active(repo: Path, free_fuser: Path) -> None:
+    worktree = dispatch_tree(repo)
+    log = admin_dir(worktree) / "logs" / "HEAD"
+    _append_reflog_stamp(log, int(time.time()))
+    _append_reflog_stamp(log, 978307200)
+    old = time.time() - TWO_HOURS
+    os.utime(log, (old, old))
+    age(
+        [
+            admin_dir(worktree) / "HEAD",
+            admin_dir(worktree) / "index",
+            repo / "batch_state" / "tasks" / "task-a.json",
+        ]
+    )
+
+    assert _refusal(repo, worktree) == "last activity 0 min ago (< 60 min)"
+
+
+def test_identical_reflog_bytes_after_observation_are_still_reaped(repo: Path, free_fuser: Path) -> None:
+    worktree = dispatch_tree(repo)
+    _keep_once(repo, worktree)
+    log = admin_dir(worktree) / "logs" / "HEAD"
+    log.write_bytes(log.read_bytes())
+    age(
+        [
+            admin_dir(worktree) / "HEAD",
+            admin_dir(worktree) / "index",
+            repo / "batch_state" / "tasks" / "task-a.json",
+        ]
+    )
+
+    report = rw.reap_clean_pushed(repo_root=repo, dry_run=False)
+
+    assert outcome_for(report, worktree, repo).action == "removed"
+    assert not worktree.exists()
+
+
+@pytest.mark.parametrize(
+    ("kind", "reason"),
+    [
+        ("missing", "logs/HEAD missing; activity unknown"),
+        ("unreadable", "logs/HEAD unreadable; activity unknown"),
+        ("directory", "logs/HEAD unreadable; activity unknown"),
+        ("symlink", "logs/HEAD unreadable; activity unknown"),
+        ("fifo", "logs/HEAD unreadable; activity unknown"),
+    ],
+)
+def test_unusable_head_reflog_is_not_reaped(repo: Path, free_fuser: Path, kind: str, reason: str) -> None:
+    if kind == "unreadable" and os.geteuid() == 0:
+        pytest.skip("root reads mode-000 files")
+    worktree = dispatch_tree(repo)
+    log = admin_dir(worktree) / "logs" / "HEAD"
+    if kind == "missing":
+        log.unlink()
+    elif kind == "unreadable":
+        log.chmod(0)
+    elif kind == "directory":
+        log.unlink()
+        log.mkdir()
+    elif kind == "symlink":
+        target = log.parent / "not-a-log"
+        target.write_text("elsewhere\n", encoding="utf-8")
+        log.unlink()
+        log.symlink_to(target.name)
+    else:
+        log.unlink()
+        os.mkfifo(log)
+    age(
+        [
+            admin_dir(worktree) / "HEAD",
+            admin_dir(worktree) / "index",
+            repo / "batch_state" / "tasks" / "task-a.json",
+        ]
+    )
+    try:
+        assert _refusal(repo, worktree) == reason
+    finally:
+        if kind == "unreadable" and log.exists():
+            log.chmod(0o644)
+
+
+def test_oversized_reflog_timestamp_does_not_abort_the_sweep(repo: Path, free_fuser: Path) -> None:
+    worktree = dispatch_tree(repo)
+    head = git(worktree, "rev-parse", "HEAD")
+    log = admin_dir(worktree) / "logs" / "HEAD"
+    log.write_text(
+        f"{head} {head} Test User <tester@example.com> {'9' * 400} +0000\treset: moving to HEAD\n",
+        encoding="utf-8",
+    )
+    age(
+        [
+            admin_dir(worktree) / "HEAD",
+            admin_dir(worktree) / "index",
+            repo / "batch_state" / "tasks" / "task-a.json",
+        ]
+    )
+
+    assert _refusal(repo, worktree) == "logs/HEAD timestamp out of range; activity unknown"
+
+
+def test_oversized_head_reflog_is_activity_unknown(repo: Path, free_fuser: Path) -> None:
+    worktree = dispatch_tree(repo)
+    log = admin_dir(worktree) / "logs" / "HEAD"
+    log.write_bytes(b"x" * (rw._HEAD_REFLOG_MAX_BYTES + 1))
+    age(
+        [
+            admin_dir(worktree) / "HEAD",
+            admin_dir(worktree) / "index",
+            repo / "batch_state" / "tasks" / "task-a.json",
+        ]
+    )
+
+    assert _refusal(repo, worktree) == "logs/HEAD oversized; activity unknown"
 
 
 def test_unparsable_task_record_refuses(repo: Path, free_fuser: Path) -> None:
@@ -1527,7 +1703,7 @@ def test_fetch_timeout_skips_the_whole_run(repo: Path, free_fuser: Path, monkeyp
     real_run = rw._run
 
     def slow_fetch(args: list[str], **kwargs: Any) -> Any:
-        if args[:2] == ["git", "fetch"]:
+        if _git_subcommand(args) == "fetch":
             assert kwargs["timeout"] == 60.0
             raise subprocess.TimeoutExpired(args, kwargs["timeout"])
         return real_run(args, **kwargs)
@@ -1547,7 +1723,7 @@ def test_fetch_runs_before_the_reaper_lock_and_once(
     real_enter = rw._ReapLock.__enter__
 
     def spy_run(args: list[str], **kwargs: Any) -> Any:
-        if args[:2] in (["git", "fetch"], ["git", "ls-remote"]):
+        if _git_subcommand(args) in {"fetch", "ls-remote"}:
             events.append(" ".join(args))
         return real_run(args, **kwargs)
 

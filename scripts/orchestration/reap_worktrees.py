@@ -28,6 +28,7 @@ import contextvars
 import fcntl
 import hashlib
 import json
+import math
 import os
 import re
 import secrets
@@ -40,7 +41,7 @@ import time
 from collections.abc import Callable, Iterator
 from dataclasses import asdict, dataclass, field, replace
 from pathlib import Path
-from typing import Any
+from typing import Any, NamedTuple
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlencode, urlsplit
 
@@ -5787,52 +5788,212 @@ def _reread_claims(claims: list[_TaskClaim], path: Path, repo_root: Path) -> tup
     return fresh, None
 
 
-# Last ``logs/HEAD`` line: two object ids, an identity, then the committer
+# One ``logs/HEAD`` line: two object ids, an identity, then the committer
 # timestamp and a ``+HHMM`` timezone. The message after the tab is ignored.
 _HEAD_REFLOG_ENTRY = re.compile(r"^(?:[0-9a-f]{40} [0-9a-f]{40}|[0-9a-f]{64} [0-9a-f]{64}) .+ ([0-9]+) ([+-][0-9]{4})$")
+# A larger reflog is not read. Activity stays unknown so a huge log cannot
+# hide a newer entry past the part a reader would stop at, and cannot force
+# an unbounded allocation.
+_HEAD_REFLOG_MAX_BYTES = 1_048_576
+# 9999-12-31T23:59:59Z. Past this, float conversion can become non-finite and
+# ``int`` of the idle duration raises. Negative stamps are not in the pattern.
+_HEAD_REFLOG_TIME_MAX = 253_402_300_799
+_HEAD_REFLOG_WATCH_NAME = "head-reflog-watch.json"
+# ``git -c`` overrides that disable the maintenance fetch would otherwise run.
+GIT_NO_AUTO_MAINTENANCE = ("-c", "maintenance.auto=false", "-c", "gc.auto=0")
 
 
-def _head_reflog_entry_time(reflog: Path) -> tuple[float | None, str | None]:
-    """Committer timestamp of the last ``logs/HEAD`` line, or a refusal.
+class _HeadReflog(NamedTuple):
+    newest: float | None
+    refusal: str | None
+    fingerprint: tuple[str, int] | None
 
-    The file mtime is not used. ``git gc`` runs ``reflog expire --all``, which
-    rewrites every worktree ``logs/HEAD`` at one instant and leaves the entries
-    unchanged, so the file mtime would make every checkout look active. Activity
-    is the committer timestamp on the last line (seconds since the epoch, the
-    field before the timezone).
 
-    ``(None, None)`` when the file is absent. A present file that is empty,
-    unreadable, or not a reflog entry is activity unknown, and the tree is kept.
+def _read_bounded_regular(path: Path, limit: int) -> tuple[bytes | None, str | None]:
+    """Bytes of a regular ``path``, or an activity-unknown reason.
+
+    ``O_NOFOLLOW`` refuses a symlink and ``O_NONBLOCK`` refuses a FIFO without
+    blocking. A directory fails to open. A missing path is its own reason.
     """
     try:
-        info = reflog.lstat()
+        descriptor = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
     except FileNotFoundError:
-        return None, None
+        return None, "logs/HEAD missing; activity unknown"
     except OSError:
-        return None, "logs/HEAD unreadable; activity unknown"
-    if not stat.S_ISREG(info.st_mode):
         return None, "logs/HEAD unreadable; activity unknown"
     try:
-        text = reflog.read_text(encoding="utf-8", errors="replace")
+        info = os.fstat(descriptor)
+        if not stat.S_ISREG(info.st_mode):
+            return None, "logs/HEAD unreadable; activity unknown"
+        if info.st_size > limit:
+            return None, "logs/HEAD oversized; activity unknown"
+        chunks: list[bytes] = []
+        remaining = limit + 1
+        while remaining > 0:
+            block = os.read(descriptor, remaining)
+            if not block:
+                break
+            chunks.append(block)
+            remaining -= len(block)
     except OSError:
         return None, "logs/HEAD unreadable; activity unknown"
-    lines = text.splitlines()
-    while lines and not lines[-1].strip():
-        lines.pop()
-    if not lines:
-        return None, "logs/HEAD empty; activity unknown"
-    match = _HEAD_REFLOG_ENTRY.fullmatch(lines[-1].split("\t", 1)[0])
-    if match is None:
-        return None, "logs/HEAD unparseable; activity unknown"
-    return float(match.group(1)), None
+    finally:
+        os.close(descriptor)
+    raw = b"".join(chunks)
+    if len(raw) > limit:
+        return None, "logs/HEAD oversized; activity unknown"
+    return raw, None
+
+
+def _head_reflog_observation(reflog: Path) -> _HeadReflog:
+    """Newest committer time in a bounded ``logs/HEAD``, or a refusal.
+
+    The last line is not the newest evidence: ``GIT_COMMITTER_DATE`` can append
+    an older stamp after a newer one without moving ``HEAD`` or the index. The
+    file mtime is not used. ``git gc`` rewrites the file and can leave the
+    bytes unchanged, so a fresh mtime is not activity.
+
+    A missing, unreadable, non-regular, empty, unparseable, oversized, or
+    out-of-range log is activity unknown. The fingerprint is the SHA-256 of
+    the bytes and the number of entries; it is absent when the log is refused.
+    """
+    raw, refusal = _read_bounded_regular(reflog, _HEAD_REFLOG_MAX_BYTES)
+    if refusal or raw is None:
+        return _HeadReflog(None, refusal or "logs/HEAD unreadable; activity unknown", None)
+    newest: int | None = None
+    entries = 0
+    for line in raw.decode("utf-8", errors="replace").splitlines():
+        if not line.strip():
+            continue
+        entries += 1
+        match = _HEAD_REFLOG_ENTRY.fullmatch(line.split("\t", 1)[0])
+        if match is None:
+            return _HeadReflog(None, "logs/HEAD unparseable; activity unknown", None)
+        token = match.group(1)
+        if len(token) > len(str(_HEAD_REFLOG_TIME_MAX)):
+            return _HeadReflog(None, "logs/HEAD timestamp out of range; activity unknown", None)
+        stamp = int(token)
+        if stamp > _HEAD_REFLOG_TIME_MAX:
+            return _HeadReflog(None, "logs/HEAD timestamp out of range; activity unknown", None)
+        newest = stamp if newest is None else max(newest, stamp)
+    if newest is None:
+        return _HeadReflog(None, "logs/HEAD empty; activity unknown", None)
+    digest = hashlib.sha256(raw).hexdigest()
+    return _HeadReflog(float(newest), None, (digest, entries))
+
+
+def _head_reflog_watch_path(repo_root: Path) -> Path:
+    return reaper_lifecycle.journal_path(repo_root).parent / _HEAD_REFLOG_WATCH_NAME
+
+
+def _watch_entry_ok(value: object) -> bool:
+    if not isinstance(value, dict):
+        return False
+    digest = value.get("sha256")
+    entries = value.get("entries")
+    if not isinstance(digest, str) or len(digest) != 64 or digest.strip("0123456789abcdef"):
+        return False
+    if type(entries) is not int or entries < 0:
+        return False
+    changed = value.get("changed_at")
+    return changed is None or (type(changed) is int and 0 <= changed <= _HEAD_REFLOG_TIME_MAX)
+
+
+def _load_reflog_watch(path: Path) -> dict[str, dict[str, Any]]:
+    try:
+        if path.lstat().st_size > _HEAD_REFLOG_MAX_BYTES or not stat.S_ISREG(path.lstat().st_mode):
+            return {}
+        loaded = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError, ValueError):
+        return {}
+    trees = loaded.get("trees") if isinstance(loaded, dict) else None
+    if not isinstance(trees, dict):
+        return {}
+    return {key: value for key, value in trees.items() if isinstance(key, str) and _watch_entry_ok(value)}
+
+
+def _write_private_json(path: Path, payload: dict[str, Any]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
+    os.chmod(path.parent, 0o700)
+    temporary = path.with_name(f".{path.name}.{os.getpid()}.tmp")
+    descriptor = os.open(temporary, os.O_WRONLY | os.O_CREAT | os.O_TRUNC | os.O_NOFOLLOW, 0o600)
+    try:
+        with os.fdopen(descriptor, "w", encoding="utf-8") as handle:
+            json.dump(payload, handle, sort_keys=True)
+            handle.write("\n")
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.chmod(temporary, 0o600)
+        os.replace(temporary, path)
+        os.chmod(path, 0o600)
+    except Exception:
+        temporary.unlink(missing_ok=True)
+        raise
+
+
+def _note_head_reflog(
+    repo_root: Path,
+    git_dir: Path,
+    fingerprint: tuple[str, int],
+    *,
+    now: float,
+    remember: bool,
+) -> float | None:
+    """When this reflog's bytes last changed, if a prior observation exists.
+
+    No record yet is first sight: entry times decide, and nothing here counts
+    as activity. A later observation with the same digest and entry count is
+    not activity, including a ``git gc`` rewrite of identical bytes. A different
+    digest or entry count is activity at ``now`` (and that time is what a later
+    run uses, so the checkout stays for the idle window). Apply runs store the
+    record; a dry run only reads it.
+    """
+    path = _head_reflog_watch_path(repo_root)
+    digest, entries = fingerprint
+    lock_fd = -1
+    activity: float | None = None
+    try:
+        key = str(git_dir.resolve())
+        if remember:
+            path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
+            lock_fd = os.open(path.with_suffix(".lock"), os.O_RDWR | os.O_CREAT | os.O_NOFOLLOW, 0o600)
+            fcntl.flock(lock_fd, fcntl.LOCK_EX)
+        trees = _load_reflog_watch(path)
+        prior = trees.get(key)
+        same = isinstance(prior, dict) and prior.get("sha256") == digest and prior.get("entries") == entries
+        if same and isinstance(prior, dict):
+            raw_changed = prior.get("changed_at")
+            changed_at = raw_changed if type(raw_changed) is int else None
+            activity = float(changed_at) if changed_at is not None else None
+        elif prior is not None:
+            activity = now
+            changed_at = int(now) if math.isfinite(now) and 0 <= now <= _HEAD_REFLOG_TIME_MAX else None
+        else:
+            changed_at = None
+        if remember:
+            kept: dict[str, dict[str, Any]] = {}
+            for stored, value in trees.items():
+                try:
+                    if Path(stored).exists():
+                        kept[stored] = value
+                except OSError:
+                    kept[stored] = value
+            kept[key] = {"sha256": digest, "entries": entries, "changed_at": changed_at}
+            _write_private_json(path, {"schema_version": "worktree-reaper-head-reflog.v1", "trees": kept})
+        return activity
+    except OSError:
+        return activity
+    finally:
+        if lock_fd >= 0:
+            os.close(lock_fd)
 
 
 def _tree_mtime_sources(path: Path, common_git_dir: Path) -> tuple[list[Path], Path | None, str | None]:
     """The checkout's ``HEAD`` and ``index``, and its git directory.
 
-    ``logs/HEAD`` is not a file-mtime source. :func:`_head_reflog_entry_time`
-    reads the newest reflog entry instead, because a ``git gc`` rewrite would
-    otherwise look like activity.
+    ``logs/HEAD`` is not a file-mtime source. :func:`_head_reflog_observation`
+    reads every entry, because a ``git gc`` rewrite would otherwise look like
+    activity and the last line is not always the newest stamp.
     """
     git_dir = _worktree_git_dir(path)
     if git_dir is None:
@@ -6450,6 +6611,7 @@ class _CleanPushedContext:
     census: _OriginCensus
     now: float | None = None
     uninspectable: set[int] = field(default_factory=set)
+    remember_reflog: bool = False
 
 
 def _location_refusal(info: WorktreeInfo, ctx: _CleanPushedContext, tree: Path) -> str | None:
@@ -6524,11 +6686,18 @@ def _clean_pushed_refusal(
     newest, refusal = _newest_mtime(sources, required=required)
     if refusal or newest is None:
         return refusal or "activity unknown", claims
-    entry_time, refusal = _head_reflog_entry_time(git_dir / "logs" / "HEAD")
-    if refusal:
-        return refusal, claims
-    if entry_time is not None:
-        newest = max(newest, entry_time)
+    now = ctx.now if ctx.now is not None else time.time()
+    observed = _head_reflog_observation(git_dir / "logs" / "HEAD")
+    if observed.refusal:
+        return observed.refusal, claims
+    if observed.fingerprint is not None:
+        change_time = _note_head_reflog(
+            ctx.primary, git_dir, observed.fingerprint, now=now, remember=ctx.remember_reflog
+        )
+        if change_time is not None:
+            newest = max(newest, change_time)
+    if observed.newest is not None:
+        newest = max(newest, observed.newest)
     extras = [claim.path for claim in claims]
     if task_id:
         extras.append(ctx.tasks_dir / f"{task_id}.json")
@@ -6537,9 +6706,17 @@ def _clean_pushed_refusal(
         return refusal, claims
     if extra_newest is not None:
         newest = max(newest, extra_newest)
-    idle_s = (ctx.now if ctx.now is not None else time.time()) - newest
+    if not math.isfinite(now) or not math.isfinite(newest):
+        return "activity unknown", claims
+    idle_s = now - newest
+    if not math.isfinite(idle_s):
+        return "activity unknown", claims
+    try:
+        idle_min = int(idle_s // 60)
+    except (OverflowError, ValueError):
+        return "activity unknown", claims
     if idle_s < CLEAN_PUSHED_MIN_IDLE_S:
-        return f"last activity {max(0, int(idle_s // 60))} min ago (< 60 min)", claims
+        return f"last activity {max(0, idle_min)} min ago (< 60 min)", claims
     refusal = _git_refusal(tree, info.head, ctx.census)
     if refusal:
         return refusal, claims
@@ -6616,7 +6793,9 @@ def _refresh_origin_refs(primary: Path) -> str | None:
     It brings origin's objects here, so the census tips can be checked for
     ancestry; the refs it updates prove nothing (a narrowed fetch refspec
     leaves some stale), :func:`_origin_census` does. Runs before the reaper
-    lock is taken: no remote read may happen under it.
+    lock is taken: no remote read may happen under it. The command is admitted
+    only as ``fetch``; the safe-git profile already sets ``maintenance.auto=false``
+    and ``gc.auto=0``, so this fetch cannot expire reflogs before activity is judged.
     """
     try:
         proc = _run(
@@ -7072,9 +7251,11 @@ def reap_clean_pushed(
     in use; an uninspectable process keeps every tree for the run); no task
     record claiming it is ``spawning``, ``running``, unsettled, unreadable or
     has a live worker; and the newest of its HEAD and index mtimes, the
-    committer timestamp of the last ``logs/HEAD`` entry (not that file's
-    mtime; ``git gc`` rewrites the file without changing entries), and its
-    claiming task records is more than 60 minutes ago. Removal goes through
+    newest committer timestamp in a bounded ``logs/HEAD`` (not that file's
+    mtime, and not only its last line), the time that file's bytes last
+    changed after a prior observation, and its claiming task records is more
+    than 60 minutes ago. A missing or unusable reflog is activity unknown.
+    Removal goes through
     :func:`worktree_claims.remove_unclaimed_worktree` without ``force``, so
     the shared claim scan and ignored-output preservation (256 MiB cap) still
     apply. Right before git removes it, the checkout is recorded and moved to
@@ -7131,6 +7312,7 @@ def reap_clean_pushed(
             tasks_dir=tasks_dir,
             index=_build_task_index(tasks_dir, primary),
             census=census,
+            remember_reflog=not dry_run,
         )
         recovered, handled, moved = _recover_quarantine(
             primary, ctx, listing, control_root=control_root, dry_run=dry_run
