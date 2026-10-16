@@ -2398,3 +2398,167 @@ def test_pr_source_and_projection_cache_clocks_through_handlers(
     else:
         assert row["projections"]["verification"]["ci_state"] == "passing"
         assert row["projections"]["review"]["sealed_verdict_available"] is True
+
+
+@pytest.fixture
+def history_handlers(monkeypatch, tmp_path):
+    """Exercise both public handlers with fixture-only roots, sources and caches."""
+    from scripts.api.main import create_app
+    from scripts.api.monitor_context import fixture_context
+
+    _literal_work_clock(monkeypatch)
+    _patch_known_streams(monkeypatch)
+    context = fixture_context(tmp_path)
+    isolated_client = TestClient(create_app(context), raise_server_exceptions=False)
+
+    def serve(sections):
+        def build(**kwargs):
+            return build_projection(sections, lifecycle_ledgers=[], target_lifecycle_lookup={}, **kwargs)
+
+        monkeypatch.setattr(work_router, "build_public_projection", build)
+        projection = isolated_client.get("/api/work/v1/projection?fresh=true")
+        assert projection.status_code == 200, projection.text
+        nxt = isolated_client.get("/api/work/v1/next?stream=infra-harness")
+        assert nxt.status_code == 200, nxt.text
+        return projection.json(), nxt.json()
+
+    yield serve
+    for key in list(context.stores.work_in_flight):
+        work_router.wait_for_in_flight_build(key, ctx=context)
+    isolated_client.close()
+
+
+@pytest.mark.parametrize(
+    "status,truncated,count,observed,age,omissions",
+    [
+        ("ok", False, 5, "2026-10-16T06:00:00Z", 2, []),
+        (
+            "truncated",
+            True,
+            5,
+            "2026-10-16T06:00:00Z",
+            2,
+            [{"class": "prs_merged", "reason": "enumeration_cap", "count": 5}],
+        ),
+        (
+            "stale",
+            True,
+            5,
+            "2026-10-16T05:59:00Z",
+            62,
+            [
+                {"class": "prs_merged", "reason": "enumeration_cap", "count": 5},
+                {"class": "prs_merged", "reason": "gh_pr_refresh_failed", "count": 0},
+            ],
+        ),
+        (
+            "unavailable",
+            False,
+            None,
+            None,
+            None,
+            [{"class": "prs_merged", "reason": "gh_pr_snapshot_missing", "count": 0}],
+        ),
+    ],
+)
+def test_terminal_history_digest_preserves_coverage(
+    history_handlers, status, truncated, count, observed, age, omissions
+):
+    sections = _qualify_sections(
+        prs=SectionResult("prs", "ok", payload=[], count=0, observed_at="2026-10-16T06:00:00Z"),
+        prs_merged=SectionResult(
+            "prs_merged",
+            status,
+            count=count,
+            observed_at=observed,
+            age_s=age,
+            truncated=truncated,
+            reason={"stale": "gh_pr_refresh_failed", "unavailable": "gh_pr_snapshot_missing"}.get(status),
+            payload=[{"number": n, "state": "MERGED", "mergedAt": "2026-10-14T12:00:00Z"} for n in range(71, 76)]
+            if count
+            else None,
+        ),
+    )
+    projection, nxt = history_handlers(sections)
+    assert [(r["remote_id"], r["lifecycle"]) for r in projection["items"]] == (
+        [(str(n), "merged") for n in range(71, 76)] if count else []
+    )
+    assert nxt["queue"] == []
+    for data in (projection, nxt):
+        assert data["denominator"]["prs_open"] == 0
+        meta = data["sources"][0]["sections"]["prs_merged"]
+        assert {k: meta[k] for k in ("status", "truncated", "count", "observed_at", "age_s")} == {
+            "status": status,
+            "truncated": truncated,
+            "count": count,
+            "observed_at": observed,
+            "age_s": age,
+        }
+        assert [o for o in data["denominator"]["omissions"] if o["class"] == "prs_merged"] == omissions
+    assert nxt["digest"]["unscoped_unknown"] == {"count": 0, "reason_counts": {}}
+
+
+@pytest.mark.parametrize("with_history", [False, True])
+def test_terminal_history_digest_preserves_mixed_unknowns(history_handlers, with_history):
+    prs = [
+        {"number": 81, "state": "OPEN", "headRefOid": "a" * 40, "reviewDecision": "APPROVED"},
+        {"number": 82, "state": "OPEN", "isDraft": True, "headRefOid": "b" * 40, "reviewDecision": "APPROVED"},
+        {"number": 83, "state": "OPEN", "statusCheckRollup": [{"conclusion": "FAILURE"}]},
+    ]
+    if with_history:
+        prs.append({"number": 84, "state": "CLOSED"})
+    sections = _qualify_sections(
+        prs=SectionResult("prs", "ok", payload=prs, count=len(prs), observed_at="2026-10-16T06:00:00Z"),
+        prs_merged=SectionResult(
+            "prs_merged",
+            "ok",
+            count=1 if with_history else 0,
+            observed_at="2026-10-16T06:00:00Z",
+            payload=[{"number": 85, "state": "MERGED", "mergedAt": "2026-10-14T12:00:00Z"}] if with_history else [],
+        ),
+        issues=SectionResult(
+            "issues",
+            "ok",
+            count=2,
+            payload=[_issue_row(6001, "Blocked", body="blocked by #9"), _issue_row(6002, "Unknown membership")],
+        ),
+        streams=SectionResult(
+            "streams",
+            "ok",
+            count=2,
+            payload={
+                "membership_certified": True,
+                "streams": {"infra-harness": [10]},
+                "orphans": [],
+                "open_stream_membership": {"6001": ["infra-harness"]},
+            },
+        ),
+        delegate_tasks=SectionResult(
+            "delegate_tasks", "ok", count=1, payload={"total": 1, "tasks": [_task_row("finished", "done", alive=False)]}
+        ),
+        fleet_reviews=SectionResult(
+            "fleet_reviews",
+            "ok",
+            count=1,
+            payload={"total": 1, "reviews": [{"review_id": "unresolved", "repository": REPO, "state": "completed"}]},
+        ),
+    )
+    projection, nxt = history_handlers(sections)
+    assert [r["remote_id"] for r in nxt["queue"]] == ["6001"]
+    assert nxt["digest"]["unscoped_actionable_count"] == 2
+    assert nxt["digest"]["unscoped_unknown"] == {
+        "count": 5,
+        "reason_counts": {
+            "no_ledger": 2,
+            "absent_from_certified_inventory": 1,
+            "task_done_not_delivered": 1,
+            "formal_review_terminal_historical": 1,
+        },
+    }
+    by_id = {r["remote_id"]: r for r in projection["items"]}
+    assert by_id["81"]["lifecycle"] == "open"
+    assert by_id["82"]["lifecycle"] == "draft"
+    assert by_id["finished"]["lifecycle"] == "done"
+    if with_history:
+        assert by_id["84"]["lifecycle"] == "closed"
+        assert by_id["85"]["lifecycle"] == "merged"

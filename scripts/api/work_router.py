@@ -539,16 +539,19 @@ def _known_streams(ctx: MonitorContext | None = None) -> list[str] | None:
 
 
 def _unscoped_unknown_digest(items: list[dict[str, Any]], stream: str) -> dict[str, Any]:
-    """Unknown rows that are not already on this lane's pick list.
+    """Unknown work that is not already on this lane's pick list.
 
     An empty stream queue must not read as "no remaining work". A row that
     still names the requested stream is counted here when it is not actionable,
     so ``source_ok: false`` cannot drop it. Rows already on the pick list stay
-    there and are not counted twice.
+    there and are not counted twice. Terminal PRs are historical evidence,
+    whose current readiness is inapplicable, rather than uncertain work.
     """
     reason_counts: dict[str, int] = {}
     count = 0
     for item in items:
+        if item.get("resource_kind") == "pr" and item.get("lifecycle") in {"merged", "closed"}:
+            continue
         action = item.get("safe_next_action") if isinstance(item.get("safe_next_action"), dict) else {}
         stream_status = ((item.get("projections") or {}).get("stream") or {}).get("status")
         unknown = (
