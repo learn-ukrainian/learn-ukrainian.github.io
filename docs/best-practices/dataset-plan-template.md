@@ -19,9 +19,10 @@ Standard: [dataset engineering](dataset-engineering.md). All blanks block their 
 - Frozen universe, source/field/stratum counts and dispositions: <manifest/digest>.
 - Unknown denominator: <owner, event, blocked operation; never an invented total>.
 - Sources: <edition/snapshot/checksum, locator, facet, provenance/licence record>.
-- Rights: <internal-use disposition; separate redistribution/permission evidence>.
+- Rights: <decided internal use; private-transfer owner/authority/scope receipt; public review; project licence decision; upstream grants/attribution survive access terms>.
 - Mixed fields and derivatives: <field-level licence, attribution, dependencies>.
-- Splits: <source/author/book/lexeme boundaries, applicability, weights>.
+- Consumer train/test splits: <source/author/book/lexeme boundaries, applicability>.
+- Protected audit partitions: <independent closures, ordinary release dispositions, no membership-revealing release complement; private draw state, public resampling seed only>.
 - Exact/near dedup and contamination: <algorithm, threshold, scope, unresolveds>.
 
 ## Human gold and measurement
@@ -30,12 +31,15 @@ Standard: [dataset engineering](dataset-engineering.md). All blanks block their 
 - Seal: <authority/signature, manifest SHA, UTC date, isolation/access receipts>.
 - Custody: <separate control, denied author membership/answers, alias closure>.
 - Disclosed development/training: <manifest, disjointness, no final-test use>.
-- Sealed calibration: <n/units/strata, candidate judges/rubrics, selection rule>.
+- Sealed calibration: <n/units/cells; complete two-family/tool/rule/screener workflows; shared errors, selection rule>.
 - Pilot-certification inputs: <separate n/units/strata, evaluator and custody>.
 - Untouched final release test: <separate n/units/strata, evaluator and custody>.
 - Rubric and critical failures: <fixed version, error/abstention costs>.
-- Numeric thresholds: <overall and per field/source, sample-size/precision rationale>.
-- IAA: <statistic, prevalence/marginals, raw agreement, human adjudication>.
+- Acceptance plan: <AQL/rejectable rate, producer/consumer risks, n/c, OC pass probabilities/dependence, exact c>0 bounds, familywise confidence, finite-pool feasibility; distinct estimation>.
+- Numeric thresholds: <all structural count and field-quality gates pass; denominators, no silent precedence or quality-bar reduction>.
+- Human-negative test: <conditional false acceptance, independent enrichment/minimum cells, inclusion probabilities/weights, prevalence limits/CIs, sensitivity/specificity; accept-all and abstain-all must fail>.
+- Human labels: <rating unit/task, two independent humans, reliability CI/prevalence/skew/undefined cases; blind unlabelled dispute readjudication, preserve originals and audit agreements>.
+- Human capacity: <named labelers/steward, hours/uncertainty, adjudication/screening budget, measured timing; exhaustion stop before ratification/execution>.
 - Denominators: <all sampled, missing labels/abstentions, eligible label pairs>.
 - CIs: <method/confidence, seed/resamples, clusters, multiplicity, rare errors>.
 - Freeze selection before evaluation: <judge/prompt/parser/config/tool digests>.
@@ -52,12 +56,12 @@ Standard: [dataset engineering](dataset-engineering.md). All blanks block their 
 
 ## Release, stopping, and completion
 
-- Card/Croissant/RAI: <substantive fields, pinned validators and receipts>.
+- Card/Croissant/RAI: <substantive fields, synthetic-data status, group vs record rates, pinned validators/receipts>.
 - Rebuild: <pinned sources/code/config/tools/seeds, clean-room command/comparison>.
-- Visibility/access: <private default, namespace verified, gold separately isolated>.
+- Visibility/access: <private default, verified namespace, effective repo grants/entitlement dependency and operator topology decision; gold separately isolated>.
 - Public-only conditions: <per-source redistribution review and current operator GO>.
 - Capacity/retention: <measured bytes/versions/reserve, overage stop, release archive>.
-- Maintenance/takedown: <source-change trigger, access suppression, replacement>.
+- Maintenance/takedown: <named owner/response target, scope/evidence; withdrawal vs body purge, supported history/LFS/ref action, separate operator authorization per destructive event, retired-ref verification and client-copy residual>.
 - Stop/residual: <failures, two-round limit, owner and exact unblocking event>.
 - DoD: <untouched-test semantic proof, same-artifact review, release/hygiene evidence>.
 - Receipt schema: <criterion, status, actor/time, inputs/artifact/code, metric/CI, digest>.
