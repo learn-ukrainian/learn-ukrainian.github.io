@@ -9,10 +9,12 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import signal
 import subprocess
 import sys
+import tempfile
 from contextlib import contextmanager
 from dataclasses import dataclass
 from pathlib import Path
@@ -29,6 +31,7 @@ from scripts.publish.github import read
 
 ROOT = Path(__file__).resolve().parents[2]
 MAX_AGE_S = 3600
+MEMBERSHIP_CACHE_SCHEMA_VERSION = 1
 # delegate.py gives --issue --strict 135 seconds: 60 for the issue, 60 for
 # membership (cache validation and any live audit included), 15 for overhead.
 NON_OVERRIDABLE = frozenset({"dod_structure_malformed", "membership_conflicting_ancestry"})
@@ -51,8 +54,8 @@ def section(status: str, errors: list[dict] | None = None, **details) -> dict:
     return {"status": status, "errors": errors or [], **details}
 
 
-def membership_error(code: str) -> dict:
-    return section("WARN", [error("membership", "ancestry", code, code.replace("_", " "))])
+def membership_error(code: str, message: str | None = None) -> dict:
+    return section("WARN", [error("membership", "ancestry", code, message or code.replace("_", " "))])
 
 
 @contextmanager
@@ -189,6 +192,86 @@ def _claim(issue: dict, roots: list[int], index: dict, parents: dict) -> int | N
     return None
 
 
+def _audit_refusal(report: dict, repository: str, registry: dict) -> dict | None:
+    if not audit.membership_report_is_complete(report):
+        return membership_error("membership_audit_incomplete")
+    if audit.validate_membership_report(report, MAX_AGE_S) is None:
+        return membership_error("membership_audit_stale")
+    observed_repository = report.get("repository")
+    if not isinstance(observed_repository, str) or observed_repository.casefold() != repository.casefold():
+        return membership_error("membership_audit_repository_mismatch")
+    if report.get("streams") != {k: sorted(v) for k, v in registry.items()}:
+        return membership_error("membership_audit_registry_mismatch")
+    if "schema_version" in report and (
+        type(report["schema_version"]) is not int or report["schema_version"] != MEMBERSHIP_CACHE_SCHEMA_VERSION
+    ):
+        return membership_error("membership_audit_cache_schema")
+    if "schema_version" in report and (
+        (results := _membership_root_results(report, registry)) is None or report.get("root_results") != results
+    ):
+        return membership_error("membership_audit_cache_schema")
+    return None
+
+
+def _membership_root_results(report: dict, registry: dict) -> dict | None:
+    """Group the validated effective index by root, refusing conflicting owners."""
+    roots = {n for ns in registry.values() for n in ns}
+    if any(
+        w["code"] == "unresolved_subissue"
+        and (not audit._is_positive_int(w.get("issue")) or w["issue"] in roots)
+        for w in report.get("warnings") or ()
+    ):
+        return None
+    numbers = report.get("open_issue_numbers")
+    if (
+        not isinstance(numbers, list)
+        or len(numbers) >= 500
+        or len(set(numbers)) != len(numbers)
+        or type(report.get("open_total")) is not int
+        or report.get("open_total") != len(numbers)
+        or report.get("multi_homed") != []
+    ):
+        return None
+    root_results = {str(n): {"native": [], "body": []} for n in sorted(roots)}
+    stream_of = {n: key for key, ns in registry.items() for n in ns}
+    for number, entry in report["effective_membership"].items():
+        if entry["unique_stream"] is not True or entry["epics"][0] not in roots:
+            return None
+        epic = entry["epics"][0]
+        if entry["streams"] != [stream_of[epic]]:
+            return None
+        root_results[str(epic)][entry["via"]].append(int(number))
+    for result in root_results.values():
+        for members in result.values():
+            members.sort()
+    return root_results
+
+
+def write_membership_cache(report: dict, repository: str, registry: dict, *, root: Path | None = None) -> bool:
+    """Publish only fresh, complete, conflict-free evidence beside the shared cache."""
+    if _audit_refusal(report, repository, registry):
+        return False
+    root_results = _membership_root_results(report, registry)
+    if root_results is None:
+        return False
+    payload = json.dumps(
+        {**report, "schema_version": MEMBERSHIP_CACHE_SCHEMA_VERSION, "root_results": root_results},
+        ensure_ascii=False, sort_keys=True,
+    ) + "\n"
+    path = main_checkout_root(ROOT if root is None else root) / "batch_state/issue_stream_audit.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    descriptor, temporary = tempfile.mkstemp(prefix=".issue-stream-audit-", suffix=".json", dir=path.parent)
+    try:
+        with os.fdopen(descriptor, "w", encoding="utf-8") as handle:
+            handle.write(payload)
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.replace(temporary, path)
+    finally:
+        Path(temporary).unlink(missing_ok=True)
+    return True
+
+
 def evaluate_membership(
     issue: dict, repository: str, number: int, registry: dict, parents: dict, report: dict | None = None
 ) -> dict:
@@ -197,15 +280,9 @@ def evaluate_membership(
     if number in roots:
         return section("root_exempt")
     if report is not None:
-        if not audit.membership_report_is_complete(report):
-            return membership_error("membership_audit_incomplete")
-        if audit.validate_membership_report(report, MAX_AGE_S) is None:
-            return membership_error("membership_audit_stale")
-        observed_repository = report.get("repository")
-        if not isinstance(observed_repository, str) or observed_repository.casefold() != repository.casefold():
-            return membership_error("membership_audit_repository_mismatch")
-        if report.get("streams") != {k: sorted(v) for k, v in registry.items()}:
-            return membership_error("membership_audit_registry_mismatch")
+        refusal = _audit_refusal(report, repository, registry)
+        if refusal:
+            return refusal
     index = (report or {}).get("effective_membership", {})
     entry = index.get(str(number), {})
     if entry and entry.get("unique_stream") is not True:
@@ -235,6 +312,18 @@ def evaluate_membership(
     )
     if result["valid"]:
         return section("PASS", pending_native_link=result["method"] == "body")
+    if (
+        report is not None and parents.get(number) is None and not entry
+        and number in report.get("open_issue_numbers", [])
+        and not any(w["code"] == "unresolved_subissue" for w in report.get("warnings") or ())
+    ):
+        return membership_error(
+            "membership_unregistered_parentless",
+            f"Issue #{number} has no native parent and no registered stream membership. "
+            f"Register #{number} as a native sub-issue of one registered stream root or its overflow container; "
+            f"if the native link is at capacity, add '- [ ] #{number}' to exactly one registered root's body "
+            "and refresh the membership audit.",
+        )
     reason = result["reason"]
     if any(s in reason for s in ("cyclic", "crosses a repository", "different registered", "multi-homed")):
         code = "membership_conflicting_ancestry"
@@ -290,12 +379,20 @@ def observe_membership(issue: dict, repository: str, number: int, *, audit_orpha
         if audit_orphans and parents.get(number) is None:
             progress.stage = "cached_audit_validation"
             cached = cached_membership(issue, repository, number, registry, parents)
-            if cached["status"] == "PASS":
+            if cached["status"] == "PASS" or cached["errors"][0]["code"] == "membership_unregistered_parentless":
                 return cached
             cache_rejection = cached["errors"][0]["code"]
             progress.stage = "live_audit"
             report = live_audit(repository, registry, progress=progress)
         result = evaluate_membership(issue, repository, number, registry, parents, report)
+        if report is not None and (
+            result["status"] == "PASS" or result["errors"][0]["code"] == "membership_unregistered_parentless"
+        ):
+            progress.stage = "live_audit_cache_write"
+            try:
+                write_membership_cache(report, repository, registry)
+            except OSError:
+                result["cache_write_error"] = "membership_audit_cache_write_failed"
     except (_DeadlineExpired, TimeoutError, subprocess.TimeoutExpired):
         code = "membership_timeout" if progress.stage.startswith("parent_") else f"membership_timeout_{progress.stage}"
         result = membership_error(code)
@@ -569,7 +666,8 @@ def main(argv: list[str] | None = None) -> int:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="Examples:\n  .venv/bin/python -m scripts.ci.check_issue_task_quality --issue 10565 --strict --json\n"
         "  .venv/bin/python -m scripts.ci.check_issue_task_quality --body-file card.md\n"
-        "Outputs: stdout only; no audit cache writes. Issue fetch and membership each have a 60-second budget.\n"
+        "Outputs: stdout; successful complete live membership audits atomically refresh batch_state/issue_stream_audit.json.\n"
+        "Issue fetch and membership each have a 60-second budget.\n"
         "Parentless targets try a validated audit cache (maximum age 3600s) before a live audit.\n"
         "Timeout codes identify the target fetch, cache validation, or live audit root and issue.\n"
         "Exit codes: 0 = advisory or PASS; 1 = strict WARN; 2 = invalid arguments.\n"

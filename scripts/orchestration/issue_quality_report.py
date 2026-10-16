@@ -34,6 +34,7 @@ CODES = frozenset(
         "membership_registry_absent",
         "membership_audit_incomplete",
         "membership_audit_stale",
+        "membership_audit_cache_write_failed",
         "checker_error",
     }
 )
@@ -92,11 +93,24 @@ def collect_repository(repo) -> tuple[list[dict] | None, int | None, dict | None
     if repo.role == "public-monorepo":
         try:
             # Exactly one audit per repository, no per-issue ancestry walks.
-            report = audit.run_audit(ROOT)
+            registry = checker.registry_for(repo.github)
+            if not registry:
+                raise ValueError("membership registry absent")
+            # Avoid run_audit's unvalidated, checkout-local cache write.
+            # Publish only after the independent census reconciles.
+            report = checker.live_audit(repo.github, registry, root=ROOT)
         except github_client.GitHubRateLimited:
             codes.append("rate_limited")
         except Exception:
             codes.append("membership_audit_incomplete")
+        if (
+            report is not None and issues is not None and count == len(issues) and len(issues) < LIMIT
+            and sorted(i["number"] for i in issues) == report.get("open_issue_numbers")
+        ):
+            try:
+                checker.write_membership_cache(report, repo.github, registry, root=ROOT)
+            except OSError:
+                codes.append("membership_audit_cache_write_failed")
     return issues, count, report, codes
 
 
@@ -261,7 +275,7 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description="Prepare daily counts-only issue quality for all fleet repositories.\nUse --publish from the daily timer; default only persists and prints.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="Examples:\n  .venv/bin/python -m scripts.orchestration.issue_quality_report\n  .venv/bin/python -m scripts.orchestration.issue_quality_report --publish --sender devops\nOutputs: ignored batch_state/reports/issue-quality-report-<UTC date>.json; --publish sends the same bytes on retry.\nExit codes: 0 = persisted/published; 1 = preparation or publication failed; 2 = invalid usage.\nRelated: #10565, docs/best-practices/task-quality.md.",
+        epilog="Examples:\n  .venv/bin/python -m scripts.orchestration.issue_quality_report\n  .venv/bin/python -m scripts.orchestration.issue_quality_report --publish --sender devops\nOutputs: ignored batch_state/reports/issue-quality-report-<UTC date>.json; --publish sends the same bytes on retry.\nComplete conflict-free membership audits atomically refresh shared batch_state/issue_stream_audit.json (3600s freshness).\nExit codes: 0 = persisted/published; 1 = preparation or publication failed; 2 = invalid usage.\nRelated: #10565, #10793, docs/best-practices/task-quality.md.",
     )
     parser.add_argument("--publish", action="store_true", help="Publish persisted payload to epics (default: false)")
     parser.add_argument("--sender", default="devops", help="Fleet Comms sender (default: devops)")

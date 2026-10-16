@@ -64,8 +64,30 @@ the exact target number must have unique body membership for the claimed root.
 An invalid, conflicting, missing or unreadable cache cannot admit the target.
 It falls back to a live audit within the same membership budget. A failed
 fallback records both its typed refusal and the cache rejection reason. Native
-parent traversal does not read the cache or run the audit. Neither path writes
-the audit cache.
+parent traversal does not read the cache or run the audit.
+
+The daily issue-quality report and successful bounded live checks publish the
+cache through `write_membership_cache`. It validates the repository, current
+registry, complete traversal, listing denominator and conflict-free effective
+membership before writing. A sibling temporary file is flushed and synced,
+then renamed over the shared cache atomically. Failed validation or a failed
+write leaves the previous cache intact. The payload retains the audit's original
+`generated_at`, `membership_complete`, index and open-issue numbers. It adds
+`schema_version: 1` and `root_results`, which lists each registered root's
+effective native and body members. Readers validate versioned per-root results
+against the index; existing unversioned audit reports retain their canonical
+validation. No new process or timer is required. Daily publication retries
+reuse the saved report bytes and do not renew the membership timestamp.
+
+A parentless issue resolves only when the audit records exact unique body
+membership, even if its own title or body has no parent claim. A valid audit
+that observed the open target but found no stream returns
+`membership_unregistered_parentless`, without repeating the live audit. Its
+message gives the registration step: link the issue as a native sub-issue of
+one registered root or its overflow container. If native linking is at capacity,
+add `- [ ] #N` to exactly one registered root's body and refresh the audit.
+A target absent from the snapshot still needs a live audit. A fresh cache
+does not register a new issue by itself.
 
 Issue fetching and membership observation each have a 60-second budget,
 including cache validation and the entire live audit. Together they leave 15

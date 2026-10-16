@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import subprocess
 from datetime import UTC, datetime
+from unittest.mock import Mock
 
 import pytest
 
@@ -127,13 +128,72 @@ def test_collection_uses_one_audit_and_independent_count(monkeypatch):
         return subprocess.CompletedProcess([], 0, '{"data":{"repository":{"issues":{"totalCount":612}}}}', "")
 
     monkeypatch.setattr(report, "read", read)
-    monkeypatch.setattr(report.audit, "run_audit", lambda *a: calls.append("audit") or audit_report())
+    monkeypatch.setattr(report.checker, "registry_for", lambda *a: REGISTRY)
+    monkeypatch.setattr(report.checker, "live_audit", lambda *a, **k: calls.append("audit") or audit_report())
+    monkeypatch.setattr(report.checker, "write_membership_cache", lambda *a, **k: pytest.fail("census incomplete"))
     issues, count, _, codes = report.collect_repository(PUBLIC)
     assert issues == [{"number": 123}] and count == 612 and codes == []
     assert calls == ["issue-count", "audit"]
     calls.clear()
     report.collect_repository(PRIVATE)
     assert calls == ["issue-count"]
+
+
+def stub_collection(monkeypatch, tmp_path, *, count=1, membership=None):
+    monkeypatch.setattr(report, "ROOT", tmp_path)
+    monkeypatch.setattr(report.checker, "ROOT", tmp_path)
+    monkeypatch.setattr(report.github_client, "check_output", lambda *a, **k: '[{"number":123}]')
+    monkeypatch.setattr(report, "read", lambda *a, **k: subprocess.CompletedProcess(
+        [], 0, json.dumps({"data": {"repository": {"issues": {"totalCount": count}}}}), ""
+    ))
+    monkeypatch.setattr(report.checker, "registry_for", lambda *a: REGISTRY)
+    snapshot = membership if membership is not None else audit_report(body=[123])
+    live = Mock(return_value=snapshot)
+    monkeypatch.setattr(report.checker, "live_audit", live)
+    return live
+
+
+def test_daily_report_writes_cache_consumed_by_parentless_checker(monkeypatch, tmp_path):
+    live = stub_collection(monkeypatch, tmp_path)
+    issues, count, membership, codes = report.collect_repository(PUBLIC)
+    assert issues == [{"number": 123}] and count == 1 and codes == []
+    live.assert_called_once_with(REPO, REGISTRY, root=tmp_path)
+    path = tmp_path / "batch_state/issue_stream_audit.json"
+    payload = json.loads(path.read_text())
+    assert payload["schema_version"] == 1
+    assert payload["generated_at"] == membership["generated_at"]
+    assert payload["membership_complete"] is True
+    monkeypatch.setattr(report.checker, "read_parent", lambda *a: None)
+    live.reset_mock()
+    assert report.checker.observe_membership({}, REPO, 123) == {
+        "status": "PASS", "errors": [], "pending_native_link": True,
+    }
+    live.assert_not_called()
+
+
+@pytest.mark.parametrize("count,change", [
+    (2, {}), (None, {}), (1, {"open_issue_numbers": [124]}),
+    (1, {"membership_complete": False}), (1, {"generated_at": 0}),
+])
+def test_daily_report_never_publishes_unverified_cache(monkeypatch, tmp_path, count, change):
+    stub_collection(monkeypatch, tmp_path, count=count, membership={**audit_report(body=[123]), **change})
+    report.collect_repository(PUBLIC)
+    assert not (tmp_path / "batch_state/issue_stream_audit.json").exists()
+
+
+def test_daily_report_cache_failure_is_typed_and_redacted(monkeypatch, tmp_path):
+    stub_collection(monkeypatch, tmp_path)
+
+    def fail(*a, **k):
+        raise OSError("PRIVATE_CANARY")
+
+    monkeypatch.setattr(report.checker, "write_membership_cache", fail)
+    issues, count, membership, codes = report.collect_repository(PUBLIC)
+    assert codes == ["membership_audit_cache_write_failed"]
+    result = summarize(issues, count, membership, codes)
+    assert result["coverage"] == "incomplete"
+    assert result["incomplete_codes"] == codes
+    assert "CANARY" not in json.dumps(result)
 
 
 def test_collection_redacts_exception_data(monkeypatch):
