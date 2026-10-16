@@ -388,6 +388,12 @@ def run_git(
                 raise ValueError("unsupported restore operation")
             # No caller-supplied flags or option-like paths can reach Git.
             args = [*args[:-2], "--", *args[-2:]]
+        elif len(args) >= 2 and args[1] == "move":
+            # The clean-pushed reaper's quarantine (#10778): one absolute
+            # source and destination, no caller flags (never --force).
+            if len(args) != 4 or not all(Path(arg).is_absolute() for arg in args[2:]):
+                raise ValueError("unsupported worktree move operation")
+            args = ["worktree", "move", "--", *args[2:]]
         elif len(args) < 2 or args[1] not in {"list", "remove", "unlock"}:
             raise ValueError("unsupported worktree operation")
     if args[0] == "remote" and (len(args) < 2 or args[1] not in {"get-url"}):
@@ -424,6 +430,9 @@ def run_git(
     if args[0] == "worktree" and args[1] == "remove":
         target = Path(args[-1])
         roots.append((target if target.is_absolute() else Path(cwd) / target, True))
+    if args[0] == "worktree" and args[1] == "move":
+        # Git reads the moved checkout's index for submodules.
+        roots.append((Path(args[-2]), True))
     keys, failure = _execution_keys(prefix, roots, safe_env, timeout)
     if failure is not None:
         # No unchecked command can follow a failed configuration inventory.

@@ -26,6 +26,7 @@ import argparse
 import contextlib
 import contextvars
 import fcntl
+import hashlib
 import json
 import os
 import re
@@ -34,9 +35,10 @@ import signal
 import stat
 import subprocess
 import sys
+import tempfile
 import time
-from collections.abc import Iterator
-from dataclasses import asdict, dataclass, replace
+from collections.abc import Callable, Iterator
+from dataclasses import asdict, dataclass, field, replace
 from pathlib import Path
 from typing import Any
 from urllib.error import HTTPError, URLError
@@ -180,6 +182,7 @@ def _run(
     cwd: Path,
     timeout: float | None = None,
     env_overrides: dict[str, str] | None = None,
+    input_text: str | None = None,
 ) -> subprocess.CompletedProcess[str]:
     env = sanitized_git_env()
     if env_overrides:
@@ -197,8 +200,17 @@ def _run(
     if args and args[0] == "git":
         command = args[1] if len(args) > 1 else ""
         profile = "remote" if command in REMOTE_COMMANDS else "commit" if command in COMMIT_COMMANDS else "local"
+        stdin: dict[str, Any] = {} if input_text is None else {"input": input_text}
         return safe_git(
-            args[1:], cwd=cwd, profile=profile, capture_output=True, text=True, check=False, timeout=timeout, env=env
+            args[1:],
+            cwd=cwd,
+            profile=profile,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=timeout,
+            env=env,
+            **stdin,
         )
     return subprocess.run(
         args,
@@ -4994,7 +5006,7 @@ def _reap_qualified_worktree(
         if merged_reuse_proof is not None:
             preservation_receipt["merged_head_proof"] = merged_reuse_proof
         foreign_root = None if is_under_worktrees(repo_root, info.path) else _foreign_scratch_root(repo_root, info.path)
-        approval = {} if foreign_root is None else {"approved_temp_roots": (foreign_root,)}
+        approval: dict[str, Any] = {} if foreign_root is None else {"approved_temp_roots": (foreign_root,)}
         target = info.path
         if merged_reuse_proof is not None or reason.endswith("MERGED; patch-equivalent"):
             try:
@@ -5602,6 +5614,16 @@ _CLEAN_PUSHED_PROBE_TIMEOUT_S = 10.0
 _CLEAN_PUSHED_STATUS_TIMEOUT_S = 15.0
 _CLEAN_PUSHED_WORKTREE_LOCK_TIMEOUT_S = 5.0
 _CLEAN_PUSHED_LIVE_STATUSES = frozenset({"spawning", "running"})
+_CLEAN_PUSHED_FETCH_TIMEOUT_S = 60.0
+_CLEAN_PUSHED_MOVE_TIMEOUT_S = 60.0
+# Same depth as ``.worktrees/dispatch/<agent>/<task>/``: a checkout waits here
+# as ``.worktrees/.reaping/<agent>-<random>/<task>/`` between its last check
+# and its removal.
+QUARANTINE_RELATIVE = Path(".worktrees") / ".reaping"
+UNPUBLISHED_REFLOG_COMMIT = "unpublished_reflog_commit"
+UNINSPECTABLE_PROCESS = "uninspectable_process"
+LATE_CHANGE = "late_change"
+REFS_STALE = "refs_stale"
 
 
 @dataclass(frozen=True)
@@ -5629,7 +5651,12 @@ class CleanPushedReport:
     ``removed`` holds the trees removed, or in a dry run the trees that would
     be. ``skipped`` holds every refusal and failed removal with its reason.
     ``refusal`` is set when the whole run did nothing, for example because
-    another cleanup held the reaper lock (``lock_busy``).
+    another cleanup held the reaper lock (``lock_busy``) or ``git fetch
+    --prune origin`` failed (``refs_stale``). ``uninspectable`` lists pids of
+    this user's processes whose open files could not be read (every tree is
+    then kept), ``late_change`` the trees that changed between their last
+    check and removal, and ``unpublished_reflog_commit`` the trees whose HEAD
+    reflog names a commit no origin ref contains.
     """
 
     dry_run: bool
@@ -5638,6 +5665,10 @@ class CleanPushedReport:
     freed_mb: int
     lock_busy: bool = False
     refusal: str | None = None
+    refs_stale: bool = False
+    uninspectable: tuple[int, ...] = ()
+    late_change: tuple[str, ...] = ()
+    unpublished_reflog_commit: tuple[str, ...] = ()
 
     def as_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -5783,17 +5814,77 @@ def _inside(target: str, root: str) -> bool:
     return target == root or target.startswith(f"{root}/")
 
 
-def _proc_users_inside(root: Path, *, deadline: float, proc_root: Path = Path("/proc")) -> bool | None:
+def _proc_status(base: Path) -> dict[str, str] | None:
+    """Fields of ``/proc/<pid>/status``, world-readable even for a non-dumpable process; ``None`` once it exited."""
+    try:
+        text = (base / "status").read_text(encoding="utf-8", errors="replace")
+    except OSError:
+        return None
+    return {key: value.strip() for key, _, value in (line.partition(":") for line in text.splitlines()) if value}
+
+
+def _session_infrastructure(base: Path, status: dict[str, str], uid: int, proc_root: Path) -> bool:
+    """A non-dumpable process of this user that never works inside a checkout.
+
+    Only two kinds, both identified by kernel facts rather than by what the
+    process reports about itself: the user's systemd manager and its
+    ``(sd-pam)`` helper, the only members of the manager's ``init.scope``
+    cgroup (systemd starts every unit, including dispatch workers, in a
+    cgroup of its own); and OpenSSH's per-connection ``sshd-session`` whose
+    parent is the root-owned privileged ``sshd-session``/``sshd``.
+    """
+    try:
+        cgroup = (base / "cgroup").read_text(encoding="utf-8", errors="replace").splitlines()
+    except OSError:
+        return False
+    if cgroup == [f"0::/user.slice/user-{uid}.slice/user@{uid}.service/init.scope"]:
+        return True
+    sshd = {"sshd-session", "sshd"}
+    if status.get("Name") not in sshd:
+        return False
+    parent = _proc_status(proc_root / status.get("PPid", ""))
+    return parent is not None and parent.get("Name") in sshd and parent.get("Uid", "").split()[:1] == ["0"]
+
+
+def _uninspectable_same_user(base: Path, proc_root: Path) -> bool:
+    """True when a live process of this user denied inspection (it is not dumpable).
+
+    Zombies and kernel threads have nothing to inspect. A process whose
+    real, effective or saved uid differs is another user's, which this scan
+    cannot see, exactly as ``fuser`` cannot.
+    """
+    status = _proc_status(base)
+    if status is None:
+        return False
+    if status.get("State", "")[:1] in {"Z", "X"} or status.get("PPid") == "2" or base.name == "2":
+        return False
+    uid = os.getuid()
+    if status.get("Uid", "").split()[:3] != [str(uid)] * 3:
+        return False
+    return not _session_infrastructure(base, status, uid, proc_root)
+
+
+def _proc_users_inside(
+    root: Path,
+    *,
+    deadline: float,
+    proc_root: Path = Path("/proc"),
+    uninspectable: list[int] | None = None,
+) -> bool | None:
     """True when a visible process has its cwd, root, executable, an open or a mapped file inside ``root``.
 
     ``fuser <dir>`` reports only processes using the directory itself; this
     also covers a shell or test runner whose working directory is a
-    subdirectory. ``None`` when the process table cannot be listed or the
-    scan runs out of time. Processes this user may not inspect are invisible
-    here, exactly as they are to ``fuser``.
+    subdirectory, and a working directory that is ``root``'s inode under
+    another name. ``None`` when the process table cannot be listed or the
+    scan runs out of time. A live process of this user that denies
+    inspection is appended to ``uninspectable`` (#10778): it may be using
+    ``root``. Other users' processes are invisible here, as they are to
+    ``fuser``.
     """
     prefix = str(root)
     try:
+        identity = (root.stat().st_dev, root.stat().st_ino)
         entries = [entry for entry in os.scandir(proc_root) if entry.name.isdigit()]
     except OSError:
         return None
@@ -5803,28 +5894,52 @@ def _proc_users_inside(root: Path, *, deadline: float, proc_root: Path = Path("/
         if time.monotonic() >= deadline:
             return None
         base = Path(entry.path)
+        denied = False
         links = [base / "cwd", base / "root", base / "exe"]
-        with contextlib.suppress(OSError):
+        try:
             links.extend((base / "fd").iterdir())
+        except PermissionError:
+            denied = True
+        except OSError:
+            pass
         for link in links:
             try:
                 if _inside(os.readlink(link), prefix):
                     return True
+            except PermissionError:
+                denied = True
             except OSError:
                 continue
         try:
-            maps = (base / "maps").read_text(encoding="utf-8", errors="replace")
+            cwd = (base / "cwd").stat()
+            if (cwd.st_dev, cwd.st_ino) == identity:
+                return True
+        except PermissionError:
+            denied = True
         except OSError:
-            continue
+            pass
+        try:
+            maps = (base / "maps").read_text(encoding="utf-8", errors="replace")
+        except PermissionError:
+            denied = True
+            maps = ""
+        except OSError:
+            maps = ""
         for line in maps.splitlines():
             fields = line.split(None, 5)
             if len(fields) == 6 and _inside(fields[5], prefix):
                 return True
+        if denied and uninspectable is not None and _uninspectable_same_user(base, proc_root):
+            uninspectable.append(int(entry.name))
     return None if time.monotonic() >= deadline else False
 
 
-def _process_refusal(path: Path) -> str | None:
-    """Refuse when ``fuser`` or the process table shows a user; any probe failure counts as in use."""
+def _process_refusal(path: Path, uninspectable: set[int] | None = None) -> str | None:
+    """Refuse when ``fuser`` or the process table shows a user; any probe failure counts as in use.
+
+    ``uninspectable`` collects this run's uninspectable pids; once it holds
+    one, every tree is kept for the rest of the run.
+    """
     fuser = _FUSER if os.path.isabs(_FUSER) else shutil.which(_FUSER)
     if fuser is None or not os.access(fuser, os.X_OK):
         return "fuser unavailable; treated as in use"
@@ -5839,16 +5954,129 @@ def _process_refusal(path: Path) -> str | None:
     if proc.returncode != 1 or (proc.stderr or "").strip() or (proc.stdout or "").strip():
         return f"fuser failed (exit {proc.returncode}); treated as in use"
     budget = _effective_timeout(_CLEAN_PUSHED_PROBE_TIMEOUT_S)
-    users = _proc_users_inside(path, deadline=time.monotonic() + (budget or 0.0))
+    denied: list[int] = []
+    users = _proc_users_inside(path, deadline=time.monotonic() + (budget or 0.0), uninspectable=denied)
     if users is None:
         return "process table probe unavailable; treated as in use"
     if users:
         return "in use: a process works inside the checkout"
+    if uninspectable is not None:
+        uninspectable.update(denied)
+        denied = sorted(uninspectable)
+    if denied:
+        return f"{UNINSPECTABLE_PROCESS} {denied[0]}: a process of this user cannot be inspected"
+    return None
+
+
+_INDEX_MODES = {"100644": False, "100755": True}
+
+
+def _matches_index(file: Path, info: os.stat_result, mode: str, blob: str, algorithm: str) -> bool:
+    """True when ``file`` on disk is byte-identical to its index blob, with the same type and exec bit."""
+    if mode == "120000":
+        if not stat.S_ISLNK(info.st_mode):
+            return False
+        target = os.fsencode(os.readlink(file))
+        digest = hashlib.new(algorithm, f"blob {len(target)}\0".encode())
+        digest.update(target)
+        return digest.hexdigest() == blob
+    if mode not in _INDEX_MODES:
+        return False  # a gitlink or an unknown mode: never proven unchanged
+    if not stat.S_ISREG(info.st_mode) or bool(info.st_mode & 0o111) != _INDEX_MODES[mode]:
+        return False
+    digest = hashlib.new(algorithm, f"blob {info.st_size}\0".encode())
+    read = 0
+    with file.open("rb", buffering=0) as handle:  # raw bytes: no clean/smudge filter
+        while chunk := handle.read(1 << 20):
+            read += len(chunk)
+            digest.update(chunk)
+    return read == info.st_size and digest.hexdigest() == blob
+
+
+def _hidden_change_refusal(path: Path) -> str | None:
+    """Refuse when an assume-unchanged or skip-worktree file present on disk differs from the index (#10778).
+
+    ``git status`` and ``git worktree remove`` both trust those flags, so an
+    edit behind them is invisible to every other guard. A sparse checkout's
+    excluded entries carry skip-worktree with no file on disk; they pass.
+    Unfiltered bytes are compared, so a clean/smudge difference refuses too.
+    """
+    form = _run(["git", "rev-parse", "--show-object-format"], cwd=path, timeout=_CLEAN_PUSHED_PROBE_TIMEOUT_S)
+    algorithm = (form.stdout or "").strip()
+    if form.returncode != 0 or algorithm not in {"sha1", "sha256"}:
+        return "object format unknown"
+    try:
+        listing = _run(["git", "ls-files", "-v", "-s", "-z"], cwd=path, timeout=_CLEAN_PUSHED_STATUS_TIMEOUT_S)
+    except ValueError:
+        return "index listing unreadable"
+    if listing.returncode != 0:
+        return "index listing failed"
+    hidden = "hidden change: a file flagged assume-unchanged or skip-worktree differs from the index"
+    for record in (listing.stdout or "").split("\0"):
+        if not record:
+            continue
+        meta, _, name = record.partition("\t")
+        fields = meta.split()
+        if len(fields) != 4 or not name:
+            return "index listing unreadable"
+        tag, mode, blob, _stage = fields
+        if not (tag.islower() or tag == "S"):
+            continue
+        file = path / name
+        try:
+            info = file.lstat()
+        except (FileNotFoundError, NotADirectoryError):
+            continue
+        except OSError:
+            return hidden
+        try:
+            if not _matches_index(file, info, mode, blob, algorithm):
+                return hidden
+        except OSError:
+            return hidden
+    return None
+
+
+def _reflog_refusal(path: Path) -> str | None:
+    """Refuse when a commit this checkout alone records is on no origin ref (#10778).
+
+    Removal deletes the checkout's HEAD reflog and its per-worktree refs
+    (``refs/worktree/``, ``refs/bisect/``, ``refs/rewritten/``), which may be
+    the last references to a commit that was reset away. The stash is shared
+    by every checkout and survives removal.
+    """
+    reflog = _run(["git", "rev-list", "--walk-reflogs", "HEAD"], cwd=path, timeout=_CLEAN_PUSHED_PROBE_TIMEOUT_S)
+    local = _run(
+        ["git", "for-each-ref", "--format=%(objectname)", "refs/worktree/", "refs/bisect/", "refs/rewritten/"],
+        cwd=path,
+        timeout=_CLEAN_PUSHED_PROBE_TIMEOUT_S,
+    )
+    tips = _run(
+        ["git", "for-each-ref", "--format=%(objectname)", "refs/remotes/origin/"],
+        cwd=path,
+        timeout=_CLEAN_PUSHED_PROBE_TIMEOUT_S,
+    )
+    if reflog.returncode != 0 or local.returncode != 0 or tips.returncode != 0:
+        return "reflog check failed"
+    named = dict.fromkeys((reflog.stdout or "").split() + (local.stdout or "").split())
+    if not named:
+        return None
+    revisions = [*named, *(f"^{tip}" for tip in dict.fromkeys((tips.stdout or "").split()))]
+    unpublished = _run(
+        ["git", "rev-list", "--max-count=1", "--stdin"],
+        cwd=path,
+        timeout=_CLEAN_PUSHED_PROBE_TIMEOUT_S,
+        input_text="\n".join(revisions) + "\n",
+    )
+    if unpublished.returncode != 0:
+        return "reflog check failed"
+    if (unpublished.stdout or "").strip():
+        return f"{UNPUBLISHED_REFLOG_COMMIT}: the HEAD reflog names a commit no origin ref contains"
     return None
 
 
 def _git_refusal(path: Path, expected_head: str | None) -> str | None:
-    """HEAD unchanged, ``git status --porcelain`` empty and no commit missing from origin."""
+    """HEAD unchanged, the tree clean (flagged index entries included) and no commit missing from origin."""
     try:
         head = _run(["git", "rev-parse", "--verify", "HEAD"], cwd=path, timeout=_CLEAN_PUSHED_PROBE_TIMEOUT_S)
         if head.returncode != 0:
@@ -5864,6 +6092,9 @@ def _git_refusal(path: Path, expected_head: str | None) -> str | None:
             return "git status failed"
         if (status.stdout or "").strip():
             return "dirty or untracked files"
+        refusal = _hidden_change_refusal(path)
+        if refusal:
+            return refusal
         unpushed = _run(
             ["git", "rev-list", "--max-count=1", "HEAD", "--not", "--remotes=origin"],
             cwd=path,
@@ -5873,9 +6104,9 @@ def _git_refusal(path: Path, expected_head: str | None) -> str | None:
             return "unpushed-commit check failed"
         if (unpushed.stdout or "").strip():
             return "commits not on origin"
+        return _reflog_refusal(path)
     except subprocess.TimeoutExpired:
         return "git probe timed out"
-    return None
 
 
 @dataclass(frozen=True)
@@ -5886,21 +6117,27 @@ class _CleanPushedContext:
     tasks_dir: Path
     index: _TaskIndex
     now: float | None = None
+    uninspectable: set[int] = field(default_factory=set)
 
 
-def _location_refusal(info: WorktreeInfo, ctx: _CleanPushedContext) -> str | None:
+def _location_refusal(info: WorktreeInfo, ctx: _CleanPushedContext, tree: Path) -> str | None:
+    """``info.path`` must be a dispatch checkout; ``tree`` (it, or its quarantine) a real directory."""
     path = info.path
     if path == ctx.primary or path.resolve() == ctx.primary.resolve():
         return "primary checkout"
     try:
         relative = path.relative_to(ctx.dispatch_root)
     except ValueError:
-        return "outside .worktrees/dispatch/"
+        try:
+            path.relative_to(ctx.primary.resolve() / QUARANTINE_RELATIVE)
+        except ValueError:
+            return "outside .worktrees/dispatch/"
+        return "left in the reaper quarantine by an interrupted run; restore it (runbook)"
     if len(relative.parts) != 2:
         return "not a .worktrees/dispatch/<agent>/<task>/ checkout"
     if relative.parts[0] == "acp":
         return "ACP runtime checkout; the ACP sweep owns it"
-    if _real_directory(path) is None:
+    if _real_directory(tree) is None:
         return "path is a symlink, missing, or not a directory"
     return None
 
@@ -5911,10 +6148,17 @@ def _clean_pushed_refusal(
     claims: list[_TaskClaim],
     *,
     recheck: bool,
+    tree: Path | None = None,
 ) -> tuple[str | None, list[_TaskClaim]]:
-    """Every guard of the mode, cheapest first. Returns ``(refusal, current claims)``."""
+    """Every guard of the mode, cheapest first. Returns ``(refusal, current claims)``.
+
+    Identity guards (location, lock, reservation, leases, task claims) judge
+    ``info.path``; content guards (activity, Git, processes) inspect
+    ``tree``, which is ``info.path`` or, after the move, its quarantine.
+    """
     path = info.path
-    refusal = _location_refusal(info, ctx)
+    tree = path if tree is None else tree
+    refusal = _location_refusal(info, ctx, tree)
     if refusal:
         return refusal, claims
     if info.locked_reason is not None:
@@ -5941,7 +6185,7 @@ def _clean_pushed_refusal(
         refusal = _task_claim_refusal(claim.name, claim.record)
         if refusal:
             return refusal, claims
-    sources, refusal = _tree_mtime_sources(path, ctx.common_git_dir)
+    sources, refusal = _tree_mtime_sources(tree, ctx.common_git_dir)
     if refusal:
         return refusal, claims
     required = len(sources[:2])
@@ -5954,10 +6198,10 @@ def _clean_pushed_refusal(
     idle_s = (ctx.now if ctx.now is not None else time.time()) - newest
     if idle_s < CLEAN_PUSHED_MIN_IDLE_S:
         return f"last activity {max(0, int(idle_s // 60))} min ago (< 60 min)", claims
-    refusal = _git_refusal(path, info.head)
+    refusal = _git_refusal(tree, info.head)
     if refusal:
         return refusal, claims
-    return _process_refusal(path), claims
+    return _process_refusal(tree, ctx.uninspectable), claims
 
 
 def _tree_size_mb(root: Path) -> int:
@@ -6024,6 +6268,95 @@ def append_abandon_log(control_root: Path, entry: dict[str, Any]) -> None:
             fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
 
 
+def _refresh_origin_refs(primary: Path) -> str | None:
+    """``git fetch --prune origin`` (no tags, no submodules, bounded); the failure, or ``None``.
+
+    Stale remote-tracking refs would prove a deleted or force-moved commit
+    still on origin. Runs before the reaper lock is taken: no remote read
+    may happen under it.
+    """
+    try:
+        proc = _run(
+            ["git", "fetch", "--no-tags", "origin", "--prune"], cwd=primary, timeout=_CLEAN_PUSHED_FETCH_TIMEOUT_S
+        )
+    except subprocess.TimeoutExpired:
+        return f"git fetch --prune origin timed out after {_CLEAN_PUSHED_FETCH_TIMEOUT_S:g}s"
+    except (OSError, ValueError, subprocess.SubprocessError) as exc:
+        return f"git fetch --prune origin failed ({type(exc).__name__})"
+    if proc.returncode != 0:
+        return f"git fetch --prune origin failed (exit {proc.returncode})"
+    return None
+
+
+def _move_worktree(primary: Path, source: Path, destination: Path) -> str | None:
+    """``git worktree move`` (an atomic rename that git records); the failure, or ``None``."""
+    try:
+        proc = _run(
+            ["git", "worktree", "move", str(source), str(destination)],
+            cwd=primary,
+            timeout=_CLEAN_PUSHED_MOVE_TIMEOUT_S,
+        )
+    except subprocess.TimeoutExpired:
+        return "git worktree move timed out"
+    except (OSError, ValueError, subprocess.SubprocessError) as exc:
+        return f"git worktree move failed ({type(exc).__name__})"
+    if proc.returncode != 0:
+        detail = (proc.stderr or proc.stdout or "").strip().splitlines()
+        return f"git worktree move failed: {detail[-1] if detail else f'exit {proc.returncode}'}"
+    return None
+
+
+def _quarantine_stager(
+    primary: Path, original: Path, verify: Callable[[Path], str | None]
+) -> worktree_claims.RemovalStager:
+    """Move the checkout out of reach, then re-run every guard on it there (#10778).
+
+    After the move no dispatch, shell or worker can reach the checkout by its
+    known path, and a process already inside now shows the quarantine path
+    in ``/proc``, so the guards that pass here are the last word before git
+    removes the quarantined path. A refusal, or a checkout git did not
+    remove, is moved back to ``original``. A failed move-back raises and
+    leaves the checkout, intact, in the quarantine.
+    """
+
+    @contextlib.contextmanager
+    def stage(target: Path) -> Iterator[Path]:
+        root = primary / QUARANTINE_RELATIVE
+        try:
+            root.mkdir(mode=0o700, parents=True, exist_ok=True)
+            if _real_directory(root) is None:
+                raise OSError("quarantine directory is not a real directory")
+            holder = Path(tempfile.mkdtemp(prefix=f"{original.parent.name}-", dir=root))
+        except OSError as exc:
+            raise worktree_claims.RemovalStageRefused(f"quarantine unavailable ({type(exc).__name__})") from None
+        staged = holder / original.name
+        failure = _move_worktree(primary, target, holder)
+        if failure is not None:
+            with contextlib.suppress(OSError):
+                holder.rmdir()
+            if os.path.lexists(staged) or not os.path.lexists(target):
+                raise RuntimeError(f"{failure}; checkout state after the failed move needs inspection")
+            raise worktree_claims.RemovalStageRefused(failure)
+        try:
+            refusal = verify(staged)
+            if refusal:
+                raise worktree_claims.RemovalStageRefused(f"{LATE_CHANGE}: {refusal}")
+            yield staged
+        finally:
+            if os.path.lexists(staged):
+                if os.path.lexists(original):
+                    raise RuntimeError(
+                        f"cannot move the checkout back: {original.name} exists again; kept in quarantine"
+                    )
+                failure = _move_worktree(primary, staged, original)
+                if failure is not None:
+                    raise RuntimeError(f"cannot move the checkout back ({failure}); it is kept in the quarantine")
+            with contextlib.suppress(OSError):
+                holder.rmdir()
+
+    return stage
+
+
 def reap_clean_pushed(
     *,
     repo_root: Path | None = None,
@@ -6033,21 +6366,30 @@ def reap_clean_pushed(
 ) -> CleanPushedReport:
     """Remove clean, fully pushed, idle dispatch worktrees; dry run by default (#10778).
 
-    A registered checkout is removed only when all of these hold, each
-    checked again under delegate's per-worktree lock immediately before
-    removal: it is exactly ``.worktrees/dispatch/<agent>/<task>/`` (not ACP,
-    not a symlink, not locked, not reserved); ``git status --porcelain
-    --untracked-files=all`` is empty; ``git rev-list HEAD --not
-    --remotes=origin`` is empty; neither ``fuser`` nor the process table
-    shows a user (a probe failure counts as in use); no task record claiming
-    it is ``spawning``, ``running``, unsettled, unreadable or has a live
-    worker; and its HEAD, index and claiming task records are all older than
-    60 minutes. Removal goes through
+    First ``git fetch --prune origin`` refreshes the remote-tracking refs,
+    outside the reaper lock; if it fails the run does nothing
+    (``refs_stale``). A registered checkout is then removed only when all of
+    these hold, each checked again under delegate's per-worktree lock
+    immediately before removal: it is exactly
+    ``.worktrees/dispatch/<agent>/<task>/`` (not ACP, not a symlink, not
+    locked, not reserved); ``git status --porcelain --untracked-files=all``
+    is empty and no assume-unchanged or skip-worktree file on disk differs
+    from the index; ``git rev-list HEAD --not --remotes=origin`` is empty and
+    every commit in the checkout's HEAD reflog and per-worktree refs is on an
+    origin ref; neither ``fuser`` nor the process table shows a user, and no
+    live process of this user denies inspection (a probe failure counts as
+    in use; an uninspectable process keeps every tree for the run); no task
+    record claiming it is ``spawning``, ``running``, unsettled, unreadable or
+    has a live worker; and its HEAD, index and claiming task records are all
+    older than 60 minutes. Removal goes through
     :func:`worktree_claims.remove_unclaimed_worktree` without ``force``, so
     the shared claim scan and ignored-output preservation (256 MiB cap) still
-    apply and a refusal leaves the tree in place. A failed removal is
-    reported and never retried. Each removal is journalled and appended to
-    ``batch_state/worktree-abandon-log.jsonl``. Branches are never touched.
+    apply. Right before git removes it, the checkout is moved to
+    ``.worktrees/.reaping/`` and every guard runs again there; a change
+    since the last check (``late_change``) moves it back. A failed removal
+    is reported and never retried. Each removal is journalled as intent and
+    as confirmed, then appended to ``batch_state/worktree-abandon-log.jsonl``.
+    Branches are never touched.
 
     The whole run holds the reaper lock; if another cleanup holds it for
     ``lock_timeout_s`` (default :data:`DEFAULT_REAP_LOCK_TIMEOUT_S`) the run
@@ -6055,11 +6397,16 @@ def reap_clean_pushed(
     """
     primary = primary_checkout_root((repo_root or resolve_repo_root()).resolve())
 
-    def refused(reason: str, *, busy: bool = False) -> CleanPushedReport:
-        return CleanPushedReport(dry_run=dry_run, removed=(), skipped=(), freed_mb=0, lock_busy=busy, refusal=reason)
+    def refused(reason: str, *, busy: bool = False, stale: bool = False) -> CleanPushedReport:
+        return CleanPushedReport(
+            dry_run=dry_run, removed=(), skipped=(), freed_mb=0, lock_busy=busy, refusal=reason, refs_stale=stale
+        )
 
     if not dry_run and os.environ.get("LU_REAPER_DISABLED") == "1":
         return refused("reaper disabled by LU_REAPER_DISABLED=1")
+    fetch_failure = _refresh_origin_refs(primary)
+    if fetch_failure is not None:
+        return refused(f"{REFS_STALE}: {fetch_failure}", stale=True)
     try:
         lock = _ReapLock(primary, timeout_s=lock_timeout_s)
         lock.__enter__()
@@ -6069,6 +6416,7 @@ def reap_clean_pushed(
         return refused(str(exc))
     removed: list[CleanPushedOutcome] = []
     skipped: list[CleanPushedOutcome] = []
+    late: list[str] = []
     try:
         try:
             control_root = worktree_claims.control_plane_root(primary)
@@ -6104,18 +6452,25 @@ def reap_clean_pushed(
                 removed.append(replace(outcome, action="would_remove"))
                 continue
 
-            def recheck(info: WorktreeInfo = info, claims: list[_TaskClaim] = claims) -> tuple[bool, str]:
+            def guards(
+                tree: Path | None = None, info: WorktreeInfo = info, claims: list[_TaskClaim] = claims
+            ) -> str | None:
                 try:
                     with _bounded_locked_git():
-                        why, _ = _clean_pushed_refusal(info, ctx, claims, recheck=True)
+                        why, _ = _clean_pushed_refusal(info, ctx, claims, recheck=True, tree=tree)
                 except subprocess.TimeoutExpired:
                     why = "re-check timed out"
+                return why
+
+            def recheck(guards: Callable[[], str | None] = guards) -> tuple[bool, str]:
+                why = guards()
                 return (False, f"re-check: {why}") if why else (True, "")
 
             try:
                 reaper_lifecycle.append_journal(
                     primary,
                     "clean-pushed-remove",
+                    stage="intent",
                     path=shown,
                     head=info.head,
                     branch=info.branch,
@@ -6136,9 +6491,14 @@ def reap_clean_pushed(
                 tasks_dir=tasks_dir,
                 lock_timeout_s=_CLEAN_PUSHED_WORKTREE_LOCK_TIMEOUT_S,
                 settled_claim=_worker_proven_gone,
+                stage_removal=_quarantine_stager(primary, info.path, guards),
             )
             if removal.action != "removed":
                 detail = f"{removal.reason}: {removal.error}" if removal.error else removal.reason
+                if detail.startswith(worktree_claims.REMOVAL_STAGE_REFUSED):
+                    detail = detail.removeprefix(worktree_claims.REMOVAL_STAGE_REFUSED)
+                    if detail.startswith(LATE_CHANGE):
+                        late.append(shown)
                 skipped.append(
                     replace(outcome, action="error" if removal.action == "error" else "skipped", reason=detail)
                 )
@@ -6154,12 +6514,11 @@ def reap_clean_pushed(
                 "size_mb": outcome.size_mb,
             }
             try:
+                reaper_lifecycle.append_journal(primary, "clean-pushed-removed", stage="confirmed", path=shown)
                 append_abandon_log(control_root, entry)
             except OSError as exc:
                 skipped.append(
-                    replace(
-                        outcome, action="error", reason=f"removed, but abandon log write failed ({exc}); run stopped"
-                    )
+                    replace(outcome, action="error", reason=f"removed, but log write failed ({exc}); run stopped")
                 )
                 break
             removed.append(replace(outcome, action="removed"))
@@ -6170,6 +6529,11 @@ def reap_clean_pushed(
         removed=tuple(removed),
         skipped=tuple(skipped),
         freed_mb=sum(outcome.size_mb or 0 for outcome in removed),
+        uninspectable=tuple(sorted(ctx.uninspectable)),
+        late_change=tuple(late),
+        unpublished_reflog_commit=tuple(
+            outcome.path for outcome in skipped if UNPUBLISHED_REFLOG_COMMIT in outcome.reason
+        ),
     )
 
 
@@ -6181,8 +6545,10 @@ def format_clean_pushed_report(report: CleanPushedReport) -> str:
     errors = sum(1 for outcome in report.skipped if outcome.action == "error")
     lines = [
         f"{mode} clean-pushed: {len(report.removed)} {verb} ({report.freed_mb} MB), "
-        f"{len(report.skipped) - errors} skipped, {errors} error(s)"
+        f"{len(report.skipped) - errors} skipped, {errors} error(s); origin refs refreshed (git fetch --prune origin)"
     ]
+    if report.uninspectable:
+        lines.append(f"{UNINSPECTABLE_PROCESS}: pid(s) {', '.join(map(str, report.uninspectable))}; every tree kept")
     for outcome in (*report.removed, *report.skipped):
         lines.append(
             f"{outcome.action.upper()} {outcome.path} branch={outcome.branch or '-'} "
@@ -6497,7 +6863,9 @@ def main(argv: list[str] | None = None) -> int:
             print(json.dumps(report.as_dict(), indent=2) if args.json else format_clean_pushed_report(report))
             if any(outcome.action == "error" for outcome in report.skipped):
                 status = 1
-            elif report.refusal and not report.lock_busy and not report.refusal.startswith("reaper disabled"):
+            elif report.refusal and not (
+                report.lock_busy or report.refs_stale or report.refusal.startswith("reaper disabled")
+            ):
                 status = 2
         return status
 

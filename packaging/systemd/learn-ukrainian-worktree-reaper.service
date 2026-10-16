@@ -16,8 +16,7 @@ TimeoutStartSec=1200
 TimeoutStopSec=120
 Nice=15
 IOSchedulingClass=idle
-# No network: the mode reads only local Git refs and task records. A user
-# manager accepts PrivateNetwork= and IPAddressDeny= without enforcing them;
-# the seccomp address-family filter is enforced.
-RestrictAddressFamilies=AF_UNIX
-IPAddressDeny=any
+# Network only for the one bounded `git fetch --prune origin` that refreshes
+# the remote-tracking refs before the run (no GitHub API call). The seccomp
+# address-family filter, which a user manager enforces, allows nothing else.
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6

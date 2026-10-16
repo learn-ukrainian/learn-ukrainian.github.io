@@ -462,9 +462,15 @@ holds the reaper lock for the whole run and removes through
 `worktree_claims.remove_unclaimed_worktree`, so delegate's per-worktree lock,
 the shared claim scan and the ignored-output preservation gate all apply.
 
+Each run first refreshes the remote-tracking refs with `git fetch --no-tags
+origin --prune` (60 s bound, no submodules), before it takes the reaper lock:
+no remote read happens under the lock. Stale refs would show a commit that was
+deleted or force-moved on origin as still pushed, so if the fetch fails or
+times out the run does nothing and reports `refs_stale` (exit 0).
+
 A registered checkout is removed only when all of these hold. Each one is
-checked to select the candidate and again under the per-worktree lock,
-immediately before removal:
+checked to select the candidate, again under the per-worktree lock, and a
+third time after the checkout is moved into the quarantine (below):
 
 - it is exactly `.worktrees/dispatch/<agent>/<task>/`, not an ACP runtime, not
   the primary checkout, with no symlink anywhere in its registered path, and
@@ -475,10 +481,31 @@ immediately before removal:
   --untracked-files=all` is empty (no change, no untracked file) and
   `git rev-list HEAD --not --remotes=origin` is empty; a detached HEAD at a
   commit contained in an origin ref counts as pushed;
+- no file flagged `assume-unchanged` or `skip-worktree` differs from the index.
+  `git status` and `git worktree remove` both trust those flags, so the reaper
+  hashes each flagged file that exists on disk (its raw bytes, or its symlink
+  target) and compares type, exec bit and blob. A sparse checkout's excluded
+  entries have no file on disk and pass;
+- every commit in the checkout's HEAD reflog and its per-worktree refs
+  (`refs/worktree/`, `refs/bisect/`, `refs/rewritten/`) is contained in an
+  origin ref. Removal deletes those, and they may be the last reference to a
+  commit that was reset away; otherwise the tree is kept as
+  `unpublished_reflog_commit`. The stash is shared by every checkout and
+  survives removal. A tree whose history was amended or rebased after a push
+  keeps the superseded commits in its reflog and therefore stays;
 - no process uses it: `fuser -s <path>` (10 s bound) reports no user, and no
-  process visible in `/proc` has its working directory, root, executable, an
-  open file or a mapped file inside it. A missing, failing or timed-out
-  `fuser`, or an unlistable process table, counts as in use;
+  process visible in `/proc` has its working directory (by path or by the
+  tree's inode), root, executable, an open file or a mapped file inside it. A
+  missing, failing or timed-out `fuser`, or an unlistable process table,
+  counts as in use. A live process of this user that denies inspection (it
+  made itself non-dumpable) might be using any tree, so every tree
+  is kept for the rest of the run and the pid is reported as
+  `uninspectable_process`. Zombies and kernel threads are ignored, and so is
+  the session infrastructure that is always non-dumpable, identified by kernel
+  facts: the user's systemd manager and `(sd-pam)` (the only members of
+  `user@<uid>.service/init.scope`) and OpenSSH's `sshd-session` whose parent is
+  the root-owned privileged `sshd-session` or `sshd`. Other users' processes
+  are invisible, as they are to `fuser`;
 - no task record in `batch_state/tasks/` whose `worktree_path` or `cwd` names
   it is `spawning` or `running`, has any other unsettled status, or has a
   worker that is live or unknown. `needs_finalize` and finished records pass
@@ -488,14 +515,32 @@ immediately before removal:
   `.git/worktrees/<name>/`) and of every claiming task record, including
   `<task>.json`, is more than 60 minutes old.
 
-Removal never passes `--force`, so Git itself also refuses a changed or
-locked checkout. Ignored output follows the existing preservation rules: it is
+Right before Git removes it, after the claim scan and artifact preservation,
+the checkout is moved with `git worktree move` (an atomic rename) to
+`.worktrees/.reaping/<agent>-<random>/<task>/`, and every guard runs again on
+the quarantined path. Nothing can reach the tree by its known path any more,
+and a process already inside it now shows the quarantine path in `/proc`. If
+any guard fails there, or Git does not remove the tree, it is moved back and
+reported as `late_change` (or as the removal error). Removal never passes
+`--force`, so Git itself also refuses a changed or locked checkout. Ignored output follows the existing preservation rules: it is
 copied to `batch_state/preserved/` within the 256 MiB cap, and a tree over the
 cap or without canonical attribution for its output is retained and reported.
 A failed removal is reported as `error` and never retried. Each removal is
-journalled (`clean-pushed-remove`) before it runs and appended afterwards to
-`batch_state/worktree-abandon-log.jsonl` with `ts`, `actor`, repository-relative
-`path`, `head`, `branch`, `task_status`, `reason` and `size_mb`. Branches are
+journalled as intent (`clean-pushed-remove`, `stage: intent`) before it runs,
+as confirmed (`clean-pushed-removed`, `stage: confirmed`) once Git removed the
+tree, and then appended to `batch_state/worktree-abandon-log.jsonl` with
+`ts`, `actor`, repository-relative `path`, `head`, `branch`, `task_status`,
+`reason` and `size_mb`.
+
+Recovery window: an intent without a confirmation means the run stopped
+between the two. Check `git worktree list`: the tree is either still at its
+path, back from the quarantine, or (if the process died mid-quarantine) under
+`.worktrees/.reaping/`, where later runs report it as `left in the reaper
+quarantine` and never remove it. Restore it with `git worktree move
+.worktrees/.reaping/<agent>-<random>/<task> .worktrees/dispatch/<agent>/<task>`
+and remove the empty holder directory. A confirmation with no abandon-log
+line means the log append failed after the removal; the journal row is the
+record. Branches are
 never deleted; `branch_sweep` owns branch retirement (#10763).
 `LU_REAPER_DISABLED=1` turns apply into a no-op. A run that waits 30 s for the
 reaper lock without getting it does nothing and reports `lock_busy`.
@@ -503,7 +548,8 @@ reaper lock without getting it does nothing and reports `lock_busy`.
 Dispatch admission calls the same rule through
 `reap_clean_pushed(repo_root=..., dry_run=..., actor=..., lock_timeout_s=...)`,
 which returns a `CleanPushedReport` (`removed`, `skipped` with reasons,
-`freed_mb`, `lock_busy`, `refusal`).
+`freed_mb`, `lock_busy`, `refusal`, `refs_stale`, `uninspectable` pids,
+`late_change` and `unpublished_reflog_commit` paths).
 
 ```bash
 # dry run (default): what would be removed, and why each other tree stays
@@ -519,7 +565,8 @@ command every 30 minutes from
 `learn-ukrainian-worktree-reaper.timer` (`OnCalendar=*:00/30`,
 `Persistent=false`). The service is a oneshot, so systemd never starts a
 second run while one is active, and `TimeoutStartSec=1200` bounds each run
-inside the cadence. It has no network access. Install it on the dispatch host
+inside the cadence. Its only network use is the bounded `git fetch` above
+(the address-family filter allows Unix and IP sockets only). Install it on the dispatch host
 from the primary checkout on `main`, after the change is merged:
 
 ```bash
