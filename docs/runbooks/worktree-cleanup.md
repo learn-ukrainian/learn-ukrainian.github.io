@@ -418,7 +418,28 @@ whose GitHub query confirms no open PR. Set `LU_REAPER_TERMINAL_DISPATCHES=0`
 to disable only this optional scheduled class during an incident; merged-clean
 reaping remains enabled. Before removal the reaper writes an
 append-only local journal, reserves the path as reap-pending, and creates a
-`refs/reaper-rescue/...` ref. Set `LU_REAPER_DISABLED=1` to stop automatic
+`refs/reaper-rescue/...` ref unless that tip is already preserved. Preservation
+is the same proof `scripts.hygiene.rescue_refs` uses: the tip is an ancestor of
+`origin/main`, or it is reachable from another `origin/*` ref, or every commit
+in `git rev-list <tip> --not origin/main` has a `git patch-id --stable` match
+among `origin/main` commits whose committer date is after 2026-08-01. A commit
+older than that window is not a match, and a commit that emits no patch-id is
+not a match. Those tips stay UNIQUE and still get a rescue ref. A preserved tip
+is journaled as `rescue-skipped` and no ref is created. The creation check tries
+ancestry first and runs the patch-id proof only when ancestry does not already
+hold; if that proof would scan more main history than the reap lock can afford,
+the tip is treated as unproven and the ref is still created.
+
+`python -m scripts.hygiene.rescue_refs` classifies every `refs/reaper-rescue/*`
+ref. Dry-run is the default: it prints the three counts and writes a JSON
+listing outside the repository. `--apply --limit N` deletes at most N
+CONTAINED and PATCH-EQUIVALENT refs. It holds the same `worktree-reaper.lock`
+as the other reaper tools, refuses the batch when any registered worktree has a
+native git operation in progress, and appends a journal line (ref, sha, class,
+proof, time) before each `git update-ref -d <ref> <expected-sha>`. A ref that
+moved is skipped. UNIQUE refs are never deleted.
+
+Set `LU_REAPER_DISABLED=1` to stop automatic
 reaps immediately. Apply mode also recovers interrupted reap reservations:
 new reservations record the holding PID, and recovery requires that PID to be
 absent plus acquisition of the worktree attachment lock. Live or unverifiable

@@ -401,8 +401,8 @@ def _issue_number(name: str, messages: list[str]) -> int | None:
     return from_messages[0] if len(from_messages) == 1 else None
 
 
-def _rev_list(repo: Path, rev_range: str) -> list[str]:
-    result = _git(repo, "rev-list", rev_range, timeout=60)
+def _rev_list(repo: Path, *revs: str, timeout: int = 60) -> list[str]:
+    result = _git(repo, "rev-list", *revs, timeout=timeout)
     if result.returncode:
         raise RuntimeError(f"git rev-list failed: {(result.stderr or result.stdout).strip()}")
     shas = [line for line in result.stdout.splitlines() if line]
@@ -411,7 +411,7 @@ def _rev_list(repo: Path, rev_range: str) -> list[str]:
     return shas
 
 
-def _parse_patch_ids(repo: Path, patch_text: str) -> dict[str, str]:
+def _parse_patch_ids(repo: Path, patch_text: str, *, timeout: int = 120) -> dict[str, str]:
     if not patch_text.strip():
         return {}
     proc = subprocess.run(
@@ -422,7 +422,7 @@ def _parse_patch_ids(repo: Path, patch_text: str) -> dict[str, str]:
         capture_output=True,
         text=True,
         check=False,
-        timeout=120,
+        timeout=timeout,
     )
     if proc.returncode:
         raise RuntimeError(f"git patch-id failed: {(proc.stderr or proc.stdout).strip()}")
@@ -435,14 +435,14 @@ def _parse_patch_ids(repo: Path, patch_text: str) -> dict[str, str]:
     return found
 
 
-def _load_patch_ids(repo: Path, cache: dict[str, str | None], shas: list[str]) -> None:
+def _load_patch_ids(repo: Path, cache: dict[str, str | None], shas: list[str], *, timeout: int = 120) -> None:
     missing = [sha for sha in shas if sha not in cache]
     for start in range(0, len(missing), 40):
         chunk = missing[start : start + 40]
-        log = _git(repo, "log", "-p", "--no-walk", "--pretty=format:%H", *chunk, timeout=120)
+        log = _git(repo, "log", "-p", "--no-walk", "--pretty=format:%H", *chunk, timeout=timeout)
         if log.returncode:
             raise RuntimeError(f"git log failed: {(log.stderr or log.stdout).strip()}")
-        found = _parse_patch_ids(repo, log.stdout)
+        found = _parse_patch_ids(repo, log.stdout, timeout=timeout)
         for sha in chunk:
             cache[sha] = found.get(sha)
 

@@ -314,7 +314,30 @@ def create_recovery_ref(
 
     ``timeout`` overrides :data:`DEFAULT_GIT_TIMEOUT_SECONDS`. The reaper
     passes the time left on its locked-region deadline.
+
+    Returns ``(None, None)`` when the tip is already preserved (contained in
+    an origin ref, or patch-equivalent to ``origin/main``). That skip is
+    journaled as ``rescue-skipped``. An unproven tip still gets a ref: a
+    timed-out or unaffordable proof is not preservation.
     """
+    # Imported here so this module can load before the hygiene package.
+    from scripts.hygiene.rescue_refs import preservation_for_creation
+
+    bound_for_proof = DEFAULT_GIT_TIMEOUT_SECONDS if timeout is None else timeout
+    # Leave time for the update-ref below. Ancestry is cheap; patch-id runs
+    # only when ancestry does not already prove the tip is preserved.
+    proof_budget = min(8.0, max(0.0, bound_for_proof - 2.0))
+    preserved = preservation_for_creation(repo_root, head, budget_s=proof_budget)
+    if preserved is not None and preserved.deletable:
+        append_journal(
+            repo_root,
+            "rescue-skipped",
+            head=head,
+            branch=branch,
+            classification=preserved.classification,
+            proof=preserved.proof,
+        )
+        return None, None
     label = re.sub(r"[^A-Za-z0-9._/-]+", "-", branch or "detached").strip("./-")
     label = label or "detached"
     stamp = utc_now().strftime("%Y%m%dT%H%M%SZ")

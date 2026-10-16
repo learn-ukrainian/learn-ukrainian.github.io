@@ -2428,7 +2428,7 @@ def test_merged_flag_does_not_remove_settled_dispatch_without_merged_pr(
     assert worktree.exists()
 
 
-def test_p0_merged_dispatch_reap_journals_recovery_and_restores(
+def test_p0_merged_dispatch_reap_skips_a_rescue_ref_already_on_main(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -2445,22 +2445,14 @@ def test_p0_merged_dispatch_reap_journals_recovery_and_restores(
     )
 
     assert result.action == "removed"
-    assert result.recovery_ref is not None
+    assert result.recovery_ref is None
     assert not worktree.exists()
     assert reaper_lifecycle.is_reap_pending(repo, worktree) is False
     journal = reaper_lifecycle.journal_path(repo).read_text(encoding="utf-8")
     assert '"event": "plan"' in journal
     assert '"event": "reap"' in journal
-
-    restored, error = reaper_lifecycle.restore_worktree(
-        repo,
-        recovery_ref=result.recovery_ref,
-        branch="codex/p0-round-trip",
-        worktree_path=worktree,
-    )
-    assert restored is True
-    assert error is None
-    assert git(worktree, "rev-parse", "HEAD") == head
+    assert '"event": "rescue-skipped"' in journal
+    assert git(repo, "rev-parse", "refs/remotes/origin/main") == head
 
 
 def test_p0_gh_guard_failure_never_deletes(
@@ -5572,8 +5564,9 @@ def test_removed_then_branch_prune_timeout_reports_removed(
 ) -> None:
     """#8748: a hang on ``git branch -D`` after removal is a prune error, not a skip.
 
-    The worktree is already gone, so the result stays ``action="removed"``,
-    keeps ``recovery_ref``, and still counts toward the daily cap.
+    The worktree is already gone, so the result stays ``action="removed"``.
+    The tip is on origin/main, so no rescue ref is created, and the reap still
+    counts toward the daily cap.
     """
     repo = init_repo(tmp_path)
     worktree = add_worktree(repo, "codex/prune-hang")
@@ -5630,7 +5623,7 @@ def test_removed_then_branch_prune_timeout_reports_removed(
     elapsed = time.monotonic() - started
 
     assert result.action == "removed"
-    assert result.recovery_ref
+    assert result.recovery_ref is None
     assert result.error is not None and "timed out" in result.error
     assert "branch prune failed" in result.reason
     assert not worktree.exists()
@@ -5781,7 +5774,7 @@ def test_removal_keeps_its_own_bound_when_the_region_deadline_is_nearly_spent(
     )
 
     assert result.action == "removed"
-    assert result.recovery_ref
+    assert result.recovery_ref is None
     assert not worktree.exists()
     assert remove_timeouts == [None]
     assert held_during_remove == [True]
@@ -5789,11 +5782,11 @@ def test_removal_keeps_its_own_bound_when_the_region_deadline_is_nearly_spent(
     assert held_during_record == [False]
 
 
-def test_timeout_after_recovery_ref_keeps_the_ref(
+def test_timeout_after_skipping_a_preserved_tip_skips_removal(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """A region timeout after the rescue ref exists skips removal and names the ref."""
+    """A region timeout after a preserved tip skips removal and creates no rescue ref."""
     repo = init_repo(tmp_path)
     worktree = add_worktree(repo, "codex/rescue-timeout")
     patch_gh(
@@ -5831,7 +5824,7 @@ def test_timeout_after_recovery_ref_keeps_the_ref(
 
     assert result.action == "skipped"
     assert "timed out" in result.reason
-    assert result.recovery_ref
+    assert result.recovery_ref is None
     assert worktree.exists()
     assert started_remove is False
 
@@ -6241,7 +6234,7 @@ def test_detached_clean_contained_on_origin_main_is_reaped_when_fresh(
     result = result_for(_reap_contained(repo, monkeypatch), worktree)
     assert result.action == "removed"
     assert result.reason == dry.reason
-    assert result.recovery_ref
+    assert result.recovery_ref is None
     assert not worktree.exists()
     assert_main_checkout_unchanged(repo)
 
@@ -7168,7 +7161,7 @@ def _pr_with_two_heads(
     return worktree, old, new
 
 
-def test_superseded_pr_checkout_is_reaped_and_keeps_its_rescue_ref(
+def test_superseded_pr_checkout_on_origin_is_reaped_without_a_rescue_ref(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -7183,7 +7176,7 @@ def test_superseded_pr_checkout_is_reaped_and_keeps_its_rescue_ref(
     result = result_for(_reap_review(repo, monkeypatch), worktree)
     assert result.action == "removed"
     assert result.reason == dry.reason
-    assert result.recovery_ref
+    assert result.recovery_ref is None
     assert not worktree.exists()
     assert_main_checkout_unchanged(repo)
 
@@ -7287,7 +7280,7 @@ def test_unrecorded_detached_checkout_older_than_two_hours_is_reaped(
 
     assert result.action == "removed"
     assert result.reason == "unrecorded detached checkout"
-    assert result.recovery_ref
+    assert result.recovery_ref is None
     assert not worktree.exists()
     assert_main_checkout_unchanged(repo)
 
@@ -7387,7 +7380,7 @@ def test_foreign_registered_checkout_under_a_scratch_root_is_reaped(
 
     assert result.action == "removed"
     assert result.reason == "foreign registered checkout"
-    assert result.recovery_ref
+    assert result.recovery_ref is None
     assert not worktree.exists()
     assert_main_checkout_unchanged(repo)
 
