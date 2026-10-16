@@ -124,6 +124,9 @@ def test_content_collection_loads_track_index_mdx_files() -> None:
     assert not missing, f"content loader does not include track indexes: {', '.join(missing)}"
 
 
+# The generator also reads the plans and status files under curriculum/, so a
+# worker that owns this test gets that tree too (scripts/delegate.py).
+@pytest.mark.needs_sparse_tree("site/src/content", "curriculum")
 def test_b2_landing_matches_generated_curriculum_state() -> None:
     curriculum = yaml.safe_load((PROJECT_ROOT / "curriculum" / "l2-uk-en" / "curriculum.yaml").read_text("utf-8"))
     expected = generate_landing_pages.generate_landing_page("b2", curriculum)
@@ -133,6 +136,7 @@ def test_b2_landing_matches_generated_curriculum_state() -> None:
 
 
 @pytest.mark.parametrize("track", ["c1", "bio", "folk"])
+@pytest.mark.needs_sparse_tree("site/src/content", "curriculum")
 def test_count_landing_matches_generated_curriculum_state(track: str) -> None:
     curriculum = yaml.safe_load((PROJECT_ROOT / "curriculum" / "l2-uk-en" / "curriculum.yaml").read_text("utf-8"))
     expected = generate_landing_pages.generate_landing_page(track, curriculum)

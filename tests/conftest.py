@@ -2692,7 +2692,8 @@ def pytest_configure(config: pytest.Config) -> None:
     config.addinivalue_line(
         "markers",
         "needs_sparse_tree(tree): test reads a default sparse-excluded tree such as data/projects; "
-        "skipped when sparse-checkout omits that tree",
+        "skipped when sparse-checkout omits that tree. A tree with a cone anchor (curriculum) "
+        "cannot be seen as absent and is named so a dispatch that owns the test includes it",
     )
     config.addinivalue_line(
         "markers",

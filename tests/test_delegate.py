@@ -9466,7 +9466,8 @@ def _make_run_stub(
                 listing = "data/corpus_audit\ndata/lexicon\ndata/projects\ndata/raw\n"
             elif cmd[-1:] == ["registry/"]:
                 listing = "registry/artifacts\nregistry/lexicon\nregistry/projects\n"
-            elif cmd[-1:] == ["curriculum/l2-uk-en/lesson-plans"]:
+            elif cmd[-1:] == ["curriculum/l2-uk-en/"]:
+                # The anchor is looked up among its parent's children.
                 listing = "curriculum/l2-uk-en/lesson-plans\n"
             else:
                 listing = "curriculum\ndata\ndocs\nregistry\nscripts\nsite\ntests\nwiki\n"

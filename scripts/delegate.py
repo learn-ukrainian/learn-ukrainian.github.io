@@ -9182,7 +9182,9 @@ _DISPATCH_SPARSE_ANCHORS: dict[str, tuple[str, ...]] = {
 # read data/projects, and a blanket stem would check out ~633MB. The lexicon
 # readers read the source inventories, which #8853 moved from data/lexicon
 # to registry/lexicon. Frontend work under ``site/`` builds from the
-# generated data and the published lessons.
+# generated data and the published lessons. Test files are not listed: an
+# owned test gets the trees its pytest.mark.needs_sparse_tree marks name
+# (_owned_test_marked_trees).
 _SOURCE_INVENTORY_READERS = (
     "scripts/lexicon",
     "tests/lexicon",
@@ -9194,6 +9196,8 @@ _SOURCE_INVENTORY_READERS = (
     "scripts/practice/thin_mode_source_inventory.py",
 )
 _SPARSE_OWNED_PATH_REINCLUDE: dict[str, tuple[str, ...]] = {
+    # Landing pages take module titles from the plans and status files.
+    "curriculum": ("scripts/generate_landing_pages.py",),
     "data/projects": (
         "data/projects",
         "tests/projects/open_model_data",
@@ -9202,27 +9206,19 @@ _SPARSE_OWNED_PATH_REINCLUDE: dict[str, tuple[str, ...]] = {
     ),
     "registry/lexicon/source-inventory": _SOURCE_INVENTORY_READERS,
     "registry/lexicon/source-inventory-review-decisions": _SOURCE_INVENTORY_READERS,
-    # Readers whose tests carry pytest.mark.needs_sparse_tree for the tree.
+    # Scripts whose tests carry pytest.mark.needs_sparse_tree for the tree.
     "site/src/content": (
         "site",
         "scripts/api/preparation_state.py",
         "scripts/generate_landing_pages.py",
         "scripts/generate_mdx/reading_links.py",
         "scripts/lexicon/lesson_atlas_link_census.py",
-        "tests/build/test_fresh_provenance.py",
-        "tests/test_landings_use_levellanding.py",
-        "tests/test_lesson_atlas_link_census.py",
-        "tests/test_preparation_api.py",
     ),
     "site/src/data": (
         "site",
         "scripts/audit/check_static_practice_assets.py",
         "scripts/lexicon/check_manifest_freshness.py",
         "scripts/lexicon/lesson_atlas_link_census.py",
-        "tests/test_check_static_practice_assets.py",
-        "tests/test_landings_use_levellanding.py",
-        "tests/test_lesson_atlas_link_census.py",
-        "tests/test_lexicon_manifest_fingerprint.py",
     ),
 }
 # Stem prefixes whose match still has to mention the tree in that file.
@@ -9325,6 +9321,31 @@ def _reinclude_file_confirms(path: str, prefix: str) -> bool:
     return _imported_binding_mentions_marker(text, markers)
 
 
+def _owned_test_marked_trees(path: str) -> tuple[str, ...]:
+    """Excluded trees an owned test file names in ``pytest.mark.needs_sparse_tree``.
+
+    The owner gets them, so the marked tests run instead of skipping. Test
+    file names stay out of this module: the repo_wide marker prefilter
+    (tests/test_repo_wide_marker_invariant.py) reads a file name in a module
+    that loads modules dynamically as a load of that test, and this module is
+    imported by tests/conftest.py, so every test became a candidate (#10777).
+    """
+    if not (path.startswith("tests/") and path.endswith(".py")):
+        return ()
+    try:
+        tree = ast.parse((_REPO_ROOT / path).read_text(encoding="utf-8"))
+    except (OSError, SyntaxError, UnicodeError, ValueError):
+        return ()
+    found = {
+        arg.value
+        for node in ast.walk(tree)
+        if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute) and node.func.attr == "needs_sparse_tree"
+        for arg in node.args
+        if isinstance(arg, ast.Constant) and arg.value in _DISPATCH_SPARSE_EXCLUDE_DEFAULT
+    }
+    return tuple(sorted(found))
+
+
 def _normalize_sparse_include(raw: Sequence[str] | None) -> tuple[str, ...]:
     """Normalize --sparse-include values to unique default-excluded trees.
 
@@ -9374,7 +9395,8 @@ def _sparse_trees_for_owned_path(raw: str) -> tuple[str, ...]:
     A path inside an excluded tree needs that tree. A directory that holds
     excluded trees (``site``, ``registry/lexicon``) needs all of them. A
     path outside every excluded tree needs the trees its reader prefixes
-    name in ``_SPARSE_OWNED_PATH_REINCLUDE``.
+    name in ``_SPARSE_OWNED_PATH_REINCLUDE`` and, for a test file, the trees
+    its ``needs_sparse_tree`` marks name.
     """
     path = str(raw).strip().strip("/")
     if not path or path == ".":
@@ -9395,6 +9417,7 @@ def _sparse_trees_for_owned_path(raw: str) -> tuple[str, ...]:
                         for prefix in prefixes
                     )
                 ),
+                *_owned_test_marked_trees(path),
             ]
         )
     )

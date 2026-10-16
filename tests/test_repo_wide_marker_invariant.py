@@ -65,6 +65,7 @@ from pathlib import Path
 import pytest
 
 from scripts.ci.pytest_dispatch_cap import DISPATCH_TASK_ENV, FULL_SUITE_BUSY, LOCK_ENV
+from tests.process_group_child import run_in_process_group
 
 pytestmark = [pytest.mark.repo_invariant, pytest.mark.repo_wide]
 
@@ -827,6 +828,8 @@ def test_repo_tree_scanners_carry_the_marker() -> None:
 # later deselects, and the marks are read after every modifyitems hook ran.
 # The child is ``--collect-only``, which the dispatch cap exempts from the
 # full-suite lock that a worker's serial ``pytest -m repo_wide`` parent holds.
+# It runs in its own process group (tests/process_group_child.py), so a test
+# timeout that ends the xdist worker ends the child too (#10777).
 _COLLECT_SCRIPT = textwrap.dedent(
     """
     import json
@@ -1128,7 +1131,7 @@ def _collect_repo_wide_marks(
         output = Path(scratch) / "marks.json"
         allowed = Path(scratch) / "allowed.json"
         allowed.write_text(json.dumps(sorted(str(path.resolve()) for path in test_files)), encoding="utf-8")
-        result = subprocess.run(
+        result = run_in_process_group(
             [
                 sys.executable,
                 "-c",
@@ -1143,8 +1146,6 @@ def _collect_repo_wide_marks(
             ],
             cwd=root,
             env=_child_env(),
-            capture_output=True,
-            text=True,
             timeout=timeout,
         )
         report = json.loads(output.read_text(encoding="utf-8")) if output.is_file() else None
@@ -1261,7 +1262,7 @@ def _selected_node_ids(marker: str, module: str) -> list[str]:
 
     ``--verbosity=-1`` overrides the config's ``-v``, so pytest lists one node id per line.
     """
-    result = subprocess.run(
+    result = run_in_process_group(
         [
             sys.executable,
             "-m",
@@ -1276,8 +1277,6 @@ def _selected_node_ids(marker: str, module: str) -> list[str]:
         ],
         cwd=_REPO_ROOT,
         env=_child_env(),
-        capture_output=True,
-        text=True,
         timeout=_COLLECT_TIMEOUT_S,
     )
     selected = [line for line in result.stdout.splitlines() if line.startswith(f"{module}::")]
@@ -1310,12 +1309,10 @@ def test_collection_child_runs_while_the_parent_holds_the_full_suite_lock(
     try:
         fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
         marked = _collect_repo_wide_marks(_REPO_ROOT, [_REPO_ROOT / "tests/test_hooks_executable.py"])
-        refused = subprocess.run(
+        refused = run_in_process_group(
             [sys.executable, "-m", "pytest", "-q", "-p", "no:cacheprovider", "tests"],
             cwd=_REPO_ROOT,
             env=_child_env(),
-            capture_output=True,
-            text=True,
             timeout=_COLLECT_TIMEOUT_S,
         )
     finally:
