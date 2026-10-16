@@ -2956,13 +2956,26 @@ describe('LexiconPractice', () => {
     });
     const user = userEvent.setup();
     const deck = paronymDeck();
-    const view = render(<LexiconPractice initialDeck={deck} initialMode="mixed" />);
+    let view = render(<LexiconPractice initialDeck={deck} initialMode="mixed" />);
     await user.click(await screen.findByTestId('practice-start-session'));
     const orders = new Set<string>();
     for (let round = 0; round < 6; round++) {
+      if (round === 0 || round === 2) {
+        const beforeReload = within(await screen.findByTestId('practice-paronym')).getAllByRole('button').map((button) => button.textContent);
+        const snapshot = JSON.parse(localStorage.getItem(PRACTICE_SESSION_STORAGE_KEY)!).byMode.mixed;
+        const savedSrs = localStorage.getItem(SRS_STORAGE_KEY);
+        view.unmount();
+        view = render(<LexiconPractice initialDeck={deck} initialMode="mixed" />);
+        await user.click(await screen.findByTestId('practice-start-session'));
+        expect(localStorage.getItem(SRS_STORAGE_KEY)).toBe(savedSrs);
+        expect(screen.getByTestId('practice-session-progress')).toHaveTextContent(`${historyLength + round}/`);
+        const afterReload = within(await screen.findByTestId('practice-paronym')).getAllByRole('button').map((button) => button.textContent);
+        console.info('F2 resume observation', JSON.stringify({ historyLength, seed: snapshot.sessionSeed, item: snapshot.history.at(-1), retained: snapshot.history.length, completed: snapshot.completed, beforeReload, afterReload }));
+      }
       const scope = within(await screen.findByTestId('practice-paronym'));
       const labels = scope.getAllByRole('button').map((button) => button.textContent);
       orders.add(JSON.stringify(labels));
+      console.info('F2 presentation observation', JSON.stringify({ historyLength, round, labels }));
       expect([...labels].sort()).toEqual(['біжить', 'бігає'].sort());
       view.rerender(<LexiconPractice initialDeck={deck} initialMode="mixed" />);
       expect(within(screen.getByTestId('practice-paronym')).getAllByRole('button').map((button) => button.textContent)).toEqual(labels);

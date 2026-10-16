@@ -2120,3 +2120,45 @@ test.describe('#10706 A3 injected media controls:', () => {
     expect(await audioLearningState(page)).toEqual(before);
   });
 });
+
+// F1 fault injection proves error handling in the built consumer, not native speech quality.
+test('F1 CDN media failure plus throwing speech fallback reports error promptly and preserves learning state', async ({ page }) => {
+  const uncaught: string[] = [];
+  page.on('pageerror', (error) => uncaught.push(error.message));
+  await observePracticeAudio(page, true);
+  await page.addInitScript(() => {
+    let faults = 0;
+    Reflect.set(window, 'f1SpeechFaults', () => faults);
+    speechSynthesis.getVoices = () => { faults++; throw new Error('F1 injected catalog failure'); };
+  });
+  await page.route('**/manifest.json', (route) => route.fulfill({ json: {
+    schemaVersion: 1, entries: { 'або': { file: AUDIO_FILE } },
+  } }));
+  let requests = 0;
+  await page.route(`**/${AUDIO_FILE}`, (route) => {
+    requests++;
+    return requests === 1 ? route.fulfill({ status: 404, body: '' })
+      : route.fulfill({ path: AUDIO_FIXTURE, contentType: 'audio/wav' });
+  });
+  await openAudioPractice(page);
+  const before = await audioLearningState(page);
+  await audioButton(page).click();
+  await expect(page.locator('[data-pronunciation-lemma] [role="status"]')).toHaveText('Audio unavailable. Try again.', { timeout: 3000 });
+  await expect(audioButton(page)).toHaveAccessibleName('Play pronunciation');
+  await expect(audioButton(page)).toHaveAttribute('aria-busy', 'false');
+  expect(await audioLearningState(page)).toEqual(before);
+  expect(uncaught).toEqual([]);
+  // The locked build selects CDN fallback only when this build input is nonempty.
+  expect(await page.evaluate(() => Reflect.get(window, 'f1SpeechFaults')())).toBe(process.env.PUBLIC_AUDIO_CDN_URL ? 1 : 0);
+  await audioButton(page).click();
+  await nativePlaying(page);
+  await audioButton(page).click();
+  await expect.poll(() => page.evaluate(() => {
+    const record = window.practiceAudioProbe.media.at(-1)!;
+    return { paused: record.element.paused, time: record.element.currentTime, stopped: record.events.includes('pause()') };
+  })).toEqual({ paused: true, time: 0, stopped: true });
+  await expect(audioButton(page)).toHaveAccessibleName('Play pronunciation');
+  expect(await audioLearningState(page)).toEqual(before);
+  expect(uncaught).toEqual([]);
+  await test.info().attach('f1-browser-control.json', { body: JSON.stringify({ requests, uncaught, media: await page.evaluate(() => window.practiceAudioProbe.media.map((record) => ({ src: record.element.src, events: record.events, promises: record.promises }))) }), contentType: 'application/json' });
+});
