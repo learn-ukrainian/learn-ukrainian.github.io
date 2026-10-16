@@ -89,7 +89,7 @@ tr:last-child td { border-bottom:none; }
 
   <section class="section panel">
     <h2>Subscriptions</h2>
-    <p class="sub" style="margin-bottom:10px">Provider allotment (Auto/API monthly for Cursor; other lanes per payload). Fleet burn is our dispatch JSONL — distinct from provider remaining.</p>
+    <p class="sub" style="margin-bottom:10px">Routing pressure includes its source. Measured provider quota and runtime health have separate freshness markers. Fleet burn counts dispatch calls.</p>
     <div id="subscriptions-table"></div>
   </section>
 
@@ -161,9 +161,9 @@ function pct(value) {
   return Number.isFinite(num) ? Math.max(0, Math.min(100, num)) : 0;
 }
 
-function statusPill(status) {
+function statusPill(status, label = status || 'unknown') {
   const cls = String(status || 'unknown').toLowerCase();
-  return `<span class="pill ${escapeHtml(cls)}">${escapeHtml(status || 'unknown')}</span>`;
+  return `<span class="pill ${escapeHtml(cls)}">${escapeHtml(label)}</span>`;
 }
 
 const CODEXBAR_HOST_TOOLING_SKIP = {
@@ -296,32 +296,35 @@ function windowKindLabel(win) {
   return 'window';
 }
 
+function subscriptionNumber(value) {
+  return typeof value === 'number' && Number.isFinite(value) ? value : null;
+}
+
 function pctDisplay(used, remaining) {
-  const usedNum = Number(used);
-  const remNum = Number(remaining);
-  if (!Number.isFinite(usedNum)) return null;
-  const rem = Number.isFinite(remNum) ? remNum : Math.max(0, 100 - usedNum);
-  return `${usedNum.toFixed(0)}% used · ${rem.toFixed(0)}% left`;
+  const usedNum = subscriptionNumber(used);
+  const remNum = subscriptionNumber(remaining);
+  return `${usedNum === null ? 'unknown used' : `${usedNum.toFixed(0)}% used`} · ${remNum === null ? 'unknown remaining' : `${remNum.toFixed(0)}% left`}`;
 }
 
 function renderWindowBlock(label, win, opts = {}) {
-  const rawUsed = win?.used_pct;
-  const usedNum = (rawUsed === null || rawUsed === undefined) ? NaN : Number(rawUsed);
-  const rawRemaining = win?.remaining_pct;
-  const remNum = (rawRemaining === null || rawRemaining === undefined) ? NaN : Number(rawRemaining);
-  const hasPct = Number.isFinite(usedNum);
-  const display = hasPct ? pctDisplay(usedNum, remNum) : (opts.missingLabel || 'unknown');
+  const usedNum = subscriptionNumber(win?.used_pct);
+  const remNum = subscriptionNumber(win?.remaining_pct);
+  const hasPct = usedNum !== null && usedNum >= 0 && usedNum <= 100;
+  const hasRemaining = remNum !== null && remNum >= 0 && remNum <= 100;
+  const display = hasPct || hasRemaining
+    ? pctDisplay(hasPct ? usedNum : null, hasRemaining ? remNum : null)
+    : (opts.missingLabel || 'unknown');
   const barClass = hasPct ? 'bar' : `bar ${opts.barClass || 'unavailable'}`;
   const barWidth = hasPct ? pct(usedNum) : 100;
   const resets = win?.resets_at ? ` · resets ${formatTs(win.resets_at)}` : '';
   return `<div class="sub-window">
-    <div class="label"><span class="mono">${escapeHtml(label)}</span> ${hasPct ? escapeHtml(display) : `<span class="pill ${escapeHtml(opts.missingLabel === 'NEED_PROBE' ? 'need_probe' : 'unknown')}">${escapeHtml(display)}</span>`}${resets ? `<span class="stale-note">${escapeHtml(resets)}</span>` : ''}</div>
+    <div class="label"><span class="mono">${escapeHtml(label)}</span> ${hasPct || hasRemaining ? escapeHtml(display) : `<span class="pill ${escapeHtml(opts.missingLabel === 'NEED_PROBE' ? 'need_probe' : 'unknown')}">${escapeHtml(display)}</span>`}${resets ? `<span class="stale-note">${escapeHtml(resets)}</span>` : ''}</div>
     <div class="${barClass}" title="${escapeHtml(display)}"><span style="width:${barWidth}%"></span></div>
   </div>`;
 }
 
 function collectSubscriptionWindows(agent) {
-  const cb = agent.codexbar || {};
+  const cb = agent.codexbar || agent.notebook_report || {};
   const providerWindows = agent.provider_windows || cb.provider_windows;
   if (providerWindows && typeof providerWindows === 'object') {
     return Object.entries(providerWindows).map(([key, win]) => ({
@@ -338,10 +341,9 @@ function collectSubscriptionWindows(agent) {
         key: k,
         label: named[k].label || windowKindLabel(named[k]),
         win: named[k],
-      }))
-      .filter(entry => entry.win.used_pct != null || entry.win.remaining_pct != null);
+      }));
   }
-  if (cb.weekly_used_pct != null && typeof cb.weekly_used_pct === 'number') {
+  if (cb.weekly_used_pct != null || cb.weekly_remaining_pct != null) {
     return [{
       key: 'weekly',
       label: 'weekly',
@@ -367,16 +369,85 @@ function renderFleetBurnCell(agent) {
   return `<div class="fleet-burn">${parts.join(' · ')}<br><span class="stale-note">dispatch JSONL</span></div>`;
 }
 
-function renderLaneFreshness(agent) {
-  const cb = agent.codexbar || {};
-  const fetched = cb.fetched_at || agent.fetched_at;
-  const age = cb.age_s ?? agent.age_s;
-  const stale = cb.stale || agent.stale;
-  const parts = [];
-  if (fetched) parts.push(formatTs(fetched));
-  if (age != null) parts.push(formatAge(age));
-  if (stale) parts.push('stale');
-  return parts.length ? `<span class="stale-note">${escapeHtml(parts.join(' · '))}</span>` : '';
+function subscriptionFreshness(record, routing) {
+  const age = subscriptionNumber(record.age_s);
+  const timestamp = typeof record.fetched_at === 'string' ? Date.parse(record.fetched_at) : NaN;
+  const elapsed = Number.isFinite(timestamp) ? (Date.now() - timestamp) / 1000 : null;
+  const ages = [age, elapsed].filter(value => value !== null && value >= 0);
+  const effectiveAge = ages.length ? Math.max(...ages) : null;
+  const threshold = subscriptionNumber(routing.diagnostics?.stale_threshold_s);
+  const stale = record.stale === true || record.freshness === 'stale'
+    || (effectiveAge !== null && threshold !== null && effectiveAge > threshold);
+  const state = stale ? 'stale' : record.freshness === 'fresh' && effectiveAge !== null ? 'fresh' : 'freshness unknown';
+  return [state, age !== null && age >= 0 ? formatAge(age) : 'age unknown',
+    Number.isFinite(timestamp) ? formatTs(record.fetched_at) : 'probe time unknown'].join(' · ');
+}
+
+function renderLaneFreshness(agent, routing) {
+  const cb = agent.codexbar || agent.notebook_report || {};
+  const record = { ...agent, ...cb };
+  const parts = [subscriptionFreshness(record, routing)];
+  if (cb.failure_kind) parts.push(`probe failure: ${cb.failure_kind}`);
+  if (cb.last_failure_at) parts.push(`last probe failure ${formatTs(cb.last_failure_at)}`);
+  return `<div class="stale-note">${escapeHtml(parts.join(' · '))}</div>`;
+}
+
+function renderSnapshotFreshness(routing) {
+  const freshness = subscriptionFreshness({
+    fetched_at: routing.generated_at,
+    freshness: routing.diagnostics?.stale === false ? 'fresh' : null,
+    stale: routing.diagnostics?.stale,
+  }, routing);
+  return `<div class="stale-note">snapshot ${escapeHtml(freshness)}</div>`;
+}
+
+function renderRoutingPressure(agent, routing) {
+  const cb = agent.codexbar || agent.notebook_report || {};
+  const runtime = agent.runtime || {};
+  const status = agent.status || 'unknown';
+  let label = status;
+  let source = agent.status_source === 'weekly_pace' ? 'weekly pace'
+    : agent.status_source === 'cursor_auto' ? 'measured provider window'
+    : `unknown${agent.status_source ? ` (${agent.status_source})` : ''}`;
+  let reason = '';
+  if (status === 'near_cap') {
+    label = 'near cap';
+    source = 'measured provider window';
+    reason = 'Provider window near its cap; see measured remaining quota.';
+  } else if (runtime.headroom_blocked === true) {
+    label = 'runtime pressure';
+    source = 'runtime health';
+    reason = runtime.headroom_reason || 'Runtime headroom blocked; details unknown.';
+  } else if (status === 'hot' && agent.status_source === 'weekly_pace') {
+    label = 'usage ahead of pace';
+    reason = cb.pace_summary || 'Pace details unknown.';
+  } else if (status === 'error') {
+    source = agent.health?.healthy === false ? 'runtime health' : source;
+    reason = agent.health?.last_error || cb.failure_kind || 'Error details unknown.';
+  } else if (agent.status_source === 'weekly_pace') {
+    reason = agent.pace_deficit?.reason || cb.pace_summary || 'Pace details unknown.';
+  }
+  return `${statusPill(status, label)}<div>${escapeHtml(source)}</div>
+    <div class="sub">${escapeHtml(reason)}</div>${source === 'runtime health' ? renderSnapshotFreshness(routing) : renderLaneFreshness(agent, routing)}`;
+}
+
+function renderSubscriptionHealth(agent, routing) {
+  const health = agent.health || {};
+  const runtime = agent.runtime || {};
+  const label = health.healthy === true ? 'healthy' : health.healthy === false ? 'unhealthy' : 'unknown';
+  const details = [health.basis || 'health basis unknown'];
+  if (health.last_error) details.push(health.last_error);
+  if (runtime.headroom_blocked === true) details.push(runtime.headroom_reason || 'runtime headroom blocked');
+  for (const [key, name] of [['error', 'errors'], ['rate_limited', 'rate limits'], ['timeout', 'timeouts']]) {
+    const count = subscriptionNumber(runtime[key]);
+    details.push(count !== null && count >= 0 ? `${count} ${name}` : `${name} unknown`);
+  }
+  const window = subscriptionNumber(runtime.window_s);
+  details.push(window !== null && window > 0 ? `runtime window ${window}s` : 'runtime window unknown');
+  const last = runtime.last_outcome_at;
+  details.push(last ? `last outcome ${formatTs(last)}` : 'last outcome unknown');
+  return `${statusPill(label === 'healthy' ? 'ok' : label === 'unhealthy' ? 'error' : 'unknown', label)}<div class="sub">${escapeHtml(details.join(' · '))}</div>
+    ${renderSnapshotFreshness(routing)}`;
 }
 
 function formatUsd(value, currency = 'USD') {
@@ -531,8 +602,7 @@ function renderSubscriptions(routing) {
   const subscriptionLanes = ['cursor', 'claude', 'codex', 'grok', 'kimi', 'agy'];
   const rows = subscriptionLanes
     .map(name => {
-      const agent = resolveSubscriptionAgent(agents, name);
-      if (!agent) return '';
+      const agent = resolveSubscriptionAgent(agents, name) || {};
       const isCursor = name === 'cursor';
       const needLogin = agent.login_state === 'NEED_LOGIN' || agent.probe_state === 'NEED_LOGIN';
       const needProbe = !needLogin && agent.probe_state === 'NEED_PROBE';
@@ -565,16 +635,17 @@ function renderSubscriptions(routing) {
 
       return `<tr>
         <td class="mono">${escapeHtml(name)}</td>
-        <td>${statusPill(agent.status)}</td>
-        <td>${windowsHtml}${renderLaneFreshness(agent)}</td>
+        <td>${renderRoutingPressure(agent, routing)}</td>
+        <td>${windowsHtml}${renderLaneFreshness(agent, routing)}</td>
+        <td>${renderSubscriptionHealth(agent, routing)}</td>
         <td>${renderFleetBurnCell(agent)}</td>
         <td>${escapeHtml(resolveSubscriptionInFlight(inFlight, name))}</td>
       </tr>`;
     }).join('');
 
   document.getElementById('subscriptions-table').innerHTML = `<table>
-    <tr><th>Lane</th><th>Status</th><th>Provider allotment</th><th>Fleet burn (calls)</th><th>In Flight</th></tr>
-    ${rows || '<tr><td colspan="5">No subscription data.</td></tr>'}
+    <tr><th>Lane</th><th>Routing pressure and source</th><th>Measured remaining quota</th><th>Runtime health</th><th>Fleet burn (calls)</th><th>In Flight</th></tr>
+    ${rows}
   </table>`;
 }
 
