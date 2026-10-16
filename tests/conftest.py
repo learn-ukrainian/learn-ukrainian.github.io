@@ -2013,10 +2013,19 @@ _install_socket_guard()
 # always runs them. Needs are derived from the test module (path joins,
 # Path/open arguments, imported path constants, fixtures, and
 # pytest.mark.needs_sparse_tree), not from a hand list. A string that only
-# mentions the tree name is not a read.
+# mentions the tree name is not a read. Every default exclusion in
+# scripts/delegate.py is listed except wiki and the trees with a cone anchor
+# (_DISPATCH_SPARSE_ANCHORS): their directory exists in a default checkout,
+# so absence is not detectable here (#10777,
+# tests/test_dispatch_checkout_size.py).
 _SPARSE_TREE_DIRS: dict[str, tuple[str, ...]] = {
     "data/projects": ("tests/projects/open_model_data",),
     "data/lexicon": ("tests/lexicon",),
+    "data/datasets": (),
+    "data/processed": (),
+    "registry/lexicon/source-inventory-review-decisions": (),
+    "site/src/content": (),
+    "site/src/data": (),
 }
 _SPARSE_TREES = frozenset(_SPARSE_TREE_DIRS)
 _SPARSE_READ_ATTRS = frozenset(
@@ -2049,7 +2058,7 @@ def sparse_missing_tree_skip_reason(
         return None
     normalized = rel_path.replace("\\", "/").lstrip("./")
     needed = _trees_needed_by_test(normalized, item_name)
-    for tree in ("data/projects", "data/lexicon"):
+    for tree in sorted(_SPARSE_TREES):
         if tree in missing_trees and tree in needed:
             return f"{tree} is absent from this sparse worktree; re-include it with --sparse-include {tree}"
     return None
@@ -2078,7 +2087,7 @@ def _path_trees(text: str, *, allow_bare: bool = False) -> set[str]:
     """
     normalized = text.replace("\\", "/")
     found: set[str] = set()
-    for tree in ("data/projects", "data/lexicon"):
+    for tree in _SPARSE_TREES:
         into_tree = f"{tree}/" in normalized
         bare_tree = allow_bare and (normalized == tree or normalized.endswith(f"/{tree}"))
         if into_tree or bare_tree:
@@ -2427,7 +2436,7 @@ def _sparse_missing_trees() -> frozenset[str]:
     if not _sparse_checkout_enabled():
         return frozenset(forced)
     missing = set(forced)
-    for rel in ("data/projects", "data/lexicon"):
+    for rel in _SPARSE_TREES:
         if not (_REPO_ROOT / rel).is_dir():
             missing.add(rel)
     return frozenset(missing)
@@ -2679,7 +2688,7 @@ def pytest_configure(config: pytest.Config) -> None:
     )
     config.addinivalue_line(
         "markers",
-        "needs_sparse_tree(tree): test reads data/projects or data/lexicon; "
+        "needs_sparse_tree(tree): test reads a default sparse-excluded tree such as data/projects; "
         "skipped when sparse-checkout omits that tree",
     )
     config.addinivalue_line(

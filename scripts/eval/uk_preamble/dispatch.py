@@ -237,11 +237,7 @@ class DelegateComposer:
         """The sparse-checkout telemetry delegate's worktree block reads (exclusions only; nothing applied)."""
         d, worktree = self.delegate, self.worktree
         includes = d._infer_sparse_include(None, owned_paths=None, prompt_text=prompt)
-        exclude = set(d._DISPATCH_SPARSE_EXCLUDE_DEFAULT) - set(d._normalize_sparse_include(includes))
-        top = d._list_worktree_top_dirs(worktree)
-        data = d._list_worktree_dirs(worktree, "data/") if "data" in top else []
-        registry = d._list_worktree_dirs(worktree, "registry/") if "registry" in top else []
-        _, excluded = d._dispatch_sparse_cone_dirs(top, data, exclude, registry)
+        _, excluded = d._dispatch_sparse_profile(d._worktree_dir_lister(worktree), includes)
         return {"full_checkout": False, "excluded": excluded}
 
     def compose(self, prompt: str) -> dict[str, Any]:

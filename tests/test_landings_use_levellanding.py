@@ -141,6 +141,11 @@ def test_count_landing_matches_generated_curriculum_state(track: str) -> None:
 
 
 def _tracks_with_modules() -> list[str]:
+    # Default dispatch checkouts exclude site/src/data (#10777). A read here
+    # would abort collection of the whole suite there, so a missing file
+    # yields one placeholder case that fails when it runs instead.
+    if not STATS_PATH.is_file():
+        return ["curriculum-stats-missing"]
     stats = json.loads(STATS_PATH.read_text(encoding="utf-8"))
     return [track for track, entry in stats.items() if track != "_total" and entry["modules"] > 0]
 

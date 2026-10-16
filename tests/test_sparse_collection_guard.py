@@ -4,8 +4,10 @@ No repo copy (``cp -al`` walks the whole checkout and fails across
 filesystems). A child ``pytest --collect-only`` sets
 ``SPARSE_TEST_FORCE_MISSING_TREES`` so ``tree_absent()`` — the predicate
 ``tests/conftest.py``'s ``sparse_missing_tree_skip_reason`` consumes — treats
-``curriculum/``, ``wiki/``, ``data/projects/``, and ``data/lexicon/`` as
-absent. The same child loads ``tests.sparse_collection_audit``, which raises
+the default dispatch exclusions (``scripts/delegate.py``
+``_DISPATCH_SPARSE_EXCLUDE_DEFAULT``) as absent, except the cone anchors a
+default dispatch checkout keeps (``_DISPATCH_SPARSE_ANCHORS``, #10777).
+The same child loads ``tests.sparse_collection_audit``, which raises
 ``FileNotFoundError`` for reads of those trees and for ``os.stat`` /
 ``os.lstat`` (so ``Path.exists()`` agrees). Paths are resolved, so a symlink
 or ``/proc/self/cwd`` spelling is the same as the tree's real path. The
@@ -45,15 +47,21 @@ from pathlib import Path
 
 import pytest
 
+from scripts import delegate
 from tests.sparse_collection_scope import OUTCOMES_FILE_ENV, SCOPE_FILE_ENV
-from tests.sparse_trees import FORCE_MISSING_TREES_ENV, REPO_ROOT_ENV
+from tests.sparse_trees import FORCE_MISSING_TREES_ENV, REPO_ROOT_ENV, VISIBLE_ANCHORS_ENV
 
 pytestmark = [pytest.mark.reads_content, pytest.mark.repo_wide]
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
-_ABSENT_TREES = ("curriculum", "wiki", "data/projects", "data/lexicon")
-_TREE_REFERENCE = re.compile(r"data/projects|data/lexicon|curriculum/|wiki/")
-_BARE_SEGMENTS = ("curriculum", "wiki")
+_ABSENT_TREES = tuple(sorted(delegate._DISPATCH_SPARSE_EXCLUDE_DEFAULT))
+_VISIBLE_ANCHORS = tuple(sorted(anchor for anchors in delegate._DISPATCH_SPARSE_ANCHORS.values() for anchor in anchors))
+# A nested tree is named by its full path; a top-level one by "tree/" so the
+# bare word in prose does not match.
+_TREE_REFERENCE = re.compile(
+    "|".join(re.escape(tree if "/" in tree else f"{tree}/") for tree in sorted(_ABSENT_TREES, key=len, reverse=True))
+)
+_BARE_SEGMENTS = tuple(tree for tree in _ABSENT_TREES if "/" not in tree)
 
 
 def _references_sparse_tree(value: str) -> bool:
@@ -61,6 +69,22 @@ def _references_sparse_tree(value: str) -> bool:
         return True
     # Path-join segments: root / "curriculum" / ... or ".../wiki".
     return value in _BARE_SEGMENTS or any(value.endswith(f"/{tree}") for tree in _BARE_SEGMENTS)
+
+
+def _div_segments(node: ast.AST) -> list[str]:
+    if isinstance(node, ast.BinOp) and isinstance(node.op, ast.Div):
+        return _div_segments(node.left) + _div_segments(node.right)
+    if isinstance(node, ast.Constant) and isinstance(node.value, str):
+        return [node.value]
+    return []
+
+
+def _joins_sparse_tree(node: ast.AST) -> bool:
+    """``root / "site" / "src" / "data"`` names a nested tree one segment at a time."""
+    if not (isinstance(node, ast.BinOp) and isinstance(node.op, ast.Div)):
+        return False
+    joined = "/".join(_div_segments(node))
+    return any(joined == tree or f"{tree}/" in f"{joined}/" for tree in _ABSENT_TREES if "/" in tree)
 
 
 # Test modules changed by #8581. Unioned with the derived scan so coverage of
@@ -90,7 +114,8 @@ _PR_CHANGED_MODULES = (
 
 def _contains_tree_reference(node: ast.AST) -> bool:
     return any(
-        isinstance(sub, ast.Constant) and isinstance(sub.value, str) and _references_sparse_tree(sub.value)
+        (isinstance(sub, ast.Constant) and isinstance(sub.value, str) and _references_sparse_tree(sub.value))
+        or _joins_sparse_tree(sub)
         for sub in ast.walk(node)
     )
 
@@ -186,6 +211,8 @@ def collect_with_absent_trees(
     directory = _collection_directory(resolved)
     env = os.environ.copy()
     env[FORCE_MISSING_TREES_ENV] = ",".join(_ABSENT_TREES)
+    # Like _dispatch_sparse_profile, keep only anchors that exist in the checkout.
+    env[VISIBLE_ANCHORS_ENV] = ",".join(anchor for anchor in _VISIBLE_ANCHORS if (root / anchor).is_dir())
     env[REPO_ROOT_ENV] = str(root)
     # The child runs in an isolated scratch cwd and loads its own audit plugin.
     # The dispatch parent's plugin is not importable there.
@@ -350,6 +377,47 @@ def test_small_tree_referencing_modules_collect_when_sparse_trees_are_absent(
     completed, outcomes = collect_with_absent_trees(targets, cwd=repo, repo_root=repo)
     _assert_targets_reported(completed, outcomes, targets)
     assert len(outcomes) == len(trees)
+
+
+def test_anchor_keeps_import_time_reads_visible_and_dropping_it_fails(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The child sees what a default dispatch checkout has (#10777).
+
+    An anchor inside an excluded tree materializes the files beside its
+    ancestors, as cone mode does, while sibling directories stay hidden.
+    Without the anchor the same import-time read aborts collection.
+    """
+    repo = tmp_path / "synthetic-repo"
+    anchor = "registry/projects/open_model_data/integrations"
+    assert anchor in _VISIBLE_ANCHORS
+    (repo / anchor).mkdir(parents=True)
+    (repo / anchor / "entry.yaml").write_text("x: 1\n", encoding="utf-8")
+    catalog = repo / "registry/projects/open_model_data/instruction_catalog.yaml"
+    catalog.write_text("components: {}\n", encoding="utf-8")
+    sibling = repo / "registry/projects/open_model_data/components/big.json"
+    sibling.parent.mkdir(parents=True)
+    sibling.write_text("{}\n", encoding="utf-8")
+    module = _write_module(
+        repo / "tests",
+        "test_anchored_read.py",
+        "from pathlib import Path\n"
+        f"CATALOG = Path({str(catalog)!r}).read_text()\n"
+        f"if Path({str(sibling)!r}).exists():\n"
+        "    raise AssertionError('a sibling of the anchor stayed visible')\n"
+        "\n"
+        "def test_anchored_read() -> None:\n"
+        "    assert CATALOG\n",
+    )
+    targets = [str(module)]
+
+    completed, outcomes = collect_with_absent_trees(targets, cwd=repo, repo_root=repo)
+    _assert_targets_reported(completed, outcomes, targets)
+
+    monkeypatch.setattr(sys.modules[__name__], "_VISIBLE_ANCHORS", ())
+    dropped, dropped_outcomes = collect_with_absent_trees(targets, cwd=repo, repo_root=repo)
+    assert dropped.returncode != 0
+    assert dropped_outcomes.get(module.resolve().as_posix(), {}).get("status") == "failed"
 
 
 def test_citation_module_skip_is_a_reported_outcome(tmp_path: Path) -> None:

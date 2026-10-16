@@ -11847,6 +11847,12 @@ def test_normalize_sparse_include_rejects_nested_and_unknown():
         delegate._normalize_sparse_include([""])
 
 
+_SOURCE_INVENTORY_TREES = (
+    "registry/lexicon/source-inventory",
+    "registry/lexicon/source-inventory-review-decisions",
+)
+
+
 def test_infer_sparse_include_from_owned_paths_and_prompt():
     assert delegate._infer_sparse_include(None) == ()
     assert delegate._infer_sparse_include(
@@ -11880,14 +11886,11 @@ def test_infer_sparse_include_from_owned_paths_and_prompt():
     assert delegate._infer_sparse_include(
         None,
         owned_paths=["scripts/lexicon/manifest_io.py", "site/src/pages/index.astro"],
-    ) == ("data/lexicon",)
-    assert (
-        delegate._infer_sparse_include(
-            None,
-            owned_paths=["site/src/pages/index.astro"],
-        )
-        == ()
-    )
+    ) == (*_SOURCE_INVENTORY_TREES, "site/src/content", "site/src/data")
+    assert delegate._infer_sparse_include(
+        None,
+        owned_paths=["site/src/pages/index.astro"],
+    ) == ("site/src/content", "site/src/data")
     assert delegate._infer_sparse_include(
         None,
         owned_paths=["tests/test_open_model_foundry_cli.py"],
@@ -11902,7 +11905,7 @@ def test_infer_sparse_include_from_owned_paths_and_prompt():
     assert delegate._infer_sparse_include(
         None,
         owned_paths=["scripts/audit/source_inventory_review_decisions.py"],
-    ) == ("data/lexicon",)
+    ) == _SOURCE_INVENTORY_TREES
     assert (
         delegate._infer_sparse_include(
             None,
@@ -11913,15 +11916,15 @@ def test_infer_sparse_include_from_owned_paths_and_prompt():
     assert delegate._infer_sparse_include(
         None,
         owned_paths=["tests/test_source_inventory_intake.py"],
-    ) == ("data/lexicon",)
+    ) == _SOURCE_INVENTORY_TREES
     assert delegate._infer_sparse_include(
         None,
         owned_paths=["scripts/practice/author_densified_pairs.py"],
-    ) == ("data/lexicon",)
+    ) == _SOURCE_INVENTORY_TREES
     assert delegate._infer_sparse_include(
         None,
         owned_paths=["scripts/practice/thin_mode_source_inventory.py"],
-    ) == ("data/lexicon",)
+    ) == _SOURCE_INVENTORY_TREES
     assert (
         delegate._infer_sparse_include(
             None,
