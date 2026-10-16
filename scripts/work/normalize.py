@@ -472,7 +472,7 @@ def _build_pr_item(
                 "state": ci_state,
                 "ci_state": ci_state,
                 "merge_state_status": raw.get("mergeStateStatus") if current else None,
-                "head_sha": raw.get("headRefOid"),
+                "head_sha": head_sha if isinstance(head_sha, str) else None,
                 "head_ref": raw.get("headRefName"),
             },
         },

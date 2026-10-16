@@ -198,6 +198,8 @@ def derive_health(item: dict[str, Any], *, source_ok: bool) -> str:
         decision = str(review.get("review_decision") or "").upper()
         if decision in {"CHANGES_REQUESTED"}:
             return "OFF_TRACK"
+        if decision == "UNKNOWN":
+            return "UNKNOWN"
         if decision in {"", "REVIEW_REQUIRED", "NONE"} and check == "passing":
             return "AT_RISK"
         if decision == "APPROVED" and check == "passing":
@@ -314,6 +316,8 @@ def derive_safe_next_action(item: dict[str, Any]) -> dict[str, Any]:
             return _action("WAIT_CI", ["ci_pending"], "waiting")
         if decision == "CHANGES_REQUESTED":
             return _action("ADDRESS_REVIEW", ["changes_requested"], "ready")
+        if decision == "UNKNOWN":
+            return _action("INSPECT_UNKNOWN", ["review_decision_unknown"], "unknown")
         if decision in {"", "NONE", "REVIEW_REQUIRED"} and ci == "passing":
             return _action("REQUEST_CF_REVIEW", ["review_required"], "ready")
         if decision == "APPROVED" and ci == "passing":

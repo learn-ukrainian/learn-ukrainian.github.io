@@ -293,3 +293,61 @@ def test_server_ssot_deny_list_preserves_open_github():
     assert is_actionable({"health": "AT_RISK", "safe_next_action": {"code": "OPEN_GITHUB"}})
     assert is_actionable({"health": "OFF_TRACK", "safe_next_action": {"code": "OPEN_GITHUB"}})
     assert is_actionable({"health": "OFF_TRACK", "safe_next_action": {"code": "NONE"}})
+
+
+@pytest.mark.parametrize(
+    ("rollup", "health", "action", "expected_count"),
+    [
+        ([{"conclusion": "SUCCESS"}], "UNKNOWN", "INSPECT_UNKNOWN", 0),
+        ([], "UNKNOWN", "INSPECT_UNKNOWN", 0),
+        ([{"status": "IN_PROGRESS"}], "AT_RISK", "WAIT_CI", 1),
+        ([{"conclusion": "FAILURE"}], "OFF_TRACK", "FIX_CI", 1),
+    ],
+)
+def test_headless_approved_projection_in_dashboard_actionable_view(rollup, health, action, expected_count):
+    from scripts.work.normalize import build_projection
+    from scripts.work.sources_public import SectionResult
+
+    sections = {
+        name: SectionResult(name, "ok", payload=payload)
+        for name, payload in {
+            "prs": [{"number": 77, "state": "OPEN", "reviewDecision": "APPROVED", "statusCheckRollup": rollup}],
+            "issues": [],
+            "streams": {"streams": {}},
+            "delegate_active": {"tasks": []},
+            "delegate_tasks": {"tasks": []},
+            "fleet_reviews": {"reviews": []},
+        }.items()
+    }
+    projection = build_projection(sections, lifecycle_ledgers=[])
+    pr = projection["items"][0]
+    assert pr["health"] == health
+    assert pr["safe_next_action"]["code"] == action
+    script = """
+    const fs = require('fs');
+    const html = fs.readFileSync(process.argv[1], 'utf8');
+    eval(html.slice(html.indexOf('function isActionable('), html.indexOf('function railClasses(')));
+    const projection = JSON.parse(fs.readFileSync(0, 'utf8'));
+    const actionable = applyLocalFilters(projection, {view: 'actionable'});
+    const all = applyLocalFilters(projection, {view: 'all'});
+    console.log(JSON.stringify({
+      actionableItems: actionable.items.length, actionableAttention: actionable.attention.length,
+      filtered: actionable.filteredCount, total: actionable.totalMatching,
+      allItems: all.items.length, allAttention: all.attention.length,
+      allId: all.items[0].work_id, allAction: all.items[0].safe_next_action.code,
+    }));
+    """
+    result = subprocess.run(
+        ["node", "-e", script, str(WORK)], input=json.dumps(projection), capture_output=True, text=True, timeout=30
+    )
+    assert result.returncode == 0, result.stderr
+    assert json.loads(result.stdout) == {
+        "actionableItems": expected_count,
+        "actionableAttention": expected_count,
+        "filtered": 1 - expected_count,
+        "total": 1,
+        "allItems": 1,
+        "allAttention": 1,
+        "allId": pr["work_id"],
+        "allAction": action,
+    }

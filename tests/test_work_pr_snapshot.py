@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import copy
 import json
 import threading
 import time
@@ -194,10 +195,12 @@ def test_stale_and_incomplete_prs_stay_unknown_independently():
     assert projection["items"][0]["safe_next_action"]["code"] == "REQUEST_CF_REVIEW"
     assert projection["items"][1]["safe_next_action"]["code"] == "INSPECT_UNKNOWN"
     assert projection["items"][1]["health"] == "UNKNOWN"
+    assert projection["items"][1]["safe_next_action"]["reason_codes"] == ["source_unavailable"]
     assert projection["items"][1]["projections"]["verification"]["ci_state"] == "unknown"
     section.status = "stale"
     stale = build_projection(_sections(section), lifecycle_ledgers=[])
     assert all(i["health"] == "UNKNOWN" for i in stale["items"])
+    assert all(i["safe_next_action"]["reason_codes"] == ["source_unavailable"] for i in stale["items"])
     assert all(i["projections"]["verification"]["ci_state"] == "unknown" for i in stale["items"])
     assert any(o["class"] == "prs" and o["reason"] == "stale" for o in stale["denominator"]["omissions"])
 
@@ -272,3 +275,53 @@ def test_expiry_revokes_same_head_sealed_verdict_availability(monkeypatch, expir
     assert pr["safe_next_action"]["code"] == "INSPECT_UNKNOWN"
     assert payload["items"][0]["projections"]["review"]["sealed_verdict_available"] is True
     assert payload["items"][0]["projections"]["review"]["review_decision"] == "APPROVED"
+
+
+@pytest.mark.parametrize("head", ["missing", None, "", " \t ", 123, False, [], {}])
+@pytest.mark.parametrize("decision", ["APPROVED", "CHANGES_REQUESTED"])
+@pytest.mark.parametrize(
+    ("ci", "rollup", "health", "action", "reason", "state", "actionable"),
+    [
+        (
+            "passing",
+            [{"conclusion": "SUCCESS"}],
+            "UNKNOWN",
+            "INSPECT_UNKNOWN",
+            "review_decision_unknown",
+            "unknown",
+            False,
+        ),
+        ("unknown", [], "UNKNOWN", "INSPECT_UNKNOWN", "review_decision_unknown", "unknown", False),
+        ("pending", [{"status": "IN_PROGRESS"}], "AT_RISK", "WAIT_CI", "ci_pending", "waiting", True),
+        ("failing", [{"conclusion": "FAILURE"}], "OFF_TRACK", "FIX_CI", "ci_failing", "ready", True),
+    ],
+)
+def test_headless_pr_preserves_unknown_and_negative_evidence(
+    head, decision, ci, rollup, health, action, reason, state, actionable
+):
+    raw = {"number": 77, "state": "OPEN", "reviewDecision": decision, "statusCheckRollup": rollup}
+    if head != "missing":
+        raw["headRefOid"] = head
+    sections = _sections(sources.SectionResult("prs", "ok", payload=[raw], count=1))
+    original = copy.deepcopy(sections)
+    payload = build_projection(sections, repository_id=REPO, lifecycle_ledgers=[])
+    validate_projection(payload)
+    pr = payload["items"][0]
+    if decision == "CHANGES_REQUESTED" and ci in {"passing", "unknown"}:
+        health, action, reason, state, actionable = "OFF_TRACK", "ADDRESS_REVIEW", "changes_requested", "ready", True
+    assert pr["work_id"] == f"wp1:public-monitor:{REPO}:pr:77"
+    assert pr["projections"]["review"]["review_decision"] == (
+        "UNKNOWN" if decision == "APPROVED" else "CHANGES_REQUESTED"
+    )
+    assert pr["projections"]["review"]["sealed_verdict_available"] is False
+    assert pr["projections"]["verification"]["ci_state"] == ci
+    assert pr["projections"]["verification"]["head_sha"] == (
+        head if isinstance(head, str) and head != "missing" else None
+    )
+    assert pr["health"] == health
+    assert pr["safe_next_action"] == {"code": action, "reason_codes": [reason], "state": state}
+    assert pr["flags"]["source_ok"] is True
+    assert pr["flags"]["attention"] is actionable
+    assert payload["attention"][0]["safe_next_action"] == pr["safe_next_action"]
+    assert payload["capabilities"]["mutation"] is False
+    assert sections == original

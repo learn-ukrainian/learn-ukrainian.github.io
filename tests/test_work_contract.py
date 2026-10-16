@@ -203,19 +203,23 @@ def test_pr_check_state_pr_8264_rollup_is_passing():
         ("APPROVED", "UNKNOWN", "INSPECT_UNKNOWN"),
     ],
 )
+@pytest.mark.parametrize("head", [None, "a" * 40], ids=["original-headless", "valid-head"])
 def test_pr_matrix_leftover_projection_routes_to_review_or_merge(
+    head,
     green_rollup_with_matrix_leftover,
     decision,
     health,
     action,
 ):
+    raw = {
+        "number": 7691,
+        "reviewDecision": decision,
+        "statusCheckRollup": green_rollup_with_matrix_leftover,
+    }
+    if head is not None:
+        raw["headRefOid"] = head
     item = _build_pr_item(
-        {
-            "number": 7691,
-            "headRefOid": "a" * 40,
-            "reviewDecision": decision,
-            "statusCheckRollup": green_rollup_with_matrix_leftover,
-        },
+        raw,
         repository_id=REPO,
         tasks=[],
         reviews=[],
@@ -226,7 +230,9 @@ def test_pr_matrix_leftover_projection_routes_to_review_or_merge(
     assert item["health"] == health
     assert item["safe_next_action"]["code"] == action
     if decision == "APPROVED":
-        assert item["safe_next_action"]["reason_codes"] == ["merge_evidence_unknown"]
+        assert item["safe_next_action"]["reason_codes"] == [
+            "merge_evidence_unknown" if head else "review_decision_unknown"
+        ]
         assert item["safe_next_action"]["state"] == "unknown"
 
 
@@ -3664,6 +3670,7 @@ def test_pr_review_projection_does_not_reuse_old_head_verdict():
         ("b" * 40, REPO, 77, _HEAD_9741, "completed", True, False),
         (None, REPO, 77, _HEAD_9741, "completed", True, False),
         ("", REPO, 77, _HEAD_9741, "completed", True, False),
+        (123, REPO, 77, _HEAD_9741, "completed", True, False),
         (" ", REPO, 77, " ", "completed", True, False),
         (_HEAD_9741, REPO, 77, 123, "completed", True, False),
         (_HEAD_9741, REPO, 77, None, "completed", True, False),
@@ -3705,6 +3712,9 @@ def test_pr_review_projection_requires_all_source_identities(
     if history:
         assert history[0]["projections"]["review"]["head_sha"] == review_head
     assert pr["projections"]["verification"]["merge_evidence"] == {"state": "unknown", "reason": "no_ledger"}
+    assert pr["health"] == "UNKNOWN"
+    assert pr["safe_next_action"]["code"] == "INSPECT_UNKNOWN"
+    assert pr["safe_next_action"]["state"] == "unknown"
 
 
 def test_pr_review_projection_requalifies_mixed_reviews_after_head_change():
