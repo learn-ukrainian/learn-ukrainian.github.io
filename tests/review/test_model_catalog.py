@@ -37,7 +37,9 @@ import sys
 source = sys.argv[sys.argv.index("--source-root") + 1]
 sys.path[:0] = [source, source + "/scripts", source + "/packages/v4-runtime/src"]
 from tests.agent_runtime.agy_hook_helpers import register_agy_hooks
-cached_capture_reads = runpy.run_path(source + "/tests/review/test_model_catalog.py")["cached_capture_reads"]
+support = runpy.run_path(source + "/tests/review/test_model_catalog.py")
+cached_capture_reads = support["cached_capture_reads"]
+stage_agy_effort_help = support["stage_agy_effort_help"]
 sys.argv = sys.argv[1:]
 capture = runpy.run_path(sys.argv[0])
 original = capture["capture"]
@@ -45,11 +47,26 @@ def cached_capture(*args, **kwargs):
     # Enter only after main has installed its hermetic environment.
     if args:
         register_agy_hooks(args[1], home=args[1] / "home")
+        stage_agy_effort_help(args[1])
     with cached_capture_reads():
         return original(*args, **kwargs)
 capture["main"].__globals__["capture"] = cached_capture
 capture["main"]()
 """
+
+
+def stage_agy_effort_help(scratch):
+    """Give the staged AGY CLI its supported help without changing the pinned capture."""
+    stub = scratch / "bin" / "agy"
+    if not stub.is_file():
+        return
+    body = stub.read_text()
+    stub.write_text(
+        "#!/bin/sh\n"
+        'if [ "$#" = 1 ] && [ "$1" = --help ]; then\n'
+        "  printf '%s\\n' '  --effort Reasoning effort (low|medium|high|xhigh|max)'\n"
+        "  exit 0\nfi\n" + body
+    )
 
 
 @contextmanager
@@ -269,8 +286,88 @@ PRE_ARGON_HOST_BASELINE = approved_claude_account_dispatch_baseline(
         )
     )
 )
-APPROVED_BASELINE = approved_argon_trial_baseline(PRE_ARGON_HOST_BASELINE, "host-cli")
+
+
+def approved_agy_effort_baseline(baseline, configuration):
+    """#9917 passes explicit high effort, or refuses a CLI whose support is unknown."""
+    adapters = deepcopy(baseline["adapters"])
+    for index, case in enumerate(INPUTS["adapters"]):
+        if case["agent"] != "agy" or case["isolation"]:
+            continue
+        if configuration == "host-cli":
+            cmd = adapters[index]["value"]["cmd"]
+            position = cmd.index("--model") + 2
+            cmd[position:position] = ["--effort", "high"]
+        else:
+            assert configuration == "no-cli"
+            adapters[index] = {
+                "error": "agy_effort_unverified: CLI version could not be verified",
+                "exception": "ValueError",
+                "exit_status": 1,
+                "stderr": "",
+                "stdout": "",
+            }
+    return {**baseline, "adapters": adapters}
+
+
+APPROVED_BASELINE = approved_agy_effort_baseline(
+    approved_argon_trial_baseline(PRE_ARGON_HOST_BASELINE, "host-cli"), "host-cli"
+)
 APPROVED_INPUTS = {**GEMINI_INPUTS, **SEATS_OVERLAY["inputs"], **ARGON_OVERLAY["inputs"]}
+
+
+@pytest.mark.parametrize("configuration", ("host-cli", "no-cli"))
+def test_agy_effort_overlay_changes_only_explicit_nonisolated_agy_rows(configuration):
+    before = approved_argon_trial_baseline(PRE_ARGON_HOST_BASELINE, configuration)
+    original = deepcopy(before)
+    after = approved_agy_effort_baseline(before, configuration)
+    assert before == original
+    assert {key: value for key, value in after.items() if key != "adapters"} == {
+        key: value for key, value in before.items() if key != "adapters"
+    }
+    changed = [
+        index for index, (old, new) in enumerate(zip(before["adapters"], after["adapters"], strict=True)) if old != new
+    ]
+    assert changed == [108, 110]
+    for index in changed:
+        assert INPUTS["adapters"][index] == {
+            "agent": "agy",
+            "isolation": False,
+            "mode": "read-only" if index == 108 else "workspace-write",
+        }
+        if configuration == "host-cli":
+            expected = deepcopy(before["adapters"][index])
+            cmd = expected["value"]["cmd"]
+            cmd[cmd.index("--model") + 2 : cmd.index("--model") + 2] = ["--effort", "high"]
+            assert after["adapters"][index] == expected
+        else:
+            assert after["adapters"][index] == {
+                "error": "agy_effort_unverified: CLI version could not be verified",
+                "exception": "ValueError",
+                "exit_status": 1,
+                "stderr": "",
+                "stdout": "",
+            }
+
+
+@pytest.mark.parametrize("configuration", ("host-cli", "no-cli"))
+def test_staged_agy_effort_help_preserves_version_and_refuses_sessions(tmp_path, configuration):
+    env = CAPTURE["capture_environment"](tmp_path, configuration)
+    stage_agy_effort_help(tmp_path)
+    binary = tmp_path / "bin" / "agy"
+    if configuration == "no-cli":
+        assert not binary.exists()
+        return
+    version = subprocess.run([binary, "--version"], env=env, capture_output=True, text=True, timeout=5)
+    assert (version.returncode, version.stdout, version.stderr) == (0, "1.2.10\n", "")
+    help_result = subprocess.run([binary, "--help"], env=env, capture_output=True, text=True, timeout=5)
+    assert (help_result.returncode, help_result.stdout, help_result.stderr) == (
+        0,
+        "  --effort Reasoning effort (low|medium|high|xhigh|max)\n",
+        "",
+    )
+    session = subprocess.run([binary, "--print", "fixture"], env=env, capture_output=True, text=True, timeout=5)
+    assert (session.returncode, session.stdout, session.stderr) == (97, "", "capture stub refuses provider execution\n")
 
 
 def test_argon_trial_overlay_records_only_the_model_data_delta():
@@ -279,7 +376,8 @@ def test_argon_trial_overlay_records_only_the_model_data_delta():
         "efe9c9b9db2f651e421e42769cc1682c12b724122545d2e2e8b4b0d66d1148ba"
     )
     assert set(ARGON_OVERLAY) == {"adapter_patches", "inputs", "row_patches", "surfaces"}
-    before, after = PRE_ARGON_HOST_BASELINE, APPROVED_BASELINE
+    before = PRE_ARGON_HOST_BASELINE
+    after = approved_argon_trial_baseline(before, "host-cli")
     assert set(before) == set(after)
     assert set(ARGON_OVERLAY["surfaces"]) == {"catalog", "approval", "reviewer"}
     assert set(ARGON_OVERLAY["inputs"]) == {"reviewer"}
@@ -287,7 +385,9 @@ def test_argon_trial_overlay_records_only_the_model_data_delta():
     assert ARGON_OVERLAY["adapter_patches"] == {"host-cli": {}, "no-cli": {}}
     for surface in set(before) - {"catalog", "approval", "reviewer", "dispatch"}:
         assert before[surface] == after[surface], surface
-    changed_dispatch = [i for i, (old, new) in enumerate(zip(before["dispatch"], after["dispatch"], strict=True)) if old != new]
+    changed_dispatch = [
+        i for i, (old, new) in enumerate(zip(before["dispatch"], after["dispatch"], strict=True)) if old != new
+    ]
     assert changed_dispatch == list(range(196, 220, 2))
     old_ids = "`gemini-3.1-pro-high`, `gemini-3.1-pro-low`."
     new_ids = "`gemini-3.1-pro-high`, `gemini-3.1-pro-low`, `gemini-4-argon-high`, `gemini-4-argon-medium`, `gemini-4-argon-low`."
@@ -306,7 +406,9 @@ def test_argon_trial_overlay_records_only_the_model_data_delta():
     assert new_models["gemini-4-argon-high"]["roles"] == ["explicit_bakeoff_only"]
     old_review_inputs = {**GEMINI_INPUTS, **SEATS_OVERLAY["inputs"]}["reviewer"]
     new_review_inputs = APPROVED_INPUTS["reviewer"]
-    old_by_input = {dispatch_key(row): receipt for row, receipt in zip(old_review_inputs, before["reviewer"], strict=True)}
+    old_by_input = {
+        dispatch_key(row): receipt for row, receipt in zip(old_review_inputs, before["reviewer"], strict=True)
+    }
     added = changed = 0
     for row, receipt in zip(new_review_inputs, after["reviewer"], strict=True):
         key = dispatch_key(row)
@@ -1096,7 +1198,7 @@ def test_no_cli_capture_equals_separate_frozen_surface(tmp_path):
         assert hashlib.sha256((output / name).read_bytes()).hexdigest() == digest
     actual = json.loads(gzip.decompress((output / "baseline.json.gz").read_bytes()))
     original = json.loads(gzip.decompress((expected / "baseline.json.gz").read_bytes()))
-    assert actual == approved_argon_trial_baseline(
+    expected_baseline = approved_argon_trial_baseline(
         approved_claude_account_dispatch_baseline(
             approved_cto_wrappers_baseline(
                 approved_claude_cap_baseline(
@@ -1116,6 +1218,7 @@ def test_no_cli_capture_equals_separate_frozen_surface(tmp_path):
         ),
         "no-cli",
     )
+    assert actual == approved_agy_effort_baseline(expected_baseline, "no-cli")
     assert len(actual["launchers"]) == 70
     errors = [row.get("error", "") for row in actual["adapters"]]
     assert any("grok" in error and "PATH" in error for error in errors)
