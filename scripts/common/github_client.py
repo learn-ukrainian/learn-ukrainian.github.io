@@ -7,9 +7,12 @@ Only fully modelled argv/JSON fields translate; other commands retain their
 native gh semantics through the same bounded, colour-safe process transport.
 Stale JSON reads require allow_stale=True; binary responses are never cached.
 
-Every request path (REST, injected transports and native gh) is admitted by one
-decision, ``_refusal``. Only an authentic GitHub hold refuses a call that lands a
-PR; every local refusal is ``github_rate_limited`` (exit 75) with a typed reason.
+Every request path (REST, injected transports and native gh) is normalized once
+(``_normalize``) and admitted by one decision, ``_refusal``. Only GitHub's own
+Retry-After hold refuses a call that lands a PR; every local refusal is
+``github_rate_limited`` (exit 75) with a typed reason. A body is read only when that
+decision depends on it; one that cannot then be read exactly is refused before any
+send as ``github_invalid_request`` with a typed reason, never classified by guess.
 """
 
 from __future__ import annotations
@@ -17,6 +20,7 @@ from __future__ import annotations
 import contextvars
 import email.utils
 import hashlib
+import io
 import json
 import math
 import os
@@ -31,7 +35,7 @@ from dataclasses import dataclass, field
 from datetime import UTC
 from pathlib import Path
 from typing import Any
-from urllib.parse import quote, urlencode, urlsplit
+from urllib.parse import quote, quote_plus, urlencode, urlsplit
 
 RESERVE = 10
 """GraphQL and search pools: a non-landing call is refused at or below this many remaining."""
@@ -39,6 +43,14 @@ LANDING_RESERVE = 500
 """Core pool: below this many remaining, what is left is kept for calls that land a PR."""
 REFUSAL_REASONS = frozenset({"retry_after", "secondary_hold", "core_below_landing_reserve", "pool_exhausted"})
 """The closed set of reasons; every local refusal names exactly one."""
+MAX_REQUEST_BYTES = 8 * 1024 * 1024
+"""Most bytes of a request body this client reads to classify it, separate from ``max_response_bytes``.
+
+A body admission needs that is larger is refused without reading the rest. A body admission
+does not need is never read, whatever its size.
+"""
+PREPARATION_ERRORS = frozenset({"body_unreadable", "body_not_replayable", "body_too_large", "invalid_body_type"})
+"""The closed set of reasons a request whose admission needs its body is refused before any send."""
 ANSI = re.compile(rb"\x1b\[[0-?]*[ -/]*[@-~]")
 
 
@@ -130,6 +142,25 @@ def _limited(reason, reset_at, **observation):
     return Result(status=429, error="github_rate_limited", reset_at=reset_at, reason=reason)
 
 
+class GitHubUnpreparedRequest(RuntimeError):
+    """Admission needed a request body this client cannot read exactly; nothing was sent."""
+
+    code = "github_invalid_request"
+
+    def __init__(self, reason):
+        if reason not in PREPARATION_ERRORS:
+            raise AssertionError(f"untyped GitHub preparation error: {reason!r}")
+        self.reason = reason
+        super().__init__(f"github_invalid_request reason={reason}")
+
+
+def _unprepared(reason):
+    """The result of a request refused before any send because admission could not read its body."""
+    if reason not in PREPARATION_ERRORS:
+        raise AssertionError(f"untyped GitHub preparation error: {reason!r}")
+    return Result(status=400, error=GitHubUnpreparedRequest.code, reason=reason)
+
+
 def refusal_of(observed, *, injected=False):
     """The typed refusal a client result, completed process or process error carries, else ``None``.
 
@@ -156,10 +187,11 @@ def refusal_of(observed, *, injected=False):
 
 # --- admission: one decision for every request path ---------------------------------------
 #
-# Holds share the budget table with GitHub's pool observations. GitHub's own Retry-After holds
-# every pool of a credential ("retry_after"); its reset time after a primary-limit 403 or 429
-# holds that pool ("retry_after:<pool>"). "secondary" is this client's own inference (gh stderr,
-# a limit response without Retry-After); it never refuses a landing call.
+# Holds share the budget table with GitHub's pool observations. Only GitHub's own Retry-After
+# holds, every pool of a credential ("retry_after"). A primary-limit 403 or 429 is a pool
+# observation (remaining 0 until GitHub's reset), never a hold: ordinary calls honour it and
+# landing calls do not. "secondary" is this client's own inference (gh stderr, a limit response
+# without Retry-After); it never refuses a landing call.
 _AUTHENTIC_HOLD = "retry_after"
 _SYNTHETIC_HOLD = "secondary"
 _FLOORED_POOLS = frozenset({"graphql", "search", "code_search"})
@@ -172,7 +204,7 @@ def _refusal(budgets, pools, *, call_class, now):
     ``pools`` are the rate-limit buckets the call can spend and ``call_class`` is
     ``"landing"``, ``"exempt"`` or ``None``. The first match wins:
 
-    1. an authentic GitHub hold refuses every class: ``retry_after``;
+    1. GitHub's own Retry-After hold refuses every class: ``retry_after``;
     2. a landing or exempt call is admitted;
     3. a live synthetic or secondary hold: ``secondary_hold``;
     4. core with its window open and ``0 <= remaining < LANDING_RESERVE``: ``core_below_landing_reserve``;
@@ -190,7 +222,7 @@ def _refusal(budgets, pools, *, call_class, now):
         ]
         return max(resets, default=None)
 
-    checks = [("retry_after", [_AUTHENTIC_HOLD, *(f"{_AUTHENTIC_HOLD}:{pool}" for pool in pools)], lambda _: True)]
+    checks = [("retry_after", [_AUTHENTIC_HOLD], lambda _: True)]
     if call_class is None:
         checks += [
             ("secondary_hold", [_SYNTHETIC_HOLD], lambda remaining: remaining <= RESERVE),
@@ -210,7 +242,7 @@ def _refusal(budgets, pools, *, call_class, now):
 
 def _admission(db, scope, pools, call_class, now):
     """Apply :func:`_refusal` to the scope's stored budgets and holds."""
-    names = [*pools, _SYNTHETIC_HOLD, _AUTHENTIC_HOLD, *(f"{_AUTHENTIC_HOLD}:{pool}" for pool in pools)]
+    names = [*pools, _SYNTHETIC_HOLD, _AUTHENTIC_HOLD]
     rows = db.execute(
         "SELECT resource,remaining,reset FROM budget WHERE scope=? AND resource IN ("
         + ",".join("?" * len(names))
@@ -219,6 +251,22 @@ def _admission(db, scope, pools, call_class, now):
     ).fetchall()
     budgets = {resource: (remaining, reset) for resource, remaining, reset in rows}
     return _refusal(budgets, pools, call_class=call_class, now=now)
+
+
+def _admit(db, scope, request, now):
+    """Admit one normalized request (:func:`_normalize`): ``None`` or a ``(reason, reset)`` refusal.
+
+    The decision is :func:`_refusal`'s. A body is read only when that decision depends on it:
+    an ordinary call would be refused (steps 3-5) where a landing one would not, and neither
+    the request's own shape nor a vetted landing flow has decided its class. A body that cannot
+    then be read exactly raises :class:`GitHubUnpreparedRequest`; it is never guessed ordinary.
+    """
+    if request.inspect is None:
+        return _admission(db, scope, request.pools, request.call_class, now)
+    refusal = _admission(db, scope, request.pools, None, now)
+    if refusal is None or refusal[0] == "retry_after":
+        return refusal
+    return None if request.inspect() else refusal
 
 
 def _retry_after_expiry(value, now):
@@ -244,13 +292,14 @@ def _budget_headers(headers):
         return None
 
 
-def _limit_hold(response, resources, now):
+def _limit_hold(response, now):
     """The hold GitHub's limit response asks for: ``(holds, reset, reason)``, else ``None``.
 
-    Every request path that sees GitHub's status and headers decides through this. Its
-    ``Retry-After`` holds every pool of the credential; its reset time after a primary-limit
-    403 or 429 holds that pool (``resources`` when GitHub names none). Any other limit
-    response is this client's inference: a synthetic hold that never refuses landing.
+    Every request path that sees GitHub's status and headers decides through this. Only its
+    ``Retry-After`` is a hold, on every pool of the credential. A primary-limit 403 or 429
+    (remaining ``0`` with GitHub's reset) holds nothing: the caller stores that remaining and
+    reset as the pool's budget, which ordinary calls honour and landing calls do not. Any other
+    limit response is this client's inference: a synthetic hold that never refuses landing.
     """
     h = {key.lower(): value for key, value in response.headers.items()}
     if not (
@@ -266,8 +315,7 @@ def _limit_hold(response, resources, now):
         return [_AUTHENTIC_HOLD], retry, "retry_after"
     budget = _budget_headers(h)
     if budget is not None and budget[0] == 0:
-        named = [h["x-ratelimit-resource"]] if h.get("x-ratelimit-resource") else list(resources)
-        return [f"{_AUTHENTIC_HOLD}:{resource}" for resource in named], budget[1], "retry_after"
+        return [], budget[1], "pool_exhausted"
     return [_SYNTHETIC_HOLD], (budget[1] if budget is not None else None) or int(now + 60), "secondary_hold"
 
 
@@ -315,21 +363,30 @@ _GRAPHQL_TOKEN = re.compile(
 
 
 _ROOT_TYPES = {"query": "Query", "mutation": "Mutation", "subscription": "Subscription"}
+_CONDITIONS = frozenset({"skip", "include"})
+_ABSENT = object()
 
 
 class _GraphQLUnread(ValueError):
-    """A GraphQL document this reader cannot parse or resolve."""
+    """A GraphQL document this reader cannot parse, or no single operation it selects."""
 
 
-def _graphql_root_fields(query, operation_name=None):
-    """Operation type and root field names of the operation a GraphQL request executes, else ``None``.
+class _Undecided(ValueError):
+    """Which root fields of the selected GraphQL operation execute cannot be decided."""
 
-    Follows the GraphQL specification's executable grammar and operation selection
-    (GetOperation): ``operationName`` picks one of several named operations, and a lone
-    operation needs none. Fragment spreads and inline fragments at the root expand into
-    their fields. Aliases, arguments, variables, directives, strings and comments never
-    name a field. A document this reader cannot parse, an ambiguous or missing operation,
-    an unknown or cyclic fragment, or a fragment on another root type has no answer.
+
+def _graphql_operation(query, operation_name=None, variables=None):
+    """``(operation type, root fields)`` of the operation a GraphQL request executes, else ``None``.
+
+    Follows the GraphQL specification (September 2025): operation selection (GetOperation),
+    then root field collection (CollectFields). ``operationName`` picks one of several named
+    operations; an absent or null one selects only a sole operation. Root fragment spreads and
+    inline fragments expand into their fields, and ``@skip``/``@include`` are resolved from
+    literals, ``variables`` and the operation's defaults. Aliases, arguments, strings and
+    comments never name a field. The fields are ``None`` when which ones execute cannot be
+    decided: an unknown or cyclic fragment, a fragment on another root type, or a condition
+    that is not a declared ``Boolean`` value. A document this reader cannot parse, or no
+    single selected operation, is ``None``.
     """
     if not isinstance(query, str) or not (operation_name is None or isinstance(operation_name, str)):
         return None
@@ -366,12 +423,87 @@ def _graphql_root_fields(query, operation_name=None):
                     return
         raise _GraphQLUnread
 
-    def directives():
+    def value(const):
+        """A value: its boolean, ``("variable", name)``, or ``_ABSENT`` for any other value."""
+        if at("$"):
+            if const:
+                raise _GraphQLUnread
+            take("$")
+            return ("variable", take(kind="name"))
+        if at("[") or at("{"):
+            closing = "]" if take() == "[" else "}"
+            names = set()
+            while not at(closing):
+                if closing == "}":
+                    name = take(kind="name")
+                    if name in names:
+                        raise _GraphQLUnread
+                    names.add(name)
+                    take(":")
+                value(const)
+            take(closing)
+            return _ABSENT
+        if at(kind="string") or at(kind="number"):
+            take(kind=tokens[index][0])
+            return _ABSENT
+        name = take(kind="name")
+        return name == "true" if name in ("true", "false") else _ABSENT
+
+    def arguments(const=False):
+        take("(")
+        found = {}
+        while not at(")"):
+            name = take(kind="name")
+            if name in found:
+                raise _GraphQLUnread
+            take(":")
+            found[name] = value(const)
+        take(")")
+        if not found:
+            raise _GraphQLUnread
+        return found
+
+    def directives(const=False):
+        found = []
         while at("@"):
             take("@")
-            take(kind="name")
-            if at("("):
-                skip("(", ")")
+            name = take(kind="name")
+            found.append((name, arguments(const) if at("(") else {}))
+        return found
+
+    def type_reference():
+        if at("["):
+            take("[")
+            type_reference()
+            take("]")
+            named = None
+        else:
+            named = take(kind="name")
+        non_null = at("!")
+        if non_null:
+            take("!")
+        return named, non_null
+
+    def variable_definitions():
+        take("(")
+        found = {}
+        while not at(")"):
+            take("$")
+            name = take(kind="name")
+            take(":")
+            named, non_null = type_reference()
+            default = _ABSENT
+            if at("="):
+                take("=")
+                default = value(True)
+            directives(True)
+            if name in found:
+                raise _GraphQLUnread
+            found[name] = (named, non_null, default)
+        take(")")
+        if not found:
+            raise _GraphQLUnread
+        return found
 
     def selection_set():
         take("{")
@@ -380,27 +512,25 @@ def _graphql_root_fields(query, operation_name=None):
             if at("..."):
                 take("...")
                 if at(kind="name") and not at("on", kind="name"):
-                    spread = take(kind="name")
-                    directives()
-                    selections.append(("spread", spread))
+                    selections.append(("spread", take(kind="name"), directives()))
                     continue
                 condition = None
                 if at("on", kind="name"):
                     take("on", kind="name")
                     condition = take(kind="name")
-                directives()
-                selections.append(("inline", condition, selection_set()))
+                marks = directives()
+                selections.append(("inline", condition, marks, selection_set()))
                 continue
             field = take(kind="name")
             if at(":"):
                 take(":")
                 field = take(kind="name")
             if at("("):
-                skip("(", ")")
-            directives()
+                arguments()
+            marks = directives()
             if at("{"):
                 skip("{", "}")
-            selections.append(("field", field))
+            selections.append(("field", field, marks))
         take("}")
         if not selections:
             raise _GraphQLUnread
@@ -414,62 +544,121 @@ def _graphql_root_fields(query, operation_name=None):
                 name = take(kind="name")
                 take("on", kind="name")
                 condition = take(kind="name")
-                directives()
+                marks = directives()
                 if name == "on" or name in fragments:
                     raise _GraphQLUnread
-                fragments[name] = (condition, selection_set())
+                fragments[name] = (condition, marks, selection_set())
             elif at("{"):
-                operations.append(("query", None, selection_set()))
+                operations.append(("query", None, {}, [], selection_set()))
             else:
                 operation = take(*_ROOT_TYPES, kind="name")
                 name = take(kind="name") if at(kind="name") else None
-                if at("("):
-                    skip("(", ")")
-                directives()
-                operations.append((operation, name, selection_set()))
-        names = [name for _, name, _ in operations]
+                definitions = variable_definitions() if at("(") else {}
+                operations.append((operation, name, definitions, directives(), selection_set()))
+        names = [name for _, name, *_ in operations]
         if len(operations) > 1 and (None in names or len(set(names)) != len(names)):
             return None
         selected = [op for op in operations if operation_name is None or op[1] == operation_name]
         if len(selected) != 1:
             return None
-        operation, _, selections = selected[0]
-        root, fields = _ROOT_TYPES[operation], []
-
-        def expand(selections, spreading):
-            for selection in selections:
-                if selection[0] == "field":
-                    fields.append(selection[1])
-                elif selection[0] == "inline":
-                    if selection[1] not in (None, root):
-                        raise _GraphQLUnread
-                    expand(selection[2], spreading)
-                else:
-                    name = selection[1]
-                    if name in spreading or name not in fragments or fragments[name][0] != root:
-                        raise _GraphQLUnread
-                    expand(fragments[name][1], spreading | {name})
-
-        expand(selections, frozenset())
     except (_GraphQLUnread, RecursionError):
         return None
+    operation, _, definitions, marks, selections = selected[0]
+    root, fields = _ROOT_TYPES[operation], []
+    # Coerced variable values: a supplied value, else the operation's default.
+    supplied = variables if isinstance(variables, dict) else {}
+    coerced = {name: supplied.get(name, default) for name, (_, _, default) in definitions.items()}
+
+    def executes(marks):
+        """Whether a selection with these directives executes (CollectFields' @skip and @include)."""
+        conditions = [(name, arguments) for name, arguments in marks if name in _CONDITIONS]
+        if len({name for name, _ in conditions}) != len(conditions):
+            raise _Undecided
+        result = True
+        for name, arguments in conditions:
+            if set(arguments) != {"if"}:
+                raise _Undecided
+            flag = arguments["if"]
+            if isinstance(flag, tuple):
+                # A variable in a Boolean! position: declared Boolean!, or Boolean with a default.
+                named, non_null, default = definitions.get(flag[1], (None, False, _ABSENT))
+                if named != "Boolean" or not (non_null or default is not _ABSENT):
+                    raise _Undecided
+                flag = coerced.get(flag[1], _ABSENT)
+            if not isinstance(flag, bool):
+                raise _Undecided
+            result = result and (not flag if name == "skip" else flag)
+        return result
+
+    def expand(selections, spreading):
+        for selection in selections:
+            if not executes(selection[2]):
+                continue
+            if selection[0] == "field":
+                fields.append(selection[1])
+            elif selection[0] == "inline":
+                if selection[1] not in (None, root):
+                    raise _Undecided
+                expand(selection[3], spreading)
+            else:
+                name = selection[1]
+                if name in spreading or name not in fragments or fragments[name][0] != root:
+                    raise _Undecided
+                if any(mark in _CONDITIONS for mark, _ in fragments[name][1]):
+                    raise _Undecided
+                expand(fragments[name][2], spreading | {name})
+
+    try:
+        if any(name in _CONDITIONS for name, _ in marks):
+            raise _Undecided
+        expand(selections, frozenset())
+    except (_Undecided, RecursionError):
+        return operation, None
     return operation, fields
 
 
-def _request_class(method, path, document=None):
-    """``"landing"`` for a write that lands a PR, ``"exempt"`` for a budget or credential call.
+def _graphql_request(document):
+    """``(kind, landing)`` of the GraphQL request a decoded JSON body makes.
 
-    Only the request's own shape counts; anything else is ``None``. A GraphQL request is
-    landing only when every root field of the operation it executes is a landing mutation.
+    GraphQL over HTTP: an object whose ``query`` is the one executable document, an optional
+    ``operationName`` (absent or null selects a sole operation) and ``variables`` (an object).
+    kind is the selected operation's type; ``"batch"`` for a JSON array of requests;
+    ``"persisted"`` for an object with no document whose extensions name a persisted query;
+    ``"opaque"`` for anything else no operation can be selected from. A document inside
+    variables, extensions or a string never executes. Only a selected mutation whose every
+    executing root field is a landing mutation is landing.
     """
-    if path == "graphql":
-        shape = (
-            _graphql_root_fields(document.get("query"), document.get("operationName"))
-            if method == "POST" and isinstance(document, dict)
-            else None
-        )
-        landing = shape is not None and shape[0] == "mutation" and shape[1] and set(shape[1]) <= _LANDING_MUTATIONS
-        return "landing" if landing else None
+    if isinstance(document, list):
+        return "batch", False
+    if not isinstance(document, dict):
+        return "opaque", False
+    query, variables = document.get("query"), document.get("variables")
+    if query is None:
+        extensions = document.get("extensions")
+        return ("persisted" if isinstance(extensions, dict) and "persistedQuery" in extensions else "opaque"), False
+    if not (variables is None or isinstance(variables, dict)):
+        return "opaque", False
+    operation = _graphql_operation(query, document.get("operationName"), variables)
+    if operation is None:
+        return "opaque", False
+    kind, fields = operation
+    return kind, kind == "mutation" and bool(fields) and set(fields) <= _LANDING_MUTATIONS
+
+
+def _reject_constant(name):
+    raise ValueError(f"not JSON: {name}")
+
+
+def _json_body(data):
+    """The JSON value a request body's exact bytes encode (strict UTF-8, no NaN or Infinity), else ``None``."""
+    try:
+        return json.loads(data.decode("utf-8"), parse_constant=_reject_constant)
+    except (UnicodeDecodeError, ValueError, RecursionError):
+        return None
+
+
+def _rest_class(method, path):
+    """``"landing"`` for a REST write that lands a PR, ``"exempt"`` for a budget or credential call, else ``None``."""
     return next(
         (
             call_class
@@ -478,6 +667,223 @@ def _request_class(method, path, document=None):
         ),
         None,
     )
+
+
+# --- the request normalizer: one interpretation of a request for every transport ------------
+
+_CLASSIFICATIONS = frozenset(
+    {
+        "rest",
+        "rest_landing",
+        "rest_exempt",
+        "graphql_get",
+        "graphql_query",
+        "graphql_mutation",
+        "graphql_landing",
+        "graphql_subscription",
+        "graphql_batch",
+        "graphql_persisted",
+        "graphql_opaque",
+        "uninspected",
+        "unprepared",
+        "command",
+        "invalid",
+    }
+)
+# A body gh fills from repository context (a placeholder in a typed field): its bytes are
+# gh's to compute, so it can never establish landing.
+_UNRESOLVED_BODY = object()
+
+
+@dataclass(frozen=True)
+class _Provenance:
+    """How a request was classified. Only these four fields: never a header, token, body,
+    document, variable, path or argv, so the record can neither leak nor correlate them."""
+
+    classification: str
+    length: int | None = None
+    digest: str | None = None
+    refusal: str | None = None
+
+    def __post_init__(self):
+        if self.classification not in _CLASSIFICATIONS or not (
+            self.refusal is None or self.refusal in PREPARATION_ERRORS
+        ):
+            raise AssertionError("untyped GitHub request provenance")
+
+
+@dataclass(eq=False)
+class _Request:
+    """One request as admission sees it, whatever transport sends it (see :func:`_normalize`).
+
+    ``call_class`` is ``"landing"``, ``"exempt"`` or ``None``; ``read`` marks a cacheable read;
+    ``inspect`` is set only while the class still depends on an unread body: it reads the body
+    and answers whether it lands a PR, or raises :class:`GitHubUnpreparedRequest`.
+    """
+
+    method: str
+    path: str | None
+    pools: tuple
+    call_class: str | None
+    read: bool = False
+    inspect: Any = None
+    provenance: _Provenance = _Provenance("uninspected")
+
+    def classify(self, body):
+        """Classify a GraphQL POST body (exact bytes, ``None``, or a reader of them): whether it lands a PR."""
+        try:
+            data = body() if callable(body) else body
+            if data is not None and data is not _UNRESOLVED_BODY and len(data) > MAX_REQUEST_BYTES:
+                raise GitHubUnpreparedRequest("body_too_large")
+        except GitHubUnpreparedRequest as refused:
+            self.provenance = _Provenance("unprepared", refusal=refused.reason)
+            raise
+        known = isinstance(data, bytes)
+        kind, landing = _graphql_request(_json_body(data) if known else None)
+        self.provenance = _Provenance(
+            "graphql_landing" if landing else "graphql_" + kind,
+            len(data) if known else None,
+            hashlib.sha256(data).hexdigest() if known else None,
+        )
+        return landing
+
+
+def _normalize(method, path, pools, body=None):
+    """The one interpretation of a request that admission, caching and every transport share.
+
+    ``path`` is the canonical resource path (:func:`_canonical_endpoint`). ``body`` is the
+    exact bytes sent, ``None`` for none, or a zero-argument reader of them that admission calls
+    only if its decision depends on the body (:func:`_admit`). The class comes from the
+    request's own shape (a REST landing or exempt call, or a GraphQL POST whose selected
+    operation is a landing mutation), else from a vetted landing flow; a read is never landing
+    by its URL. A GraphQL request is a cacheable read only when it selects a query.
+    """
+    method = method.upper()
+    flow = "landing" if _landing_flow() else None
+    if path != "graphql":
+        shape = _rest_class(method, path)
+        provenance = _Provenance("rest_" + shape if shape else "rest")
+        return _Request(method, path, tuple(pools), shape or flow, method == "GET", provenance=provenance)
+    if method != "POST":
+        # GraphQL over GET never executes a mutation (GraphQL over HTTP); it is never cached.
+        return _Request(method, path, tuple(pools), flow, provenance=_Provenance("graphql_get"))
+    request = _Request(method, path, tuple(pools), flow)
+    if callable(body):
+        if flow is None:
+            request.inspect = lambda: request.classify(body)
+        return request
+    try:
+        landing = request.classify(body)
+    except GitHubUnpreparedRequest as refused:
+        reason = refused.reason
+        if flow is None:
+
+            def inspect():
+                raise GitHubUnpreparedRequest(reason)
+
+            request.inspect = inspect
+        return request
+    request.call_class = "landing" if landing else flow
+    request.read = request.provenance.classification == "graphql_query"
+    return request
+
+
+def _read_limited(stream, limit):
+    """At most ``limit + 1`` bytes or characters of ``stream``, read to its end; ``None`` if it would block."""
+    parts, size = [], 0
+    while size <= limit:
+        part = stream.read(limit + 1 - size)
+        if part is None:
+            return None
+        if not part:
+            break
+        parts.append(part)
+        size += len(part)
+    return parts[0][:0].join(parts) if parts else b""
+
+
+def _payload_bytes(payload):
+    """The exact bytes :meth:`GitHubClient.request` sends for ``payload``: bytes-like data as given, else its JSON."""
+    if payload is None:
+        return None
+    if isinstance(payload, (bytes, bytearray, memoryview)):
+        return bytes(payload)
+    return json.dumps(payload, ensure_ascii=False).encode()
+
+
+class _DeferredBody:
+    """A ``urllib.request.Request`` body its opener sends itself; read only if admission needs it."""
+
+    def __init__(self, data):
+        self.data = data
+
+    def capture(self):
+        """The exact bytes urllib sends for this body (Python 3.12 ``http.client``), without consuming it.
+
+        Bytes-like data is sent as is; a file object from its current position (a text file
+        encoded ISO-8859-1); a list or tuple chunk by chunk. Only what can be read and then sent
+        unchanged is read: a seekable file is read up to ``MAX_REQUEST_BYTES`` and its position
+        restored. A one-shot iterator or non-seekable stream is refused unread, never buffered;
+        ``str`` and other types urllib rejects are refused, never encoded by guess.
+        """
+        data = self.data
+        if hasattr(data, "read"):
+            try:
+                if not data.seekable():
+                    raise GitHubUnpreparedRequest("body_not_replayable")
+                position = data.tell()
+            except (AttributeError, OSError, ValueError):
+                raise GitHubUnpreparedRequest("body_not_replayable") from None
+            try:
+                content = _read_limited(data, MAX_REQUEST_BYTES)
+            except (OSError, ValueError):
+                content = None
+            try:
+                data.seek(position)
+            except (OSError, ValueError):
+                # The original can no longer be sent unchanged.
+                raise GitHubUnpreparedRequest("body_unreadable") from None
+            if content is None:
+                raise GitHubUnpreparedRequest("body_unreadable")
+            if isinstance(content, str) and isinstance(data, io.TextIOBase):
+                try:
+                    content = content.encode("iso-8859-1")
+                except UnicodeEncodeError:
+                    raise GitHubUnpreparedRequest("invalid_body_type") from None
+            if not isinstance(content, (bytes, bytearray)):
+                raise GitHubUnpreparedRequest("invalid_body_type")
+            if len(content) > MAX_REQUEST_BYTES:
+                raise GitHubUnpreparedRequest("body_too_large")
+            return bytes(content)
+        if isinstance(data, str):
+            raise GitHubUnpreparedRequest("invalid_body_type")
+        try:
+            view = memoryview(data)
+        except TypeError:
+            view = None
+        if view is not None:
+            if view.nbytes > MAX_REQUEST_BYTES:
+                raise GitHubUnpreparedRequest("body_too_large")
+            return view.tobytes()
+        if isinstance(data, (list, tuple)):
+            chunks, size = [], 0
+            for chunk in data:
+                if isinstance(chunk, str):
+                    raise GitHubUnpreparedRequest("invalid_body_type")
+                try:
+                    view = memoryview(chunk)
+                except TypeError:
+                    raise GitHubUnpreparedRequest("invalid_body_type") from None
+                size += view.nbytes
+                if size > MAX_REQUEST_BYTES:
+                    raise GitHubUnpreparedRequest("body_too_large")
+                chunks.append(view.tobytes())
+            return b"".join(chunks)
+        try:
+            iter(data)
+        except TypeError:
+            raise GitHubUnpreparedRequest("invalid_body_type") from None
+        raise GitHubUnpreparedRequest("body_not_replayable")
 
 
 # The current landing operation, opened only by this module's vetted sites.
@@ -855,27 +1261,12 @@ class GitHubClient:
         host_class, resource_path = _canonical_endpoint(endpoint, self.host)
         if host_class == "rejected":
             raise ValueError("GitHub endpoint host mismatch")
-        raw = (
-            payload
-            if isinstance(payload, bytes)
-            else json.dumps(payload, ensure_ascii=False).encode()
-            if payload is not None
-            else None
-        )
+        # A body the opener sends itself (http_open) is read only if admission needs it.
+        deferred_body = payload.capture if isinstance(payload, _DeferredBody) else None
+        raw = None if deferred_body else _payload_bytes(payload)
         graphql = resource_path == "graphql"
-        document = payload
-        if graphql and isinstance(payload, bytes):
-            try:
-                document = json.loads(payload)
-            except ValueError:
-                document = None
-        read = method == "GET" or (
-            graphql
-            and isinstance(document, dict)
-            and document
-            and not re.search(r"\bmutation\b", str(document.get("query", "")))
-        )
         resource = _endpoint_bucket(resource_path)
+        normalized = _normalize(method, resource_path, (resource,), deferred_body or raw)
         key = hashlib.sha256(
             (
                 method
@@ -888,7 +1279,7 @@ class GitHubClient:
             + (raw or b"")
         ).hexdigest()
         cacheable = (
-            read
+            normalized.read
             and not raw_response
             and not any(
                 name.lower() == "accept" and value == "application/octet-stream"
@@ -896,20 +1287,22 @@ class GitHubClient:
             )
             and not re.search(r"/(?:releases/assets/\d+|artifacts/\d+/zip)$", resource_path)
         )
-        call_class = _request_class(method, resource_path, document) or ("landing" if _landing_flow() else None)
         now = self.clock()
-        with self._db() as db:
-            cached = (
-                db.execute(
-                    "SELECT body,headers,at FROM cache WHERE scope=? AND key=? AND (? IS NULL OR length(body)<=?)",
-                    (self.scope, key, self.max_response_bytes, self.max_response_bytes),
-                ).fetchone()
-                if cacheable
-                else None
-            )
-            if not cacheable or (cached and json.loads(cached[1]).get("_github_binary")):
-                cached = None
-            refusal = _admission(db, self.scope, (resource,), call_class, now)
+        try:
+            with self._db() as db:
+                cached = (
+                    db.execute(
+                        "SELECT body,headers,at FROM cache WHERE scope=? AND key=? AND (? IS NULL OR length(body)<=?)",
+                        (self.scope, key, self.max_response_bytes, self.max_response_bytes),
+                    ).fetchone()
+                    if cacheable
+                    else None
+                )
+                if not cacheable or (cached and json.loads(cached[1]).get("_github_binary")):
+                    cached = None
+                refusal = _admit(db, self.scope, normalized, now)
+        except GitHubUnpreparedRequest as refused:
+            return _unprepared(refused.reason)
 
         def deferred(reason, reset):
             if allow_stale and cached and not fresh:
@@ -940,7 +1333,7 @@ class GitHubClient:
                     if budget is not None:
                         remaining, reset = budget
                         _store_budget(db, self.scope, h.get("x-ratelimit-resource", resource), remaining, reset)
-                    limit = _limit_hold(response, (resource,), now)
+                    limit = _limit_hold(response, now)
                     if limit is not None:
                         holds, reset, reason = limit
                         for hold in holds:
@@ -2242,63 +2635,417 @@ def _native_buckets(args, host="github.com"):
     return frozenset(buckets)
 
 
-def _native_source(source, stdin, cwd):
-    """The bytes ``gh`` reads for an ``--input`` or ``-F key=@`` source, else ``None``.
+# --- gh api: the request a native command line makes, as gh 2.98.0 builds it -----------------
+#
+# ``-F`` has one meaning per gh 2.98.0 command family (``gh <family> <command> --help``): a typed
+# ``gh api`` field, the release notes file of ``gh release create|edit``, the body file of
+# ``gh issue|pr comment|create|edit`` and ``gh pr review|merge``. Only ``gh api`` fields shape a
+# request this client classifies; a body or notes file is never read for admission.
+_DASH_F = {"api": "--field", "release": "--notes-file", "issue": "--body-file", "pr": "--body-file"}
+# gh 2.98.0 ``gh api`` flags (pkg/cmd/api/api.go) by pflag spelling: (name, takes a value).
+_GH_API_FLAGS = {
+    "--hostname": ("hostname", True),
+    "--method": ("method", True),
+    "-X": ("method", True),
+    "--field": ("field", True),
+    "-F": ("field", True),
+    "--raw-field": ("raw-field", True),
+    "-f": ("raw-field", True),
+    "--header": ("header", True),
+    "-H": ("header", True),
+    "--preview": ("preview", True),
+    "-p": ("preview", True),
+    "--input": ("input", True),
+    "--template": ("template", True),
+    "-t": ("template", True),
+    "--jq": ("jq", True),
+    "-q": ("jq", True),
+    "--cache": ("cache", True),
+    "--include": ("include", False),
+    "-i": ("include", False),
+    "--slurp": ("slurp", False),
+    "--paginate": ("paginate", False),
+    "--silent": ("silent", False),
+    "--verbose": ("verbose", False),
+    "--allow-escape-sequences": ("allow-escape-sequences", False),
+}
+# gh fills these from the current repository (fillPlaceholders); this client does not.
+_GH_PLACEHOLDER = re.compile(r":(?:owner|repo|branch)\b|\{(?:owner|repo|branch)\}", re.ASCII)
+_GO_TRUE, _GO_FALSE = {"1", "t", "T", "TRUE", "true", "True"}, {"0", "f", "F", "FALSE", "false", "False"}
+_UNRESOLVED = object()
 
-    ``-`` is the command's standard input. Only a regular file is read, so a device or pipe
-    path can neither block nor consume this process's input.
+
+def _gh_api_argv(tokens):
+    """``(flags, positional)`` of ``gh api`` arguments as gh 2.98.0's pflag parser reads them, else ``None``.
+
+    ``flags`` maps a flag's name to its values in order. A long flag takes ``--name=value`` or
+    the next argument; shorthands combine (``-iXPOST``), attach (``-Fkey=value``) or take
+    ``-F=value``; ``-`` is positional and ``--`` ends the flags. An unknown flag, a missing value
+    or help is ``None``: gh sends no request.
+    """
+    flags, positional, queue = {}, [], [str(token) for token in tokens]
+    while queue:
+        token = queue.pop(0)
+        if token == "--":
+            positional.extend(queue)
+            break
+        if not token.startswith("-") or token == "-":
+            positional.append(token)
+            continue
+        if token.startswith("--"):
+            spelling, eq, value = token.partition("=")
+            if spelling not in _GH_API_FLAGS:
+                return None
+            name, valued = _GH_API_FLAGS[spelling]
+            if valued and not eq:
+                if not queue:
+                    return None
+                value = queue.pop(0)
+            elif not valued:
+                value = True if not eq else True if value in _GO_TRUE else False if value in _GO_FALSE else None
+                if value is None:
+                    return None
+            flags.setdefault(name, []).append(value)
+            continue
+        shorthands = token[1:]
+        while shorthands:
+            if "-" + shorthands[0] not in _GH_API_FLAGS:
+                return None
+            name, valued = _GH_API_FLAGS["-" + shorthands[0]]
+            if len(shorthands) > 2 and shorthands[1] == "=":
+                value, shorthands = shorthands[2:], ""
+                if not valued:
+                    value = True if value in _GO_TRUE else False if value in _GO_FALSE else None
+                    if value is None:
+                        return None
+            elif not valued:
+                value, shorthands = True, shorthands[1:]
+            elif len(shorthands) > 1:
+                value, shorthands = shorthands[1:], ""
+            elif queue:
+                value, shorthands = queue.pop(0), ""
+            else:
+                return None
+            flags.setdefault(name, []).append(value)
+    return flags, positional
+
+
+def _go_atoi(text):
+    """Go's ``strconv.Atoi``: an optionally signed ASCII decimal within int64, else ``None``."""
+    match = re.fullmatch(r"([+-]?)0*([0-9]+)", text, re.ASCII)
+    if match is None or len(match[2]) > 19:
+        return None
+    number = int(match[1] + match[2])
+    return number if -(2**63) <= number < 2**63 else None
+
+
+def _gh_typed(text, read):
+    """gh 2.98.0 ``magicFieldValue`` of a ``-F`` value (pkg/cmd/api/fields.go).
+
+    ``@path`` and ``@-`` are a file's or standard input's text (``read``); then an int, a
+    boolean or null; any other value is the string, unless gh would fill a repository
+    placeholder into it.
+    """
+    if text.startswith("@"):
+        return read(text[1:])
+    number = _go_atoi(text)
+    if number is not None:
+        return number
+    if text in ("true", "false"):
+        return text == "true"
+    if text == "null":
+        return None
+    return _UNRESOLVED if _GH_PLACEHOLDER.search(text) else text
+
+
+def _gh_fields(raw, typed, value_of):
+    """gh 2.98.0 ``parseFields``: raw fields, then typed ones, into nested parameters, else ``None``.
+
+    Bracketed keys nest objects (``a[b]=1``) and append to arrays (``a[]=1``); a key without
+    ``=`` is an empty array only when it ends in ``[]``. Overriding a field, or a type
+    conflict, is gh's error: no request.
+    """
+    params = {}
+    for entry, magic in [*((entry, False) for entry in raw), *((entry, True) for entry in typed)]:
+        value_index, keystack, key_start = 0, [], 0
+        for position, char in enumerate(entry):
+            if char == "[":
+                if key_start == 0:
+                    keystack.append(entry[:position])
+                key_start = position + 1
+            elif char == "]":
+                keystack.append(entry[key_start:position])
+            elif char == "=":
+                if key_start == 0:
+                    keystack.append(entry[:position])
+                value_index = position + 1
+                break
+        if not keystack:
+            return None
+        if value_index == 0:
+            if keystack[-1] != "":
+                return None
+            value = None
+        else:
+            value = entry[value_index:]
+            if magic:
+                value = value_of(value)
+        target, is_array, subkey = params, False, ""
+        for key in keystack:
+            if key == "":
+                is_array = True
+                continue
+            if subkey != "":
+                target = _gh_slice(target, subkey, key) if is_array else _gh_map(target, subkey)
+                is_array = False
+                if target is None:
+                    return None
+            subkey = key
+        if is_array:
+            if value is None:
+                target[subkey] = []
+            elif subkey not in target:
+                target[subkey] = [value]
+            elif isinstance(target[subkey], list):
+                target[subkey].append(value)
+            else:
+                return None
+        elif subkey in target:
+            return None
+        else:
+            target[subkey] = value
+    return params
+
+
+def _gh_map(params, key):
+    if key not in params:
+        params[key] = {}
+    return params[key] if isinstance(params[key], dict) else None
+
+
+def _gh_slice(params, previous, key):
+    if previous not in params:
+        params[previous] = [{}]
+        return params[previous][0]
+    existing = params[previous]
+    if not isinstance(existing, list):
+        return None
+    if existing and isinstance(existing[-1], dict):
+        if key not in existing[-1]:
+            return existing[-1]
+        if existing[-1][key] is None:
+            return None  # gh's reflect.TypeOf(nil).Kind() panics: no request
+        if isinstance(existing[-1][key], list):
+            return existing[-1]
+    existing.append({})
+    return existing[-1]
+
+
+def _gh_contains_unresolved(value):
+    if value is _UNRESOLVED:
+        return True
+    if isinstance(value, dict):
+        return any(_gh_contains_unresolved(item) for item in value.values())
+    return isinstance(value, list) and any(_gh_contains_unresolved(item) for item in value)
+
+
+def _gh_group(params):
+    """gh 2.98.0 ``groupGraphQLVariables``: ``query`` and ``operationName`` stay top-level, every other field is a variable."""
+    top = {key: value for key, value in params.items() if key in ("query", "operationName")}
+    variables = {key: value for key, value in params.items() if key not in top}
+    return {**top, "variables": variables} if variables else top
+
+
+def _go_json(value):
+    """The bytes Go's ``encoding/json.Marshal`` writes for gh's parameters: sorted keys, compact, HTML-safe."""
+    text = json.dumps(value, ensure_ascii=False, separators=(",", ":"), sort_keys=True)
+    for char, escape in (("<", "\\u003c"), (">", "\\u003e"), ("&", "\\u0026"), (" ", "\\u2028"), (" ", "\\u2029")):
+        text = text.replace(char, escape)
+    return text.encode()
+
+
+def _gh_add_query(path, params):
+    """gh 2.98.0 ``addQuery`` (pkg/cmd/api/http.go): parameters as ``url.Values``, keys sorted."""
+    if not params:
+        return path
+    pairs = []
+
+    def add(key, value):
+        if isinstance(value, str):
+            pairs.append((key, value))
+        elif value is None:
+            pairs.append((key, ""))
+        elif isinstance(value, bool):
+            pairs.append((key, "true" if value else "false"))
+        elif isinstance(value, int):
+            pairs.append((key, str(value)))
+        elif isinstance(value, dict):
+            for subkey, item in value.items():
+                add(subkey, item)
+        elif isinstance(value, list):
+            for item in value:
+                add(key + "[]", item)
+
+    add("", params)
+    pairs.sort(key=lambda pair: pair[0])
+    query = "&".join(quote_plus(key, safe="") + "=" + quote_plus(value, safe="") for key, value in pairs)
+    return path + ("&" if "?" in path else "?") + query
+
+
+class _Stdin:
+    """A command's standard input as gh reads it: once, whole (:func:`_gh_api_call` refuses a second reader)."""
+
+    def __init__(self, data):
+        self.data = (
+            b""
+            if data is None
+            else data.encode()
+            if isinstance(data, str)
+            else bytes(data)
+            if isinstance(data, (bytes, bytearray, memoryview))
+            else None
+        )
+
+    def take(self):
+        data, self.data = self.data, b""
+        if data is None:
+            raise GitHubUnpreparedRequest("invalid_body_type")
+        if len(data) > MAX_REQUEST_BYTES:
+            raise GitHubUnpreparedRequest("body_too_large")
+        return data
+
+
+def _source_bytes(source, stdin, cwd):
+    """The exact bytes gh reads from a ``--input`` or ``@`` source, up to ``MAX_REQUEST_BYTES``.
+
+    ``-`` is the command's standard input (:class:`_Stdin`). A path, relative to the command's
+    working directory, is opened without blocking and read only if it is a regular file; a
+    pipe or device is refused unread, so it can neither block nor be consumed.
     """
     if source == "-":
-        if isinstance(stdin, str):
-            return stdin.encode()
-        return bytes(stdin) if isinstance(stdin, (bytes, bytearray, memoryview)) else None
+        return stdin.take()
+    path = Path(source)
+    path = path if path.is_absolute() else Path(cwd or ".") / path
     try:
-        path = Path(source)
-        path = path if path.is_absolute() else Path(cwd or ".") / path
-        if not stat.S_ISREG(path.stat().st_mode):
-            return None
-        return path.read_bytes()
+        descriptor = os.open(path, os.O_RDONLY | os.O_NONBLOCK | os.O_CLOEXEC)
     except (OSError, ValueError):
-        return None
-
-
-def _native_call_class(args, host="github.com", *, stdin=None, cwd=None):
-    """:func:`_request_class` of a native ``gh api`` argv: its method, endpoint and body.
-
-    The body is what ``gh`` sends: the ``--input`` file or standard input, else the
-    ``-f``/``-F`` fields (``-F key=@file`` reads the file). A body that cannot be read
-    classifies as nothing.
-    """
-    if len(args) < 3 or args[1] != "api":
-        return None
-    options, positional = _options(args[2:])
-    hostname = _opt(options, "--hostname")
-    host_class, path = _canonical_endpoint(
-        positional[0] if len(positional) == 1 else None, hostname if isinstance(hostname, str) else host
-    )
-    if host_class in {"unknown", "rejected"}:
-        return None
-    fields = {}
-    for flag in ("-f", "--raw-field", "-F", "--field"):
-        for key, _, value in (str(entry).partition("=") for entry in options.get(flag, [])):
-            if flag in {"-F", "--field"} and value.startswith("@"):
-                content = _native_source(value[1:], stdin, cwd)
-                try:
-                    value = content.decode() if content is not None else None
-                except UnicodeDecodeError:
-                    value = None
-            fields[key] = value
-    method = _opt(options, "--method", "-X", default="POST" if fields or "--input" in options else "GET")
-    if "--input" in options:
-        # With --input, gh sends that body; the fields become query parameters.
-        content = _native_source(str(_opt(options, "--input")), stdin, cwd)
+        raise GitHubUnpreparedRequest("body_unreadable") from None
+    with open(descriptor, "rb", closefd=True) as handle:
+        mode = os.fstat(descriptor).st_mode
+        if not stat.S_ISREG(mode):
+            raise GitHubUnpreparedRequest("body_unreadable" if stat.S_ISDIR(mode) else "body_not_replayable")
         try:
-            document = json.loads(content) if content is not None else None
-        except ValueError:
-            document = None
-    else:
-        document = {"query": fields.get("query"), "operationName": fields.get("operationName")}
-    return _request_class(str(method).upper(), path, document)
+            data = _read_limited(handle, MAX_REQUEST_BYTES)
+        except OSError:
+            raise GitHubUnpreparedRequest("body_unreadable") from None
+    if data is None:
+        raise GitHubUnpreparedRequest("body_unreadable")
+    if len(data) > MAX_REQUEST_BYTES:
+        raise GitHubUnpreparedRequest("body_too_large")
+    return data
+
+
+@dataclass
+class _GhApiCall:
+    """The request one ``gh api`` command line makes, as gh 2.98.0 builds it (pkg/cmd/api)."""
+
+    method: str
+    endpoint: str
+    host: str | None
+    flags: dict
+    unresolved: bool
+    build: Any
+
+    def body(self):
+        """The exact body bytes, ``None`` for none, or ``_UNRESOLVED_BODY``; raises when gh's sources cannot be read."""
+        return self.build()[1]
+
+
+def _gh_api_call(tokens, *, stdin, cwd):
+    """The request ``gh api <tokens>`` sends, else ``None`` when gh 2.98.0 would send none.
+
+    One reading for admission and translation: pflag argv (:func:`_gh_api_argv`), gh's own
+    argument checks, fields (:func:`_gh_fields`, raw before typed) and the method gh defaults
+    to (POST once there are fields or ``--input``). ``build()`` reads every source gh reads,
+    in gh's order, and returns ``(url, body)``: ``--input`` is the body verbatim and the fields
+    become query parameters; otherwise a GET carries the fields as query parameters and any
+    other method as gh's JSON (``graphql`` keeps ``query`` and ``operationName`` top-level and
+    groups every other field under ``variables``).
+    """
+    parsed = _gh_api_argv(tokens)
+    if parsed is None:
+        return None
+    flags, positional = parsed
+
+    def last(name, default=None):
+        return flags[name][-1] if name in flags else default
+
+    if len(positional) != 1:
+        return None
+    endpoint, given_method, input_file = positional[0], last("method", "GET"), last("input") or None
+    paginate, slurp = last("paginate") is True, last("slurp") is True
+    outputs = [last("verbose") is True, last("silent") is True, bool(last("jq")), bool(last("template"))]
+    if (
+        (paginate and given_method.upper() != "GET" and endpoint != "graphql")
+        or (paginate and input_file)
+        or (slurp and (last("jq") or last("template") or not paginate))
+        or sum(outputs) > 1
+    ):
+        return None
+    raw, typed = flags.get("raw-field", []), flags.get("field", [])
+    shape = _gh_fields(raw, typed, lambda text: _gh_typed(text, lambda _source: ""))
+    # gh reads standard input once and closes it: a second reader fails before any request.
+    stdin_readers = sum(entry.partition("=")[2] == "@-" for entry in typed if "=" in entry) + (input_file == "-")
+    if shape is None or stdin_readers > 1:
+        return None
+    method = given_method if "method" in flags else "POST" if shape or input_file else "GET"
+    method = method.upper() or "GET"
+    fields_unresolved = _gh_contains_unresolved(shape)
+
+    def build():
+        if fields_unresolved and not input_file and method != "GET":
+            return endpoint, _UNRESOLVED_BODY
+        stream = _Stdin(stdin)
+
+        def text_of(source):
+            return _source_bytes(source, stream, cwd).decode(errors="replace")
+
+        # gh reads the fields' sources first (``@-`` takes standard input), then ``--input``.
+        params = _gh_fields(raw, typed, lambda text: _gh_typed(text, text_of))
+        if input_file:
+            return _gh_add_query(endpoint, params), _source_bytes(input_file, stream, cwd)
+        if not params:
+            return endpoint, None
+        if method == "GET":
+            return _gh_add_query(endpoint, params), None
+        data = _go_json(_gh_group(params) if endpoint == "graphql" else params)
+        if len(data) > MAX_REQUEST_BYTES:
+            raise GitHubUnpreparedRequest("body_too_large")
+        return endpoint, data
+
+    unresolved = fields_unresolved or _GH_PLACEHOLDER.search(endpoint) is not None
+    return _GhApiCall(method, endpoint, last("hostname"), flags, unresolved, build)
+
+
+def _normalize_native(args, host, pools, *, stdin=None, cwd=None):
+    """:func:`_normalize` of a native ``gh`` command line.
+
+    A ``gh api`` request is what gh builds (:func:`_gh_api_call`); its body is read only if
+    admission needs it. Any other command, and argv gh would refuse, is classified by its vetted
+    landing flow alone (:data:`_DASH_F`: its ``-F`` names a body or notes file, never a field).
+    """
+    call = (
+        _gh_api_call(args[2:], stdin=stdin, cwd=cwd)
+        if len(args) > 2 and _DASH_F.get(str(args[1])) == "--field"
+        else None
+    )
+    if call is not None:
+        host_class, path = _canonical_endpoint(call.endpoint, call.host or host)
+        if host_class not in {"unknown", "rejected"}:
+            return _normalize(call.method, path, pools, call.body)
+    flow = "landing" if _landing_flow() else None
+    classification = "invalid" if len(args) > 1 and args[1] == "api" else "command"
+    return _Request("", None, tuple(pools), flow, provenance=_Provenance(classification))
 
 
 def _argv_landing_flow(args):
@@ -2335,13 +3082,14 @@ def _native_response(args, output):
 
 
 def _native_command(args, client, runner, kwargs):
-    """Fall through once using the bounded, colour-safe native transport."""
+    """Fall through once using the bounded, colour-safe native transport, inside the same admission."""
     pools = sorted(_native_buckets(args, client.host) - {_SYNTHETIC_HOLD})
-    call_class = _native_call_class(args, client.host, stdin=kwargs.get("input"), cwd=client.cwd) or (
-        "landing" if _landing_flow() else None
-    )
-    with client._db() as db:
-        refusal = _admission(db, client.scope, pools, call_class, client.clock())
+    request = _normalize_native(args, client.host, pools, stdin=kwargs.get("input"), cwd=client.cwd)
+    try:
+        with client._db() as db:
+            refusal = _admit(db, client.scope, request, client.clock())
+    except GitHubUnpreparedRequest as refused:
+        return _result_process(args, _unprepared(refused.reason), {}, kwargs)
     if refusal is not None:
         return _result_process(args, _limited(*refusal), {}, kwargs)
     executable = client.env.get("AGENT_REAL_GH", "gh")
@@ -2377,7 +3125,7 @@ def _native_command(args, client, runner, kwargs):
         response = _native_response(args, output)
         if response is not None:
             # gh api --include printed GitHub's own status and headers: decide as request() does.
-            limit = _limit_hold(response, pools, now)
+            limit = _limit_hold(response, now)
         elif b"rate limit" in raw_error.lower():
             # gh's stderr carries no Retry-After: a synthetic hold, never binding on landing.
             limit = [_SYNTHETIC_HOLD], int(now + 60), "secondary_hold"
@@ -2386,9 +3134,15 @@ def _native_command(args, client, runner, kwargs):
         if limit is not None:
             holds, reset, reason = limit
             budget = _budget_headers(response.headers) if response is not None else None
+            # GitHub's pool observation: the resource it names, else the one pool the command spends.
+            resource = (
+                (response.headers.get("x-ratelimit-resource") or (pools[0] if len(pools) == 1 else None))
+                if budget is not None
+                else None
+            )
             with client._db() as db:
-                if budget is not None and response.headers.get("x-ratelimit-resource"):
-                    _store_budget(db, client.scope, response.headers["x-ratelimit-resource"], *budget)
+                if resource is not None:
+                    _store_budget(db, client.scope, resource, *budget)
                 for hold in holds:
                     _store_budget(db, client.scope, hold, 0, reset)
             return _result_process(args, _limited(reason, reset), {}, kwargs)
@@ -2490,33 +3244,18 @@ def _run_command(args, *, runner=None, client=None, fresh=False, allow_stale=Fal
         for raw_header in options.get("-H", []) + options.get("--header", []):
             name, _, value = raw_header.partition(":")
             request_headers[name.strip()] = value.strip()
-        endpoint = positional[0]
-        payload = None
-        frozen_input = None
+        # What is sent is what gh would send: the one reading admission also uses.
+        call = _gh_api_call(args[2:], stdin=kwargs.get("input"), cwd=client.cwd)
+        if call is None or call.unresolved:
+            return _native_command(args, client, runner, kwargs)
+        try:
+            endpoint, payload = call.build()
+        except GitHubUnpreparedRequest:
+            # A source this client will not read stays gh's own, inside the same admission.
+            return _native_command(args, client, runner, kwargs)
         if "--input" in options:
-            source = _opt(options, "--input")
-            raw = kwargs.get("input") if source == "-" else Path(source).read_bytes()
-            payload = json.loads(raw)
-            frozen_input = raw.encode() if isinstance(raw, str) else raw
-        for flag in ("-f", "--raw-field", "-F", "--field"):
-            for value in options.get(flag, []):
-                key, _, data = value.partition("=")
-                frozen_input = None
-                payload = payload or {}
-                payload[key] = (
-                    data
-                    if flag in {"-f", "--raw-field"}
-                    else json.loads(data)
-                    if data.isdigit() or data in {"true", "false", "null"}
-                    else data
-                )
-        method = _opt(options, "--method", "-X", default="POST" if payload else "GET")
-        if method == "GET" and payload:
-            endpoint += ("&" if "?" in endpoint else "?") + urlencode(payload)
-            payload = None
-            frozen_input = None
-        elif frozen_input is not None:
-            payload = frozen_input
+            json.loads(payload)
+        method = call.method
         if "--paginate" in options and method == "GET":
             # gh applies --jq to each page, and prints a non-list page as its
             # own document. A merged value is a different result, so those
@@ -2615,18 +3354,21 @@ def http_open(request, *, timeout=30, opener=None, **kwargs):
 
     client.transport = transport
     # The opener sends ``request`` itself; its body is passed only so admission classifies
-    # the real request. A streamed body cannot be read without consuming it, so it is None.
-    body = request.data
+    # the real request, and only if the decision needs it (:class:`_DeferredBody`): the request
+    # is sent unchanged, or refused before any send.
+    body = _DeferredBody(request.data) if request.data is not None else None
     # POST/DELETE token endpoints contain sensitive responses and have no read cache.
     result = client.request(
         method,
         request.full_url,
-        payload=bytes(body) if isinstance(body, (bytes, bytearray, memoryview)) else None,
+        payload=body,
         timeout=timeout,
         fresh=True,
         raw_response=True,
         headers=dict(request.header_items()),
     )
+    if result.error == GitHubUnpreparedRequest.code:
+        raise GitHubUnpreparedRequest(result.reason)
     if result.error and result.error != "github_rate_limited":
         encoded = json.dumps(result.value).encode()
         raise urllib.error.HTTPError(
@@ -2976,6 +3718,8 @@ def _result_process(args, result, options, kwargs, *, api=True):
             detail["reason"] = result.reason
         elif result.error == "github_http_error":
             detail["status"] = result.status
+        elif result.error == GitHubUnpreparedRequest.code:
+            detail["reason"] = result.reason
         elif result.error == "github_graphql_error":
             detail["errors"] = _graphql_error_detail(result.value)
         output = json.dumps(detail).encode()

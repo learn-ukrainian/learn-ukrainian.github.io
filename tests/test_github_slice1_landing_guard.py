@@ -201,12 +201,13 @@ def test_synthetic_hold_and_core_exhaustion_never_refuse_landing(tmp_path, call,
     assert len(wire.sent) == 1
 
 
-def test_primary_limit_hold_is_scoped_to_its_pool(tmp_path):
+def test_a_stored_per_pool_hold_name_carries_no_retry_after_authority(tmp_path):
+    """Only GitHub's Retry-After holds landing; a record named like a pool hold acquires nothing."""
     wire = Wire()
-    client = store(tmp_path, wire, [("retry_after:core", 0, OPEN)])
-    refused(LANDING["rest"](client), "retry_after")
+    client = store(tmp_path, wire, [("retry_after:core", 0, OPEN), ("retry_after:graphql", 0, OPEN)])
+    admitted(LANDING["rest"](client))
     admitted(LANDING["graphql"](client))
-    assert wire.sent == [("http", "POST", "graphql")]
+    assert wire.sent == [("http", "PUT", "repos/o/r/pulls/1/merge"), ("http", "POST", "graphql")]
 
 
 def test_refusal_precedence(tmp_path):
@@ -279,14 +280,20 @@ def test_github_retry_after_creates_an_authentic_hold(tmp_path, retry_after):
     assert len(wire.sent) == 2
 
 
-def test_primary_limit_403_with_github_reset_is_authentic_for_its_pool(tmp_path):
+def test_primary_limit_403_is_a_pool_observation_never_a_landing_hold(tmp_path):
+    """GitHub's primary-limit reset is its pool's budget: ordinary calls honour it, landing calls do not."""
     headers = {"X-RateLimit-Remaining": "0", "X-RateLimit-Reset": str(OPEN), "X-RateLimit-Resource": "core"}
     wire = Wire(_limited_reply(403, headers, b'{"message":"API rate limit exceeded"}'))
     client = store(tmp_path, wire)
-    refused(client.request("GET", "repos/o/r/issues/1/timeline"), "retry_after")
-    refused(LANDING["rest"](client), "retry_after")
+    refused(client.request("GET", "repos/o/r/issues/1/timeline"), "pool_exhausted")
+    admitted(LANDING["rest"](client))
+    refused(client.request("GET", "repos/o/r/issues/1/comments"), "core_below_landing_reserve")
     admitted(LANDING["graphql"](client))
-    assert wire.sent == [("http", "GET", "repos/o/r/issues/1/timeline"), ("http", "POST", "graphql")]
+    assert wire.sent == [
+        ("http", "GET", "repos/o/r/issues/1/timeline"),
+        ("http", "PUT", "repos/o/r/pulls/1/merge"),
+        ("http", "POST", "graphql"),
+    ]
 
 
 @pytest.mark.parametrize(
@@ -964,17 +971,21 @@ def test_native_include_retry_after_is_an_authentic_hold(tmp_path, status, retry
     assert len(wire.sent) == 1 + len(LANDING)
 
 
-def test_native_include_primary_limit_holds_its_pool(tmp_path):
+def test_native_include_primary_limit_is_a_pool_observation(tmp_path):
     headers = {"X-Ratelimit-Remaining": "0", "X-Ratelimit-Reset": str(OPEN), "X-Ratelimit-Resource": "core"}
     stdout = _include_output(403, headers, b'{"message":"API rate limit exceeded for user ID 1."}')
     wire = Wire(native=_native_limited(stdout, b"gh: API rate limit exceeded for user ID 1. (HTTP 403)"))
     client = store(tmp_path, wire)
-    refused(gh.run(["gh", *NATIVE_INCLUDE], client=client, capture_output=True), "retry_after")
-    refused(LANDING["rest"](client), "retry_after")
-    refused(LANDING["native"](client), "retry_after")
-    refused(client.request("GET", "repos/o/r/issues/1/timeline"), "retry_after")
+    refused(gh.run(["gh", *NATIVE_INCLUDE], client=client, capture_output=True), "pool_exhausted")
+    admitted(LANDING["rest"](client))
+    admitted(LANDING["native"](client))
+    refused(client.request("GET", "repos/o/r/issues/1/timeline"), "core_below_landing_reserve")
     admitted(LANDING["graphql"](client))
-    assert wire.sent[1:] == [("http", "POST", "graphql")]
+    assert wire.sent[1:] == [
+        ("http", "PUT", "repos/o/r/pulls/1/merge"),
+        ("native", "pr", "merge", "1", "--repo", "o/r", "--auto"),
+        ("http", "POST", "graphql"),
+    ]
 
 
 def test_native_include_paginated_limit_uses_the_failing_page(tmp_path):
@@ -1067,20 +1078,26 @@ def test_native_unreadable_or_non_landing_bodies_are_not_landing(tmp_path):
     client.cwd = tmp_path
     (tmp_path / "viewer.json").write_text(json.dumps({"query": VIEWER}))
     (tmp_path / "broken.json").write_text("{not json")
-    os.mkfifo(tmp_path / "pipe")  # never opened: a device or pipe path can neither block nor consume input
+    os.mkfifo(tmp_path / "pipe")  # never read: a pipe can neither block nor be consumed
     template = ["--template", "{{.}}"]
     for argv in (
         ["api", "graphql", "--input", "viewer.json", *template],
-        ["api", "graphql", "--input", "missing.json", *template],
         ["api", "graphql", "--input", "broken.json", *template],
-        ["api", "graphql", "--input", "pipe", *template],
         ["api", "graphql", "--input", "-", *template],
-        ["api", "graphql", "-F", "query=@missing.graphql", *template],
         ["api", "graphql", "-f", "query=" + TWO_OPERATIONS, "-f", "operationName=Read", *template],
         # -f never reads a file: the literal text is the query.
         ["api", "graphql", "-f", "query=@enqueue.graphql", *template],
     ):
         refused(gh.run(["gh", *argv], client=client, capture_output=True), "pool_exhausted")
+    # A body admission needs but cannot read exactly is refused before gh, never guessed ordinary.
+    for argv, reason in (
+        (["api", "graphql", "--input", "missing.json", *template], "body_unreadable"),
+        (["api", "graphql", "--input", "pipe", *template], "body_not_replayable"),
+        (["api", "graphql", "-F", "query=@missing.graphql", *template], "body_unreadable"),
+    ):
+        result = gh.run(["gh", *argv], client=client, capture_output=True)
+        assert result.returncode == 1 and result.github_result.error == "github_invalid_request"
+        assert json.loads(result.stdout) == {"error": "github_invalid_request", "reset_at": None, "reason": reason}
     assert wire.sent == []
     # An unreadable body is admitted only inside a vetted landing flow.
     argv = ["api", "graphql", "--input", "missing.json", *template]
@@ -1119,11 +1136,16 @@ def test_http_open_classifies_the_request_body(monkeypatch, tmp_path):
         with gh.http_open(Request(url, data=body, method="POST", headers=headers), opener=opener) as response:
             assert response.status == 200
     assert opened == [("POST", url)] * 2
-    # A read, a body that is not JSON, and a streamed body that cannot be read without consuming it.
-    for body in (json.dumps({"query": VIEWER}).encode(), b"not json", iter([ENQUEUE_BODY])):
+    # A read and a body that is not JSON keep the typed refusal.
+    for body in (json.dumps({"query": VIEWER}).encode(), b"not json"):
         with pytest.raises(gh.GitHubRateLimited) as limited:
             gh.http_open(Request(url, data=body, method="POST", headers=headers), opener=opener)
         assert (limited.value.reason, limited.value.reset_at) == ("secondary_hold", reset)
+    # A streamed body cannot be read without consuming it: refused before any send, never guessed ordinary.
+    stream = iter([ENQUEUE_BODY])
+    with pytest.raises(gh.GitHubUnpreparedRequest) as unprepared:
+        gh.http_open(Request(url, data=stream, method="POST", headers=headers), opener=opener)
+    assert unprepared.value.reason == "body_not_replayable" and next(stream) == ENQUEUE_BODY
     assert len(opened) == 2
 
 
