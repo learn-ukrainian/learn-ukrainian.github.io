@@ -84,8 +84,9 @@ def test_governor_prompt_keeps_sol_bounded_and_v2_accountable() -> None:
 def test_governor_prompt_routes_live_capacity_without_fixed_width() -> None:
     prompt = _normalized_prompt()
 
-    assert "/Applications/CodexBar.app/Contents/Helpers/CodexBarCLI usage" in prompt
-    assert "<codex|claude|cursor|gemini|antigravity|grok|kimi|zai>" in prompt
+    assert ".venv/bin/python -m scripts.fleet.capacity_pick --json" in prompt
+    assert ".venv/bin/python -m scripts.fleet.usage show" in prompt
+    assert "CodexBarCLI" not in prompt
     assert "Never persist live percentages or fixed fleet width" in prompt
     assert "Disk is a hard gate and wins every conflict" in prompt
     assert "Never manufacture work to burn quota" in prompt
