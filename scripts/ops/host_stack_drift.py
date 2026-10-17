@@ -8,6 +8,10 @@ if its resolved path is inside the session checkout or the canonical repository.
 
 There is no timer. The weekly audit publishes pinned-versus-latest; this
 check does not.
+
+The report file is replaced from a temp name created with ``O_EXCL``. A
+symlink or extra hard link at the destination is refused, and so is a state
+directory whose real path sits inside a git checkout or worktree.
 """
 
 from __future__ import annotations
@@ -18,8 +22,10 @@ import os
 import platform
 import re
 import shutil
+import stat
 import subprocess
 import sys
+import tempfile
 import time
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass
@@ -36,6 +42,7 @@ from scripts.ci.stack_currency_report import (
 REPO_ROOT = Path(__file__).resolve().parents[2]
 BUDGET_SECONDS = 1.5
 PROBE_TIMEOUT_SECONDS = 0.25
+_PREDICTABLE_TEMP = "report.json.tmp"
 _STABLE_VERSION = re.compile(r"^[0-9]+(?:\.[0-9]+){1,3}$")
 _IPV4 = re.compile(r"^(?:\d{1,3}\.){3}\d{1,3}$")
 _SENTINELS = frozenset({"absent", "unknown", "not_running", "differs", "missing"})
@@ -238,6 +245,59 @@ def _assert_outside_repo(directory: Path, roots: tuple[Path, ...]) -> Path:
     return resolved
 
 
+def _assert_not_inside_git(directory: Path) -> None:
+    """Refuse a real path inside any checkout or linked worktree.
+
+    ``directory`` is already resolved. A ``.git`` directory marks a checkout.
+    A ``.git`` file marks a linked worktree. ``lstat`` does not follow either.
+    """
+    for parent in (directory, *directory.parents):
+        marker = parent / ".git"
+        try:
+            marker.lstat()
+        except FileNotFoundError:
+            continue
+        except OSError as exc:
+            raise DriftError("stack drift report must stay outside the repository") from exc
+        raise DriftError("stack drift report must stay outside the repository")
+
+
+def _refuse_linked_file(path: Path) -> None:
+    """Refuse a symlink or a file with another hard link. Missing is allowed.
+
+    ``lstat`` does not open the path and does not follow a symlink.
+    """
+    try:
+        info = path.lstat()
+    except FileNotFoundError:
+        return
+    except OSError as exc:
+        raise DriftError("stack drift report could not be written") from exc
+    if stat.S_ISLNK(info.st_mode) or info.st_nlink > 1:
+        raise DriftError("stack drift report must stay a private file")
+
+
+def _write_new_file(directory: Path, destination: Path, text: str) -> None:
+    """Write ``text`` to a new temp file in ``directory``, then replace ``destination``.
+
+    ``mkstemp`` creates the name with ``O_EXCL``. ``report.json.tmp`` and any
+    other pre-existing path are not opened.
+    """
+    descriptor, raw_name = tempfile.mkstemp(dir=os.fspath(directory))
+    temporary = Path(raw_name)
+    try:
+        with os.fdopen(descriptor, "wb") as stream:
+            stream.write(text.encode("utf-8"))
+            stream.flush()
+            os.fsync(stream.fileno())
+            os.fchmod(stream.fileno(), 0o600)
+        os.replace(temporary, destination)
+    except OSError:
+        temporary.unlink(missing_ok=True)
+        raise
+    os.chmod(destination, 0o600)
+
+
 def build_rows(pins_path: Path, read: Callable[[str], Reading]) -> list[dict[str, str]]:
     rows: list[dict[str, str]] = []
     for pin in load_pin_rows(pins_path):
@@ -271,9 +331,12 @@ def write_report(
     if canonical_root is not None:
         roots = (*roots, canonical_root)
     directory = _assert_outside_repo(state_dir(env), roots)
+    _assert_not_inside_git(directory)
     directory.mkdir(parents=True, exist_ok=True)
     directory.chmod(0o700)
     destination = directory / "report.json"
+    _refuse_linked_file(destination)
+    _refuse_linked_file(directory / _PREDICTABLE_TEMP)
     pins_path = repo_root / "scripts" / "config" / "stack_pins.yaml"
     complete = True
     if read is None:
@@ -307,11 +370,7 @@ def write_report(
     except PinFileError:
         payload = {"schema": "stack-drift.v1", "complete": complete, "rows": [], "error": "pins_unreadable"}
     text = json.dumps(payload, indent=2) + "\n"
-    temporary = destination.with_suffix(".json.tmp")
-    temporary.write_text(text, encoding="utf-8")
-    os.chmod(temporary, 0o600)
-    os.replace(temporary, destination)
-    os.chmod(destination, 0o600)
+    _write_new_file(directory, destination, text)
     return destination
 
 

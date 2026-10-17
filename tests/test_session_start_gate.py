@@ -791,6 +791,53 @@ def test_canonical_checkout_drift_refusal_stays_status_ok(
     assert str(worktree) not in out
 
 
+def test_planted_temp_alias_refusal_stays_status_ok(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """A planted temp-file alias writes nothing and the hook still reports status ok."""
+    monkeypatch.setattr(gate, "phase_stack_drift", _REAL_PHASE_STACK_DRIFT)
+    monkeypatch.setattr(gate, "phase_session_record", lambda _args: {"status": "ok"})
+    monkeypatch.setattr(gate, "phase_python_version", lambda _args: {"status": "ok"})
+    monkeypatch.setattr(gate, "phase_primary_main", lambda _args: {"status": "ok"})
+    monkeypatch.setattr(gate, "phase_thread_lease", lambda _args: {"status": "skipped", "reason": "test"})
+    monkeypatch.setattr(gate, "phase_rollover_import", lambda _args: {"status": "skipped", "reason": "test"})
+    monkeypatch.setattr(gate, "phase_rollover_detect", lambda _args: {"status": "skipped", "reason": "test"})
+
+    worktree = tmp_path / "worktree"
+    canonical = tmp_path / "canonical"
+    external = tmp_path / "external"
+    worktree.mkdir()
+    canonical.mkdir()
+    protected = canonical / "report.json"
+    original = b'{"keep":"checkout"}\n'
+    protected.write_bytes(original)
+    drift_dir = external / "learn-ukrainian" / "stack-drift"
+    drift_dir.mkdir(parents=True)
+    (drift_dir / "report.json.tmp").symlink_to(protected)
+    monkeypatch.setenv("XDG_STATE_HOME", str(external))
+
+    rc = gate.main(
+        [
+            "--repo-root",
+            str(canonical),
+            "--project-dir",
+            str(worktree),
+            "--agent",
+            "claude-testlane",
+            "--session-id",
+            "s-drift-alias",
+        ]
+    )
+    assert rc == 0
+    out = capsys.readouterr().out
+    result = json.loads(out)
+    assert result["stack_drift"] == {"status": "ok"}
+    assert protected.read_bytes() == original
+    assert not (drift_dir / "report.json").exists()
+    assert str(canonical) not in out
+    assert str(worktree) not in out
+
+
 def test_shell_surfaces_takeover_banner(tmp_path: Path) -> None:
     result = dict(BASE_GATE_RESULT)
     result["thread_lease"] = {

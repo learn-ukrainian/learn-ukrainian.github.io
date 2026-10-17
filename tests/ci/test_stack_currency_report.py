@@ -36,21 +36,30 @@ def _table(body: str) -> dict[str, list[str]]:
     return parsed
 
 
-def test_qualifying_report_is_versions_and_repo_paths_only() -> None:
+def test_qualifying_report_keeps_pin_names_and_version_pins_only() -> None:
     body = report.render_body(report.build_report(_PINS, lambda _name: "9.8.7"))
     rows = _table(body)
 
-    assert rows["python"] == ["python", "3.12.14", "9.8.7", ".python-version"]
-    assert rows["node"][1] == "22"
+    assert rows["python"] == ["python", "3.12.14", "9.8.7", "withheld"]
+    assert rows["node"] == ["node", "22", "9.8.7", "withheld"]
     assert rows["postgresql"][1] == "16"
-    assert rows["entire"][1] == "0.8.42"
-    assert rows["entire"][3] == "scripts/entire_context/provider.py"
-    assert rows["uv"][3] == ".github/actions/python-ci-env/action.yml"
-    assert rows["ci-literals"][1] == "ubuntu-latest"
-    assert rows["ci-literals"][3] == ".github/workflows/ci.yml"
-    assert rows["pinned-model-ids"][1].startswith("gpt-6.1-sol, ")
-    assert "kimi-code/k3" in rows["pinned-model-ids"][1]
-    assert rows["gh"][1:] == ["unknown", "9.8.7", ""]
+    assert rows["entire"] == ["entire", "0.8.42", "9.8.7", "withheld"]
+    assert rows["uv"][1] == "0.12.9"
+    assert rows["uv"][3] == "withheld"
+    assert rows["ci-literals"] == ["ci-literals", "withheld", "9.8.7", "withheld"]
+    assert rows["pinned-model-ids"][0] == "pinned-model-ids"
+    assert rows["pinned-model-ids"][1] == "withheld"
+    assert rows["gh"] == ["gh", "withheld", "9.8.7", "withheld"]
+    for secret in (
+        "unknown",
+        "ubuntu-latest",
+        ".python-version",
+        "scripts/entire_context/provider.py",
+        ".github/workflows/ci.yml",
+        "gpt-6.1-sol",
+        "kimi-code/k3",
+    ):
+        assert secret not in body
     assert "://" not in body
     assert_no_host_paths(body, "stack currency body")
     assert_no_host_facts(body, "stack currency body")
@@ -86,14 +95,40 @@ def test_missing_pin_row_does_not_invent_a_latest(tmp_path: Path) -> None:
     assert called == ["python"]
 
 
-def test_render_refuses_an_address() -> None:
+_PUBLICATION_CANARIES = (
+    "ghp_PUBLICATION_CANARY",
+    "github_pat_PUBLICATION_CANARY",
+    "AKIAIOSFODNN7EXAMPLE",
+    "pin.203.0.113.10",
+    "host.internal.example",
+    "203.0.113.10",
+)
+
+
+def test_render_withholds_an_address() -> None:
     unsafe = {
         "rows": [
             {"name": "gh", "pinned": "unknown", "latest": "203.0.113.10", "source": "host"},
         ]
     }
-    with pytest.raises(report.PublicationRefused):
-        report.render_body(unsafe)
+    body = report.render_body(unsafe)
+    assert "203.0.113.10" not in body
+    assert _table(body)["gh"] == ["gh", "withheld", "withheld", "withheld"]
+
+
+@pytest.mark.parametrize("field", ["name", "pinned", "latest", "source"])
+@pytest.mark.parametrize("value", _PUBLICATION_CANARIES)
+def test_unpublished_cells_are_withheld(field: str, value: str) -> None:
+    row = {"name": "python", "pinned": "3.12.14", "latest": "9.8.7", "source": "1.2.3"}
+    row[field] = value
+    body = report.render_body({"rows": [row]})
+    assert value not in body
+    parsed = _table(body)
+    if field == "name":
+        assert parsed["withheld"][0] == "withheld"
+    else:
+        index = {"pinned": 1, "latest": 2, "source": 3}[field]
+        assert parsed["python"][index] == "withheld"
 
 
 @pytest.mark.parametrize(
@@ -107,13 +142,20 @@ def test_render_refuses_an_address() -> None:
         ("pinned", "TOKEN=PUBLICATION_CANARY"),
         ("pinned", "installed at /opt/private/tool"),
         ("latest", "2001:db8::1"),
+        ("name", "not-a-pin"),
     ],
 )
-def test_render_refuses_unsafe_publication_shapes(field: str, value: str) -> None:
-    row = {"name": "gh", "pinned": "unknown", "latest": "unknown", "source": "host"}
+def test_render_withholds_unsafe_publication_shapes(field: str, value: str) -> None:
+    row = {"name": "gh", "pinned": "1", "latest": "1", "source": "1"}
     row[field] = value
-    with pytest.raises(report.PublicationRefused, match="not publishable"):
-        report.render_body({"rows": [row]})
+    body = report.render_body({"rows": [row]})
+    assert value not in body
+    parsed = _table(body)
+    if field == "name":
+        assert parsed["withheld"][0] == "withheld"
+    else:
+        index = {"pinned": 1, "latest": 2, "source": 3}[field]
+        assert parsed["gh"][index] == "withheld"
 
 
 def test_current_pin_file_collects_and_renders(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:

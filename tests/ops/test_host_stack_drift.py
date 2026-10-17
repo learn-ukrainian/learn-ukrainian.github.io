@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import stat
 from pathlib import Path
 
@@ -70,6 +71,7 @@ def test_report_is_versions_under_stack_drift(tmp_path: Path, monkeypatch: pytes
         env={"XDG_STATE_HOME": str(tmp_path / "xdg")},
     )
     assert path == tmp_path / "xdg" / "learn-ukrainian" / "stack-drift" / "report.json"
+    assert not path.with_suffix(".json.tmp").exists()
     assert stat.S_IMODE(path.stat().st_mode) == 0o600
     text = path.read_text(encoding="utf-8")
     saved = json.loads(text)
@@ -123,6 +125,124 @@ def test_resolved_alias_into_the_canonical_checkout_is_refused(tmp_path: Path) -
         drift.write_report(
             worktree,
             canonical_root=canonical,
+            read=lambda _name: drift.Reading("unknown", "unknown"),
+            env={"XDG_STATE_HOME": str(alias)},
+        )
+    assert not report_path.exists()
+
+
+_CHECKOUT_BYTES = b'{"keep":"checkout"}\n'
+
+
+def _external_state(tmp_path: Path) -> tuple[Path, Path]:
+    """A checkout and a state directory outside it. Returns ``(checkout, drift_dir)``."""
+    checkout = tmp_path / "checkout"
+    checkout.mkdir()
+    drift_dir = tmp_path / "external" / "learn-ukrainian" / "stack-drift"
+    drift_dir.mkdir(parents=True)
+    return checkout, drift_dir
+
+
+def _planted_temp_alias_is_refused(tmp_path: Path, plant) -> None:
+    checkout, drift_dir = _external_state(tmp_path)
+    protected = checkout / "report.json"
+    protected.write_bytes(_CHECKOUT_BYTES)
+    plant(protected, drift_dir / "report.json.tmp")
+    with pytest.raises(drift.DriftError, match="private file"):
+        drift.write_report(
+            checkout,
+            read=lambda _name: drift.Reading("unknown", "unknown"),
+            env={"XDG_STATE_HOME": str(tmp_path / "external")},
+        )
+    assert protected.read_bytes() == _CHECKOUT_BYTES
+    assert not (drift_dir / "report.json").exists()
+
+
+def test_planted_temp_symlink_does_not_change_a_checkout_file(tmp_path: Path) -> None:
+    _planted_temp_alias_is_refused(tmp_path, lambda protected, planted: planted.symlink_to(protected))
+
+
+def test_planted_temp_hardlink_does_not_change_a_checkout_file(tmp_path: Path) -> None:
+    _planted_temp_alias_is_refused(tmp_path, lambda protected, planted: os.link(protected, planted))
+
+
+def test_destination_symlink_does_not_change_a_checkout_file(tmp_path: Path) -> None:
+    checkout, drift_dir = _external_state(tmp_path)
+    protected = checkout / "report.json"
+    protected.write_bytes(_CHECKOUT_BYTES)
+    (drift_dir / "report.json").symlink_to(protected)
+    with pytest.raises(drift.DriftError, match="private file"):
+        drift.write_report(
+            checkout,
+            read=lambda _name: drift.Reading("unknown", "unknown"),
+            env={"XDG_STATE_HOME": str(tmp_path / "external")},
+        )
+    assert protected.read_bytes() == _CHECKOUT_BYTES
+
+
+def test_destination_hardlink_does_not_change_a_checkout_file(tmp_path: Path) -> None:
+    checkout, drift_dir = _external_state(tmp_path)
+    protected = checkout / "report.json"
+    protected.write_bytes(_CHECKOUT_BYTES)
+    os.link(protected, drift_dir / "report.json")
+    with pytest.raises(drift.DriftError, match="private file"):
+        drift.write_report(
+            checkout,
+            read=lambda _name: drift.Reading("unknown", "unknown"),
+            env={"XDG_STATE_HOME": str(tmp_path / "external")},
+        )
+    assert protected.read_bytes() == _CHECKOUT_BYTES
+
+
+def test_preexisting_regular_temp_file_is_not_opened(tmp_path: Path) -> None:
+    checkout, drift_dir = _external_state(tmp_path)
+    leftover = drift_dir / "report.json.tmp"
+    leftover.write_bytes(b"leave-me")
+    path = drift.write_report(
+        checkout,
+        read=lambda _name: drift.Reading("unknown", "unknown"),
+        env={"XDG_STATE_HOME": str(tmp_path / "external")},
+    )
+    assert leftover.read_bytes() == b"leave-me"
+    assert path == drift_dir / "report.json"
+    assert stat.S_IMODE(path.stat().st_mode) == 0o600
+
+
+@pytest.mark.parametrize("kind", ["dir", "file"])
+def test_state_dir_inside_any_git_checkout_is_refused(tmp_path: Path, kind: str) -> None:
+    foreign = tmp_path / "foreign"
+    foreign.mkdir()
+    marker = foreign / ".git"
+    if kind == "dir":
+        marker.mkdir()
+    else:
+        marker.write_text("gitdir: /unused\n", encoding="utf-8")
+    session = tmp_path / "session"
+    session.mkdir()
+    report_path = foreign / "learn-ukrainian" / "stack-drift" / "report.json"
+    with pytest.raises(drift.DriftError, match="outside the repository"):
+        drift.write_report(
+            session,
+            read=lambda _name: drift.Reading("unknown", "unknown"),
+            env={"XDG_STATE_HOME": str(foreign)},
+        )
+    assert not report_path.exists()
+
+
+def test_resolved_alias_into_a_foreign_checkout_is_refused(tmp_path: Path) -> None:
+    foreign = tmp_path / "foreign"
+    foreign.mkdir()
+    (foreign / ".git").write_text("gitdir: /unused\n", encoding="utf-8")
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    alias = outside / "state"
+    alias.symlink_to(foreign, target_is_directory=True)
+    session = tmp_path / "session"
+    session.mkdir()
+    report_path = foreign / "learn-ukrainian" / "stack-drift" / "report.json"
+    with pytest.raises(drift.DriftError, match="outside the repository"):
+        drift.write_report(
+            session,
             read=lambda _name: drift.Reading("unknown", "unknown"),
             env={"XDG_STATE_HOME": str(alias)},
         )

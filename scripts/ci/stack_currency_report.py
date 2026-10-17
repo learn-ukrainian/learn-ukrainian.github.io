@@ -1,10 +1,11 @@
 """Pinned versus latest-stable report for the weekly security audit (#10862).
 
 ``collect`` reads ``scripts/config/stack_pins.yaml`` and writes a local JSON
-report. ``render`` turns that report into a comment body of versions and
-repo-relative paths. Neither command publishes. The weekly job in
-``.github/workflows/security-audit.yml`` is the only publisher, and only to
-the open ``dependency-advisory`` issue.
+report. ``render`` turns that report into a comment body. A cell is published
+only when it is an exact component name from that pin file, or a version pin.
+Every other value is the token ``withheld``. Neither command publishes. The
+weekly job in ``.github/workflows/security-audit.yml`` is the only publisher,
+and only to the open ``dependency-advisory`` issue.
 
 A component with no verified upstream stays ``latest: unknown``. A name from
 the section-1 inventory that is absent from the pin file is a missing pin row.
@@ -60,17 +61,9 @@ _MULTI_PROBES: dict[str, tuple[tuple[str, ...], ...]] = {
 
 _STABLE_VERSION = re.compile(r"^[0-9]+(?:\.[0-9]+){1,3}$")
 _GITHUB_REPO = re.compile(r"^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$")
-# Forms the pin file already renders. A denylist keeps accepting new spellings.
-_COMPONENT_ID = re.compile(r"^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$")
-_VERSION_TOKEN = re.compile(r"^[0-9]+(?:\.[0-9]+){0,2}$")
-_PUBLIC_SENTINELS = frozenset({"unknown", "host", "missing"})
-_RUNNER_TAG = "ubuntu-latest"
-_MODEL_ID = r"[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*(?:/[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*)?"
-_MODEL_LIST = re.compile(rf"^{_MODEL_ID}(?:, {_MODEL_ID})*$")
-_PATH_SEGMENT = (
-    r"(?:\.[A-Za-z0-9][A-Za-z0-9_-]*|[A-Za-z][A-Za-z0-9_-]*)(?:\.[A-Za-z0-9][A-Za-z0-9_-]*)*"
-)
-_REPO_RELATIVE = re.compile(rf"^{_PATH_SEGMENT}(?:/{_PATH_SEGMENT})*$")
+# The only version text render will publish. Names come from the pin file.
+_PUBLISHED_VERSION = re.compile(r"^[0-9]{1,8}(\.[0-9]{1,8}){0,2}([-+][A-Za-z0-9.]{1,20})?$")
+_WITHHELD = "withheld"
 _USER_AGENT = "learn-ukrainian-stack-currency"
 _MAX_BODY = 5_000_000
 
@@ -80,7 +73,7 @@ class PinFileError(ValueError):
 
 
 class PublicationRefused(ValueError):
-    """A public cell is outside the pin-file allowlist. The message names no cell value."""
+    """The report shape cannot be rendered. The message names no cell value."""
 
 
 def _accept_version(raw: str) -> str:
@@ -297,46 +290,50 @@ def build_report(path: Path, latest_of: Callable[[str], str]) -> dict[str, Any]:
     return {"rows": rows}
 
 
-def _allowed_publication(text: str) -> bool:
-    """Component id, version, sentinel, runner tag, model-id list, or repo-relative path."""
-    if text in _PUBLIC_SENTINELS or text == _RUNNER_TAG:
-        return True
-    return any(
-        pattern.fullmatch(text) for pattern in (_COMPONENT_ID, _VERSION_TOKEN, _MODEL_LIST, _REPO_RELATIVE)
-    )
+def _pin_names(path: Path | None = None) -> frozenset[str]:
+    """Exact ``name`` strings from the pin file. Unreadable pins publish no names."""
+    try:
+        return frozenset(row["name"] for row in load_pin_rows(path or PINS_PATH))
+    except PinFileError:
+        return frozenset()
 
 
-def _public_cell(value: object) -> str:
-    if not isinstance(value, str):
-        raise PublicationRefused("report field is not publishable")
-    text = " ".join(value.split())
-    if not _allowed_publication(text):
-        raise PublicationRefused("report field is not publishable")
-    return text
+def _publish_name(value: object, names: frozenset[str]) -> str:
+    if isinstance(value, str) and value in names:
+        return value
+    return _WITHHELD
+
+
+def _publish_version(value: object) -> str:
+    if isinstance(value, str) and _PUBLISHED_VERSION.fullmatch(value):
+        return value
+    return _WITHHELD
 
 
 def render_body(report: Mapping[str, Any]) -> str:
-    """Markdown table of allowlisted pin fields. An unsafe row refuses the body."""
+    """Markdown table. Pin-file names and version pins stay; every other cell is withheld."""
     rows = report.get("rows")
     if not isinstance(rows, list):
         raise PublicationRefused("report field is not publishable")
+    names = _pin_names()
     lines = [
         "## Stack currency",
         "",
-        "Pinned versus latest stable. Versions and repo-relative paths only.",
+        "Pinned versus latest stable. Pin-file component names and version pins only.",
         "",
         "| component | pinned | latest | source |",
         "| --- | --- | --- | --- |",
     ]
+    withheld_row = f"| {_WITHHELD} | {_WITHHELD} | {_WITHHELD} | {_WITHHELD} |"
     for row in rows:
         if not isinstance(row, dict):
-            raise PublicationRefused("report field is not publishable")
-        source = _public_cell(row.get("source", ""))
-        source_cell = "" if source == "host" else source
-        name = _public_cell(row.get("name", ""))
-        pinned = _public_cell(row.get("pinned", ""))
-        latest = _public_cell(row.get("latest", ""))
-        lines.append(f"| {name} | {pinned} | {latest} | {source_cell} |")
+            lines.append(withheld_row)
+            continue
+        name = _publish_name(row.get("name", ""), names)
+        pinned = _publish_version(row.get("pinned", ""))
+        latest = _publish_version(row.get("latest", ""))
+        source = _publish_version(row.get("source", ""))
+        lines.append(f"| {name} | {pinned} | {latest} | {source} |")
     return "\n".join(lines) + "\n"
 
 
@@ -364,8 +361,9 @@ def main(argv: list[str] | None = None) -> int:
             "--report ci-artifacts/stack-currency.json --body-out ci-artifacts/stack-currency.md\n"
             "\n"
             "Outputs:\n"
-            "  collect: local JSON with one row per pin (versions and repo-relative sources).\n"
-            "  render: local markdown limited to versions and repo-relative paths.\n"
+            "  collect: local JSON with one row per pin.\n"
+            "  render: local markdown of pin-file component names and version pins.\n"
+            "  Every other cell is the token withheld.\n"
             "  Neither command contacts GitHub or opens an issue.\n"
             "\n"
             "Exit codes:\n"
@@ -395,7 +393,7 @@ def main(argv: list[str] | None = None) -> int:
         help="local JSON report path, e.g. ci-artifacts/stack-currency.json (required)",
     )
 
-    render_parser = sub.add_parser("render", help="render a local report as a versions-and-paths comment body")
+    render_parser = sub.add_parser("render", help="render a local report as a pin-name and version comment body")
     render_parser.add_argument(
         "--report",
         type=Path,
