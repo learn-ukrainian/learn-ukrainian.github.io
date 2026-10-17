@@ -1,0 +1,90 @@
+"""Round-2 canary 6 (#10846): locator digest checks, bound to the 0.11.5 upgrade.
+
+For a checkpoint written by 0.11.5 (r2-01) and one written by 0.8.42 before the upgrade (r2-17):
+1. the commit's Entire-Checkpoint trailer names the checkpoint the locator carries;
+2. Entire 0.11.5 `checkpoint explain <commit-sha> --json` returns that same checkpoint id;
+3. the project resolver builds the locator (canonical digest over the commit projection) and
+   `reverify_link` re-resolves it and accepts it;
+4. a locator whose digest or commit was altered is refused (digest mismatch).
+"""
+
+from __future__ import annotations
+
+import json
+import subprocess
+import sys
+from pathlib import Path
+
+WT = Path("<worktree>")
+sys.path.insert(0, str(WT))
+
+from scripts.entire_context.model import ContextLink  # noqa: E402
+from scripts.entire_context.resolvers import ResolutionError, resolve_git_commit, reverify_link  # noqa: E402
+
+C = Path("<scratch>/canary")
+CLONE = C / "clone"
+
+
+def trailer(sha: str) -> str:
+    return subprocess.run(
+        ["git", "-C", str(CLONE), "log", "-1", "--format=%(trailers:key=Entire-Checkpoint,valueonly)", sha],
+        text=True, capture_output=True, check=True,
+    ).stdout.strip()
+
+
+def explain(ref: str) -> dict:
+    out = subprocess.run(
+        [str(C / "tools/cenv.sh"), str(C / "bin-0.11.5"), "entire", "checkpoint", "explain", ref, "--json"],
+        cwd=CLONE, text=True, capture_output=True, check=False, env={"PATH": "/usr/bin:/bin"},
+    )
+    return {"rc": out.returncode, "json": json.loads(out.stdout) if out.returncode == 0 else None}
+
+
+def check(label: str, sha: str, written_by: str) -> dict:
+    checkpoint = trailer(sha)
+    by_sha = explain(sha)
+    by_id = explain(checkpoint)
+    resolution = resolve_git_commit(sha, repo=CLONE)
+    # The stored locator carries the checkpoint id beside the commit it was captured with.
+    stored = ContextLink.from_dict({**resolution.link.to_dict(), "entire_checkpoint_id": checkpoint})
+    stored.validate()
+    link = stored.to_dict()
+    accepted = reverify_link(link, repo=CLONE, acp_root=None) is not None
+    tampered = {**link, "canonical_digest": "sha256:" + "0" * 64}
+    try:
+        reverify_link(tampered, repo=CLONE, acp_root=None)
+        tamper_refused = None
+    except ResolutionError as exc:
+        tamper_refused = exc.reason
+    parent = subprocess.run(["git", "-C", str(CLONE), "rev-parse", f"{sha}^"], text=True, capture_output=True, check=True).stdout.strip()
+    swapped = {**link, "canonical_id": parent, "git_sha": parent}
+    try:
+        reverify_link(swapped, repo=CLONE, acp_root=None)
+        swap_refused = None
+    except ResolutionError as exc:
+        swap_refused = exc.reason
+    return {
+        "label": label,
+        "checkpoint_written_by": written_by,
+        "commit_sha": sha,
+        "trailer_checkpoint_id": checkpoint,
+        "explain_by_sha_rc": by_sha["rc"],
+        "explain_by_sha_checkpoint_id": (by_sha["json"] or {}).get("checkpoint_id"),
+        "explain_by_id_rc": by_id["rc"],
+        "explain_by_id_files_touched": (by_id["json"] or {}).get("files_touched"),
+        "locator_id": link.get("locator_id"),
+        "locator_canonical_digest": link["canonical_digest"],
+        "locator_names_trailer_checkpoint": link["entire_checkpoint_id"] == checkpoint,
+        "explain_sha_matches_locator_checkpoint": (by_sha["json"] or {}).get("checkpoint_id") == checkpoint,
+        "reverify_accepts_locator": accepted,
+        "reverify_refuses_tampered_digest": tamper_refused,
+        "reverify_refuses_digest_for_other_commit": swap_refused,
+    }
+
+
+if __name__ == "__main__":
+    rows = [
+        check("r2-01-accepted", sys.argv[1], "Entire CLI 0.11.5 through the capture guard"),
+        check("r2-17-legacy", sys.argv[2], "Entire CLI 0.8.42 (pre-upgrade, unguarded)"),
+    ]
+    print(json.dumps(rows, indent=2))

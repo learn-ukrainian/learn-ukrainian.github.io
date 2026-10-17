@@ -5,7 +5,7 @@ model label.  Native Entire hosts therefore never enter this module.  The
 private transcript spool exists only while synchronous ``entire hooks`` calls
 need it and is deleted after the terminal hook attempt.
 
-The pinned Entire CLI (0.8.42) ships no built-in ``fleet`` hook agent; the
+The pinned Entire CLI (0.11.5) ships no built-in ``fleet`` hook agent; the
 optional external plugin is present only when
 ``scripts/entire/install_fleet_external_agent.sh`` has placed the
 ``entire-agent-fleet`` binary on PATH.  Hook delivery therefore fails open:
@@ -31,6 +31,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 from scripts.common.repo_root import main_checkout_root
+from scripts.entire import capture_guard
 
 _LOGGER = logging.getLogger(__name__)
 _OWNED_HOSTS = frozenset({"agy", "cursor-headless", "grok", "hermes"})
@@ -269,10 +270,15 @@ class FleetCapture:
         if not entire:
             return False
         if shutil.which("entire-agent-fleet") is None:
-            # Entire 0.8.42 has no built-in "fleet" hook agent; without the
+            # Entire 0.11.5 has no built-in "fleet" hook agent; without the
             # external plugin binary the call can only fail with
             # ``unknown agent "fleet"``.  Fail open and keep the local spool.
             _LOGGER.debug("Entire fleet hook %s skipped: entire-agent-fleet not installed", hook)
+            return False
+        timeout = _SESSION_END_TIMEOUT_SECONDS if hook == "session-end" else _HOOK_TIMEOUT_SECONDS
+        reason = capture_guard.refusal(self.repo_path, entire, time.monotonic() + timeout)
+        if reason is not None:
+            _LOGGER.warning("[entire] capture refused (%s): no checkpoint written", reason)
             return False
         payload: dict[str, object] = {
             "hook_type": hook,
@@ -292,11 +298,7 @@ class FleetCapture:
                 input=json.dumps(payload, ensure_ascii=False),
                 text=True,
                 capture_output=True,
-                timeout=(
-                    _SESSION_END_TIMEOUT_SECONDS
-                    if hook == "session-end"
-                    else _HOOK_TIMEOUT_SECONDS
-                ),
+                timeout=timeout,
                 env=env,
                 cwd=str(self.repo_path),
             )

@@ -14,17 +14,33 @@ if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from scripts.common import github_client
+from scripts.entire.capture_guard import ACCEPTED_VERSION, route_private, version_accepted
+from scripts.entire.validate_checkpoint_routing import validate
 
-try:
-    from scripts.entire.validate_checkpoint_routing import validate
-except ModuleNotFoundError:  # Direct script execution from the repository root.
-    from validate_checkpoint_routing import validate
-
-PINNED_VERSION = "0.8.42"
+# Capture (scripts/entire/capture_guard.py) and recall share one accepted version
+# and one private-route predicate.
+PINNED_VERSION = ACCEPTED_VERSION
 CHECKPOINT_REF = "refs/heads/entire/checkpoints/v1"
 SOURCE_REPOSITORY = "learn-ukrainian/learn-ukrainian.github.io"
 
 Runner = Callable[[Sequence[str], Path], subprocess.CompletedProcess[str]]
+
+
+def mirror_ref(repository: str) -> str:
+    """Return the forge-qualified reference Entire uses for a GitHub mirror."""
+    return f"/gh/{repository}"
+
+
+def mirror_view_args(repository: str) -> tuple[str, ...]:
+    """Return the `entire` arguments that look up one GitHub mirror by exact name."""
+    return ("repo", "view", mirror_ref(repository), "--json")
+
+
+def mirror_row(payload: Any, repository: str) -> dict[str, Any] | None:
+    """Return the `repo view --json` row only when it describes ``repository``."""
+    if isinstance(payload, dict) and payload.get("repo") == mirror_ref(repository):
+        return payload
+    return None
 
 
 def _run(command: Sequence[str], cwd: Path) -> subprocess.CompletedProcess[str]:
@@ -76,8 +92,10 @@ def preflight(root: Path, *, runner: Runner = _run) -> dict[str, Any]:
     checkpoint_repo = settings["strategy_options"]["checkpoint_remote"]["repo"]
     expected_principals = policy["entire_access_principals"]
 
-    version = _invoke(runner, ("entire", "version"), root)
-    checks["pinned_cli"] = version.returncode == 0 and f"Entire CLI {PINNED_VERSION}" in version.stdout
+    checks["pinned_cli"] = version_accepted(_invoke(runner, ("entire", "version"), root))
+    if checks["pinned_cli"]:
+        status = _load_json(_invoke(runner, ("entire", "status", "--json"), root))
+        checks["checkpoint_route_private"] = route_private(status, checkpoint_repo)
 
     private_repo = _load_json(
         _invoke(
@@ -122,73 +140,38 @@ def preflight(root: Path, *, runner: Runner = _run) -> dict[str, Any]:
         marker in auth_stdout for marker in ("not logged in", "run 'entire login'")
     )
 
-    mirrors = _load_json(
-        _invoke(
-            runner,
-            (
-                "entire",
-                "repo",
-                "mirror",
-                "list",
-                "--name",
-                "learn-ukrainian",
-                "--json",
-            ),
-            root,
-        )
+    private_mirror = mirror_row(
+        _load_json(_invoke(runner, ("entire", *mirror_view_args(checkpoint_repo)), root)),
+        checkpoint_repo,
     )
-    mirror_rows = mirrors if isinstance(mirrors, list) else []
-    private_mirror = next(
-        (
-            row
-            for row in mirror_rows
-            if isinstance(row, dict) and f"{row.get('owner')}/{row.get('repo')}" == checkpoint_repo
-        ),
-        None,
-    )
-    source_mirror = next(
-        (
-            row
-            for row in mirror_rows
-            if isinstance(row, dict) and f"{row.get('owner')}/{row.get('repo')}" == SOURCE_REPOSITORY
-        ),
-        None,
+    source_mirror = mirror_row(
+        _load_json(_invoke(runner, ("entire", *mirror_view_args(SOURCE_REPOSITORY)), root)),
+        SOURCE_REPOSITORY,
     )
     checks["private_mirror_ready"] = bool(
-        private_mirror and private_mirror.get("isPrivate") is True and private_mirror.get("status") == "ready"
+        private_mirror and private_mirror.get("private") is True and private_mirror.get("status") == "ready"
     )
     checks["source_mirror_ready"] = bool(source_mirror and source_mirror.get("status") == "ready")
 
-    def _mirror_principals(repository: str, mirror: dict[str, Any] | None) -> Any:
-        if not mirror or not isinstance(mirror.get("clusterHost"), str):
-            return None
+    def _mirror_principals(repository: str) -> Any:
         return _load_json(
-            _invoke(
-                runner,
-                (
-                    "entire",
-                    "repo",
-                    "mirror",
-                    "collaborators",
-                    "list",
-                    f"github.com/{repository}",
-                    mirror["clusterHost"],
-                    "--json",
-                ),
-                root,
-            )
+            _invoke(runner, ("entire", "repo", "grant", "list", mirror_ref(repository), "--json"), root)
         )
 
     def _normalize_principals(value: Any) -> list[dict[str, Any]] | None:
-        if not isinstance(value, list) or not all(isinstance(row, dict) for row in value):
+        # A GitHub mirror's grant rows carry source "github"; any other row is
+        # not the mirror ACL this check is about.
+        if not isinstance(value, list) or not all(
+            isinstance(row, dict) and row.get("source") == "github" for row in value
+        ):
             return None
-        return [{"handle": row.get("handle"), "role": row.get("role")} for row in value]
+        return [{"handle": row.get("granteeName"), "role": row.get("role")} for row in value]
 
     if checks["private_mirror_ready"]:
-        private_principals = _normalize_principals(_mirror_principals(checkpoint_repo, private_mirror))
+        private_principals = _normalize_principals(_mirror_principals(checkpoint_repo))
         checks["checkpoint_mirror_access_private"] = private_principals == expected_principals
     if checks["source_mirror_ready"]:
-        source_principals = _normalize_principals(_mirror_principals(SOURCE_REPOSITORY, source_mirror))
+        source_principals = _normalize_principals(_mirror_principals(SOURCE_REPOSITORY))
         checks["source_mirror_access_private"] = source_principals == expected_principals
 
     issues.extend(f"{name}_failed" for name, passed in checks.items() if not passed)
@@ -211,7 +194,7 @@ def main() -> int:
             "Example: scripts/entire/private_mode_preflight.py --repo-root .\n"
             "Outputs: body-free JSON receipt on stdout; no files written.\n"
             "Exit codes: 0 = ready; 2 = preflight failed.\n"
-            "Related: .entire/private-recall.json; Entire CLI 0.8.42; #6283."
+            "Related: .entire/private-recall.json; Entire CLI 0.11.5; #6283, #10846."
         ),
     )
     parser.add_argument(

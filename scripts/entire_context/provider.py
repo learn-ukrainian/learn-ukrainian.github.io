@@ -1,4 +1,4 @@
-"""Explicit Entire 0.8.42 status/capability refresh and read-only caches."""
+"""Explicit Entire 0.11.5 status/capability refresh and read-only caches."""
 
 from __future__ import annotations
 
@@ -11,12 +11,13 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
+from scripts.entire.private_mode_preflight import PINNED_VERSION, mirror_row, mirror_view_args
 from scripts.entire.private_mode_preflight import preflight as private_mode_preflight
 
 from .model import SchemaError, validate_identity
 from .paths import provider_capabilities_path, provider_status_path
 
-REQUIRED_ENTIRE_VERSION = "0.8.42"
+REQUIRED_ENTIRE_VERSION = PINNED_VERSION
 PROVIDER_STATUS_MAX_AGE_SECONDS = 900
 PROVIDER_CAPABILITIES_MAX_AGE_SECONDS = 3600
 _SOURCE_REPOSITORY_PATTERN = re.compile(
@@ -187,23 +188,18 @@ def _probe_cloud_search(root: Path, source_repo: str, query: str) -> dict[str, A
 
 
 def _dispatch_jurisdiction(root: Path, source_repo: str) -> str | None:
-    result = _run(root, "repo", "mirror", "list", "--name", "learn-ukrainian", "--json")
-    if result.returncode != 0:
-        return None
-    try:
-        rows = json.loads(result.stdout)
-    except (TypeError, json.JSONDecodeError):
-        return None
-    if not isinstance(rows, list):
+    result = _run(root, *mirror_view_args(source_repo))
+    row = mirror_row(_json_object(result), source_repo)
+    placements = row.get("placements") if row else None
+    if not isinstance(placements, list):
         return None
     slugs = {
-        row["jurisdiction"]
-        for row in rows
-        if isinstance(row, dict)
-        and f"{row.get('owner')}/{row.get('repo')}" == source_repo
-        and row.get("status") == "ready"
-        and isinstance(row.get("jurisdiction"), str)
-        and re.fullmatch(r"[a-z][a-z0-9-]*", row["jurisdiction"])
+        placement["jurisdiction"]
+        for placement in placements
+        if isinstance(placement, dict)
+        and placement.get("status") == "ready"
+        and isinstance(placement.get("jurisdiction"), str)
+        and re.fullmatch(r"[a-z][a-z0-9-]*", placement["jurisdiction"])
     }
     return slugs.pop() if len(slugs) == 1 else None
 

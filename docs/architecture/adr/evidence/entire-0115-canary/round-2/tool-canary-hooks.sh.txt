@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+# Round-2 canary: Entire 0.11.5 hook install, repo installer guard rewrite, --check, and
+# the `entire enable --force` regeneration round trip. Throwaway clone only.
+set -uo pipefail
+C=<scratch>/canary
+E="$C/evidence"
+cd "$C/clone"
+managed=(prepare-commit-msg commit-msg post-commit post-rewrite pre-push)
+snap() {  # snap <dir>
+    mkdir -p "$E/$1"
+    for h in "${managed[@]}"; do cp ".git/hooks/$h" "$E/$1/$h" 2>/dev/null || echo "missing $h"; done
+}
+
+echo "== entire enable --force (0.11.5), no .pre-entire yet"
+"$C/tools/cenv.sh" "$C/bin-0.11.5" entire enable --force --agent claude-code --telemetry=false >"$C/logs/enable-1.txt" 2>&1
+echo "enable rc=$?"
+git diff --quiet -- .entire/settings.json && echo "tracked .entire/settings.json unchanged"
+snap wrappers-entire-unchained
+
+echo "== repo installer"
+"$C/tools/cenv.sh" "$C/bin-0.11.5" bash scripts/install_git_hooks.sh
+echo "installer rc=$?"
+snap wrappers-installed
+echo "== installer --check"
+"$C/tools/cenv.sh" "$C/bin-0.11.5" bash scripts/install_git_hooks.sh --check
+echo "check rc=$?"
+
+echo "== entire enable --force (0.11.5) again, .pre-entire present"
+"$C/tools/cenv.sh" "$C/bin-0.11.5" entire enable --force --agent claude-code --telemetry=false >"$C/logs/enable-2.txt" 2>&1
+echo "enable rc=$?"
+snap wrappers-entire-rechained
+echo "== installer --check after Entire regeneration"
+"$C/tools/cenv.sh" "$C/bin-0.11.5" bash scripts/install_git_hooks.sh --check 2>&1 | grep -E "UNGUARDED|ok|check:"
+echo "== installer rerun"
+"$C/tools/cenv.sh" "$C/bin-0.11.5" bash scripts/install_git_hooks.sh | grep -E "routed|added"
+snap wrappers-reguarded
+for h in "${managed[@]}"; do
+    if cmp -s "$E/wrappers-installed/$h" "$E/wrappers-reguarded/$h"; then echo "$h: reguarded == first install"; else echo "$h: DIFFERS"; fi
+done
+"$C/tools/cenv.sh" "$C/bin-0.11.5" bash scripts/install_git_hooks.sh --check >/dev/null 2>&1 && echo "check after rerun: OK"
+
+echo "== Entire's own git-hook state check on the guarded wrappers (status/doctor must not reinstall)"
+before="$(cat .git/hooks/pre-push | sha256sum)"
+"$C/tools/cenv.sh" "$C/bin-0.11.5" entire status --json >"$E/status-after-guard.json" 2>"$C/logs/status-after-guard.err"
+echo "status rc=$?"
+after="$(cat .git/hooks/pre-push | sha256sum)"
+[[ "$before" == "$after" ]] && echo "pre-push wrapper unchanged by entire status"

@@ -1,0 +1,212 @@
+"""Entire 0.8.42 -> 0.11.5 canary driver (throwaway clone, no network, isolated HOME).
+
+Every Entire and git invocation goes through tools/cenv.sh, which runs it inside a
+bwrap network namespace with an isolated HOME/config. Remotes are local bare
+repositories reached through tools/fake-ssh.
+"""
+
+from __future__ import annotations
+
+import json
+import statistics
+import subprocess
+import sys
+import time
+import uuid
+from datetime import UTC, datetime
+from pathlib import Path
+
+C = Path("<scratch>/canary")
+CLONE = C / "clone"
+CENV = str(C / "tools" / "cenv.sh")
+REMOTES = C / "remotes" / "github.com"
+BARES = {
+    "public": REMOTES / "learn-ukrainian" / "learn-ukrainian.github.io.git",
+    "private": REMOTES / "learn-ukrainian" / "entire-checkpoints-private.git",
+    "fork": REMOTES / "someone-else" / "learn-ukrainian.github.io.git",
+}
+PROJECTS = C / "home" / ".claude" / "projects" / str(CLONE).replace("/", "-")
+
+
+def now() -> str:
+    return datetime.now(UTC).isoformat().replace("+00:00", "Z")
+
+
+def run(bin_dir: str, argv: list[str], stdin: str | None = None, timeout: int = 300) -> tuple[int, float, str, str]:
+    start = time.monotonic()
+    proc = subprocess.run(
+        [CENV, str(C / bin_dir), *argv],
+        cwd=CLONE,
+        input=stdin,
+        text=True,
+        capture_output=True,
+        timeout=timeout,
+        check=False,
+    )
+    return proc.returncode, time.monotonic() - start, proc.stdout, proc.stderr
+
+
+class Session:
+    def __init__(self, bin_dir: str) -> None:
+        self.bin_dir = bin_dir
+        self.session_id = str(uuid.uuid4())
+        PROJECTS.mkdir(parents=True, exist_ok=True)
+        self.transcript = PROJECTS / f"{self.session_id}.jsonl"
+        self.transcript.touch()
+        self.parent: str | None = None
+
+    def _line(self, kind: str, message: dict) -> None:
+        entry_id = str(uuid.uuid4())
+        entry = {
+            "type": kind,
+            "uuid": entry_id,
+            "parentUuid": self.parent,
+            "sessionId": self.session_id,
+            "timestamp": now(),
+            "cwd": str(CLONE),
+            "message": message,
+        }
+        self.parent = entry_id
+        with self.transcript.open("a", encoding="utf-8") as handle:
+            handle.write(json.dumps(entry) + "\n")
+
+    def user(self, text: str) -> None:
+        self._line("user", {"role": "user", "content": text})
+
+    def assistant(self, text: str, edit_path: str | None = None) -> None:
+        content: list[dict] = [{"type": "text", "text": text}]
+        if edit_path:
+            content.append(
+                {
+                    "type": "tool_use",
+                    "id": "toolu_" + uuid.uuid4().hex[:20],
+                    "name": "Edit",
+                    "input": {"file_path": str(CLONE / edit_path), "old_string": "", "new_string": "canary"},
+                }
+            )
+        self._line("assistant", {"role": "assistant", "model": "claude-canary", "content": content})
+
+    def hook(self, verb: str, **extra: object) -> tuple[int, float, str]:
+        event = {
+            "session-start": "SessionStart",
+            "user-prompt-submit": "UserPromptSubmit",
+            "stop": "Stop",
+            "session-end": "SessionEnd",
+        }[verb]
+        payload = {
+            "session_id": self.session_id,
+            "transcript_path": str(self.transcript),
+            "cwd": str(CLONE),
+            "hook_event_name": event,
+            **extra,
+        }
+        rc, seconds, _out, err = run(self.bin_dir, ["entire", "hooks", "claude-code", verb], json.dumps(payload))
+        return rc, seconds, err[-400:]
+
+
+def refs(name: str) -> list[str]:
+    out = subprocess.run(
+        ["git", "-C", str(BARES[name]), "for-each-ref", "--format=%(refname) %(objectname:short)"],
+        text=True,
+        capture_output=True,
+        check=True,
+    ).stdout
+    return out.splitlines()
+
+
+def summary(values: list[float]) -> dict:
+    ordered = sorted(values)
+    p95 = ordered[min(len(ordered) - 1, round(0.95 * (len(ordered) - 1)))]
+    return {
+        "n": len(values),
+        "p50": round(statistics.median(ordered), 3),
+        "p95": round(p95, 3),
+        "min": round(ordered[0], 3),
+        "max": round(ordered[-1], 3),
+    }
+
+
+def load() -> str:
+    return Path("/proc/loadavg").read_text().split()[0]
+
+
+def latency(bin_dir: str, n: int) -> dict:
+    session = Session(bin_dir)
+    session.user("canary session start")
+    start_rc = session.hook("session-start", source="startup")
+    prompt_times: list[float] = []
+    stop_times: list[float] = []
+    failures: list[str] = []
+    loads = [load()]
+    for i in range(n):
+        session.user(f"canary prompt {i}")
+        rc, seconds, err = session.hook("user-prompt-submit", prompt=f"canary prompt {i}")
+        prompt_times.append(seconds)
+        if rc:
+            failures.append(f"prompt[{i}] rc={rc} {err}")
+        session.assistant(f"canary answer {i}")
+        rc, seconds, err = session.hook("stop", stop_hook_active=False)
+        stop_times.append(seconds)
+        if rc:
+            failures.append(f"stop[{i}] rc={rc} {err}")
+        loads.append(load())
+    end = session.hook("session-end", reason="exit")
+    return {
+        "bin": bin_dir,
+        "session_start": {"rc": start_rc[0], "seconds": round(start_rc[1], 3)},
+        "user_prompt_submit": summary(prompt_times),
+        "stop": summary(stop_times),
+        "session_end": {"rc": end[0], "seconds": round(end[1], 3)},
+        "failures": failures,
+        "loadavg_1m_samples": [loads[0], loads[len(loads) // 2], loads[-1]],
+    }
+
+
+def capture(bin_dir: str, label: str, push_remote: str = "origin") -> dict:
+    """One agent turn that edits a tracked file, then commit and push."""
+    target = Path("docs/canary-entire.md")
+    session = Session(bin_dir)
+    session.user(f"{label} start")
+    session.hook("session-start", source="startup")
+    session.user(f"{label}: edit a file")
+    prompt = session.hook("user-prompt-submit", prompt=f"{label}: edit a file")
+    path = CLONE / target
+    with path.open("a", encoding="utf-8") as handle:
+        handle.write(f"{label} {now()}\n")
+    session.assistant(f"{label} edited", edit_path=str(target))
+    stop = session.hook("stop", stop_hook_active=False)
+    rc_add, _, _, err_add = run(bin_dir, ["git", "add", str(target)])
+    rc_commit, commit_s, out_commit, err_commit = run(bin_dir, ["git", "commit", "-q", "-m", f"canary: {label}"])
+    trailer = subprocess.run(
+        ["git", "-C", str(CLONE), "log", "-1", "--format=%(trailers:key=Entire-Checkpoint,valueonly)"],
+        text=True,
+        capture_output=True,
+        check=True,
+    ).stdout.strip()
+    rc_push, push_s, out_push, err_push = run(bin_dir, ["git", "push", push_remote, "HEAD:main"])
+    session.hook("session-end", reason="exit")
+    return {
+        "bin": bin_dir,
+        "label": label,
+        "push_remote": push_remote,
+        "prompt_rc": prompt[0],
+        "stop_rc": stop[0],
+        "commit_rc": rc_commit,
+        "commit_seconds": round(commit_s, 3),
+        "checkpoint_trailer": trailer,
+        "push_rc": rc_push,
+        "push_seconds": round(push_s, 3),
+        "push_stderr_tail": err_push[-1200:],
+        "refs": {name: refs(name) for name in BARES},
+    }
+
+
+if __name__ == "__main__":
+    mode = sys.argv[1]
+    if mode == "latency":
+        print(json.dumps(latency(sys.argv[2], int(sys.argv[3])), indent=2))
+    elif mode == "capture":
+        remote = sys.argv[4] if len(sys.argv) > 4 else "origin"
+        print(json.dumps(capture(sys.argv[2], sys.argv[3], remote), indent=2))
+    elif mode == "refs":
+        print(json.dumps({name: refs(name) for name in BARES}, indent=2))

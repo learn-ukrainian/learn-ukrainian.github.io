@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# Dry run of runbook Install step 2 (download + verify) in a scratch dir.
+set -euo pipefail
+C=<scratch>/canary
+dl="$(mktemp -d -p <scratch>)"
+base=https://github.com/entireio/cli/releases/download/v0.11.5
+curl -fsSL -o "$dl/checksums.txt" "$base/checksums.txt"
+curl -fsSL -o "$dl/entire_linux_amd64.tar.gz" "$base/entire_linux_amd64.tar.gz"
+echo "d3dce3e819f7e8d679eab9e12845fe3bf7d3fa711b3d8a18866624b7bdf143b6  $dl/checksums.txt" | sha256sum -c - | sed 's#.*/##'
+echo "c20476c4ba9689b1800fe8d590601792e2b6f3c89d03a95280d88484029d7eba  $dl/entire_linux_amd64.tar.gz" | sha256sum -c - | sed 's#.*/##'
+(cd "$dl" && grep " entire_linux_amd64.tar.gz$" checksums.txt | sha256sum -c -)
+tar -xzf "$dl/entire_linux_amd64.tar.gz" -C "$dl" entire git-remote-entire
+ls "$dl"
+cmp "$dl/entire" "$C/bin-0.11.5/entire" && echo SAME_AS_CANARY_BINARY
+rm -rf "$dl"

@@ -1,0 +1,67 @@
+#!/usr/bin/env bash
+# Round-2 canary scenarios (#10846). Throwaway clone and fake remotes only.
+set -uo pipefail
+P=<scratch>
+C=$P/canary
+E=$C/evidence
+PY=<primary>/.venv/bin/python
+DRV="$PY -I $P/canary-driver.py"
+cd "$C/clone"
+
+scenario() {  # scenario <log-name> <driver args...>
+    local name="$1"; shift
+    echo "== $name"
+    $DRV turn "$@" >"$E/log-$name.json"
+    "$PY" -c 'import json,sys; r=json.load(open(sys.argv[1])); g=sorted({l for h in r["agent_hook_results"] for l in h["guard"]}); print(" trailer=%r commit_guard=%s push_rc=%s gate=%s public_entire_refs=%s agent_guard=%s" % (r["checkpoint_trailer"], r["commit_guard_lines"][:1], r.get("push_rc"), r["repo_gate_calls"], r["public_entire_refs"], g))' "$E/log-$name.json"
+    echo " status-route: $("$C/tools/cenv.sh" "$C/bin-0.11.5" entire status --json 2>/dev/null | "$PY" -c 'import json,sys; s=json.load(sys.stdin); print({k: s.get(k) for k in ("checkpoint_sync_remote","checkpoint_sync_remote_source","checkpoint_remote_ignored","unpushed_checkpoints")})')"
+}
+
+# Canary 1: fail-closed version preflight (real older binary + newer/malformed/hung variants).
+scenario r2-02-version-0.8.42-real bin-0.8.42 r2-02-v0842
+scenario r2-03-version-0.11.50 bin-v0.11.50 r2-03-v01150
+scenario r2-04-version-0.11.6 bin-v0.11.6 r2-04-v0116
+scenario r2-05-version-malformed bin-vmalformed r2-05-vmalformed
+scenario r2-06-version-hang bin-vhang r2-06-vhang
+
+# Canary 2: private-destination allowlist.
+cp .entire/settings.json "$C/tmp/settings.json.orig"
+"$PY" - <<'PY'
+import json
+from pathlib import Path
+p = Path(".entire/settings.json")
+s = json.loads(p.read_text())
+s["strategy_options"]["checkpoint_remote"]["repo"] = "learn-ukrainian/learn-ukrainian.github.io"
+p.write_text(json.dumps(s, indent=2) + "\n")
+PY
+echo "== tracked settings point the checkpoint store at the PUBLIC repo; raw status says:"
+"$C/tools/cenv.sh" "$C/bin-0.11.5" entire status --json >"$E/status-r2-07-tampered-tracked.json" 2>/dev/null
+cat "$E/status-r2-07-tampered-tracked.json"; echo
+scenario r2-07-allowlist-tracked-public bin-0.11.5 r2-07-tracked-public
+cp "$C/tmp/settings.json.orig" .entire/settings.json
+
+printf '{\n  "strategy_options": {\n    "checkpoint_remote": {\n      "provider": "github",\n      "repo": "someone-else/learn-ukrainian.github.io"\n    }\n  }\n}\n' >.entire/settings.local.json
+echo "== local override points the store at a foreign repo; raw status says:"
+"$C/tools/cenv.sh" "$C/bin-0.11.5" entire status --json >"$E/status-r2-08-local-override.json" 2>/dev/null
+cat "$E/status-r2-08-local-override.json"; echo
+scenario r2-08-allowlist-local-override bin-0.11.5 r2-08-local-override
+rm -f .entire/settings.local.json
+
+git remote set-url origin https://github.com/someone-else/learn-ukrainian.github.io.git
+echo "== origin owned by another account (round-1 S3); raw status says:"
+"$C/tools/cenv.sh" "$C/bin-0.11.5" entire status --json >"$E/status-r2-09-misowned-origin.json" 2>/dev/null
+cat "$E/status-r2-09-misowned-origin.json"; echo
+scenario r2-09-allowlist-misowned-origin bin-0.11.5 r2-09-misowned
+git remote set-url origin https://github.com/learn-ukrainian/learn-ukrainian.github.io.git
+
+# Canary 5: fail-open outage behaviour (the repository gate decides the push).
+scenario r2-10-outage-all-calls-fail bin-allfail r2-10-allfail
+scenario r2-11-outage-prepush-fails bin-prepushfail r2-11-prepushfail
+scenario r2-12-outage-prepush-hangs bin-prepushhang r2-12-prepushhang
+PRIV="$C/remotes/github.com/learn-ukrainian/entire-checkpoints-private.git"
+mv "$PRIV" "$PRIV.offline"
+scenario r2-13-outage-private-store-unreachable bin-0.11.5 r2-13-store-offline
+mv "$PRIV.offline" "$PRIV"
+scenario r2-14-outage-and-gate-refuses bin-prepushfail r2-14-gate-refuses gate_exit=1
+scenario r2-15-accepted-after-outages bin-0.11.5 r2-15-recovery
+echo "== final refs"
+$DRV refs | tee "$E/refs-final.json"

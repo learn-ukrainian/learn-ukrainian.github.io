@@ -1,0 +1,92 @@
+== r2-02-version-0.8.42-real
+ trailer='' commit_guard=['[entire] capture refused (cli_version_not_accepted): no checkpoint written; see docs/runbooks/entire-cli-upgrade.md'] push_rc=0 gate=['gate:pre-commit', 'gate:commit-msg', 'gate:post-commit', 'gate:pre-push'] public_entire_refs=[] agent_guard=['[entire] capture refused (cli_version_not_accepted): no checkpoint written; see docs/runbooks/entire-cli-upgrade.md']
+ status-route: {'checkpoint_sync_remote': 'learn-ukrainian/entire-checkpoints-private', 'checkpoint_sync_remote_source': 'dedicated', 'checkpoint_remote_ignored': None, 'unpushed_checkpoints': None}
+== r2-03-version-0.11.50
+ trailer='' commit_guard=['[entire] capture refused (cli_version_not_accepted): no checkpoint written; see docs/runbooks/entire-cli-upgrade.md'] push_rc=0 gate=['gate:pre-commit', 'gate:commit-msg', 'gate:post-commit', 'gate:pre-push'] public_entire_refs=[] agent_guard=['[entire] capture refused (cli_version_not_accepted): no checkpoint written; see docs/runbooks/entire-cli-upgrade.md']
+ status-route: {'checkpoint_sync_remote': 'learn-ukrainian/entire-checkpoints-private', 'checkpoint_sync_remote_source': 'dedicated', 'checkpoint_remote_ignored': None, 'unpushed_checkpoints': None}
+== r2-04-version-0.11.6
+ trailer='' commit_guard=['[entire] capture refused (cli_version_not_accepted): no checkpoint written; see docs/runbooks/entire-cli-upgrade.md'] push_rc=0 gate=['gate:pre-commit', 'gate:commit-msg', 'gate:post-commit', 'gate:pre-push'] public_entire_refs=[] agent_guard=['[entire] capture refused (cli_version_not_accepted): no checkpoint written; see docs/runbooks/entire-cli-upgrade.md']
+ status-route: {'checkpoint_sync_remote': 'learn-ukrainian/entire-checkpoints-private', 'checkpoint_sync_remote_source': 'dedicated', 'checkpoint_remote_ignored': None, 'unpushed_checkpoints': None}
+== r2-05-version-malformed
+ trailer='' commit_guard=['[entire] capture refused (cli_version_not_accepted): no checkpoint written; see docs/runbooks/entire-cli-upgrade.md'] push_rc=0 gate=['gate:pre-commit', 'gate:commit-msg', 'gate:post-commit', 'gate:pre-push'] public_entire_refs=[] agent_guard=['[entire] capture refused (cli_version_not_accepted): no checkpoint written; see docs/runbooks/entire-cli-upgrade.md']
+ status-route: {'checkpoint_sync_remote': 'learn-ukrainian/entire-checkpoints-private', 'checkpoint_sync_remote_source': 'dedicated', 'checkpoint_remote_ignored': None, 'unpushed_checkpoints': None}
+== r2-06-version-hang
+ trailer='' commit_guard=['[entire] capture refused (guard_probe_timeout): no checkpoint written; see docs/runbooks/entire-cli-upgrade.md'] push_rc=0 gate=['gate:pre-commit', 'gate:commit-msg', 'gate:post-commit', 'gate:pre-push'] public_entire_refs=[] agent_guard=['[entire] capture refused (guard_probe_timeout): no checkpoint written; see docs/runbooks/entire-cli-upgrade.md']
+ status-route: {'checkpoint_sync_remote': 'learn-ukrainian/entire-checkpoints-private', 'checkpoint_sync_remote_source': 'dedicated', 'checkpoint_remote_ignored': None, 'unpushed_checkpoints': None}
+== tracked settings point the checkpoint store at the PUBLIC repo; raw status says:
+{"enabled":true,"agents":["Claude Code","OpenCode"],"active_sessions":[],"agent_help":"entire agent-help","hooks_outdated":["opencode"],"checkpoint_sync_remote":"learn-ukrainian/learn-ukrainian.github.io","checkpoint_sync_remote_source":"dedicated"}
+
+== r2-07-allowlist-tracked-public
+ trailer='' commit_guard=['[entire] capture refused (routing_allowlist_failed): no checkpoint written; see docs/runbooks/entire-cli-upgrade.md'] push_rc=0 gate=['gate:pre-commit', 'gate:commit-msg', 'gate:post-commit', 'gate:pre-push'] public_entire_refs=[] agent_guard=['[entire] capture refused (routing_allowlist_failed): no checkpoint written; see docs/runbooks/entire-cli-upgrade.md']
+ status-route: {'checkpoint_sync_remote': 'learn-ukrainian/learn-ukrainian.github.io', 'checkpoint_sync_remote_source': 'dedicated', 'checkpoint_remote_ignored': None, 'unpushed_checkpoints': None}
+== local override points the store at a foreign repo; raw status says:
+{"enabled":true,"agents":["Claude Code","OpenCode"],"active_sessions":[],"agent_help":"entire agent-help","hooks_outdated":["opencode"],"checkpoint_sync_remote":"someone-else/learn-ukrainian.github.io","checkpoint_sync_remote_source":"dedicated"}
+
+== r2-08-allowlist-local-override
+ trailer='' commit_guard=['[entire] capture refused (checkpoint_route_not_private): no checkpoint written; see docs/runbooks/entire-cli-upgrade.md'] push_rc=0 gate=['gate:pre-commit', 'gate:commit-msg', 'gate:post-commit', 'gate:pre-push'] public_entire_refs=[] agent_guard=['[entire] capture refused (checkpoint_route_not_private): no checkpoint written; see docs/runbooks/entire-cli-upgrade.md']
+ status-route: {'checkpoint_sync_remote': 'someone-else/learn-ukrainian.github.io', 'checkpoint_sync_remote_source': 'dedicated', 'checkpoint_remote_ignored': None, 'unpushed_checkpoints': None}
+== origin owned by another account (round-1 S3); raw status says:
+{"enabled":true,"agents":["Claude Code","OpenCode"],"active_sessions":[],"agent_help":"entire agent-help","hooks_outdated":["opencode"],"checkpoint_sync_remote":"origin","checkpoint_sync_remote_source":"default","unpushed_checkpoints":2,"checkpoint_remote_ignored":"learn-ukrainian/entire-checkpoints-private","checkpoint_remote_ignored_reason":"origin owner \"someone-else\" differs from checkpoint owner \"learn-ukrainian\"","checkpoint_remote_ignored_remedy":"entire enable --local --checkpoint-remote github:learn-ukrainian/entire-checkpoints-private","checkpoint_remote_ignored_verdict":"disproved"}
+
+== r2-09-allowlist-misowned-origin
+ trailer='' commit_guard=['[entire] capture refused (checkpoint_route_not_private): no checkpoint written; see docs/runbooks/entire-cli-upgrade.md'] push_rc=0 gate=['gate:pre-commit', 'gate:commit-msg', 'gate:post-commit', 'gate:pre-push'] public_entire_refs=[] agent_guard=['[entire] capture refused (checkpoint_route_not_private): no checkpoint written; see docs/runbooks/entire-cli-upgrade.md']
+ status-route: {'checkpoint_sync_remote': 'origin', 'checkpoint_sync_remote_source': 'default', 'checkpoint_remote_ignored': 'learn-ukrainian/entire-checkpoints-private', 'unpushed_checkpoints': 2}
+== r2-10-outage-all-calls-fail
+ trailer='' commit_guard=['[entire] capture refused (cli_version_not_accepted): no checkpoint written; see docs/runbooks/entire-cli-upgrade.md'] push_rc=0 gate=['gate:pre-commit', 'gate:commit-msg', 'gate:post-commit', 'gate:pre-push'] public_entire_refs=[] agent_guard=['[entire] capture refused (cli_version_not_accepted): no checkpoint written; see docs/runbooks/entire-cli-upgrade.md']
+ status-route: {'checkpoint_sync_remote': 'learn-ukrainian/entire-checkpoints-private', 'checkpoint_sync_remote_source': 'dedicated', 'checkpoint_remote_ignored': None, 'unpushed_checkpoints': None}
+== r2-11-outage-prepush-fails
+ trailer='d13af7a8b574' commit_guard=[] push_rc=0 gate=['gate:pre-commit', 'gate:commit-msg', 'gate:post-commit', 'gate:pre-push'] public_entire_refs=[] agent_guard=[]
+ status-route: {'checkpoint_sync_remote': 'learn-ukrainian/entire-checkpoints-private', 'checkpoint_sync_remote_source': 'dedicated', 'checkpoint_remote_ignored': None, 'unpushed_checkpoints': None}
+== r2-12-outage-prepush-hangs
+ trailer='6912cb7131da' commit_guard=[] push_rc=0 gate=['gate:pre-commit', 'gate:commit-msg', 'gate:post-commit', 'gate:pre-push'] public_entire_refs=[] agent_guard=[]
+ status-route: {'checkpoint_sync_remote': 'learn-ukrainian/entire-checkpoints-private', 'checkpoint_sync_remote_source': 'dedicated', 'checkpoint_remote_ignored': None, 'unpushed_checkpoints': None}
+== r2-13-outage-private-store-unreachable
+Traceback (most recent call last):
+  File "<scratch>/canary-driver.py", line 262, in <module>
+    print(json.dumps(turn(sys.argv[2], sys.argv[3], **kwargs), indent=2))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/canary-driver.py", line 209, in turn
+    record["refs_after"] = all_refs()
+                           ^^^^^^^^^^
+  File "<scratch>/canary-driver.py", line 140, in all_refs
+    return {name: refs(name) for name in BARES}
+                  ^^^^^^^^^^
+  File "<scratch>/canary-driver.py", line 132, in refs
+    out = subprocess.run(
+          ^^^^^^^^^^^^^^^
+  File "<home>/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['git', '-C', '<scratch>/canary/remotes/github.com/learn-ukrainian/entire-checkpoints-private.git', 'for-each-ref', '--format=%(refname) %(objectname:short)']' returned non-zero exit status 2.
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+  File "<home>/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/json/__init__.py", line 293, in load
+    return loads(fp.read(),
+           ^^^^^^^^^^^^^^^^
+  File "<home>/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<home>/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/json/decoder.py", line 338, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<home>/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/json/decoder.py", line 356, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+ status-route: {'checkpoint_sync_remote': 'learn-ukrainian/entire-checkpoints-private', 'checkpoint_sync_remote_source': 'dedicated', 'checkpoint_remote_ignored': None, 'unpushed_checkpoints': None}
+== r2-14-outage-and-gate-refuses
+ trailer='2341fbb80451' commit_guard=[] push_rc=1 gate=['gate:pre-commit', 'gate:commit-msg', 'gate:post-commit', 'gate:pre-push'] public_entire_refs=[] agent_guard=[]
+ status-route: {'checkpoint_sync_remote': 'learn-ukrainian/entire-checkpoints-private', 'checkpoint_sync_remote_source': 'dedicated', 'checkpoint_remote_ignored': None, 'unpushed_checkpoints': None}
+== r2-15-accepted-after-outages
+ trailer='d992088b40e3' commit_guard=[] push_rc=0 gate=['gate:pre-commit', 'gate:commit-msg', 'gate:post-commit', 'gate:pre-push'] public_entire_refs=[] agent_guard=[]
+ status-route: {'checkpoint_sync_remote': 'learn-ukrainian/entire-checkpoints-private', 'checkpoint_sync_remote_source': 'dedicated', 'checkpoint_remote_ignored': None, 'unpushed_checkpoints': None}
+== final refs
+{
+  "public": [
+    "refs/heads/main f8d92d97"
+  ],
+  "private": [
+    "refs/heads/entire/checkpoints/v1 147aa28"
+  ],
+  "fork": [
+    "refs/heads/main 517a9ff5"
+  ]
+}

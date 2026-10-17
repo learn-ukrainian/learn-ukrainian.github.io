@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# Re-run `entire enable --force` with 0.11.5 in the throwaway clone and compare
+# what it writes against the 0.8.42 install.
+set -uo pipefail
+C=<scratch>/canary
+cd "$C/clone"
+mkdir -p "$C/evidence/pre-enable-0115" "$C/evidence/hooks-0.11.5"
+cp .claude/settings.json "$C/evidence/pre-enable-0115/claude-settings.json"
+cp .entire/settings.json "$C/evidence/pre-enable-0115/entire-settings.json"
+"$C/tools/cenv.sh" "$C/bin-0.11.5" entire enable --force --agent claude-code --telemetry=false >"$C/logs/enable-0115.txt" 2>&1
+echo "enable rc=$?"
+tail -n 12 "$C/logs/enable-0115.txt"
+if diff "$C/evidence/pre-enable-0115/entire-settings.json" .entire/settings.json; then echo ENTIRE_SETTINGS_UNCHANGED; fi
+ls -a .entire
+for h in commit-msg post-commit post-rewrite pre-push prepare-commit-msg; do
+  cp ".git/hooks/$h" "$C/evidence/hooks-0.11.5/$h"
+  if cmp -s "$C/evidence/hooks-0.8.42/$h" "$C/evidence/hooks-0.11.5/$h"; then echo "$h SAME"; else echo "$h DIFF"; fi
+done
+ls .git/hooks | grep -v sample
+cp .claude/settings.json "$C/evidence/claude-settings-0115.json"

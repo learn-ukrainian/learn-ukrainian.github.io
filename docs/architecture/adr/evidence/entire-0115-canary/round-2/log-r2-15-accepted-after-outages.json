@@ -1,0 +1,61 @@
+{
+  "bin": "bin-0.11.5",
+  "label": "r2-15-recovery",
+  "agent_hooks": "configured guarded commands",
+  "commit_rc": 0,
+  "commit_seconds": 1.155,
+  "commit_guard_lines": [],
+  "commit_sha": "f8d92d97a71e218cf1437323a3ae574961ea1546",
+  "checkpoint_trailer": "d992088b40e3",
+  "local_v1_before": "7c9b4fcd287e",
+  "local_v1_after_commit": "147aa28fc6bf",
+  "push_remote": "origin",
+  "gate_exit": 0,
+  "push_rc": 0,
+  "push_seconds": 0.444,
+  "push_stderr_tail": "[entire] Pushing entire/checkpoints/v1 to checkpoint remote... done\nTo github.com:learn-ukrainian/learn-ukrainian.github.io.git\n   308c9fbe..f8d92d97  HEAD -> main\n",
+  "agent_hook_results": [
+    {
+      "verb": "session-start",
+      "rc": 0,
+      "seconds": 0.234,
+      "guard": []
+    },
+    {
+      "verb": "user-prompt-submit",
+      "rc": 0,
+      "seconds": 1.853,
+      "guard": []
+    },
+    {
+      "verb": "stop",
+      "rc": 0,
+      "seconds": 2.361,
+      "guard": []
+    },
+    {
+      "verb": "session-end",
+      "rc": 0,
+      "seconds": 0.249,
+      "guard": []
+    }
+  ],
+  "repo_gate_calls": [
+    "gate:pre-commit",
+    "gate:commit-msg",
+    "gate:post-commit",
+    "gate:pre-push"
+  ],
+  "refs_after": {
+    "public": [
+      "refs/heads/main f8d92d97"
+    ],
+    "private": [
+      "refs/heads/entire/checkpoints/v1 147aa28"
+    ],
+    "fork": [
+      "refs/heads/main 517a9ff5"
+    ]
+  },
+  "public_entire_refs": []
+}

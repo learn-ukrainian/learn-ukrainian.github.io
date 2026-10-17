@@ -16,9 +16,15 @@ import re
 import shutil
 import subprocess
 import sys
+import time
 import uuid
 from pathlib import Path
 from typing import Any
+
+try:
+    from scripts.entire import capture_guard
+except ModuleNotFoundError:  # Direct hook execution: scripts/entire is sys.path[0].
+    import capture_guard
 
 _MAX_INPUT_BYTES = 1 << 20
 _MAX_HOOKS_BYTES = 1 << 20
@@ -179,6 +185,10 @@ def _hook(verb: str) -> int:
         payload, repo_root = _normalize(raw, cwd=Path.cwd(), home=Path.home())
         entire = shutil.which("entire")
         if not entire:
+            return 0
+        reason = capture_guard.refusal(repo_root, entire, time.monotonic() + _HOOK_TIMEOUT_SECONDS)
+        if reason is not None:
+            print(f"[entire] capture refused ({reason}): no checkpoint written", file=sys.stderr)
             return 0
         subprocess.run(
             [entire, "hooks", "cursor", verb],
