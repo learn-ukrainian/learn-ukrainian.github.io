@@ -1,0 +1,3 @@
+# Exact branch names, one per line. No patterns or inline comments.
+# main, the default branch, protected branches and open PR heads are always retained.
+main
