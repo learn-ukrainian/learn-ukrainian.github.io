@@ -229,6 +229,32 @@ def test_lean_orient_caps_fat_rollovers_and_full_orient_does_not(monkeypatch):
     assert len(full.content) > 16384
 
 
+def test_lean_orient_caps_large_collector_error_metadata(monkeypatch):
+    _patch_orient_sources(monkeypatch)
+
+    def failing_runtime(ctx=None):
+        raise RuntimeError("e" * 18000)
+
+    monkeypatch.setattr(api_main, "_collect_runtime_orient_data", failing_runtime)
+
+    response = client.get("/api/orient?lean=true")
+
+    assert response.status_code == 200
+    assert len(response.content) <= 16384
+    data = response.json()
+    assert data["generated_at"]
+    for section in (data["runtime"], data["meta"]["runtime"]):
+        assert section["omitted"] is True
+        assert section["locator"] == "GET /api/orient?sections=runtime"
+    assert data["meta"]["runtime"]["generated_at"]
+    assert "GET /api/orient?sections=runtime" in data["orientation_bound"]["omitted"]["locators"]
+
+    full = client.get("/api/orient")
+    assert full.status_code == 200
+    assert full.json()["runtime"]["error"] == "e" * 18000
+    assert full.json()["meta"]["runtime"]["error"] == "RuntimeError: " + "e" * 18000
+
+
 def test_orient_git_exposes_primary_checkout_dirty_signal(monkeypatch, tmp_path):
     original_git_collector = api_main._collect_git_orient_data
     repo = _init_orient_git_repo(tmp_path)

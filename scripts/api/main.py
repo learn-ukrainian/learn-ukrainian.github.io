@@ -1648,8 +1648,8 @@ def _orient_section_specs() -> dict[str, tuple[Callable[..., Any], Any, bool]]:
 def _cap_lean_orient(response: dict[str, Any]) -> dict[str, Any]:
     """Keep the lean preset inside the orientation byte bound.
 
-    Sections that do not fit become locators. ``generated_at`` stays. The full
-    ``/api/orient`` payload is unchanged.
+    Sections and section metadata that do not fit become locators.
+    ``generated_at`` stays. The full ``/api/orient`` payload is unchanged.
     """
     protected = {"generated_at", "meta", "_telemetry", "orientation_bound"}
 
@@ -1659,13 +1659,26 @@ def _cap_lean_orient(response: dict[str, Any]) -> dict[str, Any]:
     if size(response) <= PACKET_MAX_BYTES:
         return response
     omitted: list[str] = []
+    bound: dict[str, Any] = {
+        "max_bytes": PACKET_MAX_BYTES,
+        "complete": False,
+        "omitted": {"count": 0, "locators": omitted},
+    }
+    response["orientation_bound"] = bound
+    candidates = [(response, key) for key in response if key not in protected]
+    meta = response.get("meta", {})
+    candidates.extend((meta, key) for key in meta)
     while size(response) > PACKET_MAX_BYTES:
-        candidates = [key for key in response if key not in protected]
         if not candidates:
             break
-        key = max(candidates, key=lambda name: len(json_bytes({name: response[name]})))
+        candidate = max(
+            candidates,
+            key=lambda item: len(json_bytes({item[1]: item[0][item[1]]})),
+        )
+        candidates.remove(candidate)
+        container, key = candidate
         locator = f"GET /api/orient?sections={key}"
-        section = response[key]
+        section = container[key]
         stub: dict[str, Any] = {
             "omitted": True,
             "locator": locator,
@@ -1677,14 +1690,10 @@ def _cap_lean_orient(response: dict[str, Any]) -> dict[str, Any]:
             counts = section.get("counts")
             if isinstance(counts, dict) and len(json_bytes(counts)) <= 400:
                 stub["counts"] = counts
-        response[key] = stub
-        omitted.append(locator)
-        protected.add(key)
-    response["orientation_bound"] = {
-        "max_bytes": PACKET_MAX_BYTES,
-        "complete": False,
-        "omitted": {"count": len(omitted), "locators": omitted},
-    }
+        container[key] = stub
+        if locator not in omitted:
+            omitted.append(locator)
+        bound["omitted"]["count"] = len(omitted)
     if size(response) > PACKET_MAX_BYTES:
         response.pop("orientation_bound", None)
         for key, value in list(response.items()):
