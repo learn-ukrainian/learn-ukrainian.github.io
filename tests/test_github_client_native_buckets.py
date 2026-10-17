@@ -8,9 +8,15 @@ from unittest.mock import Mock
 import pytest
 
 from scripts.common import github_client as gh
+from tests.common.github_cache_isolation import isolate_github_client_cache
 
 NOW = 1000
 FUTURE = 2000
+
+
+@pytest.fixture(autouse=True)
+def _isolate_github_client_cache(tmp_path, monkeypatch):
+    yield from isolate_github_client_cache(tmp_path, monkeypatch)
 
 
 def natively_runs(args):

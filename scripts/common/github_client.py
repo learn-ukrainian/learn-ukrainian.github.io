@@ -23,6 +23,7 @@ import email.utils
 import hashlib
 import io
 import json
+import logging
 import math
 import os
 import re
@@ -42,6 +43,14 @@ RESERVE = 10
 """GraphQL and search pools: a non-landing call is refused at or below this many remaining."""
 LANDING_RESERVE = 500
 """Core pool: below this many remaining, what is left is kept for calls that land a PR."""
+BUDGET_RESET_HORIZON_SECONDS = 2 * 60 * 60
+"""GitHub resets a primary window within an hour. A stored primary reset further ahead than this is not a budget.
+
+Retry-After expiries are not primary windows. :func:`_observation_reset_ignored` keeps them.
+"""
+MAX_BUDGET_REMAINING = 15_000
+"""Inclusive ceiling for a plausible remaining count. GitHub's highest published primary limit is 15_000."""
+_IMPLAUSIBLE_RESET_LOGGED = False
 REFUSAL_REASONS = frozenset({"retry_after", "secondary_hold", "core_below_landing_reserve", "pool_exhausted"})
 """The closed set of reasons; every local refusal names exactly one."""
 SPILL_BYTES = 8 * 1024 * 1024
@@ -244,6 +253,75 @@ def _refusal(budgets, pools, *, call_class, now):
     return None
 
 
+def _budget_reset_implausible(reset, now):
+    """True when ``reset`` cannot be a live GitHub primary window relative to ``now``.
+
+    A window lasts at most an hour. Non-finite, non-integer, non-positive, and
+    far-future values are not budgets: a year-2096 reset would otherwise refuse
+    until that date because an expired row is the only one admission skips.
+    """
+    if type(reset) is not int or reset <= 0:
+        return True
+    return reset > now + BUDGET_RESET_HORIZON_SECONDS
+
+
+def _budget_remaining_implausible(remaining, limit):
+    """True when ``remaining`` is outside the closed interval ``[0, limit]``."""
+    return type(remaining) is not int or remaining < 0 or remaining > limit
+
+
+def _observation_reset_ignored(resource, reset, now):
+    """True when a stored or incoming reset must not act as this resource's budget.
+
+    The primary-window horizon applies to pool observations only. GitHub's
+    Retry-After expiry is the duration it named, which can outlast that window,
+    so a long authentic hold is kept. A non-positive or non-integer expiry is
+    still not a hold.
+    """
+    if resource == _AUTHENTIC_HOLD:
+        return type(reset) is not int or reset <= 0
+    return _budget_reset_implausible(reset, now)
+
+
+def _log_implausible_reset_once(reset):
+    """Debug-log the first implausible reset in this process and stay quiet after that."""
+    global _IMPLAUSIBLE_RESET_LOGGED
+    if _IMPLAUSIBLE_RESET_LOGGED:
+        return
+    _IMPLAUSIBLE_RESET_LOGGED = True
+    logging.getLogger(__name__).debug("ignoring implausible GitHub budget reset: %s", reset)
+
+
+def implausible_budget_rows(connection, *, now, remaining_limit=MAX_BUDGET_REMAINING):
+    """Budget rows that cannot be a live GitHub observation.
+
+    ``connection`` is only read. A row is listed when its reset is ignored
+    (:func:`_observation_reset_ignored`) or its remaining falls outside
+    ``[0, remaining_limit]``. A Retry-After expiry beyond the primary-window
+    horizon is a live hold, not a poisoned reset.
+    """
+    found = []
+    query = "SELECT scope, resource, remaining, reset FROM budget ORDER BY resource"
+    for scope, resource, remaining, reset in connection.execute(query):
+        reasons = []
+        if _observation_reset_ignored(resource, reset, now):
+            reasons.append("reset")
+        if _budget_remaining_implausible(remaining, remaining_limit):
+            reasons.append("remaining")
+        if reasons:
+            found.append(
+                {
+                    "table": "budget",
+                    "scope": scope,
+                    "resource": resource,
+                    "remaining": remaining,
+                    "reset": reset,
+                    "reasons": tuple(reasons),
+                }
+            )
+    return found
+
+
 def _admission(db, scope, pools, call_class, now):
     """Apply :func:`_refusal` to the scope's stored budgets and holds."""
     names = [*pools, _SYNTHETIC_HOLD, _AUTHENTIC_HOLD]
@@ -253,7 +331,12 @@ def _admission(db, scope, pools, call_class, now):
         + ")",
         (scope, *names),
     ).fetchall()
-    budgets = {resource: (remaining, reset) for resource, remaining, reset in rows}
+    budgets = {}
+    for resource, remaining, reset in rows:
+        if _observation_reset_ignored(resource, reset, now):
+            _log_implausible_reset_once(reset)
+            continue
+        budgets[resource] = (remaining, reset)
     return _refusal(budgets, pools, call_class=call_class, now=now)
 
 
@@ -958,13 +1041,31 @@ def _cached_value(cached):
     return cached[0] if json.loads(cached[1]).get("_github_binary") else json.loads(cached[0])
 
 
-def _store_budget(db, scope, resource, remaining, reset):
+def _store_budget(db, scope, resource, remaining, reset, now=None):
+    """Record one observation.
+
+    An implausible primary-window reset is not written. GitHub's Retry-After
+    expiry is not that window, so a hold longer than it is kept. A stored row
+    the reader ignores loses to a later plausible observation: the upsert used
+    to require ``excluded.reset >= budget.reset``, and a year-2096 reset then
+    blocked every healthy write. The extra ``WHERE`` terms are that ignore
+    rule (:func:`_observation_reset_ignored`) applied to the stored row.
+    """
+    if now is None:
+        now = time.time()
+    if _observation_reset_ignored(resource, reset, now):
+        _log_implausible_reset_once(reset)
+        return
     db.execute(
         """INSERT INTO budget VALUES(?,?,?,?)
         ON CONFLICT(scope,resource) DO UPDATE SET
         remaining=CASE WHEN excluded.reset=budget.reset THEN min(budget.remaining,excluded.remaining) ELSE excluded.remaining END,
-        reset=excluded.reset WHERE excluded.reset>=budget.reset""",
-        (scope, resource, remaining, reset),
+        reset=excluded.reset
+        WHERE excluded.reset>=budget.reset
+           OR typeof(budget.reset)!='integer'
+           OR budget.reset<=0
+           OR (budget.resource!=? AND budget.reset>?)""",
+        (scope, resource, remaining, reset, _AUTHENTIC_HOLD, now + BUDGET_RESET_HORIZON_SECONDS),
     )
 
 
@@ -1340,12 +1441,14 @@ class GitHubClient:
                     budget = _budget_headers(h)
                     if budget is not None:
                         remaining, reset = budget
-                        _store_budget(db, self.scope, h.get("x-ratelimit-resource", resource), remaining, reset)
+                        _store_budget(
+                            db, self.scope, h.get("x-ratelimit-resource", resource), remaining, reset, now=now
+                        )
                     limit = _limit_hold(response, now)
                     if limit is not None:
                         holds, reset, reason = limit
                         for hold in holds:
-                            _store_budget(db, self.scope, hold, 0, reset)
+                            _store_budget(db, self.scope, hold, 0, reset, now=now)
                         return deferred(reason, reset)
                     if response.status == 304:
                         if not cached:
@@ -1381,7 +1484,7 @@ class GitHubClient:
                         )
                     ):
                         reset = reset or int(now + 60)
-                        _store_budget(db, self.scope, resource, 0, reset)
+                        _store_budget(db, self.scope, resource, 0, reset, now=now)
                         return deferred("pool_exhausted", reset)
                     if graphql and isinstance(value, dict) and value.get("errors"):
                         return Result(value, status=response.status, error="github_graphql_error", headers=h)
@@ -1396,7 +1499,7 @@ class GitHubClient:
                                 and type(rate.get("remaining")) is int
                                 and type(rate.get("reset")) is int
                             ):
-                                _store_budget(db, self.scope, name, rate["remaining"], rate["reset"])
+                                _store_budget(db, self.scope, name, rate["remaining"], rate["reset"], now=now)
                     if cacheable:
                         _store_cache(db, self.scope, key, response.body, h, now)
                     else:
@@ -3218,9 +3321,9 @@ def _native_command(args, client, runner, kwargs):
             )
             with client._db() as db:
                 if resource is not None:
-                    _store_budget(db, client.scope, resource, *budget)
+                    _store_budget(db, client.scope, resource, *budget, now=now)
                 for hold in holds:
-                    _store_budget(db, client.scope, hold, 0, reset)
+                    _store_budget(db, client.scope, hold, 0, reset, now=now)
             return _result_process(args, _limited(reason, reset), {}, kwargs)
     if client.max_response_bytes is not None and len(output) > client.max_response_bytes:
         return _result_process(args, Result(error="github_response_too_large"), {}, kwargs)

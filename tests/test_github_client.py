@@ -12,9 +12,15 @@ from pathlib import Path
 import pytest
 
 from scripts.common import github_client as gh
+from tests.common.github_cache_isolation import isolate_github_client_cache
 
 # Captured at import: tests that monkeypatch ``gh.GitHubClient`` must still build stores from the real class.
 REAL_CLIENT = gh.GitHubClient
+
+
+@pytest.fixture(autouse=True)
+def _isolate_github_client_cache(tmp_path, monkeypatch):
+    yield from isolate_github_client_cache(tmp_path, monkeypatch)
 
 
 def natively_runs(args):
@@ -2609,7 +2615,8 @@ def test_publisher_write_live_limit_records_headers_without_replay(tmp_path):
                 "SELECT resource,remaining,reset FROM budget WHERE scope=?", (store.scope,)
             )
         }
-    assert budgets["core"] == (77, 4000000000)
+    # A reset centuries ahead is not a GitHub window, so the core observation is not stored.
+    assert "core" not in budgets
     # GitHub's Retry-After is an authentic hold, distinct from the client's synthetic ones.
     assert budgets["retry_after"] == (0, result.github_result.reset_at) and "secondary" not in budgets
     assert result.github_result.reason == "retry_after"
