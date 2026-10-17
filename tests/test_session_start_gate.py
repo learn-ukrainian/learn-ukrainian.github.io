@@ -23,6 +23,15 @@ SESSION_SETUP_HOOK = REPO_ROOT / "agents_extensions" / "shared" / "hooks" / "ses
 sys.path.insert(0, str(REPO_ROOT))
 
 from scripts.hooks import session_start_gate as gate
+from tests._host_path_guard import FIXTURE_HOME, assert_no_host_facts, assert_no_host_paths
+
+_REAL_PHASE_STACK_DRIFT = gate.phase_stack_drift
+
+
+@pytest.fixture(autouse=True)
+def _stub_stack_drift(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Host probes stay out of gate tests unless a test restores the real phase."""
+    monkeypatch.setattr(gate, "phase_stack_drift", lambda _args: {"status": "ok"})
 
 
 @pytest.fixture(autouse=True)
@@ -679,6 +688,61 @@ def test_shell_maps_gate_failure_to_could_not_run(tmp_path: Path) -> None:
     assert "SESSION GATE COULD NOT RUN" in context
     assert "lease state UNKNOWN" in context
     assert "DURABLE THREAD LEASE CONFLICT" not in context
+
+
+def test_drift_report_stays_off_the_session_context(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """The private report may hold a version, a path, and an address. Session JSON may not."""
+    monkeypatch.setattr(gate, "phase_stack_drift", _REAL_PHASE_STACK_DRIFT)
+    monkeypatch.setattr(gate, "phase_session_record", lambda _args: {"status": "ok"})
+    monkeypatch.setattr(gate, "phase_python_version", lambda _args: {"status": "ok"})
+    monkeypatch.setattr(gate, "phase_primary_main", lambda _args: {"status": "ok"})
+    monkeypatch.setattr(gate, "phase_thread_lease", lambda _args: {"status": "skipped", "reason": "test"})
+    monkeypatch.setattr(gate, "phase_rollover_import", lambda _args: {"status": "skipped", "reason": "test"})
+    monkeypatch.setattr(gate, "phase_rollover_detect", lambda _args: {"status": "skipped", "reason": "test"})
+    sentinel_version = "9.9.9"
+    sentinel_path = f"{FIXTURE_HOME}/bin/gh"
+    sentinel_address = "203.0.113.10"
+    destination = tmp_path / "learn-ukrainian" / "stack-drift" / "report.json"
+
+    def write_report(repo_root: Path) -> Path:
+        print(sentinel_version)
+        print(sentinel_path)
+        print(sentinel_address)
+        destination.parent.mkdir(parents=True)
+        destination.write_text(
+            json.dumps({"installed": sentinel_version, "path": sentinel_path, "address": sentinel_address}),
+            encoding="utf-8",
+        )
+        return destination
+
+    monkeypatch.setattr("scripts.ops.host_stack_drift.write_report", write_report)
+    rc = gate.main(
+        [
+            "--repo-root",
+            str(REPO_ROOT),
+            "--project-dir",
+            str(tmp_path),
+            "--agent",
+            "claude-testlane",
+            "--session-id",
+            "s-drift",
+        ]
+    )
+    assert rc == 0
+    out = capsys.readouterr().out
+    result = json.loads(out)
+    assert result["stack_drift"] == {"status": "ok"}
+    assert sentinel_version not in out
+    assert sentinel_path not in out
+    assert sentinel_address not in out
+    assert_no_host_paths(out, "session gate json")
+    assert_no_host_facts(out, "session gate json")
+    private = destination.read_text(encoding="utf-8")
+    assert sentinel_version in private
+    assert sentinel_path in private
+    assert sentinel_address in private
 
 
 def test_shell_surfaces_takeover_banner(tmp_path: Path) -> None:

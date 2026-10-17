@@ -535,8 +535,7 @@ def phase_rollover_import(args: argparse.Namespace) -> dict[str, Any]:
         notices = []
         if copies:
             notices.append(
-                "WARNING: rollover bundle differs at equal order; kept local; "
-                f"remote preserved at {', '.join(copies)}"
+                f"WARNING: rollover bundle differs at equal order; kept local; remote preserved at {', '.join(copies)}"
             )
         notices.extend(_installed_stage_cleanup_warnings(payload))
         if notices:
@@ -548,6 +547,23 @@ def phase_rollover_import(args: argparse.Namespace) -> dict[str, Any]:
         "status": "issue",
         "warning": f"WARNING: rollover bundle import skipped (fail-open): {detail}",
     }
+
+
+def phase_stack_drift(args: argparse.Namespace) -> dict[str, Any]:
+    """Write the private drift report. The session payload stays status-only.
+
+    Installed versions, host paths, and addresses belong in the report file.
+    A probe failure does not stop the session and does not explain itself here.
+    """
+    try:
+        from scripts.ops.host_stack_drift import write_report
+
+        sink = io.StringIO()
+        with contextlib.redirect_stdout(sink), contextlib.redirect_stderr(sink):
+            write_report(Path(args.project_dir))
+    except Exception:
+        return {"status": "ok"}
+    return {"status": "ok"}
 
 
 # --- entrypoint ---------------------------------------------------------------
@@ -602,6 +618,8 @@ def main(argv: list[str] | None = None) -> int:
     else:
         result["rollover_import"] = phase_rollover_import(args)
         result["rollover_detect"] = phase_rollover_detect(args)
+
+    result["stack_drift"] = phase_stack_drift(args)
 
     json.dump(result, sys.stdout, ensure_ascii=False)
     return 0
