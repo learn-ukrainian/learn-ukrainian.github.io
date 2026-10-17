@@ -2,7 +2,7 @@ arc_schema: 1
 level: a1
 source:
   path: docs/epics/fresh-build-a1-arc.md
-  sha256: 99b2ffe193b059f66001156ee4b0c7aac313bd32809b47fbc89b82f075b33cee
+  sha256: 6059900baab73cbf142b65c83e7ba828538b48528d4a05f978050b20d9c33b10
 est_lessons_total: 162
 positions:
 - position: 1
@@ -649,7 +649,7 @@ positions:
   job: Ask someone to do something and prohibit an action; all Standard imperative pairs, second person singular and plural
   inventory_text: null
   phase: A1.7
-  skills_text: Li, S, R, W (illustrated instructions and prohibitions; copy familiar signs; `:264-266`, `:299`, `:314-315`, `:362-364`) (`:721-725`, `:314-315`, `:475`)
+  skills_text: Li, S, R, W (illustrated instructions and prohibitions; copy familiar signs; `:264-266`, `:299`, `:314-315`, `:362-364`) (`:721-725`, `:475`)
   skills:
   - Li
   - S
@@ -666,8 +666,6 @@ positions:
     - 364
   - - 721
     - 725
-  - - 314
-    - 315
   - - 475
     - 475
 - position: 44
@@ -807,7 +805,7 @@ positions:
   job: Say what hurts, including injury and high temperature; at the pharmacy and doctor
   inventory_text: null
   phase: A1.8
-  skills_text: Li, S, R, W (patient exchanges, signs and short personal-data notes; `:287`, `:335`, `:387`, `:449`, `:541-545`) (`:541-545`)
+  skills_text: Li, S, R, W (patient exchanges, signs and short personal-data notes; `:287`, `:335`, `:387`, `:449`, `:541-545`)
   skills:
   - Li
   - S
@@ -822,8 +820,6 @@ positions:
     - 387
   - - 449
     - 449
-  - - 541
-    - 545
   - - 541
     - 545
 - position: 54

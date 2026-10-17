@@ -325,7 +325,7 @@ def test_positions_11_to_55_match_floor_ownership_amendment():
     import json
 
     later = _records()[10:]
-    assert hashlib.sha256(json.dumps(later, ensure_ascii=False, sort_keys=True).encode()).hexdigest() == '21d8bfdd27afca5b2e9c60b32df161013aad55f53bb2fb093615ba07f1e3db6f'
+    assert hashlib.sha256(json.dumps(later, ensure_ascii=False, sort_keys=True).encode()).hexdigest() == '06ee01a411097c094c5b2388601063f7dda4490a1f07c3cc275d27b2ffea2687'
 
 
 def test_regenerated_a1_owns_reviewed_standard_duties(tmp_path: Path) -> None:

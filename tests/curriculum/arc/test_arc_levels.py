@@ -33,7 +33,7 @@ FIRST_BAND_KEY = {"a2": "a2-bridge", "b1": "b1-core", "b2": "b2+"}
 A1_ARC_DOC = REPO_ROOT / "docs/epics/fresh-build-a1-arc.md"
 A1_ARC_YAML = REPO_ROOT / "curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml"
 # All 55 generated rows after the #10108 floor ownership amendment, with duplicate line refs removed.
-A1_POSITIONS_BLOCK_SHA256 = "46878f647e39466b9fc45d590842040bed8f3dfd07bc69c97940c60867a92041"
+A1_POSITIONS_BLOCK_SHA256 = "9c8aa2641676e87c42bdd9eee8ada09baa105ddcb7d62a2322768915ba400e9f"
 NON_A1_ARC_SHA256 = {
     "a2": "d9419ea84a8f3bac3d1ba9159061e25ffd8a126813986c5e5efbd8e164db03aa",
     "b1": "274cbfdf28f7c7193d5efd4b4cd623d4ebb0933fd20e391303d3cd36bcf5390f",
@@ -113,6 +113,15 @@ def test_loader_band_keys() -> None:
     a1 = loader.load_arc("a1")
     assert a1[0].band_key == "a1-orientation"
     assert all(position.band_key is None for position in a1[1:])
+
+
+@pytest.mark.parametrize("level", ("a1", *sorted(LEVELS)))
+def test_standard_line_refs_have_no_duplicate_pairs(level: str) -> None:
+    for record in _records(level):
+        pairs = [tuple(pair) for pair in record["standard_line_refs"]]
+        assert len(pairs) == len(set(pairs)), (
+            f"{level} position {record['position']} repeats a standard_line_refs pair"
+        )
 
 
 def test_a1_arc_preserves_orientation_and_amended_positions() -> None:

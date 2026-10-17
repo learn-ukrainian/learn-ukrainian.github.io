@@ -180,7 +180,7 @@ Skills duty = the Standard skill the module must exercise beyond its language po
 | 40 | `people-around-me` | A1.6 | Talk about people you see, know and think about: accusative animate nouns and agreeing hard/soft-group adjectives in all three genders; мене, тебе, нас, вас; `про` + accusative | — (`:610-650`, `:656-657`, `:687-688`) | 3 |
 | 41 | `checkpoint-food-shopping` | A1.6 | Self-check: order and buy | R | 2 |
 | 42 | `hey-friend` | A1.7 | Address people by name: vocative | — | 2 |
-| 43 | `please-do-this` | A1.7 | Ask someone to do something and prohibit an action; all Standard imperative pairs, second person singular and plural | Li, S, R, W (illustrated instructions and prohibitions; copy familiar signs; `:264-266`, `:299`, `:314-315`, `:362-364`) (`:721-725`, `:314-315`, `:475`) | 3 |
+| 43 | `please-do-this` | A1.7 | Ask someone to do something and prohibit an action; all Standard imperative pairs, second person singular and plural | Li, S, R, W (illustrated instructions and prohibitions; copy familiar signs; `:264-266`, `:299`, `:314-315`, `:362-364`) (`:721-725`, `:475`) | 3 |
 | 44 | `linking-ideas` | A1.7 | Join ideas: і, а, але, бо, тому що | W | 2 |
 | 45 | `when-and-where` | A1.7 | Build first complex sentences with що, де, коли — talking about your home: housing, rooms, furniture, what is where | R, W (read an illustrated short description for gist, topic and details; describe your room; `:294-311`, `:358-360`, `:489-493`) | 4 |
 | 46 | `holidays` | A1.7 | Greet people on holidays; state and religious holidays, birthdays, weddings and gifts | Li, S, R, W (read postcards, SMS and email; write or copy greetings, wishes, thanks and a greeting from a place; `:300`, `:323`, `:348-351`, `:553-556`) | 3 |
@@ -190,7 +190,7 @@ Skills duty = the Standard skill the module must exercise beyond its language po
 | 50 | `what-will-happen` | A1.8 | Say what will happen using all future forms of бути and the compound imperfective future | — (`:710-711`, `:715-717`) | 3 |
 | 51 | `my-plans` | A1.8 | Make plans and arrange to meet using selected perfective futures зможу, скажете, прочитають; recycle at 52 | W (SMS) (`:718-719`) | 3 |
 | 52 | `my-story` | A1.8 | Tell your life in three tenses and complete a personal profile, including gender, date/place of birth and education | R, W, S (read and complete a personal-data form, write and tell a short biography, retell a simple text; `:322`, `:352-353`, `:405-406`, `:422-436`) (`:343-347`, `:370-377`, `:482-485`) | 3 |
-| 53 | `health` | A1.8 | Say what hurts, including injury and high temperature; at the pharmacy and doctor | Li, S, R, W (patient exchanges, signs and short personal-data notes; `:287`, `:335`, `:387`, `:449`, `:541-545`) (`:541-545`) | 3 |
+| 53 | `health` | A1.8 | Say what hurts, including injury and high temperature; at the pharmacy and doctor | Li, S, R, W (patient exchanges, signs and short personal-data notes; `:287`, `:335`, `:387`, `:449`, `:541-545`) | 3 |
 | 54 | `emergencies` | A1.8 | Get help in an emergency | Li, S, R, W (help requests and important written phrases; `:272-275`, `:368-369`) | 2 |
 | 55 | `a1-finale` | A1.8 | Spend one full day in a Ukrainian city: integrated reuse of all taught Standard A1 intentions, themes and speech skills; no new language | all (Standard section 1 verification using taught inventory; source section 11) (`:228-451`, `:453-556`) | 3 |
 
@@ -285,7 +285,7 @@ No lesson prose or replacement plan is authorized by this revision.
 Listening and speaking begin at position 2, with stress and intonation. Hard/soft
 contrast belongs to 3; the apostrophe to 4; дж and дз, alphabet order, letter names,
 capital/small letters and recognising handwritten letters to 5. Line breaking
-(`:588`) remains owned by the writing strand at position 20, in the §5 table.
+(`:588`) remains owned by the writing strand at position 20, outside the tables.
 Prosody and useful exchanges recycle through 6–10. Printed words follow the
 introduction of their constituent letters; supported oral chunks may precede decoding.
 
@@ -368,6 +368,7 @@ All 55 positions, slugs and letter inventories/order remain. Early lessons intro
 facets are short teaching/practice steps before the recap. Recaps introduce nothing.
 Appearance at 10 uses nominative descriptions, not an oblique-pronoun system.
 Position 3 owns syllables; 6 owns unstressed [е]/[и]; 20 owns line breaking.
+This amendment supersedes §8's 'outside the tables' wording for `:588`: position 20's §5 row now carries the reference.
 Position 5 completes writing one's own and others' names (`:343-344`) and capital-letter
 use, including Київ/київський and Україна/українець (`:571-572`), alongside printed
 and handwritten letter recognition. Position 6 explicitly teaches
