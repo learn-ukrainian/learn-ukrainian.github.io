@@ -1150,7 +1150,8 @@ private operations docs):
 | `DISPATCH_MIN_MEM_AVAILABLE_GIB` | `MemAvailable` in `/proc/meminfo` is below the floor |
 | `DISPATCH_MAX_LOAD_PER_CPU` | the 1-minute load average divided by the CPU count is above the limit |
 | `DISPATCH_WORKER_MEM_RESERVE_GIB` | the shared `lu.slice` pool's non-cache use plus this per-worker reserve would exceed its `memory.high` (#9975) |
-| `DISPATCH_DISK_REFUSE_USED_PERCENT` | the filesystem holding `.worktrees/` is at or above this percent used (default 85, as `df` reports it) after the worktree reaper has run once (#10776); a hard stop, exit 4 |
+| `DISPATCH_DISK_REAP_USED_PERCENT` | not a refusal: at or above this percent used (default 85, as `df` reports it) the worktree reaper runs once and the dispatch is admitted (#10871); must be below the refuse value, else reading the thresholds fails with a configuration error |
+| `DISPATCH_DISK_REFUSE_USED_PERCENT` | the filesystem holding `.worktrees/` is at or above this percent used (default 90) after the worktree reaper has run once (#10776, #10871); a hard stop, exit 4 |
 
 A refusal exits 3 and prints one line that names each failed check with its measured value
 and threshold. Retry once a worker finishes or the host recovers, or override one dispatch

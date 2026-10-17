@@ -213,6 +213,185 @@ def test_ordinary_codex_start_is_concise_and_compact_session_start_is_silent(
     assert compacted.stdout == ""
 
 
+# A real Codex session id is a UUID; it lands in the capsule's orientation
+# URL, so the byte budget is measured with one rather than an empty id.
+_CODEX_SESSION_ID = "0199a5c1-1234-7abc-8def-0123456789ab"
+_SYNTHETIC_ROOT_GUARD = (
+    "import json\n"
+    "import pathlib\n"
+    "report = pathlib.Path(__file__).with_name('report.json').read_text(encoding='utf-8')\n"
+    "print(json.dumps(json.loads(report), indent=2))\n"
+)
+
+
+def _start_ordinary_codex_with_root_names(
+    tmp_path: Path,
+    names: list[str],
+    *,
+    synthetic: bool,
+) -> subprocess.CompletedProcess[bytes]:
+    """Run ordinary Codex SessionStart with ``names`` as unexpected root entries."""
+    project = tmp_path / "primary"
+    project.mkdir()
+    _run(["git", "init", "-b", "main"], cwd=project)
+    _run(["git", "config", "user.email", "hooks@example.invalid"], cwd=project)
+    _run(["git", "config", "user.name", "Hook Tests"], cwd=project)
+    (project / ".gitignore").write_text(".venv\nscripts\n", encoding="utf-8")
+    (project / ".python-version").write_text(
+        (REPO_ROOT / ".python-version").read_text(encoding="utf-8"),
+        encoding="utf-8",
+    )
+    (project / "README.md").write_text("hook test\n", encoding="utf-8")
+    (project / ".venv").symlink_to(PRIMARY_ROOT / ".venv")
+    (project / "scripts").symlink_to(REPO_ROOT / "scripts")
+    _run(["git", "add", ".gitignore", ".python-version", "README.md"], cwd=project)
+    _run(["git", "commit", "-m", "fixture"], cwd=project)
+    hook_cwd = project
+    if synthetic:
+        # ``python -m`` puts its cwd first on sys.path. This shadow package
+        # serves only scripts.hygiene.root_entry_guard and resolves every
+        # other scripts.* module from the real tree.
+        hook_cwd = tmp_path / "shadow"
+        shadow_hygiene = hook_cwd / "scripts" / "hygiene"
+        shadow_hygiene.mkdir(parents=True)
+        (hook_cwd / "scripts" / "__init__.py").write_text(
+            f"__path__.append({os.fspath(REPO_ROOT / 'scripts')!r})\n", encoding="utf-8"
+        )
+        (shadow_hygiene / "__init__.py").write_text("", encoding="utf-8")
+        (shadow_hygiene / "root_entry_guard.py").write_text(_SYNTHETIC_ROOT_GUARD, encoding="utf-8")
+        report = {
+            "repo_root": os.fspath(project),
+            "unexpected_count": len(names),
+            "unexpected": [{"name": name, "kind": "dir", "git_invisible": True} for name in names],
+        }
+        (shadow_hygiene / "report.json").write_text(json.dumps(report), encoding="utf-8")
+    else:
+        for name in names:
+            (project / name).mkdir()
+
+    # CI runners have no codex CLI; its lane self-test failure is a separate
+    # 128-byte ISSUE. A stub keeps this measurement on the hygiene line alone.
+    stub_bin = tmp_path / "bin"
+    stub_bin.mkdir()
+    (stub_bin / "codex").write_text("#!/bin/sh\necho 'codex-cli 0.0.0-test'\n", encoding="utf-8")
+    (stub_bin / "codex").chmod(0o755)
+
+    deployed = tmp_path / ".codex" / "hooks"
+    deployed.mkdir(parents=True)
+    session_hook = deployed / "session-setup.sh"
+    shutil.copy2(SESSION_SETUP_HOOK, session_hook)
+    environment = os.environ.copy()
+    for key in tuple(environment):
+        if (
+            key.startswith("LEARN_UKRAINIAN_")
+            or key.startswith("CODEX_")
+            or key.startswith("SESSION_")
+            or key == "CLAUDE_CODE_FILE_READ_MAX_OUTPUT_TOKENS"
+        ):
+            environment.pop(key, None)
+    environment.update(
+        {
+            "CLAUDE_PROJECT_DIR": os.fspath(project),
+            "CODEX_CANONICAL_REPO_ROOT": os.fspath(project),
+            "CLAUDE_PROFILE_RESOLVER_SH": os.fspath(REPO_ROOT / "scripts/lib/profile_resolver.sh"),
+            "CLAUDE_PROFILE_RESOLVER_PY": os.fspath(REPO_ROOT / "scripts/lib/context_profiles.py"),
+            "HOME": os.fspath(tmp_path / "home"),
+            "PATH": os.fspath(stub_bin) + os.pathsep + environment.get("PATH", ""),
+        }
+    )
+    return subprocess.run(
+        ["bash", os.fspath(session_hook)],
+        cwd=hook_cwd,
+        input=json.dumps({"source": "startup", "model": "gpt-6.1-sol", "session_id": _CODEX_SESSION_ID}).encode(),
+        capture_output=True,
+        check=False,
+        env=environment,
+        timeout=60,
+    )
+
+
+@pytest.mark.parametrize(
+    ("names", "synthetic", "shown_count", "inline"),
+    [
+        pytest.param(["n" * 139], False, "1", None, id="real-139-byte-name"),
+        pytest.param(["nnnnnnn€nnnn"], False, "1", None, id="three-byte-char-straddles-old-cut"),
+        pytest.param(["nnnnnn😀nnn"], False, "1", None, id="four-byte-emoji-straddles-old-cut"),
+        *(
+            pytest.param(["n" * offset + "é" + "nnnn"], False, "1", None, id=f"e-acute-at-byte-{offset}")
+            for offset in range(5, 10)
+        ),
+        pytest.param(["x\x1b[2J\x1b[H"], False, "1", None, id="terminal-clear-and-home"),
+        pytest.param(["a\nb"], False, "1", None, id="newline"),
+        pytest.param(["bell\x07"], False, "1", None, id="control-character"),
+        pytest.param(["abcd", "efghi"], False, "2", "abcd, efghi", id="exactly-at-limit"),
+        pytest.param(["abcd", "efghij"], False, "2", None, id="one-over-limit"),
+        pytest.param([f"garbage-{index:04d}" for index in range(1000)], True, "99+", None, id="1000-entries"),
+    ],
+)
+def test_ordinary_codex_start_bounds_root_hygiene_names(
+    tmp_path: Path,
+    names: list[str],
+    synthetic: bool,
+    shown_count: str,
+    inline: str | None,
+) -> None:
+    """Root-entry names are unbounded and attacker-shaped (#6863).
+
+    Every case in this table fails on parent 5cee535ee1. An empty name list
+    is an unchanged control and is not in this table.
+
+    The ordinary SessionStart context must stay strictly under 500 bytes and
+    valid UTF-8 for any names: they appear inline only as a whole printable
+    ASCII list of at most 11 bytes, else as a fixed marker, with every name
+    on one escaped stderr line. A synthetic guard report stands in for 1,000
+    real directories, which the guard cannot scan inside its deadline.
+    """
+    started = _start_ordinary_codex_with_root_names(tmp_path, names, synthetic=synthetic)
+
+    assert started.returncode == 0, started.stderr
+    context = json.loads(started.stdout.decode("utf-8"))["hookSpecificOutput"]["additionalContext"]
+    assert len(context.encode("utf-8")) < 500
+    assert _CODEX_SESSION_ID in context
+    assert "profile=native_codex" in context
+    assert "Native compaction is runtime-owned" in context
+    assert "DISPATCH LANE SELF-TEST FAILED" not in context
+    assert (
+        f"ROOT HYGIENE: {shown_count} unexpected primary-checkout root entries "
+        f"({inline or 'names on stderr'}). Remove manually; never auto-deleted (#6863)."
+    ) in context
+    escaped_line = b"ROOT HYGIENE unexpected entries (escaped): " + ascii(names).encode() + b"\n"
+    if inline is None:
+        assert all(name not in context for name in names)
+        assert escaped_line in started.stderr
+    else:
+        assert escaped_line not in started.stderr
+    for raw in (b"\x1b", b"\x07"):
+        assert raw not in started.stderr
+    for name in names:
+        if not (name.isascii() and name.isprintable()):
+            assert name.encode() not in started.stderr
+
+
+def test_empty_name_list_is_an_unchanged_control(tmp_path: Path) -> None:
+    """An empty name list must still print nothing.
+
+    This is a control that passes on the parent (5cee535ee1) by design.
+    It is outside the parent-rejection table, which holds only cases that
+    fail on that hook.
+    """
+    started = _start_ordinary_codex_with_root_names(tmp_path, [], synthetic=False)
+
+    assert started.returncode == 0, started.stderr
+    context = json.loads(started.stdout.decode("utf-8"))["hookSpecificOutput"]["additionalContext"]
+    assert len(context.encode("utf-8")) < 500
+    assert _CODEX_SESSION_ID in context
+    assert "profile=native_codex" in context
+    assert "Native compaction is runtime-owned" in context
+    assert "DISPATCH LANE SELF-TEST FAILED" not in context
+    assert "ROOT HYGIENE" not in context
+    assert b"ROOT HYGIENE" not in started.stderr
+
+
 def test_explicit_non_driver_codex_compact_session_start_is_silent(tmp_path: Path) -> None:
     compact_hook = tmp_path / ".codex" / "hooks" / "post-compact.sh"
     compact_hook.parent.mkdir(parents=True)

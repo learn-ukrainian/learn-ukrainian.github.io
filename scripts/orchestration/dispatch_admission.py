@@ -37,12 +37,16 @@ every check passes. Read-only dispatches are exempt.
   pool skips this check; the reason is shown.
 * **Disk (#10776).** The filesystem holding the primary checkout's
   ``.worktrees/`` directory, in percent used as ``df`` reports it (used over
-  used plus available). Below ``DISPATCH_DISK_REFUSE_USED_PERCENT`` (default
-  85) the check passes. At or above it, a caller that passes ``reaper`` (the
-  real dispatch, through :func:`run_disk_reaper`) calls the common reaper's
+  used plus available). Two watermarks (#10871). Below
+  ``DISPATCH_DISK_REAP_USED_PERCENT`` (default 85) the check passes. At or
+  above it, a caller that passes ``reaper`` (the real dispatch, through
+  :func:`run_disk_reaper`) calls the common reaper's
   ``reap_clean_pushed(dry_run=False)`` once, which removes clean, fully pushed,
-  idle dispatch worktrees; the disk is measured again and the dispatch is
-  refused if it is still at or above the threshold. The refusal names the
+  idle dispatch worktrees, and the disk is measured again. The dispatch is
+  admitted whatever the reaper did unless the disk is still at or above
+  ``DISPATCH_DISK_REFUSE_USED_PERCENT`` (default 90), which refuses it. The
+  reap watermark must be strictly below the refuse watermark; otherwise reading
+  the thresholds raises :class:`DiskWatermarkConfigError`. The refusal names the
   percent used, the free GiB and the reaper outcome: trees removed and MB
   freed, the most frequent skip reasons, a busy reaper lock or the reaper's
   own refusal, or "reaper unavailable" when it cannot run. The reaper runs
@@ -129,13 +133,15 @@ ENV_MIN_MEM_AVAILABLE_GIB = "DISPATCH_MIN_MEM_AVAILABLE_GIB"
 ENV_MAX_LOAD_PER_CPU = "DISPATCH_MAX_LOAD_PER_CPU"
 ENV_WORKER_MEM_RESERVE_GIB = "DISPATCH_WORKER_MEM_RESERVE_GIB"
 ENV_MAX_TEST_SLOT_QUEUE = "DISPATCH_MAX_TEST_SLOT_QUEUE"
+ENV_DISK_REAP_USED_PERCENT = "DISPATCH_DISK_REAP_USED_PERCENT"
 ENV_DISK_REFUSE_USED_PERCENT = "DISPATCH_DISK_REFUSE_USED_PERCENT"
 ENV_DISK_ALERT_USED_PERCENT = "DISPATCH_DISK_ALERT_USED_PERCENT"
 ENV_DISK_REAPER_COOLDOWN_S = "DISPATCH_DISK_REAPER_COOLDOWN_S"
 ENV_DISK_REAPER_TIMEOUT_S = "DISPATCH_DISK_REAPER_TIMEOUT_S"
 _DEFAULT_WORKER_MEM_RESERVE_GIB = 2.5
 _DEFAULT_MAX_TEST_SLOT_QUEUE = 4
-_DEFAULT_DISK_REFUSE_USED_PERCENT = 85.0
+_DEFAULT_DISK_REAP_USED_PERCENT = 85.0
+_DEFAULT_DISK_REFUSE_USED_PERCENT = 90.0
 _DEFAULT_DISK_ALERT_USED_PERCENT = 80.0
 
 # Disk alert (#10776): one post per interval; a failed post is retried after
@@ -195,6 +201,7 @@ _THRESHOLD_ENV_NAMES = (
     ENV_MAX_LOAD_PER_CPU,
     ENV_WORKER_MEM_RESERVE_GIB,
     ENV_MAX_TEST_SLOT_QUEUE,
+    ENV_DISK_REAP_USED_PERCENT,
     ENV_DISK_REFUSE_USED_PERCENT,
     ENV_DISK_ALERT_USED_PERCENT,
     ENV_DISK_REAPER_COOLDOWN_S,
@@ -214,6 +221,10 @@ class AdmissionLockTimeout(RuntimeError):
     """Another dispatch held the host admission lock for too long."""
 
 
+class DiskWatermarkConfigError(ValueError):
+    """The disk reap watermark is not strictly below the refuse watermark (#10871)."""
+
+
 @dataclass(frozen=True)
 class Thresholds:
     max_live_write_workers: int
@@ -221,6 +232,7 @@ class Thresholds:
     max_load_per_cpu: float
     worker_mem_reserve_gib: float = _DEFAULT_WORKER_MEM_RESERVE_GIB
     max_test_slot_queue: int = _DEFAULT_MAX_TEST_SLOT_QUEUE
+    disk_reap_used_percent: float = _DEFAULT_DISK_REAP_USED_PERCENT
     disk_refuse_used_percent: float = _DEFAULT_DISK_REFUSE_USED_PERCENT
     disk_alert_used_percent: float = _DEFAULT_DISK_ALERT_USED_PERCENT
     disk_reaper_cooldown_s: float = DISK_REAPER_COOLDOWN_S
@@ -287,8 +299,8 @@ class DiskCheck:
             text = self.probe.text()
         else:
             text = (
-                f"{self.probe.text()} (refuse at {limits.disk_refuse_used_percent:g}%, "
-                f"alert at {limits.disk_alert_used_percent:g}%)"
+                f"{self.probe.text()} (reap at {limits.disk_reap_used_percent:g}%, "
+                f"refuse at {limits.disk_refuse_used_percent:g}%, alert at {limits.disk_alert_used_percent:g}%)"
             )
         if self.reaper is not None:
             before = self.before_reaper.used_percent if self.before_reaper is not None else None
@@ -453,6 +465,7 @@ class AdmissionDecision:
             "test_slot_queue_skipped": self.slots.skipped if self.slots else None,
             "disk_used_percent": round(disk_used, 2) if disk_used is not None else None,
             "disk_free_gib": round(disk_free, 2) if disk_free is not None else None,
+            "disk_reap_used_percent": limits.disk_reap_used_percent if limits else None,
             "disk_refuse_used_percent": limits.disk_refuse_used_percent if limits else None,
             "disk_alert_used_percent": limits.disk_alert_used_percent if limits else None,
             "disk_check_skipped": disk.probe.skipped if disk else None,
@@ -476,6 +489,7 @@ def config_defaults() -> Thresholds:
         max_load_per_cpu=float(config.DISPATCH_MAX_LOAD_PER_CPU),
         worker_mem_reserve_gib=float(config.DISPATCH_WORKER_MEM_RESERVE_GIB),
         max_test_slot_queue=int(config.DISPATCH_MAX_TEST_SLOT_QUEUE),
+        disk_reap_used_percent=float(config.DISPATCH_DISK_REAP_USED_PERCENT),
         disk_refuse_used_percent=float(config.DISPATCH_DISK_REFUSE_USED_PERCENT),
         disk_alert_used_percent=float(config.DISPATCH_DISK_ALERT_USED_PERCENT),
         disk_reaper_cooldown_s=float(config.DISPATCH_DISK_REAPER_COOLDOWN_S),
@@ -552,7 +566,7 @@ def load_thresholds(environ: Mapping[str, str] | None = None) -> Thresholds:
         **{k: v for k, v in process_env.items() if k in _THRESHOLD_ENV_NAMES and v.strip()},
     }
     defaults = config_defaults()
-    for name in (ENV_DISK_REFUSE_USED_PERCENT, ENV_DISK_ALERT_USED_PERCENT):
+    for name in (ENV_DISK_REAP_USED_PERCENT, ENV_DISK_REFUSE_USED_PERCENT, ENV_DISK_ALERT_USED_PERCENT):
         if _env_number(env, name, 0.0, integer=False) > 100:
             raise ValueError(f"{name}={env[name]!r} must be a percentage of at most 100")
     for name in (ENV_DISK_REAPER_COOLDOWN_S, ENV_DISK_REAPER_TIMEOUT_S):
@@ -560,7 +574,7 @@ def load_thresholds(environ: Mapping[str, str] | None = None) -> Thresholds:
             raise ValueError(f"{name}={env[name]!r} must be a finite number of seconds")
     if _env_number(env, ENV_DISK_REAPER_TIMEOUT_S, 1.0, integer=False) <= 0:
         raise ValueError(f"{ENV_DISK_REAPER_TIMEOUT_S}={env[ENV_DISK_REAPER_TIMEOUT_S]!r} must be more than zero")
-    return Thresholds(
+    limits = Thresholds(
         max_live_write_workers=int(
             _env_number(env, ENV_MAX_LIVE_WRITE_WORKERS, defaults.max_live_write_workers, integer=True)
         ),
@@ -572,6 +586,9 @@ def load_thresholds(environ: Mapping[str, str] | None = None) -> Thresholds:
             env, ENV_WORKER_MEM_RESERVE_GIB, defaults.worker_mem_reserve_gib, integer=False
         ),
         max_test_slot_queue=int(_env_number(env, ENV_MAX_TEST_SLOT_QUEUE, defaults.max_test_slot_queue, integer=True)),
+        disk_reap_used_percent=_env_number(
+            env, ENV_DISK_REAP_USED_PERCENT, defaults.disk_reap_used_percent, integer=False
+        ),
         disk_refuse_used_percent=_env_number(
             env, ENV_DISK_REFUSE_USED_PERCENT, defaults.disk_refuse_used_percent, integer=False
         ),
@@ -585,6 +602,21 @@ def load_thresholds(environ: Mapping[str, str] | None = None) -> Thresholds:
             env, ENV_DISK_REAPER_TIMEOUT_S, defaults.disk_reaper_timeout_s, integer=False
         ),
     )
+    validate_disk_watermarks(limits)
+    return limits
+
+
+def validate_disk_watermarks(limits: Thresholds) -> None:
+    """Raise :class:`DiskWatermarkConfigError` unless reap is strictly below refuse (#10871).
+
+    Equal or inverted values would refuse a dispatch before the reaper had a
+    chance to free space for it, so the settings are rejected when they are read.
+    """
+    if limits.disk_reap_used_percent >= limits.disk_refuse_used_percent:
+        raise DiskWatermarkConfigError(
+            f"{ENV_DISK_REAP_USED_PERCENT}={limits.disk_reap_used_percent:g} must be below "
+            f"{ENV_DISK_REFUSE_USED_PERCENT}={limits.disk_refuse_used_percent:g}"
+        )
 
 
 def _read_mem_available_bytes(meminfo: Path) -> int | None:
@@ -1241,11 +1273,14 @@ def maybe_alert_disk(
 def check_disk(
     limits: Thresholds, *, reaper: DiskReaper | None, tasks_dir: Path | None = None
 ) -> tuple[DiskCheck, str | None]:
-    """Measure the disk, reaping once at the refuse threshold; return the check and any failure.
+    """Measure the disk, reaping once at the reap watermark; return the check and any failure.
 
-    With a ``reaper`` the attempt goes through :func:`attempt_disk_reaper`
-    (one per host, cooldown, deadline), which keeps its state in
-    ``tasks_dir``. A failure sets ``DiskCheck.refused``: a hard stop.
+    At or above ``disk_reap_used_percent`` a ``reaper`` is attempted through
+    :func:`attempt_disk_reaper` (one per host, cooldown, deadline), which keeps
+    its state in ``tasks_dir``, and the disk is measured again. Only a disk
+    still at or above ``disk_refuse_used_percent`` fails: the check is then
+    ``refused``, a hard stop. Between the two watermarks a dispatch is admitted
+    whatever the reaper did (#10871).
     """
     probe = probe_disk()
     used = probe.used_percent
@@ -1253,11 +1288,13 @@ def check_disk(
         log = _logger.debug if probe.skipped == TEST_HOST_POOL_SKIP else _logger.warning
         log("dispatch admission: disk check skipped: %s", probe.skipped)
         return DiskCheck(probe=probe), None
-    if used < limits.disk_refuse_used_percent:
+    if used < limits.disk_reap_used_percent:
         return DiskCheck(probe=probe), None
     if reaper is None:
         outcome = ReaperOutcome(ran=False, detail="reaper not run in this check")
         check = DiskCheck(probe=probe, before_reaper=None, reaper=outcome)
+        if used < limits.disk_refuse_used_percent:
+            return check, None
     else:
         if tasks_dir is None:
             raise ValueError("check_disk needs tasks_dir when it may run the reaper")
@@ -1522,8 +1559,9 @@ def evaluate(
     dispatcher is provably gone (the caller marks it ``crashed``); without it
     the records are only reported. ``reaper`` (normally
     :func:`run_disk_reaper`) is attempted at most once, through
-    :func:`attempt_disk_reaper`, when the disk is at or above the refuse
-    threshold; without it the disk is only measured. ``disk_guard=False``
+    :func:`attempt_disk_reaper`, when the disk is at or above the reap
+    watermark; without it the disk is only measured and only the refuse
+    watermark refuses. ``disk_guard=False``
     (a dispatch that reuses an existing worktree) skips the disk check, the
     reaper and the alert. Invalid threshold environment variables raise
     ``ValueError``.

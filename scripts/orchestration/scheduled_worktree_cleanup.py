@@ -38,7 +38,7 @@ from scripts.common import github_client
 from scripts.common.task_scratch import recover_orphans as recover_task_scratch
 from scripts.hygiene import fetch_refspecs, home_session_retention_check
 from scripts.maintenance.claude_session_scratch import sweep_sessions
-from scripts.orchestration import reap_worktrees
+from scripts.orchestration import backup_failure_alert, disk_watermark_alert, reap_worktrees
 from scripts.orchestration.tmp_leak_sweep import sweep_tmp_leaks
 from scripts.review.isolation import sweep_review_temp_orphans
 
@@ -1366,6 +1366,13 @@ Related:
         default=default_state_dir() / "receipts" / "v2",
         help="Private receipt directory. Default: configured hygiene state receipts/v2. Example: <receipts-dir>",
     )
+    parser.add_argument(
+        "--alert-state-dir",
+        type=Path,
+        default=default_state_dir() / "disk-watermark",
+        help="Change-only disk watermark alert state. Default: configured hygiene state disk-watermark. "
+        "Example: <alert-state-dir>",
+    )
     parser.set_defaults(default_repo_roots=[public_repo, default_private_repo(public_repo)])
     return parser
 
@@ -1490,6 +1497,14 @@ def batch_state_retention_reports(repo_roots: list[Path], *, apply: bool) -> lis
     return reports
 
 
+def disk_watermark_alert_report(state_dir: Path) -> dict[str, Any]:
+    """Run the once-per-crossing cto alert; a failure is reported as an error, never raised (#10871)."""
+    try:
+        return {"detail": disk_watermark_alert.check_and_alert(state_dir, PROJECT_ROOT), "errors": 0}
+    except (ValueError, backup_failure_alert.AlertError) as exc:
+        return {"detail": f"disk watermark alert failed: {exc}", "errors": 1}
+
+
 @github_client.timer
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
@@ -1503,6 +1518,11 @@ def main(argv: list[str] | None = None) -> int:
         apply=bool(args.apply),
     )
     receipt["summary"]["errors"] += receipt["claude_session_scratch"]["summary"]["errors"]
+    if args.apply:
+        receipt["disk_watermark_alert"] = disk_watermark_alert_report(args.alert_state_dir.expanduser())
+        receipt["summary"]["errors"] += receipt["disk_watermark_alert"]["errors"]
+        if receipt["disk_watermark_alert"]["errors"]:
+            sys.stderr.write(f"{receipt['disk_watermark_alert']['detail']}\n")
     for line in home_session_retention_check.warning_lines(home_session_retention):
         sys.stderr.write(f"{line}\n")
     for line in rescue_warning_lines(receipt):

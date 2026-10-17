@@ -488,14 +488,13 @@ def test_gemini_adapter_accepts_effort_without_crashing(tmp_path, caplog):
     # No --effort in cmd (gemini-cli doesn't expose one).
     assert "--effort" not in plan.cmd
     assert "xhigh" not in plan.cmd
-    # And a DEBUG note referencing the follow-up issue was logged.
+    # A constant DEBUG note referencing the follow-up issue was logged, and the
+    # requested effort value never reaches any log record (#10751).
     assert any(
-        "xhigh" in rec.message and "#1396" in rec.message
+        rec.message == "gemini effort not yet wired through CLI — using adapter default (#1396 follow-up)"
         for rec in caplog.records
-    ), (
-        f"expected a DEBUG log mentioning 'xhigh' and '#1396'; "
-        f"records={[r.message for r in caplog.records]}"
-    )
+    ), f"expected the constant gemini effort DEBUG note; records={[r.message for r in caplog.records]}"
+    assert not any("xhigh" in rec.getMessage() for rec in caplog.records)
 
 
 

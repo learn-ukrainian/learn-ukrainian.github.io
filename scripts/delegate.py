@@ -19066,6 +19066,8 @@ def build_parser() -> argparse.ArgumentParser:
             "test slots (scripts/common/test_slots.py), or the .worktrees filesystem is still at or above\n"
             f"  DISPATCH_DISK_REFUSE_USED_PERCENT (default {admission_defaults.disk_refuse_used_percent:g}% used) "
             "after one run of the worktree reaper;\n"
+            f"  at DISPATCH_DISK_REAP_USED_PERCENT (default {admission_defaults.disk_reap_used_percent:g}%) "
+            "that one reaper run happens and the dispatch is still admitted;\n"
             f"  at DISPATCH_DISK_ALERT_USED_PERCENT (default {admission_defaults.disk_alert_used_percent:g}%) "
             "one alert per 6 hours goes to the epics channel. "
             "Environment variables override the scripts/config.py defaults.\n"

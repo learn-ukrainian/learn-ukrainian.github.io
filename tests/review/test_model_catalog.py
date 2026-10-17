@@ -250,19 +250,37 @@ def approved_claude_account_dispatch_baseline(baseline):
     return {**baseline, "dispatch": dispatch}
 
 
+def approved_hermes_effort_baseline(baseline):
+    """Apply #10751's constant Hermes effort warning to the frozen adapter stderr.
+
+    The warning no longer carries the requested effort value, so the captured
+    text drops ``='high'``; every other adapter field and surface is unchanged.
+    """
+    fixture = json.loads((CAPACITY_FIXTURE / "hermes-effort-10751.json").read_bytes())
+    adapters = deepcopy(baseline["adapters"])
+    for replacement in fixture["adapter_stderr_replacements"]:
+        before, after = replacement["before"], replacement["after"]
+        for index in replacement["rows"]:
+            assert adapters[index]["stderr"].count(before) == 1
+            adapters[index]["stderr"] = adapters[index]["stderr"].replace(before, after)
+    return {**baseline, "adapters": adapters}
+
+
 # Apply literal paragraph edits last: a surface overlay such as #10291's Grok
 # help revision must neither erase this wording nor have its other lines erased.
-PRE_ARGON_HOST_BASELINE = approved_claude_account_dispatch_baseline(
-    approved_cto_wrappers_baseline(
-        approved_claude_cap_baseline(
-            approved_cursor_trailer_baseline(
-                approved_launcher_canary_baseline(
-                    approved_reviewer_seats_baseline(
-                        {
-                            **REVIEW_CAPACITY_BASELINE,
-                            **GEMINI_OVERLAY["surfaces"],
-                            **RESOURCE_OVERLAY["surfaces"],
-                        }
+PRE_ARGON_HOST_BASELINE = approved_hermes_effort_baseline(
+    approved_claude_account_dispatch_baseline(
+        approved_cto_wrappers_baseline(
+            approved_claude_cap_baseline(
+                approved_cursor_trailer_baseline(
+                    approved_launcher_canary_baseline(
+                        approved_reviewer_seats_baseline(
+                            {
+                                **REVIEW_CAPACITY_BASELINE,
+                                **GEMINI_OVERLAY["surfaces"],
+                                **RESOURCE_OVERLAY["surfaces"],
+                            }
+                        )
                     )
                 )
             )
@@ -349,6 +367,34 @@ def test_claude_account_dispatch_baseline_changes_only_usage_option(configuratio
         else:
             assert new == old
     assert changed > 0
+
+
+@pytest.mark.parametrize("configuration", ("host-cli", "no-cli"))
+def test_hermes_effort_fixture_changes_only_hermes_warning_stderr(configuration):
+    fixture_path = CAPACITY_FIXTURE / "hermes-effort-10751.json"
+    assert hashlib.sha256(fixture_path.read_bytes()).hexdigest() == (
+        "7d2d4a65a579b878ea91102d3e7cfa261b1cea5102b51fd5c779e384a508ad76"
+    )
+    fixture = json.loads(fixture_path.read_bytes())
+    assert set(fixture) == {"adapter_stderr_replacements"}
+    replacements = fixture["adapter_stderr_replacements"]
+    assert [row["rows"] for row in replacements] == [list(range(40, 44)), list(range(44, 48)), list(range(48, 52))]
+    for row in replacements:
+        assert row["before"].replace("='high'", "") == row["after"]
+        assert "high" not in row["after"]
+    path = FIXTURE / ("baseline.json.gz" if configuration == "host-cli" else "no-cli/baseline.json.gz")
+    before = json.loads(gzip.decompress(path.read_bytes()))
+    original = deepcopy(before)
+    after = approved_hermes_effort_baseline(before)
+    assert before == original
+    assert {k: v for k, v in after.items() if k != "adapters"} == {k: v for k, v in before.items() if k != "adapters"}
+    changed = [i for i, (old, new) in enumerate(zip(before["adapters"], after["adapters"], strict=True)) if old != new]
+    assert changed == list(range(40, 52))
+    for index in changed:
+        old, new = before["adapters"][index], after["adapters"][index]
+        assert INPUTS["adapters"][index]["agent"] in {"hermes-deepseek", "grok-hermes", "qwen"}
+        assert {k: v for k, v in old.items() if k != "stderr"} == {k: v for k, v in new.items() if k != "stderr"}
+        assert "effort='high'" in old["stderr"] and "effort=" not in new["stderr"]
 
 
 @pytest.mark.parametrize("configuration", ("host-cli", "no-cli"))
@@ -772,7 +818,7 @@ def test_review_capacity_fixture_is_pinned_and_scope_bounded():
 PINNED_DIGESTS = {
     "routing-10263.json.gz": "3385853a0070ab9a2f77e1fb40d9178ce195e44e7fd6b8c8245702ec529b7d16",
     "SHA256SUMS": "4cba22dff8338f75c8ae96b35119c3da2bea3b3d7d6418c49e466ddc0ddf73a8",
-    "SPEC.md": "7a9f8d2e02c422edf21582162c0e516f637fc6c2e11ce16688c8f3b898f863f5",
+    "SPEC.md": "4f2549cd5cbe31dd441d924655b45a31f8b4c3f6d0fc28e8f87c4228ace3c01f",
     "baseline.json.gz": "2cf8945084c13d7ce0b55e98a91522e897baee5ba53648f21ec7ae7b66cdaa5d",
     "capture.py": "7571955c784ecf973931ba3b3a86c50bc4ee9f5bf2c2bdcfdbcbe096381222ea",
     "inputs.json": "4f9d9dd89acff3872a9e627a9627516c65b7e410da28464a4dda9105c0ec34b0",
@@ -1097,17 +1143,19 @@ def test_no_cli_capture_equals_separate_frozen_surface(tmp_path):
     actual = json.loads(gzip.decompress((output / "baseline.json.gz").read_bytes()))
     original = json.loads(gzip.decompress((expected / "baseline.json.gz").read_bytes()))
     assert actual == approved_argon_trial_baseline(
-        approved_claude_account_dispatch_baseline(
-            approved_cto_wrappers_baseline(
-                approved_claude_cap_baseline(
-                    approved_cursor_trailer_baseline(
-                        approved_launcher_canary_baseline(
-                            approved_reviewer_seats_baseline(
-                                {
-                                    **approved_review_baseline(original),
-                                    **GEMINI_OVERLAY["surfaces"],
-                                    **RESOURCE_OVERLAY["surfaces"],
-                                }
+        approved_hermes_effort_baseline(
+            approved_claude_account_dispatch_baseline(
+                approved_cto_wrappers_baseline(
+                    approved_claude_cap_baseline(
+                        approved_cursor_trailer_baseline(
+                            approved_launcher_canary_baseline(
+                                approved_reviewer_seats_baseline(
+                                    {
+                                        **approved_review_baseline(original),
+                                        **GEMINI_OVERLAY["surfaces"],
+                                        **RESOURCE_OVERLAY["surfaces"],
+                                    }
+                                )
                             )
                         )
                     )

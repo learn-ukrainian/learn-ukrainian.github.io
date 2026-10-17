@@ -534,7 +534,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/reading-ukrainian/module.md",
-      "sha256": "c49a57b2d80b54aad30ac52a1907938e19c606a508ab69df706d34198350000a"
+      "sha256": "e17e5632803ac56eafc1dbf4faff0fea7212bea32c48f18a2167f129f4723ee7"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/reading-ukrainian/resources.yaml",
@@ -562,11 +562,11 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/sounds-letters-and-hello/activities.yaml",
-      "sha256": "f29906d7e668234e5bea0a82a0106d982036bc5c2e71e12c9c679433cfd0d52b"
+      "sha256": "d58924a9e9aae5a5294adba632bdfa30a9078d3fc86911d6e59cb5cbfb389b08"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/sounds-letters-and-hello/module.md",
-      "sha256": "50db6d1024783251d61f0452afb892ec8aaef280494175383d32f940c952c388"
+      "sha256": "13114589fb1a190760930d5ad012d1e6fb9c92adfc2e27de64e690724411aa74"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/sounds-letters-and-hello/resources.yaml",
@@ -574,7 +574,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/sounds-letters-and-hello/vocabulary.yaml",
-      "sha256": "dce9bd395c42577ebc6e6c606d4f4f5a177967ee2691e639bf6b8ee49b879f83"
+      "sha256": "d6048f57724bc07f701c0fd8037c290aa4e6a3ca08e0592922d47b9e1858ff5e"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/special-signs/activities.yaml",
@@ -582,7 +582,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/special-signs/module.md",
-      "sha256": "23db02cba647be8ae2364fce18dabb11cf66c5123b0bcfd707b208f6f6bab67e"
+      "sha256": "03f523cfaed0e7d2e1bdbac2562008e46eb860a02a5ee9a055d58a522e83bf9c"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/special-signs/resources.yaml",
@@ -13818,7 +13818,7 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/reading-ukrainian.mdx",
-      "sha256": "3dd4ac74e7c4ffdd489f5d6fcc104acbc9eafa81827c555b02fdfa676f55675d"
+      "sha256": "20d0ad4117c535fdb0baaa1bfe12bc2ac0548d40aab6a3e0623d651d788e2a22"
     },
     {
       "path": "site/src/content/docs/a1-v1/shopping.mdx",
@@ -13826,11 +13826,11 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/sounds-letters-and-hello.mdx",
-      "sha256": "f1d92eb63c3d28cd0d8d634f47613d0e900b72577d83411805682164e378b788"
+      "sha256": "abd196cf362ede3a378efbb8d7c867f93242d983139fdfac4069eed896ff1981"
     },
     {
       "path": "site/src/content/docs/a1-v1/special-signs.mdx",
-      "sha256": "8aa94db5e74393a28dccee867fff50154079d710847abdea8d51df0dcd799bc9"
+      "sha256": "e4496e75315a52b52c14412e4604ffbcb5dcdac6f91dbb8a94a3c62101a4fd6d"
     },
     {
       "path": "site/src/content/docs/a1-v1/stress-and-melody.mdx",
