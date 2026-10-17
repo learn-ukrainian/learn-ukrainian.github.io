@@ -266,20 +266,67 @@ def approved_hermes_effort_baseline(baseline):
     return {**baseline, "adapters": adapters}
 
 
+# Claude worker adapter rows whose command carries the shared guard settings.
+HOOK_FAILURE_ROWS = list(range(8, 24, 2))
+# Guard -> (captured timeout, approved timeout, refuses the call on hook failure).
+HOOK_FAILURE_POLICY = {
+    "enforce-venv.sh": (3, 10, True),
+    "heal-core-bare.py": (3, 10, False),
+    "guard-branch-switch-in-main.py": (3, 10, True),
+    "guard-admin-merge.py": (30, 30, True),
+    "guard-pr-merge.py": (30, 30, True),
+    "guard-secret-print.py": (5, 10, True),
+    "guard-primary-checkout-write.py": (5, 10, True),
+    "guard-public-github-text.py": (5, 10, True),
+}
+
+
+def settings_index(row):
+    cmd = row["value"]["cmd"]
+    assert cmd.count("--settings") == 1
+    return cmd.index("--settings") + 1
+
+
+def approved_hook_failure_baseline(baseline):
+    """Apply #10848's fail-closed guard policy to the Claude worker settings.
+
+    Only the ``--settings`` argument of the eight Claude worker adapter rows
+    changes: each shared PreToolUse guard takes its approved timeout, and every
+    refusing guard gains ``onFailure: block``. Other fields and surfaces stay.
+    """
+    adapters = deepcopy(baseline["adapters"])
+    for index in HOOK_FAILURE_ROWS:
+        cmd = adapters[index]["value"]["cmd"]
+        position = settings_index(adapters[index])
+        settings = json.loads(cmd[position])
+        guards = [hook for group in settings["hooks"]["PreToolUse"] for hook in group["hooks"]]
+        assert len(guards) == 9
+        for hook in guards:
+            before, after, blocks = HOOK_FAILURE_POLICY[Path(hook["command"]).name]
+            assert hook["timeout"] == before and "onFailure" not in hook
+            hook["timeout"] = after
+            if blocks:
+                hook["onFailure"] = "block"
+        cmd[position] = json.dumps(settings, separators=(",", ":"))
+    return {**baseline, "adapters": adapters}
+
+
 # Apply literal paragraph edits last: a surface overlay such as #10291's Grok
 # help revision must neither erase this wording nor have its other lines erased.
-PRE_ARGON_HOST_BASELINE = approved_hermes_effort_baseline(
-    approved_claude_account_dispatch_baseline(
-        approved_cto_wrappers_baseline(
-            approved_claude_cap_baseline(
-                approved_cursor_trailer_baseline(
-                    approved_launcher_canary_baseline(
-                        approved_reviewer_seats_baseline(
-                            {
-                                **REVIEW_CAPACITY_BASELINE,
-                                **GEMINI_OVERLAY["surfaces"],
-                                **RESOURCE_OVERLAY["surfaces"],
-                            }
+PRE_ARGON_HOST_BASELINE = approved_hook_failure_baseline(
+    approved_hermes_effort_baseline(
+        approved_claude_account_dispatch_baseline(
+            approved_cto_wrappers_baseline(
+                approved_claude_cap_baseline(
+                    approved_cursor_trailer_baseline(
+                        approved_launcher_canary_baseline(
+                            approved_reviewer_seats_baseline(
+                                {
+                                    **REVIEW_CAPACITY_BASELINE,
+                                    **GEMINI_OVERLAY["surfaces"],
+                                    **RESOURCE_OVERLAY["surfaces"],
+                                }
+                            )
                         )
                     )
                 )
@@ -395,6 +442,81 @@ def test_hermes_effort_fixture_changes_only_hermes_warning_stderr(configuration)
         assert INPUTS["adapters"][index]["agent"] in {"hermes-deepseek", "grok-hermes", "qwen"}
         assert {k: v for k, v in old.items() if k != "stderr"} == {k: v for k, v in new.items() if k != "stderr"}
         assert "effort='high'" in old["stderr"] and "effort=" not in new["stderr"]
+
+
+def guard_policy(settings):
+    return [
+        (group["matcher"], Path(hook["command"]).name, hook["timeout"], hook.get("onFailure"))
+        for group in settings["hooks"]["PreToolUse"]
+        for hook in group["hooks"]
+    ]
+
+
+@pytest.mark.parametrize("configuration", ("host-cli", "no-cli"))
+def test_hook_failure_overlay_changes_only_worker_guard_settings(configuration):
+    path = FIXTURE / ("baseline.json.gz" if configuration == "host-cli" else "no-cli/baseline.json.gz")
+    before = json.loads(gzip.decompress(path.read_bytes()))
+    original = deepcopy(before)
+    after = approved_hook_failure_baseline(before)
+    assert before == original
+    assert {k: v for k, v in after.items() if k != "adapters"} == {k: v for k, v in before.items() if k != "adapters"}
+    changed = [i for i, (old, new) in enumerate(zip(before["adapters"], after["adapters"], strict=True)) if old != new]
+    assert changed == HOOK_FAILURE_ROWS
+    assert [i for i, row in enumerate(before["adapters"]) if "--settings" in row.get("value", {}).get("cmd", [])] == (
+        HOOK_FAILURE_ROWS
+    )
+    source = json.loads((Path(__file__).resolve().parents[2] / "agents_extensions/shared/settings.json").read_bytes())
+    tracked = {name: (timeout, on_failure) for _, name, timeout, on_failure in guard_policy(source)}
+    for index in changed:
+        old, new = before["adapters"][index], after["adapters"][index]
+        assert INPUTS["adapters"][index]["agent"] in {"claude", "claude-desktop", "claude-infra", "claude-monitor"}
+        position = settings_index(old)
+        old_cmd, new_cmd = old["value"]["cmd"], new["value"]["cmd"]
+        assert old_cmd[:position] + old_cmd[position + 1 :] == new_cmd[:position] + new_cmd[position + 1 :]
+        assert {k: v for k, v in old["value"].items() if k != "cmd"} == {
+            k: v for k, v in new["value"].items() if k != "cmd"
+        }
+        assert {k: v for k, v in old.items() if k != "value"} == {k: v for k, v in new.items() if k != "value"}
+        old_settings, new_settings = json.loads(old_cmd[position]), json.loads(new_cmd[position])
+        assert {k: v for k, v in old_settings.items() if k != "hooks"} == {
+            k: v for k, v in new_settings.items() if k != "hooks"
+        }
+        old_policy, new_policy = guard_policy(old_settings), guard_policy(new_settings)
+        assert [row[:2] for row in old_policy] == [row[:2] for row in new_policy]
+        assert {row[3] for row in old_policy} == {None}
+        for matcher, name, timeout, on_failure in new_policy:
+            assert (timeout, on_failure) == tracked[name], (matcher, name)
+        assert [row[1] for row in new_policy if row[3] is None] == ["heal-core-bare.py"]
+
+
+@pytest.mark.parametrize(
+    "mutate",
+    [
+        pytest.param(lambda adapters: adapters[9].update(stderr=adapters[9].get("stderr", "") + "x"), id="other-row"),
+        pytest.param(lambda adapters: adapters[8]["value"].update(cwd="elsewhere"), id="same-row-other-field"),
+        pytest.param(
+            lambda adapters: adapters[8]["value"]["cmd"].__setitem__(
+                settings_index(adapters[8]),
+                adapters[8]["value"]["cmd"][settings_index(adapters[8])].replace(
+                    '/heal-core-bare.py","timeout":10}', '/heal-core-bare.py","timeout":10,"onFailure":"block"}'
+                ),
+            ),
+            id="unapproved-guard-policy",
+        ),
+    ],
+)
+def test_hook_failure_overlay_still_rejects_other_adapter_changes(mutate):
+    actual = deepcopy(APPROVED_BASELINE)
+    before = deepcopy(actual["adapters"])
+    mutate(actual["adapters"])
+    assert actual["adapters"] != before
+    with pytest.raises(AssertionError, match="approved surface differs: adapters"):
+        assert_frozen_surfaces(actual)
+
+
+def test_hook_failure_overlay_refuses_drifted_settings():
+    with pytest.raises(AssertionError):
+        approved_hook_failure_baseline(APPROVED_BASELINE)
 
 
 @pytest.mark.parametrize("configuration", ("host-cli", "no-cli"))
@@ -1143,18 +1265,20 @@ def test_no_cli_capture_equals_separate_frozen_surface(tmp_path):
     actual = json.loads(gzip.decompress((output / "baseline.json.gz").read_bytes()))
     original = json.loads(gzip.decompress((expected / "baseline.json.gz").read_bytes()))
     assert actual == approved_argon_trial_baseline(
-        approved_hermes_effort_baseline(
-            approved_claude_account_dispatch_baseline(
-                approved_cto_wrappers_baseline(
-                    approved_claude_cap_baseline(
-                        approved_cursor_trailer_baseline(
-                            approved_launcher_canary_baseline(
-                                approved_reviewer_seats_baseline(
-                                    {
-                                        **approved_review_baseline(original),
-                                        **GEMINI_OVERLAY["surfaces"],
-                                        **RESOURCE_OVERLAY["surfaces"],
-                                    }
+        approved_hook_failure_baseline(
+            approved_hermes_effort_baseline(
+                approved_claude_account_dispatch_baseline(
+                    approved_cto_wrappers_baseline(
+                        approved_claude_cap_baseline(
+                            approved_cursor_trailer_baseline(
+                                approved_launcher_canary_baseline(
+                                    approved_reviewer_seats_baseline(
+                                        {
+                                            **approved_review_baseline(original),
+                                            **GEMINI_OVERLAY["surfaces"],
+                                            **RESOURCE_OVERLAY["surfaces"],
+                                        }
+                                    )
                                 )
                             )
                         )
