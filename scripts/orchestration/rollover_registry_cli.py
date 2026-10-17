@@ -377,6 +377,7 @@ def build_parser() -> argparse.ArgumentParser:
         ("supersede-exact", registry.MaintenanceAction.SUPERSEDE),
         ("abandon-exact", registry.MaintenanceAction.ABANDON),
         ("dispose-exited-successor-exact", registry.MaintenanceAction.DISPOSE_EXITED_SUCCESSOR),
+        ("dispose-legacy-resumed-exact", registry.MaintenanceAction.DISPOSE_LEGACY_RESUMED),
     ):
         maintenance = subparsers.add_parser(
             name,
@@ -385,7 +386,22 @@ def build_parser() -> argparse.ArgumentParser:
                 f"Plan or apply exact {action.value} maintenance with durable proof. "
                 "Exited successors require canonical launcher runtime state exited, an integer exit_code, "
                 "and the exact bound session ID; active or unknown evidence is refused."
+                if action is not registry.MaintenanceAction.DISPOSE_LEGACY_RESUMED else
+                "Dispose one legacy RESUMED Codex successor without a supervisor runtime. "
+                "Use only with attributed operator or CTO authorization in operator_disposition; "
+                "a live successor process or positive thread heartbeat refuses planning and apply. "
+                "Use the canonical exited-successor command when a runtime exists."
             ),
+            epilog=(
+                "Example: .venv/bin/python scripts/orchestration/rollover_registry_cli.py "
+                "dispose-legacy-resumed-exact --agent codex-infra --lineage-id lineage-a1 "
+                "--rollover-id rollover-r1 --plan --proof-file operator-proof.json\n"
+                "Outputs: immutable plan; --apply writes the registry disposition, intent and receipt. "
+                "Lease and packet files are preserved.\n"
+                "Exit codes: 0 success; 2 invalid selection, authorization or live evidence.\n"
+                "Related: agents_extensions/shared/contracts/rollover-registry.md; #10921"
+            ) if action is registry.MaintenanceAction.DISPOSE_LEGACY_RESUMED else None,
+            formatter_class=argparse.RawDescriptionHelpFormatter,
         )
         _add_exact_selectors(maintenance, require_pair=True)
         mode = maintenance.add_mutually_exclusive_group(required=True)

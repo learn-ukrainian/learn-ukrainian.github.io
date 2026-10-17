@@ -76,6 +76,7 @@ class MaintenanceAction(StrEnum):
     SUPERSEDE = "supersede"
     ABANDON = "abandon"
     DISPOSE_EXITED_SUCCESSOR = "dispose-exited-successor"
+    DISPOSE_LEGACY_RESUMED = "dispose-legacy-resumed"
 
 
 TERMINAL_STATES = frozenset(
@@ -762,7 +763,7 @@ def transition(
             intent = _load_json(resolved.parent / "apply-intent.json")
             expected_record_digest = intent.get("final_record_digest") if already_applied else exit_plan["record_digest"]
             if (
-                exit_plan["action"] != MaintenanceAction.DISPOSE_EXITED_SUCCESSOR.value
+                exit_plan["action"] not in _SUCCESSOR_DISPOSITIONS
                 or exit_plan["key"] != record["key"]
                 or exit_plan["digest"] != operation_id
                 or expected_record_digest != sha256_digest(record)
@@ -772,7 +773,7 @@ def transition(
                 or updates
             ):
                 raise ValueError("exited-successor transition does not match its exact maintenance plan")
-            _revalidate_exit_plan(state_root, record, exit_plan)
+            _revalidate_successor_plan(state_root, record, exit_plan)
             expected_intent = _maintenance_intent(exit_plan)
             if already_applied:
                 expected_intent["final_record_digest"] = sha256_digest(record)
@@ -1680,13 +1681,60 @@ _EXIT_ASSERTIONS = frozenset({
     "selected_exact_ids_match",
 })
 
+_SUCCESSOR_DISPOSITIONS = frozenset({
+    MaintenanceAction.DISPOSE_EXITED_SUCCESSOR.value,
+    MaintenanceAction.DISPOSE_LEGACY_RESUMED.value,
+})
+
 
 def _maintenance_assertions(action: MaintenanceAction) -> frozenset[str]:
     if action is MaintenanceAction.FINISH_CLEANUP:
         return _CLEANUP_ASSERTIONS
     if action is MaintenanceAction.DISPOSE_EXITED_SUCCESSOR:
         return _EXIT_ASSERTIONS
+    if action is MaintenanceAction.DISPOSE_LEGACY_RESUMED:
+        return frozenset({"selected_exact_ids_match"})
     return _DISPOSITION_ASSERTIONS
+
+
+def _validate_legacy_disposition(state_root: Path, record: Mapping[str, Any], proof: Mapping[str, Any]) -> None:
+    from .. import thread_handoff
+
+    authorization = proof.get("operator_disposition")
+    if not isinstance(authorization, Mapping) or set(authorization) != {
+        "authority", "actor_agent", "actor_host_id", "replacement_thread_id",
+    }:
+        raise ValueError("legacy disposition requires exact operator attribution and successor ID")
+    if authorization["authority"] not in ("operator", "cto") or any(
+        not isinstance(authorization[name], str) or not authorization[name].strip()
+        for name in ("actor_agent", "actor_host_id")
+    ):
+        raise ValueError("legacy disposition requires attributed operator or CTO authorization")
+    replacement = record["task_identity"].get("replacement_task_id")
+    if not replacement or authorization["replacement_thread_id"] != replacement:
+        raise ValueError("legacy disposition does not name the exact bound successor")
+    if (
+        record["key"]["agent"].split("-", 1)[0] != "codex"
+        or record["last_successful_boundary"] != RolloverState.RESUMED.value
+        or record["state"] not in {RolloverState.RESUMED.value, RolloverState.ABANDONED_WITH_PROOF.value}
+        or record["native_creation"]["state"] != "legacy_or_unrecorded"
+    ):
+        raise ValueError("legacy disposition requires a legacy RESUMED Codex successor")
+    if proof["evidence_paths"] != [record["lease_path"]]:
+        raise ValueError("legacy disposition evidence must be the exact preserved rollover lease")
+    supervisor_root = state_root / ".agent/claudex-supervisors"
+    if supervisor_root.is_symlink():
+        raise ValueError("legacy supervisor evidence must not traverse symlinks")
+    if supervisor_root.exists():
+        for run in supervisor_root.iterdir():
+            if run.is_symlink():
+                raise ValueError("legacy supervisor evidence must not traverse symlinks")
+            runtime_path = run / "runtime.json"
+            if runtime_path.is_symlink():
+                raise ValueError("legacy supervisor evidence must not traverse symlinks")
+            if runtime_path.exists() and _load_json(runtime_path).get("session_id") == replacement:
+                raise ValueError("legacy successor has a supervisor runtime; use canonical exit disposition")
+    thread_handoff.refuse_live_legacy_successor(state_root, agent=record["key"]["agent"], thread_id=replacement)
 
 
 def _validate_successor_exit(state_root: Path, record: Mapping[str, Any], proof: Mapping[str, Any]) -> None:
@@ -1730,11 +1778,11 @@ def _validate_successor_exit(state_root: Path, record: Mapping[str, Any], proof:
         raise ValueError("launcher exit evidence digest changed")
 
 
-def _revalidate_exit_plan(state_root: Path, record: Mapping[str, Any], plan: Mapping[str, Any]) -> None:
+def _revalidate_successor_plan(state_root: Path, record: Mapping[str, Any], plan: Mapping[str, Any]) -> None:
     proof = {**plan["key"], **plan["proof"]}
     proof.pop("proof_digest")
     validated = validate_maintenance_proof(
-        record, action=MaintenanceAction.DISPOSE_EXITED_SUCCESSOR, proof=proof, state_root=state_root,
+        record, action=MaintenanceAction(plan["action"]), proof=proof, state_root=state_root,
     )
     if validated != plan["proof"]:
         raise ValueError("exited-successor maintenance proof changed")
@@ -1791,6 +1839,14 @@ def validate_maintenance_proof(
         if state_root is None:
             raise ValueError("successor exit requires the authoritative state root")
         _validate_successor_exit(state_root, record, proof)
+    if action is MaintenanceAction.DISPOSE_LEGACY_RESUMED:
+        allowed = {"agent", "lineage_id", "rollover_id", "captured_at", "reason",
+                   "assertions", "evidence_paths", "operator_disposition"}
+        if set(proof) != allowed or set(assertions) != required or not str(proof.get("reason") or "").strip():
+            raise ValueError("legacy disposition proof has missing or unexpected fields")
+        if state_root is None:
+            raise ValueError("legacy disposition requires the authoritative state root")
+        _validate_legacy_disposition(state_root, record, proof)
     state = RolloverState(str(record.get("state")))
     if (
         action in {MaintenanceAction.SUPERSEDE, MaintenanceAction.ABANDON}
@@ -1812,6 +1868,8 @@ def validate_maintenance_proof(
         "proof_digest": hashlib.sha256(canonical_json(dict(proof)).encode()).hexdigest(),
         **({"successor_exit": dict(proof["successor_exit"])}
            if action is MaintenanceAction.DISPOSE_EXITED_SUCCESSOR else {}),
+        **({"operator_disposition": dict(proof["operator_disposition"])}
+           if action is MaintenanceAction.DISPOSE_LEGACY_RESUMED else {}),
     }
 
 
@@ -1901,6 +1959,8 @@ def load_maintenance_plan(state_root: Path, *, plan_path: Path) -> tuple[Path, d
     proof_fields = {"assertions", "evidence_paths", "captured_at", "reason", "proof_digest"}
     if action is MaintenanceAction.DISPOSE_EXITED_SUCCESSOR:
         proof_fields.add("successor_exit")
+    if action is MaintenanceAction.DISPOSE_LEGACY_RESUMED:
+        proof_fields.add("operator_disposition")
     if set(proof) != proof_fields:
         raise ValueError("maintenance plan proof has missing or unexpected fields")
     assertions = proof.get("assertions")
@@ -1957,9 +2017,9 @@ def apply_maintenance_plan(state_root: Path, *, plan_path: Path) -> dict[str, An
 
     with advisory_lock(lineage_lock_path(state_root, agent=agent, lineage_id=lineage_id)):
         record = load_record(state_root, agent=agent, lineage_id=lineage_id, rollover_id=rollover_id)
-        exit_disposition = plan["action"] == MaintenanceAction.DISPOSE_EXITED_SUCCESSOR.value
+        exit_disposition = plan["action"] in _SUCCESSOR_DISPOSITIONS
         if exit_disposition:
-            _revalidate_exit_plan(state_root, record, plan)
+            _revalidate_successor_plan(state_root, record, plan)
         if durable := existing_receipt():
             if exit_disposition and durable.get("final_record_digest") != sha256_digest(record):
                 raise ValueError("registry record changed after maintenance receipt")
