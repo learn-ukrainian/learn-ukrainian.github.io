@@ -56,6 +56,25 @@ and the applicable roles in the
 [agent activity matrix](agent-activity-matrix.md#2-agent-roster).
 Do not copy a historical model roster or health snapshot into each packet.
 
+### Safe cursor and delivery semantics for scheduled readers
+
+Scheduled readers and event-driven automation must handle cursor advancement and
+delivery confirmation safely to prevent message loss or duplicate execution, as
+discussed in [effective agent automations](https://claude.dev/blog/building-effective-agent-automations/).
+When reading an order feed, inbox, or event stream, a reader must preserve the
+failed source's cursor at its previous verified position if source ingestion or
+downstream processing fails. Never advance the cursor past unconsumed or failed
+inputs. Delivery must be confirmed through verified task delivery and receipt
+acknowledgment before advancing the cursor. When delivery status cannot be
+definitively confirmed (such as on network timeouts, interrupted turns, or
+missing acknowledgments), retain an explicit uncertain-delivery state for subsequent
+reconciliation rather than assuming success or dropping the event. Reconcile this
+state using existing Fleet authority and receipts
+([fleet_comms](../../scripts/fleet_comms/__init__.py)) rather than introducing a
+separate bookmark store or secondary state machine. This guidance describes
+target cursor semantics and does not claim that current Fleet automation already
+implements automatic cursor progression.
+
 ### Recover with a full bounded snapshot
 
 The following is the approved recovery contract documented by
@@ -117,6 +136,72 @@ head voids approval and CI. The accountable driver owns those steps and the
 [acceptance and completion evidence](../../agents_extensions/shared/rules/core.md#p3--definition-of-ready-and-definition-of-done).
 Author checks are ordinary verification, not independent held-out proof.
 
+### Mid-run steering and delegation context
+
+When an in-flight task receives mid-run steering, user feedback, or corrective
+constraints, continue executing within the same authorized task rather than
+restarting from scratch, abandoning prior progress, or spawning duplicate work.
+This reflects mid-run steering practices established in
+[Opus 5.5 guidance](https://claude.dev/blog/getting-the-most-out-of-opus-5-5/)
+and the
+[Codex steering release](https://developers.openai.com/codex/changelog/).
+When a driver delegates a follow-up or steered subtask to a worker, the follow-up
+prompt cannot assume that the worker retains the driver's full interactive dialogue.
+The driver must explicitly supply the relevant verified prior results and the
+changed constraints, matching the state-transfer and handoff patterns described in
+[bringing an LED display to life](https://developers.openai.com/blog/bringing-my-led-display-to-life).
+Avoid redispatching healthy, already-verified work; provide only the targeted delta
+and necessary evidence for the steered unit. Mid-run steering operates strictly
+within authorized boundaries: existing lease custody, scope limits, cancellation,
+and stop conditions remain fully binding.
+
+## Capability qualification
+
+### Multi-tier harness evaluation
+
+To qualify agent tooling and context behaviors across runtime environments,
+evaluations must distinguish whether a tool functions in isolation from whether an
+agent selects and invokes it correctly. Following the methodology in
+[harness-aware plugin evaluations](https://developers.openai.com/cookbook/examples/partners/harness_aware_plugin_evals/harness_aware_plugin_evals),
+qualification uses three representative checks across increasing levels of fidelity:
+
+1. **Direct tool behavior:** Execute the tool function directly with structured
+   inputs, independent of any model or prompt formatting, to verify underlying
+   logic and deterministic outputs.
+2. **Controlled model/tool interaction:** Evaluate the model in an isolated
+   function-calling loop to test natural-language interpretation, tool selection,
+   schema adherence, and argument generation without harness-specific side effects.
+3. **Installed CLI workflow:** Run end-to-end representative tasks inside the
+   actual product harness (such as the target CLI or desktop agent environment),
+   evaluating how client-specific agent loops, prompt formatting, sandboxing, and
+   turn limits affect tool execution.
+
+For each evaluation tier, record the evaluated model, prompt instructions, tool
+availability, and runtime configuration. These checks define capability
+qualification procedures; they do not certify this repository's installed tools,
+CLI, or model behavior, and authorize no paid qualification runs.
+
+### Restart survival and persistence checks
+
+Durable handoffs and lifecycle records establish intended persistence, but their
+presence alone does not prove that an agent session correctly survives an
+interruption. Following the suspend/resume and persistence patterns in the
+[sandbox persistence example](https://developers.openai.com/cookbook/examples/agents_api/sandboxes/aws/readme),
+capability qualification includes a representative restart-survival check:
+
+- Execute a multi-turn task up to an initial milestone and persist state (such as
+  an intermediate output artifact and task identity).
+- Simulate an intentional session suspension or container restart.
+- Resume execution in a fresh session process, requiring the agent to retrieve the
+  saved artifact and task identity from disk or storage.
+- Verify that the agent successfully continues the assigned task from the saved
+  checkpoint to forward completion without re-running completed work or losing
+  context.
+
+This check tests runtime persistence mechanics during qualification. It does not
+certify this repository's installed tools, CLI persistence, or runtime continuation,
+and does not authorize paid qualification runs.
+
 ## Measurement and budgets
 
 The [cold-start measurement tool](../../scripts/ai_agent_bridge/measure_cold_start.py)
@@ -161,9 +246,77 @@ Budget targets are targets. They do not prove feasibility, savings, or task
 success. Resolve capacity for the actual model and runtime as described in the
 [context budget audit](../../agents_extensions/shared/skills/context-budget-audit/SKILL.md#4-context-window-headroom).
 Context cost and occupancy can constrain work. Quality also depends on relevant
-sources and preserved directives. Do not infer output allowance by subtracting
-input from an advertised window, or reuse the former illustrative per-call token
-breakdown as a current measurement.
+sources and preserved directives. When budgeting turns, keep four distinct
+quantities separate:
+
+1. **Remaining context capacity:** The unused portion of the model's total context
+   window available for prompt input and upcoming history.
+2. **Model maximum output:** The model's architectural ceiling for a single response
+   generation. As shown in the
+   [Sonnet 5.5 guide](https://claude.dev/blog/building-with-claude-sonnet-5-5/),
+   a model may support a large context window (such as 1M tokens) while enforcing
+   a separate, distinct maximum output limit (such as 128K tokens). These provider-specific
+   limits must never be copied onto other models, such as Gemini.
+3. **Configured output budget:** The request-level limit (such as `max_tokens`)
+   configured by the runtime or runner for a particular invocation.
+4. **Reasoning allowance:** Tokens or effort allocated for internal chain-of-thought
+   or adaptive thinking before emitting visible response tokens.
+
+Never derive an output allowance by simply subtracting input tokens from the
+advertised context window. Resolve each limit directly from current model and
+runtime documentation rather than assuming cross-provider equivalence, and do not
+reuse former illustrative per-call breakdowns as current measurements.
+
+### Cache-aware compaction and session boundaries
+
+Compacting conversational history reduces active context occupancy, but compaction
+must be scheduled thoughtfully around natural task boundaries (such as completing an
+isolated subtask, passing a verification checkpoint, or transitioning build phases).
+Before performing compaction or clearing unrelated work from context, explicitly
+preserve decisive evidence: failing test outputs, exact error diagnostics, target
+artifact paths, task identity, and active constraints. Clearing unrelated work
+prevents distraction and token waste, but compaction alters prompt prefixes. Under
+provider caching architectures, modifying or summarizing historical turns can
+invalidate warm prompt caches or incur cache-creation write costs on the subsequent
+call, as analyzed in
+[what a task costs on Opus 5.5](https://claude.dev/blog/what-a-task-costs-on-opus-5-5/).
+Do not install a fixed or universal token threshold to trigger compaction; compaction
+should align with task boundaries and evidence preservation rather than an arbitrary
+token count. Compaction never promises universal cost savings and cannot bypass the
+[recovery contract](#recover-with-a-full-bounded-snapshot): after compaction, re-verify
+the baseline snapshot, launcher lease ownership, and session hydration.
+
+### Cache-preserving request construction for GPT-6 integrations
+
+For integrations that construct API requests directly, maintaining prompt cache
+hits requires structuring requests to avoid invalidating the shared prefix, as
+detailed in
+[better prompt caching for GPT-6](https://openai.com/index/better-prompt-caching-for-gpt-6/).
+This guidance applies strictly to request-constructing code; end users of CLI tools
+do not control internal client request serialization. Key practices include:
+
+- **Stable prefixes:** Place static instructions, baseline definitions, and unchanging
+  system context at the very start of the request so that subsequent turns reuse the
+  cached prefix.
+- **Stable tool definitions and `allowed_tools`:** Keep tool definitions, schemas,
+  and ordering consistent across calls. Modifying tool schemas between turns breaks
+  the cached prefix. When restricting active tools for a specific turn, keep the
+  master tool definitions static and use `allowed_tools` (or tool choice restrictions)
+  to constrain available tools without altering the underlying schemas.
+- **Appended developer instructions:** Add dynamic developer directives, per-turn
+  constraints, or steered guidance by appending them to the message stream rather
+  than modifying earlier system prompts in the prefix.
+- **`configuration_update` for reasoning effort:** In standard single-agent mode,
+  append a `configuration_update` input item to adjust reasoning effort dynamically
+  between turns while keeping the top-level request-level effort unchanged. Note
+  current compatibility boundaries: automatic compaction/truncation and standalone
+  compact endpoints have restrictions, so `configuration_update` must not be
+  generalized into a universal compaction recipe for CLI harnesses.
+- **Prompt cache diagnostics:** Inspect diagnostic fields (such as
+  `prompt_cache_diagnostics.reason`, which flags causes like `tools_changed` or
+  `reasoning_effort_changed`) to monitor cache performance during integration
+  testing. Caching is an optimization that depends on provider cache state and does
+  not guarantee a cache hit on every invocation.
 
 ## Curriculum context
 
