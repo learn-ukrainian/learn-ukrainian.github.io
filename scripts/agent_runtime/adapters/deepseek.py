@@ -19,7 +19,7 @@ import logging
 import shutil
 from pathlib import Path
 
-from scripts.review.model_catalog import retired_model_refusal
+from scripts.review.model_catalog import deepseek_trial_invocation_model, retired_model_refusal
 
 from ..failure_codes import opencode_provider_error, provider_failure_code, provider_stderr_error
 from ..result import ParseResult
@@ -83,8 +83,7 @@ class DeepSeekAdapter:
 
     name: str = "deepseek"
     # Fleet MODEL identity (bare catalog id). The ``deepseek`` provider pin
-    # is an opencode INVOCATION detail — applied in build_invocation via
-    # DEEPSEEK_OPENCODE_MODEL_ROUTES, not stored as identity.
+    # is an opencode INVOCATION detail, applied by the catalog allowlist.
     default_model: str = "deepseek-v4.1-flash"
     # Operator 2026-08-13: omitted effort defaults to high (--variant high);
     # an explicit --effort always wins.
@@ -120,11 +119,8 @@ class DeepSeekAdapter:
         refusal = retired_model_refusal(target_model)
         if refusal:
             raise ValueError(refusal)
-        # Route bare catalog ids to the first-party opencode provider — a bare
-        # "deepseek-v4.1-flash" would leave provider resolution to opencode and
-        # can land off the api.deepseek.com account. Explicit provider-prefixed
-        # ids pass through untouched.
-        invocation_model = DEEPSEEK_OPENCODE_MODEL_ROUTES.get(target_model, target_model)
+        # Route the bare trial id explicitly and refuse every unlisted route.
+        invocation_model = deepseek_trial_invocation_model(target_model)
         if invocation_model == "deepseek/deepseek-flash":
             cached_name = _cached_flash_name()
             if cached_name is not None and cached_name != "DeepSeek V4.1 Flash":

@@ -57,6 +57,26 @@ def test_default_dispatch_plan_is_opencode_first_party_flash_at_high(tmp_path):
     assert plan.env_overrides.get("OPENCODE_EXPERIMENTAL_OUTPUT_TOKEN_MAX") == "131072"
 
 
+@pytest.mark.parametrize("model,expected", [
+    ("deepseek-v4.1-flash", "deepseek/deepseek-flash"),
+    ("deepseek/deepseek-flash", "deepseek/deepseek-flash"),
+    ("openrouter/deepseek/deepseek-v4.1-flash", "openrouter/deepseek/deepseek-v4.1-flash"),
+])
+def test_trial_invocation_allowlist(tmp_path, model, expected):
+    plan = _build("Inspect the example.", tmp_path, model=model)
+    assert plan.cmd[plan.cmd.index("--model") + 1] == expected
+
+
+@pytest.mark.parametrize("model", [
+    "together/deepseek-v4.1-flash", "openrouter/deepseek/deepseek-chat",
+    "deepseek/deepseek-chat", "deepseek-v4.1-flash-high", "deepseek-v4.1-flash[1m]",
+    "gpt-6-luna", "unknown-model",
+])
+def test_trial_invocation_refuses_every_unlisted_id(tmp_path, model):
+    with pytest.raises(ValueError, match="invocation allowlist"):
+        _build("Inspect the example.", tmp_path, model=model)
+
+
 def _ndjson_events(*events: dict) -> str:
     return "\n".join(json.dumps(e) for e in events)
 

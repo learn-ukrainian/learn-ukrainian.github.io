@@ -1247,6 +1247,21 @@ def risk_reviewer_refusal(model: Any, risk: Any, catalog: dict[str, Any] | None 
     )
 
 
+def deepseek_trial_invocation_model(model: str, catalog: dict[str, Any] | None = None) -> str:
+    """Resolve only the trial's first-party route and its OpenRouter fallback."""
+    catalog = catalog or load_model_catalog()
+    for model_id, entry in catalog["models"].items():
+        if entry["family"] != "deepseek" or not entry.get("bounded_implementation_trial"):
+            continue
+        first_party = entry["provider_alias"]
+        fallback = f"openrouter/deepseek/{model_id}"
+        if model in {model_id, first_party}:
+            return first_party
+        if model == fallback:
+            return fallback
+    raise ModelCatalogError("DEEPSEEK_TASK_REFUSED: model is outside the trial invocation allowlist")
+
+
 def require_execution_model(
     model: str, *, transport: str, catalog: dict[str, Any] | None = None,
 ) -> str:
@@ -1263,6 +1278,8 @@ def require_execution_model(
     if model_id is None:
         raise ModelCatalogError(f"model {model!r} is not in the model catalog")
     entry = catalog["models"][model_id]
+    if entry["family"] == "deepseek" and entry.get("bounded_implementation_trial"):
+        deepseek_trial_invocation_model(model, catalog)
     if entry["lifecycle"] not in {"active", "fallback"}:
         raise ModelCatalogError(f"model {model!r} is not admitted for execution")
     if transport not in entry["transports"]:

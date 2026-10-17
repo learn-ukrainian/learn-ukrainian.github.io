@@ -55,7 +55,7 @@ class Tree:
 
 def scope(**overrides):
     return {"mode": "read-only", "task_family": "routine_mechanical",
-            "paths": ("package-lock.json",), "trees": (Tree(),), **overrides}
+            "paths": ("package-lock.json",), "trees": (Tree(),), "repo": "public-monorepo", **overrides}
 
 
 @pytest.mark.parametrize("family", sorted(admission.MECHANICAL_FAMILIES))
@@ -425,3 +425,135 @@ def test_deepseek_complete_public_packet_admitted():
     admission.refuse_mechanical_task(("deepseek-v4.1-flash",), **scope(
         task_family="bounded_implementation", paths=("tests/example.py",),
         task_prompt=driver_brief(), repo="public-monorepo"))
+
+
+@pytest.mark.parametrize("model", [HAIKU, "gpt-6-luna", "deepseek-v4.1-flash"])
+@pytest.mark.parametrize("repo", ["private-infra", "private-product", None])
+@pytest.mark.parametrize("mode", ["read-only", admission.BRIDGE_MODE])
+def test_every_trial_pin_requires_public_repository(model, repo, mode):
+    with pytest.raises(admission.MechanicalAdmissionRefused, match="public-repository"):
+        admission.refuse_mechanical_task((model,), **scope(
+            task_family="bounded_implementation", paths=("tests/example.py",),
+            task_prompt=driver_brief(), repo=repo, mode=mode))
+
+
+def test_mixed_trial_pins_cannot_borrow_the_consult_exemption():
+    with pytest.raises(admission.MechanicalAdmissionRefused, match="supported execution mode"):
+        admission.refuse_mechanical_task((HAIKU, "deepseek-v4.1-flash"), **scope(
+            task_family="bounded_implementation", mode=admission.BRIDGE_MODE,
+            paths=("tests/example.py",), task_prompt=driver_brief()))
+
+
+@pytest.mark.parametrize("model", [HAIKU, "gpt-6-luna", "deepseek-v4.1-flash"])
+@pytest.mark.parametrize("name", ["id_rsa", "id_ed25519", ".env.local", "env.prod", "credentials.json", "secret.txt"])
+@pytest.mark.parametrize("source", ["owned", "descendant", "prompt", "prompt-file"])
+def test_every_trial_pin_refuses_secret_filenames(model, name, source, tmp_path):
+    path = "tests/example.py"
+    changes = {}
+    if source == "owned":
+        path = "config/" + name
+    elif source == "descendant":
+        changes["trees"] = (Tree({"config/" + name: b"private"}),)
+    brief = driver_brief(path)
+    if source in {"prompt", "prompt-file"}:
+        brief += "\nRead `config/" + name + "`."
+    if source == "prompt-file":
+        prompt_file = tmp_path / "brief.md"
+        prompt_file.write_text(brief)
+        changes.update(prompt_file=str(prompt_file), task_prompt=None)
+    else:
+        changes["task_prompt"] = brief
+    with pytest.raises(admission.MechanicalAdmissionRefused, match="secret files"):
+        admission.refuse_mechanical_task((model,), **scope(
+            task_family="bounded_implementation", paths=(path,), **changes))
+
+
+@pytest.mark.parametrize("model", [
+    "together/deepseek-v4.1-flash", "openrouter/deepseek/deepseek-chat",
+    "deepseek-v4.1-flash-high", "deepseek-v4.1-flash[1m]", "deepseek-v4-pro",
+])
+def test_deepseek_unlisted_route_refused_before_routing(model):
+    def never_route(_request):
+        pytest.fail("unlisted route reached resolution")
+    with pytest.raises(admission.MechanicalAdmissionRefused, match="invocation allowlist"):
+        resolve_and_admit(("deepseek",), model=model, route=never_route, **scope(
+            task_family="bounded_implementation", paths=("tests/example.py",), task_prompt=driver_brief()))
+
+
+@pytest.mark.parametrize("model", [
+    "deepseek-v4.1-flash", "deepseek/deepseek-flash", "openrouter/deepseek/deepseek-v4.1-flash",
+])
+def test_deepseek_allowed_routes_admitted(model):
+    (target,) = resolve_and_admit(("deepseek",), model=model, **scope(
+        task_family="bounded_implementation", paths=("tests/example.py",), task_prompt=driver_brief()))
+    assert target.model == model
+
+
+@pytest.mark.parametrize("changes,reason", [
+    ({"language_lane": True}, "Ukrainian"),
+    ({"research_track": "l2-uk-en/a1"}, "Ukrainian"),
+    ({"task_role": "design"}, "design"),
+    ({"task_role": "approval"}, "approval"),
+    ({"task_role": "advisor"}, "approval"),
+    ({"task_prompt": "Напиши текст"}, "Cyrillic"),
+    ({"paths": ("scripts/delegate.py",)}, "security-sensitive"),
+    ({"paths": ("wiki/new.md",)}, "Ukrainian"),
+    ({"task_prompt": "Inspect `scripts/delegate.py`."}, "security-sensitive"),
+    ({"task_prompt": "Inspect wiki/new.md"}, "Ukrainian"),
+    ({"trees": (Tree({"tests/example.py": "Україна".encode()}),)}, "Cyrillic"),
+    ({"trees": (Tree({"scripts/hooks/check.py": b"pass"}),)}, "security-sensitive"),
+    ({"paths": ("config/id_rsa",)}, "secret files"),
+    ({"task_prompt": "Read config/id_ed25519"}, "secret files"),
+    ({"trees": (Tree({"config/id_rsa": b"private"}),)}, "secret files"),
+])
+def test_deepseek_bridge_consult_checks_inputs_before_return(changes, reason):
+    with pytest.raises(admission.MechanicalAdmissionRefused, match=reason):
+        resolve_and_admit(("deepseek",), model="deepseek-v4.1-flash", **{
+            "mode": admission.BRIDGE_MODE, "task_prompt": "Explain sorting algorithms.",
+            "paths": ("tests/example.py",), **changes})
+
+
+@pytest.mark.parametrize("text,reason", [
+    ("Напиши текст", "task input"), ("Read config/id_rsa", "secret files"),
+    ("Inspect scripts/hooks/check.py", "security-sensitive"),
+])
+def test_deepseek_bridge_consult_checks_prompt_file(tmp_path, text, reason):
+    prompt = tmp_path / "brief.md"
+    prompt.write_text(text)
+    with pytest.raises(admission.MechanicalAdmissionRefused, match=reason):
+        resolve_and_admit(("deepseek",), model="deepseek-v4.1-flash",
+                          mode=admission.BRIDGE_MODE, prompt_file=str(prompt))
+
+
+def test_ordinary_deepseek_bridge_consult_needs_no_driver_packet_or_owned_files():
+    (target,) = resolve_and_admit(("deepseek",), model="deepseek-v4.1-flash",
+                                mode=admission.BRIDGE_MODE, task_prompt="Explain sorting algorithms.")
+    assert target.model == "deepseek-v4.1-flash"
+
+
+@pytest.mark.parametrize("repo", ["public-monorepo", "private-infra", "private-product", None])
+@pytest.mark.parametrize("model", [HAIKU, "gpt-6-luna", "deepseek-v4.1-flash"])
+def test_execution_rechecks_trial_repository(monkeypatch, tmp_path, repo, model):
+    monkeypatch.setattr(admission, "worktree_trees", lambda cwd: [Tree()])
+    kwargs = dict(
+        mode="read-only", cwd=tmp_path, prompt=driver_brief(),
+        tool_config={"mechanical_task": {
+            "family": "bounded_implementation", "paths": ["tests/example.py"], "repo": repo,
+        }},
+    )
+    if repo == "public-monorepo":
+        admission.refuse_mechanical_execution(model, **kwargs)
+    else:
+        with pytest.raises(admission.MechanicalAdmissionRefused, match="public-repository"):
+            admission.refuse_mechanical_execution(model, **kwargs)
+
+
+def test_deepseek_directory_scope_refused_without_a_local_tree_root():
+    class DirectoryScope(Tree):
+        def owned_files(self, path):
+            return True, {"tests/example/test_case.py": b"pass"}
+
+    with pytest.raises(admission.MechanicalAdmissionRefused, match="explicit file paths"):
+        admission.refuse_mechanical_task(("deepseek-v4.1-flash",), **scope(
+            task_family="bounded_implementation", paths=("tests/example",),
+            task_prompt=driver_brief("tests/example"), trees=(DirectoryScope(),)))

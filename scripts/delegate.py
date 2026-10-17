@@ -17387,7 +17387,7 @@ def _admit_dispatch_target(
     from scripts.agent_runtime.kimi_admission import KimiAdmissionRefused
     from scripts.agent_runtime.mechanical_admission import MechanicalAdmissionRefused
     from scripts.agent_runtime.target_admission import ReviewAdmissionRefused, resolve_and_admit
-    from scripts.review.model_catalog import ModelCatalogError, apply_cursor_model_pins
+    from scripts.review.model_catalog import ModelCatalogError, apply_cursor_model_pins, deepseek_trial_invocation_model
     from scripts.review.target_resolution import TargetResolutionError, repository_target_error
 
     if claude_account is None:
@@ -17448,6 +17448,7 @@ def _admit_dispatch_target(
         if canonical_model_id(getattr(args, "model", None)) == DEEPSEEK_MODEL or agent == "deepseek":
             if not getattr(args, "worktree", None) and ".worktrees/dispatch/" not in str(getattr(args, "cwd", "")):
                 raise MechanicalAdmissionRefused("DEEPSEEK_TASK_REFUSED: public-repository worktrees only")
+            deepseek_trial_invocation_model(getattr(args, "model", None) or DEEPSEEK_MODEL)
             if agent != "deepseek" or getattr(args, "harness", None) not in {None, "native"}:
                 raise MechanicalAdmissionRefused("DEEPSEEK_TASK_REFUSED: use the deepseek opencode adapter")
         mechanical_task = _mechanical_task_scope(args)

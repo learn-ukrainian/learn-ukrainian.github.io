@@ -16,7 +16,7 @@ def record(**changes):
         "family": "mechanical_classification", "role": "classification", "track": "infra-harness",
         "language_lane": False, "review": False, "paths": ["tests/test_example.py"],
         "mode": "read-only", "task_prompt": "Inspect this test.", "prompt_file": None,
-        "prompt_file_sha256": None, **changes,
+        "prompt_file_sha256": None, "repo": "public-monorepo", **changes,
     }
     scope["sha256"] = mechanical_scope_digest(scope)
     return {"mode": "read-only", "mechanical_task": scope,
@@ -30,6 +30,7 @@ def test_worker_scope_preserves_recorded_inputs():
         "task_family": "mechanical_classification", "task_role": "classification",
         "research_track": "infra-harness", "language_lane": False, "review": False,
         "paths": ["tests/test_example.py"], "task_prompt": "Inspect this test.", "prompt_file": None,
+        "repo": "public-monorepo",
     }
     assert saved == before
     assert mechanical_worker_scope({}, mode="read-only", model="claude-haiku-5-5", prompt="Inspect this test.") == {}

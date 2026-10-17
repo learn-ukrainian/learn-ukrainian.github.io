@@ -288,7 +288,9 @@ def test_deepseek_metadata_is_preserved_without_review_seats() -> None:
     assert "models.json" in flash["provider_alias_drift_check"]
 
     assert flash["tier"] == "frontier_practical"
-    assert {"frontend_agentic_coding", "strong_code_review"} <= set(flash["roles"])
+    assert set(flash["roles"]) == {"bounded_implementation", "strong_code_review"}
+    assert flash["bounded_implementation_trial"] == "haiku-luna-coding-trial"
+    assert flash["transports"] == ["opencode"]
     assert "not_critical_authority" in flash["weaknesses"]
     assert "https://arena.ai/leaderboard/code" in flash["sources"]
     # Metadata is retained per #9301's non-goals; it confers no review eligibility.
@@ -1527,6 +1529,9 @@ def test_catalog_cli_non_retired_model_exits_silently(model):
 @pytest.mark.parametrize("reference", ["candidate", "endpoint", "default", "escalation", "family", "substitution_source", "substitution_target"])
 def test_catalog_rejects_retired_and_rule_excluded_executable_references(model, reference):
     catalog = deepcopy(load_model_catalog())
+    # The approved implementation trial is an explicit exception to the
+    # general routing ban. Without that marker, every reference still refuses.
+    catalog["models"][model].pop("bounded_implementation_trial", None)
     if reference == "candidate":
         catalog["review_candidates"]["claude-opus-5-5"]["model_id"] = model
     elif reference == "endpoint":
@@ -1541,6 +1546,20 @@ def test_catalog_rejects_retired_and_rule_excluded_executable_references(model, 
         catalog["budget_substitution_models"]["cursor"][model] = "grok-4.7"
     else:
         catalog["budget_substitution_models"]["cursor"]["grok-4.7"] = model
+    with pytest.raises(ModelCatalogError):
+        validate_catalog(catalog)
+
+
+@pytest.mark.parametrize("reference", ["candidate", "endpoint"])
+def test_deepseek_trial_marker_never_grants_review_authority(reference):
+    catalog = deepcopy(load_model_catalog())
+    model = "deepseek-v4.1-flash"
+    assert catalog["models"][model]["bounded_implementation_trial"] == "haiku-luna-coding-trial"
+    assert activity_role_refusal(model, "review", catalog)
+    if reference == "candidate":
+        catalog["review_candidates"]["claude-opus-5-5"]["model_id"] = model
+    else:
+        catalog["review_scheduler"]["endpoints"]["claude"]["models"].append(model)
     with pytest.raises(ModelCatalogError):
         validate_catalog(catalog)
 

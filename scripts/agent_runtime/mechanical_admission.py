@@ -12,6 +12,7 @@ from scripts.agent_runtime.kimi_admission import BRIDGE_MODE, CYRILLIC, ContentT
 from scripts.review.model_catalog import (
     MECHANICAL_FAMILIES,
     canonical_model_id,
+    deepseek_trial_invocation_model,
     load_model_catalog,
 )
 from scripts.review.model_catalog import (
@@ -29,9 +30,9 @@ DEEPSEEK_MODEL = next(
 
 def sensitive_data_path(path: str) -> bool:
     """Reject credential, environment and secret filenames, including glob scopes."""
-    parts = PurePosixPath(path.casefold().strip("`\"'(),:;[]{}<>")).parts
+    parts = PurePosixPath(path.casefold().strip("`\"'(),:;[]{}<>").rstrip("`\"'.,:;!?)]}>")).parts
     return any(
-        part in {".ssh", ".aws", ".config", ".netrc", ".npmrc", ".pypirc"}
+        part in {".ssh", ".aws", ".config", ".netrc", ".npmrc", ".pypirc", "id_rsa", "id_ed25519"}
         or part.startswith((".env", "env.", "credentials", "credential.", "secret"))
         or part.endswith((".pem", ".key", ".p12", ".pfx"))
         for part in parts
@@ -69,27 +70,30 @@ def refuse_mechanical_task(
     if not pins:
         return
     catalog = load_model_catalog()
-    deepseek = any(
-        (identity := canonical_model_id(pin, catalog)) and catalog["models"][identity]["family"] == "deepseek"
-        for pin in pins
+    deepseek_pins = tuple(
+        pin for pin in pins if "deepseek" in pin.casefold()
+        or ((identity := canonical_model_id(pin, catalog)) and catalog["models"][identity]["family"] == "deepseek")
     )
-    if deepseek and mode == BRIDGE_MODE and not review:
-        if language_lane or task_role in {"design", "approval", "advisor"}:
-            raise MechanicalAdmissionRefused("DEEPSEEK_TASK_REFUSED: no Ukrainian content, design or approval")
-        return  # Ordinary non-language consultation retains its existing bridge gates.
-    if deepseek and (task_family != TRIAL_FAMILY or any(
-        canonical_model_id(pin, catalog) != DEEPSEEK_MODEL for pin in pins
-        if catalog["models"].get(canonical_model_id(pin, catalog), {}).get("family") == "deepseek"
-    )):
+    for pin in deepseek_pins:
+        try:
+            deepseek_trial_invocation_model(pin, catalog)
+        except ValueError as exc:
+            raise MechanicalAdmissionRefused(str(exc)) from exc
+    deepseek = bool(deepseek_pins)
+    bridge_consult = deepseek and mode == BRIDGE_MODE and not review and task_family != TRIAL_FAMILY
+    if bridge_consult and task_role in {"design", "approval", "advisor"}:
+        raise MechanicalAdmissionRefused("DEEPSEEK_TASK_REFUSED: no Ukrainian content, design or approval")
+    if deepseek and not bridge_consult and task_family != TRIAL_FAMILY:
         raise MechanicalAdmissionRefused("DEEPSEEK_TASK_REFUSED: bounded_implementation trial only")
-    if deepseek and repo != "public-monorepo":
-        raise MechanicalAdmissionRefused("DEEPSEEK_TASK_REFUSED: public-repository worktrees only")
     trial = task_family == TRIAL_FAMILY and any(is_trial_model(pin) for pin in pins)
+    if not bridge_consult and (deepseek or trial) and repo != "public-monorepo":
+        prefix = "DEEPSEEK_TASK_REFUSED" if deepseek else "MECHANICAL_TASK_REFUSED"
+        raise MechanicalAdmissionRefused(f"{prefix}: public-repository worktrees only")
     constrained = [catalog["models"][identity] for pin in pins
                    if (identity := canonical_model_id(pin, catalog))
                    and ("mechanical_only" in catalog["models"][identity]["roles"]
                         or (trial and is_trial_model(pin)))]
-    if not constrained:
+    if not constrained and not bridge_consult:
         return
 
     def refuse(reason: str) -> None:
@@ -97,18 +101,19 @@ def refuse_mechanical_task(
 
     if review:
         refuse("mechanical-only seats never perform review, critique or approval")
-    if (task_family not in MECHANICAL_FAMILIES and not trial) or any(task_family not in model["roles"] for model in constrained):
+    if not bridge_consult and ((task_family not in MECHANICAL_FAMILIES and not trial)
+                              or any(task_family not in model["roles"] for model in constrained)):
         refuse("declare a catalog-eligible --research-task-family: routine_mechanical, mechanical_classification or readonly_recon")
-    if task_role not in {None, "implementation", "recon", "classification", "triage"}:
+    if not bridge_consult and task_role not in {None, "implementation", "recon", "classification", "triage"}:
         refuse("driver, design, advisory, approval and content roles are excluded")
-    if not trial and (mode not in {"read-only", "workspace-write"} or (task_family != "routine_mechanical" and mode != "read-only")):
+    if not bridge_consult and not trial and (mode not in {"read-only", "workspace-write"} or (task_family != "routine_mechanical" and mode != "read-only")):
         refuse("only routine mechanical work may write; classification and recon must be read-only")
-    if trial and mode not in {"read-only", "workspace-write", "danger"}:
+    if not bridge_consult and trial and mode not in {"read-only", "workspace-write", "danger"}:
         refuse("bounded implementation requires a supported execution mode")
     owned = tuple(paths)
-    if not owned:
+    if not owned and not bridge_consult:
         refuse("declare narrow owned paths for the mechanical task")
-    if deepseek and any(sensitive_data_path(path) for path in owned):
+    if (deepseek or trial) and any(sensitive_data_path(path) for path in owned):
         refuse("credential, env and secret files are excluded")
     if deepseek and any(set(path) & set("*?[") or path.endswith("/") for path in owned):
         refuse("data fence requires explicit file paths, excluding credential, env and secret files")
@@ -123,14 +128,21 @@ def refuse_mechanical_task(
     stage = "task prompt"
     try:
         brief = ""
-        if trial:
+        if trial or bridge_consult:
             stage = "prompt file" if prompt_file else "task prompt"
             brief = Path(prompt_file).read_text(encoding="utf-8") if prompt_file else task_prompt or ""
-        if deepseek:
+        if deepseek or trial:
             from scripts.lib.rules_core import core_block
 
-            if any(sensitive_data_path(word) for word in brief.replace(core_block("core"), "").split()):
+            words = (brief + "\n" + (task_prompt or "")).replace(core_block("core"), "").split()
+            if any(sensitive_data_path(word) for word in words):
                 refuse("credential, env and secret files in prompts are excluded")
+            if bridge_consult:
+                mentioned_paths = tuple(word.strip("`\"'(),:;[]{}<>").rstrip("`\"'.,:;!?)]}>") for word in words)
+                if is_security_sensitive_change(mentioned_paths):
+                    refuse("security-sensitive prompt paths are excluded")
+                if any(set(PurePosixPath(path).parts) & {"curriculum", "wiki"} for path in mentioned_paths):
+                    refuse("Ukrainian content paths are excluded")
         if task_prompt:
             from scripts.lib.rules_core import core_block
 
@@ -144,9 +156,9 @@ def refuse_mechanical_task(
             refuse("task input must be plain UTF-8 without Cyrillic")
         stage = "tree resolution"
         resolved = trees() if callable(trees) else trees
-        if not resolved:
+        if not resolved and not bridge_consult:
             refuse("owned content must be available for admission")
-        if trial:
+        if trial and not bridge_consult:
             from scripts.agent_runtime.bounded_advisory import parse_envelope, require_owned_paths_match
 
             packet = parse_envelope(brief, repo_root=getattr(resolved[0], "root", Path.cwd()), driver_packet=True)
@@ -162,13 +174,15 @@ def refuse_mechanical_task(
                         refuse("data fence requires explicit file paths")
                     if any(part.is_symlink() for part in (target, *target.parents) if part != root):
                         refuse("symlink owned paths are excluded")
-                _, files = tree.owned_files(path)
+                is_scope, files = tree.owned_files(path)
+                if deepseek and is_scope:
+                    refuse("data fence requires explicit file paths")
                 for name, data in files.items():
                     if trial and (root := getattr(tree, "root", None)) is not None and (root / name).is_symlink():
                         refuse("symlink owned content is excluded")
                     if is_security_sensitive_change((name,)) or set(PurePosixPath(name).parts) & {"curriculum", "wiki"}:
                         refuse("owned scope contains security-sensitive or Ukrainian content paths")
-                    if deepseek and sensitive_data_path(name):
+                    if (deepseek or trial) and sensitive_data_path(name):
                         refuse("owned scope contains credential, env or secret files")
                     if CYRILLIC.search(name) or content_problem(data):
                         refuse("owned content must be plain UTF-8 without Cyrillic")
@@ -191,6 +205,7 @@ def refuse_mechanical_execution(
         (model,), mode=mode, task_family=task.get("family"), task_role=task.get("role"),
         paths=task.get("paths") or (), research_track=task.get("track"),
         task_prompt=prompt,
+        repo=task.get("repo"),
         language_lane=bool(task.get("language_lane") or config.get("language_lane") or config.get("review_profile") == "ukrainian"),
         # reviewer_tools is also the ordinary read-only permissions profile;
         # it does not type an activity as review. Use actual review markers.

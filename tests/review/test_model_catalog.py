@@ -347,6 +347,8 @@ def approved_coding_trial_baseline(baseline):
             continue
         assert catalog["models"][model] == change["before"]
         catalog["models"][model] = change["after"]
+    # #10919 exact-head review excludes Hermes from the implementation trial.
+    catalog["models"]["deepseek-v4.1-flash"]["transports"] = ["opencode"]
     dispatch = deepcopy(baseline["dispatch"])
     changes = overlay["_dispatch"]
     for row in dispatch:
@@ -389,7 +391,7 @@ def test_coding_trial_overlay_changes_only_approved_model_fields():
     allowed = {
         "claude-haiku-5-5": {"roles", "weaknesses", "notes", "bounded_implementation_trial", "bounded_implementation_effort"},
         "gpt-6-luna": {"bounded_implementation_trial", "bounded_implementation_effort"},
-        "deepseek-v4.1-flash": {"roles", "bounded_implementation_trial", "bounded_implementation_effort"},
+        "deepseek-v4.1-flash": {"roles", "bounded_implementation_trial", "bounded_implementation_effort", "transports"},
     }
     changed = {}
     for model, old in before["catalog"]["models"].items():
@@ -1397,3 +1399,35 @@ def test_deepseek_trial_keeps_formal_review_excluded_and_resolves_provider_alias
     assert canonical_model_id("deepseek/deepseek-flash") == "deepseek-v4.1-flash"
     assert "excluded from formal review" in activity_role_refusal("deepseek-v4.1-flash", "review")
     assert "excluded from formal review" in activity_role_refusal("deepseek/deepseek-flash", "review")
+
+
+@pytest.mark.parametrize("model,expected", [
+    ("deepseek-v4.1-flash", "deepseek/deepseek-flash"),
+    ("deepseek/deepseek-flash", "deepseek/deepseek-flash"),
+    ("openrouter/deepseek/deepseek-v4.1-flash", "openrouter/deepseek/deepseek-v4.1-flash"),
+])
+def test_deepseek_trial_catalog_invocation_ids(model, expected):
+    from scripts.review.model_catalog import deepseek_trial_invocation_model, require_execution_model
+
+    assert deepseek_trial_invocation_model(model) == expected
+    assert require_execution_model(model, transport="opencode") == "deepseek-v4.1-flash"
+
+
+@pytest.mark.parametrize("model", [
+    "together/deepseek-v4.1-flash", "openrouter/deepseek/deepseek-chat",
+    "deepseek-v4.1-flash-high", "deepseek-v4.1-flash[1m]", "unknown-model",
+])
+def test_deepseek_trial_catalog_refuses_unlisted_invocation_ids(model):
+    from scripts.review.model_catalog import ModelCatalogError, deepseek_trial_invocation_model, require_execution_model
+
+    with pytest.raises(ModelCatalogError, match="invocation allowlist"):
+        deepseek_trial_invocation_model(model)
+    with pytest.raises(ModelCatalogError):
+        require_execution_model(model, transport="opencode")
+
+
+def test_deepseek_trial_refuses_hermes_transport():
+    from scripts.review.model_catalog import ModelCatalogError, require_execution_model
+
+    with pytest.raises(ModelCatalogError, match="no admitted hermes transport"):
+        require_execution_model("deepseek-v4.1-flash", transport="hermes")

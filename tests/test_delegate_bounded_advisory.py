@@ -2737,15 +2737,32 @@ def test_deepseek_dispatch_refuses_non_implementation(env, capsys, extra):
     assert env.spawned == []
 
 
-def test_private_deepseek_dispatch_refused_before_spawn(env):
+@pytest.mark.parametrize("repo", ["private-infra", "private-product"])
+@pytest.mark.parametrize("agent,model", [
+    ("claude", "claude-haiku-5-5"), ("codex", "gpt-6-luna"), ("deepseek", "deepseek-v4.1-flash"),
+])
+def test_private_trial_dispatch_refused_before_spawn(env, repo, agent, model):
     argv = _argv("--research-task-family", "bounded_implementation", "--research-role", "implementation",
                  "--owned-path", "tests/test_trial_example.py", "--worktree",
-                 agent="deepseek", model="deepseek-v4.1-flash")
+                 agent=agent, model=model)
     argv[argv.index("--prompt") + 1] = _driver_brief()
     refusal, target = delegate._admit_dispatch_target(
-        _parse(argv), agent="deepseek", repo_role="private-infra", trees=())
+        _parse(argv), agent=agent, repo_role=repo, trees=())
     assert target is None
     assert "public-repository worktrees only" in refusal
+    assert env.spawned == []
+
+
+@pytest.mark.parametrize("model", [
+    "together/deepseek-v4.1-flash", "openrouter/deepseek/deepseek-chat", "gpt-6-luna",
+])
+def test_deepseek_dispatch_refuses_unlisted_invocation_id(env, model):
+    argv = _argv("--research-task-family", "bounded_implementation", "--owned-path", "tests/test_trial_example.py",
+                 "--provider", "openrouter", "--worktree", agent="deepseek", model=model)
+    argv[argv.index("--prompt") + 1] = _driver_brief()
+    refusal, target = delegate._admit_dispatch_target(
+        _parse(argv), agent="deepseek", repo_role="public-monorepo", trees=())
+    assert target is None and "invocation allowlist" in refusal
     assert env.spawned == []
 
 

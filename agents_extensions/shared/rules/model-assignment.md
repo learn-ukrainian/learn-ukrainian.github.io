@@ -692,7 +692,7 @@ df -h /; du -sh "$repo_root/.worktrees"
 | Prefer when free / behind | Typical fit | Never / caveats |
 | --- | --- | --- |
 | **cursor** (`--model grok-4.7-high`) | code/infra CI, ruff/fixtures, bounded refactors, mechanical-with-judgment; language-free overflow when fit and live capacity favor it. `auto` only for a well-defined coding dispatch (owned paths, PASS DoR card) | formal CF identity only as the resolver's `grok-4.7-high` code/infra seat at every risk (#9769); not language seats; not advisor/authority; `concurrency_limit: 1` |
-| **deepseek** | No dispatch or review route | Catalog identity retained for historical evidence only |
+| **deepseek** | `bounded_implementation` trial through OpenCode using `deepseek/deepseek-flash`; one explicit `--provider openrouter` fallback using `openrouter/deepseek/deepseek-v4.1-flash` | Public-repository worktrees and explicit file paths only; no review, Ukrainian content, design, approval or security-class code |
 | **claude** (Sonnet for well-scoped non-security routine work and polished English deliverables; Opus for security-sensitive code; Opus for Ukrainian curriculum) | native Claude CLI implementation as subscription headroom allows; hard judgment, CF, architecture briefs | don't burn Opus on queue grind |
 | **agy** (Gemini 3.8 Flash default) | Ukrainian review and well-defined implementation tasks; **worker with complete briefs** (#5737) — not self-decomposing micro-PR spray | metered — cost-aware, not absent; complete brief required |
 | **pool** (`laguna-s-2.1` default) | free CF volume + web-verify volume | not language; bridge `ask-pool` |
