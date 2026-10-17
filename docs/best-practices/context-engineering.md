@@ -203,9 +203,10 @@ rebuilds the outline from it without another research phase.
 ### Meta outlines and section allocation
 
 The meta's `content_outline` gives each section a word allocation and writing
-points. The [meta-only template](../../agents_extensions/shared/phases/gemini/phase-A-meta-only.md)
-requires no section to exceed 25% of the word target. It also specifies a
-200-word minimum allocation and section-count guidance for larger modules.
+points. Both the [seminar template's meta-outline rules](../../agents_extensions/shared/phases/gemini/phase-A-seminar.md#rules-for-meta-outline)
+and the [meta-only template's rules](../../agents_extensions/shared/phases/gemini/phase-A-meta-only.md#rules)
+require no section to exceed 25% of the word target and a minimum allocation of
+200 words. For targets of at least 4000 words, both say to aim for 8-12 sections minimum.
 These are phase-template requirements, not a claim that every current builder
 automatically detects violations or reruns research.
 
@@ -215,11 +216,11 @@ Retain the plan's section identity when adding subtitles.
 
 ### Track context
 
-Sequential core modules need prior vocabulary and grammar context. The earlier
-workflow used the last five modules. Apply the current build contract's retrieval
-scope rather than treating that historical count as a universal rule. Independent
-seminar topics do not need the whole track's content. Avoid unrelated modules
-that can contaminate examples or distract from the current plan.
+The current [Core vs Seminar contract](track-architecture.md#core-vs-seminar-key-differences)
+requires the last five modules as track context for core tracks and omits track
+context entirely for seminar tracks. This is a curriculum retrieval scope, not a
+universal driver or worker scope or token cap. Avoid unrelated modules that can
+contaminate examples or distract from the current plan.
 
 ### Placeholders and ordering
 
