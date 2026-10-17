@@ -40,6 +40,7 @@ from __future__ import annotations
 import json
 import os
 import re
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -95,6 +96,17 @@ def _git_probe_env() -> dict[str, str]:
         "GIT_ALTERNATE_OBJECT_DIRECTORIES",
     ):
         env.pop(name, None)
+    # Agent sessions put command shims first on PATH. They police agent
+    # commands, not these fixed read-only probes, and each shimmed call costs
+    # several extra processes, which stretches hook latency under load. PATH
+    # stays unchanged when no real git remains without the shims.
+    direct = os.pathsep.join(
+        entry
+        for entry in env.get("PATH", "").split(os.pathsep)
+        if Path(entry).parts[-3:] != ("scripts", "agent_runtime", "shims")
+    )
+    if shutil.which("git", path=direct):
+        env["PATH"] = direct
     return env
 
 
@@ -117,11 +129,19 @@ def _public_primary_root() -> Path:
 
 # This deployed public hook is also the only branch guard for the private
 # infrastructure checkout. Resolve both roots so symlinked invocations compare
-# the actual checkout directories, not their textual spellings.
-PROTECTED_ROOTS = [
-    _public_primary_root(),
-    Path("~/projects/learn-ukrainian-infra-private").expanduser().resolve(),
-]
+# the actual checkout directories, not their textual spellings. Resolved on
+# first use: most commands never reach a branch verb, and the lookup spawns git.
+PROTECTED_ROOTS: list[Path] | None = None
+
+
+def _protected_roots() -> set[Path]:
+    global PROTECTED_ROOTS
+    if PROTECTED_ROOTS is None:
+        PROTECTED_ROOTS = [
+            _public_primary_root(),
+            Path("~/projects/learn-ukrainian-infra-private").expanduser().resolve(),
+        ]
+    return {root.resolve() for root in PROTECTED_ROOTS}
 
 
 def _read_payload() -> dict:
@@ -533,6 +553,28 @@ def _segment_is_dangerous(seg: list[str], current_branch: str | None = "main") -
     return f"git {verb} {target} switches branch in the main worktree"
 
 
+def _may_be_dangerous(seg: list[str]) -> bool:
+    """False only when no checked-out branch could make this git segment dangerous.
+
+    Lets the caller skip the repository probes (each spawns git) for the
+    common read-only verbs. Mirrors _segment_is_dangerous: checkout/switch do
+    not depend on the current branch, and ``git branch`` is dangerous only
+    with a force flag.
+    """
+    invocation = _git_invocation(seg, Path.cwd())
+    if invocation is None:
+        return False
+    verb, args, _ = invocation
+    if verb in SWITCH_VERBS:
+        return _segment_is_dangerous(seg) is not None
+    if verb == "branch":
+        return any(
+            a == "--force" or (len(a) >= 2 and a[0] == "-" and a[1] != "-" and not set(a[1:]).isdisjoint("DMf"))
+            for a in args
+        )
+    return False
+
+
 def _gh_pr_checkout_reason(seg: list[str], effective_cwd: Path | None) -> str | None:
     """Block ``gh pr checkout`` in the protected primary (#4857).
 
@@ -558,8 +600,7 @@ def _gh_pr_checkout_reason(seg: list[str], effective_cwd: Path | None) -> str | 
         repo_root = _git_repo_root(effective_cwd)
         if repo_root is None:
             return None
-        protected_roots = {root.resolve() for root in PROTECTED_ROOTS}
-        if repo_root.resolve() not in protected_roots:
+        if repo_root.resolve() not in _protected_roots():
             return None
         if not _in_main_worktree(repo_root):
             return None
@@ -570,7 +611,6 @@ def _gh_pr_checkout_reason(seg: list[str], effective_cwd: Path | None) -> str | 
 def _command_danger_reason(command: str, session_cwd: Path | None = None) -> str | None:
     """Return a block reason only for a command targeting a protected root."""
     effective_cwd = (session_cwd or Path.cwd()).resolve()
-    protected_roots = {root.resolve() for root in PROTECTED_ROOTS}
     # Deliberate rare over-block: case or parameter-expansion parentheses make
     # EVERY branch operation in this command unknown, even in a worktree, before
     # the syntax or across newlines. No scope close or absolute -C restores trust.
@@ -648,8 +688,10 @@ def _command_danger_reason(command: str, session_cwd: Path | None = None) -> str
             if _segment_is_dangerous(segment):
                 return "branch-switch target could not be parsed safely"
             continue
+        if not _may_be_dangerous(segment):
+            continue
         repo_root = _git_repo_root(git_cwd)
-        if repo_root is None or repo_root not in protected_roots:
+        if repo_root is None or repo_root not in _protected_roots():
             continue
         # A target under */.worktrees/* may share this repo's common git dir,
         # but it is deliberately an added worktree where branch operations are

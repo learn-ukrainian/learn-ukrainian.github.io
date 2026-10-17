@@ -2731,5 +2731,25 @@ def main() -> int:
     return 0
 
 
+def _bypass_agent_shims() -> None:
+    """Send this guard's own read-only git probes to the real git.
+
+    Agent sessions put command shims first on PATH. They police agent
+    commands, not the containment probes, and each shimmed call costs several
+    extra processes, which stretches hook latency under load. PATH stays
+    unchanged when no real git remains without the shims.
+    """
+    import shutil
+
+    direct = os.pathsep.join(
+        entry
+        for entry in os.environ.get("PATH", "").split(os.pathsep)
+        if Path(entry).parts[-3:] != ("scripts", "agent_runtime", "shims")
+    )
+    if shutil.which("git", path=direct):
+        os.environ["PATH"] = direct
+
+
 if __name__ == "__main__":
+    _bypass_agent_shims()
     sys.exit(main())
