@@ -153,6 +153,17 @@ parse_databases_backed_up() {
   grep -oE 'SQLite databases backed up: [0-9]+' "$log" | awk 'END {if (NR > 0) print $NF}' || true
 }
 
+parse_repository_check() {
+  local log=$1
+  if [[ -f "$log" ]] && grep -Fq 'Repository check failed' "$log"; then
+    printf '%s\n' failed
+  elif [[ -f "$log" ]] && grep -Fq 'Checking repository metadata after backup.' "$log"; then
+    printf '%s\n' passed
+  else
+    printf '%s\n' not_run
+  fi
+}
+
 # Total snapshots of this backup family in the repository; best effort — the
 # receipt must still be written when the repository is unreachable.
 query_snapshot_count() {
@@ -164,11 +175,14 @@ query_snapshot_count() {
 
 write_last_run() {
   local status=$1 started=$2 finished=$3 log=$4 output=$5 skip_snapshots=${6:-}
-  local run_id bytes_added snapshot_count databases_backed_up temporary
+  local run_id="" bytes_added="" snapshot_count databases_backed_up="" repository_check temporary
 
-  run_id="$(parse_run_id "$log")" || return 1
-  bytes_added="$(parse_bytes_added "$log")" || return 1
-  databases_backed_up="$(parse_databases_backed_up "$log")" || return 1
+  if [[ -f "$log" ]]; then
+    run_id="$(parse_run_id "$log")" || return 1
+    bytes_added="$(parse_bytes_added "$log")" || return 1
+    databases_backed_up="$(parse_databases_backed_up "$log")" || return 1
+  fi
+  repository_check="$(parse_repository_check "$log")" || return 1
   snapshot_count=""
   if [[ "$skip_snapshots" != skip-snapshots ]]; then
     snapshot_count="$(query_snapshot_count)" || return 1
@@ -184,11 +198,13 @@ write_last_run() {
     --arg bytes_added "$bytes_added" \
     --arg snapshot_count "$snapshot_count" \
     --arg databases_backed_up "$databases_backed_up" \
+    --arg repository_check "$repository_check" \
     '{
       schema_version: 1,
       started_at_utc: $started,
       finished_at_utc: $finished,
       exit_status: $status,
+      repository_check: $repository_check,
       run_id: (if $run_id == "" then null else $run_id end),
       snapshot_count: (if $snapshot_count == "" then null else ($snapshot_count | tonumber) end),
       bytes_added: (if $bytes_added == "" then null else ($bytes_added | tonumber) end),
@@ -277,7 +293,7 @@ run_record() {
   [[ -n "$status" && "$status" =~ ^[0-9]+$ ]] ||
     { echo "record: --status must be a non-negative integer" >&2; exit 2; }
   [[ -n "$started" ]] || { echo "record: --started is required" >&2; exit 2; }
-  [[ -n "$log" && -f "$log" ]] || { echo "record: --log must be an existing file" >&2; exit 2; }
+  [[ -n "$log" ]] || { echo "record: --log is required" >&2; exit 2; }
   finished=${finished:-$(utc_now)}
   output=${output:-$(last_run_path)}
 
