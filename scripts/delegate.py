@@ -10033,6 +10033,9 @@ def _ensure_worktree(
                 full_checkout=full_checkout,
                 sparse_include=sparse_include,
             )
+            # Sparse checkout can remove ignored links with an excluded parent.
+            # Keep the pre-sparse read-only containment check and restore links afterward.
+            _provision_data_symlinks(worktree_path, _REPO_ROOT, read_only=read_only or detached)
         _record_worktree_local_venv_warning(worktree_path, telemetry)
         return worktree_path, worktree_branch, telemetry
 
@@ -10144,6 +10147,7 @@ def _ensure_worktree(
         full_checkout=full_checkout,
         sparse_include=sparse_include,
     )
+    _provision_data_symlinks(worktree_path, _REPO_ROOT, read_only=read_only or detached)
     _record_worktree_local_venv_warning(worktree_path, telemetry)
     return worktree_path, worktree_branch, telemetry
 

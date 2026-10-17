@@ -27,6 +27,8 @@ from collections.abc import Mapping, Sequence
 from contextlib import suppress
 from pathlib import Path
 
+from scripts.common.scratch import ensure_scratch_root
+
 _POLL_S = 0.05
 _REAP_TIMEOUT_S = 10
 
@@ -82,7 +84,10 @@ def run_in_process_group(
     group outlives the call, and none outlives the calling process.
     """
     command = [sys.executable, "-I", "-c", _SUPERVISOR, str(os.getpid()), *args]
-    with tempfile.TemporaryFile() as stdout, tempfile.TemporaryFile() as stderr:
+    with (
+        tempfile.TemporaryFile(dir=ensure_scratch_root()) as stdout,
+        tempfile.TemporaryFile(dir=ensure_scratch_root()) as stderr,
+    ):
         process = subprocess.Popen(command, cwd=cwd, env=env, stdout=stdout, stderr=stderr, start_new_session=True)
         deadline = time.monotonic() + timeout
         timed_out = False

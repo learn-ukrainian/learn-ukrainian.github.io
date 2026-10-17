@@ -110,10 +110,15 @@ def _isolate_delegate_import_path(monkeypatch):
     """Worker setup prepends the primary scripts path; keep it within one test.
 
     Otherwise later fixture imports can mix primary-checkout modules with
-    this worktree's packages, depending on xdist's scheduling order.
+    this worktree's packages, depending on xdist's scheduling order. Review
+    fixtures must also launch the server whose declarations they validate.
     """
+    from scripts.agent_runtime import review_mcp
+
+    checkout = Path(__file__).resolve().parents[1]
     monkeypatch.setattr(sys, "path", list(sys.path))
-    monkeypatch.syspath_prepend(str(Path(__file__).resolve().parents[1] / "scripts"))
+    monkeypatch.syspath_prepend(str(checkout / "scripts"))
+    monkeypatch.setattr(review_mcp, "review_server_checkout", lambda: checkout)
 
 
 @pytest.fixture(autouse=True)
