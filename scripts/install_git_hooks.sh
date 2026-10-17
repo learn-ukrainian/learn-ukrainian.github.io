@@ -316,6 +316,27 @@ for hook_path in "$tracked_hooks_dir"/*; do
 done
 
 # 3. Route every Entire wrapper's invocation through the capture guard.
+# The rewrite is staged under TMPDIR. When TMPDIR is unset (a bare `git push` or
+# systemd environment) fall back to the managed task scratch roots, then to a
+# per-run directory in this repository's git directory, removed on exit. A
+# TMPDIR set to an empty string stays a configuration error.
+guard_scratch_dir=""
+remove_guard_scratch() {
+    [[ -z "$guard_scratch_dir" ]] || rmdir "$guard_scratch_dir" 2>/dev/null || true
+}
+ensure_guard_tmpdir() {
+    [[ -z "${TMPDIR+set}" ]] || return 0
+    if [[ -n "${LU_TASK_SCRATCH_DIR:-}" ]]; then
+        TMPDIR="$LU_TASK_SCRATCH_DIR"
+    elif [[ -n "${LU_RUNTIME_TMP_ROOT:-}" ]]; then
+        TMPDIR="$LU_RUNTIME_TMP_ROOT"
+    else
+        guard_scratch_dir="$git_common_dir/install-git-hooks.$$"
+        [[ -d "$guard_scratch_dir" ]] || mkdir -m 700 "$guard_scratch_dir"
+        trap remove_guard_scratch EXIT
+        TMPDIR="$guard_scratch_dir"
+    fi
+}
 unguarded_wrappers=0
 for hook_name in "${entire_managed_hooks[@]}"; do
     wrapper="$hooks_dir/$hook_name"
@@ -323,6 +344,7 @@ for hook_name in "${entire_managed_hooks[@]}"; do
     case "$(entire_invocation_state "$wrapper")" in
         guarded) ;;
         raw)
+            ensure_guard_tmpdir
             if [[ -z "${TMPDIR:-}" ]]; then
                 echo "ERROR: TMPDIR is unset; cannot stage the guarded $wrapper (set TMPDIR to a scratch directory, then rerun)" >&2
                 unguarded_wrappers=$((unguarded_wrappers + 1))
