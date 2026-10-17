@@ -11913,6 +11913,9 @@ def _run_worker(
         )
 
     usage_record = getattr(result, "usage_record", None)
+    from scripts.agent_runtime.mechanical_admission import TRIAL_LABEL
+    if TRIAL_LABEL in final_state.get("labels", []):
+        final_state["tokens"] = usage_record.get("tokens") if isinstance(usage_record, dict) else None
     result_substitution = getattr(result, "substitution", None)
     if result_substitution is not None:
         substitution = result_substitution
@@ -13109,6 +13112,11 @@ def _dispatch(
         return 2
     # Everything below launches the admitted route; nothing resolves it again.
     dispatch_agent, args.model = launch_target.recipient, launch_target.model
+    from scripts.agent_runtime.mechanical_admission import TRIAL_FAMILY, is_trial_model
+    if getattr(args, "research_task_family", None) == TRIAL_FAMILY and is_trial_model(args.model):
+        from scripts.review.model_catalog import load_model_catalog
+        if not getattr(args, "effort", None):
+            args.effort = load_model_catalog()["models"][args.model]["bounded_implementation_effort"]
     # Reviewer resolution and budget substitution can change the seat after
     # the original-request guard. Enforce the same boundary on the final route.
     if (
@@ -15367,6 +15375,7 @@ class _AdvisoryAdmission:
     agent: str | None = None  # the admitted launch the bounded worker must run
     model_id: str | None = None
     exemption: dict[str, Any] | None = None  # a Gemini Flash launch classified Ukrainian
+    trial: bool = False
 
     def state_fields(self, *, research_block: str = "", execution: Mapping[str, Any] | None = None) -> dict[str, Any]:
         """Task-record fields; ``research_block`` is the research pointer block added to the worker prompt.
@@ -15390,6 +15399,9 @@ class _AdvisoryAdmission:
                     research_block=research_block,
                 )
             }
+        if self.trial:
+            from scripts.agent_runtime.mechanical_admission import TRIAL_LABEL
+            return {"labels": [TRIAL_LABEL]}
         if self.exemption is not None:
             return {"advisory_exemption": dict(self.exemption)}
         if self.advisor_binding is not None:
@@ -15470,6 +15482,27 @@ def _admit_advisory(
     mode = str(getattr(args, "mode", "") or "")
     task_family = getattr(args, "research_task_family", None)
     review_profile = getattr(args, "review_profile", None)
+    from scripts.agent_runtime.mechanical_admission import (
+        TRIAL_FAMILY,
+        MechanicalAdmissionRefused,
+        is_trial_model,
+        refuse_mechanical_task,
+    )
+    if task_family == TRIAL_FAMILY and is_trial_model(model_id):
+        try:
+            if not declared:
+                raise MechanicalAdmissionRefused("declare --owned-path for bounded implementation")
+            refuse_mechanical_task(
+                (model_id,), mode=mode, task_family=task_family,
+                task_role=getattr(args, "research_role", None), paths=classified_paths,
+                review=_dispatch_is_review_typed(args), language_lane=_dispatch_is_language_lane(args),
+                research_track=getattr(args, "research_track", None),
+                prompt_file=getattr(args, "prompt_file", None), task_prompt=getattr(args, "prompt", None),
+                trees=lambda: _kimi_worktree_trees(repo_root),
+            )
+        except MechanicalAdmissionRefused as exc:
+            raise bounded_advisory.AdvisoryRefused(bounded_advisory.ADMISSION_INVALID, str(exc)) from exc
+        return _AdvisoryAdmission(trial=True)
     requirement = bounded_advisory.bounded_requirement(
         model_id,
         mode=mode,
@@ -17490,7 +17523,7 @@ def _mechanical_task_scope(args: argparse.Namespace, *, admitted: bool = False) 
         # Persist the inputs captured at admission, even if argv or the prompt file changed since then.
         return dict(getattr(args, "_mechanical_admitted_scope", {}))
     family = getattr(args, "research_task_family", None)
-    if family not in MECHANICAL_FAMILIES:
+    if family not in MECHANICAL_FAMILIES | {"bounded_implementation"}:
         return {}
     prompt_file = getattr(args, "prompt_file", None)
     try:
@@ -19636,7 +19669,7 @@ def build_parser() -> argparse.ArgumentParser:
         metavar="TASK_ID",
         help=(
             "#9275: the finished advisor task whose envelope admits this bounded-worker dispatch. "
-            "Required whenever the admitted route launches the bounded worker (gpt-6-luna) or the "
+            "Required outside the owner-brief bounded implementation trial when the route launches the bounded worker (gpt-6-luna) or the "
             "Gemini Flash bounded fallback without a Ukrainian authoring/review classification; "
             "refused on any other dispatch. Its owned_paths must equal --owned-path. Default: None."
         ),

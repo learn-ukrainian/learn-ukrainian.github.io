@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 import subprocess
 from collections.abc import Callable, Iterable, Mapping, Sequence
 from pathlib import Path, PurePosixPath
@@ -17,6 +18,16 @@ from scripts.review.model_catalog import (
     MECHANICAL_ROLES as MECHANICAL_ROLES,
 )
 from scripts.review.security_paths import is_security_sensitive_change
+
+TRIAL_LABEL = "haiku-luna-coding-trial"
+TRIAL_FAMILY = "bounded_implementation"
+
+
+def is_trial_model(model: str | None) -> bool:
+    """Resolve trial membership from the catalog, including model aliases."""
+    catalog = load_model_catalog()
+    identity = canonical_model_id(model, catalog) if model else None
+    return bool(identity and catalog["models"][identity].get("bounded_implementation_trial") == TRIAL_LABEL)
 
 
 class MechanicalAdmissionRefused(ValueError):
@@ -42,9 +53,11 @@ def refuse_mechanical_task(
     if not pins:
         return
     catalog = load_model_catalog()
+    trial = task_family == TRIAL_FAMILY and any(is_trial_model(pin) for pin in pins)
     constrained = [catalog["models"][identity] for pin in pins
                    if (identity := canonical_model_id(pin, catalog))
-                   and "mechanical_only" in catalog["models"][identity]["roles"]]
+                   and ("mechanical_only" in catalog["models"][identity]["roles"]
+                        or (trial and is_trial_model(pin)))]
     if not constrained:
         return
 
@@ -53,12 +66,14 @@ def refuse_mechanical_task(
 
     if review:
         refuse("mechanical-only seats never perform review, critique or approval")
-    if task_family not in MECHANICAL_FAMILIES or any(task_family not in model["roles"] for model in constrained):
+    if (task_family not in MECHANICAL_FAMILIES and not trial) or any(task_family not in model["roles"] for model in constrained):
         refuse("declare a catalog-eligible --research-task-family: routine_mechanical, mechanical_classification or readonly_recon")
     if task_role not in {None, "implementation", "recon", "classification", "triage"}:
         refuse("driver, design, advisory, approval and content roles are excluded")
-    if mode not in {"read-only", "workspace-write"} or (task_family != "routine_mechanical" and mode != "read-only"):
+    if not trial and (mode not in {"read-only", "workspace-write"} or (task_family != "routine_mechanical" and mode != "read-only")):
         refuse("only routine mechanical work may write; classification and recon must be read-only")
+    if trial and mode not in {"read-only", "workspace-write", "danger"}:
+        refuse("bounded implementation requires a supported execution mode")
     owned = tuple(paths)
     if not owned:
         refuse("declare narrow owned paths for the mechanical task")
@@ -72,6 +87,10 @@ def refuse_mechanical_task(
         refuse("Ukrainian content paths are excluded")
     stage = "task prompt"
     try:
+        if trial:
+            brief = Path(prompt_file).read_text(encoding="utf-8") if prompt_file else task_prompt or ""
+            if not re.search(r"(?im)^[ \t]*(?:verify|acceptance)(?: command)?[ \t]*:[ \t]*\S[^\n]*", brief):
+                refuse("bounded implementation requires an acceptance or verify command in the owner brief")
         if task_prompt:
             from scripts.lib.rules_core import core_block
 
@@ -90,8 +109,16 @@ def refuse_mechanical_task(
         stage = "owned content"
         for tree in resolved:
             for path in owned:
+                if trial and (root := getattr(tree, "root", None)) is not None:
+                    from scripts.agent_runtime.bounded_advisory import validate_owned_path
+                    validate_owned_path(path, root)
+                    target = root / path
+                    if any(part.is_symlink() for part in (target, *target.parents) if part != root):
+                        refuse("symlink owned paths are excluded")
                 _, files = tree.owned_files(path)
                 for name, data in files.items():
+                    if trial and (root := getattr(tree, "root", None)) is not None and (root / name).is_symlink():
+                        refuse("symlink owned content is excluded")
                     if is_security_sensitive_change((name,)) or set(PurePosixPath(name).parts) & {"curriculum", "wiki"}:
                         refuse("owned scope contains security-sensitive or Ukrainian content paths")
                     if CYRILLIC.search(name) or content_problem(data):

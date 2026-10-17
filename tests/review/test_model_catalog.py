@@ -334,8 +334,44 @@ PRE_ARGON_HOST_BASELINE = approved_hook_failure_baseline(
         )
     )
 )
-APPROVED_BASELINE = approved_argon_trial_baseline(PRE_ARGON_HOST_BASELINE, "host-cli")
+def approved_coding_trial_baseline(baseline):
+    """Apply only #10919's approved model rows to either frozen CLI surface."""
+    path = CAPACITY_FIXTURE / "haiku-luna-coding-10919.json"
+    assert hashlib.sha256(path.read_bytes()).hexdigest() == (
+        "8536b6c42f88cb219e54e1e2ff8b067603591bc2870b653a20759dfa8ee12c0e"
+    )
+    catalog = deepcopy(baseline["catalog"])
+    for model, change in json.loads(path.read_bytes()).items():
+        assert catalog["models"][model] == change["before"]
+        catalog["models"][model] = change["after"]
+    return {**baseline, "catalog": catalog}
+
+
+APPROVED_BASELINE = approved_coding_trial_baseline(approved_argon_trial_baseline(PRE_ARGON_HOST_BASELINE, "host-cli"))
 APPROVED_INPUTS = {**GEMINI_INPUTS, **SEATS_OVERLAY["inputs"], **ARGON_OVERLAY["inputs"]}
+
+
+def test_coding_trial_overlay_changes_only_approved_model_fields():
+    before = approved_argon_trial_baseline(PRE_ARGON_HOST_BASELINE, "host-cli")
+    after = approved_coding_trial_baseline(before)
+    assert {k: v for k, v in after.items() if k != "catalog"} == {
+        k: v for k, v in before.items() if k != "catalog"
+    }
+    assert {k: v for k, v in after["catalog"].items() if k != "models"} == {
+        k: v for k, v in before["catalog"].items() if k != "models"
+    }
+    allowed = {
+        "claude-haiku-5-5": {"roles", "weaknesses", "notes", "bounded_implementation_trial", "bounded_implementation_effort"},
+        "gpt-6-luna": {"bounded_implementation_trial", "bounded_implementation_effort"},
+    }
+    changed = {}
+    for model, old in before["catalog"]["models"].items():
+        new = after["catalog"]["models"][model]
+        fields = {key for key in old.keys() | new.keys() if old.get(key) != new.get(key)}
+        if fields:
+            changed[model] = fields
+    assert changed == allowed
+    assert set(after["catalog"]["models"]) == set(before["catalog"]["models"])
 
 
 def test_argon_trial_overlay_records_only_the_model_data_delta():
@@ -344,7 +380,8 @@ def test_argon_trial_overlay_records_only_the_model_data_delta():
         "efe9c9b9db2f651e421e42769cc1682c12b724122545d2e2e8b4b0d66d1148ba"
     )
     assert set(ARGON_OVERLAY) == {"adapter_patches", "inputs", "row_patches", "surfaces"}
-    before, after = PRE_ARGON_HOST_BASELINE, APPROVED_BASELINE
+    before = PRE_ARGON_HOST_BASELINE
+    after = approved_argon_trial_baseline(before, "host-cli")
     assert set(before) == set(after)
     assert set(ARGON_OVERLAY["surfaces"]) == {"catalog", "approval", "reviewer"}
     assert set(ARGON_OVERLAY["inputs"]) == {"reviewer"}
@@ -1264,7 +1301,7 @@ def test_no_cli_capture_equals_separate_frozen_surface(tmp_path):
         assert hashlib.sha256((output / name).read_bytes()).hexdigest() == digest
     actual = json.loads(gzip.decompress((output / "baseline.json.gz").read_bytes()))
     original = json.loads(gzip.decompress((expected / "baseline.json.gz").read_bytes()))
-    assert actual == approved_argon_trial_baseline(
+    assert actual == approved_coding_trial_baseline(approved_argon_trial_baseline(
         approved_hook_failure_baseline(
             approved_hermes_effort_baseline(
                 approved_claude_account_dispatch_baseline(
@@ -1287,7 +1324,7 @@ def test_no_cli_capture_equals_separate_frozen_surface(tmp_path):
             )
         ),
         "no-cli",
-    )
+    ))
     assert len(actual["launchers"]) == 70
     errors = [row.get("error", "") for row in actual["adapters"]]
     assert any("grok" in error and "PATH" in error for error in errors)

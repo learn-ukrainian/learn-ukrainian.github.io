@@ -1,10 +1,12 @@
 """A bounded worker is dispatched only with a complete advisory envelope (#9275).
 
-Operator decision 2026-09-30: there is no direct bounded dispatch. Every
+Outside the #10919 bounded implementation trial, every
 dispatch that resolves to the catalog's bounded worker
 (``execution_routing.sol_advised_bounded.preferred_worker``), or to its Gemini
 Flash fallback without an explicit Ukrainian authoring/review classification,
 needs an envelope from the catalog advisor route, bound to that dispatch.
+The trial uses the owner brief as its envelope and rechecks its persisted
+paths, command and content at the worker boundary.
 
 Threat model (advisor decision on #9275): the rule is cooperative. It stops
 omitted advice, stale or foreign bindings, accidental prompt drift and scope
@@ -1027,6 +1029,24 @@ def verify_worker_admission(
         raise AdvisoryRefused(ADMISSION_MISSING, f"{model_id} has no task record carrying a parent admission")
     if record.get("mode") != mode:
         raise AdvisoryRefused(ADMISSION_INVALID, f"the task record's mode {record.get('mode')!r} is not {mode!r}")
+    from scripts.agent_runtime.mechanical_admission import (
+        TRIAL_FAMILY,
+        TRIAL_LABEL,
+        MechanicalAdmissionRefused,
+        is_trial_model,
+        refuse_mechanical_task,
+    )
+    if is_trial_model(model_id) and (record.get("mechanical_task") or {}).get("family") == TRIAL_FAMILY:
+        from scripts.agent_runtime.kimi_admission import worktree_trees
+        from scripts.agent_runtime.target_admission import mechanical_worker_scope
+        try:
+            if TRIAL_LABEL not in record.get("labels", []):
+                raise MechanicalAdmissionRefused("trial label missing")
+            scope = mechanical_worker_scope(record, mode=mode, model=model_id, prompt=prompt)
+            refuse_mechanical_task((model_id,), mode=mode, trees=lambda: worktree_trees(cwd), **scope)
+        except MechanicalAdmissionRefused as exc:
+            raise AdvisoryRefused(ADMISSION_INVALID, str(exc)) from exc
+        return None
     admitted = record.get("advisory_envelope")
     if admitted is None and model_id == policy.bounded_fallback_model_id:
         exemption = record.get("advisory_exemption")

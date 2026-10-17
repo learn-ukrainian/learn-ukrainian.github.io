@@ -698,7 +698,10 @@ def validate_catalog(data: Any) -> dict[str, Any]:
             )
             if field == "sources" and any(not source.startswith("https://") for source in values):
                 raise ModelCatalogError(f"models.{model_id}.sources must use https URLs")
-        if "mechanical_only" in model["roles"] and not set(model["roles"]) <= MECHANICAL_ROLES:
+        allowed_mechanical_roles = MECHANICAL_ROLES | (
+            {"bounded_implementation"} if model.get("bounded_implementation_trial") == "haiku-luna-coding-trial" else set()
+        )
+        if "mechanical_only" in model["roles"] and not set(model["roles"]) <= allowed_mechanical_roles:
             raise ModelCatalogError(f"models.{model_id}: mechanical-only seats cannot hold code, language, review, design or driver roles")
         if lifecycle == "retired" and model["transports"]:
             raise ModelCatalogError(f"models.{model_id}.transports must be empty for retired models")

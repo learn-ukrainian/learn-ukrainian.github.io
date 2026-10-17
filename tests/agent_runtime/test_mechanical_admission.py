@@ -80,7 +80,7 @@ def test_standalone_catalog_resolves_haiku_without_runtime_package(tmp_path, ent
 
 @pytest.mark.parametrize("overrides,reason", [
     ({"task_family": None}, "catalog-eligible"),
-    ({"task_family": "bounded_implementation"}, "catalog-eligible"),
+    ({"task_family": "bounded_implementation"}, "verify command"),
     ({"task_role": "driver"}, "driver"),
     ({"task_role": "orchestration"}, "driver"),
     ({"task_role": "design"}, "design"),
@@ -206,7 +206,7 @@ def test_custom_review_metadata_cannot_grant_haiku_authority(formal, risk):
     )
 
 
-@pytest.mark.parametrize("role", ["orchestration", "architecture", "critical_review", "ukrainian_review", "bounded_implementation"])
+@pytest.mark.parametrize("role", ["orchestration", "architecture", "critical_review", "ukrainian_review", "routine_coding"])
 def test_catalog_cannot_grant_excluded_roles(role):
     catalog = deepcopy(load_model_catalog())
     catalog["models"][HAIKU]["roles"].append(role)
@@ -315,3 +315,45 @@ def test_only_exact_canonical_core_is_exempt_from_prompt_content_check(monkeypat
         admission.refuse_mechanical_execution(
             HAIKU, mode="read-only", cwd=tmp_path, prompt=core_block("core") + "Напиши текст",
             tool_config={"mechanical_task": {"family": "routine_mechanical", "paths": ["package-lock.json"]}})
+
+
+@pytest.mark.parametrize("model", [HAIKU, "gpt-6-luna"])
+@pytest.mark.parametrize("overrides,reason", [
+    ({"task_prompt": "Implement.\nVerify:\nNo command"}, "verify command"),
+    ({"task_prompt": "Implement.\nVerify: pytest\nНапиши текст"}, "task prompt"),
+    ({"trees": (Tree({"tests/example.py": "Україна".encode()}),)}, "Cyrillic"),
+    ({"trees": ()}, "available"),
+    ({"paths": ("scripts/hooks/check.py",)}, "security-sensitive"),
+    ({"paths": ("wiki/new.md",)}, "Ukrainian"),
+    ({"review": True}, "review"),
+    ({"task_role": "driver"}, "driver"),
+])
+def test_trial_preserves_input_and_role_refusals(model, overrides, reason):
+    with pytest.raises(admission.MechanicalAdmissionRefused, match=reason):
+        admission.refuse_mechanical_task((model,), **scope(**{
+            "task_family": "bounded_implementation", "task_prompt": "Implement.\nVerify: pytest",
+            "paths": ("tests/example.py",), **overrides,
+        }))
+
+
+@pytest.mark.parametrize("model", [HAIKU, "gpt-6-luna"])
+def test_trial_acceptance_command_and_prompt_file(model, tmp_path):
+    brief = tmp_path / "brief.md"
+    brief.write_text("Implement.\nAcceptance command: npm test\n")
+    admission.refuse_mechanical_task((model,), **scope(
+        mode="workspace-write", task_family="bounded_implementation",
+        prompt_file=str(brief), paths=("tests/example.py",),
+    ))
+
+
+@pytest.mark.parametrize("model", [HAIKU, "gpt-6-luna"])
+def test_trial_refuses_symlink_scope(model, tmp_path):
+    from scripts.agent_runtime.kimi_admission import DirectoryTree
+    (tmp_path / "tests").mkdir()
+    (tmp_path / "tests/target.py").write_text("pass\n")
+    (tmp_path / "tests/alias.py").symlink_to("target.py")
+    with pytest.raises(admission.MechanicalAdmissionRefused, match="symlink"):
+        admission.refuse_mechanical_task((model,), **scope(
+            task_family="bounded_implementation", task_prompt="Implement.\nVerify: pytest",
+            paths=("tests/alias.py",), trees=(DirectoryTree(tmp_path),),
+        ))

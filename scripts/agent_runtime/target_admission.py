@@ -90,13 +90,16 @@ def mechanical_worker_scope(
     """Recheck mechanical-only scope against the stdin prompt, never the source file."""
     from scripts.review.model_catalog import canonical_model_id, load_model_catalog
 
-    from .mechanical_admission import MechanicalAdmissionRefused
+    from .mechanical_admission import TRIAL_FAMILY, MechanicalAdmissionRefused, is_trial_model
 
     catalog = load_model_catalog()
     substitution = record.get("substitution") or {}
     models = (model, record.get("model"), substitution.get("requested_model"), substitution.get("actual_model"))
     if not any(
-        (identity := canonical_model_id(pin, catalog)) and "mechanical_only" in catalog["models"][identity]["roles"]
+        (identity := canonical_model_id(pin, catalog)) and (
+            "mechanical_only" in catalog["models"][identity]["roles"]
+            or (is_trial_model(pin) and (record.get("mechanical_task") or {}).get("family") == TRIAL_FAMILY)
+        )
         for pin in models
     ):
         return {}
