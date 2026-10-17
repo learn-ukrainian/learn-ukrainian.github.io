@@ -10,7 +10,7 @@ sources:
   accepted_evidence:
     doc: docs/epics/fresh-build-build-program.md
     line: '| Arcs A1, A2, B1, B2 | `docs/epics/fresh-build-{a1,a2,b1,b2}-arc.md` | all four accepted by the operator 2026-09-21; only A1 has its generated `_arc.yaml` |'
-  doc_sha256: e7649ae5f811fde3e81454530c0a46f3b6dc4a192d532552ced53790209abe45
+  doc_sha256: 6059900baab73cbf142b65c83e7ba828538b48528d4a05f978050b20d9c33b10
   section_sha256: 00fed5fff3c40c72a392710fe16d7641be380cbfb8c8179ffede60d07d12fd5d
   text: |+
     ## 2. Decisions
@@ -75,7 +75,7 @@ sources:
   accepted_evidence:
     doc: docs/epics/fresh-build-a1-arc.md
     line: '## 6. Decisions on the six open questions (operator accepted the driver''s proposals, 2026-09-21; the reviewer independently recommended the same on 2–6)'
-  doc_sha256: e7649ae5f811fde3e81454530c0a46f3b6dc4a192d532552ced53790209abe45
+  doc_sha256: 6059900baab73cbf142b65c83e7ba828538b48528d4a05f978050b20d9c33b10
   section_sha256: dcb7c50f6fce61ff44312d31a5c8c38484c9618dc0bda1eaada15a23bd3c7d67
   text: |+
     ## 6. Decisions on the six open questions (operator accepted the driver's proposals, 2026-09-21; the reviewer independently recommended the same on 2–6)
@@ -95,7 +95,7 @@ sources:
   accepted_evidence:
     doc: docs/epics/fresh-build-a1-arc.md
     line: 'Accepted: 2026-10-08 (designated approval: Sol 6.1 and Opus 5.5; #10108)'
-  doc_sha256: e7649ae5f811fde3e81454530c0a46f3b6dc4a192d532552ced53790209abe45
+  doc_sha256: 6059900baab73cbf142b65c83e7ba828538b48528d4a05f978050b20d9c33b10
   section_sha256: 68be6519acea2552fb29ffea396de48249dcd5ba59271189a5f018ce1d087976
   text: |+
     ## 8. Revision r4 (#10108)
@@ -152,7 +152,7 @@ sources:
   accepted_evidence:
     doc: docs/epics/fresh-build-a1-arc.md
     line: 'Accepted: 2026-10-08 (designated approval: Sol 6.1 and Opus 5.5; #10105)'
-  doc_sha256: e7649ae5f811fde3e81454530c0a46f3b6dc4a192d532552ced53790209abe45
+  doc_sha256: 6059900baab73cbf142b65c83e7ba828538b48528d4a05f978050b20d9c33b10
   section_sha256: aff360b85ef72a42ab69d7f71f6491b7cb47935d4d25c15d9d8b657117ce0d86
   text: |
     ## 9. Revision r3.1: A1 practical recap (#10105)
@@ -182,9 +182,9 @@ sources:
   accepted_evidence:
     doc: docs/epics/fresh-build-a1-arc.md
     line: 'Accepted: 2026-10-09 (designated approval: Sol 6.1 and Opus 5.5; #10108)'
-  doc_sha256: e7649ae5f811fde3e81454530c0a46f3b6dc4a192d532552ced53790209abe45
-  section_sha256: f8620c333df7d1ca0a80600f1090a1160835fd3e98cf3830d11e304c1fea266e
-  text: |
+  doc_sha256: 6059900baab73cbf142b65c83e7ba828538b48528d4a05f978050b20d9c33b10
+  section_sha256: 5e3e01c2a07a36eaf3e9d187522e236ba94706a2dbe2a2310e774fd358f634eb
+  text: |+
     ## 10. Revision r4.1: Staged phonetic facets (#10108)
 
     Accepted: 2026-10-09 (designated approval: Sol 6.1 and Opus 5.5; #10108)
@@ -220,6 +220,8 @@ sources:
     Historical accepted sections 2, 6, 8 and 9 remain verbatim; the ten jobs, 33 letters,
     55 positions, 162 estimated lessons, retirement, recap, and vocabulary-selected
     immersion remain intact.
+
+
 - doc: docs/epics/fresh-build-plan-schema.md
   heading: '## 7. Design decisions (operator accepted the driver''s recommendations, 2026-09-21)'
   accepted: '2026-09-21'

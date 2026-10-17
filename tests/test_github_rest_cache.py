@@ -674,6 +674,8 @@ def test_work_projection_endpoint_contract(monkeypatch):
                 "pending_native_link": [],
                 "open_total": 1,
                 "open_issue_numbers": [9],
+                "streams": {"infra-harness": [9]},
+                "open_stream_membership": {"9": ["infra-harness"]},
             },
             count=1,
         ),
@@ -701,17 +703,22 @@ def test_work_projection_endpoint_contract(monkeypatch):
     )
     cache_invalidate("work:v1:projection")
 
-    response = client.get("/api/work/v1/projection?fresh=true")
+    response = client.get("/api/work/v1/projection?fresh=true&stream=infra-harness")
 
     assert response.status_code == 200
     items = response.json()["items"]
     issue = next(item for item in items if item["resource_kind"] == "issue")
-    pull = next(item for item in items if item["resource_kind"] == "pr")
     assert issue["title"] == "Public issue"
     assert issue["lifecycle"] == "open"
     assert issue["labels"] == ["bug"]
     assert issue["urls"]["html"].endswith("/issues/9")
     assert "body" not in issue
+    assert all(item["resource_kind"] != "pr" for item in items)
+    from scripts.api.state_helpers import cache_get_with_age
+    from scripts.api.work_router import projection_cache_key
+
+    cached, _age = cache_get_with_age(projection_cache_key({}), float("inf"))
+    pull = next(item for item in cached["items"] if item["resource_kind"] == "pr")
     assert pull["lifecycle"] == "open"
     assert pull["flags"]["is_draft"] is False
     assert pull["projections"]["verification"]["ci_state"] == "passing"

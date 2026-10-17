@@ -42,7 +42,7 @@ from scripts.agent_runtime.adapters.acpx import ACPX_PARTICIPANT_CATALOG_TRANSPO
 from scripts.agent_runtime.agent_identity import resolve_retired_agent_alias
 from scripts.audit import model_families
 from scripts.fleet import credit_lane
-from scripts.fleet.claude_account_lane import ClaudeAccount, require_account, select_account
+from scripts.fleet.claude_account_lane import ClaudeAccount, bind_snapshot, require_account
 from scripts.review.app_bot_authorship import VERIFIED_APP_BOT
 from scripts.review.capacity import ReviewCapacity, review_capacity
 from scripts.review.model_catalog import (
@@ -502,11 +502,13 @@ class ResolverInputs:
     author_task_models: tuple[str, ...] = ()
     # The account a claude-route reviewer runs as: the account part of its
     # route key (#10619, #10630). Required, with no default: a construction
-    # without a ``ClaudeAccount`` raises ``TypeError``. The resolver reads
-    # ``routing_snapshot`` as this account's ``claude_account_lane.select_account``
-    # view (a caller may pass the raw payload or that view), and the
-    # plan-headroom stop reads the claude lane's usage as it. An unresolved
-    # account excludes every claude-route seat and no other.
+    # without a ``ClaudeAccount`` raises ``TypeError``. A mapping
+    # ``routing_snapshot`` is bound to this account on construction (and on
+    # every ``replace``), so the resolver only ever holds the account's
+    # ``claude_account_lane.bind_snapshot`` view; a snapshot already bound to
+    # another account raises ``AccountRequired`` (#10770). The plan-headroom
+    # stop reads the claude lane's usage as it. An unresolved account excludes
+    # every claude-route seat and no other.
     claude_account: ClaudeAccount = field(kw_only=True)
     # A structural check that no quota decides (authoring feasibility, verdict
     # qualification). The account still decides: an unresolved one removes the
@@ -515,6 +517,9 @@ class ResolverInputs:
 
     def __post_init__(self) -> None:
         require_account(self.claude_account)
+        if isinstance(self.routing_snapshot, Mapping) and self.routing_snapshot:
+            bound = bind_snapshot(self.routing_snapshot, account=self.claude_account)
+            object.__setattr__(self, "routing_snapshot", bound)
 
 
 def complete_author_families(inputs: ResolverInputs, single_family: str) -> frozenset[str] | None:
@@ -855,16 +860,17 @@ def _account_view(inputs: ResolverInputs) -> ResolverInputs:
     """``inputs`` with ``routing_snapshot`` read as ``inputs.claude_account`` (#10630).
 
     The claude lane of a routing-budget payload is the default account's meter;
-    :func:`claude_account_lane.select_account` gives the named account's view
-    (an unresolved account reads an unknown meter). A malformed payload raises
-    ``ValueError`` first, exactly as :func:`normalize_routing_snapshot` does.
+    :func:`claude_account_lane.bind_snapshot` gives the named account's view
+    (an unresolved account reads an unknown meter). The snapshot is bound
+    before it is normalized, so no other account's meter is read (#10770); a
+    malformed payload then raises ``ValueError``, as
+    :func:`normalize_routing_snapshot` does.
     """
     snapshot = inputs.routing_snapshot
+    if isinstance(snapshot, Mapping) and snapshot:
+        snapshot = bind_snapshot(snapshot, account=inputs.claude_account)
     normalize_routing_snapshot(snapshot)
-    if not isinstance(snapshot, Mapping) or not snapshot:
-        return inputs
-    view, _ = select_account(snapshot, account=inputs.claude_account)
-    return replace(inputs, routing_snapshot=view)
+    return inputs if snapshot is inputs.routing_snapshot else replace(inputs, routing_snapshot=snapshot)
 
 
 def evaluate_candidate(

@@ -74,14 +74,14 @@
   translation: What is your name?
   pos: phrase
   usage: Як тебе́ зва́ти?
-- lemma: Ме́не зва́ти ...
+- lemma: Мене́ зва́ти ...
   translation: My name is ...
   pos: phrase
-  usage: Ме́не зва́ти Анна.
+  usage: Мене́ зва́ти Анна.
 - lemma: А тебе́?
   translation: And you? (after a name question)
   pos: phrase
-  usage: Ме́не зва́ти Софія. А тебе́?
+  usage: Мене́ зва́ти Софія. А тебе́?
 - lemma: До поба́чення
   translation: Goodbye
   pos: phrase

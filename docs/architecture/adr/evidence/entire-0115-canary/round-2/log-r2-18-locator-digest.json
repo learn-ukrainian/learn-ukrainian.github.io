@@ -1,0 +1,40 @@
+[
+  {
+    "label": "r2-01-accepted",
+    "checkpoint_written_by": "Entire CLI 0.11.5 through the capture guard",
+    "commit_sha": "b1d22a40179a82832618fafcda2825211267fd60",
+    "trailer_checkpoint_id": "92cad9cd8df6",
+    "explain_by_sha_rc": 0,
+    "explain_by_sha_checkpoint_id": "92cad9cd8df6",
+    "explain_by_id_rc": 0,
+    "explain_by_id_files_touched": [
+      "docs/canary-entire.md"
+    ],
+    "locator_id": "clink_da87b9bb559874b9a9183e9d82ceafbb4c3e535755da7ff7b936d8a6c42ea39d",
+    "locator_canonical_digest": "sha256:da5430e61e9dfb3572df1dc975b0b5f2949b344f84ad570c01747dc2e66d08d5",
+    "locator_names_trailer_checkpoint": true,
+    "explain_sha_matches_locator_checkpoint": true,
+    "reverify_accepts_locator": true,
+    "reverify_refuses_tampered_digest": "digest_mismatch",
+    "reverify_refuses_digest_for_other_commit": "digest_mismatch"
+  },
+  {
+    "label": "r2-17-legacy",
+    "checkpoint_written_by": "Entire CLI 0.8.42 (pre-upgrade, unguarded)",
+    "commit_sha": "de3fc0535c819b78d6b39fff6fcbd7fab106c2ae",
+    "trailer_checkpoint_id": "582d78005054",
+    "explain_by_sha_rc": 0,
+    "explain_by_sha_checkpoint_id": "582d78005054",
+    "explain_by_id_rc": 0,
+    "explain_by_id_files_touched": [
+      "docs/canary-entire.md"
+    ],
+    "locator_id": "clink_62c81a14404ab1f66748acaf57644b65b9a5e167579ff2917f8e0b78d4f90d19",
+    "locator_canonical_digest": "sha256:ac2b3d87df81080a72a56bb6b55fef4dea9d45d072cf8f1c5c8494c96084f2ee",
+    "locator_names_trailer_checkpoint": true,
+    "explain_sha_matches_locator_checkpoint": true,
+    "reverify_accepts_locator": true,
+    "reverify_refuses_tampered_digest": "digest_mismatch",
+    "reverify_refuses_digest_for_other_commit": "digest_mismatch"
+  }
+]

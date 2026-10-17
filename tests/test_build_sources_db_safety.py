@@ -722,3 +722,72 @@ class TestJournalModeAfterRebuild:
         with patch.object(bs.sqlite3, "connect", return_value=fake):
             with pytest.raises(RuntimeError, match="expected 'wal'"):
                 bs.declare_wal(p)
+
+
+@pytest.mark.parametrize("mutation", ["missing", "lost_row", "reorder_rows", "pos", "shrink", "reorder_items", "replace_item"])
+def test_dmklinger_rebuild_refuses_loss_and_preserves_target(tmp_path, mutation):
+    import json
+
+    db, gd = tmp_path / "staged.db", tmp_path / "bulk"
+    source = gd / "dmklinger-uk-en/chunks.jsonl"
+    source.parent.mkdir(parents=True)
+    old = [
+        {"word": "sample", "pos": "noun", "translations": ["one", "two"], "text": "stable"},
+        {"word": "sample", "pos": "verb", "translations": ["three"], "text": "stable"},
+        {"word": "sample", "pos": "noun", "translations": ["duplicate"], "text": "stable"},
+    ]
+    source.write_text("".join(json.dumps(row) + "\n" for row in old))
+    with sqlite3.connect(db) as conn:
+        conn.executescript(bs.SCHEMA)
+        bs._ingest_jsonl(conn, "dmklinger_uk_en", source, ["word", "pos", "translations", "text", "source"], "fixture")
+    before = db.read_bytes()
+    if mutation == "missing":
+        source.unlink()
+    else:
+        proposed = json.loads(json.dumps(old))
+        if mutation == "lost_row":
+            proposed.pop()
+        elif mutation == "reorder_rows":
+            proposed.reverse()
+        elif mutation == "pos":
+            proposed[0]["pos"] = "changed"
+        elif mutation == "shrink":
+            proposed[0]["translations"].pop()
+        elif mutation == "reorder_items":
+            proposed[0]["translations"].reverse()
+        else:
+            proposed[0]["translations"][0] = "changed"
+        source.write_text("".join(json.dumps(row) + "\n" for row in proposed))
+    with pytest.raises(bs.BuildValidationError, match="dmklinger conservation"):
+        bs.build(db_path=db, external_dir=tmp_path / "empty", textbook_dir=tmp_path / "empty", gdrive_dir=gd, force=True)
+    assert db.read_bytes() == before
+    assert not list(tmp_path.glob(".staged.db.*.building*"))
+
+
+@pytest.mark.parametrize("existing", ["absent", "no_table", "empty", "populated"])
+def test_dmklinger_fixture_build_and_monotonic_rebuild(tmp_path, existing):
+    import json
+
+    db, gd = tmp_path / "staged.db", tmp_path / "bulk"
+    source = gd / "dmklinger-uk-en/chunks.jsonl"
+    source.parent.mkdir(parents=True)
+    entries = [
+        {"word": "sample", "pos": "noun", "translations": ["one"], "text": "stable", "source": "fixture"},
+        {"word": "sample", "pos": "noun", "translations": ["duplicate"], "text": "stable", "source": "fixture"},
+    ]
+    source.write_text("".join(json.dumps(row) + "\n" for row in entries))
+    if existing != "absent":
+        with sqlite3.connect(db) as conn:
+            if existing == "no_table":
+                conn.execute("CREATE TABLE unrelated (value TEXT)")
+            else:
+                conn.executescript(bs.SCHEMA)
+                if existing == "populated":
+                    bs._ingest_jsonl(conn, "dmklinger_uk_en", source, ["word", "pos", "translations", "text", "source"], "fixture")
+    entries[0]["translations"].append("new item")
+    source.write_text("".join(json.dumps(row) + "\n" for row in entries))
+    bs.build(db_path=db, external_dir=tmp_path / "empty", textbook_dir=tmp_path / "empty", gdrive_dir=gd, force=True)
+    with sqlite3.connect(db) as conn:
+        assert conn.execute("SELECT word,pos,translations FROM dmklinger_uk_en ORDER BY id").fetchall() == [
+            ("sample", "noun", '["one", "new item"]'), ("sample", "noun", '["duplicate"]'),
+        ]

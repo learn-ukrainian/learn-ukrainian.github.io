@@ -166,8 +166,12 @@ pytest-stamp and Git LFS hooks; and restores the primary-checkout guards after
 checkout or merge. The installer also materializes `.githooks` in existing sparse
 worktrees without broadening their checkout. Where Entire CLI owns a hook, the
 delegator sits at `<name>.pre-entire` and the installer makes Entire's wrapper
-chain to it. `scripts/install_git_hooks.sh --check` (read-only) fails when a hook
-stage declared in `.pre-commit-config.yaml` has no reachable delegator.
+chain to it, and routes Entire's own call through `scripts/entire/capture_guard.sh`
+(Entire runs only with the accepted CLI version and the private checkpoint route,
+and never blocks a commit or push). It refuses, without changing anything, when a
+hook path is a symlink. `scripts/install_git_hooks.sh --check` (read-only) fails
+when a hook stage declared in `.pre-commit-config.yaml` has no reachable
+delegator, an Entire wrapper is unguarded, or a hook path is a symlink.
 
 ---
 
@@ -1150,10 +1154,13 @@ private operations docs):
 | `DISPATCH_MIN_MEM_AVAILABLE_GIB` | `MemAvailable` in `/proc/meminfo` is below the floor |
 | `DISPATCH_MAX_LOAD_PER_CPU` | the 1-minute load average divided by the CPU count is above the limit |
 | `DISPATCH_WORKER_MEM_RESERVE_GIB` | the shared `lu.slice` pool's non-cache use plus this per-worker reserve would exceed its `memory.high` (#9975) |
+| `DISPATCH_DISK_REAP_USED_PERCENT` | not a refusal: at or above this percent used (default 85, as `df` reports it) the worktree reaper runs once and the dispatch is admitted (#10871); must be below the refuse value, else reading the thresholds fails with a configuration error |
+| `DISPATCH_DISK_REFUSE_USED_PERCENT` | the filesystem holding `.worktrees/` is at or above this percent used (default 90) after the worktree reaper has run once (#10776, #10871); a hard stop, exit 4 |
 
 A refusal exits 3 and prints one line that names each failed check with its measured value
 and threshold. Retry once a worker finishes or the host recovers, or override one dispatch
-with `--force-admission "<reason>"`. The reason is required and is recorded in the task record
+with `--force-admission "<reason>"`. A full disk is the exception: it exits 4, and no force
+reason overrides it in either the early check or the locked recheck; free space and retry. The reason is required and is recorded in the task record
 under `admission.force_reason`. Nothing is queued silently. Before counting, admission marks
 every `spawning`/`running` record whose pid is dead as `crashed` (source `admission`), so a
 dead worker never holds a slot. The final count, the check, and publication of the new
@@ -1164,7 +1171,7 @@ and only the worker cap applies. The pool check reads `memory.current`, `memory.
 `memory.stat` from the `lu.slice` cgroup (or `$LU_SLICE_CGROUP`) and subtracts
 `active_file`/`inactive_file`, so reclaimable page cache does not count. When those files are
 missing (CI, macOS) the check is skipped, logged, and recorded as `admission.pool_check_skipped`. `python -m scripts.fleet.capacity_pick` prints the same
-decision as its last line (JSON key `admission`). Write task records keep the `admission`
+decision as its last line (JSON key `admission`). The disk check (#10776) runs the reaper (`reap_worktrees.reap_clean_pushed(dry_run=False, lock_timeout_s=5)`, #10778) only for a live dispatch's first check, never under the lock, in `--dry-run` or in `capacity_pick`; those report a full disk as a refusal with "reaper not run in this check". The reaper runs in a child process stopped after `DISPATCH_DISK_REAPER_TIMEOUT_S` (default 90 s; "reaper timed out"). One attempt runs per host at a time (`dispatch-admission-disk-reaper.lock` and `.state` beside the admission lock): a dispatch that does not get the attempt lock, or that arrives within `DISPATCH_DISK_REAPER_COOLDOWN_S` (default 600 s) of an attempt that freed nothing, does not run it and refuses with the recorded outcome ("reaper attempted N s ago: ..."). A dispatch that reuses an existing worktree skips the disk check. Paths in reaper, probe and alert details are shown as `<path>`. At or above `DISPATCH_DISK_ALERT_USED_PERCENT` (default 80) one alert goes to the epics Fleet Comms channel per 6 hours (state: `dispatch-admission-disk-alert.state` beside the lock). An unreadable disk probe or a failed alert never refuses; the reason is shown on the admission line. Write task records keep the `admission`
 snapshot, and every terminal record keeps `peak_rss_mib`. That value is the largest single
 process the worker reaped, from `getrusage(RUSAGE_CHILDREN)`. Use both fields to tune the
 thresholds.

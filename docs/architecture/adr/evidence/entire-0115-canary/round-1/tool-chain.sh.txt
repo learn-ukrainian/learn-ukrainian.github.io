@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# Compare the wrapper bytes each version writes when <name>.pre-entire already exists.
+set -uo pipefail
+C=<scratch>/canary
+cd "$C/clone"
+hooks=(commit-msg post-commit pre-push)
+for h in "${hooks[@]}"; do
+  printf '#!/bin/sh\nexit 0\n' > ".git/hooks/$h.pre-entire"
+  chmod +x ".git/hooks/$h.pre-entire"
+done
+for B in bin-0.8.42 bin-0.11.5; do
+  mkdir -p "$C/evidence/chain-$B"
+  for h in "${hooks[@]}"; do rm -f ".git/hooks/$h"; done
+  "$C/tools/cenv.sh" "$C/$B" entire enable --force --agent claude-code --telemetry=false >"$C/logs/chain-enable-$B.txt" 2>&1
+  echo "$B enable rc=$?"
+  for h in "${hooks[@]}"; do cp ".git/hooks/$h" "$C/evidence/chain-$B/$h"; done
+done
+for h in "${hooks[@]}"; do
+  if cmp -s "$C/evidence/chain-bin-0.8.42/$h" "$C/evidence/chain-bin-0.11.5/$h"; then echo "$h chained SAME"; else echo "$h chained DIFF"; fi
+done
+cat "$C/evidence/chain-bin-0.11.5/pre-push"
+for h in "${hooks[@]}"; do rm -f ".git/hooks/$h.pre-entire"; done

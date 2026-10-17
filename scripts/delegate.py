@@ -1525,29 +1525,46 @@ def _build_runtime_tmp_legacy_stem_index() -> dict[str, str]:
     return index
 
 
+# Present in a legacy stem index once the task-id scan has added every record's
+# lease name. No lease name contains "/" (``_runtime_tmp_lease_name``).
+_RUNTIME_TMP_LEGACY_TASK_IDS_SCANNED = "/task-ids-scanned"
+
+
+def _add_runtime_tmp_legacy_task_id_owners(legacy_stem_index: dict[str, str]) -> None:
+    """Add each record's task-id lease name to the index, once per index (#10799).
+
+    A record's file stem can differ from its task id, so a lease the stem
+    index misses is resolved by task id. One scan serves every later miss
+    of the same sweep. A stem match keeps precedence; among task-id matches
+    the first record in glob order wins.
+    """
+    legacy_stem_index[_RUNTIME_TMP_LEGACY_TASK_IDS_SCANNED] = ""
+    try:
+        state_files = tuple(tasks_dir().glob("*.json")) if tasks_dir().is_dir() else ()
+    except OSError:
+        return
+    for state_path in state_files:
+        if state_path.name.endswith(".tmp") or ".tmp." in state_path.name:
+            continue
+        state = _read_state_json(state_path)
+        task_id = state.get("task_id") if isinstance(state, dict) else None
+        if isinstance(task_id, str):
+            legacy_stem_index.setdefault(_runtime_tmp_lease_name(task_id), state_path.stem)
+
+
 def _read_runtime_tmp_state_for_legacy_lease(
     lease_name: str,
     *,
     legacy_stem_index: dict[str, str],
 ) -> dict[str, Any] | None:
-    """Resolve one marker-less lease, falling back to a bounded record scan."""
+    """Resolve one marker-less lease by file stem, then by task id."""
     stem = legacy_stem_index.get(lease_name)
-    if stem is not None:
-        return _read_state_json(tasks_dir() / f"{stem}.json")
-    try:
-        state_files = tuple(tasks_dir().glob("*.json")) if tasks_dir().is_dir() else ()
-    except OSError:
+    if stem is None and _RUNTIME_TMP_LEGACY_TASK_IDS_SCANNED not in legacy_stem_index:
+        _add_runtime_tmp_legacy_task_id_owners(legacy_stem_index)
+        stem = legacy_stem_index.get(lease_name)
+    if stem is None:
         return None
-    for state_path in state_files:
-        if state_path.name.endswith(".tmp") or ".tmp." in state_path.name:
-            continue
-        state = _read_state_json(state_path)
-        if not isinstance(state, dict):
-            continue
-        task_id = state.get("task_id")
-        if isinstance(task_id, str) and _runtime_tmp_lease_name(task_id) == lease_name:
-            return state
-    return None
+    return _read_state_json(tasks_dir() / f"{stem}.json")
 
 
 def _runtime_tmp_state_for_lease(
@@ -4988,6 +5005,9 @@ def _heal_dead_task(state_path: Path, state: dict[str, Any], *, source: str) -> 
 # Exit code for a dispatch refused by host admission: retryable once a worker
 # finishes or the host recovers, unlike exit 2 (invalid request).
 _ADMISSION_REFUSED_EXIT = 3
+# A full .worktrees disk after the reaper (#10776): a hard stop that
+# --force-admission cannot override, so it has its own code.
+_ADMISSION_DISK_REFUSED_EXIT = 4
 
 
 def _evaluate_dispatch_admission(
@@ -4995,8 +5015,16 @@ def _evaluate_dispatch_admission(
     *,
     sweep: bool,
     thresholds: dispatch_admission.Thresholds | None = None,
+    reap_disk: bool = False,
+    disk_guard: bool = True,
 ) -> dispatch_admission.AdmissionDecision:
-    """Sweep proven dead workers only when admission explicitly requests it."""
+    """Sweep proven dead workers only when admission explicitly requests it.
+
+    ``reap_disk`` lets a full disk run the worktree reaper once (#10776); the
+    locked recheck never does, so the reaper never runs under the lock.
+    ``disk_guard=False`` skips the disk check for a dispatch that reuses an
+    existing worktree.
+    """
     return dispatch_admission.evaluate(
         mode,
         tasks_dir(),
@@ -5004,7 +5032,24 @@ def _evaluate_dispatch_admission(
         record_liveness=lambda record: worker_liveness(record, pid_alive=_pid_alive),
         on_dead=(lambda path, state: _heal_dead_task(path, state, source="admission")) if sweep else None,
         thresholds=thresholds,
+        reaper=dispatch_admission.run_disk_reaper if reap_disk else None,
+        disk_guard=disk_guard,
     )
+
+
+def _admission_allows_dispatch(decision: dispatch_admission.AdmissionDecision, *, force_reason: str | None) -> bool:
+    """May this dispatch proceed (and publish its admission hold)?
+
+    Admitted, or refused only by checks ``--force-admission`` may override.
+    A disk refusal (#10776) is a hard stop no force reason turns into an admit.
+    """
+    if decision.exempt or decision.admitted:
+        return True
+    return force_reason is not None and not decision.disk_refused
+
+
+def _admission_refused_exit(decision: dispatch_admission.AdmissionDecision) -> int:
+    return _ADMISSION_DISK_REFUSED_EXIT if decision.disk_refused else _ADMISSION_REFUSED_EXIT
 
 
 def _report_dispatch_admission(
@@ -5016,6 +5061,9 @@ def _report_dispatch_admission(
     if decision.admitted:
         print(f"🚦 dispatch admission: admitted — {decision.summary()}", file=sys.stderr)
         return None
+    if not _admission_allows_dispatch(decision, force_reason=force_reason):
+        print(f"❌ {decision.refusal_line()}", file=sys.stderr)
+        return _admission_refused_exit(decision)
     if force_reason is not None:
         print(
             f"⚠️  dispatch admission overridden by --force-admission ({force_reason!r}): {'; '.join(decision.failures)}",
@@ -5024,6 +5072,73 @@ def _report_dispatch_admission(
         return None
     print(f"❌ {decision.refusal_line()}", file=sys.stderr)
     return _ADMISSION_REFUSED_EXIT
+
+
+def _dispatch_reuses_worktree(
+    worktree_arg: str | None,
+    *,
+    agent: str,
+    task_id: str,
+    repo_root: Path | None,
+    validated: Path | None = None,
+) -> bool:
+    """Read-only, no git: True when ``--worktree`` resolves to a checkout that already exists.
+
+    ``--worktree auto`` or an explicit path reuses the checkout already at the
+    resolved path. An explicit path passed as ``validated`` is probed as is,
+    never resolved again (#8775). A ``--cwd`` dispatch is not probed: proving
+    that path is a registered worktree runs git in it, which may happen only
+    after the post-lock re-check (#8775), so it keeps the disk guard.
+    """
+    if not worktree_arg:
+        return False
+    if validated is not None:
+        try:
+            return (validated / ".git").exists()
+        except OSError:
+            return False
+    raw = str(_auto_worktree_path(agent, task_id, repo_root=repo_root)) if worktree_arg == "auto" else worktree_arg
+    return _is_existing_worktree(raw, repo_root=repo_root)
+
+
+def _dispatch_may_forward() -> bool:
+    """Read-only, no network: True when placement could forward this dispatch to a VPS worker host.
+
+    The occupancy-free half of ``job_host_exec.decide_dispatch_placement``:
+    only the retire marker, without the notebook opt-in, lets a dispatch
+    leave this host. Placement itself is not called, so a refused dispatch
+    never consults it.
+    """
+    from scripts.orchestration import job_host_exec
+
+    if os.environ.get(job_host_exec.ENV_ALLOW_NOTEBOOK, "").strip() == "1":
+        return False
+    fleet_comms = _REPO_ROOT / "batch_state" / "fleet-comms"
+    return any((root / job_host_exec.RETIRED_LOCAL_MARKER).is_file() for root in (fleet_comms / "v1", fleet_comms))
+
+
+def _early_host_refusal(args: argparse.Namespace) -> int | None:
+    """Exit code when this host's memory or load already refuses the dispatch (#10799), else ``None``.
+
+    Read-only: runs before the costly preflights, the runtime tmp sweep and
+    the capacity hint, which a refused dispatch would otherwise pay for. It
+    applies only where the worker would run: a dry run never forwards, and a
+    live dispatch is checked only when it cannot be forwarded. A client that
+    may forward, or a ``--force-admission`` request, is left to the full
+    admission, which stays authoritative.
+    """
+    if getattr(args, "force_admission", None) is not None:
+        return None
+    if not bool(getattr(args, "dry_run", False)) and _dispatch_may_forward():
+        return None
+    try:
+        decision = dispatch_admission.precheck(args.mode)
+    except ValueError as exc:
+        print(f"❌ invalid dispatch admission threshold: {exc}", file=sys.stderr)
+        return 2
+    if decision is None:
+        return None
+    return _report_dispatch_admission(decision, force_reason=None)
 
 
 def _is_existing_worktree(worktree: Any, *, repo_root: Path | None = None) -> bool:
@@ -13029,6 +13144,12 @@ def _dispatch(
         print(f"❌ dispatch refused: {exc}; the rules core is required.", file=sys.stderr)
         return 2
 
+    # #10799: an overloaded host refuses here, before routing, the DoR and
+    # authoring preflights, the runtime tmp sweep and the capacity hint.
+    early_refusal_rc = _early_host_refusal(args)
+    if early_refusal_rc is not None:
+        return early_refusal_rc
+
     # The launch route (the retired-CLI alias and any budget substitution; #8517: a review
     # attempt never takes a substitute) is resolved inside ``resolve_and_admit``, which gates
     # the original request before the route probes anything and the resolved route after it.
@@ -13943,9 +14064,17 @@ def _dispatch(
     # follows VPS forwarding. This check fails fast before the base fetch; the
     # authoritative one runs under the admission lock just before the first
     # worktree or task-record side effect. Dry-run reports dead-pid records
-    # without marking them.
+    # without marking them and never runs the disk reaper.
+    # A dispatch that reuses an existing worktree adds no checkout, so the disk
+    # guard and its reaper are skipped for it (#10776).
+    disk_guard = not _dispatch_reuses_worktree(
+        worktree_arg, agent=dispatch_agent, task_id=task_id, repo_root=target_repo_root, validated=validated_worktree
+    )
     try:
-        admission = _evaluate_dispatch_admission(args.mode, sweep=not bool(getattr(args, "dry_run", False)))
+        live_dispatch = not bool(getattr(args, "dry_run", False))
+        admission = _evaluate_dispatch_admission(
+            args.mode, sweep=live_dispatch, reap_disk=live_dispatch and disk_guard, disk_guard=disk_guard
+        )
     except ValueError as exc:
         print(f"❌ invalid dispatch admission threshold: {exc}", file=sys.stderr)
         return 2
@@ -14352,10 +14481,25 @@ def _dispatch(
         }
     if not admission.exempt:
         admission_refusal: str | None = None
+        admission_refusal_exit = _ADMISSION_REFUSED_EXIT
         try:
             with dispatch_admission.admission_lock(tasks_dir()):
-                admission = _evaluate_dispatch_admission(args.mode, sweep=True, thresholds=admission.thresholds)
-                if admission.admitted or force_admission_reason is not None:
+                # #10776: the reuse exemption is decided again here, under the
+                # worktree lock held since base resolution and right before the
+                # worktree is created or reused. A checkout removed after the
+                # pre-lock probe is a fresh creation and gets the disk guard,
+                # which refuses at the threshold (the reaper never runs here).
+                disk_guard = not _dispatch_reuses_worktree(
+                    worktree_arg,
+                    agent=dispatch_agent,
+                    task_id=task_id,
+                    repo_root=target_repo_root,
+                    validated=validated_worktree,
+                )
+                admission = _evaluate_dispatch_admission(
+                    args.mode, sweep=True, thresholds=admission.thresholds, disk_guard=disk_guard
+                )
+                if _admission_allows_dispatch(admission, force_reason=force_admission_reason):
                     admission_record = admission.to_record(force_reason=force_admission_reason)
                     _publish_admission_hold(
                         task_id, run_nonce, mode=args.mode, admission=admission_record, review_fields=review_fields
@@ -14363,6 +14507,7 @@ def _dispatch(
                     admission_holds.callback(_release_admission_hold, task_id, run_nonce)
                 else:
                     admission_refusal = admission.refusal_line()
+                    admission_refusal_exit = _admission_refused_exit(admission)
         except dispatch_admission.AdmissionLockTimeout as exc:
             admission_refusal = f"dispatch admission lock unavailable: {exc}; retry the dispatch"
         except (OSError, RuntimeError) as exc:
@@ -14370,7 +14515,7 @@ def _dispatch(
             return 1
         if admission_refusal is not None:
             print(f"❌ {admission_refusal}", file=sys.stderr)
-            return _ADMISSION_REFUSED_EXIT
+            return admission_refusal_exit
     elif review_fields is not None:
         try:
             _publish_admission_hold(task_id, run_nonce, mode=args.mode, admission=None, review_fields=review_fields)
@@ -17967,7 +18112,7 @@ def _resolve_agent_with_budget_guard(
         # #10733: no claude seat is selected on an account that was not resolved and bound.
         raise BudgetGuardRefuseError(f"CLAUDE_ACCOUNT_REFUSED: {claude_account.refusal}")
     try:
-        payload = _fetch_routing_budget()
+        routing_payload = _fetch_routing_budget()
     except MonitorApiUnavailable:
         if (requested == "deepseek" or provider == "openrouter") and not force_agent:
             raise BudgetGuardRefuseError(
@@ -17981,7 +18126,7 @@ def _resolve_agent_with_budget_guard(
     if prepaid:
         from scripts.api.state_router import _api_lane_status_from_account
 
-        accounts = payload.get("api_accounts") or {}
+        accounts = routing_payload.get("api_accounts") or {}
         account = accounts.get(prepaid) or {}
         prepaid_status = _api_lane_status_from_account(prepaid, account)
         blocked = (
@@ -18007,18 +18152,17 @@ def _resolve_agent_with_budget_guard(
             _publish_lane_diagnostics(
                 requested,
                 account if isinstance(account, dict) else None,
-                payload.get("diagnostics") if isinstance(payload.get("diagnostics"), dict) else None,
+                routing_payload.get("diagnostics") if isinstance(routing_payload.get("diagnostics"), dict) else None,
                 model=requested_model,
                 sink=diagnostic_sink,
             )
         return requested
 
-    diags = payload.get("diagnostics") or {}
-    rec = payload.get("recommendation") or {}
-    # #10619, #10630: every lane record below is read as the dispatch's claude account.
-    routing_payload = payload
-    view, account_evidence = claude_account_lane.select_account(payload, account=claude_account)
-    payload = dict(view)
+    diags = routing_payload.get("diagnostics") or {}
+    rec = routing_payload.get("recommendation") or {}
+    # #10619, #10630, #10770: every lane record below is read from the snapshot bound to the
+    # dispatch's claude account; the raw payload is kept only to bind the cooler-seat advice.
+    payload, account_evidence = claude_account_lane.select_account(routing_payload, account=claude_account)
     agents = claude_account_lane.account_agents(payload, account=claude_account)
     records_loaded = int(diags.get("records_loaded", 0) or 0)
     is_stale = bool(diags.get("stale", False))
@@ -18206,11 +18350,10 @@ def _resolve_agent_with_budget_guard(
             blocked, cause = review_capacity_action(candidate.route, info, diags, candidate.concrete_model)
             if blocked:
                 capacity_exclusions[candidate.name] = cause
-        review_snapshot = {
-            **payload,
-            "agents": {lane: info if isinstance(info, Mapping) else {} for lane, info in agents.items()},
-            "review_capacity_exclusions": capacity_exclusions,
-        }
+        review_snapshot = payload.evolve(
+            agents={lane: info if isinstance(info, Mapping) else {} for lane, info in agents.items()},
+            review_capacity_exclusions=capacity_exclusions,
+        )
         sub, chosen = review_select(review_snapshot, requested if needs_action else "")
         if sub == requested and chosen == requested_model:
             if not needs_action:
@@ -18602,17 +18745,14 @@ def _check_capacity_hint(
         )
 
         in_flight: dict[str, int] = {lane: 0 for lane in subscription_lanes}
-        if tasks_dir().is_dir():
-            for state_file in tasks_dir().glob("*.json"):
-                state = _read_state(state_file)
-                if not state or state.get("status") not in ("running", "spawning"):
-                    continue
-                pid = state.get("pid")
-                if pid and not _pid_alive(int(pid)):
-                    continue
-                agent_norm = normalize_agent_name(state.get("agent"))
-                if agent_norm in in_flight:
-                    in_flight[agent_norm] += 1
+        # Stored fields only (#10799): the hint needs no snapshot sidecar.
+        for _state_file, state in dispatch_admission.iter_active_records(tasks_dir()):
+            pid = state.get("pid")
+            if pid and not _pid_alive(int(pid)):
+                continue
+            agent_norm = normalize_agent_name(state.get("agent"))
+            if agent_norm in in_flight:
+                in_flight[agent_norm] += 1
 
         busy_count = in_flight.get(target_norm, 0)
         if busy_count <= 0:
@@ -19116,7 +19256,13 @@ def build_parser() -> argparse.ArgumentParser:
             f"{admission_defaults.min_mem_available_gib:g} GiB), or the 1-minute load per CPU\n"
             f"  exceeds DISPATCH_MAX_LOAD_PER_CPU (default {admission_defaults.max_load_per_cpu:g}), or more test runs "
             f"than DISPATCH_MAX_TEST_SLOT_QUEUE\n  (default {admission_defaults.max_test_slot_queue}) wait for host "
-            "test slots (scripts/common/test_slots.py). "
+            "test slots (scripts/common/test_slots.py), or the .worktrees filesystem is still at or above\n"
+            f"  DISPATCH_DISK_REFUSE_USED_PERCENT (default {admission_defaults.disk_refuse_used_percent:g}% used) "
+            "after one run of the worktree reaper;\n"
+            f"  at DISPATCH_DISK_REAP_USED_PERCENT (default {admission_defaults.disk_reap_used_percent:g}%) "
+            "that one reaper run happens and the dispatch is still admitted;\n"
+            f"  at DISPATCH_DISK_ALERT_USED_PERCENT (default {admission_defaults.disk_alert_used_percent:g}%) "
+            "one alert per 6 hours goes to the epics channel. "
             "Environment variables override the scripts/config.py defaults.\n"
             "  Without /proc (macOS) memory and CPU are unknown and only the worker cap applies. Records whose pid\n"
             "  is dead are marked crashed first. The final check holds a host-wide lock until the spawning record\n"
@@ -19130,7 +19276,8 @@ def build_parser() -> argparse.ArgumentParser:
             "  LU_DISPATCH_ISOLATION=fallback forces the plain Popen path. See packaging/systemd/README.md.\n\n"
             "Exit codes:\n"
             "  0 dispatched, or --dry-run validated; 1 worktree, lease, or spawn failure;\n"
-            "  2 invalid request or another guard refused; 3 host admission refused (retry later or --force-admission).\n\n"
+            "  2 invalid request or another guard refused; 3 host admission refused (retry later or --force-admission);\n"
+            "  4 the .worktrees disk is still full after the reaper (free space; --force-admission cannot override).\n\n"
             "Claude account (#10619):\n"
             "  A claude dispatch runs as --claude-account, else the label in the default-account file read once at\n"
             "  dispatch (see --claude-account), else a. The task record keeps the label and its source\n"
@@ -19183,7 +19330,8 @@ def build_parser() -> argparse.ArgumentParser:
         help=(
             "Start a write-capable worker even when host admission refuses it (live write-worker cap, "
             "MemAvailable floor, or load per CPU; #8645). REASON is required and is recorded in the "
-            "task record under admission.force_reason."
+            "task record under admission.force_reason. A full .worktrees disk (#10776, exit 4) is never "
+            "overridden."
         ),
     )
     d.add_argument(

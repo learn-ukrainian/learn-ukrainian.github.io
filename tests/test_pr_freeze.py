@@ -3,8 +3,10 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+import time
 from pathlib import Path
 from types import SimpleNamespace
+from urllib.parse import parse_qs
 
 import pytest
 
@@ -38,11 +40,21 @@ def test_admits_below_threshold(tmp_path: Path) -> None:
 
 
 def test_env_override(tmp_path: Path) -> None:
-    fetch, _ = _fetch(20)
+    fetch, calls = _fetch(20)
     env = {pr_freeze.THRESHOLD_ENV: "25"}
     assert not pr_freeze.evaluate(REPO, environ=env, fetch=fetch, cache_file=tmp_path / "c.json").refused
-    env = {pr_freeze.THRESHOLD_ENV: "0"}
-    assert not pr_freeze.evaluate(REPO, environ=env, fetch=fetch, cache_file=tmp_path / "c.json").refused
+    assert calls == [REPO]
+    disabled = pr_freeze.evaluate(
+        REPO,
+        environ={pr_freeze.THRESHOLD_ENV: "0"},
+        fetch=fetch,
+        cache_file=tmp_path / "disabled.json",
+    )
+    assert not disabled.refused
+    assert disabled.threshold == 0
+    assert disabled.open_prs is None
+    assert calls == [REPO]
+    assert pr_freeze.threshold_from_env({}) == 15
     assert pr_freeze.threshold_from_env({pr_freeze.THRESHOLD_ENV: "junk"}) == 15
 
 
@@ -82,6 +94,48 @@ def test_cache_reused_within_ttl(tmp_path: Path) -> None:
     for _ in range(3):
         pr_freeze.cached_open_pr_count(REPO, fetch=fetch, cache_file=cache, ttl_s=60, now=lambda: next(clock))
     assert len(calls) == 2
+
+
+def test_fresh_cache_count_below_total_is_not_used(tmp_path: Path) -> None:
+    """A fresh cache of count 14 and total 21 must not pass a threshold of 15."""
+    cache = tmp_path / "c.json"
+    cache.write_text(json.dumps({"count": 14, "total": 21, "at": time.time()}))
+    calls: list[str] = []
+
+    def fetch(repo: str) -> pr_freeze.OpenPrCounts:
+        calls.append(repo)
+        return pr_freeze.OpenPrCounts(total=21, counted=21)
+
+    decision = pr_freeze.evaluate(REPO, environ={}, fetch=fetch, cache_file=cache)
+    assert calls == [REPO]
+    assert decision.open_prs == 21
+    assert decision.total_open == 21
+    assert decision.open_prs == decision.total_open
+    assert decision.refused
+    assert decision.warning in (None, "")
+    stored = json.loads(cache.read_text())
+    assert stored["count"] == 21
+    assert stored["total"] == 21
+
+
+def test_unequal_fetched_counts_are_not_used(tmp_path: Path) -> None:
+    """A fetched counted value below the total is not the freeze count."""
+    calls: list[str] = []
+
+    def fetch(repo: str) -> pr_freeze.OpenPrCounts:
+        calls.append(repo)
+        return pr_freeze.OpenPrCounts(total=21, counted=14)
+
+    normalized = pr_freeze._as_counts(pr_freeze.OpenPrCounts(total=21, counted=14))
+    assert normalized.counted == 21
+    assert normalized.total == 21
+    decision = pr_freeze.evaluate(REPO, environ={}, fetch=fetch, cache_file=tmp_path / "c.json")
+    assert calls == [REPO]
+    assert decision.open_prs == 21
+    assert decision.total_open == 21
+    assert decision.open_prs == decision.total_open
+    assert decision.refused
+    assert decision.warning in (None, "")
 
 
 @pytest.mark.parametrize(
@@ -146,8 +200,13 @@ def test_helper_allows_existing_pr_branch(monkeypatch) -> None:
     monkeypatch.setenv(pr_freeze.CACHE_ENV, "0")
     repo = SimpleNamespace(github=REPO, role="public-monorepo")
     args = argparse.Namespace(
-        mode="workspace-write", branch="codex/fix-1", pr=None, cwd=None, worktree=None,
-        force_new=True, task_id="retry-probe",
+        mode="workspace-write",
+        branch="codex/fix-1",
+        pr=None,
+        cwd=None,
+        worktree=None,
+        force_new=True,
+        task_id="retry-probe",
     )
     assert delegate._check_open_pr_freeze(args, repo) is None
 
@@ -208,8 +267,18 @@ def test_force_new_record_cannot_exempt_fresh_branch(monkeypatch, capsys, tmp_pa
         sys,
         "argv",
         [
-            "delegate.py", "dispatch", "--agent", "codex", "--task-id", task_id,
-            "--mode", "workspace-write", "--worktree", "--force-new", "--prompt", "implement a thing",
+            "delegate.py",
+            "dispatch",
+            "--agent",
+            "codex",
+            "--task-id",
+            task_id,
+            "--mode",
+            "workspace-write",
+            "--worktree",
+            "--force-new",
+            "--prompt",
+            "implement a thing",
         ],
     )
     assert delegate.main() == 3
@@ -291,3 +360,57 @@ def test_relative_worktree_resolves_against_target_repo(monkeypatch, tmp_path) -
     real.mkdir(parents=True)
     (real / ".git").write_text("gitdir: x\n")
     assert delegate._check_open_pr_freeze(args, repo, target_root) is None
+
+
+def _issued_search_query(endpoint: str) -> str:
+    path, _, query = endpoint.partition("?")
+    assert path == "search/issues", endpoint
+    parsed = parse_qs(query, strict_parsing=True)
+    assert parsed["per_page"] == ["1"]
+    return parsed["q"][0]
+
+
+def test_decision_path_issues_one_non_dependabot_search(monkeypatch, tmp_path: Path) -> None:
+    """One search. Its total_count is the counted number. Page length is not."""
+    payload = {
+        "total_count": 16,
+        "items": [{"number": 1}, {"number": 2}],
+    }
+    assert payload["total_count"] != len(payload["items"])
+    seen: list[str] = []
+
+    def fake_get(endpoint: str):
+        seen.append(endpoint)
+        return payload
+
+    monkeypatch.setattr(pr_freeze, "_gh_get", fake_get)
+    decision = pr_freeze.evaluate(REPO, environ={}, cache_file=tmp_path / "c.json")
+    assert seen == [pr_freeze._open_pr_search_endpoint(REPO)]
+    assert len(seen) == 1
+    assert _issued_search_query(seen[0]) == f"repo:{REPO} is:pr is:open -author:app/dependabot"
+    assert decision.refused
+    assert decision.open_prs == payload["total_count"]
+    assert decision.total_open == payload["total_count"]
+    assert decision.open_prs != len(payload["items"])
+    assert decision.warning in (None, "")
+    line = decision.refusal_line(REPO)
+    assert "16 open PRs" in line
+    assert "16 counted" in line
+    assert "Land your own open PRs first" in line
+
+
+def test_search_fetch_error_fails_open(monkeypatch, tmp_path: Path) -> None:
+    """A real search failure fails open and does not issue another search."""
+    seen: list[str] = []
+
+    def broken(endpoint: str):
+        seen.append(endpoint)
+        raise RuntimeError("network down")
+
+    monkeypatch.setattr(pr_freeze, "_gh_get", broken)
+    decision = pr_freeze.evaluate(REPO, environ={}, cache_file=tmp_path / "c.json")
+    assert not decision.refused
+    assert decision.open_prs is None
+    assert decision.warning == "open-PR freeze check skipped: open_pr_count_unavailable"
+    assert len(seen) == 1
+    assert _issued_search_query(seen[0]) == f"repo:{REPO} is:pr is:open -author:app/dependabot"

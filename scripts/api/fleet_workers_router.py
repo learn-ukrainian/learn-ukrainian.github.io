@@ -18,7 +18,7 @@ async def get_workers(
     host_id: str | None = Query(default=None),
     ctx: MonitorContext = Depends(get_ctx),
 ) -> JSONResponse:
-    self_report_ids = workers_collect._self_host_ids()
+    self_report_ids = workers_collect._self_host_ids() - {workers_collect.UNATTRIBUTED_HOST_ID}
     if host_id is not None:
         self_report_ids &= {host_id}
     self_reports: dict[str, LocalDocumentSnapshot] = {
@@ -35,6 +35,7 @@ async def get_workers(
             continue
         host["freshness"] = snapshot.freshness
         host["age_s"] = snapshot.age_s
+    workers_collect.reconcile_worker_counts(payload)
     return JSONResponse(
         content=payload,
         headers={"Cache-Control": "no-store", "X-Workers-Schema": WORKERS_SCHEMA},

@@ -9,7 +9,7 @@ PRIVATE_CHECKPOINT_REPO = "learn-ukrainian/entire-checkpoints-private"
 EXPECTED_PRIVATE_RECALL = {
     "schema": "entire-private-recall.v1",
     "enabled": True,
-    "required_cli_version": "0.8.42",
+    "required_cli_version": "0.11.5",
     "source_repo": "learn-ukrainian/learn-ukrainian.github.io",
     "checkpoint_repo": PRIVATE_CHECKPOINT_REPO,
     "entire_access_principals": [{"handle": "github:krisztiankoos", "role": "writer"}],

@@ -40,9 +40,7 @@ except ModuleNotFoundError as exc:
     if exc.name != "scripts":
         raise
     # lib.readonly_sqlite lives in scripts/, which file execution does not put on sys.path.
-    _scripts_dir = next(
-        parent for parent in Path(__file__).resolve().parents if parent.name == "scripts"
-    )
+    _scripts_dir = next(parent for parent in Path(__file__).resolve().parents if parent.name == "scripts")
     if str(_scripts_dir) not in sys.path:
         sys.path.insert(0, str(_scripts_dir))
     from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
@@ -551,7 +549,10 @@ def _load(path: Path, report: Report) -> dict[str, Any] | None:
     except (OSError, json.JSONDecodeError) as exc:
         report.fail(f"unreadable artifact {path.name}: {exc}")
         return None
-    return payload if isinstance(payload, dict) else None
+    if not isinstance(payload, dict):
+        report.fail(f"invalid artifact {path.name}: expected JSON object")
+        return None
+    return payload
 
 
 def check_manifest(deck_dir: Path, manifest: dict[str, Any], report: Report) -> None:
@@ -563,7 +564,9 @@ def check_manifest(deck_dir: Path, manifest: dict[str, Any], report: Report) -> 
         data = path.read_bytes()
         if hashlib.sha256(data).hexdigest() != record.get("sha256") or len(data) != record.get("bytes"):
             report.fail(f"manifest hash/size mismatch: {record.get('path')}")
-        payload = json.loads(data)
+        payload = _load(path, report)
+        if payload is None:
+            continue
         if payload.get("schema") != record.get("schema") or payload.get("schemaVersion") != record.get("schemaVersion"):
             report.fail(f"manifest schema mismatch: {record.get('path')}")
         budget = record.get("gzipBudget")

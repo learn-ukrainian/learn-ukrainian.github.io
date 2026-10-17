@@ -178,9 +178,11 @@ def routing_budget_used_pct(lane: str, *, account: ClaudeAccount | None) -> floa
         return None  # unreachable, unreadable or truncated: no usable reading
     if not isinstance(data, dict):
         return None
+    # Bound where it enters (#10770): the claude lane is only ever ``account``'s meter; with no account, none.
+    view = claude_account_lane.bind_snapshot(data, account=account or claude_account_lane.no_claude_account())
     if lane == "claude" and account is not None:
-        return claude_account_lane.account_weekly_used_pct(data, account=account)
-    info = claude_account_lane.other_lane_record(data, lane)
+        return claude_account_lane.account_weekly_used_pct(view, account=account)
+    info = claude_account_lane.other_lane_record(view, lane)
     if not info or info.get("status") == "unknown":
         return None  # missing, or withdrawn as stale by Monitor
     codexbar = info.get("codexbar")

@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# Run a command with an isolated HOME/config and NO network (bwrap net namespace).
+# usage: cenv.sh <entire-bin-dir> <cmd...>
+set -euo pipefail
+C=<scratch>/canary
+BIN="$1"; shift
+exec env -i PATH="$BIN:/usr/local/bin:/usr/bin:/bin" HOME="$C/home" \
+  XDG_CONFIG_HOME="$C/home/.config" XDG_CACHE_HOME="$C/home/.cache" XDG_DATA_HOME="$C/home/.local/share" \
+  XDG_STATE_HOME="$C/home/.local/state" ENTIRE_CONFIG_DIR="$C/home/.config/entire" ENTIRE_TOKEN_STORE=file \
+  TERM=dumb LANG=C.UTF-8 TMPDIR="$C/tmp" GIT_CONFIG_NOSYSTEM=1 \
+  ${CENV_EXTRA:-} \
+  bwrap --dev-bind / / --unshare-net -- "$@"

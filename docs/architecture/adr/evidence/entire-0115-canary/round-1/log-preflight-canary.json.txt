@@ -1,0 +1,21 @@
+{
+  "checks": {
+    "checkpoint_repository_private": false,
+    "checkpoint_route_private": true,
+    "entire_authenticated": false,
+    "pinned_cli": true,
+    "private_checkpoint_ref": true,
+    "private_mirror_ready": false,
+    "public_origin_clean": true,
+    "routing_allowlist": true,
+    "source_mirror_ready": false
+  },
+  "issues": [
+    "checkpoint_repository_private_failed",
+    "entire_authenticated_failed",
+    "private_mirror_ready_failed",
+    "source_mirror_ready_failed"
+  ],
+  "ready": false,
+  "schema": "entire-private-preflight.v1"
+}

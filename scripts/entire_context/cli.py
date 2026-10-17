@@ -913,7 +913,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     provider_status = sub.add_parser(
         "refresh-provider-status",
-        help="Explicit bounded Entire 0.8.42 status probe; writes a sanitized local cache",
+        help="Explicit bounded Entire 0.11.5 status probe; writes a sanitized local cache",
     )
     provider_status.add_argument("--repo", default=None, help="Source repository (default: cwd)")
     provider_status.set_defaults(func=cmd_refresh_provider_status)

@@ -20,15 +20,15 @@ if [[ -z "${entire_command}" ]]; then
   entire_command="$(command -v entire || true)"
 fi
 if [[ -z "${entire_command}" || ! -x "${entire_command}" ]]; then
-  echo "Entire CLI 0.8.42 is required; set ENTIRE_FLEET_CLI to the executable" >&2
+  echo "Entire CLI 0.11.5 is required; set ENTIRE_FLEET_CLI to the executable" >&2
   exit 1
 fi
 if [[ ! -x "${python_command}" ]]; then
   echo "Project Python 3.12.14 is required at ${python_command}" >&2
   exit 1
 fi
-if [[ "$("${entire_command}" version | head -n 1)" != "Entire CLI 0.8.42" ]]; then
-  echo "Entire CLI must remain pinned to 0.8.42" >&2
+if [[ "$("${entire_command}" version | head -n 1)" != "Entire CLI 0.11.5" ]]; then
+  echo "Entire CLI must remain pinned to 0.11.5" >&2
   exit 1
 fi
 
@@ -50,3 +50,7 @@ if ! "${python_command}" "${cursor_shim}" check >/dev/null 2>&1; then
   "${python_command}" "${cursor_shim}" install
 fi
 echo "Installed Entire fleet adapter and native Cursor integration"
+# Entire 0.10.6+ honors external_agents only from an untracked
+# .entire/settings.local.json, so the committed settings.json grant alone does
+# not make Entire discover entire-agent-fleet.
+echo "Entire discovers entire-agent-fleet only when ${repo_root}/.entire/settings.local.json sets \"external_agents\": true"

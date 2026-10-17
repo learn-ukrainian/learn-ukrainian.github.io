@@ -1,0 +1,17 @@
+[Unit]
+Description=Learn Ukrainian boot relaunch of the tmux driver lanes (existing sessions are skipped)
+After=learn-ukrainian-api.socket learn-ukrainian-sources.service learn-ukrainian-work.service
+
+[Service]
+Type=oneshot
+WorkingDirectory=@REPO_ROOT@
+Environment=PYTHONUNBUFFERED=1
+Environment=LANG=C.UTF-8
+# The tmux server and every lane inherit this PATH; Codex lanes put the shims first (#10814).
+Environment=PATH=%h/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+# --server-scope starts a missing tmux server in its own scope so it outlives this oneshot.
+ExecStart=@REPO_ROOT@/.venv/bin/python -m scripts.ops.lane_relaunch --server-scope
+TimeoutStartSec=10min
+
+[Install]
+WantedBy=default.target

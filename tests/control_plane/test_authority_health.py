@@ -124,6 +124,140 @@ def test_existing_sqlite_file_is_not_proof_of_healthy_schema(tmp_path, state):
     assert target.read_bytes() == before
 
 
+def test_pg_privilege_denial_is_not_a_probe_failure(monkeypatch, tmp_path):
+    """SQLSTATE 42501 is its own code. The driver text stays off the payload."""
+    from scripts.control_plane.health import read_failure_code
+    from scripts.control_plane.storage import Authority
+
+    class PrivilegeDenied(Exception):
+        sqlstate = "42501"
+
+    marker = "SYNTHETIC_PRIVATE_DRIVER_DETAIL"
+    assert read_failure_code(PrivilegeDenied(marker), Authority.PG) == "pg_privilege_denied"
+
+    class Unreachable(Exception):
+        sqlstate = "08001"
+
+    assert read_failure_code(Unreachable(marker), Authority.PG) == "pg_probe_failed"
+
+    conn = PgRead(error=PrivilegeDenied(marker))
+    install_pg(monkeypatch, conn)
+    status = message_plane.read_plane_status(root=tmp_path)
+    assert status["schema"]["db_error"] == "pg_privilege_denied"
+    assert status["store"]["reachable"] is False
+    assert marker not in json.dumps(status)
+    assert conn.closed
+
+
+def _status_when_connect_fails(monkeypatch, tmp_path, fail):
+    install_pg(monkeypatch, PgRead())
+    monkeypatch.setattr(psycopg, "connect", fail)
+    return message_plane.read_plane_status(root=tmp_path)
+
+
+def _assert_opaque(status, marker):
+    rendered = json.dumps(status)
+    assert marker not in rendered
+    assert "synthetic-driver-input" not in rendered
+    assert status["store"]["reachable"] is False
+
+
+def test_connect_time_privilege_denial_reads_the_wrapped_sqlstate(monkeypatch, tmp_path):
+    """A denial raised by connect is wrapped; its SQLSTATE still classifies the read."""
+    marker = "SYNTHETIC_PRIVATE_DRIVER_DETAIL"
+
+    def denied_on_cause(*_args, **_kwargs):
+        raise psycopg.errors.InsufficientPrivilege(marker)
+
+    def denied_on_context(*_args, **_kwargs):
+        denied = psycopg.errors.InsufficientPrivilege(marker)
+        carrier = RuntimeError(marker)
+        carrier.__context__ = denied
+        raise carrier
+
+    for fail in (denied_on_cause, denied_on_context):
+        status = _status_when_connect_fails(monkeypatch, tmp_path, fail)
+        assert status["schema"]["db_error"] == "pg_privilege_denied"
+        _assert_opaque(status, marker)
+
+
+def test_connect_time_unreachable_dsn_stays_a_probe_failure(monkeypatch, tmp_path):
+    """SQLSTATE 08001 on the wrapped connect error is not a privilege denial."""
+    marker = "SYNTHETIC_PRIVATE_DRIVER_DETAIL"
+
+    def unreachable(*_args, **_kwargs):
+        raise psycopg.errors.SqlclientUnableToEstablishSqlconnection(marker)
+
+    status = _status_when_connect_fails(monkeypatch, tmp_path, unreachable)
+    assert status["schema"]["db_error"] == "pg_probe_failed"
+    _assert_opaque(status, marker)
+
+
+def test_connect_time_chained_non_psycopg_errors_stay_probe_failures(monkeypatch, tmp_path):
+    """A cause chain with no SQLSTATE stays a probe failure and leaks no text."""
+    marker = "SYNTHETIC_PRIVATE_DRIVER_DETAIL"
+
+    def chained(*_args, **_kwargs):
+        try:
+            raise OSError(marker)
+        except OSError as inner:
+            try:
+                raise RuntimeError(marker) from inner
+            except RuntimeError as mid:
+                raise ValueError(marker) from mid
+
+    status = _status_when_connect_fails(monkeypatch, tmp_path, chained)
+    assert status["schema"]["db_error"] == "pg_probe_failed"
+    _assert_opaque(status, marker)
+
+
+def test_connect_time_cause_cycle_does_not_hang(monkeypatch, tmp_path):
+    """A cause/context cycle returns, and a denial on that cycle is still classified."""
+    marker = "SYNTHETIC_PRIVATE_DRIVER_DETAIL"
+
+    def plain_cycle(*_args, **_kwargs):
+        left = RuntimeError(marker)
+        right = OSError(marker)
+        left.__cause__ = right
+        right.__cause__ = left
+        left.__context__ = right
+        right.__context__ = left
+        raise left
+
+    status = _status_when_connect_fails(monkeypatch, tmp_path, plain_cycle)
+    assert status["schema"]["db_error"] == "pg_probe_failed"
+    _assert_opaque(status, marker)
+
+    def denial_cycle(*_args, **_kwargs):
+        denied = psycopg.errors.InsufficientPrivilege(marker)
+        denied.__cause__ = denied
+        denied.__context__ = denied
+        raise denied
+
+    status = _status_when_connect_fails(monkeypatch, tmp_path, denial_cycle)
+    assert status["schema"]["db_error"] == "pg_privilege_denied"
+    _assert_opaque(status, marker)
+
+
+def test_sqlstate_walk_stops_at_the_chain_limit():
+    """Privilege past the walk cap stays a probe failure; one inside the cap does not."""
+    from scripts.control_plane.health import _SQLSTATE_CHAIN_LIMIT, read_failure_code
+    from scripts.control_plane.storage import Authority
+
+    def chain(depth: int) -> Exception:
+        head: Exception = RuntimeError("synthetic")
+        current = head
+        for _ in range(1, depth):
+            nxt: Exception = RuntimeError("synthetic")
+            current.__cause__ = nxt
+            current = nxt
+        current.sqlstate = "42501"
+        return head
+
+    assert read_failure_code(chain(_SQLSTATE_CHAIN_LIMIT), Authority.PG) == "pg_privilege_denied"
+    assert read_failure_code(chain(_SQLSTATE_CHAIN_LIMIT + 1), Authority.PG) == "pg_probe_failed"
+
+
 def test_missing_pg_dsn_is_not_component_refusal_or_missing_sqlite(monkeypatch, tmp_path):
     monkeypatch.setenv("LEARN_UKRAINIAN_CP_AUTHORITY_FLEET_COMMS", "pg")
     status = message_plane.read_plane_status(root=tmp_path / "absent")

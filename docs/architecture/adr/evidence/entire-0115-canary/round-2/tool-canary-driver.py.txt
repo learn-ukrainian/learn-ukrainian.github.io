@@ -1,0 +1,268 @@
+"""Round-2 Entire 0.11.5 canary driver (#10846): throwaway clone, no network, isolated HOME.
+
+Agent hooks run the CONFIGURED commands from the clone's agents_extensions/shared/settings.json
+(the capture guard path), not bare `entire hooks`. Git hooks are the installed, guarded wrappers.
+Every Entire and git invocation goes through tools/cenv.sh (bwrap net namespace, env -i).
+Remotes are local bare repositories reached through tools/fake-ssh.
+"""
+
+from __future__ import annotations
+
+import json
+import statistics
+import subprocess
+import sys
+import time
+import uuid
+from datetime import UTC, datetime
+from pathlib import Path
+
+C = Path("<scratch>/canary")
+CLONE = C / "clone"
+CENV = str(C / "tools" / "cenv.sh")
+REMOTES = C / "remotes" / "github.com"
+BARES = {
+    "public": REMOTES / "learn-ukrainian" / "learn-ukrainian.github.io.git",
+    "private": REMOTES / "learn-ukrainian" / "entire-checkpoints-private.git",
+    "fork": REMOTES / "someone-else" / "learn-ukrainian.github.io.git",
+}
+PROJECTS = C / "home" / ".claude" / "projects" / str(CLONE).replace("/", "-")
+GATE_LOG = C / "logs" / "gate.log"
+SETTINGS = CLONE / "agents_extensions" / "shared" / "settings.json"
+# Planted strings for the leakage scan: A goes into the prompt (transcript body), B into
+# files the agent never commits, C into the committed code change.
+CANARY_A = "LUCANARY-A-PROMPT-7f3e2a"
+CANARY_B = "LUCANARY-B-UNCOMMITTED-91c04d"
+CANARY_C = "LUCANARY-C-CODE-5b8e11"
+
+
+def now() -> str:
+    return datetime.now(UTC).isoformat().replace("+00:00", "Z")
+
+
+def run(bin_dir: str, argv: list[str], stdin: str | None = None, timeout: int = 900, env_extra: str = "") -> tuple[int, float, str, str]:
+    start = time.monotonic()
+    proc = subprocess.run(
+        [CENV, str(C / bin_dir), *argv],
+        cwd=CLONE,
+        input=stdin,
+        text=True,
+        capture_output=True,
+        timeout=timeout,
+        check=False,
+        env={"PATH": "/usr/bin:/bin", "GATE_EXIT": env_extra or "0"},
+    )
+    return proc.returncode, time.monotonic() - start, proc.stdout, proc.stderr
+
+
+def configured(verb: str) -> str:
+    settings = json.loads(SETTINGS.read_text(encoding="utf-8"))
+    for entries in settings["hooks"].values():
+        for entry in entries:
+            for hook in entry.get("hooks", []):
+                if f"hooks claude-code {verb};" in hook.get("command", ""):
+                    return hook["command"]
+    raise KeyError(verb)
+
+
+class Session:
+    def __init__(self, bin_dir: str, direct: bool = False) -> None:
+        self.bin_dir = bin_dir
+        self.direct = direct
+        self.session_id = str(uuid.uuid4())
+        PROJECTS.mkdir(parents=True, exist_ok=True)
+        self.transcript = PROJECTS / f"{self.session_id}.jsonl"
+        self.transcript.touch()
+        self.parent: str | None = None
+        self.hook_log: list[dict] = []
+
+    def _line(self, kind: str, message: dict) -> None:
+        entry_id = str(uuid.uuid4())
+        entry = {
+            "type": kind,
+            "uuid": entry_id,
+            "parentUuid": self.parent,
+            "sessionId": self.session_id,
+            "timestamp": now(),
+            "cwd": str(CLONE),
+            "message": message,
+        }
+        self.parent = entry_id
+        with self.transcript.open("a", encoding="utf-8") as handle:
+            handle.write(json.dumps(entry) + "\n")
+
+    def user(self, text: str) -> None:
+        self._line("user", {"role": "user", "content": text})
+
+    def assistant(self, text: str, edit_path: str | None = None) -> None:
+        content: list[dict] = [{"type": "text", "text": text}]
+        if edit_path:
+            content.append(
+                {
+                    "type": "tool_use",
+                    "id": "toolu_" + uuid.uuid4().hex[:20],
+                    "name": "Edit",
+                    "input": {"file_path": str(CLONE / edit_path), "old_string": "", "new_string": CANARY_C},
+                }
+            )
+        self._line("assistant", {"role": "assistant", "model": "claude-canary", "content": content})
+
+    def hook(self, verb: str, **extra: object) -> tuple[int, float, str]:
+        event = {
+            "session-start": "SessionStart",
+            "user-prompt-submit": "UserPromptSubmit",
+            "stop": "Stop",
+            "session-end": "SessionEnd",
+        }[verb]
+        payload = {
+            "session_id": self.session_id,
+            "transcript_path": str(self.transcript),
+            "cwd": str(CLONE),
+            "hook_event_name": event,
+            **extra,
+        }
+        argv = ["entire", "hooks", "claude-code", verb] if self.direct else ["sh", "-c", configured(verb)]
+        rc, seconds, _out, err = run(self.bin_dir, argv, json.dumps(payload))
+        refused = [line for line in err.splitlines() if line.startswith("[entire] capture")]
+        self.hook_log.append({"verb": verb, "rc": rc, "seconds": round(seconds, 3), "guard": refused})
+        return rc, seconds, err
+
+
+def refs(name: str) -> list[str]:
+    if not BARES[name].exists():
+        return ["<offline: bare repository moved away for this scenario>"]
+    out = subprocess.run(
+        ["git", "-C", str(BARES[name]), "for-each-ref", "--format=%(refname) %(objectname:short)"],
+        text=True, capture_output=True, check=True,
+    ).stdout
+    return out.splitlines()
+
+
+def all_refs() -> dict[str, list[str]]:
+    return {name: refs(name) for name in BARES}
+
+
+def public_entire_refs() -> list[str]:
+    return [f"{name}:{line}" for name in ("public", "fork") for line in refs(name) if " " in line and line.split()[0].startswith(("refs/heads/entire/", "refs/entire"))]
+
+
+def local_v1() -> str:
+    out = subprocess.run(
+        ["git", "-C", str(CLONE), "rev-parse", "--verify", "-q", "refs/heads/entire/checkpoints/v1"],
+        text=True, capture_output=True, check=False,
+    )
+    return out.stdout.strip()[:12]
+
+
+def gate_lines() -> int:
+    return len(GATE_LOG.read_text(encoding="utf-8").splitlines()) if GATE_LOG.exists() else 0
+
+
+def turn(bin_dir: str, label: str, *, push_remote: str = "origin", gate_exit: int = 0, direct: bool = False, push: bool = True) -> dict:
+    """One agent turn that edits a tracked file, then commit and push."""
+    target = Path("docs/canary-entire.md")
+    gate_before = gate_lines()
+    v1_before = local_v1()
+    session = Session(bin_dir, direct=direct)
+    session.user(f"{label} start")
+    session.hook("session-start", source="startup")
+    prompt = f"{label}: edit a file ({CANARY_A})"
+    session.user(prompt)
+    session.hook("user-prompt-submit", prompt=prompt)
+    path = CLONE / target
+    with path.open("a", encoding="utf-8") as handle:
+        handle.write(f"{label} {now()} {CANARY_C}\n")
+    session.assistant(f"{label} edited", edit_path=str(target))
+    session.hook("stop", stop_hook_active=False)
+    run(bin_dir, ["git", "add", str(target)])
+    rc_commit, commit_s, _out, err_commit = run(bin_dir, ["git", "commit", "-q", "-m", f"canary: {label}"])
+    trailer = subprocess.run(
+        ["git", "-C", str(CLONE), "log", "-1", "--format=%(trailers:key=Entire-Checkpoint,valueonly)"],
+        text=True, capture_output=True, check=True,
+    ).stdout.strip()
+    sha = subprocess.run(["git", "-C", str(CLONE), "rev-parse", "HEAD"], text=True, capture_output=True, check=True).stdout.strip()
+    record: dict = {
+        "bin": bin_dir,
+        "label": label,
+        "agent_hooks": "direct entire hooks" if direct else "configured guarded commands",
+        "commit_rc": rc_commit,
+        "commit_seconds": round(commit_s, 3),
+        "commit_guard_lines": [line for line in err_commit.splitlines() if line.startswith("[entire]")],
+        "commit_sha": sha,
+        "checkpoint_trailer": trailer,
+        "local_v1_before": v1_before,
+        "local_v1_after_commit": local_v1(),
+    }
+    if push:
+        rc_push, push_s, _out, err_push = run(bin_dir, ["git", "push", push_remote, "HEAD:main"], env_extra=str(gate_exit))
+        record.update(
+            {
+                "push_remote": push_remote,
+                "gate_exit": gate_exit,
+                "push_rc": rc_push,
+                "push_seconds": round(push_s, 3),
+                "push_stderr_tail": err_push[-900:],
+            }
+        )
+    session.hook("session-end", reason="exit")
+    record["agent_hook_results"] = session.hook_log
+    gate_after = GATE_LOG.read_text(encoding="utf-8").splitlines()[gate_before:] if GATE_LOG.exists() else []
+    record["repo_gate_calls"] = gate_after
+    record["refs_after"] = all_refs()
+    record["public_entire_refs"] = public_entire_refs()
+    return record
+
+
+def summary(values: list[float]) -> dict:
+    ordered = sorted(values)
+    p95 = ordered[min(len(ordered) - 1, round(0.95 * (len(ordered) - 1)))]
+    return {"n": len(values), "p50": round(statistics.median(ordered), 3), "p95": round(p95, 3), "min": round(ordered[0], 3), "max": round(ordered[-1], 3)}
+
+
+def load() -> str:
+    return Path("/proc/loadavg").read_text().split()[0]
+
+
+def latency(bin_dir: str, n: int, direct: bool) -> dict:
+    session = Session(bin_dir, direct=direct)
+    session.user("canary latency start")
+    session.hook("session-start", source="startup")
+    prompt_times: list[float] = []
+    stop_times: list[float] = []
+    failures: list[str] = []
+    loads = [load()]
+    for i in range(n):
+        session.user(f"canary prompt {i}")
+        rc, seconds, err = session.hook("user-prompt-submit", prompt=f"canary prompt {i}")
+        prompt_times.append(seconds)
+        if rc or "[entire] capture" in err:
+            failures.append(f"prompt[{i}] rc={rc} {err[-200:]}")
+        session.assistant(f"canary answer {i}")
+        rc, seconds, err = session.hook("stop", stop_hook_active=False)
+        stop_times.append(seconds)
+        if rc or "[entire] capture" in err:
+            failures.append(f"stop[{i}] rc={rc} {err[-200:]}")
+        loads.append(load())
+    session.hook("session-end", reason="exit")
+    return {
+        "bin": bin_dir,
+        "agent_hooks": "direct entire hooks" if direct else "configured guarded commands",
+        "user_prompt_submit": summary(prompt_times),
+        "stop": summary(stop_times),
+        "failures": failures,
+        "loadavg_1m_samples": [loads[0], loads[len(loads) // 2], loads[-1]],
+    }
+
+
+if __name__ == "__main__":
+    mode = sys.argv[1]
+    if mode == "turn":
+        kwargs: dict = {}
+        for arg in sys.argv[4:]:
+            key, _, value = arg.partition("=")
+            kwargs[key] = int(value) if value.isdigit() else (value == "true" if value in {"true", "false"} else value)
+        print(json.dumps(turn(sys.argv[2], sys.argv[3], **kwargs), indent=2))
+    elif mode == "latency":
+        print(json.dumps(latency(sys.argv[2], int(sys.argv[3]), sys.argv[4] == "direct"), indent=2))
+    elif mode == "refs":
+        print(json.dumps(all_refs(), indent=2))

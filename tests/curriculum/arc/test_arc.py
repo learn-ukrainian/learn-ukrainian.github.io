@@ -84,9 +84,9 @@ def test_opening_rows_own_phase_and_skills() -> None:
 
 def test_standard_line_refs_parsing() -> None:
     records = {r["position"]: r for r in _records()}
-    assert records[3]["standard_line_refs"] == [[485, 485]]
-    assert records[5]["standard_line_refs"] == [[571, 572]]
-    assert records[34]["standard_line_refs"] == [[523, 525], [361, 361]]
+    assert records[3]["standard_line_refs"] == [[588, 588], [485, 485]]
+    assert records[5]["standard_line_refs"] == [[571, 572], [343, 344], [362, 365]]
+    assert records[34]["standard_line_refs"] == [[523, 525], [345, 346], [352, 352], [361, 361], [377, 377]]
     assert records[28]["standard_line_refs"] == []
 
 
@@ -196,13 +196,13 @@ def test_unbackticked_line_ref_fails_generation(tmp_path: Path) -> None:
 
 
 def test_backticked_ref_en_dash_fails_generation(tmp_path: Path) -> None:
-    mutated = _mutated_doc(tmp_path, "`:571-572`", "`:571–572`")
+    mutated = _mutated_doc(tmp_path, "handwritten letters (`:571-572`)", "handwritten letters (`:571–572`)")
     with pytest.raises(generate_arc.ArcGenerationError, match="ASCII hyphen"):
         generate_arc.generate_yaml(mutated)
 
 
 def test_inverted_line_ref_range_fails_generation(tmp_path: Path) -> None:
-    mutated = _mutated_doc(tmp_path, "`:571-572`", "`:572-571`")
+    mutated = _mutated_doc(tmp_path, "handwritten letters (`:571-572`)", "handwritten letters (`:572-571`)")
     with pytest.raises(generate_arc.ArcGenerationError, match="inverted range"):
         generate_arc.generate_yaml(mutated)
 
@@ -222,7 +222,7 @@ def test_loader_roundtrip() -> None:
     assert positions[27].slug == "euphony"
     assert positions[27].skills == []
     assert positions[27].letters is None
-    assert positions[44].standard_line_refs == [(489, 493)]
+    assert positions[44].standard_line_refs == [(294, 311), (358, 360), (489, 493)]
 
 
 def test_generated_a1_orientation_loads_all_55_positions(tmp_path: Path) -> None:
@@ -288,7 +288,7 @@ def test_loader_raises_on_inverted_line_ref_range(tmp_path: Path) -> None:
     """The schema cannot express start <= end with prefixItems; the loader checks it."""
     data = yaml.safe_load(ARC_YAML.read_text(encoding="utf-8"))
     refs = data["positions"][4]["standard_line_refs"]
-    assert refs == [[571, 572]]
+    assert refs == [[571, 572], [343, 344], [362, 365]]
     refs[0] = [572, 571]
     inverted = tmp_path / "_arc.yaml"
     inverted.write_text(yaml.safe_dump(data, allow_unicode=True), encoding="utf-8")
@@ -320,12 +320,31 @@ def test_loader_never_reads_plans_directory(tmp_path: Path, monkeypatch: pytest.
         loader.load_arc("a1")
 
 
-def test_positions_11_to_55_retain_semantic_identity():
+def test_positions_11_to_55_match_floor_ownership_amendment():
     import hashlib
     import json
 
     later = _records()[10:]
-    assert hashlib.sha256(json.dumps(later, ensure_ascii=False, sort_keys=True).encode()).hexdigest() == 'd4ccdd35f7898ae57947ffba177277cb2d396a85280cfb48b20d492ba54d5673'
+    assert hashlib.sha256(json.dumps(later, ensure_ascii=False, sort_keys=True).encode()).hexdigest() == '06ee01a411097c094c5b2388601063f7dda4490a1f07c3cc275d27b2ffea2687'
+
+
+def test_regenerated_a1_owns_reviewed_standard_duties(tmp_path: Path) -> None:
+    generated = tmp_path / "_arc.yaml"
+    generated.write_text(generate_arc.generate_yaml(ARC_DOC), encoding="utf-8")
+    positions = {p.position: p for p in loader.load_arc("a1", arc_path=generated)}
+
+    assert "syllables" in positions[3].inventory_text
+    assert "unstressed" not in positions[3].inventory_text
+    assert "stressed/unstressed [е], [и]" in positions[6].job
+    assert "complete writing own and other names/surnames" in positions[5].skills_text
+    assert "use capitals in Київ/київський and Україна/українець" in positions[5].skills_text
+    assert "дивитися" in positions[17].job
+    assert "reflexive paradigm" in positions[17].job
+    assert "могти" in positions[18].job
+    assert "parts of the world (continents)" in positions[34].job
+    assert "compass" not in positions[34].job
+    assert "integrated reuse of all taught Standard A1 intentions, themes and speech skills" in positions[55].job
+    assert "no new language" in positions[55].job
 
 
 def test_positions_3_to_5_staged_phonetic_facets_and_invariants() -> None:

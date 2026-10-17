@@ -7,6 +7,7 @@ import re
 import select
 import shlex
 import shutil
+import signal
 import subprocess
 import sys
 from datetime import UTC, datetime
@@ -14,9 +15,30 @@ from pathlib import Path
 
 import pytest
 
+from tests.wait_helpers import wait_until
+
 pytestmark = pytest.mark.usefixtures("hermetic_monitor")
 
 REPO = Path(__file__).resolve().parents[1]
+
+
+def manager_guard(directory: Path) -> Path:
+    """Stand-ins that refuse and record any user-manager call no fake intercepted.
+
+    Placed after a fixture's fake manager on PATH: a launcher fixture that would
+    reach this host's real user manager fails at once instead (#9624).
+    """
+    directory.mkdir(parents=True, exist_ok=True)
+    for name in ("systemd-run", "systemctl"):
+        exe = directory / name
+        exe.write_text(
+            "#!/usr/bin/env bash\n"
+            f'printf \'%s\\n\' "{name} $*" >> "${{LU_TEST_REAL_MANAGER_CONTACT:-/dev/null}}"\n'
+            f"printf 'TEST GUARD: {name} would reach the real user manager\\n' >&2\n"
+            "exit 97\n"
+        )
+        exe.chmod(0o755)
+    return directory
 
 
 def scope_sandbox(root: Path, tmp_path: Path) -> dict[str, str]:
@@ -24,6 +46,7 @@ def scope_sandbox(root: Path, tmp_path: Path) -> dict[str, str]:
     helper = root / "scripts/lib/driver_scope.sh"
     helper.parent.mkdir(parents=True, exist_ok=True)
     body = (REPO / "scripts/lib/driver_scope.sh").read_text()
+    assert body.count('"/proc/$$/cgroup"') == 1
     body = body.replace('"/proc/$$/cgroup"', '"$FAKE_CGROUP"')
     helper.write_text(body)
     bindir = tmp_path / "scope-bin"
@@ -31,10 +54,12 @@ def scope_sandbox(root: Path, tmp_path: Path) -> dict[str, str]:
     exe = bindir / "systemd-run"
     exe.write_text("""#!/usr/bin/env bash
 printf 'start\\n' >> "$FAKE_STARTS"
+printf 'systemd-run %s\\n' "$*" >> "${FAKE_MANAGER_CALLS:-/dev/null}"
+[ -z "${FAKE_RUN_ARGV:-}" ] || printf '%s\\0' "$@" > "$FAKE_RUN_ARGV"
 for arg; do case "$arg" in --unit=*) unit="${arg#*=}" ;; esac; done
 while [ "$1" != -- ]; do shift; done
 shift
-[ "${FAKE_SCOPE_FAIL:-0}" = 0 ] || exit 1
+[ "${FAKE_SCOPE_FAIL:-0}" = 0 ] || { printf 'fake systemd-run: scope start failed\\n' >&2; exit 1; }
 printf '0::/test/lu.slice/lu-driver.slice/%s\\n' "$unit" > "$FAKE_CGROUP"
 if [ "${FAKE_UNLINK_ENTRY:-0}" = 1 ]; then
   rc=0
@@ -47,12 +72,13 @@ exec "$@"
     exe.chmod(0o755)
     exe = bindir / "systemctl"
     exe.write_text("""#!/usr/bin/env bash
+printf 'systemctl %s\\n' "$*" >> "${FAKE_MANAGER_CALLS:-/dev/null}"
 [ "${FAKE_BUS_FAIL:-0}" = 0 ] || exit 1
 if [[ "$*" == *lu-driver.slice* ]]; then
   printf 'LoadState=%s\\nFragmentPath=%s\\n' "${FAKE_SLICE_LOAD_STATE:-loaded}" "${FAKE_SLICE_FRAGMENT-/test/lu-driver.slice}"
   exit
 fi
-printf 'Id=%s\\nControlGroup=/test/lu.slice/lu-driver.slice/%s\\nSlice=lu-driver.slice\\nOOMPolicy=%s\\nActiveState=active\\n' "$LU_DRIVER_SCOPE_UNIT" "$LU_DRIVER_SCOPE_UNIT" "${FAKE_OOM_POLICY:-continue}"
+printf 'Id=%s\\nControlGroup=/test/lu.slice/lu-driver.slice/%s\\nSlice=%s\\nOOMPolicy=%s\\nActiveState=active\\n' "$LU_DRIVER_SCOPE_UNIT" "$LU_DRIVER_SCOPE_UNIT" "${FAKE_UNIT_SLICE:-lu-driver.slice}" "${FAKE_OOM_POLICY:-continue}"
 """)
     exe.chmod(0o755)
     exe = bindir / "cat"
@@ -76,10 +102,13 @@ exit "${FAKE_LOGGER_RC:-0}"
     exe.chmod(0o755)
     cgroup = tmp_path / "cgroup"
     cgroup.write_text("0::/test/outside.scope\n")
+    guard = manager_guard(tmp_path / "manager-guard-bin")
     return {
-        "PATH": f"{bindir}:{os.environ['PATH']}",
+        "PATH": f"{bindir}:{guard}:{os.environ['PATH']}",
         "FAKE_CGROUP": str(cgroup),
         "FAKE_STARTS": str(tmp_path / "scope-starts"),
+        "FAKE_MANAGER_CALLS": str(tmp_path / "manager-calls"),
+        "LU_TEST_REAL_MANAGER_CONTACT": str(tmp_path / "real-manager-contact"),
         "FAKE_LOGGER_MESSAGES": str(tmp_path / "logger-messages"),
         # Hermetic: never read a deployment config from the runner's home.
         "LU_DRIVER_SCOPE_CONFIG": str(tmp_path / "no-driver-scope.env"),
@@ -89,14 +118,23 @@ exit "${FAKE_LOGGER_RC:-0}"
 
 
 def install_scope_sandbox(root: Path) -> None:
-    """Give existing lifecycle fixtures a fake manager and kernel boundary."""
+    """Give lifecycle fixtures a fake manager and kernel boundary.
+
+    Every wrapper enters a scope (#9624), so each present wrapper, interactive,
+    compatibility, CTO, driver or bio, exports the fakes ahead of the manager
+    guard, even when a test replaces PATH.
+    """
     env = scope_sandbox(root, root.parent)
-    for launcher in root.glob("start-*-driver.sh"):
+    fakes, guard = env["PATH"].split(":")[:2]
+    for launcher in (*root.glob("start-*.sh"), *root.glob("scripts/start-*.sh")):
         body = launcher.read_text()
         first, rest = body.split("\n", 1)
         exports = "\n".join(
-            f'export PATH={shlex.quote(value.split(":", 1)[0])}:"$PATH"'
+            f'export PATH={shlex.quote(fakes)}:{shlex.quote(guard)}:"$PATH"'
             if key == "PATH"
+            # A caller's own contact record (run_launcher) takes precedence.
+            else f'export {key}="${{{key}:-{value}}}"'
+            if key == "LU_TEST_REAL_MANAGER_CONTACT"
             else f"export {key}={shlex.quote(value)}"
             for key, value in env.items()
         )
@@ -154,11 +192,23 @@ launcher_adapter_exec() {
     return launcher, env
 
 
+_INHERITED_HOLDS = ("LU_DRIVER_", "PYTEST_XDIST_AUTO_NUM_WORKERS")
+
+
+def _inherited_environ() -> dict[str, str]:
+    """The process environment minus holds the pre-push gate or a driver scope exports.
+
+    The gate sets PYTEST_XDIST_AUTO_NUM_WORKERS and a driver scope sets the
+    LU_DRIVER_* limits; each test supplies the ones it asserts on explicitly.
+    """
+    return {k: v for k, v in os.environ.items() if not k.startswith(_INHERITED_HOLDS)}
+
+
 def _run(launcher: Path, env: dict[str, str], **extra: str) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
         ["bash", str(launcher)],
         cwd=launcher.parent,
-        env={**os.environ, **env, **extra},
+        env={**_inherited_environ(), **env, **extra},
         input="stdin survives\n",
         capture_output=True,
         text=True,
@@ -254,7 +304,7 @@ def test_closed_stderr_preserves_exit_and_journal(tmp_path: Path, rc: int) -> No
     with subprocess.Popen(
         ["bash", str(launcher)],
         cwd=launcher.parent,
-        env={**os.environ, **env, "TEST_RC": str(rc)},
+        env={**_inherited_environ(), **env, "TEST_RC": str(rc)},
         stdin=subprocess.PIPE,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
@@ -289,6 +339,158 @@ launcher_adapter_exec() {
     result = _run(launcher, env)
     assert result.returncode == 143, result.stderr
     _assert_exit_line(result.stderr, env, 143, "TERM")
+
+
+# Bash discards a child's status when a trapped signal interrupts `wait` as the
+# child exits (a later `wait` then reports 127), so the waiting launcher must
+# only `wait` for a child that has already exited. The race itself is
+# timing-dependent; this asserts the invariant that rules it out (#9624). The
+# waiter's trap is the real relay, which also must not stall the timed pause.
+_WAIT_CHILD_SCRIPT = """
+source "$1"
+violations=0
+wait() {
+  if driver_scope_child_running "$1"; then violations=$((violations + 1)); fi
+  builtin wait "$@"
+}
+LC_MODE=driver
+relayed=""
+child=""
+trap 'driver_scope_relay TERM' TERM
+( trap - TERM; %s ) &
+child=$!
+%s
+driver_scope_wait_child "$child"
+printf 'rc=%%s violations=%%s relayed=%%s\\n' "$DS_CHILD_RC" "$violations" "$relayed"
+"""
+
+
+@pytest.mark.parametrize(
+    ("child", "signal_waiter", "expected"),
+    [
+        # TERM reaches the driver waiter while its child runs; the collector
+        # retains the child's own status without waiting on a running child.
+        ("trap 'exit 43' TERM; while :; do sleep 0.05; done", True, "rc=43 violations=0 relayed=TERM"),
+        ("sleep 0.6; exit 0", False, "rc=0 violations=0 relayed="),
+        ("sleep 0.6; kill -KILL $BASHPID", False, "rc=137 violations=0 relayed="),
+        # Already exited, and not yet collected, when the launcher starts waiting.
+        ("exit 7", False, "rc=7 violations=0 relayed="),
+    ],
+)
+def test_waiting_launcher_collects_status_without_waiting_on_a_running_child(
+    child: str, signal_waiter: bool, expected: str
+) -> None:
+    signal = "( sleep 0.3; kill -TERM $$ ) &" if signal_waiter else "sleep 0.3"
+    result = subprocess.run(
+        ["bash", "-c", _WAIT_CHILD_SCRIPT % (child, signal), "bash", str(REPO / "scripts/lib/driver_scope.sh")],
+        capture_output=True,
+        text=True,
+        timeout=30,
+        # No controlling terminal: the waiter is never in a foreground group.
+        start_new_session=True,
+    )
+    assert result.returncode == 0, result.stderr
+    assert result.stdout.strip() == expected, result.stderr
+    assert "not a child" not in result.stderr
+    assert "No such file" not in result.stderr
+
+
+def test_reaped_child_probe_does_not_exit_the_waiting_shell() -> None:
+    """A vanished /proc entry is an ordinary false result, including on Bash 5.2."""
+    result = subprocess.run(
+        ["bash", "-eu", "-c", '''
+source "$1"
+( exit 0 ) &
+child=$!
+wait "$child"
+if driver_scope_child_running "$child"; then exit 99; fi
+printf 'reaped child; waiter alive\\n'
+''', "bash", str(REPO / "scripts/lib/driver_scope.sh")],
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+    assert result.returncode == 0, result.stderr
+    assert result.stdout == "reaped child; waiter alive\n"
+    assert result.stderr == ""
+
+
+@pytest.mark.parametrize("name", ["plain child", "child) \nexit"])
+def test_child_probe_recognizes_a_zombie_with_a_multiline_command_name(name: str) -> None:
+    """Keep the child unreaped so its real kernel state remains Z during the probe."""
+    child = subprocess.Popen(
+        [sys.executable, "-I", "-c", """
+import ctypes, sys
+raise SystemExit(0 if ctypes.CDLL(None).prctl(15, sys.argv[1].encode(), 0, 0, 0) == 0 else 1)
+""", name],
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.PIPE,
+    )
+    stat = Path(f"/proc/{child.pid}/stat")
+    try:
+        wait_until(
+            lambda: stat.read_text().rsplit(")", 1)[1].split()[0] == "Z",
+            timeout=5,
+            message="unreaped child to become a zombie",
+        )
+        assert f"({name}) Z " in stat.read_text()
+        result = subprocess.run(
+            ["bash", "-eu", "-c", '''
+source "$1"
+if driver_scope_child_running "$2"; then echo running; else echo exited; fi
+''', "bash", str(REPO / "scripts/lib/driver_scope.sh"), str(child.pid)],
+            capture_output=True,
+            text=True,
+            timeout=10,
+        )
+        assert result.returncode == 0, result.stderr
+        assert result.stdout == "exited\n"
+        assert result.stderr == ""
+    finally:
+        _, stderr = child.communicate(timeout=10)
+    assert child.returncode == 0, stderr.decode()
+
+
+@pytest.mark.parametrize("phase", ["collector", "logger"])
+@pytest.mark.parametrize("provider_exit", ["exit 42", "kill -KILL $$"])
+def test_late_term_preserves_the_collected_provider_status(tmp_path: Path, provider_exit: str, phase: str) -> None:
+    """Deliver TERM both after wait and during the final journal write."""
+    from tests.test_launcher_interactive_scope import DEADLINE_S, _checkout, _lines, _Terminal, _write
+
+    root, env = _checkout(tmp_path)
+    collected = tmp_path / "collected"
+    release = tmp_path / "release"
+    os.mkfifo(release)
+    release_fd = os.open(release, os.O_RDWR | os.O_NONBLOCK)
+    hold = (
+        f"printf 'collected\\n' > {shlex.quote(str(collected))}\n"
+        + f"IFS= read -r -t {DEADLINE_S} _ < {shlex.quote(str(release))}\n"
+    )
+    if phase == "collector":
+        helper = root / "scripts/lib/driver_scope.sh"
+        body = helper.read_text().replace("driver_scope_wait_child() {", "original_wait_child() {")
+        helper.write_text(
+            body + '\ndriver_scope_wait_child() {\n  original_wait_child "$@"\n' + hold + "}\n"
+        )
+    else:
+        logger = Path(env["PATH"].split(":")[0]) / "logger"
+        first, body = logger.read_text().split("\n", 1)
+        logger.write_text(first + "\n" + hold + body)
+    _write(Path(env["TEST_PROVIDER"]), f"#!/usr/bin/env bash\n{provider_exit}\n", 0o755)
+    terminal = _Terminal(tmp_path, ["bash", str(root / "start-claude-driver.sh"), "--epic", "devops"], env, root)
+    try:
+        terminal.wait_for(collected.exists, "collected provider exit")
+        job = int(next(line.split()[1] for line in _lines(terminal.status) if line.startswith("job ")))
+        os.kill(job, signal.SIGTERM)
+        # Writing the FIFO completes the collector's positive synchronization;
+        # the pending trap runs before the launcher chooses its final status.
+        os.write(release_fd, b"release\n")
+        expected = 137 if provider_exit.startswith("kill") else 42
+        assert terminal.finish() == expected
+        assert f"rc={expected} signal=none " in terminal.output.decode(errors="replace")
+    finally:
+        terminal.close()
+        os.close(release_fd)
 
 
 @pytest.mark.parametrize("rc", [0, 5, 137])
@@ -340,6 +542,19 @@ def test_entry_owner_observes_verified_after_path_unlinked(tmp_path: Path) -> No
     assert "scope-start-failed" not in result.stderr
     assert "PROVIDER:stdin survives" in result.stdout
     assert not list(temporary.iterdir())
+
+
+def test_failed_scope_start_publishes_only_for_a_driver_successor(tmp_path: Path) -> None:
+    """The full driver wrapper still publishes only its captured start failure."""
+    from tests.test_launcher_interactive_scope import _SUPERVISOR, _checkout, _events, _launch
+
+    root, env = _checkout(tmp_path)
+    result = _launch(root, env, "start-claude-driver.sh", "--epic", "devops", FAKE_SCOPE_FAIL="1", **_SUPERVISOR)
+    assert result.returncode == 6, result.stdout + result.stderr
+    assert "DRIVER_SCOPE_REFUSED reason=scope-start-failed;" in result.stderr
+    names = [name for name, _ in _events(env)]
+    assert names.count("publish") == 1, names
+    assert not [name for name in names if name.startswith(("lease-", "rollover-"))]
 
 
 @pytest.mark.parametrize("publish_ok", [True, False])
@@ -411,6 +626,7 @@ def test_scope_refusals_publish_only_for_captured_successor_start(
         ({"FAKE_BUS_FAIL": "1"}, "user-manager-unavailable"),
         ({"FAKE_SCOPE_FAIL": "1"}, "scope-start-failed"),
         ({"FAKE_OOM_POLICY": "stop"}, "unit-properties-mismatch"),
+        ({"FAKE_UNIT_SLICE": "app.slice"}, "unit-properties-mismatch"),
         ({"LU_DRIVER_MEMORY_MAX": "max"}, "invalid-limits"),
         ({"LU_DRIVER_MEMORY_HIGH": "5", "LU_DRIVER_MEMORY_MAX": "5"}, "invalid-limits"),
         ({"LU_DRIVER_MEMORY_HIGH": "3221225473"}, "invalid-limits"),
@@ -475,20 +691,33 @@ def test_inherited_identity_is_not_reentry(tmp_path: Path) -> None:
     assert Path(env["FAKE_STARTS"]).read_text().splitlines() == ["start"]
 
 
-def test_same_pid_forged_identity_refused(tmp_path: Path) -> None:
+def _direct_entry(
+    tmp_path: Path, identity: str, cgroup: str | None = None
+) -> tuple[subprocess.CompletedProcess[str], dict[str, str]]:
+    """Call scope entry from a tracked driver entry point after forging identity."""
     root = tmp_path / "repo"
     env = scope_sandbox(root, tmp_path)
-    helper = root / "scripts/lib/driver_scope.sh"
+    if cgroup is not None:
+        Path(env["FAKE_CGROUP"]).write_text(cgroup)
+    entry = root / "start-claude-driver.sh"
+    entry.write_text(
+        f"set -u\nsource {shlex.quote(str(root / 'scripts/lib/driver_scope.sh'))}\n"
+        f"LC_ROOT={shlex.quote(str(root))}; LC_PROVIDER=claude; LC_MODE=driver; LC_EPIC=devops\n"
+        f"{identity}\nlauncher_enter_driver_scope\n"
+    )
     result = subprocess.run(
-        [
-            "bash",
-            "-c",
-            f"source {shlex.quote(str(helper))}; LC_MODE=driver; export LU_DRIVER_SCOPE_PID=$$ LU_DRIVER_SCOPE_UNIT=lu-driver-fake.scope; launcher_enter_driver_scope",
-        ],
-        env={**os.environ, **env},
+        ["bash", str(entry)],
+        env={**_inherited_environ(), **env},
         capture_output=True,
         text=True,
         timeout=15,
+    )
+    return result, env
+
+
+def test_same_pid_forged_identity_refused(tmp_path: Path) -> None:
+    result, env = _direct_entry(
+        tmp_path, "export LU_DRIVER_SCOPE_PID=$$ LU_DRIVER_SCOPE_UNIT=lu-driver-claude-devops-fake.scope"
     )
     assert result.returncode == 6
     assert "cgroup-mismatch" in result.stderr
@@ -496,95 +725,224 @@ def test_same_pid_forged_identity_refused(tmp_path: Path) -> None:
 
 
 def test_same_pid_without_unit_refused(tmp_path: Path) -> None:
-    root = tmp_path / "repo"
-    env = scope_sandbox(root, tmp_path)
-    Path(env["FAKE_CGROUP"]).write_text("0::/test/lu.slice/lu-driver.slice/lu-driver-fake.scope\n")
-    helper = root / "scripts/lib/driver_scope.sh"
-    result = subprocess.run(
-        [
-            "bash",
-            "-c",
-            f"set -u; source {shlex.quote(str(helper))}; LC_MODE=driver; "
-            "export LU_DRIVER_SCOPE_PID=$$; unset LU_DRIVER_SCOPE_UNIT; launcher_enter_driver_scope",
-        ],
-        env={**os.environ, **env},
-        capture_output=True,
-        text=True,
-        timeout=15,
+    result, env = _direct_entry(
+        tmp_path,
+        "export LU_DRIVER_SCOPE_PID=$$; unset LU_DRIVER_SCOPE_UNIT",
+        "0::/test/lu.slice/lu-driver.slice/lu-driver-fake.scope\n",
     )
     assert result.returncode == 6, result.stderr
     assert "DRIVER_SCOPE_REFUSED reason=unit-mismatch" in result.stderr
     assert not Path(env["FAKE_STARTS"]).exists()
 
 
-def test_bounded_live_scope_soak(tmp_path: Path) -> None:
-    """Explicit opt-in: real launcher/provider death, finite cgroup, service proof."""
-    import json
-    import sys
-    import time
-    import uuid
+# The approved safe live-soak envelope (#9624): a throwaway scope far below any
+# deployment limit, swap off, on a quiet host, one run at a time, never filling
+# the live pool. Opt-in only; CI never runs it.
+SOAK_OPT_IN = "LU_RUN_DRIVER_SCOPE_SOAK"
+SOAK_HIGH = 128 * 1024 * 1024
+SOAK_MAX = 192 * 1024 * 1024
+SOAK_LOAD_CEILING = 18.0
+SOAK_SERVICES = (
+    "learn-ukrainian-api.service",
+    "learn-ukrainian-sources.service",
+    "learn-ukrainian-astro.service",
+    "learn-ukrainian-work.service",
+)
 
-    from tests.test_launcher_contract import _core_driver_exit_fixture
 
-    if os.environ.get("LU_RUN_DRIVER_SCOPE_SOAK") != "1":
-        pytest.skip("bounded live soak requires LU_RUN_DRIVER_SCOPE_SOAK=1")
-    services = [
-        "learn-ukrainian-api.service",
-        "learn-ukrainian-sources.service",
-        "learn-ukrainian-astro.service",
-        "learn-ukrainian-work.service",
-    ]
+def require_soak_opt_in() -> None:
+    if os.environ.get(SOAK_OPT_IN) != "1":
+        pytest.skip(f"bounded live soak requires {SOAK_OPT_IN}=1")
+
+
+def soak_environment() -> dict[str, str]:
+    """The caller's environment against the real manager, with the soak limits."""
     env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
     env["XDG_RUNTIME_DIR"] = f"/run/user/{os.getuid()}"
+    env.update(LU_DRIVER_MEMORY_HIGH=str(SOAK_HIGH), LU_DRIVER_MEMORY_MAX=str(SOAK_MAX), LU_DRIVER_MEMORY_SWAP_MAX="0")
+    return env
 
-    def snapshot():
-        rows = {}
-        for service in services:
-            result = subprocess.run(
-                [
-                    "systemctl",
-                    "--user",
-                    "show",
-                    service,
-                    "-p",
-                    "MainPID",
-                    "-p",
-                    "MemoryCurrent",
-                    "-p",
-                    "ControlGroup",
-                    "-p",
-                    "InvocationID",
-                    "-p",
-                    "NRestarts",
-                ],
+
+def soak_hog(tmp_path: Path) -> tuple[Path, Path]:
+    """An allocator that reads its scope's limits back before allocating anything."""
+    hog = tmp_path / "hog.py"
+    proof = tmp_path / "hog-proof.json"
+    expected = {"memory.high": str(SOAK_HIGH), "memory.max": str(SOAK_MAX), "memory.swap.max": "0"}
+    hog.write_text(f"""import json
+from pathlib import Path
+cg = Path('/sys/fs/cgroup' + Path('/proc/self/cgroup').read_text().strip().split('::')[-1])
+limits = {{name: (cg / name).read_text().strip() for name in {sorted(expected)!r}}}
+assert limits == {expected!r}, limits
+Path('/proc/self/oom_score_adj').write_text('1000')
+Path({str(proof)!r}).write_text(json.dumps({{'unit': cg.name, 'limits': limits}}))
+blocks = []
+while True:
+    blocks.append(bytearray(16 * 1024 * 1024))
+""")
+    return hog, proof
+
+
+def _service_snapshot(env: dict[str, str]) -> dict[str, dict[str, str]]:
+    rows = {}
+    for service in SOAK_SERVICES:
+        properties = ("MainPID", "MemoryCurrent", "ControlGroup", "InvocationID", "NRestarts")
+        result = subprocess.run(
+            ["systemctl", "--user", "show", service, *(arg for name in properties for arg in ("-p", name))],
+            env=env,
+            capture_output=True,
+            text=True,
+            check=True,
+            timeout=10,
+        )
+        props = dict(line.split("=", 1) for line in result.stdout.splitlines() if "=" in line)
+        assert int(props["MainPID"]) > 0
+        assert "/app.slice/" in props["ControlGroup"]
+        root = Path("/sys/fs/cgroup" + props.pop("ControlGroup"))
+        events = dict(line.split() for line in (root / "memory.events").read_text().splitlines())
+        props["oom_kill"] = events["oom_kill"]
+        rows[service] = props
+    return rows
+
+
+def _global_oom_kills() -> int:
+    return int(dict(line.split() for line in Path("/proc/vmstat").read_text().splitlines())["oom_kill"])
+
+
+def _require_pool_headroom(env: dict[str, str]) -> None:
+    """Refuse unless the shared pool keeps twice the scope's maximum free."""
+    shown = subprocess.run(
+        ["systemctl", "--user", "show", "lu.slice", "-p", "ControlGroup", "--value"],
+        env=env,
+        capture_output=True,
+        text=True,
+        check=True,
+        timeout=10,
+    ).stdout.strip()
+    if not shown:
+        return
+    pool = Path("/sys/fs/cgroup" + shown)
+    current = int((pool / "memory.current").read_text())
+    for name in ("memory.high", "memory.max"):
+        limit = (pool / name).read_text().strip()
+        if limit != "max":
+            if int(limit) - current < 2 * SOAK_MAX:
+                pytest.fail(f"lu.slice {name} leaves {int(limit) - current} bytes; the soak needs {2 * SOAK_MAX}")
+            return
+
+
+def run_live_soak(
+    argv: list[str], cwd: Path, env: dict[str, str], proof: Path
+) -> tuple[subprocess.CompletedProcess[str], dict[str, object]]:
+    """Run one launcher under the real manager in the safe envelope and prove containment."""
+    import fcntl
+    import json
+    import uuid
+
+    from tests.wait_helpers import wait_until
+
+    load = os.getloadavg()[0]
+    if load > SOAK_LOAD_CEILING:
+        pytest.fail(f"one-minute load {load:.1f} is above {SOAK_LOAD_CEILING}; soak refused")
+    with open(Path(env["XDG_RUNTIME_DIR"]) / "lu-scope-soak.lock", "w") as lock:
+
+        def acquired() -> bool:
+            try:
+                fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            except BlockingIOError:
+                return False
+            return True
+
+        wait_until(acquired, timeout=600, interval=1, message="the soak lock (one run at a time)")
+        _require_pool_headroom(env)
+        # A temporary keeper activates the otherwise uninstalled empty test slice.
+        # No user-unit installation or persistent configuration is performed.
+        keeper_unit = f"lu-driver-soak-keeper-{uuid.uuid4().hex}.scope"
+        keeper = subprocess.Popen(
+            [
+                "systemd-run",
+                "--user",
+                "--scope",
+                "--collect",
+                "--quiet",
+                "--slice=lu-driver.slice",
+                f"--unit={keeper_unit}",
+                "--property=MemoryMax=33554432",
+                "--property=MemorySwapMax=0",
+                "--",
+                "sleep",
+                "60",
+            ],
+            env=env,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+        try:
+
+            def keeper_active() -> bool:
+                if keeper.poll() is not None:
+                    raise AssertionError("cannot activate bounded test slice: " + keeper.stderr.read().decode())
+                state = subprocess.run(
+                    ["systemctl", "--user", "show", keeper_unit, "-p", "ActiveState", "--value"],
+                    env=env,
+                    capture_output=True,
+                    text=True,
+                    timeout=10,
+                )
+                return state.stdout.strip() == "active"
+
+            wait_until(keeper_active, timeout=10, interval=0.05, message="test slice activation")
+            before = _service_snapshot(env)
+            global_before = _global_oom_kills()
+            result = subprocess.run(argv, cwd=cwd, env=env, capture_output=True, text=True, timeout=120)
+            after = _service_snapshot(env)
+            global_after = _global_oom_kills()
+            receipt = json.loads(proof.read_text())
+            # Scope collection removes its files; the manager journal supplies the
+            # completed scope's OOM event, tied to the exact unit recorded by hog.
+            journal = subprocess.run(
+                ["journalctl", "--user", "--no-pager", "-o", "cat", "-u", receipt["unit"]],
                 env=env,
                 capture_output=True,
                 text=True,
                 check=True,
                 timeout=10,
             )
-            props = dict(line.split("=", 1) for line in result.stdout.splitlines() if "=" in line)
-            assert int(props["MainPID"]) > 0
-            assert "/app.slice/" in props["ControlGroup"]
-            root = Path("/sys/fs/cgroup" + props.pop("ControlGroup"))
-            events = dict(line.split() for line in (root / "memory.events").read_text().splitlines())
-            props["oom_kill"] = events["oom_kill"]
-            rows[service] = props
-        return rows
+        finally:
+            if proof.exists():
+                unit = json.loads(proof.read_text())["unit"]
+                subprocess.run(
+                    ["systemctl", "--user", "stop", unit], env=env, capture_output=True, timeout=10, check=False
+                )
+            keeper.terminate()
+            keeper.communicate(timeout=10)
+    assert receipt["limits"] == {"memory.high": str(SOAK_HIGH), "memory.max": str(SOAK_MAX), "memory.swap.max": "0"}
+    assert "OOM" in journal.stdout or "oom" in journal.stdout, journal.stdout
+    assert global_after - global_before == 1
+    for service in SOAK_SERVICES:
+        for key in ("MainPID", "InvocationID", "NRestarts", "oom_kill"):
+            assert before[service][key] == after[service][key], (service, key, before, after)
+    print(
+        "SOAK_RECEIPT "
+        + json.dumps(
+            {
+                "hog_returncode": result.returncode,
+                "global_oom_kill_delta": global_after - global_before,
+                "before": before,
+                "after": after,
+                "unit": receipt["unit"],
+                "journal": journal.stdout.strip(),
+            }
+        )
+    )
+    return result, receipt
 
-    hog = tmp_path / "hog.py"
-    proof = tmp_path / "hog-proof.json"
-    hog.write_text(f"""import json, os
-from pathlib import Path
-cg = Path('/sys/fs/cgroup' + Path('/proc/self/cgroup').read_text().strip().split('::')[-1])
-assert (cg / 'memory.max').read_text().strip() == '536870912'
-assert (cg / 'memory.swap.max').read_text().strip() == '0'
-Path('/proc/self/oom_score_adj').write_text('1000')
-Path({str(proof)!r}).write_text(json.dumps({{'unit': cg.name, 'events': (cg / 'memory.events').read_text(), 'max': (cg / 'memory.max').read_text().strip()}}))
-blocks = []
-while True:
-    blocks.append(bytearray(16 * 1024 * 1024))
-""")
+
+def test_bounded_live_scope_soak(tmp_path: Path) -> None:
+    """Explicit opt-in: real driver launcher/provider death, finite cgroup, service proof."""
+    from tests.test_launcher_contract import _core_driver_exit_fixture
+
+    require_soak_opt_in()
+    hog, proof = soak_hog(tmp_path)
     launcher, attempts, closed, _ = _core_driver_exit_fixture(
         tmp_path,
         provider_body=f"exec {shlex.quote(sys.executable)} {shlex.quote(str(hog))}",
@@ -597,96 +955,12 @@ while True:
         )
         + "\n"
     )
-    env.update(LU_DRIVER_MEMORY_HIGH="536866816", LU_DRIVER_MEMORY_MAX="536870912", LU_DRIVER_MEMORY_SWAP_MAX="0")
-    # A temporary keeper activates the otherwise uninstalled empty test slice.
-    # No user-unit installation or persistent configuration is performed.
-    keeper_unit = f"lu-driver-soak-keeper-{uuid.uuid4().hex}.scope"
-    keeper = subprocess.Popen(
-        [
-            "systemd-run",
-            "--user",
-            "--scope",
-            "--collect",
-            "--quiet",
-            "--slice=lu-driver.slice",
-            f"--unit={keeper_unit}",
-            "--property=MemoryMax=33554432",
-            "--property=MemorySwapMax=0",
-            "--",
-            "sleep",
-            "60",
-        ],
-        env=env,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+    result, receipt = run_live_soak(
+        ["bash", str(launcher), "--epic", "devops"], launcher.parent, soak_environment(), proof
     )
-    try:
-        for _ in range(100):
-            if keeper.poll() is not None:
-                raise AssertionError("cannot activate bounded test slice: " + keeper.stderr.read().decode())
-            state = subprocess.run(
-                ["systemctl", "--user", "show", keeper_unit, "-p", "ActiveState", "--value"],
-                env=env,
-                capture_output=True,
-                text=True,
-                timeout=10,
-            )
-            if state.stdout.strip() == "active":
-                break
-            time.sleep(0.05)
-        else:
-            raise AssertionError("test slice did not activate")
-        before = snapshot()
-        global_before = int(dict(line.split() for line in Path("/proc/vmstat").read_text().splitlines())["oom_kill"])
-        result = subprocess.run(
-            ["bash", str(launcher), "--epic", "devops"],
-            cwd=launcher.parent,
-            env=env,
-            capture_output=True,
-            text=True,
-            timeout=45,
-        )
-        after = snapshot()
-        global_after = int(dict(line.split() for line in Path("/proc/vmstat").read_text().splitlines())["oom_kill"])
-        assert result.returncode == 137, result.stdout + result.stderr
-        assert closed.exists() and attempts.read_text().strip() == "1"
-        receipt = json.loads(proof.read_text())
-        assert receipt["max"] == "536870912"
-        # Scope collection removes its files; the manager journal supplies the
-        # completed scope's OOM event, tied to the exact unit recorded by hog.
-        journal = subprocess.run(
-            ["journalctl", "--user", "--no-pager", "-o", "cat", "-u", receipt["unit"]],
-            env=env,
-            capture_output=True,
-            text=True,
-            check=True,
-            timeout=10,
-        )
-        assert "OOM" in journal.stdout or "oom" in journal.stdout, journal.stdout
-        assert global_after - global_before == 1
-        for service in services:
-            for key in ("MainPID", "InvocationID", "NRestarts", "oom_kill"):
-                assert before[service][key] == after[service][key], (service, key, before, after)
-        print(
-            "SOAK_RECEIPT "
-            + json.dumps(
-                {
-                    "hog_returncode": result.returncode,
-                    "cleanup_attempts": 1,
-                    "global_oom_kill_delta": global_after - global_before,
-                    "before": before,
-                    "after": after,
-                    "unit": receipt["unit"],
-                    "journal": journal.stdout.strip(),
-                }
-            )
-        )
-    finally:
-        if proof.exists():
-            unit = json.loads(proof.read_text())["unit"]
-            subprocess.run(["systemctl", "--user", "stop", unit], env=env, capture_output=True, timeout=10, check=False)
-        keeper.terminate()
-        keeper.communicate(timeout=10)
+    assert result.returncode == 137, result.stdout + result.stderr
+    assert closed.exists() and attempts.read_text().strip() == "1"
+    assert str(receipt["unit"]).startswith("lu-driver-claude-devops-")
 
 
 @pytest.mark.parametrize(
@@ -709,16 +983,7 @@ def test_driver_scope_caps_pytest_auto_workers(
     extra = {} if inherited is None else {"PYTEST_XDIST_AUTO_NUM_WORKERS": inherited}
     if cap is not None:
         extra["LU_DRIVER_PYTEST_MAX_WORKERS"] = cap
-    base = {k: v for k, v in os.environ.items() if k != "PYTEST_XDIST_AUTO_NUM_WORKERS"}
-    result = subprocess.run(
-        ["bash", str(launcher)],
-        cwd=launcher.parent,
-        env={**base, **env, **extra},
-        input="stdin survives\n",
-        capture_output=True,
-        text=True,
-        timeout=15,
-    )
+    result = _run(launcher, env, **extra)
     assert result.returncode == 0, result.stderr
     assert f"XDIST_AUTO:{expected}" in result.stdout
 

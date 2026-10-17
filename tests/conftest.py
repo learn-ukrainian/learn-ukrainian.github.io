@@ -1395,7 +1395,8 @@ def _hermetic_dispatch_admission_host(monkeypatch):
     Admission tests monkeypatch ``probe_host`` themselves. The shared
     ``lu.slice`` pool is not read unless a test sets ``LU_SLICE_CGROUP`` to a
     fake cgroup (#9975), and the host test-slot queue is not read unless a test
-    sets ``LU_TEST_SLOTS_DIR`` to a private pool (#10662).
+    sets ``LU_TEST_SLOTS_DIR`` to a private pool (#10662). The host disk is not read
+    and no disk alert is published (#10776).
     """
     for name in (
         "DISPATCH_MAX_LIVE_WRITE_WORKERS",
@@ -1403,6 +1404,9 @@ def _hermetic_dispatch_admission_host(monkeypatch):
         "DISPATCH_MAX_LOAD_PER_CPU",
         "DISPATCH_WORKER_MEM_RESERVE_GIB",
         "DISPATCH_MAX_TEST_SLOT_QUEUE",
+        "DISPATCH_DISK_REAP_USED_PERCENT",
+        "DISPATCH_DISK_REFUSE_USED_PERCENT",
+        "DISPATCH_DISK_ALERT_USED_PERCENT",
         "LU_SLICE_CGROUP",
     ):
         monkeypatch.delenv(name, raising=False)

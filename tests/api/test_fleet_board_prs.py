@@ -14,8 +14,10 @@ from jsonschema import Draft202012Validator
 from scripts.api import main as api_main
 from scripts.api.fleet_board import activity as activity_mod
 from scripts.api.fleet_board import prs as prs_mod
+from scripts.api.fleet_board.envelope import endpoint_schema
 from scripts.orchestration import merge_queue_keeper as keeper
 from scripts.orchestration.integration_sweep import lookup_verdict
+from scripts.review.record_cf_verdict import build_comment
 
 client = TestClient(api_main.app, raise_server_exceptions=False)
 
@@ -59,6 +61,34 @@ def _comment(sha: str, *, verdict: str = "APPROVED") -> dict[str, str | dict[str
         "body": body,
         "user": {"login": LOGIN},
         "author_association": "OWNER",
+        "created_at": "2026-10-09T08:00:00Z",
+        "updated_at": "2026-10-09T08:00:00Z",
+    }
+
+
+def _marked(
+    sha: str,
+    *,
+    verdict: str = "APPROVED",
+    review_mode: str = "cross_family",
+    login: str = LOGIN,
+    association: str = "OWNER",
+) -> dict[str, str | dict[str, str]]:
+    body = build_comment(
+        sha=sha,
+        task_id="review-one",
+        started="2026-10-09T08:00:00.000001+00:00",
+        verdict=verdict,
+        model="gpt-6.1-sol",
+        family="openai",
+        reply="noted",
+        review_mode=review_mode,
+    )
+    return {
+        "id": f"review-{sha[:8]}-{review_mode}",
+        "body": body,
+        "user": {"login": login},
+        "author_association": association,
         "created_at": "2026-10-09T08:00:00Z",
         "updated_at": "2026-10-09T08:00:00Z",
     }
@@ -150,6 +180,62 @@ def _rows(*pulls: prs_mod.Pull, **kwargs: object) -> list[dict]:
         now=NOW,
         activity=activity,  # type: ignore[arg-type]
     )
+
+
+def test_red_team_marker_carries_the_mode_and_an_ordinary_marker_does_not() -> None:
+    """#10452 AC-01: label a red-team marker; leave a marker without the mode unchanged."""
+    today = _rows(_pull())
+    assert today[0]["cf"] == {"verdict": "APPROVED", "at_head": True}
+
+    ordinary = _rows(_pull(), comments={42: (_marked(SHA),)})
+    labelled = _rows(_pull(), comments={42: (_marked(SHA, review_mode="red_team"),)})
+    assert ordinary[0]["cf"] == {"verdict": "APPROVED", "at_head": True}
+    assert labelled[0]["cf"] == {"verdict": "APPROVED", "at_head": True, "review_mode": "red_team"}
+
+    rejected = _rows(
+        _pull(),
+        comments={42: (_marked(SHA, verdict="CHANGES_REQUESTED", review_mode="red_team"),)},
+    )
+    assert rejected[0]["cf"] == {
+        "verdict": "CHANGES_REQUESTED",
+        "at_head": True,
+        "review_mode": "red_team",
+    }
+
+    stale = _rows(_pull(), comments={42: (_marked(OTHER, review_mode="red_team"),)})
+    assert stale[0]["cf"] == {"verdict": "CF-stale", "at_head": False}
+    beside = _rows(
+        _pull(),
+        comments={42: (_marked(OTHER, review_mode="red_team"), _marked(SHA))},
+    )
+    assert beside[0]["cf"] == {"verdict": "APPROVED", "at_head": True}
+
+    untrusted = _rows(_pull(), comments={42: (_marked(SHA, review_mode="red_team", login="outsider"),)})
+    assert untrusted[0]["cf"] == {"verdict": "needs-CF", "at_head": False}
+    assert _rows(_pull(), comments={42: ()})[0]["cf"] == {"verdict": "needs-CF", "at_head": False}
+    assert _rows(_pull(), comments={})[0]["cf"] == {"verdict": "unknown", "at_head": False}
+
+    prose = {
+        "id": "prose",
+        "body": "review_mode=red_team\nVERDICT: APPROVED\n",
+        "user": {"login": LOGIN},
+        "author_association": "OWNER",
+        "created_at": "2026-10-09T08:00:00Z",
+        "updated_at": "2026-10-09T08:00:00Z",
+    }
+    assert _rows(_pull(), comments={42: (prose,)})[0]["cf"] == {"verdict": "CF-unrecorded", "at_head": False}
+    forged = _comment(SHA)
+    assert isinstance(forged["body"], str)
+    forged["body"] = forged["body"].replace(
+        "### Cross-family review\n",
+        "### Cross-family review\nReview mode: red_team\n",
+    )
+    assert _rows(_pull(), comments={42: (forged,)})[0]["cf"] == {"verdict": "unknown", "at_head": False}
+
+    cf_schema = endpoint_schema("fleet.v1.prs")["properties"]["data"]["properties"]["prs"]["items"]["properties"]["cf"]
+    Draft202012Validator(cf_schema).validate(today[0]["cf"])
+    Draft202012Validator(cf_schema).validate(labelled[0]["cf"])
+    Draft202012Validator(cf_schema).validate(rejected[0]["cf"])
 
 
 def test_current_head_approval_counts_and_an_older_head_does_not() -> None:

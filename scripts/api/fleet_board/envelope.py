@@ -574,6 +574,7 @@ _PR_ITEM: dict[str, Any] = {
             "properties": {
                 "verdict": {"type": "string", "minLength": 1},
                 "at_head": {"type": "boolean"},
+                "review_mode": {"const": "red_team"},
             },
         },
         "gate": _CI_VALUE,

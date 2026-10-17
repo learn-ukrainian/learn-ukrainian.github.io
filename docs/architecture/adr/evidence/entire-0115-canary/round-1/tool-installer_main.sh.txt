@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# Mutation evidence: origin/main's installer against real 0.11.5 chained wrappers.
+set -uo pipefail
+C=<scratch>/canary
+WT=<worktree>
+git -C "$WT" show origin/main:scripts/install_git_hooks.sh >"$C/tmp/install_git_hooks.main.sh"
+cd "$C/clone"
+mkdir -p "$C/tmp/hooks-backup"
+cp .git/hooks/commit-msg .git/hooks/post-commit .git/hooks/pre-push "$C/tmp/hooks-backup/"
+"$C/tools/cenv.sh" /usr/bin bash "$C/tmp/install_git_hooks.main.sh" >"$C/logs/installer-main-on-0115.txt" 2>&1
+echo "main installer rc=$?"
+grep 'added Entire chain' "$C/logs/installer-main-on-0115.txt"
+printf 'pre-push chain blocks after main installer: '; grep -c 'Chain: run pre-existing hook' .git/hooks/pre-push
+cp "$C/tmp/hooks-backup/commit-msg" "$C/tmp/hooks-backup/post-commit" "$C/tmp/hooks-backup/pre-push" .git/hooks/
+printf 'restored pre-push chain blocks: '; grep -c 'Chain: run pre-existing hook' .git/hooks/pre-push

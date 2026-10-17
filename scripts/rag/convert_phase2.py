@@ -26,16 +26,17 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 
-def convert_dmklinger():
+def convert_dmklinger(src: Path | None = None, out: Path | None = None) -> int:
     """Convert dmklinger UK→EN words.json to JSONL."""
-    src = PROJECT_ROOT / "data" / "dmklinger-uk-en" / "words.json"
-    out = PROJECT_ROOT / "data" / "dmklinger-uk-en" / "chunks.jsonl"
+    src = src or PROJECT_ROOT / "data" / "dmklinger-uk-en" / "words.json"
+    out = out or PROJECT_ROOT / "data" / "dmklinger-uk-en" / "chunks.jsonl"
 
     print("Converting dmklinger UK→EN...")
     with open(src, encoding="utf-8") as f:
         words = json.load(f)
 
-    with open(out, "w", encoding="utf-8") as f:
+    written = 0
+    with open(out, "w", encoding="utf-8", newline="\n") as f:
         for i, entry in enumerate(words):
             word = entry.get("word", "")
             pos = entry.get("pos", "")
@@ -46,13 +47,16 @@ def convert_dmklinger():
                 "id": f"dmk-{i:06d}",
                 "word": word,
                 "pos": pos,
-                "translations": defs[:10],
+                "translations": defs,
                 "text": f"{word} ({pos}): {'; '.join(defs[:5])}",
                 "source": "dmklinger UK→EN",
             }
             f.write(json.dumps(chunk, ensure_ascii=False) + "\n")
 
-    print(f"  ✅ {len(words)} entries → {out.name}")
+            written += 1
+
+    print(f"  ✅ {written} entries → {out.name}")
+    return written
 
 
 def convert_ukrajinet():
@@ -243,20 +247,33 @@ def extract_sum11_registers():
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Convert Phase 2 data")
-    parser.add_argument("--dmklinger", action="store_true")
-    parser.add_argument("--ukrajinet", action="store_true")
-    parser.add_argument("--ubertext-freq", action="store_true")
-    parser.add_argument("--sum11-registers", action="store_true")
-    parser.add_argument("--all", action="store_true")
+    parser = argparse.ArgumentParser(
+        description="Convert staged Phase 2 sources to RAG inputs.\n"
+                    "Use explicit dmklinger paths for offline conversion; this does not update sources.db.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="Examples:\n  .venv/bin/python scripts/rag/convert_phase2.py --dmklinger\n"
+               "  .venv/bin/python scripts/rag/convert_phase2.py --dmklinger --input words.json --output chunks.jsonl\n"
+               "Outputs: selected JSONL files or UberText frequency.db; existing outputs are overwritten.\n"
+               "Exit codes: 0 = success/help; 1 = conversion error; 2 = invalid arguments.\n"
+               "Related: #8959; scripts/wiki/build_sources_db.py.",
+    )
+    parser.add_argument("--dmklinger", action="store_true", help="Convert all dmklinger definitions (default: disabled)")
+    parser.add_argument("--ukrajinet", action="store_true", help="Convert WordNet XML (default: disabled)")
+    parser.add_argument("--ubertext-freq", action="store_true", help="Import frequency CSV (default: disabled)")
+    parser.add_argument("--sum11-registers", action="store_true", help="Extract register labels (default: disabled)")
+    parser.add_argument("--all", action="store_true", help="Run every converter (default: disabled)")
+    parser.add_argument("--input", type=Path, help="dmklinger words.json (default: data/dmklinger-uk-en/words.json)")
+    parser.add_argument("--output", type=Path, help="dmklinger chunks.jsonl (default: data/dmklinger-uk-en/chunks.jsonl)")
     args = parser.parse_args()
+    if (args.input or args.output) and not (args.dmklinger or args.all):
+        parser.error("--input/--output require --dmklinger or --all")
 
     if not any(vars(args).values()):
         parser.print_help()
         return
 
     if args.all or args.dmklinger:
-        convert_dmklinger()
+        convert_dmklinger(args.input, args.output)
     if args.all or args.ukrajinet:
         convert_ukrajinet()
     if args.all or args.ubertext_freq:

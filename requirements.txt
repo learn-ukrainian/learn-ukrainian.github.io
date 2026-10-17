@@ -49,7 +49,7 @@ psycopg[binary]>=3.3  # control-plane storage seam pg authority (Phase 0b #603)
 # rebuild had nothing to reinstall them from; declare them directly).
 psutil>=7.2      # scripts/agent_runtime/{livenessprobe,watchdog}.py, agent_monitor_router.py
 filelock>=3.32.2   # scripts/pipeline/{stress_annotator,state}.py, curriculum_coordinator.py
-rapidfuzz>=3.14  # .mcp/servers/sources/server.py (handle_verify_quote), scripts/build/linear_pipeline.py
+rapidfuzz>=3.14.6  # .mcp/servers/sources/server.py (handle_verify_quote), scripts/build/linear_pipeline.py
 
 # Document parsing (#6830 import-scan sweep — same restore-gap class as
 # above: unconditionally imported by production scripts/, only ever pulled
@@ -73,6 +73,9 @@ yt-dlp>=2026.7.4
 
 # Build utilities
 jinja2>=3.1
+
+# GraphQL documents: which operation a GitHub request executes (#10730)
+graphql-core==3.3.0  # scripts/common/github_client.py (imported only when a document can write)
 
 # TypeSafe System One (Jev) — curriculum / open-model triage (#8177–#8179)
 typesafe-sdk>=0.7.0

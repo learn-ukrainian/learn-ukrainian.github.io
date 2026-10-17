@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# Non-interactive `entire doctor` (0.11.5) must not rewrite hooks or settings.
+set -uo pipefail
+C=<scratch>/canary
+cd "$C/clone"
+before=$(cat .git/hooks/* .entire/settings.json .claude/settings.json 2>/dev/null | sha256sum)
+refs_before=$(git for-each-ref --format='%(refname) %(objectname)' | sha256sum)
+"$C/tools/cenv.sh" "$C/bin-0.11.5" entire doctor </dev/null >"$C/logs/doctor-0115.txt" 2>&1
+echo "doctor rc=$?"
+after=$(cat .git/hooks/* .entire/settings.json .claude/settings.json 2>/dev/null | sha256sum)
+refs_after=$(git for-each-ref --format='%(refname) %(objectname)' | sha256sum)
+[[ "$before" == "$after" ]] && echo "hooks+settings unchanged" || echo "hooks/settings CHANGED"
+[[ "$refs_before" == "$refs_after" ]] && echo "refs unchanged" || echo "refs CHANGED"
+cat "$C/logs/doctor-0115.txt"

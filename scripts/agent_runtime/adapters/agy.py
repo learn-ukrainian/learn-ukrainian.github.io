@@ -919,17 +919,10 @@ class AgyAdapter:
 
         max_budget_usd = (tool_config or {}).get("max_budget_usd")
         if max_budget_usd is not None:
-            _logger.warning(
-                "non-claude adapter %s ignoring max_budget_usd=%s; use hard-timeout/silence-timeout instead",
-                self.name,
-                max_budget_usd,
-            )
+            _logger.warning("non-claude adapter ignoring max_budget_usd; use hard-timeout/silence-timeout instead")
 
         if effort is not None:
-            _logger.debug(
-                "agy effort %r not yet wired through CLI — using TUI-selected model default (#1396 follow-up)",
-                effort,
-            )
+            _logger.debug("agy effort not yet wired through CLI — using TUI-selected model default (#1396 follow-up)")
 
         review_isolation = bool(tc.get("review_isolation"))
         if review_isolation and not tc.get("review_attempt_boundary"):
@@ -2322,7 +2315,7 @@ def _with_language_warning(detail: str, stderr_text: str | None) -> str:
     task records and usage rows carry it; it is not in
     ``AGY_INCOMPLETE_RUN_REASONS``, so ``delegate.py`` still settles the run.
     """
-    _logger.warning("%s: %s", AGY_INTERIM_LANGUAGE_WARNING, detail)
+    _logger.warning(AGY_INTERIM_LANGUAGE_WARNING)
     return "\n".join(part for part in (AGY_INTERIM_LANGUAGE_WARNING, detail, stderr_text) if part)[:500]
 
 
