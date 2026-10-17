@@ -1167,3 +1167,227 @@ def test_record_refuses_non_utf8_post_for_selected_target(ledger, target):
     with pytest.raises(ValueError, match="posted body must be UTF-8"):
         blockers.record(ledger, EPIC, observation(item()), receipt(body, recipient=target), body, 1, reporting_target=target)
     assert ledger.read_bytes() == before
+
+
+# #10931: terminal evidence, exact driver/stream scope, stable blocker identity.
+def finalize_task(root, *, task_id="worker", nonce="round-1", **fields):
+    task = {
+        "task_id": task_id, "run_nonce": nonce, "initiator": "codex-infra",
+        "status": "needs_finalize", "finished_at": "2026-10-17T12:00:00Z",
+        "finalize_error": "auto_finalize_push_failed",
+        "task_lifecycle": {"identity": {"stream_epic": 6943}},
+        **fields,
+    }
+    root.mkdir(exist_ok=True)
+    (root / f"{task_id}.json").write_text(json.dumps(task))
+    return task
+
+
+@pytest.mark.parametrize(("minutes", "expected"), [(29, False), (30, False), (31, True)])
+def test_finalization_age_boundary_uses_terminal_evidence(tmp_path, monkeypatch, minutes, expected):
+    from datetime import UTC, datetime, timedelta
+
+    monkeypatch.delenv(blockers.FINALIZE_AGE_ENV, raising=False)
+    finalize_task(tmp_path)
+    now = datetime(2026, 10, 17, 12, tzinfo=UTC) + timedelta(minutes=minutes)
+    items, ages = blockers.finalization_attention(tmp_path, initiator="codex-infra", stream_epic=6943, now=now)
+    assert bool(items) is expected
+    assert ages == [{
+        "task_id": "worker", "run_nonce": "round-1", "age_minutes": minutes,
+        "age_state": "known", "threshold_minutes": 30, "configuration": "valid",
+    }]
+    if expected:
+        assert items == [{
+            "id": "needs-finalize:worker:round-1", "state": "needs_finalize", "owner": "codex-infra",
+            "waits_on": "age > 30 minutes; terminal=2026-10-17T12:00:00+00:00; reason=auto_finalize_push_failed",
+            "action": "inspect retained task/head and finalization diagnostics; repair the failing gate and retry normal publication",
+        }]
+
+
+@pytest.mark.parametrize("stamp", [None, "", "invalid", "2026-10-17T12:00:00", "2026-10-18T12:00:00Z"])
+def test_unknown_or_future_finalization_age_is_attention(tmp_path, monkeypatch, stamp):
+    from datetime import UTC, datetime
+
+    monkeypatch.delenv(blockers.FINALIZE_AGE_ENV, raising=False)
+    finalize_task(tmp_path, finished_at=stamp)
+    items, ages = blockers.finalization_attention(
+        tmp_path, initiator="codex-infra", stream_epic=6943, now=datetime(2026, 10, 17, 12, tzinfo=UTC),
+    )
+    assert len(items) == 1 and "age unknown" in items[0]["waits_on"]
+    assert ages[0]["age_minutes"] is None
+    assert ages[0]["age_state"] == ("future" if stamp == "2026-10-18T12:00:00Z" else "unknown")
+
+
+@pytest.mark.parametrize("configured", ["0", "-1", "nan", "inf", "bad", ""])
+def test_invalid_age_configuration_never_suppresses_attention(tmp_path, monkeypatch, configured):
+    from datetime import UTC, datetime
+
+    monkeypatch.setenv(blockers.FINALIZE_AGE_ENV, configured)
+    finalize_task(tmp_path)
+    items, ages = blockers.finalization_attention(
+        tmp_path, initiator="codex-infra", stream_epic=6943, now=datetime(2026, 10, 17, 12, tzinfo=UTC),
+    )
+    assert items[0]["waits_on"].startswith("age threshold configuration unknown")
+    assert ages[0]["configuration"] == "unknown" and ages[0]["threshold_minutes"] is None
+
+
+def test_configured_finite_threshold_and_scoped_terminal_scan(tmp_path, monkeypatch):
+    from datetime import UTC, datetime
+
+    monkeypatch.setenv(blockers.FINALIZE_AGE_ENV, "10")
+    finalize_task(tmp_path)
+    finalize_task(tmp_path, task_id="other-driver", initiator="atlas")
+    finalize_task(tmp_path, task_id="other-stream", task_lifecycle={"identity": {"stream_epic": 4387}})
+    finalize_task(tmp_path, task_id="live", status="running")
+    finalize_task(tmp_path, task_id="delivered", status="done")
+    items, ages = blockers.finalization_attention(
+        tmp_path, initiator="codex-infra", stream_epic=6943, now=datetime(2026, 10, 17, 12, 11, tzinfo=UTC),
+    )
+    assert [row["id"] for row in items] == ["needs-finalize:worker:round-1"]
+    assert ages[0]["threshold_minutes"] == 10
+    assert len(ages) == 1
+
+
+def test_repeated_age_observation_is_unchanged_but_reason_or_attempt_change_posts(tmp_path, monkeypatch):
+    from datetime import UTC, datetime
+
+    monkeypatch.delenv(blockers.FINALIZE_AGE_ENV, raising=False)
+    finalize_task(tmp_path)
+    def observe(hour):
+        return blockers.finalization_attention(
+            tmp_path, initiator="codex-infra", stream_epic=6943, now=datetime(2026, 10, 17, hour, tzinfo=UTC),
+        )
+    first, _ = observe(13)
+    snapshot = observation(*first)
+    sidecar = tmp_path / "baseline.json"
+    seed(sidecar, snapshot)
+    baseline = blockers.load_ledger(sidecar, EPIC)
+    # The task file was just rewritten, but finished_at still determines age.
+    finalize_task(tmp_path)
+    later, ages = observe(14)
+    assert ages[0]["age_minutes"] == 120
+    delta = blockers.compute_delta(observation(*later), baseline)
+    assert delta["post_required"] is False
+    assert delta["items"][0]["class"] == "UNCHANGED"
+    finalize_task(tmp_path, finalize_error="auto_finalize_remote_unknown")
+    changed, _ = observe(14)
+    assert blockers.compute_delta(observation(*changed), baseline)["items"][0]["class"] == "CHANGED"
+    finalize_task(tmp_path, nonce="round-2")
+    retried, _ = observe(14)
+    delta = blockers.compute_delta(observation(*retried), baseline)
+    assert [row["class"] for row in delta["items"]] == ["NEW", "RESOLVED"]
+
+
+def test_finalization_scan_requires_scope_and_available_store(tmp_path):
+    from datetime import datetime
+
+    for scope in ({"initiator": "unknown", "stream_epic": 6943}, {"initiator": "codex-infra", "stream_epic": None}):
+        with pytest.raises(ValueError, match="known initiator"):
+            blockers.finalization_attention(tmp_path, **scope)
+    with pytest.raises(ValueError, match="unavailable"):
+        blockers.finalization_attention(tmp_path / "missing", initiator="codex-infra", stream_epic=6943)
+    with pytest.raises(ValueError, match="timezone"):
+        blockers.finalization_attention(tmp_path, initiator="codex-infra", stream_epic=6943, now=datetime(2026, 1, 1))
+
+
+def test_cli_includes_scoped_attention_without_sending_or_recording(ledger, tmp_path, monkeypatch, capsys):
+    task_root = tmp_path / "tasks"
+    finalize_task(task_root)
+    monkeypatch.setenv("LU_TASKS_DIR", str(task_root))
+    current = tmp_path / "current.json"
+    current.write_text(json.dumps(observation()))
+    rc = blockers.main([
+        "delta", "--epic", EPIC, "--current", str(current),
+        "--task-initiator", "codex-infra", "--task-stream-epic", "6943",
+    ])
+    assert rc == 0
+    result = json.loads(capsys.readouterr().out)
+    assert result["post_required"] and result["items"][0]["id"] == "needs-finalize:worker:round-1"
+    assert result["finalization_attention"][0]["age_minutes"] > 30
+    assert not ledger.exists()
+
+
+@pytest.mark.parametrize("selector", ["infra", "infra-harness", "6943", "9737"])
+def test_driver_snapshot_automatically_reports_aged_work_and_records_exact_post(
+    ledger, tmp_path, monkeypatch, capsys, selector,
+):
+    from datetime import UTC, datetime
+
+    class Clock(datetime):
+        hour = 13
+
+        @classmethod
+        def now(cls, tz=None):
+            return cls(2026, 10, 17, cls.hour, tzinfo=UTC)
+
+    monkeypatch.setattr(blockers, "datetime", Clock)
+    monkeypatch.setenv("SESSION_HANDOFF_AGENT", "codex-infra")
+    monkeypatch.setenv("SESSION_EPIC", selector)
+    monkeypatch.delenv(blockers.FINALIZE_AGE_ENV, raising=False)
+    root = tmp_path / "tasks"
+    monkeypatch.setenv("LU_TASKS_DIR", str(root))
+    finalize_task(root)
+    finalize_task(root, task_id="nested", task_lifecycle={"identity": {"stream_epic": 9737}})
+    finalize_task(root, task_id="foreign-driver", initiator="atlas")
+    finalize_task(root, task_id="foreign-stream", task_lifecycle={"identity": {"stream_epic": 4387}})
+    finalize_task(root, task_id="live", status="running")
+    current = {"epic": selector, "complete": True, "items": [item()]}
+    paths = record_files(tmp_path, current, b"")
+    delta_args = ["delta", "--epic", selector, "--current", str(paths[0])]
+    assert blockers.main(delta_args) == 0
+    delta = json.loads(capsys.readouterr().out)
+    assert {row["id"] for row in delta["items"]} == {
+        "blocked-build", "needs-finalize:worker:round-1", "needs-finalize:nested:round-1",
+    }
+    assert delta["post_required"] is True and delta["generation"] == 0
+    assert {row["age_minutes"] for row in delta["finalization_attention"]} == {60}
+    body_items = [{key: row[key] for key in blockers.ITEM_KEYS} for row in delta["items"]]
+    body = posted(*body_items)
+    paths[1].write_text(json.dumps(receipt(body)))
+    paths[2].write_bytes(body)
+    args = record_args(paths, "0")
+    args[2] = selector
+    assert blockers.main(args) == 0
+    assert json.loads(capsys.readouterr().out)["recorded"] is True
+    before = ledger.read_bytes()
+    Clock.hour = 14
+    # A newly written task file and advancing clock cannot trigger another post.
+    finalize_task(root)
+    assert blockers.main(delta_args) == 0
+    later = json.loads(capsys.readouterr().out)
+    assert later["post_required"] is False
+    assert {row["class"] for row in later["items"]} == {"UNCHANGED"}
+    assert {row["age_minutes"] for row in later["finalization_attention"]} == {120}
+    assert ledger.read_bytes() == before
+    # The ordinary recorder must reject a body omitting the automatic blockers.
+    finalize_task(root, finalize_error="auto_finalize_remote_unknown")
+    paths[2].write_bytes(posted(item(action="changed")))
+    paths[1].write_text(json.dumps(receipt(paths[2].read_bytes(), key="next", stamp="2026-10-10T02:00:00Z")))
+    omitted_args = record_args(paths)
+    omitted_args[2] = selector
+    assert blockers.main(omitted_args) == 1
+    assert "posted body" in capsys.readouterr().err
+    assert ledger.read_bytes() == before
+
+
+@pytest.mark.parametrize("mode", ["unknown_stream", "mismatched_session", "no_driver"])
+def test_automatic_finalization_scope_requires_launcher_identity(monkeypatch, mode):
+    monkeypatch.setenv("SESSION_HANDOFF_AGENT", "codex-infra")
+    monkeypatch.setenv("SESSION_EPIC", "unregistered" if mode == "unknown_stream" else "atlas")
+    if mode == "no_driver":
+        monkeypatch.delenv("SESSION_HANDOFF_AGENT")
+        assert blockers.driver_finalization_scope("infra") is None
+    else:
+        with pytest.raises(ValueError, match="scope unknown" if mode == "unknown_stream" else "matching epic"):
+            blockers.driver_finalization_scope("unregistered" if mode == "unknown_stream" else "infra")
+
+
+def test_age_reporting_does_not_publish_historical_private_error(tmp_path):
+    from datetime import UTC, datetime
+
+    finalize_task(tmp_path, finalize_error="private historical diagnostic /private/example")
+    items, _ = blockers.finalization_attention(
+        tmp_path, initiator="codex-infra", stream_epic=6943, now=datetime(2026, 10, 17, 13, tzinfo=UTC),
+    )
+    assert "private historical" not in items[0]["waits_on"]
+    assert "reason=finalization evidence unavailable; inspect private task diagnostics" in items[0]["waits_on"]

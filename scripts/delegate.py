@@ -6496,6 +6496,15 @@ TYPED_CAUSE_CODES = frozenset(
         "interrupted_during_finalize",
         "finalize_skipped_paths",
         "auto_finalize_unsafe_branch",
+        "auto_finalize_dirty_unknown",
+        "auto_finalize_changes_unknown",
+        "auto_finalize_committed_scope_unknown",
+        "auto_finalize_committed_scope_unowned",
+        "auto_finalize_remote_unknown",
+        "auto_finalize_remote_unverified",
+        "auto_finalize_head_moved",
+        "auto_finalize_changes_remaining",
+        "auto_finalize_unconfirmed",
         "auto_finalize_add_failed",
         "auto_finalize_commit_failed",
         "auto_finalize_push_failed",
@@ -6567,7 +6576,7 @@ _PUBLIC_REASON_PHRASES = frozenset(
         "interrupted before the completion gates ran",
     }
 )
-# Task-record fields whose value is a reason; ``auto_finalize.error`` is the nested one.
+# Task-record fields whose value is a reason, including nested delivery results.
 PUBLIC_RECORD_REASON_FIELDS = (
     "last_error",
     "finalize_error",
@@ -6579,7 +6588,7 @@ PUBLIC_RECORD_REASON_FIELDS = (
     "rescue_status",
     "kimi_content_refusal",
 )
-PUBLIC_RECORD_NESTED_REASON_FIELDS = (("auto_finalize", "error"),)
+PUBLIC_RECORD_NESTED_REASON_FIELDS = (("auto_finalize", "error"), ("finalize_delivery", "reason"))
 # Rescue and refusal rows: the keys whose value is a reason.
 PUBLIC_ROW_REASON_KEYS = ("reason", "failure_code")
 _PUBLIC_CAUSE_MAX_CHARS = 512
@@ -7966,25 +7975,106 @@ def _build_worker_env(
     return without_unneeded_secrets(worker_env, dispatch_agent)
 
 
-def _push_auto_finalize_branch(worktree: Path, branch: str) -> None:
+def _push_auto_finalize_branch(worktree: Path, branch: str, *, expected_head: str | None = None) -> None:
+    """Publish the observed HEAD through hooks, then prove the exact remote tip.
+
+    An explicit object/ref pair prevents a moved local branch or push.default
+    from selecting another commit or destination. No failure rewinds HEAD.
+    """
+    # A missing publication hook is a refusal before any Git operation.
     timeout = _auto_finalize_push_timeout_s()
-    try:
+    head = _resolve_sha(worktree)
+    if expected_head is not None and head != expected_head:
+        raise _TypedFailure("intended head changed", _TypedCause("auto_finalize_head_moved"))
+    if (
+        not head
+        or branch == "HEAD"
+        or branch in _load_worktree_containment().PROTECTED_BRANCHES
+        or _current_branch(worktree) != branch
+    ):
+        raise _TypedFailure("unsafe publication target", _TypedCause("auto_finalize_unsafe_branch"))
+    ref = f"refs/heads/{branch}"
+
+    def push_destination() -> str:
         proc = subprocess.run(
-            ["git", "push", "-u", "origin", branch],
-            cwd=worktree,
-            capture_output=True,
-            text=True,
-            check=False,
-            env=_sanitized_git_env(),
-            timeout=timeout,
+            ["git", "remote", "get-url", "--push", "--all", "origin"],
+            cwd=worktree, capture_output=True, text=True, check=False,
+            env=_sanitized_git_env(), timeout=DEFAULT_GIT_TIMEOUT_S,
         )
+        urls = (proc.stdout or "").splitlines()
+        if proc.returncode or len(urls) != 1 or not urls[0].strip():
+            raise _TypedFailure("push destination unavailable", _TypedCause("auto_finalize_remote_unknown"))
+        return urls[0]
+
+    def remote_head(destination: str) -> str | None:
+        proc = subprocess.run(
+            ["git", "ls-remote", "--refs", destination, ref],
+            cwd=worktree, capture_output=True, text=True, check=False,
+            env=_sanitized_git_env(), timeout=DEFAULT_GIT_TIMEOUT_S,
+        )
+        if proc.returncode:
+            raise _TypedFailure("remote head unavailable", _remote_git_cause("auto_finalize_remote_unknown", proc))
+        rows = (proc.stdout or "").splitlines()
+        if not rows:
+            return None
+        if len(rows) != 1 or not re.fullmatch(r"[0-9a-f]{40}\t" + re.escape(ref), rows[0]):
+            raise _TypedFailure("remote head invalid", _TypedCause("auto_finalize_remote_unknown"))
+        return rows[0].split("\t")[0]
+
+    def query_destination(target: str) -> str:
+        proc = subprocess.run(
+            ["git", "ls-remote", "--get-url", target],
+            cwd=worktree, capture_output=True, text=True, check=False,
+            env=_sanitized_git_env(), timeout=DEFAULT_GIT_TIMEOUT_S,
+        )
+        urls = (proc.stdout or "").splitlines()
+        if proc.returncode or len(urls) != 1 or not urls[0].strip():
+            raise _TypedFailure("query destination unavailable", _TypedCause("auto_finalize_remote_unknown"))
+        return urls[0]
+
+    try:
+        destination = push_destination()
+        # get-url already expands URL rewrites. Never push its output: Git
+        # would rewrite it again. Query by origin when its fetch endpoint is
+        # the push endpoint; a distinct pushurl must independently resolve to
+        # that same endpoint before it can supply remote-head evidence.
+        query = "origin" if query_destination("origin") == destination else destination
+        if query_destination(query) != destination:
+            raise _TypedFailure("query endpoint mismatch", _TypedCause("auto_finalize_remote_unverified"))
+        # Even an already-pushed retry runs the normal pre-push boundary.
+        remote_head(query)
+        if push_destination() != destination or query_destination(query) != destination:
+            raise _TypedFailure("publication endpoint changed", _TypedCause("auto_finalize_remote_unverified"))
+        if _resolve_sha(worktree) != head or _current_branch(worktree) != branch:
+            raise _TypedFailure("local head changed", _TypedCause("auto_finalize_head_moved"))
+        proc = subprocess.run(
+            ["git", "push", "-u", "origin", f"{head}:{ref}"],
+            cwd=worktree, capture_output=True, text=True, check=False,
+            env=_sanitized_git_env(), timeout=timeout,
+        )
+        if proc.returncode != 0:
+            raise _TypedFailure("git push failed", _remote_git_cause("auto_finalize_push_failed", proc))
+        if (
+            push_destination() != destination or query_destination(query) != destination
+            or remote_head(query) != head
+        ):
+            raise _TypedFailure("remote verification failed", _TypedCause("auto_finalize_remote_unverified"))
+        if _resolve_sha(worktree) != head or _current_branch(worktree) != branch:
+            raise _TypedFailure("local head changed", _TypedCause("auto_finalize_head_moved"))
+        # An object-id source cannot make push -u bind a local branch. Use
+        # the named remote's tracking ref only after exact delivery proof.
+        upstream = subprocess.run(
+            ["git", "branch", f"--set-upstream-to=origin/{branch}", branch],
+            cwd=worktree, capture_output=True, text=True, check=False,
+            env=_sanitized_git_env(), timeout=DEFAULT_GIT_TIMEOUT_S,
+        )
+        if upstream.returncode:
+            raise _TypedFailure("upstream binding failed", _remote_git_cause("auto_finalize_push_failed", upstream))
     except subprocess.TimeoutExpired as exc:
         raise _TypedFailure(
             f"git push timed out after {timeout}s",
             _exception_cause("auto_finalize_push_failed", exc, command=["git", "push"]),
         ) from exc
-    if proc.returncode != 0:
-        raise _TypedFailure("git push failed", _remote_git_cause("auto_finalize_push_failed", proc))
 
 
 @publication_boundary(RuntimeError)
@@ -8037,8 +8127,9 @@ def _auto_finalize_dirty_worktree(
     base_branch: str,
     open_pr: bool = False,
     owned_paths: object = None,
+    base_sha: str | None = None,
 ) -> AutoFinalizeResult:
-    """Stage, commit, and push the owned part of a cleanly exited dirty dispatch.
+    """Finalize and push owned work from an eligible completed dispatch.
 
     ``owned_paths`` is the task record's ``owned_paths`` list, written at
     dispatch from the task's explicit ``--owned-path`` values (#8991). Only
@@ -8084,8 +8175,62 @@ def _auto_finalize_dirty_worktree(
             changed_files=changed_files,
         )
 
+    resolved_branch = branch.removeprefix("refs/heads/") if isinstance(branch, str) else None
+    if (
+        not resolved_branch
+        or resolved_branch == "HEAD"
+        or resolved_branch in _load_worktree_containment().PROTECTED_BRANCHES
+        or _current_branch(worktree) != resolved_branch
+    ):
+        return _result(ok=False, error="auto_finalize_unsafe_branch")
+    if _worktree_is_dirty(worktree) is None:
+        return _result(ok=False, error="auto_finalize_dirty_unknown")
+    intended_head = _resolve_sha(worktree)
+    if intended_head is None:
+        return _result(ok=False, error="auto_finalize_committed_scope_unknown")
+    if owned is not None:
+        committed, _cause = _advisory_worker_diff(
+            worktree, _origin_base_ref(base_branch), ["--name-only", "-z", "--no-renames"],
+            committed_only=True, base_sha=base_sha, round_start_head=base_sha,
+        )
+        if committed is None:
+            return _result(ok=False, error="auto_finalize_committed_scope_unknown")
+        if any(not _path_is_owned(path, owned) for path in committed.split("\0") if path):
+            return _result(ok=False, error="auto_finalize_committed_scope_unowned")
+        # Publication exposes intermediate commits too. A final tree diff
+        # alone misses an unowned file added and then reverted by the worker.
+        history_base = base_sha or _resolve_merge_base(
+            worktree, _commit_count_base_ref(worktree, _origin_base_ref(base_branch))
+        )
+        if not history_base:
+            return _result(ok=False, error="auto_finalize_committed_scope_unknown")
+        try:
+            history = subprocess.run(
+                ["git", "log", "--format=", "--name-only", "-z", "--no-renames", "--diff-merges=separate",
+                 f"{history_base}..{intended_head}", "--"],
+                cwd=worktree, capture_output=True, text=True, check=False,
+                env=_sanitized_git_env(), timeout=DEFAULT_GIT_TIMEOUT_S,
+            )
+        except (OSError, subprocess.TimeoutExpired):
+            return _result(ok=False, error="auto_finalize_committed_scope_unknown")
+        if history.returncode:
+            return _result(ok=False, error="auto_finalize_committed_scope_unknown")
+        if any(not _path_is_owned(path, owned) for path in history.stdout.split("\0") if path):
+            return _result(ok=False, error="auto_finalize_committed_scope_unowned")
     if not all_changed:
-        return _result(ok=False, error="clean-tree")
+        if _worktree_is_dirty(worktree) is not False:
+            return _result(ok=False, error="auto_finalize_changes_unknown")
+        if owned is None:
+            return _result(ok=False, error=_AUTO_FINALIZE_NO_OWNED_PATHS_REASON)
+        try:
+            _push_auto_finalize_branch(worktree, resolved_branch, expected_head=intended_head)
+        except (OSError, RuntimeError, subprocess.TimeoutExpired) as exc:
+            error = _publish_cause(
+                task_id, _exception_cause("auto_finalize_failed", exc),
+                source="auto_finalize", field="auto_finalize.error",
+            )
+            return _result(ok=False, commit_sha=intended_head, error=error)
+        return _result(ok=True, commit_sha=intended_head)
     if _auto_finalize_is_junk_only(all_changed):
         return _result(
             ok=False,
@@ -8108,12 +8253,6 @@ def _auto_finalize_dirty_worktree(
     def _failed(cause: _TypedCause, **fields: Any) -> AutoFinalizeResult:
         error = _publish_cause(task_id, cause, source="auto_finalize", field="auto_finalize.error")
         return _result(ok=False, error=error, changed_files=changed_files, **fields)
-
-    resolved_branch = branch or _current_branch(worktree)
-    if not resolved_branch or resolved_branch in {"HEAD", "main", "master"}:
-        return _failed(
-            _TypedCause("auto_finalize_unsafe_branch", diagnostic=f"unsafe or unresolved branch {resolved_branch!r}")
-        )
 
     safe_task = _x_agent_task_id(agent, task_id)
     subject = f"chore(dispatch): finalize {agent} task {safe_task}"
@@ -8149,6 +8288,8 @@ def _auto_finalize_dirty_worktree(
         )
         if add_proc.returncode != 0:
             return _failed(_git_cause("auto_finalize_add_failed", add_proc))
+        if _resolve_sha(worktree) != intended_head:
+            return _failed(_TypedCause("auto_finalize_head_moved"))
 
         commit_proc = subprocess.run(
             [
@@ -8186,28 +8327,12 @@ def _auto_finalize_dirty_worktree(
             return _failed(_git_cause("auto_finalize_commit_failed", commit_proc))
 
         commit_sha = _resolve_sha(worktree)
-        _push_auto_finalize_branch(worktree, resolved_branch)
+        if not commit_sha or _resolve_sha(worktree, f"{commit_sha}^") != intended_head:
+            return _failed(_TypedCause("auto_finalize_head_moved"), commit_sha=commit_sha)
+        _push_auto_finalize_branch(worktree, resolved_branch, expected_head=commit_sha)
     except (OSError, RuntimeError, subprocess.TimeoutExpired) as exc:
         step = exc.cmd if isinstance(exc, subprocess.TimeoutExpired) and isinstance(exc.cmd, (list, tuple)) else None
         causes = [_exception_cause("auto_finalize_failed", exc, command=step)]
-        if commit_sha is not None:
-            try:
-                reset_proc = subprocess.run(
-                    ["git", "reset", "--soft", "HEAD~1"],
-                    cwd=worktree,
-                    capture_output=True,
-                    text=True,
-                    check=False,
-                    env=_sanitized_git_env(),
-                    timeout=DEFAULT_GIT_TIMEOUT_S,
-                )
-            except (OSError, subprocess.TimeoutExpired) as reset_exc:
-                causes.append(_exception_cause("auto_finalize_reset_failed", reset_exc, command=["git", "reset"]))
-            else:
-                if reset_proc.returncode != 0:
-                    causes.append(_git_cause("auto_finalize_reset_failed", reset_proc))
-                else:
-                    commit_sha = None
         error = "; ".join(
             _publish_cause(task_id, cause, source="auto_finalize", field="auto_finalize.error") for cause in causes
         )
@@ -8223,8 +8348,8 @@ def _auto_finalize_dirty_worktree(
                 title=subject,
                 body=(
                     f"Auto-finalized delegate task `{task_id}` for `{agent}`.\n\n"
-                    "The agent exited with `returncode=0`, left a dirty worktree, "
-                    "and had made zero commits, so delegate.py staged and pushed the work."
+                    "The agent exited with `returncode=0` and left owned changes "
+                    "for delegate.py to finalize and push."
                 ),
             )
         except (OSError, RuntimeError, subprocess.TimeoutExpired) as exc:
@@ -11767,7 +11892,15 @@ def _run_worker(
                     if normalized_branch.startswith("origin/"):
                         normalized_branch = normalized_branch.removeprefix("origin/")
                     containment = _load_worktree_containment()
-                    if normalized_branch not in containment.PROTECTED_BRANCHES and not (
+                    publication_branch_safe = (
+                        normalized_branch != "HEAD"
+                        and normalized_branch not in containment.PROTECTED_BRANCHES
+                        and _current_branch(Path(worktree_path)) == normalized_branch
+                    )
+                    if not publication_branch_safe:
+                        needs_finalize = True
+                        finalize_error = "auto_finalize_unsafe_branch"
+                    elif not (
                         commits_ahead == 0 and dirty_on_exit is False
                     ):
                         unpushed_commits = _count_unpushed_commits(
@@ -11783,11 +11916,27 @@ def _run_worker(
                             if rescue_status:
                                 finalize_error = rescue_status
 
+                    # Tracking refs are cached observations, not remote delivery
+                    # proof. Revalidate completed scoped work on retries too.
+                    if (
+                        publication_branch_safe and commits_ahead
+                        and (mode == "danger" or kimi_worker)
+                        and _declared_owned_paths(final_state.get("owned_paths"))
+                    ):
+                        needs_finalize = True
+                elif commits_ahead and _declared_owned_paths(final_state.get("owned_paths")):
+                    # Scoped work cannot publish without a recorded target.
+                    # Empty work and legacy manual-delivery records keep their
+                    # existing delivery checks; this does not adopt a branch.
+                    needs_finalize = True
+                    finalize_error = "auto_finalize_unsafe_branch"
+
                 if (
                     needs_finalize
-                    and rescue_status is None
                     and returncode == 0
                     and (mode == "danger" or kimi_worker)
+                    and commits_ahead is not None
+                    and dirty_on_exit is not None
                     and kimi_content_refusal is None
                     and not run_incomplete
                     and not _advisory_completion_gate_fails(final_state, Path(worktree_path))
@@ -11813,22 +11962,31 @@ def _run_worker(
                         base_branch=base_branch,
                         open_pr=finalize_open_pr,
                         owned_paths=final_state.get("owned_paths"),
+                        base_sha=_recorded_base_sha(final_state),
                     )
                     dirty_on_exit = _worktree_is_dirty(Path(worktree_path))
                     commits_ahead = _count_commits_ahead(
                         Path(worktree_path), base_ref, base_sha=_recorded_base_sha(final_state)
                     )
-                    if auto_finalize.ok and not auto_finalize.skipped_paths:
+                    if (
+                        auto_finalize.ok and not auto_finalize.skipped_paths
+                        and dirty_on_exit is False and commits_ahead is not None
+                    ):
                         needs_finalize = False
                         ok_outcome = True
                         final_status = "done"
+                        rescue_status = None
+                        finalize_error = None
                     elif auto_finalize.ok:
                         # Owned work is committed and pushed, but changes outside
                         # the owned paths are still in the tree (finalize_skipped_paths): a human decides.
-                        finalize_error = _TypedCause(
-                            "finalize_skipped_paths", count=len(auto_finalize.skipped_paths)
-                        ).public()
-                    elif auto_finalize.error == _NO_DELIVERABLE_JUNK_ONLY_WORKTREE_REASON:
+                        finalize_error = (
+                            _TypedCause("finalize_skipped_paths", count=len(auto_finalize.skipped_paths)).public()
+                            if auto_finalize.skipped_paths else "auto_finalize_changes_remaining"
+                        )
+                    else:
+                        finalize_error = auto_finalize.error or "auto_finalize_unconfirmed"
+                    if auto_finalize.error == _NO_DELIVERABLE_JUNK_ONLY_WORKTREE_REASON:
                         # A dirty tree with only known scratch residue has no
                         # user-visible deliverable. Refuse before staging so it
                         # cannot create a branch, push, or public PR.
@@ -12032,6 +12190,20 @@ def _run_worker(
             core_terminal_state.update(agy_telemetry.task_fields())
         final_state["final_branch_head_commit"] = _resolve_sha(Path(worktree_path)) if worktree_path else None
         final_state["rescue_status"] = rescue_status
+        if auto_finalize is not None or (needs_finalize and worktree_path and mode in _WRITE_CAPABLE_MODES):
+            pushed = auto_finalize is not None and auto_finalize.ok
+            final_state["finalize_delivery"] = {
+                "status": "pushed" if pushed else "needs_finalize",
+                "branch": final_state.get("worktree_branch"),
+                "commit_sha": auto_finalize.commit_sha if auto_finalize else final_state["final_branch_head_commit"],
+                "remote_verified": pushed,
+                "reason": finalize_error or last_error,
+                "owner": final_state.get("initiator") or "unknown",
+                "action": (
+                    "obtain exact-head independent review" if pushed and not needs_finalize
+                    else "inspect finalization evidence and retained work; repair the failing gate and retry normal publication"
+                ),
+            }
         _write_state_atomic(state_path, {**final_state, **core_terminal_state})
         if clean_snapshots_to_discard is not None:
             discard_read_only_snapshot_phases(clean_snapshots_to_discard)

@@ -1495,3 +1495,39 @@ is fd-relative with `O_NOFOLLOW` and proves containment on every destructive ste
 Symlinks inside a lease are unlinked, never followed, and a device change is refused.
 Anything malformed, foreign, symlinked, in use or unknown stays and is counted under
 `preserved_by_reason` in the receipt; receipts carry counts and bytes only, never paths.
+
+## Terminal worker publication
+
+A successfully exited danger-mode worker can finalize clean unpushed commits,
+owned dirty changes, or both through the existing delegate finalization boundary.
+Kimi retains its existing content and completion checks. Other write modes keep
+their existing admission rules. Incomplete runs and unknown Git measurements
+remain attention states.
+
+Finalization requires the checked-out branch to match the task's recorded
+branch and refuses protected or unknown branches. Unpublished committed paths must fit
+the declared ownership scope. Dirty changes retain the existing owned-path and
+cross-boundary move checks. Intermediate commits are checked too, including
+unowned changes later reverted. Unknown or unowned committed scope blocks publication.
+
+The normal commit and pre-push hooks run. Publication resolves the single origin
+push destination and pushes through named `origin` with an explicit commit and
+branch ref without force. It independently checks the query endpoint before
+publication. Expanded URLs are never passed back to push for another rewrite.
+A distinct fetch URL cannot supply delivery proof. Multiple or
+unknown push destinations fail closed. Finalization verifies the destination's
+remote tip, unchanged destination configuration and unchanged local HEAD, then
+binds the branch's upstream to the verified origin tracking ref.
+Scoped committed work is revalidated on retry even when cached tracking refs
+already match. `finalize_delivery` records the branch, commit, verification result,
+reason, owner, and next action before the terminal checkpoint. A push failure
+retains the local commit and current file bytes. It never rewinds HEAD.
+Unowned dirty changes remain in the checkout and keep the task `needs_finalize`,
+even when the owned commit was pushed.
+
+This operation neither deletes worktrees nor turns historical finalization
+failures into success. Existing rescue and common-reaper eligibility rules stay
+in force. The accountable driver owns blocked validation, publication retries,
+independent exact-head review, landing, and deployed behavior proof. See
+[aged finalization reporting](fleet-blocker-reporting.md#report-aged-finalization-work)
+for attention after the finite age threshold.

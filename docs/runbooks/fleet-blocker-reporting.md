@@ -75,3 +75,42 @@ Publication and a recorded baseline do not prove live authority consumption.
 The accountable driver owns exact-head cross-family review, landing, deployed
 consumer verification, genuine epics apply and fenced ACK evidence, typed
 acceptance evidence, and cleanup for [#10419](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/10419).
+
+## Report aged finalization work
+
+Ordinary driver `delta` and `record` commands automatically include terminal
+task attention. The launcher supplies `SESSION_HANDOFF_AGENT` as the exact
+initiator and `SESSION_EPIC` as the stream selector. Existing launcher aliases
+and the issue-stream registry bind that selector to its registered epics,
+including nested programs. An unknown or mismatched driver stream fails visibly.
+
+Outside a driver session, supply an explicit exact initiator and lifecycle epic
+on both commands:
+
+```bash
+.venv/bin/python -m scripts.driver_blockers delta --epic infra --current blockers.json --task-initiator codex-infra --task-stream-epic 6943
+.venv/bin/python -m scripts.driver_blockers record --epic infra --current blockers.json --task-initiator codex-infra --task-stream-epic 6943 --receipt receipt.json --body-file posted.md --expect-generation 30
+```
+
+Use the same scope on both commands. Without a launcher driver identity or an
+explicit scope, the CLI does not infer ownership of another driver's tasks.
+The scan reads the existing dispatch task
+store and includes only matching initiator and lifecycle stream identities.
+It does not adopt or repair tasks in another lane. Missing task storage fails
+visibly. No command sends a message. Include all other owned blockers in the
+original complete snapshot, then post and record the combined delta as above.
+
+`LU_NEEDS_FINALIZE_MAX_AGE_MINUTES` defaults to **30 minutes**. It must be finite
+and positive. A known age equal to the threshold is still within the allowance;
+a greater age becomes a blocker. Age comes from the recorded `finished_at`,
+never file modification time. Missing, invalid, timezone-free, or future terminal
+timestamps produce attention. Invalid configuration also produces attention
+instead of an unlimited wait.
+
+Blocker IDs bind the task ID and run nonce. Each five-field blocker names its
+owner, terminal timestamp, stable age lower bound, finalization reason, and
+concrete publication recovery action. The `finalization_attention` output gives
+the exact observed age and configuration state outside the snapshot fingerprint.
+An unchanged task therefore stays `UNCHANGED` as time passes. Changed reasons
+or attempts require another report. The exact body, receipt hash, completeness,
+and generation-CAS checks remain unchanged.

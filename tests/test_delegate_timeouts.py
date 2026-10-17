@@ -313,23 +313,30 @@ def test_current_branch_timeouts(tmp_path: Path) -> None:
         assert _current_branch(tmp_path) is None
 
 
-def test_push_auto_finalize_branch_timeouts(tmp_path: Path) -> None:
+def test_push_auto_finalize_branch_timeouts(tmp_path: Path, monkeypatch) -> None:
+    from tests.test_delegate import _agy_dispatch_worktree, _sanitize_git_env_for_test
+
+    _sanitize_git_env_for_test(monkeypatch)
+    worktree = _agy_dispatch_worktree(tmp_path, "feature")
     calls: list[dict] = []
+    real_run = subprocess.run
+    fail_push = False
 
-    def fake_run(cmd, **kwargs):
+    def run(cmd, **kwargs):
         calls.append({"cmd": cmd, **kwargs})
-        return _completed(cmd, returncode=0)
+        if cmd[:2] == ["git", "push"] and fail_push:
+            raise subprocess.TimeoutExpired(cmd, AUTO_FINALIZE_PUSH_TIMEOUT_S)
+        return real_run(cmd, **kwargs)
 
-    with patch("subprocess.run", side_effect=fake_run):
-        _push_auto_finalize_branch(tmp_path, "feature")
-
-    assert len(calls) == 1
-    assert calls[0]["timeout"] == AUTO_FINALIZE_PUSH_TIMEOUT_S
-
-    with patch("subprocess.run", side_effect=subprocess.TimeoutExpired(["git", "push"], AUTO_FINALIZE_PUSH_TIMEOUT_S)):
+    with patch("subprocess.run", side_effect=run):
+        _push_auto_finalize_branch(worktree, "feature")
+        assert len([call for call in calls if call["cmd"][:2] == ["git", "push"]]) == 1
+        assert all(call["timeout"] == (
+            AUTO_FINALIZE_PUSH_TIMEOUT_S if call["cmd"][:2] == ["git", "push"] else DEFAULT_GIT_TIMEOUT_S
+        ) for call in calls)
+        fail_push = True
         with pytest.raises(RuntimeError, match=r"^auto_finalize_push_failed, git push, TimeoutExpired$") as raised:
-            _push_auto_finalize_branch(tmp_path, "feature")
-    # #9878: the public form is typed; the timeout's own words stay for the local diagnostic.
+            _push_auto_finalize_branch(worktree, "feature")
     assert raised.value.message == f"git push timed out after {AUTO_FINALIZE_PUSH_TIMEOUT_S}s"
 
 
@@ -367,86 +374,50 @@ def test_create_auto_finalize_pr_timeouts(tmp_path: Path) -> None:
     assert raised.value.message == "gh pr create timed out after 180.0s"
 
 
-def test_auto_finalize_dirty_worktree_timeouts(tmp_path: Path) -> None:
-    # 1. git rev-parse --is-inside-work-tree timeout
-    with (
-        patch("scripts.delegate._auto_finalize_changed_files", return_value=("file.py",)),
-        patch("subprocess.run", side_effect=subprocess.TimeoutExpired(["git", "rev-parse"], DEFAULT_GIT_TIMEOUT_S)),
-    ):
-        res = _auto_finalize_dirty_worktree(
-            worktree=tmp_path,
-            task_id="task1",
-            agent="agy",
-            branch="feature",
-            base_branch="main",
-        )
-        assert res.ok is False
-        assert res.error == "not a git worktree"
+@pytest.mark.parametrize("step", ["rev-parse", "add", "commit", "no_owned_paths"])
+def test_auto_finalize_dirty_worktree_timeouts(tmp_path: Path, monkeypatch, step) -> None:
+    from tests.test_delegate import _agy_dispatch_worktree, _git_out, _sanitize_git_env_for_test
 
-    # 2. git add timeout
-    with (
-        patch("scripts.delegate._auto_finalize_changed_files", return_value=("file.py",)),
-        patch("scripts.delegate._auto_finalize_additions_deletions", return_value=((), ())),
-        patch(
-            "subprocess.run",
-            side_effect=[
-                _completed(stdout="true\n"),  # is-inside-work-tree
-                subprocess.TimeoutExpired(["git", "add"], DEFAULT_GIT_TIMEOUT_S),
-            ],
-        ),
-    ):
-        res = _auto_finalize_dirty_worktree(
-            worktree=tmp_path,
-            task_id="task1",
-            agent="agy",
-            branch="feature",
-            base_branch="main",
-            owned_paths=["file.py"],
-        )
-        assert res.ok is False
-        assert res.error == "auto_finalize_failed, git add, TimeoutExpired"  # #9878: typed, the step named
+    _sanitize_git_env_for_test(monkeypatch)
+    worktree = _agy_dispatch_worktree(tmp_path, "feature")
+    base = _resolve_sha(worktree)
+    (worktree / "file.py").write_bytes(b"current bytes\r\n")
+    calls = []
+    real_run = subprocess.run
 
-    # 3. git commit failure with restore
-    with (
-        patch("scripts.delegate._auto_finalize_changed_files", return_value=("file.py",)),
-        patch("scripts.delegate._auto_finalize_additions_deletions", return_value=((), ())),
-        patch(
-            "subprocess.run",
-            side_effect=[
-                _completed(stdout="true\n"),  # is-inside-work-tree
-                _completed(returncode=0),  # git add
-                _completed(returncode=1, stderr="pre-commit hook failed"),  # git commit failed
-                _completed(returncode=0),  # git restore --staged
-            ],
-        ) as run_mock,
-    ):
-        res = _auto_finalize_dirty_worktree(
-            worktree=tmp_path,
-            task_id="task1",
-            agent="agy",
-            branch="feature",
-            base_branch="main",
-            owned_paths=["file.py"],
-        )
-        assert res.ok is False
-        assert res.error == "auto_finalize_commit_failed, exit 1"  # #9878: the hook's output stays local
+    def run(cmd, **kwargs):
+        calls.append(cmd)
+        if step == "rev-parse" and cmd[:3] == ["git", "rev-parse", "--is-inside-work-tree"]:
+            assert kwargs["timeout"] == DEFAULT_GIT_TIMEOUT_S
+            raise subprocess.TimeoutExpired(cmd, DEFAULT_GIT_TIMEOUT_S)
+        if "--literal-pathspecs" in cmd and cmd[2] == step:
+            assert kwargs["timeout"] == DEFAULT_GIT_TIMEOUT_S
+            if step == "add":
+                raise subprocess.TimeoutExpired(cmd, DEFAULT_GIT_TIMEOUT_S)
+            return _completed(cmd, returncode=1, stderr="pre-commit hook failed")
+        return real_run(cmd, **kwargs)
 
-    # 4. no --owned-path declared: nothing is staged or committed (#8991)
-    with (
-        patch("scripts.delegate._auto_finalize_changed_files", return_value=("file.py",)),
-        patch("subprocess.run", side_effect=[_completed(stdout="true\n")]) as run_mock,
-    ):
-        res = _auto_finalize_dirty_worktree(
-            worktree=tmp_path,
-            task_id="task1",
-            agent="agy",
-            branch="feature",
-            base_branch="main",
+    with patch("subprocess.run", side_effect=run):
+        result = _auto_finalize_dirty_worktree(
+            worktree=worktree, task_id="task1", agent="agy", branch="feature", base_branch="main",
+            owned_paths=None if step == "no_owned_paths" else ["file.py"], base_sha=base,
         )
-        assert res.ok is False
-        assert res.error == "no_owned_paths_declared"
-        assert res.skipped_paths == ("file.py",)
-        assert run_mock.call_count == 1
+    assert result.ok is False
+    assert result.error == {
+        "rev-parse": "not a git worktree",
+        "add": "auto_finalize_failed, git add, TimeoutExpired",
+        "commit": "auto_finalize_commit_failed, git commit, exit 1",
+        "no_owned_paths": "no_owned_paths_declared",
+    }[step]
+    assert _resolve_sha(worktree) == base
+    assert (worktree / "file.py").read_bytes() == b"current bytes\r\n"
+    assert _git_out(worktree, "diff", "--cached", "--name-only") == ""
+    assert not any(cmd[:2] == ["git", "push"] for cmd in calls)
+    if step == "commit":
+        assert any("restore" in cmd and "--staged" in cmd for cmd in calls)
+    if step == "no_owned_paths":
+        assert result.skipped_paths == ("file.py",)
+        assert not any("--literal-pathspecs" in cmd for cmd in calls)
 
 
 def test_validate_existing_worktree_timeouts(tmp_path: Path) -> None:
@@ -583,24 +554,28 @@ def _synthetic_publishing_rules(synthetic_opsec, publisher_transport, monkeypatc
     monkeypatch.setenv("GH_REPO", "unit/public")
 
 
-def test_auto_finalize_push_timeout_tracks_gate_budgets(tmp_path: Path) -> None:
+def test_auto_finalize_push_timeout_tracks_gate_budgets(tmp_path: Path, monkeypatch) -> None:
     import runpy
 
     from scripts import delegate
+    from tests.test_delegate import _agy_dispatch_worktree, _sanitize_git_env_for_test
 
+    _sanitize_git_env_for_test(monkeypatch)
+    worktree = _agy_dispatch_worktree(tmp_path, "feature")
     gate_path = Path(delegate.__file__).resolve().parents[1] / ".githooks/pre_push_gate.py"
     bounds = runpy.run_path(str(gate_path))
     required = DEFAULT_NETWORK_GIT_TIMEOUT_S + bounds["ADMISSION_MAX_WAIT_S"] + bounds["ADMISSION_WAIT_S"]
-    calls: list[float] = []
+    calls = []
+    real_run = subprocess.run
 
     def run(cmd, **kwargs):
-        calls.append(kwargs["timeout"])
-        return _completed(cmd)
+        calls.append((cmd, kwargs["timeout"]))
+        return real_run(cmd, **kwargs)
 
     with patch("subprocess.run", side_effect=run):
-        _push_auto_finalize_branch(tmp_path, "feature")
-
-    assert calls == [required]
+        _push_auto_finalize_branch(worktree, "feature")
+    assert [budget for cmd, budget in calls if cmd[:2] == ["git", "push"]] == [required]
+    assert all(budget == DEFAULT_GIT_TIMEOUT_S for cmd, budget in calls if cmd[:2] != ["git", "push"])
 
 
 def test_delegate_import_succeeds_without_the_hook(tmp_path: Path) -> None:

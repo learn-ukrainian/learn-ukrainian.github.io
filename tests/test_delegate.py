@@ -5961,6 +5961,8 @@ def test_run_worker_marks_needs_finalize_for_unpushed_commits(
     worktree.mkdir()
     state_path = delegate._state_path(task_id)
     _init_git_repo_for_test(worktree, monkeypatch)
+    _git_out(worktree, "checkout", "-b", "feat/fix-7311")
+    _git_out(worktree, "commit", "--allow-empty", "-m", "setup")
     delegate._write_state_atomic(
         state_path,
         {
@@ -5997,7 +5999,9 @@ def test_run_worker_marks_needs_finalize_for_unpushed_commits(
     assert state["worktree_dirty_on_exit"] is False
     if unpushed_count is not None:
         assert state["rescue_status"] == "unpushed work - needs rescue"
-        assert state["finalize_error"] == "unpushed work - needs rescue"
+        assert state["finalize_error"] == (
+            "no_owned_paths_declared" if mode == "danger" else "unpushed work - needs rescue"
+        )
     else:
         assert state["rescue_status"] == "unpushed state unknown - needs rescue"
     assert state["final_branch_head_commit"] == delegate._resolve_sha(worktree)
@@ -6017,6 +6021,8 @@ def test_run_worker_marks_done_when_branch_commits_pushed(
     worktree.mkdir()
     state_path = delegate._state_path(task_id)
     _init_git_repo_for_test(worktree, monkeypatch)
+    _git_out(worktree, "checkout", "-b", "feat/fix-7311")
+    _git_out(worktree, "commit", "--allow-empty", "-m", "setup")
     delegate._write_state_atomic(
         state_path,
         {
@@ -6052,13 +6058,13 @@ def test_run_worker_marks_done_when_branch_commits_pushed(
 
 
 @pytest.mark.parametrize("branch", [None, "", "main", "master"])
-def test_run_worker_unpushed_check_skips_omitted_or_protected_branch(
+def test_run_worker_unpushed_check_refuses_protected_branch_without_publication(
     tmp_tasks_dir,
     tmp_path,
     monkeypatch,
     branch,
 ):
-    """Omitted or protected worktree_branch keeps existing commits_ahead delivery behavior (#7311)."""
+    """A protected recorded branch cannot claim delivery even outside auto-finalization."""
     task_id = f"skip-unpushed-check-{branch}"
     worktree = tmp_path / f"wt-{task_id}"
     worktree.mkdir()
@@ -6100,9 +6106,15 @@ def test_run_worker_unpushed_check_skips_omitted_or_protected_branch(
     state = delegate._read_state(state_path)
     assert state is not None
     assert unpushed_called is False
-    assert state["status"] == "done"
-    assert state["needs_finalize"] is False
-    assert rc == 0
+    if branch in {"main", "master"}:
+        assert state["status"] == "needs_finalize"
+        assert state["needs_finalize"] is True
+        assert state["finalize_error"] == "auto_finalize_unsafe_branch"
+        assert rc == 1
+    else:
+        assert state["status"] == "done"
+        assert state["needs_finalize"] is False
+        assert rc == 0
 
 
 def test_count_unpushed_commits_resolves_remote_ref_or_none(tmp_path, monkeypatch):
@@ -6225,7 +6237,7 @@ def test_run_worker_auto_finalizes_dirty_agy_worktree(
     pushed: list[str] = []
     created_prs: list[dict[str, str]] = []
 
-    def fake_push(_worktree: Path, branch: str) -> None:
+    def fake_push(_worktree: Path, branch: str, **_kwargs) -> None:
         pushed.append(branch)
 
     def fake_create_pr(
@@ -6299,6 +6311,7 @@ def test_run_worker_auto_finalizes_dirty_agy_worktree(
         base_branch="main",
         open_pr=True,
         owned_paths=["another.txt"],
+        base_sha=delegate._resolve_sha(worktree),
     )
     assert opt_in.ok is True
     assert created_prs[0]["branch"] == "agy/auto-finalize-test"
@@ -6695,7 +6708,7 @@ def test_run_worker_refuses_junk_only_auto_finalize_without_git_mutations(
     )
 
 
-def test_auto_finalize_push_failure_soft_resets_local_commit(tmp_path, monkeypatch):
+def test_auto_finalize_push_failure_retains_local_commit(tmp_path, monkeypatch):
     _sanitize_git_env_for_test(monkeypatch)
     worktree = tmp_path / "worktree"
     subprocess.run(
@@ -6738,7 +6751,7 @@ def test_auto_finalize_push_failure_soft_resets_local_commit(tmp_path, monkeypat
     ).stdout.strip()
     (worktree / "artifact.txt").write_text("agy wrote this\n", encoding="utf-8")
 
-    def fail_push(_worktree: Path, _branch: str) -> None:
+    def fail_push(_worktree: Path, _branch: str, **_kwargs) -> None:
         raise RuntimeError("simulated push failure")
 
     def fail_create_pr(**_kwargs: Any) -> str:
@@ -6781,12 +6794,14 @@ def test_auto_finalize_push_failure_soft_resets_local_commit(tmp_path, monkeypat
         timeout=30,
     ).stdout
 
-    assert status
-    assert head == base_head
-    assert "chore(dispatch): finalize agy task agy-push-fails" not in log_subjects
+    assert status == ""
+    assert head != base_head
+    assert "chore(dispatch): finalize agy task push-fails" in log_subjects
     assert result.ok is False
     assert result.error == "auto_finalize_failed, RuntimeError"  # #9878: the message stays local
-    assert result.commit_sha is None
+    assert result.commit_sha == head
+    assert (worktree / "artifact.txt").read_bytes() == b"agy wrote this\n"
+    assert _git_out(worktree, "show", "HEAD:artifact.txt") == "agy wrote this\n"
 
 
 def test_auto_finalize_rejects_non_git_worktree(tmp_path):
@@ -15446,12 +15461,12 @@ def test_archive_task_artifacts_preserves_stable_lock_anchor(tmp_path, monkeypat
     assert lock_path.exists()
 
 
-def test_exit_flags_dirty_committed_unpushed_without_auto_push(tmp_path, monkeypatch, tmp_tasks_dir):
+def test_exit_refuses_dirty_committed_unpushed_work_without_owned_paths(tmp_path, monkeypatch, tmp_tasks_dir):
     _primary, worktree, _origin, state_path = _rescue_checkout(tmp_path, monkeypatch, dirty=False)
     (worktree / "later.txt").write_text("more work\n", encoding="utf-8")
 
     def forbidden_push(_worktree, _branch):
-        pytest.fail("exit must not auto-push existing unpushed commits")
+        pytest.fail("exit must not publish work without declared ownership")
 
     monkeypatch.setattr(delegate, "_push_auto_finalize_branch", forbidden_push)
     with patch("agent_runtime.runner.invoke", return_value=_finalize_mock_result()):
@@ -15468,7 +15483,8 @@ def test_exit_flags_dirty_committed_unpushed_without_auto_push(tmp_path, monkeyp
     assert rc == 1
     assert state["status"] == "needs_finalize"
     assert state["rescue_status"] == "unpushed state unknown - needs rescue"
-    assert state["auto_finalize"] is None
+    assert state["auto_finalize"]["ok"] is False
+    assert state["auto_finalize"]["error"] == "no_owned_paths_declared"
     assert (worktree / "later.txt").exists()
 
 
@@ -18255,6 +18271,8 @@ def test_interrupt_fallback_records_rescue_status_after_unpushed_telemetry(
 ):
     """A checkpoint interrupt must retain the measured unpushed-work verdict."""
     _init_git_repo_for_test(tmp_path, monkeypatch)
+    _git_out(tmp_path, "checkout", "-b", "codex/interrupt-unpushed")
+    _git_out(tmp_path, "commit", "--allow-empty", "-m", "setup")
     state_path = delegate._state_path("interrupt-unpushed")
     delegate._write_state_atomic(
         state_path,
@@ -20964,7 +20982,7 @@ def _git_out(worktree: Path, *args: str) -> str:
 
 def _finalize_owned(worktree: Path, monkeypatch, owned: list[str] | None) -> delegate.AutoFinalizeResult:
     pushed: list[str] = []
-    monkeypatch.setattr(delegate, "_push_auto_finalize_branch", lambda _wt, b: pushed.append(b))
+    monkeypatch.setattr(delegate, "_push_auto_finalize_branch", lambda _wt, b, **_kwargs: pushed.append(b))
     return delegate._auto_finalize_dirty_worktree(
         worktree=worktree,
         task_id="owned-finalize",
@@ -20972,6 +20990,7 @@ def _finalize_owned(worktree: Path, monkeypatch, owned: list[str] | None) -> del
         branch="claude/owned-finalize",
         base_branch="main",
         owned_paths=owned,
+        base_sha=delegate._resolve_sha(worktree),
     )
 
 
@@ -21081,7 +21100,7 @@ def _owned_run(tmp_path, monkeypatch, task_id, extra_state):
         },
     )
     pushed: list[str] = []
-    monkeypatch.setattr(delegate, "_push_auto_finalize_branch", lambda _wt, b: pushed.append(b))
+    monkeypatch.setattr(delegate, "_push_auto_finalize_branch", lambda _wt, b, **_kwargs: pushed.append(b))
 
     with patch("agent_runtime.runner.invoke", return_value=_bg_mock_result("")):
         rc = delegate._run_worker(
@@ -21140,7 +21159,7 @@ def test_run_worker_auto_finalize_with_only_owned_changes_is_done(tmp_tasks_dir,
             "keep_worktree": True,
         },
     )
-    monkeypatch.setattr(delegate, "_push_auto_finalize_branch", lambda *_a: None)
+    monkeypatch.setattr(delegate, "_push_auto_finalize_branch", lambda *_a, **_k: None)
     monkeypatch.setattr(delegate, "_count_unpushed_commits", lambda *_a: 0)
 
     with patch("agent_runtime.runner.invoke", return_value=_bg_mock_result("")):
@@ -21247,16 +21266,19 @@ def test_run_worker_branch_continuation_finalizes_owned_changes_or_reports_failu
         assert rc == 1
         assert state["status"] == "needs_finalize"
         assert state["needs_finalize"] is True
-        assert state["worktree_dirty_on_exit"] is True
-        assert remote_head == delegate._resolve_sha(worktree) == original_head
+        assert state["worktree_dirty_on_exit"] is (finalize_failure != "push_failed")
+        assert remote_head == original_head
         assert artifact.read_text(encoding="utf-8") == "continuation changes\n"
         if finalize_failure == "unavailable":
             assert state["finalize_error"] == "finalize_failed, OSError"
             assert state["auto_finalize"] is None
         elif finalize_failure == "push_failed":
             assert state["auto_finalize"]["ok"] is False
-            assert state["auto_finalize"]["error"].startswith("auto_finalize_push_failed")
+            assert state["auto_finalize"]["error"].startswith("auto_finalize_remote_unknown")
+            assert delegate._resolve_sha(worktree) == state["auto_finalize"]["commit_sha"] != original_head
+            assert _git_out(worktree, "show", "HEAD:artifact.txt") == "continuation changes\n"
         else:
+            assert delegate._resolve_sha(worktree) == original_head
             assert state["auto_finalize"]["ok"] is False
             assert state["auto_finalize"]["error"] == "no_owned_paths_declared"
 
@@ -21489,7 +21511,7 @@ def test_auto_finalize_commit_replaces_parent_git_identity(tmp_path, monkeypatch
     (worktree / "scripts/fleet/worker.py").write_text("worker change\n")
     for key, value in git_identity_env("claude").items():
         monkeypatch.setenv(key, value)
-    monkeypatch.setattr(delegate, "_push_auto_finalize_branch", lambda *_args: None)
+    monkeypatch.setattr(delegate, "_push_auto_finalize_branch", lambda *_args, **_kwargs: None)
     result = delegate._auto_finalize_dirty_worktree(
         worktree=worktree,
         task_id="identity-finalize",
@@ -21498,6 +21520,7 @@ def test_auto_finalize_commit_replaces_parent_git_identity(tmp_path, monkeypatch
         branch="claude/owned-finalize",
         base_branch="main",
         owned_paths=["scripts/fleet/worker.py"],
+        base_sha=delegate._resolve_sha(worktree),
     )
     assert result.ok, result
     slug = "unknown" if name == "LU Unknown" else name.lower()
@@ -21546,7 +21569,7 @@ def test_cursor_finalize_preserves_auto_selector_and_concrete_runner_model(
         "substituted": True,
         "source": "runner-failover",
     }
-    monkeypatch.setattr(delegate, "_push_auto_finalize_branch", lambda *_args: None)
+    monkeypatch.setattr(delegate, "_push_auto_finalize_branch", lambda *_args, **_kwargs: None)
     monkeypatch.setattr(delegate, "_count_unpushed_commits", lambda *_args: 0)
     with patch("agent_runtime.runner.invoke", return_value=result):
         rc = delegate._run_worker(
@@ -21582,7 +21605,7 @@ def test_auto_finalize_refuses_when_every_change_is_outside_owned_paths(tmp_path
     _sanitize_git_env_for_test(monkeypatch)
     worktree = _agy_dispatch_worktree(tmp_path, "claude/owned-none")
     (worktree / "scratch.py").write_text("# scratch\n", encoding="utf-8")
-    monkeypatch.setattr(delegate, "_push_auto_finalize_branch", lambda *_a: pytest.fail("must not push"))
+    monkeypatch.setattr(delegate, "_push_auto_finalize_branch", lambda *_a, **_k: pytest.fail("must not push"))
     head = delegate._resolve_sha(worktree)
 
     result = delegate._auto_finalize_dirty_worktree(
@@ -23353,3 +23376,97 @@ def test_agy_producer_consistency_through_durable_worker_projections(
         else:
             assert runtime_events == []
     assert runner._AGY_OBSERVED_IDENTITY.get() is None
+@pytest.mark.parametrize("case", ["clean", "dirty", "mixed", "retry", "rejected", "incomplete", "live"])
+def test_terminal_delivery_matches_remote_and_retains_worker_bytes(tmp_tasks_dir, tmp_path, monkeypatch, case):
+    """#10931: the worker's durable milestone agrees with real Git publication."""
+    _sanitize_git_env_for_test(monkeypatch)
+    task_id = "terminal-delivery"
+    branch = f"codex/{task_id}"
+    worktree = _agy_dispatch_worktree(tmp_path, branch)
+    artifact = worktree / "artifact.txt"
+    if case != "dirty":
+        artifact.write_bytes(b"committed\r\n")
+        _git_out(worktree, "add", "artifact.txt")
+        _git_out(worktree, "commit", "-m", "completed worker commit")
+    if case in {"dirty", "mixed"}:
+        artifact.write_bytes(b"current\r\n\x00bytes\n")
+    head = delegate._resolve_sha(worktree)
+    if case == "retry":
+        _git_out(worktree, "push", "-u", "origin", branch)
+    if case == "rejected":
+        hook = worktree / ".git/hooks/pre-push"
+        hook.write_text("#!/bin/sh\nexit 1\n")
+        hook.chmod(0o755)
+    expected = artifact.read_bytes()
+    state_path = delegate._state_path(task_id)
+    delegate._write_state_atomic(state_path, {
+        "task_id": task_id, "run_nonce": "delivery-round", "initiator": "codex-infra",
+        "worktree_path": str(worktree), "worktree_branch": branch, "worktree_base": "main",
+        "owned_paths": ["artifact.txt"], "keep_worktree": True,
+    })
+    result = _bg_mock_result("")
+    if case == "incomplete":
+        result.ok = False
+    if case == "live":
+        monkeypatch.setattr(delegate, "_background_jobs_at_exit", lambda *_a, **_k: delegate.worker_leftovers.ExitScan(
+            delegate.worker_leftovers.SCAN_UNKNOWN,
+            delegate.worker_leftovers.WorkerScope(task_id=task_id, launch_mode="popen-fallback", run_nonce="delivery-round"),
+        ))
+    with patch("agent_runtime.runner.invoke", return_value=result):
+        rc = delegate._run_worker(
+            task_id=task_id, agent="codex", prompt="finish owned work", mode="danger",
+            cwd_str=str(worktree), model="gpt-6.1-sol", hard_timeout=60, effort="high", keep_worktree=True,
+        )
+    state = delegate._read_state(state_path)
+    remote = _git_out(worktree, "ls-remote", "origin", f"refs/heads/{branch}").split()
+    assert artifact.read_bytes() == expected
+    if case in {"rejected", "incomplete", "live"}:
+        assert rc == 1 and state["status"] == "needs_finalize"
+        assert not remote and delegate._resolve_sha(worktree) == head
+        if case == "rejected":
+            assert state["finalize_delivery"]["remote_verified"] is False
+            assert state["finalize_delivery"]["owner"] == "codex-infra"
+    else:
+        assert rc == 0 and state["status"] == "done"
+        assert remote[0] == state["final_branch_head_commit"] == delegate._resolve_sha(worktree)
+        assert state["rescue_status"] is None
+        if case != "retry":
+            assert state["finalize_delivery"]["commit_sha"] == remote[0]
+            assert state["finalize_delivery"]["remote_verified"] is True
+            assert state["finalize_delivery"]["owner"] == "codex-infra"
+
+
+@pytest.mark.parametrize("mode", ["workspace-write", "danger"])
+@pytest.mark.parametrize("target", ["protected", "mismatched", "missing"])
+def test_worker_refuses_unsafe_branch_even_without_auto_finalization(tmp_tasks_dir, tmp_path, monkeypatch, mode, target):
+    _sanitize_git_env_for_test(monkeypatch)
+    branch = "codex/branch-proof"
+    worktree = _agy_dispatch_worktree(tmp_path, branch)
+    if target == "protected":
+        _git_out(worktree, "checkout", "main")
+    (worktree / "artifact.txt").write_bytes(b"preserved\x00\r\n")
+    _git_out(worktree, "add", "artifact.txt")
+    _git_out(worktree, "commit", "-m", "completed bytes")
+    head = delegate._resolve_sha(worktree)
+    before = _git_out(worktree, "ls-remote", "origin")
+    state_path = delegate._state_path("unsafe-branch")
+    delegate._write_state_atomic(state_path, {
+        "task_id": "unsafe-branch", "run_nonce": "round", "initiator": "codex-infra",
+        "worktree_path": str(worktree),
+        "worktree_branch": {"protected": "main", "mismatched": "codex/foreign", "missing": None}[target],
+        "worktree_base": "main", "owned_paths": ["artifact.txt"], "keep_worktree": True,
+    })
+    with patch("agent_runtime.runner.invoke", return_value=_bg_mock_result("")):
+        rc = delegate._run_worker(
+            task_id="unsafe-branch", agent="codex", prompt="finish", mode=mode,
+            cwd_str=str(worktree), model="gpt-6.1-sol", hard_timeout=60, effort="high", keep_worktree=True,
+        )
+    state = delegate._read_state(state_path)
+    assert rc == 1 and state["status"] == "needs_finalize"
+    assert state["finalize_error"] == "auto_finalize_unsafe_branch"
+    assert state["finalize_delivery"]["remote_verified"] is False
+    assert state["finalize_delivery"]["owner"] == "codex-infra"
+    assert state["finalize_delivery"]["action"] == "inspect finalization evidence and retained work; repair the failing gate and retry normal publication"
+    assert delegate._resolve_sha(worktree) == head
+    assert (worktree / "artifact.txt").read_bytes() == b"preserved\x00\r\n"
+    assert _git_out(worktree, "ls-remote", "origin") == before
