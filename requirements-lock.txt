@@ -15,7 +15,7 @@ annotated-types==0.8.0
 anthropic==0.108.0
 anyio==4.15.1
 APScheduler==3.11.3
-ast-serialize==0.8.0
+ast-serialize==0.12.1
 asttokens==3.0.2
 attrs==26.1.0
 Authlib==1.7.2
