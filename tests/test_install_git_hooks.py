@@ -496,11 +496,18 @@ def test_every_entire_wrapper_is_guarded_and_check_catches_a_regenerated_one(tmp
     repo, env = _fixture_repository(tmp_path)
     _write_pre_commit_config(repo, "default_install_hook_types: [commit-msg, pre-push]\nrepos: []\n")
     hooks_dir = _install_entire_wrappers(repo, env, tmp_path)
+    scratch = tmp_path / "scratch"
+    scratch.mkdir()
+    env["TMPDIR"] = str(scratch)
 
     install = _run(["bash", "scripts/install_git_hooks.sh"], cwd=repo, env=env)
     for hook_name, content in ENTIRE_UNCHAINED_WRAPPERS.items():
         assert f"{hook_name}: Entire capture routed through scripts/entire/capture_guard.sh" in install.stdout
         assert (hooks_dir / hook_name).read_text(encoding="utf-8") == _guarded(content)
+        assert os.access(hooks_dir / hook_name, os.X_OK)
+    # The rewrite is staged under the managed TMPDIR and leaves no residue in either place.
+    assert list(scratch.iterdir()) == []
+    assert not any(".guard." in path.name for path in hooks_dir.iterdir())
     assert _run(["bash", "scripts/install_git_hooks.sh", "--check"], cwd=repo, env=env).returncode == 0
 
     # `entire enable --force` rewrites the wrapper with a bare Entire call.
@@ -513,6 +520,20 @@ def test_every_entire_wrapper_is_guarded_and_check_catches_a_regenerated_one(tmp
     assert "post-rewrite: Entire capture routed" in rerun.stdout
     assert "pre-push: Entire capture routed" not in rerun.stdout
     assert _run(["bash", "scripts/install_git_hooks.sh", "--check"], cwd=repo, env=env).returncode == 0
+
+
+def test_raw_wrapper_without_tmpdir_fails_the_installer_unchanged(tmp_path: Path) -> None:
+    repo, env = _fixture_repository(tmp_path)
+    hooks_dir = _install_entire_wrappers(repo, env, tmp_path)
+    # _clean_env starts from os.environ, so an empty value stands in for an unset one.
+    env["TMPDIR"] = ""
+
+    install = _run(["bash", "scripts/install_git_hooks.sh"], cwd=repo, env=env, check=False)
+
+    assert install.returncode == 1
+    assert "TMPDIR is unset; cannot stage the guarded" in install.stderr
+    for hook_name, content in ENTIRE_UNCHAINED_WRAPPERS.items():
+        assert (hooks_dir / hook_name).read_text(encoding="utf-8") == content
 
 
 def test_unrecognized_entire_invocation_fails_the_installer(tmp_path: Path) -> None:

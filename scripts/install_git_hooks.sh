@@ -323,7 +323,12 @@ for hook_name in "${entire_managed_hooks[@]}"; do
     case "$(entire_invocation_state "$wrapper")" in
         guarded) ;;
         raw)
-            guarded_tmp="$(mktemp "$hooks_dir/.$hook_name.guard.XXXXXX")"
+            if [[ -z "${TMPDIR:-}" ]]; then
+                echo "ERROR: TMPDIR is unset; cannot stage the guarded $wrapper (set TMPDIR to a scratch directory, then rerun)" >&2
+                unguarded_wrappers=$((unguarded_wrappers + 1))
+                continue
+            fi
+            guarded_tmp="$(mktemp "$TMPDIR/entire-$hook_name.guard.XXXXXX")"
             # ENVIRON, not -v: awk -v would interpret backslash escapes in the values.
             RAW="$entire_raw_call" GUARDED="$entire_guarded_call" awk '{
                 i = index($0, ENVIRON["RAW"])
@@ -331,7 +336,9 @@ for hook_name in "${entire_managed_hooks[@]}"; do
                 print
             }' "$wrapper" > "$guarded_tmp"
             chmod 755 "$guarded_tmp"
-            mv -f "$guarded_tmp" "$wrapper"
+            # TMPDIR may sit on another filesystem: stage beside the wrapper, then rename atomically.
+            mv -f "$guarded_tmp" "$hooks_dir/.$hook_name.guard.new"
+            mv -f "$hooks_dir/.$hook_name.guard.new" "$wrapper"
             echo "$hook_name: Entire capture routed through scripts/entire/capture_guard.sh"
             ;;
         *)
