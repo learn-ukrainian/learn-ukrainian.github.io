@@ -422,6 +422,116 @@ def test_hashed_snapshot_ignores_caller_replacement_on_managed_scratch(staged, m
     assert json.loads(receipt.read_text())["status"] == "dry_run"
 
 
+def _tree(root):
+    rows = []
+    for path in sorted(root.rglob("*")):
+        rel = path.relative_to(root).as_posix()
+        if path.is_symlink():
+            rows.append((rel, "symlink", path.readlink().as_posix()))
+        elif path.is_file():
+            rows.append((rel, "file", path.read_bytes()))
+        else:
+            rows.append((rel, "dir"))
+    return tuple(rows)
+
+
+def _public_cli(*args):
+    return subprocess.run(
+        [sys.executable, str(Path(ingest.__file__)), *args],
+        text=True, capture_output=True, timeout=30,
+    )
+
+
+@pytest.mark.parametrize("apply", [False, True], ids=["dry-run", "apply"])
+@pytest.mark.parametrize(("role", "message"), [
+    ("database", "database path cannot be resolved"),
+    ("input", "input path cannot be resolved"),
+    ("receipt", "receipt path cannot be resolved"),
+    ("-wal", "SQLite sidecar path cannot be resolved"),
+    ("-shm", "SQLite sidecar path cannot be resolved"),
+    ("-journal", "SQLite sidecar path cannot be resolved"),
+])
+def test_public_cli_refuses_symlink_loop_before_any_work(staged, apply, role, message):
+    db, chunks, _, receipt = staged
+    root = db.parent
+    db_arg, input_arg, receipt_arg = db, chunks, root / "missing.jsonl"
+    if role in {"-wal", "-shm", "-journal"}:
+        loop = Path(f"{db}{role}")
+    else:
+        loop = root / "self-loop"
+        if role == "database":
+            db_arg = loop
+        elif role == "input":
+            input_arg = loop
+        else:
+            receipt_arg = loop
+    loop.symlink_to(loop.name)
+    before = _tree(root)
+    with pytest.raises(ingest.IngestError, match=f"^{message}$") as caught:
+        ingest.ingest(
+            db_arg, input_arg, input_sha256="0" * 64, receipt_path=receipt_arg, apply=apply,
+        )
+    assert isinstance(caught.value.__cause__, RuntimeError)
+    assert str(caught.value.__cause__).startswith("Symlink loop from ")
+    assert _tree(root) == before
+    args = ["--db", str(db_arg), "--input", str(input_arg), "--input-sha256", "0" * 64, "--receipt", str(receipt_arg)]
+    result = _public_cli(*args, *(["--apply"] if apply else []))
+    assert result.returncode == 2
+    assert result.stdout == ""
+    assert result.stderr == f"REFUSED: {message}\n"
+    assert _tree(root) == before
+    assert not receipt.exists()
+
+
+def test_symlinked_database_dry_run_uses_validated_identity(staged, capsys):
+    db, chunks, _, receipt = staged
+    alias = db.parent / "database-alias.db"
+    alias.symlink_to(db)
+    before = db.read_bytes()
+    argv = ["--db", str(alias), "--input", str(chunks), "--input-sha256", ingest.INPUT_SHA256, "--receipt", str(receipt)]
+    assert ingest.main(argv) == 0
+    assert db.read_bytes() == before
+    assert '"status": "dry_run"' in capsys.readouterr().out
+    assert json.loads(receipt.read_text())["status"] == "dry_run"
+
+
+def test_runtime_error_after_path_validation_propagates_from_main(staged, monkeypatch, capsys):
+    db, chunks, _, receipt = staged
+    before = db.read_bytes(), chunks.read_bytes()
+    calls = []
+    original = ingest._resolve_prework_identity
+
+    def spy(path, failure):
+        resolved = original(path, failure)
+        calls.append(failure)
+        return resolved
+
+    def fail(*_args, **_kwargs):
+        assert calls
+        raise RuntimeError("injected after path validation")
+
+    monkeypatch.setattr(ingest, "_resolve_prework_identity", spy)
+    monkeypatch.setattr(ingest, "_ingest_jsonl", fail)
+    argv = ["--db", str(db), "--input", str(chunks), "--input-sha256", ingest.INPUT_SHA256, "--receipt", str(receipt)]
+    with pytest.raises(RuntimeError, match=r"^injected after path validation$") as caught:
+        ingest.main(argv)
+    assert caught.value.__cause__ is None
+    assert calls == [
+        "database path cannot be resolved",
+        "receipt path cannot be resolved",
+        "input path cannot be resolved",
+        "SQLite sidecar path cannot be resolved",
+        "SQLite sidecar path cannot be resolved",
+        "SQLite sidecar path cannot be resolved",
+    ]
+    captured = capsys.readouterr()
+    assert captured.out == ""
+    assert captured.err == ""
+    assert (db.read_bytes(), chunks.read_bytes()) == before
+    assert not receipt.exists()
+    assert all(not Path(f"{db}{suffix}").exists() for suffix in ("-wal", "-shm", "-journal"))
+
+
 def test_injected_staging_failure_cleans_managed_dir_without_target_writes(staged, monkeypatch):
     db, chunks, _, receipt = staged
     before = {db: db.read_bytes(), chunks: chunks.read_bytes()}
