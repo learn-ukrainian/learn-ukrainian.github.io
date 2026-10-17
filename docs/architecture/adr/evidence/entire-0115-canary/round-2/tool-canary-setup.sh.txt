@@ -1,0 +1,102 @@
+#!/usr/bin/env bash
+# Round-2 Entire 0.11.5 canary setup (#10846): isolated tools, binaries, fake remotes, throwaway clone.
+# Never touches the live Entire binary, live .entire data, live refs or any real remote.
+set -euo pipefail
+P=<scratch>
+C=$P/canary
+WT=<worktree>
+PRESERVED=<preserved-round-1>
+SRC_COMMIT="${1:?usage: canary-setup.sh <commit>}"
+
+rm -rf "$C"
+mkdir -p "$C"/{tools,logs,home,tmp,evidence,remotes/github.com/learn-ukrainian,remotes/github.com/someone-else}
+chmod 700 "$C"
+
+# Binaries: the separately downloaded, checksum-verified releases.
+mkdir -p "$C/bin-0.11.5" "$C/bin-0.8.42"
+cp "$P/bin-0.11.5/entire" "$P/bin-0.11.5/git-remote-entire" "$C/bin-0.11.5/"
+tar -xzf "$P/dl842/entire_linux_amd64.tar.gz" -C "$C/bin-0.8.42" entire
+REAL="$C/bin-0.11.5/entire"
+
+cat >"$C/tools/cenv.sh" <<EOF
+#!/usr/bin/env bash
+# Run a command with an isolated HOME/config and NO network (bwrap net namespace).
+# usage: cenv.sh <entire-bin-dir> <cmd...>
+set -euo pipefail
+C=$C
+BIN="\$1"; shift
+exec env -i PATH="\$BIN:/usr/local/bin:/usr/bin:/bin" HOME="\$C/home" \\
+  XDG_CONFIG_HOME="\$C/home/.config" XDG_CACHE_HOME="\$C/home/.cache" XDG_DATA_HOME="\$C/home/.local/share" \\
+  XDG_STATE_HOME="\$C/home/.local/state" ENTIRE_CONFIG_DIR="\$C/home/.config/entire" ENTIRE_TOKEN_STORE=file \\
+  TERM=dumb LANG=C.UTF-8 TMPDIR="\$C/tmp" GIT_CONFIG_NOSYSTEM=1 GATE_EXIT="\${GATE_EXIT:-0}" \\
+  bwrap --dev-bind / / --unshare-net -- "\$@"
+EOF
+sed "s|<scratch>/canary|$C|" "$PRESERVED/tool-fake-ssh.txt" >"$C/tools/fake-ssh"
+chmod +x "$C/tools/cenv.sh" "$C/tools/fake-ssh"
+
+# Version-variant and outage wrappers: every non-overridden call goes to the real 0.11.5 binary,
+# so a wrongly accepted variant would produce a real, observable checkpoint.
+wrapper() {
+    local name="$1" body="$2"
+    mkdir -p "$C/$name"
+    printf '#!/bin/sh\n%s\nexec %s "$@"\n' "$body" "$REAL" >"$C/$name/entire"
+    chmod +x "$C/$name/entire"
+}
+wrapper bin-v0.11.50 'if [ "$1" = version ]; then echo "Entire CLI 0.11.50"; exit 0; fi'
+wrapper bin-v0.11.6 'if [ "$1" = version ]; then echo "Entire CLI 0.11.6"; exit 0; fi'
+wrapper bin-vmalformed 'if [ "$1" = version ]; then echo "entire version: unknown (dev build)"; exit 0; fi'
+wrapper bin-vhang 'if [ "$1" = version ]; then sleep 60; fi'
+wrapper bin-allfail 'echo "entire: simulated outage" >&2; exit 1'
+wrapper bin-prepushfail 'if [ "$1 $2 $3" = "hooks git pre-push" ]; then echo "entire: simulated pre-push outage" >&2; exit 1; fi'
+wrapper bin-prepushhang 'if [ "$1 $2 $3" = "hooks git pre-push" ]; then sleep 600; fi'
+
+# Throwaway clone of the commit under test.
+git clone -q --no-hardlinks --depth 1 "file://$WT" "$C/clone" --branch claude/infra-entire-upgrade-r2
+cd "$C/clone"
+git checkout -q -B main "$SRC_COMMIT"
+git config user.email canary@example.invalid
+git config user.name "Entire Canary"
+git config url.git@github.com:.insteadOf https://github.com/
+git config core.sshCommand "$C/tools/fake-ssh"
+git remote set-url origin https://github.com/learn-ukrainian/learn-ukrainian.github.io.git
+
+# Repository gate stubs: each tracked hook logs its name and pre-push exits $GATE_EXIT.
+for hook in pre-commit commit-msg pre-push post-merge post-checkout post-commit; do
+    if [[ "$hook" == pre-push ]]; then
+        printf '#!/usr/bin/env bash\necho "gate:%s" >> "%s/logs/gate.log"\nexit "${GATE_EXIT:-0}"\n' "$hook" "$C" >".githooks/$hook"
+    else
+        printf '#!/usr/bin/env bash\necho "gate:%s" >> "%s/logs/gate.log"\n' "$hook" "$C" >".githooks/$hook"
+    fi
+    chmod +x ".githooks/$hook"
+done
+git commit -q -am "canary: stub repository gate hooks"
+
+# The guard resolves the project interpreter at <root>/.venv/bin/python (ignored).
+mkdir -p .venv/bin
+printf '#!/bin/sh\nexec <primary>/.venv/bin/python "$@"\n' >.venv/bin/python
+chmod +x .venv/bin/python
+
+# Fake remotes behind fake-ssh: public origin, private checkpoint store, a foreign fork.
+PUB="$C/remotes/github.com/learn-ukrainian/learn-ukrainian.github.io.git"
+PRIV="$C/remotes/github.com/learn-ukrainian/entire-checkpoints-private.git"
+FORK="$C/remotes/github.com/someone-else/learn-ukrainian.github.io.git"
+git init -q --bare -b main "$PUB"
+git init -q --bare -b main "$PRIV"
+git init -q --bare -b main "$FORK"
+git -C "$PUB" fetch -q --update-shallow "$C/clone" main:main
+git -C "$FORK" fetch -q --update-shallow "$C/clone" main:main
+git remote -v
+
+# Ignored-file load like the live checkout (round 1 used 463,000 files under batch_state/).
+"$C/clone/.venv/bin/python" - "$C/clone/batch_state/canary-load" <<'PY'
+import sys
+from pathlib import Path
+root = Path(sys.argv[1])
+for d in range(463):
+    sub = root / f"d{d:03d}"
+    sub.mkdir(parents=True, exist_ok=True)
+    for f in range(1000):
+        (sub / f"f{f:04d}").touch()
+PY
+git check-ignore -q batch_state/canary-load/d000/f0000 && echo "ignored-load OK: $(find batch_state/canary-load -type f | wc -l) files"
+echo "tracked files: $(git ls-files | wc -l)"

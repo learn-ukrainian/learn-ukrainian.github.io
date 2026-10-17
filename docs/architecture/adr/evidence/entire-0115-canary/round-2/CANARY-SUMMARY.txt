@@ -1,0 +1,105 @@
+Entire 0.11.5 capture-guard canary, round 2 (#10846), 2026-10-16 UTC
+==================================================================
+
+Source and integrity
+- Entire 0.11.5: release archive re-downloaded; checksums.txt sha256
+  d3dce3e819f7e8d679eab9e12845fe3bf7d3fa711b3d8a18866624b7bdf143b6 and
+  entire_linux_amd64.tar.gz sha256
+  c20476c4ba9689b1800fe8d590601792e2b6f3c89d03a95280d88484029d7eba (both match
+  the runbook pins). Extracted binary sha256
+  367ecb64f94d25ce64c2456c6229db6862133f169d068211e33587e508a0140d.
+- Entire 0.8.42 (real older binary for the negative case): release archive
+  checked against its own release checksums.txt (sha256 of that file
+  3072b46fd2fdfd161b3108bde40c26bcabee67178d93d8d0334cb7e40392219e). No
+  independent pin exists for it; it is only ever a refused or legacy binary here.
+- Source read: tag v0.11.5 (git hook state check, hook specs, status JSON
+  fields, PrePush callers).
+- The live binary was not used for any canary step. Note: one unit-test smoke
+  run during development resolved the live binary on PATH and ran
+  `entire version` once (read-only); every later run used a PATH without it.
+
+Isolation (tool-cenv.sh.txt, tool-fake-ssh.txt, tool-canary-setup.sh.txt)
+- bwrap --unshare-net, env -i, isolated HOME/XDG/ENTIRE_CONFIG_DIR, file token
+  store with no token, no system git config.
+- Throwaway clone of the branch commit under test (aca6458e9b) plus a commit
+  that replaces the tracked repository hooks with logging gate stubs
+  (pre-push exits $GATE_EXIT). 32,601 tracked files, 463,000 gitignored files.
+- Remotes: origin = public bare, checkpoint store = private bare, a fork owned
+  by another account; all behind GitHub-shaped URLs mapped by fake-ssh, which
+  logs every transfer (log-ssh.txt) and refuses unknown repositories.
+- Agent hooks ran the CONFIGURED commands from
+  agents_extensions/shared/settings.json (tool-canary-driver.py.txt); git
+  hooks were Entire's wrappers after scripts/install_git_hooks.sh.
+
+Hook install (log-hooks-phase.txt, wrapper-*.txt)
+- entire enable --force (0.11.5) wrote five unchained wrappers; the test
+  fixtures in tests/test_install_git_hooks.py are byte-identical to them.
+- The installer chained three wrappers and guarded all five; --check OK.
+- entire enable --force again (with .pre-entire present) rewrote all five
+  unguarded; --check reported five UNGUARDED wrappers; an installer rerun
+  re-guarded them byte-identically to the first install; --check OK.
+- entire status --json left the guarded pre-push wrapper unchanged.
+
+Six canaries
+1 Fail-closed version preflight: PROVED. r2-01 (real 0.11.5) captured:
+  trailer 92cad9cd8df6, private v1 advanced, gate ran. r2-02 real 0.8.42,
+  r2-03 "Entire CLI 0.11.50", r2-04 "Entire CLI 0.11.6", r2-05 malformed line
+  (variants delegate every other call to the real 0.11.5 binary, so a wrong
+  acceptance would have produced a real checkpoint): every hook refused with
+  cli_version_not_accepted, no trailer, private store unchanged, push went
+  through the gate. r2-06 hung `version`: refused with guard_probe_timeout.
+2 Private-destination allowlist: PROVED. r2-07 tracked settings pointed at
+  the PUBLIC repository: raw status reported a dedicated route to it
+  (status-r2-07-tampered-tracked.json); the guard refused with
+  routing_allowlist_failed. r2-08 settings.local.json override to a foreign
+  repository: refused with checkpoint_route_not_private. r2-09 origin owned by
+  another account (round-1 S3, where an unguarded 0.11.5 push put
+  entire/checkpoints/v1 on the fork): refused; the fork received only the code.
+3 Zero public entire/* refs: PROVED. Each log-r2-*.json records the refs of
+  all three remotes after its push; public_entire_refs is [] in every one;
+  refs-final.json: public and fork hold only refs/heads/main.
+4 Body-leakage scan: PROVED (log-r2-19-leakage-scan.json,
+  tool-canary-leakscan.py.txt). Method: read every object in each bare
+  repository (git cat-file --batch-all-objects --batch, reachable or not) and
+  count objects containing three planted strings: A in the prompt, B in an
+  ignored file and an untracked file that were never committed, C in the
+  committed code. Public 34,272 objects: A 0, B 0. Fork: A 0, B 0. Private
+  store: B 0; A only in full.jsonl, prompt.txt and transcript.jsonl (the
+  session-transcript kinds the private store exists for); the checkpoint tree
+  holds only content_hash.txt, full.jsonl, metadata.json, prompt.txt and
+  transcript.jsonl.
+5 Fail-open outage behaviour: PROVED. r2-10 every Entire call exits 1;
+  r2-11 `hooks git pre-push` exits 1 ("capture failed (exit 1)"); r2-12 it
+  hangs (stopped at the 110 s budget, push 110.2 s); r2-13 private store
+  unreachable (Entire kept the checkpoint locally; r2-16 synced it). In each,
+  the repository pre-push gate ran and the push succeeded. r2-14 Entire
+  outage plus a failing gate: push refused by the gate.
+  (The first r2-13 attempt crashed in the harness while listing the offline
+  bare repository after the push; the driver was fixed and r2-13 rerun.)
+6 Locator digest checks: PROVED (log-r2-18-locator-digest.json,
+  tool-canary-locator.py.txt). For the 0.11.5 checkpoint (r2-01) and a 0.8.42
+  checkpoint written before the upgrade (r2-17, deliberately unguarded with
+  Entire's own 0.8.42 wrappers, then re-guarded): the commit trailer names the
+  checkpoint the locator carries; 0.11.5 `checkpoint explain <commit-sha>`
+  returns that id; scripts.entire_context.resolvers.reverify_link accepts the
+  locator and refuses a tampered digest and a locator moved to the parent
+  commit with digest_mismatch.
+
+Latency, n=10 each, same clone, 1-min load 14.5-17.5 (log-latency-r2-*.json)
+| hook               | direct p50 | p95   | guarded p50 | p95   |
+| user-prompt-submit | 1.721      | 3.758 | 1.715       | 1.840 |
+| stop               | 2.098      | 2.763 | 2.245       | 2.545 |
+`entire status --json` alone: 0.064-0.073 s. Failures: 0.
+
+Mutation checks (mutation-r2-tests.txt): the new tests fail on the round-1
+settings, installer and ADR, and on a guard that accepts a substring version,
+skips the route check, propagates an Entire failure, or leaves a timed-out
+capture tree running.
+
+Not proved
+- Authenticated cloud search (no credentials by design; runbook Verify step 3).
+- Agent entry points this round does not guard: the stock OpenCode plugin
+  (.opencode/plugins/entire.ts, SHA-pinned to Entire's stock bytes), the
+  Kimi external agent's generated hook config, and Cursor's four stock hooks
+  outside the managed shim. They write local session data only; the guarded
+  git pre-push wrapper is the automatic checkpoint egress.

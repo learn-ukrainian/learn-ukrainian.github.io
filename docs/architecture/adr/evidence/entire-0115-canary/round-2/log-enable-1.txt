@@ -1,0 +1,14 @@
+  Agent: Claude Code
+
+Note: pre-commit detected (.pre-commit-config.yaml)
+
+  If pre-commit reinstalls hooks, run 'entire enable' to restore Entire's hooks.
+
+  Installed 10 hooks for Claude Code - Anthropic's CLI coding assistant
+  ✓ Configured project
+    .entire/settings.json
+  ! Could not fetch existing checkpoints from git@github.com:learn-ukrainian/entire-checkpoints-private.git
+    Continuing — they will be fetched on demand when a command needs them.
+  ✓ Created orphan ref entire/checkpoints/v1 for session metadata
+
+Ready.

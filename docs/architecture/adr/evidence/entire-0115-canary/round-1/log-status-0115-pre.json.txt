@@ -1,0 +1,1 @@
+{"enabled":true,"agents":["Claude Code","OpenCode"],"active_sessions":[],"agent_help":"entire agent-help","hooks_outdated":["claude-code","opencode"],"checkpoint_sync_remote":"learn-ukrainian/entire-checkpoints-private","checkpoint_sync_remote_source":"dedicated"}

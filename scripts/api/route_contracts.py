@@ -107,7 +107,7 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         "prefix",
         "http",
         "Body-free capture, local recall, and explicit agent-use evidence.",
-        "Rebuildable local context-link SQLite projection plus explicitly refreshed sanitized Entire 0.8.42 status and capability caches.",
+        "Rebuildable local context-link SQLite projection plus explicitly refreshed sanitized Entire 0.11.5 status and capability caches.",
         "Projection and provider-cache reads are live per request; provider responses expose cache age/staleness, private-boundary truth, cloud-index truth, and dispatch routing truth without invoking Entire synchronously.",
         ("agents", "Monitor", "operators"),
         "Complements canonical Git, ACP, rollover, Fleet, and formal-review sources; it never replaces them.",

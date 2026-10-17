@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+# E2E: branch scripts/install_git_hooks.sh against real Entire 0.11.5 wrappers.
+set -uo pipefail
+C=<scratch>/canary
+WT=<worktree>
+cd "$C/clone"
+H=.git/hooks
+rm -f "$H"/*.pre-entire
+cp "$WT/scripts/install_git_hooks.sh" "$C/tmp/install_git_hooks.sh"
+"$C/tools/cenv.sh" "$C/bin-0.11.5" entire enable --force --agent claude-code --telemetry=false >/dev/null 2>&1
+echo "step1 entire enable (no .pre-entire) rc=$?"
+"$C/tools/cenv.sh" /usr/bin bash "$C/tmp/install_git_hooks.sh" >"$C/logs/installer-e2e.txt" 2>&1
+echo "step2 installer rc=$?"
+grep -E 'commit-msg|post-commit|pre-push' "$C/logs/installer-e2e.txt"
+for h in commit-msg post-commit pre-push; do
+  if cmp -s "$H/$h" "$C/evidence/chain-bin-0.11.5/$h"; then echo "$h installer-chained == entire-0.11.5-chained (bytes)"; else echo "$h MISMATCH"; diff "$H/$h" "$C/evidence/chain-bin-0.11.5/$h"; fi
+done
+mkdir -p "$C/evidence/installer-e2e"
+cp "$H"/commit-msg "$H"/post-commit "$H"/pre-push "$C/evidence/installer-e2e/"
+"$C/tools/cenv.sh" "$C/bin-0.11.5" entire enable --force --agent claude-code --telemetry=false >/dev/null 2>&1
+echo "step3 entire reinstall rc=$?"
+for h in commit-msg post-commit pre-push; do
+  if cmp -s "$H/$h" "$C/evidence/installer-e2e/$h"; then echo "$h unchanged after Entire reinstall"; else echo "$h CHANGED after reinstall"; fi
+done
+"$C/tools/cenv.sh" /usr/bin bash "$C/tmp/install_git_hooks.sh" >"$C/logs/installer-e2e-2.txt" 2>&1
+echo "step4 installer rerun rc=$?"
+grep -c 'added Entire chain' "$C/logs/installer-e2e-2.txt"
+for h in commit-msg post-commit pre-push; do
+  printf '%s chain call lines: ' "$h"; grep -c "pre-entire\" \"\$@\"" "$H/$h"
+done

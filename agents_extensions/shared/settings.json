@@ -712,7 +712,7 @@
           },
           {
             "type": "command",
-            "command": "sh -c 'if ! command -v entire >/dev/null 2>&1; then printf \"%s\\n\" \"{\\\"systemMessage\\\":\\\"\\n\\nEntire CLI is enabled but not installed or not on PATH.\\nInstallation guide: https://docs.entire.io/cli/installation#installation-methods\\\"}\"; exit 0; fi; entire hooks claude-code session-start || true'",
+            "command": "sh -c 'if ! command -v entire >/dev/null 2>&1; then printf \"%s\\n\" \"{\\\"systemMessage\\\":\\\"\\n\\nEntire CLI is enabled but not installed or not on PATH.\\nInstallation guide: https://docs.entire.io/cli/installation#installation-methods\\\"}\"; exit 0; fi; g=\"$(git rev-parse --show-toplevel 2>/dev/null)/scripts/entire/capture_guard.sh\"; if [ -x \"$g\" ]; then \"$g\" --budget 25 hooks claude-code session-start; else echo \"[entire] capture refused (guard_missing): no checkpoint written\" >&2; fi'",
             "timeout": 30
           }
         ]
@@ -787,7 +787,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "sh -c 'if ! command -v entire >/dev/null 2>&1; then exit 0; fi; entire hooks claude-code pre-task || true'",
+            "command": "sh -c 'if ! command -v entire >/dev/null 2>&1; then exit 0; fi; g=\"$(git rev-parse --show-toplevel 2>/dev/null)/scripts/entire/capture_guard.sh\"; if [ -x \"$g\" ]; then \"$g\" --budget 25 hooks claude-code pre-task; else echo \"[entire] capture refused (guard_missing): no checkpoint written\" >&2; fi'",
             "timeout": 30
           }
         ]
@@ -823,8 +823,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "sh -c 'if ! command -v entire >/dev/null 2>&1; then exit 0; fi; entire hooks claude-code post-task || true'",
-            "timeout": 30
+            "command": "sh -c 'if ! command -v entire >/dev/null 2>&1; then exit 0; fi; g=\"$(git rev-parse --show-toplevel 2>/dev/null)/scripts/entire/capture_guard.sh\"; if [ -x \"$g\" ]; then \"$g\" --budget 110 hooks claude-code post-task; else echo \"[entire] capture refused (guard_missing): no checkpoint written\" >&2; fi'",
+            "timeout": 120
           }
         ]
       },
@@ -833,7 +833,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "sh -c 'if ! command -v entire >/dev/null 2>&1; then exit 0; fi; entire hooks claude-code post-todo || true'",
+            "command": "sh -c 'if ! command -v entire >/dev/null 2>&1; then exit 0; fi; g=\"$(git rev-parse --show-toplevel 2>/dev/null)/scripts/entire/capture_guard.sh\"; if [ -x \"$g\" ]; then \"$g\" --budget 25 hooks claude-code post-todo; else echo \"[entire] capture refused (guard_missing): no checkpoint written\" >&2; fi'",
             "timeout": 30
           }
         ]
@@ -875,7 +875,7 @@
           },
           {
             "type": "command",
-            "command": "sh -c 'if ! command -v entire >/dev/null 2>&1; then exit 0; fi; entire hooks claude-code user-prompt-submit || true'",
+            "command": "sh -c 'if ! command -v entire >/dev/null 2>&1; then exit 0; fi; g=\"$(git rev-parse --show-toplevel 2>/dev/null)/scripts/entire/capture_guard.sh\"; if [ -x \"$g\" ]; then \"$g\" --budget 25 hooks claude-code user-prompt-submit; else echo \"[entire] capture refused (guard_missing): no checkpoint written\" >&2; fi'",
             "timeout": 30
           }
         ]
@@ -937,8 +937,8 @@
           },
           {
             "type": "command",
-            "command": "sh -c 'if ! command -v entire >/dev/null 2>&1; then exit 0; fi; entire hooks claude-code stop || true'",
-            "timeout": 30
+            "command": "sh -c 'if ! command -v entire >/dev/null 2>&1; then exit 0; fi; g=\"$(git rev-parse --show-toplevel 2>/dev/null)/scripts/entire/capture_guard.sh\"; if [ -x \"$g\" ]; then \"$g\" --budget 110 hooks claude-code stop; else echo \"[entire] capture refused (guard_missing): no checkpoint written\" >&2; fi'",
+            "timeout": 120
           }
         ]
       }
@@ -964,7 +964,7 @@
           },
           {
             "type": "command",
-            "command": "sh -c 'if ! command -v entire >/dev/null 2>&1; then exit 0; fi; entire hooks claude-code session-end || true'",
+            "command": "sh -c 'if ! command -v entire >/dev/null 2>&1; then exit 0; fi; g=\"$(git rev-parse --show-toplevel 2>/dev/null)/scripts/entire/capture_guard.sh\"; if [ -x \"$g\" ]; then \"$g\" --budget 25 hooks claude-code session-end; else echo \"[entire] capture refused (guard_missing): no checkpoint written\" >&2; fi'",
             "timeout": 30
           }
         ]

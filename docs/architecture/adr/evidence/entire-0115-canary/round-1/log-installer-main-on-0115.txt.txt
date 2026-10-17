@@ -1,0 +1,10 @@
+commit-msg: added Entire chain to commit-msg.pre-entire
+commit-msg: chained-under-entire
+post-checkout: kept
+post-commit: added Entire chain to post-commit.pre-entire
+post-commit: chained-under-entire
+post-merge: kept
+pre-commit: kept
+pre-push: added Entire chain to pre-push.pre-entire
+pre-push: chained-under-entire
+reference-transaction: kept

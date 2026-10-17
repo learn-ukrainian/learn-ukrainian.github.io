@@ -1,0 +1,71 @@
+{
+  "bin": "bin-0.11.5",
+  "label": "r2-08-local-override",
+  "agent_hooks": "configured guarded commands",
+  "commit_rc": 0,
+  "commit_seconds": 1.296,
+  "commit_guard_lines": [
+    "[entire] capture refused (checkpoint_route_not_private): no checkpoint written; see docs/runbooks/entire-cli-upgrade.md"
+  ],
+  "commit_sha": "07851487418bf55aecddfb3e8300a8a2f375e3eb",
+  "checkpoint_trailer": "",
+  "local_v1_before": "983f768d8f74",
+  "local_v1_after_commit": "983f768d8f74",
+  "push_remote": "origin",
+  "gate_exit": 0,
+  "push_rc": 0,
+  "push_seconds": 0.472,
+  "push_stderr_tail": "[entire] capture refused (checkpoint_route_not_private): no checkpoint written; see docs/runbooks/entire-cli-upgrade.md\nTo github.com:learn-ukrainian/learn-ukrainian.github.io.git\n   12242951..07851487  HEAD -> main\n",
+  "agent_hook_results": [
+    {
+      "verb": "session-start",
+      "rc": 0,
+      "seconds": 0.391,
+      "guard": [
+        "[entire] capture refused (checkpoint_route_not_private): no checkpoint written; see docs/runbooks/entire-cli-upgrade.md"
+      ]
+    },
+    {
+      "verb": "user-prompt-submit",
+      "rc": 0,
+      "seconds": 0.368,
+      "guard": [
+        "[entire] capture refused (checkpoint_route_not_private): no checkpoint written; see docs/runbooks/entire-cli-upgrade.md"
+      ]
+    },
+    {
+      "verb": "stop",
+      "rc": 0,
+      "seconds": 0.351,
+      "guard": [
+        "[entire] capture refused (checkpoint_route_not_private): no checkpoint written; see docs/runbooks/entire-cli-upgrade.md"
+      ]
+    },
+    {
+      "verb": "session-end",
+      "rc": 0,
+      "seconds": 0.374,
+      "guard": [
+        "[entire] capture refused (checkpoint_route_not_private): no checkpoint written; see docs/runbooks/entire-cli-upgrade.md"
+      ]
+    }
+  ],
+  "repo_gate_calls": [
+    "gate:pre-commit",
+    "gate:commit-msg",
+    "gate:post-commit",
+    "gate:pre-push"
+  ],
+  "refs_after": {
+    "public": [
+      "refs/heads/main 07851487"
+    ],
+    "private": [
+      "refs/heads/entire/checkpoints/v1 983f768"
+    ],
+    "fork": [
+      "refs/heads/main 48c9cfef"
+    ]
+  },
+  "public_entire_refs": []
+}

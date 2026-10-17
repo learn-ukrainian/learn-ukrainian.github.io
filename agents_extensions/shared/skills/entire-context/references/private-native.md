@@ -12,8 +12,10 @@ and private handoff when those tools materially help the task. Before first
 use, run `.venv/bin/python -m scripts.entire.private_mode_preflight` and require
 its body-free receipt to report `"ready": true`. It verifies routing, private
 checkpoint visibility, public-ref absence, authentication, exact private
-Entire ACLs on both mirrors, mirror readiness, and the exact 0.8.42 pin without
-printing command output or local paths. Use only these shapes:
+Entire ACLs on both mirrors (`entire repo grant list /gh/<owner>/<repo>`),
+mirror readiness (`entire repo view`), that Entire itself reports the dedicated
+private checkpoint route (`entire status --json`), and the exact 0.11.5 pin
+without printing command output or local paths. Use only these shapes:
 
 ```bash
 entire search "<query>" --json --limit <1-10> \

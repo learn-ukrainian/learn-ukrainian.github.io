@@ -1,0 +1,3 @@
+FAILED tests/test_install_git_hooks.py::test_entire_wrappers_gain_entire_chain_block
+FAILED tests/test_install_git_hooks.py::test_entire_0115_written_chain_runs_the_repo_hook_once
+========================= 2 failed, 22 passed in 8.71s =========================

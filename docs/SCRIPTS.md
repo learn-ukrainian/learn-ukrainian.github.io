@@ -166,8 +166,12 @@ pytest-stamp and Git LFS hooks; and restores the primary-checkout guards after
 checkout or merge. The installer also materializes `.githooks` in existing sparse
 worktrees without broadening their checkout. Where Entire CLI owns a hook, the
 delegator sits at `<name>.pre-entire` and the installer makes Entire's wrapper
-chain to it. `scripts/install_git_hooks.sh --check` (read-only) fails when a hook
-stage declared in `.pre-commit-config.yaml` has no reachable delegator.
+chain to it, and routes Entire's own call through `scripts/entire/capture_guard.sh`
+(Entire runs only with the accepted CLI version and the private checkpoint route,
+and never blocks a commit or push). It refuses, without changing anything, when a
+hook path is a symlink. `scripts/install_git_hooks.sh --check` (read-only) fails
+when a hook stage declared in `.pre-commit-config.yaml` has no reachable
+delegator, an Entire wrapper is unguarded, or a hook path is a symlink.
 
 ---
 
