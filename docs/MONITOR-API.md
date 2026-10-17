@@ -92,7 +92,7 @@ Read-only public Work attention projection (`FOUNDATION_COMPLETE` foundation onl
 
 | Method | Path | Notes |
 | --- | --- | --- |
-| GET | `/api/work/v1/projection` | Normalized items + attention + source envelopes + `cache_age_s` |
+| GET | `/api/work/v1/projection?stream=<lane>` | One lane's items + attention + source envelopes + `cache_age_s`. `stream` is required. |
 | GET | `/api/work/v1/next` | Stream-scoped actionable pick list (`stream=` required, `limit=` ≤25); warm cache only; 503 `building` / `stale` / `registry_unavailable` (unwrapped body) |
 | GET | `/api/work/v1/capabilities` | Schema digest, budgets, private-source seam (`not_configured`) |
 | GET | `/api/work/v1/health` | Work surface liveness |

@@ -14,6 +14,7 @@ Commands::
     .venv/bin/python -m scripts.driver_state whoami     # epic, seat, model, next step
     .venv/bin/python -m scripts.driver_state goals      # full pinned state
     .venv/bin/python -m scripts.driver_state path [--epic E]
+    .venv/bin/python -m scripts.driver_state packet --epic E [--recipient SLOT]
     .venv/bin/python -m scripts.driver_state init --epic E [--force]
     .venv/bin/python -m scripts.driver_state agy-hook          # AGY PreInvocation hook
     .venv/bin/python -m scripts.driver_state agy-stop-hook     # AGY Stop hook
@@ -624,6 +625,7 @@ def main(argv: list[str] | None = None) -> int:
         epilog="""Examples:
   .venv/bin/python -m scripts.driver_state whoami
   .venv/bin/python -m scripts.driver_state init --epic infra
+  .venv/bin/python -m scripts.driver_state packet --epic infra
   .venv/bin/python -m scripts.driver_state agy-stop-hook < hook-payload.json
 Outputs: init writes private driver state; hooks emit JSON and private failure/counter records.
 Exit codes: 0 success (hooks report failures in JSON); 1 invalid epic, missing state or refused overwrite.
@@ -638,6 +640,9 @@ Related: scripts/agy_hooks/driver_state_inject.sh; #10201, #10297.
     p_init = sub.add_parser("init", help="Write a template state file for an epic.")
     p_init.add_argument("--epic", required=True, help="Epic selector to initialize, for example infra.")
     p_init.add_argument("--force", action="store_true", help="Overwrite an existing file (default: false).")
+    p_packet = sub.add_parser("packet", help="Print one bounded orientation packet for a lane.")
+    p_packet.add_argument("--epic", required=True, help="Lane selector, for example monitor.")
+    p_packet.add_argument("--recipient", help="Fleet recipient whose unconsumed order ids to include.")
     sub.add_parser("agy-hook", help="AGY PreInvocation hook: stdin payload -> injectSteps JSON.")
     sub.add_parser("agy-stop-hook", help="AGY Stop hook: continue when the turn ends against policy.")
     sub.add_parser("agy-pretool-hook", help="AGY PreToolUse hook: deny ask_question for drivers.")
@@ -687,6 +692,11 @@ Related: scripts/agy_hooks/driver_state_inject.sh; #10201, #10297.
             print("no epic: pass --epic or run inside a driver session", file=sys.stderr)
             return 1
         print(path)
+        return 0
+    if args.cmd == "packet":
+        from scripts.orientation_packet import render_packet
+
+        sys.stdout.write(render_packet(args.epic, recipient=getattr(args, "recipient", None)))
         return 0
     if args.cmd == "init":
         path = state_path(args.epic)

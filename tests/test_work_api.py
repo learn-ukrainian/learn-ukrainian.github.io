@@ -168,7 +168,7 @@ def test_projection_endpoint_with_injected_sources(monkeypatch):
 
     monkeypatch.setattr(work_router, "build_public_projection", fake_build)
 
-    response = client.get("/api/work/v1/projection?health=AT_RISK&kind=issue")
+    response = client.get("/api/work/v1/projection?health=AT_RISK&kind=issue&stream=infra-harness")
     assert response.status_code == 200, response.text
     data = response.json()
     assert data["schema_version"] == "work-projection.v1"
@@ -200,7 +200,7 @@ def test_projection_rejects_private_filter_keys(monkeypatch):
         return build_projection(_sections_with_canary(), repository_id=REPO)
 
     monkeypatch.setattr(work_router, "build_public_projection", fake_build)
-    bad = client.get("/api/work/v1/projection?q=secret&private_endpoint=http://127.0.0.1:9")
+    bad = client.get("/api/work/v1/projection?q=secret&private_endpoint=http://127.0.0.1:9&stream=infra-harness")
     assert bad.status_code == 400
     assert bad.json()["detail"]["error"] == "invalid_saved_view"
 
@@ -216,14 +216,14 @@ def test_projection_rejects_oversized_repeated_filters(monkeypatch):
 
     monkeypatch.setattr(work_router, "build_public_projection", fake_build)
     qs = "&".join(["health=ON_TRACK"] * (FILTER_MAX_RAW_ITEMS["health"] + 1))
-    response = client.get(f"/api/work/v1/projection?{qs}")
+    response = client.get(f"/api/work/v1/projection?{qs}&stream=infra-harness")
     assert response.status_code == 400
     detail = response.json()["detail"]
     assert detail["error"] == "invalid_saved_view"
     assert "exceeds max" in detail["message"]
 
     # Singleton repository_id also 400s on raw repetition.
-    dup_repo = client.get(f"/api/work/v1/projection?repository_id={REPO}&repository_id={REPO}")
+    dup_repo = client.get(f"/api/work/v1/projection?repository_id={REPO}&repository_id={REPO}&stream=infra-harness")
     assert dup_repo.status_code == 400
     assert dup_repo.json()["detail"]["error"] == "invalid_saved_view"
 
@@ -239,7 +239,7 @@ def test_source_id_filter_echoed_and_schema_valid(monkeypatch):
         return build_projection(sections, repository_id=REPO, filters=filters, cache_age_s=cache_age_s)
 
     monkeypatch.setattr(work_router, "build_public_projection", fake_build)
-    response = client.get("/api/work/v1/projection?source_id=public-monitor")
+    response = client.get("/api/work/v1/projection?source_id=public-monitor&stream=infra-harness")
     assert response.status_code == 200, response.text
     data = response.json()
     assert data["filters_applied"]["source_id"] == ["public-monitor"]
@@ -259,8 +259,8 @@ def test_duplicate_multivalue_filters_share_cache_entry(monkeypatch):
 
     monkeypatch.setattr(work_router, "build_public_projection", fake_build)
 
-    first = client.get("/api/work/v1/projection?health=ON_TRACK&health=AT_RISK&kind=pr&kind=issue")
-    second = client.get("/api/work/v1/projection?health=AT_RISK&health=ON_TRACK&health=AT_RISK&kind=issue&kind=pr")
+    first = client.get("/api/work/v1/projection?health=ON_TRACK&health=AT_RISK&kind=pr&kind=issue&stream=infra-harness")
+    second = client.get("/api/work/v1/projection?health=AT_RISK&health=ON_TRACK&health=AT_RISK&kind=issue&kind=pr&stream=infra-harness")
     assert first.status_code == 200, first.text
     assert second.status_code == 200, second.text
     assert build_count["n"] == 1
@@ -269,7 +269,7 @@ def test_duplicate_multivalue_filters_share_cache_entry(monkeypatch):
     assert first.json()["filters_applied"]["resource_kind"] == ["issue", "pr"]
 
     # Distinct canonical filters still get their own entry.
-    third = client.get("/api/work/v1/projection?health=OFF_TRACK")
+    third = client.get("/api/work/v1/projection?health=OFF_TRACK&stream=infra-harness")
     assert third.status_code == 200, third.text
     assert build_count["n"] == 2
 
@@ -290,7 +290,7 @@ def test_independent_degradation_when_one_section_fails(monkeypatch):
         return build_projection(sections, repository_id=REPO, filters=filters, cache_age_s=cache_age_s)
 
     monkeypatch.setattr(work_router, "build_public_projection", fake_build)
-    response = client.get("/api/work/v1/projection")
+    response = client.get("/api/work/v1/projection?stream=infra-harness")
     assert response.status_code == 200
     data = response.json()
     # Healthy GH issues still present
@@ -547,7 +547,7 @@ def test_pr_snapshot_http_cold_refresh_and_warm_stale(monkeypatch):
     _patch_known_streams(monkeypatch)
     try:
         before = time.perf_counter()
-        response = client.get("/api/work/v1/projection?fresh=true")
+        response = client.get("/api/work/v1/projection?fresh=true&stream=infra-harness")
         assert time.perf_counter() - before < work_router.TIMEOUT_S
         assert response.status_code == 200
         cold = response.json()
@@ -559,10 +559,13 @@ def test_pr_snapshot_http_cold_refresh_and_warm_stale(monkeypatch):
         snapshot._thread.join(timeout=10)
         assert not snapshot._thread.is_alive()
 
-    warm = client.get("/api/work/v1/projection?fresh=true")
+    warm = client.get("/api/work/v1/projection?fresh=true&stream=infra-harness")
     assert warm.status_code == 200
     assert warm.json()["denominator"]["prs_open"] == 40
-    assert {i["safe_next_action"]["code"] for i in warm.json()["items"]} == {"REQUEST_CF_REVIEW"}
+    from scripts.api.state_helpers import cache_get_with_age
+
+    warm_cached, _age = cache_get_with_age(work_router.projection_cache_key({}), float("inf"))
+    assert {i["safe_next_action"]["code"] for i in warm_cached["items"]} == {"REQUEST_CF_REVIEW"}
     observed = sources_public.datetime.fromisoformat(warm.json()["sources"][0]["sections"]["prs"]["observed_at"])
 
     class Clock:
@@ -575,12 +578,15 @@ def test_pr_snapshot_http_cold_refresh_and_warm_stale(monkeypatch):
     monkeypatch.setattr(normalize, "datetime", Clock)
     # Keep refresh pending while inspecting the independently aged warm cache.
     monkeypatch.setattr(work_router, "_get_or_create_build_task", lambda *a, **kw: None)
-    stale = client.get("/api/work/v1/projection")
+    stale = client.get("/api/work/v1/projection?stream=infra-harness")
     assert stale.status_code == 200
     assert stale.json()["cache_age_s"] < work_router.CACHE_TTL_S
-    assert all(i["health"] == "UNKNOWN" for i in stale.json()["items"])
-    assert all(i["projections"]["verification"]["ci_state"] == "unknown" for i in stale.json()["items"])
     assert stale.json()["sources"][0]["sections"]["prs"]["age_s"] == 31
+    # PRs have no lane membership, so the lane body does not carry them.
+    # The route still qualifies the cached copy before that filter.
+    qualified = normalize.qualify_pr_snapshot_age(warm_cached)
+    assert all(i["health"] == "UNKNOWN" for i in qualified["items"])
+    assert all(i["projections"]["verification"]["ci_state"] == "unknown" for i in qualified["items"])
     nxt = client.get("/api/work/v1/next?stream=infra-harness")
     assert nxt.status_code == 200
     assert nxt.json()["queue"] == []
@@ -1584,7 +1590,7 @@ def _serve(monkeypatch, sections: dict[str, SectionResult], **build_kwargs) -> d
 def _projection_and_next(monkeypatch, sections, **build_kwargs):
     _patch_known_streams(monkeypatch)
     payload = _serve(monkeypatch, sections, **build_kwargs)
-    projection = client.get("/api/work/v1/projection")
+    projection = client.get("/api/work/v1/projection?stream=infra-harness")
     assert projection.status_code == 200, projection.text
     nxt = client.get("/api/work/v1/next?stream=infra-harness")
     assert nxt.status_code == 200, nxt.text
@@ -1604,7 +1610,8 @@ def test_state_ready_names_next_action_without_admission(monkeypatch):
         )
     )
     _local, projection, nxt = _projection_and_next(monkeypatch, sections)
-    row = next(item for item in projection["items"] if item["remote_id"] == "live-ready")
+    row = next(item for item in _local["items"] if item["remote_id"] == "live-ready")
+    assert all(item.get("remote_id") != "live-ready" for item in projection["items"])
     assert row["safe_next_action"]["code"] == "CONTINUE_DISPATCH"
     assert row["safe_next_action"]["state"] == "ready"
     assert row["health"] == "AT_RISK"
@@ -1698,7 +1705,8 @@ def test_state_stale_membership_is_unknown(monkeypatch):
         ),
     )
     _local, projection, nxt = _projection_and_next(monkeypatch, sections)
-    row = next(item for item in projection["items"] if item["remote_id"] == "6003")
+    row = next(item for item in _local["items"] if item["remote_id"] == "6003")
+    assert all(item.get("remote_id") != "6003" for item in projection["items"])
     assert row["projections"]["stream"]["status"] == "unknown"
     assert row["projections"]["stream"]["streams"] == []
     assert row["projections"]["stream"]["membership_reason"] == "membership_stale"
@@ -1721,7 +1729,8 @@ def test_state_terminal_done_is_not_delivered(monkeypatch):
         )
     )
     _local, projection, nxt = _projection_and_next(monkeypatch, sections)
-    row = next(item for item in projection["items"] if item["remote_id"] == "finished")
+    row = next(item for item in _local["items"] if item["remote_id"] == "finished")
+    assert all(item.get("remote_id") != "finished" for item in projection["items"])
     assert row["lifecycle"] == "done"
     assert row["health"] == "UNKNOWN"
     assert row["safe_next_action"]["code"] == "NONE"
@@ -1752,7 +1761,8 @@ def test_work_next_reports_unscoped_unknown(monkeypatch):
         ),
     )
     _local, projection, nxt = _projection_and_next(monkeypatch, sections)
-    unknown = next(item for item in projection["items"] if item["remote_id"] == "6003")
+    unknown = next(item for item in _local["items"] if item["remote_id"] == "6003")
+    assert all(item.get("remote_id") != "6003" for item in projection["items"])
     homed = next(item for item in projection["items"] if item["remote_id"] == "6005")
     assert unknown["projections"]["stream"]["status"] == "unknown"
     assert unknown["projections"]["stream"]["streams"] == []
@@ -1857,7 +1867,7 @@ def test_projection_timeout_fallback_downgrades_decision_fields(monkeypatch):
     monkeypatch.setattr(work_router, "TIMEOUT_S", 0.01)
     monkeypatch.setattr(work_router, "_build_sync", lambda *args, **kwargs: time.sleep(0.05))
 
-    response = client.get("/api/work/v1/projection")
+    response = client.get("/api/work/v1/projection?stream=infra-harness")
     assert response.status_code == 200, response.text
     data = response.json()
     item = data["items"][0]
@@ -1902,7 +1912,7 @@ def test_ledger_contents_never_reach_projection_or_next(monkeypatch):
 
     cache_set(work_router.projection_cache_key({}), payload)
     _patch_known_streams(monkeypatch)
-    projection = client.get("/api/work/v1/projection")
+    projection = client.get("/api/work/v1/projection?stream=infra-harness")
     nxt = client.get("/api/work/v1/next?stream=infra-harness")
     assert projection.status_code == 200, projection.text
     assert nxt.status_code == 200, nxt.text
