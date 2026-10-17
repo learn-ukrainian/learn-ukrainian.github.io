@@ -307,6 +307,78 @@ def identity_binding(inputs: wa.Inputs, cards: dict) -> dict:
 UNADDRESSABLE = frozenset({"inventory", "dictionary_key", "malformed"})
 
 
+def source_routes(inputs: wa.Inputs, unit: dict, entry: dict, assertion: dict) -> list[tuple[str, str, str]]:
+    """Permitted (locator head, frozen record locator, assertion snapshot) for an allocated subject.
+
+    Start at creation/mint evidence, never the supplied locator or record id. Derived forms and section
+    extracts have their own snapshots and can cite an entry record rather than the extracted section.
+    VESUM is supplemental evidence with no persistent record in this allocation.
+    """
+    source, field = assertion["source_id"], assertion["field"]
+    anchor = inputs.records[unit["anchor_locator"]]
+    own = [inputs.records[k] for k in unit["source_record_keys"]]
+    if source in {"puls", "ukrainian_word_stress", "frazeolohichnyi"}:
+        permitted = {"puls": "cefr", "ukrainian_word_stress": "stress", "frazeolohichnyi": "mwe_form"}
+        return [(r["locator"], r["locator"], r["snapshot_id"]) for r in own
+                if r["source_id"] == source and field == permitted[source]
+                and assertion["subject"] == {"kind": "card", "id": entry["card_id"]}]
+    if source != "ulif":
+        return []
+    if unit["entry_type"] == "lexeme_candidate":
+        entry_id = anchor["raw_row"]["id"]
+        if field in {"spelling", "stress", "pos", "grammatical_label", "gender", "aspect"}:
+            if assertion["subject"] != {"kind": "card", "id": entry["card_id"]}:
+                return []
+            record = anchor
+            if field in {"spelling", "stress"} and not anchor["raw_row"]["canonical_headword"]:
+                record = next(r for r in own if r["table"] == "ulif_dictua_sections")
+            return [(record["locator"], record["locator"], anchor["snapshot_id"])]
+        if field == "sense_label":
+            event = inputs.sense_events.get(assertion["subject"]["id"], {})
+            index = re.search(r"sense_gloss\[(\d+)\]$", event.get("source_unit", ""))
+            if assertion["subject"]["kind"] != "sense" or not index:
+                return []
+            locator = f"{anchor['locator']} [sense_gloss[{index.group(1)}]]"
+            return [(locator, anchor["locator"], anchor["snapshot_id"])]
+        if field == "paradigm":
+            if assertion["subject"] != {"kind": "card", "id": entry["card_id"]}:
+                return []
+            record = next((r for r in own if r["table"] == "ulif_dictua_sections"), anchor)
+            snapshot = "ulif-forms@sha256:" + foundation.digest(inputs.sources.forms(entry_id))
+            return [(f"ulif:ulif_forms:entry:{entry_id}", record["locator"], snapshot)]
+        if field in wa.RELATION_FIELDS:
+            return [(f"ulif:ulif_dictua_sections:id:{u.source_key.rpartition('=')[2]}", anchor["locator"],
+                     "ulif-section@sha256:" + next(v for v in u.candidate.response
+                                                   if v.slot == "members").citations[0].field_sha256)
+                    for u in inputs.wp3_units if u.parent_key == f"ulif_dictua_entries:id={entry_id}"
+                    and u.candidate.operation == field and u.candidate.outcome == "accepted"]
+        return []
+    if field not in {"mwe_form", "definition_uk", "examples"}:
+        return []
+    subject = {"kind": "card", "id": entry["card_id"]} if field == "mwe_form" else {
+        "kind": "sense", "id": entry["senses"][0]["sense_id"]}
+    if assertion["subject"] != subject:
+        return []
+    # A same-spelling idiom alone is insufficient: its definition and quotation must be in this frozen body.
+    body = wa.squeeze(wa.strip_aggregator_markup(anchor["raw_row"]["definition"]))
+    routes = []
+    for u in inputs.wp3_units:
+        c = u.candidate
+        if c.operation != "idiom_definition" or c.outcome != "accepted":
+            continue
+        idiom = next((v for v in c.slots if v.slot == "idiom"), None)
+        definition = next((v for v in c.response if v.slot == "definition"), None)
+        citations = [v for v in c.response if v.slot == "citation"]
+        if idiom is None or definition is None or wa.normalize_mwe_form(idiom.text) != wa.normalize_mwe_form(
+                unit["literal_head"]) or wa.squeeze(definition.text) not in body or not any(
+                wa.squeeze(v.text) in body for v in citations):
+            continue
+        routes.append((f"ulif:ulif_dictua_sections:id:{u.source_key.rpartition('=')[2]}",
+                       f"ulif:ulif_dictua_entries:id:{u.parent_key.rpartition('=')[2]}",
+                       "ulif-section@sha256:" + definition.citations[0].field_sha256))
+    return routes
+
+
 def _stored_proposition(field: str, value_norm: str, structured: bool, normalise) -> tuple | str:
     """A proposition read from a STORED `value_norm` (the assembler regenerates it from the raw value instead):
     a paradigm slot is its slot plus its unstressed form set, a declared set its member set, else the text."""
@@ -357,7 +429,8 @@ def intended_matches(selector: dict, inventory: dict, records: dict) -> set[str]
     return None
 
 
-def withdrawal(cards: dict, takedown: list[dict], suppressions: dict | None, source_records: list[dict]) -> dict:
+def withdrawal(cards: dict, takedown: list[dict], suppressions: dict | None, source_records: list[dict],
+               record_bindings: dict[str, str] | None = None) -> dict:
     """Suppressed provenance: every suppressed assertion is credited by the takedown entry it names, every
     credited assertion is retained and suppressed, the takedown covers exactly the declared selectors, and each
     selector reached exactly the assertions it was meant to (`intended_matches`, worked out independently)."""
@@ -365,7 +438,8 @@ def withdrawal(cards: dict, takedown: list[dict], suppressions: dict | None, sou
     entries = {t["suppression_id"]: t for t in takedown}
     declared = (suppressions or {}).get("entries", [])
     errors["takedown_vs_selectors"] += sorted(entries) != sorted(e["suppression_id"] for e in declared)
-    inventory = {a["assertion_id"]: (a, card["key_at_creation"]["spelling"])
+    inventory = {a["assertion_id"]: (dict(a, source_record_id=record_bindings.get(a["assertion_id"]))
+                                   if record_bindings is not None else a, card["key_at_creation"]["spelling"])
                  for card in cards.values() for a in card["assertions"]}
     records = {sr["source_record_id"]: sr for sr in source_records}
     intended_union = set()
@@ -493,7 +567,8 @@ def verify(inputs: wa.Inputs, result: dict, again: dict | None = None, suppressi
             and c["status"] == "unique" for c in sr["correspondence"])]
         binding[record["locator"]] = (owners[0]["source_record_id"], record["snapshot_id"]) if len(owners) == 1 else None
     id_errors, register_errors, lineage_errors, sr_errors, forbidden = Counter(), Counter(), Counter(), Counter(), 0
-    cited_records = set()
+    cited_records, record_bindings = set(), {}
+    unit_of = {inputs.entry_by_unit[u["unit_key"]]["card_id"]: u for u in inputs.units}
     for card in cards.values():
         # Retained evidence is checked whole: a suppressed assertion keeps its identity, record and lineage.
         for a in card["assertions"]:
@@ -504,17 +579,33 @@ def verify(inputs: wa.Inputs, result: dict, again: dict | None = None, suppressi
             register_errors["version"] += a["licence_ref"]["register_version"] != inputs.register_version
             group, tier = wa.LINEAGE[a["source_id"]]
             lineage_errors["lineage"] += (a["independence_group"], a["tier"]) != (group, tier)
+            if a["source_id"] == "vesum":
+                sr_errors["locator_outside_subject"] += not a["locator"].startswith("vesum:entry:") or (
+                    a["subject"] != {"kind": "card", "id": card["card_id"]}) or card["card_kind"] == "mwe"
+                sr_errors["snapshot_binding"] += a["snapshot_id"] != "vesum@" + inputs.hashes["vesum_canonical"][:16]
+                sr_errors["unexpected_attribution"] += "source_record_id" in a or "source_record_key" in a
+            else:
+                unit = unit_of[card["card_id"]]
+                routes = source_routes(inputs, unit, inputs.entry_by_unit[unit["unit_key"]], a)
+                match = LOCATOR.fullmatch(a["locator"])
+                head = match.group("head") if match else None
+                routes = sorted({r for r in routes if r[0] in {head, a["locator"]}})
+                sr_errors["locator_outside_subject"] += len(routes) != 1
+                sr_errors["missing_attribution"] += not a.get("source_record_id") or not a.get("source_record_key")
+                if len(routes) == 1:
+                    _, record_locator, snapshot = routes[0]
+                    bound = binding.get(record_locator)
+                    sr_errors["unbound_frozen_row"] += bound is None
+                    if bound:
+                        record_bindings[a["assertion_id"]] = bound[0]
+                        sr_errors["snapshot_binding"] += (a.get("source_record_id"), a["snapshot_id"]) != (
+                            bound[0], snapshot)
+                        sr_errors["key_outside_snapshot"] += a.get("source_record_key") not in {
+                            x["key"] for x in registry_sr[bound[0]]["aliases"] if x["snapshot_id"] == bound[1]}
             if a.get("source_record_id"):
                 cited_records.add(a["source_record_id"])
                 sr_errors["unknown"] += a["source_record_id"] not in registry_sr
                 sr_errors["source"] += registry_sr.get(a["source_record_id"], {}).get("source_id") != a["source_id"]
-                bound = binding.get(a["locator"].split(" ")[0], False)
-                sr_errors["unbound_frozen_row"] += bound is None
-                if bound:
-                    sr_errors["snapshot_binding"] += bound[0] != a["source_record_id"]
-                    sr_errors["key_outside_snapshot"] += a.get("source_record_key") not in {
-                        x["key"] for x in registry_sr.get(a["source_record_id"], {}).get("aliases", [])
-                        if x["snapshot_id"] == bound[1]}
             forbidden += a["source_id"] == "sum11" and a["field"] != "russification_exposed"
     report["assertion_identity"] = {"passed": not any(id_errors.values()), "errors": dict(id_errors)}
     report["register_lineage"] = {"passed": not any(register_errors.values()) and not any(lineage_errors.values()),
@@ -523,7 +614,6 @@ def verify(inputs: wa.Inputs, result: dict, again: dict | None = None, suppressi
     sr_errors["unbound_frozen_row"] += sum(bound is None for bound in binding.values())
     # A frozen record no assertion cites must be accounted for by a ledger hold naming it (refused evidence), and a
     # hold may name only a frozen record of the card's own allocated unit.
-    unit_of = {inputs.entry_by_unit[u["unit_key"]]["card_id"]: u for u in inputs.units}
     held = set()
     for card_id, item in result["ledger"].cards.items():
         own = {binding[k][0] for k in unit_of[card_id]["source_record_keys"] if binding.get(k)} \
@@ -549,7 +639,10 @@ def verify(inputs: wa.Inputs, result: dict, again: dict | None = None, suppressi
                 locator_errors[f"{a['source_id']}:{a['field']}:{problem}"] += 1
     report["locators"] = {"passed": not locator_errors, "checked": checked, "errors": dict(locator_errors)}
 
-    report["withdrawal"] = withdrawal(cards, result["takedown"], suppressions, inputs.registry["source_records"])
+    report["withdrawal"] = withdrawal(cards, result["takedown"], suppressions, inputs.registry["source_records"],
+                                      record_bindings)
+    report["withdrawal"]["source_bindings_valid"] = report["source_records"]["passed"]
+    report["withdrawal"]["passed"] &= report["source_records"]["passed"]
     withdrawn_fields = {f for t in result["takedown"] for f in t["fields"]}
     ledger_errors = Counter()
     for card_id, item in result["ledger"].cards.items():

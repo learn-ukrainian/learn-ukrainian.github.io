@@ -1305,6 +1305,7 @@ def resign(card):
     for a in card["assertions"]:
         a["assertion_id"] = aid(a["source_id"], a["snapshot_id"], a["locator"], a["subject"], a["field"],
                                 a["value_norm"], a["extraction_version"])
+    wa._recompute(card)
     card["build"]["card_version"] = card_version(_project(card))
     return card
 
@@ -1571,6 +1572,87 @@ def test_r3f1_verify_rejects_independent_source_record_rebinding(inputs, result,
     report = forged_report(inputs, result, forgery(inputs))
     assert report["passed"] is False
     assert report["source_records"]["passed"] is False and error in report["source_records"]["errors"]
+
+
+def test_r3f1_output_rejects_coherent_foreign_homograph_row(inputs, result):
+    assert verify.verify(inputs, result)["passed"]
+    forged = copy.deepcopy(result)
+    victim = alpha_ulif_spelling(forged)
+    foreign = next(a for a in card_of(result, "альфа", nth=1)["assertions"]
+                   if a["source_id"] == "ulif" and a["field"] == "spelling")
+    for key in ("locator", "source_record_id", "source_record_key", "snapshot_id"):
+        victim[key] = foreign[key]
+    resign(card_of(forged, "альфа", nth=0))
+    report = verify.verify(inputs, forged)  # audited inputs unchanged; no rebuilt-output oracle
+    assert all(report[k]["passed"] for k in ("schema", "input_allocation", "identity_binding",
+                                             "assertion_identity", "locators", "public_projection"))
+    assert report["passed"] is False
+    assert report["source_records"]["errors"]["locator_outside_subject"] == 1
+
+
+@pytest.mark.parametrize(("source", "field"), [
+    ("ulif", "spelling"), ("ulif", "paradigm"), ("ulif", "synonyms"), ("ulif", "definition_uk"),
+    ("frazeolohichnyi", "mwe_form"), ("puls", "cefr"), ("vesum", "spelling")])
+def test_r3f1_output_rejects_forged_snapshot(inputs, result, source, field):
+    forged = copy.deepcopy(result)
+    card, victim = next((c, a) for c in forged["cards"].values() for a in c["assertions"]
+                        if a["source_id"] == source and a["field"] == field)
+    victim["snapshot_id"] = "selected-row@sha256:" + "1" * 64
+    resign(card)
+    report = verify.verify(inputs, forged)
+    assert all(report[k]["passed"] for k in ("schema", "assertion_identity", "locators", "public_projection"))
+    assert report["passed"] is False
+    assert report["source_records"]["errors"]["snapshot_binding"] == 1
+
+
+@pytest.mark.parametrize("removed", [("source_record_id",), ("source_record_key",),
+                                     ("source_record_id", "source_record_key")])
+def test_r3f1_output_rejects_removed_persistent_attribution(inputs, result, removed):
+    forged = copy.deepcopy(result)
+    victim = alpha_ulif_spelling(forged)
+    for key in removed:
+        del victim[key]
+    resign(card_of(forged, "альфа", nth=0))
+    report = verify.verify(inputs, forged)
+    assert report["schema"]["passed"] and report["assertion_identity"]["passed"]
+    assert report["passed"] is False
+    assert report["source_records"]["errors"]["missing_attribution"] == 1
+
+
+def test_r3f1_output_cannot_disguise_frozen_attribution_as_supplemental_vesum(inputs, result):
+    forged = copy.deepcopy(result)
+    victim = alpha_ulif_spelling(forged)
+    victim.update(source_id="vesum", snapshot_id="vesum@" + inputs.hashes["vesum_canonical"][:16],
+                  independence_group="G-VESUM", tier=1)
+    victim["licence_ref"]["register_source_id"] = "vesum"
+    del victim["source_record_id"], victim["source_record_key"]
+    resign(card_of(forged, "альфа", nth=0))
+    report = verify.verify(inputs, forged)
+    assert report["schema"]["passed"] and report["register_lineage"]["passed"]
+    assert report["locators"]["passed"] and report["assertion_identity"]["passed"]
+    assert report["passed"] is False
+    assert report["source_records"]["errors"]["locator_outside_subject"] == 1
+
+
+def test_r3f1_record_withdrawal_cannot_certify_an_escaped_assertion(inputs, result):
+    target = alpha_ulif_spelling(result)
+    selectors = suppression({"kind": "source_record", "source_id": "ulif",
+                             "source_record_id": target["source_record_id"]})
+    control = wa.build(inputs, selectors)
+    assert alpha_ulif_spelling(control)["status"] == "suppressed"
+    assert verify.verify(inputs, control, None, selectors)["passed"]
+    forged = copy.deepcopy(result)
+    victim = alpha_ulif_spelling(forged)
+    del victim["source_record_id"], victim["source_record_key"]
+    forged["takedown"] = wa.apply_suppressions(forged["cards"], selectors, inputs.registry["source_records"])
+    for card in forged["cards"].values():
+        resign(card)
+    assert victim["status"] == "active"  # reproduce the previous withdrawal bypass
+    report = verify.verify(inputs, forged, None, selectors)
+    assert report["passed"] is False and report["withdrawal"]["passed"] is False
+    assert report["source_records"]["errors"]["missing_attribution"] == 1
+    assert report["withdrawal"]["errors"]["selector_scope"] == 1
+    assert report["withdrawal"]["errors"]["suppressed_outside_selectors"] == 1
 
 
 def test_r3f1_verify_rejects_a_rebound_held_ledger_source_record(tmp_path):
