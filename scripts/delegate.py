@@ -7995,23 +7995,13 @@ def _push_auto_finalize_branch(worktree: Path, branch: str, *, expected_head: st
         raise _TypedFailure("unsafe publication target", _TypedCause("auto_finalize_unsafe_branch"))
     ref = f"refs/heads/{branch}"
 
-    def push_destination() -> str:
-        proc = subprocess.run(
-            ["git", "remote", "get-url", "--push", "--all", "origin"],
-            cwd=worktree, capture_output=True, text=True, check=False,
-            env=_sanitized_git_env(), timeout=DEFAULT_GIT_TIMEOUT_S,
-        )
+    def push_destination(proc: subprocess.CompletedProcess[str]) -> str:
         urls = (proc.stdout or "").splitlines()
         if proc.returncode or len(urls) != 1 or not urls[0].strip():
             raise _TypedFailure("push destination unavailable", _TypedCause("auto_finalize_remote_unknown"))
         return urls[0]
 
-    def remote_head(destination: str) -> str | None:
-        proc = subprocess.run(
-            ["git", "ls-remote", "--refs", destination, ref],
-            cwd=worktree, capture_output=True, text=True, check=False,
-            env=_sanitized_git_env(), timeout=DEFAULT_GIT_TIMEOUT_S,
-        )
+    def remote_head(proc: subprocess.CompletedProcess[str]) -> str | None:
         if proc.returncode:
             raise _TypedFailure("remote head unavailable", _remote_git_cause("auto_finalize_remote_unknown", proc))
         rows = (proc.stdout or "").splitlines()
@@ -8021,29 +8011,43 @@ def _push_auto_finalize_branch(worktree: Path, branch: str, *, expected_head: st
             raise _TypedFailure("remote head invalid", _TypedCause("auto_finalize_remote_unknown"))
         return rows[0].split("\t")[0]
 
-    def query_destination(target: str) -> str:
-        proc = subprocess.run(
-            ["git", "ls-remote", "--get-url", target],
-            cwd=worktree, capture_output=True, text=True, check=False,
-            env=_sanitized_git_env(), timeout=DEFAULT_GIT_TIMEOUT_S,
-        )
+    def query_destination(proc: subprocess.CompletedProcess[str]) -> str:
         urls = (proc.stdout or "").splitlines()
         if proc.returncode or len(urls) != 1 or not urls[0].strip():
             raise _TypedFailure("query destination unavailable", _TypedCause("auto_finalize_remote_unknown"))
         return urls[0]
 
+    # Transport stays in this existing Git boundary; the parsers do no I/O.
+    read_options = {
+        "cwd": worktree, "capture_output": True, "text": True, "check": False,
+    }
     try:
-        destination = push_destination()
+        destination = push_destination(subprocess.run(
+            ["git", "remote", "get-url", "--push", "--all", "origin"],
+            env=_sanitized_git_env(), timeout=DEFAULT_GIT_TIMEOUT_S, **read_options,
+        ))
         # get-url already expands URL rewrites. Never push its output: Git
         # would rewrite it again. Query by origin when its fetch endpoint is
         # the push endpoint; a distinct pushurl must independently resolve to
         # that same endpoint before it can supply remote-head evidence.
-        query = "origin" if query_destination("origin") == destination else destination
-        if query_destination(query) != destination:
+        fetch_destination = query_destination(subprocess.run(
+            ["git", "ls-remote", "--get-url", "origin"], env=_sanitized_git_env(), timeout=DEFAULT_GIT_TIMEOUT_S, **read_options,
+        ))
+        query = "origin" if fetch_destination == destination else destination
+        if query_destination(subprocess.run(
+            ["git", "ls-remote", "--get-url", query], env=_sanitized_git_env(), timeout=DEFAULT_GIT_TIMEOUT_S, **read_options,
+        )) != destination:
             raise _TypedFailure("query endpoint mismatch", _TypedCause("auto_finalize_remote_unverified"))
         # Even an already-pushed retry runs the normal pre-push boundary.
-        remote_head(query)
-        if push_destination() != destination or query_destination(query) != destination:
+        remote_head(subprocess.run(
+            ["git", "ls-remote", "--refs", query, ref], env=_sanitized_git_env(), timeout=DEFAULT_GIT_TIMEOUT_S, **read_options,
+        ))
+        if push_destination(subprocess.run(
+            ["git", "remote", "get-url", "--push", "--all", "origin"],
+            env=_sanitized_git_env(), timeout=DEFAULT_GIT_TIMEOUT_S, **read_options,
+        )) != destination or query_destination(subprocess.run(
+            ["git", "ls-remote", "--get-url", query], env=_sanitized_git_env(), timeout=DEFAULT_GIT_TIMEOUT_S, **read_options,
+        )) != destination:
             raise _TypedFailure("publication endpoint changed", _TypedCause("auto_finalize_remote_unverified"))
         if _resolve_sha(worktree) != head or _current_branch(worktree) != branch:
             raise _TypedFailure("local head changed", _TypedCause("auto_finalize_head_moved"))
@@ -8055,8 +8059,14 @@ def _push_auto_finalize_branch(worktree: Path, branch: str, *, expected_head: st
         if proc.returncode != 0:
             raise _TypedFailure("git push failed", _remote_git_cause("auto_finalize_push_failed", proc))
         if (
-            push_destination() != destination or query_destination(query) != destination
-            or remote_head(query) != head
+            push_destination(subprocess.run(
+                ["git", "remote", "get-url", "--push", "--all", "origin"],
+                env=_sanitized_git_env(), timeout=DEFAULT_GIT_TIMEOUT_S, **read_options,
+            )) != destination or query_destination(subprocess.run(
+                ["git", "ls-remote", "--get-url", query], env=_sanitized_git_env(), timeout=DEFAULT_GIT_TIMEOUT_S, **read_options,
+            )) != destination or remote_head(subprocess.run(
+                ["git", "ls-remote", "--refs", query, ref], env=_sanitized_git_env(), timeout=DEFAULT_GIT_TIMEOUT_S, **read_options,
+            )) != head
         ):
             raise _TypedFailure("remote verification failed", _TypedCause("auto_finalize_remote_unverified"))
         if _resolve_sha(worktree) != head or _current_branch(worktree) != branch:
