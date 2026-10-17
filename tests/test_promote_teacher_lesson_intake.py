@@ -265,6 +265,7 @@ def test_reviewed_common_words_accept_vesum_even_when_marked_invalid(tmp_path, m
     assert {entry["lemma"] for entry in candidates} == set(words)
 
 
+@pytest.mark.needs_sparse_tree("registry/lexicon/source-inventory")
 def test_private_teacher_lesson_delta_inventory_is_privacy_safe(source_records) -> None:
     records, _ = source_records
 

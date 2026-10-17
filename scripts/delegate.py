@@ -7862,6 +7862,28 @@ def _x_agent_trailer(agent: str, task_id: str) -> str:
     return f"X-Agent: {agent}/{_x_agent_task_id(agent, task_id)}"
 
 
+def _worker_tool_cache_env(runtime_tmp_root: Path) -> dict[str, str]:
+    """Point tool caches at the task scratch lease instead of the worktree (#10777).
+
+    The lease is reaped when the worker exits; a cache in the worktree stays
+    until the tree is removed. Measured 2026-10-16 on old dispatch trees:
+    ``__pycache__`` 61-126MB and ``.mypy_cache`` 33MB per tree. The bytecode
+    prefix also holds compiled interpreter libraries for the task, so they
+    are compiled once per lease. ``.ruff_cache`` is about 1MB.
+
+    Left in the worktree: ``.pytest_cache`` (at most 2MB) has no environment
+    override, and setting it through ``PYTEST_ADDOPTS`` would reach the
+    nested pytest runs that tests start; ``.pytest_breadcrumbs`` names the
+    test that hung and must survive the worker for diagnosis.
+    """
+    cache_root = runtime_tmp_root / "tool-cache"
+    return {
+        "MYPY_CACHE_DIR": str(cache_root / "mypy"),
+        "PYTHONPYCACHEPREFIX": str(cache_root / "pycache"),
+        "RUFF_CACHE_DIR": str(cache_root / "ruff"),
+    }
+
+
 def _build_worker_env(
     *,
     task_id: str,
@@ -7916,6 +7938,7 @@ def _build_worker_env(
     if runtime_tmp_root is not None:
         worker_env["TMPDIR"] = str(runtime_tmp_root)
         worker_env["LU_RUNTIME_TMP_ROOT"] = str(runtime_tmp_root)
+        worker_env.update(_worker_tool_cache_env(Path(runtime_tmp_root)))
     if runtime_tmp_namespace_root is not None:
         worker_env["LU_RUNTIME_TMP_BASE_ROOT"] = str(Path(runtime_tmp_namespace_root).parent)
     if worktree_path is not None:
@@ -9205,6 +9228,39 @@ def _provision_data_symlinks(worktree_path: Path, main_repo_root: Path, *, read_
 # module-mapping.json, callout-claims-review.md). ``du -sh`` of that
 # tree: 3.6M, not 289M. The anchor is added only when that directory
 # exists at HEAD.
+#
+# #10777 (measured 2026-10-16 on main c0f3aaf4639, tracked bytes from
+# ``git ls-tree -r -l``): the profile above still kept 408.9 MiB. Its
+# largest trees were registry/lexicon/source-inventory (49.8 MiB) and
+# source-inventory-review-decisions (49.3 MiB), site/src/data (51.7 MiB,
+# mostly generated lexicon JSON), site/src/content (26.9 MiB, published
+# lessons), data/processed (23.4 MiB, ESUM volumes) and data/datasets
+# (14.4 MiB). Excluding them, with the anchors below, leaves 196.3 MiB;
+# tests/test_dispatch_checkout_size.py holds the ceiling. data/lexicon moved
+# to registry/lexicon in #8853 and is no longer tracked; it stays a valid
+# --sparse-include name. ``pytest -m repo_wide`` in a default checkout built
+# from this profile was compared with a full checkout; each remaining
+# difference got an anchor or a conftest skip:
+# - registry/projects/open_model_data/integrations (one 614-byte file)
+#   brings instruction_catalog.yaml and its schema, the only files directly
+#   in open_model_data. test_instruction_catalog.py reads them at import, and
+#   their absence aborted collection of the whole run, already before
+#   #10777.
+# - registry/lexicon/source-inventory/grade-01 (1.0 MiB) brings the 25 loose
+#   inventories (0.7 MiB) beside it. Plan validation reads
+#   ohoiko-oho-a1-reference.yaml (tests/review/test_prompts.py fixtures);
+#   the grade-NN and oneshot subtrees (48 MiB) stay out.
+# - curriculum/l2-uk-en/plans/a1 (0.5 MiB):
+#   tests/audit/test_track_deterministic_audit.py launches review_plan.py
+#   on a real A1 plan.
+# - curriculum/l2-uk-direct/a1 (0.5 MiB):
+#   tests/test_ohoiko_source_inventory_scope.py checks the Ohoiko inventory
+#   against the committed abetka key words.
+# - No anchor for site/src/data (its largest files sit directly in it, so
+#   any anchor brings them back) or site/src/content (its readers read the
+#   published lessons themselves). The repo_wide tests that read them carry
+#   pytest.mark.needs_sparse_tree and skip in a sparse checkout, naming the
+#   --sparse-include to use (tests/conftest.py).
 _DISPATCH_SPARSE_EXCLUDE_DEFAULT = frozenset(
     {
         "curriculum",
@@ -9212,33 +9268,72 @@ _DISPATCH_SPARSE_EXCLUDE_DEFAULT = frozenset(
         "data/projects",
         "data/lexicon",
         "registry/projects",
+        "data/datasets",
+        "data/processed",
+        "registry/lexicon/source-inventory",
+        "registry/lexicon/source-inventory-review-decisions",
+        "site/src/content",
+        "site/src/data",
     }
 )
-_DISPATCH_SPARSE_CURRICULUM_MANIFEST_CONE = "curriculum/l2-uk-en/lesson-plans"
+# Cone directories kept inside an excluded tree so tests that every
+# dispatch can run (``pytest -m repo_wide``, ``tests/curriculum``
+# collection) still find the files they read. Each anchor is added only
+# when that directory exists at HEAD.
+_DISPATCH_SPARSE_ANCHORS: dict[str, tuple[str, ...]] = {
+    "curriculum": (
+        "curriculum/l2-uk-direct/a1",
+        "curriculum/l2-uk-en/lesson-plans",
+        "curriculum/l2-uk-en/plans/a1",
+    ),
+    "registry/lexicon/source-inventory": ("registry/lexicon/source-inventory/grade-01",),
+    "registry/projects": ("registry/projects/open_model_data/integrations",),
+}
 # Owned-path prefixes that re-include a default-excluded tree even when the
 # path itself is not under that tree (tests and scripts that read it).
 # Filename stems end with "_" and match tests/test_open_model_*.py. Exact
-# files are listed only when grep shows that file reads the tree. ``site/``
-# consumes site/src/data/lexicon-*.json, not raw data/lexicon/.
+# files are listed only when grep shows that file reads the tree.
 # ``tests/test_open_model_`` is content-gated: most of those modules never
-# read data/projects, and a blanket stem would check out ~633MB.
+# read data/projects, and a blanket stem would check out ~633MB. The lexicon
+# readers read the source inventories, which #8853 moved from data/lexicon
+# to registry/lexicon. Frontend work under ``site/`` builds from the
+# generated data and the published lessons. Test files are not listed: an
+# owned test gets the trees its pytest.mark.needs_sparse_tree marks name
+# (_owned_test_marked_trees).
+_SOURCE_INVENTORY_READERS = (
+    "scripts/lexicon",
+    "tests/lexicon",
+    "tests/test_source_inventory_",
+    "scripts/audit/source_inventory_review_decisions.py",
+    "scripts/audit/generate_source_inventory_review_candidates.py",
+    "scripts/practice/author_densified_pairs.py",
+    "scripts/practice/creation_review.py",
+    "scripts/practice/thin_mode_source_inventory.py",
+)
 _SPARSE_OWNED_PATH_REINCLUDE: dict[str, tuple[str, ...]] = {
+    # Landing pages take module titles from the plans and status files.
+    "curriculum": ("scripts/generate_landing_pages.py",),
     "data/projects": (
         "data/projects",
         "tests/projects/open_model_data",
         "scripts/projects/open_model_data",
         "tests/test_open_model_",
     ),
-    "data/lexicon": (
-        "data/lexicon",
-        "scripts/lexicon",
-        "tests/lexicon",
-        "tests/test_source_inventory_",
-        "scripts/audit/source_inventory_review_decisions.py",
-        "scripts/audit/generate_source_inventory_review_candidates.py",
-        "scripts/practice/author_densified_pairs.py",
-        "scripts/practice/creation_review.py",
-        "scripts/practice/thin_mode_source_inventory.py",
+    "registry/lexicon/source-inventory": _SOURCE_INVENTORY_READERS,
+    "registry/lexicon/source-inventory-review-decisions": _SOURCE_INVENTORY_READERS,
+    # Scripts whose tests carry pytest.mark.needs_sparse_tree for the tree.
+    "site/src/content": (
+        "site",
+        "scripts/api/preparation_state.py",
+        "scripts/generate_landing_pages.py",
+        "scripts/generate_mdx/reading_links.py",
+        "scripts/lexicon/lesson_atlas_link_census.py",
+    ),
+    "site/src/data": (
+        "site",
+        "scripts/audit/check_static_practice_assets.py",
+        "scripts/lexicon/check_manifest_freshness.py",
+        "scripts/lexicon/lesson_atlas_link_census.py",
     ),
 }
 # Stem prefixes whose match still has to mention the tree in that file.
@@ -9341,13 +9436,37 @@ def _reinclude_file_confirms(path: str, prefix: str) -> bool:
     return _imported_binding_mentions_marker(text, markers)
 
 
+def _owned_test_marked_trees(path: str) -> tuple[str, ...]:
+    """Excluded trees an owned test file names in ``pytest.mark.needs_sparse_tree``.
+
+    The owner gets them, so the marked tests run instead of skipping. Test
+    file names stay out of this module: the repo_wide marker prefilter
+    (tests/test_repo_wide_marker_invariant.py) reads a file name in a module
+    that loads modules dynamically as a load of that test, and this module is
+    imported by tests/conftest.py, so every test became a candidate (#10777).
+    """
+    if not (path.startswith("tests/") and path.endswith(".py")):
+        return ()
+    try:
+        tree = ast.parse((_REPO_ROOT / path).read_text(encoding="utf-8"))
+    except (OSError, SyntaxError, UnicodeError, ValueError):
+        return ()
+    found = {
+        arg.value
+        for node in ast.walk(tree)
+        if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute) and node.func.attr == "needs_sparse_tree"
+        for arg in node.args
+        if isinstance(arg, ast.Constant) and arg.value in _DISPATCH_SPARSE_EXCLUDE_DEFAULT
+    }
+    return tuple(sorted(found))
+
+
 def _normalize_sparse_include(raw: Sequence[str] | None) -> tuple[str, ...]:
     """Normalize --sparse-include values to unique default-excluded trees.
 
     Fail closed: explicit values must be names in the default exclusion set
-    (``curriculum``, ``wiki``, ``data/projects``, ``data/lexicon``,
-    ``registry/projects``). Other nested paths and unknown names raise
-    :class:`ValueError`.
+    (``_DISPATCH_SPARSE_EXCLUDE_DEFAULT``). Other nested paths and unknown
+    names raise :class:`ValueError`.
     """
     if not raw:
         return ()
@@ -9364,11 +9483,7 @@ def _normalize_sparse_include(raw: Sequence[str] | None) -> tuple[str, ...]:
             )
         if name not in _DISPATCH_SPARSE_EXCLUDE_DEFAULT:
             if "/" in name:
-                raise ValueError(
-                    f"--sparse-include {item!r} must name a default-excluded tree "
-                    "(nested exclusions: data/projects, data/lexicon, registry/projects). "
-                    f"Allowed: {allowed}"
-                )
+                raise ValueError(f"--sparse-include {item!r} must name a default-excluded tree. Allowed: {allowed}")
             raise ValueError(f"--sparse-include {name!r} is not a default-excluded tree; allowed: {allowed}")
         if name in seen:
             continue
@@ -9389,21 +9504,67 @@ def _infer_sparse_include_from_text(text: str | None) -> tuple[str, ...]:
     return tuple(found)
 
 
-def _sparse_tree_for_owned_path(raw: str) -> str | None:
-    """Return the excluded tree a research-owned path requires, if any."""
-    path = str(raw).strip().strip("/")
-    if not path:
+def _sparse_owned_path_root(raw: str) -> str | None:
+    """The repo-relative path an owned-path claim covers, read as ownership admission reads it.
+
+    ``./site/src/data/x.json``, ``registry/./projects/x`` and ``a//b`` name
+    the same path as their canonical spelling (``normalize_claim``). A glob
+    covers the literal directories before its first wildcard segment
+    (``curriculum/l2-uk-en/**/lessons.lock.yaml`` covers
+    ``curriculum/l2-uk-en``). A claim that owns nothing (empty, ``.``,
+    absolute, ``..``) covers nothing.
+    """
+    try:
+        from scripts.guardrails.delegate_ownership import ClaimKind, normalize_claim, owned_path_matcher
+    except ImportError:  # pragma: no cover - flat script path
+        from guardrails.delegate_ownership import ClaimKind, normalize_claim, owned_path_matcher  # type: ignore
+
+    if owned_path_matcher(raw) is None:
         return None
-    for name in sorted(_DISPATCH_SPARSE_EXCLUDE_DEFAULT, key=len, reverse=True):
+    claim = normalize_claim(raw)
+    if claim.kind is ClaimKind.SUBTREE:
+        return claim.norm
+    literal: list[str] = []
+    for segment in claim.norm.split("/"):
+        if any(ch in segment for ch in "*?["):
+            break
+        literal.append(segment)
+    root = normalize_claim("/".join(literal))
+    return root.norm if root.kind is ClaimKind.SUBTREE else None
+
+
+def _sparse_trees_for_owned_path(raw: str) -> tuple[str, ...]:
+    """Return the excluded trees an owned path (``--owned-path`` or research) requires.
+
+    A path inside an excluded tree needs that tree. A directory that holds
+    excluded trees (``site``, ``registry/lexicon``) needs all of them. A
+    path outside every excluded tree needs the trees its reader prefixes
+    name in ``_SPARSE_OWNED_PATH_REINCLUDE`` and, for a test file, the trees
+    its ``needs_sparse_tree`` marks name.
+    """
+    path = _sparse_owned_path_root(str(raw))
+    if path is None:
+        return ()
+    for name in _DISPATCH_SPARSE_EXCLUDE_DEFAULT:
         if _sparse_path_has_prefix(path, name):
-            return name
-    for tree, prefixes in _SPARSE_OWNED_PATH_REINCLUDE.items():
-        if any(
-            _sparse_reinclude_prefix_matches(path, prefix) and _reinclude_file_confirms(path, prefix)
-            for prefix in prefixes
-        ):
-            return tree
-    return None
+            return (name,)
+    nested = sorted(name for name in _DISPATCH_SPARSE_EXCLUDE_DEFAULT if name.startswith(path + "/"))
+    return tuple(
+        dict.fromkeys(
+            [
+                *nested,
+                *(
+                    tree
+                    for tree, prefixes in _SPARSE_OWNED_PATH_REINCLUDE.items()
+                    if any(
+                        _sparse_reinclude_prefix_matches(path, prefix) and _reinclude_file_confirms(path, prefix)
+                        for prefix in prefixes
+                    )
+                ),
+                *_owned_test_marked_trees(path),
+            ]
+        )
+    )
 
 
 def _infer_sparse_include(
@@ -9414,19 +9575,19 @@ def _infer_sparse_include(
 ) -> tuple[str, ...]:
     """Merge explicit includes with owned-path prefixes and prompt path references.
 
-    A dispatch that already declares ``--research-owned-path curriculum/...``,
-    ``scripts/projects/open_model_data/...``, or a lexicon reader such as
-    ``scripts/lexicon/...`` materializes the matching excluded tree without a
-    second flag. ``site/...`` does not: the frontend reads runtime JSON under
-    ``site/src/data/``, not raw ``data/lexicon/``.
+    ``owned_paths`` holds the dispatch's ``--owned-path`` claims and its
+    ``--research-owned-path`` values. An owned path such as
+    ``curriculum/...``, ``scripts/projects/open_model_data/...`` or a lexicon
+    reader such as ``scripts/lexicon/...`` materializes the matching excluded
+    tree without a second flag.
     """
     merged: list[str] = list(_normalize_sparse_include(explicit))
     seen = set(merged)
     for raw in owned_paths or ():
-        name = _sparse_tree_for_owned_path(str(raw))
-        if name and name not in seen:
-            seen.add(name)
-            merged.append(name)
+        for name in _sparse_trees_for_owned_path(str(raw)):
+            if name not in seen:
+                seen.add(name)
+                merged.append(name)
     for name in _infer_sparse_include_from_text(prompt_text):
         if name not in seen:
             seen.add(name)
@@ -9468,43 +9629,75 @@ def _list_worktree_top_dirs(worktree_path: Path, *, at_ref: str = "HEAD") -> lis
 
 
 def _dispatch_sparse_cone_dirs(
-    top_dirs: Sequence[str],
-    data_children: Sequence[str],
+    list_dirs: Callable[[str], Sequence[str]],
     exclude: Collection[str],
-    registry_children: Sequence[str] = (),
 ) -> tuple[list[str], list[str]]:
     """Build a cone include list that drops excluded dirs at directory level.
 
-    Nested exclusions (``data/projects``, ``data/lexicon``, and
-    ``registry/projects``) are expressed by listing the sibling directories
-    instead of their parent. Cone mode then keeps files directly in each
-    parent and preserves the other sibling trees.
+    ``list_dirs("")`` returns the top-level directories and
+    ``list_dirs("site/src")`` the repo-relative child directories of
+    ``site/src``. A nested exclusion (``data/projects``,
+    ``site/src/data``) is expressed by listing the sibling directories at
+    every level down to it instead of their parent. Cone mode then keeps
+    files directly in each parent and preserves the other sibling trees.
+    A parent whose every child directory is excluded keeps its own files
+    only when an anchor sits below it, since cone mode has no file entries.
     """
-    exclude_set = set(exclude)
-    nested_children = {"data": data_children, "registry": registry_children}
+    exclude_set = {name.strip("/") for name in exclude}
     cone: list[str] = []
     excluded: list[str] = []
-    for name in top_dirs:
-        if name not in nested_children:
-            if name in exclude_set:
-                excluded.append(name)
-            else:
-                cone.append(name)
-            continue
-        if name in exclude_set:
-            excluded.append(name)
-            continue
-        children = list(nested_children[name])
-        dropped = [child for child in children if child in exclude_set]
-        if not dropped:
-            cone.append(name)
-            continue
-        for child in children:
+
+    def walk(parent: str) -> None:
+        for child in list_dirs(parent):
+            if parent and not child.startswith(parent + "/"):
+                # Not a child of ``parent``: descending again would never end.
+                continue
             if child in exclude_set:
                 excluded.append(child)
+            elif any(name.startswith(child + "/") for name in exclude_set):
+                cone_mark, excluded_mark = len(cone), len(excluded)
+                walk(child)
+                if len(excluded) == excluded_mark:
+                    # Nothing beneath exists at this ref: keep the whole tree,
+                    # including the files directly in it.
+                    del cone[cone_mark:]
+                    cone.append(child)
             else:
                 cone.append(child)
+
+    walk("")
     return cone, sorted(excluded)
+
+
+def _dispatch_sparse_profile(
+    list_dirs: Callable[[str], Sequence[str]],
+    sparse_include: Sequence[str] = (),
+) -> tuple[list[str], list[str]]:
+    """Return ``(cone_dirs, excluded_trees)`` for the default dispatch profile.
+
+    ``sparse_include`` names default-excluded trees to keep. Anchors of a
+    tree that stays excluded join the cone when they exist at HEAD.
+    """
+    includes = _normalize_sparse_include(sparse_include)
+    exclude = set(_DISPATCH_SPARSE_EXCLUDE_DEFAULT) - set(includes)
+    included, excluded = _dispatch_sparse_cone_dirs(list_dirs, exclude)
+    for tree in excluded:
+        for anchor in _DISPATCH_SPARSE_ANCHORS.get(tree, ()):
+            parent = anchor.rpartition("/")[0]
+            if anchor in list_dirs(parent):
+                included.append(anchor)
+    return included, excluded
+
+
+def _worktree_dir_lister(worktree_path: Path) -> Callable[[str], list[str]]:
+    """List directories at HEAD in ``worktree_path`` for the sparse profile."""
+
+    def list_dirs(parent: str) -> list[str]:
+        if not parent:
+            return _list_worktree_top_dirs(worktree_path)
+        return _list_worktree_dirs(worktree_path, parent + "/")
+
+    return list_dirs
 
 
 def _apply_dispatch_sparse_checkout(
@@ -9515,16 +9708,13 @@ def _apply_dispatch_sparse_checkout(
 ) -> dict[str, Any]:
     """Apply (or disable) cone sparse-checkout on a dispatch worktree.
 
-    Default profile excludes ``curriculum/``, ``wiki/``, ``data/projects/``
-    (~633MB), ``data/lexicon/`` (~277MB), and ``registry/projects/``. The
-    latter is excluded as a nested tree so ``registry/lexicon/`` stays
-    available. When ``curriculum`` stays
-    excluded and ``curriculum/l2-uk-en/lesson-plans`` exists at HEAD, that
-    directory is still cone-included so ``curriculum/l2-uk-en/curriculum.yaml``
-    and ``lesson-plans/a1/_arc.yaml`` are present (~3.6MB) without the rest
-    of ``curriculum/``.
-    ``--full-checkout`` disables sparse mode. ``--sparse-include`` keeps a
-    named excluded tree.
+    The default profile drops every tree in
+    ``_DISPATCH_SPARSE_EXCLUDE_DEFAULT``; nested trees such as
+    ``site/src/data`` are dropped by listing their siblings, so the rest of
+    ``site/`` stays. Anchors in ``_DISPATCH_SPARSE_ANCHORS`` keep the files
+    collection reads (``curriculum/l2-uk-en/curriculum.yaml``) without the
+    rest of their tree. ``--full-checkout`` disables sparse mode.
+    ``--sparse-include`` keeps a named excluded tree.
     """
     includes = _normalize_sparse_include(sparse_include)
     telemetry: dict[str, Any] = {
@@ -9566,14 +9756,7 @@ def _apply_dispatch_sparse_checkout(
         telemetry["applied"] = True
         return telemetry
 
-    exclude = set(_DISPATCH_SPARSE_EXCLUDE_DEFAULT) - set(includes)
-    all_dirs = _list_worktree_top_dirs(worktree_path)
-    data_children = _list_worktree_dirs(worktree_path, "data/") if "data" in all_dirs else []
-    registry_children = _list_worktree_dirs(worktree_path, "registry/") if "registry" in all_dirs else []
-    included, excluded = _dispatch_sparse_cone_dirs(all_dirs, data_children, exclude, registry_children)
-    manifest_cone = _DISPATCH_SPARSE_CURRICULUM_MANIFEST_CONE
-    if "curriculum" in excluded and manifest_cone in _list_worktree_dirs(worktree_path, manifest_cone):
-        included.append(manifest_cone)
+    included, excluded = _dispatch_sparse_profile(_worktree_dir_lister(worktree_path), includes)
     telemetry["excluded"] = excluded
     telemetry["included_dirs"] = included
 
@@ -9965,6 +10148,9 @@ def _ensure_worktree(
                 full_checkout=full_checkout,
                 sparse_include=sparse_include,
             )
+            # Sparse checkout can remove ignored links with an excluded parent.
+            # Keep the pre-sparse read-only containment check and restore links afterward.
+            _provision_data_symlinks(worktree_path, _REPO_ROOT, read_only=read_only or detached)
         _record_worktree_local_venv_warning(worktree_path, telemetry)
         return worktree_path, worktree_branch, telemetry
 
@@ -10076,6 +10262,7 @@ def _ensure_worktree(
         full_checkout=full_checkout,
         sparse_include=sparse_include,
     )
+    _provision_data_symlinks(worktree_path, _REPO_ROOT, read_only=read_only or detached)
     _record_worktree_local_venv_warning(worktree_path, telemetry)
     return worktree_path, worktree_branch, telemetry
 
@@ -10132,7 +10319,8 @@ def _augment_prompt_with_worktree(
                 + ". To materialize one inside this worktree, run "
                 + add_commands
                 + " (for example `git sparse-checkout add data/projects`). "
-                + "Do not invent content for missing paths.\n"
+                + "A test that fails because a file under one of these trees is missing needs that "
+                + "command, not a code change. Do not invent content for missing paths.\n"
             )
     delivery_note = ""
     if mode in _WRITE_CAPABLE_MODES and delegate_commits:
@@ -13375,9 +13563,14 @@ def _dispatch(
     requested_branch = getattr(args, "branch", None)
     full_checkout = bool(getattr(args, "full_checkout", False))
     try:
+        # Declared ownership keeps the trees it owns; research paths only add
+        # to it, and a dispatch without research flags still gets them (#10777).
         sparse_include = _infer_sparse_include(
             getattr(args, "sparse_include", None),
-            owned_paths=getattr(args, "research_owned_path", None),
+            owned_paths=[
+                *(_declared_owned_paths(getattr(args, "owned_path", None)) or ()),
+                *(getattr(args, "research_owned_path", None) or ()),
+            ],
             prompt_text=early_prompt,
         )
     except ValueError as exc:
@@ -19433,10 +19626,10 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help=(
             "Materialize the full git working tree in the dispatch worktree. "
-            "Default cone sparse-checkout excludes curriculum/ (289MB), wiki/ (66MB), "
-            "data/projects/ (633MB), data/lexicon/ (277MB), and registry/projects/ "
-            "while retaining registry/lexicon/, leaving a default "
-            "worktree under 450MB. Use this when the task needs the entire tree."
+            "Default cone sparse-checkout excludes curriculum/, wiki/, site/src/data/, "
+            "site/src/content/, the registry/lexicon source inventories, registry/projects/, "
+            "data/projects/, data/datasets/ and data/processed/, leaving about 200MB of tracked "
+            "files instead of 730MB. Use this when the task needs the entire tree."
         ),
     )
     d.add_argument(
@@ -19445,10 +19638,13 @@ def build_parser() -> argparse.ArgumentParser:
         default=None,
         metavar="DIR",
         help=(
-            "Keep a tree that default sparse-checkout would exclude "
-            "(curriculum, wiki, data/projects, data/lexicon, registry/projects). Repeatable. "
-            "Example: --sparse-include data/projects, or --sparse-include registry/projects "
-            "for module content. Owned paths under those trees are included automatically."
+            "Keep a tree that default sparse-checkout would exclude (curriculum, wiki, "
+            "data/projects, data/lexicon, data/datasets, data/processed, registry/projects, "
+            "registry/lexicon/source-inventory, registry/lexicon/source-inventory-review-decisions, "
+            "site/src/content, site/src/data). Repeatable. "
+            "Example: --sparse-include data/projects, or --sparse-include site/src/content "
+            "for published lessons. Owned paths under or above those trees, and known readers "
+            "of them, are included automatically."
         ),
     )
     d.add_argument(

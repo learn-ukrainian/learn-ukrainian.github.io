@@ -3,11 +3,14 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
+
 ROOT = Path(__file__).resolve().parents[1]
 INVENTORY = ROOT / "site/src/data/lexicon-sentence-inventory.json"
 DAILY_POOL = ROOT / "site/src/data/lexicon-daily-pool.json"
 
 
+@pytest.mark.needs_sparse_tree("site/src/data")
 def test_daily_pool_examples_are_inventory_backed_and_cover_the_ship_floor() -> None:
     inventory = json.loads(INVENTORY.read_text(encoding="utf-8"))
     pool = json.loads(DAILY_POOL.read_text(encoding="utf-8"))
@@ -24,6 +27,7 @@ def test_daily_pool_examples_are_inventory_backed_and_cover_the_ship_floor() -> 
     assert all("clozemaster" not in json.dumps(row, ensure_ascii=False).casefold() for row in rows)
 
 
+@pytest.mark.needs_sparse_tree("site/src/data")
 def test_daily_pool_excludes_avoid_classified_rows() -> None:
     """A neutral daily card must never surface an error-modeling lemma (#6525)."""
     pool = json.loads(DAILY_POOL.read_text(encoding="utf-8"))
@@ -31,6 +35,7 @@ def test_daily_pool_excludes_avoid_classified_rows() -> None:
     assert all(row.get("k") != "avoid" for row in pool)
 
 
+@pytest.mark.needs_sparse_tree("site/src/data")
 def test_ulp_inventory_rows_have_only_the_safe_provenance_shape() -> None:
     rows = json.loads(INVENTORY.read_text(encoding="utf-8"))["rows"]
     for row in rows:

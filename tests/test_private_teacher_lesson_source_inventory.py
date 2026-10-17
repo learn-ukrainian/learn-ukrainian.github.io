@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
 import yaml
 
 from scripts.audit import source_inventory_review_decisions as decisions
@@ -894,6 +895,7 @@ def test_public_teacher_cloze_build_excludes_private_lemmas_before_distractors()
     assert public_teacher_lemmas([{"lemma": "альона"}, {"lemma": "місто"}]) == ["місто"]
 
 
+@pytest.mark.needs_sparse_tree("site/src/data")
 def test_public_teacher_cloze_build_filters_residual_cards_in_committed_asset() -> None:
     asset_text = PUBLIC_TEACHER_CLOZE_ASSET.read_text(encoding="utf-8")
     payload = json.loads(asset_text)

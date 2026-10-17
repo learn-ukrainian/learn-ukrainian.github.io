@@ -224,7 +224,7 @@ def resolve_recipient_alias(agent: str, *, assignments_path: Path | None = None)
     both names keep mail separate from the bare provider inbox.
 
     Launchers used to mint SESSION_HANDOFF_AGENT names like
-    ``grok-monitor`` for areas whose area_assignments.yaml slots
+    ``codex-monitor`` for areas whose area_assignments.yaml slots
     roster is empty; those names were never valid inbox recipients, so
     argparse rejected them and stranded the live session (#7597). Treat such
     an already-minted name as an alias of the bare provider so the session

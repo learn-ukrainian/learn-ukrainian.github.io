@@ -403,14 +403,18 @@ HUNG_CHILD = textwrap.dedent(
 
     install_signal_dump(Path(sys.argv[1]))
     lock = threading.Lock()
+    condition = threading.Condition()
 
     def worker_blocked_on_shared_lock():
-        lock.acquire()
+        with condition:
+            print("hung", flush=True)
+            lock.acquire()
 
     lock.acquire()
-    threading.Thread(target=worker_blocked_on_shared_lock, daemon=True).start()
-    print("hung", flush=True)
-    lock.acquire()  # the main thread deadlocks on a lock it already holds
+    with condition:
+        threading.Thread(target=worker_blocked_on_shared_lock, daemon=True).start()
+        # The worker can announce readiness only after the main thread waits.
+        condition.wait()
     """
 )
 

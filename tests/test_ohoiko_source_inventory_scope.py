@@ -43,6 +43,7 @@ def test_ohoiko_abetka_inventory_covers_all_committed_key_words() -> None:
     assert sum(ohoiko_rows.values()) == 33
 
 
+@pytest.mark.needs_sparse_tree("registry/lexicon/source-inventory-review-decisions")
 @pytest.mark.slow
 def test_ohoiko_abetka_inventory_has_review_decisions_for_all_rows() -> None:
     records = read_source_inventory(OHOIKO_INVENTORY, project_root=PROJECT_ROOT)
