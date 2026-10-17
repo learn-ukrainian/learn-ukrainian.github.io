@@ -3,7 +3,7 @@
 Operator decision 2026-09-30: every ``gpt-6-luna`` dispatch, and every Gemini
 Flash dispatch without an explicit Ukrainian authoring/review classification,
 needs an envelope issued by a finished ``gpt-6.1-sol`` advisory task and bound
-to this dispatch's arguments. Test names carry the frozen acceptance-matrix row
+to this dispatch's arguments, except the #10919 bounded implementation trial. Test names carry the frozen acceptance-matrix row
 (M1–M18) they prove.
 """
 
@@ -2603,3 +2603,68 @@ def test_r7_a_verdict_required_record_keeps_another_gates_typed_failure(tmp_path
         },
     )
     assert delegate._read_state(path)["failure_reason"] == bounded_advisory.CEILING_EXCEEDED
+
+
+@pytest.mark.parametrize("agent,model,effort", [
+    ("claude", "claude-haiku-5-5", "medium"),
+    ("codex", "gpt-6-luna", "high"),
+])
+def test_trial_implementation_dispatch_without_advisor(env, monkeypatch, capsys, agent, model, effort):
+    subprocess.run(["git", "update-ref", "refs/remotes/origin/main", "HEAD"],
+                   cwd=delegate._REPO_ROOT, env=delegate._sanitized_git_env(), check=True, capture_output=True, timeout=30)
+    argv = _argv(
+        "--research-task-family", "bounded_implementation", "--research-role", "implementation",
+        "--owned-path", "tests/test_trial_example.py", "--mode", "workspace-write", "--worktree",
+        "--force-agent", agent=agent, model=model,
+    )
+    argv[argv.index("--prompt") + 1] = "Implement the example.\nVerify: pytest -q tests/test_trial_example.py"
+    assert _dispatch(argv) == 0, capsys.readouterr().err
+    record = _worker_record(env.tasks)
+    assert record["labels"] == ["haiku-luna-coding-trial"]
+    assert record["mechanical_task"]["family"] == "bounded_implementation"
+    assert record["owned_paths"] == ["tests/test_trial_example.py"]
+    assert "advisory_envelope" not in record
+    assert "duration_s" in record  # Existing runtime accounting remains in the same record.
+    assert env.spawned[0][env.spawned[0].index("--effort") + 1] == effort
+    # Recheck the actual composed worker input at both worker admission gates.
+    launch = env.spawned[0]
+    cwd = Path(launch[launch.index("--cwd") + 1])
+    refusal, target = delegate._kimi_worker_refusal(
+        _worker_id(), agent=agent, model=model, mode="workspace-write", cwd=cwd,
+        review=False, prompt=env.prompts[0],
+    )
+    assert refusal is None and target.model == model
+    spy = _Spy('DELIVERABLE: {"outcome":"no_change","reason":"example already works"}')
+    def invoke(*args, **kwargs):
+        result = spy(*args, **kwargs)
+        result.usage_record = {"tokens": {"input": 120, "output": 30}}
+        return result
+    monkeypatch.setattr("agent_runtime.runner.invoke", invoke)
+    monkeypatch.setattr(delegate, "_background_jobs_at_exit", lambda *_a, **_k: None)
+    monkeypatch.setattr(delegate, "_emit_terminal_dispatch_event", lambda **_kwargs: None)
+    assert _run_spawned_worker(env, env.prompts[0], monkeypatch) == 0, capsys.readouterr().err
+    terminal = _worker_record(env.tasks)
+    assert terminal["labels"] == ["haiku-luna-coding-trial"]
+    assert terminal["tokens"] == {"input": 120, "output": 30}
+    assert isinstance(terminal["duration_s"], float) and terminal["duration_s"] >= 0
+    assert spy.calls == 1
+
+
+@pytest.mark.parametrize("agent,model", [("claude", "claude-haiku-5-5"), ("codex", "gpt-6-luna")])
+@pytest.mark.parametrize("case", ["security", "ukrainian", "review", "missing-paths", "missing-command", "empty-command"])
+def test_trial_dispatch_refuses_excluded_or_incomplete_brief(env, capsys, agent, model, case):
+    path = {"security": "scripts/delegate.py", "ukrainian": "curriculum/l2-uk-en/a1/item.md"}.get(case, "tests/test_trial_example.py")
+    extra = ["--research-task-family", "bounded_implementation", "--research-role", "implementation"]
+    if case != "missing-paths":
+        extra += ["--owned-path", path]
+    if case == "review":
+        extra += ["--require-review-verdict"]
+    argv = _argv(*extra, agent=agent, model=model)
+    argv[argv.index("--prompt") + 1] = {
+        "missing-command": "Implement the example.",
+        "empty-command": "Implement the example.\nVerify:\nNo command was supplied.",
+    }.get(case, "Implement the example.\nVerify: pytest -q tests/test_trial_example.py")
+    assert _dispatch(argv) == 2
+    assert env.spawned == []
+    assert _worker_record(env.tasks) is None
+    assert capsys.readouterr().err
