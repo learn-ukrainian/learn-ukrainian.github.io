@@ -68,6 +68,7 @@ def _write_json(path: Path, payload: object) -> None:
     path.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
 
 
+@pytest.mark.needs_sparse_tree("registry/lexicon/source-inventory-review-decisions", "curriculum")
 def test_plan_maps_approved_decision_to_manifest_addition(tmp_path: Path) -> None:
     decision = _first_decision()
     candidates = tmp_path / "candidates.json"
@@ -109,6 +110,7 @@ def test_plan_maps_approved_decision_to_manifest_addition(tmp_path: Path) -> Non
     )
 
 
+@pytest.mark.needs_sparse_tree("registry/lexicon/source-inventory-review-decisions", "curriculum")
 def test_plan_skips_existing_lemmas_when_manifest_supplied(tmp_path: Path) -> None:
     decision = _first_decision()
     candidates = tmp_path / "candidates.json"
@@ -127,6 +129,7 @@ def test_plan_skips_existing_lemmas_when_manifest_supplied(tmp_path: Path) -> No
     assert plan["skipped_existing"][0]["reason"] == "already_in_manifest"
 
 
+@pytest.mark.needs_sparse_tree("registry/lexicon/source-inventory-review-decisions", "curriculum")
 def test_candidate_matching_uses_stable_source_key_not_queue_id(tmp_path: Path) -> None:
     decision = _first_decision()
     candidates = tmp_path / "candidates.json"
@@ -182,6 +185,7 @@ def test_write_plan_and_report_stay_ephemeral(tmp_path: Path) -> None:
 
 
 
+@pytest.mark.needs_sparse_tree("registry/lexicon/source-inventory-review-decisions", "curriculum")
 def test_plan_carries_surface_admission_to_manifest_entry(tmp_path: Path) -> None:
     payload = yaml.safe_load(FIRST_BATCH.read_text(encoding="utf-8"))
     decision = payload["decisions"][0]
@@ -204,6 +208,7 @@ def test_plan_carries_surface_admission_to_manifest_entry(tmp_path: Path) -> Non
 
 
 
+@pytest.mark.needs_sparse_tree("registry/lexicon/source-inventory-review-decisions", "curriculum")
 def test_plan_drops_candidate_surface_admission_without_decision_opt_in(tmp_path: Path) -> None:
     decision = _first_decision()
     candidates_payload = _candidate_payload_for(decision)

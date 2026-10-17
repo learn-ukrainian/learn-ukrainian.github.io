@@ -330,6 +330,7 @@ def test_culture_deck_shape():
     assert deck["drills"][0]["id"] == "err_0001"
 
 
+@pytest.mark.needs_sparse_tree("site/src/data")
 def test_committed_culture_decks_are_one_regeneration():
     """The bundled site deck and the audited registry copy are the same extractor output."""
     root = Path(__file__).resolve().parents[1]
@@ -493,6 +494,7 @@ def test_reviewed_withholds_are_keyed_by_pair_text():
     assert [row["reason"] for row in withheld] == ["reviewed_wrong_error", "reviewed_contested"]
 
 
+@pytest.mark.needs_sparse_tree("site/src/data")
 def test_committed_deck_excludes_reviewed_withholds():
     from scripts.practice.extract_textbook_error_corrections import load_reviewed_withholds, pair_key
 
@@ -655,6 +657,7 @@ def test_export_stops_when_source_label_disagrees_with_row():
         build_evidence_snapshot(deck, conn)
 
 
+@pytest.mark.needs_sparse_tree("site/src/data")
 def test_committed_evidence_snapshot_covers_every_drill():
     """One snapshot entry per bundled drill, carrying the drill's own error and correction."""
     from scripts.practice.extract_textbook_error_corrections import load_evidence_snapshot, source_ref_problem

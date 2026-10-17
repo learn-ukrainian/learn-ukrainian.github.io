@@ -285,6 +285,7 @@ def test_check_parity_rejects_arc_kind_outside_arc_levels(mock_legacy_levels, mo
     assert len(check_parity([other], {other})) == 1
 
 
+@pytest.mark.needs_sparse_tree("site/src/content")
 def test_real_generated_a1_pages_pass_parity(mock_legacy_levels, mock_subprocess):
     pages = [MDX_DIR / "a1" / "index.mdx", *sorted(MDX_DIR.glob("a1/*/index.mdx"))]
     assert pages and all(page.is_file() for page in pages)

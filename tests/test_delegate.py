@@ -110,10 +110,15 @@ def _isolate_delegate_import_path(monkeypatch):
     """Worker setup prepends the primary scripts path; keep it within one test.
 
     Otherwise later fixture imports can mix primary-checkout modules with
-    this worktree's packages, depending on xdist's scheduling order.
+    this worktree's packages, depending on xdist's scheduling order. Review
+    fixtures must also launch the server whose declarations they validate.
     """
+    from scripts.agent_runtime import review_mcp
+
+    checkout = Path(__file__).resolve().parents[1]
     monkeypatch.setattr(sys, "path", list(sys.path))
-    monkeypatch.syspath_prepend(str(Path(__file__).resolve().parents[1] / "scripts"))
+    monkeypatch.syspath_prepend(str(checkout / "scripts"))
+    monkeypatch.setattr(review_mcp, "review_server_checkout", lambda: checkout)
 
 
 @pytest.fixture(autouse=True)
@@ -9466,7 +9471,8 @@ def _make_run_stub(
                 listing = "data/corpus_audit\ndata/lexicon\ndata/projects\ndata/raw\n"
             elif cmd[-1:] == ["registry/"]:
                 listing = "registry/artifacts\nregistry/lexicon\nregistry/projects\n"
-            elif cmd[-1:] == ["curriculum/l2-uk-en/lesson-plans"]:
+            elif cmd[-1:] == ["curriculum/l2-uk-en/"]:
+                # The anchor is looked up among its parent's children.
                 listing = "curriculum/l2-uk-en/lesson-plans\n"
             else:
                 listing = "curriculum\ndata\ndocs\nregistry\nscripts\nsite\ntests\nwiki\n"
@@ -11847,6 +11853,12 @@ def test_normalize_sparse_include_rejects_nested_and_unknown():
         delegate._normalize_sparse_include([""])
 
 
+_SOURCE_INVENTORY_TREES = (
+    "registry/lexicon/source-inventory",
+    "registry/lexicon/source-inventory-review-decisions",
+)
+
+
 def test_infer_sparse_include_from_owned_paths_and_prompt():
     assert delegate._infer_sparse_include(None) == ()
     assert delegate._infer_sparse_include(
@@ -11880,14 +11892,11 @@ def test_infer_sparse_include_from_owned_paths_and_prompt():
     assert delegate._infer_sparse_include(
         None,
         owned_paths=["scripts/lexicon/manifest_io.py", "site/src/pages/index.astro"],
-    ) == ("data/lexicon",)
-    assert (
-        delegate._infer_sparse_include(
-            None,
-            owned_paths=["site/src/pages/index.astro"],
-        )
-        == ()
-    )
+    ) == (*_SOURCE_INVENTORY_TREES, "site/src/content", "site/src/data")
+    assert delegate._infer_sparse_include(
+        None,
+        owned_paths=["site/src/pages/index.astro"],
+    ) == ("site/src/content", "site/src/data")
     assert delegate._infer_sparse_include(
         None,
         owned_paths=["tests/test_open_model_foundry_cli.py"],
@@ -11902,7 +11911,7 @@ def test_infer_sparse_include_from_owned_paths_and_prompt():
     assert delegate._infer_sparse_include(
         None,
         owned_paths=["scripts/audit/source_inventory_review_decisions.py"],
-    ) == ("data/lexicon",)
+    ) == _SOURCE_INVENTORY_TREES
     assert (
         delegate._infer_sparse_include(
             None,
@@ -11913,15 +11922,15 @@ def test_infer_sparse_include_from_owned_paths_and_prompt():
     assert delegate._infer_sparse_include(
         None,
         owned_paths=["tests/test_source_inventory_intake.py"],
-    ) == ("data/lexicon",)
+    ) == _SOURCE_INVENTORY_TREES
     assert delegate._infer_sparse_include(
         None,
         owned_paths=["scripts/practice/author_densified_pairs.py"],
-    ) == ("data/lexicon",)
+    ) == _SOURCE_INVENTORY_TREES
     assert delegate._infer_sparse_include(
         None,
         owned_paths=["scripts/practice/thin_mode_source_inventory.py"],
-    ) == ("data/lexicon",)
+    ) == _SOURCE_INVENTORY_TREES
     assert (
         delegate._infer_sparse_include(
             None,
@@ -21606,6 +21615,40 @@ def test_dispatch_records_only_explicit_owned_paths(tmp_tasks_dir, tmp_path, mon
     assert "owned_paths" not in plain
     assert "owned_paths" not in research
     assert owned["owned_paths"] == ["scripts/fleet/", "docs/x.md"]
+
+
+@pytest.mark.usefixtures("isolated_dispatch_repo")
+def test_dispatch_checks_out_the_excluded_trees_its_owned_paths_need(tmp_tasks_dir, tmp_path, monkeypatch):
+    """--owned-path keeps the excluded tree it owns without research flags; research paths only add (#10777)."""
+    monkeypatch.setattr(delegate, "_build_research_context", lambda args: None)
+    ensure = delegate._ensure_worktree
+    sparse_includes: dict[str, tuple[str, ...]] = {}
+
+    def recording_ensure(**kwargs):
+        sparse_includes[kwargs["task_id"]] = tuple(kwargs["sparse_include"])
+        return ensure(**kwargs)
+
+    monkeypatch.setattr(delegate, "_ensure_worktree", recording_ensure)
+    for task_id, extra in (
+        ("sparse-owned", ["--owned-path", "site/src/data/curriculum-stats.json"]),
+        ("sparse-owned-alias", ["--owned-path", "./site/src/data/curriculum-stats.json"]),
+        (
+            "sparse-owned-and-research",
+            [
+                "--owned-path",
+                "site/src/data/curriculum-stats.json",
+                "--research-owned-path",
+                "registry/projects/open_model_data/x.json",
+            ],
+        ),
+    ):
+        _dispatch_recording_the_worker_prompt(tmp_path, monkeypatch, task_id, ["--mode", "read-only", *extra])
+
+    assert sparse_includes == {
+        "sparse-owned": ("site/src/data",),
+        "sparse-owned-alias": ("site/src/data",),
+        "sparse-owned-and-research": ("site/src/data", "registry/projects"),
+    }
 
 
 @pytest.mark.parametrize("bad", ["/etc", "../outside", ".", "", "scripts/../docs", "./**", "**", "*", "*/**"])

@@ -56,7 +56,17 @@ def _has_prop(text: str, prop: str) -> bool:
     return re.search(rf"\b{re.escape(prop)}\s*=", text) is not None
 
 
-@pytest.mark.parametrize("path", _track_landings(), ids=lambda path: path.parent.name)
+def _track_landing_cases() -> list[Path]:
+    # Default dispatch checkouts exclude site/src/content (#10777). An empty
+    # parameter set would skip without naming the include, so a missing tree
+    # yields one placeholder case that fails when it runs instead.
+    if not DOCS_ROOT.is_dir():
+        return [DOCS_ROOT / "content-docs-missing" / "index.mdx"]
+    return _track_landings()
+
+
+@pytest.mark.parametrize("path", _track_landing_cases(), ids=lambda path: path.parent.name)
+@pytest.mark.needs_sparse_tree("site/src/content")
 def test_track_landing_uses_levellanding_contract(path: Path) -> None:
     text = path.read_text(encoding="utf-8")
     track = path.parent.name
@@ -101,6 +111,7 @@ def test_dynamic_route_uses_every_track_index_mdx_as_landing_doc() -> None:
     assert "showHero={props.kind !== 'landingDoc' && props.kind !== 'track' && !arcFrontmatter}" in text
 
 
+@pytest.mark.needs_sparse_tree("site/src/content")
 @pytest.mark.repo_wide
 def test_arc_landings_are_generated_pages_the_router_mounts_from_frontmatter() -> None:
     text = ROUTER_PATH.read_text(encoding="utf-8")
@@ -115,6 +126,7 @@ def test_arc_landings_are_generated_pages_the_router_mounts_from_frontmatter() -
         assert body == "", f"{path} is generated with an empty body; the router renders it from the arc JSON"
 
 
+@pytest.mark.needs_sparse_tree("site/src/content")
 def test_content_collection_loads_track_index_mdx_files() -> None:
     text = CONTENT_CONFIG_PATH.read_text(encoding="utf-8")
     tracks = {path.parent.name for path in _track_landings()}
@@ -123,6 +135,9 @@ def test_content_collection_loads_track_index_mdx_files() -> None:
     assert not missing, f"content loader does not include track indexes: {', '.join(missing)}"
 
 
+# The generator also reads the plans and status files under curriculum/, so a
+# worker that owns this test gets that tree too (scripts/delegate.py).
+@pytest.mark.needs_sparse_tree("site/src/content", "curriculum")
 def test_b2_landing_matches_generated_curriculum_state() -> None:
     curriculum = yaml.safe_load((PROJECT_ROOT / "curriculum" / "l2-uk-en" / "curriculum.yaml").read_text("utf-8"))
     expected = generate_landing_pages.generate_landing_page("b2", curriculum)
@@ -132,6 +147,7 @@ def test_b2_landing_matches_generated_curriculum_state() -> None:
 
 
 @pytest.mark.parametrize("track", ["c1", "bio", "folk"])
+@pytest.mark.needs_sparse_tree("site/src/content", "curriculum")
 def test_count_landing_matches_generated_curriculum_state(track: str) -> None:
     curriculum = yaml.safe_load((PROJECT_ROOT / "curriculum" / "l2-uk-en" / "curriculum.yaml").read_text("utf-8"))
     expected = generate_landing_pages.generate_landing_page(track, curriculum)
@@ -141,6 +157,11 @@ def test_count_landing_matches_generated_curriculum_state(track: str) -> None:
 
 
 def _tracks_with_modules() -> list[str]:
+    # Default dispatch checkouts exclude site/src/data (#10777). A read here
+    # would abort collection of the whole suite there, so a missing file
+    # yields one placeholder case that fails when it runs instead.
+    if not STATS_PATH.is_file():
+        return ["curriculum-stats-missing"]
     stats = json.loads(STATS_PATH.read_text(encoding="utf-8"))
     return [track for track, entry in stats.items() if track != "_total" and entry["modules"] > 0]
 
@@ -149,6 +170,7 @@ def _tracks_with_modules() -> list[str]:
     "track",
     _tracks_with_modules(),
 )
+@pytest.mark.needs_sparse_tree("site/src/content", "site/src/data")
 def test_track_landing_module_count_matches_curriculum_stats(track: str) -> None:
     stats = json.loads(STATS_PATH.read_text(encoding="utf-8"))
     text = (DOCS_ROOT / track / "index.mdx").read_text(encoding="utf-8")

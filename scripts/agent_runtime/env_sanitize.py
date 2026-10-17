@@ -51,7 +51,13 @@ _SAFE_NAME_ALLOWLIST = {
     "LEARN_UKRAINIAN_DISPATCH_AGENT",
     "LEARN_UKRAINIAN_DISPATCH_TASK_ID",
     "LOGNAME",
+    # Tool cache directories delegate.py points at the task's scratch lease
+    # (#10777), so caches leave the worktree. Directory paths, never
+    # credentials.
+    "MYPY_CACHE_DIR",
     "PATH",
+    "PYTHONPYCACHEPREFIX",
+    "RUFF_CACHE_DIR",
     "TMPDIR",
     "USER",
 }
@@ -87,6 +93,9 @@ _PUSH_CREDENTIAL_NAMES = (
 _SAFE_VALUE_NAME_ALLOWLIST = {
     "LEARN_UKRAINIAN_DISPATCH_AGENT",
     "LEARN_UKRAINIAN_DISPATCH_TASK_ID",
+    "MYPY_CACHE_DIR",
+    "PYTHONPYCACHEPREFIX",
+    "RUFF_CACHE_DIR",
     "TMPDIR",
     "LU_RUNTIME_TMP_BASE_ROOT",
     "LU_RUNTIME_TMP_ROOT",

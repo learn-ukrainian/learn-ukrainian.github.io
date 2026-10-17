@@ -3820,6 +3820,7 @@ def test_tatoeba_cloze_without_attribution_metadata_fails_closed() -> None:
     assert shards["A1"]["cloze"]["cloze"] == []
 
 
+@pytest.mark.needs_sparse_tree("site/src/data")
 def test_live_curated_cloze_sources_and_allowlist_match() -> None:
     cloze_sources_path = Path("site/src/data/lexicon-practice-cloze-sources.json")
     reviewed_sources_path = Path("site/src/data/lexicon-practice-reviewed-sources.json")

@@ -102,7 +102,13 @@ def primary(tmp_path, monkeypatch) -> Path:
     _git(repo, "config", "user.email", "test@example.com")
     _git(repo, "config", "user.name", "test")
     (repo / ".gitignore").write_text("*.db\n.worktrees/\nbatch_state/\n", encoding="utf-8")
-    for relative in ("data/projects/f.txt", "data/lexicon/f.txt", "data/datasets/f.txt", "scripts/f.txt"):
+    for relative in (
+        "data/projects/f.txt",
+        "data/lexicon/f.txt",
+        "data/datasets/f.txt",
+        "data/reference/f.txt",
+        "scripts/f.txt",
+    ):
         target = repo / relative
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_text(f"{relative}\n", encoding="utf-8")
@@ -130,8 +136,34 @@ def _sparse_dispatch_worktree(primary: Path, task_id: str) -> Path:
         detached=True,
     )
     assert branch is None
-    assert telemetry["sparse"]["excluded"] == ["data/lexicon", "data/projects"]
+    assert telemetry["sparse"]["excluded"] == ["data/datasets", "data/lexicon", "data/projects"]
     return worktree
+
+
+@pytest.mark.parametrize("reused", [False, True])
+def test_sparse_dispatch_restores_database_links_when_all_data_trees_are_excluded(
+    primary: Path, tmp_tasks_dir, reused: bool
+) -> None:
+    """Sparse checkout must not discard provisioned ignored databases with their parent."""
+    _git(primary, "rm", "-r", "data/reference")
+    _git(primary, "commit", "-qm", "exclude every tracked data tree")
+    kwargs = {
+        "agent": "agy",
+        "task_id": "sparse-database-links",
+        "raw_path": str(primary / ".worktrees" / "dispatch" / "agy" / "sparse-database-links"),
+        "resolved_base_sha": _git(primary, "rev-parse", "HEAD"),
+    }
+    if reused:
+        delegate._ensure_worktree(**kwargs)
+    worktree, _, telemetry = delegate._ensure_worktree(**kwargs)
+
+    assert telemetry["reused"] is reused
+    assert telemetry["sparse"]["excluded"] == ["data/datasets", "data/lexicon", "data/projects"]
+    assert sorted(path.name for path in (worktree / "data").iterdir()) == sorted(_DATABASES)
+    for name in _DATABASES:
+        link = worktree / "data" / name
+        assert link.is_symlink()
+        assert link.resolve(strict=True) == (primary / "data" / name).resolve()
 
 
 def _run_read_only_worker(worktree: Path, task_id: str, worker_script: str, *args: str) -> tuple[int, dict, str]:
@@ -437,7 +469,7 @@ def test_read_only_sparse_dispatch_with_sources_mcp_lookup_ends_done(primary: Pa
     assert state["status"] == "done"
     assert state["read_only_mutation_paths"] == []
     assert state["last_error"] is None
-    assert sorted(path.name for path in (worktree / "data").iterdir()) == ["datasets"]
+    assert sorted(path.name for path in (worktree / "data").iterdir()) == ["reference"]
     assert {name: _digest(primary / "data" / name) for name in _DATABASES} == before
 
 
@@ -456,7 +488,7 @@ def test_sources_mcp_lookup_without_databases_fails_typed_and_creates_nothing(pr
     assert rc == 0
     assert state["status"] == "done"
     assert state["read_only_mutation_paths"] == []
-    assert sorted(path.name for path in (worktree / "data").iterdir()) == ["datasets"]
+    assert sorted(path.name for path in (worktree / "data").iterdir()) == ["reference"]
     assert sorted((primary / "data").glob("*.db")) == []
 
 
