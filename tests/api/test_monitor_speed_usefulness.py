@@ -233,6 +233,7 @@ const admitPublicDocument = doc => ({ok: true, doc});
 const fetchJson = url => new Promise((resolve, reject) => pending.push({url, resolve, reject}));
 const classifyPrivateFailure = () => 'unreachable';
 const privateMetaFromCode = code => code;
+const controlsToFilters = () => ({stream: 'monitor'});
 """
         + code
         + r"""
