@@ -5,6 +5,7 @@ import json
 import sys
 from pathlib import Path
 from types import SimpleNamespace
+from urllib.parse import unquote
 
 import pytest
 
@@ -146,8 +147,13 @@ def test_helper_allows_existing_pr_branch(monkeypatch) -> None:
     monkeypatch.setenv(pr_freeze.CACHE_ENV, "0")
     repo = SimpleNamespace(github=REPO, role="public-monorepo")
     args = argparse.Namespace(
-        mode="workspace-write", branch="codex/fix-1", pr=None, cwd=None, worktree=None,
-        force_new=True, task_id="retry-probe",
+        mode="workspace-write",
+        branch="codex/fix-1",
+        pr=None,
+        cwd=None,
+        worktree=None,
+        force_new=True,
+        task_id="retry-probe",
     )
     assert delegate._check_open_pr_freeze(args, repo) is None
 
@@ -208,8 +214,18 @@ def test_force_new_record_cannot_exempt_fresh_branch(monkeypatch, capsys, tmp_pa
         sys,
         "argv",
         [
-            "delegate.py", "dispatch", "--agent", "codex", "--task-id", task_id,
-            "--mode", "workspace-write", "--worktree", "--force-new", "--prompt", "implement a thing",
+            "delegate.py",
+            "dispatch",
+            "--agent",
+            "codex",
+            "--task-id",
+            task_id,
+            "--mode",
+            "workspace-write",
+            "--worktree",
+            "--force-new",
+            "--prompt",
+            "implement a thing",
         ],
     )
     assert delegate.main() == 3
@@ -291,3 +307,62 @@ def test_relative_worktree_resolves_against_target_repo(monkeypatch, tmp_path) -
     real.mkdir(parents=True)
     (real / ".git").write_text("gitdir: x\n")
     assert delegate._check_open_pr_freeze(args, repo, target_root) is None
+
+
+def test_search_total_excludes_only_exact_dependabot_login(monkeypatch, tmp_path: Path) -> None:
+    """Dependabot is excluded by exact login. Page length is not the count."""
+    total_payload = {
+        "total_count": 21,
+        "items": [
+            {"number": 1, "user": {"login": "app/dependabot"}},
+            {"number": 2, "user": {"login": "krisztiankoos"}},
+            {"number": 3},
+            {"number": 4, "user": None},
+            {"number": 5, "user": {"login": None}},
+            {"number": 6, "user": {"login": "dependabot[bot]"}},
+            {"number": 7, "user": {"login": "app/renovate"}},
+        ],
+    }
+    excluded_payload = {
+        "total_count": 6,
+        "items": [{"number": 1, "user": {"login": "app/dependabot"}}],
+    }
+    assert total_payload["total_count"] > len(total_payload["items"])
+    assert excluded_payload["total_count"] > len(excluded_payload["items"])
+    seen: list[str] = []
+
+    def fake_get(endpoint: str):
+        seen.append(endpoint)
+        if "author:" in endpoint:
+            return excluded_payload
+        return total_payload
+
+    monkeypatch.setattr(pr_freeze, "_gh_get", fake_get)
+    decision = pr_freeze.evaluate(REPO, environ={}, cache_file=tmp_path / "c.json")
+    assert decision.refused
+    assert decision.total_open == 21
+    assert decision.open_prs == 15
+    assert decision.total_open != decision.open_prs
+    assert decision.total_open != len(total_payload["items"])
+    assert decision.open_prs != sum(pr_freeze.counts_toward_freeze(item) for item in total_payload["items"])
+
+    dependabot, human, missing, null_user, null_login, bot_suffix, other_app = total_payload["items"]
+    assert pr_freeze.counts_toward_freeze(dependabot) is False
+    assert pr_freeze.counts_toward_freeze(human) is True
+    assert pr_freeze.counts_toward_freeze(missing) is True
+    assert pr_freeze.counts_toward_freeze(null_user) is True
+    assert pr_freeze.counts_toward_freeze(null_login) is True
+    assert pr_freeze.counts_toward_freeze(bot_suffix) is True
+    assert pr_freeze.counts_toward_freeze(other_app) is True
+
+    author_calls = [endpoint for endpoint in seen if "author:" in endpoint]
+    assert len(author_calls) == 1
+    decoded = unquote(author_calls[0])
+    assert 'author:"app/dependabot"' in decoded
+    assert "[bot]" not in decoded
+    assert decoded.replace('author:"app/dependabot"', "").count("author:") == 0
+
+    line = decision.refusal_line(REPO)
+    assert "21 open PRs" in line
+    assert "15 counted" in line
+    assert "Land your own open PRs first" in line
