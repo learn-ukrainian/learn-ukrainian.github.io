@@ -536,3 +536,21 @@ def test_other_seats_keep_the_isolation_fallback(tmp_path, monkeypatch):
     with patch.dict("os.environ", _kimi_isolation_env(tmp_path), clear=True):
         env = build_agent_env(provider="codex")
     assert env["GIT_CONFIG_GLOBAL"] == os.devnull
+
+
+def test_tool_cache_dirs_pass_through_for_every_dispatch_provider() -> None:
+    """#10777: delegate.py points tool caches at the task's scratch lease. The
+    lease path holds the task id, so ``sk-`` in it must not drop the caches
+    back into the worktree."""
+    lease = "/scratch/learn-ukrainian/task-10777-sk-something/tool-cache"
+    caches = {
+        "MYPY_CACHE_DIR": f"{lease}/mypy",
+        "PYTHONPYCACHEPREFIX": f"{lease}/pycache",
+        "RUFF_CACHE_DIR": f"{lease}/ruff",
+    }
+    with patch.dict("os.environ", {"PATH": "/usr/bin", "HOME": "/Users/example", **caches}, clear=True):
+        envs = {provider: build_agent_env(provider=provider) for provider in ("claude", "codex", "kimi", "grok", "agy")}
+
+    for provider, env in envs.items():
+        for name, value in caches.items():
+            assert env[name] == value, (provider, name)

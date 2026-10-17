@@ -263,6 +263,7 @@ def _fixture_paths(tmp_path: Path) -> tuple[Path, Path, Path]:
     return daily_pool, practice_dir, reviewed_sources
 
 
+@pytest.mark.needs_sparse_tree("site/src/data")
 def test_check_assets_accepts_static_fallback_assets(tmp_path: Path) -> None:
     daily_pool, practice_dir, reviewed_sources = _fixture_paths(tmp_path)
 
@@ -304,6 +305,7 @@ def test_check_assets_fails_closed_for_unallowlisted_cloze(tmp_path: Path) -> No
     assert any("reviewed allowlist is empty" in error for error in summary["errors"])
 
 
+@pytest.mark.needs_sparse_tree("site/src/data")
 def test_check_assets_accepts_allowlisted_cloze(tmp_path: Path) -> None:
     daily_pool = tmp_path / "lexicon-daily-pool.json"
     practice_dir = tmp_path / "lexicon"
@@ -547,6 +549,7 @@ def test_check_assets_requires_tatoeba_attribution(tmp_path: Path) -> None:
     assert any("missing Tatoeba attribution" in error for error in summary["errors"])
 
 
+@pytest.mark.needs_sparse_tree("site/src/data")
 def test_check_assets_accepts_tatoeba_attributed_cloze(tmp_path: Path) -> None:
     daily_pool = tmp_path / "lexicon-daily-pool.json"
     practice_dir = tmp_path / "lexicon"
@@ -598,6 +601,7 @@ _VALID_HERITAGE_OPTIONS: list[dict[str, object]] = [
 ]
 
 
+@pytest.mark.needs_sparse_tree("site/src/data")
 def test_heritage_lemma_from_lower_level_shard_is_allowed(tmp_path: Path) -> None:
     """#4720 availability floor: a heritage item floored to A2 may reference a native
     lexeme that lives in the A1 shard — the client loads lexeme shards cumulatively."""
@@ -619,6 +623,7 @@ def test_heritage_lemma_from_lower_level_shard_is_allowed(tmp_path: Path) -> Non
     assert summary["ok"] is True, summary["errors"]
 
 
+@pytest.mark.needs_sparse_tree("site/src/data")
 def test_synonym_lemma_from_lower_level_shard_is_allowed(tmp_path: Path) -> None:
     """B1-floor synonym cards can use a prompt from a lower cumulative shard."""
     daily_pool, practice_dir, reviewed_sources = _fixture_paths(tmp_path)
@@ -692,6 +697,7 @@ def test_non_heritage_modes_stay_strictly_same_level(tmp_path: Path) -> None:
     assert any("lemmaId 'dim' missing from A2 lexeme shard" in error for error in summary["errors"])
 
 
+@pytest.mark.needs_sparse_tree("site/src/data")
 def test_thin_deck_warnings(tmp_path: Path) -> None:
     daily_pool, practice_dir, reviewed_sources = _fixture_paths(tmp_path)
     summary = check_assets(
@@ -749,6 +755,7 @@ def test_check_assets_summary_includes_coverage_structure(tmp_path: Path) -> Non
     assert coverage["levels"]["A2"]["synonym"] == {"ratio": 0.08, "pct": 8.0, "thin": False}
 
 
+@pytest.mark.needs_sparse_tree("site/src/data")
 def test_cli_prints_coverage_table(tmp_path: Path) -> None:
     daily_pool, practice_dir, reviewed_sources = _fixture_paths(tmp_path)
 
@@ -1002,6 +1009,7 @@ def _check_fixture(root: Path, *, levels: tuple[str, ...] = ("A1",)) -> dict:
     )
 
 
+@pytest.mark.needs_sparse_tree("site/src/data")
 def test_fallback_validation_preserves_supplied_inputs(tmp_path: Path) -> None:
     _fixture_paths(tmp_path)
     before = _input_snapshot(tmp_path)
@@ -1122,6 +1130,7 @@ def test_corrupt_or_absent_inputs_are_read_only_errors(tmp_path: Path, damage: s
     assert _input_snapshot(tmp_path) == before
 
 
+@pytest.mark.needs_sparse_tree("site/src/data")
 def test_mixed_unavailable_and_empty_custom_modes_keep_distinct_reports(tmp_path: Path, capsys) -> None:
     _, practice, _ = _fixture_paths(tmp_path)
     _write_level(practice, level="A2")
@@ -1227,6 +1236,7 @@ def test_pointer_failure_never_falls_back_to_custom_success(tmp_path: Path, monk
     assert _input_snapshot(tmp_path) == before
 
 
+@pytest.mark.needs_sparse_tree("site/src/data")
 def test_consistent_opaque_custom_versions_and_cross_level_mismatch(tmp_path: Path) -> None:
     _, practice, _ = _fixture_paths(tmp_path)
     _write_level(practice, level="A2")
@@ -1247,6 +1257,7 @@ def test_consistent_opaque_custom_versions_and_cross_level_mismatch(tmp_path: Pa
 
 
 @pytest.mark.parametrize("failure", [False, True])
+@pytest.mark.needs_sparse_tree("site/src/data")
 def test_repeated_default_relative_absolute_library_and_default_qa_cli_are_pure(tmp_path: Path, monkeypatch, failure: bool) -> None:
     import shutil
     import sqlite3
@@ -1361,6 +1372,7 @@ def _make_sandbox(tmp_path: Path) -> tuple[Path, Path]:
 
 
 @pytest.mark.parametrize("case", ["success", "richer", "stale", "download", "hash", "pointer", "untyped", "check-fails"])
+@pytest.mark.needs_sparse_tree("site/src/data")
 def test_actual_make_prepares_before_validation_and_preserves_precise_refusal(tmp_path: Path, case: str) -> None:
     import os
     import shutil
@@ -1423,6 +1435,7 @@ def test_actual_make_prepares_before_validation_and_preserves_precise_refusal(tm
 
 @pytest.mark.parametrize("failure", [False, True])
 @pytest.mark.parametrize("output_format", ["json", "summary"])
+@pytest.mark.needs_sparse_tree("site/src/data")
 def test_public_main_keeps_default_qa_and_unavailable_reporting(tmp_path: Path, capsys, failure: bool, output_format: str) -> None:
     daily, practice, reviewed = _fixture_paths(tmp_path)
     teacher, corrections, inventory = (tmp_path / name for name in ("teacher.json", "ec.json", "si.json"))
