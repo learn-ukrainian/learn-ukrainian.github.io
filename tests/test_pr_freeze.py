@@ -402,3 +402,70 @@ def test_dependabot_bot_page_is_counted_not_a_fetch_failure(monkeypatch, tmp_pat
     decoded = unquote(author_calls[0])
     assert 'author:"app/dependabot"' in decoded
     assert "dependabot[bot]" not in decoded
+
+
+def _excluded_page_without_login_list(kind: str) -> dict:
+    """Successful excluded-author page whose items are not a list of logins."""
+    payload: dict = {"total_count": 7}
+    if kind == "missing":
+        return payload
+    if kind == "null":
+        payload["items"] = None
+        return payload
+    if kind == "object":
+        payload["items"] = {"number": 1, "user": {"login": "app/dependabot"}}
+        return payload
+    raise AssertionError(kind)
+
+
+@pytest.mark.parametrize("kind", ["missing", "null", "object"])
+def test_excluded_page_without_login_list_subtracts_nothing(monkeypatch, tmp_path: Path, kind: str) -> None:
+    """Missing, null, or non-list items subtract nothing. The open total stays counted."""
+    total_payload = {
+        "total_count": 21,
+        "items": [{"number": 1, "user": {"login": "krisztiankoos"}}],
+    }
+    excluded_payload = _excluded_page_without_login_list(kind)
+    assert excluded_payload["total_count"] == 7
+    assert excluded_payload["total_count"] > 1
+    assert not isinstance(excluded_payload.get("items"), list)
+    assert pr_freeze._excluded_total(excluded_payload, excluded_payload["total_count"]) == 0
+
+    def fake_get(endpoint: str):
+        if "author:" in endpoint:
+            return excluded_payload
+        return total_payload
+
+    monkeypatch.setattr(pr_freeze, "_gh_get", fake_get)
+    decision = pr_freeze.evaluate(REPO, environ={}, cache_file=tmp_path / f"{kind}.json")
+    assert decision.refused
+    assert decision.total_open == 21
+    assert decision.open_prs == 21
+    assert decision.warning in (None, "")
+    assert "open_pr_count_unavailable" not in (decision.warning or "")
+    assert decision.open_prs == decision.total_open
+    assert decision.open_prs != total_payload["total_count"] - excluded_payload["total_count"]
+
+
+def test_empty_excluded_items_list_still_subtracts(monkeypatch, tmp_path: Path) -> None:
+    """An empty items list stays on the current path and still subtracts total_count."""
+    total_payload = {
+        "total_count": 21,
+        "items": [{"number": 1, "user": {"login": "krisztiankoos"}}],
+    }
+    excluded_payload = {"total_count": 7, "items": []}
+    assert excluded_payload["total_count"] > len(excluded_payload["items"])
+    assert pr_freeze._excluded_total(excluded_payload, excluded_payload["total_count"]) == 7
+
+    def fake_get(endpoint: str):
+        if "author:" in endpoint:
+            return excluded_payload
+        return total_payload
+
+    monkeypatch.setattr(pr_freeze, "_gh_get", fake_get)
+    decision = pr_freeze.evaluate(REPO, environ={}, cache_file=tmp_path / "empty.json")
+    assert not decision.refused
+    assert decision.total_open == 21
+    assert decision.open_prs == 14
+    assert decision.warning in (None, "")
+    assert "open_pr_count_unavailable" not in (decision.warning or "")

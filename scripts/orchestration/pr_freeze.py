@@ -24,8 +24,10 @@ GitHub search ``author:"app/dependabot"`` can return a successful page whose
 ``user.login`` is ``dependabot[bot]``. That page is not a fetch failure: the
 search returned a count, and those pull requests are not the excluded login,
 so none of that search ``total_count`` is subtracted and the counted number
-stays the open total. Subtract the excluded search ``total_count`` only when
-every returned login is exactly ``app/dependabot``.
+stays the open total. The same is true when ``items`` is missing, null, or
+not a list: nothing is subtracted. Subtract the excluded search ``total_count``
+only when ``items`` is a list and every returned login is exactly
+``app/dependabot``. An empty list still subtracts that total.
 
 ``LU_OPEN_PR_FREEZE_THRESHOLD`` overrides the threshold (default 15; ``0``
 disables the check). The counts come from the GitHub REST search API and are
@@ -159,12 +161,15 @@ def _excluded_total(payload: Any, reported: int) -> int:
 
     ``author:"app/dependabot"`` can return a successful page of
     ``dependabot[bot]``. That login is counted, so the page is not a fetch
-    failure and nothing is subtracted. Subtract ``reported`` only when every
-    returned login is exactly ``app/dependabot``. The page length is not a count.
+    failure and nothing is subtracted. A missing, null, or non-list ``items``
+    field is the same kind of successful page: subtract nothing, and do not
+    raise. Subtract ``reported`` only when ``items`` is a list and every
+    returned login is exactly ``app/dependabot``. An empty list still subtracts
+    ``reported``. The page length is not a count.
     """
     items = payload.get("items") if isinstance(payload, dict) else None
     if not isinstance(items, list):
-        return reported
+        return 0
     for item in items:
         if counts_toward_freeze(item):
             return 0
@@ -175,10 +180,12 @@ def fetch_open_pr_count(repo: str) -> OpenPrCounts:
     """Complete open-PR counts for ``repo``.
 
     ``total`` is every open pull request. ``counted`` subtracts the excluded
-    search ``total_count`` only when every returned login is exactly
-    ``app/dependabot``. A successful page of ``dependabot[bot]`` subtracts
-    zero; that is not a fetch failure. Both numbers are search ``total_count``
-    values, so a short ``items`` page cannot shrink them.
+    search ``total_count`` only when ``items`` is a list and every returned
+    login is exactly ``app/dependabot``. A successful page of
+    ``dependabot[bot]``, or a page whose ``items`` are missing, null, or not a
+    list, subtracts zero; that is not a fetch failure. An empty list still
+    subtracts. Both numbers are search ``total_count`` values, so a short
+    ``items`` page cannot shrink them.
     """
     total_payload = _gh_get(_open_pr_search_endpoint(repo))
     total = _require_total_count(total_payload)
