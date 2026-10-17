@@ -51,6 +51,25 @@ updates:
       - dependency-name: "typescript"
         versions: [">=7.0.0"]
 
+  # npm (root manifest). Same weekly schedule, grouping, and cooldown as /site.
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    cooldown:
+      default-days: 7
+    commit-message:
+      prefix: "deps"
+    labels:
+      - "dependencies"
+    groups:
+      astro:
+        patterns:
+          - "astro"
+          - "@astrojs/*"
+    open-pull-requests-limit: 5
+
   # pip (Python scripts)
   - package-ecosystem: "pip"
     directory: "/"
