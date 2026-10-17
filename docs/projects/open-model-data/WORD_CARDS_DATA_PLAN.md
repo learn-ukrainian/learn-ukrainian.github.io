@@ -54,7 +54,7 @@ identities. Every assertion carries
 | --- | --- | --- | --- |
 | `paradigm` (forms per slot) | ULIF (primary, stressed), VESUM (supporting; version from `vesum_source.lock.json`) | a slot's form set is accepted only when VESUM's form set for the same lexeme and slot equals ULIF's (all variants), with the source sense/template applicability of the C2 spec; omission classes keep their reason codes (asterisk, preposition-bound, unmapped label, unauthenticated header cell, the failed entries, parse-error homonym groups, homonym unbridgeable) | WP2 extractor + census, branch `codex/impl-rb1-wp2c` @1fbfbe98 |
 | `stress` | ULIF stressed forms; `ukrainian_word_stress` lineage | scalar with `variant` vs `conflict` (schema §8); conflict never auto-resolved | WP2 |
-| `senses[]` + `definition_uk` | seed (§6 decision 1): an unquarantined СУМ-20 article **mapped to this lexeme**, else ВТС numbered senses **only after ВТС is admitted** (§6), else ULIF `sense_gloss` units; an entry with no nonblank gloss (209,710 checked ULIF entries) keeps one `unsplit` sense with no meaning; sense ids are preserved when a richer source arrives | definitions verbatim from unquarantined СУМ-20 senses (89 articles / 168 senses today), labels and the sense's own citations bound to the same article and sense; the 11 quarantined articles never appear (#9609, #9840) | WP3 СУМ-20 meaning |
+| `senses[]` + `definition_uk` | seed (§6 decision 1): an unquarantined СУМ-20 article **mapped to this lexeme** (22,075 cached entries), else ВТС numbered senses **(admitted source round 2026-10-17; 31,688 cached entries)** (§6), else ULIF `sense_gloss` units (47,050 glossed entries); an entry with no nonblank gloss keeps one `unsplit` sense with no meaning; sense ids are preserved when a richer source arrives | definitions verbatim from unquarantined СУМ-20 senses (89 articles / 168 senses today in sources.db; 22,075 in local cache), labels and the sense's own citations bound to the same article and sense; the 11 quarantined articles never appear (#9609, #9840) | WP3 СУМ-20 meaning |
 | `synonyms`/`antonyms` by sense | ULIF synonym/antonym sections | members bound to one `sense_or_group_id` of the same entry; a multi-group entry without a source-visible discriminator is **withheld** `sense_not_visible` (806 sections in WP3) — kept as evidence, never accepted, never assigned by position; a source-readable group discriminator is not alignment to a seeded card sense (schema §6: automatic alignment only when both sides have exactly one unit); «рада» wrong-homonym fixture must fail | WP3, branch `codex/impl-rb1-wp3c` @bdf70eda (69,714 / 469 accepted in RB-1 terms) |
 | MWE cards (idioms) | ULIF phraseology sections; Фразеологічний словник only with an edition record (#9609) | an identifiable printed idiom ↔ a nonempty definition ↔ author-labelled citations, all from one section (withheld: `sense_not_visible`, `definition_unresolved`, `citation_unresolved`); component links via ULIF anchors (schema §7.1) | WP3 phraseology (3,385 accepted) |
 | `russification_exposed` (sense) | Антоненко-Давидович pairs adjudicated by two seats; СУМ-11 as `soviet_colonization_context` only | contrast-pair identity = the cited Антоненко row **plus its two-seat adjudication receipt**; both form spans cited; СУМ-11 binds to the rejected form (with `sovietization_risk` and keywords), ULIF + VESUM to the recommended form; swapped recommendation fails; opt-in export only; never a definition, stress, example or answer (schema §14) | WP6 C7 extractor, branch `codex/rb1-wp6-c7-card-input`; 637 agreed + ≈ 240 reconciled pairs |
@@ -114,22 +114,18 @@ model-written Ukrainian in any card field.
 
 ## 6. Decisions this plan takes (driver, within approved design) and asks reviewers to check
 
-1. **Sense seed.** СУМ-20 (unquarantined, mapped to the lexeme) → ВТС numbered senses → ULIF `sense_gloss`, as
-   schema §16.3 item 2 recommends, with one condition: ВТС is held locally (13,181 `slovnyk_me_entries` rows,
-   `dictionary_slug='vts'`, with URLs and retrieval times) but its edition, permission-register row and sense parsing
-   are not established; until a source-admission round establishes them, ВТС seeds nothing and the order falls
-   through to ULIF. Seeding is not semantic authority; cross-source sense counts are adjudicated through `sense_map`.
+1. **Sense seed.** СУМ-20 (unquarantined, mapped to the lexeme, 22,075 cached entries) → ВТС numbered senses (admitted source round 2026-10-17; 31,688 cached entries) → ULIF `sense_gloss` (47,050 glossed entries), as schema §16.3 item 2 recommends. Following the 2026-10-17 source admission round (`docs/sources/admissions/2026-10-17-vts-sum20-source-admission.md`), ВТС is admitted for card sense seeding based on live Atlas practice (7,849 live entries; `definition_cards` parser in `scripts/lexicon/enrich_manifest.py:4571`), slovnyk.me digital copy edition records (Бусел 2005/2009, 5-те вид., ВТФ «Перун»), and Art. 22(2)(1) Law 2811-IX educational quotation terms (`vts_busel_slovnyk_me` in `docs/sources/permissions-register.yaml`). Seeding is not semantic authority; cross-source sense counts are adjudicated through `sense_map`.
 2. The pilot is the first denominator; full scale waits for the complete Gate 1 and Gate 2.
 3. WP2/WP3 code is reused behind the card extractor interface rather than merged as RB-1 components.
 
 ## 7. Residuals and owners
 
-C2 MemoryError (W9, this lane); 46 % form disagreement (W2, this lane); ВТС admission — edition, register row, sense parsing — before it seeds senses (W1a prerequisite, this lane); acquisition of further authority books (#8791, operator);
+C2 MemoryError (W9, this lane); 46 % form disagreement (W2, this lane); ВТС admission completed 2026-10-17 (`docs/sources/admissions/2026-10-17-vts-sum20-source-admission.md`, closed); acquisition of further authority books (#8791, operator);
 #8334 identity/URL sign-off (Atlas URL part stays Atlas; identity part this lane).
 
 ## 8. v1 review findings → where v1.1 closes them (Sol, `design-cards-plan-sol`)
 1. (blocker) `sense_not_visible` stays withheld; evidence vs accepted facts separated → §3 intro and table.
-2. (blocker) ВТС is held locally; admission, not holding, decides → §3 senses row, §6 decision 1; blank-gloss fallback.
+2. (blocker) ВТС is held locally; admission, not holding, decides → §3 senses row, §6 decision 1; blank-gloss fallback. (Resolved 2026-10-17: ВТС admitted via slovnyk.me digital copy edition record, 31,688 cached entries, permissions-register entry `vts_busel_slovnyk_me`).
 3. (blocker) Full scale waits for the complete Gate 1 incl. Atlas checks, PULS coverage kept, Russification pilot
    before the golden set → W5, W6, W8, W9.
 4. (should) Frozen component specs normative; C2/C4/C7 conditions added → §3.
