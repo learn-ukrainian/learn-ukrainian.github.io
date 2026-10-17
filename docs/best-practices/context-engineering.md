@@ -83,8 +83,8 @@ reader. A validated-update interface remains an approved target here, not a
 verified implemented command. This documentation does not add that interface.
 
 Recovery must also re-verify lease authority and hydration. The launcher owns the
-lease. Agents never claim, renew, release, or replace it. Unknown authority or
-hydration stops consequential action under the
+lease. Agents never open, resume, claim, renew, release, or replace the lease.
+Unknown authority or hydration stops consequential action under the
 [core unconditional invariants](../../agents_extensions/shared/rules/core.md#unconditional-invariants).
 
 ## Worker context
