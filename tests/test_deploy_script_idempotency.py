@@ -260,7 +260,7 @@ _SKILL_NESTED_SAMPLE = "agents_extensions/shared/skills/track-completion/scripts
 class _DeployPythonBroker:
     """One warm interpreter for the deploy script's short Python helpers.
 
-    ``sync_agent_mirror.py`` calls ``os.execvp`` and must stay a real process.
+    ``sync_agent_mirror.py`` calls ``os.execv`` and must stay a real process.
     Every other helper is re-executed with ``runpy`` so ``__file__`` still
     names this checkout. The cache is the imported stdlib, not a path.
     """
@@ -462,7 +462,7 @@ def _copy_declared_paths(target: Path, paths: tuple[str, ...]) -> None:
 
 
 def _copy_full_tree(target: Path) -> None:
-    for directory in ("agents_extensions/shared", "agents_extensions/codex", "gemini_extensions"):
+    for directory in ("agents_extensions/shared", "agents_extensions/codex", "agents_extensions/agy", "gemini_extensions"):
         shutil.copytree(REPO_ROOT / directory, target / directory, symlinks=True)
     _copy_deploy_harness(target)
 
@@ -535,6 +535,190 @@ def _run(repo: Path, script: Path) -> subprocess.CompletedProcess[str]:
         text=True,
         timeout=120,
     )
+
+
+def _copy_sync_boundary_fixture(repo: Path) -> None:
+    """Copy fixed deploy inputs without the skill-discovery scanner."""
+    _copy_deploy_harness(repo)
+    for relative in _SYNTHETIC_SOURCE_DIRS:
+        (repo / relative).mkdir(parents=True, exist_ok=True)
+    settings = Path("agents_extensions/shared/settings.json")
+    shutil.copy2(REPO_ROOT / settings, repo / settings)
+
+
+@pytest.mark.parametrize("route", ["direct", "directory-alias", "executable-symlink", "cli-alias"])
+def test_deploy_refuses_installed_rsync_before_any_shell_sync(tmp_path, monkeypatch, route):
+    """No shell sync may run a bundled target, including through PATH aliases."""
+    from tests import cursor_exec_tripwire as tripwire
+
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    _copy_sync_boundary_fixture(repo)
+    home = tmp_path / "home"
+    installation = home / ".local/share/cursor-agent"
+    bundled = installation / "versions/fixture/bin"
+    bundled.mkdir(parents=True)
+    marker = tmp_path / "forbidden-executed"
+    target = bundled / "rsync"
+    target.write_text(f"#!/bin/sh\ntouch {shlex.quote(str(marker))}\n")
+    target.chmod(0o755)
+    lookup = bundled
+    if route == "directory-alias":
+        lookup = tmp_path / "directory-alias"
+        lookup.symlink_to(bundled, target_is_directory=True)
+    elif route in {"executable-symlink", "cli-alias"}:
+        lookup = tmp_path / "tools"
+        lookup.mkdir()
+        (lookup / "rsync").symlink_to(target)
+        if route == "cli-alias":
+            # An installed CLI can also live outside the usual installation root.
+            moved = tmp_path / "installed-cli"
+            target.rename(moved)
+            (lookup / "rsync").unlink()
+            (lookup / "rsync").symlink_to(moved)
+            (lookup / "cursor-agent").symlink_to(moved)
+    monkeypatch.setenv("HOME", str(home))
+    monkeypatch.setenv("PATH", os.pathsep.join((str(lookup), os.environ["PATH"])))
+    monkeypatch.setattr(tripwire, "real_roots", (*tripwire.real_roots, str(installation)))
+    result = _run(repo, DEPLOY_SCRIPT)
+    assert result.returncode != 0
+    assert "rsync resolves to an installed Cursor target" in result.stderr, result.stdout + result.stderr
+    assert not marker.exists()
+    assert not (repo / ".claude").exists(), "the shell sync ran before executable validation"
+
+
+def test_mirror_sync_resolves_relative_path_wrapper_before_fchdir(tmp_path, monkeypatch):
+    """A legitimate priority wrapper is bound before cwd changes to .agent."""
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    _copy_sync_boundary_fixture(repo)
+    tools = repo / "tools"
+    tools.mkdir()
+    real_rsync = shutil.which("rsync", path=os.defpath)
+    assert real_rsync
+    marker = tmp_path / "wrapper-cwd"
+    (tools / "rsync").write_text(f'#!/bin/sh\npwd > {shlex.quote(str(marker))}\nexec {shlex.quote(real_rsync)} "$@"\n')
+    (tools / "rsync").chmod(0o755)
+    monkeypatch.setenv("PATH", os.pathsep.join(("tools", os.environ["PATH"])))
+    result = _run_command(
+        repo,
+        [
+            sys.executable,
+            "scripts/deploy/sync_agent_mirror.py",
+            "--source-root",
+            "agents_extensions/shared",
+            "--agent-root",
+            ".agent",
+        ],
+    )
+    assert result.returncode == 0, result.stderr
+    assert Path(marker.read_text().strip()) == repo / ".agent"
+    assert (repo / ".agent/settings.json").read_bytes() == (
+        repo / "agents_extensions/shared/settings.json"
+    ).read_bytes()
+
+
+@pytest.mark.parametrize("unsafe", ["missing", "writable", "loop", "newline", "install-loop"])
+def test_rsync_resolution_refuses_unknown_or_unsafe_target(tmp_path, monkeypatch, unsafe):
+    tools = tmp_path / "tools"
+    tools.mkdir()
+    if unsafe in {"writable", "newline", "install-loop"}:
+        target = tools / "rsync"
+        target.write_text("#!/bin/sh\nexit 0\n")
+        target.chmod(0o777 if unsafe == "writable" else 0o755)
+        if unsafe == "newline":
+            actual = tools / "renamed\n"
+            target.rename(actual)
+            target.symlink_to(actual)
+        elif unsafe == "install-loop":
+            home = tmp_path / "home"
+            (home / ".local/share").mkdir(parents=True)
+            (home / ".local/share/cursor-agent").symlink_to("cursor-agent")
+            monkeypatch.setenv("HOME", str(home))
+    elif unsafe == "loop":
+        (tools / "rsync").symlink_to("rsync")
+    monkeypatch.setenv("PATH", str(tools))
+    result = subprocess.run(
+        [sys.executable, str(REPO_ROOT / "scripts/deploy/sync_agent_mirror.py"), "--resolve-rsync"],
+        capture_output=True,
+        text=True,
+        timeout=10,
+    )
+    assert result.returncode == 1
+    assert "Error: refusing .agent mirror sync:" in result.stderr
+    assert ("cursor-agent" if unsafe == "install-loop" else "rsync") in result.stderr
+
+
+def test_rsync_resolution_validates_actual_target_and_sync_failure_closes_fd(tmp_path, monkeypatch, capsys):
+    """Direct coverage supplements the real gate and directory-swap integration tests."""
+    monkeypatch.syspath_prepend(str(REPO_ROOT / "scripts/deploy"))
+    helper = runpy.run_path(str(REPO_ROOT / "scripts/deploy/sync_agent_mirror.py"))
+    home = tmp_path / "home"
+    bundled = home / ".local/share/cursor-agent/bin"
+    bundled.mkdir(parents=True)
+    wrapper = tmp_path / "wrapper"
+    wrapper.write_text("#!/bin/sh\nexit 0\n")
+    wrapper.chmod(0o755)
+    (bundled / "rsync").symlink_to(wrapper)
+    monkeypatch.setenv("HOME", str(home))
+    monkeypatch.setenv("PATH", str(bundled))
+    # An installation directory's spelling does not make a system target unsafe.
+    assert helper["resolve_rsync"]() == str(wrapper)
+    assert helper["main"](["--resolve-rsync"]) == 0
+    assert capsys.readouterr().out.strip() == str(wrapper)
+    with pytest.raises(SystemExit) as missing:
+        helper["main"]([])
+    assert missing.value.code == 2
+
+    source = tmp_path / "source"
+    source.mkdir()
+    agent = tmp_path / "agent"
+    open_agent = helper["open_agent_directory"]
+    descriptors = []
+
+    def record_open(path):
+        fd = open_agent(path)
+        descriptors.append(fd)
+        return fd
+
+    def failed_exec(executable, argv):
+        assert executable == str(wrapper)
+        assert argv == (str(wrapper), "-av", f"{source}/", ".")
+        assert Path.cwd() == agent
+        assert os.get_inheritable(descriptors[0])
+        raise OSError("fixture exec failure")
+
+    monkeypatch.setitem(helper["sync_agent_mirror"].__globals__, "open_agent_directory", record_open)
+    monkeypatch.setattr(os, "execv", failed_exec)
+    original = os.open(".", os.O_RDONLY | os.O_DIRECTORY)
+    try:
+        assert helper["main"](["--source-root", str(source), "--agent-root", str(agent)]) == 1
+    finally:
+        os.fchdir(original)
+        os.close(original)
+    assert "fixture exec failure" in capsys.readouterr().err
+    with pytest.raises(OSError):
+        os.fstat(descriptors[0])
+    assert helper["main"](["--source-root", str(wrapper), "--agent-root", str(agent)]) == 1
+    monkeypatch.setenv("PATH", "")
+    assert helper["main"](["--resolve-rsync"]) == 1
+
+
+def test_mirror_sync_requires_roots_and_refuses_non_directory_source(tmp_path):
+    helper = str(REPO_ROOT / "scripts/deploy/sync_agent_mirror.py")
+    missing = subprocess.run([sys.executable, helper], capture_output=True, text=True, timeout=10)
+    assert missing.returncode == 2
+    assert "--source-root and --agent-root are required" in missing.stderr
+    source = tmp_path / "source"
+    source.touch()
+    result = subprocess.run(
+        [sys.executable, helper, "--source-root", str(source), "--agent-root", str(tmp_path / "agent")],
+        capture_output=True,
+        text=True,
+        timeout=10,
+    )
+    assert result.returncode == 1
+    assert "shared source is not a directory" in result.stderr
 
 
 def _run_tracked_mirror_check(repo: Path) -> subprocess.CompletedProcess[str]:

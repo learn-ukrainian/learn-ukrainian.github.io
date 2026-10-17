@@ -9,6 +9,7 @@ import importlib.util
 import json
 import os
 import re
+import shlex
 import shutil
 import signal
 import stat
@@ -267,6 +268,114 @@ def _verdict(result: subprocess.CompletedProcess[str]) -> dict:
     lines = [line for line in result.stderr.splitlines() if line.startswith('{"pre_push_gate"')]
     assert lines, result.stderr
     return json.loads(lines[-1])["pre_push_gate"]
+
+
+def test_cursor_path_protected_gate_runs_real_deployment(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """The maintained gate runs the three original deploy failures with the tripwire active."""
+    from tests import cursor_exec_tripwire as tripwire
+    from tests.test_deploy_script_idempotency import _copy_full_tree
+
+    root = tmp_path / "repo"
+    root.mkdir()
+    _copy_full_tree(root)
+    shutil.copytree(HOOK_DIR, root / ".githooks")
+    for relative in (
+        "tests/__init__.py",
+        "tests/helpers/__init__.py",
+        "tests/helpers/python.py",
+        "tests/cursor_process_guard.py",
+        "tests/cursor_exec_tripwire.py",
+        "tests/test_deploy_script_idempotency.py",
+    ):
+        destination = root / relative
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(REPO_ROOT / relative, destination)
+    _write(root, "tests/conftest.py", 'pytest_plugins = ("tests.cursor_process_guard",)\n')
+    _write(root, "pytest.ini", "[pytest]\nmarkers =\n    repo_wide: repository invariant\n")
+    nodes = (
+        "test_claude_deploy_ships_epic_named_skills_and_keeps_epic_handoffs",
+        "test_codex_skills_have_one_discovery_root_and_migrate_verified_legacy",
+        "test_fresh_deploy_produces_synced_output",
+    )
+    _write(
+        root,
+        "tests/test_repo_wide_marker_invariant.py",
+        "KNOWN_REPO_WIDE_MODULES = ()\nKNOWN_REPO_WIDE_FUNCTIONS = "
+        + repr(tuple(f"tests/test_deploy_script_idempotency.py::{node}" for node in nodes))
+        + "\n",
+    )
+    actual = yaml.safe_load((REPO_ROOT / ".pre-commit-config.yaml").read_text())
+    hooks = [
+        hook
+        for repo in actual["repos"]
+        for hook in repo.get("hooks", [])
+        if hook["id"] in {"lint-opsec-leaks", "check-no-internal-ids"}
+    ]
+    assert len(hooks) == 2
+    _write(root, ".pre-commit-config.yaml", yaml.safe_dump({"repos": [{"repo": "local", "hooks": hooks}]}))
+    for name in ("lint_opsec_leaks.py", "check_no_internal_ids.py"):
+        _write(root, f"scripts/audit/{name}", (REPO_ROOT / "scripts/audit" / name).read_text())
+    _install_test_slot_governor(root)
+    _write(root, "scripts/pre_commit/project_python.sh", f'#!/bin/bash\nexec {shlex.quote(sys.executable)} "$@"\n')
+    _git(root, "init", "-b", "feature")
+    _git(root, "config", "user.email", "gate@example.invalid")
+    _git(root, "config", "user.name", "Gate Test")
+    base = _commit(root, "base", ".")
+    _write(root, "README.md", "Deployment gate regression.\n")
+    _commit(root, "exercise real deploy invariants", "README.md")
+
+    home = tmp_path / "home"
+    install = home / ".local/share/cursor-agent"
+    bundled = install / "versions/fixture/bin"
+    bundled.mkdir(parents=True)
+    # This candidate does not exist. Shell PATH search must reach the wrapper;
+    # execvp must not submit the nonexistent installed candidate to the tripwire.
+    assert not (bundled / "rsync").exists()
+    wrapper = tmp_path / "wrapper"
+    wrapper.mkdir()
+    markers = tmp_path / "rsync.jsonl"
+    real_rsync = shutil.which("rsync", path=os.defpath)
+    assert real_rsync
+    _write(
+        wrapper,
+        "rsync",
+        f"""#!{sys.executable}
+import json, os, sys
+import cursor_exec_tripwire as tripwire
+assert tripwire.active and not tripwire.allow_real
+with open(os.environ["DEPLOY_RSYNC_MARKERS"], "a") as log:
+    log.write(json.dumps({{"cwd": os.getcwd(), "argv": sys.argv[1:], "guard_active": tripwire.active}}) + "\\n")
+os.execv({real_rsync!r}, [{real_rsync!r}, *sys.argv[1:]])
+""",
+    )
+    (wrapper / "rsync").chmod(0o755)
+    monkeypatch.setattr(tripwire, "real_roots", (*tripwire.real_roots, str(install)))
+    result = _run_gate(
+        root,
+        remote_sha=base,
+        extra_env={
+            "HOME": str(home),
+            "PATH": os.pathsep.join((str(bundled), str(wrapper), os.environ["PATH"])),
+            "DEPLOY_RSYNC_MARKERS": str(markers),
+            gate.MAX_CONCURRENT_RUNS_ENV: "1",
+            gate.MAX_TEST_PROCESSES_ENV: "2",
+        },
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert _measurements(root)[-1]["outcome"] == "green"
+    records = [json.loads(line) for line in markers.read_text().splitlines()]
+    destinations = [row["argv"][-1] for row in records]
+    # Cover shell rsync both before and after the descriptor-bound Python exec.
+    assert destinations.count(".") >= 3
+    for destination in (".claude/", ".codex/", ".agents/skills/", ".gemini/", ".gemini/rules/"):
+        assert destination in destinations, destinations
+    assert all(str(install) not in row["cwd"] for row in records)
+    assert ".agents/" in destinations  # optional AGY overlay shell rsync
+    assert all(row["guard_active"] for row in records)
+    for index, destination in enumerate(destinations):
+        if destination == ".":
+            assert destinations[index - 1] == ".claude/"
+            assert destinations[index + 1] == ".codex/"
 
 
 def _measurements(repo: Path) -> list[dict]:
