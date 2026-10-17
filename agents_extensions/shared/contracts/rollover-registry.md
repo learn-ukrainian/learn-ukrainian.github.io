@@ -118,7 +118,7 @@ cleanup.
 
 ### Exited successor disposition
 
-`dispose-exited-successor-exact` is the sole maintenance exception for an
+`dispose-exited-successor-exact` is the runtime-backed maintenance exception for an
 exited resumed or confirmed successor. It records `ABANDONED_WITH_PROOF`,
 retains the last successful boundary and all packet and lease files, and uses
 the existing immutable plan, lineage lock, apply intent and receipt. The
@@ -159,6 +159,37 @@ supervisor storage, hostile writers with write access to canonical launcher or
 registry state, and kernel power-loss durability. Other launchers without this
 canonical durable runtime fail closed; process absence and copied snapshots
 are not substitutes.
+
+### Operator disposition of a legacy resumed successor
+
+`dispose-legacy-resumed-exact` admits only an exact Codex `RESUMED` record
+whose native creation is `legacy_or_unrecorded` and whose successor has no
+supervisor runtime. This is an attributed operator disposition, not proof of
+native exit. `dispose-exited-successor-exact` still refuses missing, active or
+non-exited runtime evidence.
+
+The proof contains exactly `agent`, `lineage_id`, `rollover_id`, UTC
+`captured_at`, a nonempty operator `reason`, `assertions`, `evidence_paths`
+and `operator_disposition`. Assertions contain only
+`selected_exact_ids_match: true`. Evidence paths contain only the selected
+record's preserved rollover lease path. `operator_disposition` contains exactly
+`authority` (`operator` or `cto`), nonempty `actor_agent` and `actor_host_id`,
+and the exact `replacement_thread_id`. Actor and host attribution follow the
+launcher's attributed operator force-release convention. They remain in local
+registry evidence, not public reports.
+
+Planning and apply, including retries, refuse a live Codex process naming that
+exact successor in an argument or an `--option=value` argument. They also refuse
+a positive `heartbeat_at` for that successor's `owner_thread_id` in the lane's
+canonical thread lease, regardless of its age. The registry's stored
+`active_or_unknown` is not positive heartbeat evidence. Unavailable process
+inspection and malformed or symlinked evidence refuse the operation. A
+supervisor runtime for that successor, in any state, excludes this legacy path.
+
+The operation uses the existing immutable plan, lineage lock, apply intent,
+record digest and receipt mechanism to record `ABANDONED_WITH_PROOF`. It
+preserves the `RESUMED` boundary, lease bytes and packet files. Detection then
+excludes that exact terminal record. It neither deletes nor releases a lease.
 
 ## Migration
 

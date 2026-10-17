@@ -259,6 +259,37 @@ def default_thread_lease_path(agent: str) -> Path:
     return Path(".agent") / f"{agent}-thread-lease.json"
 
 
+def refuse_live_legacy_successor(state_root: Path, *, agent: str, thread_id: str) -> None:
+    """Veto operator legacy disposition on positive process or heartbeat evidence."""
+    import psutil
+
+    for process in psutil.process_iter():
+        try:
+            with process.oneshot():
+                command = process.cmdline()
+                names = {process.name(), Path(command[0]).name if command else ""}
+                if "codex" not in names:
+                    continue
+                if (
+                    any(arg == thread_id or arg.partition("=")[2] == thread_id for arg in command[1:])
+                    and process.status() != psutil.STATUS_ZOMBIE
+                ):
+                    raise ValueError("live codex process found for the exact successor thread")
+        except psutil.NoSuchProcess:
+            continue
+        except (psutil.AccessDenied, OSError) as exc:
+            raise ValueError("successor process probe unavailable") from exc
+    lease_path = state_root / default_thread_lease_path(agent)
+    if lease_path.is_symlink():
+        raise ValueError("successor heartbeat lease must not be a symlink")
+    if lease_path.exists():
+        lease = json.loads(lease_path.read_text(encoding="utf-8"))
+        if not isinstance(lease, dict):
+            raise ValueError("successor heartbeat lease is malformed")
+        if lease.get("owner_thread_id") == thread_id and lease.get("heartbeat_at"):
+            raise ValueError("positive heartbeat found for the exact successor thread")
+
+
 def default_bootstrap_path(agent: str, lineage_id: str, generation: int, rollover_id: str) -> Path:
     return runtime_dir(agent, lineage_id, generation, rollover_id) / "bootstrap.md"
 
