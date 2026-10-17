@@ -7,6 +7,8 @@ open a second store. Launchers inject the packet in a separate change.
 from __future__ import annotations
 
 import json
+import os
+from copy import deepcopy
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -121,9 +123,7 @@ def _default_session(root: Path, observed_at: str) -> dict[str, Any]:
 
         markdown, sections, digest = _assemble_session("orchestrator", root)
         safe_sections = {
-            key: value
-            for key, value in sections.items()
-            if key in {"agent", "current", "router", "recent_handoffs"}
+            key: value for key, value in sections.items() if key in {"agent", "current", "router", "recent_handoffs"}
         }
         return {
             "hash": digest,
@@ -167,6 +167,54 @@ def _note(packet: dict[str, Any], locator: str, count: int) -> None:
         omitted["locators"].append(locator)
 
 
+def _response_note(payload: dict[str, Any], locator: str) -> None:
+    bound = payload.setdefault("orientation_bound", {"complete": False, "omitted": {"count": 0, "locators": []}})
+    bound["omitted"]["count"] += 1
+    bound["omitted"]["locators"].append(locator)
+
+
+def _shed_source_reasons(payload: dict[str, Any], locator: str) -> None:
+    # A source's diagnostic text must not crowd healthy work out of the packet.
+    for index, source in enumerate(payload.get("sources") or []):
+        if len(json_bytes(payload, newline=True)) <= PACKET_MAX_BYTES:
+            break
+        if isinstance(source, dict) and source.get("reason"):
+            source.pop("reason")
+            _response_note(payload, f"{locator}#/sources/{index}/reason")
+
+
+def cap_response(payload: dict[str, Any], *, locator: str) -> dict[str, Any]:
+    """Bound the whole JSON document, including metadata and omission notes.
+
+    JSON Pointer fragments locate removed fields in the source response. If
+    those notes themselves overflow, the source locator covers the entire
+    omitted document, including its existing omission records.
+    """
+    if len(json_bytes(payload, newline=True)) <= PACKET_MAX_BYTES:
+        return payload
+    out = deepcopy(payload)
+    _shed_source_reasons(out, locator)
+    if len(json_bytes(out, newline=True)) <= PACKET_MAX_BYTES:
+        return out
+
+    candidates = sorted(
+        (key for key in out if key != "orientation_bound"),
+        key=lambda key: len(json_bytes({key: out[key]})),
+        reverse=True,
+    )
+    for key in candidates:
+        out.pop(key)
+        pointer = str(key).replace("~", "~0").replace("/", "~1")
+        _response_note(out, f"{locator}#/{pointer}")
+        if len(json_bytes(out, newline=True)) <= PACKET_MAX_BYTES:
+            return out
+    return {
+        "error": "orientation_overflow",
+        "complete": False,
+        "omitted": {"count": 1, "locators": [locator]},
+    }
+
+
 def _fit(packet: dict[str, Any], state_locator: str) -> dict[str, Any]:
     def oversized() -> bool:
         return len(json_bytes(packet, newline=True)) > PACKET_MAX_BYTES
@@ -204,12 +252,11 @@ def _fit(packet: dict[str, Any], state_locator: str) -> dict[str, Any]:
     if not oversized():
         return packet
 
-    # Order ids stay until nothing else can be shed. Indicators for every
-    # stop and hold stay even when their prose is gone.
-    for entry in (*packet["holds"], *packet["stops"]):
-        entry["text"] = ""
+    # Prefer hold and stop indicators over order ids while their cardinality fits.
+    shed = _shorten(packet["holds"], 0) + _shorten(packet["stops"], 0)
+    if shed:
+        _note(packet, state_locator, shed)
     if not oversized():
-        _note(packet, state_locator, 0)
         return packet
 
     kept: list[dict[str, str]] = []
@@ -229,7 +276,17 @@ def _fit(packet: dict[str, Any], state_locator: str) -> dict[str, Any]:
         while packet["orders"] and len(json_bytes(packet, newline=True)) > PACKET_MAX_BYTES:
             packet["orders"].pop()
             packet["omitted"]["count"] += 1
-    return packet
+    # A section locator covers every omitted entry without an unbounded list
+    # of ids. Reserve its bytes before dropping entries.
+    for key in ("goals", "holds", "stops"):
+        if not oversized():
+            return packet
+        if packet[key]:
+            _note(packet, f"{state_locator}#{key}", 0)
+        while packet[key] and oversized():
+            packet[key].pop()
+            packet["omitted"]["count"] += 1
+    return cap_response(packet, locator=f".venv/bin/python -m scripts.driver_state packet --epic {packet['epic']}")
 
 
 def build_packet(
@@ -247,8 +304,9 @@ def build_packet(
 
     validate_epic(epic)
     generated_at = _stamp(now)
-    path = state_path(epic, root) if root is not None else state_path(epic)
-    base = root if root is not None else (path.parents[2] if path is not None else Path.cwd())
+    explicit_state = os.environ.get("LU_DRIVER_STATE_FILE", "").strip()
+    path = Path(explicit_state) if root is None and explicit_state else state_path(epic, root)
+    base = root if root is not None else (path.resolve().parents[2] if path is not None else Path.cwd())
     state_locator = f".claude/{epic}-epic/DRIVER-STATE.md"
     state_freshness = "unknown"
     observed_at = None
@@ -260,9 +318,7 @@ def build_packet(
 
     if orders is None:
         orders = (
-            _default_orders(recipient)
-            if recipient
-            else {"probe": "unknown", "count": 0, "ids": [], "truncated": False}
+            _default_orders(recipient) if recipient else {"probe": "unknown", "count": 0, "ids": [], "truncated": False}
         )
     probe_ok = orders.get("probe") == "ok"
     order_ids = [str(item) for item in orders.get("ids") or [] if isinstance(item, (str, int))]
@@ -345,16 +401,7 @@ def build_packet(
     runtime_keys = set(packet["runtime"])
     if runtime_keys != {"worker_target"}:
         raise RuntimeError("orientation runtime allowlist violated")
-    fitted = _fit(packet, state_locator)
-    if len(json_bytes(fitted, newline=True)) > PACKET_MAX_BYTES:
-        raise RuntimeError("orientation packet exceeded its byte bound")
-    hold_ids = [entry["id"] for entry in collected["holds"]]
-    stop_ids = [entry["id"] for entry in collected["stops"]]
-    if [entry["id"] for entry in fitted["holds"]] != hold_ids:
-        raise RuntimeError("orientation packet dropped a hold")
-    if [entry["id"] for entry in fitted["stops"]] != stop_ids:
-        raise RuntimeError("orientation packet dropped a stop")
-    return fitted
+    return _fit(packet, state_locator)
 
 
 def render_packet(epic: str, *, recipient: str | None = None) -> str:
@@ -364,28 +411,35 @@ def render_packet(epic: str, *, recipient: str | None = None) -> str:
 def cap_projection(payload: dict[str, Any]) -> dict[str, Any]:
     """Keep the highest-attention rows that fit in PACKET_MAX_BYTES.
 
-    The caller has already limited ``items`` to one lane. ``denominator`` stays
-    the public counts; dropped rows become one omission instead of a clipped
-    document.
+    The caller has already limited ``items`` to one lane. Public counts stay
+    when possible; dropped rows and metadata have source locators.
     """
+    locator = "/api/work/v1/projection"
+    if len(json_bytes(payload, newline=True)) > PACKET_MAX_BYTES:
+        payload = deepcopy(payload)
+        _shed_source_reasons(payload, locator)
     items = [item for item in payload.get("items") or [] if isinstance(item, dict)]
     attention = [row for row in payload.get("attention") or [] if isinstance(row, dict)]
     rank = {row.get("work_id"): index for index, row in enumerate(attention)}
     ordered = sorted(items, key=lambda item: rank.get(item.get("work_id"), 10**9))
+    metadata = cap_response({**payload, "items": [], "attention": []}, locator=locator)
+    if metadata.get("error") == "orientation_overflow":
+        return metadata
 
     def assemble(kept: list[dict[str, Any]]) -> dict[str, Any]:
         ids = {item.get("work_id") for item in kept}
-        out = dict(payload)
+        out = dict(metadata)
         out["items"] = kept
         out["attention"] = [row for row in attention if row.get("work_id") in ids]
         if len(kept) != len(ordered):
-            denominator = dict(payload.get("denominator") or {})
+            denominator = dict(metadata.get("denominator") or {})
             omissions = [row for row in (denominator.get("omissions") or []) if isinstance(row, dict)]
             omissions.append(
                 {
                     "class": "orientation_bound",
                     "reason": "lane_projection_bytes",
                     "count": len(ordered) - len(kept),
+                    "locator": f"{locator}#/items",
                 }
             )
             denominator["omissions"] = omissions
@@ -402,4 +456,4 @@ def cap_projection(payload: dict[str, Any]) -> dict[str, Any]:
             low = mid + 1
         else:
             high = mid - 1
-    return assemble(ordered[:best])
+    return cap_response(assemble(ordered[:best]), locator=locator)

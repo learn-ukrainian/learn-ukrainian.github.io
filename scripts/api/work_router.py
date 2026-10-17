@@ -512,7 +512,7 @@ def _projection_lane_names(item: dict[str, Any]) -> list[str]:
     widen the pick list. The HTTP projection still has to show the row whose
     decision fields just became unknown.
     """
-    stream = ((item.get("projections") or {}).get("stream") or {})
+    stream = (item.get("projections") or {}).get("stream") or {}
     if not isinstance(stream, dict):
         return []
     found: list[str] = []
@@ -531,12 +531,26 @@ def _lane_view(payload: dict[str, Any], stream: str) -> dict[str, Any]:
     if not isinstance(payload, dict):
         return payload
     items = [
-        item
-        for item in payload.get("items") or []
-        if isinstance(item, dict) and stream in _projection_lane_names(item)
+        item for item in payload.get("items") or [] if isinstance(item, dict) and stream in _projection_lane_names(item)
     ]
     viewed = dict(payload)
     viewed["items"] = items
+    unassigned = [
+        {
+            "class": "orientation_lane",
+            "reason": "pr_stream_unassigned",
+            "count": 1,
+            "work_id": item.get("work_id"),
+            "locator": f"/api/work/v1/projection#/items/{index}",
+        }
+        for index, item in enumerate(payload.get("items") or [])
+        if isinstance(item, dict) and item.get("resource_kind") == "pr" and not _projection_lane_names(item)
+    ]
+    if unassigned:
+        denominator = dict(payload.get("denominator") or {})
+        denominator["streams_complete"] = False
+        denominator["omissions"] = [*(denominator.get("omissions") or []), *unassigned]
+        viewed["denominator"] = denominator
     ids = {item.get("work_id") for item in items}
     viewed["attention"] = [
         row for row in payload.get("attention") or [] if isinstance(row, dict) and row.get("work_id") in ids

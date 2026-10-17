@@ -41,7 +41,7 @@ from scripts.common.safe_open import safe_open_below
 from scripts.control_plane.storage import StoreId, assert_component_supported
 from scripts.github_check_rollup import group_collapsed_by_name
 from scripts.guardrails import worktree_containment
-from scripts.orientation_packet import PACKET_MAX_BYTES, json_bytes
+from scripts.orientation_packet import PACKET_MAX_BYTES, cap_response, json_bytes
 from scripts.research import registry as reg
 
 try:
@@ -189,7 +189,7 @@ async def _lifespan(_app: FastAPI):
 
 
 def _error_envelope(
-    error: str, detail: Any, *, status_code: int, headers: dict[str, str] | None = None
+    error: str, detail: Any, *, status_code: int, headers: dict[str, str] | None = None, bounded: bool = False
 ) -> JSONResponse:
     """Build the public error shape without serializing exception text.
 
@@ -198,14 +198,13 @@ def _error_envelope(
     never pass their ``str(exc)`` representation to a client; the correlation
     id is the only diagnostic handle exposed on the wire.
     """
+    content = {"error": error, "error_id": uuid.uuid4().hex, "detail": detail}
+    if bounded:
+        content = cap_response(content, locator="/api/work/v1/projection")
     return JSONResponse(
         status_code=status_code,
         headers=headers,
-        content={
-            "error": error,
-            "error_id": uuid.uuid4().hex,
-            "detail": detail,
-        },
+        content=content,
     )
 
 
@@ -242,23 +241,24 @@ def _sanitize_public_detail(detail: Any) -> Any:
 
 async def http_exception_handler(request: Request, exc: StarletteHTTPException):
     """Normalize handled HTTP errors without changing their status codes."""
-    del request
     return _error_envelope(
         "http_error",
         _sanitize_public_detail(exc.detail),
         status_code=exc.status_code,
         headers=exc.headers,
+        bounded=request.url.path == "/api/work/v1/projection",
     )
 
 
 async def request_validation_exception_handler(request: Request, exc: RequestValidationError):
     """Return validation shape without echoing submitted values."""
-    del request
     sanitized_errors = []
     for error in exc.errors():
         sanitized = {key: _sanitize_public_detail(value) for key, value in error.items() if key not in {"ctx", "input"}}
         sanitized_errors.append(sanitized)
-    return _error_envelope("validation_error", sanitized_errors, status_code=422)
+    return _error_envelope(
+        "validation_error", sanitized_errors, status_code=422, bounded=request.url.path == "/api/work/v1/projection"
+    )
 
 
 async def global_exception_handler(request: Request, exc: Exception):
