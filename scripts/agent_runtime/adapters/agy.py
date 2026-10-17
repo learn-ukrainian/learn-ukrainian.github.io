@@ -2080,6 +2080,14 @@ def _stream_result(
     identity_events: list[dict[str, Any]] | None = None,
 ) -> tuple[dict[str, Any] | None, str | None]:
     """Read exactly one terminal result from AGY's NDJSON event stream."""
+    def unique_members(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+        event: dict[str, Any] = {}
+        for key, value in pairs:
+            if key in event:
+                raise ValueError("duplicate NDJSON member")
+            event[key] = value
+        return event
+
     result: dict[str, Any] | None = None
     expected_model = plan.cmd[plan.cmd.index("--model") + 1] if plan and "--model" in plan.cmd else None
     try:
@@ -2098,9 +2106,16 @@ def _stream_result(
         if not line.strip():
             continue
         try:
-            event = json.loads(line)
+            # Validate all object depths before a duplicate can hide identity metadata.
+            event = json.loads(
+                line, object_pairs_hook=unique_members if resolved_expected in _AGY_CLAUDE_SLUGS else None,
+            )
         except json.JSONDecodeError:
             return None, "agy_stream_output_invalid: malformed NDJSON event"
+        except ValueError:
+            if model_identity is not None and model_identity.get("source") == "provider-init":
+                model_identity["substituted"] = True
+            return None, "agy_model_event_mismatch"
         if not isinstance(event, dict) or not isinstance(event.get("event"), str):
             return None, "agy_stream_output_invalid: malformed NDJSON event"
         if check_identity and event["event"] == "init":

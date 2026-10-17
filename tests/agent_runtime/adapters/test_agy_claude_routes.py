@@ -23,11 +23,14 @@ BACKEND_IDS = ("claude-sonnet-5-5-high", "claude-opus-5-5-high")
 
 @pytest.fixture(autouse=True)
 def no_provider_process(monkeypatch):
-    def forbidden(*args, **kwargs):
+    popen = agy.subprocess.Popen
+
+    def local_git_only(cmd, *args, **kwargs):
+        if isinstance(cmd, (list, tuple)) and cmd[0] == "git":
+            return popen(cmd, *args, **kwargs)
         pytest.fail("provider subprocess must not run")
 
-    monkeypatch.setattr(agy.subprocess, "run", forbidden)
-    monkeypatch.setattr(agy.subprocess, "Popen", forbidden)
+    monkeypatch.setattr(agy.subprocess, "Popen", local_git_only)
 
 
 def build(tmp_path, model, mode="read-only", config=None):
@@ -569,3 +572,138 @@ def test_opus_security_worker_keeps_its_existing_catalog_role(tmp_path, monkeypa
     plan = build(tmp_path, SLUGS[1], "workspace-write", config)
     assert plan.cmd[plan.cmd.index("--model") + 1] == SLUGS[1]
     assert "--dangerously-skip-permissions" in plan.cmd
+
+
+@pytest.mark.parametrize("slug", SLUGS)
+@pytest.mark.parametrize("reverse", [False, True], ids=["matching-last", "matching-first"])
+@pytest.mark.parametrize("member,first,last,nested", [
+    ("model", '"gemini-3.8-flash-high"', '"MODEL"', False),
+    ("model", '"gemini-3.8-flash-high"', '"MODEL"', True),
+    ("source", '"configuration"', '"provider-init"', False),
+    ("source", '"requested"', '"runtime"', True),
+    ("model_source", '"configuration"', '"runtime"', False),
+    ("model_source", '"requested"', '"provider-init"', True),
+    ("init", '{"model":"gemini-3.8-flash-high"}', '{"model":"MODEL"}', False),
+    ("event", '"step_update"', '"init"', False),
+    ("conversation_id", '"stale-session"', '"7cd3ba85-817f-4a03-8223-1ff39ca42419"', False),
+    ("session_id", '"stale-session"', '"7cd3ba85-817f-4a03-8223-1ff39ca42419"', True),
+    ("model", '"MODEL"', '"MODEL"', True),
+    ("metadata", '{"model":"other","model":"MODEL"}', '{}', True),
+    ("metadata", '[{"source":"requested","source":"runtime"}]', '[]', False),
+])
+@pytest.mark.parametrize("entrypoint", ["parser", "runner", "cancel", "exception"])
+def test_duplicate_init_members_never_qualify(
+    tmp_path, monkeypatch, slug, reverse, member, first, last, nested, entrypoint,
+):
+    from scripts.agent_runtime import runner
+
+    if reverse:
+        first, last = last, first
+    # Escape the second spelling: duplicate detection must compare decoded names.
+    escaped_key = f'"\\u{ord(member[0]):04x}{member[1:]}"'
+    pairs = f'{json.dumps(member)}:{first},{escaped_key}:{last}'.replace("MODEL", slug)
+    defaults = [f'"model":{json.dumps(slug)}'] if member != "model" else []
+    if not nested and member != "event":
+        defaults.append('"event":"init"')
+    body = "{" + ",".join([*defaults, pairs]) + "}"
+    init = '{"event":"init","init":' + body + "}" if nested else body
+    plan, terminal = _identity_stream_plan(tmp_path, slug)
+    stdout = init + "\n" + json.dumps(terminal) + "\n"
+    if entrypoint == "parser":
+        result = agy.AgyAdapter().parse_response(
+            stdout=stdout, stderr="", returncode=0, output_file=None, plan=plan,
+        )
+    else:
+        provider_dir = tmp_path / "provider"
+        provider_dir.mkdir()
+        launches, _, _ = mock_agy_provider(
+            monkeypatch, provider_dir, runner, stdout=stdout,
+            exit_kind=entrypoint if entrypoint != "runner" else "complete",
+        )
+        kwargs = dict(mode="workspace-write", cwd=tmp_path, model=slug, task_id="duplicate-init",
+                      tool_config={"run_nonce": "duplicate-run", "owned_paths": ["artifact.txt"]})
+        if entrypoint in {"cancel", "exception"}:
+            with pytest.raises(KeyboardInterrupt if entrypoint == "cancel" else RuntimeError) as caught:
+                runner.invoke("agy", "Implement.", **kwargs)
+            assert len(launches) == 1
+            assert caught.value.model_identity is None
+            assert runner._AGY_OBSERVED_IDENTITY.get() is None
+            return
+        result = runner.invoke("agy", "Implement.", **kwargs)
+        assert len(launches) == 1
+        assert runner._AGY_OBSERVED_IDENTITY.get() is None
+    assert result.ok is False
+    assert result.response == ""
+    assert result.model_identity is None
+    assert result.failure_code == "provider_policy_refusal"
+    assert result.stderr_excerpt == "agy_model_event_mismatch"
+
+
+@pytest.mark.parametrize("slug", SLUGS)
+@pytest.mark.parametrize("entrypoint", ["parser", "runner", "cancel", "exception"])
+def test_duplicate_later_event_revokes_matching_identity(tmp_path, monkeypatch, slug, entrypoint):
+    from scripts.agent_runtime import runner
+
+    plan, terminal = _identity_stream_plan(tmp_path, slug)
+    stdout = "\n".join([
+        json.dumps({"event": "init", "model": slug}),
+        '{"event":"init","event":"step_update","model":"other"}',
+        json.dumps(terminal),
+    ])
+    if entrypoint == "parser":
+        result = agy.AgyAdapter().parse_response(
+            stdout=stdout, stderr="", returncode=0, output_file=None, plan=plan,
+        )
+        identity = result.model_identity
+    else:
+        provider_dir = tmp_path / "provider"
+        provider_dir.mkdir()
+        launches, _, _ = mock_agy_provider(
+            monkeypatch, provider_dir, runner, stdout=stdout,
+            exit_kind=entrypoint if entrypoint != "runner" else "complete",
+        )
+        kwargs = dict(mode="workspace-write", cwd=tmp_path, model=slug, task_id="late-duplicate",
+                      tool_config={"run_nonce": "duplicate-run", "owned_paths": ["artifact.txt"]})
+        if entrypoint in {"cancel", "exception"}:
+            with pytest.raises(KeyboardInterrupt if entrypoint == "cancel" else RuntimeError) as caught:
+                runner.invoke("agy", "Implement.", **kwargs)
+            identity = caught.value.model_identity
+        else:
+            result = runner.invoke("agy", "Implement.", **kwargs)
+            identity = result.model_identity
+        assert len(launches) == 1
+        assert runner._AGY_OBSERVED_IDENTITY.get() is None
+    if entrypoint in {"parser", "runner"}:
+        assert result.ok is False
+        assert result.response == ""
+        assert result.stderr_excerpt == "agy_model_event_mismatch"
+    assert identity["actual_model"] == slug
+    assert identity["substituted"] is True
+
+
+@pytest.mark.parametrize("slug", SLUGS)
+@pytest.mark.parametrize("container", ["object", "array"])
+@pytest.mark.parametrize("entrypoint", ["parser", "runner"])
+def test_duplicate_descendants_cannot_hide_in_unique_envelopes(tmp_path, monkeypatch, slug, container, entrypoint):
+    from scripts.agent_runtime import runner
+
+    plan, terminal = _identity_stream_plan(tmp_path, slug)
+    descendant = '{"model":"other","model":' + json.dumps(slug) + "}"
+    metadata = '{"nested":' + descendant + "}" if container == "object" else "[" + descendant + "]"
+    init = '{"event":"init","model":' + json.dumps(slug) + ',"metadata":' + metadata + "}"
+    stdout = init + "\n" + json.dumps(terminal)
+    if entrypoint == "parser":
+        result = agy.AgyAdapter().parse_response(
+            stdout=stdout, stderr="", returncode=0, output_file=None, plan=plan,
+        )
+    else:
+        provider_dir = tmp_path / "provider"
+        provider_dir.mkdir()
+        launches, _, _ = mock_agy_provider(monkeypatch, provider_dir, runner, stdout=stdout)
+        result = runner.invoke("agy", "Implement.", mode="workspace-write", cwd=tmp_path, model=slug,
+                               task_id="nested-duplicates", tool_config={"run_nonce": "nested-run"})
+        assert len(launches) == 1
+    assert result.ok is False
+    assert result.response == ""
+    assert result.model_identity is None
+    assert result.stderr_excerpt == "agy_model_event_mismatch"
