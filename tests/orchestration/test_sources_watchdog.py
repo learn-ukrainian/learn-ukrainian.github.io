@@ -16,6 +16,7 @@ import pytest
 
 from scripts.orchestration import sources_watchdog as wd
 from scripts.rag import hang_diagnostics as hd
+from tests.wait_helpers import wait_until
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 REAL_HOST = wd.Host
@@ -409,7 +410,6 @@ HUNG_CHILD = textwrap.dedent(
 
     lock.acquire()
     threading.Thread(target=worker_blocked_on_shared_lock, daemon=True).start()
-    print("hung", flush=True)
     lock.acquire()  # the main thread deadlocks on a lock it already holds
     """
 )
@@ -424,13 +424,46 @@ def _spawn(script: str, *args: str) -> subprocess.Popen[str]:
     )
 
 
+def _wait_for_blocked_threads(child: subprocess.Popen[str], *, timeout: float = 10.0) -> None:
+    observed: dict[str, tuple[str, str]] = {}
+
+    def blocked() -> bool:
+        assert child.poll() is None, f"child exited with {child.returncode} before blocking"
+        observed.clear()
+        for task in Path(f"/proc/{child.pid}/task").iterdir():
+            state = (task / "stat").read_text().rsplit(")", 1)[1].split()[0]
+            observed[task.name] = (state, (task / "wchan").read_text().strip())
+        # This fixture has exactly two threads and never releases the shared lock.
+        # Check the kernel directly, independently of the watchdog's snapshot code.
+        return len(observed) == 2 and all(state == "S" and "futex" in wchan for state, wchan in observed.values())
+
+    try:
+        wait_until(blocked, timeout=timeout, message="main and worker blocked on the shared lock")
+    except AssertionError as error:
+        raise AssertionError(f"{error}; pid={child.pid}, last thread states/wchans={observed}") from error
+
+
+@pytest.mark.parametrize("runnable_main", [False, True], ids=["missing-worker", "runnable-main"])
+def test_blocked_threads_readiness_times_out(tmp_path: Path, runnable_main: bool) -> None:
+    script = HUNG_CHILD.replace(
+        "lock.acquire()  # the main thread deadlocks on a lock it already holds", "while True: pass"
+    ) if runnable_main else "import time; time.sleep(60)"
+    child = _spawn(script, str(tmp_path), str(PROJECT_ROOT))
+    try:
+        with pytest.raises(AssertionError, match=r"main and worker blocked.*not met within.*last thread states/wchans="):
+            _wait_for_blocked_threads(child, timeout=0.1)
+        assert child.poll() is None
+    finally:
+        child.kill()
+        child.wait(timeout=10)
+
+
 def test_forced_hang_produces_a_dump_file(tmp_path: Path) -> None:
     """AC-02: a hung process yields every thread's Python stack in the incident."""
     dump_dir = tmp_path / "dumps"
     child = _spawn(HUNG_CHILD, str(dump_dir), str(PROJECT_ROOT))
     try:
-        assert child.stdout is not None
-        assert child.stdout.readline().strip() == "hung"
+        _wait_for_blocked_threads(child)
         incident = wd.capture_incident_dump(child.pid, dump_dir, 1, time.time(), reason="forced hang")
         stacks = (incident / "python-stacks.txt").read_text(encoding="utf-8")
         assert "worker_blocked_on_shared_lock" in stacks
