@@ -44,7 +44,7 @@
     "@types/react-dom": "^19.3.0",
     "astro": "^7.3.5",
     "better-sqlite3": "^13.0.3",
-    "playwright": "^1.63.0",
+    "playwright": "^1.64.0",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "rehype-mermaid": "^3.0.0",
