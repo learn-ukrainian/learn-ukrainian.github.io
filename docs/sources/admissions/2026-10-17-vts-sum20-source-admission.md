@@ -15,8 +15,7 @@ In `WORD_CARDS_DATA_PLAN.md` §6 Decision 1, sense seeding order was originally 
 However, Decision 1 blocked ВТС from active seeding because:
 > "ВТС is held locally (13,181 slovnyk_me_entries rows...) but its edition, permission-register row and sense parsing are not established; until a source-admission round establishes them, ВТС seeds nothing and the order falls through to ULIF."
 
-On 2026-10-17, the Operator observed:
-> "we already have СУМ-20 and ВТС on Atlas, why not use them?"
+Based on Atlas production practice, digital copies of both СУМ-20 and ВТС are already in operational use for definition presentation.
 
 Verified database facts establish that live Atlas (`data/atlas.db:enrichment`) already serves definition cards for 12,468 words:
 - **ВТС definitions**: 7,849 words
@@ -60,7 +59,7 @@ Because СУМ-20's published print volumes currently stop at Volume 16 (entry r
 
 The permissions register (`docs/sources/permissions-register.yaml`) is updated to formally admit ВТС under the exact same legal and operational basis that Atlas already relies on for its live definition cards:
 
-1. **Governing Law**: Art. 22(2)(1) of the Law of Ukraine No. 2811-IX «Про авторське право і суміжні права» (Right of quotation without author consent for educational, critical, scientific, or informational purposes, with attribution to the author and source).
+1. **Governing Law**: Art. 22(2)(1) of the Law of Ukraine No. 2811-IX «Про авторське право і суміжні права» (quotation from lawfully published works to the extent justified by the intended purpose, if conditioned by the critical, polemical, scientific, or informational nature of the incorporating work, with mandatory attribution of the author's name and the source of borrowing).
 2. **Attribution Display**: All rendered definition cards cite the full academic label:
    - For ВТС: `Великий тлумачний словник сучасної української мови` (short pill: `ВТС`)
    - For СУМ-20: `Словник української мови у 20 томах` (short pill: `СУМ-20`)
@@ -71,26 +70,13 @@ The permissions register (`docs/sources/permissions-register.yaml`) is updated t
 
 ---
 
-## 4. Sense Parsing: Reuse of Atlas Definition Cards Pipeline
+## 4. Sense Parsing & Extraction Status
 
-Rather than constructing an unverified parser from scratch, word-card sense extraction reuses the exact, tested parser pipeline that compiles Atlas definition cards:
+In the existing Atlas pipeline (`scripts/lexicon/enrich_manifest.py`), `_SlovnykArticleParser` and `_parse_slovnyk_entry` extract entry text and paragraph blocks from cached HTML, while `_vts_definition_card` and `_sum20_definition_card` package the definitions for Atlas presentation.
 
-- **Primary Source Code**: [`scripts/lexicon/enrich_manifest.py`](file:///home/ops/learn-ukrainian/scripts/lexicon/enrich_manifest.py)
-  - `_SlovnykArticleParser` (lines 1481–1549): Clean DOM parser extracting canonical URLs, `<h1 class="entry-title">`, `<p>` blocks, and stripping boilerplate.
-  - `_parse_slovnyk_entry` (lines 1551–1595): Parses raw HTML into structured dictionary row (`text`, `paragraphs`, `title`, `source_url`, `word`).
-  - `_definition_body` (lines 4529–4568): Cleans definition body, strips redundant leading headwords, normalizes punctuation and HTML entities.
-  - `_vts_definition_card` (lines 4571–4633): Assembles VTS card payload with academic attribution, attaches official/mirror URLs, and resolves cross-references via `_resolve_definition_xref`.
-  - `_sum20_definition_card` (lines 4668–4735): Assembles СУМ-20 card payload with academic attribution and official URL attachment.
-  - `_definition_cards` (lines 4739–4768): Establishes priority sorting: modern definitions first, dialect/archaic demotion, and Грінченко (1907) heritage card last.
-  - `_dictionary_definition_rows` (lines 4792–4830): Read-only extractor returning structured rows for gate verification.
+However, extracting entry text into definition blocks does not by itself produce isolated, numbered-sense units conforming to the word-card schema. While 31,688 nonblank ВТС entries are cached and available, decomposing multi-sense articles into isolated, numbered sense units with edition-binding verification remains an active engineering prerequisite.
 
-### Empirical Parsing Quality Measurement
-Measured against the full 38,190-entry local cache:
-- **Total cache files parsed**: 38,190
-- **Valid, non-empty СУМ-20 extractions**: 22,075 (100% of available newsum articles)
-- **Valid, non-empty ВТС extractions**: 31,688 (100% of available vts articles)
-- **At least one modern definition extracted**: 32,306 words
-- **Parser crash or corruption rate**: 0.00% across the full cache corpus.
+Therefore, source use of ВТС for lexical sense reference is admitted under Art. 22(2)(1) Law 2811-IX, while numbered-sense extraction and card schema integration are preserved as an active engineering residual under `WORD_CARDS_DATA_PLAN.md` §7.
 
 ---
 
@@ -125,8 +111,7 @@ Applying the hierarchy **СУМ-20 (first) → ВТС (second) → ULIF gloss (t
 
 ## 6. Formal Admission Verdict
 
-1. **ВТС is hereby ADMITTED** as a required secondary source for Word-Card sense seeding under `WORD_CARDS_DATA_PLAN.md` §6 Decision 1.
-2. The sense seed sequence is formally confirmed as:
+1. **ВТС is hereby ADMITTED** as an authorized secondary source for Word-Card sense reference under `WORD_CARDS_DATA_PLAN.md` §6 Decision 1, on the basis of Law 2811-IX Art. 22(2)(1) educational quotation.
+2. The sense seed sequence is confirmed as:
    $$\text{СУМ-20 (unquarantined)} \longrightarrow \text{ВТС (numbered senses)} \longrightarrow \text{ULIF sense\_gloss}$$
-3. Residual in §7 is formally closed.
-4. Independent Cross-Family review routed to **GPT Sol 6.1**.
+3. Numbered sense parsing, decomposition, and card schema integration are retained as an active engineering residual under `WORD_CARDS_DATA_PLAN.md` §7 (to be delivered in W1 / engineering steps).

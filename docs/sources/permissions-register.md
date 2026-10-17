@@ -724,7 +724,7 @@ Open questions: none recorded.
 
 ### Великий тлумачний словник сучасної української мови (ВТС-СУМ, за ред. В. Т. Бусела) via slovnyk.me — `vts_busel_slovnyk_me`
 
-- **Permission status:** `unknown` — Live Atlas definition_cards and internal word cards quote short definitions under Art. 22(2)(1) of Law 2811-IX (educational quotation with attribution) and operator IP responsibility (Decision 1, Plan v3.5.0 O1). Public dataset distribution licence status remains unknown pending rights holder contact; this limitation blocks only the Phase 7 public dataset release, not internal cards or site display.
+- **Permission status:** `unknown` — Live Atlas definition_cards and internal word cards quote entry definitions citing Art. 22(2)(1) of Law of Ukraine 2811-IX (quotation from lawfully published works to the extent justified by the intended purpose, conditioned by the scientific, critical, or informational nature of the incorporating work, with mandatory author/source attribution) and operator IP responsibility (Decision 1, Plan v3.5.0 O1). Public dataset distribution licence status remains unknown pending rights holder contact; this limitation blocks only the Phase 7 public dataset release, not internal cards or site display.
 - **Organisation:** ВТФ «Перун» (видавництво), за ред. В. Т. Бусела; digital copy hosted by slovnyk.me
 - **Role:** Secondary modern explanatory dictionary for Word-Card sense seeding (admitted 2026-10-17 under #8977 / #6321) and live Atlas definition cards (7,849 entries); provides definitions for lexemes outside СУМ-20 published volume boundary (РЯХТЛИВИЙ..Я) and unquarantined entries.
 - **Fields:** headword, meaning

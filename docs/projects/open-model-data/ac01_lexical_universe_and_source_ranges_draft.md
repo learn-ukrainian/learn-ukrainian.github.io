@@ -12,13 +12,14 @@
 To satisfy AC-01, source completeness cannot be measured against arbitrary local caches, pilot samples, or mutable web endpoints. A finite, versioned lexical universe defines the denominator for word card assembly:
 
 1. **Lexical Universe v1 (Phase 1 Baseline — CTO Recommendation 2026-10-17T22:51Z)**:
-   - **Atlas Manifest Headwords**: The published Word Atlas word list (`scripts/lexicon/enrich_manifest.py` MANIFEST, which drove [`data/lexicon/slovnyk_cache/`](file:///home/ops/learn-ukrainian/data/lexicon/slovnyk_cache), comprising **38,190 distinct word files**).
-   - **Pedagogical Core (PULS CEFR A1–C1)**: All **5,839 CEFR-graded entries** in [`data/sources.db:puls_cefr`](file:///home/ops/learn-ukrainian/data/sources.db) (A1: 962, A2: 1,386, B1: 2,164, B2: 1,194, C1: 233).
-   - **Atlas Live Core**: 27,128 active learner-facing articles in [`data/atlas.db:articles`](file:///home/ops/learn-ukrainian/data/atlas.db).
+   - **Atlas Manifest Headwords**: The published Word Atlas word list (`scripts/lexicon/enrich_manifest.py` MANIFEST, referencing **27,472 distinct headwords** across **38,190 cached entries** in `data/lexicon/slovnyk_cache/`).
+   - **Pedagogical Core (PULS CEFR A1–C1)**: **5,939 total rows** representing **5,839 distinct headwords** in `data/sources.db:puls_cefr` (A1: 962, A2: 1,386, B1: 2,164, B2: 1,194, C1: 233). Of these 5,839 distinct headwords, **828 headwords** are outside the 38,190 cache corpus.
+   - **Cache ∪ PULS Universe**: **39,018 distinct headwords** (38,190 cache lemmas + 828 PULS-only headwords).
+   - **Atlas Live Core**: 27,128 active learner-facing articles in `data/atlas.db:articles`.
    - **Scope Boundary**: Lexical Universe v1 encompasses the Atlas word list plus PULS A1–C1. Binding v1 definition is queued for designated approval by Claude Opus 5.5 + GPT Sol 6.1 following the Claude reset (~2026-10-19T07:00Z).
 
 2. **Lexical Universe v2 (Full Scale — Post-v1)**:
-   - **Core Lexical Foundation (VESUM ∩ ULIF)**: Full intersection of VESUM v6.8.0 ([`data/vesum.db`](file:///home/ops/learn-ukrainian/data/vesum.db), 442,458 blocks, 6,970,759 form analyses) and the ULIF published register (262,812 entry positions, 943,689 raw blobs in [`data/lexicon/cache/ulif_raw.sqlite`](file:///home/ops/learn-ukrainian/data/lexicon/cache/ulif_raw.sqlite)), spanning ~245,000–260,000 lemmas. Anything wider than v1 belongs strictly to v2.
+   - **Core Lexical Foundation (VESUM ∩ ULIF)**: Full intersection of VESUM v6.8.0 (`data/vesum.db`, 442,458 blocks, 6,970,759 form analyses) and the ULIF published register (262,812 entry positions, 943,689 raw blobs in `data/lexicon/cache/ulif_raw.sqlite`), spanning ~245,000–260,000 lemmas. Anything wider than v1 belongs strictly to v2.
 
 3. **Exclusions**:
    - Zero model-generated or synthetic Ukrainian entries.
@@ -28,24 +29,24 @@ To satisfy AC-01, source completeness cannot be measured against arbitrary local
 
 ## 1b. Meanings Coverage on Lexical Universe v1
 
-Because СУМ-20's published print volumes currently stop at Volume 16 (А — РЯХТЛИВИЙ), СУМ-20 alone cannot cover modern Ukrainian meanings across the full lexical alphabet. Under Operator Directive (2026-10-17), **ВТС is admitted as the required secondary meaning source** for Word-Card sense seeding (`docs/sources/admissions/2026-10-17-vts-sum20-source-admission.md`).
+Because СУМ-20's published print volumes currently stop at Volume 16 (А — РЯХТЛИВИЙ), СУМ-20 alone cannot cover modern Ukrainian meanings across the full lexical alphabet. Under Operator Directive (2026-10-17), **ВТС is admitted as the required secondary meaning source** for Word-Card sense reference (`docs/sources/admissions/2026-10-17-vts-sum20-source-admission.md`).
 
 Sense seeding evaluates strictly in the hierarchy:
 $$\text{СУМ-20 (unquarantined)} \longrightarrow \text{ВТС (numbered senses)} \longrightarrow \text{ULIF sense\_gloss}$$
 
-### Meanings Status Breakdown on v1 Corpus (38,190 Entries)
-Per CTO breakdown (`message_9d60a58d955843438524ae9ac23ac5cb`):
+### Meanings Status Breakdown on v1 Cache Corpus (38,190 Entries)
+Per CTO breakdown (`message_9d60a58d955843438524ae9ac23ac5cb`) and verified read-only census:
 - **СУМ-20 (`newsum`)**:
-  - Found (valid definition): **22,075 words**
-  - Not found (explicit 404/miss): **5,938 words**
-  - Never queried (unqueried residue): **10,177 words** (~10,200)
+  - Found (valid nonblank definition): **22,075 words**
+  - Not found (explicit 404/miss marker): **5,938 words**
+  - Null lookup / unqueried residue: **10,177 words** (7,368 absent lookup key, 2,809 null lookup without observed 404)
 - **ВТС (`vts`)**:
-  - Found (valid definition): **31,688 words**
-  - Not found (explicit 404/miss): **1,925 words**
-  - Never queried (unqueried residue): **4,577 words** (~4,600)
+  - Found (valid nonblank definition): **31,688 words**
+  - Not found (explicit 404/miss marker): **1,925 words**
+  - Null lookup / unqueried residue: **4,577 words** (6 absent lookup key, 4,571 null lookup without observed 404)
 
-> [!IMPORTANT]
-> **Crawl Hold Policy**: A completing fetch of the never-queried words is escalated to the operator under an explicit crawl hold. Agents must **not** perform live network fetches until explicit operator GO.
+> [!NOTE]
+> **Crawl Hold & Ingest Status**: Under Operator Decision D (2026-10-17), the crawl hold is lifted specifically to: (1) promote 2,282 staged articles from `data/sum20_staging.db` to `sources.db`, (2) resume official crawl from wordid 2,355, and (3) fill missing Atlas-list words on slovnyk.me with the existing fill script. All other scraping remains prohibited.
 
 ### Multi-Universe Meanings Hierarchy Coverage Summary
 

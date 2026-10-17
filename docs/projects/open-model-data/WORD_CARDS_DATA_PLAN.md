@@ -114,18 +114,18 @@ model-written Ukrainian in any card field.
 
 ## 6. Decisions this plan takes (driver, within approved design) and asks reviewers to check
 
-1. **Sense seed.** СУМ-20 (unquarantined, mapped to the lexeme, 22,075 cached entries) → ВТС numbered senses (admitted source round 2026-10-17; 31,688 cached entries) → ULIF `sense_gloss` (47,050 glossed entries), as schema §16.3 item 2 recommends. Following the 2026-10-17 source admission round (`docs/sources/admissions/2026-10-17-vts-sum20-source-admission.md`), ВТС is admitted for card sense seeding based on live Atlas practice (7,849 live entries; `definition_cards` parser in `scripts/lexicon/enrich_manifest.py:4571`), slovnyk.me digital copy edition records (Бусел 2005/2009, 5-те вид., ВТФ «Перун»), and Art. 22(2)(1) Law 2811-IX educational quotation terms (`vts_busel_slovnyk_me` in `docs/sources/permissions-register.yaml`). Seeding is not semantic authority; cross-source sense counts are adjudicated through `sense_map`.
+1. **Sense seed.** СУМ-20 (unquarantined, mapped to the lexeme, 22,075 cached entries) → ВТС numbered senses (admitted for sense reference under Art. 22(2)(1) Law 2811-IX; numbered-sense extraction and card schema integration is an active engineering residual) → ULIF `sense_gloss` (47,050 glossed entries), as schema §16.3 item 2 recommends. Following the 2026-10-17 source admission round (`docs/sources/admissions/2026-10-17-vts-sum20-source-admission.md`), ВТС is admitted for card sense reference based on live Atlas practice (7,849 live entries; `definition_cards` parser in `scripts/lexicon/enrich_manifest.py`), slovnyk.me digital copy edition records (Бусел 2005/2009, 5-те вид., ВТФ «Перун»), and Art. 22(2)(1) Law 2811-IX educational quotation terms (`vts_busel_slovnyk_me` in `docs/sources/permissions-register.yaml`). Seeding is not semantic authority; cross-source sense counts are adjudicated through `sense_map`.
 2. The pilot is the first denominator; full scale waits for the complete Gate 1 and Gate 2.
 3. WP2/WP3 code is reused behind the card extractor interface rather than merged as RB-1 components.
 
 ## 7. Residuals and owners
 
-C2 MemoryError (W9, this lane); 46 % form disagreement (W2, this lane); ВТС admission completed 2026-10-17 (`docs/sources/admissions/2026-10-17-vts-sum20-source-admission.md`, closed); acquisition of further authority books (#8791, operator);
+C2 MemoryError (W9, this lane); 46 % form disagreement (W2, this lane); ВТС source admission completed 2026-10-17 (`docs/sources/admissions/2026-10-17-vts-sum20-source-admission.md`; numbered sense parsing and card schema integration remains an active engineering residual, W1a/engineering, this lane); acquisition of further authority books (#8791 closed by operator Decision A; Пономарів 2001 private reference only, remaining titles dropped);
 #8334 identity/URL sign-off (Atlas URL part stays Atlas; identity part this lane).
 
 ## 8. v1 review findings → where v1.1 closes them (Sol, `design-cards-plan-sol`)
 1. (blocker) `sense_not_visible` stays withheld; evidence vs accepted facts separated → §3 intro and table.
-2. (blocker) ВТС is held locally; admission, not holding, decides → §3 senses row, §6 decision 1; blank-gloss fallback. (Resolved 2026-10-17: ВТС admitted via slovnyk.me digital copy edition record, 31,688 cached entries, permissions-register entry `vts_busel_slovnyk_me`).
+2. (blocker) ВТС is held locally; admission, not holding, decides → §3 senses row, §6 decision 1; blank-gloss fallback. (Source reference admitted 2026-10-17: permissions-register entry `vts_busel_slovnyk_me`, 31,688 cached entries; numbered-sense extraction/schema integration active residual under W1a).
 3. (blocker) Full scale waits for the complete Gate 1 incl. Atlas checks, PULS coverage kept, Russification pilot
    before the golden set → W5, W6, W8, W9.
 4. (should) Frozen component specs normative; C2/C4/C7 conditions added → §3.
