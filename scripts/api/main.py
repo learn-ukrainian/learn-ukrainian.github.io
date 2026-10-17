@@ -41,6 +41,7 @@ from scripts.common.safe_open import safe_open_below
 from scripts.control_plane.storage import StoreId, assert_component_supported
 from scripts.github_check_rollup import group_collapsed_by_name
 from scripts.guardrails import worktree_containment
+from scripts.orientation_packet import PACKET_MAX_BYTES, json_bytes
 from scripts.research import registry as reg
 
 try:
@@ -1644,6 +1645,55 @@ def _orient_section_specs() -> dict[str, tuple[Callable[..., Any], Any, bool]]:
     }
 
 
+def _cap_lean_orient(response: dict[str, Any]) -> dict[str, Any]:
+    """Keep the lean preset inside the orientation byte bound.
+
+    Sections that do not fit become locators. ``generated_at`` stays. The full
+    ``/api/orient`` payload is unchanged.
+    """
+    protected = {"generated_at", "meta", "_telemetry", "orientation_bound"}
+
+    def size(body: dict[str, Any]) -> int:
+        return len(json_bytes(body))
+
+    if size(response) <= PACKET_MAX_BYTES:
+        return response
+    omitted: list[str] = []
+    while size(response) > PACKET_MAX_BYTES:
+        candidates = [key for key in response if key not in protected]
+        if not candidates:
+            break
+        key = max(candidates, key=lambda name: len(json_bytes({name: response[name]})))
+        locator = f"GET /api/orient?sections={key}"
+        section = response[key]
+        stub: dict[str, Any] = {
+            "omitted": True,
+            "locator": locator,
+            "bytes": len(json_bytes({key: section})),
+        }
+        if isinstance(section, dict):
+            if isinstance(section.get("generated_at"), str):
+                stub["generated_at"] = section["generated_at"]
+            counts = section.get("counts")
+            if isinstance(counts, dict) and len(json_bytes(counts)) <= 400:
+                stub["counts"] = counts
+        response[key] = stub
+        omitted.append(locator)
+        protected.add(key)
+    response["orientation_bound"] = {
+        "max_bytes": PACKET_MAX_BYTES,
+        "complete": False,
+        "omitted": {"count": len(omitted), "locators": omitted},
+    }
+    if size(response) > PACKET_MAX_BYTES:
+        response.pop("orientation_bound", None)
+        for key, value in list(response.items()):
+            if key in {"generated_at", "meta", "_telemetry"} or not isinstance(value, dict):
+                continue
+            value.pop("counts", None)
+    return response
+
+
 @core_router.get("/api/orient")
 async def orient(
     request: Request,
@@ -1762,7 +1812,10 @@ async def orient(
             response["idle_prs_error"] = idle_prs_info["error"]
 
     _attach_cold_start_research(response, role)
-    return add_json_telemetry(response, session_id=session_id_from_request(request))
+    body = add_json_telemetry(response, session_id=session_id_from_request(request))
+    if lean and not (sections and sections.strip()):
+        body = _cap_lean_orient(body)
+    return body
 
 
 def _attach_cold_start_research(response: dict[str, Any], role: str | None) -> None:

@@ -24,7 +24,7 @@ Base URL (public Monitor): `http://127.0.0.1:8765` (prefer loopback IP).
 
 | Method | Path | Purpose |
 | --- | --- | --- |
-| `GET` | `/api/work/v1/projection` | Normalized attention list, work items, source envelopes, denominator, cache age |
+| `GET` | `/api/work/v1/projection?stream=<lane>` | One lane's attention list, work items, source envelopes, denominator, cache age. `stream` is required. |
 | `GET` | `/api/work/v1/next` | Stream-scoped actionable pick list for orchestrators (#6880) |
 | `GET` | `/api/work/v1/capabilities` | Schema digest, budgets, class-4 endpoint freeze, private-source seam |
 | `GET` | `/api/work/v1/health` | Cheap Work surface liveness |
@@ -362,7 +362,7 @@ or deployment-health proof.
 
 ```bash
 curl -sS 'http://127.0.0.1:8765/api/work/v1/capabilities' | .venv/bin/python -m json.tool
-curl -sS 'http://127.0.0.1:8765/api/work/v1/projection?fresh=true' | .venv/bin/python -m json.tool | head
+curl -sS 'http://127.0.0.1:8765/api/work/v1/projection?stream=<lane>&fresh=true' | .venv/bin/python -m json.tool | head
 # Private adapter (loopback only; never via public Monitor):
 curl -sS -H 'Accept: application/json' -H 'Origin: http://127.0.0.1:8765' \
   'http://127.0.0.1:8769/v1/projection' | .venv/bin/python -m json.tool | head

@@ -133,7 +133,7 @@ def test_fx07_canaries_never_enter_public_api_payload(monkeypatch):
         ),
     )
 
-    response = client.get("/api/work/v1/projection")
+    response = client.get("/api/work/v1/projection?stream=infra-harness")
     assert response.status_code == 200
     blob = response.text
     for canary in canaries:

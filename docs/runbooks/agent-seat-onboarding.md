@@ -63,7 +63,7 @@ handoff creates a competing authority.
   update or for borrowing another session's identity.
 - **Orient:** read rules, `plane-status`, and the assigned stream's continuity.
   Query the public Work surfaces through the configured Monitor endpoint:
-  `GET /api/work/v1/projection` (normalized attention list, denominator,
+  `GET /api/work/v1/projection?stream=<your-stream>` (normalized attention list, denominator,
   `cache_age_s`), `GET /api/work/v1/next?stream=<your-stream>` (stream-scoped
   pick list), `GET /api/work/v1/capabilities` (schema digest, budgets,
   private-source seam), and `GET /api/work/v1/health` (cheap liveness only —

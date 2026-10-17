@@ -203,6 +203,32 @@ def test_orient_lean_route_omits_heavy_sections_and_meets_byte_budget(monkeypatc
     assert not ({"pipeline", "issues", "wiki"} & set(response.json()))
 
 
+def test_lean_orient_caps_fat_rollovers_and_full_orient_does_not(monkeypatch):
+    _patch_orient_sources(monkeypatch)
+    fat = {
+        "counts": {"total": 4, "live_pending": 3},
+        "generated_at": "2026-10-17T00:00:00Z",
+        "actionable": [{"agent": "codex", "blob": "x" * 4000} for _ in range(40)],
+        "errors": [],
+    }
+    monkeypatch.setattr(api_main, "_collect_rollovers_orient_data", lambda ctx=None: fat)
+
+    lean = client.get("/api/orient?lean=true")
+    assert lean.status_code == 200
+    assert len(lean.content) <= 16384
+    stub = lean.json()["rollovers"]
+    assert stub["omitted"] is True
+    assert stub["locator"] == "GET /api/orient?sections=rollovers"
+    assert stub["counts"] == {"total": 4, "live_pending": 3}
+    assert stub["generated_at"] == "2026-10-17T00:00:00Z"
+    assert lean.json()["orientation_bound"]["complete"] is False
+
+    full = client.get("/api/orient")
+    assert full.status_code == 200
+    assert full.json()["rollovers"]["actionable"] == fat["actionable"]
+    assert len(full.content) > 16384
+
+
 def test_orient_git_exposes_primary_checkout_dirty_signal(monkeypatch, tmp_path):
     original_git_collector = api_main._collect_git_orient_data
     repo = _init_orient_git_repo(tmp_path)

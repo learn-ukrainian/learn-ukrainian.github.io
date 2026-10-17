@@ -34,7 +34,7 @@ AUTHORITY_WHERE = """recipient = ? AND state IN ('queued', 'running')
                     WHERE i.namespace = 'supervisory-consumption:' || d.delivery_id)"""
 
 
-def probe(recipient: str) -> dict:
+def probe(recipient: str, *, limit: int = 5) -> dict:
     """Return only counts and identifiers; any uncertainty invalidates the result."""
     unknown = {
         "count": 0,
@@ -43,6 +43,8 @@ def probe(recipient: str) -> dict:
         "stores": {"legacy": None, "authority": None},
         "probe": "unknown",
     }
+    if type(limit) is not int or limit < 1 or limit > 500:
+        return unknown
     try:
         from scripts.agent_runtime.kimi_admission import BRIDGE_MODE
         from scripts.agent_runtime.target_admission import resolve_and_admit
@@ -83,7 +85,10 @@ def probe(recipient: str) -> dict:
                     # observation as generation-bound supervisory consumption.
                     conn.execute("SELECT delivery_id, state FROM authority_wake_receipts LIMIT 0")
                 stores[name] = conn.execute(f"SELECT COUNT(*) FROM {table} WHERE {where}", params).fetchone()[0]
-                rows = conn.execute(f"SELECT {column} FROM {table} WHERE {where} ORDER BY {column} LIMIT 5", params)
+                rows = conn.execute(
+                    f"SELECT {column} FROM {table} WHERE {where} ORDER BY {column} LIMIT ?",
+                    (*tuple(params), limit),
+                )
                 for (identifier,) in rows:
                     if name == "legacy":
                         if not isinstance(identifier, int) or identifier < 1:
@@ -94,7 +99,8 @@ def probe(recipient: str) -> dict:
                         return unknown
                     ids.append(identifier)
         count = sum(stores.values())
-        return {"count": count, "ids": ids[:5], "truncated": count > 5, "stores": stores, "probe": "ok"}
+        shown = ids[:limit]
+        return {"count": count, "ids": shown, "truncated": count > len(shown), "stores": stores, "probe": "ok"}
     except Exception:
         # Exception text can contain paths or data. It never leaves this boundary.
         return unknown

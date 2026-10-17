@@ -1210,7 +1210,7 @@ PAGE_CONTRACTS: tuple[PageContract, ...] = (
         "work.html",
         "/work.html",
         "Read-only Work attention surface with evidence rail, authority/freshness, and private-source unavailable seam.",
-        "GET /api/work/v1/projection and /api/work/v1/capabilities over public Monitor sources only.",
+        "GET /api/work/v1/projection?stream=<lane> and /api/work/v1/capabilities over public Monitor sources only.",
         "Client fetches live projection with 5s timeout; API reports cache_age_s and per-source degradation.",
         ("humans", "operators"),
         "Complements fleet/delegate/orient without becoming a second planning authority.",

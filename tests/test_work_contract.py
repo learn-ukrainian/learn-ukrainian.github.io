@@ -2775,7 +2775,7 @@ def test_work_projection_single_flight_under_concurrent_load(monkeypatch):
 
     async def run_concurrent():
         async with AsyncClient(transport=ASGITransport(app=api_main.app), base_url="http://test") as ac:
-            tasks = [ac.get("/api/work/v1/projection") for _ in range(8)]
+            tasks = [ac.get("/api/work/v1/projection?stream=infra-harness") for _ in range(8)]
             responses = await asyncio.gather(*tasks)
             return responses
 
@@ -2817,7 +2817,7 @@ def test_work_projection_cold_timeout_completes_in_background_and_converges_on_r
         async with AsyncClient(transport=ASGITransport(app=api_main.app), base_url="http://test") as ac:
             # Request 1: with a tiny timeout (0.02s) to simulate client-side 504 timeout
             monkeypatch.setattr(work_router, "TIMEOUT_S", 0.02)
-            resp1 = await ac.get("/api/work/v1/projection")
+            resp1 = await ac.get("/api/work/v1/projection?stream=infra-harness")
             assert resp1.status_code == 504
             assert resp1.json()["detail"]["error"] == "work_projection_timeout"
 
@@ -2826,7 +2826,7 @@ def test_work_projection_cold_timeout_completes_in_background_and_converges_on_r
 
             # Request 2 (retry): should immediately succeed with 200 OK from warm cache
             monkeypatch.setattr(work_router, "TIMEOUT_S", 5.0)
-            resp2 = await ac.get("/api/work/v1/projection")
+            resp2 = await ac.get("/api/work/v1/projection?stream=infra-harness")
             assert resp2.status_code == 200
             data = resp2.json()
             assert data["schema_version"] == "work-projection.v1"
@@ -2887,7 +2887,7 @@ def test_work_projection_serves_stale_on_rebuild_timeout(monkeypatch):
 
     async def run_flow():
         async with AsyncClient(transport=ASGITransport(app=api_main.app), base_url="http://test") as ac:
-            resp = await ac.get("/api/work/v1/projection")
+            resp = await ac.get("/api/work/v1/projection?stream=infra-harness")
             assert resp.status_code == 200
             data = resp.json()
             assert data["schema_version"] == "work-projection.v1"
