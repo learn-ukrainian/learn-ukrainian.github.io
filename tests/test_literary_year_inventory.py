@@ -885,6 +885,43 @@ def test_excluded_shapes_have_counts_and_integer_coordinates(tmp_path: Path) -> 
     assert isinstance(rows[0]["coordinate"][0], int)
 
 
+@pytest.mark.parametrize(
+    "scraper_raw",
+    [
+        pytest.param(b"+" * 8000 + b"1\n", id="unary-stack"),
+        pytest.param(b"1" + b"+1" * 12000 + b"\n", id="binary-recursion"),
+    ],
+)
+def test_scraper_parser_limits_are_typed(tmp_path: Path, scraper_raw: bytes) -> None:
+    manifest = tmp_path / "manifest.json"
+    scraper = tmp_path / "scraper.py"
+    manifest_raw = b"{}"
+    manifest_sha = _write(manifest, manifest_raw)
+    scraper_sha = _write(scraper, scraper_raw)
+    _assert_typed_refusal(
+        run_cli(_pins(manifest, manifest_sha, scraper, scraper_sha)),
+        "scraper_parse_failed",
+    )
+    assert manifest.read_bytes() == manifest_raw
+    assert scraper.read_bytes() == scraper_raw
+
+
+@pytest.mark.parametrize("limit_error", [MemoryError, RecursionError])
+def test_literal_eval_parser_limits_are_typed(
+    monkeypatch: pytest.MonkeyPatch,
+    limit_error: type[BaseException],
+) -> None:
+    import scripts.audit.literary_year_inventory as inventory
+
+    def raise_limit(_value: object) -> object:
+        raise limit_error
+
+    monkeypatch.setattr(inventory.ast, "literal_eval", raise_limit)
+    with pytest.raises(inventory.InventoryError) as caught:
+        inventory._parse_scraper_authors(b'WRAP = {"a": {"name": "Author One", "years": "1900-1980"}}\n')
+    assert caught.value.code == "scraper_parse_failed"
+
+
 def test_scraper_source_is_not_executed(tmp_path: Path) -> None:
     marker = tmp_path / "executed.txt"
     manifest = tmp_path / "manifest.json"

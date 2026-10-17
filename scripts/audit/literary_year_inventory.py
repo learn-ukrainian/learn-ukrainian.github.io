@@ -180,7 +180,7 @@ def _parse_scraper_authors(raw: bytes) -> tuple[dict[str, str], int, int]:
     text = _decode_utf8(raw, "scraper")
     try:
         tree = ast.parse(text)
-    except SyntaxError:
+    except (SyntaxError, MemoryError, RecursionError):
         raise InventoryError("scraper_parse_failed") from None
     years_by_name: dict[str, str] = {}
     record_count = 0
@@ -193,8 +193,11 @@ def _parse_scraper_authors(raw: bytes) -> tuple[dict[str, str], int, int]:
                 continue
             try:
                 evaluated = ast.literal_eval(value)
-            except Exception:
+            except (MemoryError, RecursionError):
+                raise InventoryError("scraper_parse_failed") from None
+            except (ValueError, SyntaxError, TypeError):
                 # The retained probe skips any dict that is not a pure literal.
+                # TypeError is an unhashable literal key, which is not a parser limit.
                 continue
             if not isinstance(evaluated, dict) or "years" not in evaluated or "name" not in evaluated:
                 continue
