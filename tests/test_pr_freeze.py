@@ -5,7 +5,7 @@ import json
 import sys
 from pathlib import Path
 from types import SimpleNamespace
-from urllib.parse import unquote
+from urllib.parse import parse_qs
 
 import pytest
 
@@ -39,11 +39,21 @@ def test_admits_below_threshold(tmp_path: Path) -> None:
 
 
 def test_env_override(tmp_path: Path) -> None:
-    fetch, _ = _fetch(20)
+    fetch, calls = _fetch(20)
     env = {pr_freeze.THRESHOLD_ENV: "25"}
     assert not pr_freeze.evaluate(REPO, environ=env, fetch=fetch, cache_file=tmp_path / "c.json").refused
-    env = {pr_freeze.THRESHOLD_ENV: "0"}
-    assert not pr_freeze.evaluate(REPO, environ=env, fetch=fetch, cache_file=tmp_path / "c.json").refused
+    assert calls == [REPO]
+    disabled = pr_freeze.evaluate(
+        REPO,
+        environ={pr_freeze.THRESHOLD_ENV: "0"},
+        fetch=fetch,
+        cache_file=tmp_path / "disabled.json",
+    )
+    assert not disabled.refused
+    assert disabled.threshold == 0
+    assert disabled.open_prs is None
+    assert calls == [REPO]
+    assert pr_freeze.threshold_from_env({}) == 15
     assert pr_freeze.threshold_from_env({pr_freeze.THRESHOLD_ENV: "junk"}) == 15
 
 
@@ -309,163 +319,55 @@ def test_relative_worktree_resolves_against_target_repo(monkeypatch, tmp_path) -
     assert delegate._check_open_pr_freeze(args, repo, target_root) is None
 
 
-def test_search_total_excludes_only_exact_dependabot_login(monkeypatch, tmp_path: Path) -> None:
-    """Dependabot is excluded by exact login. Page length is not the count."""
-    total_payload = {
-        "total_count": 21,
-        "items": [
-            {"number": 1, "user": {"login": "app/dependabot"}},
-            {"number": 2, "user": {"login": "krisztiankoos"}},
-            {"number": 3},
-            {"number": 4, "user": None},
-            {"number": 5, "user": {"login": None}},
-            {"number": 6, "user": {"login": "dependabot[bot]"}},
-            {"number": 7, "user": {"login": "app/renovate"}},
-        ],
+def _issued_search_query(endpoint: str) -> str:
+    path, _, query = endpoint.partition("?")
+    assert path == "search/issues", endpoint
+    parsed = parse_qs(query, strict_parsing=True)
+    assert parsed["per_page"] == ["1"]
+    return parsed["q"][0]
+
+
+def test_decision_path_issues_one_non_dependabot_search(monkeypatch, tmp_path: Path) -> None:
+    """One search. Its total_count is the counted number. Page length is not."""
+    payload = {
+        "total_count": 16,
+        "items": [{"number": 1}, {"number": 2}],
     }
-    excluded_payload = {
-        "total_count": 6,
-        "items": [{"number": 1, "user": {"login": "app/dependabot"}}],
-    }
-    assert total_payload["total_count"] > len(total_payload["items"])
-    assert excluded_payload["total_count"] > len(excluded_payload["items"])
+    assert payload["total_count"] != len(payload["items"])
     seen: list[str] = []
 
     def fake_get(endpoint: str):
         seen.append(endpoint)
-        if "author:" in endpoint:
-            return excluded_payload
-        return total_payload
+        return payload
 
     monkeypatch.setattr(pr_freeze, "_gh_get", fake_get)
     decision = pr_freeze.evaluate(REPO, environ={}, cache_file=tmp_path / "c.json")
+    assert seen == [pr_freeze._open_pr_search_endpoint(REPO)]
+    assert len(seen) == 1
+    assert _issued_search_query(seen[0]) == f"repo:{REPO} is:pr is:open -author:app/dependabot"
     assert decision.refused
-    assert decision.total_open == 21
-    assert decision.open_prs == 15
-    assert decision.total_open != decision.open_prs
-    assert decision.total_open != len(total_payload["items"])
-    assert decision.open_prs != sum(pr_freeze.counts_toward_freeze(item) for item in total_payload["items"])
-
-    dependabot, human, missing, null_user, null_login, bot_suffix, other_app = total_payload["items"]
-    assert pr_freeze.counts_toward_freeze(dependabot) is False
-    assert pr_freeze.counts_toward_freeze(human) is True
-    assert pr_freeze.counts_toward_freeze(missing) is True
-    assert pr_freeze.counts_toward_freeze(null_user) is True
-    assert pr_freeze.counts_toward_freeze(null_login) is True
-    assert pr_freeze.counts_toward_freeze(bot_suffix) is True
-    assert pr_freeze.counts_toward_freeze(other_app) is True
-
-    author_calls = [endpoint for endpoint in seen if "author:" in endpoint]
-    assert len(author_calls) == 1
-    decoded = unquote(author_calls[0])
-    assert 'author:"app/dependabot"' in decoded
-    assert "[bot]" not in decoded
-    assert decoded.replace('author:"app/dependabot"', "").count("author:") == 0
-
+    assert decision.open_prs == payload["total_count"]
+    assert decision.total_open == payload["total_count"]
+    assert decision.open_prs != len(payload["items"])
+    assert decision.warning in (None, "")
     line = decision.refusal_line(REPO)
-    assert "21 open PRs" in line
-    assert "15 counted" in line
+    assert "16 open PRs" in line
+    assert "16 counted" in line
     assert "Land your own open PRs first" in line
 
 
-def test_dependabot_bot_page_is_counted_not_a_fetch_failure(monkeypatch, tmp_path: Path) -> None:
-    """author:"app/dependabot" can return dependabot[bot]. Count the open total."""
-    total_payload = {
-        "total_count": 21,
-        "items": [{"number": 1, "user": {"login": "dependabot[bot]"}}],
-    }
-    excluded_payload = {
-        "total_count": 6,
-        "items": [{"number": 8, "user": {"login": "dependabot[bot]"}}],
-    }
-    assert excluded_payload["total_count"] > len(excluded_payload["items"])
+def test_search_fetch_error_fails_open(monkeypatch, tmp_path: Path) -> None:
+    """A real search failure fails open and does not issue another search."""
     seen: list[str] = []
 
-    def fake_get(endpoint: str):
+    def broken(endpoint: str):
         seen.append(endpoint)
-        if "author:" in endpoint:
-            return excluded_payload
-        return total_payload
+        raise RuntimeError("network down")
 
-    monkeypatch.setattr(pr_freeze, "_gh_get", fake_get)
+    monkeypatch.setattr(pr_freeze, "_gh_get", broken)
     decision = pr_freeze.evaluate(REPO, environ={}, cache_file=tmp_path / "c.json")
-    assert decision.refused
-    assert decision.total_open == 21
-    assert decision.open_prs == 21
-    assert decision.warning in (None, "")
-    assert "open_pr_count_unavailable" not in (decision.warning or "")
-    assert decision.open_prs != len(excluded_payload["items"])
-    assert pr_freeze.EXCLUDED_AUTHOR_LOGIN == "app/dependabot"
-
-    author_calls = [endpoint for endpoint in seen if "author:" in endpoint]
-    assert len(author_calls) == 1
-    decoded = unquote(author_calls[0])
-    assert 'author:"app/dependabot"' in decoded
-    assert "dependabot[bot]" not in decoded
-
-
-def _excluded_page_without_login_list(kind: str) -> dict:
-    """Successful excluded-author page whose items are not a list of logins."""
-    payload: dict = {"total_count": 7}
-    if kind == "missing":
-        return payload
-    if kind == "null":
-        payload["items"] = None
-        return payload
-    if kind == "object":
-        payload["items"] = {"number": 1, "user": {"login": "app/dependabot"}}
-        return payload
-    raise AssertionError(kind)
-
-
-@pytest.mark.parametrize("kind", ["missing", "null", "object"])
-def test_excluded_page_without_login_list_subtracts_nothing(monkeypatch, tmp_path: Path, kind: str) -> None:
-    """Missing, null, or non-list items subtract nothing. The open total stays counted."""
-    total_payload = {
-        "total_count": 21,
-        "items": [{"number": 1, "user": {"login": "krisztiankoos"}}],
-    }
-    excluded_payload = _excluded_page_without_login_list(kind)
-    assert excluded_payload["total_count"] == 7
-    assert excluded_payload["total_count"] > 1
-    assert not isinstance(excluded_payload.get("items"), list)
-    assert pr_freeze._excluded_total(excluded_payload, excluded_payload["total_count"]) == 0
-
-    def fake_get(endpoint: str):
-        if "author:" in endpoint:
-            return excluded_payload
-        return total_payload
-
-    monkeypatch.setattr(pr_freeze, "_gh_get", fake_get)
-    decision = pr_freeze.evaluate(REPO, environ={}, cache_file=tmp_path / f"{kind}.json")
-    assert decision.refused
-    assert decision.total_open == 21
-    assert decision.open_prs == 21
-    assert decision.warning in (None, "")
-    assert "open_pr_count_unavailable" not in (decision.warning or "")
-    assert decision.open_prs == decision.total_open
-    assert decision.open_prs != total_payload["total_count"] - excluded_payload["total_count"]
-
-
-def test_empty_excluded_items_list_still_subtracts(monkeypatch, tmp_path: Path) -> None:
-    """An empty items list stays on the current path and still subtracts total_count."""
-    total_payload = {
-        "total_count": 21,
-        "items": [{"number": 1, "user": {"login": "krisztiankoos"}}],
-    }
-    excluded_payload = {"total_count": 7, "items": []}
-    assert excluded_payload["total_count"] > len(excluded_payload["items"])
-    assert pr_freeze._excluded_total(excluded_payload, excluded_payload["total_count"]) == 7
-
-    def fake_get(endpoint: str):
-        if "author:" in endpoint:
-            return excluded_payload
-        return total_payload
-
-    monkeypatch.setattr(pr_freeze, "_gh_get", fake_get)
-    decision = pr_freeze.evaluate(REPO, environ={}, cache_file=tmp_path / "empty.json")
     assert not decision.refused
-    assert decision.total_open == 21
-    assert decision.open_prs == 14
-    assert decision.warning in (None, "")
-    assert "open_pr_count_unavailable" not in (decision.warning or "")
+    assert decision.open_prs is None
+    assert decision.warning == "open-PR freeze check skipped: open_pr_count_unavailable"
+    assert len(seen) == 1
+    assert _issued_search_query(seen[0]) == f"repo:{REPO} is:pr is:open -author:app/dependabot"

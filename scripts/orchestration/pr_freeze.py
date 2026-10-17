@@ -1,36 +1,24 @@
 """Open-PR freeze for new implementation dispatches.
 
-While the public repository has ``threshold`` or more open pull requests that
-are not an exact author-login match for ``app/dependabot``, a new
-write-capable dispatch that would open a new PR is refused. Work on an
-existing PR stays allowed: ``--pr``, a ``--branch`` that already has an open
-PR, or a reused ``--cwd`` or explicit ``--worktree`` path. ``--force-new``
-alone does not prove branch continuation. Read-only work, reviews and other
-repositories are unaffected. A ``--branch`` with no open PR counts as new.
+While the public repository has ``threshold`` or more open pull requests
+other than those by ``app/dependabot``, a new write-capable dispatch that
+would open a new PR is refused. Work on an existing PR stays allowed:
+``--pr``, a ``--branch`` that already has an open PR, or a reused ``--cwd``
+or explicit ``--worktree`` path. ``--force-new`` alone does not prove branch
+continuation. Read-only work, reviews and other repositories are unaffected.
+A ``--branch`` with no open PR counts as new.
 
-Exclude no login except ``app/dependabot``. On 2026-10-17 the only non-human
-login on the open list was ``app/dependabot`` (six pull requests; the human
-login ``krisztiankoos`` had five), and a wider app rule is refused. A missing,
-null, human, or any other GitHub App login is counted. ``dependabot[bot]`` is
-counted. An ``app/`` prefix or a ``[bot]`` suffix is not an exclusion, so any
-other GitHub App author stays in the count for that reason.
+The decision path runs one GitHub search::
 
-The refusal line reports the total open count and the counted number (the one
-compared with the threshold). ``FreezeDecision.open_prs`` is that counted
-number; ``total_open`` is every open pull request. Both numbers are complete
-search ``total_count`` values. The length of one returned page is not a count.
+    repo:<repo> is:pr is:open -author:app/dependabot
 
-GitHub search ``author:"app/dependabot"`` can return a successful page whose
-``user.login`` is ``dependabot[bot]``. That page is not a fetch failure: the
-search returned a count, and those pull requests are not the excluded login,
-so none of that search ``total_count`` is subtracted and the counted number
-stays the open total. The same is true when ``items`` is missing, null, or
-not a list: nothing is subtracted. Subtract the excluded search ``total_count``
-only when ``items`` is a list and every returned login is exactly
-``app/dependabot``. An empty list still subtracts that total.
+That search ``total_count`` is the counted number compared with the threshold.
+There is no second search, no subtraction, and no per-item login check. The
+unfiltered open total is not fetched. The length of the returned page is not
+a count. ``FreezeDecision.open_prs`` is that counted number.
 
 ``LU_OPEN_PR_FREEZE_THRESHOLD`` overrides the threshold (default 15; ``0``
-disables the check). The counts come from the GitHub REST search API and are
+disables the check). The count comes from the GitHub REST search API and is
 cached briefly (``LU_OPEN_PR_FREEZE_CACHE_S``, default 60s). When the count or
 the branch's PR cannot be fetched the check fails open with a warning.
 """
@@ -51,14 +39,19 @@ DEFAULT_CACHE_S = 60.0
 THRESHOLD_ENV = "LU_OPEN_PR_FREEZE_THRESHOLD"
 CACHE_ENV = "LU_OPEN_PR_FREEZE_CACHE_S"
 WRITE_MODES = frozenset({"workspace-write", "danger"})
-# Exact author login only. A prefix or ``[bot]`` suffix would also drop human
-# and other-app pull requests; that wider rule is refused.
+# The only author the decision search excludes. The qualifier is
+# ``-author:app/dependabot`` on the single open-PR search.
 EXCLUDED_AUTHOR_LOGIN = "app/dependabot"
 
 
 @dataclass(frozen=True)
 class OpenPrCounts:
-    """Complete open-PR counts. ``counted`` is what the freeze compares."""
+    """Counted open pull requests from the one decision search.
+
+    ``counted`` is the search ``total_count`` the freeze compares with the
+    threshold. ``total`` carries that same number: the unfiltered open total
+    is not fetched.
+    """
 
     total: int
     counted: int
@@ -118,24 +111,6 @@ def _gh_get(endpoint: str) -> Any:
     return json.loads(proc.stdout)
 
 
-def counts_toward_freeze(item: Mapping[str, Any] | None) -> bool:
-    """True unless the author login is exactly ``app/dependabot``.
-
-    A missing user, a null login, a human login, and any other GitHub App
-    login are counted. ``dependabot[bot]`` is counted. Exclusion is not an
-    ``app/`` prefix or a ``[bot]`` suffix.
-    """
-    if not isinstance(item, Mapping):
-        return True
-    user = item.get("user")
-    if not isinstance(user, Mapping):
-        return True
-    login = user.get("login")
-    if not isinstance(login, str):
-        return True
-    return login != EXCLUDED_AUTHOR_LOGIN
-
-
 def _require_total_count(data: Any) -> int:
     """Search ``total_count``. Never the length of the returned page."""
     if not isinstance(data, dict):
@@ -148,56 +123,28 @@ def _require_total_count(data: Any) -> int:
     return count
 
 
-def _open_pr_search_endpoint(repo: str, *, author: str | None = None) -> str:
-    terms = [f"repo:{repo}", "is:pr", "is:open"]
-    if author is not None:
-        # Quote the login so the slash in ``app/dependabot`` stays inside one qualifier.
-        terms.append("author:" + quote(f'"{author}"', safe=""))
-    return f"search/issues?q={'+'.join(terms)}&per_page=1"
+def _open_pr_search_endpoint(repo: str) -> str:
+    """The one decision-path search for ``repo``.
 
-
-def _excluded_total(payload: Any, reported: int) -> int:
-    """Excluded search total to subtract, or zero when the page is not exact.
-
-    ``author:"app/dependabot"`` can return a successful page of
-    ``dependabot[bot]``. That login is counted, so the page is not a fetch
-    failure and nothing is subtracted. A missing, null, or non-list ``items``
-    field is the same kind of successful page: subtract nothing, and do not
-    raise. Subtract ``reported`` only when ``items`` is a list and every
-    returned login is exactly ``app/dependabot``. An empty list still subtracts
-    ``reported``. The page length is not a count.
+    The query is ``repo:<repo> is:pr is:open -author:app/dependabot``.
     """
-    items = payload.get("items") if isinstance(payload, dict) else None
-    if not isinstance(items, list):
-        return 0
-    for item in items:
-        if counts_toward_freeze(item):
-            return 0
-    return reported
+    query = f"repo:{repo} is:pr is:open -author:{EXCLUDED_AUTHOR_LOGIN}"
+    return f"search/issues?q={quote(query, safe='')}&per_page=1"
 
 
 def fetch_open_pr_count(repo: str) -> OpenPrCounts:
-    """Complete open-PR counts for ``repo``.
+    """Counted open pull requests for ``repo``.
 
-    ``total`` is every open pull request. ``counted`` subtracts the excluded
-    search ``total_count`` only when ``items`` is a list and every returned
-    login is exactly ``app/dependabot``. A successful page of
-    ``dependabot[bot]``, or a page whose ``items`` are missing, null, or not a
-    list, subtracts zero; that is not a fetch failure. An empty list still
-    subtracts. Both numbers are search ``total_count`` values, so a short
-    ``items`` page cannot shrink them.
+    Issues one search and returns its ``total_count``. That number is what
+    the freeze compares with the threshold. Items on the page are not
+    inspected, and the unfiltered open total is not fetched.
     """
-    total_payload = _gh_get(_open_pr_search_endpoint(repo))
-    total = _require_total_count(total_payload)
-    excluded_payload = _gh_get(_open_pr_search_endpoint(repo, author=EXCLUDED_AUTHOR_LOGIN))
-    excluded = _excluded_total(excluded_payload, _require_total_count(excluded_payload))
-    if excluded > total:
-        raise RuntimeError("excluded open-pr count exceeds total")
-    return OpenPrCounts(total=total, counted=total - excluded)
+    counted = _require_total_count(_gh_get(_open_pr_search_endpoint(repo)))
+    return OpenPrCounts(total=counted, counted=counted)
 
 
 def _as_counts(value: Any) -> OpenPrCounts:
-    """Normalize a fetch result. An int is a counted total with nothing excluded."""
+    """Normalize a fetch result. An int is that search's counted total."""
     if isinstance(value, OpenPrCounts):
         if value.total < 0 or value.counted < 0 or value.counted > value.total:
             raise RuntimeError("invalid open-pr counts")
