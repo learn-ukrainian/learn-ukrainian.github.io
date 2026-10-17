@@ -348,6 +348,8 @@ launcher_adapter_exec() {
 # waiter's trap is the real relay, which also must not stall the timed pause.
 _WAIT_CHILD_SCRIPT = """
 source "$1"
+exec {ready}<> "$2"
+exec {release}<> "$3"
 violations=0
 wait() {
   if driver_scope_child_running "$1"; then violations=$((violations + 1)); fi
@@ -370,19 +372,58 @@ printf 'rc=%%s violations=%%s relayed=%%s\\n' "$DS_CHILD_RC" "$violations" "$rel
     [
         # TERM reaches the driver waiter while its child runs; the collector
         # retains the child's own status without waiting on a running child.
-        ("trap 'exit 43' TERM; while :; do sleep 0.05; done", True, "rc=43 violations=0 relayed=TERM"),
-        ("sleep 0.6; exit 0", False, "rc=0 violations=0 relayed="),
-        ("sleep 0.6; kill -KILL $BASHPID", False, "rc=137 violations=0 relayed="),
+        (
+            "trap 'echo child-trap=TERM >&2; exit 43' TERM; "
+            "echo child-ready >&\"$ready\"; while :; do sleep 0.05; done",
+            True,
+            "rc=43 violations=0 relayed=TERM",
+        ),
+        ('echo child-ready >&"$ready"; read -r -u "$release" _; exit 0', False, "rc=0 violations=0 relayed="),
+        (
+            'echo child-ready >&"$ready"; read -r -u "$release" _; kill -KILL $BASHPID',
+            False,
+            "rc=137 violations=0 relayed=",
+        ),
         # Already exited, and not yet collected, when the launcher starts waiting.
         ("exit 7", False, "rc=7 violations=0 relayed="),
     ],
 )
 def test_waiting_launcher_collects_status_without_waiting_on_a_running_child(
-    child: str, signal_waiter: bool, expected: str
+    tmp_path: Path, child: str, signal_waiter: bool, expected: str
 ) -> None:
-    signal = "( sleep 0.3; kill -TERM $$ ) &" if signal_waiter else "sleep 0.3"
+    ready = tmp_path / "ready"
+    release = tmp_path / "release"
+    os.mkfifo(ready)
+    os.mkfifo(release)
+    if child == "exit 7":
+        synchronize = 'while driver_scope_child_running "$child"; do sleep 0.01; done'
+    else:
+        release_child = 'echo waiter-ready >&"$ready"' if signal_waiter else 'echo release >&"$release"'
+        sender = '''(
+  IFS= builtin read -r -u "$ready" token
+  [ "$token" = waiter-ready ] || exit 98
+  echo signal=TERM >&2
+  kill -TERM $$
+) &''' if signal_waiter else ""
+        synchronize = f'''
+IFS= read -r -u "$ready" token
+[ "$token" = child-ready ] || exit 98
+echo "$token" >&2
+# The first read belongs to the real collector's timed pause. Release or
+# signal the child only after the collector reaches that running-child path.
+read() {{
+  unset -f read
+  echo waiter-ready >&2
+  {release_child}
+  builtin read "$@"
+}}
+{sender}
+'''
     result = subprocess.run(
-        ["bash", "-c", _WAIT_CHILD_SCRIPT % (child, signal), "bash", str(REPO / "scripts/lib/driver_scope.sh")],
+        [
+            "bash", "-c", _WAIT_CHILD_SCRIPT % (child, synchronize), "bash",
+            str(REPO / "scripts/lib/driver_scope.sh"), str(ready), str(release),
+        ],
         capture_output=True,
         text=True,
         timeout=30,
@@ -393,6 +434,10 @@ def test_waiting_launcher_collects_status_without_waiting_on_a_running_child(
     assert result.stdout.strip() == expected, result.stderr
     assert "not a child" not in result.stderr
     assert "No such file" not in result.stderr
+    if signal_waiter:
+        assert result.stderr.splitlines() == ["child-ready", "waiter-ready", "signal=TERM", "child-trap=TERM"]
+    elif child != "exit 7":
+        assert result.stderr.splitlines()[:2] == ["child-ready", "waiter-ready"]
 
 
 def test_reaped_child_probe_does_not_exit_the_waiting_shell() -> None:
