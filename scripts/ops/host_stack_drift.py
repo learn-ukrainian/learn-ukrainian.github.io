@@ -21,11 +21,11 @@ import json
 import os
 import platform
 import re
+import secrets
 import shutil
 import stat
 import subprocess
 import sys
-import tempfile
 import time
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass
@@ -280,11 +280,11 @@ def _refuse_linked_file(path: Path) -> None:
 def _write_new_file(directory: Path, destination: Path, text: str) -> None:
     """Write ``text`` to a new temp file in ``directory``, then replace ``destination``.
 
-    ``mkstemp`` creates the name with ``O_EXCL``. ``report.json.tmp`` and any
+    A random name is created with ``O_EXCL``. ``report.json.tmp`` and any
     other pre-existing path are not opened.
     """
-    descriptor, raw_name = tempfile.mkstemp(dir=os.fspath(directory))
-    temporary = Path(raw_name)
+    temporary = directory / f".report-{secrets.token_hex(16)}.tmp"
+    descriptor = os.open(temporary, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
     try:
         with os.fdopen(descriptor, "wb") as stream:
             stream.write(text.encode("utf-8"))
