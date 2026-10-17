@@ -14,6 +14,7 @@ import argparse
 import ast
 import hashlib
 import json
+import math
 import sys
 from collections.abc import Mapping, Sequence
 from pathlib import Path
@@ -65,14 +66,42 @@ class _DuplicateJsonKey(Exception):
     """Internal signal for a repeated key. The key and value are not stored."""
 
 
+class _NonstandardJsonConstant(Exception):
+    """Internal signal for NaN/Infinity/-Infinity. The token is not stored."""
+
+
 def canonical_json(value: object) -> str:
-    """Return compact UTF-8-oriented JSON with sorted object keys."""
-    return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+    """Return compact strict JSON with sorted object keys."""
+    try:
+        return json.dumps(
+            value,
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(",", ":"),
+            allow_nan=False,
+        )
+    except ValueError as exc:
+        if "Out of range float" not in str(exc):
+            raise
+        raise InventoryError("witness_nonfinite_number") from None
+    except RecursionError:
+        raise InventoryError("json_nesting_limit") from None
 
 
-def _write_bytes(stream: Any, payload: str) -> None:
-    stream.buffer.write(payload.encode("utf-8"))
+def _utf8_bytes(payload: str) -> bytes:
+    try:
+        return payload.encode("utf-8")
+    except UnicodeEncodeError:
+        raise InventoryError("json_string_not_utf8") from None
+
+
+def _write_bytes(stream: Any, payload: bytes) -> None:
+    stream.buffer.write(payload)
     stream.buffer.flush()
+
+
+def _reject_json_constant(_token: str) -> None:
+    raise _NonstandardJsonConstant
 
 
 def _normalize_sha256(value: str, role: str) -> str:
@@ -111,11 +140,23 @@ def _reject_duplicate_keys(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
 def _parse_manifest(raw: bytes) -> Any:
     text = _decode_utf8(raw, "manifest")
     try:
-        return json.loads(text, object_pairs_hook=_reject_duplicate_keys)
+        return json.loads(
+            text,
+            object_pairs_hook=_reject_duplicate_keys,
+            parse_constant=_reject_json_constant,
+        )
     except _DuplicateJsonKey:
         raise InventoryError("duplicate_json_key") from None
+    except _NonstandardJsonConstant:
+        raise InventoryError("json_nonstandard_constant") from None
     except json.JSONDecodeError:
         raise InventoryError("json_parse_failed") from None
+    except ValueError as exc:
+        if "integer string conversion" not in str(exc):
+            raise
+        raise InventoryError("json_integer_limit") from None
+    except RecursionError:
+        raise InventoryError("json_nesting_limit") from None
 
 
 def _split_label(label: str) -> tuple[str, str | None]:
@@ -193,12 +234,28 @@ def _label_value_type(attestation: Mapping[str, Any]) -> str:
     return "other"
 
 
+def _witness_refusal(key: str, value: Any) -> str | None:
+    """Return a fixed error code when a present witness cannot be emitted unchanged."""
+    if key not in ("chunk_id", "source_url"):
+        return None
+    if value is None or isinstance(value, (str, bool, int)):
+        return None
+    if isinstance(value, float):
+        if math.isfinite(value):
+            return None
+        return "witness_nonfinite_number"
+    return "witness_value_unsupported"
+
+
 def _witnesses(attestation: Mapping[str, Any]) -> dict[str, Any]:
     found: dict[str, Any] = {}
     for key in _WITNESS_KEYS:
         if key not in attestation:
             continue
         value = attestation[key]
+        refusal = _witness_refusal(key, value)
+        if refusal is not None:
+            raise InventoryError(refusal)
         if value is None or isinstance(value, (str, int, float, bool)):
             found[key] = value
     return found
@@ -243,7 +300,7 @@ def _build_row(
     if value_type == "str":
         label = attestation["source_label"]
         parsed_author, parsed_year, classes = _classify_string(label, years_by_name)
-        label_sha256: str | None = hashlib.sha256(label.encode("utf-8")).hexdigest()
+        label_sha256: str | None = hashlib.sha256(_utf8_bytes(label)).hexdigest()
     elif value_type == "missing":
         parsed_author = None
         parsed_year = None
@@ -335,9 +392,12 @@ def build_inventory(manifest_raw: bytes, scraper_raw: bytes) -> dict[str, Any]:
         "labels_with_year": 0,
     }
     excluded = {"list_valued": 0, "other_non_dict": 0, "other_source": 0}
-    _walk(manifest, [], years_by_name, rows, probe, excluded)
+    try:
+        _walk(manifest, [], years_by_name, rows, probe, excluded)
+    except RecursionError:
+        raise InventoryError("json_nesting_limit") from None
     probe["ukrlib_authors_parsed"] = len(years_by_name)
-    membership = hashlib.sha256(canonical_json(rows).encode("utf-8")).hexdigest()
+    membership = hashlib.sha256(_utf8_bytes(canonical_json(rows))).hexdigest()
     return {
         "class_counts": _class_counts(rows),
         "denominator": {"literary_fts_dictionary_attestations": len(rows)},
@@ -384,9 +444,11 @@ def build_parser() -> argparse.ArgumentParser:
             "  per-class counts, scraper record, distinct-name and collision counts, and\n"
             "  rows_membership_sha256 (SHA-256 of the canonical JSON of the ordered rows array).\n"
             "  Row fields are only ordinal, coordinate (string keys and integer indexes), source,\n"
-            "  chunk_id and source_url when those witness values are JSON scalars, label_sha256\n"
-            "  (null when the label is not a string), label_value_type, parsed_author, parsed_year\n"
-            "  and classes. Raw labels, text and body are not emitted. This command does not write\n"
+            "  chunk_id and source_url when those present values are JSON null, booleans, strings\n"
+            "  or finite numbers, label_sha256 (null when the label is not a string),\n"
+            "  label_value_type, parsed_author, parsed_year and classes. Objects, arrays and\n"
+            "  non-finite numbers in chunk_id or source_url are refused before any inventory is\n"
+            "  written. Raw labels, text and body are not emitted. This command does not write\n"
             "  files, modify either input, import or execute the scraper, or contact a network,\n"
             "  database or other service.\n"
             "\n"
@@ -397,12 +459,19 @@ def build_parser() -> argparse.ArgumentParser:
             "  there are at least three parts and str.isdigit is true, so Unicode digits count.\n"
             "  The scraper years start is the text before the first ASCII hyphen-minus. Author\n"
             "  names follow ast.walk order and the last duplicate name wins. Duplicate JSON keys\n"
-            "  are refused. The retained probe kept the last duplicate key instead.\n"
+            "  are refused. The retained probe kept the last duplicate key instead. NaN, Infinity\n"
+            "  and -Infinity tokens are refused. A finite JSON number that overflows the\n"
+            "  interpreter float range is refused when it is a chunk_id or source_url value.\n"
+            "  Unpaired UTF-16 surrogates are refused when a label, emitted witness or coordinate\n"
+            "  key must be encoded as UTF-8. Inputs that exceed the interpreter integer-digit or\n"
+            "  nesting limits are refused; those limits are left unchanged.\n"
             "\n"
             "Exit codes:\n"
             "  0  inventory JSON on stdout\n"
-            "  1  pin, UTF-8, JSON, duplicate-key or scraper-parse failure; stdout empty; stderr is\n"
-            '     one JSON object {"error":"<code>"} and does not echo label or body values\n'
+            "  1  pin, UTF-8, JSON, duplicate-key, unsupported witness, non-finite number,\n"
+            "     surrogate, nesting-limit, integer-limit or scraper-parse failure; stdout empty;\n"
+            '     stderr is one JSON object {"error":"<code>"} and does not echo label, witness\n'
+            "     or body values\n"
             "  2  usage error (missing or unrecognized arguments)\n"
             "\n"
             "Related:\n"
@@ -471,10 +540,11 @@ def main(argv: Sequence[str] | None = None) -> int:
         manifest_raw = _read_pinned(Path(args.manifest), manifest_sha, "manifest")
         scraper_raw = _read_pinned(Path(args.scraper), scraper_sha, "scraper")
         document = build_inventory(manifest_raw, scraper_raw)
+        payload = _utf8_bytes(canonical_json(document) + "\n")
     except InventoryError as exc:
-        _write_bytes(sys.stderr, canonical_json({"error": exc.code}) + "\n")
+        _write_bytes(sys.stderr, _utf8_bytes(canonical_json({"error": exc.code}) + "\n"))
         return 1
-    _write_bytes(sys.stdout, canonical_json(document) + "\n")
+    _write_bytes(sys.stdout, payload)
     return 0
 
 

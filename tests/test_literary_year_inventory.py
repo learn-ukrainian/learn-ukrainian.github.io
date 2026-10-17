@@ -145,16 +145,36 @@ def _packed(
     return row
 
 
+def _reject_nonstandard(token: str) -> None:
+    raise AssertionError(token)
+
+
 def _canonical(payload: object) -> bytes:
-    return json.dumps(payload, ensure_ascii=False, separators=(",", ":"), sort_keys=True).encode("utf-8")
+    return json.dumps(
+        payload,
+        ensure_ascii=False,
+        separators=(",", ":"),
+        sort_keys=True,
+        allow_nan=False,
+    ).encode("utf-8")
 
 
 def _load_success(stdout: bytes) -> dict[str, object]:
     assert stdout.endswith(b"\n")
-    assert _canonical(json.loads(stdout)) + b"\n" == stdout
-    document = json.loads(stdout)
+    document = json.loads(stdout, parse_constant=_reject_nonstandard)
     assert isinstance(document, dict)
+    assert _canonical(document) + b"\n" == stdout
     return document
+
+
+def _assert_typed_refusal(outcome: tuple[int, bytes, bytes], error_code: str, *hidden: bytes) -> None:
+    code, stdout, stderr = outcome
+    assert code == 1
+    assert stdout == b""
+    assert stderr == _error(error_code)
+    assert b"Traceback" not in stderr
+    for secret in hidden:
+        assert secret not in stderr
 
 
 def _attestation(chunk: str, label: object | None = None, **extra: object) -> dict[str, object]:
@@ -409,6 +429,9 @@ def test_help_documents_pins_stdout_and_no_side_effects() -> None:
     assert "Exit codes:" in text
     assert "#10853" in text
     assert "str.isdigit" in text
+    assert "finite numbers" in text
+    assert "Objects, arrays" in text
+    assert "limits are left unchanged" in text
 
 
 def test_synthetic_fixture_preserves_slots_classes_and_digest(main_inputs: tuple[Path, str, Path, str]) -> None:
@@ -520,7 +543,7 @@ def test_open_ended_years_and_scalar_witnesses(tmp_path: Path) -> None:
         manifest,
         {
             "literary_attestation": {
-                "chunk_id": {"secret": "NESTED_SECRET"},
+                "chunk_id": "chunk-open",
                 "source": "literary_fts",
                 "source_label": label,
                 "source_url": None,
@@ -540,14 +563,225 @@ def test_open_ended_years_and_scalar_witnesses(tmp_path: Path) -> None:
         "Author Open",
         "1930",
         EQUAL_CLASSES,
-        {"source": "literary_fts", "source_url": None},
+        {"chunk_id": "chunk-open", "source": "literary_fts", "source_url": None},
         label,
     )
     assert document["rows"] == [expected]
     assert document["probe_compatible_counts"]["labels_ukrlib_year_eq_author_years_start"] == 1  # type: ignore[index]
-    assert b"NESTED_SECRET" not in stdout
     assert b"SECRET_BODY_TEXT" not in stdout
-    assert b'"chunk_id":' not in stdout
+
+
+def _refusal_inputs(tmp_path: Path, raw: bytes) -> tuple[Path, bytes, Path, bytes, list[str]]:
+    manifest = tmp_path / "manifest.json"
+    scraper = tmp_path / "scraper.py"
+    scraper_raw = b"pass\n"
+    manifest_sha = _write(manifest, raw)
+    scraper_sha = _write(scraper, scraper_raw)
+    return manifest, raw, scraper, scraper_raw, _pins(manifest, manifest_sha, scraper, scraper_sha)
+
+
+@pytest.mark.parametrize(
+    ("field", "value", "hidden"),
+    [
+        ("chunk_id", {"secret": "NESTED_SECRET"}, b"NESTED_SECRET"),
+        ("chunk_id", ["SECRET_LIST"], b"SECRET_LIST"),
+        ("source_url", {"secret": "URL_SECRET"}, b"URL_SECRET"),
+        ("source_url", ["URL_LIST"], b"URL_LIST"),
+    ],
+)
+def test_compound_witness_values_are_refused(tmp_path: Path, field: str, value: object, hidden: bytes) -> None:
+    manifest, raw, scraper, scraper_raw, args = _refusal_inputs(
+        tmp_path,
+        json.dumps({"literary_attestation": {"source": "literary_fts", "source_label": "Alpha", field: value}}).encode(
+            "utf-8"
+        ),
+    )
+    _assert_typed_refusal(run_cli(args), "witness_value_unsupported", hidden)
+    assert manifest.read_bytes() == raw
+    assert scraper.read_bytes() == scraper_raw
+
+
+def test_present_scalar_and_missing_witnesses_are_preserved(tmp_path: Path) -> None:
+    specs: list[dict[str, object]] = [
+        {},
+        {"chunk_id": None},
+        {"source_url": None},
+        {"chunk_id": None, "source_url": None},
+        {"chunk_id": "chunk"},
+        {"source_url": "https://example.test/a"},
+        {"chunk_id": "NaN", "source_url": "Infinity"},
+        {"chunk_id": "-Infinity", "source_url": "1e999"},
+        {"chunk_id": True, "source_url": False},
+        {"chunk_id": 0, "source_url": 0},
+        {"chunk_id": 1, "source_url": -2},
+        {"chunk_id": -3, "source_url": 4},
+        {"chunk_id": 0.0, "source_url": 0.0},
+        {"chunk_id": 1.5, "source_url": -3.25},
+        {"chunk_id": -4.5, "source_url": 2.5},
+        {"chunk_id": 10**20, "source_url": -(10**20)},
+    ]
+    manifest = tmp_path / "manifest.json"
+    scraper = tmp_path / "scraper.py"
+    payload = [{"literary_attestation": {"source": "literary_fts", "source_label": "Alpha", **spec}} for spec in specs]
+    manifest_sha = _write_json(manifest, payload)
+    scraper_sha = _write(scraper, b"pass\n")
+    code, stdout, stderr = run_cli(_pins(manifest, manifest_sha, scraper, scraper_sha))
+
+    assert (code, stderr) == (0, b"")
+    document = _load_success(stdout)
+    rows = document["rows"]
+    assert isinstance(rows, list)
+    assert len(rows) == len(specs)
+    for row, spec in zip(rows, specs, strict=True):
+        assert isinstance(row, dict)
+        assert row["source"] == "literary_fts"
+        for key in ("chunk_id", "source_url"):
+            if key in spec:
+                assert row[key] == spec[key]
+            else:
+                assert key not in row
+
+
+@pytest.mark.parametrize("field", ["chunk_id", "source_url"])
+@pytest.mark.parametrize("token", ["NaN", "Infinity", "-Infinity"])
+def test_nonstandard_witness_constants_are_refused(tmp_path: Path, field: str, token: str) -> None:
+    raw = (
+        '{"literary_attestation":{"source":"literary_fts","source_label":"Alpha","' + field + '":' + token + "}}"
+    ).encode()
+    manifest, stored, scraper, scraper_raw, args = _refusal_inputs(tmp_path, raw)
+    _assert_typed_refusal(run_cli(args), "json_nonstandard_constant", token.encode("ascii"))
+    assert manifest.read_bytes() == stored
+    assert scraper.read_bytes() == scraper_raw
+
+
+def test_nonstandard_constant_outside_a_witness_is_refused(tmp_path: Path) -> None:
+    manifest, raw, scraper, scraper_raw, args = _refusal_inputs(tmp_path, b'{"note":NaN}')
+    _assert_typed_refusal(run_cli(args), "json_nonstandard_constant", b"NaN")
+    assert manifest.read_bytes() == raw
+    assert scraper.read_bytes() == scraper_raw
+
+
+@pytest.mark.parametrize("field", ["chunk_id", "source_url"])
+@pytest.mark.parametrize("token", ["1e999", "-1e999"])
+def test_witness_float_overflow_is_refused(tmp_path: Path, field: str, token: str) -> None:
+    raw = (
+        '{"literary_attestation":{"source":"literary_fts","source_label":"Alpha","' + field + '":' + token + "}}"
+    ).encode()
+    manifest, stored, scraper, scraper_raw, args = _refusal_inputs(tmp_path, raw)
+    _assert_typed_refusal(run_cli(args), "witness_nonfinite_number", token.encode("ascii"), b"Infinity")
+    assert manifest.read_bytes() == stored
+    assert scraper.read_bytes() == scraper_raw
+
+
+def test_overflow_label_remains_non_string_and_strict_json(tmp_path: Path) -> None:
+    manifest = tmp_path / "manifest.json"
+    scraper = tmp_path / "scraper.py"
+    raw = b'{"literary_attestation":{"source":"literary_fts","source_label":1e999}}'
+    manifest_sha = _write(manifest, raw)
+    scraper_sha = _write(scraper, b"pass\n")
+    code, stdout, stderr = run_cli(_pins(manifest, manifest_sha, scraper, scraper_sha))
+
+    assert (code, stderr) == (0, b"")
+    document = _load_success(stdout)
+    rows = document["rows"]
+    assert isinstance(rows, list)
+    assert rows[0]["label_value_type"] == "float"  # type: ignore[index]
+    assert b"Infinity" not in stdout
+    assert b"NaN" not in stdout
+
+
+@pytest.mark.parametrize(
+    ("payload", "hidden"),
+    [
+        (
+            {"literary_attestation": {"source": "literary_fts", "source_label": "SECRET\ud800", "chunk_id": "c"}},
+            b"SECRET",
+        ),
+        (
+            {"literary_attestation": {"source": "literary_fts", "source_label": "Alpha", "source_url": "SECRET\udc00"}},
+            b"SECRET",
+        ),
+        (
+            {"SECRET\ud800": {"literary_attestation": {"source": "literary_fts", "source_label": "Alpha"}}},
+            b"SECRET",
+        ),
+    ],
+)
+def test_unpaired_surrogates_are_typed(tmp_path: Path, payload: dict[str, object], hidden: bytes) -> None:
+    raw = json.dumps(payload).encode("utf-8")
+    manifest, stored, scraper, scraper_raw, args = _refusal_inputs(tmp_path, raw)
+    _assert_typed_refusal(run_cli(args), "json_string_not_utf8", hidden)
+    assert manifest.read_bytes() == stored
+    assert scraper.read_bytes() == scraper_raw
+
+
+def test_oversized_unused_integer_is_typed(tmp_path: Path) -> None:
+    digits = b"9" * 4400
+    manifest, raw, scraper, scraper_raw, args = _refusal_inputs(tmp_path, b'{"unused":' + digits + b"}")
+    _assert_typed_refusal(run_cli(args), "json_integer_limit", digits)
+    assert manifest.read_bytes() == raw
+    assert scraper.read_bytes() == scraper_raw
+
+
+@pytest.mark.parametrize("depth", [1100, 10000])
+def test_excessive_nesting_is_typed(tmp_path: Path, depth: int) -> None:
+    raw = b"[" * depth + b"0" + b"]" * depth
+    manifest, stored, scraper, scraper_raw, args = _refusal_inputs(tmp_path, raw)
+    _assert_typed_refusal(run_cli(args), "json_nesting_limit")
+    assert manifest.read_bytes() == stored
+    assert scraper.read_bytes() == scraper_raw
+
+
+def test_canonical_json_refuses_nonfinite_and_deep_output() -> None:
+    from scripts.audit.literary_year_inventory import InventoryError, canonical_json
+
+    with pytest.raises(InventoryError) as nonfinite:
+        canonical_json({"chunk_id": float("inf")})
+    assert nonfinite.value.code == "witness_nonfinite_number"
+
+    nested: object = 0
+    for _ in range(10000):
+        nested = [nested]
+    with pytest.raises(InventoryError) as deep:
+        canonical_json(nested)
+    assert deep.value.code == "json_nesting_limit"
+
+
+def test_canonical_json_does_not_swallow_unrelated_value_errors() -> None:
+    from scripts.audit.literary_year_inventory import canonical_json
+
+    cycle: list[object] = []
+    cycle.append(cycle)
+    with pytest.raises(ValueError, match="Circular reference"):
+        canonical_json(cycle)
+
+
+def test_compound_witness_on_excluded_source_stays_outside_the_denominator(tmp_path: Path) -> None:
+    manifest = tmp_path / "manifest.json"
+    scraper = tmp_path / "scraper.py"
+    manifest_sha = _write_json(
+        manifest,
+        {
+            "literary_attestation": {
+                "chunk_id": {"secret": "EXCLUDED_SECRET"},
+                "source": "other",
+                "source_url": ["EXCLUDED_URL"],
+            }
+        },
+    )
+    scraper_sha = _write(scraper, b"pass\n")
+    code, stdout, stderr = run_cli(_pins(manifest, manifest_sha, scraper, scraper_sha))
+
+    assert (code, stderr) == (0, b"")
+    document = _load_success(stdout)
+    assert document["rows"] == []
+    assert document["excluded_literary_attestation_counts"] == {
+        "list_valued": 0,
+        "other_non_dict": 0,
+        "other_source": 1,
+    }
+    assert b"EXCLUDED_SECRET" not in stdout
+    assert b"EXCLUDED_URL" not in stdout
 
 
 def test_non_string_labels_are_unknown_and_not_emitted(tmp_path: Path) -> None:
