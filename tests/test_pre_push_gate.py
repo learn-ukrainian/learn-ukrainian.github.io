@@ -270,7 +270,10 @@ def _verdict(result: subprocess.CompletedProcess[str]) -> dict:
     return json.loads(lines[-1])["pre_push_gate"]
 
 
-def test_cursor_path_protected_gate_runs_real_deployment(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+@pytest.mark.parametrize("route", ["missing-installed-candidate", "installed-entry-escape", "aliased-entry-escape"])
+def test_cursor_path_protected_gate_runs_real_deployment(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, route: str
+) -> None:
     """The maintained gate runs the three original deploy failures with the tripwire active."""
     from tests import cursor_exec_tripwire as tripwire
     from tests.test_deploy_script_idempotency import _copy_full_tree
@@ -326,7 +329,7 @@ def test_cursor_path_protected_gate_runs_real_deployment(tmp_path: Path, monkeyp
 
     home = tmp_path / "home"
     install = home / ".local/share/cursor-agent"
-    bundled = install / "versions/fixture/bin"
+    bundled = install / "versions/author-entry-boundary/bin"
     bundled.mkdir(parents=True)
     # This candidate does not exist. Shell PATH search must reach the wrapper;
     # execvp must not submit the nonexistent installed candidate to the tripwire.
@@ -349,21 +352,36 @@ os.execv({real_rsync!r}, [{real_rsync!r}, *sys.argv[1:]])
 """,
     )
     (wrapper / "rsync").chmod(0o755)
+    lookup = bundled
+    if route != "missing-installed-candidate":
+        # The final target is outside Cursor, but the located entry belongs to
+        # its installation. Refuse it without falling through to the wrapper.
+        (bundled / "rsync").symlink_to(wrapper / "rsync")
+        if route == "aliased-entry-escape":
+            lookup = tmp_path / "path-alias"
+            lookup.symlink_to(bundled, target_is_directory=True)
     monkeypatch.setattr(tripwire, "real_roots", (*tripwire.real_roots, str(install)))
     result = _run_gate(
         root,
         remote_sha=base,
         extra_env={
             "HOME": str(home),
-            "PATH": os.pathsep.join((str(bundled), str(wrapper), os.environ["PATH"])),
+            "PATH": os.pathsep.join((str(lookup), str(wrapper), os.environ["PATH"])),
             "DEPLOY_RSYNC_MARKERS": str(markers),
             gate.MAX_CONCURRENT_RUNS_ENV: "1",
             gate.MAX_TEST_PROCESSES_ENV: "2",
         },
     )
+    records = [json.loads(line) for line in markers.read_text().splitlines()] if markers.exists() else []
+    print(json.dumps({"route": route, "gate_exit": result.returncode, "rsync_markers": records}))
+    if route != "missing-installed-candidate":
+        assert result.returncode != 0, result.stdout + result.stderr
+        assert _measurements(root)[-1]["outcome"] == "refused"
+        assert "rsync resolves to an installed Cursor target" in result.stdout + result.stderr
+        assert not records, "an installed entry escaped validation or fell through to the later wrapper"
+        return
     assert result.returncode == 0, result.stdout + result.stderr
     assert _measurements(root)[-1]["outcome"] == "green"
-    records = [json.loads(line) for line in markers.read_text().splitlines()]
     destinations = [row["argv"][-1] for row in records]
     # Cover shell rsync both before and after the descriptor-bound Python exec.
     assert destinations.count(".") >= 3

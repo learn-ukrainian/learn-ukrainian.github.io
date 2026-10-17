@@ -546,7 +546,9 @@ def _copy_sync_boundary_fixture(repo: Path) -> None:
     shutil.copy2(REPO_ROOT / settings, repo / settings)
 
 
-@pytest.mark.parametrize("route", ["direct", "directory-alias", "executable-symlink", "cli-alias"])
+@pytest.mark.parametrize(
+    "route", ["direct", "directory-alias", "executable-symlink", "cli-alias", "entry-escape", "aliased-entry-escape"]
+)
 def test_deploy_refuses_installed_rsync_before_any_shell_sync(tmp_path, monkeypatch, route):
     """No shell sync may run a bundled target, including through PATH aliases."""
     from tests import cursor_exec_tripwire as tripwire
@@ -556,14 +558,18 @@ def test_deploy_refuses_installed_rsync_before_any_shell_sync(tmp_path, monkeypa
     _copy_sync_boundary_fixture(repo)
     home = tmp_path / "home"
     installation = home / ".local/share/cursor-agent"
-    bundled = installation / "versions/fixture/bin"
+    bundled = installation / "versions/author-entry-boundary/bin"
     bundled.mkdir(parents=True)
     marker = tmp_path / "forbidden-executed"
     target = bundled / "rsync"
     target.write_text(f"#!/bin/sh\ntouch {shlex.quote(str(marker))}\n")
     target.chmod(0o755)
     lookup = bundled
-    if route == "directory-alias":
+    if route in {"entry-escape", "aliased-entry-escape"}:
+        outside = tmp_path / "outside-executable"
+        target.rename(outside)
+        target.symlink_to(outside)
+    if route in {"directory-alias", "aliased-entry-escape"}:
         lookup = tmp_path / "directory-alias"
         lookup.symlink_to(bundled, target_is_directory=True)
     elif route in {"executable-symlink", "cli-alias"}:
@@ -662,7 +668,21 @@ def test_rsync_resolution_validates_actual_target_and_sync_failure_closes_fd(tmp
     (bundled / "rsync").symlink_to(wrapper)
     monkeypatch.setenv("HOME", str(home))
     monkeypatch.setenv("PATH", str(bundled))
-    # An installation directory's spelling does not make a system target unsafe.
+    # Entry-parent refusal is separate from final-target refusal: this payload
+    # is outside the installation, while the located rsync entry is inside it.
+    with pytest.raises(PermissionError, match="rsync resolves to an installed Cursor target"):
+        helper["resolve_rsync"]()
+    assert helper["main"](["--resolve-rsync"]) == 1
+    refused = capsys.readouterr()
+    assert not refused.out
+    assert "rsync resolves to an installed Cursor target" in refused.err
+
+    # A trusted priority wrapper whose own directory is outside Cursor remains
+    # allowed, including when that entry is a symlink to the same safe payload.
+    tools = tmp_path / "tools"
+    tools.mkdir()
+    (tools / "rsync").symlink_to(wrapper)
+    monkeypatch.setenv("PATH", str(tools))
     assert helper["resolve_rsync"]() == str(wrapper)
     assert helper["main"](["--resolve-rsync"]) == 0
     assert capsys.readouterr().out.strip() == str(wrapper)

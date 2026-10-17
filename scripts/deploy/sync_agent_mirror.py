@@ -35,6 +35,7 @@ def resolve_rsync() -> str:
     found = shutil.which("rsync")
     if found is None:
         raise FileNotFoundError("rsync not found on PATH; install system rsync or provide a trusted PATH wrapper")
+    entry_parent = Path(found).parent.resolve(strict=True)
     executable = Path(found).resolve(strict=True)
     # This path is also returned to Bash via command substitution. In
     # particular, a trailing newline would be stripped and name another file.
@@ -44,7 +45,10 @@ def resolve_rsync() -> str:
     cli_targets = {
         Path(target).resolve(strict=True) for name in ("cursor-agent", "agent") if (target := shutil.which(name))
     }
-    if executable.is_relative_to(installation) or executable in cli_targets:
+    # A located installation entry remains forbidden even when its symlink
+    # payload escapes the root. Resolve its parent separately to cover PATH
+    # directory aliases without discarding the entry's identity.
+    if entry_parent.is_relative_to(installation) or executable.is_relative_to(installation) or executable in cli_targets:
         raise PermissionError(
             "rsync resolves to an installed Cursor target; put system rsync or a trusted wrapper first on PATH"
         )
