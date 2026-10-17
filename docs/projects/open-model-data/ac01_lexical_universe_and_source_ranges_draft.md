@@ -21,7 +21,7 @@ To satisfy AC-01, source completeness cannot be measured against arbitrary local
    - **Candidate Baselines for Designated Approval (Claude Opus 5.5 + GPT Sol 6.1)**:
      * *Candidate Baseline A (Manifest ∪ PULS)*: Core pedagogical universe binding the 27,472 published Atlas manifest words and PULS CEFR A1–C1.
      * *Candidate Baseline B (Cache ∪ PULS)*: Expanded engineering universe of 39,018 distinct headwords.
-   - **Scope Boundary**: Lexical Universe v1 is confined to the Atlas word list and PULS A1–C1. Formal selection of the binding baseline is queued for designated approval by Claude Opus 5.5 + GPT Sol 6.1 following the Claude reset (~2026-10-19T07:00Z). Meanings coverage for any unselected or combined union remains unmeasured pending baseline designation.
+    - **Scope Boundary**: Lexical Universe v1 boundaries depend on candidate selection (Candidate A: Atlas published manifest ∪ PULS A1–C1; Candidate B: Cache corpus ∪ PULS A1–C1). Formal selection of the binding baseline is queued for designated approval by Claude Opus 5.5 + GPT Sol 6.1 following the Claude reset (~2026-10-19T07:00Z). Meanings coverage for any unselected or combined union remains unmeasured pending baseline designation.
 
 2. **Lexical Universe v2 (Full Scale — Post-v1)**:
    - **Core Lexical Foundation (VESUM ∩ ULIF)**: Full intersection of VESUM v6.8.0 (`data/vesum.db`, 442,458 blocks, 6,970,759 form analyses) and the ULIF published register (262,812 entry positions, 943,689 raw blobs in `data/lexicon/cache/ulif_raw.sqlite`), spanning ~245,000–260,000 lemmas. Anything wider than v1 belongs strictly to v2.
@@ -39,7 +39,7 @@ Because СУМ-20's published print volumes currently stop at Volume 16 (А — 
 Sense seeding evaluates strictly in the hierarchy:
 $$\text{СУМ-20 (unquarantined)} \longrightarrow \text{ВТС (numbered senses)} \longrightarrow \text{ULIF sense\_gloss}$$
 
-### Meanings Status Breakdown on v1 Cache Corpus (38,190 Entries)
+### Meanings Status Breakdown on Constituent Cache Corpus (38,190 Entries)
 Per CTO breakdown (`message_9d60a58d955843438524ae9ac23ac5cb`) and verified read-only census:
 - **СУМ-20 (`newsum`)**:
   - Found (valid nonblank definition): **22,075 words**

@@ -95,11 +95,12 @@ open_questions:
   E6 (dataset licence choice) remains an operator decision.'
 - 'Sources shown in the Atlas with no entry here yet (labels from scripts/lexicon/source_attribution.py, counted
   in atlas.db public-route payloads of the 2026-09-11 manifest, published as the atlas-manifest release asset; counted
-  2026-09-28): Великий тлумачний словник сучасної української мови (ВТС, 8,422), Словник синонімів С. Караванського
-  (2,727), Орфографічний словник української мови (5,534), Правописний словник Голоскевича (3,396), Орфоепічний
-  словник української мови (1,912), Приповідки або українсько-народня філософія (555), МійКлас relation pairs (704),
-  «Уроки державної мови» з газети «Хрещатик» (27), Словник чужослів Павла Штепи (33), Культура слова (3), and the
-  literary corpus (literary_texts, e.g. izbornyk.org.ua, ukrlib.com.ua). Each needs its own entry.'
+  2026-09-28): Словник синонімів С. Караванського (2,727), Орфографічний словник української мови (5,534), Правописний
+  словник Голоскевича (3,396), Орфоепічний словник української мови (1,912), Приповідки або українсько-народня філософія
+  (555), МійКлас relation pairs (704), «Уроки державної мови» з газети «Хрещатик» (27), Словник чужослів Павла Штепи (33),
+  Культура слова (3), and the literary corpus (literary_texts, e.g. izbornyk.org.ua, ukrlib.com.ua). (Note: Великий
+  тлумачний словник сучасної української мови / ВТС was admitted and registered under #8977 / #6321 as vts_busel_slovnyk_me).
+  Each remaining unregistered source needs its own entry.'
 sources:
 - id: ulif
   permission_status: verbal-granted-written-pending
