@@ -218,9 +218,9 @@ Source: [Maintaining software with the GPT-6 family](https://developers.openai.c
 
 Independent held-out cases stay unseen by the edit under test. A held-out split alone does not show that the grader is stable, that the tasks represent the work, or that a gain exceeds noise. Before optimizing a prompt against an evaluation, check all of the following:
 
-- Repeated grading of identical output. A verdict that changes on the same output is too unstable to hill-climb.
+- Repeated grading of identical output. Grade the same output more than once and measure that noise against the improvement of interest. When the noise is larger than that improvement, the article's hillclimb check says so and suggests more repetitions or cases.
 - Representative difficult cases. Sample the setting you actually care about, and include cases a person can say are hard before seeing which ones today's model misses. A set built only from one model's failures measures that model.
-- Achievable headroom. The strongest configuration still has room to move, and a case that fails on every repeat is an impossible or ambiguous task. The same article's build-eval diagnostic warns when a baseline is already about 95%.
+- Achievable headroom. The strongest configuration still has room to move. The same article's build-eval diagnostic warns when a baseline is already about 95%. A case that fails on every repeat is a tell to investigate task validity, model capability, grader correctness, and execution failure, including a timeout, an API error, a cut-off answer, or a harness error.
 - Clean trial state. Start each trial clean. A leftover file or git history can hand the agent the answer.
 - Uncertainty around measured improvements. State the noise around the score. Adopt a change only when the gain is larger than that uncertainty.
 
