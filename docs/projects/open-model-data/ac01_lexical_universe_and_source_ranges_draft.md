@@ -9,39 +9,45 @@
 
 ## 1. Frozen Lexical Universe (G-UNIVERSE)
 
-To satisfy AC-01, source completeness cannot be measured against arbitrary local caches, pilot samples, or mutable web endpoints. A finite, versioned lexical universe defines the denominator for word card assembly across four explicit tiers:
+To satisfy AC-01, source completeness cannot be measured against arbitrary local caches, pilot samples, or mutable web endpoints. A finite, versioned lexical universe defines the denominator for word card assembly:
 
-1. **Tier 1: Core Lexical Foundation (VESUM ∩ ULIF)**:
-   - **VESUM v6.8.0**: Installed dictionary store [`data/vesum.db`](file:///home/ops/learn-ukrainian/data/vesum.db) with verified canonical JSONL digest `53923150073b4fc7bee419fe7b071acbe17b6a9aba76cfb2d0336c95f5188680` across 442,458 blocks and 6,970,759 inflected form analyses.
-   - **ULIF Register**: Published register walk of 10,513 pages comprising 262,812 ordered entry positions, backed by 943,689 raw response blobs in [`data/lexicon/cache/ulif_raw.sqlite`](file:///home/ops/learn-ukrainian/data/lexicon/cache/ulif_raw.sqlite).
-   - **Intersection Denominator**: All canonical headword lemmas shared between the ULIF register and VESUM blocks (~245,000–260,000 lemmas), preserving distinct homonyms and part-of-speech variants.
+1. **Lexical Universe v1 (Phase 1 Baseline — CTO Recommendation 2026-10-17T22:51Z)**:
+   - **Atlas Manifest Headwords**: The published Word Atlas word list (`scripts/lexicon/enrich_manifest.py` MANIFEST, which drove [`data/lexicon/slovnyk_cache/`](file:///home/ops/learn-ukrainian/data/lexicon/slovnyk_cache), comprising **38,190 distinct word files**).
+   - **Pedagogical Core (PULS CEFR A1–C1)**: All **5,839 CEFR-graded entries** in [`data/sources.db:puls_cefr`](file:///home/ops/learn-ukrainian/data/sources.db) (A1: 962, A2: 1,386, B1: 2,164, B2: 1,194, C1: 233).
+   - **Atlas Live Core**: 27,128 active learner-facing articles in [`data/atlas.db:articles`](file:///home/ops/learn-ukrainian/data/atlas.db).
+   - **Scope Boundary**: Lexical Universe v1 encompasses the Atlas word list plus PULS A1–C1. Binding v1 definition is queued for designated approval by Claude Opus 5.5 + GPT Sol 6.1 following the Claude reset (~2026-10-19T07:00Z).
 
-2. **Tier 2: Atlas Live Articles Universe (`data/atlas.db:articles`)**:
-   - **27,128 canonical headword entries** currently live and published to learners.
-   - Governs immediate user-facing card parity and regression-free migration under `migration.md` §9.
+2. **Lexical Universe v2 (Full Scale — Post-v1)**:
+   - **Core Lexical Foundation (VESUM ∩ ULIF)**: Full intersection of VESUM v6.8.0 ([`data/vesum.db`](file:///home/ops/learn-ukrainian/data/vesum.db), 442,458 blocks, 6,970,759 form analyses) and the ULIF published register (262,812 entry positions, 943,689 raw blobs in [`data/lexicon/cache/ulif_raw.sqlite`](file:///home/ops/learn-ukrainian/data/lexicon/cache/ulif_raw.sqlite)), spanning ~245,000–260,000 lemmas. Anything wider than v1 belongs strictly to v2.
 
-3. **Tier 3: Pedagogical Core Register (`data/sources.db:puls_cefr`)**:
-   - **5,839 CEFR-graded entries** across levels A1 to C1 (A1: 962, A2: 1,386, B1: 2,164, B2: 1,194, C1: 233).
-   - Governs pedagogical curriculum vocabulary and milestone W8.
-
-4. **Tier 4: Explanatory Cache Corpus (`data/lexicon/slovnyk_cache/`)**:
-   - **38,190 distinct word files** (456.4 MB) with 33,623 files having filesystem mtime >= 2026-10-10.
-   - Captures pre-fetched modern dictionary definitions from slovnyk.me across 16 dictionary slugs.
-
-5. **Exclusions**:
+3. **Exclusions**:
    - Zero model-generated or synthetic Ukrainian entries.
    - Soviet ideological definitions from СУМ-11 excluded from modern semantic norms (admitted strictly as contrast context).
 
 ---
 
-## 1b. Meanings Coverage Hierarchy & Gap Accounting
+## 1b. Meanings Coverage on Lexical Universe v1
 
 Because СУМ-20's published print volumes currently stop at Volume 16 (А — РЯХТЛИВИЙ), СУМ-20 alone cannot cover modern Ukrainian meanings across the full lexical alphabet. Under Operator Directive (2026-10-17), **ВТС is admitted as the required secondary meaning source** for Word-Card sense seeding (`docs/sources/admissions/2026-10-17-vts-sum20-source-admission.md`).
 
 Sense seeding evaluates strictly in the hierarchy:
 $$\text{СУМ-20 (unquarantined)} \longrightarrow \text{ВТС (numbered senses)} \longrightarrow \text{ULIF sense\_gloss}$$
 
-Empirical coverage against this hierarchy reveals the true remaining lexical gap (where a further fetch would ever be needed):
+### Meanings Status Breakdown on v1 Corpus (38,190 Entries)
+Per CTO breakdown (`message_9d60a58d955843438524ae9ac23ac5cb`):
+- **СУМ-20 (`newsum`)**:
+  - Found (valid definition): **22,075 words**
+  - Not found (explicit 404/miss): **5,938 words**
+  - Never queried (unqueried residue): **10,177 words** (~10,200)
+- **ВТС (`vts`)**:
+  - Found (valid definition): **31,688 words**
+  - Not found (explicit 404/miss): **1,925 words**
+  - Never queried (unqueried residue): **4,577 words** (~4,600)
+
+> [!IMPORTANT]
+> **Crawl Hold Policy**: A completing fetch of the never-queried words is escalated to the operator under an explicit crawl hold. Agents must **not** perform live network fetches until explicit operator GO.
+
+### Multi-Universe Meanings Hierarchy Coverage Summary
 
 | Lexical Universe Denominator | Total Size (N) | Step 1: СУМ-20 (First) | Step 2: ВТС (Second) | Step 3: ULIF Gloss (Third) | Total Covered (Meanings) | NEITHER (Real Gap) |
 |---|---|---|---|---|---|---|
