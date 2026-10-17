@@ -11,14 +11,21 @@ repositories are unaffected. A ``--branch`` with no open PR counts as new.
 Exclude no login except ``app/dependabot``. On 2026-10-17 the only non-human
 login on the open list was ``app/dependabot`` (six pull requests; the human
 login ``krisztiankoos`` had five), and a wider app rule is refused. A missing,
-null, human, or any other GitHub App login is counted. An ``app/`` prefix or
-a ``[bot]`` suffix is not an exclusion, so any other GitHub App author stays
-in the count for that reason.
+null, human, or any other GitHub App login is counted. ``dependabot[bot]`` is
+counted. An ``app/`` prefix or a ``[bot]`` suffix is not an exclusion, so any
+other GitHub App author stays in the count for that reason.
 
 The refusal line reports the total open count and the counted number (the one
 compared with the threshold). ``FreezeDecision.open_prs`` is that counted
 number; ``total_open`` is every open pull request. Both numbers are complete
 search ``total_count`` values. The length of one returned page is not a count.
+
+GitHub search ``author:"app/dependabot"`` can return a successful page whose
+``user.login`` is ``dependabot[bot]``. That page is not a fetch failure: the
+search returned a count, and those pull requests are not the excluded login,
+so none of that search ``total_count`` is subtracted and the counted number
+stays the open total. Subtract the excluded search ``total_count`` only when
+every returned login is exactly ``app/dependabot``.
 
 ``LU_OPEN_PR_FREEZE_THRESHOLD`` overrides the threshold (default 15; ``0``
 disables the check). The counts come from the GitHub REST search API and are
@@ -113,7 +120,8 @@ def counts_toward_freeze(item: Mapping[str, Any] | None) -> bool:
     """True unless the author login is exactly ``app/dependabot``.
 
     A missing user, a null login, a human login, and any other GitHub App
-    login are counted. Exclusion is not an ``app/`` prefix or a ``[bot]`` suffix.
+    login are counted. ``dependabot[bot]`` is counted. Exclusion is not an
+    ``app/`` prefix or a ``[bot]`` suffix.
     """
     if not isinstance(item, Mapping):
         return True
@@ -146,31 +154,36 @@ def _open_pr_search_endpoint(repo: str, *, author: str | None = None) -> str:
     return f"search/issues?q={'+'.join(terms)}&per_page=1"
 
 
-def _excluded_page_matches(payload: Any) -> None:
-    """Fail when a returned excluded-author row is not the exact login.
+def _excluded_total(payload: Any, reported: int) -> int:
+    """Excluded search total to subtract, or zero when the page is not exact.
 
-    The page is a sample. Its length is not the excluded count.
+    ``author:"app/dependabot"`` can return a successful page of
+    ``dependabot[bot]``. That login is counted, so the page is not a fetch
+    failure and nothing is subtracted. Subtract ``reported`` only when every
+    returned login is exactly ``app/dependabot``. The page length is not a count.
     """
     items = payload.get("items") if isinstance(payload, dict) else None
     if not isinstance(items, list):
-        return
+        return reported
     for item in items:
         if counts_toward_freeze(item):
-            raise RuntimeError("excluded-author search returned a counted pull request")
+            return 0
+    return reported
 
 
 def fetch_open_pr_count(repo: str) -> OpenPrCounts:
     """Complete open-PR counts for ``repo``.
 
-    ``total`` is every open pull request. ``counted`` subtracts pull requests
-    whose author login is exactly ``app/dependabot``. Both numbers are search
-    ``total_count`` values, so a short ``items`` page cannot shrink them.
+    ``total`` is every open pull request. ``counted`` subtracts the excluded
+    search ``total_count`` only when every returned login is exactly
+    ``app/dependabot``. A successful page of ``dependabot[bot]`` subtracts
+    zero; that is not a fetch failure. Both numbers are search ``total_count``
+    values, so a short ``items`` page cannot shrink them.
     """
     total_payload = _gh_get(_open_pr_search_endpoint(repo))
     total = _require_total_count(total_payload)
     excluded_payload = _gh_get(_open_pr_search_endpoint(repo, author=EXCLUDED_AUTHOR_LOGIN))
-    excluded = _require_total_count(excluded_payload)
-    _excluded_page_matches(excluded_payload)
+    excluded = _excluded_total(excluded_payload, _require_total_count(excluded_payload))
     if excluded > total:
         raise RuntimeError("excluded open-pr count exceeds total")
     return OpenPrCounts(total=total, counted=total - excluded)
