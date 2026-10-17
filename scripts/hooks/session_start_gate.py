@@ -560,7 +560,7 @@ def phase_stack_drift(args: argparse.Namespace) -> dict[str, Any]:
 
         sink = io.StringIO()
         with contextlib.redirect_stdout(sink), contextlib.redirect_stderr(sink):
-            write_report(Path(args.project_dir))
+            write_report(Path(args.project_dir), canonical_root=Path(args.repo_root))
     except Exception:
         return {"status": "ok"}
     return {"status": "ok"}

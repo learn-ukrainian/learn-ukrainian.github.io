@@ -41,9 +41,15 @@ def test_qualifying_report_is_versions_and_repo_paths_only() -> None:
     rows = _table(body)
 
     assert rows["python"] == ["python", "3.12.14", "9.8.7", ".python-version"]
+    assert rows["node"][1] == "22"
+    assert rows["postgresql"][1] == "16"
     assert rows["entire"][1] == "0.8.42"
     assert rows["entire"][3] == "scripts/entire_context/provider.py"
     assert rows["uv"][3] == ".github/actions/python-ci-env/action.yml"
+    assert rows["ci-literals"][1] == "ubuntu-latest"
+    assert rows["ci-literals"][3] == ".github/workflows/ci.yml"
+    assert rows["pinned-model-ids"][1].startswith("gpt-6.1-sol, ")
+    assert "kimi-code/k3" in rows["pinned-model-ids"][1]
     assert rows["gh"][1:] == ["unknown", "9.8.7", ""]
     assert "://" not in body
     assert_no_host_paths(body, "stack currency body")
@@ -88,6 +94,36 @@ def test_render_refuses_an_address() -> None:
     }
     with pytest.raises(report.PublicationRefused):
         report.render_body(unsafe)
+
+
+@pytest.mark.parametrize(
+    ("field", "value"),
+    [
+        ("source", "203.0.113.10"),
+        ("source", "token=PUBLICATION_CANARY"),
+        ("source", "C:/private/tool"),
+        ("source", "[pin](/private/tool)"),
+        ("source", "pin|203.0.113.10"),
+        ("pinned", "TOKEN=PUBLICATION_CANARY"),
+        ("pinned", "installed at /opt/private/tool"),
+        ("latest", "2001:db8::1"),
+    ],
+)
+def test_render_refuses_unsafe_publication_shapes(field: str, value: str) -> None:
+    row = {"name": "gh", "pinned": "unknown", "latest": "unknown", "source": "host"}
+    row[field] = value
+    with pytest.raises(report.PublicationRefused, match="not publishable"):
+        report.render_body({"rows": [row]})
+
+
+def test_current_pin_file_collects_and_renders(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(report, "fetch_latest", lambda _name: "9.8.7")
+    destination = tmp_path / "stack-currency.json"
+    body_out = tmp_path / "stack-currency.md"
+
+    assert report.main(["collect", "--pins", str(_PINS), "--out", str(destination)]) == 0
+    assert report.main(["render", "--report", str(destination), "--body-out", str(body_out)]) == 0
+    assert "3.12.14" in body_out.read_text(encoding="utf-8")
 
 
 def test_component_without_a_verified_upstream_stays_unknown() -> None:

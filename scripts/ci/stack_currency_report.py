@@ -59,8 +59,18 @@ _MULTI_PROBES: dict[str, tuple[tuple[str, ...], ...]] = {
 }
 
 _STABLE_VERSION = re.compile(r"^[0-9]+(?:\.[0-9]+){1,3}$")
-_IPV4 = re.compile(r"(?<![\w.])(?:\d{1,3}\.){3}\d{1,3}(?![\w.])")
 _GITHUB_REPO = re.compile(r"^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$")
+# Forms the pin file already renders. A denylist keeps accepting new spellings.
+_COMPONENT_ID = re.compile(r"^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$")
+_VERSION_TOKEN = re.compile(r"^[0-9]+(?:\.[0-9]+){0,2}$")
+_PUBLIC_SENTINELS = frozenset({"unknown", "host", "missing"})
+_RUNNER_TAG = "ubuntu-latest"
+_MODEL_ID = r"[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*(?:/[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*)?"
+_MODEL_LIST = re.compile(rf"^{_MODEL_ID}(?:, {_MODEL_ID})*$")
+_PATH_SEGMENT = (
+    r"(?:\.[A-Za-z0-9][A-Za-z0-9_-]*|[A-Za-z][A-Za-z0-9_-]*)(?:\.[A-Za-z0-9][A-Za-z0-9_-]*)*"
+)
+_REPO_RELATIVE = re.compile(rf"^{_PATH_SEGMENT}(?:/{_PATH_SEGMENT})*$")
 _USER_AGENT = "learn-ukrainian-stack-currency"
 _MAX_BODY = 5_000_000
 
@@ -70,7 +80,7 @@ class PinFileError(ValueError):
 
 
 class PublicationRefused(ValueError):
-    """The rendered body contains something other than a version or a repo-relative path."""
+    """A public cell is outside the pin-file allowlist. The message names no cell value."""
 
 
 def _accept_version(raw: str) -> str:
@@ -287,33 +297,26 @@ def build_report(path: Path, latest_of: Callable[[str], str]) -> dict[str, Any]:
     return {"rows": rows}
 
 
-def is_repo_relative(source: str) -> bool:
-    """A repository path. ``host`` is the pin-file sentinel, not a path."""
-    if not source or source == "host" or source.startswith(("/", "\\")):
-        return False
-    parts = source.split("/")
-    if any(part in {"", ".", ".."} for part in parts):
-        return False
-    return "\\" not in source and "://" not in source and not any(ord(char) < 32 for char in source)
-
-
-def _unsafe(text: str) -> bool:
-    if "://" in text or "\\" in text or "|" in text:
+def _allowed_publication(text: str) -> bool:
+    """Component id, version, sentinel, runner tag, model-id list, or repo-relative path."""
+    if text in _PUBLIC_SENTINELS or text == _RUNNER_TAG:
         return True
-    if text.startswith("/") or "/home/" in text or "/Users/" in text or "~/" in text:
-        return True
-    return _IPV4.search(text) is not None
+    return any(
+        pattern.fullmatch(text) for pattern in (_COMPONENT_ID, _VERSION_TOKEN, _MODEL_LIST, _REPO_RELATIVE)
+    )
 
 
-def _public_cell(value: str) -> str:
+def _public_cell(value: object) -> str:
+    if not isinstance(value, str):
+        raise PublicationRefused("report field is not publishable")
     text = " ".join(value.split())
-    if not text or _unsafe(text):
+    if not _allowed_publication(text):
         raise PublicationRefused("report field is not publishable")
     return text
 
 
 def render_body(report: Mapping[str, Any]) -> str:
-    """Markdown table of versions and repo-relative paths. Unsafe cells refuse the body."""
+    """Markdown table of allowlisted pin fields. An unsafe row refuses the body."""
     rows = report.get("rows")
     if not isinstance(rows, list):
         raise PublicationRefused("report field is not publishable")
@@ -328,11 +331,11 @@ def render_body(report: Mapping[str, Any]) -> str:
     for row in rows:
         if not isinstance(row, dict):
             raise PublicationRefused("report field is not publishable")
-        source = row.get("source", "")
-        source_cell = source if isinstance(source, str) and is_repo_relative(source) else ""
-        name = _public_cell(str(row.get("name", "")))
-        pinned = _public_cell(str(row.get("pinned", "")))
-        latest = _public_cell(str(row.get("latest", "")))
+        source = _public_cell(row.get("source", ""))
+        source_cell = "" if source == "host" else source
+        name = _public_cell(row.get("name", ""))
+        pinned = _public_cell(row.get("pinned", ""))
+        latest = _public_cell(row.get("latest", ""))
         lines.append(f"| {name} | {pinned} | {latest} | {source_cell} |")
     return "\n".join(lines) + "\n"
 

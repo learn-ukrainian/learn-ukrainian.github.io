@@ -63,7 +63,12 @@ def test_report_is_versions_under_stack_drift(tmp_path: Path, monkeypatch: pytes
             return drift.Reading("2.2.2", "not_running")
         return drift.Reading("absent", "not_running")
 
-    path = drift.write_report(_REPO_ROOT, read=read, env={"XDG_STATE_HOME": str(tmp_path / "xdg")})
+    path = drift.write_report(
+        _REPO_ROOT,
+        canonical_root=tmp_path / "canonical-checkout",
+        read=read,
+        env={"XDG_STATE_HOME": str(tmp_path / "xdg")},
+    )
     assert path == tmp_path / "xdg" / "learn-ukrainian" / "stack-drift" / "report.json"
     assert stat.S_IMODE(path.stat().st_mode) == 0o600
     text = path.read_text(encoding="utf-8")
@@ -83,3 +88,42 @@ def test_state_dir_inside_the_repository_is_refused(tmp_path: Path) -> None:
         drift.write_report(
             inside, read=lambda _name: drift.Reading("unknown", "unknown"), env={"XDG_STATE_HOME": str(inside)}
         )
+
+
+def test_linked_worktree_refuses_state_inside_the_canonical_checkout(tmp_path: Path) -> None:
+    worktree = tmp_path / "worktree"
+    canonical = tmp_path / "canonical"
+    worktree.mkdir()
+    canonical.mkdir()
+    state = canonical / "xdg"
+    report_path = state / "learn-ukrainian" / "stack-drift" / "report.json"
+
+    with pytest.raises(drift.DriftError, match="outside the repository"):
+        drift.write_report(
+            worktree,
+            canonical_root=canonical,
+            read=lambda _name: drift.Reading("unknown", "unknown"),
+            env={"XDG_STATE_HOME": str(state)},
+        )
+    assert not report_path.exists()
+
+
+def test_resolved_alias_into_the_canonical_checkout_is_refused(tmp_path: Path) -> None:
+    worktree = tmp_path / "worktree"
+    canonical = tmp_path / "canonical"
+    outside = tmp_path / "outside"
+    worktree.mkdir()
+    canonical.mkdir()
+    outside.mkdir()
+    alias = outside / "state"
+    alias.symlink_to(canonical, target_is_directory=True)
+    report_path = canonical / "learn-ukrainian" / "stack-drift" / "report.json"
+
+    with pytest.raises(drift.DriftError, match="outside the repository"):
+        drift.write_report(
+            worktree,
+            canonical_root=canonical,
+            read=lambda _name: drift.Reading("unknown", "unknown"),
+            env={"XDG_STATE_HOME": str(alias)},
+        )
+    assert not report_path.exists()

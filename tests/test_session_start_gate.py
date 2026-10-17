@@ -706,7 +706,9 @@ def test_drift_report_stays_off_the_session_context(
     sentinel_address = "203.0.113.10"
     destination = tmp_path / "learn-ukrainian" / "stack-drift" / "report.json"
 
-    def write_report(repo_root: Path) -> Path:
+    def write_report(repo_root: Path, *, canonical_root: Path | None = None) -> Path:
+        assert repo_root == tmp_path
+        assert canonical_root == REPO_ROOT
         print(sentinel_version)
         print(sentinel_path)
         print(sentinel_address)
@@ -743,6 +745,50 @@ def test_drift_report_stays_off_the_session_context(
     assert sentinel_version in private
     assert sentinel_path in private
     assert sentinel_address in private
+
+
+def test_canonical_checkout_drift_refusal_stays_status_ok(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """A destination inside the canonical checkout writes nothing and stays status ok."""
+    monkeypatch.setattr(gate, "phase_stack_drift", _REAL_PHASE_STACK_DRIFT)
+    monkeypatch.setattr(gate, "phase_session_record", lambda _args: {"status": "ok"})
+    monkeypatch.setattr(gate, "phase_python_version", lambda _args: {"status": "ok"})
+    monkeypatch.setattr(gate, "phase_primary_main", lambda _args: {"status": "ok"})
+    monkeypatch.setattr(gate, "phase_thread_lease", lambda _args: {"status": "skipped", "reason": "test"})
+    monkeypatch.setattr(gate, "phase_rollover_import", lambda _args: {"status": "skipped", "reason": "test"})
+    monkeypatch.setattr(gate, "phase_rollover_detect", lambda _args: {"status": "skipped", "reason": "test"})
+
+    worktree = tmp_path / "worktree"
+    canonical = tmp_path / "canonical"
+    outside = tmp_path / "outside"
+    worktree.mkdir()
+    canonical.mkdir()
+    outside.mkdir()
+    alias = outside / "state"
+    alias.symlink_to(canonical, target_is_directory=True)
+    monkeypatch.setenv("XDG_STATE_HOME", str(alias))
+    report_path = canonical / "learn-ukrainian" / "stack-drift" / "report.json"
+
+    rc = gate.main(
+        [
+            "--repo-root",
+            str(canonical),
+            "--project-dir",
+            str(worktree),
+            "--agent",
+            "claude-testlane",
+            "--session-id",
+            "s-drift-refuse",
+        ]
+    )
+    assert rc == 0
+    out = capsys.readouterr().out
+    result = json.loads(out)
+    assert result["stack_drift"] == {"status": "ok"}
+    assert not report_path.exists()
+    assert str(canonical) not in out
+    assert str(worktree) not in out
 
 
 def test_shell_surfaces_takeover_banner(tmp_path: Path) -> None:

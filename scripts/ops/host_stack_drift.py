@@ -4,7 +4,7 @@ Session start calls ``write_report`` once. The report lives under
 ``$XDG_STATE_HOME/learn-ukrainian/stack-drift`` (or
 ``~/.local/state/learn-ukrainian/stack-drift``). It records versions only.
 Command output that is not a version is dropped, and the report is refused
-if the state directory is inside the repository.
+if its resolved path is inside the session checkout or the canonical repository.
 
 There is no timer. The weekly audit publishes pinned-versus-latest; this
 check does not.
@@ -229,9 +229,10 @@ def _default_run(argv: tuple[str, ...], deadline: float) -> str:
 
 
 def _assert_outside_repo(directory: Path, roots: tuple[Path, ...]) -> Path:
+    """Resolved destination. A symlink into any root is the same refusal."""
     resolved = directory.expanduser().resolve()
     for root in roots:
-        root_resolved = root.resolve()
+        root_resolved = root.expanduser().resolve()
         if resolved == root_resolved or root_resolved in resolved.parents:
             raise DriftError("stack drift report must stay outside the repository")
     return resolved
@@ -261,11 +262,15 @@ def build_rows(pins_path: Path, read: Callable[[str], Reading]) -> list[dict[str
 def write_report(
     repo_root: Path,
     *,
+    canonical_root: Path | None = None,
     read: Callable[[str], Reading] | None = None,
     env: Mapping[str, str] | None = None,
 ) -> Path:
-    """Write ``report.json`` under the private stack-drift directory."""
-    directory = _assert_outside_repo(state_dir(env), (repo_root, REPO_ROOT))
+    """Write ``report.json`` outside the session checkout and the canonical repository."""
+    roots = (repo_root, REPO_ROOT)
+    if canonical_root is not None:
+        roots = (*roots, canonical_root)
+    directory = _assert_outside_repo(state_dir(env), roots)
     directory.mkdir(parents=True, exist_ok=True)
     directory.chmod(0o700)
     destination = directory / "report.json"
