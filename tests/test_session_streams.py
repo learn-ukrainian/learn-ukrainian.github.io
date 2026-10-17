@@ -1149,6 +1149,22 @@ def test_tracked_suffix_label_conventions_remain_files(body: str) -> None:
     validate_entry_body(body)
 
 
+def test_entire_canary_script_receipts_remain_files_but_siblings_stay_hosts() -> None:
+    # .sh (Saint Helena) and .py (Paraguay) are suffix labels before .txt; only
+    # the exact tracked receipt names are files, never the label or the shape.
+    for body in (
+        "tool-cenv.sh.txt",
+        "canary-driver.py.txt",
+        "docs/architecture/adr/evidence/entire-0115-canary/round-2/tool-canary-hooks.sh.txt",
+    ):
+        assert not _filename_contains_hostname(body), body
+        validate_entry_body(body)
+    for body in ("tool-other.sh.txt", "canary-driver.sh.txt", "TOOL-CENV.SH.TXT", "tool-cenv.sh.json"):
+        assert _filename_contains_hostname(body), body
+        with pytest.raises(ContentRejectedError, match="hostname rule"):
+            validate_entry_body(body)
+
+
 @pytest.mark.parametrize(
     "body",
     [
