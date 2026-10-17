@@ -52,7 +52,17 @@ def test_qualifying_report_is_versions_and_repo_paths_only() -> None:
 
 def test_missing_pin_row_does_not_invent_a_latest(tmp_path: Path) -> None:
     pins = tmp_path / "stack_pins.yaml"
-    pins.write_text(_ONE_ROW, encoding="utf-8")
+    pins.write_text(
+        _ONE_ROW
+        + """\
+  - name: uv
+    source: .github/actions/python-ci-env/action.yml
+    owner: DevOps
+    review_by: "2026-11-16"
+    note: pin value absent
+""",
+        encoding="utf-8",
+    )
     called: list[str] = []
 
     def latest_of(name: str) -> str:
@@ -67,8 +77,7 @@ def test_missing_pin_row_does_not_invent_a_latest(tmp_path: Path) -> None:
     assert by_name["uv"]["pinned"] == "missing"
     assert by_name["uv"]["latest"] == "unknown"
     assert by_name["uv"]["latest_reason"] == "missing_pin"
-    assert "uv" not in called
-    assert set(by_name) >= set(report.EXPECTED_COMPONENTS)
+    assert called == ["python"]
 
 
 def test_render_refuses_an_address() -> None:

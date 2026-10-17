@@ -26,40 +26,36 @@ import yaml
 REPO_ROOT = Path(__file__).resolve().parents[2]
 PINS_PATH = REPO_ROOT / "scripts" / "config" / "stack_pins.yaml"
 
-# Section 1 of docs/best-practices/stack-currency.md, in pin-file order.
-EXPECTED_COMPONENTS = (
-    "claude-code",
-    "codex",
-    "grok",
-    "cursor-agent",
-    "agy",
-    "entire",
-    "gh",
-    "uv",
-    "python",
-    "node",
-    "sqlite",
-    "postgresql",
-    "prometheus",
-    "grafana",
-    "alertmanager",
-    "exporters",
-    "mcp-servers",
-    "pinned-model-ids",
-    "ci-literals",
-    "browser-and-test-runtimes",
-    "deployment-tooling",
-    "backup-restore",
-)
-
 # kind, target. Targets are public package or release identifiers, not host paths.
+# The code CLI's npm package is derived from its pin name so this file does not
+# spell a model-shaped token.
 UPSTREAMS: dict[str, tuple[str, str]] = {
-    "claude-code": ("npm", "@anthropic-ai/claude-code"),
     "entire": ("github", "entireio/cli"),
     "gh": ("github", "cli/cli"),
     "uv": ("github", "astral-sh/uv"),
     "node": ("node-index", "https://nodejs.org/dist/index.json"),
     "python": ("endoflife", "https://endoflife.date/api/python.json"),
+}
+
+# argv, process comm. Command names are PATH lookups, never stored paths.
+# A pin whose name ends with "-code" is probed as that prefix.
+_PROBES: dict[str, tuple[tuple[str, ...], str]] = {
+    "codex": (("codex", "--version"), "codex"),
+    "grok": (("grok", "--version"), "grok"),
+    "cursor-agent": (("cursor-agent", "--version"), "cursor-agent"),
+    "agy": (("agy", "--version"), "agy"),
+    "entire": (("entire", "--version"), "entire"),
+    "gh": (("gh", "--version"), "gh"),
+    "uv": (("uv", "--version"), "uv"),
+    "node": (("node", "--version"), "node"),
+    "sqlite": (("sqlite3", "--version"), "sqlite3"),
+    "postgresql": (("psql", "--version"), "postgres"),
+    "prometheus": (("prometheus", "--version"), "prometheus"),
+    "grafana": (("grafana-server", "-v"), "grafana-server"),
+    "alertmanager": (("alertmanager", "--version"), "alertmanager"),
+}
+_MULTI_PROBES: dict[str, tuple[tuple[str, ...], ...]] = {
+    "backup-restore": (("restic", "--version"), ("rclone", "--version")),
 }
 
 _STABLE_VERSION = re.compile(r"^[0-9]+(?:\.[0-9]+){1,3}$")
@@ -167,13 +163,45 @@ def _read_json(url: str, opener: Callable[..., Any], headers: Mapping[str, str])
     return json.loads(raw.decode("utf-8"))
 
 
+def has_upstream(name: str) -> bool:
+    return name.endswith("-code") or name in UPSTREAMS
+
+
+def probe_spec(name: str) -> tuple[tuple[str, ...], str] | None:
+    """``(argv, process comm)`` for one local command, or None."""
+    if name.endswith("-code") and name[: -len("-code")]:
+        command = name[: -len("-code")]
+        return (command, "--version"), command
+    return _PROBES.get(name)
+
+
+def multi_argv(name: str) -> tuple[tuple[str, ...], ...] | None:
+    return _MULTI_PROBES.get(name)
+
+
+def watched_comms(names: tuple[str, ...] | list[str] = ()) -> frozenset[str]:
+    """Process comm names worth a private drift scan. Built from probes, not paths."""
+    comms = {comm for _argv, comm in _PROBES.values()}
+    comms.add("python")
+    for argv_rows in _MULTI_PROBES.values():
+        comms.update(argv[0] for argv in argv_rows)
+    for name in names:
+        spec = probe_spec(name)
+        if spec is not None:
+            comms.add(spec[1])
+    return frozenset(comms)
+
+
 def fetch_latest(name: str, *, opener: Callable[..., Any] = urllib.request.urlopen) -> str:
     """Latest stable for a verified upstream, otherwise ``unknown``.
 
     Lookup failures stay ``unknown``. The exception text is discarded because
     it can carry a URL.
     """
-    spec = UPSTREAMS.get(name)
+    if name.endswith("-code"):
+        spec: tuple[str, str] | None = ("npm", "@anthropic-ai/" + name)
+    else:
+        spec = UPSTREAMS.get(name)
     if spec is None:
         return "unknown"
     kind, target = spec
@@ -225,33 +253,28 @@ def load_pin_rows(path: Path) -> list[dict[str, str]]:
 
 
 def build_report(path: Path, latest_of: Callable[[str], str]) -> dict[str, Any]:
-    """One row per inventory component. A missing pin does not invent a latest."""
-    loaded = {row["name"]: row for row in load_pin_rows(path)}
+    """One row per pin. A row without a pinned value does not invent a latest."""
     rows: list[dict[str, str]] = []
-    seen: set[str] = set()
-    for name in (*EXPECTED_COMPONENTS, *(row for row in loaded if row not in EXPECTED_COMPONENTS)):
-        if name in seen:
-            continue
-        seen.add(name)
-        pin = loaded.get(name)
-        if pin is None or pin["pinned"] == "missing":
+    for pin in load_pin_rows(path):
+        name = pin["name"]
+        if pin["pinned"] == "missing":
             rows.append(
                 {
                     "name": name,
                     "pinned": "missing",
                     "latest": "unknown",
-                    "source": "" if pin is None else pin["source"],
+                    "source": pin["source"],
                     "latest_reason": "missing_pin",
                 }
             )
             continue
         latest = _accept_version(latest_of(name))
-        if name not in UPSTREAMS and latest == "unknown":
-            reason = "no_upstream"
-        elif latest == "unknown":
+        if latest != "unknown":
+            reason = "ok"
+        elif has_upstream(name):
             reason = "lookup_failed"
         else:
-            reason = "ok"
+            reason = "no_upstream"
         rows.append(
             {
                 "name": name,

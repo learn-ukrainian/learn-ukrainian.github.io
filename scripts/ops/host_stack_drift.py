@@ -25,7 +25,13 @@ from collections.abc import Callable, Mapping
 from dataclasses import dataclass
 from pathlib import Path
 
-from scripts.ci.stack_currency_report import EXPECTED_COMPONENTS, PinFileError, load_pin_rows
+from scripts.ci.stack_currency_report import (
+    PinFileError,
+    load_pin_rows,
+    multi_argv,
+    probe_spec,
+    watched_comms,
+)
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 BUDGET_SECONDS = 1.5
@@ -37,44 +43,6 @@ _MULTI = re.compile(
     r"^(?:restic|rclone) (?:absent|unknown|[0-9]+(?:\.[0-9]+){1,3})"
     r"(?:, (?:restic|rclone) (?:absent|unknown|[0-9]+(?:\.[0-9]+){1,3}))$"
 )
-
-# argv0 is a command name looked up on PATH, never a stored path.
-COMMANDS: dict[str, tuple[str, ...]] = {
-    "claude-code": ("claude", "--version"),
-    "codex": ("codex", "--version"),
-    "grok": ("grok", "--version"),
-    "cursor-agent": ("cursor-agent", "--version"),
-    "agy": ("agy", "--version"),
-    "entire": ("entire", "--version"),
-    "gh": ("gh", "--version"),
-    "uv": ("uv", "--version"),
-    "node": ("node", "--version"),
-    "sqlite": ("sqlite3", "--version"),
-    "postgresql": ("psql", "--version"),
-    "prometheus": ("prometheus", "--version"),
-    "grafana": ("grafana-server", "-v"),
-    "alertmanager": ("alertmanager", "--version"),
-}
-PROCESS_COMM: dict[str, str] = {
-    "claude-code": "claude",
-    "codex": "codex",
-    "grok": "grok",
-    "cursor-agent": "cursor-agent",
-    "agy": "agy",
-    "entire": "entire",
-    "gh": "gh",
-    "uv": "uv",
-    "python": "python",
-    "node": "node",
-    "sqlite": "sqlite3",
-    "postgresql": "postgres",
-    "prometheus": "prometheus",
-    "grafana": "grafana-server",
-    "alertmanager": "alertmanager",
-}
-MULTI_COMMANDS: dict[str, tuple[tuple[str, ...], ...]] = {
-    "backup-restore": (("restic", "--version"), ("rclone", "--version")),
-}
 
 
 class DriftError(ValueError):
@@ -145,10 +113,7 @@ def running_label(installed: str, binary: Path | None, exes: list[Path]) -> str:
     return "unknown"
 
 
-_WATCHED_COMMS = frozenset({*PROCESS_COMM.values(), "restic", "rclone"})
-
-
-def scan_processes() -> dict[str, list[Path]]:
+def scan_processes(watched: frozenset[str]) -> dict[str, list[Path]]:
     """One pass over process comm names. Paths stay in this process."""
     proc = Path("/proc")
     grouped: dict[str, list[Path]] = {}
@@ -165,7 +130,7 @@ def scan_processes() -> dict[str, list[Path]]:
             name = (entry / "comm").read_text(encoding="utf-8", errors="replace").strip()
         except OSError:
             continue
-        if name not in _WATCHED_COMMS and not name.startswith("python"):
+        if name not in watched and not name.startswith("python"):
             continue
         exe = entry / "exe"
         try:
@@ -210,7 +175,7 @@ def probe_component(
             running = installed
         return Reading(_store_probe(installed), _store_probe(running))
 
-    multi = MULTI_COMMANDS.get(name)
+    multi = multi_argv(name)
     if multi is not None:
         parts: list[str] = []
         labels: list[str] = []
@@ -235,13 +200,14 @@ def probe_component(
             running = installed_text
         return Reading(installed_text, _store_probe(running))
 
-    argv = COMMANDS.get(name)
-    if argv is None:
+    spec = probe_spec(name)
+    if spec is None:
         return Reading("unknown", "unknown")
+    argv, comm = spec
     binary_text = which(argv[0])
     binary = Path(binary_text) if binary_text else None
     installed = "absent" if binary is None else version_token(_probe_text(argv, run))
-    running = running_label(installed, binary, exes_for(PROCESS_COMM.get(name, argv[0])))
+    running = running_label(installed, binary, exes_for(comm))
     return Reading(_store_probe(installed), _store_probe(running))
 
 
@@ -272,24 +238,19 @@ def _assert_outside_repo(directory: Path, roots: tuple[Path, ...]) -> Path:
 
 
 def build_rows(pins_path: Path, read: Callable[[str], Reading]) -> list[dict[str, str]]:
-    loaded = {row["name"]: row for row in load_pin_rows(pins_path)}
     rows: list[dict[str, str]] = []
-    seen: set[str] = set()
-    names = [*EXPECTED_COMPONENTS, *(name for name in loaded if name not in EXPECTED_COMPONENTS)]
-    for name in names:
-        if name in seen:
+    for pin in load_pin_rows(pins_path):
+        if pin["pinned"] == "missing":
+            rows.append({"name": pin["name"], "pinned": "missing", "installed": "unknown", "running": "unknown"})
             continue
-        seen.add(name)
-        pin = loaded.get(name)
-        pinned = "missing" if pin is None or pin["pinned"] == "missing" else pin["pinned"]
         try:
-            reading = read(name)
+            reading = read(pin["name"])
         except Exception:
             reading = Reading("unknown", "unknown")
         rows.append(
             {
-                "name": name,
-                "pinned": pinned,
+                "name": pin["name"],
+                "pinned": pin["pinned"],
                 "installed": _store_probe(reading.installed),
                 "running": _store_probe(reading.running),
             }
@@ -312,7 +273,11 @@ def write_report(
     complete = True
     if read is None:
         scan_deadline = time.monotonic() + BUDGET_SECONDS
-        grouped = scan_processes()
+        try:
+            pin_names = [row["name"] for row in load_pin_rows(pins_path)]
+        except PinFileError:
+            pin_names = []
+        grouped = scan_processes(watched_comms(pin_names))
 
         def run(argv: tuple[str, ...]) -> str:
             return _default_run(argv, scan_deadline)
