@@ -144,10 +144,18 @@ def fetch_open_pr_count(repo: str) -> OpenPrCounts:
 
 
 def _as_counts(value: Any) -> OpenPrCounts:
-    """Normalize a fetch result. An int is that search's counted total."""
+    """Normalize a fetch result. An int is that search's counted total.
+
+    The search ``total_count`` is the only counted number. A smaller
+    ``counted`` is an excluded-author subtraction. This pair carries no login
+    list, so that smaller value is not used and the fetched total stays the
+    counted number.
+    """
     if isinstance(value, OpenPrCounts):
         if value.total < 0 or value.counted < 0 or value.counted > value.total:
             raise RuntimeError("invalid open-pr counts")
+        if value.counted < value.total:
+            return OpenPrCounts(total=value.total, counted=value.total)
         return value
     if isinstance(value, bool) or not isinstance(value, int) or value < 0:
         raise RuntimeError("unexpected open-pr count")
@@ -182,7 +190,8 @@ def cached_open_pr_count(
             and not isinstance(counted, bool)
             and isinstance(total, int)
             and not isinstance(total, bool)
-            and 0 <= counted <= total
+            and counted >= 0
+            and counted == total
             and now() - float(cached["at"]) < ttl_s
         ):
             return OpenPrCounts(total=total, counted=counted)

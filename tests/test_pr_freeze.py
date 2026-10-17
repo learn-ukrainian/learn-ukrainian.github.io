@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+import time
 from pathlib import Path
 from types import SimpleNamespace
 from urllib.parse import parse_qs
@@ -93,6 +94,48 @@ def test_cache_reused_within_ttl(tmp_path: Path) -> None:
     for _ in range(3):
         pr_freeze.cached_open_pr_count(REPO, fetch=fetch, cache_file=cache, ttl_s=60, now=lambda: next(clock))
     assert len(calls) == 2
+
+
+def test_fresh_cache_count_below_total_is_not_used(tmp_path: Path) -> None:
+    """A fresh cache of count 14 and total 21 must not pass a threshold of 15."""
+    cache = tmp_path / "c.json"
+    cache.write_text(json.dumps({"count": 14, "total": 21, "at": time.time()}))
+    calls: list[str] = []
+
+    def fetch(repo: str) -> pr_freeze.OpenPrCounts:
+        calls.append(repo)
+        return pr_freeze.OpenPrCounts(total=21, counted=21)
+
+    decision = pr_freeze.evaluate(REPO, environ={}, fetch=fetch, cache_file=cache)
+    assert calls == [REPO]
+    assert decision.open_prs == 21
+    assert decision.total_open == 21
+    assert decision.open_prs == decision.total_open
+    assert decision.refused
+    assert decision.warning in (None, "")
+    stored = json.loads(cache.read_text())
+    assert stored["count"] == 21
+    assert stored["total"] == 21
+
+
+def test_unequal_fetched_counts_are_not_used(tmp_path: Path) -> None:
+    """A fetched counted value below the total is not the freeze count."""
+    calls: list[str] = []
+
+    def fetch(repo: str) -> pr_freeze.OpenPrCounts:
+        calls.append(repo)
+        return pr_freeze.OpenPrCounts(total=21, counted=14)
+
+    normalized = pr_freeze._as_counts(pr_freeze.OpenPrCounts(total=21, counted=14))
+    assert normalized.counted == 21
+    assert normalized.total == 21
+    decision = pr_freeze.evaluate(REPO, environ={}, fetch=fetch, cache_file=tmp_path / "c.json")
+    assert calls == [REPO]
+    assert decision.open_prs == 21
+    assert decision.total_open == 21
+    assert decision.open_prs == decision.total_open
+    assert decision.refused
+    assert decision.warning in (None, "")
 
 
 @pytest.mark.parametrize(
