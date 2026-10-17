@@ -22863,10 +22863,26 @@ def test_agy_dispatch_rejects_injected_and_unbound_identity(tmp_tasks_dir, tmp_p
     assert launches == []
 
 
-@pytest.mark.usefixtures("isolated_dispatch_repo")
 @pytest.mark.parametrize("model", ["claude-sonnet-5-5-high", "claude-opus-5-5-high"])
-def test_normal_dispatch_admits_claude_agy_high_pin_without_substitution(tmp_tasks_dir, monkeypatch, model):
-    _git_out(delegate._REPO_ROOT, "update-ref", "refs/remotes/origin/main", "HEAD")
+def test_normal_dispatch_admits_claude_agy_high_pin_without_substitution(
+    tmp_tasks_dir, monkeypatch, isolated_dispatch_repo, model,
+):
+    head = _git_out(isolated_dispatch_repo, "rev-parse", "HEAD").strip()
+    _git_out(isolated_dispatch_repo, "update-ref", "refs/remotes/origin/main", head)
+    fetches = []
+
+    def fetch_fixture_branch(remote, branch):
+        assert (remote, branch) == ("origin", "main")
+        fetches.append((remote, branch))
+        # Admission refreshes the remote ref before rechecking its frozen base.
+        # Serve that refresh from the same isolated repository as observation.
+        return delegate.subprocess.run(
+            ["git", "fetch", str(isolated_dispatch_repo), "+refs/heads/main:refs/remotes/origin/main"],
+            cwd=isolated_dispatch_repo, capture_output=True, text=True, check=False,
+            env=delegate._sanitized_git_env(), timeout=30,
+        )
+
+    monkeypatch.setattr(delegate, "_fetch_remote_branch", fetch_fixture_branch)
     args = _minimal_dispatch_args(
         "agy-high-dispatch", agent="agy", model=model, mode="workspace-write", worktree="auto", cwd=None,
         owned_path=["README.md"],
@@ -22888,6 +22904,9 @@ def test_normal_dispatch_admits_claude_agy_high_pin_without_substitution(tmp_tas
     record = delegate._read_state(delegate._state_path("agy-high-dispatch"))
     assert record["model"] == model
     assert record["substitution"] is None
+    assert fetches == [("origin", "main")]
+    assert record["authoring_review_admission"]["creation_sha"] == head
+    assert _git_out(Path(record["worktree_path"]), "rev-parse", "HEAD").strip() == head
     assert Path(record["worktree_path"]).is_dir()
 
 
