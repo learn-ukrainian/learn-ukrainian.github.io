@@ -15,7 +15,7 @@
 ## 3. Security
 
 - Daily security detection stays the existing 04:23 UTC advisory refresh. Deadlines by severity: actively exploited (CISA KEV or vendor-confirmed) = triage the same day; critical 48 h; high 7 days; others at the next monthly review.
-- Ubuntu security updates come from unattended-upgrades; a distro backport is not a version gap. Track pending reboots (the 2026-10-08 kernel is still pending) and services still running old libraries after an upgrade (needrestart), and apply them in the maintenance window.
+- Ubuntu security updates come from unattended-upgrades; a distro backport is not a version gap. Track pending reboots and services still running old libraries after an upgrade (needrestart), and apply them in the maintenance window.
 - Model and API retirements count as security/availability events (catalog freshness already runs Mondays).
 
 ## 4. Cadence and expiry

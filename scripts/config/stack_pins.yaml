@@ -106,7 +106,14 @@ pins:
     review_by: "2026-11-16"
     note: .mcp.json declares the sources server and does not pin a version.
   - name: pinned-model-ids
-    pinned: model-catalog.v1
+    pinned: >-
+      gpt-6.1-sol, gpt-6-luna, claude-fable-5-1, claude-opus-5-5,
+      claude-haiku-5-5, claude-sonnet-5-5, gemini-3.8-flash-high,
+      gemini-3.1-pro-high, grok-4.7, kimi-code/k3, kimi-code/k3-256k,
+      kimi-k3-max, kimi-code/kimi-for-coding,
+      kimi-code/kimi-for-coding-highspeed, glm-5.3, deepseek-v4.1-flash,
+      poolside/laguna-s-2.1, poolside/laguna-xs-2.1, poolside/laguna-m.1,
+      composer-2.5, google-ais/gemma-4-31b-it, glm-5.3-flash
     source: scripts/config/model_catalog.yaml
     owner: Infra
     review_by: "2026-11-16"

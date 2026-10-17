@@ -115,11 +115,16 @@ def _review_by_text(value: object) -> str:
 
 
 def load_stack_pins(path: Path | None = None) -> list[dict]:
-    """Load pin rows. Missing owner, a bad date, or a duplicate name is an error."""
+    """Load pin rows. A parse failure, missing owner, bad date, or duplicate name is an error."""
     pin_path = STACK_PINS_FILE if path is None else path
     if not pin_path.is_file():
         raise StackPinsError(f"missing stack pins file: {pin_path}")
-    data = yaml.safe_load(pin_path.read_text(encoding="utf-8"))
+    try:
+        data = yaml.safe_load(pin_path.read_text(encoding="utf-8"))
+    except (yaml.YAMLError, ValueError) as exc:
+        # An unquoted impossible date is a timestamp. PyYAML raises ValueError
+        # from datetime.date instead of YAMLError, which would skip the report.
+        raise StackPinsError(f"stack pins file failed to parse: {pin_path}") from exc
     if not isinstance(data, dict) or not isinstance(data.get("pins"), list):
         raise StackPinsError("stack_pins.yaml must contain a pins list")
     seen: set[str] = set()

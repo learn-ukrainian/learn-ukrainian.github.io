@@ -19,6 +19,17 @@ pins:
     note: interpreter pin
 """
 
+# Catalog models whose lifecycle is active or fallback, in map order.
+_ADMITTED_MODEL_IDS = (
+    "gpt-6.1-sol, gpt-6-luna, claude-fable-5-1, claude-opus-5-5, "
+    "claude-haiku-5-5, claude-sonnet-5-5, gemini-3.8-flash-high, "
+    "gemini-3.1-pro-high, grok-4.7, kimi-code/k3, kimi-code/k3-256k, "
+    "kimi-k3-max, kimi-code/kimi-for-coding, "
+    "kimi-code/kimi-for-coding-highspeed, glm-5.3, deepseek-v4.1-flash, "
+    "poolside/laguna-s-2.1, poolside/laguna-xs-2.1, poolside/laguna-m.1, "
+    "composer-2.5, google-ais/gemma-4-31b-it, glm-5.3-flash"
+)
+
 
 def _write(tmp_path: Path, body: str) -> Path:
     path = tmp_path / "stack_pins.yaml"
@@ -43,6 +54,8 @@ def test_repo_pins_load_and_match_recorded_versions() -> None:
     assert by_name["claude-code"]["owner"] == "Infra"
     assert by_name["claude-code"]["review_by"] == "2026-10-30"
     assert by_name["python"]["review_by"] == "2026-11-16"
+    assert by_name["pinned-model-ids"]["pinned"] == _ADMITTED_MODEL_IDS
+    assert "schema_version model-catalog.v1" in by_name["pinned-model-ids"]["note"]
     assert find_overdue_reviews(rows, today=date(2026, 10, 16)) == []
 
 
@@ -58,6 +71,14 @@ def test_malformed_date_fails(tmp_path: Path) -> None:
 
     with pytest.raises(StackPinsError, match="malformed review_by"):
         load_stack_pins(_write(tmp_path, body))
+
+
+def test_unquoted_impossible_date_fails(tmp_path: Path) -> None:
+    body = _VALID_ROW.replace('review_by: "2026-11-16"', "review_by: 2026-02-30")
+
+    with pytest.raises(StackPinsError, match="failed to parse") as raised:
+        load_stack_pins(_write(tmp_path, body))
+    assert type(raised.value) is StackPinsError
 
 
 def test_duplicate_name_fails(tmp_path: Path) -> None:
