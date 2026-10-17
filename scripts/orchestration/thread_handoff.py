@@ -1306,6 +1306,7 @@ def _bundle_commit_install(
     stage = stage_root.relative_to(state_root).as_posix()
     original_backup = f"{stage}/original-lineage"
     repo_backups: dict[str, bytes | None] = {}
+    installed_handoffs: dict[str, dict[str, int]] = {}
     created_preserved: list[str] = []
     preserved: list[str] = []
     archived: Path | None = None
@@ -1335,10 +1336,21 @@ def _bundle_commit_install(
                     repo.write_path(superseded, old_payload)
                     created_preserved.append(superseded)
                     preserved.append((repo_root / superseded).as_posix())
-                repo.write_path(name, installed, replace=True)
+                installed_identity = repo.write_path(name, installed, replace=True)
+                if name in handoff_candidates:
+                    installed_handoffs[name] = installed_identity
             tree.write_path(
                 receipt,
-                _bundle_json({"schema": "rollover-bundle-receipt.v1", "upload_seq": int(manifest.get("upload_seq", 0))}),
+                _bundle_json({
+                    "schema": "rollover-bundle-receipt.v1",
+                    "upload_seq": int(manifest.get("upload_seq", 0)),
+                    "agent": agent,
+                    "lineage_id": lineage_id,
+                    "rollover_id": manifest["rollover_id"],
+                    "stream_id": manifest["stream_id"],
+                    "prepared_at": manifest["prepared_at"],
+                    "installed_handoffs": installed_handoffs,
+                }),
                 replace=True,
             )
             archived = _bundle_archive_local_lineage(
@@ -6334,9 +6346,21 @@ class _BundleReconcileTree:
         except FileNotFoundError:
             return None
 
-    def write_path(self, path: str, payload: bytes, *, replace: bool = False) -> None:
+    def write_path(self, path: str, payload: bytes, *, replace: bool = False) -> dict[str, int]:
         with self.parent(path, create=True) as (parent, name):
             self.write(parent, name, payload, replace=replace)
+            fd = os.open(name, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=parent)
+            with os.fdopen(fd, "rb") as handle:
+                info = os.fstat(handle.fileno())
+                if not stat.S_ISREG(info.st_mode) or info.st_nlink != 1 or handle.read() != payload:
+                    raise BundleReconcileRefused("reconcile_member_changed")
+                after = os.fstat(handle.fileno())
+                if info.st_mtime_ns != after.st_mtime_ns or info.st_ctime_ns != after.st_ctime_ns:
+                    raise BundleReconcileRefused("reconcile_member_changed")
+            return {
+                "device": info.st_dev, "inode": info.st_ino, "size": info.st_size,
+                "mtime_ns": info.st_mtime_ns, "ctime_ns": info.st_ctime_ns,
+            }
 
     def new_directory(self, path: str) -> None:
         with self.parent(path, create=True) as (parent, name):
@@ -6744,13 +6768,15 @@ def render_session_start_context(
         # cold start orients from durable state; probes exist only for rollovers.
         lines = [
             "COLD START: NO LIVE THREAD ROLLOVER",
-            "No pending or resumed packet exists for this agent.",
+            "No eligible pending or resumed packet exists for this agent.",
             "Orient from durable project state with tool-backed reads before ordinary work.",
             "Do not invent a lineage_id or rollover_id; prepare creates both only when this thread later rolls over.",
             "Keep the primary checkout read-only and use a dispatch worktree for implementation.",
         ]
         if isinstance(candidate, dict):
             lines.extend(_skipped_foreign_lines(candidate.get("skipped_foreign", [])))
+            for item in candidate.get("skipped_stale", []):
+                lines.append(f"Pending packet predates lane handoff {item['newer_handoff']}; left unchanged.")
             if candidate.get("excluded_terminal"):
                 lines.append(
                     "Excluded terminal rollover: "
@@ -6865,6 +6891,78 @@ def _render_multiple_pending_session_start(
     return "\n".join(lines)
 
 
+def newer_lane_handoff(
+    state_root: Path, *, agent: str, stream: str, prepared_at: str | None,
+    packet_agent: str | None = None, lineage_id: str | None = None, rollover_id: str | None = None,
+) -> str | None:
+    """Find a newer durable lane handoff without disposing of the packet."""
+    prepared = parse_iso_datetime(prepared_at)
+    if prepared is None:
+        raise ValueError("pending rollover requires a valid prepared_at for handoff comparison")
+    candidates = set(_bundle_handoff_candidates(state_root, stream)) if stream else set()
+    candidates.add(default_handoff_path(agent).as_posix())
+    imported_handoffs: dict[str, Any] = {}
+    if packet_agent and lineage_id and rollover_id:
+        receipt_path = f".agent/thread-rollovers/{packet_agent}/_bundle-receipts/{lineage_id}.json"
+        try:
+            with _BundleReconcileTree(state_root, packet_agent, lineage_id) as tree:
+                payload = tree.read_path(receipt_path)
+            receipt = json.loads(payload) if payload is not None else None
+            if (
+                isinstance(receipt, dict)
+                and receipt.get("schema") == "rollover-bundle-receipt.v1"
+                and receipt.get("agent") == packet_agent
+                and receipt.get("lineage_id") == lineage_id
+                and receipt.get("rollover_id") == rollover_id
+                and receipt.get("stream_id") == stream
+                and receipt.get("prepared_at") == prepared_at
+                and isinstance(receipt.get("installed_handoffs"), dict)
+            ):
+                imported_handoffs = receipt["installed_handoffs"]
+        except (OSError, ValueError):
+            pass  # Unproven imports retain the ordinary stale-handoff check.
+    newest: tuple[int, str] | None = None
+    for relative in sorted(candidates):
+        path = repo_local_path(state_root, Path(relative))
+        if not path.is_file():
+            continue
+        info = path.stat()
+        # Only this packet's unchanged imported inode is exempt. A later edit,
+        # touch, replacement, or a different candidate still supersedes it.
+        if not (state_root / relative).is_symlink() and imported_handoffs.get(relative) == {
+            "device": info.st_dev, "inode": info.st_ino, "size": info.st_size,
+            "mtime_ns": info.st_mtime_ns, "ctime_ns": info.st_ctime_ns,
+        }:
+            continue
+        modified = int(info.st_mtime)
+        # Tracked role routers are installed with a new checkout mtime. Use
+        # their committed timestamp unless they have local edits.
+        tracked = run_command(
+            ["git", "ls-files", "--error-unmatch", "--", relative],
+            cwd=state_root, timeout_s=10, env=git_environment(),
+        )
+        if tracked.returncode not in {0, 1, 128}:
+            raise ValueError("cannot determine whether the lane handoff is tracked")
+        if tracked.returncode == 0:
+            dirty = run_command(
+                ["git", "status", "--porcelain", "--", relative],
+                cwd=state_root, timeout_s=10, env=git_environment(),
+            )
+            if dirty.returncode != 0:
+                raise ValueError("cannot read lane handoff Git status")
+            if not dirty.stdout:
+                committed = run_command(
+                    ["git", "log", "-1", "--format=%ct", "--", relative],
+                    cwd=state_root, timeout_s=10, env=git_environment(),
+                )
+                if committed.returncode != 0 or not committed.stdout.strip().isdigit():
+                    raise ValueError("cannot read lane handoff commit timestamp")
+                modified = int(committed.stdout.strip())
+        if modified > prepared.timestamp() and (newest is None or modified > newest[0]):
+            newest = (modified, relative)
+    return newest[1] if newest else None
+
+
 def cmd_detect(args: argparse.Namespace) -> int:
     try:
         _, state_root = resolve_roots(args.repo_root)
@@ -6889,6 +6987,7 @@ def cmd_detect(args: argparse.Namespace) -> int:
     excluded_terminal: list[dict[str, str]] = []
     registry_errors: list[str] = []
     skipped_foreign: list[dict[str, Any]] = []
+    skipped_stale: list[dict[str, Any]] = []
 
     for scan_agent in scan_agents:
         agent_dir = state_root / ".agent" / "thread-rollovers" / scan_agent
@@ -6950,6 +7049,24 @@ def cmd_detect(args: argparse.Namespace) -> int:
                         }
                     )
                     continue
+                if replacement["status"] == "pending_start":
+                    try:
+                        newer_handoff = newer_lane_handoff(
+                            state_root, agent=agent, stream=stream_filter or packet_stream,
+                            prepared_at=replacement.get("prepared_at"),
+                            packet_agent=candidate_agent, lineage_id=lineage_id, rollover_id=rollover_id,
+                        )
+                    except (OSError, ValueError) as exc:
+                        print(json.dumps({"error": str(exc)}, indent=2))
+                        return 2
+                    if newer_handoff:
+                        skipped_stale.append({
+                            "agent": candidate_agent,
+                            "lineage_id": lineage_id,
+                            "rollover_id": rollover_id,
+                            "newer_handoff": newer_handoff,
+                        })
+                        continue
                 live_leases.append((path, state, replacement, scan_agent))
 
     # A family is a disambiguation hint, not stream identity. If it matches no
@@ -6967,6 +7084,8 @@ def cmd_detect(args: argparse.Namespace) -> int:
             output["registry_errors"] = registry_errors
         if skipped_foreign:
             output["skipped_foreign"] = skipped_foreign
+        if skipped_stale:
+            output["skipped_stale"] = skipped_stale
         print(
             render_session_start_context(
                 output,
@@ -7008,6 +7127,8 @@ def cmd_detect(args: argparse.Namespace) -> int:
             payload["registry_errors"] = registry_errors
         if skipped_foreign:
             payload["skipped_foreign"] = skipped_foreign
+        if skipped_stale:
+            payload["skipped_stale"] = skipped_stale
 
         if args.format == "session-start":
             print(
@@ -7072,6 +7193,8 @@ def cmd_detect(args: argparse.Namespace) -> int:
         output["registry_errors"] = registry_errors
     if skipped_foreign:
         output["skipped_foreign"] = skipped_foreign
+    if skipped_stale:
+        output["skipped_stale"] = skipped_stale
 
     print(
         render_session_start_context(
