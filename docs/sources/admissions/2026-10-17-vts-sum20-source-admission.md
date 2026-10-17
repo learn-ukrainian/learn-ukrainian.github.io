@@ -59,7 +59,7 @@ Because СУМ-20's published print volumes currently stop at Volume 16 (entry r
 
 The permissions register (`docs/sources/permissions-register.yaml`) is updated to formally admit ВТС under the exact same legal and operational basis that Atlas already relies on for its live definition cards:
 
-1. **Governing Law**: Art. 22(2)(1) of the Law of Ukraine No. 2811-IX «Про авторське право і суміжні права» (quotation from lawfully published works to the extent justified by the intended purpose, if conditioned by the critical, polemical, scientific, or informational nature of the incorporating work, with mandatory attribution of the author's name and the source of borrowing).
+1. **Statutory Reference**: Law of Ukraine No. 2811-IX «Про авторське право і суміжні права» Art. 22(2)(1) provides for the free quotation from lawfully published works without permission and free of charge, with mandatory naming of the author and source of borrowing, conditioned by the critical, polemical, scientific, or informational character of the incorporating work, with semantic and/or graphical marking of quotation boundaries (із семантичним та/або графічним виділенням меж цитати).
 2. **Attribution Display**: All rendered definition cards cite the full academic label:
    - For ВТС: `Великий тлумачний словник сучасної української мови` (short pill: `ВТС`)
    - For СУМ-20: `Словник української мови у 20 томах` (short pill: `СУМ-20`)
@@ -111,7 +111,7 @@ Applying the hierarchy **СУМ-20 (first) → ВТС (second) → ULIF gloss (t
 
 ## 6. Formal Admission Verdict
 
-1. **ВТС is hereby ADMITTED** as an authorized secondary source for Word-Card sense reference under `WORD_CARDS_DATA_PLAN.md` §6 Decision 1, on the basis of Law 2811-IX Art. 22(2)(1) educational quotation.
+1. **ВТС is hereby ADMITTED** as an authorized secondary source for Word-Card sense reference under `WORD_CARDS_DATA_PLAN.md` §6 Decision 1 and operator IP responsibility (Plan v3.5.0 O1; an administrative source-use decision, not a legal conclusion), citing the quotation exception under Law 2811-IX Art. 22(2)(1) with mandatory author/source attribution and marked quotation boundaries.
 2. The sense seed sequence is confirmed as:
    $$\text{СУМ-20 (unquarantined)} \longrightarrow \text{ВТС (numbered senses)} \longrightarrow \text{ULIF sense\_gloss}$$
 3. Numbered sense parsing, decomposition, and card schema integration are retained as an active engineering residual under `WORD_CARDS_DATA_PLAN.md` §7 (to be delivered in W1 / engineering steps).

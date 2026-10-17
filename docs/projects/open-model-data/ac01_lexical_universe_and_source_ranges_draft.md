@@ -11,12 +11,17 @@
 
 To satisfy AC-01, source completeness cannot be measured against arbitrary local caches, pilot samples, or mutable web endpoints. A finite, versioned lexical universe defines the denominator for word card assembly:
 
-1. **Lexical Universe v1 (Phase 1 Baseline — CTO Recommendation 2026-10-17T22:51Z)**:
-   - **Atlas Manifest Headwords**: The published Word Atlas word list (`scripts/lexicon/enrich_manifest.py` MANIFEST, referencing **27,472 distinct headwords** across **38,190 cached entries** in `data/lexicon/slovnyk_cache/`).
-   - **Pedagogical Core (PULS CEFR A1–C1)**: **5,939 total rows** representing **5,839 distinct headwords** in `data/sources.db:puls_cefr` (A1: 962, A2: 1,386, B1: 2,164, B2: 1,194, C1: 233). Of these 5,839 distinct headwords, **828 headwords** are outside the 38,190 cache corpus.
-   - **Cache ∪ PULS Universe**: **39,018 distinct headwords** (38,190 cache lemmas + 828 PULS-only headwords).
-   - **Atlas Live Core**: 27,128 active learner-facing articles in `data/atlas.db:articles`.
-   - **Scope Boundary**: Lexical Universe v1 encompasses the Atlas word list plus PULS A1–C1. Binding v1 definition is queued for designated approval by Claude Opus 5.5 + GPT Sol 6.1 following the Claude reset (~2026-10-19T07:00Z).
+1. **Lexical Universe v1 (Phase 1 Baseline Proposals — Queued for Designated Approval ~2026-10-19T07:00Z)**:
+   - **Constituent Populations**:
+     * **Atlas Published Manifest**: `data/lexicon/manifest/manifest.jsonl` contains **27,472 distinct headwords**.
+     * **Atlas Live Articles**: `data/atlas.db:articles` holds **27,128 active learner-facing articles**.
+     * **Slovnyk Cache Corpus**: `data/lexicon/slovnyk_cache/` holds **38,190 distinct headword files** (current census confirms 10,815 cache lemmas outside the published manifest, and 97 manifest words outside the cache).
+     * **Pedagogical Core (PULS CEFR A1–C1)**: **5,939 total rows** representing **5,839 distinct headwords** in `data/sources.db:puls_cefr` (A1: 962, A2: 1,386, B1: 2,164, B2: 1,194, C1: 233). Of these 5,839 distinct headwords, **828 headwords** are outside the 38,190 cache corpus.
+     * **Cache ∪ PULS Union**: **39,018 distinct headwords** (38,190 cache lemmas + 828 PULS-only headwords).
+   - **Candidate Baselines for Designated Approval (Claude Opus 5.5 + GPT Sol 6.1)**:
+     * *Candidate Baseline A (Manifest ∪ PULS)*: Core pedagogical universe binding the 27,472 published Atlas manifest words and PULS CEFR A1–C1.
+     * *Candidate Baseline B (Cache ∪ PULS)*: Expanded engineering universe of 39,018 distinct headwords.
+   - **Scope Boundary**: Lexical Universe v1 is confined to the Atlas word list and PULS A1–C1. Formal selection of the binding baseline is queued for designated approval by Claude Opus 5.5 + GPT Sol 6.1 following the Claude reset (~2026-10-19T07:00Z). Meanings coverage for any unselected or combined union remains unmeasured pending baseline designation.
 
 2. **Lexical Universe v2 (Full Scale — Post-v1)**:
    - **Core Lexical Foundation (VESUM ∩ ULIF)**: Full intersection of VESUM v6.8.0 (`data/vesum.db`, 442,458 blocks, 6,970,759 form analyses) and the ULIF published register (262,812 entry positions, 943,689 raw blobs in `data/lexicon/cache/ulif_raw.sqlite`), spanning ~245,000–260,000 lemmas. Anything wider than v1 belongs strictly to v2.
@@ -72,13 +77,13 @@ Completeness requires accounting across five distinct lifecycle stages: Acquisit
 | **SRC-ULIF** | УМІФ НАН України (ulif.org.ua) published register | **262,812** ordered entry positions (336,396 sections, 4.74M forms) | A: 10,513 pages crawled; C: 943,689 raw blobs in `ulif_raw.sqlite`; P: 262,735 ok + 77 parse errors; M: version-stable read-only snapshot. |
 | **SRC-VESUM** | `brown-uk/dict_uk` v6.8.0 (commit `bcb5ccd9`) | **442,458** blocks, **6,970,759** form analyses | A/C: `dict_corp_vis.txt.bz2` (SHA `e3380378...`); P/M: installed `data/vesum.db` matching canonical SHA `5392315007...`. |
 | **SRC-SUM20** | СУМ-20, Vols 1–16 (А–РЯХТЛИВИЙ) | **22,075** cached definitions; **164,838** mirror URLs; **2,354** official staging | A: 164,838 mirror URLs; C: 22,075 valid definitions in `slovnyk_cache/`, 148,102 raw HTML held; P: resolve 11 quarantined parser v1 rows; M: complete definitions & citations imported to canonical `sources.db:sum20_articles` via parser v2. |
-| **SRC-VTS** | ВТС (Великий тлумачний словник, Бусел 2005/2009) | **31,688** distinct dictionary articles | A/C: 31,688 valid definitions in `slovnyk_cache/`; P: parse via established Atlas parser (`scripts/lexicon/enrich_manifest.py:1551,4571`); M: admitted required secondary source (`docs/sources/admissions/2026-10-17-vts-sum20-source-admission.md`, `vts_busel_slovnyk_me`). Blocker: canonical import to `sources.db:slovnyk_me_entries`. |
+| **SRC-VTS** | ВТС (Великий тлумачний словник, Бусел 2005/2009) | **31,688** distinct dictionary articles | A/C: 31,688 valid definitions in `slovnyk_cache/`; P: parse via established Atlas parser (`_parse_slovnyk_entry` and `_vts_definition_card` in `scripts/lexicon/enrich_manifest.py`); M: admitted secondary source referencing Art. 22(2)(1) Law 2811-IX (`docs/sources/admissions/2026-10-17-vts-sum20-source-admission.md`, `vts_busel_slovnyk_me`). Blocker: canonical import to `sources.db:slovnyk_me_entries`. |
 | **SRC-GRAC** | ГРАК-19 (uacorpus.org), corpus `grac19a` | **Full frequency & KWIC coverage** for all ~260K universe lemmas | A/C: frozen local SQLite frequency snapshot or deterministic API caching via `scripts/rag/source_query.py`; M: descriptive frequency thresholds. |
 | **SRC-LITERARY** | Authentic Ukrainian literary corpus (1076–2015) | **137,723** chunk passages across **3,310** works & **134** authors | A/C: raw texts inventory in `data/sources.db:literary_texts`; P: clean chunk passage boundaries; M: cited literary examples. |
 | **SRC-TEXTBOOK** | Ukrainian school textbooks (Grades 1–11) | **53,930** pure textbook chunk passages across 200 inventory files | A/C: verified PDF/e-book text extractions; P: 53,930 chunks partitioned from 169 Antonenko and 28 Pohribnyi prose chunks; M: pedagogical citations. |
 | **SRC-PRAVOPYS** | Український правопис 2019 (Наукова думка) | **280** printed-contents entries (168 paragraphs P001–P168, 44 sections) | A/C: 392-page authorized PDF (SHA `0d2fd75a...`); P: 168 DB paragraphs; M: outside-author reproduced inventory matching PDF. |
 | **SRC-ANTONENKO** | Б. Антоненко-Давидович «Як ми говоримо» | **342** style guide entries + **169** book prose chunks (504,299 chars) | A/C: 1970/1991 edition text in `data/sources.db`; P: 26 sections in `style_guide`; M: verified correction pairings. |
-| **SRC-KARAVANSKY** | 4 authority reference books under #8791 | **1 held private-reference, 3 unheld/print** | Пономарів (ред.) «Сучасна українська мова» (Либідь 2001, 2-ге вид.) held as **PRIVATE REFERENCE ONLY** at `/home/ops/learn-ukrainian-acquisitions/ponomariv-suchasna-ukrainska-mova-2001/` (cite bibliographically only; zero text into sources.db/dataset/PRs); «Культура слова» = print only, out of stock; Городенська title = not found (likely model-invented); паронім dictionary = Сербенська 2022 print, substitution not yet checked. |
+| **SRC-KARAVANSKY** | 4 authority reference books under #8791 | **1 held private-reference, 3 dropped** | Пономарів (ред.) «Сучасна українська мова» (Либідь 2001, 2-ге вид.) held as **PRIVATE REFERENCE ONLY** in private offline acquisition custody (cite bibliographically only; zero text into sources.db/dataset/PRs). Operator Decision A formally closed book purchases under #8791 and dropped the other 3 candidate titles («Культура слова», Городенська title, Сербенська 2022). |
 | **SRC-UAGEC** | UA-GEC Ukrainian Error-Annotated Corpus | **8,937** annotated errors across **1,408** documents | A/C: upstream `grammarly/ua-gec`; P: 7,778 train / 1,159 test error spans; M: phrase-scoped grammatical correction metadata. |
 | **SRC-ESUM** | Етимологічний словник української мови (Томи 1–6) | **36,177** entries across 33,035 lemmas in **6 volumes** | A/C: 6 scan volumes (archive.org `etslukrmov1-6`); P: 36,177 metadata & entry rows in `esum_etymology`; M: OCR damage reconciliation. |
 | **SRC-HRINCHENKO** | Словник української мови Б. Грінченка (1907–1909) | **67,275** entries across 4 volumes | A/C: Lingvo aggregator JSON; P: 67,275 rows in `data/sources.db:grinchenko`; M: historical attestation labeling. |
@@ -97,7 +102,7 @@ Completeness requires accounting across five distinct lifecycle stages: Acquisit
 ### Background & Evidence
 - On 2026-09-20, comment `5749722387` recorded a historical count of 123 `not_found` lemmas (90 with CEFR) out of 256,628 processed lemmas against an unrecorded count-time snapshot of `ulif_dump_all.db`.
 - Three example strings were named in historical notes: `застосунок`, `записник`, `домогосподарство`.
-- A comprehensive structural detector scan ([`len123-detector.json`](file:///home/ops/learn-ukrainian/batch_state/preserved/author-10512-source-ledger-sonnet/152bd0e846f84bb7bb220818027168c9/batch_state/reports/source-ledger-10512-sonnet/len123-detector.json)) evaluated 2,006 candidate JSON files across the workspace:
+- A comprehensive structural detector scan (`batch_state/reports/source-ledger-10512-sonnet/len123-detector.json`) evaluated 2,006 candidate JSON files across the workspace:
   - Total arrays of length 123 found: **0** (the only 123-length array located was a synthetic development fixture `fixture-member-N`).
   - Key `original_members`: `null`.
   - Bound member list: **0 present, 0 absent, 123 unresolved**.
