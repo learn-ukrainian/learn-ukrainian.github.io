@@ -5702,11 +5702,11 @@
     },
     {
       "path": "curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml",
-      "sha256": "192d7a98cc9b9ee314487c478c3426acef01f903045d8d73f53894e09dd9e81f"
+      "sha256": "9fafbfb74684b2c7c7a734bd0e77b246c4183951424d6ca02c0fc1cdc8c62065"
     },
     {
       "path": "curriculum/l2-uk-en/lesson-plans/a1/_decisions.yaml",
-      "sha256": "2e4d712be41f071ee9e4241bd5056caea82be0bc8111a87986f487a0464e93c3"
+      "sha256": "43458665f105e597317c18e15536385db1516d2b820c7548e9dfaff78ce7a73e"
     },
     {
       "path": "curriculum/l2-uk-en/lesson-plans/a1/_grammar.yaml",
@@ -13906,7 +13906,7 @@
     },
     {
       "path": "site/src/content/docs/a1/a1-finale/index.mdx",
-      "sha256": "1e23af53dc05c05f785ebb8a3bec9a936a069c939fa6e2753f24272dd9176362"
+      "sha256": "7681b9edff13de9b0e6ca4723cf4c5fbf667d086677d73ee6b14732f846c2037"
     },
     {
       "path": "site/src/content/docs/a1/around-the-city/index.mdx",
@@ -13914,7 +13914,7 @@
     },
     {
       "path": "site/src/content/docs/a1/at-the-cafe/index.mdx",
-      "sha256": "7e0c1a49aafc38b6695e8a2b07cf58044cacca50d8a48cc7d76a09283a28aa99"
+      "sha256": "30368f62090c5e9b51275a1dc01e77eb2fc0b8c623abab0e6f387fedf8423e93"
     },
     {
       "path": "site/src/content/docs/a1/checkpoint-actions/index.mdx",
@@ -13946,7 +13946,7 @@
     },
     {
       "path": "site/src/content/docs/a1/colors/index.mdx",
-      "sha256": "3503a2d461e7bdfde7e7e744147cb5b72d89dacc24471eff392cae186fc80c5e"
+      "sha256": "3bd7c5d90458aaa201bb3c25567f103d31bc32edd8895b79b833975e6aa0b51d"
     },
     {
       "path": "site/src/content/docs/a1/days-and-months/index.mdx",
@@ -13962,7 +13962,7 @@
     },
     {
       "path": "site/src/content/docs/a1/first-conversations/index.mdx",
-      "sha256": "f6f11c635c0264b525383870e3f70bf96ce49c5ef8b56154edc8878d85d7b006"
+      "sha256": "36e5c362959397714e995fe5b16e782da08c48c241a6ae149fa8cc0a307d98d7"
     },
     {
       "path": "site/src/content/docs/a1/food-and-drink/index.mdx",
@@ -13970,11 +13970,11 @@
     },
     {
       "path": "site/src/content/docs/a1/free-time/index.mdx",
-      "sha256": "b0f501ed9478fd4793a9d76926b01bdf9b33a8f6a1cef4eab2159da2c828629c"
+      "sha256": "a4cb9d31dcde57f05001e7b35580a53dca66c1e396fa8dce5027b976bcb4964e"
     },
     {
       "path": "site/src/content/docs/a1/health/index.mdx",
-      "sha256": "de69d93ff55cd17d449f2ba1828e953e7eed085101e911f0a0e68ec6d0f96527"
+      "sha256": "9368b3e2aa6252bf203ccfff3cedbe0ec8298c4df0059f0a8c077c57c7787656"
     },
     {
       "path": "site/src/content/docs/a1/hey-friend/index.mdx",
@@ -13982,7 +13982,7 @@
     },
     {
       "path": "site/src/content/docs/a1/holidays/index.mdx",
-      "sha256": "acff42d533643aa94f93fec660aa0dea31d37d4630f53c092ab3621293d24262"
+      "sha256": "d2e6995cd7d8f03414370f6f8810b17e51726b83f056ba8e2d7a0fbd9887d2bb"
     },
     {
       "path": "site/src/content/docs/a1/how-many/index.mdx",
@@ -13990,11 +13990,11 @@
     },
     {
       "path": "site/src/content/docs/a1/i-eat-i-drink/index.mdx",
-      "sha256": "f47db7e25c7d02f17c2b1c012c86bb50ab32901695a8cc7222adf829f64b94b9"
+      "sha256": "5d21526d51b9839f1795b70a488c19320a42cb7f60c4f5f68cbe8b2ca05bf2c8"
     },
     {
       "path": "site/src/content/docs/a1/i-want-i-can/index.mdx",
-      "sha256": "73236d2b62667546d7399b26a9c6f26a1931cb2e91168012eab755a3c71a86e5"
+      "sha256": "04d893fd51a4c3856f02b047db6e562e2301a8513b3e213d4dc4f8269266d294"
     },
     {
       "path": "site/src/content/docs/a1/index.mdx",
@@ -14010,15 +14010,15 @@
     },
     {
       "path": "site/src/content/docs/a1/many-things/index.mdx",
-      "sha256": "155b4ae10ef16674770ece9c503da3fe584d1c5816844dc9ededc93f7d00b221"
+      "sha256": "96fb435a4a815e042eb0c2ade7a10b21a0b9af2841962dfd5ae512974c82a0cf"
     },
     {
       "path": "site/src/content/docs/a1/my-city/index.mdx",
-      "sha256": "2788d42726d37725621418719a345c8a14d96273934db7a86c9fcd14acfaa64c"
+      "sha256": "3d5986098c6e4de1254bdf42b3cd138014b24032aa7500bc9457d46360e89b2b"
     },
     {
       "path": "site/src/content/docs/a1/my-day/index.mdx",
-      "sha256": "640a5b550ac3226698664862b838e2846263d5d31a0c98d2986ca31270110896"
+      "sha256": "e391f0131f679e99f9edf9363b09b0e672811f7c0b0f6d06b722910dd01a5c62"
     },
     {
       "path": "site/src/content/docs/a1/my-family/index.mdx",
@@ -14026,23 +14026,23 @@
     },
     {
       "path": "site/src/content/docs/a1/my-morning/index.mdx",
-      "sha256": "6d910e88377c24524fe1e564646c11a02ebda095b299ee080f7cd9d98ece4398"
+      "sha256": "fca23b261be69cf6230b6627ad387abe0ebefb045a8e0a086ed2afb3c1b2c8bb"
     },
     {
       "path": "site/src/content/docs/a1/my-plans/index.mdx",
-      "sha256": "7fc87a48b495788782a127c6e353d16393de0f4afc6d17f496f701c150a9532e"
+      "sha256": "75b5bec5bf8d1546dfc1231cc858146b00681dc311c974b513ec57f298a06074"
     },
     {
       "path": "site/src/content/docs/a1/my-story/index.mdx",
-      "sha256": "fc3079a8f5feae8f03b53c18ad469e36fcf1a0da2cbe41496b583a1ff24d2cbb"
+      "sha256": "329f95049470abe25fc2cb5168c18dde76b5fb51e136dfae592bd409adc31fe0"
     },
     {
       "path": "site/src/content/docs/a1/people-around-me/index.mdx",
-      "sha256": "c89d761f42ce64a10a081963edadab780665e4d83e218e0355758d9cabe8e82e"
+      "sha256": "aa5c8dc6f3d7b5ac8db8a22b02679134a637df76be2073095e1bba57a1a2ac9f"
     },
     {
       "path": "site/src/content/docs/a1/please-do-this/index.mdx",
-      "sha256": "574aa8bfdbd14d8955e32a688c7a4440a68095e84d48d96ad265abd5ca862870"
+      "sha256": "72ae7f5323719ca2a33d27cb77ce3cdd34fdc16861730417d8454f20d1eed687"
     },
     {
       "path": "site/src/content/docs/a1/questions/index.mdx",
@@ -14054,7 +14054,7 @@
     },
     {
       "path": "site/src/content/docs/a1/shopping/index.mdx",
-      "sha256": "3d5950746c8e848c9ebb76cf5e53726a1ee03dee956b3898bae99eff3fe7ad71"
+      "sha256": "555db2559138dafb6c9b3224c6310ca42e1184718a7fe41da3b9c601218048b1"
     },
     {
       "path": "site/src/content/docs/a1/sounds-letters-and-hello/index.mdx",
@@ -14070,7 +14070,7 @@
     },
     {
       "path": "site/src/content/docs/a1/things-have-gender/index.mdx",
-      "sha256": "75470c8e731420e1aabf7ff983a5f6778e3228d28610e7b253c33c5843887b9e"
+      "sha256": "c8d81fae2e9212b03179684f1a33a74d798396da7a089c3f2d42042d198b8e65"
     },
     {
       "path": "site/src/content/docs/a1/this-and-that/index.mdx",
@@ -14078,23 +14078,23 @@
     },
     {
       "path": "site/src/content/docs/a1/transport/index.mdx",
-      "sha256": "e272ca790c05f71e5626e45e3d736727c5fa243f0c3e4c277889efe2fcd6b5c1"
+      "sha256": "b0534fd7c88760bdd4512e585f7cba0a6c36703dd83a1f45d90dbd3923a428f0"
     },
     {
       "path": "site/src/content/docs/a1/verbs-group-one/index.mdx",
-      "sha256": "f2145ed1fb4f4cd4f4933539144954c3da6ed635e45a179f57785d4acda1727f"
+      "sha256": "98db66839a8b9914078cd0e6b30ff94f42d761fe9da315ab49e66c2e9c73a26e"
     },
     {
       "path": "site/src/content/docs/a1/verbs-group-two/index.mdx",
-      "sha256": "ac93ae9e8e2b7272cd83c4104482e837ce81ccb3a23c19fc3466a7847ec96a32"
+      "sha256": "f3dae47e12bb91c09015acc152a4146a226141dfc099e7bba454c1c7562b0996"
     },
     {
       "path": "site/src/content/docs/a1/weather/index.mdx",
-      "sha256": "e750d8e1136e430b18f1bafdb864b63fe2a2121357bdc7c632e56b3a2cd9b6a5"
+      "sha256": "8d2b01be6a7337b840a4d85601672b8f71058b01a9206750313e6a9d9d108f8f"
     },
     {
       "path": "site/src/content/docs/a1/what-happened/index.mdx",
-      "sha256": "6ce1136466cf01e207bb4a7615fa8cd747a90653eb51a5b8a96829ebc54d4b7b"
+      "sha256": "fed09921699886b1eb3b74df4fb7365f21b80ca2a7ba65648bab85d058773609"
     },
     {
       "path": "site/src/content/docs/a1/what-i-like/index.mdx",
@@ -14106,11 +14106,11 @@
     },
     {
       "path": "site/src/content/docs/a1/what-time/index.mdx",
-      "sha256": "fd77458febea33ff19e3a84d617b66346a41dfaec1a28c9ac258c2dac4c6f840"
+      "sha256": "abf1d28ad7b81f3c4a59dc8a3410a623ce0a9f146c24b4acdb5f29e3ba08f93e"
     },
     {
       "path": "site/src/content/docs/a1/what-will-happen/index.mdx",
-      "sha256": "9a74a5232521e80fb82bb46ced5bb559639a609b2ac97dd65cc076324ce31259"
+      "sha256": "5786b12c3fc2ae0ed4842cf0ef9fc983355c4fc5917b155368e5997e86bdc693"
     },
     {
       "path": "site/src/content/docs/a1/when-and-where/index.mdx",
@@ -14118,15 +14118,15 @@
     },
     {
       "path": "site/src/content/docs/a1/where-from/index.mdx",
-      "sha256": "125e0f55f84b7f8fb7e51414ce81fd692daf4c1ae1b00adb0ead36fe5f2ad1c2"
+      "sha256": "53ca31108fd9f635d859d6b75016f91d4026da398f2b6c04b20f2c29fc8ee2f3"
     },
     {
       "path": "site/src/content/docs/a1/where-is-it/index.mdx",
-      "sha256": "cdb24e56b70f2644cc906d368194bced67b71a91790950c40b8f43f78ed884f2"
+      "sha256": "68ab16e734eff11d2a3129e2012f4a22767c092593cb78c5a65b7c2e4a3e0f11"
     },
     {
       "path": "site/src/content/docs/a1/where-to/index.mdx",
-      "sha256": "f3e7b0c9755d3e7f5faea701c1c0b4b8bd5b20279f77b40456236e62be0c2afe"
+      "sha256": "54dbe716919edbd6db7a9eb2bd21b6cd3bd53bda3baff0ec604c603a6e374caa"
     },
     {
       "path": "site/src/content/docs/a1/who-am-i/index.mdx",
