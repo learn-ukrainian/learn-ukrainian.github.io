@@ -31,13 +31,15 @@ SUPPORT_FILES = (
 )
 
 
-def _clean_env(extra: dict[str, str] | None = None) -> dict[str, str]:
+def _clean_env(extra: dict[str, str] | None = None, unset: tuple[str, ...] = ()) -> dict[str, str]:
     # Entire 0.11.5's chain block exports ENTIRE_CHAINING_<HOOK> and skips the
     # chain while it is set, so a run from inside a chained hook (the pre-push
     # gate) must not leak it into these fixture repositories.
     env = {key: value for key, value in os.environ.items() if not key.startswith(("GIT_", "ENTIRE_CHAINING_"))}
     if extra:
         env.update(extra)
+    for key in unset:
+        env.pop(key, None)
     return env
 
 
@@ -47,13 +49,14 @@ def _run(
     cwd: Path,
     env: dict[str, str] | None = None,
     check: bool = True,
+    unset: tuple[str, ...] = (),
 ) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
         command,
         capture_output=True,
         check=check,
         cwd=cwd,
-        env=_clean_env(env),
+        env=_clean_env(env, unset),
         text=True,
         timeout=60,
     )
@@ -243,7 +246,7 @@ ENTIRE_UNCHAINED_WRAPPERS = {
 }
 # The installer reroutes each wrapper's Entire call through the capture guard (#10846).
 GUARDED_CALL = (
-    "then sh -c 'g=\"$(git rev-parse --show-toplevel)/scripts/entire/capture_guard.sh\"; "
+    'then sh -c \'g="$(git rev-parse --show-toplevel)/scripts/entire/capture_guard.sh"; '
     'if [ -x "$g" ]; then exec "$g" "$@"; fi; '
     'echo "[entire] capture refused (guard_missing): no checkpoint written" >&2\' entire-capture-guard hooks git '
 )
@@ -525,15 +528,137 @@ def test_every_entire_wrapper_is_guarded_and_check_catches_a_regenerated_one(tmp
 def test_raw_wrapper_without_tmpdir_fails_the_installer_unchanged(tmp_path: Path) -> None:
     repo, env = _fixture_repository(tmp_path)
     hooks_dir = _install_entire_wrappers(repo, env, tmp_path)
-    # _clean_env starts from os.environ, so an empty value stands in for an unset one.
+    # An empty TMPDIR is a configuration error; the unset case falls back (see below).
     env["TMPDIR"] = ""
 
     install = _run(["bash", "scripts/install_git_hooks.sh"], cwd=repo, env=env, check=False)
 
     assert install.returncode == 1
-    assert "TMPDIR is unset; cannot stage the guarded" in install.stderr
+    assert "TMPDIR is set but empty; cannot stage the guarded" in install.stderr
     for hook_name, content in ENTIRE_UNCHAINED_WRAPPERS.items():
         assert (hooks_dir / hook_name).read_text(encoding="utf-8") == content
+
+
+ENTIRE_MANAGED_HOOKS = ("prepare-commit-msg", "commit-msg", "post-commit", "post-rewrite", "pre-push")
+TMPDIR_VARIABLES = ("TMPDIR", "LU_TASK_SCRATCH_DIR", "LU_RUNTIME_TMP_ROOT")
+
+
+def test_empty_tmpdir_refuses_before_any_entire_wrapper_changes(tmp_path: Path) -> None:
+    """Review reproducer: step 2 used to append chain blocks before step 3 refused the empty TMPDIR."""
+    repo, env = _fixture_repository(tmp_path)
+    hooks_dir = _install_entire_wrappers(repo, env, tmp_path)
+    assert set(ENTIRE_MANAGED_HOOKS) == {*ENTIRE_WRAPPERS, *ENTIRE_UNCHAINED_WRAPPERS}
+    before = {hook_name: (hooks_dir / hook_name).read_bytes() for hook_name in ENTIRE_MANAGED_HOOKS}
+    snapshot = _hooks_snapshot(hooks_dir)
+
+    install = _run(
+        ["bash", "scripts/install_git_hooks.sh"],
+        cwd=repo,
+        env={**env, "TMPDIR": ""},
+        check=False,
+        unset=("LU_TASK_SCRATCH_DIR", "LU_RUNTIME_TMP_ROOT"),
+    )
+
+    assert install.returncode == 1
+    assert "TMPDIR is set but empty" in install.stderr
+    assert "nothing was changed" in install.stderr
+    for hook_name in ENTIRE_MANAGED_HOOKS:
+        assert (hooks_dir / hook_name).read_bytes() == before[hook_name], hook_name
+    assert _hooks_snapshot(hooks_dir) == snapshot
+
+
+@pytest.mark.parametrize(
+    ("missing", "valid"),
+    [
+        ("LU_TASK_SCRATCH_DIR", "LU_RUNTIME_TMP_ROOT"),
+        ("LU_RUNTIME_TMP_ROOT", None),
+    ],
+    ids=["task-scratch-before-runtime-root", "runtime-root-before-git-dir"],
+)
+def test_unset_tmpdir_selects_scratch_roots_in_order(tmp_path: Path, missing: str, valid: str | None) -> None:
+    """With TMPDIR unset the first set scratch root wins: a missing one refuses rather than falling through."""
+    repo, env = _fixture_repository(tmp_path)
+    hooks_dir = _install_entire_wrappers(repo, env, tmp_path)
+    snapshot = _hooks_snapshot(hooks_dir)
+    absent = tmp_path / "absent-scratch"
+    present = tmp_path / "present-scratch"
+    present.mkdir()
+    overrides = {missing: str(absent), **({valid: str(present)} if valid else {})}
+
+    install = _run(
+        ["bash", "scripts/install_git_hooks.sh"],
+        cwd=repo,
+        env={**env, **overrides},
+        check=False,
+        unset=tuple(name for name in TMPDIR_VARIABLES if name not in overrides),
+    )
+
+    assert install.returncode == 1
+    assert f"TMPDIR={absent} is not a writable directory" in install.stderr
+    assert _hooks_snapshot(hooks_dir) == snapshot
+
+
+def test_unset_tmpdir_and_scratch_roots_stage_under_the_git_directory(tmp_path: Path) -> None:
+    repo, env = _fixture_repository(tmp_path)
+    hooks_dir = _install_entire_wrappers(repo, env, tmp_path)
+    task_scratch = tmp_path / "task-scratch"
+    task_scratch.mkdir()
+
+    install = _run(["bash", "scripts/install_git_hooks.sh"], cwd=repo, env=env, unset=TMPDIR_VARIABLES)
+
+    for hook_name, content in ENTIRE_UNCHAINED_WRAPPERS.items():
+        assert f"{hook_name}: Entire capture routed through scripts/entire/capture_guard.sh" in install.stdout
+        assert (hooks_dir / hook_name).read_text(encoding="utf-8") == _guarded(content)
+    for hook_name in ENTIRE_WRAPPERS:
+        assert (hooks_dir / hook_name).read_text(encoding="utf-8") == _guarded(_entire_chained(hook_name))
+    # The per-run directory under the git directory is removed on exit.
+    assert not any(path.name.startswith("install-git-hooks.") for path in (repo / ".git").iterdir())
+    assert not any(".guard." in path.name for path in hooks_dir.iterdir())
+
+    # A set task scratch root wins over the git directory and keeps no residue.
+    _write_executable(hooks_dir / "post-rewrite", ENTIRE_UNCHAINED_WRAPPERS["post-rewrite"])
+    rerun = _run(
+        ["bash", "scripts/install_git_hooks.sh"],
+        cwd=repo,
+        env={**env, "LU_TASK_SCRATCH_DIR": str(task_scratch)},
+        unset=("TMPDIR", "LU_RUNTIME_TMP_ROOT"),
+    )
+    assert "post-rewrite: Entire capture routed" in rerun.stdout
+    assert list(task_scratch.iterdir()) == []
+
+
+@pytest.mark.parametrize("kind", ["live-link", "dangling-link", "directory"])
+def test_installer_refuses_an_unsafe_guard_staging_path_without_mutation(tmp_path: Path, kind: str) -> None:
+    """Review reproducer: the publish path .<name>.guard.new must not redirect the staged wrapper."""
+    repo, env = _fixture_repository(tmp_path)
+    hooks_dir = _install_entire_wrappers(repo, env, tmp_path)
+    scratch = tmp_path / "scratch"
+    scratch.mkdir()
+    env["TMPDIR"] = str(scratch)
+    staging = hooks_dir / ".post-rewrite.guard.new"
+    outside = tmp_path / "outside"
+    if kind == "directory":
+        staging.mkdir()
+    else:
+        outside.mkdir()
+        target = outside / "landing" if kind == "dangling-link" else outside
+        staging.symlink_to(target)
+    before = {hook_name: (hooks_dir / hook_name).read_bytes() for hook_name in ENTIRE_MANAGED_HOOKS}
+    snapshot = _hooks_snapshot(hooks_dir)
+
+    install = _run(["bash", "scripts/install_git_hooks.sh"], cwd=repo, env=env, check=False)
+
+    assert install.returncode == 1
+    reason = "exists and is not a regular file" if kind == "directory" else "is a symlink"
+    assert f"REFUSED: {staging} {reason}" in install.stderr
+    for hook_name in ENTIRE_MANAGED_HOOKS:
+        assert (hooks_dir / hook_name).read_bytes() == before[hook_name], hook_name
+    assert _hooks_snapshot(hooks_dir) == snapshot
+    assert list(scratch.iterdir()) == []
+    if kind == "directory":
+        assert list(staging.iterdir()) == []
+    else:
+        assert list(outside.iterdir()) == []
 
 
 def test_unrecognized_entire_invocation_fails_the_installer(tmp_path: Path) -> None:
@@ -554,7 +679,13 @@ def test_unrecognized_entire_invocation_fails_the_installer(tmp_path: Path) -> N
 
 def _hooks_snapshot(hooks_dir: Path) -> dict[str, str]:
     return {
-        path.name: (f"-> {os.readlink(path)}" if path.is_symlink() else path.read_text(encoding="utf-8"))
+        path.name: (
+            f"-> {os.readlink(path)}"
+            if path.is_symlink()
+            else sorted(child.name for child in path.iterdir())
+            if path.is_dir()
+            else path.read_text(encoding="utf-8")
+        )
         for path in sorted(hooks_dir.iterdir())
     }
 

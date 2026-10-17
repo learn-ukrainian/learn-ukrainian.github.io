@@ -230,15 +230,65 @@ for hook_path in "$tracked_hooks_dir"/*; do
         [[ -L "$destination" ]] && symlinked+=("$destination")
     done
 done
+# The guard rewrite publishes through .<name>.guard.new: a symlink there would be
+# replaced or followed, and a directory there would receive the staged file.
+not_regular=()
 for hook_name in "${entire_managed_hooks[@]}"; do
     [[ -L "$hooks_dir/$hook_name" ]] && symlinked+=("$hooks_dir/$hook_name")
+    staging="$hooks_dir/.$hook_name.guard.new"
+    if [[ -L "$staging" ]]; then
+        symlinked+=("$staging")
+    elif [[ -e "$staging" && ! -f "$staging" ]]; then
+        not_regular+=("$staging")
+    fi
 done
-if ((${#symlinked[@]} > 0)); then
-    for destination in "${symlinked[@]}"; do
+if ((${#symlinked[@]} + ${#not_regular[@]} > 0)); then
+    for destination in ${symlinked[@]+"${symlinked[@]}"}; do
         echo "REFUSED: $destination is a symlink; replace it with a regular file and rerun (nothing was changed)" >&2
+    done
+    for destination in ${not_regular[@]+"${not_regular[@]}"}; do
+        echo "REFUSED: $destination exists and is not a regular file; remove it and rerun (nothing was changed)" >&2
     done
     exit 1
 fi
+
+# Step 3 stages each guard rewrite under TMPDIR. When TMPDIR is unset (a bare
+# `git push` or systemd environment) fall back to the managed task scratch roots,
+# then to a per-run directory in this repository's git directory, removed on exit.
+# Resolve it before any mutation, so a TMPDIR set to an empty string or to a path
+# that is not a writable directory fails the installer with every hook unchanged.
+guard_scratch_dir=""
+remove_guard_scratch() {
+    [[ -z "$guard_scratch_dir" ]] || rmdir "$guard_scratch_dir" 2>/dev/null || true
+}
+ensure_guard_tmpdir() {
+    [[ -z "${TMPDIR+set}" ]] || return 0
+    if [[ -n "${LU_TASK_SCRATCH_DIR:-}" ]]; then
+        TMPDIR="$LU_TASK_SCRATCH_DIR"
+    elif [[ -n "${LU_RUNTIME_TMP_ROOT:-}" ]]; then
+        TMPDIR="$LU_RUNTIME_TMP_ROOT"
+    else
+        guard_scratch_dir="$git_common_dir/install-git-hooks.$$"
+        [[ -d "$guard_scratch_dir" ]] || mkdir -m 700 "$guard_scratch_dir"
+        trap remove_guard_scratch EXIT
+        TMPDIR="$guard_scratch_dir"
+    fi
+}
+for hook_name in "${entire_managed_hooks[@]}"; do
+    wrapper="$hooks_dir/$hook_name"
+    [[ -f "$wrapper" ]] && grep -qF "$entire_marker" "$wrapper" || continue
+    [[ "$(entire_invocation_state "$wrapper")" == "raw" ]] || continue
+    ensure_guard_tmpdir
+    if [[ -z "$TMPDIR" ]]; then
+        echo "REFUSED: TMPDIR is set but empty; cannot stage the guarded $wrapper (set TMPDIR to a scratch directory, or unset it, then rerun; nothing was changed)" >&2
+        exit 1
+    fi
+    if [[ ! -d "$TMPDIR" || ! -w "$TMPDIR" ]]; then
+        echo "REFUSED: TMPDIR=$TMPDIR is not a writable directory; cannot stage the guarded $wrapper (nothing was changed)" >&2
+        exit 1
+    fi
+    break
+done
 mkdir -p "$hooks_dir"
 
 # 1. Unset core.hooksPath if set to .githooks (leave any other explicit value alone)
@@ -315,28 +365,8 @@ for hook_path in "$tracked_hooks_dir"/*; do
     fi
 done
 
-# 3. Route every Entire wrapper's invocation through the capture guard.
-# The rewrite is staged under TMPDIR. When TMPDIR is unset (a bare `git push` or
-# systemd environment) fall back to the managed task scratch roots, then to a
-# per-run directory in this repository's git directory, removed on exit. A
-# TMPDIR set to an empty string stays a configuration error.
-guard_scratch_dir=""
-remove_guard_scratch() {
-    [[ -z "$guard_scratch_dir" ]] || rmdir "$guard_scratch_dir" 2>/dev/null || true
-}
-ensure_guard_tmpdir() {
-    [[ -z "${TMPDIR+set}" ]] || return 0
-    if [[ -n "${LU_TASK_SCRATCH_DIR:-}" ]]; then
-        TMPDIR="$LU_TASK_SCRATCH_DIR"
-    elif [[ -n "${LU_RUNTIME_TMP_ROOT:-}" ]]; then
-        TMPDIR="$LU_RUNTIME_TMP_ROOT"
-    else
-        guard_scratch_dir="$git_common_dir/install-git-hooks.$$"
-        [[ -d "$guard_scratch_dir" ]] || mkdir -m 700 "$guard_scratch_dir"
-        trap remove_guard_scratch EXIT
-        TMPDIR="$guard_scratch_dir"
-    fi
-}
+# 3. Route every Entire wrapper's invocation through the capture guard, staging the
+# rewrite under the TMPDIR resolved before any mutation.
 unguarded_wrappers=0
 for hook_name in "${entire_managed_hooks[@]}"; do
     wrapper="$hooks_dir/$hook_name"
@@ -344,12 +374,6 @@ for hook_name in "${entire_managed_hooks[@]}"; do
     case "$(entire_invocation_state "$wrapper")" in
         guarded) ;;
         raw)
-            ensure_guard_tmpdir
-            if [[ -z "${TMPDIR:-}" ]]; then
-                echo "ERROR: TMPDIR is unset; cannot stage the guarded $wrapper (set TMPDIR to a scratch directory, then rerun)" >&2
-                unguarded_wrappers=$((unguarded_wrappers + 1))
-                continue
-            fi
             guarded_tmp="$(mktemp "$TMPDIR/entire-$hook_name.guard.XXXXXX")"
             # ENVIRON, not -v: awk -v would interpret backslash escapes in the values.
             RAW="$entire_raw_call" GUARDED="$entire_guarded_call" awk '{
@@ -358,9 +382,10 @@ for hook_name in "${entire_managed_hooks[@]}"; do
                 print
             }' "$wrapper" > "$guarded_tmp"
             chmod 755 "$guarded_tmp"
-            # TMPDIR may sit on another filesystem: stage beside the wrapper, then rename atomically.
-            mv -f "$guarded_tmp" "$hooks_dir/.$hook_name.guard.new"
-            mv -f "$hooks_dir/.$hook_name.guard.new" "$wrapper"
+            # TMPDIR may sit on another filesystem: stage beside the wrapper, then rename
+            # atomically. -T never moves into a directory that appears at either name.
+            mv -fT -- "$guarded_tmp" "$hooks_dir/.$hook_name.guard.new"
+            mv -fT -- "$hooks_dir/.$hook_name.guard.new" "$wrapper"
             echo "$hook_name: Entire capture routed through scripts/entire/capture_guard.sh"
             ;;
         *)
