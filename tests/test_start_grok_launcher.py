@@ -63,10 +63,12 @@ def test_grok_driver_claims_a_lease_for_supported_selectors(selector: str) -> No
     "selector, slot", (("seminars-folk", "grok-folk"), ("bio", "grok-bio"), ("hramatka", "grok-hramatka"))
 )
 def test_grok_driver_refuses_ukrainian_content_slots(selector: str, slot: str) -> None:
+    """Unregistered Grok content slots exit 2 as not registered and never claim a lease."""
     result = run_launcher("start-grok-driver.sh", "--epic", selector)
     assert result.returncode == 2, result.stdout + result.stderr
     assert slot in result.stderr
-    assert "operator order 2026-09-27" in result.stderr
+    assert f"'{slot}', which is not registered" in result.stderr
+    assert "operator order 2026-09-27" not in result.stderr
     assert "would claim lease" not in result.stdout
 
 
@@ -89,7 +91,13 @@ def test_grok_hermes_opt_in_pins_route_and_reuses_driver_lifecycle(tmp_path) -> 
     from tests.test_launcher_contract import hermes_stub_env
 
     result = run_launcher(
-        "start-grok-driver.sh", "--epic", "devops", "--harness", "hermes", "--effort", "high",
+        "start-grok-driver.sh",
+        "--epic",
+        "devops",
+        "--harness",
+        "hermes",
+        "--effort",
+        "high",
         env=hermes_stub_env(tmp_path),
     )
     assert result.returncode == 0, result.stderr

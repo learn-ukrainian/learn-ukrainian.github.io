@@ -260,8 +260,12 @@ launcher_require_registered_slot() {
   _handoff_slot_registry --slot "$slot" 2>/dev/null && return 0 || rc=$?
   if [ "$rc" -eq 3 ]; then
     options="$(_handoff_slot_registry --list "$provider" 2>/dev/null | paste -sd ' ' - || true)"
+    # The operator order of 2026-10-16 (#10835) admits native Grok to all work
+    # under measurement, so Grok content slots are no longer refused by the
+    # 2026-09-27 order: grok-open-model-data is registered, and an unregistered
+    # Grok content slot gets the generic not-registered refusal below.
     case "$slot" in
-      grok-folk | kimi-folk | cursor-folk | grok-bio | kimi-bio | cursor-bio | grok-hramatka | kimi-hramatka | cursor-hramatka | grok-open-model-data | kimi-open-model-data | cursor-open-model-data)
+      kimi-folk | cursor-folk | kimi-bio | cursor-bio | kimi-hramatka | cursor-hramatka | kimi-open-model-data | cursor-open-model-data)
         printf "selector '%s' resolves to handoff slot '%s', refused by operator order 2026-09-27: only claude, gpt and gemini should be involved in ukrainian content; no other models allowed if it is about ukrainian lang. culture, heritage.\n" \
           "$selector" "$slot" >&2
         return 1

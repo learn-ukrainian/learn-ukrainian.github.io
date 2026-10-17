@@ -316,7 +316,7 @@ def test_generic_registry_keys_are_registered_or_refused_for_every_provider() ->
                 )
 
 
-@pytest.mark.parametrize("provider", ("grok", "kimi", "cursor"))
+@pytest.mark.parametrize("provider", ("kimi", "cursor"))
 @pytest.mark.parametrize(
     "selector, lane",
     (("folk", "folk"), ("bio", "bio"), ("hramatka", "hramatka"), ("open-model-data", "open-model-data")),
@@ -327,6 +327,38 @@ def test_removed_content_slot_refused_by_operator_order(provider: str, selector:
     assert f"'{provider}-{lane}'" in result.stderr
     assert "operator order 2026-09-27" in result.stderr
     assert "only claude, gpt and gemini" in result.stderr
+
+
+def test_registered_grok_open_model_data_seat_is_admitted() -> None:
+    """The 2026-10-16 order (#10835) registers grok-open-model-data; the gate admits and mints it."""
+    assert registry.is_registered_slot("grok-open-model-data")
+    result = _bash(
+        'source "$1"; launcher_require_registered_slot grok open-model-data && handoff_identity_for_grok_epic open-model-data',
+        str(HANDOFF_IDENTITY),
+    )
+    assert result.returncode == 0, result.stderr
+    assert result.stdout == "grok-open-model-data"
+
+
+@pytest.mark.parametrize("selector, lane", (("folk", "folk"), ("bio", "bio"), ("hramatka", "hramatka")))
+def test_unregistered_grok_content_slot_is_refused_as_unregistered(selector: str, lane: str) -> None:
+    """Grok content lanes without a slot stay refused, now as unregistered rather than by the superseded order."""
+    assert not registry.is_registered_slot(f"grok-{lane}")
+    result = _gate("grok", selector)
+    assert result.returncode == 1, result.stdout + result.stderr
+    assert f"'grok-{lane}', which is not registered" in result.stderr
+    assert "operator order 2026-09-27" not in result.stderr
+
+
+def test_grok_monitor_is_a_dedicated_slot_and_muse_monitor_stays_locked() -> None:
+    """grok-monitor receives its own inbox; Muse keeps its monitor identity; other monitor names stay legacy."""
+    roster = yaml.safe_load((REPO / "scripts/config/area_assignments.yaml").read_text(encoding="utf-8"))
+    assert roster["assignments"]["monitor"]["slots"] == ["muse-monitor", "grok-monitor"]
+    assert _channels.resolve_recipient_alias("grok-monitor") == "grok-monitor"
+    assert _channels.resolve_recipient_alias("muse-monitor") == "muse-monitor"
+    assert _channels.resolve_recipient_alias("claude-monitor") == "claude"
+    gate = _gate("grok", "monitor")
+    assert gate.returncode == 0, gate.stderr
 
 
 @pytest.mark.parametrize("provider", PROVIDERS)
@@ -344,9 +376,13 @@ def test_gate_names_the_refused_provider_slot(provider: str) -> None:
 REGISTERED_SELECTORS = ("infra", "devops", "monitor", "open-model-data", "atlas", "folk", "bio", "corpus", "hramatka")
 
 
-@pytest.mark.parametrize("provider", ("claude", "codex"))
+@pytest.mark.parametrize("provider", ("claude", "codex", "grok"))
 def test_open_model_data_selector_mints_registered_slot(provider: str) -> None:
-    identity_function = "handoff_identity_for_epic" if provider == "claude" else "handoff_identity_for_codex_epic"
+    identity_function = {
+        "claude": "handoff_identity_for_epic",
+        "codex": "handoff_identity_for_codex_epic",
+        "grok": "handoff_identity_for_grok_epic",
+    }[provider]
     result = _bash(
         'source "$1"; launcher_require_registered_slot "$2" open-model-data && "$3" open-model-data',
         str(HANDOFF_IDENTITY),

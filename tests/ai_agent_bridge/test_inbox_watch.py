@@ -8,10 +8,11 @@ from pathlib import Path
 from unittest.mock import patch
 
 import pytest
+import yaml
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
-from scripts.ai_agent_bridge import _db, _inbox_watch, _messaging
+from scripts.ai_agent_bridge import _channels, _db, _inbox_watch, _messaging
 
 
 @pytest.fixture(autouse=True)
@@ -202,7 +203,22 @@ def test_inbox_watcher_watchdog_failure_warns_and_continues(
         patch.stopall()
 
 
-def test_recipients_for_agent_resolves_phantom_empty_roster_identity():
+@pytest.fixture
+def legacy_monitor_roster(tmp_path: Path, monkeypatch):
+    """The live roster with grok-monitor unregistered, as before #10835 made it a slot.
+
+    Only Grok has dual-read aliases (grok-build), so the legacy monitor path is
+    exercised on that provider with the monitor roster the #7597 sessions saw.
+    """
+    assignments = yaml.safe_load(_channels.ASSIGNMENTS_PATH.read_text(encoding="utf-8"))
+    assignments["assignments"]["monitor"]["slots"] = ["muse-monitor"]
+    roster = tmp_path / "area_assignments.yaml"
+    roster.write_text(yaml.safe_dump(assignments), encoding="utf-8")
+    monkeypatch.setattr(_channels, "ASSIGNMENTS_PATH", roster)
+    return roster
+
+
+def test_recipients_for_agent_resolves_phantom_empty_roster_identity(legacy_monitor_roster):
     """A phantom {provider}-{empty-slots-area} identity resolves to provider aliases (#7597)."""
     recipients = _inbox_watch.recipients_for_agent("grok-monitor")
     assert recipients == ("grok", "grok-build")
@@ -210,7 +226,13 @@ def test_recipients_for_agent_resolves_phantom_empty_roster_identity():
     assert _inbox_watch.canonical_slot("grok-monitor") == "grok"
 
 
-def test_poll_once_surfaces_messages_for_phantom_empty_roster_identity(isolate_db: Path):
+def test_recipients_for_registered_grok_monitor_slot_is_dedicated():
+    """With grok-monitor registered (#10835) its watcher reads only its own slot."""
+    assert _inbox_watch.recipients_for_agent("grok-monitor") == ("grok-monitor",)
+    assert _inbox_watch.recipients_for_agent("codex-monitor") == ("codex",)
+
+
+def test_poll_once_surfaces_messages_for_phantom_empty_roster_identity(isolate_db: Path, legacy_monitor_roster):
     """Watcher polling for a phantom identity queries messages for the resolved provider aliases."""
     canonical_id = _send("canonical message", to_llm="grok")
     alias_id = _send("historical message", to_llm="grok-build")
