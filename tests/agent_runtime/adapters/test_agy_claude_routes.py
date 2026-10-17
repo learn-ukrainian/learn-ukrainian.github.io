@@ -82,31 +82,33 @@ def test_retired_thinking_labels_keep_retirement_error(model):
 
 @pytest.mark.parametrize("mode", ["read-only", "workspace-write", "danger"])
 @pytest.mark.parametrize("model", [*SLUGS, *LABELS])
-@pytest.mark.parametrize("config", [None, {}, {"bridge_repo_read": True}])
-def test_non_review_rejects_before_permission_writes_and_probes(tmp_path, monkeypatch, mode, model, config):
-    def forbidden(*args, **kwargs):
-        pytest.fail("refusal must precede permission writes and version probes")
-
-    monkeypatch.setattr(agy, "_write_review_permissions", forbidden)
-    monkeypatch.setattr(agy, "_require_background_wait_support", forbidden)
-    with pytest.raises(ValueError) as error:
-        build(tmp_path, model, mode, config)
-    assert str(error.value).startswith("agy_claude_requires_review_route")
-    assert model in str(error.value)
-    assert "rejected" in str(error.value)
-    assert list(tmp_path.iterdir()) == []
+def test_worker_route_keeps_high_pin_and_existing_permissions(tmp_path, monkeypatch, mode, model):
+    monkeypatch.setattr(agy, "require_hook_config", lambda *args, **kwargs: None)
+    monkeypatch.setattr(agy, "_require_background_wait_support", lambda *args: None)
+    monkeypatch.setattr(agy, "_build_log_path", lambda *args: tmp_path / "agy.log")
+    monkeypatch.setattr(agy, "_write_review_permissions", lambda *a, **k: pytest.fail("worker wrote review grants"))
+    plan = build(tmp_path, model, mode)
+    assert plan.cmd[plan.cmd.index("--model") + 1] == agy.AgyAdapter.resolve_model_slug(model)
+    assert "--dangerously-skip-permissions" in plan.cmd
+    assert "--sandbox" not in plan.cmd
+    assert "--effort" not in plan.cmd
 
 
 @pytest.mark.parametrize("model", SLUGS)
-def test_real_delegate_probe_refuses_without_default_substitution(model):
-    refusal = delegate._adapter_model_rejection("agy", model)
-    assert refusal.startswith("agy_claude_requires_review_route")
-    assert model in refusal
-    with pytest.raises(delegate.BudgetGuardRefuseError) as error:
+def test_real_delegate_probe_keeps_explicit_high_pin(tmp_path, monkeypatch, model):
+    monkeypatch.setattr(agy, "require_hook_config", lambda *a, **k: None)
+    monkeypatch.setattr(agy, "_require_background_wait_support", lambda *args: None)
+    monkeypatch.setattr(agy, "_build_log_path", lambda *args: tmp_path / "agy.log")
+    assert delegate._adapter_model_rejection("agy", model) is None
+    with pytest.raises(delegate.BudgetGuardRefuseError, match="pinned AGY Claude identity"):
         delegate._resolve_substitution_model("agy", model)
-    assert model in str(error.value)
-    assert "agy_claude_requires_review_route" in str(error.value)
-    assert "gemini-3.8-flash-high" not in str(error.value)
+
+
+@pytest.mark.parametrize("owned", [["scripts/delegate.py"], ["scripts/agent_runtime/"], ["scripts/"]])
+def test_sonnet_worker_security_floor_precedes_hooks_and_cli(tmp_path, monkeypatch, owned):
+    monkeypatch.setattr(agy, "require_hook_config", lambda *a, **k: pytest.fail("hooks ran before security refusal"))
+    with pytest.raises(ValueError, match="agy_sonnet_security_refused"):
+        build(tmp_path, SLUGS[0], "danger", {"owned_paths": owned})
 
 
 @pytest.mark.parametrize("model", [*SLUGS, *LABELS])
@@ -234,8 +236,8 @@ def test_provider_init_identity_on_existing_parse_result(tmp_path, monkeypatch, 
         output_file=None,
         plan=plan,
     )
-    assert result.ok is (observed != "mismatching")
-    assert result.response == ("" if observed == "mismatching" else "READY")
+    assert result.ok is (observed == "matching")
+    assert result.response == ("READY" if observed == "matching" else "")
     identity = result.model_identity
     if observed != "mismatching":
         assert result.substitution is None
@@ -374,8 +376,8 @@ def test_claude_reported_identity_fails_closed(tmp_path, slug, label, backend, f
         plan=plan,
     )
     mismatch = form in {"different", "whitespace", "non-string", "retired", "unknown"}
-    assert parsed.ok is not mismatch
-    assert parsed.response == ("" if mismatch else "READY")
+    assert parsed.ok is (not mismatch and form not in {"absent", "empty"})
+    assert parsed.response == ("" if mismatch or form in {"absent", "empty"} else "READY")
     if form in {"absent", "empty"}:
         assert parsed.model_identity is None
     else:
@@ -414,3 +416,156 @@ def test_conflicting_init_model_values_fail_closed(tmp_path, slug, nested_matche
     assert parsed.stderr_excerpt == "agy_model_event_mismatch"
     assert parsed.model_identity["actual_model"] == different
     assert parsed.model_identity["substituted"] is True
+
+
+def mock_agy_provider(monkeypatch, tmp_path, runner, *, stdout, exit_kind="complete", version="1.4.0"):
+    """Mock only the process boundary, keeping adapter planning/parsing and runner custody."""
+    from types import SimpleNamespace
+
+    monkeypatch.setattr(agy, "require_hook_config", lambda *a, **k: None)
+    monkeypatch.setattr(agy, "_require_background_wait_support", lambda *a: None)
+    plan, _ = _identity_stream_plan(tmp_path, SLUGS[1])
+    monkeypatch.setenv("AGY_APP_DATA_DIR", str(tmp_path / "agy-data"))
+    monkeypatch.setattr(agy, "_agy_app_data", lambda overrides: tmp_path / "agy-data")
+    monkeypatch.setattr(agy, "_build_log_path", lambda *a: tmp_path / "agy.log")
+    binary = tmp_path / "agy-cli-fixture"
+    binary.write_bytes(b"synthetic CLI artifact, never executed\n")
+    original_which = agy.shutil.which
+    monkeypatch.setattr(agy.shutil, "which", lambda name: str(binary) if name == "agy" else original_which(name))
+    monkeypatch.setattr(runner, "has_headroom", lambda *a: (True, "fixture"))
+    monkeypatch.setattr(runner, "load_failover_chain", lambda *a, **k: None)
+    monkeypatch.setattr(runner, "write_record", lambda *a: None)
+    monkeypatch.setattr(runner, "resolve_invocation_telemetry", lambda **k: SimpleNamespace(
+        model=k["requested_model"], effort="high", cli_version=version,
+    ))
+    monkeypatch.setattr(runner.FleetCapture, "start", lambda **k: None)
+    monkeypatch.setattr(runner.PrimaryTreeWatch, "start", lambda **k: None)
+    monkeypatch.setattr(runner._ChildCwdPin, "start", lambda **k: None)
+    monkeypatch.setattr(runner, "_prepare_spawn_command", lambda cmd, env: (cmd, env))
+    launches = []
+
+    class Process:
+        pid = 999_999_991
+        returncode = None
+
+        def poll(self):
+            if self.returncode is not None:
+                return self.returncode
+            if exit_kind == "timeout":
+                return None
+            if exit_kind == "cancel":
+                raise KeyboardInterrupt("synthetic cancellation")
+            if exit_kind == "exception":
+                raise RuntimeError("synthetic runtime failure")
+            self.returncode = 0
+            return self.returncode
+
+        def wait(self, **kwargs):
+            return self.returncode
+
+    proc = Process()
+
+    def spawn(cmd, **kwargs):
+        launches.append((cmd, kwargs))
+        return proc, None, None
+
+    monkeypatch.setattr(runner, "_spawn_subprocess", spawn)
+    monkeypatch.setattr(runner, "_kill_process_tree", lambda proc: setattr(proc, "returncode", -15))
+    monkeypatch.setattr(runner, "_agy_process_group_exited", lambda pid: True)
+    state = SimpleNamespace(stdout_lines=stdout.splitlines(keepends=True), stderr_lines=[])
+    monkeypatch.setattr(runner, "start_watchdog", lambda *a, **k: (state, []))
+    monkeypatch.setattr(runner, "stop_watchdog", lambda *a, **k: None)
+    if exit_kind == "timeout":
+        monkeypatch.setattr(runner, "should_kill", lambda *a, **k: "hard_timeout")
+    return launches, plan, binary
+
+
+@pytest.mark.parametrize("model", ["claude-sonnet-5-5-medium", "Claude Opus 5.5 (Low)"])
+def test_unknown_variant_refuses_normal_builder_before_hooks(tmp_path, monkeypatch, model):
+    monkeypatch.setattr(agy, "require_hook_config", lambda *a, **k: pytest.fail("unsupported pin reached hooks"))
+    with pytest.raises(ValueError, match="Unsupported AGY model"):
+        build(tmp_path, model, "danger")
+
+
+@pytest.mark.parametrize("source", ["requested", "configuration", {"provider-init": True}])
+def test_request_or_configuration_init_cannot_qualify(tmp_path, source):
+    plan, terminal = _identity_stream_plan(tmp_path, SLUGS[1])
+    stdout = "\n".join(map(json.dumps, [
+        {"event": "init", "init": {"model": SLUGS[1], "source": source}}, terminal,
+    ]))
+    result = agy.AgyAdapter().parse_response(stdout=stdout, stderr="", returncode=0, output_file=None, plan=plan)
+    assert result.ok is False
+    assert result.model_identity is None
+    assert result.stderr_excerpt == "agy_model_identity_missing"
+
+
+@pytest.mark.parametrize("position", ["duplicate", "after-tool", "after-result"])
+def test_init_is_one_initial_observation(tmp_path, position):
+    plan, terminal = _identity_stream_plan(tmp_path, SLUGS[1])
+    init = {"event": "init", "model": SLUGS[1]}
+    events = {
+        "duplicate": [init, init, terminal],
+        "after-tool": [{"event": "step_update", "model": SLUGS[1]}, init, terminal],
+        "after-result": [terminal, init],
+    }[position]
+    result = agy.AgyAdapter().parse_response(
+        stdout="\n".join(map(json.dumps, events)), stderr="", returncode=0, output_file=None, plan=plan,
+    )
+    assert result.ok is False
+    assert result.stderr_excerpt == "agy_model_event_mismatch"
+
+
+@pytest.mark.parametrize("identifiers", [
+    {"conversation_id": "one", "session_id": "two"},
+    {"conversation_id": 7},
+    {"conversation_id": ""},
+    {"conversation_id": "stale-session"},
+])
+def test_provider_session_must_bind_to_this_stream(tmp_path, identifiers):
+    plan, terminal = _identity_stream_plan(tmp_path, SLUGS[1])
+    init = {"event": "init", "model": SLUGS[1], **identifiers}
+    result = agy.AgyAdapter().parse_response(
+        stdout="\n".join(map(json.dumps, [init, terminal])), stderr="", returncode=0, output_file=None, plan=plan,
+    )
+    assert result.ok is False
+    assert result.model_identity is None or result.model_identity["substituted"] is True
+
+
+@pytest.mark.parametrize("model", ["claude-opus-5-5-high", "claude-sonnet-5-5-high"])
+def test_identity_survives_provider_failure_without_claiming_success(tmp_path, model):
+    plan, terminal = _identity_stream_plan(tmp_path, model)
+    terminal["result"].update(status="ERROR", error="synthetic provider failure")
+    result = agy.AgyAdapter().parse_response(
+        stdout="\n".join(map(json.dumps, [{"event": "init", "model": model}, terminal])),
+        stderr="", returncode=1, output_file=None, plan=plan,
+    )
+    assert result.ok is False
+    assert result.model_identity["actual_model"] == model
+    assert result.model_identity["actual_model_known"] is True
+
+
+@pytest.mark.parametrize("model", SLUGS)
+def test_claude_worker_keeps_the_real_shell_output_hook_gate(tmp_path, model):
+    from scripts.agent_runtime.agy_hook_config import AgyHookConfigError
+
+    hooks = tmp_path / ".agents" / "hooks.json"
+    hooks.parent.mkdir()
+    hooks.write_bytes(b"{}\n")
+    with pytest.raises(AgyHookConfigError, match="missing_guard"):
+        build(tmp_path, model, "workspace-write", {"agy_home_override": str(tmp_path / "home")})
+    assert hooks.read_bytes() == b"{}\n"
+
+
+def test_sonnet_explicit_critical_worker_is_refused_without_owned_paths(tmp_path):
+    with pytest.raises(ValueError, match="agy_sonnet_security_refused"):
+        build(tmp_path, SLUGS[0], "workspace-write", {"risk": "critical"})
+
+
+@pytest.mark.parametrize("config", [{"risk": "critical"}, {"owned_paths": ["scripts/delegate.py"]}])
+def test_opus_security_worker_keeps_its_existing_catalog_role(tmp_path, monkeypatch, config):
+    monkeypatch.setattr(agy, "require_hook_config", lambda *a, **k: None)
+    monkeypatch.setattr(agy, "_require_background_wait_support", lambda *a: None)
+    monkeypatch.setattr(agy, "_build_log_path", lambda *a: tmp_path / "agy.log")
+    plan = build(tmp_path, SLUGS[1], "workspace-write", config)
+    assert plan.cmd[plan.cmd.index("--model") + 1] == SLUGS[1]
+    assert "--dangerously-skip-permissions" in plan.cmd

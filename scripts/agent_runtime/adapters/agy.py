@@ -24,8 +24,8 @@ Known behavioral facts (verify against the installed CLI when changing transport
   ``MCP_TOOL`` events; both shapes are paired with planner intents.
 - Per-invocation model is an allowlisted ``--model <slug>``. Slugs and
   display strings normalize to the same key. Missing models use the default;
-  unknown explicit names are refused. Claude 5.5 high pins require the
-  permission-denied review route and separate driver qualification (#10420).
+  unknown explicit names are refused. Claude 5.5 high pins use the existing
+  worker or permission-denied review route and separate driver qualification (#10420).
 - ``agy plugin`` only exposes ``import gemini|claude``, ``install``,
   ``enable``, ``disable``. There is no plugin-marketplace browse surface,
   and ``import gemini`` is a no-op in a default install.
@@ -92,7 +92,7 @@ import tempfile
 import unicodedata
 import urllib.parse
 import uuid
-from collections.abc import Iterator, Mapping
+from collections.abc import Iterable, Iterator, Mapping
 from pathlib import Path
 from typing import Any, NamedTuple
 
@@ -761,7 +761,7 @@ _AGY_MODEL_SLUGS: tuple[str, ...] = (
     "claude-sonnet-5-5-high",
     "claude-opus-5-5-high",
 )
-_AGY_CLAUDE_REVIEW_SLUGS = frozenset({"claude-sonnet-5-5-high", "claude-opus-5-5-high"})
+_AGY_CLAUDE_SLUGS = frozenset({"claude-sonnet-5-5-high", "claude-opus-5-5-high"})
 
 # Recognize legacy display labels for active selection or retired-model refusal.
 _AGY_MODEL_LEGACY_LABELS: tuple[str, ...] = (
@@ -846,12 +846,36 @@ _WRITE_MODE_PROMPT_CONTRACT = (
 )
 
 
+class AgyRuntimeIdentity(dict):
+    """In-memory custody of a runner-observed init, serialized as an ordinary mapping.
+
+    A dictionary from model output or a cached record cannot acquire this type.
+    The snapshot also detects mutation between observation and dispatch storage.
+    This is provider-reported identity, not backend attestation.
+    """
+
+    def __init__(self, observation: Mapping[str, Any] | Iterable[tuple[str, Any]]) -> None:
+        super().__init__(observation)
+        self._snapshot = json.dumps(self, sort_keys=True)
+
+    def bound_to(self, *, task_id: str, run_nonce: str | None, requested_model: str | None) -> bool:
+        provenance = self.get("provenance") or {}
+        return (
+            json.dumps(self, sort_keys=True) == self._snapshot
+            and bool(run_nonce)
+            and provenance.get("task_id") == task_id
+            and provenance.get("run_nonce") == run_nonce
+            and provenance.get("requested_model") == requested_model
+        )
+
+
 class AgyAdapter:
     """Adapter for the ``agy`` Antigravity CLI."""
 
     name: str = "agy"
     default_model: str = os.environ.get("LEARN_UK_AGY_MODEL", "gemini-3.8-flash-high")
     supported_modes: frozenset[str] = frozenset({"read-only", "workspace-write", "danger"})
+    claude_model_slugs = _AGY_CLAUDE_SLUGS
 
     @staticmethod
     def resolve_model_slug(model: str) -> str | None:
@@ -899,8 +923,8 @@ class AgyAdapter:
 
         Slugs and display strings resolve to an allowlisted ``--model`` slug.
         Missing models use the configured default; unknown explicit models
-        fail before subprocesses. Claude pins require the permission-denied
-        review route. ``effort`` remains a no-op (#1396).
+        fail before subprocesses. Claude high pins use the existing worker or
+        permission-denied review route. ``effort`` remains a no-op (#1396).
         """
         if mode not in self.supported_modes:
             raise ValueError(f"AgyAdapter: unsupported mode {mode!r}")
@@ -911,11 +935,16 @@ class AgyAdapter:
         resolved_model = self._resolve_model_flag(model)
         tc = tool_config or {}
         review_route = _agy_review_route(tc)
-        if resolved_model in _AGY_CLAUDE_REVIEW_SLUGS and not review_route:
-            raise ValueError(
-                f"agy_claude_requires_review_route: rejected {model if model is not None else self.default_model}; "
-                "Claude requires the permission-denied AGY review route"
-            )
+        if resolved_model in self.claude_model_slugs and not review_route:
+            from scripts.review.security_paths import is_security_sensitive_change
+
+            model_spec = next((
+                spec for spec in load_model_catalog()["models"].values()
+                if spec.get("routing_wire_ids", {}).get("agy") == resolved_model
+            ), {})
+            security_scope = tc.get("risk") == "critical" or is_security_sensitive_change((), tc.get("owned_paths") or ())
+            if security_scope and "security_review" not in model_spec.get("roles", ()):
+                raise ValueError("agy_sonnet_security_refused: Sonnet cannot implement security-sensitive work")
 
         max_budget_usd = (tool_config or {}).get("max_budget_usd")
         if max_budget_usd is not None:
@@ -2048,6 +2077,7 @@ def _stream_result(
     *,
     plan: InvocationPlan | None = None,
     model_identity: dict[str, Any] | None = None,
+    identity_events: list[dict[str, Any]] | None = None,
 ) -> tuple[dict[str, Any] | None, str | None]:
     """Read exactly one terminal result from AGY's NDJSON event stream."""
     result: dict[str, Any] | None = None
@@ -2057,8 +2087,11 @@ def _stream_result(
     except ValueError:
         resolved_expected = None
     argon_identity = resolved_expected in _AGY_ARGON_SLUGS
-    check_identity = argon_identity or resolved_expected in _AGY_CLAUDE_REVIEW_SLUGS
+    check_identity = argon_identity or resolved_expected in _AGY_CLAUDE_SLUGS
     identity_seen = False
+    init_seen = False
+    activity_seen = False
+    provider_session = None
     if not stdout or not stdout.strip():
         return None, "agy_stream_output_invalid: missing terminal result"
     for line in stdout.split("\n"):
@@ -2072,6 +2105,40 @@ def _stream_result(
             return None, "agy_stream_output_invalid: malformed NDJSON event"
         if check_identity and event["event"] == "init":
             config = event.get("init")
+            if resolved_expected in _AGY_CLAUDE_SLUGS:
+                import hashlib
+
+                if "\ufffd" in line:
+                    return None, "agy_model_identity_missing"
+                if identity_events is not None:
+                    identity_events.append({"sha256": hashlib.sha256(line.removesuffix("\r").encode("utf-8")).hexdigest()})
+                if init_seen or activity_seen:
+                    if model_identity is not None:
+                        model_identity["substituted"] = True
+                    return None, "agy_model_event_mismatch"
+                init_seen = True
+                # Configuration/request echoes are not runtime observations.
+                for metadata in (event, config):
+                    if isinstance(metadata, dict) and any(
+                        metadata.get(key) not in (None, "provider-init", "runtime")
+                        for key in ("source", "model_source")
+                    ):
+                        return None, "agy_model_identity_missing"
+                sessions = [
+                    metadata[key]
+                    for metadata in (event, config) if isinstance(metadata, dict)
+                    for key in ("conversation_id", "session_id") if metadata.get(key) is not None
+                ]
+                if any(not isinstance(value, str) or not value or len(value) > 200 for value in sessions):
+                    return None, "agy_model_identity_missing"
+                if len(set(sessions)) > 1:
+                    return None, "agy_model_event_mismatch"
+                provider_session = sessions[0] if sessions else None
+                resumed = next((arg.split("=", 1)[1] for arg in plan.cmd if arg.startswith("--conversation=")), None)
+                if provider_session is not None and resumed is not None and provider_session != resumed:
+                    return None, "agy_model_event_mismatch"
+                if identity_events is not None:
+                    identity_events[-1]["provider_session_id"] = provider_session
             reported = [config.get("model")] if isinstance(config, dict) else []
             reported.append(event.get("model"))
             for provider_model in reported:
@@ -2097,7 +2164,15 @@ def _stream_result(
                 if mismatch:
                     return None, "agy_model_event_mismatch"
                 identity_seen = True
+        elif event["event"] != "init":
+            activity_seen = True
         if event["event"] == "result":
+            if provider_session is not None and isinstance(event.get("result"), dict) and (
+                event["result"].get("conversation_id") != provider_session
+            ):
+                if model_identity is not None:
+                    model_identity["substituted"] = True
+                return None, "agy_model_event_mismatch"
             if result is not None or not isinstance(event.get("result"), dict):
                 return None, "agy_stream_output_invalid: duplicate or malformed terminal result"
             result = event["result"]
@@ -2112,7 +2187,7 @@ def _stream_result(
         ) and error else "agy_stream_result_error"
     if not result.get("response", "").strip() and "structured_output" not in result:
         return result, "agy_stream_output_invalid: empty terminal response"
-    if argon_identity and not identity_seen:
+    if check_identity and not identity_seen:
         return None, "agy_model_identity_missing"
     return result, None
 

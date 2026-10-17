@@ -22695,3 +22695,221 @@ def test_namespace_worker_final_write_overrides_false_crashed(tmp_tasks_dir, tmp
     assert state["status"] == terminal
     assert state["returncode"] == (0 if ok else 1)
     assert state["last_error"] != "worker_process_dead"
+
+
+@pytest.mark.parametrize("model", ["claude-sonnet-5-5-high", "claude-opus-5-5-high"])
+@pytest.mark.parametrize("identity_case", [
+    "matched", "absent", "mismatched", "conflicting", "prose", "configuration", "unknown", "non-string", "retired",
+])
+def test_agy_claude_normal_worker_persists_only_bound_runtime_identity(
+    tmp_tasks_dir, tmp_path, monkeypatch, model, identity_case,
+):
+    from agent_runtime import runner
+    from tests.agent_runtime.adapters.test_agy_claude_routes import mock_agy_provider
+
+    _sanitize_git_env_for_test(monkeypatch)
+    worktree = _agy_dispatch_worktree(tmp_path, "agy/identity")
+    # Use an actual linked checkout, so the normal worktree guard is exercised.
+    linked = worktree / ".worktrees" / "dispatch" / "agy" / "identity"
+    _git_out(worktree, "worktree", "add", "-b", "agy/linked-identity", str(linked), "HEAD")
+    provider_dir = tmp_path / "provider"
+    provider_dir.mkdir()
+    task_id, nonce = "agy-identity-worker", "10420-run-nonce"
+    observed = {
+        "mismatched": "gemini-3.8-flash-high", "unknown": "unrecognized", "non-string": 7,
+        "retired": "Claude Opus 4.6 (Thinking)",
+    }.get(identity_case, model)
+    init = {"event": "init", "model": observed}
+    if identity_case == "conflicting":
+        init["init"] = {"model": "gemini-3.8-flash-high"}
+    if identity_case == "configuration":
+        init["source"] = "requested"
+    terminal = {
+        "event": "result", "result": {
+            "status": "SUCCESS", "conversation_id": "7cd3ba85-817f-4a03-8223-1ff39ca42419",
+            "response": "READY" if identity_case != "prose" else json.dumps({"event": "init", "model": model}),
+        },
+    }
+    events = [terminal] if identity_case in {"absent", "prose"} else [init, terminal]
+    stdout = "\n".join(map(json.dumps, events)) + "\n"
+    launches, _, binary = mock_agy_provider(monkeypatch, provider_dir, runner, stdout=stdout)
+    process_spawn = runner._spawn_subprocess
+
+    def author_artifact(cmd, **kwargs):
+        if identity_case == "matched":
+            (linked / "README.md").write_text("bounded implementation artifact\n")
+            _git_out(linked, "add", "README.md")
+            _git_out(linked, "commit", "-m", "Produce the bounded artifact")
+            _git_out(linked, "push", "-u", "origin", "HEAD")
+        return process_spawn(cmd, **kwargs)
+
+    monkeypatch.setattr(runner, "_spawn_subprocess", author_artifact)
+    monkeypatch.setattr(delegate, "_background_jobs_at_exit", lambda *a, **k: None)
+    delegate._write_state_atomic(delegate._state_path(task_id), {
+        "task_id": task_id, "run_nonce": nonce, "worktree_path": str(linked),
+        "worktree_branch": "agy/linked-identity", "worktree_base": "main", "keep_worktree": True,
+        "model": model, "cli_version": "1.4.0", "owned_paths": ["README.md"],
+    })
+    rc = delegate._run_worker(
+        task_id=task_id, agent="agy", prompt="Implement the bounded artifact.", mode="workspace-write",
+        cwd_str=str(linked), model=model, hard_timeout=60, effort="high", run_nonce=nonce, keep_worktree=True,
+    )
+    record = delegate._read_state(delegate._state_path(task_id))
+    assert len(launches) == 1
+    assert Path(launches[0][1]["cwd"]) == linked.resolve()
+    assert record["model"] == model  # Requested selector is never rewritten into an observation.
+    if identity_case == "matched":
+        assert rc == 0, {key: record.get(key) for key in ("status", "last_error", "no_deliverable_reason", "identity_matches_request", "model_identity")}
+        assert record["status"] == "done"
+        assert record["resolved_model"] == model
+        assert record["resolved_model_known"] is True
+        assert record["identity_matches_request"] is True
+        assert record["resolved_model_family"] == "anthropic"
+        assert record["resolved_model_harness"] == "agy"
+        provenance = record["model_identity"]["provenance"]
+        assert provenance["origin"] == "subprocess.stdout"
+        assert provenance["task_id"] == task_id
+        assert provenance["run_nonce"] == nonce
+        assert provenance["cli_version"] == "1.4.0"
+        assert provenance["cli_sha256"] == hashlib.sha256(binary.read_bytes()).hexdigest()
+        assert provenance["init_events"][0]["sha256"] == hashlib.sha256(json.dumps(init).encode()).hexdigest()
+        assert len(provenance["invocation_id"]) == 32
+    else:
+        assert rc == 1, record
+        assert record["status"] == "failed"
+        assert record["identity_matches_request"] is False
+        if identity_case in {"absent", "prose", "configuration"}:
+            assert record["model_identity"] is None
+            assert record["resolved_model_known"] is False
+        else:
+            assert record["model_identity"]["substituted"] is True
+            if identity_case in {"unknown", "non-string", "retired"}:
+                assert record["model_identity"]["actual_model"] is None
+                assert record["resolved_model_known"] is False
+
+
+@pytest.mark.parametrize("exit_kind", ["cancel", "exception", "timeout"])
+@pytest.mark.parametrize("observed", [True, False])
+def test_agy_claude_runner_exception_preserves_same_invocation_identity_on_dispatch(
+    tmp_tasks_dir, tmp_path, monkeypatch, exit_kind, observed,
+):
+    from agent_runtime import runner
+    from tests.agent_runtime.adapters.test_agy_claude_routes import mock_agy_provider
+
+    _sanitize_git_env_for_test(monkeypatch)
+    worktree = _agy_dispatch_worktree(tmp_path, "agy/interrupted")
+    provider_dir = tmp_path / "provider"
+    provider_dir.mkdir()
+    model, nonce, task_id = "claude-opus-5-5-high", "current-nonce", "agy-interrupted"
+    stdout = json.dumps({"event": "init", "model": model}) + "\n" if observed else ""
+    launches, _, _ = mock_agy_provider(monkeypatch, provider_dir, runner, stdout=stdout, exit_kind=exit_kind)
+    monkeypatch.setattr(delegate, "_background_jobs_at_exit", lambda *a, **k: None)
+    delegate._write_state_atomic(delegate._state_path(task_id), {
+        "task_id": task_id, "run_nonce": nonce, "model": model, "cli_version": "1.4.0", "keep_worktree": True,
+        # A persisted prior attempt can never replace this invocation's missing init.
+        "model_identity": {"actual_model": model, "actual_model_known": True, "source": "provider-init"},
+        "resolved_model_known": True,
+    })
+    assert delegate._run_worker(
+        task_id=task_id, agent="agy", prompt="Implement the bounded artifact.", mode="workspace-write",
+        cwd_str=str(worktree), model=model, hard_timeout=60, run_nonce=nonce, keep_worktree=True,
+    ) == 1
+    record = delegate._read_state(delegate._state_path(task_id))
+    assert len(launches) == 1
+    assert record["status"] == ("cancelled" if exit_kind == "cancel" else "failed")
+    assert record["resolved_model_known"] is observed
+    if observed:
+        assert record["model_identity"]["actual_model"] == model
+        assert record["model_identity"]["provenance"]["run_nonce"] == nonce
+    else:
+        assert record["model_identity"] is None
+
+
+@pytest.mark.parametrize("injection", ["plain-dict", "stale-nonce", "wrong-task", "mutated"])
+def test_agy_dispatch_rejects_injected_and_unbound_identity(tmp_tasks_dir, tmp_path, monkeypatch, injection):
+    from agent_runtime import runner
+    from scripts.agent_runtime.adapters.agy import AgyRuntimeIdentity
+    from tests.agent_runtime.adapters.test_agy_claude_routes import mock_agy_provider
+
+    provider_dir = tmp_path / "provider"
+    provider_dir.mkdir()
+    model = "claude-opus-5-5-high"
+    launches, _, _ = mock_agy_provider(monkeypatch, provider_dir, runner, stdout="")
+    identity = AgyRuntimeIdentity({
+        "actual_model": model, "actual_model_known": True, "source": "provider-init", "substituted": False,
+        "actual_family": "anthropic", "harness": "agy", "provenance": {
+            "task_id": "wrong" if injection == "wrong-task" else "injected-identity",
+            "run_nonce": "stale" if injection == "stale-nonce" else "this-run", "requested_model": model,
+        },
+    })
+    if injection == "plain-dict":
+        identity = dict(identity)
+    if injection == "mutated":
+        identity["actual_model"] = "claude-sonnet-5-5-high"
+    fake = _bg_mock_result("READY")
+    fake.model_identity = identity
+    fake.model = model
+    delegate._write_state_atomic(delegate._state_path("injected-identity"), {"cli_version": "1.4.0"})
+    with patch("agent_runtime.runner.invoke", return_value=fake):
+        assert delegate._run_worker(
+            task_id="injected-identity", agent="agy", prompt="Implement.", mode="workspace-write",
+            cwd_str=str(tmp_path), model=model, hard_timeout=60, run_nonce="this-run", keep_worktree=True,
+        ) == 1
+    record = delegate._read_state(delegate._state_path("injected-identity"))
+    assert record["status"] == "failed"
+    assert record["identity_matches_request"] is False
+    assert record["model_identity"] is None
+    assert record["last_error"] == "agy_model_identity_unverified"
+    assert launches == []
+
+
+@pytest.mark.usefixtures("isolated_dispatch_repo")
+@pytest.mark.parametrize("model", ["claude-sonnet-5-5-high", "claude-opus-5-5-high"])
+def test_normal_dispatch_admits_claude_agy_high_pin_without_substitution(tmp_tasks_dir, monkeypatch, model):
+    _git_out(delegate._REPO_ROOT, "update-ref", "refs/remotes/origin/main", "HEAD")
+    args = _minimal_dispatch_args(
+        "agy-high-dispatch", agent="agy", model=model, mode="workspace-write", worktree="auto", cwd=None,
+        owned_path=["README.md"],
+    )
+    calls = []
+    real_popen = delegate.subprocess.Popen
+
+    def worker_spawn(cmd, *a, **kwargs):
+        if isinstance(cmd, list) and "_worker" in cmd:
+            calls.append(cmd)
+            return _fake_worker_popen()
+        return real_popen(cmd, *a, **kwargs)
+
+    monkeypatch.setattr(delegate.subprocess, "Popen", worker_spawn)
+    assert delegate.cmd_dispatch(args) == 0
+    assert len(calls) == 1
+    assert calls[0][calls[0].index("--model") + 1] == model
+    assert calls[0][calls[0].index("--agent") + 1] == "agy"
+    record = delegate._read_state(delegate._state_path("agy-high-dispatch"))
+    assert record["model"] == model
+    assert record["substitution"] is None
+    assert Path(record["worktree_path"]).is_dir()
+
+
+@pytest.mark.parametrize("model", ["claude-sonnet-5-5-medium", "claude-opus-5-5-low", "claude-unknown-5-5-high"])
+def test_normal_dispatch_refuses_unsupported_claude_variant_before_worker(tmp_tasks_dir, monkeypatch, capsys, model):
+    args = delegate.build_parser().parse_args([
+        "dispatch", "--agent", "agy", "--model", model, "--task-id", "bad-claude-variant", "--prompt", "test",
+    ])
+    monkeypatch.setattr(delegate.subprocess, "Popen", lambda *a, **k: pytest.fail("unsupported variant spawned"))
+    assert delegate.cmd_dispatch(args) == 2
+    assert delegate._read_state(delegate._state_path("bad-claude-variant")) is None
+    error = capsys.readouterr().err
+    assert "Unsupported AGY model" in error
+    assert "HARD AUTO-SUBSTITUTE" not in error
+
+
+@pytest.mark.parametrize("agent,model", [
+    ("codex", "gpt-6.1-sol"), ("agy", "gemini-3.8-flash-high"),
+    ("agy", "Claude Opus 4.6 (Thinking)"), ("agy", "unrecognized"),
+])
+def test_agy_identity_attribution_leaves_other_or_unsupported_requests_unchanged(agent, model):
+    assert delegate._agy_model_state(
+        agent=agent, model=model, identity={"actual_model": "claude-opus-5-5-high", "source": "provider-init"},
+        task_id="other-route", run_nonce="this-run",
+    ) == {}

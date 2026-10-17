@@ -75,6 +75,7 @@ from scripts.agent_runtime.adapters.acpx import (
     active_communication_scope,
 )
 from scripts.agent_runtime.adapters.acpx import TRANSPORT_ENV as ACPX_TRANSPORT_ENV
+from scripts.agent_runtime.adapters.agy import AgyAdapter, AgyRuntimeIdentity, _stream_result
 from scripts.agent_runtime.attempt_safe_read import AttemptReadError, safe_attempt_file_size, safe_read_attempt_file
 from scripts.agent_runtime.result import AgyAttempt, AgyTelemetry
 from scripts.entire.fleet_capture import FleetCapture, resolved_route
@@ -172,8 +173,62 @@ _INVOCATION_ATTRIBUTION: contextvars.ContextVar[InvocationAttribution | None] = 
 _INTER_AGENT_TRANSPORT: contextvars.ContextVar[AcpxTransportProvenance | None] = contextvars.ContextVar(
     "agent_runtime_inter_agent_transport", default=None
 )
+_AGY_OBSERVED_IDENTITY: contextvars.ContextVar[AgyRuntimeIdentity | None] = contextvars.ContextVar(
+    "agy_observed_identity", default=None
+)
 _INTER_AGENT_TRANSPORT_NAME = "acp"
 _RESERVED_TRANSPORT_PROVENANCE = frozenset({"source", "agent", "via"})
+
+
+def _observe_agy_identity(
+    *, stdout: str, plan: Any, task_id: str | None, run_nonce: str | None,
+    invocation_id: str, cli_sha256: str | None, cli_version: str,
+) -> AgyRuntimeIdentity | None:
+    """Seal identity from this invocation's stdout, never plan metadata or prose."""
+    requested = plan.cmd[plan.cmd.index("--model") + 1] if "--model" in plan.cmd else None
+    if requested not in AgyAdapter.claude_model_slugs:
+        return None
+    identity: dict[str, Any] = {}
+    events: list[dict[str, Any]] = []
+    terminal, _problem = _stream_result(stdout, plan=plan, model_identity=identity, identity_events=events)
+    if not events or identity.get("source") != "provider-init" or not cli_sha256 or cli_version == "unknown":
+        return None
+    observed = identity.get("actual_model")
+    try:
+        observed_slug = AgyAdapter.resolve_model_slug(observed) if isinstance(observed, str) else None
+    except ValueError:
+        observed_slug = None
+    from scripts.review.model_catalog import load_model_catalog
+
+    family = next((
+        spec["family"] for key, spec in load_model_catalog()["models"].items()
+        if key == observed_slug or spec.get("routing_wire_ids", {}).get("agy") == observed_slug
+    ), None) if observed_slug else None
+    provider_session = events[0].get("provider_session_id")
+    if provider_session is None and terminal:
+        candidate = terminal.get("conversation_id")
+        if isinstance(candidate, str) and 0 < len(candidate) <= 200:
+            provider_session = candidate
+    if observed_slug is None:
+        identity.update(actual_model=None, actual_model_known=False)
+    receipt = AgyRuntimeIdentity({
+        **identity,
+        "actual_family": family,
+        "harness": "agy",
+        "provenance": {
+            "origin": "subprocess.stdout",
+            "init_events": events,
+            "provider_session_id": provider_session,
+            "cli_sha256": cli_sha256,
+            "cli_version": cli_version,
+            "invocation_id": invocation_id,
+            "task_id": task_id,
+            "run_nonce": run_nonce,
+            "requested_model": requested,
+        },
+    })
+    _AGY_OBSERVED_IDENTITY.set(receipt)
+    return receipt
 
 
 class AgentOutputLimitError(AgentRuntimeError):
@@ -1094,6 +1149,8 @@ def _build_usage_record(
     }
     if agent == "codex":
         record["model_identity"] = codex_model_identity()
+    elif agent == "agy" and isinstance(model_identity, AgyRuntimeIdentity):
+        record["model_identity"] = model_identity
     elif agent == "agy" and isinstance(model_identity, dict):
         actual_model = model_identity.get("actual_model")
         record["model_identity"] = {
@@ -1615,6 +1672,7 @@ def _execute_invocation_plan(
         stdout_silence_timeout=stdout_silence_timeout,
         initial_response_timeout=initial_response_timeout,
         v4_authorization_id=v4_authorization_id,
+        cli_version=cli_version,
     )
     if agent_name != "agy":
         return _execute_invocation_once(**kwargs)
@@ -1835,6 +1893,7 @@ def _execute_invocation_once(
     stdout_silence_timeout: int | None = None,
     initial_response_timeout: int | None = None,
     v4_authorization_id: str | None = None,
+    cli_version: str = "unknown",
 ) -> _ExecutionOutcome:
     """Spawn one plan, run watchdog/parse flow, and return raw execution state."""
     # Exact-target review isolation (#5285): when tool_config requests
@@ -1903,6 +1962,19 @@ def _execute_invocation_once(
         env["AGENT_NO_TELEMETRY_FOOTER"] = "1"
         env = _apply_merge_guard(mode=mode, env=env)
 
+    pinned_model = plan.cmd[plan.cmd.index("--model") + 1] if "--model" in plan.cmd else None
+    agy_identity_launch = agent_name == "agy" and pinned_model in AgyAdapter.claude_model_slugs
+    cli_sha256 = None
+    invocation_id = ""
+    if agent_name == "agy":
+        _AGY_OBSERVED_IDENTITY.set(None)
+    if agy_identity_launch:
+        import hashlib
+        import uuid
+
+        invocation_id = uuid.uuid4().hex
+        with contextlib.suppress(OSError):
+            cli_sha256 = hashlib.sha256(Path(plan.cmd[0]).read_bytes()).hexdigest()
     start_time = time.monotonic()
     proc: subprocess.Popen | None = None
     watchdog_state: WatchdogState | None = None
@@ -2179,6 +2251,13 @@ def _execute_invocation_once(
         # the finally clause doesn't try to close them again.
         stdout_master_fd = None
         stderr_master_fd = None
+        observed_identity = None
+        if agy_identity_launch:
+            observed_identity = _observe_agy_identity(
+                stdout=stdout_text, plan=plan, task_id=task_id,
+                run_nonce=(tool_config or {}).get("run_nonce"), invocation_id=invocation_id,
+                cli_sha256=cli_sha256, cli_version=cli_version,
+            )
         try:
             parse = adapter.parse_response(
                 stdout=stdout_text,
@@ -2190,6 +2269,8 @@ def _execute_invocation_once(
             )
         except AttemptReadError as exc:
             parse = ParseResult(ok=False, response="", failure_code=str(exc), stderr_excerpt=str(exc))
+        if agy_identity_launch:
+            parse = replace(parse, model_identity=observed_identity)
         if (
             not parse.ok
             and final_returncode not in (None, 0)
@@ -2257,6 +2338,22 @@ def _execute_invocation_once(
                 else None
             ),
         )
+    except BaseException:
+        if agy_identity_launch and watchdog_state is not None:
+            if proc is not None:
+                with contextlib.suppress(Exception):
+                    _kill_process_tree(proc)
+            stop_watchdog(
+                watchdog_state, watchdog_threads, proc=proc,
+                stdout_master_fd=stdout_master_fd, stderr_master_fd=stderr_master_fd,
+            )
+            stdout_master_fd = stderr_master_fd = None
+            _observe_agy_identity(
+                stdout="".join(watchdog_state.stdout_lines), plan=plan, task_id=task_id,
+                run_nonce=(tool_config or {}).get("run_nonce"), invocation_id=invocation_id,
+                cli_sha256=cli_sha256, cli_version=cli_version,
+            )
+        raise
     finally:
         if proc is not None and proc.poll() is None:
             with contextlib.suppress(Exception):
@@ -3825,6 +3922,7 @@ def invoke(
     agy_token = _AGY_INVOCATION_BUDGET.set(
         _AgyLaunchBudget(time.monotonic() + hard_timeout) if agent_name in {"agy", "gemini"} else None
     )
+    identity_token = _AGY_OBSERVED_IDENTITY.set(None)
     launch = None
     attempt = None
     try:
@@ -3864,17 +3962,26 @@ def invoke(
             and not bool(tool_config and (tool_config.get("review_id") or tool_config.get("attempt_id"))),
         )
     except BaseException as exc:
+        if agent_name == "agy":
+            exc.model_identity = _AGY_OBSERVED_IDENTITY.get()
         budget = _AGY_INVOCATION_BUDGET.get()
         if budget is not None and (agent_name in {"agy", "gemini"} or budget.attempts):
             exc.agy_telemetry = budget.snapshot(task_id)
         raise
     finally:
-        if launch is not None:
-            launch.cleanup()
-        if attempt is not None:
-            attempt.cleanup()
-        _INVOCATION_ATTRIBUTION.reset(attribution_token)
-        _AGY_INVOCATION_BUDGET.reset(agy_token)
+        try:
+            if launch is not None:
+                launch.cleanup()
+            if attempt is not None:
+                attempt.cleanup()
+        except BaseException as exc:
+            if agent_name == "agy":
+                exc.model_identity = _AGY_OBSERVED_IDENTITY.get()
+            raise
+        finally:
+            _INVOCATION_ATTRIBUTION.reset(attribution_token)
+            _AGY_INVOCATION_BUDGET.reset(agy_token)
+            _AGY_OBSERVED_IDENTITY.reset(identity_token)
 
 
 @dataclass(frozen=True)

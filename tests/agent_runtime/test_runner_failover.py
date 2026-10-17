@@ -1024,8 +1024,8 @@ def test_agy_real_parser_identity_reaches_runner_result(tmp_path, monkeypatch, p
     result = runner_mod.invoke("agy", "planned prompt\n", model=pin, mode="read-only", cwd=tmp_path)
     assert len(parses) == 1
     mismatch = form in {"different", "whitespace"}
-    assert result.ok is not mismatch
-    assert result.failure_code == ("provider_policy_refusal" if mismatch else None)
+    assert result.ok is (not mismatch and form != "absent")
+    assert result.failure_code == ("provider_policy_refusal" if mismatch or form == "absent" else None)
     expected_identity = (
         None
         if form == "absent"
