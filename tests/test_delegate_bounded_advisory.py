@@ -2605,9 +2605,20 @@ def test_r7_a_verdict_required_record_keeps_another_gates_typed_failure(tmp_path
     assert delegate._read_state(path)["failure_reason"] == bounded_advisory.CEILING_EXCEEDED
 
 
+def _driver_brief(path="tests/test_trial_example.py", **overrides):
+    packet = _envelope("0" * 64, owned_paths=[path])
+    del packet["dispatch_args_sha256"]
+    packet.update({"read_first": [path], "out_of_scope": ["No docs or refactors"],
+                   "verify_commands": ["pytest -q " + path],
+                   "report_format": "Changed files, commands and results, residuals"})
+    packet.update(overrides)
+    return _result_text(packet)
+
+
 @pytest.mark.parametrize("agent,model,effort", [
     ("claude", "claude-haiku-5-5", "medium"),
     ("codex", "gpt-6-luna", "high"),
+    ("deepseek", "deepseek-v4.1-flash", "high"),
 ])
 def test_trial_implementation_dispatch_without_advisor(env, monkeypatch, capsys, agent, model, effort):
     subprocess.run(["git", "update-ref", "refs/remotes/origin/main", "HEAD"],
@@ -2617,13 +2628,17 @@ def test_trial_implementation_dispatch_without_advisor(env, monkeypatch, capsys,
         "--owned-path", "tests/test_trial_example.py", "--mode", "workspace-write", "--worktree",
         "--force-agent", agent=agent, model=model,
     )
-    argv[argv.index("--prompt") + 1] = "Implement the example.\nVerify: pytest -q tests/test_trial_example.py"
+    argv[argv.index("--prompt") + 1] = _driver_brief()
+    if agent == "deepseek":
+        argv += ["--provider", "deepseek"]
     assert _dispatch(argv) == 0, capsys.readouterr().err
     record = _worker_record(env.tasks)
     assert record["labels"] == ["haiku-luna-coding-trial"]
     assert record["mechanical_task"]["family"] == "bounded_implementation"
     assert record["owned_paths"] == ["tests/test_trial_example.py"]
-    assert "advisory_envelope" not in record
+    assert record["advisory_envelope"]["issuer"] == "owning_driver"
+    assert bounded_advisory.VERIFY_PARAGRAPH in env.prompts[0]
+    assert bounded_advisory.STAY_IN_SCOPE_PARAGRAPH in env.prompts[0]
     assert "duration_s" in record  # Existing runtime accounting remains in the same record.
     assert env.spawned[0][env.spawned[0].index("--effort") + 1] == effort
     # Recheck the actual composed worker input at both worker admission gates.
@@ -2650,7 +2665,7 @@ def test_trial_implementation_dispatch_without_advisor(env, monkeypatch, capsys,
     assert spy.calls == 1
 
 
-@pytest.mark.parametrize("agent,model", [("claude", "claude-haiku-5-5"), ("codex", "gpt-6-luna")])
+@pytest.mark.parametrize("agent,model", [("claude", "claude-haiku-5-5"), ("codex", "gpt-6-luna"), ("deepseek", "deepseek-v4.1-flash")])
 @pytest.mark.parametrize("case", ["security", "ukrainian", "review", "missing-paths", "missing-command", "empty-command"])
 def test_trial_dispatch_refuses_excluded_or_incomplete_brief(env, capsys, agent, model, case):
     path = {"security": "scripts/delegate.py", "ukrainian": "curriculum/l2-uk-en/a1/item.md"}.get(case, "tests/test_trial_example.py")
@@ -2659,12 +2674,103 @@ def test_trial_dispatch_refuses_excluded_or_incomplete_brief(env, capsys, agent,
         extra += ["--owned-path", path]
     if case == "review":
         extra += ["--require-review-verdict"]
+    if agent == "deepseek":
+        extra += ["--worktree"]
     argv = _argv(*extra, agent=agent, model=model)
     argv[argv.index("--prompt") + 1] = {
         "missing-command": "Implement the example.",
         "empty-command": "Implement the example.\nVerify:\nNo command was supplied.",
-    }.get(case, "Implement the example.\nVerify: pytest -q tests/test_trial_example.py")
+    }.get(case, _driver_brief())
     assert _dispatch(argv) == 2
     assert env.spawned == []
     assert _worker_record(env.tasks) is None
     assert capsys.readouterr().err
+
+
+@pytest.mark.parametrize("agent,model", [("claude", "claude-haiku-5-5"), ("codex", "gpt-6-luna"), ("deepseek", "deepseek-v4.1-flash")])
+def test_trial_finalize_ceiling_overrun_fails(env, monkeypatch, capsys, agent, model):
+    subprocess.run(["git", "update-ref", "refs/remotes/origin/main", "HEAD"],
+                   cwd=delegate._REPO_ROOT, env=delegate._sanitized_git_env(), check=True, capture_output=True, timeout=30)
+    argv = _argv("--research-task-family", "bounded_implementation", "--research-role", "implementation",
+                 "--owned-path", "tests/test_trial_example.py", "--mode", "workspace-write", "--worktree",
+                 "--force-agent", agent=agent, model=model)
+    argv[argv.index("--prompt") + 1] = _driver_brief(max_changed_files=1)
+    assert _dispatch(argv) == 0, capsys.readouterr().err
+    spy = _Spy('DELIVERABLE: {"outcome":"no_change","reason":"example already works"}')
+    monkeypatch.setattr("agent_runtime.runner.invoke", spy)
+    monkeypatch.setattr(delegate, "_advisory_ceiling_check", lambda *_a, **_kw: {
+        "measured": True, "changed_files": 2, "non_test_loc": 0, "exceeded": ["changed files 2 > 1"],
+    })
+    monkeypatch.setattr(delegate, "_background_jobs_at_exit", lambda *_a, **_k: None)
+    monkeypatch.setattr(delegate, "_emit_terminal_dispatch_event", lambda **_kwargs: None)
+    assert _run_spawned_worker(env, env.prompts[0], monkeypatch) != 0
+    terminal = _worker_record(env.tasks)
+    assert terminal["status"] == "failed"
+    assert terminal["failure_reason"] == "advisory_ceiling_exceeded"
+
+
+def test_deepseek_dispatch_builds_direct_opencode_invocation(env, capsys):
+    from scripts.agent_runtime.adapters.deepseek import DeepSeekAdapter
+
+    argv = _argv("--research-task-family", "bounded_implementation", "--research-role", "implementation",
+                 "--owned-path", "tests/test_trial_example.py", "--provider", "deepseek", "--worktree",
+                 agent="deepseek", model="deepseek-v4.1-flash")
+    argv[argv.index("--prompt") + 1] = _driver_brief()
+    refusal, target = delegate._admit_dispatch_target(
+        _parse(argv), agent="deepseek", trees=lambda: delegate._kimi_worktree_trees(delegate._REPO_ROOT),
+        repo_role="public-monorepo")
+    assert refusal is None, refusal
+    plan = DeepSeekAdapter().build_invocation(
+        prompt=_driver_brief(), mode="read-only", cwd=delegate._REPO_ROOT, model=target.model,
+        task_id=None, session_id=None, tool_config=None, effort="high")
+    assert Path(plan.cmd[0]).name == "opencode"
+    assert plan.cmd[plan.cmd.index("--model") + 1] == "deepseek/deepseek-flash"
+
+
+@pytest.mark.parametrize("extra", [["--require-review-verdict"], ["--research-role", "design"],
+                                  ["--research-role", "approval"]])
+def test_deepseek_dispatch_refuses_non_implementation(env, capsys, extra):
+    argv = _argv("--research-task-family", "bounded_implementation", "--owned-path", "tests/test_trial_example.py",
+                 *extra, agent="deepseek", model="deepseek-v4.1-flash")
+    argv[argv.index("--prompt") + 1] = _driver_brief()
+    assert _dispatch(argv) == 2
+    assert env.spawned == []
+
+
+def test_private_deepseek_dispatch_refused_before_spawn(env):
+    argv = _argv("--research-task-family", "bounded_implementation", "--research-role", "implementation",
+                 "--owned-path", "tests/test_trial_example.py", "--worktree",
+                 agent="deepseek", model="deepseek-v4.1-flash")
+    argv[argv.index("--prompt") + 1] = _driver_brief()
+    refusal, target = delegate._admit_dispatch_target(
+        _parse(argv), agent="deepseek", repo_role="private-infra", trees=())
+    assert target is None
+    assert "public-repository worktrees only" in refusal
+    assert env.spawned == []
+
+
+@pytest.mark.parametrize("provider,expected", [("deepseek", "deepseek/deepseek-flash"),
+                                               ("openrouter", "openrouter/deepseek/deepseek-v4.1-flash")])
+def test_deepseek_trial_provider_routing(env, monkeypatch, capsys, provider, expected):
+    from scripts.agent_runtime.adapters.deepseek import DeepSeekAdapter
+
+    subprocess.run(["git", "update-ref", "refs/remotes/origin/main", "HEAD"],
+                   cwd=delegate._REPO_ROOT, env=delegate._sanitized_git_env(), check=True, capture_output=True, timeout=30)
+    argv = _argv("--research-task-family", "bounded_implementation", "--research-role", "implementation",
+                 "--owned-path", "tests/test_trial_example.py", "--mode", "workspace-write", "--worktree",
+                 "--force-agent", "--provider", provider, agent="deepseek", model="deepseek-v4.1-flash")
+    argv[argv.index("--prompt") + 1] = _driver_brief()
+    assert _dispatch(argv) == 0, capsys.readouterr().err
+    spy = _Spy('DELIVERABLE: {"outcome":"no_change","reason":"example already works"}')
+    def invoke(agent, prompt, **kwargs):
+        plan = DeepSeekAdapter().build_invocation(
+            prompt=prompt, mode=kwargs["mode"], cwd=kwargs["cwd"], model=kwargs["model"],
+            task_id=None, session_id=None, tool_config=None, effort=kwargs["effort"])
+        assert Path(plan.cmd[0]).name == "opencode"
+        assert plan.cmd[plan.cmd.index("--model") + 1] == expected
+        return spy(agent, prompt, **kwargs)
+    monkeypatch.setattr("agent_runtime.runner.invoke", invoke)
+    monkeypatch.setattr(delegate, "_background_jobs_at_exit", lambda *_a, **_k: None)
+    monkeypatch.setattr(delegate, "_emit_terminal_dispatch_event", lambda **_kwargs: None)
+    assert _run_spawned_worker(env, env.prompts[0], monkeypatch) == 0, capsys.readouterr().err
+    assert spy.calls == 1

@@ -62,7 +62,7 @@ For mechanical and ordinary infra/code implement that is not LANGUAGE-LANES and 
 advisor/authority, prefer `--agent cursor --model grok-4.7-high` while the Cursor Models
 pool has headroom. A review of a Grok author runs the reviewer resolver's non-xAI pick
 (native Claude, Codex or another eligible seat the resolver returns); no Claude model reviews
-through Cursor (D-129, #10464), and the Other Models pool never carries a review. DeepSeek is excluded from dispatch and review; `deepseek-v4.1-flash` remains active in the catalog, and Pro is retired.
+through Cursor (D-129, #10464), and the Other Models pool never carries a review. DeepSeek admits only the bounded_implementation trial through opencode with the driver packet and data fence in model-assignment.md; formal review is excluded; `deepseek-v4.1-flash` remains active in the catalog, and Pro is retired.
 
 **Utilize, do not trim.** Keep **Kimi** and **Z.AI/GLM** as first-class seats. Live check:
 `.venv/bin/python -m scripts.fleet.capacity_pick` (preferred) +
@@ -96,7 +96,7 @@ stampede one hot lane.
 | --- | --- | --- |
 | **Cursor, included pool** | code/infra CI, mechanical + ordinary infra/code implement | `--agent cursor --model grok-4.7-high`. Not Fast, not `grok-4.6`, not `grok-4.5`. Not CF of a Grok author |
 | **Cursor, Other Models** | named third-party model, non-review work only; never a review (D-129, #10464) | Pin only an approved concrete slug from § Cursor pools. Draws the API pool. A review of a Grok author goes to the `resolve-reviewer` non-xAI pick instead. |
-| **DeepSeek V4.1 Flash** | Excluded from dispatch and review | `deepseek-v4.1-flash` remains active in the catalog; Pro is retired. `ask-deepseek` is consult-only for non-language work, never implementation or review. |
+| **DeepSeek V4.1 Flash** | Bounded implementation trial only; no formal review | `deepseek-v4.1-flash` remains active in the catalog; Pro is retired. `ask-deepseek` is consult-only for non-language work, never implementation or review. |
 | **Kimi k3-256k** | everyday fast coding/impl | `--agent kimi --model k3-256k` (or catalog id `kimi-code/k3-256k`) |
 | **Kimi k3** | complex / long-context coding only (Kimi: web, UI and backend coding only — no Ukrainian-language content, no reviews, consults, design or rules) | `--model k3` @ high/max — not routine queue |
 | **AGY Gemini Flash** | agentic scripts, language-lane content | `gemini-3.8-flash-high` |

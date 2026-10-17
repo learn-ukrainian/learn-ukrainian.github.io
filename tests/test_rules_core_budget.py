@@ -21,7 +21,8 @@ CATALOG = ROOT / "scripts/config/model_catalog.yaml"
 # 35_500 -> 35_600: CTO decision 2026-10-09 — the security row states "never written or reviewed on Sonnet"; the router-only exception lives in model-assignment.md and the agent file.
 # 35_600 -> 35_800: retain the approved 200-byte allowance for detached long jobs with checkpoint and log (P1 Loop).
 # 35_800 -> 36_200: CTO order cto-local-precheck, 2026-10-13 — the approved allowance for the local pre-push check (P0-P9 Unconditional invariants).
-CORE_BYTE_BUDGET = 36_200
+# #10919 addenda add the driver-packet contract and fenced DeepSeek trial.
+CORE_BYTE_BUDGET = 36_900
 PILLARS = tuple(f"P{n}" for n in range(10))
 # A launcher context-window suffix such as `[1m]` is not part of the model id; the base id is checked.
 MODEL_ID = re.compile(r"`((?:gpt|claude|gemini|grok|kimi|glm|deepseek|composer|poolside)[^`\s\[]*)(?:\[[^\]`\s]*\])?`")
@@ -76,7 +77,12 @@ def test_model_table_names_only_active_catalog_models() -> None:
         "Haiku @ medium and Luna bounded implementation",
         "Both bar security, Ukrainian and review.",
         "Other Luna and Flash outside Ukrainian authoring/review need a bound Sol task.",
-        "use the owner's paths and acceptance/verify command as the envelope, no Sol task.",
+        "use the owning driver's complete advisory packet, no Sol task.",
+        "read_first (at most 5), out_of_scope, verify_commands, acceptance_evidence and report_format",
+        "finalize enforces ceilings.",
+        "using the direct DeepSeek API provider, with OpenRouter as an allowed fallback.",
+        "Formal review, Ukrainian content, design, approval and security-class code remain excluded.",
+        "never the private infra repository or credential, env or secret files in prompts or owned paths.",
     ],
 )
 def test_core_preserves_routing_obligations(obligation: str) -> None:

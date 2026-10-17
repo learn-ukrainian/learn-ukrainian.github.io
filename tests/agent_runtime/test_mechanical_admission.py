@@ -31,6 +31,20 @@ HAIKU = "claude-haiku-5-5"
 ROOT = Path(__file__).resolve().parents[2]
 
 
+def driver_brief(path="tests/example.py", **changes):
+    packet = {
+        "task_contract": "Implement the example and stop after the named check passes.",
+        "owned_paths": [path], "max_changed_files": 2, "max_non_test_loc": 40,
+        "read_first": [path], "constraints": ["No dependencies"],
+        "out_of_scope": ["No refactors or docs"], "risk_boundaries": ["No security changes"],
+        "verify_commands": ["pytest -q " + path], "acceptance_evidence": ["The named test passes"],
+        "escalation_triggers": ["Need another path"],
+        "report_format": "Changed files, exact checks and results, residuals",
+    }
+    packet.update(changes)
+    return "```advisory-envelope\n" + json.dumps(packet) + "\n```\n"
+
+
 class Tree:
     def __init__(self, files=None):
         self.files = files if files is not None else {"package-lock.json": b'{"lockfileVersion": 3}'}
@@ -80,7 +94,7 @@ def test_standalone_catalog_resolves_haiku_without_runtime_package(tmp_path, ent
 
 @pytest.mark.parametrize("overrides,reason", [
     ({"task_family": None}, "catalog-eligible"),
-    ({"task_family": "bounded_implementation"}, "verify command"),
+    ({"task_family": "bounded_implementation"}, "ENVELOPE_MISSING"),
     ({"task_role": "driver"}, "driver"),
     ({"task_role": "orchestration"}, "driver"),
     ({"task_role": "design"}, "design"),
@@ -319,8 +333,8 @@ def test_only_exact_canonical_core_is_exempt_from_prompt_content_check(monkeypat
 
 @pytest.mark.parametrize("model", [HAIKU, "gpt-6-luna"])
 @pytest.mark.parametrize("overrides,reason", [
-    ({"task_prompt": "Implement.\nVerify:\nNo command"}, "verify command"),
-    ({"task_prompt": "Implement.\nVerify: pytest\nНапиши текст"}, "task prompt"),
+    ({"task_prompt": "Implement.\nVerify:\nNo command"}, "ENVELOPE_MISSING"),
+    ({"task_prompt": driver_brief() + "Напиши текст"}, "task prompt"),
     ({"trees": (Tree({"tests/example.py": "Україна".encode()}),)}, "Cyrillic"),
     ({"trees": ()}, "available"),
     ({"paths": ("scripts/hooks/check.py",)}, "security-sensitive"),
@@ -331,7 +345,7 @@ def test_only_exact_canonical_core_is_exempt_from_prompt_content_check(monkeypat
 def test_trial_preserves_input_and_role_refusals(model, overrides, reason):
     with pytest.raises(admission.MechanicalAdmissionRefused, match=reason):
         admission.refuse_mechanical_task((model,), **scope(**{
-            "task_family": "bounded_implementation", "task_prompt": "Implement.\nVerify: pytest",
+            "task_family": "bounded_implementation", "task_prompt": driver_brief(),
             "paths": ("tests/example.py",), **overrides,
         }))
 
@@ -339,7 +353,7 @@ def test_trial_preserves_input_and_role_refusals(model, overrides, reason):
 @pytest.mark.parametrize("model", [HAIKU, "gpt-6-luna"])
 def test_trial_acceptance_command_and_prompt_file(model, tmp_path):
     brief = tmp_path / "brief.md"
-    brief.write_text("Implement.\nAcceptance command: npm test\n")
+    brief.write_text(driver_brief())
     admission.refuse_mechanical_task((model,), **scope(
         mode="workspace-write", task_family="bounded_implementation",
         prompt_file=str(brief), paths=("tests/example.py",),
@@ -354,6 +368,60 @@ def test_trial_refuses_symlink_scope(model, tmp_path):
     (tmp_path / "tests/alias.py").symlink_to("target.py")
     with pytest.raises(admission.MechanicalAdmissionRefused, match="symlink"):
         admission.refuse_mechanical_task((model,), **scope(
-            task_family="bounded_implementation", task_prompt="Implement.\nVerify: pytest",
+            task_family="bounded_implementation", task_prompt=driver_brief("tests/alias.py"),
             paths=("tests/alias.py",), trees=(DirectoryTree(tmp_path),),
         ))
+
+
+@pytest.mark.parametrize("model", [HAIKU, "gpt-6-luna", "deepseek-v4.1-flash"])
+@pytest.mark.parametrize("field", [
+    "task_contract", "owned_paths", "max_changed_files", "max_non_test_loc", "read_first", "constraints",
+    "out_of_scope", "risk_boundaries", "verify_commands", "acceptance_evidence", "escalation_triggers", "report_format",
+])
+def test_driver_packet_missing_field_refused(model, field):
+    packet = json.loads(driver_brief().split("\n", 1)[1].rsplit("\n```", 1)[0])
+    del packet[field]
+    brief = "```advisory-envelope\n" + json.dumps(packet) + "\n```\n"
+    with pytest.raises(admission.MechanicalAdmissionRefused, match=field):
+        admission.refuse_mechanical_task((model,), **scope(
+            task_family="bounded_implementation", paths=("tests/example.py",),
+            task_prompt=brief, repo="public-monorepo"))
+
+
+@pytest.mark.parametrize("changes", [
+    {"read_first": ["tests/example.py"] * 6}, {"verify_commands": []},
+    {"max_changed_files": 0}, {"max_non_test_loc": True}, {"out_of_scope": []},
+    {"report_format": ""}, {"acceptance_evidence": []},
+])
+def test_driver_packet_invalid_fields_refused(changes):
+    with pytest.raises(admission.MechanicalAdmissionRefused):
+        admission.refuse_mechanical_task((HAIKU,), **scope(
+            task_family="bounded_implementation", paths=("tests/example.py",), task_prompt=driver_brief(**changes)))
+
+
+@pytest.mark.parametrize("changes,reason", [
+    ({"repo": "private-infra"}, "public-repository"),
+    ({"repo": None}, "public-repository"),
+    ({"task_family": "routine_mechanical"}, "trial only"),
+    ({"review": True}, "review"),
+    ({"task_role": "design"}, "design"),
+    ({"task_role": "approval"}, "approval"),
+    ({"language_lane": True}, "Ukrainian"),
+    ({"paths": ("scripts/delegate.py",)}, "security-sensitive"),
+    ({"paths": ("config/.env",)}, "secret files"),
+    ({"paths": ("tests/**",)}, "explicit file paths"),
+    ({"paths": ("tests/",)}, "explicit file paths"),
+    ({"task_prompt": driver_brief() + " Read config/credentials.json"}, "secret files"),
+    ({"trees": (Tree({"tests/.env.local": b"private"}),)}, "secret files"),
+])
+def test_deepseek_trial_fence(changes, reason):
+    with pytest.raises(admission.MechanicalAdmissionRefused, match=reason):
+        admission.refuse_mechanical_task(("deepseek-v4.1-flash",), **scope(**{
+            "task_family": "bounded_implementation", "paths": ("tests/example.py",),
+            "task_prompt": driver_brief(), "repo": "public-monorepo", **changes}))
+
+
+def test_deepseek_complete_public_packet_admitted():
+    admission.refuse_mechanical_task(("deepseek-v4.1-flash",), **scope(
+        task_family="bounded_implementation", paths=("tests/example.py",),
+        task_prompt=driver_brief(), repo="public-monorepo"))

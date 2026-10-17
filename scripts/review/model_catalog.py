@@ -167,8 +167,8 @@ def _require_routable_model(models: dict[str, Any], value: Any, label: str) -> s
     model = models[model_id]
     if model["lifecycle"] == "retired":
         raise ModelCatalogError(f"{label} references retired model {model_id!r}")
-    if model["family"] == "deepseek":
-        raise ModelCatalogError(f"{label}: DeepSeek is excluded from dispatch and review by core.md P2")
+    if model["family"] == "deepseek" and not model.get("bounded_implementation_trial"):
+        raise ModelCatalogError(f"{label}: DeepSeek admits only the bounded implementation trial by core.md P2")
     return model_id
 
 
@@ -948,6 +948,8 @@ def model_aliases(catalog: dict[str, Any] | None = None) -> dict[str, str]:
     for model_id, model in models.items():
         aliases[model_id] = model_id
         aliases.update({alias: model_id for alias in model.get("aliases", [])})
+        if alias := model.get("provider_alias"):
+            aliases[alias] = model_id
     return aliases
 
 
@@ -1208,6 +1210,8 @@ def activity_role_refusal(model: Any, activity: str, catalog: dict[str, Any] | N
         return None
     if refusal := retired_model_refusal(model_id, catalog):
         return refusal
+    if catalog["models"][model_id]["family"] == "deepseek" and activity == REVIEW_ACTIVITY:
+        return "DeepSeek is excluded from formal review, critique and approval by core.md P2"
     activity_roles = catalog["review_scheduler"]["activity_roles"]
     admitted = set(activity_roles[REVIEW_ACTIVITY])
     if activity == CONSULT_ACTIVITY:

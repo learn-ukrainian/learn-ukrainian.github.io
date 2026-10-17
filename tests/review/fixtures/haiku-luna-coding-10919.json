@@ -67,7 +67,7 @@
         "no_security_code",
         "no_driver"
       ],
-      "notes": "#9996: routine lockfile, pointer and smoke work; mechanical TypeSafe/Jev, CI failure and issue/DoR classification; read-only recon alongside Luna. Mechanical-only admission requires a matching task family, narrow safe owned paths and non-Ukrainian inputs. Bounded implementation is admitted by the haiku-luna-coding trial at medium effort, not max by default. The owner brief supplies owned paths and an acceptance or verify command as its envelope; no separate Sol advisory task is required. All other exclusions remain. Flash and non-implementation Luna advisory admission stay intact.",
+      "notes": "#9996: routine lockfile, pointer and smoke work; mechanical TypeSafe/Jev, CI failure and issue/DoR classification; read-only recon alongside Luna. Mechanical-only admission requires a matching task family, narrow safe owned paths and non-Ukrainian inputs. Bounded implementation is admitted by the haiku-luna-coding trial at medium effort, not max by default. The owning driver supplies the complete advisory packet, including scope ceilings and exact verify commands; no separate Sol advisory task is required. All other exclusions remain. Flash and non-implementation Luna advisory admission stay intact.",
       "sources": [
         "https://platform.claude.com/docs/en/models/overview",
         "https://platform.claude.com/docs/en/models/haiku-5-5/overview",
@@ -138,5 +138,212 @@
         "https://openai.com/index/introducing-gpt-6-sol-and-luna/"
       ]
     }
+  },
+  "deepseek-v4.1-flash": {
+    "before": {
+      "family": "deepseek",
+      "tier": "frontier_practical",
+      "lifecycle": "active",
+      "roles": [
+        "frontend_agentic_coding",
+        "strong_code_review",
+        "bounded_agentic_work"
+      ],
+      "transports": [
+        "hermes",
+        "opencode"
+      ],
+      "strengths": [
+        "frontend_code_quality_per_dollar",
+        "very_low_cost",
+        "speed",
+        "one_million_context"
+      ],
+      "weaknesses": [
+        "preliminary_frontend_evidence_only",
+        "not_critical_authority",
+        "silent_stall_history",
+        "not_for_folk_content",
+        "moving_provider_alias"
+      ],
+      "provider_alias": "deepseek/deepseek-flash",
+      "provider_alias_expected_name": "DeepSeek V4.1 Flash",
+      "provider_alias_drift_check": "jq -r '.deepseek.models[\"deepseek-flash\"].name' ~/.cache/opencode/models.json",
+      "sources": [
+        "https://api-docs.deepseek.com/news/news260424/",
+        "https://api-docs.deepseek.com/quick_start/pricing",
+        "https://arena.ai/leaderboard/code"
+      ]
+    },
+    "after": {
+      "family": "deepseek",
+      "tier": "frontier_practical",
+      "lifecycle": "active",
+      "roles": [
+        "strong_code_review",
+        "bounded_implementation"
+      ],
+      "bounded_implementation_trial": "haiku-luna-coding-trial",
+      "bounded_implementation_effort": "high",
+      "transports": [
+        "hermes",
+        "opencode"
+      ],
+      "strengths": [
+        "frontend_code_quality_per_dollar",
+        "very_low_cost",
+        "speed",
+        "one_million_context"
+      ],
+      "weaknesses": [
+        "preliminary_frontend_evidence_only",
+        "not_critical_authority",
+        "silent_stall_history",
+        "not_for_folk_content",
+        "moving_provider_alias"
+      ],
+      "provider_alias": "deepseek/deepseek-flash",
+      "provider_alias_expected_name": "DeepSeek V4.1 Flash",
+      "provider_alias_drift_check": "jq -r '.deepseek.models[\"deepseek-flash\"].name' ~/.cache/opencode/models.json",
+      "sources": [
+        "https://api-docs.deepseek.com/news/news260424/",
+        "https://api-docs.deepseek.com/quick_start/pricing",
+        "https://arena.ai/leaderboard/code"
+      ]
+    }
+  },
+  "_dispatch": {
+    "help_before": "                            [--provider {openrouter}] [--effort {low,medium,high,xhigh,max}] [--repo KEY] [--cwd CWD]\n                            [--worktree [WORKTREE]] [--pr PR] [--pinned-head SHA] [--branch EXISTING] [--keep-worktree]\n                            [--finalize-open-pr] [--require-review-verdict] [--review-profile {code,infra,ukrainian}]\n                            [--review-author-model MODEL] [--review-risk {low,medium,high,critical}]\n",
+    "help_after": "                            [--provider {deepseek,openrouter}] [--effort {low,medium,high,xhigh,max}] [--repo KEY]\n                            [--cwd CWD] [--worktree [WORKTREE]] [--pr PR] [--pinned-head SHA] [--branch EXISTING]\n                            [--keep-worktree] [--finalize-open-pr] [--require-review-verdict]\n                            [--review-profile {code,infra,ukrainian}] [--review-author-model MODEL]\n                            [--review-risk {low,medium,high,critical}]\n",
+    "refusal_groups": [
+      {
+        "indices": [
+          276,
+          278,
+          280,
+          282,
+          284,
+          286,
+          288,
+          290,
+          292,
+          294,
+          296,
+          298,
+          300,
+          302,
+          304,
+          306
+        ],
+        "before": {
+          "argv": null,
+          "refusal": "NOTE: ROUTING REFUSED: prepaid deepseek status=unknown; probe_state=NEED_PROBE; freshness=unavailable. Verify funding with `python -m scripts.fleet.usage refresh` or pass --force-agent.",
+          "routing": {
+            "alias_note": null,
+            "requested_agent": "deepseek",
+            "substitution": null
+          },
+          "target": null
+        },
+        "after": {
+          "argv": null,
+          "refusal": "DEEPSEEK_TASK_REFUSED: public-repository worktrees only",
+          "routing": {
+            "alias_note": null,
+            "requested_agent": null,
+            "substitution": null
+          },
+          "target": null
+        }
+      },
+      {
+        "indices": [
+          277,
+          279,
+          281,
+          283,
+          289,
+          291,
+          297,
+          299,
+          301,
+          303,
+          305,
+          307
+        ],
+        "before": {
+          "argv": null,
+          "refusal": "REVIEW_TARGET_UNRESOLVED: review attempt target unreadable",
+          "routing": {
+            "alias_note": null,
+            "requested_agent": null,
+            "substitution": null
+          },
+          "target": null
+        },
+        "after": {
+          "argv": null,
+          "refusal": "DEEPSEEK_TASK_REFUSED: public-repository worktrees only",
+          "routing": {
+            "alias_note": null,
+            "requested_agent": null,
+            "substitution": null
+          },
+          "target": null
+        }
+      },
+      {
+        "indices": [
+          285,
+          287
+        ],
+        "before": {
+          "argv": null,
+          "refusal": "REVIEW_ROUTE_REFUSED: model 'claude-fable-5-1' (claude-fable-5-1) holds no review, critique or approval role in the model catalog (roles: long_horizon_coding, orchestration; review_scheduler.activity_roles.review, #9583)",
+          "routing": {
+            "alias_note": null,
+            "requested_agent": null,
+            "substitution": null
+          },
+          "target": null
+        },
+        "after": {
+          "argv": null,
+          "refusal": "DEEPSEEK_TASK_REFUSED: public-repository worktrees only",
+          "routing": {
+            "alias_note": null,
+            "requested_agent": null,
+            "substitution": null
+          },
+          "target": null
+        }
+      },
+      {
+        "indices": [
+          293,
+          295
+        ],
+        "before": {
+          "argv": null,
+          "refusal": "REVIEW_ROUTE_REFUSED: model 'gpt-6-luna' (gpt-6-luna) holds no review, critique or approval role in the model catalog (roles: recon, bounded_checks, log_triage, bounded_implementation, bounded_investigation; review_scheduler.activity_roles.review, #9583)",
+          "routing": {
+            "alias_note": null,
+            "requested_agent": null,
+            "substitution": null
+          },
+          "target": null
+        },
+        "after": {
+          "argv": null,
+          "refusal": "DEEPSEEK_TASK_REFUSED: public-repository worktrees only",
+          "routing": {
+            "alias_note": null,
+            "requested_agent": null,
+            "substitution": null
+          },
+          "target": null
+        }
+      }
+    ]
   }
 }

@@ -127,6 +127,7 @@ def mechanical_worker_scope(
             "review": scope["review"],
             "task_prompt": prompt,
             "prompt_file": None,
+            "repo": scope.get("repo"),
         }
     except (KeyError, TypeError, ValueError, OSError) as exc:
         raise MechanicalAdmissionRefused(
@@ -323,7 +324,7 @@ def resolve_and_admit(
     from .mechanical_admission import refuse_mechanical_task
 
     mechanical_scope = {
-        key: gate[key] for key in ("paths", "language_lane", "research_track", "prompt_file", "trees") if key in gate
+        key: gate[key] for key in ("paths", "language_lane", "research_track", "prompt_file", "trees", "repo") if key in gate
     }
     refuse_mechanical_task(
         requested[1],

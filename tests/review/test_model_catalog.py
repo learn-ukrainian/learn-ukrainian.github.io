@@ -338,13 +338,26 @@ def approved_coding_trial_baseline(baseline):
     """Apply only #10919's approved model rows to either frozen CLI surface."""
     path = CAPACITY_FIXTURE / "haiku-luna-coding-10919.json"
     assert hashlib.sha256(path.read_bytes()).hexdigest() == (
-        "8536b6c42f88cb219e54e1e2ff8b067603591bc2870b653a20759dfa8ee12c0e"
+        "66176e36746730a418d78db7e81e2d1fecc715d6f9afc5b39d7395cdf29df807"
     )
     catalog = deepcopy(baseline["catalog"])
-    for model, change in json.loads(path.read_bytes()).items():
+    overlay = json.loads(path.read_bytes())
+    for model, change in overlay.items():
+        if model == "_dispatch":
+            continue
         assert catalog["models"][model] == change["before"]
         catalog["models"][model] = change["after"]
-    return {**baseline, "catalog": catalog}
+    dispatch = deepcopy(baseline["dispatch"])
+    changes = overlay["_dispatch"]
+    for row in dispatch:
+        if row["stderr"].startswith("usage: delegate.py dispatch "):
+            assert row["stderr"].count(changes["help_before"]) == 1
+            row["stderr"] = row["stderr"].replace(changes["help_before"], changes["help_after"])
+    for group in changes["refusal_groups"]:
+        for index in group["indices"]:
+            assert dispatch[index]["value"] == group["before"]
+            dispatch[index]["value"] = deepcopy(group["after"])
+    return {**baseline, "catalog": catalog, "dispatch": dispatch}
 
 
 APPROVED_BASELINE = approved_coding_trial_baseline(approved_argon_trial_baseline(PRE_ARGON_HOST_BASELINE, "host-cli"))
@@ -354,15 +367,29 @@ APPROVED_INPUTS = {**GEMINI_INPUTS, **SEATS_OVERLAY["inputs"], **ARGON_OVERLAY["
 def test_coding_trial_overlay_changes_only_approved_model_fields():
     before = approved_argon_trial_baseline(PRE_ARGON_HOST_BASELINE, "host-cli")
     after = approved_coding_trial_baseline(before)
-    assert {k: v for k, v in after.items() if k != "catalog"} == {
-        k: v for k, v in before.items() if k != "catalog"
+    assert {k: v for k, v in after.items() if k not in {"catalog", "dispatch"}} == {
+        k: v for k, v in before.items() if k not in {"catalog", "dispatch"}
     }
+    overlay = json.loads((CAPACITY_FIXTURE / "haiku-luna-coding-10919.json").read_bytes())["_dispatch"]
+    refusal_indices = {index for group in overlay["refusal_groups"] for index in group["indices"]}
+    assert refusal_indices == set(range(276, 308))
+    for index, (old, new) in enumerate(zip(before["dispatch"], after["dispatch"], strict=True)):
+        assert {k: v for k, v in old.items() if k not in {"stderr", "value"}} == {
+            k: v for k, v in new.items() if k not in {"stderr", "value"}
+        }
+        if index not in refusal_indices:
+            assert old.get("value") == new.get("value")
+        else:
+            assert new["value"]["refusal"] == "DEEPSEEK_TASK_REFUSED: public-repository worktrees only"
+            assert new["value"]["target"] is None
+        assert new["stderr"] == old["stderr"].replace(overlay["help_before"], overlay["help_after"])
     assert {k: v for k, v in after["catalog"].items() if k != "models"} == {
         k: v for k, v in before["catalog"].items() if k != "models"
     }
     allowed = {
         "claude-haiku-5-5": {"roles", "weaknesses", "notes", "bounded_implementation_trial", "bounded_implementation_effort"},
         "gpt-6-luna": {"bounded_implementation_trial", "bounded_implementation_effort"},
+        "deepseek-v4.1-flash": {"roles", "bounded_implementation_trial", "bounded_implementation_effort"},
     }
     changed = {}
     for model, old in before["catalog"]["models"].items():
@@ -1362,3 +1389,11 @@ def test_extended_capture_denominator_and_current_contract():
     assert len(contract["rows"]) == len(catalog["models"]) * 9
     assert {row["outcome"] for row in contract["rows"]} == {"approved", "missing_approval", "operator_disposition"}
     assert all(not row["self_approval_counts"] for row in contract["rows"])
+
+
+def test_deepseek_trial_keeps_formal_review_excluded_and_resolves_provider_alias():
+    from scripts.review.model_catalog import activity_role_refusal, canonical_model_id
+
+    assert canonical_model_id("deepseek/deepseek-flash") == "deepseek-v4.1-flash"
+    assert "excluded from formal review" in activity_role_refusal("deepseek-v4.1-flash", "review")
+    assert "excluded from formal review" in activity_role_refusal("deepseek/deepseek-flash", "review")

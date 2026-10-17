@@ -590,8 +590,8 @@ models:
       CI failure and issue/DoR classification; read-only recon alongside Luna.
       Mechanical-only admission requires a matching task family, narrow safe
       owned paths and non-Ukrainian inputs. Bounded implementation is admitted by
-      the haiku-luna-coding trial at medium effort, not max by default. The owner
-      brief supplies owned paths and an acceptance or verify command as its envelope;
+      the haiku-luna-coding trial at medium effort, not max by default. The owning driver
+      supplies the complete advisory packet, including scope ceilings and exact verify commands;
       no separate Sol advisory task is required. All other exclusions remain.
       Flash and non-implementation Luna advisory admission stay intact.
     sources:
@@ -973,7 +973,10 @@ models:
     family: deepseek
     tier: frontier_practical
     lifecycle: active
-    roles: [frontend_agentic_coding, strong_code_review, bounded_agentic_work]
+    # Historical capability role is descriptive; formal review is explicitly refused.
+    roles: [strong_code_review, bounded_implementation]
+    bounded_implementation_trial: haiku-luna-coding-trial
+    bounded_implementation_effort: high
     transports: [hermes, opencode]
     strengths: [frontend_code_quality_per_dollar, very_low_cost, speed, one_million_context]
     weaknesses: [preliminary_frontend_evidence_only, not_critical_authority, silent_stall_history, not_for_folk_content, moving_provider_alias]

@@ -11156,12 +11156,16 @@ def _run_worker(
             advisory_prompt_sha256 = _verify_bounded_worker(
                 task_id, agent=agent, model=model, mode=mode, cwd=cwd, execution=advisory_execution, prompt=prompt
             )
+            runtime_model = model
+            if agent == "deepseek" and provider == "openrouter":
+                from scripts.agent_runtime.mechanical_admission import DEEPSEEK_MODEL
+                runtime_model = f"openrouter/deepseek/{DEEPSEEK_MODEL}"
             result = runtime_invoke(
                 agent,
                 prompt,
                 mode=mode,
                 cwd=cwd,
-                model=model,
+                model=runtime_model,
                 task_id=task_id,
                 session_id=None,  # Layer 3 is always fresh-session
                 tool_config=tool_config,
@@ -13114,9 +13118,9 @@ def _dispatch(
     dispatch_agent, args.model = launch_target.recipient, launch_target.model
     from scripts.agent_runtime.mechanical_admission import TRIAL_FAMILY, is_trial_model
     if getattr(args, "research_task_family", None) == TRIAL_FAMILY and is_trial_model(args.model):
-        from scripts.review.model_catalog import load_model_catalog
+        from scripts.review.model_catalog import canonical_model_id, load_model_catalog
         if not getattr(args, "effort", None):
-            args.effort = load_model_catalog()["models"][args.model]["bounded_implementation_effort"]
+            args.effort = load_model_catalog()["models"][canonical_model_id(args.model)]["bounded_implementation_effort"]
     # Reviewer resolution and budget substitution can change the seat after
     # the original-request guard. Enforce the same boundary on the final route.
     if (
@@ -15376,6 +15380,7 @@ class _AdvisoryAdmission:
     model_id: str | None = None
     exemption: dict[str, Any] | None = None  # a Gemini Flash launch classified Ukrainian
     trial: bool = False
+    trial_packet: dict[str, Any] | None = None
 
     def state_fields(self, *, research_block: str = "", execution: Mapping[str, Any] | None = None) -> dict[str, Any]:
         """Task-record fields; ``research_block`` is the research pointer block added to the worker prompt.
@@ -15401,7 +15406,15 @@ class _AdvisoryAdmission:
             }
         if self.trial:
             from scripts.agent_runtime.mechanical_admission import TRIAL_LABEL
-            return {"labels": [TRIAL_LABEL]}
+            assert self.trial_packet is not None
+            return {"labels": [TRIAL_LABEL], "advisory_envelope": {
+                **self.trial_packet,
+                "issuer": "owning_driver",
+                "packet_sha256": bounded_advisory.envelope_sha256(self.trial_packet),
+                "admitted_execution": None if execution is None else {
+                    "agent": self.agent, "model_id": self.model_id, **execution,
+                },
+            }}
         if self.exemption is not None:
             return {"advisory_exemption": dict(self.exemption)}
         if self.advisor_binding is not None:
@@ -15414,6 +15427,9 @@ class _AdvisoryAdmission:
 
     def prompt_block(self) -> tuple[str, str | None]:
         """``(text, block kind)`` appended to the worker prompt; empty when neither role applies."""
+        if self.trial:
+            assert self.model_id is not None
+            return bounded_advisory.trial_prompt_block(self.model_id), "driver_packet"
         if self.envelope is not None:
             return bounded_advisory.worker_prompt_block(self.envelope), "advisory_envelope"
         if self.advisor_binding is not None:
@@ -15499,10 +15515,14 @@ def _admit_advisory(
                 research_track=getattr(args, "research_track", None),
                 prompt_file=getattr(args, "prompt_file", None), task_prompt=getattr(args, "prompt", None),
                 trees=lambda: _kimi_worktree_trees(repo_root),
+                repo=getattr(args, "_trial_repo_role", None),
             )
         except MechanicalAdmissionRefused as exc:
             raise bounded_advisory.AdvisoryRefused(bounded_advisory.ADMISSION_INVALID, str(exc)) from exc
-        return _AdvisoryAdmission(trial=True)
+        brief = Path(args.prompt_file).read_text(encoding="utf-8") if args.prompt_file else args.prompt
+        packet = bounded_advisory.parse_envelope(brief or "", repo_root=repo_root, driver_packet=True)
+        bounded_advisory.require_owned_paths_match(packet["owned_paths"], declared)
+        return _AdvisoryAdmission(trial=True, trial_packet=packet, agent=dispatch_agent, model_id=model_id)
     requirement = bounded_advisory.bounded_requirement(
         model_id,
         mode=mode,
@@ -17422,6 +17442,14 @@ def _admit_dispatch_target(
 
     try:
         _require_ukrainian_model_family(args, getattr(args, "model", None))
+        args._trial_repo_role = repo_role
+        from scripts.agent_runtime.mechanical_admission import DEEPSEEK_MODEL
+        from scripts.review.model_catalog import canonical_model_id
+        if canonical_model_id(getattr(args, "model", None)) == DEEPSEEK_MODEL or agent == "deepseek":
+            if not getattr(args, "worktree", None) and ".worktrees/dispatch/" not in str(getattr(args, "cwd", "")):
+                raise MechanicalAdmissionRefused("DEEPSEEK_TASK_REFUSED: public-repository worktrees only")
+            if agent != "deepseek" or getattr(args, "harness", None) not in {None, "native"}:
+                raise MechanicalAdmissionRefused("DEEPSEEK_TASK_REFUSED: use the deepseek opencode adapter")
         mechanical_task = _mechanical_task_scope(args)
         (target,) = resolve_and_admit(
             (agent,),
@@ -17473,6 +17501,8 @@ def _admit_dispatch_target(
             claude_account=account,
         )
         _require_ukrainian_model_family(args, target.model, resolved=True)
+        if canonical_model_id(target.model) == DEEPSEEK_MODEL and target.recipient != "deepseek":
+            raise MechanicalAdmissionRefused("DEEPSEEK_TASK_REFUSED: use the deepseek opencode adapter")
         if mechanical_task != _mechanical_task_scope(args):
             raise MechanicalAdmissionRefused(
                 "MECHANICAL_TASK_REFUSED: admission inputs changed during dispatch (#10079)"
@@ -17546,6 +17576,7 @@ def _mechanical_task_scope(args: argparse.Namespace, *, admitted: bool = False) 
         "task_prompt": getattr(args, "prompt", None),
         "prompt_file": str(Path(prompt_file).resolve()) if prompt_file else None,
         "prompt_file_sha256": prompt_file_sha256,
+        "repo": getattr(args, "_trial_repo_role", None),
     }
     scope["sha256"] = mechanical_scope_digest(scope)
     return scope
@@ -19237,7 +19268,7 @@ def build_parser() -> argparse.ArgumentParser:
     d.add_argument(
         "--provider",
         default=None,
-        choices=["openrouter"],
+        choices=["deepseek", "openrouter"],
         help="Opt-in provider for Hermes-routed agents (e.g. deepseek). "
         "Default for DeepSeek is first-party (local-only). "
         "Use --provider openrouter for US-residency pinned path.",

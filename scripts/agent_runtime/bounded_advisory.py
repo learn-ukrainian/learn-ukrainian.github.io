@@ -81,6 +81,30 @@ from scripts.review.model_catalog import (
 )
 
 ENVELOPE_FENCE = "advisory-envelope"
+DRIVER_PACKET_FIELDS = ("read_first", "out_of_scope", "verify_commands", "report_format")
+# Verbatim functional instructions from Anthropic's Haiku 5.5 prompting guide:
+# https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-haiku-5-5
+VERIFY_PARAGRAPH = (
+    "When you change code that can be run, built, or type-checked, run a real check that exercises the change "
+    "before reporting it done: the project's tests, type-checker, or build, or the changed command itself. "
+    "A syntax-only check, or a check command that failed to start, does not count; if all that is missing "
+    "is the project's declared dependencies, install them with its own package manager and lockfile "
+    "(e.g. npm install, pip install -r requirements.txt), never via sudo or the system package manager, "
+    "unless told not to. Only if no real check can run here, say which one you did not run and why "
+    "instead of reporting the change as done."
+)
+STAY_IN_SCOPE_PARAGRAPH = (
+    "Keep working until everything the user asked for is done, and only stop to ask when you can't go on "
+    "without the user or before a risky step.\n"
+    "When the work the user asked for is done and checked, stop and report. Don't add new features, docs, "
+    "or refactors that weren't asked for. If you think one would help, mention it at the end instead of doing it."
+)
+
+
+def trial_prompt_block(model_id: str) -> str:
+    """Fixed instructions appended by the dispatcher, never supplied by the driver."""
+    return f"\n\n## Bounded implementation instructions ({model_id})\n\n{VERIFY_PARAGRAPH}\n\n{STAY_IN_SCOPE_PARAGRAPH}\n"
+
 BINDING_FIELD = "dispatch_args_sha256"
 _FENCE_RE = re.compile(r"^```" + re.escape(ENVELOPE_FENCE) + r"[ \t]*\n(.*?)\n```[ \t]*$", re.MULTILINE | re.DOTALL)
 _SHA256_RE = re.compile(r"[0-9a-f]{64}")
@@ -643,6 +667,7 @@ def parse_envelope(
     *,
     repo_root: Path,
     policy: BoundedExecutionPolicy | None = None,
+    driver_packet: bool = False,
 ) -> dict[str, Any]:
     """The one ``advisory-envelope`` JSON object in ``result_text``, validated field by field."""
     policy = policy or bounded_execution_policy()
@@ -657,21 +682,26 @@ def parse_envelope(
         raise AdvisoryRefused(ENVELOPE_INCOMPLETE, f"the envelope is not JSON: {exc}") from None
     if not isinstance(envelope, dict):
         raise AdvisoryRefused(ENVELOPE_INCOMPLETE, "the envelope must be a JSON object")
-    expected = {*policy.advisor_output_fields, BINDING_FIELD}
+    fields = (*policy.advisor_output_fields, *DRIVER_PACKET_FIELDS) if driver_packet else policy.advisor_output_fields
+    expected = set(fields) if driver_packet else {*fields, BINDING_FIELD}
     missing = sorted(expected - set(envelope))
     extra = sorted(set(envelope) - expected)
     if missing or extra:
         raise AdvisoryRefused(ENVELOPE_INCOMPLETE, f"envelope fields missing {missing}, unexpected {extra}")
-    for field in policy.advisor_output_fields:
+    for field in fields:
         if field in {"max_changed_files", "max_non_test_loc"}:
             _require_positive_int(envelope, field)
-        elif field == "task_contract":
+        elif field in {"task_contract", "report_format"}:
             _require_text(envelope, field)
         else:
             _require_text_list(envelope, field)
-    binding = envelope[BINDING_FIELD]
-    if not isinstance(binding, str) or not _SHA256_RE.fullmatch(binding):
-        raise AdvisoryRefused(ENVELOPE_INCOMPLETE, f"{BINDING_FIELD} must be a lowercase sha256 hex digest")
+    if driver_packet:
+        if len(envelope["read_first"]) > 5:
+            raise AdvisoryRefused(ENVELOPE_INCOMPLETE, "read_first permits at most 5 entries")
+    else:
+        binding = envelope[BINDING_FIELD]
+        if not isinstance(binding, str) or not _SHA256_RE.fullmatch(binding):
+            raise AdvisoryRefused(ENVELOPE_INCOMPLETE, f"{BINDING_FIELD} must be a lowercase sha256 hex digest")
     owned = [validate_owned_path(path, repo_root) for path in envelope["owned_paths"]]
     if len(set(owned)) != len(owned):
         raise AdvisoryRefused(OWNED_PATHS_INVALID, "owned_paths repeats a path")
@@ -1023,7 +1053,9 @@ def verify_worker_admission(
     actual = {"agent": agent, "model_id": model_id, "mode": mode, "cwd": str(cwd), **execution}
     if set(actual) != set(EXECUTION_FIELDS):
         raise ValueError(f"agent, model_id, mode, cwd and execution must give exactly {list(EXECUTION_FIELDS)}")
-    if model_id not in {policy.bounded_worker_model_id, policy.bounded_fallback_model_id}:
+    from scripts.agent_runtime.mechanical_admission import DEEPSEEK_MODEL, TRIAL_FAMILY, is_trial_model
+    trial = is_trial_model(model_id) and (record or {}).get("mechanical_task", {}).get("family") == TRIAL_FAMILY
+    if model_id not in {policy.bounded_worker_model_id, policy.bounded_fallback_model_id, DEEPSEEK_MODEL} and not trial:
         return None
     if not record:
         raise AdvisoryRefused(ADMISSION_MISSING, f"{model_id} has no task record carrying a parent admission")
@@ -1044,9 +1076,22 @@ def verify_worker_admission(
                 raise MechanicalAdmissionRefused("trial label missing")
             scope = mechanical_worker_scope(record, mode=mode, model=model_id, prompt=prompt)
             refuse_mechanical_task((model_id,), mode=mode, trees=lambda: worktree_trees(cwd), **scope)
+            packet = parse_envelope(prompt, repo_root=cwd, driver_packet=True)
+            admitted = record.get("advisory_envelope") or {}
+            if (
+                admitted.get("issuer") != "owning_driver"
+                or admitted.get("packet_sha256") != envelope_sha256(packet)
+                or any(admitted.get(key) != value for key, value in packet.items())
+                or admitted.get("admitted_execution") != actual
+            ):
+                raise MechanicalAdmissionRefused("driver packet or admitted execution changed")
+            if trial_prompt_block(model_id) not in prompt:
+                raise MechanicalAdmissionRefused("fixed model instructions missing")
         except MechanicalAdmissionRefused as exc:
             raise AdvisoryRefused(ADMISSION_INVALID, str(exc)) from exc
-        return None
+        return hashlib.sha256(prompt.encode("utf-8")).hexdigest()
+    if model_id == DEEPSEEK_MODEL:
+        raise AdvisoryRefused(ADMISSION_INVALID, "trial model requires a driver packet")
     admitted = record.get("advisory_envelope")
     if admitted is None and model_id == policy.bounded_fallback_model_id:
         exemption = record.get("advisory_exemption")
