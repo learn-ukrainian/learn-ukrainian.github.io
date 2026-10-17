@@ -65,6 +65,15 @@ non-mutating. It never chooses by recency, title, or filesystem order.
 Age can produce the stale classification but cannot delete, abandon, or
 supersede continuity state.
 
+Launcher and SessionStart detection exclude a `pending_start` packet prepared
+before its lane's latest durable handoff. Candidates come from the stream
+inventory and the agent's role handoff. Comparison uses whole UTC seconds:
+clean tracked handoffs use their latest commit time, while local handoff edits
+use modification time. Equal timestamps remain eligible. This is a read-only
+auto-binding filter, reported as `skipped_stale`; the packet, lease and registry
+are preserved for exact inspection or maintenance. Resumed packets still
+require an explicit receipted disposition.
+
 ## Authoritative reconciliation
 
 `reconcile-exact` consumes an operator-captured JSON snapshot bound to the exact
@@ -87,7 +96,8 @@ receipt under the exact registry record and refuses inconsistent snapshots.
 ## Maintenance
 
 The safe commands are `resume-exact`, `reconcile-exact`,
-`finish-cleanup-exact`, `supersede-exact`, and `abandon-exact`. Cleanup,
+`finish-cleanup-exact`, `supersede-exact`, `abandon-exact`, and
+`dispose-exited-successor-exact`. Cleanup,
 supersession, and abandonment are two-step `--plan` / `--apply` operations.
 Apply validates the immutable plan's digest, action, and exact key before any
 mutation and writes an apply intent plus durable receipt.
@@ -105,6 +115,50 @@ Cleanup additionally requires the exact confirmed successor, exact predecessor
 archive proof, explicit heartbeat-retirement authorization, and exact heartbeat
 retirement proof. One lineage's proof never authorizes another lineage's
 cleanup.
+
+### Exited successor disposition
+
+`dispose-exited-successor-exact` is the sole maintenance exception for an
+exited resumed or confirmed successor. It records `ABANDONED_WITH_PROOF`,
+retains the last successful boundary and all packet and lease files, and uses
+the existing immutable plan, lineage lock, apply intent and receipt. The
+supersede and abandon commands still refuse confirmed successors.
+
+The proof must contain exactly the selected `agent`, `lineage_id`,
+`rollover_id`, UTC `captured_at`, nonempty `reason`, `assertions`,
+`evidence_paths`, and `successor_exit`. Assertions must contain exactly
+`selected_exact_ids_match`, `no_unrecorded_native_create`, and
+`no_active_heartbeat_dependency`, all true. These retain the existing
+maintenance guards; they do not independently establish successor exit.
+`successor_exit` contains exactly `run_id`, `replacement_thread_id`, and
+`runtime_digest`. The successor ID must match the registry binding.
+
+Only the existing launcher's canonical
+`.agent/claudex-supervisors/<run-id>/runtime.json` is admitted as exit evidence.
+`evidence_paths` must contain only that relative path. The supervisor's runtime
+validator must accept it, its `session_id` and `handoff_agent` must match the
+bound successor and registry agent, its state must be `exited`, and its exit
+code must be an integer. Its update timestamp must follow the recorded resume
+or confirmation boundary and be no later than `captured_at`. `runtime_digest`
+is SHA-256 of its canonical JSON using sorted keys, compact separators and
+unescaped Unicode. Symlinked evidence is refused.
+
+Planning never changes the selected record. Apply revalidates the durable
+runtime, pinned proof digest and record digest under the lineage lock. The
+intent pins the resulting record digest before publication; the receipt pins
+that same digest. Identical retries return the same receipt. Crash recovery
+can finish receipt publication only for the exact applied record. Changed
+records or evidence require reconciliation rather than receipt replay.
+
+Synthetic tests cover active or unknown exits, mismatched exact IDs, changed
+evidence, record and receipt replay, interrupted publication, arbitrary evidence
+paths, preserved lease bytes, and launcher cold start after disposition. They
+also exercise the heartbeat and unrecorded-create guards and refusal of legacy
+confirmed dispositions. Boundaries not tested are live provider exit, remote
+supervisor storage, hostile writers with write access to canonical launcher or
+registry state, and kernel power-loss durability. Other launchers without this
+canonical durable runtime fail closed; process absence and copied snapshots
+are not substitutes.
 
 ## Migration
 

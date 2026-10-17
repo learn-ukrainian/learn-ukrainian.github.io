@@ -95,12 +95,12 @@ resolve_codex_pending_rollover() {
   if [ -n "${THREAD_ROLLOVER_COMMAND_RUNNER:-}" ]; then
     detect_output="$(
       "${runner[@]}" "$python_bin" "$handoff_script" --repo-root "$project_dir" \
-        detect --agent "$handoff_agent" --format json 2>&1
+        detect --agent "$handoff_agent" --stream "${SESSION_STREAM_ID:-}" --format json 2>&1
     )" || detect_rc=$?
   else
     detect_output="$(
       "$python_bin" "$handoff_script" --repo-root "$project_dir" \
-        detect --agent "$handoff_agent" --format json 2>&1
+        detect --agent "$handoff_agent" --stream "${SESSION_STREAM_ID:-}" --format json 2>&1
     )" || detect_rc=$?
   fi
   if [ "$detect_rc" -ne 0 ]; then

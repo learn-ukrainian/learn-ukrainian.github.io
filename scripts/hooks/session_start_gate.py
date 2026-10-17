@@ -424,7 +424,7 @@ def phase_rollover_detect(args: argparse.Namespace) -> dict[str, Any]:
             }
         return {"status": "stop", "context": fout, "detect_status": detect_status}
     if detect_status == "none":
-        if payload.get("skipped_foreign"):
+        if payload.get("skipped_foreign") or payload.get("skipped_stale"):
             try:
                 frc, fout, ferr = _formatted()
             except Exception as exc:

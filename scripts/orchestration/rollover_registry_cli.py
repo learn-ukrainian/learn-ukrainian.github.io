@@ -288,17 +288,48 @@ def _add_exact_selectors(
     require_pair: bool = False,
     include_replacement: bool = True,
 ) -> None:
-    parser.add_argument("--agent", type=registry.normalize_agent, default="codex")
-    parser.add_argument("--source-thread-id")
+    parser.add_argument(
+        "--agent",
+        type=registry.normalize_agent,
+        default="codex",
+        help="Registry agent, e.g. codex-infra. Default: codex.",
+    )
+    parser.add_argument("--source-thread-id", help="Exact predecessor thread ID; omitted by default.")
     if include_replacement:
-        parser.add_argument("--replacement-thread-id", dest="selector_replacement_thread_id")
-    parser.add_argument("--lineage-id", required=require_pair)
-    parser.add_argument("--rollover-id", required=require_pair)
+        parser.add_argument(
+            "--replacement-thread-id",
+            dest="selector_replacement_thread_id",
+            help="Exact successor thread ID; omitted by default.",
+        )
+    parser.add_argument(
+        "--lineage-id", required=require_pair, help="Exact lineage ID, e.g. lineage-a1; otherwise omitted."
+    )
+    parser.add_argument(
+        "--rollover-id", required=require_pair, help="Exact rollover ID, e.g. rollover-r1; otherwise omitted."
+    )
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--repo-root", type=Path)
+    parser = argparse.ArgumentParser(
+        description=(
+            "Inspect and maintain the exact-ID fleet rollover registry.\n"
+            "Use durable proofs for maintenance; never use titles or process absence as identity."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "Examples:\n"
+            "  .venv/bin/python scripts/orchestration/rollover_registry_cli.py audit\n"
+            "  .venv/bin/python scripts/orchestration/rollover_registry_cli.py dispose-exited-successor-exact "
+            "--agent codex-infra --lineage-id lineage-a1 --rollover-id rollover-r1 --plan --proof-file proof.json\n"
+            "Outputs: JSON; authorized apply writes registry state, immutable plans, intents and receipts. "
+            "Lease files are preserved.\n"
+            "Exit codes: 0 success; 2 invalid selection, evidence or operation.\n"
+            "Related: agents_extensions/shared/contracts/rollover-registry.md; #10916"
+        ),
+    )
+    parser.add_argument(
+        "--repo-root", type=Path, help="Checkout path; default: discover canonical state from the current checkout."
+    )
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     detect = subparsers.add_parser("detect", help="Read-only generic or exact rollover detection.")
@@ -306,14 +337,23 @@ def build_parser() -> argparse.ArgumentParser:
     detect.set_defaults(func=cmd_detect)
 
     audit = subparsers.add_parser("audit", help="Classify every fleet rollover packet without mutation.")
-    audit.add_argument("--stale-hours", type=float, default=registry.DEFAULT_STALE_HOURS)
+    audit.add_argument(
+        "--stale-hours",
+        type=float,
+        default=registry.DEFAULT_STALE_HOURS,
+        help="Stale classification age in hours; default: 24.",
+    )
     audit.set_defaults(func=cmd_audit)
 
     migrate = subparsers.add_parser("migrate", help="Plan or apply non-destructive legacy registry migration.")
     migration_mode = migrate.add_mutually_exclusive_group(required=True)
-    migration_mode.add_argument("--plan", action="store_true")
-    migration_mode.add_argument("--apply", action="store_true")
-    migrate.add_argument("--evidence")
+    migration_mode.add_argument(
+        "--plan", action="store_true", help="Preview migration without mutation; choose plan or apply."
+    )
+    migration_mode.add_argument(
+        "--apply", action="store_true", help="Apply non-destructive migration; choose plan or apply."
+    )
+    migrate.add_argument("--evidence", help="Required migration authorization on apply; omitted by default.")
     migrate.set_defaults(func=cmd_migrate)
 
     reconcile = subparsers.add_parser(
@@ -321,27 +361,52 @@ def build_parser() -> argparse.ArgumentParser:
         help="Compare one exact registry entry with an authoritative native/app snapshot.",
     )
     _add_exact_selectors(reconcile)
-    reconcile.add_argument("--snapshot", type=Path, required=True)
-    reconcile.add_argument("--apply", action="store_true")
+    reconcile.add_argument(
+        "--snapshot", type=Path, required=True, help="Authoritative exact-ID JSON snapshot, e.g. snapshot.json."
+    )
+    reconcile.add_argument("--apply", action="store_true", help="Persist reconciliation; default: read-only preview.")
     reconcile.set_defaults(func=cmd_reconcile)
 
     resume = subparsers.add_parser("resume-exact", help="Resume one uniquely selected exact packet.")
     _add_exact_selectors(resume, include_replacement=False)
-    resume.add_argument("--replacement-thread-id", required=True)
+    resume.add_argument("--replacement-thread-id", required=True, help="Exact bound successor thread ID to resume.")
     resume.set_defaults(func=cmd_resume)
 
     for name, action in (
         ("finish-cleanup-exact", registry.MaintenanceAction.FINISH_CLEANUP),
         ("supersede-exact", registry.MaintenanceAction.SUPERSEDE),
         ("abandon-exact", registry.MaintenanceAction.ABANDON),
+        ("dispose-exited-successor-exact", registry.MaintenanceAction.DISPOSE_EXITED_SUCCESSOR),
     ):
-        maintenance = subparsers.add_parser(name, help=f"Plan or apply exact {action.value} maintenance.")
+        maintenance = subparsers.add_parser(
+            name,
+            help=f"Plan or apply exact {action.value} maintenance.",
+            description=(
+                f"Plan or apply exact {action.value} maintenance with durable proof. "
+                "Exited successors require canonical launcher runtime state exited, an integer exit_code, "
+                "and the exact bound session ID; active or unknown evidence is refused."
+            ),
+        )
         _add_exact_selectors(maintenance, require_pair=True)
         mode = maintenance.add_mutually_exclusive_group(required=True)
-        mode.add_argument("--plan", action="store_true")
-        mode.add_argument("--apply", action="store_true")
-        maintenance.add_argument("--proof-file", type=Path)
-        maintenance.add_argument("--plan-file", type=Path)
+        mode.add_argument(
+            "--plan",
+            action="store_true",
+            help="Write an immutable plan without changing the selected record; choose plan or apply.",
+        )
+        mode.add_argument(
+            "--apply",
+            action="store_true",
+            help="Apply the exact immutable plan and write a receipt; choose plan or apply.",
+        )
+        maintenance.add_argument(
+            "--proof-file",
+            type=Path,
+            help="Exact-ID JSON proof for planning; no default. See the rollover registry contract for fields.",
+        )
+        maintenance.add_argument(
+            "--plan-file", type=Path, help="Canonical plan.json returned by planning; required for apply, no default."
+        )
         maintenance.set_defaults(func=cmd_maintenance, maintenance_action=action.value)
     return parser
 

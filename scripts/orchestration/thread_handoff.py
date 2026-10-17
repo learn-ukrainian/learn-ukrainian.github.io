@@ -6744,13 +6744,15 @@ def render_session_start_context(
         # cold start orients from durable state; probes exist only for rollovers.
         lines = [
             "COLD START: NO LIVE THREAD ROLLOVER",
-            "No pending or resumed packet exists for this agent.",
+            "No eligible pending or resumed packet exists for this agent.",
             "Orient from durable project state with tool-backed reads before ordinary work.",
             "Do not invent a lineage_id or rollover_id; prepare creates both only when this thread later rolls over.",
             "Keep the primary checkout read-only and use a dispatch worktree for implementation.",
         ]
         if isinstance(candidate, dict):
             lines.extend(_skipped_foreign_lines(candidate.get("skipped_foreign", [])))
+            for item in candidate.get("skipped_stale", []):
+                lines.append(f"Pending packet predates lane handoff {item['newer_handoff']}; left unchanged.")
             if candidate.get("excluded_terminal"):
                 lines.append(
                     "Excluded terminal rollover: "
@@ -6865,6 +6867,49 @@ def _render_multiple_pending_session_start(
     return "\n".join(lines)
 
 
+def newer_lane_handoff(
+    state_root: Path, *, agent: str, stream: str, prepared_at: str | None
+) -> str | None:
+    """Find a newer durable lane handoff without disposing of the packet."""
+    prepared = parse_iso_datetime(prepared_at)
+    if prepared is None:
+        raise ValueError("pending rollover requires a valid prepared_at for handoff comparison")
+    candidates = set(_bundle_handoff_candidates(state_root, stream)) if stream else set()
+    candidates.add(default_handoff_path(agent).as_posix())
+    newest: tuple[int, str] | None = None
+    for relative in sorted(candidates):
+        path = repo_local_path(state_root, Path(relative))
+        if not path.is_file():
+            continue
+        modified = int(path.stat().st_mtime)
+        # Tracked role routers are installed with a new checkout mtime. Use
+        # their committed timestamp unless they have local edits.
+        tracked = run_command(
+            ["git", "ls-files", "--error-unmatch", "--", relative],
+            cwd=state_root, timeout_s=10, env=git_environment(),
+        )
+        if tracked.returncode not in {0, 1, 128}:
+            raise ValueError("cannot determine whether the lane handoff is tracked")
+        if tracked.returncode == 0:
+            dirty = run_command(
+                ["git", "status", "--porcelain", "--", relative],
+                cwd=state_root, timeout_s=10, env=git_environment(),
+            )
+            if dirty.returncode != 0:
+                raise ValueError("cannot read lane handoff Git status")
+            if not dirty.stdout:
+                committed = run_command(
+                    ["git", "log", "-1", "--format=%ct", "--", relative],
+                    cwd=state_root, timeout_s=10, env=git_environment(),
+                )
+                if committed.returncode != 0 or not committed.stdout.strip().isdigit():
+                    raise ValueError("cannot read lane handoff commit timestamp")
+                modified = int(committed.stdout.strip())
+        if modified > prepared.timestamp() and (newest is None or modified > newest[0]):
+            newest = (modified, relative)
+    return newest[1] if newest else None
+
+
 def cmd_detect(args: argparse.Namespace) -> int:
     try:
         _, state_root = resolve_roots(args.repo_root)
@@ -6889,6 +6934,7 @@ def cmd_detect(args: argparse.Namespace) -> int:
     excluded_terminal: list[dict[str, str]] = []
     registry_errors: list[str] = []
     skipped_foreign: list[dict[str, Any]] = []
+    skipped_stale: list[dict[str, Any]] = []
 
     for scan_agent in scan_agents:
         agent_dir = state_root / ".agent" / "thread-rollovers" / scan_agent
@@ -6950,6 +6996,23 @@ def cmd_detect(args: argparse.Namespace) -> int:
                         }
                     )
                     continue
+                if replacement["status"] == "pending_start":
+                    try:
+                        newer_handoff = newer_lane_handoff(
+                            state_root, agent=agent, stream=stream_filter or packet_stream,
+                            prepared_at=replacement.get("prepared_at"),
+                        )
+                    except (OSError, ValueError) as exc:
+                        print(json.dumps({"error": str(exc)}, indent=2))
+                        return 2
+                    if newer_handoff:
+                        skipped_stale.append({
+                            "agent": candidate_agent,
+                            "lineage_id": lineage_id,
+                            "rollover_id": rollover_id,
+                            "newer_handoff": newer_handoff,
+                        })
+                        continue
                 live_leases.append((path, state, replacement, scan_agent))
 
     # A family is a disambiguation hint, not stream identity. If it matches no
@@ -6967,6 +7030,8 @@ def cmd_detect(args: argparse.Namespace) -> int:
             output["registry_errors"] = registry_errors
         if skipped_foreign:
             output["skipped_foreign"] = skipped_foreign
+        if skipped_stale:
+            output["skipped_stale"] = skipped_stale
         print(
             render_session_start_context(
                 output,
@@ -7008,6 +7073,8 @@ def cmd_detect(args: argparse.Namespace) -> int:
             payload["registry_errors"] = registry_errors
         if skipped_foreign:
             payload["skipped_foreign"] = skipped_foreign
+        if skipped_stale:
+            payload["skipped_stale"] = skipped_stale
 
         if args.format == "session-start":
             print(
@@ -7072,6 +7139,8 @@ def cmd_detect(args: argparse.Namespace) -> int:
         output["registry_errors"] = registry_errors
     if skipped_foreign:
         output["skipped_foreign"] = skipped_foreign
+    if skipped_stale:
+        output["skipped_stale"] = skipped_stale
 
     print(
         render_session_start_context(
