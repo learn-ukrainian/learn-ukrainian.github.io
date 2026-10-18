@@ -1211,7 +1211,6 @@ def _handle_channel_tail(args) -> int:
                     print(f"   ... [{len(m['body']) - 200} more chars]", flush=True)
     except KeyboardInterrupt:
         return 0
-    return 0
 
 
 def _handle_channel_watch(args) -> int:
