@@ -202,6 +202,7 @@ KNOWN_REPO_WIDE_FUNCTIONS = (
     "tests/test_skill_instruction_routes.py::test_task_scope_selector_keeps_canonical_sources_and_phase_gates_reachable",
     "tests/test_storage_classification_table.py::test_frozen_rows_and_git_index_totals",
     "tests/test_red_team_consumer_trace.py::test_every_marker_or_status_consumer_has_a_fixed_handling_row",
+    "tests/hygiene/test_cli_help_ratchet.py::test_repository_clis_meet_help_standard_or_stay_frozen",
 )
 
 # Escape hatch for a scanner the best-effort heuristic flags but that is not

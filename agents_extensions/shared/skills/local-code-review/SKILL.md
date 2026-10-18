@@ -72,6 +72,19 @@ regressions against main, verdicts are proportional, and a missing required
 capability is INCONCLUSIVE, which still blocks (Step 5); the breakers are
 unchanged (Step 6).
 
+## CLI `--help` gate (blocking)
+
+A Python CLI under `scripts/` (a file with an `if __name__ == "__main__":`
+entry) that the change adds or touches must meet
+`agents_extensions/shared/rules/cli-help-standard.md`: `--help` exits 0
+within 5 seconds without doing work or writing, and prints a description,
+help for every argument, and an epilog naming Examples and Exit codes. If it
+does not, the verdict is REQUEST_CHANGES, even when the script was already
+in `scripts/hygiene/cli_help_baseline.json`. The same change must also remove
+the script's baseline entry, and no change may add an entry. Check with
+`.venv/bin/python -m scripts.hygiene.lint_cli_help`, or cite the CI run of
+`tests/hygiene/test_cli_help_ratchet.py`.
+
 ## Output
 
 Print a structured report to the conversation (the checklist's Step 8 gives

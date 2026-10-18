@@ -11,6 +11,7 @@ Analyzes:
 Output: JSON report with removal candidates categorized by risk level
 """
 
+import argparse
 import json
 import re
 import subprocess
@@ -254,7 +255,32 @@ class DeadCodeAnalyzer:
         print("Report saved to: /tmp/dead_code_report.json")
         print("=" * 70)
 
-def main():
+def build_parser() -> argparse.ArgumentParser:
+    return argparse.ArgumentParser(
+        description=(
+            "Rank scripts/**/*.py by how safe they look to remove, using importers, doc references and git age.\n"
+            "Use it to shortlist dead-code candidates for human review; it never deletes anything, and its LOW "
+            "risk label is a hint, not proof."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "Examples:\n"
+            "  .venv/bin/python scripts/tools/analyze_dead_code.py\n"
+            "  .venv/bin/python scripts/tools/analyze_dead_code.py && "
+            ".venv/bin/python scripts/tools/remove_dead_code.py --low-risk   # dry-run removal preview\n\n"
+            "Outputs:\n"
+            "  Writes the full JSON report to <system temp dir>/dead_code_report.json and prints a summary.\n"
+            "  Runs git log and rg for every script; it changes no repository file.\n\n"
+            "Exit codes:\n"
+            "  0 = report written; 1 = unexpected error; 2 = invalid arguments.\n\n"
+            "Related:\n"
+            "  scripts/tools/remove_dead_code.py reads the report; #10955 (CLI --help standard)."
+        ),
+    )
+
+
+def main(argv: list[str] | None = None) -> int:
+    build_parser().parse_args(argv)
     project_root = Path(__file__).parent.parent.parent
 
     analyzer = DeadCodeAnalyzer(project_root)
@@ -270,7 +296,9 @@ def main():
     analyzer.print_summary(report)
 
     print("\nTo remove low-risk scripts, run:")
-    print("  python3 scripts/remove_dead_code.py --low-risk")
+    print("  .venv/bin/python scripts/tools/remove_dead_code.py --low-risk")
+    return 0
+
 
 if __name__ == '__main__':
-    main()
+    raise SystemExit(main())
