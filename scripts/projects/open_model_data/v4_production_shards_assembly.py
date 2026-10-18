@@ -224,16 +224,6 @@ def get_actual_lemma_and_count(cur_v: sqlite3.Cursor, w: str) -> tuple[str, int]
     return chosen_w, 0
 
 
-def has_sum11_entry(cur_s: sqlite3.Cursor, w: str) -> bool:
-    cw = clean_word(w)
-    head = cw.split()[0] if " " in cw else cw
-    r = cur_s.execute(
-        "SELECT id FROM sum11 WHERE word = ? OR word LIKE ? OR word = ? OR word LIKE ? LIMIT 1",
-        (cw, f"{cw}|%", head, f"{head}|%"),
-    ).fetchone()
-    return bool(r)
-
-
 def reconcile_gold_seed_trajectory(
     seed: dict[str, Any],
     cur_v: sqlite3.Cursor,
