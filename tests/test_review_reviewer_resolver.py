@@ -1566,6 +1566,7 @@ def test_resolve_reviewer_classifies_every_adapter_and_reviewer_hook():
     repo = Path(__file__).resolve().parent.parent
     expected = {
         "__init__.py": None,
+        "_opencode_state.py": None,
         "_output_schema.py": None,
         "_template.py": None,
         "acpx.py": None,
