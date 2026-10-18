@@ -49,4 +49,7 @@ jobs:
           GIT_CONFIG_COUNT: '1'
           GIT_CONFIG_KEY_0: credential.https://github.com.helper
           GIT_CONFIG_VALUE_0: '!gh auth git-credential'
-        run: python -m scripts.hygiene.remote_branch_cleanup --repo "$REPO"
+        run: |
+          git remote set-url origin "https://github.com/$REPO.git"
+          git remote set-url --push origin "https://github.com/$REPO.git"
+          python -m scripts.hygiene.remote_branch_cleanup --repo "$REPO"

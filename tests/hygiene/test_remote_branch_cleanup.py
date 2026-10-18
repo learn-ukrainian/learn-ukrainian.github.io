@@ -14,6 +14,7 @@ from pathlib import Path
 from types import SimpleNamespace
 from typing import ClassVar
 from urllib.error import URLError
+from urllib.parse import parse_qs, urlsplit
 
 import pytest
 import yaml
@@ -22,6 +23,7 @@ from scripts.hygiene import remote_branch_cleanup as m
 from tests.common.github_cache_isolation import isolate_github_client_cache
 
 REPO = "learn-ukrainian/learn-ukrainian.github.io"
+REPO_ID = 1300192
 HEAD = "a" * 40
 OLD = "b" * 40
 NOW = datetime(2026, 10, 17, 12, tzinfo=UTC)
@@ -60,9 +62,9 @@ def keep(text="main\n"):
 
 class API(m.GitHub):
     def __init__(self):
-        self.repo = REPO
+        super().__init__(REPO, "fixture")
         self.objects = {
-            "": {"full_name": REPO, "private": False, "default_branch": "main"},
+            "": {"id": REPO_ID, "full_name": REPO, "private": False, "default_branch": "main"},
             "branches/main": branch("main", HEAD, True),
             f"contents/{m.KEEP_PATH}?ref={HEAD}": keep(),
             "branches/stale": branch(),
@@ -557,6 +559,300 @@ def test_cli_help(capsys):
     assert all(text in output for text in ["--repo", "Outputs:", "Exit codes:", "Related:", "48 hours"])
 
 
+@pytest.mark.parametrize("event", ["schedule", "workflow_dispatch"])
+def test_checkout_origin_workflow_reaches_safe_cleanup(api, monkeypatch, tmp_path, event):
+    """Replay the pinned checkout's actual suffixless origin, without network writes."""
+    subprocess.run(["git", "init", "--quiet", str(tmp_path)], check=True, timeout=30)
+    subprocess.run(
+        ["git", "-C", str(tmp_path), "remote", "add", "origin", f"https://github.com/{REPO}"],
+        check=True,
+        timeout=30,
+    )
+    subprocess.run(
+        ["git", "-C", str(tmp_path), "remote", "set-url", "--push", "origin", f"https://github.com/{REPO}"],
+        check=True,
+        timeout=30,
+    )
+    workflow = yaml.safe_load((ROOT / ".github/workflows/stale-branch-cleanup.yml").read_text())
+    script = workflow["jobs"]["cleanup"]["steps"][-1]["run"].strip()
+    setup = script.rsplit("\n", 1)[0] if "\n" in script else ""
+    monkeypatch.setenv("REPO", REPO)
+    monkeypatch.setenv("GITHUB_EVENT_NAME", event)
+    subprocess.run(["bash", "-e", "-c", setup], cwd=tmp_path, check=True, timeout=30)
+    source_git = m.git
+
+    def checkout_git(*args):
+        if args[0] == "remote":
+            return subprocess.check_output(["git", "-C", str(tmp_path), *args], text=True, timeout=30)
+        return source_git(*args)
+
+    monkeypatch.setattr(m, "git", checkout_git)
+    deleted = []
+    monkeypatch.setattr(m, "delete", deleted.append)
+    report = m.cleanup(api, NOW)
+    assert report["deleted"] == [{"name": "stale", "sha": OLD}]
+    assert report["failures"] == []
+    assert deleted == [m.Candidate("stale", OLD, NOW - timedelta(hours=48), False)]
+
+
+@pytest.fixture
+def wire_api(api, monkeypatch):
+    """Real get/pages/shared-client stack; HTTP bodies use GitHub's public shapes."""
+    client = m.GitHub(REPO, "fixture")
+    calls = []
+    options = {"numeric": True, "pr_on_page_two": False, "bad_link": None}
+
+    def open_request(request, timeout):
+        url = request.full_url
+        calls.append(url)
+        # Even numeric Link paths must never become request destinations.
+        assert url.startswith(f"{m.API}/repos/{REPO}/")
+        endpoint = url.removeprefix(f"{m.API}/repos/{REPO}/")
+        parsed = urlsplit(endpoint)
+        query = parse_qs(parsed.query)
+        link = ""
+        if "page" in query:
+            assert query["per_page"] == ["100"]
+            page = int(query["page"][0])
+            collection = parsed.path
+            assert query == ({"state": ["open"]} if collection == "pulls" else {}) | {
+                "per_page": ["100"],
+                "page": [str(page)],
+            }
+            if collection == "branches":
+                data = [api.objects["branches/main"]] if page == 1 else [api.objects["branches/stale"]]
+            else:
+                open_pr = pr()
+                open_pr["head"]["sha"] = api.objects["branches/stale"]["commit"]["sha"]
+                data = (
+                    [pr(name="unrelated", number=2)] if page == 1 else ([open_pr] if options["pr_on_page_two"] else [])
+                )
+            path = f"repositories/{REPO_ID}" if options["numeric"] else f"repos/{REPO}"
+            filters = "state=open&" if collection == "pulls" else ""
+            collection_url = f"{m.API}/{path}/{collection}?{filters}per_page=100"
+            if page == 1:
+                link = f'<{collection_url}&page=2>; rel="next", <{collection_url}&page=2>; rel="last"'
+                if options["bad_link"] and collection == "pulls":
+                    link = options["bad_link"]
+            else:
+                link = f'<{collection_url}&page=1>; rel="prev", <{collection_url}&page=1>; rel="first"'
+            assert page in {1, 2}
+        else:
+            data = api.objects[endpoint]
+        response = io.BytesIO(json.dumps(data).encode())
+        response.status = 200
+        response.headers = {"Link": link}
+        return response
+
+    monkeypatch.setattr(client.opener, "open", open_request)
+    monkeypatch.setenv("GITHUB_REPOSITORY", REPO)
+    monkeypatch.setenv("GH_TOKEN", "fixture")
+    monkeypatch.setattr(m, "GitHub", lambda *args: client)
+    return client, calls, options
+
+
+@pytest.mark.parametrize("numeric", [False, True])
+@pytest.mark.parametrize("pr_on_page_two", [False, True])
+def test_cli_real_pagination_deletes_or_retains_from_all_pages(wire_api, monkeypatch, capsys, numeric, pr_on_page_two):
+    _, calls, options = wire_api
+    options.update(numeric=numeric, pr_on_page_two=pr_on_page_two)
+    deleted = []
+    monkeypatch.setattr(m, "delete", deleted.append)
+    assert m.main(["--repo", REPO]) == 0
+    report = json.loads(capsys.readouterr().out)
+    assert report["failures"] == []
+    assert report["deleted"] == ([] if pr_on_page_two else [{"name": "stale", "sha": OLD}])
+    assert len(deleted) == (0 if pr_on_page_two else 1)
+    for endpoint in ["branches?", "pulls?state=open&"]:
+        assert f"{m.API}/repos/{REPO}/{endpoint}per_page=100&page=2" in calls
+
+
+@pytest.mark.parametrize("numeric", [False, True])
+@pytest.mark.parametrize("pr_on_page_two", [False, True])
+def test_wire_pagination_with_actual_disposable_git_remote(
+    api, wire_api, monkeypatch, tmp_path, capsys, numeric, pr_on_page_two
+):
+    """Only the source-identity seam is faked; deletion uses Git against our local bare remote."""
+    _, calls, options = wire_api
+    options.update(numeric=numeric, pr_on_page_two=pr_on_page_two)
+    remote = tmp_path / "owned.git"
+    local = tmp_path / "local"
+    local.mkdir()
+
+    def run(*args):
+        result = subprocess.run(["git", *args], cwd=local, text=True, capture_output=True, timeout=30, check=False)
+        assert result.returncode == 0, result.stderr
+        return result.stdout.strip()
+
+    run("init", "--bare", str(remote))
+    run("init", "--initial-branch=fixture-default")
+    run("config", "user.email", "fixture@example.invalid")
+    run("config", "user.name", "Fixture")
+    run("remote", "add", "origin", str(remote))
+    monkeypatch.setenv("GIT_COMMITTER_DATE", "2026-10-15T12:00:00Z")
+    run("-c", "core.hooksPath=/dev/null", "commit", "--allow-empty", "-m", "old")
+    old_sha = run("rev-parse", "HEAD")
+    monkeypatch.setenv("GIT_COMMITTER_DATE", "2026-10-17T12:00:00Z")
+    run("-c", "core.hooksPath=/dev/null", "commit", "--allow-empty", "-m", "default")
+    main_sha = run("rev-parse", "HEAD")
+    run("push", "origin", f"{main_sha}:refs/heads/fixture-default", f"{old_sha}:refs/heads/stale")
+    api.objects[""]["default_branch"] = "fixture-default"
+    api.objects["branches/main"] = branch("fixture-default", main_sha, True)
+    api.objects["branches/fixture-default"] = api.objects["branches/main"]
+    api.objects["branches/stale"] = branch("stale", old_sha)
+    for value, date in [(old_sha, "2026-10-15T12:00:00Z"), (main_sha, "2026-10-17T12:00:00Z")]:
+        api.objects[f"git/commits/{value}"] = {"sha": value, "committer": {"date": date}}
+    api.objects[f"contents/{m.KEEP_PATH}?ref={main_sha}"] = keep()
+    monkeypatch.setenv("GITHUB_SHA", main_sha)
+    monkeypatch.setenv("GITHUB_REF", "refs/heads/fixture-default")
+    original = m.git
+
+    def source_git(*args):
+        if args == ("rev-parse", "HEAD"):
+            return main_sha + "\n"
+        return original(*args)
+
+    monkeypatch.setattr(m, "git", source_git)
+    monkeypatch.chdir(local)
+    assert m.main(["--repo", REPO]) == 0
+    report = json.loads(capsys.readouterr().out)
+    assert report["deleted"] == ([] if pr_on_page_two else [{"name": "stale", "sha": old_sha}])
+    assert report["failures"] == []
+    assert run("ls-remote", "origin", "refs/heads/stale") == (f"{old_sha}\trefs/heads/stale" if pr_on_page_two else "")
+    assert run("ls-remote", "origin", "refs/heads/fixture-default") == f"{main_sha}\trefs/heads/fixture-default"
+    assert f"{m.API}/repos/{REPO}/pulls?state=open&per_page=100&page=2" in calls
+
+
+@pytest.mark.parametrize(
+    "url",
+    [
+        f"https://api.github.com/repositories/{REPO_ID + 1}/pulls?state=open&per_page=100&page=2",
+        "https://api.github.com/repos/someone/else/pulls?state=open&per_page=100&page=2",
+        f"https://api.github.com/repositories/{REPO_ID}/issues?state=open&per_page=100&page=2",
+        f"https://evil.test/repositories/{REPO_ID}/pulls?state=open&per_page=100&page=2",
+        f"http://api.github.com/repositories/{REPO_ID}/pulls?state=open&per_page=100&page=2",
+        f"https://user@api.github.com/repositories/{REPO_ID}/pulls?state=open&per_page=100&page=2",
+        f"https://api.github.com:443/repositories/{REPO_ID}/pulls?state=open&per_page=100&page=2",
+        f"https://api.github.com/repositories/{REPO_ID}/pulls?state=open&per_page=100&page=2#fragment",
+        *[
+            f"https://api.github.com/repositories/{REPO_ID}/pulls?{query}"
+            for query in [
+                "per_page=100&page=2",
+                "state=closed&per_page=100&page=2",
+                "state=open&state=closed&per_page=100&page=2",
+                "state=open&per_page=100&per_page=100&page=2",
+                "state=open&page=2",
+                "state=open&per_page=30&page=2",
+                "state=open&per_page=100&page=1",
+                "state=open&per_page=100&page=3",
+                "state=open&per_page=100&page=2&page=3",
+                "state=open&per_page=100&page=NaN",
+                "state=open&per_page=100&page=2&base=main",
+            ]
+        ],
+    ],
+)
+def test_cli_untrusted_pagination_refuses_without_following_link(wire_api, monkeypatch, capsys, url):
+    _, calls, options = wire_api
+    options["bad_link"] = f'<{url}>; rel="next"'
+    monkeypatch.setattr(m, "delete", lambda _: pytest.fail("untrusted pagination allowed deletion"))
+    assert m.main(["--repo", REPO]) == 1
+    report = json.loads(capsys.readouterr().out)
+    assert report["deleted"] == []
+    assert len(report["failures"]) == 1
+    assert calls[-1] == f"{m.API}/repos/{REPO}/pulls?state=open&per_page=100&page=1"
+
+
+@pytest.mark.parametrize("value", [None, True, "1300192", 0, -1])
+def test_repository_id_unknown_refuses(api, monkeypatch, value):
+    api.objects[""]["id"] = value
+    monkeypatch.setattr(m, "delete", lambda _: pytest.fail("unknown repository ID allowed deletion"))
+    report = m.cleanup(api, NOW)
+    assert report["deleted"] == []
+    assert report["failures"] == [{"reason": "repository ID unknown or changed"}]
+
+
+def test_repository_id_changed_at_final_read_refuses(api, monkeypatch):
+    def change(endpoint):
+        if endpoint == "" and api.calls.count("") == 2:
+            api.objects[""]["id"] += 1
+
+    api.before_get = change
+    monkeypatch.setattr(m, "delete", lambda _: pytest.fail("changed repository ID allowed deletion"))
+    report = m.cleanup(api, NOW)
+    assert report["deleted"] == []
+    assert report["failures"] == [{"name": "stale", "reason": "repository ID unknown or changed"}]
+
+
+def test_numeric_pagination_without_repository_binding_refuses(monkeypatch):
+    client = m.GitHub(REPO, "fixture")
+    calls = []
+
+    def get(endpoint):
+        calls.append(endpoint)
+        return [{}], f'<{m.API}/repositories/{REPO_ID}/branches?per_page=100&page=2>; rel="next"'
+
+    monkeypatch.setattr(client, "get", get)
+    with pytest.raises(m.Unknown, match="untrusted pagination link"):
+        client.pages("branches")
+    assert calls == ["branches?per_page=100&page=1"]
+
+
+@pytest.mark.parametrize("omit_filter", [False, True])
+def test_pagination_preserves_all_original_filters(monkeypatch, omit_filter):
+    client = m.GitHub(REPO, "fixture")
+    calls = []
+
+    def get(endpoint):
+        calls.append(endpoint)
+        if len(calls) == 1:
+            filters = "state=open&" if omit_filter else "state=open&base=main&"
+            return [{"number": 1}], f'<{m.API}/repos/{REPO}/pulls?{filters}per_page=100&page=2>; rel="next"'
+        return [{"number": 2}], ""
+
+    monkeypatch.setattr(client, "get", get)
+    if omit_filter:
+        with pytest.raises(m.Unknown, match="untrusted pagination link"):
+            client.pages("pulls?state=open&base=main")
+        assert calls == ["pulls?state=open&base=main&per_page=100&page=1"]
+    else:
+        assert client.pages("pulls?state=open&base=main") == [{"number": 1}, {"number": 2}]
+        assert calls == [
+            "pulls?state=open&base=main&per_page=100&page=1",
+            "pulls?state=open&base=main&per_page=100&page=2",
+        ]
+
+
+@pytest.mark.parametrize("scope", ["fetch", "push"])
+@pytest.mark.parametrize(
+    "url",
+    [
+        f"https://github.com/{REPO}",
+        f"http://github.com/{REPO}.git",
+        f"https://user@github.com/{REPO}.git",
+        f"https://github.com:443/{REPO}.git",
+        f"https://github.com/{REPO}.git?query",
+        f"https://github.com/{REPO}.git#fragment",
+        f"https://elsewhere.test/{REPO}.git",
+        "https://github.com/someone/else.git",
+        f"https://github.com/{REPO}.git\nhttps://github.com/{REPO}.git",
+    ],
+)
+def test_source_exact_fetch_and_push_guards_remain(api, monkeypatch, scope, url):
+    original = m.git
+
+    def git(*args):
+        if args[0] == "remote" and ("--push" in args) == (scope == "push"):
+            return url + "\n"
+        return original(*args)
+
+    monkeypatch.setattr(m, "git", git)
+    monkeypatch.setattr(m, "delete", lambda _: pytest.fail("untrusted origin allowed deletion"))
+    report = m.cleanup(api, NOW)
+    assert report["deleted"] == []
+    assert report["failures"] == [{"reason": "untrusted origin URL"}]
+
+
 def test_workflow_default_source_shared_entrypoint_and_permissions():
     workflow = yaml.safe_load((ROOT / ".github/workflows/stale-branch-cleanup.yml").read_text())
     triggers = workflow.get("on", workflow.get(True))
@@ -572,7 +868,11 @@ def test_workflow_default_source_shared_entrypoint_and_permissions():
     assert checkout["with"]["persist-credentials"] is False
     invocations = [step for step in job["steps"] if "run" in step]
     assert len(invocations) == 1
-    assert invocations[0]["run"] == 'python -m scripts.hygiene.remote_branch_cleanup --repo "$REPO"'
+    assert invocations[0]["run"].splitlines() == [
+        'git remote set-url origin "https://github.com/$REPO.git"',
+        'git remote set-url --push origin "https://github.com/$REPO.git"',
+        'python -m scripts.hygiene.remote_branch_cleanup --repo "$REPO"',
+    ]
 
 
 def test_workflow_sparse_checkout_can_execute_module(tmp_path):

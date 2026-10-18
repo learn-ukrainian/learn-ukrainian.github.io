@@ -85,6 +85,7 @@ class NoRedirect(HTTPRedirectHandler):
 class GitHub:
     def __init__(self, repo: str, token: str):
         self.repo = repository(repo)
+        self.repository_id: int | None = None
         self.token = token
         self.opener = build_opener(NoRedirect())
 
@@ -124,13 +125,16 @@ class GitHub:
                     url, relation = match.groups()
                     parsed = urlsplit(url)
                     expected = urlsplit(f"{API}/repos/{self.repo}/{endpoint}")
+                    paths = {expected.path}
+                    if self.repository_id is not None:
+                        paths.add(f"/repositories/{self.repository_id}/{urlsplit(endpoint).path}")
                     query = parse_qs(parsed.query, keep_blank_values=True)
                     expected_query = parse_qs(expected.query)
                     page_value = query.pop("page", [])
                     if (
                         parsed.scheme != expected.scheme
                         or parsed.netloc != expected.netloc
-                        or parsed.path != expected.path
+                        or parsed.path not in paths
                         or parsed.fragment
                         or query != {**expected_query, "per_page": ["100"]}
                         or len(page_value) != 1
@@ -188,6 +192,10 @@ def read_evidence(api: GitHub) -> tuple[Evidence, list[str]]:
     repo = api.object("")
     if repository(repo.get("full_name")).lower() != api.repo.lower() or repo.get("private") is not False:
         raise Unknown("repository identity/public state mismatch")
+    repo_id = repo.get("id")
+    if type(repo_id) is not int or repo_id <= 0 or api.repository_id not in {None, repo_id}:
+        raise Unknown("repository ID unknown or changed")
+    api.repository_id = repo_id
     default = branch_name(repo.get("default_branch"))
     name, revision, _ = branch_record(api.object(f"branches/{quote(default, safe='')}"))
     if name != default:
