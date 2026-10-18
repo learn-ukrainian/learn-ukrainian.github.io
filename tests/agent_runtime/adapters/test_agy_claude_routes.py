@@ -97,6 +97,59 @@ def test_worker_route_keeps_high_pin_and_existing_permissions(tmp_path, monkeypa
     assert "--effort" not in plan.cmd
 
 
+@pytest.mark.parametrize("model", [*SLUGS, *LABELS])
+@pytest.mark.parametrize(
+    "mode,review_route",
+    [("workspace-write", False), ("danger", False), ("read-only", False), ("read-only", True)],
+)
+def test_generated_invocation_task_guidance(tmp_path, monkeypatch, model, mode, review_route):
+    home = tmp_path / "home"
+    (home / ".gemini" / "antigravity-cli").mkdir(parents=True)
+    register_agy_hooks(tmp_path, home=home)
+    monkeypatch.setattr(agy, "_require_background_wait_support", lambda *args: None)
+    monkeypatch.setattr(agy, "_build_log_path", lambda *args: tmp_path / "agy.log")
+    prompt = delegate._compose_dispatch_prompt(
+        "Complete the assigned work.",
+        worktree_path=None,
+        mode=mode,
+        sparse_telemetry=None,
+        delegate_commits=False,
+        research_block="",
+        advisory_block="",
+        advisory_block_kind=None,
+        rules_seat=None,
+        agent="agy",
+        review_route=review_route,
+    )
+    config = {"agy_home_override": str(home)}
+    if review_route:
+        config["review_profile"] = "code"
+    plan = agy.AgyAdapter().build_invocation(
+        prompt=prompt,
+        mode=mode,
+        cwd=tmp_path,
+        model=model,
+        task_id="task-guidance",
+        session_id=None,
+        tool_config=config,
+        effort="high",
+    )
+    sent = json.loads(plan.stdin_payload)["message"]["content"][0]["text"]
+    assert sent == prompt
+    assert plan.cmd[plan.cmd.index("--model") + 1] == agy.AgyAdapter.resolve_model_slug(model)
+    if mode == "read-only" or review_route:
+        assert "WRITE MODE CONTRACT" not in sent
+    else:
+        assert sent.endswith(
+            '\n\n[WRITE MODE CONTRACT: Do not start timers or waits. '
+            'If a command becomes a background task, use the native manage_task tool with Action="status" '
+            'and the exact returned TaskId to track it to confirmed completion before replying. '
+            'Do not spawn shell pgrep/sleep wait loops or use manage_task Action="kill" to coordinate waiting. '
+            'Never end the turn while a task is running. Reply ONLY after push and verification are confirmed.]'
+        )
+        assert sent.count("WRITE MODE CONTRACT") == 1
+
+
 @pytest.mark.parametrize("model", SLUGS)
 def test_real_delegate_probe_keeps_explicit_high_pin(tmp_path, monkeypatch, model):
     monkeypatch.setattr(agy, "require_hook_config", lambda *a, **k: None)
