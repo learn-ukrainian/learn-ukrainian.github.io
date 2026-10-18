@@ -183,7 +183,10 @@ class Transport:
                 }
             elif endpoint.endswith("/pulls/42"):
                 self.pull_reads += 1
-                data = {"state": "open", "head": {"sha": NEW_HEAD if self.moved and self.pull_reads > 1 else self.head}}
+                data = {"state": "open", "changed_files": 0,
+                        "head": {"sha": NEW_HEAD if self.moved and self.pull_reads > 1 else self.head}}
+            elif endpoint.endswith("/pulls/42/files"):
+                data = [[]]
             elif endpoint == "user":
                 data = {"login": "driver"}
             else:
@@ -363,7 +366,8 @@ def test_invalid_live_evidence_refuses(setup, action, cause):
         transport.moved = True
         if action == "direct":
             transport.pull_reads = 1
-    with pytest.raises(gate.PublishBlocked, match="RECOVERY_"):
+    reason = "security-signoff paths unreadable" if cause == "moved" and action == "direct" else "RECOVERY_"
+    with pytest.raises(gate.PublishBlocked, match=reason):
         recover(setup, action)
     assert transport.writes == []
 

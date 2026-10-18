@@ -25,6 +25,10 @@ def transport(calls, *, subject="clean (#1)", body="* clean", queue=False, head=
     """Answer readiness and squash-text reads; record only the merge write."""
 
     def send(args, **kwargs):
+        if args[:5] == ["gh", "api", "--method", "GET", "repos/unit/public/pulls/1?per_page=100"]:
+            return subprocess.CompletedProcess(args, 0, json.dumps({"changed_files": 0, "head": {"sha": HEAD}}), "")
+        if "repos/unit/public/pulls/1/files?per_page=100" in args:
+            return subprocess.CompletedProcess(args, 0, "[[]]", "")
         if args[:3] == ["gh", "pr", "view"]:
             return subprocess.CompletedProcess(
                 args, 0, json.dumps({"number": 1, "isDraft": False, "headRefOid": HEAD}), ""

@@ -14,6 +14,7 @@ from scripts.fleet_comms import review_publication, review_publisher
 from scripts.orchestration import integration_sweep as sweep
 from scripts.orchestration import merge_queue_keeper as keeper
 from scripts.review.record_cf_verdict import build_comment
+from scripts.review.security_signoff import SecuritySignoffError, require_security_signoff
 
 # Publication and telemetry readers are included so a new reference cannot
 # silently enter the approval path. These are handling labels, not endorsements.
@@ -27,6 +28,7 @@ HANDLING = {
     "scripts/lexicon/published_record_dispositions.py": "refuse",
     "scripts/orchestration/integration_sweep.py#CI-blocker-exclusion": "ignore",
     "scripts/review/record_cf_verdict.py": "accept-as-approval",
+    "scripts/review/security_signoff.py": "ignore",
     "scripts/fleet_comms/cli.py": "ignore",
     "scripts/fleet_comms/efficiency_metrics.py": "ignore",
     "scripts/entire_context/resolvers.py": "ignore",
@@ -97,6 +99,23 @@ def test_keeper_and_sweep_accept_red_team_approval(tmp_path):
     assert keeper._recorded_approval_for_head([_comment()], SHA, "fleet") is True
     assert HANDLING["scripts/orchestration/merge_queue_keeper.py"] == "accept-as-approval"
     assert HANDLING["scripts/orchestration/integration_sweep.py"] == "accept-as-approval"
+
+
+@pytest.mark.parametrize("mode", ["cross_family", "red_team"])
+def test_security_gate_ignores_cf_approval_without_explicit_signoff(mode):
+    from tests.orchestration.test_integration_sweep import SHA
+
+    row = _comment(mode, login="fleet")
+    readers = {
+        "read_files": lambda: [{"filename": "scripts/hooks/guard.py"}],
+        "read_comments": lambda: [row],
+        "read_login": lambda: "fleet",
+    }
+    with pytest.raises(SecuritySignoffError, match="required for current head"):
+        require_security_signoff(SHA, **readers)
+    row["body"] = f"<!-- security-signoff v1 sha={SHA} task=security-review verdict=PASS model=gpt-6.1-sol -->"
+    require_security_signoff(SHA, **readers)
+    assert HANDLING["scripts/review/security_signoff.py"] == "ignore"
 
 
 def test_fleet_board_counts_red_team_as_ready():

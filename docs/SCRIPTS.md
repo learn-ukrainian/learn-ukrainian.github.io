@@ -1110,6 +1110,19 @@ with `review_owned_paths`; `./` prefixes are normalized and owned directories ad
 security coverage. Code-profile `closeout_cli resolve-reviewer` refuses without a resolved target
 or an owned path; run `closeout_cli target` with the same state file first.
 
+**Security sign-off before enqueue (#10973):** `scripts.publish pr-merge` and
+`scripts.orchestration.merge_queue_keeper` require a separate exact-head security marker
+for changes classified by `scripts/review/security_paths.py`. An ordinary CF approval
+does not clear this gate. After a qualified critical APPROVE by `claude-opus-5-5` or
+`gpt-6.1-sol`, run `scripts/review/record_cf_verdict.py --task-id <review-task> --pr <number>
+--security-signoff` with the project interpreter. The recorder validates the reviewer,
+risk, current head and sensitive paths before adding
+`<!-- security-signoff v1 sha=<40-hex> task=<id> verdict=PASS model=<model> -->`.
+Both enqueue tools use `scripts/review/security_signoff.py` to require that marker on
+the current head from the authenticated publisher's unedited, trusted comment.
+Unreadable or incomplete changed-file lists refuse enqueue. Non-sensitive changes
+retain the existing gates.
+
 **Credit lanes in routing-budget, the reviewer resolver and `usage show` (#9517):**
 `/api/state/routing-budget` publishes each subscription lane's `credit_lane.lane_credit_state` as the
 additive `agents.<lane>.credit` field; the raw quota `status` keeps its vocabulary (a near-cap Codex

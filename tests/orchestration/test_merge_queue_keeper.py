@@ -1246,13 +1246,13 @@ def test_codeql_check_from_any_other_app_is_not_evidence(tmp_path: Path, monkeyp
     assert "enqueue" not in mutations(fake)
 
 
-def test_pr_with_analyze_runs_never_reads_files(tmp_path: Path, monkeypatch) -> None:
+def test_pr_with_analyze_runs_still_reads_files_for_security_gate(tmp_path: Path, monkeypatch) -> None:
     fake = FakeGitHub()
 
     lines, _failed = run(fake, tmp_path / "state.json", monkeypatch)
 
     assert "reason=ready" in lines[0]
-    assert fake.lookups == []
+    assert fake.lookups == ["files", "files"]
 
 
 def test_file_lookup_failure_never_enqueues(tmp_path: Path, monkeypatch) -> None:

@@ -421,6 +421,8 @@ def test_merge_readiness_reads_and_the_merge_receive_no_override(synthetic_opsec
         calls.append((args[:3], kwargs["env"]))
         if args[:3] == ["gh", "pr", "view"]:
             out = json.dumps({"number": 1, "isDraft": False, "headRefOid": head})
+        elif args[:4] == ["gh", "api", "--method", "GET"]:
+            out = json.dumps([[]] if "/files?" in args[4] else {"changed_files": 0, "head": {"sha": head}})
         elif args[:3] == ["gh", "pr", "checks"]:
             out = "[]"
         elif args[:2] == ["gh", "api"]:

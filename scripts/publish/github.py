@@ -476,6 +476,7 @@ def publish(
         recovery_queue = False
         if verb == "pr-merge":
             from scripts.publish.merge_guard import ensure_merge_ready
+            from scripts.review.security_signoff import SecuritySignoffError, require_security_signoff
 
             fields["match_head"] = ensure_merge_ready(
                 gh_repo,
@@ -485,6 +486,43 @@ def publish(
                 environment=environment,
                 match_head=fields.get("match_head"),
             )
+
+            def security_read(operation, **selectors):
+                result = read(
+                    operation, repo=gh_repo, runner=readiness_runner, cwd=cwd, env=environment,
+                    capture_output=True, text=True, timeout=15, **selectors,
+                )
+                if result.returncode:
+                    raise ValueError("security evidence lookup failed")
+                return json.loads(result.stdout)
+
+            def security_pages(operation):
+                pages = security_read(operation, number=fields["number"], paginate=True, slurp=True)
+                if not isinstance(pages, list) or not all(isinstance(page, list) for page in pages):
+                    raise ValueError("security evidence pagination incomplete")
+                return [item for page in pages for item in page]
+
+            def security_files():
+                pull = security_read("pull", number=fields["number"])
+                count = pull.get("changed_files") if isinstance(pull, dict) else None
+                if (
+                    type(count) is not int or count < 0 or count >= 3000
+                    or pull.get("head", {}).get("sha") != fields["match_head"]
+                ):
+                    raise ValueError("security changed-file count or head unknown")
+                rows = security_pages("pr-files")
+                if len(rows) != count:
+                    raise ValueError("security changed-file list incomplete")
+                return rows
+
+            try:
+                require_security_signoff(
+                    fields["match_head"], read_files=security_files,
+                    read_comments=lambda: security_pages("comments"),
+                    read_login=lambda: security_read("identity")["login"],
+                )
+            except SecuritySignoffError as exc:
+                raise gate.PublishBlocked(str(exc)) from exc
             # GitHub's default squash text carries the PR title and commit messages.
             # Omitted fields are sent explicitly so the scanned text is the sent text;
             # a merge queue ignores explicit text, so its defaults are scanned too.

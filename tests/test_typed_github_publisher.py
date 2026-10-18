@@ -5,6 +5,7 @@ from __future__ import annotations
 import io
 import json
 import os
+import re
 import statistics
 import subprocess
 import sys
@@ -33,6 +34,14 @@ def catalog(monkeypatch):
 
 def spy(calls):
     def send(args, **kwargs):
+        if args[:4] == ["gh", "api", "--method", "GET"]:
+            endpoint = args[4].split("?", 1)[0]
+            if "/pulls/" in endpoint and endpoint.endswith("/files"):
+                return subprocess.CompletedProcess(args, 0, "[[]]", "")
+            if re.fullmatch(r"repos/[^/]+/[^/]+/pulls/\d+", endpoint):
+                return subprocess.CompletedProcess(
+                    args, 0, json.dumps({"changed_files": 0, "head": {"sha": "a" * 40}}), ""
+                )
         if (
             args[:3] == ["gh", "pr", "view"]
             and "--json" in args

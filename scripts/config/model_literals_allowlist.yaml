@@ -5664,6 +5664,20 @@ entries:
   count: 1
   kind: non_model_label
   reason: Existing harness, task, artifact or descriptive label 'grok-model-usage'; not a model ID.
+- path: scripts/review/security_signoff.py
+  scope: <module>
+  context: expression
+  id: claude-opus-5-5
+  count: 1
+  kind: frozen_identity
+  reason: 'Exact security-signoff v1 wire identity required by #10973; not a runtime routing selection.'
+- path: scripts/review/security_signoff.py
+  scope: <module>
+  context: expression
+  id: gpt-6.1-sol
+  count: 1
+  kind: frozen_identity
+  reason: 'Exact security-signoff v1 wire identity required by #10973; not a runtime routing selection.'
 - path: scripts/review/reviewer_resolver.py
   scope: <module>
   context: docstring

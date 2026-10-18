@@ -83,6 +83,13 @@ from scripts.review.reviewer_resolver import (
 )
 from scripts.review.role_resolution import resolve_routing_reference
 from scripts.review.security_paths import git_changed_paths, is_security_sensitive_change
+from scripts.review.security_signoff import (
+    MARKER_PREFIX as SECURITY_MARKER_PREFIX,
+)
+from scripts.review.security_signoff import (
+    SIGNOFF_MODELS,
+    parse_security_signoff,
+)
 from scripts.review.subject_seat import prepare_subject_exclusion
 from scripts.review.target_resolution import TargetResolutionError
 from scripts.review.verdict_parser import recognized_verdicts
@@ -1256,12 +1263,13 @@ def build_comment(
     unknown_history: Iterable[str] = (),
     withheld_findings: int | Literal["unknown"] | None = None,
     app_bot: bool = False,
+    security_signoff: bool = False,
 ) -> str:
     if not SHA.fullmatch(sha):
         raise RecordError("reviewed SHA must be a full 40-hex commit SHA")
     if review_mode not in {"cross_family", "red_team"}:
         raise RecordError("unsupported review mode")
-    if MARKER_PREFIX in reply:
+    if MARKER_PREFIX in reply or SECURITY_MARKER_PREFIX in reply:
         raise RecordError("review reply contains reserved verdict marker")
     mode_field = " review_mode=red_team" if review_mode == "red_team" else ""
     history = tuple(sorted(set(unknown_history)))
@@ -1294,6 +1302,8 @@ def build_comment(
         f"Reviewer model: {model}\n"
         f"Task id: {task_id}\n\n"
     )
+    if security_signoff:
+        prefix += f"<!-- security-signoff v1 sha={sha} task={task_id} verdict=PASS model={model} -->\n\n"
     if withheld_findings is not None:
         return (
             prefix
@@ -1627,6 +1637,7 @@ def record(
     lock_root: Path | None = None,
     review_mode: str | None = None,
     red_team_prompt: Path | None = None,
+    security_signoff: bool = False,
 ) -> dict[str, Any]:
     root = _repo_root() if task_root is None or lock_root is None else None
     task_root = task_root or root / "batch_state" / "tasks"
@@ -1754,6 +1765,13 @@ def record(
     if family in facts.excluded_families and review_mode != "red_team":
         raise RecordError("reviewer family equals an author family")
     _require_qualified_reviewer(facts, task=task, model=model, family=family, review_mode=review_mode)
+    if security_signoff and (
+        model not in SIGNOFF_MODELS
+        or task.get("review_risk") != "critical"
+        or verdict != "APPROVED"
+        or not is_security_sensitive_change(facts.changed_paths)
+    ):
+        raise RecordError("security-signoff requires a qualified critical APPROVE on security-sensitive paths")
     adapter = GitHubAdapter(Path.cwd())
     login = adapter.identity()
     reply = repository_relative_reply(reply, task=task, primary_root=root or _repo_root())
@@ -1770,6 +1788,7 @@ def record(
         sources_mcp_call_count=sources_count,
         unknown_history=facts.unknown_history,
         app_bot=bool(facts.app_bot_commits),
+        security_signoff=security_signoff,
     )
     comment = build_comment(**comment_fields)
     destination = normalize_repository(repository)
@@ -1825,6 +1844,12 @@ def record(
                     ):
                         raise RecordError("existing verdict marker was edited or conflicts with task")
                     existing = item
+                    if security_signoff:
+                        signoff = parse_security_signoff(body)
+                        if signoff != {"sha": sha, "task": task_id, "model": model}:
+                            # A prior ordinary CF publication cannot stand in for security approval.
+                            existing = None
+                            continue
                     break
         if existing is None:
             data = _run_json(
@@ -1893,6 +1918,11 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--task-id", required=True, help="Completed branch-pinned review task id")
     parser.add_argument("--pr", type=int, help="Open PR number; otherwise resolve from review branch")
     parser.add_argument(
+        "--security-signoff", action="store_true",
+        help="Post a separate security marker for exact-head critical APPROVE by Opus 5.5 or Sol 6.1 "
+        "on sensitive paths (default: ordinary CF only)",
+    )
+    parser.add_argument(
         "--review-mode",
         choices=("cross_family", "red_team"),
         help="Review mode (default: task review_mode, otherwise cross_family); red_team permits same-family",
@@ -1905,7 +1935,8 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     try:
         result = record(
-            args.task_id, pr_number=args.pr, review_mode=args.review_mode, red_team_prompt=args.red_team_prompt
+            args.task_id, pr_number=args.pr, review_mode=args.review_mode, red_team_prompt=args.red_team_prompt,
+            security_signoff=args.security_signoff,
         )
     except (RecordError, SweepError, ValueError) as exc:
         print(f"CF verdict refused: {exc}")

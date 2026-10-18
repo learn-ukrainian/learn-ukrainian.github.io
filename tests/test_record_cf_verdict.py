@@ -716,7 +716,10 @@ def test_cli_forwards_explicit_red_team_arguments(monkeypatch, tmp_path, capsys)
         )
         == 0
     )
-    assert seen == {"task_id": "review-one", "pr_number": 42, "review_mode": "red_team", "red_team_prompt": prompt}
+    assert seen == {
+        "task_id": "review-one", "pr_number": 42, "review_mode": "red_team",
+        "red_team_prompt": prompt, "security_signoff": False,
+    }
     assert json.loads(capsys.readouterr().out)["review_mode"] == "red_team"
 
 

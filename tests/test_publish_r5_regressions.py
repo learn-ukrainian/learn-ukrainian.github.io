@@ -96,6 +96,9 @@ def test_merge_readiness_applies_to_public_and_private(synthetic_opsec, repo, st
         elif args[1:3] == ["pr", "checks"]:
             reads.append(args)
             body = [{"name": "CI Gate", "bucket": {"red": "fail", "pending": "pending", "unknown": "unrecognised"}.get(state, "pass")}]
+        elif args[1:4] == ["api", "--method", "GET"]:
+            reads.append(args)
+            body = [[]] if "/files?" in args[4] else {"changed_files": 0, "head": {"sha": "a" * 40}}
         elif args[1:5] == ["api", "--method", "POST", "graphql"]:
             reads.append(args)
             body = {"data": {"repository": {"pullRequest": {
@@ -113,7 +116,7 @@ def test_merge_readiness_applies_to_public_and_private(synthetic_opsec, repo, st
             pub.publish("pr-merge", repo=repo, number=1, runner=spy, env={})
         assert writes == []
     # Ready merges also read GitHub's default squash text before the write.
-    assert len(reads) == (3 if state == "ready" else 2)
+    assert len(reads) == (5 if state == "ready" else 2)
 
 
 def test_worker_merge_guard_and_changed_head_refuse_before_write():

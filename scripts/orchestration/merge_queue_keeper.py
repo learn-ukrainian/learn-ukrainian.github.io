@@ -32,6 +32,7 @@ from scripts.opsec.prepublish import (
 from scripts.orchestration.integration_sweep import Verdict, classify_pr, lookup_verdict, parse_marker
 from scripts.publish import recovery
 from scripts.publish.github import Request, request_run
+from scripts.review.security_signoff import SecuritySignoffError, require_security_signoff
 
 FLOOR = 500
 MARKER = "<!-- mq-keeper head={head} reason={reason} -->"
@@ -944,6 +945,14 @@ def run(
                 reason = _gate_hold(gh, number, head, drops, grants, previous, comments, login) or reason
             except KeeperError:
                 reason = "requeue-unknown"
+            if reason == "ready":
+                try:
+                    require_security_signoff(
+                        head, read_files=lambda number=number: gh.files(number),
+                        read_comments=lambda comments=comments: comments, read_login=lambda: login,
+                    )
+                except SecuritySignoffError as exc:
+                    reason = str(exc)
         rollup = [
             {
                 "name": item.get("name"),
@@ -961,6 +970,8 @@ def run(
             observed_at=observed,
         )
         state = "ready" if reason == "ready" and not queued and not armed else report.state
+        if reason.startswith("security-signoff"):
+            state = "blocked security sign-off"
         lines.append(f"#{number} head={head[:12]} state={state} reason={reason} queued={queued} armed={armed}")
         if not apply:
             continue
@@ -1026,6 +1037,14 @@ def run(
                 )
                 if reason == "ready" and queued is not True and not armed:
                     reason = _gate_hold(gh, number, head, drops, grants, previous, current_comments, login) or reason
+                    if reason == "ready":
+                        try:
+                            require_security_signoff(
+                                head, read_files=lambda number=number: gh.files(number),
+                                read_comments=lambda comments=current_comments: comments, read_login=lambda: login,
+                            )
+                        except SecuritySignoffError as exc:
+                            reason = str(exc)
             if queued is True or armed:
                 fresh = bool(
                     current
