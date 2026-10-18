@@ -12155,11 +12155,15 @@ def _run_worker(
     if agy_model_state:
         # Reproject from the same bound observation. Neither Result/usage fallback
         # nor a prior task's nested attribution may resurrect rejected evidence.
-        runtime_substitution = agy_model_state["model_identity"] if (
-            agy_model_state["resolved_model_known"] and (
-                runtime_substitution is not None or agy_model_state["model_identity"]["substituted"]
-            )
-        ) else None
+        runtime_substitution = {
+            "requested_provider": "agy",
+            "requested_model": agy_requested_model,
+            "actual_provider": "agy",
+            "actual_model": agy_model_state["resolved_model"],
+            "actual_model_known": True,
+            "source": agy_model_state["resolved_model_source"],
+            "substituted": True,
+        } if agy_model_state["resolved_model_known"] and agy_model_state["model_identity"]["substituted"] else None
         substitution = runtime_substitution
     else:
         substitution = _merge_agent_substitution(final_state.get("substitution"), runtime_substitution)

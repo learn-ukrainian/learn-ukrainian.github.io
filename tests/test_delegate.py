@@ -23313,19 +23313,36 @@ def test_agy_producer_consistency_through_durable_worker_projections(
     assert dispatch_events[0]["resolved_model"] == (observed if known else "unattested-harness")
     if not known:
         assert dispatch_events[0]["substitution"] is None
+    summaries = [record["substitution"], dispatch_events[0]["substitution"]]
+    expected = {
+        "requested_provider": "agy",
+        "requested_model": model,
+        "actual_provider": "agy",
+        "actual_model": observed,
+        "actual_model_known": True,
+        "source": "provider-init",
+        "substituted": True,
+    } if known and case != "provider-failure" else None
+    assert all(summary == expected for summary in summaries)
+    saved_expected = {
+        "requested_provider": "agy",
+        "requested_model": model,
+        "actual_provider": "agy",
+        "actual_model": observed,
+        "source": "provider-init",
+        "marker": None,
+        "substituted": True,
+    } if known and case != "provider-failure" else None
+    for usage_row in usages:
+        assert usage_row.get("substitution") == saved_expected
+    runtime_events = [fields for event, fields in events if event == "agent_runtime_substitution"]
+    for event in runtime_events:
+        assert event["substitution"] == saved_expected
     if exit_kind == "complete":
-        summaries = [record["substitution"], dispatch_events[0]["substitution"], usages[0].get("substitution")]
-        runtime_events = [fields for event, fields in events if event == "agent_runtime_substitution"]
-        if known and case != "provider-failure":
-            expected = {"requested_model": model, "actual_model": observed, "substituted": True}
-            for summary in summaries:
-                assert {key: summary[key] for key in expected} == expected
-                assert "provenance" not in summary
+        if expected is not None:
             assert usages[0]["model"] == observed
             assert len(runtime_events) == 1
             assert runtime_events[0]["model"] == observed
-            assert {key: runtime_events[0]["substitution"][key] for key in expected} == expected
         else:
-            assert summaries == [None, None, None]
             assert runtime_events == []
     assert runner._AGY_OBSERVED_IDENTITY.get() is None
