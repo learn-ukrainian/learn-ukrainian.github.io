@@ -527,8 +527,6 @@ models:
     weaknesses: [thinking_cannot_be_disabled, longer_turns_at_xhigh_max, broader_refusal_classifiers]
     notes: >-
       Operator 2026-09-22: default Claude model and the Claude orchestrator seat.
-      The AGY high pin supports existing implementation roles with same-run
-      provider-reported identity; live qualification is separate (#10420).
       Opus 5.5 executes architecture, hard coding, deep code review and
       Ukrainian-specific linguistic work. start-claude-driver.sh pins claude-opus-5-5[1m] @ high.
       Opus 5.5 / Sol 6.1 take review, critique and design input and hold
@@ -607,8 +605,6 @@ models:
     strengths: [well_scoped_everyday_tasks, bug_fixes, faster_than_sonnet_5, fewer_tokens_per_task, polished_english_documents_slides_spreadsheets, design_eye]
     weaknesses: [weaker_than_opus_on_complex_open_ended_work, provisional_until_measured, not_for_security_sensitive_code, not_for_ukrainian_curriculum_content]
     notes: >-
-      The AGY high pin supports existing implementation roles with same-run
-      provider-reported identity, excluding security work (#10420).
       Use for well-scoped everyday work, bug fixes, and polished English reports,
       runbooks, write-ups, PR/issue prose, decks, spreadsheets, and design review.
       Route authoring of security-sensitive code (hooks/guards, launchers, credential or secret
