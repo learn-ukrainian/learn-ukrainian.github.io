@@ -8,7 +8,7 @@ import json
 import os
 import re
 import sys
-import tempfile
+import uuid
 from collections import Counter, defaultdict
 from datetime import datetime
 from pathlib import Path
@@ -636,12 +636,12 @@ def publish(output_dir: Path, outputs: dict[str, bytes], receipt: dict) -> None:
     output_dir.mkdir(parents=True)
     try:
         for name, raw in files.items():
-            with tempfile.NamedTemporaryFile(dir=output_dir, prefix=".staging-", delete=False) as handle:
-                temporary = Path(handle.name)
+            staging_path = output_dir / f".staging-{uuid.uuid4().hex}"
+            with open(staging_path, "wb") as handle:
                 handle.write(raw)
                 handle.flush()
                 os.fsync(handle.fileno())
-            os.replace(temporary, output_dir / name)
+            os.replace(staging_path, output_dir / name)
             # Persist preceding manifests before the receipt can commit them.
             descriptor = os.open(output_dir, os.O_RDONLY | os.O_DIRECTORY)
             try:
