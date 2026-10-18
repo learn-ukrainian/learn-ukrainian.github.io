@@ -114,7 +114,7 @@ SCHEMAS = {
     ),
     "issue-unlink": ({"parent_id", "child_id"}, {**COMMON, "parent_id": "node", "child_id": "node"}),
 }
-WORKFLOWS = {"ci.yml": {}, "deploy-pages.yml": {}}
+WORKFLOWS = {"ci.yml": {}, "deploy-pages.yml": {}, "stale-branch-cleanup.yml": {}}
 
 ENUMS = {
     "workflow": set(WORKFLOWS),
