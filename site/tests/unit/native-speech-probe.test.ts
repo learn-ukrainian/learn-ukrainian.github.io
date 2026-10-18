@@ -666,6 +666,12 @@ describe('prepare and validate CLI', () => {
     const linked = build('inner-link');
     symlinkSync('/etc/hostname', join(linked, '_astro/evil.js'));
     expect(() => prepare(opts({ out: linked }))).toThrow(/symlink or special file/);
+    const dangling = build('dangling-link');
+    symlinkSync(join(root, 'does-not-exist'), join(dangling, '_astro/evil.js'));
+    expect(() => treeDigest(dangling)).toThrow(/symlink or special file/);
+    const fifo = build('fifo');
+    execFileSync('mkfifo', [join(fifo, '_astro/evil.js')]);
+    expect(() => treeDigest(fifo)).toThrow(/symlink or special file/);
     const existing = join(root, 'existing.json');
     writeFileSync(existing, '{}');
     expect(() => prepare(opts({ manifest: existing }))).toThrow(/new file/);

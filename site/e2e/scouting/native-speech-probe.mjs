@@ -2,7 +2,7 @@
 // #10706 native speech device check: `prepare` adds one page to an immutable static build; `validate` checks the pasted receipt off-device.
 import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
-import { lstatSync, readFileSync, readdirSync, realpathSync, writeFileSync } from 'node:fs';
+import { closeSync, constants, fstatSync, lstatSync, openSync, readFileSync, readdirSync, realpathSync, writeFileSync } from 'node:fs';
 import { dirname, join, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseArgs } from 'node:util';
@@ -353,15 +353,25 @@ const present = (p) => attempt(() => lstatSync(p)) !== null;
 const knows = (cwd, sha) => attempt(() => git(cwd, 'cat-file', '-e', `${sha}^{commit}`)) !== null;
 const realDir = (p) => attempt(() => lstatSync(p).isDirectory() && realpathSync(p) === p) === true;
 
+// Hash one regular file from a single open descriptor: O_NOFOLLOW refuses a symlink, O_NONBLOCK keeps a
+// FIFO from hanging the open, and the type check runs on the same descriptor the bytes are read from.
+function hashRegularFile(p, label) {
+  let fd;
+  try { fd = openSync(p, constants.O_RDONLY | (constants.O_NOFOLLOW ?? 0) | (constants.O_NONBLOCK ?? 0)); } catch { refuse(`build contains a symlink or special file: ${label}`); }
+  try {
+    if (!fstatSync(fd).isFile()) refuse(`build contains a symlink or special file: ${label}`);
+    return sha256(readFileSync(fd));
+  } finally { closeSync(fd); }
+}
+
 export function treeDigest(root, skip = null) {
   const files = {};
   const walk = (dir) => {
-    for (const name of readdirSync(dir).sort()) {
-      const p = join(dir, name);
-      const st = lstatSync(p);
-      if (st.isSymbolicLink() || !(st.isDirectory() || st.isFile())) refuse(`build contains a symlink or special file: ${relative(root, p)}`);
-      if (st.isDirectory()) walk(p);
-      else files[relative(root, p).split(sep).join('/')] = sha256(readFileSync(p));
+    for (const entry of readdirSync(dir, { withFileTypes: true }).sort((a, b) => (a.name < b.name ? -1 : a.name > b.name ? 1 : 0))) {
+      const p = join(dir, entry.name);
+      if (entry.isDirectory()) walk(p);
+      else if (entry.isFile()) files[relative(root, p).split(sep).join('/')] = hashRegularFile(p, relative(root, p));
+      else refuse(`build contains a symlink or special file: ${relative(root, p)}`);
     }
   };
   walk(root);
