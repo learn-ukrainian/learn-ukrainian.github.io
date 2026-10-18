@@ -80,7 +80,7 @@ def test_standalone_catalog_resolves_haiku_without_runtime_package(tmp_path, ent
 
 @pytest.mark.parametrize("overrides,reason", [
     ({"task_family": None}, "catalog-eligible"),
-    ({"task_family": "bounded_implementation"}, "catalog-eligible"),
+    ({"task_family": "bounded_implementation"}, "implementation role"),
     ({"task_role": "driver"}, "driver"),
     ({"task_role": "orchestration"}, "driver"),
     ({"task_role": "design"}, "design"),
@@ -206,7 +206,7 @@ def test_custom_review_metadata_cannot_grant_haiku_authority(formal, risk):
     )
 
 
-@pytest.mark.parametrize("role", ["orchestration", "architecture", "critical_review", "ukrainian_review", "bounded_implementation"])
+@pytest.mark.parametrize("role", ["orchestration", "architecture", "critical_review", "ukrainian_review"])
 def test_catalog_cannot_grant_excluded_roles(role):
     catalog = deepcopy(load_model_catalog())
     catalog["models"][HAIKU]["roles"].append(role)
@@ -315,3 +315,13 @@ def test_only_exact_canonical_core_is_exempt_from_prompt_content_check(monkeypat
         admission.refuse_mechanical_execution(
             HAIKU, mode="read-only", cwd=tmp_path, prompt=core_block("core") + "Напиши текст",
             tool_config={"mechanical_task": {"family": "routine_mechanical", "paths": ["package-lock.json"]}})
+
+
+@pytest.mark.parametrize("model", [HAIKU, "gpt-6-luna"])
+def test_bounded_implementation_role_preserves_target_gates(model):
+    admission.refuse_mechanical_task((model,), **scope(
+        task_family="bounded_implementation", task_role="implementation", mode="workspace-write"))
+    for role in ("driver", "design", "approval", "advisory", "orchestration", "review"):
+        with pytest.raises(admission.MechanicalAdmissionRefused):
+            resolve_and_admit(("claude" if model == HAIKU else "codex",), model=model,
+                              **scope(task_family="bounded_implementation", task_role=role), claude_account=HOST_ACCOUNT)

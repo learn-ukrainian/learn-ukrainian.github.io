@@ -1,0 +1,46 @@
+{
+  "catalog_model_fields": [
+    {
+      "model": "claude-haiku-5-5",
+      "field": "roles",
+      "before": [
+        "mechanical_only",
+        "routine_mechanical",
+        "mechanical_classification",
+        "readonly_recon"
+      ],
+      "after": [
+        "mechanical_only",
+        "routine_mechanical",
+        "mechanical_classification",
+        "readonly_recon",
+        "bounded_implementation"
+      ]
+    },
+    {
+      "model": "claude-haiku-5-5",
+      "field": "weaknesses",
+      "before": [
+        "no_ukrainian_content",
+        "no_formal_review",
+        "no_design_or_approval",
+        "no_security_code",
+        "no_driver",
+        "no_bounded_implementation"
+      ],
+      "after": [
+        "no_ukrainian_content",
+        "no_formal_review",
+        "no_design_or_approval",
+        "no_security_code",
+        "no_driver"
+      ]
+    },
+    {
+      "model": "claude-haiku-5-5",
+      "field": "notes",
+      "before": "#9996: routine lockfile, pointer and smoke work; mechanical TypeSafe/Jev, CI failure and issue/DoR classification; read-only recon alongside Luna. Mechanical-only admission requires a matching task family, narrow safe owned paths and non-Ukrainian inputs. No bounded code, even with an envelope: the cited workload evidence qualifies classification/extraction/routing, not fleet code authoring. Existing Luna/Flash envelope admission stays intact.",
+      "after": "#9996: routine lockfile, pointer and smoke work; mechanical TypeSafe/Jev, CI failure and issue/DoR classification; read-only recon alongside Luna. Mechanical-only admission requires a matching task family, narrow safe owned paths and non-Ukrainian inputs. #10919: bounded implementation also accepts the dispatching driver brief with owned paths and a verify command; caller attribution and the exact brief SHA are recorded. Explicit advisor envelopes remain supported; security, language, review, design and driver exclusions remain."
+    }
+  ]
+}

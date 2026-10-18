@@ -1,10 +1,10 @@
-"""A bounded worker is dispatched only with a complete advisory envelope (#9275).
+"""Bounded admission from a driver brief (#10919) or sealed advisor envelope (#9275).
 
-Operator decision 2026-09-30: there is no direct bounded dispatch. Every
-dispatch that resolves to the catalog's bounded worker
-(``execution_routing.sol_advised_bounded.preferred_worker``), or to its Gemini
-Flash fallback without an explicit Ukrainian authoring/review classification,
-needs an envelope from the catalog advisor route, bound to that dispatch.
+Luna/Haiku bounded implementation can use the dispatching driver's complete
+brief, owned paths and verify command. Caller attribution is recorded, not
+authenticated. Other Luna work and non-Ukrainian Flash work still need the
+catalog advisor envelope. Both admission sources bind the exact brief,
+dispatch arguments and launch, and recheck them before execution.
 
 Threat model (advisor decision on #9275): the rule is cooperative. It stops
 omitted advice, stale or foreign bindings, accidental prompt drift and scope
@@ -63,6 +63,7 @@ import hashlib
 import json
 import os
 import re
+import shlex
 import subprocess
 import unicodedata
 from collections.abc import Callable, Iterable, Mapping, Sequence
@@ -76,6 +77,7 @@ from scripts.review.model_catalog import (
     BoundedExecutionPolicy,
     bounded_execution_policy,
     canonical_model_id,
+    driver_brief_models,
 )
 
 ENVELOPE_FENCE = "advisory-envelope"
@@ -135,6 +137,7 @@ CEILING_EXCEEDED = "advisory_ceiling_exceeded"
 CEILING_UNMEASURED = "advisory_ceiling_unmeasured"
 EXEMPT_CODE_CHANGE = "advisory_exempt_code_change"
 EXEMPT_CHANGES_UNMEASURED = "advisory_exempt_changes_unmeasured"
+DRIVER_BRIEF_REFUSED = "BOUNDED_DRIVER_BRIEF_REFUSED"
 
 # The launch a bounded worker is admitted to run (``admitted_execution``); the
 # worker compares each with what it is about to run before any provider call.
@@ -528,7 +531,7 @@ def bounded_requirement(
 
     ``model_id`` is the canonical catalog id of the model the admitted route
     launches, after aliases, ``--force-agent`` and any substitution. Every
-    bounded-worker dispatch needs one. A Gemini Flash dispatch is the bounded
+    bounded-worker dispatch needs one unless admitted with a driver brief. A Gemini Flash dispatch is the bounded
     fallback unless it is explicitly classified non-bounded — a Ukrainian
     authoring or review task family, or ``--review-profile ukrainian`` for a
     read-only review — and nothing contradicts that; missing or conflicting
@@ -539,7 +542,9 @@ def bounded_requirement(
     policy = policy or bounded_execution_policy()
     if model_id is None:
         return None
-    if model_id == policy.bounded_worker_model_id:
+    if model_id == policy.bounded_worker_model_id or (
+        model_id in driver_brief_models() and task_family == "bounded_implementation"
+    ):
         return f"{model_id} is the bounded worker"
     if model_id != policy.bounded_fallback_model_id:
         return None
@@ -616,6 +621,82 @@ def validate_owned_path(path: Any, repo_root: Path) -> str:
         if current.is_file() and index < len(static) - 1:
             raise AdvisoryRefused(OWNED_PATHS_INVALID, f"owned path {path!r} descends into file {segment!r}")
     return path
+
+
+def validate_driver_brief(
+    args: Mapping[str, Any], *, repo_root: Path, brief_sha256: str | None, model_id: str | None,
+) -> list[str]:
+    """Validate the narrow driver-supplied implementation contract, without authenticating its caller."""
+    from scripts.agent_runtime.kimi_admission import worktree_trees
+    from scripts.agent_runtime.mechanical_admission import MechanicalAdmissionRefused, refuse_mechanical_task
+    from scripts.lib import rules_core
+
+    def refuse(detail: str) -> None:
+        raise AdvisoryRefused(DRIVER_BRIEF_REFUSED, detail)
+
+    try:
+        rules_core.require_core(args.get("rules_seat"))
+    except rules_core.RulesCoreMissing:
+        refuse("current core instructions are unavailable")
+    if model_id not in driver_brief_models():
+        refuse("this model cannot use a driver implementation brief")
+    if args.get("research_task_family") != "bounded_implementation" or args.get("research_role") != "implementation":
+        refuse("a driver brief admits only bounded_implementation with the implementation role")
+    if args.get("mode") not in {"workspace-write", "danger"}:
+        refuse("a driver implementation brief requires a write mode")
+    if not brief_sha256 or not _SHA256_RE.fullmatch(brief_sha256):
+        refuse("a nonempty brief with an exact SHA-256 is required")
+    try:
+        brief = Path(args["prompt_file"]).read_text(encoding="utf-8") if args.get("prompt_file") else args.get("prompt")
+    except (OSError, UnicodeError):
+        refuse("the bound driver brief is unavailable")
+    if not isinstance(brief, str) or not brief.strip() or hashlib.sha256(brief.encode()).hexdigest() != brief_sha256:
+        refuse("the bound driver brief is missing, empty or changed")
+    command = args.get("verify_command")
+    try:
+        words = shlex.split(command) if isinstance(command, str) else []
+    except ValueError:
+        words = []
+    if not words or not words[0].strip() or any(unicodedata.category(c).startswith("C") for c in command):
+        refuse("--verify-command must name a nonempty, syntactically valid acceptance command")
+    owned = _as_list(args.get("owned_path"))
+    if not owned:
+        refuse("declare --owned-path; research paths do not grant ownership")
+    classified = [*owned, *_as_list(args.get("research_owned_path"))]
+    try:
+        for path in list(classified):
+            validate_owned_path(path, repo_root)
+            static = re.split(r"[*?\[]", path, maxsplit=1)[0].rstrip("/")
+            if static:
+                resolved = (repo_root / static).resolve().relative_to(repo_root.resolve()).as_posix()
+                validate_owned_path(resolved, repo_root)
+                classified.append(resolved)
+            # Classify a glob by its fixed ancestor too, including paths that do
+            # not exist yet. A future security file must not slip through a glob.
+            prefix = re.split(r"[*?\[]", path, maxsplit=1)[0]
+            if prefix != path:
+                classified.append(prefix.rsplit("/", 1)[0])
+    except (OSError, RuntimeError, ValueError):
+        refuse("owned paths cannot be resolved unambiguously")
+    try:
+        refuse_mechanical_task(
+            (model_id,), mode=str(args["mode"]), task_family="bounded_implementation",
+            task_role=str(args["research_role"]), paths=classified,
+            review=bool(args.get("review") or args.get("review_profile") or args.get("require_review_verdict")
+                        or args.get("review_attempt") or args.get("type") == "review"),
+            language_lane=bool(args.get("language_lane")), research_track=args.get("research_track"),
+            task_prompt=args.get("prompt"), prompt_file=args.get("prompt_file"),
+            trees=lambda: worktree_trees(repo_root),
+        )
+    except MechanicalAdmissionRefused as exc:
+        raise AdvisoryRefused(DRIVER_BRIEF_REFUSED, str(exc)) from None
+    return owned
+
+
+def driver_brief_prompt_block(args: Mapping[str, Any]) -> str:
+    """Carry the bound ownership and acceptance command into the worker's exact prompt."""
+    owned = "\n".join(f"- {path}" for path in args["owned_path"])
+    return f"\n\n## Driver brief scope and acceptance\n\nOwned paths:\n{owned}\n\nRun and report: {args['verify_command']}\n"
 
 
 def _require_text(envelope: Mapping[str, Any], field: str) -> None:
@@ -856,7 +937,7 @@ def _verify_exemption(
 # NUL byte never occurs in a dispatcher block.
 _BRIEF_PLACEHOLDER = "\0bounded-advisory-brief\0"
 
-PromptComposer = Callable[[str, ValidatedEnvelope, Mapping[str, Any]], str]
+PromptComposer = Callable[[str, ValidatedEnvelope | None, Mapping[str, Any]], str]
 
 
 def _bound_execution_value(field: str, value: Any) -> Any:
@@ -1021,12 +1102,41 @@ def verify_worker_admission(
     actual = {"agent": agent, "model_id": model_id, "mode": mode, "cwd": str(cwd), **execution}
     if set(actual) != set(EXECUTION_FIELDS):
         raise ValueError(f"agent, model_id, mode, cwd and execution must give exactly {list(EXECUTION_FIELDS)}")
-    if model_id not in {policy.bounded_worker_model_id, policy.bounded_fallback_model_id}:
+    direct_models = driver_brief_models()
+    if model_id not in {*direct_models, policy.bounded_fallback_model_id}:
         return None
     if not record:
         raise AdvisoryRefused(ADMISSION_MISSING, f"{model_id} has no task record carrying a parent admission")
+    mechanical = record.get("mechanical_task")
+    if model_id in direct_models - {policy.bounded_worker_model_id} and isinstance(mechanical, Mapping) and mechanical.get("family") in {
+        "routine_mechanical", "mechanical_classification", "readonly_recon"
+    } and record.get("driver_brief") is None and record.get("advisory_envelope") is None:
+        return None  # The existing mechanical scope and adapter gates still apply.
     if record.get("mode") != mode:
         raise AdvisoryRefused(ADMISSION_INVALID, f"the task record's mode {record.get('mode')!r} is not {mode!r}")
+    driver_brief = record.get("driver_brief")
+    if driver_brief is not None:
+        if model_id not in direct_models or not isinstance(driver_brief, dict):
+            raise AdvisoryRefused(ADMISSION_INVALID, "the driver brief does not admit this model")
+        args = driver_brief.get("advisory_args")
+        if not isinstance(args, dict):
+            raise AdvisoryRefused(ADMISSION_INVALID, "the driver brief has no bound arguments")
+        prompt_sha256 = _require_digest(driver_brief, "prompt_sha256")
+        args_sha256 = _require_digest(driver_brief, "advisory_args_sha256")
+        if (canonical_sha256(args) != args_sha256
+                or binding_digest(args_sha256, prompt_sha256) != _require_digest(driver_brief, BINDING_FIELD)
+                or record.get("prompt_sha256") != prompt_sha256):
+            raise AdvisoryRefused(BINDING_MISMATCH, "the driver brief or its dispatch arguments changed")
+        caller = {"identity": record.get("initiator"), "source": record.get("attribution_source")}
+        if driver_brief.get("driver") != caller:
+            raise AdvisoryRefused(BINDING_MISMATCH, "the recorded caller attribution changed")
+        owned = validate_driver_brief(args, repo_root=cwd, brief_sha256=prompt_sha256, model_id=model_id)
+        require_owned_paths_match(owned, driver_brief.get("owned_paths"))
+        require_owned_paths_match(owned, record.get("owned_paths"))
+        _require_execution(driver_brief, args, record, execution=actual, envelope_paths=owned)
+        return _require_bound_prompt(
+            prompt, prompt_sha256=prompt_sha256, compose=lambda brief: compose_prompt(brief, None, args)
+        )
     admitted = record.get("advisory_envelope")
     if admitted is None and model_id == policy.bounded_fallback_model_id:
         exemption = record.get("advisory_exemption")

@@ -10,6 +10,7 @@ from typing import Any
 from scripts.agent_runtime.kimi_admission import CYRILLIC, ContentTree, content_problem, worktree_trees
 from scripts.review.model_catalog import (
     MECHANICAL_FAMILIES,
+    bounded_execution_policy,
     canonical_model_id,
     load_model_catalog,
 )
@@ -42,9 +43,14 @@ def refuse_mechanical_task(
     if not pins:
         return
     catalog = load_model_catalog()
-    constrained = [catalog["models"][identity] for pin in pins
-                   if (identity := canonical_model_id(pin, catalog))
-                   and "mechanical_only" in catalog["models"][identity]["roles"]]
+    preferred = bounded_execution_policy(catalog).bounded_worker_model_id
+    identities = {canonical_model_id(pin, catalog) for pin in pins}
+    constrained = [catalog["models"][identity] for identity in identities if identity and (
+        "mechanical_only" in catalog["models"][identity]["roles"]
+        or (identity == preferred and task_family == "bounded_implementation")
+    )]
+    if preferred in identities and task_role not in {None, "implementation", "recon", "classification", "triage"}:
+        raise MechanicalAdmissionRefused("MECHANICAL_TASK_REFUSED: bounded workers cannot take driver, design, advisory or review roles")
     if not constrained:
         return
 
@@ -53,12 +59,18 @@ def refuse_mechanical_task(
 
     if review:
         refuse("mechanical-only seats never perform review, critique or approval")
-    if task_family not in MECHANICAL_FAMILIES or any(task_family not in model["roles"] for model in constrained):
-        refuse("declare a catalog-eligible --research-task-family: routine_mechanical, mechanical_classification or readonly_recon")
+    families = MECHANICAL_FAMILIES | {"bounded_implementation"}
+    if task_family not in families or any(task_family not in model["roles"] for model in constrained):
+        refuse("declare a catalog-eligible --research-task-family: routine_mechanical, mechanical_classification, readonly_recon or bounded_implementation")
     if task_role not in {None, "implementation", "recon", "classification", "triage"}:
         refuse("driver, design, advisory, approval and content roles are excluded")
-    if mode not in {"read-only", "workspace-write"} or (task_family != "routine_mechanical" and mode != "read-only"):
-        refuse("only routine mechanical work may write; classification and recon must be read-only")
+    bounded = task_family == "bounded_implementation"
+    if bounded and task_role != "implementation":
+        refuse("bounded implementation requires the implementation role")
+    if mode not in ({"workspace-write", "danger"} if bounded else {"read-only", "workspace-write"}) or (
+        task_family not in {"routine_mechanical", "bounded_implementation"} and mode != "read-only"
+    ):
+        refuse("only routine mechanical or bounded implementation work may write; classification and recon must be read-only")
     owned = tuple(paths)
     if not owned:
         refuse("declare narrow owned paths for the mechanical task")

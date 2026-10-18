@@ -34,7 +34,7 @@ VALID_LIFECYCLES = frozenset({"active", "fallback", "hold", "retired"})
 VALID_RISKS = frozenset({"low", "medium", "high", "critical"})
 VALID_REVIEW_PROFILES = frozenset({"code", "infra"})
 MECHANICAL_FAMILIES = frozenset({"routine_mechanical", "mechanical_classification", "readonly_recon"})
-MECHANICAL_ROLES = MECHANICAL_FAMILIES | {"mechanical_only"}
+MECHANICAL_ROLES = MECHANICAL_FAMILIES | {"mechanical_only", "bounded_implementation"}
 # ``review_scheduler.activity_roles`` keys (#9583): ``review`` admits a review,
 # critique or approval of record; ``consult`` admits an ACP ask, consult or
 # discussion together with the ``review`` roles.
@@ -1080,6 +1080,17 @@ class BoundedExecutionPolicy:
 
 
 ADVISOR_ROUTE = "execution_routing.sol_advised_bounded.advisor"
+
+
+def driver_brief_models(catalog: dict[str, Any] | None = None) -> frozenset[str]:
+    """Active bounded implementers in the preferred-worker or mechanical-only class."""
+    catalog = catalog or load_model_catalog()
+    preferred = bounded_execution_policy(catalog).bounded_worker_model_id
+    return frozenset(
+        identity for identity, model in catalog["models"].items()
+        if model["lifecycle"] == "active" and "bounded_implementation" in model["roles"]
+        and (identity == preferred or "mechanical_only" in model["roles"])
+    )
 
 
 def bounded_execution_policy(catalog: dict[str, Any] | None = None) -> BoundedExecutionPolicy:

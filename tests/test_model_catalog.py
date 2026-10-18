@@ -1686,3 +1686,15 @@ def test_native_grok_runtime_attestation_allowlist_is_exact():
     model = load_model_catalog()["models"]["grok-4.7"]
     assert model["runtime_model_ids"] == ["grok-4.7-build"]
     assert "grok-4.7-build-fast" not in model["runtime_model_ids"]
+
+
+def test_driver_brief_population_follows_catalog_capabilities():
+    from scripts.review.model_catalog import driver_brief_models
+
+    catalog = deepcopy(load_model_catalog())
+    assert driver_brief_models(catalog) == {"gpt-6-luna", "claude-haiku-5-5"}
+    catalog["models"]["claude-haiku-5-5"]["roles"].remove("bounded_implementation")
+    assert driver_brief_models(catalog) == {"gpt-6-luna"}
+    catalog["models"]["claude-haiku-5-5"]["roles"].append("bounded_implementation")
+    catalog["models"]["claude-haiku-5-5"]["lifecycle"] = "hold"
+    assert driver_brief_models(catalog) == {"gpt-6-luna"}

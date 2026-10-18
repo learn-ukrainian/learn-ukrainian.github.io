@@ -1,6 +1,6 @@
-"""#9275: a bounded worker is dispatched only with a complete, bound advisory envelope.
+"""#9275 envelope integrity and #10919 driver-brief admission and replay.
 
-Operator decision 2026-09-30: every ``gpt-6-luna`` dispatch, and every Gemini
+Outside #10919 bounded implementation, every ``gpt-6-luna`` dispatch and every Gemini
 Flash dispatch without an explicit Ukrainian authoring/review classification,
 needs an envelope issued by a finished ``gpt-6.1-sol`` advisory task and bound
 to this dispatch's arguments. Test names carry the frozen acceptance-matrix row
@@ -139,6 +139,8 @@ def env(monkeypatch, tmp_path):
     ).stdout.strip()
     monkeypatch.setattr(delegate, "_resolve_worktree_base_sha", lambda **_kwargs: head_sha)
     pin_review_target(monkeypatch, head_sha)
+    subprocess.run(["git", "update-ref", "refs/remotes/origin/main", head_sha],
+                   cwd=delegate._REPO_ROOT, check=True, capture_output=True, timeout=30)
     monkeypatch.setattr(delegate.subprocess, "Popen", fake_popen)
     monkeypatch.setattr(delegate.urllib.request, "urlopen", health_only)
     telemetry = type("_Telemetry", (), {"model": "fixture-model", "effort": "high", "cli_version": "fixture"})()
@@ -2603,3 +2605,224 @@ def test_r7_a_verdict_required_record_keeps_another_gates_typed_failure(tmp_path
         },
     )
     assert delegate._read_state(path)["failure_reason"] == bounded_advisory.CEILING_EXCEEDED
+
+
+# #10919: the driver brief is a second admission source, with the same replay boundary.
+_BRIEF_MODELS = [("codex", "gpt-6-luna"), ("claude", "claude-haiku-5-5")]
+_SAFE_OWNED = "tests/driver_brief_target.py"
+
+
+def _driver_argv(agent, model, *extra):
+    return _argv(
+        "--mode", "workspace-write", "--worktree", "--force-agent",
+        "--owned-path", _SAFE_OWNED, "--research-task-family", "bounded_implementation",
+        "--research-role", "implementation", "--verify-command", "pytest -q tests/driver_brief_target.py",
+        "--initiator", "infra-driver", *extra, agent=agent, model=model,
+    )
+
+
+def _verify_driver_record(env, agent, model, prompt=None):
+    record = _worker_record(env.tasks)
+    execution = dict((record.get("driver_brief") or {}).get("admitted_execution") or {
+        field: record.get(field) for field in bounded_advisory.EXECUTION_FIELDS
+    })
+    for key in ("agent", "model_id", "mode", "cwd"):
+        execution.pop(key)
+    return delegate._verify_bounded_worker(
+        _worker_id(), agent=agent, model=model, mode=record["mode"], cwd=Path(record["cwd"]),
+        execution=execution, prompt=env.prompts[0] if prompt is None else prompt,
+    )
+
+
+@pytest.mark.parametrize("agent,model", _BRIEF_MODELS)
+def test_driver_brief_normal_dispatch_and_replay(env, capsys, agent, model):
+    assert _dispatch(_driver_argv(agent, model)) == 0, capsys.readouterr().err
+    record = _worker_record(env.tasks)
+    brief = record["driver_brief"]
+    assert brief["driver"] == {"identity": "infra-driver", "source": "explicit"}
+    assert brief["prompt_sha256"] == hashlib.sha256(b"Map the parser flags.").hexdigest()
+    assert brief["owned_paths"] == [_SAFE_OWNED]
+    assert "advisory_envelope" not in record
+    assert len(env.spawned) == 1
+    assert "Run and report: pytest -q tests/driver_brief_target.py" in env.prompts[0]
+    assert _verify_driver_record(env, agent, model) == hashlib.sha256(env.prompts[0].encode()).hexdigest()
+
+
+@pytest.mark.parametrize("agent,model", _BRIEF_MODELS)
+@pytest.mark.parametrize("flag,value", [
+    ("--owned-path", None), ("--verify-command", None), ("--verify-command", ""),
+    ("--verify-command", "''"), ("--verify-command", "'unclosed"),
+    ("--prompt", ""), ("--prompt", " "), ("--prompt", "-"),
+    ("--research-role", "driver"), ("--research-role", "design"),
+    ("--research-role", "approval"), ("--research-role", "advisory"),
+    ("--research-role", "review"), ("--research-role", "orchestration"),
+    ("--owned-path", "scripts/agent_runtime/new_gate.py"),
+    ("--owned-path", "scripts/review/new_gate.py"),
+    ("--owned-path", "scripts/publish/new_gate.py"),
+    ("--owned-path", "scripts//agent_runtime/new_gate.py"),
+    ("--owned-path", "tests/../scripts/agent_runtime/new_gate.py"),
+    ("--owned-path", "scripts/[ar]*/*.py"),
+    ("--owned-path", "curriculum/a1/lesson.md"),
+    ("--owned-path", "../outside.py"),
+])
+def test_driver_brief_refusal_matrix(env, capsys, agent, model, flag, value):
+    argv = _driver_argv(agent, model)
+    index = argv.index(flag)
+    if value is None:
+        del argv[index:index + 2]
+    else:
+        argv[index + 1] = value
+    assert _dispatch(argv) == 2
+    assert env.spawned == []
+    assert _worker_record(env.tasks) is None
+    assert "refus" in capsys.readouterr().err.lower() or value is None
+
+
+@pytest.mark.parametrize("agent,model", _BRIEF_MODELS)
+@pytest.mark.parametrize("extra", [
+    ["--language-lane"], ["--research-track", "l2-uk-en/a1"],
+    ["--review-profile", "code"], ["--require-review-verdict"],
+])
+def test_driver_brief_cannot_admit_excluded_activities(env, capsys, agent, model, extra):
+    assert _dispatch(_driver_argv(agent, model, *extra)) == 2
+    assert env.spawned == [] and _worker_record(env.tasks) is None
+
+
+@pytest.mark.parametrize("agent,model", _BRIEF_MODELS)
+def test_driver_brief_unknown_attribution_is_explicit(env, capsys, monkeypatch, agent, model):
+    from scripts.agent_runtime.attribution import InvocationAttribution
+    monkeypatch.setattr("scripts.agent_runtime.attribution.resolve_invocation_attribution",
+                        lambda **kw: InvocationAttribution("unknown", "unknown", kw["task_id"]))
+    assert _dispatch(_driver_argv(agent, model)) == 0, capsys.readouterr().err
+    assert _worker_record(env.tasks)["driver_brief"]["driver"] == {"identity": "unknown", "source": "unknown"}
+    assert _verify_driver_record(env, agent, model)
+
+
+@pytest.mark.parametrize("agent,model", _BRIEF_MODELS)
+@pytest.mark.parametrize("mutation", ["missing", "args", "brief", "ownership", "bound-ownership", "caller", "execution", "core"])
+def test_driver_brief_replay_refuses_mutations(env, capsys, monkeypatch, agent, model, mutation):
+    assert _dispatch(_driver_argv(agent, model)) == 0, capsys.readouterr().err
+    record = _worker_record(env.tasks)
+    if mutation == "missing":
+        del record["driver_brief"]
+    elif mutation == "args":
+        record["driver_brief"]["advisory_args"]["verify_command"] = "true"
+    elif mutation == "brief":
+        record["driver_brief"]["prompt_sha256"] = "1" * 64
+    elif mutation == "ownership":
+        record["owned_paths"] = ["scripts/delegate.py"]
+    elif mutation == "bound-ownership":
+        record["driver_brief"]["owned_paths"] = ["scripts/delegate.py"]
+    elif mutation == "caller":
+        record["initiator"] = "other-driver"
+    elif mutation == "execution":
+        record["driver_brief"]["admitted_execution"]["model_id"] = "gpt-6.1-sol"
+    else:
+        monkeypatch.setattr(delegate.rules_core, "with_core", lambda prompt, seat: "changed core\n" + prompt)
+    (env.tasks / f"{_worker_id()}.json").write_text(json.dumps(record))
+    with pytest.raises(bounded_advisory.AdvisoryRefused):
+        _verify_driver_record(env, agent, model)
+
+
+@pytest.mark.parametrize("agent,model", _BRIEF_MODELS)
+@pytest.mark.parametrize("suffix", ["\nextra instructions", ""])
+def test_driver_brief_replay_checks_exact_prompt(env, capsys, agent, model, suffix):
+    assert _dispatch(_driver_argv(agent, model)) == 0, capsys.readouterr().err
+    prompt = env.prompts[0] + suffix if suffix else ""
+    with pytest.raises(bounded_advisory.AdvisoryRefused):
+        _verify_driver_record(env, agent, model, prompt)
+
+
+@pytest.mark.parametrize("agent,model", _BRIEF_MODELS)
+@pytest.mark.parametrize("change", ["missing", "empty", "changed"])
+def test_driver_brief_source_file_is_bound_on_replay(env, capsys, tmp_path, agent, model, change):
+    brief = tmp_path / "bounded-brief.md"
+    brief.write_text("Implement the bounded target and verify it.")
+    argv = _driver_argv(agent, model)
+    index = argv.index("--prompt")
+    argv[index:index + 2] = ["--prompt-file", str(brief)]
+    assert _dispatch(argv) == 0, capsys.readouterr().err
+    if change == "missing":
+        brief.unlink()
+    else:
+        brief.write_text("" if change == "empty" else "Do different work.")
+    with pytest.raises(bounded_advisory.AdvisoryRefused):
+        _verify_driver_record(env, agent, model)
+
+
+@pytest.mark.parametrize("agent,model", _BRIEF_MODELS)
+def test_driver_brief_explicit_advisor_still_supported(env, capsys, agent, model):
+    argv = _driver_argv(agent, model)
+    _write_advisor(env.tasks, _binding(argv), envelope=_envelope(_binding(argv), owned_paths=[_SAFE_OWNED]))
+    assert _dispatch([*argv, "--advisory-task", _advisor_id()]) == 0, capsys.readouterr().err
+    record = _worker_record(env.tasks)
+    assert "driver_brief" not in record
+    assert record["advisory_envelope"]["advisor_task_id"] == _advisor_id()
+    actual = dict(record["advisory_envelope"]["admitted_execution"])
+    execution = {k: v for k, v in actual.items() if k not in {"agent", "model_id", "mode", "cwd"}}
+    assert delegate._verify_bounded_worker(
+        _worker_id(), agent=agent, model=model, mode=actual["mode"], cwd=Path(actual["cwd"]),
+        execution=execution, prompt=env.prompts[0],
+    ) == hashlib.sha256(env.prompts[0].encode()).hexdigest()
+
+
+@pytest.mark.parametrize("agent,model", _BRIEF_MODELS)
+@pytest.mark.parametrize("problem", ["cyrillic", "symlink-security", "symlink-outside", "missing-core"])
+def test_driver_brief_rechecks_content_and_core(env, capsys, monkeypatch, tmp_path, agent, model, problem):
+    assert _dispatch(_driver_argv(agent, model)) == 0, capsys.readouterr().err
+    root = Path(_worker_record(env.tasks)["cwd"])
+    target = root / _SAFE_OWNED
+    if problem == "cyrillic":
+        target.write_text("Україна")
+    elif problem == "symlink-security":
+        target.symlink_to(root / "scripts/delegate.py")
+    elif problem == "symlink-outside":
+        target.symlink_to(tmp_path / "outside.py")
+    else:
+        def missing(*args, **kwargs):
+            raise delegate.rules_core.RulesCoreMissing("core unavailable")
+        monkeypatch.setattr(delegate.rules_core, "require_core", missing)
+    with pytest.raises(bounded_advisory.AdvisoryRefused):
+        _verify_driver_record(env, agent, model)
+
+
+@pytest.mark.parametrize("agent,model", _BRIEF_MODELS)
+def test_driver_brief_argv_without_a_record_cannot_start_provider(worker_env, capsys, agent, model):
+    assert _start_worker(worker_env, "Implement a bounded change.", agent=agent, model=model) == 1
+    expected = "mechanical_admission_refused" if agent == "claude" else bounded_advisory.ADMISSION_MISSING
+    assert expected in capsys.readouterr().err
+    assert worker_env.spy.calls == 0
+
+
+@pytest.mark.parametrize("agent,model", _BRIEF_MODELS)
+def test_driver_brief_dry_run_has_binding_but_no_worker(env, capsys, agent, model):
+    assert _dispatch(_driver_argv(agent, model, "--dry-run")) == 0, capsys.readouterr().err
+    record = _worker_record(env.tasks)
+    assert record["status"] == "dry_run"
+    assert record["driver_brief"]["prompt_sha256"] == hashlib.sha256(b"Map the parser flags.").hexdigest()
+    assert "admitted_execution" not in record["driver_brief"]
+    assert env.spawned == []
+
+
+def test_driver_brief_refusal_is_a_public_typed_cause():
+    assert bounded_advisory.DRIVER_BRIEF_REFUSED in delegate.public_causes()
+
+
+@pytest.mark.parametrize("agent,model", _BRIEF_MODELS)
+def test_driver_brief_symlink_cycle_is_a_typed_refusal(env, capsys, agent, model):
+    assert _dispatch(_driver_argv(agent, model)) == 0, capsys.readouterr().err
+    root = Path(_worker_record(env.tasks)["cwd"])
+    target = root / _SAFE_OWNED
+    target.symlink_to(target.name)
+    with pytest.raises(bounded_advisory.AdvisoryRefused):
+        _verify_driver_record(env, agent, model)
+
+
+def test_driver_brief_verify_command_is_bound_when_present():
+    args = _parse(_driver_argv("codex", "gpt-6-luna"))
+    original = (delegate.dispatch_args_sha256(args), delegate.advisory_args_sha256(args))
+    args.verify_command = "pytest -q tests/another_target.py"
+    assert delegate.dispatch_args_sha256(args) != original[0]
+    assert delegate.advisory_args_sha256(args) != original[1]
+    args.verify_command = None
+    assert "verify_command" not in delegate.advisory_args_payload(args)
