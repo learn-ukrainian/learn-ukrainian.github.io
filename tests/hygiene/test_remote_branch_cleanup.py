@@ -352,7 +352,22 @@ def test_api_errors_are_closed(monkeypatch, failure):
         api.get("branches")
 
 
-def test_api_request_fixed_destination_and_headers(monkeypatch):
+@pytest.mark.parametrize(
+    "endpoint,expected_url",
+    [
+        ("", "https://api.github.com/repos/learn-ukrainian/learn-ukrainian.github.io"),
+        ("branches", "https://api.github.com/repos/learn-ukrainian/learn-ukrainian.github.io/branches"),
+        (
+            "branches/topic%2Ffix",
+            "https://api.github.com/repos/learn-ukrainian/learn-ukrainian.github.io/branches/topic%2Ffix",
+        ),
+        (
+            "pulls?state=open&per_page=100&page=2",
+            "https://api.github.com/repos/learn-ukrainian/learn-ukrainian.github.io/pulls?state=open&per_page=100&page=2",
+        ),
+    ],
+)
+def test_api_request_fixed_destination_and_headers(monkeypatch, endpoint, expected_url):
     api = m.GitHub(REPO, "fixture")
 
     class Response(io.BytesIO):
@@ -360,14 +375,17 @@ def test_api_request_fixed_destination_and_headers(monkeypatch):
         headers: ClassVar = {"Link": "links"}
 
     def open_request(request, timeout):
-        assert request.full_url == f"{m.API}/repos/{REPO}/branches"
+        assert request.full_url == expected_url
         assert request.get_header("Authorization") == "Bearer fixture"
+        assert request.get_header("Accept") == "application/vnd.github+json"
+        assert request.get_header("X-github-api-version") == "2022-11-28"
         assert request.get_header("Cache-control") == "no-cache"
         assert timeout == 30
         return Response(b'{"ok": true}')
 
     monkeypatch.setattr(api.opener, "open", open_request)
-    assert api.get("branches") == ({"ok": True}, "links")
+    assert api.get(endpoint) == ({"ok": True}, "links")
+    assert api.object(endpoint) == {"ok": True}
     with pytest.raises(m.Unknown, match="redirect"):
         m.NoRedirect().redirect_request(None, None, 302, "", {}, "https://evil.test")
     monkeypatch.setattr(api, "get", lambda _: ([], ""))
@@ -650,8 +668,12 @@ def wire_api(api, monkeypatch):
         url = request.full_url
         calls.append(url)
         # Even numeric Link paths must never become request destinations.
-        assert url.startswith(f"{m.API}/repos/{REPO}/")
-        endpoint = url.removeprefix(f"{m.API}/repos/{REPO}/")
+        root = f"{m.API}/repos/{REPO}"
+        if url == root:
+            endpoint = ""
+        else:
+            assert url.startswith(f"{root}/")
+            endpoint = url.removeprefix(f"{root}/")
         parsed = urlsplit(endpoint)
         query = parse_qs(parsed.query)
         link = ""

@@ -92,7 +92,7 @@ class GitHub:
 
     def get(self, endpoint: str) -> tuple[object, str]:
         request = Request(
-            f"{API}/repos/{self.repo}/{endpoint}",
+            f"{API}/repos/{self.repo}" + (f"/{endpoint}" if endpoint else ""),
             headers={
                 "Authorization": f"Bearer {self.token}",
                 "Accept": "application/vnd.github+json",
