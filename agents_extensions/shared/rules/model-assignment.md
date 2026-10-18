@@ -94,7 +94,7 @@ review of record, design/advice/designated approval, security-sensitive code or
 driver seats to Haiku. Claude's Ukrainian seat stays Opus 5.5.
 
 Haiku recon/classification and bounded implementation use the #10919 driver-brief contract
-below, or an explicit bound Sol envelope. Routine mechanical admission stays unchanged. Broader investigation stays with the
+below, or an explicit bound Sol envelope. Haiku bounded writes use `workspace-write` only, never `danger`, through either route. Routine mechanical admission stays unchanged. Broader investigation stays with the
 existing Luna/Flash routes. Haiku is not
 a blanket budget substitute for stronger seats. Its API base prices are
 $0.10/$0.50 per MTok input/output and $0.01 cache read through 100,000 prompt
@@ -591,7 +591,7 @@ the system until it returns) is broken by ROLE SPLIT, not by a better single dri
 * **Driver brief for bounded implementation (#10919):** `gpt-6-luna` and
   `claude-haiku-5-5` accept `--research-task-family bounded_implementation`,
   `--research-role implementation`, a complete nonempty brief, narrow `--owned-path`
-  values and `--verify-command` in a write mode, without `--advisory-task`. The
+  values and `--verify-command` in `workspace-write` mode, without `--advisory-task`. The
   dispatching driver's brief supplies the advisory. The task records the exact
   brief SHA and caller identity/provenance from existing attribution; this records
   a caller, not an authenticated driver role. Missing attribution is explicitly
@@ -941,9 +941,10 @@ high for broader autonomous integration. The #10919 driver-brief exception admit
 `bounded_implementation` with role `implementation` (`workspace-write` only, never `danger`).
 All three require a nonempty exact-hashed brief, explicit `--owned-path`, `--verify-command`,
 current core instructions and recorded caller provenance; worker replay rechecks those bindings.
-Caller attribution is not driver authentication. Explicit envelopes retain their mode rules and
-free-form Luna research roles such as diagnosis, quality and investigation; excluded activities
-remain excluded. Haiku routine mechanical work retains its existing typed admission. The
+Caller attribution is not driver authentication. Luna explicit envelopes retain their mode rules,
+non-security code containing Cyrillic and free-form research roles such as diagnosis, quality
+and investigation. Haiku bounded implementation is `workspace-write` only through either route.
+Security paths and excluded activities remain refused. Haiku routine mechanical work retains its existing typed admission. The
 `bounded_fallback_worker` (`gemini-3.8-flash-high`) needs the same envelope. Current designated advice uses **Opus / Sol**;
 designated approval needs them to agree, and when one authored the proposal the other's approval completes it, and any other author needs both (#9583, #9616). Where #9275 requires an envelope, its advisor is Sol 6.1 alone; an envelope is not an approval.
 Kimi: web, UI and backend coding only — no

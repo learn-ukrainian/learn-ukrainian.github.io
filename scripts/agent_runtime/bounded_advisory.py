@@ -1112,6 +1112,8 @@ def verify_worker_admission(
     direct_models = driver_brief_models()
     if model_id not in {*direct_models, policy.bounded_fallback_model_id}:
         return None
+    if model_id in direct_models - {policy.bounded_worker_model_id} and mode not in {"read-only", "workspace-write"}:
+        raise AdvisoryRefused(ADMISSION_INVALID, "mechanical-only seats cannot bypass the workspace sandbox")
     if not record:
         raise AdvisoryRefused(ADMISSION_MISSING, f"{model_id} has no task record carrying a parent admission")
     mechanical = record.get("mechanical_task")

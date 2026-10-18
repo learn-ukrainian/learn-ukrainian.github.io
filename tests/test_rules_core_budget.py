@@ -77,6 +77,7 @@ def test_model_table_names_only_active_catalog_models() -> None:
         "Luna @ high: scouting and bounded repeatable work",
         "Luna/Haiku read-only recon/classification or workspace-write `bounded_implementation`",
         "Other Luna/non-Ukrainian Flash needs a bound Sol envelope (`--advisory-task`)",
+        "Haiku writes: workspace-write only",
     ],
 )
 def test_core_preserves_routing_obligations(obligation: str) -> None:

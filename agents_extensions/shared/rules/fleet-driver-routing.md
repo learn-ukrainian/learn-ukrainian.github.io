@@ -36,7 +36,7 @@ and ≥2 tiers for 14 consecutive days. A review does not expire the standing ru
 **Codex role boundary:** GPT-6.1 Sol (`gpt-6.1-sol`) @ `high` is the only Sol: the coding and
 review seat and, since operator 2026-09-29 (#9230), took over the former Astra advisory seat at `high`.
 Ordinary advice uses Opus 5.5 / Sol 6.1; Fable and the former Astra seat hold no advisory role (#9583).
-Luna @ `high` handles routine bounded work and scouting under a Sol advisory envelope (§2).
+Luna @ `high` handles routine bounded work and scouting under the driver-brief or Sol-envelope contract (§2).
 `gpt-6-sol` and `gpt-6-astra` are not routable. Designated approval remains separate
 from ordinary advice; do not spend advisory turns on ordinary implementation or review.
 
@@ -129,7 +129,7 @@ balance (near cap without credits: unchanged), or on other lanes. A dispatch wit
 judged by the lane default. A broken policy file restricts only Codex, to the built-in copy of that allowlist; other
 lanes are unaffected. The reset advice is text only: spending a free full reset stays an operator
 decision, and no tool consumes credits or resets.
-Luna handles bounded work under a Sol advisory envelope (§2); hard advice uses Opus 5.5 / Sol 6.1.
+Luna handles bounded work under the driver-brief or Sol-envelope contract (§2); hard advice uses Opus 5.5 / Sol 6.1.
 
 The operator records a shared assertion at `batch_state/routing_budget/operator_reset_reserve.json`
 in the primary checkout. Its exact JSON fields are `schema_version` (`operator-reset-reserve.v1`),
@@ -171,7 +171,20 @@ Full table: `model-assignment.md` § *No-idle utilization + transport map*. Issu
 ## 2. Default execution shape (binding)
 
 For **bounded** work (clear owned paths, objective acceptance command, no open
-architecture decision):
+architecture decision), the #10919 exception admits Luna/Haiku from a complete
+nonempty driver brief, typed task role, narrow `--owned-path` and `--verify-command`.
+`readonly_recon` with role `recon` and `mechanical_classification` with role
+`classification` or `triage` require read-only mode. `bounded_implementation`
+with role `implementation` requires `workspace-write`. No separate `--advisory-task`
+is needed. Caller identity/provenance and the exact brief SHA are recorded; replay
+rechecks the brief, ownership, execution and core instructions. Attribution records
+a caller, not an authenticated driver role. Security paths, Ukrainian content,
+review, design/approval and driver roles remain excluded. Haiku bounded writes
+are `workspace-write` only through every route, including explicit envelopes.
+Existing Luna envelopes retain their mode rules, free-form research roles and
+non-security code containing Cyrillic; security paths remain refused.
+
+Other bounded work retains the existing envelope flow:
 
 ```text
 0) Driver fixes the worker dispatch arguments and prints their binding digest:
@@ -186,10 +199,9 @@ architecture decision):
 3) Driver integrates; formal CF = independent cross-family (discussion ≠ CF)
 ```
 
-This is the catalog `execution_routing.sol_advised_bounded` route. **Operator decision
-2026-09-30 (#9275): there is no direct bounded dispatch.** Every dispatch to the bounded
-worker (`gpt-6-luna`), and to its `gemini-3.8-flash-high` fallback unless the dispatch is
-classified Ukrainian authoring or review, needs a complete envelope from a finished
+This is the catalog `execution_routing.sol_advised_bounded` route. Outside the #10919
+driver-brief exception, Luna dispatches and the `gemini-3.8-flash-high` fallback
+unless classified Ukrainian authoring or review need a complete envelope from a finished
 `gpt-6.1-sol` advisor task bound to that dispatch's arguments and prompt text; `delegate.py` refuses it
 otherwise (`BOUNDED_ENVELOPE_REQUIRED`), including after a budget substitution, and fails
 the worker at finalize when it exceeds the envelope ceilings (a completion gate checked after
@@ -197,8 +209,8 @@ the worker exits, not a limit on what it does while running). A second completio
 fails a Ukrainian-classified `gemini-3.8-flash-high` write worker whose changes include a
 code file or a path outside the Ukrainian content roots (`advisory_exempt_code_change`),
 because admission can only classify the files its owned paths held then. The envelope's `owned_paths`
-must equal the worker's `--owned-path` set. A design brief that is not a Sol envelope does
-not admit a bounded worker (the packet path used to be "Fable or Astra"; it is now the catalog
+must equal the worker's `--owned-path` set. Outside the #10919 exception, a brief
+that is not a Sol envelope does not admit a bounded worker (the packet path used to be "Fable or Astra"; it is now the catalog
 advisor route only). Routine lockfile, pointer and smoke tasks take
 no advisory seat, so they go to a non-bounded worker (for example `claude-sonnet-5-5`)
 instead of a bounded one. Native Codex subagents spawned in-session by a `gpt-6.1-sol`
@@ -222,7 +234,7 @@ task_id: <id>
 tier: authority | practical | heap
 model_x_harness: <e.g. codex/gpt-6-luna>   # both axes
 why_this_tier: <one sentence>
-advisor_packet: none | sol=<advisor task id>  # required for heap; delegate refuses Luna/Flash without it
+advisor_packet: none | driver-brief | sol=<advisor task id>  # driver-brief only for #10919; other bounded routes require Sol
 owned_paths: <paths>
 acceptance_cmd: <deterministic command that proves done>
 alternatives_considered:

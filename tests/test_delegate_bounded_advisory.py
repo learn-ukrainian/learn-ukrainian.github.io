@@ -2856,8 +2856,8 @@ def test_driver_brief_refuses_danger_for_every_direct_class(env, capsys, agent, 
     assert "refus" in capsys.readouterr().err.lower()
 
 
-@pytest.mark.parametrize("agent,model", _BRIEF_MODELS)
-def test_explicit_advisor_retains_danger_mode(env, capsys, agent, model):
+def test_explicit_luna_advisor_retains_danger_mode(env, capsys):
+    agent, model = "codex", "gpt-6-luna"
     argv = _driver_argv(agent, model)
     argv[argv.index("--mode") + 1] = "danger"
     _write_advisor(env.tasks, _binding(argv), envelope=_envelope(_binding(argv), owned_paths=[_SAFE_OWNED]))
@@ -2943,3 +2943,81 @@ def test_readonly_driver_brief_with_automatic_worktree_replays(env, capsys, agen
     argv.remove("--worktree")
     assert _dispatch(argv) == 0, capsys.readouterr().err
     assert _verify_driver_record(env, agent, model) == hashlib.sha256(env.prompts[0].encode()).hexdigest()
+
+
+@pytest.mark.parametrize("mode", ["read-only", "workspace-write", "danger"])
+def test_explicit_luna_bounded_code_with_cyrillic_dispatch_and_replay(env, capsys, mode):
+    owned = "tests/test_api_helpers.py"
+    argv = _argv("--force-agent", "--owned-path", owned, "--mode", mode,
+                 "--research-task-family", "bounded_implementation", "--research-role", "implementation")
+    if mode != "read-only":
+        argv.append("--worktree")
+    _write_advisor(env.tasks, _binding(argv), envelope=_envelope(_binding(argv), owned_paths=[owned]))
+    assert _dispatch([*argv, "--advisory-task", _advisor_id()]) == 0, capsys.readouterr().err
+    record = _worker_record(env.tasks)
+    actual = dict(record["advisory_envelope"]["admitted_execution"])
+    assert record["mode"] == mode and "driver_brief" not in record
+    assert delegate._verify_bounded_worker(
+        _worker_id(), agent="codex", model="gpt-6-luna", mode=mode, cwd=Path(actual["cwd"]),
+        execution={k: v for k, v in actual.items() if k not in {"agent", "model_id", "mode", "cwd"}},
+        prompt=env.prompts[0],
+    ) == hashlib.sha256(env.prompts[0].encode()).hexdigest()
+
+
+@pytest.mark.parametrize("problem", ["missing", "unsealed", "wrong-binding"])
+def test_luna_cyrillic_scope_still_requires_valid_sealed_envelope(env, capsys, problem):
+    owned = "tests/test_api_helpers.py"
+    argv = _argv("--force-agent", "--owned-path", owned, "--mode", "workspace-write", "--worktree",
+                 "--research-task-family", "bounded_implementation", "--research-role", "implementation")
+    if problem != "missing":
+        binding = "0" * 64 if problem == "wrong-binding" else _binding(argv)
+        options = {"seal": None} if problem == "unsealed" else {}
+        _write_advisor(env.tasks, binding, envelope=_envelope(binding, owned_paths=[owned]), **options)
+    assert _dispatch([*argv, "--advisory-task", _advisor_id()]) == 2, capsys.readouterr().err
+    assert env.spawned == [] and _worker_record(env.tasks) is None
+
+
+@pytest.mark.parametrize("model,agent", [("gpt-6-luna", "codex"), ("claude-haiku-5-5", "claude")])
+@pytest.mark.parametrize("flag", ["--owned-path", "--research-owned-path"])
+def test_explicit_bounded_envelope_retains_security_path_refusal(env, capsys, model, agent, flag):
+    owned = "scripts/agent_runtime/new_gate.py" if flag == "--owned-path" else _SAFE_OWNED
+    extra = ["--force-agent", "--owned-path", owned, "--mode", "workspace-write", "--worktree",
+             "--research-task-family", "bounded_implementation", "--research-role", "implementation"]
+    if flag == "--research-owned-path":
+        extra += [flag, "scripts/agent_runtime/new_gate.py"]
+    argv = _argv(*extra, agent=agent, model=model)
+    _write_advisor(env.tasks, _binding(argv), envelope=_envelope(_binding(argv), owned_paths=[owned]))
+    assert _dispatch([*argv, "--advisory-task", _advisor_id()]) == 2
+    assert "security-sensitive" in capsys.readouterr().err
+    assert env.spawned == [] and _worker_record(env.tasks) is None
+
+
+def test_haiku_explicit_envelope_refuses_danger_before_dispatch(env, capsys):
+    argv = _driver_argv("claude", "claude-haiku-5-5")
+    argv[argv.index("--mode") + 1] = "danger"
+    _write_advisor(env.tasks, _binding(argv), envelope=_envelope(_binding(argv), owned_paths=[_SAFE_OWNED]))
+    assert _dispatch([*argv, "--advisory-task", _advisor_id()]) == 2
+    assert "MECHANICAL_TASK_REFUSED" in capsys.readouterr().err
+    assert env.spawned == [] and _worker_record(env.tasks) is None
+
+
+@pytest.mark.parametrize("mutation", ["mode", "fake-envelope"])
+def test_haiku_envelope_replay_cannot_bypass_workspace_sandbox(env, capsys, mutation):
+    argv = _driver_argv("claude", "claude-haiku-5-5")
+    _write_advisor(env.tasks, _binding(argv), envelope=_envelope(_binding(argv), owned_paths=[_SAFE_OWNED]))
+    assert _dispatch([*argv, "--advisory-task", _advisor_id()]) == 0, capsys.readouterr().err
+    record = _worker_record(env.tasks)
+    actual = dict(record["advisory_envelope"]["admitted_execution"])
+    assert delegate._verify_bounded_worker(
+        _worker_id(), agent="claude", model="claude-haiku-5-5", mode="workspace-write", cwd=Path(actual["cwd"]),
+        execution={k: v for k, v in actual.items() if k not in {"agent", "model_id", "mode", "cwd"}},
+        prompt=env.prompts[0],
+    ) == hashlib.sha256(env.prompts[0].encode()).hexdigest()
+    record["mode"] = "danger"
+    record["advisory_envelope"]["admitted_execution"]["mode"] = "danger"
+    if mutation == "fake-envelope":
+        record["advisory_envelope"] = {"advisory_args": {"mode": "danger"}}
+    (env.tasks / f"{_worker_id()}.json").write_text(json.dumps(record))
+    with pytest.raises(bounded_advisory.AdvisoryRefused, match="workspace sandbox") as refused:
+        _verify_driver_record(env, "claude", "claude-haiku-5-5")
+    assert refused.value.code == bounded_advisory.ADMISSION_INVALID

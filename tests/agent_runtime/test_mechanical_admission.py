@@ -347,3 +347,30 @@ def test_luna_direct_readonly_scope_rechecks_content(family, role):
         admission.refuse_mechanical_task(("gpt-6-luna",), **scope(
             task_family=family, task_role=role, driver_brief=True,
             trees=(Tree({"safe.txt": "Україна".encode()}),)))
+
+
+@pytest.mark.parametrize("model", [HAIKU, "gpt-6-luna"])
+@pytest.mark.parametrize("direct", [False, True])
+def test_bounded_routes_keep_distinct_content_rules_and_shared_security_floor(model, direct):
+    inputs = scope(task_family="bounded_implementation", task_role="implementation",
+                   mode="workspace-write", driver_brief=direct,
+                   paths=("tests/code.py",), trees=(Tree({"tests/code.py": "TEXT = 'Україна'".encode()}),))
+    if model == "gpt-6-luna" and not direct:
+        admission.refuse_mechanical_task((model,), **inputs)
+    else:
+        with pytest.raises(admission.MechanicalAdmissionRefused, match="Cyrillic"):
+            admission.refuse_mechanical_task((model,), **inputs)
+    inputs["trees"] = (Tree({"scripts/agent_runtime/new_gate.py": b"# security"}),)
+    with pytest.raises(admission.MechanicalAdmissionRefused, match="security-sensitive"):
+        admission.refuse_mechanical_task((model,), **inputs)
+
+
+@pytest.mark.parametrize("family", ["bounded_implementation", "routine_mechanical", "readonly_recon", "mechanical_classification"])
+def test_haiku_adapter_refuses_danger_even_with_advisory_claims(monkeypatch, tmp_path, family):
+    monkeypatch.setattr(admission, "worktree_trees", lambda cwd: [Tree()])
+    with pytest.raises(admission.MechanicalAdmissionRefused, match="only routine"):
+        claude.ClaudeAdapter().build_invocation(
+            prompt="Inspect the code", mode="danger", cwd=tmp_path, model=HAIKU, task_id=None, session_id=None,
+            tool_config={"advisory_envelope": {"advisor_model": "gpt-6.1-sol"},
+                         "mechanical_task": {"family": family, "role": "implementation", "paths": ["package-lock.json"]}},
+        )
