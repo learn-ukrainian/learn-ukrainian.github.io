@@ -13,6 +13,81 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 from agent_runtime.env_sanitize import build_agent_env
 
 
+@pytest.mark.parametrize("slug", ["infra-10420-task-summary-finalize", "ask-codex-review", "risk-review-1", "plain"])
+@pytest.mark.parametrize("provider", ["agy", "claude", "codex", "grok", "gemini"])
+@pytest.mark.parametrize("override", [False, True])
+@pytest.mark.parametrize("dispatch", [False, True])
+def test_process_context_survives_token_prefix_inside_word(slug, provider, override, dispatch):
+    home = f"/fixture/{slug}/home"
+    path = f"/fixture/{slug}/bin:/usr/bin:/bin"
+    app = f"/fixture/{slug}/app"
+    context = {"HOME": home, "PATH": path, "AGY_APP_DATA_DIR": app, "AB_TRACE": home}
+    markers = (
+        {"LEARN_UKRAINIAN_DISPATCH_TASK_ID": slug, "LEARN_UKRAINIAN_DISPATCH_AGENT": provider}
+        if dispatch
+        else {}
+    )
+    parent = {"HOME": "/fixture/plain/home", "PATH": "/usr/bin:/bin"} if override else context
+    with patch.dict(os.environ, {**parent, **markers}, clear=True):
+        env = build_agent_env(provider=provider, overrides=context if override else None)
+
+    assert env["HOME"] == home
+    assert env["PATH"] == path
+    assert env["AB_TRACE"] == home
+    if provider == "agy" and override:
+        assert env["AGY_APP_DATA_DIR"] == app
+    else:
+        assert "AGY_APP_DATA_DIR" not in env
+    for name in ("LEARN_UKRAINIAN_DISPATCH_TASK_ID", "LEARN_UKRAINIAN_DISPATCH_AGENT"):
+        if dispatch:
+            assert env[name] == markers[name]
+        else:
+            assert name not in env
+
+
+@pytest.mark.parametrize("provider", ["agy", "claude", "codex"])
+@pytest.mark.parametrize(
+    "token",
+    [
+        "sk-fakevalue", "sk-ant-fake", "sk-proj-fake", "ghp_fakevalue", "github_pat_fakevalue",
+        "xoxb-fake-value", "hf_fakevalue", "npm_fakevalue", "AKIAFAKEFAKEFAKE", "AIzaFakeValue",
+    ],
+)
+@pytest.mark.parametrize(
+    "template",
+    [
+        "{}", "{}/tail", "/prefix/{}/tail", "/prefix/{}", "https://{}@fixture.invalid",
+        "https://fixture.invalid/?key={}", "/usr/bin:{}:/bin", "/prefix-{}",
+        "/fixture/infra-10420-task-summary-finalize/{}/bin",
+    ],
+)
+def test_process_context_still_rejects_embedded_credentials(provider, token, template):
+    value = template.format(token)
+    context = {"HOME": value, "PATH": value, "AGY_APP_DATA_DIR": value, "AB_TRACE": value}
+    with patch.dict(os.environ, context, clear=True):
+        inherited = build_agent_env(provider=provider)
+        overridden = build_agent_env(provider=provider, overrides=context)
+    for env in (inherited, overridden):
+        assert not set(context).intersection(env)
+        assert all(token not in item for item in env.values())
+
+
+def test_hyphen_preceded_key_path_remains_rejected_with_spoofed_dispatch():
+    context = {
+        "HOME": "/fixture/task-7828-sk-something/home",
+        "PATH": "/fixture/task-7828-sk-something/bin:/usr/bin:/bin",
+        "AGY_APP_DATA_DIR": "/fixture/task-7828-sk-something/app",
+    }
+    with patch.dict(
+        os.environ,
+        {**context, "LEARN_UKRAINIAN_DISPATCH_TASK_ID": "task-7828-sk-something"},
+        clear=True,
+    ):
+        env = build_agent_env(provider="agy", overrides=context)
+    assert not set(context).intersection(env)
+    assert env["LEARN_UKRAINIAN_DISPATCH_TASK_ID"] == "task-7828-sk-something"
+
+
 @pytest.mark.parametrize("provider", ["agy", "claude", "codex", "grok", "bridge"])
 @pytest.mark.parametrize("override", [False, True])
 def test_child_environment_never_inherits_driver_state(tmp_path, monkeypatch, provider, override):

@@ -22695,3 +22695,654 @@ def test_namespace_worker_final_write_overrides_false_crashed(tmp_tasks_dir, tmp
     assert state["status"] == terminal
     assert state["returncode"] == (0 if ok else 1)
     assert state["last_error"] != "worker_process_dead"
+
+
+@pytest.mark.parametrize("model", ["claude-sonnet-5-5-high", "claude-opus-5-5-high"])
+@pytest.mark.parametrize("identity_case", [
+    "matched", "display", "absent", "mismatched", "other-pin", "conflicting", "prose", "configuration", "unknown",
+    "non-string", "retired",
+])
+def test_agy_claude_normal_worker_persists_only_bound_runtime_identity(
+    tmp_tasks_dir, tmp_path, monkeypatch, model, identity_case,
+):
+    from agent_runtime import runner
+    from tests.agent_runtime.adapters.test_agy_claude_routes import mock_agy_provider
+
+    _sanitize_git_env_for_test(monkeypatch)
+    worktree = _agy_dispatch_worktree(tmp_path, "agy/identity")
+    # Use an actual linked checkout, so the normal worktree guard is exercised.
+    linked = worktree / ".worktrees" / "dispatch" / "agy" / "identity"
+    _git_out(worktree, "worktree", "add", "-b", "agy/linked-identity", str(linked), "HEAD")
+    provider_dir = tmp_path / "provider"
+    provider_dir.mkdir()
+    task_id, nonce = "agy-identity-worker", "10420-run-nonce"
+    observed = {
+        "mismatched": "gemini-3.8-flash-high", "unknown": "unrecognized", "non-string": 7,
+        "retired": "Claude Opus 4.6 (Thinking)",
+        "display": "Claude Sonnet 5.5 (High)" if "sonnet" in model else "Claude Opus 5.5 (High)",
+        "other-pin": "claude-opus-5-5-high" if "sonnet" in model else "claude-sonnet-5-5-high",
+    }.get(identity_case, model)
+    init = {"event": "init", "model": observed}
+    if identity_case == "conflicting":
+        init["init"] = {"model": "gemini-3.8-flash-high"}
+    if identity_case == "configuration":
+        init["source"] = "requested"
+    terminal = {
+        "event": "result", "result": {
+            "status": "SUCCESS", "conversation_id": "7cd3ba85-817f-4a03-8223-1ff39ca42419",
+            "response": "READY" if identity_case != "prose" else json.dumps({"event": "init", "model": model}),
+        },
+    }
+    events = [terminal] if identity_case in {"absent", "prose"} else [init, terminal]
+    stdout = "\n".join(map(json.dumps, events)) + "\n"
+    launches, _, binary = mock_agy_provider(monkeypatch, provider_dir, runner, stdout=stdout)
+    process_spawn = runner._spawn_subprocess
+
+    def author_artifact(cmd, **kwargs):
+        if identity_case in {"matched", "display"}:
+            (linked / "README.md").write_text("bounded implementation artifact\n")
+            _git_out(linked, "add", "README.md")
+            _git_out(linked, "commit", "-m", "Produce the bounded artifact")
+            _git_out(linked, "push", "-u", "origin", "HEAD")
+        return process_spawn(cmd, **kwargs)
+
+    monkeypatch.setattr(runner, "_spawn_subprocess", author_artifact)
+    monkeypatch.setattr(delegate, "_background_jobs_at_exit", lambda *a, **k: None)
+    delegate._write_state_atomic(delegate._state_path(task_id), {
+        "task_id": task_id, "run_nonce": nonce, "worktree_path": str(linked),
+        "worktree_branch": "agy/linked-identity", "worktree_base": "main", "keep_worktree": True,
+        "model": model, "cli_version": "1.4.0", "owned_paths": ["README.md"],
+    })
+    rc = delegate._run_worker(
+        task_id=task_id, agent="agy", prompt="Implement the bounded artifact.", mode="workspace-write",
+        cwd_str=str(linked), model=model, hard_timeout=60, effort="high", run_nonce=nonce, keep_worktree=True,
+    )
+    record = delegate._read_state(delegate._state_path(task_id))
+    assert len(launches) == 1
+    assert Path(launches[0][1]["cwd"]) == linked.resolve()
+    assert record["model"] == model  # Requested selector is never rewritten into an observation.
+    if identity_case in {"matched", "display"}:
+        assert rc == 0, {key: record.get(key) for key in ("status", "last_error", "no_deliverable_reason", "identity_matches_request", "model_identity")}
+        assert record["status"] == "done"
+        assert record["resolved_model"] == observed
+        assert record["resolved_model_known"] is True
+        assert record["identity_matches_request"] is True
+        assert record["resolved_model_family"] == "anthropic"
+        assert record["resolved_model_harness"] == "agy"
+        provenance = record["model_identity"]["provenance"]
+        assert provenance["origin"] == "subprocess.stdout"
+        assert provenance["task_id"] == task_id
+        assert provenance["run_nonce"] == nonce
+        assert provenance["cli_version"] == "1.4.0"
+        assert provenance["cli_sha256"] == hashlib.sha256(binary.read_bytes()).hexdigest()
+        assert provenance["init_events"][0]["sha256"] == hashlib.sha256(json.dumps(init).encode()).hexdigest()
+        assert len(provenance["invocation_id"]) == 32
+    else:
+        assert rc == 1, record
+        assert record["status"] == "failed"
+        assert record["identity_matches_request"] is False
+        if identity_case in {"absent", "prose", "configuration", "conflicting"}:
+            assert record["model_identity"] is None
+            assert record["resolved_model_known"] is False
+        else:
+            assert record["model_identity"]["substituted"] is True
+            if identity_case in {"mismatched", "other-pin"}:
+                assert record["resolved_model"] == observed
+                assert record["resolved_model_known"] is True
+                assert record["resolved_model_family"] == ("google" if identity_case == "mismatched" else "anthropic")
+            if identity_case in {"unknown", "non-string", "retired"}:
+                assert record["model_identity"]["actual_model"] is None
+                assert record["resolved_model_known"] is False
+
+
+@pytest.mark.parametrize("exit_kind", ["cancel", "exception", "timeout"])
+@pytest.mark.parametrize("observed", [True, False])
+@pytest.mark.parametrize("model", ["claude-sonnet-5-5-high", "claude-opus-5-5-high"])
+def test_agy_claude_runner_exception_preserves_same_invocation_identity_on_dispatch(
+    tmp_tasks_dir, tmp_path, monkeypatch, exit_kind, observed, model,
+):
+    from agent_runtime import runner
+    from tests.agent_runtime.adapters.test_agy_claude_routes import mock_agy_provider
+
+    _sanitize_git_env_for_test(monkeypatch)
+    worktree = _agy_dispatch_worktree(tmp_path, "agy/interrupted")
+    provider_dir = tmp_path / "provider"
+    provider_dir.mkdir()
+    nonce, task_id = "current-nonce", "agy-interrupted"
+    stdout = json.dumps({"event": "init", "model": model}) + "\n" if observed else ""
+    launches, _, _ = mock_agy_provider(monkeypatch, provider_dir, runner, stdout=stdout, exit_kind=exit_kind)
+    monkeypatch.setattr(delegate, "_background_jobs_at_exit", lambda *a, **k: None)
+    delegate._write_state_atomic(delegate._state_path(task_id), {
+        "task_id": task_id, "run_nonce": nonce, "model": model, "cli_version": "1.4.0", "keep_worktree": True,
+        # A persisted prior attempt can never replace this invocation's missing init.
+        "model_identity": {"actual_model": model, "actual_model_known": True, "source": "provider-init"},
+        "resolved_model_known": True,
+    })
+    assert delegate._run_worker(
+        task_id=task_id, agent="agy", prompt="Implement the bounded artifact.", mode="workspace-write",
+        cwd_str=str(worktree), model=model, hard_timeout=60, run_nonce=nonce, keep_worktree=True,
+    ) == 1
+    record = delegate._read_state(delegate._state_path(task_id))
+    assert len(launches) == 1
+    assert record["status"] == ("cancelled" if exit_kind == "cancel" else "failed")
+    assert record["resolved_model_known"] is observed
+    if observed:
+        assert record["model_identity"]["actual_model"] == model
+        assert record["model_identity"]["provenance"]["run_nonce"] == nonce
+    else:
+        assert record["model_identity"] is None
+
+
+@pytest.mark.parametrize("injection", ["plain-dict", "stale-nonce", "wrong-task", "mutated"])
+def test_agy_dispatch_rejects_injected_and_unbound_identity(tmp_tasks_dir, tmp_path, monkeypatch, injection):
+    from agent_runtime import runner
+    from scripts.agent_runtime.adapters.agy import AgyRuntimeIdentity
+    from tests.agent_runtime.adapters.test_agy_claude_routes import mock_agy_provider
+
+    provider_dir = tmp_path / "provider"
+    provider_dir.mkdir()
+    model = "claude-opus-5-5-high"
+    launches, _, _ = mock_agy_provider(monkeypatch, provider_dir, runner, stdout="")
+    identity = AgyRuntimeIdentity({
+        "actual_model": model, "actual_model_known": True, "source": "provider-init", "substituted": False,
+        "actual_family": "anthropic", "harness": "agy", "provenance": {
+            "task_id": "wrong" if injection == "wrong-task" else "injected-identity",
+            "run_nonce": "stale" if injection == "stale-nonce" else "this-run", "requested_model": model,
+        },
+    })
+    if injection == "plain-dict":
+        identity = dict(identity)
+    if injection == "mutated":
+        identity["actual_model"] = "claude-sonnet-5-5-high"
+    fake = _bg_mock_result("READY")
+    fake.model_identity = identity
+    fake.model = model
+    delegate._write_state_atomic(delegate._state_path("injected-identity"), {"cli_version": "1.4.0"})
+    with patch("agent_runtime.runner.invoke", return_value=fake):
+        assert delegate._run_worker(
+            task_id="injected-identity", agent="agy", prompt="Implement.", mode="workspace-write",
+            cwd_str=str(tmp_path), model=model, hard_timeout=60, run_nonce="this-run", keep_worktree=True,
+        ) == 1
+    record = delegate._read_state(delegate._state_path("injected-identity"))
+    assert record["status"] == "failed"
+    assert record["identity_matches_request"] is False
+    assert record["model_identity"] is None
+    assert record["last_error"] == "agy_model_identity_unverified"
+    assert launches == []
+
+
+@pytest.mark.parametrize("model", ["claude-sonnet-5-5-high", "claude-opus-5-5-high"])
+def test_normal_dispatch_admits_claude_agy_high_pin_without_substitution(
+    tmp_tasks_dir, monkeypatch, isolated_dispatch_repo, model,
+):
+    head = _git_out(isolated_dispatch_repo, "rev-parse", "HEAD").strip()
+    _git_out(isolated_dispatch_repo, "update-ref", "refs/remotes/origin/main", head)
+    fetches = []
+
+    def fetch_fixture_branch(remote, branch):
+        assert (remote, branch) == ("origin", "main")
+        fetches.append((remote, branch))
+        # Admission refreshes the remote ref before rechecking its frozen base.
+        # Serve that refresh from the same isolated repository as observation.
+        return delegate.subprocess.run(
+            ["git", "fetch", str(isolated_dispatch_repo), "+refs/heads/main:refs/remotes/origin/main"],
+            cwd=isolated_dispatch_repo, capture_output=True, text=True, check=False,
+            env=delegate._sanitized_git_env(), timeout=30,
+        )
+
+    monkeypatch.setattr(delegate, "_fetch_remote_branch", fetch_fixture_branch)
+    args = _minimal_dispatch_args(
+        "agy-high-dispatch", agent="agy", model=model, mode="workspace-write", worktree="auto", cwd=None,
+        owned_path=["README.md"],
+    )
+    calls = []
+    real_popen = delegate.subprocess.Popen
+
+    def worker_spawn(cmd, *a, **kwargs):
+        if isinstance(cmd, list) and "_worker" in cmd:
+            calls.append(cmd)
+            return _fake_worker_popen()
+        return real_popen(cmd, *a, **kwargs)
+
+    monkeypatch.setattr(delegate.subprocess, "Popen", worker_spawn)
+    assert delegate.cmd_dispatch(args) == 0
+    assert len(calls) == 1
+    assert calls[0][calls[0].index("--model") + 1] == model
+    assert calls[0][calls[0].index("--agent") + 1] == "agy"
+    record = delegate._read_state(delegate._state_path("agy-high-dispatch"))
+    assert record["model"] == model
+    assert record["substitution"] is None
+    assert fetches == [("origin", "main")]
+    assert record["authoring_review_admission"]["creation_sha"] == head
+    assert _git_out(Path(record["worktree_path"]), "rev-parse", "HEAD").strip() == head
+    assert Path(record["worktree_path"]).is_dir()
+
+
+@pytest.mark.parametrize("model", ["claude-sonnet-5-5-medium", "claude-opus-5-5-low", "claude-unknown-5-5-high"])
+def test_normal_dispatch_refuses_unsupported_claude_variant_before_worker(tmp_tasks_dir, monkeypatch, capsys, model):
+    args = delegate.build_parser().parse_args([
+        "dispatch", "--agent", "agy", "--model", model, "--task-id", "bad-claude-variant", "--prompt", "test",
+    ])
+    monkeypatch.setattr(delegate.subprocess, "Popen", lambda *a, **k: pytest.fail("unsupported variant spawned"))
+    assert delegate.cmd_dispatch(args) == 2
+    assert delegate._read_state(delegate._state_path("bad-claude-variant")) is None
+    error = capsys.readouterr().err
+    assert "Unsupported AGY model" in error
+    assert "HARD AUTO-SUBSTITUTE" not in error
+
+
+@pytest.mark.parametrize("agent,model", [
+    ("codex", "gpt-6.1-sol"), ("agy", "gemini-3.8-flash-high"),
+    ("agy", "Claude Opus 4.6 (Thinking)"), ("agy", "unrecognized"),
+])
+def test_agy_identity_attribution_leaves_other_or_unsupported_requests_unchanged(agent, model):
+    assert delegate._agy_model_state(
+        agent=agent, model=model, identity={"actual_model": "claude-opus-5-5-high", "source": "provider-init"},
+        task_id="other-route", run_nonce="this-run",
+    ) == {}
+
+
+def _agy_consumer_observation(tmp_path, model, stdout):
+    from scripts.agent_runtime import runner
+    from scripts.agent_runtime.adapters.base import InvocationPlan
+
+    token = runner._AGY_OBSERVED_IDENTITY.set(None)
+    try:
+        return runner._observe_agy_identity(
+            stdout=stdout,
+            plan=InvocationPlan(cmd=["never-executed", "--model", model], cwd=tmp_path),
+            task_id="consumer-identity", run_nonce="consumer-run", invocation_id="c" * 32,
+            cli_sha256="d" * 64, cli_version="1.4.0",
+        )
+    finally:
+        runner._AGY_OBSERVED_IDENTITY.reset(token)
+
+
+
+@pytest.mark.parametrize("model", ["claude-sonnet-5-5-high", "claude-opus-5-5-high"])
+@pytest.mark.parametrize("case", [
+    "exact", "display", "other-pin", "other-family", "unknown", "retired", "non-string",
+    "conflict", "repeated", "absent", "configuration", "prose", "session", "terminal-session",
+])
+def test_agy_consumer_retains_honest_observer_semantics(tmp_path, model, case):
+    observed = {
+        "display": "Claude Sonnet 5.5 (High)" if "sonnet" in model else "Claude Opus 5.5 (High)",
+        "other-pin": "claude-opus-5-5-high" if "sonnet" in model else "claude-sonnet-5-5-high",
+        "other-family": "gemini-3.8-flash-high", "unknown": "unrecognized",
+        "retired": "Claude Opus 4.6 (Thinking)", "non-string": 42,
+    }.get(case, model)
+    init = {"event": "init", "model": observed}
+    terminal = {"event": "result", "result": {"status": "SUCCESS", "response": "READY"}}
+    if case == "conflict":
+        init["init"] = {"model": "gemini-3.8-flash-high"}
+    if case == "configuration":
+        init["source"] = "configuration"
+    if case in {"session", "terminal-session"}:
+        terminal["result"]["conversation_id"] = "provider-session"
+    if case == "session":
+        init["session_id"] = "provider-session"
+    if case == "prose":
+        terminal["result"]["response"] = json.dumps(init)
+    events = [terminal] if case in {"absent", "prose"} else [init, terminal]
+    if case == "repeated":
+        events.insert(1, init)
+    identity = _agy_consumer_observation(tmp_path, model, "\n".join(map(json.dumps, events)))
+    state = delegate._agy_model_state(
+        agent="agy", model=model, identity=identity, task_id="consumer-identity", run_nonce="consumer-run",
+    )
+    assert state["identity_matches_request"] is (case in {"exact", "display", "session", "terminal-session"})
+    assert state["resolved_model_known"] is (case not in {
+        "absent", "configuration", "prose", "unknown", "retired", "non-string", "conflict",
+    })
+    if identity is None:
+        assert state["model_identity"] is None
+        assert state["resolved_model_source"] == "unattested-harness"
+    else:
+        assert state["model_identity"] == dict(identity)
+        assert state["resolved_model_source"] == "provider-init"
+        assert state["resolved_model_harness"] == "agy"
+        if case == "conflict":
+            assert state["resolved_model"] == "gemini-3.8-flash-high"
+            assert state["resolved_model_family"] == "google"
+        elif case in {"unknown", "retired", "non-string"}:
+            assert state["resolved_model"] == "unattested-harness"
+            assert state["resolved_model_family"] is None
+        else:
+            assert state["resolved_model"] == observed
+            assert state["resolved_model_family"] == ("google" if case == "other-family" else "anthropic")
+
+
+@pytest.mark.parametrize("model", ["claude-sonnet-5-5-high", "claude-opus-5-5-high"])
+@pytest.mark.parametrize("field,value", [
+    ("actual_model", "gemini-3.8-flash-high"),
+    ("actual_model", "other-high-pin"),
+    ("actual_model", "unrecognized"), ("actual_model", "Claude Opus 4.6 (Thinking)"),
+    ("actual_model", None), ("actual_model", 42), ("actual_model_known", False),
+    ("actual_model_known", 1), ("actual_family", "google"), ("harness", "native_claude"),
+    ("source", "requested"), ("source", "configuration"), ("source", "runtime"),
+    ("substituted", 0), ("substituted", True), ("provenance", None), ("provenance", "provider-init"),
+    ("provenance.origin", "response.prose"), ("provenance.origin", "configuration"),
+    ("provenance.init_events", []), ("provenance.init_events", {}),
+    ("provenance.init_events", [None]), ("provenance.init_events", [{}]),
+    ("provenance.init_events", [{"sha256": "not-a-digest"}]),
+    ("provenance.init_events", [{"sha256": 42}]),
+    ("provenance.init_events", [{"sha256": "e" * 64}, {"sha256": "f" * 64}]),
+    ("provenance.init_events", [{"sha256": "e" * 64, "provider_session_id": "other-session"}]),
+    ("provenance.invocation_id", None), ("provenance.invocation_id", ""),
+    ("provenance.invocation_id", "stale-invocation"), ("provenance.invocation_id", 42),
+    ("provenance.cli_sha256", None), ("provenance.cli_sha256", ""),
+    ("provenance.cli_sha256", "d" * 63), ("provenance.cli_sha256", 42),
+    ("provenance.cli_version", "unknown"), ("provenance.cli_version", " "),
+    ("provenance.cli_version", None), ("provenance.cli_version", 42),
+    ("provenance.provider_session_id", ""), ("provenance.provider_session_id", "s" * 201),
+    ("provenance.provider_session_id", 42), ("provenance.task_id", "other-task"),
+    ("provenance.run_nonce", "stale-run"), ("provenance.requested_model", "gemini-3.8-flash-high"),
+])
+def test_agy_worker_rejects_presealed_inconsistent_receipts(
+    tmp_tasks_dir, tmp_path, monkeypatch, model, field, value,
+):
+    from scripts.agent_runtime.adapters.agy import AgyRuntimeIdentity
+
+    identity = _agy_consumer_observation(tmp_path, model, json.dumps({"event": "init", "model": model}))
+    assert identity is not None
+    payload = json.loads(json.dumps(identity))
+    target = payload
+    parts = field.split(".")
+    for part in parts[:-1]:
+        target = target[part]
+    if value == "other-high-pin":
+        value = "claude-opus-5-5-high" if "sonnet" in model else "claude-sonnet-5-5-high"
+    target[parts[-1]] = value
+    # Internal construction is a consistency fault, not external provider reachability.
+    receipt = AgyRuntimeIdentity(payload)
+    result = _bg_mock_result("READY")
+    result.model_identity = receipt
+    result.model = model
+    monkeypatch.setattr(delegate, "_background_jobs_at_exit", lambda *a, **k: None)
+    delegate._write_state_atomic(delegate._state_path("consumer-identity"), {"cli_version": "1.4.0"})
+    with patch("agent_runtime.runner.invoke", return_value=result):
+        assert delegate._run_worker(
+            task_id="consumer-identity", agent="agy", prompt="Implement.", mode="workspace-write",
+            cwd_str=str(tmp_path), model=model, hard_timeout=60, run_nonce="consumer-run", keep_worktree=True,
+        ) == 1
+    record = delegate._read_state(delegate._state_path("consumer-identity"))
+    assert record["status"] == "failed"
+    assert record["last_error"] == "agy_model_identity_unverified"
+    assert record["model_identity"] is None
+    assert record["resolved_model"] == "unattested-harness"
+    assert record["resolved_model_known"] is False
+    assert record["resolved_model_source"] == "unattested-harness"
+    assert record["resolved_model_family"] is None
+    assert record["identity_matches_request"] is False
+
+
+@pytest.mark.parametrize("model", ["claude-sonnet-5-5-high", "claude-opus-5-5-high"])
+@pytest.mark.parametrize("case", ["mapping", "mutation", "nested-mutation", "bad-json", "missing-nonce"])
+def test_agy_consumer_keeps_snapshot_and_binding_guards(tmp_path, model, case):
+    identity = _agy_consumer_observation(tmp_path, model, json.dumps({"event": "init", "model": model}))
+    assert identity is not None
+    if case == "mapping":
+        identity = dict(identity)
+    elif case == "mutation":
+        identity["source"] = "requested"
+    elif case == "nested-mutation":
+        identity["provenance"]["init_events"][0]["sha256"] = "e" * 64
+    elif case == "bad-json":
+        identity["unexpected"] = object()
+    state = delegate._agy_model_state(
+        agent="agy", model=model, identity=identity, task_id="consumer-identity",
+        run_nonce=None if case == "missing-nonce" else "consumer-run",
+    )
+    assert state["model_identity"] is None
+    assert state["resolved_model_known"] is False
+    assert state["identity_matches_request"] is False
+
+
+@pytest.mark.parametrize("model", ["claude-sonnet-5-5-high", "claude-opus-5-5-high"])
+@pytest.mark.parametrize("observation,observed_family,observed_known", [
+    ("exact", "anthropic", True), ("display", "anthropic", True),
+    ("other-pin", "anthropic", True), ("other-family", "google", True),
+    ("unknown", None, False), ("retired", None, False), ("non-string", None, False),
+])
+@pytest.mark.parametrize("event_count,substituted,trust_exact,trust_mismatch,match_exact", [
+    (0, False, False, False, False), (0, True, False, False, False),
+    (1, False, True, False, True), (1, True, False, True, False),
+    (2, False, False, False, False), (2, True, True, True, False),
+    (3, False, False, False, False), (3, True, True, True, False),
+])
+def test_agy_consumer_substitution_consistency_matrix(
+    tmp_path, model, observation, observed_family, observed_known,
+    event_count, substituted, trust_exact, trust_mismatch, match_exact,
+):
+    from scripts.agent_runtime.adapters.agy import AgyRuntimeIdentity
+
+    observed = {
+        "exact": model,
+        "display": "Claude Sonnet 5.5 (High)" if "sonnet" in model else "Claude Opus 5.5 (High)",
+        "other-pin": "claude-opus-5-5-high" if "sonnet" in model else "claude-sonnet-5-5-high",
+        "other-family": "gemini-3.8-flash-high", "unknown": "unrecognized",
+        "retired": "Claude Opus 4.6 (Thinking)", "non-string": 42,
+    }[observation]
+    identity = _agy_consumer_observation(tmp_path, model, json.dumps({"event": "init", "model": observed}))
+    assert identity is not None
+    payload = json.loads(json.dumps(identity))
+    # Model-internal construction can seal contradictory fields without mutation.
+    # Vary the whole count/flag class; these receipts do not prove provider reachability.
+    payload["provenance"]["init_events"] *= event_count
+    payload["substituted"] = substituted
+    receipt = AgyRuntimeIdentity(payload)
+    state = delegate._agy_model_state(
+        agent="agy", model=model, identity=receipt, task_id="consumer-identity", run_nonce="consumer-run",
+    )
+    exact = observation in {"exact", "display"}
+    trusted = trust_exact if exact else trust_mismatch
+    assert state == {
+        "model_identity": payload if trusted else None,
+        "resolved_model": observed if trusted and observed_known else "unattested-harness",
+        "resolved_model_known": trusted and observed_known,
+        "resolved_model_source": "provider-init" if trusted else "unattested-harness",
+        "resolved_model_family": observed_family if trusted else None,
+        "resolved_model_harness": "agy",
+        "identity_matches_request": match_exact if exact else False,
+    }
+
+
+@pytest.mark.parametrize("model", ["claude-sonnet-5-5-high", "claude-opus-5-5-high"])
+@pytest.mark.parametrize("later_model", ["same", "other-pin", "other-family"])
+@pytest.mark.parametrize("event_count", [2, 3])
+def test_agy_consumer_honest_repeated_init_retains_first_observation(
+    tmp_path, model, later_model, event_count,
+):
+    later = {
+        "same": model,
+        "other-pin": "claude-opus-5-5-high" if "sonnet" in model else "claude-sonnet-5-5-high",
+        "other-family": "gemini-3.8-flash-high",
+    }[later_model]
+    events = [{"event": "init", "model": model}]
+    events.extend({"event": "init", "model": later} for _ in range(event_count - 1))
+    identity = _agy_consumer_observation(tmp_path, model, "\n".join(map(json.dumps, events)))
+    if later_model == "same":
+        assert identity is not None
+        assert len(identity["provenance"]["init_events"]) == event_count
+        assert identity["actual_model"] == model
+        assert identity["substituted"] is True
+    else:
+        assert identity is None
+    state = delegate._agy_model_state(
+        agent="agy", model=model, identity=identity, task_id="consumer-identity", run_nonce="consumer-run",
+    )
+    assert state["resolved_model_known"] is (later_model == "same")
+    assert state["identity_matches_request"] is False
+    assert state["resolved_model"] == (model if later_model == "same" else "unattested-harness")
+    assert state["model_identity"] == identity
+
+
+
+@pytest.mark.parametrize("model", ["claude-sonnet-5-5-high", "claude-opus-5-5-high"])
+@pytest.mark.parametrize("case,known,family", [
+    ("nested-model", False, None), ("nested-session", False, None),
+    ("terminal-session", False, None), ("duplicate-after", False, None),
+    ("mismatch-then-duplicate", False, None), ("mismatch-then-session", False, None),
+    ("repeated-model", False, None), ("repeated-session", False, None), ("repeated-source", False, None),
+    ("configuration", False, None), ("missing", False, None), ("late", False, None),
+    ("unknown", False, None), ("retired", False, None), ("non-string", False, None),
+    ("other-pin", True, "anthropic"), ("other-family", True, "google"),
+    ("repeated", True, "anthropic"), ("provider-failure", True, "anthropic"),
+])
+@pytest.mark.parametrize("exit_kind", ["complete", "cancel", "timeout", "exception", "cleanup"])
+def test_agy_producer_consistency_through_durable_worker_projections(
+    tmp_tasks_dir, tmp_path, monkeypatch, model, case, known, family, exit_kind,
+):
+    from types import SimpleNamespace
+
+    from agent_runtime import runner
+    from tests.agent_runtime.adapters.test_agy_claude_routes import consistency_stream, mock_agy_provider
+
+    _sanitize_git_env_for_test(monkeypatch)
+    worktree = _agy_dispatch_worktree(tmp_path, "agy/consistent-projections")
+    provider_dir = tmp_path / "provider"
+    provider_dir.mkdir()
+    task_id, nonce = "projection-worker", "projection-run"
+    launches, _, _ = mock_agy_provider(
+        monkeypatch, provider_dir, runner, stdout=consistency_stream(model, case),
+        exit_kind="complete" if exit_kind == "cleanup" else exit_kind,
+    )
+    if exit_kind == "cleanup":
+        def cleanup():
+            raise RuntimeError("synthetic cleanup failure")
+        monkeypatch.setattr(runner, "prepare_trail_isolation", lambda **kwargs: SimpleNamespace(
+            cleanup=cleanup, tool_config=kwargs["tool_config"],
+        ))
+    from telemetry import emit as telemetry_emit
+
+    captures, usages, events, substitutions = [], [], [], []
+    monkeypatch.setattr(telemetry_emit, "emit_event", lambda event, fields: events.append((event, fields)))
+
+    def capture_start(**kwargs):
+        captures.append(("start", kwargs))
+        return SimpleNamespace(finish=lambda **fields: captures.append(("finish", fields)))
+
+    monkeypatch.setattr(runner.FleetCapture, "start", capture_start)
+    from agent_runtime import usage
+
+    usage_file = tmp_path / "projection-usage.jsonl"
+    monkeypatch.setattr(usage, "_usage_file", lambda *args: usage_file)
+    monkeypatch.setattr(runner, "write_record", usage.write_record)
+    emit_substitution = runner._emit_substitution_event
+
+    def emit_summary(**fields):
+        substitutions.append(fields)
+        emit_substitution(**fields)
+
+    monkeypatch.setattr(runner, "_emit_substitution_event", emit_summary)
+    monkeypatch.setattr(delegate, "_append_dispatch_event", lambda event, **fields: events.append((event, fields)))
+    monkeypatch.setattr(delegate, "_background_jobs_at_exit", lambda *args, **kwargs: None)
+    delegate._write_state_atomic(delegate._state_path(task_id), {
+        "task_id": task_id, "model": model, "run_nonce": nonce, "cli_version": "1.4.0",
+        "owned_paths": ["README.md"], "keep_worktree": True,
+        # A previous attempt cannot supply actual identity, including via nested attribution.
+        "substitution": {"kind": "agent-substitution", "actual_model": model, "actual_model_known": True,
+                         "runtime_attribution": {"actual_model": model, "actual_model_known": True}},
+    })
+    spawn = runner._spawn_subprocess
+
+    def inspect_start(*args, **kwargs):
+        starting = delegate._read_state(delegate._state_path(task_id))
+        assert starting["resolved_model_known"] is False
+        assert starting["model_identity"] is None
+        assert starting["substitution"] is None
+        return spawn(*args, **kwargs)
+
+    monkeypatch.setattr(runner, "_spawn_subprocess", inspect_start)
+    assert delegate._run_worker(
+        task_id=task_id, agent="agy", prompt="Implement the bounded artifact.", mode="workspace-write",
+        cwd_str=str(worktree), model=model, hard_timeout=60, run_nonce=nonce, keep_worktree=True,
+    ) == 1
+    record = json.loads(delegate._state_path(task_id).read_text())
+    usages = [json.loads(line) for line in usage_file.read_text().splitlines()] if usage_file.exists() else []
+    assert len(launches) == 1
+    assert record["model"] == model
+    assert record["status"] == ("cancelled" if exit_kind == "cancel" else "failed")
+    assert record["resolved_model_known"] is known
+    assert record["resolved_model_family"] == family
+    assert record["resolved_model_harness"] == "agy"
+    assert record["identity_matches_request"] is (known and case == "provider-failure")
+    observed = {
+        "other-pin": "claude-opus-5-5-high" if "sonnet" in model else "claude-sonnet-5-5-high",
+        "other-family": "gemini-3.8-flash-high",
+    }.get(case, model)
+    assert record["resolved_model"] == (observed if known else "unattested-harness")
+    if exit_kind == "complete" and case not in {"provider-failure", "missing"}:
+        assert record["failure_code"] == "provider_policy_refusal"
+        assert record["last_error"] == "provider_policy_refusal"
+    if exit_kind == "cancel":
+        assert record["last_error"] == "worker_cancelled"
+    if exit_kind == "timeout":
+        assert record["last_error"] == "worker_failed"
+    if exit_kind in {"exception", "cleanup"}:
+        assert record["last_error"] == "worker_unexpected_error, RuntimeError"
+    assert len(captures) == 2
+    start, finish = captures[0][1], captures[1][1]
+    assert start["plan_metadata"]["entire_fleet"]["actual_model"] is None
+    assert str(start["plan_metadata"]["entire_fleet"]["actual_model_known"]).lower() == "false"
+    assert finish["actual_model"] == (observed if known else "")
+    assert finish["route_metadata"]["actual_model_known"] == str(known).lower()
+    assert finish["outcome"] == ({"complete": "error", "cleanup": "error", "timeout": "hard_timeout"}.get(exit_kind, "runner_exception"))
+    if exit_kind in {"complete", "timeout", "cleanup"}:
+        assert len(usages) == 1
+        usage_identity = usages[0].get("model_identity")
+        assert bool(usage_identity and usage_identity["actual_model_known"]) is known
+        assert usages[0]["outcome"] == ("hard_timeout" if exit_kind == "timeout" else "error")
+        if known:
+            assert usage_identity["actual_model"] == observed
+            assert usage_identity["actual_family"] == family
+        else:
+            assert not usages[0].get("substitution")
+    for fields in substitutions:
+        substitution = fields.get("substitution")
+        assert bool(substitution and substitution["substituted"]) is (known and case != "provider-failure")
+    if known:
+        assert record["model_identity"]["actual_model"] == observed
+        assert len(record["model_identity"]["provenance"]["init_events"]) == (2 if case == "repeated" else 1)
+    else:
+        assert record["substitution"] is None
+        assert not (record["model_identity"] or {}).get("actual_model_known", False)
+    dispatch_events = [fields for event, fields in events if event == "dispatch"]
+    assert len(dispatch_events) == 1
+    assert dispatch_events[0]["resolved_model_known"] is known
+    assert dispatch_events[0]["resolved_model"] == (observed if known else "unattested-harness")
+    if not known:
+        assert dispatch_events[0]["substitution"] is None
+    summaries = [record["substitution"], dispatch_events[0]["substitution"]]
+    expected = {
+        "requested_provider": "agy",
+        "requested_model": model,
+        "actual_provider": "agy",
+        "actual_model": observed,
+        "actual_model_known": True,
+        "source": "provider-init",
+        "substituted": True,
+    } if known and case != "provider-failure" else None
+    assert all(summary == expected for summary in summaries)
+    saved_expected = {
+        "requested_provider": "agy",
+        "requested_model": model,
+        "actual_provider": "agy",
+        "actual_model": observed,
+        "source": "provider-init",
+        "marker": None,
+        "substituted": True,
+    } if known and case != "provider-failure" else None
+    for usage_row in usages:
+        assert usage_row.get("substitution") == saved_expected
+    runtime_events = [fields for event, fields in events if event == "agent_runtime_substitution"]
+    for event in runtime_events:
+        assert event["substitution"] == saved_expected
+    if exit_kind == "complete":
+        if expected is not None:
+            assert usages[0]["model"] == observed
+            assert len(runtime_events) == 1
+            assert runtime_events[0]["model"] == observed
+        else:
+            assert runtime_events == []
+    assert runner._AGY_OBSERVED_IDENTITY.get() is None

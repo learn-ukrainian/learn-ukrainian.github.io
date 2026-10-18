@@ -172,7 +172,23 @@ def test_matching_agy_parse_passes_eval_identity_check(
         ]
     )
     parsed = AgyAdapter().parse_response(stdout=stdout, stderr="", returncode=0, output_file=None, plan=plan)
-    assert parsed.ok is True
+    claude_pin = pin in {"claude-opus-5-5-high", "claude-sonnet-5-5-high"}
+    if claude_pin and reported_model is None:
+        # Absent Claude runtime identity is refused, never a matching successful worker.
+        assert parsed.ok is False
+        assert parsed.stderr_excerpt == "agy_model_identity_missing"
+        assert parsed.response == ""
+        assert parsed.substitution is None
+        assert parsed.model_identity is None
+        return
+    assert parsed.ok is True and parsed.response == "READY"
+    if claude_pin:
+        assert parsed.model_identity == {
+            "actual_model": reported_model,
+            "actual_model_known": True,
+            "source": "provider-init",
+            "substituted": False,
+        }
     outcome = TaskOutcome(
         task_id="agy-matching-model",
         status="done",

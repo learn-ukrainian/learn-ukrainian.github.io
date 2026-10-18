@@ -22,6 +22,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import shlex
 import subprocess
 from pathlib import Path
@@ -2167,13 +2168,19 @@ def test_grok_build_invocation_accepts_none_or_fixed_model_and_effort(tmp_path, 
         assert plan.metadata["acpx_cli_compatibility"] == "json-one-shot-v1"
 
 
-def test_grok_build_invocation_auth_env_sets_cached_token_and_scrubs_xai_keys(
-    tmp_path, monkeypatch
-):
+def test_grok_build_invocation_auth_env_sets_cached_token_and_scrubs_xai_keys(tmp_path, monkeypatch):
     _shadow_env(monkeypatch)
     _stub_binary(monkeypatch, tmp_path)
     _stub_grok(monkeypatch, tmp_path)
     adapter = AcpxGrokShadowAdapter()
+    credentials = {
+        "XAI_API_KEY": "xai-fixture-credential",
+        "GROK_API_KEY": "sk-fixture-credential",
+        "ACPX_AUTH_XAI_API_KEY": "xai-fixture-acpx",
+        "ACPX_AUTH_API_KEY": "sk-fixture-acpx",
+    }
+    for name, value in credentials.items():
+        monkeypatch.setenv(name, value)
 
     plan = _build_grok(adapter, cwd=tmp_path)
     _assert_acpx_env_overrides(plan.env_overrides, expected={"ACPX_AUTH_CACHED_TOKEN": "1"})
@@ -2181,10 +2188,11 @@ def test_grok_build_invocation_auth_env_sets_cached_token_and_scrubs_xai_keys(
     assert "GROK_API_KEY" in plan.env_unsets
     assert "ACPX_AUTH_XAI_API_KEY" in plan.env_unsets
     assert "ACPX_AUTH_API_KEY" in plan.env_unsets
-    # Never forward credentials into argv, stdin, or metadata.
-    for blob in (plan.cmd, [plan.stdin_payload], list(plan.metadata.values())):
+    # Never forward credentials, including payloads embedded in other text.
+    for blob in (plan.cmd, [plan.stdin_payload], list(plan.metadata.values()), list(plan.env_overrides.values())):
         serialized = " ".join(str(x) for x in blob)
-        assert "sk-" not in serialized
+        assert all(value not in serialized for value in credentials.values())
+        assert re.search(r"\bsk-[A-Za-z0-9_-]+", serialized) is None
         assert "xai-" not in serialized.lower() or "xai_api_key" not in serialized.lower()
 
 

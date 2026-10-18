@@ -2721,6 +2721,15 @@ def _cursor_model_state(
     return state
 
 
+def _agy_model_state(
+    *, agent: str, model: str | None, identity: Any, task_id: str, run_nonce: str | None,
+) -> dict[str, Any]:
+    """Project the canonical invocation-bound AGY observation into task state."""
+    from scripts.agent_runtime.adapters.agy import agy_model_state
+
+    return agy_model_state(agent=agent, model=model, identity=identity, task_id=task_id, run_nonce=run_nonce)
+
+
 def _deepseek_model_state(*, agent: str, model: str | None, cache_path: Path | None = None) -> dict[str, Any]:
     """Attest a DeepSeek route from its versioned pin or cached alias name."""
     if agent != "deepseek":
@@ -6446,6 +6455,7 @@ def _worktree_diff_output(worktree: Path, diff_args: Sequence[str], *, git_optio
 # file (:func:`_append_diagnostics`).
 TYPED_CAUSE_CODES = frozenset(
     {
+        "agy_model_identity_unverified",
         # Reading a Kimi worker's changes for the content check.
         "merge_base_unresolved",
         "temp_index_failed",
@@ -10873,7 +10883,9 @@ def _emit_terminal_dispatch_event(
         usage_record = getattr(result, "usage_record", None)
         tokens = usage_record.get("tokens") if isinstance(usage_record, dict) else None
         substitution = final_state.get("substitution")
-        if substitution is None and isinstance(usage_record, dict):
+        if substitution is None and isinstance(usage_record, dict) and not (
+            agent == "agy" and "identity_matches_request" in final_state
+        ):
             substitution = usage_record.get("substitution")
         model = final_state.get("model")
         cost = compute_cost(
@@ -11074,6 +11086,17 @@ def _run_worker(
         state.setdefault("model", start_telemetry.model)
         state.setdefault("effort", start_telemetry.effort)
         state.setdefault("cli_version", start_telemetry.cli_version)
+    agy_requested_model = model
+    if agent == "agy":
+        from scripts.agent_runtime.adapters.agy import AgyAdapter
+
+        agy_requested_model = model or state.get("model") or AgyAdapter.default_model
+        agy_start_state = _agy_model_state(
+            agent=agent, model=agy_requested_model, identity=None, task_id=task_id, run_nonce=effective_nonce,
+        )
+        state.update(agy_start_state)
+        if agy_start_state:
+            state["substitution"] = None
     _write_state_atomic(state_path, state)
 
     cwd = Path(cwd_str)
@@ -11117,6 +11140,7 @@ def _run_worker(
     failure_cause: str | None = None
     timed_out = False
     result = None
+    runtime_identity = None
     substitution: dict[str, Any] | None = None
     runtime_tmp_reap: dict[str, Any] | None = None
 
@@ -11190,6 +11214,9 @@ def _run_worker(
             stdout_silence_timeout = silence_timeout if silence_timeout > 0 else None
             initial_probe = initial_response_timeout if initial_response_timeout > 0 else None
             tool_config: dict[str, Any] = {}
+            if agent == "agy" and "claude" in (agy_requested_model or "").casefold():
+                tool_config.update(run_nonce=effective_nonce, owned_paths=state.get("owned_paths") or [])
+                tool_config["risk"] = state.get("review_risk")
             if state.get("mechanical_task"):
                 tool_config["mechanical_task"] = state["mechanical_task"]
             if agent == "claude" and CLAUDE_ACCOUNT_KEY in state:
@@ -11359,6 +11386,7 @@ def _run_worker(
                 initial_response_timeout=initial_probe,
                 effort=effort,
             )
+            runtime_identity = getattr(result, "model_identity", None)
             ok_outcome = result.ok
             response = result.response
             stderr_excerpt = result.stderr_excerpt
@@ -11370,6 +11398,7 @@ def _run_worker(
             substitution = getattr(result, "substitution", None)
             agy_telemetry = getattr(result, "agy_telemetry", agy_telemetry)
         except KeyboardInterrupt as exc:
+            runtime_identity = getattr(exc, "model_identity", None)
             # Raised by our SIGTERM handler (or by Ctrl+C in manual runs).
             # The runtime's finally block has already killed the CLI
             # subprocess and stopped the watchdog by the time we catch
@@ -11378,11 +11407,13 @@ def _run_worker(
             stderr_excerpt = f"cancelled via SIGTERM or Ctrl+C: {exc}"[:500]
             returncode_reason = "worker interrupted before a terminal subprocess returncode was available"
         except RateLimitedError as exc:
+            runtime_identity = getattr(exc, "model_identity", None)
             agy_telemetry = getattr(exc, "agy_telemetry", None) or agy_telemetry
             rate_limited = True
             stderr_excerpt = str(exc)[:500]
             returncode_reason = "runtime rejected the dispatch before a terminal subprocess returncode was available"
         except AgentStalledError as exc:
+            runtime_identity = getattr(exc, "model_identity", None)
             agy_telemetry = getattr(exc, "agy_telemetry", None) or agy_telemetry
             timed_out = True
             substitution = getattr(exc, "substitution", None)
@@ -11403,6 +11434,7 @@ def _run_worker(
                 )[:500]
             returncode_reason = "runtime timeout raised before a terminal subprocess returncode was available"
         except AgentTimeoutError as exc:
+            runtime_identity = getattr(exc, "model_identity", None)
             agy_telemetry = getattr(exc, "agy_telemetry", None) or agy_telemetry
             substitution = getattr(exc, "substitution", None)
             stderr_excerpt = (
@@ -11412,16 +11444,19 @@ def _run_worker(
             )[:500]
             returncode_reason = "runtime timeout raised before a terminal subprocess returncode was available"
         except AgentRuntimeError as exc:
+            runtime_identity = getattr(exc, "model_identity", None)
             agy_telemetry = getattr(exc, "agy_telemetry", None) or agy_telemetry
             worker_exception = _exception_cause("worker_runtime_error", exc)
             stderr_excerpt = f"runtime error: {type(exc).__name__}: {exc}"[:500]
             returncode_reason = "runtime exception did not expose a terminal subprocess returncode"
         except ClaudeAccountRefused as exc:
+            runtime_identity = getattr(exc, "model_identity", None)
             pre_spawn_failure = True
             failure_cause = exc.code
             stderr_excerpt = f"CLAUDE_ACCOUNT_REFUSED: {exc.code}"
             returncode_reason = "the task record's Claude account label was refused; provider not started"
         except bounded_advisory.AdvisoryRefused as exc:
+            runtime_identity = getattr(exc, "model_identity", None)
             pre_spawn_failure = True
             advisory_handoff_refusal = exc.code
             failure_cause = exc.code
@@ -11430,12 +11465,14 @@ def _run_worker(
                 "bounded model failed its advisory admission at the provider handoff; provider not started"
             )
         except ValueError as exc:
+            runtime_identity = getattr(exc, "model_identity", None)
             agy_telemetry = getattr(exc, "agy_telemetry", None) or agy_telemetry
             pre_spawn_failure = True
             worker_exception = _exception_cause("adapter_rejected", exc)
             stderr_excerpt = f"adapter rejected before spawn: {exc}"[:500]
             returncode_reason = "adapter rejected the dispatch before a process was spawned"
         except Exception as exc:
+            runtime_identity = getattr(exc, "model_identity", None)
             # Last-ditch: don't crash the worker on an unexpected bug — we
             # need to update the state file or the parent will see us as
             # "crashed" forever.
@@ -11470,6 +11507,13 @@ def _run_worker(
                     )
                     final_state.update(runtime_tmp_reap)
 
+        agy_model_state = _agy_model_state(
+            agent=agent, model=agy_requested_model, identity=runtime_identity, task_id=task_id, run_nonce=effective_nonce,
+        )
+        if ok_outcome and agy_model_state and not agy_model_state["identity_matches_request"]:
+            ok_outcome = False
+            failure_cause = "agy_model_identity_unverified"
+            stderr_excerpt = "agy_model_identity_unverified"
         duration_s = time.monotonic() - start
         final_status = _classify_final_status(
             cancelled=cancelled,
@@ -11502,6 +11546,7 @@ def _run_worker(
             returncode_reason = f"worker subprocess terminated by {signal_name} (returncode {returncode})"
 
         final_state = _read_state(state_path) or {}
+        final_state.update(agy_model_state)
         # #9275: gate evidence is this run's measurement, never an earlier record's.
         for gate_key in _ADVISORY_GATE_KEYS:
             final_state.pop(gate_key, None)
@@ -12107,7 +12152,21 @@ def _run_worker(
     if substitution is None and isinstance(usage_record, dict):
         substitution = usage_record.get("substitution")
     runtime_substitution = substitution
-    substitution = _merge_agent_substitution(final_state.get("substitution"), runtime_substitution)
+    if agy_model_state:
+        # Reproject from the same bound observation. Neither Result/usage fallback
+        # nor a prior task's nested attribution may resurrect rejected evidence.
+        runtime_substitution = {
+            "requested_provider": "agy",
+            "requested_model": agy_requested_model,
+            "actual_provider": "agy",
+            "actual_model": agy_model_state["resolved_model"],
+            "actual_model_known": True,
+            "source": agy_model_state["resolved_model_source"],
+            "substituted": True,
+        } if agy_model_state["resolved_model_known"] and agy_model_state["model_identity"]["substituted"] else None
+        substitution = runtime_substitution
+    else:
+        substitution = _merge_agent_substitution(final_state.get("substitution"), runtime_substitution)
     cursor_model_state = _cursor_model_state(
         agent=agent,
         result=result,
@@ -12122,6 +12181,7 @@ def _run_worker(
             **core_terminal_state,
             "model": getattr(result, "model", final_state.get("model")),
             **cursor_model_state,
+            **({"model": agy_requested_model} if agy_model_state else {}),
             **_deepseek_model_state(
                 agent=agent,
                 model=getattr(result, "model", final_state.get("model")),
@@ -17900,6 +17960,16 @@ def _resolve_substitution_model(target_agent: str, explicit_model: str | None) -
     when the explicit model is rejected, or neither a mapped model nor the
     default is valid for the substitute.
     """
+    # These pins require their original AGY invocation and observed identity;
+    # a substitute lane's default cannot stand in for either variant (#10420).
+    from scripts.agent_runtime.adapters.agy import AgyAdapter
+
+    claude_pin = None
+    if explicit_model and "claude" in explicit_model.casefold():
+        with contextlib.suppress(ValueError):
+            claude_pin = AgyAdapter.resolve_model_slug(explicit_model)
+    if claude_pin in AgyAdapter.claude_model_slugs:
+        raise BudgetGuardRefuseError("ROUTING REFUSED: pinned AGY Claude identity cannot use a substitute route")
     table = _load_budget_substitution_table().get(target_agent, {})
     mapped = table.get(explicit_model) if explicit_model else None
     default = _lane_default_model(target_agent)

@@ -727,13 +727,28 @@ def process_for_agy(
 
     if not stdout_only:
         print(f"\n✅ Agy finished ({len(response)} chars)")
+    from scripts.agent_runtime.adapters.agy import agy_model_state
+
+    identity_state = agy_model_state(
+        agent="agy", model=model, identity=result.model_identity,
+        task_id=msg["task_id"], run_nonce=tool_config.get("run_nonce"),
+    )
     provenance_data, actual_model = response_provenance(
         msg,
-        actual_model=getattr(result, "model", None) or model,
+        actual_model=identity_state["resolved_model"] if identity_state else getattr(result, "model", None) or model,
         harness="agy",
         effort_applied=effort_applied,
         effort_reason=effort_reason,
     )
+    if identity_state:
+        provenance = json.loads(provenance_data)
+        provenance.update(
+            actual_model=identity_state["resolved_model"] if identity_state["resolved_model_known"] else None,
+            actual_model_known=identity_state["resolved_model_known"],
+            actual_family=identity_state["resolved_model_family"],
+            model_identity=identity_state["model_identity"],
+        )
+        provenance_data = json.dumps(provenance, sort_keys=True)
     reply_id = send_message(
         content=response,
         task_id=msg["task_id"],
@@ -813,6 +828,17 @@ def _handle_agy_error(msg: dict, message_id: int, reason: str) -> None:
     from ._ask_contract import failed_response_provenance
 
     data, from_model = failed_response_provenance(msg, bridge_model="agy-bridge-error", harness="agy")
+    from scripts.agent_runtime.adapters.agy import agy_model_state
+
+    identity_state = agy_model_state(
+        agent="agy", model=_extract_target_model(msg) or _default_agy_model(),
+        identity=None, task_id=msg["task_id"], run_nonce=None,
+    )
+    if identity_state:
+        provenance = json.loads(data)
+        provenance.update(from_model="unattested-harness", actual_model=None,
+                          actual_model_known=False, actual_family=None, model_identity=None)
+        data, from_model = json.dumps(provenance, sort_keys=True), "unattested-harness"
     send_message(
         content=f"[Agy error] {reason}",
         task_id=msg["task_id"],

@@ -811,3 +811,14 @@ def test_the_advisory_committed_diff_error_names_the_exception_class_only(tmp_pa
 
     assert output is None
     assert error == "the worker's committed diff could not be read (OSError)"
+
+
+def test_agy_unverified_identity_is_a_closed_public_cause():
+    task_id = "agy-unverified-public"
+    delegate._write_state_atomic(delegate._state_path(task_id), {"task_id": task_id})
+    cause = delegate._worker_last_error(
+        task_id, stderr_excerpt=HOSTILE, failure_cause="agy_model_identity_unverified",
+        final_status="failed", returncode=0, runtime_failure_code=None, worker_exception=None,
+    )
+    assert cause == "agy_model_identity_unverified"
+    assert_no_host_details(cause)

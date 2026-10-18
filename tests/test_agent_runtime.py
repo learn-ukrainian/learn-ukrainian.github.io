@@ -4916,3 +4916,185 @@ def test_agy_usage_carries_bounded_optional_model_identity(tmp_path, entrypoint,
     else:
         assert "model_identity" not in record
     assert "substitution" not in record
+
+
+@pytest.mark.parametrize("model", ["claude-sonnet-5-5-high", "claude-opus-5-5-high"])
+@pytest.mark.parametrize("exit_kind", ["complete", "cancel", "exception"])
+def test_agy_claude_public_runtime_preserves_provider_init_custody(
+    tmp_path, monkeypatch, write_guard_repo, model, exit_kind,
+):
+    import hashlib
+    from dataclasses import asdict
+
+    from agent_runtime import runner
+    from scripts.agent_runtime.adapters.agy import AgyRuntimeIdentity
+    from tests.agent_runtime.adapters.test_agy_claude_routes import mock_agy_provider
+
+    provider_dir = tmp_path / "provider"
+    provider_dir.mkdir()
+    init = {"event": "init", "init": {"model": model, "conversation_id": "7cd3ba85-817f-4a03-8223-1ff39ca42419"}}
+    terminal = {"event": "result", "result": {
+        "status": "SUCCESS", "response": "READY", "conversation_id": "7cd3ba85-817f-4a03-8223-1ff39ca42419",
+    }}
+    stdout = "\n".join(map(json.dumps, [init, terminal])) + "\n"
+    launches, _, binary = mock_agy_provider(monkeypatch, provider_dir, runner, stdout=stdout, exit_kind=exit_kind)
+    kwargs = dict(
+        mode="workspace-write", cwd=write_guard_repo.dispatch_wt, model=model,
+        task_id="runtime-10420", tool_config={"run_nonce": "current-run", "owned_paths": ["tracked.txt"]},
+    )
+    if exit_kind == "complete":
+        result = invoke("agy", "Implement.", **kwargs)
+        assert result.ok is True
+        assert result.response == "READY"
+        serialized = json.loads(json.dumps(asdict(result)))
+        assert serialized["model_identity"]["actual_model"] == model
+        identity = result.model_identity
+        # Usage serialization and caller Result keep the same custody, not a reconstructed label.
+        assert identity is result.usage_record["model_identity"]
+        assert json.loads(json.dumps(result.usage_record))["model_identity"]["actual_model"] == model
+    else:
+        with pytest.raises(KeyboardInterrupt if exit_kind == "cancel" else RuntimeError) as caught:
+            invoke("agy", "Implement.", **kwargs)
+        identity = caught.value.model_identity
+    assert len(launches) == 1
+    assert isinstance(identity, AgyRuntimeIdentity)
+    assert identity.bound_to(task_id="runtime-10420", run_nonce="current-run", requested_model=model)
+    assert identity["actual_model"] == model
+    assert identity["actual_model_known"] is True
+    assert identity["provenance"]["cli_sha256"] == hashlib.sha256(binary.read_bytes()).hexdigest()
+    assert identity["provenance"]["init_events"][0]["provider_session_id"] == "7cd3ba85-817f-4a03-8223-1ff39ca42419"
+    assert runner._AGY_OBSERVED_IDENTITY.get() is None
+
+
+@pytest.mark.parametrize("missing", ["version", "artifact", "init"])
+def test_agy_runtime_missing_origin_evidence_never_acquires_custody(tmp_path, monkeypatch, missing):
+    from agent_runtime import runner
+    from tests.agent_runtime.adapters.test_agy_claude_routes import mock_agy_provider
+
+    model = "claude-opus-5-5-high"
+    stdout = json.dumps({"event": "init", "model": model}) + "\n" if missing != "init" else ""
+    launches, _, binary = mock_agy_provider(
+        monkeypatch, tmp_path, runner, stdout=stdout, exit_kind="cancel",
+        version="unknown" if missing == "version" else "1.4.0",
+    )
+    if missing == "artifact":
+        binary.unlink()  # A fake spawn must not turn a missing pinned artifact into provenance.
+    with pytest.raises(KeyboardInterrupt) as caught:
+        invoke("agy", "Implement.", mode="workspace-write", cwd=tmp_path, model=model,
+               task_id="missing-origin", tool_config={"run_nonce": "current-run"})
+    assert len(launches) == 1
+    assert caught.value.model_identity is None
+    assert runner._AGY_OBSERVED_IDENTITY.get() is None
+
+
+def test_agy_init_custody_survives_cleanup_exception(tmp_path, monkeypatch):
+    from agent_runtime import runner
+    from tests.agent_runtime.adapters.test_agy_claude_routes import mock_agy_provider
+
+    model = "claude-opus-5-5-high"
+    stdout = "\n".join(map(json.dumps, [
+        {"event": "init", "model": model},
+        {"event": "result", "result": {"status": "SUCCESS", "response": "READY",
+                                       "conversation_id": "7cd3ba85-817f-4a03-8223-1ff39ca42419"}},
+    ]))
+    launches, _, _ = mock_agy_provider(monkeypatch, tmp_path, runner, stdout=stdout)
+
+    def cleanup():
+        raise RuntimeError("synthetic cleanup failure")
+
+    monkeypatch.setattr(runner, "prepare_trail_isolation", lambda **k: SimpleNamespace(
+        cleanup=cleanup, tool_config={"run_nonce": "cleanup-run"},
+    ))
+    with pytest.raises(RuntimeError, match="synthetic cleanup failure") as caught:
+        invoke("agy", "Implement.", mode="workspace-write", cwd=tmp_path, model=model, task_id="cleanup-10420")
+    assert len(launches) == 1
+    assert caught.value.model_identity.bound_to(task_id="cleanup-10420", run_nonce="cleanup-run", requested_model=model)
+    assert runner._AGY_OBSERVED_IDENTITY.get() is None
+
+
+@pytest.mark.parametrize("model", ["claude-sonnet-5-5-high", "claude-opus-5-5-high"])
+@pytest.mark.parametrize("binding", ["none", "task-only", "nonce-only", "bound"])
+def test_agy_direct_runtime_requires_real_context_for_every_projection(tmp_path, monkeypatch, model, binding):
+    from agent_runtime import runner
+    from tests.agent_runtime.adapters.test_agy_claude_routes import consistency_stream, mock_agy_provider
+
+    launches, _, _ = mock_agy_provider(monkeypatch, tmp_path, runner, stdout=consistency_stream(model, "exact"))
+    records, captures = [], []
+    monkeypatch.setattr(runner, "write_record", records.append)
+    monkeypatch.setattr(runner.FleetCapture, "start", lambda **kwargs: SimpleNamespace(
+        finish=lambda **fields: captures.append(fields),
+    ))
+    result = runner.invoke("agy", "Implement.", model=model, mode="workspace-write", cwd=tmp_path,
+                           task_id="direct-context" if binding in {"task-only", "bound"} else None,
+                           tool_config={"run_nonce": "direct-run"} if binding in {"nonce-only", "bound"} else None)
+    assert len(launches) == 1
+    assert result.ok is True  # Runtime execution alone never certifies a dispatch.
+    assert result.model == model
+    assert bool(result.model_identity and result.model_identity["actual_model_known"]) is (binding == "bound")
+    assert bool(records[0].get("model_identity")) is (binding == "bound")
+    assert captures[0]["actual_model"] == (model if binding == "bound" else "")
+    assert captures[0]["route_metadata"]["actual_model_known"] == ("true" if binding == "bound" else "false")
+    assert runner._AGY_OBSERVED_IDENTITY.get() is None
+
+
+def test_agy_observer_revocation_clears_prior_context(tmp_path):
+    from agent_runtime import runner
+    from scripts.agent_runtime.adapters.base import InvocationPlan
+
+    model = "claude-opus-5-5-high"
+    kwargs = dict(plan=InvocationPlan(cmd=["fixture", "--model", model], cwd=tmp_path), task_id="same-task",
+                  run_nonce="same-run", invocation_id="e" * 32, cli_sha256="f" * 64, cli_version="fixture")
+    assert runner._observe_agy_identity(stdout=json.dumps({"event": "init", "model": model}), **kwargs) is not None
+    assert runner._observe_agy_identity(stdout="", **kwargs) is None
+    assert runner._AGY_OBSERVED_IDENTITY.get() is None
+
+
+@pytest.mark.parametrize("pin", ["claude-sonnet-5-5-high", "claude-opus-5-5-high"])
+@pytest.mark.parametrize("case,known", [("exact", True), ("terminal-session", False)])
+def test_agy_watchdog_cleanup_failure_retains_only_valid_observation(tmp_path, monkeypatch, pin, case, known):
+    from agent_runtime import runner
+    from tests.agent_runtime.adapters.test_agy_claude_routes import consistency_stream, mock_agy_provider
+
+    launches, _, _ = mock_agy_provider(monkeypatch, tmp_path, runner, stdout=consistency_stream(pin, case))
+    captures = []
+    monkeypatch.setattr(runner.FleetCapture, "start", lambda **kwargs: SimpleNamespace(
+        finish=lambda **fields: captures.append(fields),
+    ))
+
+    def stop(*args, **kwargs):
+        raise RuntimeError("synthetic watchdog cleanup failure")
+
+    monkeypatch.setattr(runner, "stop_watchdog", stop)
+    with pytest.raises(RuntimeError, match="synthetic watchdog cleanup failure") as caught:
+        runner.invoke("agy", "Implement.", model=pin, mode="workspace-write", cwd=tmp_path,
+                      task_id="watchdog-cleanup", tool_config={"run_nonce": "watchdog-run"})
+    assert len(launches) == 1
+    assert bool(caught.value.model_identity and caught.value.model_identity["actual_model_known"]) is known
+    assert len(captures) == 1
+    assert captures[0]["actual_model"] == (pin if known else "")
+    assert captures[0]["route_metadata"]["actual_model_known"] == str(known).lower()
+    assert captures[0]["outcome"] == "runner_exception"
+    assert runner._AGY_OBSERVED_IDENTITY.get() is None
+
+
+@pytest.mark.parametrize("pin", ["claude-sonnet-5-5-high", "claude-opus-5-5-high"])
+def test_agy_second_invocation_exception_cannot_reuse_prior_identity(tmp_path, monkeypatch, pin):
+    from agent_runtime import runner
+    from tests.agent_runtime.adapters.test_agy_claude_routes import consistency_stream, mock_agy_provider
+
+    kwargs = dict(model=pin, mode="workspace-write", cwd=tmp_path,
+                  task_id="first-invocation", tool_config={"run_nonce": "first-run"})
+    first = tmp_path / "first"
+    first.mkdir()
+    mock_agy_provider(monkeypatch, first, runner, stdout=consistency_stream(pin, "exact"))
+    result = runner.invoke("agy", "Implement.", **kwargs)
+    assert result.ok is True
+    assert result.model_identity["actual_model"] == pin
+    second = tmp_path / "second"
+    second.mkdir()
+    mock_agy_provider(monkeypatch, second, runner, stdout="", exit_kind="exception")
+    kwargs.update(task_id="second-invocation", tool_config={"run_nonce": "second-run"})
+    with pytest.raises(RuntimeError, match="synthetic runtime failure") as caught:
+        runner.invoke("agy", "Implement.", **kwargs)
+    assert caught.value.model_identity is None
+    assert runner._AGY_OBSERVED_IDENTITY.get() is None
