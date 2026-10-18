@@ -22,7 +22,7 @@ STATES = ("verified-complete", "missing", "corrupt", "quarantined", "genuinely_a
 STAGES = ("acquisition", "raw_custody", "parsing", "admission")
 VERSION = "source-completeness.v1"
 TEXT = {"type": "string", "minLength": 1, "pattern": r"\S"}
-DIGEST = {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+DIGEST = {"type": "string", "minLength": 64, "maxLength": 64, "pattern": "^[0-9a-f]{64}$"}
 EvidenceValidator = validators.extend(
     Draft202012Validator,
     type_checker=Draft202012Validator.TYPE_CHECKER.redefine("integer", lambda _checker, value: type(value) is int),

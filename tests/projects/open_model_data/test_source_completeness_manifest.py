@@ -1015,3 +1015,20 @@ def test_legacy_obligation_requires_a_json_integer(fixture):
     assert result.returncode == 3
     assert "expected_obligation: type failed" in result.stderr
     assert not (fixture.root / "output").exists()
+
+
+def test_cli_rejects_trailing_newline_in_unacquired_unit_digest(fixture):
+    row = fixture.docs["source_manifest"]["ranges"][0]
+    unit = row["units"][0]
+    unit["sha256"] += "\n"
+    fixture.source_index(0)
+    for record in fixture.docs["stage_evidence"]["records"]:
+        if record["range_id"] == row["range_id"] and record["identity"] == unit["identity"]:
+            record.update(
+                source_unit_sha256=unit["sha256"], state="missing", evidence=[], reason="not yet acquired"
+            )
+    fixture.save()
+    result = fixture.cli()
+    assert result.returncode == 3, result.stdout + result.stderr
+    assert result.stderr.startswith("INVALID_EVIDENCE:")
+    assert not (fixture.root / "output").exists()
