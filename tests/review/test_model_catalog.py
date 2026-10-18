@@ -21,7 +21,12 @@ from unittest.mock import patch
 import pytest
 import yaml
 
-from scripts.review.model_catalog import load_model_catalog
+from scripts.review.model_catalog import (
+    ModelCatalogError,
+    _require_routable_model,
+    load_model_catalog,
+    require_execution_model,
+)
 from scripts.review.role_resolution import expanded_legacy_view
 
 FIXTURE = Path(__file__).resolve().parents[1] / "fixtures/routing_baseline"
@@ -1403,3 +1408,22 @@ def test_extended_capture_denominator_and_current_contract():
     assert len(contract["rows"]) == len(catalog["models"]) * 9
     assert {row["outcome"] for row in contract["rows"]} == {"approved", "missing_approval", "operator_disposition"}
     assert all(not row["self_approval_counts"] for row in contract["rows"])
+
+
+def test_deepseek_flash_execution_requires_opencode():
+    catalog = load_model_catalog()
+    assert require_execution_model("deepseek-v4.1-flash", transport="opencode", catalog=catalog) == "deepseek-v4.1-flash"
+    with pytest.raises(ModelCatalogError, match="requires the opencode transport"):
+        require_execution_model("deepseek-v4.1-flash", transport="hermes", catalog=catalog)
+
+
+@pytest.mark.parametrize("model_id", ["deepseek-v4-pro", "deepseek-v4-flash", "deepseek-other"])
+def test_other_deepseek_execution_models_stay_refused(model_id):
+    catalog = deepcopy(load_model_catalog())
+    # Even an active new catalog entry cannot widen the operator's Flash-only order.
+    if model_id == "deepseek-other":
+        catalog["models"][model_id] = deepcopy(catalog["models"]["deepseek-v4.1-flash"])
+    with pytest.raises(ModelCatalogError, match=r"retired|only deepseek-v4\.1-flash"):
+        require_execution_model(model_id, transport="opencode", catalog=catalog)
+    with pytest.raises(ModelCatalogError, match=r"retired|only deepseek-v4\.1-flash"):
+        _require_routable_model(catalog["models"], model_id, "test execution reference")

@@ -5588,6 +5588,13 @@ entries:
   kind: documentation
   reason: Explanatory model identity in an AST docstring; does not select a runtime model.
 - path: scripts/review/model_catalog.py
+  scope: _require_routable_model
+  context: expression
+  id: deepseek-v4.1-flash
+  count: 2
+  kind: adapter_identity
+  reason: 'Operator order cto-deepseek-unban (#10959) permits only this Flash identity for coding; exact comparison and refusal text.'
+- path: scripts/review/model_catalog.py
   scope: apply_cursor_model_pins
   context: expression
   id: grok-4.7

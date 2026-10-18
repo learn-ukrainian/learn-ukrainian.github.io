@@ -45,8 +45,10 @@ List the modules to review and any skipped modules.
 
 ## Dispatch Subagents (Max 4 Parallel)
 
-DeepSeek is excluded from dispatch and review; `ask-deepseek` is consult-only
-for non-language work and never a batch-review route.
+Latest DeepSeek V4.1 Flash coding through opencode is allowed under `rules/model-assignment.md`.
+Review-of-record and Ukrainian work need measured evidence first. V4 Pro and older are retired.
+Never send private-repository content or secrets. `ask-deepseek` remains consult-only for
+non-language work and never a batch-review route.
 
 > **Reviewer-seat economics guard** (`rules/model-assignment.md`): each `Agent`-tool subagent reloads the full
 > project (~2–3M tokens) for its verdict, so it is ~50–150× the cost of an inline review. For a **single

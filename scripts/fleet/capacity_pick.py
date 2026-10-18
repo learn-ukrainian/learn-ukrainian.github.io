@@ -105,11 +105,6 @@ _WRITE_SUCCESS_STATUSES = frozenset({"done"})
 _WRITE_NON_ATTEMPT_STATUSES = frozenset({"dry_run", "cancelled", "running", "spawning"})
 # Task-record agent names that are another lane's dispatch alias.
 _RECORD_AGENT_LANE = {"grok-build": "grok"}
-# Lanes that stay visible in the table but are never a pick. DeepSeek is a
-# prepaid API lane; model-assignment.md excludes it from dispatch and review.
-_EXCLUDED_DISPATCH_LANES: dict[str, str] = {
-    "deepseek": "prepaid API lane; excluded from dispatch and review",
-}
 _MONITOR_DEFAULT = "http://127.0.0.1:8765"
 # delegate.py's task records, anchored to the primary checkout.
 
@@ -357,14 +352,11 @@ def build_lane_rows(
         pace_deficit = facts.uncovered is True
         # The reserve needs the owner's verified capacity (#9740), so it only ranks Codex first and
         # never lifts an AVOID.
-        excluded = _EXCLUDED_DISPATCH_LANES.get(lane)
-        avoid = bool(excluded) or (
-            (bool(retired_target) or facts.capacity == credit_lane.CAPACITY_AVOID) and not credit_relaxes
-        )
+        avoid = (bool(retired_target) or facts.capacity == credit_lane.CAPACITY_AVOID) and not credit_relaxes
         if avoid:
             capacity = {
                 "state": credit_lane.CAPACITY_AVOID,
-                "reason": excluded or (f"retired→{retired_target}" if retired_target else facts.capacity_reason),
+                "reason": f"retired→{retired_target}" if retired_target else facts.capacity_reason,
             }
         elif retired_target is None and facts.capacity == credit_lane.CAPACITY_AVOID and credit_relaxes:
             capacity = {"state": credit_lane.CAPACITY_VERIFIED, "reason": facts.capacity_reason}
@@ -409,8 +401,6 @@ def build_lane_rows(
                 notes.append("NEED_LOGIN")
             if retired_target:
                 notes.append(f"retired→{retired_target}")
-            if excluded:
-                notes.append(excluded)
             if pace_deficit:
                 notes.append("deficit")
             if status in _AVOID_STATUSES:
@@ -888,7 +878,7 @@ def main(argv: list[str] | None = None) -> int:
             "verified row, never a cooler seat, never --strict success. Unknown load prints `—` (JSON null).\n"
             "Pick order: heat first; then plan headroom in 10-point bands, fewest in flight, static lane\n"
             "rank (Codex, Claude, Cursor first). A lane with >=3 write dispatches in 7 days and <60% done drops one band\n"
-            "(JSON `write_success`). DeepSeek (prepaid API) is shown but never picked.\n"
+            "(JSON `write_success`). DeepSeek (prepaid API) is eligible for Flash coding through opencode.\n"
             "Exit codes: 0 success; 2 invalid arguments or no admissible lane with --strict.\n"
             "Related: /api/state/routing-budget?transport=acp; scripts/orchestration/dispatch_admission.py;\n"
             "issues #7812, #8645, #9518, #9615, #9740, #10776."

@@ -57,7 +57,7 @@ the independent review gate.
 | 💙 **Синя команда** (Blue) | Claude | Architect, reviewer, quality gate |
 | 💛 **Жовта команда** (Gold) | Cursor / track writers | Content builder, implementer |
 | 🟢 **Зелена команда** (Green) | Codex | Main orchestrator, adversarial reviewer, bug finder, code improver |
-| ⚙️ **Code review lane** | Qualified outside-family reviewer from `closeout_cli resolve-reviewer` | DeepSeek is excluded from dispatch and review; `ask-deepseek` is consult-only for non-language work |
+| ⚙️ **Code review lane** | Qualified outside-family reviewer from `closeout_cli resolve-reviewer` | DeepSeek V4.1 Flash coding through opencode is allowed; review-of-record and Ukrainian work need measured evidence first; `ask-deepseek` is consult-only for non-language work |
 
 Gemini/AGY handles Ukrainian-language work and review under the LANGUAGE-LANES
 rule. Code review follows `model-assignment.md` Code review row. Historical

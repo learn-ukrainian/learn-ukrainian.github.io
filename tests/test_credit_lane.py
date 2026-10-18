@@ -926,12 +926,12 @@ def _scenario_info(scenario: str) -> dict:
 
 
 def _origin_main_row(lane: str, scenario: str) -> dict:
-    """The row origin/main's ``build_lane_rows`` produced for this lane and scenario (captured 2026-10-02)."""
+    """Captured 2026-10-02 rows, with the #10959 DeepSeek coding-policy update."""
     healthy = scenario == "plan_healthy"
     retired = {"gemini": "agy", "glm": "cursor"}.get(lane)
     if lane == "deepseek":
-        # Prepaid API lane: excluded from dispatch picks since the headroom ranking change.
-        status, avoid, notes = "cool", True, "AVOID; prepaid API lane; excluded from dispatch and review"
+        # #10959: fresh prepaid funding supplies the status independently of plan scenarios.
+        status, avoid, notes = "cool", False, "idle"
     elif healthy:
         status, avoid = "cool", retired is not None
         notes = f"AVOID; retired→{retired}" if retired else "idle"

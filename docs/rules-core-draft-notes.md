@@ -140,11 +140,12 @@ E13, E19, E23, Eh02, Eh10, Eo03, Ed19.
 
 ## Policy applied in round 3
 
-- **DeepSeek.** The core states "No DeepSeek for any dispatch or review." The source rules that still
-  route DeepSeek are stale, and Phase C removes them. They are the DeepSeek seat, review-ladder,
-  second-dissent and worker entries in `model-assignment.md` (M18, M24; the M17 review list) and, in
-  `fleet-driver-routing.md`, the DeepSeek sentence in the Cursor paragraph (R06's source) and the DeepSeek
-  V4.1 Flash row. The catalog entries and adapter code remain; only routing is stale.
+- **DeepSeek (operator order cto-deepseek-unban, #10959).** Only the latest V4.1 Flash
+  (`deepseek-v4.1-flash`) may code through opencode on the direct DeepSeek API or OpenRouter
+  with a named US provider allow-list. Never send private-repository content or secrets.
+  V4 Pro and older are retired. Review-of-record and Ukrainian work need measured evidence first.
+  `scripts/ai_agent_bridge/routing_guard.py` still refuses `openrouter/deepseek` until a named
+  US provider allow-list exists; this order leaves the guard unchanged.
 - **Kimi.** The core limits Kimi to web, UI and backend coding. Kimi does no Ukrainian-language content,
   reviews, consults, ACP discussions, design sign-off or rules. This was an approved policy change on
   2026-09-29 (driver-attested). The Kimi admission PR updated `operator-expectations.md` (item 12),
@@ -163,7 +164,7 @@ E13, E19, E23, Eh02, Eh10, Eo03, Ed19.
 | S03 | A pushed deliverable is the worker's milestone, not DoD | DoD in `operator-expectations.md` and `drive-epic` |
 | S06 | Primary checkout never holds feature work | Worktree guard in `scripts/delegate.py` |
 | S11, S18 | Native AGY admits low/medium risk code reviews; high/critical, infra and security reviews exclude Gemini; the bridge refuses code review | Code-review rule in `model-assignment.md`; dispatch review qualification in `scripts/delegate.py` |
-| S12 | No DeepSeek for any dispatch or review | Policy applied in round 3 (above) |
+| S12 | Latest V4.1 Flash coding through opencode allowed; review-of-record and Ukrainian work need measured evidence first | Operator order cto-deepseek-unban (#10959), above |
 | S15 | Canaries run only inside `thread-rollover` | Rollover-only startup flow in `workflow.md` |
 | S34, S35 | CF APPROVE before opening a PR; squash enqueue, no `--auto` | Landing order in `critical-rules.md` §8 and `drive-epic` |
 | S40 | Stress: `verify_stress` plus the СУМ-20 headword | `scripts/verification/stress.py` implements `verify_stress` |
@@ -175,7 +176,7 @@ E13, E19, E23, Eh02, Eh10, Eo03, Ed19.
 | Daily driver | Sol and Opus 5.5 first, `grok-4.7` as fallback | Catalog roles: `gpt-6.1-sol` and `claude-opus-5-5` carry `orchestration`; `grok-4.7` does not |
 | drive-epic split | Load-when points at `drive-epic/references/*.md` | The skill is now a 9 KB core plus references |
 
-Stale text that Phase C must update to match: the DeepSeek routing above; `gpt-6-sol` and `gpt-6-astra` in rule prose; the S11 recommendation
+Stale text that Phase C must update to match, with DeepSeek routing superseded by #10959 above: `gpt-6-sol` and `gpt-6-astra` in rule prose; the S11 recommendation
 rows in `fleet-role-scorecard.md`; the `MEMORY.md` lines behind S32–S35.
 
 ## Needs decision (policy conflicts; the core does not pick)

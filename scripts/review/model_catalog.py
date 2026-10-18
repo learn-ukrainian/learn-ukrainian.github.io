@@ -167,8 +167,8 @@ def _require_routable_model(models: dict[str, Any], value: Any, label: str) -> s
     model = models[model_id]
     if model["lifecycle"] == "retired":
         raise ModelCatalogError(f"{label} references retired model {model_id!r}")
-    if model["family"] == "deepseek":
-        raise ModelCatalogError(f"{label}: DeepSeek is excluded from dispatch and review by core.md P2")
+    if model["family"] == "deepseek" and model_id != "deepseek-v4.1-flash":
+        raise ModelCatalogError(f"{label}: only deepseek-v4.1-flash is admitted for DeepSeek coding by core.md P2")
     return model_id
 
 
@@ -1255,7 +1255,10 @@ def require_execution_model(
     model_id = resolve_catalog_model_id(model, catalog)
     if model_id is None:
         raise ModelCatalogError(f"model {model!r} is not in the model catalog")
+    _require_routable_model(catalog["models"], model_id, "execution model")
     entry = catalog["models"][model_id]
+    if entry["family"] == "deepseek" and transport != "opencode":
+        raise ModelCatalogError("DeepSeek coding requires the opencode transport by core.md P2")
     if entry["lifecycle"] not in {"active", "fallback"}:
         raise ModelCatalogError(f"model {model!r} is not admitted for execution")
     if transport not in entry["transports"]:

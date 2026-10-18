@@ -440,23 +440,26 @@ def test_unhealthy_deepseek_account_row_is_avoid():
 
 
 def test_healthy_deepseek_account_row_unaffected():
-    """health.healthy True adds no unhealthy note; the lane stays excluded from picks."""
+    """health.healthy True preserves coding eligibility without an unhealthy note."""
     budget = _fixture_budget()
     baseline = next(r for r in capacity_pick.build_lane_rows(budget) if r["lane"] == "deepseek")
     budget["api_accounts"]["deepseek"]["health"] = {"healthy": True, "last_error": ""}
     row = next(r for r in capacity_pick.build_lane_rows(budget) if r["lane"] == "deepseek")
-    assert row["avoid"] is baseline["avoid"] is True
+    assert row["avoid"] is baseline["avoid"] is False
     assert "unhealthy:" not in row["notes"]
 
 
-def test_deepseek_prepaid_lane_is_never_a_pick():
-    """A cool, funded, healthy DeepSeek account stays visible but is AVOID and never a cooler seat."""
-    report = capacity_pick.build_report(_fixture_budget())
+def test_deepseek_prepaid_lane_is_a_coding_pick():
+    """A cool, funded, healthy DeepSeek account is eligible for coding."""
+    budget = _fixture_budget()
+    budget["api_accounts"]["deepseek"]["health"] = {"healthy": True}
+    budget["recommendation"]["primary_agent_for_code"] = "deepseek"
+    report = capacity_pick.build_report(budget)
     row = next(r for r in report["pick_order"] if r["lane"] == "deepseek")
-    assert row["pick"] == "AVOID"
-    assert "excluded from dispatch and review" in row["notes"]
-    assert row["capacity"]["state"] == credit_lane.CAPACITY_AVOID
-    assert "deepseek" not in report["cooler_lanes"]
+    assert row["pick"] != "AVOID"
+    assert row["capacity"]["state"] == credit_lane.CAPACITY_VERIFIED
+    assert "deepseek" in report["cooler_lanes"]
+    assert report["recommendation"]["primary_agent_for_code"] == "deepseek"
 
 
 def _pick_row(lane: str, status: str, remaining: float | None, in_flight: int | None, *, avoid: bool = False) -> dict:

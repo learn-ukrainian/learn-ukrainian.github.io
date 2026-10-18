@@ -963,7 +963,7 @@ def _evaluate_candidate(
     if candidate.family not in _VALID_CONCRETE_FAMILIES:
         refusal = "reviewer family unknown: a known concrete family is required"
     if candidate.family == "deepseek" or model_family == "deepseek" or candidate.route == "deepseek":
-        refusal = "DeepSeek is excluded from dispatch and review by core.md P2"
+        refusal = "DeepSeek is excluded from review-of-record by core.md P2; review-of-record needs measured evidence"
     if inputs.risk.strip().casefold() == "critical" and (model_id or "").startswith("claude-sonnet-"):
         refusal = "Sonnet is excluded from security review by core.md P2"
     if refusal:
