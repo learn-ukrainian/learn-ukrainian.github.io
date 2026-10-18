@@ -23015,7 +23015,7 @@ def test_agy_consumer_retains_honest_observer_semantics(tmp_path, model, case):
     ("actual_model", None), ("actual_model", 42), ("actual_model_known", False),
     ("actual_model_known", 1), ("actual_family", "google"), ("harness", "native_claude"),
     ("source", "requested"), ("source", "configuration"), ("source", "runtime"),
-    ("substituted", 0), ("provenance", None), ("provenance", "provider-init"),
+    ("substituted", 0), ("substituted", True), ("provenance", None), ("provenance", "provider-init"),
     ("provenance.origin", "response.prose"), ("provenance.origin", "configuration"),
     ("provenance.init_events", []), ("provenance.init_events", {}),
     ("provenance.init_events", [None]), ("provenance.init_events", [{}]),
@@ -23091,3 +23091,81 @@ def test_agy_consumer_keeps_snapshot_and_binding_guards(tmp_path, model, case):
     assert state["model_identity"] is None
     assert state["resolved_model_known"] is False
     assert state["identity_matches_request"] is False
+
+
+@pytest.mark.parametrize("model", ["claude-sonnet-5-5-high", "claude-opus-5-5-high"])
+@pytest.mark.parametrize("observation,observed_family,observed_known", [
+    ("exact", "anthropic", True), ("display", "anthropic", True),
+    ("other-pin", "anthropic", True), ("other-family", "google", True),
+    ("unknown", None, False), ("retired", None, False), ("non-string", None, False),
+])
+@pytest.mark.parametrize("event_count,substituted,trust_exact,trust_mismatch,match_exact", [
+    (0, False, False, False, False), (0, True, False, False, False),
+    (1, False, True, False, True), (1, True, False, True, False),
+    (2, False, False, False, False), (2, True, True, True, False),
+    (3, False, False, False, False), (3, True, True, True, False),
+])
+def test_agy_consumer_substitution_consistency_matrix(
+    tmp_path, model, observation, observed_family, observed_known,
+    event_count, substituted, trust_exact, trust_mismatch, match_exact,
+):
+    from scripts.agent_runtime.adapters.agy import AgyRuntimeIdentity
+
+    observed = {
+        "exact": model,
+        "display": "Claude Sonnet 5.5 (High)" if "sonnet" in model else "Claude Opus 5.5 (High)",
+        "other-pin": "claude-opus-5-5-high" if "sonnet" in model else "claude-sonnet-5-5-high",
+        "other-family": "gemini-3.8-flash-high", "unknown": "unrecognized",
+        "retired": "Claude Opus 4.6 (Thinking)", "non-string": 42,
+    }[observation]
+    identity = _agy_consumer_observation(tmp_path, model, json.dumps({"event": "init", "model": observed}))
+    assert identity is not None
+    payload = json.loads(json.dumps(identity))
+    # Model-internal construction can seal contradictory fields without mutation.
+    # Vary the whole count/flag class; these receipts do not prove provider reachability.
+    payload["provenance"]["init_events"] *= event_count
+    payload["substituted"] = substituted
+    receipt = AgyRuntimeIdentity(payload)
+    state = delegate._agy_model_state(
+        agent="agy", model=model, identity=receipt, task_id="consumer-identity", run_nonce="consumer-run",
+    )
+    exact = observation in {"exact", "display"}
+    trusted = trust_exact if exact else trust_mismatch
+    assert state == {
+        "model_identity": payload if trusted else None,
+        "resolved_model": observed if trusted and observed_known else "unattested-harness",
+        "resolved_model_known": trusted and observed_known,
+        "resolved_model_source": "provider-init" if trusted else "unattested-harness",
+        "resolved_model_family": observed_family if trusted else None,
+        "resolved_model_harness": "agy",
+        "identity_matches_request": match_exact if exact else False,
+    }
+
+
+@pytest.mark.parametrize("model", ["claude-sonnet-5-5-high", "claude-opus-5-5-high"])
+@pytest.mark.parametrize("later_model", ["same", "other-pin", "other-family"])
+@pytest.mark.parametrize("event_count", [2, 3])
+def test_agy_consumer_honest_repeated_init_retains_first_observation(
+    tmp_path, model, later_model, event_count,
+):
+    later = {
+        "same": model,
+        "other-pin": "claude-opus-5-5-high" if "sonnet" in model else "claude-sonnet-5-5-high",
+        "other-family": "gemini-3.8-flash-high",
+    }[later_model]
+    events = [{"event": "init", "model": model}]
+    events.extend({"event": "init", "model": later} for _ in range(event_count - 1))
+    identity = _agy_consumer_observation(tmp_path, model, "\n".join(map(json.dumps, events)))
+    assert identity is not None
+    # The parser stops at the second init and keeps the first observed identity.
+    assert len(identity["provenance"]["init_events"]) == 2
+    assert identity["actual_model"] == model
+    assert identity["substituted"] is True
+    state = delegate._agy_model_state(
+        agent="agy", model=model, identity=identity, task_id="consumer-identity", run_nonce="consumer-run",
+    )
+    assert state == {
+        "model_identity": dict(identity), "resolved_model": model, "resolved_model_known": True,
+        "resolved_model_source": "provider-init", "resolved_model_family": "anthropic",
+        "resolved_model_harness": "agy", "identity_matches_request": False,
+    }

@@ -2780,7 +2780,7 @@ def _agy_model_state(
                 and (observed_slug is not None or observed is None)
                 and identity.get("actual_family") == family
                 and isinstance(identity.get("substituted"), bool)
-                and (identity["substituted"] or (observed_slug == requested and len(events) == 1))
+                and identity["substituted"] is (observed_slug != requested or len(events) > 1)
             )
     observed = identity.get("actual_model") if trusted else None
     known = trusted and identity.get("actual_model_known") is True
