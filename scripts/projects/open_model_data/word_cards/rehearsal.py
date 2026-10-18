@@ -13,6 +13,10 @@ import tempfile
 from contextlib import ExitStack
 from pathlib import Path
 
+ROOT = Path(__file__).resolve().parents[4]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
 import yaml
 
 from scripts.atlas import word_card_assembly as assembly
@@ -20,7 +24,6 @@ from scripts.atlas import word_card_foundation as foundation
 from scripts.atlas import word_card_verify as verifier
 from scripts.common.scratch import ensure_scratch_root
 
-ROOT = Path(__file__).resolve().parents[4]
 W1A_SHA = "c5d5909282c98dbb04fc8e71c7c59a7167b2ae2c"
 # Canonical JSON digests of the two committed W1a inputs, independent of candidates and Git availability.
 MANIFEST_SHA256 = "ffe7ff160ad9b08a97e0bd971d0577be654825b90cc40c2fc37aca7ae70a0b8b"
