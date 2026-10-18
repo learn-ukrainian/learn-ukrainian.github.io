@@ -894,8 +894,7 @@ def _recommend_agent(
         )
 
     avoid_by_lane = {
-        lane: lane in capacity_pick._EXCLUDED_DISPATCH_LANES
-        or capacity_pick.is_avoid_lane(agents.get(lane), lane=lane, facts=owner_facts(lane))
+        lane: capacity_pick.is_avoid_lane(agents.get(lane), lane=lane, facts=owner_facts(lane))
         for lane in status_by_agent
     }
 
