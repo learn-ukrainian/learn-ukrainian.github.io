@@ -1,0 +1,55 @@
+name: Stale branch cleanup
+
+on:
+  schedule:
+    - cron: '43 4 * * *'
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: stale-branch-cleanup
+  cancel-in-progress: false
+
+jobs:
+  cleanup:
+    if: github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+      pull-requests: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+          fetch-depth: 1
+          sparse-checkout: |
+            scripts/__init__.py
+            scripts/hygiene/__init__.py
+            scripts/hygiene/remote_branch_cleanup.py
+            scripts/common/__init__.py
+            scripts/common/github_client.py
+            scripts/common/scratch.py
+            scripts/opsec/__init__.py
+            scripts/opsec/gh_snapshot.py
+            scripts/opsec/prepublish.py
+            .github/branch-cleanup-keep.txt
+            .python-version
+          sparse-checkout-cone-mode: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version-file: '.python-version'
+      - name: Remove eligible remote branches
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          # Git reads credentials through gh only for this step; nothing is persisted.
+          GIT_CONFIG_COUNT: '1'
+          GIT_CONFIG_KEY_0: credential.https://github.com.helper
+          GIT_CONFIG_VALUE_0: '!gh auth git-credential'
+        run: |
+          git remote set-url origin "https://github.com/$REPO.git"
+          git remote set-url --push origin "https://github.com/$REPO.git"
+          python -m scripts.hygiene.remote_branch_cleanup --repo "$REPO"
