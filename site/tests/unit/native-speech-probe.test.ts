@@ -2,7 +2,7 @@
  * #10706 native speech device check: tool behaviour only. These mocks prove the observer,
  * evaluator and CLI behave as specified; they never certify physical audibility or voice absence.
  */
-import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { execFileSync, spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { cpSync, mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
@@ -11,6 +11,20 @@ import { join, resolve } from 'node:path';
 import {
   OWNED, PAGE, TRANSITIONS, browserProbe, evaluate, prepare, shapeErrors, treeDigest, validate, validateReceipt,
 } from '../../e2e/scouting/native-speech-probe.mjs';
+
+// Lets a test run code in the window between the probe listing a directory and descending into its entries.
+const fsHooks = vi.hoisted(() => ({ afterReaddir: null as null | (() => void) }));
+vi.mock('node:fs', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('node:fs')>();
+  const readdirSync = ((...args: Parameters<typeof actual.readdirSync>) => {
+    const entries = actual.readdirSync(...args);
+    const hook = fsHooks.afterReaddir;
+    fsHooks.afterReaddir = null;
+    hook?.();
+    return entries;
+  }) as typeof actual.readdirSync;
+  return { ...actual, readdirSync, default: { ...actual, readdirSync } };
+});
 
 const PROBE = resolve(__dirname, '../../e2e/scouting/native-speech-probe.mjs');
 const TEMPLATE = resolve(__dirname, '../../e2e/scouting/native-speech-check.html');
@@ -677,6 +691,31 @@ describe('prepare and validate CLI', () => {
     expect(() => prepare(opts({ manifest: existing }))).toThrow(/new file/);
     const out = build('manifest-inside');
     expect(() => prepare(opts({ out, manifest: join(out, 'm.json') }))).toThrow(/outside --out/);
+  });
+
+  it('refuses a directory swapped for a symlink after it was listed, without hashing outside bytes', () => {
+    const outside = join(root, 'outside-secret');
+    mkdirSync(outside);
+    writeFileSync(join(outside, 'secret.js'), 'outside bytes');
+    const swapped = build('swapped-dir');
+    // The first listing is the build root; swap `_astro` for a symlink to the outside directory before the walk descends.
+    fsHooks.afterReaddir = () => {
+      rmSync(join(swapped, '_astro'), { recursive: true });
+      symlinkSync(outside, join(swapped, '_astro'));
+    };
+    try { expect(() => treeDigest(swapped)).toThrow(/symlink or special file: _astro/); } finally { fsHooks.afterReaddir = null; }
+    // Same swap on a nested directory, with the symlink target holding a file the walk would otherwise hash.
+    const nested = build('swapped-nested');
+    mkdirSync(join(nested, '_astro/chunks'));
+    writeFileSync(join(nested, '_astro/chunks/a.js'), 'inside');
+    // The swap is armed from the root listing and fires on the next one, which is the `_astro` directory.
+    fsHooks.afterReaddir = () => {
+      fsHooks.afterReaddir = () => {
+        rmSync(join(nested, '_astro/chunks'), { recursive: true });
+        symlinkSync(outside, join(nested, '_astro/chunks'));
+      };
+    };
+    try { expect(() => treeDigest(nested)).toThrow(/symlink or special file: _astro\/chunks/); } finally { fsHooks.afterReaddir = null; }
   });
 
   it('refuses a helper branch that changes non-owned paths or lacks committed helper bytes', () => {

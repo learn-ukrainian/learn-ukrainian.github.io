@@ -3,7 +3,7 @@
 import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 import { closeSync, constants, fstatSync, lstatSync, openSync, readFileSync, readdirSync, realpathSync, writeFileSync } from 'node:fs';
-import { dirname, join, relative, resolve, sep } from 'node:path';
+import { dirname, join, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseArgs } from 'node:util';
 
@@ -364,17 +364,30 @@ function hashRegularFile(p, label) {
   } finally { closeSync(fd); }
 }
 
+// Linux lets a held directory descriptor anchor every child lookup, so renaming or replacing any ancestor
+// after it was opened cannot redirect the walk. Elsewhere each component is still opened with O_NOFOLLOW.
+const FD_ANCHOR = attempt(() => lstatSync('/proc/self/fd').isDirectory()) === true;
+
 export function treeDigest(root, skip = null) {
   const files = {};
-  const walk = (dir) => {
-    for (const entry of readdirSync(dir, { withFileTypes: true }).sort((a, b) => (a.name < b.name ? -1 : a.name > b.name ? 1 : 0))) {
-      const p = join(dir, entry.name);
-      if (entry.isDirectory()) walk(p);
-      else if (entry.isFile()) files[relative(root, p).split(sep).join('/')] = hashRegularFile(p, relative(root, p));
-      else refuse(`build contains a symlink or special file: ${relative(root, p)}`);
-    }
+  // The directory is opened (not just listed) with O_NOFOLLOW|O_DIRECTORY, so an entry swapped for a symlink
+  // after its parent was read is refused at the moment it is opened, before any of its children are hashed.
+  const walk = (dirPath, label) => {
+    let fd;
+    try { fd = openSync(dirPath, constants.O_RDONLY | (constants.O_DIRECTORY ?? 0) | (constants.O_NOFOLLOW ?? 0)); } catch { refuse(`build contains a symlink or special file: ${label || '.'}`); }
+    try {
+      if (!fstatSync(fd).isDirectory()) refuse(`build contains a symlink or special file: ${label || '.'}`);
+      const anchor = FD_ANCHOR ? `/proc/self/fd/${fd}` : dirPath;
+      for (const entry of readdirSync(anchor, { withFileTypes: true }).sort((a, b) => (a.name < b.name ? -1 : a.name > b.name ? 1 : 0))) {
+        const p = join(anchor, entry.name);
+        const rel = label ? `${label}/${entry.name}` : entry.name;
+        if (entry.isDirectory()) walk(p, rel);
+        else if (entry.isFile()) files[rel] = hashRegularFile(p, rel);
+        else refuse(`build contains a symlink or special file: ${rel}`);
+      }
+    } finally { closeSync(fd); }
   };
-  walk(root);
+  walk(root, '');
   return { digest: sha256(Object.entries(files).filter(([rel]) => rel !== skip).map(([rel, h]) => `${h}  ${rel}\n`).join('')), files };
 }
 
