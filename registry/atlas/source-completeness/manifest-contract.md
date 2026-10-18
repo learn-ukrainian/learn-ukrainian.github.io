@@ -228,9 +228,10 @@ Run the source-free focused CLI tests and existing record-contract tests:
 .venv/bin/python -m pytest -n 2 -q \
   tests/projects/open_model_data/test_source_completeness_manifest.py \
   tests/test_open_model_source_record_contract.py tests/test_ulif_word_records.py
-.venv/bin/python -m pytest -n 2 -q tests/test_docs_catalogue_coverage.py
 .venv/bin/python -m scripts.docs.catalogue readme --check
 ```
+
+The repository-wide catalogue tests run in CI under the shared gate.
 
 The fixture suite compares literal ordered expectations to actual CLI files,
 including unknown ranges, stage losses, digest/order drift, separate homonyms,
