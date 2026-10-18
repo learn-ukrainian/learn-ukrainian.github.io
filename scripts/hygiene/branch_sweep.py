@@ -25,6 +25,7 @@ from contextlib import contextmanager
 from dataclasses import asdict, dataclass, field, replace
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
+from typing import Literal, overload
 
 from scripts.common import github_client
 from scripts.common.git_context import UnsafeBranchNameError, sanitized_git_env, validate_plain_branch_name
@@ -115,19 +116,40 @@ class SweepError(RuntimeError):
         self.decisions = decisions
 
 
+@overload
 def _git(
     repo: Path,
     *args: str,
     timeout: int = 30,
     input: str | None = None,
-) -> subprocess.CompletedProcess[str]:
+    text: Literal[True] = True,
+) -> subprocess.CompletedProcess[str]: ...
+
+
+@overload
+def _git(
+    repo: Path,
+    *args: str,
+    timeout: int = 30,
+    input: bytes | None = None,
+    text: Literal[False],
+) -> subprocess.CompletedProcess[bytes]: ...
+
+
+def _git(
+    repo: Path,
+    *args: str,
+    timeout: int = 30,
+    input: str | bytes | None = None,
+    text: bool = True,
+) -> subprocess.CompletedProcess[str] | subprocess.CompletedProcess[bytes]:
     return subprocess.run(
         ["git", *args],
         cwd=repo,
         env=sanitized_git_env(),
         input=input,
         capture_output=True,
-        text=True,
+        text=text,
         check=False,
         timeout=timeout,
     )
@@ -444,15 +466,7 @@ def _load_patch_ids(repo: Path, cache: dict[str, str | None], shas: list[str]) -
     for start in range(0, len(missing), 40):
         chunk = missing[start : start + 40]
         # Patch content is arbitrary bytes; text mode also translates line endings.
-        log = subprocess.run(
-            ["git", "log", "-p", "--no-walk", "--pretty=format:%H", *chunk],
-            cwd=repo,
-            env=sanitized_git_env(),
-            capture_output=True,
-            text=False,
-            check=False,
-            timeout=120,
-        )
+        log = _git(repo, "log", "-p", "--no-walk", "--pretty=format:%H", *chunk, text=False, timeout=120)
         if log.returncode:
             raise RuntimeError(f"git log failed (exit {log.returncode})")
         found = _parse_patch_ids(repo, log.stdout)

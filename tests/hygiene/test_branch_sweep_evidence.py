@@ -495,10 +495,10 @@ def test_failed_delete_records_outcome_without_claiming_success(
     tip = same_change(repo, "codex/impl-1001")
     original = sweep._git
 
-    def fail_push(root: Path, *args: str, timeout: int = 30) -> subprocess.CompletedProcess[str]:
+    def fail_push(root: Path, *args: str, **kwargs):
         if args and args[0] == "push":
             return subprocess.CompletedProcess(list(args), 1, stdout="", stderr="rejected by test")
-        return original(root, *args, timeout=timeout)
+        return original(root, *args, **kwargs)
 
     monkeypatch.setattr(sweep, "_git", fail_push)
     item = only(repo, "codex/impl-1001", apply=True)
