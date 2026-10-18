@@ -11,6 +11,7 @@ import pytest
 from scripts.open_dataset.publish import OpenDatasetPublishError, build_package, publish_open_dataset
 from scripts.open_dataset.russification import (
     QuarantineError,
+    _fold,
     build_contrastive_subset,
     validate_default_split,
     write_contrastive_subset,
@@ -238,6 +239,34 @@ def test_default_split_preserves_modern_sources_and_checks_all_records() -> None
     assert rows == before
     with pytest.raises(QuarantineError, match="invalid_sum11_inventory"):
         validate_default_split(rows, sum11_texts=[""])
+
+
+QUOTATION_VARIANTS = [
+    "м'яка пам'ять",
+    "м’яка пам’ять",
+    "мʼяка памʼять",
+    "м`яка пам`ять",
+    "м'я\u0301ка па\u0301м'ять",
+    "м’я\u0301ка па\u0301м’ять",
+    "мʼя\u0301ка па\u0301мʼять",
+    "м`я\u0301ка па\u0301м`ять",
+]
+
+
+@pytest.mark.parametrize("text", QUOTATION_VARIANTS)
+def test_quotation_fold_normalizes_apostrophes_and_stress(text) -> None:
+    assert _fold(text) == "м'яка пам'ять"
+
+
+def test_quotation_fold_preserves_other_diacritics_and_existing_normalization() -> None:
+    assert _fold("  И\u0306  І\u0308\u0301\n") == "й ї"
+
+
+@pytest.mark.parametrize("inventory", QUOTATION_VARIANTS)
+@pytest.mark.parametrize("candidate", QUOTATION_VARIANTS)
+def test_default_split_blocks_quotation_variants_on_both_sides(inventory, candidate) -> None:
+    with pytest.raises(QuarantineError, match="sum11_in_default_split"):
+        validate_default_split([{"text": f"Prefix {candidate} suffix"}], sum11_texts=[inventory])
 
 
 def test_russification_writer_emits_only_separate_subset_and_card(contrast_pair, tmp_path) -> None:

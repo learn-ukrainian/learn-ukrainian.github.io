@@ -32,8 +32,12 @@ card together. There is no implicit inclusion in the default dataset.
 Before release, call `validate_default_split(default_records,
 sum11_texts=frozen_quotation_inventory)` with an independently frozen complete
 inventory for the projection being audited. The gate rejects nested СУМ-11
-provenance, contrast fields and matching quotations, including case and whitespace
-changes. Without the inventory it checks provenance only. It cannot establish
+provenance, contrast fields and matching quotations. Both inventory and candidate
+text undergo NFC normalization, case folding and whitespace collapsing. The gate
+also maps ASCII, curly (U+2019), modifier-letter (U+02BC) and backtick (U+0060)
+apostrophes to ASCII single quotes (U+0027) and strips combining acute stress
+marks (U+0301) before NFC normalization. Without the inventory it checks
+provenance only. It cannot establish
 the provenance of unlabelled text or detect arbitrary paraphrases. Report the
 inventory digest, input denominator and exact reviewed projection with the audit.
 The ordinary release packager rejects quarantined provenance and refuses

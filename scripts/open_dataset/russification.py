@@ -36,6 +36,8 @@ def _text(value: object) -> bool:
 
 
 def _fold(text: str) -> str:
+    """Fold apostrophes, acute stress, NFC, case and whitespace for matching."""
+    text = text.translate(str.maketrans("’ʼ`", "'''")).replace("\u0301", "")
     return " ".join(unicodedata.normalize("NFC", text).casefold().split())
 
 
