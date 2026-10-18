@@ -40,12 +40,12 @@ def branch(name="stale", head=OLD, protected=False):
     return {"name": name, "commit": {"sha": head}, "protected": protected}
 
 
-def pr(repo=REPO, name="stale", number=1, **extra):
+def pr(repo=REPO, name="stale", number=1, base_name="main", **extra):
     return {
         "number": number,
         "state": "open",
         "head": {"repo": {"full_name": repo}, "ref": name, "sha": OLD},
-        "base": {"repo": {"full_name": REPO}},
+        "base": {"repo": {"full_name": REPO}, "ref": base_name},
         **extra,
     }
 
@@ -150,17 +150,58 @@ def test_fork_name_collision_does_not_exclude_local_branch(api):
     assert m.eligible(m.Candidate("stale", OLD, NOW - timedelta(hours=48), False), evidence, REPO, NOW)
 
 
+@pytest.mark.parametrize("head_repo", [REPO, "someone/fork"])
+def test_open_stacked_pr_bases_retained_without_open_heads(api, monkeypatch, head_repo):
+    api.objects[f"git/commits/{OLD}"]["committer"]["date"] = "2026-10-14T12:00:00Z"
+    api.objects["branches/other-base"] = branch("other-base")
+    api.listings["branches"].append(branch("other-base"))
+    api.listings["pulls?state=open"] = [
+        pr(repo=head_repo, name="stacked-tip", base_name="stale"),
+        pr(repo=head_repo, name="other-tip", base_name="other-base", number=2),
+    ]
+    attempted = []
+    monkeypatch.setattr(m, "delete", attempted.append)
+    report = m.cleanup(api, NOW)
+    assert report["failures"] == []
+    assert report["deleted"] == []
+    assert attempted == []
+    assert report["retained"] == [
+        {"name": "main", "reason": "ineligible"},
+        {"name": "stale", "reason": "ineligible"},
+        {"name": "other-base", "reason": "ineligible"},
+    ]
+
+
+@pytest.mark.parametrize("base_ref", [None, "", "bad ref", "../bad", "a\nb", "a\u202eb", 123])
+def test_malformed_pr_base_ref_refuses_cleanup(api, monkeypatch, base_ref):
+    api.listings["pulls?state=open"] = [pr(base_name=base_ref)]
+    monkeypatch.setattr(m, "delete", lambda _: pytest.fail("deletion after malformed PR base ref"))
+    report = m.cleanup(api, NOW)
+    assert report["deleted"] == []
+    assert len(report["failures"]) == 1
+
+
+def test_missing_pr_base_ref_refuses_cleanup(api, monkeypatch):
+    api.listings["pulls?state=open"] = [pr(base={"repo": {"full_name": REPO}})]
+    monkeypatch.setattr(m, "delete", lambda _: pytest.fail("deletion after missing PR base ref"))
+    report = m.cleanup(api, NOW)
+    assert report["deleted"] == []
+    assert report["failures"] == [{"reason": "invalid branch name"}]
+
+
 @pytest.mark.parametrize("value", [None, "", "2026-02-30T00:00:00Z", "2026-10-15", "2026-10-15T12:00:00+00:00", 123])
 def test_malformed_timestamp_refuses(value):
     with pytest.raises(m.Unknown, match="timestamp"):
         m.utc_timestamp(value)
 
 
-@pytest.mark.parametrize("change", ["head", "protection", "protected_set", "keep", "pr", "default", "unknown"])
+@pytest.mark.parametrize("change", ["head", "protection", "protected_set", "keep", "pr", "pr_base", "default", "unknown"])
 def test_final_evidence_changed_or_unknown_never_deletes(api, monkeypatch, change):
     attempted = []
     monkeypatch.setattr(m, "delete", attempted.append)
     checks = 0
+    if change == "pr_base":
+        api.listings["pulls?state=open"] = [pr(name="stacked-tip")]
 
     def mutate(endpoint):
         nonlocal checks
@@ -179,6 +220,8 @@ def test_final_evidence_changed_or_unknown_never_deletes(api, monkeypatch, chang
             api.objects[f"contents/{m.KEEP_PATH}?ref={HEAD}"] = keep("main\nstale\n")
         elif change == "pr":
             api.listings["pulls?state=open"] = [pr()]
+        elif change == "pr_base":
+            api.listings["pulls?state=open"][0]["base"]["ref"] = "stale"
         elif change == "default":
             api.objects[""]["default_branch"] = "stale"
             api.objects[f"contents/{m.KEEP_PATH}?ref={OLD}"] = keep()
@@ -601,7 +644,7 @@ def wire_api(api, monkeypatch):
     """Real get/pages/shared-client stack; HTTP bodies use GitHub's public shapes."""
     client = m.GitHub(REPO, "fixture")
     calls = []
-    options = {"numeric": True, "pr_on_page_two": False, "bad_link": None}
+    options = {"numeric": True, "pr_on_page_two": False, "pr_role": "head", "bad_link": None}
 
     def open_request(request, timeout):
         url = request.full_url
@@ -625,6 +668,9 @@ def wire_api(api, monkeypatch):
             else:
                 open_pr = pr()
                 open_pr["head"]["sha"] = api.objects["branches/stale"]["commit"]["sha"]
+                if options["pr_role"] == "base":
+                    open_pr["head"]["ref"] = "stacked-tip"
+                    open_pr["base"]["ref"] = "stale"
                 data = (
                     [pr(name="unrelated", number=2)] if page == 1 else ([open_pr] if options["pr_on_page_two"] else [])
                 )
@@ -670,12 +716,13 @@ def test_cli_real_pagination_deletes_or_retains_from_all_pages(wire_api, monkeyp
 
 @pytest.mark.parametrize("numeric", [False, True])
 @pytest.mark.parametrize("pr_on_page_two", [False, True])
+@pytest.mark.parametrize("pr_role", ["head", "base"])
 def test_wire_pagination_with_actual_disposable_git_remote(
-    api, wire_api, monkeypatch, tmp_path, capsys, numeric, pr_on_page_two
+    api, wire_api, monkeypatch, tmp_path, capsys, numeric, pr_on_page_two, pr_role
 ):
     """Only the source-identity seam is faked; deletion uses Git against our local bare remote."""
     _, calls, options = wire_api
-    options.update(numeric=numeric, pr_on_page_two=pr_on_page_two)
+    options.update(numeric=numeric, pr_on_page_two=pr_on_page_two, pr_role=pr_role)
     remote = tmp_path / "owned.git"
     local = tmp_path / "local"
     local.mkdir()

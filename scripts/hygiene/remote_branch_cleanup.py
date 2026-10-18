@@ -183,7 +183,7 @@ class Evidence:
     keep_blob: str
     keep: frozenset[str]
     protected: frozenset[str]
-    prs: frozenset[tuple[int, str, str, str]]
+    prs: frozenset[tuple[int, str, str, str, str]]
 
 
 def branch_record(data: dict) -> tuple[str, str, bool]:
@@ -242,7 +242,13 @@ def read_evidence(api: GitHub) -> tuple[Evidence, list[str]]:
         if repository(base_repo.get("full_name")).lower() != api.repo.lower():
             raise Unknown("PR base repository mismatch")
         prs.add(
-            (number, repository(head_repo.get("full_name")).lower(), branch_name(head.get("ref")), sha(head.get("sha")))
+            (
+                number,
+                repository(head_repo.get("full_name")).lower(),
+                branch_name(head.get("ref")),
+                sha(head.get("sha")),
+                branch_name(base.get("ref")),
+            )
         )
     return Evidence(default, revision, blob, keep, frozenset(b[0] for b in branches if b[2]), frozenset(prs)), [
         b[0] for b in branches
@@ -264,7 +270,8 @@ def eligible(candidate: Candidate, evidence: Evidence, repo: str, now: datetime)
     if now.tzinfo != UTC:
         raise Unknown("clock must be UTC")
     excluded = {"main", evidence.default} | evidence.keep | evidence.protected
-    excluded |= {ref for _, owner, ref, _ in evidence.prs if owner == repo.lower()}
+    excluded |= {ref for _, owner, ref, _, _ in evidence.prs if owner == repo.lower()}
+    excluded |= {base for _, _, _, _, base in evidence.prs}
     return (
         candidate.name not in excluded
         and not candidate.protected
