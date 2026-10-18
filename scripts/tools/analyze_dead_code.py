@@ -11,6 +11,7 @@ Analyzes:
 Output: JSON report with removal candidates categorized by risk level
 """
 
+import argparse
 import json
 import re
 import subprocess
@@ -254,7 +255,20 @@ class DeadCodeAnalyzer:
         print("Report saved to: /tmp/dead_code_report.json")
         print("=" * 70)
 
-def main():
+def main(argv=None):
+    parser = argparse.ArgumentParser(
+        description=("Identify scripts that may be safe to remove using imports, references, and age.\n"
+                     "Use for a removal review; this tool reports candidates and never deletes scripts."),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""Examples:
+  .venv/bin/python scripts/tools/analyze_dead_code.py --help
+  .venv/bin/python scripts/tools/analyze_dead_code.py
+Outputs: a summary on stdout and dead_code_report.json in the system temporary directory.
+Exit codes: 0 = help or analysis completed; 1 = analysis or report writing failed.
+Related: scripts/hygiene/lint_cli_help.py; #10955.
+""",
+    )
+    parser.parse_args(argv)
     project_root = Path(__file__).parent.parent.parent
 
     analyzer = DeadCodeAnalyzer(project_root)

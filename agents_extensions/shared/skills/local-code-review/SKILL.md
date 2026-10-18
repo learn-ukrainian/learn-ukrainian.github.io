@@ -72,6 +72,16 @@ regressions against main, verdicts are proportional, and a missing required
 capability is INCONCLUSIVE, which still blocks (Step 5); the breakers are
 unchanged (Step 6).
 
+## Python CLI help gate
+
+A Python CLI under `scripts/` added or touched without the help required by
+`agents_extensions/shared/rules/cli-help-standard.md` is **REQUEST_CHANGES**.
+Run `.venv/bin/python -m scripts.hygiene.lint_cli_help`. Its committed baseline
+only exempts unchanged existing violations and may only lose entries. Require
+`--help` to exit 0 within five seconds, do no work or writes from a temporary
+cwd, and print a description, per-argument help, and an epilog naming
+`Examples:` and `Exit codes:`. The CI test is `tests/test_cli_help_ratchet.py`.
+
 ## Output
 
 Print a structured report to the conversation (the checklist's Step 8 gives
