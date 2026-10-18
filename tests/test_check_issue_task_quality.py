@@ -213,12 +213,14 @@ def test_dor_workflow_comment_lists_missing_fields_and_updates_one() -> None:
     ]
     reconcile_comments(issue, comments, api, "/issues/123")
     assert calls == [
-        ("PATCH", "/issues/123/comments/1", {"body": comment}),
-        ("DELETE", "/issues/123/comments/2", None),
+        ("PATCH", "/issues/comments/1", {"body": comment}),
+        ("DELETE", "/issues/comments/2", None),
     ]
     calls.clear()
     reconcile_comments(issue, [{**comments[0], "body": comment}], api, "/issues/123")
     assert calls == []
+    reconcile_comments(issue, [], api, "/issues/123")
+    assert calls == [("POST", "/issues/123/comments", {"body": comment})]
 
 
 def test_dor_workflow_comment_creates_once_for_empty_comments() -> None:
