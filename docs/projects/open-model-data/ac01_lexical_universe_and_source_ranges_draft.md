@@ -21,7 +21,7 @@ To satisfy AC-01, source completeness cannot be measured against arbitrary local
    - **Candidate Baselines for Designated Approval (Claude Opus 5.5 + GPT Sol 6.1)**:
      * *Candidate Baseline A (Manifest ∪ PULS)*: Core pedagogical universe binding the 27,472 published Atlas manifest words and PULS CEFR A1–C1.
      * *Candidate Baseline B (Cache ∪ PULS)*: Expanded engineering universe of 39,018 distinct headwords.
-    - **Scope Boundary**: Lexical Universe v1 boundaries depend on candidate selection (Candidate A: Atlas published manifest ∪ PULS A1–C1; Candidate B: Cache corpus ∪ PULS A1–C1). Formal selection of the binding baseline is queued for designated approval by Claude Opus 5.5 + GPT Sol 6.1 on 2026-10-19. Meanings coverage for any unselected or combined union remains unmeasured pending baseline designation.
+   - **Scope Boundary**: Lexical Universe v1 boundaries depend on candidate selection (Candidate A: Atlas published manifest ∪ PULS A1–C1; Candidate B: Cache corpus ∪ PULS A1–C1). Formal selection of the binding baseline is queued for designated approval by Claude Opus 5.5 + GPT Sol 6.1 on 2026-10-19. Meanings coverage for any unselected or combined union remains unmeasured pending baseline designation.
 
 2. **Lexical Universe v2 (Full Scale — Post-v1)**:
    - **Core Lexical Foundation (VESUM ∩ ULIF)**: Full intersection of VESUM v6.8.0 (`data/vesum.db`, 442,458 blocks, 6,970,759 form analyses) and the ULIF published register (262,812 entry positions, 943,689 raw blobs in `data/lexicon/cache/ulif_raw.sqlite`), spanning ~245,000–260,000 lemmas. Anything wider than v1 belongs strictly to v2.
@@ -126,7 +126,7 @@ flowchart TD
   - Condition **R-A**: Locate an immutable contemporaneous machine receipt from 2026-09-20 containing the ordered 123-member raw export, timestamp, and SHA-256.
   - Condition **R-B**: Reconstruct the count-time execution by retrieving the 348 MB `ulif_dump_all.db` snapshot (captured 2026-10-01, SHA `9f1f8084...`, currently absent from disk) and executing the exact count-time loader query against candidate manifest `81c695cd...`.
 - **Pros**: Perfectly preserves historical continuity with original GitHub issue comments.
-- **Cons**: Substantial risk of irrecoverability (333 MB raw crawl dump missing; 2,006 JSON files scanned with zero hits); potential reliance on stale or unverified crawl artifacts.
+- **Cons**: Substantial risk of irrecoverability (348 MB raw crawl dump missing; 2,006 JSON files scanned with zero hits); potential reliance on stale or unverified crawl artifacts.
 
 #### Option B: Formal Retirement with Recorded Reason & Re-derivation
 - **Mechanism**:

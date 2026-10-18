@@ -2007,7 +2007,7 @@ sources:
   permission_status: unknown
   permission_note: Live Atlas definition_cards and internal word cards quote entry definitions referencing the statutory quotation exception under Art. 22(2)(1) of Law of Ukraine 2811-IX (free quotation from lawfully published works without permission and free of charge, with mandatory naming of the author and source of borrowing, conditioned by the critical, polemical, scientific, or informational character of the incorporating work, with semantic and/or graphical marking of quotation boundaries) under operator IP responsibility (Decision 1, Plan v3.5.0 O1; an administrative source-use decision, not a legal conclusion). Public dataset distribution licence status remains unknown pending rights holder contact; this limitation blocks only the Phase 7 public dataset release, not internal cards or site display.
   name: Великий тлумачний словник сучасної української мови (ВТС-СУМ, за ред. В. Т. Бусела) via slovnyk.me
-  organisation: ВТФ «Перун» (видавництво), за ред. В. Т. Бусела; digital copy hosted by slovnyk.me
+  organisation: 'Not established from electronic mirror colophon (candidate attribution: ВТФ «Перун» / ред. В. Т. Бусел unverified); digital copy hosted by slovnyk.me'
   role: Secondary modern explanatory dictionary for Word-Card sense seeding (admitted 2026-10-17 under #8977 / #6321) and live Atlas definition cards (7,849 entries); provides definitions for lexemes outside СУМ-20 published volume boundary (РЯХТЛИВИЙ..Я) and unquarantined entries.
   fields_used:
   - headword
@@ -2028,7 +2028,7 @@ sources:
   terms:
     found: true
     licence:
-      name: All rights reserved (ВТФ «Перун» / В. Т. Бусел); no open licence on slovnyk.me aggregator
+      name: All rights reserved (rights holder unverified / candidate ВТФ «Перун» / В. Т. Бусел); no open licence on slovnyk.me aggregator
       spdx: null
       verbatim_quote: null
     conditions:
@@ -2045,6 +2045,7 @@ sources:
       read_on: '2026-10-17'
     searched:
     - https://slovnyk.me/ (no explicit open license terms declared for VTS dictionary text)
+    - "https://slovnyk.me/terms (archived 2024-03-20; slovnyk_terms_2024 quotes clause forbidding copying without permission; permission_status: none applies to aggregator text; quotation exception under Art. 22(2)(1) Law 2811-IX is claimed for the underlying lawfully published VTS dictionary work, not the mirror copy; licence basis NOT CHECKED for public dataset release, blocking Phase 7 release but not internal card seeding)"
     legal_refs:
     - law_art22_quotation
   citation:
