@@ -6750,8 +6750,11 @@ def test_enrich_entry_berehynia_sum20_goddess_rework(monkeypatch) -> None:
     assert "нижчий дух" not in str(wiki_ref)
 
 
-def test_ulif_authoritative_enrichment_integration(monkeypatch) -> None:
+def test_ulif_authoritative_enrichment_integration(monkeypatch, tmp_path) -> None:
     """Validate authoritative ULIF DictUA enrichment integration for synonyms, antonyms, idioms, and stress."""
+    monkeypatch.setattr(enrich_manifest_module, "SLOVNYK_CACHE", tmp_path / "slovnyk-cache")
+    monkeypatch.setenv("LEXICON_SLOVNYK_OFFLINE", "1")
+
     from scripts.lexicon.enrich_manifest import (
         _antonyms_ulif,
         _idioms_ulif,
@@ -6941,6 +6944,35 @@ def test_ulif_authoritative_enrichment_integration(monkeypatch) -> None:
     assert "stress" in enrichment
     assert enrichment["stress"]["source"] == ULIF_DICTUA_LABEL
     assert enrichment["stress"]["form"] == "до́брий"
+
+
+def test_ulif_integration_preserves_shared_cache_and_forbids_network(monkeypatch, tmp_path) -> None:
+    shared_cache = tmp_path / "shared-cache"
+    shared_cache.mkdir()
+    sentinel = shared_cache / "добрий.json"
+    sentinel.write_bytes(b'{"sentinel":"preserve shared cache"}\n')
+    before = sentinel.read_bytes()
+    network_attempts = []
+
+    def forbidden_request(*args, **kwargs):
+        network_attempts.append(True)
+        raise AssertionError("ULIF integration attempted a network request")
+
+    monkeypatch.setattr(enrich_manifest_module, "SLOVNYK_CACHE", shared_cache)
+    monkeypatch.setenv("LEXICON_SLOVNYK_OFFLINE", "0")
+    monkeypatch.setattr(enrich_manifest_module.requests.sessions.Session, "request", forbidden_request)
+    real_fetch = enrich_manifest_module._fetch_slovnyk_entry
+    isolated_tmp = tmp_path / "integration"
+
+    test_ulif_authoritative_enrichment_integration(monkeypatch, isolated_tmp)
+
+    assert sentinel.read_bytes() == before
+    assert list(shared_cache.iterdir()) == [sentinel]
+    assert enrich_manifest_module.SLOVNYK_CACHE.is_relative_to(isolated_tmp)
+    assert enrich_manifest_module._phase1_offline_mode() is True
+    # Exercise the real fetch, which the integration test replaces with a stub.
+    assert real_fetch("добрий", "добрий", "newsum") is None
+    assert network_attempts == []
 
 
 def test_offline_mode_does_not_poison_slovnyk_cache(monkeypatch, tmp_path) -> None:
