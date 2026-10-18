@@ -243,6 +243,163 @@ def fixture(tmp_path):
     return Fixture(tmp_path)
 
 
+def atlas_input(fixture, entries=None):
+    path = fixture.root / "atlas.json"
+    write(
+        path,
+        {
+            "version": "0.1",
+            "entries": entries
+            if entries is not None
+            else [
+                {"lemma": "fixture-key", "url_slug": "first"},
+                {"lemma": "fixture-key", "url_slug": "second"},
+                {"lemma": "FIXTURE-KEY", "url_slug": "uppercase"},
+                {"lemma": "fixture-key\u0301", "url_slug": "accented"},
+                {"lemma": "fixture key", "url_slug": "phrase"},
+            ],
+        },
+    )
+    return path
+
+
+def test_atlas_census_cli_ordered_exact_matches_and_hashes(fixture):
+    atlas = atlas_input(fixture)
+    original_inputs = {p: p.read_bytes() for p in [atlas, *fixture.paths.values()]}
+    result = fixture.cli(extra=["--atlas-manifest", str(atlas)])
+    assert (result.returncode, result.stderr) == (0, "")
+    raw = (fixture.root / "output/atlas-census.json").read_bytes()
+    census = json.loads(raw)
+    receipt = fixture.receipt()
+    assert census["schema_version"] == "atlas-census.v1"
+    assert census["evidence_role"] == "exact_key_observation_only"
+    assert census["programme_completeness"] == "UNRESOLVED"
+    assert census["entry_count"] == 5
+    assert census["distinct_lemma_count"] == 4
+    assert census["required_requirement_count"] == receipt["required_requirement_count"] == 20
+    assert census["contract_sha256"] == digest(manifest.CONTRACT.read_bytes())
+    assert census["matrix_sha256"] == receipt["matrix_sha256"] == digest(manifest.MATRIX.read_bytes())
+    assert census["inputs"] == receipt["inputs"]
+    assert census["inputs"]["atlas_manifest"] == {
+        "sha256": digest(atlas.read_bytes()),
+        "bytes": len(atlas.read_bytes()),
+        "schema_version": "atlas-manifest:0.1",
+    }
+    assert receipt["outputs"][-1] == {"path": "atlas-census.json", "sha256": digest(raw), "bytes": len(raw)}
+    assert [r["requirement_id"] for r in census["requirements"]] == list(IDS)
+    assert census["requirements"][0] == {
+        "requirement_id": "SRC-ULIF",
+        "gap": "G-ULIF",
+        "owner": "open-model-data",
+        "partition_status": "PARTITIONED",
+        "entry_count": 5,
+        "exact_key_matched_entry_count": 2,
+        "no_exact_key_match_entry_count": 3,
+        "supplied_known_matched_entry_count": 2,
+        "supplied_known_matched_unit_count": 3,
+    }
+    assert census["requirements"][-1]["supplied_known_matched_unit_count"] == 123
+    first = census["entries"][0]
+    assert (first["ordinal"], first["lemma"], first["url_slug"]) == (0, "fixture-key", "first")
+    assert len(first["source_key_matches"]) == 144
+    assert [m["identity"] for m in first["source_key_matches"][:3]] == [
+        u["identity"] for u in fixture.docs["source_manifest"]["ranges"][0]["units"]
+    ]
+    assert census["entries"][1]["source_key_matches"] == first["source_key_matches"]
+    assert [e["ordinal"] for e in census["entries"]] == [0, 1, 2, 3, 4]
+    assert [e["url_slug"] for e in census["entries"]] == ["first", "second", "uppercase", "accented", "phrase"]
+    assert [e["source_key_matches"] for e in census["entries"][2:]] == [[], [], []]
+    before = {p.name: (p.read_bytes(), p.stat().st_mtime_ns) for p in (fixture.root / "output").iterdir()}
+    assert fixture.cli(extra=["--atlas-manifest", str(atlas)]).returncode == 0
+    assert before == {p.name: (p.read_bytes(), p.stat().st_mtime_ns) for p in (fixture.root / "output").iterdir()}
+    assert original_inputs == {p: p.read_bytes() for p in original_inputs}
+
+
+@pytest.mark.parametrize("inventory", ["unknown", "partial", "missing", "known_empty"])
+def test_atlas_census_unknown_is_not_zero_coverage(fixture, inventory):
+    atlas = atlas_input(fixture)
+    ranges = fixture.docs["source_manifest"]["ranges"]
+    row = ranges[1]
+    if inventory == "partial":
+        ranges.append({**row, "range_id": "unavailable-extension", "membership": "UNKNOWN", "index": None, "units": []})
+    else:
+        fixture.docs["stage_evidence"]["records"] = [
+            r for r in fixture.docs["stage_evidence"]["records"] if r["range_id"] != row["range_id"]
+        ]
+        if inventory == "missing":
+            ranges.remove(row)
+        elif inventory == "known_empty":
+            row["units"] = []
+            fixture.source_index(1)
+        else:
+            row.update(membership="UNKNOWN", index=None, units=[])
+    fixture.save()
+    outputs, receipt = manifest.account(fixture.paths, atlas_manifest=atlas)
+    coverage = json.loads(outputs["atlas-census.json"])["requirements"][1]
+    assert coverage["partition_status"] == ("PARTITIONED" if inventory == "known_empty" else "UNPARTITIONED")
+    assert coverage["exact_key_matched_entry_count"] == (0 if inventory == "known_empty" else None)
+    assert coverage["no_exact_key_match_entry_count"] == (5 if inventory == "known_empty" else None)
+    assert coverage["supplied_known_matched_entry_count"] == (2 if inventory == "partial" else 0)
+    assert coverage["supplied_known_matched_unit_count"] == (1 if inventory == "partial" else 0)
+    assert receipt["required_requirement_count"] == 20
+    assert receipt["legacy_expected_obligation"] == 123
+    if inventory != "known_empty":
+        assert receipt["status"] == "INCOMPLETE_DIAGNOSTIC"
+
+
+@pytest.mark.parametrize(
+    "value",
+    [
+        [],
+        {},
+        {"version": "0.2", "entries": []},
+        {"version": "0.1", "entries": None},
+        {"version": "0.1", "entries": [None]},
+        {"version": "0.1", "entries": [{"lemma": "x"}]},
+        {"version": "0.1", "entries": [{"lemma": " ", "url_slug": "x"}]},
+        {"version": "0.1", "entries": [{"lemma": 3, "url_slug": "x"}]},
+        {"version": "0.1", "entries": [{"lemma": "x", "url_slug": " "}]},
+        {"version": "0.1", "entries": [{"lemma": "x", "url_slug": "same"}, {"lemma": "y", "url_slug": "same"}]},
+    ],
+)
+def test_atlas_census_invalid_input_publishes_nothing(fixture, value):
+    atlas = atlas_input(fixture)
+    write(atlas, value)
+    result = fixture.cli(extra=["--atlas-manifest", str(atlas)])
+    assert result.returncode == 3
+    assert result.stderr.startswith("INVALID_EVIDENCE:")
+    assert not (fixture.root / "output").exists()
+
+
+def test_atlas_census_empty_entries_and_optional_compatibility(fixture):
+    atlas = atlas_input(fixture, [])
+    baseline, original = manifest.account(fixture.paths)
+    outputs, receipt = manifest.account(fixture.paths, atlas_manifest=atlas)
+    assert "atlas-census.json" not in baseline
+    assert "atlas_manifest" not in original["inputs"]
+    assert all(outputs[name] == raw for name, raw in baseline.items())
+    census = json.loads(outputs["atlas-census.json"])
+    assert census["entries"] == []
+    assert census["entry_count"] == census["distinct_lemma_count"] == 0
+    assert [r["exact_key_matched_entry_count"] for r in census["requirements"]] == [0] * 20
+    assert receipt["programme_completeness"] == "UNRESOLVED"
+
+
+def test_atlas_census_drift_refuses_publication_and_input_overlap(fixture, monkeypatch):
+    atlas = atlas_input(fixture)
+    assert fixture.cli(extra=["--atlas-manifest", str(atlas)]).returncode == 0
+    previous = (fixture.root / "output/manifest-receipt.json").read_bytes()
+    write(atlas, {"version": "0.1", "entries": [{"lemma": "changed", "url_slug": "changed"}]})
+    result = fixture.cli(extra=["--atlas-manifest", str(atlas)])
+    assert result.returncode == 4
+    assert result.stderr.startswith("PUBLICATION_FAILURE:")
+    assert (fixture.root / "output/manifest-receipt.json").read_bytes() == previous
+    outputs, receipt = manifest.account(fixture.paths, atlas_manifest=atlas)
+    monkeypatch.setenv("TMPDIR", str(fixture.root))
+    with pytest.raises(OSError, match="overlaps input evidence"):
+        manifest.publish(atlas, outputs, receipt)
+
+
 def test_complete_finite_inventory_cli_callable_and_rerun(fixture):
     result = fixture.cli()
     assert (result.returncode, result.stderr) == (0, "")
@@ -1024,9 +1181,7 @@ def test_cli_rejects_trailing_newline_in_unacquired_unit_digest(fixture):
     fixture.source_index(0)
     for record in fixture.docs["stage_evidence"]["records"]:
         if record["range_id"] == row["range_id"] and record["identity"] == unit["identity"]:
-            record.update(
-                source_unit_sha256=unit["sha256"], state="missing", evidence=[], reason="not yet acquired"
-            )
+            record.update(source_unit_sha256=unit["sha256"], state="missing", evidence=[], reason="not yet acquired")
     fixture.save()
     result = fixture.cli()
     assert result.returncode == 3, result.stdout + result.stderr
