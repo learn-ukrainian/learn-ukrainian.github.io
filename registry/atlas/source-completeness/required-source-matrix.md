@@ -113,3 +113,9 @@ provide regression evidence only. No public deployment or cutover is authorized.
 
 Generated inventories, diagnostics, and reconciliation receipts remain ignored
 under `batch_state/reports/`; do not commit them as authored registry inputs.
+
+For the ordered-unit producer's input formats, stage partitions and diagnostic
+exit codes, see [the manifest contract](manifest-contract.md). The executable
+`scripts.projects.open_model_data.source_completeness_manifest` accounts for
+supplied evidence. Its structural receipt does not accept source completeness
+or discharge the blocking inputs above.
