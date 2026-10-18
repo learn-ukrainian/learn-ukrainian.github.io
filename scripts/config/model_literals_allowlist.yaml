@@ -1476,13 +1476,6 @@ entries:
   count: 1
   kind: non_model_label
   reason: Existing harness, task, artifact or descriptive label 'grok-hermes'; not a model ID.
-- path: scripts/ai_agent_bridge/_channels.py
-  scope: resolve_recipient_alias
-  context: docstring
-  id: grok-monitor
-  count: 1
-  kind: non_model_label
-  reason: Existing harness, task, artifact or descriptive label 'grok-monitor'; not a model ID.
 - path: scripts/ai_agent_bridge/_channels_cli.py
   scope: <module>
   context: docstring
@@ -1826,13 +1819,6 @@ entries:
   count: 1
   kind: non_model_label
   reason: Existing harness, task, artifact or descriptive label 'grok-build'; not a model ID.
-- path: scripts/ai_agent_bridge/_messaging.py
-  scope: check_inbox
-  context: docstring
-  id: grok-monitor
-  count: 1
-  kind: non_model_label
-  reason: Existing harness, task, artifact or descriptive label 'grok-monitor'; not a model ID.
 - path: scripts/ai_agent_bridge/_model.py
   scope: <module>
   context: expression

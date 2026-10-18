@@ -745,8 +745,13 @@ models:
     tier: frontier_practical
     lifecycle: active
     # Current CLI default. grok-4.7-build-fast is about 2x the price and is not
-    # an alias. grok-4.6 is not admitted.
-    roles: [coding, strong_review, adversarial_review, critical_review, debugging]
+    # an alias. grok-4.6 is not admitted. ukrainian_review: operator order
+    # 2026-10-16 (#10835) admits native Grok to Ukrainian work under
+    # measurement with the Sources MCP. The role confers no route: review
+    # routes list only the code and infra profiles, and the resolver,
+    # delegate language-lane and sense-binding family filters still refuse
+    # xAI until the native harness wires the Sources MCP.
+    roles: [coding, strong_review, adversarial_review, critical_review, debugging, ukrainian_review]
     runtime_model_ids: [grok-4.7-build]
     transports: [native_grok, cursor]
     strengths: [strong_coding, sharp_review, agentic_work, residual_positional_review]

@@ -834,14 +834,15 @@ def test_detect_caller_identity_honors_session_handoff_agent(monkeypatch):
 
 
 def test_detect_caller_identity_phantom_handoff_agent_aliased_to_provider(monkeypatch):
-    # #7597: a pre-fix launcher exported SESSION_HANDOFF_AGENT=grok-monitor.
+    # #7597: a pre-fix launcher exported SESSION_HANDOFF_AGENT=codex-monitor
+    # (grok-monitor is a registered slot since #10835).
     # The explicit marker must still win (aliased to the provider), not fall
     # through to the soft CLAUDE_PROJECT_DIR heuristic.
     _clear_identity_env(monkeypatch)
-    monkeypatch.setenv("SESSION_HANDOFF_AGENT", "grok-monitor")
+    monkeypatch.setenv("SESSION_HANDOFF_AGENT", "codex-monitor")
     monkeypatch.setenv("CLAUDE_PROJECT_DIR", "/tmp/claude-project")
 
-    assert _cli._detect_caller_identity_from_env() == "grok"
+    assert _cli._detect_caller_identity_from_env() == "codex"
 
 
 def test_explicit_from_mismatch_with_handoff_agent_is_warning_tagged(monkeypatch, capsys):
@@ -1087,13 +1088,16 @@ def test_required_core_slots_keep_dedicated_recipients():
 
 def test_resolve_recipient_alias_maps_empty_roster_phantoms_to_provider():
     # Already-minted monitor identities must still drain via the provider.
-    assert _channels.resolve_recipient_alias("grok-monitor") == "grok"
+    # grok-monitor is a registered slot since #10835 and keeps its own inbox.
+    assert _channels.resolve_recipient_alias("grok-monitor") == "grok-monitor"
+    assert _channels.resolve_recipient_alias("codex-monitor") == "codex"
     assert _channels.resolve_recipient_alias("claude-monitor") == "claude"
     assert _channels.resolve_recipient_alias("kimi-monitor") == "kimi"
     assert _channels.resolve_recipient_alias("cursor-monitor") == "cursor"
 
 
-@pytest.mark.parametrize("provider", ["claude", "codex", "gemini", "grok", "kimi", "cursor"])
+# grok-monitor is a registered slot since #10835; test_handoff_slot_registry covers its dedicated inbox.
+@pytest.mark.parametrize("provider", ["claude", "codex", "gemini", "kimi", "cursor"])
 def test_mixed_monitor_roster_preserves_legacy_inbox_consumers(provider, monkeypatch, isolate_db, capsys):
     alias = f"{provider}-monitor"
     assert "muse-monitor" in _channels._load_registry_slots()
@@ -1204,11 +1208,12 @@ def test_resolve_recipient_alias_rejects_typos_and_unknown_providers():
 
 def test_inbox_for_accepts_phantom_empty_roster_identity():
     parser = _cli._build_parser()
-    assert parser.parse_args(["inbox", "--for", "grok-monitor"]).for_llm == "grok"
-    assert parser.parse_args(["ack-all", "grok-monitor"]).agent == "grok"
-    assert parser.parse_args(["send", "hi", "--to", "grok-monitor"]).to_llm == "grok"
-    assert parser.parse_args(["inbox", "show", "grok-monitor"]).agent == "grok"
-    assert parser.parse_args(["inbox", "run", "grok-monitor", "--once"]).agent == "grok"
+    assert parser.parse_args(["inbox", "--for", "codex-monitor"]).for_llm == "codex"
+    assert parser.parse_args(["ack-all", "codex-monitor"]).agent == "codex"
+    assert parser.parse_args(["send", "hi", "--to", "codex-monitor"]).to_llm == "codex"
+    assert parser.parse_args(["inbox", "show", "codex-monitor"]).agent == "codex"
+    assert parser.parse_args(["inbox", "run", "codex-monitor", "--once"]).agent == "codex"
+    assert parser.parse_args(["send", "hi", "--to", "grok-monitor"]).to_llm == "grok-monitor"
     assert parser.parse_args(["inbox", "--for", "cursor-monitor"]).for_llm == "cursor"
     assert parser.parse_args(["send", "hi", "--to", "cursor-monitor"]).to_llm == "cursor"
 
@@ -1229,24 +1234,24 @@ def test_inbox_for_still_rejects_unknown_identities():
 
 def test_check_inbox_phantom_identity_drains_provider_inbox(capsys):
     # A live session launched before #7597 carries
-    # SESSION_HANDOFF_AGENT=grok-monitor; its inbox drain must read the
-    # grok inbox without a relaunch.
-    _messaging.send_message("hello grok", from_llm="claude", to_llm="grok", quiet=True)
+    # SESSION_HANDOFF_AGENT=codex-monitor; its inbox drain must read the
+    # codex inbox without a relaunch.
+    _messaging.send_message("hello codex", from_llm="claude", to_llm="codex", quiet=True)
     capsys.readouterr()
 
-    _messaging.check_inbox("grok-monitor")
+    _messaging.check_inbox("codex-monitor")
 
     captured = capsys.readouterr()
-    assert "Inbox for grok" in captured.out
+    assert "Inbox for codex" in captured.out
     assert "From: claude" in captured.out
 
 
 def test_acknowledge_all_phantom_identity_acks_provider_inbox(capsys):
-    _messaging.send_message("ack me", from_llm="claude", to_llm="grok", quiet=True)
+    _messaging.send_message("ack me", from_llm="claude", to_llm="codex", quiet=True)
     capsys.readouterr()
 
-    _messaging.acknowledge_all("grok-monitor")
+    _messaging.acknowledge_all("codex-monitor")
 
     captured = capsys.readouterr()
     assert "Acknowledged 1 messages" in captured.out
-    assert "for grok" in captured.out
+    assert "for codex" in captured.out

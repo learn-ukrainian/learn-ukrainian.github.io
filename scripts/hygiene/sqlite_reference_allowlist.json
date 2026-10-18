@@ -105,6 +105,16 @@
     ]
   },
   {
+    "path": "scripts/atlas/word_card_sources.py",
+    "reference_count": 1,
+    "kind": "writer",
+    "target_db": "temporary pilot WP3 extract DB",
+    "reason": "copies the pilot entries, their homonym siblings and sections verbatim into a throwaway file so the WP3 ingestion modules run over a bounded snapshot (#8981)",
+    "calls": [
+      "sqlite3.connect(destination)"
+    ]
+  },
+  {
     "path": "scripts/audit/checks/vocabulary.py",
     "reference_count": 2,
     "kind": "writer",

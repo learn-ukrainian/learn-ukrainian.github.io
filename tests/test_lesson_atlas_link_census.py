@@ -58,6 +58,7 @@ def test_classify_rules_on_a_tiny_catalog():
     assert catalog.classify("неіснуюче") == DEAD
 
 
+@pytest.mark.needs_sparse_tree("site/src/data")
 def test_published_data_classifies_known_inflected_forms():
     catalog = load_published_catalog(DEFAULT_SEARCH_INDEX, DEFAULT_ALIASES)
     assert catalog.classify("студент") == ENTRY
@@ -77,6 +78,7 @@ def test_mask_atlas_href_ignores_link_edits_only():
     assert mask_atlas_href_fields(before) != mask_atlas_href_fields(prose)
 
 
+@pytest.mark.needs_sparse_tree("site/src/data")
 def test_gate_fails_on_a_planted_dead_link(tmp_path: Path):
     docs = tmp_path / "site" / "src" / "content" / "docs" / "a2"
     docs.mkdir(parents=True)
@@ -114,6 +116,7 @@ def test_gate_fails_on_a_planted_alias_link(tmp_path: Path):
     assert hits[0].word == "студент"
 
 
+@pytest.mark.needs_sparse_tree("site/src/content", "site/src/data")
 def test_committed_lesson_atlas_hrefs_are_published_entries():
     catalog = load_published_catalog(DEFAULT_SEARCH_INDEX, DEFAULT_ALIASES)
     hits = blocking_atlas_hrefs(DEFAULT_DOCS, catalog)
@@ -127,6 +130,7 @@ def test_committed_lesson_atlas_hrefs_are_published_entries():
     )
 
 
+@pytest.mark.needs_sparse_tree("site/src/content", "site/src/data")
 def test_committed_lessons_keep_wrong_sense_links_out():
     """#9002: the region Поділля and the language register реєстр have no
     matching Atlas sense, so these lessons carry no link for them."""
@@ -158,6 +162,7 @@ def test_census_help_mentions_when_not_to_use_it():
     assert "--search-index" in help_text
 
 
+@pytest.mark.needs_sparse_tree("site/src/data")
 def test_planted_ambiguous_alias_is_blocking(tmp_path: Path):
     docs = tmp_path / "docs" / "a2"
     docs.mkdir(parents=True)

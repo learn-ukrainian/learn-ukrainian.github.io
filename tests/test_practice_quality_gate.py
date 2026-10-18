@@ -448,6 +448,7 @@ def test_forged_snapshot_source_label_fails_with_sources_db(tmp_path: Path):
     assert [(v["item"], v["type"]) for v in violations] == [(drill["id"], "SOURCE_LABEL_MISMATCH")]
 
 
+@pytest.mark.needs_sparse_tree("site/src/data")
 @pytest.mark.parametrize("database_mode", [False, True])
 def test_reviewer_source_label_probe_on_committed_err_0005(
     tmp_path: Path, database_mode: bool, request: pytest.FixtureRequest
@@ -492,6 +493,7 @@ def test_supplied_invalid_sources_db_fails(tmp_path: Path, database_kind: str):
     assert [(v["item"], v["type"]) for v in violations] == [("sources_db", "SOURCE_DB_INVALID")]
 
 
+@pytest.mark.needs_sparse_tree("site/src/data")
 def test_default_error_correction_audit_uses_snapshot_with_no_sources_db(tmp_path: Path, monkeypatch):
     """CI must audit the committed deck without resolving a local sources.db."""
     from scripts.audit import practice_quality_gate
@@ -605,6 +607,7 @@ def test_database_mode_reverifies_the_snapshot(tmp_path: Path):
     ]
 
 
+@pytest.mark.needs_sparse_tree("site/src/data")
 def test_reviewer_probe_on_the_committed_deck_and_real_sources_db(tmp_path: Path, requires_sources_db: Path):
     """The exact round 4 probe: committed err_0005's error with err_0004's correction, snapshot forged to agree."""
     from scripts.audit.practice_quality_gate import PROJECT_ROOT
@@ -645,6 +648,7 @@ def test_audit_error_correction_checks_typed_answers(tmp_path: Path):
     ]
 
 
+@pytest.mark.needs_sparse_tree("site/src/data")
 def test_production_culture_deck_passes_error_correction_gate(tmp_path: Path, monkeypatch):
     """The bundled Culture-of-Speech deck is what learners play; audit it directly."""
     from scripts.audit.practice_quality_gate import DEFAULT_VESUM_DB, PROJECT_ROOT
@@ -1126,6 +1130,7 @@ def test_audit_practice_shards_empty_option_label_fails(tmp_path: Path):
     assert any(v["type"] == "EMPTY_OPTION_LABEL" and "p_empty_label" in v["item"] for v in violations)
 
 
+@pytest.mark.needs_sparse_tree("site/src/data")
 def test_production_practice_quality_gate_passes(tmp_path: Path, monkeypatch):
     """Verify that current repository practice datasets pass with 0 violations."""
     _hide_sources_db(monkeypatch, tmp_path)

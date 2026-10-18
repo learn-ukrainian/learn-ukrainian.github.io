@@ -2054,6 +2054,7 @@ def test_live_runner_youtube_link_inside_prose_unit_fails_closed(
     assert "transform 'embed_youtube_video_links' rewrote the bytes of unit 0" in c9["reason"]
 
 
+@pytest.mark.needs_sparse_tree("site/src/content")
 def test_live_runner_readings_block_insertion_keeps_unit_locations(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

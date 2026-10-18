@@ -777,14 +777,15 @@ def test_committed_inputs_readonly_cli_guard(tmp_path, capsys):
     output = json.loads(result.stdout)
     assert output["counts"] == dict(units=150, source_records=272, atlas_articles=114, legacy_alias_rows=140)
     registry = json.loads(paths[1].read_bytes())
-    assert [len(registry[k]) for k in ("entries", "source_records", "events")] == [264, 272, 691]
-    assert registry["registry_version"] == 2
+    # v3 = the reviewed v2 allocation plus three appended holding-sense mints (#8981, append-only).
+    assert [len(registry[k]) for k in ("entries", "source_records", "events")] == [264, 272, 694]
+    assert registry["registry_version"] == 3
     # The source-partition allocation appends to, rather than rewriting, the bootstrap.
     assert sha(dict(entries=registry["entries"][:114], source_records=registry["source_records"],
                     events=registry["events"][:386])) == \
         "a349127ec24789b2bf180cf6edf7a4056e9025f1c2801e4232a11446be3dc5e1"
     assert len(output["unresolved_card_mappings"]) == 22 and output["heldout_isolation"] == "unverified"
-    assert output["foreign_build_events"] == 305  # Separate allocation epoch; not bootstrap mint evidence.
+    assert output["foreign_build_events"] == 308  # Allocation and holding epochs; not bootstrap mint evidence.
     member, held = tmp_path / "membership.json", json.loads(paths[0].read_bytes())["selection"]["source_records"][0]
     save(member, dict(heldout=[held["locator"]], replay=[]))  # No committed owner carries an adjudication marker.
     assert foundation.main(["verify", "--manifest", str(paths[0]), "--registry", str(paths[1]),
@@ -802,9 +803,15 @@ def test_committed_pilot_source_partition_allocations():
     records = {r["locator"]: r for r in manifest["selection"]["source_records"]}
     assert len(entries) == 150 and len(events) == 305
     assert len({e["card_id"] for e in entries}) == 150
-    # Immutability guard on the new allocation epoch (Opus review finding 3).
-    assert sha(dict(entries=entries, events=events)) == \
+    # Immutability guard on the allocation epoch (Opus review finding 3): its entries, read with only the senses it
+    # minted, and its events are unchanged by the later append-only holding-sense epoch (#8981).
+    seeded = {e["to"][0] for e in events if e["kind"] == "sense_mint"}
+    epoch = [dict(e, senses=[s for s in e["senses"] if s["sense_id"] in seeded]) for e in entries]
+    assert sha(dict(entries=epoch, events=events)) == \
         "4f7717c56ba723e4db22e89d1ca96baee21fc2731f24fdce078e9dc9021ca422"
+    holding_build = "pilot-holding-sense-allocation-8981@sha256:" + manifest["manifest_sha256"]
+    holding = {e["to"][0]: e for e in registry["events"] if e["build_id"] == holding_build}
+    assert len(holding) == 3 and all(e["kind"] == "sense_mint" for e in holding.values())
     assert sum(e["card_kind"] == "mwe" for e in entries) == 15
     assert sum(e["card_kind"] == "proper_name" for e in entries) == 13
     assert sum(e["card_kind"] == "lexeme" for e in entries) == 122
@@ -845,8 +852,11 @@ def test_committed_pilot_source_partition_allocations():
             parts = [p.strip() for p in gloss[1:-1].split(";")]
         else:
             parts = [None]
-        assert len(entry["senses"]) == len(parts)
-        for order, (sense, literal) in enumerate(zip(entry["senses"], parts, strict=True), 1):
+        assert len([s for s in entry["senses"] if s["sense_id"] in seeded]) == len(parts)
+        for extra in entry["senses"][len(parts):]:  # an appended holding sense: unsplit, minted by the holding epoch
+            assert extra["state"] == "unsplit" and extra["sense_id"] in holding
+            assert json.loads(holding[extra["sense_id"]]["evidence"])["source_unit"] == anchor["locator"] + "#unsplit"
+        for order, (sense, literal) in enumerate(zip(entry["senses"][:len(parts)], parts, strict=True), 1):
             allocated_senses.append(sense)
             expected_state = "active" if (gloss and not (entry["card_kind"] == "proper_name" and ";" in gloss)) else "unsplit"
             assert sense["order"] == order and sense["state"] == expected_state
