@@ -368,6 +368,7 @@ def test_agy_model_killed_read_with_complete_reply_is_accepted(tmp_path, command
         "sh checks.sh",
         "checks.sh",
         "unknown",
+        "while pgrep -f 'pytest -q' >/dev/null; do sleep 5; done",
         "rg needle; pytest",
         "rg needle && pytest",
         "cat file > output",
