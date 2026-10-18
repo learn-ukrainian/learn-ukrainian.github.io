@@ -95,11 +95,12 @@ open_questions:
   E6 (dataset licence choice) remains an operator decision.'
 - 'Sources shown in the Atlas with no entry here yet (labels from scripts/lexicon/source_attribution.py, counted
   in atlas.db public-route payloads of the 2026-09-11 manifest, published as the atlas-manifest release asset; counted
-  2026-09-28): Великий тлумачний словник сучасної української мови (ВТС, 8,422), Словник синонімів С. Караванського
-  (2,727), Орфографічний словник української мови (5,534), Правописний словник Голоскевича (3,396), Орфоепічний
-  словник української мови (1,912), Приповідки або українсько-народня філософія (555), МійКлас relation pairs (704),
-  «Уроки державної мови» з газети «Хрещатик» (27), Словник чужослів Павла Штепи (33), Культура слова (3), and the
-  literary corpus (literary_texts, e.g. izbornyk.org.ua, ukrlib.com.ua). Each needs its own entry.'
+  2026-09-28): Словник синонімів С. Караванського (2,727), Орфографічний словник української мови (5,534), Правописний
+  словник Голоскевича (3,396), Орфоепічний словник української мови (1,912), Приповідки або українсько-народня філософія
+  (555), МійКлас relation pairs (704), «Уроки державної мови» з газети «Хрещатик» (27), Словник чужослів Павла Штепи (33),
+  Культура слова (3), and the literary corpus (literary_texts, e.g. izbornyk.org.ua, ukrlib.com.ua). (Note: Великий
+  тлумачний словник сучасної української мови / ВТС was admitted and registered under #8977 / #6321 as vts_busel_slovnyk_me).
+  Each remaining unregistered source needs its own entry.'
 sources:
 - id: ulif
   permission_status: verbal-granted-written-pending
@@ -2002,3 +2003,57 @@ sources:
     scope: the Atlas/practice fields carrying this source's label; the stored copies listed in stored_in (deleted
       only with the operator's authorisation).
   open_questions: []
+- id: vts_busel_slovnyk_me
+  permission_status: unknown
+  permission_note: Live Atlas definition_cards and internal word cards quote entry definitions referencing the statutory quotation exception under Art. 22(2)(1) of Law of Ukraine 2811-IX (free quotation from lawfully published works without permission and free of charge, with mandatory naming of the author and source of borrowing, conditioned by the critical, polemical, scientific, or informational character of the incorporating work, with semantic and/or graphical marking of quotation boundaries) under operator IP responsibility (Decision 1, Plan v3.5.0 O1; an administrative source-use decision, not a legal conclusion). Public dataset distribution licence status remains unknown pending rights holder contact; this limitation blocks only the Phase 7 public dataset release, not internal cards or site display.
+  name: Великий тлумачний словник сучасної української мови (ВТС-СУМ, за ред. В. Т. Бусела) via slovnyk.me
+  organisation: 'Not established from electronic mirror colophon (candidate attribution: ВТФ «Перун» / ред. В. Т. Бусел unverified); digital copy hosted by slovnyk.me'
+  role: Secondary modern explanatory dictionary for Word-Card sense seeding (admitted 2026-10-17 under #8977 / #6321) and live Atlas definition cards (7,849 entries); provides definitions for lexemes outside СУМ-20 published volume boundary (РЯХТЛИВИЙ..Я) and unquarantined entries.
+  fields_used:
+  - headword
+  - meaning
+  appears_in:
+  - internal
+  - site
+  appears_note: Live Atlas definition_cards displays ВТС definitions for 7,849 words (data/atlas.db count) and the public atlas-manifest release asset distributes definition-card presentation blocks. Internal word cards use ВТС as secondary sense seed (official СУМ-20 → ВТС → ULIF). Open model training dataset export remains withheld pending Phase 7 licensing clearance.
+  stored_in:
+  - data/lexicon/slovnyk_cache/*.json (slug vts; 31,688 valid entries)
+  - data/sources.db slovnyk_me_entries (dictionary_slug='vts')
+  - data/atlas.db enrichment (section='definition_cards')
+  provenance:
+    urls:
+    - https://slovnyk.me/dict/vts/
+    retrieved: '2026-10-15'
+    retrieved_evidence: data/lexicon/slovnyk_cache/*.json entries retrieved between 2026-08-06 and 2026-10-15; 31,688 entries with valid text in local cache; sources.db slovnyk_me_entries holds 13,181 rows.
+  terms:
+    found: true
+    licence:
+      name: All rights reserved (rights holder unverified / candidate ВТФ «Перун» / В. Т. Бусел); no open licence on slovnyk.me aggregator
+      spdx: null
+      verbatim_quote: null
+    conditions:
+      share_alike: null
+      non_commercial: null
+      other:
+      - Entry definitions quoted with mandatory author and source attribution and marked quotation boundaries, referencing Art. 22(2)(1) of Law 2811-IX.
+      - Operator decision d1_content_stays and Plan v3.5.0 O1 verbatim reference use apply to internal cards and site display under operator IP responsibility.
+    quotes:
+    - id: vts_slovnyk_me_attribution
+      quote: 'Джерело: Великий тлумачний словник сучасної української мови на Slovnyk.me'
+      gloss_en: Digital aggregator slovnyk.me attribution tag appended to VTS entries.
+      url: https://slovnyk.me/dict/vts/
+      read_on: '2026-10-17'
+    searched:
+    - https://slovnyk.me/ (no explicit open license terms declared for VTS dictionary text)
+    - "https://slovnyk.me/terms (archived 2024-03-20; slovnyk_terms_2024 quotes clause forbidding copying without permission; permission_status: none applies to aggregator text; quotation exception under Art. 22(2)(1) Law 2811-IX is claimed for the underlying lawfully published VTS dictionary work, not the mirror copy; licence basis NOT CHECKED for public dataset release, blocking Phase 7 release but not internal card seeding)"
+    legal_refs:
+    - law_art22_quotation
+  citation:
+    form: Великий тлумачний словник сучасної української мови (електронна копія на Slovnyk.me, https://slovnyk.me/dict/vts/ — друковане видання ВТФ «Перун» не встановлено за колофоном електронного дзеркала; вимагає бібліографічної верифікації).
+    shown_label: Великий тлумачний словник сучасної української мови
+  removal:
+    route: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues
+    scope: Atlas definition cards carrying the VTS label, internal word card sense seeds derived from VTS, and stored copies in data/lexicon/slovnyk_cache/ and data/sources.db.
+  open_questions:
+  - Print edition attribution (ВТФ «Перун» / за ред. В. Т. Бусела, 2005) not established from electronic mirror colophon; edition verification prerequisite remains open for formal bibliographic citation.
+  - Commercial/public-dataset redistribution licence status remains unconfirmed with rights holder (ВТФ «Перун»); blocks Phase 7 public dataset release only.
