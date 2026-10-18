@@ -411,25 +411,29 @@ def _rev_list(repo: Path, rev_range: str) -> list[str]:
     return shas
 
 
-def _parse_patch_ids(repo: Path, patch_text: str) -> dict[str, str]:
-    if not patch_text.strip():
+def _parse_patch_ids(repo: Path, patch_bytes: bytes) -> dict[str, str]:
+    if not patch_bytes:
         return {}
     proc = subprocess.run(
         ["git", "patch-id", "--stable"],
         cwd=repo,
         env=sanitized_git_env(),
-        input=patch_text,
+        input=patch_bytes,
         capture_output=True,
-        text=True,
+        text=False,
         check=False,
         timeout=120,
     )
     if proc.returncode:
-        raise RuntimeError(f"git patch-id failed: {(proc.stderr or proc.stdout).strip()}")
+        raise RuntimeError(f"git patch-id failed (exit {proc.returncode})")
+    try:
+        output = proc.stdout.decode("ascii")
+    except UnicodeDecodeError as exc:
+        raise RuntimeError("git patch-id returned non-ASCII metadata") from exc
     found: dict[str, str] = {}
-    for line in proc.stdout.splitlines():
-        parts = line.split()
-        if len(parts) != 2 or not SHA_RE.fullmatch(parts[1]):
+    for line in output.splitlines(keepends=True):
+        parts = line.removesuffix("\n").split(" ")
+        if len(parts) != 2 or any(not SHA_RE.fullmatch(part) for part in parts) or parts[1] in found:
             raise RuntimeError("git patch-id returned an unreadable row")
         found[parts[1]] = parts[0]
     return found
@@ -439,9 +443,18 @@ def _load_patch_ids(repo: Path, cache: dict[str, str | None], shas: list[str]) -
     missing = [sha for sha in shas if sha not in cache]
     for start in range(0, len(missing), 40):
         chunk = missing[start : start + 40]
-        log = _git(repo, "log", "-p", "--no-walk", "--pretty=format:%H", *chunk, timeout=120)
+        # Patch content is arbitrary bytes; text mode also translates line endings.
+        log = subprocess.run(
+            ["git", "log", "-p", "--no-walk", "--pretty=format:%H", *chunk],
+            cwd=repo,
+            env=sanitized_git_env(),
+            capture_output=True,
+            text=False,
+            check=False,
+            timeout=120,
+        )
         if log.returncode:
-            raise RuntimeError(f"git log failed: {(log.stderr or log.stdout).strip()}")
+            raise RuntimeError(f"git log failed (exit {log.returncode})")
         found = _parse_patch_ids(repo, log.stdout)
         for sha in chunk:
             cache[sha] = found.get(sha)
