@@ -860,7 +860,7 @@ several models are reachable through more than one. Know both axes before routin
 ¹ `ab` = the user's shell alias for `.venv/bin/python scripts/ai_agent_bridge/__main__.py`.
 In scripts, docs meant for copy-paste, and anything automated, ALWAYS write the full path —
 bare `ab` resolves to ApacheBench (`/usr/sbin/ab`) outside the user's shell (AGENTS.md rule).
-`ask-deepseek` is consult-only for non-language work (added 2026-08-16, #6805), never implementation or review. Bridge asks ride the
+`ask-deepseek` is consult-only for non-language work (added 2026-08-16, #6805). Latest DeepSeek V4.1 Flash coding runs through opencode; review-of-record and Ukrainian work need measured evidence first. Budget substitution never selects DeepSeek. Bridge asks ride the
 `acpx-deepseek-shadow` ACP seat — native `opencode acp --pure` pinned to first-party
 `deepseek/deepseek-flash` (identity `deepseek-v4.1-flash`) at high effort, deny-all tools (the `ask-hermes` alias
 resolves to the same seat; Hermes itself was permanently removed 2026-08-16).

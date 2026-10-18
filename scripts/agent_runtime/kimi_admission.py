@@ -42,6 +42,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Protocol
 
+from .deepseek_admission import refuse_deepseek_if_disallowed
 from .redacted_env import RedactedEnv
 
 POLICY_LINE = (
@@ -676,9 +677,11 @@ def refuse_kimi_if_disallowed(
     commit it is checked out or created from). ``trees`` may be a callable,
     so resolving a base commit never precedes a policy refusal; a callable
     that raises, or owned paths with no tree to read, refuse. Never writes.
-    Returns None for every non-Kimi call.
+    DeepSeek input admission runs first; other non-Kimi calls return None.
     """
-    seat = _kimi_seat_name(tuple(effective_participants), tuple(effective_models))
+    participants, models = tuple(effective_participants), tuple(effective_models)
+    refuse_deepseek_if_disallowed(participants, models, repo=repo, prompt_file=prompt_file)
+    seat = _kimi_seat_name(participants, models)
     if seat is None:
         return
     owned = tuple(paths)

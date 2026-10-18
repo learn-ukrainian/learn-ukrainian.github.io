@@ -72,7 +72,7 @@ Assign by **role × task family × harness × route/egress**, not marketing rank
 
 - **Cursor (operator 2026-09-22; Auto scope operator decision 2026-09-30):** prefer **`--agent cursor --model grok-4.7-high`** for mechanical **and** ordinary infra/code implement when fit allows — not LANGUAGE-LANES, not advisor/authority. Cursor Auto runs only a well-defined coding task (`--research-role implementation` write dispatch, owned paths, PASS DoR card); the driver seat, design, consults, discussions and recon pin `grok-4.7` or `composer-2.5`, and a review runs the approved concrete model the reviewer resolver selects. `cursor:auto` never CF-of-record.
 - **Utilize, do not trim (operator 2026-08-08 / #6468):** free/behind seats (Cursor, AGY, Pool, **Z.AI/GLM**, **Kimi k3-256k**, Claude routine, Grok workers) with open in-scope work must be pulled before feeding Codex near_cap mechanical jobs. **Keep Kimi and Z.AI/GLM** — they are first-class. Cutting subscriptions is a last resort after sustained measured zero use, not a response to multi-driver complexity. Concurrent drivers (~2 Grok + 1 Claude + 1–4 Codex) share free pools; coordinate via `/api/delegate/active`.
-- **DeepSeek:** excluded from dispatch, implementation and review. Flash remains active in the catalog; Pro is retired. `ask-deepseek` is consult-only for non-language work, LOCAL-ONLY, via first-party `deepseek/` through OpenCode.
+- **DeepSeek:** latest V4.1 Flash coding through opencode is allowed on the direct DeepSeek API or OpenRouter with a named US provider allow-list. Never send private-repository content or secrets. Review-of-record and Ukrainian work need measured evidence first; Pro and older ids stay retired. `ask-deepseek` is consult-only for non-language work. Budget substitution never selects DeepSeek. `scripts/ai_agent_bridge/routing_guard.py` still refuses `openrouter/deepseek` until that allow-list exists.
 - **OpenRouter:** mainly Pool + Gemma; not a general multi-model bus.
 - **Timed pauses:** near_cap/paused lanes carry **return-at** — auto-return, never permanent neglect.
 - **Cursor gate:** #6469 plan-only adapter **fixed** — cursor-first mechanical tier is active.
@@ -189,7 +189,7 @@ Before dispatch, classify **data class** and **route**:
 | Public open-source code | Standard fleet routes OK |
 | Curriculum drafts / unreleased content | Prefer Western lab routes; record route |
 | Secrets, tokens, learner PII | **Default-deny** external routes |
-| Local-only policy lanes (GLM, some DeepSeek) | Never CI; never sensitive classes |
+| Local-only policy lanes (GLM) | Never CI; never sensitive classes |
 
 Record when relevant: **provider, intermediary, region/retention, data class**. Brand labels (“China”) are insufficient without the concrete route.
 
