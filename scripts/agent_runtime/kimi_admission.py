@@ -100,6 +100,7 @@ KIMI_OWNED_ROOTS: dict[str, str] = {
     ".github/codeql/": "CodeQL configuration",
     ".github/dependabot.yml": "dependency update configuration",
     ".dagger/": "Dagger CI module",
+    "dashboards/": "operator monitoring dashboard pages",
 }
 # Site build and test configuration at the site root (astro.config.mjs, vitest.config.ts...).
 SITE_CONFIG_REASON = "site build and test configuration"

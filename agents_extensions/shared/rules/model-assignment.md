@@ -340,7 +340,7 @@ or count as a formal review.
   allowlisted paths only (`KIMI_OWNED_ROOTS`: site UI components, layouts, pages, styles and assets,
   four named `site/src/lib` helpers, `site/*.config.*`, the verified backend packages
   `scripts/{agent_runtime,api,orchestration,ci,fleet_comms,hygiene,storage}` and their tests, CI
-  workflows and `.dagger/`); anything not on the allowlist is refused, as is an owned scope
+  workflows, `.dagger/` and the operator dashboard pages `dashboards/`); anything not on the allowlist is refused, as is an owned scope
   covering an excluded file. Kimi content must be plain UTF-8 text (no control characters but tab,
   LF, CR) without Cyrillic: an owned file or scope holding anything else (Cyrillic, UTF-16, another
   encoding, a binary) is refused — read in the tree the worker starts from, a reused worktree on

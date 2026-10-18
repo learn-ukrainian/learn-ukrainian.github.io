@@ -117,6 +117,7 @@ ADMITTED_PATHS = (
     ".github/workflows/ci.yml",
     ".github/actions/python-ci-env/action.yml",
     ".dagger/src/learn_ukrainian_ci/main.py",
+    "dashboards/fleet-board.html",
     "./scripts/api/x.py",
     "scripts//ci/x.py",
     # Directory and glob scopes whose every file is allowlisted and Cyrillic-free.
@@ -166,6 +167,7 @@ REFUSED_PATHS = (
     ".github/ISSUE_TEMPLATE/naturalness-quality.md",
     "site/package.json",
     "README.md",
+    "dashboards-archive/fleet-board.html",
     # Exclusions inside allowlisted roots.
     "scripts/agent_runtime/kimi_admission.py",
     "scripts/agent_runtime/kimi_boundary.py",
@@ -207,7 +209,7 @@ def test_every_allowlisted_root_and_exclusion_carries_a_reason():
 @pytest.mark.repo_wide
 def test_every_allowlisted_root_exists_in_the_repository():
     tracked = subprocess.run(
-        ["git", "ls-files", "site/src", "scripts", "tests", ".github", ".dagger"],
+        ["git", "ls-files", "site/src", "scripts", "tests", ".github", ".dagger", "dashboards"],
         cwd=_REPO_ROOT,
         capture_output=True,
         text=True,
