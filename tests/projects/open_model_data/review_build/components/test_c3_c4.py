@@ -337,6 +337,9 @@ def test_multi_group_sense_not_visible_never_position_assigned(sources):
         ("<b>SYNTHETIC idiom</b> SYNTHETIC definition.", "citation_unresolved"),
         ("<b>SYNTHETIC idiom</b> SYNTHETIC definition.<i>SYNTHETIC quote</i> ()", "citation_unresolved"),
         (PHRASE.replace(" (SYNTHETIC second author)", ""), "citation_unresolved"),
+        (PHRASE.replace("(SYNTHETIC author)", "(synthetic stage direction)"), "citation_unresolved"),
+        (PHRASE.replace("(SYNTHETIC second author)", "(synthetic stage direction)"), "citation_unresolved"),
+        (PHRASE.replace("(SYNTHETIC author)", "(123)"), "citation_unresolved"),
         (PHRASE.replace("SYNTHETIC example <b>SYNTHETIC emphasis</b>", ""), "citation_unresolved"),
     ],
 )
@@ -351,6 +354,19 @@ def test_c4_requires_printed_idiom_definition_and_every_author_label(sources, ht
             c4_phraseology,
             replace(unit, candidate=replace(unit.candidate, outcome="accepted", reason="ok", evidence=())),
         )
+
+
+def test_c4_projection_refuses_quotation_whose_author_label_was_removed(sources):
+    unit = units(sources, c4_phraseology)[0]
+    assert unit.candidate.outcome == "accepted"
+    html_update(sources, 3, PHRASE.replace("(SYNTHETIC second author)", "(synthetic stage direction)"))
+    with SnapshotReader({STORE: sources}) as reader:
+        with pytest.raises(BuildError):
+            unit.project(ComponentContext(reader, {}))
+    current = units(sources, c4_phraseology)[0]
+    assert (current.candidate.outcome, current.candidate.reason) == ("withheld", "citation_unresolved")
+    with SnapshotReader({STORE: sources}) as reader:
+        assert current.project(ComponentContext(reader, {})) == current.candidate
 
 
 @pytest.mark.parametrize("mutation", ["omit", "reorder", "cross_sense", "truncate", "metadata"])
