@@ -570,11 +570,26 @@ def phase_stack_drift(args: argparse.Namespace) -> dict[str, Any]:
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--repo-root", required=True, help="canonical checkout (state root)")
-    parser.add_argument("--project-dir", required=True, help="session checkout (may be a worktree)")
-    parser.add_argument("--agent", required=True)
-    parser.add_argument("--session-id", default="")
+    parser = argparse.ArgumentParser(
+        description=(
+            "Run SessionStart checks and emit one JSON document of phase statuses.\n"
+            "Use from the session setup hook, not for standalone lease recovery."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""Examples:
+  .venv/bin/python scripts/hooks/session_start_gate.py --help
+  .venv/bin/python scripts/hooks/session_start_gate.py --repo-root . --project-dir . --agent codex
+Outputs: JSON phase statuses on stdout; session records and local stack drift state may be updated.
+  --claim-lease requests a thread lease; --import-bundle imports rollover state.
+Exit codes: 0 = JSON produced or help shown; 2 = invalid arguments.
+  Other nonzero exits mean the gate could not run. A phase failure is reported in JSON.
+Related: agents_extensions/shared/hooks/session-setup.sh; scripts/orchestration/thread_handoff.py; #6411.
+""",
+    )
+    parser.add_argument("--repo-root", required=True, help="canonical state checkout path (required), e.g. .")
+    parser.add_argument("--project-dir", required=True, help="session checkout or worktree path (required), e.g. .")
+    parser.add_argument("--agent", required=True, help="agent identity (required), e.g. codex")
+    parser.add_argument("--session-id", default="", help="durable thread identity, e.g. thread-001 (default: empty)")
     parser.add_argument(
         "--record-session-id",
         default="",
@@ -585,16 +600,20 @@ def main(argv: list[str] | None = None) -> int:
             "--session-id when omitted."
         ),
     )
-    parser.add_argument("--transcript-path", default="")
-    parser.add_argument("--source", default="")
-    parser.add_argument("--observed-model", default="")
-    parser.add_argument("--agent-type", default="")
-    parser.add_argument("--profile-id", default="")
-    parser.add_argument("--task-family", default="")
-    parser.add_argument("--claim-lease", action="store_true")
-    parser.add_argument("--detect", action="store_true")
-    parser.add_argument("--import-bundle", action="store_true")
-    parser.add_argument("--stream", default="")
+    parser.add_argument(
+        "--transcript-path", default="", help="session transcript path, e.g. session.jsonl (default: empty)",
+    )
+    parser.add_argument("--source", default="", help="hook source label, e.g. startup (default: empty)")
+    parser.add_argument(
+        "--observed-model", default="", help="runtime model identity for the record (default: empty)",
+    )
+    parser.add_argument("--agent-type", default="", help="agent role label, e.g. worker (default: empty)")
+    parser.add_argument("--profile-id", default="", help="installed profile identity (default: empty)")
+    parser.add_argument("--task-family", default="", help="rollover task-family filter, e.g. infra (default: empty)")
+    parser.add_argument("--claim-lease", action="store_true", help="request the thread lease (default: disabled)")
+    parser.add_argument("--detect", action="store_true", help="detect pending rollover state (default: disabled)")
+    parser.add_argument("--import-bundle", action="store_true", help="import a pending rollover bundle (default: disabled)")
+    parser.add_argument("--stream", default="", help="rollover stream filter, e.g. epic:123 (default: empty)")
     args = parser.parse_args(argv)
 
     # Imports must resolve against the session checkout, matching the old

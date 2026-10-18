@@ -45,7 +45,7 @@ def pin(root: Path, script: Path) -> None:
 def test_repository_cli_help_gate() -> None:
     errors, failures = checker.find_violations()
     assert errors == [], "\n".join(errors)
-    assert len(failures) == 974
+    assert len(failures) == 973
 
 
 def test_passing_help(tmp_path: Path) -> None:
@@ -239,11 +239,18 @@ def test_probe_uses_temporary_cwd(
     assert list(scratch.iterdir()) == []
 
 
-def test_analyze_dead_code_help_does_not_start_analysis(tmp_path: Path) -> None:
+@pytest.mark.parametrize("help_flag", ["--help", "-h"])
+def test_analyze_dead_code_help_does_not_start_analysis(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, help_flag: str,
+) -> None:
+    output_dir = tmp_path / "analysis-output"
+    output_dir.mkdir()
     script = checker.REPO_ROOT / "scripts/tools/analyze_dead_code.py"
+    monkeypatch.delenv("TMPDIR", raising=False)
     assert checker.probe_help(script, checker.REPO_ROOT) is None
+    monkeypatch.setenv("TMPDIR", str(output_dir))
     result = subprocess.run(
-        [sys.executable, str(script), "--help"], cwd=tmp_path,
+        [sys.executable, str(script), help_flag], cwd=output_dir,
         capture_output=True, text=True, timeout=5, check=False,
     )
     assert result.returncode == 0
@@ -251,7 +258,8 @@ def test_analyze_dead_code_help_does_not_start_analysis(tmp_path: Path) -> None:
     assert "Examples:" in result.stdout
     assert "Exit codes:" in result.stdout
     assert "Analyzing" not in result.stdout
-    assert list(tmp_path.iterdir()) == []
+    assert not (output_dir / "dead_code_report.json").exists()
+    assert list(output_dir.iterdir()) == []
 
 
 @pytest.mark.parametrize("invocation", [

@@ -331,7 +331,10 @@ def main(argv: list[str] | None = None) -> int:
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
-    sub = parser.add_subparsers(dest="command", required=True)
+    sub = parser.add_subparsers(
+        dest="command", required=True,
+        help="required operation: collect a JSON report or render it as markdown",
+    )
 
     collect_parser = sub.add_parser("collect", help="compare pins with latest stable and write local JSON")
     collect_parser.add_argument(

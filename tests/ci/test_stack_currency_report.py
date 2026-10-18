@@ -236,6 +236,7 @@ def test_help_follows_cli_help_standard(capsys: pytest.CaptureFixture[str]) -> N
     for heading in ("Examples:", "Outputs:", "Exit codes:", "Related:"):
         assert heading in text
     assert ".venv/bin/python" in text
+    assert "required operation: collect a JSON report or render it as markdown" in " ".join(text.split())
 
 
 @pytest.mark.parametrize("field", ["pinned", "latest", "source"])
