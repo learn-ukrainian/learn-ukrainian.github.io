@@ -41,8 +41,11 @@ def _resolve_vesum_db_path(default_path: Path, project_root: Path) -> Path:
     any operator's machine) rather than a hardcoded absolute path (#6542
     review finding). The import is lazy: this module has ~80 importers and
     most runs (primary checkout, ``default_path`` already exists) never need
-    it.
+    it. Help only needs a display default, so it must not discover stores or
+    invoke Git before the caller parses its arguments.
     """
+    if "--help" in sys.argv[1:] or "-h" in sys.argv[1:]:
+        return default_path
     if default_path.is_file():
         return default_path
     try:

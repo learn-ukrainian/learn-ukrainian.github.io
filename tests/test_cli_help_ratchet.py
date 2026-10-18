@@ -51,6 +51,40 @@ def test_passing_help(tmp_path: Path) -> None:
     assert checker.find_violations(root) == ([], {})
 
 
+@pytest.mark.parametrize("database_present", [False, True])
+@pytest.mark.parametrize("help_flag", ["--help", "-h"])
+def test_rag_config_help_does_not_discover_database(
+    tmp_path: Path, database_present: bool, help_flag: str,
+) -> None:
+    config_path = tmp_path / "scripts/rag/config.py"
+    source = (
+        "import runpy, sys\n"
+        f"sys.argv = ['fixture.py', {help_flag!r}]\n"
+        f"config = runpy.run_path({str(config_path)!r})\n"
+        "assert config['VESUM_DB_PATH'] == config['DATA_DIR'] / 'vesum.db'\n"
+        + PASSING
+    )
+    root, script = fixture_root(tmp_path, source)
+    config_path.parent.mkdir()
+    config_path.write_bytes((checker.REPO_ROOT / "scripts/rag/config.py").read_bytes())
+    if database_present:
+        (root / "data").mkdir()
+        (root / "data/vesum.db").write_bytes(b"fixture, never opened")
+    assert checker.probe_help(script, root) is None
+
+
+def test_repository_gate_is_pinned_to_full_history_shard() -> None:
+    from scripts.ci.split_tests import DEFAULT_HISTORY, assign, read_list
+
+    target = "tests/test_cli_help_ratchet.py"
+    history = read_list(DEFAULT_HISTORY)
+    assert target in history
+    files = [*history, "tests/test_shallow_fixture.py"]
+    shards = assign(files, {target: 1000.0}, 16, pinned=history)
+    assert target in shards[0]
+    assert all(target not in shard for shard in shards[1:])
+
+
 def test_new_violator_is_never_run(tmp_path: Path) -> None:
     root, _ = fixture_root(tmp_path, VIOLATOR)
     errors, failures = checker.find_violations(root)
