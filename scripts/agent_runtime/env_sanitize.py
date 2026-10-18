@@ -30,7 +30,9 @@ _SENSITIVE_VALUE_RE = re.compile(
     r"(?:"
     r"github_pat_[A-Za-z0-9_]+|"
     r"gh[pousr]_[A-Za-z0-9_]+|"
-    r"sk-[A-Za-z0-9_-]+|"
+    # A credential starts at a word boundary; the tail of "task-" is not a
+    # key prefix. Separators, including a hyphen, still expose short keys.
+    r"\bsk-[A-Za-z0-9_-]+|"
     r"xox[baprs]-[A-Za-z0-9-]+|"
     r"hf_[A-Za-z0-9_]+|"
     r"npm_[A-Za-z0-9_]+|"
