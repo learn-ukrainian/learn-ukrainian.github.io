@@ -33,7 +33,6 @@ from scripts.opsec.prepublish import publication_cli
 from scripts.publish.github import Request, request_run
 
 CURRICULUM_BASE = PROJECT_ROOT / "curriculum" / "l2-uk-en"
-VENV_PYTHON = str(project_interpreter())
 
 DEFAULT_GH_TIMEOUT_SECONDS: float = 60.0
 DEFAULT_AUDIT_MODULE_TIMEOUT_SECONDS: float = 60.0
@@ -110,7 +109,7 @@ def _run_audit(md_path: Path, timeout: float = DEFAULT_AUDIT_MODULE_TIMEOUT_SECO
     """Run audit_module.py and return (all_passed, output_text)."""
     try:
         result = subprocess.run(
-            [VENV_PYTHON, str(PROJECT_ROOT / "scripts" / "audit_module.py"), str(md_path)],
+            [str(project_interpreter()), str(PROJECT_ROOT / "scripts" / "audit_module.py"), str(md_path)],
             capture_output=True,
             text=True,
             cwd=str(PROJECT_ROOT),

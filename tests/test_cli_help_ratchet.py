@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import ast
 import hashlib
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -42,13 +43,63 @@ def pin(root: Path, script: Path) -> None:
 
 @pytest.mark.timeout(600)
 def test_repository_cli_help_gate() -> None:
-    errors, _ = checker.find_violations()
+    errors, failures = checker.find_violations()
     assert errors == [], "\n".join(errors)
+    assert len(failures) == 974
 
 
 def test_passing_help(tmp_path: Path) -> None:
     root, _ = fixture_root(tmp_path)
     assert checker.find_violations(root) == ([], {})
+
+
+@pytest.mark.parametrize("database_present", [False, True])
+@pytest.mark.parametrize("layout", ["snapshot", "full", "shallow", "linked"])
+def test_review_issues_help_is_independent_of_checkout_layout(
+    tmp_path: Path, database_present: bool, layout: str,
+) -> None:
+    root = tmp_path / "checkout"
+    shutil.copytree(checker.REPO_ROOT / "scripts", root / "scripts",
+                    ignore=shutil.ignore_patterns("__pycache__", "*.pyc"))
+    if layout == "linked":
+        (root / ".git").write_text(f"gitdir: {tmp_path / 'primary/.git/worktrees/fixture'}\n")
+    elif layout in {"full", "shallow"}:
+        git(root, "init", "-q")
+        git(root, "add", "scripts/audit/check_review_issues.py")
+        git(root, "-c", "core.hooksPath=/dev/null", "-c", "user.name=CLI fixture",
+            "-c", "user.email=cli@example.test", "commit", "-qm", "fixture")
+        if layout == "shallow":
+            commit = git(root, "rev-parse", "HEAD").strip()
+            (root / ".git/shallow").write_text(commit + "\n")
+            assert git(root, "rev-parse", "--is-shallow-repository").strip() == "true"
+    if database_present:
+        (root / "data").mkdir()
+        (root / "data/vesum.db").write_bytes(b"fixture, never opened")
+    assert checker.probe_help(root / "scripts/audit/check_review_issues.py", root) is None
+
+
+def test_review_issues_audit_resolves_interpreter_when_run(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from scripts.audit import check_review_issues as audit
+
+    calls = []
+    interpreter = tmp_path / "project-python"
+    monkeypatch.setattr(audit, "project_interpreter", lambda: interpreter)
+
+    def run(command, **kwargs):
+        calls.append((command, kwargs))
+        return subprocess.CompletedProcess(command, 0, "PASS\n", "")
+
+    monkeypatch.setattr(audit.subprocess, "run", run)
+    module = tmp_path / "module.md"
+    assert audit._run_audit(module) == (True, "PASS\n")
+    assert calls == [([
+        str(interpreter), str(audit.PROJECT_ROOT / "scripts/audit_module.py"), str(module),
+    ], {
+        "capture_output": True, "text": True, "cwd": str(audit.PROJECT_ROOT),
+        "timeout": 60.0,
+    })]
 
 
 @pytest.mark.parametrize("database_present", [False, True])
@@ -168,11 +219,24 @@ def test_help_times_out(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None
     assert checker.probe_help(script, root) == "--help exceeded 5 seconds"
 
 
-def test_probe_uses_temporary_cwd(tmp_path: Path) -> None:
+@pytest.mark.parametrize("managed_lease", [False, True])
+def test_probe_uses_temporary_cwd(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, managed_lease: bool,
+) -> None:
+    scratch = tmp_path / "scratch"
+    scratch.mkdir()
+    if managed_lease:
+        monkeypatch.setenv("TMPDIR", str(scratch))
+        monkeypatch.setattr(checker, "ensure_scratch_root", lambda: pytest.fail("lease already exists"))
+    else:
+        monkeypatch.delenv("TMPDIR", raising=False)
+        monkeypatch.setattr(checker, "ensure_scratch_root", lambda: scratch)
     root, script = fixture_root(tmp_path, PASSING.replace(
-        'parser.parse_args()', 'import os; assert os.getcwd() != ' + repr(str(tmp_path)) + '; parser.parse_args()',
+        'parser.parse_args()',
+        'import os; assert os.path.dirname(os.getcwd()) == ' + repr(str(scratch)) + '; parser.parse_args()',
     ))
     assert checker.probe_help(script, root) is None
+    assert list(scratch.iterdir()) == []
 
 
 def test_analyze_dead_code_help_does_not_start_analysis(tmp_path: Path) -> None:
@@ -190,11 +254,16 @@ def test_analyze_dead_code_help_does_not_start_analysis(tmp_path: Path) -> None:
     assert list(tmp_path.iterdir()) == []
 
 
-def test_checker_help_and_entry_point(tmp_path: Path) -> None:
+@pytest.mark.parametrize("invocation", [
+    ["-m", "scripts.hygiene.lint_cli_help"],
+    [str(Path(checker.__file__).resolve())],
+])
+def test_checker_help_and_entry_point(tmp_path: Path, invocation: list[str]) -> None:
     assert checker.probe_help(Path(checker.__file__), checker.REPO_ROOT) is None
     result = subprocess.run(
-        [sys.executable, "-m", "scripts.hygiene.lint_cli_help", "--help"],
-        cwd=checker.REPO_ROOT, capture_output=True, text=True, timeout=5, check=False,
+        [sys.executable, *invocation, "--help"],
+        cwd=checker.REPO_ROOT if invocation[0] == "-m" else tmp_path,
+        capture_output=True, text=True, timeout=5, check=False,
     )
     assert result.returncode == 0
     assert "Examples:" in result.stdout

@@ -18,6 +18,10 @@ import tempfile
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+from scripts.common.scratch import ensure_scratch_root
+
 BASELINE_PATH = "scripts/hygiene/cli_help_baseline.txt"
 HELP_TIMEOUT = 5
 
@@ -144,7 +148,8 @@ def source_problem(tree: ast.AST) -> str | None:
 
 def probe_help(path: Path, root: Path) -> str | None:
     """Run only --help, in a temporary cwd, with writes/work effects denied."""
-    with tempfile.TemporaryDirectory(prefix="cli-help-") as temporary:
+    TMPDIR = os.environ.get("TMPDIR") or ensure_scratch_root()
+    with tempfile.TemporaryDirectory(prefix="cli-help-", dir=TMPDIR) as temporary:
         env = {"PATH": os.defpath, "HOME": temporary, "TMPDIR": temporary,
                "PYTHONDONTWRITEBYTECODE": "1", "PYTHONHASHSEED": "0",
                "LANG": "C.UTF-8"}
