@@ -278,17 +278,32 @@ def test_session_probe_runs_only_the_fixed_command(
     calls = []
 
     def run(command, **kwargs):
-        calls.append((command, kwargs))
+        calls.append(("subprocess", command, kwargs))
+        return subprocess.CompletedProcess(command, 0, "1.2.3", "")
+
+    def github_run(command, **kwargs):
+        calls.append(("shared_client", command, kwargs))
         return subprocess.CompletedProcess(command, 0, "1.2.3", "")
 
     monkeypatch.setattr(drift.subprocess, "run", run)
+    monkeypatch.setattr(drift, "github_run", github_run)
     if name == "backup-restore":
         assert argv in drift.multi_argv(name)
     else:
         assert drift.probe_spec(name) == (argv, comm)
     assert comm in drift.watched_comms([name])
     assert drift._default_run(argv, time.monotonic() + 1) == "1.2.3\n"
-    assert calls == [(list(argv), {"capture_output": True, "text": True, "timeout": 0.25, "check": False})]
+    route = "shared_client" if name == "gh" else "subprocess"
+    assert calls == [(route, list(argv), {"capture_output": True, "text": True, "timeout": 0.25, "check": False})]
+
+
+@pytest.mark.parametrize("error", [OSError("unavailable"), subprocess.TimeoutExpired(["gh", "--version"], 0.25)])
+def test_github_probe_returns_empty_on_shared_client_failure(error: Exception, monkeypatch: pytest.MonkeyPatch) -> None:
+    def github_run(*_args, **_kwargs):
+        raise error
+
+    monkeypatch.setattr(drift, "github_run", github_run)
+    assert drift._default_run(("gh", "--version"), time.monotonic() + 1) == ""
 
 
 @pytest.mark.parametrize("argv", [("unregistered", "--version"), ("claude", "-p"), ("agy", "--help")])

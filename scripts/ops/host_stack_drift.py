@@ -35,6 +35,7 @@ from scripts.ci.stack_currency_report import (
     PinFileError,
     load_pin_rows,
 )
+from scripts.common.github_client import run as github_run
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 BUDGET_SECONDS = 1.5
@@ -291,7 +292,7 @@ def _default_run(argv: tuple[str, ...], deadline: float) -> str:
                     ["entire", "--version"], capture_output=True, text=True, timeout=timeout, check=False
                 )
             case ("gh", "--version"):
-                completed = subprocess.run(
+                completed = github_run(
                     ["gh", "--version"], capture_output=True, text=True, timeout=timeout, check=False
                 )
             case ("uv", "--version"):
