@@ -24,6 +24,7 @@ if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from scripts.atlas import word_card_foundation as foundation
+from scripts.common.scratch import ensure_scratch_root
 from scripts.guardrails import worktree_containment as containment
 from scripts.storage.topology import resolve_store
 
@@ -188,7 +189,7 @@ def holding_obligations(manifest, registry, sources_conn):
     seeded = {e["to"][0] for e in registry["events"] if e["kind"] == "sense_mint" and e["build_id"] == build}
     records = {r["locator"]: r for r in manifest["selection"]["source_records"]}
     entry_ids = sorted(r["raw_row"]["id"] for r in records.values() if r["table"] == "ulif_dictua_entries")
-    with tempfile.TemporaryDirectory(prefix="pilot-holding-") as scratch:
+    with tempfile.TemporaryDirectory(prefix="pilot-holding-", dir=ensure_scratch_root()) as scratch:
         extract = Path(scratch) / "extract.sqlite"
         assembly.require_host_only([extract])
         src.write_extract(sources_conn, entry_ids, extract)

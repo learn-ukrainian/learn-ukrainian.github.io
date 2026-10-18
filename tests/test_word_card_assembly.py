@@ -28,6 +28,7 @@ from scripts.atlas import word_card_verify as verify
 from scripts.atlas.allocate_pilot_identities import BUILD_PREFIX, HOLDING_BASIS, HOLDING_BUILD_PREFIX
 from scripts.atlas.word_card_resolver import _project, aid, card_version
 from scripts.common.git_context import sanitized_git_env
+from scripts.common.scratch import ensure_scratch_root
 from scripts.guardrails import worktree_containment as containment
 from tests.test_word_card_sources import (
     ENTRY_DDL,
@@ -1164,7 +1165,7 @@ def host_scratch():
     base = Path(tempfile.gettempdir()).resolve()
     if base.is_relative_to(containment.resolve_main_root(Path(wa.__file__))):
         pytest.skip("the temporary directory is inside the repository; no host scratch is available")
-    with tempfile.TemporaryDirectory(prefix="word-card-host-") as scratch:
+    with tempfile.TemporaryDirectory(prefix="word-card-host-", dir=ensure_scratch_root()) as scratch:
         yield Path(scratch)
 
 

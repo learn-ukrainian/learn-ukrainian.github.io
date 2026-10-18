@@ -47,6 +47,7 @@ from scripts.atlas.allocate_pilot_identities import (
 )
 from scripts.atlas.word_card_resolver import CONF_ORDER, _project, _recompute, aid, card_version
 from scripts.common.git_context import sanitized_git_env
+from scripts.common.scratch import ensure_scratch_root
 from scripts.guardrails import worktree_containment as containment
 from scripts.lexicon import ulif_raw_cache
 
@@ -1446,7 +1447,8 @@ def main(argv=None) -> int:
     try:
         suppressions = load_suppressions(args.suppressions)
         with ExitStack() as stack:
-            scratch = Path(stack.enter_context(tempfile.TemporaryDirectory(prefix="word-card-assembly-")))
+            scratch = Path(stack.enter_context(
+                tempfile.TemporaryDirectory(prefix="word-card-assembly-", dir=ensure_scratch_root())))
             inputs = load_inputs(
                 args.manifest, args.registry, args.register, store_path("sources", args.sources_db),
                 store_path("vesum", args.vesum_db), store_path("atlas", args.atlas_db), stack, scratch,
