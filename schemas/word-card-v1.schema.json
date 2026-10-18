@@ -222,7 +222,8 @@
                 "$ref": "#/$defs/sense_id"
               }
             }
-          }
+          },
+          "description": "One verdict per practice mode the build evaluated (#8983). A mode with no entry is not eligible: absence never means \"no restriction\". The pilot assembly evaluates no mode (practice is parked), so every pilot card lists none and is eligible for nothing."
         }
       }
     },
