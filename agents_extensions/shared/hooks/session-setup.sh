@@ -320,7 +320,13 @@ if [ -f "$LANE_PROBE_SCRIPT" ]; then
     LANE_PROBE_AGENT=$(printf '%s' "$LANE_PROBE_JSON" | _hook_deadline 2 jq -r '.probes[0].agent // empty' 2>/dev/null || true)
     LANE_PROBE_AGENT="${LANE_PROBE_AGENT:-$HANDOFF_AGENT}"
     LANE_PROBE_REASON=$(printf '%s' "$LANE_PROBE_JSON" | _hook_deadline 2 jq -r '.probes[0].reason // "probe did not return a result"' 2>/dev/null || true)
-    ISSUES+=("DISPATCH LANE SELF-TEST FAILED for $LANE_PROBE_AGENT (handoff identity $HANDOFF_AGENT): $LANE_PROBE_REASON")
+    # The ordinary Codex context is contracted under 500 bytes (#10952); there
+    # a handoff identity equal to the probed lane repeats it, so it is omitted.
+    if [ "${CODEX_NORMAL_TASK:-0}" = "1" ] && [ "$LANE_PROBE_AGENT" = "$HANDOFF_AGENT" ]; then
+      ISSUES+=("DISPATCH LANE SELF-TEST FAILED for $LANE_PROBE_AGENT: $LANE_PROBE_REASON")
+    else
+      ISSUES+=("DISPATCH LANE SELF-TEST FAILED for $LANE_PROBE_AGENT (handoff identity $HANDOFF_AGENT): $LANE_PROBE_REASON")
+    fi
   fi
   unset LANE_PROBE_AGENT LANE_PROBE_RC LANE_PROBE_JSON LANE_PROBE_REASON
 fi
@@ -342,16 +348,17 @@ if [ "$ROOT_GUARD_RC" -eq 0 ] && [ -n "$ROOT_GUARD_JSON" ]; then
     # entry names are unbounded attacker-shaped text (#6863: a garbage
     # directory can be a whole JSON line, terminal escapes included). The
     # names stay inline only when the whole joined list is printable ASCII
-    # of at most 11 bytes; otherwise the line carries a fixed marker and
-    # stderr gets every name on one ascii()-escaped line. The count shows at
-    # most "99+", so the line is fixed-width at worst.
+    # of at most 11 bytes; otherwise stderr gets every name on one
+    # ascii()-escaped line, and the Detail command lists them. The count
+    # shows at most "99+", so the line is fixed-width at worst.
     ROOT_GUARD_SHOWN="$ROOT_GUARD_COUNT"
     if [ "$ROOT_GUARD_COUNT" -gt 99 ]; then
       ROOT_GUARD_SHOWN="99+"
     fi
     ROOT_GUARD_NAMES=""
+    ROOT_GUARD_WITHHELD="names unavailable"
     if [ -x "${BOUNDED_PYTHON:-}" ]; then
-      ROOT_GUARD_NAMES=$(printf '%s' "$ROOT_GUARD_JSON" | _hook_deadline 2 "$BOUNDED_PYTHON" -c '
+      if ROOT_GUARD_NAMES=$(printf '%s' "$ROOT_GUARD_JSON" | _hook_deadline 2 "$BOUNDED_PYTHON" -c '
 import json
 import sys
 names = [str(entry.get("name", "")) for entry in json.load(sys.stdin)["unexpected"]]
@@ -360,13 +367,23 @@ if joined.isascii() and joined.isprintable() and len(joined) <= int(sys.argv[1])
     sys.stdout.write(joined)
 else:
     sys.stderr.write("ROOT HYGIENE unexpected entries (escaped): " + ascii(names) + "\n")
-    sys.stdout.write("names on stderr")
-' 11) || ROOT_GUARD_NAMES=""
+' 11); then
+        ROOT_GUARD_WITHHELD="names on stderr"
+      else
+        ROOT_GUARD_NAMES=""
+      fi
     fi
-    ROOT_GUARD_NAMES="${ROOT_GUARD_NAMES:-names unavailable}"
-    ISSUES+=("ROOT HYGIENE: $ROOT_GUARD_SHOWN unexpected primary-checkout root entries ($ROOT_GUARD_NAMES). Remove manually; never auto-deleted (#6863). Detail: .venv/bin/python -m scripts.hygiene.root_entry_guard")
+    ROOT_GUARD_DETAIL="Detail: .venv/bin/python -m scripts.hygiene.root_entry_guard"
+    if [ "${CODEX_NORMAL_TASK:-0}" = "1" ]; then
+      # Ordinary Codex context is contracted under 500 bytes (#10952): the
+      # lane self-test and this notice must fit together, so withheld names
+      # are reached through the Detail command instead of a marker.
+      ISSUES+=("ROOT HYGIENE: $ROOT_GUARD_SHOWN unexpected primary-checkout root entries${ROOT_GUARD_NAMES:+ ($ROOT_GUARD_NAMES)}; manual removal only (#6863). $ROOT_GUARD_DETAIL")
+    else
+      ISSUES+=("ROOT HYGIENE: $ROOT_GUARD_SHOWN unexpected primary-checkout root entries (${ROOT_GUARD_NAMES:-$ROOT_GUARD_WITHHELD}). Remove manually; never auto-deleted (#6863). $ROOT_GUARD_DETAIL")
+    fi
   fi
-  unset ROOT_GUARD_COUNT ROOT_GUARD_SHOWN ROOT_GUARD_NAMES
+  unset ROOT_GUARD_COUNT ROOT_GUARD_SHOWN ROOT_GUARD_NAMES ROOT_GUARD_WITHHELD ROOT_GUARD_DETAIL
 else
   # Alert-only means output ONLY on findings: a skipped canary is not a
   # finding, so it goes to stderr and must not eat the concise-session
@@ -1021,9 +1038,16 @@ if [ "${LEARN_UKRAINIAN_COLD_START_PROFILE:-}" = "compact" ]; then
 fi
 
 if [ "$IS_CODEX_SESSION" = "1" ]; then
+  # An ordinary task binds no fleet hydration, and its 500-byte context
+  # (#10952) must keep room for the notices below, so it states none.
+  CODEX_HYDRATION=""
+  if [ "$CODEX_NORMAL_TASK" != "1" ]; then
+    CODEX_HYDRATION=" Fleet hydration is ${SESSION_EPIC:+bound to ${SESSION_EPIC}; }${SESSION_EPIC:-unbound for this ordinary task}."
+  fi
   CAPSULE="CODEX SESSION: profile=${LEARN_UKRAINIAN_PROFILE_ID:-fallback}; model=${OBSERVED_MODEL:-${LEARN_UKRAINIAN_MAIN_MODEL_ID:-unknown}}; context=${LEARN_UKRAINIAN_MAIN_CONTEXT_WINDOW_TOKENS:-0}; trusted=${LEARN_UKRAINIAN_TRUSTED:-0}.
-Native compaction is runtime-owned. Fleet hydration is ${SESSION_EPIC:+bound to ${SESSION_EPIC}; }${SESSION_EPIC:-unbound for this ordinary task}.
+Native compaction is runtime-owned.${CODEX_HYDRATION}
 Orientation (on demand): ${CAPSULE_ORIENTATION_URL#http://localhost:8765}"
+  unset CODEX_HYDRATION
 else
   CAPSULE="--- SESSION PROFILE CAPSULE ---
 Profile: ${LEARN_UKRAINIAN_PROFILE_ID:-fallback}
@@ -1065,30 +1089,38 @@ CODEX COLD-START BOARD (launcher-injected)
 $CODEX_COLD_START_BOARD"
 fi
 
-if [ ${#ISSUES[@]} -gt 0 ]; then
-  CONTEXT="$CONTEXT
+# The ordinary Codex context is contracted under 500 bytes (#10952), so it
+# lists the same notices without the section banner and indentation.
+SETUP_CHECK_HEADER="
 
-SESSION SETUP CHECK:
+SESSION SETUP CHECK:"
+SETUP_CHECK_BULLET="  - "
+if [ "$CODEX_NORMAL_TASK" = "1" ]; then
+  SETUP_CHECK_HEADER=""
+  SETUP_CHECK_BULLET="- "
+fi
+
+if [ ${#ISSUES[@]} -gt 0 ]; then
+  CONTEXT="$CONTEXT$SETUP_CHECK_HEADER
 ISSUES:"
   for issue in "${ISSUES[@]}"; do
     CONTEXT="$CONTEXT
-  - $issue"
+$SETUP_CHECK_BULLET$issue"
   done
 fi
 
 if [ ${#INFO[@]} -gt 0 ]; then
   if [ ${#ISSUES[@]} -eq 0 ]; then
-    CONTEXT="$CONTEXT
-
-SESSION SETUP CHECK:"
+    CONTEXT="$CONTEXT$SETUP_CHECK_HEADER"
   fi
   CONTEXT="$CONTEXT
 INFO:"
   for info in "${INFO[@]}"; do
     CONTEXT="$CONTEXT
-  - $info"
+$SETUP_CHECK_BULLET$info"
   done
 fi
+unset SETUP_CHECK_HEADER SETUP_CHECK_BULLET
 
 _emit_session_start_json() {
   local msg="$1"
