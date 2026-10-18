@@ -142,7 +142,8 @@ def test_historical_content_review_rows_cannot_read_as_live_routes():
     assert len(rows) == 2
     for row in rows:
         assert row.startswith("| Historical result |")
-        assert "DeepSeek is excluded from dispatch, implementation and review." in row
+        assert "DeepSeek V4.1 Flash coding through opencode is allowed" in row
+        assert "review-of-record and Ukrainian work need measured evidence first" in row
 
 
 def test_scorecard_example_and_phase3_rebind_contract():

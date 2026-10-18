@@ -734,6 +734,8 @@ def test_folk_content_excludes_both_deepseek_models():
         )
         assert result.status == "excluded"
         assert "DeepSeek is excluded" in result.reason
+        assert "review-of-record needs measured evidence" in result.reason
+        assert "dispatch" not in result.reason
 
 
 def test_glm_data_egress_gate_is_fail_closed():

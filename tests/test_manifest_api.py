@@ -85,6 +85,20 @@ def test_rules_live_assembly_includes_fleet_scorecard():
     assert body["hash"] == rules_router.scope_digest("task:driver", md)
 
 
+def test_served_deepseek_policy_allows_coding_but_keeps_review_closed():
+    response = client.get("/api/rules?scope=task:driver&format=json")
+    assert response.status_code == 200
+    markdown = response.json()["markdown"]
+    assert "latest V4.1 Flash coding through opencode is allowed" in markdown
+    assert "named US provider allow-list" in markdown
+    assert "Never send private-repository content or secrets." in markdown
+    assert "Review-of-record and Ukrainian work need measured evidence first" in markdown
+    assert "Pro and older ids stay retired" in markdown
+    assert "`ask-deepseek` is consult-only for non-language work" in markdown
+    assert "Budget substitution never selects DeepSeek" in markdown
+    assert "still refuses `openrouter/deepseek` until that allow-list exists" in markdown
+
+
 def test_rules_live_assembly_includes_fleet_comms_coordination():
     """Drivers explicitly load the fleet-comms authority SSOT for their task."""
     resp = client.get("/api/rules?scope=task:fleet-comms&format=json")
