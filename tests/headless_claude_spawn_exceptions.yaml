@@ -259,7 +259,6 @@ exceptions:
   - {module: scripts/ops/host_stack_drift.py, function: "_default_run", program: "cursor-agent", category: non-claude, reason: "literal `cursor-agent --version` session-start version probe"}
   - {module: scripts/ops/host_stack_drift.py, function: "_default_run", program: "agy", category: non-claude, reason: "literal `agy --version` session-start version probe"}
   - {module: scripts/ops/host_stack_drift.py, function: "_default_run", program: "entire", category: non-claude, reason: "literal `entire --version` session-start version probe"}
-  - {module: scripts/ops/host_stack_drift.py, function: "_default_run", program: "gh", category: non-claude, reason: "literal `gh --version` session-start version probe"}
   - {module: scripts/ops/host_stack_drift.py, function: "_default_run", program: "uv", category: non-claude, reason: "literal `uv --version` session-start version probe"}
   - {module: scripts/ops/host_stack_drift.py, function: "_default_run", program: "node", category: non-claude, reason: "literal `node --version` session-start version probe"}
   - {module: scripts/ops/host_stack_drift.py, function: "_default_run", program: "sqlite3", category: non-claude, reason: "literal `sqlite3 --version` session-start version probe"}
