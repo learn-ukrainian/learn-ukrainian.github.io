@@ -2724,76 +2724,10 @@ def _cursor_model_state(
 def _agy_model_state(
     *, agent: str, model: str | None, identity: Any, task_id: str, run_nonce: str | None,
 ) -> dict[str, Any]:
-    """Persist only same-run observations supplied by the normal runtime."""
-    if agent != "agy":
-        return {}
-    from scripts.agent_runtime.adapters.agy import AgyAdapter, AgyRuntimeIdentity
+    """Project the canonical invocation-bound AGY observation into task state."""
+    from scripts.agent_runtime.adapters.agy import agy_model_state
 
-    try:
-        requested = AgyAdapter.resolve_model_slug(model) if model else None
-    except ValueError:
-        requested = None
-    if requested not in AgyAdapter.claude_model_slugs:
-        return {}
-    from scripts.review.model_catalog import load_model_catalog
-
-    trusted = False
-    observed_slug = family = None
-    if isinstance(identity, AgyRuntimeIdentity):
-        provenance = identity.get("provenance")
-        if isinstance(provenance, dict):
-            events = provenance.get("init_events")
-            invocation = provenance.get("invocation_id")
-            cli_digest = provenance.get("cli_sha256")
-            cli_version = provenance.get("cli_version")
-            session = provenance.get("provider_session_id")
-            observed = identity.get("actual_model")
-            try:
-                observed_slug = AgyAdapter.resolve_model_slug(observed) if isinstance(observed, str) else None
-                bound = identity.bound_to(task_id=task_id, run_nonce=run_nonce, requested_model=requested)
-            except (TypeError, ValueError):
-                bound = False
-            family = next((
-                spec["family"] for key, spec in load_model_catalog()["models"].items()
-                if key == observed_slug or spec.get("routing_wire_ids", {}).get("agy") == observed_slug
-            ), None) if observed_slug else None
-            # Custody and binding do not establish consistency of a sealed mapping.
-            # A genuine mismatch stays known; a contradictory receipt stays untrusted.
-            trusted = (
-                bound
-                and identity.get("source") == "provider-init"
-                and identity.get("harness") == "agy"
-                and provenance.get("origin") == "subprocess.stdout"
-                and isinstance(invocation, str) and re.fullmatch(r"[0-9a-f]{32}", invocation) is not None
-                and isinstance(cli_digest, str) and re.fullmatch(r"[0-9a-f]{64}", cli_digest) is not None
-                and isinstance(cli_version, str) and bool(cli_version.strip()) and cli_version != "unknown"
-                and (session is None or (isinstance(session, str) and 0 < len(session) <= 200))
-                and isinstance(events, list) and bool(events)
-                and all(
-                    isinstance(event, dict)
-                    and isinstance(event.get("sha256"), str)
-                    and re.fullmatch(r"[0-9a-f]{64}", event["sha256"]) is not None
-                    and (event.get("provider_session_id") is None or event["provider_session_id"] == session)
-                    for event in events
-                )
-                and identity.get("actual_model_known") is (observed_slug is not None)
-                and (observed_slug is not None or observed is None)
-                and identity.get("actual_family") == family
-                and isinstance(identity.get("substituted"), bool)
-                and identity["substituted"] is (observed_slug != requested or len(events) > 1)
-            )
-    observed = identity.get("actual_model") if trusted else None
-    known = trusted and identity.get("actual_model_known") is True
-    matched = known and observed_slug == requested and identity.get("substituted") is False
-    return {
-        "model_identity": dict(identity) if trusted else None,
-        "resolved_model": observed if known else "unattested-harness",
-        "resolved_model_known": bool(known),
-        "resolved_model_source": identity["source"] if trusted else "unattested-harness",
-        "resolved_model_family": family if trusted else None,
-        "resolved_model_harness": "agy",
-        "identity_matches_request": bool(matched),
-    }
+    return agy_model_state(agent=agent, model=model, identity=identity, task_id=task_id, run_nonce=run_nonce)
 
 
 def _deepseek_model_state(*, agent: str, model: str | None, cache_path: Path | None = None) -> dict[str, Any]:
@@ -10949,7 +10883,9 @@ def _emit_terminal_dispatch_event(
         usage_record = getattr(result, "usage_record", None)
         tokens = usage_record.get("tokens") if isinstance(usage_record, dict) else None
         substitution = final_state.get("substitution")
-        if substitution is None and isinstance(usage_record, dict):
+        if substitution is None and isinstance(usage_record, dict) and not (
+            agent == "agy" and "identity_matches_request" in final_state
+        ):
             substitution = usage_record.get("substitution")
         model = final_state.get("model")
         cost = compute_cost(
@@ -11155,9 +11091,12 @@ def _run_worker(
         from scripts.agent_runtime.adapters.agy import AgyAdapter
 
         agy_requested_model = model or state.get("model") or AgyAdapter.default_model
-        state.update(_agy_model_state(
+        agy_start_state = _agy_model_state(
             agent=agent, model=agy_requested_model, identity=None, task_id=task_id, run_nonce=effective_nonce,
-        ))
+        )
+        state.update(agy_start_state)
+        if agy_start_state:
+            state["substitution"] = None
     _write_state_atomic(state_path, state)
 
     cwd = Path(cwd_str)
@@ -12213,7 +12152,17 @@ def _run_worker(
     if substitution is None and isinstance(usage_record, dict):
         substitution = usage_record.get("substitution")
     runtime_substitution = substitution
-    substitution = _merge_agent_substitution(final_state.get("substitution"), runtime_substitution)
+    if agy_model_state:
+        # Reproject from the same bound observation. Neither Result/usage fallback
+        # nor a prior task's nested attribution may resurrect rejected evidence.
+        runtime_substitution = agy_model_state["model_identity"] if (
+            agy_model_state["resolved_model_known"] and (
+                runtime_substitution is not None or agy_model_state["model_identity"]["substituted"]
+            )
+        ) else None
+        substitution = runtime_substitution
+    else:
+        substitution = _merge_agent_substitution(final_state.get("substitution"), runtime_substitution)
     cursor_model_state = _cursor_model_state(
         agent=agent,
         result=result,

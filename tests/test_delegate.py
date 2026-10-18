@@ -22781,7 +22781,7 @@ def test_agy_claude_normal_worker_persists_only_bound_runtime_identity(
         assert rc == 1, record
         assert record["status"] == "failed"
         assert record["identity_matches_request"] is False
-        if identity_case in {"absent", "prose", "configuration"}:
+        if identity_case in {"absent", "prose", "configuration", "conflicting"}:
             assert record["model_identity"] is None
             assert record["resolved_model_known"] is False
         else:
@@ -22946,12 +22946,17 @@ def _agy_consumer_observation(tmp_path, model, stdout):
     from scripts.agent_runtime import runner
     from scripts.agent_runtime.adapters.base import InvocationPlan
 
-    return runner._observe_agy_identity(
-        stdout=stdout,
-        plan=InvocationPlan(cmd=["never-executed", "--model", model], cwd=tmp_path),
-        task_id="consumer-identity", run_nonce="consumer-run", invocation_id="c" * 32,
-        cli_sha256="d" * 64, cli_version="1.4.0",
-    )
+    token = runner._AGY_OBSERVED_IDENTITY.set(None)
+    try:
+        return runner._observe_agy_identity(
+            stdout=stdout,
+            plan=InvocationPlan(cmd=["never-executed", "--model", model], cwd=tmp_path),
+            task_id="consumer-identity", run_nonce="consumer-run", invocation_id="c" * 32,
+            cli_sha256="d" * 64, cli_version="1.4.0",
+        )
+    finally:
+        runner._AGY_OBSERVED_IDENTITY.reset(token)
+
 
 
 @pytest.mark.parametrize("model", ["claude-sonnet-5-5-high", "claude-opus-5-5-high"])
@@ -22987,7 +22992,7 @@ def test_agy_consumer_retains_honest_observer_semantics(tmp_path, model, case):
     )
     assert state["identity_matches_request"] is (case in {"exact", "display", "session", "terminal-session"})
     assert state["resolved_model_known"] is (case not in {
-        "absent", "configuration", "prose", "unknown", "retired", "non-string",
+        "absent", "configuration", "prose", "unknown", "retired", "non-string", "conflict",
     })
     if identity is None:
         assert state["model_identity"] is None
@@ -23156,16 +23161,150 @@ def test_agy_consumer_honest_repeated_init_retains_first_observation(
     events = [{"event": "init", "model": model}]
     events.extend({"event": "init", "model": later} for _ in range(event_count - 1))
     identity = _agy_consumer_observation(tmp_path, model, "\n".join(map(json.dumps, events)))
-    assert identity is not None
-    # The parser stops at the second init and keeps the first observed identity.
-    assert len(identity["provenance"]["init_events"]) == 2
-    assert identity["actual_model"] == model
-    assert identity["substituted"] is True
+    if later_model == "same":
+        assert identity is not None
+        assert len(identity["provenance"]["init_events"]) == event_count
+        assert identity["actual_model"] == model
+        assert identity["substituted"] is True
+    else:
+        assert identity is None
     state = delegate._agy_model_state(
         agent="agy", model=model, identity=identity, task_id="consumer-identity", run_nonce="consumer-run",
     )
-    assert state == {
-        "model_identity": dict(identity), "resolved_model": model, "resolved_model_known": True,
-        "resolved_model_source": "provider-init", "resolved_model_family": "anthropic",
-        "resolved_model_harness": "agy", "identity_matches_request": False,
-    }
+    assert state["resolved_model_known"] is (later_model == "same")
+    assert state["identity_matches_request"] is False
+    assert state["resolved_model"] == (model if later_model == "same" else "unattested-harness")
+    assert state["model_identity"] == identity
+
+
+
+@pytest.mark.parametrize("model", ["claude-sonnet-5-5-high", "claude-opus-5-5-high"])
+@pytest.mark.parametrize("case,known,family", [
+    ("nested-model", False, None), ("nested-session", False, None),
+    ("terminal-session", False, None), ("duplicate-after", False, None),
+    ("mismatch-then-duplicate", False, None), ("mismatch-then-session", False, None),
+    ("repeated-model", False, None), ("repeated-session", False, None), ("repeated-source", False, None),
+    ("configuration", False, None), ("missing", False, None), ("late", False, None),
+    ("unknown", False, None), ("retired", False, None), ("non-string", False, None),
+    ("other-pin", True, "anthropic"), ("other-family", True, "google"),
+    ("repeated", True, "anthropic"), ("provider-failure", True, "anthropic"),
+])
+@pytest.mark.parametrize("exit_kind", ["complete", "cancel", "timeout", "exception", "cleanup"])
+def test_agy_producer_consistency_through_durable_worker_projections(
+    tmp_tasks_dir, tmp_path, monkeypatch, model, case, known, family, exit_kind,
+):
+    from types import SimpleNamespace
+
+    from agent_runtime import runner
+    from tests.agent_runtime.adapters.test_agy_claude_routes import consistency_stream, mock_agy_provider
+
+    _sanitize_git_env_for_test(monkeypatch)
+    worktree = _agy_dispatch_worktree(tmp_path, "agy/consistent-projections")
+    provider_dir = tmp_path / "provider"
+    provider_dir.mkdir()
+    task_id, nonce = "projection-worker", "projection-run"
+    launches, _, _ = mock_agy_provider(
+        monkeypatch, provider_dir, runner, stdout=consistency_stream(model, case),
+        exit_kind="complete" if exit_kind == "cleanup" else exit_kind,
+    )
+    if exit_kind == "cleanup":
+        def cleanup():
+            raise RuntimeError("synthetic cleanup failure")
+        monkeypatch.setattr(runner, "prepare_trail_isolation", lambda **kwargs: SimpleNamespace(
+            cleanup=cleanup, tool_config=kwargs["tool_config"],
+        ))
+    from telemetry import emit as telemetry_emit
+
+    captures, usages, events, substitutions = [], [], [], []
+    monkeypatch.setattr(telemetry_emit, "emit_event", lambda event, fields: events.append((event, fields)))
+
+    def capture_start(**kwargs):
+        captures.append(("start", kwargs))
+        return SimpleNamespace(finish=lambda **fields: captures.append(("finish", fields)))
+
+    monkeypatch.setattr(runner.FleetCapture, "start", capture_start)
+    from agent_runtime import usage
+
+    usage_file = tmp_path / "projection-usage.jsonl"
+    monkeypatch.setattr(usage, "_usage_file", lambda *args: usage_file)
+    monkeypatch.setattr(runner, "write_record", usage.write_record)
+    monkeypatch.setattr(runner, "_emit_substitution_event", lambda **fields: substitutions.append(fields))
+    monkeypatch.setattr(delegate, "_append_dispatch_event", lambda event, **fields: events.append((event, fields)))
+    monkeypatch.setattr(delegate, "_background_jobs_at_exit", lambda *args, **kwargs: None)
+    delegate._write_state_atomic(delegate._state_path(task_id), {
+        "task_id": task_id, "model": model, "run_nonce": nonce, "cli_version": "1.4.0",
+        "owned_paths": ["README.md"], "keep_worktree": True,
+        # A previous attempt cannot supply actual identity, including via nested attribution.
+        "substitution": {"kind": "agent-substitution", "actual_model": model, "actual_model_known": True,
+                         "runtime_attribution": {"actual_model": model, "actual_model_known": True}},
+    })
+    spawn = runner._spawn_subprocess
+
+    def inspect_start(*args, **kwargs):
+        starting = delegate._read_state(delegate._state_path(task_id))
+        assert starting["resolved_model_known"] is False
+        assert starting["model_identity"] is None
+        assert starting["substitution"] is None
+        return spawn(*args, **kwargs)
+
+    monkeypatch.setattr(runner, "_spawn_subprocess", inspect_start)
+    assert delegate._run_worker(
+        task_id=task_id, agent="agy", prompt="Implement the bounded artifact.", mode="workspace-write",
+        cwd_str=str(worktree), model=model, hard_timeout=60, run_nonce=nonce, keep_worktree=True,
+    ) == 1
+    record = json.loads(delegate._state_path(task_id).read_text())
+    usages = [json.loads(line) for line in usage_file.read_text().splitlines()] if usage_file.exists() else []
+    assert len(launches) == 1
+    assert record["model"] == model
+    assert record["status"] == ("cancelled" if exit_kind == "cancel" else "failed")
+    assert record["resolved_model_known"] is known
+    assert record["resolved_model_family"] == family
+    assert record["resolved_model_harness"] == "agy"
+    assert record["identity_matches_request"] is (known and case == "provider-failure")
+    observed = {
+        "other-pin": "claude-opus-5-5-high" if "sonnet" in model else "claude-sonnet-5-5-high",
+        "other-family": "gemini-3.8-flash-high",
+    }.get(case, model)
+    assert record["resolved_model"] == (observed if known else "unattested-harness")
+    if exit_kind == "complete" and case not in {"provider-failure", "missing"}:
+        assert record["failure_code"] == "provider_policy_refusal"
+        assert record["last_error"] == "provider_policy_refusal"
+    if exit_kind == "cancel":
+        assert record["last_error"] == "worker_cancelled"
+    if exit_kind == "timeout":
+        assert record["last_error"] == "worker_failed"
+    if exit_kind in {"exception", "cleanup"}:
+        assert record["last_error"] == "worker_unexpected_error, RuntimeError"
+    assert len(captures) == 2
+    start, finish = captures[0][1], captures[1][1]
+    assert start["plan_metadata"]["entire_fleet"]["actual_model"] is None
+    assert str(start["plan_metadata"]["entire_fleet"]["actual_model_known"]).lower() == "false"
+    assert finish["actual_model"] == (observed if known else "")
+    assert finish["route_metadata"]["actual_model_known"] == str(known).lower()
+    assert finish["outcome"] == ({"complete": "error", "cleanup": "error", "timeout": "hard_timeout"}.get(exit_kind, "runner_exception"))
+    if exit_kind in {"complete", "timeout", "cleanup"}:
+        assert len(usages) == 1
+        usage_identity = usages[0].get("model_identity")
+        assert bool(usage_identity and usage_identity["actual_model_known"]) is known
+        assert usages[0]["outcome"] == ("hard_timeout" if exit_kind == "timeout" else "error")
+        if known:
+            assert usage_identity["actual_model"] == observed
+            assert usage_identity["actual_family"] == family
+        else:
+            assert not usages[0].get("substitution")
+    for fields in substitutions:
+        substitution = fields.get("substitution")
+        assert bool(substitution and substitution["actual_model_known"]) is known
+    if known:
+        assert record["model_identity"]["actual_model"] == observed
+        assert len(record["model_identity"]["provenance"]["init_events"]) == (2 if case == "repeated" else 1)
+    else:
+        assert record["substitution"] is None
+        assert not (record["model_identity"] or {}).get("actual_model_known", False)
+    dispatch_events = [fields for event, fields in events if event == "dispatch"]
+    assert len(dispatch_events) == 1
+    assert dispatch_events[0]["resolved_model_known"] is known
+    assert dispatch_events[0]["resolved_model"] == (observed if known else "unattested-harness")
+    if not known:
+        assert dispatch_events[0]["substitution"] is None
+    assert runner._AGY_OBSERVED_IDENTITY.get() is None

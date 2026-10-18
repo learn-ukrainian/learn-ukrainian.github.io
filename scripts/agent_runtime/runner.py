@@ -75,7 +75,7 @@ from scripts.agent_runtime.adapters.acpx import (
     active_communication_scope,
 )
 from scripts.agent_runtime.adapters.acpx import TRANSPORT_ENV as ACPX_TRANSPORT_ENV
-from scripts.agent_runtime.adapters.agy import AgyAdapter, AgyRuntimeIdentity, _stream_result
+from scripts.agent_runtime.adapters.agy import AgyAdapter, AgyRuntimeIdentity, _stream_result, agy_model_state
 from scripts.agent_runtime.attempt_safe_read import AttemptReadError, safe_attempt_file_size, safe_read_attempt_file
 from scripts.agent_runtime.result import AgyAttempt, AgyTelemetry
 from scripts.entire.fleet_capture import FleetCapture, resolved_route
@@ -185,6 +185,7 @@ def _observe_agy_identity(
     invocation_id: str, cli_sha256: str | None, cli_version: str,
 ) -> AgyRuntimeIdentity | None:
     """Seal identity from this invocation's stdout, never plan metadata or prose."""
+    _AGY_OBSERVED_IDENTITY.set(None)
     requested = plan.cmd[plan.cmd.index("--model") + 1] if "--model" in plan.cmd else None
     if requested not in AgyAdapter.claude_model_slugs:
         return None
@@ -227,8 +228,42 @@ def _observe_agy_identity(
             "requested_model": requested,
         },
     })
+    state = agy_model_state(agent="agy", model=requested, identity=receipt, task_id=task_id,
+                            run_nonce=run_nonce, invocation_id=invocation_id)
+    receipt = state["model_identity"]
     _AGY_OBSERVED_IDENTITY.set(receipt)
     return receipt
+
+
+def _validated_agy_parse(
+    parse: ParseResult, *, agent: str, requested_model: str | None,
+    task_id: str | None, run_nonce: str | None,
+) -> ParseResult:
+    """Validate before any accounting override, event, usage or Result projection."""
+    state = agy_model_state(agent=agent, model=requested_model, identity=parse.model_identity,
+                            task_id=task_id, run_nonce=run_nonce)
+    if not state:
+        return parse
+    identity = state["model_identity"]
+    substitution = identity if state["resolved_model_known"] and (
+        parse.substitution is not None or identity["substituted"]
+    ) else None
+    return replace(parse, model_identity=identity, substitution=substitution)
+
+
+def _agy_capture_route(
+    *, requested_model: str, plan_metadata: Mapping[str, object] | None,
+    substitution: Mapping[str, object] | None, governed: bool,
+) -> tuple[str, dict[str, object]]:
+    """Use the validated observation for governed capture, including exceptions."""
+    if not governed:
+        return resolved_route(requested_model=requested_model, plan_metadata=plan_metadata, substitution=substitution)
+    identity = _AGY_OBSERVED_IDENTITY.get()
+    known = identity is not None and identity.get("actual_model_known") is True
+    actual = identity["actual_model"] if known else ""
+    return actual, {"requested_model": requested_model, "actual_model": actual,
+                    "actual_model_known": str(known).lower(), "harness": "agy",
+                    "actual_family": identity.get("actual_family") if known else ""}
 
 
 class AgentOutputLimitError(AgentRuntimeError):
@@ -2270,7 +2305,9 @@ def _execute_invocation_once(
         except AttemptReadError as exc:
             parse = ParseResult(ok=False, response="", failure_code=str(exc), stderr_excerpt=str(exc))
         if agy_identity_launch:
-            parse = replace(parse, model_identity=observed_identity)
+            parse = _validated_agy_parse(replace(parse, model_identity=observed_identity),
+                                         agent=agent_name, requested_model=pinned_model,
+                                         task_id=task_id, run_nonce=(tool_config or {}).get("run_nonce"))
         if (
             not parse.ok
             and final_returncode not in (None, 0)
@@ -2290,10 +2327,11 @@ def _execute_invocation_once(
                 )[:500],
             )
         if fleet_capture is not None:
-            actual_model, route_metadata = resolved_route(
+            actual_model, route_metadata = _agy_capture_route(
                 requested_model=model,
                 plan_metadata=getattr(plan, "metadata", None),
                 substitution=parse.substitution,
+                governed=agy_identity_launch,
             )
             fleet_capture.finish(
                 response=parse.response,
@@ -2343,16 +2381,18 @@ def _execute_invocation_once(
             if proc is not None:
                 with contextlib.suppress(Exception):
                     _kill_process_tree(proc)
-            stop_watchdog(
-                watchdog_state, watchdog_threads, proc=proc,
-                stdout_master_fd=stdout_master_fd, stderr_master_fd=stderr_master_fd,
-            )
-            stdout_master_fd = stderr_master_fd = None
-            _observe_agy_identity(
-                stdout="".join(watchdog_state.stdout_lines), plan=plan, task_id=task_id,
-                run_nonce=(tool_config or {}).get("run_nonce"), invocation_id=invocation_id,
-                cli_sha256=cli_sha256, cli_version=cli_version,
-            )
+            try:
+                stop_watchdog(
+                    watchdog_state, watchdog_threads, proc=proc,
+                    stdout_master_fd=stdout_master_fd, stderr_master_fd=stderr_master_fd,
+                )
+            finally:
+                stdout_master_fd = stderr_master_fd = None
+                _observe_agy_identity(
+                    stdout="".join(watchdog_state.stdout_lines), plan=plan, task_id=task_id,
+                    run_nonce=(tool_config or {}).get("run_nonce"), invocation_id=invocation_id,
+                    cli_sha256=cli_sha256, cli_version=cli_version,
+                )
         raise
     finally:
         if proc is not None and proc.poll() is None:
@@ -2367,10 +2407,11 @@ def _execute_invocation_once(
                 tree_watch.final_check()
 
         if fleet_capture is not None:
-            actual_model, route_metadata = resolved_route(
+            actual_model, route_metadata = _agy_capture_route(
                 requested_model=model,
                 plan_metadata=getattr(plan, "metadata", None),
                 substitution=None,
+                governed=agy_identity_launch,
             )
             fleet_capture.finish(
                 response="",
@@ -3345,7 +3386,9 @@ def _invoke_with_runner_failover(
             agy_budget=agy_budget,
             cli_version=telemetry.cli_version,
         )
-        parse = execution.parse
+        parse = _validated_agy_parse(execution.parse, agent=agent_name, requested_model=route.model,
+                                     task_id=task_id, run_nonce=(attempt_tool_config or {}).get("run_nonce"))
+        execution = replace(execution, parse=parse)
         trigger = None
         if not parse.ok or execution.kill_reason:
             trigger = classify_failover_trigger(
@@ -3765,7 +3808,9 @@ def _invoke_impl(
         v4_authorization_id=v4_authorization_id,
         cli_version=telemetry.cli_version,
     )
-    parse = execution.parse
+    parse = _validated_agy_parse(execution.parse, agent=agent_name, requested_model=effective_model,
+                                 task_id=task_id, run_nonce=(tool_config or {}).get("run_nonce"))
+    execution = replace(execution, parse=parse)
 
     if execution.kill_reason:
         _raise_for_kill_reason(

@@ -1010,6 +1010,11 @@ def test_agy_real_parser_identity_reaches_runner_result(tmp_path, monkeypatch, p
     def execute(**kwargs):
         parsed = adapter.parse_response(stdout=stdout, stderr="", returncode=0, output_file=None, plan=kwargs["plan"])
         parses.append(parsed)
+        receipt = runner_mod._observe_agy_identity(
+            stdout=stdout, plan=kwargs["plan"], task_id="fixture", run_nonce="fixture-run",
+            invocation_id="c" * 32, cli_sha256="d" * 64, cli_version="fixture",
+        )
+        parsed = replace(parsed, model_identity=receipt)
         return runner_mod._ExecutionOutcome(
             parse=parsed,
             duration_s=0.01,
@@ -1021,34 +1026,33 @@ def test_agy_real_parser_identity_reaches_runner_result(tmp_path, monkeypatch, p
         )
 
     monkeypatch.setattr(runner_mod, "_execute_invocation_plan", execute)
-    result = runner_mod.invoke("agy", "planned prompt\n", model=pin, mode="read-only", cwd=tmp_path)
+    result = runner_mod.invoke("agy", "planned prompt\n", model=pin, mode="read-only", cwd=tmp_path,
+                               task_id="fixture", tool_config={"run_nonce": "fixture-run"})
     assert len(parses) == 1
     mismatch = form in {"different", "whitespace"}
     assert result.ok is (not mismatch and form != "absent")
     assert result.failure_code == ("provider_policy_refusal" if mismatch or form == "absent" else None)
-    expected_identity = (
-        None
-        if form == "absent"
-        else {
-            "actual_model": value,
-            "actual_model_known": True,
-            "source": "provider-init",
-            "substituted": mismatch,
-        }
-    )
-    assert result.model_identity == expected_identity
-    assert parses[0].model_identity == expected_identity
-    if expected_identity is None:
+    if form == "absent":
+        assert result.model_identity is None
         assert "model_identity" not in records[-1]
     else:
-        assert records[-1]["model_identity"] == expected_identity
+        known = form != "whitespace"
+        assert result.model_identity["actual_model"] == (value if known else None)
+        assert result.model_identity["actual_model_known"] is known
+        assert result.model_identity["source"] == "provider-init"
+        assert result.model_identity["substituted"] is mismatch
+        assert records[-1]["model_identity"] == result.model_identity
+    assert parses[0].model_identity == (None if form == "absent" else {
+        "actual_model": value if form != "whitespace" else None,
+        "actual_model_known": form != "whitespace", "source": "provider-init", "substituted": mismatch,
+    })
     assert result.usage_record == records[-1]
-    assert bool(result.substitution and result.substitution["substituted"]) is mismatch
+    assert bool(result.substitution and result.substitution["substituted"]) is (form == "different")
     seat = replace(SEATS["claude-opus-5-5"], agent="agy", model=pin)
     digest = sha256_text("planned prompt\n")
     outcome = TaskOutcome(
         task_id="fixture",
-        status="done",
+        status="done" if result.ok else "failed",
         agent=result.agent,
         model=result.model,
         substitution=result.substitution,
@@ -1057,4 +1061,40 @@ def test_agy_real_parser_identity_reaches_runner_result(tmp_path, monkeypatch, p
         run_nonce="fixture",
         prompt_sha256=digest,
     )
-    assert (outcome.identity_problem(seat, digest) is None) is not mismatch
+    # The real evaluator requires successful dispatch status as well as routing.
+    assert (outcome.status == "done" and outcome.identity_problem(seat, digest) is None) is (
+        form in {"pin", "display", "backend"}
+    )
+
+
+@pytest.mark.parametrize("pin", ["claude-sonnet-5-5-high", "claude-opus-5-5-high"])
+@pytest.mark.parametrize("case,known", [("terminal-session", False), ("duplicate-after", False),
+                                       ("repeated-session", False), ("other-pin", True), ("repeated", True)])
+def test_agy_configured_failover_validates_before_projection(tmp_path, monkeypatch, pin, case, known):
+    from agent_runtime.failover import FailoverChain, FailoverRoute
+    from tests.agent_runtime.adapters.test_agy_claude_routes import consistency_stream, mock_agy_provider
+
+    launches, _, _ = mock_agy_provider(monkeypatch, tmp_path, runner_mod, stdout=consistency_stream(pin, case))
+    chain = FailoverChain(agent_name="agy", routes=(FailoverRoute(provider="agy", model=pin),), cooldown_ttl_s=600)
+    monkeypatch.setattr(runner_mod, "load_failover_chain", lambda *args, **kwargs: chain)
+    monkeypatch.setenv(FAILOVER_COOLDOWN_DB_ENV, str(tmp_path / "cooldowns.sqlite3"))
+    records, events = [], []
+    monkeypatch.setattr(runner_mod, "write_record", records.append)
+    result = runner_mod.invoke("agy", "Implement.", model=pin, mode="workspace-write", cwd=tmp_path,
+                               task_id="failover-context", tool_config={"run_nonce": "failover-run"},
+                               event_sink=lambda *args, **kwargs: events.append((args, kwargs)))
+    assert len(launches) == 1
+    assert result.ok is False
+    assert result.failure_code == "provider_policy_refusal"
+    assert result.stderr_excerpt == "agy_model_event_mismatch"
+    assert bool(result.model_identity and result.model_identity["actual_model_known"]) is known
+    assert bool(records[-1].get("model_identity") and records[-1]["model_identity"]["actual_model_known"]) is known
+    if known:
+        observed = ("claude-opus-5-5-high" if "sonnet" in pin else "claude-sonnet-5-5-high") if case == "other-pin" else pin
+        assert result.model_identity["actual_model"] == observed
+        assert result.substitution["actual_model"] == observed
+        assert records[-1]["substitution"]["actual_model"] == observed
+    else:
+        assert result.substitution is None
+        assert "substitution" not in records[-1]
+    assert runner_mod._AGY_OBSERVED_IDENTITY.get() is None

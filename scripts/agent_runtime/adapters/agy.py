@@ -862,11 +862,87 @@ class AgyRuntimeIdentity(dict):
         provenance = self.get("provenance") or {}
         return (
             json.dumps(self, sort_keys=True) == self._snapshot
+            and bool(task_id)
             and bool(run_nonce)
             and provenance.get("task_id") == task_id
             and provenance.get("run_nonce") == run_nonce
             and provenance.get("requested_model") == requested_model
         )
+
+
+def agy_model_state(
+    *, agent: str, model: str | None, identity: Any, task_id: str | None, run_nonce: str | None, invocation_id: str | None = None,
+) -> dict[str, Any]:
+    """Persist only same-run observations supplied by the normal runtime."""
+    if agent != "agy":
+        return {}
+
+    try:
+        requested = AgyAdapter.resolve_model_slug(model) if model else None
+    except ValueError:
+        requested = None
+    if requested not in AgyAdapter.claude_model_slugs:
+        return {}
+    from scripts.review.model_catalog import load_model_catalog
+
+    trusted = False
+    observed_slug = family = None
+    if isinstance(identity, AgyRuntimeIdentity):
+        provenance = identity.get("provenance")
+        if isinstance(provenance, dict):
+            events = provenance.get("init_events")
+            invocation = provenance.get("invocation_id")
+            cli_digest = provenance.get("cli_sha256")
+            cli_version = provenance.get("cli_version")
+            session = provenance.get("provider_session_id")
+            observed = identity.get("actual_model")
+            try:
+                observed_slug = AgyAdapter.resolve_model_slug(observed) if isinstance(observed, str) else None
+                bound = identity.bound_to(task_id=task_id, run_nonce=run_nonce, requested_model=requested)
+            except (TypeError, ValueError):
+                bound = False
+            family = next((
+                spec["family"] for key, spec in load_model_catalog()["models"].items()
+                if key == observed_slug or spec.get("routing_wire_ids", {}).get("agy") == observed_slug
+            ), None) if observed_slug else None
+            # Custody and binding do not establish consistency of a sealed mapping.
+            # A genuine mismatch stays known; a contradictory receipt stays untrusted.
+            trusted = (
+                bound
+                and identity.get("source") == "provider-init"
+                and identity.get("harness") == "agy"
+                and provenance.get("origin") == "subprocess.stdout"
+                and isinstance(invocation, str) and re.fullmatch(r"[0-9a-f]{32}", invocation) is not None
+                and (invocation_id is None or invocation == invocation_id)
+                and isinstance(cli_digest, str) and re.fullmatch(r"[0-9a-f]{64}", cli_digest) is not None
+                and isinstance(cli_version, str) and bool(cli_version.strip()) and cli_version != "unknown"
+                and (session is None or (isinstance(session, str) and 0 < len(session) <= 200))
+                and isinstance(events, list) and bool(events)
+                and all(
+                    isinstance(event, dict)
+                    and isinstance(event.get("sha256"), str)
+                    and re.fullmatch(r"[0-9a-f]{64}", event["sha256"]) is not None
+                    and (event.get("provider_session_id") is None or event["provider_session_id"] == session)
+                    for event in events
+                )
+                and identity.get("actual_model_known") is (observed_slug is not None)
+                and (observed_slug is not None or observed is None)
+                and identity.get("actual_family") == family
+                and isinstance(identity.get("substituted"), bool)
+                and identity["substituted"] is (observed_slug != requested or len(events) > 1)
+            )
+    observed = identity.get("actual_model") if trusted else None
+    known = trusted and identity.get("actual_model_known") is True
+    matched = known and observed_slug == requested and identity.get("substituted") is False
+    return {
+        "model_identity": identity if trusted else None,
+        "resolved_model": observed if known else "unattested-harness",
+        "resolved_model_known": bool(known),
+        "resolved_model_source": identity["source"] if trusted else "unattested-harness",
+        "resolved_model_family": family if trusted else None,
+        "resolved_model_harness": "agy",
+        "identity_matches_request": bool(matched),
+    }
 
 
 class AgyAdapter:
@@ -1087,7 +1163,8 @@ class AgyAdapter:
                 ),
                 "entire_fleet": {
                     "requested_model": model or self.default_model,
-                    "actual_model": resolved_model or model or self.default_model,
+                    "actual_model": None if resolved_model in _AGY_CLAUDE_SLUGS else resolved_model or model or self.default_model,
+                    **({"actual_model_known": "false"} if resolved_model in _AGY_CLAUDE_SLUGS else {}),
                 },
             },
             host_harness="agy",
@@ -2079,7 +2156,7 @@ def _stream_result(
     model_identity: dict[str, Any] | None = None,
     identity_events: list[dict[str, Any]] | None = None,
 ) -> tuple[dict[str, Any] | None, str | None]:
-    """Read exactly one terminal result from AGY's NDJSON event stream."""
+    """Read terminal output and every initialization before selecting identity."""
     def unique_members(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
         event: dict[str, Any] = {}
         for key, value in pairs:
@@ -2088,109 +2165,138 @@ def _stream_result(
             event[key] = value
         return event
 
+    def invalidate(reason: str) -> tuple[None, str]:
+        if model_identity is not None:
+            # Invalid evidence has no observation to substitute. Execution failure
+            # belongs to the returned problem, never to the substitution flag.
+            model_identity.update(actual_model=None, actual_model_known=False, source="unattested-harness")
+        return None, reason
+
     result: dict[str, Any] | None = None
     expected_model = plan.cmd[plan.cmd.index("--model") + 1] if plan and "--model" in plan.cmd else None
     try:
-        resolved_expected = AgyAdapter.resolve_model_slug(expected_model) if expected_model is not None else None
+        expected = AgyAdapter.resolve_model_slug(expected_model) if expected_model is not None else None
     except ValueError:
-        resolved_expected = None
-    argon_identity = resolved_expected in _AGY_ARGON_SLUGS
-    check_identity = argon_identity or resolved_expected in _AGY_CLAUDE_SLUGS
+        expected = None
+    claude_identity = expected in _AGY_CLAUDE_SLUGS
+    argon_identity = expected in _AGY_ARGON_SLUGS
+    check_identity = claude_identity or argon_identity
     identity_seen = False
     init_seen = False
     activity_seen = False
     provider_session = None
+    observed_slug = None
+    observed_model = None
+    identity_problem = None
     if not stdout or not stdout.strip():
         return None, "agy_stream_output_invalid: missing terminal result"
     for line in stdout.split("\n"):
         if not line.strip():
             continue
         try:
-            # Validate all object depths before a duplicate can hide identity metadata.
-            event = json.loads(
-                line, object_pairs_hook=unique_members if resolved_expected in _AGY_CLAUDE_SLUGS else None,
-            )
+            event = json.loads(line, object_pairs_hook=unique_members if claude_identity else None)
         except json.JSONDecodeError:
             return None, "agy_stream_output_invalid: malformed NDJSON event"
         except ValueError:
-            if model_identity is not None and model_identity.get("source") == "provider-init":
-                model_identity["substituted"] = True
-            return None, "agy_model_event_mismatch"
+            return invalidate("agy_model_event_mismatch")
         if not isinstance(event, dict) or not isinstance(event.get("event"), str):
             return None, "agy_stream_output_invalid: malformed NDJSON event"
         if check_identity and event["event"] == "init":
             config = event.get("init")
-            if resolved_expected in _AGY_CLAUDE_SLUGS:
+            metadata_order = (event, config) if claude_identity else (config, event)
+            reported = [metadata["model"] for metadata in metadata_order
+                        if isinstance(metadata, dict) and "model" in metadata]
+            if claude_identity:
                 import hashlib
 
                 if "\ufffd" in line:
-                    return None, "agy_model_identity_missing"
+                    return invalidate("agy_model_identity_missing")
+                sessions = [metadata[key] for metadata in (event, config) if isinstance(metadata, dict)
+                            for key in ("conversation_id", "session_id") if metadata.get(key) is not None]
                 if identity_events is not None:
-                    identity_events.append({"sha256": hashlib.sha256(line.removesuffix("\r").encode("utf-8")).hexdigest()})
-                if init_seen or activity_seen:
-                    if model_identity is not None:
-                        model_identity["substituted"] = True
-                    return None, "agy_model_event_mismatch"
-                init_seen = True
-                # Configuration/request echoes are not runtime observations.
-                for metadata in (event, config):
-                    if isinstance(metadata, dict) and any(
-                        metadata.get(key) not in (None, "provider-init", "runtime")
-                        for key in ("source", "model_source")
-                    ):
-                        return None, "agy_model_identity_missing"
-                sessions = [
-                    metadata[key]
-                    for metadata in (event, config) if isinstance(metadata, dict)
-                    for key in ("conversation_id", "session_id") if metadata.get(key) is not None
-                ]
+                    identity_events.append({
+                        "sha256": hashlib.sha256(line.removesuffix("\r").encode("utf-8")).hexdigest(),
+                        "provider_session_id": sessions[0] if sessions else None,
+                    })
+                if activity_seen:
+                    return invalidate("agy_model_event_mismatch")
+                if any(metadata.get(key) not in (None, "provider-init", "runtime")
+                       for metadata in (event, config) if isinstance(metadata, dict)
+                       for key in ("source", "model_source")):
+                    return invalidate("agy_model_identity_missing")
                 if any(not isinstance(value, str) or not value or len(value) > 200 for value in sessions):
-                    return None, "agy_model_identity_missing"
+                    return invalidate("agy_model_identity_missing")
                 if len(set(sessions)) > 1:
-                    return None, "agy_model_event_mismatch"
-                provider_session = sessions[0] if sessions else None
+                    return invalidate("agy_model_event_mismatch")
+                session = sessions[0] if sessions else None
                 resumed = next((arg.split("=", 1)[1] for arg in plan.cmd if arg.startswith("--conversation=")), None)
-                if provider_session is not None and resumed is not None and provider_session != resumed:
-                    return None, "agy_model_event_mismatch"
-                if identity_events is not None:
-                    identity_events[-1]["provider_session_id"] = provider_session
-            reported = [config.get("model")] if isinstance(config, dict) else []
-            reported.append(event.get("model"))
-            for provider_model in reported:
-                if provider_model is None or provider_model == "":
-                    continue
-                try:
-                    if argon_identity:
-                        mismatch = provider_model != resolved_expected
-                    else:
-                        mismatch = (
-                            not isinstance(provider_model, str)
-                            or AgyAdapter.resolve_model_slug(provider_model) != resolved_expected
-                        )
-                except ValueError:
-                    mismatch = True
+                if session is not None and ((provider_session is not None and session != provider_session)
+                                            or (resumed is not None and session != resumed)):
+                    return invalidate("agy_model_event_mismatch")
+                provider_session = session or provider_session
+                if not reported or all(value is None or value == "" for value in reported):
+                    return invalidate("agy_model_identity_missing")
+                resolved = []
+                for value in reported:
+                    try:
+                        slug = AgyAdapter.resolve_model_slug(value) if isinstance(value, str) and value.strip() else None
+                    except ValueError:
+                        slug = None
+                    resolved.append(slug)
+                # Validate the whole init before choosing either representation.
+                if len(reported) > 1 and any(
+                    slug != resolved[0] or (slug is None and value != reported[0])
+                    for value, slug in zip(reported[1:], resolved[1:], strict=True)
+                ):
+                    return invalidate("agy_model_event_mismatch")
+                candidate = resolved[0] if resolved else None
+                value = reported[0] if reported else None
+                if init_seen:
+                    if candidate != observed_slug or (candidate is None and value != observed_model):
+                        return invalidate("agy_model_event_mismatch")
+                    identity_problem = "agy_model_event_mismatch"
+                else:
+                    observed_slug, observed_model = candidate, value
+                init_seen = True
+                mismatch = candidate != expected
+                identity_seen = candidate is not None
                 if model_identity is not None:
                     model_identity.update(
-                        actual_model=provider_model[:200] if isinstance(provider_model, str) else None,
-                        actual_model_known=isinstance(provider_model, str),
-                        substituted=mismatch,
+                        actual_model=observed_model[:200] if candidate is not None else None,
+                        actual_model_known=candidate is not None,
+                        substituted=mismatch or identity_problem is not None,
                         source="provider-init",
                     )
                 if mismatch:
-                    return None, "agy_model_event_mismatch"
-                identity_seen = True
+                    identity_problem = "agy_model_event_mismatch"
+                # Keep reading: a later duplicate/session/source/init can revoke
+                # an otherwise honest mismatch or consistent repeated observation.
+            else:
+                for value in reported:
+                    if value is None or value == "":
+                        continue
+                    mismatch = value != expected
+                    if model_identity is not None:
+                        model_identity.update(actual_model=value[:200] if isinstance(value, str) else None,
+                                              actual_model_known=isinstance(value, str), substituted=mismatch,
+                                              source="provider-init")
+                    if mismatch:
+                        return None, "agy_model_event_mismatch"
+                    identity_seen = True
         elif event["event"] != "init":
             activity_seen = True
         if event["event"] == "result":
-            if provider_session is not None and isinstance(event.get("result"), dict) and (
-                event["result"].get("conversation_id") != provider_session
+            terminal = event.get("result")
+            if provider_session is not None and isinstance(terminal, dict) and (
+                terminal.get("conversation_id") != provider_session
+                or terminal.get("session_id", provider_session) != provider_session
             ):
-                if model_identity is not None:
-                    model_identity["substituted"] = True
-                return None, "agy_model_event_mismatch"
-            if result is not None or not isinstance(event.get("result"), dict):
+                return invalidate("agy_model_event_mismatch")
+            if result is not None or not isinstance(terminal, dict):
                 return None, "agy_stream_output_invalid: duplicate or malformed terminal result"
-            result = event["result"]
+            result = terminal
+    if identity_problem:
+        return None, identity_problem
     if result is None:
         return None, "agy_stream_output_invalid: missing terminal result"
     if "response" in result and not isinstance(result["response"], str):

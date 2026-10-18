@@ -385,8 +385,8 @@ def test_claude_reported_identity_fails_closed(tmp_path, slug, label, backend, f
         assert parsed.model_identity is None
     else:
         assert parsed.model_identity == {
-            "actual_model": value if isinstance(value, str) else None,
-            "actual_model_known": isinstance(value, str),
+            "actual_model": value if form in {"pin", "display", "backend", "different"} else None,
+            "actual_model_known": form in {"pin", "display", "backend", "different"},
             "source": "provider-init",
             "substituted": mismatch,
         }
@@ -417,8 +417,8 @@ def test_conflicting_init_model_values_fail_closed(tmp_path, slug, nested_matche
     assert parsed.ok is False
     assert parsed.failure_code == "provider_policy_refusal"
     assert parsed.stderr_excerpt == "agy_model_event_mismatch"
-    assert parsed.model_identity["actual_model"] == different
-    assert parsed.model_identity["substituted"] is True
+    assert parsed.model_identity is None
+    assert parsed.substitution is None
 
 
 def mock_agy_provider(monkeypatch, tmp_path, runner, *, stdout, exit_kind="complete", version="1.4.0"):
@@ -677,8 +677,9 @@ def test_duplicate_later_event_revokes_matching_identity(tmp_path, monkeypatch, 
         assert result.ok is False
         assert result.response == ""
         assert result.stderr_excerpt == "agy_model_event_mismatch"
-    assert identity["actual_model"] == slug
-    assert identity["substituted"] is True
+    assert identity is None
+    if entrypoint in {"parser", "runner"}:
+        assert result.substitution is None
 
 
 @pytest.mark.parametrize("slug", SLUGS)
@@ -707,3 +708,69 @@ def test_duplicate_descendants_cannot_hide_in_unique_envelopes(tmp_path, monkeyp
     assert result.response == ""
     assert result.model_identity is None
     assert result.stderr_excerpt == "agy_model_event_mismatch"
+
+
+def consistency_stream(slug, case):
+    """Frozen author inputs; expectations live in the consuming tests."""
+    other = "claude-opus-5-5-high" if "sonnet" in slug else "claude-sonnet-5-5-high"
+    init = {"event": "init", "model": slug, "session_id": "7cd3ba85-817f-4a03-8223-1ff39ca42419"}
+    terminal = {"event": "result", "result": {
+        "status": "SUCCESS", "response": "READY", "conversation_id": "7cd3ba85-817f-4a03-8223-1ff39ca42419",
+    }}
+    events = [init]
+    if case == "display":
+        init["model"] = "Claude Sonnet 5.5 (High)" if "sonnet" in slug else "Claude Opus 5.5 (High)"
+    elif case in {"other-pin", "mismatch-then-duplicate", "mismatch-then-session"}:
+        init["model"] = other
+    elif case == "other-family":
+        init["model"] = "gemini-3.8-flash-high"
+    elif case == "nested-model":
+        init["init"] = {"model": other}
+    elif case == "nested-session":
+        init["init"] = {"session_id": "different-session"}
+    elif case == "terminal-session":
+        terminal["result"]["conversation_id"] = "different-session"
+    elif case.startswith("repeated"):
+        repeated = dict(init)
+        if case == "repeated-model":
+            repeated["model"] = other
+        elif case == "repeated-session":
+            repeated["session_id"] = "different-session"
+        elif case == "repeated-source":
+            repeated["source"] = "configuration"
+        events.append(repeated)
+    elif case in {"unknown", "retired", "non-string"}:
+        init["model"] = {"unknown": "unrecognized", "retired": "Claude Opus 4.6 (Thinking)", "non-string": 7}[case]
+    elif case == "configuration":
+        init["source"] = "requested"
+    elif case == "missing":
+        events = []
+    elif case == "late":
+        events.insert(0, {"event": "step_update"})
+    elif case == "provider-failure":
+        terminal["result"].update(status="ERROR", error="synthetic provider failure")
+    if case == "mismatch-then-session":
+        events.append({**init, "session_id": "different-session"})
+    lines = list(map(json.dumps, events))
+    if case in {"duplicate-after", "mismatch-then-duplicate"}:
+        lines.append('{"event":"step_update","metadata":[{"model":"one","\\u006dodel":"two"}]}')
+    lines.append(json.dumps(terminal))
+    return "\n".join(lines) + "\n"
+
+
+@pytest.mark.parametrize("nested,top,observed", [
+    ("other-nested", "other-top", "other-nested"),
+    ("other-nested", "gemini-4-argon-high", "other-nested"),
+    ("gemini-4-argon-high", "other-top", "other-top"),
+])
+def test_argon_preserves_nested_first_mismatch_observation(tmp_path, nested, top, observed):
+    plan, terminal = _identity_stream_plan(tmp_path, "gemini-4-argon-high")
+    identity = {}
+    result, problem = agy._stream_result(
+        "\n".join(map(json.dumps, [{"event": "init", "init": {"model": nested}, "model": top}, terminal])),
+        plan=plan, model_identity=identity,
+    )
+    assert result is None
+    assert problem == "agy_model_event_mismatch"
+    assert identity == {"actual_model": observed, "actual_model_known": True,
+                        "substituted": True, "source": "provider-init"}

@@ -997,3 +997,28 @@ def test_invoke_hermes_raises_on_nonzero_exit():
     ):
         with pytest.raises(SystemExit, match="no usable response"):
             _invoke_hermes("hello", "deepseek-v4.1-flash")
+
+
+@pytest.mark.parametrize("pin", ["claude-sonnet-5-5-high", "claude-opus-5-5-high"])
+@pytest.mark.parametrize("outcome", ["ok", "error", "runner_exception", "hard_timeout", "cancelled"])
+def test_agy_capture_unknown_never_falls_back_to_requested_pin(tmp_path, monkeypatch, pin, outcome):
+    hooks = []
+    monkeypatch.setattr(capture.shutil, "which", lambda _name: "/fake/entire")
+    monkeypatch.setattr(capture.subprocess, "run", _fake_run(hooks))
+    fleet = capture.FleetCapture.start(
+        host_harness="agy", runner_agent="agy", entrypoint="delegate", requested_model=pin,
+        prompt="Implement.", repo_path=tmp_path, runtime_repo_root=tmp_path,
+        plan_metadata={"entire_fleet": {"requested_model": pin, "actual_model": None, "actual_model_known": "false"}},
+    )
+    assert fleet is not None
+    for _, payload in hooks:
+        assert payload["raw_data"]["actual_model_known"] == "false"
+        assert payload["raw_data"].get("actual_model") is None
+    fleet.finish(response="", outcome=outcome, returncode=None, actual_model="",
+                 route_metadata={"actual_model": "", "actual_model_known": "false", "requested_model": pin})
+    terminal = [payload for name, payload in hooks if name == "session-end"]
+    assert len(terminal) == 1
+    assert terminal[0]["raw_data"]["actual_model_known"] == "false"
+    assert terminal[0]["raw_data"].get("actual_model") is None
+    assert terminal[0]["raw_data"]["requested_model"] == pin
+    assert terminal[0]["raw_data"]["outcome"] == outcome

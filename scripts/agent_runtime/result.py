@@ -259,7 +259,9 @@ class Result:
     transport_metadata: dict[str, str] | None = None
     transport_outcome: str | None = None
     # Optional provenance; absent historical records imply no provider observation.
-    model_identity: dict[str, str | bool | None] | None = None
+    # Validated same-invocation AGY observation, including bounded provenance.
+    # The routing/accounting model above never supplies missing actual identity.
+    model_identity: dict[str, Any] | None = None
     # The adapter's closed, body-free failure classification (ParseResult.failure_code),
     # e.g. ``provider_policy_refusal``; None on success or when unclassified.
     failure_code: str | None = None

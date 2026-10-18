@@ -224,3 +224,50 @@ def test_agy_branch_review_fails_closed_until_native_isolation_exists(monkeypatc
         process_for_agy(9, review=True, stdout_only=True)
     assert captured == {}
     assert binder.expected_engine is None
+
+
+@pytest.mark.parametrize("model", ["claude-sonnet-5-5-high", "claude-opus-5-5-high"])
+@pytest.mark.parametrize("outcome", ["ok", "provider-failure", "cancel", "timeout"])
+def test_claude_bridge_never_promotes_unbound_routing_model(monkeypatch, tmp_path, model, outcome):
+    from scripts.agent_runtime.adapters.agy import AgyRuntimeIdentity
+
+    msg = {"id": 41, "task_id": "bridge-identity", "from": "codex", "to": "agy", "type": "query",
+           "content": "Reply.", "data": json.dumps({"to_model": model})}
+    sent = []
+    monkeypatch.setattr(_agy, "_fetch_agy_message", lambda _id: msg)
+    monkeypatch.setattr(_agy, "_agy_ask_scratch_cwd", lambda: tmp_path)
+    monkeypatch.setattr(_agy, "send_message", lambda **fields: sent.append(fields) or 42)
+    monkeypatch.setattr(_agy, "acknowledge", lambda *_args: None)
+    monkeypatch.setattr(_agy, "record_ask_reply", lambda *_args: None)
+    monkeypatch.setattr(_agy, "record_ask_failure", lambda *_args, **_kwargs: None)
+    # No bridge nonce exists. A saved/injected record cannot supply that binding.
+    identity = AgyRuntimeIdentity({"actual_model": model, "actual_model_known": True,
+                                  "source": "provider-init", "substituted": False})
+
+    def invoke(*_args, **kwargs):
+        assert "run_nonce" not in kwargs["tool_config"]
+        if outcome == "timeout":
+            raise _agy.AgentTimeoutError("agy", hard_timeout=30)
+        if outcome == "cancel":
+            raise KeyboardInterrupt("synthetic cancellation")
+        return Result(ok=outcome == "ok", agent="agy", model=model, mode="danger", response="READY",
+                      stderr_excerpt=None if outcome == "ok" else "synthetic provider failure", duration_s=0.1,
+                      session_id=None, rate_limited=False, stalled=False, returncode=0 if outcome == "ok" else 1,
+                      model_identity=identity)
+
+    monkeypatch.setattr(_agy.agent_runner, "invoke", invoke)
+    if outcome == "cancel":
+        with pytest.raises(KeyboardInterrupt):
+            process_for_agy(41, stdout_only=True)
+        assert sent == []
+        return
+    assert process_for_agy(41, stdout_only=True) == ("READY" if outcome == "ok" else None)
+    assert len(sent) == 1
+    assert sent[0]["from_model"] == "unattested-harness"
+    assert sent[0]["msg_type"] == ("response" if outcome == "ok" else "error")
+    provenance = json.loads(sent[0]["data"])
+    assert provenance["actual_model"] is None
+    assert provenance["actual_model_known"] is False
+    assert provenance["actual_family"] is None
+    assert provenance["model_identity"] is None
+    assert provenance["model_requested"] == model
