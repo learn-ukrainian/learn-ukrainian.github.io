@@ -18,6 +18,7 @@ from jsonschema import Draft202012Validator, validators
 
 ROOT = Path(__file__).resolve().parents[3]
 MATRIX = ROOT / "registry/atlas/source-completeness/required-source-matrix.md"
+CONTRACT = MATRIX.with_name("manifest-contract.md")
 STATES = ("verified-complete", "missing", "corrupt", "quarantined", "genuinely_absent")
 STAGES = ("acquisition", "raw_custody", "parsing", "admission")
 VERSION = "source-completeness.v1"
@@ -413,7 +414,107 @@ def _records(inputs: Inputs, base: Path, ranges: dict, requirements: dict) -> di
     return records
 
 
-def account(paths: dict[str, Path]) -> tuple[dict[str, bytes], dict]:
+def _atlas_census(path: Path, inputs: Inputs, ordered: list[dict], ranges: dict[str, dict]) -> dict:
+    """Observe exact Atlas lemma/source-key matches without inferring source membership.
+
+    atlas-census.v1 retains entry ordinals, verbatim lemmas/slugs and every matched
+    range/identity. Counts use entries, including repeated lemmas, as denominator.
+    Partial/unknown source inventories have null full-coverage counts and separate
+    supplied-known counts. All input, matrix and accounting-contract bytes are bound.
+    This observational artifact cannot approve Candidate A or replace source-side
+    lexical-universe/legacy membership, stage evidence or independent reconciliation.
+    """
+    raw, document = _read(path)
+    _validate(
+        document,
+        {
+            "type": "object",
+            "required": ["version", "entries"],
+            "properties": {
+                "version": {"const": "0.1"},
+                "entries": _array(
+                    {
+                        "type": "object",
+                        "required": ["lemma", "url_slug"],
+                        "properties": {"lemma": TEXT, "url_slug": TEXT},
+                    }
+                ),
+            },
+        },
+        "atlas-manifest",
+    )
+    entries = document["entries"]
+    _distinct([entry["url_slug"] for entry in entries], "Atlas URL slug")
+    inputs.paths.add(_resolve(path))
+    inputs.bindings["atlas_manifest"] = {
+        "sha256": _sha(raw),
+        "bytes": len(raw),
+        "schema_version": "atlas-manifest:0.1",
+    }
+    contract_raw = CONTRACT.read_bytes()
+    inputs.paths.add(_resolve(CONTRACT))
+    inputs.paths.add(_resolve(MATRIX))
+    keys = Counter(entry["lemma"] for entry in entries)
+    matches: dict[str, list[dict]] = defaultdict(list)
+    coverage = []
+    for requirement in ordered:
+        requirement_id = requirement["requirement_id"]
+        selected = [row for row in ranges.values() if row["requirement_id"] == requirement_id]
+        known = [row for row in selected if row["membership"] == "KNOWN"]
+        known_keys: set[str] = set()
+        matched_units = 0
+        for row in known:
+            for unit in row["units"]:
+                key = unit["identity"]["key"]
+                known_keys.add(key)
+                if key in keys:
+                    matched_units += 1
+                    matches[key].append(
+                        {
+                            "requirement_id": requirement_id,
+                            "range_id": row["range_id"],
+                            "identity": unit["identity"],
+                        }
+                    )
+        matched_entries = sum(keys[key] for key in known_keys)
+        partitioned = bool(selected) and len(known) == len(selected)
+        coverage.append(
+            {
+                "requirement_id": requirement_id,
+                "gap": requirement["gap"],
+                "owner": requirement["owner"],
+                "partition_status": "PARTITIONED" if partitioned else "UNPARTITIONED",
+                "entry_count": len(entries),
+                "exact_key_matched_entry_count": matched_entries if partitioned else None,
+                "no_exact_key_match_entry_count": len(entries) - matched_entries if partitioned else None,
+                "supplied_known_matched_entry_count": matched_entries,
+                "supplied_known_matched_unit_count": matched_units,
+            }
+        )
+    return {
+        "schema_version": "atlas-census.v1",
+        "evidence_role": "exact_key_observation_only",
+        "programme_completeness": "UNRESOLVED",
+        "contract_sha256": _sha(contract_raw),
+        "matrix_sha256": inputs.documents["requirements"]["matrix_sha256"],
+        "inputs": dict(inputs.bindings),
+        "required_requirement_count": 20,
+        "entry_count": len(entries),
+        "distinct_lemma_count": len(keys),
+        "requirements": coverage,
+        "entries": [
+            {
+                "ordinal": ordinal,
+                "lemma": entry["lemma"],
+                "url_slug": entry["url_slug"],
+                "source_key_matches": matches.get(entry["lemma"], []),
+            }
+            for ordinal, entry in enumerate(entries)
+        ],
+    }
+
+
+def account(paths: dict[str, Path], *, atlas_manifest: Path | None = None) -> tuple[dict[str, bytes], dict]:
     """Validate independent inventories and account for all supplied units and members."""
     if set(paths) != set(SCHEMAS):
         raise InvalidEvidence("all five explicit input artifacts are required")
@@ -526,7 +627,9 @@ def account(paths: dict[str, Path]) -> tuple[dict[str, bytes], dict]:
                     "stage_counts": {
                         stage: {s: counts[stage][s] for s in STATES}
                         for stage in (*STAGES, *(f"consumer:{c}" for c in requirement["consumers"]))
-                    } if row["membership"] == "KNOWN" else None,
+                    }
+                    if row["membership"] == "KNOWN"
+                    else None,
                 }
             )
         disposition = {
@@ -573,6 +676,8 @@ def account(paths: dict[str, Path]) -> tuple[dict[str, bytes], dict]:
                 gap(requirement, member["member_id"], name, "member source linkage unresolved", [])
     members_out["legacy_membership"]["expected_obligation"] = 123
     outputs["members.json"] = _bytes({"schema_version": VERSION, **members_out})
+    if atlas_manifest is not None:
+        outputs["atlas-census.json"] = _bytes(_atlas_census(atlas_manifest, inputs, ordered, ranges))
     status = "INCOMPLETE_DIAGNOSTIC" if gaps else "STRUCTURALLY_ACCOUNTED"
     receipt = {
         "schema_version": VERSION,
@@ -663,7 +768,12 @@ def main(argv: list[str] | None = None) -> int:
     --requirements requirements.json --source-manifest source.json \\
     --stage-evidence stages.json --lexical-universe universe.json \\
     --legacy-membership legacy.json --output-dir "$TMPDIR/accounting"
+Add --atlas-manifest site/src/data/lexicon-manifest.json to census Candidate A.
 Outputs: SRC-*.json ordered manifests, members.json, manifest-receipt.json last.
+With --atlas-manifest, also atlas-census.json (atlas-census.v1): ordered entries,
+exact-key observations for all 20 sources, input/matrix/contract hashes. Unknown
+source coverage stays null. Matches never prove source/field completeness or an
+approved lexical universe. All five independent accounting inputs remain required.
 No source/store writes. Existing byte-identical outputs are verified on rerun.
 Exit codes: 0 STRUCTURALLY_ACCOUNTED; 2 INCOMPLETE_DIAGNOSTIC;
 3 INVALID_EVIDENCE; 4 PUBLICATION_FAILURE. Neither 0 nor 2 certifies completeness.
@@ -678,6 +788,11 @@ Related: registry/atlas/source-completeness/manifest-contract.md; #10512, #9401.
             help=f"Explicit {name.replace('_', ' ')} JSON v1 input, e.g. {name}.json; see contract.",
         )
     parser.add_argument(
+        "--atlas-manifest",
+        type=Path,
+        help="Optional Atlas version 0.1 JSON, e.g. site/src/data/lexicon-manifest.json; default: no census.",
+    )
+    parser.add_argument(
         "--output-dir",
         required=True,
         type=Path,
@@ -685,7 +800,7 @@ Related: registry/atlas/source-completeness/manifest-contract.md; #10512, #9401.
     )
     try:
         args = parser.parse_args(argv)
-        outputs, receipt = account({name: getattr(args, name) for name in SCHEMAS})
+        outputs, receipt = account({name: getattr(args, name) for name in SCHEMAS}, atlas_manifest=args.atlas_manifest)
     except (InvalidEvidence, OSError) as exc:
         print(f"INVALID_EVIDENCE: {exc}", file=sys.stderr)
         return 3
