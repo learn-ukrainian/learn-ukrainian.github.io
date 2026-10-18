@@ -116,7 +116,7 @@ def phrase_spans(markup):
         if start < head_end:
             continue
         author = AUTHOR.match(text, end)
-        if start == end or not author or not any(c.isalpha() for c in author.group()):
+        if start == end or not author or not author_label(author.group()):
             return None, "citation_unresolved"
         if quotes and start < quotes[-1][1]:
             return None, "citation_unresolved"
