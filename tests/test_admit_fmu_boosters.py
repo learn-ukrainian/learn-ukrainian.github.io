@@ -3,6 +3,7 @@
 import json
 from pathlib import Path
 
+import pytest
 import yaml
 
 from scripts.audit.source_inventory_intake import read_source_inventory
@@ -54,6 +55,7 @@ def test_fmu_booster_all_single_words_vesum_attested(requires_vesum_db):
             assert bool(forms), f"Lemma {r.lemma} is not attested in VESUM"
 
 
+@pytest.mark.needs_sparse_tree("site/src/data")
 def test_fmu_booster_manifest_pointer_and_fingerprint():
     assert POINTER_PATH.is_file()
     assert FINGERPRINT_PATH.is_file()

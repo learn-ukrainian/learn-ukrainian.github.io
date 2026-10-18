@@ -75,6 +75,8 @@ class MaintenanceAction(StrEnum):
     FINISH_CLEANUP = "finish-cleanup"
     SUPERSEDE = "supersede"
     ABANDON = "abandon"
+    DISPOSE_EXITED_SUCCESSOR = "dispose-exited-successor"
+    DISPOSE_LEGACY_RESUMED = "dispose-legacy-resumed"
 
 
 TERMINAL_STATES = frozenset(
@@ -740,21 +742,48 @@ def transition(
     operation_id: str | None = None,
     updates: Mapping[str, Any] | None = None,
     already_locked: bool = False,
+    maintenance_plan: Path | None = None,
 ) -> dict[str, Any]:
     path = record_path(state_root, agent=agent, lineage_id=lineage_id, rollover_id=rollover_id)
 
     def apply() -> dict[str, Any]:
         record = validate_record(_load_json(path), path=path)
-        if operation_id and any(
+        already_applied = bool(operation_id) and any(
             event.get("operation_id") == operation_id and event.get("state") == state.value
             for event in record.get("history", [])
-        ):
+        )
+        if already_applied and maintenance_plan is None:
             return record
         current = RolloverState(record["state"])
         if current in TERMINAL_STATES and current is not state:
             raise ValueError(f"terminal rollover {current.value} cannot transition to {state.value}")
+        exit_plan = None
+        if maintenance_plan is not None:
+            resolved, exit_plan = load_maintenance_plan(state_root, plan_path=maintenance_plan)
+            intent = _load_json(resolved.parent / "apply-intent.json")
+            expected_record_digest = intent.get("final_record_digest") if already_applied else exit_plan["record_digest"]
+            if (
+                exit_plan["action"] not in _SUCCESSOR_DISPOSITIONS
+                or exit_plan["key"] != record["key"]
+                or exit_plan["digest"] != operation_id
+                or expected_record_digest != sha256_digest(record)
+                or state is not RolloverState.ABANDONED_WITH_PROOF
+                or reason != exit_plan["proof"]["reason"]
+                or list(evidence_paths) != exit_plan["proof"]["evidence_paths"]
+                or updates
+            ):
+                raise ValueError("exited-successor transition does not match its exact maintenance plan")
+            _revalidate_successor_plan(state_root, record, exit_plan)
+            expected_intent = _maintenance_intent(exit_plan)
+            if already_applied:
+                expected_intent["final_record_digest"] = sha256_digest(record)
+            if intent != expected_intent:
+                raise ValueError("exited-successor transition requires its exact apply intent")
+            if already_applied:
+                return record
         if (
-            state in TERMINAL_STATES
+            exit_plan is None
+            and state in TERMINAL_STATES
             and SUCCESS_RANK.get(RolloverState(record["last_successful_boundary"]), 0)
             >= SUCCESS_RANK[RolloverState.CONFIRMED]
         ):
@@ -832,6 +861,9 @@ def transition(
                 replacement_task_id=replacement_task_id,
             )
         validate_record(record, path=path)
+        if exit_plan is not None:
+            intent = {**_maintenance_intent(exit_plan), "final_record_digest": sha256_digest(record)}
+            atomic_write_json(resolved.parent / "apply-intent.json", intent)
         atomic_write_json(path, record)
         return record
 
@@ -1643,6 +1675,128 @@ _CLEANUP_ASSERTIONS = frozenset(
 )
 
 
+_EXIT_ASSERTIONS = frozenset({
+    "no_unrecorded_native_create",
+    "no_active_heartbeat_dependency",
+    "selected_exact_ids_match",
+})
+
+_SUCCESSOR_DISPOSITIONS = frozenset({
+    MaintenanceAction.DISPOSE_EXITED_SUCCESSOR.value,
+    MaintenanceAction.DISPOSE_LEGACY_RESUMED.value,
+})
+
+
+def _maintenance_assertions(action: MaintenanceAction) -> frozenset[str]:
+    if action is MaintenanceAction.FINISH_CLEANUP:
+        return _CLEANUP_ASSERTIONS
+    if action is MaintenanceAction.DISPOSE_EXITED_SUCCESSOR:
+        return _EXIT_ASSERTIONS
+    if action is MaintenanceAction.DISPOSE_LEGACY_RESUMED:
+        return frozenset({"selected_exact_ids_match"})
+    return _DISPOSITION_ASSERTIONS
+
+
+def _validate_legacy_disposition(state_root: Path, record: Mapping[str, Any], proof: Mapping[str, Any]) -> None:
+    from .. import thread_handoff
+
+    authorization = proof.get("operator_disposition")
+    if not isinstance(authorization, Mapping) or set(authorization) != {
+        "authority", "actor_agent", "actor_host_id", "replacement_thread_id",
+    }:
+        raise ValueError("legacy disposition requires exact operator attribution and successor ID")
+    if authorization["authority"] not in ("operator", "cto") or any(
+        not isinstance(authorization[name], str) or not authorization[name].strip()
+        for name in ("actor_agent", "actor_host_id")
+    ):
+        raise ValueError("legacy disposition requires attributed operator or CTO authorization")
+    replacement = record["task_identity"].get("replacement_task_id")
+    if not replacement or authorization["replacement_thread_id"] != replacement:
+        raise ValueError("legacy disposition does not name the exact bound successor")
+    if (
+        record["key"]["agent"].split("-", 1)[0] != "codex"
+        or record["last_successful_boundary"] != RolloverState.RESUMED.value
+        or record["state"] not in {RolloverState.RESUMED.value, RolloverState.ABANDONED_WITH_PROOF.value}
+        or record["native_creation"]["state"] != "legacy_or_unrecorded"
+    ):
+        raise ValueError("legacy disposition requires a legacy RESUMED Codex successor")
+    if proof["evidence_paths"] != [record["lease_path"]]:
+        raise ValueError("legacy disposition evidence must be the exact preserved rollover lease")
+    supervisor_root = state_root / ".agent/claudex-supervisors"
+    if supervisor_root.is_symlink():
+        raise ValueError("legacy supervisor evidence must not traverse symlinks")
+    if supervisor_root.exists():
+        for run in supervisor_root.iterdir():
+            if run.is_symlink():
+                raise ValueError("legacy supervisor evidence must not traverse symlinks")
+            runtime_path = run / "runtime.json"
+            if runtime_path.is_symlink():
+                raise ValueError("legacy supervisor evidence must not traverse symlinks")
+            if runtime_path.exists() and _load_json(runtime_path).get("session_id") == replacement:
+                raise ValueError("legacy successor has a supervisor runtime; use canonical exit disposition")
+    thread_handoff.refuse_live_legacy_successor(state_root, agent=record["key"]["agent"], thread_id=replacement)
+
+
+def _validate_successor_exit(state_root: Path, record: Mapping[str, Any], proof: Mapping[str, Any]) -> None:
+    # Only the launcher's canonical runtime is authoritative. Caller assertions,
+    # process absence, copied snapshots and elapsed time cannot establish exit.
+    from .. import claudex_supervisor
+
+    exit_proof = proof.get("successor_exit")
+    if not isinstance(exit_proof, Mapping) or set(exit_proof) != {
+        "run_id", "replacement_thread_id", "runtime_digest",
+    }:
+        raise ValueError("successor_exit requires exact run_id, replacement_thread_id and runtime_digest")
+    run_id = exit_proof.get("run_id")
+    if not isinstance(run_id, str) or not claudex_supervisor.RUN_ID_RE.fullmatch(run_id):
+        raise ValueError("successor exit run_id is malformed")
+    replacement = record["task_identity"].get("replacement_task_id")
+    if not replacement or exit_proof["replacement_thread_id"] != replacement:
+        raise ValueError("successor exit does not name the exact bound successor")
+    if SUCCESS_RANK[RolloverState(record["last_successful_boundary"])] < SUCCESS_RANK[RolloverState.RESUMED]:
+        raise ValueError("successor exit requires an exact resumed or confirmed successor")
+    relative = Path(".agent/claudex-supervisors") / run_id / "runtime.json"
+    if proof.get("evidence_paths") != [relative.as_posix()]:
+        raise ValueError("successor exit evidence must be the canonical launcher runtime only")
+    path = _assert_within_state_root(state_root, state_root / relative, label="successor exit runtime")
+    if any(part.is_symlink() for part in (path, *path.parents) if part != state_root.parent):
+        raise ValueError("successor exit runtime must not traverse symlinks")
+    runtime = claudex_supervisor.load_runtime(state_root, run_id)
+    if runtime.get("session_id") != replacement or runtime.get("handoff_agent") != record["key"]["agent"]:
+        raise ValueError("launcher exit identity does not match the exact bound successor")
+    if runtime.get("state") != "exited" or type(runtime.get("exit_code")) is not int:
+        raise ValueError("launcher successor exit is active or unknown")
+    exited_at = parse_timestamp(runtime.get("updated_at"))
+    boundary_at = parse_timestamp(record["confirmation"].get("confirmed_at"))
+    if boundary_at is None:
+        boundary_at = next((parse_timestamp(event.get("at")) for event in reversed(record["history"])
+                            if event.get("state") == RolloverState.RESUMED.value), None)
+    captured_at = parse_timestamp(proof.get("captured_at"))
+    if exited_at is None or boundary_at is None or captured_at is None or not boundary_at <= exited_at <= captured_at:
+        raise ValueError("launcher exit timestamp does not follow the bound successor boundary")
+    if exit_proof["runtime_digest"] != sha256_digest(runtime):
+        raise ValueError("launcher exit evidence digest changed")
+
+
+def _revalidate_successor_plan(state_root: Path, record: Mapping[str, Any], plan: Mapping[str, Any]) -> None:
+    proof = {**plan["key"], **plan["proof"]}
+    proof.pop("proof_digest")
+    validated = validate_maintenance_proof(
+        record, action=MaintenanceAction(plan["action"]), proof=proof, state_root=state_root,
+    )
+    if validated != plan["proof"]:
+        raise ValueError("exited-successor maintenance proof changed")
+
+
+def _maintenance_intent(plan: Mapping[str, Any]) -> dict[str, Any]:
+    return {
+        "schema_version": REGISTRY_SCHEMA_VERSION,
+        "kind": "rollover_maintenance_apply_intent",
+        "plan_digest": plan["digest"],
+        "key": dict(plan["key"]),
+    }
+
+
 def _maintenance_target_states(action: MaintenanceAction) -> list[str]:
     if action is MaintenanceAction.FINISH_CLEANUP:
         return [
@@ -1661,13 +1815,14 @@ def validate_maintenance_proof(
     *,
     action: MaintenanceAction,
     proof: Mapping[str, Any],
+    state_root: Path | None = None,
 ) -> dict[str, Any]:
     if _snapshot_key(proof) != _key(record):
         raise ValueError("maintenance proof exact IDs do not match the selected registry record")
     assertions = proof.get("assertions")
     if not isinstance(assertions, Mapping):
         raise ValueError("maintenance proof requires assertions")
-    required = _CLEANUP_ASSERTIONS if action is MaintenanceAction.FINISH_CLEANUP else _DISPOSITION_ASSERTIONS
+    required = _maintenance_assertions(action)
     missing = sorted(name for name in required if assertions.get(name) is not True)
     if missing:
         raise ValueError(f"maintenance proof lacks required true assertions: {', '.join(missing)}")
@@ -1676,6 +1831,22 @@ def validate_maintenance_proof(
         raise ValueError("maintenance proof requires durable evidence_paths")
     if parse_timestamp(proof.get("captured_at")) is None:
         raise ValueError("maintenance proof requires an authoritative UTC captured_at")
+    if action is MaintenanceAction.DISPOSE_EXITED_SUCCESSOR:
+        allowed = {"agent", "lineage_id", "rollover_id", "captured_at", "reason",
+                   "assertions", "evidence_paths", "successor_exit"}
+        if set(proof) != allowed or set(assertions) != required or not str(proof.get("reason") or "").strip():
+            raise ValueError("exited-successor proof has missing or unexpected fields")
+        if state_root is None:
+            raise ValueError("successor exit requires the authoritative state root")
+        _validate_successor_exit(state_root, record, proof)
+    if action is MaintenanceAction.DISPOSE_LEGACY_RESUMED:
+        allowed = {"agent", "lineage_id", "rollover_id", "captured_at", "reason",
+                   "assertions", "evidence_paths", "operator_disposition"}
+        if set(proof) != allowed or set(assertions) != required or not str(proof.get("reason") or "").strip():
+            raise ValueError("legacy disposition proof has missing or unexpected fields")
+        if state_root is None:
+            raise ValueError("legacy disposition requires the authoritative state root")
+        _validate_legacy_disposition(state_root, record, proof)
     state = RolloverState(str(record.get("state")))
     if (
         action in {MaintenanceAction.SUPERSEDE, MaintenanceAction.ABANDON}
@@ -1695,6 +1866,10 @@ def validate_maintenance_proof(
         "captured_at": str(proof["captured_at"]),
         "reason": str(proof.get("reason") or action.value),
         "proof_digest": hashlib.sha256(canonical_json(dict(proof)).encode()).hexdigest(),
+        **({"successor_exit": dict(proof["successor_exit"])}
+           if action is MaintenanceAction.DISPOSE_EXITED_SUCCESSOR else {}),
+        **({"operator_disposition": dict(proof["operator_disposition"])}
+           if action is MaintenanceAction.DISPOSE_LEGACY_RESUMED else {}),
     }
 
 
@@ -1705,7 +1880,9 @@ def create_maintenance_plan(
     action: MaintenanceAction,
     proof: Mapping[str, Any],
 ) -> dict[str, Any]:
-    validated = validate_maintenance_proof(record, action=action, proof=proof)
+    if RolloverState(record["state"]) in TERMINAL_STATES:
+        raise ValueError("terminal rollover cannot acquire a new maintenance plan")
+    validated = validate_maintenance_proof(record, action=action, proof=proof, state_root=state_root)
     _require_durable_paths(
         state_root,
         validated["evidence_paths"],
@@ -1779,10 +1956,15 @@ def load_maintenance_plan(state_root: Path, *, plan_path: Path) -> tuple[Path, d
     proof = plan.get("proof")
     if not isinstance(proof, Mapping):
         raise ValueError("maintenance plan proof is missing")
-    if set(proof) != {"assertions", "evidence_paths", "captured_at", "reason", "proof_digest"}:
+    proof_fields = {"assertions", "evidence_paths", "captured_at", "reason", "proof_digest"}
+    if action is MaintenanceAction.DISPOSE_EXITED_SUCCESSOR:
+        proof_fields.add("successor_exit")
+    if action is MaintenanceAction.DISPOSE_LEGACY_RESUMED:
+        proof_fields.add("operator_disposition")
+    if set(proof) != proof_fields:
         raise ValueError("maintenance plan proof has missing or unexpected fields")
     assertions = proof.get("assertions")
-    required = _CLEANUP_ASSERTIONS if action is MaintenanceAction.FINISH_CLEANUP else _DISPOSITION_ASSERTIONS
+    required = _maintenance_assertions(action)
     if (
         not isinstance(assertions, Mapping)
         or set(assertions) != required
@@ -1833,10 +2015,14 @@ def apply_maintenance_plan(state_root: Path, *, plan_path: Path) -> dict[str, An
             raise ValueError("durable maintenance receipt conflicts with the exact plan")
         return durable
 
-    if durable := existing_receipt():
-        return durable
     with advisory_lock(lineage_lock_path(state_root, agent=agent, lineage_id=lineage_id)):
+        record = load_record(state_root, agent=agent, lineage_id=lineage_id, rollover_id=rollover_id)
+        exit_disposition = plan["action"] in _SUCCESSOR_DISPOSITIONS
+        if exit_disposition:
+            _revalidate_successor_plan(state_root, record, plan)
         if durable := existing_receipt():
+            if exit_disposition and durable.get("final_record_digest") != sha256_digest(record):
+                raise ValueError("registry record changed after maintenance receipt")
             return durable
         _, durable_plan = load_maintenance_plan(state_root, plan_path=resolved)
         if durable_plan != plan:
@@ -1851,15 +2037,20 @@ def apply_maintenance_plan(state_root: Path, *, plan_path: Path) -> dict[str, An
         already_applied = any(event.get("operation_id") == operation_id for event in record.get("history", []))
         if not already_applied and sha256_digest(record) != plan.get("record_digest"):
             raise ValueError("registry record changed after maintenance planning; create a fresh exact plan")
-        intent = {
-            "schema_version": REGISTRY_SCHEMA_VERSION,
-            "kind": "rollover_maintenance_apply_intent",
-            "plan_digest": operation_id,
-            "key": dict(key),
-        }
-        if intent_path.is_file() and _load_json(intent_path) != intent:
-            raise ValueError("durable maintenance apply intent conflicts with the exact plan")
-        atomic_write_json(intent_path, intent)
+        intent = _maintenance_intent(plan)
+        if intent_path.is_file():
+            saved_intent = _load_json(intent_path)
+            expected = dict(intent)
+            if exit_disposition and "final_record_digest" in saved_intent:
+                expected["final_record_digest"] = saved_intent["final_record_digest"]
+            if saved_intent != expected:
+                raise ValueError("durable maintenance apply intent conflicts with the exact plan")
+            if exit_disposition and already_applied and saved_intent.get("final_record_digest") != sha256_digest(record):
+                raise ValueError("registry record changed after exited-successor apply")
+        elif exit_disposition and already_applied:
+            raise ValueError("exited-successor apply is missing its durable intent")
+        if not already_applied:
+            atomic_write_json(intent_path, intent)
         for target_value in plan.get("target_states", []):
             record = transition(
                 state_root,
@@ -1871,6 +2062,7 @@ def apply_maintenance_plan(state_root: Path, *, plan_path: Path) -> dict[str, An
                 evidence_paths=plan["proof"]["evidence_paths"],
                 operation_id=operation_id,
                 already_locked=True,
+                maintenance_plan=resolved if exit_disposition else None,
             )
         receipt = {
             "schema_version": REGISTRY_SCHEMA_VERSION,
@@ -1879,6 +2071,7 @@ def apply_maintenance_plan(state_root: Path, *, plan_path: Path) -> dict[str, An
             "key": dict(key),
             "action": plan["action"],
             "final_state": record["state"],
+            **({"final_record_digest": sha256_digest(record)} if exit_disposition else {}),
             "applied_at": isoformat_z(utc_now()),
             "evidence_paths": plan["proof"]["evidence_paths"],
         }

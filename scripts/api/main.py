@@ -41,6 +41,7 @@ from scripts.common.safe_open import safe_open_below
 from scripts.control_plane.storage import StoreId, assert_component_supported
 from scripts.github_check_rollup import group_collapsed_by_name
 from scripts.guardrails import worktree_containment
+from scripts.orientation_packet import PACKET_MAX_BYTES, cap_response, json_bytes
 from scripts.research import registry as reg
 
 try:
@@ -188,7 +189,7 @@ async def _lifespan(_app: FastAPI):
 
 
 def _error_envelope(
-    error: str, detail: Any, *, status_code: int, headers: dict[str, str] | None = None
+    error: str, detail: Any, *, status_code: int, headers: dict[str, str] | None = None, bounded: bool = False
 ) -> JSONResponse:
     """Build the public error shape without serializing exception text.
 
@@ -197,14 +198,13 @@ def _error_envelope(
     never pass their ``str(exc)`` representation to a client; the correlation
     id is the only diagnostic handle exposed on the wire.
     """
+    content = {"error": error, "error_id": uuid.uuid4().hex, "detail": detail}
+    if bounded:
+        content = cap_response(content, locator="/api/work/v1/projection")
     return JSONResponse(
         status_code=status_code,
         headers=headers,
-        content={
-            "error": error,
-            "error_id": uuid.uuid4().hex,
-            "detail": detail,
-        },
+        content=content,
     )
 
 
@@ -241,23 +241,24 @@ def _sanitize_public_detail(detail: Any) -> Any:
 
 async def http_exception_handler(request: Request, exc: StarletteHTTPException):
     """Normalize handled HTTP errors without changing their status codes."""
-    del request
     return _error_envelope(
         "http_error",
         _sanitize_public_detail(exc.detail),
         status_code=exc.status_code,
         headers=exc.headers,
+        bounded=request.url.path == "/api/work/v1/projection",
     )
 
 
 async def request_validation_exception_handler(request: Request, exc: RequestValidationError):
     """Return validation shape without echoing submitted values."""
-    del request
     sanitized_errors = []
     for error in exc.errors():
         sanitized = {key: _sanitize_public_detail(value) for key, value in error.items() if key not in {"ctx", "input"}}
         sanitized_errors.append(sanitized)
-    return _error_envelope("validation_error", sanitized_errors, status_code=422)
+    return _error_envelope(
+        "validation_error", sanitized_errors, status_code=422, bounded=request.url.path == "/api/work/v1/projection"
+    )
 
 
 async def global_exception_handler(request: Request, exc: Exception):
@@ -1644,6 +1645,64 @@ def _orient_section_specs() -> dict[str, tuple[Callable[..., Any], Any, bool]]:
     }
 
 
+def _cap_lean_orient(response: dict[str, Any]) -> dict[str, Any]:
+    """Keep the lean preset inside the orientation byte bound.
+
+    Sections and section metadata that do not fit become locators.
+    ``generated_at`` stays. The full ``/api/orient`` payload is unchanged.
+    """
+    protected = {"generated_at", "meta", "_telemetry", "orientation_bound"}
+
+    def size(body: dict[str, Any]) -> int:
+        return len(json_bytes(body))
+
+    if size(response) <= PACKET_MAX_BYTES:
+        return response
+    omitted: list[str] = []
+    bound: dict[str, Any] = {
+        "max_bytes": PACKET_MAX_BYTES,
+        "complete": False,
+        "omitted": {"count": 0, "locators": omitted},
+    }
+    response["orientation_bound"] = bound
+    candidates = [(response, key) for key in response if key not in protected]
+    meta = response.get("meta", {})
+    candidates.extend((meta, key) for key in meta)
+    while size(response) > PACKET_MAX_BYTES:
+        if not candidates:
+            break
+        candidate = max(
+            candidates,
+            key=lambda item: len(json_bytes({item[1]: item[0][item[1]]})),
+        )
+        candidates.remove(candidate)
+        container, key = candidate
+        locator = f"GET /api/orient?sections={key}"
+        section = container[key]
+        stub: dict[str, Any] = {
+            "omitted": True,
+            "locator": locator,
+            "bytes": len(json_bytes({key: section})),
+        }
+        if isinstance(section, dict):
+            if isinstance(section.get("generated_at"), str):
+                stub["generated_at"] = section["generated_at"]
+            counts = section.get("counts")
+            if isinstance(counts, dict) and len(json_bytes(counts)) <= 400:
+                stub["counts"] = counts
+        container[key] = stub
+        if locator not in omitted:
+            omitted.append(locator)
+        bound["omitted"]["count"] = len(omitted)
+    if size(response) > PACKET_MAX_BYTES:
+        response.pop("orientation_bound", None)
+        for key, value in list(response.items()):
+            if key in {"generated_at", "meta", "_telemetry"} or not isinstance(value, dict):
+                continue
+            value.pop("counts", None)
+    return response
+
+
 @core_router.get("/api/orient")
 async def orient(
     request: Request,
@@ -1762,7 +1821,10 @@ async def orient(
             response["idle_prs_error"] = idle_prs_info["error"]
 
     _attach_cold_start_research(response, role)
-    return add_json_telemetry(response, session_id=session_id_from_request(request))
+    body = add_json_telemetry(response, session_id=session_id_from_request(request))
+    if lean and not (sections and sections.strip()):
+        body = _cap_lean_orient(body)
+    return body
 
 
 def _attach_cold_start_research(response: dict[str, Any], role: str | None) -> None:

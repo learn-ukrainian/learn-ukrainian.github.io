@@ -77,7 +77,7 @@ hard-code or invent a server host.
    - fresh Codex transport:
      `.venv/bin/python -m scripts.orchestration.codex_transport_health status
      --json`; only the bounded launcher/probe command may refresh it;
-   - routing budget: the CodexBar probes below;
+   - routing budget: the capacity commands below;
    - active delegates: exact `batch_state/tasks/<task-id>.json` records plus
      GitHub PR state.
 7. Retry the API on the next material cycle; a temporary fallback never
@@ -130,12 +130,12 @@ Every substantive change must preserve this trace:
 ## Dynamic subscription and capacity routing
 
 Read `/api/state/routing-budget`, `/api/runtime/agents`, and active-work state
-first. Then query CodexBar as the local quota/config/health probe:
+first. Then query the fleet capacity commands as the local quota and health
+probe (`codexbar usage` is retired, 2026-10-16):
 
 ```text
-/Applications/CodexBar.app/Contents/Helpers/CodexBarCLI usage \
-  --provider <codex|claude|cursor|gemini|antigravity|grok|kimi|zai> \
-  --format json --no-color
+.venv/bin/python -m scripts.fleet.capacity_pick --json
+.venv/bin/python -m scripts.fleet.usage show
 ```
 
 - If direct Gemini is unauthenticated, use the Antigravity Google AI Ultra
@@ -206,7 +206,7 @@ cross-family review.
   the external fleet while the fresh-process lane is degraded.
 - Before each eligible native spawn, re-read
   `/api/runtime/transport-health` and reconcile `list_agents`, external active
-  work, path ownership, CodexBar, and disk. The receipt must still be fresh,
+  work, path ownership, fleet capacity, and disk. The receipt must still be fresh,
   healthy, and model-matched.
 - Use no more than three non-root native agents across the whole tree. Default
   to `fork_turns="none"` and use a unique `task_name`.

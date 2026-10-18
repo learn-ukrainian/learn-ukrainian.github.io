@@ -466,9 +466,12 @@ fi
 
 # Step 3: Sync — with per-target --exclude for declared orphan paths
 echo "=== Syncing ==="
+# Resolve before the first shell sync as well as the descriptor-bound helper.
+# Ambient PATH aliases must not execute an installed Cursor target in either.
+RSYNC="$("$PROJECT_PYTHON" "$PROJECT_ROOT/scripts/deploy/sync_agent_mirror.py" --resolve-rsync)"
 "$PROJECT_PYTHON" scripts/deploy/retire_codex_skills.py apply
 # shellcheck disable=SC2046  # intentional word-splitting of build_excludes output
-rsync -av --delete $(build_excludes "$ORPHAN_PATHS_CLAUDE $CLAUDE_RULE_AUTOLOAD_EXCLUDE_PATHS") "$SHARED_EXTENSIONS/" .claude/
+"$RSYNC" -av --delete $(build_excludes "$ORPHAN_PATHS_CLAUDE $CLAUDE_RULE_AUTOLOAD_EXCLUDE_PATHS") "$SHARED_EXTENSIONS/" .claude/
 # .agent/ overlays source without --delete. A deploy-owned manifest reaps only
 # retired paths which an earlier deploy recorded, preserving all other runtime
 # scratch even when it shares a source directory such as prompts/. #4741
@@ -479,9 +482,9 @@ reap_retired_shared_agent_paths
 sync_shared_agent_mirror
 write_shared_agent_manifest
 # shellcheck disable=SC2046
-rsync -av --delete $(build_excludes "$ORPHAN_PATHS_CODEX $CODEX_OVERLAY_PATHS $CODEX_DISCOVERY_EXCLUDES") "$SHARED_EXTENSIONS/" .codex/
+"$RSYNC" -av --delete $(build_excludes "$ORPHAN_PATHS_CODEX $CODEX_OVERLAY_PATHS $CODEX_DISCOVERY_EXCLUDES") "$SHARED_EXTENSIONS/" .codex/
 if [[ -d "$CODEX_EXTENSIONS" ]]; then
-    rsync -av "$CODEX_EXTENSIONS/" .codex/
+    "$RSYNC" -av "$CODEX_EXTENSIONS/" .codex/
 fi
 # shellcheck disable=SC2046
 # rsync needs the destination's parent dir to exist before it can create
@@ -491,12 +494,12 @@ fi
 # directory (2)`. Pre-create the parent so a fresh clone works.
 mkdir -p .agents
 # shellcheck disable=SC2046  # intentional word-splitting of build_excludes output
-rsync -av --delete $(build_excludes "$ORPHAN_PATHS_AGENTS") "$SHARED_EXTENSIONS/skills/" .agents/skills/
+"$RSYNC" -av --delete $(build_excludes "$ORPHAN_PATHS_AGENTS") "$SHARED_EXTENSIONS/skills/" .agents/skills/
 if [[ -d "$AGY_EXTENSIONS" ]]; then
-    rsync -av "$AGY_EXTENSIONS/" .agents/
+    "$RSYNC" -av "$AGY_EXTENSIONS/" .agents/
 fi
 # shellcheck disable=SC2046
-rsync -av --delete \
+"$RSYNC" -av --delete \
     $(build_excludes "$ORPHAN_PATHS_GEMINI") \
     $(build_shared_skill_overlay_excludes) \
     gemini_extensions/ .gemini/
@@ -504,9 +507,9 @@ for shared_skill in "$SHARED_EXTENSIONS"/skills/*; do
     [[ -d "$shared_skill" ]] || continue
     skill_name="$(basename "$shared_skill")"
     mkdir -p ".gemini/skills/$skill_name"
-    rsync -av --delete "$shared_skill/" ".gemini/skills/$skill_name/"
+    "$RSYNC" -av --delete "$shared_skill/" ".gemini/skills/$skill_name/"
 done
-rsync -av --delete "$SHARED_EXTENSIONS/rules/" .gemini/rules/
+"$RSYNC" -av --delete "$SHARED_EXTENSIONS/rules/" .gemini/rules/
 echo ""
 
 # Ensure deployed hooks are executable in the destination

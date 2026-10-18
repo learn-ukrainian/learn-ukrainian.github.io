@@ -38,10 +38,12 @@ assignments:
       - muse-devops
   monitor:
     # Human name: Ops API + UI (#7919). Kimi may implement UI code (dispatch --agent kimi, web/UI/backend paths only; design and review go to other seats);
-    # Only Muse has a monitor slot; other *-monitor identities remain phantoms.
+    # Muse and Grok hold monitor slots (Grok added by the operator order of 2026-10-16, #10835).
+    # Other launcher-minted *-monitor names drain their bare provider inbox (#7597).
     driver_agent_type: infra-orchestrator
     slots:
       - muse-monitor
+      - grok-monitor
   harness:
     driver_agent_type: infra-orchestrator
     slots:
@@ -55,12 +57,17 @@ assignments:
     # Ownership split 2026-10-06 (#6321): this lane owns word-card data
     # (store, ingestion, identities, citations, sense binding, Russification
     # data, gates, dataset projection); Atlas owns presentation.
-    # Same Ukrainian-language provider restriction as seminars and hramatka.
+    # Same Ukrainian-language provider restriction as seminars and hramatka,
+    # except native Grok: the operator order of 2026-10-16 (#10835) admits it
+    # to all work under measurement, so grok-open-model-data is a driver slot.
+    # Its Ukrainian content work still needs the Sources MCP; Kimi and Cursor
+    # stay off this lane.
     driver_agent_type: infra-orchestrator
     slots:
       - claude-open-model-data
       - codex-open-model-data
       - gemini-open-model-data
+      - grok-open-model-data
   atlas:
     # Ownership split 2026-10-06 (#6321): Atlas owns word-card presentation;
     # open-model-data owns the underlying word-card data and gates.

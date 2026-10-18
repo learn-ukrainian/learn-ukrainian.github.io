@@ -216,10 +216,10 @@ _UNICODE_HOST_TOKEN_RE = re.compile(
     "[\\w.\\-\u0300-\u036f" + "".join(re.escape(char) for char in _SUFFIX_LABEL_MARKS) + "]+"
 )
 # Exact tracked basenames whose stem ends in a suffix label (localized .uk.md
-# docs, .report.json gate evidence, decolonization .review.json records and
-# archived .py.txt evidence). A label is never exempt as such: any other name
-# under it stays a host. The repo-wide guards require each name to be tracked
-# and to need its exemption.
+# docs, .report.json gate evidence, decolonization .review.json records, and
+# archived .py.txt and Entire canary .py.txt/.sh.txt evidence). A label is never
+# exempt as such: any other name under it stays a host. The repo-wide guards
+# require each name to be tracked and to need its exemption.
 _EMBEDDED_HOST_EXEMPT_FILENAMES = frozenset(
     {
         *("DATA_CARD.uk.md", "README.uk.md", "PHASE2_COMPLEMENTS.uk.md", "PHASE3_CONTRACTS.uk.md"),
@@ -232,6 +232,11 @@ _EMBEDDED_HOST_EXEMPT_FILENAMES = frozenset(
             for number in range(1, count + 1)
         ),
         *("run_codex_baseline.py.txt", "verify_release_freeze.py.txt", "verify_release_freeze_v011.py.txt"),
+        *("canary-driver.py.txt", "tool-canary-driver.py.txt", "tool-canary-leakscan.py.txt"),
+        *("tool-canary-locator.py.txt", "tool-argv.sh.txt", "tool-cenv.sh.txt", "tool-chain.sh.txt"),
+        *("tool-doctor.sh.txt", "tool-enable0115.sh.txt", "tool-explain.sh.txt", "tool-installer_e2e.sh.txt"),
+        *("tool-installer_main.sh.txt", "tool-preflight.sh.txt", "tool-runbook_download.sh.txt"),
+        *("tool-canary-hooks.sh.txt", "tool-canary-scenarios.sh.txt", "tool-canary-setup.sh.txt"),
     }
 )
 # Explicit repository basenames, never a runtime filesystem/Git lookup. Unknown

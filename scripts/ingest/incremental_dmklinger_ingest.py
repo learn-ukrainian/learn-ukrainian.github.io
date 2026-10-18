@@ -93,6 +93,20 @@ def _changes(before: list[tuple], expected: list[tuple]) -> tuple[list[tuple], i
     return updates, restored
 
 
+def _resolve_prework_identity(path: Path, failure: str) -> Path:
+    """Resolve one identity before any read, database open, or receipt write.
+
+    On Python 3.12, ``Path.resolve`` raises ``RuntimeError`` for a symlink loop.
+    That invalid input becomes ``IngestError`` with the runtime error chained.
+    Later code must use the returned path. A runtime error after this returns
+    is not a refusal.
+    """
+    try:
+        return path.resolve()
+    except RuntimeError as exc:
+        raise IngestError(failure) from exc
+
+
 def ingest(
     db_path: Path, input_path: Path, *, input_sha256: str,
     receipt_path: Path, apply: bool = False,
@@ -103,14 +117,24 @@ def ingest(
     committed_with_post_commit_error status, never a rollback claim.
     """
     db_path, input_path, receipt_path = map(Path, (db_path, input_path, receipt_path))
-    resolved_db = db_path.resolve()
-    protected_paths = (db_path, input_path, *(Path(f"{resolved_db}{suffix}") for suffix in ("-wal", "-shm", "-journal")))
-    if receipt_path.resolve() in {path.resolve() for path in protected_paths} or any(
+    resolved_db = _resolve_prework_identity(db_path, "database path cannot be resolved")
+    resolved_receipt = _resolve_prework_identity(receipt_path, "receipt path cannot be resolved")
+    resolved_input = _resolve_prework_identity(input_path, "input path cannot be resolved")
+    sidecar_paths = tuple(Path(f"{resolved_db}{suffix}") for suffix in ("-wal", "-shm", "-journal"))
+    resolved_sidecars = tuple(
+        _resolve_prework_identity(path, "SQLite sidecar path cannot be resolved") for path in sidecar_paths
+    )
+    protected_paths = (db_path, input_path, *sidecar_paths)
+    if resolved_receipt in {resolved_db, resolved_input, *resolved_sidecars} or any(
         receipt_path.exists() and path.exists() and receipt_path.samefile(path) for path in protected_paths
     ):
         raise IngestError("receipt must not overwrite database, input or SQLite sidecars")
     if not db_path.is_file():
         raise IngestError("database must already exist")
+    # The pinned connect expression and the read-only opener resolve db_path
+    # again. Bind the identity validated above so that second resolve cannot
+    # become a refusal after input has been read.
+    db_path = resolved_db
     expected, schema = _expected_input(input_path, input_sha256)
     conn = (
         sqlite3.connect(db_path.resolve().as_uri() + "?mode=rw", uri=True, isolation_level=None)

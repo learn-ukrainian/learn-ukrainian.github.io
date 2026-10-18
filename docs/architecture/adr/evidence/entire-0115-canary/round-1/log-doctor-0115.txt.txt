@@ -1,0 +1,17 @@
+✓ Metadata branches: OK
+
+✓ Git hooks: OK
+✓ Codex hooks: INSTALLED
+  Codex-discovered hooks: <scratch>/canary/clone/.codex/hooks.json
+Codex hook trust: UNKNOWN
+  The hooks are installed, but Codex's local approval records could not be read.
+  Open /hooks inside Codex to review their active state.
+✓ Claude Code hook config: OK
+OpenCode hooks: OUT OF DATE
+  The installed hook config no longer matches what this CLI writes, so
+  some hooks may not fire, or may block the agent if `entire` stalls on launch.
+  Run `entire agent add opencode` to update it.
+  If that does not fix it, add --force, which rebuilds Entire's hooks and
+  drops any changes you made to them.
+✓ Legacy shadow branches: none
+No stuck sessions found.

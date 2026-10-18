@@ -115,6 +115,17 @@ Exit 0 proves foundation preparation only, never full pilot or 220-case certific
 - **Pass criteria:** every pilot card renders; **every applicable mode works and every ineligible combination stays excluded** (not "every card produces practice in every live mode"): an ineligible field never yields an item, an ambiguous spelling-level assertion never satisfies a level rule (`mapping_evidenced`), a `medium`-identity card never feeds meaning practice; each exercise records `card_version` and generator version; withdrawal, changed-snapshot reimport and rollback (M8) behave as specified with current suppressions enforced; redirect/split checks (M9) pass; rebuild is byte-identical; language-lane sample review of generated items passes; zero model-written Ukrainian.
 - **Cut from the first pilot (kept as later obligations):** the full PULS slice before the first end-to-end proof; full proper-name/MWE expansion; dependencies on unrelated feature completion. **Not cut:** withdrawal, rollback, redirect/progress checks, semantic review, held-out evaluation.
 
+### Pilot assembly (#8981, mechanics-only)
+
+`.venv/bin/python -m scripts.atlas.word_card_assembly {build|verify|rehearse}` assembles the 150 frozen pilot units into host-only
+cards over the frozen registry (it never mints), authenticates derived ULIF forms against the held raw pages, re-reads every locator,
+and rehearses withdrawal and rollback; counts, findings and residuals are in [`pilot-findings.md`](pilot-findings.md). Atlas pages,
+practice items, the dataset projection and the golden set are not part of this step, and its cards are uncertified.
+
+Registry v3 is the reviewed pilot allocation (v2) plus one appended `unsplit` holding sense on each of the three pilot cards whose
+relation groups cannot be aligned and that had none (`scripts/atlas/allocate_pilot_identities.py --append-holding`, §6 placement,
+§13 allocation): an append-only, idempotent registry step under its own build id; no existing identity or event changes.
+
 ## 4. Gate 2 — the golden set, with an independent held-out evaluation (before full scale; gates C2)
 
 Round 1 supplied the expected identities as overlay `identity` entries and then checked the build against them, which proves overlay replay, not matching accuracy (Astra gap 7). The set is now two disjoint pools with an exact, frozen manifest.

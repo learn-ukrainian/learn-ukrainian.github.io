@@ -40,7 +40,7 @@ at the **onboarding contract** for ownership and experimental ACPX scope; this r
 | Caveman | Optional output-style compression (lite default); never persisted GitHub/curriculum text |
 
 - ACP / ACPX are **toolless**. Use them only for inter-agent communication (state transfer). Do **not** use `ask-*` ACP/ACPX for plan, create, review, or design tasks.
-- For plan, create, review, and design, use **toolful** native or `delegate.py` seats (claude/codex/glm/opencode; agy only for bounded task-level work, never plan or design, operator decision 2026-10-03, #9584; Kimi takes web, UI and backend coding only, never plan, review or design).
+- For plan, create, review, and design, use **toolful** native or `delegate.py` seats (claude/codex/glm/opencode; native grok for plan and create, operator 2026-10-16, while review of a Grok author stays on the resolver's non-xAI pick; agy only for bounded task-level work, never plan or design, operator decision 2026-10-03, #9584; Kimi takes web, UI and backend coding only, never plan, review or design).
 - Explicit: `ask-* --type review` over ACP is **not** the review-of-record path when the reviewer needs to read the tree. Review of record = qualified toolful approval before PR, then `record_cf_verdict.py` binding + same-head CI (drive-epic §6–§7).
 - Caveman is **style**, not transport. Default intensity: **lite** (drop filler/hedging, keep articles and full sentences). Never use it as a substitute for fleet-comms durable state, and never caveman persisted artifacts (commits, PR/issue bodies, curriculum, runbooks, review-of-record text posted on GitHub).
 
@@ -133,7 +133,9 @@ quotas, or caching evidence.
 Inspect the chronological event and selection trace before attributing
 concentration to an orchestrator or scheduler. A “No ledger update” cue is
 stale activity evidence, not provider-liveness proof and not authority to
-reclaim a lease early. Corroborate headroom with CodexBar and durable authority
+reclaim a lease early. Corroborate headroom with
+`.venv/bin/python -m scripts.fleet.capacity_pick` and
+`.venv/bin/python -m scripts.fleet.usage show` (2026-10-16) and durable authority
 job/reservation state. The dashboard is read-only: its filters, search,
 details, and load-more controls never select, retry, cancel, reclaim, or reroute
 work.

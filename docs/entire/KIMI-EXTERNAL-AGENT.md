@@ -55,8 +55,11 @@ needed for honest attribution.
 
 ## Safety and rollout contract
 
-- Entire CLI remains pinned to `0.8.42`.
-- External-agent discovery is explicitly enabled in `.entire/settings.json`.
+- Entire CLI remains pinned to `0.11.5` (ADR-018 amendment, #10846).
+- External-agent discovery is explicitly enabled. Entire 0.10.6 and later honor
+  `"external_agents": true` only from an untracked `.entire/settings.local.json`
+  in the checkout that runs the hooks; the same key in the committed
+  `.entire/settings.json` is ignored, and `entire status` reports why.
 - The binary name is `entire-agent-kimi`, protocol version 1.
 - Hooks are fail-open when Entire is absent or returns an error.
 - Installation is atomic and contention-safe, preserves all bytes outside one

@@ -70,9 +70,9 @@ def reconcile_comments(issue: dict[str, Any], comments: list[dict[str, Any]], ap
     if matching:
         keep = matching[0]
         if keep.get("body") != body:
-            api("PATCH", f"{path}/comments/{keep['id']}", {"body": body})
+            api("PATCH", f"/issues/comments/{keep['id']}", {"body": body})
         for extra in matching[1:]:
-            api("DELETE", f"{path}/comments/{extra['id']}")
+            api("DELETE", f"/issues/comments/{extra['id']}")
     else:
         api("POST", f"{path}/comments", {"body": body})
 

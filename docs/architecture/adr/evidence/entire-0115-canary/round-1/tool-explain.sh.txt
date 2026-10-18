@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+# usage: explain.sh <checkpoint-id> <tag>  -- explain with both binaries, timed n times
+set -uo pipefail
+C=<scratch>/canary
+id="$1"; tag="$2"; n="${3:-1}"
+cd "$C/clone"
+for B in bin-0.8.42 bin-0.11.5; do
+  out="$C/logs/explain-$tag-$B.json"; err="$C/logs/explain-$tag-$B.err"
+  times=()
+  for ((i = 0; i < n; i++)); do
+    s=$(date +%s.%N)
+    "$C/tools/cenv.sh" "$C/$B" entire checkpoint explain "$id" --json >"$out" 2>"$err"
+    rc=$?
+    e=$(date +%s.%N)
+    times+=("$(echo "$e - $s" | bc)")
+  done
+  echo "$B rc=$rc bytes=$(wc -c <"$out") times=${times[*]}"
+done

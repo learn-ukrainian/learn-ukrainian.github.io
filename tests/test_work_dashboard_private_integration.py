@@ -860,6 +860,8 @@ def _browser_scenario(
     actions_json = json.dumps(actions or [])
     viewport = viewport or {"width": 1280, "height": 800}
     origin = f"http://127.0.0.1:{public_port}"
+    if "stream=" not in filter_query:
+        filter_query = f"{filter_query}{'&' if '?' in filter_query else '?'}stream=infra-harness"
     page_url = f"{origin}/work.html{filter_query}"
     hang_json_js = "true" if private_hang_json else "false"
     # Hang-json proofs still need the 5s abort budget + small settle margin.
@@ -1595,8 +1597,9 @@ def test_browser_actionable_default_view_filters_non_actionable_rows():
     assert "Public attention item" in snap["listText"]
     assert "Healthy public issue" not in snap["listText"]
     assert "private-issue-7" not in snap["listText"]
-    # URL search remains clean without query params
-    assert snap["search"] == ""
+    # Default view adds no view param. The lane stays because the board is lane-scoped.
+    assert "view=" not in snap["search"]
+    assert "stream=infra-harness" in snap["search"]
     # Private card still glanceable with counts while rows stay non-actionable.
     assert "status=ok" in snap["privateMeta"]
     assert "issues=1" in snap["privateMeta"]
@@ -1610,7 +1613,8 @@ def test_browser_switch_view_between_actionable_and_all():
     result_default = _browser_scenario(public_doc=public, private_doc=private)
     assert result_default["snapshot"]["rowCount"] == 1
     assert "Healthy public issue" not in result_default["snapshot"]["listText"]
-    assert result_default["snapshot"]["search"] == ""
+    assert "view=" not in result_default["snapshot"]["search"]
+    assert "stream=infra-harness" in result_default["snapshot"]["search"]
 
     # Step 2: Switch to 'all' via UI select + apply -> 3 rows, URL is ?view=all
     result_all = _browser_scenario(
@@ -1645,7 +1649,8 @@ def test_browser_switch_view_between_actionable_and_all():
     assert "Public attention item" in snap_back["listText"]
     assert "Healthy public issue" not in snap_back["listText"]
     assert "private-issue-7" not in snap_back["listText"]
-    assert snap_back["search"] == ""
+    assert "view=" not in snap_back["search"]
+    assert "stream=infra-harness" in snap_back["search"]
 
 
 def test_browser_direct_actionable_url_normalizes_to_clean_path():
@@ -1658,8 +1663,9 @@ def test_browser_direct_actionable_url_normalizes_to_clean_path():
     assert "Public attention item" in snap["listText"]
     assert "Healthy public issue" not in snap["listText"]
     assert "private-issue-7" not in snap["listText"]
-    # Normalizes to clean URL
-    assert snap["search"] == ""
+    # Actionable view drops the view param and keeps the lane.
+    assert "view=" not in snap["search"]
+    assert "stream=infra-harness" in snap["search"]
 
 
 def test_browser_actionable_with_kind_and_health_filters():
@@ -1816,7 +1822,7 @@ def test_real_fixed_port_cors_http_and_browser_smoke(fixed_ports_lock):
         script = """
   const errors = [];
   page.on('pageerror', (e) => errors.push(String(e.message || e)));
-  await page.goto('http://127.0.0.1:8765/work.html?view=all', {
+  await page.goto('http://127.0.0.1:8765/work.html?view=all&stream=infra-harness', {
     waitUntil: 'domcontentloaded',
     timeout: 30000,
   });
@@ -1908,7 +1914,7 @@ def test_real_fixed_port_cors_localhost_origin_smoke(fixed_ports_lock):
             _ = resp.read()
 
         script = """
-  await page.goto('http://localhost:8765/work.html?view=all', {
+  await page.goto('http://localhost:8765/work.html?view=all&stream=infra-harness', {
     waitUntil: 'domcontentloaded',
     timeout: 30000,
   });

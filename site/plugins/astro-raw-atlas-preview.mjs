@@ -12,9 +12,10 @@ import { vitePluginAstroPreview } from '../node_modules/astro/dist/core/preview/
 import { rawAtlasShardTransport } from './raw-atlas-shard-transport.mjs';
 
 const require = createRequire(import.meta.url);
-// 7.3.5 matches 7.3.3 on every preview module this adapter imports.
-// The published files differ only by the embedded version string.
-const supportedAstroVersions = new Set(['7.2.9', '7.3.1', '7.3.2', '7.3.3', '7.3.5']);
+// Compared all six imported modules between 7.3.5 and 7.3.8; used exports remain.
+// 7.3.8 changes BuildTimeAstroVersionProvider from class + export to export class
+// and sets version to "7.3.8" ?? ""; the named binding is unchanged.
+const supportedAstroVersions = new Set(['7.2.9', '7.3.1', '7.3.2', '7.3.3', '7.3.5', '7.3.8']);
 const { version: installedAstroVersion } = require('../node_modules/astro/package.json');
 
 if (!supportedAstroVersions.has(installedAstroVersion)) {

@@ -1,0 +1,31 @@
+{
+  "bin": "bin-0.8.42",
+  "session_start": {
+    "rc": 0,
+    "seconds": 0.099
+  },
+  "user_prompt_submit": {
+    "n": 20,
+    "p50": 8.331,
+    "p95": 9.312,
+    "min": 7.543,
+    "max": 9.444
+  },
+  "stop": {
+    "n": 20,
+    "p50": 7.2,
+    "p95": 7.448,
+    "min": 6.918,
+    "max": 7.529
+  },
+  "session_end": {
+    "rc": 0,
+    "seconds": 0.063
+  },
+  "failures": [],
+  "loadavg_1m_samples": [
+    "17.77",
+    "13.70",
+    "14.38"
+  ]
+}

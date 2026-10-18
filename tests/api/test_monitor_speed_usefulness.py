@@ -52,11 +52,22 @@ def test_next_empty_queue_preserves_source_completeness(monkeypatch, source_stat
 
 
 def test_projection_direct_json_retains_opsec_middleware(monkeypatch):
-    payload = {"items": [{"title": "/home/synthetic-private/data.json"}], "attention": [], "cache_age_s": 0}
+    payload = {
+        "items": [
+            {
+                "title": "/home/synthetic-private/data.json",
+                "projections": {"stream": {"streams": ["infra-harness"]}},
+            }
+        ],
+        "attention": [],
+        "cache_age_s": 0,
+    }
     monkeypatch.setattr(work_router, "cache_get_with_age", lambda *_args: (payload, 1.0))
-    response = TestClient(app).get("/api/work/v1/projection")
+    response = TestClient(app).get("/api/work/v1/projection?stream=infra-harness")
     assert response.status_code == 200
-    assert response.json()["items"] == [{"title": "[redacted-path]"}]
+    item = response.json()["items"][0]
+    assert item["title"] == "[redacted-path]"
+    assert "/home/synthetic-private" not in response.text
     assert response.json()["cache_age_s"] == 1.0
     assert payload["items"][0]["title"] == "/home/synthetic-private/data.json"
 
@@ -222,6 +233,7 @@ const admitPublicDocument = doc => ({ok: true, doc});
 const fetchJson = url => new Promise((resolve, reject) => pending.push({url, resolve, reject}));
 const classifyPrivateFailure = () => 'unreachable';
 const privateMetaFromCode = code => code;
+const controlsToFilters = () => ({stream: 'monitor'});
 """
         + code
         + r"""

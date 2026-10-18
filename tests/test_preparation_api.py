@@ -159,6 +159,7 @@ def _all_keys(value: Any) -> set[str]:
     return set()
 
 
+@pytest.mark.needs_sparse_tree("site/src/content")
 def test_roster_uses_only_active_manifest_and_matches_required_fixture_counts() -> None:
     Draft202012Validator.check_schema(SCHEMA)
     response = CLIENT.get("/api/state/preparation")
@@ -192,6 +193,7 @@ def test_roster_uses_only_active_manifest_and_matches_required_fixture_counts() 
     assert all(item["manifest_authority"] == "fallback-diagnostic-only" for item in diagnostics.values())
 
 
+@pytest.mark.needs_sparse_tree("site/src/content")
 def test_one_track_roster_meets_budget_and_keeps_distinct_telemetry_semantics() -> None:
     response = CLIENT.get("/api/state/preparation?track=a1-v1")
 
@@ -207,6 +209,7 @@ def test_one_track_roster_meets_budget_and_keeps_distinct_telemetry_semantics() 
     assert data["tracks"][0]["module_state_counts"]["built"] == 55
 
 
+@pytest.mark.needs_sparse_tree("site/src/content")
 def test_module_projection_is_compact_canonical_and_has_no_ready_boolean() -> None:
     response = CLIENT.get("/api/state/preparation/a1/sounds-letters-and-hello")
 
@@ -236,6 +239,7 @@ def test_module_projection_is_compact_canonical_and_has_no_ready_boolean() -> No
     assert expanded.json()["canonical"]["contract_version"] == "curriculum-preparation-result.v1"
 
 
+@pytest.mark.needs_sparse_tree("site/src/content")
 def test_bio_uses_bio_profile_and_dossier_alone_never_means_build() -> None:
     response = CLIENT.get("/api/state/preparation/bio/knyahynia-olha")
 
@@ -420,6 +424,7 @@ def test_count_disagreement_emits_finding(tmp_path: Path, monkeypatch) -> None:
     }
 
 
+@pytest.mark.needs_sparse_tree("site/src/content")
 def test_off_manifest_inactive_unknown_and_unsafe_selectors_fail_closed() -> None:
     off_manifest = CLIENT.get("/api/state/preparation/a1/not-in-curriculum")
     assert off_manifest.status_code == 404

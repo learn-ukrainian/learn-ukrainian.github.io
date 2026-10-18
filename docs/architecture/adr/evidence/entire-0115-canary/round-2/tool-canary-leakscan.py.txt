@@ -1,0 +1,82 @@
+"""Round-2 canary 3+4 (#10846): public ref inventory and body-leakage scan of every pushed object.
+
+Method: for each fake remote, read EVERY object in the bare repository (reachable or not) with
+`git cat-file --batch-all-objects --batch` and count objects containing each planted string:
+A = prompt text (transcript body), B = uncommitted file bodies (one ignored, one untracked file),
+C = text the agent committed as code. Public/fork must hold no A or B and no entire/* refs. The
+private checkpoint store may hold A and C inside session transcripts; it must hold no B, and its
+checkpoint tree may contain only Entire's metadata/transcript file kinds.
+"""
+
+from __future__ import annotations
+
+import json
+import subprocess
+import sys
+from collections import Counter
+from pathlib import Path
+
+C = Path("<scratch>/canary")
+REMOTES = C / "remotes" / "github.com"
+BARES = {
+    "public": REMOTES / "learn-ukrainian" / "learn-ukrainian.github.io.git",
+    "private": REMOTES / "learn-ukrainian" / "entire-checkpoints-private.git",
+    "fork": REMOTES / "someone-else" / "learn-ukrainian.github.io.git",
+}
+PLANTED = {
+    "A_prompt": b"LUCANARY-A-PROMPT-7f3e2a",
+    "B_uncommitted_file": b"LUCANARY-B-UNCOMMITTED-91c04d",
+    "C_committed_code": b"LUCANARY-C-CODE-5b8e11",
+}
+
+
+def git(repo: Path, *args: str) -> bytes:
+    return subprocess.run(["git", "-C", str(repo), *args], capture_output=True, check=True).stdout
+
+
+def scan(repo: Path) -> dict:
+    data = git(repo, "cat-file", "--batch-all-objects", "--batch")
+    counts = Counter()
+    objects = 0
+    pos = 0
+    while pos < len(data):
+        header_end = data.index(b"\n", pos)
+        _sha, _kind, size = data[pos:header_end].split()
+        body = data[header_end + 1 : header_end + 1 + int(size)]
+        pos = header_end + 1 + int(size) + 1
+        objects += 1
+        for name, needle in PLANTED.items():
+            if needle in body:
+                counts[name] += 1
+    refs = git(repo, "for-each-ref", "--format=%(refname)").decode().split()
+    return {"objects_scanned": objects, "objects_containing": {k: counts.get(k, 0) for k in PLANTED}, "refs": refs}
+
+
+def private_tree(repo: Path) -> dict:
+    paths = git(repo, "ls-tree", "-r", "--name-only", "refs/heads/entire/checkpoints/v1").decode().splitlines()
+    kinds = Counter(Path(p).name for p in paths)
+    hits: dict[str, list[str]] = {}
+    for p in paths:
+        blob = git(repo, "show", f"refs/heads/entire/checkpoints/v1:{p}")
+        for name, needle in PLANTED.items():
+            if needle in blob:
+                hits.setdefault(name, []).append(Path(p).name)
+    return {
+        "checkpoint_tree_files": len(paths),
+        "file_kinds": dict(sorted(kinds.items())),
+        "planted_string_file_kinds": {k: sorted(Counter(v).items()) for k, v in hits.items()},
+    }
+
+
+if __name__ == "__main__":
+    report = {name: scan(path) for name, path in BARES.items()}
+    report["private"]["checkpoint_tree"] = private_tree(BARES["private"])
+    report["verdict"] = {
+        "public_and_fork_entire_refs": [r for n in ("public", "fork") for r in report[n]["refs"] if "entire" in r],
+        "public_and_fork_hold_prompt_or_uncommitted_body": any(
+            report[n]["objects_containing"][k] for n in ("public", "fork") for k in ("A_prompt", "B_uncommitted_file")
+        ),
+        "private_holds_uncommitted_body": bool(report["private"]["objects_containing"]["B_uncommitted_file"]),
+    }
+    json.dump(report, sys.stdout, indent=2)
+    print()

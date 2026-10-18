@@ -34,7 +34,7 @@ curl -s http://localhost:8765/api/runtime/agents
 - API: /api/health (resilience), /api/runtime/recent
 
 ## Fleet note (for context)
-Bridge for comms/discuss: `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-*` / `discuss`. Delegate for work: `scripts/delegate.py dispatch --agent ... --worktree`. See shared/memory/MEMORY.md for full details. (CodexBar CLI example: `/Applications/CodexBar.app/Contents/Helpers/CodexBarCLI`)
+Bridge for comms/discuss: `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-*` / `discuss`. Delegate for work: `scripts/delegate.py dispatch --agent ... --worktree`. See shared/memory/MEMORY.md for full details. (Capacity: `.venv/bin/python -m scripts.fleet.capacity_pick` and `.venv/bin/python -m scripts.fleet.usage show`; `codexbar usage` is retired.)
 
 ## Before Building
 
