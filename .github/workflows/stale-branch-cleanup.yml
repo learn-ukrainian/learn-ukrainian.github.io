@@ -26,8 +26,15 @@ jobs:
           persist-credentials: false
           fetch-depth: 1
           sparse-checkout: |
+            scripts/__init__.py
+            scripts/hygiene/__init__.py
             scripts/hygiene/remote_branch_cleanup.py
+            scripts/common/__init__.py
             scripts/common/github_client.py
+            scripts/common/scratch.py
+            scripts/opsec/__init__.py
+            scripts/opsec/gh_snapshot.py
+            scripts/opsec/prepublish.py
             .github/branch-cleanup-keep.txt
             .python-version
           sparse-checkout-cone-mode: false
