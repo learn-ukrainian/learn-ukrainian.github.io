@@ -186,7 +186,7 @@ Never put the substantive request in the broker message. The issue is the source
 - Close issues when done — don't leave them open indefinitely
 - Update issue titles if scope changes
 - Link related issues to each other
-- Don't create duplicate issues — search first
+- Before filing, search open issues for the same root cause. If an anchor exists, add the finding there. File a new issue only when no anchor exists, and name the searches in its body. Put review findings, residuals, and remaining items on the parent issue or the pull request.
 - Stale `working:` labels (>3 days) should be removed and issue re-triaged
 
 ---

@@ -23,7 +23,8 @@ CATALOG = ROOT / "scripts/config/model_catalog.yaml"
 # 35_800 -> 36_200: CTO order cto-local-precheck, 2026-10-13 — the approved allowance for the local pre-push check (P0-P9 Unconditional invariants).
 # 36_200 -> 36_500: CTO order cto-grok-rule (operator 2026-10-16, #10835) — the native Grok language seat under
 # measurement, the Sonnet worker default, the Gemini 4 hold and the Opus/Sol critical sign-off (P2).
-CORE_BYTE_BUDGET = 36_500
+# 36_500 -> 36_800: CTO order cto-file-or-fold (#10961) adds the P4 search-and-reuse rule without cutting obligations.
+CORE_BYTE_BUDGET = 36_800
 PILLARS = tuple(f"P{n}" for n in range(10))
 # A launcher context-window suffix such as `[1m]` is not part of the model id; the base id is checked.
 MODEL_ID = re.compile(r"`((?:gpt|claude|gemini|grok|kimi|glm|deepseek|composer|poolside)[^`\s\[]*)(?:\[[^\]`\s]*\])?`")
