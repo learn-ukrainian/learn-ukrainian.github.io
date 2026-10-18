@@ -6,6 +6,7 @@ import ast
 import base64
 import inspect
 import io
+import json
 import os
 import py_compile
 import runpy
@@ -622,6 +623,172 @@ def test_mirror_sync_resolves_relative_path_wrapper_before_fchdir(tmp_path, monk
     assert (repo / ".agent/settings.json").read_bytes() == (
         repo / "agents_extensions/shared/settings.json"
     ).read_bytes()
+
+
+@pytest.mark.parametrize("entrypoint", ["resolve", "sync"])
+@pytest.mark.parametrize(
+    "route,refused",
+    [
+        ("canonical-hardlink", True),
+        ("canonical-no-cli-no-path", True),
+        ("canonical-decoys", True),
+        ("relocated-decoys", True),
+        ("relocated-agent-only", True),
+        ("symlink-hardlink", True),
+        ("directory-alias-hardlink", True),
+        ("absent-anchors", False),
+        ("same-bytes-new-inode", False),
+        ("safe-hardlink", False),
+        ("safe-symlink", False),
+        ("sibling-prefix", False),
+        ("outside-escape-payload", False),
+        ("outside-directory-link", False),
+        ("missing-installed-candidate", False),
+        ("relative-cli-anchor", True),
+        ("empty-cli-anchor", True),
+        ("installation-not-directory", True),
+        ("unreadable-installation", True),
+        ("broken-cli-anchor", True),
+    ],
+)
+def test_rsync_identity_entrypoints(tmp_path, monkeypatch, route, refused, entrypoint):
+    """Exercise real CLIs with metadata aliases and an active execution tripwire."""
+    from tests import cursor_exec_tripwire as tripwire
+
+    assert tripwire.active and not tripwire.allow_real
+    home = tmp_path / "home"
+    installation = home / ".local/share/cursor-agent"
+    physical = installation / "versions/author-inode-matrix-cedar/worker"
+    physical.parent.mkdir(parents=True)
+    source = tmp_path / "source with 'quotes'"
+    source.mkdir()
+    destination = tmp_path / "held agent"
+    marker = tmp_path / "execution.json"
+    payload = (
+        f"#!{sys.executable}\n"
+        "import json, os, sys\n"
+        "import cursor_exec_tripwire as tripwire\n"
+        "assert tripwire.active and not tripwire.allow_real\n"
+        f"with open({str(marker)!r}, 'w') as out:\n"
+        "    json.dump({'cwd': os.getcwd(), 'argv': sys.argv[1:]}, out)\n"
+    )
+    physical.write_text(payload)
+    physical.chmod(0o755)
+    tools = tmp_path / "tools with 'quotes'"
+    tools.mkdir()
+    anchor_dir = tmp_path / "anchors"
+    anchor_dir.mkdir()
+    target = physical
+    if route.startswith("relocated"):
+        target = tmp_path / "relocated-marker"
+        physical.rename(target)
+    if route not in {"canonical-no-cli-no-path", "absent-anchors"}:
+        (anchor_dir / ("agent" if route == "relocated-agent-only" else "cursor-agent")).symlink_to(target)
+    candidate = tools / "rsync"
+    if refused and route not in {"installation-not-directory", "unreadable-installation", "broken-cli-anchor"}:
+        os.link(target, candidate)
+    else:
+        candidate.write_text(payload)
+        candidate.chmod(0o755)
+    lookup = tools
+    path_entries = [str(tools), str(anchor_dir)]
+    if route in {"canonical-decoys", "relocated-decoys"}:
+        decoys = tmp_path / "decoys"
+        decoys.mkdir()
+        for name in ("cursor-agent", "agent"):
+            (decoys / name).write_text("#!/bin/sh\nexit 0\n")
+            (decoys / name).chmod(0o755)
+            if not (anchor_dir / name).exists():
+                (anchor_dir / name).symlink_to(target)
+        path_entries.insert(1, str(decoys))
+    elif route == "symlink-hardlink":
+        candidate.rename(tools / "alias")
+        candidate.symlink_to("alias")
+    elif route == "directory-alias-hardlink":
+        lookup = tmp_path / "directory-alias"
+        lookup.symlink_to(tools, target_is_directory=True)
+        path_entries[0] = str(lookup)
+    elif route == "absent-anchors":
+        physical.unlink()
+        physical.parent.rmdir()
+        (installation / "versions").rmdir()
+        installation.rmdir()
+        path_entries = [str(tools)]
+    elif route == "safe-hardlink":
+        candidate.rename(tools / "safe-wrapper")
+        os.link(tools / "safe-wrapper", candidate)
+    elif route == "safe-symlink":
+        candidate.rename(tools / "safe-wrapper")
+        candidate.symlink_to("safe-wrapper")
+    elif route == "sibling-prefix":
+        lookup = installation.with_name("cursor-agent-safe-tools")
+        tools.rename(lookup)
+        candidate = lookup / "rsync"
+        path_entries[0] = str(lookup)
+    elif route == "outside-escape-payload":
+        (physical.parent / "rsync").symlink_to(candidate)
+    elif route == "outside-directory-link":
+        (physical.parent / "outside").symlink_to(tools, target_is_directory=True)
+    elif route == "missing-installed-candidate":
+        path_entries.insert(0, str(physical.parent))
+    elif route in {"relative-cli-anchor", "empty-cli-anchor"}:
+        path_entries[-1] = "anchors" if route == "relative-cli-anchor" else ""
+        if route == "empty-cli-anchor":
+            (tmp_path / "cursor-agent").symlink_to(target)
+    elif route == "installation-not-directory":
+        shutil.rmtree(installation)
+        installation.write_text("not a directory")
+    elif route == "unreadable-installation":
+        installation.chmod(0)
+    elif route == "broken-cli-anchor":
+        (anchor_dir / "agent").symlink_to("absent-target")
+
+    monkeypatch.setenv("HOME", str(home))
+    monkeypatch.setenv("PATH", os.pathsep.join(path_entries))
+    # The tripwire matches raw substrings. Terminate only this synthetic root
+    # so the sibling-prefix positive control is not mistaken for its contents.
+    # Every synthetic installed file remains under this root; real roots stay.
+    monkeypatch.setattr(tripwire, "real_roots", (*tripwire.real_roots, str(installation) + os.sep))
+    helper_path = str(REPO_ROOT / "scripts/deploy/sync_agent_mirror.py")
+    args = [sys.executable, helper_path]
+    args += ["--resolve-rsync"] if entrypoint == "resolve" else [
+        "--source-root", str(source), "--agent-root", str(destination),
+    ]
+    diagnostic = "Cursor target identity discovery incomplete" if route in {
+        "installation-not-directory", "unreadable-installation", "broken-cli-anchor",
+    } else "rsync resolves to an installed Cursor target"
+    try:
+        result = subprocess.run(args, cwd=tmp_path, capture_output=True, text=True, timeout=10)
+        # In-process evidence supplies statement coverage; the subprocess above
+        # remains the actual CLI/exec proof and uses the unmodified tripwire.
+        monkeypatch.syspath_prepend(str(REPO_ROOT / "scripts/deploy"))
+        monkeypatch.chdir(tmp_path)
+        helper = runpy.run_path(helper_path)
+        if refused:
+            with pytest.raises(PermissionError, match=diagnostic):
+                helper["resolve_rsync"]()
+        else:
+            assert helper["resolve_rsync"]() == str(candidate.resolve())
+    finally:
+        if route == "unreadable-installation":
+            installation.chmod(0o755)
+    print(f"identity route={route} entrypoint={entrypoint} exit={result.returncode} stderr={result.stderr!r}")
+    if refused:
+        assert result.returncode == 1, result.stdout + result.stderr
+        assert diagnostic in result.stderr
+        assert result.stdout == ""
+        assert not marker.exists()
+        assert not destination.exists()
+    else:
+        assert result.returncode == 0, result.stdout + result.stderr
+        if entrypoint == "resolve":
+            assert result.stdout == f"{candidate.resolve()}\n"
+            assert not marker.exists()
+            assert not destination.exists()
+        else:
+            assert json.loads(marker.read_text()) == {
+                "cwd": str(destination), "argv": ["-av", f"{source}/", "."],
+            }
 
 
 @pytest.mark.parametrize("unsafe", ["missing", "writable", "loop", "newline", "install-loop"])

@@ -270,7 +270,13 @@ def _verdict(result: subprocess.CompletedProcess[str]) -> dict:
     return json.loads(lines[-1])["pre_push_gate"]
 
 
-@pytest.mark.parametrize("route", ["missing-installed-candidate", "installed-entry-escape", "aliased-entry-escape"])
+@pytest.mark.parametrize(
+    "route",
+    [
+        "missing-installed-candidate", "installed-entry-escape", "aliased-entry-escape",
+        "canonical-hardlink-decoys", "relocated-hardlink-decoys",
+    ],
+)
 def test_cursor_path_protected_gate_runs_real_deployment(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, route: str
 ) -> None:
@@ -353,20 +359,42 @@ os.execv({real_rsync!r}, [{real_rsync!r}, *sys.argv[1:]])
     )
     (wrapper / "rsync").chmod(0o755)
     lookup = bundled
-    if route != "missing-installed-candidate":
+    if route.endswith("hardlink-decoys"):
+        # All fixtures are marker tools. No installed provider is executed.
+        target = bundled / "physical-worker"
+        if route == "relocated-hardlink-decoys":
+            target = tmp_path / "relocated-worker"
+        shutil.copyfile(wrapper / "rsync", target)
+        target.chmod(0o755)
+        lookup = tmp_path / "hardlink-tools"
+        lookup.mkdir()
+        os.link(target, lookup / "rsync")
+        decoys = tmp_path / "decoys"
+        decoys.mkdir()
+        anchors = tmp_path / "anchors"
+        anchors.mkdir()
+        for name in ("cursor-agent", "agent"):
+            _write(decoys, name, "#!/bin/sh\nexit 0\n")
+            (decoys / name).chmod(0o755)
+            (anchors / name).symlink_to(target)
+        lookup_path = [str(lookup), str(decoys), str(anchors)]
+    elif route != "missing-installed-candidate":
         # The final target is outside Cursor, but the located entry belongs to
         # its installation. Refuse it without falling through to the wrapper.
         (bundled / "rsync").symlink_to(wrapper / "rsync")
         if route == "aliased-entry-escape":
             lookup = tmp_path / "path-alias"
             lookup.symlink_to(bundled, target_is_directory=True)
+        lookup_path = [str(lookup)]
+    else:
+        lookup_path = [str(lookup)]
     monkeypatch.setattr(tripwire, "real_roots", (*tripwire.real_roots, str(install)))
     result = _run_gate(
         root,
         remote_sha=base,
         extra_env={
             "HOME": str(home),
-            "PATH": os.pathsep.join((str(lookup), str(wrapper), os.environ["PATH"])),
+            "PATH": os.pathsep.join((*lookup_path, str(wrapper), os.environ["PATH"])),
             "DEPLOY_RSYNC_MARKERS": str(markers),
             gate.MAX_CONCURRENT_RUNS_ENV: "1",
             gate.MAX_TEST_PROCESSES_ENV: "2",

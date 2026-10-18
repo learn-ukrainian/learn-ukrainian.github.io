@@ -16,6 +16,9 @@ owns this resolution, including its shell rsync calls: adapter-only filtering
 misses PATH changes inside a worker, while shared environment filtering would
 change unrelated providers and tools. Priority PATH wrappers remain supported,
 but an installed Cursor target, including through aliases, is never a deploy tool.
+Device/inode identity covers hard links, including CLI entries behind PATH
+decoys and physical installation files when the install is absent from PATH.
+This is a metadata snapshot, not protection against executable replacement.
 """
 
 from __future__ import annotations
@@ -30,6 +33,44 @@ from pathlib import Path
 from agent_directory import open_agent_directory
 
 
+def _cursor_target_identities(installation: Path) -> set[tuple[int, int]]:
+    """Discover installed file identities; incomplete discovery must refuse sync."""
+    identities = set()
+    try:
+        try:
+            installation.lstat()
+        except FileNotFoundError:
+            pending = []  # The optional installation anchor is genuinely absent.
+        else:
+            pending = [installation]
+        while pending:
+            with os.scandir(pending.pop()) as entries:
+                for entry in entries:
+                    info = entry.stat(follow_symlinks=False)
+                    if stat.S_ISDIR(info.st_mode):
+                        pending.append(Path(entry.path))
+                    elif stat.S_ISREG(info.st_mode):
+                        identities.add((info.st_dev, info.st_ino))
+                    # Do not follow installation symlinks. An outward rsync
+                    # link does not forbid its unrelated outside wrapper.
+        for directory in os.get_exec_path():
+            for name in ("cursor-agent", "agent"):
+                anchor = Path(directory) / name
+                try:
+                    anchor.lstat()
+                except (FileNotFoundError, NotADirectoryError):
+                    continue  # No optional CLI entry in this PATH directory.
+                target = anchor.resolve(strict=True)
+                info = target.stat()
+                if stat.S_ISREG(info.st_mode) and os.access(target, os.X_OK):
+                    identities.add((info.st_dev, info.st_ino))
+    except (OSError, RuntimeError) as exc:
+        raise PermissionError(
+            f"Cursor target identity discovery incomplete; check installation and PATH access: {exc}"
+        ) from exc
+    return identities
+
+
 def resolve_rsync() -> str:
     """Resolve one executable, refusing Cursor installation targets before any sync."""
     found = shutil.which("rsync")
@@ -41,18 +82,21 @@ def resolve_rsync() -> str:
     # particular, a trailing newline would be stripped and name another file.
     if any(ord(char) < 32 or ord(char) == 127 for char in str(executable)):
         raise PermissionError("rsync target contains control characters; use a trusted executable path")
-    installation = (Path.home() / ".local/share/cursor-agent").resolve()
-    cli_targets = {
-        Path(target).resolve(strict=True) for name in ("cursor-agent", "agent") if (target := shutil.which(name))
-    }
+    installation = Path.home() / ".local/share/cursor-agent"
+    cli_targets = _cursor_target_identities(installation)
+    installation = installation.resolve()
+    info = executable.stat()
     # A located installation entry remains forbidden even when its symlink
     # payload escapes the root. Resolve its parent separately to cover PATH
     # directory aliases without discarding the entry's identity.
-    if entry_parent.is_relative_to(installation) or executable.is_relative_to(installation) or executable in cli_targets:
+    if (
+        entry_parent.is_relative_to(installation)
+        or executable.is_relative_to(installation)
+        or (info.st_dev, info.st_ino) in cli_targets
+    ):
         raise PermissionError(
             "rsync resolves to an installed Cursor target; put system rsync or a trusted wrapper first on PATH"
         )
-    info = executable.stat()
     if (
         not stat.S_ISREG(info.st_mode)
         or not os.access(executable, os.X_OK)
