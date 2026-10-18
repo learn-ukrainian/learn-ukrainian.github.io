@@ -307,6 +307,23 @@ def identity_binding(inputs: wa.Inputs, cards: dict) -> dict:
 UNADDRESSABLE = frozenset({"inventory", "dictionary_key", "malformed"})
 
 
+def matched_vesum_entry(inputs: wa.Inputs, unit: dict) -> int | None:
+    """Re-derive identity.md §4's entry from the allocated unit and held sources, never the supplied card."""
+    if unit["entry_type"] != "lexeme_candidate":
+        return None
+    entry = inputs.entry_by_unit[unit["unit_key"]]
+    raw = inputs.records[unit["anchor_locator"]]["raw_row"]
+    proper = entry["card_kind"] == "proper_name"
+    homonyms = wa.class_homonyms(inputs, raw, unit, proper)
+    keep_gender = any(len(slot) > 1 and any(t in src.GENDERS for t in slot)
+                      for h in homonyms.values() if h["paradigm"] for slot in h["paradigm"]["slots"])
+    key = entry["key_at_creation"]
+    rows = inputs.sources.vesum_forms(key["spelling"])
+    entries = src.vesum_paradigm([r for r in rows if r["pos"] == key["pos"]], keep_gender)
+    candidates = {eid: e for eid, e in entries.items() if ("prop" in e["flags"]) == proper}
+    return src.match_identity(raw["id"], homonyms, candidates)["vesum_entry"]
+
+
 def source_routes(inputs: wa.Inputs, unit: dict, entry: dict, assertion: dict) -> list[tuple[str, str, str]]:
     """Permitted (locator head, frozen record locator, assertion snapshot) for an allocated subject.
 
@@ -570,6 +587,9 @@ def verify(inputs: wa.Inputs, result: dict, again: dict | None = None, suppressi
     cited_records, record_bindings = set(), {}
     unit_of = {inputs.entry_by_unit[u["unit_key"]]["card_id"]: u for u in inputs.units}
     for card in cards.values():
+        unit = unit_of[card["card_id"]]
+        vesum_entry = matched_vesum_entry(inputs, unit) if any(
+            a["source_id"] == "vesum" for a in card["assertions"]) else None
         # Retained evidence is checked whole: a suppressed assertion keeps its identity, record and lineage.
         for a in card["assertions"]:
             expected = aid(a["source_id"], a["snapshot_id"], a["locator"], a["subject"], a["field"], a["value_norm"],
@@ -584,8 +604,10 @@ def verify(inputs: wa.Inputs, result: dict, again: dict | None = None, suppressi
                     a["subject"] != {"kind": "card", "id": card["card_id"]}) or card["card_kind"] == "mwe"
                 sr_errors["snapshot_binding"] += a["snapshot_id"] != "vesum@" + inputs.hashes["vesum_canonical"][:16]
                 sr_errors["unexpected_attribution"] += "source_record_id" in a or "source_record_key" in a
+                match = LOCATOR.fullmatch(a["locator"])
+                sr_errors["vesum_entry_mismatch"] += vesum_entry is None or match is None or (
+                    match.group("head") != f"vesum:entry:{vesum_entry}")
             else:
-                unit = unit_of[card["card_id"]]
                 routes = source_routes(inputs, unit, inputs.entry_by_unit[unit["unit_key"]], a)
                 match = LOCATOR.fullmatch(a["locator"])
                 head = match.group("head") if match else None

@@ -1634,6 +1634,44 @@ def test_r3f1_output_cannot_disguise_frozen_attribution_as_supplemental_vesum(in
     assert report["source_records"]["errors"]["locator_outside_subject"] == 1
 
 
+@pytest.mark.parametrize("field", ["spelling", "paradigm"])
+def test_r3_output_rejects_foreign_vesum_homograph(inputs, result, field):
+    assert verify.verify(inputs, result)["passed"]
+    forged = copy.deepcopy(result)
+    card = card_of(forged, "альфа", nth=0)
+    foreign = next(a for a in card_of(result, "альфа", nth=1)["assertions"]
+                   if a["source_id"] == "vesum" and a["field"] == field)
+    assert foreign["locator"].startswith("vesum:entry:102 ")
+    victim = next(a for a in card["assertions"] if a["source_id"] == "vesum" and a["field"] == field)
+    victim.update(copy.deepcopy(foreign))
+    victim["subject"] = {"kind": "card", "id": card["card_id"]}
+    # Even a matching output identity claim cannot authorize another homograph's evidence.
+    card["identity"] = copy.deepcopy(card_of(result, "альфа", nth=1)["identity"])
+    resign(card)
+    report = verify.verify(inputs, forged)
+    assert all(report[k]["passed"] for k in ("schema", "assertion_identity", "locators", "public_projection"))
+    assert report["passed"] is False and report["source_records"]["passed"] is False
+    assert report["source_records"]["errors"]["vesum_entry_mismatch"] == 1
+
+
+def test_r3_output_rejects_common_noun_vesum_entry_on_proper_name(inputs, result):
+    assert verify.verify(inputs, result)["passed"]
+    forged = copy.deepcopy(result)
+    card = card_of(forged, "Ета")
+    victim = next(a for a in card["assertions"] if a["source_id"] == "ulif" and a["field"] == "spelling")
+    victim.update(source_id="vesum", locator="vesum:entry:107 [lemma]",
+                  snapshot_id="vesum@" + inputs.hashes["vesum_canonical"][:16],
+                  independence_group="G-VESUM", tier=1)
+    victim["licence_ref"]["register_source_id"] = "vesum"
+    del victim["source_record_id"], victim["source_record_key"]
+    resign(card)
+    report = verify.verify(inputs, forged)
+    assert all(report[k]["passed"] for k in ("schema", "register_lineage", "assertion_identity", "locators",
+                                             "public_projection"))
+    assert report["passed"] is False and report["source_records"]["passed"] is False
+    assert report["source_records"]["errors"]["vesum_entry_mismatch"] == 1
+
+
 def test_r3f1_record_withdrawal_cannot_certify_an_escaped_assertion(inputs, result):
     target = alpha_ulif_spelling(result)
     selectors = suppression({"kind": "source_record", "source_id": "ulif",
