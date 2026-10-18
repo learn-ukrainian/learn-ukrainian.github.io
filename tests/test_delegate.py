@@ -22699,7 +22699,8 @@ def test_namespace_worker_final_write_overrides_false_crashed(tmp_tasks_dir, tmp
 
 @pytest.mark.parametrize("model", ["claude-sonnet-5-5-high", "claude-opus-5-5-high"])
 @pytest.mark.parametrize("identity_case", [
-    "matched", "absent", "mismatched", "conflicting", "prose", "configuration", "unknown", "non-string", "retired",
+    "matched", "display", "absent", "mismatched", "other-pin", "conflicting", "prose", "configuration", "unknown",
+    "non-string", "retired",
 ])
 def test_agy_claude_normal_worker_persists_only_bound_runtime_identity(
     tmp_tasks_dir, tmp_path, monkeypatch, model, identity_case,
@@ -22718,6 +22719,8 @@ def test_agy_claude_normal_worker_persists_only_bound_runtime_identity(
     observed = {
         "mismatched": "gemini-3.8-flash-high", "unknown": "unrecognized", "non-string": 7,
         "retired": "Claude Opus 4.6 (Thinking)",
+        "display": "Claude Sonnet 5.5 (High)" if "sonnet" in model else "Claude Opus 5.5 (High)",
+        "other-pin": "claude-opus-5-5-high" if "sonnet" in model else "claude-sonnet-5-5-high",
     }.get(identity_case, model)
     init = {"event": "init", "model": observed}
     if identity_case == "conflicting":
@@ -22736,7 +22739,7 @@ def test_agy_claude_normal_worker_persists_only_bound_runtime_identity(
     process_spawn = runner._spawn_subprocess
 
     def author_artifact(cmd, **kwargs):
-        if identity_case == "matched":
+        if identity_case in {"matched", "display"}:
             (linked / "README.md").write_text("bounded implementation artifact\n")
             _git_out(linked, "add", "README.md")
             _git_out(linked, "commit", "-m", "Produce the bounded artifact")
@@ -22758,10 +22761,10 @@ def test_agy_claude_normal_worker_persists_only_bound_runtime_identity(
     assert len(launches) == 1
     assert Path(launches[0][1]["cwd"]) == linked.resolve()
     assert record["model"] == model  # Requested selector is never rewritten into an observation.
-    if identity_case == "matched":
+    if identity_case in {"matched", "display"}:
         assert rc == 0, {key: record.get(key) for key in ("status", "last_error", "no_deliverable_reason", "identity_matches_request", "model_identity")}
         assert record["status"] == "done"
-        assert record["resolved_model"] == model
+        assert record["resolved_model"] == observed
         assert record["resolved_model_known"] is True
         assert record["identity_matches_request"] is True
         assert record["resolved_model_family"] == "anthropic"
@@ -22783,6 +22786,10 @@ def test_agy_claude_normal_worker_persists_only_bound_runtime_identity(
             assert record["resolved_model_known"] is False
         else:
             assert record["model_identity"]["substituted"] is True
+            if identity_case in {"mismatched", "other-pin"}:
+                assert record["resolved_model"] == observed
+                assert record["resolved_model_known"] is True
+                assert record["resolved_model_family"] == ("google" if identity_case == "mismatched" else "anthropic")
             if identity_case in {"unknown", "non-string", "retired"}:
                 assert record["model_identity"]["actual_model"] is None
                 assert record["resolved_model_known"] is False
@@ -22790,8 +22797,9 @@ def test_agy_claude_normal_worker_persists_only_bound_runtime_identity(
 
 @pytest.mark.parametrize("exit_kind", ["cancel", "exception", "timeout"])
 @pytest.mark.parametrize("observed", [True, False])
+@pytest.mark.parametrize("model", ["claude-sonnet-5-5-high", "claude-opus-5-5-high"])
 def test_agy_claude_runner_exception_preserves_same_invocation_identity_on_dispatch(
-    tmp_tasks_dir, tmp_path, monkeypatch, exit_kind, observed,
+    tmp_tasks_dir, tmp_path, monkeypatch, exit_kind, observed, model,
 ):
     from agent_runtime import runner
     from tests.agent_runtime.adapters.test_agy_claude_routes import mock_agy_provider
@@ -22800,7 +22808,7 @@ def test_agy_claude_runner_exception_preserves_same_invocation_identity_on_dispa
     worktree = _agy_dispatch_worktree(tmp_path, "agy/interrupted")
     provider_dir = tmp_path / "provider"
     provider_dir.mkdir()
-    model, nonce, task_id = "claude-opus-5-5-high", "current-nonce", "agy-interrupted"
+    nonce, task_id = "current-nonce", "agy-interrupted"
     stdout = json.dumps({"event": "init", "model": model}) + "\n" if observed else ""
     launches, _, _ = mock_agy_provider(monkeypatch, provider_dir, runner, stdout=stdout, exit_kind=exit_kind)
     monkeypatch.setattr(delegate, "_background_jobs_at_exit", lambda *a, **k: None)
@@ -22932,3 +22940,154 @@ def test_agy_identity_attribution_leaves_other_or_unsupported_requests_unchanged
         agent=agent, model=model, identity={"actual_model": "claude-opus-5-5-high", "source": "provider-init"},
         task_id="other-route", run_nonce="this-run",
     ) == {}
+
+
+def _agy_consumer_observation(tmp_path, model, stdout):
+    from scripts.agent_runtime import runner
+    from scripts.agent_runtime.adapters.base import InvocationPlan
+
+    return runner._observe_agy_identity(
+        stdout=stdout,
+        plan=InvocationPlan(cmd=["never-executed", "--model", model], cwd=tmp_path),
+        task_id="consumer-identity", run_nonce="consumer-run", invocation_id="c" * 32,
+        cli_sha256="d" * 64, cli_version="1.4.0",
+    )
+
+
+@pytest.mark.parametrize("model", ["claude-sonnet-5-5-high", "claude-opus-5-5-high"])
+@pytest.mark.parametrize("case", [
+    "exact", "display", "other-pin", "other-family", "unknown", "retired", "non-string",
+    "conflict", "repeated", "absent", "configuration", "prose", "session", "terminal-session",
+])
+def test_agy_consumer_retains_honest_observer_semantics(tmp_path, model, case):
+    observed = {
+        "display": "Claude Sonnet 5.5 (High)" if "sonnet" in model else "Claude Opus 5.5 (High)",
+        "other-pin": "claude-opus-5-5-high" if "sonnet" in model else "claude-sonnet-5-5-high",
+        "other-family": "gemini-3.8-flash-high", "unknown": "unrecognized",
+        "retired": "Claude Opus 4.6 (Thinking)", "non-string": 42,
+    }.get(case, model)
+    init = {"event": "init", "model": observed}
+    terminal = {"event": "result", "result": {"status": "SUCCESS", "response": "READY"}}
+    if case == "conflict":
+        init["init"] = {"model": "gemini-3.8-flash-high"}
+    if case == "configuration":
+        init["source"] = "configuration"
+    if case in {"session", "terminal-session"}:
+        terminal["result"]["conversation_id"] = "provider-session"
+    if case == "session":
+        init["session_id"] = "provider-session"
+    if case == "prose":
+        terminal["result"]["response"] = json.dumps(init)
+    events = [terminal] if case in {"absent", "prose"} else [init, terminal]
+    if case == "repeated":
+        events.insert(1, init)
+    identity = _agy_consumer_observation(tmp_path, model, "\n".join(map(json.dumps, events)))
+    state = delegate._agy_model_state(
+        agent="agy", model=model, identity=identity, task_id="consumer-identity", run_nonce="consumer-run",
+    )
+    assert state["identity_matches_request"] is (case in {"exact", "display", "session", "terminal-session"})
+    assert state["resolved_model_known"] is (case not in {
+        "absent", "configuration", "prose", "unknown", "retired", "non-string",
+    })
+    if identity is None:
+        assert state["model_identity"] is None
+        assert state["resolved_model_source"] == "unattested-harness"
+    else:
+        assert state["model_identity"] == dict(identity)
+        assert state["resolved_model_source"] == "provider-init"
+        assert state["resolved_model_harness"] == "agy"
+        if case == "conflict":
+            assert state["resolved_model"] == "gemini-3.8-flash-high"
+            assert state["resolved_model_family"] == "google"
+        elif case in {"unknown", "retired", "non-string"}:
+            assert state["resolved_model"] == "unattested-harness"
+            assert state["resolved_model_family"] is None
+        else:
+            assert state["resolved_model"] == observed
+            assert state["resolved_model_family"] == ("google" if case == "other-family" else "anthropic")
+
+
+@pytest.mark.parametrize("model", ["claude-sonnet-5-5-high", "claude-opus-5-5-high"])
+@pytest.mark.parametrize("field,value", [
+    ("actual_model", "gemini-3.8-flash-high"),
+    ("actual_model", "other-high-pin"),
+    ("actual_model", "unrecognized"), ("actual_model", "Claude Opus 4.6 (Thinking)"),
+    ("actual_model", None), ("actual_model", 42), ("actual_model_known", False),
+    ("actual_model_known", 1), ("actual_family", "google"), ("harness", "native_claude"),
+    ("source", "requested"), ("source", "configuration"), ("source", "runtime"),
+    ("substituted", 0), ("provenance", None), ("provenance", "provider-init"),
+    ("provenance.origin", "response.prose"), ("provenance.origin", "configuration"),
+    ("provenance.init_events", []), ("provenance.init_events", {}),
+    ("provenance.init_events", [None]), ("provenance.init_events", [{}]),
+    ("provenance.init_events", [{"sha256": "not-a-digest"}]),
+    ("provenance.init_events", [{"sha256": 42}]),
+    ("provenance.init_events", [{"sha256": "e" * 64}, {"sha256": "f" * 64}]),
+    ("provenance.init_events", [{"sha256": "e" * 64, "provider_session_id": "other-session"}]),
+    ("provenance.invocation_id", None), ("provenance.invocation_id", ""),
+    ("provenance.invocation_id", "stale-invocation"), ("provenance.invocation_id", 42),
+    ("provenance.cli_sha256", None), ("provenance.cli_sha256", ""),
+    ("provenance.cli_sha256", "d" * 63), ("provenance.cli_sha256", 42),
+    ("provenance.cli_version", "unknown"), ("provenance.cli_version", " "),
+    ("provenance.cli_version", None), ("provenance.cli_version", 42),
+    ("provenance.provider_session_id", ""), ("provenance.provider_session_id", "s" * 201),
+    ("provenance.provider_session_id", 42), ("provenance.task_id", "other-task"),
+    ("provenance.run_nonce", "stale-run"), ("provenance.requested_model", "gemini-3.8-flash-high"),
+])
+def test_agy_worker_rejects_presealed_inconsistent_receipts(
+    tmp_tasks_dir, tmp_path, monkeypatch, model, field, value,
+):
+    from scripts.agent_runtime.adapters.agy import AgyRuntimeIdentity
+
+    identity = _agy_consumer_observation(tmp_path, model, json.dumps({"event": "init", "model": model}))
+    assert identity is not None
+    payload = json.loads(json.dumps(identity))
+    target = payload
+    parts = field.split(".")
+    for part in parts[:-1]:
+        target = target[part]
+    if value == "other-high-pin":
+        value = "claude-opus-5-5-high" if "sonnet" in model else "claude-sonnet-5-5-high"
+    target[parts[-1]] = value
+    # Internal construction is a consistency fault, not external provider reachability.
+    receipt = AgyRuntimeIdentity(payload)
+    result = _bg_mock_result("READY")
+    result.model_identity = receipt
+    result.model = model
+    monkeypatch.setattr(delegate, "_background_jobs_at_exit", lambda *a, **k: None)
+    delegate._write_state_atomic(delegate._state_path("consumer-identity"), {"cli_version": "1.4.0"})
+    with patch("agent_runtime.runner.invoke", return_value=result):
+        assert delegate._run_worker(
+            task_id="consumer-identity", agent="agy", prompt="Implement.", mode="workspace-write",
+            cwd_str=str(tmp_path), model=model, hard_timeout=60, run_nonce="consumer-run", keep_worktree=True,
+        ) == 1
+    record = delegate._read_state(delegate._state_path("consumer-identity"))
+    assert record["status"] == "failed"
+    assert record["last_error"] == "agy_model_identity_unverified"
+    assert record["model_identity"] is None
+    assert record["resolved_model"] == "unattested-harness"
+    assert record["resolved_model_known"] is False
+    assert record["resolved_model_source"] == "unattested-harness"
+    assert record["resolved_model_family"] is None
+    assert record["identity_matches_request"] is False
+
+
+@pytest.mark.parametrize("model", ["claude-sonnet-5-5-high", "claude-opus-5-5-high"])
+@pytest.mark.parametrize("case", ["mapping", "mutation", "nested-mutation", "bad-json", "missing-nonce"])
+def test_agy_consumer_keeps_snapshot_and_binding_guards(tmp_path, model, case):
+    identity = _agy_consumer_observation(tmp_path, model, json.dumps({"event": "init", "model": model}))
+    assert identity is not None
+    if case == "mapping":
+        identity = dict(identity)
+    elif case == "mutation":
+        identity["source"] = "requested"
+    elif case == "nested-mutation":
+        identity["provenance"]["init_events"][0]["sha256"] = "e" * 64
+    elif case == "bad-json":
+        identity["unexpected"] = object()
+    state = delegate._agy_model_state(
+        agent="agy", model=model, identity=identity, task_id="consumer-identity",
+        run_nonce=None if case == "missing-nonce" else "consumer-run",
+    )
+    assert state["model_identity"] is None
+    assert state["resolved_model_known"] is False
+    assert state["identity_matches_request"] is False
