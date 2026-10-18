@@ -7,8 +7,9 @@ not a style linter for library modules or for scripts without a __main__ entry.
 A CLI is a tracked or new scripts/**/*.py file with a module-level
 ``if __name__ == "__main__":`` block. Its ``--help`` passes when, run from a
 temporary working directory, the process exits 0 within 5 seconds, attempts no
-writes, process spawns, network or SQLite access (a PEP 578 audit hook blocks
-and records them), and the argparse parser that printed help to stdout has a
+writes, process spawns, network or SQLite access, including in atexit callbacks
+at interpreter shutdown (a PEP 578 audit hook blocks and records them), and the
+argparse parser that printed help to stdout has a
 description, a help text for every visible argument and subcommand, and an
 epilog naming Examples and Exit codes.
 
@@ -63,7 +64,7 @@ EXIT_CODES = re.compile(r"\bexit[ -]codes?\b", re.IGNORECASE)
 # so a blocked action never happens. It detects ordinary Python side effects; it is not a
 # containment boundary against code that bypasses auditing (ctypes, native extensions).
 _PROBE = r'''
-import argparse, json, os, runpy, sys, tempfile
+import argparse, atexit, json, os, runpy, sys, tempfile
 _report = os.open(sys.argv[1], os.O_WRONLY)
 tempfile.gettempdir()  # Resolve (and cache) the sandbox TMPDIR before writes are blocked.
 _mode, _target, _root = sys.argv[2:5]
@@ -135,11 +136,26 @@ def _describe(parser, to_stdout):
     return {"to_stdout": to_stdout, "description": _text(parser.description),
             "epilog": _text(parser.epilog), "undocumented": undocumented}
 
+def _finish():
+    # atexit runs callbacks last in, first out, so this one, registered before the target,
+    # runs after every shutdown callback the target registered, with the hook still
+    # installed. Exiting here skips module teardown, whose finalizers Python never promises.
+    report = {"exit": code, "error": error, "events": _events[:5],
+              "parser": _describe(*_printed[-1]) if _printed else None}
+    for stream in (sys.stdout, sys.stderr):
+        try:
+            stream.flush()
+        except BaseException:
+            pass
+    os.write(_report, json.dumps(report).encode())
+    os._exit(code if 0 <= code < 256 else 1)
+
 code, error = 0, ""
 try:
     sys.path[:] = [p for p in sys.path if p not in ("", os.getcwd())]
     sys.argv = [_target, "--help"]
     sys.addaudithook(_hook)
+    atexit.register(_finish)
     if _mode == "path":
         sys.path[:0] = [os.path.dirname(_target), _root]
         runpy.run_path(_target, run_name="__main__")
@@ -153,15 +169,7 @@ except SystemExit as exc:
     code = 0 if exc.code is None else exc.code if isinstance(exc.code, int) else 1
 except BaseException as exc:
     code, error = 1, f"{type(exc).__name__}: {exc}".splitlines()[0][:200] if str(exc) else type(exc).__name__
-report = {"exit": code, "error": error, "events": _events[:5],
-          "parser": _describe(*_printed[-1]) if _printed else None}
-for stream in (sys.stdout, sys.stderr):
-    try:
-        stream.flush()
-    except BaseException:
-        pass
-os.write(_report, json.dumps(report).encode())
-os._exit(code if 0 <= code < 256 else 1)
+# Falling off the end starts normal interpreter shutdown; _finish writes the report.
 '''
 
 
