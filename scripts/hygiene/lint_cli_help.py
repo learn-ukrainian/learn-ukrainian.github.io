@@ -140,13 +140,13 @@ def _finish():
     # atexit runs callbacks last in, first out, so this one, registered before the target,
     # runs after every shutdown callback the target registered, with the hook still
     # installed. Exiting here skips module teardown, whose finalizers Python never promises.
-    report = {"exit": code, "error": error, "events": _events[:5],
-              "parser": _describe(*_printed[-1]) if _printed else None}
     for stream in (sys.stdout, sys.stderr):
         try:
             stream.flush()
         except BaseException:
             pass
+    report = {"exit": code, "error": error, "events": _events[:5],
+              "parser": _describe(*_printed[-1]) if _printed else None}
     os.write(_report, json.dumps(report).encode())
     os._exit(code if 0 <= code < 256 else 1)
 

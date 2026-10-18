@@ -145,6 +145,36 @@ def test_shutdown_writes_are_blocked_and_fail(tmp_path: Path) -> None:
     assert not marker.exists()
 
 
+@pytest.mark.parametrize("rel", ["scripts/flush_writer.py", "scripts/flush-writer.py"])
+@pytest.mark.parametrize("stream", ["stdout", "stderr"])
+def test_flush_writes_are_blocked_and_fail(tmp_path: Path, rel: str, stream: str) -> None:
+    marker = tmp_path / "at-flush.txt"
+    register = f'''
+import argparse, atexit, sys
+
+class FlushWriter:
+    def __init__(self, wrapped):
+        self.wrapped = wrapped
+
+    def __getattr__(self, name):
+        return getattr(self.wrapped, name)
+
+    def flush(self):
+        self.wrapped.flush()
+        open({str(marker)!r}, "w").close()
+
+atexit.register(setattr, sys, {stream!r}, FlushWriter(sys.{stream}))
+'''
+    root = _tree(tmp_path, {rel: GOOD.replace("import argparse\n", register, 1)})
+    done = subprocess.run([sys.executable, str(root / rel), "--help"], cwd=tmp_path,
+                          capture_output=True, text=True, timeout=5)
+    assert done.returncode == 0 and "Exit codes:" in done.stdout and marker.exists()
+    marker.unlink()
+
+    assert lint.evaluate(root, rel) == "side effect during --help: open '<path>'"
+    assert not marker.exists()
+
+
 def test_packages_absent_from_ci_are_refused_on_every_host(tmp_path: Path) -> None:
     root = _tree(tmp_path, {"scripts/heavy.py": GOOD.replace("import argparse\n", "import argparse\nimport torch\n", 1)})
     reason = lint.evaluate(root, "scripts/heavy.py")
