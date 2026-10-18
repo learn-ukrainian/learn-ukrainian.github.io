@@ -2,7 +2,7 @@
 
 - **Issue**: [#10512](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/10512) (Phase 1 Source Completeness)
 - **Programme**: [#8977](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8977) (Word Cards), [#6321](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6321) (Open-Model-Data)
-- **Status**: **DRAFT ONLY** (Non-binding until designated approval by Claude Opus 5.5 + GPT Sol 6.1 upon Claude reset ~2026-10-19T07:00Z)
+- **Status**: **DRAFT ONLY** (Non-binding until designated approval by Claude Opus 5.5 + GPT Sol 6.1 on 2026-10-19)
 - **Authorities**: CTO Orders `message_edbaeceb61bc4b7c8ce599cb06314817` (2026-10-17T22:09Z), `message_4d8176a5ded542f6aeafc562e6b8f93d` (2026-10-17T22:38Z), and `message_d91c2393a03a4df397e097bf278db355` (2026-10-17T22:41Z).
 
 ---
@@ -11,7 +11,7 @@
 
 To satisfy AC-01, source completeness cannot be measured against arbitrary local caches, pilot samples, or mutable web endpoints. A finite, versioned lexical universe defines the denominator for word card assembly:
 
-1. **Lexical Universe v1 (Phase 1 Baseline Proposals — Queued for Designated Approval ~2026-10-19T07:00Z)**:
+1. **Lexical Universe v1 (Phase 1 Baseline Proposals — Queued for Designated Approval 2026-10-19)**:
    - **Constituent Populations**:
      * **Atlas Published Manifest**: `data/lexicon/manifest/manifest.jsonl` contains **27,472 distinct headwords**.
      * **Atlas Live Articles**: `data/atlas.db:articles` holds **27,128 active learner-facing articles**.
@@ -21,7 +21,7 @@ To satisfy AC-01, source completeness cannot be measured against arbitrary local
    - **Candidate Baselines for Designated Approval (Claude Opus 5.5 + GPT Sol 6.1)**:
      * *Candidate Baseline A (Manifest ∪ PULS)*: Core pedagogical universe binding the 27,472 published Atlas manifest words and PULS CEFR A1–C1.
      * *Candidate Baseline B (Cache ∪ PULS)*: Expanded engineering universe of 39,018 distinct headwords.
-    - **Scope Boundary**: Lexical Universe v1 boundaries depend on candidate selection (Candidate A: Atlas published manifest ∪ PULS A1–C1; Candidate B: Cache corpus ∪ PULS A1–C1). Formal selection of the binding baseline is queued for designated approval by Claude Opus 5.5 + GPT Sol 6.1 following the Claude reset (~2026-10-19T07:00Z). Meanings coverage for any unselected or combined union remains unmeasured pending baseline designation.
+    - **Scope Boundary**: Lexical Universe v1 boundaries depend on candidate selection (Candidate A: Atlas published manifest ∪ PULS A1–C1; Candidate B: Cache corpus ∪ PULS A1–C1). Formal selection of the binding baseline is queued for designated approval by Claude Opus 5.5 + GPT Sol 6.1 on 2026-10-19. Meanings coverage for any unselected or combined union remains unmeasured pending baseline designation.
 
 2. **Lexical Universe v2 (Full Scale — Post-v1)**:
    - **Core Lexical Foundation (VESUM ∩ ULIF)**: Full intersection of VESUM v6.8.0 (`data/vesum.db`, 442,458 blocks, 6,970,759 form analyses) and the ULIF published register (262,812 entry positions, 943,689 raw blobs in `data/lexicon/cache/ulif_raw.sqlite`), spanning ~245,000–260,000 lemmas. Anything wider than v1 belongs strictly to v2.
@@ -138,4 +138,4 @@ flowchart TD
 ## 4. Designated Approval Routing
 Binding this AC-01 definition and selecting Option A vs Option B for `SRC-LEGACY123` constitutes a normative baseline decision under Operator Contract item 12.
 - **Reviewers**: Claude Opus 5.5 and GPT Sol 6.1 agreeing.
-- **Timeline**: Scheduled on the post-Claude-reset queue (~2026-10-19T07:00Z).
+- **Timeline**: Scheduled on the designated approval queue for 2026-10-19.

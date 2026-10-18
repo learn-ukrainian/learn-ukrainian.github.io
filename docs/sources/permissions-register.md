@@ -729,13 +729,15 @@ Open questions: none recorded.
 - **Organisation:** ВТФ «Перун» (видавництво), за ред. В. Т. Бусела; digital copy hosted by slovnyk.me
 - **Role:** Secondary modern explanatory dictionary for Word-Card sense seeding (admitted 2026-10-17 under #8977 / #6321) and live Atlas definition cards (7,849 entries); provides definitions for lexemes outside СУМ-20 published volume boundary (РЯХТЛИВИЙ..Я) and unquarantined entries.
 - **Fields:** headword, meaning
-- **Appears in:** internal, site. Live Atlas definition_cards displays ВТС definitions for 7,849 words (2026-10-17 count in data/atlas.db); local cache holds 31,688 words with valid definitions. Internal word cards use ВТС as secondary sense seed (СУМ-20 → ВТС → ULIF). Not in public dataset until Phase 7 licensing clearance.
+- **Appears in:** internal, site. Live Atlas definition_cards displays ВТС definitions for 7,849 words (data/atlas.db count) and the public atlas-manifest release asset distributes definition-card presentation blocks. Internal word cards use ВТС as secondary sense seed (official СУМ-20 → ВТС → ULIF). Open model training dataset export remains withheld pending Phase 7 licensing clearance.
 - **Stored in:** data/lexicon/slovnyk_cache/*.json (slug vts; 31,688 valid entries); data/sources.db slovnyk_me_entries (dictionary_slug='vts'); data/atlas.db enrichment (section='definition_cards')
 - **Where from:** https://slovnyk.me/dict/vts/
 - **Retrieval evidence:** data/lexicon/slovnyk_cache/*.json entries retrieved between 2026-08-06 and 2026-10-15; 31,688 entries with valid text in local cache; sources.db slovnyk_me_entries holds 13,181 rows.
 - **Terms:** All rights reserved (ВТФ «Перун» / В. Т. Бусел); no open licence on slovnyk.me aggregator. Search record: https://slovnyk.me/ (no explicit open license terms declared for VTS dictionary text).
 - **Statute referred to:** `law_art22_quotation`
-- **Citation:** Великий тлумачний словник сучасної української мови / Уклад. і голов. ред. В. Т. Бусел. — К.; Ірпінь: ВТФ «Перун», 2005. — 1728 с. Label shown: Великий тлумачний словник сучасної української мови.
+- **Citation:** Великий тлумачний словник сучасної української мови (електронна копія на Slovnyk.me, https://slovnyk.me/dict/vts/ — друковане видання ВТФ «Перун» не встановлено за колофоном електронного дзеркала; вимагає бібліографічної верифікації). Label shown: Великий тлумачний словник сучасної української мови.
 - **Removal:** https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues — Atlas definition cards carrying the VTS label, internal word card sense seeds derived from VTS, and stored copies in data/lexicon/slovnyk_cache/ and data/sources.db.
 
-Open questions: Commercial/public-dataset redistribution licence status remains unconfirmed with rights holder (ВТФ «Перун»); blocks Phase 7 public dataset release only.
+Open questions:
+- Print edition attribution (ВТФ «Перун» / за ред. В. Т. Бусела, 2005) not established from electronic mirror colophon; edition verification prerequisite remains open for formal bibliographic citation.
+- Commercial/public-dataset redistribution licence status remains unconfirmed with rights holder (ВТФ «Перун»); blocks Phase 7 public dataset release only.

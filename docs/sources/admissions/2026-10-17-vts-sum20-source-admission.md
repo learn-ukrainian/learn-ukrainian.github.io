@@ -1,9 +1,9 @@
-# Source Admission Record: ВТС and СУМ-20 (Word-Card Sense Seeding)
+# Source Admission Record: ВТС (Word-Card Sense Seeding) & СУМ-20 Official Crawl Alignment
 
 - **Date**: 2026-10-17
 - **Authority**: CTO Order `message_d91c2393a03a4df397e097bf278db355` / Operator Directive (22:4xZ)
 - **Programme**: [#8977](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8977) (Word Cards), [#6321](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6321) (Open-Model-Data), [#10512](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/10512) (Source Completeness)
-- **Scope**: Admission of digital copies of **СУМ-20** and **ВТС** as primary and secondary meaning sources for Word-Card sense seeding (amending `WORD_CARDS_DATA_PLAN.md` §6 Decision 1, §7 Residuals, §8 Counts).
+- **Scope**: Admission of digital copy of **ВТС** as secondary meaning source for Word-Card sense seeding (amending `WORD_CARDS_DATA_PLAN.md` §6 Decision 1, §7 Residuals, §8 Counts), alongside alignment of СУМ-20 sense seeding strictly to official-edition crawl data (`sources.db:sum20_articles`) with mandatory quarantine enforcement (#9609, #9840) and Rule 5 caveat for slovnyk.me mirror cache.
 
 ---
 
@@ -37,21 +37,19 @@ Because СУМ-20's published print volumes currently stop at Volume 16 (entry r
 - **Work Title**: «Словник української мови: у 20 т.»
 - **Institutions**: Український мовно-інформаційний фонд НАН України (УМІФ), Інститут мовознавства ім. О. О. Потебні НАН України
 - **Published Scope**: Томи 1–16 (літери А — РЯХТЛИВИЙ), Київ: Наукова думка, 2010–2025+
-- **Digital Platform / Aggregator**: slovnyk.me (`dictionary_slug='newsum'`)
-- **Digital Label**: `Словник української мови у 20 томах (УМІФ НАН України, Ін-т мовознавства ім. О. О. Потебні)`
-- **URL Schema**: `https://slovnyk.me/dict/newsum/{word}`
-- **Held In Cache**: 22,075 words with verified non-empty definition text in `data/lexicon/slovnyk_cache/*.json`
-- **Retrieval Dates**: 2026-08-06 to 2026-10-15 (with 33,623 files having filesystem mtime >= 2026-10-10)
+- **Official Edition (Sole Primary Source)**: https://sum20ua.com/ (stored in `data/sources.db:sum20_articles`; adheres strictly to `permissions-register.yaml:253-254` "official edition only, never a mirror"). The 11 quarantined articles (#9609, #9840) are strictly excluded.
+- **Digital Aggregator Mirror (Candidate Discovery Only)**: slovnyk.me (`dictionary_slug='newsum'`, URL schema `https://slovnyk.me/dict/newsum/{word}`). Governed by `docs/best-practices/atlas-source-presentation.md` Rule 5: mirror rows seed candidate discovery only with an internal accuracy caveat, re-verification against sum20ua.com, and strict quarantine filtering.
+- **Cache Evidence**: 22,075 entries in `data/lexicon/slovnyk_cache/*.json` with `fetched_at` timestamps between 2026-08-06T14:32Z and 2026-10-15T18:45Z.
 
 ### B. ВТС (Великий тлумачний словник сучасної української мови)
 - **Work Title**: «Великий тлумачний словник сучасної української мови» (ВТС-СУМ)
-- **Editor / Compiler**: В. Т. Бусел (головний редактор)
-- **Print Edition**: 5-те видання, з дод. і допов., Київ; Ірпінь: ВТФ «Перун», 2005 (перевидання 2009); 1728 с., ISBN 966-569-013-2
+- **Compiler / Editor Reference**: ВТФ «Перун», за ред. В. Т. Бусела (print tradition)
+- **Print Edition Status**: Print edition not established from electronic mirror colophon; digital text published at slovnyk.me/dict/vts under title 'Великий тлумачний словник сучасної української мови' (ВТФ «Перун» / за ред. В. Т. Бусела attribution unverified on mirror). Candidate seeding is admitted under Law 2811-IX Art. 22(2)(1), with print edition verification prerequisite open for formal citations.
 - **Digital Platform / Aggregator**: slovnyk.me (`dictionary_slug='vts'`)
-- **Digital Label**: `Великий тлумачний словник сучасної української мови` (Academic label: `Великий тлумачний словник сучасної української мови`)
+- **Digital Label**: `Великий тлумачний словник сучасної української мови`
 - **URL Schema**: `https://slovnyk.me/dict/vts/{word}`
 - **Held In Cache**: 31,688 words with verified non-empty definition text in `data/lexicon/slovnyk_cache/*.json`
-- **Retrieval Dates**: 2026-08-06 to 2026-10-15
+- **Retrieval Dates**: `fetched_at` timestamps between 2026-08-06T14:32Z and 2026-10-15T18:45Z.
 
 ---
 
@@ -75,6 +73,8 @@ The permissions register (`docs/sources/permissions-register.yaml`) is updated t
 In the existing Atlas pipeline (`scripts/lexicon/enrich_manifest.py`), `_SlovnykArticleParser` and `_parse_slovnyk_entry` extract entry text and paragraph blocks from cached HTML, while `_vts_definition_card` and `_sum20_definition_card` package the definitions for Atlas presentation.
 
 However, extracting entry text into definition blocks does not by itself produce isolated, numbered-sense units conforming to the word-card schema. While 31,688 nonblank ВТС entries are cached and available, decomposing multi-sense articles into isolated, numbered sense units with edition-binding verification remains an active engineering prerequisite.
+
+**Interim W1a Behavior**: Until the numbered-sense parser is implemented, a lexeme with no unquarantined official СУМ-20 entry falls through to ULIF `sense_gloss` units (or keeps one `unsplit` sense if ULIF has no nonblank gloss); raw ВТС entry text serves as contextual reference evidence, not isolated card senses.
 
 Therefore, source use of ВТС for lexical sense reference is admitted under Art. 22(2)(1) Law 2811-IX, while numbered-sense extraction and card schema integration are preserved as an active engineering residual under `WORD_CARDS_DATA_PLAN.md` §7.
 
@@ -113,5 +113,6 @@ Applying the hierarchy **СУМ-20 (first) → ВТС (second) → ULIF gloss (t
 
 1. **ВТС is hereby ADMITTED** as an authorized secondary source for Word-Card sense reference under `WORD_CARDS_DATA_PLAN.md` §6 Decision 1 and operator IP responsibility (Plan v3.5.0 O1; an administrative source-use decision, not a legal conclusion), citing the quotation exception under Law 2811-IX Art. 22(2)(1) with mandatory author/source attribution and marked quotation boundaries.
 2. The sense seed sequence is confirmed as:
-   $$\text{СУМ-20 (unquarantined)} \longrightarrow \text{ВТС (numbered senses)} \longrightarrow \text{ULIF sense\_gloss}$$
+   $$\text{СУМ-20 (official, unquarantined)} \longrightarrow \text{ВТС (numbered senses)} \longrightarrow \text{ULIF sense\_gloss}$$
+   With interim W1a fall-through to ULIF for lexemes lacking official СУМ-20 until the numbered-sense parser is completed.
 3. Numbered sense parsing, decomposition, and card schema integration are retained as an active engineering residual under `WORD_CARDS_DATA_PLAN.md` §7 (to be delivered in W1 / engineering steps).
