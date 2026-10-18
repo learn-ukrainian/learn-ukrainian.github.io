@@ -446,6 +446,24 @@ def test_queued_recorded_rejection_revokes(tmp_path: Path) -> None:
     assert "CF-changes_requested" in lines[0]
 
 
+@pytest.mark.parametrize("entry", ["queued", "armed"])
+def test_later_posted_rejection_with_earlier_start_dequeues(tmp_path: Path, entry: str) -> None:
+    """#10973: replay the #10947 timeline; how the PR entered the queue does not matter."""
+    queue = {"isInMergeQueue": True} if entry == "queued" else {"autoMergeRequest": {"enabledAt": "x"}}
+    fake = FakeGitHub(pr(**queue))
+    approval = recorded("APPROVED", "2026-10-18T17:17:37.175425+00:00")
+    rejection = recorded("CHANGES_REQUESTED", "2026-10-18T17:17:36.933735+00:00")
+    approval.update(created_at="2026-10-18T17:19:35Z", updated_at="2026-10-18T17:19:35Z")
+    rejection.update(created_at="2026-10-18T17:44:00Z", updated_at="2026-10-18T17:44:00Z")
+    fake.comments_rows = [approval, rejection]
+    lines, failed = keeper.run(fake, tmp_path / "state.json", apply=True)
+    assert not failed
+    action = ("dequeue", "PR_node_42") if entry == "queued" else ("disarm", 42)
+    assert action in fake.actions
+    assert "#42 revoked: CF-changes_requested" in lines
+    assert "enqueue" not in mutations(fake)
+
+
 def test_queued_recorded_approval_then_hold_revokes(tmp_path: Path) -> None:
     fake = FakeGitHub(pr(isInMergeQueue=True))
     fake.comments_rows = [recorded("APPROVED", "2026-09-23T12:00:00.000001+00:00")]

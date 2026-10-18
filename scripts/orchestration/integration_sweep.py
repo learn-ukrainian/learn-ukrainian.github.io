@@ -179,12 +179,15 @@ def lookup_verdict(
     *,
     complete: bool = True,
 ) -> Verdict:
-    """Resolve the latest review start for one SHA; malformed or edited evidence poisons it."""
+    """Resolve one SHA's verdict; malformed or edited evidence poisons it.
+
+    A rejection stands until an approval both started and was posted after it (#10973).
+    """
     if not complete or not isinstance(comments, Sequence) or isinstance(comments, (str, bytes)):
         return Verdict("unknown")
     if not SHA.fullmatch(sha) or not authenticated_login:
         return Verdict("unknown")
-    candidates: list[tuple[datetime, int, dict[str, Any]]] = []
+    candidates: list[tuple[datetime, tuple[datetime, int], dict[str, Any]]] = []
     untrusted: list[str] = []
     legacy = False
     other_head = False
@@ -227,21 +230,33 @@ def lookup_verdict(
             return Verdict("unknown", untrusted_markers=tuple(untrusted))
         if _edited(comment):
             return Verdict("unknown", untrusted_markers=tuple(untrusted))
-        candidates.append((_timestamp(marker["started"]), index, marker))
+        # An unedited comment has a parseable creation time; list order breaks same-second ties.
+        posted = (_timestamp(_field(comment, "created_at", "createdAt")), index)
+        candidates.append((_timestamp(marker["started"]), posted, marker))
     if not candidates:
         state = "CF-unrecorded" if legacy else "CF-stale" if other_head else "needs-CF"
         return Verdict(state, untrusted_markers=tuple(untrusted))
-    latest_start = max(item[0] for item in candidates)
-    tied = [item for item in candidates if item[0] == latest_start]
-    # At a true timestamp tie any rejection wins, irrespective of comment arrival order.
-    winner = next((item for item in tied if item[2]["verdict"] in REJECTED), tied[0])
+    approvals = [item for item in candidates if item[2]["verdict"] not in REJECTED]
+    # A rejection posted after an approval wins even when its review started first (#10973), and a
+    # late-posted approval of an older review start cannot overwrite it; a start tie also keeps it.
+    standing = [
+        item
+        for item in candidates
+        if item[2]["verdict"] in REJECTED
+        and not any(approval[0] > item[0] and approval[1] > item[1] for approval in approvals)
+    ]
+    if standing:
+        winner = max(standing, key=lambda item: (item[0], item[1]))
+    else:
+        latest_start = max(item[0] for item in approvals)
+        winner = next(item for item in approvals if item[0] == latest_start)
     marker = winner[2]
     return Verdict(
         marker["verdict"],
         marker["task"],
         marker["model"],
         marker["family"],
-        latest_start,
+        winner[0],
         tuple(untrusted),
         marker.get("review_mode", "cross_family"),
         tuple(marker.get("unknown_history", ())),
