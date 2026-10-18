@@ -1,6 +1,6 @@
 """#9275 envelope integrity and #10919 driver-brief admission and replay.
 
-Outside #10919 bounded implementation, every ``gpt-6-luna`` dispatch and every Gemini
+Outside #10919 recon/classification and bounded implementation, every ``gpt-6-luna`` dispatch and every Gemini
 Flash dispatch without an explicit Ukrainian authoring/review classification,
 needs an envelope issued by a finished ``gpt-6.1-sol`` advisory task and bound
 to this dispatch's arguments. Test names carry the frozen acceptance-matrix row
@@ -2610,13 +2610,19 @@ def test_r7_a_verdict_required_record_keeps_another_gates_typed_failure(tmp_path
 # #10919: the driver brief is a second admission source, with the same replay boundary.
 _BRIEF_MODELS = [("codex", "gpt-6-luna"), ("claude", "claude-haiku-5-5")]
 _SAFE_OWNED = "tests/driver_brief_target.py"
+_BRIEF_SCOPES = [
+    ("bounded_implementation", "implementation", "workspace-write"),
+    ("readonly_recon", "recon", "read-only"),
+    ("mechanical_classification", "classification", "read-only"),
+]
 
 
-def _driver_argv(agent, model, *extra):
+def _driver_argv(agent, model, *extra, scope=_BRIEF_SCOPES[0]):
+    family, role, mode = scope
     return _argv(
-        "--mode", "workspace-write", "--worktree", "--force-agent",
-        "--owned-path", _SAFE_OWNED, "--research-task-family", "bounded_implementation",
-        "--research-role", "implementation", "--verify-command", "pytest -q tests/driver_brief_target.py",
+        "--mode", mode, "--worktree", "--force-agent",
+        "--owned-path", _SAFE_OWNED, "--research-task-family", family,
+        "--research-role", role, "--verify-command", "pytest -q tests/driver_brief_target.py",
         "--initiator", "infra-driver", *extra, agent=agent, model=model,
     )
 
@@ -2635,8 +2641,9 @@ def _verify_driver_record(env, agent, model, prompt=None):
 
 
 @pytest.mark.parametrize("agent,model", _BRIEF_MODELS)
-def test_driver_brief_normal_dispatch_and_replay(env, capsys, agent, model):
-    assert _dispatch(_driver_argv(agent, model)) == 0, capsys.readouterr().err
+@pytest.mark.parametrize("scope", _BRIEF_SCOPES)
+def test_driver_brief_normal_dispatch_and_replay(env, capsys, agent, model, scope):
+    assert _dispatch(_driver_argv(agent, model, scope=scope)) == 0, capsys.readouterr().err
     record = _worker_record(env.tasks)
     brief = record["driver_brief"]
     assert brief["driver"] == {"identity": "infra-driver", "source": "explicit"}
@@ -2656,6 +2663,8 @@ def test_driver_brief_normal_dispatch_and_replay(env, capsys, agent, model):
     ("--research-role", "driver"), ("--research-role", "design"),
     ("--research-role", "approval"), ("--research-role", "advisory"),
     ("--research-role", "review"), ("--research-role", "orchestration"),
+    ("--research-role", "diagnosis"), ("--research-role", "quality"),
+    ("--research-role", "investigation"), ("--research-role", None),
     ("--owned-path", "scripts/agent_runtime/new_gate.py"),
     ("--owned-path", "scripts/review/new_gate.py"),
     ("--owned-path", "scripts/publish/new_gate.py"),
@@ -2665,8 +2674,9 @@ def test_driver_brief_normal_dispatch_and_replay(env, capsys, agent, model):
     ("--owned-path", "curriculum/a1/lesson.md"),
     ("--owned-path", "../outside.py"),
 ])
-def test_driver_brief_refusal_matrix(env, capsys, agent, model, flag, value):
-    argv = _driver_argv(agent, model)
+@pytest.mark.parametrize("scope", _BRIEF_SCOPES)
+def test_driver_brief_refusal_matrix(env, capsys, agent, model, flag, value, scope):
+    argv = _driver_argv(agent, model, scope=scope)
     index = argv.index(flag)
     if value is None:
         del argv[index:index + 2]
@@ -2683,25 +2693,28 @@ def test_driver_brief_refusal_matrix(env, capsys, agent, model, flag, value):
     ["--language-lane"], ["--research-track", "l2-uk-en/a1"],
     ["--review-profile", "code"], ["--require-review-verdict"],
 ])
-def test_driver_brief_cannot_admit_excluded_activities(env, capsys, agent, model, extra):
-    assert _dispatch(_driver_argv(agent, model, *extra)) == 2
+@pytest.mark.parametrize("scope", _BRIEF_SCOPES)
+def test_driver_brief_cannot_admit_excluded_activities(env, capsys, agent, model, extra, scope):
+    assert _dispatch(_driver_argv(agent, model, *extra, scope=scope)) == 2
     assert env.spawned == [] and _worker_record(env.tasks) is None
 
 
 @pytest.mark.parametrize("agent,model", _BRIEF_MODELS)
-def test_driver_brief_unknown_attribution_is_explicit(env, capsys, monkeypatch, agent, model):
+@pytest.mark.parametrize("scope", _BRIEF_SCOPES)
+def test_driver_brief_unknown_attribution_is_explicit(env, capsys, monkeypatch, agent, model, scope):
     from scripts.agent_runtime.attribution import InvocationAttribution
     monkeypatch.setattr("scripts.agent_runtime.attribution.resolve_invocation_attribution",
                         lambda **kw: InvocationAttribution("unknown", "unknown", kw["task_id"]))
-    assert _dispatch(_driver_argv(agent, model)) == 0, capsys.readouterr().err
+    assert _dispatch(_driver_argv(agent, model, scope=scope)) == 0, capsys.readouterr().err
     assert _worker_record(env.tasks)["driver_brief"]["driver"] == {"identity": "unknown", "source": "unknown"}
     assert _verify_driver_record(env, agent, model)
 
 
 @pytest.mark.parametrize("agent,model", _BRIEF_MODELS)
 @pytest.mark.parametrize("mutation", ["missing", "args", "brief", "ownership", "bound-ownership", "caller", "execution", "core"])
-def test_driver_brief_replay_refuses_mutations(env, capsys, monkeypatch, agent, model, mutation):
-    assert _dispatch(_driver_argv(agent, model)) == 0, capsys.readouterr().err
+@pytest.mark.parametrize("scope", _BRIEF_SCOPES)
+def test_driver_brief_replay_refuses_mutations(env, capsys, monkeypatch, agent, model, mutation, scope):
+    assert _dispatch(_driver_argv(agent, model, scope=scope)) == 0, capsys.readouterr().err
     record = _worker_record(env.tasks)
     if mutation == "missing":
         del record["driver_brief"]
@@ -2726,8 +2739,9 @@ def test_driver_brief_replay_refuses_mutations(env, capsys, monkeypatch, agent, 
 
 @pytest.mark.parametrize("agent,model", _BRIEF_MODELS)
 @pytest.mark.parametrize("suffix", ["\nextra instructions", ""])
-def test_driver_brief_replay_checks_exact_prompt(env, capsys, agent, model, suffix):
-    assert _dispatch(_driver_argv(agent, model)) == 0, capsys.readouterr().err
+@pytest.mark.parametrize("scope", _BRIEF_SCOPES)
+def test_driver_brief_replay_checks_exact_prompt(env, capsys, agent, model, suffix, scope):
+    assert _dispatch(_driver_argv(agent, model, scope=scope)) == 0, capsys.readouterr().err
     prompt = env.prompts[0] + suffix if suffix else ""
     with pytest.raises(bounded_advisory.AdvisoryRefused):
         _verify_driver_record(env, agent, model, prompt)
@@ -2735,10 +2749,12 @@ def test_driver_brief_replay_checks_exact_prompt(env, capsys, agent, model, suff
 
 @pytest.mark.parametrize("agent,model", _BRIEF_MODELS)
 @pytest.mark.parametrize("change", ["missing", "empty", "changed"])
-def test_driver_brief_source_file_is_bound_on_replay(env, capsys, tmp_path, agent, model, change):
+@pytest.mark.parametrize("scope", _BRIEF_SCOPES)
+def test_driver_brief_source_file_is_bound_on_replay(env, capsys, tmp_path, agent, model, change, scope):
     brief = tmp_path / "bounded-brief.md"
-    brief.write_text("Implement the bounded target and verify it.")
-    argv = _driver_argv(agent, model)
+    brief.write_text("Implement the bounded target and verify it." if scope[2] == "workspace-write"
+                     else "Inspect the bounded target and report verification.")
+    argv = _driver_argv(agent, model, scope=scope)
     index = argv.index("--prompt")
     argv[index:index + 2] = ["--prompt-file", str(brief)]
     assert _dispatch(argv) == 0, capsys.readouterr().err
@@ -2751,8 +2767,9 @@ def test_driver_brief_source_file_is_bound_on_replay(env, capsys, tmp_path, agen
 
 
 @pytest.mark.parametrize("agent,model", _BRIEF_MODELS)
-def test_driver_brief_explicit_advisor_still_supported(env, capsys, agent, model):
-    argv = _driver_argv(agent, model)
+@pytest.mark.parametrize("scope", _BRIEF_SCOPES)
+def test_driver_brief_explicit_advisor_still_supported(env, capsys, agent, model, scope):
+    argv = _driver_argv(agent, model, scope=scope)
     _write_advisor(env.tasks, _binding(argv), envelope=_envelope(_binding(argv), owned_paths=[_SAFE_OWNED]))
     assert _dispatch([*argv, "--advisory-task", _advisor_id()]) == 0, capsys.readouterr().err
     record = _worker_record(env.tasks)
@@ -2768,8 +2785,9 @@ def test_driver_brief_explicit_advisor_still_supported(env, capsys, agent, model
 
 @pytest.mark.parametrize("agent,model", _BRIEF_MODELS)
 @pytest.mark.parametrize("problem", ["cyrillic", "symlink-security", "symlink-outside", "missing-core"])
-def test_driver_brief_rechecks_content_and_core(env, capsys, monkeypatch, tmp_path, agent, model, problem):
-    assert _dispatch(_driver_argv(agent, model)) == 0, capsys.readouterr().err
+@pytest.mark.parametrize("scope", _BRIEF_SCOPES)
+def test_driver_brief_rechecks_content_and_core(env, capsys, monkeypatch, tmp_path, agent, model, problem, scope):
+    assert _dispatch(_driver_argv(agent, model, scope=scope)) == 0, capsys.readouterr().err
     root = Path(_worker_record(env.tasks)["cwd"])
     target = root / _SAFE_OWNED
     if problem == "cyrillic":
@@ -2826,3 +2844,102 @@ def test_driver_brief_verify_command_is_bound_when_present():
     assert delegate.advisory_args_sha256(args) != original[1]
     args.verify_command = None
     assert "verify_command" not in delegate.advisory_args_payload(args)
+
+
+@pytest.mark.parametrize("agent,model", _BRIEF_MODELS)
+@pytest.mark.parametrize("scope", _BRIEF_SCOPES)
+def test_driver_brief_refuses_danger_for_every_direct_class(env, capsys, agent, model, scope):
+    argv = _driver_argv(agent, model, scope=scope)
+    argv[argv.index("--mode") + 1] = "danger"
+    assert _dispatch(argv) == 2
+    assert env.spawned == [] and _worker_record(env.tasks) is None
+    assert "refus" in capsys.readouterr().err.lower()
+
+
+@pytest.mark.parametrize("agent,model", _BRIEF_MODELS)
+def test_explicit_advisor_retains_danger_mode(env, capsys, agent, model):
+    argv = _driver_argv(agent, model)
+    argv[argv.index("--mode") + 1] = "danger"
+    _write_advisor(env.tasks, _binding(argv), envelope=_envelope(_binding(argv), owned_paths=[_SAFE_OWNED]))
+    assert _dispatch([*argv, "--advisory-task", _advisor_id()]) == 0, capsys.readouterr().err
+    record = _worker_record(env.tasks)
+    assert "driver_brief" not in record and record["mode"] == "danger"
+    assert "advisory_envelope" in record
+
+
+@pytest.mark.parametrize("role", ["diagnosis", "quality", "investigation", None])
+@pytest.mark.parametrize("mode", ["read-only", "workspace-write", "danger"])
+@pytest.mark.parametrize("family", [None, "bounded_investigation", "bounded_implementation"])
+def test_explicit_luna_envelope_preserves_free_form_research_roles(env, capsys, role, mode, family):
+    owned = _SAFE_OWNED if family == "bounded_implementation" else OWNED
+    extra = ["--force-agent", "--owned-path", owned, "--mode", mode]
+    if family:
+        extra.extend(["--research-task-family", family])
+    if mode != "read-only":
+        extra.append("--worktree")
+    if role:
+        extra.extend(["--research-role", role])
+    argv = _argv(*extra)
+    _write_advisor(env.tasks, _binding(argv), envelope=_envelope(_binding(argv), owned_paths=[owned]))
+    assert _dispatch([*argv, "--advisory-task", _advisor_id()]) == 0, capsys.readouterr().err
+    record = _worker_record(env.tasks)
+    assert "driver_brief" not in record
+    assert record["advisory_envelope"]["advisor_task_id"] == _advisor_id()
+
+
+@pytest.mark.parametrize("role", ["diagnosis", "quality", "investigation", None, "implementation"])
+@pytest.mark.parametrize("scope", _BRIEF_SCOPES[1:])
+@pytest.mark.parametrize("agent,model", _BRIEF_MODELS)
+def test_direct_readonly_brief_rejects_unclassified_or_unrelated_roles(env, capsys, role, scope, agent, model):
+    argv = _driver_argv(agent, model, scope=scope)
+    index = argv.index("--research-role")
+    if role is None:
+        del argv[index:index + 2]
+    else:
+        argv[index + 1] = role
+    assert _dispatch(argv) == 2, capsys.readouterr().err
+    assert env.spawned == [] and _worker_record(env.tasks) is None
+
+
+def test_existing_haiku_routine_mechanical_dispatch_needs_no_new_brief_contract(env, capsys):
+    argv = _argv("--force-agent", "--research-task-family", "routine_mechanical",
+                 "--owned-path", _SAFE_OWNED, agent="claude", model="claude-haiku-5-5")
+    assert _dispatch(argv) == 0, capsys.readouterr().err
+    record = _worker_record(env.tasks)
+    assert "driver_brief" not in record and "advisory_envelope" not in record
+    assert _verify_driver_record(env, "claude", "claude-haiku-5-5") is None
+
+
+@pytest.mark.parametrize("family", ["routine_mechanical", "readonly_recon", "mechanical_classification"])
+def test_legacy_haiku_mechanical_record_remains_replayable(worker_env, family):
+    record = {"task_id": _worker_id(), "mode": "read-only", "mechanical_task": {"family": family}}
+    _publish(worker_env, record)
+    assert delegate._verify_bounded_worker(
+        _worker_id(), agent="claude", model="claude-haiku-5-5", mode="read-only", cwd=worker_env.cwd,
+        execution={key: value for key, value in _launch("read-only", worker_env.cwd).items()
+                   if key not in {"agent", "model_id", "mode", "cwd"}}, prompt="Inspect this scope.",
+    ) is None
+
+
+@pytest.mark.parametrize("agent,model", _BRIEF_MODELS)
+@pytest.mark.parametrize("scope", _BRIEF_SCOPES[1:])
+def test_direct_recon_classification_cannot_write(env, capsys, agent, model, scope):
+    argv = _driver_argv(agent, model, scope=scope)
+    argv[argv.index("--mode") + 1] = "workspace-write"
+    assert _dispatch(argv) == 2, capsys.readouterr().err
+    assert env.spawned == [] and _worker_record(env.tasks) is None
+
+
+@pytest.mark.parametrize("agent,model", _BRIEF_MODELS)
+def test_driver_classification_triage_role_uses_bound_replay(env, capsys, agent, model):
+    assert _dispatch(_driver_argv(agent, model, scope=("mechanical_classification", "triage", "read-only"))) == 0, capsys.readouterr().err
+    assert _verify_driver_record(env, agent, model) == hashlib.sha256(env.prompts[0].encode()).hexdigest()
+
+
+@pytest.mark.parametrize("agent,model", _BRIEF_MODELS)
+@pytest.mark.parametrize("scope", _BRIEF_SCOPES[1:])
+def test_readonly_driver_brief_with_automatic_worktree_replays(env, capsys, agent, model, scope):
+    argv = _driver_argv(agent, model, scope=scope)
+    argv.remove("--worktree")
+    assert _dispatch(argv) == 0, capsys.readouterr().err
+    assert _verify_driver_record(env, agent, model) == hashlib.sha256(env.prompts[0].encode()).hexdigest()

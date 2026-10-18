@@ -75,7 +75,7 @@ def test_model_table_names_only_active_catalog_models() -> None:
         "Fable/former Astra: no advice, approval or review.",
         "Sol 6.1 @ high: orchestration, advanced coding, Ukrainian authoring and red-team.",
         "Luna @ high: scouting and bounded repeatable work",
-        "Luna/Haiku `bounded_implementation` uses a driver brief",
+        "Luna/Haiku read-only recon/classification or workspace-write `bounded_implementation`",
         "Other Luna/non-Ukrainian Flash needs a bound Sol envelope (`--advisory-task`)",
     ],
 )

@@ -543,7 +543,7 @@ def bounded_requirement(
     if model_id is None:
         return None
     if model_id == policy.bounded_worker_model_id or (
-        model_id in driver_brief_models() and task_family == "bounded_implementation"
+        model_id in driver_brief_models() and task_family in {"bounded_implementation", "readonly_recon", "mechanical_classification"}
     ):
         return f"{model_id} is the bounded worker"
     if model_id != policy.bounded_fallback_model_id:
@@ -626,7 +626,7 @@ def validate_owned_path(path: Any, repo_root: Path) -> str:
 def validate_driver_brief(
     args: Mapping[str, Any], *, repo_root: Path, brief_sha256: str | None, model_id: str | None,
 ) -> list[str]:
-    """Validate the narrow driver-supplied implementation contract, without authenticating its caller."""
+    """Validate the narrow driver-supplied recon, classification or implementation contract, without authenticating its caller."""
     from scripts.agent_runtime.kimi_admission import worktree_trees
     from scripts.agent_runtime.mechanical_admission import MechanicalAdmissionRefused, refuse_mechanical_task
     from scripts.lib import rules_core
@@ -639,11 +639,18 @@ def validate_driver_brief(
     except rules_core.RulesCoreMissing:
         refuse("current core instructions are unavailable")
     if model_id not in driver_brief_models():
-        refuse("this model cannot use a driver implementation brief")
-    if args.get("research_task_family") != "bounded_implementation" or args.get("research_role") != "implementation":
-        refuse("a driver brief admits only bounded_implementation with the implementation role")
-    if args.get("mode") not in {"workspace-write", "danger"}:
-        refuse("a driver implementation brief requires a write mode")
+        refuse("this model cannot use a driver brief")
+    family = args.get("research_task_family")
+    roles = {
+        "bounded_implementation": {"implementation"},
+        "readonly_recon": {"recon"},
+        "mechanical_classification": {"classification", "triage"},
+    }
+    if family not in roles or args.get("research_role") not in roles[family]:
+        refuse("a driver brief requires a matching bounded implementation, recon or classification role")
+    required_mode = "workspace-write" if family == "bounded_implementation" else "read-only"
+    if args.get("mode") != required_mode:
+        refuse(f"a driver {family} brief requires {required_mode} mode")
     if not brief_sha256 or not _SHA256_RE.fullmatch(brief_sha256):
         refuse("a nonempty brief with an exact SHA-256 is required")
     try:
@@ -680,7 +687,7 @@ def validate_driver_brief(
         refuse("owned paths cannot be resolved unambiguously")
     try:
         refuse_mechanical_task(
-            (model_id,), mode=str(args["mode"]), task_family="bounded_implementation",
+            (model_id,), mode=str(args["mode"]), task_family=family, driver_brief=True,
             task_role=str(args["research_role"]), paths=classified,
             review=bool(args.get("review") or args.get("review_profile") or args.get("require_review_verdict")
                         or args.get("review_attempt") or args.get("type") == "review"),
@@ -1110,7 +1117,7 @@ def verify_worker_admission(
     mechanical = record.get("mechanical_task")
     if model_id in direct_models - {policy.bounded_worker_model_id} and isinstance(mechanical, Mapping) and mechanical.get("family") in {
         "routine_mechanical", "mechanical_classification", "readonly_recon"
-    } and record.get("driver_brief") is None and record.get("advisory_envelope") is None:
+    } and record.get("driver_brief") is None and record.get("advisory_envelope") is None and "driver_brief" not in (record.get("prompt_blocks") or ()):
         return None  # The existing mechanical scope and adapter gates still apply.
     if record.get("mode") != mode:
         raise AdvisoryRefused(ADMISSION_INVALID, f"the task record's mode {record.get('mode')!r} is not {mode!r}")

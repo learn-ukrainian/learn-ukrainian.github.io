@@ -325,3 +325,25 @@ def test_bounded_implementation_role_preserves_target_gates(model):
         with pytest.raises(admission.MechanicalAdmissionRefused):
             resolve_and_admit(("claude" if model == HAIKU else "codex",), model=model,
                               **scope(task_family="bounded_implementation", task_role=role), claude_account=HOST_ACCOUNT)
+
+
+@pytest.mark.parametrize("role", ["diagnosis", "quality", "investigation"])
+def test_luna_free_form_envelope_roles_remain_available(role):
+    admission.refuse_mechanical_task(("gpt-6-luna",), mode="read-only", task_role=role)
+
+
+@pytest.mark.parametrize("role", ["driver", "security_code", "ukrainian_authoring", "formal-review", "design_approval",
+                                  "consult", "consultation", "advice", "adviser"])
+def test_luna_free_form_roles_do_not_authorize_excluded_activity_classes(role):
+    with pytest.raises(admission.MechanicalAdmissionRefused):
+        admission.refuse_mechanical_task(("gpt-6-luna",), mode="read-only", task_role=role)
+
+
+@pytest.mark.parametrize("family,role", [("readonly_recon", "recon"), ("mechanical_classification", "classification")])
+def test_luna_direct_readonly_scope_rechecks_content(family, role):
+    admission.refuse_mechanical_task(("gpt-6-luna",), **scope(
+        task_family=family, task_role=role, driver_brief=True))
+    with pytest.raises(admission.MechanicalAdmissionRefused, match="Cyrillic"):
+        admission.refuse_mechanical_task(("gpt-6-luna",), **scope(
+            task_family=family, task_role=role, driver_brief=True,
+            trees=(Tree({"safe.txt": "Україна".encode()}),)))

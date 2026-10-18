@@ -15704,7 +15704,9 @@ def _admit_advisory(
                 }
             )
         return _AdvisoryAdmission()
-    if advisory_task is None and model_id in bounded_advisory.driver_brief_models() and task_family == "bounded_implementation":
+    if advisory_task is None and model_id in bounded_advisory.driver_brief_models() and task_family in {
+        "bounded_implementation", "readonly_recon", "mechanical_classification"
+    }:
         try:
             prompt_sha256 = _binding_prompt_sha256(args, read_stdin=False)
         except (OSError, UnicodeError):
@@ -19871,7 +19873,7 @@ def build_parser() -> argparse.ArgumentParser:
         metavar="TASK_ID",
         help=(
             "#9275: the finished advisor task whose envelope admits this bounded-worker dispatch. "
-            "Optional for Luna/Haiku bounded implementation with a complete driver brief and --verify-command. "
+            "Optional for Luna/Haiku read-only recon/classification or workspace-write bounded implementation with a complete driver brief, owned paths and --verify-command. "
             "Otherwise required whenever the admitted route launches the bounded worker (gpt-6-luna) or the "
             "Gemini Flash bounded fallback without a Ukrainian authoring/review classification; "
             "refused on any other dispatch. Its owned_paths must equal --owned-path. Default: None."
@@ -19938,8 +19940,8 @@ def build_parser() -> argparse.ArgumentParser:
     d.usage = d.format_usage().removeprefix("usage: ").rstrip("\n")
     d.add_argument(
         "--verify-command", default=None, metavar="COMMAND",
-        help=("Acceptance command for a driver-supplied bounded implementation brief. Required with "
-              "owned paths for Luna/Haiku implementation without --advisory-task. Default: None."),
+        help=("Acceptance command for a driver brief. Required with "
+              "owned paths for Luna/Haiku read-only recon/classification or workspace-write bounded implementation without --advisory-task. Default: None."),
     )
     d.add_argument(
         "--review-mode",

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 import subprocess
 from collections.abc import Callable, Iterable, Mapping, Sequence
 from pathlib import Path, PurePosixPath
@@ -30,6 +31,7 @@ def refuse_mechanical_task(
     language_lane: bool = False, research_track: str | None = None,
     prompt_file: str | None = None,
     task_prompt: str | None = None,
+    driver_brief: bool = False,
     trees: Sequence[ContentTree] | Callable[[], Sequence[ContentTree]] = (),
 ) -> None:
     """Refuse original and resolved mechanical-only pins before routing or launch effects.
@@ -47,9 +49,14 @@ def refuse_mechanical_task(
     identities = {canonical_model_id(pin, catalog) for pin in pins}
     constrained = [catalog["models"][identity] for identity in identities if identity and (
         "mechanical_only" in catalog["models"][identity]["roles"]
-        or (identity == preferred and task_family == "bounded_implementation")
+        or (identity == preferred and (driver_brief or task_family == "bounded_implementation"))
     )]
-    if preferred in identities and task_role not in {None, "implementation", "recon", "classification", "triage"}:
+    # Explicit-envelope research roles are free-form. Keep their historical
+    # vocabulary while refusing excluded activities and their class siblings.
+    excluded_roles = {"driver", "orchestrator", "orchestration", "design", "architecture",
+                      "approval", "advisory", "advisor", "adviser", "advice", "consult", "consultation",
+                      "review", "reviewer", "critique", "security", "ukrainian", "content", "language"}
+    if preferred in identities and excluded_roles.intersection(re.split(r"[\W_]+", (task_role or "").casefold())):
         raise MechanicalAdmissionRefused("MECHANICAL_TASK_REFUSED: bounded workers cannot take driver, design, advisory or review roles")
     if not constrained:
         return
@@ -62,12 +69,16 @@ def refuse_mechanical_task(
     families = MECHANICAL_FAMILIES | {"bounded_implementation"}
     if task_family not in families or any(task_family not in model["roles"] for model in constrained):
         refuse("declare a catalog-eligible --research-task-family: routine_mechanical, mechanical_classification, readonly_recon or bounded_implementation")
-    if task_role not in {None, "implementation", "recon", "classification", "triage"}:
+    typed_role = driver_brief or any("mechanical_only" in model["roles"] for model in constrained)
+    if typed_role and task_role not in {None, "implementation", "recon", "classification", "triage"}:
         refuse("driver, design, advisory, approval and content roles are excluded")
     bounded = task_family == "bounded_implementation"
-    if bounded and task_role != "implementation":
+    if typed_role and bounded and task_role != "implementation":
         refuse("bounded implementation requires the implementation role")
-    if mode not in ({"workspace-write", "danger"} if bounded else {"read-only", "workspace-write"}) or (
+    allowed_modes = {"workspace-write", "danger"} if bounded else {"read-only", "workspace-write"}
+    if bounded and not typed_role:
+        allowed_modes.add("read-only")  # Existing Luna envelopes retain their read-only launch mode.
+    if mode not in allowed_modes or (
         task_family not in {"routine_mechanical", "bounded_implementation"} and mode != "read-only"
     ):
         refuse("only routine mechanical or bounded implementation work may write; classification and recon must be read-only")

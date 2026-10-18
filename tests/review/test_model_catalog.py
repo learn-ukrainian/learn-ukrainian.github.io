@@ -362,18 +362,30 @@ GROK_LANGUAGE_BASELINE = approved_grok_language_seat_baseline(ARGON_HOST_BASELIN
 
 
 def approved_driver_brief_baseline(baseline):
-    """Apply only #10919's three Haiku catalog fields."""
+    """Apply only #10919's Haiku fields and Luna recon/classification roles."""
     path = CAPACITY_FIXTURE / "haiku-luna-brief-10919.json"
     assert hashlib.sha256(path.read_bytes()).hexdigest() == (
-        "23bb41b3ff398fa4776e7cedeb2fb638aa99ae4d5150169849920e566baf1e31"
+        "39b9928c4ce9a261ee329e8f1cb87833a9f9243b9a84298eb2cafbdf056652eb"
     )
     changes = json.loads(path.read_bytes())
     catalog = deepcopy(baseline["catalog"])
     for row in changes["catalog_model_fields"]:
-        assert row["model"] == "claude-haiku-5-5" and row["field"] in {"roles", "weaknesses", "notes"}
+        assert (row["model"], row["field"]) in {
+            ("claude-haiku-5-5", "roles"), ("claude-haiku-5-5", "weaknesses"),
+            ("claude-haiku-5-5", "notes"), ("gpt-6-luna", "roles"),
+        }
         assert catalog["models"][row["model"]][row["field"]] == row["before"]
         catalog["models"][row["model"]][row["field"]] = row["after"]
-    return {**baseline, "catalog": catalog}
+    dispatch = deepcopy(baseline["dispatch"])
+    for row in changes["dispatch_refusals"]:
+        target = dispatch[row["index"]]["value"]
+        assert target["refusal"] == row["before"]
+        assert row["after"] == row["before"].replace(
+            "bounded_investigation; review_scheduler",
+            "bounded_investigation, readonly_recon, mechanical_classification; review_scheduler",
+        )
+        target["refusal"] = row["after"]
+    return {**baseline, "catalog": catalog, "dispatch": dispatch}
 
 
 APPROVED_BASELINE = approved_driver_brief_baseline(GROK_LANGUAGE_BASELINE)
@@ -1426,14 +1438,28 @@ def test_extended_capture_denominator_and_current_contract():
 
 def test_driver_brief_capture_preserves_every_unrelated_value():
     before, after = GROK_LANGUAGE_BASELINE, APPROVED_BASELINE
-    for surface in set(before) - {"catalog"}:
+    for surface in set(before) - {"catalog", "dispatch"}:
         assert before[surface] == after[surface]
     old_models, new_models = before["catalog"]["models"], after["catalog"]["models"]
-    assert [pin for pin in old_models if old_models[pin] != new_models[pin]] == ["claude-haiku-5-5"]
+    assert [pin for pin in old_models if old_models[pin] != new_models[pin]] == ["claude-haiku-5-5", "gpt-6-luna"]
     old, new = old_models["claude-haiku-5-5"], new_models["claude-haiku-5-5"]
     assert new["roles"] == [*old["roles"], "bounded_implementation"]
     assert new["weaknesses"] == [value for value in old["weaknesses"] if value != "no_bounded_implementation"]
     assert {k: v for k, v in old.items() if k not in {"roles", "weaknesses", "notes"}} == {
         k: v for k, v in new.items() if k not in {"roles", "weaknesses", "notes"}
     }
-    assert before["dispatch"] == after["dispatch"]
+    expected_dispatch = deepcopy(before["dispatch"])
+    for row in expected_dispatch:
+        value = row.get("value", {})
+        refusal = value.get("refusal")
+        if isinstance(refusal, str) and "model 'gpt-6-luna'" in refusal:
+            value["refusal"] = refusal.replace(
+                "bounded_investigation; review_scheduler",
+                "bounded_investigation, readonly_recon, mechanical_classification; review_scheduler",
+            )
+    assert expected_dispatch == after["dispatch"]
+    old_luna, new_luna = old_models["gpt-6-luna"], new_models["gpt-6-luna"]
+    assert new_luna["roles"] == [*old_luna["roles"], "readonly_recon", "mechanical_classification"]
+    assert {k: v for k, v in old_luna.items() if k != "roles"} == {
+        k: v for k, v in new_luna.items() if k != "roles"
+    }

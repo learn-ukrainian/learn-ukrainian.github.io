@@ -389,7 +389,7 @@ models:
     family: openai
     tier: economical
     lifecycle: active
-    roles: [recon, bounded_checks, log_triage, bounded_implementation, bounded_investigation]
+    roles: [recon, bounded_checks, log_triage, bounded_implementation, bounded_investigation, readonly_recon, mechanical_classification]
     transports: [native_codex]
     strengths: [high_volume, repeatable_work, lowest_gpt6_token_price]
     weaknesses: [not_a_formal_reviewer, not_the_orchestrator, not_sole_consequential_authority]

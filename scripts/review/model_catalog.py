@@ -239,8 +239,8 @@ def _validate_execution_routing(raw: Any, models: dict[str, Any]) -> None:
         "execution_routing.sol_advised_bounded.preferred_worker.escalate_to",
     )
 
-    # Operator decision 2026-09-30 (#9275): no bounded worker is dispatched without
-    # a complete advisory envelope, so the catalog carries no direct-worker route.
+    # This section describes the explicit-envelope route (#9275). The narrow
+    # driver-brief route (#10919) is validated separately at dispatch and replay.
     bounded_fallback = _require_mapping(
         route["bounded_fallback_worker"],
         "execution_routing.sol_advised_bounded.bounded_fallback_worker",
