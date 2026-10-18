@@ -80,31 +80,34 @@ Therefore, source use of ВТС for lexical sense reference is admitted under Ar
 
 ---
 
-## 5. Hierarchy & Meanings Coverage Across Lexical Universes
+## 5. Hierarchy & Cached Reference Availability Across Lexical Universes
 
-Applying the hierarchy **СУМ-20 (first) → ВТС (second) → ULIF gloss (third)** yields the following verified coverage results:
+> [!IMPORTANT]
+> **Cached Reference Availability Boundary**: The figures below measure cached lexical reference availability across local dictionaries (`data/lexicon/slovnyk_cache/`). Following §2, mirror cache records serve strictly for candidate discovery and cached reference availability; these numbers **explicitly do not constitute proof of official СУМ-20 verification, quarantine clearance, or W1a sense readiness**. Official СУМ-20 definitions enter the canonical store only via official crawl ingestion (`sources.db:sum20_articles`) and quarantine inspection.
+
+Evaluating candidate reference availability across **СУМ-20 cached reference (first) → ВТС cached reference (second) → ULIF gloss (third)** yields the following baseline counts:
 
 ### Universe 1: Atlas Live Articles (`data/atlas.db:articles`, N = 27,128)
-- **Step 1: Covered by СУМ-20 first**: 21,428 entries (78.99%)
-- **Step 2: Covered by ВТС second**: 4,428 entries (16.32%)
-- **Step 3: Covered by ULIF gloss third**: 1 entry (0.00%)
-- **Total covered with modern meaning**: **25,857 entries (95.31%)**
+- **Step 1: СУМ-20 cached reference availability**: 21,428 entries (78.99%) *(candidate reference discovery; excludes official verification, quarantine clearance, and W1a sense readiness)*
+- **Step 2: ВТС cached reference availability**: 4,428 entries (16.32%)
+- **Step 3: ULIF gloss fallback third**: 1 entry (0.00%)
+- **Total with cached modern lexical reference**: **25,857 entries (95.31%)**
 - **Real gap (neither)**: **1,271 entries (4.69%)**
-- *(With VESUM base-lemma fallback for inflected headwords, total coverage rises to 26,111 entries (96.25%), leaving only 1,017 entries (3.75%) lacking a definition — predominantly multi-word idiomatic phrases, hyphenated spellings, or rare participles).*
+- *(With VESUM base-lemma fallback for inflected headwords, total cached availability rises to 26,111 entries (96.25%), leaving only 1,017 entries (3.75%) lacking a definition — predominantly multi-word idiomatic phrases, hyphenated spellings, or rare participles).*
 
 ### Universe 2: PULS CEFR Pedagogical Register (`data/sources.db:puls_cefr`, N = 5,839)
-- **Step 1: Covered by СУМ-20 first**: 4,072 entries (69.74%)
-- **Step 2: Covered by ВТС second**: 865 entries (14.81%)
-- **Step 3: Covered by ULIF gloss third**: 4 entries (0.07%)
-- **Total covered with modern meaning**: **4,941 entries (84.62%)**
+- **Step 1: СУМ-20 cached reference availability**: 4,072 entries (69.74%) *(candidate reference discovery; excludes official verification, quarantine clearance, and W1a sense readiness)*
+- **Step 2: ВТС cached reference availability**: 865 entries (14.81%)
+- **Step 3: ULIF gloss fallback third**: 4 entries (0.07%)
+- **Total with cached modern lexical reference**: **4,941 entries (84.62%)**
 - **Real gap (neither)**: **898 entries (15.38%)** (primarily comparatives, passive participles, modern loanwords, and compound terms whose base lemmas are covered).
-- *(With VESUM base-lemma fallback, total coverage rises to 4,958 entries (84.91%), leaving 881 entries (15.09%) neither).*
+- *(With VESUM base-lemma fallback, total cached availability rises to 4,958 entries (84.91%), leaving 881 entries (15.09%) neither).*
 
 ### Universe 3: Slovnyk Cache Corpus (N = 38,190)
-- **Step 1: Covered by СУМ-20 first**: 22,075 entries (57.80%)
-- **Step 2: Covered by ВТС second**: 10,231 entries (26.79%)
-- **Step 3: Covered by ULIF gloss third**: 6 entries (0.02%)
-- **Total covered with modern meaning**: **32,312 entries (84.61%)**
+- **Step 1: СУМ-20 cached reference availability**: 22,075 entries (57.80%) *(raw mirror cache availability; explicitly excludes proof of official verification, quarantine clearance, and W1a sense readiness)*
+- **Step 2: ВТС cached reference availability**: 10,231 entries (26.79%)
+- **Step 3: ULIF gloss fallback third**: 6 entries (0.02%)
+- **Total with cached modern lexical reference**: **32,312 entries (84.61%)**
 - **Real gap (neither)**: **5,878 entries (15.39%)**
 
 ---
