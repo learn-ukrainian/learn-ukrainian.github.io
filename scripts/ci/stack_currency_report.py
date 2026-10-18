@@ -7,8 +7,8 @@ Every other value is the token ``withheld``. Neither command publishes. The
 weekly job in ``.github/workflows/security-audit.yml`` is the only publisher,
 and only to the open ``dependency-advisory`` issue.
 
-A component with no verified upstream stays ``latest: unknown``. A name from
-the section-1 inventory that is absent from the pin file is a missing pin row.
+A component with no verified upstream stays ``latest: unknown``. Rows come
+only from the pin file; a row without a pin value is marked missing.
 """
 
 from __future__ import annotations
@@ -38,31 +38,10 @@ UPSTREAMS: dict[str, tuple[str, str]] = {
     "python": ("endoflife", "https://endoflife.date/api/python.json"),
 }
 
-# argv, process comm. Command names are PATH lookups, never stored paths.
-# A pin whose name ends with "-code" is probed as that prefix.
-_PROBES: dict[str, tuple[tuple[str, ...], str]] = {
-    "codex": (("codex", "--version"), "codex"),
-    "grok": (("grok", "--version"), "grok"),
-    "cursor-agent": (("cursor-agent", "--version"), "cursor-agent"),
-    "agy": (("agy", "--version"), "agy"),
-    "entire": (("entire", "--version"), "entire"),
-    "gh": (("gh", "--version"), "gh"),
-    "uv": (("uv", "--version"), "uv"),
-    "node": (("node", "--version"), "node"),
-    "sqlite": (("sqlite3", "--version"), "sqlite3"),
-    "postgresql": (("psql", "--version"), "postgres"),
-    "prometheus": (("prometheus", "--version"), "prometheus"),
-    "grafana": (("grafana-server", "-v"), "grafana-server"),
-    "alertmanager": (("alertmanager", "--version"), "alertmanager"),
-}
-_MULTI_PROBES: dict[str, tuple[tuple[str, ...], ...]] = {
-    "backup-restore": (("restic", "--version"), ("rclone", "--version")),
-}
-
 _STABLE_VERSION = re.compile(r"^[0-9]+(?:\.[0-9]+){1,3}$")
 _GITHUB_REPO = re.compile(r"^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$")
 # The only version text render will publish. Names come from the pin file.
-_PUBLISHED_VERSION = re.compile(r"^[0-9]{1,8}(\.[0-9]{1,8}){0,2}([-+][A-Za-z0-9.]{1,20})?$")
+_PUBLISHED_VERSION = re.compile(r"^[0-9]{1,8}(?:\.[0-9]{1,8}){0,2}$")
 _WITHHELD = "withheld"
 _USER_AGENT = "learn-ukrainian-stack-currency"
 _MAX_BODY = 5_000_000
@@ -168,31 +147,6 @@ def _read_json(url: str, opener: Callable[..., Any], headers: Mapping[str, str])
 
 def has_upstream(name: str) -> bool:
     return name.endswith("-code") or name in UPSTREAMS
-
-
-def probe_spec(name: str) -> tuple[tuple[str, ...], str] | None:
-    """``(argv, process comm)`` for one local command, or None."""
-    if name.endswith("-code") and name[: -len("-code")]:
-        command = name[: -len("-code")]
-        return (command, "--version"), command
-    return _PROBES.get(name)
-
-
-def multi_argv(name: str) -> tuple[tuple[str, ...], ...] | None:
-    return _MULTI_PROBES.get(name)
-
-
-def watched_comms(names: tuple[str, ...] | list[str] = ()) -> frozenset[str]:
-    """Process comm names worth a private drift scan. Built from probes, not paths."""
-    comms = {comm for _argv, comm in _PROBES.values()}
-    comms.add("python")
-    for argv_rows in _MULTI_PROBES.values():
-        comms.update(argv[0] for argv in argv_rows)
-    for name in names:
-        spec = probe_spec(name)
-        if spec is not None:
-            comms.add(spec[1])
-    return frozenset(comms)
 
 
 def fetch_latest(name: str, *, opener: Callable[..., Any] = urllib.request.urlopen) -> str:

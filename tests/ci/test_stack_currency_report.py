@@ -236,3 +236,16 @@ def test_help_follows_cli_help_standard(capsys: pytest.CaptureFixture[str]) -> N
     for heading in ("Examples:", "Outputs:", "Exit codes:", "Related:"):
         assert heading in text
     assert ".venv/bin/python" in text
+
+
+@pytest.mark.parametrize("field", ["pinned", "latest", "source"])
+@pytest.mark.parametrize(
+    "value",
+    ["1.2.3-PUBLICATIONCANARY", "1.2.3+PUBLICATIONCANARY", "1.2.3 PUBLICATION_CANARY", "v1.2.3"],
+)
+def test_version_prefix_with_extra_text_is_withheld(field: str, value: str) -> None:
+    row = {"name": "python", "pinned": "3.12.14", "latest": "9.8.7", "source": "1.2.3"}
+    row[field] = value
+    body = report.render_body({"rows": [row]})
+    assert value not in body
+    assert _table(body)["python"][{"pinned": 1, "latest": 2, "source": 3}[field]] == "withheld"

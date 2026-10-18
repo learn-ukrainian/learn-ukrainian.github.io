@@ -5,6 +5,8 @@ from __future__ import annotations
 import json
 import os
 import stat
+import subprocess
+import time
 from pathlib import Path
 
 import pytest
@@ -247,3 +249,62 @@ def test_resolved_alias_into_a_foreign_checkout_is_refused(tmp_path: Path) -> No
             env={"XDG_STATE_HOME": str(alias)},
         )
     assert not report_path.exists()
+
+
+@pytest.mark.parametrize(
+    ("name", "argv", "comm"),
+    [
+        ("claude-code", ("claude", "--version"), "claude"),
+        ("codex", ("codex", "--version"), "codex"),
+        ("grok", ("grok", "--version"), "grok"),
+        ("cursor-agent", ("cursor-agent", "--version"), "cursor-agent"),
+        ("agy", ("agy", "--version"), "agy"),
+        ("entire", ("entire", "--version"), "entire"),
+        ("gh", ("gh", "--version"), "gh"),
+        ("uv", ("uv", "--version"), "uv"),
+        ("node", ("node", "--version"), "node"),
+        ("sqlite", ("sqlite3", "--version"), "sqlite3"),
+        ("postgresql", ("psql", "--version"), "postgres"),
+        ("prometheus", ("prometheus", "--version"), "prometheus"),
+        ("grafana", ("grafana-server", "-v"), "grafana-server"),
+        ("alertmanager", ("alertmanager", "--version"), "alertmanager"),
+        ("backup-restore", ("restic", "--version"), "restic"),
+        ("backup-restore", ("rclone", "--version"), "rclone"),
+    ],
+)
+def test_session_probe_runs_only_the_fixed_command(
+    name: str, argv: tuple[str, ...], comm: str, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    calls = []
+
+    def run(command, **kwargs):
+        calls.append((command, kwargs))
+        return subprocess.CompletedProcess(command, 0, "1.2.3", "")
+
+    monkeypatch.setattr(drift.subprocess, "run", run)
+    if name == "backup-restore":
+        assert argv in drift.multi_argv(name)
+    else:
+        assert drift.probe_spec(name) == (argv, comm)
+    assert comm in drift.watched_comms([name])
+    assert drift._default_run(argv, time.monotonic() + 1) == "1.2.3\n"
+    assert calls == [(list(argv), {"capture_output": True, "text": True, "timeout": 0.25, "check": False})]
+
+
+@pytest.mark.parametrize("argv", [("unregistered", "--version"), ("claude", "-p"), ("agy", "--help")])
+def test_session_probe_refuses_unregistered_argv(argv: tuple[str, ...], monkeypatch: pytest.MonkeyPatch) -> None:
+    def unexpected_run(*_args, **_kwargs):
+        pytest.fail("unregistered argv reached subprocess")
+
+    monkeypatch.setattr(drift.subprocess, "run", unexpected_run)
+    assert drift.probe_spec("unregistered-code") is None
+    reading = drift.probe_component(
+        "unregistered-code",
+        which=lambda _command: pytest.fail("unknown pin reached PATH lookup"),
+        run=lambda _argv: pytest.fail("unknown pin reached version probe"),
+        exes_for=lambda _comm: [],
+        python_version="3.12.14",
+        python_executable=None,
+    )
+    assert reading == drift.Reading("unknown", "unknown")
+    assert drift._default_run(argv, time.monotonic() + 1) == ""

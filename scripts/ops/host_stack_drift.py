@@ -34,9 +34,6 @@ from pathlib import Path
 from scripts.ci.stack_currency_report import (
     PinFileError,
     load_pin_rows,
-    multi_argv,
-    probe_spec,
-    watched_comms,
 )
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -50,6 +47,50 @@ _MULTI = re.compile(
     r"^(?:restic|rclone) (?:absent|unknown|[0-9]+(?:\.[0-9]+){1,3})"
     r"(?:, (?:restic|rclone) (?:absent|unknown|[0-9]+(?:\.[0-9]+){1,3}))$"
 )
+
+
+# argv, process comm. Command names are PATH lookups, never stored paths.
+_PROBES: dict[str, tuple[tuple[str, ...], str]] = {
+    "claude-code": (("claude", "--version"), "claude"),
+    "codex": (("codex", "--version"), "codex"),
+    "grok": (("grok", "--version"), "grok"),
+    "cursor-agent": (("cursor-agent", "--version"), "cursor-agent"),
+    "agy": (("agy", "--version"), "agy"),
+    "entire": (("entire", "--version"), "entire"),
+    "gh": (("gh", "--version"), "gh"),
+    "uv": (("uv", "--version"), "uv"),
+    "node": (("node", "--version"), "node"),
+    "sqlite": (("sqlite3", "--version"), "sqlite3"),
+    "postgresql": (("psql", "--version"), "postgres"),
+    "prometheus": (("prometheus", "--version"), "prometheus"),
+    "grafana": (("grafana-server", "-v"), "grafana-server"),
+    "alertmanager": (("alertmanager", "--version"), "alertmanager"),
+}
+_MULTI_PROBES: dict[str, tuple[tuple[str, ...], ...]] = {
+    "backup-restore": (("restic", "--version"), ("rclone", "--version")),
+}
+
+
+def probe_spec(name: str) -> tuple[tuple[str, ...], str] | None:
+    """``(argv, process comm)`` for one local command, or None."""
+    return _PROBES.get(name)
+
+
+def multi_argv(name: str) -> tuple[tuple[str, ...], ...] | None:
+    return _MULTI_PROBES.get(name)
+
+
+def watched_comms(names: tuple[str, ...] | list[str] = ()) -> frozenset[str]:
+    """Process comm names worth a private drift scan. Built from probes, not paths."""
+    comms = {comm for _argv, comm in _PROBES.values()}
+    comms.add("python")
+    for argv_rows in _MULTI_PROBES.values():
+        comms.update(argv[0] for argv in argv_rows)
+    for name in names:
+        spec = probe_spec(name)
+        if spec is not None:
+            comms.add(spec[1])
+    return frozenset(comms)
 
 
 class DriftError(ValueError):
@@ -223,13 +264,74 @@ def _default_run(argv: tuple[str, ...], deadline: float) -> str:
     if remaining <= 0 or argv[0] != Path(argv[0]).name:
         return ""
     try:
-        completed = subprocess.run(
-            list(argv),
-            capture_output=True,
-            text=True,
-            timeout=min(PROBE_TIMEOUT_SECONDS, remaining),
-            check=False,
-        )
+        timeout = min(PROBE_TIMEOUT_SECONDS, remaining)
+        match argv:
+            case ("claude", "--version"):
+                completed = subprocess.run(
+                    ["claude", "--version"], capture_output=True, text=True, timeout=timeout, check=False
+                )
+            case ("codex", "--version"):
+                completed = subprocess.run(
+                    ["codex", "--version"], capture_output=True, text=True, timeout=timeout, check=False
+                )
+            case ("grok", "--version"):
+                completed = subprocess.run(
+                    ["grok", "--version"], capture_output=True, text=True, timeout=timeout, check=False
+                )
+            case ("cursor-agent", "--version"):
+                completed = subprocess.run(
+                    ["cursor-agent", "--version"], capture_output=True, text=True, timeout=timeout, check=False
+                )
+            case ("agy", "--version"):
+                completed = subprocess.run(
+                    ["agy", "--version"], capture_output=True, text=True, timeout=timeout, check=False
+                )
+            case ("entire", "--version"):
+                completed = subprocess.run(
+                    ["entire", "--version"], capture_output=True, text=True, timeout=timeout, check=False
+                )
+            case ("gh", "--version"):
+                completed = subprocess.run(
+                    ["gh", "--version"], capture_output=True, text=True, timeout=timeout, check=False
+                )
+            case ("uv", "--version"):
+                completed = subprocess.run(
+                    ["uv", "--version"], capture_output=True, text=True, timeout=timeout, check=False
+                )
+            case ("node", "--version"):
+                completed = subprocess.run(
+                    ["node", "--version"], capture_output=True, text=True, timeout=timeout, check=False
+                )
+            case ("sqlite3", "--version"):
+                completed = subprocess.run(
+                    ["sqlite3", "--version"], capture_output=True, text=True, timeout=timeout, check=False
+                )
+            case ("psql", "--version"):
+                completed = subprocess.run(
+                    ["psql", "--version"], capture_output=True, text=True, timeout=timeout, check=False
+                )
+            case ("prometheus", "--version"):
+                completed = subprocess.run(
+                    ["prometheus", "--version"], capture_output=True, text=True, timeout=timeout, check=False
+                )
+            case ("grafana-server", "-v"):
+                completed = subprocess.run(
+                    ["grafana-server", "-v"], capture_output=True, text=True, timeout=timeout, check=False
+                )
+            case ("alertmanager", "--version"):
+                completed = subprocess.run(
+                    ["alertmanager", "--version"], capture_output=True, text=True, timeout=timeout, check=False
+                )
+            case ("restic", "--version"):
+                completed = subprocess.run(
+                    ["restic", "--version"], capture_output=True, text=True, timeout=timeout, check=False
+                )
+            case ("rclone", "--version"):
+                completed = subprocess.run(
+                    ["rclone", "--version"], capture_output=True, text=True, timeout=timeout, check=False
+                )
+            case _:
+                return ""
     except (OSError, subprocess.TimeoutExpired):
         return ""
     return f"{completed.stdout}\n{completed.stderr}"

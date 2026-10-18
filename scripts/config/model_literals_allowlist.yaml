@@ -4556,6 +4556,13 @@ entries:
   count: 1
   kind: non_model_label
   reason: Existing harness, task, artifact or descriptive label 'claude-1000'; not a model ID.
+- path: scripts/ops/host_stack_drift.py
+  scope: <module>
+  context: expression
+  id: claude-code
+  count: 1
+  kind: non_model_label
+  reason: Exact stack-pin component name for the literal CLI version probe; not a model ID.
 - path: scripts/orchestration/codex_transport_health.py
   scope: <module>
   context: expression

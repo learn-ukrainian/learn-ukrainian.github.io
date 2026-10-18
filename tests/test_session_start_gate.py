@@ -747,10 +747,10 @@ def test_drift_report_stays_off_the_session_context(
     assert sentinel_address in private
 
 
-def test_canonical_checkout_drift_refusal_stays_status_ok(
+def test_canonical_checkout_drift_refusal_reports_crashed(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
-    """A destination inside the canonical checkout writes nothing and stays status ok."""
+    """A destination inside the canonical checkout writes nothing and reports crashed."""
     monkeypatch.setattr(gate, "phase_stack_drift", _REAL_PHASE_STACK_DRIFT)
     monkeypatch.setattr(gate, "phase_session_record", lambda _args: {"status": "ok"})
     monkeypatch.setattr(gate, "phase_python_version", lambda _args: {"status": "ok"})
@@ -785,16 +785,16 @@ def test_canonical_checkout_drift_refusal_stays_status_ok(
     assert rc == 0
     out = capsys.readouterr().out
     result = json.loads(out)
-    assert result["stack_drift"] == {"status": "ok"}
+    assert result["stack_drift"] == {"status": "crashed"}
     assert not report_path.exists()
     assert str(canonical) not in out
     assert str(worktree) not in out
 
 
-def test_planted_temp_alias_refusal_stays_status_ok(
+def test_planted_temp_alias_refusal_reports_crashed(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
-    """A planted temp-file alias writes nothing and the hook still reports status ok."""
+    """A planted temp-file alias writes nothing and the hook reports crashed."""
     monkeypatch.setattr(gate, "phase_stack_drift", _REAL_PHASE_STACK_DRIFT)
     monkeypatch.setattr(gate, "phase_session_record", lambda _args: {"status": "ok"})
     monkeypatch.setattr(gate, "phase_python_version", lambda _args: {"status": "ok"})
@@ -831,7 +831,7 @@ def test_planted_temp_alias_refusal_stays_status_ok(
     assert rc == 0
     out = capsys.readouterr().out
     result = json.loads(out)
-    assert result["stack_drift"] == {"status": "ok"}
+    assert result["stack_drift"] == {"status": "crashed"}
     assert protected.read_bytes() == original
     assert not (drift_dir / "report.json").exists()
     assert str(canonical) not in out
@@ -847,3 +847,16 @@ def test_shell_surfaces_takeover_banner(tmp_path: Path) -> None:
     }
     context = _run_hook(tmp_path, {"FAKE_GATE_JSON": json.dumps(result)})
     assert "THREAD LEASE TAKEOVER" in context
+
+
+def test_drift_exception_is_status_only(monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]) -> None:
+    def crash(*_args, **_kwargs):
+        print("PUBLICATION_CANARY")
+        print("PUBLICATION_CANARY", file=sys.stderr)
+        raise RuntimeError(f"{FIXTURE_HOME}/PUBLICATION_CANARY")
+
+    monkeypatch.setattr("scripts.ops.host_stack_drift.write_report", crash)
+    assert _REAL_PHASE_STACK_DRIFT(_args()) == {"status": "crashed"}
+    captured = capsys.readouterr()
+    assert captured.out == ""
+    assert captured.err == ""
