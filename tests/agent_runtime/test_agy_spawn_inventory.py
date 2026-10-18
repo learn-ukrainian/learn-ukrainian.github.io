@@ -15,6 +15,10 @@ GENERIC_HELPERS = frozenset({"scripts/agent_runtime/runner.py", "scripts/lib/lau
 
 # One row per file; mixed files take the weakest applicable status.
 SPAWN_INVENTORY = {
+    "scripts/ops/host_stack_drift.py": (
+        "probe-exempt",
+        "Session-start drift report runs a literal AGY version probe without starting a model session.",
+    ),
     "scripts/launchers/gemini.sh": ("gated", "Launcher validates guard registration before its model-session start."),
     "scripts/ai_agent_bridge/_model.py": ("gated", "Model check uses the guarded adapter before starting AGY."),
     "scripts/agent_runtime/runner.py": (
