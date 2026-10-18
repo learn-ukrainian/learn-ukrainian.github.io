@@ -1098,3 +1098,80 @@ def test_agy_configured_failover_validates_before_projection(tmp_path, monkeypat
         assert result.substitution is None
         assert "substitution" not in records[-1]
     assert runner_mod._AGY_OBSERVED_IDENTITY.get() is None
+
+
+@pytest.mark.parametrize("pin,other", [
+    ("claude-sonnet-5-5-high", "claude-opus-5-5-high"),
+    ("claude-opus-5-5-high", "claude-sonnet-5-5-high"),
+])
+@pytest.mark.parametrize("path", ["normal", "failover"])
+@pytest.mark.parametrize("case,known,substituted", [
+    ("matched", True, False), ("provider-failure", True, False),
+    ("other-pin", True, True), ("other-family", True, True), ("repeated", True, True),
+    ("nested-model", False, False), ("unknown", False, False),
+    ("unbound", False, False), ("stale-context", False, False),
+])
+def test_agy_substitution_summary_through_runner_and_saved_usage(
+    tmp_path, monkeypatch, pin, other, path, case, known, substituted,
+):
+    import json
+
+    from agent_runtime import usage
+    from agent_runtime.failover import FailoverChain, FailoverRoute
+    from telemetry import emit as telemetry_emit
+    from tests.agent_runtime.adapters.test_agy_claude_routes import consistency_stream, mock_agy_provider
+
+    launches, _, _ = mock_agy_provider(
+        monkeypatch, tmp_path, runner_mod,
+        stdout=consistency_stream(pin, "other-pin" if case in {"unbound", "stale-context"} else case),
+    )
+    chain = FailoverChain(agent_name="agy", routes=(FailoverRoute(provider="agy", model=pin),), cooldown_ttl_s=600)
+    monkeypatch.setattr(runner_mod, "load_failover_chain", lambda *a, **k: chain if path == "failover" else None)
+    monkeypatch.setenv(FAILOVER_COOLDOWN_DB_ENV, str(tmp_path / "cooldowns.sqlite3"))
+    if case in {"unbound", "stale-context"}:
+        observe = runner_mod._observe_agy_identity
+
+        def wrong_context(**kwargs):
+            kwargs["run_nonce"] = None if case == "unbound" else "earlier-invocation"
+            return observe(**kwargs)
+
+        monkeypatch.setattr(runner_mod, "_observe_agy_identity", wrong_context)
+    usage_file = tmp_path / "summary-usage.jsonl"
+    monkeypatch.setattr(usage, "_usage_file", lambda *a: usage_file)
+    monkeypatch.setattr(runner_mod, "write_record", usage.write_record)
+    emitted, sink = [], []
+    monkeypatch.setattr(telemetry_emit, "emit_event", lambda name, fields: emitted.append((name, fields)))
+    result = runner_mod.invoke(
+        "agy", "Implement.", model=pin, mode="workspace-write", cwd=tmp_path,
+        task_id="summary-task", tool_config={"run_nonce": "summary-run"},
+        event_sink=lambda name, **fields: sink.append((name, fields)),
+    )
+    assert len(launches) == 1
+    assert result.ok is (case == "matched")
+    if case not in {"matched", "provider-failure"}:
+        assert result.failure_code == "provider_policy_refusal"
+    assert bool(result.model_identity and result.model_identity["actual_model_known"]) is known
+    actual = {"other-pin": other, "other-family": "gemini-3.8-flash-high"}.get(case, pin)
+    if known:
+        assert result.model_identity["actual_model"] == actual
+    saved, = [json.loads(line) for line in usage_file.read_text().splitlines()]
+    assert result.model == saved["model"] == (actual if substituted else pin)
+    assert result.usage_record["model"] == saved["model"]
+    summary_events = [fields for name, fields in emitted if name == "agent_runtime_substitution"]
+    sink_events = [fields for name, fields in sink if name == "agent_runtime_substitution"]
+    if substituted:
+        expected = {"requested_provider": "agy", "requested_model": pin, "actual_provider": "agy",
+                    "actual_model": actual, "substituted": True}
+        for summary in [result.substitution, result.usage_record["substitution"], saved["substitution"]]:
+            assert {key: summary[key] for key in expected} == expected
+            assert "provenance" not in summary
+        assert len(summary_events) == len(sink_events) == 1
+        for event in summary_events + sink_events:
+            assert event["model"] == actual
+            assert {key: event["substitution"][key] for key in expected} == expected
+    else:
+        assert result.substitution is None
+        assert "substitution" not in saved
+        assert "substitution" not in result.usage_record
+        assert summary_events == sink_events == []
+    assert runner_mod._AGY_OBSERVED_IDENTITY.get() is None

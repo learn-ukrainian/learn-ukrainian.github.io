@@ -245,9 +245,15 @@ def _validated_agy_parse(
     if not state:
         return parse
     identity = state["model_identity"]
-    substitution = identity if state["resolved_model_known"] and (
-        parse.substitution is not None or identity["substituted"]
-    ) else None
+    substitution = {
+        "requested_provider": "agy",
+        "requested_model": requested_model,
+        "actual_provider": "agy",
+        "actual_model": identity["actual_model"],
+        "actual_model_known": True,
+        "source": identity["source"],
+        "substituted": True,
+    } if state["resolved_model_known"] and identity["substituted"] else None
     return replace(parse, model_identity=identity, substitution=substitution)
 
 

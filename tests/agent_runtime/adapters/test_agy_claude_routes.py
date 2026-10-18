@@ -545,6 +545,26 @@ def test_identity_survives_provider_failure_without_claiming_success(tmp_path, m
     assert result.ok is False
     assert result.model_identity["actual_model"] == model
     assert result.model_identity["actual_model_known"] is True
+    assert result.substitution is None
+
+
+@pytest.mark.parametrize("pin,other", [
+    ("claude-sonnet-5-5-high", "claude-opus-5-5-high"),
+    ("claude-opus-5-5-high", "claude-sonnet-5-5-high"),
+])
+def test_adapter_substitution_uses_invocation_pin_instead_of_metadata(tmp_path, pin, other):
+    plan, terminal = _identity_stream_plan(tmp_path, pin)
+    plan.metadata["entire_fleet"]["requested_model"] = "stale-metadata-model"
+    result = agy.AgyAdapter().parse_response(
+        stdout="\n".join(map(json.dumps, [{"event": "init", "model": other}, terminal])),
+        stderr="", returncode=0, output_file=None, plan=plan,
+    )
+    assert result.ok is False
+    assert result.failure_code == "provider_policy_refusal"
+    assert result.substitution == {
+        "requested_provider": "agy", "requested_model": pin, "actual_provider": "agy",
+        "actual_model": other, "actual_model_known": True, "substituted": True, "source": "provider-init",
+    }
 
 
 @pytest.mark.parametrize("model", SLUGS)

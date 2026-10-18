@@ -1301,7 +1301,10 @@ class AgyAdapter:
             agy_killed_commands=killed,
             agy_pre_model_failure=False if denial else _pre_model_failure(plan, stdout, bound),
             agy_attempt=attempt,
-            substitution=model_identity if not result.ok and model_identity["actual_model_known"] else None,
+            substitution={
+                **model_identity,
+                "requested_model": plan.cmd[plan.cmd.index("--model") + 1] if plan and "--model" in plan.cmd else None,
+            } if model_identity["actual_model_known"] and model_identity["substituted"] else None,
             model_identity={
                 "actual_model": model_identity["actual_model"],
                 "actual_model_known": model_identity["actual_model_known"],

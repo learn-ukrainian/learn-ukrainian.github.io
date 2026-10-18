@@ -23228,7 +23228,13 @@ def test_agy_producer_consistency_through_durable_worker_projections(
     usage_file = tmp_path / "projection-usage.jsonl"
     monkeypatch.setattr(usage, "_usage_file", lambda *args: usage_file)
     monkeypatch.setattr(runner, "write_record", usage.write_record)
-    monkeypatch.setattr(runner, "_emit_substitution_event", lambda **fields: substitutions.append(fields))
+    emit_substitution = runner._emit_substitution_event
+
+    def emit_summary(**fields):
+        substitutions.append(fields)
+        emit_substitution(**fields)
+
+    monkeypatch.setattr(runner, "_emit_substitution_event", emit_summary)
     monkeypatch.setattr(delegate, "_append_dispatch_event", lambda event, **fields: events.append((event, fields)))
     monkeypatch.setattr(delegate, "_background_jobs_at_exit", lambda *args, **kwargs: None)
     delegate._write_state_atomic(delegate._state_path(task_id), {
@@ -23294,7 +23300,7 @@ def test_agy_producer_consistency_through_durable_worker_projections(
             assert not usages[0].get("substitution")
     for fields in substitutions:
         substitution = fields.get("substitution")
-        assert bool(substitution and substitution["actual_model_known"]) is known
+        assert bool(substitution and substitution["substituted"]) is (known and case != "provider-failure")
     if known:
         assert record["model_identity"]["actual_model"] == observed
         assert len(record["model_identity"]["provenance"]["init_events"]) == (2 if case == "repeated" else 1)
@@ -23307,4 +23313,19 @@ def test_agy_producer_consistency_through_durable_worker_projections(
     assert dispatch_events[0]["resolved_model"] == (observed if known else "unattested-harness")
     if not known:
         assert dispatch_events[0]["substitution"] is None
+    if exit_kind == "complete":
+        summaries = [record["substitution"], dispatch_events[0]["substitution"], usages[0].get("substitution")]
+        runtime_events = [fields for event, fields in events if event == "agent_runtime_substitution"]
+        if known and case != "provider-failure":
+            expected = {"requested_model": model, "actual_model": observed, "substituted": True}
+            for summary in summaries:
+                assert {key: summary[key] for key in expected} == expected
+                assert "provenance" not in summary
+            assert usages[0]["model"] == observed
+            assert len(runtime_events) == 1
+            assert runtime_events[0]["model"] == observed
+            assert {key: runtime_events[0]["substitution"][key] for key in expected} == expected
+        else:
+            assert summaries == [None, None, None]
+            assert runtime_events == []
     assert runner._AGY_OBSERVED_IDENTITY.get() is None
