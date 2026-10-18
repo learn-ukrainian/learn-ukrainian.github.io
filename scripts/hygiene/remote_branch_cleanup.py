@@ -13,6 +13,7 @@ import subprocess
 import unicodedata
 from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
+from http.client import HTTPException
 from pathlib import Path
 from urllib.error import URLError
 from urllib.parse import parse_qs, quote, urlsplit
@@ -104,7 +105,7 @@ class GitHub:
                 if response.status != 200:
                     raise Unknown("API status unknown")
                 return json.load(response), response.headers.get("link", "")
-        except (URLError, OSError, ValueError, github_client.GitHubRateLimited) as exc:
+        except (URLError, OSError, ValueError, HTTPException, github_client.GitHubRateLimited) as exc:
             raise Unknown("API unavailable or malformed") from exc
 
     def pages(self, endpoint: str) -> list[dict]:
@@ -123,27 +124,32 @@ class GitHub:
                     if not match or match[2] in relations:
                         raise Unknown("malformed pagination link")
                     url, relation = match.groups()
-                    parsed = urlsplit(url)
-                    expected = urlsplit(f"{API}/repos/{self.repo}/{endpoint}")
-                    paths = {expected.path}
-                    if self.repository_id is not None:
-                        paths.add(f"/repositories/{self.repository_id}/{urlsplit(endpoint).path}")
-                    query = parse_qs(parsed.query, keep_blank_values=True)
-                    expected_query = parse_qs(expected.query)
-                    page_value = query.pop("page", [])
+                    try:
+                        parsed = urlsplit(url)
+                        expected = urlsplit(f"{API}/repos/{self.repo}/{endpoint}")
+                        paths = {expected.path}
+                        if self.repository_id is not None:
+                            paths.add(f"/repositories/{self.repository_id}/{urlsplit(endpoint).path}")
+                        query = parse_qs(parsed.query, keep_blank_values=True)
+                        expected_query = parse_qs(expected.query)
+                        page_value = query.pop("page", [])
+                        page_number = (
+                            int(page_value[0])
+                            if len(page_value) == 1 and page_value[0].isascii() and page_value[0].isdigit()
+                            else 0
+                        )
+                    except ValueError as exc:
+                        raise Unknown("malformed pagination link") from exc
                     if (
                         parsed.scheme != expected.scheme
                         or parsed.netloc != expected.netloc
                         or parsed.path not in paths
                         or parsed.fragment
                         or query != {**expected_query, "per_page": ["100"]}
-                        or len(page_value) != 1
-                        or not page_value[0].isascii()
-                        or not page_value[0].isdigit()
-                        or int(page_value[0]) < 1
+                        or page_number < 1
                     ):
                         raise Unknown("untrusted pagination link")
-                    relations[relation] = int(page_value[0])
+                    relations[relation] = page_number
                 if "next" in relations and relations["next"] != page + 1:
                     raise Unknown("incomplete pagination")
                 if relations.get("last", page) > page and "next" not in relations:

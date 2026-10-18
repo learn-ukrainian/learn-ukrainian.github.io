@@ -10,6 +10,7 @@ import json
 import subprocess
 import sys
 from datetime import UTC, datetime, timedelta
+from http.client import BadStatusLine, IncompleteRead, RemoteDisconnected
 from pathlib import Path
 from types import SimpleNamespace
 from typing import ClassVar
@@ -761,6 +762,214 @@ def test_cli_untrusted_pagination_refuses_without_following_link(wire_api, monke
     assert report["deleted"] == []
     assert len(report["failures"]) == 1
     assert calls[-1] == f"{m.API}/repos/{REPO}/pulls?state=open&per_page=100&page=1"
+
+
+@pytest.fixture
+def refusal_wire(api, wire_api, monkeypatch, tmp_path):
+    """Exercise the CLI through real parsers, with only HTTP/Git transport stubs."""
+    client, calls, _ = wire_api
+    for name in ["second", "third"]:
+        api.objects[f"branches/{name}"] = branch(name)
+    original_open = client.opener.open
+    original_run = subprocess.run
+    attempts = []
+    confirmed = []
+    fault = {"after": 0, "endpoint": "branches", "case": None, "triggered": 0, "delete_failure": None}
+    summary = tmp_path / "summary"
+    monkeypatch.setenv("GITHUB_STEP_SUMMARY", str(summary))
+
+    class BrokenBody(io.BytesIO):
+        status = 200
+        headers: ClassVar = {}
+
+        def read(self, *args):
+            failures = {
+                "incomplete_read": IncompleteRead(b"private-payload", 100),
+                "bad_status_read": BadStatusLine("private-payload"),
+                "remote_disconnected_read": RemoteDisconnected("private-payload"),
+            }
+            raise failures[fault["case"]]
+
+    def open_request(request, timeout):
+        endpoint = request.full_url.removeprefix(f"{m.API}/repos/{REPO}/")
+        parsed = urlsplit(endpoint)
+        target = fault["endpoint"]
+        selected = parsed.path == target and (
+            target.startswith("branches/") or parse_qs(parsed.query).get("page") == ["1"]
+        )
+        if selected and len(confirmed) == fault["after"] and fault["case"]:
+            fault["triggered"] += 1
+            case = fault["case"]
+            if case in {"bad_status_open", "url_error", "os_error"}:
+                raise {
+                    "bad_status_open": BadStatusLine("private-payload"),
+                    "url_error": URLError("private-payload"),
+                    "os_error": OSError("private-payload"),
+                }[case]
+            if case in {"incomplete_read", "bad_status_read", "remote_disconnected_read"}:
+                return BrokenBody()
+            if case in {"invalid_json", "truncated_json", "invalid_utf8"}:
+                response = io.BytesIO(
+                    {"invalid_json": b"private-payload", "truncated_json": b'[{"name":', "invalid_utf8": b"\xff"}[case]
+                )
+                response.status = 200
+                response.headers = {}
+                return response
+            response = original_open(request, timeout)
+            host = {
+                "out_of_range_port": "api.github.com:65536",
+                "nonnumeric_port": "api.github.com:bad",
+                "unmatched_bracket": "[api.github.com",
+                "invalid_bracket_host": "[api.github.com]",
+                "nfkc_netloc": "api.github.com\uff1a443",
+                "oversized_page_integer": "api.github.com",
+            }[case]
+            page = "9" * 5000 if case == "oversized_page_integer" else "2"
+            filters = "state=open&" if target == "pulls" else ""
+            response.headers["Link"] = (
+                f'<https://{host}/repos/{REPO}/{target}?{filters}per_page=100&page={page}>; rel="next"'
+            )
+            return response
+        response = original_open(request, timeout)
+        if endpoint == "branches?per_page=100&page=2":
+            data = [*json.loads(response.getvalue()), branch("second"), branch("third")]
+            replacement = io.BytesIO(json.dumps(data).encode())
+            replacement.status, replacement.headers = response.status, response.headers
+            response.close()
+            return replacement
+        return response
+
+    def run(command, **kwargs):
+        if command[:2] == ["git", "-c"] and "push" in command:
+            ref = command[-1]
+            attempts.append(ref)
+            if ref == ":refs/heads/second" and fault["delete_failure"]:
+                assert "--force-with-lease=refs/heads/second:" + OLD in command
+                if fault["delete_failure"] == "timeout":
+                    raise subprocess.TimeoutExpired(command, 60, stderr="private-payload")
+                return subprocess.CompletedProcess(
+                    command,
+                    1 if fault["delete_failure"] == "refused" else 0,
+                    "=\t:refs/heads/second\t[up to date]\n" if fault["delete_failure"] == "up-to-date" else "",
+                    "private-payload",
+                )
+            assert ref == ":refs/heads/stale"
+            assert "--force-with-lease=refs/heads/stale:" + OLD in command
+            confirmed.append({"name": "stale", "sha": OLD})
+            return subprocess.CompletedProcess(command, 0, "-\t:refs/heads/stale\t[deleted]\n", "")
+        return original_run(command, **kwargs)
+
+    monkeypatch.setattr(client.opener, "open", open_request)
+    monkeypatch.setattr(m.subprocess, "run", run)
+    return fault, attempts, confirmed, summary, calls
+
+
+def assert_cli_refusal(capsys, summary, expected_deleted):
+    captured = capsys.readouterr()
+    report = json.loads(captured.out)
+    assert report["deleted"] == expected_deleted
+    assert len(report["failures"]) == 1
+    assert captured.err == ""
+    rendered = "## Remote branch cleanup\n\n" + "\n".join("    " + line for line in captured.out.splitlines()) + "\n"
+    assert summary.read_text() == rendered
+    for private in ["private-payload", "https://", "Bearer", "fixture", "Traceback"]:
+        assert private not in captured.out
+        assert private not in summary.read_text()
+    return report
+
+
+@pytest.mark.parametrize("after", [0, 1], ids=["before-delete", "after-confirmed-delete"])
+@pytest.mark.parametrize("endpoint", ["branches", "pulls"])
+@pytest.mark.parametrize(
+    "case",
+    [
+        "out_of_range_port",
+        "nonnumeric_port",
+        "unmatched_bracket",
+        "invalid_bracket_host",
+        "nfkc_netloc",
+        "oversized_page_integer",
+    ],
+)
+def test_cli_parser_refusal_preserves_confirmed_receipts(refusal_wire, capsys, after, endpoint, case):
+    fault, attempts, confirmed, summary, _ = refusal_wire
+    fault.update(after=after, endpoint=endpoint, case=case)
+    assert m.main(["--repo", REPO]) == 1
+    expected = [{"name": "stale", "sha": OLD}] if after else []
+    report = assert_cli_refusal(capsys, summary, expected)
+    assert confirmed == expected
+    assert attempts == ([":refs/heads/stale"] if after else [])
+    assert fault["triggered"] == 1
+    assert report["failures"][0]["reason"] in {"untrusted pagination link", "malformed pagination link"}
+
+
+@pytest.mark.parametrize("after", [0, 1], ids=["before-delete", "after-confirmed-delete"])
+@pytest.mark.parametrize("entrypoint", ["branches", "pulls", "candidate"])
+@pytest.mark.parametrize(
+    "case",
+    [
+        "incomplete_read",
+        "bad_status_read",
+        "bad_status_open",
+        "remote_disconnected_read",
+        "invalid_json",
+        "truncated_json",
+        "invalid_utf8",
+        "url_error",
+        "os_error",
+    ],
+)
+def test_cli_http_refusal_preserves_confirmed_receipts(refusal_wire, capsys, after, entrypoint, case):
+    fault, attempts, confirmed, summary, _ = refusal_wire
+    endpoint = ("branches/second" if after else "branches/stale") if entrypoint == "candidate" else entrypoint
+    fault.update(after=after, endpoint=endpoint, case=case)
+    assert m.main(["--repo", REPO]) == 1
+    expected = [{"name": "stale", "sha": OLD}] if after else []
+    report = assert_cli_refusal(capsys, summary, expected)
+    assert confirmed == expected
+    assert attempts == ([":refs/heads/stale"] if after else [])
+    assert fault["triggered"] == 1
+    assert report["failures"][0]["reason"] == "API unavailable or malformed"
+
+
+def test_cli_repeated_refusal_does_not_infer_another_deletion(refusal_wire, capsys):
+    fault, attempts, confirmed, summary, _ = refusal_wire
+    fault.update(after=1, endpoint="branches", case="incomplete_read")
+    assert m.main(["--repo", REPO]) == 1
+    assert_cli_refusal(capsys, summary, [{"name": "stale", "sha": OLD}])
+    first_summary = summary.read_text()
+    assert m.main(["--repo", REPO]) == 1
+    captured = capsys.readouterr()
+    report = json.loads(captured.out)
+    assert report["deleted"] == []
+    assert report["failures"] == [{"reason": "API unavailable or malformed"}]
+    assert (
+        summary.read_text()
+        == first_summary
+        + "## Remote branch cleanup\n\n"
+        + "\n".join("    " + line for line in captured.out.splitlines())
+        + "\n"
+    )
+    assert attempts == [":refs/heads/stale"]
+    assert confirmed == [{"name": "stale", "sha": OLD}]
+    assert fault["triggered"] == 2
+
+
+@pytest.mark.parametrize("failure", ["refused", "empty", "up-to-date", "timeout"])
+def test_cli_unconfirmed_delete_preserves_only_prior_receipt(refusal_wire, capsys, failure):
+    fault, attempts, confirmed, summary, _ = refusal_wire
+    fault["delete_failure"] = failure
+    assert m.main(["--repo", REPO]) == 1
+    report = assert_cli_refusal(capsys, summary, [{"name": "stale", "sha": OLD}])
+    reason = {
+        "refused": "git refused operation",
+        "empty": "no confirmed deletion receipt; outcome unknown",
+        "up-to-date": "no confirmed deletion receipt; outcome unknown",
+        "timeout": "git unavailable or timed out; outcome unknown",
+    }[failure]
+    assert report["failures"] == [{"name": "second", "reason": reason}]
+    assert confirmed == [{"name": "stale", "sha": OLD}]
+    assert attempts == [":refs/heads/stale", ":refs/heads/second"]
 
 
 @pytest.mark.parametrize("value", [None, True, "1300192", 0, -1])
