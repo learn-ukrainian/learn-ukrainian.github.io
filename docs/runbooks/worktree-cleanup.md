@@ -550,9 +550,19 @@ third time after the checkout is moved into the quarantine (below):
   worker that is live or unknown. `needs_finalize` and finished records pass
   once their worker is proven gone. A record that cannot be read, or cannot be
   parsed and may name the checkout, refuses;
-- the newest mtime of the checkout's `HEAD`, `index` and `logs/HEAD` (in
-  `.git/worktrees/<name>/`) and of every claiming task record, including
-  `<task>.json`, is more than 60 minutes old.
+- the newest of the checkout's `HEAD` and `index` mtimes, the newest
+  committer timestamp among every `logs/HEAD` entry (seconds since the
+  epoch, the field before the timezone), the time a change in that file's
+  bytes was last observed, and every claiming task record, including
+  `<task>.json`, is more than 60 minutes old. The reflog read is bounded at
+  1 MiB; a larger file is activity unknown. The file's mtime is not
+  activity: `git gc` rewrites it without changing entries. A missing,
+  empty, unreadable, non-regular, unparseable, or out-of-range `logs/HEAD`
+  is activity unknown and the tree is kept. The observation record is
+  `batch_state/worktree-reaper/head-reflog-watch.json` (a digest and an
+  entry count per checkout). A rewrite that leaves the bytes identical is
+  not activity. The first observation has no record and uses the entry
+  times only. Apply runs record an observation; a dry run does not write it.
 
 Under the per-worktree lock, once the re-check passes and before artifact
 preservation, the reaper records a manifest of the checkout and of its
@@ -1128,7 +1138,9 @@ Apply:
 
 Each run performs the following in both repository roots:
 
-1. fetches `origin` and prunes deleted remote refs;
+1. fetches `origin` and prunes deleted remote refs, with automatic
+   maintenance disabled on that command (`maintenance.auto=false` and
+   `gc.auto=0`) so the fetch cannot expire reflogs before activity is judged;
 2. prunes stale Git worktree registrations;
 3. automatically removes only clean, inactive worktrees with exact merged-PR
    head evidence (including same-tree squash siblings) or MERGED PR evidence with
@@ -1149,7 +1161,8 @@ Each run performs the following in both repository roots:
    on the same containment evidence (`entire/` refs are preserved);
 6. preserves and reports unproven gone branches and orphaned worktree
    directories;
-7. runs `git gc --auto`;
+7. runs `git gc --auto` after the reaper (gc rewrites every worktree
+   `logs/HEAD`);
 8. writes an immutable JSON receipt.
 
 Dirty worktrees, open PRs, active/non-terminal tasks, checked-out branches, and

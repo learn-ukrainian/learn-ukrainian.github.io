@@ -84,6 +84,17 @@ def _run_git(repo_root: Path, *args: str) -> subprocess.CompletedProcess[str]:
     )
 
 
+def _fetch_origin(repo_root: Path) -> subprocess.CompletedProcess[str]:
+    """``git fetch --prune origin`` with automatic maintenance disabled.
+
+    A fetch whose loose-object count trips ``maintenance.auto`` runs
+    ``maintenance run --auto``, which expires every reflog and can run
+    ``gc --auto`` before this process reaches the reaper (#10856). The
+    explicit ``git gc --auto`` after the reaper stays the only maintenance.
+    """
+    return _run_git(repo_root, *reap_worktrees.GIT_NO_AUTO_MAINTENANCE, "fetch", "--prune", "origin")
+
+
 def _failure(proc: subprocess.CompletedProcess[str]) -> str:
     detail = (proc.stderr or proc.stdout or "").strip()
     return detail.splitlines()[-1] if detail else f"exit {proc.returncode}"
@@ -1041,7 +1052,7 @@ def _repo_result_unlocked(repo_root: Path, *, apply: bool) -> dict[str, Any]:
 
     fetch_ok = True
     if apply:
-        fetch = _run_git(repo_root, "fetch", "--prune", "origin")
+        fetch = _fetch_origin(repo_root)
         fetch_ok = fetch.returncode == 0
         result["fetch"] = {
             "ok": fetch_ok,
@@ -1126,7 +1137,7 @@ def _repo_result_unlocked(repo_root: Path, *, apply: bool) -> dict[str, Any]:
                         fetch_refspecs.reconcile_fetch_refspecs(repo_root, apply=True)
                     except Exception as exc:
                         result["errors"].append(f"post-origin fetch refspec reconcile failed: {exc}")
-                prune_after = _run_git(repo_root, "fetch", "--prune", "origin")
+                prune_after = _fetch_origin(repo_root)
                 if prune_after.returncode != 0:
                     result["errors"].append(f"post-origin prune failed ({_failure(prune_after)})")
             branches = cleanup_gone_local_branches(repo_root, apply=apply, fetch_ok=fetch_ok) + (
@@ -1143,6 +1154,9 @@ def _repo_result_unlocked(repo_root: Path, *, apply: bool) -> dict[str, Any]:
             f"{row['branch']}: {row.get('error') or row['reason']}" for row in branches if row["action"] == "error"
         )
         result["orphans"] = find_orphaned_worktree_directories(repo_root)
+        # #10856: git gc --auto rewrites every worktree logs/HEAD. Fetch above
+        # runs with automatic maintenance disabled; this explicit gc stays
+        # after the reaper has judged activity.
         maintenance = _git_maintenance(repo_root, apply=apply)
         result["maintenance"] = maintenance
         if not maintenance["ok"]:
