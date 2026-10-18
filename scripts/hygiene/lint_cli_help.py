@@ -124,10 +124,19 @@ def source_problem(tree: ast.AST) -> str | None:
     Other frameworks remain baseline violations until they have a supported,
     inspectable help path. Missing help is never a reason to run normal work.
     """
+    parser_names = {"ArgumentParser"} | {
+        node.name for node in ast.walk(tree) if isinstance(node, ast.ClassDef)
+        and any(
+            (isinstance(base, ast.Name) and base.id == "ArgumentParser")
+            or (isinstance(base, ast.Attribute) and base.attr == "ArgumentParser"
+                and isinstance(base.value, ast.Name) and base.value.id == "argparse")
+            for base in node.bases
+        )
+    }
     calls = [n for n in ast.walk(tree) if isinstance(n, ast.Call)]
     parsers = [n for n in calls if (
         isinstance(n.func, ast.Attribute) and n.func.attr == "ArgumentParser"
-    ) or (isinstance(n.func, ast.Name) and n.func.id == "ArgumentParser")]
+    ) or (isinstance(n.func, ast.Name) and n.func.id in parser_names)]
     if not parsers:
         return "no inspectable argparse help path (not executed)"
     complete = [n for n in parsers if {"description", "epilog"} <= {k.arg for k in n.keywords}]

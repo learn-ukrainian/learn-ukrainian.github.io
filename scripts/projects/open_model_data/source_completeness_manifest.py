@@ -11,10 +11,9 @@ import sys
 import uuid
 from collections import Counter, defaultdict
 from datetime import datetime
+from functools import cache
 from pathlib import Path
 from typing import Any
-
-from jsonschema import Draft202012Validator, validators
 
 ROOT = Path(__file__).resolve().parents[3]
 MATRIX = ROOT / "registry/atlas/source-completeness/required-source-matrix.md"
@@ -24,10 +23,6 @@ STAGES = ("acquisition", "raw_custody", "parsing", "admission")
 VERSION = "source-completeness.v1"
 TEXT = {"type": "string", "minLength": 1, "pattern": r"\S"}
 DIGEST = {"type": "string", "minLength": 64, "maxLength": 64, "pattern": "^[0-9a-f]{64}$"}
-EvidenceValidator = validators.extend(
-    Draft202012Validator,
-    type_checker=Draft202012Validator.TYPE_CHECKER.redefine("integer", lambda _checker, value: type(value) is int),
-)
 
 
 class InvalidEvidence(ValueError):
@@ -167,8 +162,19 @@ def _bad_constant(value: str) -> None:
     raise InvalidEvidence(f"non-JSON constant: {value}")
 
 
+@cache
+def _evidence_validator() -> type:
+    """Initialize schema validation only when accounting needs it, after help exits."""
+    from jsonschema import Draft202012Validator, validators
+
+    return validators.extend(
+        Draft202012Validator,
+        type_checker=Draft202012Validator.TYPE_CHECKER.redefine("integer", lambda _checker, value: type(value) is int),
+    )
+
+
 def _validate(value: Any, schema: dict, label: str) -> None:
-    errors = list(EvidenceValidator(schema).iter_errors(value))
+    errors = list(_evidence_validator()(schema).iter_errors(value))
     if errors:
         error = errors[0]
         location = ".".join(map(str, error.absolute_path)) or "root"
@@ -763,7 +769,7 @@ def main(argv: list[str] | None = None) -> int:
         description="Produce ordered source-unit manifests and independent stage partitions.\n"
         "Use for structural diagnostics; never source approval or Phase 1 exit.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="""Example:
+        epilog="""Examples:
   .venv/bin/python -m scripts.projects.open_model_data.source_completeness_manifest \\
     --requirements requirements.json --source-manifest source.json \\
     --stage-evidence stages.json --lexical-universe universe.json \\

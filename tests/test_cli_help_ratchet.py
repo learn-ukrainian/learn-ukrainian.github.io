@@ -45,12 +45,49 @@ def pin(root: Path, script: Path) -> None:
 def test_repository_cli_help_gate() -> None:
     errors, failures = checker.find_violations()
     assert errors == [], "\n".join(errors)
-    assert len(failures) == 973
+    assert len(failures) == 970
 
 
 def test_passing_help(tmp_path: Path) -> None:
     root, _ = fixture_root(tmp_path)
     assert checker.find_violations(root) == ([], {})
+
+
+def test_source_manifest_help_does_not_read_schema_data() -> None:
+    script = checker.REPO_ROOT / "scripts/projects/open_model_data/source_completeness_manifest.py"
+    assert checker.probe_help(script, checker.REPO_ROOT) is None
+
+
+@pytest.mark.parametrize("base", ["argparse.ArgumentParser", "ArgumentParser"])
+@pytest.mark.parametrize("source, expected", [
+    (PASSING, None),
+    (PASSING.replace(
+        'description="Describe the fixture. Use to check help, never for analysis."',
+        'description=""',
+    ), "--help lacks a description"),
+    (PASSING.replace(', help="Name to print (default: sample), e.g. alice."', ""),
+     "argument lacks help"),
+    (PASSING.replace("Examples:", "Example:"), "epilog must name"),
+    ('import argparse\nparser = argparse.ArgumentParser()\n'
+     'if __name__ == "__main__":\n    parser.parse_args()\n',
+     "parser lacks description or epilog"),
+])
+def test_subclass_parser_help(
+    tmp_path: Path, base: str, source: str, expected: str | None,
+) -> None:
+    source = "from argparse import ArgumentParser\n" + source.replace(
+        "parser = argparse.ArgumentParser(",
+        f"class EvidenceArgumentParser({base}):\n    pass\n\n"
+        "parser = EvidenceArgumentParser(",
+    )
+    root, _ = fixture_root(tmp_path, source)
+    errors, failures = checker.find_violations(root)
+    if expected is None:
+        assert (errors, failures) == ([], {})
+    else:
+        assert len(errors) == 1
+        assert expected in errors[0]
+        assert list(failures) == ["scripts/fixture.py"]
 
 
 @pytest.mark.parametrize("database_present", [False, True])
