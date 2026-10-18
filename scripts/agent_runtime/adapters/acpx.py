@@ -106,6 +106,7 @@ from ..binary_resolve import resolve_agent_binary
 from ..jsonl import jsonl_lines
 from ..result import ParseResult
 from ..routes import deepseek_first_party_error, is_deepseek_first_party_forbidden_in_ci
+from ._opencode_state import opencode_command
 from .base import InvocationPlan
 from .cursor import _load_cursor_api_key_from_env_file
 from .deepseek import DEEPSEEK_OPENCODE_MODEL_ROUTES, DeepSeekAdapter
@@ -3780,13 +3781,12 @@ class AcpxGlmShadowAdapter(_AcpxDiscussionAdapter):
     fixed_effort = "high"
 
     def _custom_agent_command(self, cwd: Path) -> tuple[str, dict[str, Any]]:
-        _ = cwd
         assert_glm_egress_allowed(type(self).__name__)
         binary, version = _resolve_participant_binary(
             "opencode",
             adapter_label=type(self).__name__,
         )
-        return shlex.join([binary, "acp", "--pure"]), {
+        return shlex.join(opencode_command([binary, "acp", "--pure"], cwd=cwd)), {
             "provider_cli": "opencode",
             "provider_cli_version": version,
             "provider_cli_compatibility": OPENCODE_CLI_COMPATIBILITY_CONTRACT,
@@ -3828,12 +3828,11 @@ class AcpxGemmaShadowAdapter(_AcpxDiscussionAdapter):
     default_model = fixed_model
 
     def _custom_agent_command(self, cwd: Path) -> tuple[str, dict[str, Any]]:
-        _ = cwd
         binary, version = _resolve_participant_binary(
             "opencode",
             adapter_label=type(self).__name__,
         )
-        return shlex.join([binary, "acp", "--pure"]), {
+        return shlex.join(opencode_command([binary, "acp", "--pure"], cwd=cwd)), {
             "provider_cli": "opencode",
             "provider_cli_version": version,
             "provider_cli_compatibility": OPENCODE_CLI_COMPATIBILITY_CONTRACT,
@@ -3876,7 +3875,6 @@ class AcpxDeepSeekShadowAdapter(_AcpxDiscussionAdapter):
     fixed_effort = "high"
 
     def _custom_agent_command(self, cwd: Path) -> tuple[str, dict[str, Any]]:
-        _ = cwd
         if is_deepseek_first_party_forbidden_in_ci("deepseek", DEEPSEEK_ACP_INVOCATION_MODEL):
             raise AcpxShadowRefusalError(
                 deepseek_first_party_error(
@@ -3889,7 +3887,7 @@ class AcpxDeepSeekShadowAdapter(_AcpxDiscussionAdapter):
             "opencode",
             adapter_label=type(self).__name__,
         )
-        return shlex.join([binary, "acp", "--pure"]), {
+        return shlex.join(opencode_command([binary, "acp", "--pure"], cwd=cwd)), {
             "provider_cli": "opencode",
             "provider_cli_version": version,
             "provider_cli_compatibility": OPENCODE_CLI_COMPATIBILITY_CONTRACT,

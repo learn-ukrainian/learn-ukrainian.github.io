@@ -2967,8 +2967,14 @@ def test_new_fleet_discussion_seats_use_fixed_confined_commands(
     command_tokens = shlex.split(command)
     # AGY rides the project text ACP server via node; GLM and DeepSeek are
     # native ``opencode acp --pure`` participants (#6805).
-    assert command_tokens[0] == binaries["node" if participant == "agy" else provider_binary]
-    assert provider_binary in " ".join(command_tokens)
+    if provider_binary == "opencode":
+        assert Path(command_tokens[0]).is_file()
+        assert binaries[provider_binary] in Path(command_tokens[0]).read_text(encoding="utf-8")
+        assert command_tokens[1:] == ["acp", "--pure"]
+    else:
+        assert command_tokens[0] == binaries["node"]
+    if participant == "agy":
+        assert provider_binary in " ".join(command_tokens)
     assert plan.cmd[-3:] == ["exec", "-f", "-"]
     assert plan.metadata["model"] == model
     assert plan.metadata["provider_cli_version"] == version
@@ -3042,7 +3048,10 @@ def test_gemma_shadow_seat_uses_a_confined_opencode_command(tmp_path, monkeypatc
 
     assert adapter.name == "acpx-gemma-shadow"
     command = plan.cmd[plan.cmd.index("--agent") + 1]
-    assert shlex.split(command) == [str(opencode), "acp", "--pure"]
+    command_tokens = shlex.split(command)
+    assert Path(command_tokens[0]).is_file()
+    assert str(opencode) in Path(command_tokens[0]).read_text(encoding="utf-8")
+    assert command_tokens[1:] == ["acp", "--pure"]
     assert ("--model", "google-ais/gemma-4-31b-it") in zip(
         plan.cmd, plan.cmd[1:], strict=False
     )

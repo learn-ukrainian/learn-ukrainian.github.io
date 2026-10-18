@@ -44,6 +44,8 @@ def _build(prompt: str, tmp_path: Path, monkeypatch, **kw):
 def test_default_dispatch_plan_pins_ndjson_format(tmp_path, monkeypatch):
     plan = _build("Review this diff.", tmp_path, monkeypatch)
 
+    assert Path(plan.cmd[0]).is_file()
+    assert FAKE_OPENCODE in Path(plan.cmd[0]).read_text(encoding="utf-8")
     assert plan.cmd[1] == "run"
     assert plan.cmd[plan.cmd.index("--model") + 1] == "zai/glm-5.3-flash"
     assert plan.cmd[plan.cmd.index("--format") + 1] == "json"

@@ -28,6 +28,7 @@ from ..routes import (
     is_deepseek_first_party_forbidden_in_ci,
 )
 from ..trail_isolation import TrailIsolationError, trail_isolation_requested
+from ._opencode_state import opencode_command
 from .base import InvocationPlan
 
 _logger = logging.getLogger(__name__)
@@ -157,7 +158,7 @@ class DeepSeekAdapter:
         _logger.debug("deepseek invocation")
 
         return InvocationPlan(
-            cmd=cmd,
+            cmd=opencode_command(cmd, cwd=cwd),
             cwd=cwd,
             stdin_payload="",
             output_file=None,

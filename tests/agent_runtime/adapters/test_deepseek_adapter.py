@@ -24,6 +24,12 @@ from agent_runtime.routes import DEEPSEEK_FIRST_PARTY_FORBIDDEN_MARKER
 FAKE_OPENCODE = "/usr/local/bin/opencode"
 
 
+@pytest.fixture(autouse=True)
+def isolated_opencode_home(tmp_path, monkeypatch):
+    """Launch-shape tests must not read the host's moving model cache."""
+    monkeypatch.setattr("agent_runtime.adapters.deepseek.Path.home", lambda: tmp_path / "home")
+
+
 def _build(prompt: str, tmp_path: Path, **kw):
     with patch("agent_runtime.adapters.deepseek.shutil.which", return_value=FAKE_OPENCODE):
         return DeepSeekAdapter().build_invocation(
@@ -43,7 +49,8 @@ def test_default_dispatch_plan_is_opencode_first_party_flash_at_high(tmp_path):
     deepseek/deepseek-flash --variant high; no hermes anywhere."""
     plan = _build("Review this diff.", tmp_path)
 
-    assert plan.cmd[0] == FAKE_OPENCODE
+    assert Path(plan.cmd[0]).is_file()
+    assert FAKE_OPENCODE in Path(plan.cmd[0]).read_text(encoding="utf-8")
     assert plan.cmd[1] == "run"
     assert plan.cmd[plan.cmd.index("--model") + 1] == "deepseek/deepseek-flash"
     # NDJSON event stream is the only stdout surface that survives the

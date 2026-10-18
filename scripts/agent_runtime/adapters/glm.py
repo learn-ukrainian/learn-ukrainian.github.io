@@ -20,6 +20,7 @@ from ..errors import AgentRuntimeError
 from ..failure_codes import opencode_provider_error, provider_failure_code, provider_stderr_error
 from ..result import ParseResult
 from ..trail_isolation import TrailIsolationError, trail_isolation_requested
+from ._opencode_state import opencode_command
 from .base import InvocationPlan
 
 _logger = logging.getLogger(__name__)
@@ -144,7 +145,7 @@ class GlmAdapter:
         _logger.debug("glm invocation")
 
         return InvocationPlan(
-            cmd=cmd,
+            cmd=opencode_command(cmd, cwd=cwd),
             cwd=cwd,
             stdin_payload="",
             output_file=None,

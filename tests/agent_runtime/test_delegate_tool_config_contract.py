@@ -186,6 +186,9 @@ def test_every_dispatch_adapter_accepts_delegate_tool_config_keys(adapter_cls, t
     checkout.mkdir()
     monkeypatch.setenv("LU_RUNTIME_TMP_BASE_ROOT", str(tmp_path))
     _install_cli_stubs(tmp_path, monkeypatch)
+    if adapter_cls.__name__ == "DeepSeekAdapter":
+        # Host model-cache drift is unrelated to this tool_config contract.
+        monkeypatch.setattr(f"{adapter_cls.__module__}._cached_flash_name", lambda: None)
     # GLM's egress guard itself stays tested in
     # tests/test_agent_runtime_glm_adapter.py::test_glm_adapter_ci_refusal_guard.
     # This contract only checks tool_config keys, so drop the CI markers that
