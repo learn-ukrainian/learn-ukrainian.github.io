@@ -185,6 +185,54 @@ def test_late_recorded_older_approval_does_not_overwrite_rejection():
     assert sweep.lookup_verdict(rows, SHA, "fleet").state == "BLOCKED"
 
 
+PR_10947_SHA = "19c9b39eb2eef93e2e2ae29178787d9105078120"
+
+
+def posted(item, created_at):
+    return {**item, "created_at": created_at, "updated_at": created_at}
+
+
+def test_later_posted_rejection_beats_approval_with_later_start():
+    """#10973: the #10947 rejection started 0.24 s before the approval but was posted 25 minutes after it."""
+    approval = posted(
+        comment(sha=PR_10947_SHA, task="approve", started="2026-10-18T17:17:37.175425+00:00"),
+        "2026-10-18T17:19:35Z",
+    )
+    rejection = posted(
+        comment(
+            sha=PR_10947_SHA,
+            task="reject",
+            started="2026-10-18T17:17:36.933735+00:00",
+            verdict="CHANGES_REQUESTED",
+        ),
+        "2026-10-18T17:44:00Z",
+    )
+    for rows in ([approval, rejection], [rejection, approval]):
+        verdict = sweep.lookup_verdict(rows, PR_10947_SHA, "fleet")
+        assert (verdict.state, verdict.task) == ("CHANGES_REQUESTED", "reject")
+        assert verdict.started == datetime(2026, 10, 18, 17, 17, 36, 933735, tzinfo=UTC)
+
+
+def test_approval_started_and_posted_after_rejection_supersedes_it():
+    rejection = posted(comment(task="reject", verdict="BLOCKED"), "2026-09-23T13:00:00Z")
+    approval = posted(comment(task="re-review", started="2026-09-23T12:30:00.000001+00:00"), "2026-09-23T13:10:00Z")
+    assert sweep.lookup_verdict([rejection, approval], SHA, "fleet").state == "APPROVED"
+    assert sweep.lookup_verdict([approval, rejection], SHA, "fleet").state == "APPROVED"
+
+
+def test_rejection_stands_unless_one_approval_follows_it_in_both_orders():
+    # One approval started later but was posted earlier; the other was posted later but started earlier.
+    started_late = posted(
+        comment(task="early-post", started="2026-09-23T12:10:00.000001+00:00"), "2026-09-23T12:11:00Z"
+    )
+    rejection = posted(
+        comment(task="reject", started="2026-09-23T12:05:00.000001+00:00", verdict="BLOCKED"), "2026-09-23T12:12:00Z"
+    )
+    posted_late = posted(comment(task="late-post", started="2026-09-23T12:01:00.000001+00:00"), "2026-09-23T12:13:00Z")
+    verdict = sweep.lookup_verdict([started_late, rejection, posted_late], SHA, "fleet")
+    assert (verdict.state, verdict.task) == ("BLOCKED", "reject")
+
+
 def test_same_second_microseconds_and_tie_rejection():
     later = "2026-09-23T12:00:00.000002+00:00"
     assert (
