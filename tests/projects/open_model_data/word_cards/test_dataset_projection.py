@@ -4,14 +4,86 @@ import copy
 import json
 
 import pytest
+import yaml
 
 from scripts.atlas import word_card_certification as certification
+from scripts.atlas import word_card_foundation as foundation
 from scripts.projects.open_model_data.word_cards import dataset_projection as projection
 from tests.projects.open_model_data import test_word_card_dataset_release as release_fixtures
 from tests.word_card_certification_fixtures import certification_fixture  # noqa: F401
 
 release_input = release_fixtures.release_input
 synthetic_mount = release_fixtures.synthetic_mount
+
+
+@pytest.fixture
+def entries_input(release_input, tmp_path, monkeypatch):
+    register = yaml.safe_load(release_input.register.read_bytes())
+    register["legal_references"] = [{"id": "fixture-terms", "text": "Original terms"}]
+    register["sources"][0]["terms"]["legal_refs"] = ["fixture-terms"]
+    release_input.register.write_text(yaml.safe_dump(register))
+    card = release_input.card
+    card["assertions"] = card["assertions"][:2]
+    card["known_gaps"] = ["Pending independent review"]
+    pin = tmp_path / "pilot.register-pin.json"
+    pin.write_text(json.dumps({"source_ids": ["vesum", "ulif", "internal"]}))
+    monkeypatch.setattr(projection, "PILOT_REGISTER_PIN_PATH", pin)
+    return release_input, register
+
+
+@pytest.mark.parametrize("basis", ["file", "all_entries", "assertions", "pilot"])
+def test_register_digest_bases(entries_input, basis):
+    fixture, register = entries_input
+    card = fixture.card
+    ids = {"all_entries": [s["id"] for s in register["sources"]],
+           "assertions": ["vesum", "ulif"], "pilot": ["vesum", "ulif", "internal"]}
+    card["build"]["inputs"]["R"]["register"]["content_sha256"] = (
+        projection.sha256(fixture.register.read_bytes()) if basis == "file"
+        else foundation.register_entries_digest(register, ids[basis])
+    )
+    if basis == "pilot":
+        card["build"]["inputs"]["R"]["assembler"] = {
+            "ref": "scripts/atlas/word_card_assembly.py", "version": "fixture-v1",
+        }
+    result = projection.create_release([card], release_version="v0.1.0", allow_candidates=True)
+    row = json.loads(result.dataset)
+    assert (result.manifest["card_count"], result.manifest["certified_count"],
+            result.manifest["candidate_count"]) == (1, 0, 1)
+    assert [(f["field"], f["value"]) for f in row["fields"]] == [
+        ("spelling", "fixture-head"), ("definition_uk", "permitted-definition"),
+    ]
+    assert result.manifest["permissions_register_sha256"] == projection.sha256(fixture.register.read_bytes())
+
+
+@pytest.mark.parametrize("basis", ["assertions", "pilot"])
+@pytest.mark.parametrize("change", ["unrelated", "referenced", "legal_reference", "missing_source"])
+def test_entries_digest_register_drift(entries_input, basis, change):
+    fixture, register = entries_input
+    card = fixture.card
+    source_ids = ["vesum", "ulif"]
+    if basis == "pilot":
+        source_ids.append("internal")
+        card["build"]["inputs"]["R"]["assembler"] = {
+            "ref": "scripts/atlas/word_card_assembly.py", "version": "fixture-v1",
+        }
+    card["build"]["inputs"]["R"]["register"]["content_sha256"] = foundation.register_entries_digest(
+        register, source_ids,
+    )
+    if change == "unrelated":
+        register["sources"].append({"id": "unrelated", "appears_in": ["internal"], "terms": {}})
+    elif change == "referenced":
+        register["sources"][0]["citation"]["form"] = "Changed source edition"
+    elif change == "legal_reference":
+        register["legal_references"][0]["text"] = "Changed terms"
+    else:
+        register["sources"] = register["sources"][1:]
+    fixture.register.write_text(yaml.safe_dump(register))
+    if change == "unrelated":
+        result = projection.create_release([card], release_version="v0.1.0", allow_candidates=True)
+        assert json.loads(result.dataset)["status"] == "CANDIDATE"
+    else:
+        with pytest.raises(projection.ProjectionRefusal, match="register differs"):
+            projection.create_release([card], release_version="v0.1.0", allow_candidates=True)
 
 
 @pytest.mark.parametrize("format", ["json", "jsonl"])
