@@ -20,6 +20,7 @@ from __future__ import annotations
 import argparse
 import json
 import sqlite3
+import sys
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
@@ -31,7 +32,7 @@ def convert_dmklinger(src: Path | None = None, out: Path | None = None) -> int:
     src = src or PROJECT_ROOT / "data" / "dmklinger-uk-en" / "words.json"
     out = out or PROJECT_ROOT / "data" / "dmklinger-uk-en" / "chunks.jsonl"
 
-    print("Converting dmklinger UK→EN...")
+    print("Converting dmklinger UK→EN...", file=sys.stderr)
     with open(src, encoding="utf-8") as f:
         words = json.load(f)
 
@@ -55,7 +56,7 @@ def convert_dmklinger(src: Path | None = None, out: Path | None = None) -> int:
 
             written += 1
 
-    print(f"  ✅ {written} entries → {out.name}")
+    print(f"  ✅ {written} entries → {out.name}", file=sys.stderr)
     return written
 
 

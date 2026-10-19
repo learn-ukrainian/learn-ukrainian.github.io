@@ -207,15 +207,21 @@ def test_postcommit_failures_report_committed_and_do_not_claim_rollback(staged, 
 def test_cli_dry_run_apply_rerun_and_error_codes(staged, capsys, monkeypatch):
     db, chunks, _, receipt = staged
     argv = ["--db", str(db), "--input", str(chunks), "--input-sha256", ingest.INPUT_SHA256, "--receipt", str(receipt)]
-    assert ingest.main(argv) == 0
-    assert ingest.main([*argv, "--apply"]) == 0
-    assert ingest.main([*argv, "--apply"]) == 0
-    assert '"status": "already_applied"' in capsys.readouterr().out
+    for arguments, status in ((argv, "dry_run"), ([*argv, "--apply"], "committed"),
+                              ([*argv, "--apply"], "already_applied")):
+        assert ingest.main(arguments) == 0
+        captured = capsys.readouterr()
+        result = json.loads(captured.out)
+        assert result["status"] == status
+        assert result == json.loads(receipt.read_text())
+        assert captured.err == "  📥 DMKlinger UK→EN: 3 entries\n"
     receipt.unlink()
     monkeypatch.setattr(ingest, "PREIMAGE_SHA256", "wrong")
     chunks.write_text("wrong")
     assert ingest.main(argv) == 2
-    assert "REFUSED" in capsys.readouterr().err
+    captured = capsys.readouterr()
+    assert captured.out == ""
+    assert captured.err == "REFUSED: corrected input SHA256 does not match the reviewed pin\n"
 
 
 def test_cli_postcommit_receipt_error_exit_three(staged, monkeypatch, capsys):
@@ -225,7 +231,11 @@ def test_cli_postcommit_receipt_error_exit_three(staged, monkeypatch, capsys):
     monkeypatch.setattr(ingest, "atomic_write", fail)
     assert ingest.main(["--db", str(db), "--input", str(chunks), "--input-sha256", ingest.INPUT_SHA256,
                         "--receipt", str(receipt), "--apply"]) == 3
-    assert "committed_with_post_commit_error" in capsys.readouterr().out
+    captured = capsys.readouterr()
+    result = json.loads(captured.out)
+    assert result["status"] == "committed_with_post_commit_error"
+    assert result["post_commit_error"] == "receipt write failed: receipt failed"
+    assert captured.err == "  📥 DMKlinger UK→EN: 3 entries\n"
 
 
 def test_missing_files_and_receipt_collision_refused(staged):
