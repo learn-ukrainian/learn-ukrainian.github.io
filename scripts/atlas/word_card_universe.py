@@ -18,6 +18,7 @@ from pathlib import Path
 from scripts.atlas import word_card_certification as cert
 from scripts.atlas import word_card_golden_set as gold
 from scripts.atlas.word_card_assembly import require_host_only
+from scripts.lib.readonly_sqlite import SQLiteConnection, open_readonly
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 IMPLEMENTATION_PATHS = cert.IMPLEMENTATION_PATHS
@@ -287,7 +288,7 @@ def _counts(loaded: dict) -> dict:
             "cards": len(loaded["cards"])}
 
 
-def _checkpoint(connection: sqlite3.Connection, expected: str) -> None:
+def _checkpoint(connection: SQLiteConnection, expected: str) -> None:
     connection.execute("PRAGMA synchronous=FULL")
     with connection:
         connection.execute("BEGIN IMMEDIATE")
@@ -304,7 +305,7 @@ def _checkpoint(connection: sqlite3.Connection, expected: str) -> None:
             gold.require(rows == [(expected,)], "Checkpoint belongs to another freeze")
 
 
-def _verify_rows(connection: sqlite3.Connection, loaded: dict, *, complete: bool) -> int:
+def _verify_rows(connection: SQLiteConnection, loaded: dict, *, complete: bool) -> int:
     count = 0
     seen_units = set()
     for key, payload in connection.execute("SELECT unit_key, payload FROM units"):
@@ -391,7 +392,7 @@ def reconcile(spec_path: Path, spec_sha256: str, checkpoint: Path,
               for unit in loaded["units"].values() for check in CHECKS}
     gold.require(coverage == needed, "Missing source or failure-stratum inspection")
     # Read-only opening prevents a missing checkpoint from becoming an empty DB.
-    with closing(sqlite3.connect(checkpoint.resolve().as_uri() + "?mode=ro", uri=True)) as connection:
+    with closing(open_readonly(checkpoint)) as connection:
         gold.require(connection.execute("SELECT spec_sha256 FROM metadata").fetchall() == [(spec_sha256,)],
                      "Checkpoint belongs to another freeze")
         _verify_rows(connection, loaded, complete=True)
