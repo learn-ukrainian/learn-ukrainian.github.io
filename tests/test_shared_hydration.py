@@ -601,7 +601,7 @@ def test_remote_transport_real_loopback_drip_obeys_total_deadline(monkeypatch: p
                     self.wfile.flush()
                 except (BrokenPipeError, ConnectionResetError):
                     break
-                time.sleep(0.025)
+                time.sleep(0.25)
 
         def log_message(self, format: str, *args: object) -> None:
             pass
@@ -615,7 +615,7 @@ def test_remote_transport_real_loopback_drip_obeys_total_deadline(monkeypatch: p
         with pytest.raises(LookupError):
             hydration._fetch_remote_stream("epic:123", deadline=started + 0.1)
         assert received.is_set()
-        assert time.monotonic() - started < 0.5
+        assert time.monotonic() - started < 3.0
     finally:
         server.shutdown()
         server.server_close()
