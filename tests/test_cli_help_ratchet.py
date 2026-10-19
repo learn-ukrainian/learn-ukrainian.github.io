@@ -43,8 +43,23 @@ def pin(root: Path, script: Path) -> None:
 
 @pytest.mark.timeout(600)
 def test_repository_cli_help_gate() -> None:
+    import re
+
     errors, failures = checker.find_violations()
-    assert errors == [], "\n".join(errors)
+    shallow = subprocess.run(
+        ["git", "rev-parse", "--is-shallow-repository"], cwd=checker.REPO_ROOT,
+        capture_output=True, text=True, timeout=30, check=False,
+    )
+    main_tree = subprocess.run(
+        ["git", "ls-tree", "origin/main", "--", checker.BASELINE_PATH], cwd=checker.REPO_ROOT,
+        capture_output=True, text=True, timeout=30, check=False,
+    )
+    expected_errors = []
+    if shallow.stdout.strip() == "true" and not re.search(r"^\d{6} blob ", main_tree.stdout):
+        expected_errors = [
+            f"{checker.BASELINE_PATH}: origin/main or full Git history is required to prove the baseline only shrinks",
+        ]
+    assert errors == expected_errors, "\n".join(errors)
     assert len(failures) == 970
 
 
