@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import signal
 import subprocess
 import sys
@@ -428,6 +429,43 @@ def _spawn(script: str, *args: str) -> subprocess.Popen[str]:
     )
 
 
+THREAD_LINE = re.compile(r"^\d+ .* state=(\S+) wchan=")
+
+
+def _thread_states(snapshot: str) -> list[str]:
+    """The ``state=`` letters of the thread lines in a ``proc_snapshot`` text."""
+    threads = snapshot.split("== socket states", 1)[0]
+    return [match.group(1) for line in threads.splitlines() if (match := THREAD_LINE.match(line))]
+
+
+def _wait_until_threads_blocked(
+    pid: int,
+    *,
+    min_threads: int = 2,
+    settle_polls: int = 3,
+    timeout_s: float = 10.0,
+    poll_s: float = 0.01,
+) -> None:
+    """Return once every thread of ``pid`` is observed asleep in ``state=S``.
+
+    The child's ``hung`` line is printed *before* its worker blocks, so it does
+    not prove any thread is asleep: a thread can still be runnable (``state=R``)
+    when the snapshot is taken (#10974). Observing the same ``/proc`` thread
+    lines the incident dump records, ``settle_polls`` times in a row, is the
+    truthful readiness condition; a deadlocked thread never wakes again.
+    """
+    deadline = time.monotonic() + timeout_s
+    asleep = 0
+    states: list[str] = []
+    while time.monotonic() < deadline:
+        states = _thread_states(wd.proc_snapshot(pid, 1))
+        asleep = asleep + 1 if len(states) >= min_threads and set(states) == {"S"} else 0
+        if asleep >= settle_polls:
+            return
+        time.sleep(poll_s)
+    raise AssertionError(f"pid {pid} never settled with {min_threads}+ threads all asleep; last states {states}")
+
+
 def test_forced_hang_produces_a_dump_file(tmp_path: Path) -> None:
     """AC-02: a hung process yields every thread's Python stack in the incident."""
     dump_dir = tmp_path / "dumps"
@@ -435,6 +473,7 @@ def test_forced_hang_produces_a_dump_file(tmp_path: Path) -> None:
     try:
         assert child.stdout is not None
         assert child.stdout.readline().strip() == "hung"
+        _wait_until_threads_blocked(child.pid)
         incident = wd.capture_incident_dump(child.pid, dump_dir, 1, time.time(), reason="forced hang")
         stacks = (incident / "python-stacks.txt").read_text(encoding="utf-8")
         assert "worker_blocked_on_shared_lock" in stacks
@@ -445,6 +484,63 @@ def test_forced_hang_produces_a_dump_file(tmp_path: Path) -> None:
         assert "state=S" in (incident / "proc.txt").read_text(encoding="utf-8")
         assert oct((incident / "python-stacks.txt").stat().st_mode & 0o777) == "0o600"
         assert child.poll() is None, "the dump must not kill the process"
+    finally:
+        child.kill()
+        child.wait(timeout=10)
+
+
+def _fake_snapshots(monkeypatch: pytest.MonkeyPatch, *samples: list[str]) -> None:
+    """Serve ``samples`` (thread states per poll) from ``proc_snapshot``, then repeat the last."""
+    remaining = list(samples)
+
+    def snapshot(_pid: int, _port: int, *_args: object) -> str:
+        states = remaining.pop(0) if len(remaining) > 1 else remaining[0]
+        threads = "".join(f"{100 + i} python state={s} wchan=futex_wait_queue\n" for i, s in enumerate(states))
+        return f"== threads of pid 1 (tid comm state wchan)\n{threads}== socket states on port 1\n"
+
+    monkeypatch.setattr(wd, "proc_snapshot", snapshot)
+
+
+def test_blocked_wait_needs_consecutive_sleeping_samples(monkeypatch: pytest.MonkeyPatch) -> None:
+    """A thread that is still runnable, or flaps, restarts the settle count."""
+    _fake_snapshots(monkeypatch, ["S", "R"], ["S", "S"], ["S", "R"], ["S", "S"], ["S", "S"], ["S", "S"])
+    served: list[int] = []
+    real = wd.proc_snapshot
+    monkeypatch.setattr(wd, "proc_snapshot", lambda *a: served.append(1) or real(*a))
+    _wait_until_threads_blocked(1, poll_s=0)
+    assert len(served) == 6
+
+
+@pytest.mark.parametrize(
+    "states",
+    [["R", "S"], ["S", "R"], ["R", "R"], ["S"], []],
+    ids=["main-runnable", "worker-runnable", "all-runnable", "worker-missing", "no-task-list"],
+)
+def test_blocked_wait_rejects_an_unblocked_fixture(monkeypatch: pytest.MonkeyPatch, states: list[str]) -> None:
+    """The old race: ``hung`` printed, a thread not yet asleep. It must fail, not pass or hang."""
+    _fake_snapshots(monkeypatch, states)
+    started = time.monotonic()
+    with pytest.raises(AssertionError, match="never settled"):
+        _wait_until_threads_blocked(1, timeout_s=0.2, poll_s=0)
+    assert time.monotonic() - started < 5
+
+
+def test_blocked_wait_rejects_a_real_runnable_thread() -> None:
+    """A real child whose worker spins is ``state=R`` after printing ``hung``; the wait refuses it."""
+    spinner = textwrap.dedent(
+        """\
+        import threading, time
+        threading.Thread(target=lambda: [None for _ in iter(int, 1)], daemon=True).start()
+        print("hung", flush=True)
+        time.sleep(60)
+        """
+    )
+    child = _spawn(spinner)
+    try:
+        assert child.stdout is not None
+        assert child.stdout.readline().strip() == "hung"
+        with pytest.raises(AssertionError, match=r"never settled.*'R'"):
+            _wait_until_threads_blocked(child.pid, timeout_s=1.0)
     finally:
         child.kill()
         child.wait(timeout=10)
