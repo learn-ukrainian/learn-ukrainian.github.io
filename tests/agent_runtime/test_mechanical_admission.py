@@ -80,7 +80,7 @@ def test_standalone_catalog_resolves_haiku_without_runtime_package(tmp_path, ent
 
 @pytest.mark.parametrize("overrides,reason", [
     ({"task_family": None}, "catalog-eligible"),
-    ({"task_family": "bounded_implementation"}, "catalog-eligible"),
+    ({"task_family": "bounded_implementation"}, "implementation role"),
     ({"task_role": "driver"}, "driver"),
     ({"task_role": "orchestration"}, "driver"),
     ({"task_role": "design"}, "design"),
@@ -206,7 +206,7 @@ def test_custom_review_metadata_cannot_grant_haiku_authority(formal, risk):
     )
 
 
-@pytest.mark.parametrize("role", ["orchestration", "architecture", "critical_review", "ukrainian_review", "bounded_implementation"])
+@pytest.mark.parametrize("role", ["orchestration", "architecture", "critical_review", "ukrainian_review"])
 def test_catalog_cannot_grant_excluded_roles(role):
     catalog = deepcopy(load_model_catalog())
     catalog["models"][HAIKU]["roles"].append(role)
@@ -315,3 +315,62 @@ def test_only_exact_canonical_core_is_exempt_from_prompt_content_check(monkeypat
         admission.refuse_mechanical_execution(
             HAIKU, mode="read-only", cwd=tmp_path, prompt=core_block("core") + "Напиши текст",
             tool_config={"mechanical_task": {"family": "routine_mechanical", "paths": ["package-lock.json"]}})
+
+
+@pytest.mark.parametrize("model", [HAIKU, "gpt-6-luna"])
+def test_bounded_implementation_role_preserves_target_gates(model):
+    admission.refuse_mechanical_task((model,), **scope(
+        task_family="bounded_implementation", task_role="implementation", mode="workspace-write"))
+    for role in ("driver", "design", "approval", "advisory", "orchestration", "review"):
+        with pytest.raises(admission.MechanicalAdmissionRefused):
+            resolve_and_admit(("claude" if model == HAIKU else "codex",), model=model,
+                              **scope(task_family="bounded_implementation", task_role=role), claude_account=HOST_ACCOUNT)
+
+
+@pytest.mark.parametrize("role", ["diagnosis", "quality", "investigation"])
+def test_luna_free_form_envelope_roles_remain_available(role):
+    admission.refuse_mechanical_task(("gpt-6-luna",), mode="read-only", task_role=role)
+
+
+@pytest.mark.parametrize("role", ["driver", "security_code", "ukrainian_authoring", "formal-review", "design_approval",
+                                  "consult", "consultation", "advice", "adviser"])
+def test_luna_free_form_roles_do_not_authorize_excluded_activity_classes(role):
+    with pytest.raises(admission.MechanicalAdmissionRefused):
+        admission.refuse_mechanical_task(("gpt-6-luna",), mode="read-only", task_role=role)
+
+
+@pytest.mark.parametrize("family,role", [("readonly_recon", "recon"), ("mechanical_classification", "classification")])
+def test_luna_direct_readonly_scope_rechecks_content(family, role):
+    admission.refuse_mechanical_task(("gpt-6-luna",), **scope(
+        task_family=family, task_role=role, driver_brief=True))
+    with pytest.raises(admission.MechanicalAdmissionRefused, match="Cyrillic"):
+        admission.refuse_mechanical_task(("gpt-6-luna",), **scope(
+            task_family=family, task_role=role, driver_brief=True,
+            trees=(Tree({"safe.txt": "Україна".encode()}),)))
+
+
+@pytest.mark.parametrize("model", [HAIKU, "gpt-6-luna"])
+@pytest.mark.parametrize("direct", [False, True])
+def test_bounded_routes_keep_distinct_content_rules_and_shared_security_floor(model, direct):
+    inputs = scope(task_family="bounded_implementation", task_role="implementation",
+                   mode="workspace-write", driver_brief=direct,
+                   paths=("tests/code.py",), trees=(Tree({"tests/code.py": "TEXT = 'Україна'".encode()}),))
+    if model == "gpt-6-luna" and not direct:
+        admission.refuse_mechanical_task((model,), **inputs)
+    else:
+        with pytest.raises(admission.MechanicalAdmissionRefused, match="Cyrillic"):
+            admission.refuse_mechanical_task((model,), **inputs)
+    inputs["trees"] = (Tree({"scripts/agent_runtime/new_gate.py": b"# security"}),)
+    with pytest.raises(admission.MechanicalAdmissionRefused, match="security-sensitive"):
+        admission.refuse_mechanical_task((model,), **inputs)
+
+
+@pytest.mark.parametrize("family", ["bounded_implementation", "routine_mechanical", "readonly_recon", "mechanical_classification"])
+def test_haiku_adapter_refuses_danger_even_with_advisory_claims(monkeypatch, tmp_path, family):
+    monkeypatch.setattr(admission, "worktree_trees", lambda cwd: [Tree()])
+    with pytest.raises(admission.MechanicalAdmissionRefused, match="only routine"):
+        claude.ClaudeAdapter().build_invocation(
+            prompt="Inspect the code", mode="danger", cwd=tmp_path, model=HAIKU, task_id=None, session_id=None,
+            tool_config={"advisory_envelope": {"advisor_model": "gpt-6.1-sol"},
+                         "mechanical_task": {"family": family, "role": "implementation", "paths": ["package-lock.json"]}},
+        )

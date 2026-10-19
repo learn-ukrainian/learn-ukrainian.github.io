@@ -92,8 +92,13 @@ are the tie-breakers.
    **Driver routing is enforced** (operator GO 2026-08-06): every dispatch needs a
    `ROUTING_CARD_V1` (tier · model×harness · advisor packet · alternatives); default bounded
    work is **Sol 6.1 advisory envelope → bounded worker** (#9275); Sol is the default brief
-   author. An advisory brief that is not a Sol envelope does not admit bounded
-   workers. Session breadth floor + handoff report:
+   author. The #10919 exception admits Luna/Haiku read-only recon/classification
+   and workspace-write bounded implementation from the complete driver brief,
+   typed role, owned paths and verify command, without a separate advisory task.
+   Caller provenance and the exact brief SHA are recorded and rechecked on replay.
+   Haiku bounded writes are workspace-write only, including with explicit envelopes;
+   security, Ukrainian, review, design/approval and driver roles stay excluded.
+   Other bounded work retains its required Sol envelope. Session breadth floor + handoff report:
    `fleet-driver-routing.md` + `python -m scripts.fleet.driver_breadth_report`.
 5. **Know each model's strengths and weaknesses; route by fit.** The canonical per-task routing
    table is `model-assignment.md` (served at `/api/rules`). Model names are examples, not
@@ -101,7 +106,8 @@ are the tie-breakers.
    MODEL from the HARNESS it rides in (see "Harness vs model" in `model-assignment.md`):
    hermes and opencode each host many models and add their own capabilities.
    **Tiers:** authority (Opus 5.5 / Sol 6.1) · practical
-   (Terra/Sonnet/Flash-high) · heap (Luna and weaker with a complete Sol advisory envelope).
+   (Terra/Sonnet/Flash-high) · heap (Luna and weaker with a complete Sol advisory envelope,
+   or the narrow #10919 driver-brief exception in item 4).
    **Kimi: web, UI and backend coding only — no Ukrainian-language content, no reviews,
    consults, design or rules.**
 6. **Limits happen — handle them.** Providers rate-limit and quota out; that is normal

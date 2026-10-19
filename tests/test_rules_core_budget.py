@@ -76,8 +76,9 @@ def test_model_table_names_only_active_catalog_models() -> None:
         "Fable/former Astra: no advice, approval or review.",
         "Sol 6.1 @ high: orchestration, advanced coding, Ukrainian authoring and red-team.",
         "Luna @ high: scouting and bounded repeatable work",
-        "No bounded dispatch is direct (operator decision 2026-09-30)",
-        "first gets a complete `gpt-6.1-sol` advisory envelope bound to it (`--advisory-task`)",
+        "Luna/Haiku read-only recon/classification or workspace-write `bounded_implementation`",
+        "Other Luna/non-Ukrainian Flash needs a bound Sol envelope (`--advisory-task`)",
+        "Haiku writes: workspace-write only",
     ],
 )
 def test_core_preserves_routing_obligations(obligation: str) -> None:
