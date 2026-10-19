@@ -44,10 +44,11 @@ from tests.test_delegate import (  # noqa: F401
 )
 from tests.test_kimi_coding_only_admission import (
     _FAKE_TOKEN,
+    ESCAPE_SEQUENCES,
     HOSTILE_GIT_ERRORS,
     JSON_ESCAPED_CHARS,
-    LINK_LOCAL_IPV6,
     assert_no_host_details,
+    contains_link_local_ipv6,
     link_local_after_json_escapes,
     shas_after_json_escapes,
 )
@@ -106,7 +107,7 @@ def _assert_no_hostile_markers(public: str) -> None:
     """``public`` holds no hostile marker, no credential and no IPv6 link-local literal."""
     for marker in (*HOSTILE_MARKERS, _FAKE_TOKEN):
         assert marker not in public, marker
-    assert not LINK_LOCAL_IPV6.search(public), "IPv6 link-local literal"
+    assert not contains_link_local_ipv6(public), "IPv6 link-local literal"
 
 
 def _assert_public(record: dict) -> None:
@@ -130,14 +131,14 @@ def test_the_hostile_link_local_literal_still_fails_the_public_guard():
 
 
 @pytest.mark.parametrize("text", link_local_after_json_escapes())
-def test_a_link_local_literal_behind_a_json_escape_still_fails_the_public_guard(text):
+def test_a_link_local_literal_behind_an_escape_still_fails_the_public_guard(text):
     with pytest.raises(AssertionError, match="link-local"):
         _assert_no_hostile_markers(text)
 
 
-def test_a_commit_sha_behind_a_json_escape_passes_the_public_guard():
+def test_a_commit_sha_behind_an_escape_passes_the_public_guard():
     texts = shas_after_json_escapes()
-    assert len(texts) == len(JSON_ESCAPED_CHARS) * 37 * 2
+    assert len(texts) == 37 * 2 * (len(JSON_ESCAPED_CHARS) * 5 + len(ESCAPE_SEQUENCES) * 3)
     for text in texts:
         _assert_no_hostile_markers(text)
 

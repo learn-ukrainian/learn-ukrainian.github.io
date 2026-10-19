@@ -543,21 +543,35 @@ HOST_MARKERS = (
     _FAKE_TOKEN,
 )
 # An IPv6 link-local literal (``fe80`` then colon-separated hex groups, e.g. ``fe80::1``). The bare four letters are
-# no marker: a 40-hex commit SHA such as ``...ebfe8007cb`` carries them, and a SHA never carries a colon.
-# A hex digit before the letters blocks the match only inside a real hex run. Serialized task records are JSON, where
-# a control character or a no-break space is written ``\b \f \n \r \t`` or ``\uXXXX``: the tail of such an escape is
-# a hex digit too, yet it ends the escape, not a hex run, so it must not hide the literal that follows.
-LINK_LOCAL_IPV6 = re.compile(
-    r"(?:(?<![0-9a-f])|(?<=\\[bfnrt])|(?<=\\u[0-9a-f]{4}))fe80(?::[0-9a-f]{0,4}){2,}",
-    re.IGNORECASE,
-)
+# no marker: a 40-hex commit SHA such as ``...ebfe8007cb`` carries them, and a SHA never carries a colon, so the
+# letters count only when no hex digit precedes them. An escape sequence is never part of a hex run, yet its tail is
+# often a hex digit (``\b \f \0 \x01 \u00a0``): it would hide a literal right behind it. So every escape sequence is
+# first replaced by a space, which exposes the real neighbour character. The escapes differ in how many backslashes
+# spell them: one in the escaped text itself (or a ``repr()``), two once ``json.dumps`` has serialized that, four after a
+# second serialization; each count is read, and a plain text with no escapes is read as well.
+_LINK_LOCAL_AFTER_NON_HEX = re.compile(r"(?<![0-9a-f])fe80(?::[0-9a-f]{0,4}){2,}", re.IGNORECASE)
+_BACKSLASH_COUNTS = (0, 1, 2, 4)
+
+
+def _without_escape_sequences(text: str, backslashes: int) -> str:
+    """``text`` with each escape sequence spelled with ``backslashes`` backslashes replaced by one space."""
+    if not backslashes:
+        return text
+    slashes = "\\\\" * backslashes  # the regex for that many literal backslashes
+    escape = re.compile(slashes + r"(?:u[0-9a-fA-F]{4}|U[0-9a-fA-F]{8}|x[0-9a-fA-F]{2}|[bfnrtv0a\"'/]|" + slashes + ")")
+    return escape.sub(" ", text)  # left to right: an escaped backslash pair is consumed as one unit
+
+
+def contains_link_local_ipv6(text: str) -> bool:
+    """Whether ``text`` holds an IPv6 link-local literal, also behind a (repeatedly serialized) escape sequence."""
+    return any(_LINK_LOCAL_AFTER_NON_HEX.search(_without_escape_sequences(text, count)) for count in _BACKSLASH_COUNTS)
 
 
 def assert_no_host_details(text: str, *roots: Path) -> None:
     """``text`` (a refusal, a rescue row) holds none of the hostile markers, the user's login or any root."""
     for marker in HOST_MARKERS:
         assert marker not in text, marker
-    assert not LINK_LOCAL_IPV6.search(text), "IPv6 link-local literal"
+    assert not contains_link_local_ipv6(text), "IPv6 link-local literal"
     for root in roots:
         assert str(root) not in text and str(root.resolve()) not in text, root
     assert f"/{getpass.getuser()}/" not in text
@@ -583,42 +597,92 @@ def test_an_ipv6_link_local_literal_is_still_host_detail(text):
         assert_no_host_details(text.replace("eth7", "").replace("%", ""))
 
 
-# Characters whose JSON escape ends in a hex digit (``\b \f``, ``\n`` ``\r`` ``\t`` and ``\uXXXX``); ``json.dumps`` writes them escaped.
-JSON_ESCAPED_CHARS = ("\b", "\f", "\n", "\r", "\t", "\u00a0", "\x01", "\x1f", "\u2028", "\u200b", "\u00ad")
-_LINK_LOCAL_LETTERS = "fe" + "80"  # fragments: no whole link-local literal appears in this file's new lines
+# Characters whose escape ends in a hex digit (``\b \f \0``, ``\x01 \x1f \xa0``, ``\uXXXX``, ``\UXXXXXXXX``), as ``json.dumps``
+# and ``repr()`` write them.
+JSON_ESCAPED_CHARS = (
+    "\b", "\f", "\n", "\r", "\t", "\v", "\0", "\x01", "\x1f", "\u00a0", "\u2028", "\u200b", "\u00ad", "\U000e0001",
+)  # fmt: skip
+# The same escapes as text, as they sit in a serialized record.
+ESCAPE_SEQUENCES = (
+    r"\b", r"\f", r"\n", r"\r", r"\t", r"\v", r"\0", r"\x01", r"\x1f", r"\xa0",
+    r"\u0001", r"\u00a0", r"\u2028", r"\u200b", r"\U000e0001",
+)  # fmt: skip
+_LINK_LOCAL_LETTERS = "fe" + "80"  # fragments: no whole link-local literal appears in this file
+
+
+def _serializations(value: str) -> list[str]:
+    """``value`` as a serialized record holds it: ``repr()``, ``json.dumps`` and both, each also serialized twice."""
+    return [
+        repr(value),
+        json.dumps(value),
+        json.dumps(repr(value)),
+        json.dumps(json.dumps(value)),
+        json.dumps(json.dumps(repr(value))),
+    ]
+
+
+def _behind_escapes(payload: str) -> list[str]:
+    """Serialized texts with ``payload`` right behind each escape of ``JSON_ESCAPED_CHARS`` / ``ESCAPE_SEQUENCES``."""
+    texts = [form for char in JSON_ESCAPED_CHARS for form in _serializations(char + payload)]
+    for sequence in ESCAPE_SEQUENCES:
+        texts += [sequence + payload, json.dumps(sequence + payload), json.dumps(json.dumps(sequence + payload))]
+    return texts
 
 
 def link_local_after_json_escapes() -> list[str]:
-    """Serialized text with a link-local literal right behind each escaped character."""
-    return [json.dumps(char + _LINK_LOCAL_LETTERS + "::1") for char in JSON_ESCAPED_CHARS]
+    """Serialized text with a link-local literal right behind each escape."""
+    return _behind_escapes(_LINK_LOCAL_LETTERS + "::1")
 
 
 def shas_after_json_escapes() -> list[str]:
     """Serialized text with a 40-hex SHA, holding the link-local letters at every offset, right behind each escape."""
     texts = []
-    for char in JSON_ESCAPED_CHARS:
-        for offset in range(0, 37):
-            filler = "0123456789abcdef" * 3
-            sha = (filler[:offset] + _LINK_LOCAL_LETTERS + filler)[:40]
-            assert len(sha) == 40 and _LINK_LOCAL_LETTERS in sha
-            texts.append(json.dumps(f"{char}{sha}"))
-            texts.append(json.dumps(f"{char}sha:{sha.upper()}"))
+    for offset in range(0, 37):
+        filler = "0123456789abcdef" * 3
+        sha = (filler[:offset] + _LINK_LOCAL_LETTERS + filler)[:40]
+        assert len(sha) == 40 and _LINK_LOCAL_LETTERS in sha
+        texts += _behind_escapes(sha) + _behind_escapes(f"sha:{sha.upper()}")
     return texts
 
 
 @pytest.mark.parametrize("text", link_local_after_json_escapes())
-def test_a_link_local_literal_behind_a_json_escape_is_still_host_detail(text):
-    assert "\\" in text and " " not in text  # the escape, not the raw character, precedes the literal
+def test_a_link_local_literal_behind_an_escape_is_still_host_detail(text):
+    assert "\\" in text and text.isascii()  # the escape, not the raw character, precedes the literal
+    assert contains_link_local_ipv6(text), text
     with pytest.raises(AssertionError, match="link-local"):
         assert_no_host_details(text)
 
 
-def test_a_commit_sha_behind_a_json_escape_is_no_host_detail():
+def test_a_commit_sha_behind_an_escape_is_no_host_detail():
     texts = shas_after_json_escapes()
-    assert len(texts) == len(JSON_ESCAPED_CHARS) * 37 * 2
+    assert len(texts) == 37 * 2 * (len(JSON_ESCAPED_CHARS) * 5 + len(ESCAPE_SEQUENCES) * 3)
     for text in texts:
-        assert not LINK_LOCAL_IPV6.search(text), text
+        assert not contains_link_local_ipv6(text), text
         assert_no_host_details(text)
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "\\\\" + _LINK_LOCAL_LETTERS + "::1",  # an escaped backslash pair, no escape sequence, before the literal
+        "C:\\" + _LINK_LOCAL_LETTERS + "::1",  # a backslash in plain text
+        json.dumps("\\" + _LINK_LOCAL_LETTERS + "::1"),
+        json.dumps({"last_error": repr("\x01" + _LINK_LOCAL_LETTERS + "::1")}),
+        json.dumps(json.dumps({"last_error": repr("\x1f" + _LINK_LOCAL_LETTERS + ":0:0:1")})),
+    ],
+)
+def test_a_link_local_literal_behind_a_backslash_or_in_a_record_is_still_host_detail(text):
+    assert contains_link_local_ipv6(text), text
+
+
+def test_the_old_lookbehind_guard_misses_the_repr_escapes_this_one_catches():
+    """Mutation check: the per-escape lookbehind form this guard replaced lets ``repr()`` escapes through."""
+    old = re.compile(
+        r"(?:(?<![0-9a-f])|(?<=\\[bfnrt])|(?<=\\u[0-9a-f]{4}))" + _LINK_LOCAL_LETTERS + r"(?::[0-9a-f]{0,4}){2,}",
+        re.IGNORECASE,
+    )
+    missed = [text for text in link_local_after_json_escapes() if not old.search(text)]
+    assert any(r"\\x01" in text for text in missed) and all(contains_link_local_ipv6(text) for text in missed)
 
 
 def _fail_git(monkeypatch, step: str, stderr: str) -> None:
