@@ -557,8 +557,24 @@ def _load(path: Path, report: Report) -> dict[str, Any] | None:
     return payload
 
 
+def _manifest_records(manifest: dict[str, Any], report: Report) -> list[dict[str, Any]] | None:
+    """The manifest's file rows; a malformed container or row is reported, never iterated."""
+
+    files = manifest.get("files", [])
+    if not isinstance(files, list):
+        report.fail(f"invalid manifest {MANIFEST_FILE}: files must be a list")
+        return None
+    for index, row in enumerate(files):
+        if not isinstance(row, dict):
+            report.fail(f"invalid manifest {MANIFEST_FILE}: files[{index}] must be an object")
+    return [row for row in files if isinstance(row, dict)]
+
+
 def check_manifest(deck_dir: Path, manifest: dict[str, Any], report: Report) -> None:
-    for record in manifest.get("files", []):
+    records = _manifest_records(manifest, report)
+    if records is None:
+        return
+    for record in records:
         path = deck_dir / str(record.get("path"))
         if not path.exists():
             report.fail(f"manifest file missing: {record.get('path')}")
@@ -575,7 +591,7 @@ def check_manifest(deck_dir: Path, manifest: dict[str, Any], report: Report) -> 
         compressed = len(gzip.compress(data, compresslevel=9, mtime=0))
         if isinstance(budget, int) and compressed > budget:
             report.fail(f"{record.get('path')}: gzip {compressed} B exceeds budget {budget} B")
-    names = {record.get("path") for record in manifest.get("files", [])}
+    names = {record.get("path") for record in records}
     for required in (DECK_FILE, CLOZE_FILE, FROZEN_FILE):
         if required not in names:
             report.fail(f"manifest does not reference {required}")
