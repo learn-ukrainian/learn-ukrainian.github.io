@@ -777,6 +777,8 @@ def _run_review_with_wait_state(monkeypatch, tmp_path, *, status, wait_rc, respo
         ("VERDICT: CHANGES", "CHANGES"),
         ("## **Verdict**: **REVISE**", "REVISE"),
         ("**VERDICT: CHANGES.** Explain below.", "CHANGES"),
+        ("Verdict: Looks good to me overall.", "Looks"),
+        ("**Verdict:** I approve this change.", "I"),
     ],
 )
 def test_ask_unsupported_verdict_serializes_safe_diagnostic(monkeypatch, tmp_path, status, wait_rc, response, token):
@@ -795,7 +797,7 @@ def test_ask_unsupported_verdict_serializes_safe_diagnostic(monkeypatch, tmp_pat
     assert serialized["ok"] is False and serialized["status"] == "failed"
     assert serialized["failure_reason"] == "review_unsupported_verdict_token"
     assert serialized["stderr_excerpt"] == (
-        f"review_unsupported_verdict_token: unsupported token {token!r}; "
+        f"review_unsupported_verdict_token: unsupported verdict identifier {token!r}; "
         "accepted tokens: APPROVE, APPROVED, CHANGES_REQUESTED, REQUEST_CHANGES, BLOCKED"
     )
 
@@ -806,23 +808,32 @@ def test_ask_unsupported_verdict_serializes_safe_diagnostic(monkeypatch, tmp_pat
 
 
 @pytest.mark.parametrize(
-    "token,expected",
+    "response,token,expected",
     [
         (
+            "VERDICT: ghp_SYNTHETIC10598TOKENabcdefghij\n",
             "ghp_SYNTHETIC10598TOKENabcdefghij",
-            "review_unsupported_verdict_token: unsupported token '[REDACTED_SECRET]'; accepted tokens: APPROVE, APPROVED, CHANGES_REQUESTED, REQUEST_CHANGES, BLOCKED",
+            "review_unsupported_verdict_token: unsupported verdict identifier '[REDACTED_SECRET]'; accepted tokens: APPROVE, APPROVED, CHANGES_REQUESTED, REQUEST_CHANGES, BLOCKED",
         ),
         (
+            "VERDICT: CHANGES\n",
             "CHANGES",
-            "review_unsupported_verdict_token: unsupported token 'CHANGES'; accepted tokens: APPROVE, APPROVED, CHANGES_REQUESTED, REQUEST_CHANGES, BLOCKED",
+            "review_unsupported_verdict_token: unsupported verdict identifier 'CHANGES'; accepted tokens: APPROVE, APPROVED, CHANGES_REQUESTED, REQUEST_CHANGES, BLOCKED",
+        ),
+        (
+            "Verdict: Looks good to me overall.", "Looks",
+            "review_unsupported_verdict_token: unsupported verdict identifier 'Looks'; accepted tokens: APPROVE, APPROVED, CHANGES_REQUESTED, REQUEST_CHANGES, BLOCKED",
+        ),
+        (
+            "**Verdict:** I approve this change.", "I",
+            "review_unsupported_verdict_token: unsupported verdict identifier 'I'; accepted tokens: APPROVE, APPROVED, CHANGES_REQUESTED, REQUEST_CHANGES, BLOCKED",
         ),
     ],
-    ids=["sensitive", "benign"],
+    ids=["sensitive", "benign", "prose-looks", "prose-i"],
 )
-def test_native_ask_cli_stderr_names_unsupported_token_and_vocabulary(tmp_path, token, expected):
+def test_native_ask_cli_stderr_names_unsupported_token_and_vocabulary(tmp_path, response, token, expected):
     """Run the CLI output path in a process; fake only dispatch/wait transport."""
     result = tmp_path / "result.md"
-    response = f"VERDICT: {token}\n"
     result.write_text(response, encoding="utf-8")
     code = """
 import json, os, subprocess, sys
