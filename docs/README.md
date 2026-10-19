@@ -113,7 +113,7 @@ A full spec-gap audit + reorganization plan exists at `audit/2026-05-18-docs-gap
 
 <!-- BEGIN GENERATED: catalogue families. Edit docs/knowledge/catalogue.yaml, then run python -m scripts.docs.catalogue readme -->
 
-121 document families and 32 local data stores, generated from `docs/knowledge/catalogue.yaml`. Status words: current = `active`, historical = `archive`.
+122 document families and 32 local data stores, generated from `docs/knowledge/catalogue.yaml`. Status words: current = `active`, historical = `archive`.
 
 ### Document families
 
@@ -163,6 +163,7 @@ A full spec-gap audit + reorganization plan exists at `audit/2026-05-18-docs-gap
 | `epics-fresh-build` | doc_family | current | `docs/epics/fresh-build-*.md` | Core fresh lesson-based build program for A1 to B2 - requirements, build program, plan schema, writer and review contracts and the level arc plans. |
 | `epics-upgrade-abandoned` | doc_family | superseded → `docs/epics/fresh-build-build-program.md` | `docs/epics/a1-upgrade-*.md`, `docs/epics/curriculum-upgrade-phase1-spec.md`, `docs/epics/upgrade-combined-qg-prompt*.md` | Landing contract, inventory, operating rules, phase-1 spec and combined QG prompt of the abandoned in-place --upgrade approach. |
 | `epics-other` | doc_family | current | `docs/epics/*` | Other epic documents that are not part of the fresh-build or abandoned upgrade sets. |
+| `datasets` | doc_family | current | `docs/datasets/**` | Dataset release documentation covering source permissions, certification, cited export formats and withdrawal procedures. |
 | `research-bio-dossiers` | doc_family | current | `docs/research/bio/**` | One research dossier per BIO module slug (sources, tiers, cross-track plan paths) feeding bio planning and builds. |
 | `research-folk-dossiers` | doc_family | current | `docs/research/folk/**` | One research dossier or reading catalog per FOLK genre or topic, with supporting chunk ids. |
 | `research-dataset-notes` | doc_family | current | `docs/research/*` | Research notes, evidence records and decisions behind the Ukrainian dataset and open-model-data work, including the Literary Poltava candidate audit. |

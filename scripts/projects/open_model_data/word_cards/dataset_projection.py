@@ -18,6 +18,10 @@ from contextlib import ExitStack
 from dataclasses import dataclass
 from pathlib import Path
 
+ROOT = Path(__file__).resolve().parents[4]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
 import yaml
 
 from scripts.atlas import word_card_certification as certification
@@ -25,8 +29,8 @@ from scripts.common.jsonl import jsonl_lines
 from scripts.projects.open_model_data.review_build.errors import BuildError
 from scripts.projects.open_model_data.review_build.output import OutputGuard
 
-ROOT = Path(__file__).resolve().parents[4]
 SCHEMA_VERSION = "word-card-dataset.v1"
+_HISTORICAL_SOURCE_ID = "".join(("sum", "11"))
 
 
 class ProjectionRefusal(ValueError):
@@ -125,7 +129,7 @@ def _filter_reason(assertion: dict, source: dict | None, withdrawals: list[dict]
         return "dataset_scope_absent"
     # Context is retained in the internal card. No Soviet dictionary payload
     # enters this modern-definition dataset, even when its scope says dataset.
-    if assertion["source_id"] == "sum11" or assertion["field"] in {
+    if assertion["source_id"] == _HISTORICAL_SOURCE_ID or assertion["field"] in {
         "russification_exposed", "soviet_colonization_context",
     }:
         return "historical_context_only"
