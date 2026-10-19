@@ -87,12 +87,56 @@ def age_tree(tree: Path) -> None:
         os.utime(path, (stamp, stamp))
 
 
-def dispatch_tree(repo: Path, name: str) -> Path:
-    tree = repo / ".worktrees" / "dispatch" / "codex" / name
+def dispatch_tree(repo: Path, name: str, *, agent: str = "codex") -> Path:
+    tree = repo / ".worktrees" / "dispatch" / agent / name
     tree.parent.mkdir(parents=True, exist_ok=True)
-    git(repo, "worktree", "add", "-b", f"codex/{name}", str(tree), "main")
+    git(repo, "worktree", "add", "-b", f"{agent}/{name}", str(tree), "main")
     age_tree(tree)
     return tree
+
+
+@pytest.fixture(
+    params=[
+        "same-basename",
+        "case-variant",
+        "prefix",
+        "reverse-prefix",
+        "repo-root",
+        "dispatch-parent",
+        "agent-parent",
+        "unknown",
+    ]
+)
+def near_miss(repo: Path, request: pytest.FixtureRequest) -> tuple[Path, Path, bool]:
+    kind = request.param
+    survivor = dispatch_tree(repo, "task-a" if kind != "prefix" else "task-ab")
+    selects_checkout = kind in {"same-basename", "prefix", "reverse-prefix"}
+    if selects_checkout:
+        target = dispatch_tree(
+            repo,
+            "task-ab" if kind == "reverse-prefix" else "task-a",
+            agent="claude" if kind == "same-basename" else "codex",
+        )
+    else:
+        target = {
+            "case-variant": survivor.with_name("TASK-A"),
+            "repo-root": repo,
+            "dispatch-parent": survivor.parent.parent,
+            "agent-parent": survivor.parent,
+            "unknown": repo / "unregistered",
+        }[kind]
+    return survivor, target, selects_checkout
+
+
+def tree_snapshot(root: Path) -> dict[str, tuple[int, int, bytes | None]]:
+    return {
+        path.relative_to(root).as_posix(): (
+            path.stat().st_mode,
+            path.stat().st_ino,
+            path.read_bytes() if path.is_file() else None,
+        )
+        for path in (root, *sorted(root.rglob("*")))
+    }
 
 
 def outcome(payload: dict[str, Any], tree: Path, repo: Path) -> dict[str, Any]:
@@ -172,26 +216,27 @@ def test_explicit_none_is_byte_identical_to_default(repo: Path) -> None:
     assert json.dumps(explicit) == json.dumps(default)
 
 
-@pytest.mark.parametrize("kind", ["unknown", "dispatch-parent", "agent-parent", "prefix-sibling"])
 @pytest.mark.parametrize("apply", [False, True])
-def test_nonmatching_path_never_widens_selection(
-    repo: Path, capsys: pytest.CaptureFixture[str], kind: str, apply: bool
+def test_main_loop_preserves_near_miss(
+    repo: Path, capsys: pytest.CaptureFixture[str], near_miss: tuple[Path, Path, bool], apply: bool
 ) -> None:
-    survivor = dispatch_tree(repo, "task-extra")
-    target = {
-        "unknown": repo / "unregistered",
-        "dispatch-parent": survivor.parent.parent,
-        "agent-parent": survivor.parent,
-        "prefix-sibling": survivor.with_name("task"),
-    }[kind]
+    survivor, target, selects_checkout = near_miss
+    before = tree_snapshot(survivor)
 
     [report] = cli(capsys, "--repo-root", str(repo), "--worktree", str(target), *(["--apply"] if apply else []))
 
-    assert report["removed"] == []
-    assert outcome(report, target, repo)["action"] == "skipped"
-    assert outcome(report, target, repo)["reason"] == "not_registered"
+    assert [row["path"] for row in report["removed"]] == (
+        [target.relative_to(repo).as_posix()] if selects_checkout else []
+    ), report
+    if selects_checkout:
+        assert outcome(report, target, repo)["action"] == ("removed" if apply else "would_remove")
+        assert target.exists() is not apply
+    else:
+        assert outcome(report, target, repo)["action"] == "skipped"
+        assert outcome(report, target, repo)["reason"] == ("primary checkout" if target == repo else "not_registered")
     assert outcome(report, survivor, repo)["reason"] == "not_selected"
-    assert survivor.is_dir()
+    assert tree_snapshot(survivor) == before
+    assert str(survivor) in git(repo, "worktree", "list", "--porcelain")
 
 
 def test_empty_sequence_selects_nobody(repo: Path) -> None:
@@ -504,18 +549,15 @@ def test_quarantine_recovery_respects_selection(
 
 
 @pytest.mark.parametrize("apply", [False, True])
-@pytest.mark.parametrize("selection", ["repo-root", "agent-directory", "prefix", "reverse-prefix"])
 @pytest.mark.parametrize("contents", ["checkout", "record-only", "unexpected-entry"])
 def test_scoped_recovery_preserves_unnamed_holder(
-    repo: Path, capsys: pytest.CaptureFixture[str], selection: str, contents: str, apply: bool
+    repo: Path,
+    capsys: pytest.CaptureFixture[str],
+    near_miss: tuple[Path, Path, bool],
+    contents: str,
+    apply: bool,
 ) -> None:
-    b = dispatch_tree(repo, "task-a" if selection == "reverse-prefix" else "task-ab")
-    if selection == "repo-root":
-        target = repo
-    elif selection == "agent-directory":
-        target = b.parent
-    else:
-        target = dispatch_tree(repo, "task-ab" if selection == "reverse-prefix" else "task-a")
+    b, target, selects_checkout = near_miss
     identity = b.stat()
     holder = repo / ".worktrees" / ".reaping" / f"codex-{'0' * 32}"
     holder.parent.mkdir(mode=0o700)
@@ -541,21 +583,11 @@ def test_scoped_recovery_preserves_unnamed_holder(
     elif contents == "unexpected-entry":
         (holder / "unexpected.txt").write_bytes(b"preserve this entry\n")
 
-    def snapshot() -> dict[str, tuple[int, int, bytes | None]]:
-        return {
-            path.relative_to(holder).as_posix(): (
-                path.stat().st_mode,
-                path.stat().st_ino,
-                path.read_bytes() if path.is_file() else None,
-            )
-            for path in (holder, *sorted(holder.rglob("*")))
-        }
-
-    before = snapshot()
+    before = tree_snapshot(holder)
     [report] = cli(capsys, "--repo-root", str(repo), "--worktree", str(target), *(["--apply"] if apply else []))
 
     assert holder.is_dir()
-    assert snapshot() == before
+    assert tree_snapshot(holder) == before
     assert not b.exists()
     assert staged.exists() is (contents != "record-only")
     assert not any(
@@ -567,7 +599,6 @@ def test_scoped_recovery_preserves_unnamed_holder(
         }
         for row in (*report["removed"], *report["skipped"])
     ), report
-    selects_checkout = selection in {"prefix", "reverse-prefix"}
     assert [row["path"] for row in report["removed"]] == (
         [target.relative_to(repo).as_posix()] if selects_checkout else []
     )
