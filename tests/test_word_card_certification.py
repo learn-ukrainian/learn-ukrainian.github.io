@@ -10,124 +10,8 @@ import pytest
 
 from scripts.atlas import word_card_certification as cert
 from scripts.atlas import word_card_golden_set as gold
-from tests.test_word_card_golden_set import GoldFixture, write
-from tests.word_card_certification_fixtures import certification_fixture  # noqa: F401
-
-
-class CertificationFixture:
-    def __init__(self, root, authority, abstention=False):
-        self.root, self.authority = root, authority
-        self.gold = GoldFixture(root)
-        self.card = authority.card
-        self.gold.cases["cases"][0]["expectations"] = []
-        self.card["assertions"] = []
-        for index, facet in enumerate(cert.FACETS):
-            claim = copy.deepcopy(self.gold.claim)
-            if facet != "identity":
-                claim.update(pointer="/edition", value="literal-fixture-edition")
-            self.gold.cases["cases"][0]["expectations"].append({
-                "field": facet, "state": "value", "claims": [claim], "reason": "literal fixture evidence",
-                "votes": [{"adjudicator_id": "judge-one", "disposition": "agree"},
-                          {"adjudicator_id": "judge-two", "disposition": "agree"}],
-            })
-            if abstention and facet == "abstention":
-                expectation = self.gold.cases["cases"][0]["expectations"][-1]
-                expectation["state"] = "abstention"
-                for vote in expectation["votes"]:
-                    vote["disposition"] = "abstain"
-            self.card["assertions"].append({
-                "assertion_id": "wa_" + f"{index:024x}", "subject": {"kind": "card", "id": self.card["card_id"]},
-                "field": facet, "value": None if abstention and facet == "abstention" else claim["value"],
-                "value_norm": "literal fixture",
-                "source_id": "fixture", "snapshot_id": "fixture-v1", "locator": claim["pointer"],
-                "extraction_version": "fixture-v1", "extraction_confidence": "high",
-                "producer": {"kind": "source_extract", "name": "fixture"}, "review": {"status": "none"},
-                "licence_ref": {"register_source_id": "fixture", "register_version": 1}, "status": "active",
-            })
-        self.authority.approve(self.card)
-        self.spec_path = root / "certification-spec.json"
-        self.evaluation_path = root / "evaluation.json"
-        self.card_path = root / "card.json"
-        self.mechanics_path = root / "mechanics.json"
-        self.spec = {
-            "schema_version": "word-card-certification-spec.v1",
-            "author": {"id": "code-author", "family": "author-family"},
-            "evaluators": copy.deepcopy(self.gold.spec["roles"]["adjudicators"]),
-            "projections": {facet: {"gold_field": facet, "card_pointer": f"/assertions/{index}/value"}
-                            for index, facet in enumerate(cert.FACETS)},
-            "cases": [{"case_id": "case-001", "card": write(self.card_path, self.card)}], "controls": [],
-        }
-        self.gold.spec["required_fields"] = list(cert.FACETS)
-        self.spec["frozen"] = cert.frozen_artifact(cert.CertificationAuthority(), [self.card])
-        self.gold.spec["assembler_build_sha256"] = self.spec["frozen"]["implementation_sha256"]
-        self.gold.seal()
-        self.gold.custody()
-        self.gold.isolation["assembler_build_sha256"] = self.spec["frozen"]["implementation_sha256"]
-        self.gold.save_custody()
-        self.spec.update(gold_spec={"path": str(self.gold.spec_path), "sha256": self.gold.spec_sha},
-                         gold_seal={"path": str(self.gold.bundle / "seal.json"),
-                                    "sha256": gold.sha((self.gold.bundle / "seal.json").read_bytes())},
-                         isolation={"path": str(self.gold.isolation_path), "sha256": self.gold.isolation_sha},
-                         complete_data_receipt=self.gold.refs["complete_data_receipt"])
-        self.mechanics = {
-            "schema_version": "word-card-mechanics-acceptance.v1", "status": "MECHANICS_ACCEPTED",
-            "frozen": self.spec["frozen"], "cards_sha256": cert.digest([self.card]),
-            "accepted_by": {"id": "mechanics-reviewer", "family": "independent-family"},
-            "evidence": [self.gold.opaque],
-        }
-        self.spec["mechanics_receipt"] = write(self.mechanics_path, self.mechanics)
-        for index, name in enumerate(cert.CONTROL_FACETS):
-            self.add_control(name, f"control-{index}")
-        self.save_spec()
-        self.make_evaluation()
-
-    def add_control(self, name, key):
-        card = copy.deepcopy(self.card)
-        index = cert.FACETS.index(cert.CONTROL_FACETS[name])
-        card["assertions"][index]["value"] = "planted source-free wrong value"
-        self.spec["controls"].append({"control_id": key, "case_id": "case-001", "class": name,
-                                      "card": write(self.root / f"{key}.json", card)})
-
-    def save_spec(self):
-        self.spec_sha = write(self.spec_path, self.spec)["sha256"]
-
-    def make_evaluation(self):
-        expectations = {row["field"]: row for row in self.gold.cases["cases"][0]["expectations"]}
-        reports = []
-        for actor in self.spec["evaluators"]:
-            items = []
-            for key, card, control in [*( (row["case_id"], json.loads(Path(row["card"]["path"]).read_bytes()), None)
-                                         for row in self.spec["cases"]),
-                                       *( (row["control_id"], json.loads(Path(row["card"]["path"]).read_bytes()), row["class"])
-                                          for row in self.spec["controls"])]:
-                scores = []
-                for facet in cert.FACETS:
-                    failed = control is not None and cert.CONTROL_FACETS[control] == facet
-                    scores.append({"facet": facet, "verdict": "fail" if failed else "pass",
-                                   "reason": "literal fixture inspection", "source_claims_sha256": cert.digest(expectations[facet]),
-                                   "findings": [{"code": "material", "owner": "fixture-repair",
-                                                 "dependency": "replace unsupported source claim", "evidence": self.gold.opaque}]
-                                   if failed else []})
-                items.append({"item_id": key, "card_sha256": cert.digest(card), "inspected_complete_card": True,
-                              "scores": scores})
-            reports.append({"evaluator_id": actor["id"], "items": items})
-        self.evaluation = {"schema_version": "word-card-language-evaluation.v1", "spec_sha256": self.spec_sha,
-                           "reports": reports}
-        self.save_evaluation()
-
-    def save_evaluation(self):
-        self.evaluation_sha = write(self.evaluation_path, self.evaluation)["sha256"]
-
-    def evaluate(self):
-        return cert.evaluate_certification(self.spec_path, self.spec_sha, self.evaluation_path, self.evaluation_sha)
-
-    def receipt(self):
-        return write(self.root / "receipt.json", self.evaluate())
-
-    def approve(self):
-        self.authority.approve(self.card)
-        self.authority.ledger["approved_reviews"][0]["certification_receipt"] = self.receipt()
-        write(self.authority.ledger_path, self.authority.ledger)
+from tests.test_word_card_golden_set import write
+from tests.word_card_certification_fixtures import CertificationFixture, certification_fixture  # noqa: F401
 
 
 @pytest.fixture
@@ -148,6 +32,66 @@ def test_exact_receipt_and_export(packet):
     assert cert.verify_certification_receipt(packet.receipt(), packet.root) == result
     packet.approve()
     assert cert.load_certified_card_for_export(packet.card) == packet.card
+
+
+def test_receipt_paths_replay_from_another_root(packet, tmp_path):
+    reports = packet.root / "reports"
+    reports.mkdir()
+    packet.evaluation_path = reports / "evaluation.json"
+    packet.save_evaluation()
+    receipt = packet.evaluate()
+    assert receipt["spec"] == {"path": "certification-spec.json", "sha256": packet.spec_sha}
+    assert receipt["evaluation"] == {"path": "reports/evaluation.json", "sha256": packet.evaluation_sha}
+
+    relocated = tmp_path / "relocated"
+    (relocated / "reports").mkdir(parents=True)
+    spec_path = relocated / packet.spec_path.name
+    evaluation_path = relocated / "reports/evaluation.json"
+    spec_path.write_bytes(packet.spec_path.read_bytes())
+    evaluation_path.write_bytes(packet.evaluation_path.read_bytes())
+    replay = cert.evaluate_certification(spec_path, packet.spec_sha, evaluation_path, packet.evaluation_sha)
+    assert gold.canonical(replay) == gold.canonical(receipt)
+    ref = write(relocated / "receipt.json", receipt)
+    ref["path"] = "relocated/receipt.json"
+    assert cert.verify_certification_receipt(ref, tmp_path) == receipt
+    assert cert.certification_summary(ref, tmp_path)["status"] == "CERTIFIED"
+
+
+@pytest.mark.parametrize("reader", [cert.verify_certification_receipt, cert.certification_summary])
+@pytest.mark.parametrize("receipt", [None, [], {}, {"schema_version": "unknown"},
+                                    {"schema_version": "word-card-certification-receipt.v1",
+                                     "status": "CERTIFIED"}])
+def test_malformed_receipt_envelope_is_typed_refusal(tmp_path, reader, receipt):
+    ref = write(tmp_path / "receipt.json", receipt)
+    with pytest.raises(cert.UncertifiedCardRefusal, match="Invalid exact-artifact receipt"):
+        reader(ref, tmp_path)
+
+
+@pytest.mark.parametrize("field", ["spec", "evaluation", "status", "cards", "findings"])
+@pytest.mark.parametrize("replacement", [None, {}, {"path": "missing"}, {"path": "missing", "sha256": "bad"}])
+def test_malformed_receipt_fields_are_typed_refusal(packet, field, replacement):
+    receipt = packet.evaluate()
+    receipt[field] = replacement
+    ref = write(packet.root / "malformed.json", receipt)
+    message = "Invalid exact-artifact receipt" if field in {"spec", "evaluation"} else "Stale evaluation summary"
+    with pytest.raises(cert.UncertifiedCardRefusal, match=message):
+        cert.certification_summary(ref, packet.root)
+
+
+@pytest.mark.parametrize("field", ["spec", "evaluation", "status", "cards", "findings"])
+def test_missing_receipt_fields_are_typed_refusal(packet, field):
+    receipt = packet.evaluate()
+    receipt.pop(field)
+    ref = write(packet.root / "missing-field.json", receipt)
+    with pytest.raises(cert.UncertifiedCardRefusal, match="Invalid exact-artifact receipt"):
+        cert.certification_summary(ref, packet.root)
+
+
+def test_shared_fixture_has_replayable_exact_card_evidence(certification):
+    ref = certification.ledger["approved_reviews"][0]["certification_receipt"]
+    receipt = cert.verify_certification_receipt(ref, certification.root)
+    assert receipt["cards"] == {certification.card["card_id"]: cert.digest(certification.card)}
+    assert cert.load_certified_card_for_export(certification.card) == certification.card
 
 
 @pytest.mark.parametrize("gate", ["complete_data_receipt", "mechanics_receipt", "gold_spec", "gold_seal", "isolation"])
@@ -270,6 +214,8 @@ def test_denominator_and_evidence_omissions_refused(packet, fault):
 
 
 def test_legacy_approval_without_phase5_receipt_cannot_unlock_export(certification):
+    certification.ledger["approved_reviews"][0].pop("certification_receipt")
+    write(certification.ledger_path, certification.ledger)
     with pytest.raises(cert.UncertifiedCardRefusal, match="invalid certification authority"):
         cert.load_certified_card_for_export(certification.card)
 

@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 from collections.abc import Iterator
 from contextlib import contextmanager
 from contextvars import ContextVar
@@ -328,6 +329,8 @@ def evaluate_certification(spec_path: Path, spec_sha256: str,
 
     Trusted pins must come from the independent steward, never from the author.
     This checks evidence and literal projections; language judgments remain external.
+    Retain the returned receipt beside the specification; its references are relative
+    to that directory.
     No files, approvals, release state, or review ledger entries are written.
     """
     _, spec = gold.read(spec_path, spec_sha256)
@@ -353,7 +356,10 @@ def evaluate_certification(spec_path: Path, spec_sha256: str,
                  "Reduced, duplicated or reordered gold denominator")
     cards = [gold.decode(gold.reference(row["card"], base)) for row in spec["cases"]]
     gold.require(len({card["card_id"] for card in cards}) == len(cards), "Duplicate evaluated card identity")
-    authority = CertificationAuthority()
+    state = _AUTHORITY.get()
+    authority = state.get("authority") if state is not None else None
+    if authority is None:
+        authority = CertificationAuthority()
     gold.require(spec["frozen"] == frozen_artifact(authority, cards), "Frozen artifact changed")
     mechanics_path = base / spec["mechanics_receipt"]["path"]
     mechanics = gold.decode(gold.reference(spec["mechanics_receipt"], base))
@@ -460,37 +466,51 @@ def evaluate_certification(spec_path: Path, spec_sha256: str,
                                                    "dependency": "repair missed planted control"}]})
     status = "CERTIFIED" if not findings else "FAILED"
     return {"schema_version": "word-card-certification-receipt.v1", "status": status,
-            "spec": {"path": str(spec_path.resolve()), "sha256": spec_sha256},
-            "evaluation": {"path": str(evaluation_path.resolve()), "sha256": evaluation_sha256},
+            "spec": {"path": spec_path.name, "sha256": spec_sha256},
+            "evaluation": {"path": Path(os.path.relpath(evaluation_path, base)).as_posix(),
+                           "sha256": evaluation_sha256},
             "frozen": spec["frozen"], "gold_seal_sha256": verified["seal_sha256"],
             "case_count": len(cards), "strata": source_spec["strata"],
             "evaluators": evaluators, "scores": scores, "controls": controls, "findings": findings,
             "cards": {card["card_id"]: digest(card) for card in cards}}
 
 
+def _read_certification_receipt(ref: dict, base: Path) -> tuple[dict, Path]:
+    """Validate the receipt envelope before dereferencing or replaying its evidence."""
+    shape = gold.obj({
+        "schema_version": {"const": "word-card-certification-receipt.v1"},
+        "spec": gold.REF, "evaluation": gold.REF,
+        **{key: {} for key in ("status", "frozen", "gold_seal_sha256", "case_count", "strata",
+                              "evaluators", "scores", "controls", "findings", "cards")},
+    })
+    try:
+        receipt = gold.decode(gold.reference(ref, base))
+        gold.validate(receipt, shape, "exact-artifact receipt")
+    except (OSError, ValueError, TypeError) as exc:
+        raise UncertifiedCardRefusal("Invalid exact-artifact receipt") from exc
+    return receipt, (base / ref["path"]).parent
+
+
 def verify_certification_receipt(ref: dict, base: Path) -> dict:
     """Replay a pinned receipt against current evidence; a copied CERTIFIED is insufficient."""
-    receipt = gold.decode(gold.reference(ref, base))
-    gold.require(isinstance(receipt, dict) and receipt.get("schema_version") == "word-card-certification-receipt.v1",
-                 "Invalid exact-artifact receipt")
+    receipt, base = _read_certification_receipt(ref, base)
     spec, evaluation = receipt["spec"], receipt["evaluation"]
-    gold.validate(spec, gold.REF, "receipt specification")
-    gold.validate(evaluation, gold.REF, "receipt evaluation")
     replay = evaluate_certification(base / spec["path"], spec["sha256"],
                                     base / evaluation["path"], evaluation["sha256"])
-    gold.require(gold.canonical(replay) == gold.canonical(receipt) and replay["status"] == "CERTIFIED",
-                 "Failed or stale certification receipt")
+    if gold.canonical(replay) != gold.canonical(receipt) or replay["status"] != "CERTIFIED":
+        raise UncertifiedCardRefusal("Failed or stale certification receipt")
     return receipt
 
 
 def certification_summary(ref: dict, base: Path) -> dict:
     """Return aggregate evaluation evidence without protected IDs, paths, or source text."""
-    receipt = gold.decode(gold.reference(ref, base))
+    receipt, base = _read_certification_receipt(ref, base)
     # Failed evaluations remain publishable as failed, but their evidence must replay too.
     spec, evaluation = receipt["spec"], receipt["evaluation"]
     replay = evaluate_certification(base / spec["path"], spec["sha256"],
                                     base / evaluation["path"], evaluation["sha256"])
-    gold.require(gold.canonical(replay) == gold.canonical(receipt), "Stale evaluation summary")
+    if gold.canonical(replay) != gold.canonical(receipt):
+        raise UncertifiedCardRefusal("Stale evaluation summary")
     codes: dict[str, int] = {}
     for row in receipt["findings"]:
         for finding in row["findings"]:
