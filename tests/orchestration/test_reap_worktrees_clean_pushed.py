@@ -16,6 +16,7 @@ import subprocess
 import sys
 import threading
 import time
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -178,15 +179,26 @@ def write_published_head_reflog(worktree: Path) -> None:
 def age_tree(worktree: Path, repo: Path, task_id: str | None = None) -> None:
     git_dir = admin_dir(worktree)
     paths = [git_dir / "HEAD", git_dir / "index", git_dir / "logs" / "HEAD"]
+    paths.extend(worktree / name for name in git(worktree, "ls-files", "-z").split("\0") if name)
     if task_id:
         paths.append(repo / "batch_state" / "tasks" / f"{task_id}.json")
     age(paths)
+    # Keep cached stats consistent with the aged tracked files. Otherwise
+    # sparse-checkout can refuse to hide a file it considers not up to date.
+    git(worktree, "status", "--porcelain")
+    age([git_dir / "index"])
 
 
 def write_task(repo: Path, task_id: str, worktree: Path, **fields: Any) -> Path:
     tasks = repo / "batch_state" / "tasks"
     tasks.mkdir(parents=True, exist_ok=True)
-    record = {"task_id": task_id, "status": "needs_finalize", "worktree_path": str(worktree), **fields}
+    record = {
+        "task_id": task_id,
+        "status": "needs_finalize",
+        "worktree_path": str(worktree),
+        "finished_at": datetime.fromtimestamp(time.time() - TWO_HOURS, UTC).isoformat(),
+        **fields,
+    }
     path = tasks / f"{task_id}.json"
     path.write_text(json.dumps(record), encoding="utf-8")
     return path
@@ -446,14 +458,15 @@ def test_task_with_live_worker_refuses(repo: Path, free_fuser: Path) -> None:
 def test_younger_than_sixty_minutes_refuses(repo: Path, free_fuser: Path) -> None:
     worktree = dispatch_tree(repo)
     age_tree(worktree, repo, "task-a")
-    age([admin_dir(worktree) / "index"], seconds=59 * 60)
+    age([worktree / "README.md"], seconds=59 * 60)
     assert _refusal(repo, worktree) == "last activity 59 min ago (< 60 min)"
 
 
-def test_recent_task_file_refuses(repo: Path, free_fuser: Path) -> None:
+def test_recent_task_file_metadata_does_not_reset_terminal_time(repo: Path, free_fuser: Path) -> None:
     worktree = dispatch_tree(repo)
     os.utime(repo / "batch_state" / "tasks" / "task-a.json")
-    assert _refusal(repo, worktree) == "last activity 0 min ago (< 60 min)"
+    report = rw.reap_clean_pushed(repo_root=repo, dry_run=False)
+    assert outcome_for(report, worktree, repo).action == "removed"
 
 
 def test_fresh_checkout_refuses(repo: Path, free_fuser: Path) -> None:
@@ -498,11 +511,12 @@ def test_new_reflog_entry_stays_active_when_the_file_mtime_is_old(repo: Path, fr
 
 
 @pytest.mark.parametrize("name", ["index", "HEAD"])
-def test_fresh_head_or_index_mtime_stays_active(repo: Path, free_fuser: Path, name: str) -> None:
+def test_head_or_index_metadata_does_not_reset_idle_time(repo: Path, free_fuser: Path, name: str) -> None:
     worktree = dispatch_tree(repo)
     os.utime(admin_dir(worktree) / name)
 
-    assert _refusal(repo, worktree) == "last activity 0 min ago (< 60 min)"
+    report = rw.reap_clean_pushed(repo_root=repo, dry_run=False)
+    assert outcome_for(report, worktree, repo).action == "removed"
 
 
 @pytest.mark.parametrize(
@@ -524,6 +538,7 @@ def test_empty_or_unparseable_head_reflog_is_not_reaped(
         [
             admin_dir(worktree) / "HEAD",
             admin_dir(worktree) / "index",
+            worktree / "README.md",
             repo / "batch_state" / "tasks" / "task-a.json",
         ]
     )
@@ -546,8 +561,8 @@ def _append_reflog_stamp(log: Path, stamp: int) -> None:
 
 
 def _keep_once(repo: Path, worktree: Path) -> None:
-    """Apply once while the index is fresh so the reflog fingerprint is stored."""
-    os.utime(admin_dir(worktree) / "index")
+    """Apply once after a tracked write so the reflog fingerprint is stored."""
+    (worktree / "README.md").write_bytes((worktree / "README.md").read_bytes())
     report = rw.reap_clean_pushed(repo_root=repo, dry_run=False)
     outcome = outcome_for(report, worktree, repo)
     assert outcome.action == "skipped" and outcome.reason.startswith("last activity"), outcome
@@ -573,7 +588,7 @@ def test_backdated_soft_reset_cannot_hide_reflog_activity(repo: Path, free_fuser
         timeout=30,
     )
     assert proc.returncode == 0, proc.stderr
-    age([admin / "HEAD", admin / "index", repo / "batch_state" / "tasks" / "task-a.json"])
+    age([admin / "HEAD", admin / "index", worktree / "README.md", repo / "batch_state" / "tasks" / "task-a.json"])
 
     assert _refusal(repo, worktree).startswith("last activity")
 
@@ -587,7 +602,7 @@ def _observe_then_backdate(repo: Path, worktree: Path) -> None:
     """
     _keep_once(repo, worktree)
     admin = admin_dir(worktree)
-    age([admin / "HEAD", admin / "index", repo / "batch_state" / "tasks" / "task-a.json"])
+    age([admin / "HEAD", admin / "index", worktree / "README.md", repo / "batch_state" / "tasks" / "task-a.json"])
     before = [(admin / name).stat().st_mtime_ns for name in ("HEAD", "index")]
     env = git_env()
     env["GIT_COMMITTER_DATE"] = "2001-01-01T00:00:00+0000"
@@ -842,6 +857,7 @@ def test_recent_entry_then_backdated_entry_stays_active(repo: Path, free_fuser: 
         [
             admin_dir(worktree) / "HEAD",
             admin_dir(worktree) / "index",
+            worktree / "README.md",
             repo / "batch_state" / "tasks" / "task-a.json",
         ]
     )
@@ -858,6 +874,7 @@ def test_identical_reflog_bytes_after_observation_are_still_reaped(repo: Path, f
         [
             admin_dir(worktree) / "HEAD",
             admin_dir(worktree) / "index",
+            worktree / "README.md",
             repo / "batch_state" / "tasks" / "task-a.json",
         ]
     )
@@ -902,6 +919,7 @@ def test_unusable_head_reflog_is_not_reaped(repo: Path, free_fuser: Path, kind: 
         [
             admin_dir(worktree) / "HEAD",
             admin_dir(worktree) / "index",
+            worktree / "README.md",
             repo / "batch_state" / "tasks" / "task-a.json",
         ]
     )
@@ -924,6 +942,7 @@ def test_oversized_reflog_timestamp_does_not_abort_the_sweep(repo: Path, free_fu
         [
             admin_dir(worktree) / "HEAD",
             admin_dir(worktree) / "index",
+            worktree / "README.md",
             repo / "batch_state" / "tasks" / "task-a.json",
         ]
     )
@@ -939,6 +958,7 @@ def test_oversized_head_reflog_is_activity_unknown(repo: Path, free_fuser: Path)
         [
             admin_dir(worktree) / "HEAD",
             admin_dir(worktree) / "index",
+            worktree / "README.md",
             repo / "batch_state" / "tasks" / "task-a.json",
         ]
     )
@@ -1819,7 +1839,7 @@ def holders():
 @pytest.mark.parametrize(
     ("change", "reason"),
     [
-        (late_commit, "late_change: last activity 0 min ago (< 60 min)"),  # the commit wrote HEAD
+        (late_commit, "late_change: HEAD moved since the worktree listing"),
         (late_file, "late_change: dirty or untracked files"),
         (late_process, "late_change: in use: a process works inside the checkout"),
         (late_hidden, f"late_change: {HIDDEN}"),
