@@ -392,7 +392,10 @@ def _git(cwd: Path, *args: str, trace_fixture_root: Path | None = None) -> None:
             code = str(exc) if re.fullmatch(r"OO01_[A-Z_]+", str(exc)) else "OO01_TRACE_REFUSAL"
             for artifact in output.glob("command-*.json"):
                 artifact.unlink()
-            (output / "refusal.json").write_text(json.dumps({"status": code}), encoding="utf-8")
+            refusal = {"status": code}
+            if isinstance(exc, _FixtureTracePrivacyRefusal):
+                refusal.update(exc.evidence)
+            (output / "refusal.json").write_text(json.dumps(refusal), encoding="utf-8")
             raise RuntimeError(code) from None
         return
     try:
@@ -410,12 +413,35 @@ _OO01_SYSCALLS = (
 _OO01_TRACE_BYTES = 1024 * 1024
 
 
+class _FixtureTracePrivacyRefusal(RuntimeError):
+    """Only fixed reason codes and numeric positions cross the raw-data boundary."""
+
+    def __init__(self, reason: str, record_index: int | None = None):
+        phases = {
+            "unrecognized_record": "syscall_trace",
+            "disallowed_syscall": "syscall_trace",
+            "invalid_trace_encoding": "syscall_trace",
+            "unrecognized_build_line": "build_options",
+            "missing_version": "build_options",
+            "invalid_build_encoding": "build_options",
+            "invalid_image_label": "runner_image",
+        }
+        # These arguments are internal constants/ordinals, never parsed text.
+        if reason not in phases or (record_index is not None and
+                                   (type(record_index) is not int or record_index < 1)):
+            raise RuntimeError("OO01_TRACE_REFUSAL")
+        super().__init__("OO01_PRIVACY_REFUSAL")
+        self.evidence = {"phase": phases[reason], "reason": reason}
+        if record_index is not None:
+            self.evidence["record_index"] = record_index
+
+
 def _filter_fixture_trace(raw: str, cwd: Path) -> list[dict]:
     """Project syscall evidence onto synthetic paths; never copy trace text."""
     rows = []
     processes: dict[str, str] = {}
     pending: dict[tuple[str, str], list[str]] = {}
-    for line in raw.splitlines():
+    for record_index, line in enumerate(raw.splitlines(), 1):
         match = re.fullmatch(r"\s*(\d+)\s+([a-z0-9_]+)\((.*)", line)
         resumed = False
         if match is None:
@@ -425,10 +451,10 @@ def _filter_fixture_trace(raw: str, cwd: Path) -> list[dict]:
             # Signals/exit notices carry host identifiers. Syscall exits are retained instead.
             if re.fullmatch(r"\s*\d+\s+(?:---|\+\+\+).*", line):
                 continue
-            raise RuntimeError("OO01_PRIVACY_REFUSAL")
+            raise _FixtureTracePrivacyRefusal("unrecognized_record", record_index)
         pid, operation, arguments = match.groups()
         if operation not in _OO01_SYSCALLS.split(","):
-            raise RuntimeError("OO01_PRIVACY_REFUSAL")
+            raise _FixtureTracePrivacyRefusal("disallowed_syscall", record_index)
         process = processes.setdefault(pid, f"p{len(processes) + 1}")
         paths = []
         for quoted in re.findall(r'"([^"\\]*)"', arguments):
@@ -477,7 +503,11 @@ def _fixture_git_identity(git: str, env: dict[str, str]) -> dict:
         [git, "--version", "--build-options"], env=env, check=True, capture_output=True, timeout=10,
     ).stdout
     fields = {}
-    for line in build.decode("ascii").splitlines():
+    try:
+        lines = build.decode("ascii").splitlines()
+    except UnicodeError:
+        raise _FixtureTracePrivacyRefusal("invalid_build_encoding") from None
+    for record_index, line in enumerate(lines, 1):
         if re.fullmatch(r"git version [0-9][a-zA-Z0-9.+-]{0,80}", line):
             fields["version"] = line
         elif line == "no commit associated with this build":
@@ -490,15 +520,15 @@ def _fixture_git_identity(git: str, env: dict[str, str]) -> dict:
                 r"default-ref-format|default-hash|built from commit):? ([a-zA-Z0-9_.+-]{1,80})", line,
             )
             if match is None:
-                raise RuntimeError("OO01_PRIVACY_REFUSAL")
+                raise _FixtureTracePrivacyRefusal("unrecognized_build_line", record_index)
             fields[match[1]] = match[2]
     if "version" not in fields:
-        raise RuntimeError("OO01_PRIVACY_REFUSAL")
+        raise _FixtureTracePrivacyRefusal("missing_version")
     image = {}
-    for key in ("ImageOS", "ImageVersion"):
+    for record_index, key in enumerate(("ImageOS", "ImageVersion"), 1):
         value = os.environ.get(key, "unknown")
         if not re.fullmatch(r"[a-zA-Z0-9_.-]{1,80}", value):
-            raise RuntimeError("OO01_PRIVACY_REFUSAL")
+            raise _FixtureTracePrivacyRefusal("invalid_image_label", record_index)
         image[key] = value
     return {
         "git_sha256": hashlib.sha256(Path(git).read_bytes()).hexdigest(),
@@ -540,7 +570,11 @@ def _trace_fixture_git(cwd: Path, args: tuple[str, ...], env: dict[str, str], fi
         )
         if not trace.exists() or trace.stat().st_size >= _OO01_TRACE_BYTES:
             raise RuntimeError("OO01_TRACE_BUDGET_OR_CAPABILITY_REFUSAL")
-        rows = _filter_fixture_trace(trace.read_text(encoding="utf-8"), cwd)
+        try:
+            raw = trace.read_text(encoding="utf-8")
+        except UnicodeError:
+            raise _FixtureTracePrivacyRefusal("invalid_trace_encoding") from None
+        rows = _filter_fixture_trace(raw, cwd)
     evidence = {**identity, "fixture": cwd.name, "command": args[0], "returncode": proc.returncode,
                 "operations": rows}
     serialized = json.dumps(evidence, sort_keys=True)
@@ -2266,6 +2300,94 @@ def test_oo01_identity_refuses_unrecognized_text(tmp_path, monkeypatch, image, b
         _fixture_git_identity("unused", {})
 
 
+@pytest.mark.parametrize("reason,position", [
+    ("private-arbitrary-reason", None),
+    ("unrecognized_record", "private-position"),
+    ("unrecognized_record", True),
+    ("unrecognized_record", 0),
+])
+def test_oo01_refusal_details_reject_nonconstant_or_nonnumeric_fields(reason, position):
+    with pytest.raises(RuntimeError, match=r"^OO01_TRACE_REFUSAL$"):
+        _FixtureTracePrivacyRefusal(reason, position)
+
+
+@pytest.mark.parametrize("failure,expected", [
+    ("build_line", {"phase": "build_options", "reason": "unrecognized_build_line", "record_index": 2}),
+    ("build_version", {"phase": "build_options", "reason": "missing_version"}),
+    ("build_encoding", {"phase": "build_options", "reason": "invalid_build_encoding"}),
+    ("image_os", {"phase": "runner_image", "reason": "invalid_image_label", "record_index": 1}),
+    ("image_version", {"phase": "runner_image", "reason": "invalid_image_label", "record_index": 2}),
+    ("trace_record", {"phase": "syscall_trace", "reason": "unrecognized_record", "record_index": 2}),
+    ("trace_syscall", {"phase": "syscall_trace", "reason": "disallowed_syscall", "record_index": 2}),
+    ("trace_encoding", {"phase": "syscall_trace", "reason": "invalid_trace_encoding"}),
+])
+def test_oo01_privacy_refusal_identifies_boundary_without_text(tmp_path, monkeypatch, failure, expected):
+    cwd = tmp_path / "primary"
+    cwd.mkdir()
+    output = tmp_path / "filtered"
+    output.mkdir()
+    (output / "command-1.json").write_text('{"old":"filtered"}')
+    monkeypatch.setenv("TMPDIR", str(tmp_path))
+    monkeypatch.setenv("LU_OO01_GIT_TRACE", "1")
+    monkeypatch.setenv("LU_OO01_GIT_TRACE_DIR", str(output))
+    monkeypatch.setenv("ImageOS", "ubuntu24")
+    monkeypatch.setenv("ImageVersion", "20261019.1.0")
+    private = b"/private/account/credential"
+    build = b"git version 2.55.0\n"
+    trace = b'1 mkdir(".git", 0700) = 0\n'
+    if failure == "build_line":
+        build += b"unrecognized-field: " + private + b"\n"
+    elif failure == "build_version":
+        build = b"cpu: x86_64\n"
+    elif failure == "build_encoding":
+        build += b"\xff" + private
+    elif failure in {"image_os", "image_version"}:
+        monkeypatch.setenv("ImageOS" if failure == "image_os" else "ImageVersion", private.decode())
+    elif failure == "trace_record":
+        trace += b"unrecognized record " + private
+    elif failure == "trace_syscall":
+        trace += b'1 execve("' + private + b'", [], []) = 0\n'
+    elif failure == "trace_encoding":
+        trace += b"\xff" + private
+
+    def fake_run(argv, **kwargs):
+        if "--build-options" in argv:
+            return subprocess.CompletedProcess(argv, 0, stdout=build, stderr=private)
+        Path(argv[argv.index("-o") + 1]).write_bytes(trace)
+        return subprocess.CompletedProcess(argv, 0, stdout=private, stderr=private)
+
+    monkeypatch.setattr(subprocess, "run", fake_run)
+    with pytest.raises(RuntimeError, match=r"^OO01_PRIVACY_REFUSAL$") as error:
+        _git(cwd, "init", "-q", "-b", "main", trace_fixture_root=tmp_path)
+    assert str(error.value) == "OO01_PRIVACY_REFUSAL"
+    assert json.loads((output / "refusal.json").read_text()) == {"status": "OO01_PRIVACY_REFUSAL", **expected}
+    assert sorted(p.name for p in output.iterdir()) == ["refusal.json"]
+    assert not list(tmp_path.glob("oo01-raw-*"))
+    assert private.decode() not in (output / "refusal.json").read_text()
+
+
+def test_oo01_identity_retains_supported_build_fields(tmp_path, monkeypatch):
+    git = tmp_path / "git"
+    git.write_bytes(b"synthetic-executable")
+    build = (
+        b"git version 2.55.0\ncpu: x86_64\nno commit associated with this build\n"
+        b"sizeof-long: 8\nsizeof-size_t: 8\nshell-path: /private/build-shell\n"
+    )
+    monkeypatch.setenv("ImageOS", "ubuntu24")
+    monkeypatch.setenv("ImageVersion", "20261019.1.0")
+    monkeypatch.setattr(subprocess, "run", lambda *a, **kw: subprocess.CompletedProcess(a, 0, build))
+    assert _fixture_git_identity(str(git), {}) == {
+        "git_sha256": hashlib.sha256(b"synthetic-executable").hexdigest(),
+        "build_options_sha256": hashlib.sha256(build).hexdigest(),
+        "build_options": {
+            "version": "git version 2.55.0", "cpu": "x86_64", "commit": "none",
+            "sizeof-long": "8", "sizeof-size_t": "8",
+            "shell-path-sha256": hashlib.sha256(b"/private/build-shell").hexdigest(),
+        },
+        "runner_image": {"ImageOS": "ubuntu24", "ImageVersion": "20261019.1.0"},
+    }
+
+
 def test_oo01_real_packaged_git_trace_and_linkage(tmp_path, monkeypatch):
     output = tmp_path / "filtered"
     monkeypatch.delenv("TMPDIR", raising=False)
@@ -2342,7 +2464,10 @@ def test_oo01_refusal_publishes_no_trace(tmp_path, monkeypatch, failure):
                                 "_filter_fixture_trace", lambda *a: [{"paths": ["x" * (256 * 1024)]}])
     with pytest.raises(RuntimeError, match=code):
         _git(cwd, "init", "-q", "-b", "main", trace_fixture_root=tmp_path)
-    assert json.loads((output / "refusal.json").read_text()) == {"status": code}
+    expected = {"status": code}
+    if failure == "privacy":
+        expected.update(phase="syscall_trace", reason="unrecognized_record", record_index=1)
+    assert json.loads((output / "refusal.json").read_text()) == expected
     assert not list(output.glob("command-*.json"))
     assert not list(tmp_path.glob("oo01-raw-*"))
 
