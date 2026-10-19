@@ -373,7 +373,7 @@ def _write_json(path: Path, data: dict) -> None:
     path.write_text(json.dumps(data), encoding="utf-8")
 
 
-def _git(cwd: Path, *args: str) -> None:
+def _git(cwd: Path, *args: str, trace_fixture_root: Path | None = None) -> None:
     env = {
         "PATH": "/usr/bin:/bin",
         "HOME": str(cwd),
@@ -385,7 +385,7 @@ def _git(cwd: Path, *args: str) -> None:
     }
     if os.environ.get("LU_OO01_GIT_TRACE") == "1":
         try:
-            _trace_fixture_git(cwd, args, env)
+            _trace_fixture_git(cwd, args, env, trace_fixture_root)
         except (RuntimeError, OSError, UnicodeError, subprocess.TimeoutExpired) as exc:
             output = Path(os.environ["LU_OO01_GIT_TRACE_DIR"])
             output.mkdir(parents=True, exist_ok=True)
@@ -507,12 +507,14 @@ def _fixture_git_identity(git: str, env: dict[str, str]) -> dict:
     }
 
 
-def _trace_fixture_git(cwd: Path, args: tuple[str, ...], env: dict[str, str]) -> None:
+def _trace_fixture_git(cwd: Path, args: tuple[str, ...], env: dict[str, str], fixture_root: Path | None) -> None:
     """OO01's opt-in isolated CI checkpoint, restricted to disposable fixture Git."""
     output = Path(os.environ["LU_OO01_GIT_TRACE_DIR"])
     output.mkdir(parents=True, exist_ok=True)
     TMPDIR = os.environ.get("TMPDIR") or os.fspath(ensure_scratch_root())
-    if not cwd.resolve().is_relative_to(Path(TMPDIR).resolve()):
+    if fixture_root is None or cwd.resolve() not in {
+        (fixture_root / "primary").resolve(), (fixture_root / "tooling").resolve(),
+    }:
         raise RuntimeError("OO01_TRACE_SCOPE_REFUSAL")
     count = len(list(output.glob("command-*.json")))
     allowed = {
@@ -554,8 +556,8 @@ def _scratch_checkouts(tmp_path: Path, name: str = "task") -> tuple[Path, Path]:
     """A real primary checkout with real node_modules and a dispatch git worktree named ``name``."""
     primary = tmp_path / "primary"
     primary.mkdir()
-    _git(primary, "init", "-q", "-b", "main")
-    _git(primary, "commit", "-q", "--allow-empty", "-m", "init")
+    _git(primary, "init", "-q", "-b", "main", trace_fixture_root=tmp_path)
+    _git(primary, "commit", "-q", "--allow-empty", "-m", "init", trace_fixture_root=tmp_path)
     _write_json(primary / "package.json", {"name": "primary", "workspaces": ["packages/*"]})
     for folder in (primary / "node_modules", primary / "site" / "node_modules"):
         folder.mkdir(parents=True)
@@ -563,7 +565,7 @@ def _scratch_checkouts(tmp_path: Path, name: str = "task") -> tuple[Path, Path]:
         (folder / "dep").mkdir()
 
     worktree = primary / ".worktrees" / "dispatch" / "agent" / name
-    _git(primary, "worktree", "add", "-q", "--detach", str(worktree))
+    _git(primary, "worktree", "add", "-q", "--detach", str(worktree), trace_fixture_root=tmp_path)
     _write_json(worktree / "package.json", {"name": "worktree", "workspaces": ["packages/*"]})
     _write_json(worktree / "packages" / "kit" / "package.json", {"name": "@lu/kit"})
     _write_json(worktree / "site" / "package.json", {"name": "site"})
@@ -627,7 +629,7 @@ def _build_layout(tmp_path: Path, worktree_name: str = "task") -> dict[str, Path
     tooling = root / "tooling"
     shim_dir = tooling / "scripts" / "agent_runtime" / "shims"
     shim_dir.mkdir(parents=True)
-    _git(tooling, "init", "-q", "-b", "main")
+    _git(tooling, "init", "-q", "-b", "main", trace_fixture_root=root)
     shutil.copy2(SHIM_SOURCE, shim_dir / "npm")
     shutil.copy2(NPX_SOURCE, shim_dir / "npx")
     shutil.copy2(GUARD_SOURCE, tooling / "scripts" / "agent_runtime" / "npm_guard.py")
@@ -2266,7 +2268,7 @@ def test_oo01_identity_refuses_unrecognized_text(tmp_path, monkeypatch, image, b
 
 def test_oo01_real_packaged_git_trace_and_linkage(tmp_path, monkeypatch):
     output = tmp_path / "filtered"
-    monkeypatch.setenv("TMPDIR", str(tmp_path))
+    monkeypatch.delenv("TMPDIR", raising=False)
     monkeypatch.setenv("LU_OO01_GIT_TRACE", "1")
     monkeypatch.setenv("LU_OO01_GIT_TRACE_DIR", str(output))
     built = _build_layout(tmp_path)
@@ -2295,7 +2297,8 @@ def test_oo01_trace_preserves_real_git_failure(tmp_path, monkeypatch):
     monkeypatch.setenv("LU_OO01_GIT_TRACE", "1")
     monkeypatch.setenv("LU_OO01_GIT_TRACE_DIR", str(output))
     with pytest.raises(subprocess.CalledProcessError) as error:
-        _git(cwd, "worktree", "add", "-q", "--detach", str(cwd / ".worktrees/dispatch/agent/task"))
+        _git(cwd, "worktree", "add", "-q", "--detach", str(cwd / ".worktrees/dispatch/agent/task"),
+             trace_fixture_root=tmp_path)
     assert error.value.returncode == 128
     assert json.loads((output / "command-1.json").read_text())["returncode"] == 128
     assert error.value.stdout is None and error.value.stderr is None
@@ -2338,7 +2341,7 @@ def test_oo01_refusal_publishes_no_trace(tmp_path, monkeypatch, failure):
             monkeypatch.setattr(__import__(__name__, fromlist=["_filter_fixture_trace"]),
                                 "_filter_fixture_trace", lambda *a: [{"paths": ["x" * (256 * 1024)]}])
     with pytest.raises(RuntimeError, match=code):
-        _git(cwd, "init", "-q", "-b", "main")
+        _git(cwd, "init", "-q", "-b", "main", trace_fixture_root=tmp_path)
     assert json.loads((output / "refusal.json").read_text()) == {"status": code}
     assert not list(output.glob("command-*.json"))
     assert not list(tmp_path.glob("oo01-raw-*"))
