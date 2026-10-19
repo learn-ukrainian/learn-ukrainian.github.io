@@ -427,3 +427,85 @@ def test_shell_unicode_separator_preserves_physical_line_numbers(tmp_path):
 def test_allowlist_residuals_reference_followup_issue():
     assert all("#8755" not in reason for _, reason, _ in lint.ALLOWLIST)
     assert all("#9702" in reason for _, reason, _ in lint.ALLOWLIST if "migration" in reason or "follow-up" in reason)
+
+
+@pytest.mark.parametrize("suffix", ["py", "sh", "bash"])
+def test_changed_files_match_repo_scan_and_counted_allowlist(tmp_path, monkeypatch, capsys, suffix):
+    root = tmp_path
+    path = root / f"scripts/probe.{suffix}"
+    path.parent.mkdir()
+    line = f'ROOT = "{LITERAL}"' if suffix == "py" else f'ROOT="{LITERAL}"'
+    path.write_text(line + "\n")
+    clean = root / "tests/clean.py"
+    clean.parent.mkdir()
+    clean.write_text("VALUE = 1\n")
+    # An unselected violation must not affect a clean-file invocation.
+    assert lint.main(["--repo", str(root), str(clean)]) == 0
+    assert capsys.readouterr().out == "literal_tmp_findings=0\n"
+    assert lint.main(["--repo", str(root), str(path)]) == 1
+    selected = capsys.readouterr()
+    assert lint.main(["--repo", str(root)]) == 1
+    assert capsys.readouterr() == selected
+    monkeypatch.setattr(
+        lint, "ALLOWLIST", ((f"scripts/probe.{suffix}", "fixture only", lint.line_digest(line) + ":1"),)
+    )
+    assert lint.main(["--repo", str(root), str(path), str(path)]) == 0
+    capsys.readouterr()
+    path.write_text(line + "\n" + line + "\n")
+    assert lint.main(["--repo", str(root), str(path)]) == 1
+    selected = capsys.readouterr()
+    assert f"scripts/probe.{suffix}:2:" in selected.out
+    assert lint.main(["--repo", str(root)]) == 1
+    assert capsys.readouterr() == selected
+    path.write_text(line.replace("fixture", "changed") + "\n")
+    assert lint.main(["--repo", str(root), str(path)]) == 1
+
+
+def test_changed_files_scope_and_errors(tmp_path, monkeypatch, capsys):
+    monkeypatch.chdir(tmp_path)
+    for name in ["scripts/bad.py", "docs/ignored.py", "scripts/ignored.txt", "scripts/nested/probe.py"]:
+        path = tmp_path / name
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(f'ROOT = "{LITERAL}"\n')
+    (tmp_path / "scripts/link.py").symlink_to(tmp_path / "scripts/bad.py")
+    (tmp_path / "scripts/linked_dir").symlink_to(tmp_path / "scripts/nested", target_is_directory=True)
+    assert (
+        lint.main(["--repo", ".", "docs/ignored.py", "scripts/ignored.txt", "scripts/missing.py", "scripts/link.py"])
+        == 0
+    )
+    capsys.readouterr()
+    assert lint.main(["--repo", ".", "scripts/linked_dir/probe.py"]) == 0
+    capsys.readouterr()
+    assert lint.main(["--repo", ".", "scripts/bad.py"]) == 1
+    assert "scripts/bad.py:1:" in capsys.readouterr().out
+    (tmp_path / "scripts/bad.py").write_text("def broken(:\n")
+    assert lint.main(["--repo", ".", "scripts/bad.py"]) == 2
+    assert "cannot read or parse source" in capsys.readouterr().err
+
+
+def test_changed_from_tracks_worktree_staged_deleted_and_empty(tmp_path, monkeypatch, capsys):
+    import subprocess
+
+    monkeypatch.chdir(tmp_path)
+    subprocess.run(["git", "init", "-q"], check=True, timeout=30)
+    scripts = tmp_path / "scripts"
+    scripts.mkdir()
+    (scripts / "probe.py").write_text("VALUE = 1\n")
+    (scripts / "deleted.py").write_text("VALUE = 1\n")
+    subprocess.run(["git", "add", "."], check=True, timeout=30)
+    subprocess.run(
+        ["git", "-c", "user.name=Test", "-c", "user.email=test@example.invalid", "commit", "-qm", "base"],
+        check=True,
+        timeout=30,
+    )
+    (tmp_path / "scripts/untracked.py").write_text(f'ROOT = "{LITERAL}"\n')
+    assert lint.main(["--repo", ".", "--changed-from", "HEAD"]) == 0
+    capsys.readouterr()
+    (scripts / "probe.py").write_text(f'ROOT = "{LITERAL}"\n')
+    (scripts / "deleted.py").unlink()
+    (scripts / "added.py").write_text("VALUE = 1\n")
+    subprocess.run(["git", "add", "scripts/added.py"], check=True, timeout=30)
+    assert lint.main(["--repo", ".", "--changed-from", "HEAD"]) == 1
+    assert "scripts/probe.py:1:" in capsys.readouterr().out
+    assert lint.main(["--repo", ".", "--changed-from", "missing-ref"]) == 2
+    assert capsys.readouterr().err == "git: cannot list changed files\n"
