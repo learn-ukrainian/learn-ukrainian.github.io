@@ -1,7 +1,33 @@
 import { compareCurrent, type PreviewCard } from '../lib/lexicon/word-card-preview';
 import type { EntryRecord } from '../lib/lexicon/atlas-data-source';
+import { releaseReportUrl, type ReleaseCard } from '../lib/lexicon/word-card-release';
 
-export default function WordCardPreview({ card, current, compare }: { card: PreviewCard; current: EntryRecord | null; compare: boolean }) {
+export default function WordCardPreview({ card, current, compare }: { card: PreviewCard | ReleaseCard; current: EntryRecord | null; compare: boolean }) {
+  if (card.kind === 'release-card') return <div data-release-card={card.row.card_id}>
+    <h2>{card.row.status} {card.row.card_id}</h2>
+    <p data-release-version>Release {card.pin.release_version}</p>
+    <p data-card-version>Card version {card.row.card_version}</p>
+    <p data-release-status>{card.row.status}</p>
+    <p>{card.pin.provenance === 'synthetic-fixture' ?
+      'Synthetic fixture. CERTIFIED exercises the UI branch under test authority only. No linguistic or publication approval.' :
+      'Producer-declared status. No publication approval is implied.'}</p>
+    <section aria-label="Known gaps"><h3>Known gaps</h3><p>Declared metadata, not language facts.</p>
+      {card.row.known_gaps.length ? card.row.known_gaps.map((gap, i) => <pre key={i}>{typeof gap === 'string' ? gap : JSON.stringify(gap, null, 2)}</pre>) : <p>No declared gaps</p>}
+    </section>
+    <section aria-label="Parallel cited assertions"><h3>Parallel cited assertions</h3>
+      <p>Assertions remain separate. No field resolution or semantic verdict is inferred.</p>
+      {card.row.fields.map(field => <article key={field.assertion_id} data-release-assertion={field.assertion_id}>
+        <h4>{field.field}</h4><p>{field.subject.kind}: {field.subject.id}</p>
+        <pre data-raw-value>{typeof field.value === 'string' ? field.value : JSON.stringify(field.value, null, 2)}</pre>
+        <pre data-release-citation>{JSON.stringify(field.citation, null, 2)}</pre>
+        <a data-report-action href={releaseReportUrl(card, field)}>Report / improve this assertion</a>
+      </article>)}
+    </section>
+    {compare && <section aria-label="Field comparison"><h2>Field comparison</h2>
+      <p>Unresolved pairing. This release has no assembled-card identity keys. No comparison rows.</p>
+      <p>Better/worse unavailable pending independently accepted comparison evidence.</p>
+    </section>}
+  </div>;
   if (card.kind === 'unavailable') return <p role="status">Unavailable: {card.reason}</p>;
   if (card.kind === 'suppressed') return <p role="status">Suppressed. No card body.</p>;
   if (card.kind === 'successors') return <section aria-label="Successors"><p>{card.state}</p><ul>{card.ids.map(id => <li key={id}>{id}</li>)}</ul></section>;

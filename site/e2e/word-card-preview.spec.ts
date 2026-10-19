@@ -1,8 +1,12 @@
 import { expect, test } from '@playwright/test';
-import { readFileSync } from 'node:fs';
+import { readFileSync, mkdtempSync, existsSync, readdirSync } from 'node:fs';
 import { createHash } from 'node:crypto';
+import { createServer, type Server } from 'node:http';
+import { join, resolve, sep } from 'node:path';
+import { tmpdir } from 'node:os';
 import snapshot from '../tests/fixtures/word-card-preview/current';
 import { revisionCases, relationCases, record } from '../tests/fixtures/word-card-preview/inputs';
+import { buildPreview, releaseControls, candidateId, certifiedId, pins } from '../tests/fixtures/word-card-preview/release-controls';
 
 // This spec drives an explicitly flag-enabled local build. No data certification.
 const names = ['bronia-armour', 'bronia-reservation', 'idiom-buduvaty-povitriani-zamky', 'kliuch-1', 'vriady-hody-conflict', 'vybihaty-imperf', 'vybihty-perf', 'zamok-castle', 'zamok-legacy-split', 'zamok-lock', 'zamok-settlement',
@@ -105,4 +109,149 @@ for (const c of relationCases()) test(`compare/${c.name}`, async ({page}, info) 
     await expect(candidate.locator('[data-comparison]')).toHaveCount(0);
     await expect(current.locator('[data-word-atlas]')).toHaveCount(0);
   }
+});
+
+test.describe('release controls R01-R16 and R10b', () => {
+  test.describe.configure({ mode: 'serial', timeout: 300_000 });
+  const outputs: Record<string, string> = {};
+  let server: Server;
+  let origin: string;
+  test.beforeAll(async () => {
+    const scratch = mkdtempSync(join(process.env.TMPDIR || tmpdir(), 'release-browser-'));
+    const controls = releaseControls(join(scratch, 'inputs'));
+    for (const name of ['base', 'json', 'replacement', 'absent', 'malformed', 'missing', 'bytes', 'tamper', 'status', 'citation', 'required', 'off']) {
+      const config = controls[name];
+      if (!config) throw Error('Missing control');
+      outputs[name] = buildPreview(join(scratch, name), config);
+    }
+    server = createServer((req, res) => {
+      const url = new URL(req.url || '/', 'http://localhost');
+      const parts = url.pathname.split('/');
+      const name = parts[1] === '__control__' ? parts[2] : 'base';
+      const root = outputs[name || ''];
+      const path = parts[1] === '__control__' ? '/' + parts.slice(3).join('/') : url.pathname;
+      if (!root) { res.writeHead(404).end(); return; }
+      const file = resolve(root, '.' + (path.endsWith('/') ? path + 'index.html' : path));
+      if (!file.startsWith(root + sep) || !existsSync(file)) { res.writeHead(404).end('Absent'); return; }
+      res.setHeader('Content-Type', file.endsWith('.css') ? 'text/css' : file.endsWith('.js') ? 'text/javascript' : 'text/html');
+      res.end(readFileSync(file));
+    });
+    await new Promise<void>(done => server.listen(0, '127.0.0.1', done));
+    const address = server.address();
+    if (!address || typeof address === 'string') throw Error('No local port');
+    origin = `http://127.0.0.1:${address.port}`;
+  });
+  test.afterAll(async () => { if (server) await new Promise<void>(done => server.close(() => done())); });
+  const url = (control: string, path: string) => `${origin}/__control__/${control}/lexicon-v2/${path}/`;
+
+  test('R01 candidate literal values, citations and declared gaps', async ({ page }) => {
+    await page.goto(url('base', `release/${candidateId}`));
+    await expect(page.locator('[data-release-status]')).toHaveText('CANDIDATE');
+    await expect(page.locator('[data-card-version]')).toHaveText('Card version synthetic-candidate-1');
+    await expect(page.locator('[data-release-version]')).toHaveText('Release v0.1.0-synthetic');
+    expect(await page.locator('[data-raw-value]').allTextContents()).toEqual([
+      'fixture-head', '<img src=x onerror=globalThis.releaseInjected=1> RAW  A', 'parallel-definition',
+    ]);
+    expect(await page.getByRole('region', { name: 'Known gaps' }).locator('pre').allTextContents()).toEqual([
+      'Independent linguistic review pending', '<script>globalThis.releaseInjected=1</script>',
+    ]);
+    await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex, nofollow');
+    await expect(page.locator('[data-preview-banner]')).toBeVisible();
+    expect(await page.evaluate(() => Object.hasOwn(globalThis, 'releaseInjected'))).toBe(false);
+    expect(await page.content()).not.toContain(process.env.TMPDIR || 'must-not-render-host-path');
+  });
+  test('R02 certified branch is explicitly synthetic', async ({ page }) => {
+    await page.goto(url('base', `release/${certifiedId}`));
+    await expect(page.locator('[data-release-status]')).toHaveText('CERTIFIED');
+    await expect(page.locator('[data-card-version]')).toHaveText('Card version cv_fa34b32f0e93bece65b966e8');
+    await expect(page.getByText('Synthetic fixture. CERTIFIED exercises the UI branch under test authority only. No linguistic or publication approval.', { exact: true })).toBeVisible();
+    expect(await page.locator('[data-raw-value]').allTextContents()).toEqual(['fixture-head', 'permitted-definition', 'parallel-definition']);
+  });
+  test('R03 mixed statuses account for every card and all six citations', async ({ page }) => {
+    let total = 0;
+    for (const [id, status] of [[certifiedId, 'CERTIFIED'], [candidateId, 'CANDIDATE']]) {
+      await page.goto(url('base', `release/${id}`));
+      await expect(page.locator('[data-release-card]')).toHaveAttribute('data-release-card', id);
+      await expect(page.locator('[data-release-status]')).toHaveText(status);
+      total += await page.locator('[data-release-citation]').count();
+      for (const text of await page.locator('[data-release-citation]').allTextContents()) {
+        const citation = JSON.parse(text);
+        expect(citation.snapshot_id).toBe('fixture-v1');
+        expect(citation.attribution).toBe(`Synthetic ${citation.source_id} edition`);
+        expect(citation.licence.name).toBe('Fixture terms');
+        expect(citation.locator).toMatch(/^(vesum|ulif):row:/);
+      }
+    }
+    expect(total).toBe(6);
+  });
+  test('R04 same spelling routes exclusively by separate card IDs', async ({ page }) => {
+    for (const id of [candidateId, certifiedId]) {
+      await page.goto(url('base', `release/${id}`));
+      await expect(page.locator('[data-release-card]')).toHaveAttribute('data-release-card', id);
+      await expect(page.locator('[data-raw-value]').first()).toHaveText('fixture-head');
+    }
+    expect((await page.goto(url('base', 'release/fixture-head')))?.status()).toBe(404);
+  });
+  test('R05 valid different release at configured location refuses unchanged old pin', async ({ page }) => {
+    await page.goto(url('replacement', 'release'));
+    await expect(page.getByRole('status')).toHaveText('Unavailable: Manifest pin mismatch');
+    await expect(page.locator('[data-release-card]')).toHaveCount(0);
+  });
+  test('R06 producer JSON format renders the full population', async ({ page }) => {
+    for (const id of [candidateId, certifiedId]) {
+      await page.goto(url('json', `release/${id}`));
+      await expect(page.locator('[data-release-card]')).toHaveAttribute('data-release-card', id);
+      await expect(page.locator('[data-release-version]')).toHaveText('Release v0.1.1-synthetic');
+      await expect(page.locator('[data-input-hash]')).toHaveText(pins.json.dataset_sha256);
+      await expect(page.locator('[data-release-assertion]')).toHaveCount(3);
+    }
+  });
+  for (const [id, control, reason] of [
+    ['R07', 'absent', 'Release not configured'], ['R08', 'malformed', 'Malformed manifest'],
+    ['R09', 'missing', 'Missing artifact'], ['R10', 'bytes', 'Dataset integrity mismatch'],
+    ['R10b', 'tamper', 'Manifest pin mismatch'], ['R11', 'status', 'Unknown card status'],
+    ['R12', 'citation', 'Missing or malformed field citation'], ['R13', 'required', 'Missing or malformed card field'],
+  ]) test(`${id} ${control} refuses visibly at intended boundary`, async ({ page }, info) => {
+    await page.goto(url(control, 'release'));
+    await expect(page.getByRole('status')).toHaveText(`Unavailable: ${reason}`);
+    await expect(page.locator('[data-release-card], [data-raw-value]')).toHaveCount(0);
+    expect(await page.content()).not.toContain(process.env.TMPDIR || 'must-not-render-host-path');
+    await info.attach(id, { body: await page.screenshot(), contentType: 'image/png' });
+  });
+  test('R14 report is user-clicked and contains only six allowed identifiers', async ({ page }) => {
+    const requests: string[] = [];
+    await page.route('https://github.com/**', route => { requests.push(route.request().url()); return route.fulfill({ body: 'Manual report draft, no submission' }); });
+    await page.goto(url('base', `release/${candidateId}`));
+    const link = page.locator('[data-report-action]').nth(1);
+    const href = await link.getAttribute('href');
+    if (!href) throw Error('No report link');
+    const target = new URL(href);
+    expect(target.origin + target.pathname).toBe('https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/new');
+    expect(JSON.parse(target.searchParams.get('body') || '')).toEqual({
+      release_version: 'v0.1.0-synthetic', dataset_sha256: pins.jsonl.dataset_sha256,
+      card_id: candidateId, card_version: 'synthetic-candidate-1', assertion_id: 'wa_000000000000000000000065', field: 'definition_uk',
+    });
+    expect(requests).toEqual([]);
+    await link.click();
+    await expect(page.getByText('Manual report draft, no submission')).toBeVisible();
+    expect(requests).toEqual([href]);
+  });
+  test('R15 assembled comparison baseline survives; release comparison has no invented pairing', async ({ page }) => {
+    await page.goto(url('base', 'compare/kliuch-1'));
+    await expect(page.locator('[data-word-atlas]')).toBeVisible();
+    expect(await page.locator('[data-comparison]').count()).toBeGreaterThan(0);
+    for (const id of [candidateId, certifiedId]) {
+      await page.goto(url('base', `compare/release/${id}`));
+      await expect(page.getByRole('region', { name: 'Field comparison', exact: true })).toContainText('Unresolved pairing');
+      await expect(page.locator('[data-comparison], [data-result="better"], [data-result="worse"]')).toHaveCount(0);
+      await expect(page.locator('[data-word-atlas]')).toHaveCount(0);
+    }
+  });
+  test('R16 flag-off build excludes preview routes and fixture bytes with configuration set', async ({ page }) => {
+    for (const path of [`release/${candidateId}`, 'control-complete', 'release']) expect((await page.goto(url('off', path)))?.status()).toBe(404);
+    expect(existsSync(join(outputs.off || '', 'lexicon-v2'))).toBe(false);
+    for (const file of readdirSync(outputs.off || '', { recursive: true })) if (typeof file === 'string' && /\.(html|js|json|xml)$/.test(file)) {
+      expect(readFileSync(join(outputs.off || '', file), 'utf8')).not.toMatch(/lexicon-v2|fixture-head|permitted-definition|synthetic-candidate-1|wc_0123456789a[bc]/);
+    }
+  });
 });
