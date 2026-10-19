@@ -115,6 +115,16 @@
     ]
   },
   {
+    "path": "scripts/atlas/word_card_universe.py",
+    "reference_count": 1,
+    "kind": "writer",
+    "target_db": "checkpoint.db",
+    "reason": "creates resumable complete-universe build checkpoint database (#10516)",
+    "calls": [
+      "sqlite3.connect(checkpoint)"
+    ]
+  },
+  {
     "path": "scripts/audit/checks/vocabulary.py",
     "reference_count": 2,
     "kind": "writer",

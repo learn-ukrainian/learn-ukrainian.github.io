@@ -347,6 +347,7 @@ def dispatch_args_sha256(args: argparse.Namespace) -> str:
         and not (key == "review_mode" and value == "cross_family")
         and not (key == "authoring_review_plan" and value == "cross_family")
         and not (key == "claude_account" and value in (None, "a"))
+        and not (key == "verify_command" and value is None)
     }
     canonical = json.dumps(payload, sort_keys=True, separators=(",", ":"))
     return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
@@ -369,6 +370,7 @@ def advisory_args_payload(args: argparse.Namespace) -> dict[str, Any]:
         and not (key == "review_mode" and value == "cross_family")
         and not (key == "authoring_review_plan" and value == "cross_family")
         and not (key == "claude_account" and value in (None, "a"))
+        and not (key == "verify_command" and value is None)
     }
 
 
@@ -6634,7 +6636,7 @@ def public_causes() -> frozenset[str]:
             "OWNED_PATHS_INVALID", "BINDING_MISMATCH", "OWNED_PATHS_MISMATCH", "ENVELOPE_CHANGED", "SEAL_MISSING",
             "SEAL_MISMATCH", "ADMISSION_MISSING", "ADMISSION_INVALID", "ADVISOR_ROUTE_REFUSED",
             "EXECUTION_MISMATCH", "CEILING_EXCEEDED", "CEILING_UNMEASURED", "EXEMPT_CODE_CHANGE",
-            "EXEMPT_CHANGES_UNMEASURED",
+            "EXEMPT_CHANGES_UNMEASURED", "DRIVER_BRIEF_REFUSED",
         )
         if isinstance(getattr(bounded_advisory, name, None), str)
     }  # fmt: skip
@@ -7663,7 +7665,7 @@ def run_completion_gate(
         reason = _review_verdict_failure_reason(response or "")
         if reason == _REVIEW_UNSUPPORTED_VERDICT_REASON:
             token = unsupported_verdict_tokens(response or "")[-1]
-            detail = f"{reason}: unsupported token {token!r}; accepted tokens: {', '.join(ACCEPTED_VERDICT_TOKENS)}"
+            detail = f"{reason}: unsupported verdict identifier {token!r}; accepted tokens: {', '.join(ACCEPTED_VERDICT_TOKENS)}"
             return CompletionGateResult(gate, reason, redact_text(detail) or "")
         return CompletionGateResult(gate, reason, reason or "")
     if gate in (COMPLETION_GATE_ADVISORY_CEILING, COMPLETION_GATE_ADVISORY_EXEMPT_CHANGE):
@@ -13405,6 +13407,7 @@ def _dispatch(
             launch_model=launch_target.model,
             bound_args=advisory_args,
             repo_root=target_repo_root,
+            caller={"identity": attribution.initiator, "source": attribution.source},
         )
     except bounded_advisory.AdvisoryRefused as exc:
         print(f"❌ dispatch refused: {exc}", file=sys.stderr)
@@ -15620,6 +15623,7 @@ class _AdvisoryAdmission:
     agent: str | None = None  # the admitted launch the bounded worker must run
     model_id: str | None = None
     exemption: dict[str, Any] | None = None  # a Gemini Flash launch classified Ukrainian
+    driver_brief: dict[str, Any] | None = None
 
     def state_fields(self, *, research_block: str = "", execution: Mapping[str, Any] | None = None) -> dict[str, Any]:
         """Task-record fields; ``research_block`` is the research pointer block added to the worker prompt.
@@ -15628,6 +15632,11 @@ class _AdvisoryAdmission:
         recorded with the admitted agent and model as ``admitted_execution``;
         None for a dry run, which starts no worker.
         """
+        if self.driver_brief is not None:
+            admitted = {**self.driver_brief, "research_block": research_block}
+            if execution is not None:
+                admitted["admitted_execution"] = {"agent": self.agent, "model_id": self.model_id, **execution}
+            return {"driver_brief": admitted}
         if self.envelope is not None and self.requirement is not None:
             assert self.args is not None and self.prompt_sha256 is not None and self.repo_root is not None
             assert self.agent is not None and self.model_id is not None
@@ -15655,6 +15664,8 @@ class _AdvisoryAdmission:
 
     def prompt_block(self) -> tuple[str, str | None]:
         """``(text, block kind)`` appended to the worker prompt; empty when neither role applies."""
+        if self.driver_brief is not None:
+            return bounded_advisory.driver_brief_prompt_block(self.args or {}), "driver_brief"
         if self.envelope is not None:
             return bounded_advisory.worker_prompt_block(self.envelope), "advisory_envelope"
         if self.advisor_binding is not None:
@@ -15696,6 +15707,7 @@ def _admit_advisory(
     launch_model: str | None,
     bound_args: dict[str, Any],
     repo_root: Path,
+    caller: Mapping[str, Any] | None = None,
 ) -> _AdvisoryAdmission:
     """Admit the admitted route under #9275 or raise ``AdvisoryRefused``.
 
@@ -15752,6 +15764,30 @@ def _admit_advisory(
                 }
             )
         return _AdvisoryAdmission()
+    if advisory_task is None and model_id in bounded_advisory.driver_brief_models() and task_family in {
+        "bounded_implementation", "readonly_recon", "mechanical_classification"
+    }:
+        try:
+            prompt_sha256 = _binding_prompt_sha256(args, read_stdin=False)
+        except (OSError, UnicodeError):
+            raise bounded_advisory.AdvisoryRefused(
+                bounded_advisory.DRIVER_BRIEF_REFUSED, "the driver brief cannot be read"
+            ) from None
+        owned = bounded_advisory.validate_driver_brief(
+            bound_args, repo_root=repo_root, brief_sha256=prompt_sha256, model_id=model_id
+        )
+        return _AdvisoryAdmission(
+            prompt_sha256=prompt_sha256, args=bound_args, repo_root=repo_root, agent=dispatch_agent, model_id=model_id,
+            driver_brief={
+                "driver": dict(caller or {"identity": "unknown", "source": "unknown"}),
+                "advisory_args": bound_args,
+                "advisory_args_sha256": bounded_advisory.canonical_sha256(bound_args),
+                "prompt_sha256": prompt_sha256,
+                "dispatch_args_sha256": advisory_binding(bounded_advisory.canonical_sha256(bound_args), prompt_sha256),
+                "owned_paths": owned,
+                "repo_root": str(repo_root),
+            },
+        )
     if advisory_task is None:
         raise bounded_advisory.AdvisoryRefused(
             bounded_advisory.ENVELOPE_REQUIRED,
@@ -15802,7 +15838,7 @@ def _bounded_prompt_composer(
     """
     from scripts.agent_runtime.kimi_admission import is_kimi_seat
 
-    def compose(brief: str, validated: bounded_advisory.ValidatedEnvelope, args: Mapping[str, Any]) -> str:
+    def compose(brief: str, validated: bounded_advisory.ValidatedEnvelope | None, args: Mapping[str, Any]) -> str:
         carrier = record.get("task_lifecycle")
         lifecycle = ""
         if isinstance(carrier, dict):
@@ -15811,7 +15847,7 @@ def _bounded_prompt_composer(
             lifecycle = task_lifecycle.render_carrier_prompt(carrier)
         worktree = record.get("worktree_path")
         sparse = record.get("worktree_sparse")
-        admitted = record.get("advisory_envelope") or {}
+        admitted = record.get("driver_brief") or record.get("advisory_envelope") or {}
         return _compose_dispatch_prompt(
             brief + lifecycle,
             worktree_path=Path(str(worktree)) if worktree else None,
@@ -15819,8 +15855,9 @@ def _bounded_prompt_composer(
             sparse_telemetry=sparse if isinstance(sparse, dict) else None,
             delegate_commits=is_kimi_seat(agent, model=model),
             research_block=_recorded_research_block(admitted.get("research_block")),
-            advisory_block=bounded_advisory.worker_prompt_block(validated),
-            advisory_block_kind="advisory_envelope",
+            advisory_block=(bounded_advisory.worker_prompt_block(validated) if validated is not None
+                            else bounded_advisory.driver_brief_prompt_block(args)),
+            advisory_block_kind="advisory_envelope" if validated is not None else "driver_brief",
             rules_seat=args.get("rules_seat"),
             agent=agent,
             review_route=(record.get("review_attempt") is not None),
@@ -15914,6 +15951,10 @@ def _advisory_worker_refusal(
 
 def _recheck_advisory(admission: _AdvisoryAdmission, *, repo_root: Path) -> None:
     """Refuse when the admitted envelope's advisor record or result changed before spawn (#9275)."""
+    if admission.driver_brief is not None:
+        bounded_advisory.validate_driver_brief(
+            admission.args or {}, repo_root=repo_root, brief_sha256=admission.prompt_sha256, model_id=admission.model_id
+        )
     validated = admission.envelope
     if validated is None:
         return
@@ -17743,7 +17784,7 @@ def _mechanical_task_scope(args: argparse.Namespace, *, admitted: bool = False) 
         # Persist the inputs captured at admission, even if argv or the prompt file changed since then.
         return dict(getattr(args, "_mechanical_admitted_scope", {}))
     family = getattr(args, "research_task_family", None)
-    if family not in MECHANICAL_FAMILIES:
+    if family not in MECHANICAL_FAMILIES | {"bounded_implementation"}:
         return {}
     prompt_file = getattr(args, "prompt_file", None)
     try:
@@ -19902,7 +19943,8 @@ def build_parser() -> argparse.ArgumentParser:
         metavar="TASK_ID",
         help=(
             "#9275: the finished advisor task whose envelope admits this bounded-worker dispatch. "
-            "Required whenever the admitted route launches the bounded worker (gpt-6-luna) or the "
+            "Optional for Luna/Haiku read-only recon/classification or workspace-write bounded implementation with a complete driver brief, owned paths and --verify-command. "
+            "Otherwise required whenever the admitted route launches the bounded worker (gpt-6-luna) or the "
             "Gemini Flash bounded fallback without a Ukrainian authoring/review classification; "
             "refused on any other dispatch. Its owned_paths must equal --owned-path. Default: None."
         ),
@@ -19966,6 +20008,11 @@ def build_parser() -> argparse.ArgumentParser:
     )
     # Keep legacy argument-error output byte-identical; the option help exposes the opt-in.
     d.usage = d.format_usage().removeprefix("usage: ").rstrip("\n")
+    d.add_argument(
+        "--verify-command", default=None, metavar="COMMAND",
+        help=("Acceptance command for a driver brief. Required with "
+              "owned paths for Luna/Haiku read-only recon/classification or workspace-write bounded implementation without --advisory-task. Default: None."),
+    )
     d.add_argument(
         "--review-mode",
         choices=("cross_family", "red_team"),

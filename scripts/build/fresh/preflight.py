@@ -148,7 +148,6 @@ def preflight_lesson(
     words_path: Path | None = None,
     level: str | None = None,
     slug: str | None = None,
-    pack_lock_sha256: str | None = None,
     words_lock_sha256: str | None = None,
     learner_state: Any = None,
     repo_root: Path | None = None,

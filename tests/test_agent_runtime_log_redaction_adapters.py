@@ -141,6 +141,7 @@ def test_deepseek_max_budget_warning_is_constant(tmp_path, monkeypatch, caplog):
     secret = "secret-looking-budget-value"
     with (
         patch(f"{DeepSeekAdapter.__module__}.shutil.which", return_value=str(tmp_path / "runtime-cli")),
+        patch(f"{DeepSeekAdapter.__module__}._cached_flash_name", return_value=None),
         caplog.at_level(logging.DEBUG),
     ):
         DeepSeekAdapter().build_invocation(

@@ -4101,11 +4101,11 @@ def test_run_worker_review_without_verdict_fails_with_reason(
     [
         (
             "ghp_SYNTHETIC10598TOKENabcdefghij",
-            "review_unsupported_verdict_token: unsupported token '[REDACTED_SECRET]'; accepted tokens: APPROVE, APPROVED, CHANGES_REQUESTED, REQUEST_CHANGES, BLOCKED",
+            "review_unsupported_verdict_token: unsupported verdict identifier '[REDACTED_SECRET]'; accepted tokens: APPROVE, APPROVED, CHANGES_REQUESTED, REQUEST_CHANGES, BLOCKED",
         ),
         (
             "CHANGES",
-            "review_unsupported_verdict_token: unsupported token 'CHANGES'; accepted tokens: APPROVE, APPROVED, CHANGES_REQUESTED, REQUEST_CHANGES, BLOCKED",
+            "review_unsupported_verdict_token: unsupported verdict identifier 'CHANGES'; accepted tokens: APPROVE, APPROVED, CHANGES_REQUESTED, REQUEST_CHANGES, BLOCKED",
         ),
     ],
     ids=["sensitive", "benign"],
@@ -4126,14 +4126,19 @@ def test_review_verdict_gate_redacts_unsupported_diagnostic(token, expected):
 
 
 @pytest.mark.parametrize(
-    "token,diagnostic_token",
+    "response,token,diagnostic_token",
     [
-        ("CHANGES", "CHANGES"),
-        ("REVISE", "REVISE"),
-        ("changes", "changes"),
-        ("APPROVEX", "APPROVEX"),
-        ("APPROVE_2", "APPROVE_2"),
-        ("ghp_SYNTHETIC10598TOKENabcdefghij", "[REDACTED_SECRET]"),
+        ("Findings.\n## **VERDICT**: **CHANGES**\n", "CHANGES", "CHANGES"),
+        ("Findings.\n## **VERDICT**: **REVISE**\n", "REVISE", "REVISE"),
+        ("Findings.\n## **VERDICT**: **changes**\n", "changes", "changes"),
+        ("Findings.\n## **VERDICT**: **APPROVEX**\n", "APPROVEX", "APPROVEX"),
+        ("Findings.\n## **VERDICT**: **APPROVE_2**\n", "APPROVE_2", "APPROVE_2"),
+        (
+            "Findings.\n## **VERDICT**: **ghp_SYNTHETIC10598TOKENabcdefghij**\n",
+            "ghp_SYNTHETIC10598TOKENabcdefghij", "[REDACTED_SECRET]",
+        ),
+        ("Verdict: Looks good to me overall.", "Looks", "Looks"),
+        ("**Verdict:** I approve this change.", "I", "I"),
     ],
 )
 def test_run_worker_review_verdict_unsupported_diagnostic_persists(
@@ -4141,10 +4146,10 @@ def test_run_worker_review_verdict_unsupported_diagnostic_persists(
     tmp_path,
     monkeypatch,
     capsys,
+    response,
     token,
     diagnostic_token,
 ):
-    response = f"Findings.\n## **VERDICT**: **{token}**\n"
     task_id = "review-unsupported-verdict"
     rc, state = _run_successful_worker_for_deliverable_test(
         task_id=task_id,
@@ -4160,7 +4165,7 @@ def test_run_worker_review_verdict_unsupported_diagnostic_persists(
     for field in ("failure_reason", "review_verdict_failure", "last_error"):
         assert state[field] == persisted[field] == "review_unsupported_verdict_token"
     diagnostic = (
-        f"review_unsupported_verdict_token: unsupported token {diagnostic_token!r}; "
+        f"review_unsupported_verdict_token: unsupported verdict identifier {diagnostic_token!r}; "
         "accepted tokens: APPROVE, APPROVED, CHANGES_REQUESTED, REQUEST_CHANGES, BLOCKED"
     )
     assert persisted["stderr_excerpt"] == diagnostic
@@ -4177,6 +4182,8 @@ def test_run_worker_review_verdict_unsupported_diagnostic_persists(
     "reply,token",
     [
         ("VERDICT: CHANGES", "CHANGES"),
+        ("Verdict: Looks good to me overall.", "Looks"),
+        ("**Verdict:** I approve this change.", "I"),
         ("**Verdict**: **changes**", "changes"),
         ("__VERDICT__: __REVISE__", "REVISE"),
         ("   ###### VERDICT: NEEDS_WORK", "NEEDS_WORK"),
@@ -4203,7 +4210,7 @@ def test_review_verdict_unsupported_tokens_use_shared_markdown_scanner(reply, to
     assert delegate.parse_review_verdict(reply) is None
     assert unsupported_verdict_tokens(reply)[-1] == token
     assert result.failure == "review_unsupported_verdict_token"
-    assert f"unsupported token {token!r}" in result.detail
+    assert f"unsupported verdict identifier {token!r}" in result.detail
     assert "accepted tokens: APPROVE, APPROVED, CHANGES_REQUESTED, REQUEST_CHANGES, BLOCKED" in result.detail
 
 
@@ -4272,7 +4279,7 @@ def test_integrated_unsupported_verdicts_keep_main_fence_policy(newline, body, e
     if expected:
         assert result.failure == "review_unsupported_verdict_token"
         assert result.detail == (
-            "review_unsupported_verdict_token: unsupported token 'REVISE'; "
+            "review_unsupported_verdict_token: unsupported verdict identifier 'REVISE'; "
             "accepted tokens: APPROVE, APPROVED, CHANGES_REQUESTED, REQUEST_CHANGES, BLOCKED"
         )
     else:

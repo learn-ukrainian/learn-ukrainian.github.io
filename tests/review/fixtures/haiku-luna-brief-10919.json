@@ -1,0 +1,168 @@
+{
+  "catalog_model_fields": [
+    {
+      "model": "claude-haiku-5-5",
+      "field": "roles",
+      "before": [
+        "mechanical_only",
+        "routine_mechanical",
+        "mechanical_classification",
+        "readonly_recon"
+      ],
+      "after": [
+        "mechanical_only",
+        "routine_mechanical",
+        "mechanical_classification",
+        "readonly_recon",
+        "bounded_implementation"
+      ]
+    },
+    {
+      "model": "claude-haiku-5-5",
+      "field": "weaknesses",
+      "before": [
+        "no_ukrainian_content",
+        "no_formal_review",
+        "no_design_or_approval",
+        "no_security_code",
+        "no_driver",
+        "no_bounded_implementation"
+      ],
+      "after": [
+        "no_ukrainian_content",
+        "no_formal_review",
+        "no_design_or_approval",
+        "no_security_code",
+        "no_driver"
+      ]
+    },
+    {
+      "model": "claude-haiku-5-5",
+      "field": "notes",
+      "before": "#9996: routine lockfile, pointer and smoke work; mechanical TypeSafe/Jev, CI failure and issue/DoR classification; read-only recon alongside Luna. Mechanical-only admission requires a matching task family, narrow safe owned paths and non-Ukrainian inputs. No bounded code, even with an envelope: the cited workload evidence qualifies classification/extraction/routing, not fleet code authoring. Existing Luna/Flash envelope admission stays intact.",
+      "after": "#9996: routine lockfile, pointer and smoke work; mechanical TypeSafe/Jev, CI failure and issue/DoR classification; read-only recon alongside Luna. Mechanical-only admission requires a matching task family, narrow safe owned paths and non-Ukrainian inputs. #10919: bounded implementation also accepts the dispatching driver brief with owned paths and a verify command; caller attribution and the exact brief SHA are recorded. Explicit advisor envelopes remain supported; security, language, review, design and driver exclusions remain."
+    },
+    {
+      "model": "gpt-6-luna",
+      "field": "roles",
+      "before": [
+        "recon",
+        "bounded_checks",
+        "log_triage",
+        "bounded_implementation",
+        "bounded_investigation"
+      ],
+      "after": [
+        "recon",
+        "bounded_checks",
+        "log_triage",
+        "bounded_implementation",
+        "bounded_investigation",
+        "readonly_recon",
+        "mechanical_classification"
+      ]
+    }
+  ],
+  "dispatch_refusals": [
+    {
+      "index": 17,
+      "before": "REVIEW_ROUTE_REFUSED: model 'gpt-6-luna' (gpt-6-luna) holds no review, critique or approval role in the model catalog (roles: recon, bounded_checks, log_triage, bounded_implementation, bounded_investigation; review_scheduler.activity_roles.review, #9583)",
+      "after": "REVIEW_ROUTE_REFUSED: model 'gpt-6-luna' (gpt-6-luna) holds no review, critique or approval role in the model catalog (roles: recon, bounded_checks, log_triage, bounded_implementation, bounded_investigation, readonly_recon, mechanical_classification; review_scheduler.activity_roles.review, #9583)"
+    },
+    {
+      "index": 19,
+      "before": "REVIEW_ROUTE_REFUSED: model 'gpt-6-luna' (gpt-6-luna) holds no review, critique or approval role in the model catalog (roles: recon, bounded_checks, log_triage, bounded_implementation, bounded_investigation; review_scheduler.activity_roles.review, #9583)",
+      "after": "REVIEW_ROUTE_REFUSED: model 'gpt-6-luna' (gpt-6-luna) holds no review, critique or approval role in the model catalog (roles: recon, bounded_checks, log_triage, bounded_implementation, bounded_investigation, readonly_recon, mechanical_classification; review_scheduler.activity_roles.review, #9583)"
+    },
+    {
+      "index": 73,
+      "before": "REVIEW_ROUTE_REFUSED: model 'gpt-6-luna' (gpt-6-luna) holds no review, critique or approval role in the model catalog (roles: recon, bounded_checks, log_triage, bounded_implementation, bounded_investigation; review_scheduler.activity_roles.review, #9583)",
+      "after": "REVIEW_ROUTE_REFUSED: model 'gpt-6-luna' (gpt-6-luna) holds no review, critique or approval role in the model catalog (roles: recon, bounded_checks, log_triage, bounded_implementation, bounded_investigation, readonly_recon, mechanical_classification; review_scheduler.activity_roles.review, #9583)"
+    },
+    {
+      "index": 75,
+      "before": "REVIEW_ROUTE_REFUSED: model 'gpt-6-luna' (gpt-6-luna) holds no review, critique or approval role in the model catalog (roles: recon, bounded_checks, log_triage, bounded_implementation, bounded_investigation; review_scheduler.activity_roles.review, #9583)",
+      "after": "REVIEW_ROUTE_REFUSED: model 'gpt-6-luna' (gpt-6-luna) holds no review, critique or approval role in the model catalog (roles: recon, bounded_checks, log_triage, bounded_implementation, bounded_investigation, readonly_recon, mechanical_classification; review_scheduler.activity_roles.review, #9583)"
+    },
+    {
+      "index": 205,
+      "before": "REVIEW_ROUTE_REFUSED: model 'gpt-6-luna' (gpt-6-luna) holds no review, critique or approval role in the model catalog (roles: recon, bounded_checks, log_triage, bounded_implementation, bounded_investigation; review_scheduler.activity_roles.review, #9583)",
+      "after": "REVIEW_ROUTE_REFUSED: model 'gpt-6-luna' (gpt-6-luna) holds no review, critique or approval role in the model catalog (roles: recon, bounded_checks, log_triage, bounded_implementation, bounded_investigation, readonly_recon, mechanical_classification; review_scheduler.activity_roles.review, #9583)"
+    },
+    {
+      "index": 207,
+      "before": "REVIEW_ROUTE_REFUSED: model 'gpt-6-luna' (gpt-6-luna) holds no review, critique or approval role in the model catalog (roles: recon, bounded_checks, log_triage, bounded_implementation, bounded_investigation; review_scheduler.activity_roles.review, #9583)",
+      "after": "REVIEW_ROUTE_REFUSED: model 'gpt-6-luna' (gpt-6-luna) holds no review, critique or approval role in the model catalog (roles: recon, bounded_checks, log_triage, bounded_implementation, bounded_investigation, readonly_recon, mechanical_classification; review_scheduler.activity_roles.review, #9583)"
+    },
+    {
+      "index": 237,
+      "before": "REVIEW_ROUTE_REFUSED: model 'gpt-6-luna' (gpt-6-luna) holds no review, critique or approval role in the model catalog (roles: recon, bounded_checks, log_triage, bounded_implementation, bounded_investigation; review_scheduler.activity_roles.review, #9583)",
+      "after": "REVIEW_ROUTE_REFUSED: model 'gpt-6-luna' (gpt-6-luna) holds no review, critique or approval role in the model catalog (roles: recon, bounded_checks, log_triage, bounded_implementation, bounded_investigation, readonly_recon, mechanical_classification; review_scheduler.activity_roles.review, #9583)"
+    },
+    {
+      "index": 239,
+      "before": "REVIEW_ROUTE_REFUSED: model 'gpt-6-luna' (gpt-6-luna) holds no review, critique or approval role in the model catalog (roles: recon, bounded_checks, log_triage, bounded_implementation, bounded_investigation; review_scheduler.activity_roles.review, #9583)",
+      "after": "REVIEW_ROUTE_REFUSED: model 'gpt-6-luna' (gpt-6-luna) holds no review, critique or approval role in the model catalog (roles: recon, bounded_checks, log_triage, bounded_implementation, bounded_investigation, readonly_recon, mechanical_classification; review_scheduler.activity_roles.review, #9583)"
+    },
+    {
+      "index": 265,
+      "before": "REVIEW_ROUTE_REFUSED: model 'gpt-6-luna' (gpt-6-luna) holds no review, critique or approval role in the model catalog (roles: recon, bounded_checks, log_triage, bounded_implementation, bounded_investigation; review_scheduler.activity_roles.review, #9583)",
+      "after": "REVIEW_ROUTE_REFUSED: model 'gpt-6-luna' (gpt-6-luna) holds no review, critique or approval role in the model catalog (roles: recon, bounded_checks, log_triage, bounded_implementation, bounded_investigation, readonly_recon, mechanical_classification; review_scheduler.activity_roles.review, #9583)"
+    },
+    {
+      "index": 267,
+      "before": "REVIEW_ROUTE_REFUSED: model 'gpt-6-luna' (gpt-6-luna) holds no review, critique or approval role in the model catalog (roles: recon, bounded_checks, log_triage, bounded_implementation, bounded_investigation; review_scheduler.activity_roles.review, #9583)",
+      "after": "REVIEW_ROUTE_REFUSED: model 'gpt-6-luna' (gpt-6-luna) holds no review, critique or approval role in the model catalog (roles: recon, bounded_checks, log_triage, bounded_implementation, bounded_investigation, readonly_recon, mechanical_classification; review_scheduler.activity_roles.review, #9583)"
+    },
+    {
+      "index": 293,
+      "before": "REVIEW_ROUTE_REFUSED: model 'gpt-6-luna' (gpt-6-luna) holds no review, critique or approval role in the model catalog (roles: recon, bounded_checks, log_triage, bounded_implementation, bounded_investigation; review_scheduler.activity_roles.review, #9583)",
+      "after": "REVIEW_ROUTE_REFUSED: model 'gpt-6-luna' (gpt-6-luna) holds no review, critique or approval role in the model catalog (roles: recon, bounded_checks, log_triage, bounded_implementation, bounded_investigation, readonly_recon, mechanical_classification; review_scheduler.activity_roles.review, #9583)"
+    },
+    {
+      "index": 295,
+      "before": "REVIEW_ROUTE_REFUSED: model 'gpt-6-luna' (gpt-6-luna) holds no review, critique or approval role in the model catalog (roles: recon, bounded_checks, log_triage, bounded_implementation, bounded_investigation; review_scheduler.activity_roles.review, #9583)",
+      "after": "REVIEW_ROUTE_REFUSED: model 'gpt-6-luna' (gpt-6-luna) holds no review, critique or approval role in the model catalog (roles: recon, bounded_checks, log_triage, bounded_implementation, bounded_investigation, readonly_recon, mechanical_classification; review_scheduler.activity_roles.review, #9583)"
+    },
+    {
+      "index": 357,
+      "before": "REVIEW_ROUTE_REFUSED: model 'gpt-6-luna' (gpt-6-luna) holds no review, critique or approval role in the model catalog (roles: recon, bounded_checks, log_triage, bounded_implementation, bounded_investigation; review_scheduler.activity_roles.review, #9583)",
+      "after": "REVIEW_ROUTE_REFUSED: model 'gpt-6-luna' (gpt-6-luna) holds no review, critique or approval role in the model catalog (roles: recon, bounded_checks, log_triage, bounded_implementation, bounded_investigation, readonly_recon, mechanical_classification; review_scheduler.activity_roles.review, #9583)"
+    },
+    {
+      "index": 359,
+      "before": "REVIEW_ROUTE_REFUSED: model 'gpt-6-luna' (gpt-6-luna) holds no review, critique or approval role in the model catalog (roles: recon, bounded_checks, log_triage, bounded_implementation, bounded_investigation; review_scheduler.activity_roles.review, #9583)",
+      "after": "REVIEW_ROUTE_REFUSED: model 'gpt-6-luna' (gpt-6-luna) holds no review, critique or approval role in the model catalog (roles: recon, bounded_checks, log_triage, bounded_implementation, bounded_investigation, readonly_recon, mechanical_classification; review_scheduler.activity_roles.review, #9583)"
+    },
+    {
+      "index": 425,
+      "before": "REVIEW_ROUTE_REFUSED: model 'gpt-6-luna' (gpt-6-luna) holds no review, critique or approval role in the model catalog (roles: recon, bounded_checks, log_triage, bounded_implementation, bounded_investigation; review_scheduler.activity_roles.review, #9583)",
+      "after": "REVIEW_ROUTE_REFUSED: model 'gpt-6-luna' (gpt-6-luna) holds no review, critique or approval role in the model catalog (roles: recon, bounded_checks, log_triage, bounded_implementation, bounded_investigation, readonly_recon, mechanical_classification; review_scheduler.activity_roles.review, #9583)"
+    },
+    {
+      "index": 427,
+      "before": "REVIEW_ROUTE_REFUSED: model 'gpt-6-luna' (gpt-6-luna) holds no review, critique or approval role in the model catalog (roles: recon, bounded_checks, log_triage, bounded_implementation, bounded_investigation; review_scheduler.activity_roles.review, #9583)",
+      "after": "REVIEW_ROUTE_REFUSED: model 'gpt-6-luna' (gpt-6-luna) holds no review, critique or approval role in the model catalog (roles: recon, bounded_checks, log_triage, bounded_implementation, bounded_investigation, readonly_recon, mechanical_classification; review_scheduler.activity_roles.review, #9583)"
+    },
+    {
+      "index": 457,
+      "before": "REVIEW_ROUTE_REFUSED: model 'gpt-6-luna' (gpt-6-luna) holds no review, critique or approval role in the model catalog (roles: recon, bounded_checks, log_triage, bounded_implementation, bounded_investigation; review_scheduler.activity_roles.review, #9583)",
+      "after": "REVIEW_ROUTE_REFUSED: model 'gpt-6-luna' (gpt-6-luna) holds no review, critique or approval role in the model catalog (roles: recon, bounded_checks, log_triage, bounded_implementation, bounded_investigation, readonly_recon, mechanical_classification; review_scheduler.activity_roles.review, #9583)"
+    },
+    {
+      "index": 459,
+      "before": "REVIEW_ROUTE_REFUSED: model 'gpt-6-luna' (gpt-6-luna) holds no review, critique or approval role in the model catalog (roles: recon, bounded_checks, log_triage, bounded_implementation, bounded_investigation; review_scheduler.activity_roles.review, #9583)",
+      "after": "REVIEW_ROUTE_REFUSED: model 'gpt-6-luna' (gpt-6-luna) holds no review, critique or approval role in the model catalog (roles: recon, bounded_checks, log_triage, bounded_implementation, bounded_investigation, readonly_recon, mechanical_classification; review_scheduler.activity_roles.review, #9583)"
+    },
+    {
+      "index": 865,
+      "before": "REVIEW_ROUTE_REFUSED: model 'gpt-6-luna' (gpt-6-luna) holds no review, critique or approval role in the model catalog (roles: recon, bounded_checks, log_triage, bounded_implementation, bounded_investigation; review_scheduler.activity_roles.review, #9583)",
+      "after": "REVIEW_ROUTE_REFUSED: model 'gpt-6-luna' (gpt-6-luna) holds no review, critique or approval role in the model catalog (roles: recon, bounded_checks, log_triage, bounded_implementation, bounded_investigation, readonly_recon, mechanical_classification; review_scheduler.activity_roles.review, #9583)"
+    },
+    {
+      "index": 867,
+      "before": "REVIEW_ROUTE_REFUSED: model 'gpt-6-luna' (gpt-6-luna) holds no review, critique or approval role in the model catalog (roles: recon, bounded_checks, log_triage, bounded_implementation, bounded_investigation; review_scheduler.activity_roles.review, #9583)",
+      "after": "REVIEW_ROUTE_REFUSED: model 'gpt-6-luna' (gpt-6-luna) holds no review, critique or approval role in the model catalog (roles: recon, bounded_checks, log_triage, bounded_implementation, bounded_investigation, readonly_recon, mechanical_classification; review_scheduler.activity_roles.review, #9583)"
+    }
+  ]
+}

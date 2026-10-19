@@ -27,6 +27,9 @@ SCOPES = (
 )
 # Exact approved lines: edits or new references require renewed review.
 RULE_CONTEXT_LINES = {
+    "site/src/lib/lexicon/word-card-preview.ts": frozenset({
+        "visible: value.status === 'active' && value.review.status !== 'rejected' && value.source_id !== 'sum11' && value.licence_ref.register_source_id !== 'sum11' &&",
+    }),
     "scripts/review/prompts/lesson-review.md.j2": frozenset({
         "`search_definitions` (SUM-11) is available for Sovietization context only;",
     }),
@@ -553,6 +556,29 @@ def test_approved_line_matches_regardless_of_surrounding_whitespace() -> None:
     path = "scripts/build/phases/linear-review-dim.md"
     approved = next(iter(RULE_CONTEXT_LINES[path]))
     assert _is_exempt(path, "  " + approved + "  ")
+
+
+@pytest.mark.parametrize("mutation", ["source_id", "register_source_id", "appended", "added"])
+def test_preview_exclusion_only_exempts_the_exact_line(tmp_path: Path, mutation: str) -> None:
+    path = "site/src/lib/lexicon/word-card-preview.ts"
+    approved = next(iter(RULE_CONTEXT_LINES[path]))
+    subprocess.run(["git", "init", "-q", str(tmp_path)], check=True, timeout=30)
+    source = tmp_path / path
+    source.parent.mkdir(parents=True)
+    source.write_text(approved + "\n", encoding="utf-8")
+    subprocess.run(["git", "add", path], cwd=tmp_path, check=True, timeout=30)
+    assert _source_references(root=tmp_path) == []
+    if mutation in {"source_id", "register_source_id"}:
+        changed = approved.replace(f".{mutation} !== 'sum11'", f".{mutation} === 'sum11'")
+        content, number, reported = changed, 1, changed
+    elif mutation == "appended":
+        content = approved + " definition = search_definitions(word)"
+        number, reported = 1, content
+    else:
+        reported = "definition = search_definitions(word)"
+        content, number = approved + "\n" + reported, 2
+    source.write_text(content + "\n", encoding="utf-8")
+    assert _source_references(root=tmp_path) == [f"{path}:{number}:{reported}"]
 
 
 def test_new_lexicon_verification_use_fails_scanner(tmp_path: Path) -> None:

@@ -1,7 +1,8 @@
-"""Catalog mechanical-only seats have narrow, explicitly typed task authority (#9996)."""
+"""Keep mechanical/direct admission separate from existing Luna envelope scope."""
 
 from __future__ import annotations
 
+import re
 import subprocess
 from collections.abc import Callable, Iterable, Mapping, Sequence
 from pathlib import Path, PurePosixPath
@@ -10,6 +11,7 @@ from typing import Any
 from scripts.agent_runtime.kimi_admission import CYRILLIC, ContentTree, content_problem, worktree_trees
 from scripts.review.model_catalog import (
     MECHANICAL_FAMILIES,
+    bounded_execution_policy,
     canonical_model_id,
     load_model_catalog,
 )
@@ -29,22 +31,34 @@ def refuse_mechanical_task(
     language_lane: bool = False, research_track: str | None = None,
     prompt_file: str | None = None,
     task_prompt: str | None = None,
+    driver_brief: bool = False,
     trees: Sequence[ContentTree] | Callable[[], Sequence[ContentTree]] = (),
 ) -> None:
     """Refuse original and resolved mechanical-only pins before routing or launch effects.
 
     Unclassified work is refused. Classification and recon are read-only; routine
-    mechanical writes require narrow ownership. Content is conservatively limited
-    to plain UTF-8 without Cyrillic, including every descendant of a declared scope.
+    mechanical writes require narrow ownership. Mechanical seats and direct briefs
+    require plain UTF-8 without Cyrillic. Existing Luna envelopes may own ordinary
+    code containing Cyrillic; security and Ukrainian content paths stay excluded.
     Identity and eligible task families come from catalog roles, never model ids.
     """
     pins = tuple(model for model in models if model)
     if not pins:
         return
     catalog = load_model_catalog()
-    constrained = [catalog["models"][identity] for pin in pins
-                   if (identity := canonical_model_id(pin, catalog))
-                   and "mechanical_only" in catalog["models"][identity]["roles"]]
+    preferred = bounded_execution_policy(catalog).bounded_worker_model_id
+    identities = {canonical_model_id(pin, catalog) for pin in pins}
+    constrained = [catalog["models"][identity] for identity in identities if identity and (
+        "mechanical_only" in catalog["models"][identity]["roles"]
+        or (identity == preferred and (driver_brief or task_family == "bounded_implementation"))
+    )]
+    # Explicit-envelope research roles are free-form. Keep their historical
+    # vocabulary while refusing excluded activities and their class siblings.
+    excluded_roles = {"driver", "orchestrator", "orchestration", "design", "architecture",
+                      "approval", "advisory", "advisor", "adviser", "advice", "consult", "consultation",
+                      "review", "reviewer", "critique", "security", "ukrainian", "content", "language"}
+    if preferred in identities and excluded_roles.intersection(re.split(r"[\W_]+", (task_role or "").casefold())):
+        raise MechanicalAdmissionRefused("MECHANICAL_TASK_REFUSED: bounded workers cannot take driver, design, advisory or review roles")
     if not constrained:
         return
 
@@ -53,12 +67,23 @@ def refuse_mechanical_task(
 
     if review:
         refuse("mechanical-only seats never perform review, critique or approval")
-    if task_family not in MECHANICAL_FAMILIES or any(task_family not in model["roles"] for model in constrained):
-        refuse("declare a catalog-eligible --research-task-family: routine_mechanical, mechanical_classification or readonly_recon")
-    if task_role not in {None, "implementation", "recon", "classification", "triage"}:
+    families = MECHANICAL_FAMILIES | {"bounded_implementation"}
+    if task_family not in families or any(task_family not in model["roles"] for model in constrained):
+        refuse("declare a catalog-eligible --research-task-family: routine_mechanical, mechanical_classification, readonly_recon or bounded_implementation")
+    typed_role = driver_brief or any("mechanical_only" in model["roles"] for model in constrained)
+    if typed_role and task_role not in {None, "implementation", "recon", "classification", "triage"}:
         refuse("driver, design, advisory, approval and content roles are excluded")
-    if mode not in {"read-only", "workspace-write"} or (task_family != "routine_mechanical" and mode != "read-only"):
-        refuse("only routine mechanical work may write; classification and recon must be read-only")
+    bounded = task_family == "bounded_implementation"
+    if typed_role and bounded and task_role != "implementation":
+        refuse("bounded implementation requires the implementation role")
+    if bounded:
+        allowed_modes = {"workspace-write"} if typed_role else {"read-only", "workspace-write", "danger"}
+    else:
+        allowed_modes = {"read-only", "workspace-write"}
+    if mode not in allowed_modes or (
+        task_family not in {"routine_mechanical", "bounded_implementation"} and mode != "read-only"
+    ):
+        refuse("only routine mechanical or bounded implementation work may write; classification and recon must be read-only")
     owned = tuple(paths)
     if not owned:
         refuse("declare narrow owned paths for the mechanical task")
@@ -68,11 +93,11 @@ def refuse_mechanical_task(
         refuse("security-sensitive owned paths are excluded")
     if language_lane or (research_track or "").casefold().startswith("l2-uk"):
         refuse("Ukrainian authoring, review and content are excluded")
-    if any(CYRILLIC.search(path) or set(PurePosixPath(path).parts) & {"curriculum", "wiki"} for path in owned):
+    if any((typed_role and CYRILLIC.search(path)) or set(PurePosixPath(path).parts) & {"curriculum", "wiki"} for path in owned):
         refuse("Ukrainian content paths are excluded")
     stage = "task prompt"
     try:
-        if task_prompt:
+        if typed_role and task_prompt:
             from scripts.lib.rules_core import core_block
 
             # The canonical core contains Ukrainian normative examples and is
@@ -81,7 +106,7 @@ def refuse_mechanical_task(
             if content_problem(task_text.encode("utf-8")):
                 refuse("task prompt must be plain UTF-8 without Cyrillic")
         stage = "prompt file"
-        if prompt_file and content_problem(Path(prompt_file).read_bytes()):
+        if typed_role and prompt_file and content_problem(Path(prompt_file).read_bytes()):
             refuse("task input must be plain UTF-8 without Cyrillic")
         stage = "tree resolution"
         resolved = trees() if callable(trees) else trees
@@ -94,7 +119,7 @@ def refuse_mechanical_task(
                 for name, data in files.items():
                     if is_security_sensitive_change((name,)) or set(PurePosixPath(name).parts) & {"curriculum", "wiki"}:
                         refuse("owned scope contains security-sensitive or Ukrainian content paths")
-                    if CYRILLIC.search(name) or content_problem(data):
+                    if typed_role and (CYRILLIC.search(name) or content_problem(data)):
                         refuse("owned content must be plain UTF-8 without Cyrillic")
     except MechanicalAdmissionRefused:
         raise
