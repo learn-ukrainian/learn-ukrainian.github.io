@@ -6,6 +6,7 @@
     "site/",
     "schemas/word-card-v1.schema.json",
     "docs/atlas/word-cards/examples/",
+    "docs/sources/permissions-register.yaml",
     "curriculum/l2-uk-en/curriculum.yaml",
     "registry/practice/",
     "registry/lexicon/synonym_pair_verdicts.yaml",

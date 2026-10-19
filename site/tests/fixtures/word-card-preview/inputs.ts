@@ -2,7 +2,6 @@ import { readFileSync, readdirSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { resolve } from 'node:path';
 import snapshot from './current';
-import { pairCurrent, previewCard } from '../../../src/lib/lexicon/word-card-preview';
 
 export function record(value: unknown): Record<string, unknown> {
   const isRecord = (v: unknown): v is Record<string, unknown> => v !== null && typeof v === 'object' && !Array.isArray(v);
@@ -39,8 +38,9 @@ export function loadCases() {
     if (value && typeof value === 'object') return Object.fromEntries(Object.entries(value).map(([k, v]) => [k, ascii(v)]));
     return value;
   }
-  const complete = mutate('control-complete', ['all non-ASCII strings', 'all assertion values/value_norm/review', 'all field evidence unverified', 'senses[0].fields.examples', 'assertions + examples'], card => {
+  const complete = mutate('control-complete', ['all non-ASCII strings', 'identity.source_keys=[]', 'all assertion values/value_norm/review', 'all field evidence unverified', 'senses[0].fields.examples', 'assertions + examples'], card => {
     Object.assign(card, record(ascii(card)));
+    record(card.identity).source_keys = [];
     function placeholder(value: unknown): unknown {
       if (typeof value === 'string') return 'CONTROL_RAW';
       if (Array.isArray(value)) return value.map(placeholder);
@@ -76,14 +76,41 @@ export function loadCases() {
   ];
   return [...originals, ...controls].map(c => ({ ...c, fingerprint: hash(JSON.stringify(c.input)) }));
 }
-export function previewInputs() {
+export async function previewInputs() {
+  const {pairCurrent, previewCard} = await import('../../../src/lib/lexicon/word-card-preview');
   const cases = loadCases();
-  const canonical = cases.filter(c => !c.mutations.length).map(c => previewCard(c.input, 'controlled'));
+  const canonical = cases.filter(c => !c.mutations.length).map(c => c.input);
   const snapshotHash = hash(readFileSync(resolve(process.cwd(), 'tests/fixtures/word-card-preview/current.ts')));
   const common = { generatedAt: snapshot.generatedAt, manifestVersion: snapshot.manifestVersion };
-  return [...cases.map(c => {
+  return [...[...cases.map(c => ({...c, claimants:canonical})), ...revisionCases()].map(c => {
     const card = previewCard(c.input, 'controlled');
-    const current = pairCurrent(card, canonical, snapshot.records.map(r => r.record));
+    const current = pairCurrent(card, c.claimants.map(input => previewCard(input, 'controlled')), snapshot.records.map(r => r.record));
     return { ...common, ...c, card, current, snapshotHash };
   }), { ...common, name: 'real-data', card: previewCard(null), current: null, source: 'No certified export', fingerprint: hash('real-data-unavailable'), snapshotHash }];
+}
+
+export function revisionCases() {
+  const originals = loadCases().filter(c => !c.mutations.length);
+  const castle = originals.find(c => c.name === 'zamok-castle');
+  const predecessor = originals.find(c => c.name === 'zamok-legacy-split');
+  if (!castle || !predecessor) throw Error('Missing identity controls');
+  const identity = ['suppressed', 'malformed', 'unreadable', 'bad-key'].flatMap(state => {
+    const input = record(structuredClone(predecessor.input));
+    if (state === 'suppressed') input.state = 'suppressed';
+    if (state === 'malformed') input.split_into = array(input.split_into).slice(0,1);
+    if (state === 'unreadable') delete input.identity;
+    if (state === 'bad-key') record(input.identity).source_keys = [null];
+    const claimants = originals.map(c => c === predecessor ? input : c.input);
+    return [{...castle, name:`f1-${state}-castle`}, {...predecessor, name:`f1-${state}-predecessor`, input}].map(c =>
+      ({...c, claimants, mutations:[`predecessor:${state}`], fingerprint:hash(JSON.stringify({value:c.input,claimants}))}));
+  });
+  const visibility = ['ubertext_freq','ulp_private','zno_nmt','pohribnyi_1992','ulif'].flatMap(id => ['source','register'].map(binding => {
+    const input = record(structuredClone(castle.input));
+    const a = record(array(input.assertions).find(a => record(a).assertion_id === record(record(input.fields).stress).selected));
+    delete record(a.licence_ref).appears_in;
+    if (binding === 'source') a.source_id = id;
+    else record(a.licence_ref).register_source_id = id;
+    return {...castle, name:`f2-${id}-${binding}`, input, claimants:originals.map(c => c.input), mutations:[`stress.${binding}=${id}`, 'delete appears_in'], fingerprint:hash(JSON.stringify(input))};
+  }));
+  return [...identity, ...visibility];
 }

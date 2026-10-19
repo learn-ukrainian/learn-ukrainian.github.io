@@ -8,7 +8,7 @@ import type { EntryRecord } from '../../lib/lexicon/atlas-data-source';
 export async function getStaticPaths() {
   if (process.env.ATLAS_WORD_CARD_PREVIEW !== '1') return [];
   const { previewInputs } = await import('../../../tests/fixtures/word-card-preview/inputs');
-  return previewInputs().flatMap(sample => [false, true].map(compare => ({
+  return (await previewInputs()).flatMap(sample => [false, true].map(compare => ({
     params: { path: `${compare ? 'compare/' : ''}${sample.name}` },
     props: { ...sample, compare },
   })));

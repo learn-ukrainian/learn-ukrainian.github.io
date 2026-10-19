@@ -1,4 +1,6 @@
 import schema from '../../../../schemas/word-card-v1.schema.json';
+import registerText from '../../../../docs/sources/permissions-register.yaml?raw';
+import { createRequire } from 'node:module';
 import type { EntryRecord } from './atlas-data-source';
 
 export const fieldStates = ['verified', 'single-source', 'variant', 'conflict', 'unverified', 'suppressed'] as const;
@@ -10,11 +12,12 @@ export type PreviewField = {
   path: string; group: 'forms' | 'stress' | 'senses' | 'examples'; state: FieldState;
   raw: Json[]; citations: Citation[]; evidence: Json; refusal: string | null;
 };
-export type PreviewCard =
+export type PreviewCard = (
   | { kind: 'unavailable'; reason: string }
   | { kind: 'suppressed' }
-  | { kind: 'successors'; state: 'redirected' | 'split'; ids: string[]; keys: string[] }
-  | { kind: 'card'; id: string; keys: string[]; fields: PreviewField[] };
+  | { kind: 'successors'; state: 'redirected' | 'split'; ids: string[] }
+  | { kind: 'card'; id: string; fields: PreviewField[] }
+) & { keys: string[] | null };
 type ReadyCard = Extract<PreviewCard, { kind: 'card' }>;
 const cardId = new RegExp(schema.$defs.card_id.pattern);
 const assertionId = new RegExp(schema.$defs.assertion_id.pattern);
@@ -33,6 +36,16 @@ function json(value: unknown, depth = 0): value is Json {
 function strings(value: unknown): value is string[] {
   return Array.isArray(value) && value.every(v => typeof v === 'string');
 }
+function registerInternalSources(): Set<string> {
+  const load: (text: string) => unknown = createRequire(import.meta.url)('js-yaml').load;
+  const register = load(registerText);
+  if (!object(register) || !Array.isArray(register.sources)) throw Error('Unreadable permissions register');
+  return new Set(register.sources.flatMap(source => {
+    if (!object(source) || typeof source.id !== 'string' || !strings(source.appears_in) || !source.appears_in.length) throw Error('Malformed register source visibility');
+    return source.appears_in.includes('internal') && !source.appears_in.includes('site') ? [source.id] : [];
+  }));
+}
+const internalSources = registerInternalSources();
 function state(value: unknown): value is FieldState {
   return fieldStates.some(s => s === value);
 }
@@ -46,7 +59,9 @@ function identityKeys(input: Record<string, unknown>): string[] {
   if (!object(input.identity) || !Array.isArray(input.identity.source_keys)) throw Error('Missing identity keys');
   return input.identity.source_keys.flatMap(key => {
     if (!object(key) || typeof key.key !== 'string' || typeof key.source_id !== 'string') throw Error('Malformed identity key');
-    return key.source_id === 'atlas0' && /^atlas0:(slug:[^/]+|heteronym:[^/]+\/[^/]+)$/.test(key.key) ? [key.key] : [];
+    if (key.source_id !== 'atlas0') return [];
+    if (!/^atlas0:(slug:[^/]+|heteronym:[^/]+\/[^/]+)$/.test(key.key)) throw Error('Malformed Atlas identity key');
+    return [key.key];
   });
 }
 function assertion(value: unknown): Assertion | null {
@@ -64,7 +79,7 @@ function assertion(value: unknown): Assertion | null {
     assertion_id: value.assertion_id, source_id: value.source_id, snapshot_id: value.snapshot_id, locator: value.locator,
     subject: { kind: String(value.subject.kind), id: value.subject.id }, field: value.field, value: value.value, value_norm: value.value_norm,
     visible: value.status === 'active' && value.review.status !== 'rejected' && value.source_id !== 'sum11' && value.licence_ref.register_source_id !== 'sum11' &&
-      value.source_id !== 'ulp_private' && value.licence_ref.register_source_id !== 'ulp_private' &&
+      !internalSources.has(value.source_id) && !internalSources.has(value.licence_ref.register_source_id) &&
       (visibility === undefined || visibility.includes('site')),
   };
 }
@@ -107,18 +122,20 @@ function field(args: { name: string; resolution: unknown; subject: string; kind:
 
 /** Consumed-field checks for controlled diagnostics, never a certification validator. */
 export function previewCard(input: unknown, mode: 'controlled' | 'real' = 'real'): PreviewCard {
-  if (mode === 'real') return { kind: 'unavailable', reason: 'Certified real-card export unavailable. Owner Data, dependency #10516.' };
+  if (mode === 'real') return { kind: 'unavailable', keys: null, reason: 'Certified real-card export unavailable. Owner Data, dependency #10516.' };
+  let keys: string[] | null = null;
   try {
-    if (!object(input) || input.schema_version !== '1' || typeof input.card_id !== 'string' || !cardId.test(input.card_id) || Object.keys(input).some(k => !Object.hasOwn(schema.properties, k))) throw Error('Unsupported card input');
-    if (input.state === 'suppressed') return { kind: 'suppressed' };
+    if (!object(input)) throw Error('Unsupported card input');
+    keys = identityKeys(input);
+    if (input.schema_version !== '1' || typeof input.card_id !== 'string' || !cardId.test(input.card_id) || Object.keys(input).some(k => !Object.hasOwn(schema.properties, k))) throw Error('Unsupported card input');
+    if (input.state === 'suppressed') return { kind: 'suppressed', keys };
     if (input.state === 'split' || input.state === 'redirected') {
       const ids = input.state === 'split' ? input.split_into : [input.merged_into];
       if (!strings(ids) || ids.length < (input.state === 'split' ? 2 : 1) || ids.some(id => !cardId.test(id))) throw Error('Malformed successors');
-      return { kind: 'successors', state: input.state, ids, keys: identityKeys(input) };
+      return { kind: 'successors', state: input.state, ids, keys };
     }
     if (input.state !== 'active' || !object(input.fields) || !Array.isArray(input.senses) || !Array.isArray(input.assertions) ||
         !object(input.identity) || !Array.isArray(input.identity.source_keys)) throw Error('Unsupported card structure');
-    const keys = identityKeys(input);
     const assertions = new Map<string, Assertion>();
     const seen = new Set<string>();
     for (const value of input.assertions) {
@@ -147,16 +164,15 @@ export function previewCard(input: unknown, mode: 'controlled' | 'real' = 'real'
     }
     return { kind: 'card', id: input.card_id, keys, fields };
   } catch (error) {
-    return { kind: 'unavailable', reason: error instanceof Error ? error.message : 'Malformed input' };
+    return { kind: 'unavailable', keys, reason: error instanceof Error ? error.message : 'Malformed input' };
   }
 }
 
 export function pairCurrent(card: PreviewCard, cards: PreviewCard[], current: EntryRecord[]): EntryRecord | null {
-  if (card.kind !== 'card') return null;
-  // A shared key is ambiguous even when one claimant is a split predecessor.
-  // The caller supplies all canonical keys, including predecessor keys.
+  if (card.kind !== 'card' || card.keys === null || cards.some(c => c.keys === null)) return null;
+  // Display refusal never removes an identity claim. Unreadable claims block pairing.
   for (const key of card.keys) {
-    if (cards.filter(c => (c.kind === 'card' || c.kind === 'successors') && c.keys.includes(key)).length !== 1) continue;
+    if (cards.filter(c => c.keys?.includes(key)).length !== 1) continue;
     if (!key.startsWith('atlas0:slug:')) continue;
     const matches = current.filter(r => `atlas0:slug:${r.slug}` === key);
     if (matches.length === 1) return matches[0] ?? null;

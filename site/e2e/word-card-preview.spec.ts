@@ -2,6 +2,7 @@ import { expect, test } from '@playwright/test';
 import { readFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import snapshot from '../tests/fixtures/word-card-preview/current';
+import { revisionCases, record } from '../tests/fixtures/word-card-preview/inputs';
 
 // This spec drives an explicitly flag-enabled local build. No data certification.
 const names = ['bronia-armour', 'bronia-reservation', 'idiom-buduvaty-povitriani-zamky', 'kliuch-1', 'vriady-hody-conflict', 'vybihaty-imperf', 'vybihty-perf', 'zamok-castle', 'zamok-legacy-split', 'zamok-lock', 'zamok-settlement',
@@ -55,3 +56,37 @@ for (const prefix of ['', 'compare/']) {
     await testInfo.attach('page',{body:await page.screenshot({fullPage:true}),contentType:'image/png'});
   });
 }
+
+for (const prefix of ['', 'compare/']) for (const c of revisionCases()) test(`${prefix}${c.name}`, async ({page}, info) => {
+  await page.goto(`/lexicon-v2/${prefix}${c.name}/`);
+  const candidate = page.getByRole('region',{name:'Candidate presentation',exact:true});
+  await expect(page.locator('[data-input-hash]')).toHaveText(c.fingerprint);
+  await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content','noindex, nofollow');
+  await info.attach('page',{body:await page.screenshot({fullPage:true}),contentType:'image/png'});
+  if (c.name.startsWith('f1-')) {
+    if (c.name.endsWith('-predecessor')) {
+      await expect(candidate.locator('[data-raw-value]')).toHaveCount(0);
+      await expect(candidate).toContainText(c.name.includes('-suppressed-') ? 'Suppressed. No card body.' : 'Unavailable:');
+    } else if (prefix) {
+      await expect(candidate).toContainText('Unresolved pairing');
+      await expect(candidate.locator('[data-comparison]')).toHaveCount(0);
+      await expect(page.getByRole('region',{name:'Current presentation',exact:true}).locator('[data-word-atlas]')).toHaveCount(0);
+    }
+  } else {
+    const stress = candidate.getByRole('region',{name:'stress',exact:true});
+    const assertions = record(c.input).assertions;
+    if (!Array.isArray(assertions)) throw Error('Missing source assertions');
+    const a = record(assertions.find(a => record(a).assertion_id === record(record(record(c.input).fields).stress).selected));
+    const citation = candidate.getByRole('region',{name:'citations',exact:true}).locator(`[data-field="${record(a.subject).id}/stress"]`);
+    if (c.name.startsWith('f2-ulif-')) {
+      expect(await stress.locator('[data-raw-value]').textContent()).toBe(a.value);
+      await expect(stress).toContainText(`${a.assertion_id} | ${a.source_id} | ${a.snapshot_id} | ${a.locator}`);
+      await expect(citation).toContainText(String(a.assertion_id));
+    } else {
+      await expect(stress.locator('[data-raw-value]')).toHaveCount(0);
+      await expect(stress).toContainText('Source unavailable for this view');
+      await expect(stress).not.toContainText(String(a.assertion_id));
+      await expect(citation.locator('pre')).toHaveCount(0);
+    }
+  }
+});
