@@ -194,7 +194,7 @@ ruamel.yaml==0.19.1
 ruff==0.15.21
 safetensors==0.8.0
 scikit-learn==1.8.0
-scipy==1.17.0
+scipy==1.18.1
 secretstorage==3.5.0
 sentence-transformers==5.6.1
 sentencepiece==0.2.1
