@@ -38,7 +38,7 @@ import stat
 import subprocess
 import sys
 import time
-from collections.abc import Callable, Iterator
+from collections.abc import Callable, Iterator, Sequence
 from dataclasses import asdict, dataclass, field, replace
 from pathlib import Path
 from typing import Any, NamedTuple
@@ -5112,7 +5112,7 @@ def _reap_qualified_worktree(
             reaper_lifecycle.clear_reap_pending(repo_root, info.path)
 
 
-def _target_filter(target_paths: list[Path] | None) -> set[Path] | None:
+def _target_filter(target_paths: Sequence[Path] | None) -> set[Path] | None:
     if target_paths is None:
         return None
     return {path.resolve() for path in target_paths}
@@ -7331,6 +7331,7 @@ def reap_clean_pushed(
     dry_run: bool = True,
     actor: str = DEFAULT_CLEAN_PUSHED_ACTOR,
     lock_timeout_s: float | None = None,
+    target_paths: Sequence[Path] | None = None,
 ) -> CleanPushedReport:
     """Remove clean, fully pushed, idle dispatch worktrees; dry run by default (#10778).
 
@@ -7378,6 +7379,9 @@ def reap_clean_pushed(
     does nothing and reports ``lock_busy``.
     """
     primary = primary_checkout_root((repo_root or resolve_repo_root()).resolve())
+    # Like the general reaper, relative targets resolve against the process cwd.
+    # None preserves the unfiltered loop; an empty sequence selects nobody.
+    targets = _target_filter(target_paths)
 
     def refused(reason: str, *, busy: bool = False, stale: bool = False) -> CleanPushedReport:
         return CleanPushedReport(
@@ -7419,6 +7423,8 @@ def reap_clean_pushed(
             census=census,
             remember_reflog=not dry_run,
         )
+        # Recovery may restore or keep other holders, but never removes them.
+        # Keep it unfiltered; a scoped run must not finish a foreign quarantine.
         recovered, handled, moved = _recover_quarantine(
             primary, ctx, listing, control_root=control_root, dry_run=dry_run
         )
@@ -7428,10 +7434,23 @@ def reap_clean_pushed(
                 listing = list_git_worktrees(primary, resolve_paths=False)
             except RuntimeError as exc:
                 return refused(str(exc))
+        if targets is not None:
+            registered = {info.path.resolve() for info in listing} | handled
+            for target in sorted(targets - registered):
+                skipped.append(
+                    CleanPushedOutcome(path=_display_path(target, primary), action="skipped", reason="not_registered")
+                )
         for info in listing:
             if info.path.resolve() in handled:
                 continue
             shown = _display_path(info.path, primary)
+            if targets is not None and info.path.resolve() not in targets:
+                skipped.append(
+                    CleanPushedOutcome(
+                        path=shown, action="skipped", reason="not_selected", head=info.head, branch=info.branch
+                    )
+                )
+                continue
             claims = list(ctx.index.by_path.get(info.path.resolve(), ()))
             refusal, claims = _clean_pushed_refusal(info, ctx, claims, recheck=False)
             outcome = CleanPushedOutcome(
@@ -7877,7 +7896,9 @@ def main(argv: list[str] | None = None) -> int:
     if args.clean_pushed:
         status = 0
         for repo_root in repo_roots:
-            report = reap_clean_pushed(repo_root=repo_root, dry_run=not apply, actor=args.actor)
+            report = reap_clean_pushed(
+                repo_root=repo_root, dry_run=not apply, actor=args.actor, target_paths=args.worktree
+            )
             print(json.dumps(report.as_dict(), indent=2) if args.json else format_clean_pushed_report(report))
             if any(outcome.action == "error" for outcome in report.skipped):
                 status = 1
