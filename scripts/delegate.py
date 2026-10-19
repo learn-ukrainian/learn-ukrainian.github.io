@@ -8089,7 +8089,7 @@ def _finalize_history(context: SafeGitContext, *, head: str, base: str, owned: S
     protected = (
         ".githooks/",
         "scripts/pre_commit/",
-        Path("scripts/common/test_slots").with_suffix(".py").as_posix(),
+        "scripts/common/test_slots",  # Prefix covers scripts/common/test_slots.py; omit .py for the #10777 test-file prefilter.
         ".pre-commit-config.yaml",
         ".venv",
     )

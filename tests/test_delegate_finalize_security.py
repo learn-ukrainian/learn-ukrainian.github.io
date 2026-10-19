@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import ast
 import contextlib
+import inspect
 import sys
 from pathlib import Path
 
@@ -69,6 +71,46 @@ def publish(publication):
 
 def refs(origin):
     return _git_out(origin, "for-each-ref", "--format=%(refname) %(objectname)")
+
+
+def test_finalize_history_protected_paths_are_source_literals():
+    tree = ast.parse(inspect.getsource(delegate._finalize_history))
+    protected = next(
+        node.value
+        for node in ast.walk(tree)
+        if isinstance(node, ast.Assign)
+        and any(isinstance(target, ast.Name) and target.id == "protected" for target in node.targets)
+    )
+    assert isinstance(protected, ast.Tuple)
+    assert all(isinstance(entry, ast.Constant) and isinstance(entry.value, str) for entry in protected.elts)
+    assert ast.literal_eval(protected) == (
+        ".githooks/",
+        "scripts/pre_commit/",
+        "scripts/common/test_slots",
+        ".pre-commit-config.yaml",
+        ".venv",
+    )
+
+
+@pytest.mark.parametrize("path", ["scripts/common/test_slots.py", "scripts/common/test_slots_extra.py"])
+def test_test_slots_history_is_refused_before_validation(publication, path):
+    worktree, origin, base, marker = publication
+    (worktree / path).parent.mkdir(parents=True, exist_ok=True)
+    head = write_commit(worktree, path, "worker changed validation\n")
+    result = delegate._auto_finalize_dirty_worktree(
+        worktree=worktree,
+        task_id="security-finalize",
+        agent="codex",
+        branch="codex/finalize",
+        base_branch="main",
+        base_sha=base,
+        owned_paths=["scripts/common"],
+    )
+    assert not result.ok
+    assert result.error == "auto_finalize_validation_changed"
+    assert "refs/heads/codex/finalize" not in refs(origin)
+    assert not marker.exists()
+    assert delegate._resolve_sha(worktree) == head
 
 
 @pytest.mark.parametrize(
