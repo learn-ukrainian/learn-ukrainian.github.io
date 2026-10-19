@@ -751,6 +751,20 @@ entries:
       - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/epics"}
     content_searchable: true
 
+  # ================================================================ datasets
+  - id: datasets
+    kind: doc_family
+    paths: [docs/datasets/**]
+    purpose: Dataset release documentation covering source permissions, certification, cited export formats and withdrawal procedures.
+    keywords: [dataset, word cards, release, citations, permissions, withdrawal]
+    lifecycle: active
+    owner: open-model-data
+    entrypoints:
+      - {topic: word-card dataset releases, path: docs/datasets/word-cards.md}
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/datasets"}
+    content_searchable: true
+
   # ================================================================ research and references
   - id: research-bio-dossiers
     kind: doc_family
