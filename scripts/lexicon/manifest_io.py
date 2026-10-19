@@ -95,6 +95,9 @@ def _decode_manifest(data: bytes, source: Path | str) -> dict[str, Any]:
     manifest = json.loads(data.decode("utf-8"))
     if not isinstance(manifest, dict):
         raise ValueError(f"{source} must contain a JSON object")
+    from scripts.atlas.word_card_certification import guard_card_inventory
+
+    guard_card_inventory(manifest)
     return manifest
 
 
@@ -319,6 +322,7 @@ def _hydrate(path: Path, pointer: dict[str, Any]) -> dict[str, Any]:
     cache_path = _cache_file_for(gz_sha)
     if json_bytes is None:
         json_bytes = _download_verified_json(pointer)
+        manifest = _decode_manifest(json_bytes, pointer["asset_url"])
         _write_cache_readonly(cache_path, json_bytes)
         if _read_verified_cache(gz_sha, json_sha) != json_bytes:
             raise ValueError(
@@ -326,9 +330,9 @@ def _hydrate(path: Path, pointer: dict[str, Any]) -> dict[str, Any]:
                 f"Manual recovery command: {RECOVERY_COMMAND}"
             )
     else:
+        manifest = _decode_manifest(json_bytes, pointer["asset_url"])
         os.chmod(cache_path, _CACHE_FILE_MODE)
 
-    manifest = _decode_manifest(json_bytes, pointer["asset_url"])
     _refuse_richer_local(path, manifest)
     _publish_cached_file(cache_path, path)
     return manifest

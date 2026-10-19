@@ -195,7 +195,7 @@ def test_export_main_write_calls_export(monkeypatch: pytest.MonkeyPatch) -> None
 
     called: list[str] = []
 
-    def fake_export() -> tuple[int, int]:
+    def fake_export(*, allow_draft: bool = False) -> tuple[int, int]:
         called.append("export")
         return (5, 2)
 

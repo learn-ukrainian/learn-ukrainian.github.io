@@ -155,6 +155,20 @@ def hydrate_open_dataset(
     if len(expected_by_path) != pointer["file_count"]:
         raise OpenDatasetHydrationError("open dataset pointer has duplicate or invalid file entries")
 
+    from scripts.open_dataset.publish import (
+        OpenDatasetPublishError,
+        build_package,
+        package_file_bytes,
+    )
+    try:
+        metadata_files = [f for f in package_files if f.get("path") == "dataset/_metadata.json"]
+        if len(metadata_files) != 1:
+            raise OpenDatasetHydrationError("missing certified package metadata")
+        metadata = json.loads(package_file_bytes(metadata_files[0]))
+        build_package(metadata, package_files)
+    except (OpenDatasetPublishError, ValueError, TypeError, AttributeError) as exc:
+        raise OpenDatasetHydrationError("uncertified package refused before hydration") from exc
+
     temp_root = dataset_root.with_name(f"{dataset_root.name}.tmp")
     if temp_root.exists():
         shutil.rmtree(temp_root)
@@ -171,7 +185,7 @@ def hydrate_open_dataset(
             expected = expected_by_path.get(rel_path)
             if expected is None:
                 raise OpenDatasetHydrationError(f"open dataset package contains unexpected file {rel_path}")
-            data = content.encode("utf-8")
+            data = package_file_bytes(file_payload)
             if len(data) != expected["bytes"] or _sha256(data) != expected["sha256"]:
                 raise OpenDatasetHydrationError(f"open dataset package file digest mismatch for {rel_path}")
             out_path = _safe_output_path(temp_root, rel_path)
@@ -198,11 +212,19 @@ def hydrate_open_dataset(
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--pointer", type=Path, default=DEFAULT_POINTER)
-    parser.add_argument("--dataset-root", type=Path, default=DEFAULT_DATASET_ROOT)
-    parser.add_argument("--package", type=Path, default=None, help="Read a local gzipped package instead of downloading")
-    parser.add_argument("--repo", default="learn-ukrainian/learn-ukrainian.github.io")
+    parser = argparse.ArgumentParser(
+        description="Hydrate a release-pinned open dataset.\nUse for certified packages; draft artifacts are refused.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=("Examples:\n  .venv/bin/python -m scripts.open_dataset.hydrate --pointer pointer.json\n"
+                "  .venv/bin/python -m scripts.open_dataset.hydrate --pointer pointer.json --package release.json.gz\n"
+                "Outputs: Replaces the dataset directory only after transport and certification checks.\n"
+                "Exit codes: 0 success; 75 GitHub rate limit; other nonzero validation or usage failure.\n"
+                "Related: #10513; scripts/open_dataset/publish.py"),
+    )
+    parser.add_argument("--pointer", type=Path, default=DEFAULT_POINTER, help="Release pointer JSON (default: %(default)s).")
+    parser.add_argument("--dataset-root", type=Path, default=DEFAULT_DATASET_ROOT, help="Hydrated dataset directory (default: %(default)s).")
+    parser.add_argument("--package", type=Path, default=None, help="Local gzip package, e.g. release.json.gz (default: download).")
+    parser.add_argument("--repo", default="learn-ukrainian/learn-ukrainian.github.io", help="Release OWNER/REPO (default: %(default)s).")
     args = parser.parse_args()
     try:
         result = hydrate_open_dataset(
