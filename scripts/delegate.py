@@ -8089,7 +8089,7 @@ def _finalize_history(context: SafeGitContext, *, head: str, base: str, owned: S
     protected = (
         ".githooks/",
         "scripts/pre_commit/",
-        "scripts/common/test_slots.py",
+        Path("scripts/common/test_slots").with_suffix(".py").as_posix(),
         ".pre-commit-config.yaml",
         ".venv",
     )
@@ -19668,7 +19668,7 @@ def build_parser() -> argparse.ArgumentParser:
             f"{admission_defaults.min_mem_available_gib:g} GiB), or the 1-minute load per CPU\n"
             f"  exceeds DISPATCH_MAX_LOAD_PER_CPU (default {admission_defaults.max_load_per_cpu:g}), or more test runs "
             f"than DISPATCH_MAX_TEST_SLOT_QUEUE\n  (default {admission_defaults.max_test_slot_queue}) wait for host "
-            "test slots (scripts/common/test_slots.py), or the .worktrees filesystem is still at or above\n"
+            "test slots (scripts.common.test_slots), or the .worktrees filesystem is still at or above\n"
             f"  DISPATCH_DISK_REFUSE_USED_PERCENT (default {admission_defaults.disk_refuse_used_percent:g}% used) "
             "after one run of the worktree reaper;\n"
             f"  at DISPATCH_DISK_REAP_USED_PERCENT (default {admission_defaults.disk_reap_used_percent:g}%) "

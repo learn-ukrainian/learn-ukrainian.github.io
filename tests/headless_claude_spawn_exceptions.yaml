@@ -171,8 +171,6 @@ exceptions:
   - {module: scripts/delegate.py, function: "_authoring_commit_available", program: "git", category: non-claude, reason: "runs `git cat-file -e`"}
   - {module: scripts/delegate.py, function: "_authoring_default_branch", program: "git", category: non-claude, reason: "runs `git ls-remote --symref <remote> HEAD`"}
   - {module: scripts/delegate.py, function: "_authoring_gh_json", program: "command", category: non-claude, reason: "runs the GitHub CLI: both in-module callers pass a literal `gh pr list` / `gh pr view` argv"}
-  - {module: scripts/delegate.py, function: "_auto_finalize_changed_files", program: "git", category: non-claude, reason: "runs git"}
-  - {module: scripts/delegate.py, function: "_auto_finalize_dirty_worktree", program: "*git_prefix", category: non-claude, reason: "runs git"}
   - {module: scripts/delegate.py, function: "_auto_finalize_dirty_worktree", program: "git", category: non-claude, reason: "runs git"}
   - {module: scripts/delegate.py, function: "_branch_ref_exists", program: "git", category: non-claude, reason: "runs git"}
   - {module: scripts/delegate.py, function: "_branch_worktree_paths", program: "git", category: non-claude, reason: "runs git"}
