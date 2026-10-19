@@ -7231,7 +7231,13 @@ def _restore_refusal(
 
 
 def _recover_quarantine(
-    primary: Path, ctx: _CleanPushedContext, listing: list[WorktreeInfo], *, control_root: Path, dry_run: bool
+    primary: Path,
+    ctx: _CleanPushedContext,
+    listing: list[WorktreeInfo],
+    *,
+    control_root: Path,
+    dry_run: bool,
+    targets: set[Path] | None = None,
 ) -> tuple[list[CleanPushedOutcome], set[Path], bool]:
     """Judge what an interrupted run left in ``.worktrees/.reaping/`` (#10778).
 
@@ -7241,7 +7247,8 @@ def _recover_quarantine(
     else is kept and reported: no or an unreadable record, removal possibly
     started, another directory under the recorded name, an occupied
     original path. A record left with no checkout is cleared. Returns
-    ``(outcomes, paths judged, whether a checkout moved)``.
+    ``(outcomes, paths judged, whether a checkout moved)``. With ``targets``,
+    only records naming a selected original path are evaluated for recovery.
     """
     root = primary.resolve() / QUARANTINE_RELATIVE
     outcomes: list[CleanPushedOutcome] = []
@@ -7253,7 +7260,9 @@ def _recover_quarantine(
         handled.update(path for path in registered if path.parent.parent == root)
         reason = "quarantine: the quarantine directory is not a real directory; inspect it (runbook)"
         return (
-            [CleanPushedOutcome(path=_display_path(root, primary.resolve()), action="skipped", reason=reason)],
+            [CleanPushedOutcome(path=_display_path(root, primary.resolve()), action="skipped", reason=reason)]
+            if targets is None
+            else [],
             handled,
             False,
         )
@@ -7271,9 +7280,14 @@ def _recover_quarantine(
             )
 
         if holder.is_symlink() or not holder.is_dir():
-            keep("not a directory")
+            if targets is None:
+                keep("not a directory")
             continue
         record = _read_quarantine_record(holder)
+        if targets is not None and (
+            record is None or (primary.resolve() / record["original"]).resolve() not in targets
+        ):
+            continue
         if record is None:
             keep("no readable quarantine record")
             continue
@@ -7423,10 +7437,10 @@ def reap_clean_pushed(
             census=census,
             remember_reflog=not dry_run,
         )
-        # Recovery may restore or keep other holders, but never removes them.
-        # Keep it unfiltered; a scoped run must not finish a foreign quarantine.
+        # Recovery can restore checkouts or clear records. Scope those effects
+        # to selected original paths, just like the general reaper's recovery.
         recovered, handled, moved = _recover_quarantine(
-            primary, ctx, listing, control_root=control_root, dry_run=dry_run
+            primary, ctx, listing, control_root=control_root, dry_run=dry_run, targets=targets
         )
         skipped.extend(recovered)
         if moved:

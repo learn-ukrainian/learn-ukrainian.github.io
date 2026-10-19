@@ -7,6 +7,7 @@ import os
 import re
 import shutil
 import subprocess
+import sys
 import time
 from pathlib import Path
 from typing import Any
@@ -368,3 +369,177 @@ def test_scoped_run_refuses_unsafe_lock(repo: Path, capsys: pytest.CaptureFixtur
     assert report["refusal"].startswith("reaper lock unavailable or unsafe:")
     assert report["removed"] == []
     assert a.is_dir() and b.is_dir()
+
+
+@pytest.mark.parametrize("apply", [False, True])
+@pytest.mark.parametrize("guard", ["dirty", "process"])
+def test_unnamed_refused_tree_is_not_selected(
+    repo: Path, capsys: pytest.CaptureFixture[str], guard: str, apply: bool
+) -> None:
+    a, b = dispatch_tree(repo, "task-a"), dispatch_tree(repo, "task-b")
+    holder = None
+    if guard == "dirty":
+        (b / "README.md").write_text("foreign edit\n", encoding="utf-8")
+        refusal = "dirty or untracked files"
+    else:
+        holder = subprocess.Popen([sys.executable, "-c", "import time; time.sleep(120)"], cwd=b)
+        refusal = "in use: a process works inside the checkout"
+    try:
+        # Establish that the foreign checkout really would be refused if evaluated.
+        baseline = rw.reap_clean_pushed(repo_root=repo).as_dict()
+        assert outcome(baseline, b, repo)["reason"] == refusal
+
+        [report] = cli(capsys, "--repo-root", str(repo), "--worktree", str(a), *(["--apply"] if apply else []))
+
+        assert outcome(report, b, repo)["reason"] == "not_selected"
+        assert outcome(report, repo, repo)["reason"] == "not_selected"
+        assert [row["path"] for row in report["removed"]] == [a.relative_to(repo).as_posix()]
+        assert a.exists() is not apply and b.is_dir()
+        if guard == "dirty":
+            assert (b / "README.md").read_text(encoding="utf-8") == "foreign edit\n"
+    finally:
+        if holder is not None:
+            holder.terminate()
+            holder.wait(timeout=30)
+
+
+@pytest.mark.parametrize("apply", [False, True])
+def test_scoped_run_never_probes_unnamed_trees(
+    repo: Path, capsys: pytest.CaptureFixture[str], monkeypatch: pytest.MonkeyPatch, apply: bool
+) -> None:
+    a, b = dispatch_tree(repo, "task-a"), dispatch_tree(repo, "task-b")
+    real = rw._clean_pushed_refusal
+    probed = []
+
+    def only_selected(info: rw.WorktreeInfo, *args: Any, **kwargs: Any) -> Any:
+        probed.append(info.path)
+        assert info.path == a, f"probed unnamed checkout: {info.path}"
+        return real(info, *args, **kwargs)
+
+    monkeypatch.setattr(rw, "_clean_pushed_refusal", only_selected)
+
+    [report] = cli(capsys, "--repo-root", str(repo), "--worktree", str(a), *(["--apply"] if apply else []))
+
+    assert probed
+    assert outcome(report, b, repo)["reason"] == "not_selected"
+    assert outcome(report, repo, repo)["reason"] == "not_selected"
+    assert a.exists() is not apply and b.is_dir()
+
+
+@pytest.mark.parametrize("apply", [False, True])
+@pytest.mark.parametrize("selection", ["foreign", "selected", "unscoped", "empty"])
+def test_quarantine_recovery_respects_selection(
+    repo: Path, capsys: pytest.CaptureFixture[str], selection: str, apply: bool
+) -> None:
+    a, b = dispatch_tree(repo, "task-a"), dispatch_tree(repo, "task-b")
+    identity = b.stat()
+    holder = repo / ".worktrees" / ".reaping" / f"codex-{'0' * 32}"
+    holder.parent.mkdir(mode=0o700)
+    holder.mkdir(mode=0o700)
+    record = holder / rw.QUARANTINE_RECORD
+    record.write_text(
+        json.dumps(
+            {
+                "schema": "clean-pushed-quarantine.v1",
+                "original": b.relative_to(repo).as_posix(),
+                "task": b.name,
+                "dev": identity.st_dev,
+                "ino": identity.st_ino,
+                "stage": "intent",
+            }
+        ),
+        encoding="utf-8",
+    )
+    git(repo, "worktree", "move", str(b), str(holder))
+    staged = holder / b.name
+    record_bytes = record.read_bytes()
+    listing = git(repo, "worktree", "list", "--porcelain")
+
+    if selection == "empty":
+        report = rw.reap_clean_pushed(repo_root=repo, target_paths=[], dry_run=not apply).as_dict()
+    else:
+        args = [] if selection == "unscoped" else ["--worktree", str(b if selection == "selected" else a)]
+        [report] = cli(capsys, "--repo-root", str(repo), *args, *(["--apply"] if apply else []))
+
+    if selection in {"foreign", "empty"}:
+        assert not b.exists() and staged.is_dir()
+        assert record.read_bytes() == record_bytes
+        assert staged.stat().st_ino == identity.st_ino
+        assert (staged / "README.md").read_text(encoding="utf-8") == "base\n"
+        assert not any(
+            row["path"]
+            in {
+                b.relative_to(repo).as_posix(),
+                staged.relative_to(repo).as_posix(),
+                holder.relative_to(repo).as_posix(),
+            }
+            for row in (*report["removed"], *report["skipped"])
+        )
+        if selection == "empty":
+            assert report["removed"] == ()
+            assert git(repo, "worktree", "list", "--porcelain") == listing
+    else:
+        row = outcome(report, b, repo)
+        assert row == {
+            "path": b.relative_to(repo).as_posix(),
+            "action": "skipped",
+            "reason": (
+                "restored from the reaper quarantine (interrupted run); kept this run"
+                if apply
+                else "would restore it from the reaper quarantine (interrupted run)"
+            ),
+            "head": None,
+            "branch": None,
+            "task_status": None,
+            "size_mb": None,
+        }
+        assert b.exists() is apply
+        assert holder.exists() is not apply
+        if not apply:
+            assert record.read_bytes() == record_bytes
+            assert git(repo, "worktree", "list", "--porcelain") == listing
+    removes_a = selection in {"foreign", "unscoped"}
+    assert [row["path"] for row in report["removed"]] == ([a.relative_to(repo).as_posix()] if removes_a else [])
+    assert a.exists() is not (apply and removes_a)
+
+
+@pytest.mark.parametrize("apply", [False, True])
+@pytest.mark.parametrize("scoped", [False, True])
+@pytest.mark.parametrize("kind", ["root-file", "holder-file", "unreadable-record"])
+def test_scoped_recovery_cannot_attribute_unreadable_quarantine_entries(
+    repo: Path, capsys: pytest.CaptureFixture[str], kind: str, scoped: bool, apply: bool
+) -> None:
+    root = repo / ".worktrees" / ".reaping"
+    root.parent.mkdir()
+    if kind == "root-file":
+        preserved = root
+        reason = "quarantine: the quarantine directory is not a real directory; inspect it (runbook)"
+        shown = root
+    else:
+        root.mkdir(mode=0o700)
+        shown = root / f"codex-{'0' * 32}"
+        preserved = shown
+        reason = "quarantine: not a directory; inspect it (runbook)"
+        if kind == "unreadable-record":
+            shown.mkdir(mode=0o700)
+            preserved = shown / rw.QUARANTINE_RECORD
+            reason = "quarantine: no readable quarantine record; inspect it (runbook)"
+    preserved.write_text("unreadable quarantine entry\n", encoding="utf-8")
+
+    [report] = cli(
+        capsys,
+        "--repo-root",
+        str(repo),
+        *(["--worktree", str(repo)] if scoped else []),
+        *(["--apply"] if apply else []),
+    )
+
+    assert report["removed"] == []
+    assert preserved.read_text(encoding="utf-8") == "unreadable quarantine entry\n"
+    quarantine_rows = [row for row in report["skipped"] if row["path"].startswith(".worktrees/.reaping")]
+    if scoped:
+        assert quarantine_rows == []
+    else:
+        [row] = quarantine_rows
+        assert row["path"] == shown.relative_to(repo).as_posix()
+        assert (row["action"], row["reason"]) == ("skipped", reason)
