@@ -520,13 +520,36 @@ def _parse_timestamp(value: object) -> datetime | None:
     return parsed.astimezone(UTC)
 
 
+def _valid_stream_epic(value: object) -> str | None:
+    """Return a canonical epic number only for a non-negative int or an ASCII-digit string."""
+    if isinstance(value, bool):
+        return None
+    if isinstance(value, int):
+        return str(value) if value >= 0 else None
+    if isinstance(value, str):
+        digits = value.strip()
+        if digits.isascii() and digits.isdigit():
+            return str(int(digits))
+    return None
+
+
+def _valid_task_family(value: object) -> str | None:
+    """Return a stripped task family only when it is a non-empty string."""
+    if isinstance(value, str):
+        return value.strip() or None
+    return None
+
+
 def _identity(record: dict[str, Any]) -> tuple[str | None, str | None]:
-    """Read only explicit lifecycle identity fields; never infer from labels."""
-    stream_epic = record.get("stream_epic")
-    task_family = record.get("task_family")
-    stream = str(stream_epic).strip() if stream_epic is not None else ""
-    family = str(task_family).strip() if task_family is not None else ""
-    return (stream or None, family or None)
+    """Read only explicit lifecycle identity fields; never infer from labels.
+
+    A malformed value (list, dict, float, bool, blank) is treated as absent so it
+    can never become a group key.
+    """
+    return (
+        _valid_stream_epic(record.get("stream_epic")),
+        _valid_task_family(record.get("task_family")),
+    )
 
 
 def _task_identity(record: dict[str, Any]) -> tuple[str | None, str | None]:
@@ -534,8 +557,9 @@ def _task_identity(record: dict[str, Any]) -> tuple[str | None, str | None]:
 
     Producers write ``task_lifecycle.identity`` (``task-lifecycle-carrier.v1``);
     top-level ``stream_epic``/``task_family`` remain a per-field fallback for older
-    records. The list-valued ``dor_preflight.stream_epic`` is ambiguous and is
-    never consulted.
+    records. Each field is validated before precedence, so an invalid carrier value
+    falls through to a valid top-level one. The list-valued
+    ``dor_preflight.stream_epic`` is ambiguous and is never consulted.
     """
     lifecycle = record.get("task_lifecycle")
     carrier = lifecycle.get("identity") if isinstance(lifecycle, dict) else None

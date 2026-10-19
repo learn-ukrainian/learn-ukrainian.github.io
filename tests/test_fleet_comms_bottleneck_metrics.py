@@ -362,3 +362,158 @@ def test_dispatch_source_errors_name_what_is_wrong(
     dispatch_errors = [e for e in payload["source_errors"] if e["source"] == "dispatch"]
     assert [e["error_kind"] for e in dispatch_errors] == [error_kind]
     assert payload["unclassified"]["by_stream_epic"]["dispatch"]["n"] == 0
+
+
+def _identity_payload(tmp_path: Path, records: dict[str, dict[str, object]]) -> dict[str, object]:
+    tasks_dir = tmp_path / "tasks"
+    tasks_dir.mkdir()
+    started = (NOW - timedelta(seconds=10)).isoformat()
+    for name, extra in records.items():
+        record = {"task_id": name, "started_at": started, "finished_at": NOW.isoformat(), **extra}
+        (tasks_dir / f"{name}.json").write_text(json.dumps(record), encoding="utf-8")
+    plane_db = tmp_path / "plane.sqlite3"
+    _plane_db(plane_db, with_identity=False)
+    return collect_stream_bottleneck_metrics(
+        tasks_dir=tasks_dir, plane_db=plane_db, now=NOW, github_lookup=_merged_at
+    )
+
+
+_INVALID_STREAM_EPICS = [
+    pytest.param([6943, 9737], id="list"),
+    pytest.param({"epic": 6943}, id="dict"),
+    pytest.param(6943.0, id="float"),
+    pytest.param(True, id="bool"),
+    pytest.param(-6943, id="negative-int"),
+    pytest.param("", id="empty"),
+    pytest.param("   ", id="whitespace"),
+    pytest.param("epic-6943", id="non-digit-string"),
+]
+_INVALID_TASK_FAMILIES = [
+    pytest.param(["infra"], id="list"),
+    pytest.param({"name": "infra"}, id="dict"),
+    pytest.param(1.5, id="float"),
+    pytest.param(True, id="bool"),
+    pytest.param("", id="empty"),
+    pytest.param("   ", id="whitespace"),
+]
+
+
+@pytest.mark.parametrize("bad", _INVALID_STREAM_EPICS)
+def test_invalid_carrier_stream_epic_falls_back_to_valid_top_level(
+    tmp_path: Path, bad: object
+) -> None:
+    payload = _identity_payload(
+        tmp_path,
+        {"t": {"stream_epic": 6943, "task_lifecycle": {"identity": {"stream_epic": bad}}}},
+    )
+
+    assert list(payload["by_stream_epic"]) == ["6943"]
+    assert payload["by_stream_epic"]["6943"]["dispatch"]["n"] == 1
+    assert payload["unclassified"]["by_stream_epic"]["dispatch"]["n"] == 0
+    assert payload["source_errors"] == []
+
+
+@pytest.mark.parametrize("bad", _INVALID_STREAM_EPICS)
+def test_invalid_stream_epic_without_fallback_is_unclassified(
+    tmp_path: Path, bad: object
+) -> None:
+    payload = _identity_payload(
+        tmp_path, {"t": {"task_lifecycle": {"identity": {"stream_epic": bad}}}}
+    )
+
+    assert payload["by_stream_epic"] == {}
+    assert payload["unclassified"]["by_stream_epic"]["dispatch"]["n"] == 1
+
+
+@pytest.mark.parametrize("bad", _INVALID_TASK_FAMILIES)
+def test_invalid_carrier_task_family_falls_back_to_valid_top_level(
+    tmp_path: Path, bad: object
+) -> None:
+    payload = _identity_payload(
+        tmp_path,
+        {"t": {"task_family": "infra", "task_lifecycle": {"identity": {"task_family": bad}}}},
+    )
+
+    assert list(payload["by_task_family"]) == ["infra"]
+    assert payload["by_task_family"]["infra"]["dispatch"]["n"] == 1
+    assert payload["unclassified"]["by_task_family"]["dispatch"]["n"] == 0
+    assert payload["source_errors"] == []
+
+
+@pytest.mark.parametrize("bad", _INVALID_TASK_FAMILIES)
+def test_invalid_task_family_without_fallback_is_unclassified(
+    tmp_path: Path, bad: object
+) -> None:
+    payload = _identity_payload(
+        tmp_path, {"t": {"task_lifecycle": {"identity": {"task_family": bad}}}}
+    )
+
+    assert payload["by_task_family"] == {}
+    assert payload["unclassified"]["by_task_family"]["dispatch"]["n"] == 1
+
+
+def test_identity_values_are_normalised_before_grouping(tmp_path: Path) -> None:
+    payload = _identity_payload(
+        tmp_path,
+        {
+            "a": {"task_lifecycle": {"identity": {"stream_epic": " 6943 ", "task_family": " infra "}}},
+            "b": {"task_lifecycle": {"identity": {"stream_epic": "06943", "task_family": "infra"}}},
+        },
+    )
+
+    assert payload["by_stream_epic"]["6943"]["dispatch"]["n"] == 2
+    assert payload["by_task_family"]["infra"]["dispatch"]["n"] == 2
+
+
+def test_dispatch_records_scanned_equal_classified_unclassified_plus_errors(
+    tmp_path: Path,
+) -> None:
+    """Every scanned task file lands in exactly one of: classified, unclassified, error."""
+    tasks_dir = tmp_path / "tasks"
+    (tasks_dir / "archive").mkdir(parents=True)
+    started = (NOW - timedelta(seconds=10)).isoformat()
+    base = {"task_id": "t", "started_at": started, "finished_at": NOW.isoformat()}
+    identity = {"stream_epic": 6943, "task_family": "infra"}
+    records: dict[str, dict[str, object]] = {
+        "carrier": {**base, "task_lifecycle": {"identity": identity}},
+        "archived-carrier": {**base, "task_lifecycle": {"identity": identity}},
+        "fallback": {**base, **identity},
+        "malformed-with-fallback": {
+            **base,
+            **identity,
+            "task_lifecycle": {"identity": {"stream_epic": [1, 2], "task_family": {"x": 1}}},
+        },
+        "malformed-no-fallback": {
+            **base,
+            "task_lifecycle": {"identity": {"stream_epic": 1.5, "task_family": True}},
+        },
+        "no-identity": dict(base),
+        "non-task": {"decision": "approve", "started_at": started},
+        "missing-timestamp": {"task_id": "t"},
+        "invalid-timestamp": {"task_id": "t", "started_at": "garbage"},
+    }
+    for name, record in records.items():
+        directory = tasks_dir / "archive" if name.startswith("archived") else tasks_dir
+        (directory / f"{name}.json").write_text(json.dumps(record), encoding="utf-8")
+    (tasks_dir / "unreadable.json").write_text("{not json", encoding="utf-8")
+    scanned = len(records) + 1
+    plane_db = tmp_path / "plane.sqlite3"
+    _plane_db(plane_db, with_identity=False)
+
+    payload = collect_stream_bottleneck_metrics(
+        tasks_dir=tasks_dir, plane_db=plane_db, now=NOW, github_lookup=_merged_at
+    )
+
+    dispatch_errors = [e for e in payload["source_errors"] if e["source"] == "dispatch"]
+    assert sorted(e["error_kind"] for e in dispatch_errors) == [
+        "invalid_started_at",
+        "missing_started_at",
+        "not_a_task_record",
+        "task_record_unreadable",
+    ]
+    for dimension in ("by_stream_epic", "by_task_family"):
+        classified = sum(g["dispatch"]["n"] for g in payload[dimension].values())
+        unclassified = payload["unclassified"][dimension]["dispatch"]["n"]
+        assert classified + unclassified + len(dispatch_errors) == scanned
+    assert payload["by_stream_epic"]["6943"]["dispatch"]["n"] == 4
+    assert payload["unclassified"]["by_stream_epic"]["dispatch"]["n"] == 2
