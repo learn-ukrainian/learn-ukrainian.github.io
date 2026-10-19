@@ -464,10 +464,12 @@ def article_senses(article: dict[str, Any]) -> list[str]:
     return [" ".join(item.split()) for item in english if isinstance(item, str) and item.strip()]
 
 
-def load_ledger(path: Path, report: Report) -> tuple[dict[str, str], set[str]]:
+def load_ledger(path: Path, report: Report) -> tuple[dict[str, str], set[str]] | None:
     """Withheld sentence digests -> code, and kept digests; the ledger must carry hashes, never text."""
 
-    payload = json.loads(path.read_text(encoding="utf-8"))
+    payload = _load(path, report)
+    if payload is None:
+        return None
     if (payload.get("schema"), payload.get("schemaVersion")) != LEDGER_SCHEMA:
         report.fail("review ledger schema/version mismatch")
     withheld: dict[str, str] = {}
@@ -1137,7 +1139,13 @@ def run(args: argparse.Namespace) -> tuple[Report, dict[str, Any]]:
         report.fail(f"frozen key list has {len(frozen.get('keys', []))} keys, expected {args.expect_keys}")
     if args.docx:
         summary["table"] = check_source_table(deck, frozen, extract_table(args.docx, args.heading), report)
-    withheld, kept = load_ledger(args.withheld, report) if getattr(args, "withheld", None) else (None, set())
+    withheld: dict[str, str] | None = None
+    kept: set[str] = set()
+    if getattr(args, "withheld", None):
+        ledger = load_ledger(args.withheld, report)
+        if ledger is None:
+            return report, {}
+        withheld, kept = ledger
     required_kept = kept if getattr(args, "publication", False) else None
     vesum = _read_only(args.vesum_db)
     sources = _read_only(args.sources_db)

@@ -1690,3 +1690,107 @@ def test_manifest_preserves_artifact_validation(tmp_path: Path, damage: str, dia
     report = checker.Report()
     checker.check_manifest(tmp_path, {"files": records}, report)
     assert report.errors == [diagnostic]
+
+
+@pytest.mark.parametrize(
+    ("case", "content", "diagnostic", "publication"),
+    [
+        (case, content, diagnostic, publication)
+        for publication in (False, True)
+        for case, content, diagnostic in (
+            (
+                "utf8", b"\x80",
+                "unreadable artifact withheld.json: 'utf-8' codec can't decode byte 0x80 in position 0: invalid start byte",
+            ),
+            (
+                "syntax", b"{",
+                "unreadable artifact withheld.json: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)",
+            ),
+            ("root", b"[]", "invalid artifact withheld.json: expected JSON object"),
+            ("missing", None, "missing artifact: withheld.json"),
+            ("valid", None, None),
+        )
+    ] + [("absent", None, None, False)],
+    ids=[f"{mode}-{case}" for mode in ("normal", "publication")
+         for case in ("utf8", "syntax", "root", "missing", "valid")] + ["normal-absent"],
+)
+def test_checker_withheld_ledger_json_cli(
+    checked_world: dict[str, Path],
+    tmp_path: Path,
+    case: str,
+    content: bytes | None,
+    diagnostic: str | None,
+    publication: bool,
+) -> None:
+    world = checked_world
+    if content is not None:
+        world["withheld"].write_bytes(content)
+    if case == "missing":
+        world["withheld"].unlink()
+    report = tmp_path / "ledger-report.json"
+    args = [sys.executable, str(ROOT / "scripts/audit/check_teacher_deck.py"),
+            "--deck-dir", str(world["out"]), "--json", str(report)]
+    for flag, key in (("docx", "docx"), ("vesum-db", "vesum"), ("sources-db", "sources"), ("atlas-db", "atlas")):
+        args += [f"--{flag}", str(world[key])]
+    if case != "absent":
+        args += ["--withheld", str(world["withheld"])]
+    if publication:
+        args += ["--publication"]
+    result = subprocess.run(args, capture_output=True, text=True, check=False, timeout=120)
+    assert result.returncode == (1 if diagnostic else 0), result
+    assert result.stderr == ""
+    payload = json.loads(report.read_text(encoding="utf-8"))
+    assert payload["ok"] is (diagnostic is None)
+    assert payload["errors"] == ([diagnostic] if diagnostic else [])
+    assert f"teacher deck check: {'FAIL (1 errors)' if diagnostic else 'PASS (0 errors)'}" in result.stdout
+    if diagnostic:
+        assert diagnostic in result.stdout
+        assert "withheldVerified" not in payload
+    else:
+        assert payload["withheldVerified"] is (case == "valid")
+        assert payload["entries"] == 16 and payload["cloze"] == 6
+        assert payload["reviewRequired"] is publication
+        assert payload["aspectVerified"] is True and payload["atlasVerified"] is True
+
+
+@pytest.mark.parametrize("publication", [False, True], ids=["normal", "publication"])
+@pytest.mark.parametrize(
+    ("damage", "diagnostic"),
+    [
+        ("schema", "review ledger schema/version mismatch"),
+        ("kept-record", "review ledger: malformed kept record ['sentenceSha256']"),
+        ("digest", "review ledger: a record is not a SHA-256 digest"),
+        ("conflict", "review ledger: a sentence is both kept and withheld"),
+        ("served-withheld", "serves a sentence the language review withheld (ERR)"),
+    ],
+)
+def test_checker_preserves_ledger_review_guards(
+    checked_world: dict[str, Path],
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+    publication: bool,
+    damage: str,
+    diagnostic: str,
+) -> None:
+    world = checked_world
+    ledger = json.loads(world["withheld"].read_text(encoding="utf-8"))
+    if damage == "schema":
+        ledger["schemaVersion"] = 99
+    elif damage == "kept-record":
+        ledger["kept"].append({"sentenceSha256": "0" * 64})
+    elif damage == "digest":
+        ledger["kept"].append({"sentenceSha256": "not-a-hash", "reviewer": "fixture", "reviewedAt": "2026-09-27"})
+    else:
+        record = ledger["kept"][0]
+        ledger["withheld"].append({**record, "code": "ERR"})
+        if damage == "served-withheld":
+            ledger["kept"].remove(record)
+    world["withheld"].write_text(json.dumps(ledger), encoding="utf-8")
+    capsys.readouterr()
+    report = tmp_path / "ledger-guard.json"
+    assert _check_main(world, report, publication=publication, with_sources=True) == 1
+    output = capsys.readouterr()
+    payload = json.loads(report.read_text(encoding="utf-8"))
+    assert payload["ok"] is False and output.err == ""
+    assert any(diagnostic in error for error in payload["errors"])
+    assert diagnostic in output.out and "FAIL" in output.out
