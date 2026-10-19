@@ -119,7 +119,7 @@ more-itertools==11.1.0
 mpmath==1.3.0
 multidict==6.9.1
 multiprocess==0.70.19
-mypy==2.1.0
+mypy==2.4.0
 mypy_extensions==1.1.0
 networkx==3.6.1
 nodeenv==1.10.0
