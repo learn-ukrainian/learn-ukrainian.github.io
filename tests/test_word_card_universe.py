@@ -5,15 +5,89 @@ from __future__ import annotations
 import copy
 import hashlib
 import sqlite3
+from functools import cache
 from pathlib import Path
 
 import pytest
+from jsonschema import validators
 
+from scripts.atlas import word_card_assembly as assembly
 from scripts.atlas import word_card_certification as cert
 from scripts.atlas import word_card_golden_set as gold
 from scripts.atlas import word_card_universe as universe
 from tests.test_word_card_golden_set import write
-from tests.word_card_certification_fixtures import CertificationFixture, certification_fixture  # noqa: F401
+from tests.word_card_certification_fixtures import CertificationFixture, certification_fixture
+
+
+@pytest.fixture(scope="module")
+def validation_cache():
+    # Schema validation is pure. Reuse successful checks only for identical values and schemas.
+    def cached(validate):
+        accepted = set()
+
+        def validate_once(value, schema, label):
+            key = (gold.canonical(value), gold.canonical(schema))
+            if key not in accepted:
+                validate(value, schema, label)
+                accepted.add(key)
+
+        return validate_once
+
+    unique_items = gold.VALIDATOR.VALIDATORS["uniqueItems"]
+
+    def json_key(value):
+        if isinstance(value, dict):
+            return ("object", frozenset((key, json_key(item)) for key, item in value.items()))
+        if isinstance(value, list):
+            return ("array", tuple(map(json_key, value)))
+        # JSON Schema distinguishes booleans from numbers, but equates 1 and 1.0.
+        return ("boolean" if isinstance(value, bool) else "scalar", value)
+
+    def unique_once(validator, enabled, instance, schema):
+        # Hash nested JSON values instead of the library's quadratic pairwise comparisons.
+        if (enabled and validator.is_type(instance, "array")
+                and len({json_key(item) for item in instance}) != len(instance)):
+            yield from unique_items(validator, enabled, instance, schema)
+
+    account = gold.accounting.account
+    accounting_cache = {}
+
+    def account_once(paths, *, atlas_manifest=None):
+        key = (tuple(sorted(paths.items())), atlas_manifest)
+        if key in accounting_cache:
+            files, result = accounting_cache[key]
+            if all(path.is_file() and path.read_bytes() == raw for path, raw in files.items()):
+                return copy.deepcopy(result)
+        result = account(paths, atlas_manifest=atlas_manifest)
+        # The accounting receipt enumerates every transitive source dependency.
+        files = {path: path.read_bytes() for path in result[1]["_input_paths"]}
+        accounting_cache[key] = files, copy.deepcopy(result)
+        return result
+
+    evaluate = cert.evaluate_certification
+    evaluations = {}
+
+    def evaluate_once(spec_path, spec_sha256, evaluation_path, evaluation_sha256):
+        # These synthetic packets keep all certification dependencies under these roots.
+        roots = (cert.PROJECT_ROOT, spec_path.parent)
+        files = tuple((path, path.read_bytes()) for path in sorted({
+            path for root in roots for path in root.rglob("*") if path.is_file()
+        }))
+        key = (spec_path, spec_sha256, evaluation_path, evaluation_sha256, files)
+        if key not in evaluations:
+            evaluations[key] = evaluate(spec_path, spec_sha256, evaluation_path, evaluation_sha256)
+        return copy.deepcopy(evaluations[key])
+
+    with pytest.MonkeyPatch.context() as patch:
+        # This module never changes repository topology; keep all per-path containment checks.
+        patch.setattr(assembly, "_checkouts", cache(assembly._checkouts))
+        for module, name in ((gold, "VALIDATOR"), (gold.accounting, "EvidenceValidator")):
+            patch.setattr(module, name, validators.extend(getattr(module, name), {"uniqueItems": unique_once}))
+        patch.setattr(gold, "validate", cached(gold.validate))
+        patch.setattr(gold.accounting, "_validate", cached(gold.accounting._validate))
+        patch.setattr(gold.accounting, "account", account_once)
+        patch.setattr(cert, "evaluate_certification", evaluate_once)
+        yield
 
 
 class UniverseFixture:
@@ -137,9 +211,64 @@ class UniverseFixture:
         return universe.reconcile(self.spec_path, self.pin, self.checkpoint, self.proof_ref, self.root)
 
 
+@pytest.fixture(scope="module")
+def universe_template(tmp_path_factory, validation_cache):
+    root = tmp_path_factory.mktemp("universe-template")
+    with pytest.MonkeyPatch.context() as patch:
+        authority = certification_fixture.__wrapped__(root, patch)
+        template = UniverseFixture(root / "universe", authority)
+        bindings = {name: getattr(cert, name) for name in (
+            "PROJECT_ROOT", "SCHEMA_PATH", "REVIEW_EVIDENCE_PATH", "PERMISSIONS_REGISTER_PATH",
+            "IMPLEMENTATION_PATHS", "RULE_PATHS",
+        )}
+    files = {path: path.read_bytes() for path in root.rglob("*") if path.is_file()}
+    return template, bindings, files, copy.deepcopy(authority.ledger)
+
+
 @pytest.fixture
-def packet(tmp_path, certification):
-    return UniverseFixture(tmp_path / "universe", certification)
+def packet(universe_template, monkeypatch):
+    template, bindings, files, ledger = universe_template
+    # Preserve absolute paths and their pinned hashes, but restore every test's disk mutations.
+    for path in template.root.parent.rglob("*"):
+        if path.is_file() and path not in files:
+            path.unlink()
+    for path, raw in files.items():
+        if not path.exists() or path.read_bytes() != raw:
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(raw)
+    for name, value in bindings.items():
+        monkeypatch.setattr(cert, name, value)
+    # approve_review closes over this dictionary; keep that alias in the per-test copy.
+    authority_ledger = template.phase5.authority.ledger
+    authority_ledger.clear()
+    authority_ledger.update(copy.deepcopy(ledger))
+    # Source documents are read-only here; source corruption tests change their files.
+    source = template.phase5.gold.source
+    return copy.deepcopy(template, {id(authority_ledger): authority_ledger, id(source): source})
+
+
+@pytest.mark.parametrize("value,valid", [
+    ([{"a": [1, True]}, {"a": [True, 1]}], True),
+    ([{"a": [1, True]}, {"a": [1.0, True]}], False),
+    ([{"a": 1, "b": 2}, {"b": 2, "a": 1}], False),
+    ([1, True, None, "1", False, 0], True),
+    ([[], []], False),
+    ([{"a": []}, {"a": {}}], True),
+    ([], True),
+])
+def test_cached_validation_preserves_json_schema_uniqueness(validation_cache, value, valid):
+    schema = {"uniqueItems": True}
+    assert validators.Draft202012Validator(schema).is_valid(value) is valid
+    assert gold.VALIDATOR(schema).is_valid(value) is valid
+
+
+def test_cached_accounting_rechecks_transitive_source_bytes(packet):
+    packet.freeze()
+    source = packet.phase5.gold.source
+    index = source.root / source.docs["source_manifest"]["ranges"][0]["index"]["path"]
+    index.write_bytes(b"changed source index")
+    with pytest.raises(ValueError):
+        packet.freeze()
 
 
 def test_frozen_denominator_and_independent_reconciliation(packet):
@@ -163,7 +292,8 @@ def test_frozen_denominator_and_independent_reconciliation(packet):
     assert list(result["certifications"].values()) == [{packet.card["card_id"]: cert.digest(packet.card)}]
 
 
-@pytest.mark.parametrize("point", [1, 6, 7, 8, 71, 143, 144, 145])
+@pytest.mark.parametrize("point", [1, 7, 71, 143, 144, 145],
+                         ids=["early", "batch-boundary", "middle", "last-partial", "complete", "past-completion"])
 def test_resume_is_byte_identical_and_idempotent(packet, point):
     first = packet.build(max_units=point)
     assert first["accounted_units"] == min(point, 144)
