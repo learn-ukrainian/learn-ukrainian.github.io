@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import contextlib
 import os
 import re
 import select
@@ -536,6 +537,128 @@ def test_late_term_preserves_the_collected_provider_status(tmp_path: Path, provi
     finally:
         terminal.close()
         os.close(release_fd)
+
+
+@pytest.mark.parametrize(("sig", "rc"), [(signal.SIGINT, 130), (signal.SIGTERM, 143), (signal.SIGHUP, 129)])
+def test_signal_reaches_provider_when_the_timed_pause_expires_in_the_trap(
+    tmp_path: Path, sig: signal.Signals, rc: int
+) -> None:
+    """#11094: a trap still running when the collector's `read -t` expires is abandoned.
+
+    Bash checks the expired read timer at the trap's next read, `mapfile` included,
+    and jumps back to the read's caller. The wrapped relay sleeps past the 0.1 s
+    pause first, so any trap step after the sleep that reads is cut off.
+    """
+    launcher, env = _launcher(tmp_path)
+    helper = launcher.parent / "scripts/lib/driver_scope.sh"
+    body = helper.read_text()
+    assert body.count("driver_scope_relay() {") == 1
+    helper.write_text(
+        body.replace("driver_scope_relay() {", "original_relay() {")
+        + '\ndriver_scope_relay() {\n  sleep 0.15\n  original_relay "$@"\n}\n'
+    )
+    child_ready, received = tmp_path / "child-ready", tmp_path / "received"
+    with (launcher.parent / "scripts/launchers/claude.sh").open("a") as stream:
+        stream.write("""
+launcher_adapter_exec() {
+  trap 'printf "INT\\n" > "$TEST_RECEIVED"; exit 0' INT
+  trap 'printf "TERM\\n" > "$TEST_RECEIVED"; exit 0' TERM
+  trap 'printf "HUP\\n" > "$TEST_RECEIVED"; exit 0' HUP
+  : > "$TEST_CHILD_READY"
+  while :; do sleep 0.05; done
+}
+""")
+    with subprocess.Popen(
+        ["bash", str(launcher)],
+        cwd=launcher.parent,
+        env={**_inherited_environ(), **env, "TEST_CHILD_READY": str(child_ready), "TEST_RECEIVED": str(received)},
+        stdin=subprocess.DEVNULL,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        start_new_session=True,
+    ) as process:
+        try:
+            wait_until(child_ready.exists, timeout=15, message="provider signal traps")
+            # The waiting shell spends almost all of its time in the timed pause.
+            os.kill(process.pid, sig)
+            try:
+                _, stderr = process.communicate(timeout=15)
+            except subprocess.TimeoutExpired:
+                pytest.fail(f"{sig.name} never reached the provider; the waiting launcher kept running")
+        finally:
+            with contextlib.suppress(ProcessLookupError):
+                os.killpg(process.pid, signal.SIGKILL)
+    assert process.returncode == rc, stderr
+    assert received.read_text() == f"{sig.name[3:]}\n"
+    _assert_exit_line(stderr, env, rc, sig.name[3:])
+
+
+_RELAY_SCRIPT = """
+source "$1"
+exec {ready}<> "$2"
+exec {release}<> "$3"
+relayed=""
+child=""
+trap 'driver_scope_relay TERM' TERM
+%s
+driver_scope_wait_child "$child"
+printf 'rc=%%s relayed=%%s\\n' "$DS_CHILD_RC" "$relayed"
+"""
+# The bounded read keeps a child that is never signalled from outliving the test.
+_RUNNING_CHILD = """( trap - TERM; echo child-ready >&"$ready"; read -r -t 20 -u "$release" _; exit 7 ) &
+child=$!
+IFS= read -r -u "$ready" token
+[ "$token" = child-ready ] || exit 98"""
+
+
+@pytest.mark.parametrize(
+    ("setup", "expected"),
+    [
+        # A signal recorded before the child exists reaches it at the first wait.
+        ("kill -TERM $$\n" + _RUNNING_CHILD, "rc=143 relayed=TERM"),
+        # A signal recorded while the child runs, before the first wait.
+        (_RUNNING_CHILD + "\nkill -TERM $$", "rc=143 relayed=TERM"),
+        # The child exited on its own before the signal: its status stands.
+        (
+            '( exit 7 ) &\nchild=$!\nwhile driver_scope_child_running "$child"; do sleep 0.01; done\nkill -TERM $$',
+            "rc=7 relayed=",
+        ),
+        # Recorded while the child ran, but it exited on its own before the
+        # collector forwarded anything: it never received the signal, and its
+        # status stands. The child state is read when forwarding, not in the trap.
+        (
+            _RUNNING_CHILD
+            + """
+read() {
+  unset -f read
+  kill -TERM $$
+  echo release >&"$release"
+  while driver_scope_child_running "$child"; do sleep 0.01; done
+  builtin read "$@"
+}""",
+            "rc=7 relayed=",
+        ),
+    ],
+    ids=["before-child", "before-first-wait", "child-exited", "exited-before-forward"],
+)
+def test_recorded_signal_is_forwarded_only_to_a_running_child(tmp_path: Path, setup: str, expected: str) -> None:
+    ready = tmp_path / "ready"
+    release = tmp_path / "release"
+    os.mkfifo(ready)
+    os.mkfifo(release)
+    result = subprocess.run(
+        [
+            "bash", "-c", _RELAY_SCRIPT % setup, "bash",
+            str(REPO / "scripts/lib/driver_scope.sh"), str(ready), str(release),
+        ],
+        capture_output=True,
+        text=True,
+        timeout=30,
+        start_new_session=True,
+    )
+    assert result.returncode == 0, result.stderr
+    assert result.stdout.strip() == expected, result.stderr
 
 
 @pytest.mark.parametrize("rc", [0, 5, 137])
