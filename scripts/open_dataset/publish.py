@@ -9,6 +9,7 @@ import hashlib
 import json
 import subprocess
 import sys
+from collections.abc import Iterable
 from pathlib import Path
 from typing import Any
 from urllib.parse import quote
@@ -16,6 +17,8 @@ from urllib.parse import quote
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
+from scripts.common.jsonl import jsonl_lines
+from scripts.open_dataset.russification import QuarantineGate
 from scripts.opsec.prepublish import publication_boundary, publication_cli
 from scripts.publish.github import Asset, Request, request_run
 
@@ -102,7 +105,27 @@ def collect_dataset(dataset_root: Path = DEFAULT_DATASET_ROOT) -> tuple[dict[str
     return metadata, pointer_files, package_files
 
 
-def build_package(metadata: dict[str, Any], files: list[dict[str, str]]) -> bytes:
+def build_package(
+    metadata: dict[str, Any], files: list[dict[str, str]], *, sum11_texts: Iterable[str] = (),
+) -> bytes:
+    # Validate the exact bytes being packaged, including files outside dataset/.
+    # A separate opt-in subset must never ride along with the default release.
+    inventory = tuple(sum11_texts)
+    try:
+        gate = QuarantineGate(inventory)
+        gate.validate([metadata])
+        for file in files:
+            path = Path(file["path"])
+            gate.validate([file["path"]])
+            if path.suffix.lower() == ".jsonl":
+                records = [json.loads(line) for line in jsonl_lines(file["content"]) if line.strip()]
+            elif path.suffix.lower() == ".json":
+                records = [json.loads(file["content"])]
+            else:
+                records = [file["content"]]
+            gate.validate(records)
+    except ValueError as exc:
+        raise OpenDatasetPublishError("default dataset quarantine gate failed") from exc
     package = {
         "schema": "atlas-open-dataset-package",
         "schemaVersion": 1,
@@ -195,9 +218,13 @@ def publish_open_dataset(
     release_tag: str = DEFAULT_RELEASE_TAG,
     repo: str = DEFAULT_REPO,
     dry_run: bool = False,
+    sum11_texts: Iterable[str] = (),
 ) -> dict[str, Any]:
+    inventory = tuple(sum11_texts)
+    if not dry_run and not inventory:
+        raise OpenDatasetPublishError("a frozen sum11 quotation inventory is required for publication")
     metadata, pointer_files, package_files = collect_dataset(dataset_root)
-    package_bytes = build_package(metadata, package_files)
+    package_bytes = build_package(metadata, package_files, sum11_texts=inventory)
     gzip_bytes = gzip.compress(package_bytes, compresslevel=9, mtime=0)
     gzip_path.parent.mkdir(parents=True, exist_ok=True)
     gzip_path.write_bytes(gzip_bytes)
@@ -221,7 +248,14 @@ def main() -> int:
     parser = argparse.ArgumentParser(
         description="Publish the open Word Atlas dataset as a release asset.\nUse --dry-run before publishing; not for practice decks.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="Examples:\n  .venv/bin/python scripts/open_dataset/publish.py --dry-run\nOutputs and exit codes: Package and pointer files; release writes unless dry-run. 0: success; >=1: failed.\nRelated: #9297",
+        epilog=(
+            "Examples:\n"
+            "  .venv/bin/python scripts/open_dataset/publish.py --dry-run\n"
+            "  .venv/bin/python scripts/open_dataset/publish.py --dry-run --sum11-inventory <frozen-inventory.json>\n"
+            "Outputs: Package and pointer files; release writes unless dry-run.\n"
+            "A dry run without an inventory checks provenance only.\n"
+            "Exit codes: 0: success; >=1: failed.\nRelated: #9297, #8989"
+        ),
     )
     parser.add_argument(
         "--dataset-root", type=Path, default=DEFAULT_DATASET_ROOT, help="Dataset directory (default: %(default)s)."
@@ -237,7 +271,14 @@ def main() -> int:
     )
     parser.add_argument("--repo", default=DEFAULT_REPO, help="Destination OWNER/REPO (default: %(default)s).")
     parser.add_argument("--dry-run", action="store_true", help="Build package metadata without uploading/writing pointer")
+    parser.add_argument(
+        "--sum11-inventory", type=Path, default=None,
+        help="Frozen independent СУМ-11 quotation inventory as a JSON array of strings; required for upload (default: none).",
+    )
     args = parser.parse_args()
+    inventory = json.loads(args.sum11_inventory.read_text(encoding="utf-8")) if args.sum11_inventory else []
+    if not isinstance(inventory, list):
+        raise OpenDatasetPublishError("sum11 inventory must be a JSON array of quotations")
     pointer = publish_open_dataset(
         dataset_root=args.dataset_root,
         gzip_path=args.gzip,
@@ -245,6 +286,7 @@ def main() -> int:
         release_tag=args.release_tag,
         repo=args.repo,
         dry_run=args.dry_run,
+        sum11_texts=inventory,
     )
     print(
         "Word Atlas open dataset pointer "
