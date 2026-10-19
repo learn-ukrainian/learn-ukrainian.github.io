@@ -150,6 +150,7 @@ gha-creds-*.json
 .pytest_cache/
 .pytest_breadcrumbs/
 .ruff_cache/
+.mypy_cache/
 # CI scratch output (junit XML, shard plans, logs) written by .github/workflows/ci.yml
 ci-artifacts/
 

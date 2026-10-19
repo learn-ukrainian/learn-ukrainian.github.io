@@ -31,7 +31,7 @@ streams:
     epics: [5535]  # nested program; was provisionally under #4707/#6943 until this registry bootstrap (#5537)
   devops:
     title: "DevOps automation, CI, release & launcher reliability"
-    epics: [5703]
+    epics: [5703, 10844]  # #10844 overflow epic for the existing stream (#5703 is at GitHub's 100 native sub-issue limit)
   monitor:
     # Product name: Ops API + UI. Stream key stays `monitor` for launcher/handoff
     # stability; selectors `ops-api` / `ops.api` alias here via handoff_identity.sh.

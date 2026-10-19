@@ -816,7 +816,6 @@ def assert_branch_deletion_preconditions(
     bundle: BundleReceipt,
     explicit_protected: set[str] | frozenset[str] = frozenset(),
     require_remote_gone: bool = True,
-    allow_current_head: bool = False,
     worktree_registered: bool = False,
     expected_head: str | None = None,
 ) -> tuple[str, str, str]:
