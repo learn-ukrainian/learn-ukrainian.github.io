@@ -62,9 +62,7 @@ _AMBIGUOUS_PATHS = frozenset(
     }
 )
 
-_AMBIGUOUS_PREFIXES = (
-    "scripts/agent_runtime/hermes_hooks/",
-)
+_AMBIGUOUS_PREFIXES = ("scripts/agent_runtime/hermes_hooks/",)
 
 _ADAPTER_PREFIX = "scripts/agent_runtime/adapters/"
 
@@ -113,6 +111,14 @@ def _matches_kimi(candidate: _SeatCandidate) -> bool:
     return candidate.route.casefold() in {"kimi", "kimicc"} or name.startswith("kimi") or model.startswith("kimi")
 
 
+def _matches_muse(candidate: _SeatCandidate) -> bool:
+    name = candidate.name.casefold()
+    model = candidate.concrete_model.casefold()
+    return candidate.route.casefold() == "muse" or any(
+        identity == "muse" or identity.startswith(("muse-", "muse_")) for identity in (name, model)
+    )
+
+
 def _matches_deepseek(candidate: _SeatCandidate) -> bool:
     name = candidate.name.casefold()
     model = candidate.concrete_model.casefold()
@@ -128,7 +134,12 @@ def _matches_glm(candidate: _SeatCandidate) -> bool:
 def _matches_qwen(candidate: _SeatCandidate) -> bool:
     name = candidate.name.casefold()
     model = candidate.concrete_model.casefold()
-    return candidate.route.casefold() == "qwen" or "qwen" in name or "qwen" in model or candidate.family.casefold() == "qwen"
+    return (
+        candidate.route.casefold() == "qwen"
+        or "qwen" in name
+        or "qwen" in model
+        or candidate.family.casefold() == "qwen"
+    )
 
 
 def _matches_pool(candidate: _SeatCandidate) -> bool:
@@ -166,6 +177,7 @@ _MATCHERS: dict[str, Callable[[_SeatCandidate], bool]] = {
     "glm": _matches_glm,
     "grok": _matches_grok,
     "kimi": _matches_kimi,
+    "muse": _matches_muse,
     "pool": _matches_pool,
     "qwen": _matches_qwen,
 }
@@ -242,9 +254,7 @@ def classify_owned_path(path: str) -> OwnedPathClassification:
     hooked = _HOOK_SEATS.get(rel)
     if hooked is not None:
         return OwnedPathClassification("seat", frozenset({hooked}), hooked)
-    ambiguous_prefix = any(
-        rel.startswith(prefix) or rel == prefix.rstrip("/") for prefix in _AMBIGUOUS_PREFIXES
-    )
+    ambiguous_prefix = any(rel.startswith(prefix) or rel == prefix.rstrip("/") for prefix in _AMBIGUOUS_PREFIXES)
     if rel in _AMBIGUOUS_PATHS or ambiguous_prefix:
         return OwnedPathClassification("ambiguous", frozenset(), "shared reviewer-hook surface")
     if rel.startswith(_ADAPTER_PREFIX) and rel.endswith(".py"):

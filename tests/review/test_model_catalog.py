@@ -376,8 +376,10 @@ def approved_driver_brief_baseline(baseline):
     catalog = deepcopy(baseline["catalog"])
     for row in changes["catalog_model_fields"]:
         assert (row["model"], row["field"]) in {
-            ("claude-haiku-5-5", "roles"), ("claude-haiku-5-5", "weaknesses"),
-            ("claude-haiku-5-5", "notes"), ("gpt-6-luna", "roles"),
+            ("claude-haiku-5-5", "roles"),
+            ("claude-haiku-5-5", "weaknesses"),
+            ("claude-haiku-5-5", "notes"),
+            ("gpt-6-luna", "roles"),
         }
         assert catalog["models"][row["model"]][row["field"]] == row["before"]
         catalog["models"][row["model"]][row["field"]] = row["after"]
@@ -393,8 +395,44 @@ def approved_driver_brief_baseline(baseline):
     return {**baseline, "catalog": catalog, "dispatch": dispatch}
 
 
-APPROVED_BASELINE = approved_driver_brief_baseline(GROK_LANGUAGE_BASELINE)
+def approved_muse_subject_baseline(baseline):
+    """#11032 adds only Muse to known-seat lists in unknown-seat refusals."""
+    before = "expected one of agy, claude, codex, cursor, deepseek, gemini, gemma, glm, grok, kimi, pool, qwen"
+    after = "expected one of agy, claude, codex, cursor, deepseek, gemini, gemma, glm, grok, kimi, muse, pool, qwen"
+    reviewer = deepcopy(baseline["reviewer"])
+    for row in reviewer:
+        reason = row["value"].get("fail_closed_reason")
+        if reason and reason.startswith("unknown subject seat "):
+            assert reason.count(before) == 1
+            row["value"]["fail_closed_reason"] = reason.replace(before, after)
+    return {**baseline, "reviewer": reviewer}
+
+
+DRIVER_BRIEF_BASELINE = approved_driver_brief_baseline(GROK_LANGUAGE_BASELINE)
+APPROVED_BASELINE = approved_muse_subject_baseline(DRIVER_BRIEF_BASELINE)
 APPROVED_INPUTS = {**GEMINI_INPUTS, **SEATS_OVERLAY["inputs"], **ARGON_OVERLAY["inputs"]}
+
+
+def test_muse_subject_overlay_changes_only_one_added_seat_in_refusal_lists():
+    before = DRIVER_BRIEF_BASELINE
+    original = deepcopy(before)
+    after = approved_muse_subject_baseline(before)
+    restored = deepcopy(after)
+    changed = []
+    for index, (old, new) in enumerate(zip(before["reviewer"], after["reviewer"], strict=True)):
+        if old == new:
+            continue
+        changed.append(index)
+        old_reason = old["value"]["fail_closed_reason"]
+        new_reason = new["value"]["fail_closed_reason"]
+        assert old_reason.startswith("unknown subject seat ")
+        old_seats = re.search(r"expected one of (.*?) \(or a documented alias", old_reason).group(1).split(", ")
+        new_seats = re.search(r"expected one of (.*?) \(or a documented alias", new_reason).group(1).split(", ")
+        assert new_seats == sorted([*old_seats, "muse"])
+        assert new_reason == old_reason.replace("kimi, pool", "kimi, muse, pool")
+        restored["reviewer"][index]["value"]["fail_closed_reason"] = old_reason
+    assert len(changed) == 56
+    assert restored == before == original
 
 
 def test_grok_language_overlay_records_only_the_two_field_delta():
@@ -460,7 +498,9 @@ def test_argon_trial_overlay_records_only_the_model_data_delta():
     assert ARGON_OVERLAY["adapter_patches"] == {"host-cli": {}, "no-cli": {}}
     for surface in set(before) - {"catalog", "approval", "reviewer", "dispatch"}:
         assert before[surface] == after[surface], surface
-    changed_dispatch = [i for i, (old, new) in enumerate(zip(before["dispatch"], after["dispatch"], strict=True)) if old != new]
+    changed_dispatch = [
+        i for i, (old, new) in enumerate(zip(before["dispatch"], after["dispatch"], strict=True)) if old != new
+    ]
     assert changed_dispatch == list(range(196, 220, 2))
     old_ids = "`gemini-3.1-pro-high`, `gemini-3.1-pro-low`."
     new_ids = "`gemini-3.1-pro-high`, `gemini-3.1-pro-low`, `gemini-4-argon-high`, `gemini-4-argon-medium`, `gemini-4-argon-low`."
@@ -479,7 +519,9 @@ def test_argon_trial_overlay_records_only_the_model_data_delta():
     assert new_models["gemini-4-argon-high"]["roles"] == ["explicit_bakeoff_only"]
     old_review_inputs = {**GEMINI_INPUTS, **SEATS_OVERLAY["inputs"]}["reviewer"]
     new_review_inputs = APPROVED_INPUTS["reviewer"]
-    old_by_input = {dispatch_key(row): receipt for row, receipt in zip(old_review_inputs, before["reviewer"], strict=True)}
+    old_by_input = {
+        dispatch_key(row): receipt for row, receipt in zip(old_review_inputs, before["reviewer"], strict=True)
+    }
     added = changed = 0
     for row, receipt in zip(new_review_inputs, after["reviewer"], strict=True):
         key = dispatch_key(row)
@@ -800,9 +842,12 @@ def test_resource_policy_fallbacks_equal_approved_overlay():
     """The live fallbacks equal #10263's overlay with #10835's policy text applied."""
     source = Path(__file__).resolve().parents[2]
     actual = yaml.safe_load((source / "scripts/config/agent_fallback_substitutions.yaml").read_text())
-    assert actual == approved_grok_language_seat_baseline(
-        {"catalog": ARGON_HOST_BASELINE["catalog"], "fallbacks": RESOURCE_OVERLAY["surfaces"]["fallbacks"]}
-    )["fallbacks"]
+    assert (
+        actual
+        == approved_grok_language_seat_baseline(
+            {"catalog": ARGON_HOST_BASELINE["catalog"], "fallbacks": RESOURCE_OVERLAY["surfaces"]["fallbacks"]}
+        )["fallbacks"]
+    )
 
 
 def test_gemini_fixture_preserves_historical_cases_and_other_seat_eligibility():
@@ -1375,32 +1420,35 @@ def test_no_cli_capture_equals_separate_frozen_surface(tmp_path):
         assert hashlib.sha256((output / name).read_bytes()).hexdigest() == digest
     actual = json.loads(gzip.decompress((output / "baseline.json.gz").read_bytes()))
     original = json.loads(gzip.decompress((expected / "baseline.json.gz").read_bytes()))
-    assert actual == approved_driver_brief_baseline(approved_grok_language_seat_baseline(
-        approved_argon_trial_baseline(
-            approved_hook_failure_baseline(
-                approved_hermes_effort_baseline(
-                    approved_claude_account_dispatch_baseline(
-                        approved_cto_wrappers_baseline(
-                            approved_claude_cap_baseline(
-                                approved_cursor_trailer_baseline(
-                                    approved_launcher_canary_baseline(
-                                        approved_reviewer_seats_baseline(
-                                            {
-                                                **approved_review_baseline(original),
-                                                **GEMINI_OVERLAY["surfaces"],
-                                                **RESOURCE_OVERLAY["surfaces"],
-                                            }
+    approved = approved_driver_brief_baseline(
+        approved_grok_language_seat_baseline(
+            approved_argon_trial_baseline(
+                approved_hook_failure_baseline(
+                    approved_hermes_effort_baseline(
+                        approved_claude_account_dispatch_baseline(
+                            approved_cto_wrappers_baseline(
+                                approved_claude_cap_baseline(
+                                    approved_cursor_trailer_baseline(
+                                        approved_launcher_canary_baseline(
+                                            approved_reviewer_seats_baseline(
+                                                {
+                                                    **approved_review_baseline(original),
+                                                    **GEMINI_OVERLAY["surfaces"],
+                                                    **RESOURCE_OVERLAY["surfaces"],
+                                                }
+                                            )
                                         )
                                     )
                                 )
                             )
                         )
                     )
-                )
-            ),
-            "no-cli",
+                ),
+                "no-cli",
+            )
         )
-    ))
+    )
+    assert actual == approved_muse_subject_baseline(approved)
     assert len(actual["launchers"]) == 70
     errors = [row.get("error", "") for row in actual["adapters"]]
     assert any("grok" in error and "PATH" in error for error in errors)
@@ -1440,9 +1488,8 @@ def test_extended_capture_denominator_and_current_contract():
     assert all(not row["self_approval_counts"] for row in contract["rows"])
 
 
-
 def test_driver_brief_capture_preserves_every_unrelated_value():
-    before, after = GROK_LANGUAGE_BASELINE, APPROVED_BASELINE
+    before, after = GROK_LANGUAGE_BASELINE, DRIVER_BRIEF_BASELINE
     for surface in set(before) - {"catalog", "dispatch"}:
         assert before[surface] == after[surface]
     old_models, new_models = before["catalog"]["models"], after["catalog"]["models"]
@@ -1465,14 +1512,14 @@ def test_driver_brief_capture_preserves_every_unrelated_value():
     assert expected_dispatch == after["dispatch"]
     old_luna, new_luna = old_models["gpt-6-luna"], new_models["gpt-6-luna"]
     assert new_luna["roles"] == [*old_luna["roles"], "readonly_recon", "mechanical_classification"]
-    assert {k: v for k, v in old_luna.items() if k != "roles"} == {
-        k: v for k, v in new_luna.items() if k != "roles"
-    }
+    assert {k: v for k, v in old_luna.items() if k != "roles"} == {k: v for k, v in new_luna.items() if k != "roles"}
 
 
 def test_deepseek_flash_execution_requires_opencode():
     catalog = load_model_catalog()
-    assert require_execution_model("deepseek-v4.1-flash", transport="opencode", catalog=catalog) == "deepseek-v4.1-flash"
+    assert (
+        require_execution_model("deepseek-v4.1-flash", transport="opencode", catalog=catalog) == "deepseek-v4.1-flash"
+    )
     with pytest.raises(ModelCatalogError, match="requires the opencode transport"):
         require_execution_model("deepseek-v4.1-flash", transport="hermes", catalog=catalog)
 
