@@ -7,6 +7,7 @@ import contextlib
 import getpass
 import json
 import os
+import re
 import sqlite3
 import subprocess
 import sys
@@ -532,7 +533,6 @@ HOST_MARKERS = (
     "mirror-7",
     "~/mnt",
     "private-share",
-    "fe80",
     "eth7",
     "/srv/",
     "synthetic-operator",
@@ -542,15 +542,39 @@ HOST_MARKERS = (
     "learn.git",
     _FAKE_TOKEN,
 )
+# An IPv6 link-local literal (``fe80`` then colon-separated hex groups, e.g. ``fe80::1``). The bare four letters are
+# no marker: a 40-hex commit SHA such as ``...ebfe8007cb`` carries them, and a SHA never carries a colon.
+LINK_LOCAL_IPV6 = re.compile(r"(?<![0-9a-f])fe80(?::[0-9a-f]{0,4}){2,}", re.IGNORECASE)
 
 
 def assert_no_host_details(text: str, *roots: Path) -> None:
     """``text`` (a refusal, a rescue row) holds none of the hostile markers, the user's login or any root."""
     for marker in HOST_MARKERS:
         assert marker not in text, marker
+    assert not LINK_LOCAL_IPV6.search(text), "IPv6 link-local literal"
     for root in roots:
         assert str(root) not in text and str(root.resolve()) not in text, root
     assert f"/{getpass.getuser()}/" not in text
+
+
+def test_a_commit_sha_holding_the_link_local_letters_is_no_host_detail():
+    sha = "426cf32d8175a73823c18d63ca4107ebfe8007cb"
+    assert "fe80" in sha
+    assert_no_host_details(f"head {sha}, base {sha.upper()}")
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        HOSTILE_GIT_ERRORS["ipv6_interface"],
+        "via fe80::1",
+        "via [FE80::1ff:fe23:4567:890a]",
+        "via fe80:0:0:0:1ff:fe23:4567:890a",
+    ],
+)
+def test_an_ipv6_link_local_literal_is_still_host_detail(text):
+    with pytest.raises(AssertionError):
+        assert_no_host_details(text.replace("eth7", "").replace("%", ""))
 
 
 def _fail_git(monkeypatch, step: str, stderr: str) -> None:
