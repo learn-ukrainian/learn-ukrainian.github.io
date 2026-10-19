@@ -2,7 +2,11 @@ from __future__ import annotations
 
 import json
 import sqlite3
+import subprocess
+import sys
 from pathlib import Path
+
+import pytest
 
 from scripts.practice_deck.markup_integrity import stem_requires_markup
 from scripts.practice_deck.zno import (
@@ -189,3 +193,85 @@ def test_builder_quarantines_markup_dependent_items_without_overlay(tmp_path: Pa
     assert stem_requires_markup(
         "Однаковий звук позначають букви, виділені в кожному слові рядка",
     )
+
+
+@pytest.mark.parametrize(
+    ("spec", "expected", "occurrences", "withheld"),
+    [
+        ([], (0, 0, 0), 0, []),
+        ([("single", 11)], (1, 1, 0), 1, []),
+        ([("overlap", 11)], (1, 1, 0), 2, []),
+        ([("overlap", 11), ("duplicate", 12), ("quarantine", 13)], (3, 1, 2), 2, [12, 13]),
+        ([("duplicate", 12), ("quarantine", 13)], (2, 0, 2), 0, [12, 13]),
+        ([("unmatched", 14), ("nonchoice", 15)], (2, 0, 2), 0, [14, 15]),
+    ],
+    ids=["empty", "single", "overlap", "mixed", "zero", "nonserved"],
+)
+def test_cli_aggregate_counts_unique_source_tasks(
+    tmp_path: Path,
+    spec: list[tuple[str, int]],
+    expected: tuple[int, int, int],
+    occurrences: int,
+    withheld: list[int],
+) -> None:
+    database = _database(tmp_path / "sources.db")
+    with sqlite3.connect(database) as connection:
+        template = list(connection.execute("SELECT * FROM zno_tasks WHERE id = 8").fetchone())
+        markup_row = connection.execute("SELECT * FROM zno_tasks WHERE id = 13").fetchone()
+        connection.execute("DELETE FROM zno_tasks")
+        for kind, task_id in spec:
+            row = template.copy()
+            row[0] = task_id
+            row[7:10] = ["plain synthetic fixture", json.dumps(["alpha", "beta", "gamma"]), "А"]
+            if kind == "single":
+                row[10:12] = ["", "lexical_norm"]
+            if kind == "duplicate":
+                row[8] = json.dumps(["alpha", "alpha", "beta"])
+            if kind == "quarantine":
+                row[7:9] = markup_row[7:9]
+            if kind in ("unmatched", "nonchoice"):
+                row[10:12] = ["", ""]
+            if kind == "nonchoice":
+                row[6], row[9] = "own-statement", ""
+            connection.execute("INSERT INTO zno_tasks VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", row)
+
+    output = tmp_path / "out"
+    fill_path = tmp_path / "fill.json"
+    result = subprocess.run(
+        [
+            sys.executable, "-m", "scripts.practice_deck.zno",
+            "--db", str(database), "--out-dir", str(output),
+            "--fill-residual", str(fill_path), "--markup-overlay", str(tmp_path / "missing-overlay.json"),
+        ],
+        capture_output=True, text=True, check=False, timeout=30,
+    )
+    assert result.returncode == 0, result.stderr
+    assert result.stderr == ""
+    residual = json.loads((output / "practice-zno.residual.json").read_bytes())
+    assert tuple(residual["namedResidual"][key] for key in ("corpusTasks", "emittedItems", "intentionalCut")) == expected
+    emitted_ids = [
+        item["znoTaskId"]
+        for path in output.glob("practice-zno.*.json")
+        for item in json.loads(path.read_bytes()).get("items", [])
+    ]
+    assert len(emitted_ids) == occurrences
+    assert set(emitted_ids) == ({"zno:11"} if occurrences else set())
+    assert {task_id for _, task_id in spec} - {int(value.split(":")[1]) for value in emitted_ids} == set(withheld)
+    for deck in residual["decks"].values():
+        assert deck["candidates"] == deck["emitted"] + sum(deck["dropped"].values())
+
+    if expected == (3, 1, 2):
+        for key in ("morphological-norm", "morphology"):
+            deck = residual["decks"][key]
+            assert deck["candidates"] == 3
+            assert deck["emitted"] == 1
+            assert deck["dropped"] == {"invalid_options": 1, "broken_missing_markup": 1}
+        fill = json.loads(fill_path.read_bytes())
+        assert fill["blocked"] == [
+            {"deck": key, "znoTaskId": task_id, "reason": reason}
+            for key in ("morphological-norm", "morphology")
+            for task_id, reason in (("zno:12", "invalid_options"), ("zno:13", "broken_missing_markup"))
+        ]
+        assert fill["unparsed"] == [{"znoTaskId": "zno:12", "reason": "invalid_options"}]
+        # Existing quarantine classification remains unresolved under #10701.
+        assert fill["predicateMissByTopicNorm"] == {"morphological_norm": 1}
