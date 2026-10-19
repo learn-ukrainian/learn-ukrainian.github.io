@@ -1,5 +1,7 @@
 # Grok session canary + diary dual-write policy
 
+For an authorized CLI seat move, follow [Move a driver seat to another CLI](driver-seat-cli-move.md); the launcher owns lease release.
+
 ## Problem
 
 Grok auto-compacts at **85%** of the model context window by default (~**400k** tokens on large Grok coding windows). Compact is **lossy for working memory**. Disk session logs and stream dual-writes survive; the model’s live context is summarized.

@@ -1,5 +1,7 @@
 # Agent seat onboarding — fleet cooperation and ACPX
 
+For an authorized CLI seat move, follow [Move a driver seat to another CLI](driver-seat-cli-move.md); the launcher owns lease release.
+
 **Audience:** every supported fleet seat on cold-start (interactive TUI, driver
 launcher, headless dispatch).
 **Product epic:** #6027 · **Stream:** #4707 (`infra-harness`).
