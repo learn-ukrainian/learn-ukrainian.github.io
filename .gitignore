@@ -982,3 +982,6 @@ data/projects/open_model_data/export/
 # Narrow live-registration artifact shapes.
 /data/projects/open_model_data/components/grammar/grammar_train_shard_*_of_*.jsonl
 /data/projects/open_model_data/components/grammar/grammar_eval_shard_*_of_*.jsonl
+
+# Immutable dataset releases; backed up by scripts/config/backup-allowlist.json path data/datasets, line ~181; not versioned in git
+data/datasets/word-cards/releases/

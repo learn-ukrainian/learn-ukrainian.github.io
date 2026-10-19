@@ -187,11 +187,27 @@ driver_scope_verify() {
 }
 
 driver_scope_relay() {
-  # A completed provider owns its exit cause. In particular, a late TERM
-  # must not replace a collected OOM/SIGKILL status with 143.
-  if [ -n "${child:-}" ] && ! driver_scope_child_running "$child"; then return 0; fi
-  relayed="$1"
-  [ -z "${child:-}" ] || kill -"$1" "$child" 2>/dev/null || true
+  # The INT/TERM/HUP trap only records the signal. A trap can run inside the
+  # timed read in driver_scope_wait_child, and once that read's timer expires
+  # any read in the trap (mapfile included) abandons the trap there, before
+  # it forwards anything (#11094). An assignment reads nothing.
+  relay_signals+=("$1")
+}
+
+driver_scope_forward_signals() {
+  # Forwards, in order, each signal recorded since the last call to child $1
+  # while it runs. Called only from the wait loop, outside any timed read. A
+  # completed provider owns its exit cause, so a signal it never received
+  # does not replace it: a late TERM must not turn an OOM/SIGKILL status into
+  # 143. Until `wait` reaps the child, its pid cannot be reused.
+  local signal
+  while (( relay_forwarded < ${#relay_signals[@]} )); do
+    signal="${relay_signals[relay_forwarded]}"
+    relay_forwarded=$((relay_forwarded + 1))
+    driver_scope_child_running "$1" || continue
+    relayed="$signal"
+    kill -"$signal" "$1" 2>/dev/null || true
+  done
 }
 
 driver_scope_child_running() {
@@ -200,10 +216,9 @@ driver_scope_child_running() {
   # proc_pid_stat(5)).
   local stat
   local -a rows=()
-  # Also called from the relay trap: a nested read would cancel the timed
-  # read in driver_scope_wait_child. mapfile leaves that timeout intact and
-  # handles a vanished child without Bash 5.2's fatal $(< missing-file) error.
-  # The parenthesised command name can contain newlines; read the whole record.
+  # mapfile handles a vanished child without Bash 5.2's fatal
+  # $(< missing-file) error. The parenthesised command name can contain
+  # newlines; read the whole record.
   { mapfile -d '' -t rows < "/proc/$1/stat"; } 2>/dev/null || return 1
   stat="${rows[0]:-}"
   [ -n "$stat" ] || return 1
@@ -218,11 +233,12 @@ driver_scope_wait_child() {
   # every later `wait` reports 127 (not a child), so the provider's own status
   # is lost. `wait` only collects a child that has already exited. The pause is
   # a timed read on a pipe nothing writes to: a builtin, so the job gains no
-  # process, and traps still run at once. A trap must not run `read` itself:
-  # a nested read cancels this one's timeout.
-  local pid="$1" tick=""
+  # process, and traps still run at once. Signals the trap recorded, before
+  # the first pause or during any pause, are forwarded here, before each
+  # child-state check that may end the loop.
+  local pid="$1" tick="" relay_forwarded=0
   { exec {tick}<> <(:); } 2>/dev/null || tick=""
-  while driver_scope_child_running "$pid"; do
+  while driver_scope_forward_signals "$pid"; driver_scope_child_running "$pid"; do
     if [ -n "$tick" ]; then read -r -t 0.1 -u "$tick" _ || true; else sleep 0.1; fi
   done
   [ -z "$tick" ] || exec {tick}<&-
@@ -257,6 +273,7 @@ launcher_enter_driver_scope() {
   esac
   driver_scope_bus || return 6
   local token unit entry rc=0 child relayed=""
+  local -a relay_signals=()
   token="$(cat /proc/sys/kernel/random/uuid)" || { driver_scope_refuse identity-unavailable; return 6; }
   unit="lu-${LC_MODE}-${LC_PROVIDER}-${label}-${token}.scope"
   if [ "$LC_MODE" = interactive ]; then
@@ -294,7 +311,6 @@ launcher_enter_driver_scope() {
   ) 0<&0 &
   child=$!
   exec 219>&-
-  [ -z "$relayed" ] || kill -"$relayed" "$child" 2>/dev/null || true
   driver_scope_wait_child "$child"
   rc="$DS_CHILD_RC"
   local verified=""
