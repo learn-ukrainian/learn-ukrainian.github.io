@@ -389,7 +389,7 @@ models:
     family: openai
     tier: economical
     lifecycle: active
-    roles: [recon, bounded_checks, log_triage, bounded_implementation, bounded_investigation]
+    roles: [recon, bounded_checks, log_triage, bounded_implementation, bounded_investigation, readonly_recon, mechanical_classification]
     transports: [native_codex]
     strengths: [high_volume, repeatable_work, lowest_gpt6_token_price]
     weaknesses: [not_a_formal_reviewer, not_the_orchestrator, not_sole_consequential_authority]
@@ -578,17 +578,19 @@ models:
     family: anthropic
     tier: economical
     lifecycle: active
-    roles: [mechanical_only, routine_mechanical, mechanical_classification, readonly_recon]
+    roles: [mechanical_only, routine_mechanical, mechanical_classification, readonly_recon, bounded_implementation]
     transports: [native_claude]
     strengths: [high_volume_classification, extraction, routing, low_latency, low_cost, readonly_search]
-    weaknesses: [no_ukrainian_content, no_formal_review, no_design_or_approval, no_security_code, no_driver, no_bounded_implementation]
+    weaknesses: [no_ukrainian_content, no_formal_review, no_design_or_approval, no_security_code, no_driver]
     notes: >-
       #9996: routine lockfile, pointer and smoke work; mechanical TypeSafe/Jev,
       CI failure and issue/DoR classification; read-only recon alongside Luna.
       Mechanical-only admission requires a matching task family, narrow safe
-      owned paths and non-Ukrainian inputs. No bounded code, even with an envelope:
-      the cited workload evidence qualifies classification/extraction/routing,
-      not fleet code authoring. Existing Luna/Flash envelope admission stays intact.
+      owned paths and non-Ukrainian inputs. #10919: bounded implementation also
+      accepts the dispatching driver brief with owned paths and a verify command;
+      caller attribution and the exact brief SHA are recorded. Explicit advisor
+      envelopes remain supported; security, language, review, design and driver
+      exclusions remain.
     sources:
       - https://platform.claude.com/docs/en/models/overview
       - https://platform.claude.com/docs/en/models/haiku-5-5/overview

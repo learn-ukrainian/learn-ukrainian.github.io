@@ -363,7 +363,37 @@ def approved_grok_language_seat_baseline(baseline):
 
 
 ARGON_HOST_BASELINE = approved_argon_trial_baseline(PRE_ARGON_HOST_BASELINE, "host-cli")
-APPROVED_BASELINE = approved_grok_language_seat_baseline(ARGON_HOST_BASELINE)
+GROK_LANGUAGE_BASELINE = approved_grok_language_seat_baseline(ARGON_HOST_BASELINE)
+
+
+def approved_driver_brief_baseline(baseline):
+    """Apply only #10919's Haiku fields and Luna recon/classification roles."""
+    path = CAPACITY_FIXTURE / "haiku-luna-brief-10919.json"
+    assert hashlib.sha256(path.read_bytes()).hexdigest() == (
+        "39b9928c4ce9a261ee329e8f1cb87833a9f9243b9a84298eb2cafbdf056652eb"
+    )
+    changes = json.loads(path.read_bytes())
+    catalog = deepcopy(baseline["catalog"])
+    for row in changes["catalog_model_fields"]:
+        assert (row["model"], row["field"]) in {
+            ("claude-haiku-5-5", "roles"), ("claude-haiku-5-5", "weaknesses"),
+            ("claude-haiku-5-5", "notes"), ("gpt-6-luna", "roles"),
+        }
+        assert catalog["models"][row["model"]][row["field"]] == row["before"]
+        catalog["models"][row["model"]][row["field"]] = row["after"]
+    dispatch = deepcopy(baseline["dispatch"])
+    for row in changes["dispatch_refusals"]:
+        target = dispatch[row["index"]]["value"]
+        assert target["refusal"] == row["before"]
+        assert row["after"] == row["before"].replace(
+            "bounded_investigation; review_scheduler",
+            "bounded_investigation, readonly_recon, mechanical_classification; review_scheduler",
+        )
+        target["refusal"] = row["after"]
+    return {**baseline, "catalog": catalog, "dispatch": dispatch}
+
+
+APPROVED_BASELINE = approved_driver_brief_baseline(GROK_LANGUAGE_BASELINE)
 APPROVED_INPUTS = {**GEMINI_INPUTS, **SEATS_OVERLAY["inputs"], **ARGON_OVERLAY["inputs"]}
 
 
@@ -373,7 +403,7 @@ def test_grok_language_overlay_records_only_the_two_field_delta():
         "a2b3103dc0675299d54608ae94546a6802778f6c2b4320cfcf5cd1b1d507ae71"
     )
     assert set(GROK_LANGUAGE_OVERLAY) == {"issue", "order", "catalog_model_fields", "fallbacks_fields"}
-    before, after = ARGON_HOST_BASELINE, APPROVED_BASELINE
+    before, after = ARGON_HOST_BASELINE, GROK_LANGUAGE_BASELINE
     assert set(before) == set(after)
     for surface in set(before) - {"catalog", "fallbacks"}:
         assert before[surface] == after[surface], surface
@@ -1345,7 +1375,7 @@ def test_no_cli_capture_equals_separate_frozen_surface(tmp_path):
         assert hashlib.sha256((output / name).read_bytes()).hexdigest() == digest
     actual = json.loads(gzip.decompress((output / "baseline.json.gz").read_bytes()))
     original = json.loads(gzip.decompress((expected / "baseline.json.gz").read_bytes()))
-    assert actual == approved_grok_language_seat_baseline(
+    assert actual == approved_driver_brief_baseline(approved_grok_language_seat_baseline(
         approved_argon_trial_baseline(
             approved_hook_failure_baseline(
                 approved_hermes_effort_baseline(
@@ -1370,7 +1400,7 @@ def test_no_cli_capture_equals_separate_frozen_surface(tmp_path):
             ),
             "no-cli",
         )
-    )
+    ))
     assert len(actual["launchers"]) == 70
     errors = [row.get("error", "") for row in actual["adapters"]]
     assert any("grok" in error and "PATH" in error for error in errors)
@@ -1408,6 +1438,36 @@ def test_extended_capture_denominator_and_current_contract():
     assert len(contract["rows"]) == len(catalog["models"]) * 9
     assert {row["outcome"] for row in contract["rows"]} == {"approved", "missing_approval", "operator_disposition"}
     assert all(not row["self_approval_counts"] for row in contract["rows"])
+
+
+
+def test_driver_brief_capture_preserves_every_unrelated_value():
+    before, after = GROK_LANGUAGE_BASELINE, APPROVED_BASELINE
+    for surface in set(before) - {"catalog", "dispatch"}:
+        assert before[surface] == after[surface]
+    old_models, new_models = before["catalog"]["models"], after["catalog"]["models"]
+    assert [pin for pin in old_models if old_models[pin] != new_models[pin]] == ["claude-haiku-5-5", "gpt-6-luna"]
+    old, new = old_models["claude-haiku-5-5"], new_models["claude-haiku-5-5"]
+    assert new["roles"] == [*old["roles"], "bounded_implementation"]
+    assert new["weaknesses"] == [value for value in old["weaknesses"] if value != "no_bounded_implementation"]
+    assert {k: v for k, v in old.items() if k not in {"roles", "weaknesses", "notes"}} == {
+        k: v for k, v in new.items() if k not in {"roles", "weaknesses", "notes"}
+    }
+    expected_dispatch = deepcopy(before["dispatch"])
+    for row in expected_dispatch:
+        value = row.get("value", {})
+        refusal = value.get("refusal")
+        if isinstance(refusal, str) and "model 'gpt-6-luna'" in refusal:
+            value["refusal"] = refusal.replace(
+                "bounded_investigation; review_scheduler",
+                "bounded_investigation, readonly_recon, mechanical_classification; review_scheduler",
+            )
+    assert expected_dispatch == after["dispatch"]
+    old_luna, new_luna = old_models["gpt-6-luna"], new_models["gpt-6-luna"]
+    assert new_luna["roles"] == [*old_luna["roles"], "readonly_recon", "mechanical_classification"]
+    assert {k: v for k, v in old_luna.items() if k != "roles"} == {
+        k: v for k, v in new_luna.items() if k != "roles"
+    }
 
 
 def test_deepseek_flash_execution_requires_opencode():

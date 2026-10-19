@@ -107,6 +107,9 @@ def adapter_for(route: str, monkeypatch: pytest.MonkeyPatch):
         monkeypatch.setattr(module.shutil, "which", lambda command: f"/usr/bin/{command}")
     if route == "claude":
         monkeypatch.setattr(module, "_ensure_supported_claude_cli_version", lambda _: (2, 1, 200))
+    if route == "deepseek":
+        # Model-cache drift is tested by the adapter suite, independently of schema transport.
+        monkeypatch.setattr(module, "_cached_flash_name", lambda: None)
     if route == "glm":
         # These tests only build plans; no provider executes. Exercise the
         # unsupported-schema contract in CI independently of the egress guard,

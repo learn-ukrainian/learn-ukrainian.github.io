@@ -1190,22 +1190,33 @@ def test_hook_behind_the_program_link_of_a_process_whose_binary_was_deleted_is_a
     """``/proc/<pid>/exe`` keeps naming the running program after its file is removed."""
     import shutil
 
-    sleep = shutil.which("sleep")
-    if sleep is None:
-        pytest.skip("no sleep program to copy")
-    program = tmp_path / "sleep"  # A multi-call coreutils binary picks its program by name.
-    shutil.copy2(sleep, program)
+    cat = shutil.which("cat")
+    assert cat is not None, "the procfs fixture requires the POSIX cat utility"
+    program = tmp_path / "cat"  # Multi-call utilities select their program by name.
+    shutil.copy2(cat, program)
     expected = program.read_bytes()
-    process = subprocess.Popen([str(program), "60"])
+    process = subprocess.Popen(
+        [str(program)],
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    )
     try:
+        process.stdin.write("ready\n")
+        process.stdin.flush()
+        assert process.stdout.readline() == "ready\n"
+        assert process.poll() is None
+        assert os.path.samefile(f"/proc/{process.pid}/exe", program)
         program.unlink()
         (tmp_path / ".agents").mkdir()
         (tmp_path / HOOK).symlink_to(f"/proc/{process.pid}/exe")
         assert os.readlink(f"/proc/{process.pid}/exe").endswith(" (deleted)")
         _assert_procfs_fingerprint(tmp_path, expected)
+        assert process.poll() is None
     finally:
         process.kill()
-        process.wait()
+        process.communicate(timeout=10)
 
 
 @linux_procfs
