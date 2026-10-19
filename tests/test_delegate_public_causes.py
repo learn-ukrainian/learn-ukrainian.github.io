@@ -45,8 +45,11 @@ from tests.test_delegate import (  # noqa: F401
 from tests.test_kimi_coding_only_admission import (
     _FAKE_TOKEN,
     HOSTILE_GIT_ERRORS,
+    JSON_ESCAPED_CHARS,
     LINK_LOCAL_IPV6,
     assert_no_host_details,
+    link_local_after_json_escapes,
+    shas_after_json_escapes,
 )
 
 kimi_rescue = rescue_fixtures.kimi_rescue
@@ -124,6 +127,19 @@ def test_the_hostile_link_local_literal_still_fails_the_public_guard():
         _assert_no_hostile_markers(json.dumps({"last_error": "via [fe80::1ff:fe23:4567:890a]"}))
     with pytest.raises(AssertionError, match="link-local"):
         _assert_no_hostile_markers("via fe80::1")
+
+
+@pytest.mark.parametrize("text", link_local_after_json_escapes())
+def test_a_link_local_literal_behind_a_json_escape_still_fails_the_public_guard(text):
+    with pytest.raises(AssertionError, match="link-local"):
+        _assert_no_hostile_markers(text)
+
+
+def test_a_commit_sha_behind_a_json_escape_passes_the_public_guard():
+    texts = shas_after_json_escapes()
+    assert len(texts) == len(JSON_ESCAPED_CHARS) * 37 * 2
+    for text in texts:
+        _assert_no_hostile_markers(text)
 
 
 # --- the registry and the sink -------------------------------------------------------------------

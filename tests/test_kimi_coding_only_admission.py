@@ -544,7 +544,13 @@ HOST_MARKERS = (
 )
 # An IPv6 link-local literal (``fe80`` then colon-separated hex groups, e.g. ``fe80::1``). The bare four letters are
 # no marker: a 40-hex commit SHA such as ``...ebfe8007cb`` carries them, and a SHA never carries a colon.
-LINK_LOCAL_IPV6 = re.compile(r"(?<![0-9a-f])fe80(?::[0-9a-f]{0,4}){2,}", re.IGNORECASE)
+# A hex digit before the letters blocks the match only inside a real hex run. Serialized task records are JSON, where
+# a control character or a no-break space is written ``\b \f \n \r \t`` or ``\uXXXX``: the tail of such an escape is
+# a hex digit too, yet it ends the escape, not a hex run, so it must not hide the literal that follows.
+LINK_LOCAL_IPV6 = re.compile(
+    r"(?:(?<![0-9a-f])|(?<=\\[bfnrt])|(?<=\\u[0-9a-f]{4}))fe80(?::[0-9a-f]{0,4}){2,}",
+    re.IGNORECASE,
+)
 
 
 def assert_no_host_details(text: str, *roots: Path) -> None:
@@ -575,6 +581,44 @@ def test_a_commit_sha_holding_the_link_local_letters_is_no_host_detail():
 def test_an_ipv6_link_local_literal_is_still_host_detail(text):
     with pytest.raises(AssertionError):
         assert_no_host_details(text.replace("eth7", "").replace("%", ""))
+
+
+# Characters whose JSON escape ends in a hex digit (``\b \f``, ``\n`` ``\r`` ``\t`` and ``\uXXXX``); ``json.dumps`` writes them escaped.
+JSON_ESCAPED_CHARS = ("\b", "\f", "\n", "\r", "\t", "\u00a0", "\x01", "\x1f", "\u2028", "\u200b", "\u00ad")
+_LINK_LOCAL_LETTERS = "fe" + "80"  # fragments: no whole link-local literal appears in this file's new lines
+
+
+def link_local_after_json_escapes() -> list[str]:
+    """Serialized text with a link-local literal right behind each escaped character."""
+    return [json.dumps(char + _LINK_LOCAL_LETTERS + "::1") for char in JSON_ESCAPED_CHARS]
+
+
+def shas_after_json_escapes() -> list[str]:
+    """Serialized text with a 40-hex SHA, holding the link-local letters at every offset, right behind each escape."""
+    texts = []
+    for char in JSON_ESCAPED_CHARS:
+        for offset in range(0, 37):
+            filler = "0123456789abcdef" * 3
+            sha = (filler[:offset] + _LINK_LOCAL_LETTERS + filler)[:40]
+            assert len(sha) == 40 and _LINK_LOCAL_LETTERS in sha
+            texts.append(json.dumps(f"{char}{sha}"))
+            texts.append(json.dumps(f"{char}sha:{sha.upper()}"))
+    return texts
+
+
+@pytest.mark.parametrize("text", link_local_after_json_escapes())
+def test_a_link_local_literal_behind_a_json_escape_is_still_host_detail(text):
+    assert "\\" in text and " " not in text  # the escape, not the raw character, precedes the literal
+    with pytest.raises(AssertionError, match="link-local"):
+        assert_no_host_details(text)
+
+
+def test_a_commit_sha_behind_a_json_escape_is_no_host_detail():
+    texts = shas_after_json_escapes()
+    assert len(texts) == len(JSON_ESCAPED_CHARS) * 37 * 2
+    for text in texts:
+        assert not LINK_LOCAL_IPV6.search(text), text
+        assert_no_host_details(text)
 
 
 def _fail_git(monkeypatch, step: str, stderr: str) -> None:
