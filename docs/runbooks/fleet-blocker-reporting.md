@@ -114,3 +114,17 @@ the exact observed age and configuration state outside the snapshot fingerprint.
 An unchanged task therefore stays `UNCHANGED` as time passes. Changed reasons
 or attempts require another report. The exact body, receipt hash, completeness,
 and generation-CAS checks remain unchanged.
+
+The existing inbox checkpoint also checks aged `needs_finalize` tasks and posts
+an action-required message to the `cto` Fleet Comms channel. This automatic
+escalation is authorized for finalization attention; it does not change the
+routing of ordinary blocker reports. No driver command, timer or daemon is
+required. The checkpoint and driver report use `finalization_age` and the same
+`DEFAULT_FINALIZE_AGE_MINUTES` setting. Unknown age or configuration is explicit.
+
+The checkpoint retains per-task/run message IDs in the existing broker alert
+state. A repeated scan does not post the same task/run again, including when
+its age crosses another multiple of the threshold. A new run nonce identifies
+a new attempt. Messages contain task identity, age, typed reason, owner and
+recovery action; raw diagnostics stay private. Author tests use an isolated
+broker and never post to the production `cto` channel.

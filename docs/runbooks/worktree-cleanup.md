@@ -1498,30 +1498,44 @@ Anything malformed, foreign, symlinked, in use or unknown stays and is counted u
 
 ## Terminal worker publication
 
-A successfully exited danger-mode worker can finalize clean unpushed commits,
-owned dirty changes, or both through the existing delegate finalization boundary.
-Kimi retains its existing content and completion checks. Other write modes keep
-their existing admission rules. Incomplete runs and unknown Git measurements
-remain attention states.
+A completed write-capable worker can finalize clean unpushed commits, owned
+dirty changes, or both through the existing delegate finalization boundary.
+Kimi retains its content and completion checks. A hard timeout also reaches
+this decision for clean completed commits; publication does not change the
+recorded timeout or invent a subprocess exit code. Live background jobs and
+unknown process scans prevent finalization.
 
 Finalization requires the checked-out branch to match the task's recorded
-branch and refuses protected or unknown branches. Unpublished committed paths must fit
-the declared ownership scope. Dirty changes retain the existing owned-path and
-cross-boundary move checks. Intermediate commits are checked too, including
-unowned changes later reverted. Unknown or unowned committed scope blocks publication.
+branch and refuses protected or unknown branches. Every exposed intermediate
+commit must fit the declared ownership scope, including changes later reverted.
+Replacement objects cannot alter that check. Dirty changes retain the owned-path
+and cross-boundary move checks. Unknown or unowned committed scope blocks publication.
 
-The normal commit and pre-push hooks run. Publication resolves the single origin
-push destination and pushes through named `origin` with an explicit commit and
-branch ref without force. It independently checks the query endpoint before
-publication. Expanded URLs are never passed back to push for another rewrite.
-A distinct fetch URL cannot supply delivery proof. Multiple or
-unknown push destinations fail closed. Finalization verifies the destination's
-remote tip, unchanged destination configuration and unchanged local HEAD, then
-binds the branch's upstream to the verified origin tracking ref.
-Scoped committed work is revalidated on retry even when cached tracking refs
-already match. `finalize_delivery` records the branch, commit, verification result,
-reason, owner, and next action before the terminal checkpoint. A push failure
-retains the local commit and current file bytes. It never rewinds HEAD.
+Dirty preparation uses a fresh configuration and a private copy of the source
+index for move detection, scoped staging and trailer commit. Source hooks,
+filters and trailer commands cannot execute. Active attribute transformations
+on the scoped files cause a refusal. The prepared commit and index are installed
+only while the source branch and index still match the captured inputs.
+Staged changes outside the owned paths stay staged and uncommitted.
+
+Publication borrows objects into `SafeGitContext` and uses its own configuration,
+environment and pinned destination. Worker configuration, includes, URL rewrites,
+push URLs, transport programs, implicit tags and inherited `GIT_*` settings
+cannot select the history, destination or published refs. Publication sends one
+explicit object-to-branch refspec without force. Delivery is checked with
+`ls-remote` against that destination; forged tracking refs and a missing upstream
+do not establish or prevent delivery.
+
+The pre-push hook chain comes from the driver's trusted base commit and runs
+in an isolated validation checkout. Worker hook overrides and commits that
+change the validation chain are refused. Validation failure or incomplete
+validation prevents publication. Automatic finalization never disables the hook.
+An unchanged retry also runs validation before confirming the remote tip.
+
+`finalize_delivery` records the branch, commit, verification result, reason,
+owner and next action before the terminal checkpoint. Every `needs_finalize`
+terminal checkpoint includes a typed cause and a recovery action. A push failure
+retains the local commit and current file bytes; it never rewinds HEAD.
 Unowned dirty changes remain in the checkout and keep the task `needs_finalize`,
 even when the owned commit was pushed.
 

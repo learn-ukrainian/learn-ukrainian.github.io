@@ -106,8 +106,43 @@ FINALIZE_AGE_ENV = "LU_NEEDS_FINALIZE_MAX_AGE_MINUTES"
 DEFAULT_FINALIZE_AGE_MINUTES = 30.0
 
 
+def finalization_age(task: dict, *, now: datetime | None = None) -> dict:
+    """One clock and finite threshold contract for blockers and inbox alerts."""
+    clock = now if now is not None else datetime.now(UTC)
+    if clock.tzinfo is None or clock.utcoffset() is None:
+        raise ValueError("finalization clock must include a timezone")
+    configured = os.environ.get(FINALIZE_AGE_ENV, str(DEFAULT_FINALIZE_AGE_MINUTES))
+    try:
+        threshold = float(configured)
+        valid = math.isfinite(threshold) and threshold > 0
+    except (ValueError, TypeError, OverflowError):
+        threshold, valid = None, False
+    age, state, terminal = None, "unknown", None
+    try:
+        terminal = _timestamp(task.get("finished_at"))
+        seconds = (clock - terminal).total_seconds()
+        if seconds >= 0:
+            age, state = seconds / 60, "known"
+        else:
+            state = "future"
+    except (ValueError, TypeError, OverflowError):
+        pass
+    return {
+        "age_minutes": age,
+        "age_state": state,
+        "terminal": terminal.isoformat() if state == "known" else None,
+        "threshold_minutes": threshold if valid else None,
+        "configuration": "valid" if valid else "unknown",
+        "attention": not valid or age is None or age > threshold,
+    }
+
+
 def finalization_attention(
-    task_root: Path, *, initiator: str, stream_epic: int, now: datetime | None = None,
+    task_root: Path,
+    *,
+    initiator: str,
+    stream_epic: int,
+    now: datetime | None = None,
 ) -> tuple[list[dict], list[dict]]:
     """Read only this driver's stream; age never uses a task file's mtime.
 
@@ -117,16 +152,8 @@ def finalization_attention(
     """
     if not _string(initiator) or initiator == "unknown" or type(stream_epic) is not int or stream_epic < 1:
         raise ValueError("finalization scan requires a known initiator and positive stream epic")
-    clock = now if now is not None else datetime.now(UTC)
-    if clock.tzinfo is None or clock.utcoffset() is None:
+    if now is not None and (now.tzinfo is None or now.utcoffset() is None):
         raise ValueError("finalization clock must include a timezone")
-    configured = os.environ.get(FINALIZE_AGE_ENV, str(DEFAULT_FINALIZE_AGE_MINUTES))
-    try:
-        threshold = float(configured)
-        valid_config = math.isfinite(threshold) and threshold > 0
-    except (ValueError, TypeError, OverflowError):
-        valid_config = False
-        threshold = DEFAULT_FINALIZE_AGE_MINUTES
     if not task_root.is_dir():
         raise ValueError("finalization task store unavailable; attention is unknown")
     items, observations = [], []
@@ -144,25 +171,18 @@ def finalization_attention(
         task_id, nonce = task.get("task_id"), task.get("run_nonce")
         if not _string(task_id) or not _string(nonce):
             raise ValueError("scoped finalization task identity unavailable")
-        stamp = task.get("finished_at")
-        age = None
-        age_state = "unknown"
-        try:
-            terminal = _timestamp(stamp)
-            seconds = (clock - terminal).total_seconds()
-            if seconds >= 0:
-                age = seconds / 60
-                age_state = "known"
-            else:
-                age_state = "future"
-        except (ValueError, TypeError, OverflowError):
-            pass
-        observations.append({
-            "task_id": task_id, "run_nonce": nonce, "age_minutes": age, "age_state": age_state,
-            "threshold_minutes": threshold if valid_config else None,
-            "configuration": "valid" if valid_config else "unknown",
-        })
-        if valid_config and age is not None and age <= threshold:
+        age_info = finalization_age(task, now=now)
+        age, age_state = age_info["age_minutes"], age_info["age_state"]
+        threshold = age_info["threshold_minutes"]
+        valid_config = age_info["configuration"] == "valid"
+        observations.append(
+            {
+                "task_id": task_id,
+                "run_nonce": nonce,
+                **{key: age_info[key] for key in ("age_minutes", "age_state", "threshold_minutes", "configuration")},
+            }
+        )
+        if not age_info["attention"]:
             continue
         from scripts.delegate import is_public_cause
 
@@ -171,23 +191,28 @@ def finalization_attention(
         # boundary. Their raw diagnostic text never belongs in a Fleet post.
         if not is_public_cause(reason):
             reason = "finalization evidence unavailable; inspect private task diagnostics"
-        age_text = f"age > {threshold:g} minutes" if age is not None else f"age unknown ({age_state})"
+        age_text = f"age > {threshold:g} minutes" if age is not None and valid_config else f"age unknown ({age_state})"
         if not valid_config:
             age_text = "age threshold configuration unknown"
         # A normalized valid timestamp is stable across observations. Never echo invalid input.
-        since = f"; terminal={terminal.isoformat()}" if age_state == "known" else ""
-        items.append({
-            "id": f"needs-finalize:{task_id}:{nonce}",
-            "state": "needs_finalize",
-            "owner": initiator,
-            "waits_on": f"{age_text}{since}; reason={reason}",
-            "action": "inspect retained task/head and finalization diagnostics; repair the failing gate and retry normal publication",
-        })
+        since = f"; terminal={age_info['terminal']}" if age_state == "known" else ""
+        items.append(
+            {
+                "id": f"needs-finalize:{task_id}:{nonce}",
+                "state": "needs_finalize",
+                "owner": initiator,
+                "waits_on": f"{age_text}{since}; reason={reason}",
+                "action": "inspect retained task/head and finalization diagnostics; repair the failing gate and retry normal publication",
+            }
+        )
     return items, observations
 
 
 def include_finalization_attention(
-    observation: dict, *, initiator: str, stream_epic: int,
+    observation: dict,
+    *,
+    initiator: str,
+    stream_epic: int,
 ) -> tuple[dict, list[dict]]:
     """Merge scoped task attention into the caller's complete blocker snapshot."""
     from scripts.common.task_store_paths import tasks_dir
@@ -214,7 +239,9 @@ def driver_finalization_scope(epic: str) -> tuple[str, tuple[int, ...]] | None:
 
     registry = load_registry()
     key = load_launcher_aliases().get(epic, epic)
-    matches = [numbers for name, numbers in registry.items() if name == key or (epic.isdecimal() and int(epic) in numbers)]
+    matches = [
+        numbers for name, numbers in registry.items() if name == key or (epic.isdecimal() and int(epic) in numbers)
+    ]
     if len(matches) != 1:
         raise ValueError("finalization stream scope unknown; restore launcher registry attribution")
     return initiator, tuple(matches[0])
@@ -518,10 +545,13 @@ def main(argv: list[str] | None = None) -> int:
             )
         if name != "show":
             cmd.add_argument(
-                "--task-initiator", help="Exact accountable dispatch initiator, e.g. codex-infra; requires --task-stream-epic. Default: launcher driver identity.",
+                "--task-initiator",
+                help="Exact accountable dispatch initiator, e.g. codex-infra; requires --task-stream-epic. Default: launcher driver identity.",
             )
             cmd.add_argument(
-                "--task-stream-epic", type=int, help="Exact lifecycle stream epic, e.g. 6943; requires --task-initiator. Default: launcher registered stream epics.",
+                "--task-stream-epic",
+                type=int,
+                help="Exact lifecycle stream epic, e.g. 6943; requires --task-initiator. Default: launcher registered stream epics.",
             )
         if name == "record":
             cmd.add_argument(
@@ -560,7 +590,9 @@ def main(argv: list[str] | None = None) -> int:
                 ages = []
                 for stream_epic in epics:
                     observation, stream_ages = include_finalization_attention(
-                        observation, initiator=initiator, stream_epic=stream_epic,
+                        observation,
+                        initiator=initiator,
+                        stream_epic=stream_epic,
                     )
                     ages.extend(stream_ages)
             if args.command == "delta":

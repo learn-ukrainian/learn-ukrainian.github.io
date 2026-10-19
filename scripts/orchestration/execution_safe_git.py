@@ -18,8 +18,10 @@ admitted, so merge drivers and help/browser tools are unreachable. Remote
 commands pin upload-pack, SSH and credential controls; custom VCS helpers and
 ext transport are refused. Neither commit signing nor SSH signing-key commands
 are admitted. Local-only commands cannot reach any transport.
-GUI, email, trailer and CVS commands are also excluded, so guitool.*.cmd,
-sendemail.*Cmd, trailer.*.cmd/command and gitcvs.dbDriver are unreachable.
+GUI, email and CVS commands are excluded, so guitool.*.cmd, sendemail.*Cmd
+and gitcvs.dbDriver are unreachable. Scoped finalization admits add and trailer
+commit only in a fresh driver-configured repository, without importing source
+configuration or hooks. Thus trailer.*.cmd/command cannot run there either.
 Missing promisor objects cannot
 start a fetch (--no-lazy-fetch); automatic gc/maintenance is disabled, so
 gc.recentObjectsHook cannot be reached either. Only file/HTTPS/SSH protocols are
@@ -40,6 +42,8 @@ import subprocess
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
+
+from scripts.orchestration.safe_git_context import SafeGitContext, SnapshotRefusal
 
 GIT = shutil.which("git", path=os.defpath) or "/usr/bin/git"
 LOCAL_COMMANDS = frozenset(
@@ -145,7 +149,7 @@ def primary_repository(cwd: Path) -> Path:
     return common.parent
 
 
-def _preserve_attributes(prefix, cwd, env, timeout):
+def _preserve_attributes(prefix, cwd, env, timeout, *, scoped_paths=None):
     """Refuse transformations in current or staged attributes before add.
 
     A disabled clean filter cannot reproduce filtered storage. The same applies
@@ -155,15 +159,18 @@ def _preserve_attributes(prefix, cwd, env, timeout):
     including redefinitions of binary; the built-in binary only unsets
     diff/merge/text and does not transform storage. Inspect both attribute views.
     """
-    paths = subprocess.run(
-        [*prefix, "ls-files", "-z", "--cached", "--others", "--exclude-standard"],
-        cwd=cwd,
-        env=env,
-        capture_output=True,
-        text=False,
-        timeout=timeout,
-        check=False,
-    )
+    if scoped_paths is None:
+        paths = subprocess.run(
+            [*prefix, "ls-files", "-z", "--cached", "--others", "--exclude-standard"],
+            cwd=cwd,
+            env=env,
+            capture_output=True,
+            text=False,
+            timeout=timeout,
+            check=False,
+        )
+    else:
+        paths = subprocess.CompletedProcess([], 0, os.fsencode("\0".join(scoped_paths) + "\0"), b"")
     if paths.returncode:
         return paths
     for source in ([], ["--cached"]):
@@ -232,6 +239,133 @@ class SafeGitRunner:
     executable: str = GIT
 
 
+@dataclass(frozen=True)
+class ScopedCommitResult:
+    step: str
+    process: subprocess.CompletedProcess
+    head: str | None = None
+
+
+def prepare_scoped_commit(
+    context: SafeGitContext,
+    *,
+    worktree: Path,
+    branch: str,
+    expected_head: str,
+    paths: tuple[str, ...],
+    subject: str,
+    body: str,
+    trailer: str,
+    identity: dict[str, str],
+) -> ScopedCommitResult:
+    """Prepare one scoped commit with no source-configured execution.
+
+    Borrow source objects and an index snapshot, never source config or hooks.
+    Write new objects to source storage so a refused push retains the commit.
+    Install the resulting index and branch only if both still match the inputs.
+    The only source-side Git mutation is a hook-disabled compare-and-swap ref
+    update. Publication must separately run the trusted pre-push gate.
+    """
+    if (
+        not paths
+        or not re.fullmatch(r"[0-9a-f]{40}", expected_head)
+        or branch.startswith("-")
+        or any(
+            path in {"", ".", "./"} or Path(path).is_absolute() or ".." in Path(path).parts or "\0" in path
+            for path in paths
+        )
+        or not re.fullmatch(r"X-Agent: [a-z0-9_-]+/[a-zA-Z0-9_.-]+", trailer)
+        or "\n" in subject
+        or re.search(r"(?im)^X-Agent:", subject + "\n" + body)
+        or set(identity) != {"GIT_AUTHOR_NAME", "GIT_AUTHOR_EMAIL", "GIT_COMMITTER_NAME", "GIT_COMMITTER_EMAIL"}
+    ):
+        raise ValueError("unsupported scoped preparation operation")
+    ref = f"refs/heads/{branch}"
+    if context.run("check-ref-format", ref).returncode:
+        raise ValueError("unsupported scoped preparation branch")
+    source = context.source_git_dir
+    source_index = source / "index"
+    original_index = source_index.read_bytes() if source_index.exists() else None
+    if original_index is not None:
+        (context.root / "index").write_bytes(original_index)
+    else:
+        context.checked("read-tree", expected_head)
+    context.checked("update-ref", ref, expected_head)
+    context.checked("symbolic-ref", "HEAD", ref)
+    context.checked("config", "core.bare", "false")
+    # No source includes, info/attributes, trailer commands or execution config.
+    prefix = [GIT, "--literal-pathspecs", "-c", f"core.worktree={worktree}"]
+    for setting in (*_SETTINGS, *_COMMIT_SETTINGS, f"core.attributesFile={os.devnull}"):
+        prefix.extend(["-c", setting])
+    env = {
+        **context.env,
+        **identity,
+        "GIT_OBJECT_DIRECTORY": str(context.objects),
+        "GIT_WORK_TREE": str(worktree),
+    }
+    failure = _preserve_attributes(prefix, context.root, env, 30, scoped_paths=paths)
+    if failure is not None:
+        return ScopedCommitResult(
+            "add",
+            subprocess.CompletedProcess(
+                failure.args,
+                failure.returncode,
+                failure.stdout.decode("utf-8", "replace"),
+                failure.stderr.decode("utf-8", "replace"),
+            ),
+        )
+    scoped = ["--pathspec-from-file=-", "--pathspec-file-nul"]
+    for step, args in (
+        ("add", ["add", "-A", *scoped]),
+        ("commit", ["commit", "--only", *scoped, "-m", subject, "-m", body, "--trailer", trailer]),
+    ):
+        result = subprocess.run(
+            [*prefix, *args],
+            cwd=context.root,
+            env=env,
+            input="\0".join(paths),
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=30,
+        )
+        if result.returncode:
+            return ScopedCommitResult(step, result)
+        current = context.read_source_ref(source, "HEAD")
+        name = context.read_source_ref(source, "HEAD", symbolic=True)
+        if (
+            current.returncode
+            or current.stdout.strip() != expected_head
+            or name.returncode
+            or name.stdout.strip() != ref
+        ):
+            raise SnapshotRefusal("auto_finalize_head_moved")
+    head = context.checked("rev-parse", "HEAD")
+    lock = source_index.with_name("index.lock")
+    # Coordinate with ordinary source Git writers. Failure retains their
+    # index/ref and the new objects, without publishing anything.
+    with lock.open("xb") as stream:
+        try:
+            current_index = source_index.read_bytes() if source_index.exists() else None
+            if current_index != original_index:
+                raise SnapshotRefusal("auto_finalize_head_moved")
+            stream.write((context.root / "index").read_bytes())
+            stream.flush()
+            result = run_git(
+                ["update-ref", ref, head, expected_head],
+                cwd=worktree,
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            if result.returncode:
+                raise SnapshotRefusal("auto_finalize_head_moved")
+            os.replace(lock, source_index)
+        finally:
+            lock.unlink(missing_ok=True)
+    return ScopedCommitResult("commit", result, head)
+
+
 class GitRefusal(subprocess.CompletedProcess):
     """A non-executing, failed Git result with a privacy-safe reason code.
 
@@ -255,26 +389,41 @@ def _restore_attributes(prefix, cwd, source, env, timeout):
     """
     paths = subprocess.run(
         [*prefix, "ls-tree", "-r", "--name-only", "-z", source, "--"],
-        cwd=cwd, env=env, capture_output=True, text=False, check=False, timeout=timeout,
+        cwd=cwd,
+        env=env,
+        capture_output=True,
+        text=False,
+        check=False,
+        timeout=timeout,
     )
     if paths.returncode:
         return paths
     attrs = subprocess.run(
         [
-            *prefix, "check-attr", f"--source={source}", "-z", "--stdin",
-            "filter", "text", "crlf", "eol", "working-tree-encoding", "ident",
+            *prefix,
+            "check-attr",
+            f"--source={source}",
+            "-z",
+            "--stdin",
+            "filter",
+            "text",
+            "crlf",
+            "eol",
+            "working-tree-encoding",
+            "ident",
         ],
         input=paths.stdout,
-        cwd=cwd, env=env, capture_output=True, text=False, check=False, timeout=timeout,
+        cwd=cwd,
+        env=env,
+        capture_output=True,
+        text=False,
+        check=False,
+        timeout=timeout,
     )
     if attrs.returncode:
         return attrs
     fields = attrs.stdout.split(b"\0")
-    active = [
-        fields[i + 1]
-        for i in range(0, len(fields) - 1, 3)
-        if fields[i + 2] not in {b"unspecified", b"unset"}
-    ]
+    active = [fields[i + 1] for i in range(0, len(fields) - 1, 3) if fields[i + 2] not in {b"unspecified", b"unset"}]
     if active:
         code = "restore_filter_attribute" if b"filter" in active else "restore_transform_attribute"
         return GitRefusal(attrs.args, code)
@@ -370,8 +519,10 @@ def run_git(
     if not Path(executable).is_absolute():
         raise ValueError("Git executable must be absolute")
     admitted = {
-        "local": LOCAL_COMMANDS, "remote": REMOTE_COMMANDS,
-        "commit": COMMIT_COMMANDS, "checkout": CHECKOUT_COMMANDS,
+        "local": LOCAL_COMMANDS,
+        "remote": REMOTE_COMMANDS,
+        "commit": COMMIT_COMMANDS,
+        "checkout": CHECKOUT_COMMANDS,
     }
     if profile not in admitted or not args or args[0] not in admitted[profile]:
         raise ValueError("only local cleanup/inventory Git commands are admitted")
@@ -381,10 +532,14 @@ def run_git(
         raise ValueError("unsupported bundle operation")
     if args[0] == "worktree":
         if profile == "checkout":
-            if not (
-                (len(args) == 4 and args[:2] == ["worktree", "add"])
-                or (len(args) == 6 and args[:3] == ["worktree", "add", "-b"] and not args[3].startswith("-"))
-            ) or not Path(args[-2]).is_absolute() or args[-1].startswith("-"):
+            if (
+                not (
+                    (len(args) == 4 and args[:2] == ["worktree", "add"])
+                    or (len(args) == 6 and args[:3] == ["worktree", "add", "-b"] and not args[3].startswith("-"))
+                )
+                or not Path(args[-2]).is_absolute()
+                or args[-1].startswith("-")
+            ):
                 raise ValueError("unsupported restore operation")
             # No caller-supplied flags or option-like paths can reach Git.
             args = [*args[:-2], "--", *args[-2:]]
@@ -469,7 +624,12 @@ def run_git(
             branch = args[-1]
             resolved = subprocess.run(
                 [*prefix, "rev-parse", "--verify", f"refs/heads/{branch}^{{commit}}"],
-                cwd=cwd, env=safe_env, capture_output=True, text=False, check=False, timeout=timeout,
+                cwd=cwd,
+                env=safe_env,
+                capture_output=True,
+                text=False,
+                check=False,
+                timeout=timeout,
             )
             if resolved.returncode:
                 failure = resolved
@@ -483,8 +643,10 @@ def run_git(
                 failure.check_returncode()
             if kwargs.get("text"):
                 return subprocess.CompletedProcess(
-                    failure.args, failure.returncode,
-                    failure.stdout.decode("utf-8", "replace"), failure.stderr.decode("utf-8", "replace"),
+                    failure.args,
+                    failure.returncode,
+                    failure.stdout.decode("utf-8", "replace"),
+                    failure.stderr.decode("utf-8", "replace"),
                 )
             return failure
     if profile == "remote":

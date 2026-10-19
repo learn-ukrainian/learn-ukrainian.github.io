@@ -178,7 +178,7 @@ exceptions:
   - {module: scripts/delegate.py, function: "_branch_worktree_paths", program: "git", category: non-claude, reason: "runs git"}
   - {module: scripts/delegate.py, function: "_checked_out_branch_names", program: "git", category: non-claude, reason: "runs git"}
   - {module: scripts/delegate.py, function: "_commit_is_durably_contained", program: "git", category: non-claude, reason: "runs git"}
-  - {module: scripts/delegate.py, function: "_count_unpushed_commits", program: "git", category: non-claude, reason: "runs git"}
+  # _count_unpushed_commits uses SafeGitContext; it spawns no subprocess directly.
   - {module: scripts/delegate.py, function: "_current_branch", program: "git", category: non-claude, reason: "runs git"}
   - {module: scripts/delegate.py, function: "_delete_local_branch", program: "git", category: non-claude, reason: "runs git"}
   - {module: scripts/delegate.py, function: "_dispatch", program: "<reference>", category: runtime, reason: "hands subprocess.Popen to the agent runtime launch of the worker plan; Claude plans come only from runner-tested harnesses"}
@@ -194,7 +194,7 @@ exceptions:
   - {module: scripts/delegate.py, function: "_list_worktree_dirs", program: "git", category: non-claude, reason: "runs git"}
   - {module: scripts/delegate.py, function: "_live_origin_branch_shas", program: "git", category: non-claude, reason: "runs git"}
   - {module: scripts/delegate.py, function: "_ls_remote_branch_sha", program: "git", category: non-claude, reason: "runs git"}
-  - {module: scripts/delegate.py, function: "_push_auto_finalize_branch", program: "git", category: non-claude, reason: "runs git"}
+  - {module: scripts/delegate.py, function: "_push_auto_finalize_branch", program: "str(hook)", category: non-claude, reason: "runs the trusted base pre-push hook for an already-published retry"}
   - {module: scripts/delegate.py, function: "_read_only_checkout_snapshot", program: "command", category: non-claude, reason: "runs git status"}
   - {module: scripts/delegate.py, function: "_require_local_branch_is_ancestor_of_origin", program: "git", category: non-claude, reason: "runs git"}
   - {module: scripts/delegate.py, function: "_resolve_commit", program: "git", category: non-claude, reason: "runs git"}

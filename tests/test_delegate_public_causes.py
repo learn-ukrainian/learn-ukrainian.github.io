@@ -21,6 +21,8 @@ from unittest.mock import patch
 
 import pytest
 
+from tests.test_delegate import isolated_finalization_context  # noqa: F401
+
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 import delegate
@@ -135,7 +137,11 @@ def test_unsupported_verdict_cause_survives_public_persistence_without_free_text
     assert cause in delegate.public_causes()
     task_id = "unsupported-verdict-public"
     gate = delegate.run_completion_gate(
-        delegate.COMPLETION_GATE_REVIEW_VERDICT, {}, response=response, commits_ahead=None, worktree=None,
+        delegate.COMPLETION_GATE_REVIEW_VERDICT,
+        {},
+        response=response,
+        commits_ahead=None,
+        worktree=None,
     )
     assert gate.failure == cause and gate.status == "failed"
     diagnostic = gate.detail
@@ -450,8 +456,15 @@ def _failing_git(monkeypatch, subcommand: str, stderr: str = HOSTILE) -> None:
     def run(cmd, *args, **kwargs):
         words = [str(word) for word in cmd] if isinstance(cmd, (list, tuple)) else []
         scoped = subcommand not in ("add", "commit") or "--literal-pathspecs" in words
-        if words[:1] == ["git"] and delegate._git_subcommand(words) == subcommand and scoped:
-            return subprocess.CompletedProcess(cmd, 128, "", stderr)
+        if (
+            words
+            and Path(words[0]).name == "git"
+            and delegate._git_subcommand(["git", *words[1:]]) == subcommand
+            and scoped
+        ):
+            return subprocess.CompletedProcess(
+                cmd, 128, "" if kwargs.get("text") else b"", stderr if kwargs.get("text") else stderr.encode()
+            )
         return real_run(cmd, *args, **kwargs)
 
     monkeypatch.setattr(delegate.subprocess, "run", run)
@@ -844,8 +857,13 @@ def test_agy_unverified_identity_is_a_closed_public_cause():
     task_id = "agy-unverified-public"
     delegate._write_state_atomic(delegate._state_path(task_id), {"task_id": task_id})
     cause = delegate._worker_last_error(
-        task_id, stderr_excerpt=HOSTILE, failure_cause="agy_model_identity_unverified",
-        final_status="failed", returncode=0, runtime_failure_code=None, worker_exception=None,
+        task_id,
+        stderr_excerpt=HOSTILE,
+        failure_cause="agy_model_identity_unverified",
+        final_status="failed",
+        returncode=0,
+        runtime_failure_code=None,
+        worker_exception=None,
     )
     assert cause == "agy_model_identity_unverified"
     assert_no_host_details(cause)

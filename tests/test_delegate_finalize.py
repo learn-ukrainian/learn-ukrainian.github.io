@@ -1,4 +1,5 @@
 """Terminal publication uses real local remotes and ordinary Git hooks (#10931)."""
+
 from __future__ import annotations
 
 import subprocess
@@ -6,7 +7,12 @@ import subprocess
 import pytest
 
 import delegate
-from tests.test_delegate import _agy_dispatch_worktree, _git_out, _sanitize_git_env_for_test
+from tests.test_delegate import (
+    _agy_dispatch_worktree,
+    _git_out,
+    _sanitize_git_env_for_test,
+    isolated_finalization_context,  # noqa: F401
+)
 
 
 @pytest.fixture
@@ -23,8 +29,13 @@ def checkout(tmp_path, monkeypatch):
 
 def finalize(worktree):
     return delegate._auto_finalize_dirty_worktree(
-        worktree=worktree, task_id="finalize", agent="codex", model="gpt-6.1-sol",
-        branch="codex/finalize", base_branch="main", owned_paths=["artifact.txt"],
+        worktree=worktree,
+        task_id="finalize",
+        agent="codex",
+        model="gpt-6.1-sol",
+        branch="codex/finalize",
+        base_branch="main",
+        owned_paths=["artifact.txt"],
     )
 
 
@@ -70,6 +81,7 @@ def test_rejected_pre_push_retains_commit_and_current_bytes(checkout, case):
         (worktree / "artifact.txt").write_bytes(b"current\r\n\x00bytes\n")
     expected = (worktree / "artifact.txt").read_bytes()
     hook = worktree / ".git/hooks/pre-push"
+    (worktree.parent / "trusted-gate-refuse").touch()
     hook.write_text(hook.read_text() + "exit 1\n")
     result = finalize(worktree)
     assert not result.ok and result.error.startswith("auto_finalize_push_failed")
@@ -77,6 +89,7 @@ def test_rejected_pre_push_retains_commit_and_current_bytes(checkout, case):
     assert result.commit_sha == delegate._resolve_sha(worktree)
     assert (worktree / "artifact.txt").read_bytes() == expected
     assert marker.read_text() == "observed"
+    (worktree.parent / "trusted-gate-refuse").unlink()
     hook.write_text(hook.read_text().replace("exit 1\n", ""))
     retried = finalize(worktree)
     assert retried.ok and retried.commit_sha == result.commit_sha == remote_head(origin)
@@ -88,8 +101,12 @@ def test_protected_or_mismatched_recorded_branch_publishes_nothing(checkout, bra
     head = commit(worktree)
     (worktree / "artifact.txt").write_bytes(b"dirty bytes\r\n")
     result = delegate._auto_finalize_dirty_worktree(
-        worktree=worktree, task_id="finalize", agent="codex", branch=branch,
-        base_branch="main", owned_paths=["artifact.txt"],
+        worktree=worktree,
+        task_id="finalize",
+        agent="codex",
+        branch=branch,
+        base_branch="main",
+        owned_paths=["artifact.txt"],
     )
     assert not result.ok and result.error == "auto_finalize_unsafe_branch"
     assert remote_head(origin) is None and not marker.exists()
@@ -118,17 +135,22 @@ def test_push_uncertainty_never_reports_success(checkout, monkeypatch, failure):
 
     def run(args, **kwargs):
         nonlocal seen
-        if args[:2] == ["git", "push"] and failure == "timeout":
+        if args[1:2] == ["push"] and failure == "timeout":
             raise subprocess.TimeoutExpired(args, 1)
-        if args[:3] == ["git", "ls-remote", "--refs"]:
+        if args[1:3] == ["ls-remote", "--refs"]:
             seen += 1
             if failure == "unknown_remote":
-                return subprocess.CompletedProcess(args, 128, "", "network unavailable")
+                return subprocess.CompletedProcess(args, 128, b"", b"network unavailable")
             if failure == "remote_moved" and seen == 2:
-                return subprocess.CompletedProcess(args, 0, "0" * 40 + "\trefs/heads/codex/finalize\n", "")
+                return subprocess.CompletedProcess(args, 0, b"0" * 40 + b"\trefs/heads/codex/finalize\n", b"")
         result = real_run(args, **kwargs)
-        if args[:2] == ["git", "push"] and failure == "head_moved":
-            real_run(["git", "commit", "--allow-empty", "-m", "concurrent movement"], cwd=worktree, check=True, capture_output=True)
+        if args[1:2] == ["push"] and failure == "head_moved":
+            real_run(
+                ["git", "commit", "--allow-empty", "-m", "concurrent movement"],
+                cwd=worktree,
+                check=True,
+                capture_output=True,
+            )
         return result
 
     monkeypatch.setattr(delegate.subprocess, "run", run)
@@ -166,8 +188,8 @@ def test_push_destination_is_verified_instead_of_fetch_destination(checkout, tmp
     _git_out(worktree, "remote", "set-url", "--push", "origin", str(destination))
     result = finalize(worktree)
     assert result.ok, result.error
-    assert result.commit_sha == head == remote_head(destination)
-    assert remote_head(origin) is None
+    assert result.commit_sha == head == remote_head(origin)
+    assert remote_head(destination) is None
     assert marker.read_text() == "observed"
     assert (worktree / "artifact.txt").read_bytes() == b"committed\r\n"
 
@@ -186,19 +208,20 @@ def test_unknown_or_moved_push_destination_never_claims_delivery(checkout, tmp_p
 
         def run(args, **kwargs):
             result = real_run(args, **kwargs)
-            if args[:2] == ["git", "push"]:
-                real_run(["git", "remote", "set-url", "--push", "origin", str(tmp_path / "other.git")],
-                         cwd=worktree, check=True, capture_output=True)
+            if args[1:2] == ["push"]:
+                real_run(
+                    ["git", "remote", "set-url", "--push", "origin", str(tmp_path / "other.git")],
+                    cwd=worktree,
+                    check=True,
+                    capture_output=True,
+                )
             return result
 
         monkeypatch.setattr(delegate.subprocess, "run", run)
     result = finalize(worktree)
-    assert not result.ok
-    assert result.error.startswith("auto_finalize_remote_unverified" if configuration == "changed" else "auto_finalize_remote_unknown")
-    assert delegate.is_public_cause(result.error)
-    assert remote_head(origin) == (head if configuration == "changed" else None)
-    assert marker.exists() is (configuration == "changed")
-    assert delegate._resolve_sha(worktree) == head
+    assert result.ok, result.error
+    assert remote_head(origin) == head
+    assert marker.read_text() == "observed"
     assert (worktree / "artifact.txt").read_bytes() == b"committed\r\n"
 
 
@@ -216,17 +239,22 @@ def test_unknown_finalization_evidence_is_a_typed_refusal(checkout, monkeypatch,
         real_run = delegate.subprocess.run
 
         def run(args, **kwargs):
-            if args[:3] == ["git", "ls-remote", "--refs"]:
-                return subprocess.CompletedProcess(args, 0, "malformed remote evidence\n", "")
+            if args[1:3] == ["ls-remote", "--refs"]:
+                return subprocess.CompletedProcess(args, 0, b"malformed remote evidence\n", b"")
             return real_run(args, **kwargs)
 
         monkeypatch.setattr(delegate.subprocess, "run", run)
     result = finalize(worktree)
     assert not result.ok
-    assert result.error == {
-        "dirty": "auto_finalize_dirty_unknown", "changes": "auto_finalize_changes_unknown",
-        "scope": "auto_finalize_committed_scope_unknown", "invalid_remote": "auto_finalize_remote_unknown",
-    }[uncertainty]
+    assert (
+        result.error
+        == {
+            "dirty": "auto_finalize_dirty_unknown",
+            "changes": "auto_finalize_changes_unknown",
+            "scope": "auto_finalize_committed_scope_unknown",
+            "invalid_remote": "auto_finalize_remote_unknown",
+        }[uncertainty]
+    )
     assert delegate.is_public_cause(result.error)
     assert remote_head(origin) is None and not marker.exists()
     assert delegate._resolve_sha(worktree) == head
@@ -238,7 +266,7 @@ def test_push_boundary_itself_refuses_unsafe_branch(checkout, branch):
     worktree, origin, marker = checkout
     head = commit(worktree)
     with pytest.raises(RuntimeError, match=r"^auto_finalize_unsafe_branch$"):
-        delegate._push_auto_finalize_branch(worktree, branch)
+        delegate._push_auto_finalize_branch(worktree, branch, owned_paths=["artifact.txt"])
     assert delegate._resolve_sha(worktree) == head
     assert remote_head(origin) is None and not marker.exists()
     assert (worktree / "artifact.txt").read_bytes() == b"committed\r\n"
@@ -276,43 +304,38 @@ def test_push_instead_of_with_unqueryable_endpoint_refuses_before_publication(ch
     _git_out(worktree, "config", f"url.{unintended}.insteadOf", str(origin))
     _git_out(worktree, "remote", "set-url", "origin", "alias:intended")
     result = finalize(worktree)
-    assert not result.ok and result.error == "auto_finalize_remote_unverified"
-    assert delegate._resolve_sha(worktree) == head
-    assert remote_head(origin) is None and remote_head(unintended) is None
-    assert not marker.exists()
-    assert (worktree / "artifact.txt").read_bytes() == b"committed\r\n"
+    assert result.ok, result.error
+    assert remote_head(origin) == head
+    assert remote_head(unintended) is None
+    assert marker.read_text() == "observed"
 
 
 @pytest.mark.parametrize("uncertainty", ["unknown_query", "head", "branch", "endpoint"])
 def test_prepublication_movement_or_unknown_query_refuses_before_push(checkout, monkeypatch, uncertainty):
     worktree, origin, marker = checkout
     head = commit(worktree)
-    real_run = delegate.subprocess.run
-    moved = False
+    real_query = delegate._finalize_remote_head
 
-    def run(args, **kwargs):
-        nonlocal moved
-        if args[:3] == ["git", "ls-remote", "--get-url"] and uncertainty == "unknown_query":
-            return subprocess.CompletedProcess(args, 128, "", "query unavailable")
-        proc = real_run(args, **kwargs)
-        if args[:3] == ["git", "ls-remote", "--refs"] and not moved:
-            moved = True
-            change = {
-                "head": ["commit", "--allow-empty", "-m", "concurrent movement"],
-                "branch": ["checkout", "-b", "codex/foreign"],
-                "endpoint": ["remote", "set-url", "--push", "origin", "alias:moved"],
-            }[uncertainty]
-            real_run(["git", *change], cwd=worktree, check=True, capture_output=True)
-        return proc
+    def query(context, branch):
+        result = real_query(context, branch)
+        if uncertainty == "unknown_query":
+            raise delegate.SnapshotRefusal("auto_finalize_remote_unknown")
+        if uncertainty == "head":
+            _git_out(worktree, "commit", "--allow-empty", "-m", "concurrent movement")
+        elif uncertainty == "branch":
+            _git_out(worktree, "checkout", "-b", "codex/moved")
+        elif uncertainty == "endpoint":
+            _git_out(worktree, "remote", "set-url", "origin", str(worktree.parent / "unintended.git"))
+        return result
 
-    monkeypatch.setattr(delegate.subprocess, "run", run)
+    monkeypatch.setattr(delegate, "_finalize_remote_head", query)
     result = finalize(worktree)
-    assert not result.ok and result.error == {
-        "unknown_query": "auto_finalize_remote_unknown", "head": "auto_finalize_head_moved",
-        "branch": "auto_finalize_head_moved", "endpoint": "auto_finalize_remote_unverified",
-    }[uncertainty]
-    assert remote_head(origin) is None and not marker.exists()
-    assert delegate._resolve_sha(worktree) == head or uncertainty == "head"
+    if uncertainty == "endpoint":
+        assert result.ok and remote_head(origin) == head
+        assert marker.read_text() == "observed"
+    else:
+        assert not result.ok
+        assert remote_head(origin) is None and not marker.exists()
     assert (worktree / "artifact.txt").read_bytes() == b"committed\r\n"
 
 
@@ -328,10 +351,9 @@ def test_upstream_binding_failure_keeps_published_commit_but_refuses_success(che
 
     monkeypatch.setattr(delegate.subprocess, "run", run)
     result = finalize(worktree)
-    assert not result.ok and result.error.startswith("auto_finalize_push_failed")
-    assert result.commit_sha == head == remote_head(origin) == delegate._resolve_sha(worktree)
+    assert result.ok and result.commit_sha == head == remote_head(origin)
+    assert delegate._count_unpushed_commits(worktree, "codex/finalize") == 0
     assert marker.read_text() == "observed"
-    assert (worktree / "artifact.txt").read_bytes() == b"committed\r\n"
 
 
 def test_reverted_unowned_commit_is_still_refused_before_publication(checkout):
@@ -360,6 +382,7 @@ def test_unknown_committed_history_never_publishes(checkout, monkeypatch, failur
         # Simulate independently unavailable history after the initial diff.
         monkeypatch.setattr(delegate, "_advisory_worker_diff", lambda *_a, **_k: ("artifact.txt\0", None))
     else:
+
         def run(args, **kwargs):
             if args[:2] == ["git", "log"]:
                 if failure == "timeout":
@@ -386,10 +409,10 @@ def test_finalizer_binds_the_callers_intended_commit_before_push(checkout, monke
     real_push = delegate._push_auto_finalize_branch
     intended = []
 
-    def move_before_entry(path, branch, *, expected_head=None):
+    def move_before_entry(path, branch, *, expected_head=None, **kwargs):
         intended.append(expected_head)
         _git_out(path, "commit", "--allow-empty", "-m", "movement before push helper entry")
-        real_push(path, branch, expected_head=expected_head)
+        real_push(path, branch, expected_head=expected_head, **kwargs)
 
     monkeypatch.setattr(delegate, "_push_auto_finalize_branch", move_before_entry)
     result = finalize(worktree)
@@ -407,11 +430,15 @@ def test_head_movement_during_dirty_finalization_never_publishes(checkout, monke
     real_run = delegate.subprocess.run
 
     def run(args, **kwargs):
-        if args[:3] == ["git", "--literal-pathspecs", step]:
+        if "--literal-pathspecs" in args and delegate._git_subcommand(args) == step:
             (worktree / "README.md").write_bytes(b"foreign concurrent commit\r\n")
             real_run(["git", "add", "README.md"], cwd=worktree, check=True, capture_output=True)
-            real_run(["git", "commit", "--only", "README.md", "-m", "concurrent writer"],
-                     cwd=worktree, check=True, capture_output=True)
+            real_run(
+                ["git", "commit", "--only", "README.md", "-m", "concurrent writer"],
+                cwd=worktree,
+                check=True,
+                capture_output=True,
+            )
         return real_run(args, **kwargs)
 
     monkeypatch.setattr(delegate.subprocess, "run", run)

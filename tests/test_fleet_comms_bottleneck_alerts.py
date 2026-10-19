@@ -24,8 +24,9 @@ def isolate_broker(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     # checkout. These fixtures are plain non-git tmp dirs; since #6863 the
     # default hard-fails there, so they use the explicit operator override.
     monkeypatch.setenv("FLEET_COMMS_ROOT", str(tmp_path / "plane"))
-    with patch("scripts.ai_agent_bridge._config.DB_PATH", broker_db), patch(
-        "scripts.ai_agent_bridge._db.DB_PATH", broker_db
+    with (
+        patch("scripts.ai_agent_bridge._config.DB_PATH", broker_db),
+        patch("scripts.ai_agent_bridge._db.DB_PATH", broker_db),
     ):
         _db.init_db()
         yield broker_db
@@ -101,7 +102,9 @@ def test_duplicate_scan_posts_one_action_required_system_alert(tmp_path: Path) -
     try:
         recipients = {
             row["to_agent"]
-            for row in conn.execute("SELECT to_agent FROM deliveries WHERE message_id = ?", (messages[0]["message_id"],))
+            for row in conn.execute(
+                "SELECT to_agent FROM deliveries WHERE message_id = ?", (messages[0]["message_id"],)
+            )
         }
     finally:
         conn.close()
@@ -112,9 +115,7 @@ def test_persistent_breach_rearms_at_next_threshold_multiple(tmp_path: Path) -> 
     def collector(**kwargs: object) -> dict[str, object]:
         return _metrics(age_s=7_200, **kwargs)
 
-    scan_bottlenecks_at_inbox_checkpoint(
-        repo_root=tmp_path, now=NOW, rate_limit_seconds=0, metrics_collector=collector
-    )
+    scan_bottlenecks_at_inbox_checkpoint(repo_root=tmp_path, now=NOW, rate_limit_seconds=0, metrics_collector=collector)
     rearmed = scan_bottlenecks_at_inbox_checkpoint(
         repo_root=tmp_path,
         now=NOW + timedelta(seconds=1),
@@ -173,9 +174,7 @@ def test_failed_delivery_is_loud_and_recorded_without_blocking_rescan(tmp_path: 
     def collector(**kwargs: object) -> dict[str, object]:
         return _metrics(age_s=7_200, **kwargs)
 
-    scan_bottlenecks_at_inbox_checkpoint(
-        repo_root=tmp_path, now=NOW, rate_limit_seconds=0, metrics_collector=collector
-    )
+    scan_bottlenecks_at_inbox_checkpoint(repo_root=tmp_path, now=NOW, rate_limit_seconds=0, metrics_collector=collector)
     conn = _db.get_db()
     try:
         conn.execute("UPDATE deliveries SET status = 'failed', error = 'test transport failure'")
@@ -231,3 +230,97 @@ def test_alert_state_and_messages_never_contain_collector_prompt_or_body(tmp_pat
     # The channel message necessarily has its own generated alert body, but
     # never reflects untrusted task/message payload fields from the collector.
     assert "inspect lifecycle metadata" in serialized
+
+
+@pytest.mark.parametrize("minutes,expected", [(29, 0), (30, 0), (31, 1)])
+def test_aged_finalization_posts_once_to_cto_at_checkpoint(tmp_path, monkeypatch, minutes, expected, record_property):
+    monkeypatch.setenv("LU_NEEDS_FINALIZE_MAX_AGE_MINUTES", "30")
+    tasks = tmp_path / "tasks"
+    tasks.mkdir()
+    record = {
+        "task_id": "isolated-finalize",
+        "run_nonce": "isolated-run",
+        "status": "needs_finalize",
+        "initiator": "claude-infra",
+        "finished_at": (NOW - timedelta(minutes=minutes)).isoformat(),
+        "finalize_error": "auto_finalize_push_failed",
+    }
+    (tasks / "task.json").write_text(json.dumps(record))
+    for offset in (0, 301, 3600):
+        scan_bottlenecks_at_inbox_checkpoint(
+            repo_root=tmp_path,
+            tasks_dir=tasks,
+            now=NOW + timedelta(seconds=offset if expected else 0),
+            rate_limit_seconds=0,
+            metrics_collector=lambda **_: _metrics(age_s=None),
+        )
+    messages = _channels.read("cto", tail=20)
+    assert len(messages) == expected
+    if expected:
+        assert "task=isolated-finalize" in messages[0]["body"]
+        assert "owner=claude-infra" in messages[0]["body"]
+        record_property("isolated_cto_message_id", messages[0]["message_id"])
+
+
+def test_finalization_dedupe_recovers_a_post_before_state_checkpoint(tmp_path, monkeypatch):
+    monkeypatch.setenv("LU_NEEDS_FINALIZE_MAX_AGE_MINUTES", "30")
+    tasks = tmp_path / "tasks"
+    tasks.mkdir()
+    (tasks / "task.json").write_text(
+        json.dumps(
+            {
+                "task_id": "crash-finalize",
+                "run_nonce": "crash-run",
+                "status": "needs_finalize",
+                "initiator": "claude-infra",
+                "finished_at": (NOW - timedelta(hours=1)).isoformat(),
+            }
+        )
+    )
+
+    def scan():
+        return scan_bottlenecks_at_inbox_checkpoint(
+            repo_root=tmp_path,
+            tasks_dir=tasks,
+            now=NOW,
+            rate_limit_seconds=0,
+            metrics_collector=lambda **_: _metrics(age_s=None),
+        )
+
+    assert scan().alerts_posted == 1
+    conn = _db.get_db()
+    try:
+        conn.execute("DELETE FROM bottleneck_alert_state WHERE span='needs_finalize'")
+        conn.commit()
+    finally:
+        conn.close()
+    assert scan().alerts_posted == 0
+    assert len(_channels.read("cto", tail=20)) == 1
+
+
+@pytest.mark.parametrize("threshold", ["nan", "inf", "bad", "0", "-1"])
+def test_finalization_alert_reports_unknown_threshold(tmp_path, monkeypatch, threshold):
+    monkeypatch.setenv("LU_NEEDS_FINALIZE_MAX_AGE_MINUTES", threshold)
+    tasks = tmp_path / "tasks"
+    tasks.mkdir()
+    (tasks / "task.json").write_text(
+        json.dumps(
+            {
+                "task_id": "unknown-age",
+                "run_nonce": "unknown-run",
+                "status": "needs_finalize",
+                "finished_at": "unknown",
+                "initiator": "claude-infra",
+            }
+        )
+    )
+    scan_bottlenecks_at_inbox_checkpoint(
+        repo_root=tmp_path,
+        tasks_dir=tasks,
+        now=NOW,
+        rate_limit_seconds=0,
+        metrics_collector=lambda **_: _metrics(age_s=None),
+    )
+    message = _channels.read("cto", tail=1)[0]
+    assert "configuration=unknown" in message["body"]
+    assert "age_state=unknown" in message["body"]

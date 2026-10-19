@@ -37,8 +37,13 @@ class SafeGitContext:
     """
 
     def __init__(
-        self, *, objects: Path, temp_root: Path, origin: str = CANONICAL_ORIGIN,
-        token: str | None = None, local_remote: bool = False,
+        self,
+        *,
+        objects: Path,
+        temp_root: Path,
+        origin: str = CANONICAL_ORIGIN,
+        token: str | None = None,
+        local_remote: bool = False,
     ) -> None:
         if origin != CANONICAL_ORIGIN and not (local_remote and Path(origin).is_absolute()):
             raise SnapshotRefusal("rescue_push_url_unavailable")
@@ -58,13 +63,22 @@ class SafeGitContext:
             home.mkdir()
             template.mkdir()
             self.env = {
-                "PATH": os.defpath, "HOME": str(home), "LC_ALL": "C",
-                "GIT_CONFIG_NOSYSTEM": "1", "GIT_CONFIG_GLOBAL": os.devnull,
-                "GIT_TERMINAL_PROMPT": "0", "GIT_NO_REPLACE_OBJECTS": "1",
+                "PATH": os.defpath,
+                "HOME": str(home),
+                "LC_ALL": "C",
+                "GIT_CONFIG_NOSYSTEM": "1",
+                "GIT_CONFIG_GLOBAL": os.devnull,
+                "GIT_TERMINAL_PROMPT": "0",
+                "GIT_NO_REPLACE_OBJECTS": "1",
+                "GIT_NO_LAZY_FETCH": "1",
             }
             subprocess.run(
                 [GIT, "init", "--bare", f"--template={template}", str(self.git_dir)],
-                cwd=self.root, env=self.env, capture_output=True, check=True, timeout=60,
+                cwd=self.root,
+                env=self.env,
+                capture_output=True,
+                check=True,
+                timeout=60,
             )
             # Overwrite init's defaults: this is the sole configuration source.
             identity = ""
@@ -72,19 +86,22 @@ class SafeGitContext:
                 header = base64.b64encode(f"x-access-token:{self.token}".encode()).decode()
                 identity = f'[http "{CANONICAL_ORIGIN}"]\n\textraHeader = "Authorization: Basic {header}"\n'
             self.git_dir.joinpath("config").write_text(
-                '[core]\n\trepositoryformatversion = 0\n\tbare = true\n'
-                '\tfilemode = true\n\tsymlinks = true\n'
+                "[core]\n\trepositoryformatversion = 0\n\tbare = true\n"
+                "\tfilemode = true\n\tsymlinks = true\n"
                 '[protocol]\n\tallow = never\n[protocol "https"]\n\tallow = always\n'
-                + ('[protocol "file"]\n\tallow = always\n' if self.local_remote else '')
+                + ('[protocol "file"]\n\tallow = always\n' if self.local_remote else "")
                 + f'[remote "origin"]\n\turl = "{self.origin}"\n'
-                + '[user]\n\tname = Dispatch rescue\n\temail = dispatch@users.noreply.github.com\n'
-                + identity, encoding="utf-8",
+                + "[user]\n\tname = Dispatch rescue\n\temail = dispatch@users.noreply.github.com\n"
+                + identity,
+                encoding="utf-8",
             )
             self.git_dir.joinpath("config").chmod(0o600)
             self.env.update(
                 GIT_DIR=str(self.git_dir),
                 # Git's quoted alternates syntax also handles separators in paths.
-                GIT_ALTERNATE_OBJECT_DIRECTORIES='"' + str(self.objects).replace('\\', '\\\\').replace('"', '\\"') + '"',
+                GIT_ALTERNATE_OBJECT_DIRECTORIES='"'
+                + str(self.objects).replace("\\", "\\\\").replace('"', '\\"')
+                + '"',
                 GIT_INDEX_FILE=str(self.root / "index"),
             )
             return self
@@ -96,8 +113,14 @@ class SafeGitContext:
         self._scratch.cleanup()
 
     def run(
-        self, *args: str, work_tree: Path | None = None, index: Path | None = None,
-        stdin: str | None = None, network: bool = False, binary: bool = False,
+        self,
+        *args: str,
+        work_tree: Path | None = None,
+        index: Path | None = None,
+        stdin: str | None = None,
+        network: bool = False,
+        binary: bool = False,
+        timeout: float | None = None,
     ) -> subprocess.CompletedProcess:
         env = dict(self.env)
         if index is not None:
@@ -105,27 +128,96 @@ class SafeGitContext:
         if work_tree is not None:
             env["GIT_WORK_TREE"] = str(work_tree)
         proc = subprocess.run(
-            [GIT, *args], cwd=self.root, env=env,
+            [GIT, *args],
+            cwd=self.root,
+            env=env,
             input=None if stdin is None else stdin.encode("utf-8", "surrogateescape"),
-            capture_output=True, check=False, timeout=120 if network else 60,
+            capture_output=True,
+            check=False,
+            timeout=timeout if timeout is not None else (120 if network else 60),
         )
         if binary:
             return proc
         return subprocess.CompletedProcess(
-            proc.args, proc.returncode, proc.stdout.decode("utf-8", "surrogateescape"),
+            proc.args,
+            proc.returncode,
+            proc.stdout.decode("utf-8", "surrogateescape"),
             proc.stderr.decode("utf-8", "surrogateescape"),
         )
 
+    def prepare_validation(self, *, head: str, branch: str, base: str, interpreter: Path) -> None:
+        """Materialize an isolated checkout with the base commit's trusted hook chain.
+
+        Subprocesses which clear GIT_* still discover only our configuration,
+        refs and objects. No worker hook, config or tracking ref is imported.
+        """
+        checkout = self.root / "checkout"
+        checkout.mkdir()
+        self.checked("config", "core.bare", "false")
+        self.checked("config", "core.worktree", str(checkout))
+        (checkout / ".git").write_text(f"gitdir: {self.git_dir}\n")
+        # The gate clears GIT_* in its children. Persist only borrowed object
+        # storage, never source config or source refs, for those children.
+        alternates = self.git_dir / "objects/info/alternates"
+        alternates.write_text(str(self.objects) + "\n")
+        self.checked("update-ref", f"refs/heads/{branch}", head)
+        self.checked("symbolic-ref", "HEAD", f"refs/heads/{branch}")
+        self.checked("update-ref", "refs/remotes/origin/main", base)
+        self.checked("read-tree", "--reset", "-u", head, work_tree=checkout)
+        shutil.copyfile(self.root / "index", self.git_dir / "index")
+        self.env["GIT_INDEX_FILE"] = str(self.git_dir / "index")
+        # The canonical launcher discovers the shared interpreter through
+        # .venv. This link exists only in the disposable validation checkout.
+        if os.path.lexists(checkout / ".venv") or not interpreter.is_file():
+            raise SnapshotRefusal("auto_finalize_validation_unavailable")
+        (checkout / ".venv").symlink_to(interpreter.parent.parent, target_is_directory=True)
+        trusted = self.root / "trusted"
+        hooks = trusted / ".githooks"
+        hooks.mkdir(parents=True)
+        paths = self.checked("ls-tree", "-r", "-z", base, "--", ".githooks", "scripts/common/test_slots.py")
+        for row in paths.split("\0"):
+            if not row:
+                continue
+            metadata, name = row.split("\t", 1)
+            mode, kind, oid = metadata.split()
+            if kind != "blob" or mode not in {"100644", "100755"}:
+                raise SnapshotRefusal("auto_finalize_validation_unavailable")
+            destination = trusted / name
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            blob = self.run("cat-file", "blob", oid, binary=True)
+            if blob.returncode:
+                raise SnapshotRefusal("auto_finalize_validation_unavailable")
+            destination.write_bytes(blob.stdout)
+            destination.chmod(0o755 if mode == "100755" else 0o644)
+        if not (hooks / "pre-push").is_file() or not os.access(hooks / "pre-push", os.X_OK):
+            raise SnapshotRefusal("auto_finalize_validation_unavailable")
+        self.checked("config", "core.hooksPath", str(hooks))
+        self.checkout = checkout
+
     def read_source_ref(self, source: Path, ref: str, *, symbolic: bool = False) -> subprocess.CompletedProcess[str]:
         """Plumbing-only read of source refs: no worktree, network, hooks or index."""
-        env = {key: self.env[key] for key in (
-            "PATH", "HOME", "LC_ALL", "GIT_CONFIG_NOSYSTEM", "GIT_CONFIG_GLOBAL",
-            "GIT_TERMINAL_PROMPT", "GIT_NO_REPLACE_OBJECTS",
-        )}
+        env = {
+            key: self.env[key]
+            for key in (
+                "PATH",
+                "HOME",
+                "LC_ALL",
+                "GIT_CONFIG_NOSYSTEM",
+                "GIT_CONFIG_GLOBAL",
+                "GIT_TERMINAL_PROMPT",
+                "GIT_NO_REPLACE_OBJECTS",
+                "GIT_NO_LAZY_FETCH",
+            )
+        }
         args = ["--symbolic-full-name", ref] if symbolic else ["--verify", "--quiet", f"{ref}^{{commit}}"]
         return subprocess.run(
-            [GIT, f"--git-dir={source}", "rev-parse", *args], cwd=self.root,
-            env=env, text=True, capture_output=True, check=False, timeout=60,
+            [GIT, f"--git-dir={source}", "rev-parse", *args],
+            cwd=self.root,
+            env=env,
+            text=True,
+            capture_output=True,
+            check=False,
+            timeout=60,
         )
 
     def checked(self, *args: str, **kwargs) -> str:
@@ -151,14 +243,23 @@ class SafeGitContext:
             return
         options = (f"--source={source}",) if source else ()
         output = self.checked(
-            "check-attr", *options, "-z", "--stdin", "filter", work_tree=work_tree,
+            "check-attr",
+            *options,
+            "-z",
+            "--stdin",
+            "filter",
+            work_tree=work_tree,
             stdin="\0".join(paths) + "\0",
         ).split("\0")
         if any(output[i] not in {"unspecified", "unset"} for i in range(2, len(output), 3)):
             raise SnapshotRefusal("rescue_filtered_path")
 
     def capture(
-        self, work_tree: Path, head: str, *, worker_index: Path | None = None,
+        self,
+        work_tree: Path,
+        head: str,
+        *,
+        worker_index: Path | None = None,
         exclude_file: Path | None = None,
     ) -> str:
         """Hermetic add -A of the working post-image, seeded from HEAD, with stability proof."""
@@ -192,22 +293,37 @@ class SafeGitContext:
                 shutil.copyfile(worker_index, copied)
                 current = worker_index.stat()
                 if (current.st_dev, current.st_ino, current.st_size, current.st_mtime_ns, current.st_ctime_ns) != (
-                    info.st_dev, info.st_ino, info.st_size, info.st_mtime_ns, info.st_ctime_ns,
+                    info.st_dev,
+                    info.st_ino,
+                    info.st_size,
+                    info.st_mtime_ns,
+                    info.st_ctime_ns,
                 ):
                     raise SnapshotRefusal("rescue_input_changed")
             except OSError as exc:
                 raise SnapshotRefusal("rescue_input_unreadable") from exc
             skipped = self.checked("ls-files", "-t", "-z", index=copied).split("\0")
-            absent = [entry[2:] for entry in skipped if entry.startswith("S ") and not os.path.lexists(work_tree / entry[2:])]
+            absent = [
+                entry[2:] for entry in skipped if entry.startswith("S ") and not os.path.lexists(work_tree / entry[2:])
+            ]
             if absent:
-                self.checked("update-index", "--skip-worktree", "-z", "--stdin", work_tree=work_tree, stdin="\0".join(absent) + "\0")
+                self.checked(
+                    "update-index",
+                    "--skip-worktree",
+                    "-z",
+                    "--stdin",
+                    work_tree=work_tree,
+                    stdin="\0".join(absent) + "\0",
+                )
         paths = self._paths(work_tree)
         before = self._signatures(work_tree, paths)
         self.checked("add", "-A", work_tree=work_tree)
         tree = self.checked("write-tree")
         if not set(self._paths(work_tree)).issubset(paths) or before != self._signatures(work_tree, paths):
             raise SnapshotRefusal("rescue_input_changed")
-        changed = [path for path in self.checked("diff-tree", "-r", "--name-only", "-z", head, tree).split("\0") if path]
+        changed = [
+            path for path in self.checked("diff-tree", "-r", "--name-only", "-z", head, tree).split("\0") if path
+        ]
         self._refuse_filters(changed, work_tree=work_tree)
         self.refuse_tree(head, tree)
         self._snapshot = (work_tree, paths, before)
@@ -224,9 +340,20 @@ class SafeGitContext:
             raise SnapshotRefusal("rescue_input_changed")
 
     def _paths(self, work_tree: Path) -> list[str]:
-        return sorted({path.rstrip("/") for path in self.checked(
-            "ls-files", "--cached", "--others", "--exclude-standard", "-z", work_tree=work_tree,
-        ).split("\0") if path})
+        return sorted(
+            {
+                path.rstrip("/")
+                for path in self.checked(
+                    "ls-files",
+                    "--cached",
+                    "--others",
+                    "--exclude-standard",
+                    "-z",
+                    work_tree=work_tree,
+                ).split("\0")
+                if path
+            }
+        )
 
     @staticmethod
     def _signatures(work_tree: Path, paths: list[str]) -> dict:
@@ -251,8 +378,11 @@ class SafeGitContext:
                     if not parent_info.st_mode & 0o555:
                         raise SnapshotRefusal("rescue_input_unreadable")
                     signatures[str(parent.relative_to(work_tree)) + "/"] = (
-                        parent_info.st_dev, parent_info.st_ino, parent_info.st_mode,
-                        parent_info.st_mtime_ns, parent_info.st_ctime_ns,
+                        parent_info.st_dev,
+                        parent_info.st_ino,
+                        parent_info.st_mode,
+                        parent_info.st_mtime_ns,
+                        parent_info.st_ctime_ns,
                     )
                     if os.path.lexists(parent / ".git"):
                         raise SnapshotRefusal("rescue_embedded_repository")
@@ -280,8 +410,10 @@ class SafeGitContext:
                 else:
                     raise SnapshotRefusal("rescue_input_unreadable")
                 current = path.lstat()
+
                 def fingerprint(st):
                     return (st.st_dev, st.st_ino, st.st_mode, st.st_size, st.st_mtime_ns, st.st_ctime_ns)
+
                 if fingerprint(info) != fingerprint(current):
                     raise SnapshotRefusal("rescue_input_changed")
                 signatures[name] = (*fingerprint(info), digest)

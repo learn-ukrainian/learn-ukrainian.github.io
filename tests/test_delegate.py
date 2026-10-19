@@ -56,6 +56,41 @@ from tests.test_ask_review_admission_floor import ordinary_review_scope as ordin
 from tests.test_ask_review_admission_floor import write_code_review_manifest
 
 
+@pytest.fixture(autouse=True)
+def isolated_finalization_context(tmp_path, monkeypatch):
+    """Explicit driver-bound destination and base for isolated Git fixtures."""
+    import contextlib
+
+    from scripts.agent_runtime.kimi_boundary import worktree_git_dir
+    from scripts.orchestration.safe_git_context import SafeGitContext, SnapshotRefusal
+
+    @contextlib.contextmanager
+    def execution(worktree, **_kwargs):
+        admin = worktree_git_dir(worktree)
+        if admin is None or not admin.is_relative_to(tmp_path):
+            raise SnapshotRefusal("auto_finalize_remote_unknown")
+        common_file = admin / "commondir"
+        common = (admin / common_file.read_text().strip()).resolve() if common_file.is_file() else admin
+        origin = common.parent.parent / "origin.git"
+        if (common.parent.parent / "private.git").is_dir():
+            origin = common.parent.parent / "private.git"
+        with SafeGitContext(
+            objects=common / "objects", temp_root=tmp_path, origin=str(origin), local_remote=True
+        ) as context:
+            context.source_git_dir = admin
+            if origin.is_dir():
+                context.driver_base = context.checked("ls-remote", "origin", "refs/heads/main").split()[0]
+            else:
+                context.driver_base = context.read_source_ref(common, "refs/heads/main").stdout.strip()
+            context.interpreter = Path(sys.executable)
+            yield context
+
+    monkeypatch.setattr(delegate, "_finalize_execution_context", execution)
+    alternate = sys.modules.get("scripts.delegate")
+    if alternate is not None and alternate is not delegate:
+        monkeypatch.setattr(alternate, "_finalize_execution_context", execution)
+
+
 @pytest.fixture
 def isolated_dispatch_repo(tmp_path, monkeypatch):
     from tests.helpers.dispatch_checkout import isolate_dispatch_repo
@@ -71,8 +106,11 @@ def non_git_path():
         path = scratch.payload_dir
         discovery = subprocess.run(
             ["git", "rev-parse", "--git-common-dir"],
-            cwd=path, env=delegate._sanitized_git_env(),
-            capture_output=True, text=True, timeout=10,
+            cwd=path,
+            env=delegate._sanitized_git_env(),
+            capture_output=True,
+            text=True,
+            timeout=10,
         )
         assert discovery.returncode == 128, discovery.stderr
         assert "not a git repository" in discovery.stderr
@@ -97,11 +135,14 @@ def _synthetic_routing_budget(monkeypatch):
     Dedicated budget cases in test_delegate_review_admission.py provide their
     own inputs; this fixture applies only to this module's dispatch scenarios.
     """
-    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: {
-        "agents": {seat: {"status": "cool", "remaining_pct": 60}
-                   for seat in ("claude", "codex", "cursor")},
-        "diagnostics": {"records_loaded": 5, "stale": False},
-    })
+    monkeypatch.setattr(
+        delegate,
+        "_fetch_routing_budget",
+        lambda: {
+            "agents": {seat: {"status": "cool", "remaining_pct": 60} for seat in ("claude", "codex", "cursor")},
+            "diagnostics": {"records_loaded": 5, "stale": False},
+        },
+    )
     monkeypatch.setattr(delegate, "_load_reset_reserve", lambda *_args, **_kwargs: {})
 
 
@@ -849,10 +890,16 @@ def test_pid_alive_false_for_nonexistent_pid():
 
 def test_status_dead_worker_is_readonly(tmp_tasks_dir, capsys):
     path = delegate._state_path("zombie-task")
-    delegate._write_state_atomic(path, {
-        "task_id": "zombie-task", "agent": "codex", "status": "running",
-        "pid": 999_999_998, "started_at": "2026-04-10T12:00:00+00:00",
-    })
+    delegate._write_state_atomic(
+        path,
+        {
+            "task_id": "zombie-task",
+            "agent": "codex",
+            "status": "running",
+            "pid": 999_999_998,
+            "started_at": "2026-04-10T12:00:00+00:00",
+        },
+    )
     before = path.read_bytes()
     assert delegate.cmd_status(argparse.Namespace(task_id="zombie-task")) == 0
     assert path.read_bytes() == before
@@ -1820,9 +1867,10 @@ def test_commonmark_closed_brief_is_data_but_outside_write_intent_is_refused(fen
     )
     assert delegate._read_only_write_intent_error(mode="read-only", prompt=prompt) is None
     assert delegate.parse_review_verdict(prompt) is None
-    assert delegate._read_only_write_intent_error(
-        mode="read-only", prompt=prompt + "Please implement the parser.\n"
-    ) is not None
+    assert (
+        delegate._read_only_write_intent_error(mode="read-only", prompt=prompt + "Please implement the parser.\n")
+        is not None
+    )
 
 
 @pytest.mark.parametrize(
@@ -1862,7 +1910,7 @@ def test_commonmark_invalid_opener_and_containers_do_not_hide_write_intent(block
 
 
 @pytest.mark.parametrize("fence", ["```", "~~~"])
-@pytest.mark.parametrize("items,indent", [(('1.', '2.', '3.'), 3), (('-', '-', '-'), 2)])
+@pytest.mark.parametrize("items,indent", [(("1.", "2.", "3."), 3), (("-", "-", "-"), 2)])
 def test_commonmark_list_item_escape_does_not_hide_visible_write_intent(fence, items, indent):
     prompt = (
         "Review only; report findings.\n"
@@ -1881,8 +1929,10 @@ def test_commonmark_list_item_escape_does_not_hide_visible_write_intent(fence, i
     "block,quoted_issue_visible",
     [
         (f"{' ' * indent}{fence}markdown\nExample #8886\n   {fence}{fence[0]} \t\n", False)
-        for fence in ("```", "~~~") for indent in range(4)
-    ] + [
+        for fence in ("```", "~~~")
+        for indent in range(4)
+    ]
+    + [
         ("~~~\nExample #8886\n", True),
         ("````\n```\nExample #8886\n", True),
         ("```\n~~~\nExample #8886\n", True),
@@ -1903,7 +1953,9 @@ def test_commonmark_dor_checks_visible_issue_references_without_weakening_readin
     def gh_and_checker(command, **kwargs):
         calls.append(command)
         if command[:2] == ["gh", "api"]:
-            return subprocess.CompletedProcess(command, 0, json.dumps({"number": int(command[-1].rsplit("/", 1)[-1])}), "")
+            return subprocess.CompletedProcess(
+                command, 0, json.dumps({"number": int(command[-1].rsplit("/", 1)[-1])}), ""
+            )
         number = command[command.index("--issue") + 1]
         verdict = {"verdict": "WARN", "missing": ["verify"]} if number == "8886" else {"verdict": "PASS", "missing": []}
         return subprocess.CompletedProcess(command, int(number == "8886"), json.dumps(verdict), "")
@@ -1932,7 +1984,8 @@ def test_commonmark_dor_checks_visible_issue_references_without_weakening_readin
 def test_parser_spans_container_exit_preserves_write_refusal(container):
     # Second Opus CF reproduction, with an equivalent blockquote exit.
     prompt = (
-        "Review the brief below.\n\n" + container
+        "Review the brief below.\n\n"
+        + container
         + "```\nquoted data\n```\nAdd a CLI flag to scripts/foo.py.\n```\ntrailing\n"
     )
     stripped = delegate._strip_quoted_content(prompt)
@@ -2013,10 +2066,19 @@ def test_parser_spans_failure_precedes_dispatch_effects(tmp_tasks_dir, monkeypat
     for name in ("_ensure_worktree", "_provision_data_symlinks"):
         monkeypatch.setattr(delegate, name, forbidden_effect)
     monkeypatch.setattr(delegate.subprocess, "Popen", forbidden_effect)
-    args = delegate.build_parser().parse_args([
-        "dispatch", "--agent", "codex", "--task-id", "parser-spans-failure",
-        "--mode", mode, "--prompt", "Review only.\n```\nFixes #9672.\n```\n",
-    ])
+    args = delegate.build_parser().parse_args(
+        [
+            "dispatch",
+            "--agent",
+            "codex",
+            "--task-id",
+            "parser-spans-failure",
+            "--mode",
+            mode,
+            "--prompt",
+            "Review only.\n```\nFixes #9672.\n```\n",
+        ]
+    )
     with pytest.raises(exception, match="parser_spans injected"):
         delegate.cmd_dispatch(args)
     assert not (tmp_tasks_dir / "parser-spans-failure.json").exists()
@@ -2764,9 +2826,15 @@ def test_cancel_uses_recorded_worker_identity(tmp_tasks_dir, monkeypatch, capsys
     elif identity_case == "reused":
         identity["start_time"] -= 1
     path = delegate._state_path("identity-cancel")
-    delegate._write_state_atomic(path, {
-        "task_id": "identity-cancel", "status": "running", "pid": identity["pid"], "worker_identity": identity,
-    })
+    delegate._write_state_atomic(
+        path,
+        {
+            "task_id": "identity-cancel",
+            "status": "running",
+            "pid": identity["pid"],
+            "worker_identity": identity,
+        },
+    )
     signals = []
     monkeypatch.setattr(delegate.os, "kill", lambda pid, sig: signals.append((pid, sig)))
     assert delegate.cmd_cancel(argparse.Namespace(task_id="identity-cancel")) == expected
@@ -4135,7 +4203,8 @@ def test_review_verdict_gate_redacts_unsupported_diagnostic(token, expected):
         ("Findings.\n## **VERDICT**: **APPROVE_2**\n", "APPROVE_2", "APPROVE_2"),
         (
             "Findings.\n## **VERDICT**: **ghp_SYNTHETIC10598TOKENabcdefghij**\n",
-            "ghp_SYNTHETIC10598TOKENabcdefghij", "[REDACTED_SECRET]",
+            "ghp_SYNTHETIC10598TOKENabcdefghij",
+            "[REDACTED_SECRET]",
         ),
         ("Verdict: Looks good to me overall.", "Looks", "Looks"),
         ("**Verdict:** I approve this change.", "I", "I"),
@@ -4205,7 +4274,11 @@ def test_review_verdict_unsupported_tokens_use_shared_markdown_scanner(reply, to
     from scripts.review.verdict_parser import unsupported_verdict_tokens
 
     result = delegate.run_completion_gate(
-        delegate.COMPLETION_GATE_REVIEW_VERDICT, {}, response=reply, commits_ahead=None, worktree=None,
+        delegate.COMPLETION_GATE_REVIEW_VERDICT,
+        {},
+        response=reply,
+        commits_ahead=None,
+        worktree=None,
     )
     assert delegate.parse_review_verdict(reply) is None
     assert unsupported_verdict_tokens(reply)[-1] == token
@@ -4214,31 +4287,56 @@ def test_review_verdict_unsupported_tokens_use_shared_markdown_scanner(reply, to
     assert "accepted tokens: APPROVE, APPROVED, CHANGES_REQUESTED, REQUEST_CHANGES, BLOCKED" in result.detail
 
 
-@pytest.mark.parametrize("reply", [
-    "", "No verdict", "VERDICT:", "> VERDICT: CHANGES", "`VERDICT: CHANGES`",
-    "I will report VERDICT: CHANGES later", "    VERDICT: CHANGES", "\tVERDICT: CHANGES",
-    "##VERDICT: CHANGES", "####### VERDICT: CHANGES", "## The VERDICT: CHANGES",
-    "```\nVERDICT: CHANGES\n```", "~~~\nVERDICT: CHANGES\n~~~",
-    "```text\n~~~\nVERDICT: CHANGES\n```", "~~~\n```\nVERDICT: CHANGES\n~~~",
-    "````\n```\nVERDICT: CHANGES\n````", "```\n```python\nVERDICT: CHANGES\n```",
-    "```\nVERDICT: CHANGES", "VERDICT: APPROVEé", "VERDICT: https://example.invalid",
-    "VERDICT: /private/file", "VERDICT: changes@example.invalid", "VERDICT: " + "X" * 65,
-    "VERDICT: REKISE",
-])
+@pytest.mark.parametrize(
+    "reply",
+    [
+        "",
+        "No verdict",
+        "VERDICT:",
+        "> VERDICT: CHANGES",
+        "`VERDICT: CHANGES`",
+        "I will report VERDICT: CHANGES later",
+        "    VERDICT: CHANGES",
+        "\tVERDICT: CHANGES",
+        "##VERDICT: CHANGES",
+        "####### VERDICT: CHANGES",
+        "## The VERDICT: CHANGES",
+        "```\nVERDICT: CHANGES\n```",
+        "~~~\nVERDICT: CHANGES\n~~~",
+        "```text\n~~~\nVERDICT: CHANGES\n```",
+        "~~~\n```\nVERDICT: CHANGES\n~~~",
+        "````\n```\nVERDICT: CHANGES\n````",
+        "```\n```python\nVERDICT: CHANGES\n```",
+        "```\nVERDICT: CHANGES",
+        "VERDICT: APPROVEé",
+        "VERDICT: https://example.invalid",
+        "VERDICT: /private/file",
+        "VERDICT: changes@example.invalid",
+        "VERDICT: " + "X" * 65,
+        "VERDICT: REKISE",
+    ],
+)
 def test_review_verdict_examples_and_unsafe_text_keep_safe_missing_rejection(reply):
     result = delegate.run_completion_gate(
-        delegate.COMPLETION_GATE_REVIEW_VERDICT, {}, response=reply, commits_ahead=None, worktree=None,
+        delegate.COMPLETION_GATE_REVIEW_VERDICT,
+        {},
+        response=reply,
+        commits_ahead=None,
+        worktree=None,
     )
     assert result.failure == result.detail == "review_missing_verdict_line"
 
 
 @pytest.mark.parametrize("token", ["APPROVE", "APPROVED", "CHANGES_REQUESTED", "REQUEST_CHANGES", "BLOCKED"])
-@pytest.mark.parametrize("reply", [
-    "VERDICT: CHANGES\nVERDICT: {token}",
-    "VERDICT: {token}\nVERDICT: CHANGES",
-    "VERDICT: APPROVE\nVERDICT: CHANGES\nVERDICT: {token}\nVERDICT: REVISE",
-    "VERDICT: __{token}__ (findings follow)",
-])
+@pytest.mark.parametrize(
+    "reply",
+    [
+        "VERDICT: CHANGES\nVERDICT: {token}",
+        "VERDICT: {token}\nVERDICT: CHANGES",
+        "VERDICT: APPROVE\nVERDICT: CHANGES\nVERDICT: {token}\nVERDICT: REVISE",
+        "VERDICT: __{token}__ (findings follow)",
+    ],
+)
 def test_review_verdict_recognized_tokens_keep_precedence_over_unsupported(token, reply):
     from scripts.review.verdict_parser import recognized_verdicts, unsupported_verdict_tokens
 
@@ -4300,8 +4398,13 @@ def test_integrated_verdict_diagnostic_preserves_main_line_maps(separator):
 
 def test_non_review_verdict_unsupported_reply_is_unaffected(tmp_tasks_dir, tmp_path, monkeypatch):
     rc, state = _run_successful_worker_for_deliverable_test(
-        task_id="ordinary-unsupported-token", mode="read-only", response="VERDICT: CHANGES",
-        commits_ahead=None, tmp_path=tmp_path, monkeypatch=monkeypatch, require_review_verdict=False,
+        task_id="ordinary-unsupported-token",
+        mode="read-only",
+        response="VERDICT: CHANGES",
+        commits_ahead=None,
+        tmp_path=tmp_path,
+        monkeypatch=monkeypatch,
+        require_review_verdict=False,
     )
     assert rc == 0 and state["status"] == "done"
     assert state.get("review_verdict_failure") is None
@@ -5998,12 +6101,10 @@ def test_run_worker_marks_needs_finalize_for_unpushed_commits(
     assert state["commits_ahead"] == 1
     assert state["worktree_dirty_on_exit"] is False
     if unpushed_count is not None:
-        assert state["rescue_status"] == "unpushed work - needs rescue"
-        assert state["finalize_error"] == (
-            "no_owned_paths_declared" if mode == "danger" else "unpushed work - needs rescue"
-        )
+        assert state["rescue_status"] == "finalize_unpushed"
+        assert state["finalize_error"] == ("no_owned_paths_declared")
     else:
-        assert state["rescue_status"] == "unpushed state unknown - needs rescue"
+        assert state["rescue_status"] == "finalize_remote_unknown"
     assert state["final_branch_head_commit"] == delegate._resolve_sha(worktree)
     assert rc == 1
 
@@ -6142,7 +6243,7 @@ def test_count_unpushed_commits_resolves_remote_ref_or_none(tmp_path, monkeypatc
     subprocess.run(["git", "add", "file.txt"], cwd=worktree, check=True, timeout=30)
     subprocess.run(["git", "commit", "-m", "feat: add file"], cwd=worktree, check=True, timeout=30)
 
-    assert delegate._count_unpushed_commits(worktree, "feat/my-branch") is None
+    assert delegate._count_unpushed_commits(worktree, "feat/my-branch") > 0
 
     # 2. Push branch to origin: now 0 unpushed commits
     subprocess.run(
@@ -6341,6 +6442,16 @@ def _agy_dispatch_worktree(tmp_path: Path, branch: str) -> Path:
     git("config", "user.email", "test@example.com")
     git("config", "user.name", "test")
     (worktree / "README.md").write_text("base\n", encoding="utf-8")
+    hooks = worktree / ".githooks"
+    hooks.mkdir()
+    gate = hooks / "pre-push"
+    gate.write_text(
+        f'#!/bin/sh\nprintf observed >> "{tmp_path / "push-observed"}"\n'
+        f'test ! -e "{tmp_path / "trusted-gate-refuse"}"\n'
+    )
+    gate.chmod(0o755)
+    (hooks / "pre_push_gate.py").write_text("ADMISSION_MAX_WAIT_S = 1\nADMISSION_WAIT_S = 1\n")
+    git("add", ".githooks")
     git("add", "README.md")
     git("commit", "-m", "base")
     git("remote", "add", "origin", str(origin))
@@ -6434,7 +6545,7 @@ def test_run_worker_auto_finalize_respects_provider_outcome(
     # #9878: last_error is a public cause: the runtime's registered code, else the outcome with its exit status.
     line = delegate._first_error_line(parsed.stderr_excerpt) if not ok else None
     public = failure_code if failure_code in delegate.public_causes() else "worker_failed, exit 0"
-    assert state["last_error"] == (public if line else None)
+    assert state["last_error"] == (public if line else "finalize_unpushed" if not ok else None)
     # An unregistered code is replaced at the record writer (the runtime admits only registered ones).
     registered = failure_code is None or failure_code in delegate.public_causes()
     assert state.get("failure_code") == (failure_code if registered else "unclassified_error")
@@ -6545,7 +6656,7 @@ def test_run_worker_never_finalizes_agy_run_cut_off_mid_work(
     assert state["worktree_dirty_on_exit"] is True
     assert state["commits_ahead"] == (1 if pushed_commit_first else 0)
     assert state.get("auto_finalize") is None
-    assert state.get("finalize_error") is None
+    assert delegate.is_public_cause(state["finalize_error"])
     assert publish_calls == []
     assert state["last_error"] == reason
     assert (worktree / "half_done.py").exists()
@@ -6919,8 +7030,16 @@ def _claude_review_worker(task_id: str, tmp_path: Path, *, on_invoke=None, **ove
     ``on_invoke`` runs inside the mocked provider call, where the adapter would verify the login.
     """
     mock_result = MagicMock(
-        ok=True, response="done", stderr_excerpt=None, returncode=0, rate_limited=False,
-        model="fixture", effort="unknown", cli_version="fixture", failure_code=None, substitution=None,
+        ok=True,
+        response="done",
+        stderr_excerpt=None,
+        returncode=0,
+        rate_limited=False,
+        model="fixture",
+        effort="unknown",
+        cli_version="fixture",
+        failure_code=None,
+        substitution=None,
     )
 
     def invoke(*_args, **_kwargs):
@@ -6940,8 +7059,14 @@ def _claude_review_worker(task_id: str, tmp_path: Path, *, on_invoke=None, **ove
     review.update(overrides)
     with patch("agent_runtime.runner.invoke", side_effect=invoke) as mock_invoke:
         rc = delegate._run_worker(
-            task_id=task_id, agent="claude", prompt="review", mode="read-only", cwd_str=str(tmp_path),
-            model=None, hard_timeout=60, **review,
+            task_id=task_id,
+            agent="claude",
+            prompt="review",
+            mode="read-only",
+            cwd_str=str(tmp_path),
+            model=None,
+            hard_timeout=60,
+            **review,
         )
     return rc, mock_invoke
 
@@ -7008,8 +7133,19 @@ def test_dispatch_records_the_default_claude_account(tmp_tasks_dir, tmp_path, mo
     monkeypatch.setattr(job_host_exec, "decide_dispatch_placement", lambda **_kwargs: pytest.fail("no placement"))
     for task_id, extra in (("claude-account-omitted", []), ("claude-account-explicit", ["--claude-account", "a"])):
         args = delegate.build_parser().parse_args(
-            ["dispatch", "--agent", "claude", "--task-id", task_id, "--initiator", "codex", "--prompt", "test",
-             "--dry-run", *extra],
+            [
+                "dispatch",
+                "--agent",
+                "claude",
+                "--task-id",
+                task_id,
+                "--initiator",
+                "codex",
+                "--prompt",
+                "test",
+                "--dry-run",
+                *extra,
+            ],
         )
         assert delegate.cmd_dispatch(args) == 0
         state = delegate._read_state(delegate._state_path(task_id))
@@ -7050,8 +7186,20 @@ def test_dispatch_admits_a_bound_claude_account_for_an_ordinary_worker(tmp_tasks
     monkeypatch.setattr(job_host_exec, "decide_dispatch_placement", lambda **_kwargs: pytest.fail("no placement"))
     task_id = "claude-account-ordinary-b"
     args = delegate.build_parser().parse_args(
-        ["dispatch", "--agent", "claude", "--task-id", task_id, "--initiator", "codex", "--prompt", "test",
-         "--dry-run", "--claude-account", "b"],
+        [
+            "dispatch",
+            "--agent",
+            "claude",
+            "--task-id",
+            task_id,
+            "--initiator",
+            "codex",
+            "--prompt",
+            "test",
+            "--dry-run",
+            "--claude-account",
+            "b",
+        ],
     )
 
     assert _claude_account_refusal(args) is None
@@ -7089,8 +7237,18 @@ def _claude_account_args(*extra: str) -> argparse.Namespace:
         (["--agent", "codex", "--claude-account", "b"], "claude_account_seat_unsupported"),
         (["--agent", "claude", "--claude-account", "b"], "claude_account_ambient_conflict"),
         (
-            ["--agent", "claude", "--claude-account", "b", "--review-attempt", "manifest.yaml",
-             "--review-id", "rev", "--attempt-id", "att"],
+            [
+                "--agent",
+                "claude",
+                "--claude-account",
+                "b",
+                "--review-attempt",
+                "manifest.yaml",
+                "--review-id",
+                "rev",
+                "--attempt-id",
+                "att",
+            ],
             "claude_account_ambient_conflict",
         ),
     ],
@@ -7253,15 +7411,31 @@ def _dry_run_claude_dispatch(tmp_path: Path, monkeypatch, task_id: str, *extra: 
     monkeypatch.setenv("LU_SCRATCH_ROOT", str(tmp_path))
     monkeypatch.setattr(job_host_exec, "decide_dispatch_placement", lambda **_kwargs: pytest.fail("no placement"))
     args = delegate.build_parser().parse_args(
-        ["dispatch", "--agent", "claude", "--task-id", task_id, "--initiator", "codex", "--prompt", "test",
-         "--dry-run", *extra],
+        [
+            "dispatch",
+            "--agent",
+            "claude",
+            "--task-id",
+            task_id,
+            "--initiator",
+            "codex",
+            "--prompt",
+            "test",
+            "--dry-run",
+            *extra,
+        ],
     )
     return delegate.cmd_dispatch(args)
 
 
 def _forbid_dispatch_side_effects(monkeypatch) -> MagicMock:
-    for name in ("worktree_lock", "_ensure_worktree", "_write_state_atomic", "_sweep_runtime_tmp_orphans",
-                 "_archive_task_artifacts"):
+    for name in (
+        "worktree_lock",
+        "_ensure_worktree",
+        "_write_state_atomic",
+        "_sweep_runtime_tmp_orphans",
+        "_archive_task_artifacts",
+    ):
         monkeypatch.setattr(delegate, name, lambda *_a, _name=name, **_k: pytest.fail(f"{_name} ran before refusal"))
     spawn = MagicMock(side_effect=AssertionError("spawned"))
     monkeypatch.setattr(delegate.subprocess, "Popen", spawn)
@@ -7626,7 +7800,10 @@ def _break_claude_account_b(tmp_path: Path, monkeypatch, selected: Path, case: s
     elif case == "global_config_env":
         _private_json(
             selected / ".claude.json",
-            {"oauthAccount": _login_identity(BOUND_ACCOUNT_UUID), "env": {"ANTHROPIC_BASE_URL": "https://fixture.invalid"}},
+            {
+                "oauthAccount": _login_identity(BOUND_ACCOUNT_UUID),
+                "env": {"ANTHROPIC_BASE_URL": "https://fixture.invalid"},
+            },
         )
     elif case == "ambient_credential":
         monkeypatch.setenv("CLAUDE_CODE_OAUTH_TOKEN", "fixture-ambient-" + "e" * 30)
@@ -7781,15 +7958,25 @@ def test_worker_refuses_a_default_file_label_when_machine_policy_appears_after_d
 
     def adapter_builds_the_plan(*_args, **kwargs):
         ClaudeAdapter().build_invocation(
-            prompt="fixture", mode="read-only", cwd=tmp_path, model=None, task_id=None, session_id=None,
+            prompt="fixture",
+            mode="read-only",
+            cwd=tmp_path,
+            model=None,
+            task_id=None,
+            session_id=None,
             tool_config=kwargs["tool_config"],
         )
         pytest.fail("the labelled plan was built on a host with machine policy")
 
     with patch("agent_runtime.runner.invoke", side_effect=adapter_builds_the_plan):
         rc = delegate._run_worker(
-            task_id=task_id, agent="claude", prompt="fixture", mode="read-only", cwd_str=str(tmp_path),
-            model=None, hard_timeout=60,
+            task_id=task_id,
+            agent="claude",
+            prompt="fixture",
+            mode="read-only",
+            cwd_str=str(tmp_path),
+            model=None,
+            hard_timeout=60,
         )
 
     assert rc == 1
@@ -7807,8 +7994,14 @@ def _terminal_claude_record(task_id: str, label: str, source: str) -> Path:
     path = delegate._state_path(task_id)
     delegate._write_state_atomic(
         path,
-        {"task_id": task_id, "agent": "claude", "status": "done", "initiator": "codex",
-         "claude_account": label, "claude_account_source": source},
+        {
+            "task_id": task_id,
+            "agent": "claude",
+            "status": "done",
+            "initiator": "codex",
+            "claude_account": label,
+            "claude_account_source": source,
+        },
     )
     return path
 
@@ -7819,7 +8012,8 @@ def test_worker_keeps_the_recorded_label_after_the_default_file_changes(tmp_task
     _default_account_file(tmp_path, monkeypatch, b"b\n").write_bytes(b"c\n")  # changed, and now invalid
     task_id = "claude-worker-sticky"
     delegate._write_state_atomic(
-        delegate._state_path(task_id), {"task_id": task_id, "claude_account": "b", "claude_account_source": "default-file"}
+        delegate._state_path(task_id),
+        {"task_id": task_id, "claude_account": "b", "claude_account_source": "default-file"},
     )
 
     rc, mock_invoke = _claude_review_worker(task_id, tmp_path, review_id=None, attempt_id=None)
@@ -7897,7 +8091,8 @@ def test_worker_records_a_verified_value_free_auth_receipt(tmp_tasks_dir, tmp_pa
     """AC-01: the record carries label, source, method class and verification, and no value."""
     task_id = "claude-receipt-verified"
     delegate._write_state_atomic(
-        delegate._state_path(task_id), {"task_id": task_id, "claude_account": "b", "claude_account_source": "default-file"}
+        delegate._state_path(task_id),
+        {"task_id": task_id, "claude_account": "b", "claude_account_source": "default-file"},
     )
 
     rc, _ = _claude_review_worker(
@@ -8067,19 +8262,33 @@ def _forward_claude_dispatch(
         return subprocess.CompletedProcess(cmd, transport_rc)
 
     monkeypatch.setattr(job_host_exec.subprocess, "run", _transport)
-    raw_argv = ["scripts/delegate.py", "dispatch", "--agent", "claude", "--task-id", task_id, "--initiator", "codex",
-                "--prompt", "test", "--mode", "read-only", *extra]
+    raw_argv = [
+        "scripts/delegate.py",
+        "dispatch",
+        "--agent",
+        "claude",
+        "--task-id",
+        task_id,
+        "--initiator",
+        "codex",
+        "--prompt",
+        "test",
+        "--mode",
+        "read-only",
+        *extra,
+    ]
     monkeypatch.setattr(sys, "argv", raw_argv if argv is None else argv)
     rc = delegate.cmd_dispatch(delegate.build_parser().parse_args(raw_argv[1:]))
     if not sent:
         return rc, None
     assert len(sent) == 1
     command = shlex.split(sent[0].strip().splitlines()[-1])
-    return rc, command[command.index("scripts/delegate.py"):]
+    return rc, command[command.index("scripts/delegate.py") :]
 
 
-def _received_claude_account(command: list[str], tmp_path: Path, monkeypatch, *, default: bytes | None = None,
-                             record: str | None = None):
+def _received_claude_account(
+    command: list[str], tmp_path: Path, monkeypatch, *, default: bytes | None = None, record: str | None = None
+):
     """Resolve a forwarded request as the worker host does: its own default file and task records, no others."""
     host = tmp_path / "worker-host"
     tasks = host / "tasks"
@@ -8194,7 +8403,7 @@ def test_forwarded_explicit_label_is_sent_unchanged(tmp_tasks_dir, tmp_path, mon
     assert rc == 0 and command is not None
     sent = command[: len(sys.argv)]
     assert sent == sys.argv
-    assert command[len(sys.argv):][::2] == ["--run-nonce"]  # the transport's own addition
+    assert command[len(sys.argv) :][::2] == ["--run-nonce"]  # the transport's own addition
     label = flag[-1].rpartition("=")[2]
     assert _received_claude_account(command, tmp_path, monkeypatch, default=b"b\n" if label == "a" else b"a\n") == (
         label,
@@ -8238,8 +8447,20 @@ def test_forward_refuses_when_its_argv_would_not_carry_the_label(tmp_tasks_dir, 
 def test_a_non_claude_forward_is_sent_unchanged(tmp_tasks_dir, tmp_path, monkeypatch):
     """Another seat takes no label and never reads the file: its forwarded argv is exactly the command line."""
     _default_account_file(tmp_path, monkeypatch, b"c\n")  # invalid, so reading it would refuse
-    raw_argv = ["scripts/delegate.py", "dispatch", "--agent", "codex", "--task-id", "codex-forward-unlabelled",
-                "--initiator", "codex", "--prompt", "test", "--mode", "read-only"]
+    raw_argv = [
+        "scripts/delegate.py",
+        "dispatch",
+        "--agent",
+        "codex",
+        "--task-id",
+        "codex-forward-unlabelled",
+        "--initiator",
+        "codex",
+        "--prompt",
+        "test",
+        "--mode",
+        "read-only",
+    ]
     monkeypatch.setattr(sys, "argv", raw_argv)
     monkeypatch.setattr(job_host_exec, "decide_dispatch_placement", lambda **_kwargs: ("vps", "available", "host-job"))
     sent: list[list[str]] = []
@@ -8792,15 +9013,18 @@ def test_run_worker_agy_review_write_mode_reaches_adapter_refusal(
         pytest.fail("write review passed the adapter")
 
     with patch("agent_runtime.runner.invoke", side_effect=invoke) as runtime:
-        assert delegate._run_worker(
-            task_id=task_id,
-            agent=agent,
-            prompt="Review the tracked diff.",
-            mode=mode,
-            cwd_str=str(tmp_path),
-            model=None,
-            hard_timeout=60,
-        ) == 1
+        assert (
+            delegate._run_worker(
+                task_id=task_id,
+                agent=agent,
+                prompt="Review the tracked diff.",
+                mode=mode,
+                cwd_str=str(tmp_path),
+                model=None,
+                hard_timeout=60,
+            )
+            == 1
+        )
     runtime.assert_called_once()
     assert refusals == ["agy_review_permissions_require_read_only"]
     assert delegate._read_state(delegate._state_path(task_id))["status"] == "failed"
@@ -8852,16 +9076,19 @@ def test_run_worker_agy_nonreceipt_home_binds_checkout_at_creation(tmp_tasks_dir
         return _codex_worker_result()
 
     with patch("agent_runtime.runner.invoke", side_effect=invoke):
-        assert delegate._run_worker(
-            task_id=task_id,
-            agent="agy",
-            prompt="review with mcp__sources__verify_word",
-            mode="read-only",
-            cwd_str=str(checkout),
-            model=None,
-            hard_timeout=60,
-            runtime_tmp_root=str(lease),
-        ) == 0
+        assert (
+            delegate._run_worker(
+                task_id=task_id,
+                agent="agy",
+                prompt="review with mcp__sources__verify_word",
+                mode="read-only",
+                cwd_str=str(checkout),
+                model=None,
+                hard_timeout=60,
+                runtime_tmp_root=str(lease),
+            )
+            == 0
+        )
 
 
 def _agy_token_link(plan):
@@ -11580,10 +11807,14 @@ def test_branch_holder_monitor_outage_preserves_release_guards(monkeypatch, tmp_
     monkeypatch.setattr(urllib.request, "urlopen", fail)
     monkeypatch.setattr(delegate, "_bound_task_state_unparseable_reason", lambda _path: None)
     monkeypatch.setattr(
-        reap_worktrees, "_live_cwd_paths", lambda _repo: {occupied / "scripts"} if holder == "live_cwd" else set(),
+        reap_worktrees,
+        "_live_cwd_paths",
+        lambda _repo: {occupied / "scripts"} if holder == "live_cwd" else set(),
     )
     reason = delegate._branch_holder_activity_reason(
-        occupied, task_id="legacy", task_state=None if holder == "missing_record" else state,
+        occupied,
+        task_id="legacy",
+        task_state=None if holder == "missing_record" else state,
         complete=holder == "complete",
     )
 
@@ -11930,10 +12161,13 @@ def test_infer_sparse_include_from_owned_paths_and_prompt():
         )
         == ()
     )
-    assert delegate._infer_sparse_include(
-        None,
-        owned_paths=["scripts/audit/source_inventory_review_decisions.py"],
-    ) == _SOURCE_INVENTORY_TREES
+    assert (
+        delegate._infer_sparse_include(
+            None,
+            owned_paths=["scripts/audit/source_inventory_review_decisions.py"],
+        )
+        == _SOURCE_INVENTORY_TREES
+    )
     assert (
         delegate._infer_sparse_include(
             None,
@@ -11941,18 +12175,27 @@ def test_infer_sparse_include_from_owned_paths_and_prompt():
         )
         == ()
     )
-    assert delegate._infer_sparse_include(
-        None,
-        owned_paths=["tests/test_source_inventory_intake.py"],
-    ) == _SOURCE_INVENTORY_TREES
-    assert delegate._infer_sparse_include(
-        None,
-        owned_paths=["scripts/practice/author_densified_pairs.py"],
-    ) == _SOURCE_INVENTORY_TREES
-    assert delegate._infer_sparse_include(
-        None,
-        owned_paths=["scripts/practice/thin_mode_source_inventory.py"],
-    ) == _SOURCE_INVENTORY_TREES
+    assert (
+        delegate._infer_sparse_include(
+            None,
+            owned_paths=["tests/test_source_inventory_intake.py"],
+        )
+        == _SOURCE_INVENTORY_TREES
+    )
+    assert (
+        delegate._infer_sparse_include(
+            None,
+            owned_paths=["scripts/practice/author_densified_pairs.py"],
+        )
+        == _SOURCE_INVENTORY_TREES
+    )
+    assert (
+        delegate._infer_sparse_include(
+            None,
+            owned_paths=["scripts/practice/thin_mode_source_inventory.py"],
+        )
+        == _SOURCE_INVENTORY_TREES
+    )
     assert (
         delegate._infer_sparse_include(
             None,
@@ -14154,7 +14397,11 @@ def test_dispatch_accepts_sibling_cwd_worktree_from_sibling_repo(
 
 @pytest.mark.parametrize("target", ["sibling", "primary"])
 def test_cwd_sibling_is_decided_by_repository_identity_not_path_name(
-    tmp_tasks_dir, tmp_path, monkeypatch, target, non_git_path,
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+    target,
+    non_git_path,
 ):
     """#9739: a --cwd checkout of another repository skips authoring admission like --repo; the primary's own
     worktree at the same relative path (``.worktrees/dispatch/codex/task-1``) is admitted as usual."""
@@ -15272,7 +15519,9 @@ def test_rescue_cleans_junk_then_preserves_unpushed_commit(tmp_path, monkeypatch
 
 
 def test_rescue_junk_cleanup_preserves_unrelated_staging_and_runs_no_worker_program(
-    tmp_path, monkeypatch, tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+    tmp_tasks_dir,
 ):
     from tests.orchestration.test_safe_git_context import plant_programs
 
@@ -15482,7 +15731,7 @@ def test_exit_refuses_dirty_committed_unpushed_work_without_owned_paths(tmp_path
     state = delegate._read_state(state_path)
     assert rc == 1
     assert state["status"] == "needs_finalize"
-    assert state["rescue_status"] == "unpushed state unknown - needs rescue"
+    assert state["rescue_status"] == "finalize_unpushed"
     assert state["auto_finalize"]["ok"] is False
     assert state["auto_finalize"]["error"] == "no_owned_paths_declared"
     assert (worktree / "later.txt").exists()
@@ -17361,7 +17610,11 @@ def _patch_admitted_codex_review_substitution(monkeypatch):
         )
         routing.substitution = resolution["record"]
         (target,) = resolve_and_admit(
-            ("codex",), model="gpt-6.1-sol", mode=args.mode, review_dispatch=True, review_attempt=True,
+            ("codex",),
+            model="gpt-6.1-sol",
+            mode=args.mode,
+            review_dispatch=True,
+            review_attempt=True,
             claude_account=HOST_ACCOUNT,
         )
         return None, None, target
@@ -18331,7 +18584,7 @@ def test_interrupt_fallback_records_rescue_status_after_unpushed_telemetry(
     assert interrupted
     assert state is not None
     assert state["status"] == "needs_finalize"
-    assert state["rescue_status"] == "unpushed work - needs rescue"
+    assert state["rescue_status"] == "finalize_unpushed"
     assert state["final_branch_head_commit"] == delegate._resolve_sha(tmp_path)
 
 
@@ -20119,7 +20372,9 @@ def test_branch_reuse_releases_terminal_clean_holder_and_attaches(tmp_path, monk
     assert any(c[:3] == ["git", "worktree", "add"] for c in calls)
 
 
-def test_branch_reuse_refuses_terminal_clean_holder_when_active_api_unreachable(tmp_path, monkeypatch, tmp_tasks_dir, capsys):
+def test_branch_reuse_refuses_terminal_clean_holder_when_active_api_unreachable(
+    tmp_path, monkeypatch, tmp_tasks_dir, capsys
+):
     """#10227: a terminal clean holder still needs the active-task probe."""
     from scripts.orchestration import reap_worktrees
 
@@ -20136,12 +20391,20 @@ def test_branch_reuse_refuses_terminal_clean_holder_when_active_api_unreachable(
     monkeypatch.setattr(delegate, "_branch_holder_active_task_ids", lambda: None)
     monkeypatch.setattr(reap_worktrees, "_open_file_activity_reason", lambda _path: None)
     monkeypatch.setattr(reap_worktrees, "_live_cwd_paths", lambda _repo: set())
-    delegate._write_state_atomic(delegate._state_path("task-7236-prior"), {
-        "task_id": "task-7236-prior", "agent": "codex", "status": "done",
-        "worktree_path": str(occupied), "pid": 999999,
-    })
+    delegate._write_state_atomic(
+        delegate._state_path("task-7236-prior"),
+        {
+            "task_id": "task-7236-prior",
+            "agent": "codex",
+            "status": "done",
+            "worktree_path": str(occupied),
+            "pid": 999999,
+        },
+    )
     with pytest.raises(delegate.WorktreeBranchMismatch, match="already checked out in"):
-        delegate._ensure_worktree(agent="agy", task_id="task-7236-next", raw_path=str(tmp_path / "target"), branch=branch)
+        delegate._ensure_worktree(
+            agent="agy", task_id="task-7236-next", raw_path=str(tmp_path / "target"), branch=branch
+        )
     assert "active-task probe unavailable" in capsys.readouterr().err
     assert not any(cmd[:3] == ["git", "worktree", "remove"] for cmd in calls)
 
@@ -21214,13 +21477,14 @@ def test_run_worker_branch_continuation_finalizes_owned_changes_or_reports_failu
         },
     )
     if finalize_failure == "unavailable":
+
         def unavailable(**_kwargs):
             raise OSError("finalize unavailable")
 
         monkeypatch.setattr(delegate, "_auto_finalize_dirty_worktree", unavailable)
     elif finalize_failure == "push_failed":
-        # Use the real push path against a missing local repository.
-        _git_out(worktree, "remote", "set-url", "--push", "origin", str(tmp_path / "missing.git"))
+        # The driver's trusted gate refuses; worker push URLs are not authority.
+        (tmp_path / "trusted-gate-refuse").touch()
 
     result = Result(
         ok=True,
@@ -21274,7 +21538,7 @@ def test_run_worker_branch_continuation_finalizes_owned_changes_or_reports_failu
             assert state["auto_finalize"] is None
         elif finalize_failure == "push_failed":
             assert state["auto_finalize"]["ok"] is False
-            assert state["auto_finalize"]["error"].startswith("auto_finalize_remote_unknown")
+            assert state["auto_finalize"]["error"] == "auto_finalize_push_failed, git push, exit 1"
             assert delegate._resolve_sha(worktree) == state["auto_finalize"]["commit_sha"] != original_head
             assert _git_out(worktree, "show", "HEAD:artifact.txt") == "continuation changes\n"
         else:
@@ -22057,9 +22321,7 @@ def test_delivery_declaration_preserves_unicode_separators(sep):
 
 
 @pytest.mark.parametrize("failure", ["runtime-tmp-lease", "existing-worktree-validation"])
-def test_worktree_prep_failure_records_reuse_without_claiming_creation(
-    tmp_tasks_dir, tmp_path, monkeypatch, failure
-):
+def test_worktree_prep_failure_records_reuse_without_claiming_creation(tmp_tasks_dir, tmp_path, monkeypatch, failure):
     """#10486: neither failure caller may label another task's checkout as created."""
     main, tree = _init_repo_with_worktree(tmp_path)
     _add_local_bare_origin(main)
@@ -22183,8 +22445,13 @@ def advisory_continuation(tmp_path, monkeypatch):
 
     def git(*args):
         return subprocess.run(
-            ["git", *args], cwd=worktree, check=True, capture_output=True, text=True,
-            env=delegate._sanitized_git_env(), timeout=30,
+            ["git", *args],
+            cwd=worktree,
+            check=True,
+            capture_output=True,
+            text=True,
+            env=delegate._sanitized_git_env(),
+            timeout=30,
         ).stdout.strip()
 
     for index in range(3):
@@ -22206,7 +22473,8 @@ def advisory_continuation(tmp_path, monkeypatch):
         "pinned_head": None,
         "worktree_reused": True,
         delegate.AUTHORING_REVIEW_STATE_KEY: {
-            "target": "existing-worktree", "branch": "codex/task-1",
+            "target": "existing-worktree",
+            "branch": "codex/task-1",
         },
         "advisory_envelope": {"max_changed_files": 2, "max_non_test_loc": 10},
     }
@@ -22224,16 +22492,24 @@ def _run_advisory_completion_worker(advisory_continuation, monkeypatch):
     monkeypatch.setattr(delegate, "_background_jobs_at_exit", lambda *_a, **_k: None)
     monkeypatch.setattr(delegate, "_emit_terminal_dispatch_event", lambda **_k: None)
     rc = delegate._run_worker(
-        task_id=record["task_id"], agent="codex", prompt="complete this round",
-        mode="workspace-write", cwd_str=str(worktree), model="gpt-6.1-sol",
-        hard_timeout=60, keep_worktree=True,
+        task_id=record["task_id"],
+        agent="codex",
+        prompt="complete this round",
+        mode="workspace-write",
+        cwd_str=str(worktree),
+        model="gpt-6.1-sol",
+        hard_timeout=60,
+        keep_worktree=True,
     )
     return rc, delegate._read_state(state_path)
 
 
 @pytest.mark.parametrize("reused", [True, False], ids=["existing-tree", "new-attachment"])
 def test_advisory_continuation_within_envelope_passes_without_pin(
-    tmp_tasks_dir, advisory_continuation, monkeypatch, reused,
+    tmp_tasks_dir,
+    advisory_continuation,
+    monkeypatch,
+    reused,
 ):
     """#9747: earlier commits cannot consume the continuation round's ceiling."""
     worktree, record = advisory_continuation
@@ -22256,7 +22532,10 @@ def test_advisory_continuation_within_envelope_passes_without_pin(
 
 @pytest.mark.parametrize("recovers", [True, False], ids=["transient", "persistent"])
 def test_advisory_diff_read_retries_once_before_unmeasured_failure(
-    tmp_tasks_dir, advisory_continuation, monkeypatch, recovers,
+    tmp_tasks_dir,
+    advisory_continuation,
+    monkeypatch,
+    recovers,
 ):
     """#9747: one retry can recover; two failed reads persist the error and fail."""
     worktree, record = advisory_continuation
@@ -22311,7 +22590,10 @@ def test_advisory_diff_read_retries_once_before_unmeasured_failure(
 
 @pytest.mark.parametrize("reused", [True, False], ids=["existing-tree", "new-attachment"])
 def test_advisory_exempt_continuation_ignores_earlier_code_changes(
-    tmp_tasks_dir, advisory_continuation, monkeypatch, reused,
+    tmp_tasks_dir,
+    advisory_continuation,
+    monkeypatch,
+    reused,
 ):
     worktree, record = advisory_continuation
     record.pop("advisory_envelope")
@@ -22326,7 +22608,10 @@ def test_advisory_exempt_continuation_ignores_earlier_code_changes(
     assert rc == 0
     assert state["status"] == "done", state.get("last_error")
     assert state["advisory_exempt_change_check"] == {
-        "measured": True, "changed_paths": ["docs/current.md"], "ignored_residue": [], "problems": [],
+        "measured": True,
+        "changed_paths": ["docs/current.md"],
+        "ignored_residue": [],
+        "problems": [],
     }
 
 
@@ -22365,7 +22650,11 @@ def test_advisory_fresh_worktree_keeps_merge_base_measurement(advisory_continuat
 @pytest.mark.parametrize("gate", ["ceiling", "exempt"])
 @pytest.mark.parametrize("error_class", [OSError, PermissionError, subprocess.TimeoutExpired])
 def test_advisory_round_start_lookup_errors_are_recorded_as_unmeasured(
-    tmp_tasks_dir, advisory_continuation, monkeypatch, gate, error_class,
+    tmp_tasks_dir,
+    advisory_continuation,
+    monkeypatch,
+    gate,
+    error_class,
 ):
     worktree, record = advisory_continuation
     # A pin reaches the lookup on both the old and fixed implementations.
@@ -22389,8 +22678,11 @@ def test_advisory_round_start_lookup_errors_are_recorded_as_unmeasured(
 
     assert rc == 1
     assert state["status"] == "failed"
-    failure = (delegate.bounded_advisory.CEILING_UNMEASURED if gate == "ceiling"
-               else delegate.bounded_advisory.EXEMPT_CHANGES_UNMEASURED)
+    failure = (
+        delegate.bounded_advisory.CEILING_UNMEASURED
+        if gate == "ceiling"
+        else delegate.bounded_advisory.EXEMPT_CHANGES_UNMEASURED
+    )
     assert state["failure_reason"] == failure
     key = "advisory_ceiling_check" if gate == "ceiling" else "advisory_exempt_change_check"
     detail = f"round-start head could not be read ({error_class.__name__})"
@@ -22704,12 +22996,23 @@ def test_namespace_sandbox_pid_does_not_terminalize_live_host_worker(tmp_tasks_d
 @pytest.mark.parametrize("ok,terminal", [(True, "done"), (False, "failed")])
 def test_namespace_worker_final_write_overrides_false_crashed(tmp_tasks_dir, tmp_path, ok, terminal):
     path = delegate._state_path("final-write")
-    delegate._write_state_atomic(path, {"task_id": "final-write", "status": "spawning", "model": "unknown", "cli_version": "unknown"})
-    result = type("_Result", (), {
-        "ok": ok, "response": "finished", "stderr_excerpt": None if ok else "failed",
-        "returncode": 0 if ok else 1, "rate_limited": False,
-        "model": "unknown", "effort": "high", "cli_version": "unknown",
-    })()
+    delegate._write_state_atomic(
+        path, {"task_id": "final-write", "status": "spawning", "model": "unknown", "cli_version": "unknown"}
+    )
+    result = type(
+        "_Result",
+        (),
+        {
+            "ok": ok,
+            "response": "finished",
+            "stderr_excerpt": None if ok else "failed",
+            "returncode": 0 if ok else 1,
+            "rate_limited": False,
+            "model": "unknown",
+            "effort": "high",
+            "cli_version": "unknown",
+        },
+    )()
 
     def finish_after_false_mark(*args, **kwargs):
         state = delegate._read_state(path)
@@ -22720,7 +23023,16 @@ def test_namespace_worker_final_write_overrides_false_crashed(tmp_tasks_dir, tmp
         return result
 
     with patch("agent_runtime.runner.invoke", side_effect=finish_after_false_mark):
-        assert delegate._run_worker(task_id="final-write", agent="claude", prompt="hi", mode="read-only", cwd_str=str(tmp_path), model=None, hard_timeout=60, effort=None) == (0 if ok else 1)
+        assert delegate._run_worker(
+            task_id="final-write",
+            agent="claude",
+            prompt="hi",
+            mode="read-only",
+            cwd_str=str(tmp_path),
+            model=None,
+            hard_timeout=60,
+            effort=None,
+        ) == (0 if ok else 1)
     state = delegate._read_state(path)
     assert state["status"] == terminal
     assert state["returncode"] == (0 if ok else 1)
@@ -22728,12 +23040,28 @@ def test_namespace_worker_final_write_overrides_false_crashed(tmp_tasks_dir, tmp
 
 
 @pytest.mark.parametrize("model", ["claude-sonnet-5-5-high", "claude-opus-5-5-high"])
-@pytest.mark.parametrize("identity_case", [
-    "matched", "display", "absent", "mismatched", "other-pin", "conflicting", "prose", "configuration", "unknown",
-    "non-string", "retired",
-])
+@pytest.mark.parametrize(
+    "identity_case",
+    [
+        "matched",
+        "display",
+        "absent",
+        "mismatched",
+        "other-pin",
+        "conflicting",
+        "prose",
+        "configuration",
+        "unknown",
+        "non-string",
+        "retired",
+    ],
+)
 def test_agy_claude_normal_worker_persists_only_bound_runtime_identity(
-    tmp_tasks_dir, tmp_path, monkeypatch, model, identity_case,
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+    model,
+    identity_case,
 ):
     from agent_runtime import runner
     from tests.agent_runtime.adapters.test_agy_claude_routes import mock_agy_provider
@@ -22747,7 +23075,9 @@ def test_agy_claude_normal_worker_persists_only_bound_runtime_identity(
     provider_dir.mkdir()
     task_id, nonce = "agy-identity-worker", "10420-run-nonce"
     observed = {
-        "mismatched": "gemini-3.8-flash-high", "unknown": "unrecognized", "non-string": 7,
+        "mismatched": "gemini-3.8-flash-high",
+        "unknown": "unrecognized",
+        "non-string": 7,
         "retired": "Claude Opus 4.6 (Thinking)",
         "display": "Claude Sonnet 5.5 (High)" if "sonnet" in model else "Claude Opus 5.5 (High)",
         "other-pin": "claude-opus-5-5-high" if "sonnet" in model else "claude-sonnet-5-5-high",
@@ -22758,8 +23088,10 @@ def test_agy_claude_normal_worker_persists_only_bound_runtime_identity(
     if identity_case == "configuration":
         init["source"] = "requested"
     terminal = {
-        "event": "result", "result": {
-            "status": "SUCCESS", "conversation_id": "7cd3ba85-817f-4a03-8223-1ff39ca42419",
+        "event": "result",
+        "result": {
+            "status": "SUCCESS",
+            "conversation_id": "7cd3ba85-817f-4a03-8223-1ff39ca42419",
             "response": "READY" if identity_case != "prose" else json.dumps({"event": "init", "model": model}),
         },
     }
@@ -22778,21 +23110,41 @@ def test_agy_claude_normal_worker_persists_only_bound_runtime_identity(
 
     monkeypatch.setattr(runner, "_spawn_subprocess", author_artifact)
     monkeypatch.setattr(delegate, "_background_jobs_at_exit", lambda *a, **k: None)
-    delegate._write_state_atomic(delegate._state_path(task_id), {
-        "task_id": task_id, "run_nonce": nonce, "worktree_path": str(linked),
-        "worktree_branch": "agy/linked-identity", "worktree_base": "main", "keep_worktree": True,
-        "model": model, "cli_version": "1.4.0", "owned_paths": ["README.md"],
-    })
+    delegate._write_state_atomic(
+        delegate._state_path(task_id),
+        {
+            "task_id": task_id,
+            "run_nonce": nonce,
+            "worktree_path": str(linked),
+            "worktree_branch": "agy/linked-identity",
+            "worktree_base": "main",
+            "keep_worktree": True,
+            "model": model,
+            "cli_version": "1.4.0",
+            "owned_paths": ["README.md"],
+        },
+    )
     rc = delegate._run_worker(
-        task_id=task_id, agent="agy", prompt="Implement the bounded artifact.", mode="workspace-write",
-        cwd_str=str(linked), model=model, hard_timeout=60, effort="high", run_nonce=nonce, keep_worktree=True,
+        task_id=task_id,
+        agent="agy",
+        prompt="Implement the bounded artifact.",
+        mode="workspace-write",
+        cwd_str=str(linked),
+        model=model,
+        hard_timeout=60,
+        effort="high",
+        run_nonce=nonce,
+        keep_worktree=True,
     )
     record = delegate._read_state(delegate._state_path(task_id))
     assert len(launches) == 1
     assert Path(launches[0][1]["cwd"]) == linked.resolve()
     assert record["model"] == model  # Requested selector is never rewritten into an observation.
     if identity_case in {"matched", "display"}:
-        assert rc == 0, {key: record.get(key) for key in ("status", "last_error", "no_deliverable_reason", "identity_matches_request", "model_identity")}
+        assert rc == 0, {
+            key: record.get(key)
+            for key in ("status", "last_error", "no_deliverable_reason", "identity_matches_request", "model_identity")
+        }
         assert record["status"] == "done"
         assert record["resolved_model"] == observed
         assert record["resolved_model_known"] is True
@@ -22829,7 +23181,12 @@ def test_agy_claude_normal_worker_persists_only_bound_runtime_identity(
 @pytest.mark.parametrize("observed", [True, False])
 @pytest.mark.parametrize("model", ["claude-sonnet-5-5-high", "claude-opus-5-5-high"])
 def test_agy_claude_runner_exception_preserves_same_invocation_identity_on_dispatch(
-    tmp_tasks_dir, tmp_path, monkeypatch, exit_kind, observed, model,
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+    exit_kind,
+    observed,
+    model,
 ):
     from agent_runtime import runner
     from tests.agent_runtime.adapters.test_agy_claude_routes import mock_agy_provider
@@ -22842,19 +23199,36 @@ def test_agy_claude_runner_exception_preserves_same_invocation_identity_on_dispa
     stdout = json.dumps({"event": "init", "model": model}) + "\n" if observed else ""
     launches, _, _ = mock_agy_provider(monkeypatch, provider_dir, runner, stdout=stdout, exit_kind=exit_kind)
     monkeypatch.setattr(delegate, "_background_jobs_at_exit", lambda *a, **k: None)
-    delegate._write_state_atomic(delegate._state_path(task_id), {
-        "task_id": task_id, "run_nonce": nonce, "model": model, "cli_version": "1.4.0", "keep_worktree": True,
-        # A persisted prior attempt can never replace this invocation's missing init.
-        "model_identity": {"actual_model": model, "actual_model_known": True, "source": "provider-init"},
-        "resolved_model_known": True,
-    })
-    assert delegate._run_worker(
-        task_id=task_id, agent="agy", prompt="Implement the bounded artifact.", mode="workspace-write",
-        cwd_str=str(worktree), model=model, hard_timeout=60, run_nonce=nonce, keep_worktree=True,
-    ) == 1
+    delegate._write_state_atomic(
+        delegate._state_path(task_id),
+        {
+            "task_id": task_id,
+            "run_nonce": nonce,
+            "model": model,
+            "cli_version": "1.4.0",
+            "keep_worktree": True,
+            # A persisted prior attempt can never replace this invocation's missing init.
+            "model_identity": {"actual_model": model, "actual_model_known": True, "source": "provider-init"},
+            "resolved_model_known": True,
+        },
+    )
+    assert (
+        delegate._run_worker(
+            task_id=task_id,
+            agent="agy",
+            prompt="Implement the bounded artifact.",
+            mode="workspace-write",
+            cwd_str=str(worktree),
+            model=model,
+            hard_timeout=60,
+            run_nonce=nonce,
+            keep_worktree=True,
+        )
+        == 1
+    )
     record = delegate._read_state(delegate._state_path(task_id))
     assert len(launches) == 1
-    assert record["status"] == ("cancelled" if exit_kind == "cancel" else "failed")
+    assert record["status"] == ({"cancel": "cancelled", "timeout": "timeout"}.get(exit_kind, "failed"))
     assert record["resolved_model_known"] is observed
     if observed:
         assert record["model_identity"]["actual_model"] == model
@@ -22873,13 +23247,21 @@ def test_agy_dispatch_rejects_injected_and_unbound_identity(tmp_tasks_dir, tmp_p
     provider_dir.mkdir()
     model = "claude-opus-5-5-high"
     launches, _, _ = mock_agy_provider(monkeypatch, provider_dir, runner, stdout="")
-    identity = AgyRuntimeIdentity({
-        "actual_model": model, "actual_model_known": True, "source": "provider-init", "substituted": False,
-        "actual_family": "anthropic", "harness": "agy", "provenance": {
-            "task_id": "wrong" if injection == "wrong-task" else "injected-identity",
-            "run_nonce": "stale" if injection == "stale-nonce" else "this-run", "requested_model": model,
-        },
-    })
+    identity = AgyRuntimeIdentity(
+        {
+            "actual_model": model,
+            "actual_model_known": True,
+            "source": "provider-init",
+            "substituted": False,
+            "actual_family": "anthropic",
+            "harness": "agy",
+            "provenance": {
+                "task_id": "wrong" if injection == "wrong-task" else "injected-identity",
+                "run_nonce": "stale" if injection == "stale-nonce" else "this-run",
+                "requested_model": model,
+            },
+        }
+    )
     if injection == "plain-dict":
         identity = dict(identity)
     if injection == "mutated":
@@ -22889,10 +23271,20 @@ def test_agy_dispatch_rejects_injected_and_unbound_identity(tmp_tasks_dir, tmp_p
     fake.model = model
     delegate._write_state_atomic(delegate._state_path("injected-identity"), {"cli_version": "1.4.0"})
     with patch("agent_runtime.runner.invoke", return_value=fake):
-        assert delegate._run_worker(
-            task_id="injected-identity", agent="agy", prompt="Implement.", mode="workspace-write",
-            cwd_str=str(tmp_path), model=model, hard_timeout=60, run_nonce="this-run", keep_worktree=True,
-        ) == 1
+        assert (
+            delegate._run_worker(
+                task_id="injected-identity",
+                agent="agy",
+                prompt="Implement.",
+                mode="workspace-write",
+                cwd_str=str(tmp_path),
+                model=model,
+                hard_timeout=60,
+                run_nonce="this-run",
+                keep_worktree=True,
+            )
+            == 1
+        )
     record = delegate._read_state(delegate._state_path("injected-identity"))
     assert record["status"] == "failed"
     assert record["identity_matches_request"] is False
@@ -22903,7 +23295,10 @@ def test_agy_dispatch_rejects_injected_and_unbound_identity(tmp_tasks_dir, tmp_p
 
 @pytest.mark.parametrize("model", ["claude-sonnet-5-5-high", "claude-opus-5-5-high"])
 def test_normal_dispatch_admits_claude_agy_high_pin_without_substitution(
-    tmp_tasks_dir, monkeypatch, isolated_dispatch_repo, model,
+    tmp_tasks_dir,
+    monkeypatch,
+    isolated_dispatch_repo,
+    model,
 ):
     head = _git_out(isolated_dispatch_repo, "rev-parse", "HEAD").strip()
     _git_out(isolated_dispatch_repo, "update-ref", "refs/remotes/origin/main", head)
@@ -22916,13 +23311,22 @@ def test_normal_dispatch_admits_claude_agy_high_pin_without_substitution(
         # Serve that refresh from the same isolated repository as observation.
         return delegate.subprocess.run(
             ["git", "fetch", str(isolated_dispatch_repo), "+refs/heads/main:refs/remotes/origin/main"],
-            cwd=isolated_dispatch_repo, capture_output=True, text=True, check=False,
-            env=delegate._sanitized_git_env(), timeout=30,
+            cwd=isolated_dispatch_repo,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=delegate._sanitized_git_env(),
+            timeout=30,
         )
 
     monkeypatch.setattr(delegate, "_fetch_remote_branch", fetch_fixture_branch)
     args = _minimal_dispatch_args(
-        "agy-high-dispatch", agent="agy", model=model, mode="workspace-write", worktree="auto", cwd=None,
+        "agy-high-dispatch",
+        agent="agy",
+        model=model,
+        mode="workspace-write",
+        worktree="auto",
+        cwd=None,
         owned_path=["README.md"],
     )
     calls = []
@@ -22950,9 +23354,19 @@ def test_normal_dispatch_admits_claude_agy_high_pin_without_substitution(
 
 @pytest.mark.parametrize("model", ["claude-sonnet-5-5-medium", "claude-opus-5-5-low", "claude-unknown-5-5-high"])
 def test_normal_dispatch_refuses_unsupported_claude_variant_before_worker(tmp_tasks_dir, monkeypatch, capsys, model):
-    args = delegate.build_parser().parse_args([
-        "dispatch", "--agent", "agy", "--model", model, "--task-id", "bad-claude-variant", "--prompt", "test",
-    ])
+    args = delegate.build_parser().parse_args(
+        [
+            "dispatch",
+            "--agent",
+            "agy",
+            "--model",
+            model,
+            "--task-id",
+            "bad-claude-variant",
+            "--prompt",
+            "test",
+        ]
+    )
     monkeypatch.setattr(delegate.subprocess, "Popen", lambda *a, **k: pytest.fail("unsupported variant spawned"))
     assert delegate.cmd_dispatch(args) == 2
     assert delegate._read_state(delegate._state_path("bad-claude-variant")) is None
@@ -22961,15 +23375,26 @@ def test_normal_dispatch_refuses_unsupported_claude_variant_before_worker(tmp_ta
     assert "HARD AUTO-SUBSTITUTE" not in error
 
 
-@pytest.mark.parametrize("agent,model", [
-    ("codex", "gpt-6.1-sol"), ("agy", "gemini-3.8-flash-high"),
-    ("agy", "Claude Opus 4.6 (Thinking)"), ("agy", "unrecognized"),
-])
+@pytest.mark.parametrize(
+    "agent,model",
+    [
+        ("codex", "gpt-6.1-sol"),
+        ("agy", "gemini-3.8-flash-high"),
+        ("agy", "Claude Opus 4.6 (Thinking)"),
+        ("agy", "unrecognized"),
+    ],
+)
 def test_agy_identity_attribution_leaves_other_or_unsupported_requests_unchanged(agent, model):
-    assert delegate._agy_model_state(
-        agent=agent, model=model, identity={"actual_model": "claude-opus-5-5-high", "source": "provider-init"},
-        task_id="other-route", run_nonce="this-run",
-    ) == {}
+    assert (
+        delegate._agy_model_state(
+            agent=agent,
+            model=model,
+            identity={"actual_model": "claude-opus-5-5-high", "source": "provider-init"},
+            task_id="other-route",
+            run_nonce="this-run",
+        )
+        == {}
+    )
 
 
 def _agy_consumer_observation(tmp_path, model, stdout):
@@ -22981,25 +23406,44 @@ def _agy_consumer_observation(tmp_path, model, stdout):
         return runner._observe_agy_identity(
             stdout=stdout,
             plan=InvocationPlan(cmd=["never-executed", "--model", model], cwd=tmp_path),
-            task_id="consumer-identity", run_nonce="consumer-run", invocation_id="c" * 32,
-            cli_sha256="d" * 64, cli_version="1.4.0",
+            task_id="consumer-identity",
+            run_nonce="consumer-run",
+            invocation_id="c" * 32,
+            cli_sha256="d" * 64,
+            cli_version="1.4.0",
         )
     finally:
         runner._AGY_OBSERVED_IDENTITY.reset(token)
 
 
-
 @pytest.mark.parametrize("model", ["claude-sonnet-5-5-high", "claude-opus-5-5-high"])
-@pytest.mark.parametrize("case", [
-    "exact", "display", "other-pin", "other-family", "unknown", "retired", "non-string",
-    "conflict", "repeated", "absent", "configuration", "prose", "session", "terminal-session",
-])
+@pytest.mark.parametrize(
+    "case",
+    [
+        "exact",
+        "display",
+        "other-pin",
+        "other-family",
+        "unknown",
+        "retired",
+        "non-string",
+        "conflict",
+        "repeated",
+        "absent",
+        "configuration",
+        "prose",
+        "session",
+        "terminal-session",
+    ],
+)
 def test_agy_consumer_retains_honest_observer_semantics(tmp_path, model, case):
     observed = {
         "display": "Claude Sonnet 5.5 (High)" if "sonnet" in model else "Claude Opus 5.5 (High)",
         "other-pin": "claude-opus-5-5-high" if "sonnet" in model else "claude-sonnet-5-5-high",
-        "other-family": "gemini-3.8-flash-high", "unknown": "unrecognized",
-        "retired": "Claude Opus 4.6 (Thinking)", "non-string": 42,
+        "other-family": "gemini-3.8-flash-high",
+        "unknown": "unrecognized",
+        "retired": "Claude Opus 4.6 (Thinking)",
+        "non-string": 42,
     }.get(case, model)
     init = {"event": "init", "model": observed}
     terminal = {"event": "result", "result": {"status": "SUCCESS", "response": "READY"}}
@@ -23018,12 +23462,25 @@ def test_agy_consumer_retains_honest_observer_semantics(tmp_path, model, case):
         events.insert(1, init)
     identity = _agy_consumer_observation(tmp_path, model, "\n".join(map(json.dumps, events)))
     state = delegate._agy_model_state(
-        agent="agy", model=model, identity=identity, task_id="consumer-identity", run_nonce="consumer-run",
+        agent="agy",
+        model=model,
+        identity=identity,
+        task_id="consumer-identity",
+        run_nonce="consumer-run",
     )
     assert state["identity_matches_request"] is (case in {"exact", "display", "session", "terminal-session"})
-    assert state["resolved_model_known"] is (case not in {
-        "absent", "configuration", "prose", "unknown", "retired", "non-string", "conflict",
-    })
+    assert state["resolved_model_known"] is (
+        case
+        not in {
+            "absent",
+            "configuration",
+            "prose",
+            "unknown",
+            "retired",
+            "non-string",
+            "conflict",
+        }
+    )
     if identity is None:
         assert state["model_identity"] is None
         assert state["resolved_model_source"] == "unattested-harness"
@@ -23043,33 +23500,63 @@ def test_agy_consumer_retains_honest_observer_semantics(tmp_path, model, case):
 
 
 @pytest.mark.parametrize("model", ["claude-sonnet-5-5-high", "claude-opus-5-5-high"])
-@pytest.mark.parametrize("field,value", [
-    ("actual_model", "gemini-3.8-flash-high"),
-    ("actual_model", "other-high-pin"),
-    ("actual_model", "unrecognized"), ("actual_model", "Claude Opus 4.6 (Thinking)"),
-    ("actual_model", None), ("actual_model", 42), ("actual_model_known", False),
-    ("actual_model_known", 1), ("actual_family", "google"), ("harness", "native_claude"),
-    ("source", "requested"), ("source", "configuration"), ("source", "runtime"),
-    ("substituted", 0), ("substituted", True), ("provenance", None), ("provenance", "provider-init"),
-    ("provenance.origin", "response.prose"), ("provenance.origin", "configuration"),
-    ("provenance.init_events", []), ("provenance.init_events", {}),
-    ("provenance.init_events", [None]), ("provenance.init_events", [{}]),
-    ("provenance.init_events", [{"sha256": "not-a-digest"}]),
-    ("provenance.init_events", [{"sha256": 42}]),
-    ("provenance.init_events", [{"sha256": "e" * 64}, {"sha256": "f" * 64}]),
-    ("provenance.init_events", [{"sha256": "e" * 64, "provider_session_id": "other-session"}]),
-    ("provenance.invocation_id", None), ("provenance.invocation_id", ""),
-    ("provenance.invocation_id", "stale-invocation"), ("provenance.invocation_id", 42),
-    ("provenance.cli_sha256", None), ("provenance.cli_sha256", ""),
-    ("provenance.cli_sha256", "d" * 63), ("provenance.cli_sha256", 42),
-    ("provenance.cli_version", "unknown"), ("provenance.cli_version", " "),
-    ("provenance.cli_version", None), ("provenance.cli_version", 42),
-    ("provenance.provider_session_id", ""), ("provenance.provider_session_id", "s" * 201),
-    ("provenance.provider_session_id", 42), ("provenance.task_id", "other-task"),
-    ("provenance.run_nonce", "stale-run"), ("provenance.requested_model", "gemini-3.8-flash-high"),
-])
+@pytest.mark.parametrize(
+    "field,value",
+    [
+        ("actual_model", "gemini-3.8-flash-high"),
+        ("actual_model", "other-high-pin"),
+        ("actual_model", "unrecognized"),
+        ("actual_model", "Claude Opus 4.6 (Thinking)"),
+        ("actual_model", None),
+        ("actual_model", 42),
+        ("actual_model_known", False),
+        ("actual_model_known", 1),
+        ("actual_family", "google"),
+        ("harness", "native_claude"),
+        ("source", "requested"),
+        ("source", "configuration"),
+        ("source", "runtime"),
+        ("substituted", 0),
+        ("substituted", True),
+        ("provenance", None),
+        ("provenance", "provider-init"),
+        ("provenance.origin", "response.prose"),
+        ("provenance.origin", "configuration"),
+        ("provenance.init_events", []),
+        ("provenance.init_events", {}),
+        ("provenance.init_events", [None]),
+        ("provenance.init_events", [{}]),
+        ("provenance.init_events", [{"sha256": "not-a-digest"}]),
+        ("provenance.init_events", [{"sha256": 42}]),
+        ("provenance.init_events", [{"sha256": "e" * 64}, {"sha256": "f" * 64}]),
+        ("provenance.init_events", [{"sha256": "e" * 64, "provider_session_id": "other-session"}]),
+        ("provenance.invocation_id", None),
+        ("provenance.invocation_id", ""),
+        ("provenance.invocation_id", "stale-invocation"),
+        ("provenance.invocation_id", 42),
+        ("provenance.cli_sha256", None),
+        ("provenance.cli_sha256", ""),
+        ("provenance.cli_sha256", "d" * 63),
+        ("provenance.cli_sha256", 42),
+        ("provenance.cli_version", "unknown"),
+        ("provenance.cli_version", " "),
+        ("provenance.cli_version", None),
+        ("provenance.cli_version", 42),
+        ("provenance.provider_session_id", ""),
+        ("provenance.provider_session_id", "s" * 201),
+        ("provenance.provider_session_id", 42),
+        ("provenance.task_id", "other-task"),
+        ("provenance.run_nonce", "stale-run"),
+        ("provenance.requested_model", "gemini-3.8-flash-high"),
+    ],
+)
 def test_agy_worker_rejects_presealed_inconsistent_receipts(
-    tmp_tasks_dir, tmp_path, monkeypatch, model, field, value,
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+    model,
+    field,
+    value,
 ):
     from scripts.agent_runtime.adapters.agy import AgyRuntimeIdentity
 
@@ -23091,10 +23578,20 @@ def test_agy_worker_rejects_presealed_inconsistent_receipts(
     monkeypatch.setattr(delegate, "_background_jobs_at_exit", lambda *a, **k: None)
     delegate._write_state_atomic(delegate._state_path("consumer-identity"), {"cli_version": "1.4.0"})
     with patch("agent_runtime.runner.invoke", return_value=result):
-        assert delegate._run_worker(
-            task_id="consumer-identity", agent="agy", prompt="Implement.", mode="workspace-write",
-            cwd_str=str(tmp_path), model=model, hard_timeout=60, run_nonce="consumer-run", keep_worktree=True,
-        ) == 1
+        assert (
+            delegate._run_worker(
+                task_id="consumer-identity",
+                agent="agy",
+                prompt="Implement.",
+                mode="workspace-write",
+                cwd_str=str(tmp_path),
+                model=model,
+                hard_timeout=60,
+                run_nonce="consumer-run",
+                keep_worktree=True,
+            )
+            == 1
+        )
     record = delegate._read_state(delegate._state_path("consumer-identity"))
     assert record["status"] == "failed"
     assert record["last_error"] == "agy_model_identity_unverified"
@@ -23120,7 +23617,10 @@ def test_agy_consumer_keeps_snapshot_and_binding_guards(tmp_path, model, case):
     elif case == "bad-json":
         identity["unexpected"] = object()
     state = delegate._agy_model_state(
-        agent="agy", model=model, identity=identity, task_id="consumer-identity",
+        agent="agy",
+        model=model,
+        identity=identity,
+        task_id="consumer-identity",
         run_nonce=None if case == "missing-nonce" else "consumer-run",
     )
     assert state["model_identity"] is None
@@ -23129,20 +23629,42 @@ def test_agy_consumer_keeps_snapshot_and_binding_guards(tmp_path, model, case):
 
 
 @pytest.mark.parametrize("model", ["claude-sonnet-5-5-high", "claude-opus-5-5-high"])
-@pytest.mark.parametrize("observation,observed_family,observed_known", [
-    ("exact", "anthropic", True), ("display", "anthropic", True),
-    ("other-pin", "anthropic", True), ("other-family", "google", True),
-    ("unknown", None, False), ("retired", None, False), ("non-string", None, False),
-])
-@pytest.mark.parametrize("event_count,substituted,trust_exact,trust_mismatch,match_exact", [
-    (0, False, False, False, False), (0, True, False, False, False),
-    (1, False, True, False, True), (1, True, False, True, False),
-    (2, False, False, False, False), (2, True, True, True, False),
-    (3, False, False, False, False), (3, True, True, True, False),
-])
+@pytest.mark.parametrize(
+    "observation,observed_family,observed_known",
+    [
+        ("exact", "anthropic", True),
+        ("display", "anthropic", True),
+        ("other-pin", "anthropic", True),
+        ("other-family", "google", True),
+        ("unknown", None, False),
+        ("retired", None, False),
+        ("non-string", None, False),
+    ],
+)
+@pytest.mark.parametrize(
+    "event_count,substituted,trust_exact,trust_mismatch,match_exact",
+    [
+        (0, False, False, False, False),
+        (0, True, False, False, False),
+        (1, False, True, False, True),
+        (1, True, False, True, False),
+        (2, False, False, False, False),
+        (2, True, True, True, False),
+        (3, False, False, False, False),
+        (3, True, True, True, False),
+    ],
+)
 def test_agy_consumer_substitution_consistency_matrix(
-    tmp_path, model, observation, observed_family, observed_known,
-    event_count, substituted, trust_exact, trust_mismatch, match_exact,
+    tmp_path,
+    model,
+    observation,
+    observed_family,
+    observed_known,
+    event_count,
+    substituted,
+    trust_exact,
+    trust_mismatch,
+    match_exact,
 ):
     from scripts.agent_runtime.adapters.agy import AgyRuntimeIdentity
 
@@ -23150,8 +23672,10 @@ def test_agy_consumer_substitution_consistency_matrix(
         "exact": model,
         "display": "Claude Sonnet 5.5 (High)" if "sonnet" in model else "Claude Opus 5.5 (High)",
         "other-pin": "claude-opus-5-5-high" if "sonnet" in model else "claude-sonnet-5-5-high",
-        "other-family": "gemini-3.8-flash-high", "unknown": "unrecognized",
-        "retired": "Claude Opus 4.6 (Thinking)", "non-string": 42,
+        "other-family": "gemini-3.8-flash-high",
+        "unknown": "unrecognized",
+        "retired": "Claude Opus 4.6 (Thinking)",
+        "non-string": 42,
     }[observation]
     identity = _agy_consumer_observation(tmp_path, model, json.dumps({"event": "init", "model": observed}))
     assert identity is not None
@@ -23162,7 +23686,11 @@ def test_agy_consumer_substitution_consistency_matrix(
     payload["substituted"] = substituted
     receipt = AgyRuntimeIdentity(payload)
     state = delegate._agy_model_state(
-        agent="agy", model=model, identity=receipt, task_id="consumer-identity", run_nonce="consumer-run",
+        agent="agy",
+        model=model,
+        identity=receipt,
+        task_id="consumer-identity",
+        run_nonce="consumer-run",
     )
     exact = observation in {"exact", "display"}
     trusted = trust_exact if exact else trust_mismatch
@@ -23181,7 +23709,10 @@ def test_agy_consumer_substitution_consistency_matrix(
 @pytest.mark.parametrize("later_model", ["same", "other-pin", "other-family"])
 @pytest.mark.parametrize("event_count", [2, 3])
 def test_agy_consumer_honest_repeated_init_retains_first_observation(
-    tmp_path, model, later_model, event_count,
+    tmp_path,
+    model,
+    later_model,
+    event_count,
 ):
     later = {
         "same": model,
@@ -23199,7 +23730,11 @@ def test_agy_consumer_honest_repeated_init_retains_first_observation(
     else:
         assert identity is None
     state = delegate._agy_model_state(
-        agent="agy", model=model, identity=identity, task_id="consumer-identity", run_nonce="consumer-run",
+        agent="agy",
+        model=model,
+        identity=identity,
+        task_id="consumer-identity",
+        run_nonce="consumer-run",
     )
     assert state["resolved_model_known"] is (later_model == "same")
     assert state["identity_matches_request"] is False
@@ -23207,21 +23742,41 @@ def test_agy_consumer_honest_repeated_init_retains_first_observation(
     assert state["model_identity"] == identity
 
 
-
 @pytest.mark.parametrize("model", ["claude-sonnet-5-5-high", "claude-opus-5-5-high"])
-@pytest.mark.parametrize("case,known,family", [
-    ("nested-model", False, None), ("nested-session", False, None),
-    ("terminal-session", False, None), ("duplicate-after", False, None),
-    ("mismatch-then-duplicate", False, None), ("mismatch-then-session", False, None),
-    ("repeated-model", False, None), ("repeated-session", False, None), ("repeated-source", False, None),
-    ("configuration", False, None), ("missing", False, None), ("late", False, None),
-    ("unknown", False, None), ("retired", False, None), ("non-string", False, None),
-    ("other-pin", True, "anthropic"), ("other-family", True, "google"),
-    ("repeated", True, "anthropic"), ("provider-failure", True, "anthropic"),
-])
+@pytest.mark.parametrize(
+    "case,known,family",
+    [
+        ("nested-model", False, None),
+        ("nested-session", False, None),
+        ("terminal-session", False, None),
+        ("duplicate-after", False, None),
+        ("mismatch-then-duplicate", False, None),
+        ("mismatch-then-session", False, None),
+        ("repeated-model", False, None),
+        ("repeated-session", False, None),
+        ("repeated-source", False, None),
+        ("configuration", False, None),
+        ("missing", False, None),
+        ("late", False, None),
+        ("unknown", False, None),
+        ("retired", False, None),
+        ("non-string", False, None),
+        ("other-pin", True, "anthropic"),
+        ("other-family", True, "google"),
+        ("repeated", True, "anthropic"),
+        ("provider-failure", True, "anthropic"),
+    ],
+)
 @pytest.mark.parametrize("exit_kind", ["complete", "cancel", "timeout", "exception", "cleanup"])
 def test_agy_producer_consistency_through_durable_worker_projections(
-    tmp_tasks_dir, tmp_path, monkeypatch, model, case, known, family, exit_kind,
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+    model,
+    case,
+    known,
+    family,
+    exit_kind,
 ):
     from types import SimpleNamespace
 
@@ -23234,15 +23789,25 @@ def test_agy_producer_consistency_through_durable_worker_projections(
     provider_dir.mkdir()
     task_id, nonce = "projection-worker", "projection-run"
     launches, _, _ = mock_agy_provider(
-        monkeypatch, provider_dir, runner, stdout=consistency_stream(model, case),
+        monkeypatch,
+        provider_dir,
+        runner,
+        stdout=consistency_stream(model, case),
         exit_kind="complete" if exit_kind == "cleanup" else exit_kind,
     )
     if exit_kind == "cleanup":
+
         def cleanup():
             raise RuntimeError("synthetic cleanup failure")
-        monkeypatch.setattr(runner, "prepare_trail_isolation", lambda **kwargs: SimpleNamespace(
-            cleanup=cleanup, tool_config=kwargs["tool_config"],
-        ))
+
+        monkeypatch.setattr(
+            runner,
+            "prepare_trail_isolation",
+            lambda **kwargs: SimpleNamespace(
+                cleanup=cleanup,
+                tool_config=kwargs["tool_config"],
+            ),
+        )
     from telemetry import emit as telemetry_emit
 
     captures, usages, events, substitutions = [], [], [], []
@@ -23267,13 +23832,24 @@ def test_agy_producer_consistency_through_durable_worker_projections(
     monkeypatch.setattr(runner, "_emit_substitution_event", emit_summary)
     monkeypatch.setattr(delegate, "_append_dispatch_event", lambda event, **fields: events.append((event, fields)))
     monkeypatch.setattr(delegate, "_background_jobs_at_exit", lambda *args, **kwargs: None)
-    delegate._write_state_atomic(delegate._state_path(task_id), {
-        "task_id": task_id, "model": model, "run_nonce": nonce, "cli_version": "1.4.0",
-        "owned_paths": ["README.md"], "keep_worktree": True,
-        # A previous attempt cannot supply actual identity, including via nested attribution.
-        "substitution": {"kind": "agent-substitution", "actual_model": model, "actual_model_known": True,
-                         "runtime_attribution": {"actual_model": model, "actual_model_known": True}},
-    })
+    delegate._write_state_atomic(
+        delegate._state_path(task_id),
+        {
+            "task_id": task_id,
+            "model": model,
+            "run_nonce": nonce,
+            "cli_version": "1.4.0",
+            "owned_paths": ["README.md"],
+            "keep_worktree": True,
+            # A previous attempt cannot supply actual identity, including via nested attribution.
+            "substitution": {
+                "kind": "agent-substitution",
+                "actual_model": model,
+                "actual_model_known": True,
+                "runtime_attribution": {"actual_model": model, "actual_model_known": True},
+            },
+        },
+    )
     spawn = runner._spawn_subprocess
 
     def inspect_start(*args, **kwargs):
@@ -23284,15 +23860,25 @@ def test_agy_producer_consistency_through_durable_worker_projections(
         return spawn(*args, **kwargs)
 
     monkeypatch.setattr(runner, "_spawn_subprocess", inspect_start)
-    assert delegate._run_worker(
-        task_id=task_id, agent="agy", prompt="Implement the bounded artifact.", mode="workspace-write",
-        cwd_str=str(worktree), model=model, hard_timeout=60, run_nonce=nonce, keep_worktree=True,
-    ) == 1
+    assert (
+        delegate._run_worker(
+            task_id=task_id,
+            agent="agy",
+            prompt="Implement the bounded artifact.",
+            mode="workspace-write",
+            cwd_str=str(worktree),
+            model=model,
+            hard_timeout=60,
+            run_nonce=nonce,
+            keep_worktree=True,
+        )
+        == 1
+    )
     record = json.loads(delegate._state_path(task_id).read_text())
     usages = [json.loads(line) for line in usage_file.read_text().splitlines()] if usage_file.exists() else []
     assert len(launches) == 1
     assert record["model"] == model
-    assert record["status"] == ("cancelled" if exit_kind == "cancel" else "failed")
+    assert record["status"] == ({"cancel": "cancelled", "timeout": "timeout"}.get(exit_kind, "failed"))
     assert record["resolved_model_known"] is known
     assert record["resolved_model_family"] == family
     assert record["resolved_model_harness"] == "agy"
@@ -23308,7 +23894,7 @@ def test_agy_producer_consistency_through_durable_worker_projections(
     if exit_kind == "cancel":
         assert record["last_error"] == "worker_cancelled"
     if exit_kind == "timeout":
-        assert record["last_error"] == "worker_failed"
+        assert record["last_error"] == "worker_timed_out"
     if exit_kind in {"exception", "cleanup"}:
         assert record["last_error"] == "worker_unexpected_error, RuntimeError"
     assert len(captures) == 2
@@ -23317,7 +23903,9 @@ def test_agy_producer_consistency_through_durable_worker_projections(
     assert str(start["plan_metadata"]["entire_fleet"]["actual_model_known"]).lower() == "false"
     assert finish["actual_model"] == (observed if known else "")
     assert finish["route_metadata"]["actual_model_known"] == str(known).lower()
-    assert finish["outcome"] == ({"complete": "error", "cleanup": "error", "timeout": "hard_timeout"}.get(exit_kind, "runner_exception"))
+    assert finish["outcome"] == (
+        {"complete": "error", "cleanup": "error", "timeout": "hard_timeout"}.get(exit_kind, "runner_exception")
+    )
     if exit_kind in {"complete", "timeout", "cleanup"}:
         assert len(usages) == 1
         usage_identity = usages[0].get("model_identity")
@@ -23344,25 +23932,33 @@ def test_agy_producer_consistency_through_durable_worker_projections(
     if not known:
         assert dispatch_events[0]["substitution"] is None
     summaries = [record["substitution"], dispatch_events[0]["substitution"]]
-    expected = {
-        "requested_provider": "agy",
-        "requested_model": model,
-        "actual_provider": "agy",
-        "actual_model": observed,
-        "actual_model_known": True,
-        "source": "provider-init",
-        "substituted": True,
-    } if known and case != "provider-failure" else None
+    expected = (
+        {
+            "requested_provider": "agy",
+            "requested_model": model,
+            "actual_provider": "agy",
+            "actual_model": observed,
+            "actual_model_known": True,
+            "source": "provider-init",
+            "substituted": True,
+        }
+        if known and case != "provider-failure"
+        else None
+    )
     assert all(summary == expected for summary in summaries)
-    saved_expected = {
-        "requested_provider": "agy",
-        "requested_model": model,
-        "actual_provider": "agy",
-        "actual_model": observed,
-        "source": "provider-init",
-        "marker": None,
-        "substituted": True,
-    } if known and case != "provider-failure" else None
+    saved_expected = (
+        {
+            "requested_provider": "agy",
+            "requested_model": model,
+            "actual_provider": "agy",
+            "actual_model": observed,
+            "source": "provider-init",
+            "marker": None,
+            "substituted": True,
+        }
+        if known and case != "provider-failure"
+        else None
+    )
     for usage_row in usages:
         assert usage_row.get("substitution") == saved_expected
     runtime_events = [fields for event, fields in events if event == "agent_runtime_substitution"]
@@ -23376,6 +23972,8 @@ def test_agy_producer_consistency_through_durable_worker_projections(
         else:
             assert runtime_events == []
     assert runner._AGY_OBSERVED_IDENTITY.get() is None
+
+
 @pytest.mark.parametrize("case", ["clean", "dirty", "mixed", "retry", "rejected", "incomplete", "live"])
 def test_terminal_delivery_matches_remote_and_retains_worker_bytes(tmp_tasks_dir, tmp_path, monkeypatch, case):
     """#10931: the worker's durable milestone agrees with real Git publication."""
@@ -23394,28 +23992,50 @@ def test_terminal_delivery_matches_remote_and_retains_worker_bytes(tmp_tasks_dir
     if case == "retry":
         _git_out(worktree, "push", "-u", "origin", branch)
     if case == "rejected":
+        (tmp_path / "trusted-gate-refuse").touch()
         hook = worktree / ".git/hooks/pre-push"
         hook.write_text("#!/bin/sh\nexit 1\n")
         hook.chmod(0o755)
     expected = artifact.read_bytes()
     state_path = delegate._state_path(task_id)
-    delegate._write_state_atomic(state_path, {
-        "task_id": task_id, "run_nonce": "delivery-round", "initiator": "codex-infra",
-        "worktree_path": str(worktree), "worktree_branch": branch, "worktree_base": "main",
-        "owned_paths": ["artifact.txt"], "keep_worktree": True,
-    })
+    delegate._write_state_atomic(
+        state_path,
+        {
+            "task_id": task_id,
+            "run_nonce": "delivery-round",
+            "initiator": "codex-infra",
+            "worktree_path": str(worktree),
+            "worktree_branch": branch,
+            "worktree_base": "main",
+            "owned_paths": ["artifact.txt"],
+            "keep_worktree": True,
+        },
+    )
     result = _bg_mock_result("")
     if case == "incomplete":
         result.ok = False
     if case == "live":
-        monkeypatch.setattr(delegate, "_background_jobs_at_exit", lambda *_a, **_k: delegate.worker_leftovers.ExitScan(
-            delegate.worker_leftovers.SCAN_UNKNOWN,
-            delegate.worker_leftovers.WorkerScope(task_id=task_id, launch_mode="popen-fallback", run_nonce="delivery-round"),
-        ))
+        monkeypatch.setattr(
+            delegate,
+            "_background_jobs_at_exit",
+            lambda *_a, **_k: delegate.worker_leftovers.ExitScan(
+                delegate.worker_leftovers.SCAN_UNKNOWN,
+                delegate.worker_leftovers.WorkerScope(
+                    task_id=task_id, launch_mode="popen-fallback", run_nonce="delivery-round"
+                ),
+            ),
+        )
     with patch("agent_runtime.runner.invoke", return_value=result):
         rc = delegate._run_worker(
-            task_id=task_id, agent="codex", prompt="finish owned work", mode="danger",
-            cwd_str=str(worktree), model="gpt-6.1-sol", hard_timeout=60, effort="high", keep_worktree=True,
+            task_id=task_id,
+            agent="codex",
+            prompt="finish owned work",
+            mode="danger",
+            cwd_str=str(worktree),
+            model="gpt-6.1-sol",
+            hard_timeout=60,
+            effort="high",
+            keep_worktree=True,
         )
     state = delegate._read_state(state_path)
     remote = _git_out(worktree, "ls-remote", "origin", f"refs/heads/{branch}").split()
@@ -23438,7 +24058,9 @@ def test_terminal_delivery_matches_remote_and_retains_worker_bytes(tmp_tasks_dir
 
 @pytest.mark.parametrize("mode", ["workspace-write", "danger"])
 @pytest.mark.parametrize("target", ["protected", "mismatched", "missing"])
-def test_worker_refuses_unsafe_branch_even_without_auto_finalization(tmp_tasks_dir, tmp_path, monkeypatch, mode, target):
+def test_worker_refuses_unsafe_branch_even_without_auto_finalization(
+    tmp_tasks_dir, tmp_path, monkeypatch, mode, target
+):
     _sanitize_git_env_for_test(monkeypatch)
     branch = "codex/branch-proof"
     worktree = _agy_dispatch_worktree(tmp_path, branch)
@@ -23450,23 +24072,144 @@ def test_worker_refuses_unsafe_branch_even_without_auto_finalization(tmp_tasks_d
     head = delegate._resolve_sha(worktree)
     before = _git_out(worktree, "ls-remote", "origin")
     state_path = delegate._state_path("unsafe-branch")
-    delegate._write_state_atomic(state_path, {
-        "task_id": "unsafe-branch", "run_nonce": "round", "initiator": "codex-infra",
-        "worktree_path": str(worktree),
-        "worktree_branch": {"protected": "main", "mismatched": "codex/foreign", "missing": None}[target],
-        "worktree_base": "main", "owned_paths": ["artifact.txt"], "keep_worktree": True,
-    })
+    delegate._write_state_atomic(
+        state_path,
+        {
+            "task_id": "unsafe-branch",
+            "run_nonce": "round",
+            "initiator": "codex-infra",
+            "worktree_path": str(worktree),
+            "worktree_branch": {"protected": "main", "mismatched": "codex/foreign", "missing": None}[target],
+            "worktree_base": "main",
+            "owned_paths": ["artifact.txt"],
+            "keep_worktree": True,
+        },
+    )
     with patch("agent_runtime.runner.invoke", return_value=_bg_mock_result("")):
         rc = delegate._run_worker(
-            task_id="unsafe-branch", agent="codex", prompt="finish", mode=mode,
-            cwd_str=str(worktree), model="gpt-6.1-sol", hard_timeout=60, effort="high", keep_worktree=True,
+            task_id="unsafe-branch",
+            agent="codex",
+            prompt="finish",
+            mode=mode,
+            cwd_str=str(worktree),
+            model="gpt-6.1-sol",
+            hard_timeout=60,
+            effort="high",
+            keep_worktree=True,
         )
     state = delegate._read_state(state_path)
     assert rc == 1 and state["status"] == "needs_finalize"
     assert state["finalize_error"] == "auto_finalize_unsafe_branch"
     assert state["finalize_delivery"]["remote_verified"] is False
     assert state["finalize_delivery"]["owner"] == "codex-infra"
-    assert state["finalize_delivery"]["action"] == "inspect finalization evidence and retained work; repair the failing gate and retry normal publication"
+    assert (
+        state["finalize_delivery"]["action"]
+        == "inspect finalization evidence and retained work; repair the failing gate and retry normal publication"
+    )
     assert delegate._resolve_sha(worktree) == head
     assert (worktree / "artifact.txt").read_bytes() == b"preserved\x00\r\n"
     assert _git_out(worktree, "ls-remote", "origin") == before
+
+
+@pytest.mark.parametrize("decision", ["publish", "gate-refused", "live-background"])
+def test_hard_timeout_reaches_guarded_commit_publication(tmp_tasks_dir, tmp_path, monkeypatch, decision):
+    _sanitize_git_env_for_test(monkeypatch)
+    branch, task_id = "codex/timeout-finalize", "timeout-finalize"
+    worktree = _agy_dispatch_worktree(tmp_path, branch)
+    (worktree / "artifact.txt").write_text("completed before timeout\n")
+    _git_out(worktree, "add", "artifact.txt")
+    _git_out(worktree, "commit", "-m", "completed work")
+    if decision == "gate-refused":
+        (tmp_path / "trusted-gate-refuse").touch()
+    if decision == "live-background":
+        monkeypatch.setattr(
+            delegate,
+            "_background_jobs_at_exit",
+            lambda *_a, **_k: delegate.worker_leftovers.ExitScan(
+                delegate.worker_leftovers.SCAN_UNKNOWN,
+                delegate.worker_leftovers.WorkerScope(
+                    task_id=task_id, launch_mode="popen-fallback", run_nonce="timeout-run"
+                ),
+            ),
+        )
+    path = delegate._state_path(task_id)
+    delegate._write_state_atomic(
+        path,
+        {
+            "task_id": task_id,
+            "run_nonce": "timeout-run",
+            "initiator": "claude-infra",
+            "worktree_path": str(worktree),
+            "worktree_branch": branch,
+            "worktree_base": "main",
+            "owned_paths": ["artifact.txt"],
+            "keep_worktree": True,
+        },
+    )
+    with patch(
+        "agent_runtime.runner.invoke",
+        side_effect=__import__("agent_runtime.errors", fromlist=["AgentTimeoutError"]).AgentTimeoutError("codex", 7200),
+    ):
+        delegate._run_worker(
+            task_id=task_id,
+            agent="codex",
+            prompt="finish owned work",
+            mode="danger",
+            cwd_str=str(worktree),
+            model="gpt-6.1-sol",
+            hard_timeout=7200,
+            effort="high",
+            keep_worktree=True,
+        )
+    record = delegate._read_state(path)
+    remote = _git_out(worktree, "ls-remote", "origin", f"refs/heads/{branch}").split()
+    assert record["returncode"] is None  # The timeout did not expose a process exit code.
+    if decision == "publish":
+        assert remote[0] == record["finalize_delivery"]["commit_sha"]
+        assert record["finalize_delivery"]["remote_verified"] is True
+        assert record["status"] == "timeout"
+    else:
+        assert remote == [] and record["status"] == "needs_finalize"
+        assert delegate.is_public_cause(record["finalize_error"])
+        assert record["finalize_next_action"]
+        assert record["finalize_delivery"]["owner"] == "claude-infra"
+
+
+def _finalize_assignment_sites():
+    """Keep the terminal-cause invariant attached to every attention producer."""
+    import ast
+    import inspect
+
+    tree = ast.parse(inspect.getsource(delegate))
+    return [
+        f"line-{node.lineno}"
+        for node in ast.walk(tree)
+        if isinstance(node, ast.Assign)
+        and isinstance(node.value, ast.Constant)
+        and node.value.value is True
+        and any(isinstance(target, ast.Name) and target.id.endswith("needs_finalize") for target in node.targets)
+    ]
+
+
+@pytest.mark.parametrize("producer", _finalize_assignment_sites())
+@pytest.mark.parametrize("reason", [None, "", "private untyped diagnostic", "auto_finalize_push_failed"])
+def test_every_attention_producer_persists_typed_cause_and_next_action(producer, reason):
+    # All producers converge at the checkpoint and interruption builders. The
+    # observed terminal record, including absent historical causes, is the API.
+    result = delegate._core_terminal_fields(
+        status="needs_finalize",
+        duration_s=1,
+        response="",
+        result_file=None,
+        stderr_excerpt=None,
+        returncode=0,
+        returncode_reason=None,
+        dirty_on_exit=True,
+        commits_ahead=1,
+        needs_finalize=True,
+        finalize_error=reason,
+        last_error=None,
+    )
+    assert result["status"] == "needs_finalize", producer
+    assert delegate.is_public_cause(result["finalize_error"]), producer
+    assert result["finalize_error"] and result["finalize_next_action"], producer
