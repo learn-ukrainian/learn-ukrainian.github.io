@@ -51,6 +51,7 @@
         }
       }
     },
+    "store_registry": {"$ref": "#/$defs/storeRegistry"},
     "residual": {
       "description": "Tracked paths whose lifecycle cannot be classified yet. Each path still belongs to a family; the family default does not apply to it.",
       "type": "array",
@@ -212,6 +213,101 @@
         },
         "producer_note": {"$ref": "#/$defs/text"},
         "local_only": {"type": "boolean"}
+      }
+    },
+    "writerRef": {
+      "description": "A write entry point: a tracked file, ':' and a module-level function or Class.method defined in it (checked by scripts/docs/store_census.py).",
+      "type": "string",
+      "pattern": "^(?!/)[^:\\u0000-\\u001f\\u007f-\\u009f]+:[A-Za-z_][A-Za-z0-9_]*(?:[.][A-Za-z_][A-Za-z0-9_]*)*(?![^\\n]|\\n)"
+    },
+    "storeFacts": {
+      "description": "Facts every store and family row records (#11092). protection keep|rebuild|disposable is never a deletion authorization; backup is the fact scripts/config/backup-allowlist.json gives today.",
+      "type": "object",
+      "required": ["owner", "kind", "writers", "journal", "busy_ms", "busy_source", "protection", "backup", "retention"],
+      "properties": {
+        "owner": {"$ref": "#/$defs/owner"},
+        "kind": {"enum": ["operational", "cache", "reference", "derived", "job_state", "telemetry", "staged", "orphan"]},
+        "writers": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/writerRef"}},
+        "writer_note": {"$ref": "#/$defs/text"},
+        "journal": {"enum": ["wal", "delete", "unknown"]},
+        "busy_ms": {"type": ["integer", "null"], "minimum": 0},
+        "busy_source": {"enum": ["default", "explicit", "no_writer", "not_applicable"]},
+        "protection": {"enum": ["keep", "rebuild", "disposable"]},
+        "backup": {"enum": ["keep", "drop", "none"]},
+        "protection_gap": {"$ref": "#/$defs/text"},
+        "retention": {"$ref": "#/$defs/text"},
+        "note": {"$ref": "#/$defs/text"}
+      }
+    },
+    "storeRow": {
+      "description": "One named physical SQLite store, present or declared in code but absent. <git-common-dir>/ prefixes a path in the Git common directory.",
+      "type": "object",
+      "unevaluatedProperties": false,
+      "allOf": [{"$ref": "#/$defs/storeFacts"}],
+      "required": ["path", "activity", "presence"],
+      "properties": {
+        "path": {"$ref": "#/$defs/repoPath"},
+        "activity": {"enum": ["active", "dormant", "staged", "orphan", "not_created"]},
+        "presence": {"enum": ["present", "declared_absent"]},
+        "absent_reason": {"$ref": "#/$defs/text"},
+        "family": {"$ref": "#/$defs/id"},
+        "catalogue_entry": {"$ref": "#/$defs/id"}
+      }
+    },
+    "familyRow": {
+      "description": "Stores at caller-chosen or per-key paths: the code's path rule and, when knowable, a census glob with an example.",
+      "type": "object",
+      "unevaluatedProperties": false,
+      "allOf": [{"$ref": "#/$defs/storeFacts"}],
+      "required": ["id", "path_rule", "glob"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "path_rule": {"$ref": "#/$defs/text"},
+        "glob": {"anyOf": [{"$ref": "#/$defs/glob"}, {"type": "null"}]},
+        "example": {"$ref": "#/$defs/repoPath"},
+        "literals": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/storeName"}}
+      }
+    },
+    "evidenceDir": {
+      "description": "A top-level batch_state/ directory the census does not walk; its files are classified by this row.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "owner", "example", "backup", "retention"],
+      "properties": {
+        "path": {"$ref": "#/$defs/glob"},
+        "owner": {"$ref": "#/$defs/owner"},
+        "example": {"$ref": "#/$defs/repoPath"},
+        "backup": {"enum": ["keep", "drop", "none"]},
+        "retention": {"$ref": "#/$defs/text"}
+      }
+    },
+    "nonStore": {
+      "description": "SQLite-shaped files that are not project stores, by exact paths or by a glob with an example.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "class", "owner", "backup", "retention"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "class": {"enum": ["zero_byte_placeholder", "coverage_data", "backup_copy", "test_copy", "experiment_copy", "probe_evidence"]},
+        "paths": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/repoPath"}},
+        "glob": {"$ref": "#/$defs/glob"},
+        "example": {"$ref": "#/$defs/repoPath"},
+        "owner": {"$ref": "#/$defs/owner"},
+        "backup": {"enum": ["keep", "drop", "none"]},
+        "retention": {"$ref": "#/$defs/text"}
+      }
+    },
+    "storeRegistry": {
+      "description": "Every SQLite store the project owns (#11092); validated and censused by scripts/docs/store_census.py.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["census_roots", "stores", "families", "evidence_dirs", "non_stores"],
+      "properties": {
+        "census_roots": {"const": ["data", ".agent", ".mcp", "batch_state"]},
+        "stores": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/storeRow"}},
+        "families": {"type": "array", "items": {"$ref": "#/$defs/familyRow"}},
+        "evidence_dirs": {"type": "array", "items": {"$ref": "#/$defs/evidenceDir"}},
+        "non_stores": {"type": "array", "items": {"$ref": "#/$defs/nonStore"}}
       }
     }
   }

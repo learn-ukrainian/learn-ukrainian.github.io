@@ -793,8 +793,9 @@ def test_only_the_gated_reader_reads_blob_bodies():
                for call in ast.walk(fn) if isinstance(call, ast.Call)
                and getattr(call.func, 'id', None) == '_index_blobs']
     # read_heads gates document bodies with body_readable; store_literals reads scripts/ only and
-    # withholds control-character and inventory-excluded paths before requesting any blob.
-    assert sorted(callers) == ['read_heads', 'store_literals']
+    # withholds control-character and inventory-excluded paths before requesting any blob;
+    # store_registry_errors applies that same gate to the registry's writer files and the backup allowlist.
+    assert sorted(callers) == ['read_heads', 'store_literals', 'store_registry_errors']
     # Git commands that print blob contents appear only in the gated reader and in
     # owner_keys, which reads the two fixed owner registries, never a catalogued path.
     readers = [fn.name for fn in ast.walk(tree) if isinstance(fn, ast.FunctionDef)

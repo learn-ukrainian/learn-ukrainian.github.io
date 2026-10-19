@@ -11,8 +11,11 @@ roots, so the check is sparse-checkout safe and never reads ``data/``.
 ``repository_check`` is what CI enforces (``tests/test_docs_catalogue_coverage.py``):
 coverage and validation, a data_store entry for every ``data/`` store that a tracked
 file under ``scripts/`` names, front matter and banners that agree with the
-catalogue's superseded overrides, and a current generated family table in
-``docs/README.md``. The search over all of it is ``scripts/docs/find.py``.
+catalogue's superseded overrides, a current generated family table in
+``docs/README.md`` and a consistent SQLite store registry (``store_registry``, checked by
+``scripts/docs/store_census.py``). The ``check`` and ``census`` commands also walk the
+census roots of a checkout for SQLite files no registry row claims. The search over all
+of it is ``scripts/docs/find.py``.
 
 Store-name scan dialect (``store_literals``). Surface: every path Git's index lists
 under ``scripts/``, any extension or none, read as its index blob through the privacy
@@ -45,6 +48,7 @@ import yaml
 from jsonschema import Draft202012Validator
 from jsonschema.exceptions import best_match
 
+from scripts.docs import store_census  # imports this module back; each side uses the other only at call time
 from scripts.docs.docs_inventory import EXCLUDED_PARTS
 from scripts.docs.docs_inventory import metadata as inventory_metadata
 
@@ -760,8 +764,9 @@ def body_readable(report: Report, path: str) -> bool:
 def _index_blobs(repo: Path, objects: dict[str, str]) -> dict[str, bytes]:
     """Blob contents keyed by path, requested by index object ID.
 
-    Call only via ``read_heads`` (the privacy-gated document reader) or ``store_literals``
-    (which applies the same gate to ``scripts/`` paths before requesting any blob).
+    Call only via ``read_heads`` (the privacy-gated document reader), ``store_literals``
+    (which applies the same gate to ``scripts/`` paths before requesting any blob) or
+    ``store_registry_errors`` (the same gate on writer files and the backup allowlist).
 
     ``objects`` maps each path to its index object ID. The ``cat-file --batch`` request
     holds validated object IDs only, never pathnames, and each response header must name
@@ -1268,10 +1273,38 @@ def repository_check(repo: Path, catalogue_path: Path | None = None) -> tuple[Re
                          'inventory-excluded component), so its store names are unchecked; move it'
                          for p in scan.withheld)
     report.errors.extend(store_literal_errors(catalogue, scan.stores))
+    report.errors.extend(store_registry_errors(repo, catalogue, files, scan.stores))
     errors, report.markers_unverifiable = marker_errors(repo, report, catalogue)
     report.errors.extend(errors)
     report.errors.extend(readme_errors(repo, report, catalogue, files))
     return report, catalogue
+
+
+def store_registry_errors(repo: Path, catalogue: dict, files: dict[str, IndexEntry],
+                          literals: dict[str, list[str]]) -> list[str]:
+    """The SQLite store registry (``store_census.registry_errors``), read from Git's index.
+
+    The backup allowlist and every writer file are read as index blobs, after the same
+    privacy gate as the store scan; an excluded, missing or non-UTF-8 file is unverified.
+    """
+    if not store_census.registry(catalogue):
+        return []
+    wanted = store_census.writer_files(catalogue) | {store_census.ALLOWLIST_PATH}
+    objects = {p: files[p].oid for p in sorted(wanted) if p in files and files[p].mode in REGULAR_MODES
+               and not CONTROL_CHARS.search(p) and not is_excluded(p)}
+    sources = {}
+    for path, blob in _index_blobs(repo, objects).items():
+        try:
+            sources[path] = blob.decode('utf-8')
+        except UnicodeDecodeError:
+            continue
+    if store_census.ALLOWLIST_PATH not in sources:
+        return [f'{store_census.ALLOWLIST_PATH}: not readable from the index, so registry backup facts are unchecked']
+    try:
+        allowlist = json.loads(sources.pop(store_census.ALLOWLIST_PATH))
+    except json.JSONDecodeError as exc:
+        return [f'{store_census.ALLOWLIST_PATH}: not JSON ({exc.msg}), so registry backup facts are unchecked']
+    return store_census.registry_errors(catalogue, set(files), owner_keys(repo), allowlist, sources, literals)
 
 
 # ---------------------------------------------------------------- suggestions
@@ -1345,23 +1378,24 @@ def main(argv: list[str] | None = None) -> int:
                '  .venv/bin/python -m scripts.docs.catalogue check --report-only --suggest\n'
                '  .venv/bin/python -m scripts.docs.catalogue check --json\n'
                '  .venv/bin/python -m scripts.docs.catalogue check --data-root ../primary-checkout/data\n'
+               '  .venv/bin/python -m scripts.docs.catalogue census --root ../primary-checkout --expect-present\n'
                '  .venv/bin/python -m scripts.docs.catalogue draft-scan --json\n'
                '  .venv/bin/python -m scripts.docs.catalogue readme --check\n'
                '  .venv/bin/python -m scripts.docs.catalogue mark --apply\n'
-               'Outputs: check and draft-scan print a report on stdout and never write files (data/ is read by '
-               'name only); readme rewrites the generated block of docs/README.md; mark --apply writes '
+               'Outputs: check, census and draft-scan print a report on stdout and never write files (data/ is '
+               'read by name only; census reads at most 100 header bytes per file); readme rewrites the generated block of docs/README.md; mark --apply writes '
                'front matter and banners into superseded Markdown files.\n'
                'Exit codes: 0 no errors, full coverage and no unmatched local store (or --report-only; '
                'draft-scan always reports with 0; readme/mark: done or nothing to change); 1 errors (including '
                'a tracked path with control characters, a data/ store named in scripts/ without an entry, '
-               'a status marker that disagrees with the catalogue or a stale README block), uncovered paths '
-               'or unmatched stores (readme --check: stale block; mark: files need markers); 2 invalid '
+               'a status marker that disagrees with the catalogue or a stale README block), uncovered paths, '
+               'unmatched stores or an SQLite file no store_registry row claims (readme --check: stale block; mark: files need markers); 2 invalid '
                'arguments; 3 unreadable '
                'repository or catalogue, an unmerged index or unexpected Git output, or a catalogue outside '
                'the accepted YAML subset (anchors, aliases, merge keys, tags, duplicate or non-string keys, '
                'unconstructible scalars, over 2 MiB, 100,000 nodes or 16 nesting levels); 4 internal error. Failures print a typed '
                'error (JSON with --json), never a traceback.\n'
-               'Related: #9412; docs/knowledge/catalogue.yaml; docs/knowledge/catalogue.schema.json; '
+               'Related: #9412; #11092; docs/knowledge/catalogue.yaml; scripts/docs/store_census.py; docs/knowledge/catalogue.schema.json; '
                'scripts/docs/docs_inventory.py; docs/architecture/docs-authority-lifecycle.md.')
     sub = parser.add_subparsers(dest='command', required=True)
     check = sub.add_parser('check', help='Validate schema, coverage, globs, supersession, owners, producers, '
@@ -1379,8 +1413,27 @@ def main(argv: list[str] | None = None) -> int:
     check.add_argument('--data-root', type=Path, default=None,
                        help='Local store directory to reconcile by name only (default: <repo>/data when it '
                             'exists; skipped otherwise, as in CI); e.g. ../primary-checkout/data.')
+    check.add_argument('--store-root', type=Path, default=None,
+                       help='Checkout whose data/, .agent/, .mcp/ and batch_state/ are censused for SQLite '
+                            'files no store_registry row claims (default: --repo); e.g. ../primary-checkout.')
+    check.add_argument('--expect-present', action='store_true',
+                       help='Also fail when a store the registry claims present is missing (use on the store '
+                            'host only; default: off).')
     check.add_argument('--json', action='store_true',
                        help='Print the full report as JSON, including per-entry counts (default: text).')
+    census = sub.add_parser('census', help='List every SQLite file under data/, .agent/, .mcp/ and batch_state/ '
+                            'of --root and flag any that no store_registry row claims (read-only).',
+                            description='Walk the census roots of --root by name and 100-byte header (evidence '
+                                        'directories are not walked) and classify each SQLite file against the '
+                                        'store_registry of the --repo catalogue. Nothing is written or locked.')
+    census.add_argument('--repo', type=Path, default=Path('.'),
+                        help='Repository or worktree whose catalogue is used (default: current directory).')
+    census.add_argument('--root', type=Path, default=None,
+                        help='Checkout to walk (default: --repo); e.g. ../primary-checkout.')
+    census.add_argument('--expect-present', action='store_true',
+                        help='Also fail on a present-claimed store that is missing and on a journal mode that '
+                             'disagrees with the file header (store host only; default: off).')
+    census.add_argument('--json', action='store_true', help='Print the census as JSON (default: text).')
     drafts = sub.add_parser('draft-scan', help='List draft markers in the first 30 lines of every content-readable '
                             'catalogued path against the lifecycle it resolves to (review aid, not a gate).',
                             description='Read each catalogued path from the Git index of --repo and report '
@@ -1411,6 +1464,8 @@ def main(argv: list[str] | None = None) -> int:
         return _run('README block', _readme_command, args)
     if args.command == 'mark':
         return _run('Status markers', _mark_command, args)
+    if args.command == 'census':
+        return _run('Store census', _census_command, args)
     return _run('Catalogue check', _check_command, args)
 
 
@@ -1445,10 +1500,14 @@ def _check_command(args: argparse.Namespace) -> int:
     data_root = args.data_root or repo / 'data'
     # Store names are reconciled only against a schema-valid catalogue.
     stores = local_store_gaps(data_root, catalogue) if data_root.is_dir() and report.schema_ok else None
+    census_result = (store_census.census(census_root(args.store_root, repo), catalogue,
+                                         expect_present=args.expect_present) if report.schema_ok else None)
     data = report.to_json()
     if args.json:
         data['local_stores'] = (None if stores is None
                                 else {'checked': stores[0], 'unmatched': stores[1]})
+        data['store_census'] = (None if census_result is None
+                                else census_result.to_json(store_census.registry(catalogue)))
         print(json.dumps(data, indent=2, sort_keys=True, ensure_ascii=False))
     else:
         print(f"denominator {data['denominator']}; covered {data['covered']}; "
@@ -1471,6 +1530,11 @@ def _check_command(args: argparse.Namespace) -> int:
             print(f'local stores: {stores[0]} names checked; {len(stores[1])} unmatched')
             for logical in stores[1]:
                 print(f'UNMATCHED STORE {shown(logical)}')
+        if census_result is None:
+            print('store census: skipped (catalogue failed schema validation)')
+        else:
+            for line in store_census.census_lines(census_result, store_census.registry(catalogue)):
+                print(shown(line))
     if args.suggest and report.uncovered:
         print(suggest(report, catalogue))
     if args.suggest and report.store_literals:
@@ -1478,7 +1542,35 @@ def _check_command(args: argparse.Namespace) -> int:
             print(f'  # data/ store named in {CODE_ROOT} without an entry: {shown(store)}')
             print(store_stub(store), end='')
     store_gaps = bool(stores and stores[1])
-    return 0 if args.report_only or (report.ok and not store_gaps) else 1
+    census_ok = census_result is None or census_result.ok
+    return 0 if args.report_only or (report.ok and not store_gaps and census_ok) else 1
+
+
+def census_root(path: Path | None, repo: Path) -> Path:
+    """The checkout to census: ``path`` (a plain directory need not be a Git checkout) or ``repo``.
+
+    A path that is not a directory raises, so a typo never yields an empty, passing census.
+    """
+    root = repo if path is None else path.resolve()
+    if not root.is_dir():
+        raise FileNotFoundError(f'census root {shown(str(root))} is not a directory')
+    return root
+
+
+def _census_command(args: argparse.Namespace) -> int:
+    repo = toplevel(args.repo)
+    catalogue = load(repo / CATALOGUE_PATH)
+    schema = json.loads((repo / SCHEMA_PATH).read_text(encoding='utf-8'))
+    if (found := schema_errors(catalogue, schema)) or control_string_errors(catalogue):
+        raise CatalogueLoadError('schema', f'the catalogue fails validation ({len(found)} schema errors); run check')
+    result = store_census.census(census_root(args.root, repo), catalogue, expect_present=args.expect_present)
+    registry = store_census.registry(catalogue)
+    if args.json:
+        print(json.dumps(result.to_json(registry), indent=2, sort_keys=True, ensure_ascii=False))
+    else:
+        for line in store_census.census_lines(result, registry):
+            print(shown(line))
+    return 0 if result.ok else 1
 
 
 def _readme_command(args: argparse.Namespace) -> int:
