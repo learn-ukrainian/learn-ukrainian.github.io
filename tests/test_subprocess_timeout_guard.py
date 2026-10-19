@@ -188,6 +188,16 @@ _NON_LINE_ANCHORED_IMPORTS = {
     "backslash-continuation": "import \\\nsubprocess\nsubprocess.run(['echo'])\n",
     "from-import-after-semicolon": "x = 1; from subprocess import run\nrun(['echo'])\n",
     "nfkc-normalised-identifier": "import \uff53ubprocess\nsubprocess.run(['echo'])\n",
+    "module-alias": "import subprocess as sp\nsp.run(['echo'])\n",
+    "comma-separated-modules": "import os, subprocess as sp\nsp.call(['echo'])\n",
+    "from-import-alias": "from subprocess import check_output as execute\nexecute(['echo'])\n",
+    "from-import-continuation": "from \\\nsubprocess import check_call\ncheck_call(['echo'])\n",
+    "comma-separated-functions": (
+        "from subprocess import run, call, check_output, check_call\ncheck_output(['echo'])\n"
+    ),
+    "parenthesized-from-import": "from subprocess import (\nrun as execute,\ncall,\n)\nexecute(['echo'])\n",
+    "nfkc-module-and-call": "import \uff53ubprocess as sp\nsp.\uff52un(['echo'])\n",
+    "nfkc-from-import": "from \uff53ubprocess import run as execute\nexecute(['echo'])\n",
 }
 
 
@@ -217,6 +227,55 @@ def test_non_line_anchored_subprocess_import_fails_the_cli(
 def test_prefilter_still_skips_sources_that_cannot_import_subprocess() -> None:
     assert timeout_less_calls_from_source("import os\nos.system('true')\n") == []
     assert timeout_less_calls_from_source("") == []
+
+
+@pytest.mark.parametrize("source", [
+    "",
+    "import os\nos.system('true')\n",
+    "import subprocess_timeout_guard\nsubprocess_timeout_guard.run()\n",
+    "from my_subprocess import run\nrun()\n",
+    "import subprocess2\nsubprocess2.call()\n",
+    "label = '\u2603'\n",
+    "import \uff53ubprocess_helper\n",
+])
+def test_prefilter_skips_ast_parsing_for_irrelevant_sources(
+    source: str, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    path = tmp_path / "irrelevant.py"
+    path.write_text(source, encoding="utf-8")
+    assert guard.timeout_less_calls_from_tree(ast.parse(source)) == []
+
+    def unexpected_parse(*args, **kwargs):
+        pytest.fail("irrelevant source reached the AST parser")
+
+    monkeypatch.setattr(guard.ast, "parse", unexpected_parse)
+    monkeypatch.setattr(guard, "parse_test_source", unexpected_parse)
+    assert timeout_less_calls_from_source(source) == []
+    assert timeout_less_calls(path) == []
+
+
+def test_prefilter_preserves_candidate_syntax_errors(tmp_path: Path) -> None:
+    source = "import subprocess\nsubprocess.run(\n"
+    path = tmp_path / "broken.py"
+    path.write_text(source, encoding="utf-8")
+    with pytest.raises(SyntaxError) as from_source:
+        timeout_less_calls_from_source(source, filename=str(path))
+    with pytest.raises(SyntaxError) as from_path:
+        timeout_less_calls(path)
+    assert from_source.value.filename == from_path.value.filename == str(path)
+
+
+@pytest.mark.parametrize("raw", [b"# invalid UTF-8: \xff\n", b"import subprocess\n# \xff\n"])
+def test_prefilter_does_not_swallow_encoding_errors(raw: bytes, tmp_path: Path) -> None:
+    path = tmp_path / "bad_encoding.py"
+    path.write_bytes(raw)
+    with pytest.raises(UnicodeDecodeError):
+        timeout_less_calls(path)
+
+
+def test_prefilter_does_not_swallow_missing_files(tmp_path: Path) -> None:
+    with pytest.raises(FileNotFoundError):
+        timeout_less_calls(tmp_path / "missing.py")
 
 
 @pytest.mark.parametrize("root", [_SCRIPTS_ROOT, _TESTS_ROOT], ids=["scripts", "tests"])

@@ -7,8 +7,9 @@ cannot rotate into a vacated slot under the same qualname (review F4).
 Prefilter rule (#10782): a file is parsed unless it provably cannot import
 ``subprocess``. The visitor only flags names bound by ``import subprocess`` /
 ``from subprocess import ...`` (found anywhere via ``ast.walk``), and the
-module name is one token, so a source without the substring ``subprocess``
-cannot be flagged. Python NFKC-normalises identifiers, so non-ASCII sources
+module name is one token, so a source without the token ``subprocess``
+cannot be flagged. Embedded names such as ``subprocess_timeout_guard`` do
+not import that module. Python NFKC-normalises identifiers, so non-ASCII sources
 are also tested after NFKC normalisation. Import *syntax* is never inspected
 by the prefilter: ``if x: import subprocess``, ``a = 1; import subprocess`` and
 ``import \\`` line continuations are all parsed. The AST walk stays the authority.
@@ -34,7 +35,7 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 BOUNDED_FUNCS = frozenset({"run", "check_output", "call", "check_call"})
 SHAPE_HASH_HEX_LEN = 16
 ALLOWLIST_KEY_PARTS = 4
-_SUBPROCESS_TOKEN = "subprocess"
+_SUBPROCESS_TOKEN_RE = re.compile(r"\bsubprocess\b", re.ASCII)
 _SHAPE_RE = re.compile(rf"^[0-9a-f]{{{SHAPE_HASH_HEX_LEN}}}$")
 
 TESTS_TIMEOUT_PREAMBLE = (
@@ -185,9 +186,10 @@ def timeout_less_calls_from_tree(tree: ast.AST) -> list[TimeoutLessCall]:
 
 def _may_import_subprocess(src: str) -> bool:
     """Sound prefilter: False only when no ``import subprocess`` can exist in ``src``."""
-    if _SUBPROCESS_TOKEN in src:
+    # ASCII boundaries are conservative even beside Unicode identifier characters.
+    if "subprocess" in src and _SUBPROCESS_TOKEN_RE.search(src):
         return True
-    return not src.isascii() and _SUBPROCESS_TOKEN in unicodedata.normalize("NFKC", src)
+    return not src.isascii() and bool(_SUBPROCESS_TOKEN_RE.search(unicodedata.normalize("NFKC", src)))
 
 
 def timeout_less_calls_from_source(src: str, *, filename: str = "<mem>") -> list[TimeoutLessCall]:
