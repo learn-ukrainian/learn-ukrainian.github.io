@@ -1700,6 +1700,38 @@ def test_checker_unreferenced_optional_coverage_cli(
         assert diagnostic in result.stdout
 
 
+@pytest.mark.parametrize("publication", [False, True], ids=["normal", "publication"])
+@pytest.mark.parametrize("row", [17, None, "non-dict"], ids=["integer", "null", "string"])
+def test_checker_missing_required_artifact_precedes_manifest_rows_cli(
+    checked_world: dict[str, Path], tmp_path: Path, publication: bool, row: object
+) -> None:
+    world = checked_world
+    (world["out"] / checker.CLOZE_FILE).unlink()
+    (world["out"] / checker.MANIFEST_FILE).write_text(json.dumps({"files": [row]}), encoding="utf-8")
+    report = tmp_path / "missing-required-report.json"
+    args = [
+        sys.executable,
+        str(ROOT / "scripts/audit/check_teacher_deck.py"),
+        "--deck-dir",
+        str(world["out"]),
+        "--json",
+        str(report),
+    ]
+    if publication:
+        args += ["--publication", "--withheld", str(world["withheld"])]
+        for flag, key in (("docx", "docx"), ("vesum-db", "vesum"), ("sources-db", "sources"), ("atlas-db", "atlas")):
+            args += [f"--{flag}", str(world[key])]
+    result = subprocess.run(args, capture_output=True, text=True, check=False, timeout=120)
+    assert result.returncode == 1, result
+    assert result.stderr == ""
+    assert "AttributeError" not in result.stdout
+    assert result.stdout == "teacher deck check: FAIL (1 errors)\n  ERROR missing artifact: practice-cloze.teacher.json\n"
+    assert json.loads(report.read_text(encoding="utf-8")) == {
+        "ok": False,
+        "errors": ["missing artifact: practice-cloze.teacher.json"],
+    }
+
+
 @pytest.mark.parametrize(
     ("damage", "diagnostic"),
     [
