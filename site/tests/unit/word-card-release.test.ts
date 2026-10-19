@@ -7,11 +7,11 @@ import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { loadWordCardRelease, releaseReportUrl } from '../../src/lib/lexicon/word-card-release';
 import WordCardPreview from '../../src/lexicon/WordCardPreview';
-import { candidateId, certifiedId, pins, releaseControls } from '../fixtures/word-card-preview/release-controls';
+import { candidateId, certifiedId, pins, releaseControls, fidelityControls, fidelityRefusals } from '../fixtures/word-card-preview/release-controls';
 
 
 const scratch = mkdtempSync(join(process.env.TMPDIR || tmpdir(), 'release-unit-'));
-const controls = releaseControls(scratch);
+const controls = { ...releaseControls(scratch), ...fidelityControls(join(scratch, 'fidelity')) };
 afterAll(() => rmSync(scratch, { recursive: true }));
 const load = (name: string) => {
   const config = controls[name];
@@ -20,6 +20,18 @@ const load = (name: string) => {
 };
 
 describe('pinned producer release boundary', () => {
+  it.each(fidelityRefusals)('refuses unsupported source control %s without silently dropping data', (name, reason) => {
+    expect(load(name)).toEqual({ kind: 'unavailable', reason });
+  });
+  it('preserves supplementary Unicode, safe integers, floats, whitespace and arbitrary safe licence metadata', () => {
+    const result = load('faithful');
+    expect(result.kind).toBe('release');
+    if (result.kind !== 'release') throw Error('Refused faithful release');
+    const row = result.rows[1];
+    expect(row?.fields[1]?.value).toEqual({ nested: [null, true, false, 0, 9007199254740991, -9007199254740991, 1.25, 'A😀𐐀B', ' A\r\nB '] });
+    expect(row?.known_gaps).toEqual([{ nested: ['😀', 9007199254740991] }]);
+    expect(row?.fields[1]?.citation.licence.extra).toEqual({ nested: ['𐐀', -9007199254740991, null] });
+  });
   it.each(['base', 'json'])('accounts for every exact identity, status, parallel assertion and citation in %s', name => {
     const result = load(name);
     expect(result.kind).toBe('release');

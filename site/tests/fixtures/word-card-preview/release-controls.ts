@@ -19,6 +19,81 @@ export const candidateId = 'wc_0123456789ac';
 export const certifiedId = 'wc_0123456789ab';
 export type Control = { enabled: boolean; artifactPath?: string; pin?: string };
 
+export const unsupportedKeys = ['row', 'field', 'subject', 'citation', 'licence-ref'] as const;
+export const unfaithfulValues = {
+  proto: '{"nested":[{"__proto__":{"p":1},"a":1}]}',
+  constructor: '[{"constructor":{"p":1}}]',
+  prototype: '{"nested":[{"prototype":1}]}',
+  'unsafe-positive': '9007199254740993',
+  'unsafe-negative': '-9007199254740993',
+  'overflow-positive': '1e400',
+  'overflow-negative': '-1e400',
+  nul: '"A\\u0000B"',
+  'lone-high': '"A\\ud800B"',
+  'lone-low': '"A\\udfffB"',
+  'invalid-key': '{"A\\ud800B":1}',
+} satisfies Record<string, string>;
+export const fidelityRefusals: [string, string][] = [
+  ...unsupportedKeys.map(key => [`extra-${key}`, ['citation', 'licence-ref'].includes(key) ?
+    'Missing or malformed field citation' : 'Missing or malformed card field'] satisfies [string, string]),
+  ...['value', 'gap', 'licence'].flatMap(target => Object.keys(unfaithfulValues).map(key =>
+    [`${target}-${key}`, 'Unsupported release value'] satisfies [string, string])),
+  ...['card_version', 'field', 'subject', 'locator', 'attribution', 'terms_ref', 'source_record_id', 'source_record_key'].map(key =>
+    [`string-${key}`, 'Unsupported release value'] satisfies [string, string]),
+];
+
+/** Literal source controls, including numeric tokens JS cannot represent faithfully. */
+export function fidelityControls(root: string): Record<string, Control> {
+  const controls: Record<string, Control> = {};
+  const source = readFileSync(join(fixtureRoot, 'release-jsonl/word-cards.jsonl'), 'utf8');
+  for (const name of [...fidelityRefusals.map(([name]) => name), 'faithful']) {
+    const rows = source.trimEnd().split('\n').map(line => JSON.parse(line));
+    const row = rows[1];
+    const field = row.fields[1];
+    const citation = field.citation;
+    let token: string | undefined;
+    if (name.startsWith('extra-')) {
+      const target = name.slice(6);
+      if (target === 'row') row.withdrawn = true;
+      if (target === 'field') field.review = { status: 'rejected' };
+      if (target === 'subject') field.subject.superseded = true;
+      if (target === 'citation') citation.verbatim_note = 'ANNOTATION MUST NOT DISAPPEAR';
+      if (target === 'licence-ref') citation.licence_ref.review = 'pending';
+    } else if (name.startsWith('string-')) {
+      const key = name.slice(7);
+      if (key === 'card_version') row.card_version = 'A\u0000B';
+      else if (key === 'field') field.field = 'A\ud800B';
+      else if (key === 'subject') field.subject.id = 'A\udfffB';
+      else citation[key] = 'A\u0000B';
+    } else if (name === 'faithful') {
+      field.value = { nested: [null, true, false, 0, 9007199254740991, -9007199254740991, 1.25, 'A😀𐐀B', ' A\r\nB '] };
+      row.known_gaps = [{ nested: ['😀', 9007199254740991] }];
+      citation.licence.extra = { nested: ['𐐀', -9007199254740991, null] };
+    } else {
+      const [target, ...parts] = name.split('-');
+      token = unfaithfulValues[parts.join('-') as keyof typeof unfaithfulValues];
+      if (!token) throw Error('Missing literal control');
+      if (target === 'value') field.value = { nested: ['FIDELITY_TOKEN'] };
+      if (target === 'gap') row.known_gaps = [{ nested: ['FIDELITY_TOKEN'] }];
+      if (target === 'licence') citation.licence.extra = { nested: ['FIDELITY_TOKEN'] };
+    }
+    let data = rows.map(row => JSON.stringify(row)).join('\n') + '\n';
+    if (token) data = data.replace('"FIDELITY_TOKEN"', token);
+    const path = join(root, name);
+    mkdirSync(path, { recursive: true });
+    const manifest = JSON.parse(readFileSync(join(fixtureRoot, 'release-jsonl/manifest.json'), 'utf8'));
+    manifest.dataset_bytes = Buffer.byteLength(data);
+    manifest.dataset_sha256 = digest(data);
+    const manifestBytes = JSON.stringify(manifest) + '\n';
+    writeFileSync(join(path, 'word-cards.jsonl'), data);
+    writeFileSync(join(path, 'manifest.json'), manifestBytes);
+    controls[name] = { enabled: true, artifactPath: path, pin: JSON.stringify({ ...pins.jsonl,
+      dataset_sha256: manifest.dataset_sha256, manifest_sha256: digest(manifestBytes) }) };
+    writeFileSync(join(path, 'pin.json'), controls[name].pin || '');
+  }
+  return controls;
+}
+
 /** Negative rows are re-manifested by the pinned producer's canonical/hash functions. */
 export function remanifest(directory: string, fault: string): string {
   const common = execFileSync('git', ['rev-parse', '--path-format=absolute', '--git-common-dir'], { encoding: 'utf8' }).trim();

@@ -6,7 +6,7 @@ import { join, resolve, sep } from 'node:path';
 import { tmpdir } from 'node:os';
 import snapshot from '../tests/fixtures/word-card-preview/current';
 import { revisionCases, relationCases, record } from '../tests/fixtures/word-card-preview/inputs';
-import { buildPreview, releaseControls, candidateId, certifiedId, pins } from '../tests/fixtures/word-card-preview/release-controls';
+import { buildPreview, releaseControls, candidateId, certifiedId, pins, fidelityControls, fidelityRefusals } from '../tests/fixtures/word-card-preview/release-controls';
 
 // This spec drives an explicitly flag-enabled local build. No data certification.
 const names = ['bronia-armour', 'bronia-reservation', 'idiom-buduvaty-povitriani-zamky', 'kliuch-1', 'vriady-hody-conflict', 'vybihaty-imperf', 'vybihty-perf', 'zamok-castle', 'zamok-legacy-split', 'zamok-lock', 'zamok-settlement',
@@ -93,6 +93,64 @@ for (const prefix of ['', 'compare/']) for (const c of revisionCases()) test(`${
       await expect(citation.locator('pre')).toHaveCount(0);
     }
   }
+});
+
+test.describe('source fidelity refusals', () => {
+  test.describe.configure({ timeout: 150_000 });
+  const scratch = mkdtempSync(join(process.env.TMPDIR || tmpdir(), 'fidelity-browser-'));
+  const controls = fidelityControls(join(scratch, 'inputs'));
+  async function serve(root: string): Promise<Server> {
+    const server = createServer((req, res) => {
+      const path = new URL(req.url || '/', 'http://localhost').pathname;
+      const file = resolve(root, '.' + (path.endsWith('/') ? path + 'index.html' : path));
+      if (!file.startsWith(root + sep) || !existsSync(file)) { res.writeHead(404).end(); return; }
+      res.setHeader('Content-Type', file.endsWith('.css') ? 'text/css' : file.endsWith('.js') ? 'text/javascript' : 'text/html');
+      res.end(readFileSync(file));
+    });
+    await new Promise<void>(done => server.listen(0, '127.0.0.1', done));
+    return server;
+  }
+  for (const [name, reason] of fidelityRefusals) test(`refuses ${name}`, async ({ page }, info) => {
+    const config = controls[name];
+    if (!config) throw Error('Missing fidelity control');
+    const root = buildPreview(join(scratch, name), config);
+    const server = await serve(root);
+    try {
+      const address = server.address();
+      if (!address || typeof address === 'string') throw Error('No local port');
+      const origin = `http://127.0.0.1:${address.port}`;
+      // Capture the defect before asserting refusal, so failing reproductions retain actual DOM evidence.
+      await page.goto(`${origin}/lexicon-v2/release/${candidateId}/`);
+      await info.attach(`${name}-observed`, { body: await page.content(), contentType: 'text/html' });
+      await info.attach(`${name}-page`, { body: await page.screenshot(), contentType: 'image/png' });
+      expect(await page.locator('[data-release-card]').count()).toBe(0);
+      for (const prefix of ['', 'compare/']) {
+        await page.goto(`${origin}/lexicon-v2/${prefix}release/`);
+        await expect(page.getByRole('status')).toHaveText(`Unavailable: ${reason}`);
+        await expect(page.locator('[data-release-card], [data-raw-value], [data-report-action]')).toHaveCount(0);
+        await info.attach(`${name}-${prefix ? 'compare' : 'word'}-refusal`, { body: await page.screenshot(), contentType: 'image/png' });
+      }
+    } finally { await new Promise<void>(done => server.close(() => done())); }
+  });
+  test('retains faithful values and safe citation metadata', async ({ page }) => {
+    const config = controls.faithful;
+    if (!config) throw Error('Missing faithful control');
+    const server = await serve(buildPreview(join(scratch, 'faithful'), config));
+    try {
+      const address = server.address();
+      if (!address || typeof address === 'string') throw Error('No local port');
+      for (const prefix of ['', 'compare/']) {
+        await page.goto(`http://127.0.0.1:${address.port}/lexicon-v2/${prefix}release/${candidateId}/`);
+        await expect(page.locator('[data-release-status]')).toHaveText('CANDIDATE');
+        const raw = await page.locator('[data-raw-value]').nth(1).textContent();
+        expect(JSON.parse(raw || '')).toEqual({ nested: [null, true, false, 0, 9007199254740991, -9007199254740991, 1.25, 'A😀𐐀B', ' A\r\nB '] });
+        const gaps = await page.getByRole('region', { name: 'Known gaps' }).locator('pre').allTextContents();
+        expect(gaps.map(text => JSON.parse(text))).toEqual([{ nested: ['😀', 9007199254740991] }]);
+        const citation = JSON.parse(await page.locator('[data-release-citation]').nth(1).textContent() || '');
+        expect(citation.licence.extra).toEqual({ nested: ['𐐀', -9007199254740991, null] });
+      }
+    } finally { await new Promise<void>(done => server.close(() => done())); }
+  });
 });
 
 for (const c of relationCases()) test(`compare/${c.name}`, async ({page}, info) => {

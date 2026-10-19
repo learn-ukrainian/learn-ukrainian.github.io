@@ -24,19 +24,19 @@ const citationSchema = z.object({
   source_id: nonempty, snapshot_id: nonempty, locator: nonempty,
   source_record_id: z.string().nullable().optional(), source_record_key: z.string().nullable().optional(),
   licence_ref: z.object({ register_source_id: nonempty, register_version: z.number().int().positive(),
-    appears_in: z.array(z.enum(['internal', 'site', 'dataset'])).optional() }),
+    appears_in: z.array(z.enum(['internal', 'site', 'dataset'])).optional() }).strict(),
   attribution: nonempty, licence: z.object({ name: nonempty }).catchall(json), terms_ref: nonempty,
-}).refine(c => c.source_id === c.licence_ref.register_source_id);
+}).strict().refine(c => c.source_id === c.licence_ref.register_source_id);
 const fieldSchema = z.object({
   assertion_id: z.string().regex(new RegExp(cardSchema.$defs.assertion_id.pattern)),
-  subject: z.object({ kind: z.enum(['card', 'sense', 'link']), id: nonempty }),
+  subject: z.object({ kind: z.enum(['card', 'sense', 'link']), id: nonempty }).strict(),
   field: nonempty, value: json, citation: citationSchema,
-});
+}).strict();
 const rowSchema = z.object({
   card_id: z.string().regex(new RegExp(cardSchema.$defs.card_id.pattern)),
   card_version: nonempty, card_kind: nonempty.refine(value => cardSchema.properties.card_kind.enum.includes(value)),
   status: z.enum(['CERTIFIED', 'CANDIDATE']), known_gaps: z.array(json), fields: z.array(fieldSchema).min(1),
-});
+}).strict();
 export type ReleasePin = z.infer<typeof pinSchema>;
 export type ReleaseRow = z.infer<typeof rowSchema>;
 export type LoadedRelease = { kind: 'release'; pin: ReleasePin; rows: ReleaseRow[] };
@@ -49,9 +49,20 @@ const hash = (bytes: Buffer) => createHash('sha256').update(bytes).digest('hex')
 function read(path: string): Buffer {
   try { return fs.readFileSync(path); } catch { return refuse('Missing artifact'); }
 }
+function faithfulJson(value: unknown): boolean {
+  if (value === null || typeof value === 'boolean') return true;
+  if (typeof value === 'string') return !/[\u0000\uD800-\uDFFF]/u.test(value);
+  if (typeof value === 'number') return Number.isFinite(value) && (!Number.isInteger(value) || Number.isSafeInteger(value));
+  if (Array.isArray(value)) return value.every(faithfulJson);
+  return typeof value === 'object' && Object.entries(value).every(([key, item]) =>
+    !['__proto__', 'constructor', 'prototype'].includes(key) && faithfulJson(key) && faithfulJson(item));
+}
 function parse(bytes: Buffer, reason: string): unknown {
-  try { return JSON.parse(new TextDecoder('utf-8', { fatal: true }).decode(bytes)); }
+  let value: unknown;
+  try { value = JSON.parse(new TextDecoder('utf-8', { fatal: true }).decode(bytes)); }
   catch { return refuse(reason); }
+  if (!faithfulJson(value)) refuse('Unsupported release value');
+  return value;
 }
 
 /** Local build boundary. Disabled previews return before parsing config or reading any path. */
