@@ -34,7 +34,7 @@ The module schemas are the machine-readable reference.
 | `plan` | Frozen disposition for every enumerated source unit. |
 | `certifications` | Nonempty inventory of exact Phase 5 receipts. |
 | `limits` | Positive integer `batch_units`, `max_card_bytes`, and `min_free_bytes`. |
-| `runtime_sha256` | `runtime_fingerprint()` over the interpreter, SQLite version, OS release, and machine architecture. Runtime drift refuses execution. |
+| `runtime_sha256` | `runtime_fingerprint()` over the interpreter, SQLite version, OS release, machine architecture, and implementation SHA-256. Runtime or implementation drift refuses execution. |
 | `resource_acceptance` | Independently accepted full-scale resource and interruption trial. |
 
 The complete-data verifier replays the independent source indexes, stage
@@ -114,6 +114,16 @@ universe, implementation, rule set, or snapshot cannot authorize the mapping.
 The harness never edits the trusted review ledger to admit new candidates.
 
 ## Resource acceptance and crash-safe resume
+
+The runtime fingerprint includes an implementation SHA-256 over repository-relative
+paths and each file's SHA-256 in `cert.IMPLEMENTATION_PATHS`. This binds
+`word_card_universe.py`, `word_card_certification.py`, `word_card_golden_set.py`,
+`word_card_assembly.py` including `require_host_only`, and the certification
+dependency set. File hashes are recomputed on every fingerprint call. Any change
+invalidates prior resource acceptance, including interruption and resume proof.
+The spec's `runtime_sha256` must match before loading build inputs and when
+checking resource acceptance. Changed code requires a new full-scale trial,
+independent acceptance, pinned specification, and checkpoint.
 
 `word-card-universe-resources.v1` contains:
 

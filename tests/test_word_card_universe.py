@@ -509,6 +509,34 @@ def test_changed_runtime_invalidates_resource_proof(packet, monkeypatch):
         packet.build()
 
 
+@pytest.mark.parametrize("changed_file", [
+    "scripts/atlas/word_card_universe.py",
+    "scripts/atlas/word_card_certification.py",
+    "scripts/atlas/word_card_golden_set.py",
+    "scripts/atlas/word_card_assembly.py",
+    "scripts/projects/open_model_data/source_completeness_manifest.py",
+])
+def test_changed_implementation_invalidates_resource_proof(packet, monkeypatch, tmp_path, changed_file):
+    packet.build(max_units=1)
+    root = tmp_path / "runtime"
+    paths = []
+    for source in universe.IMPLEMENTATION_PATHS:
+        target = root / source.relative_to(universe.PROJECT_ROOT)
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes(source.read_bytes())
+        paths.append(target)
+    monkeypatch.setattr(universe, "PROJECT_ROOT", root)
+    monkeypatch.setattr(universe, "IMPLEMENTATION_PATHS", tuple(paths))
+    assert universe.runtime_fingerprint() == packet.spec["runtime_sha256"]
+    changed = root / changed_file
+    changed.write_bytes(changed.read_bytes() + b"\n# changed implementation\n")
+    assert universe.runtime_fingerprint() != packet.spec["runtime_sha256"]
+    with pytest.raises(ValueError, match="Resource runtime changed"):
+        packet.build()
+    with pytest.raises(ValueError, match="Resource runtime changed"):
+        universe._resources(packet.spec, packet.root, 144, hashlib.sha256(packet.output).hexdigest())
+
+
 @pytest.mark.parametrize("stride", [2, 3, 5])
 def test_partition_conservation_with_mixed_dispositions(packet, stride):
     for ordinal, row in enumerate(packet.plan["dispositions"]):

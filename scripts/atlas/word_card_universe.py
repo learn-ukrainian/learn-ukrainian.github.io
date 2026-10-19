@@ -19,6 +19,9 @@ from scripts.atlas import word_card_certification as cert
 from scripts.atlas import word_card_golden_set as gold
 from scripts.atlas.word_card_assembly import require_host_only
 
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+IMPLEMENTATION_PATHS = cert.IMPLEMENTATION_PATHS
+
 DIMENSIONS = ("spellings", "lexemes", "senses", "mwes", "forms")
 CHECKS = ("source_fidelity", "scope", "citations", "withdrawals", "reimports",
           "resumed_builds", "homonyms", "senses", "mwes")
@@ -83,8 +86,13 @@ def input_binding(spec: dict) -> str:
 
 
 def runtime_fingerprint() -> str:
-    """Bind resource trials to the current interpreter, SQLite and OS runtime."""
+    """Bind resource trials to implementation bytes and the current runtime."""
+    implementation = cert.digest({
+        path.relative_to(PROJECT_ROOT).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
+        for path in IMPLEMENTATION_PATHS
+    })
     return cert.digest({"python": sys.version, "sqlite": sqlite3.sqlite_version,
+                        "implementation_sha256": implementation,
                         "system": platform.system(), "release": platform.release(), "machine": platform.machine()})
 
 
@@ -221,6 +229,7 @@ def _plan(spec: dict, base: Path, units: dict, inventory: dict, source_spec: dic
 
 
 def _resources(spec: dict, base: Path, count: int, output_sha: str) -> None:
+    gold.require(spec["runtime_sha256"] == runtime_fingerprint(), "Resource runtime changed")
     ref = spec["resource_acceptance"]
     proof = _document(ref, base, RESOURCE, "full-scale resource acceptance")
     proof_base = (base / ref["path"]).parent
