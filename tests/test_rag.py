@@ -135,11 +135,21 @@ def test_search_dictionary_uses_sqlite_dictionary_helpers(monkeypatch):
     assert hits == [
         {
             "score": 0.0,
-            "text": "пояснення",
+            "text": "Historical Soviet colonization context only; cannot verify modern Ukrainian.",
             "word": "мова",
             "collection": "sum11",
-            "source": "sum11",
-            "metadata": {"word": "мова", "definition": "пояснення", "source": "sum11"},
+            "soviet_colonization_context": {
+                "source": "СУМ-11 (1970–1980)",
+                "source_role": "soviet_colonization_context",
+                "red_flag": True,
+                "historical_only": True,
+                "contrast_only": True,
+                "can_verify_modern_ukrainian": False,
+                "sovietization_risk": None,
+                "sovietization_keywords": None,
+                "ideological_markers": None,
+                "entry": {"word": "мова", "definition": "пояснення", "source": "sum11"},
+            },
         }
     ]
 
