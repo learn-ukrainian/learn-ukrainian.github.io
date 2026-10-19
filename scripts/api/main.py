@@ -508,7 +508,6 @@ def _collect_git_orient_data(ctx: MonitorContext | None = None) -> dict:
     authority = build_repository_authority(
         project_root=resolved_ctx.roots.project_root,
         live_repo_root=resolved_ctx.roots.live_repo_root,
-        data_branch=branch,
     )
     return {
         "branch": branch,

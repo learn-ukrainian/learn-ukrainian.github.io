@@ -3248,7 +3248,7 @@ def compute_provider_trend(lane: str, *, history: list[dict[str, Any]] | None = 
     }
 
 
-def _fetch_cursor_lane_usage_live(*, prefer_native: bool = True) -> dict[str, Any]:
+def _fetch_cursor_lane_usage_live() -> dict[str, Any]:
     """Probe Cursor login + native Auto/API pools (blocking; background/scheduler only)."""
     login = probe_cursor_login()
     if not login.get("is_authenticated"):
@@ -3364,7 +3364,7 @@ def trigger_cursor_background_refresh() -> None:
         _cursor_refresh_thread.start()
 
 
-def get_cursor_lane_usage(*, prefer_native: bool = True) -> dict[str, Any]:
+def get_cursor_lane_usage() -> dict[str, Any]:
     """Cursor lane: cache-only HTTP path; native probe runs in background."""
     cached = cache_get_with_age(CURSOR_CACHE_KEY, ttl=_cursor_cache_ttl_s())
     if cached is not None:

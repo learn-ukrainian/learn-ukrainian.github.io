@@ -202,7 +202,6 @@ def classify_error(
     returncode: int,
     stderr: str,
     elapsed_ms: int = 0,
-    timeout_ms: int = 0,
 ) -> ErrorCategory:
     """Classify a process error into a category for retry decisions.
 
@@ -210,7 +209,6 @@ def classify_error(
         returncode: Process exit code (-1 for timeout).
         stderr: Standard error output.
         elapsed_ms: How long the process ran.
-        timeout_ms: The configured timeout (for detecting near-timeout).
 
     Returns:
         ErrorCategory indicating how to handle the error.
