@@ -546,7 +546,7 @@ def _load(path: Path, report: Report) -> dict[str, Any] | None:
         return None
     try:
         payload = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError) as exc:
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
         report.fail(f"unreadable artifact {path.name}: {exc}")
         return None
     if not isinstance(payload, dict):
