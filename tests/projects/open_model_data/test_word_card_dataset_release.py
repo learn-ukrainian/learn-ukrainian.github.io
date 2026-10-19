@@ -83,7 +83,7 @@ def test_permission_filtering_and_complete_citations(release_input):
         }
     for forbidden in (b"PRIVATE", b"UNKNOWN", b"SOVIET", b"INACTIVE", b"GENERATED", b"UNRESOLVED", b"REJECTED"):
         assert forbidden not in result.dataset
-    assert set(rows[0]) == {"card_id", "card_kind", "fields"}
+    assert set(rows[0]) == {"card_id", "card_version", "card_kind", "status", "known_gaps", "fields"}
 
 
 @pytest.mark.parametrize("format", ["json", "jsonl"])
@@ -115,7 +115,11 @@ def test_determinism_and_input_immutability(release_input):
     # A new order is a different certified artifact, but projection order is stable.
     release_input.approve(release_input.card)
     reordered = release(release_input)
-    assert first.dataset == reordered.dataset
+    first_row, reordered_row = json.loads(first.dataset), json.loads(reordered.dataset)
+    assert first_row.pop("card_version") == original["build"]["card_version"]
+    assert reordered_row.pop("card_version") == release_input.card["build"]["card_version"]
+    assert original["build"]["card_version"] != release_input.card["build"]["card_version"]
+    assert first_row == reordered_row
     assert release(release_input) == reordered
     release_input.card["assertions"].reverse()
     assert release_input.card["assertions"] == original["assertions"]

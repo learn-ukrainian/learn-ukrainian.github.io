@@ -1,7 +1,7 @@
 """Versioned assertion-only dataset projection and withdrawal packages (#8988).
 
-Dataset scope comes from the current register. Exact-artifact certification
-remains mandatory, including for pilot cards assembled from a frozen manifest.
+Dataset scope comes from the current register. Candidate projection is opt-in;
+only exact-artifact dataset certification earns a CERTIFIED row status.
 """
 
 from __future__ import annotations
@@ -23,6 +23,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 import yaml
+from jsonschema import Draft202012Validator
 
 from scripts.atlas import word_card_certification as certification
 from scripts.common.jsonl import jsonl_lines
@@ -147,8 +148,9 @@ def _filter_reason(assertion: dict, source: dict | None, withdrawals: list[dict]
 def create_release(
     cards: list[dict], *, release_version: str, register_path: Path | None = None,
     format: str = "jsonl", withdrawals: list[dict] | None = None,
+    allow_candidates: bool = False,
 ) -> Release:
-    """Certify inputs, filter assertions and build deterministic release bytes.
+    """Classify inputs, filter assertions and build deterministic release bytes.
 
     Every included assertion becomes one cited field. Cached resolutions,
     headwords, identity metadata and arbitrary outer properties are never copied.
@@ -163,10 +165,29 @@ def create_release(
         raise ProjectionRefusal("Input cards must be nonempty and unique")
     register_bytes = (register_path or certification.PERMISSIONS_REGISTER_PATH).read_bytes()
     register_hash = sha256(register_bytes)
+    # Projection annotations extend the assembled card schema, not certification.
+    schema = json.loads(certification.SCHEMA_PATH.read_bytes())
+    schema["properties"].update({
+        "card_version": {"type": "string", "minLength": 1},
+        "known_gaps": {"type": "array"},
+    })
+    validator = Draft202012Validator(schema)
+    statuses = {}
     for card in cards:
-        certification.load_certified_card_for_export(card, required_approval="dataset")
+        if not validator.is_valid(card):
+            raise ProjectionRefusal("Invalid word-card schema")
+        if card["state"] != "active":
+            raise ProjectionRefusal("Only active cards may be projected")
+        try:
+            certification.load_certified_card_for_export(card, required_approval="dataset")
+        except certification.UncertifiedCardRefusal:
+            if not allow_candidates:
+                raise
+            statuses[card["card_id"]] = "CANDIDATE"
+        else:
+            statuses[card["card_id"]] = "CERTIFIED"
         if card["build"]["inputs"]["R"]["register"]["content_sha256"] != register_hash:
-            raise ProjectionRefusal("Projection register differs from certified register")
+            raise ProjectionRefusal("Projection register differs from card register")
     register = yaml.safe_load(register_bytes)
     sources = {s["id"]: s for s in register["sources"]}
     if len(sources) != len(register["sources"]):
@@ -223,7 +244,12 @@ def create_release(
                 },
             })
         if fields:
-            rows.append({"card_id": card["card_id"], "card_kind": card["card_kind"], "fields": fields})
+            rows.append({
+                "card_id": card["card_id"],
+                "card_version": card.get("card_version", card["build"].get("card_version", "0.1.0")),
+                "card_kind": card["card_kind"], "status": statuses[card["card_id"]],
+                "known_gaps": copy.deepcopy(card.get("known_gaps", [])), "fields": fields,
+            })
     dataset = b"".join(canonical(row) for row in rows) if format == "jsonl" else canonical(rows)
     breakdown = {}
     for source_id, tally in sorted(counts.items()):
@@ -240,6 +266,8 @@ def create_release(
         "schema_version": SCHEMA_VERSION, "release_version": release_version,
         "dataset_file": f"word-cards.{format}", "dataset_sha256": sha256(dataset), "dataset_bytes": len(dataset),
         "card_count": len(rows), "field_citation_count": sum(len(row["fields"]) for row in rows),
+        "certified_count": sum(row["status"] == "CERTIFIED" for row in rows),
+        "candidate_count": sum(row["status"] == "CANDIDATE" for row in rows),
         "input_card_count": len(cards), "input_assertion_count": len(seen_assertions),
         "input_cards_sha256": sha256(canonical(sorted(cards, key=lambda c: c["card_id"]))),
         "permissions_register_sha256": register_hash, "source_breakdown": breakdown,
@@ -253,11 +281,12 @@ def create_release(
 def withdraw_release(
     cards: list[dict], *, previous_version: str, release_version: str, selector: dict, justification: str,
     register_path: Path | None = None, format: str = "jsonl", withdrawals: list[dict] | None = None,
+    allow_candidates: bool = False,
 ) -> Release:
     """Rebuild from original cards with all prior selectors plus one withdrawal."""
     if previous_version == release_version:
         raise ProjectionRefusal("Withdrawal requires a new release version")
-    options = {"register_path": register_path, "format": format}
+    options = {"register_path": register_path, "format": format, "allow_candidates": allow_candidates}
     previous = create_release(cards, release_version=previous_version, withdrawals=withdrawals, **options)
     entries = [*(withdrawals or []), {"selector": selector, "justification": justification}]
     replacement = create_release(cards, release_version=release_version, withdrawals=entries, **options)
@@ -276,7 +305,7 @@ def withdraw_release(
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
-        description="Build a versioned, cited word-card dataset from certified cards.\n"
+        description="Build a versioned, cited word-card dataset with certification status.\n"
         "Use for local release packaging or withdrawal drills, never as certification or publication approval.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""Examples:
@@ -294,11 +323,13 @@ Related: #8988; docs/datasets/word-cards.md; scripts.atlas.word_card_assembly
     parser.add_argument("--cards", type=Path, required=True,
                         help="Assembled JSON/JSONL, cards directory, or pilot manifest, e.g. pilot-v1.json")
     parser.add_argument("--register", type=Path, default=certification.PERMISSIONS_REGISTER_PATH,
-                        help="Permissions YAML, default docs/sources/permissions-register.yaml; must match certification")
+                        help="Permissions YAML, default docs/sources/permissions-register.yaml; must match card build inputs")
     parser.add_argument("--version", required=True, help="Release version, e.g. v0.1.0-pilot")
     parser.add_argument("--output", type=Path, required=True,
                         help="New private package directory outside checkouts, e.g. $TMPDIR/word-card-release")
     parser.add_argument("--format", choices=("json", "jsonl"), default="jsonl", help="Dataset encoding, default jsonl")
+    parser.add_argument("--allow-candidates", action="store_true",
+                        help="Include schema-valid uncertified cards as CANDIDATE; default requires dataset certification")
     parser.add_argument("--withdrawals", type=Path,
                         help="Prior cumulative selector/justification JSON array; default none")
     parser.add_argument("--previous-version", help="Prior version for a withdrawal, e.g. v0.1.0-pilot; default none")
@@ -313,6 +344,7 @@ Related: #8988; docs/datasets/word-cards.md; scripts.atlas.word_card_assembly
         parser.error("withdrawal requires a selector, --previous-version and --justification together")
     try:
         options = {"release_version": args.version, "register_path": args.register, "format": args.format,
+                   "allow_candidates": args.allow_candidates,
                    "withdrawals": json.loads(args.withdrawals.read_bytes()) if args.withdrawals else None}
         cards = load_cards(args.cards, args.register)
         release = (withdraw_release(cards, previous_version=args.previous_version, selector=selector,
