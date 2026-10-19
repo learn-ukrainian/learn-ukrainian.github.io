@@ -216,10 +216,8 @@ def load_baseline(text: str) -> dict[str, str]:
     return entries
 
 
-def baseline_policy_violations(root: Path, current: dict[str, str]) -> list[str]:
-    """Like the SQLite checker, compare available committed predecessors."""
-    if not (root / ".git").exists():
-        return []
+def shallow_baseline_unprovable(root: Path) -> bool:
+    """Require the baseline blob on origin/main when Git history is shallow."""
     shallow = subprocess.run(
         ["git", "rev-parse", "--is-shallow-repository"], cwd=root,
         capture_output=True, text=True, timeout=30, check=True,
@@ -228,9 +226,16 @@ def baseline_policy_violations(root: Path, current: dict[str, str]) -> list[str]
         ["git", "ls-tree", "origin/main", "--", BASELINE_PATH], cwd=root,
         capture_output=True, text=True, timeout=30, check=False,
     )
-    if shallow.stdout.strip() == "true" and (
-        main_tree.returncode or not re.search(r"^\d{6} blob ", main_tree.stdout)
-    ):
+    return shallow.stdout.strip() == "true" and (
+        main_tree.returncode != 0 or re.search(r"^\d{6} blob ", main_tree.stdout) is None
+    )
+
+
+def baseline_policy_violations(root: Path, current: dict[str, str]) -> list[str]:
+    """Like the SQLite checker, compare available committed predecessors."""
+    if not (root / ".git").exists():
+        return []
+    if shallow_baseline_unprovable(root):
         return [f"{BASELINE_PATH}: origin/main or full Git history is required to prove the baseline only shrinks"]
     history = subprocess.run(
         ["git", "log", "--format=%H", "HEAD", "--", BASELINE_PATH], cwd=root,
