@@ -568,6 +568,22 @@ def test_one_card_cannot_collapse_distinct_homonyms(packet):
         packet.freeze()
 
 
+@pytest.mark.parametrize("identities", ["lexemes", "mwes", "mixed"])
+def test_duplicate_card_ids_cannot_collapse_supportable_identities(packet, monkeypatch, identities):
+    row = packet.inventory["members"][0]
+    row["lexemes"] = ["source:lexeme:0", "source:lexeme:1"] if identities == "lexemes" else []
+    row["mwes"] = ["source:mwe:0", "source:mwe:1"] if identities == "mwes" else []
+    if identities == "mixed":
+        row["lexemes"] = ["source:lexeme:0"]
+        row["mwes"] = ["source:mwe:0"]
+    row["card_ids"] = [packet.card["card_id"], packet.card["card_id"]]
+    # Isolate allocation validation from the schema's earlier uniqueItems rejection.
+    monkeypatch.setattr(universe, "_document", lambda *args: packet.inventory)
+    with pytest.raises(ValueError, match="Supportable lexical identities collapsed"):
+        universe._inventory(packet.spec["inventory"], packet.root, packet.units,
+                            {member["member_id"]: member for member in packet.members}, packet.spec["author"])
+
+
 def test_unbound_checkpoint_rows_are_not_adopted(packet):
     with sqlite3.connect(packet.checkpoint) as connection:
         connection.execute("CREATE TABLE units (unit_key TEXT PRIMARY KEY, payload BLOB NOT NULL)")

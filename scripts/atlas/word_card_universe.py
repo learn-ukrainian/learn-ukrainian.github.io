@@ -156,7 +156,7 @@ def _inventory(ref: dict, base: Path, units: dict, members: dict, author: dict) 
         gold.require(bool(row["spellings"]), "Missing source spelling inventory")
         identity = (tuple(sorted(row["lexemes"])), tuple(sorted(row["mwes"])))
         if row["card_ids"]:
-            gold.require(0 < len(row["lexemes"]) + len(row["mwes"]) <= len(row["card_ids"]),
+            gold.require(0 < len(row["lexemes"]) + len(row["mwes"]) <= len(set(row["card_ids"])),
                          "Supportable lexical identities collapsed")
         for card_id in row["card_ids"]:
             gold.require(card_id not in card_identities or card_identities[card_id] == identity,
