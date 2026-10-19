@@ -7,6 +7,8 @@ import sqlite3
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
+import pytest
+
 from scripts.fleet_comms.efficiency_metrics import collect_stream_bottleneck_metrics
 
 NOW = datetime(2026, 7, 22, 12, 0, tzinfo=UTC)
@@ -21,15 +23,30 @@ def _write_task(
     stream_epic: int | None = 4707,
     task_family: str | None = "fleet-comms-metrics",
     hard_timeout: int | None = None,
+    top_level_identity: bool = False,
 ) -> None:
+    """Write a task record; identity uses the real ``task-lifecycle-carrier.v1`` shape.
+
+    ``top_level_identity`` writes the legacy top-level keys instead, which no
+    current producer emits but older records may carry.
+    """
     record: dict[str, object] = {
+        "task_id": name,
         "started_at": started.isoformat(),
         "finished_at": finished.isoformat() if finished else None,
     }
+    identity: dict[str, object] = {}
     if stream_epic is not None:
-        record["stream_epic"] = stream_epic
+        identity["stream_epic"] = stream_epic
     if task_family is not None:
-        record["task_family"] = task_family
+        identity["task_family"] = task_family
+    if top_level_identity:
+        record.update(identity)
+    elif identity:
+        record["task_lifecycle"] = {
+            "schema_version": "task-lifecycle-carrier.v1",
+            "identity": identity,
+        }
     if hard_timeout is not None:
         record["hard_timeout"] = hard_timeout
     (tasks_dir / f"{name}.json").write_text(json.dumps(record), encoding="utf-8")
@@ -236,3 +253,112 @@ def test_dispatch_history_includes_archived_records(tmp_path: Path) -> None:
     dispatch = payload["by_stream_epic"]["4707"]["dispatch"]
     assert dispatch["n"] == 20
     assert "p50" in dispatch["duration_s"]
+
+
+def test_carrier_identity_groups_dispatch_without_top_level_fields(tmp_path: Path) -> None:
+    """#11099: producers nest identity under task_lifecycle.identity only."""
+    tasks_dir = tmp_path / "tasks"
+    tasks_dir.mkdir()
+    _write_task(
+        tasks_dir,
+        "carrier",
+        started=NOW - timedelta(seconds=10),
+        finished=NOW,
+        stream_epic=6943,
+        task_family="infra",
+    )
+    record = json.loads((tasks_dir / "carrier.json").read_text(encoding="utf-8"))
+    assert "stream_epic" not in record
+    assert "task_family" not in record
+    plane_db = tmp_path / "plane.sqlite3"
+    _plane_db(plane_db, with_identity=False)
+
+    payload = collect_stream_bottleneck_metrics(
+        tasks_dir=tasks_dir, plane_db=plane_db, now=NOW, github_lookup=_merged_at
+    )
+
+    assert payload["by_stream_epic"]["6943"]["dispatch"]["n"] == 1
+    assert payload["by_task_family"]["infra"]["dispatch"]["n"] == 1
+    assert payload["unclassified"]["by_stream_epic"]["dispatch"]["n"] == 0
+
+
+def test_top_level_identity_remains_a_fallback(tmp_path: Path) -> None:
+    tasks_dir = tmp_path / "tasks"
+    tasks_dir.mkdir()
+    _write_task(
+        tasks_dir,
+        "legacy",
+        started=NOW - timedelta(seconds=10),
+        finished=NOW,
+        top_level_identity=True,
+    )
+    plane_db = tmp_path / "plane.sqlite3"
+    _plane_db(plane_db, with_identity=False)
+
+    payload = collect_stream_bottleneck_metrics(
+        tasks_dir=tasks_dir, plane_db=plane_db, now=NOW, github_lookup=_merged_at
+    )
+
+    assert payload["by_stream_epic"]["4707"]["dispatch"]["n"] == 1
+    assert payload["by_task_family"]["fleet-comms-metrics"]["dispatch"]["n"] == 1
+
+
+def test_carrier_identity_takes_precedence_and_ignores_dor_preflight(tmp_path: Path) -> None:
+    tasks_dir = tmp_path / "tasks"
+    tasks_dir.mkdir()
+    started = (NOW - timedelta(seconds=10)).isoformat()
+    base = {"task_id": "t", "started_at": started, "finished_at": NOW.isoformat()}
+    records = {
+        # carrier wins over the legacy top-level keys, per field
+        "both": {
+            **base,
+            "stream_epic": 1,
+            "task_family": "old",
+            "task_lifecycle": {"identity": {"stream_epic": 6943}},
+        },
+        # list-valued dor_preflight.stream_epic is never read
+        "dor-only": {**base, "dor_preflight": {"stream_epic": [6943, 9737]}},
+    }
+    for name, record in records.items():
+        (tasks_dir / f"{name}.json").write_text(
+            json.dumps({**record, "task_id": name}), encoding="utf-8"
+        )
+    plane_db = tmp_path / "plane.sqlite3"
+    _plane_db(plane_db, with_identity=False)
+
+    payload = collect_stream_bottleneck_metrics(
+        tasks_dir=tasks_dir, plane_db=plane_db, now=NOW, github_lookup=_merged_at
+    )
+
+    assert payload["by_stream_epic"]["6943"]["dispatch"]["n"] == 1
+    assert "1" not in payload["by_stream_epic"]
+    assert payload["by_task_family"]["old"]["dispatch"]["n"] == 1
+    assert payload["unclassified"]["by_stream_epic"]["dispatch"]["n"] == 1
+
+
+@pytest.mark.parametrize(
+    ("record", "error_kind"),
+    [
+        ({"decision": "approve", "started_at": "2026-07-22T11:00:00+00:00"}, "not_a_task_record"),
+        ({"task_id": "t", "status": "stub"}, "missing_started_at"),
+        ({"task_id": "t", "started_at": None}, "missing_started_at"),
+        ({"task_id": "t", "started_at": "garbage"}, "invalid_started_at"),
+        ({"task_id": "t", "started_at": ""}, "invalid_started_at"),
+    ],
+)
+def test_dispatch_source_errors_name_what_is_wrong(
+    tmp_path: Path, record: dict[str, object], error_kind: str
+) -> None:
+    tasks_dir = tmp_path / "tasks"
+    tasks_dir.mkdir()
+    (tasks_dir / "bad.json").write_text(json.dumps(record), encoding="utf-8")
+    plane_db = tmp_path / "plane.sqlite3"
+    _plane_db(plane_db, with_identity=False)
+
+    payload = collect_stream_bottleneck_metrics(
+        tasks_dir=tasks_dir, plane_db=plane_db, now=NOW, github_lookup=_merged_at
+    )
+
+    dispatch_errors = [e for e in payload["source_errors"] if e["source"] == "dispatch"]
+    assert [e["error_kind"] for e in dispatch_errors] == [error_kind]
+    assert payload["unclassified"]["by_stream_epic"]["dispatch"]["n"] == 0

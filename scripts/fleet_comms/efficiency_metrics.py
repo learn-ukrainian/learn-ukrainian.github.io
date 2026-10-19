@@ -529,6 +529,24 @@ def _identity(record: dict[str, Any]) -> tuple[str | None, str | None]:
     return (stream or None, family or None)
 
 
+def _task_identity(record: dict[str, Any]) -> tuple[str | None, str | None]:
+    """Read dispatch identity from the task-lifecycle carrier, then top-level keys.
+
+    Producers write ``task_lifecycle.identity`` (``task-lifecycle-carrier.v1``);
+    top-level ``stream_epic``/``task_family`` remain a per-field fallback for older
+    records. The list-valued ``dor_preflight.stream_epic`` is ambiguous and is
+    never consulted.
+    """
+    lifecycle = record.get("task_lifecycle")
+    carrier = lifecycle.get("identity") if isinstance(lifecycle, dict) else None
+    if isinstance(carrier, dict):
+        stream, family = _identity(carrier)
+    else:
+        stream, family = None, None
+    fallback_stream, fallback_family = _identity(record)
+    return (stream or fallback_stream, family or fallback_family)
+
+
 def _percentile(samples: list[float], percentile: float) -> float:
     """Linearly interpolate sorted samples at index ``(n - 1) * percentile``."""
     ordered = sorted(samples)
@@ -895,6 +913,12 @@ def collect_stream_bottleneck_metrics(
             hard_timeout = record.get("hard_timeout")
             if isinstance(hard_timeout, int) and hard_timeout >= 0:
                 dispatch_hard_timeouts.append(hard_timeout)
+            if "task_id" not in record:
+                errors.append(_dispatch_error("not_a_task_record"))
+                continue
+            if record.get("started_at") is None:
+                errors.append(_dispatch_error("missing_started_at"))
+                continue
             started = _parse_timestamp(record.get("started_at"))
             if started is None:
                 errors.append(_dispatch_error("invalid_started_at"))
@@ -908,7 +932,7 @@ def collect_stream_bottleneck_metrics(
                 errors.append(_dispatch_error("negative_duration"))
                 continue
             add(
-                _identity(record),
+                _task_identity(record),
                 "dispatch",
                 (finished - started).total_seconds() if finished else None,
                 max(0.0, (clock - started).total_seconds()) if finished is None else None,
