@@ -303,7 +303,10 @@ def test_grouped_phrase_reference_rejects_invalid_reference_formatting(marker: s
         parse_sum20_article(source, 461)
 
 
-@pytest.mark.parametrize("target", ['<div class="BUX">1</div>', ' <b> </b><div class="BUX">1</div> '])
+@pytest.mark.parametrize(
+    "target",
+    ['<div class="BUX">1</div>', ' <b> </b><div class="BUX">1</div> ', " \t\r\n ", ' \t<div class="BUX">1</div>\r\n '],
+)
 def test_grouped_phrase_reference_rejects_formatting_without_a_target(target: str) -> None:
     source = GROUPED_REFERENCE_HTML.replace(PHRASE_FIELDS["LINKTXT"], '<div class="LINKTXT">' + target + "</div>", 1)
     with pytest.raises(Sum20ParseError):
@@ -879,6 +882,49 @@ def test_official_grouped_reference_has_no_definition_card(tmp_path: Path, monke
     assert records[0]["senses"] == records[0]["citations"] == []
     monkeypatch.setattr(enrich_manifest_module, "SOURCES_DB", db_path)
     assert enrich_manifest_module._sum20_official_definition_card("адамів") is None
+    monkeypatch.setattr(enrich_manifest_module, "_fetch_slovnyk_entry", lambda *_args, **_kwargs: None)
+    monkeypatch.setattr(enrich_manifest_module, "_vesum_base_lemma", lambda *_args: None)
+    assert enrich_manifest_module._sum20_definition_card("адамів") is None
+
+
+@pytest.mark.parametrize(
+    "target",
+    [pytest.param(".", id="period"), pytest.param(";", id="semicolon"), pytest.param("\u200b", id="zero-width-space")],
+)
+def test_grouped_reference_nonlexical_target_preserves_source_without_definition_card(
+    target: str, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # Mutate only one cached reference. These are synthetic markup sentinels,
+    # not evidence that the official source contains these target variants.
+    source = WORDID461_HTML.replace(
+        '<div class="LINKTXT">голова́</div>', f'<div class="LINKTXT">{target}<div class="BUX">1</div></div>', 1
+    )
+    expected_text = WORDID461_TEXT.replace("див. голова́ ;", f"див. {target} 1 ;", 1)
+    article = parse_sum20_article(source, 461)
+    assert article.article_html == source
+    assert article.article_text == expected_text
+    assert article.content_sha256 == hashlib.sha256(source.encode("utf-8")).hexdigest()
+    assert article.senses == article.citations == []
+
+    db_path = tmp_path / "sources.db"
+    with sqlite3.connect(db_path) as conn:
+        ensure_sum20_official_schema(conn)
+        assert upsert_sum20_article(conn, article, fetched_at="2026-10-09T00:00:00+00:00")
+        assert conn.execute(
+            "SELECT article_html, article_text, content_sha256, definition_text FROM sum20_articles"
+        ).fetchone() == (source, expected_text, article.content_sha256, "")
+        assert conn.execute("SELECT COUNT(*) FROM sum20_senses").fetchone()[0] == 0
+        assert conn.execute("SELECT COUNT(*) FROM sum20_citations").fetchone()[0] == 0
+
+    records = sources_db.query_sum20("адамів", db_path=db_path)
+    assert len(records) == 1
+    assert records[0]["source_record_id"] == "461"
+    assert records[0]["article_text"] == expected_text
+    assert records[0]["content_sha256"] == article.content_sha256
+    assert records[0]["senses"] == records[0]["citations"] == []
+    monkeypatch.setattr(enrich_manifest_module, "SOURCES_DB", db_path)
+    assert enrich_manifest_module._sum20_official_definition_card("адамів") is None
+    # Isolate the stored row from independent online and morphology fallbacks.
     monkeypatch.setattr(enrich_manifest_module, "_fetch_slovnyk_entry", lambda *_args, **_kwargs: None)
     monkeypatch.setattr(enrich_manifest_module, "_vesum_base_lemma", lambda *_args: None)
     assert enrich_manifest_module._sum20_definition_card("адамів") is None
