@@ -67,3 +67,9 @@ The path census names the public boundaries and their regression tests. These
 tests use synthetic authority and prove guard mechanics only. Independent
 exact-head review, held-out outcome proof, source-census completion under #9401,
 and authorization for any real certification or release remain separate gates.
+
+The [versioned assertion projection](../../datasets/word-cards.md) also checks
+exact-artifact dataset certification before producing release bytes. It then
+filters assertion scope and rebuilds cited fields without copying cached
+resolutions. Its implementation is included in the certification fingerprint.
+Its local release schema is separate from the Atlas shard package schema.

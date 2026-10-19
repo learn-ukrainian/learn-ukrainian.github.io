@@ -306,7 +306,7 @@ def test_authoritative_ledger_and_census():
     assert census['source_census_issue'] == 9401
     assert {row['path_id'] for row in census['frozen_paths']} == {
         'dataset_export', 'acceptance', 'runtime_export', 'runtime_verify', 'package_collect', 'package_build',
-        'dataset_publish', 'dataset_hydrate', 'manifest_read', 'manifest_publish'}
+        'dataset_publish', 'dataset_hydrate', 'manifest_read', 'manifest_publish', 'versioned_dataset_projection'}
     for row in census['frozen_paths']:
         assert (ROOT / row['entry_point']).is_file()
 
