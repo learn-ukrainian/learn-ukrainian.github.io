@@ -15,7 +15,7 @@ and distinguish parallel source assertions from resolved language answers.
 scope, attribution, license terms, operator decisions, and removal routes.
 The projection includes an assertion only when its source explicitly lists
 `dataset` in `appears_in`. Unknown sources and internal-only sources are filtered.
-The current register must match the bytes bound by the card's certification.
+The current register must match the bytes bound by the card's build inputs.
 The assertion's `licence_ref` must name the same source and register schema version.
 
 Dataset scope is distinct from an open license. Recorded operator decisions
@@ -24,10 +24,16 @@ does not relabel them as open data. VESUM records CC BY-NC-SA 4.0 for dictionary
 data, ULIF records proprietary terms, and other sources retain their own entries.
 There is no blanket license that replaces these source terms.
 
-Every input card must pass
+By default, every input card must pass
 [`load_certified_card_for_export`](../../scripts/atlas/word_card_certification.py)
-with dataset approval. Source scope and citations alone cannot authorize an
-uncertified card. See the
+with dataset approval. Set `allow_candidates=True` in `create_release` or
+`withdraw_release`, or pass `--allow-candidates` to the CLI, to include
+uncertified cards with `status: "CANDIDATE"`. Each card still passes the
+assembled-card schema, register binding, citation checks, and withdrawal filters.
+Only active cards may be projected. A failed, missing, withdrawn, or inapplicable
+certification never earns `CERTIFIED` status. Candidate output grants no
+certification or publication approval. Public releases requiring certification
+must retain the default `allow_candidates=False`. See the certified-card
 [acceptance and export invariants](../atlas/word-cards/export-invariants.md).
 
 ## Input formats
@@ -38,8 +44,9 @@ directory can contain a `cards/` subdirectory.
 
 `registry/atlas/pilot/pilot-v1.json` is a frozen input manifest. When given this
 manifest, the loader calls existing Atlas assembly with the identity registry
-and read-only source stores. The resulting pilot cards still need exact-artifact
-dataset certification before export. Assembly success grants no approval.
+and read-only source stores. The resulting pilot cards need exact-artifact
+dataset certification for `CERTIFIED` status. Candidate projection requires
+the explicit opt-in above. Assembly success grants no approval.
 
 ## Release schema
 
@@ -53,8 +60,24 @@ the form `v0.1.0-pilot`. Each fresh output directory contains:
 | `manifest.json` | Versions, exact dataset SHA-256 and byte count, denominators, source breakdown, register digest, input digest, and cumulative withdrawals |
 | `withdrawal-notice.json` | Present for a withdrawal, with selector, justification, previous and replacement digests, and removed citation count |
 
-Each dataset card contains `card_id`, `card_kind`, and `fields`. Each field is
-one surviving assertion, sorted by `assertion_id`, with these properties:
+Each dataset card contains:
+
+| Property | Meaning |
+| --- | --- |
+| `card_id` | Original stable card ID |
+| `card_version` | Explicit input `card_version`, otherwise `build.card_version`, with `0.1.0` as fallback |
+| `card_kind` | Original card kind, such as `lexeme` |
+| `status` | `CERTIFIED` only after exact-artifact dataset certification passes; otherwise `CANDIDATE` when allowed |
+| `known_gaps` | Input `known_gaps` array, or `[]` when absent; declared gaps are metadata, not cited language facts |
+| `fields` | Surviving cited assertions, sorted by `assertion_id` |
+
+The projection accepts optional top-level `card_version` and `known_gaps`
+annotations alongside the assembled-card schema. The version must be a nonempty
+string and gaps must be an array. Other schema constraints remain binding.
+Certification checks the exact original card through its existing schema and
+authority; adding annotations cannot preserve an earlier certification.
+
+Each field has these properties:
 
 | Property | Meaning |
 | --- | --- |
@@ -66,7 +89,8 @@ one surviving assertion, sorted by `assertion_id`, with these properties:
 
 The projection preserves parallel assertions. It does not select a modern
 definition from conflicting sources. Cached field resolutions, identity keys,
-outer metadata, links, and quality prose cannot add uncited facts.
+links, and quality prose cannot add uncited fields. Only the version and gap
+metadata described above accompany the cited assertions.
 
 Canonical JSON sorts object keys, uses compact separators, preserves Unicode,
 rejects nonfinite numbers, and ends with a newline. The dataset digest covers
@@ -77,6 +101,8 @@ Directories use mode `0700` and files use mode `0600`. Symlink routes and
 existing output directories are refused. The manifest is written last.
 
 `card_count` counts cards with at least one included assertion.
+`certified_count` and `candidate_count` count emitted cards by status and sum to
+`card_count`. Inputs with no surviving assertions do not increase these counts.
 `field_citation_count` counts included assertions, including parallel citations.
 Input card and assertion counts retain the original denominator. Source breakdowns
 count included and filtered assertions and unique source rows. A row is identified
@@ -104,7 +130,8 @@ publisher's package schema. It is a local artifact, not an upload instruction.
 
 ## Withdrawal contract
 
-`withdraw_release` rebuilds from the original certified cards. A selector contains
+`withdraw_release` rebuilds from the original cards with the same candidate policy
+as `create_release`. A selector contains
 `source_id`, `locator`, or both. `locator` matches an exact assertion locator or
 an exact `source_record_key`. When both properties are supplied, both must match.
 The selector must match an active assertion, and justification must be nonempty.
@@ -130,5 +157,5 @@ codes. Use the interpreter prescribed by the dispatch contract.
 The scoped mechanics regression command is:
 
 ```bash
-.venv/bin/python -m pytest -n 2 -q tests/projects/open_model_data/test_word_card_dataset_release.py
+.venv/bin/python -m pytest -n 2 -q tests/projects/open_model_data/word_cards/test_dataset_projection.py tests/projects/open_model_data/test_word_card_dataset_release.py
 ```
