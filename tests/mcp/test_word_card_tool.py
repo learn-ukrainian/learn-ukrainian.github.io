@@ -7,10 +7,13 @@ certifies no real card. Every other card is served as a labelled candidate.
 
 from __future__ import annotations
 
+import ast
 import asyncio
 import importlib.util
 import json
 import os
+import shutil
+import stat
 import sys
 from pathlib import Path
 
@@ -145,6 +148,7 @@ def test_uncertified_card_is_labelled_candidate_with_citations_and_gaps(tmp_path
         "build_id": "fixture-build@1",
         "card_files": 1,
         "unreadable_card_files": 0,
+        "off_store_card_files": 0,
         "ledger": True,
     }
     assert served["version"] == {
@@ -377,3 +381,326 @@ def test_tool_is_listed_read_only_and_dispatched(server_module, tmp_path, monkey
     assert (result["status"], result["cards"][0]["card_id"]) == ("candidate", "wc_aaaaaaaaaaaa")
     garbage, is_error, _typed = asyncio.run(server_module._dispatch_tool_call("word_card", {"word": "<b>"}))
     assert is_error is False and json.loads(garbage[0].text)["result"] == "invalid_input"
+
+
+# --- Review round 1 (#11084): digest coverage, child-target locality, provenance, unreadable stores ---
+
+
+_DYNAMIC_LOADERS = frozenset({"importlib", "runpy", "imp", "zipimport"})
+_DYNAMIC_BUILTINS = frozenset({"exec", "eval", "compile", "__import__"})
+_DYNAMIC_METHODS = frozenset({"import_module", "spec_from_file_location", "exec_module", "load_module", "run_path"})
+
+
+def _dynamic_loads(source: str) -> list[str]:
+    """Imports of loader modules and calls that run code no import statement names."""
+    found = []
+    for node in ast.walk(ast.parse(source)):
+        if isinstance(node, ast.Import):
+            found += [a.name for a in node.names if a.name.split(".")[0] in _DYNAMIC_LOADERS]
+        elif isinstance(node, ast.ImportFrom) and (node.module or "").split(".")[0] in _DYNAMIC_LOADERS:
+            found.append(node.module)
+        elif isinstance(node, ast.Call):
+            if isinstance(node.func, ast.Name) and node.func.id in _DYNAMIC_BUILTINS:
+                found.append(node.func.id)
+            elif isinstance(node.func, ast.Attribute) and node.func.attr in _DYNAMIC_METHODS:
+                found.append(node.func.attr)
+    return found
+
+
+def test_server_modules_load_code_only_through_imports_the_digest_traces():
+    """The review digest hashes what import statements name; a dynamic load would run unhashed code."""
+    from scripts.review.render_contract import server_code_files
+
+    traced = server_code_files(PROJECT_ROOT)
+    server_dir = SERVER_PATH.parent.relative_to(PROJECT_ROOT).as_posix() + "/"
+    beside = sorted(name for name in traced if name.startswith(server_dir))
+
+    assert ".mcp/servers/sources/word_card.py" in beside
+    for name in beside:
+        assert _dynamic_loads((PROJECT_ROOT / name).read_text(encoding="utf-8")) == [], name
+
+
+def test_editing_word_card_changes_the_digest_and_refuses_the_launch(tmp_path):
+    from scripts.review.render_contract import (
+        LOCK_FILE,
+        SERVER_ENTRY,
+        ReviewContractError,
+        check_launch_contract,
+        server_code,
+    )
+
+    checkout = tmp_path / "checkout"
+    for relative in (SERVER_ENTRY, ".mcp/servers/sources/word_card.py", LOCK_FILE):
+        (checkout / relative).parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(PROJECT_ROOT / relative, checkout / relative)
+    before = server_code(checkout)
+    interpreter = Path(sys.executable)
+    contract = {
+        "server_checkout": str(checkout.resolve()),
+        "server_interpreter": str(interpreter),
+        "server_digest": before.digest,
+        "server_components": before.components(),
+    }
+    check_launch_contract(contract, checkout, interpreter)  # Unchanged: admitted.
+
+    module = checkout / ".mcp/servers/sources/word_card.py"
+    module.write_text(module.read_text(encoding="utf-8") + "\nCHANGED = True\n", encoding="utf-8")
+
+    assert ".mcp/servers/sources/word_card.py" in before.files
+    assert server_code(checkout).digest != before.digest
+    with pytest.raises(ReviewContractError, match="review_server_changed"):
+        check_launch_contract(contract, checkout, interpreter)
+
+
+@pytest.fixture
+def network_dir(tmp_path, monkeypatch):
+    """A directory the locality check reports as network storage; nothing under it may be read."""
+    from scripts.storage import topology
+
+    network = (tmp_path / "network").resolve()
+    network.mkdir()
+    real = topology.is_network_filesystem_path
+    monkeypatch.setattr(
+        topology,
+        "is_network_filesystem_path",
+        lambda path: Path(path).resolve().is_relative_to(network) or real(path),
+    )
+    return network
+
+
+def test_cards_directory_symlinked_into_network_storage_is_refused(tmp_path, network_dir):
+    write_store(network_dir / "remote", candidate_card())
+    root = tmp_path / "build"
+    root.mkdir()
+    (root / "cards").symlink_to(network_dir / "remote" / "cards", target_is_directory=True)
+
+    result = lookup("мова", root)
+
+    assert (result["result"], result["cards"]) == ("no_card", [])
+    assert result["card_store"] == {"available": False, "reason": "locality_network"}
+    assert str(tmp_path) not in json.dumps(result, ensure_ascii=False)
+    assert result["per_facet_tools"] == word_card.PER_FACET_TOOLS
+
+
+@pytest.mark.parametrize("name", ["ledger.json", "build-manifest.json"])
+def test_ledger_or_manifest_symlinked_into_network_storage_is_refused(tmp_path, network_dir, name):
+    root = write_store(tmp_path / "build", candidate_card(), ledger={})
+    (network_dir / name).write_bytes((root / name).read_bytes())
+    (root / name).unlink()
+    (root / name).symlink_to(network_dir / name)
+
+    result = lookup("мова", root)
+
+    assert result["card_store"] == {"available": False, "reason": "locality_network"}
+
+
+def test_dangling_child_symlink_is_refused_not_skipped(tmp_path):
+    root = write_store(tmp_path / "build", candidate_card())
+    (root / "ledger.json").symlink_to(tmp_path / "gone.json")
+
+    assert lookup("мова", root)["card_store"] == {"available": False, "reason": "store_missing"}
+
+
+@pytest.mark.parametrize("into", ["network", "local_outside"])
+def test_card_files_resolving_outside_the_cards_directory_are_never_read(tmp_path, network_dir, into):
+    root = write_store(tmp_path / "build", candidate_card())
+    outside = network_dir if into == "network" else tmp_path / "elsewhere"
+    outside.mkdir(exist_ok=True)
+    foreign = candidate_card("wc_kkkkkkkkkkkk", "баран")
+    (outside / "wc_kkkkkkkkkkkk.json").write_text(json.dumps(foreign, ensure_ascii=False), encoding="utf-8")
+    (root / "cards" / "wc_kkkkkkkkkkkk.json").symlink_to(outside / "wc_kkkkkkkkkkkk.json")
+
+    result = lookup("баран", root)
+
+    assert (result["result"], result["card_store"]["off_store_card_files"]) == ("no_card", 1)
+    assert [c["card_id"] for c in lookup("мова", root)["cards"]] == ["wc_aaaaaaaaaaaa"]
+
+
+def test_a_store_file_on_another_filesystem_than_checked_is_not_read(tmp_path):
+    path = tmp_path / "ledger.json"
+    path.write_text("{}", encoding="utf-8")
+    moved = word_card.LocalTarget(path.resolve(), path.stat().st_dev + 1)
+
+    with pytest.raises(word_card._OffStore):
+        word_card._read_checked(moved)
+
+
+def _linked_cards() -> tuple[dict, dict]:
+    """Two homograph cards; each states one assertion of their shared derived link, as the pilot build does."""
+    left = candidate_card("wc_llllllllllll", "баран")
+    right = candidate_card("wc_mmmmmmmmmmmm", "Баран", card_kind="proper_name")
+    left_ref = fixture.card_assertion(left["card_id"], 11, "homograph_of", "баран")
+    right_ref = fixture.card_assertion(right["card_id"], 12, "homograph_of", "Баран")
+    left["assertions"].append(left_ref)
+    right["assertions"].append(right_ref)
+    link = {
+        "link_id": "wl_" + "1" * 24,
+        "type": "homograph_of",
+        "endpoints": [{"id": left["card_id"]}, {"id": right["card_id"]}],
+        "basis": "derived",
+        "derived_by": "rules:homograph_of",
+        "assertion_ids": [left_ref["assertion_id"], right_ref["assertion_id"]],
+        "state": "active",
+    }
+    left["links"] = [link]
+    right["links"] = [json.loads(json.dumps(link))]
+    return left, right
+
+
+def test_link_citations_include_the_assertions_stated_on_the_other_endpoint(tmp_path):
+    left, right = _linked_cards()
+    store = write_store(tmp_path / "build", left, right)
+
+    served = {c["card_id"]: c for c in lookup("баран", store)["cards"]}
+
+    [link] = served["wc_llllllllllll"]["links"]
+    assert link["evidence_ids"] == right["links"][0]["assertion_ids"]
+    assert [c.get("card_id") for c in link["citations"]] == [None, "wc_mmmmmmmmmmmm"]
+    assert all(c["source_id"] == "ulif" and c["locator"] for c in link["citations"])
+    assert (link["basis"], link["derived_by"], link["card_ids"]) == (
+        "derived",
+        "rules:homograph_of",
+        [right["card_id"]],
+    )
+    assert "gaps" not in link
+
+
+def test_uncitable_link_is_a_gap_not_a_link(tmp_path):
+    left, _right = _linked_cards()
+    left["links"][0]["assertion_ids"] = ["wa_" + "e" * 24]
+    store = write_store(tmp_path / "build", left)  # The other endpoint is not in the build either.
+
+    [served] = lookup("баран", store)["cards"]
+
+    assert served["links"] == []
+    assert served["gaps"]["links"]["links"] == [
+        {
+            "link_id": "wl_" + "1" * 24,
+            "type": "homograph_of",
+            "disposition": "uncitable_link_withheld",
+            "evidence_ids": ["wa_" + "e" * 24],
+        }
+    ]
+
+
+def test_dangling_field_evidence_is_a_gap_never_a_value(tmp_path):
+    card = candidate_card()
+    dangling = "wa_" + "d" * 24
+    card["fields"]["stress"]["values"].append(
+        {
+            "value_norm": "мова́",
+            "assertion_ids": [dangling],
+            "independence_groups": ["G-X"],
+            "mapping_evidenced": True,
+            "independence_groups_evidenced": 1,
+        }
+    )
+    card["fields"]["cefr"]["values"][0]["assertion_ids"].append(dangling)
+    card["fields"]["cefr"]["non_voting"] = [{"assertion_id": dangling, "reason": "mapping low"}]
+    store = write_store(tmp_path / "build", card)
+
+    [served] = lookup("мова", store)["cards"]
+
+    stress = served["fields"]["stress"]
+    assert [v["value"] for v in stress["values"]] == ["мо́ва"]  # The uncited value is withheld.
+    assert "мова́" not in json.dumps(stress, ensure_ascii=False)
+    assert (
+        f"uncitable_value withheld: no retained source assertion cites it (evidence ids {dangling})" in stress["gaps"]
+    )
+    cefr = served["fields"]["cefr"]
+    [value] = cefr["values"]
+    assert value["evidence_ids"] == ["wa_000000000000000000000002"]
+    assert all("missing_assertion" not in c for c in value["citations"])
+    assert cefr["non_voting"] == [{"evidence_id": dangling, "reason": "mapping low"}]
+    assert word_card._uncited(dangling) in cefr["gaps"]
+
+
+def test_tombstoned_evidence_cites_no_source(tmp_path):
+    card = candidate_card()
+    stress_id = card["fields"]["stress"]["values"][0]["assertion_ids"][0]
+    card["assertions"] = [
+        {"assertion_id": stress_id, "status": "suppressed", "suppression_ref": "takedown:1"}
+        if a["assertion_id"] == stress_id
+        else a
+        for a in card["assertions"]
+    ]
+    store = write_store(tmp_path / "build", card)
+
+    [served] = lookup("мова", store)["cards"]
+
+    assert served["fields"]["stress"]["values"] == []
+    assert any(g.startswith("uncitable_value withheld") for g in served["fields"]["stress"]["gaps"])
+
+
+def test_identity_and_sense_provenance_is_kept(tmp_path):
+    card = candidate_card()
+    source_key = {"source_id": "ulif", "key": "ulif:entry:1", "snapshot_id": "probe"}
+    card["key_at_creation"]["source_keys"] = [source_key]
+    card["identity"].update({"source_keys": [source_key], "decided_by": "rules:probe", "notes": ["n"]})
+    card["senses"] = [
+        {
+            "sense_id": "ws_aaaaaaaaaaaa",
+            "order": 1,
+            "state": "unsplit",
+            "sense_map": [{"source_id": "ulif", "source_sense_key": "ulif:entry:1#unsplit"}],
+            "seeded_from": "ulif_sense_gloss:ulif:entry:1",
+            "fields": {},
+        }
+    ]
+    store = write_store(tmp_path / "build", card)
+
+    [served] = lookup("мова", store)["cards"]
+
+    identity = served["identity"]
+    assert identity["source_keys"] == identity["key_source_keys"] == [source_key]
+    assert (identity["decided_by"], identity["notes"]) == ("rules:probe", ["n"])
+    [sense] = served["senses"]
+    assert sense["sense_map"] == card["senses"][0]["sense_map"]
+    assert sense["seeded_from"] == "ulif_sense_gloss:ulif:entry:1"
+
+
+@pytest.fixture
+def unreadable_cards(tmp_path):
+    store = write_store(tmp_path / "build", candidate_card())
+    cards = store / "cards"
+    cards.chmod(0)
+    try:
+        if os.access(cards, os.R_OK):
+            pytest.skip("this user reads a mode-000 directory")
+        yield store
+    finally:
+        cards.chmod(stat.S_IRWXU)
+
+
+def test_unreadable_cards_directory_is_an_explicit_unavailable_result(unreadable_cards, tmp_path):
+    result = lookup("мова", unreadable_cards)
+
+    assert (result["result"], result["cards"]) == ("no_card", [])
+    assert result["card_store"] == {"available": False, "reason": "store_unavailable"}
+    assert result["per_facet_tools"] == word_card.PER_FACET_TOOLS
+    assert "Use the per-facet tools" in result["message"]
+    assert str(tmp_path) not in json.dumps(result, ensure_ascii=False)
+
+
+def test_unreadable_store_through_the_wire_handler_names_the_tools(
+    server_module, unreadable_cards, tmp_path, monkeypatch
+):
+    monkeypatch.setenv(word_card.ENV_WORD_CARDS_DIR, str(unreadable_cards))
+    monkeypatch.setattr(server_module.word_card, "_vesum_lookup", fake_vesum)
+
+    content, is_error, _typed = asyncio.run(server_module._dispatch_tool_call("word_card", {"word": "мова"}))
+
+    assert is_error is False
+    result = json.loads(content[0].text)
+    assert result["card_store"] == {"available": False, "reason": "store_unavailable"}
+    assert result["per_facet_tools"]["stress"] == ["verify_stress", "query_sum20"]
+    assert str(tmp_path) not in content[0].text
+
+
+def test_unreadable_ledger_is_reported_not_silently_empty(tmp_path):
+    store = write_store(tmp_path / "build", candidate_card(), ledger={})
+    (store / "ledger.json").write_text("{broken", encoding="utf-8")
+
+    result = lookup("мова", store)
+
+    assert result["card_store"]["ledger"] is False and result["card_store"]["ledger_unreadable"] is True

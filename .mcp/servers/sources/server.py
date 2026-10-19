@@ -28,7 +28,6 @@ Tools:
 
 import asyncio
 import hashlib
-import importlib.util
 import json
 import re
 import sys
@@ -48,9 +47,21 @@ for _path in (PROJECT_ROOT, SCRIPTS_DIR):
     if str(_path) not in sys.path:
         sys.path.insert(0, str(_path))
 
+# Sibling modules of this file import by plain name, after scripts/ and the repository root, which is the
+# order the review digest (scripts/review/render_contract.server_code) traces them in.
+SERVER_DIR = Path(__file__).resolve().parent
+if str(SERVER_DIR) not in sys.path:
+    sys.path.append(str(SERVER_DIR))
+
+import word_card
+
 from scripts.rag.call_governor import CallGovernor, CallRefused, GovernorLimits
 from scripts.verification.check_ru_morph import is_russian_pattern
 from wiki.textbook_subjects import CANONICAL_TEXTBOOK_SUBJECTS
+
+if Path(word_card.__file__).resolve() != SERVER_DIR / "word_card.py":
+    # Any other module of that name would run code the review digest never hashed.
+    raise ImportError(f"word_card resolved outside the sources server directory: {word_card.__file__}")
 
 try:
     from mcp.server import Server
@@ -1409,18 +1420,6 @@ async def handle_check_russian_shadow(args: dict):
     threshold = args.get("threshold", 0.7)
     result = await asyncio.to_thread(is_russian_pattern, word, threshold)
     return [TextContent(type="text", text=json.dumps(result, indent=2, ensure_ascii=False))]
-
-
-def _load_word_card_module():
-    # A sibling file, not a package: load it under a unique name, as tests load this server.
-    spec = importlib.util.spec_from_file_location("sources_word_card", Path(__file__).with_name("word_card.py"))
-    module = importlib.util.module_from_spec(spec)
-    sys.modules[spec.name] = module
-    spec.loader.exec_module(module)
-    return module
-
-
-word_card = _load_word_card_module()
 
 
 async def handle_word_card(args: dict):

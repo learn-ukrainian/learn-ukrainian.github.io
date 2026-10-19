@@ -10,7 +10,11 @@ source assertion awaiting review, not an accepted fact (#8977).
 The card store is a host-only assembly build directory (``cards/*.json`` plus
 the optional ``ledger.json`` and ``build-manifest.json`` written by
 ``scripts.atlas.word_card_assembly``), named by ``LU_WORD_CARDS_DIR``. Nothing
-here writes, and no host path is echoed in a result.
+here writes, and no host path is echoed in a result. Every target is read only
+after its symlinks are resolved and it is shown to be local: the root, the
+``cards/`` directory, the ledger and the manifest by the network-locality check,
+each card file by sitting directly in the checked ``cards/`` directory on its
+filesystem, re-checked on the opened descriptor.
 """
 
 from __future__ import annotations
@@ -18,6 +22,7 @@ from __future__ import annotations
 import json
 import os
 import re
+import stat
 import unicodedata
 from collections import defaultdict
 from collections.abc import Callable, Mapping
@@ -77,13 +82,36 @@ _QUERY_SHAPE = re.compile(r"[\u0400-\u04ff'\- ,.!?\u2026]+")
 _HAS_LETTER = re.compile(r"[\u0400-\u04ff]")
 
 
+_O_NOFOLLOW = getattr(os, "O_NOFOLLOW", 0)
+
+
+class StoreUnavailable(Exception):
+    """A card store target failed validation or could not be read. ``reason`` is path-free."""
+
+    def __init__(self, reason: str):
+        super().__init__(reason)
+        self.reason = reason
+
+
+class _OffStore(OSError):
+    """A card file whose resolved target is not in the checked ``cards/`` directory or its filesystem."""
+
+
+@dataclass(frozen=True)
+class LocalTarget:
+    """A store target with its symlinks resolved, shown local, and the filesystem it was shown on."""
+
+    path: Path
+    device: int
+
+
 @dataclass(frozen=True)
 class CardStore:
     """A validated, read-only card build directory."""
 
-    cards_dir: Path
-    ledger_path: Path | None
-    manifest_path: Path | None
+    cards: LocalTarget
+    ledger: LocalTarget | None
+    manifest: LocalTarget | None
 
 
 def _clean(text: str) -> str:
@@ -118,10 +146,28 @@ def normalize_query(word: Any) -> tuple[str | None, str | None]:
     return text, None
 
 
-def resolve_card_store(env: Mapping[str, str] | None = None) -> CardStore | str:
-    """Resolve the configured card build, or return a path-free refusal reason."""
+def _local_target(path: Path, *, directory: bool) -> LocalTarget:
+    """Resolve ``path`` through its symlinks and require a local directory (or regular file) there."""
     from scripts.storage.topology import is_network_filesystem_path
 
+    try:
+        resolved = path.resolve(strict=True)
+        info = resolved.stat()
+        if directory and not stat.S_ISDIR(info.st_mode):
+            raise StoreUnavailable("not_a_directory")
+        if not directory and not stat.S_ISREG(info.st_mode):
+            raise StoreUnavailable("store_unavailable")
+        if is_network_filesystem_path(resolved):
+            raise StoreUnavailable("locality_network")
+    except FileNotFoundError as exc:
+        raise StoreUnavailable("store_missing") from exc
+    except (OSError, RuntimeError) as exc:
+        raise StoreUnavailable("store_unavailable") from exc
+    return LocalTarget(resolved, info.st_dev)
+
+
+def resolve_card_store(env: Mapping[str, str] | None = None) -> CardStore | str:
+    """Resolve the configured card build, or return a path-free refusal reason."""
     raw = (os.environ if env is None else env).get(ENV_WORD_CARDS_DIR)
     if raw is None:
         return "not_configured"
@@ -133,19 +179,18 @@ def resolve_card_store(env: Mapping[str, str] | None = None) -> CardStore | str:
     if not path.is_absolute():
         return "relative_override"
     try:
-        path = path.resolve(strict=True)
-        if not path.is_dir():
-            return "not_a_directory"
-        if is_network_filesystem_path(path):
-            return "locality_network"
-    except FileNotFoundError:
-        return "store_missing"
-    except (OSError, RuntimeError):
-        return "store_unavailable"
-    cards_dir = path / "cards" if (path / "cards").is_dir() else path
-    ledger = path / "ledger.json"
-    manifest = path / "build-manifest.json"
-    return CardStore(cards_dir, ledger if ledger.is_file() else None, manifest if manifest.is_file() else None)
+        root = _local_target(path, directory=True)
+        # A child that exists as an entry, a dangling symlink included, is checked; only absence skips it.
+        child = {name: root.path / name for name in ("cards", "ledger.json", "build-manifest.json")}
+        present = {name: os.path.lexists(target) for name, target in child.items()}
+        cards = _local_target(child["cards"], directory=True) if present["cards"] else root
+        ledger = _local_target(child["ledger.json"], directory=False) if present["ledger.json"] else None
+        manifest = (
+            _local_target(child["build-manifest.json"], directory=False) if present["build-manifest.json"] else None
+        )
+    except StoreUnavailable as exc:
+        return exc.reason
+    return CardStore(cards, ledger, manifest)
 
 
 def _fold(text: str) -> str:
@@ -164,14 +209,37 @@ def _read_json(path: Path) -> Any:
     return json.loads(path.read_bytes())
 
 
+def _read_checked(target: LocalTarget) -> Any:
+    """JSON of ``target``, opened without following a symlink and only on the filesystem it was checked on."""
+    descriptor = os.open(target.path, os.O_RDONLY | _O_NOFOLLOW)
+    with os.fdopen(descriptor, "rb") as handle:
+        info = os.fstat(handle.fileno())
+        if info.st_dev != target.device or not stat.S_ISREG(info.st_mode):
+            raise _OffStore("store file left its checked filesystem")
+        return json.loads(handle.read())
+
+
+def _read_card(cards: LocalTarget, name: str) -> Any:
+    """A card file, read only when its resolved target sits directly in the checked ``cards/`` directory."""
+    resolved = (cards.path / name).resolve(strict=True)
+    if resolved.parent != cards.path:
+        raise _OffStore("card file resolves outside the card directory")
+    return _read_checked(LocalTarget(resolved, cards.device))
+
+
 @lru_cache(maxsize=4)
-def _spelling_index(cards_dir: str, _mtime_ns: int, _file_count: int) -> tuple[dict[str, tuple[str, ...]], int]:
+def _spelling_index(
+    cards: LocalTarget, _mtime_ns: int, _file_count: int
+) -> tuple[dict[str, tuple[str, ...]], int, int]:
     """Map folded spellings to card files. The key changes when files are added or removed."""
     index: dict[str, list[str]] = defaultdict(list)
-    unreadable = 0
-    for path in sorted(Path(cards_dir).glob("*.json")):
+    unreadable = off_store = 0
+    for name in _card_names(cards):
         try:
-            spelling = _dict(_dict(_read_json(path)).get("key_at_creation")).get("spelling")
+            spelling = _dict(_dict(_read_card(cards, name)).get("key_at_creation")).get("spelling")
+        except _OffStore:
+            off_store += 1
+            continue
         except (OSError, ValueError):
             unreadable += 1
             continue
@@ -179,36 +247,43 @@ def _spelling_index(cards_dir: str, _mtime_ns: int, _file_count: int) -> tuple[d
         if key is None:
             unreadable += 1
             continue
-        index[key].append(path.name)
-    return {key: tuple(names) for key, names in index.items()}, unreadable
+        index[key].append(name)
+    return {key: tuple(names) for key, names in index.items()}, unreadable, off_store
 
 
-def _store_index(store: CardStore) -> tuple[dict[str, tuple[str, ...]], int, int]:
-    names = [entry.name for entry in os.scandir(store.cards_dir) if entry.name.endswith(".json")]
-    index, unreadable = _spelling_index(str(store.cards_dir), store.cards_dir.stat().st_mtime_ns, len(names))
-    return index, unreadable, len(names)
+def _card_names(cards: LocalTarget) -> list[str]:
+    with os.scandir(cards.path) as entries:
+        return sorted(entry.name for entry in entries if entry.name.endswith(".json"))
+
+
+def _store_index(store: CardStore) -> tuple[dict[str, tuple[str, ...]], int, int, int]:
+    """The spelling index with its unreadable and off-store counts. A directory read failure raises OSError."""
+    file_count = len(_card_names(store.cards))
+    index, unreadable, off_store = _spelling_index(store.cards, store.cards.path.stat().st_mtime_ns, file_count)
+    return index, unreadable, off_store, file_count
 
 
 @lru_cache(maxsize=2)
-def _ledger(path: str, _mtime_ns: int, _size: int) -> dict:
-    return _dict(_dict(_read_json(Path(path))).get("cards"))
+def _ledger(target: LocalTarget, _mtime_ns: int, _size: int) -> dict:
+    return _dict(_dict(_read_checked(target)).get("cards"))
 
 
-def _ledger_cards(store: CardStore) -> dict:
-    if store.ledger_path is None:
+def _ledger_cards(store: CardStore) -> dict | None:
+    """The build ledger's card rows; ``None`` when the store has a ledger that cannot be read."""
+    if store.ledger is None:
         return {}
     try:
-        stat = store.ledger_path.stat()
-        return _ledger(str(store.ledger_path), stat.st_mtime_ns, stat.st_size)
+        info = store.ledger.path.stat()
+        return _ledger(store.ledger, info.st_mtime_ns, info.st_size)
     except (OSError, ValueError):
-        return {}
+        return None
 
 
 def _store_build_id(store: CardStore) -> str | None:
-    if store.manifest_path is None:
+    if store.manifest is None:
         return None
     try:
-        build_id = _dict(_read_json(store.manifest_path)).get("build_id")
+        build_id = _dict(_read_checked(store.manifest)).get("build_id")
     except (OSError, ValueError):
         return None
     return build_id if isinstance(build_id, str) else None
@@ -248,9 +323,12 @@ def _certification(card: dict) -> tuple[list[str], dict[str, str]]:
     return granted, refusals
 
 
-def _citation(evidence_id: str, assertion: dict | None) -> dict:
-    if assertion is None:
-        return {"evidence_id": evidence_id, "missing_assertion": True}
+def _citation(evidence_id: str, assertion: dict | None) -> dict | None:
+    """The source a retained assertion cites; ``None`` when it is missing or a tombstone with no source."""
+    assertion = _dict(assertion)
+    if not assertion.get("source_id") or not assertion.get("locator"):
+        return None
+    producer = _dict(assertion.get("producer"))
     citation = {
         "evidence_id": evidence_id,
         "source_id": assertion.get("source_id"),
@@ -261,7 +339,9 @@ def _citation(evidence_id: str, assertion: dict | None) -> dict:
         "value": assertion.get("value"),
         "assertion_status": assertion.get("status"),
         "review_status": _dict(assertion.get("review")).get("status"),
+        "extraction_version": assertion.get("extraction_version"),
         "extraction_confidence": assertion.get("extraction_confidence"),
+        "producer": {k: producer[k] for k in ("kind", "name", "version") if k in producer} or None,
         "mapping": assertion.get("mapping"),
         "tier": assertion.get("tier"),
     }
@@ -269,6 +349,22 @@ def _citation(evidence_id: str, assertion: dict | None) -> dict:
         citation["role"] = "soviet_colonization_context"
         citation["notice"] = SOVIET_CONTEXT_NOTICE
     return {key: value for key, value in citation.items() if value is not None}
+
+
+def _uncited(evidence_id: str) -> str:
+    return f"uncited_evidence {evidence_id}: no retained source assertion on this card"
+
+
+def _citations(ids: list[str], cite: Callable[[str], dict | None]) -> tuple[list[dict], list[str]]:
+    """Citations for ``ids`` and the ids that cite no source."""
+    citations, uncited = [], []
+    for evidence_id in ids:
+        citation = cite(evidence_id)
+        if citation is None:
+            uncited.append(evidence_id)
+        else:
+            citations.append(citation)
+    return citations, uncited
 
 
 def _field_gaps(resolution: dict) -> list[str]:
@@ -289,38 +385,47 @@ def _field_gaps(resolution: dict) -> list[str]:
     return gaps
 
 
-def _project_field(resolution: Any, assertions: dict[str, dict], accepted: bool) -> dict:
+def _project_field(resolution: Any, cite: Callable[[str], dict | None], accepted: bool) -> dict:
+    """A field's values, each with its citations. A value no retained assertion cites is a gap, never a value."""
     resolution = _dict(resolution)
     selected = resolution.get("selected")
     selected_ids = set(selected) if isinstance(selected, list) else {selected} if isinstance(selected, str) else set()
-    values = []
+    values, uncitable, uncited = [], [], []
     for value in _list(resolution.get("values")):
         value = _dict(value)
         ids = [i for i in _list(value.get("assertion_ids")) if isinstance(i, str)]
+        citations, missing = _citations(ids, cite)
+        uncited.extend(missing)
+        if not citations:
+            uncitable.append(
+                "uncitable_value withheld: no retained source assertion cites it"
+                + (f" (evidence ids {', '.join(ids)})" if ids else " (no evidence ids)")
+            )
+            continue
         projected = {
             "value": value.get("value_norm"),
             "selected": bool(selected_ids.intersection(ids)),
-            "evidence_ids": ids,
+            "evidence_ids": [citation["evidence_id"] for citation in citations],
             "independence_groups": _list(value.get("independence_groups")),
-            "citations": [_citation(i, assertions.get(i)) for i in ids],
+            "citations": citations,
         }
         if value.get("declared_set"):
             projected["declared_set"] = True
         values.append(projected)
     field = {"state": resolution.get("state"), "accepted": accepted, "values": values}
-    non_voting = [
-        {
-            "evidence_id": _dict(item).get("assertion_id"),
-            "reason": _dict(item).get("reason"),
-            "citation": _citation(
-                str(_dict(item).get("assertion_id")), assertions.get(_dict(item).get("assertion_id"))
-            ),
-        }
-        for item in _list(resolution.get("non_voting"))
-    ]
+    non_voting = []
+    for item in _list(resolution.get("non_voting")):
+        evidence_id = str(_dict(item).get("assertion_id"))
+        entry = {"evidence_id": evidence_id, "reason": _dict(item).get("reason")}
+        citation = cite(evidence_id)
+        if citation is None:
+            uncited.append(evidence_id)
+        else:
+            entry["citation"] = citation
+        non_voting.append(entry)
     if non_voting:
         field["non_voting"] = non_voting
-    gaps = _field_gaps(resolution)
+    gaps = _field_gaps(resolution) + uncitable + [_uncited(i) for i in dict.fromkeys(uncited)]
     if gaps:
         field["gaps"] = gaps
     return field
@@ -360,29 +465,93 @@ def _card_gaps(card: dict, ledger_entry: dict) -> dict[str, dict]:
     return gaps
 
 
-def _project_card(card: dict, matched_by: str, ledger_entry: dict) -> dict:
+def _project_link(link: Any, card_id: Any, cite: Callable[[str], dict | None]) -> tuple[dict, list[str]]:
+    """A link with its citations, and the evidence ids that cite no source anywhere in the build."""
+    link = _dict(link)
+    ids = [i for i in _list(link.get("assertion_ids")) if isinstance(i, str)]
+    citations, uncited = _citations(ids, cite)
+    endpoints = [_dict(e) for e in _list(link.get("endpoints"))]
+    projected = {
+        "link_id": link.get("link_id"),
+        "type": link.get("type"),
+        "state": link.get("state"),
+        "basis": link.get("basis"),
+        "derived_by": link.get("derived_by"),
+        "note": link.get("note"),
+        "card_ids": [e.get("id") for e in endpoints if e.get("id") != card_id],
+        "endpoints": [{k: e[k] for k in ("id", "role", "sense_id") if k in e} for e in endpoints],
+        "evidence_ids": [citation["evidence_id"] for citation in citations],
+        "citations": citations,
+    }
+    if uncited:
+        projected["gaps"] = [_uncited(i).replace("on this card", "on this card or its link endpoints") for i in uncited]
+    return {k: v for k, v in projected.items() if v is not None}, uncited
+
+
+def _project_card(card: dict, matched_by: str, ledger_entry: dict, endpoint_card: Callable[[str], dict | None]) -> dict:
     granted, refusals = _certification(card)
     accepted = bool(granted)
     assertions = {
         a["assertion_id"]: a for a in _list(card.get("assertions")) if isinstance(a, dict) and "assertion_id" in a
     }
-    fields = {name: _project_field(res, assertions, accepted) for name, res in _dict(card.get("fields")).items()}
+
+    def cite(evidence_id: str) -> dict | None:
+        return _citation(evidence_id, assertions.get(evidence_id))
+
+    fields = {name: _project_field(res, cite, accepted) for name, res in _dict(card.get("fields")).items()}
     senses = []
     for sense in _list(card.get("senses")):
         sense = _dict(sense)
-        senses.append(
-            {
-                "sense_id": sense.get("sense_id"),
-                "order": sense.get("order"),
-                "state": sense.get("state"),
-                "fields": {
-                    name: _project_field(res, assertions, accepted) for name, res in _dict(sense.get("fields")).items()
-                },
-            }
-        )
+        projected_sense = {
+            "sense_id": sense.get("sense_id"),
+            "order": sense.get("order"),
+            "state": sense.get("state"),
+            "sense_map": _list(sense.get("sense_map")),
+            "fields": {name: _project_field(res, cite, accepted) for name, res in _dict(sense.get("fields")).items()},
+        }
+        for optional in ("seeded_from", "merged_into"):
+            if sense.get(optional):
+                projected_sense[optional] = sense[optional]
+        senses.append(projected_sense)
+    links, uncitable_links = [], []
+    for link in _list(card.get("links")):
+        endpoints = [_dict(e).get("id") for e in _list(_dict(link).get("endpoints"))]
+
+        def cite_link(evidence_id: str, endpoints: list = endpoints) -> dict | None:
+            # A link's assertions live on the card that states them; a symmetric link cites both endpoints'.
+            citation = cite(evidence_id)
+            for other_id in endpoints:
+                if citation is not None:
+                    break
+                if other_id == card.get("card_id") or not isinstance(other_id, str):
+                    continue
+                other = _dict(endpoint_card(other_id))
+                for assertion in _list(other.get("assertions")):
+                    if _dict(assertion).get("assertion_id") == evidence_id:
+                        citation = _citation(evidence_id, assertion)
+                        if citation is not None:
+                            citation["card_id"] = other_id
+                        break
+            return citation
+
+        projected_link, _uncited_ids = _project_link(link, card.get("card_id"), cite_link)
+        if projected_link["citations"]:
+            links.append(projected_link)
+        else:
+            uncitable_links.append(
+                {
+                    "link_id": projected_link.get("link_id"),
+                    "type": projected_link.get("type"),
+                    "disposition": "uncitable_link_withheld",
+                    "evidence_ids": [i for i in _list(_dict(link).get("assertion_ids")) if isinstance(i, str)],
+                }
+            )
     key = _dict(card.get("key_at_creation"))
     identity = _dict(card.get("identity"))
     build = _dict(card.get("build"))
+    gaps = _card_gaps(card, ledger_entry)
+    if uncitable_links:
+        gaps["links"] = {"disposition": "uncitable_link_withheld", "links": uncitable_links}
     projected = {
         "card_id": card.get("card_id"),
         "card_kind": card.get("card_kind"),
@@ -403,24 +572,17 @@ def _project_card(card: dict, matched_by: str, ledger_entry: dict) -> dict:
             "pos": key.get("pos"),
             "paradigm_key": key.get("paradigm_key"),
             "mwe_key": key.get("mwe_key"),
+            "key_source_keys": _list(key.get("source_keys")),
             "confidence": identity.get("confidence"),
             "method": identity.get("method"),
+            "decided_by": identity.get("decided_by"),
+            "source_keys": _list(identity.get("source_keys")),
+            "notes": _list(identity.get("notes")),
         },
         "fields": fields,
         "senses": senses,
-        "links": [
-            {
-                "type": _dict(link).get("type"),
-                "state": _dict(link).get("state"),
-                "card_ids": [
-                    _dict(e).get("id")
-                    for e in _list(_dict(link).get("endpoints"))
-                    if _dict(e).get("id") != card.get("card_id")
-                ],
-            }
-            for link in _list(card.get("links"))
-        ],
-        "gaps": _card_gaps(card, ledger_entry),
+        "links": links,
+        "gaps": gaps,
         "evidence_ids": sorted(assertions),
     }
     if not accepted:
@@ -456,37 +618,64 @@ def lookup_word_card(
             "per_facet_tools": PER_FACET_TOOLS,
         }
     vesum = _vesum(normalized, vesum_lookup or _vesum_lookup)
-    store = resolve_card_store(env)
     base = {"schema": RESULT_SCHEMA, "query": word, "normalized": normalized, "vesum": vesum}
+    store = resolve_card_store(env)
     if isinstance(store, str):
-        return {
-            **base,
-            "result": "no_card",
-            "status": "no_card",
-            "card_store": {"available": False, "reason": store},
-            "message": (
-                f"No word card could be checked for '{normalized}': the card store is unavailable ({store}). "
-                "Use the per-facet tools."
-            ),
-            "cards": [],
-            "per_facet_tools": PER_FACET_TOOLS,
-        }
+        return _store_unavailable(base, store)
+    try:
+        return _lookup_in_store(store, normalized, vesum, base)
+    except (OSError, RuntimeError):
+        # The store went unreadable mid-lookup (a directory listing, a stat): explicit, path-free.
+        return _store_unavailable(base, "store_unavailable")
+
+
+def _store_unavailable(base: dict, reason: str) -> dict:
+    return {
+        **base,
+        "result": "no_card",
+        "status": "no_card",
+        "card_store": {"available": False, "reason": reason},
+        "message": (
+            f"No word card could be checked for '{base['normalized']}': the card store is unavailable ({reason}). "
+            "Use the per-facet tools."
+        ),
+        "cards": [],
+        "per_facet_tools": PER_FACET_TOOLS,
+    }
+
+
+def _lookup_in_store(store: CardStore, normalized: str, vesum: dict, base: dict) -> dict:
     from scripts.atlas.word_card_certification import certification_run
 
-    index, unreadable, file_count = _store_index(store)
+    index, unreadable, off_store, file_count = _store_index(store)
     wanted = {_fold(normalized): "spelling"}
     for lemma in vesum.get("lemmas", []):
         key = _spelling_key(lemma)
         if key is not None:
             wanted.setdefault(key, "vesum_lemma")
     ledger = _ledger_cards(store)
+    endpoint_cards: dict[str, dict | None] = {}
+
+    def endpoint_card(card_id: str) -> dict | None:
+        """A link endpoint's card by id, read once per call through the same checks as any card file."""
+        if card_id not in endpoint_cards:
+            try:
+                other = _dict(_read_card(store.cards, f"{card_id}.json"))
+            except (OSError, ValueError):
+                other = {}
+            endpoint_cards[card_id] = other if other.get("card_id") == card_id else None
+        return endpoint_cards[card_id]
+
     cards = []
     # One certification run per call: authority is reread on every lookup, never cached across calls.
     with certification_run():
         for key, matched_by in wanted.items():
             for name in index.get(key, ()):
                 try:
-                    card = _dict(_read_json(store.cards_dir / name))
+                    card = _dict(_read_card(store.cards, name))
+                except _OffStore:
+                    off_store += 1
+                    continue
                 except (OSError, ValueError):
                     unreadable += 1
                     continue
@@ -495,15 +684,19 @@ def lookup_word_card(
                 cards.append((card, matched_by))
         cards.sort(key=lambda pair: _sort_key(normalized, pair[0]))
         projected = [
-            _project_card(card, matched_by, _dict(ledger.get(card.get("card_id")))) for card, matched_by in cards
+            _project_card(card, matched_by, _dict(_dict(ledger).get(card.get("card_id"))), endpoint_card)
+            for card, matched_by in cards
         ]
     card_store = {
         "available": True,
         "build_id": _store_build_id(store),
         "card_files": file_count,
         "unreadable_card_files": unreadable,
-        "ledger": store.ledger_path is not None,
+        "off_store_card_files": off_store,
+        "ledger": store.ledger is not None and ledger is not None,
     }
+    if store.ledger is not None and ledger is None:
+        card_store["ledger_unreadable"] = True
     if not projected:
         return {
             **base,
