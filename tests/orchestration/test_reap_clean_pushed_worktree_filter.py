@@ -504,6 +504,79 @@ def test_quarantine_recovery_respects_selection(
 
 
 @pytest.mark.parametrize("apply", [False, True])
+@pytest.mark.parametrize("selection", ["repo-root", "agent-directory", "prefix", "reverse-prefix"])
+@pytest.mark.parametrize("contents", ["checkout", "record-only", "unexpected-entry"])
+def test_scoped_recovery_preserves_unnamed_holder(
+    repo: Path, capsys: pytest.CaptureFixture[str], selection: str, contents: str, apply: bool
+) -> None:
+    b = dispatch_tree(repo, "task-a" if selection == "reverse-prefix" else "task-ab")
+    if selection == "repo-root":
+        target = repo
+    elif selection == "agent-directory":
+        target = b.parent
+    else:
+        target = dispatch_tree(repo, "task-ab" if selection == "reverse-prefix" else "task-a")
+    identity = b.stat()
+    holder = repo / ".worktrees" / ".reaping" / f"codex-{'0' * 32}"
+    holder.parent.mkdir(mode=0o700)
+    holder.mkdir(mode=0o700)
+    record = holder / rw.QUARANTINE_RECORD
+    record.write_text(
+        json.dumps(
+            {
+                "schema": "clean-pushed-quarantine.v1",
+                "original": b.relative_to(repo).as_posix(),
+                "task": b.name,
+                "dev": identity.st_dev,
+                "ino": identity.st_ino,
+                "stage": "intent",
+            }
+        ),
+        encoding="utf-8",
+    )
+    git(repo, "worktree", "move", str(b), str(holder))
+    staged = holder / b.name
+    if contents == "record-only":
+        git(repo, "worktree", "remove", str(staged))
+    elif contents == "unexpected-entry":
+        (holder / "unexpected.txt").write_bytes(b"preserve this entry\n")
+
+    def snapshot() -> dict[str, tuple[int, int, bytes | None]]:
+        return {
+            path.relative_to(holder).as_posix(): (
+                path.stat().st_mode,
+                path.stat().st_ino,
+                path.read_bytes() if path.is_file() else None,
+            )
+            for path in (holder, *sorted(holder.rglob("*")))
+        }
+
+    before = snapshot()
+    [report] = cli(capsys, "--repo-root", str(repo), "--worktree", str(target), *(["--apply"] if apply else []))
+
+    assert holder.is_dir()
+    assert snapshot() == before
+    assert not b.exists()
+    assert staged.exists() is (contents != "record-only")
+    assert not any(
+        row["path"]
+        in {
+            b.relative_to(repo).as_posix(),
+            staged.relative_to(repo).as_posix(),
+            holder.relative_to(repo).as_posix(),
+        }
+        for row in (*report["removed"], *report["skipped"])
+    ), report
+    selects_checkout = selection in {"prefix", "reverse-prefix"}
+    assert [row["path"] for row in report["removed"]] == (
+        [target.relative_to(repo).as_posix()] if selects_checkout else []
+    )
+    if selects_checkout:
+        assert outcome(report, target, repo)["action"] == ("removed" if apply else "would_remove")
+        assert target.exists() is not apply
+
+
+@pytest.mark.parametrize("apply", [False, True])
 @pytest.mark.parametrize("scoped", [False, True])
 @pytest.mark.parametrize("kind", ["root-file", "holder-file", "unreadable-record"])
 def test_scoped_recovery_cannot_attribute_unreadable_quarantine_entries(
