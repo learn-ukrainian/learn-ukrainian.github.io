@@ -18,7 +18,7 @@ APScheduler==3.11.3
 ast-serialize==0.12.1
 asttokens==3.0.2
 attrs==26.1.0
-Authlib==1.7.2
+Authlib==1.8.0
 av==18.1.0
 bandit==1.9.4
 beautifulsoup4==4.15.0
