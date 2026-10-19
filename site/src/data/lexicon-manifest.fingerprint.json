@@ -191,7 +191,7 @@
       },
       {
         "path": "scripts/lexicon/export_open_dataset.py",
-        "sha256": "c8df8feb2ecc506f665c49cbc3736683d912fa22708f99810e1c394d9fe27ff9"
+        "sha256": "80d34a380e25de5fa16bd76b1bd9f0a482338e89fe5d2baa6f4d6ac097bce541"
       },
       {
         "path": "scripts/lexicon/extract_book_headword_inventory.py",
@@ -331,7 +331,7 @@
       },
       {
         "path": "scripts/lexicon/publish_manifest.py",
-        "sha256": "d77f66b55198f8fdb9742481360043fafd860b2f4dbc58775476d68124e863cf"
+        "sha256": "2d1e5cfbd506b85102e65b241ddb880c5c4b780e66ade62fcb722d296faf5e63"
       },
       {
         "path": "scripts/lexicon/published_record_dispositions.py",

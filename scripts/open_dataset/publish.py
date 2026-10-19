@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import base64
 import gzip
 import hashlib
 import json
@@ -17,6 +18,12 @@ from urllib.parse import quote
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
+from scripts.atlas.word_card_certification import (
+    UncertifiedCardRefusal,
+    certification_run,
+    certified_inventory,
+    load_certified_card_for_export,
+)
 from scripts.common.jsonl import jsonl_lines
 from scripts.open_dataset.russification import QuarantineGate
 from scripts.opsec.prepublish import publication_boundary, publication_cli
@@ -85,7 +92,11 @@ def collect_dataset(dataset_root: Path = DEFAULT_DATASET_ROOT) -> tuple[dict[str
     pointer_files: list[dict[str, Any]] = []
     package_files: list[dict[str, str]] = []
     for path in sorted(p for p in dataset_root.rglob("*") if p.is_file()):
+        if path.is_symlink():
+            raise OpenDatasetPublishError("dataset symlinks are not package files")
         rel_path = path.relative_to(dataset_root).as_posix()
+        if rel_path not in REQUIRED_DATASET_FILES[:3] and path.suffix not in {".jsonl", ".json", ".gz"}:
+            raise OpenDatasetPublishError("unsupported package file type")
         data = path.read_bytes()
         pointer_files.append(
             {
@@ -97,14 +108,90 @@ def collect_dataset(dataset_root: Path = DEFAULT_DATASET_ROOT) -> tuple[dict[str
         package_files.append(
             {
                 "path": rel_path,
-                "content": data.decode("utf-8"),
+                "content": base64.b64encode(data).decode("ascii") if path.suffix == ".gz" else data.decode("utf-8"),
+                **({"encoding": "base64"} if path.suffix == ".gz" else {}),
             }
         )
     if not package_files:
         raise OpenDatasetPublishError(f"{dataset_root} contains no files")
+    validate_package_files(metadata, package_files)
     return metadata, pointer_files, package_files
 
 
+def package_file_bytes(file: dict[str, str]) -> bytes:
+    if file.get("encoding") == "base64":
+        return base64.b64decode(file["content"], validate=True)
+    if "encoding" in file:
+        raise OpenDatasetPublishError("unsupported package encoding")
+    return file["content"].encode("utf-8")
+
+
+@certification_run()
+def validate_package_files(metadata: dict[str, Any], files: list[dict[str, str]]) -> None:
+    """Revalidate every packaged data file, including cached and compressed inputs."""
+    try:
+        allowed = {"version", "generated_at", "stats", "shard_integrity", "certified", "export_eligible", "draft_engineering"}
+        if not isinstance(metadata, dict) or set(metadata) - allowed:
+            raise OpenDatasetPublishError("unreviewed package metadata")
+        for key in ("version", "generated_at"):
+            if key in metadata and not isinstance(metadata[key], str):
+                raise OpenDatasetPublishError("invalid package metadata")
+        stats = metadata.get("stats", {})
+        if (not isinstance(stats, dict) or set(stats) - {"cards", "lemmas_total", "form_of_count"}
+                or any(type(value) is not int or value < 0 for value in stats.values())):
+            raise OpenDatasetPublishError("invalid package counters")
+        integrity = metadata.get("shard_integrity", {})
+        if not isinstance(integrity, dict):
+            raise OpenDatasetPublishError("invalid shard integrity metadata")
+        for record in integrity.values():
+            if (not isinstance(record, dict) or set(record) != {"sha256", "bytes", "entries"}
+                    or not isinstance(record["sha256"], str) or len(record["sha256"]) != 64
+                    or any(c not in "0123456789abcdef" for c in record["sha256"])
+                    or any(type(record[key]) is not int or record[key] < 0 for key in ("bytes", "entries"))):
+                raise OpenDatasetPublishError("invalid shard integrity metadata")
+        if (metadata.get("certified") is not True or metadata.get("export_eligible") is not True
+                or metadata.get("draft_engineering") is not False):
+            raise OpenDatasetPublishError("dataset lacks certification metadata")
+        names = set()
+        count = 0
+        for file in files:
+            path = Path(file["path"])
+            if (path.is_absolute() or ".." in path.parts or "draft" in path.parts
+                    or path.as_posix() in names):
+                raise OpenDatasetPublishError("unsafe, draft or duplicate package path")
+            names.add(path.as_posix())
+            data = package_file_bytes(file)
+            if path.as_posix() in REQUIRED_DATASET_FILES[:3]:
+                continue
+            if path.suffix not in {".jsonl", ".json", ".gz"}:
+                raise OpenDatasetPublishError("unsupported package file type")
+            if path.suffix == ".gz":
+                data = gzip.decompress(data)
+                path = path.with_suffix("")
+            if path.suffix == ".jsonl":
+                cards = [json.loads(line) for line in jsonl_lines(data.decode()) if line.strip()]
+            elif path.suffix == ".json":
+                value = json.loads(data)
+                if file["path"] == "dataset/_metadata.json":
+                    if value != metadata:
+                        raise OpenDatasetPublishError("packaged metadata mismatch")
+                    continue
+                cards = certified_inventory(value) if isinstance(value, dict) and "card_id" not in value else (
+                    value if isinstance(value, list) else [value])
+            else:
+                raise OpenDatasetPublishError("unsupported compressed data type")
+            if not cards:
+                raise OpenDatasetPublishError("empty certified data file")
+            for card in cards:
+                load_certified_card_for_export(card, required_approval="dataset")
+                count += 1
+        if not set(REQUIRED_DATASET_FILES).issubset(names) or count == 0:
+            raise OpenDatasetPublishError("incomplete certified package")
+    except (UncertifiedCardRefusal, ValueError, TypeError, KeyError, OSError) as exc:
+        raise OpenDatasetPublishError("uncertified or invalid dataset package") from exc
+
+
+@certification_run()
 def build_package(
     metadata: dict[str, Any], files: list[dict[str, str]], *, sum11_texts: Iterable[str] = (),
 ) -> bytes:
@@ -116,16 +203,21 @@ def build_package(
         gate.validate([metadata])
         for file in files:
             path = Path(file["path"])
+            content = package_file_bytes(file)
+            if path.suffix == ".gz":
+                path = path.with_suffix("")
+                content = gzip.decompress(content)
             gate.validate([file["path"]])
             if path.suffix.lower() == ".jsonl":
-                records = [json.loads(line) for line in jsonl_lines(file["content"]) if line.strip()]
+                records = [json.loads(line) for line in jsonl_lines(content.decode()) if line.strip()]
             elif path.suffix.lower() == ".json":
-                records = [json.loads(file["content"])]
+                records = [json.loads(content)]
             else:
-                records = [file["content"]]
+                records = [content.decode()]
             gate.validate(records)
     except ValueError as exc:
         raise OpenDatasetPublishError("default dataset quarantine gate failed") from exc
+    validate_package_files(metadata, files)
     package = {
         "schema": "atlas-open-dataset-package",
         "schemaVersion": 1,
@@ -210,6 +302,7 @@ def upload_release_asset(gzip_path: Path, *, release_tag: str, repo: str) -> Non
         raise _called_process_error_from_timeout(exc) from exc
 
 
+@certification_run()
 def publish_open_dataset(
     *,
     dataset_root: Path = DEFAULT_DATASET_ROOT,

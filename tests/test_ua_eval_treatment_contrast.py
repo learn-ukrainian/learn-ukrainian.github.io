@@ -21,6 +21,7 @@ from scripts.projects.ua_eval_harness.compare_treatment_runs import (
     paired_contrast,
     safety_contrast,
 )
+from tests.word_card_certification_fixtures import certification_fixture, dataset_files  # noqa: F401
 
 ROOT = Path(__file__).resolve().parents[1]
 IDENTITY = ROOT / "data/projects/ua_eval_harness/baselines/v1/identity.responses.jsonl"
@@ -328,9 +329,11 @@ def test_default_package_rejects_co_located_opt_in_subset(contrast_pair) -> None
         build_package({}, [{"path": "opt-in/contrast.jsonl", "content": json.dumps(row)}])
 
 
-def test_default_package_round_trip_and_invalid_json() -> None:
-    files = [{"path": "dataset/default.jsonl", "content": '{"text":"Authentic correction"}\n'}]
-    package = json.loads(build_package({"version": "synthetic"}, files, sum11_texts=["Forbidden quotation"]))
+def test_default_package_round_trip_and_invalid_json(certification) -> None:
+    certification.card["identity"]["notes"] = ["Authentic correction"]
+    certification.approve(certification.card)
+    metadata, files = dataset_files(certification.card)
+    package = json.loads(build_package(metadata, files, sum11_texts=["Forbidden quotation"]))
     assert package["files"] == files
     assert package["manifest_version"] == "synthetic"
     with pytest.raises(OpenDatasetPublishError, match="quarantine gate failed"):
@@ -338,10 +341,12 @@ def test_default_package_round_trip_and_invalid_json() -> None:
 
 
 @pytest.mark.parametrize("separator", ["\u0085", "\u2028", "\u2029"])
-def test_default_package_keeps_unicode_separators_inside_jsonl_records(separator) -> None:
+def test_default_package_keeps_unicode_separators_inside_jsonl_records(separator, certification) -> None:
     text = f"Authentic{separator}quotation"
-    files = [{"path": "dataset/default.jsonl", "content": json.dumps({"text": text}, ensure_ascii=False) + "\n"}]
-    assert json.loads(build_package({}, files))["files"] == files
+    certification.card["identity"]["notes"] = [text]
+    certification.approve(certification.card)
+    metadata, files = dataset_files(certification.card)
+    assert json.loads(build_package(metadata, files))["files"] == files
     with pytest.raises(OpenDatasetPublishError, match="quarantine gate failed"):
         build_package({}, files, sum11_texts=["Authentic quotation"])
 
@@ -360,16 +365,17 @@ def test_default_publish_refuses_missing_inventory_before_any_write(tmp_path) ->
     assert not gzip_path.exists()
 
 
-def test_default_publish_audits_exact_package_before_upload(tmp_path, monkeypatch) -> None:
+def test_default_publish_audits_exact_package_before_upload(tmp_path, monkeypatch, certification) -> None:
     from scripts.open_dataset import publish
 
     root = tmp_path / "default"
     (root / "dataset").mkdir(parents=True)
-    for name in ("README.md", "ATTRIBUTION.md", "NOTICE.md"):
-        (root / name).write_text("Synthetic documentation\n")
-    (root / "dataset/_metadata.json").write_text('{"version":"synthetic"}')
+    certification.card["identity"]["notes"] = ["Unlabelled Soviet quotation"]
+    certification.approve(certification.card)
+    _metadata, files = dataset_files(certification.card)
+    for file in files:
+        (root / file["path"]).write_text(file["content"])
     shard = root / "dataset/default.jsonl"
-    shard.write_text('{"text":"Unlabelled Soviet quotation"}\n')
     uploads = []
     monkeypatch.setattr(publish, "upload_release_asset", lambda path, **kw: uploads.append(path.read_bytes()))
     output = tmp_path / "default.gz"
@@ -379,12 +385,15 @@ def test_default_publish_audits_exact_package_before_upload(tmp_path, monkeypatc
     with pytest.raises(OpenDatasetPublishError, match="quarantine gate failed"):
         publish_open_dataset(**kwargs)
     assert uploads == [] and not output.exists() and not pointer.exists()
-    shard.write_text('{"text":"Authentic correction"}\n')
+    certification.card["identity"]["notes"] = ["Authentic correction"]
+    certification.approve(certification.card)
+    shard.write_text(json.dumps(certification.card, ensure_ascii=False) + "\n")
     result = publish_open_dataset(**kwargs)
     assert len(uploads) == 1
     package = json.loads(gzip.decompress(uploads[0]))
     packaged_shard = next(file for file in package["files"] if file["path"] == "dataset/default.jsonl")
-    assert packaged_shard["content"] == '{"text":"Authentic correction"}\n'
+    assert json.loads(packaged_shard["content"]) == certification.card
+    assert json.loads(packaged_shard["content"])["identity"]["notes"] == ["Authentic correction"]
     assert result == json.loads(pointer.read_text())
 
 

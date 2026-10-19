@@ -23,6 +23,7 @@ ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from scripts.atlas.word_card_certification import certification_run, guard_card_inventory
 from scripts.common import github_client
 from scripts.lexicon.manifest_fingerprint import (
     DEFAULT_FINGERPRINT,
@@ -172,14 +173,17 @@ def validate_pointer_freshness(
         raise ManifestPublishError("Atlas manifest fingerprint does not match pointer")
 
 
+@certification_run()
 def gzip_manifest(manifest_path: Path = DEFAULT_MANIFEST, gzip_path: Path = DEFAULT_GZIP) -> bytes:
     """Write a deterministic gzip for the manifest and return its bytes."""
     manifest_bytes = manifest_path.read_bytes()
+    guard_card_inventory(json.loads(manifest_bytes))
     gzip_bytes = gzip.compress(manifest_bytes, compresslevel=9, mtime=0)
     gzip_path.write_bytes(gzip_bytes)
     return gzip_bytes
 
 
+@certification_run()
 def build_pointer_payload(
     *,
     manifest_path: Path = DEFAULT_MANIFEST,
@@ -196,6 +200,7 @@ def build_pointer_payload(
     manifest = json.loads(manifest_bytes.decode("utf-8"))
     if not isinstance(manifest, dict):
         raise ManifestPublishError(f"{manifest_path} must contain a JSON object")
+    guard_card_inventory(manifest)
     fingerprint = load_publish_fingerprint(fingerprint_path, root=ROOT)
     validate_manifest_fingerprint(manifest, fingerprint, manifest_path=manifest_path)
 
@@ -504,6 +509,7 @@ def validate_richness_gate_record(record: dict[str, Any]) -> None:
         raise ManifestPublishError("Atlas manifest richness_gate must record override_reason")
 
 
+@certification_run()
 def publish_manifest(
     *,
     manifest_path: Path = DEFAULT_MANIFEST,
@@ -516,6 +522,7 @@ def publish_manifest(
     allow_richness_regression_reason: str | None = None,
     bootstrap_no_baseline: bool = False,
 ) -> dict[str, Any]:
+    guard_card_inventory(json.loads(manifest_path.read_bytes()))
     richness_record = evaluate_manifest_pointer_write_gate(
         manifest_path,
         release_tag=release_tag,
@@ -542,13 +549,21 @@ def publish_manifest(
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Publish the Word Atlas manifest release asset.")
-    parser.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST)
-    parser.add_argument("--gzip", type=Path, default=DEFAULT_GZIP)
-    parser.add_argument("--pointer", type=Path, default=DEFAULT_POINTER)
-    parser.add_argument("--fingerprint", type=Path, default=DEFAULT_FINGERPRINT)
-    parser.add_argument("--release-tag", default=DEFAULT_RELEASE_TAG)
-    parser.add_argument("--repo", default=DEFAULT_REPO)
+    parser = argparse.ArgumentParser(
+        description="Publish the Atlas manifest release asset.\nUse for a verified build; card payloads require current site certification.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=("Examples:\n  .venv/bin/python -m scripts.lexicon.publish_manifest --dry-run\n"
+                "  .venv/bin/python -m scripts.lexicon.publish_manifest --manifest manifest.json --dry-run\n"
+                "Outputs: Writes a gzip package; uploads assets and writes a pointer unless --dry-run.\n"
+                "Exit codes: 0 success; nonzero validation, certification, transport or usage failure.\n"
+                "Related: #10513; docs/atlas/word-cards/export-invariants.md"),
+    )
+    parser.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST, help="Input manifest JSON (default: %(default)s).")
+    parser.add_argument("--gzip", type=Path, default=DEFAULT_GZIP, help="Output gzip asset (default: %(default)s).")
+    parser.add_argument("--pointer", type=Path, default=DEFAULT_POINTER, help="Output release pointer JSON (default: %(default)s).")
+    parser.add_argument("--fingerprint", type=Path, default=DEFAULT_FINGERPRINT, help="Build fingerprint sidecar JSON (default: %(default)s).")
+    parser.add_argument("--release-tag", default=DEFAULT_RELEASE_TAG, help="Release tag (default: %(default)s).")
+    parser.add_argument("--repo", default=DEFAULT_REPO, help="Release OWNER/REPO (default: %(default)s).")
     parser.add_argument(
         "--dry-run",
         "--verify-only",
