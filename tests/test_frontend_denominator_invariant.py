@@ -25,6 +25,8 @@ SITE_CONFIGS = (
 )
 SOURCE_SUFFIXES = {".astro", ".js", ".jsx", ".mjs", ".ts", ".tsx"}
 RELATIVE_LITERAL = re.compile(r"(?P<quote>['\"])(?P<path>\.\./[^'\"]+)(?P=quote)")
+# Exact Vite raw import: the path ends at the first ?/# (Vite cleanUrl) and the whole query is `raw`.
+RAW_IMPORT = re.compile(r"(?P<path>[^?#]+)\?raw")
 
 
 def git_tree_paths(repo_root: Path) -> set[str]:
@@ -60,7 +62,7 @@ def external_site_paths() -> dict[str, list[str]]:
             base = SITE if "process.cwd()" in expression and "resolve(" in expression else source.parent
             literals = [match.group("path") for match in RELATIVE_LITERAL.finditer(line)]
             # Vite loads a `file?raw` import from `file`; the literal stays a candidate filename.
-            literals += [literal.removesuffix("?raw") for literal in literals if literal.endswith("?raw")]
+            literals += [raw.group("path") for literal in literals if (raw := RAW_IMPORT.fullmatch(literal))]
             for literal in literals:
                 target = (base / literal).resolve()
                 if not target.is_relative_to(ROOT) or target.is_relative_to(SITE) or target == ROOT:
@@ -103,6 +105,9 @@ SYNTHETIC_FILES = {
     "docs/bare.yaml": "bare: 1\n",
     "docs/raw.yaml": "raw: 1\n",
     "docs/odd?raw": "a real filename that ends in a query-like suffix\n",
+    # Tracked names a partial `?raw` strip would invent from the last three reader lines.
+    "docs/q?opaque": "not read: Vite cleans q?opaque?raw to q\n",
+    "docs/h#part": "not read: Vite cleans h#part?raw to h\n",
     "site/src/data/local.json": "{}\n",
     SYNTHETIC_READER: (
         'import bare from "../../../docs/bare.yaml";\n'
@@ -112,6 +117,9 @@ SYNTHETIC_FILES = {
         'import local from "../data/local.json?raw";\n'
         '// import again from "../../../docs/raw.yaml?raw";\n'
         'import generated from "../../../data/generated.db?raw";\n'
+        'import query from "../../../docs/q?opaque?raw";\n'
+        'import fragment from "../../../docs/h#part?raw";\n'
+        'import twice from "../../../docs/odd?raw?raw";\n'
     ),
 }
 SYNTHETIC_EXTERNAL = {
