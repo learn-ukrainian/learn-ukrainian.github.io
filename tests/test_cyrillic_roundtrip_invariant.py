@@ -292,9 +292,6 @@ ROUND_TRIPPERS = [
     ),
 ]
 
-KNOWN_XFAILS = {
-}
-
 
 def _reconstruct_from_chunks(text: str, chunks: list[str]) -> str:
     if not chunks:
@@ -329,10 +326,6 @@ def _roundtrip_params() -> list[object]:
 
 @pytest.mark.parametrize(("path", "case"), _roundtrip_params())
 def test_cyrillic_text_paths_preserve_bytes(path: RoundTripper, case: dict[str, str]) -> None:
-    xfail_issue = KNOWN_XFAILS.get((path.name, case["id"]))
-    if xfail_issue is not None:
-        pytest.xfail(f"Pre-existing Unicode drift tracked in {xfail_issue}")
-
     got = path.fn(case["text"])
     assert got == case["text"], (
         f"Round-trip mutated Cyrillic: case={case['id']} path={path.name}\n"

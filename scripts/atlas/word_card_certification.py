@@ -38,6 +38,7 @@ IMPLEMENTATION_PATHS = (
     PROJECT_ROOT / "scripts/open_dataset/hydrate.py",
     PROJECT_ROOT / "scripts/config/vesum_source.lock.json",
     PROJECT_ROOT / "scripts/projects/open_model_data/source_completeness_manifest.py",
+    PROJECT_ROOT / "scripts/projects/open_model_data/word_cards/dataset_projection.py",
 )
 RULE_PATHS = (
     *sorted(PROJECT_ROOT.glob("schemas/word-card-*.schema.json")),

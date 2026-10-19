@@ -120,12 +120,26 @@ def test_every_registered_cause_is_fixed_text():
             assert marker not in cause, (cause, marker)
 
 
-def test_unsupported_verdict_cause_survives_public_persistence_without_free_text():
+@pytest.mark.parametrize(
+    "response,identifier",
+    [
+        ("VERDICT: CHANGES", "CHANGES"),
+        ("Verdict: Looks good to me overall.", "Looks"),
+        ("**Verdict:** I approve this change.", "I"),
+        ("VERDICT: ghp_SYNTHETIC10598TOKENabcdefghij", "[REDACTED_SECRET]"),
+    ],
+)
+def test_unsupported_verdict_cause_survives_public_persistence_without_free_text(response, identifier):
     cause = "review_unsupported_verdict_token"
     assert cause in delegate.public_causes()
     task_id = "unsupported-verdict-public"
-    diagnostic = (
-        f"{cause}: unsupported token 'CHANGES'; "
+    gate = delegate.run_completion_gate(
+        delegate.COMPLETION_GATE_REVIEW_VERDICT, {}, response=response, commits_ahead=None, worktree=None,
+    )
+    assert gate.failure == cause and gate.status == "failed"
+    diagnostic = gate.detail
+    assert diagnostic == (
+        f"{cause}: unsupported verdict identifier {identifier!r}; "
         "accepted tokens: APPROVE, APPROVED, CHANGES_REQUESTED, REQUEST_CHANGES, BLOCKED"
     )
     delegate._write_state_atomic(
@@ -145,7 +159,7 @@ def test_unsupported_verdict_cause_survives_public_persistence_without_free_text
     assert state["stderr_excerpt"] == diagnostic
     # Details remain in the existing diagnostic channel, never admitted as
     # arbitrary parameters on a public reason.
-    public, local = delegate.public_cause(f"{cause}, unsupported token {HOSTILE}")
+    public, local = delegate.public_cause(f"{cause}, unsupported verdict identifier {HOSTILE}")
     assert public == delegate.UNCLASSIFIED_CAUSE and local is not None
 
 

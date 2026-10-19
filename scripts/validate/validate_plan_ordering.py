@@ -359,7 +359,7 @@ def _resolve_ref_by_description(
     return None
 
 
-def _fix_ref_in_file(plan_file: Path, old_ref: str, new_ref: str,
+def _fix_ref_in_file(plan_file: Path, new_ref: str,
                      old_entry: str, new_entry: str) -> bool:
     """Fix a single reference in a plan file. Returns True if changed."""
     content = plan_file.read_text(encoding="utf-8")
@@ -538,7 +538,7 @@ def validate_track(
                                 f"({desc})", f"({slug_desc})"
                             )
                             if new_entry != entry_str and _fix_ref_in_file(
-                                plan_file, ref_str, ref_str, entry_str, new_entry
+                                plan_file, ref_str, entry_str, new_entry
                             ):
                                 fix_count += 1
                             else:
@@ -566,7 +566,7 @@ def validate_track(
                                 new_ref, entry_str, count=1
                             )
                             if new_entry != entry_str and _fix_ref_in_file(
-                                plan_file, ref_str, new_ref, entry_str, new_entry
+                                plan_file, new_ref, entry_str, new_entry
                             ):
                                 fix_count += 1
                                 print(f"  FIXED: {plan_file.name} {field_name}: "
