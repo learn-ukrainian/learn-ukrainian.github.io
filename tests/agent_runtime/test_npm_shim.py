@@ -22,9 +22,11 @@ may only be ``nested-ci``; any other non-empty value exits 99 and runs nothing.
 from __future__ import annotations
 
 import ast
+import hashlib
 import inspect
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -381,12 +383,171 @@ def _git(cwd: Path, *args: str) -> None:
         "GIT_COMMITTER_NAME": "Test",
         "GIT_COMMITTER_EMAIL": "test@example.invalid",
     }
+    if os.environ.get("LU_OO01_GIT_TRACE") == "1":
+        try:
+            _trace_fixture_git(cwd, args, env)
+        except (RuntimeError, OSError, UnicodeError, subprocess.TimeoutExpired) as exc:
+            output = Path(os.environ["LU_OO01_GIT_TRACE_DIR"])
+            output.mkdir(parents=True, exist_ok=True)
+            code = str(exc) if re.fullmatch(r"OO01_[A-Z_]+", str(exc)) else "OO01_TRACE_REFUSAL"
+            for artifact in output.glob("command-*.json"):
+                artifact.unlink()
+            (output / "refusal.json").write_text(json.dumps({"status": code}), encoding="utf-8")
+            raise RuntimeError(code) from None
+        return
     try:
         subprocess.run(["git", *args], cwd=cwd, env=env, check=True, capture_output=True, timeout=60)
     except subprocess.CalledProcessError as exc:
         exc.add_note(f"fixture git stdout: {exc.stdout!r}")
         exc.add_note(f"fixture git stderr: {exc.stderr!r}")
         raise
+
+
+_OO01_SYSCALLS = (
+    "mkdir,mkdirat,newfstatat,stat,lstat,statx,readlink,readlinkat,openat,"
+    "unlink,unlinkat,rmdir,rename,renameat,renameat2,chdir,clone,clone3,fork,vfork,wait4,exit_group"
+)
+_OO01_TRACE_BYTES = 1024 * 1024
+
+
+def _filter_fixture_trace(raw: str, cwd: Path) -> list[dict]:
+    """Project syscall evidence onto synthetic paths; never copy trace text."""
+    rows = []
+    processes: dict[str, str] = {}
+    pending: dict[tuple[str, str], list[str]] = {}
+    for line in raw.splitlines():
+        match = re.fullmatch(r"\s*(\d+)\s+([a-z0-9_]+)\((.*)", line)
+        resumed = False
+        if match is None:
+            match = re.fullmatch(r"\s*(\d+)\s+<\.\.\. ([a-z0-9_]+) resumed>(.*)", line)
+            resumed = match is not None
+        if match is None:
+            # Signals/exit notices carry host identifiers. Syscall exits are retained instead.
+            if re.fullmatch(r"\s*\d+\s+(?:---|\+\+\+).*", line):
+                continue
+            raise RuntimeError("OO01_PRIVACY_REFUSAL")
+        pid, operation, arguments = match.groups()
+        if operation not in _OO01_SYSCALLS.split(","):
+            raise RuntimeError("OO01_PRIVACY_REFUSAL")
+        process = processes.setdefault(pid, f"p{len(processes) + 1}")
+        paths = []
+        for quoted in re.findall(r'"([^"\\]*)"', arguments):
+            path = Path(quoted)
+            if not path.is_absolute():
+                path = cwd / path
+            # No resolve(): evidence must describe the syscall's original lexical path.
+            relative = os.path.relpath(path, cwd)
+            if relative == ".git" or relative.startswith((".git/worktrees", ".worktrees/")):
+                if relative in {".git", ".git/worktrees", ".git/worktrees/task"}:
+                    paths.append(f"fixture/{relative}")
+                elif relative.startswith(".git/worktrees/task/") and relative.rsplit("/", 1)[-1] in {
+                    "HEAD", "commondir", "gitdir", "index", "locked", "ORIG_HEAD",
+                }:
+                    paths.append(f"fixture/.git/worktrees/task/{relative.rsplit('/', 1)[-1]}")
+                else:
+                    paths.append("fixture/path-" + hashlib.sha256(relative.encode()).hexdigest()[:12])
+        if resumed:
+            paths = pending.pop((pid, operation), [])
+        result = re.search(r"\)\s+= (-?\d+)(?: (E[A-Z0-9]+))?", arguments)
+        if not paths and operation not in {"clone", "clone3", "fork", "vfork", "wait4", "exit_group"}:
+            continue
+        row = {"process": process, "operation": operation, "paths": paths}
+        if resumed:
+            row["resumed"] = True
+        if result:
+            code = int(result[1])
+            if operation in {"clone", "clone3", "fork", "vfork", "wait4"} and code > 0:
+                row["result"] = processes.setdefault(str(code), f"p{len(processes) + 1}")
+            else:
+                row["result"] = code
+            if result[2]:
+                row["errno"] = result[2]
+        else:
+            row["result"] = "unfinished" if "<unfinished ...>" in arguments else "unknown"
+            if row["result"] == "unfinished":
+                pending[(pid, operation)] = paths
+        rows.append(row)
+    if not rows or len(rows) > 4096:
+        raise RuntimeError("OO01_TRACE_BUDGET_OR_EMPTY")
+    return rows
+
+
+def _fixture_git_identity(git: str, env: dict[str, str]) -> dict:
+    build = subprocess.run(
+        [git, "--version", "--build-options"], env=env, check=True, capture_output=True, timeout=10,
+    ).stdout
+    fields = {}
+    for line in build.decode("ascii").splitlines():
+        if re.fullmatch(r"git version [0-9][a-zA-Z0-9.+-]{0,80}", line):
+            fields["version"] = line
+        elif line == "no commit associated with this build":
+            fields["commit"] = "none"
+        elif line.startswith("shell-path: "):
+            fields["shell-path-sha256"] = hashlib.sha256(line[12:].encode()).hexdigest()
+        else:
+            match = re.fullmatch(
+                r"(cpu|sizeof-long|sizeof-size_t|rust|gettext|libcurl|zlib|SHA-1|SHA-256|"
+                r"default-ref-format|default-hash|built from commit):? ([a-zA-Z0-9_.+-]{1,80})", line,
+            )
+            if match is None:
+                raise RuntimeError("OO01_PRIVACY_REFUSAL")
+            fields[match[1]] = match[2]
+    if "version" not in fields:
+        raise RuntimeError("OO01_PRIVACY_REFUSAL")
+    image = {}
+    for key in ("ImageOS", "ImageVersion"):
+        value = os.environ.get(key, "unknown")
+        if not re.fullmatch(r"[a-zA-Z0-9_.-]{1,80}", value):
+            raise RuntimeError("OO01_PRIVACY_REFUSAL")
+        image[key] = value
+    return {
+        "git_sha256": hashlib.sha256(Path(git).read_bytes()).hexdigest(),
+        "build_options_sha256": hashlib.sha256(build).hexdigest(),
+        "build_options": fields, "runner_image": image,
+    }
+
+
+def _trace_fixture_git(cwd: Path, args: tuple[str, ...], env: dict[str, str]) -> None:
+    """OO01's opt-in isolated CI checkpoint, restricted to disposable fixture Git."""
+    output = Path(os.environ["LU_OO01_GIT_TRACE_DIR"])
+    output.mkdir(parents=True, exist_ok=True)
+    TMPDIR = os.environ.get("TMPDIR") or os.fspath(ensure_scratch_root())
+    if not cwd.resolve().is_relative_to(Path(TMPDIR).resolve()):
+        raise RuntimeError("OO01_TRACE_SCOPE_REFUSAL")
+    count = len(list(output.glob("command-*.json")))
+    allowed = {
+        ("init", "-q", "-b", "main"),
+        ("commit", "-q", "--allow-empty", "-m", "init"),
+        ("worktree", "add", "-q", "--detach", str(cwd / ".worktrees/dispatch/agent/task")),
+    }
+    if count >= 4 or args not in allowed or cwd.name not in {"primary", "tooling"}:
+        raise RuntimeError("OO01_TRACE_SCOPE_REFUSAL")
+    # The fixture's closed PATH is authoritative, not the runner shell's Git.
+    git = shutil.which("git", path=env["PATH"])
+    strace = shutil.which("strace", path=env["PATH"])
+    prlimit = shutil.which("prlimit", path=env["PATH"])
+    if not all((git, strace, prlimit)):
+        raise RuntimeError("OO01_TRACE_CAPABILITY_MISSING")
+    identity = _fixture_git_identity(git, env)
+    with tempfile.TemporaryDirectory(prefix="oo01-raw-", dir=TMPDIR) as scratch:
+        trace = Path(scratch) / "trace"
+        proc = subprocess.run(
+            [prlimit, f"--fsize={_OO01_TRACE_BYTES}", "--", strace, "--kill-on-exit", "-f", "-qq", "-s", "4096",
+             "-e", f"trace={_OO01_SYSCALLS}", "-o", str(trace), "--", git, *args],
+            cwd=cwd, env=env, check=False, capture_output=True, timeout=60,
+        )
+        if not trace.exists() or trace.stat().st_size >= _OO01_TRACE_BYTES:
+            raise RuntimeError("OO01_TRACE_BUDGET_OR_CAPABILITY_REFUSAL")
+        rows = _filter_fixture_trace(trace.read_text(encoding="utf-8"), cwd)
+    evidence = {**identity, "fixture": cwd.name, "command": args[0], "returncode": proc.returncode,
+                "operations": rows}
+    serialized = json.dumps(evidence, sort_keys=True)
+    if len(serialized) > 256 * 1024:
+        raise RuntimeError("OO01_TRACE_OUTPUT_BUDGET")
+    (output / f"command-{count + 1}.json").write_text(serialized + "\n", encoding="utf-8")
+    if proc.returncode:
+        # Keep the original Git failure code; never publish stderr or command arguments.
+        raise subprocess.CalledProcessError(proc.returncode, ["fixture-git", args[0]])
 
 
 def _scratch_checkouts(tmp_path: Path, name: str = "task") -> tuple[Path, Path]:
@@ -2044,6 +2205,143 @@ def test_runner_merge_guard_path_resolves_npm_to_the_shim():
 
 
 # --- git fixture diagnostic reporting (#10408) ---------------------------------
+
+
+def test_oo01_filter_keeps_only_synthetic_operations(tmp_path):
+    raw = (
+        f'945 mkdir("{tmp_path}/.git/worktrees", 0777) = 0\n'
+        f'945 newfstatat(AT_FDCWD, "{tmp_path}/.git/worktrees/task", 0x123, 0) = -1 ENOENT (private)\n'
+        '945 openat(AT_FDCWD, "/private/credential", O_RDONLY) = 7\n'
+        '945 clone(child_stack=NULL, flags=SIGCHLD) = 946\n'
+        '946 exit_group(0) = ?\n'
+        '945 --- SIGCHLD {si_pid=946, si_uid=1234} ---\n'
+    )
+    assert _filter_fixture_trace(raw, tmp_path) == [
+        {"process": "p1", "operation": "mkdir", "paths": ["fixture/.git/worktrees"], "result": 0},
+        {"process": "p1", "operation": "newfstatat", "paths": ["fixture/.git/worktrees/task"],
+         "result": -1, "errno": "ENOENT"},
+        {"process": "p1", "operation": "clone", "paths": [], "result": "p2"},
+        {"process": "p2", "operation": "exit_group", "paths": [], "result": "unknown"},
+    ]
+
+
+def test_oo01_filter_handles_relative_and_unfinished_paths(tmp_path):
+    rows = _filter_fixture_trace(
+        '7 openat(AT_FDCWD, ".git/worktrees/task/gitdir", O_WRONLY) = 3\n'
+        '7 mkdir(".git/worktrees/secret-name", 0700 <unfinished ...>\n'
+        '7 <... mkdir resumed>) = 0\n'
+        '7 readlink(".git", "private-value", 4096) = 13\n', tmp_path,
+    )
+    assert rows[0]["paths"] == ["fixture/.git/worktrees/task/gitdir"]
+    assert rows[1]["paths"] == ["fixture/path-" + hashlib.sha256(b".git/worktrees/secret-name").hexdigest()[:12]]
+    assert rows[1]["result"] == "unfinished"
+    assert rows[2] == {"process": "p1", "operation": "mkdir", "paths": rows[1]["paths"],
+                       "result": 0, "resumed": True}
+    assert rows[3]["paths"] == ["fixture/.git"]
+    assert "private" not in json.dumps(rows)
+
+
+@pytest.mark.parametrize("raw,code", [
+    ("unexpected private data", "OO01_PRIVACY_REFUSAL"),
+    ('1 execve("/private", [], []) = 0', "OO01_PRIVACY_REFUSAL"),
+    ('1 openat(AT_FDCWD, "/private", O_RDONLY) = 3', "OO01_TRACE_BUDGET_OR_EMPTY"),
+    ('1 mkdir(".git", 0700) = 0\n' * 4097, "OO01_TRACE_BUDGET_OR_EMPTY"),
+])
+def test_oo01_filter_refuses_invalid_or_excessive_evidence(tmp_path, raw, code):
+    with pytest.raises(RuntimeError, match=code):
+        _filter_fixture_trace(raw, tmp_path)
+
+
+@pytest.mark.parametrize("image,build", [
+    ("/private/image", b"git version 2.55.0\n"),
+    ("ubuntu24", b"git version 2.55.0\nprivate-field: account\n"),
+    ("ubuntu24", b"cpu: x86_64\n"),
+])
+def test_oo01_identity_refuses_unrecognized_text(tmp_path, monkeypatch, image, build):
+    monkeypatch.setenv("ImageOS", image)
+    monkeypatch.setattr(subprocess, "run", lambda *a, **kw: subprocess.CompletedProcess(a, 0, build))
+    with pytest.raises(RuntimeError, match="OO01_PRIVACY_REFUSAL"):
+        _fixture_git_identity("unused", {})
+
+
+def test_oo01_real_packaged_git_trace_and_linkage(tmp_path, monkeypatch):
+    output = tmp_path / "filtered"
+    monkeypatch.setenv("TMPDIR", str(tmp_path))
+    monkeypatch.setenv("LU_OO01_GIT_TRACE", "1")
+    monkeypatch.setenv("LU_OO01_GIT_TRACE_DIR", str(output))
+    built = _build_layout(tmp_path)
+    artifacts = sorted(output.glob("command-*.json"))
+    assert len(artifacts) == 4
+    evidence = [json.loads(path.read_text()) for path in artifacts]
+    assert [record["command"] for record in evidence] == ["init", "init", "commit", "worktree"]
+    assert [record["returncode"] for record in evidence] == [0, 0, 0, 0]
+    git = shutil.which("git", path="/usr/bin:/bin")
+    assert {record["git_sha256"] for record in evidence} == {hashlib.sha256(Path(git).read_bytes()).hexdigest()}
+    assert any(row["operation"] == "mkdir" and row["paths"] == ["fixture/.git/worktrees"]
+               and row["result"] == 0 for row in evidence[-1]["operations"])
+    assert (built["primary"] / ".git/worktrees/task/commondir").read_text().strip() == "../.."
+    assert (built["worktree"] / ".git").is_file()
+    serialized = json.dumps(evidence)
+    assert str(tmp_path) not in serialized
+    assert "test@example" not in serialized
+    assert not list(tmp_path.glob("oo01-raw-*"))
+
+
+def test_oo01_trace_preserves_real_git_failure(tmp_path, monkeypatch):
+    cwd = tmp_path / "primary"
+    cwd.mkdir()
+    output = tmp_path / "filtered"
+    monkeypatch.setenv("TMPDIR", str(tmp_path))
+    monkeypatch.setenv("LU_OO01_GIT_TRACE", "1")
+    monkeypatch.setenv("LU_OO01_GIT_TRACE_DIR", str(output))
+    with pytest.raises(subprocess.CalledProcessError) as error:
+        _git(cwd, "worktree", "add", "-q", "--detach", str(cwd / ".worktrees/dispatch/agent/task"))
+    assert error.value.returncode == 128
+    assert json.loads((output / "command-1.json").read_text())["returncode"] == 128
+    assert error.value.stdout is None and error.value.stderr is None
+
+
+@pytest.mark.parametrize("failure", ["capability", "scope", "budget", "output_budget", "privacy", "timeout"])
+def test_oo01_refusal_publishes_no_trace(tmp_path, monkeypatch, failure):
+    cwd = tmp_path / "primary"
+    cwd.mkdir()
+    output = tmp_path / "filtered"
+    output.mkdir()
+    (output / "command-1.json").write_text('{"old":"filtered"}')
+    monkeypatch.setenv("TMPDIR", str(tmp_path))
+    monkeypatch.setenv("LU_OO01_GIT_TRACE", "1")
+    monkeypatch.setenv("LU_OO01_GIT_TRACE_DIR", str(output))
+    if failure == "capability":
+        monkeypatch.setattr(shutil, "which", lambda *a, **kw: None)
+        code = "OO01_TRACE_CAPABILITY_MISSING"
+    elif failure == "scope":
+        cwd = tmp_path
+        code = "OO01_TRACE_SCOPE_REFUSAL"
+    else:
+        monkeypatch.setattr(__import__(__name__, fromlist=["_fixture_git_identity"]),
+                            "_fixture_git_identity", lambda *a: {})
+        if failure == "timeout":
+            def fake_run(*a, **kw):
+                raise subprocess.TimeoutExpired("private-argument", 60)
+            code = "OO01_TRACE_REFUSAL"
+        else:
+            def fake_run(argv, **kw):
+                path = Path(argv[argv.index("-o") + 1])
+                path.write_text('1 mkdir(".git/worktrees", 0777) = 0\n' if failure != "privacy" else "private-data")
+                return subprocess.CompletedProcess(argv, 0)
+            code = {"budget": "OO01_TRACE_BUDGET_OR_CAPABILITY_REFUSAL",
+                    "output_budget": "OO01_TRACE_OUTPUT_BUDGET", "privacy": "OO01_PRIVACY_REFUSAL"}[failure]
+        monkeypatch.setattr(subprocess, "run", fake_run)
+        if failure == "budget":
+            monkeypatch.setitem(globals(), "_OO01_TRACE_BYTES", 1)
+        if failure == "output_budget":
+            monkeypatch.setattr(__import__(__name__, fromlist=["_filter_fixture_trace"]),
+                                "_filter_fixture_trace", lambda *a: [{"paths": ["x" * (256 * 1024)]}])
+    with pytest.raises(RuntimeError, match=code):
+        _git(cwd, "init", "-q", "-b", "main")
+    assert json.loads((output / "refusal.json").read_text()) == {"status": code}
+    assert not list(output.glob("command-*.json"))
+    assert not list(tmp_path.glob("oo01-raw-*"))
 
 
 def _assert_git_run_call(call: tuple[list[str], dict], cwd: Path, cmd: list[str]) -> None:
