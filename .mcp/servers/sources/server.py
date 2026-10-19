@@ -23,10 +23,12 @@ Tools:
     - search_slovnyk_me, search_heritage
     - search_style_guide (Антоненко-Давидович)
     - translate_en_uk (Балла)
+    - word_card (current word card, labelled certified or candidate)
 """
 
 import asyncio
 import hashlib
+import importlib.util
 import json
 import re
 import sys
@@ -1317,6 +1319,29 @@ async def list_tools() -> list[Tool]:
                 "required": ["word"],
             },
         ),
+        _tool(
+            name="word_card",
+            description=(
+                "Everything the current word-card build knows about a Ukrainian word in one call: identity "
+                "(spelling, stress, POS, paradigm), CEFR, senses, relations, Russianism and heritage fields when "
+                "present, each value with its source citations and evidence ids, known gaps per field, and the "
+                "card version. Matches the card spelling or the word's VESUM lemma; homographs return several "
+                "cards. status is recomputed on every call from the review ledger: 'certified' only for an "
+                "exact certified card version; 'candidate' cards are cited source assertions, NOT accepted "
+                "facts. 'no_card' names the per-facet tools to call instead. Reads the host card build named "
+                "by LU_WORD_CARDS_DIR."
+            ),
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "word": {
+                        "type": "string",
+                        "description": "Ukrainian word, form or multiword expression (e.g., 'баран', 'вряди-годи')",
+                    },
+                },
+                "required": ["word"],
+            },
+        ),
     ]
 
 
@@ -1384,6 +1409,23 @@ async def handle_check_russian_shadow(args: dict):
     threshold = args.get("threshold", 0.7)
     result = await asyncio.to_thread(is_russian_pattern, word, threshold)
     return [TextContent(type="text", text=json.dumps(result, indent=2, ensure_ascii=False))]
+
+
+def _load_word_card_module():
+    # A sibling file, not a package: load it under a unique name, as tests load this server.
+    spec = importlib.util.spec_from_file_location("sources_word_card", Path(__file__).with_name("word_card.py"))
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+word_card = _load_word_card_module()
+
+
+async def handle_word_card(args: dict):
+    result = await asyncio.to_thread(word_card.lookup_word_card, args.get("word"))
+    return [TextContent(type="text", text=json.dumps(result, indent=1, ensure_ascii=False))]
 
 
 def _normalize_quote_text(value: str) -> str:
@@ -1931,6 +1973,7 @@ async def _dispatch_tool_call(
             "search_idioms": lambda: handle_dict_search(arguments, "frazeolohichnyi", "Фразеологічний"),
             "search_synonyms": lambda: handle_dict_search(arguments, "ukrajinet", "Ukrajinet WordNet"),
             "translate_en_uk": lambda: handle_dict_search(arguments, "balla_en_uk", "Балла EN→UK"),
+            "word_card": lambda: handle_word_card(arguments),
         }
         handler = _handlers.get(name)
         if handler:
