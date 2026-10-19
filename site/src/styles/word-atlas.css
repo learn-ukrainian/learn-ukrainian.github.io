@@ -747,9 +747,16 @@ html[data-theme='dark'] .lu-content .word-atlas .word-hero .practice-cta-hero {
   border-left: 3px solid var(--red);
 }
 
+/* The muted label falls just under 4.5:1 on the red-tinted box in light mode,
+   and --red turns pale in dark mode, where a fixed white pill label is ~2.4:1.
+   Full-strength text and the theme-aware on-fill token keep both readable. */
+.def-card.soviet-colonization-box .def-source {
+  color: var(--lu-text);
+}
+
 .def-card.soviet-colonization-box .src-pill {
   background: var(--red);
-  color: #fff;
+  color: var(--lu-on-primary-fill, #fff);
   font-weight: 700;
 }
 
