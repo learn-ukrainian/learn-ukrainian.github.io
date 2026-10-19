@@ -139,5 +139,8 @@ def test_documented_recorder_uses_completed_review_task_and_pr(monkeypatch, caps
 
     monkeypatch.setattr(recorder, "record", publication_boundary)
     assert recorder.main(argv[2:]) == 0
-    assert calls == [("review-fixture", {"pr_number": 7, "review_mode": None, "red_team_prompt": None})]
+    # The documented recipe publishes ordinary CF only; security sign-off needs its explicit flag.
+    assert calls == [
+        ("review-fixture", {"pr_number": 7, "review_mode": None, "red_team_prompt": None, "security_signoff": False})
+    ]
     assert json.loads(capsys.readouterr().out) == {"status": "posted"}

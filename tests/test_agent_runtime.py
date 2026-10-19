@@ -4370,7 +4370,11 @@ def test_typed_publisher_allows_pr_comment_under_no_merge(tmp_path, gh_shim_sand
 
 
 @pytest.mark.parametrize(
-    "readiness", ["ready", "draft", "failing", "unverifiable", "squash-hit", "squash-unverifiable"]
+    "readiness",
+    [
+        "ready", "draft", "failing", "unverifiable", "squash-hit", "squash-unverifiable",
+        "security-unsigned", "security-incomplete",
+    ],
 )
 def test_typed_publisher_allows_pr_merge_with_opt_in(tmp_path, gh_shim_sandbox, readiness):
     root, _shim, _tooling = gh_shim_sandbox
@@ -4379,6 +4383,10 @@ def test_typed_publisher_allows_pr_merge_with_opt_in(tmp_path, gh_shim_sandbox, 
     head = "a" * 40
     metadata = {"number": 1234, "draft": readiness == "draft", "head": {"sha": head}}
     checks = [{"name": "CI Gate", "bucket": "fail" if readiness == "failing" else "pass"}]
+    # Security sign-off reads the complete changed-file list first; only a sensitive change reads markers.
+    changed = "scripts/publish/github.py" if readiness == "security-unsigned" else "docs/clean.md"
+    files = [{"filename": changed, "status": "modified"}]
+    security_pull = {"changed_files": 2 if readiness == "security-incomplete" else 1, "head": {"sha": head}}
     # Real gh answers the squash-text GraphQL read with GitHub's default squash subject and body.
     pull = {
         "headRefOid": head,
@@ -4405,6 +4413,15 @@ def test_typed_publisher_allows_pr_merge_with_opt_in(tmp_path, gh_shim_sandbox, 
         "elif args[:2] == ['pr', 'checks']:\n"
         f"    print('invalid-json' if {readiness == 'unverifiable'!r} else "
         f"json.dumps({checks!r}))\n"
+        "elif args[:5] == ['api', '--include', '--method', 'GET', 'repos/unit/public/pulls/1234?per_page=100']:\n"
+        f"    print('HTTP/1.1 200 OK\\n\\n' + json.dumps({security_pull!r}))\n"
+        "elif args[:5] == ['api', '--include', '--method', 'GET', 'repos/unit/public/pulls/1234/files?per_page=100']:\n"
+        f"    print('HTTP/1.1 200 OK\\n\\n' + json.dumps({files!r}))\n"
+        "elif args[:5] == ['api', '--include', '--method', 'GET',"
+        " 'repos/unit/public/issues/1234/comments?per_page=100']:\n"
+        "    print('HTTP/1.1 200 OK\\n\\n[]')\n"
+        "elif args[:5] == ['api', '--include', '--method', 'GET', 'user?per_page=100']:\n"
+        "    print('HTTP/1.1 200 OK\\n\\n' + json.dumps({'login': 'unit-bot'}))\n"
         "elif args[:5] == ['api', '--include', '--method', 'POST', 'graphql']:\n"
         "    document = sys.stdin.read()\n"
         "    assert 'viewerMergeBodyText(mergeType:SQUASH)' in document\n"
@@ -4434,13 +4451,21 @@ def test_typed_publisher_allows_pr_merge_with_opt_in(tmp_path, gh_shim_sandbox, 
     assert sent[0]["argv"][:5] == ["api", "--include", "--method", "GET", "repos/unit/public/pulls/1234"]
     if readiness != "draft":
         assert sent[1]["argv"][:2] == ["pr", "checks"]
+    get = ["api", "--include", "--method", "GET"]
+    path_reads = [
+        [*get, "repos/unit/public/pulls/1234?per_page=100"],
+        [*get, "repos/unit/public/pulls/1234/files?per_page=100"],
+    ]
+    graphql = ["api", "--include", "--method", "POST", "graphql"]
     if readiness == "ready":
         assert proc.returncode == 0
         # The scanned default squash text is sent explicitly, so GitHub publishes exactly it.
         assert proc.stdout.strip() == (
             f"real-gh pr merge 1234 --repo unit/public --squash --subject=clean (#1234) --match-head-commit={head}"
         )
-        assert [record["argv"][:2] for record in sent[2:]] == [["api", "--include"], ["pr", "merge"]]
+        # A complete non-sensitive file list passes without reading sign-off markers.
+        assert [record["argv"][:5] for record in sent[2:4]] == path_reads
+        assert [record["argv"][:2] for record in sent[4:]] == [["api", "--include"], ["pr", "merge"]]
         assert sent[-1]["--body-file"] == "* clean"
     elif readiness.startswith("squash-"):
         assert proc.returncode != 0
@@ -4449,7 +4474,20 @@ def test_typed_publisher_allows_pr_merge_with_opt_in(tmp_path, gh_shim_sandbox, 
             assert "rule=synthetic-rule class=1 field=body line=1" in proc.stderr
         else:
             assert "squash text unverifiable" in proc.stderr
-        assert len(sent) == 3 and sent[-1]["argv"][:5] == ["api", "--include", "--method", "POST", "graphql"]
+        assert [record["argv"][:5] for record in sent[2:]] == [*path_reads, graphql]
+    elif readiness.startswith("security-"):
+        # Sign-off refuses before the squash scan, so no merge write is reachable.
+        assert proc.returncode != 0
+        if readiness == "security-unsigned":
+            assert proc.stderr.strip() == "security-signoff required for current head"
+            assert [record["argv"][:5] for record in sent[2:]] == [
+                *path_reads,
+                [*get, "repos/unit/public/issues/1234/comments?per_page=100"],
+                [*get, "user?per_page=100"],
+            ]
+        else:
+            assert proc.stderr.strip() == "security-signoff paths unreadable"
+            assert [record["argv"][:5] for record in sent[2:]] == path_reads
     else:
         assert proc.returncode != 0
         assert "OPSEC: merge" in proc.stderr
