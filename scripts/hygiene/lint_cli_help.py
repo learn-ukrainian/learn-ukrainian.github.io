@@ -228,7 +228,9 @@ def baseline_policy_violations(root: Path, current: dict[str, str]) -> list[str]
         ["git", "ls-tree", "origin/main", "--", BASELINE_PATH], cwd=root,
         capture_output=True, text=True, timeout=30, check=False,
     )
-    if shallow.stdout.strip() == "true" and main_tree.returncode:
+    if shallow.stdout.strip() == "true" and (
+        main_tree.returncode or not re.search(r"^\d{6} blob ", main_tree.stdout)
+    ):
         return [f"{BASELINE_PATH}: origin/main or full Git history is required to prove the baseline only shrinks"]
     history = subprocess.run(
         ["git", "log", "--format=%H", "HEAD", "--", BASELINE_PATH], cwd=root,

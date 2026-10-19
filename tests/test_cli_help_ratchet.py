@@ -427,7 +427,7 @@ def test_help_denies_data_reads(tmp_path: Path) -> None:
 def test_shallow_history_fails_closed(tmp_path: Path) -> None:
     root, script = fixture_root(tmp_path, VIOLATOR)
     pin(root, script)
-    git(root, "init", "-q")
+    git(root, "init", "-q", "-b", "fixture")
     git(root, "config", "user.name", "CLI fixture")
     git(root, "config", "user.email", "cli@example.test")
     git(root, "add", ".")
@@ -435,6 +435,27 @@ def test_shallow_history_fails_closed(tmp_path: Path) -> None:
     clone = root / "shallow"
     git(root, "clone", "--depth", "1", root.as_uri(), str(clone))
     baseline = checker.load_baseline((clone / checker.BASELINE_PATH).read_text())
+    assert checker.baseline_policy_violations(clone, baseline) == [
+        f"{checker.BASELINE_PATH}: origin/main or full Git history is required to prove the baseline only shrinks",
+    ]
+
+
+def test_shallow_history_without_main_baseline_blob_fails_closed(tmp_path: Path) -> None:
+    root, script = fixture_root(tmp_path, VIOLATOR)
+    pin(root, script)
+    git(root, "init", "-q", "-b", "main")
+    git(root, "config", "user.name", "CLI fixture")
+    git(root, "config", "user.email", "cli@example.test")
+    git(root, "add", "scripts/fixture.py")
+    git(root, "-c", "core.hooksPath=/dev/null", "commit", "-qm", "fixture without baseline")
+    clone = root / "shallow"
+    git(root, "clone", "--depth", "1", root.as_uri(), str(clone))
+    assert git(clone, "rev-parse", "--is-shallow-repository").strip() == "true"
+    assert git(clone, "ls-tree", "origin/main", "--", checker.BASELINE_PATH) == ""
+    baseline_path = clone / checker.BASELINE_PATH
+    baseline_path.parent.mkdir()
+    baseline_path.write_text((root / checker.BASELINE_PATH).read_text())
+    baseline = checker.load_baseline(baseline_path.read_text())
     assert checker.baseline_policy_violations(clone, baseline) == [
         f"{checker.BASELINE_PATH}: origin/main or full Git history is required to prove the baseline only shrinks",
     ]
