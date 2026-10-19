@@ -6513,6 +6513,8 @@ TYPED_CAUSE_CODES = frozenset(
         "auto_finalize_unsafe_branch",
         "auto_finalize_validation_changed",
         "auto_finalize_validation_unavailable",
+        "auto_finalize_invalid_tree_path",
+        "auto_finalize_preparation_refused",
         "finalize_delivery_pending",
         "finalize_remote_unknown",
         "finalize_unpushed",
@@ -8086,6 +8088,8 @@ def _finalize_history(context: SafeGitContext, *, head: str, base: str, owned: S
         "--",
     )
     paths = [path for path in history.split("\0") if path]
+    if any(part in {"", ".", ".."} or part.lower() == ".git" for path in paths for part in path.split("/")):
+        raise SnapshotRefusal("auto_finalize_invalid_tree_path")
     protected = (
         ".githooks/",
         "scripts/pre_commit/",
@@ -8093,11 +8097,27 @@ def _finalize_history(context: SafeGitContext, *, head: str, base: str, owned: S
         ".pre-commit-config.yaml",
         ".venv",
     )
-    if any(path.startswith(protected) for path in paths):
+    if any(path.lower().startswith(protected) for path in paths):
         raise SnapshotRefusal("auto_finalize_validation_changed")
     if any(not _path_is_owned(path, owned) for path in paths):
         raise SnapshotRefusal("auto_finalize_committed_scope_unowned")
-    context.refuse_tree(base, head)
+    attributes_changed = any(path.rpartition("/")[2] == ".gitattributes" for path in paths)
+    for commit in context.checked("rev-list", f"{base}..{head}").splitlines():
+        context.refuse_tree(base, commit)
+        if attributes_changed:
+            # Attribute-only commits can install filters on unchanged files.
+            tree_paths = context.checked("ls-tree", "-r", "--name-only", "-z", commit)
+            base_filters, commit_filters = [
+                context.checked("check-attr", f"--source={source}", "-z", "--stdin", "filter", stdin=tree_paths).split(
+                    "\0"
+                )
+                for source in (base, commit)
+            ]
+            if any(
+                commit_filters[i] not in {"unspecified", "unset"} and commit_filters[i] != base_filters[i]
+                for i in range(2, len(commit_filters), 3)
+            ):
+                raise SnapshotRefusal("rescue_filtered_path")
 
 
 def _finalize_refuse_hook_override(context: SafeGitContext) -> None:
@@ -8397,17 +8417,22 @@ def _auto_finalize_dirty_worktree(
         with _finalize_execution_context(worktree) as context:
             if _finalize_source_head(context, resolved_branch) != intended_head:
                 return _failed(_TypedCause("auto_finalize_head_moved"))
-            prepared = prepare_scoped_commit(
-                context,
-                worktree=worktree,
-                branch=resolved_branch,
-                expected_head=intended_head,
-                paths=changed_files,
-                subject=subject,
-                body=body,
-                trailer=_x_agent_trailer(agent, task_id),
-                identity=git_identity_env(agent, model),
-            )
+            try:
+                prepared = prepare_scoped_commit(
+                    context,
+                    worktree=worktree,
+                    branch=resolved_branch,
+                    expected_head=intended_head,
+                    paths=changed_files,
+                    subject=subject,
+                    body=body,
+                    trailer=_x_agent_trailer(agent, task_id),
+                    identity=git_identity_env(agent, model),
+                )
+            except ValueError as exc:
+                return _failed(
+                    _TypedCause("auto_finalize_preparation_refused", diagnostic=str(exc)), commit_sha=intended_head
+                )
             if prepared.process.returncode:
                 return _failed(_git_cause(f"auto_finalize_{prepared.step}_failed", prepared.process))
             commit_sha = prepared.head

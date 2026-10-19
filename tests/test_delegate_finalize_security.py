@@ -5,6 +5,7 @@ from __future__ import annotations
 import ast
 import contextlib
 import inspect
+import subprocess
 import sys
 from pathlib import Path
 
@@ -56,21 +57,136 @@ def write_commit(worktree, name="artifact.txt", content="owned\n"):
     return _git_out(worktree, "rev-parse", "HEAD").strip()
 
 
-def publish(publication):
+def publish(publication, *, owned_paths=None, task_id="security-finalize"):
     worktree, _origin, base, _marker = publication
     return delegate._auto_finalize_dirty_worktree(
         worktree=worktree,
-        task_id="security-finalize",
+        task_id=task_id,
         agent="codex",
         branch="codex/finalize",
         base_branch="main",
         base_sha=base,
-        owned_paths=["artifact.txt"],
+        owned_paths=["artifact.txt"] if owned_paths is None else owned_paths,
     )
 
 
 def refs(origin):
     return _git_out(origin, "for-each-ref", "--format=%(refname) %(objectname)")
+
+
+def git_input(worktree, *args, data):
+    return subprocess.run(
+        ["git", *args],
+        cwd=worktree,
+        input=data,
+        text=True,
+        capture_output=True,
+        check=True,
+        timeout=30,
+        env=delegate._sanitized_git_env(),
+    ).stdout.strip()
+
+
+@pytest.mark.parametrize("component", ["..", ".", ".git", ".GIT"])
+def test_crafted_intermediate_tree_path_is_refused(publication, component):
+    worktree, origin, base, marker = publication
+    oid = git_input(worktree, "hash-object", "-w", "--stdin", data="hostile hook\n")
+    kind, mode = "blob", "100644"
+    for name in reversed(["a", component, ".githooks", "pre-push"]):
+        oid = git_input(worktree, "mktree", data=f"{mode} {kind} {oid}\t{name}\n")
+        kind, mode = "tree", "40000"
+    entries = _git_out(worktree, "ls-tree", base)
+    nested = _git_out(worktree, "ls-tree", oid)
+    tree = git_input(worktree, "mktree", data=entries + nested)
+    hostile = _git_out(worktree, "commit-tree", tree, "-p", base, "-m", "crafted intermediate").strip()
+    clean_tree = _git_out(worktree, "rev-parse", f"{base}^{{tree}}").strip()
+    head = _git_out(worktree, "commit-tree", clean_tree, "-p", hostile, "-m", "clean final tree").strip()
+    _git_out(worktree, "update-ref", "refs/heads/codex/finalize", head)
+    history = _git_out(worktree, "log", "--format=", "--name-only", f"{base}..{head}")
+    assert f"a/{component}/.githooks/pre-push" in history
+
+    result = publish(publication, owned_paths=["a"])
+
+    assert not result.ok
+    assert result.error == "auto_finalize_invalid_tree_path"
+    assert "refs/heads/codex/finalize" not in refs(origin)
+    assert not marker.exists()
+    assert delegate._resolve_sha(worktree) == head
+
+
+@pytest.mark.parametrize("prefix", [".GITHOOKS", ".Githooks", "scripts/Pre_commit"])
+def test_mixed_case_protected_history_is_refused(publication, prefix):
+    worktree, origin, _base, marker = publication
+    path = f"{prefix}/worker"
+    (worktree / path).parent.mkdir(parents=True, exist_ok=True)
+    write_commit(worktree, path)
+    _git_out(worktree, "rm", path)
+    _git_out(worktree, "commit", "-m", "revert protected change")
+    head = delegate._resolve_sha(worktree)
+
+    result = publish(publication, owned_paths=[prefix])
+
+    assert not result.ok
+    assert result.error == "auto_finalize_validation_changed"
+    assert "refs/heads/codex/finalize" not in refs(origin)
+    assert not marker.exists()
+    assert delegate._resolve_sha(worktree) == head
+
+
+@pytest.mark.parametrize("attack", ["gitlink", "filter", "attributes-only"])
+def test_reverted_gitlink_or_filter_is_refused(publication, attack):
+    worktree, origin, base, marker = publication
+    if attack == "gitlink":
+        _git_out(worktree, "update-index", "--add", "--cacheinfo", f"160000,{base},artifact.txt")
+        _git_out(worktree, "commit", "-m", "intermediate gitlink")
+        _git_out(worktree, "update-index", "--force-remove", "artifact.txt")
+        code = "rescue_new_gitlink"
+    else:
+        if attack == "filter":
+            write_commit(worktree)
+        target = "artifact.txt" if attack == "filter" else "README.md"
+        _git_out(worktree, "cat-file", "-e", f"HEAD:{target}")
+        write_commit(worktree, ".gitattributes", f"{target} filter=worker\n")
+        _git_out(worktree, "rm", ".gitattributes")
+        code = "rescue_filtered_path"
+    _git_out(worktree, "commit", "-m", "remove intermediate hazard")
+    head = delegate._resolve_sha(worktree)
+
+    result = publish(publication, owned_paths=["artifact.txt", ".gitattributes"])
+
+    assert not result.ok
+    assert result.error == code
+    assert "refs/heads/codex/finalize" not in refs(origin)
+    assert not marker.exists()
+    assert delegate._resolve_sha(worktree) == head
+
+
+def test_scoped_preparation_value_error_is_typed_and_retains_local_commit(publication):
+    worktree, origin, _base, marker = publication
+    head = write_commit(worktree)
+    (worktree / "artifact.txt").write_text("dirty owned work\n")
+
+    result = publish(publication, task_id="security\nX-Agent: injected")
+
+    assert not result.ok
+    assert result.error == "auto_finalize_preparation_refused"
+    assert result.commit_sha == head
+    assert delegate._resolve_sha(worktree) == head
+    assert (worktree / "artifact.txt").read_text() == "dirty owned work\n"
+    assert "refs/heads/codex/finalize" not in refs(origin)
+    assert not marker.exists()
+
+
+def test_unchanged_base_filter_allows_unrelated_attribute_edit(publication):
+    worktree, origin, _base, marker = publication
+    base = write_commit(worktree, ".gitattributes", "README.md filter=existing\n")
+    head = write_commit(worktree, ".gitattributes", "README.md filter=existing\n# unrelated comment\n")
+
+    result = publish((worktree, origin, base, marker), owned_paths=[".gitattributes"])
+
+    assert result.ok, result.error
+    assert "refs/heads/codex/finalize " + head in refs(origin)
+    assert marker.read_text() == "checked"
 
 
 def test_finalize_history_protected_paths_are_source_literals():
