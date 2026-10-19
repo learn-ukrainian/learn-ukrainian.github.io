@@ -1336,6 +1336,39 @@ def test_real_codex_cli_accepts_scoped_home_and_refuses_trusted_project_server(
         verify_codex_review_effective_mcp(config_path=plan.config_path, cwd=project)
 
 
+def _assert_no_sources_server_address(cmd: list[str]) -> None:
+    joined = " ".join(cmd)
+    for address in ("127.0.0.1:8766", "localhost:8766"):
+        assert address not in joined
+
+
+@pytest.mark.parametrize(
+    "cmd",
+    [
+        ["codex", "exec", "review"],
+        ["agy", "--log-file", "agy-runtime-review-42-cafe8766abcd.log"],
+        ["agy", "--log-file", "agy-runtime-review-8766-deadbeefcafe.log"],
+        ["codex", "--cd", "work/pytest-8766/review"],
+    ],
+)
+def test_no_sources_server_address_accepts_unrelated_command_digits(cmd: list[str]) -> None:
+    _assert_no_sources_server_address(cmd)
+
+
+@pytest.mark.parametrize(
+    "cmd",
+    [
+        ["review", "http://127.0.0.1:8766/mcp"],
+        ["review", "localhost:8766"],
+        ["codex", "-c", 'mcp_servers.sources.url="http://127.0.0.1:8766/mcp"'],
+        ["review", '--config={"sources":{"url":"http://localhost:8766/mcp"}}'],
+    ],
+)
+def test_no_sources_server_address_refuses_endpoint_in_any_argument(cmd: list[str]) -> None:
+    with pytest.raises(AssertionError):
+        _assert_no_sources_server_address(cmd)
+
+
 def test_codex_adapter_final_argv_and_env_use_scoped_home(manifest_file: Path, tmp_path: Path) -> None:
     plan = _prepare_codex(manifest_file, tmp_path)
     invocation = CodexAdapter().build_invocation(
@@ -1350,7 +1383,7 @@ def test_codex_adapter_final_argv_and_env_use_scoped_home(manifest_file: Path, t
     assert invocation.env_overrides["CODEX_HOME"] == str(plan.codex_home)
     joined = " ".join(invocation.cmd)
     assert "mcp_servers.sources.url" not in joined
-    assert "8766" not in joined
+    _assert_no_sources_server_address(invocation.cmd)
     assert 'mcp_servers.sources.default_tools_approval_mode="prompt"' in invocation.cmd
 
 
@@ -2004,6 +2037,7 @@ def test_agy_final_spawned_environment_carries_scoped_home_only_for_review(
     from scripts.agent_runtime.agy_hook_config import GUARD_NAME, guard_registration, hook_locations
     from scripts.agent_runtime.env_sanitize import build_agent_env
 
+    monkeypatch.setattr(uuid, "uuid4", lambda: uuid.UUID("cafe8766abcd40008000000000000001"))
     real_home = tmp_path / "real-home"
     real_home.mkdir()
     monkeypatch.setenv("HOME", str(real_home))
@@ -2029,7 +2063,8 @@ def test_agy_final_spawned_environment_carries_scoped_home_only_for_review(
     assert review_env["HOME"] == str(plan.agy_home)
     assert review_env["AGY_APP_DATA_DIR"] == str(agy_review_app_data_dir(plan.agy_home))
     assert not any(item.startswith("mcp") for item in review.cmd[1:2])  # no MCP flag exists for agy
-    assert "8766" not in " ".join(review.cmd)
+    assert any("cafe8766abcd.log" in item for item in review.cmd)
+    _assert_no_sources_server_address(review.cmd)
 
     ordinary = AgyAdapter().build_invocation(
         prompt="ordinary",
