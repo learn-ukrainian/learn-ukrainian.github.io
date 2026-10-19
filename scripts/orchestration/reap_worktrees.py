@@ -4117,6 +4117,36 @@ def _merged_reuse_claim_proven_settled(
     return None
 
 
+def _merged_reuse_creator_path_valid(
+    path: Path,
+    creator: dict[str, Any],
+    cohort: list[tuple[Path, dict[str, Any]]],
+    *,
+    tasks_dir: Path,
+) -> bool:
+    """Accept canonical history or the exact superseded binding used by the output resolver."""
+    from scripts.fleet import ignored_task_output
+    from scripts.orchestration.task_record_store import task_record_path
+
+    identity = creator["task_id"]
+    canonical = task_record_path(tasks_dir, identity)
+    if path in (canonical, task_record_path(tasks_dir / "archive", identity)):
+        return True
+    if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]*", identity):
+        return False
+    creators = [match for match in cohort if ignored_task_output.record_created_worktree(match[1])]
+    current = [match for match in cohort if match[0] == canonical]
+    return bool(
+        creators == [(path, creator)]
+        and worktree_claims.is_superseded_record(path)
+        and path.parent == tasks_dir
+        and re.fullmatch(re.escape(identity) + r"\.\d{8}T\d{6}\d*Z(?:\.\d+)?\.archived\.json", path.name)
+        and len(current) == 1
+        and current[0][1].get("worktree_reused") is True
+        and all(member.get("task_id") == identity for _, member in cohort)
+    )
+
+
 def _record_merged_reuse_proof(
     repo_root: Path,
     info: WorktreeInfo,
@@ -4131,7 +4161,6 @@ def _record_merged_reuse_proof(
     publishing; preservation still handles all ignored output independently.
     """
     from scripts.fleet import ignored_task_output
-    from scripts.orchestration.task_record_store import task_record_path
 
     matches = ignored_task_output.matching_worktree_records(
         info.path, tasks_dir, repo_root=repo_root, publish_cache=False
@@ -4162,10 +4191,7 @@ def _record_merged_reuse_proof(
         for key in ("task_id", "run_nonce")
     ):
         raise ValueError("continuation run identity unavailable")
-    if path not in (
-        task_record_path(tasks_dir, creator["task_id"]),
-        task_record_path(tasks_dir / "archive", creator["task_id"]),
-    ):
+    if not _merged_reuse_creator_path_valid(path, creator, cohort, tasks_dir=tasks_dir):
         raise ValueError("continuation creator has no canonical task record")
     if not all(_pid_proven_absent(member) for _, member in cohort):
         raise ValueError("continuation process absence unavailable")
