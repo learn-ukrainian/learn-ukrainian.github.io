@@ -26,11 +26,13 @@ import yaml
 from jsonschema import Draft202012Validator
 
 from scripts.atlas import word_card_certification as certification
+from scripts.atlas import word_card_foundation as foundation
 from scripts.common.jsonl import jsonl_lines
 from scripts.projects.open_model_data.review_build.errors import BuildError
 from scripts.projects.open_model_data.review_build.output import OutputGuard
 
 SCHEMA_VERSION = "word-card-dataset.v1"
+PILOT_REGISTER_PIN_PATH = ROOT / "registry/atlas/pilot/pilot-v1.register-pin.json"
 _HISTORICAL_SOURCE_ID = "".join(("sum", "11"))
 
 
@@ -144,6 +146,27 @@ def _filter_reason(assertion: dict, source: dict | None, withdrawals: list[dict]
     return None
 
 
+def _register_matches(card: dict, register: dict, register_hash: str) -> bool:
+    expected = card["build"]["inputs"]["R"]["register"]["content_sha256"]
+    if expected == register_hash:
+        return True
+    source_sets = [
+        [source["id"] for source in register["sources"]],
+        sorted({a["source_id"] for a in card["assertions"] if "source_id" in a}),
+    ]
+    if card["build"]["inputs"]["R"].get("assembler", {}).get("ref") == "scripts/atlas/word_card_assembly.py":
+        # Assembly pins the whole pilot selection, including sources absent
+        # from an individual card. VESUM validation assertions are separate.
+        source_sets.append(json.loads(PILOT_REGISTER_PIN_PATH.read_bytes())["source_ids"])
+    for source_ids in source_sets:
+        try:
+            if expected == foundation.register_entries_digest(register, source_ids):
+                return True
+        except (foundation.Refusal, KeyError):
+            continue
+    return False
+
+
 @certification.certification_run()
 def create_release(
     cards: list[dict], *, release_version: str, register_path: Path | None = None,
@@ -165,6 +188,7 @@ def create_release(
         raise ProjectionRefusal("Input cards must be nonempty and unique")
     register_bytes = (register_path or certification.PERMISSIONS_REGISTER_PATH).read_bytes()
     register_hash = sha256(register_bytes)
+    register = yaml.safe_load(register_bytes)
     # Projection annotations extend the assembled card schema, not certification.
     schema = json.loads(certification.SCHEMA_PATH.read_bytes())
     schema["properties"].update({
@@ -186,9 +210,8 @@ def create_release(
             statuses[card["card_id"]] = "CANDIDATE"
         else:
             statuses[card["card_id"]] = "CERTIFIED"
-        if card["build"]["inputs"]["R"]["register"]["content_sha256"] != register_hash:
+        if not _register_matches(card, register, register_hash):
             raise ProjectionRefusal("Projection register differs from card register")
-    register = yaml.safe_load(register_bytes)
     sources = {s["id"]: s for s in register["sources"]}
     if len(sources) != len(register["sources"]):
         raise ProjectionRefusal("Duplicate register source")

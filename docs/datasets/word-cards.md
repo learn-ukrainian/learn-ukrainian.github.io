@@ -15,7 +15,15 @@ and distinguish parallel source assertions from resolved language answers.
 scope, attribution, license terms, operator decisions, and removal routes.
 The projection includes an assertion only when its source explicitly lists
 `dataset` in `appears_in`. Unknown sources and internal-only sources are filtered.
-The current register must match the bytes bound by the card's build inputs.
+The register digest in the card's build inputs must match either the current
+file bytes or the canonical digest of referenced entries and their cited legal
+references. Entries may cover all register sources or the card's assertion
+sources. Pilot assembly binds the source list in
+`registry/atlas/pilot/pilot-v1.register-pin.json` across the whole build,
+including sources absent from an individual card. The projection recomputes
+that digest from the current register, so unrelated additions are allowed and
+changes to referenced entries or legal references are refused. The release
+manifest always records the whole current register file digest.
 The assertion's `licence_ref` must name the same source and register schema version.
 
 Dataset scope is distinct from an open license. Recorded operator decisions
