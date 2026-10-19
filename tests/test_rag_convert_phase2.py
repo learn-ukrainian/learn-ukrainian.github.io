@@ -31,7 +31,9 @@ def test_complete_definitions_duplicates_ordinals_text_and_counts(tmp_path, caps
         {"id": "dmk-000004", "word": "sample", "pos": "verb", "translations": ["other POS"],
          "text": "sample (verb): other POS", "source": "dmklinger UK→EN"},
     ]
-    assert "3 entries" in capsys.readouterr().out
+    captured = capsys.readouterr()
+    assert captured.out == ""
+    assert captured.err == "Converting dmklinger UK→EN...\n  ✅ 3 entries → chunks.jsonl\n"
     assert converter.convert_dmklinger(source, output) == 3
     assert output.read_bytes() == first
 
@@ -43,7 +45,9 @@ def test_default_paths_and_empty_count(tmp_path, monkeypatch, capsys):
     monkeypatch.setattr(converter, "PROJECT_ROOT", tmp_path)
     assert converter.convert_dmklinger() == 0
     assert (folder / "chunks.jsonl").read_bytes() == b""
-    assert "0 entries" in capsys.readouterr().out
+    captured = capsys.readouterr()
+    assert captured.out == ""
+    assert captured.err == "Converting dmklinger UK→EN...\n  ✅ 0 entries → chunks.jsonl\n"
 
 
 def test_direct_cli_explicit_paths_and_help(tmp_path):
@@ -52,6 +56,8 @@ def test_direct_cli_explicit_paths_and_help(tmp_path):
     command = [sys.executable, str(Path(converter.__file__))]
     result = subprocess.run([*command, "--dmklinger", "--input", str(source), "--output", str(output)], capture_output=True, text=True, timeout=30)
     assert result.returncode == 0, result.stderr
+    assert result.stdout == ""
+    assert result.stderr == "Converting dmklinger UK→EN...\n  ✅ 1 entries → chunks.jsonl\n"
     assert json.loads(output.read_text())["translations"] == ["one"]
     for arguments in (["--help"], []):
         result = subprocess.run(command + arguments, capture_output=True, text=True, timeout=30)

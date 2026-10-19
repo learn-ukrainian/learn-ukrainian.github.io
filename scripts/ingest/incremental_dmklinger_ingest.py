@@ -11,7 +11,7 @@ import json
 import sqlite3
 import sys
 import tempfile
-from contextlib import closing
+from contextlib import closing, redirect_stdout
 from pathlib import Path
 
 if __package__ in {None, ""}:
@@ -66,7 +66,8 @@ def _expected_input(input_path: Path, input_sha256: str) -> tuple[list[tuple], l
         snapshot.write_bytes(payload)
         with closing(sqlite3.connect(":memory:")) as oracle:
             oracle.executescript(SCHEMA)
-            _ingest_jsonl(oracle, TABLE, snapshot, list(COLUMNS[1:]), "DMKlinger UK→EN")
+            with redirect_stdout(sys.stderr):
+                _ingest_jsonl(oracle, TABLE, snapshot, list(COLUMNS[1:]), "DMKlinger UK→EN")
             expected = table_rows(oracle)
             schema = _schema(oracle)
     if rows_digest(expected) != POSTIMAGE_SHA256:
