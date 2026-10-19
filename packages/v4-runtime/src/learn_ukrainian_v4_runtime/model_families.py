@@ -23,8 +23,9 @@ Routing decisions codified here (2026-07-17, issue #5385):
   formal-review model identity
   (``agents_extensions/shared/rules/model-assignment.md``); a cursor seat that
   records a pinned model inherits the pin's family.
-* ``agy`` / ``antigravity`` / ``gemma`` / ``gemini`` → ``google`` (restored in Layer-B, which
-  previously orphaned ``agy``).
+* ``gemma`` / ``gemini`` → ``google``. ``agy`` / ``antigravity`` are route
+  labels: they imply ``google`` only without an existing concrete-family
+  marker (restored in Layer-B, which previously orphaned ``agy``).
 * ``codex`` / ``gpt`` / ``openai`` → ``openai`` (unified; Layer-B previously
   used ``gpt``).
 * ``claude`` / ``anthropic`` / ``opus`` / ``sonnet`` → ``anthropic``.
@@ -88,9 +89,11 @@ _LINEAGE_FIELDS: tuple[str, ...] = (
 # Marker words → family. Matched as whole words (casefolded) so e.g. ``gemmate``
 # is NOT mistaken for ``gemma``. cursor/composer/auto are handled separately
 # because Auto has its own family while concrete pins retain their family.
+# Preserve concrete-family order even for contradictory mixed strings. AGY
+# route markers are a fallback, so they cannot overshadow any concrete family.
 _FAMILY_TOKEN_RULES: tuple[tuple[tuple[str, ...], Family], ...] = (
     (("deepseek",), Family.DEEPSEEK),
-    (("gemma", "gemini", "agy", "antigravity", "google"), Family.GOOGLE),
+    (("gemma", "gemini", "google"), Family.GOOGLE),
     (("codex", "openai", "gpt"), Family.OPENAI),
     (("anthropic", "claude", "fable", "opus", "sonnet"), Family.ANTHROPIC),
     (("grok", "xai"), Family.XAI),
@@ -98,6 +101,7 @@ _FAMILY_TOKEN_RULES: tuple[tuple[tuple[str, ...], Family], ...] = (
     (("glm", "zhipu"), Family.ZHIPU),
     (("poolside", "laguna", "pool"), Family.POOLSIDE),
     (("qwen",), Family.QWEN),
+    (("agy", "antigravity"), Family.GOOGLE),
 )
 
 

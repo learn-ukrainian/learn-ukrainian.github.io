@@ -168,6 +168,96 @@ def test_family_resolution_across_model_and_harness_aliases():
         assert resolve_family(seat) == expected_family, seat
 
 
+@pytest.mark.parametrize(
+    "author,alias,family,independent",
+    [
+        ("claude-opus-5-5", "claude-opus-5-5-agy", "anthropic", "gpt-6.1-sol"),
+        ("claude-opus-5-5", "agy:claude-opus-5-5", "anthropic", "gpt-6.1-sol"),
+        ("claude-opus-5-5", "antigravity:claude-opus-5-5", "anthropic", "gpt-6.1-sol"),
+        ("claude-opus-5-5", "AGY/CLAUDE-OPUS-5-5[1m]", "anthropic", "gpt-6.1-sol"),
+        ("gpt-6.1-sol", "agy:gpt-6.1-sol", "openai", "claude-opus-5-5"),
+        ("gpt-6.1-sol", "gpt-6.1-sol-antigravity", "openai", "claude-opus-5-5"),
+        ("gpt-6.1-sol", "ANTIGRAVITY:GPT-6.1-SOL[1m]", "openai", "claude-opus-5-5"),
+        ("gpt-6.1-sol", "gpt-6.1-sol[agy]", "openai", "claude-opus-5-5"),
+    ],
+)
+@pytest.mark.parametrize("risk", ["low", "medium", "high", "critical"])
+@pytest.mark.parametrize("profile", ["code", "infra"])
+def test_agy_author_alias_keeps_every_same_family_seat_out_of_formal_review(
+    author, alias, family, independent, risk, profile, monkeypatch
+):
+    import subprocess
+    import urllib.request
+
+    from scripts.agent_runtime import model_pause
+
+    provider_calls = []
+
+    def refuse_provider(*args, **kwargs):
+        provider_calls.append((args, kwargs))
+        raise AssertionError("resolver attempted provider or network execution")
+
+    # Freeze the external policy and usage seams; the real family, risk,
+    # subject, endpoint and capacity gates still run for every catalog seat.
+    monkeypatch.setattr(model_pause, "load_policy", lambda: {})
+    monkeypatch.setattr(model_pause, "routing_budget_used_pct", lambda *_args, **_kwargs: 10.0)
+    monkeypatch.setattr(urllib.request, "urlopen", refuse_provider)
+    monkeypatch.setattr(subprocess, "run", refuse_provider)
+    monkeypatch.setattr(subprocess, "Popen", refuse_provider)
+    snapshot = {
+        "diagnostics": {"stale": False},
+        "agents": {
+            candidate.route: {
+                "status": "cool",
+                "health": {"healthy": True},
+                "codexbar": {
+                    "weekly_used_pct": 10.0,
+                    "weekly_remaining_pct": 90.0,
+                    "weekly_pace_delta_pct": -20.0,
+                    "freshness": "fresh",
+                    "age_s": 30.0,
+                    "stale": False,
+                },
+            }
+            for candidate in REVIEW_CANDIDATES.values()
+        },
+    }
+    inputs = ResolverInputs(
+        author_model=author,
+        risk=risk,
+        review_profile=profile,
+        routing_snapshot=snapshot,
+        exact_head="a" * 40,
+        claude_account=HOST_ACCOUNT,
+    )
+    decorated = replace(inputs, author_model=alias)
+    baseline = resolve_reviewer(inputs)
+    actual = resolve_reviewer(decorated)
+    assert actual.fail_closed_reason is None
+    assert actual.selected is not None
+    assert actual.selected.family != family
+    assert actual.selected == baseline.selected
+    assert actual.trace == baseline.trace
+    same_family_rows = [row for row in actual.trace if row.family == family]
+    assert same_family_rows
+    assert all(row.status in {"excluded", "advisory_only"} for row in same_family_rows)
+
+    # The installed ladder may omit a seat at this risk. Evaluate ALL seats
+    # as well, and compare their existing dispositions with the plain author.
+    for candidate in REVIEW_CANDIDATES.values():
+        expected = evaluate_candidate(candidate, inputs)
+        observed = evaluate_candidate(candidate, decorated)
+        assert observed == expected, candidate.name
+        if candidate.family == family:
+            assert observed.status in {"excluded", "advisory_only"}, candidate.name
+    positive = next(candidate for candidate in REVIEW_CANDIDATES.values() if candidate.concrete_model == independent)
+    positive_result = evaluate_candidate(positive, decorated)
+    assert positive_result.status == "eligible"
+    assert positive_result.capacity.remaining_pct == 90.0
+    assert positive_result.capacity.freshness == "fresh"
+    assert provider_calls == []
+
+
 def test_fleet_endpoint_eligibility_is_a_projection_of_model_catalog() -> None:
     root = Path(__file__).resolve().parent.parent
     catalog = yaml.safe_load((root / "scripts/config/model_catalog.yaml").read_text(encoding="utf-8"))
