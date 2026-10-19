@@ -5,7 +5,9 @@ current card of a word whether or not it is certified. The status is never
 taken from the card: every call replays the exact-artifact certification
 boundary (``load_certified_card_for_export``) against the live review ledger.
 A card that fails it is returned as ``candidate``: each value is a cited
-source assertion awaiting review, not an accepted fact (#8977).
+source assertion awaiting review, not an accepted fact (#8977). A link endpoint's evidence enters a certified card
+only when that endpoint is itself certified, with its card version bound;
+anything else is a separate candidate relation or a withheld gap.
 
 The card store is a host-only assembly build directory (``cards/*.json`` plus
 the optional ``ledger.json`` and ``build-manifest.json`` written by
@@ -67,6 +69,10 @@ CANDIDATE_NOTICE = (
     "not an accepted fact. Confirm a value with the per-facet tools before relying on it."
 )
 CERTIFIED_NOTICE = "CERTIFIED card: this exact card version passed the exact-artifact certification boundary."
+CANDIDATE_LINK_NOTICE = (
+    "CANDIDATE relation: it rests on evidence from a link endpoint card that is not certified. "
+    "It is not part of this certified card's accepted values; each citation names its endpoint card's version."
+)
 SOVIET_CONTEXT_NOTICE = (
     "Soviet-occupation СУМ-11 text, shown as soviet_colonization_context only; "
     "never a source of modern meaning, stress or validity."
@@ -112,6 +118,14 @@ class CardStore:
     cards: LocalTarget
     ledger: LocalTarget | None
     manifest: LocalTarget | None
+
+
+@dataclass(frozen=True)
+class Endpoint:
+    """A link endpoint's card and the projections its own exact-artifact certification grants."""
+
+    card: dict
+    granted: tuple[str, ...]
 
 
 def _clean(text: str) -> str:
@@ -465,8 +479,37 @@ def _card_gaps(card: dict, ledger_entry: dict) -> dict[str, dict]:
     return gaps
 
 
-def _project_link(link: Any, card_id: Any, cite: Callable[[str], dict | None]) -> tuple[dict, list[str]]:
-    """A link with its citations, and the evidence ids that cite no source anywhere in the build."""
+def _endpoint_citation(
+    evidence_id: str,
+    endpoint_ids: list,
+    card_id: Any,
+    endpoint_card: Callable[[str], Endpoint | None],
+    admit: Callable[[Endpoint], bool],
+) -> dict | None:
+    """The citation an admitted link endpoint states for ``evidence_id``, bound to that endpoint's card version."""
+    for other_id in endpoint_ids:
+        if other_id == card_id or not isinstance(other_id, str):
+            continue
+        endpoint = endpoint_card(other_id)
+        if endpoint is None or not admit(endpoint):
+            continue
+        assertion = next(
+            (a for a in _list(endpoint.card.get("assertions")) if _dict(a).get("assertion_id") == evidence_id), None
+        )
+        citation = _citation(evidence_id, assertion) if assertion is not None else None
+        if citation is not None:
+            citation["card_id"] = other_id
+            citation["card_version"] = _dict(endpoint.card.get("build")).get("card_version")
+            citation["card_status"] = "certified" if endpoint.granted else "candidate"
+            citation["card_certified_for"] = list(endpoint.granted)
+            return citation
+    return None
+
+
+def _project_link(
+    link: Any, card_id: Any, cite: Callable[[str], dict | None], scope: str = "its link endpoints"
+) -> tuple[dict, list[str]]:
+    """A link with its citations, and the evidence ids that cite no source on this card or ``scope``."""
     link = _dict(link)
     ids = [i for i in _list(link.get("assertion_ids")) if isinstance(i, str)]
     citations, uncited = _citations(ids, cite)
@@ -484,11 +527,68 @@ def _project_link(link: Any, card_id: Any, cite: Callable[[str], dict | None]) -
         "citations": citations,
     }
     if uncited:
-        projected["gaps"] = [_uncited(i).replace("on this card", "on this card or its link endpoints") for i in uncited]
+        projected["gaps"] = [_uncited(i).replace("on this card", f"on this card or {scope}") for i in uncited]
     return {k: v for k, v in projected.items() if v is not None}, uncited
 
 
-def _project_card(card: dict, matched_by: str, ledger_entry: dict, endpoint_card: Callable[[str], dict | None]) -> dict:
+def _project_links(
+    card: dict, granted: list[str], cite: Callable[[str], dict | None], endpoint_card: Callable[[str], Endpoint | None]
+) -> tuple[list[dict], list[dict], list[dict]]:
+    """``(links, candidate_links, withheld)`` for a card.
+
+    A candidate card's links cite every endpoint, each imported citation labelled with that endpoint's status and
+    version. A certified card's links import evidence only from endpoints certified for every projection it is
+    certified for, so nothing an uncertified card says can change its accepted payload. A link that also rests on
+    uncertified endpoint evidence is returned separately as a candidate relation; one with no certified citation
+    is a withheld gap.
+    """
+    card_id = card.get("card_id")
+    links: list[dict] = []
+    candidate_links: list[dict] = []
+    withheld: list[dict] = []
+
+    def covers(endpoint: Endpoint) -> bool:
+        return set(granted) <= set(endpoint.granted)
+
+    def any_endpoint(_endpoint: Endpoint) -> bool:
+        return True
+
+    for link in _list(card.get("links")):
+        endpoint_ids = [_dict(e).get("id") for e in _list(_dict(link).get("endpoints"))]
+
+        def cite_from(admit: Callable[[Endpoint], bool], endpoint_ids: list = endpoint_ids):
+            def cite_link(evidence_id: str) -> dict | None:
+                return cite(evidence_id) or _endpoint_citation(evidence_id, endpoint_ids, card_id, endpoint_card, admit)
+
+            return cite_link
+
+        every, _ = _project_link(link, card_id, cite_from(any_endpoint))
+        if granted:
+            projected, _ = _project_link(link, card_id, cite_from(covers), "its certified link endpoints")
+            disposition = "no_certified_citation_withheld"
+            if every["evidence_ids"] != projected["evidence_ids"]:
+                candidate_links.append(
+                    {"status": "candidate", "accepted": False, "notice": CANDIDATE_LINK_NOTICE, **every}
+                )
+        else:
+            projected, disposition = every, "uncitable_link_withheld"
+        if projected["citations"]:
+            links.append(projected)
+        else:
+            withheld.append(
+                {
+                    "link_id": projected.get("link_id"),
+                    "type": projected.get("type"),
+                    "disposition": disposition,
+                    "evidence_ids": [i for i in _list(_dict(link).get("assertion_ids")) if isinstance(i, str)],
+                }
+            )
+    return links, candidate_links, withheld
+
+
+def _project_card(
+    card: dict, matched_by: str, ledger_entry: dict, endpoint_card: Callable[[str], Endpoint | None]
+) -> dict:
     granted, refusals = _certification(card)
     accepted = bool(granted)
     assertions = {
@@ -513,45 +613,14 @@ def _project_card(card: dict, matched_by: str, ledger_entry: dict, endpoint_card
             if sense.get(optional):
                 projected_sense[optional] = sense[optional]
         senses.append(projected_sense)
-    links, uncitable_links = [], []
-    for link in _list(card.get("links")):
-        endpoints = [_dict(e).get("id") for e in _list(_dict(link).get("endpoints"))]
-
-        def cite_link(evidence_id: str, endpoints: list = endpoints) -> dict | None:
-            # A link's assertions live on the card that states them; a symmetric link cites both endpoints'.
-            citation = cite(evidence_id)
-            for other_id in endpoints:
-                if citation is not None:
-                    break
-                if other_id == card.get("card_id") or not isinstance(other_id, str):
-                    continue
-                other = _dict(endpoint_card(other_id))
-                for assertion in _list(other.get("assertions")):
-                    if _dict(assertion).get("assertion_id") == evidence_id:
-                        citation = _citation(evidence_id, assertion)
-                        if citation is not None:
-                            citation["card_id"] = other_id
-                        break
-            return citation
-
-        projected_link, _uncited_ids = _project_link(link, card.get("card_id"), cite_link)
-        if projected_link["citations"]:
-            links.append(projected_link)
-        else:
-            uncitable_links.append(
-                {
-                    "link_id": projected_link.get("link_id"),
-                    "type": projected_link.get("type"),
-                    "disposition": "uncitable_link_withheld",
-                    "evidence_ids": [i for i in _list(_dict(link).get("assertion_ids")) if isinstance(i, str)],
-                }
-            )
+    # A link's assertions live on the card that states them; a symmetric link cites both endpoints'.
+    links, candidate_links, withheld_links = _project_links(card, granted, cite, endpoint_card)
     key = _dict(card.get("key_at_creation"))
     identity = _dict(card.get("identity"))
     build = _dict(card.get("build"))
     gaps = _card_gaps(card, ledger_entry)
-    if uncitable_links:
-        gaps["links"] = {"disposition": "uncitable_link_withheld", "links": uncitable_links}
+    if withheld_links:
+        gaps["links"] = {"disposition": withheld_links[0]["disposition"], "links": withheld_links}
     projected = {
         "card_id": card.get("card_id"),
         "card_kind": card.get("card_kind"),
@@ -585,6 +654,8 @@ def _project_card(card: dict, matched_by: str, ledger_entry: dict, endpoint_card
         "gaps": gaps,
         "evidence_ids": sorted(assertions),
     }
+    if candidate_links:
+        projected["candidate_links"] = candidate_links
     if not accepted:
         projected["certification_refusal"] = refusals
     for redirect in ("merged_into", "split_into"):
@@ -654,16 +725,18 @@ def _lookup_in_store(store: CardStore, normalized: str, vesum: dict, base: dict)
         if key is not None:
             wanted.setdefault(key, "vesum_lemma")
     ledger = _ledger_cards(store)
-    endpoint_cards: dict[str, dict | None] = {}
+    endpoint_cards: dict[str, Endpoint | None] = {}
 
-    def endpoint_card(card_id: str) -> dict | None:
-        """A link endpoint's card by id, read once per call through the same checks as any card file."""
+    def endpoint_card(card_id: str) -> Endpoint | None:
+        """A link endpoint's card by id with its own certification, read and replayed once per call."""
         if card_id not in endpoint_cards:
             try:
                 other = _dict(_read_card(store.cards, f"{card_id}.json"))
             except (OSError, ValueError):
                 other = {}
-            endpoint_cards[card_id] = other if other.get("card_id") == card_id else None
+            endpoint_cards[card_id] = (
+                Endpoint(other, tuple(_certification(other)[0])) if other.get("card_id") == card_id else None
+            )
         return endpoint_cards[card_id]
 
     cards = []

@@ -565,6 +565,123 @@ def test_link_citations_include_the_assertions_stated_on_the_other_endpoint(tmp_
     assert "gaps" not in link
 
 
+def _certified_parent_linked_to(certification, endpoint: dict) -> dict:
+    """The fixture's certified card as «мова», with two links to ``endpoint``: one also citing itself, one not."""
+    card = certification.card
+    card["key_at_creation"] = {"spelling": "мова", "pos": "noun"}
+    own = fixture.card_assertion(card["card_id"], 21, "homograph_of", "мова")
+    [endpoint_ref] = [a for a in endpoint["assertions"] if a["field"] == "homograph_of"]
+    card["assertions"] = [own]
+    card["links"] = [
+        {
+            "link_id": "wl_" + suffix * 24,
+            "type": "homograph_of",
+            "endpoints": [{"id": card["card_id"]}, {"id": endpoint["card_id"]}],
+            "basis": "derived",
+            "derived_by": "rules:homograph_of",
+            "assertion_ids": ids,
+            "state": "active",
+        }
+        for suffix, ids in (
+            ("2", [own["assertion_id"], endpoint_ref["assertion_id"]]),
+            ("3", [endpoint_ref["assertion_id"]]),
+        )
+    ]
+    certification.approve(card)
+    cert.load_certified_card_for_export(card, required_approval="site")  # The fixture really certifies it.
+    return card
+
+
+def _linked_endpoint(card_id: str = "wc_nnnnnnnnnnnn") -> dict:
+    endpoint = candidate_card(card_id, "Мова", card_kind="proper_name")
+    endpoint["assertions"].append(fixture.card_assertion(card_id, 22, "homograph_of", "Мова"))
+    return endpoint
+
+
+def _accepted_payload(served: dict) -> bytes:
+    """Everything a certified card asserts as accepted: the card without its separate candidate relations."""
+    return json.dumps({k: v for k, v in served.items() if k != "candidate_links"}, sort_keys=True).encode()
+
+
+def test_an_uncertified_endpoint_never_changes_a_certified_card(certification, tmp_path):
+    endpoint = _linked_endpoint()
+    parent = _certified_parent_linked_to(certification, endpoint)
+    store = write_store(tmp_path / "build", parent, endpoint)
+
+    [before] = [c for c in lookup("мова", store)["cards"] if c["card_id"] == parent["card_id"]]
+    endpoint_ref = endpoint["assertions"][-1]
+    endpoint_ref["value"] = endpoint_ref["value_norm"] = "змінено"
+    endpoint_ref["locator"] = "ulif:probe:mutated"
+    write_store(tmp_path / "build", endpoint)
+    [after] = [c for c in lookup("мова", store)["cards"] if c["card_id"] == parent["card_id"]]
+
+    for served in (before, after):
+        assert (served["status"], served["accepted"]) == ("certified", True)
+        assert served["version"]["card_version"] == parent["build"]["card_version"]
+        # The certified links cite only the parent's own assertion; the endpoint's evidence id is a gap.
+        [link] = served["links"]
+        assert [c.get("card_id") for c in link["citations"]] == [None]
+        assert link["gaps"] == [
+            f"uncited_evidence {endpoint_ref['assertion_id']}: "
+            "no retained source assertion on this card or its certified link endpoints"
+        ]
+        assert served["gaps"]["links"]["links"] == [
+            {
+                "link_id": "wl_" + "3" * 24,
+                "type": "homograph_of",
+                "disposition": "no_certified_citation_withheld",
+                "evidence_ids": [endpoint_ref["assertion_id"]],
+            }
+        ]
+        # The endpoint appears only as candidate relations, each bound to the endpoint card's own version.
+        assert [c["link_id"] for c in served["candidate_links"]] == ["wl_" + "2" * 24, "wl_" + "3" * 24]
+        for candidate in served["candidate_links"]:
+            assert (candidate["status"], candidate["accepted"]) == ("candidate", False)
+            imported = candidate["citations"][-1]
+            assert (imported["card_id"], imported["card_status"], imported["card_certified_for"]) == (
+                endpoint["card_id"],
+                "candidate",
+                [],
+            )
+            assert imported["card_version"] == endpoint["build"]["card_version"]
+    assert _accepted_payload(after) == _accepted_payload(before)
+    assert before["candidate_links"][-1]["citations"][-1]["locator"] == "ulif:probe:22"
+    assert after["candidate_links"][-1]["citations"][-1]["locator"] == "ulif:probe:mutated"
+    assert after["candidate_links"][-1]["citations"][-1]["value"] == "змінено"
+
+
+def test_a_certified_endpoint_is_cited_with_its_bound_version(certification, tmp_path):
+    endpoint = json.loads(json.dumps(certification.card))  # The fixture's certifiable shape, as a second card.
+    endpoint.update(card_id="wc_0123456789ac", card_kind="proper_name")
+    endpoint["key_at_creation"] = {"spelling": "Мова", "pos": "noun"}
+    endpoint["assertions"] = [fixture.card_assertion(endpoint["card_id"], 22, "homograph_of", "Мова")]
+    certification.approve(endpoint)
+    certified_version = endpoint["build"]["card_version"]
+    cert.load_certified_card_for_export(endpoint, required_approval="site")
+    parent = _certified_parent_linked_to(certification, endpoint)
+    store = write_store(tmp_path / "build", parent, endpoint)
+
+    [served] = [c for c in lookup("мова", store)["cards"] if c["card_id"] == parent["card_id"]]
+
+    assert "candidate_links" not in served and "links" not in served["gaps"]
+    assert [link["link_id"] for link in served["links"]] == ["wl_" + "2" * 24, "wl_" + "3" * 24]
+    imported = served["links"][-1]["citations"][-1]
+    assert (imported["card_id"], imported["card_version"], imported["card_status"]) == (
+        endpoint["card_id"],
+        certified_version,
+        "certified",
+    )
+    assert imported["card_certified_for"] == ["site", "dataset"]
+
+    endpoint["assertions"][-1]["locator"] = "ulif:probe:mutated"  # The endpoint leaves its certification.
+    write_store(tmp_path / "build", endpoint)
+    [changed] = [c for c in lookup("мова", store)["cards"] if c["card_id"] == parent["card_id"]]
+
+    assert changed["status"] == "certified"
+    assert all(c.get("card_id") is None for link in changed["links"] for c in link["citations"])
+    assert [c["link_id"] for c in changed["candidate_links"]] == ["wl_" + "2" * 24, "wl_" + "3" * 24]
+
+
 def test_uncitable_link_is_a_gap_not_a_link(tmp_path):
     left, _right = _linked_cards()
     left["links"][0]["assertion_ids"] = ["wa_" + "e" * 24]
