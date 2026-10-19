@@ -82,7 +82,7 @@ export async function previewInputs() {
   const canonical = cases.filter(c => !c.mutations.length).map(c => c.input);
   const snapshotHash = hash(readFileSync(resolve(process.cwd(), 'tests/fixtures/word-card-preview/current.ts')));
   const common = { generatedAt: snapshot.generatedAt, manifestVersion: snapshot.manifestVersion };
-  return [...[...cases.map(c => ({...c, claimants:canonical})), ...revisionCases()].map(c => {
+  return [...[...cases.map(c => ({...c, claimants:canonical})), ...revisionCases(), ...relationCases()].map(c => {
     const card = previewCard(c.input, 'controlled');
     const current = pairCurrent(card, c.claimants.map(input => previewCard(input, 'controlled')), snapshot.records.map(r => r.record));
     return { ...common, ...c, card, current, snapshotHash };
@@ -113,4 +113,26 @@ export function revisionCases() {
     return {...castle, name:`f2-${id}-${binding}`, input, claimants:originals.map(c => c.input), mutations:[`stress.${binding}=${id}`, 'delete appears_in'], fingerprint:hash(JSON.stringify(input))};
   }));
   return [...identity, ...visibility];
+}
+
+export function relationCases() {
+  const originals = loadCases().filter(c => !c.mutations.length);
+  const base = originals.find(c => c.name === 'kliuch-1');
+  const other = originals.find(c => c.name === 'vriady-hody-conflict');
+  if (!base || !other) throw Error('Missing relation controls');
+  return ['namespace', 'reverse-namespace', 'case-source', 'case-key', 'two-claims', 'two-claims-reversed', 'duplicate-record', 'valid'].map(kind => {
+    const input = record(structuredClone(base.input));
+    const claimant = record(structuredClone(other.input));
+    const own = {source_id:'atlas0', key:'atlas0:slug:ключ'};
+    const second = {source_id:'atlas0', key:'atlas0:slug:вряди-годи'};
+    record(input.identity).source_keys = [own];
+    record(claimant.identity).source_keys = [];
+    if (kind === 'namespace') record(claimant.identity).source_keys = [{...own,source_id:'vesum'}];
+    if (kind === 'reverse-namespace') record(claimant.identity).source_keys = [{...own,key:'vesum:entry:1'}];
+    if (kind === 'case-source') record(claimant.identity).source_keys = [{...own,source_id:'Atlas0'}];
+    if (kind === 'case-key') record(claimant.identity).source_keys = [{...own,source_id:'vesum',key:'Atlas0:slug:ключ'}];
+    if (kind.startsWith('two-claims')) record(input.identity).source_keys = kind.endsWith('-reversed') ? [own,second] : [second,own];
+    const claimants = kind === 'duplicate-record' ? [input,structuredClone(input)] : [input,claimant];
+    return {...base,name:`relation-${kind}`,input,claimants,mutations:[`identity relation:${kind}`],fingerprint:hash(JSON.stringify({value:input,claimants}))};
+  });
 }

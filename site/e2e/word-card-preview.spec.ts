@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 import { readFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import snapshot from '../tests/fixtures/word-card-preview/current';
-import { revisionCases, record } from '../tests/fixtures/word-card-preview/inputs';
+import { revisionCases, relationCases, record } from '../tests/fixtures/word-card-preview/inputs';
 
 // This spec drives an explicitly flag-enabled local build. No data certification.
 const names = ['bronia-armour', 'bronia-reservation', 'idiom-buduvaty-povitriani-zamky', 'kliuch-1', 'vriady-hody-conflict', 'vybihaty-imperf', 'vybihty-perf', 'zamok-castle', 'zamok-legacy-split', 'zamok-lock', 'zamok-settlement',
@@ -88,5 +88,21 @@ for (const prefix of ['', 'compare/']) for (const c of revisionCases()) test(`${
       await expect(stress).not.toContainText(String(a.assertion_id));
       await expect(citation.locator('pre')).toHaveCount(0);
     }
+  }
+});
+
+for (const c of relationCases()) test(`compare/${c.name}`, async ({page}, info) => {
+  await page.goto(`/lexicon-v2/compare/${c.name}/`);
+  await expect(page.locator('[data-input-hash]')).toHaveText(c.fingerprint);
+  const candidate = page.getByRole('region',{name:'Candidate presentation',exact:true});
+  const current = page.getByRole('region',{name:'Current presentation',exact:true});
+  await info.attach('page',{body:await page.screenshot({fullPage:true}),contentType:'image/png'});
+  if (c.name === 'relation-valid') {
+    await expect(current.locator('[data-word-atlas]')).toBeVisible();
+    expect(await candidate.locator('[data-comparison]').count()).toBeGreaterThan(0);
+  } else {
+    await expect(candidate).toContainText('Unresolved pairing');
+    await expect(candidate.locator('[data-comparison]')).toHaveCount(0);
+    await expect(current.locator('[data-word-atlas]')).toHaveCount(0);
   }
 });

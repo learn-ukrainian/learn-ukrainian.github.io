@@ -8,7 +8,7 @@ import { createRequire } from 'node:module';
 import schema from '../../../schemas/word-card-v1.schema.json';
 import WordCardPreview from '../../src/lexicon/WordCardPreview';
 import { compareCurrent, fieldStates, pairCurrent, previewCard } from '../../src/lib/lexicon/word-card-preview';
-import { hash, loadCases, previewInputs, record, revisionCases } from '../fixtures/word-card-preview/inputs';
+import { hash, loadCases, previewInputs, record, revisionCases, relationCases } from '../fixtures/word-card-preview/inputs';
 import snapshot from '../fixtures/word-card-preview/current';
 
 const cases = loadCases();
@@ -65,7 +65,7 @@ describe('source-bound preview mechanics', () => {
       const card = parse(name); const html = renderToStaticMarkup(<WordCardPreview card={card} current={null} compare />);
       expect(html).not.toContain('data-raw-value');
     }
-    expect(parse('control-suppressed')).toEqual({kind: 'suppressed',keys:['atlas0:slug:замок','atlas0:heteronym:замок/за́мок']});
+    expect(parse('control-suppressed')).toEqual({kind: 'suppressed',claimantId:'wc_7k3m9q2xw4pd',keys:['atlas0:slug:замок','atlas0:heteronym:замок/за́мок']});
     expect(parse('control-redirected')).toMatchObject({kind: 'successors', ids: ['wc_aaaaaaaaaaaa']});
     expect(previewCard(sample('zamok-castle').input)).toMatchObject({kind: 'unavailable'});
   });
@@ -85,7 +85,7 @@ describe('source-bound preview mechanics', () => {
       (c: Record<string, unknown>) => { const p = record(record(c.fields).paradigm); p.propositions = null; },
     ];
     for (const edit of edits) expect(mutate(edit).kind).toBe('unavailable');
-    expect(parse('control-mismatched')).toEqual({kind:'unavailable',reason:'Mismatched selected assertion binding',keys:['atlas0:slug:замок','atlas0:heteronym:замок/за́мок']});
+    expect(parse('control-mismatched')).toEqual({kind:'unavailable',claimantId:'wc_7k3m9q2xw4pd',reason:'Mismatched selected assertion binding',keys:['atlas0:slug:замок','atlas0:heteronym:замок/за́мок']});
     const rejected = mutate(c => { const values = c.assertions; if (!Array.isArray(values)) throw Error('No assertions'); for (const a of values) record(record(a).review).status = 'rejected'; });
     if (rejected.kind !== 'card') throw Error('No rejected card');
     expect(rejected.fields.flatMap(f => f.raw)).toEqual([]);
@@ -112,11 +112,11 @@ describe('source-bound preview mechanics', () => {
   });
   it('freezes exact source/snapshot bytes and case denominator before browser proof', async () => {
     const inputs = await previewInputs();
-    expect(inputs).toHaveLength(41);
+    expect(inputs).toHaveLength(49);
     const manifest = inputs.map(c => ({name:c.name,source:c.source,fingerprint:c.fingerprint,snapshotHash:c.snapshotHash,kind:c.card.kind}));
     const sourceHashes = cases.map(c => ({name:c.name,source:c.source,sourceHash:c.sourceHash,mutations:c.mutations}));
     const output = process.env.WORD_CARD_PREVIEW_REPORT;
-    if (output) writeFileSync(resolve(output), JSON.stringify({schema:hash(readFileSync(resolve('../schemas/word-card-v1.schema.json'))), register:hash(readFileSync(resolve('../docs/sources/permissions-register.yaml'))), routes:82, groups:5, cases:manifest, sourceHashes, revision:revisionCases()},null,2)+'\n');
+    if (output) writeFileSync(resolve(output), JSON.stringify({schema:hash(readFileSync(resolve('../schemas/word-card-v1.schema.json'))), register:hash(readFileSync(resolve('../docs/sources/permissions-register.yaml'))), routes:98, groups:5, cases:manifest, sourceHashes, revision:revisionCases(), relation:relationCases()},null,2)+'\n');
     expect(hash('abc')).toBe('ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad');
   });
   it.each(revisionCases())('preserves literal refusal/source binding for $name', c => {
@@ -157,5 +157,53 @@ describe('source-bound preview mechanics', () => {
         expect(parsed.fields.find(f => f.group === 'stress')?.citations).toEqual([]);
       }
     } finally { vi.doUnmock('../../../docs/sources/permissions-register.yaml?raw'); vi.resetModules(); }
+  });
+
+  function permutations<T>(items: T[]): T[][] {
+    return items.length ? items.flatMap((item,i) => permutations(items.filter((_,j) => i !== j)).map(rest => [item,...rest])) : [[]];
+  }
+  it.each(relationCases())('enforces the complete relation for $name in every array order', c => {
+    const current = snapshot.records.slice(1,3).map(r => r.record);
+    const candidate = previewCard(c.input,'controlled');
+    for (const claimants of permutations(c.claimants)) for (const targets of permutations(current)) {
+      expect(pairCurrent(candidate,claimants.map(c => previewCard(c,'controlled')),targets)).toEqual(c.name === 'relation-valid' ? snapshot.records[1]?.record : null);
+    }
+  });
+  it.each(['valid','repeated-key','unrelated-key','no-target','duplicate-target','absent-candidate','owner-mismatch','claimset-mismatch','duplicate-id','distinct-owner','missing-id','invalid-id','null-key','missing-identity','missing-key','missing-source','malformed-key','unknown-state','suppressed','redirected','split','unavailable'])('refuses uncertainty without status/order preference: %s', kind => {
+    const input = record(structuredClone(sample('kliuch-1').input));
+    const other = record(structuredClone(sample('vriady-hody-conflict').input));
+    const own = {source_id:'atlas0',key:'atlas0:slug:ключ'};
+    record(input.identity).source_keys = [own];
+    record(other.identity).source_keys = [];
+    const candidate = previewCard(input,'controlled');
+    let claimants = [input,other];
+    let current = [snapshot.records[1]?.record].filter(r => r !== undefined);
+    if (kind === 'repeated-key') record(input.identity).source_keys = [own,own];
+    if (kind === 'unrelated-key') record(input.identity).source_keys = [own,{source_id:'vesum',key:'vesum:entry:1'}];
+    if (kind === 'no-target') current = [];
+    if (kind === 'duplicate-target') current = [...current,...current];
+    if (kind === 'absent-candidate') claimants = [other];
+    if (kind === 'owner-mismatch') { claimants = [other]; record(other.identity).source_keys = [own]; }
+    if (kind === 'claimset-mismatch') record(input.identity).source_keys = [own,{...own,key:'atlas0:slug:other'}];
+    if (kind === 'duplicate-id') claimants.push(record(structuredClone(input)));
+    if (kind === 'distinct-owner') record(other.identity).source_keys = [own];
+    if (kind === 'missing-id') delete other.card_id;
+    if (kind === 'invalid-id') other.card_id = 'wc_invalid';
+    if (kind === 'null-key') record(other.identity).source_keys = [null];
+    if (kind === 'missing-identity') delete other.identity;
+    if (kind === 'missing-key') record(other.identity).source_keys = [{source_id:'atlas0'}];
+    if (kind === 'missing-source') record(other.identity).source_keys = [{key:own.key}];
+    if (kind === 'malformed-key') record(other.identity).source_keys = [{...own,key:'atlas0:slug:x/y'}];
+    if (['unknown-state','suppressed','redirected','split','unavailable'].includes(kind)) {
+      record(other.identity).source_keys = [own]; other.state = kind === 'unknown-state' ? 'unknown' : kind === 'unavailable' ? 'active' : kind;
+      if (kind === 'redirected') other.merged_into = input.card_id;
+      if (kind === 'split') other.split_into = [input.card_id,'wc_aaaaaaaaaaaa'];
+      if (kind === 'unavailable') other.fields = null;
+    }
+    for (const order of permutations(claimants)) for (const targets of permutations(current)) {
+      const parsed = order.map(c => previewCard(c,'controlled'));
+      expect(pairCurrent(candidate,parsed,targets)).toEqual(['valid','repeated-key','unrelated-key'].includes(kind) ? snapshot.records[1]?.record : null);
+      expect(pairCurrent(candidate,[...parsed,...parsed],targets)).toBeNull();
+    }
   });
 });
