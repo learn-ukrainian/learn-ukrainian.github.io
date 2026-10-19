@@ -411,12 +411,16 @@ _OO01_SYSCALLS = (
     "unlink,unlinkat,rmdir,rename,renameat,renameat2,chdir,clone,clone3,fork,vfork,wait4,exit_group"
 )
 _OO01_TRACE_BYTES = 1024 * 1024
+_OO01_BUILD_LINE_CLASSES = {
+    "feature:": "feature", "OpenSSL:": "openssl", "zlib-ng:": "zlib_ng",
+    "SHA-1:": "sha1", "non-collision-detecting-SHA-1:": "non_collision_sha1",
+}
 
 
 class _FixtureTracePrivacyRefusal(RuntimeError):
-    """Only fixed reason codes and numeric positions cross the raw-data boundary."""
+    """Only fixed codes/categories and numeric positions cross the raw-data boundary."""
 
-    def __init__(self, reason: str, record_index: int | None = None):
+    def __init__(self, reason: str, record_index: int | None = None, *, build_line_class: str | None = None):
         phases = {
             "unrecognized_record": "syscall_trace",
             "disallowed_syscall": "syscall_trace",
@@ -430,10 +434,17 @@ class _FixtureTracePrivacyRefusal(RuntimeError):
         if reason not in phases or (record_index is not None and
                                    (type(record_index) is not int or record_index < 1)):
             raise RuntimeError("OO01_TRACE_REFUSAL")
+        if build_line_class is not None and (
+            reason != "unrecognized_build_line" or
+            build_line_class not in (*_OO01_BUILD_LINE_CLASSES.values(), "other")
+        ):
+            raise RuntimeError("OO01_TRACE_REFUSAL")
         super().__init__("OO01_PRIVACY_REFUSAL")
         self.evidence = {"phase": phases[reason], "reason": reason}
         if record_index is not None:
             self.evidence["record_index"] = record_index
+        if build_line_class is not None:
+            self.evidence["build_line_class"] = build_line_class
 
 
 def _filter_fixture_trace(raw: str, cwd: Path) -> list[dict]:
@@ -514,13 +525,31 @@ def _fixture_git_identity(git: str, env: dict[str, str]) -> dict:
             fields["commit"] = "none"
         elif line.startswith("shell-path: "):
             fields["shell-path-sha256"] = hashlib.sha256(line[12:].encode()).hexdigest()
+        # Fixed metadata from Git's get_version_info()/hash.h, not arbitrary feature text.
+        elif line == "feature: fsmonitor--daemon":
+            fields["feature"] = "fsmonitor--daemon"
+        elif re.fullmatch(r"zlib-ng: [0-9]{1,2}\.[0-9]{1,2}\.[0-9]{1,2}", line):
+            fields["zlib-ng"] = line.split(": ", 1)[1]
+        elif re.fullmatch(r"SHA-1: SHA1_(?:APPLE|OPENSSL|BLK) \(No collision detection\)", line):
+            fields["SHA-1"] = line[7:]
+        elif re.fullmatch(r"non-collision-detecting-SHA-1: SHA1_(?:APPLE|OPENSSL|BLK)_UNSAFE", line):
+            fields["non-collision-detecting-SHA-1"] = line.split(": ", 1)[1]
+        elif re.fullmatch(
+            r"OpenSSL: OpenSSL [0-9]{1,2}\.[0-9]{1,2}\.[0-9]{1,2}[a-z]? {1,2}"
+            r"(?:[1-9]|[12][0-9]|3[01]) (?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) [0-9]{4}", line,
+        ):
+            fields["OpenSSL"] = line[9:]
         else:
             match = re.fullmatch(
                 r"(cpu|sizeof-long|sizeof-size_t|rust|gettext|libcurl|zlib|SHA-1|SHA-256|"
                 r"default-ref-format|default-hash|built from commit):? ([a-zA-Z0-9_.+-]{1,80})", line,
             )
             if match is None:
-                raise _FixtureTracePrivacyRefusal("unrecognized_build_line", record_index)
+                category = next((category for prefix, category in _OO01_BUILD_LINE_CLASSES.items()
+                                 if line.startswith(prefix)), "other")
+                raise _FixtureTracePrivacyRefusal(
+                    "unrecognized_build_line", record_index, build_line_class=category,
+                )
             fields[match[1]] = match[2]
     if "version" not in fields:
         raise _FixtureTracePrivacyRefusal("missing_version")
@@ -2312,7 +2341,8 @@ def test_oo01_refusal_details_reject_nonconstant_or_nonnumeric_fields(reason, po
 
 
 @pytest.mark.parametrize("failure,expected", [
-    ("build_line", {"phase": "build_options", "reason": "unrecognized_build_line", "record_index": 2}),
+    ("build_line", {"phase": "build_options", "reason": "unrecognized_build_line", "record_index": 2,
+                    "build_line_class": "other"}),
     ("build_version", {"phase": "build_options", "reason": "missing_version"}),
     ("build_encoding", {"phase": "build_options", "reason": "invalid_build_encoding"}),
     ("image_os", {"phase": "runner_image", "reason": "invalid_image_label", "record_index": 1}),
@@ -2386,6 +2416,97 @@ def test_oo01_identity_retains_supported_build_fields(tmp_path, monkeypatch):
         },
         "runner_image": {"ImageOS": "ubuntu24", "ImageVersion": "20261019.1.0"},
     }
+
+
+@pytest.mark.parametrize("extra,expected", [
+    pytest.param(b"feature: fsmonitor--daemon\nSHA-1: SHA1_DC\n",
+                 {"feature": "fsmonitor--daemon"}, id="fsmonitor"),
+    pytest.param(b"OpenSSL: OpenSSL 3.0.13 30 Jan 2024\nSHA-1: SHA1_DC\n",
+                 {"OpenSSL": "OpenSSL 3.0.13 30 Jan 2024"}, id="openssl-release"),
+    pytest.param(b"zlib-ng: 2.2.4\nSHA-1: SHA1_DC\n", {"zlib-ng": "2.2.4"}, id="zlib-ng"),
+    pytest.param(b"SHA-1: SHA1_DC\nnon-collision-detecting-SHA-1: SHA1_OPENSSL_UNSAFE\n",
+                 {"non-collision-detecting-SHA-1": "SHA1_OPENSSL_UNSAFE"}, id="unsafe-backend"),
+    pytest.param(b"SHA-1: SHA1_BLK (No collision detection)\n",
+                 {"SHA-1": "SHA1_BLK (No collision detection)"}, id="sha1-warning"),
+])
+def test_oo01_identity_supports_documented_optional_metadata(tmp_path, monkeypatch, extra, expected):
+    # Git v2.55.0 help.c get_version_info(), hash.h; OpenSSL 3.0.13 opensslv.h.in.
+    # Source-shaped fixtures establish compatibility, not the unknown runner line.
+    git = tmp_path / "git"
+    git.write_bytes(b"synthetic-executable")
+    build = (
+        b"git version 2.55.0\ncpu: x86_64\nno commit associated with this build\n"
+        b"sizeof-long: 8\nsizeof-size_t: 8\nshell-path: /bin/sh\nrust: disabled\n" + extra +
+        b"SHA-256: SHA256_BLK\ndefault-ref-format: files\ndefault-hash: sha1\n"
+    )
+    monkeypatch.setenv("ImageOS", "ubuntu24")
+    monkeypatch.setenv("ImageVersion", "20261019.1.0")
+    monkeypatch.setattr(subprocess, "run", lambda *a, **kw: subprocess.CompletedProcess(a, 0, build))
+    assert _fixture_git_identity(str(git), {}) == {
+        "git_sha256": hashlib.sha256(b"synthetic-executable").hexdigest(),
+        "build_options_sha256": hashlib.sha256(build).hexdigest(),
+        "build_options": {
+            "version": "git version 2.55.0", "cpu": "x86_64", "commit": "none",
+            "sizeof-long": "8", "sizeof-size_t": "8",
+            "shell-path-sha256": hashlib.sha256(b"/bin/sh").hexdigest(), "rust": "disabled",
+            "SHA-1": "SHA1_DC", **expected,
+            "SHA-256": "SHA256_BLK", "default-ref-format": "files", "default-hash": "sha1",
+        },
+        "runner_image": {"ImageOS": "ubuntu24", "ImageVersion": "20261019.1.0"},
+    }
+
+
+@pytest.mark.parametrize("reason,category", [
+    ("unrecognized_build_line", "private-category"),
+    ("unrecognized_build_line", ["feature"]),
+    ("unrecognized_build_line", True),
+    ("unrecognized_build_line", 1),
+    ("unrecognized_record", "feature"),
+])
+def test_oo01_build_line_category_refuses_invalid_or_wrong_phase(reason, category):
+    with pytest.raises(RuntimeError, match=r"^OO01_TRACE_REFUSAL$"):
+        _FixtureTracePrivacyRefusal(reason, 2, build_line_class=category)
+
+
+@pytest.mark.parametrize("line,category", [
+    (b"feature: unknown-feature", "feature"),
+    (b"feature: fsmonitor--daemon /private/account", "feature"),
+    (b"OpenSSL: OpenSSL 3.0.13 30 Unknown 2024", "openssl"),
+    (b"OpenSSL: OpenSSL 3.0.13 30 Jan 2024 /private/account", "openssl"),
+    (b"zlib-ng: 2.2.4 /private/account", "zlib_ng"),
+    (b"zlib-ng: private-account", "zlib_ng"),
+    (b"non-collision-detecting-SHA-1: SHA1_OTHER_UNSAFE", "non_collision_sha1"),
+    (b"non-collision-detecting-SHA-1: SHA1_OPENSSL_UNSAFE /private/account", "non_collision_sha1"),
+    (b"SHA-1: SHA1_BLK (No collision detection) /private/account", "sha1"),
+    (b"unknown-field: harmless-looking-token", "other"),
+    (b"/private/account", "other"),
+])
+def test_oo01_unknown_build_metadata_still_refuses_with_fixed_category(tmp_path, monkeypatch, line, category):
+    cwd = tmp_path / "primary"
+    cwd.mkdir()
+    output = tmp_path / "filtered"
+    output.mkdir()
+    (output / "command-1.json").write_text('{"old":"filtered"}')
+    monkeypatch.setenv("TMPDIR", str(tmp_path))
+    monkeypatch.setenv("LU_OO01_GIT_TRACE", "1")
+    monkeypatch.setenv("LU_OO01_GIT_TRACE_DIR", str(output))
+    build = b"git version 2.55.0\n" + line + b"\n"
+
+    def fake_run(argv, **kwargs):
+        assert argv[1:] == ["--version", "--build-options"]
+        return subprocess.CompletedProcess(argv, 0, stdout=build, stderr=b"/private/stderr")
+
+    monkeypatch.setattr(subprocess, "run", fake_run)
+    with pytest.raises(RuntimeError, match=r"^OO01_PRIVACY_REFUSAL$") as error:
+        _git(cwd, "init", "-q", "-b", "main", trace_fixture_root=tmp_path)
+    assert str(error.value) == "OO01_PRIVACY_REFUSAL"
+    assert json.loads((output / "refusal.json").read_text()) == {
+        "status": "OO01_PRIVACY_REFUSAL", "phase": "build_options", "reason": "unrecognized_build_line",
+        "record_index": 2, "build_line_class": category,
+    }
+    assert sorted(p.name for p in output.iterdir()) == ["refusal.json"]
+    assert not list(tmp_path.glob("oo01-raw-*"))
+    assert line.decode() not in (output / "refusal.json").read_text()
 
 
 def test_oo01_real_packaged_git_trace_and_linkage(tmp_path, monkeypatch):
