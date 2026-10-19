@@ -530,7 +530,12 @@ def test_blocked_wait_rejects_a_real_runnable_thread() -> None:
     spinner = textwrap.dedent(
         """\
         import threading, time
-        threading.Thread(target=lambda: [None for _ in iter(int, 1)], daemon=True).start()
+
+        def spin():
+            while True:  # runnable in constant memory (a list comprehension would retain every item)
+                pass
+
+        threading.Thread(target=spin, daemon=True).start()
         print("hung", flush=True)
         time.sleep(60)
         """
