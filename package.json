@@ -112,7 +112,7 @@
     "markdownlint-cli2": "^0.20.0",
     "prettier": "^3.9.10",
     "puppeteer": "^25.6.0",
-    "ts-jest": "^29.4.6",
+    "ts-jest": "^29.4.14",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.49.0",
