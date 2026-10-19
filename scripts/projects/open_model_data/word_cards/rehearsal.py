@@ -12,6 +12,7 @@ import sys
 import tempfile
 from contextlib import ExitStack
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 ROOT = Path(__file__).resolve().parents[4]
 if str(ROOT) not in sys.path:
@@ -19,10 +20,10 @@ if str(ROOT) not in sys.path:
 
 import yaml
 
-from scripts.atlas import word_card_assembly as assembly
-from scripts.atlas import word_card_foundation as foundation
-from scripts.atlas import word_card_verify as verifier
 from scripts.common.scratch import ensure_scratch_root
+
+if TYPE_CHECKING:
+    from scripts.atlas import word_card_assembly as assembly
 
 W1A_SHA = "c5d5909282c98dbb04fc8e71c7c59a7167b2ae2c"
 # Canonical JSON digests of the two committed W1a inputs, independent of candidates and Git availability.
@@ -37,6 +38,9 @@ SCENARIOS = frozenset({
 
 def check_frozen_inputs(manifest: dict, registry: dict) -> None:
     """Refuse changed W1a inputs, including a coherently rehashed selection or identity swap."""
+    from scripts.atlas import word_card_assembly as assembly
+    from scripts.atlas import word_card_foundation as foundation
+
     foundation.require(foundation.digest(manifest) == MANIFEST_SHA256, "Manifest differs from frozen W1a baseline")
     foundation.require(foundation.digest(registry) == REGISTRY_SHA256, "Registry differs from frozen W1a baseline")
     assembly.audit_allocation(registry, manifest)
@@ -44,6 +48,10 @@ def check_frozen_inputs(manifest: dict, registry: dict) -> None:
 
 def run_rehearsal(inputs: assembly.Inputs) -> dict:
     """Build twice, verify every assertion and identity, then rehearse withdrawal and rollback."""
+    from scripts.atlas import word_card_assembly as assembly
+    from scripts.atlas import word_card_foundation as foundation
+    from scripts.atlas import word_card_verify as verifier
+
     check_frozen_inputs(inputs.manifest, inputs.registry)
     baseline = assembly.build(inputs)
     repeated = assembly.build(inputs)
@@ -101,6 +109,9 @@ Related: #8981; docs/atlas/word-cards/pilot-findings.md; scripts/atlas/word_card
                             help=f"Read-only {store} SQLite file (default: configured primary store); use an absolute path. "
                             "The sources store must have its associated ULIF raw cache.")
     args = parser.parse_args(argv)
+    from scripts.atlas import word_card_assembly as assembly
+    from scripts.atlas import word_card_foundation as foundation
+
     try:
         # Refuse substituted inputs and unsafe output before opening any source store or creating scratch.
         check_frozen_inputs(foundation.load(args.manifest), foundation.load(args.registry))

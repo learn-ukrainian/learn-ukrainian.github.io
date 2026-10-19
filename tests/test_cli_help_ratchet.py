@@ -58,6 +58,11 @@ def test_source_manifest_help_does_not_read_schema_data() -> None:
     assert checker.probe_help(script, checker.REPO_ROOT) is None
 
 
+def test_word_card_rehearsal_help_does_not_read_schema_data() -> None:
+    script = checker.REPO_ROOT / "scripts/projects/open_model_data/word_cards/rehearsal.py"
+    assert checker.probe_help(script, checker.REPO_ROOT) is None
+
+
 @pytest.mark.parametrize("base", ["argparse.ArgumentParser", "ArgumentParser"])
 @pytest.mark.parametrize("source, expected", [
     (PASSING, None),
