@@ -1569,6 +1569,17 @@ def test_refresh_propagates_required_json_shape_failure(
             "unreadable artifact coverage.json: "
             "Expecting property name enclosed in double quotes: line 1 column 2 (char 1)",
         ),
+        (
+            "invalid-utf8-continuation",
+            b"\x80",
+            "unreadable artifact coverage.json: 'utf-8' codec can't decode byte 0x80 in position 0: invalid start byte",
+        ),
+        (
+            "invalid-utf8-truncated",
+            b"\xe2\x82",
+            "unreadable artifact coverage.json: "
+            "'utf-8' codec can't decode bytes in position 0-1: unexpected end of data",
+        ),
         ("present", None, None),
         ("absent", None, None),
         ("missing", None, "manifest file missing: coverage.json"),
@@ -1579,7 +1590,7 @@ def test_checker_optional_manifest_json_cli(
     tmp_path: Path,
     publication: bool,
     case: str,
-    content: str | None,
+    content: str | bytes | None,
     diagnostic: str | None,
 ) -> None:
     world = checked_world
@@ -1588,7 +1599,7 @@ def test_checker_optional_manifest_json_cli(
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     record = next(record for record in manifest["files"] if record["path"] == artifact.name)
     if content is not None:
-        artifact.write_text(content, encoding="utf-8")
+        artifact.write_bytes(content.encode("utf-8") if isinstance(content, str) else content)
         data = artifact.read_bytes()
         record.update(sha256=hashlib.sha256(data).hexdigest(), bytes=len(data))
     if case == "absent":
