@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import json
+import signal
 import time
+from itertools import pairwise
 from unittest.mock import Mock
 
 import pytest
@@ -504,27 +506,28 @@ def test_canonical_validator_must_accept_cache(monkeypatch, membership_cache, ca
 
 @pytest.mark.parametrize("stage", ["target_fetch", "cached_audit_validation", "live_audit_open_issues",
                                       "live_audit_root_2_of_2_issue_6943", "live_audit_root_1_of_2_issue_999"])
-def test_slow_stage_times_out_inside_dispatch_deadline(monkeypatch, membership_cache, capsys, stage):
-    budget = checker.time_budget
-    monkeypatch.setattr(checker, "time_budget", lambda: budget(0.05))
+def test_deadline_signal_reports_current_stage(monkeypatch, membership_cache, capsys, stage):
     monkeypatch.setattr(audit, "_repo_owner_name", lambda *a: tuple(REPO.split("/")))
     membership_cache.write_text(json.dumps(audit_report(body=[123])))
 
-    def slow(*a, **k):
-        time.sleep(10)
+    def expire(*a, **k):
+        # Exercise the installed production handler at this stage, independently
+        # of the time spent validating the cache before traversal begins.
+        signal.raise_signal(signal.SIGALRM)
+        pytest.fail("deadline signal did not interrupt the selected stage")
 
     if stage == "target_fetch":
-        monkeypatch.setattr(checker, "fetch_issue", slow)
+        monkeypatch.setattr(checker, "fetch_issue", expire)
     elif stage == "cached_audit_validation":
-        monkeypatch.setattr(audit, "validate_membership_report", slow)
+        monkeypatch.setattr(audit, "validate_membership_report", expire)
     else:
         membership_cache.write_text(json.dumps({**audit_report(), "generated_at": 0}))
-        monkeypatch.setattr(audit, "fetch_open_issues", slow if stage == "live_audit_open_issues" else lambda *a: [])
+        monkeypatch.setattr(audit, "fetch_open_issues", expire if stage == "live_audit_open_issues" else lambda *a: [])
 
         def fetch(cursors, *args):
             number = next(iter(cursors))
             if stage.endswith(f"issue_{number}"):
-                slow()
+                expire()
             nodes = [{"number": 999, "repository": {"nameWithOwner": REPO}}] if number == 5703 else []
             return {number: {"body": "#123", "subIssues": {"nodes": nodes}}}
 
@@ -537,6 +540,65 @@ def test_slow_stage_times_out_inside_dispatch_deadline(monkeypatch, membership_c
     if stage != "target_fetch":
         assert result["dor"]["status"] == "PASS"
         assert result["dod"]["status"] == "PASS"
+
+
+def test_real_deadline_during_cache_validation_prevents_live_audit(monkeypatch, membership_cache):
+    membership_cache.write_text(json.dumps(audit_report(body=[123])))
+    validator = Mock(side_effect=lambda *a, **k: signal.pause())
+    live = Mock(side_effect=AssertionError("expired cache validation reached live audit"))
+    monkeypatch.setattr(audit, "validate_membership_report", validator)
+    monkeypatch.setattr(checker, "live_audit", live)
+    previous = signal.getsignal(signal.SIGALRM)
+    started = time.monotonic()
+    with checker.time_budget(0.05):
+        result = checker.observe_membership({}, REPO, 123)
+    assert time.monotonic() - started < 1
+    assert result["errors"][0]["code"] == "membership_timeout_cached_audit_validation"
+    validator.assert_called_once()
+    live.assert_not_called()
+    assert signal.getsignal(signal.SIGALRM) == previous
+
+
+def test_membership_stages_share_one_real_deadline(monkeypatch, membership_cache, capsys):
+    membership_cache.write_text(json.dumps({**audit_report(), "generated_at": 0}))
+    set_timer = signal.setitimer
+    timer = Mock(wraps=set_timer)
+    monkeypatch.setattr(signal, "setitimer", timer)
+    validate = audit.validate_membership_report
+    remaining = []
+
+    def checkpoint():
+        remaining.append(signal.getitimer(signal.ITIMER_REAL)[0])
+        # One arm for target fetching, then one for all membership work.
+        assert [call.args for call in timer.call_args_list if call.args[1] > 0] == [
+            (signal.ITIMER_REAL, 60), (signal.ITIMER_REAL, 60),
+        ]
+
+    def parent(*a):
+        checkpoint()
+        return None
+
+    def validator(*a, **k):
+        checkpoint()
+        return validate(*a, **k)
+
+    def live(*a, **k):
+        checkpoint()
+        signal.raise_signal(signal.SIGALRM)
+        pytest.fail("deadline signal was swallowed")
+
+    monkeypatch.setattr(checker, "read_parent", parent)
+    monkeypatch.setattr(audit, "validate_membership_report", validator)
+    monkeypatch.setattr(checker, "live_audit", live)
+    previous = signal.getsignal(signal.SIGALRM)
+    assert checker.main(["--issue", "123", "--strict", "--json"]) == 1
+    result = json.loads(capsys.readouterr().out)
+    assert result["membership"]["errors"][0]["code"] == "membership_timeout_live_audit"
+    assert result["membership"]["cache_rejection"] == "membership_audit_stale"
+    assert len(remaining) == 3
+    assert all(0 < later <= earlier <= 60 for earlier, later in pairwise(remaining))
+    assert timer.call_count == 4  # Each of the two budgets restores its previous timer.
+    assert signal.getsignal(signal.SIGALRM) == previous
 
 
 @pytest.mark.parametrize("parents,expected", [
@@ -714,12 +776,18 @@ def test_unknown_repository_and_empty_registry(monkeypatch):
 
 
 def test_total_deadline_restores_handler():
-    import signal
-
     previous = signal.getsignal(signal.SIGALRM)
-    with pytest.raises(TimeoutError), checker.time_budget(0.01):
-        signal.pause()
-    assert signal.getsignal(signal.SIGALRM) == previous
+    old_timer = signal.setitimer(signal.ITIMER_REAL, 30, 0.5)
+    try:
+        with pytest.raises(TimeoutError), checker.time_budget(0.01):
+            signal.pause()
+        assert signal.getsignal(signal.SIGALRM) == previous
+        remaining, interval = signal.getitimer(signal.ITIMER_REAL)
+        assert 0 < remaining <= 30
+        assert interval == 0.5
+    finally:
+        signal.setitimer(signal.ITIMER_REAL, *old_timer)
+        signal.signal(signal.SIGALRM, previous)
 
 
 def test_comment_refetches_current_issue_and_paginates(monkeypatch, tmp_path):
