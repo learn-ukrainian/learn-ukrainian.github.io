@@ -1080,8 +1080,10 @@ class AgyAdapter:
 
         # The prompt must never occupy one argv element: Linux rejects an
         # argument above MAX_ARG_STRLEN before agy can start (#8992).
+        # Review deny rules require default approval behavior; override saved plan mode.
         cmd: list[str] = [
-            agy_bin, "--mode", "auto", "--input-format", "stream-json", "--output-format", "stream-json"
+            agy_bin, "--mode", "default" if review_route else "auto",
+            "--input-format", "stream-json", "--output-format", "stream-json"
         ]
 
         final_prompt = prompt

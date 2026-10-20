@@ -44,6 +44,27 @@ def test_noninteractive_command_selects_auto_mode(tmp_path: Path, adapter_home: 
     assert json.loads(plan.stdin_payload)["event"] == "user"
 
 
+@pytest.mark.parametrize("route", ["full", "isolated", "permission-only"])
+def test_review_command_preserves_read_only_deny_list(tmp_path: Path, adapter_home: Path, route: str) -> None:
+    home = tmp_path / "review-home"
+    settings = home / ".gemini" / "antigravity-cli" / "settings.json"
+    settings.parent.mkdir(parents=True)
+    tc = {"agy_home_override": str(home), "review_profile": "code"}
+    if route != "permission-only":
+        tc["review_access"] = route
+
+    plan = build(tmp_path, "read-only", tc)
+
+    assert "--sandbox" in plan.cmd
+    assert "--dangerously-skip-permissions" not in plan.cmd
+    modes = [plan.cmd[i + 1] for i, arg in enumerate(plan.cmd) if arg == "--mode"]
+    assert "auto" not in modes
+    assert modes == ["default"]
+    deny = json.loads(settings.read_text(encoding="utf-8"))["permissions"]["deny"]
+    assert "command(*)" in deny
+    assert "write_file(*)" in deny
+
+
 @pytest.mark.parametrize("scoped", [False, True], ids=["ordinary-home", "scoped-home"])
 @pytest.mark.parametrize("transport", ["http", "stdio"])
 def test_native_sources_config_selected_from_effective_home(
