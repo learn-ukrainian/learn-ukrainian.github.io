@@ -1096,16 +1096,30 @@ def _store_cache(db, scope, key, body, headers, at):
 
 
 def _maintain_cache(db, now, ttl, max_bytes):
-    """Prune response rows only, inside the caller's existing write transaction.
+    """Prune response rows only; acquire a write lock only when pruning is needed.
 
+    The partial expression index supplies age and byte counts without loading
+    response bodies or parsing headers on each access. Recheck after deletion
+    inside the write transaction before deciding whether to evict by size.
     Drop individually oversized rows before aggregate eviction so an unretainable
     response cannot evict smaller responses. A descending cumulative sum keeps
     the newest suffix, with scope/key breaking equal validation times stably.
     """
-    db.execute(
-        f"DELETE FROM cache WHERE ({_CACHE_RESPONSE}) AND (at<=? OR {_CACHE_BYTES}>?)",
-        (now - ttl, max_bytes),
-    )
+    oldest, largest, total = db.execute(
+        f"SELECT min(at),max({_CACHE_BYTES}),sum({_CACHE_BYTES}) FROM cache WHERE {_CACHE_RESPONSE}"
+    ).fetchone()
+    if oldest is None:
+        return
+    if oldest <= now - ttl or largest > max_bytes:
+        db.execute(
+            f"DELETE FROM cache WHERE ({_CACHE_RESPONSE}) AND (at<=? OR {_CACHE_BYTES}>?)",
+            (now - ttl, max_bytes),
+        )
+        total = db.execute(
+            f"SELECT coalesce(sum({_CACHE_BYTES}),0) FROM cache WHERE {_CACHE_RESPONSE}"
+        ).fetchone()[0]
+    if total <= max_bytes:
+        return
     db.execute(
         f"""WITH ranked AS (
             SELECT scope,key,SUM({_CACHE_BYTES}) OVER (
@@ -1336,11 +1350,18 @@ class GitHubClient:
                 db.execute(
                     "CREATE TABLE IF NOT EXISTS budget (scope TEXT, resource TEXT, remaining INTEGER, reset INTEGER, PRIMARY KEY(scope,resource))"
                 )
+                db.execute(
+                    f"CREATE INDEX IF NOT EXISTS cache_retention ON cache(at,scope,key,{_CACHE_BYTES}) "
+                    f"WHERE {_CACHE_RESPONSE}"
+                )
                 if self.cache_dir is not None:
                     db.execute(
                         "INSERT OR REPLACE INTO budget (scope, resource, remaining, reset) VALUES ('__probe__', '__probe__', 0, 0)"
                     )
                     db.execute("DELETE FROM budget WHERE scope='__probe__'")
+                    # The writability probe must not hold its lock during reads
+                    # or the maintenance check of an already bounded cache.
+                    db.commit()
                 break
             except (sqlite3.OperationalError, sqlite3.DatabaseError, OSError):
                 if self.cache_dir is not None:
@@ -1354,8 +1375,10 @@ class GitHubClient:
         try:
             with db:
                 _maintain_cache(db, self.clock(), self.cache_ttl_seconds, self.cache_max_bytes)
+                changes = db.total_changes
                 yield db
-                _maintain_cache(db, self.clock(), self.cache_ttl_seconds, self.cache_max_bytes)
+                if db.total_changes != changes:
+                    _maintain_cache(db, self.clock(), self.cache_ttl_seconds, self.cache_max_bytes)
         finally:
             if self.cache_dir is not None:
                 db.close()

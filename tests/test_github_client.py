@@ -6,6 +6,7 @@ import json
 import os
 import sqlite3
 import subprocess
+import sys
 import tempfile
 from pathlib import Path
 
@@ -2880,3 +2881,114 @@ def test_cache_maintenance_fallback_keeps_bounded_memory_and_budget(tmp_path, mo
     with store._db() as db:
         assert db.execute("SELECT count(*) FROM cache").fetchone() == (0,)
         assert db.execute("SELECT remaining,reset FROM budget").fetchall() == [(0, 2000)]
+
+
+def test_bounded_cache_reads_release_probe_lock_and_budget_writes_do_not_prune(tmp_path, monkeypatch):
+    store, _ = client(tmp_path, [response(1)])
+    store.request("GET", "user")
+    statements = []
+    connect = gh.sqlite3.connect
+
+    def traced(*args, **kwargs):
+        db = connect(*args, **kwargs)
+        db.set_trace_callback(statements.append)
+        return db
+
+    monkeypatch.setattr(gh.sqlite3, "connect", traced)
+    with store._db() as db:
+        assert not db.in_transaction
+        assert db.execute("SELECT body FROM cache").fetchall() == [(b"1",)]
+        with connect(tmp_path / "cache.sqlite3", timeout=0) as sibling:
+            gh._store_budget(sibling, store.scope, "core", 0, 2000, now=1000)
+        assert gh._admission(db, store.scope, ["core"], None, 1000) == ("core_below_landing_reserve", 2000)
+    with store._db() as db:
+        gh._store_budget(db, "other", "core", 5, 2000, now=1000)
+    assert not any("DELETE FROM cache" in sql for sql in statements)
+    assert store.cache_dir == tmp_path
+    with connect(tmp_path / "cache.sqlite3") as db:
+        assert db.execute("SELECT remaining FROM budget WHERE scope='other'").fetchone() == (5,)
+
+
+def test_cache_eviction_and_index_bytes_roll_back_with_failed_store(tmp_path):
+    store, _ = client(tmp_path, [], cache_max_bytes=6)
+    with store._db() as db:
+        gh._store_cache(db, "a", "old", b"1", {}, 999)
+        gh._store_budget(db, "a", "core", 10, 2000, now=1000)
+    with pytest.raises(RuntimeError, match="abort"):
+        with store._db() as db:
+            gh._store_cache(db, "b", "new", b'"ok"', {}, 1000)
+            gh._store_budget(db, "a", "core", 0, 2000, now=1000)
+            gh._maintain_cache(db, 1000, store.cache_ttl_seconds, store.cache_max_bytes)
+            assert db.execute("SELECT scope,key FROM cache").fetchall() == [("b", "new")]
+            raise RuntimeError("abort")
+    with store._db() as db:
+        assert db.execute("SELECT scope,key,body FROM cache").fetchall() == [("a", "old", b"1")]
+        assert db.execute("SELECT remaining FROM budget").fetchall() == [(10,)]
+        gh._store_cache(db, "c", "after", b"2", {}, 1000)
+    with store._db() as db:
+        assert db.execute("SELECT scope,key FROM cache ORDER BY scope").fetchall() == [("a", "old"), ("c", "after")]
+
+
+def test_near_cap_multiprocess_304s_keep_shared_cache_and_observe_persisted_budget(tmp_path):
+    store, _ = client(tmp_path, [], env={"GH_CONFIG_DIR": str(tmp_path / "no-config")})
+    with store._db() as db:
+        db.executemany(
+            "INSERT INTO cache VALUES(?,?,?,?,?)",
+            [(f"s{i % 7}", f"k{i}", b'{"x":"' + b"y" * 1990 + b'"}', '{"etag": "z"}', 900)
+             for i in range(31000)],
+        )
+        gh._store_budget(db, "sentinel", "core", 7, 2000, now=1000)
+    script = r'''
+import json, sys
+from pathlib import Path
+from scripts.common import github_client as gh
+directory, index = Path(sys.argv[1]), int(sys.argv[2])
+calls = []
+def transport(method, endpoint, headers, body, timeout):
+    status = 304 if "If-None-Match" in headers else 200
+    calls.append(status)
+    return gh.Response(status, {"etag": "fixture", "x-ratelimit-remaining": "4000",
+                              "x-ratelimit-reset": "2000"},
+                       b"" if status == 304 else json.dumps({"p": index, "pad": "q" * 20000}).encode())
+client = gh.GitHubClient(cache_dir=directory, env={"GH_CONFIG_DIR": str(directory / "no-config")},
+                         clock=lambda: 1000, transport=transport)
+for i in range(15):
+    result = client.request("GET", f"repos/o/r/issues/{index}-{i % 5}")
+    assert result.error is None and result.value["p"] == index, result
+print(json.dumps({"disk": client.cache_dir is not None, "statuses": calls}), flush=True)
+assert sys.stdin.readline() == "budget stored\n"
+stale = client.request("GET", f"repos/o/r/issues/{index}-0", allow_stale=True)
+fresh = client.request("GET", f"repos/o/r/issues/{index}-0", fresh=True)
+assert stale.stale and stale.value["p"] == index, stale
+assert fresh.error == "github_rate_limited" and fresh.reset_at == 2000, fresh
+assert len(calls) == 15, calls
+print(json.dumps({"disk": client.cache_dir is not None, "shared_budget_observed": True}), flush=True)
+'''
+    processes = [subprocess.Popen(
+        [sys.executable, "-c", script, str(tmp_path), str(index)],
+        stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
+    ) for index in range(8)]
+    try:
+        for process in processes:
+            line = process.stdout.readline()
+            assert line, process.stderr.read()
+            assert json.loads(line) == {"disk": True, "statuses": [200] * 5 + [304] * 10}
+        with sqlite3.connect(tmp_path / "cache.sqlite3") as db:
+            assert db.execute("SELECT remaining FROM budget WHERE scope=?", (store.scope,)).fetchone() == (4000,)
+            gh._store_budget(db, store.scope, "core", 0, 2000, now=1000)
+        for process in processes:
+            output, error = process.communicate("budget stored\n", timeout=30)
+            assert process.returncode == 0, error
+            assert json.loads(output) == {"disk": True, "shared_budget_observed": True}
+        with sqlite3.connect(tmp_path / "cache.sqlite3") as db:
+            assert db.execute("SELECT remaining,reset FROM budget WHERE scope='sentinel'").fetchone() == (7, 2000)
+            total, count = db.execute(
+                "SELECT sum(length(CAST(body AS BLOB))+length(CAST(headers AS BLOB))),count(*) FROM cache"
+            ).fetchone()
+            assert 62_000_000 < total <= 67_108_864
+            assert count == 31040
+    finally:
+        for process in processes:
+            if process.poll() is None:
+                process.terminate()
+            process.communicate(timeout=30)
