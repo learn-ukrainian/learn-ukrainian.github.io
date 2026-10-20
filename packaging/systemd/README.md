@@ -90,6 +90,40 @@ Available service templates:
 - `learn-ukrainian-work.service`: Work projection adapter.
 - `learn-ukrainian-loopback.target`: Target grouping loopback services.
 
+### Word-card release drop-in (`learn-ukrainian-sources.service.d/word-cards.conf`)
+
+Sets `LU_WORD_CARDS_DIR` for the Sources MCP `word_card` tool (#11084). The
+variable must be an absolute local directory holding `cards/*.json` plus the
+optional `ledger.json` and `build-manifest.json`; unset means `not_configured`,
+and relative, empty or `file:` values are refused. The drop-in points at
+`data/datasets/word-cards/releases/current-assembly`, a relative symlink to the
+current versioned assembly directory (gitignored). `install_data_volume_dropins.py`
+only installs `data-volume.conf`, so this file is installed by hand.
+
+Install, from the primary checkout:
+
+```bash
+repo_root=$(pwd -P)
+unit_dir="$HOME/.config/systemd/user/learn-ukrainian-sources.service.d"
+mkdir -p "$unit_dir"
+sed -e "s|@REPO_ROOT@|$repo_root|g" \
+  packaging/systemd/dropins/learn-ukrainian-sources.service.d/word-cards.conf \
+  > "$unit_dir/word-cards.conf"
+systemctl --user daemon-reload
+systemctl --user restart learn-ukrainian-sources.service
+systemctl --user show -p Environment learn-ukrainian-sources.service
+```
+
+Roll a new card version: build the new versioned directory next to the old one
+under `data/datasets/word-cards/releases/` (directories `0555`, files `0444`),
+then flip the pointer and restart. The relative link keeps the drop-in unchanged:
+
+```bash
+cd data/datasets/word-cards/releases
+ln -sfn <new-version-dir> current-assembly
+systemctl --user restart learn-ukrainian-sources.service
+```
+
 ## Scheduled Maintenance Timers
 
 User timers run background reconciliation, garbage collection, and state

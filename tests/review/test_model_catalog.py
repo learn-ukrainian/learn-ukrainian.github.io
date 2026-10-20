@@ -393,7 +393,34 @@ def approved_driver_brief_baseline(baseline):
     return {**baseline, "catalog": catalog, "dispatch": dispatch}
 
 
-APPROVED_BASELINE = approved_driver_brief_baseline(GROK_LANGUAGE_BASELINE)
+WORD_CARD_TOOL_PATH = CAPACITY_FIXTURE / "word-card-tool-11084.json"
+# Codex and Codex Desktop read-only rows, which grant every read-only Sources tool.
+WORD_CARD_TOOL_ROWS = [0, 4]
+
+
+def approved_word_card_tool_baseline(baseline):
+    """Apply #11084's read-only ``word_card`` Sources grant to the Codex worker argv.
+
+    The two read-only Codex rows derive their Sources ``enabled_tools`` and
+    approval map from the server's tool declarations, so each gains exactly
+    ``word_card``. Every other row, field and surface stays.
+    """
+    assert hashlib.sha256(WORD_CARD_TOOL_PATH.read_bytes()).hexdigest() == (
+        "d0a1a006af2440f0d823508c8d59228cd7fda6a0dc51eaa894fecf8a47598fb4"
+    )
+    adapters = deepcopy(baseline["adapters"])
+    for replacement in json.loads(WORD_CARD_TOOL_PATH.read_bytes())["adapter_cmd_replacements"]:
+        before, after = replacement["before"], replacement["after"]
+        assert replacement["rows"] == WORD_CARD_TOOL_ROWS
+        for index in replacement["rows"]:
+            cmd = adapters[index]["value"]["cmd"]
+            assert cmd.count(before) == 1
+            cmd[cmd.index(before)] = after
+    return {**baseline, "adapters": adapters}
+
+
+DRIVER_BRIEF_BASELINE = approved_driver_brief_baseline(GROK_LANGUAGE_BASELINE)
+APPROVED_BASELINE = approved_word_card_tool_baseline(DRIVER_BRIEF_BASELINE)
 APPROVED_INPUTS = {**GEMINI_INPUTS, **SEATS_OVERLAY["inputs"], **ARGON_OVERLAY["inputs"]}
 
 
@@ -431,6 +458,49 @@ def test_grok_language_overlay_records_only_the_two_field_delta():
         "no excluded-writer recommendation",
     ):
         assert clause in policy, clause
+
+
+@pytest.mark.parametrize("configuration", ("host-cli", "no-cli"))
+def test_word_card_tool_overlay_adds_only_the_read_only_grant(configuration):
+    """#11084 adds ``word_card`` to the two Codex read-only Sources grants and nothing else."""
+    from scripts.agent_runtime.sources_read_only import sources_tool_sets
+
+    path = FIXTURE / ("baseline.json.gz" if configuration == "host-cli" else "no-cli/baseline.json.gz")
+    before = json.loads(gzip.decompress(path.read_bytes()))
+    original = deepcopy(before)
+    after = approved_word_card_tool_baseline(before)
+    assert before == original
+    assert {k: v for k, v in after.items() if k != "adapters"} == {k: v for k, v in before.items() if k != "adapters"}
+    changed = [i for i, (old, new) in enumerate(zip(before["adapters"], after["adapters"], strict=True)) if old != new]
+    assert changed == WORD_CARD_TOOL_ROWS
+    read_only = list(sources_tool_sets()[0])
+    assert "word_card" in read_only
+    for index in changed:
+        assert INPUTS["adapters"][index] == {
+            "agent": ("codex", "codex-desktop")[changed.index(index)],
+            "isolation": False,
+            "mode": "read-only",
+        }
+        old, new = before["adapters"][index], after["adapters"][index]
+        assert {k: v for k, v in old.items() if k != "value"} == {k: v for k, v in new.items() if k != "value"}
+        assert {k: v for k, v in old["value"].items() if k != "cmd"} == {
+            k: v for k, v in new["value"].items() if k != "cmd"
+        }
+        old_cmd, new_cmd = old["value"]["cmd"], new["value"]["cmd"]
+        tokens = [k for k, (a, b) in enumerate(zip(old_cmd, new_cmd, strict=True)) if a != b]
+        assert [old_cmd[k].split("=", 1)[0] for k in tokens] == [
+            "mcp_servers.sources.enabled_tools",
+            "mcp_servers.sources.tools",
+        ]
+        enabled, approvals = (new_cmd[k].split("=", 1)[1] for k in tokens)
+        assert json.loads(enabled) == read_only
+        assert json.loads(enabled) == sorted([*json.loads(old_cmd[tokens[0]].split("=", 1)[1]), "word_card"])
+        assert approvals == "{" + ",".join(f'{name}={{approval_mode="approve"}}' for name in read_only) + "}"
+
+
+def test_word_card_tool_overlay_refuses_drifted_argv():
+    with pytest.raises(AssertionError):
+        approved_word_card_tool_baseline(APPROVED_BASELINE)
 
 
 def test_grok_ukrainian_role_confers_no_ukrainian_review_route():
@@ -1375,7 +1445,7 @@ def test_no_cli_capture_equals_separate_frozen_surface(tmp_path):
         assert hashlib.sha256((output / name).read_bytes()).hexdigest() == digest
     actual = json.loads(gzip.decompress((output / "baseline.json.gz").read_bytes()))
     original = json.loads(gzip.decompress((expected / "baseline.json.gz").read_bytes()))
-    assert actual == approved_driver_brief_baseline(approved_grok_language_seat_baseline(
+    assert actual == approved_word_card_tool_baseline(approved_driver_brief_baseline(approved_grok_language_seat_baseline(
         approved_argon_trial_baseline(
             approved_hook_failure_baseline(
                 approved_hermes_effort_baseline(
@@ -1400,7 +1470,7 @@ def test_no_cli_capture_equals_separate_frozen_surface(tmp_path):
             ),
             "no-cli",
         )
-    ))
+    )))
     assert len(actual["launchers"]) == 70
     errors = [row.get("error", "") for row in actual["adapters"]]
     assert any("grok" in error and "PATH" in error for error in errors)
@@ -1442,7 +1512,7 @@ def test_extended_capture_denominator_and_current_contract():
 
 
 def test_driver_brief_capture_preserves_every_unrelated_value():
-    before, after = GROK_LANGUAGE_BASELINE, APPROVED_BASELINE
+    before, after = GROK_LANGUAGE_BASELINE, DRIVER_BRIEF_BASELINE
     for surface in set(before) - {"catalog", "dispatch"}:
         assert before[surface] == after[surface]
     old_models, new_models = before["catalog"]["models"], after["catalog"]["models"]

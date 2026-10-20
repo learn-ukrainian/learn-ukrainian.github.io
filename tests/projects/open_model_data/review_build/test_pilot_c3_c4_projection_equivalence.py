@@ -94,7 +94,7 @@ def pilot():
         assert receipt == foundation.load(batch.ROOT / batch.RECEIPT), "Rebuilt pilot differs from Batch 1"
         assert report["passed"]
         assert len(result["cards"]) == receipt["card_count"] == 150
-        assert receipt["locator_count"] == 2834
+        assert receipt["locator_count"] == 2822
         with SnapshotReader({STORE: scratch / "pilot-wp3-extract.sqlite"}) as reader:
             ctx = ComponentContext(reader, {})
             yield inputs, result, receipt, ctx

@@ -30,6 +30,7 @@ from scripts.atlas.word_card_resolver import _project, aid, card_version
 from scripts.common.git_context import sanitized_git_env
 from scripts.common.scratch import ensure_scratch_root
 from scripts.guardrails import worktree_containment as containment
+from scripts.storage.topology import StoreBinding, resolve_store
 from tests.test_word_card_sources import (
     ENTRY_DDL,
     FAILURES_DDL,
@@ -565,6 +566,15 @@ def test_assertion_without_registry_sense_evidence_is_refused(inputs):
 
 # --- consumed inputs and derived-form authentication (AC-P01) ---------------------------------------------
 
+
+def test_unconsumed_database_file_changes_do_not_change_card_content(inputs, result, monkeypatch):
+    monkeypatch.setitem(inputs.hashes, "sources_file", "0" * 64)
+    monkeypatch.setitem(inputs.hashes, "atlas_file", "1" * 64)
+    rebuilt = wa.build(inputs)
+    assert rebuilt["build_id"] == result["build_id"]
+    assert foundation.digest(rebuilt["cards"]) == foundation.digest(result["cards"])
+    assert verify.verify(inputs, rebuilt, result)["passed"] is True
+
 def test_mutated_form_with_zeroed_fingerprint_is_refused_and_changes_identity(tmp_path):
     clean = build_world()
     baseline = wa.build(make_inputs(clean, tmp_path / "a"))
@@ -1044,6 +1054,102 @@ def test_allocator_label_helpers_are_the_rules_assembly_reuses():
     assert is_proper_name("прізвище", "Шуба", "") is True
     assert is_proper_name("іменник жіночого роду", "Ріка", "(річка в Україні)") is True
     assert is_proper_name("іменник жіночого роду", "ріка", "(річка в Україні)") is False
+    proper = [{"tags": "noun:prop:geo"}]
+    common = [{"tags": "noun:inanim:f"}]
+    assert is_proper_name(LABEL_F, "Ета", "(острів)", proper) is True
+    assert is_proper_name(LABEL_F, "Ета", "(спільне значення)", proper, common) is False
+    assert is_proper_name(LABEL_F, "Ета", "", proper, common) is True
+    assert is_proper_name(LABEL_F, "Ета", "", [], common) is True
+    assert is_proper_name(LABEL_F, "Ета", "", common) is False
+    assert is_proper_name(LABEL_F, "Ета", "") is False
+
+
+def test_allocator_keeps_vesum_proper_head_separate_from_lowercase_common_word():
+    w = build_world()
+    try:
+        w.vesum.row_factory = sqlite3.Row
+        w.vesum_form(201, "Ета", "Ета", "noun:inanim:f:v_naz:prop:geo")
+        unit = copy.deepcopy(w.units[6])
+        anchor = copy.deepcopy(next(r for r in w.records if r["locator"] == unit["anchor_locator"]))
+        anchor["raw_row"]["grammatical_label"] = LABEL_F
+        # The same exact-case spelling also has a common analysis in the base world.
+        w.vesum.execute("DELETE FROM forms_all WHERE entry_id=107")
+        kind, _key, proof = allocator.creation(unit, {anchor["locator"]: anchor}, w.vesum)
+        assert kind == "proper_name"
+        assert {r["entry_id"] for r in proof} == {201}
+    finally:
+        w.sources.close()
+        w.vesum.close()
+        w.raw.close()
+
+
+@pytest.mark.parametrize("word,pos,guide,proper,expected", [
+    ("ета", "іменник", "", True, False),
+    ("Ета", "іменник", "", True, False),
+    ("Ета", "іменник", "(місто)", True, True),
+    ("ета", "власна назва", "", True, False),
+    ("Ета", "власна назва", "", True, True),
+    ("Ета", "власна назва", "", False, False),
+    ("ета", "іменник", "", False, True),
+])
+def test_puls_requires_source_evidence_for_the_same_identity(word, pos, guide, proper, expected):
+    assert wa.puls_matches_identity({"word": word, "pos": pos, "guideword": guide}, "Ета", proper) is expected
+
+
+def test_puls_can_scope_a_proper_abbreviation_without_admitting_its_lowercase_homonym():
+    row = {"word": "АБВ", "pos": "іменник", "guideword": ""}
+    assert wa.puls_matches_identity(row, "АБВ", True, "абревіатура") is True
+    assert wa.puls_matches_identity(row, "АБВ", True, LABEL_F) is False
+    row["word"] = "абв"
+    assert wa.puls_matches_identity(row, "АБВ", True, "абревіатура") is False
+
+
+def test_proper_name_does_not_receive_common_cefr_or_senses(inputs, monkeypatch):
+    proper_unit = unit_by_head(inputs, f"Е{A}та")
+    common_unit = unit_by_head(inputs, f"а{A}льфа")
+    puls = next(k for k in common_unit["source_record_keys"] if inputs.records[k]["source_id"] == "puls")
+    monkeypatch.setitem(proper_unit, "source_record_keys", [*proper_unit["source_record_keys"], puls])
+    result = wa.build(inputs)
+    proper = card_of(result, "Ета")
+    assert not assertions(proper, "cefr")
+    assert not [a for a in proper["assertions"] if a["subject"]["kind"] == "sense"]
+    assert proper["card_id"] not in wa.learner_cards(result["cards"])
+    assert result["ledger"].cards[proper["card_id"]]["fields"]["cefr"]["disposition"] == "held"
+    assert assertions(card_of(result, "альфа"), "cefr")
+    assertion = {"source_id": "puls", "field": "cefr", "subject": {"kind": "card", "id": proper["card_id"]}}
+    assert verify.source_routes(inputs, proper_unit, inputs.entry_by_unit[proper_unit["unit_key"]], assertion) == []
+
+
+def test_learner_release_excludes_unscoped_names_and_accounts_for_every_identity(result, host_scratch):
+    output = host_scratch / "learner-release"
+    report = wa.learner_accounting(result)
+    wa.write_output(output, result, report)
+    published = {p.stem: foundation.load(p) for p in (output / "cards").glob("*.json")}
+    assert len(published) == report["cards"] == 8
+    assert report["allocated_cards"] == 9 and report["excluded_cards"] == 1
+    assert all(c["card_kind"] != "proper_name" for c in published.values())
+    assert all(e["id"] in published for c in published.values() for link in c["links"] for e in link["endpoints"])
+    assert all(c["build"]["card_version"] == card_version(_project(c)) for c in published.values())
+    ledger = foundation.load(output / "ledger.json")
+    assert set(published).isdisjoint(ledger["excluded_cards"])
+    assert set(published) | set(ledger["excluded_cards"]) == set(ledger["cards"]) == set(result["cards"])
+    assert report["field_dispositions_by_field"]["grammatical_label"] == {"asserted": 6}
+
+
+def test_proper_name_needs_active_unambiguous_source_scope_to_enter_learner_set(result):
+    name = copy.deepcopy(card_of(result, "Ета"))
+    card_id = name["card_id"]
+    scope = {"source_id": "puls", "field": "cefr", "status": "active", "mapping": {"confidence": "medium"}}
+    name["assertions"].append(scope)
+    assert set(wa.learner_cards({card_id: name})) == {card_id}
+    scope["mapping"]["ambiguous"] = True
+    assert wa.learner_cards({card_id: name}) == {}
+    scope["mapping"]["ambiguous"] = False
+    scope["status"] = "suppressed"
+    assert wa.learner_cards({card_id: name}) == {}
+    scope["status"] = "active"
+    scope["review"] = {"status": "rejected"}
+    assert wa.learner_cards({card_id: name}) == {}
 
 
 # --- host-only output containment (AC-P06) -------------------------------------------------------------------
@@ -1153,7 +1259,7 @@ def test_cli_rehearse_and_build_writes_are_guarded(monkeypatch, tmp_path):
     assert calls and tmp_path / "rehearse" / "takedown-rehearsal.json" in calls[0]
     calls.clear()
     result = {"build_id": "b", "ledger": wa.Ledger(), "block": {"inputs": {}, "rules_version": "r"}, "takedown": [],
-              "cards": {"wc_x": {}}}
+              "cards": {"wc_x": {"card_kind": "lexeme", "links": []}}}
     wa.write_output(tmp_path / "build", result, {})
     assert tmp_path / "build" / "cards" / "wc_x.json" in calls[0]
 
@@ -1177,34 +1283,53 @@ def test_this_repository_refuses_tracked_destinations(host_scratch):
     wa.require_host_only([root / "batch_state" / "reports" / "probe" / "cards" / "x.json"])  # ignored here: fine
 
 
-def host_stores_available():
+def host_store_paths():
     try:
-        return all(wa.store_path(name, None).exists() for name in ("sources", "vesum", "atlas")) and \
-            wa.raw_cache_path(wa.store_path("sources", None)).exists()
+        primary = containment.resolve_main_root(ROOT)
+        bindings = {name: resolve_store(name, repository_root=primary) for name in ("sources", "vesum")}
+        if not all(isinstance(binding, StoreBinding) and binding.path.is_file() for binding in bindings.values()):
+            return None
+        paths = {name: binding.path for name, binding in bindings.items()}
+        paths["atlas"] = wa.store_path("atlas", None)
+        return paths if paths["atlas"].is_file() and wa.raw_cache_path(paths["sources"]).is_file() else None
     except foundation.Refusal:
-        return False
+        return None
 
 
-@pytest.mark.skipif(not host_stores_available(), reason="held sources are host-only")
 @pytest.mark.usefixtures("committed_pilot")  # the real pilot under the production allocation pin
 def test_host_pilot_builds_and_verifies_end_to_end(host_scratch, capsys, monkeypatch):
     """Host-only product proof through the real CLI: the frozen pilot assembles over the canonical read-only
     stores, every locator resolves, derived forms authenticate, relation units are conserved, rebuild is identical."""
+    paths = host_store_paths()
+    if paths is None:
+        pytest.skip("held sources are host-only")
     root = Path(wa.__file__).resolve().parents[2]
     monkeypatch.chdir(root)
     monkeypatch.delenv("LU_ULIF_RAW_CACHE", raising=False)
-    stores = [arg for name in ("sources", "vesum", "atlas") for arg in (f"--{name}-db", str(wa.store_path(name, None)))]
+    stores = [arg for name in ("sources", "vesum", "atlas")
+              for arg in (f"--{name}-db", str(paths[name]))]
     inputs = ["--manifest", "registry/atlas/pilot/pilot-v1.json", "--registry", "registry/atlas/identity/registry.json",
               "--register", "docs/sources/permissions-register.yaml", *stores]
     args = [*inputs, "--output", str(host_scratch / "pilot")]
     assert wa.main(["build", *args]) == 0
     built = json.loads(capsys.readouterr().out)
-    assert built["cards"] == 150 and built["relation_units"]["total"] == 158
+    assert built["cards"] == 138 and built["allocated_cards"] == 150 and built["excluded_cards"] == 12
+    assert built["relation_units"]["total"] == 158
+    published = [foundation.load(p) for p in (host_scratch / "pilot/cards").glob("*.json")]
+    assert len(published) == 138
+    names = [c for c in published if c["card_kind"] == "proper_name"]
+    assert len(names) == 1 and names[0]["key_at_creation"]["spelling"] == "ЮНЕСКО"
+    assert [(a["source_id"], a["value"]) for a in assertions(names[0], "cefr")] == [("puls", "B1")]
+    # Source-backed capitalisation of a common learner word is retained.
+    assert any(c["key_at_creation"]["spelling"] == "Батьківщина" and c["card_kind"] == "lexeme" for c in published)
+    assert [c["key_at_creation"]["spelling"] for c in published
+            if c["key_at_creation"]["spelling"].casefold() == "мама"] == ["мама"]
     assert built["relation_units"]["on_card_subject"] == 0 and built["heldout_isolation"] == "unverified"
     assert wa.main(["verify", *args]) == 0
     report = json.loads(capsys.readouterr().out)
     assert report["passed"] is True
     assert report["conservation"]["cards"] == 150
+    assert report["on_disk"]["cards"] == 138
     assert report["relation_units"]["units"] == 158
     assert report["source_records"]["frozen"] == report["source_records"]["cited"] + report["source_records"]["held"]
     # A protected destination is refused before anything is written.

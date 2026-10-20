@@ -189,3 +189,55 @@ def test_builder_quarantines_markup_dependent_items_without_overlay(tmp_path: Pa
     assert stem_requires_markup(
         "Однаковий звук позначають букви, виділені в кожному слові рядка",
     )
+
+
+def test_fill_report_distinguishes_blocked_candidates_from_predicate_misses(tmp_path: Path) -> None:
+    import subprocess
+    import sys
+
+    database = _database(tmp_path / "sources.db")
+    overlay = tmp_path / "missing-overlay.json"
+    with sqlite3.connect(database) as connection:
+        connection.execute(
+            "UPDATE zno_tasks SET topic_tag = (SELECT topic_tag FROM zno_tasks WHERE id = 8), "
+            "topic_norm = 'morphological_norm' WHERE id = 13"
+        )
+    _, _, blocked_only = build_zno_shards(database, markup_overlay_path=overlay)
+    assert blocked_only["predicateMissByTopicNorm"] == {}
+    assert [entry for entry in blocked_only["blocked"] if entry["znoTaskId"] == "zno:13"] == [
+        {"deck": "morphological-norm", "znoTaskId": "zno:13", "reason": "broken_missing_markup"},
+        {"deck": "morphology", "znoTaskId": "zno:13", "reason": "broken_missing_markup"},
+    ]
+    assert blocked_only["unparsed"] == [
+        {"znoTaskId": "zno:4", "reason": "invalid_options"},
+        {"znoTaskId": "zno:7", "reason": "invalid_options"},
+    ]
+
+    with sqlite3.connect(database) as connection:
+        template = list(connection.execute("SELECT * FROM zno_tasks WHERE id = 8").fetchone())
+        for task_id, topic_norm, task_format in (
+            (14, "", "single-choice"),
+            (15, " MixedCase ", "single-choice"),
+            (16, "mixedcase", "single-choice"),
+            (17, "", "own-statement"),
+        ):
+            row = template.copy()
+            row[0], row[6], row[7], row[10], row[11] = task_id, task_format, "unmatched fixture", "", topic_norm
+            connection.execute("INSERT INTO zno_tasks VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", row)
+    _, _, expected_fill = build_zno_shards(database, markup_overlay_path=overlay)
+    assert expected_fill["predicateMissByTopicNorm"] == {"MixedCase": 1, "empty": 1, "mixedcase": 1}
+    assert expected_fill["blocked"] == blocked_only["blocked"]
+    assert expected_fill["unparsed"] == blocked_only["unparsed"]
+
+    fill_path = tmp_path / "fill.json"
+    process = subprocess.run(
+        [
+            sys.executable, "-m", "scripts.practice_deck.zno", "--db", str(database),
+            "--out-dir", str(tmp_path / "shards"), "--fill-residual", str(fill_path),
+            "--markup-overlay", str(overlay),
+        ],
+        cwd=Path(__file__).resolve().parents[2], capture_output=True, text=True, check=False, timeout=30,
+    )
+    assert process.returncode == 0, process.stderr
+    assert process.stderr == ""
+    assert json.loads(fill_path.read_text(encoding="utf-8")) == expected_fill
