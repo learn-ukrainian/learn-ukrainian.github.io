@@ -468,3 +468,153 @@ def test_public_domain_is_not_confused_with_private_suffix(tmp_path, recorded_tr
     attempt = record(parse(plan, "read_url"))
     assert attempt["permission_target"] == "url:" + host.lower().removesuffix(".")
     assert attempt["permission_target_unknown_reason"] is None
+
+
+# AGY 1.4.3 result slots, from live read-only code-review probes (#10334);
+# paths replaced with fixture paths. Rule matches return the refusal to the
+# model and the turn continues; only the unmatched (prompting) read ends it.
+_REVIEW_PROFILE = "code-review-command-denial-v1"
+
+
+def _stamped(text):
+    return f"Created At: 2026-10-20T07:56:32Z\nCompleted At: 2026-10-20T07:56:33Z\n{text}"
+
+
+def _rule_denial(kind, target, rule="user-configured deny"):
+    return _stamped(
+        f'Encountered error in step execution: permission check failed for {kind} "{target}": '
+        f"Permission denied for {kind}({target}). Matches {rule} rule."
+    )
+
+
+def _headless_read_denial(target):
+    return _stamped(
+        f'Encountered error in step execution: permission check failed for read_file "{target}": '
+        f"user denied permission for read_file({target})\n"
+        "Do not attempt to circumvent this denial by rephrasing the command, using alternative tools/scripts "
+        "(e.g. python, sh, curl), or accessing the same target resource. Proceed without performing this action."
+    )
+
+
+def _planner(*calls, content=None):
+    event = {"source": "MODEL", "type": "PLANNER_RESPONSE", "status": "DONE"}
+    if calls:
+        event["tool_calls"] = [{"name": name, "args": {key: json.dumps(value)}} for name, key, value in calls]
+    if content is not None:
+        event["content"] = content
+    return event
+
+
+def _result(status, content):
+    return {"source": "MODEL", "type": "GENERIC", "status": status, "content": content}
+
+
+def review_plan(tmp_path, events, *, profile=_REVIEW_PROFILE):
+    lines = [json.dumps({"type": "USER_INPUT", "status": "DONE", "content": "Public fixture review."})]
+    plan = _background_plan(tmp_path, _FINISHED_CONVERSATION_ID, lines + [json.dumps(event) for event in events])
+    workspace = tmp_path / "repo" / ".worktrees" / "dispatch" / "agy" / "fixture"
+    workspace.mkdir(parents=True, exist_ok=True)
+    return replace(plan, cwd=workspace, metadata={**plan.metadata, "agy_permission_profile_id": profile})
+
+
+def _git_metadata_chain(tmp_path):
+    """git refused by command(*), then the worktree pointer, then primary Git metadata."""
+    workspace = tmp_path / "repo" / ".worktrees" / "dispatch" / "agy" / "fixture"
+    git_dir = tmp_path / "repo" / ".git" / "worktrees" / "fixture"
+    return [
+        _planner(("run_command", "CommandLine", "git log -n 2 --oneline")),
+        _result("ERROR", _rule_denial("unsandboxed", "git log -n 2 --oneline")),
+        _planner(("read_file", "Path", str(workspace / ".git"))),
+        _result("DONE", _stamped(f"Showing lines 1-1 of 1\n1: gitdir: {git_dir}")),
+        _planner(("read_file", "Path", str(git_dir / "HEAD"))),
+    ]
+
+
+def test_review_ended_by_outside_git_metadata_read_names_the_read(tmp_path):
+    plan = review_plan(tmp_path, _git_metadata_chain(tmp_path))
+    result = parse(plan)
+    attempt = record(result)
+    assert attempt["permission_kind"] == "read_file"
+    assert attempt["denied_tool_name"] == "read_file"
+    assert attempt["permission_target"] == "outside:repo-root"
+    assert attempt["permission_target_unknown_reason"] is None
+    assert attempt["permission_profile_id"] == _REVIEW_PROFILE
+    # The refused command is counted and was never executed; it did not end the run.
+    assert attempt["denied_command_count"] == 1
+    assert attempt["executed_command_count"] == 0
+    reason, details = result.stderr_excerpt.split("\n", 1)
+    assert reason == agy.AGY_HEADLESS_PERMISSION_DENIED
+    assert json.loads(details) == {
+        "permission_kind": "read_file",
+        "permission_target": "outside:repo-root",
+        "driver_hint": agy.AGY_DRIVER_HINT_INLINE_REVIEW_INPUTS,
+    }
+    assert str(tmp_path) not in json.dumps(attempt) + result.stderr_excerpt
+
+
+def test_review_headless_read_result_slot_is_the_trigger_and_is_counted(tmp_path, monkeypatch):
+    home = tmp_path / "private-user-home"
+    monkeypatch.setattr(agy.Path, "home", lambda: home)
+    workspace = tmp_path / "repo" / ".worktrees" / "dispatch" / "agy" / "fixture"
+    target = home / "private-name" / "conventions.md"
+    events = [
+        _planner(("read_file", "Path", str(workspace / "calc.py")), ("read_file", "Path", str(target))),
+        _result("DONE", _stamped("Showing lines 1-1 of 1\n1: def average(values): ...")),
+        _result("ERROR", _headless_read_denial(target)),
+    ]
+    result = parse(review_plan(tmp_path, events))
+    attempt = record(result)
+    assert attempt["denied_tool_name"] == "read_file"
+    assert attempt["permission_target"] == "outside:home"
+    assert attempt["denied_file_read_count"] == 1
+    assert json.loads(result.stderr_excerpt.split("\n", 1)[1])["driver_hint"] == "inline_review_inputs"
+    assert "private-" not in json.dumps(attempt) + result.stderr_excerpt
+
+
+@pytest.mark.parametrize(
+    "rule", ["user-configured deny", "hardcoded system protection boundary"], ids=["deny-rule", "hardcoded"]
+)
+def test_rule_matched_read_refusal_is_counted_but_never_the_trigger(tmp_path, rule):
+    events = [
+        _planner(("read_file", "Path", "settings.json")),
+        _result("ERROR", _rule_denial("read_file", "settings.json", rule)),
+    ]
+    attempt = record(parse(review_plan(tmp_path, events)))
+    assert attempt["denied_file_read_count"] == 1
+    assert attempt["denied_tool_name"] is None
+    assert attempt["permission_target"] == "unknown"
+    assert attempt["permission_target_unknown_reason"] == "trigger_missing"
+
+
+@pytest.mark.parametrize("kind", ["read_file", "mcp", "command"])
+@pytest.mark.parametrize("profile", [None, _REVIEW_PROFILE])
+def test_inline_inputs_hint_only_for_review_read_refusals(tmp_path, kind, profile):
+    plan = review_plan(tmp_path, _git_metadata_chain(tmp_path), profile=profile)
+    result = parse(plan, kind)
+    details = json.loads(result.stderr_excerpt.split("\n", 1)[1])
+    assert details["permission_kind"] == kind
+    if kind == "read_file" and profile:
+        assert details["driver_hint"] == agy.AGY_DRIVER_HINT_INLINE_REVIEW_INPUTS
+    else:
+        assert "driver_hint" not in details
+
+
+def test_review_with_refused_commands_completes_and_never_runs_them(tmp_path):
+    reply = "calc.py adds 1 to every mean.\nVERDICT: REQUEST_CHANGES"
+    workspace = tmp_path / "repo" / ".worktrees" / "dispatch" / "agy" / "fixture"
+    events = [
+        _planner(("run_command", "CommandLine", "git log -1")),
+        _result("ERROR", _rule_denial("unsandboxed", "git log -1")),
+        _planner(("run_command", "CommandLine", "pytest -q")),
+        _result("ERROR", _rule_denial("unsandboxed", "pytest -q")),
+        _planner(("read_file", "Path", str(workspace / "calc.py"))),
+        _result("DONE", _stamped("Showing lines 1-2 of 2\n1: def average(values):")),
+        _planner(content=reply),
+    ]
+    result = agy.AgyAdapter().parse_response(
+        stdout=reply, stderr="", returncode=0, output_file=None, plan=review_plan(tmp_path, events)
+    )
+    assert result.ok and result.response == reply and result.failure_code is None
+    assert result.agy_attempt.denied_command_count == 2
+    assert result.agy_attempt.executed_command_count == 0
+    assert result.agy_attempt.permission_kind is None
