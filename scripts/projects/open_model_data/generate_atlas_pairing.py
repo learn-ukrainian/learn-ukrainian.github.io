@@ -504,14 +504,13 @@ def write_atomic(path: Path, payload: bytes) -> None:
     fd = -1
     created = False
     try:
-        fd = os.open(temporary, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o644)
+        fd = os.open(temporary, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
         created = True
         with os.fdopen(fd, "wb") as handle:
             fd = -1
             handle.write(payload)
             handle.flush()
             os.fsync(handle.fileno())
-        os.chmod(temporary, 0o644)
         os.replace(temporary, path)
     except Exception as exc:
         if fd >= 0:

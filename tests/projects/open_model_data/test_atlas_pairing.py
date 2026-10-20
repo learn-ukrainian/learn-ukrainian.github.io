@@ -314,6 +314,21 @@ def test_pairing_does_not_modify_sources_db(tmp_path: Path, monkeypatch: pytest.
     assert not (tmp_path / "sources.db").exists()
 
 
+@pytest.mark.parametrize("existing", [False, True])
+def test_atomic_write_keeps_output_owner_only(tmp_path: Path, existing: bool) -> None:
+    output = tmp_path / "pairing-atlas0.json"
+    if existing:
+        output.write_bytes(b"old")
+    previous_umask = os.umask(0)
+    try:
+        pairing.write_atomic(output, b"new")
+    finally:
+        os.umask(previous_umask)
+    assert output.read_bytes() == b"new"
+    assert stat.S_IMODE(output.stat().st_mode) == 0o600
+    assert list(tmp_path.iterdir()) == [output]
+
+
 def test_help_documents_check_and_exit_codes() -> None:
     parser = pairing._parser()
     help_text = parser.format_help()
