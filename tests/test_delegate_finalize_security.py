@@ -4,7 +4,9 @@ from __future__ import annotations
 
 import ast
 import contextlib
+import hashlib
 import inspect
+import struct
 import subprocess
 import sys
 from pathlib import Path
@@ -108,7 +110,7 @@ def test_crafted_intermediate_tree_path_is_refused(publication, component):
     result = publish(publication, owned_paths=["a"])
 
     assert not result.ok
-    assert result.error == "auto_finalize_invalid_tree_path"
+    assert result.error == "auto_finalize_fsck_failed"
     assert "refs/heads/codex/finalize" not in refs(origin)
     assert not marker.exists()
     assert delegate._resolve_sha(worktree) == head
@@ -432,3 +434,185 @@ def test_forged_base_tracking_ref_cannot_hide_completed_commits(publication):
     head = write_commit(worktree)
     _git_out(worktree, "update-ref", "refs/remotes/origin/main", head)
     assert delegate._count_commits_ahead(worktree, "origin/main", base_sha=base, publication=True) == 1
+
+
+def test_poisoned_intermediate_commit_graph_cannot_hide_protected_path(publication):
+    worktree, origin, base, marker = publication
+    (worktree / "a").mkdir()
+    harmless = write_commit(worktree, "a/owned")
+    harmless_tree = _git_out(worktree, "rev-parse", f"{harmless}^{{tree}}").strip()
+    hidden = write_commit(worktree, ".githooks/pre-push", "#!/bin/sh\nexit 0\n")
+    _git_out(worktree, "restore", f"--source={base}", "--staged", "--worktree", ".githooks/pre-push")
+    _git_out(worktree, "commit", "-m", "revert hidden hook")
+    head = delegate._resolve_sha(worktree)
+    _git_out(worktree, "commit-graph", "write", "--reachable")
+    graph = worktree / ".git/objects/info/commit-graph"
+    data = bytearray(graph.read_bytes())
+    assert data[:6] == b"CGPH\x01\x01", "probe requires the SHA-1 commit-graph format"
+    chunks = {
+        bytes(data[offset : offset + 4]): struct.unpack_from(">Q", data, offset + 4)[0]
+        for offset in range(8, 8 + data[6] * 12, 12)
+    }
+    count = struct.unpack_from(">I", data, chunks[b"OIDF"] + 255 * 4)[0]
+    oids = [bytes(data[chunks[b"OIDL"] + i * 20 : chunks[b"OIDL"] + (i + 1) * 20]) for i in range(count)]
+    record = chunks[b"CDAT"] + oids.index(bytes.fromhex(hidden)) * 36
+    data[record : record + 20] = bytes.fromhex(harmless_tree)
+    data[-20:] = hashlib.sha1(data[:-20]).digest()
+    graph.chmod(0o644)
+    graph.write_bytes(data)
+    concealed = _git_out(worktree, "-c", "core.commitGraph=true", "log", "--format=", "--name-only", f"{base}..{head}")
+    assert ".githooks/pre-push" not in concealed
+    assert "a/owned" in concealed
+    real = _git_out(worktree, "-c", "core.commitGraph=false", "diff-tree", "-r", "--name-only", harmless, hidden)
+    assert ".githooks/pre-push" in real
+
+    result = publish(publication, owned_paths=["a", ".githooks"])
+
+    assert not result.ok
+    assert result.error == "auto_finalize_validation_changed"
+    assert "refs/heads/codex/finalize" not in refs(origin)
+    assert not marker.exists()
+    assert delegate._resolve_sha(worktree) == head
+
+
+def test_publication_uses_only_the_copied_objects(publication, monkeypatch):
+    worktree, origin, _base, marker = publication
+    head = write_commit(worktree)
+    blob = _git_out(worktree, "rev-parse", "HEAD:artifact.txt").strip()
+    prepare = SafeGitContext.prepare_validation
+
+    def mutate_source_after_validation(context, **kwargs):
+        assert "GIT_ALTERNATE_OBJECT_DIRECTORIES" not in context.env
+        assert not (context.git_dir / "objects/info/alternates").exists()
+        assert context.checked("config", "core.commitGraph") == "false"
+        assert context.checked("config", "core.useReplaceRefs") == "false"
+        # Damage a source object only after the isolated copy passed fsck.
+        # Both checkout and push must continue using that verified copy.
+        source_blob = worktree / ".git/objects" / blob[:2] / blob[2:]
+        source_blob.chmod(0o644)
+        source_blob.write_bytes(b"corrupt worker object")
+        prepare(context, **kwargs)
+
+    monkeypatch.setattr(SafeGitContext, "prepare_validation", mutate_source_after_validation)
+
+    result = publish(publication)
+
+    assert result.ok, result.error
+    assert "refs/heads/codex/finalize " + head in refs(origin)
+    assert _git_out(origin, "show", f"{head}:artifact.txt") == "owned\n"
+    assert marker.read_text() == "checked"
+
+
+@pytest.mark.parametrize(
+    "attack",
+    [
+        "replace-commit",
+        "replace-tree",
+        "packed-replace",
+        "grafts",
+        "graft-config",
+        "shallow",
+        "alternates",
+        "http-alternates",
+    ],
+)
+def test_worker_object_metadata_is_a_typed_refusal(publication, attack):
+    worktree, origin, base, marker = publication
+    intermediate = write_commit(worktree)
+    head = write_commit(worktree, content="final owned\n")
+    if attack.startswith("replace") or attack == "packed-replace":
+        old, new = intermediate, base
+        if attack == "replace-tree":
+            old, new = [_git_out(worktree, "rev-parse", f"{oid}^{{tree}}").strip() for oid in (intermediate, base)]
+        _git_out(worktree, "replace", old, new)
+        if attack == "packed-replace":
+            _git_out(worktree, "pack-refs", "--all")
+    elif attack == "graft-config":
+        grafts = worktree / ".git/custom-grafts"
+        grafts.write_text(intermediate + "\n")
+        _git_out(worktree, "config", "core.graftFile", str(grafts))
+    else:
+        name, content = {
+            "grafts": ("info/grafts", intermediate + "\n"),
+            "shallow": ("shallow", intermediate + "\n"),
+            "alternates": ("objects/info/alternates", str(worktree / ".git/objects") + "\n"),
+            "http-alternates": ("objects/info/http-alternates", "https://invalid.invalid/objects\n"),
+        }[attack]
+        (worktree / ".git" / name).write_text(content)
+
+    result = publish(publication)
+
+    assert not result.ok
+    assert result.error == "auto_finalize_object_hardening_violation"
+    assert "refs/heads/codex/finalize" not in refs(origin)
+    assert not marker.exists()
+    assert delegate._resolve_sha(worktree) == head
+
+
+@pytest.mark.parametrize(
+    "component", [".git ", ".git.", "GIT~1", ".g\u200cit", "\uff0e\uff47\uff49\uff54", ".git\\hooks"]
+)
+def test_platform_alias_tree_names_are_refused(publication, component):
+    worktree, origin, base, marker = publication
+    blob = git_input(worktree, "hash-object", "-w", "--stdin", data="hostile\n")
+    nested = git_input(worktree, "mktree", data=f"100644 blob {blob}\tworker\n")
+    tree = git_input(worktree, "mktree", data=f"040000 tree {nested}\t{component}\n")
+    tree = git_input(worktree, "mktree", data=f"040000 tree {tree}\ta\n" + _git_out(worktree, "ls-tree", base))
+    intermediate = _git_out(worktree, "commit-tree", tree, "-p", base, "-m", "platform alias").strip()
+    clean = _git_out(worktree, "rev-parse", f"{base}^{{tree}}").strip()
+    head = _git_out(worktree, "commit-tree", clean, "-p", intermediate, "-m", "clean tip").strip()
+    _git_out(worktree, "update-ref", "refs/heads/codex/finalize", head)
+
+    result = publish(publication, owned_paths=["a"])
+
+    assert not result.ok
+    assert result.error == (
+        "auto_finalize_invalid_tree_path" if component == "\uff0e\uff47\uff49\uff54" else "auto_finalize_fsck_failed"
+    )
+    assert "refs/heads/codex/finalize" not in refs(origin)
+    assert not marker.exists()
+    assert delegate._resolve_sha(worktree) == head
+
+
+@pytest.mark.parametrize("prefix", ["\u017fcripts/pre_commit", "\uff53cripts/pre_commit"])
+def test_unicode_protected_prefix_is_refused(publication, prefix):
+    worktree, origin, _base, marker = publication
+    (worktree / prefix).mkdir(parents=True)
+    head = write_commit(worktree, f"{prefix}/worker")
+
+    result = publish(publication, owned_paths=[prefix])
+
+    assert not result.ok
+    assert result.error == "auto_finalize_validation_changed"
+    assert "refs/heads/codex/finalize" not in refs(origin)
+    assert not marker.exists()
+    assert delegate._resolve_sha(worktree) == head
+
+
+@pytest.mark.parametrize("shape", ["side-branch", "octopus"])
+@pytest.mark.parametrize("path", ["unowned.txt", ".githooks/worker"])
+def test_non_first_parent_history_is_checked(publication, shape, path):
+    worktree, origin, base, marker = publication
+    _git_out(worktree, "checkout", "-b", "side", base)
+    head = write_commit(worktree, path)
+    _git_out(worktree, "rm", path)
+    _git_out(worktree, "commit", "-m", "revert side branch hazard")
+    side = delegate._resolve_sha(worktree)
+    _git_out(worktree, "checkout", "codex/finalize")
+    first = write_commit(worktree)
+    parents = ["-p", first, "-p", side]
+    if shape == "octopus":
+        third = _git_out(worktree, "commit-tree", f"{base}^{{tree}}", "-p", base, "-m", "third parent").strip()
+        parents += ["-p", third]
+    head = _git_out(worktree, "commit-tree", f"{first}^{{tree}}", *parents, "-m", "merge").strip()
+    _git_out(worktree, "update-ref", "refs/heads/codex/finalize", head)
+
+    result = publish(publication, owned_paths=["artifact.txt", ".githooks"])
+
+    assert not result.ok
+    assert result.error == (
+        "auto_finalize_validation_changed" if path.startswith(".githooks") else "auto_finalize_committed_scope_unowned"
+    )
+    assert "refs/heads/codex/finalize" not in refs(origin)
+    assert not marker.exists()
+    assert delegate._resolve_sha(worktree) == head

@@ -6514,6 +6514,8 @@ TYPED_CAUSE_CODES = frozenset(
         "auto_finalize_validation_changed",
         "auto_finalize_validation_unavailable",
         "auto_finalize_invalid_tree_path",
+        "auto_finalize_fsck_failed",
+        "auto_finalize_object_hardening_violation",
         "auto_finalize_preparation_refused",
         "finalize_delivery_pending",
         "finalize_remote_unknown",
@@ -8077,18 +8079,23 @@ def _finalize_history(context: SafeGitContext, *, head: str, base: str, owned: S
     """Check original objects and every exposed intermediate commit."""
     if context.run("merge-base", "--is-ancestor", base, head).returncode:
         raise SnapshotRefusal("auto_finalize_committed_scope_unknown")
-    history = context.checked(
-        "log",
-        "--format=",
-        "--name-only",
-        "-z",
-        "--no-renames",
-        "--diff-merges=separate",
-        f"{base}..{head}",
-        "--",
-    )
-    paths = [path for path in history.split("\0") if path]
-    if any(part in {"", ".", ".."} or part.lower() == ".git" for path in paths for part in path.split("/")):
+    commits = context.checked("rev-list", f"{base}..{head}").splitlines()
+    paths = [
+        path
+        for commit in commits
+        for path in context.checked(
+            "diff-tree", "-r", "-z", "--no-renames", "--root", "-m", "--no-commit-id", "--name-only", commit
+        ).split("\0")
+        if path
+    ]
+    if any(
+        "\\" in path
+        or any(
+            part in {"", ".", ".."} or unicodedata.normalize("NFKC", part).casefold() == ".git"
+            for part in path.split("/")
+        )
+        for path in paths
+    ):
         raise SnapshotRefusal("auto_finalize_invalid_tree_path")
     protected = (
         ".githooks/",
@@ -8097,12 +8104,12 @@ def _finalize_history(context: SafeGitContext, *, head: str, base: str, owned: S
         ".pre-commit-config.yaml",
         ".venv",
     )
-    if any(path.lower().startswith(protected) for path in paths):
+    if any(unicodedata.normalize("NFKC", path).casefold().startswith(protected) for path in paths):
         raise SnapshotRefusal("auto_finalize_validation_changed")
     if any(not _path_is_owned(path, owned) for path in paths):
         raise SnapshotRefusal("auto_finalize_committed_scope_unowned")
     attributes_changed = any(path.rpartition("/")[2] == ".gitattributes" for path in paths)
-    for commit in context.checked("rev-list", f"{base}..{head}").splitlines():
+    for commit in commits:
         context.refuse_tree(base, commit)
         if attributes_changed:
             # Attribute-only commits can install filters on unchanged files.
@@ -8158,6 +8165,7 @@ def _push_auto_finalize_branch(
             if expected_head is not None and head != expected_head:
                 raise SnapshotRefusal("auto_finalize_head_moved")
             base = base_sha or context.driver_base
+            context.isolate_objects(base=base, head=head)
             _finalize_refuse_hook_override(context)
             _finalize_history(context, head=head, base=base, owned=owned)
             remote = _finalize_remote_head(context, branch)
@@ -8313,52 +8321,16 @@ def _auto_finalize_dirty_worktree(
     intended_head = _resolve_sha(worktree)
     if intended_head is None:
         return _result(ok=False, error="auto_finalize_committed_scope_unknown")
-    if owned is not None:
-        committed, _cause = _advisory_worker_diff(
-            worktree,
-            _origin_base_ref(base_branch),
-            ["--name-only", "-z", "--no-renames"],
-            committed_only=True,
-            base_sha=base_sha,
-            round_start_head=base_sha,
-        )
-        if committed is None:
-            return _result(ok=False, error="auto_finalize_committed_scope_unknown")
-        if any(not _path_is_owned(path, owned) for path in committed.split("\0") if path):
-            return _result(ok=False, error="auto_finalize_committed_scope_unowned")
-        # Publication exposes intermediate commits too. A final tree diff
-        # alone misses an unowned file added and then reverted by the worker.
-        history_base = base_sha or _resolve_merge_base(
-            worktree, _commit_count_base_ref(worktree, _origin_base_ref(base_branch))
-        )
-        if not history_base:
-            return _result(ok=False, error="auto_finalize_committed_scope_unknown")
+    if owned and all_changed:
         try:
-            history = subprocess.run(
-                [
-                    "git",
-                    "log",
-                    "--format=",
-                    "--name-only",
-                    "-z",
-                    "--no-renames",
-                    "--diff-merges=separate",
-                    f"{history_base}..{intended_head}",
-                    "--",
-                ],
-                cwd=worktree,
-                capture_output=True,
-                text=True,
-                check=False,
-                env=_sanitized_git_env(),
-                timeout=DEFAULT_GIT_TIMEOUT_S,
-            )
+            with _finalize_execution_context(worktree) as context:
+                context.isolate_objects(base=base_sha or context.driver_base, head=intended_head)
+                _finalize_history(context, head=intended_head, base=base_sha or context.driver_base, owned=owned)
+        except SnapshotRefusal as exc:
+            code = exc.code if exc.code in TYPED_CAUSE_CODES else "auto_finalize_committed_scope_unknown"
+            return _result(ok=False, error=code, commit_sha=intended_head)
         except (OSError, subprocess.TimeoutExpired):
-            return _result(ok=False, error="auto_finalize_committed_scope_unknown")
-        if history.returncode:
-            return _result(ok=False, error="auto_finalize_committed_scope_unknown")
-        if any(not _path_is_owned(path, owned) for path in history.stdout.split("\0") if path):
-            return _result(ok=False, error="auto_finalize_committed_scope_unowned")
+            return _result(ok=False, error="auto_finalize_committed_scope_unknown", commit_sha=intended_head)
     if not all_changed:
         if _worktree_is_dirty(worktree) is not False:
             return _result(ok=False, error="auto_finalize_changes_unknown")

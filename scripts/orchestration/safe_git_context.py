@@ -87,7 +87,7 @@ class SafeGitContext:
                 identity = f'[http "{CANONICAL_ORIGIN}"]\n\textraHeader = "Authorization: Basic {header}"\n'
             self.git_dir.joinpath("config").write_text(
                 "[core]\n\trepositoryformatversion = 0\n\tbare = true\n"
-                "\tfilemode = true\n\tsymlinks = true\n"
+                "\tfilemode = true\n\tsymlinks = true\n\tcommitGraph = false\n\tuseReplaceRefs = false\n"
                 '[protocol]\n\tallow = never\n[protocol "https"]\n\tallow = always\n'
                 + ('[protocol "file"]\n\tallow = always\n' if self.local_remote else "")
                 + f'[remote "origin"]\n\turl = "{self.origin}"\n'
@@ -145,6 +145,72 @@ class SafeGitContext:
             proc.stderr.decode("utf-8", "surrogateescape"),
         )
 
+    def isolate_objects(self, *, base: str, head: str) -> None:
+        """Copy the real publication range and its base closure, then sever the source.
+
+        Only object bytes cross this boundary. The base closure is needed for
+        strict connectivity checks and the trusted validation hook's checkout.
+        """
+        common = self.objects.parent
+        admin = self.source_git_dir
+        forbidden = [root / name for root in {common, admin} for name in ("info/grafts", "shallow")] + [
+            self.objects / "info" / name for name in ("alternates", "http-alternates")
+        ]
+        replacements = common / "refs/replace"
+        packed = common / "packed-refs"
+        if (
+            any(os.path.lexists(path) for path in forbidden)
+            or (replacements.exists() and any(replacements.iterdir()))
+            or (
+                packed.exists()
+                and any(
+                    fields[-1].startswith(b"refs/replace/")
+                    for line in packed.read_bytes().splitlines()
+                    if (fields := line.split())
+                )
+            )
+        ):
+            raise SnapshotRefusal("auto_finalize_object_hardening_violation")
+        for path in (common / "config", admin / "config.worktree"):
+            if path.exists():
+                config = self.run("config", "--no-includes", "--file", str(path), "--get-all", "core.graftFile")
+                if config.returncode != 1:
+                    raise SnapshotRefusal("auto_finalize_object_hardening_violation")
+
+        # rev-list and pack-objects see a fresh config with commitGraph and
+        # replacement lookup disabled, never the worker's refs or config.
+        objects = self.checked("rev-list", "--objects", "--no-object-names", f"{base}..{head}")
+        objects += "\n" + self.checked("rev-list", "--objects", "--no-object-names", base)
+        oids = "\n".join(dict.fromkeys(line for line in objects.splitlines() if line)) + "\n"
+        pack = self.root / "publication.pack"
+        with pack.open("wb") as output:
+            exported = subprocess.run(
+                [GIT, "pack-objects", "--stdout", "--no-reuse-delta", "--no-reuse-object"],
+                cwd=self.root,
+                env=self.env,
+                input=oids.encode("ascii"),
+                stdout=output,
+                stderr=subprocess.PIPE,
+                check=False,
+                timeout=120,
+            )
+        self.env.pop("GIT_ALTERNATE_OBJECT_DIRECTORIES", None)
+        if exported.returncode:
+            raise SnapshotRefusal("auto_finalize_object_hardening_violation")
+        with pack.open("rb") as source:
+            imported = subprocess.run(
+                [GIT, "index-pack", "--stdin"],
+                cwd=self.root,
+                env=self.env,
+                stdin=source,
+                capture_output=True,
+                check=False,
+                timeout=120,
+            )
+        if imported.returncode or self.run("fsck", "--strict", "--no-dangling", head, base).returncode:
+            raise SnapshotRefusal("auto_finalize_fsck_failed")
+        self.objects = self.git_dir / "objects"
+
     def prepare_validation(self, *, head: str, branch: str, base: str, interpreter: Path) -> None:
         """Materialize an isolated checkout with the base commit's trusted hook chain.
 
@@ -158,8 +224,9 @@ class SafeGitContext:
         (checkout / ".git").write_text(f"gitdir: {self.git_dir}\n")
         # The gate clears GIT_* in its children. Persist only borrowed object
         # storage, never source config or source refs, for those children.
-        alternates = self.git_dir / "objects/info/alternates"
-        alternates.write_text(str(self.objects) + "\n")
+        if self.objects != self.git_dir / "objects":
+            alternates = self.git_dir / "objects/info/alternates"
+            alternates.write_text(str(self.objects) + "\n")
         self.checked("update-ref", f"refs/heads/{branch}", head)
         self.checked("symbolic-ref", "HEAD", f"refs/heads/{branch}")
         self.checked("update-ref", "refs/remotes/origin/main", base)
