@@ -354,13 +354,32 @@ def is_heavy(node: str, durations: dict[str, object]) -> bool:
     )
 
 
+def refreshed_main_base(update: Update, root: Path) -> str | None:
+    """The merge-base with ``origin/main`` when a fast-forward also brings in main history (#10820).
+
+    A head that merged newer main into an older remote tip carries main's own commits in
+    ``remote..head``; the pull request carries only ``merge-base..head``. The merge-base replaces the
+    remote tip only on Git's positive answer: exactly one merge-base, proven not to be an ancestor of the
+    remote tip. A Git error, no common history or several merge-bases return ``None``, which keeps the
+    complete outgoing range.
+    """
+    bases = (git_ok("merge-base", "--all", "origin/main", update.local_sha, cwd=root) or "").split()
+    if len(bases) != 1:
+        return None
+    try:
+        answer = git("merge-base", "--is-ancestor", bases[0], update.remote_sha, cwd=root).returncode
+    except (OSError, subprocess.SubprocessError):
+        return None
+    return bases[0] if answer == 1 else None  # 1 is Git's "not an ancestor"; other non-zero codes are errors
+
+
 def outgoing_base(update: Update, root: Path) -> str:
     """The commit below the outgoing range; never inferred from HEAD or shell arguments."""
     if (
         update.remote_sha != ZERO_SHA
         and git_ok("merge-base", "--is-ancestor", update.remote_sha, update.local_sha, cwd=root) is not None
     ):
-        return update.remote_sha
+        return refreshed_main_base(update, root) or update.remote_sha
     base = (git_ok("merge-base", "origin/main", update.local_sha, cwd=root) or "").strip()
     if not base:
         raise GateOutcome(
@@ -891,7 +910,13 @@ class ResourceScope:
     def execute(
         self, plan: Plan, config: str, deadline: float, event: dict[str, object], *, stage_budget_s: float
     ) -> None:
-        assert self.stream is not None and self.channel is not None
+        if self.stream is None or self.channel is None or self.process is None:
+            # Never started, or already closed: no check may run and nothing may be inferred (#10820).
+            raise GateOutcome(
+                "scope_setup_unavailable",
+                "the scoped executor was not set up or is already closed; no check ran",
+                incomplete=True,
+            )
         self.channel.settimeout(
             max(0.01, deadline - time.monotonic()) + TEST_SLOT_WAIT_S + SHADOW_BUDGET_S + 2 * CLEANUP_BUDGET_S
         )
@@ -1140,6 +1165,11 @@ class Admission:
                         position, depth = 2, depth + 1
                     else:
                         self._exclusive = True
+                        if self.scope is not None:
+                            # The scope did not start (e.g. sharing.lock was busy): exclusive admission runs
+                            # the serial path, so the holder must not keep an idle executor (#10820).
+                            self.scope.reason = "exclusive_admission_serial"
+                            self.scope = None
                         self.queue_depth = max(self.queue_depth, depth)
                         self.queue_position = self.queue_position or 1
                         return self
@@ -2152,12 +2182,21 @@ def validate(
         event["outcome"] = "green"
         event["detail"] = "no outgoing commits"
         return
+    selected_files = len({node.split("::", 1)[0] for node in plan.node_ids})
     event.update(
         head=plan.head,
         base=plan.base,
         nodes=len(plan.node_ids),
+        selected_test_files=selected_files,
+        changed_test_files=len(plan.changed_tests),
+        changed_paths=len(plan.changed_paths),
         registry_version=plan.registry_version,
         deferred_to_ci=list(plan.deferred_to_ci),
+    )
+    # An incomplete run names its selection, so a timeout from an oversized range is recognisable (#10820).
+    selection = (
+        f"selection: base {plan.base}, {selected_files} selected test files "
+        f"({len(plan.changed_tests)} changed by the range), {len(plan.changed_paths)} changed paths"
     )
     state = state_dir(root)
     head_state = coalescing_state(state, plan)
@@ -2232,10 +2271,14 @@ def validate(
                     admission=admitted,
                 )
             budget.exclude_wait(float(event.get("slot_wait_s") or 0.0))  # later ref updates keep it too
-    except GateOutcome:
+    except GateOutcome as error:
+        if error.incomplete:
+            error.detail = f"{error.detail}\n{selection}"
         raise
     except OSError as error:  # e.g. the admission lock or a stage's output file could not be created
-        raise GateOutcome("validation_error", f"validation I/O failed: {error}", incomplete=True) from error
+        raise GateOutcome(
+            "validation_error", f"validation I/O failed: {error}\n{selection}", incomplete=True
+        ) from error
     finally:
         event.update(
             admission_wait_s=round(admission.waited, 2),

@@ -188,6 +188,9 @@ def _env(extra: dict[str, str] | None = None) -> dict[str, str]:
     env.pop("AGENT_NO_MERGE", None)
     env.pop("PYTEST_ADDOPTS", None)
     env.pop("LU_TEST_SLOTS_HOLDER", None)  # a gate under test is never nested in this run's test slots
+    # Nor does it inherit the invoking push's opt-in concurrency: under two slots a qualified host lets a
+    # second gate share, which breaks serial FIFO assertions (#10820). Tests opt in through ``extra``.
+    env.pop("LU_PRE_PUSH_GATE_MAX_CONCURRENT_RUNS", None)
     env["PYTHONPATH"] = str(REPO_ROOT / "scripts")
     env.update(extra or {})
     return env
@@ -1036,6 +1039,7 @@ def test_four_process_pushers_all_validate_without_wait_consuming_the_run_budget
 def test_time_budget_exhaustion_is_validation_incomplete_and_leaves_no_receipt(repo: Path) -> None:
     _write(repo, "tests/test_slow.py", "import time\n\n\ndef test_slow():\n    time.sleep(120)\n")
     _commit(repo, "slow", "tests/test_slow.py")
+    base = _git(repo, "merge-base", "origin/main", "HEAD").stdout.strip()
 
     result = _run_gate(repo, extra_env={"LU_PRE_PUSH_GATE_RUN_BUDGET_S": "4"})
 
@@ -1044,7 +1048,13 @@ def test_time_budget_exhaustion_is_validation_incomplete_and_leaves_no_receipt(r
     assert verdict["outcome"] == "validation_incomplete"
     assert "NOT green" in result.stderr
     assert _receipts(repo) == []
-    assert _measurements(repo)[-1]["outcome"] == "validation_incomplete"
+    row = _measurements(repo)[-1]
+    assert row["outcome"] == "validation_incomplete"
+    # The timeout names its selection (#10820): the changed file plus the two registered invariant files.
+    assert "(timeout)" in row["detail"]
+    selection = f"selection: base {base}, 3 selected test files (1 changed by the range), 1 changed paths"
+    assert row["detail"].endswith(selection) and result.stderr.rstrip("\n").endswith(selection)
+    assert (row["base"], row["selected_test_files"], row["changed_test_files"], row["changed_paths"]) == (base, 3, 1, 1)
 
 
 def test_a_second_gate_waits_for_admission_then_reports_validation_incomplete(repo: Path) -> None:
@@ -5870,3 +5880,242 @@ def test_the_gate_holds_host_slots_beside_its_verified_base_temp_under_umask_002
         info = directory.lstat()
         assert stat.S_IMODE(info.st_mode) == 0o700 and info.st_uid == os.geteuid(), directory.name
     assert not os.path.lexists(base) and governor.status()["slots_in_use"] == 0  # both released at stage end
+
+
+# ---- #10820: closed scoped executors and main-refresh base selection ---------------------------------------
+
+
+def test_exclusive_admission_never_keeps_an_unstarted_scope(qualified_cgroups, tmp_path):
+    """A busy sharing transition falls back to exclusive admission, which must run the serial path."""
+    state = tmp_path / "state"
+    state.mkdir()
+    candidate = InjectedScope(qualified_cgroups)
+    with (state / "sharing.lock").open("a") as busy:
+        fcntl.flock(busy, fcntl.LOCK_EX | fcntl.LOCK_NB)  # another waiter is inside its transition check
+        with gate.Admission(state, 0, scope=candidate) as admitted:
+            assert admitted._exclusive and admitted.scope is None
+            assert candidate.group is None and candidate.reason == "exclusive_admission_serial"
+            fd = os.open(state / "admission.lock", os.O_RDWR)
+            try:
+                with pytest.raises(BlockingIOError):
+                    fcntl.flock(fd, fcntl.LOCK_SH | fcntl.LOCK_NB)  # the serial holder still excludes sharing
+            finally:
+                os.close(fd)
+    _assert_queue_released(state)
+
+
+@pytest.mark.parametrize("ending", ["green", "red", "incomplete"])
+def test_a_busy_sharing_transition_validates_once_on_the_serial_path(repo, ending, monkeypatch, qualified_cgroups):
+    """The #10820 crash: an exclusive holder kept its unstarted scope and ``execute`` hit an assertion."""
+    _write(
+        repo,
+        "scripts/pre_commit/project_python.sh",
+        textwrap.dedent(f"""\
+        #!/bin/bash
+        if [ "$1" = scripts/audit/lint_opsec_leaks.py ]; then echo opsec >> scans; exec "{sys.executable}" "$@"; fi
+        if [ "$4" = check-no-internal-ids ]; then echo internal-ids >> scans; exec "{sys.executable}" "$@"; fi
+        if [ "$2" = pre_commit ]; then echo pre >> checks; exit 0; fi
+        if [ "$2" = scripts.ci.pre_push_shadow ]; then echo shadow >> checks; echo '{{"selected_tests":[]}}'; exit 0; fi
+        echo pytest >> checks
+        echo '1 passed in 0.1s'
+        exit {dict(green=0, red=1, incomplete=2)[ending]}
+    """),
+    )
+    _commit(repo, "serial fallback after a busy sharing transition", "scripts/pre_commit/project_python.sh")
+    monkeypatch.chdir(repo)
+    monkeypatch.setenv(gate.MAX_CONCURRENT_RUNS_ENV, "2")
+    monkeypatch.delenv(gate.MAX_TEST_PROCESSES_ENV, raising=False)  # keep the run eligible for the scope
+    state = gate.state_dir(repo)
+    state.mkdir(parents=True, exist_ok=True)
+    head = _git(repo, "rev-parse", "HEAD").stdout.strip()
+    with (state / "sharing.lock").open("a") as busy:
+        fcntl.flock(busy, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        code = gate.main(
+            [
+                "--launcher",
+                str(repo / "scripts/pre_commit/project_python.sh"),
+                "--config",
+                str(repo / ".pre-commit-config.yaml"),
+            ],
+            stdin=f"refs/heads/feature {head} refs/heads/feature {ZERO_SHA}\n",
+        )
+    assert code == dict(green=0, red=1, incomplete=75)[ending]
+    assert sorted((repo / "checks").read_text().splitlines()) == ["pre", "pytest", "shadow"]
+    assert (repo / "scans").read_text().splitlines() == ["opsec", "internal-ids"]
+    row = _measurements(repo)[-1]
+    assert row["outcome"] == dict(green="green", red="refused", incomplete="validation_incomplete")[ending]
+    assert row["scope"] == {"status": "serial", "reason": "exclusive_admission_serial"}
+    assert row["stages"]["pytest"]["stale_pytest_cleanup"] == "exclusive_sweep"
+    assert (_receipts(repo) != []) is (ending == "green")  # only a genuinely passed execution is green
+    _assert_queue_released(state)
+
+
+@pytest.mark.parametrize("condition", ["unstarted", "closed"])
+def test_a_missing_or_closed_scope_is_typed_incomplete_and_runs_nothing(
+    tmp_path, injected_systemd, qualified_cgroups, condition
+):
+    state = tmp_path / "state"
+    launcher = tmp_path / "launcher"
+    launcher.write_text(f'#!/bin/bash\nexec "{sys.executable}" "$@"\n')
+    event: dict[str, object] = {}
+    with gate.Admission(state / "head", 0) as head:
+        scope = gate.ResourceScope(tmp_path, str(launcher), head)
+        with contextlib.ExitStack() as admitted:
+            if condition == "closed":
+                admission = admitted.enter_context(gate.Admission(state, 0, scope=scope))
+                assert admission.scope is scope and scope.stream is not None  # a genuinely started scope
+                scope.close()
+            with pytest.raises(gate.GateOutcome) as raised:
+                scope.execute(_plan(), "config", time.monotonic() + 30, event, stage_budget_s=30.0)
+    assert raised.value.reason == "scope_setup_unavailable" and raised.value.incomplete
+    assert event == {} and not scope.completed  # no stage ran and nothing was inferred
+    _assert_queue_released(state)
+
+
+def _feature_remote_then_newer_main(repo: Path) -> tuple[str, str]:
+    """An older pushed feature tip, then newer main on ``origin`` with changes unrelated to the feature."""
+    _write(repo, "tests/test_feature_old.py", GREEN_TEST)
+    remote = _commit(repo, "feature work already on the remote", "tests/test_feature_old.py")
+    _git(repo, "push", "--no-verify", "origin", "feature")
+    _git(repo, "checkout", "main")
+    _write(repo, "tests/test_main_only.py", GREEN_TEST)
+    _write(repo, "scripts/main_only.py", "VALUE = 1\n")
+    main = _commit(repo, "unrelated main change", "tests/test_main_only.py", "scripts/main_only.py")
+    _git(repo, "push", "--no-verify", "origin", "main")
+    _git(repo, "checkout", "feature")
+    return remote, main
+
+
+def _merge_main(repo: Path) -> str:
+    _git(repo, "merge", "--no-ff", "--no-edit", "-m", "merge newer main", "main")
+    return _git(repo, "rev-parse", "HEAD").stdout.strip()
+
+
+def _update(repo: Path, remote_sha: str) -> object:
+    head = _git(repo, "rev-parse", "HEAD").stdout.strip()
+    return gate.Update("refs/heads/feature", head, "refs/heads/feature", remote_sha)
+
+
+def _pull_request_paths(repo: Path) -> tuple[str, ...]:
+    """What the pull request carries: the three-dot diff from the merge-base with ``origin/main``."""
+    names = _git(repo, "diff", "--name-only", "--diff-filter=ACMR", "origin/main...HEAD").stdout.split()
+    return tuple(sorted(names))
+
+
+@pytest.mark.parametrize("commit_after_merge", [False, True])
+def test_a_merge_of_newer_main_selects_the_pull_request_change_not_mains(repo: Path, commit_after_merge: bool) -> None:
+    remote, main = _feature_remote_then_newer_main(repo)
+    _merge_main(repo)
+    expected = ["tests/test_feature_old.py"]
+    if commit_after_merge:
+        _write(repo, "tests/test_feature_new.py", GREEN_TEST)
+        _commit(repo, "feature work after the merge", "tests/test_feature_new.py")
+        expected.append("tests/test_feature_new.py")
+
+    plan = gate.build_plan(_update(repo, remote), repo)
+
+    assert plan is not None and plan.base == main
+    assert plan.changed_tests == tuple(sorted(expected))
+    assert plan.changed_paths == _pull_request_paths(repo)
+    assert not {"scripts/main_only.py", "tests/test_main_only.py"} & set(plan.changed_paths)
+
+
+def _criss_cross(repo: Path) -> tuple[str, str, tuple[str, ...]]:
+    """Main and feature each merged the other's tip: two merge-bases, so the range is not narrowed."""
+    _write(repo, "tests/test_a_side.py", GREEN_TEST)
+    remote = _commit(repo, "feature side", "tests/test_a_side.py")
+    _git(repo, "checkout", "main")
+    _write(repo, "tests/test_b_side.py", GREEN_TEST)
+    _commit(repo, "main side", "tests/test_b_side.py")
+    _git(repo, "checkout", "feature")
+    _git(repo, "merge", "--no-ff", "--no-edit", "-m", "feature merges main", "main")
+    _git(repo, "checkout", "main")
+    _git(repo, "merge", "--no-ff", "--no-edit", "-m", "main merges feature side", remote)
+    _git(repo, "push", "--no-verify", "origin", "main")
+    _git(repo, "checkout", "feature")
+    bases = _git(repo, "merge-base", "--all", "origin/main", "HEAD").stdout.split()
+    assert len(bases) == 2
+    return remote, remote, ("tests/test_b_side.py",)
+
+
+def _graph(repo: Path, kind: str) -> tuple[str, str, tuple[str, ...]]:
+    """Build one control graph; return the remote tip, the expected base and the expected changed tests."""
+    fork = _git(repo, "rev-parse", "HEAD").stdout.strip()
+    if kind == "criss_cross":
+        return _criss_cross(repo)
+    if kind in ("incremental", "new_branch"):
+        _write(repo, "tests/test_feature_old.py", GREEN_TEST)
+        remote = _commit(repo, "feature work already on the remote", "tests/test_feature_old.py")
+    else:
+        remote, main = _feature_remote_then_newer_main(repo)
+    if kind == "rebased_onto_newer_main":
+        _git(repo, "rebase", "main")
+        return remote, main, ("tests/test_feature_old.py",)
+    if kind == "unproven_main":
+        _merge_main(repo)
+        _git(repo, "update-ref", "-d", "refs/remotes/origin/main")  # main cannot be resolved: no narrowing
+        return remote, remote, ("tests/test_main_only.py",)
+    _write(repo, "tests/test_feature_new.py", GREEN_TEST)
+    _commit(repo, "new feature work", "tests/test_feature_new.py")
+    if kind == "new_branch":
+        return ZERO_SHA, fork, ("tests/test_feature_new.py", "tests/test_feature_old.py")
+    return remote, remote, ("tests/test_feature_new.py",)  # incremental, main moved or not
+
+
+@pytest.mark.parametrize(
+    "kind",
+    ["incremental", "incremental_main_moved", "new_branch", "rebased_onto_newer_main", "unproven_main", "criss_cross"],
+)
+def test_base_selection_controls_keep_the_complete_outgoing_range(repo: Path, kind: str) -> None:
+    remote, expected_base, expected_tests = _graph(repo, kind)
+
+    plan = gate.build_plan(_update(repo, remote), repo)
+
+    assert plan is not None and plan.base == expected_base
+    assert plan.changed_tests == expected_tests
+
+
+@pytest.mark.parametrize("failure", ["exit_128", "timeout"])
+def test_an_ancestry_error_never_narrows_the_range(repo: Path, monkeypatch: pytest.MonkeyPatch, failure: str) -> None:
+    remote, main = _feature_remote_then_newer_main(repo)
+    _merge_main(repo)
+    real_git = gate.git
+
+    def git(*args: str, cwd: Path, timeout: float = 30.0):
+        if args == ("merge-base", "--is-ancestor", main, remote):
+            if failure == "timeout":
+                raise subprocess.TimeoutExpired(["git", *args], timeout)
+            return subprocess.CompletedProcess(["git", *args], 128, "", "fatal: synthetic")
+        return real_git(*args, cwd=cwd, timeout=timeout)
+
+    monkeypatch.setattr(gate, "git", git)
+
+    plan = gate.build_plan(_update(repo, remote), repo)
+
+    assert plan is not None and plan.base == remote
+    assert "tests/test_main_only.py" in plan.changed_tests  # uncertainty keeps the complete outgoing range
+
+
+def test_a_divergent_push_without_history_in_common_with_main_is_refused(repo: Path) -> None:
+    _write(repo, "tests/test_feature_old.py", GREEN_TEST)
+    remote = _commit(repo, "feature work already on the remote", "tests/test_feature_old.py")
+    _git(repo, "checkout", "--orphan", "lonely")
+    _commit(repo, "unrelated history", ".")
+
+    with pytest.raises(gate.GateOutcome) as raised:
+        gate.build_plan(_update(repo, remote), repo)
+
+    assert raised.value.reason == "range_unresolved" and not raised.value.incomplete
+
+
+def test_a_pushed_main_refresh_validates_and_records_the_pull_request_selection(repo: Path) -> None:
+    remote, main = _feature_remote_then_newer_main(repo)
+    _merge_main(repo)
+
+    result = _run_gate(repo, remote_sha=remote)
+
+    assert result.returncode == 0, result.stderr
+    row = _measurements(repo)[-1]
+    assert row["outcome"] == "green" and row["base"] == main
+    # Only the feature's own test file joins the two registered invariant files; main's change stays out.
+    assert (row["selected_test_files"], row["changed_test_files"], row["changed_paths"]) == (3, 1, 1)

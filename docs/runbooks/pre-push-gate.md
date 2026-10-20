@@ -11,6 +11,14 @@ tracked changes:
 
 1. `pre-commit run --hook-stage pre-push --from-ref <base> --to-ref <head>` over the outgoing range.
    `<base>` is the remote tip when it is an ancestor, else the merge-base with `origin/main`.
+   One exception applies to the ancestor case (#10820): when the head merged newer `origin/main` into an
+   older remote tip, `<remote>..<head>` also carries main's own commits. The base is then the merge-base
+   with `origin/main`, so the range is the change the pull request carries (`origin/main...<head>`). The
+   rule narrows only on Git's positive answer: `git merge-base --all origin/main <head>` returns exactly
+   one commit, and `git merge-base --is-ancestor` exits 1 for it against the remote tip. A Git error, an
+   unresolvable `origin/main`, no common history or several merge-bases keep the remote tip and the
+   complete outgoing range. New branches and divergent tips are unchanged; a divergent tip with no
+   merge-base is `range_unresolved`.
    The same bounded stage then always runs `lint_opsec_leaks.py --commit-range <base>..<head>`.
    It reads each commit's version of its touched files, including values later reverted or files
    later deleted. Missing selected blobs refuse the push; diagnostics omit matched values.
@@ -91,9 +99,13 @@ The governor's disabled and CI paths apply no thread caps. See `docs/runbooks/te
 | `pre_commit_failed`, `tests_failed` | 1 | Push refused; failing hook names or pytest node ids are listed. |
 | `tree_mismatch`, `dirty_tree`, `range_unresolved`, `invalid_ref_updates` | 1 | The exact commit cannot be validated as pushed. |
 | `untracked_inputs` | 1 | Untracked or ignored `*.py`, `*.pth` or pytest/tox/setup/pyproject config files exist; they could change the run but not the receipt. Commit or remove them. |
-| `validation_incomplete` | 75 | Not validated and not green: `invalid_configuration`, `admission_timeout`, `timeout`, `registry_unavailable`, `pytest_error` (pytest exited without a verdict), `pytest_temp_unavailable` (no private pytest base temp below a verified root outside every Git checkout and Git directory; see Bounds), `changed_tests_unmaterialized` (a test file the range changes is absent from a sparse worktree; `git sparse-checkout add tests`), `selected_tests_unmaterialized` (likewise for an affected test file the gate would run), `test_slots_wait_timeout`, `test_slots_pool_unavailable`, `test_slots_invalid_configuration`, `test_slots_unavailable` (host test slots, below). The branch is preserved; return to the driver. Never retry blindly. |
+| `validation_incomplete` | 75 | Not validated and not green: `invalid_configuration`, `admission_timeout`, `timeout`, `registry_unavailable`, `pytest_error` (pytest exited without a verdict), `pytest_temp_unavailable` (no private pytest base temp below a verified root outside every Git checkout and Git directory; see Bounds), `changed_tests_unmaterialized` (a test file the range changes is absent from a sparse worktree; `git sparse-checkout add tests`), `selected_tests_unmaterialized` (likewise for an affected test file the gate would run), `test_slots_wait_timeout`, `test_slots_pool_unavailable`, `test_slots_invalid_configuration`, `test_slots_unavailable` (host test slots, below), `scope_setup_unavailable` (the scoped executor was never set up or is already closed; no check ran). The branch is preserved; return to the driver. Never retry blindly. |
 
 The last stderr line before the bypass hint is machine-readable: `{"pre_push_gate": {...}}`.
+After a plan is built, every `validation_incomplete` detail ends with its selection (#10820), for example
+`selection: base <sha>, 3 selected test files (1 changed by the range), 1 changed paths`. Selected test
+files count the distinct files of the registered invariants and the changed tests, so a timeout from an
+oversized range is recognisable. The measurement row records the same counts.
 
 ## Bounds
 
@@ -237,7 +249,11 @@ actual cgroup-v2 memory limit and peak interface before starting any check. The 
 the head and global flock descriptors. These reservations remain held if the launching gate exits
 while scoped validation continues. Every blocking stage and the selector execute inside that scope.
 No check runs during scope setup. A missing user bus or refused setup falls back to the complete
-serial path. Failure after checks start is incomplete, with no repeated stage or automatic retry.
+serial path. So does a sharing transition that cannot start the scope, for example because another
+waiter holds `sharing.lock`: the caller takes the exclusive lock, drops the unstarted scope and records
+`scope.reason=exclusive_admission_serial` (#10820). A scoped run whose executor is missing or closed
+refuses as `validation_incomplete` (`scope_setup_unavailable`) before any check; it never asserts.
+Failure after checks start is incomplete, with no repeated stage or automatic retry.
 Cleanup addresses only the run's generated unit and descendants. Scoped receipt publication follows
 verified cleanup. If descendants cannot be verified as settled, the executor retains its inherited
 reservations for own-unit cleanup and driver disposition; it never promotes an orphaned owner.
@@ -258,7 +274,9 @@ Tests that assert the exclusive sweep or inject failures into in-process serial 
 when the invoking push uses two slots. Startup I/O fault injection and the non-green leader/follower
 test also pin serial admission, where interrupting the leader ends its validation stages before
 the follower checks for a reusable receipt. The existing shared-mode stale-sweep test still verifies
-that shared execution preserves other runs' temporary directories. Tests that expect the scope to be
+that shared execution preserves other runs' temporary directories. Gates the tests start as
+subprocesses never inherit the invoking push's `LU_PRE_PUSH_GATE_MAX_CONCURRENT_RUNS` (#10820). A test
+that needs two slots passes the value explicitly. Tests that expect the scope to be
 attempted also clear `LU_PRE_PUSH_GATE_MAX_TEST_PROCESSES`, so a pushing caller's larger process
 override cannot make the run ineligible for the scope.
 
@@ -329,6 +347,8 @@ what pre-commit left of it.
 Those fields were additive and changed no existing meaning, so they stayed in `pre-push-measurement.v1`.
 Gate version 9 (#11207) replaces the `shadow` record with `selection`, and `nodes` and
 `deferred_to_ci` now describe the set that ran, so its rows are `pre-push-measurement.v2`.
+Once a plan exists, the row also records `base`, `selected_test_files`, `changed_test_files` and
+`changed_paths` (#10820).
 `resources_at_admission` contains fresh admission observations or explicit nulls.
 The top-level requested/effective test process fields remain null when no count was observed.
 `peak_memory_bytes` comes from the scope's `memory.peak`, read by the scoped executor before it exits.
