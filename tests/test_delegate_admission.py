@@ -449,7 +449,10 @@ def _stub_worktree(monkeypatch, tasks: Path):
 
 
 def test_live_dispatch_records_the_admission_snapshot(tasks_dir, monkeypatch, capsys):
+    from agent_runtime import telemetry
+
     _stub_worktree(monkeypatch, tasks_dir)
+    monkeypatch.setattr(telemetry, "_probe_version", lambda *_a, **_k: "test")
     spawned: list[list[str]] = []
 
     class _Proc:
@@ -946,6 +949,10 @@ def test_capacity_pick_prints_the_admission_line(tmp_path, monkeypatch, capsys):
     dead = _running_record(tasks, "gone", pid=424242)
     monkeypatch.setattr(dispatch_admission, "process_alive", lambda pid: pid == 515151)
     monkeypatch.setattr(dispatch_admission, "slice_usage_clause", lambda: None)
+    monkeypatch.setattr(
+        dispatch_admission.admission_shadow, "read_pressure",
+        lambda _: {"cpu.some": {"avg10": None, "avg60": None}},
+    )
     monkeypatch.setenv("LU_TASKS_DIR", str(tasks))
     monkeypatch.setattr(capacity_pick, "fetch_active_in_flight", lambda **_kwargs: {})
     monkeypatch.setattr(
@@ -959,7 +966,9 @@ def test_capacity_pick_prints_the_admission_line(tmp_path, monkeypatch, capsys):
         "admission (write dispatch): would admit now | live write workers 1/2, "
         "MemAvailable 64.0 GiB (floor 8.5 GiB), load 0.00 per CPU (limit 1.00), "
         "lu.slice pool check skipped (test host), test-slot queue check skipped (test host), "
-        "disk check skipped (test host); 1 record(s) dead pid, not counted: gone"
+        "disk check skipped (test host), PSI shadow unknown (calibration only; "
+        "unknown: test journal not configured; CPU ownership unknown, unattributed load unknown); "
+        "1 record(s) dead pid, not counted: gone"
     )
 
     monkeypatch.setenv("DISPATCH_MAX_LIVE_WRITE_WORKERS", "1")
@@ -1084,6 +1093,10 @@ def test_capacity_pick_shows_the_disk_decision_without_reaping(tmp_path, monkeyp
 
     monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
     monkeypatch.setattr(dispatch_admission, "slice_usage_clause", lambda: None)
+    monkeypatch.setattr(
+        dispatch_admission.admission_shadow, "read_pressure",
+        lambda _: {"cpu.some": {"avg10": None, "avg60": None}},
+    )
     monkeypatch.setattr(capacity_pick, "fetch_active_in_flight", lambda **_kwargs: {})
     monkeypatch.setattr(
         usage,
@@ -1094,7 +1107,9 @@ def test_capacity_pick_shows_the_disk_decision_without_reaping(tmp_path, monkeyp
 
     assert capacity_pick.main([]) == 0
     assert capsys.readouterr().out.splitlines()[-1].endswith(
-        "disk 82.0% used, 72.0 GiB free (reap at 85%, refuse at 90%, alert at 80%) [epics alert posted]"
+        "disk 82.0% used, 72.0 GiB free (reap at 85%, refuse at 90%, alert at 80%) [epics alert posted], "
+        "PSI shadow unknown (calibration only; unknown: test journal not configured; "
+        "CPU ownership unknown, unattributed load unknown)"
     )
 
     disk["readings"] = [91.0]
