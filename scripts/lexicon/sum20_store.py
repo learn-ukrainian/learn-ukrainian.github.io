@@ -6,6 +6,7 @@ import json
 import os
 import sqlite3
 from contextlib import closing
+from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
@@ -152,6 +153,27 @@ def lookup_sum20_cached(
     return results
 
 
+@lru_cache(maxsize=2)
+def _mirror_index(path: Path, signature: tuple) -> dict[str, list[tuple[str, str, int]]]:
+    """Index raw titles and slash members once per file/WAL revision.
+
+    Only identities are cached, never article text. Rank 1 is a normalized
+    whole title; rank 2 is a paired member. Exact raw matches rank 0 at lookup.
+    """
+    index: dict[str, list[tuple[str, str, int]]] = {}
+    with closing(open_readonly(path)) as conn:
+        # Validate the full reader schema even when the requested key is absent.
+        conn.execute("SELECT lemma, headword, text, source_url, url FROM sum20_slovnyk_articles LIMIT 0")
+        for raw, url in conn.execute("SELECT lemma, url FROM sum20_slovnyk_articles"):
+            keys = [(normalize_sum20_lookup(raw), 1)]
+            if "/" in raw:
+                keys.extend((normalize_sum20_lookup(member), 2) for member in raw.split("/"))
+            for key, rank in keys:
+                if key:
+                    index.setdefault(key, []).append((raw, url, rank))
+    return index
+
+
 def resolve_sum20_articles(
     lemma: str,
     db_path: Path | str | None = None,
@@ -162,7 +184,7 @@ def resolve_sum20_articles(
     """Read official articles first, then local mirror candidates for a missing key.
 
     An absent mirror is a local miss. Refused or corrupt mirrors raise a typed
-    error, as do invalid official bindings. Neither path writes or uses caches.
+    error, as do invalid official bindings. Neither path writes to a store.
     The staging file uses an injected sources binding for locality validation;
     this does not promote its records to official evidence.
     """
@@ -179,12 +201,28 @@ def resolve_sum20_articles(
         raise Sum20StoreError(resolved.reason)
     norm = normalize_sum20_lookup(lemma)
     try:
+        signature = []
+        for file in (resolved.path, Path(str(resolved.path) + "-wal")):
+            try:
+                stat = file.stat()
+                signature.append(
+                    None if file != resolved.path and stat.st_size == 0 else
+                    (stat.st_ino, stat.st_size, stat.st_mtime_ns, stat.st_ctime_ns)
+                )
+            except FileNotFoundError:
+                signature.append(None)
+        candidates = _mirror_index(resolved.path, tuple(signature)).get(norm, [])
+        if not candidates:
+            return []
+        # One article only: exact raw, normalized whole title, paired member;
+        # URL is the stable tie-breaker within a rank, regardless of row order.
+        _, url, _ = min(candidates, key=lambda row: (0 if row[0] == lemma else row[2], row[1]))
         with closing(open_readonly(resolved.path)) as conn:
             conn.row_factory = sqlite3.Row
             rows = conn.execute(
                 "SELECT lemma, headword, text, source_url, url FROM sum20_slovnyk_articles "
-                "WHERE lemma = ? ORDER BY url",
-                (norm,),
+                "WHERE url = ?",
+                (url,),
             ).fetchall()
     except (OSError, sqlite3.Error):
         raise Sum20StoreError("mirror_unavailable") from None

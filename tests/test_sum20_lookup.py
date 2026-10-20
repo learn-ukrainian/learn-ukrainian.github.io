@@ -785,10 +785,11 @@ def test_mirror_connection_refuses_writes_and_attaches(tmp_path, monkeypatch):
 
     monkeypatch.setattr(sum20_store, "open_readonly", inspect_connection)
     assert lookup_sum20_articles("берег")[0]["role"] == "mirror_candidate"
-    assert inspected == [True]
+    assert inspected == [True, True]
 
 
 @pytest.mark.parametrize("kind, reason", [("corrupt", "mirror_unavailable"), ("schema", "mirror_unavailable"),
+                                         ("partial_schema", "mirror_unavailable"),
                                          ("network", "locality_network"), ("unknown", "locality_unknown")])
 def test_invalid_mirror_is_typed_refusal_not_miss(tmp_path, monkeypatch, kind, reason):
     from scripts.storage import topology
@@ -797,6 +798,9 @@ def test_invalid_mirror_is_typed_refusal_not_miss(tmp_path, monkeypatch, kind, r
     mirror = tmp_path / "mirror.db"
     if kind == "schema":
         sqlite3.connect(mirror).close()
+    elif kind == "partial_schema":
+        with sqlite3.connect(mirror) as conn:
+            conn.execute("CREATE TABLE sum20_slovnyk_articles (lemma, url)")
     else:
         mirror.write_bytes(b"invalid sqlite")
     original = topology._store_locality
@@ -820,3 +824,76 @@ def test_injected_mirror_binding_and_lexdata_precedence(tmp_path, monkeypatch):
     _publish_generation(lexdata)
     assert lookup_sum20_articles("вода", mirror_db_path=injected)[0]["definition"] == "published definition"
     assert lookup_sum20_articles("берег", mirror_db_path=injected)[0]["role"] == "mirror_candidate"
+
+
+@pytest.mark.parametrize("raw, queries", [
+    ("Великдень", ("великдень", "ВЕЛИКДЕНЬ")),
+    ("ООН", ("оон",)),
+    ("варити / зварити", ("варити", "зварити")),
+    ("Класти / Покласти", ("класти", "покласти")),
+    ("П'ять", ("п’ять", "п`ять")),
+    ("П’ять", ("п'ять",)),
+])
+def test_mirror_raw_titles_match_normalized_keys(tmp_path, raw, queries):
+    db = _seed_articles(tmp_path / "data")
+    mirror = _seed_mirror(tmp_path)
+    with sqlite3.connect(mirror) as conn:
+        conn.execute("INSERT INTO sum20_slovnyk_articles VALUES (?, ?, ?, ?, ?)",
+                     (raw, "synthetic heading", "unaltered article", "", "selected"))
+    before = mirror.read_bytes()
+    for query in queries:
+        assert lookup_sum20_articles(query, db, mirror_db_path=mirror) == [{
+            "headword": "synthetic heading", "definition": "unaltered article",
+            "article_text": "unaltered article", "senses": [], "url": "selected", "role": "mirror_candidate",
+        }]
+    assert lookup_sum20_articles("бракує", db, mirror_db_path=mirror) == []
+    assert mirror.read_bytes() == before
+
+
+@pytest.mark.parametrize("query, titles, expected", [
+    ("Великдень", [("ВЕЛИКДЕНЬ", "a"), ("Великдень", "z")], "z"),
+    ("великдень", [("великдень / свято", "a"), ("Великдень", "z")], "z"),
+    ("великдень", [("ВЕЛИКДЕНЬ", "z"), ("Великдень", "a")], "a"),
+    ("варити", [("варити / зварити", "z"), ("варити / наварити", "a")], "a"),
+    ("варити", [("варити", "z"), ("варити", "a")], "a"),
+])
+def test_mirror_match_precedence_selects_one_article(tmp_path, query, titles, expected):
+    db = _seed_articles(tmp_path / "data")
+    mirror = _seed_mirror(tmp_path)
+    with sqlite3.connect(mirror) as conn:
+        for raw, url in titles:
+            conn.execute("INSERT INTO sum20_slovnyk_articles VALUES (?, ?, ?, ?, ?)",
+                         (raw, raw, url + " text", "", url))
+    result = lookup_sum20_articles(query, db, mirror_db_path=mirror)
+    assert len(result) == 1
+    assert result[0]["url"] == expected
+    assert result[0]["definition"] == expected + " text"
+    assert result[0]["role"] == "mirror_candidate"
+
+
+@pytest.mark.parametrize("journal_mode", ["DELETE", "WAL"])
+def test_mirror_index_reused_and_invalidated_on_store_change(tmp_path, journal_mode):
+    from scripts.lexicon import sum20_store
+
+    db = _seed_articles(tmp_path / "data")
+    mirror = _seed_mirror(tmp_path)
+    sum20_store._mirror_index.cache_clear()
+    with sqlite3.connect(mirror) as conn:
+        conn.execute("PRAGMA journal_mode=" + journal_mode)
+        assert lookup_sum20_articles("берег", db, mirror_db_path=mirror)[0]["definition"] == "mirror-only definition"
+        assert lookup_sum20_articles("берег", db, mirror_db_path=mirror)[0]["definition"] == "mirror-only definition"
+        info = sum20_store._mirror_index.cache_info()
+        assert (info.hits, info.misses) == (1, 1)
+        conn.execute("INSERT INTO sum20_slovnyk_articles VALUES (?, ?, ?, ?, ?)",
+                     ("Різдво", "Різдво", "new article", "", "new"))
+        conn.commit()
+        assert lookup_sum20_articles("різдво", db, mirror_db_path=mirror)[0]["definition"] == "new article"
+        assert sum20_store._mirror_index.cache_info().misses == 2
+
+
+def test_official_wins_over_normalized_mirror_match(tmp_path):
+    db = _seed_articles(tmp_path / "data")
+    mirror = _seed_mirror(tmp_path)
+    with sqlite3.connect(mirror) as conn:
+        conn.execute("UPDATE sum20_slovnyk_articles SET lemma='Вода' WHERE lemma='вода'")
+    assert lookup_sum20_articles("вода", db, mirror_db_path=mirror)[0]["definition"] == "synthetic stored definition"
