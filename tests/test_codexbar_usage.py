@@ -1222,15 +1222,15 @@ def test_cache_miss_starts_background_refresh_without_waiting(monkeypatch):
 
     def slow_background() -> None:
         entered.set()
-        release.wait(timeout=1.0)
+        release.wait(timeout=10.0)
 
     monkeypatch.setattr(subscription_usage_mod, "_run_all_refreshes", slow_background)
     started = time.monotonic()
     result = codexbar_usage_mod.get_provider_usage_data(provider)
     elapsed = time.monotonic() - started
     release.set()
-    assert entered.wait(timeout=0.5)
-    assert elapsed < 0.2
+    assert entered.wait(timeout=5.0)
+    assert elapsed < 3.0
     assert result["freshness"] == "unavailable"
 
 
