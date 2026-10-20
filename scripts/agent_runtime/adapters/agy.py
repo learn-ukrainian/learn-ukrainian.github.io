@@ -2128,8 +2128,21 @@ def _headless_denial_evidence(
     if notice_target is not None:
         notice_key = _denial_target_key(notice_target, kind, plan)
         call_key = _denial_target_key(args.get(arg_key), kind, plan) if isinstance(args, Mapping) and arg_key else None
-        if notice_key != call_key or (
-            native_target is not None and notice_key != _denial_target_key(native_target, kind, plan)
+        notice_matches = 0
+        for candidate in calls:
+            candidate_name, candidate_args = candidate.get("name"), candidate.get("args")
+            candidate_arg = _DENIAL_TARGET_ARGS.get(kind, {}).get(candidate_name) if isinstance(candidate_name, str) else None
+            if (
+                candidate_arg
+                and isinstance(candidate_args, Mapping)
+                and _denial_target_key(candidate_args.get(candidate_arg), kind, plan) == notice_key
+            ):
+                notice_matches += 1
+        if (
+            notice_key is None
+            or notice_matches != 1
+            or notice_key != call_key
+            or (native_target is not None and notice_key != _denial_target_key(native_target, kind, plan))
         ):
             return dataclasses.replace(base, permission_target_unknown_reason="trigger_ambiguous")
     target, reason, via_symlink = _sanitized_denial_target(
