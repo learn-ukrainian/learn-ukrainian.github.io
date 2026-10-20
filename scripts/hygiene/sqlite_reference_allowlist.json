@@ -566,6 +566,17 @@
     ]
   },
   {
+    "path": "scripts/lexdata/build_store.py",
+    "reference_count": 2,
+    "kind": "writer",
+    "target_db": "lexdata generation temp file; lexdata backup copy",
+    "reason": "single writer of data/lexdata.db: builds the temp generation before the atomic swap and receives the online backup of the published generation (lexdata design r3 §6)",
+    "calls": [
+      "sqlite3.connect(path.resolve().as_uri() + '?mode=rwc', uri=True, isolation_level='DEFERRED')",
+      "sqlite3.connect(destination)"
+    ]
+  },
+  {
     "path": "scripts/lexicon/enrich_heteronyms.py",
     "reference_count": 1,
     "kind": "writer",
