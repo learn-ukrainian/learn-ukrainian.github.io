@@ -6712,8 +6712,8 @@ def test_enrich_entry_berehynia_sum20_goddess_rework(monkeypatch) -> None:
     )
     monkeypatch.setattr(
         enrich_manifest_module,
-        "query_wikipedia",
-        lambda title: {
+        "_WIKI_REFERENCE_CACHE_DATA",
+        {"берегиня": {
             "title": "Берегиня",
             "description": "істота слов'янської міфології",
             "extract": (
@@ -6721,7 +6721,7 @@ def test_enrich_entry_berehynia_sum20_goddess_rework(monkeypatch) -> None:
                 "споріднений із русалками. Ім'я духа пов'язують з берегами."
             ),
             "url": "https://uk.wikipedia.org/wiki/%D0%91%D0%B5%D1%80%D0%B5%D0%B3%D0%B8%D0%BD%D1%8F",
-        },
+        }},
     )
 
     entry = {

@@ -4419,6 +4419,8 @@ def _resolve_definition_xref(
         target_card = fetch_target(resolved_lemma)
         if not target_card:
             continue
+        if (card.get("role") == "mirror_candidate") != (target_card.get("role") == "mirror_candidate"):
+            continue
         target_defs = target_card.get("definitions") or []
         target_body = str(target_defs[0]).strip() if target_defs else ""
         if not target_body or _xref_target_lemmas(target_body, resolved_lemma):
@@ -4448,10 +4450,18 @@ def _sum20_official_rows(lookup_word: str) -> tuple[dict[str, Any], ...]:
 
 
 def _sum20_official_definition_card(lookup_word: str) -> dict[str, Any] | None:
-    """Build a public definition card from locally ingested official rows."""
+    """Build a local card, retaining the mirror candidate role on fallback."""
     definitions: list[str] = []
     official_url = ""
+    role = "sum20_official"
     for row in _sum20_official_rows(lookup_word):
+        if row.get("role") == "mirror_candidate":
+            definition = _definition_body(row.get("definition"), headword=lookup_word, strip_leading_headword=True)
+            if definition:
+                definitions.append(definition)
+                official_url = official_url or str(row.get("url") or "")
+                role = "mirror_candidate"
+            continue
         senses = row.get("senses")
         if not isinstance(senses, list):
             continue
@@ -4488,6 +4498,8 @@ def _sum20_official_definition_card(lookup_word: str) -> dict[str, Any] | None:
     }
     if official_url:
         card["source_url"] = official_url
+    if role == "mirror_candidate":
+        card["role"] = role
     return card
 
 
@@ -4756,6 +4768,7 @@ def _dictionary_definition_rows(
             rows.append({
                 "source": SUM20_SHORT_LABEL, "text": text,
                 "source_url": str(article.get("url") or ""), "sovietization_risk": 0,
+                **({"role": "mirror_candidate"} if article.get("role") == "mirror_candidate" else {}),
             })
     for slug, source in (("vts", "ВТС"),):
         row = _cache_lookup(cache, slug)
@@ -4838,6 +4851,8 @@ def _definition_pointer_relations(
             }
             if row.get("source_url"):
                 relation["source_url"] = row["source_url"]
+            if row.get("role") == "mirror_candidate":
+                relation["role"] = "mirror_candidate"
             relations.append(relation)
     return relations
 
@@ -4949,6 +4964,8 @@ def _definition_antonym_relations(
             }
             if row.get("source_url"):
                 relation["source_url"] = row["source_url"]
+            if row.get("role") == "mirror_candidate":
+                relation["role"] = "mirror_candidate"
             relations.append(relation)
     return relations
 
@@ -5128,6 +5145,8 @@ def _homonym_dictionary_rows(
             payload = {"source": SUM20_SHORT_LABEL, "text": _definition_body(text, limit=20_000)}
             if article.get("url"):
                 payload["source_url"] = str(article["url"])
+            if article.get("role") == "mirror_candidate":
+                payload["role"] = "mirror_candidate"
             rows.append(payload)
     return rows
 
@@ -5177,6 +5196,8 @@ def _homonym_relations(
         }
         if best_row["source_url"]:
             relation["source_url"] = best_row["source_url"]
+        if best_row.get("role") == "mirror_candidate":
+            relation["role"] = "mirror_candidate"
         relations.append(relation)
     return relations
 

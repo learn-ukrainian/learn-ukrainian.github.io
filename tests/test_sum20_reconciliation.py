@@ -47,10 +47,10 @@ def test_report_compares_identity_and_full_payloads_without_writes(tmp_path, mon
         "counts": {
             "staging_records": 5, "official_records": 4,
             "staging_identities": 4, "official_identities": 4,
-            "shared": 3, "matching": 1, "missing": 1, "extra": 1, "differing": 2,
+            "shared": 3, "matching": 1, "missing": 1, "extra": 1, "differing_after_normalization": 2,
             "staging_duplicate_identities": 1, "official_duplicate_identities": 0,
         },
-        "missing": ["missing"], "extra": ["extra"], "differing": ["changed", "duplicate"],
+        "missing": ["missing"], "extra": ["extra"], "differing_examples": ["changed", "duplicate"],
     }
     assert {path.name: path.read_bytes() for path in tmp_path.iterdir()} == before
 
@@ -60,7 +60,7 @@ def test_cli_emits_only_counts_unless_details_requested(tmp_path, capsys):
     args = ["--repository-root", str(tmp_path), "--staging", str(staging), "--official", str(official)]
     assert report.main(args) == 0
     result = json.loads(capsys.readouterr().out)
-    assert result["counts"]["differing"] == 2
+    assert result["counts"]["differing_after_normalization"] == 2
     assert set(result) == {"identity", "comparison_fields", "counts"}
     assert report.main([*args, "--details"]) == 0
     assert json.loads(capsys.readouterr().out)["missing"] == ["missing"]
@@ -95,3 +95,36 @@ def test_inventory_refuses_missing_article_identity(tmp_path):
         conn.execute("INSERT INTO sum20_slovnyk_articles VALUES ('', 'HEAD', 'text')")
     with pytest.raises(report.Sum20StoreError, match="article_identity_missing"):
         report.reconcile_sum20(staging, official, repository_root=tmp_path)
+
+
+@pytest.mark.parametrize("mirror_text", [
+    "match identical",
+    "identical Джерело: Словник української мови (СУМ-20) на https://example.invalid/source",
+    "  i d e n t i c a l\n",
+    "<b>identical</b>&nbsp;",
+    "match identical Джерело: https://example.invalid/source",
+])
+def test_comparison_ignores_transport_only_and_preserves_stored_text(tmp_path, mirror_text):
+    staging, official = _stores(tmp_path)
+    with sqlite3.connect(staging) as conn:
+        conn.execute("UPDATE sum20_slovnyk_articles SET headword='match', text=? WHERE lemma='MATCH'", (mirror_text,))
+        conn.execute("UPDATE sum20_slovnyk_articles SET lemma='match' WHERE lemma='MATCH'")
+    before = staging.read_bytes(), official.read_bytes()
+    result = report.reconcile_sum20(staging, official, repository_root=tmp_path)
+    assert result["counts"]["matching"] == 1
+    assert result["counts"]["differing_after_normalization"] == 2
+    assert result["differing_examples"] == ["changed", "duplicate"]
+    assert (staging.read_bytes(), official.read_bytes()) == before
+
+
+def test_real_differences_remain_and_examples_are_capped(tmp_path):
+    staging, official = _stores(tmp_path)
+    rows = [(f"difference{i:03}", "HEAD", "mirror sense") for i in range(25)]
+    with sqlite3.connect(staging) as conn:
+        conn.executemany("INSERT INTO sum20_slovnyk_articles VALUES (?, ?, ?)", rows)
+    with sqlite3.connect(official) as conn:
+        conn.executemany("INSERT INTO sum20_articles VALUES (?, ?, 'official sense')", [(r[0], r[1]) for r in rows])
+    result = report.reconcile_sum20(staging, official, repository_root=tmp_path)
+    assert result["counts"]["matching"] == 1
+    assert result["counts"]["differing_after_normalization"] == 27
+    assert len(result["differing_examples"]) == 20

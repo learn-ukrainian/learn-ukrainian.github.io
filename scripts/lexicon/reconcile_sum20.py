@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import argparse
+import html
 import json
+import re
 import sqlite3
 from collections import defaultdict
 from contextlib import closing
@@ -14,13 +16,31 @@ from scripts.lib.readonly_sqlite import SQLiteConnection
 from scripts.storage.topology import main_checkout_root
 from scripts.wiki.sum20_official import normalize_sum20_lookup
 
+DIFFERENCE_EXAMPLE_LIMIT = 20
+
+
+def _comparison_payload(headword: str, text: str, identity: str, *, staging: bool) -> tuple[str, str]:
+    """Discard transport wrappers for comparison only; never write normalized text.
+
+    Mirror pages prepend a separate lemma before the article heading and append
+    a source footer. Whitespace differs around punctuation in the official HTML
+    extraction. Source URLs and retrieval timestamps outside the article are
+    not comparison inputs. Lexical characters, case and punctuation in the
+    article itself are retained.
+    """
+    body = re.sub(r"<[^>]+>", "", html.unescape(text)).strip()
+    if staging:
+        body = re.sub(rf"^{re.escape(identity)}\s+", "", body, count=1)
+        body = re.sub(r"\s+Джерело:\s*(?:Словник української мови|https?://).*$", "", body, flags=re.DOTALL)
+    return normalize_sum20_lookup(headword), re.sub(r"\s+", "", body)
+
 
 def _inventory(conn: SQLiteConnection, *, staging: bool) -> tuple[int, dict[str, list[tuple[str, str]]]]:
-    """Group exact article payloads by normalized article key; retain duplicates.
+    """Group comparison payloads by normalized article key; retain duplicates.
 
     Mirror URLs carry no official wordid. The shared identity is the normalized
     lemma (including any homonym suffix), not a row id or a content digest.
-    Compare headword and full article text byte-for-byte, ignoring transport
+    Compare headword and full article text after removing transport wrappers,
     markup, retrieval times and source-specific URLs. No definitions are edited.
     """
     sql = (
@@ -33,7 +53,7 @@ def _inventory(conn: SQLiteConnection, *, staging: bool) -> tuple[int, dict[str,
         key = normalize_sum20_lookup(str(identity or ""))
         if not key:
             raise Sum20StoreError("article_identity_missing")
-        grouped[key].append((str(headword or ""), str(text or "")))
+        grouped[key].append(_comparison_payload(str(headword or ""), str(text or ""), str(identity), staging=staging))
         count += 1
     return count, {key: sorted(payloads) for key, payloads in grouped.items()}
 
@@ -66,13 +86,13 @@ def reconcile_sum20(staging: Path, official: Path | None = None, *, repository_r
             "matching": len(shared) - len(differing),
             "missing": len(missing),
             "extra": len(extra),
-            "differing": len(differing),
+            "differing_after_normalization": len(differing),
             "staging_duplicate_identities": sum(len(rows) > 1 for rows in staged.values()),
             "official_duplicate_identities": sum(len(rows) > 1 for rows in ingested.values()),
         },
         "missing": missing,
         "extra": extra,
-        "differing": differing,
+        "differing_examples": differing[:DIFFERENCE_EXAMPLE_LIMIT],
     }
 
 
@@ -114,7 +134,7 @@ def main(argv: list[str] | None = None) -> int:
         print(json.dumps({"status": "refused", "reason": "invalid_article_schema"}))
         return 2
     if not args.details:
-        report = {key: value for key, value in report.items() if key not in {"missing", "extra", "differing"}}
+        report = {key: value for key, value in report.items() if key not in {"missing", "extra", "differing_examples"}}
     print(json.dumps(report, ensure_ascii=False, sort_keys=True))
     return 0
 

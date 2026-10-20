@@ -682,3 +682,141 @@ def test_full_enrichment_passes_offline_environment_to_runner(tmp_path, monkeypa
     assert enrich_manifest.enrich(tmp_path / "manifest.json", tmp_path / "fingerprint.json") == (0, 0)
     assert seen == [True]
     assert os.environ["LEXICON_SLOVNYK_OFFLINE"] == "0"
+
+
+def _seed_mirror(tmp_path):
+    path = tmp_path / "data" / "sum20_slovnyk_staging.db"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with sqlite3.connect(path) as conn:
+        conn.execute("CREATE TABLE sum20_slovnyk_articles (lemma, headword, text, source_url, url)")
+        conn.executemany("INSERT INTO sum20_slovnyk_articles VALUES (?, ?, ?, ?, ?)", [
+            ("вода", "ВОДА", "mirror duplicate", "https://example.invalid/water", "water"),
+            ("берег", "БЕРЕГ", "mirror-only definition", "https://example.invalid/bank", "bank"),
+        ])
+    return path
+
+
+def test_unified_binding_official_wins_mirror_fills_and_miss_stays_local(tmp_path, monkeypatch):
+    from scripts.lexicon import enrich_manifest
+
+    db = _seed_articles(tmp_path / "data")
+    with sqlite3.connect(db) as conn:
+        _insert_article(conn, 99, "гора", "official-only definition")
+    mirror = _seed_mirror(tmp_path)
+    before = db.read_bytes(), mirror.read_bytes()
+    calls = _forbid_network(monkeypatch)
+    assert lookup_sum20_articles("вода")[0]["definition"] == "synthetic stored definition"
+    assert lookup_sum20_articles("гора")[0]["definition"] == "official-only definition"
+    assert "role" not in lookup_sum20_articles("вода")[0]
+    rows = lookup_sum20_articles("БЕ\u0301РЕГ")
+    assert rows == [{
+        "headword": "БЕРЕГ", "definition": "mirror-only definition", "article_text": "mirror-only definition",
+        "senses": [], "url": "https://example.invalid/bank", "role": "mirror_candidate",
+    }]
+    assert lookup_sum20_articles("бракує") == []
+    card = enrich_manifest._sum20_definition_card("берег", {"lookups": {"newsum": {"text": "stale cache"}}})
+    assert card["definitions"] == ["mirror-only definition"]
+    assert card["role"] == "mirror_candidate"
+    assert card["source_url"] == "https://example.invalid/bank"
+    assert enrich_manifest._dictionary_definition_rows(None, "берег", cache={})[0]["role"] == "mirror_candidate"
+    assert enrich_manifest._homonym_dictionary_rows(None, "берег")[0]["role"] == "mirror_candidate"
+    # The normative official API must never promote mirror candidates.
+    assert sources_db.query_sum20("берег") == []
+    assert (db.read_bytes(), mirror.read_bytes()) == before
+    assert calls == []
+
+
+@pytest.mark.parametrize("origin_mirror", [False, True])
+def test_xref_does_not_mix_official_and_mirror_roles(monkeypatch, origin_mirror):
+    from scripts.lexicon import enrich_manifest as em
+
+    monkeypatch.setattr(em, "_vesum_base_lemma", lambda word: word)
+    origin = {"definitions": ["див. берег"]}
+    target = {"definitions": ["synthetic target definition"]}
+    (origin if origin_mirror else target)["role"] = "mirror_candidate"
+    assert em._resolve_definition_xref(origin, "вода", lambda _: target) is None
+
+
+@pytest.mark.parametrize("reader, text", [
+    ("_definition_pointer_relations", "Те саме, що гора."),
+    ("_definition_antonym_relations", "Протилежне гора."),
+    ("_homonym_relations", "БЕРЕГ¹, а, ч. synthetic first. БЕРЕГ², а, ч. synthetic second."),
+])
+def test_mirror_relation_provenance_retains_candidate_role(tmp_path, monkeypatch, reader, text):
+    from scripts.lexicon import enrich_manifest as em
+
+    _seed_articles(tmp_path / "data")
+    mirror = _seed_mirror(tmp_path)
+    with sqlite3.connect(mirror) as conn:
+        conn.execute("UPDATE sum20_slovnyk_articles SET text=? WHERE lemma='берег'", (text,))
+    monkeypatch.setattr(em, "_vesum_valid_synonym", lambda _: True)
+    relations = getattr(em, reader)(None, "берег", cache={})
+    assert len(relations) == 1
+    assert relations[0]["role"] == "mirror_candidate"
+    assert relations[0]["source_url"] == "https://example.invalid/bank"
+
+
+def test_missing_mirror_is_a_plain_miss_and_creates_nothing(tmp_path):
+    _seed_articles(tmp_path / "data")
+    missing = tmp_path / "absent.db"
+    assert lookup_sum20_articles("бракує") == []
+    assert lookup_sum20_articles("бракує", mirror_db_path=missing) == []
+    assert not missing.exists()
+
+
+def test_mirror_connection_refuses_writes_and_attaches(tmp_path, monkeypatch):
+    from scripts.lexicon import sum20_store
+
+    _seed_articles(tmp_path / "data")
+    mirror = _seed_mirror(tmp_path)
+    original = sum20_store.open_readonly
+    inspected = []
+
+    def inspect_connection(path):
+        conn = original(path)
+        if path == mirror:
+            conn.execute("PRAGMA query_only=OFF")
+            with pytest.raises(sqlite3.OperationalError, match="readonly"):
+                conn.execute("DELETE FROM sum20_slovnyk_articles")
+            with pytest.raises(sqlite3.OperationalError, match="attached"):
+                conn.execute("ATTACH DATABASE ':memory:' AS other")
+            inspected.append(True)
+        return conn
+
+    monkeypatch.setattr(sum20_store, "open_readonly", inspect_connection)
+    assert lookup_sum20_articles("берег")[0]["role"] == "mirror_candidate"
+    assert inspected == [True]
+
+
+@pytest.mark.parametrize("kind, reason", [("corrupt", "mirror_unavailable"), ("schema", "mirror_unavailable"),
+                                         ("network", "locality_network"), ("unknown", "locality_unknown")])
+def test_invalid_mirror_is_typed_refusal_not_miss(tmp_path, monkeypatch, kind, reason):
+    from scripts.storage import topology
+
+    _seed_articles(tmp_path / "data")
+    mirror = tmp_path / "mirror.db"
+    if kind == "schema":
+        sqlite3.connect(mirror).close()
+    else:
+        mirror.write_bytes(b"invalid sqlite")
+    original = topology._store_locality
+    if kind in {"network", "unknown"}:
+        monkeypatch.setattr(topology, "_store_locality", lambda p: kind if p == mirror else original(p))
+    # A bad mirror is not opened when official evidence already answers.
+    assert lookup_sum20_articles("вода", mirror_db_path=mirror)[0]["wordid"] == 42
+    with pytest.raises(Sum20StoreError, match=reason):
+        lookup_sum20_articles("бракує", mirror_db_path=mirror)
+
+
+def test_injected_mirror_binding_and_lexdata_precedence(tmp_path, monkeypatch):
+    _seed_articles(tmp_path / "data")
+    mirror = _seed_mirror(tmp_path)
+    injected = mirror.rename(tmp_path / "injected.db")
+    assert lookup_sum20_articles("берег") == []
+    assert lookup_sum20_articles("берег", mirror_db_path=injected)[0]["role"] == "mirror_candidate"
+    lexdata = _seed_articles(tmp_path / "data", name="lexdata.db")
+    with sqlite3.connect(lexdata) as conn:
+        conn.execute("UPDATE sum20_articles SET definition_text='published definition'")
+    _publish_generation(lexdata)
+    assert lookup_sum20_articles("вода", mirror_db_path=injected)[0]["definition"] == "published definition"
+    assert lookup_sum20_articles("берег", mirror_db_path=injected)[0]["role"] == "mirror_candidate"

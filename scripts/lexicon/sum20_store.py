@@ -2,13 +2,17 @@
 
 from __future__ import annotations
 
+import json
 import os
 import sqlite3
+from contextlib import closing
 from pathlib import Path
+from typing import Any
 
 from scripts.lexdata.generation import Unavailable, open_generation
 from scripts.lib.readonly_sqlite import SQLiteConnection, open_readonly
-from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store
+from scripts.storage.topology import StoreBinding, StoreRefusal, main_checkout_root, resolve_store
+from scripts.wiki.sum20_official import normalize_sum20_lookup, sum20_live_article_where
 
 
 class Sum20StoreError(ValueError):
@@ -72,3 +76,123 @@ def open_sum20(db_path: Path | str | None = None, *, repository_root: Path | Non
     if exclusive:
         raise Sum20StoreError("sum20_table_missing")
     return open_sources(repository_root=repository_root)
+
+
+def lookup_sum20_cached(
+    lemma: str,
+    conn: SQLiteConnection,
+    *,
+    prefix: bool = True,
+) -> list[dict[str, Any]]:
+    """Retrieve locally stored СУМ-20 records for lemma (read-only safe).
+
+    ``prefix=True`` keeps the lexicon homonym match (exact key or key plus a
+    space). ``prefix=False`` is the exact official match used by ``query_sum20``.
+    """
+    norm = normalize_sum20_lookup(lemma)
+    cur = conn.cursor()
+    try:
+        columns = [str(row[1]) for row in cur.execute("PRAGMA table_info(sum20_articles)").fetchall()]
+        if not columns:
+            return []
+        where = sum20_live_article_where(columns, prefix=prefix)
+        parameters = (norm, f"{norm} %") if prefix else (norm,)
+        cur.execute(
+            f"""
+            SELECT id, wordid, headword, stressed_headword, pos, grammar, article_text, definition_text, official_url
+            FROM sum20_articles
+            WHERE {where}
+            ORDER BY wordid
+            """,
+            parameters,
+        )
+        rows = cur.fetchall()
+    except sqlite3.OperationalError:
+        return []
+
+    results = []
+    for r in rows:
+        art_id = r["id"]
+        senses = []
+        try:
+            cur.execute(
+                """
+                SELECT sense_order, definition, register_labels
+                FROM sum20_senses
+                WHERE article_id = ?
+                ORDER BY sense_order
+                """,
+                (art_id,),
+            )
+            senses = [
+                {
+                    "sense_order": s["sense_order"],
+                    "definition": s["definition"],
+                    "register_labels": json.loads(s["register_labels"] or "[]"),
+                }
+                for s in cur.fetchall()
+            ]
+        except (sqlite3.OperationalError, json.JSONDecodeError):
+            pass
+
+        results.append(
+            {
+                "id": art_id,
+                "wordid": r["wordid"],
+                "headword": r["headword"],
+                "stressed_headword": r["stressed_headword"],
+                "pos": r["pos"],
+                "grammar": r["grammar"],
+                "definition": r["definition_text"],
+                "article_text": r["article_text"],
+                "senses": senses,
+                "url": r["official_url"],
+            }
+        )
+    return results
+
+
+def resolve_sum20_articles(
+    lemma: str,
+    db_path: Path | str | None = None,
+    *,
+    mirror_db_path: Path | str | None = None,
+    repository_root: Path | None = None,
+) -> list[dict[str, Any]]:
+    """Read official articles first, then local mirror candidates for a missing key.
+
+    An absent mirror is a local miss. Refused or corrupt mirrors raise a typed
+    error, as do invalid official bindings. Neither path writes or uses caches.
+    The staging file uses an injected sources binding for locality validation;
+    this does not promote its records to official evidence.
+    """
+    with closing(open_sum20(db_path, repository_root=repository_root)) as conn:
+        official = lookup_sum20_cached(lemma, conn)
+    if official:
+        return official
+    path = (Path(mirror_db_path) if mirror_db_path is not None else
+            main_checkout_root(repository_root or Path.cwd()) / "data" / "sum20_slovnyk_staging.db")
+    resolved = resolve_store("sources", repository_root, binding=StoreBinding("sources", path))
+    if isinstance(resolved, StoreRefusal):
+        if resolved.reason == "store_missing":
+            return []
+        raise Sum20StoreError(resolved.reason)
+    norm = normalize_sum20_lookup(lemma)
+    try:
+        with closing(open_readonly(resolved.path)) as conn:
+            conn.row_factory = sqlite3.Row
+            rows = conn.execute(
+                "SELECT lemma, headword, text, source_url, url FROM sum20_slovnyk_articles "
+                "WHERE lemma = ? ORDER BY url",
+                (norm,),
+            ).fetchall()
+    except (OSError, sqlite3.Error):
+        raise Sum20StoreError("mirror_unavailable") from None
+    return [{
+        "headword": row["headword"],
+        "definition": row["text"],
+        "article_text": row["text"],
+        "senses": [],
+        "url": row["source_url"] or row["url"],
+        "role": "mirror_candidate",
+    } for row in rows]
