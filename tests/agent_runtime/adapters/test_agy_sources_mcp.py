@@ -57,9 +57,7 @@ def test_review_command_preserves_read_only_deny_list(tmp_path: Path, adapter_ho
 
     assert "--sandbox" in plan.cmd
     assert "--dangerously-skip-permissions" not in plan.cmd
-    modes = [plan.cmd[i + 1] for i, arg in enumerate(plan.cmd) if arg == "--mode"]
-    assert "auto" not in modes
-    assert modes == ["default"]
+    assert "--mode" not in plan.cmd
     deny = json.loads(settings.read_text(encoding="utf-8"))["permissions"]["deny"]
     assert "command(*)" in deny
     assert "write_file(*)" in deny
