@@ -1668,11 +1668,26 @@ def _read_db_path() -> Path:
     return require_local_active_sources_db(main_checkout_root(PROJECT_ROOT)).resolve()
 
 
+# Class ``_open_conn`` opens every connection with. ``None`` (the default) is a
+# plain ``sqlite3.Connection``; the Sources MCP server installs a subclass that
+# reports database errors the helpers below swallow (#11115).
+_connection_factory: type[sqlite3.Connection] | None = None
+
+
+def set_connection_factory(factory: type[sqlite3.Connection] | None) -> None:
+    """Open every later ``_open_conn`` connection as ``factory`` (``None``: plain)."""
+    global _connection_factory
+    _connection_factory = factory
+
+
 def _open_conn(db_path: Path, *, read_only: bool = False) -> sqlite3.Connection:
+    options: dict[str, Any] = {} if _connection_factory is None else {"factory": _connection_factory}
     if read_only:
-        conn = sqlite3.connect(f"{db_path.resolve().as_uri()}?mode=ro", uri=True, check_same_thread=False)
+        conn = sqlite3.connect(
+            f"{db_path.resolve().as_uri()}?mode=ro", uri=True, check_same_thread=False, **options
+        )
     else:
-        conn = sqlite3.connect(str(db_path), check_same_thread=False)
+        conn = sqlite3.connect(str(db_path), check_same_thread=False, **options)
     conn.row_factory = sqlite3.Row
     # Concurrent readers must wait for a concurrent writer rather
     # than silently returning empty rowsets — see §race-condition

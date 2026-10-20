@@ -12,11 +12,13 @@ the discard-reopen-retry path, the typed failure and the request-log record.
 from __future__ import annotations
 
 import asyncio
+import contextlib
 import importlib
 import importlib.util
 import inspect
 import json
 import sqlite3
+import subprocess
 import sys
 import threading
 from pathlib import Path
@@ -61,6 +63,7 @@ def db(server, sdb, tmp_path, monkeypatch):
     conn.close()
     monkeypatch.setattr(sdb, "SOURCES_DB_PATH", path)
     monkeypatch.setattr(sdb, "_conn", None)
+    monkeypatch.setattr(sdb, "_connection_factory", server._ObservedConnection)
     monkeypatch.setenv("LU_MCP_SOURCES_LOG_DIR", str(tmp_path / "logs"))
     yield path
     held = sdb._conn
@@ -224,6 +227,15 @@ def test_discard_covers_both_import_names_and_leaves_other_databases_alone(serve
         def __init__(self) -> None:
             self._conn = object()
 
+        @staticmethod
+        def _read_db_path() -> Path:
+            return Path("sources.db")
+
+        @staticmethod
+        def _open_conn(path: Path, *, read_only: bool) -> object:
+            assert read_only
+            return object()
+
     class Vesum:
         _vesum_conn = object()
         closed = 0
@@ -238,8 +250,6 @@ def test_discard_covers_both_import_names_and_leaves_other_databases_alone(serve
     monkeypatch.setitem(server.sys.modules, "scripts.wiki.sources_db", full)
     monkeypatch.setitem(server.sys.modules, "scripts.verification.vesum", vesum)
     monkeypatch.delitem(server.sys.modules, "verification.vesum", raising=False)
-    monkeypatch.setattr(server, "_open_observed_sources_conn", lambda module: object())
-
     assert server._discard_cached_connections("sources.db") is True
     assert short._conn is not None and short._conn is not old_short
     assert full._conn is not None and full._conn is not old_full
@@ -265,25 +275,34 @@ def _add_dictionary_tables(path: Path) -> None:
     conn.close()
 
 
-def _failing_connection_opener(server, path: Path, message: str):
-    """An opener whose connection raises ``OperationalError(message)`` on every query, as the reopen would."""
+def _flaky_factory(server, message: str, failures: int | None = None):
+    """A connection class whose data queries raise ``OperationalError(message)``.
 
-    def raise_error(self, *args, **kwargs):
+    The class counts down ``failures`` raises (``None``: every query fails);
+    ``PRAGMA`` statements always work so a connection can be opened.
+    """
+
+    class State:
+        left = failures
+
+    def raise_error(self, sql, *args, **kwargs):
+        if str(sql).lstrip().upper().startswith("PRAGMA"):
+            return sqlite3.Cursor.execute(self, sql, *args, **kwargs)
+        if State.left is not None:
+            if State.left <= 0:
+                return sqlite3.Cursor.execute(self, sql, *args, **kwargs)
+            State.left -= 1
         raise sqlite3.OperationalError(message)
 
-    class FailingCursor(server._ObservedCursor):
+    class FlakyCursor(server._ObservedCursor):
         execute = server._observe(raise_error)
 
-    class FailingConnection(server._ObservedConnection):
-        def cursor(self, factory=FailingCursor):
+    class FlakyConnection(server._ObservedConnection):
+        def cursor(self, factory=FlakyCursor):
             return super().cursor(factory)
 
-    def opener(_module):
-        conn = sqlite3.connect(str(path), factory=FailingConnection, check_same_thread=False)
-        conn.row_factory = sqlite3.Row
-        return conn
-
-    return opener
+    FlakyConnection.state = State
+    return FlakyConnection
 
 
 def _observed_connection_at(server, path: Path):
@@ -314,7 +333,8 @@ def test_retry_that_swallows_a_disk_error_is_a_typed_error_not_an_empty_result(
     healthy, is_error, _ = _dispatch(server, tool, arguments)  # opens and caches the process-wide connection
     assert is_error is False and "No results" not in healthy[0].text
     _truncate_in_place(db)  # first attempt: malformed, propagates out of the helper
-    monkeypatch.setattr(server, "_open_observed_sources_conn", _failing_connection_opener(server, db, "disk I/O error"))
+    # The reopened connection (made through the installed factory) swallows a disk error on every query.
+    monkeypatch.setattr(sdb, "_connection_factory", _flaky_factory(server, "disk I/O error"))
 
     content, is_error, typed = _dispatch(server, tool, arguments)
 
@@ -328,12 +348,12 @@ def test_retry_that_swallows_a_disk_error_is_a_typed_error_not_an_empty_result(
     assert heal["recovered"] is False and heal["error_class"] == "DatabaseError"
 
 
-def test_swallowed_damage_on_a_first_attempt_over_the_healed_connection_is_healed(server, sdb, db, tmp_path):
+def test_swallowed_damage_on_a_first_attempt_over_a_cached_connection_is_healed(server, sdb, db, tmp_path, monkeypatch):
     _add_dictionary_tables(db)
     _dispatch(server, "search_style_guide", {"query": "участь"})
-    # A heal already happened, so the cached connection is an observed one; it fails once and the helper swallows it.
-    failing = _failing_connection_opener(server, db, "disk I/O error")(sdb)
-    sdb._conn = failing
+    # The cached connection fails once and the helper swallows it.
+    failing = _cache_a_damaged_connection(server, sdb, db, monkeypatch, failures=1)
+    monkeypatch.setattr(sdb, "_connection_factory", server._ObservedConnection)
 
     content, is_error, _ = _dispatch(server, "search_style_guide", {"query": "участь"})
 
@@ -349,7 +369,6 @@ def test_swallowed_damage_on_a_first_attempt_over_the_healed_connection_is_heale
 
 def test_swallowed_absent_table_is_not_a_database_failure(server, sdb, db, tmp_path):
     _dispatch(server, "collection_stats", {})  # no style_guide table in this database
-    sdb._conn = server._open_observed_sources_conn(sdb)
 
     content, is_error, typed = _dispatch(server, "search_style_guide", {"query": "участь"})
 
@@ -360,9 +379,8 @@ def test_swallowed_absent_table_is_not_a_database_failure(server, sdb, db, tmp_p
 
 def test_swallowed_absent_table_on_a_first_attempt_does_not_start_a_heal(server, sdb, db, tmp_path, monkeypatch):
     _dispatch(server, "collection_stats", {})  # no style_guide table in this database
-    sdb._conn = server._open_observed_sources_conn(sdb)  # as after any earlier heal: swallowed errors are reported
     reopened: list[object] = []
-    monkeypatch.setattr(server, "_open_observed_sources_conn", lambda module: reopened.append(module))
+    monkeypatch.setattr(server, "_discard_cached_connections", lambda *args: reopened.append(args))
 
     content, is_error, typed = _dispatch(server, "search_style_guide", {"query": "участь"})
 
@@ -384,11 +402,7 @@ def test_retry_over_a_rebuilt_database_missing_a_table_is_a_typed_error_not_an_e
     conn.execute("CREATE TABLE textbooks (id INTEGER PRIMARY KEY, body TEXT)")
     conn.commit()
     conn.close()
-    monkeypatch.setattr(
-        server,
-        "_open_observed_sources_conn",
-        lambda module: _observed_connection_at(server, rebuilt),
-    )
+    monkeypatch.setattr(sdb, "_read_db_path", lambda: rebuilt)  # the reopen now finds the rebuilt file
 
     content, is_error, typed = _dispatch(server, "search_style_guide", {"query": "участь"})
 
@@ -402,17 +416,25 @@ def test_retry_over_a_rebuilt_database_missing_a_table_is_a_typed_error_not_an_e
     assert heal["recovered"] is False and heal["error_class"] == "DatabaseError"
 
 
-def test_failed_reopen_keeps_the_held_connection_instead_of_clearing_it(server, sdb, db, monkeypatch):
+def test_failed_reopen_replaces_the_held_connection_with_one_that_fails_every_query(server, sdb, db, monkeypatch):
     _stats(server)
     held = sdb._conn
 
-    def cannot_reopen(_module):
+    def cannot_reopen():
         raise FileNotFoundError("sources database is being rebuilt")
 
-    monkeypatch.setattr(server, "_open_observed_sources_conn", cannot_reopen)
+    monkeypatch.setattr(sdb, "_read_db_path", cannot_reopen)
 
     assert server._discard_cached_connections("sources.db") is False
-    assert sdb._conn is held
+    assert sdb._conn is not held and isinstance(sdb._conn, server._UnavailableConnection)
+    for call in (
+        lambda: sdb._conn.execute("SELECT 1"),
+        lambda: sdb._conn.cursor(),
+        lambda: sdb._conn.executemany("SELECT ?", [(1,)]),
+        lambda: sdb._conn.executescript("SELECT 1"),
+    ):
+        with pytest.raises(sqlite3.OperationalError, match="unable to open database file"):
+            call()
 
 
 def test_reader_paused_before_returning_the_connection_never_gets_none_when_a_heal_runs(server, sdb, db):
@@ -460,13 +482,13 @@ def test_simultaneous_heals_of_one_stale_connection_reopen_once(server, sdb, db,
     _stats(server)
     original = _truncate_in_place(db)
     opens: list[int] = []
-    real_open = server._open_observed_sources_conn
+    real_open = sdb._open_conn
 
-    def counting_open(module):
+    def counting_open(*args, **kwargs):
         opens.append(1)
-        return real_open(module)
+        return real_open(*args, **kwargs)
 
-    monkeypatch.setattr(server, "_open_observed_sources_conn", counting_open)
+    monkeypatch.setattr(sdb, "_open_conn", counting_open)
 
     async def scenario():
         failed = 0
@@ -504,6 +526,171 @@ def test_simultaneous_heals_of_one_stale_connection_reopen_once(server, sdb, db,
     assert [json.loads(r[0].text) for r in results] == [{"textbooks": ROW_COUNT}] * 2
     assert len(opens) == 1
     assert all(h["reopened"] is True and h["recovered"] is True for h in heals.values())
+
+
+# --- #11115 round 4: every connection is observed from its first open --------
+
+
+def _heal_record(tmp_path: Path) -> dict:
+    return _log_entries(tmp_path)[-1]["self_heal"]
+
+
+def test_server_installs_the_observed_connection_for_both_import_names():
+    own_copy = _load_sources_server()  # a fresh load installs its own class, whatever an earlier load left
+    for name in ("wiki.sources_db", "scripts.wiki.sources_db"):
+        assert importlib.import_module(name)._connection_factory is own_copy._ObservedConnection
+
+
+def test_initial_connection_that_swallows_a_disk_error_is_healed_on_the_first_call(
+    server, sdb, db, tmp_path, monkeypatch
+):
+    _add_dictionary_tables(db)
+    assert sdb._conn is None  # first call after server start: nothing cached, no earlier heal
+    monkeypatch.setattr(sdb, "_connection_factory", _flaky_factory(server, "disk I/O error", failures=1))
+
+    content, is_error, typed = _dispatch(server, "search_style_guide", {"query": "участь"})
+
+    assert is_error is False and "Приймати участь" in content[0].text and typed["status"] != "empty"
+    assert _heal_record(tmp_path) == {
+        "database": "sources.db",
+        "error_class": "OperationalError",
+        "reopened": True,
+        "recovered": True,
+    }
+
+
+def test_initial_connection_that_keeps_swallowing_a_disk_error_is_a_typed_error(server, sdb, db, tmp_path, monkeypatch):
+    _add_dictionary_tables(db)
+    monkeypatch.setattr(sdb, "_connection_factory", _flaky_factory(server, "disk I/O error"))
+
+    content, is_error, typed = _dispatch(server, "search_style_guide", {"query": "участь"})
+
+    assert is_error is True
+    assert json.loads(content[0].text) == typed
+    assert typed["error_code"] == "database_unavailable" and typed["database"] == "sources.db"
+    assert "No results" not in content[0].text
+    assert _heal_record(tmp_path)["recovered"] is False
+
+
+def _cache_a_damaged_connection(server, sdb, db, monkeypatch, failures: int | None):
+    """Cache a connection whose data queries fail with a disk error the helper swallows."""
+    monkeypatch.setattr(sdb, "_connection_factory", _flaky_factory(server, "disk I/O error", failures=failures))
+    damaged = sdb._open_conn(db, read_only=True)
+    sdb._conn = damaged
+    return damaged
+
+
+def test_reopen_failure_never_reuses_the_damaged_connection_and_the_next_call_heals(
+    server, sdb, db, tmp_path, monkeypatch
+):
+    _add_dictionary_tables(db)
+    _dispatch(server, "search_style_guide", {"query": "участь"})
+    damaged = _cache_a_damaged_connection(server, sdb, db, monkeypatch, failures=1)
+    monkeypatch.setattr(sdb, "_connection_factory", server._ObservedConnection)
+    real_path = sdb._read_db_path
+
+    def path_missing():
+        raise FileNotFoundError(f"Sources database not found at {tmp_path}")
+
+    monkeypatch.setattr(sdb, "_read_db_path", path_missing)
+
+    content, is_error, typed = _dispatch(server, "search_style_guide", {"query": "участь"})
+
+    # Its one failure is spent, so reusing the damaged connection would have succeeded: it is not reused.
+    assert is_error is True and "Приймати участь" not in content[0].text
+    assert json.loads(content[0].text) == typed
+    assert typed["error_code"] == "database_unavailable" and typed["database"] == "sources.db"
+    assert typed["error_class"] == "OperationalError" and typed["reopened"] is False
+    assert str(tmp_path) not in content[0].text
+    assert sdb._conn is not damaged
+    assert _heal_record(tmp_path)["recovered"] is False and _heal_record(tmp_path)["reopened"] is False
+
+    monkeypatch.setattr(sdb, "_read_db_path", real_path)  # the file can be opened again
+    content, is_error, _ = _dispatch(server, "search_style_guide", {"query": "участь"})
+
+    assert is_error is False and "Приймати участь" in content[0].text
+    assert not isinstance(sdb._conn, server._UnavailableConnection)
+    assert _heal_record(tmp_path) == {
+        "database": "sources.db",
+        "error_class": "OperationalError",
+        "reopened": True,
+        "recovered": True,
+    }
+
+
+def test_reopen_failure_with_a_persistent_error_is_a_typed_error_in_privacy_mode_too(
+    server, sdb, db, tmp_path, monkeypatch
+):
+    _add_dictionary_tables(db)
+    damaged = _cache_a_damaged_connection(server, sdb, db, monkeypatch, failures=None)
+
+    def path_missing():
+        raise FileNotFoundError(f"Sources database not found at {tmp_path}")
+
+    monkeypatch.setattr(sdb, "_read_db_path", path_missing)
+
+    _content, is_error, typed = _dispatch(server, "search_style_guide", {"query": "участь", "_privacy_mode": True})
+
+    assert is_error is True and typed["error_code"] == "database_unavailable"
+    assert typed["reopened"] is False and sdb._conn is not damaged
+    entry = _log_entries(tmp_path)[-1]
+    assert entry["self_heal"]["recovered"] is False and entry["self_heal"]["reopened"] is False
+    assert entry["privacy_mode"] is True and str(tmp_path) not in json.dumps(entry)
+
+
+def test_connection_opened_for_another_database_path_is_observed_too(server, sdb, db, tmp_path):
+    other = tmp_path / "other.db"
+    seed = sqlite3.connect(other)
+    seed.execute("CREATE TABLE t (id INTEGER)")
+    seed.commit()
+    seed.close()
+    other_conn = sdb._get_conn_for(other)
+    try:
+        assert type(other_conn) is server._ObservedConnection
+    finally:
+        other_conn.close()
+
+
+def test_swallowed_damage_that_ends_in_another_exception_is_the_reported_failure(server, sdb, db):
+    async def swallow_damage_then_break():
+        conn = _observed_connection_at(server, db)
+        with contextlib.suppress(sqlite3.OperationalError):
+            conn.execute("SELECT * FROM textbooks WHERE no_such_column_here = 1").fetchall()
+        raise AttributeError("derived from the swallowed error")
+
+    with pytest.raises(sqlite3.OperationalError, match="no such column"):
+        asyncio.run(server._run_attempt(swallow_damage_then_break, server._FIRST_ATTEMPT_MARKERS))
+
+
+def test_exception_that_is_not_preceded_by_swallowed_damage_is_left_alone(server):
+    async def breaks():
+        raise AttributeError("unrelated")
+
+    with pytest.raises(AttributeError, match="unrelated"):
+        asyncio.run(server._run_attempt(breaks, server._FIRST_ATTEMPT_MARKERS))
+
+
+def test_other_consumers_of_sources_db_get_a_plain_connection_when_the_factory_is_unset(sdb, db, monkeypatch):
+    monkeypatch.setattr(sdb, "_connection_factory", None)
+
+    readonly = sdb._open_conn(db, read_only=True)
+    writable = sdb._open_conn(db)
+    try:
+        assert type(readonly) is sqlite3.Connection and type(writable) is sqlite3.Connection
+        assert readonly.row_factory is sqlite3.Row
+        assert readonly.execute("PRAGMA busy_timeout").fetchone()[0] == sdb._SQLITE_BUSY_TIMEOUT_MS
+    finally:
+        readonly.close()
+        writable.close()
+
+
+def test_sources_db_default_factory_is_unset_without_the_server():
+    root = Path(__file__).resolve().parents[1]
+    program = f"import sys; sys.path.insert(0, {str(root)!r}); import scripts.wiki.sources_db as m; print(m._connection_factory)"
+    result = subprocess.run(
+        [sys.executable, "-I", "-c", program], capture_output=True, text=True, check=True, timeout=300
+    )
+    assert result.stdout.strip() == "None"
 
 
 @pytest.fixture()

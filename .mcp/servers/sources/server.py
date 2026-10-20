@@ -58,6 +58,8 @@ if str(SERVER_DIR) not in sys.path:
 
 import word_card
 
+import scripts.wiki.sources_db as sources_db_full_name
+import wiki.sources_db as sources_db_short_name
 from scripts.rag.call_governor import CallGovernor, CallRefused, GovernorLimits
 from scripts.verification.check_ru_morph import is_russian_pattern
 from wiki.textbook_subjects import CANONICAL_TEXTBOOK_SUBJECTS
@@ -1914,13 +1916,14 @@ def _review_before_handler(
 #
 # Many dictionary helpers in ``wiki.sources_db`` catch ``sqlite3.Error`` and
 # return an empty result, which would turn a damaged database into a false
-# "no results" (and a false recovery). The connection the heal opens therefore
-# reports damage-class errors it raises, swallowed or not, to the attempt that
-# is running (``_ATTEMPT_DAMAGE``); an attempt that saw damage counts as failed.
-# On the retry the bar is stricter: the reopened connection must answer every
-# query, so any swallowed stale-connection error (a missing table after a
-# schema change included) fails it. A missing table alone on the first attempt
-# is only an optional table and never starts a heal.
+# "no results" (and a false recovery). Every connection that module opens is
+# therefore an observed one, from its first open: the server installs
+# ``_ObservedConnection`` through ``set_connection_factory`` at import. It
+# reports stale-connection errors it raises, swallowed or not, to the attempt
+# that is running (``_ATTEMPT_DAMAGE``); an attempt that saw one counts as
+# failed. A missing table alone on the first attempt is only an optional table
+# and never starts a heal; on the retry the reopened connection must answer
+# every query, so a missing table (a schema change) fails it too.
 
 _STALE_CONNECTION_MARKERS = (
     "malformed",
@@ -1932,15 +1935,9 @@ _STALE_CONNECTION_MARKERS = (
     "unable to open database file",
     "closed database",
 )
-# The subset that always means a damaged file or connection. "no such table"
-# is not in it: helpers treat an absent optional table as a normal empty result.
-_DAMAGE_MARKERS = (
-    "malformed",
-    "disk i/o error",
-    "file is not a database",
-    "unable to open database file",
-    "closed database",
-)
+# What a first attempt must not have swallowed. "no such table" is left out:
+# helpers treat an absent optional table as a normal empty result.
+_FIRST_ATTEMPT_MARKERS = tuple(marker for marker in _STALE_CONNECTION_MARKERS if marker != "no such table")
 _DATABASE_UNAVAILABLE_CODE = "database_unavailable"
 _UNATTRIBUTED_DATABASE = "unattributed"
 # One lock covers every replacement of a cached connection and the generation
@@ -2009,34 +2006,49 @@ class _ObservedConnection(sqlite3.Connection):
         return self.cursor().executescript(script)
 
 
-def _open_observed_sources_conn(module: Any) -> sqlite3.Connection:
-    """Open the read-only connection ``module._get_conn`` would, as an observed one."""
-    path = module._read_db_path()
-    if not path.is_file() or not path.stat().st_size:
-        raise FileNotFoundError(f"Sources database not found at {path}.")
-    conn = sqlite3.connect(
-        f"{path.resolve().as_uri()}?mode=ro", uri=True, check_same_thread=False, factory=_ObservedConnection
-    )
-    conn.row_factory = sqlite3.Row
-    conn.execute(f"PRAGMA busy_timeout = {module._SQLITE_BUSY_TIMEOUT_MS}")
-    return conn
+class _UnavailableConnection(sqlite3.Connection):
+    """Stands in for a cached connection that could not be replaced; every query on it fails.
+
+    Clearing the cache instead would let a lock-free ``_get_conn`` reader that
+    already saw it set return ``None``, and a retry that opens the database
+    lazily would see a helper swallow ``FileNotFoundError`` as "no results".
+    """
+
+    def _unavailable(self) -> sqlite3.OperationalError:
+        exc = sqlite3.OperationalError("unable to open database file")
+        _note_database_damage(exc)
+        return exc
+
+    def cursor(self, factory: Any = None) -> Any:
+        raise self._unavailable()
+
+    def execute(self, sql: str, parameters: Any = (), /) -> Any:
+        raise self._unavailable()
+
+    def executemany(self, sql: str, parameters: Any, /) -> Any:
+        raise self._unavailable()
+
+    def executescript(self, script: str, /) -> Any:
+        raise self._unavailable()
 
 
 def _discard_sources_conn(module: Any) -> bool:
-    """Swap the cached connection for a freshly opened one; it is never left unset.
+    """Swap the cached connection for a freshly opened one; never keep the failed one.
 
-    ``_get_conn`` reads ``_conn`` without a lock, so clearing it would let a
-    reader that already saw it set return ``None``. One attribute store
-    replaces it instead: a reader gets the old or the new connection, never
-    nothing. The old one is not closed here (a call in another thread may
-    still be reading it); it closes when the last reader lets go. If the
-    reopen fails the held connection stays and the retry reports the failure.
+    ``_get_conn`` reads ``_conn`` without a lock, so the swap is one attribute
+    store: a reader gets the old or the new connection, never nothing. The old
+    one is not closed here (a call in another thread may still be reading it).
+    If the reopen fails the failed connection is still replaced, by one that
+    fails every query (``_UnavailableConnection``): the retry reports the
+    failure instead of reusing the damaged object, and the next call heals
+    again once the file can be opened.
     """
     if getattr(module, "_conn", None) is None:
         return False
     try:
-        fresh = _open_observed_sources_conn(module)
-    except (OSError, ValueError, sqlite3.Error):
+        fresh = module._open_conn(module._read_db_path(), read_only=True)
+    except Exception:  # any reason the file cannot be opened leaves the failed connection unusable
+        module._conn = sqlite3.connect(":memory:", check_same_thread=False, factory=_UnavailableConnection)
         return False
     module._conn = fresh
     return True
@@ -2054,6 +2066,15 @@ _SQLITE_CONNECTION_CACHES: dict[str, tuple[tuple[str, ...], Any]] = {
     "sources.db": (("wiki.sources_db", "scripts.wiki.sources_db"), _discard_sources_conn),
     "vesum.db": (("verification.vesum", "scripts.verification.vesum"), _discard_vesum_conn),
 }
+
+
+def _install_observed_connections() -> None:
+    """Make every connection ``wiki.sources_db`` opens, in either import name, an observed one."""
+    for module in (sources_db_short_name, sources_db_full_name):
+        module.set_connection_factory(_ObservedConnection)
+
+
+_install_observed_connections()
 
 
 class SourcesDatabaseUnavailable(Exception):
@@ -2124,6 +2145,10 @@ async def _run_attempt(handler: Any, markers: tuple[str, ...]) -> Any:
     token = _ATTEMPT_DAMAGE.set(attempt)
     try:
         result = await handler()
+    except Exception as exc:
+        if attempt.errors and not isinstance(exc, sqlite3.DatabaseError):
+            raise attempt.errors[0] from exc  # the swallowed damage is the cause of whatever broke next
+        raise
     finally:
         _ATTEMPT_DAMAGE.reset(token)
     if attempt.errors:
@@ -2141,7 +2166,7 @@ async def _call_with_database_self_heal(handler: Any, heal: dict[str, Any]) -> A
     """
     seen = _connection_generations()
     try:
-        return await _run_attempt(handler, _DAMAGE_MARKERS)
+        return await _run_attempt(handler, _FIRST_ATTEMPT_MARKERS)
     except sqlite3.DatabaseError as first:
         if not _is_stale_connection_error(first):
             raise
