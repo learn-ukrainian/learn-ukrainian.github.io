@@ -15,6 +15,15 @@ It uses the producer's existing permission, citation, certification, and output
 guards. Negative controls mutate copies in managed scratch and use the producer's
 `canonical()` and `sha256()` functions to rebuild manifests.
 
+`producer_dataset_projection.py` is the byte-identical (19503 bytes, SHA-256
+`6fe2cbbb...3da5`) `dataset_projection.py` from that producer commit. It is
+trusted committed test code, not a sandbox, and is never imported by the site.
+`generate_release.py` executes it from that fixed package-local path only after
+checking the full digest, so a newer live producer, a missing copy or a changed
+byte can neither alter these fixtures nor run. There is no live-producer, Git
+history or network fallback. Freezing this copy does not certify compatibility
+with the current producer; that drift is tracked separately.
+
 ## Local build configuration
 
 `ATLAS_WORD_CARD_PREVIEW=1` enables `/lexicon-v2/`. The default build excludes

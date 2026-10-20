@@ -6,18 +6,32 @@ No Ukrainian claims, real source stores, or real review evidence are used.
 """
 
 import copy
+import hashlib
+import importlib.util
+import sys
 from pathlib import Path
-
-from scripts.projects.open_model_data.word_cards import dataset_projection as projection
 
 PRODUCER_COMMIT = "7d4680686862d4ef2a66870a883aed6583bd64f7"
 PRODUCER_SHA256 = "6fe2cbbb791acabe05c54a3e1df61d0110b73e43356ae838c3bee3526b933da5"
+FROZEN_SOURCE = Path(__file__).with_name("producer_dataset_projection.py")
+
+
+def load_frozen_projection():
+    """Execute the byte-pinned producer copy, never today's live module."""
+    if hashlib.sha256(FROZEN_SOURCE.read_bytes()).hexdigest() != PRODUCER_SHA256:
+        raise ValueError("Pinned projection implementation changed")
+    spec = importlib.util.spec_from_file_location("_atlas_frozen_projection", FROZEN_SOURCE)
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module  # dataclasses resolves its defining module here
+    spec.loader.exec_module(module)
+    return module
+
+
+projection = load_frozen_projection()
 
 
 def generate(authority, output: Path, format: str):
     """Project two same-spelling identities using the existing synthetic authority."""
-    if projection.sha256(Path(projection.__file__).read_bytes()) != PRODUCER_SHA256:
-        raise ValueError("Pinned projection implementation changed")
     certified = copy.deepcopy(authority.card)
     certified["assertions"] = certified["assertions"][:2]
     parallel = copy.deepcopy(certified["assertions"][1])
