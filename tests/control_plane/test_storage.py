@@ -214,3 +214,88 @@ def test_control_plane_lint_detects_new_direct_open(
     violations = lint_control_plane_sqlite.find_unallowlisted_connects(repo_root=tmp_path)
     assert len(violations) == 1
     assert Path(db_rel_path).name in violations[0][1]
+
+
+def test_control_plane_changed_files_match_counted_repo_results(tmp_path, capsys, monkeypatch):
+    lint = lint_control_plane_sqlite
+    path = tmp_path / "scripts/rogue.py"
+    path.parent.mkdir()
+    line = 'connection = sqlite3.connect("write-ownership.sqlite3")'
+    path.write_text("import sqlite3\n" + line + "\n")
+    clean = tmp_path / "scripts/clean.py"
+    clean.write_text("VALUE = 1\n")
+    assert lint.main(["--repo", str(tmp_path), str(clean)]) == 0
+    assert capsys.readouterr().out == "OK: no unallowlisted control-plane sqlite3.connect opens\n"
+    assert lint.main(["--repo", str(tmp_path), str(path)]) == 1
+    selected = capsys.readouterr()
+    assert lint.main(["--repo", str(tmp_path)]) == 1
+    assert capsys.readouterr() == selected
+    monkeypatch.setattr(lint, "_ALLOWLIST", (("scripts/rogue.py", line, 1),))
+    assert lint.main(["--repo", str(tmp_path), str(path), str(path)]) == 0
+    capsys.readouterr()
+    path.write_text("import sqlite3\n" + line + "\n" + line + "\n")
+    assert lint.main(["--repo", str(tmp_path), str(path)]) == 1
+    selected = capsys.readouterr()
+    assert "scripts/rogue.py:3:" in selected.err
+    assert "allowlist exceeded" in selected.err
+    assert lint.main(["--repo", str(tmp_path)]) == 1
+    assert capsys.readouterr() == selected
+    path.write_text(line.replace("connection =", "new_connection =") + "\n")
+    assert lint.main(["--repo", str(tmp_path), str(path)]) == 1
+
+
+def test_control_plane_changed_files_scope_without_repo_walk(tmp_path, monkeypatch):
+    lint = lint_control_plane_sqlite
+    monkeypatch.chdir(tmp_path)
+    names = [
+        "scripts/a.py",
+        "agents_extensions/shared/session_streams/a.py",
+        "scripts/control_plane/a.py",
+        "tests/a.py",
+        "docs/a.py",
+        "scripts/a.sh",
+        "scripts/nested/a.py",
+    ]
+    for name in names:
+        path = tmp_path / name
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text('sqlite3.connect("write-ownership.sqlite3")\n')
+    (tmp_path / "scripts/link").symlink_to(tmp_path / "scripts/nested", target_is_directory=True)
+    expected = lint.find_unallowlisted_connects(tmp_path)
+    assert len(expected) == 3
+
+    def unexpected_walk(*args, **kwargs):
+        pytest.fail("changed-file mode must not walk the repository")
+
+    monkeypatch.setattr(Path, "rglob", unexpected_walk)
+    selected = [Path(name) for name in names] + [
+        Path("scripts/missing.py"),
+        Path("scripts/link/a.py"),
+        Path("scripts/nested/../a.py"),
+    ]
+    assert lint.find_unallowlisted_connects(tmp_path, only=selected) == expected
+
+
+def test_control_plane_changed_from_and_invalid_ref(tmp_path, monkeypatch, capsys):
+    import subprocess
+
+    lint = lint_control_plane_sqlite
+    monkeypatch.chdir(tmp_path)
+    subprocess.run(["git", "init", "-q"], check=True, timeout=30)
+    path = tmp_path / "scripts/probe.py"
+    path.parent.mkdir()
+    path.write_text("VALUE = 1\n")
+    subprocess.run(["git", "add", "."], check=True, timeout=30)
+    subprocess.run(
+        ["git", "-c", "user.name=Test", "-c", "user.email=test@example.invalid", "commit", "-qm", "base"],
+        check=True,
+        timeout=30,
+    )
+    (tmp_path / "scripts/untracked.py").write_text('sqlite3.connect("write-ownership.sqlite3")\n')
+    assert lint.main(["--repo", ".", "--changed-from", "HEAD"]) == 0
+    capsys.readouterr()
+    path.write_text('sqlite3.connect("write-ownership.sqlite3")\n')
+    assert lint.main(["--repo", ".", "--changed-from", "HEAD"]) == 1
+    assert "scripts/probe.py:1:" in capsys.readouterr().err
+    assert lint.main(["--repo", ".", "--changed-from", "missing-ref"]) == 2
+    assert capsys.readouterr().err == "git: cannot list changed files\n"

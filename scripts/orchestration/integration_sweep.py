@@ -1,5 +1,36 @@
 #!/usr/bin/env python3
-"""Read-only, exact-head PR landing report. The local keeper owns mutations (#8564)."""
+"""Read-only, exact-head PR landing report. The local keeper owns mutations (#8564).
+
+Verdict-marker threat model (#11127)
+------------------------------------
+Anyone with a GitHub account can comment on a public PR, but only comments by the
+authenticated fleet login with a trusted author association are evidence; every
+other marker is listed in ``untrusted_markers`` and never counts. The fleet login
+is shared by every agent, so the remaining risk is a trusted comment carrying a
+``<!-- cf-verdict`` marker that ``record_cf_verdict`` did not write: hand-written,
+edited or malformed. The publisher refuses that prefix in comment verbs unless the
+body is the recorder's typed record (``scripts.publish.github.CfVerdictRecord``).
+That record is an in-process type, not a secret: it stops hand-written CLI and file
+bodies, not reviewed code, and the OPSEC ``gh`` guard refuses raw public writes. The
+reader rules below therefore never rely on the publisher check.
+
+A marker the parser rejects can still be read one of three ways:
+
+* It cannot be attributed to exactly one head (several markers, no ``-->``, no or
+  several ``sha=`` keys, a malformed SHA): the current head is ``unknown``. Such a
+  marker could be a rejection of any head, including this one.
+* It names the current head: ``unknown``. The parser is never relaxed for the head
+  being landed, so a malformed rejection keeps blocking it.
+* It names a different head: superseded. Valid markers for other heads never decide
+  this head either, so a forged or malformed one cannot revoke an approval of the
+  current head, nor can it approve anything. A body that mentions the current head
+  (its seven-character abbreviation or longer) is treated as naming it, so a marker
+  aimed at an old SHA cannot smuggle a current-head rejection past this rule.
+
+A forger with the fleet identity can therefore still hold a PR (fail closed), but
+can no longer revoke one through an unrelated malformed marker, and every
+``unknown`` verdict names a typed reason from ``UNKNOWN_REASONS`` and the comment.
+"""
 
 from __future__ import annotations
 
@@ -16,7 +47,7 @@ from typing import Any
 from scripts.ci.advisory_checks import is_advisory, load_advisory_checks
 from scripts.common.github_client import GitHubRateLimited, timer
 from scripts.github_check_rollup import group_collapsed_by_name
-from scripts.publish.github import Request, request_run
+from scripts.publish.github import CF_VERDICT_MARKER_PREFIX, Request, request_run
 from scripts.review.language_lane import is_ukrainian_review
 
 Runner = Callable[[list[str]], str]
@@ -29,7 +60,30 @@ MARKER = re.compile(
     r"(?: authorship=(?P<authorship>verified_app_bot))?"
     r"(?: review_profile=(?P<review_profile>ukrainian))?(?: sources_calls=(?P<sources_calls>[0-9]+))? -->\Z"
 )
-MARKER_PREFIX = "<!-- cf-verdict"
+MARKER_PREFIX = CF_VERDICT_MARKER_PREFIX
+# Stable reason codes for an ``unknown`` verdict (#11127); consumers may match on them.
+COMMENTS_UNAVAILABLE = "comments-unavailable"  # lookup failed, partial, or not a comment list
+HEAD_INVALID = "head-invalid"  # the head is not a full 40-hex SHA
+IDENTITY_UNAVAILABLE = "identity-unavailable"  # no authenticated login to trust markers from
+COMMENT_MALFORMED = "comment-malformed"  # a comment row or its body has the wrong type
+MARKER_UNATTRIBUTABLE = "marker-unattributable"  # a malformed marker names no single head
+MARKER_MALFORMED_CURRENT_HEAD = "marker-malformed-current-head"  # a malformed marker names this head
+MARKER_MENTIONS_CURRENT_HEAD = "marker-mentions-current-head"  # a malformed old-head marker cites this head
+MARKER_EDITED = "marker-edited"  # a marker for this head was edited after posting
+REVIEWER_UNATTESTED = "reviewer-unattested"  # a marker for this head has no attested reviewer family
+UNKNOWN_REASONS = (
+    COMMENTS_UNAVAILABLE,
+    HEAD_INVALID,
+    IDENTITY_UNAVAILABLE,
+    COMMENT_MALFORMED,
+    MARKER_UNATTRIBUTABLE,
+    MARKER_MALFORMED_CURRENT_HEAD,
+    MARKER_MENTIONS_CURRENT_HEAD,
+    MARKER_EDITED,
+    REVIEWER_UNATTESTED,
+)
+# Git's default abbreviation; a body citing this much of the current head names it.
+HEAD_MENTION_LENGTH = 7
 TRUSTED_ASSOCIATIONS = frozenset({"OWNER", "MEMBER", "COLLABORATOR"})
 REJECTED = frozenset({"CHANGES_REQUESTED", "BLOCKED"})
 # The recorder normalizes APPROVE to APPROVED, but older trailers carry the reviewer's raw token (#10119).
@@ -53,6 +107,23 @@ class Verdict:
     untrusted_markers: tuple[str, ...] = ()
     review_mode: str = "cross_family"
     unknown_history: tuple[str, ...] = ()
+    # Set only for ``unknown``: the typed cause and, when one comment caused it, its id.
+    reason: str | None = None
+    comment_id: str | None = None
+    # Trusted malformed markers that name another head; they neither poison nor approve.
+    superseded_markers: tuple[str, ...] = ()
+
+    def __post_init__(self) -> None:
+        if (self.state == "unknown") != (self.reason is not None):
+            raise ValueError("an unknown verdict, and only one, carries a reason")
+        if self.reason is not None and self.reason not in UNKNOWN_REASONS:
+            raise ValueError(f"unregistered unknown-verdict reason: {self.reason}")
+
+
+def verdict_detail(reason: str | None, comment_id: str | None, superseded: Sequence[str] = ()) -> str:
+    """Report suffix naming an unknown verdict's cause and comment; never comment text."""
+    detail = f" cf-unknown={reason} comment={comment_id or 'none'}" if reason else ""
+    return detail + (f" superseded-marker={','.join(superseded)}" if superseded else "")
 
 
 @dataclass(frozen=True)
@@ -63,6 +134,9 @@ class PRReport:
     state: str
     blockers: tuple[str, ...]
     untrusted_markers: tuple[str, ...] = ()
+    verdict_reason: str | None = None
+    verdict_comment: str | None = None
+    superseded_markers: tuple[str, ...] = ()
 
 
 def _timestamp(value: object) -> datetime | None:
@@ -92,6 +166,24 @@ def _terminal_marker(body: str) -> re.Match[str] | None:
     if body.count(MARKER_PREFIX) != 1:
         return None
     return MARKER.fullmatch(body.rstrip("\n").split("\n")[-1])
+
+
+def _comment_ref(comment: Mapping[str, Any], index: int) -> str:
+    """A GitHub comment id, or the list position when the row carries no integer id."""
+    value = _field(comment, "id", "databaseId")
+    return str(value) if isinstance(value, int) and not isinstance(value, bool) else f"index-{index}"
+
+
+def _attributed_head(body: str) -> str | None:
+    """The one head a single, closed marker names through one ``sha=`` key, else None."""
+    if body.count(MARKER_PREFIX) != 1:
+        return None
+    start = body.index(MARKER_PREFIX) + len(MARKER_PREFIX)
+    end = body.find("-->", start)
+    if end < 0:
+        return None
+    values = [token[4:] for token in body[start:end].split() if token.startswith("sha=")]
+    return values[0] if len(values) == 1 and SHA.fullmatch(values[0]) else None
 
 
 def _edited(comment: Mapping[str, Any]) -> bool:
@@ -179,24 +271,40 @@ def lookup_verdict(
     *,
     complete: bool = True,
 ) -> Verdict:
-    """Resolve one SHA's verdict; malformed or edited evidence poisons it.
+    """Resolve one SHA's verdict; malformed or edited evidence for it poisons it.
 
     A rejection stands until an approval both started and was posted after it (#10973).
+    A malformed marker poisons this SHA unless it is attributable to another head; see
+    the module docstring for the threat model (#11127).
     """
     if not complete or not isinstance(comments, Sequence) or isinstance(comments, (str, bytes)):
-        return Verdict("unknown")
-    if not SHA.fullmatch(sha) or not authenticated_login:
-        return Verdict("unknown")
+        return Verdict("unknown", reason=COMMENTS_UNAVAILABLE)
+    if not SHA.fullmatch(sha):
+        return Verdict("unknown", reason=HEAD_INVALID)
+    if not authenticated_login:
+        return Verdict("unknown", reason=IDENTITY_UNAVAILABLE)
     candidates: list[tuple[datetime, tuple[datetime, int], dict[str, Any]]] = []
     untrusted: list[str] = []
+    superseded: list[str] = []
     legacy = False
     other_head = False
+
+    def unknown(reason: str, index: int, comment: Mapping[str, Any] | None = None) -> Verdict:
+        ref = _comment_ref(comment, index) if comment is not None else f"index-{index}"
+        return Verdict(
+            "unknown",
+            untrusted_markers=tuple(untrusted),
+            reason=reason,
+            comment_id=ref,
+            superseded_markers=tuple(superseded),
+        )
+
     for index, comment in enumerate(comments):
         if not isinstance(comment, Mapping):
-            return Verdict("unknown")
+            return unknown(COMMENT_MALFORMED, index)
         body = comment.get("body")
         if not isinstance(body, str):
-            return Verdict("unknown")
+            return unknown(COMMENT_MALFORMED, index, comment)
         if MARKER_PREFIX not in body:
             if re.search(r"(?im)^\s*VERDICT:", body):
                 legacy = True
@@ -210,32 +318,42 @@ def lookup_verdict(
         if marker is None:
             trailer = _terminal_marker(body)
             if (
-                trailer is None
-                or trailer["verdict"] != "APPROVE"
-                or is_ukrainian_review(trailer.groupdict())
-                or "Review profile: ukrainian\n" in body.split("<details>", 1)[0]
+                trailer is not None
+                and trailer["verdict"] == "APPROVE"
+                and not is_ukrainian_review(trailer.groupdict())
+                and "Review profile: ukrainian\n" not in body.split("<details>", 1)[0]
             ):
-                return Verdict("unknown", untrusted_markers=tuple(untrusted))
-            # An approval trailer outside the keeper format cannot hide a rejection, so it neither
-            # poisons the head nor counts as approval; an edited one still poisons it (#10119).
-            if trailer["sha"] == sha and _edited(comment):
-                return Verdict("unknown", untrusted_markers=tuple(untrusted))
-            if re.search(r"(?im)^\s*VERDICT:", body):
-                legacy = True
+                # An approval trailer outside the keeper format cannot hide a rejection, so it neither
+                # poisons the head nor counts as approval; an edited one still poisons it (#10119).
+                if trailer["sha"] == sha and _edited(comment):
+                    return unknown(MARKER_EDITED, index, comment)
+                if re.search(r"(?im)^\s*VERDICT:", body):
+                    legacy = True
+                continue
+            head = _attributed_head(body)
+            if head is None:
+                return unknown(MARKER_UNATTRIBUTABLE, index, comment)
+            if head == sha:
+                return unknown(MARKER_MALFORMED_CURRENT_HEAD, index, comment)
+            if sha[:HEAD_MENTION_LENGTH] in body.casefold():
+                return unknown(MARKER_MENTIONS_CURRENT_HEAD, index, comment)
+            # Named another head: like a valid marker for that head, it cannot decide this one.
+            superseded.append(_comment_ref(comment, index))
+            other_head = True
             continue
         if marker["sha"] != sha:
             other_head = True
             continue
         if marker["family"] in {"unknown", "unattested", "ambiguous", "conflicting"}:
-            return Verdict("unknown", untrusted_markers=tuple(untrusted))
+            return unknown(REVIEWER_UNATTESTED, index, comment)
         if _edited(comment):
-            return Verdict("unknown", untrusted_markers=tuple(untrusted))
+            return unknown(MARKER_EDITED, index, comment)
         # An unedited comment has a parseable creation time; list order breaks same-second ties.
         posted = (_timestamp(_field(comment, "created_at", "createdAt")), index)
         candidates.append((_timestamp(marker["started"]), posted, marker))
     if not candidates:
         state = "CF-unrecorded" if legacy else "CF-stale" if other_head else "needs-CF"
-        return Verdict(state, untrusted_markers=tuple(untrusted))
+        return Verdict(state, untrusted_markers=tuple(untrusted), superseded_markers=tuple(superseded))
     approvals = [item for item in candidates if item[2]["verdict"] not in REJECTED]
     # A rejection posted after an approval wins even when its review started first (#10973), and a
     # late-posted approval of an older review start cannot overwrite it; a start tie also keeps it.
@@ -260,6 +378,7 @@ def lookup_verdict(
         tuple(untrusted),
         marker.get("review_mode", "cross_family"),
         tuple(marker.get("unknown_history", ())),
+        superseded_markers=tuple(superseded),
     )
 
 
@@ -323,7 +442,17 @@ def classify_pr(pr: Mapping[str, Any], verdict: Verdict, *, queued: bool | None,
     number = pr.get("number")
     head = pr.get("headRefOid")
     if not isinstance(number, int) or number < 1 or not isinstance(head, str) or not SHA.fullmatch(head):
-        return PRReport(int(number or 0), str(head or "")[:12], observed_at, "unknown", ("invalid PR identity",))
+        return PRReport(
+            int(number or 0),
+            str(head or "")[:12],
+            observed_at,
+            "unknown",
+            ("invalid PR identity",),
+            verdict.untrusted_markers,
+            verdict.reason,
+            verdict.comment_id,
+            verdict.superseded_markers,
+        )
     blockers: list[str] = []
     if pr.get("isDraft") is True:
         blockers.append("draft")
@@ -355,7 +484,17 @@ def classify_pr(pr: Mapping[str, Any], verdict: Verdict, *, queued: bool | None,
         state = "blocked merge conflict"
     else:
         state = "ready"
-    return PRReport(number, head[:12], observed_at, state, tuple(blockers), verdict.untrusted_markers)
+    return PRReport(
+        number,
+        head[:12],
+        observed_at,
+        state,
+        tuple(blockers),
+        verdict.untrusted_markers,
+        verdict.reason,
+        verdict.comment_id,
+        verdict.superseded_markers,
+    )
 
 
 class GitHubAdapter:
@@ -457,12 +596,12 @@ def run(adapter: GitHubAdapter, repository: str, *, now: datetime | None = None)
     for pr in prs:
         number, head = pr.get("number"), pr.get("headRefOid")
         if not isinstance(number, int) or number < 1 or not isinstance(head, str) or not SHA.fullmatch(head):
-            rows.append(classify_pr(pr, Verdict("unknown"), queued=None, observed_at=observed))
+            rows.append(classify_pr(pr, Verdict("unknown", reason=HEAD_INVALID), queued=None, observed_at=observed))
             continue
         try:
             verdict = lookup_verdict(adapter.comments(repository, number), head, login)
         except SweepError:
-            verdict = Verdict("unknown")
+            verdict = Verdict("unknown", reason=COMMENTS_UNAVAILABLE)
         try:
             queued = adapter.queue_membership(repository, pr)
         except (SweepError, ValueError, KeyError):
@@ -511,7 +650,8 @@ def main(argv: Sequence[str] | None = None) -> int:
             blockers = ", ".join(row.blockers) or "none"
             untrusted = f" untrusted-marker={','.join(row.untrusted_markers)}" if row.untrusted_markers else ""
             print(
-                f"#{row.number} head={row.head} observed_at={row.observed_at} state={row.state} blockers={blockers}{untrusted}"
+                f"#{row.number} head={row.head} observed_at={row.observed_at} state={row.state} blockers={blockers}"
+                f"{untrusted}{verdict_detail(row.verdict_reason, row.verdict_comment, row.superseded_markers)}"
             )
     return 0
 

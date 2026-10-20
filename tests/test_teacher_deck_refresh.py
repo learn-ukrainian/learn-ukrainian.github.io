@@ -1635,6 +1635,102 @@ def test_checker_optional_manifest_json_cli(
         assert diagnostic in result.stdout
 
 
+@pytest.mark.parametrize("publication", [False, True], ids=["normal", "publication"])
+@pytest.mark.parametrize("case", ["directory", "valid", "missing"])
+def test_checker_manifest_byte_read_cli(
+    checked_world: dict[str, Path], tmp_path: Path, publication: bool, case: str
+) -> None:
+    world = checked_world
+    artifact = world["out"] / "extra.json"
+    data = b'{"schema":"fixture","schemaVersion":1}'
+    if case == "directory":
+        artifact.mkdir()
+    elif case == "valid":
+        artifact.write_bytes(data)
+    manifest_path = world["out"] / checker.MANIFEST_FILE
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["files"].append(
+        {
+            "path": artifact.name,
+            "sha256": hashlib.sha256(data).hexdigest(),
+            "bytes": len(data),
+            "schema": "fixture",
+            "schemaVersion": 1,
+            "gzipBudget": 100,
+        }
+    )
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+    report = tmp_path / "byte-read-report.json"
+    args = [
+        sys.executable,
+        str(ROOT / "scripts/audit/check_teacher_deck.py"),
+        "--deck-dir",
+        str(world["out"]),
+        "--json",
+        str(report),
+    ]
+    if publication:
+        args += ["--publication", "--withheld", str(world["withheld"])]
+        for flag, key in (("docx", "docx"), ("vesum-db", "vesum"), ("sources-db", "sources"), ("atlas-db", "atlas")):
+            args += [f"--{flag}", str(world[key])]
+    result = subprocess.run(args, capture_output=True, text=True, check=False, timeout=120)
+    expected = {
+        "directory": [f"unreadable artifact extra.json: [Errno 21] Is a directory: '{artifact}'"],
+        "missing": ["manifest file missing: extra.json"],
+        "valid": [],
+    }[case]
+    assert result.returncode == (0 if case == "valid" else 1), result
+    assert result.stderr == ""
+    payload = json.loads(report.read_text(encoding="utf-8"))
+    assert payload["ok"] is (case == "valid")
+    assert payload["errors"] == expected
+    assert payload["entries"] == 16
+    assert f"teacher deck check: {'PASS (0 errors)' if case == 'valid' else 'FAIL (1 errors)'}" in result.stdout
+    assert all(message in result.stdout for message in expected)
+
+
+@pytest.mark.parametrize(
+    ("error", "message"),
+    [(PermissionError, "permission fixture"), (FileNotFoundError, "vanished fixture"), (RuntimeError, "bug fixture")],
+)
+def test_checker_manifest_byte_read_exceptions(
+    checked_world: dict[str, Path],
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+    error: type[Exception],
+    message: str,
+) -> None:
+    artifact = checked_world["out"] / checker.COVERAGE_FILE
+    read_bytes = Path.read_bytes
+    attempts = []
+
+    def fail_read(path: Path) -> bytes:
+        if path == artifact:
+            assert path.exists()
+            attempts.append(path.name)
+            raise error(message)
+        return read_bytes(path)
+
+    monkeypatch.setattr(Path, "read_bytes", fail_read)
+    report = tmp_path / "exception-report.json"
+    capsys.readouterr()
+    if error is RuntimeError:
+        with pytest.raises(RuntimeError, match=r"^bug fixture$"):
+            _check_main(checked_world, report, publication=False, with_sources=False)
+        assert not report.exists()
+    else:
+        assert _check_main(checked_world, report, publication=False, with_sources=False) == 1
+        output = capsys.readouterr()
+        expected = f"unreadable artifact coverage.json: {message}"
+        payload = json.loads(report.read_text(encoding="utf-8"))
+        assert payload["ok"] is False
+        assert payload["errors"] == [expected]
+        assert expected in output.out and "FAIL (1 errors)" in output.out
+        assert output.err == ""
+    assert attempts == ["coverage.json"]
+
+
 @pytest.mark.parametrize(
     ("damage", "diagnostic"),
     [

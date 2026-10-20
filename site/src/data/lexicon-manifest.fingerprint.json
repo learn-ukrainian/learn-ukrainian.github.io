@@ -391,7 +391,7 @@
       },
       {
         "path": "scripts/lexicon/triage_needs_review.py",
-        "sha256": "39c93749a37c3170945bba398d3ebf9330552ec2c699c35b89168abaecde362d"
+        "sha256": "e164f25033190ae47ebdc57e72b2f6669814c3942eb99419ba0d599fd9ce12f2"
       },
       {
         "path": "scripts/lexicon/ulif_raw_cache.py",

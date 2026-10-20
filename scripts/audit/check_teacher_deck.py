@@ -579,7 +579,11 @@ def check_manifest(deck_dir: Path, manifest: dict[str, Any], report: Report) -> 
         if not path.exists():
             report.fail(f"manifest file missing: {record.get('path')}")
             continue
-        data = path.read_bytes()
+        try:
+            data = path.read_bytes()
+        except OSError as exc:
+            report.fail(f"unreadable artifact {path.name}: {exc}")
+            continue
         if hashlib.sha256(data).hexdigest() != record.get("sha256") or len(data) != record.get("bytes"):
             report.fail(f"manifest hash/size mismatch: {record.get('path')}")
         payload = _load(path, report)

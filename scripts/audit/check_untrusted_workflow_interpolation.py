@@ -105,7 +105,6 @@ def iter_expressions(text: str) -> list[tuple[int, str]]:
             j += 1
         else:
             return results
-    return results
 # `run:` key, optionally after a `- ` step marker. Content indent is measured
 # from the line start so both `run: |` and `- run: |` blocks parse alike.
 _RUN_KEY = re.compile(r"^(?P<indent>\s*)(?:-\s+)?run:\s*(?P<value>.*)$")

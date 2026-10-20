@@ -1,7 +1,8 @@
 """Pilot word-card assembly: `build(S, V, I, O, R)` over the frozen pilot inventory (#8981, schema.md §13).
 
 Reads the admitted pilot manifest, the frozen identity registry, the held `sources.db` / `vesum.db` / ULIF raw
-cache and the permissions register; emits one schema-valid card per frozen unit plus a field-accounting ledger.
+cache and the permissions register; audits one schema-valid card per frozen unit and emits the source-scoped
+learner subset plus a field-accounting ledger that records every excluded identity.
 Every Ukrainian value is a verbatim source value with its exact locator; nothing is generated, translated or
 paraphrased. Derived ULIF forms are attached only after they authenticate against the held raw page.
 
@@ -51,7 +52,7 @@ from scripts.common.scratch import ensure_scratch_root
 from scripts.guardrails import worktree_containment as containment
 from scripts.lexicon import ulif_raw_cache
 
-ASSEMBLER_VERSION = "pilot-assembly-v2"
+ASSEMBLER_VERSION = "pilot-assembly-v4"
 ALIAS_ORDER = ("uid", "register_position", "content", "query_headword_label", "vesum_entry_form", "table_row")
 # Register source id -> (independence group, tier): schema.md §9.1 (lineage lives in R until the register records it).
 # ukrainian_word_stress follows the register entry (ULIF-derived stress data, 2026-10-06): one lineage with ULIF.
@@ -519,8 +520,11 @@ def class_homonyms(inputs: Inputs, raw: dict, unit: dict, proper: bool) -> dict[
     class_pos = label_pos(raw["grammatical_label"])
     homonyms = {}
     for row in sources.homonyms(raw["normalized_query"]):
+        head_proof = sources.vesum_forms(src.unstressed(row["canonical_headword"]))
+        common_proof = sources.vesum_forms(src.unstressed(row["canonical_headword"]).lower())
         same = (label_pos(row["grammatical_label"]) == class_pos
-                and is_proper_name(row["grammatical_label"], row["canonical_headword"], row["sense_gloss"]) == proper
+                and is_proper_name(row["grammatical_label"], row["canonical_headword"], row["sense_gloss"],
+                                   head_proof, common_proof) == proper
                 and (class_pos is not None or row["grammatical_label"] == raw["grammatical_label"]))
         if row["id"] != entry_id and not same:
             continue
@@ -531,6 +535,20 @@ def class_homonyms(inputs: Inputs, raw: dict, unit: dict, proper: bool) -> dict[
             homonyms[row["id"]] = {"head": head, "row": row, "aspect": parse_aspect(row["grammatical_label"]),
                                    "paradigm": src.ulif_paradigm(forms) if forms is not None else None}
     return homonyms
+
+
+def puls_matches_identity(row: dict, spelling: str, proper: bool, ulif_label: str = "") -> bool:
+    """A spelling-keyed common PULS row cannot identify a proper-name homonym.
+
+    A name needs both its exact case-kept headword and an explicit source name
+    label or disambiguator. A proper abbreviation also qualifies when PULS prints
+    that exact uppercase abbreviation itself. A capital alone confers no scope.
+    """
+    word = src.unstressed(row["word"])
+    source_proper = is_proper_name(row["pos"], word, row["guideword"])
+    if proper and ulif_label == "абревіатура" and spelling.isupper() and word == spelling:
+        source_proper = True
+    return source_proper == proper and (not proper or word == spelling)
 
 
 def assemble_lexeme(inputs: Inputs, unit: dict, entry: dict, ledger: Ledger, homograph_count: Counter,
@@ -720,20 +738,28 @@ def assemble_lexeme(inputs: Inputs, unit: dict, entry: dict, ledger: Ledger, hom
     # cefr: PULS is spelling-keyed; ambiguous on a spelling with several cards.
     puls_keys = [k for k in unit["source_record_keys"] if inputs.records[k]["source_id"] == "puls"]
     ambiguous = homograph_count[spelling.lower()] > 1
+    if proper:
+        ambiguous = sum(e["card_kind"] == "proper_name" and e["key_at_creation"]["spelling"] == spelling
+                        for e in inputs.entry_by_unit.values()) > 1
     for k in puls_keys:
         rec = inputs.records[k]
         row = rec["raw_row"]
+        if not puls_matches_identity(row, spelling, proper, raw["grammatical_label"]):
+            ledger.hold(card_id, "cefr", "proper_common_identity_mismatch", locator=rec["locator"],
+                        source_record_id=inputs.record_ids[("puls", rec["locator"])]["source_record_id"])
+            continue
         puls_pos, label_head = row["pos"].split()[0], label_part_of_speech(raw["grammatical_label"])
         guide = f"guideword present: {row['guideword']}" if row["guideword"] else None
-        if label_head and puls_pos != label_head:
+        if not proper and label_head and puls_pos != label_head:
             conf, note = "unresolved", f"PULS part of speech {row['pos']} differs from the ULIF label"
         else:
             conf, note = "medium", guide or "spelling-keyed PULS row"
         b.add("card", card_id, "cefr", row["level"], row["level"], "puls", rec["snapshot_id"],
               f"{rec['locator']} [level]", src.EXTRACTION["puls"], "high",
-              mapping=mapping(conf, "spelling", ambiguous=ambiguous, note=note),
+              mapping=mapping(conf, "sense" if proper else "spelling", ambiguous=ambiguous, note=note),
               record=inputs.record_ids[("puls", rec["locator"])])
-    ledger.field(card_id, "cefr", "asserted" if puls_keys else "source_absent",
+    asserted_cefr = any(a["field"] == "cefr" for a in b.assertions.values())
+    ledger.field(card_id, "cefr", "asserted" if asserted_cefr else ("held" if puls_keys else "source_absent"),
                  spelling_ambiguous=ambiguous if puls_keys else None)
 
     senses(inputs, b, unit, entry, anchor, srec, ledger)
@@ -1038,7 +1064,7 @@ def build_block(inputs: Inputs, suppressions: dict, build_id: str, consumed: str
             "S": {
                 "ulif": {"ref": "sources.ulif_dictua_entries + ulif_dictua_sections + ulif_forms",
                          "content_sha256": frozen_sources,
-                         "note": f"whole-file digest at freeze; observed at build {h['sources_file']}. Frozen rows "
+                         "note": "whole-file digest at freeze. Frozen rows "
                                  "are re-read literally at every build; every other row read is in S.consumed"},
                 "consumed": {"ref": "every row lookup and query result the build read: ULIF homonym queries, "
                                     "ulif_forms rows with their entry fingerprint, raw manifest and raw page digests, "
@@ -1051,7 +1077,7 @@ def build_block(inputs: Inputs, suppressions: dict, build_id: str, consumed: str
                 "frazeolohichnyi": {"ref": "sources.frazeolohichnyi", "content_sha256": frozen_sources,
                                     "note": "frozen rows only"},
                 "atlas0": {"ref": "data/atlas.db enrichment", "content_sha256": frozen_atlas,
-                           "note": f"frozen row only; observed at build {h['atlas_file']}"},
+                           "note": "frozen row only"},
             },
             "V": {"vesum": {"ref": "data/vesum.db vesum_build_metadata.canonical_jsonl_sha256",
                             "content_sha256": h["vesum_canonical"]}},
@@ -1320,6 +1346,36 @@ def accounting(result: dict) -> dict:
     }
 
 
+def learner_cards(cards: dict[str, dict]) -> dict[str, dict]:
+    """Keep a name only when a source assertion explicitly puts that identity in scope.
+
+    PULS assertions on names have already passed the exact-headword and proper
+    disambiguator check. Ambiguous, withdrawn and unresolved rows confer no scope.
+    """
+    selected = {key: card for key, card in cards.items() if card["card_kind"] != "proper_name" or any(
+        a["source_id"] == "puls" and a["field"] == "cefr" and a["status"] == "active"
+        and a.get("review", {}).get("status") != "rejected"
+        and a.get("mapping", {}).get("confidence") in {"high", "medium"}
+        and not a.get("mapping", {}).get("ambiguous", False) for a in card["assertions"])}
+    for key, card in selected.items():
+        links = [link for link in card["links"] if all(e["id"] in selected for e in link["endpoints"])]
+        if links != card["links"]:
+            card = {**card, "links": links, "build": dict(card["build"])}
+            card["build"]["card_version"] = card_version(_project(card))
+            selected[key] = card
+    return selected
+
+
+def learner_accounting(result: dict) -> dict:
+    """Account for the published subset while conserving all allocated identities in the audit ledger."""
+    cards = learner_cards(result["cards"])
+    ledger = Ledger()
+    ledger.cards = {key: value for key, value in result["ledger"].cards.items() if key in cards}
+    ledger.unattached = result["ledger"].unattached
+    return accounting({**result, "cards": cards, "ledger": ledger}) | {
+        "allocated_cards": len(result["cards"]), "excluded_cards": len(result["cards"]) - len(cards)}
+
+
 # --- host-only output ------------------------------------------------------------------------------------
 
 def _checkouts(anchor: Path) -> tuple[list[Path], Path]:
@@ -1388,14 +1444,17 @@ def write_host_only(output: Path, files: dict[str, dict], cards: dict[str, dict]
 
 
 def write_output(output: Path, result: dict, report: dict, anchor: Path | None = None) -> None:
+    cards = learner_cards(result["cards"])
     files = {"ledger.json": {"build_id": result["build_id"], "cards": result["ledger"].cards,
-                             "unattached": result["ledger"].unattached},
+                             "unattached": result["ledger"].unattached,
+                             "excluded_cards": {key: "proper_name_without_source_scope"
+                                                for key in result["cards"] if key not in cards}},
              "build-manifest.json": {"build_id": result["build_id"], "inputs": result["block"]["inputs"],
                                      "rules_version": result["block"]["rules_version"]},
              "report.json": report}
     if result["takedown"]:
         files["takedown-report.json"] = {"build_id": result["build_id"], "suppressions": result["takedown"]}
-    write_host_only(output, files, result["cards"], anchor)
+    write_host_only(output, files, cards, anchor)
 
 
 # --- CLI -----------------------------------------------------------------------------------------------
@@ -1454,8 +1513,11 @@ def main(argv=None) -> int:
                 store_path("vesum", args.vesum_db), store_path("atlas", args.atlas_db), stack, scratch,
                 args.heldout_manifest)
             result = build(inputs, suppressions)
-            report = accounting(result) | {"build_id": result["build_id"], "heldout_isolation": inputs.heldout,
-                                           "frozen_rows_verified": inputs.hashes["frozen_rows_verified"]}
+            report = learner_accounting(result) | {"build_id": result["build_id"], "heldout_isolation": inputs.heldout,
+                                           "frozen_rows_verified": inputs.hashes["frozen_rows_verified"],
+                                           "observed_store_file_sha256": {
+                                               "sources": inputs.hashes["sources_file"],
+                                               "atlas": inputs.hashes["atlas_file"]}}
             if args.operation == "build":
                 write_output(args.output, result, report)
                 print(json.dumps(report, ensure_ascii=False, sort_keys=True))
@@ -1469,8 +1531,9 @@ def main(argv=None) -> int:
                 return 0 if outcome["passed"] else 1
             outcome = verifier.verify(inputs, result, build(inputs, suppressions), suppressions)
             on_disk = {p.stem: foundation.load(p) for p in (args.output / "cards").glob("*.json")}
-            outcome["on_disk"] = {"passed": set(on_disk) == set(result["cards"]) and all(
-                foundation.digest(on_disk[k]) == foundation.digest(v) for k, v in result["cards"].items()),
+            expected_cards = learner_cards(result["cards"])
+            outcome["on_disk"] = {"passed": set(on_disk) == set(expected_cards) and all(
+                foundation.digest(on_disk[k]) == foundation.digest(v) for k, v in expected_cards.items()),
                 "cards": len(on_disk)}
             outcome["passed"] = outcome["passed"] and outcome["on_disk"]["passed"]
             print(json.dumps(outcome, ensure_ascii=False, sort_keys=True))
