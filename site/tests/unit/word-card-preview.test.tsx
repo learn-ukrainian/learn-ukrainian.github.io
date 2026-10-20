@@ -128,7 +128,7 @@ describe('source-bound preview mechanics', () => {
     } else {
       if (card.kind !== 'card') throw Error('Missing controlled card');
       const f = card.fields.find(f => f.group === 'stress');
-      if (c.name.startsWith('f2-ulif-')) {
+      if (c.name.startsWith('f2-ulif-') || c.name.startsWith('f2-ulp_private-')) {
         expect(f?.raw).toEqual(['за́мок']);
         expect(f?.citations[0]?.assertion_id).toBe('wa_5888b96f6142b2da61ca2973');
       } else {
@@ -141,7 +141,7 @@ describe('source-bound preview mechanics', () => {
     const load: (text:string) => unknown = createRequire(import.meta.url)('js-yaml').load;
     const sources = record(load(readFileSync(resolve('../docs/sources/permissions-register.yaml'),'utf8'))).sources;
     if (!Array.isArray(sources)) throw Error('Missing register sources');
-    expect(sources.map(record).filter(s => Array.isArray(s.appears_in) && s.appears_in.includes('internal') && !s.appears_in.includes('site')).map(s => s.id).sort()).toEqual(['pohribnyi_1992','ubertext_freq','ulp_private','zno_nmt']);
+    expect(sources.map(record).filter(s => Array.isArray(s.appears_in) && s.appears_in.includes('internal') && !s.appears_in.includes('site')).map(s => s.id).sort()).toEqual(['pohribnyi_1992', 'ubertext_freq', 'zno_nmt']);
     vi.resetModules();
     vi.doMock('../../../docs/sources/permissions-register.yaml?raw', () => ({default:'sources:\n- id: newly_internal\n  appears_in: [internal]\n- id: ulif\n  appears_in: [internal]\n'}));
     try {
