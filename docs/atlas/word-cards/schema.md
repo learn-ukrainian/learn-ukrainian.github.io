@@ -272,7 +272,18 @@ O = overlay batches + suppression selectors (registry/atlas/overlay/, content ha
 
 ## 14. Russification exposed (СУМ-11)
 
-`sum11` is tier 0. It appears only in the sense-level field `russification_exposed`, always as a contrastive object `{imposed: <СУМ-11 text with locator>, norm: <modern assertion id>, distortion_type, both citations}` (#8982), never as `definition_uk`, `stress`, `examples` or a practice answer. `sources.sum11` holds 127,069 rows with `sovietization_risk` and `sovietization_keywords` columns; the `замок` row (`id 29322`) has `sovietization_risk 0`.
+`sum11` is tier 0. It appears only in the sense-level field `russification_exposed`, never as `definition_uk`, `stress`, `examples` or a practice answer (#8982). The assertion's `value` is `{red_flag: true, soviet_colonization_context: <pair>}`. The pair uses the existing `scripts/open_dataset/russification.py` input contract:
+
+- `pair_id`, `sense_id`, and a source-substantiated `distortion_type`.
+- `imposed`: literal `text`, `citation`, `sovietization_risk`, and `sovietization_keywords`.
+- `norm`: literal `text`, `assertion_id`, and `citation`.
+- Both citations contain `source_id`, `snapshot_id`, `locator`, and `attribution`. The imposed citation names `sum11`; the norm names an approved independent source.
+
+`value_norm` contains only `pair_id`. The modern assertion must survive on the same sense, with matching text and citation coordinates. A rejected, withdrawn or ambiguously mapped norm cannot support a contrast. Modern meaning uses СУМ-20/ВТС; Антоненко-Давидович supports usage corrections.
+
+The projection gate rejects dictionary provenance outside paired assertions and checks all other card fields against the pairs' quotations. Withdrawn quotations remain in this inventory after their assertions become tombstones. `public_projection(..., sum11_texts=...)` and `validate_card_contrasts(..., sum11_texts=...)` also accept an independently frozen quotation inventory for detecting unlabelled text not present in those pairs. Without that inventory, provenance checks cannot attribute arbitrary unlabelled text to a dictionary. Structural validation does not certify that the passages substantiate a distortion. It does not replace independent linguistic review or the reviewed page rendering owned by #9860.
+
+The Sources `word_card` lookup applies this gate to stored candidate cards and linked endpoints too. Invalid cards are withheld through its existing unreadable-card handling.
 
 ## 15. Physical schema sketch (SQLite, for C1) and enforceable invariants
 

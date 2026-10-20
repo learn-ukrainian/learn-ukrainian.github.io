@@ -717,6 +717,7 @@ def _store_unavailable(base: dict, reason: str) -> dict:
 
 def _lookup_in_store(store: CardStore, normalized: str, vesum: dict, base: dict) -> dict:
     from scripts.atlas.word_card_certification import certification_run
+    from scripts.atlas.word_card_contrasts import validate_card_contrasts
 
     index, unreadable, off_store, file_count = _store_index(store)
     wanted = {_fold(normalized): "spelling"}
@@ -732,6 +733,7 @@ def _lookup_in_store(store: CardStore, normalized: str, vesum: dict, base: dict)
         if card_id not in endpoint_cards:
             try:
                 other = _dict(_read_card(store.cards, f"{card_id}.json"))
+                validate_card_contrasts(other)
             except (OSError, ValueError):
                 other = {}
             endpoint_cards[card_id] = (
@@ -746,6 +748,7 @@ def _lookup_in_store(store: CardStore, normalized: str, vesum: dict, base: dict)
             for name in index.get(key, ()):
                 try:
                     card = _dict(_read_card(store.cards, name))
+                    validate_card_contrasts(card)
                 except _OffStore:
                     off_store += 1
                     continue
