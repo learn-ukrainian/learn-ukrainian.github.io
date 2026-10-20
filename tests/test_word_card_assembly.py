@@ -30,6 +30,7 @@ from scripts.atlas.word_card_resolver import _project, aid, card_version
 from scripts.common.git_context import sanitized_git_env
 from scripts.common.scratch import ensure_scratch_root
 from scripts.guardrails import worktree_containment as containment
+from scripts.storage.topology import StoreBinding, resolve_store
 from tests.test_word_card_sources import (
     ENTRY_DDL,
     FAILURES_DDL,
@@ -1282,26 +1283,31 @@ def test_this_repository_refuses_tracked_destinations(host_scratch):
     wa.require_host_only([root / "batch_state" / "reports" / "probe" / "cards" / "x.json"])  # ignored here: fine
 
 
-def host_stores_available():
+def host_store_paths():
     try:
         primary = containment.resolve_main_root(ROOT)
-        return all((primary / "data" / f"{name}.db").exists() for name in ("sources", "vesum", "atlas")) and \
-            wa.raw_cache_path(primary / "data/sources.db").exists()
+        bindings = {name: resolve_store(name, repository_root=primary) for name in ("sources", "vesum")}
+        if not all(isinstance(binding, StoreBinding) and binding.path.is_file() for binding in bindings.values()):
+            return None
+        paths = {name: binding.path for name, binding in bindings.items()}
+        paths["atlas"] = wa.store_path("atlas", None)
+        return paths if paths["atlas"].is_file() and wa.raw_cache_path(paths["sources"]).is_file() else None
     except foundation.Refusal:
-        return False
+        return None
 
 
-@pytest.mark.skipif(not host_stores_available(), reason="held sources are host-only")
 @pytest.mark.usefixtures("committed_pilot")  # the real pilot under the production allocation pin
 def test_host_pilot_builds_and_verifies_end_to_end(host_scratch, capsys, monkeypatch):
     """Host-only product proof through the real CLI: the frozen pilot assembles over the canonical read-only
     stores, every locator resolves, derived forms authenticate, relation units are conserved, rebuild is identical."""
+    paths = host_store_paths()
+    if paths is None:
+        pytest.skip("held sources are host-only")
     root = Path(wa.__file__).resolve().parents[2]
     monkeypatch.chdir(root)
     monkeypatch.delenv("LU_ULIF_RAW_CACHE", raising=False)
-    primary = containment.resolve_main_root(ROOT)
     stores = [arg for name in ("sources", "vesum", "atlas")
-              for arg in (f"--{name}-db", str(primary / "data" / f"{name}.db"))]
+              for arg in (f"--{name}-db", str(paths[name]))]
     inputs = ["--manifest", "registry/atlas/pilot/pilot-v1.json", "--registry", "registry/atlas/identity/registry.json",
               "--register", "docs/sources/permissions-register.yaml", *stores]
     args = [*inputs, "--output", str(host_scratch / "pilot")]
