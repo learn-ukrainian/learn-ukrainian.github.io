@@ -153,30 +153,36 @@ def _without_code_fences(text: str, *, keep_unclosed: bool) -> str:
     raw_lines = _commonmark_lines(text, keepends=True)
     lines = _commonmark_lines(text)
     spans: list[tuple[int, int]] = []
-    if keep_unclosed:
-        # Use one parser for both context and spans; lexical state can drift
-        # across container exits. Import/parse failures propagate before effects.
-        # Import locally so verdict-only consumers retain their lexical policy.
-        from markdown_it import MarkdownIt
+    # CommonMark fences end at their container boundary. Blockquote maps also
+    # include lazy continuations whose source lines have no quote marker.
+    # Import/parse failures propagate before either consumer can admit a review.
+    from markdown_it import MarkdownIt
 
-        for token in MarkdownIt("commonmark").parse("\n".join(lines)):
+    for token in MarkdownIt("commonmark").parse("\n".join(lines)):
+        if keep_unclosed:
             if token.type != "fence" or token.level != 0:
                 continue
-            source_map = token.map
-            if not isinstance(source_map, (list, tuple)) or len(source_map) != 2:
+        elif token.type not in {"fence", "code_block", "blockquote_open"}:
+            continue
+        source_map = token.map
+        if not isinstance(source_map, (list, tuple)) or len(source_map) != 2:
+            if keep_unclosed:
                 continue
-            start, end = source_map
-            if type(start) is not int or type(end) is not int or not 0 <= start < end <= len(lines):
+            raise ValueError("CommonMark verdict visibility map unavailable")
+        start, end = source_map
+        if type(start) is not int or type(end) is not int or not 0 <= start < end <= len(lines):
+            if keep_unclosed:
                 continue
-            # Maps also describe EOF/container-terminated fences. A separate
-            # source closer, of the opener's marker and length, proves closure.
-            if end - 1 > start and _closes_code_fence(lines[end - 1], token.markup):
-                spans.append((start, end))
-    else:
-        spans = [(start, end) for start, end, _closed in _code_fence_spans(lines)]
+            raise ValueError("CommonMark verdict visibility map invalid")
+        # Dispatch/DoR still require a source closer for top-level data removal.
+        # Verdict examples include EOF/container-terminated fences and quotes.
+        if not keep_unclosed or (end - 1 > start and _closes_code_fence(lines[end - 1], token.markup)):
+            spans.append((start, end))
     parts: list[str] = []
     cursor = 0
-    for start, end in spans:
+    for start, end in sorted(spans):
+        if end <= cursor:
+            continue
         parts.extend(raw_lines[cursor:start])
         parts.append("\n")
         cursor = end
@@ -188,10 +194,10 @@ def recognized_verdicts(response: str) -> list[str]:
     """Return recognized verdict tokens in order, excluding code and examples.
 
     Selection and normalization belong to consumers. An unclosed CommonMark
-    fence suppresses the rest of the response.
+    fence suppresses its body through EOF or the enclosing container's end.
     """
     verdicts: list[str] = []
-    for line in _without_code_fences(response, keep_unclosed=False).splitlines():
+    for line in _commonmark_lines(_without_code_fences(response, keep_unclosed=False)):
         match = _REVIEW_VERDICT_LINE_RE.match(line)
         if match:
             verdicts.append(match.group(1).upper())
@@ -205,7 +211,7 @@ def unsupported_verdict_tokens(response: str) -> list[str]:
     admits a review or changes a consumer's recognized-token precedence.
     """
     tokens: list[str] = []
-    for line in _without_code_fences(response, keep_unclosed=False).splitlines():
+    for line in _commonmark_lines(_without_code_fences(response, keep_unclosed=False)):
         if _REVIEW_VERDICT_LINE_RE.match(line):
             continue
         match = _UNSUPPORTED_VERDICT_LINE_RE.match(line)

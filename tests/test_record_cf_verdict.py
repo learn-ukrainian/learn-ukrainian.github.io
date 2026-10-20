@@ -18,6 +18,7 @@ from scripts.common.git_context import GIT_REDIRECT_ENV_KEYS, sanitized_git_env
 from scripts.common.scratch import ensure_scratch_root
 from scripts.review import record_cf_verdict as recorder
 from tests.claude_route_accounts import HOST_ACCOUNT
+from tests.test_verdict_parser import FROZEN_CONTAINER_CASES
 
 SHA = "a" * 40
 OTHER = "b" * 40
@@ -105,6 +106,57 @@ def write_task(root: Path, *, task_id="review-one", reply="VERDICT: APPROVE", **
 )
 def test_token_normalization(reply, expected):
     assert recorder.normalize_verdict(reply) == expected
+
+
+@pytest.mark.parametrize("newline", ["\n", "\r\n", "\r"], ids=["lf", "crlf", "cr"])
+@pytest.mark.parametrize("case,reply,expected", FROZEN_CONTAINER_CASES, ids=[c[0] for c in FROZEN_CONTAINER_CASES])
+def test_container_visibility_reaches_recorder_before_any_forge_effect(tmp_path, monkeypatch, case, reply, expected, newline):
+    response = reply.replace("\n", newline)
+    normalized = {"BLOCKED": "BLOCKED", "REQUEST_CHANGES": "CHANGES_REQUESTED"}
+    observed = []
+    original = recorder._review_verdict_and_count
+
+    def observe(text):
+        result = original(text)
+        observed.append(result)
+        return result
+
+    def stop_before_forge(*_args):
+        raise recorder.RecordError("synthetic stop before forge")
+
+    monkeypatch.setattr(recorder, "_review_verdict_and_count", observe)
+    monkeypatch.setattr(recorder, "_pr", stop_before_forge)
+    write_task(tmp_path / "tasks", reply=response)
+    if expected:
+        assert recorder.normalize_verdict(response) == normalized[expected[0]]
+        reason = "synthetic stop before forge"
+    else:
+        with pytest.raises(recorder.RecordError, match="missing or ambiguous"):
+            recorder.normalize_verdict(response)
+        reason = "missing or ambiguous"
+    with pytest.raises(recorder.RecordError, match=reason):
+        recorder.record("review-one", task_root=tmp_path / "tasks", lock_root=tmp_path / "locks")
+    assert observed == ([(normalized[expected[0]], "unknown")] if expected else [])
+
+
+def test_container_filter_preserves_recorder_ambiguity_refusal():
+    with pytest.raises(recorder.RecordError, match="missing or ambiguous"):
+        recorder.normalize_verdict(
+            "> Example:\nVERDICT: APPROVE\n\nVERDICT: APPROVE\nVERDICT: BLOCKED"
+        )
+
+
+def test_recorder_parser_failure_precedes_forge_effects(tmp_path, monkeypatch):
+    from markdown_it import MarkdownIt
+
+    def unavailable(*_args):
+        raise RuntimeError("synthetic parser unavailable")
+
+    monkeypatch.setattr(MarkdownIt, "parse", unavailable)
+    monkeypatch.setattr(recorder, "_pr", lambda *_a: pytest.fail("parser failure must precede forge access"))
+    write_task(tmp_path / "tasks")
+    with pytest.raises(RuntimeError, match="synthetic parser unavailable"):
+        recorder.record("review-one", task_root=tmp_path / "tasks", lock_root=tmp_path / "locks")
 
 
 def test_full_nested_task_id_is_safe_and_loadable(tmp_path):

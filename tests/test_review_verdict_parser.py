@@ -8,6 +8,54 @@ import sys
 import pytest
 
 from scripts.review.verdict_parser import recognized_verdicts
+from tests.test_verdict_parser import FROZEN_CONTAINER_CASES
+
+
+@pytest.mark.parametrize("newline", ["\n", "\r\n", "\r"], ids=["lf", "crlf", "cr"])
+@pytest.mark.parametrize("case,reply,expected", FROZEN_CONTAINER_CASES, ids=[c[0] for c in FROZEN_CONTAINER_CASES])
+def test_container_visibility_reaches_real_dispatch_decisions(case, reply, expected, newline):
+    from scripts import delegate
+
+    response = reply.replace("\n", newline)
+    assert delegate.parse_review_verdict(response) == (expected[-1] if expected else None)
+    failure = None if expected else "review_missing_verdict_line"
+    assert delegate._review_verdict_failure_reason(response) == failure
+    gate = delegate.run_completion_gate(
+        delegate.COMPLETION_GATE_REVIEW_VERDICT, {}, response=response, commits_ahead=None, worktree=None,
+    )
+    assert gate.failure == failure
+    assert gate.detail == (failure or "")
+
+
+def test_dispatch_final_token_and_diagnostic_visibility_stay_separate():
+    from scripts import delegate
+
+    response = "> Example:\nVERDICT: UNKNOWN\n\nVERDICT: APPROVE\nVERDICT: BLOCKED"
+    assert recognized_verdicts(response) == ["APPROVE", "BLOCKED"]
+    assert delegate.parse_review_verdict(response) == "BLOCKED"
+    assert delegate._review_verdict_failure_reason(response) is None
+    gate = delegate.run_completion_gate(
+        delegate.COMPLETION_GATE_REVIEW_VERDICT, {}, response="> Example:\nVERDICT: UNKNOWN\n",
+        commits_ahead=None, worktree=None,
+    )
+    assert gate.failure == "review_missing_verdict_line"
+    assert "UNKNOWN" not in gate.detail
+
+
+def test_dispatch_parser_failure_cannot_pass_completion(monkeypatch):
+    from markdown_it import MarkdownIt
+
+    from scripts import delegate
+
+    def unavailable(*_args):
+        raise RuntimeError("synthetic parser unavailable")
+
+    monkeypatch.setattr(MarkdownIt, "parse", unavailable)
+    with pytest.raises(RuntimeError, match="synthetic parser unavailable"):
+        delegate.run_completion_gate(
+            delegate.COMPLETION_GATE_REVIEW_VERDICT, {}, response="VERDICT: APPROVE",
+            commits_ahead=None, worktree=None,
+        )
 
 
 @pytest.mark.parametrize("reply,expected", [
