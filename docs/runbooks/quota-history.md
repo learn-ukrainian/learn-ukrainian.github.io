@@ -72,6 +72,17 @@ observation that a change was seen.
 The units are templates. Render `@REPO_ROOT@` to the deployed checkout path, install, reload and enable the
 timer. Re-running these commands is safe.
 
+Install the companion data-volume drop-in (`packaging/systemd/dropins/learn-ukrainian-quota-history.service.d/data-volume.conf`)
+before enabling the timer. It wraps the collector's `ExecStart` with the data-volume guard, so a failed guard exits 78 and
+prevents restart. The approved installer renders it with every other timer service's drop-in. Run the preview from the
+primary checkout first, then `--apply` from the primary checkout (it refuses dispatch worktrees). It does not reload or
+start units:
+
+```bash
+.venv/bin/python scripts/storage/install_data_volume_dropins.py          # preview; no writes
+.venv/bin/python scripts/storage/install_data_volume_dropins.py --apply  # primary checkout only; writes drop-ins
+```
+
 ```bash
 mkdir -p ~/.config/systemd/user
 sed "s#@REPO_ROOT@#<deployed-checkout>#g" packaging/systemd/learn-ukrainian-quota-history.service > ~/.config/systemd/user/learn-ukrainian-quota-history.service
@@ -83,9 +94,6 @@ systemctl --user list-timers learn-ukrainian-quota-history.timer
 ```
 
 Verify the rendered units without installing: `systemd-analyze verify <rendered-unit-paths>`.
-
-Operator-only: the data-volume drop-in convention (`packaging/systemd/dropins/*.service.d/`) applies to every
-timer. Confirm the drop-in for this unit is in place before enabling it on a host where that guard is used.
 
 ## Limits
 
