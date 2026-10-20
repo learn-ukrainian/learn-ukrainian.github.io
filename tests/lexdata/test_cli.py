@@ -6,7 +6,8 @@ import json
 
 import pytest
 
-from scripts.lexdata import cli
+from scripts.lexdata import build_store, cli, transforms
+from tests.lexdata._support import NO_BUDGET
 
 
 @pytest.mark.parametrize("argv", [[], ["build"], ["verify"], ["status"], ["digests"]])
@@ -31,7 +32,9 @@ def test_digests_report_a_closed_registry(capsys) -> None:
 
 
 def test_verify_and_status_on_a_published_generation(harness, capsys, monkeypatch) -> None:
-    result = harness.build()
+    # Built under the production registry, so `status` (which reads with it) can open it.
+    result = build_store.build(harness.target, binding=transforms.DEFAULT_BINDING, adapters={}, stores={},
+                               repository_root=harness.repository_root, admission=NO_BUDGET)
     assert cli.main(["verify", "--path", str(result.published)]) == 0
     assert json.loads(capsys.readouterr().out)["ok"] is True
     monkeypatch.setenv("LU_LEXDATA_DB", str(result.published))

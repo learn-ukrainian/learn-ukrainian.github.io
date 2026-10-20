@@ -567,11 +567,12 @@
   },
   {
     "path": "scripts/lexdata/build_store.py",
-    "reference_count": 2,
+    "reference_count": 3,
     "kind": "writer",
-    "target_db": "lexdata generation temp file; lexdata backup copy",
-    "reason": "single writer of data/lexdata.db: builds the temp generation before the atomic swap and receives the online backup of the published generation (lexdata design r3 §6)",
+    "target_db": "lexdata generation temp file; lexdata backup copy; in-memory temp-directory pin and probe",
+    "reason": "single writer of data/lexdata.db: builds the temp generation before the atomic swap and receives the online backup of the published generation (lexdata design r3 §6); a private :memory: connection pins and proves the SQLite temp directory (§9)",
     "calls": [
+      "sqlite3.connect(':memory:')",
       "sqlite3.connect(path.resolve().as_uri() + '?mode=rwc', uri=True, isolation_level='DEFERRED')",
       "sqlite3.connect(destination)"
     ]

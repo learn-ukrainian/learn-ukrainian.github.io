@@ -18,7 +18,7 @@ from typing import Any
 from scripts.lexdata import rule_tables, transforms
 from scripts.lexdata.canonical import canonical_json, sha256_canonical
 from scripts.lexdata.derive import row_sha256
-from scripts.lexdata.generation import read_meta
+from scripts.lexdata.generation import MetaMalformed, read_meta
 from scripts.lexdata.normalize import ENTITY_RE, letter_script
 from scripts.lexdata.records import L0Row, UnitInput
 
@@ -225,7 +225,12 @@ def _check_l2(conn: Any, report: VerifyReport) -> None:
 def verify_generation(conn: Any, *, binding: transforms.TransformBinding = transforms.DEFAULT_BINDING,
                       expect_status: str | None = None) -> VerifyReport:
     """Run every invariant. ``expect_status`` pins ``candidate`` (pre-publish) or ``published``."""
-    meta = read_meta(conn)
+    try:
+        meta = read_meta(conn)
+    except MetaMalformed:
+        report = VerifyReport(None)
+        report.violations["meta_malformed"] += 1
+        return report
     report = VerifyReport(None if meta is None else meta.get("generation"))
     v = report.violations
     integrity = conn.execute("PRAGMA integrity_check").fetchall()
