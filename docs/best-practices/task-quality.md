@@ -49,6 +49,20 @@ trivial card remains visible in the DoD section, comment and report, but does
 not refuse admission. Body-only CLI modes report
 membership `unchecked` and cannot establish membership proof.
 
+Acceptance items that explicitly require evidence after merge, post-merge,
+once merged, or after landing must name `owner: <lane>` and a valid calendar
+date as `due: YYYY-MM-DD` on the same line. The recognized lanes are
+`claude-infra`, `codex-devops`, `codex-atlas`, `grok-monitor`,
+`gemini-open-model-data`, and `claude-cto`. The date is the deadline to collect
+and review the evidence. Missing or invalid fields produce
+`post_merge_unowned` WARN, which blocks implementation dispatch unless a reason
+is recorded. Generic mentions of runs, windows, days, or receipts alone do
+not trigger this rule. Fenced code blocks and quoted examples are excluded.
+
+```markdown
+- [ ] AC-03: After merge, review five CI receipts; owner: codex-devops; due: 2026-11-20
+```
+
 The live checker follows at most eight repository-qualified parent links to a
 registered active root and calls `resolve_live_ancestry`. Active roots retain
 only their documented membership exemption. Canonical fresh unique body
@@ -214,6 +228,21 @@ asked to merge. **Merge ≠ deploy ≠ certify** — match the terminal goal.
 Naming a residual owner does **not** satisfy an unmet acceptance criterion;
 in-scope residual keeps the task unfinished unless an authorized scope revision
 and transfer resolve it.
+
+After merge, run `.venv/bin/python -m scripts.orchestration.postmerge_criteria
+--pr N --apply`. For the PR's closing links and explicit `Closes #N` references,
+the command reopens closed issues with unchecked acceptance criteria and posts
+one comment per outstanding item set with each owner and deadline. Missing or
+invalid assignments go to `claude-cto` through Fleet Comms, idempotently per
+issue and item set. Dry-run omits `--apply`; outstanding criteria return exit 1.
+The owning lane checks due items in its existing reconciliation cycle, records
+evidence, and escalates overdue items. Naming an owner never satisfies an item.
+This command does not close issues or audit historical issues.
+
+Follow-up for the separate `merge_closeout.py` owner: call
+`postmerge_criteria.run_postmerge_criteria(pr_number, apply=apply)` after
+confirming MERGED and before reporting successful closeout; propagate a false
+`ok` as unfinished closeout. The integration is not installed by #11213.
 
 Compose only the rows that apply (N/A needs a reason — do not skip silently):
 
