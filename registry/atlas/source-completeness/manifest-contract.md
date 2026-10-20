@@ -56,8 +56,8 @@ worktree's ignored `batch_state/reports/`. Symlink output paths and overlap with
 any direct or transitive input are refused. Inputs and source stores are read
 only. The producer has no database, crawler, account, Hub or network operation.
 
-Outputs are twenty `SRC-*.json` manifests in matrix order, `members.json`, and
-`manifest-receipt.json`. Each source manifest preserves range order and source
+Outputs are twenty `SRC-*.json` manifests in matrix order, `members.json`, the
+optional censuses below, and `manifest-receipt.json`. Each source manifest preserves range order and source
 unit order with zero-based ordinals within its range. The receipt binds the
 exact input bytes, versions, transitive artifact digests, ordered output files,
 counts, requirement dispositions, gaps and external prerequisites. Every gap
@@ -74,6 +74,29 @@ damaged or partial directory is refused; use a fresh explicit output path.
 An invalid rerun preserves prior committed artifacts and their original input
 bindings; it does not produce a new receipt. Readers must check receipt hashes
 before using manifests. Generated evidence is never committed to Git.
+
+## Candidate A census (optional)
+
+`--atlas-manifest` (Atlas version `0.1` JSON with `entries[].lemma`/`url_slug`; unique
+slugs) adds `atlas-census.json`. `--puls-entries` (JSONL rows with `id`, `word`, `level`
+in A1–C1; other columns are not interpreted; split on LF only) adds `puls-census.json`
+with per-level row counts. Either flag works alone. Both bind exact input bytes in the
+receipt and are listed before the receipt in its ordered outputs.
+
+Each census lists entries in input order with an ordinal, the verbatim values, and every
+exact-key match to a supplied known source unit across all twenty requirements. Matching
+is byte-exact on the lemma/word versus `identity.key`: no case folding, accent stripping
+or fuzzy linking. Repeated lemmas and repeated PULS ids (a phrase row and its sense row
+share one) stay separate ordinal entries; the denominator counts entries.
+
+Per requirement, `PARTITIONED` means every supplied range for it is known; only then are
+the full-coverage counts non-null. Unknown, partial or absent inventories report
+`UNPARTITIONED` with null full-coverage counts, never zero, plus separate
+`supplied_known_*` counts. The two censuses are never merged: no union, overlap or
+deduplication is computed, because choosing the lexical-universe baseline needs
+designated approval. A census is `exact_key_observation_only`: it cannot approve
+Candidate A, replace lexical-universe or legacy membership, or establish coverage.
+Invalid census input exits 3 and publishes nothing.
 
 ## Exact input envelopes
 
