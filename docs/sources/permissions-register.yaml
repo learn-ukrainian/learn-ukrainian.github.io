@@ -1778,14 +1778,13 @@ sources:
   - course_usage
   appears_in:
   - internal
-  - site
-  - dataset
   appears_note: >-
-    PROPOSED DISPLAY RULE (operator confirmation required). Public output may show only lexical facts:
-    membership and lesson position, printed stress and grammatical labels, and only where they agree with
-    VESUM/ULIF, with the credit "Ukrainian Lessons (Anna Ohoiko)". English glosses, example sentences and
-    sense wording are internal evidence and are never shown verbatim. A public English gloss comes from
-    another admitted source or is authored and reviewed in-project.
+    Internal only until the operator confirms the display rule and per-field gating exists. PROPOSED public
+    scope (awaiting operator confirmation): site and dataset, lexical facts only (membership and lesson
+    position, printed stress and grammatical labels, only where they agree with VESUM/ULIF), credit
+    "Ukrainian Lessons (Anna Ohoiko)". English glosses, example sentences and sense wording would stay
+    internal evidence and never be shown verbatim. A public English gloss comes from another admitted
+    source or is authored and reviewed in-project.
   stored_in:
   - data/sources.db textbooks/textbook_sections (L0, unchanged)
   - data/lexdata.db L1 (derived)
