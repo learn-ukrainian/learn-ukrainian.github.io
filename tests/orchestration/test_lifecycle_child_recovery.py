@@ -79,6 +79,22 @@ def test_later_child_recovery_and_replay_preserve_author(child_case):
         assert path.read_bytes() == raw
 
 
+def test_child_recovery_refuses_same_issue_carrier_without_append(child_case):
+    repo, kwargs, pr, _, _ = child_case
+    child = tl.load_lifecycle(kwargs["state_file"])
+    task_file = kwargs["task_file"]
+    task = json.loads(task_file.read_text())
+    task["task_lifecycle"] = tl.carrier_projection(child, state_file=str(kwargs["state_file"]))
+    assert task["task_lifecycle"]["lifecycle_id"] == tl.lifecycle_id(task["task_lifecycle"]["identity"])
+    task_file.write_text(json.dumps(task))
+    before = kwargs["state_file"].read_bytes()
+
+    with pytest.raises(lo.ObservationRefusal, match="RECOVERY_LIFECYCLE_MISMATCH"):
+        lo.recover(repo, **kwargs, child_pr=pr)
+
+    assert kwargs["state_file"].read_bytes() == before
+
+
 @pytest.mark.parametrize(("mutation", "reason"), [
     ("child_number", "RECOVERY_CHILD_PR_MISMATCH"),
     ("child_head", "RECOVERY_CHILD_PR_MISMATCH"),

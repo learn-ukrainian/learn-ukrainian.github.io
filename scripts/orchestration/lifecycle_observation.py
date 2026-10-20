@@ -383,6 +383,9 @@ def recover(
                     raise ObservationRefusal(refusal)
                 recovery = local["recovered_from_preserved"]
                 if "association" in recovery:
+                    # recovery_refusal verifies the stored locators and digests.
+                    # Also bind the caller's replay paths; for unchanged paths,
+                    # the repeated digest checks are defence in depth.
                     for name, source in (("task", task_file), ("manifest", manifest_file), ("push", push_file)):
                         if _source(source, repo_root)[1] != recovery["inputs"][name]:
                             raise ObservationRefusal("RECOVERY_DIGEST_MISMATCH")
