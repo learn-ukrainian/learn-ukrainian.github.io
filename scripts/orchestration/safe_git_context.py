@@ -44,6 +44,7 @@ class SafeGitContext:
         origin: str = CANONICAL_ORIGIN,
         token: str | None = None,
         local_remote: bool = False,
+        trusted_objects: Path | None = None,
     ) -> None:
         if origin != CANONICAL_ORIGIN and not (local_remote and Path(origin).is_absolute()):
             raise SnapshotRefusal("rescue_push_url_unavailable")
@@ -52,6 +53,9 @@ class SafeGitContext:
         self.origin = origin
         self.token = token
         self.local_remote = local_remote
+        # A local destination is an explicit driver/test injection, just like
+        # its object store. Never infer trusted storage from worker config.
+        self.trusted_objects = trusted_objects or (self.objects if local_remote else None)
 
     def __enter__(self) -> SafeGitContext:
         self._scratch = tempfile.TemporaryDirectory(prefix="lu-safe-git-", dir=self.temp_root)
@@ -146,11 +150,7 @@ class SafeGitContext:
         )
 
     def isolate_objects(self, *, base: str, head: str) -> None:
-        """Copy the real publication range and its base closure, then sever the source.
-
-        Only object bytes cross this boundary. The base closure is needed for
-        strict connectivity checks and the trusted validation hook's checkout.
-        """
+        """Hash-check and fsck only the incoming range against trusted base objects."""
         common = self.objects.parent
         admin = self.source_git_dir
         forbidden = [root / name for root in {common, admin} for name in ("info/grafts", "shallow")] + [
@@ -180,12 +180,11 @@ class SafeGitContext:
         # rev-list and pack-objects see a fresh config with commitGraph and
         # replacement lookup disabled, never the worker's refs or config.
         objects = self.checked("rev-list", "--objects", "--no-object-names", f"{base}..{head}")
-        objects += "\n" + self.checked("rev-list", "--objects", "--no-object-names", base)
-        oids = "\n".join(dict.fromkeys(line for line in objects.splitlines() if line)) + "\n"
+        oids = "".join(line + "\n" for line in dict.fromkeys(objects.splitlines()) if line)
         pack = self.root / "publication.pack"
         with pack.open("wb") as output:
             exported = subprocess.run(
-                [GIT, "pack-objects", "--stdout", "--no-reuse-delta", "--no-reuse-object"],
+                [GIT, "pack-objects", "--stdout"],
                 cwd=self.root,
                 env=self.env,
                 input=oids.encode("ascii"),
@@ -197,9 +196,18 @@ class SafeGitContext:
         self.env.pop("GIT_ALTERNATE_OBJECT_DIRECTORIES", None)
         if exported.returncode:
             raise SnapshotRefusal("auto_finalize_object_hardening_violation")
+        if self.trusted_objects is None:
+            raise SnapshotRefusal("auto_finalize_object_hardening_violation")
+        # This file belongs only to the fresh repository. Validation children
+        # clear GIT_* and must still find the trusted base, never the worker.
+        trusted = self.trusted_objects.resolve(strict=True)
+        self.git_dir.joinpath("objects/info/alternates").write_text(str(trusted) + "\n")
         with pack.open("rb") as source:
             imported = subprocess.run(
-                [GIT, "index-pack", "--stdin"],
+                # --strict runs Git's strict fsck on every copied object and
+                # checks outgoing links against the trusted store. A separate
+                # fsck --full would recheck all alternate history as well.
+                [GIT, "index-pack", "--stdin", "--strict"],
                 cwd=self.root,
                 env=self.env,
                 stdin=source,
@@ -207,7 +215,18 @@ class SafeGitContext:
                 check=False,
                 timeout=120,
             )
-        if imported.returncode or self.run("fsck", "--strict", "--no-dangling", head, base).returncode:
+        if imported.returncode:
+            raise SnapshotRefusal("auto_finalize_fsck_failed")
+        # Linked workers share the trusted main store, which can also contain
+        # corrupt worker objects. Every requested range OID must be in our
+        # verified pack, rather than merely resolvable through that alternate.
+        copied = set()
+        for index in self.git_dir.glob("objects/pack/*.idx"):
+            verified = self.run("verify-pack", "-v", str(index))
+            if verified.returncode:
+                raise SnapshotRefusal("auto_finalize_fsck_failed")
+            copied.update(line.split()[0] for line in verified.stdout.splitlines() if line)
+        if not set(oids.split()).issubset(copied):
             raise SnapshotRefusal("auto_finalize_fsck_failed")
         self.objects = self.git_dir / "objects"
 

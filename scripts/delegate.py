@@ -6523,6 +6523,7 @@ TYPED_CAUSE_CODES = frozenset(
         "auto_finalize_dirty_unknown",
         "auto_finalize_changes_unknown",
         "auto_finalize_committed_scope_unknown",
+        "auto_finalize_scope_check_timeout",
         "auto_finalize_committed_scope_unowned",
         "auto_finalize_remote_unknown",
         "auto_finalize_remote_unverified",
@@ -8046,6 +8047,7 @@ def _finalize_execution_context(worktree: Path, *, publish: bool = False) -> Ite
     )
     with manager as context:
         context.source_git_dir = repo.admin_dir
+        context.trusted_objects = _REPO_ROOT / ".git/objects"
         driver = context.read_source_ref(_REPO_ROOT / ".git", "HEAD")
         if driver.returncode:
             raise SnapshotRefusal("auto_finalize_committed_scope_unknown")
@@ -8079,19 +8081,29 @@ def _finalize_history(context: SafeGitContext, *, head: str, base: str, owned: S
     """Check original objects and every exposed intermediate commit."""
     if context.run("merge-base", "--is-ancestor", base, head).returncode:
         raise SnapshotRefusal("auto_finalize_committed_scope_unknown")
-    commits = context.checked("rev-list", f"{base}..{head}").splitlines()
+    commits = context.checked("rev-list", head, "--not", base, context.driver_base).splitlines()
+    comparisons = []
+    for commit in commits:
+        recorded = context.checked("merge-base", commit, base)
+        upstream = context.checked("merge-base", commit, context.driver_base)
+        # Either trusted anchor can be newer. For pre-merge worker commits,
+        # use only the portion of each anchor already in their ancestry.
+        comparison = (
+            upstream if context.run("merge-base", "--is-ancestor", recorded, upstream).returncode == 0 else recorded
+        )
+        comparisons.append((comparison, commit))
     paths = [
         path
-        for commit in commits
-        for path in context.checked(
-            "diff-tree", "-r", "-z", "--no-renames", "--root", "-m", "--no-commit-id", "--name-only", commit
-        ).split("\0")
+        for comparison, commit in comparisons
+        for path in context.checked("diff-tree", "-r", "-z", "--no-renames", "--name-only", comparison, commit).split(
+            "\0"
+        )
         if path
     ]
     if any(
         "\\" in path
         or any(
-            part in {"", ".", ".."} or unicodedata.normalize("NFKC", part).casefold() == ".git"
+            part in {"", ".", ".."} or unicodedata.normalize("NFKC", part).casefold().rstrip(" .") in {".git", "git~1"}
             for part in path.split("/")
         )
         for path in paths
@@ -8109,8 +8121,8 @@ def _finalize_history(context: SafeGitContext, *, head: str, base: str, owned: S
     if any(not _path_is_owned(path, owned) for path in paths):
         raise SnapshotRefusal("auto_finalize_committed_scope_unowned")
     attributes_changed = any(path.rpartition("/")[2] == ".gitattributes" for path in paths)
-    for commit in commits:
-        context.refuse_tree(base, commit)
+    for comparison, commit in comparisons:
+        context.refuse_tree(comparison, commit)
         if attributes_changed:
             # Attribute-only commits can install filters on unchanged files.
             tree_paths = context.checked("ls-tree", "-r", "--name-only", "-z", commit)
@@ -8118,7 +8130,7 @@ def _finalize_history(context: SafeGitContext, *, head: str, base: str, owned: S
                 context.checked("check-attr", f"--source={source}", "-z", "--stdin", "filter", stdin=tree_paths).split(
                     "\0"
                 )
-                for source in (base, commit)
+                for source in (comparison, commit)
             ]
             if any(
                 commit_filters[i] not in {"unspecified", "unset"} and commit_filters[i] != base_filters[i]
@@ -8329,7 +8341,9 @@ def _auto_finalize_dirty_worktree(
         except SnapshotRefusal as exc:
             code = exc.code if exc.code in TYPED_CAUSE_CODES else "auto_finalize_committed_scope_unknown"
             return _result(ok=False, error=code, commit_sha=intended_head)
-        except (OSError, subprocess.TimeoutExpired):
+        except subprocess.TimeoutExpired:
+            return _result(ok=False, error="auto_finalize_scope_check_timeout", commit_sha=intended_head)
+        except OSError:
             return _result(ok=False, error="auto_finalize_committed_scope_unknown", commit_sha=intended_head)
     if not all_changed:
         if _worktree_is_dirty(worktree) is not False:

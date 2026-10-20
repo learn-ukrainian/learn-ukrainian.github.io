@@ -9,6 +9,7 @@ import inspect
 import struct
 import subprocess
 import sys
+import time
 from pathlib import Path
 
 import pytest
@@ -40,10 +41,14 @@ def publication(tmp_path, monkeypatch):
     def execution(source, **_kwargs):
         assert source == worktree
         with SafeGitContext(
-            objects=worktree / ".git/objects", temp_root=tmp_path, origin=str(origin), local_remote=True
+            objects=worktree / ".git/objects",
+            trusted_objects=origin / "objects",
+            temp_root=tmp_path,
+            origin=str(origin),
+            local_remote=True,
         ) as context:
             context.source_git_dir = worktree / ".git"
-            context.driver_base = base
+            context.driver_base = _git_out(origin, "rev-parse", "refs/heads/main").strip()
             context.interpreter = Path(sys.executable)
             yield context
 
@@ -57,6 +62,35 @@ def write_commit(worktree, name="artifact.txt", content="owned\n"):
     _git_out(worktree, "add", name)
     _git_out(worktree, "commit", "-m", "worker change")
     return _git_out(worktree, "rev-parse", "HEAD").strip()
+
+
+def test_dirty_first_change_publishes_from_empty_committed_range(publication):
+    worktree, origin, base, marker = publication
+    (worktree / "artifact.txt").write_text("first owned change\n")
+
+    result = publish(publication)
+
+    assert result.ok, result.error
+    assert "refs/heads/codex/finalize " + result.commit_sha in refs(origin)
+    assert _git_out(origin, "show", f"{result.commit_sha}:artifact.txt") == "first owned change\n"
+    assert _git_out(worktree, "rev-parse", "HEAD^").strip() == base
+    assert _git_out(worktree, "status", "--porcelain") == ""
+    assert marker.read_text() == "checked"
+
+
+def test_recorded_base_ahead_of_driver_main_is_not_charged_to_worker(publication):
+    worktree, origin, _base, marker = publication
+    base = write_commit(worktree, "baseline.txt", "accepted dispatch baseline\n")
+    _git_out(worktree, "push", "origin", "HEAD:refs/heads/trusted-base")
+    head = write_commit(worktree)
+
+    result = publish((worktree, origin, base, marker))
+
+    assert result.ok, result.error
+    assert "refs/heads/codex/finalize " + head in refs(origin)
+    assert _git_out(origin, "show", f"{head}:baseline.txt") == "accepted dispatch baseline\n"
+    assert _git_out(origin, "show", f"{head}:artifact.txt") == "owned\n"
+    assert marker.read_text() == "checked"
 
 
 def publish(publication, *, owned_paths=None, task_id="security-finalize"):
@@ -182,6 +216,7 @@ def test_scoped_preparation_value_error_is_typed_and_retains_local_commit(public
 def test_unchanged_base_filter_allows_unrelated_attribute_edit(publication):
     worktree, origin, _base, marker = publication
     base = write_commit(worktree, ".gitattributes", "README.md filter=existing\n")
+    _git_out(worktree, "push", "origin", "HEAD:refs/heads/main")
     head = write_commit(worktree, ".gitattributes", "README.md filter=existing\n# unrelated comment\n")
 
     result = publish((worktree, origin, base, marker), owned_paths=[".gitattributes"])
@@ -483,7 +518,7 @@ def test_publication_uses_only_the_copied_objects(publication, monkeypatch):
 
     def mutate_source_after_validation(context, **kwargs):
         assert "GIT_ALTERNATE_OBJECT_DIRECTORIES" not in context.env
-        assert not (context.git_dir / "objects/info/alternates").exists()
+        assert (context.git_dir / "objects/info/alternates").read_text() == str(origin / "objects") + "\n"
         assert context.checked("config", "core.commitGraph") == "false"
         assert context.checked("config", "core.useReplaceRefs") == "false"
         # Damage a source object only after the isolated copy passed fsck.
@@ -613,6 +648,222 @@ def test_non_first_parent_history_is_checked(publication, shape, path):
     assert result.error == (
         "auto_finalize_validation_changed" if path.startswith(".githooks") else "auto_finalize_committed_scope_unowned"
     )
+    assert "refs/heads/codex/finalize" not in refs(origin)
+    assert not marker.exists()
+    assert delegate._resolve_sha(worktree) == head
+
+
+@pytest.mark.parametrize("worker_unowned", [False, True])
+@pytest.mark.parametrize("recorded_base", ["original", "current"])
+def test_merge_of_trusted_newer_main_charges_only_worker_changes(publication, worker_unowned, recorded_base):
+    worktree, origin, base, marker = publication
+    _git_out(worktree, "checkout", "-B", "main", base)
+    write_commit(worktree, "main-only.txt", "trusted upstream\n")
+    # Even changes to validation are trusted when they come from main.
+    current = write_commit(worktree, ".githooks/upstream", "trusted hook support\n")
+    _git_out(worktree, "push", "origin", "HEAD:refs/heads/main")
+    _git_out(worktree, "checkout", "codex/finalize")
+    write_commit(worktree)
+    if worker_unowned:
+        write_commit(worktree, "unowned.txt")
+    _git_out(worktree, "merge", "--no-edit", "main")
+    head = delegate._resolve_sha(worktree)
+    packet = (worktree, origin, base if recorded_base == "original" else current, marker)
+
+    result = publish(packet)
+
+    if worker_unowned:
+        assert not result.ok
+        assert result.error == "auto_finalize_committed_scope_unowned"
+        assert "refs/heads/codex/finalize" not in refs(origin)
+        assert not marker.exists()
+    else:
+        assert result.ok, result.error
+        assert "refs/heads/codex/finalize " + head in refs(origin)
+        assert _git_out(origin, "show", f"{head}:main-only.txt") == "trusted upstream\n"
+        assert _git_out(origin, "show", f"{head}:artifact.txt") == "owned\n"
+        assert marker.read_text() == "checked"
+
+
+def test_precheck_timeout_has_its_own_typed_outcome(publication, monkeypatch):
+    worktree, origin, _base, marker = publication
+    head = write_commit(worktree)
+    (worktree / "artifact.txt").write_text("dirty owned\n")
+
+    def timeout(*_args, **_kwargs):
+        raise subprocess.TimeoutExpired(["git", "pack-objects"], 120)
+
+    monkeypatch.setattr(SafeGitContext, "isolate_objects", timeout)
+
+    result = publish(publication)
+
+    assert not result.ok
+    assert result.error == "auto_finalize_scope_check_timeout"
+    assert delegate.is_public_cause(result.error)
+    assert result.commit_sha == head
+    assert "refs/heads/codex/finalize" not in refs(origin)
+    assert not marker.exists()
+    assert (worktree / "artifact.txt").read_text() == "dirty owned\n"
+
+
+@pytest.mark.parametrize("component", [".git ", "GIT~1"])
+def test_python_tree_guard_catches_alias_without_fsck(publication, component):
+    worktree, origin, base, _marker = publication
+    blob = git_input(worktree, "hash-object", "-w", "--stdin", data="hostile\n")
+    nested = git_input(worktree, "mktree", data=f"100644 blob {blob}\tworker\n")
+    tree = git_input(worktree, "mktree", data=f"040000 tree {nested}\t{component}\n")
+    tree = git_input(worktree, "mktree", data=f"040000 tree {tree}\ta\n" + _git_out(worktree, "ls-tree", base))
+    head = _git_out(worktree, "commit-tree", tree, "-p", base, "-m", "alias").strip()
+    # Deliberately bypass isolate_objects and its strict fsck.
+    from scripts.orchestration.safe_git_context import SnapshotRefusal
+
+    with SafeGitContext(
+        objects=worktree / ".git/objects", temp_root=worktree.parent, origin=str(origin), local_remote=True
+    ) as context:
+        context.driver_base = base
+        with pytest.raises(SnapshotRefusal, match=r"^auto_finalize_invalid_tree_path$"):
+            delegate._finalize_history(context, head=head, base=base, owned=["a"])
+
+
+@pytest.fixture(scope="session")
+def large_history_store(tmp_path_factory):
+    """100k reachable historical blobs, a small tip, no dependency on host data."""
+    root = tmp_path_factory.mktemp("finalize-large-history")
+    store = root / "history.git"
+    _git_out(root, "init", "--bare", str(store))
+    stream = root / "import"
+    with stream.open("wb") as output:
+        for i in range(100_000):
+            content = hashlib.shake_256(str(i).encode()).digest(512)
+            output.write(f"blob\nmark :{i + 1}\ndata {len(content)}\n".encode() + content + b"\n")
+        output.write(b"commit refs/heads/main\ncommitter Test <test@example.com> 1 +0000\ndata 4\nbase\n")
+        for i in range(100_000):
+            output.write(f"M 100644 :{i + 1} historical-{i}\n".encode())
+        output.write(
+            b"\ncommit refs/heads/main\ncommitter Test <test@example.com> 2 +0000\ndata 4\ntrim\ndeleteall\n\n"
+        )
+    with stream.open("rb") as source:
+        subprocess.run(
+            ["git", "fast-import", "--quiet"],
+            cwd=store,
+            stdin=source,
+            capture_output=True,
+            env=delegate._sanitized_git_env(),
+            check=True,
+            timeout=120,
+        )
+    count = len(_git_out(store, "rev-list", "--objects", "--all").splitlines())
+    assert count >= 100_000
+    return store
+
+
+def full_history_copy(context, base, head):
+    """The old production copy, retained only as the performance denominator."""
+    started = time.monotonic()
+    oids = context.checked("rev-list", "--objects", "--no-object-names", head, base)
+    pack = context.root / "full-history.pack"
+    with pack.open("wb") as output:
+        subprocess.run(
+            ["git", "pack-objects", "--stdout", "--no-reuse-delta", "--no-reuse-object"],
+            cwd=context.root,
+            env=context.env,
+            input=oids.encode(),
+            stdout=output,
+            stderr=subprocess.PIPE,
+            check=True,
+            timeout=120,
+        )
+    context.env.pop("GIT_ALTERNATE_OBJECT_DIRECTORIES")
+    with pack.open("rb") as source:
+        subprocess.run(
+            ["git", "index-pack", "--stdin"],
+            cwd=context.root,
+            env=context.env,
+            stdin=source,
+            capture_output=True,
+            check=True,
+            timeout=120,
+        )
+    assert context.run("fsck", "--strict", "--no-dangling", head, base).returncode == 0
+    return time.monotonic() - started, pack.stat().st_size
+
+
+def test_tiny_finalize_budget_on_100k_object_history(publication, large_history_store, monkeypatch):
+    worktree, origin, _base, marker = publication
+    _git_out(worktree, "fetch", str(large_history_store), "refs/heads/main")
+    _git_out(worktree, "merge", "--allow-unrelated-histories", "-m", "trusted large history", "FETCH_HEAD")
+    base = delegate._resolve_sha(worktree)
+    _git_out(worktree, "push", "origin", "HEAD:refs/heads/main")
+    head = write_commit(worktree)
+    with SafeGitContext(
+        objects=worktree / ".git/objects", temp_root=worktree.parent, origin=str(origin), local_remote=True
+    ) as context:
+        full_seconds, full_bytes = full_history_copy(context, base, head)
+    copied = []
+    isolate = SafeGitContext.isolate_objects
+
+    def capture_copy(context, **kwargs):
+        isolate(context, **kwargs)
+        copied.append((context.root / "publication.pack").stat().st_size)
+
+    monkeypatch.setattr(SafeGitContext, "isolate_objects", capture_copy)
+    # Include both precheck and publication, not just the optimized helper.
+    (worktree / "artifact.txt").write_text("dirty owned\n")
+    started = time.monotonic()
+    result = publish((worktree, origin, base, marker))
+    elapsed = time.monotonic() - started
+
+    assert result.ok, result.error
+    assert _git_out(origin, "show", f"{result.commit_sha}:artifact.txt") == "dirty owned\n"
+    assert marker.read_text() == "checked"
+    assert len(copied) == 2
+    assert elapsed < full_seconds / 3, (elapsed, full_seconds)
+    assert max(copied) < full_bytes / 100
+    print(f"100k objects: full={full_seconds:.3f}s/{full_bytes}B finalize={elapsed:.3f}s copies={copied}")
+
+
+@pytest.mark.parametrize("shared_store", [False, True])
+def test_copy_rehashes_corrupt_worker_object(publication, monkeypatch, shared_store):
+    import zlib
+
+    worktree, origin, _base, marker = publication
+    execution = delegate._finalize_execution_context
+
+    @contextlib.contextmanager
+    def shared_execution(*args, **kwargs):
+        with execution(*args, **kwargs) as context:
+            if shared_store:
+                context.trusted_objects = worktree / ".git/objects"
+            yield context
+
+    monkeypatch.setattr(delegate, "_finalize_execution_context", shared_execution)
+    head = write_commit(worktree)
+    blob = _git_out(worktree, "rev-parse", "HEAD:artifact.txt").strip()
+    source = worktree / ".git/objects" / blob[:2] / blob[2:]
+    source.chmod(0o644)
+    source.write_bytes(zlib.compress(b"blob 5\0evil\n"))
+
+    result = publish(publication)
+
+    assert not result.ok
+    assert result.error == "auto_finalize_fsck_failed"
+    assert "refs/heads/codex/finalize" not in refs(origin)
+    assert not marker.exists()
+    assert delegate._resolve_sha(worktree) == head
+
+
+def test_copy_connectivity_never_falls_back_to_worker_base_objects(publication):
+    worktree, origin, base, marker = publication
+    head = write_commit(worktree)
+    blob = _git_out(origin, "rev-parse", f"{base}:README.md").strip()
+    trusted_blob = origin / "objects" / blob[:2] / blob[2:]
+    trusted_blob.unlink()
+    assert _git_out(worktree, "show", f"{base}:README.md") == "base\n"
+
+    result = publish(publication)
+
+    assert not result.ok
+    assert result.error == "auto_finalize_fsck_failed"
     assert "refs/heads/codex/finalize" not in refs(origin)
     assert not marker.exists()
     assert delegate._resolve_sha(worktree) == head
