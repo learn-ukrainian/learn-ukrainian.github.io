@@ -16,7 +16,9 @@ import importlib.metadata
 import json
 import os
 import re
+import shlex
 import shutil
+import socket
 import subprocess
 import sys
 import tempfile
@@ -81,65 +83,81 @@ def role_connection(pg, role):
 @pytest.fixture(scope="module")
 def _pg_server(tmp_path_factory):
     """Keep one server and a closed, schema-applied template per module."""
-    root = tmp_path_factory.mktemp("v4-pg")
-    data = root / "data"
-    sock = Path(tempfile.mkdtemp(prefix="v4pg-", dir="/tmp"))
-    reported = Path(
-        subprocess.run(["pg_config", "--bindir"], check=True, capture_output=True, text=True, timeout=30).stdout.strip()
+    TMPDIR = (
+        Path(os.environ["LU_SCRATCH_ROOT"]) if os.environ.get("LU_SCRATCH_ROOT") else tmp_path_factory.getbasetemp()
     )
-    # CI declares server 16; a newer libpq-dev can report a different bindir.
-    binary = next(
-        (
-            path
-            for path in (reported, Path("/usr/lib/postgresql/16/bin"))
-            if all((path / tool).is_file() for tool in ("initdb", "pg_ctl"))
-        ),
-        None,
-    )
-    assert binary is not None, "install the PostgreSQL server test dependency"
-    subprocess.run(
-        [str(binary / "initdb"), "-D", str(data), "--encoding=UTF8", "--locale=C", "--auth=trust"],
-        check=True,
-        capture_output=True,
-        timeout=60,
-    )
-    subprocess.run(
-        [
-            str(binary / "pg_ctl"),
-            "-D",
-            str(data),
-            "-l",
-            str(root / "server.log"),
-            "-o",
-            f'-k {sock} -h "" -p 55439',
-            "-w",
-            "start",
-        ],
-        check=True,
-        capture_output=True,
-        timeout=60,
-    )
-    try:
-        conn = psycopg.connect(host=str(sock), port=55439, dbname="postgres", autocommit=True, row_factory=dict_row)
-        try:
-            conn.execute("CREATE DATABASE v4_test_template")
-            with psycopg.connect(
-                make_conninfo(conn.info.dsn, dbname="v4_test_template"), autocommit=True, row_factory=dict_row
-            ) as template:
-                assert apply_pg_schema(template) == 6
-            conn.execute("ALTER DATABASE v4_test_template ALLOW_CONNECTIONS false")
-            yield conn
-        finally:
-            conn.close()
-    finally:
-        subprocess.run(
-            [str(binary / "pg_ctl"), "-D", str(data), "-m", "immediate", "-w", "stop"],
-            check=True,
-            capture_output=True,
-            timeout=60,
+    TMPDIR.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory(prefix="pg-", dir=TMPDIR) as directory:
+        root = Path(directory).resolve()
+        data = root / "data"
+        # TCP is disabled, so the private directory isolates the socket even if
+        # another run happens to receive the same ephemeral port number.
+        with socket.socket() as reservation:
+            reservation.bind(("localhost", 0))
+            port = reservation.getsockname()[1]
+        socket_path = root / f".s.PGSQL.{port}"
+        assert len(os.fsencode(socket_path)) <= 103, (
+            "PostgreSQL Unix socket path exceeds the portable 103-byte limit; "
+            "set LU_SCRATCH_ROOT or pytest --basetemp to a shorter private path"
         )
-        shutil.rmtree(sock, ignore_errors=True)
-        shutil.rmtree(root, ignore_errors=True)
+        reported = Path(
+            subprocess.run(
+                ["pg_config", "--bindir"], check=True, capture_output=True, text=True, timeout=30
+            ).stdout.strip()
+        )
+        # CI declares server 16; a newer libpq-dev can report a different bindir.
+        binary = next(
+            (
+                path
+                for path in (reported, Path("/usr/lib/postgresql/16/bin"))
+                if all((path / tool).is_file() for tool in ("initdb", "pg_ctl"))
+            ),
+            None,
+        )
+        assert binary is not None, "install the PostgreSQL server test dependency"
+        try:
+            subprocess.run(
+                [str(binary / "initdb"), "-D", str(data), "--encoding=UTF8", "--locale=C", "--auth=trust"],
+                check=True,
+                capture_output=True,
+                timeout=60,
+            )
+            subprocess.run(
+                [
+                    str(binary / "pg_ctl"),
+                    "-D",
+                    str(data),
+                    "-l",
+                    str(root / "server.log"),
+                    "-o",
+                    f'-k {shlex.quote(str(root))} -h "" -p {port}',
+                    "-w",
+                    "start",
+                ],
+                check=True,
+                capture_output=True,
+                timeout=60,
+            )
+            conn = psycopg.connect(host=str(root), port=port, dbname="postgres", autocommit=True, row_factory=dict_row)
+            try:
+                conn.execute("CREATE DATABASE v4_test_template")
+                with psycopg.connect(
+                    make_conninfo(conn.info.dsn, dbname="v4_test_template"), autocommit=True, row_factory=dict_row
+                ) as template:
+                    assert apply_pg_schema(template) == 6
+                conn.execute("ALTER DATABASE v4_test_template ALLOW_CONNECTIONS false")
+                yield conn
+            finally:
+                conn.close()
+        finally:
+            # pg_ctl can fail or time out after the postmaster has started.
+            if (data / "postmaster.pid").exists():
+                subprocess.run(
+                    [str(binary / "pg_ctl"), "-D", str(data), "-m", "immediate", "-w", "stop"],
+                    check=True,
+                    capture_output=True,
+                    timeout=60,
+                )
 
 
 @pytest.fixture
