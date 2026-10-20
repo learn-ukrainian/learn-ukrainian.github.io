@@ -88,9 +88,18 @@ RUNS = f"repos/unit/public/commits/{HEAD}/check-runs?check_name=Entire%20Gates&f
 STATUS = f"repos/unit/public/commits/{HEAD}/status?per_page=100"
 
 
-def entire_runner(app, calls, *, head=HEAD, error=None):
+BOUND_ROLLUP = [
+    {"__typename": "CheckRun", "name": "CI Gate", "status": "COMPLETED", "conclusion": "SUCCESS", "workflowName": "CI"},
+    {"__typename": "CheckRun", "name": "Entire Gates", "status": "IN_PROGRESS", "conclusion": "", "workflowName": ""},
+]
+
+
+def entire_runner(app, calls, *, head=HEAD, error=None, bound=None):
     def runner(args, **kwargs):
         calls.append(args)
+        if args[2:5] == ["view", "1", "--json"] and args[5] == "headRefOid,statusCheckRollup":
+            reply = {"headRefOid": head, "statusCheckRollup": BOUND_ROLLUP} if bound is None else bound
+            return subprocess.CompletedProcess(args, 0, json.dumps(reply), "")
         if args[2] == "view":
             return subprocess.CompletedProcess(args, 0, json.dumps({"number": 1, "isDraft": False, "headRefOid": head}), "")
         if args[2] == "checks":
@@ -112,8 +121,56 @@ def test_oo48_publisher_proves_entire_gates_at_the_metadata_head():
     calls = []
     runner = entire_runner({"id": 2626939, "slug": "entire"}, calls)
     assert ensure_merge_ready("unit/public", 1, runner=runner, cwd=".", environment={}, match_head=HEAD) == HEAD
-    assert [call for call in calls if call[1] == "api"] == [
-        ["gh", "api", "--method", "GET", STATUS], ["gh", "api", "--method", "GET", RUNS]]
+    assert [call[1:6] for call in calls] == [
+        ["pr", "view", "1", "--json", "number,isDraft,headRefOid"],
+        ["pr", "checks", "1", "--json", "name,bucket,state,workflow"],
+        ["pr", "view", "1", "--json", "headRefOid,statusCheckRollup"],
+        ["api", "--method", "GET", STATUS], ["api", "--method", "GET", RUNS]]
+
+
+@pytest.mark.parametrize("bound", [
+    {"headRefOid": "b" * 40, "statusCheckRollup": BOUND_ROLLUP},
+    {"statusCheckRollup": BOUND_ROLLUP},
+    {"headRefOid": HEAD, "statusCheckRollup": None},
+    {"headRefOid": HEAD},
+    [],
+])
+def test_oo48_publisher_refuses_rows_not_bound_to_the_metadata_head(bound):
+    calls = []
+    runner = entire_runner({"id": 2626939, "slug": "entire"}, calls, bound=bound)
+    with pytest.raises(PublishBlocked, match="cannot establish check state"):
+        ensure_merge_ready("unit/public", 1, runner=runner, cwd=".", environment={}, match_head=HEAD)
+    assert all(call[1] != "api" for call in calls)
+
+
+def test_oo48_publisher_judges_the_bound_rollup_not_the_headless_rows():
+    red = [{**BOUND_ROLLUP[0], "conclusion": "FAILURE"}, BOUND_ROLLUP[1]]
+    runner = entire_runner({"id": 2626939, "slug": "entire"}, [], bound={"headRefOid": HEAD, "statusCheckRollup": red})
+    with pytest.raises(PublishBlocked, match=r"merge refused: FAILING checks\."):
+        ensure_merge_ready("unit/public", 1, runner=runner, cwd=".", environment={})
+
+
+OLD_CLIENT = (
+    "unknown flag: --json\n\nUsage:  gh pr checks [<number> | <url> | <branch>] [flags]\n\n"
+    "Flags:\n      --fail-fast         Exit watch mode on first check failure\n"
+)
+
+
+@pytest.mark.parametrize("rollup,ready", [(None, False), ({}, False), ("", False), (False, False), (0, False),
+                                          ([], True)])
+def test_publisher_old_client_rollup_must_be_a_list(rollup, ready):
+    def runner(args, **kwargs):
+        if args[2] == "checks":
+            return subprocess.CompletedProcess(args, 1, "", OLD_CLIENT)
+        if "headRefOid,statusCheckRollup" in args:
+            return subprocess.CompletedProcess(args, 0, json.dumps({"headRefOid": HEAD, "statusCheckRollup": rollup}), "")
+        return subprocess.CompletedProcess(args, 0, json.dumps({"number": 1, "isDraft": False, "headRefOid": HEAD}), "")
+
+    if ready:
+        assert ensure_merge_ready("unit/public", 1, runner=runner, cwd=".", environment={}) == HEAD
+    else:
+        with pytest.raises(PublishBlocked, match="cannot establish check state"):
+            ensure_merge_ready("unit/public", 1, runner=runner, cwd=".", environment={})
 
 
 @pytest.mark.parametrize("app", [{"id": 15368, "slug": "github-actions"}, None, {"id": "2626939", "slug": "entire"}])

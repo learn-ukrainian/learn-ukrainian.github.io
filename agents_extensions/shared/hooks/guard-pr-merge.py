@@ -109,9 +109,9 @@ try:
     from scripts.publish.merge_guard import (
         _checks_json_unsupported,
         _parse_status_rollup_rows,
-        external_advisory_names,
+        bound_rollup_states,
+        external_check_states,
         parse_checks,
-        prove_external_advisory,
         readiness_reason,
     )
     from scripts.publish.merge_guard import (
@@ -795,11 +795,15 @@ _ROLLUP_PENDING = {"IN_PROGRESS", "QUEUED", "PENDING", "WAITING", "EXPECTED", "R
 _ROLLUP_PASS = {"SUCCESS", "SKIPPED", "NEUTRAL"}
 
 
-def _status_rollup_rows(pr: str, repo: str | None = None, cwd: str | None = None) -> list | None:
-    """Fallback rows for the gh 2.46.0 ``pr checks --json`` compatibility gap."""
+def _status_rollup(pr: str, repo: str | None = None, cwd: str | None = None) -> dict | None:
+    """One ``headRefOid,statusCheckRollup`` read: the rollup and its own head together.
+
+    It is the gh 2.46.0 ``pr checks --json`` compatibility fallback, and the head-bound
+    collection that an external advisory exemption is judged on.
+    """
     try:
         out = subprocess.run(
-            ["gh", "pr", "view", pr, *_repo_args(repo), "--json", "statusCheckRollup"],
+            ["gh", "pr", "view", pr, *_repo_args(repo), "--json", "headRefOid,statusCheckRollup"],
             capture_output=True,
             env=_gh_env(),
             cwd=cwd,
@@ -814,9 +818,7 @@ def _status_rollup_rows(pr: str, repo: str | None = None, cwd: str | None = None
         data = json.loads(_decolorize(out.stdout or "").strip() or "{}")
     except json.JSONDecodeError:
         return None
-    if not isinstance(data, dict) or not isinstance(data.get("statusCheckRollup"), list):
-        return None
-    return data["statusCheckRollup"]
+    return data if isinstance(data, dict) else None
 
 
 def _gh_api_json(endpoint: str, cwd: str | None = None) -> object:
@@ -835,17 +837,53 @@ def _gh_api_json(endpoint: str, cwd: str | None = None) -> object:
         return None
 
 
-def _external_advisory(rows: list, pr: str, repo: str | None, cwd: str | None, meta) -> frozenset[str] | None:
-    """Prove external advisory names at the head of the PR metadata being judged."""
-    names = external_advisory_names(rows)
-    if not names:
-        return frozenset()
-    data = meta() if meta is not None else _pr_meta(pr, repo, cwd)
+_PR_PATH = r"/([\w.-]+)/([\w.-]+)/pull/(\d+)"
+
+
+def _repo_name(value: str) -> str | None:
+    """Lower-case ``owner/repo`` of a ``--repo`` value: [https://][github.com/]OWNER/REPO[.git]."""
+    parts = re.sub(r"^https?://", "", value.strip(), flags=re.IGNORECASE).rstrip("/").removesuffix(".git").split("/")
+    if len(parts) == 3 and parts[0].lower() in {"github.com", "www.github.com"}:
+        parts = parts[1:]
+    return "/".join(parts).lower() if len(parts) == 2 and all(parts) else None
+
+
+def _judged_repo(pr: str, repo: str | None, data: object) -> str | None:
+    """``owner/repo`` of PR metadata that is the PR this command names, else None.
+
+    An exemption trusts the metadata's head, so its own number and URL, and the command's
+    number, URL and ``--repo`` selectors, must all name the same PR first. A branch
+    selector names no number; the metadata must still agree with itself and ``--repo``.
+    """
     url = data.get("url") if isinstance(data, dict) else None
-    if not isinstance(url, str) or not url.startswith("https://github.com/"):
+    own = re.fullmatch(r"https://github\.com" + _PR_PATH, url) if isinstance(url, str) else None
+    number = _canonical_pr_number(data.get("number")) if isinstance(data, dict) else None
+    if own is None or number is None or int(own.group(3)) != int(number):
         return None
-    return prove_external_advisory(
-        _owner_repo_from_url(url), data.get("headRefOid"), names, lambda endpoint: _gh_api_json(endpoint, cwd)
+    owner_repo = f"{own.group(1)}/{own.group(2)}"
+    numeric = re.fullmatch(r"#?(\d+)", pr)
+    selected = re.match(r"https?://(?:www\.)?github\.com" + _PR_PATH + r"(?:[/?#]|$)", pr, flags=re.IGNORECASE)
+    if (
+        (numeric is not None and int(numeric.group(1)) != int(number))
+        or ("://" in pr and (selected is None or int(selected.group(3)) != int(number)))
+        or (selected is not None and f"{selected.group(1)}/{selected.group(2)}".lower() != owner_repo.lower())
+        or (repo is not None and _repo_name(repo) != owner_repo.lower())
+    ):
+        return None
+    return owner_repo
+
+
+def _bound_states(pr: str, repo: str | None, cwd: str | None, meta, bound: dict | None):
+    """Judge the head-bound rollup at the head of the PR metadata being judged."""
+    data = meta() if meta is not None else _pr_meta(pr, repo, cwd)
+    owner_repo = _judged_repo(pr, repo, data)
+    if owner_repo is None:
+        return None
+    return bound_rollup_states(
+        _status_rollup(pr, repo, cwd) if bound is None else bound,
+        data.get("headRefOid"),
+        owner_repo,
+        lambda endpoint: _gh_api_json(endpoint, cwd),
     )
 
 
@@ -854,8 +892,8 @@ def _check_states(
 ) -> tuple[list[str], list[str]] | None:
     """(failing, pending) non-advisory check names, or None if undeterminable.
 
-    ``meta`` returns the PR metadata being judged; an external advisory name is
-    proven against its head, so the exemption never comes from another head.
+    ``meta`` returns the PR metadata being judged. An external advisory name is judged
+    on the head-bound rollup, proven at that metadata's head, never on headless rows.
     """
     try:
         out = subprocess.run(
@@ -869,7 +907,8 @@ def _check_states(
     except Exception:
         return None
     if _checks_json_unsupported(out):
-        rows, parse = _status_rollup_rows(pr, repo, cwd), _parse_status_rollup_rows
+        bound = _status_rollup(pr, repo, cwd)
+        rows, parse = (bound.get("statusCheckRollup") if bound is not None else None), _parse_status_rollup_rows
     else:
         text = (out.stdout or "").strip()
         if not text:
@@ -877,15 +916,18 @@ def _check_states(
             # vs a gh error / non-existent PR (rc != 0 → fail-CLOSED block). Reading an
             # *error* as "no failing checks" is the fail-open bug guard-admin-merge closed.
             return ([], []) if out.returncode == 0 else None
+        # gh exits 0, 1 (failing) or 8 (pending) after a complete read; any other code is
+        # an error or cancellation even when stdout parses (the publisher's policy).
+        if out.returncode not in (0, 1, 8):
+            return None
         try:
             rows = json.loads(_decolorize(text))
         except json.JSONDecodeError:
             return None
-        parse = parse_checks
-    if not isinstance(rows, list):
-        return None
-    advisory = _external_advisory(rows, pr, repo, cwd, meta)
-    return None if advisory is None else parse(rows, advisory=advisory)
+        if not isinstance(rows, list) or (out.returncode == 1 and not rows):
+            return None
+        bound, parse = None, parse_checks
+    return external_check_states(rows, parse, lambda: _bound_states(pr, repo, cwd, meta, bound))
 
 
 def _base_protected(owner_repo: str, base: str) -> bool | None:

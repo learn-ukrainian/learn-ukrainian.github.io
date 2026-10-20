@@ -163,15 +163,27 @@ def prove_external_advisory(
     return names
 
 
-def _proven(row: dict, advisory: frozenset[str]) -> bool:
-    """A check row whose exact name was proven external-advisory at the current head."""
-    return isinstance(row.get("name"), str) and row["name"] in advisory
+def _exempt(row: dict, advisory: frozenset[str]) -> bool | None:
+    """Whether a rollup row is a proven external check run; None for a conflicting identity.
+
+    Only a ``CheckRun`` named exactly as a proven entry, with no commit-status identity,
+    is exempt. Any other record claiming a proven name in ``name`` or ``context`` (a
+    status, a hybrid or an untyped row) cannot be attributed to the proven GitHub App.
+    """
+    name, context = row.get("name"), row.get("context")
+    if not any(isinstance(value, str) and value in advisory for value in (name, context)):
+        return False
+    clean = row.get("__typename") == "CheckRun" and context is None and row.get("state") is None
+    return True if clean and isinstance(name, str) and name in advisory else None
 
 
 def _parse_status_rollup_rows(
-    rows: list, *, advisory: frozenset[str] = frozenset()
+    rows: object, *, advisory: frozenset[str] = frozenset()
 ) -> tuple[list[str], list[str]] | None:
     """Parse old-client rollup rows; ``advisory`` holds only proven external names."""
+    # Only a list is a check collection; null, {}, "" or false establish nothing.
+    if not isinstance(rows, list):
+        return None
     if not rows:
         return [], []
     policy = load_advisory_checks()
@@ -180,12 +192,13 @@ def _parse_status_rollup_rows(
         if not isinstance(row, dict):
             return None
         name = _rollup_name(row)
-        if name is None:
+        exempt = _exempt(row, advisory)
+        if name is None or exempt is None:
             return None
         # Cancelled runs can retain an unexpanded matrix parent. It is not an
         # executed job and cannot be superseded by the differently named shards.
         # The old-client statusCheckRollup fallback calls the identity workflowName.
-        if "${{" not in name and not _proven(row, advisory) and not is_advisory(
+        if "${{" not in name and not exempt and not is_advisory(
             name, workflow=row.get("workflowName") or row.get("workflow"), policy=policy
         ):
             named.append(row)
@@ -224,11 +237,41 @@ def _parse_status_rollup_rows(
     return failing, pending
 
 
-def parse_checks(rows, *, advisory: frozenset[str] = frozenset()):
-    """Parse gh check buckets with the hook's advisory and unknown-state policy.
+def bound_rollup_states(
+    bound: object, head: object, repo: object, get_json: Callable[[str], object]
+) -> tuple[list[str], list[str]] | None:
+    """Judge a ``headRefOid,statusCheckRollup`` read whose own head is the judged ``head``.
 
-    ``advisory`` holds only external names proven by :func:`prove_external_advisory`.
+    The rollup and its head arrive in one response, so the judged rows, the App
+    provenance and the judged PR head are one commit. A missing, malformed or different
+    head (the PR moved since its metadata was read) is unverifiable, never proof.
     """
+    if (
+        not isinstance(bound, dict)
+        or not isinstance(head, str)
+        or not isinstance(bound.get("headRefOid"), str)
+        or bound["headRefOid"].lower() != head.lower()
+    ):
+        return None
+    rows = bound.get("statusCheckRollup")
+    advisory = prove_external_advisory(repo, head, external_advisory_names(rows), get_json)
+    return None if advisory is None else _parse_status_rollup_rows(rows, advisory=advisory)
+
+
+def external_check_states(rows, parse, bound_states):
+    """``parse(rows)``, or ``bound_states()`` when a row names an operator entry.
+
+    Ordinary check rows carry no head, so they never grant an exemption themselves: an
+    entry name switches the judgment to :func:`bound_rollup_states` at the judged head,
+    a newer read. The headless rows must still be a well-formed collection.
+    """
+    if not external_advisory_names(rows):
+        return parse(rows)
+    return bound_states() if all(isinstance(row, dict) for row in rows) else None
+
+
+def parse_checks(rows):
+    """Parse gh check buckets with the hook's advisory and unknown-state policy."""
     if not isinstance(rows, list):
         return None
     policy = load_advisory_checks()
@@ -237,7 +280,7 @@ def parse_checks(rows, *, advisory: frozenset[str] = frozenset()):
         if not isinstance(row, dict):
             return None
         name = str(row.get("name") or "")
-        if "${{" in name or _proven(row, advisory) or is_advisory(
+        if "${{" in name or is_advisory(
             name, workflow=row.get("workflow"), policy=policy
         ):
             continue
@@ -300,9 +343,15 @@ def ensure_merge_ready(repo, number, *, runner, cwd, environment, match_head=Non
         except (TypeError, ValueError):
             return None
 
-    def states_for(rows, parse):
-        advisory = prove_external_advisory(repo, meta["headRefOid"], external_advisory_names(rows), get_json)
-        return None if advisory is None else parse(rows, advisory=advisory)
+    def bound_view():
+        result = get(["view", str(number), "--json", "headRefOid,statusCheckRollup"])
+        try:
+            return json.loads(result.stdout) if result.returncode == 0 else None
+        except (TypeError, ValueError):
+            return None
+
+    def bound_states(bound):
+        return bound_rollup_states(bound, meta["headRefOid"], repo, get_json)
 
     try:
         meta_result = get(["view", str(number), "--json", "number,isDraft,headRefOid"])
@@ -317,25 +366,24 @@ def ensure_merge_ready(repo, number, *, runner, cwd, environment, match_head=Non
             raise ValueError("invalid metadata")
         checks = get(["checks", str(number), "--json", "name,bucket,state,workflow"])
         if _checks_json_unsupported(checks):
-            rollup = get(["view", str(number), "--json", "statusCheckRollup"])
-            states = (
-                states_for(json.loads(rollup.stdout)["statusCheckRollup"], _parse_status_rollup_rows)
-                if rollup.returncode == 0
-                else None
+            bound = bound_view()
+            states = external_check_states(
+                bound.get("statusCheckRollup") if isinstance(bound, dict) else None,
+                _parse_status_rollup_rows,
+                lambda: bound_states(bound),
             )
         else:
-            raw_checks = None
             try:
                 raw_checks = json.loads(checks.stdout)
-                states = states_for(raw_checks, parse_checks)
             except (json.JSONDecodeError, TypeError):
-                states = None
-            if checks.returncode not in {0, 1, 8} or (
-                checks.returncode == 1
-                and isinstance(raw_checks, list)
-                and not raw_checks
+                raw_checks = None
+            states = None
+            # gh exits 0, 1 (failing) or 8 (pending) after a complete read; any other
+            # code is an error or cancellation even when stdout parses.
+            if checks.returncode in {0, 1, 8} and isinstance(raw_checks, list) and (
+                checks.returncode != 1 or raw_checks
             ):
-                states = None
+                states = external_check_states(raw_checks, parse_checks, lambda: bound_states(bound_view()))
         if states is None:
             raise PublishBlocked("OPSEC: merge refused: cannot establish check state.")
         reason = readiness_reason(meta, states)

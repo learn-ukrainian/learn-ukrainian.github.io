@@ -243,24 +243,29 @@ def respond(scenario, args):
     import json
 
     head = scenario["head"]
-    if args[:2] == ["pr", "view"] and "statusCheckRollup" in args:
-        rollup = [
+    fields = args[args.index("--json") + 1].split(",") if "--json" in args else []
+    if args[:2] == ["pr", "view"] and "statusCheckRollup" in fields:
+        rollup = scenario.get("rollup", [
             {"__typename": "CheckRun", "name": row["name"], "status": row["status"],
              "conclusion": row["conclusion"], "workflowName": row["workflow"]}
             if isinstance(row, dict) else row
             for row in scenario["checks"]
-        ]
-        return 0, json.dumps({"statusCheckRollup": rollup}), ""
+        ])
+        reply = {"statusCheckRollup": rollup}
+        # Like gh, the head arrives only when asked for, in the same response as the rollup.
+        if "headRefOid" in fields and scenario.get("bound_head", head) != "omit":
+            reply["headRefOid"] = scenario.get("bound_head", head)
+        return 0, json.dumps(reply), ""
     if args[:2] == ["pr", "view"]:
         meta = {"number": 5, "isDraft": False, "baseRefName": "main", "body": "", "headRefOid": head,
-                "url": scenario.get("url", "https://github.com/owner/repo/pull/5")}
+                "url": scenario.get("url", "https://github.com/owner/repo/pull/5"), **scenario.get("meta", {})}
         return 0, json.dumps(meta), ""
     if args[:2] == ["pr", "checks"]:
         if scenario.get("old_client"):
             return 1, "", scenario["old_client_stderr"]
         buckets = {row.get("bucket") for row in scenario["checks"] if isinstance(row, dict)}
         code = 1 if buckets & {"fail", "cancel"} else 8 if "pending" in buckets else 0
-        return code, json.dumps(scenario["checks"]), ""
+        return scenario.get("checks_rc", code), json.dumps(scenario["checks"]), ""
     if args[:3] == ["api", "--method", "GET"] and len(args) == 4 and not scenario.get("api_error"):
         documents = {
             f"repos/owner/repo/commits/{head}/status?per_page=100": scenario.get(
@@ -288,6 +293,11 @@ def entire_run(status="in_progress", conclusion=None, **changes):
 GREEN_GATE = check("CI Gate", "pass", "COMPLETED", "SUCCESS", "CI")
 OBSERVED = check(ENTIRE.name, "pending", "IN_PROGRESS")  # PR #11171/#11172 at 17:31Z
 ACTIONS_APP = {"id": 15368, "slug": "github-actions"}
+# Head-bound rollup records in gh's own shape (``headRefOid,statusCheckRollup``).
+ROLLUP_GATE = {"__typename": "CheckRun", "name": "CI Gate", "status": "COMPLETED", "conclusion": "SUCCESS",
+               "workflowName": "CI"}
+ROLLUP_ENTIRE = {"__typename": "CheckRun", "name": ENTIRE.name, "status": "IN_PROGRESS", "conclusion": "",
+                 "workflowName": ""}
 
 # name -> (check rows, exact-head check runs, commit statuses, extra scenario fields, ready)
 SCENARIOS = {
@@ -342,6 +352,54 @@ SCENARIOS = {
     "malformed-check-row": ([GREEN_GATE, OBSERVED, "not-a-row"], [entire_run()], [], {}, False),
     "unknown-check-state": ([GREEN_GATE, OBSERVED, check("CI Extra", "mystery", "MYSTERY", workflow="CI")],
                             [entire_run()], [], {}, False),
+    # F1: checks, provenance and the judged metadata head are one commit.
+    "head-moved-before-bound-read": ([GREEN_GATE, OBSERVED], [entire_run()], [], {"bound_head": "b" * 40}, False),
+    "bound-read-without-head": ([GREEN_GATE, OBSERVED], [entire_run()], [], {"bound_head": "omit"}, False),
+    "bound-head-not-a-string": ([GREEN_GATE, OBSERVED], [entire_run()], [], {"bound_head": 7}, False),
+    "bound-head-case-only": ([GREEN_GATE, OBSERVED], [entire_run()], [], {"bound_head": HEAD.upper()}, True),
+    "bound-rollup-red-ci-decides": (
+        [GREEN_GATE, OBSERVED], [entire_run()], [],
+        {"rollup": [{**ROLLUP_GATE, "conclusion": "FAILURE"}, ROLLUP_ENTIRE]}, False),
+    "bound-rollup-green-ci-decides": (
+        [check("CI Gate", "fail", "COMPLETED", "FAILURE", "CI"), OBSERVED], [entire_run()], [],
+        {"rollup": [ROLLUP_GATE, ROLLUP_ENTIRE]}, True),
+    # F2: only a clean CheckRun record is attributable; every other claim of the name conflicts.
+    "rollup-clean-check-run": ([GREEN_GATE, OBSERVED], [entire_run()], [], {"rollup": [ROLLUP_GATE, ROLLUP_ENTIRE]},
+                               True),
+    "rollup-status-context-with-entire-name": (
+        [GREEN_GATE, OBSERVED], [entire_run()], [], {"rollup": [ROLLUP_GATE, {
+            "__typename": "StatusContext", "name": ENTIRE.name, "context": "Required Status", "state": "FAILURE"}]},
+        False),
+    "rollup-check-run-with-status-context": (
+        [GREEN_GATE, OBSERVED], [entire_run()], [], {"rollup": [ROLLUP_GATE, {
+            "__typename": "CheckRun", "name": ENTIRE.name, "context": "Required Status", "state": "FAILURE"}]},
+        False),
+    "rollup-check-run-with-status-state": (
+        [GREEN_GATE, OBSERVED], [entire_run()], [], {"rollup": [ROLLUP_GATE, {**ROLLUP_ENTIRE, "state": "FAILURE"}]},
+        False),
+    "rollup-untyped-entire-row": (
+        [GREEN_GATE, OBSERVED], [entire_run()], [],
+        {"rollup": [ROLLUP_GATE, {k: v for k, v in ROLLUP_ENTIRE.items() if k != "__typename"}]}, False),
+    "rollup-status-context-typename": (
+        [GREEN_GATE, OBSERVED], [entire_run()], [],
+        {"rollup": [ROLLUP_GATE, {**ROLLUP_ENTIRE, "__typename": "StatusContext"}]}, False),
+    "rollup-entire-status-context-sibling": (
+        [GREEN_GATE, OBSERVED], [entire_run()], [], {"rollup": [ROLLUP_GATE, ROLLUP_ENTIRE, {
+            "__typename": "StatusContext", "context": ENTIRE.name, "state": "PENDING"}]}, False),
+    "rollup-other-run-claiming-entire-context": (
+        [GREEN_GATE, OBSERVED], [entire_run()], [], {"rollup": [ROLLUP_GATE, ROLLUP_ENTIRE, {
+            "__typename": "CheckRun", "name": "Required Status", "context": ENTIRE.name,
+            "status": "COMPLETED", "conclusion": "FAILURE"}]}, False),
+    # F3: only a list is a check collection; a genuine empty list still means no checks.
+    "rollup-null": ([GREEN_GATE, OBSERVED], [entire_run()], [], {"rollup": None}, False),
+    "rollup-object": ([GREEN_GATE, OBSERVED], [entire_run()], [], {"rollup": {}}, False),
+    "rollup-empty-string": ([GREEN_GATE, OBSERVED], [entire_run()], [], {"rollup": ""}, False),
+    "rollup-false": ([GREEN_GATE, OBSERVED], [entire_run()], [], {"rollup": False}, False),
+    "rollup-zero": ([GREEN_GATE, OBSERVED], [entire_run()], [], {"rollup": 0}, False),
+    "no-checks-at-all": ([], [], [], {"api_error": True}, True),
+    # F5: the metadata judged must be the PR the command names.
+    "metadata-for-another-pr": ([GREEN_GATE, OBSERVED], [entire_run()], [],
+                                {"meta": {"number": 77, "url": "https://github.com/owner/repo/pull/77"}}, False),
 }
 
 
@@ -367,7 +425,7 @@ def publisher_ready(data):
         return False, calls
 
 
-def hook_ready(data, tmp_path):
+def hook_ready(data, tmp_path, command="gh pr merge 5 --squash"):
     import inspect
     import os
     import sys
@@ -392,7 +450,7 @@ def hook_ready(data, tmp_path):
            "FAKE_GH_SCENARIO": str(tmp_path / "scenario.json"), "FAKE_GH_LOG": str(log)}
     result = subprocess.run(
         [sys.executable, str(HOOK_PATH)],
-        input=json.dumps({"tool_input": {"command": "gh pr merge 5 --squash"}}),
+        input=json.dumps({"tool_input": {"command": command}}),
         capture_output=True, text=True, env=env, cwd=tmp_path, timeout=60,
     )
     assert result.returncode in {0, 2}, result.stderr
@@ -408,11 +466,16 @@ def test_oo48_publisher_and_real_hook_agree(name, old_client, tmp_path):
     hooked, hook_calls, stderr = hook_ready(data, tmp_path)
     assert published is ready
     assert hooked is ready, stderr
+    named = any(isinstance(row, dict) and row.get("name") == ENTIRE.name for row in data["checks"])
     for calls in (publisher_calls, hook_calls):
         api = [call[3] for call in calls if call[:1] == ["api"]]
-        # Provenance is read only for an exact OO-48 name, and only at the exact head.
-        if any(isinstance(row, dict) and ENTIRE.name in (row.get("name"),) for row in data["checks"]):
+        # Provenance is read only for an exact OO-48 name, only at the exact head, and only
+        # after the head-bound rollup it judges was read.
+        if named:
             assert set(api) <= {STATUS_ENDPOINT, RUNS_ENDPOINT}
+            before = calls[: next((i for i, call in enumerate(calls) if call[:1] == ["api"]), 0)]
+            assert not api or any(call[:2] == ["pr", "view"] and "headRefOid,statusCheckRollup" in call
+                                  for call in before)
         else:
             assert api == []
 
@@ -474,12 +537,153 @@ def test_external_advisory_names_are_exact():
 def test_unproven_name_is_never_skipped_by_parsers():
     from scripts.publish.merge_guard import _parse_status_rollup_rows
 
+    # Headless ``gh pr checks`` rows never take an exemption; only the bound rollup does.
     rows = [check(ENTIRE.name, "pending", "IN_PROGRESS")]
     assert parse_checks(rows) == ([], [ENTIRE.name])
-    assert parse_checks(rows, advisory=frozenset({ENTIRE.name})) == ([], [])
-    rollup = [{"name": ENTIRE.name, "status": "IN_PROGRESS", "conclusion": ""}]
-    assert _parse_status_rollup_rows(rollup) == ([], [ENTIRE.name])
-    assert _parse_status_rollup_rows(rollup, advisory=frozenset({ENTIRE.name})) == ([], [])
-    # A same-named commit status is a context, never a proven check-run name.
-    status = [{"context": ENTIRE.name, "state": "PENDING"}]
-    assert _parse_status_rollup_rows(status, advisory=frozenset({ENTIRE.name})) == ([], [ENTIRE.name])
+    with pytest.raises(TypeError):
+        parse_checks(rows, advisory=frozenset({ENTIRE.name}))
+    assert _parse_status_rollup_rows([ROLLUP_ENTIRE]) == ([], [ENTIRE.name])
+    assert _parse_status_rollup_rows([ROLLUP_ENTIRE], advisory=frozenset({ENTIRE.name})) == ([], [])
+    # A same-named commit status claims the proven name with another identity: unverifiable.
+    status = [{"__typename": "StatusContext", "context": ENTIRE.name, "state": "PENDING"}]
+    assert _parse_status_rollup_rows(status) == ([], [ENTIRE.name])
+    assert _parse_status_rollup_rows(status, advisory=frozenset({ENTIRE.name})) is None
+
+
+# F4: an unsupported checks exit is unverifiable even when stdout parses; gh's supported
+# failing (1) and pending (8) exits keep the exemption usable.
+FAILING_ENTIRE = check(ENTIRE.name, "fail", "COMPLETED", "FAILURE")
+
+
+@pytest.mark.parametrize("code,rows,ready", [
+    (2, [GREEN_GATE, FAILING_ENTIRE], False),
+    (3, [GREEN_GATE, FAILING_ENTIRE], False),
+    (7, [GREEN_GATE, FAILING_ENTIRE], False),
+    (130, [GREEN_GATE, FAILING_ENTIRE], False),
+    (2, [GREEN_GATE], False),
+    (1, [], False),
+    (1, [GREEN_GATE, FAILING_ENTIRE], True),
+    (8, [GREEN_GATE, OBSERVED], True),
+    (0, [], True),
+])
+def test_oo48_checks_transport_result_policy_is_shared(code, rows, ready, tmp_path):
+    data = {"head": HEAD, "checks": rows, "runs": [entire_run("completed", "failure")], "statuses": [],
+            "old_client": False, "old_client_stderr": OLD_CLIENT_STDERR, "checks_rc": code}
+    assert publisher_ready(data)[0] is ready
+    hooked, calls, stderr = hook_ready(data, tmp_path)
+    assert hooked is ready, stderr
+    if not ready:
+        # A refused transport result is final: no bound read, no provenance read.
+        assert not any(call[:1] == ["api"] or "headRefOid,statusCheckRollup" in call for call in calls)
+
+
+# F5: the hook's metadata must be the PR its selector names; ordinary selectors still work.
+@pytest.mark.parametrize("command,meta,ready", [
+    ("gh pr merge 5 --squash", {}, True),
+    ("gh pr merge https://github.com/owner/repo/pull/5 --squash", {}, True),
+    ("gh pr merge https://github.com/Owner/Repo/pull/5/files --squash", {}, True),
+    ("gh pr merge 5 --repo owner/repo --squash", {}, True),
+    ("gh pr merge 5 -R github.com/OWNER/REPO --squash", {}, True),
+    ("gh pr merge 5 --repo https://github.com/owner/repo.git --squash", {}, True),
+    ("gh pr merge feature-branch --squash", {}, True),
+    ("gh pr merge 9 --squash", {}, False),
+    ("gh pr merge https://github.com/owner/repo/pull/9 --squash", {}, False),
+    ("gh pr merge https://github.com/other/repo/pull/5 --squash", {}, False),
+    ("gh pr merge https://ghe.example/owner/repo/pull/5 --squash", {}, False),
+    ("gh pr merge 5 --repo other/repo --squash", {}, False),
+    ("gh pr merge 5 --repo ghe.example/owner/repo --squash", {}, False),
+    ("gh pr merge 5 --squash", {"url": "https://github.com/owner/repo/pull/77"}, False),
+    ("gh pr merge feature-branch --squash", {"number": 77}, False),
+])
+def test_oo48_hook_metadata_must_be_the_selected_pr(command, meta, ready, tmp_path):
+    data = {"head": HEAD, "checks": [GREEN_GATE, OBSERVED], "runs": [entire_run()], "statuses": [],
+            "old_client": False, "old_client_stderr": OLD_CLIENT_STDERR, "meta": meta}
+    hooked, calls, stderr = hook_ready(data, tmp_path, command)
+    assert hooked is ready, stderr
+    assert any(call[:1] == ["api"] for call in calls) is ready
+
+
+def test_oo48_without_an_entry_name_the_selector_is_not_reinterpreted(tmp_path):
+    # The selector identity check belongs to the exemption only: ordinary green PRs merge as before.
+    data = {"head": HEAD, "checks": [GREEN_GATE], "runs": [], "statuses": [], "old_client": False,
+            "old_client_stderr": OLD_CLIENT_STDERR, "meta": {"url": "https://github.com/owner/repo/pull/77"}}
+    assert hook_ready(data, tmp_path)[0] is True
+
+
+def test_exempt_requires_a_clean_check_run_identity():
+    from scripts.publish.merge_guard import _exempt
+
+    proven = frozenset({ENTIRE.name})
+    assert _exempt(ROLLUP_ENTIRE, proven) is True
+    assert _exempt(ROLLUP_ENTIRE, frozenset()) is False
+    assert _exempt(ROLLUP_GATE, proven) is False
+    assert _exempt({"__typename": "CheckRun", "name": ["Entire Gates"]}, proven) is False
+    for conflicting in [
+        {"__typename": "StatusContext", "context": ENTIRE.name, "state": "PENDING"},
+        {"__typename": "StatusContext", "name": ENTIRE.name, "context": "Required Status", "state": "FAILURE"},
+        {"__typename": "CheckRun", "name": ENTIRE.name, "context": "Required Status"},
+        {"__typename": "CheckRun", "name": ENTIRE.name, "context": ""},
+        {**ROLLUP_ENTIRE, "state": "SUCCESS"},
+        {k: v for k, v in ROLLUP_ENTIRE.items() if k != "__typename"},
+        {**ROLLUP_ENTIRE, "__typename": "checkrun"},
+        {"__typename": "CheckRun", "name": "Required Status", "context": ENTIRE.name},
+        {"__typename": "CheckRun", "name": 7, "context": ENTIRE.name},
+    ]:
+        assert _exempt(conflicting, proven) is None, conflicting
+
+
+@pytest.mark.parametrize("rows", [None, {}, "", False, 0, "[]", {"statusCheckRollup": []}])
+def test_status_rollup_parser_accepts_only_a_list(rows):
+    from scripts.publish.merge_guard import _parse_status_rollup_rows
+
+    assert _parse_status_rollup_rows(rows) is None
+    assert _parse_status_rollup_rows(rows, advisory=frozenset({ENTIRE.name})) is None
+
+
+def test_status_rollup_parser_keeps_genuine_empty_list():
+    from scripts.publish.merge_guard import _parse_status_rollup_rows
+
+    assert _parse_status_rollup_rows([]) == ([], [])
+
+
+def test_bound_rollup_states_binds_rows_proof_and_judged_head():
+    from scripts.publish.merge_guard import bound_rollup_states
+
+    documents = {STATUS_ENDPOINT: {"total_count": 0, "statuses": []},
+                 RUNS_ENDPOINT: {"total_count": 1, "check_runs": [entire_run()]}}
+    seen = []
+
+    def get_json(endpoint):
+        seen.append(endpoint)
+        return documents.get(endpoint)
+
+    bound = {"headRefOid": HEAD, "statusCheckRollup": [ROLLUP_GATE, ROLLUP_ENTIRE]}
+    assert bound_rollup_states(bound, HEAD, REPO, get_json) == ([], [])
+    assert bound_rollup_states({**bound, "headRefOid": HEAD.upper()}, HEAD, REPO, get_json) == ([], [])
+    assert seen == [STATUS_ENDPOINT, RUNS_ENDPOINT] * 2
+    for unbound, head in [
+        ({**bound, "headRefOid": "b" * 40}, HEAD),
+        ({"statusCheckRollup": bound["statusCheckRollup"]}, HEAD),
+        ({**bound, "headRefOid": None}, HEAD),
+        ({**bound, "headRefOid": 7}, HEAD),
+        (bound, None),
+        (bound, "b" * 40),
+        (None, HEAD),
+        ([bound], HEAD),
+    ]:
+        assert bound_rollup_states(unbound, head, REPO, pytest.fail) is None
+    # Without an entry name nothing is proven, and the bound rows are judged as they are.
+    assert bound_rollup_states({"headRefOid": HEAD, "statusCheckRollup": [ROLLUP_GATE]}, HEAD, REPO,
+                               pytest.fail) == ([], [])
+    assert bound_rollup_states({"headRefOid": HEAD, "statusCheckRollup": [ROLLUP_ENTIRE]}, HEAD, REPO,
+                               lambda endpoint: None) is None
+
+
+def test_external_check_states_switches_only_for_an_entry_name():
+    from scripts.publish.merge_guard import external_check_states
+
+    sentinel = ([], ["bound"])
+    assert external_check_states([GREEN_GATE], parse_checks, pytest.fail) == ([], [])
+    assert external_check_states([GREEN_GATE, OBSERVED], pytest.fail, lambda: sentinel) is sentinel
+    assert external_check_states([GREEN_GATE, OBSERVED, "not-a-row"], pytest.fail, pytest.fail) is None
+    assert external_check_states(None, parse_checks, pytest.fail) is None

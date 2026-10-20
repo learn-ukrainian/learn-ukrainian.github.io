@@ -2013,6 +2013,12 @@ _ENTIRE_ROWS = json.dumps(
     [{"name": "CI Gate", "bucket": "pass", "workflow": "CI"}, {"name": "Entire Gates", "bucket": "pending"}]
 )
 _ENTIRE_RUN = {"name": "Entire Gates", "head_sha": _HEAD, "app": {"id": 2626939, "slug": "entire"}}
+_BOUND_ROLLUP = [
+    {"__typename": "CheckRun", "name": "CI Gate", "status": "COMPLETED", "conclusion": "SUCCESS", "workflowName": "CI"},
+    {"__typename": "CheckRun", "name": "Entire Gates", "status": "IN_PROGRESS", "conclusion": "", "workflowName": ""},
+]
+_BOUND = ("pr", "view", "5", "--json", "headRefOid,statusCheckRollup")
+_META = {"number": 5, "headRefOid": _HEAD, "url": _URL}
 
 
 def _scripted_gh(monkeypatch, replies: dict):
@@ -2032,9 +2038,10 @@ def _scripted_gh(monkeypatch, replies: dict):
     return calls
 
 
-def _provenance_replies(head=_HEAD, runs=(_ENTIRE_RUN,)):
+def _provenance_replies(head=_HEAD, runs=(_ENTIRE_RUN,), bound_head=_HEAD):
     return {
         ("pr", "checks"): (8, _ENTIRE_ROWS),
+        _BOUND: (0, json.dumps({"headRefOid": bound_head, "statusCheckRollup": _BOUND_ROLLUP})),
         ("api", "--method", "GET", f"repos/owner/repo/commits/{head}/status?per_page=100"): (
             0, json.dumps({"total_count": 0, "statuses": []})),
         ("api", "--method", "GET", f"repos/owner/repo/commits/{head}/check-runs?check_name=Entire%20Gates"
@@ -2044,20 +2051,28 @@ def _provenance_replies(head=_HEAD, runs=(_ENTIRE_RUN,)):
 
 def test_oo48_check_states_prove_at_the_judged_metadata_head(monkeypatch):
     calls = _scripted_gh(monkeypatch, _provenance_replies())
-    meta = {"headRefOid": _HEAD, "url": _URL}
-    assert guard._check_states("5", None, None, lambda: meta) == ([], [])
-    assert [call[0] for call in calls] == ["pr", "api", "api"]
+    assert guard._check_states("5", None, None, lambda: _META) == ([], [])
+    assert [call[:2] for call in calls] == [["pr", "checks"], ["pr", "view"], ["api", "--method"], ["api", "--method"]]
+    assert tuple(calls[1]) == _BOUND
 
 
 def test_oo48_moved_head_is_not_proven_by_older_runs(monkeypatch):
     moved = "b" * 40
     _scripted_gh(monkeypatch, _provenance_replies(head=moved))
-    assert guard._check_states("5", None, None, lambda: {"headRefOid": moved, "url": _URL}) is None
+    assert guard._check_states("5", None, None, lambda: {**_META, "headRefOid": moved}) is None
+
+
+def test_oo48_checks_read_after_a_head_move_are_never_proven(monkeypatch):
+    # The metadata saw A; by the bound read the PR is at B. Nothing is proven for B with A.
+    calls = _scripted_gh(monkeypatch, _provenance_replies(bound_head="b" * 40))
+    assert guard._check_states("5", None, None, lambda: _META) is None
+    assert all(call[0] != "api" for call in calls)
 
 
 @pytest.mark.parametrize("meta", [
-    None, {}, {"headRefOid": _HEAD}, {"headRefOid": _HEAD, "url": "https://ghe.example/owner/repo/pull/5"},
-    {"headRefOid": _HEAD, "url": "https://github.com/owner/repo"}, {"headRefOid": None, "url": _URL},
+    None, {}, {"headRefOid": _HEAD}, {**_META, "url": "https://ghe.example/owner/repo/pull/5"},
+    {**_META, "url": "https://github.com/owner/repo"}, {**_META, "headRefOid": None}, {"headRefOid": _HEAD, "url": _URL},
+    {**_META, "number": 77}, {**_META, "url": "https://github.com/owner/repo/pull/77"},
 ])
 def test_oo48_unverifiable_metadata_blocks_the_exemption(monkeypatch, meta):
     calls = _scripted_gh(monkeypatch, _provenance_replies())
@@ -2069,8 +2084,9 @@ def test_oo48_without_snapshot_metadata_reads_the_pr_itself(monkeypatch):
     replies = _provenance_replies()
     replies[("pr", "view")] = (0, json.dumps({"isDraft": False, "body": "", "number": 5, "headRefOid": _HEAD,
                                               "url": _URL}))
-    _scripted_gh(monkeypatch, replies)
+    calls = _scripted_gh(monkeypatch, replies)
     assert guard._check_states("5") == ([], [])
+    assert ["pr", "view", "5", "--json", "isDraft,baseRefName,body,headRefOid,number,url"] in calls
 
 
 def test_oo48_snapshot_hands_its_metadata_to_the_check_reader(monkeypatch):
@@ -2086,7 +2102,7 @@ def test_oo48_api_failure_or_garbage_is_unproven(monkeypatch):
     replies = _provenance_replies()
     replies = {key: ((0, "not json") if key[0] == "api" else value) for key, value in replies.items()}
     _scripted_gh(monkeypatch, replies)
-    assert guard._check_states("5", None, None, lambda: {"headRefOid": _HEAD, "url": _URL}) is None
+    assert guard._check_states("5", None, None, lambda: _META) is None
 
 
 def test_oo48_unproven_pending_entire_gates_blocks_main(monkeypatch, capsys):
@@ -2123,3 +2139,62 @@ def test_check_states_non_list_rows_and_transport_errors_are_unverifiable(monkey
     monkeypatch.setattr(guard.subprocess, "run", boom)
     assert guard._check_states("5") is None
     assert guard._gh_api_json("repos/owner/repo/commits/" + _HEAD + "/status") is None
+
+
+@pytest.mark.parametrize("returncode", [2, 3, 7, 130])
+def test_check_states_unsupported_exit_with_parseable_rows_is_unverifiable(monkeypatch, returncode):
+    # The publisher's transport policy: only 0, 1 (failing) and 8 (pending) are complete reads.
+    _fake_gh(monkeypatch, returncode=returncode, stdout='[{"name":"CI Gate","bucket":"pass"}]')
+    assert guard._check_states("5") is None
+
+
+def test_check_states_failing_exit_without_rows_is_unverifiable(monkeypatch):
+    _fake_gh(monkeypatch, returncode=1, stdout="[]")
+    assert guard._check_states("5") is None
+
+
+@pytest.mark.parametrize("returncode,bucket,expected", [
+    (0, "pass", ([], [])), (1, "fail", (["CI Gate"], [])), (8, "pending", ([], ["CI Gate"])),
+])
+def test_check_states_supported_exits_still_parse(monkeypatch, returncode, bucket, expected):
+    _fake_gh(monkeypatch, returncode=returncode, stdout=json.dumps([{"name": "CI Gate", "bucket": bucket}]))
+    assert guard._check_states("5") == expected
+
+
+@pytest.mark.parametrize("pr,repo,meta,expected", [
+    ("5", None, _META, "owner/repo"),
+    ("#5", None, _META, "owner/repo"),
+    ("https://github.com/owner/repo/pull/5", None, _META, "owner/repo"),
+    ("http://www.github.com/OWNER/REPO/pull/5?x=1", None, _META, "owner/repo"),
+    ("feature", None, _META, "owner/repo"),
+    ("5", "owner/repo", _META, "owner/repo"),
+    ("5", "https://github.com/Owner/Repo.git/", _META, "owner/repo"),
+    ("5", "github.com/owner/repo", _META, "owner/repo"),
+    ("9", None, _META, None),
+    ("#9", None, _META, None),
+    ("https://github.com/owner/repo/pull/9", None, _META, None),
+    ("https://github.com/other/repo/pull/5", None, _META, None),
+    ("https://github.com/owner/repo/pull/50", None, _META, None),
+    ("https://ghe.example/owner/repo/pull/5", None, _META, None),
+    ("https://github.com/owner/repo/issues/5", None, _META, None),
+    ("5", "other/repo", _META, None),
+    ("5", "ghe.example/owner/repo", _META, None),
+    ("5", "repo", _META, None),
+    ("5", "a/b/c/d", _META, None),
+    ("5", None, {**_META, "number": 77}, None),
+    ("5", None, {**_META, "number": True}, None),
+    ("5", None, {**_META, "url": "https://github.com/owner/repo/pull/77"}, None),
+    ("5", None, {**_META, "url": "http://github.com/owner/repo/pull/5"}, None),
+    ("5", None, {**_META, "url": None}, None),
+    ("5", None, None, None),
+])
+def test_judged_repo_requires_the_selected_pr(pr, repo, meta, expected):
+    assert guard._judged_repo(pr, repo, meta) == expected
+
+
+def test_status_rollup_returns_the_bound_response(monkeypatch):
+    payload = {"headRefOid": _HEAD, "statusCheckRollup": _BOUND_ROLLUP}
+    _fake_gh(monkeypatch, returncode=0, stdout=json.dumps(payload))
+    assert guard._status_rollup("5") == payload
+    _fake_gh(monkeypatch, returncode=0, stdout="[]")
+    assert guard._status_rollup("5") is None
