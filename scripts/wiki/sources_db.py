@@ -2801,6 +2801,9 @@ def search_sources(
     with ThreadPoolExecutor(max_workers=len(_CORPORA)) as executor:
         futures = [
             executor.submit(
+                # Each worker gets its own Context, sharing the request's
+                # mutable damage record with the caller (#11115).
+                contextvars.copy_context().run,
                 _dispatch_corpus_search,
                 corpus,
                 bucket_a_phrases=bucket_a_phrases,

@@ -1952,6 +1952,7 @@ class _AttemptDamage:
     def __init__(self, markers: tuple[str, ...]) -> None:
         self.markers = markers
         self.errors: list[sqlite3.DatabaseError] = []
+        self.lock = threading.Lock()
 
 
 _ATTEMPT_DAMAGE: contextvars.ContextVar[_AttemptDamage | None] = contextvars.ContextVar(
@@ -1962,7 +1963,8 @@ _ATTEMPT_DAMAGE: contextvars.ContextVar[_AttemptDamage | None] = contextvars.Con
 def _note_database_damage(exc: sqlite3.DatabaseError) -> None:
     attempt = _ATTEMPT_DAMAGE.get()
     if attempt is not None and _has_marker(exc, attempt.markers):
-        attempt.errors.append(exc)
+        with attempt.lock:
+            attempt.errors.append(exc)
 
 
 def _observe(method: Any) -> Any:
@@ -3201,13 +3203,14 @@ def _lookup_wikipedia_in_db(query: str) -> dict | None:
     """Serve the pre-ingested wikipedia table in sources.db as a persistent
     cache (#1170). Matches by exact title first, then by FTS5 title match.
     Returns None if the query isn't in the DB — callers must then fall back
-    to the live API.
+    to the live API. Database errors propagate to the heal boundary before
+    the caller can cache a miss.
     """
     import contextlib
     import sqlite3
 
     from scripts.storage.topology import ActiveDatabaseNetworkError
-    from wiki.sources_db import _read_db_path
+    from wiki.sources_db import _open_conn, _read_db_path
 
     try:
         db = _read_db_path()
@@ -3217,8 +3220,7 @@ def _lookup_wikipedia_in_db(query: str) -> dict | None:
         return None
     conn: sqlite3.Connection | None = None
     try:
-        conn = sqlite3.connect(f"{db.as_uri()}?mode=ro", uri=True)
-        conn.row_factory = sqlite3.Row
+        conn = _open_conn(db, read_only=True)
         # 1. Exact title match (case-insensitive) — the common case after
         #    fetch_wikipedia.py has ingested a batch from plan topics.
         row = conn.execute(
@@ -3241,8 +3243,6 @@ def _lookup_wikipedia_in_db(query: str) -> dict | None:
         ).fetchone()
         if row:
             return dict(row)
-    except sqlite3.Error:
-        return None
     finally:
         if conn is not None:
             with contextlib.suppress(Exception):

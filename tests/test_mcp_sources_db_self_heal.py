@@ -733,3 +733,179 @@ def test_wikipedia_cache_is_closed_when_the_call_raises(server, fake_wiki_cache)
         asyncio.run(server._query_wikipedia({"query": "Київ", "mode": "search"}))
 
     assert [cache.closed for cache in fake_wiki_cache.instances] == [True]
+
+
+# --- #11115 round 5: worker context and Wikipedia corruption -----------------
+
+
+def _threaded_corpus_lookup(sdb, monkeypatch):
+    """Keep the real search_sources thread pool and the error-swallowing reader."""
+    monkeypatch.setattr(sdb, "_CORPORA", ("damaged", "healthy"))
+    monkeypatch.setattr(sdb, "_prepare_query", lambda query, track: ([], {query}, query))
+    monkeypatch.setattr(sdb, "_expand_neighbor_context", lambda hit: hit)
+    monkeypatch.setattr(sdb, "_apply_context_cap", lambda track, hits: hits)
+
+    def corpus_lookup(corpus, **kwargs):
+        if corpus == "damaged":
+            sdb.search_style_guide(kwargs["dense_query"])
+            return []
+        return [{"unit_key": "healthy:1", "title": "healthy corpus", "final_score": 1.0}]
+
+    monkeypatch.setattr(sdb, "_dispatch_corpus_search", corpus_lookup)
+    return corpus_lookup
+
+
+@pytest.mark.parametrize("failures", [1, None])
+def test_corpus_worker_swallowed_damage_heals_or_fails_without_partial_success(
+    server, sdb, db, tmp_path, monkeypatch, failures
+):
+    _add_dictionary_tables(db)
+    _threaded_corpus_lookup(sdb, monkeypatch)
+    monkeypatch.setattr(sdb, "_connection_factory", _flaky_factory(server, "disk I/O error", failures))
+    # Open before fan-out, as the live server does once its connection is cached.
+    sdb._get_conn()
+
+    content, is_error, typed = _dispatch(server, "search_sources", {"query": "участь"})
+
+    assert _heal_record(tmp_path)["recovered"] is (failures == 1)
+    if failures is None:
+        assert is_error is True and typed["error_code"] == "database_unavailable"
+        assert "healthy corpus" not in content[0].text
+    else:
+        assert is_error is False and "healthy corpus" in content[0].text
+
+
+def test_corpus_worker_damage_on_retry_does_not_log_recovered(server, sdb, db, tmp_path, monkeypatch):
+    _add_dictionary_tables(db)
+    _threaded_corpus_lookup(sdb, monkeypatch)
+    monkeypatch.setattr(sdb, "_connection_factory", _flaky_factory(server, "disk I/O error"))
+    sdb._get_conn()
+    real_handler = server.handle_search_sources
+    calls = []
+
+    async def fail_first(arguments):
+        calls.append(1)
+        if len(calls) == 1:
+            sdb._get_conn().execute("SELECT * FROM textbooks")
+        return await real_handler(arguments)
+
+    monkeypatch.setattr(server, "handle_search_sources", fail_first)
+    content, is_error, typed = _dispatch(server, "search_sources", {"query": "участь"})
+
+    assert is_error is True and typed["error_code"] == "database_unavailable"
+    assert "healthy corpus" not in content[0].text
+    assert calls == [1, 1]
+    assert _heal_record(tmp_path)["recovered"] is False
+
+
+def test_concurrent_requests_keep_worker_damage_in_their_own_attempt(server, sdb, db, monkeypatch):
+    _add_dictionary_tables(db)
+    lookup = _threaded_corpus_lookup(sdb, monkeypatch)
+    monkeypatch.setattr(sdb, "_connection_factory", _flaky_factory(server, "disk I/O error"))
+    sdb._get_conn()
+    overlap = threading.Barrier(2)
+
+    def concurrent_lookup(corpus, **kwargs):
+        if corpus == "damaged":
+            overlap.wait(timeout=30)
+            if kwargs["dense_query"] == "healthy":
+                return []
+        return lookup(corpus, **kwargs)
+
+    monkeypatch.setattr(sdb, "_dispatch_corpus_search", concurrent_lookup)
+
+    async def scenario():
+        async def request(query):
+            async def handler():
+                return await asyncio.to_thread(sdb.search_sources, query, track="")
+
+            return await server._run_attempt(handler, server._FIRST_ATTEMPT_MARKERS)
+
+        return await asyncio.gather(request("damaged"), request("healthy"), return_exceptions=True)
+
+    damaged, healthy = asyncio.run(scenario())
+    assert isinstance(damaged, sqlite3.OperationalError)
+    assert str(damaged) == "disk I/O error"
+    assert [hit["unit_key"] for hit in healthy] == ["healthy:1"]
+    assert server._ATTEMPT_DAMAGE.get() is None
+
+
+@pytest.fixture()
+def wikipedia_store(db, tmp_path, monkeypatch):
+    conn = sqlite3.connect(db)
+    conn.execute("CREATE TABLE wikipedia (id INTEGER PRIMARY KEY, title TEXT, url TEXT, text TEXT)")
+    conn.execute("INSERT INTO wikipedia VALUES (1, 'fixture', 'https://example.org/article', 'article body')")
+    conn.commit()
+    conn.close()
+    wiki_cache = importlib.import_module("rag.wiki_cache")
+    cache_type = wiki_cache.WikiCache
+    cache_path = tmp_path / "wiki-cache.db"
+    monkeypatch.setattr(wiki_cache, "WikiCache", lambda: cache_type(cache_path))
+    source_query = importlib.import_module("rag.source_query")
+    live_calls = []
+
+    def live_miss(*args, **kwargs):
+        live_calls.append(1)
+        return None
+
+    monkeypatch.setattr(source_query, "wikipedia_extract", live_miss)
+    return cache_type, cache_path, live_calls
+
+
+def test_wikipedia_corruption_is_not_cached_as_missing_and_repair_finds_article(
+    server, sdb, db, tmp_path, wikipedia_store
+):
+    cache_type, cache_path, live_calls = wikipedia_store
+    original = db.read_bytes()
+    db.write_bytes(b"not a database" * 1000)
+
+    content, is_error, typed = _dispatch(server, "query_wikipedia", {"query": "fixture", "mode": "extract"})
+
+    assert is_error is True and typed["error_code"] == "database_unavailable"
+    assert "not found" not in content[0].text
+    assert _heal_record(tmp_path)["recovered"] is False
+    cache = cache_type(cache_path)
+    try:
+        assert cache.get("extract", "fixture") is None
+    finally:
+        cache.close()
+    _restore_in_place(db, original)
+
+    content, is_error, _ = _dispatch(server, "query_wikipedia", {"query": "fixture", "mode": "extract"})
+
+    assert is_error is False and "article body" in content[0].text
+    assert live_calls == []
+
+
+def test_wikipedia_lookup_uses_factory_and_retries_a_transient_error(
+    server, sdb, db, tmp_path, monkeypatch, wikipedia_store
+):
+    monkeypatch.setattr(sdb, "_connection_factory", _flaky_factory(server, "disk I/O error", failures=1))
+
+    content, is_error, _ = _dispatch(server, "query_wikipedia", {"query": "fixture", "mode": "extract"})
+
+    assert is_error is False and "article body" in content[0].text
+    assert _heal_record(tmp_path)["recovered"] is True
+    assert wikipedia_store[2] == []
+
+
+@pytest.mark.parametrize("observed", [False, True])
+def test_wal_side_files_are_preexisting_readonly_open_behavior(server, sdb, tmp_path, monkeypatch, observed):
+    path = tmp_path / "wal-reader.db"
+    with contextlib.closing(sqlite3.connect(path)) as seed:
+        assert seed.execute("PRAGMA journal_mode=WAL").fetchone()[0] == "wal"
+        seed.execute("CREATE TABLE article (body TEXT)")
+        seed.execute("INSERT INTO article VALUES ('committed')")
+        seed.commit()
+    assert sorted(p.name for p in tmp_path.iterdir()) == ["wal-reader.db"]
+    monkeypatch.setattr(sdb, "_connection_factory", server._ObservedConnection if observed else None)
+
+    # A plain mode=ro open already creates SQLite's WAL coordination files.
+    # Healing uses the same URI and must retain visibility of concurrent WAL commits.
+    with contextlib.closing(sdb._open_conn(path, read_only=True)) as reader:
+        assert reader.execute("SELECT body FROM article").fetchone()[0] == "committed"
+        assert sorted(p.name for p in tmp_path.iterdir()) == [
+            "wal-reader.db", "wal-reader.db-shm", "wal-reader.db-wal"
+        ]
+        with pytest.raises(sqlite3.OperationalError, match="readonly"):
+            reader.execute("INSERT INTO article VALUES ('forbidden')")
