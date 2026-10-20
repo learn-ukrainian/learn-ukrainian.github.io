@@ -696,7 +696,7 @@ def get_delegate_task_detail(
                 truncated = True
 
     return task, {
-        "task": task,
+        "task": {**task, **recorded_model_accounting_fields(task)},
         "result": result_text,
         "result_truncated": truncated,
         "alive": alive,

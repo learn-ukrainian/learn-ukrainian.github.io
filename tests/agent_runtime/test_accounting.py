@@ -4,10 +4,42 @@ from __future__ import annotations
 
 import json
 from dataclasses import asdict
+from pathlib import Path
 
 import pytest
 
 from scripts.agent_runtime.accounting import model_accounting_fields, recorded_model_accounting_fields
+
+
+def test_non_agy_plain_failure_matches_frozen_accounting_control(tmp_path, monkeypatch):
+    from agent_runtime import runner
+    from agent_runtime.result import ParseResult
+    from tests.agent_runtime.test_runner_failover import _install_fake_runtime
+
+    expected_row, = [row for row in json.loads(
+        (Path(__file__).resolve().parents[1] / "fixtures" / "accounting_10954.json").read_text()
+    ) if row["case"] == "plain-failure"]
+    adapter, records, events = _install_fake_runtime(monkeypatch, tmp_path, {})
+    monkeypatch.setattr(runner, "load_failover_chain", lambda *a, **k: None)
+    monkeypatch.setattr(runner, "_execute_invocation_plan", lambda **k: runner._ExecutionOutcome(
+        parse=ParseResult(ok=False, response="", stderr_excerpt="provider failed"),
+        duration_s=0.1, returncode=1, kill_reason=None, stdout_text="", stderr_text="provider failed", liveness_paths=(),
+    ))
+
+    result = runner.invoke(expected_row["agent"], "hello", model=expected_row["pin"], cwd=tmp_path)
+
+    assert result.ok is False
+    assert result.substitution is None
+    assert adapter.attempts == ["primary-model"]
+    assert events == []
+    record, = records
+    assert record["outcome"] == "error"
+    saved = json.loads(json.dumps(asdict(result)))
+    for row in (saved, saved["usage_record"], record, recorded_model_accounting_fields(record)):
+        assert {key: row[key] for key in expected_row["expected"]} == expected_row["expected"]
+        assert row["observed_model_provenance"] == expected_row["expected_provenance"]
+    assert saved["model"] == record["model"] == expected_row["model"]
+    assert bool(record.get("substitution")) is expected_row["substituted"]
 
 
 @pytest.mark.parametrize("identity", [None, {

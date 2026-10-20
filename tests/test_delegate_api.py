@@ -569,6 +569,7 @@ def test_accounting_projection_survives_task_cache_restart_and_upgrade(tmp_path,
         }
 
     assert_rows()
+
     delegate_router._TASK_STATE_CACHE.clear()
     reloaded = delegate_router._load_task_cache_from_db(str(tasks_dir), ctx)
     assert len(reloaded) == 2
@@ -586,3 +587,28 @@ def test_accounting_projection_survives_task_cache_restart_and_upgrade(tmp_path,
     assert delegate_router._load_task_cache_from_db(str(tasks_dir), ctx) == {}
     delegate_router._TASK_STATE_CACHE.clear()
     assert_rows()
+
+
+def test_accounting_conflict_is_unknown_in_list_and_detail(tmp_path, monkeypatch):
+    tasks_dir = tmp_path / "tasks"
+    _pin_tasks_dir(monkeypatch, tasks_dir)
+    _write_task(tasks_dir / "conflict.json", _task_payload(
+        "conflict", model="accounting-model", requested_selector="requested-model",
+        observed_model="observed-model", identity_state="observed", observed_model_source="provider-init",
+        observed_model_provenance={
+            "requested_model": "attempt-model", "invocation_id": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+        },
+        model_identity={"actual_model_known": True, "actual_model": "conflicting-model", "source": "provider-init"},
+    ))
+
+    listed = client.get("/api/delegate/tasks")
+    detail = client.get("/api/delegate/tasks/conflict")
+
+    assert listed.status_code == detail.status_code == 200
+    expected = {
+        "requested_selector": "requested-model", "observed_model": None,
+        "identity_state": "unknown", "observed_model_source": None, "observed_model_provenance": None,
+    }
+    for record in (listed.json()["tasks"][0], detail.json()["task"]):
+        assert record["model"] == "accounting-model"
+        assert {key: record[key] for key in expected} == expected

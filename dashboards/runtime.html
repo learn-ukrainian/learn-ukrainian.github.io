@@ -459,7 +459,7 @@ function renderRecent(records) {
         <td>${escapeHtml(record.agent || '—')}</td>
         <td class="mono">${escapeHtml(record.via || record.entrypoint || '—')}</td>
         <td class="mono">${escapeHtml(record.model || '—')}</td>
-        <td class="mono">${escapeHtml(record.requested_selector || 'unknown')}</td>
+        <td class="mono">${escapeHtml(record.requested_selector ?? 'not specified')}</td>
         <td class="mono">${escapeHtml(record.observed_model || 'unknown')}</td>
         <td>${escapeHtml(record.identity_state || 'unknown')} ${escapeHtml(record.observed_model_source || '')}</td>
         <td><span class="pill ${cls}">${escapeHtml(record.outcome || 'unknown')}</span></td>

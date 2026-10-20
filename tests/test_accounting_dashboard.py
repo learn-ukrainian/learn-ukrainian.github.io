@@ -14,7 +14,8 @@ DASHBOARDS = Path(__file__).resolve().parents[1] / "dashboards"
     ("fleet.html", "function renderActivity(", "function renderMessages("),
     ("delegate.html", "function observerTaskView(", "function isToday("),
 ])
-def test_accounting_reader_labels_and_fields(page, start, end):
+@pytest.mark.parametrize("selector", ["requested<selector", None])
+def test_accounting_reader_labels_and_fields(page, start, end, selector):
     html = (DASHBOARDS / page).read_text()
     code = html[html.index(start):html.index(end, html.index(start))]
     script = r'''
@@ -25,6 +26,7 @@ const formatTs = x => x, formatTime = x => x, formatDuration = x => x, short = x
 const table = (headers, rows) => JSON.stringify({headers, rows});
 const row = {model: 'accounting-only', requested_selector: 'requested<selector', observed_model: 'observed-only', identity_state: 'observed', observed_model_source: 'provider-init'};
 '''
+    script += f"\nrow.requested_selector = {json.dumps(selector)};\n"
     if page == "delegate.html":
         script += code + "\nprocess.stdout.write(JSON.stringify(observerTaskView(row)));"
     else:
@@ -35,11 +37,13 @@ const row = {model: 'accounting-only', requested_selector: 'requested<selector',
     if page == "delegate.html":
         view = json.loads(output)
         assert view["accounting_model"] == "accounting-only"
-        assert view["requested_selector"] == "requested<selector"
+        assert view["requested_selector"] == selector
         assert view["observed_model"] == "observed-only"
         assert view["identity_state"] == "observed"
         assert view["observed_model_source"] == "provider-init"
     else:
         for value in ["Accounting model", "Requested selector", "Observed model", "Identity state",
-                      "accounting-only", "requested&lt;selector", "observed-only", "observed"]:
+                      "accounting-only", "observed-only", "observed"]:
             assert value in output
+        expected_selector = "requested&lt;selector" if selector else ("not specified" if page == "runtime.html" else "unknown")
+        assert expected_selector in output

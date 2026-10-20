@@ -10,8 +10,10 @@ import types
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
+import pytest
 from fastapi.testclient import TestClient
 
+import scripts.api.fleet_router as fleet_router
 import scripts.api.runtime_router as runtime_router
 from scripts.agent_runtime.acpx_discuss import AcpxDiscussionController
 from scripts.api.main import app
@@ -1368,3 +1370,37 @@ def test_recent_accounting_projections_preserve_legacy_aggregates(tmp_path, monk
         "requested_selector": None, "observed_model": None,
         "identity_state": "unknown", "observed_model_source": None, "observed_model_provenance": None,
     }
+
+
+@pytest.mark.parametrize("conflicting", [False, True])
+def test_activity_projects_runtime_model_identity(monkeypatch, conflicting):
+    projection = {
+        "requested_selector": "requested-model",
+        "observed_model": "observed-model",
+        "identity_state": "observed",
+        "observed_model_source": "provider-init",
+        "observed_model_provenance": {
+            "requested_model": "attempt-model",
+            "invocation_id": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+        },
+    }
+    raw = {
+        "model": "accounting-model",
+        **projection,
+        "model_identity": {
+            "actual_model_known": True,
+            "actual_model": "conflicting-model" if conflicting else "observed-model",
+            "source": "provider-init",
+        },
+    }
+    monkeypatch.setattr(fleet_router, "recent_runtime_records", lambda **kwargs: {"records": [raw]})
+
+    response = client.get("/api/fleet/activity")
+
+    assert response.status_code == 200
+    record, = response.json()["records"]
+    assert record["model"] == "accounting-model"
+    assert {key: record[key] for key in projection} == (projection if not conflicting else {
+        "requested_selector": "requested-model", "observed_model": None,
+        "identity_state": "unknown", "observed_model_source": None, "observed_model_provenance": None,
+    })

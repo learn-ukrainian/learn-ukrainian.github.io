@@ -10903,9 +10903,10 @@ def _emit_terminal_dispatch_event(
                 "agent": agent,
                 "model": model,
                 **{key: final_state.get(key) for key in (
-                    "requested_selector", "observed_model", "identity_state", "observed_model_source",
+                    "requested_selector", "observed_model", "observed_model_source",
                     "observed_model_provenance",
                 )},
+                "identity_state": final_state.get("identity_state") or "unknown",
                 "resolved_model": final_state.get("resolved_model"),
                 "resolved_model_known": final_state.get("resolved_model_known"),
                 "resolved_model_source": final_state.get("resolved_model_source"),

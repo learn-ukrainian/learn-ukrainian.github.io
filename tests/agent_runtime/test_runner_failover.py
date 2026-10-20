@@ -1113,6 +1113,48 @@ def test_agy_configured_failover_validates_before_projection(tmp_path, monkeypat
     assert runner_mod._AGY_OBSERVED_IDENTITY.get() is None
 
 
+@pytest.mark.parametrize("kill_reason", ["stdout_silence_timeout", "initial_response_timeout", "hard_timeout"])
+def test_watchdog_substitution_events_preserve_observed_identity(tmp_path, monkeypatch, kill_reason):
+    from agent_runtime.errors import AgentTimeoutError
+    from telemetry import emit as telemetry_emit
+    from tests.agent_runtime.adapters.test_agy_claude_routes import consistency_stream, mock_agy_provider
+
+    pin, observed = "claude-sonnet-5-5-high", "claude-opus-5-5-high"
+    launches, _, _ = mock_agy_provider(
+        monkeypatch, tmp_path, runner_mod, stdout=consistency_stream(pin, "other-pin"), exit_kind="timeout",
+    )
+    monkeypatch.setattr(runner_mod, "should_kill", lambda *a, **k: kill_reason)
+    emitted, sink, records = [], [], []
+    monkeypatch.setattr(telemetry_emit, "emit_event", lambda name, fields: emitted.append((name, fields)))
+    monkeypatch.setattr(runner_mod, "write_record", records.append)
+
+    error = AgentTimeoutError if kill_reason == "hard_timeout" else AgentStalledError
+    with pytest.raises(error):
+        runner_mod.invoke(
+            "agy", "Implement.", model=pin, mode="workspace-write", cwd=tmp_path,
+            task_id="watchdog-task", tool_config={"run_nonce": "watchdog-run"},
+            event_sink=lambda name, **fields: sink.append((name, fields)),
+        )
+
+    assert len(launches) == len(records) == 1
+    expected = {
+        "requested_selector": pin, "observed_model": observed,
+        "identity_state": "observed", "observed_model_source": "provider-init",
+    }
+    for events in (emitted, sink):
+        event, = [fields for name, fields in events if name == "agent_runtime_substitution"]
+        assert {key: event[key] for key in expected} == expected
+        assert event["observed_model_provenance"] == {
+            "requested_model": pin,
+            "invocation_id": records[0]["observed_model_provenance"]["invocation_id"],
+        }
+        assert event["observed_model_provenance"]["invocation_id"].replace("-", "") == (
+            records[0]["model_identity"]["provenance"]["invocation_id"]
+        )
+        assert event["substitution"]["actual_model"] == observed
+    assert runner_mod._AGY_OBSERVED_IDENTITY.get() is None
+
+
 @pytest.mark.parametrize("pin,other", [
     ("claude-sonnet-5-5-high", "claude-opus-5-5-high"),
     ("claude-opus-5-5-high", "claude-sonnet-5-5-high"),

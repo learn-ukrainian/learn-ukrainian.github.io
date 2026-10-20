@@ -602,14 +602,16 @@ New Result, usage, task, dispatch-event, and substitution-event projections add:
 
 | Field | Meaning |
 | --- | --- |
-| `requested_selector` | Original explicit caller selector, preserved across failover; null when omitted. |
+| `requested_selector` | Selector as admitted for launch, preserved across runtime failover; null when the admitted launch has no explicit selector. |
 | `observed_model` | Same-run validated provider-init observation, or null. |
 | `identity_state` | `observed` or `unknown`, independent of execution success. |
 | `observed_model_source` | `provider-init` for a validated observation, otherwise null. |
 | `observed_model_provenance` | Actual attempt's `requested_model` and UUID-form `invocation_id`, or null. |
 
 The observation's `observed_model_provenance.requested_model` belongs to its
-actual attempt. It may differ from the original selector after failover.
+actual attempt. It may differ from the admitted selector after runtime failover.
+Admission may replace or clear the caller's original selector, including during
+budget substitution; this field does not preserve the selector before admission.
 Existing AGY custody, task, nonce, consistency, and eligibility checks remain
 binding. A matching provider failure can retain an observation without becoming
 a model substitution. Repeated initialization retains the existing refusal and
@@ -618,7 +620,8 @@ when an accounting label matches a requested pin. Codex configured-request
 metadata and non-AGY route substitutions do not establish an observation.
 Provider-reported identity is not backend attestation.
 
-Runtime recent records and delegate summaries expose these additive fields.
+Runtime recent records, fleet activity, and delegate list and detail responses
+expose these additive fields through the same serialized-identity reader check.
 Their dashboards label the legacy value as an accounting model and show the
 selector and observation separately. The delegate cache retains the projections
 across process restarts and reloads entries from older cache schemas.

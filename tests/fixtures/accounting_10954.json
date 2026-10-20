@@ -392,5 +392,19 @@
     "model": "claude-opus-5-5-high",
     "substituted": false,
     "expected_provenance": null
+  },
+  {
+    "agent": "failover-test",
+    "pin": "primary-model",
+    "case": "plain-failure",
+    "expected": {
+      "requested_selector": "primary-model",
+      "observed_model": null,
+      "identity_state": "unknown",
+      "observed_model_source": null
+    },
+    "model": "primary-model",
+    "substituted": false,
+    "expected_provenance": null
   }
 ]

@@ -23414,3 +23414,22 @@ def test_accounting_projection_on_pre_spawn_failure(tmp_tasks_dir, monkeypatch, 
         "requested_selector", "observed_model", "identity_state", "observed_model_source", "observed_model_provenance",
     )} == {"requested_selector": model, "observed_model": None, "identity_state": "unknown",
           "observed_model_source": None, "observed_model_provenance": None}
+
+
+@pytest.mark.parametrize("identity_fields", [{}, {"identity_state": None}])
+def test_terminal_dispatch_event_defaults_missing_identity_to_unknown(monkeypatch, identity_fields):
+    from types import SimpleNamespace
+
+    from telemetry import emit as telemetry_emit
+
+    events = []
+    monkeypatch.setattr(telemetry_emit, "emit_event", lambda name, fields: events.append((name, fields)))
+    delegate._emit_terminal_dispatch_event(
+        task_id="legacy-terminal", agent="codex",
+        final_state={"model": "accounting-model", "status": "failed", **identity_fields},
+        result=SimpleNamespace(usage_record=None), fallback_prompt_chars=1,
+    )
+    event, = [fields for name, fields in events if name == "dispatch"]
+    assert event["identity_state"] == "unknown"
+    assert event["requested_selector"] is None
+    assert event["observed_model"] is None
