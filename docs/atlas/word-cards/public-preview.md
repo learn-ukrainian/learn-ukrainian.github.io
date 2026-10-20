@@ -32,7 +32,7 @@ reading protected stores or hydrating the rest of the site.
 
 Every `deploy-pages.yml` run publishes this preview with the ordinary site;
 automatic-deployment eligibility is unchanged. The committed pin
-`site/src/data/word-card-preview-release.pin.json` records the release tag and
+`site/src/data/word-card-preview-release.pointer.json` records the release tag and
 both byte sizes and digests above. `scripts/deploy/prepare_word_card_preview.py
 prepare` downloads only those two public assets, without a token, into runner
 scratch. It refuses a size or digest mismatch, a manifest that disagrees with

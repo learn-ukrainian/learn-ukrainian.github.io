@@ -288,7 +288,7 @@ def test_pages_preview_wiring_has_no_controls_flag_secrets_or_dispatch_inputs() 
 
 def test_preview_pin_changes_keep_manual_deployment_semantics() -> None:
     """#11194 leaves eligibility unchanged: a release-pin change is content drift, not auto-deployable."""
-    pin = "site/src/data/word-card-preview-release.pin.json"
+    pin = "site/src/data/word-card-preview-release.pointer.json"
     assert (REPO_ROOT / pin).is_file()
     assert decide_auto_deploy([pin]).reason == "content_drift"
     assert decide_auto_deploy(["scripts/deploy/prepare_word_card_preview.py"]).reason == "unknown_path"

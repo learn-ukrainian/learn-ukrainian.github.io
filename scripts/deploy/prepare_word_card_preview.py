@@ -2,7 +2,7 @@
 """Prepare and verify the pinned word-card candidate preview for the Pages build (#11194).
 
 ``prepare`` downloads the two public ``word-cards`` release assets named by the
-committed pin ``site/src/data/word-card-preview-release.pin.json``, refuses any
+committed pin ``site/src/data/word-card-preview-release.pointer.json``, refuses any
 asset whose byte size or SHA-256 differs from that pin, checks the manifest
 against the same pin, and only then writes the verified files plus the
 ``ATLAS_WORD_CARD_RELEASE_PIN`` value the Astro build consumes. The release tag
@@ -38,7 +38,7 @@ if __package__ in (None, ""):
 from scripts.common import github_client
 
 ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_PIN = ROOT / "site" / "src" / "data" / "word-card-preview-release.pin.json"
+DEFAULT_PIN = ROOT / "site" / "src" / "data" / "word-card-preview-release.pointer.json"
 DEFAULT_FIXTURE_ROOT = ROOT / "site" / "tests" / "fixtures" / "word-card-preview"
 CARD_SCHEMA = ROOT / "schemas" / "word-card-v1.schema.json"
 
@@ -369,7 +369,7 @@ Exit codes:
      robots, sitemap or fixture marker check failed (reason on stderr)
 
 Related: .github/workflows/deploy-pages.yml, docs/atlas/word-cards/public-preview.md,
-  site/src/data/word-card-preview-release.pin.json, issue #11194.
+  site/src/data/word-card-preview-release.pointer.json, issue #11194.
 """
 
 
@@ -384,7 +384,7 @@ def build_parser() -> argparse.ArgumentParser:
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     commands = parser.add_subparsers(dest="command", required=True)
-    pin_help = "committed release pin JSON (default: site/src/data/word-card-preview-release.pin.json)"
+    pin_help = "committed release pin JSON (default: site/src/data/word-card-preview-release.pointer.json)"
     prep = commands.add_parser("prepare", help="download and verify the pinned release assets")
     prep.add_argument("--pin", type=Path, default=DEFAULT_PIN, help=pin_help)
     prep.add_argument(

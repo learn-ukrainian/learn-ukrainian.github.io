@@ -14,7 +14,7 @@ import pytest
 from scripts.deploy import prepare_word_card_preview as preview
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-COMMITTED_PIN = REPO_ROOT / "site" / "src" / "data" / "word-card-preview-release.pin.json"
+COMMITTED_PIN = REPO_ROOT / "site" / "src" / "data" / "word-card-preview-release.pointer.json"
 SITE_PUBLIC_PIN = REPO_ROOT / "site" / "src" / "lib" / "lexicon" / "word-card-preview-inputs.ts"
 RUNBOOK = REPO_ROOT / "docs" / "atlas" / "word-cards" / "public-preview.md"
 FIXTURE_ROOT = REPO_ROOT / "site" / "tests" / "fixtures" / "word-card-preview"
