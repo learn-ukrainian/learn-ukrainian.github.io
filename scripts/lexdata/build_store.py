@@ -231,7 +231,7 @@ class _Run:
 def build_lock(target: WriterTarget) -> Iterator[None]:
     """Exclusive non-blocking ``flock``: a second writer is refused, never queued."""
     target.work_dir.mkdir(exist_ok=True)
-    fd = os.open(target.lock_path, os.O_RDWR | os.O_CREAT, 0o644)
+    fd = os.open(target.lock_path, os.O_RDWR | os.O_CREAT, 0o600)
     try:
         try:
             fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)

@@ -2472,6 +2472,19 @@ store_registry:
       protection: keep
       backup: keep
       retention: Word Atlas articles and enrichment; kept, costly to rebuild.
+    - path: data/lexdata.db
+      owner: open-model-data
+      kind: derived
+      activity: active
+      presence: present
+      catalogue_entry: data-lexdata-db
+      writers: [scripts/lexdata/build_store.py:_open_build_connection]
+      journal: delete
+      busy_ms: 5000
+      busy_source: default
+      protection: keep
+      backup: keep
+      retention: Derived lexical generations; kept, because each published file is costly to rebuild.
     - path: data/mphdict/etym.db
       owner: corpus-channels
       kind: reference

@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import json
+import subprocess
+from pathlib import Path
 
 import pytest
 
@@ -20,7 +22,26 @@ def test_help_is_agent_usable(capsys, argv) -> None:
         assert needle in text, (argv, needle)
 
 
-def test_build_from_a_linked_worktree_is_refused(capsys) -> None:
+def _git(repo: Path, *args: str) -> None:
+    subprocess.run(
+        ["git", "-C", str(repo), "-c", "user.name=lexdata-test", "-c", "user.email=lexdata-test@example.com", *args],
+        check=True,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+
+
+def test_build_from_a_linked_worktree_is_refused(capsys, tmp_path, monkeypatch) -> None:
+    """Refuse ``build`` from a linked worktree this test creates."""
+    primary, worker = tmp_path / "primary", tmp_path / "worker"
+    primary.mkdir()
+    _git(primary, "init", "-q", "-b", "main")
+    _git(primary, "commit", "--allow-empty", "-q", "-m", "init")
+    _git(primary, "worktree", "add", "--detach", "-q", str(worker))
+    (worker / "scripts").mkdir()
+    (worker / "data").mkdir()
+    monkeypatch.chdir(worker)
     assert cli.main(["build"]) == 2
     assert json.loads(capsys.readouterr().out) == {"reason": "linked_worktree", "status": "refused"}
 
