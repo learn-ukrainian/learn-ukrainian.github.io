@@ -240,7 +240,7 @@ def test_task_locks_and_snapshot_directories_are_not_staged(
     assert manifest_staged == helper_staged
 
 
-# The 31 keep paths approved for this nightly. data/lexicon/runner-mirror is
+# The 32 keep paths approved for this nightly. data/lexicon/runner-mirror is
 # the one existing addition: the gate receipt compares that tree with the
 # snapshot, and a host with no mirror logs one line and continues.
 # One text block, not a separate sources.db literal: the writable-connect lint
@@ -261,6 +261,7 @@ data/movaua.db
 data/movne_pytannya.db
 data/grac_frequency.db
 data/atlas.db
+data/lexdata.db
 data/wiki_*.db
 data/lexicon/cache/ulif_raw.sqlite
 data/textbook_chunks
@@ -411,7 +412,7 @@ def test_keep_paths_are_the_approved_set_plus_runner_mirror() -> None:
     keep = load_allowlist()["keep"]
     assert isinstance(keep, list)
     paths = [str(entry["path"]) for entry in keep if isinstance(entry, dict)]
-    assert len(APPROVED_KEEP_PATHS) == 31
+    assert len(APPROVED_KEEP_PATHS) == 32
     assert len(paths) == len(set(paths))
     extra = [path for path in paths if path not in APPROVED_KEEP_PATHS]
     assert extra == ["data/lexicon/runner-mirror"]

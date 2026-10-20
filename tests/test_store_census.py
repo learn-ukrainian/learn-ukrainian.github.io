@@ -1,6 +1,6 @@
 """SQLite store registry and census (#11092, DB plan step 1).
 
-* The repository catalogue carries the registry: 39 named stores present (33 active, 3
+* The repository catalogue carries the registry: 40 named stores present (34 active, 3
   dormant, 2 staged, 1 orphan), 9 declared-absent defaults, the dynamic families and
   the evidence directories, each row with the required fields (AC-01, AC-03).
 * The static check rejects wrong backup facts, protection below the nightly, keep
@@ -8,7 +8,7 @@
 * The census flags an unregistered SQLite file under data/, .agent/, .mcp/ and
   batch_state/ (by extension or header), passes registered stores, family globs and
   evidence directories, flags missing or unexpected stores and journal mismatches on
-  the store host, reproduces the 39 count on a materialised tree and never writes.
+  the store host, reproduces the 40 count on a materialised tree and never writes.
 
 Every census here walks a temporary tree; the walk of the real checkout is in
 tests/test_docs_catalogue_coverage.py (repo_wide).
@@ -79,10 +79,10 @@ def test_the_catalogue_validates_against_its_schema():
 
 def test_the_registry_reproduces_the_reconciled_inventory():
     present = rows(presence='present')
-    assert len(present) == 39
-    assert Counter(r['activity'] for r in present) == {'active': 33, 'dormant': 3, 'staged': 2, 'orphan': 1}
+    assert len(present) == 40
+    assert Counter(r['activity'] for r in present) == {'active': 34, 'dormant': 3, 'staged': 2, 'orphan': 1}
     active = Counter(r['kind'] for r in present if r['activity'] == 'active')
-    assert active == {'operational': 8, 'cache': 4, 'reference': 9, 'derived': 2, 'job_state': 8, 'telemetry': 2}
+    assert active == {'operational': 8, 'cache': 4, 'reference': 9, 'derived': 3, 'job_state': 8, 'telemetry': 2}
     assert {r['path'] for r in rows(activity='dormant')} == {
         'batch_state/agent_monitor.sqlite3', 'wiki/.state/progress.db', 'data/ulif_dump.db'}
     assert {r['path'] for r in rows(activity='staged')} == {'data/sum20_staging.db', 'data/sum20_slovnyk_staging.db'}
@@ -394,7 +394,7 @@ def test_coverage_rows_are_confirmed_by_their_schema_table(tmp_path):
 def test_presence_flags_missing_and_unexpected_stores_only_when_asked(tmp_path):
     assert run(tmp_path).ok  # a code-only checkout (CI, a sparse worktree) has no stores
     result = run(tmp_path, expect_present=True)
-    assert not result.ok and len(result.missing) == 39
+    assert not result.ok and len(result.missing) == 40
     store(tmp_path, 'batch_state/trails/runs.sqlite3')
     result = run(tmp_path, expect_present=True)
     assert 'batch_state/trails/runs.sqlite3: registered as declared_absent but present; update its row' in result.problems
@@ -417,14 +417,14 @@ def materialise(root: Path) -> None:
         store(root, logical, wal=row['journal'] == 'wal')
 
 
-def test_a_materialised_registry_reproduces_the_39_count(tmp_path):
+def test_a_materialised_registry_reproduces_the_40_count(tmp_path):
     materialise(tmp_path)
     result = run(tmp_path, expect_present=True)
     assert result.ok, (result.unregistered, result.problems, result.missing)
     counts = result.counts(REGISTRY)
-    assert counts['named_stores_present'] == 39 and counts['missing'] == 0
-    assert counts['by_activity'] == {'active': 33, 'dormant': 3, 'orphan': 1, 'staged': 2}
-    assert counts['active_by_kind'] == {'cache': 4, 'derived': 2, 'job_state': 8, 'operational': 8,
+    assert counts['named_stores_present'] == 40 and counts['missing'] == 0
+    assert counts['by_activity'] == {'active': 34, 'dormant': 3, 'orphan': 1, 'staged': 2}
+    assert counts['active_by_kind'] == {'cache': 4, 'derived': 3, 'job_state': 8, 'operational': 8,
                                         'reference': 9, 'telemetry': 2}
     assert counts['declared_absent_rows'] == 9
 

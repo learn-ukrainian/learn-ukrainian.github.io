@@ -17,6 +17,7 @@ import platform
 from collections.abc import Iterable, Mapping, Sequence
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
+from types import MappingProxyType
 from typing import Any, Literal
 
 from scripts.common.repo_root import main_checkout_root
@@ -36,6 +37,7 @@ ENV_SMB_BULK_ROOT = "LU_SMB_BULK_ROOT"
 ENV_GDRIVE_DATA = "LU_GDRIVE_DATA"
 ENV_SOURCES_DB = "LU_SOURCES_DB"
 ENV_VESUM_DB = "LU_VESUM_DB"
+ENV_LEXDATA_DB = "LU_LEXDATA_DB"
 
 # macOS UF_DATALESS — cloud-only / File Provider stub (never open to inspect).
 _UF_DATALESS = 0x40000000
@@ -487,7 +489,16 @@ def is_network_filesystem_path(path: Path) -> bool:
     return "smb" in fs_type or "cifs" in fs_type or "nfs" in fs_type
 
 
-StoreId = Literal["sources", "vesum"]
+StoreId = Literal["sources", "vesum", "lexdata"]
+
+# Logical store -> (filename under the primary checkout's data/, env override).
+# The one mapping every admitted store comes from; lexdata is the derived
+# lexical store written only by scripts/lexdata/build_store.py.
+STORE_FILES: Mapping[str, tuple[str, str]] = MappingProxyType({
+    "sources": ("sources.db", ENV_SOURCES_DB),
+    "vesum": ("vesum.db", ENV_VESUM_DB),
+    "lexdata": ("lexdata.db", ENV_LEXDATA_DB),
+})
 
 
 @dataclass(frozen=True)
@@ -525,6 +536,11 @@ def _store_locality(path: Path) -> Literal["local", "network", "unknown"]:
     return "unknown"
 
 
+def store_locality(path: Path) -> Literal["local", "network", "unknown"]:
+    """Public locality check for store writers; only ``"local"`` is admissible."""
+    return _store_locality(path)
+
+
 def resolve_store(
     store: StoreId,
     repository_root: Path | None = None,
@@ -538,17 +554,16 @@ def resolve_store(
     worktree is refused even if an explicit input would otherwise be usable.
     No connections, files, or directories are created by resolution.
     """
-    if store not in {"sources", "vesum"}:
+    if store not in STORE_FILES:
         raise ValueError("unsupported logical store")
     try:
         root = default_repository_root(repository_root).resolve()
         primary = main_checkout_root(root).resolve()
-        filename = "sources.db" if store == "sources" else "vesum.db"
+        filename, key = STORE_FILES[store]
         own = root / "data" / filename
         if root != primary and (own.exists() or own.is_symlink()):
             return StoreRefusal(store, "worktree_local_store")
         environ = os.environ if env is None else env
-        key = ENV_SOURCES_DB if store == "sources" else ENV_VESUM_DB
         if binding is not None:
             if binding.store != store or binding.access_mode != "read":
                 return StoreRefusal(store, "invalid_binding")
