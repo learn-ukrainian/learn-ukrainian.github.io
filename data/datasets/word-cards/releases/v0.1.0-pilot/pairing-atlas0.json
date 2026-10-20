@@ -4,16 +4,18 @@
   "cards_sha256": "45bd9c9325a3b4221c86d1663d784e96a7edc096674415445d37113f793189e6",
   "registry_version": 3,
   "total_cards": 150,
-  "paired_count": 109,
+  "paired_count": 107,
   "unpaired_count": 35,
-  "ambiguous_count": 6,
+  "ambiguous_count": 8,
   "entries": [
     {
       "card_id": "wc_02a5cjxcpbcf",
       "spelling": "баран",
-      "status": "paired",
-      "atlas0_slug": "atlas0:slug:баран",
-      "pilot_card_id": "wc_r25wxjx5nrb9"
+      "status": "ambiguous",
+      "reason": "atlas_entry_covers_multiple_homonyms",
+      "candidate_atlas0_slugs": [
+        "atlas0:slug:баран"
+      ]
     },
     {
       "card_id": "wc_043h3npd7ed4",
@@ -38,9 +40,8 @@
     {
       "card_id": "wc_0c2c6k5nrw0n",
       "spelling": "щось",
-      "status": "paired",
-      "atlas0_slug": "atlas0:slug:щось",
-      "pilot_card_id": "wc_bcks3tm0xg7b"
+      "status": "unpaired",
+      "reason": "pos_mismatch_with_atlas_entry"
     },
     {
       "card_id": "wc_0nq8zajmfvcg",
@@ -67,7 +68,10 @@
       "card_id": "wc_1nrw339ddgvm",
       "spelling": null,
       "status": "unpaired",
-      "reason": "new_candidate_no_current_atlas_entry"
+      "reason": "phraseologism_mwe_no_atlas_entry",
+      "mwe_forms": [
+        "різати правду-матку"
+      ]
     },
     {
       "card_id": "wc_2q1qzzw8gd01",
@@ -128,7 +132,10 @@
       "card_id": "wc_562eqy9g3bck",
       "spelling": null,
       "status": "unpaired",
-      "reason": "new_candidate_no_current_atlas_entry"
+      "reason": "phraseologism_mwe_no_atlas_entry",
+      "mwe_forms": [
+        "близько не пахне"
+      ]
     },
     {
       "card_id": "wc_5b36dst0her6",
@@ -148,7 +155,10 @@
       "card_id": "wc_5j37jfndz666",
       "spelling": null,
       "status": "unpaired",
-      "reason": "new_candidate_no_current_atlas_entry"
+      "reason": "phraseologism_mwe_no_atlas_entry",
+      "mwe_forms": [
+        "блигом світ"
+      ]
     },
     {
       "card_id": "wc_5s9kgf5brczs",
@@ -174,14 +184,18 @@
     {
       "card_id": "wc_6hg8x80fcnk2",
       "spelling": "Батьківщина",
-      "status": "unpaired",
-      "reason": "new_candidate_no_current_atlas_entry"
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:батьківщина",
+      "pilot_card_id": "wc_0yw0q5tgyqm8"
     },
     {
       "card_id": "wc_7a6x6n8rek4y",
       "spelling": null,
       "status": "unpaired",
-      "reason": "new_candidate_no_current_atlas_entry"
+      "reason": "phraseologism_mwe_no_atlas_entry",
+      "mwe_forms": [
+        "Гнат-безп'ятко"
+      ]
     },
     {
       "card_id": "wc_7e1t38e50r34",
@@ -304,7 +318,10 @@
       "card_id": "wc_bej8fh02sp6p",
       "spelling": null,
       "status": "unpaired",
-      "reason": "new_candidate_no_current_atlas_entry"
+      "reason": "phraseologism_mwe_no_atlas_entry",
+      "mwe_forms": [
+        "Боже помагай"
+      ]
     },
     {
       "card_id": "wc_bfdeknm81e44",
@@ -317,7 +334,7 @@
       "card_id": "wc_bgr5q9c06wxg",
       "spelling": "замок",
       "status": "ambiguous",
-      "reason": "homonym_unresolved",
+      "reason": "atlas_entry_covers_multiple_homonyms",
       "candidate_atlas0_slugs": [
         "atlas0:slug:замок"
       ]
@@ -339,7 +356,10 @@
       "card_id": "wc_c66xvp4hvdev",
       "spelling": null,
       "status": "unpaired",
-      "reason": "new_candidate_no_current_atlas_entry"
+      "reason": "phraseologism_mwe_no_atlas_entry",
+      "mwe_forms": [
+        "Робінзон на безлюдному острові"
+      ]
     },
     {
       "card_id": "wc_c6j1qtrpbcgx",
@@ -359,7 +379,7 @@
       "card_id": "wc_cvkw5nzdg00n",
       "spelling": "замок",
       "status": "ambiguous",
-      "reason": "homonym_unresolved",
+      "reason": "atlas_entry_covers_multiple_homonyms",
       "candidate_atlas0_slugs": [
         "atlas0:slug:замок"
       ]
@@ -437,7 +457,10 @@
       "card_id": "wc_fc08gvq844db",
       "spelling": null,
       "status": "unpaired",
-      "reason": "new_candidate_no_current_atlas_entry"
+      "reason": "phraseologism_mwe_no_atlas_entry",
+      "mwe_forms": [
+        "Бог помилував"
+      ]
     },
     {
       "card_id": "wc_fd7d7wa6rn62",
@@ -570,7 +593,10 @@
       "card_id": "wc_k1kp85tahqag",
       "spelling": null,
       "status": "unpaired",
-      "reason": "new_candidate_no_current_atlas_entry"
+      "reason": "phraseologism_mwe_no_atlas_entry",
+      "mwe_forms": [
+        "блекоти наїлась"
+      ]
     },
     {
       "card_id": "wc_k339xj1q2hv7",
@@ -632,7 +658,10 @@
       "card_id": "wc_p1d31y378qs1",
       "spelling": null,
       "status": "unpaired",
-      "reason": "new_candidate_no_current_atlas_entry"
+      "reason": "phraseologism_mwe_no_atlas_entry",
+      "mwe_forms": [
+        "Господь його розбере"
+      ]
     },
     {
       "card_id": "wc_p41ag4cb6be8",
@@ -745,7 +774,10 @@
       "card_id": "wc_ref9xyps30mx",
       "spelling": null,
       "status": "unpaired",
-      "reason": "new_candidate_no_current_atlas_entry"
+      "reason": "phraseologism_mwe_no_atlas_entry",
+      "mwe_forms": [
+        "Божий світ"
+      ]
     },
     {
       "card_id": "wc_rezqg70bnyy4",
@@ -764,7 +796,10 @@
       "card_id": "wc_rmvh0tsz1y1a",
       "spelling": null,
       "status": "unpaired",
-      "reason": "new_candidate_no_current_atlas_entry"
+      "reason": "phraseologism_mwe_no_atlas_entry",
+      "mwe_forms": [
+        "благородний жест"
+      ]
     },
     {
       "card_id": "wc_rn15mnpkqxar",
@@ -837,7 +872,10 @@
       "card_id": "wc_tm57q9wj8y31",
       "spelling": null,
       "status": "unpaired",
-      "reason": "new_candidate_no_current_atlas_entry"
+      "reason": "phraseologism_mwe_no_atlas_entry",
+      "mwe_forms": [
+        "блискавкою прорізати"
+      ]
     },
     {
       "card_id": "wc_tnwfw0gzfm5q",
@@ -911,7 +949,10 @@
       "card_id": "wc_vzt7m2k3tg48",
       "spelling": null,
       "status": "unpaired",
-      "reason": "new_candidate_no_current_atlas_entry"
+      "reason": "phraseologism_mwe_no_atlas_entry",
+      "mwe_forms": [
+        "Валаамова ослиця"
+      ]
     },
     {
       "card_id": "wc_w78q6xbserdn",
@@ -929,9 +970,11 @@
     {
       "card_id": "wc_wmyzn565rxp4",
       "spelling": "бар",
-      "status": "paired",
-      "atlas0_slug": "atlas0:slug:бар",
-      "pilot_card_id": "wc_331r6gx6dgb7"
+      "status": "ambiguous",
+      "reason": "atlas_entry_covers_multiple_homonyms",
+      "candidate_atlas0_slugs": [
+        "atlas0:slug:бар"
+      ]
     },
     {
       "card_id": "wc_wq7h18tk76dh",
@@ -951,7 +994,10 @@
       "card_id": "wc_wzct64k4fham",
       "spelling": null,
       "status": "unpaired",
-      "reason": "new_candidate_no_current_atlas_entry"
+      "reason": "phraseologism_mwe_no_atlas_entry",
+      "mwe_forms": [
+        "блудний син"
+      ]
     },
     {
       "card_id": "wc_x5v9xqax0t4d",
@@ -978,7 +1024,10 @@
       "card_id": "wc_xmzv71z7hwee",
       "spelling": null,
       "status": "unpaired",
-      "reason": "new_candidate_no_current_atlas_entry"
+      "reason": "phraseologism_mwe_no_atlas_entry",
+      "mwe_forms": [
+        "Бог зна що таке"
+      ]
     },
     {
       "card_id": "wc_y9j49mes11mr",

@@ -3,12 +3,12 @@
 Use this to write or check the canonical pairing artifact. Do not use it to
 certify Ukrainian, edit the published release, or change Atlas pages.
 
-An active registry entry matches when its source key is ``atlas0:slug:<slug>``
-and ``key_at_creation.spelling`` equals the card's spelling assertion exactly.
-Capitalization is significant. One atlas entry pairs. Several atlas entries
-narrow by a single part-of-speech value. A spelling claimed by more than one
-release card stays unresolved. Zero atlas entries, including a card with no
-spelling assertion, stay unpaired. The tool never opens ``sources.db``.
+Active registry entries match by spelling and compatible part of speech.
+Common lexemes may match case-insensitively; proper names retain their case.
+The frozen Atlas pilot manifest supplies article-side VESUM identities;
+articles covering multiple identities stay ambiguous. A spelling claimed by
+more than one release card stays unresolved. Phraseologisms retain their
+phrase form and a separate unpaired reason. The tool never opens ``sources.db``.
 """
 
 from __future__ import annotations
@@ -40,11 +40,15 @@ ATLAS_PREFIX = "atlas0:slug:"
 PUBLISHED_CARDS_SHA256 = "45bd9c9325a3b4221c86d1663d784e96a7edc096674415445d37113f793189e6"
 DEFAULT_CARDS = Path("data/datasets/word-cards/releases/v0.1.0-pilot/word-cards.jsonl")
 DEFAULT_REGISTRY = Path("registry/atlas/identity/registry.json")
+DEFAULT_ATLAS_MANIFEST = Path("registry/atlas/pilot/pilot-v1.json")
 DEFAULT_OUTPUT = Path("data/datasets/word-cards/releases/v0.1.0-pilot/pairing-atlas0.json")
 CARD_ID_PATTERN = r"^wc_[0-9a-hjkmnp-tv-z]{12}$"
 UNPAIRED_REASON = "new_candidate_no_current_atlas_entry"
 HOMONYM_REASON = "homonym_unresolved"
 CONFLICTING_SPELLING = "conflicting_spelling_assertions"
+POS_MISMATCH = "pos_mismatch_with_atlas_entry"
+ATLAS_HOMONYMS = "atlas_entry_covers_multiple_homonyms"
+MWE_REASON = "phraseologism_mwe_no_atlas_entry"
 
 PAIRING_SCHEMA: dict = {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -88,7 +92,9 @@ _ENTRY_SCHEMA: dict = {
                 "card_id": {"type": "string", "pattern": CARD_ID_PATTERN},
                 "spelling": {"type": ["string", "null"], "minLength": 1},
                 "status": {"const": "unpaired"},
-                "reason": {"const": UNPAIRED_REASON},
+                "reason": {"enum": [UNPAIRED_REASON, POS_MISMATCH, MWE_REASON]},
+                "mwe_forms": {"type": "array", "minItems": 1, "uniqueItems": True,
+                              "items": {"type": "string", "minLength": 1}},
             },
         },
         {
@@ -99,7 +105,7 @@ _ENTRY_SCHEMA: dict = {
                 "card_id": {"type": "string", "pattern": CARD_ID_PATTERN},
                 "spelling": {"type": ["string", "null"], "minLength": 1},
                 "status": {"const": "ambiguous"},
-                "reason": {"enum": [HOMONYM_REASON, CONFLICTING_SPELLING]},
+                "reason": {"enum": [HOMONYM_REASON, CONFLICTING_SPELLING, ATLAS_HOMONYMS]},
                 "candidate_atlas0_slugs": {
                     "type": "array",
                     "items": {"type": "string", "pattern": r"^atlas0:slug:\S+$"},
@@ -119,12 +125,13 @@ class PairingError(ValueError):
 
 @dataclass(frozen=True)
 class AtlasIdentity:
-    """One active atlas0 identity used for exact spelling match."""
+    """One active atlas0 identity and its frozen article-side evidence."""
 
     card_id: str
     spelling: str
     pos: str
     slug: str
+    vesum_entry_ids: tuple[int, ...]
 
 
 def canonical_bytes(document: dict) -> bytes:
@@ -242,13 +249,40 @@ def _atlas_slug(key: object) -> str:
     return key
 
 
-def load_atlas_identities(path: Path) -> tuple[int, tuple[AtlasIdentity, ...]]:
+def load_atlas_identities(path: Path, manifest_path: Path) -> tuple[int, tuple[AtlasIdentity, ...]]:
     """Return the registry version and active atlas0 identities."""
     try:
         document = json.loads(_read_bytes(path, "registry"))
     except json.JSONDecodeError as exc:
         raise PairingError(f"registry is not JSON: {exc}") from exc
     registry = _json_object(document, "registry")
+    try:
+        manifest = _json_object(json.loads(_read_bytes(manifest_path, "Atlas manifest")), "Atlas manifest")
+    except json.JSONDecodeError as exc:
+        raise PairingError(f"Atlas manifest is not JSON: {exc}") from exc
+    articles = manifest.get("legacy_articles")
+    if not isinstance(articles, list):
+        raise PairingError("Atlas manifest legacy_articles must be an array")
+    evidence_by_slug: dict[str, tuple[int, ...]] = {}
+    for article in articles:
+        article = _json_object(article, "Atlas article")
+        metadata = _json_object(article.get("metadata"), "Atlas metadata")
+        manifest_slug = metadata.get("slug")
+        if not isinstance(manifest_slug, str):
+            raise PairingError("Atlas metadata slug must be a string")
+        slug = _atlas_slug(ATLAS_PREFIX + manifest_slug)
+        evidence = article.get("pos_evidence")
+        if not isinstance(evidence, list):
+            raise PairingError("Atlas pos_evidence must be an array")
+        ids: set[int] = set()
+        for row in evidence:
+            entry_id = _json_object(row, "Atlas POS evidence").get("entry_id")
+            if not isinstance(entry_id, int) or isinstance(entry_id, bool):
+                raise PairingError("Atlas VESUM entry_id must be an integer")
+            ids.add(entry_id)
+        if slug in evidence_by_slug:
+            raise PairingError(f"duplicate Atlas manifest slug: {slug}")
+        evidence_by_slug[slug] = tuple(sorted(ids))
     version = registry.get("registry_version")
     if not isinstance(version, int) or isinstance(version, bool) or version < 1:
         raise PairingError("registry_version must be a positive integer")
@@ -290,7 +324,10 @@ def load_atlas_identities(path: Path) -> tuple[int, tuple[AtlasIdentity, ...]]:
             raise PairingError(f"duplicate atlas card_id: {card_id}")
         seen_slugs.add(slug)
         seen_ids.add(card_id)
-        identities.append(AtlasIdentity(card_id=card_id, spelling=spelling, pos=pos, slug=slug))
+        if slug not in evidence_by_slug or not evidence_by_slug[slug]:
+            raise PairingError(f"missing Atlas POS evidence: {slug}")
+        identities.append(AtlasIdentity(card_id=card_id, spelling=spelling, pos=pos, slug=slug,
+                                        vesum_entry_ids=evidence_by_slug[slug]))
     identities.sort(key=lambda item: (item.spelling, item.slug, item.card_id))
     return version, tuple(identities)
 
@@ -299,8 +336,13 @@ def _candidates(matches: tuple[AtlasIdentity, ...] | list[AtlasIdentity]) -> lis
     return sorted({item.slug for item in matches})
 
 
-def _pair_card(card: dict, by_spelling: dict[str, tuple[AtlasIdentity, ...]]) -> dict:
+def _pair_card(card: dict, by_spelling: dict[str, tuple[AtlasIdentity, ...]],
+               by_folded: dict[str, tuple[AtlasIdentity, ...]]) -> dict:
     card_id = _card_id(card.get("card_id"), "card")
+    phrases = _field_strings(card, "mwe_form")
+    if phrases:
+        return {"card_id": card_id, "spelling": None, "status": "unpaired", "reason": MWE_REASON,
+                "mwe_forms": phrases}
     spellings = _field_strings(card, "spelling")
     if len(spellings) > 1:
         return {
@@ -313,23 +355,28 @@ def _pair_card(card: dict, by_spelling: dict[str, tuple[AtlasIdentity, ...]]) ->
     if not spellings:
         return {"card_id": card_id, "spelling": None, "status": "unpaired", "reason": UNPAIRED_REASON}
     spelling = spellings[0]
-    matches = by_spelling.get(spelling, ())
+    matches = (by_folded.get(spelling.casefold(), ()) if card.get("card_kind") == "lexeme"
+               else by_spelling.get(spelling, ()))
     if not matches:
         return {"card_id": card_id, "spelling": spelling, "status": "unpaired", "reason": UNPAIRED_REASON}
     chosen = matches
-    if len(matches) > 1:
-        positions = _field_strings(card, "pos")
-        chosen = tuple(item for item in matches if item.pos == positions[0]) if len(positions) == 1 else ()
-        if len(chosen) != 1:
-            pool = chosen or matches
-            return {
-                "card_id": card_id,
-                "spelling": spelling,
-                "status": "ambiguous",
-                "reason": HOMONYM_REASON,
-                "candidate_atlas0_slugs": _candidates(pool),
-            }
+    positions = _field_strings(card, "pos")
+    if positions:
+        chosen = tuple(item for item in matches if len(positions) == 1 and item.pos == positions[0])
+        if not chosen:
+            return {"card_id": card_id, "spelling": spelling, "status": "unpaired", "reason": POS_MISMATCH}
+    if len(chosen) != 1:
+        return {
+            "card_id": card_id,
+            "spelling": spelling,
+            "status": "ambiguous",
+            "reason": HOMONYM_REASON,
+            "candidate_atlas0_slugs": _candidates(chosen),
+        }
     identity = chosen[0]
+    if len(identity.vesum_entry_ids) > 1:
+        return {"card_id": card_id, "spelling": spelling, "status": "ambiguous", "reason": ATLAS_HOMONYMS,
+                "candidate_atlas0_slugs": [identity.slug]}
     return {
         "card_id": card_id,
         "spelling": spelling,
@@ -348,8 +395,12 @@ def pair_cards(cards: list[dict], identities: tuple[AtlasIdentity, ...], registr
         grouped[identity.spelling].append(identity)
     for spelling, group in grouped.items():
         by_spelling[spelling] = tuple(sorted(group, key=lambda item: (item.slug, item.card_id)))
+    folded: dict[str, list[AtlasIdentity]] = defaultdict(list)
+    for identity in identities:
+        folded[identity.spelling.casefold()].append(identity)
+    by_folded = {spelling: tuple(group) for spelling, group in folded.items()}
 
-    rows = [_pair_card(card, by_spelling) for card in cards]
+    rows = [_pair_card(card, by_spelling, by_folded) for card in cards]
     owners: dict[str, list[dict]] = defaultdict(list)
     for row in rows:
         slug = row.get("_slug")
@@ -431,10 +482,10 @@ def validate_document(document: dict) -> None:
         raise PairingError("pairing status counts do not match entries")
 
 
-def build_pairing(cards_path: Path, registry_path: Path) -> dict:
-    """Load both inputs and return the validated pairing document."""
+def build_pairing(cards_path: Path, registry_path: Path, manifest_path: Path) -> dict:
+    """Load the release, registry and frozen Atlas evidence."""
     cards, digest = load_cards(cards_path)
-    version, identities = load_atlas_identities(registry_path)
+    version, identities = load_atlas_identities(registry_path, manifest_path)
     return pair_cards(cards, identities, version, digest)
 
 
@@ -506,6 +557,10 @@ Related: #8981, #11023; registry/atlas/identity/registry.json; docs/datasets/wor
              "Example: registry/atlas/identity/registry.json",
     )
     parser.add_argument(
+        "--atlas-manifest", type=Path, default=DEFAULT_ATLAS_MANIFEST,
+        help="Frozen article POS/homonym evidence (default/example: registry/atlas/pilot/pilot-v1.json).",
+    )
+    parser.add_argument(
         "--output", type=Path, default=DEFAULT_OUTPUT,
         help="Pairing artifact path (default: data/datasets/word-cards/releases/v0.1.0-pilot/pairing-atlas0.json). "
              "Example: data/datasets/word-cards/releases/v0.1.0-pilot/pairing-atlas0.json",
@@ -522,7 +577,8 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     try:
         registry_path = args.registry if args.registry.is_absolute() else ROOT / args.registry
-        document = build_pairing(resolve_cards_path(args.cards), registry_path)
+        manifest_path = args.atlas_manifest if args.atlas_manifest.is_absolute() else ROOT / args.atlas_manifest
+        document = build_pairing(resolve_cards_path(args.cards), registry_path, manifest_path)
         payload = canonical_bytes(document)
         target = _output_target(args.output)
         if args.check:
