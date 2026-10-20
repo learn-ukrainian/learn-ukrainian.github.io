@@ -3,12 +3,16 @@
 from __future__ import annotations
 
 import json
+import os
 import sqlite3
+import threading
+from collections.abc import Callable
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 import pytest
 
+from scripts.fleet_comms import efficiency_metrics
 from scripts.fleet_comms.efficiency_metrics import collect_stream_bottleneck_metrics
 
 NOW = datetime(2026, 7, 22, 12, 0, tzinfo=UTC)
@@ -364,6 +368,23 @@ def test_dispatch_source_errors_name_what_is_wrong(
     assert payload["unclassified"]["by_stream_epic"]["dispatch"]["n"] == 0
 
 
+def _collect_with_deadline(tasks_dir: Path, plane_db: Path, *, seconds: float = 20.0) -> dict[str, object]:
+    """Run the collector on a thread so a FIFO-blocked open fails the test, not the suite."""
+    result: dict[str, object] = {}
+    worker = threading.Thread(
+        target=lambda: result.update(
+            collect_stream_bottleneck_metrics(
+                tasks_dir=tasks_dir, plane_db=plane_db, now=NOW, github_lookup=_merged_at
+            )
+        ),
+        daemon=True,
+    )
+    worker.start()
+    worker.join(seconds)
+    assert not worker.is_alive(), "collector blocked (a FIFO or device was opened)"
+    return result
+
+
 def _identity_payload(tmp_path: Path, records: dict[str, dict[str, object]]) -> dict[str, object]:
     tasks_dir = tmp_path / "tasks"
     tasks_dir.mkdir()
@@ -499,13 +520,18 @@ def test_dispatch_records_scanned_equal_classified_unclassified_plus_errors(
         (directory / f"{name}.json").write_text(json.dumps(record), encoding="utf-8")
     (tasks_dir / "unreadable.json").write_text("{not json", encoding="utf-8")
     (tasks_dir / "not-object.json").write_text("[1, 2]", encoding="utf-8")
-    scanned = len(records) + 2
+    # File-level hostile entries: each must be its own error kind, never dropped.
+    os.mkfifo(tasks_dir / "fifo.json")
+    (tasks_dir / "dir.json").mkdir()
+    (tasks_dir / "loop.json").symlink_to("loop.json")
+    (tasks_dir / "dangling.json").symlink_to("missing-target")
+    with (tasks_dir / "huge.json").open("wb") as handle:
+        handle.truncate(efficiency_metrics._MAX_TASK_RECORD_BYTES + 1)
+    scanned = len(records) + 2 + 5
     plane_db = tmp_path / "plane.sqlite3"
     _plane_db(plane_db, with_identity=False)
 
-    payload = collect_stream_bottleneck_metrics(
-        tasks_dir=tasks_dir, plane_db=plane_db, now=NOW, github_lookup=_merged_at
-    )
+    payload = _collect_with_deadline(tasks_dir, plane_db)
 
     dispatch_errors = [e for e in payload["source_errors"] if e["source"] == "dispatch"]
     assert sorted(e["error_kind"] for e in dispatch_errors) == [
@@ -515,6 +541,11 @@ def test_dispatch_records_scanned_equal_classified_unclassified_plus_errors(
         "negative_duration",
         "not_a_task_record",
         "task_record_not_object",
+        "task_record_not_regular",
+        "task_record_not_regular",
+        "task_record_too_large",
+        "task_record_unreadable",
+        "task_record_unreadable",
         "task_record_unreadable",
     ]
     for dimension in ("by_stream_epic", "by_task_family"):
@@ -680,3 +711,147 @@ def test_absurd_hard_timeout_cannot_inflate_the_bottleneck_threshold(tmp_path: P
     )
 
     assert payload["threshold_seconds"]["dispatch"] == 9000
+
+
+def _file_level_payload(
+    tmp_path: Path, make_hostile: Callable[[Path], None]
+) -> tuple[dict[str, object], list[str]]:
+    """One valid record plus whatever ``make_hostile`` plants beside it."""
+    tasks_dir = tmp_path / "tasks"
+    tasks_dir.mkdir()
+    _write_task(tasks_dir, "good", started=NOW - timedelta(seconds=5), finished=NOW)
+    make_hostile(tasks_dir)
+    plane_db = tmp_path / "plane.sqlite3"
+    _plane_db(plane_db, with_identity=False)
+    payload = _collect_with_deadline(tasks_dir, plane_db)
+    kinds = [e["error_kind"] for e in payload["source_errors"] if e["source"] == "dispatch"]
+    return payload, kinds
+
+
+def _assert_valid_record_and_one_error(payload: dict[str, object], kinds: list[str], expected: str) -> None:
+    assert kinds == [expected]
+    assert payload["by_stream_epic"]["4707"]["dispatch"]["n"] == 1
+    _assert_aggregate_invariant(payload, 2)
+    json.dumps(payload)
+
+
+def test_fifo_beside_valid_record_is_counted_and_never_opened(tmp_path: Path) -> None:
+    payload, kinds = _file_level_payload(tmp_path, lambda d: os.mkfifo(d / "pipe.json"))
+
+    _assert_valid_record_and_one_error(payload, kinds, "task_record_not_regular")
+
+
+def test_symlink_to_fifo_is_counted_and_never_opened(tmp_path: Path) -> None:
+    def plant(tasks_dir: Path) -> None:
+        os.mkfifo(tasks_dir / "pipe.fifo")
+        (tasks_dir / "link.json").symlink_to("pipe.fifo")
+
+    payload, kinds = _file_level_payload(tmp_path, plant)
+
+    _assert_valid_record_and_one_error(payload, kinds, "task_record_not_regular")
+
+
+def test_looping_symlink_beside_valid_record_is_counted(tmp_path: Path) -> None:
+    payload, kinds = _file_level_payload(tmp_path, lambda d: (d / "loop.json").symlink_to("loop.json"))
+
+    _assert_valid_record_and_one_error(payload, kinds, "task_record_unreadable")
+
+
+def test_dangling_symlink_beside_valid_record_is_counted(tmp_path: Path) -> None:
+    payload, kinds = _file_level_payload(tmp_path, lambda d: (d / "dangling.json").symlink_to("nowhere"))
+
+    _assert_valid_record_and_one_error(payload, kinds, "task_record_unreadable")
+
+
+def test_directory_named_like_a_task_file_is_counted(tmp_path: Path) -> None:
+    payload, kinds = _file_level_payload(tmp_path, lambda d: (d / "folder.json").mkdir())
+
+    _assert_valid_record_and_one_error(payload, kinds, "task_record_not_regular")
+
+
+def test_symlink_to_a_valid_record_is_still_read(tmp_path: Path) -> None:
+    def plant(tasks_dir: Path) -> None:
+        (tasks_dir / "alias.json").symlink_to("good.json")
+
+    payload, _kinds = _file_level_payload(tmp_path, plant)
+
+    assert _kinds == []
+    assert payload["by_stream_epic"]["4707"]["dispatch"]["n"] == 2
+
+
+def test_file_vanishing_between_listing_and_read_is_counted(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    listing = efficiency_metrics._task_record_paths
+
+    def listing_with_ghost(directory: Path, *, optional: bool) -> list[Path]:
+        paths = listing(directory, optional=optional)
+        return [*paths, directory / "vanished.json"] if not optional else paths
+
+    monkeypatch.setattr(efficiency_metrics, "_task_record_paths", listing_with_ghost)
+
+    payload, kinds = _file_level_payload(tmp_path, lambda _d: None)
+
+    _assert_valid_record_and_one_error(payload, kinds, "task_record_unreadable")
+
+
+@pytest.mark.parametrize(
+    ("padding", "expected"),
+    [(-1, None), (0, None), (1, "task_record_too_large")],
+    ids=["below-cap", "at-cap", "just-above-cap"],
+)
+def test_task_record_size_cap_boundary(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, padding: int, expected: str | None
+) -> None:
+    cap = 4096
+    monkeypatch.setattr(efficiency_metrics, "_MAX_TASK_RECORD_BYTES", cap)
+    started = (NOW - timedelta(seconds=5)).isoformat()
+    body = json.dumps({"task_id": "big", "started_at": started, "finished_at": NOW.isoformat(), "stream_epic": 4707})
+
+    def plant(tasks_dir: Path) -> None:
+        (tasks_dir / "big.json").write_text(body + " " * (cap + padding - len(body)), encoding="utf-8")
+
+    tasks_dir = tmp_path / "tasks"
+    tasks_dir.mkdir()
+    plant(tasks_dir)
+    assert (tasks_dir / "big.json").stat().st_size == cap + padding
+    plane_db = tmp_path / "plane.sqlite3"
+    _plane_db(plane_db, with_identity=False)
+
+    payload = _collect_with_deadline(tasks_dir, plane_db)
+
+    kinds = [e["error_kind"] for e in payload["source_errors"] if e["source"] == "dispatch"]
+    assert kinds == ([expected] if expected else [])
+    assert payload["by_stream_epic"].get("4707", {}).get("dispatch", {}).get("n", 0) == (0 if expected else 1)
+    _assert_aggregate_invariant(payload, 1)
+
+
+def test_hundred_megabyte_file_is_counted_without_being_read(tmp_path: Path) -> None:
+    def plant(tasks_dir: Path) -> None:
+        with (tasks_dir / "huge.json").open("wb") as handle:
+            handle.write(b'{"task_id":"x","padding":"')
+            handle.truncate(100 * 1024 * 1024)
+
+    payload, kinds = _file_level_payload(tmp_path, plant)
+
+    _assert_valid_record_and_one_error(payload, kinds, "task_record_too_large")
+
+
+def test_memory_error_while_parsing_is_a_source_error(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    real_loads = json.loads
+
+    def loads(text: str) -> object:
+        if '"boom"' in text:
+            raise MemoryError
+        return real_loads(text)
+
+    monkeypatch.setattr(efficiency_metrics.json, "loads", loads)
+
+    def plant(tasks_dir: Path) -> None:
+        (tasks_dir / "boom.json").write_text('{"task_id": "boom"}', encoding="utf-8")
+
+    payload, kinds = _file_level_payload(tmp_path, plant)
+
+    _assert_valid_record_and_one_error(payload, kinds, "task_record_unreadable")
