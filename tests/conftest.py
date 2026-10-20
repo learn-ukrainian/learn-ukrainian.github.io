@@ -74,7 +74,6 @@ _strip_credential_shaped_env()
 import ast
 import contextlib
 import functools
-import hashlib
 import importlib.machinery
 import ipaddress
 import itertools
@@ -168,46 +167,71 @@ def _dispatch_template_factory(tmp_path_factory: pytest.TempPathFactory) -> None
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 
 
-def _telemetry_event_snapshot(root: Path) -> dict[str, str]:
-    """Hash file names and contents, including pre-existing untracked events."""
-    return {
-        path.relative_to(root).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
-        for path in sorted(root.rglob("*"))
-        if path.is_file()
-    }
-
-
 class _TelemetryIsolation:
-    """Redirect collection, fixtures and child processes; guard the default store."""
+    """Redirect events and refuse this process's emitter writes to production.
+
+    Audit opens rather than shared directory contents: live fleet processes
+    can append to production throughout a test session. The emitter frame
+    attributes an attempted write to this session, including either import
+    spelling and a replaced event-path resolver.
+    """
 
     def __init__(self, production_dirs: tuple[Path, ...]) -> None:
-        self.production_dirs = production_dirs
+        self.production_dirs = {root.resolve() for root in production_dirs}
+        self.leaks: set[str] = set()
+
+    def _audit_write(self, event: str, args: tuple[object, ...]) -> None:
+        if not self.production_dirs or event != "open" or len(args) < 3:
+            return
+        raw_path, mode, flags = args
+        writing = isinstance(mode, str) and any(char in mode for char in "wax+")
+        if not writing and not (isinstance(flags, int) and flags & (os.O_WRONLY | os.O_RDWR)):
+            return
+        if not isinstance(raw_path, (str, bytes, os.PathLike)):
+            return
+        path = Path(os.fsdecode(raw_path)).resolve()
+        root = next((root for root in self.production_dirs if path.is_relative_to(root)), None)
+        if root is None:
+            return
+        frame = sys._getframe(1)
+        try:
+            while frame is not None:
+                if frame.f_globals.get("__name__") in {"telemetry.emit", "scripts.telemetry.emit"}:
+                    self.leaks.add(f"batch_state/telemetry/events/{path.relative_to(root).as_posix()}")
+                    # emit_event swallows ordinary write errors. Retain the
+                    # attempt for sessionfinish as well as preventing the write.
+                    raise PermissionError("telemetry event guard: test emitter attempted a production write")
+                frame = frame.f_back
+        finally:
+            del frame
 
     def pytest_sessionstart(self, session: pytest.Session) -> None:
         config = session.config
-        if not hasattr(config, "workerinput"):
-            self.before = {root: _telemetry_event_snapshot(root) for root in self.production_dirs}
         # Session fixtures start after collection. Install here so imports and
         # session fixtures also inherit the redirect, including xdist workers.
         event_dir = config._tmp_path_factory.mktemp("telemetry-events")
         patcher = pytest.MonkeyPatch()
         patcher.setenv("LU_TELEMETRY_EVENTS_DIR", str(event_dir))
         config.add_cleanup(patcher.undo)
+        sys.addaudithook(self._audit_write)
+        # Python audit hooks cannot be removed. Disable this session's hook
+        # during cleanup so a later pytest.main session has its own boundary.
+        config.add_cleanup(self.production_dirs.clear)
+
+    @pytest.hookimpl(optionalhook=True)
+    def pytest_testnodedown(self, node: Any, error: object) -> None:
+        self.leaks.update(getattr(node, "workeroutput", {}).get("telemetry_leaks", ()))
 
     @pytest.hookimpl(trylast=True)
     def pytest_sessionfinish(self, session: pytest.Session, exitstatus: int) -> None:
         if hasattr(session.config, "workerinput"):
-            return
-        for root in self.production_dirs:
-            before = self.before[root]
-            after = _telemetry_event_snapshot(root)
-            changed = sorted(name for name in before.keys() | after.keys() if before.get(name) != after.get(name))
-            if changed:
-                print("telemetry event guard: production event files changed during the test session:")
-                for name in changed:
-                    print(f"  batch_state/telemetry/events/{name}")
-                if session.exitstatus == pytest.ExitCode.OK:
-                    session.exitstatus = pytest.ExitCode.TESTS_FAILED
+            session.config.workeroutput["telemetry_leaks"] = sorted(self.leaks)
+        if self.leaks:
+            print("telemetry event guard: test emitter attempted production writes:")
+            for name in sorted(self.leaks):
+                print(f"  {name}")
+            if session.exitstatus == pytest.ExitCode.OK:
+                session.exitstatus = pytest.ExitCode.TESTS_FAILED
 
 
 def _loaded_module(*parts: str):
