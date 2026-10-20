@@ -587,7 +587,7 @@ def _pre_model_failure(plan: InvocationPlan | None, stdout: str, bound: _Transcr
         ):
             return False
     if bound is not None:
-        return not bound.unreadable_lines and not any(
+        return not bound.corrupt and not any(
             event.get("type") == "USER_INPUT" or _is_model_event(event) or event.get("source") == "MODEL"
             for event in bound.events
         )
@@ -1243,6 +1243,11 @@ class AgyAdapter:
         if denial is not None:
             attempt = _headless_denial_evidence(bound, plan, denial.permission_kind, read_reason=read_reason)
             fallback_details = {}
+            if bound is not None and bound.corrupt:
+                fallback_details.update(
+                    transcript_unreadable_lines=bound.unreadable_lines,
+                    transcript_malformed_status_lines=bound.malformed_status_lines,
+                )
             if denial.permission_target is not None and attempt.permission_target_unknown_reason in {
                 "transcript_read_refused",
                 "transcript_corrupt",
@@ -1541,7 +1546,7 @@ def _attempt_evidence(bound: _TranscriptSlice | None, result: ParseResult, plan:
         else None,
         via_symlink=result.agy_attempt.via_symlink if result.agy_attempt else False,
     )
-    if bound is None or bound.unreadable_lines:
+    if bound is None or bound.corrupt:
         return base
     events = bound.events
     # The same final-reply boundary used by the completion gate.
@@ -2016,6 +2021,16 @@ def _sanitized_denial_target(target: Any, kind: str, plan: InvocationPlan | None
         return "unknown", "file_target_invalid", False
 
 
+def _denial_target_key(target: Any, kind: str, plan: InvocationPlan | None) -> str | None:
+    """Compare decoded targets before privacy classes collapse distinct paths."""
+    target = _decode_jsonish(target)
+    if not isinstance(target, str) or not target:
+        return None
+    if kind == "read_file" and plan is not None:
+        return os.path.abspath(plan.cwd / target)
+    return target
+
+
 def _headless_denial_evidence(
     bound: _TranscriptSlice | None,
     plan: InvocationPlan | None,
@@ -2023,45 +2038,66 @@ def _headless_denial_evidence(
     *,
     read_reason: str | None = None,
 ) -> AgyAttempt:
-    """Pair native result slots or a unique unresolved intent; never use prose.
+    """Match a native denial by target, or use a unique unresolved intent.
 
     Read only the already-bound invocation slice, before runtime lease reaping.
-    Multiple unresolved calls do not establish which permission request fired.
+    Result order cannot identify a denied tool. Only one matching call in the
+    current planner turn can do so; the denial text owns the observed target.
     """
     base = AgyAttempt(
         completion_reason=AGY_HEADLESS_PERMISSION_DENIED,
         permission_kind=kind,
         permission_target="unknown",
     )
-    if bound is None or bound.unreadable_lines:
+    if bound is None or bound.corrupt:
         return dataclasses.replace(
             base,
             permission_target_unknown_reason=read_reason
             or ("transcript_corrupt" if bound else "transcript_unbound_or_unreadable"),
         )
     pending: list[Mapping[str, Any]] = []
-    denied: list[tuple[Mapping[str, Any], str]] = []
+    calls: list[Mapping[str, Any]] = []
+    denied: list[str] = []
     for event in bound.events:
         if event.get("type") == "PLANNER_RESPONSE" and event.get("source") == "MODEL":
             denied.clear()  # A later model turn supersedes an earlier refusal.
-            calls = event.get("tool_calls")
-            for call in calls if isinstance(calls, list) else []:
-                if isinstance(call, Mapping) and call not in pending:
-                    pending.append(call)
-        elif event.get("type") in {"GENERIC", "TOOL_RESPONSE"} and pending:
-            call = pending.pop(0)
+            raw_calls = event.get("tool_calls")
+            calls = [call for call in raw_calls if isinstance(call, Mapping)] if isinstance(raw_calls, list) else []
+            pending = list(calls)
+        elif event.get("type") in {"GENERIC", "TOOL_RESPONSE"}:
+            if pending:
+                pending.pop(0)
             native = _native_permission_denial(event)
             # A rule match returns its refusal to the model and the turn goes
             # on; only the unmatched (prompting) check ends a headless run.
             if native is not None and native.kind == kind and not native.rule_matched:
-                denied.append((call, native.target))
-    # A native refusal identifies its target even if sibling calls have no result.
-    candidates = denied if denied else [(call, None) for call in pending]
+                denied.append(native.target)
+    native_target = None
+    if denied:
+        if len(denied) != 1:
+            return dataclasses.replace(base, permission_target_unknown_reason="trigger_ambiguous")
+        native_target = denied[0]
+        target_key = _denial_target_key(native_target, kind, plan)
+        candidates = []
+        for call in calls:
+            name, args = call.get("name"), call.get("args")
+            arg_key = _DENIAL_TARGET_ARGS.get(kind, {}).get(name) if isinstance(name, str) else None
+            if (
+                arg_key
+                and isinstance(args, Mapping)
+                and target_key is not None
+                and _denial_target_key(args.get(arg_key), kind, plan) == target_key
+            ):
+                candidates.append(call)
+        if len(candidates) != 1:
+            return dataclasses.replace(base, permission_target_unknown_reason="trigger_ambiguous")
+    else:
+        candidates = pending
     if len(candidates) != 1:
         return dataclasses.replace(
             base, permission_target_unknown_reason="trigger_ambiguous" if candidates else "trigger_missing"
         )
-    call, native_target = candidates[0]
+    call = candidates[0]
     name = call.get("name")
     arg_key = _DENIAL_TARGET_ARGS.get(kind, {}).get(name) if isinstance(name, str) else None
     if not isinstance(name, str) or not re.fullmatch(r"[a-z][a-z0-9_]{0,79}", name):
@@ -2385,7 +2421,7 @@ def _completion_gap(stderr_text: str, plan: InvocationPlan | None) -> tuple[str 
     bound = _invocation_transcript(plan)
     if bound is None:
         return AGY_TRANSCRIPT_UNBOUND, None
-    if bound.unreadable_lines:
+    if bound.corrupt:
         return AGY_TRANSCRIPT_UNREADABLE, None
     gap = _slice_completion_gap(bound.events, stderr_text)
     if gap is not None:
@@ -2683,18 +2719,21 @@ class _TranscriptSlice(NamedTuple):
     path: Path
     events: list[dict[str, Any]]
     unreadable_lines: int
+    malformed_status_lines: int = 0
+
+    @property
+    def corrupt(self) -> bool:
+        return bool(self.unreadable_lines or self.malformed_status_lines)
 
 
 def _read_transcript_events(
     transcript_path: Path, *, offset: int = 0, trusted_root: Path = Path("/")
-) -> tuple[list[dict[str, Any]], int] | None:
+) -> tuple[list[dict[str, Any]], int, int] | None:
     """Parse the transcript's JSONL events from byte ``offset`` onward.
 
-    Returns the events and the count of non-blank lines that are not a JSON
-    object or carry a malformed status (invalid UTF-8, truncated or corrupt
-    JSON, a bare scalar, a non-string or blank status), or ``None`` when the
-    file cannot be read. Callers decide what an unreadable line means;
-    nothing is silently dropped.
+    Returns events, unreadable-line count (invalid UTF-8, corrupt JSON or a
+    non-object), and malformed-status count (non-string or blank), or ``None``
+    when the file cannot be read. Both counts make evidence fail closed.
     """
     try:
         raw_lines = safe_read_attempt_file(transcript_path, offset=offset, trusted_root=trusted_root).splitlines()
@@ -2707,6 +2746,7 @@ def _read_transcript_events(
 
     events: list[dict[str, Any]] = []
     unreadable = 0
+    malformed_status = 0
     for raw_line in raw_lines:
         if not raw_line.strip():
             continue
@@ -2717,12 +2757,12 @@ def _read_transcript_events(
             continue
         if isinstance(event, dict):
             if "status" in event and (not isinstance(event["status"], str) or not event["status"].strip()):
-                unreadable += 1
+                malformed_status += 1
                 continue
             events.append(event)
         else:
             unreadable += 1
-    return events, unreadable
+    return events, unreadable, malformed_status
 
 
 def _event_step_index(event: Mapping[str, Any]) -> int | None:
@@ -3017,8 +3057,12 @@ def _invocation_transcript(plan: InvocationPlan | None) -> _TranscriptSlice | No
     parsed = _read_transcript_events(transcript, offset=offset, trusted_root=read_root)
     if parsed is None:
         return None
-    events, unreadable = parsed
-    return _TranscriptSlice(transcript, events, unreadable) if events or unreadable else None
+    events, unreadable, malformed_status = parsed
+    return (
+        _TranscriptSlice(transcript, events, unreadable, malformed_status)
+        if events or unreadable or malformed_status
+        else None
+    )
 
 
 def _log_read_root(plan: InvocationPlan) -> Path:

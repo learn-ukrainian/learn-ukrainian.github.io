@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import json
 from dataclasses import replace
+from itertools import permutations
 from pathlib import Path
 from urllib.parse import urlunsplit
 
@@ -150,7 +151,7 @@ def test_nonfatal_deny_rule_cannot_supply_headless_trigger(tmp_path, recorded_tr
 
 
 def test_terminal_native_permission_result_identifies_trigger(tmp_path, recorded_transcript):
-    plan, events = denial_plan(tmp_path, recorded_transcript, "directory")
+    plan, events = denial_plan(tmp_path, recorded_transcript, "evidence.txt")
     events.append(
         {
             "type": "GENERIC",
@@ -164,6 +165,16 @@ def test_terminal_native_permission_result_identifies_trigger(tmp_path, recorded
     attempt = record(parse(plan))
     assert attempt["denied_tool_name"] == "view_file"
     assert attempt["permission_target"] == "workspace:evidence.txt"
+
+
+def test_native_permission_result_with_no_matching_call_is_unknown(tmp_path, recorded_transcript):
+    plan, events = denial_plan(tmp_path, recorded_transcript, "never-denied.txt")
+    events.append(_result("ERROR", _headless_read_denial("actually-denied.txt")))
+    agy._transcript_path_from_plan(plan).write_text("\n".join(json.dumps(event) for event in events))
+    attempt = record(parse(plan))
+    assert attempt["denied_tool_name"] is None
+    assert attempt["permission_target"] == "unknown"
+    assert attempt["permission_target_unknown_reason"] == "trigger_ambiguous"
 
 
 @pytest.mark.parametrize(
@@ -233,7 +244,7 @@ def test_error_mcp_output_cannot_supply_file_permission_evidence(tmp_path, recor
     agy._transcript_path_from_plan(plan).write_text("\n".join(json.dumps(event) for event in events))
     attempt = record(parse(plan))
     assert attempt["permission_target"] == "unknown"
-    assert attempt["permission_target_unknown_reason"] == "tool_kind_unverified"
+    assert attempt["permission_target_unknown_reason"] == "trigger_ambiguous"
     assert attempt["denied_tool_name"] is None
 
 
@@ -574,12 +585,14 @@ def test_review_headless_read_result_slot_is_the_trigger_and_is_counted(tmp_path
 @pytest.mark.parametrize("result_type", ["GENERIC", "TOOL_RESPONSE"])
 @pytest.mark.parametrize("status", ["ERROR", "INVALID"])
 @pytest.mark.parametrize("pending_count", [1, 2])
-def test_explicit_denial_takes_precedence_over_pending_sibling_reads(tmp_path, result_type, status, pending_count):
+@pytest.mark.parametrize("denied_first", [False, True], ids=["pending-before", "pending-after"])
+def test_explicit_denial_takes_precedence_over_pending_sibling_reads(
+    tmp_path, result_type, status, pending_count, denied_first
+):
+    denied = ("read_file", "Path", "actually-denied.txt")
+    siblings = [("list_dir", "DirectoryPath", f"never-denied-{index}") for index in range(pending_count)]
     events = [
-        _planner(
-            ("read_file", "Path", "actually-denied.txt"),
-            *[("read_file", "Path", f"never-denied-{index}.txt") for index in range(pending_count)],
-        ),
+        _planner(*([denied, *siblings] if denied_first else [*siblings, denied])),
         {**_result(status, _headless_read_denial("actually-denied.txt")), "type": result_type},
     ]
     result = parse(review_plan(tmp_path, events))
@@ -589,6 +602,123 @@ def test_explicit_denial_takes_precedence_over_pending_sibling_reads(tmp_path, r
     assert attempt["permission_target_unknown_reason"] is None
     assert attempt["denied_file_read_count"] == 1
     assert json.loads(result.stderr_excerpt.split("\n", 1)[1])["permission_target"] == "workspace:actually-denied.txt"
+
+
+@pytest.mark.parametrize("same_tool", [False, True])
+@pytest.mark.parametrize("completed_first", [False, True])
+def test_denial_with_two_matching_calls_is_ambiguous(tmp_path, same_tool, completed_first):
+    second = ("read_file", "Path") if same_tool else ("view_file", "AbsolutePath")
+    events = [
+        _planner(("read_file", "Path", "actually-denied.txt"), (*second, "actually-denied.txt")),
+        *([_result("DONE", "Earlier read completed.")] if completed_first else []),
+        _result("ERROR", _headless_read_denial("actually-denied.txt")),
+    ]
+    attempt = record(parse(review_plan(tmp_path, events)))
+    assert attempt["denied_tool_name"] is None
+    assert attempt["permission_target"] == "unknown"
+    assert attempt["permission_target_unknown_reason"] == "trigger_ambiguous"
+
+
+@pytest.mark.parametrize("call_order", list(permutations(range(3))))
+@pytest.mark.parametrize("denial_first", [False, True])
+def test_completed_then_denied_then_pending_call_names_only_denied_call(tmp_path, call_order, denial_first):
+    calls = [
+        ("list_dir", "DirectoryPath", "completed-dir"),
+        ("read_file", "Path", "actually-denied.txt"),
+        ("view_file", "AbsolutePath", "pending.txt"),
+    ]
+    results = [
+        _result("DONE", "Directory listing completed."),
+        _result("ERROR", _headless_read_denial("actually-denied.txt")),
+    ]
+    events = [
+        _planner(*(calls[index] for index in call_order)),
+        *(reversed(results) if denial_first else results),
+    ]
+    attempt = record(parse(review_plan(tmp_path, events)))
+    assert attempt["denied_tool_name"] == "read_file"
+    assert attempt["permission_target"] == "workspace:actually-denied.txt"
+    assert attempt["permission_target_unknown_reason"] is None
+
+
+@pytest.mark.parametrize("reverse_results", [False, True])
+def test_two_headless_denials_are_ambiguous(tmp_path, reverse_results):
+    targets = ["first.txt", "second.txt"]
+    events = [
+        _planner(("read_file", "Path", targets[0]), ("view_file", "AbsolutePath", targets[1])),
+        *[_result("ERROR", _headless_read_denial(target)) for target in targets[:: -1 if reverse_results else 1]],
+    ]
+    attempt = record(parse(review_plan(tmp_path, events)))
+    assert attempt["denied_tool_name"] is None
+    assert attempt["permission_target"] == "unknown"
+    assert attempt["permission_target_unknown_reason"] == "trigger_ambiguous"
+
+
+def test_new_model_turn_clears_earlier_denial(tmp_path):
+    events = [
+        _planner(("read_file", "Path", "earlier.txt")),
+        _result("ERROR", _headless_read_denial("earlier.txt")),
+        _planner(content="Proceed without the read."),
+    ]
+    attempt = record(parse(review_plan(tmp_path, events)))
+    assert attempt["denied_tool_name"] is None
+    assert attempt["permission_target"] == "unknown"
+    assert attempt["permission_target_unknown_reason"] == "trigger_missing"
+
+
+@pytest.mark.parametrize("absolute", [False, True])
+def test_denial_matches_decoded_path_before_privacy_sanitization(tmp_path, absolute):
+    target = str(tmp_path / "repo" / "denied.txt") if absolute else "./actually-denied.txt"
+    events = [
+        _planner(("list_dir", "DirectoryPath", "never-denied-dir"), ("read_file", "Path", target)),
+        _result("ERROR", _headless_read_denial(target)),
+    ]
+    attempt = record(parse(review_plan(tmp_path, events)))
+    assert attempt["denied_tool_name"] == "read_file"
+    assert attempt["permission_target"] == ("outside:repo-root" if absolute else "workspace:actually-denied.txt")
+    assert attempt["permission_target_unknown_reason"] is None
+
+
+def test_different_outside_targets_cannot_match_by_sanitized_class(tmp_path):
+    events = [
+        _planner(("read_file", "Path", str(tmp_path / "repo" / "never-denied.txt"))),
+        _result("ERROR", _headless_read_denial(tmp_path / "repo" / "actually-denied.txt")),
+    ]
+    attempt = record(parse(review_plan(tmp_path, events)))
+    assert attempt["denied_tool_name"] is None
+    assert attempt["permission_target"] == "unknown"
+    assert attempt["permission_target_unknown_reason"] == "trigger_ambiguous"
+
+
+def test_relative_call_matches_absolute_denied_path(tmp_path):
+    workspace = tmp_path / "repo" / ".worktrees" / "dispatch" / "agy" / "fixture"
+    events = [
+        _planner(("list_dir", "DirectoryPath", "never-denied"), ("read_file", "Path", "./actually-denied.txt")),
+        _result("ERROR", _headless_read_denial(workspace / "actually-denied.txt")),
+    ]
+    attempt = record(parse(review_plan(tmp_path, events)))
+    assert attempt["denied_tool_name"] == "read_file"
+    assert attempt["permission_target"] == "workspace:actually-denied.txt"
+    assert attempt["permission_target_unknown_reason"] is None
+
+
+def test_url_match_uses_full_target_before_host_sanitization(tmp_path):
+    target = "https://example.org/actually-denied"
+    events = [
+        _planner(
+            ("read_url_content", "Url", "https://example.org/never-denied"),
+            ("read_url_content", "Url", target),
+        ),
+        _result(
+            "ERROR",
+            f'Encountered error in step execution: permission check failed for read_url "{target}": '
+            f"user denied permission for read_url({target})",
+        ),
+    ]
+    attempt = record(parse(review_plan(tmp_path, events), "read_url"))
+    assert attempt["denied_tool_name"] == "read_url_content"
+    assert attempt["permission_target"] == "url:example.org"
+    assert attempt["permission_target_unknown_reason"] is None
 
 
 @pytest.mark.parametrize("status", [None, 17, [], {}, "", " ", True, 1.5])
@@ -609,6 +739,30 @@ def test_malformed_transcript_status_stays_typed_unknown(tmp_path, status, event
     assert attempt["permission_target_unknown_reason"] == "transcript_corrupt"
     assert attempt["denied_tool_name"] is None
     assert attempt["evidence_complete"] is False
+    bound = agy._invocation_transcript(plan)
+    assert bound.unreadable_lines == 0
+    assert bound.malformed_status_lines == 1
+    details = json.loads(result.stderr_excerpt.split("\n", 1)[1])
+    assert details["transcript_unreadable_lines"] == 0
+    assert details["transcript_malformed_status_lines"] == 1
+
+
+def test_malformed_status_and_unreadable_lines_are_counted_separately(tmp_path):
+    plan = review_plan(tmp_path, [_planner(("read_file", "Path", "evidence.txt")), _result(None, "Bad status.")])
+    transcript = agy._transcript_path_from_plan(plan)
+    with transcript.open("ab") as handle:
+        handle.write(b"\n{truncated\n17\n\xff\n")
+    bound = agy._invocation_transcript(plan)
+    assert bound.unreadable_lines == 3
+    assert bound.malformed_status_lines == 1
+    result = parse(plan)
+    attempt = record(result)
+    assert attempt["permission_target_unknown_reason"] == "transcript_corrupt"
+    assert attempt["denied_tool_name"] is None
+    assert attempt["evidence_complete"] is False
+    details = json.loads(result.stderr_excerpt.split("\n", 1)[1])
+    assert details["transcript_unreadable_lines"] == 3
+    assert details["transcript_malformed_status_lines"] == 1
 
 
 @pytest.mark.parametrize(
