@@ -2772,7 +2772,7 @@ def test_repeated_writes_keep_newest_under_size_bound(tmp_path):
 
 
 def test_out_of_order_large_response_does_not_delete_newer_row(tmp_path):
-    store, _ = client(tmp_path, [], cache_max_bytes=6)
+    store, _ = client(tmp_path, [], now=1010, cache_max_bytes=6)
     with store._db() as db:
         gh._store_cache(db, store.scope, "key", b'"ok"', {}, 1010)
         gh._store_cache(db, store.scope, "key", b'"way too big"', {}, 1000)
@@ -2847,6 +2847,7 @@ def test_concurrent_success_preserves_newer_body_under_bound(tmp_path):
 
     def interleaved(*args):
         assert newer.request("GET", "user").value == 2
+        older.clock = lambda: 1001
         return gh.Response(200, {}, b"1")
 
     older.transport = interleaved
@@ -2992,3 +2993,161 @@ print(json.dumps({"disk": client.cache_dir is not None, "shared_budget_observed"
             if process.poll() is None:
                 process.terminate()
             process.communicate(timeout=30)
+
+
+@pytest.mark.parametrize("marker", ["_github_binary", "_GitHub_Binary"])
+@pytest.mark.parametrize("limit", [0, 200])
+def test_upstream_binary_marker_cannot_exempt_json_from_bounds(tmp_path, marker, limit):
+    store, calls = client(
+        tmp_path,
+        [gh.Response(200, {marker: "1", "etag": "v1"}, b'"json"'),
+         gh.Response(304, {marker: "1"}, b"")],
+        cache_ttl_seconds=10, cache_max_bytes=limit, env={"GH_CONFIG_DIR": str(tmp_path / "no-config")},
+    )
+    assert store.request("GET", "user").value == "json"
+    with sqlite3.connect(tmp_path / "cache.sqlite3") as db:
+        rows = db.execute("SELECT headers FROM cache").fetchall()
+        assert rows == ([] if limit == 0 else [('{"etag": "v1"}',)])
+    if limit:
+        store.clock = lambda: 1001
+        result = store.request("GET", "user")
+        assert (result.value, result.status) == ("json", 304)
+        assert calls[-1][2]["If-None-Match"] == "v1"
+    store.clock = lambda: 1011
+    with store._db() as db:
+        assert db.execute("SELECT count(*) FROM cache").fetchone() == (0,)
+
+
+@pytest.mark.parametrize("future", [1001, 1_000_000_000])
+def test_future_validation_cannot_block_public_refresh_or_retain_precedence(tmp_path, future):
+    store, calls = client(tmp_path, [gh.Response(200, {"etag": "future"}, b"1"),
+                                     gh.Response(200, {"etag": "current"}, b"2")], now=future,
+                          env={"GH_CONFIG_DIR": str(tmp_path / "no-config")})
+    assert store.request("GET", "user").value == 1
+    with sqlite3.connect(tmp_path / "cache.sqlite3") as db:
+        db.execute("INSERT INTO cache VALUES(?,?,?,?,?)", ("other", "future", b"3", "{}", future))
+        db.execute("INSERT INTO cache VALUES(?,?,?,?,?)", ("other", "valid", b"4", "{}", 999))
+    store.clock = lambda: 1000
+    assert store.request("GET", "user").value == 2
+    assert "If-None-Match" not in calls[-1][2]
+    with sqlite3.connect(tmp_path / "cache.sqlite3") as db:
+        assert db.execute("SELECT body,at FROM cache ORDER BY at").fetchall() == [(b"4", 999), (b"2", 1000)]
+    store.clock = lambda: 1000 + store.cache_ttl_seconds
+    with store._db() as db:
+        assert db.execute("SELECT count(*) FROM cache").fetchone() == (0,)
+
+
+def test_delayed_public_response_preserves_later_valid_validation(tmp_path):
+    environment = {"GH_CONFIG_DIR": str(tmp_path / "no-config")}
+    older, _ = client(tmp_path, [], env=environment)
+    newer, _ = client(tmp_path, [gh.Response(200, {"etag": "new"}, b"2")], now=1010, env=environment)
+
+    def delayed(*args):
+        assert newer.request("GET", "user").value == 2
+        older.clock = lambda: 1010
+        return gh.Response(200, {"etag": "old"}, b"1")
+
+    older.transport = delayed
+    assert older.request("GET", "user").value == 1
+    with sqlite3.connect(tmp_path / "cache.sqlite3") as db:
+        assert db.execute("SELECT body,headers,at FROM cache").fetchall() == [(b"2", '{"etag": "new"}', 1010)]
+
+
+def test_multiprocess_eviction_expiry_and_cross_scope_budgets(tmp_path):
+    from concurrent.futures import ThreadPoolExecutor
+
+    cap, ttl = 3000, 10
+    script = r'''
+import json, sys
+from pathlib import Path
+from scripts.common import github_client as gh
+directory, index, phase = Path(sys.argv[1]), int(sys.argv[2]), int(sys.argv[3])
+now = [1000, 1001, 1012, 1012][phase]
+calls = []
+def transport(method, endpoint, headers, body, timeout):
+    status = 304 if "If-None-Match" in headers else 200
+    calls.append(status)
+    return gh.Response(status, {"etag": "fixture", "padding": "h" * (1000 if phase == 1 else 0)},
+                       b"" if status == 304 else json.dumps({"phase": phase, "p": index, "pad": "q" * 400}).encode())
+client = gh.GitHubClient(cache_dir=directory,
+    env={"GH_HOST": f"worker-{index}.example", "GH_CONFIG_DIR": str(directory / "no-config")},
+    clock=lambda: now, transport=transport, cache_max_bytes=3000, cache_ttl_seconds=10)
+result = client.request("GET", "repos/o/r/issues/1")
+assert client.cache_dir == directory and client._memory_db is None
+if phase == 3:
+    assert result.error == "github_rate_limited" and result.reason == "core_below_landing_reserve", result
+    assert calls == [], calls
+else:
+    assert result.error is None and result.value["p"] == index, result
+    assert result.value["phase"] == (0 if result.status == 304 else phase), result
+print(json.dumps({"statuses": calls, "disk": True, "phase": phase}), flush=True)
+'''
+    store, _ = client(tmp_path, [], cache_max_bytes=cap, cache_ttl_seconds=ttl,
+                      env={"GH_CONFIG_DIR": str(tmp_path / "no-config")})
+    unknown = ("unknown", "preserve", b"opaque", "not json", 0)
+    binary = ("legacy", "binary", b"bytes", '{"_github_binary": true}', 0)
+    with store._db() as db:
+        db.executemany("INSERT INTO cache VALUES(?,?,?,?,?)", [unknown, binary])
+        gh._store_budget(db, "sentinel", "core", 7, 2000, now=1000)
+
+    def run_worker(index, phase):
+        completed = subprocess.run(
+            [sys.executable, "-c", script, str(tmp_path), str(index), str(phase)],
+            capture_output=True, text=True, timeout=30, check=False,
+        )
+        assert completed.returncode == 0, completed.stderr
+        observed = json.loads(completed.stdout)
+        assert observed["disk"] and observed["phase"] == phase
+        return observed["statuses"]
+
+    for phase in range(4):
+        if phase == 3:
+            with sqlite3.connect(tmp_path / "cache.sqlite3") as db:
+                for index in range(4):
+                    observer = REAL_CLIENT(cache_dir=tmp_path,
+                        env={"GH_HOST": f"worker-{index}.example", "GH_CONFIG_DIR": str(tmp_path / "no-config")})
+                    gh._store_budget(db, observer.scope, "core", 0, 2000, now=1012)
+        with ThreadPoolExecutor(max_workers=4) as pool:
+            statuses = list(pool.map(run_worker, range(4), [phase] * 4))
+        with sqlite3.connect(tmp_path / "cache.sqlite3") as db:
+            rows = db.execute(f"SELECT body,headers,at FROM cache WHERE {gh._CACHE_RESPONSE}").fetchall()
+            total = sum(len(body) + len(headers.encode()) for body, headers, _ in rows)
+            assert total <= cap
+            if phase == 0:
+                assert statuses == [[200]] * 4
+                assert len(rows) == 4
+                assert total + 4 * 1000 > cap  # The next phase's real 304 growth crosses the cap.
+            elif phase == 1:
+                assert any(calls == [304] for calls in statuses)
+                assert len(rows) < 4
+                db.execute("INSERT INTO cache VALUES(?,?,?,?,?)", ("expiry", "untouched", b"1", "{}", 1001))
+            elif phase == 2:
+                assert statuses == [[200]] * 4  # All prior validations have expired.
+                assert len(rows) == 4 and {at for _, _, at in rows} == {1012}
+                assert db.execute("SELECT count(*) FROM cache WHERE scope='expiry'").fetchone() == (0,)
+            else:
+                assert statuses == [[]] * 4
+                assert db.execute("SELECT count(*) FROM budget WHERE remaining=0").fetchone() == (4,)
+            assert db.execute("SELECT * FROM cache WHERE scope='unknown'").fetchall() == [unknown]
+            assert db.execute("SELECT * FROM cache WHERE scope='legacy'").fetchall() == [binary]
+            assert db.execute("SELECT remaining,reset FROM budget WHERE scope='sentinel'").fetchone() == (7, 2000)
+            assert db.execute("PRAGMA integrity_check").fetchone() == ("ok",)
+
+
+@pytest.mark.parametrize("status", [304, 429])
+def test_clock_rollback_during_transport_cannot_refresh_or_serve_future_row(tmp_path, status):
+    store, _ = client(tmp_path, [gh.Response(200, {"etag": "old"}, b"1")],
+                      env={"GH_CONFIG_DIR": str(tmp_path / "no-config")})
+    assert store.request("GET", "user").value == 1
+    store.clock = lambda: 1001
+
+    def rollback(*args):
+        store.clock = lambda: 999
+        return gh.Response(status, {"retry-after": "60"} if status == 429 else {}, b"")
+
+    store.transport = rollback
+    result = store.request("GET", "user", allow_stale=True)
+    assert result.error == ("github_cache_miss" if status == 304 else "github_rate_limited")
+    assert not result.stale and result.value is None
+    with sqlite3.connect(tmp_path / "cache.sqlite3") as db:
+        assert db.execute("SELECT count(*) FROM cache").fetchone() == (0,)

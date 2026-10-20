@@ -7,7 +7,8 @@ Only fully modelled argv/JSON fields translate; other commands retain their
 native gh semantics through the same bounded, colour-safe process transport.
 Stale JSON reads require allow_stale=True; binary responses are never cached.
 Refetchable response rows expire at seven days since their last successful response
-or 304 validation. Transactions prune across all scopes to at most 64 MiB of
+or 304 validation. Future validation times cannot establish freshness and are pruned.
+Transactions prune across all scopes to at most 64 MiB of
 logical body bytes plus persisted header UTF-8 bytes, oldest validation first,
 then scope/key ascending. Oversized responses are returned without retention.
 These bounds never prune budgets or compact SQLite's allocated file. Records
@@ -1098,26 +1099,38 @@ def _store_cache(db, scope, key, body, headers, at):
 def _maintain_cache(db, now, ttl, max_bytes):
     """Prune response rows only; acquire a write lock only when pruning is needed.
 
-    The partial expression index supplies age and byte counts without loading
-    response bodies or parsing headers on each access. Recheck after deletion
-    inside the write transaction before deciding whether to evict by size.
+    The existing partial index supplies two endpoint lookups and a byte sum
+    without loading response bodies or parsing headers on each access. The sum
+    remains O(rows): another client can write or open with a smaller byte cap.
+    Recheck after deletion inside the write transaction before size eviction.
     Drop individually oversized rows before aggregate eviction so an unretainable
     response cannot evict smaller responses. A descending cumulative sum keeps
     the newest suffix, with scope/key breaking equal validation times stably.
     """
-    oldest, largest, total = db.execute(
-        f"SELECT min(at),max({_CACHE_BYTES}),sum({_CACHE_BYTES}) FROM cache WHERE {_CACHE_RESPONSE}"
+    oldest, newest = db.execute(
+        f"SELECT (SELECT at FROM cache WHERE {_CACHE_RESPONSE} ORDER BY at LIMIT 1),"
+        f"(SELECT at FROM cache WHERE {_CACHE_RESPONSE} ORDER BY at DESC LIMIT 1)"
     ).fetchone()
     if oldest is None:
         return
-    if oldest <= now - ttl or largest > max_bytes:
+    if oldest <= now - ttl or newest > now:
         db.execute(
-            f"DELETE FROM cache WHERE ({_CACHE_RESPONSE}) AND (at<=? OR {_CACHE_BYTES}>?)",
-            (now - ttl, max_bytes),
+            f"DELETE FROM cache WHERE ({_CACHE_RESPONSE}) AND (at<=? OR at>?)",
+            (now - ttl, now),
         )
-        total = db.execute(
-            f"SELECT coalesce(sum({_CACHE_BYTES}),0) FROM cache WHERE {_CACHE_RESPONSE}"
-        ).fetchone()[0]
+    total = db.execute(
+        f"SELECT coalesce(sum({_CACHE_BYTES}),0) FROM cache WHERE {_CACHE_RESPONSE}"
+    ).fetchone()[0]
+    if total <= max_bytes:
+        return
+    # An individual row cannot exceed the cap unless the total does. This
+    # deletion also obtains the write lock before recomputing the shared sum.
+    db.execute(
+        f"DELETE FROM cache WHERE ({_CACHE_RESPONSE}) AND {_CACHE_BYTES}>?", (max_bytes,)
+    )
+    total = db.execute(
+        f"SELECT coalesce(sum({_CACHE_BYTES}),0) FROM cache WHERE {_CACHE_RESPONSE}"
+    ).fetchone()[0]
     if total <= max_bytes:
         return
     db.execute(
@@ -1479,11 +1492,12 @@ class GitHubClient:
                 cached = (
                     db.execute(
                         f"SELECT body,headers,at FROM cache WHERE scope=? AND key=? AND ({_CACHE_RESPONSE}) "
-                        "AND at>? AND (? IS NULL OR length(body)<=?)",
+                        "AND at>? AND at<=? AND (? IS NULL OR length(body)<=?)",
                         (
                             self.scope,
                             key,
                             now - self.cache_ttl_seconds,
+                            now,
                             self.max_response_bytes,
                             self.max_response_bytes,
                         ),
@@ -1498,7 +1512,7 @@ class GitHubClient:
             return _unprepared(refused.reason)
 
         def deferred(reason, reset):
-            if allow_stale and cached and not fresh and self.clock() - cached[2] < self.cache_ttl_seconds:
+            if allow_stale and cached and not fresh and 0 <= self.clock() - cached[2] < self.cache_ttl_seconds:
                 return _limited(
                     reason,
                     reset,
@@ -1517,7 +1531,9 @@ class GitHubClient:
             if old_headers.get("etag"):
                 headers["If-None-Match"] = old_headers["etag"]
         response = self._send(method, endpoint, headers, raw, timeout)
-        h = {k.lower(): v for k, v in response.headers.items()}
+        # The legacy binary marker is private cache metadata, never an HTTP
+        # header that an upstream response may use to escape retention bounds.
+        h = {k.lower(): v for k, v in response.headers.items() if k.lower() != "_github_binary"}
         reset = None
         for persist_attempt in range(2):
             try:
@@ -1535,7 +1551,7 @@ class GitHubClient:
                             _store_budget(db, self.scope, hold, 0, reset, now=now)
                         return deferred(reason, reset)
                     if response.status == 304:
-                        if not cached or self.clock() - cached[2] >= self.cache_ttl_seconds:
+                        if not cached or not 0 <= self.clock() - cached[2] < self.cache_ttl_seconds:
                             return Result(status=304, error="github_cache_miss", headers=h)
                         # 304 is authoritative freshness; its remaining header is used,
                         # never decremented locally.
