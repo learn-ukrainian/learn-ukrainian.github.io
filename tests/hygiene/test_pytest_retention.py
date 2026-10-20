@@ -393,14 +393,18 @@ import sys
 sys.path.insert(0, {str(REPO)!r})
 pytest_plugins = ["scripts.common.pytest_scratch"]
 ''')
-    pytester.makepyfile('''
+    pytester.makepyfile(f'''
 import os
 import tempfile
 from pathlib import Path
 
 def test_payload(tmp_path):
+    runs = list(Path({str(root / "pytest-runs" / "runs")!r}).iterdir())
+    assert len(runs) == 1
+    expected = runs[0] / "scratch"
     root = Path(tempfile.gettempdir())
-    assert root == Path(os.environ["TMPDIR"])
+    assert root == expected
+    assert os.environ["TMPDIR"] == str(expected)
     assert tmp_path.is_relative_to(root)
     with tempfile.NamedTemporaryFile() as ordinary:
         assert Path(ordinary.name).parent == root
@@ -408,10 +412,14 @@ def test_payload(tmp_path):
 ''')
     (root / "pytest-runs").mkdir(mode=0o775)
     (root / "pytest-runs").chmod(0o775)
+    caller_temp = pytester.path / "caller-temp"
+    caller_temp.mkdir()
+    env = {"LU_SCRATCH_ROOT": str(root)}
     # Pytester's runner injects --basetemp, which intentionally opts out of ownership.
     result = subprocess.run(
         [sys.executable, "-c", "import os, pytest; os.umask(0o002); raise SystemExit(pytest.main(['-q', '-n', '2']))"],
         cwd=pytester.path, capture_output=True, text=True, timeout=30,
+        env={**env, "TMPDIR": str(caller_temp)},
     )
     assert result.returncode == 0, result.stdout + result.stderr
     assert "1 passed" in result.stdout
@@ -430,9 +438,19 @@ def test_payload(tmp_path):
     assert list((runs[0] / "scratch" / "base").rglob("payload"))
 
     explicit = pytester.path / "gate-owned"
+    pytester.makepyfile(f'''
+import os
+from pathlib import Path
+
+def test_payload(tmp_path):
+    assert "TMPDIR" not in os.environ
+    assert tmp_path.is_relative_to(Path({str(explicit)!r}))
+    (tmp_path / "payload").write_text("hello")
+''')
     result = subprocess.run(
         [sys.executable, "-m", "pytest", "-q", "--basetemp", str(explicit)],
         cwd=pytester.path, capture_output=True, text=True, timeout=30,
+        env=env,
     )
     assert result.returncode == 0, result.stdout + result.stderr
     assert "1 passed" in result.stdout
