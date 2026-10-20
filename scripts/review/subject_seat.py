@@ -155,6 +155,14 @@ def _matches_gemma(candidate: _SeatCandidate) -> bool:
     return candidate.route.casefold() == "gemma" or "gemma" in name or "gemma" in model
 
 
+def _matches_muse(candidate: _SeatCandidate) -> bool:
+    return (
+        candidate.route.casefold() == "muse"
+        or candidate.name.casefold() == "muse"
+        or candidate.family.casefold() == "meta"
+    )
+
+
 _MATCHERS: dict[str, Callable[[_SeatCandidate], bool]] = {
     "agy": _matches_agy,
     "claude": _matches_claude,
@@ -166,6 +174,7 @@ _MATCHERS: dict[str, Callable[[_SeatCandidate], bool]] = {
     "glm": _matches_glm,
     "grok": _matches_grok,
     "kimi": _matches_kimi,
+    "muse": _matches_muse,
     "pool": _matches_pool,
     "qwen": _matches_qwen,
 }
