@@ -1645,14 +1645,18 @@ function buildArticleOverview(args: {
     renderable,
   } = args;
   const synonymCount =
-    (sections?.synonyms?.items?.length ?? 0) + (sections?.antonyms?.items?.length ?? 0);
-  const homonymCount = sections?.homonyms?.items?.length ?? 0;
-  const paronymCount = sections?.paronyms?.items?.length ?? 0;
-  const idiomCount = sections?.idioms?.items?.length ?? 0;
-  const proverbCount = sections?.proverbs?.items?.length ?? 0;
-  const usageNoteCount = sections?.usage_notes?.items?.length ?? 0;
-  const formNoteCount = sections?.form_notes?.items?.length ?? 0;
-  const externalCount = externalGroups.reduce((total, group) => total + (group.materials?.length ?? 0), 0);
+    (sections?.synonyms?.items?.filter(hasArticleText).length ?? 0) +
+    (sections?.antonyms?.items?.filter(hasArticleText).length ?? 0);
+  const homonymCount = sections?.homonyms?.items?.filter((item) => hasArticleText(item.word) || hasArticleText(item.gloss)).length ?? 0;
+  const paronymCount = sections?.paronyms?.items?.filter((item) => hasArticleText(item.word) || hasArticleText(item.distinction)).length ?? 0;
+  const idiomCount = sections?.idioms?.items?.filter((item) => hasArticleText(item.phrase) || hasArticleText(item.text) || hasArticleText(item.definition)).length ?? 0;
+  const proverbCount = sections?.proverbs?.items?.filter((item) => hasArticleText(item.text)).length ?? 0;
+  const usageNoteCount = sections?.usage_notes?.items?.filter((item) => hasArticleText(item.text)).length ?? 0;
+  const formNoteCount = sections?.form_notes?.items?.filter((item) => hasArticleText(item.text)).length ?? 0;
+  const externalCount = externalGroups.reduce((total, group) => total + group.materials
+    .filter((item) => hasArticleText(item.title) || hasArticleText(item.description)).length, 0);
+  const translationCount = enrichment?.translation?.en?.filter(hasArticleText).length ?? 0;
+  const styleNoteCount = styleNotes.filter(hasArticleText).length;
   const definitionCount =
     definitionCards.length + (renderable.enrichedMeaning ? 1 : 0) + (phraseHasGloss ? 1 : 0);
   const originCount = renderable.etymology ? 1 : 0;
@@ -1692,8 +1696,8 @@ function buildArticleOverview(args: {
       id: "style" as const,
       label: "Стилістика",
       detail:
-        styleNotes.length > 0
-          ? `${styleNotes.length} ${pluralizeUk(styleNotes.length, ["нотатка", "нотатки", "нотаток"])}`
+        styleNoteCount > 0
+          ? `${styleNoteCount} ${pluralizeUk(styleNoteCount, ["нотатка", "нотатки", "нотаток"])}`
           : heritageBoxes.green
             ? "захист питомості"
             : "без нотаток",
@@ -1763,8 +1767,8 @@ function buildArticleOverview(args: {
       id: "translation" as const,
       label: "Переклад",
       detail:
-        (enrichment?.translation?.en?.length ?? 0) > 0
-          ? `${enrichment?.translation?.en?.length} англ.`
+        translationCount > 0
+          ? `${translationCount} англ.`
           : "очікує джерело",
     },
     {

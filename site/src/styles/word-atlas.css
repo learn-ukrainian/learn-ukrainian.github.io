@@ -1157,6 +1157,10 @@ html[data-theme='dark'] .lu-content .word-atlas .word-hero .practice-cta-hero {
   transition: all 0.2s;
 }
 
+.word-atlas a.chip {
+  text-decoration: none;
+}
+
 .chip-gloss {
   font-size: 11px;
   font-weight: 400;
@@ -1168,6 +1172,10 @@ html[data-theme='dark'] .lu-content .word-atlas .word-hero .practice-cta-hero {
   background: var(--teal-fill);
   color: #ffffff;
   text-decoration: none;
+}
+
+.word-atlas a.chip:hover {
+  text-decoration: underline;
 }
 
 .ext-link-indicator {

@@ -827,7 +827,7 @@ const uk: Record<ChromeKey, string> = {
   'atlas.layer.course': 'Курс',
   'atlas.layer.translation': 'Переклад',
   'atlas.layer.wiki': 'Вікіпедія',
-  'atlas.layer.external': 'Зовнішні',
+  'atlas.layer.external': 'Зовнішні матеріали',
   'arc.state.plan_reviewed': 'план перевірено',
   'arc.state.built': 'уроки підготовлено',
   'arc.checkpoint': 'Контрольна точка',

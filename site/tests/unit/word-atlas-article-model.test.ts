@@ -1,4 +1,5 @@
 import { describe, expect, test } from "vitest";
+import { CHROME_STRINGS } from "@site/src/lib/i18n/chrome";
 import { formatOrigin } from "@site/src/lib/lexicon/format-origin";
 import {
   atlasWikipediaOkAsIntro,
@@ -2307,6 +2308,37 @@ describe("thin rendered-state presentation (#8327)", () => {
     return { model: buildWordAtlasArticleView(props.record, "test", "test"),
       doc: new DOMParser().parseFromString(renderWordAtlasArticle(props), "text/html") };
   }
+
+  test("external layer chrome reuses the existing Ukrainian section heading", () => {
+    const { doc } = view({ enrichment: { external_materials: [{ title: "Resource" }] } });
+    const heading = Array.from(doc.querySelectorAll(".atlas-section h2"))
+      .find((node) => node.textContent === "Зовнішні матеріали");
+    expect(CHROME_STRINGS.uk['atlas.layer.external']).toBe("Зовнішні матеріали");
+    expect(heading?.textContent).toBe("Зовнішні матеріали");
+  });
+
+  test("overview details count only the trimmed content that makes each layer ready", () => {
+    const { model } = view({ enrichment: {
+      translation: { en: [" ", "Translation", "\t"], source: "test" },
+      external_materials: [{ title: " " }, { title: "Resource" }, { title: "", description: "Description" }],
+    }, sections: {
+      synonyms: { items: [" ", "synonym"], source: "test" },
+      antonyms: { items: ["antonym", "\t"], source: "test" },
+      homonyms: { items: [{ word: " ", gloss: "\t" }, { word: "homonym", gloss: "" }, { word: "", gloss: "Gloss" }], source: "test" },
+      paronyms: { items: [{ word: " " }, { word: "paronym" }, { word: "", distinction: "Distinction" }], source: "test" },
+      idioms: { items: [{ phrase: " ", definition: "\t", source: "test" }, { phrase: "Idiom", definition: "", source: "test" }, { phrase: "", text: "Text", definition: "", source: "test" }, { phrase: "", definition: "Definition", source: "test" }], source: "test" },
+      proverbs: { items: [{ text: " ", source: "test" }, { text: "Proverb", source: "test" }], source: "test" },
+      usage_notes: { items: [{ text: " ", source: "test" }, { text: "Usage note", source: "test" }], source: "test" },
+      form_notes: { items: [{ dictionary: "orthography", text: " ", source: "test" }, { dictionary: "orthography", text: "Spelling note", source: "test" }], source: "test" },
+    } });
+    const details = Object.fromEntries(model.articleOverview.filter((card) => card.ready)
+      .map((card) => [card.id, card.detail]));
+    expect(details).toMatchObject({
+      synonyms: "2 позиції", homonyms: "2 позиції", paronyms: "2 позиції", idioms: "3 вирази",
+      proverbs: "1 приповідка", usageNotes: "1 нарис", formNotes: "1 джерело",
+      translation: "1 англ.", external: "2 матеріали",
+    });
+  });
 
   test("no ready layer means no overview heading/grid, only enrichment disclosure", () => {
     const { model, doc } = view();
