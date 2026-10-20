@@ -219,6 +219,7 @@ from scripts.config import (
     DELEGATE_WORKTREE_ADD_TIMEOUT_S,
 )
 from scripts.fleet import claude_account_lane, credit_lane
+from scripts.fleet.regenerable_output import SITE_BUILD_OUTPUT_PATTERNS
 from scripts.fleet.regenerable_output import is_disposable_auto_finalize_path as _is_disposable_auto_finalize_path
 from scripts.fleet.reset_reserve import codex_is_threatened as _codex_is_threatened
 from scripts.fleet.reset_reserve import codex_reset_reserve_eligible as _codex_reset_reserve_eligible
@@ -6121,9 +6122,11 @@ _READ_ONLY_RUNTIME_TELEMETRY_FILES = frozenset({".entire/settings.local.json"})
 # ``.pytest_cache/``, ``.pytest_breadcrumbs/``. Siblings are the same class
 # (harness/session/cache residue). Membership is load-bearing (#8516 AC-02):
 # an ignored ``!!`` path escapes the mutation guard ONLY through this
-# classification, so task-authored leak targets like ``.cache/`` (#4840),
-# root-level ``/*.py`` scratch, and ``/scratch/`` deliberately stay OUT and
-# now fail the task. Deploy-target dirs (``.claude``, ``.codex``, ``.gemini``,
+# classification, or when it is ignored and full-matches the existing
+# ``SITE_BUILD_OUTPUT_PATTERNS`` list (#11193). Task-authored leak targets
+# like ``.cache/`` (#4840), root-level ``/*.py`` scratch, and ``/scratch/``
+# deliberately stay OUT and now fail the task. Deploy-target dirs
+# (``.claude``, ``.codex``, ``.gemini``,
 # ``.cursor``, ``.agents``) are not in this set: they hold tracked,
 # harness-executed content, so an untracked new file there (e.g.
 # ``.claude/hooks/``) must still fail a read-only task in its own worktree.
@@ -6203,10 +6206,12 @@ def _is_read_only_runtime_state_path(path: str) -> bool:
 
     Covers Entire telemetry (#6803) plus the gitignored runtime dirs and sqlite
     sidecars that false-failed successful read-only tasks (#6860). Since #8516
-    AC-02 this classification is ALSO the only way an ignored ``!!`` path
-    escapes the mutation guard: task-authored ignored leaks outside it (the
+    AC-02 an ignored ``!!`` status alone does not escape the mutation guard.
+    Task-authored ignored leaks outside this classification (the
     review-a3-api-ui ``/*.py`` + ``/scratch/`` scratch class; ``.cache/``
-    residue from #4840/#7253) now fail the task like any other mutation.
+    residue from #4840/#7253) fail the task like any other mutation. The other
+    narrow escape is an ignored path that full-matches the existing
+    ``SITE_BUILD_OUTPUT_PATTERNS`` list (#11193), not ``!!`` by itself.
     """
     if _is_read_only_delegate_snapshot_sidecar_path(path):
         return True
@@ -6346,16 +6351,43 @@ def _read_only_ignored_mutation_paths(before: dict[str, str], after: dict[str, s
     )
 
 
+def _is_read_only_ignored_site_build_output(
+    path: str,
+    *,
+    before_state: str | None,
+    after_state: str | None,
+) -> bool:
+    """Exempt an ignored path that full-matches ``SITE_BUILD_OUTPUT_PATTERNS``.
+
+    ``site/astro.config.mjs`` creates
+    ``site/public/audio/pronunciation/manifest.json`` when it is absent, and
+    ``.gitignore`` ignores that directory (#11193). The match calls the
+    existing pattern list and does not add patterns. A tracked status on
+    either side, including a force-added file, is not exempt. An ignored
+    ``!!`` path outside the list is not exempt (#8516).
+    """
+    if not _is_read_only_ignored_mutation(before_state=before_state, after_state=after_state):
+        return False
+    # ``after`` is already ignored or absent. A tracked or force-added
+    # ``before`` (`` M``, ``A ``) must still trip, even when ``after`` is ``!!``.
+    if before_state is not None and not _is_read_only_ignored_status(before_state):
+        return False
+    normalized = _normalize_read_only_relpath(path)
+    return any(re.fullmatch(pattern, normalized) for pattern in SITE_BUILD_OUTPUT_PATTERNS)
+
+
 def _read_only_mutation_paths(before: dict[str, str], after: dict[str, str]) -> list[str]:
     """Return exact paths whose observable Git state changed during a review.
 
     A changed path is exempt only when it is recognized harness/runtime noise
     (:func:`_is_read_only_runtime_state_exemption`: gitignored tooling residue
-    such as ``.pytest_cache/`` or ``batch_state/``) or a newly appeared
+    such as ``.pytest_cache/`` or ``batch_state/``), a newly appeared
     sibling dispatch sandbox under ``.worktrees/dispatch/<agent>/<task>/``
     (#6938 defense in depth; since #7124 the snapshot itself already drops
-    every ``.worktrees/`` path). Tracked paths under runtime prefixes
-    (including force-added files) still trip the guard.
+    every ``.worktrees/`` path), or an ignored path that full-matches the
+    existing ``SITE_BUILD_OUTPUT_PATTERNS`` list (#11193). Tracked paths,
+    including ones that match that list, and force-added files still trip
+    the guard.
 
     #8516 AC-02: an ignored ``!!`` status BY ITSELF no longer exempts a path.
     The review-a3-api-ui leak showed why: the agy worker wrote its scratch
@@ -6363,7 +6395,9 @@ def _read_only_mutation_paths(before: dict[str, str], after: dict[str, str]) -> 
     (``/*.py``, ``/scratch/``) marked them ``!!``, and the guard filed them
     as diagnostic-only "ignored mutations" while the task settled ``done``.
     Now any other new, modified, or deleted path — tracked, untracked, or
-    ignored — fails the task and is named.
+    ignored — fails the task and is named. Matching the site-build list does
+    not widen that rule: the path must be ignored, and an ignored path
+    outside the list still fails.
     """
     before_roots = _read_only_dispatch_sandbox_roots(before)
     return sorted(
@@ -6376,6 +6410,11 @@ def _read_only_mutation_paths(before: dict[str, str], after: dict[str, str]) -> 
             after_state=after.get(path),
         )
         and not _is_read_only_new_sibling_dispatch_sandbox_path(path, before_roots=before_roots)
+        and not _is_read_only_ignored_site_build_output(
+            path,
+            before_state=before.get(path),
+            after_state=after.get(path),
+        )
     )
 
 
