@@ -14,6 +14,14 @@ export type PreviewInput = {
   fingerprint: string; source: string; generatedAt: string; manifestVersion: string;
 };
 
+/** Static routes of the preview page: every input once as itself and once under `compare/`. */
+export function previewStaticPaths(samples: PreviewInput[]) {
+  return samples.flatMap(sample => [false, true].map(compare => ({
+    params: { path: `${compare ? 'compare/' : ''}${sample.name}` },
+    props: { ...sample, compare },
+  })));
+}
+
 /** Build-time selection only. Public input never consults controlled records or a current pointer. */
 export function releasePreviewInputs(config: {
   enabled: boolean; controlled: boolean; artifactPath?: string; pin?: string;

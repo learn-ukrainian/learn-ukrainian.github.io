@@ -103,6 +103,11 @@ if (process.env.ATLAS_WORD_CARD_PUBLIC_PROOF_PATH) test('public pinned release: 
   expect(routes.sort()).toEqual(['lexicon-v2/release/index.html', 'lexicon-v2/compare/release/index.html', ...rows.flatMap(row =>
     ['', 'compare/'].map(prefix => `lexicon-v2/${prefix}release/${row.card_id}/index.html`)), ...learner.flatMap(([key]) =>
     ['', 'compare/'].map(prefix => `lexicon-v2/${prefix}word/${key}/index.html`))].sort());
+  // The committed route inventory names exactly the routes this public build emitted, for these pinned bytes.
+  const routeInventory = JSON.parse(readFileSync('src/lib/lexicon/word-card-preview-route-inventory.json', 'utf8')) as { release: unknown; routes: { path: string }[] };
+  expect(routeInventory.release).toMatchObject({ dataset_sha256: sha(bytes), dataset_bytes: bytes.length });
+  // Sorted equality fails on an omitted, unexpected or duplicated route.
+  expect(routes.map(name => `/${name.slice(0, -'index.html'.length)}`).sort()).toEqual(routeInventory.routes.map(r => r.path).sort());
   const scanned = files.filter(name => /\.(html|js|xml)$/.test(name));
   expect(files).toEqual(expect.arrayContaining(['sitemap-index.xml', 'sitemap-0.xml']));
   expect(readFileSync(join(output, 'sitemap-0.xml'), 'utf8')).toContain('<loc>https://learn-ukrainian.github.io/</loc>');

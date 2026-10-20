@@ -7,7 +7,7 @@ import type { EntryRecord } from '../../lib/lexicon/atlas-data-source';
 import type { LoadedRelease, ReleaseCard } from '../../lib/lexicon/word-card-release';
 import type { ReleasePage } from '../../lib/lexicon/word-card-readable';
 import '../../styles/word-card-preview.css';
-import { releasePreviewInputs, type PreviewInput } from '../../lib/lexicon/word-card-preview-inputs';
+import { previewStaticPaths, releasePreviewInputs, type PreviewInput } from '../../lib/lexicon/word-card-preview-inputs';
 
 export async function getStaticPaths() {
   if (process.env.ATLAS_WORD_CARD_PREVIEW !== '1') return [];
@@ -20,10 +20,7 @@ export async function getStaticPaths() {
   samples.push(...releasePreviewInputs({ enabled: true,
     controlled: import.meta.env.PUBLIC_ATLAS_WORD_CARD_PREVIEW_CONTROLS === '1',
     artifactPath: process.env.ATLAS_WORD_CARD_RELEASE_PATH, pin: process.env.ATLAS_WORD_CARD_RELEASE_PIN }));
-  return samples.flatMap(sample => [false, true].map(compare => ({
-    params: { path: `${compare ? 'compare/' : ''}${sample.name}` },
-    props: { ...sample, compare },
-  })));
+  return previewStaticPaths(samples);
 }
 interface Props {
   card: PreviewCard | ReleaseCard | ReleasePage | LoadedRelease; current: EntryRecord | null; compare: boolean;

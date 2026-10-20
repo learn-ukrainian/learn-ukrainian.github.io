@@ -1,0 +1,4084 @@
+{
+ "schema_version": "word-card-preview-route-inventory.v1",
+ "release": {
+  "release_version": "v0.1.0-pilot",
+  "dataset_sha256": "45bd9c9325a3b4221c86d1663d784e96a7edc096674415445d37113f793189e6",
+  "manifest_sha256": "ca182bf5829f3ed4daa80c2394eb87e28879c3f1dc5088eef689f495b97e4f75",
+  "provenance": "producer-declared",
+  "dataset_bytes": 2879813,
+  "manifest_bytes": 3292
+ },
+ "counts": {
+  "source_cards": 150,
+  "citations": 2978,
+  "page_keys": 136,
+  "learner_pages": 134,
+  "visible_entries": 148,
+  "proper_entries_listed": 11,
+  "proper_only_unlisted": 2,
+  "refused_without_key": 0,
+  "emitted_routes": 570,
+  "routes_by_class": {
+   "release-summary": 1,
+   "compare-release-summary": 1,
+   "card-diagnostic": 150,
+   "compare-card-diagnostic": 150,
+   "word-page": 134,
+   "compare-word-page": 134
+  }
+ },
+ "routes": [
+  {
+   "path": "/lexicon-v2/compare/release/",
+   "href": "/lexicon-v2/compare/release/",
+   "class": "compare-release-summary"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_02a5cjxcpbcf/",
+   "href": "/lexicon-v2/compare/release/wc_02a5cjxcpbcf/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_043h3npd7ed4/",
+   "href": "/lexicon-v2/compare/release/wc_043h3npd7ed4/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_08svjhdbe0fq/",
+   "href": "/lexicon-v2/compare/release/wc_08svjhdbe0fq/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_0a3k6ypbjhrf/",
+   "href": "/lexicon-v2/compare/release/wc_0a3k6ypbjhrf/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_0c2c6k5nrw0n/",
+   "href": "/lexicon-v2/compare/release/wc_0c2c6k5nrw0n/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_0nq8zajmfvcg/",
+   "href": "/lexicon-v2/compare/release/wc_0nq8zajmfvcg/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_0r1cdw5z36cd/",
+   "href": "/lexicon-v2/compare/release/wc_0r1cdw5z36cd/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_0wv95b3qm707/",
+   "href": "/lexicon-v2/compare/release/wc_0wv95b3qm707/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_1nrw339ddgvm/",
+   "href": "/lexicon-v2/compare/release/wc_1nrw339ddgvm/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_2q1qzzw8gd01/",
+   "href": "/lexicon-v2/compare/release/wc_2q1qzzw8gd01/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_2xzw44zg56aq/",
+   "href": "/lexicon-v2/compare/release/wc_2xzw44zg56aq/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_345emw0fe2hr/",
+   "href": "/lexicon-v2/compare/release/wc_345emw0fe2hr/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_36p338sk68qm/",
+   "href": "/lexicon-v2/compare/release/wc_36p338sk68qm/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_3rc3vnk4r328/",
+   "href": "/lexicon-v2/compare/release/wc_3rc3vnk4r328/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_4fm88q03w5qs/",
+   "href": "/lexicon-v2/compare/release/wc_4fm88q03w5qs/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_4w8bcapex04x/",
+   "href": "/lexicon-v2/compare/release/wc_4w8bcapex04x/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_5031n96dwgnt/",
+   "href": "/lexicon-v2/compare/release/wc_5031n96dwgnt/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_562eqy9g3bck/",
+   "href": "/lexicon-v2/compare/release/wc_562eqy9g3bck/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_5b36dst0her6/",
+   "href": "/lexicon-v2/compare/release/wc_5b36dst0her6/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_5btr8jkdzvd1/",
+   "href": "/lexicon-v2/compare/release/wc_5btr8jkdzvd1/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_5j37jfndz666/",
+   "href": "/lexicon-v2/compare/release/wc_5j37jfndz666/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_5s9kgf5brczs/",
+   "href": "/lexicon-v2/compare/release/wc_5s9kgf5brczs/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_6bt62wd6zzzf/",
+   "href": "/lexicon-v2/compare/release/wc_6bt62wd6zzzf/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_6f8yq9yvp0ns/",
+   "href": "/lexicon-v2/compare/release/wc_6f8yq9yvp0ns/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_6hg8x80fcnk2/",
+   "href": "/lexicon-v2/compare/release/wc_6hg8x80fcnk2/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_7a6x6n8rek4y/",
+   "href": "/lexicon-v2/compare/release/wc_7a6x6n8rek4y/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_7e1t38e50r34/",
+   "href": "/lexicon-v2/compare/release/wc_7e1t38e50r34/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_7vqqh0c120vy/",
+   "href": "/lexicon-v2/compare/release/wc_7vqqh0c120vy/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_8bbj9gn4qm3z/",
+   "href": "/lexicon-v2/compare/release/wc_8bbj9gn4qm3z/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_8kf3af4b8vth/",
+   "href": "/lexicon-v2/compare/release/wc_8kf3af4b8vth/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_8mhjfw05sm0t/",
+   "href": "/lexicon-v2/compare/release/wc_8mhjfw05sm0t/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_8t60pamgdqs0/",
+   "href": "/lexicon-v2/compare/release/wc_8t60pamgdqs0/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_8z09eyahcs88/",
+   "href": "/lexicon-v2/compare/release/wc_8z09eyahcs88/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_91fq1gtsh9f5/",
+   "href": "/lexicon-v2/compare/release/wc_91fq1gtsh9f5/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_91qt0yt5aqnt/",
+   "href": "/lexicon-v2/compare/release/wc_91qt0yt5aqnt/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_96p4nx83f894/",
+   "href": "/lexicon-v2/compare/release/wc_96p4nx83f894/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_9wjbgkp9fak8/",
+   "href": "/lexicon-v2/compare/release/wc_9wjbgkp9fak8/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_9zfg3rrkkqzf/",
+   "href": "/lexicon-v2/compare/release/wc_9zfg3rrkkqzf/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_a4ndp7w0v8dq/",
+   "href": "/lexicon-v2/compare/release/wc_a4ndp7w0v8dq/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_a7k5wtq89cdg/",
+   "href": "/lexicon-v2/compare/release/wc_a7k5wtq89cdg/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_acq6r56secba/",
+   "href": "/lexicon-v2/compare/release/wc_acq6r56secba/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_anz167as5tn7/",
+   "href": "/lexicon-v2/compare/release/wc_anz167as5tn7/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_b92hz3ncnw1a/",
+   "href": "/lexicon-v2/compare/release/wc_b92hz3ncnw1a/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_bej8fh02sp6p/",
+   "href": "/lexicon-v2/compare/release/wc_bej8fh02sp6p/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_bfdeknm81e44/",
+   "href": "/lexicon-v2/compare/release/wc_bfdeknm81e44/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_bgr5q9c06wxg/",
+   "href": "/lexicon-v2/compare/release/wc_bgr5q9c06wxg/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_btwc6wcf50wv/",
+   "href": "/lexicon-v2/compare/release/wc_btwc6wcf50wv/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_bz5ypsm3wyj7/",
+   "href": "/lexicon-v2/compare/release/wc_bz5ypsm3wyj7/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_c66xvp4hvdev/",
+   "href": "/lexicon-v2/compare/release/wc_c66xvp4hvdev/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_c6j1qtrpbcgx/",
+   "href": "/lexicon-v2/compare/release/wc_c6j1qtrpbcgx/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_cnq7f88k186e/",
+   "href": "/lexicon-v2/compare/release/wc_cnq7f88k186e/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_cvkw5nzdg00n/",
+   "href": "/lexicon-v2/compare/release/wc_cvkw5nzdg00n/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_cxjtr6481e7t/",
+   "href": "/lexicon-v2/compare/release/wc_cxjtr6481e7t/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_d2d38y0ctmct/",
+   "href": "/lexicon-v2/compare/release/wc_d2d38y0ctmct/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_d3qyg6mhjx07/",
+   "href": "/lexicon-v2/compare/release/wc_d3qyg6mhjx07/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_da7t5vpprjw3/",
+   "href": "/lexicon-v2/compare/release/wc_da7t5vpprjw3/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_dstgm8vb5xfr/",
+   "href": "/lexicon-v2/compare/release/wc_dstgm8vb5xfr/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_e1n2pwrrajma/",
+   "href": "/lexicon-v2/compare/release/wc_e1n2pwrrajma/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_ea2fvbcb6p3k/",
+   "href": "/lexicon-v2/compare/release/wc_ea2fvbcb6p3k/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_f0nnsej1zh7n/",
+   "href": "/lexicon-v2/compare/release/wc_f0nnsej1zh7n/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_f1m5pppp1619/",
+   "href": "/lexicon-v2/compare/release/wc_f1m5pppp1619/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_f70edzrhfy8e/",
+   "href": "/lexicon-v2/compare/release/wc_f70edzrhfy8e/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_fc08gvq844db/",
+   "href": "/lexicon-v2/compare/release/wc_fc08gvq844db/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_fd7d7wa6rn62/",
+   "href": "/lexicon-v2/compare/release/wc_fd7d7wa6rn62/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_ffw1zgt1exvw/",
+   "href": "/lexicon-v2/compare/release/wc_ffw1zgt1exvw/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_fvxestgxf73d/",
+   "href": "/lexicon-v2/compare/release/wc_fvxestgxf73d/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_gbh31d6zptnx/",
+   "href": "/lexicon-v2/compare/release/wc_gbh31d6zptnx/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_grkg2vxacyp0/",
+   "href": "/lexicon-v2/compare/release/wc_grkg2vxacyp0/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_gv7g0005qb5d/",
+   "href": "/lexicon-v2/compare/release/wc_gv7g0005qb5d/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_h509ejs613sy/",
+   "href": "/lexicon-v2/compare/release/wc_h509ejs613sy/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_h54f47k5py6b/",
+   "href": "/lexicon-v2/compare/release/wc_h54f47k5py6b/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_hde0r633f7cq/",
+   "href": "/lexicon-v2/compare/release/wc_hde0r633f7cq/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_hec14t866f1c/",
+   "href": "/lexicon-v2/compare/release/wc_hec14t866f1c/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_hmz9x3anb1ma/",
+   "href": "/lexicon-v2/compare/release/wc_hmz9x3anb1ma/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_ht0ejvdkh8qe/",
+   "href": "/lexicon-v2/compare/release/wc_ht0ejvdkh8qe/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_j1acg1649rw8/",
+   "href": "/lexicon-v2/compare/release/wc_j1acg1649rw8/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_jb4p3ppvcyvx/",
+   "href": "/lexicon-v2/compare/release/wc_jb4p3ppvcyvx/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_jgravxme007h/",
+   "href": "/lexicon-v2/compare/release/wc_jgravxme007h/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_jm7nfbvag8kp/",
+   "href": "/lexicon-v2/compare/release/wc_jm7nfbvag8kp/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_jq9rtqw9yt7y/",
+   "href": "/lexicon-v2/compare/release/wc_jq9rtqw9yt7y/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_jrycyzsy17qk/",
+   "href": "/lexicon-v2/compare/release/wc_jrycyzsy17qk/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_k1kp85tahqag/",
+   "href": "/lexicon-v2/compare/release/wc_k1kp85tahqag/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_k339xj1q2hv7/",
+   "href": "/lexicon-v2/compare/release/wc_k339xj1q2hv7/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_k45tstzkx2b6/",
+   "href": "/lexicon-v2/compare/release/wc_k45tstzkx2b6/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_ka0tp1vt39e8/",
+   "href": "/lexicon-v2/compare/release/wc_ka0tp1vt39e8/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_km3asrjbxhjb/",
+   "href": "/lexicon-v2/compare/release/wc_km3asrjbxhjb/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_m141ewnvv2m4/",
+   "href": "/lexicon-v2/compare/release/wc_m141ewnvv2m4/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_m6bs5ramkdgy/",
+   "href": "/lexicon-v2/compare/release/wc_m6bs5ramkdgy/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_n1g44brn5vs2/",
+   "href": "/lexicon-v2/compare/release/wc_n1g44brn5vs2/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_nhac073v3589/",
+   "href": "/lexicon-v2/compare/release/wc_nhac073v3589/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_p1d31y378qs1/",
+   "href": "/lexicon-v2/compare/release/wc_p1d31y378qs1/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_p41ag4cb6be8/",
+   "href": "/lexicon-v2/compare/release/wc_p41ag4cb6be8/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_p646xsqq40xt/",
+   "href": "/lexicon-v2/compare/release/wc_p646xsqq40xt/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_pmenjgpx1mh9/",
+   "href": "/lexicon-v2/compare/release/wc_pmenjgpx1mh9/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_ppr39m6qsr4e/",
+   "href": "/lexicon-v2/compare/release/wc_ppr39m6qsr4e/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_pr69ykkbh95m/",
+   "href": "/lexicon-v2/compare/release/wc_pr69ykkbh95m/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_prfy102qxyrn/",
+   "href": "/lexicon-v2/compare/release/wc_prfy102qxyrn/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_q7x9wprhedkr/",
+   "href": "/lexicon-v2/compare/release/wc_q7x9wprhedkr/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_q97mnya76nx7/",
+   "href": "/lexicon-v2/compare/release/wc_q97mnya76nx7/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_qm83zt29py0d/",
+   "href": "/lexicon-v2/compare/release/wc_qm83zt29py0d/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_qpcdgkctp7ne/",
+   "href": "/lexicon-v2/compare/release/wc_qpcdgkctp7ne/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_qq67z33prpah/",
+   "href": "/lexicon-v2/compare/release/wc_qq67z33prpah/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_qs3tehs0xz6e/",
+   "href": "/lexicon-v2/compare/release/wc_qs3tehs0xz6e/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_qt1ajf0trs35/",
+   "href": "/lexicon-v2/compare/release/wc_qt1ajf0trs35/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_r6xe3vt4qtw9/",
+   "href": "/lexicon-v2/compare/release/wc_r6xe3vt4qtw9/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_raxj8hwpvp62/",
+   "href": "/lexicon-v2/compare/release/wc_raxj8hwpvp62/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_ref9xyps30mx/",
+   "href": "/lexicon-v2/compare/release/wc_ref9xyps30mx/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_rezqg70bnyy4/",
+   "href": "/lexicon-v2/compare/release/wc_rezqg70bnyy4/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_rk47ephm1bts/",
+   "href": "/lexicon-v2/compare/release/wc_rk47ephm1bts/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_rmvh0tsz1y1a/",
+   "href": "/lexicon-v2/compare/release/wc_rmvh0tsz1y1a/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_rn15mnpkqxar/",
+   "href": "/lexicon-v2/compare/release/wc_rn15mnpkqxar/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_rq9bnybm7ybm/",
+   "href": "/lexicon-v2/compare/release/wc_rq9bnybm7ybm/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_rxz969384q84/",
+   "href": "/lexicon-v2/compare/release/wc_rxz969384q84/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_sfvs2tk37p5y/",
+   "href": "/lexicon-v2/compare/release/wc_sfvs2tk37p5y/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_sj76cz4exr2z/",
+   "href": "/lexicon-v2/compare/release/wc_sj76cz4exr2z/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_spx94fnzqre4/",
+   "href": "/lexicon-v2/compare/release/wc_spx94fnzqre4/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_sr1x6gb3wqbs/",
+   "href": "/lexicon-v2/compare/release/wc_sr1x6gb3wqbs/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_sredngg8tzb0/",
+   "href": "/lexicon-v2/compare/release/wc_sredngg8tzb0/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_sye0ppkx0dwh/",
+   "href": "/lexicon-v2/compare/release/wc_sye0ppkx0dwh/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_tk3jdz1xf0mf/",
+   "href": "/lexicon-v2/compare/release/wc_tk3jdz1xf0mf/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_tm57q9wj8y31/",
+   "href": "/lexicon-v2/compare/release/wc_tm57q9wj8y31/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_tnwfw0gzfm5q/",
+   "href": "/lexicon-v2/compare/release/wc_tnwfw0gzfm5q/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_tnxmxw3kjras/",
+   "href": "/lexicon-v2/compare/release/wc_tnxmxw3kjras/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_tpye2vc45frf/",
+   "href": "/lexicon-v2/compare/release/wc_tpye2vc45frf/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_vfqatzjagh7j/",
+   "href": "/lexicon-v2/compare/release/wc_vfqatzjagh7j/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_vm2hbj30pf6c/",
+   "href": "/lexicon-v2/compare/release/wc_vm2hbj30pf6c/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_vnk3jt6x4cw6/",
+   "href": "/lexicon-v2/compare/release/wc_vnk3jt6x4cw6/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_vq34ms5wtfev/",
+   "href": "/lexicon-v2/compare/release/wc_vq34ms5wtfev/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_vqtt12t22gam/",
+   "href": "/lexicon-v2/compare/release/wc_vqtt12t22gam/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_vtqv6my006c3/",
+   "href": "/lexicon-v2/compare/release/wc_vtqv6my006c3/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_vy1cr9bw4wsq/",
+   "href": "/lexicon-v2/compare/release/wc_vy1cr9bw4wsq/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_vzt7m2k3tg48/",
+   "href": "/lexicon-v2/compare/release/wc_vzt7m2k3tg48/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_w78q6xbserdn/",
+   "href": "/lexicon-v2/compare/release/wc_w78q6xbserdn/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_w7tnaqg1amv4/",
+   "href": "/lexicon-v2/compare/release/wc_w7tnaqg1amv4/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_wmyzn565rxp4/",
+   "href": "/lexicon-v2/compare/release/wc_wmyzn565rxp4/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_wq7h18tk76dh/",
+   "href": "/lexicon-v2/compare/release/wc_wq7h18tk76dh/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_wst7h8j302z2/",
+   "href": "/lexicon-v2/compare/release/wc_wst7h8j302z2/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_wzct64k4fham/",
+   "href": "/lexicon-v2/compare/release/wc_wzct64k4fham/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_x5v9xqax0t4d/",
+   "href": "/lexicon-v2/compare/release/wc_x5v9xqax0t4d/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_xbw7msqev2mz/",
+   "href": "/lexicon-v2/compare/release/wc_xbw7msqev2mz/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_xmnw6aata5me/",
+   "href": "/lexicon-v2/compare/release/wc_xmnw6aata5me/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_xmzv71z7hwee/",
+   "href": "/lexicon-v2/compare/release/wc_xmzv71z7hwee/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_y9j49mes11mr/",
+   "href": "/lexicon-v2/compare/release/wc_y9j49mes11mr/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_yd5ekty2j7kb/",
+   "href": "/lexicon-v2/compare/release/wc_yd5ekty2j7kb/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_yff8w36wws3j/",
+   "href": "/lexicon-v2/compare/release/wc_yff8w36wws3j/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_yh60ravvq5am/",
+   "href": "/lexicon-v2/compare/release/wc_yh60ravvq5am/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_yr4ee7vav0mq/",
+   "href": "/lexicon-v2/compare/release/wc_yr4ee7vav0mq/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_zc0b8ncwj5b9/",
+   "href": "/lexicon-v2/compare/release/wc_zc0b8ncwj5b9/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_zhvykdar3452/",
+   "href": "/lexicon-v2/compare/release/wc_zhvykdar3452/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/release/wc_zw0vjc1dxpsf/",
+   "href": "/lexicon-v2/compare/release/wc_zw0vjc1dxpsf/",
+   "class": "compare-card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/бабин/",
+   "href": "/lexicon-v2/compare/word/%D0%B1%D0%B0%D0%B1%D0%B8%D0%BD/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/бабуся/",
+   "href": "/lexicon-v2/compare/word/%D0%B1%D0%B0%D0%B1%D1%83%D1%81%D1%8F/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/базар/",
+   "href": "/lexicon-v2/compare/word/%D0%B1%D0%B0%D0%B7%D0%B0%D1%80/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/бандура/",
+   "href": "/lexicon-v2/compare/word/%D0%B1%D0%B0%D0%BD%D0%B4%D1%83%D1%80%D0%B0/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/банк/",
+   "href": "/lexicon-v2/compare/word/%D0%B1%D0%B0%D0%BD%D0%BA/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/бар/",
+   "href": "/lexicon-v2/compare/word/%D0%B1%D0%B0%D1%80/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/баран/",
+   "href": "/lexicon-v2/compare/word/%D0%B1%D0%B0%D1%80%D0%B0%D0%BD/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/батьківщина/",
+   "href": "/lexicon-v2/compare/word/%D0%B1%D0%B0%D1%82%D1%8C%D0%BA%D1%96%D0%B2%D1%89%D0%B8%D0%BD%D0%B0/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/благородний жест/",
+   "href": "/lexicon-v2/compare/word/%D0%B1%D0%BB%D0%B0%D0%B3%D0%BE%D1%80%D0%BE%D0%B4%D0%BD%D0%B8%D0%B9%20%D0%B6%D0%B5%D1%81%D1%82/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/блекоти наїлась/",
+   "href": "/lexicon-v2/compare/word/%D0%B1%D0%BB%D0%B5%D0%BA%D0%BE%D1%82%D0%B8%20%D0%BD%D0%B0%D1%97%D0%BB%D0%B0%D1%81%D1%8C/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/блигом світ/",
+   "href": "/lexicon-v2/compare/word/%D0%B1%D0%BB%D0%B8%D0%B3%D0%BE%D0%BC%20%D1%81%D0%B2%D1%96%D1%82/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/близько не пахне/",
+   "href": "/lexicon-v2/compare/word/%D0%B1%D0%BB%D0%B8%D0%B7%D1%8C%D0%BA%D0%BE%20%D0%BD%D0%B5%20%D0%BF%D0%B0%D1%85%D0%BD%D0%B5/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/блискавкою прорізати/",
+   "href": "/lexicon-v2/compare/word/%D0%B1%D0%BB%D0%B8%D1%81%D0%BA%D0%B0%D0%B2%D0%BA%D0%BE%D1%8E%20%D0%BF%D1%80%D0%BE%D1%80%D1%96%D0%B7%D0%B0%D1%82%D0%B8/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/блудний син/",
+   "href": "/lexicon-v2/compare/word/%D0%B1%D0%BB%D1%83%D0%B4%D0%BD%D0%B8%D0%B9%20%D1%81%D0%B8%D0%BD/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/бог зна що таке/",
+   "href": "/lexicon-v2/compare/word/%D0%B1%D0%BE%D0%B3%20%D0%B7%D0%BD%D0%B0%20%D1%89%D0%BE%20%D1%82%D0%B0%D0%BA%D0%B5/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/бог помилував/",
+   "href": "/lexicon-v2/compare/word/%D0%B1%D0%BE%D0%B3%20%D0%BF%D0%BE%D0%BC%D0%B8%D0%BB%D1%83%D0%B2%D0%B0%D0%B2/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/боже помагай/",
+   "href": "/lexicon-v2/compare/word/%D0%B1%D0%BE%D0%B6%D0%B5%20%D0%BF%D0%BE%D0%BC%D0%B0%D0%B3%D0%B0%D0%B9/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/божий світ/",
+   "href": "/lexicon-v2/compare/word/%D0%B1%D0%BE%D0%B6%D0%B8%D0%B9%20%D1%81%D0%B2%D1%96%D1%82/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/валаамова ослиця/",
+   "href": "/lexicon-v2/compare/word/%D0%B2%D0%B0%D0%BB%D0%B0%D0%B0%D0%BC%D0%BE%D0%B2%D0%B0%20%D0%BE%D1%81%D0%BB%D0%B8%D1%86%D1%8F/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/вряди-годи/",
+   "href": "/lexicon-v2/compare/word/%D0%B2%D1%80%D1%8F%D0%B4%D0%B8-%D0%B3%D0%BE%D0%B4%D0%B8/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/гнат-безп'ятко/",
+   "href": "/lexicon-v2/compare/word/%D0%B3%D0%BD%D0%B0%D1%82-%D0%B1%D0%B5%D0%B7%D0%BF'%D1%8F%D1%82%D0%BA%D0%BE/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/господь його розбере/",
+   "href": "/lexicon-v2/compare/word/%D0%B3%D0%BE%D1%81%D0%BF%D0%BE%D0%B4%D1%8C%20%D0%B9%D0%BE%D0%B3%D0%BE%20%D1%80%D0%BE%D0%B7%D0%B1%D0%B5%D1%80%D0%B5/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/замок/",
+   "href": "/lexicon-v2/compare/word/%D0%B7%D0%B0%D0%BC%D0%BE%D0%BA/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/ключ/",
+   "href": "/lexicon-v2/compare/word/%D0%BA%D0%BB%D1%8E%D1%87/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/любов/",
+   "href": "/lexicon-v2/compare/word/%D0%BB%D1%8E%D0%B1%D0%BE%D0%B2/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/мама/",
+   "href": "/lexicon-v2/compare/word/%D0%BC%D0%B0%D0%BC%D0%B0/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/новий/",
+   "href": "/lexicon-v2/compare/word/%D0%BD%D0%BE%D0%B2%D0%B8%D0%B9/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/помилка/",
+   "href": "/lexicon-v2/compare/word/%D0%BF%D0%BE%D0%BC%D0%B8%D0%BB%D0%BA%D0%B0/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/робінзон на безлюдному острові/",
+   "href": "/lexicon-v2/compare/word/%D1%80%D0%BE%D0%B1%D1%96%D0%BD%D0%B7%D0%BE%D0%BD%20%D0%BD%D0%B0%20%D0%B1%D0%B5%D0%B7%D0%BB%D1%8E%D0%B4%D0%BD%D0%BE%D0%BC%D1%83%20%D0%BE%D1%81%D1%82%D1%80%D0%BE%D0%B2%D1%96/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/різати правду-матку/",
+   "href": "/lexicon-v2/compare/word/%D1%80%D1%96%D0%B7%D0%B0%D1%82%D0%B8%20%D0%BF%D1%80%D0%B0%D0%B2%D0%B4%D1%83-%D0%BC%D0%B0%D1%82%D0%BA%D1%83/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/самий/",
+   "href": "/lexicon-v2/compare/word/%D1%81%D0%B0%D0%BC%D0%B8%D0%B9/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/число/",
+   "href": "/lexicon-v2/compare/word/%D1%87%D0%B8%D1%81%D0%BB%D0%BE/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/читати/",
+   "href": "/lexicon-v2/compare/word/%D1%87%D0%B8%D1%82%D0%B0%D1%82%D0%B8/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/чоловік/",
+   "href": "/lexicon-v2/compare/word/%D1%87%D0%BE%D0%BB%D0%BE%D0%B2%D1%96%D0%BA/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/чоловічий/",
+   "href": "/lexicon-v2/compare/word/%D1%87%D0%BE%D0%BB%D0%BE%D0%B2%D1%96%D1%87%D0%B8%D0%B9/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/чому/",
+   "href": "/lexicon-v2/compare/word/%D1%87%D0%BE%D0%BC%D1%83/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/чорний/",
+   "href": "/lexicon-v2/compare/word/%D1%87%D0%BE%D1%80%D0%BD%D0%B8%D0%B9/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/чорно-білий/",
+   "href": "/lexicon-v2/compare/word/%D1%87%D0%BE%D1%80%D0%BD%D0%BE-%D0%B1%D1%96%D0%BB%D0%B8%D0%B9/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/чотири/",
+   "href": "/lexicon-v2/compare/word/%D1%87%D0%BE%D1%82%D0%B8%D1%80%D0%B8/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/чотириста/",
+   "href": "/lexicon-v2/compare/word/%D1%87%D0%BE%D1%82%D0%B8%D1%80%D0%B8%D1%81%D1%82%D0%B0/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/чотирнадцятий/",
+   "href": "/lexicon-v2/compare/word/%D1%87%D0%BE%D1%82%D0%B8%D1%80%D0%BD%D0%B0%D0%B4%D1%86%D1%8F%D1%82%D0%B8%D0%B9/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/чотирнадцять/",
+   "href": "/lexicon-v2/compare/word/%D1%87%D0%BE%D1%82%D0%B8%D1%80%D0%BD%D0%B0%D0%B4%D1%86%D1%8F%D1%82%D1%8C/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/чудовий/",
+   "href": "/lexicon-v2/compare/word/%D1%87%D1%83%D0%B4%D0%BE%D0%B2%D0%B8%D0%B9/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/чути/",
+   "href": "/lexicon-v2/compare/word/%D1%87%D1%83%D1%82%D0%B8/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/шампанське/",
+   "href": "/lexicon-v2/compare/word/%D1%88%D0%B0%D0%BC%D0%BF%D0%B0%D0%BD%D1%81%D1%8C%D0%BA%D0%B5/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/шампунь/",
+   "href": "/lexicon-v2/compare/word/%D1%88%D0%B0%D0%BC%D0%BF%D1%83%D0%BD%D1%8C/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/шапка/",
+   "href": "/lexicon-v2/compare/word/%D1%88%D0%B0%D0%BF%D0%BA%D0%B0/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/шафа/",
+   "href": "/lexicon-v2/compare/word/%D1%88%D0%B0%D1%84%D0%B0/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/шафка/",
+   "href": "/lexicon-v2/compare/word/%D1%88%D0%B0%D1%84%D0%BA%D0%B0/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/швидка/",
+   "href": "/lexicon-v2/compare/word/%D1%88%D0%B2%D0%B8%D0%B4%D0%BA%D0%B0/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/швидко/",
+   "href": "/lexicon-v2/compare/word/%D1%88%D0%B2%D0%B8%D0%B4%D0%BA%D0%BE/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/швидше/",
+   "href": "/lexicon-v2/compare/word/%D1%88%D0%B2%D0%B8%D0%B4%D1%88%D0%B5/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/шестеро/",
+   "href": "/lexicon-v2/compare/word/%D1%88%D0%B5%D1%81%D1%82%D0%B5%D1%80%D0%BE/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/ширина/",
+   "href": "/lexicon-v2/compare/word/%D1%88%D0%B8%D1%80%D0%B8%D0%BD%D0%B0/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/ширший/",
+   "href": "/lexicon-v2/compare/word/%D1%88%D0%B8%D1%80%D1%88%D0%B8%D0%B9/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/шкарпетка/",
+   "href": "/lexicon-v2/compare/word/%D1%88%D0%BA%D0%B0%D1%80%D0%BF%D0%B5%D1%82%D0%BA%D0%B0/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/школа/",
+   "href": "/lexicon-v2/compare/word/%D1%88%D0%BA%D0%BE%D0%BB%D0%B0/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/школяр/",
+   "href": "/lexicon-v2/compare/word/%D1%88%D0%BA%D0%BE%D0%BB%D1%8F%D1%80/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/школярка/",
+   "href": "/lexicon-v2/compare/word/%D1%88%D0%BA%D0%BE%D0%BB%D1%8F%D1%80%D0%BA%D0%B0/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/шкідливий/",
+   "href": "/lexicon-v2/compare/word/%D1%88%D0%BA%D1%96%D0%B4%D0%BB%D0%B8%D0%B2%D0%B8%D0%B9/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/шлюб/",
+   "href": "/lexicon-v2/compare/word/%D1%88%D0%BB%D1%8E%D0%B1/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/шматок/",
+   "href": "/lexicon-v2/compare/word/%D1%88%D0%BC%D0%B0%D1%82%D0%BE%D0%BA/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/шніцель/",
+   "href": "/lexicon-v2/compare/word/%D1%88%D0%BD%D1%96%D1%86%D0%B5%D0%BB%D1%8C/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/шоколад/",
+   "href": "/lexicon-v2/compare/word/%D1%88%D0%BE%D0%BA%D0%BE%D0%BB%D0%B0%D0%B4/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/шоколадка/",
+   "href": "/lexicon-v2/compare/word/%D1%88%D0%BE%D0%BA%D0%BE%D0%BB%D0%B0%D0%B4%D0%BA%D0%B0/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/шоколадний/",
+   "href": "/lexicon-v2/compare/word/%D1%88%D0%BE%D0%BA%D0%BE%D0%BB%D0%B0%D0%B4%D0%BD%D0%B8%D0%B9/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/шорти/",
+   "href": "/lexicon-v2/compare/word/%D1%88%D0%BE%D1%80%D1%82%D0%B8/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/шостий/",
+   "href": "/lexicon-v2/compare/word/%D1%88%D0%BE%D1%81%D1%82%D0%B8%D0%B9/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/шофер/",
+   "href": "/lexicon-v2/compare/word/%D1%88%D0%BE%D1%84%D0%B5%D1%80/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/штамп/",
+   "href": "/lexicon-v2/compare/word/%D1%88%D1%82%D0%B0%D0%BC%D0%BF/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/штора/",
+   "href": "/lexicon-v2/compare/word/%D1%88%D1%82%D0%BE%D1%80%D0%B0/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/штраф/",
+   "href": "/lexicon-v2/compare/word/%D1%88%D1%82%D1%80%D0%B0%D1%84/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/шукати/",
+   "href": "/lexicon-v2/compare/word/%D1%88%D1%83%D0%BA%D0%B0%D1%82%D0%B8/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/шістдесят/",
+   "href": "/lexicon-v2/compare/word/%D1%88%D1%96%D1%81%D1%82%D0%B4%D0%B5%D1%81%D1%8F%D1%82/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/шістдесятий/",
+   "href": "/lexicon-v2/compare/word/%D1%88%D1%96%D1%81%D1%82%D0%B4%D0%B5%D1%81%D1%8F%D1%82%D0%B8%D0%B9/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/шістнадцятий/",
+   "href": "/lexicon-v2/compare/word/%D1%88%D1%96%D1%81%D1%82%D0%BD%D0%B0%D0%B4%D1%86%D1%8F%D1%82%D0%B8%D0%B9/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/шістнадцять/",
+   "href": "/lexicon-v2/compare/word/%D1%88%D1%96%D1%81%D1%82%D0%BD%D0%B0%D0%B4%D1%86%D1%8F%D1%82%D1%8C/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/шістсот/",
+   "href": "/lexicon-v2/compare/word/%D1%88%D1%96%D1%81%D1%82%D1%81%D0%BE%D1%82/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/шість/",
+   "href": "/lexicon-v2/compare/word/%D1%88%D1%96%D1%81%D1%82%D1%8C/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/щасливо/",
+   "href": "/lexicon-v2/compare/word/%D1%89%D0%B0%D1%81%D0%BB%D0%B8%D0%B2%D0%BE/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/ще/",
+   "href": "/lexicon-v2/compare/word/%D1%89%D0%B5/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/щедрий/",
+   "href": "/lexicon-v2/compare/word/%D1%89%D0%B5%D0%B4%D1%80%D0%B8%D0%B9/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/щедрівка/",
+   "href": "/lexicon-v2/compare/word/%D1%89%D0%B5%D0%B4%D1%80%D1%96%D0%B2%D0%BA%D0%B0/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/щирий/",
+   "href": "/lexicon-v2/compare/word/%D1%89%D0%B8%D1%80%D0%B8%D0%B9/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/щиро/",
+   "href": "/lexicon-v2/compare/word/%D1%89%D0%B8%D1%80%D0%BE/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/щовечора/",
+   "href": "/lexicon-v2/compare/word/%D1%89%D0%BE%D0%B2%D0%B5%D1%87%D0%BE%D1%80%D0%B0/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/щовівторка/",
+   "href": "/lexicon-v2/compare/word/%D1%89%D0%BE%D0%B2%D1%96%D0%B2%D1%82%D0%BE%D1%80%D0%BA%D0%B0/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/щогодини/",
+   "href": "/lexicon-v2/compare/word/%D1%89%D0%BE%D0%B3%D0%BE%D0%B4%D0%B8%D0%BD%D0%B8/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/щоденний/",
+   "href": "/lexicon-v2/compare/word/%D1%89%D0%BE%D0%B4%D0%B5%D0%BD%D0%BD%D0%B8%D0%B9/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/щодня/",
+   "href": "/lexicon-v2/compare/word/%D1%89%D0%BE%D0%B4%D0%BD%D1%8F/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/щодо/",
+   "href": "/lexicon-v2/compare/word/%D1%89%D0%BE%D0%B4%D0%BE/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/щока/",
+   "href": "/lexicon-v2/compare/word/%D1%89%D0%BE%D0%BA%D0%B0/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/щомісяця/",
+   "href": "/lexicon-v2/compare/word/%D1%89%D0%BE%D0%BC%D1%96%D1%81%D1%8F%D1%86%D1%8F/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/щонеділі/",
+   "href": "/lexicon-v2/compare/word/%D1%89%D0%BE%D0%BD%D0%B5%D0%B4%D1%96%D0%BB%D1%96/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/щопонеділка/",
+   "href": "/lexicon-v2/compare/word/%D1%89%D0%BE%D0%BF%D0%BE%D0%BD%D0%B5%D0%B4%D1%96%D0%BB%D0%BA%D0%B0/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/щоразу/",
+   "href": "/lexicon-v2/compare/word/%D1%89%D0%BE%D1%80%D0%B0%D0%B7%D1%83/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/щоранку/",
+   "href": "/lexicon-v2/compare/word/%D1%89%D0%BE%D1%80%D0%B0%D0%BD%D0%BA%D1%83/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/щороку/",
+   "href": "/lexicon-v2/compare/word/%D1%89%D0%BE%D1%80%D0%BE%D0%BA%D1%83/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/щорічно/",
+   "href": "/lexicon-v2/compare/word/%D1%89%D0%BE%D1%80%D1%96%D1%87%D0%BD%D0%BE/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/щосереди/",
+   "href": "/lexicon-v2/compare/word/%D1%89%D0%BE%D1%81%D0%B5%D1%80%D0%B5%D0%B4%D0%B8/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/щосуботи/",
+   "href": "/lexicon-v2/compare/word/%D1%89%D0%BE%D1%81%D1%83%D0%B1%D0%BE%D1%82%D0%B8/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/щось/",
+   "href": "/lexicon-v2/compare/word/%D1%89%D0%BE%D1%81%D1%8C/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/щотижня/",
+   "href": "/lexicon-v2/compare/word/%D1%89%D0%BE%D1%82%D0%B8%D0%B6%D0%BD%D1%8F/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/щохвилини/",
+   "href": "/lexicon-v2/compare/word/%D1%89%D0%BE%D1%85%D0%B2%D0%B8%D0%BB%D0%B8%D0%BD%D0%B8/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/щочетверга/",
+   "href": "/lexicon-v2/compare/word/%D1%89%D0%BE%D1%87%D0%B5%D1%82%D0%B2%D0%B5%D1%80%D0%B3%D0%B0/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/щітка/",
+   "href": "/lexicon-v2/compare/word/%D1%89%D1%96%D1%82%D0%BA%D0%B0/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/ювелірний/",
+   "href": "/lexicon-v2/compare/word/%D1%8E%D0%B2%D0%B5%D0%BB%D1%96%D1%80%D0%BD%D0%B8%D0%B9/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/ювілей/",
+   "href": "/lexicon-v2/compare/word/%D1%8E%D0%B2%D1%96%D0%BB%D0%B5%D0%B9/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/юридичний/",
+   "href": "/lexicon-v2/compare/word/%D1%8E%D1%80%D0%B8%D0%B4%D0%B8%D1%87%D0%BD%D0%B8%D0%B9/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/юристка/",
+   "href": "/lexicon-v2/compare/word/%D1%8E%D1%80%D0%B8%D1%81%D1%82%D0%BA%D0%B0/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/я/",
+   "href": "/lexicon-v2/compare/word/%D1%8F/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/яблуко/",
+   "href": "/lexicon-v2/compare/word/%D1%8F%D0%B1%D0%BB%D1%83%D0%BA%D0%BE/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/яблучний/",
+   "href": "/lexicon-v2/compare/word/%D1%8F%D0%B1%D0%BB%D1%83%D1%87%D0%BD%D0%B8%D0%B9/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/ягода/",
+   "href": "/lexicon-v2/compare/word/%D1%8F%D0%B3%D0%BE%D0%B4%D0%B0/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/язик/",
+   "href": "/lexicon-v2/compare/word/%D1%8F%D0%B7%D0%B8%D0%BA/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/яйце/",
+   "href": "/lexicon-v2/compare/word/%D1%8F%D0%B9%D1%86%D0%B5/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/якби/",
+   "href": "/lexicon-v2/compare/word/%D1%8F%D0%BA%D0%B1%D0%B8/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/який-небудь/",
+   "href": "/lexicon-v2/compare/word/%D1%8F%D0%BA%D0%B8%D0%B9-%D0%BD%D0%B5%D0%B1%D1%83%D0%B4%D1%8C/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/який/",
+   "href": "/lexicon-v2/compare/word/%D1%8F%D0%BA%D0%B8%D0%B9/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/якийсь/",
+   "href": "/lexicon-v2/compare/word/%D1%8F%D0%BA%D0%B8%D0%B9%D1%81%D1%8C/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/якнайшвидше/",
+   "href": "/lexicon-v2/compare/word/%D1%8F%D0%BA%D0%BD%D0%B0%D0%B9%D1%88%D0%B2%D0%B8%D0%B4%D1%88%D0%B5/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/якщо/",
+   "href": "/lexicon-v2/compare/word/%D1%8F%D0%BA%D1%89%D0%BE/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/якісний/",
+   "href": "/lexicon-v2/compare/word/%D1%8F%D0%BA%D1%96%D1%81%D0%BD%D0%B8%D0%B9/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/якість/",
+   "href": "/lexicon-v2/compare/word/%D1%8F%D0%BA%D1%96%D1%81%D1%82%D1%8C/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/ялинка/",
+   "href": "/lexicon-v2/compare/word/%D1%8F%D0%BB%D0%B8%D0%BD%D0%BA%D0%B0/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/яловичий/",
+   "href": "/lexicon-v2/compare/word/%D1%8F%D0%BB%D0%BE%D0%B2%D0%B8%D1%87%D0%B8%D0%B9/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/яловичина/",
+   "href": "/lexicon-v2/compare/word/%D1%8F%D0%BB%D0%BE%D0%B2%D0%B8%D1%87%D0%B8%D0%BD%D0%B0/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/ярмарок/",
+   "href": "/lexicon-v2/compare/word/%D1%8F%D1%80%D0%BC%D0%B0%D1%80%D0%BE%D0%BA/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/яскравий/",
+   "href": "/lexicon-v2/compare/word/%D1%8F%D1%81%D0%BA%D1%80%D0%B0%D0%B2%D0%B8%D0%B9/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/яскравіший/",
+   "href": "/lexicon-v2/compare/word/%D1%8F%D1%81%D0%BA%D1%80%D0%B0%D0%B2%D1%96%D1%88%D0%B8%D0%B9/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/ясно/",
+   "href": "/lexicon-v2/compare/word/%D1%8F%D1%81%D0%BD%D0%BE/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/яхта/",
+   "href": "/lexicon-v2/compare/word/%D1%8F%D1%85%D1%82%D0%B0/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/ящик/",
+   "href": "/lexicon-v2/compare/word/%D1%8F%D1%89%D0%B8%D0%BA/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/compare/word/яєчня/",
+   "href": "/lexicon-v2/compare/word/%D1%8F%D1%94%D1%87%D0%BD%D1%8F/",
+   "class": "compare-word-page"
+  },
+  {
+   "path": "/lexicon-v2/release/",
+   "href": "/lexicon-v2/release/",
+   "class": "release-summary"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_02a5cjxcpbcf/",
+   "href": "/lexicon-v2/release/wc_02a5cjxcpbcf/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_043h3npd7ed4/",
+   "href": "/lexicon-v2/release/wc_043h3npd7ed4/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_08svjhdbe0fq/",
+   "href": "/lexicon-v2/release/wc_08svjhdbe0fq/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_0a3k6ypbjhrf/",
+   "href": "/lexicon-v2/release/wc_0a3k6ypbjhrf/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_0c2c6k5nrw0n/",
+   "href": "/lexicon-v2/release/wc_0c2c6k5nrw0n/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_0nq8zajmfvcg/",
+   "href": "/lexicon-v2/release/wc_0nq8zajmfvcg/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_0r1cdw5z36cd/",
+   "href": "/lexicon-v2/release/wc_0r1cdw5z36cd/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_0wv95b3qm707/",
+   "href": "/lexicon-v2/release/wc_0wv95b3qm707/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_1nrw339ddgvm/",
+   "href": "/lexicon-v2/release/wc_1nrw339ddgvm/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_2q1qzzw8gd01/",
+   "href": "/lexicon-v2/release/wc_2q1qzzw8gd01/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_2xzw44zg56aq/",
+   "href": "/lexicon-v2/release/wc_2xzw44zg56aq/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_345emw0fe2hr/",
+   "href": "/lexicon-v2/release/wc_345emw0fe2hr/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_36p338sk68qm/",
+   "href": "/lexicon-v2/release/wc_36p338sk68qm/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_3rc3vnk4r328/",
+   "href": "/lexicon-v2/release/wc_3rc3vnk4r328/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_4fm88q03w5qs/",
+   "href": "/lexicon-v2/release/wc_4fm88q03w5qs/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_4w8bcapex04x/",
+   "href": "/lexicon-v2/release/wc_4w8bcapex04x/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_5031n96dwgnt/",
+   "href": "/lexicon-v2/release/wc_5031n96dwgnt/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_562eqy9g3bck/",
+   "href": "/lexicon-v2/release/wc_562eqy9g3bck/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_5b36dst0her6/",
+   "href": "/lexicon-v2/release/wc_5b36dst0her6/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_5btr8jkdzvd1/",
+   "href": "/lexicon-v2/release/wc_5btr8jkdzvd1/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_5j37jfndz666/",
+   "href": "/lexicon-v2/release/wc_5j37jfndz666/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_5s9kgf5brczs/",
+   "href": "/lexicon-v2/release/wc_5s9kgf5brczs/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_6bt62wd6zzzf/",
+   "href": "/lexicon-v2/release/wc_6bt62wd6zzzf/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_6f8yq9yvp0ns/",
+   "href": "/lexicon-v2/release/wc_6f8yq9yvp0ns/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_6hg8x80fcnk2/",
+   "href": "/lexicon-v2/release/wc_6hg8x80fcnk2/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_7a6x6n8rek4y/",
+   "href": "/lexicon-v2/release/wc_7a6x6n8rek4y/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_7e1t38e50r34/",
+   "href": "/lexicon-v2/release/wc_7e1t38e50r34/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_7vqqh0c120vy/",
+   "href": "/lexicon-v2/release/wc_7vqqh0c120vy/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_8bbj9gn4qm3z/",
+   "href": "/lexicon-v2/release/wc_8bbj9gn4qm3z/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_8kf3af4b8vth/",
+   "href": "/lexicon-v2/release/wc_8kf3af4b8vth/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_8mhjfw05sm0t/",
+   "href": "/lexicon-v2/release/wc_8mhjfw05sm0t/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_8t60pamgdqs0/",
+   "href": "/lexicon-v2/release/wc_8t60pamgdqs0/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_8z09eyahcs88/",
+   "href": "/lexicon-v2/release/wc_8z09eyahcs88/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_91fq1gtsh9f5/",
+   "href": "/lexicon-v2/release/wc_91fq1gtsh9f5/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_91qt0yt5aqnt/",
+   "href": "/lexicon-v2/release/wc_91qt0yt5aqnt/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_96p4nx83f894/",
+   "href": "/lexicon-v2/release/wc_96p4nx83f894/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_9wjbgkp9fak8/",
+   "href": "/lexicon-v2/release/wc_9wjbgkp9fak8/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_9zfg3rrkkqzf/",
+   "href": "/lexicon-v2/release/wc_9zfg3rrkkqzf/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_a4ndp7w0v8dq/",
+   "href": "/lexicon-v2/release/wc_a4ndp7w0v8dq/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_a7k5wtq89cdg/",
+   "href": "/lexicon-v2/release/wc_a7k5wtq89cdg/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_acq6r56secba/",
+   "href": "/lexicon-v2/release/wc_acq6r56secba/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_anz167as5tn7/",
+   "href": "/lexicon-v2/release/wc_anz167as5tn7/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_b92hz3ncnw1a/",
+   "href": "/lexicon-v2/release/wc_b92hz3ncnw1a/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_bej8fh02sp6p/",
+   "href": "/lexicon-v2/release/wc_bej8fh02sp6p/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_bfdeknm81e44/",
+   "href": "/lexicon-v2/release/wc_bfdeknm81e44/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_bgr5q9c06wxg/",
+   "href": "/lexicon-v2/release/wc_bgr5q9c06wxg/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_btwc6wcf50wv/",
+   "href": "/lexicon-v2/release/wc_btwc6wcf50wv/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_bz5ypsm3wyj7/",
+   "href": "/lexicon-v2/release/wc_bz5ypsm3wyj7/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_c66xvp4hvdev/",
+   "href": "/lexicon-v2/release/wc_c66xvp4hvdev/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_c6j1qtrpbcgx/",
+   "href": "/lexicon-v2/release/wc_c6j1qtrpbcgx/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_cnq7f88k186e/",
+   "href": "/lexicon-v2/release/wc_cnq7f88k186e/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_cvkw5nzdg00n/",
+   "href": "/lexicon-v2/release/wc_cvkw5nzdg00n/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_cxjtr6481e7t/",
+   "href": "/lexicon-v2/release/wc_cxjtr6481e7t/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_d2d38y0ctmct/",
+   "href": "/lexicon-v2/release/wc_d2d38y0ctmct/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_d3qyg6mhjx07/",
+   "href": "/lexicon-v2/release/wc_d3qyg6mhjx07/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_da7t5vpprjw3/",
+   "href": "/lexicon-v2/release/wc_da7t5vpprjw3/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_dstgm8vb5xfr/",
+   "href": "/lexicon-v2/release/wc_dstgm8vb5xfr/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_e1n2pwrrajma/",
+   "href": "/lexicon-v2/release/wc_e1n2pwrrajma/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_ea2fvbcb6p3k/",
+   "href": "/lexicon-v2/release/wc_ea2fvbcb6p3k/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_f0nnsej1zh7n/",
+   "href": "/lexicon-v2/release/wc_f0nnsej1zh7n/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_f1m5pppp1619/",
+   "href": "/lexicon-v2/release/wc_f1m5pppp1619/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_f70edzrhfy8e/",
+   "href": "/lexicon-v2/release/wc_f70edzrhfy8e/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_fc08gvq844db/",
+   "href": "/lexicon-v2/release/wc_fc08gvq844db/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_fd7d7wa6rn62/",
+   "href": "/lexicon-v2/release/wc_fd7d7wa6rn62/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_ffw1zgt1exvw/",
+   "href": "/lexicon-v2/release/wc_ffw1zgt1exvw/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_fvxestgxf73d/",
+   "href": "/lexicon-v2/release/wc_fvxestgxf73d/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_gbh31d6zptnx/",
+   "href": "/lexicon-v2/release/wc_gbh31d6zptnx/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_grkg2vxacyp0/",
+   "href": "/lexicon-v2/release/wc_grkg2vxacyp0/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_gv7g0005qb5d/",
+   "href": "/lexicon-v2/release/wc_gv7g0005qb5d/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_h509ejs613sy/",
+   "href": "/lexicon-v2/release/wc_h509ejs613sy/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_h54f47k5py6b/",
+   "href": "/lexicon-v2/release/wc_h54f47k5py6b/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_hde0r633f7cq/",
+   "href": "/lexicon-v2/release/wc_hde0r633f7cq/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_hec14t866f1c/",
+   "href": "/lexicon-v2/release/wc_hec14t866f1c/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_hmz9x3anb1ma/",
+   "href": "/lexicon-v2/release/wc_hmz9x3anb1ma/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_ht0ejvdkh8qe/",
+   "href": "/lexicon-v2/release/wc_ht0ejvdkh8qe/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_j1acg1649rw8/",
+   "href": "/lexicon-v2/release/wc_j1acg1649rw8/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_jb4p3ppvcyvx/",
+   "href": "/lexicon-v2/release/wc_jb4p3ppvcyvx/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_jgravxme007h/",
+   "href": "/lexicon-v2/release/wc_jgravxme007h/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_jm7nfbvag8kp/",
+   "href": "/lexicon-v2/release/wc_jm7nfbvag8kp/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_jq9rtqw9yt7y/",
+   "href": "/lexicon-v2/release/wc_jq9rtqw9yt7y/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_jrycyzsy17qk/",
+   "href": "/lexicon-v2/release/wc_jrycyzsy17qk/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_k1kp85tahqag/",
+   "href": "/lexicon-v2/release/wc_k1kp85tahqag/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_k339xj1q2hv7/",
+   "href": "/lexicon-v2/release/wc_k339xj1q2hv7/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_k45tstzkx2b6/",
+   "href": "/lexicon-v2/release/wc_k45tstzkx2b6/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_ka0tp1vt39e8/",
+   "href": "/lexicon-v2/release/wc_ka0tp1vt39e8/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_km3asrjbxhjb/",
+   "href": "/lexicon-v2/release/wc_km3asrjbxhjb/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_m141ewnvv2m4/",
+   "href": "/lexicon-v2/release/wc_m141ewnvv2m4/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_m6bs5ramkdgy/",
+   "href": "/lexicon-v2/release/wc_m6bs5ramkdgy/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_n1g44brn5vs2/",
+   "href": "/lexicon-v2/release/wc_n1g44brn5vs2/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_nhac073v3589/",
+   "href": "/lexicon-v2/release/wc_nhac073v3589/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_p1d31y378qs1/",
+   "href": "/lexicon-v2/release/wc_p1d31y378qs1/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_p41ag4cb6be8/",
+   "href": "/lexicon-v2/release/wc_p41ag4cb6be8/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_p646xsqq40xt/",
+   "href": "/lexicon-v2/release/wc_p646xsqq40xt/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_pmenjgpx1mh9/",
+   "href": "/lexicon-v2/release/wc_pmenjgpx1mh9/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_ppr39m6qsr4e/",
+   "href": "/lexicon-v2/release/wc_ppr39m6qsr4e/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_pr69ykkbh95m/",
+   "href": "/lexicon-v2/release/wc_pr69ykkbh95m/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_prfy102qxyrn/",
+   "href": "/lexicon-v2/release/wc_prfy102qxyrn/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_q7x9wprhedkr/",
+   "href": "/lexicon-v2/release/wc_q7x9wprhedkr/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_q97mnya76nx7/",
+   "href": "/lexicon-v2/release/wc_q97mnya76nx7/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_qm83zt29py0d/",
+   "href": "/lexicon-v2/release/wc_qm83zt29py0d/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_qpcdgkctp7ne/",
+   "href": "/lexicon-v2/release/wc_qpcdgkctp7ne/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_qq67z33prpah/",
+   "href": "/lexicon-v2/release/wc_qq67z33prpah/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_qs3tehs0xz6e/",
+   "href": "/lexicon-v2/release/wc_qs3tehs0xz6e/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_qt1ajf0trs35/",
+   "href": "/lexicon-v2/release/wc_qt1ajf0trs35/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_r6xe3vt4qtw9/",
+   "href": "/lexicon-v2/release/wc_r6xe3vt4qtw9/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_raxj8hwpvp62/",
+   "href": "/lexicon-v2/release/wc_raxj8hwpvp62/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_ref9xyps30mx/",
+   "href": "/lexicon-v2/release/wc_ref9xyps30mx/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_rezqg70bnyy4/",
+   "href": "/lexicon-v2/release/wc_rezqg70bnyy4/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_rk47ephm1bts/",
+   "href": "/lexicon-v2/release/wc_rk47ephm1bts/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_rmvh0tsz1y1a/",
+   "href": "/lexicon-v2/release/wc_rmvh0tsz1y1a/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_rn15mnpkqxar/",
+   "href": "/lexicon-v2/release/wc_rn15mnpkqxar/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_rq9bnybm7ybm/",
+   "href": "/lexicon-v2/release/wc_rq9bnybm7ybm/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_rxz969384q84/",
+   "href": "/lexicon-v2/release/wc_rxz969384q84/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_sfvs2tk37p5y/",
+   "href": "/lexicon-v2/release/wc_sfvs2tk37p5y/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_sj76cz4exr2z/",
+   "href": "/lexicon-v2/release/wc_sj76cz4exr2z/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_spx94fnzqre4/",
+   "href": "/lexicon-v2/release/wc_spx94fnzqre4/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_sr1x6gb3wqbs/",
+   "href": "/lexicon-v2/release/wc_sr1x6gb3wqbs/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_sredngg8tzb0/",
+   "href": "/lexicon-v2/release/wc_sredngg8tzb0/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_sye0ppkx0dwh/",
+   "href": "/lexicon-v2/release/wc_sye0ppkx0dwh/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_tk3jdz1xf0mf/",
+   "href": "/lexicon-v2/release/wc_tk3jdz1xf0mf/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_tm57q9wj8y31/",
+   "href": "/lexicon-v2/release/wc_tm57q9wj8y31/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_tnwfw0gzfm5q/",
+   "href": "/lexicon-v2/release/wc_tnwfw0gzfm5q/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_tnxmxw3kjras/",
+   "href": "/lexicon-v2/release/wc_tnxmxw3kjras/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_tpye2vc45frf/",
+   "href": "/lexicon-v2/release/wc_tpye2vc45frf/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_vfqatzjagh7j/",
+   "href": "/lexicon-v2/release/wc_vfqatzjagh7j/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_vm2hbj30pf6c/",
+   "href": "/lexicon-v2/release/wc_vm2hbj30pf6c/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_vnk3jt6x4cw6/",
+   "href": "/lexicon-v2/release/wc_vnk3jt6x4cw6/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_vq34ms5wtfev/",
+   "href": "/lexicon-v2/release/wc_vq34ms5wtfev/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_vqtt12t22gam/",
+   "href": "/lexicon-v2/release/wc_vqtt12t22gam/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_vtqv6my006c3/",
+   "href": "/lexicon-v2/release/wc_vtqv6my006c3/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_vy1cr9bw4wsq/",
+   "href": "/lexicon-v2/release/wc_vy1cr9bw4wsq/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_vzt7m2k3tg48/",
+   "href": "/lexicon-v2/release/wc_vzt7m2k3tg48/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_w78q6xbserdn/",
+   "href": "/lexicon-v2/release/wc_w78q6xbserdn/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_w7tnaqg1amv4/",
+   "href": "/lexicon-v2/release/wc_w7tnaqg1amv4/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_wmyzn565rxp4/",
+   "href": "/lexicon-v2/release/wc_wmyzn565rxp4/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_wq7h18tk76dh/",
+   "href": "/lexicon-v2/release/wc_wq7h18tk76dh/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_wst7h8j302z2/",
+   "href": "/lexicon-v2/release/wc_wst7h8j302z2/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_wzct64k4fham/",
+   "href": "/lexicon-v2/release/wc_wzct64k4fham/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_x5v9xqax0t4d/",
+   "href": "/lexicon-v2/release/wc_x5v9xqax0t4d/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_xbw7msqev2mz/",
+   "href": "/lexicon-v2/release/wc_xbw7msqev2mz/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_xmnw6aata5me/",
+   "href": "/lexicon-v2/release/wc_xmnw6aata5me/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_xmzv71z7hwee/",
+   "href": "/lexicon-v2/release/wc_xmzv71z7hwee/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_y9j49mes11mr/",
+   "href": "/lexicon-v2/release/wc_y9j49mes11mr/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_yd5ekty2j7kb/",
+   "href": "/lexicon-v2/release/wc_yd5ekty2j7kb/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_yff8w36wws3j/",
+   "href": "/lexicon-v2/release/wc_yff8w36wws3j/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_yh60ravvq5am/",
+   "href": "/lexicon-v2/release/wc_yh60ravvq5am/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_yr4ee7vav0mq/",
+   "href": "/lexicon-v2/release/wc_yr4ee7vav0mq/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_zc0b8ncwj5b9/",
+   "href": "/lexicon-v2/release/wc_zc0b8ncwj5b9/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_zhvykdar3452/",
+   "href": "/lexicon-v2/release/wc_zhvykdar3452/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/release/wc_zw0vjc1dxpsf/",
+   "href": "/lexicon-v2/release/wc_zw0vjc1dxpsf/",
+   "class": "card-diagnostic"
+  },
+  {
+   "path": "/lexicon-v2/word/бабин/",
+   "href": "/lexicon-v2/word/%D0%B1%D0%B0%D0%B1%D0%B8%D0%BD/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/бабуся/",
+   "href": "/lexicon-v2/word/%D0%B1%D0%B0%D0%B1%D1%83%D1%81%D1%8F/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/базар/",
+   "href": "/lexicon-v2/word/%D0%B1%D0%B0%D0%B7%D0%B0%D1%80/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/бандура/",
+   "href": "/lexicon-v2/word/%D0%B1%D0%B0%D0%BD%D0%B4%D1%83%D1%80%D0%B0/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/банк/",
+   "href": "/lexicon-v2/word/%D0%B1%D0%B0%D0%BD%D0%BA/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/бар/",
+   "href": "/lexicon-v2/word/%D0%B1%D0%B0%D1%80/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/баран/",
+   "href": "/lexicon-v2/word/%D0%B1%D0%B0%D1%80%D0%B0%D0%BD/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/батьківщина/",
+   "href": "/lexicon-v2/word/%D0%B1%D0%B0%D1%82%D1%8C%D0%BA%D1%96%D0%B2%D1%89%D0%B8%D0%BD%D0%B0/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/благородний жест/",
+   "href": "/lexicon-v2/word/%D0%B1%D0%BB%D0%B0%D0%B3%D0%BE%D1%80%D0%BE%D0%B4%D0%BD%D0%B8%D0%B9%20%D0%B6%D0%B5%D1%81%D1%82/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/блекоти наїлась/",
+   "href": "/lexicon-v2/word/%D0%B1%D0%BB%D0%B5%D0%BA%D0%BE%D1%82%D0%B8%20%D0%BD%D0%B0%D1%97%D0%BB%D0%B0%D1%81%D1%8C/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/блигом світ/",
+   "href": "/lexicon-v2/word/%D0%B1%D0%BB%D0%B8%D0%B3%D0%BE%D0%BC%20%D1%81%D0%B2%D1%96%D1%82/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/близько не пахне/",
+   "href": "/lexicon-v2/word/%D0%B1%D0%BB%D0%B8%D0%B7%D1%8C%D0%BA%D0%BE%20%D0%BD%D0%B5%20%D0%BF%D0%B0%D1%85%D0%BD%D0%B5/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/блискавкою прорізати/",
+   "href": "/lexicon-v2/word/%D0%B1%D0%BB%D0%B8%D1%81%D0%BA%D0%B0%D0%B2%D0%BA%D0%BE%D1%8E%20%D0%BF%D1%80%D0%BE%D1%80%D1%96%D0%B7%D0%B0%D1%82%D0%B8/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/блудний син/",
+   "href": "/lexicon-v2/word/%D0%B1%D0%BB%D1%83%D0%B4%D0%BD%D0%B8%D0%B9%20%D1%81%D0%B8%D0%BD/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/бог зна що таке/",
+   "href": "/lexicon-v2/word/%D0%B1%D0%BE%D0%B3%20%D0%B7%D0%BD%D0%B0%20%D1%89%D0%BE%20%D1%82%D0%B0%D0%BA%D0%B5/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/бог помилував/",
+   "href": "/lexicon-v2/word/%D0%B1%D0%BE%D0%B3%20%D0%BF%D0%BE%D0%BC%D0%B8%D0%BB%D1%83%D0%B2%D0%B0%D0%B2/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/боже помагай/",
+   "href": "/lexicon-v2/word/%D0%B1%D0%BE%D0%B6%D0%B5%20%D0%BF%D0%BE%D0%BC%D0%B0%D0%B3%D0%B0%D0%B9/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/божий світ/",
+   "href": "/lexicon-v2/word/%D0%B1%D0%BE%D0%B6%D0%B8%D0%B9%20%D1%81%D0%B2%D1%96%D1%82/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/валаамова ослиця/",
+   "href": "/lexicon-v2/word/%D0%B2%D0%B0%D0%BB%D0%B0%D0%B0%D0%BC%D0%BE%D0%B2%D0%B0%20%D0%BE%D1%81%D0%BB%D0%B8%D1%86%D1%8F/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/вряди-годи/",
+   "href": "/lexicon-v2/word/%D0%B2%D1%80%D1%8F%D0%B4%D0%B8-%D0%B3%D0%BE%D0%B4%D0%B8/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/гнат-безп'ятко/",
+   "href": "/lexicon-v2/word/%D0%B3%D0%BD%D0%B0%D1%82-%D0%B1%D0%B5%D0%B7%D0%BF'%D1%8F%D1%82%D0%BA%D0%BE/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/господь його розбере/",
+   "href": "/lexicon-v2/word/%D0%B3%D0%BE%D1%81%D0%BF%D0%BE%D0%B4%D1%8C%20%D0%B9%D0%BE%D0%B3%D0%BE%20%D1%80%D0%BE%D0%B7%D0%B1%D0%B5%D1%80%D0%B5/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/замок/",
+   "href": "/lexicon-v2/word/%D0%B7%D0%B0%D0%BC%D0%BE%D0%BA/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/ключ/",
+   "href": "/lexicon-v2/word/%D0%BA%D0%BB%D1%8E%D1%87/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/любов/",
+   "href": "/lexicon-v2/word/%D0%BB%D1%8E%D0%B1%D0%BE%D0%B2/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/мама/",
+   "href": "/lexicon-v2/word/%D0%BC%D0%B0%D0%BC%D0%B0/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/новий/",
+   "href": "/lexicon-v2/word/%D0%BD%D0%BE%D0%B2%D0%B8%D0%B9/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/помилка/",
+   "href": "/lexicon-v2/word/%D0%BF%D0%BE%D0%BC%D0%B8%D0%BB%D0%BA%D0%B0/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/робінзон на безлюдному острові/",
+   "href": "/lexicon-v2/word/%D1%80%D0%BE%D0%B1%D1%96%D0%BD%D0%B7%D0%BE%D0%BD%20%D0%BD%D0%B0%20%D0%B1%D0%B5%D0%B7%D0%BB%D1%8E%D0%B4%D0%BD%D0%BE%D0%BC%D1%83%20%D0%BE%D1%81%D1%82%D1%80%D0%BE%D0%B2%D1%96/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/різати правду-матку/",
+   "href": "/lexicon-v2/word/%D1%80%D1%96%D0%B7%D0%B0%D1%82%D0%B8%20%D0%BF%D1%80%D0%B0%D0%B2%D0%B4%D1%83-%D0%BC%D0%B0%D1%82%D0%BA%D1%83/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/самий/",
+   "href": "/lexicon-v2/word/%D1%81%D0%B0%D0%BC%D0%B8%D0%B9/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/число/",
+   "href": "/lexicon-v2/word/%D1%87%D0%B8%D1%81%D0%BB%D0%BE/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/читати/",
+   "href": "/lexicon-v2/word/%D1%87%D0%B8%D1%82%D0%B0%D1%82%D0%B8/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/чоловік/",
+   "href": "/lexicon-v2/word/%D1%87%D0%BE%D0%BB%D0%BE%D0%B2%D1%96%D0%BA/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/чоловічий/",
+   "href": "/lexicon-v2/word/%D1%87%D0%BE%D0%BB%D0%BE%D0%B2%D1%96%D1%87%D0%B8%D0%B9/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/чому/",
+   "href": "/lexicon-v2/word/%D1%87%D0%BE%D0%BC%D1%83/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/чорний/",
+   "href": "/lexicon-v2/word/%D1%87%D0%BE%D1%80%D0%BD%D0%B8%D0%B9/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/чорно-білий/",
+   "href": "/lexicon-v2/word/%D1%87%D0%BE%D1%80%D0%BD%D0%BE-%D0%B1%D1%96%D0%BB%D0%B8%D0%B9/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/чотири/",
+   "href": "/lexicon-v2/word/%D1%87%D0%BE%D1%82%D0%B8%D1%80%D0%B8/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/чотириста/",
+   "href": "/lexicon-v2/word/%D1%87%D0%BE%D1%82%D0%B8%D1%80%D0%B8%D1%81%D1%82%D0%B0/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/чотирнадцятий/",
+   "href": "/lexicon-v2/word/%D1%87%D0%BE%D1%82%D0%B8%D1%80%D0%BD%D0%B0%D0%B4%D1%86%D1%8F%D1%82%D0%B8%D0%B9/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/чотирнадцять/",
+   "href": "/lexicon-v2/word/%D1%87%D0%BE%D1%82%D0%B8%D1%80%D0%BD%D0%B0%D0%B4%D1%86%D1%8F%D1%82%D1%8C/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/чудовий/",
+   "href": "/lexicon-v2/word/%D1%87%D1%83%D0%B4%D0%BE%D0%B2%D0%B8%D0%B9/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/чути/",
+   "href": "/lexicon-v2/word/%D1%87%D1%83%D1%82%D0%B8/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/шампанське/",
+   "href": "/lexicon-v2/word/%D1%88%D0%B0%D0%BC%D0%BF%D0%B0%D0%BD%D1%81%D1%8C%D0%BA%D0%B5/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/шампунь/",
+   "href": "/lexicon-v2/word/%D1%88%D0%B0%D0%BC%D0%BF%D1%83%D0%BD%D1%8C/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/шапка/",
+   "href": "/lexicon-v2/word/%D1%88%D0%B0%D0%BF%D0%BA%D0%B0/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/шафа/",
+   "href": "/lexicon-v2/word/%D1%88%D0%B0%D1%84%D0%B0/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/шафка/",
+   "href": "/lexicon-v2/word/%D1%88%D0%B0%D1%84%D0%BA%D0%B0/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/швидка/",
+   "href": "/lexicon-v2/word/%D1%88%D0%B2%D0%B8%D0%B4%D0%BA%D0%B0/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/швидко/",
+   "href": "/lexicon-v2/word/%D1%88%D0%B2%D0%B8%D0%B4%D0%BA%D0%BE/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/швидше/",
+   "href": "/lexicon-v2/word/%D1%88%D0%B2%D0%B8%D0%B4%D1%88%D0%B5/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/шестеро/",
+   "href": "/lexicon-v2/word/%D1%88%D0%B5%D1%81%D1%82%D0%B5%D1%80%D0%BE/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/ширина/",
+   "href": "/lexicon-v2/word/%D1%88%D0%B8%D1%80%D0%B8%D0%BD%D0%B0/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/ширший/",
+   "href": "/lexicon-v2/word/%D1%88%D0%B8%D1%80%D1%88%D0%B8%D0%B9/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/шкарпетка/",
+   "href": "/lexicon-v2/word/%D1%88%D0%BA%D0%B0%D1%80%D0%BF%D0%B5%D1%82%D0%BA%D0%B0/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/школа/",
+   "href": "/lexicon-v2/word/%D1%88%D0%BA%D0%BE%D0%BB%D0%B0/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/школяр/",
+   "href": "/lexicon-v2/word/%D1%88%D0%BA%D0%BE%D0%BB%D1%8F%D1%80/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/школярка/",
+   "href": "/lexicon-v2/word/%D1%88%D0%BA%D0%BE%D0%BB%D1%8F%D1%80%D0%BA%D0%B0/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/шкідливий/",
+   "href": "/lexicon-v2/word/%D1%88%D0%BA%D1%96%D0%B4%D0%BB%D0%B8%D0%B2%D0%B8%D0%B9/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/шлюб/",
+   "href": "/lexicon-v2/word/%D1%88%D0%BB%D1%8E%D0%B1/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/шматок/",
+   "href": "/lexicon-v2/word/%D1%88%D0%BC%D0%B0%D1%82%D0%BE%D0%BA/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/шніцель/",
+   "href": "/lexicon-v2/word/%D1%88%D0%BD%D1%96%D1%86%D0%B5%D0%BB%D1%8C/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/шоколад/",
+   "href": "/lexicon-v2/word/%D1%88%D0%BE%D0%BA%D0%BE%D0%BB%D0%B0%D0%B4/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/шоколадка/",
+   "href": "/lexicon-v2/word/%D1%88%D0%BE%D0%BA%D0%BE%D0%BB%D0%B0%D0%B4%D0%BA%D0%B0/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/шоколадний/",
+   "href": "/lexicon-v2/word/%D1%88%D0%BE%D0%BA%D0%BE%D0%BB%D0%B0%D0%B4%D0%BD%D0%B8%D0%B9/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/шорти/",
+   "href": "/lexicon-v2/word/%D1%88%D0%BE%D1%80%D1%82%D0%B8/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/шостий/",
+   "href": "/lexicon-v2/word/%D1%88%D0%BE%D1%81%D1%82%D0%B8%D0%B9/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/шофер/",
+   "href": "/lexicon-v2/word/%D1%88%D0%BE%D1%84%D0%B5%D1%80/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/штамп/",
+   "href": "/lexicon-v2/word/%D1%88%D1%82%D0%B0%D0%BC%D0%BF/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/штора/",
+   "href": "/lexicon-v2/word/%D1%88%D1%82%D0%BE%D1%80%D0%B0/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/штраф/",
+   "href": "/lexicon-v2/word/%D1%88%D1%82%D1%80%D0%B0%D1%84/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/шукати/",
+   "href": "/lexicon-v2/word/%D1%88%D1%83%D0%BA%D0%B0%D1%82%D0%B8/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/шістдесят/",
+   "href": "/lexicon-v2/word/%D1%88%D1%96%D1%81%D1%82%D0%B4%D0%B5%D1%81%D1%8F%D1%82/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/шістдесятий/",
+   "href": "/lexicon-v2/word/%D1%88%D1%96%D1%81%D1%82%D0%B4%D0%B5%D1%81%D1%8F%D1%82%D0%B8%D0%B9/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/шістнадцятий/",
+   "href": "/lexicon-v2/word/%D1%88%D1%96%D1%81%D1%82%D0%BD%D0%B0%D0%B4%D1%86%D1%8F%D1%82%D0%B8%D0%B9/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/шістнадцять/",
+   "href": "/lexicon-v2/word/%D1%88%D1%96%D1%81%D1%82%D0%BD%D0%B0%D0%B4%D1%86%D1%8F%D1%82%D1%8C/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/шістсот/",
+   "href": "/lexicon-v2/word/%D1%88%D1%96%D1%81%D1%82%D1%81%D0%BE%D1%82/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/шість/",
+   "href": "/lexicon-v2/word/%D1%88%D1%96%D1%81%D1%82%D1%8C/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/щасливо/",
+   "href": "/lexicon-v2/word/%D1%89%D0%B0%D1%81%D0%BB%D0%B8%D0%B2%D0%BE/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/ще/",
+   "href": "/lexicon-v2/word/%D1%89%D0%B5/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/щедрий/",
+   "href": "/lexicon-v2/word/%D1%89%D0%B5%D0%B4%D1%80%D0%B8%D0%B9/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/щедрівка/",
+   "href": "/lexicon-v2/word/%D1%89%D0%B5%D0%B4%D1%80%D1%96%D0%B2%D0%BA%D0%B0/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/щирий/",
+   "href": "/lexicon-v2/word/%D1%89%D0%B8%D1%80%D0%B8%D0%B9/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/щиро/",
+   "href": "/lexicon-v2/word/%D1%89%D0%B8%D1%80%D0%BE/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/щовечора/",
+   "href": "/lexicon-v2/word/%D1%89%D0%BE%D0%B2%D0%B5%D1%87%D0%BE%D1%80%D0%B0/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/щовівторка/",
+   "href": "/lexicon-v2/word/%D1%89%D0%BE%D0%B2%D1%96%D0%B2%D1%82%D0%BE%D1%80%D0%BA%D0%B0/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/щогодини/",
+   "href": "/lexicon-v2/word/%D1%89%D0%BE%D0%B3%D0%BE%D0%B4%D0%B8%D0%BD%D0%B8/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/щоденний/",
+   "href": "/lexicon-v2/word/%D1%89%D0%BE%D0%B4%D0%B5%D0%BD%D0%BD%D0%B8%D0%B9/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/щодня/",
+   "href": "/lexicon-v2/word/%D1%89%D0%BE%D0%B4%D0%BD%D1%8F/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/щодо/",
+   "href": "/lexicon-v2/word/%D1%89%D0%BE%D0%B4%D0%BE/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/щока/",
+   "href": "/lexicon-v2/word/%D1%89%D0%BE%D0%BA%D0%B0/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/щомісяця/",
+   "href": "/lexicon-v2/word/%D1%89%D0%BE%D0%BC%D1%96%D1%81%D1%8F%D1%86%D1%8F/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/щонеділі/",
+   "href": "/lexicon-v2/word/%D1%89%D0%BE%D0%BD%D0%B5%D0%B4%D1%96%D0%BB%D1%96/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/щопонеділка/",
+   "href": "/lexicon-v2/word/%D1%89%D0%BE%D0%BF%D0%BE%D0%BD%D0%B5%D0%B4%D1%96%D0%BB%D0%BA%D0%B0/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/щоразу/",
+   "href": "/lexicon-v2/word/%D1%89%D0%BE%D1%80%D0%B0%D0%B7%D1%83/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/щоранку/",
+   "href": "/lexicon-v2/word/%D1%89%D0%BE%D1%80%D0%B0%D0%BD%D0%BA%D1%83/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/щороку/",
+   "href": "/lexicon-v2/word/%D1%89%D0%BE%D1%80%D0%BE%D0%BA%D1%83/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/щорічно/",
+   "href": "/lexicon-v2/word/%D1%89%D0%BE%D1%80%D1%96%D1%87%D0%BD%D0%BE/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/щосереди/",
+   "href": "/lexicon-v2/word/%D1%89%D0%BE%D1%81%D0%B5%D1%80%D0%B5%D0%B4%D0%B8/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/щосуботи/",
+   "href": "/lexicon-v2/word/%D1%89%D0%BE%D1%81%D1%83%D0%B1%D0%BE%D1%82%D0%B8/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/щось/",
+   "href": "/lexicon-v2/word/%D1%89%D0%BE%D1%81%D1%8C/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/щотижня/",
+   "href": "/lexicon-v2/word/%D1%89%D0%BE%D1%82%D0%B8%D0%B6%D0%BD%D1%8F/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/щохвилини/",
+   "href": "/lexicon-v2/word/%D1%89%D0%BE%D1%85%D0%B2%D0%B8%D0%BB%D0%B8%D0%BD%D0%B8/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/щочетверга/",
+   "href": "/lexicon-v2/word/%D1%89%D0%BE%D1%87%D0%B5%D1%82%D0%B2%D0%B5%D1%80%D0%B3%D0%B0/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/щітка/",
+   "href": "/lexicon-v2/word/%D1%89%D1%96%D1%82%D0%BA%D0%B0/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/ювелірний/",
+   "href": "/lexicon-v2/word/%D1%8E%D0%B2%D0%B5%D0%BB%D1%96%D1%80%D0%BD%D0%B8%D0%B9/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/ювілей/",
+   "href": "/lexicon-v2/word/%D1%8E%D0%B2%D1%96%D0%BB%D0%B5%D0%B9/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/юридичний/",
+   "href": "/lexicon-v2/word/%D1%8E%D1%80%D0%B8%D0%B4%D0%B8%D1%87%D0%BD%D0%B8%D0%B9/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/юристка/",
+   "href": "/lexicon-v2/word/%D1%8E%D1%80%D0%B8%D1%81%D1%82%D0%BA%D0%B0/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/я/",
+   "href": "/lexicon-v2/word/%D1%8F/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/яблуко/",
+   "href": "/lexicon-v2/word/%D1%8F%D0%B1%D0%BB%D1%83%D0%BA%D0%BE/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/яблучний/",
+   "href": "/lexicon-v2/word/%D1%8F%D0%B1%D0%BB%D1%83%D1%87%D0%BD%D0%B8%D0%B9/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/ягода/",
+   "href": "/lexicon-v2/word/%D1%8F%D0%B3%D0%BE%D0%B4%D0%B0/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/язик/",
+   "href": "/lexicon-v2/word/%D1%8F%D0%B7%D0%B8%D0%BA/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/яйце/",
+   "href": "/lexicon-v2/word/%D1%8F%D0%B9%D1%86%D0%B5/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/якби/",
+   "href": "/lexicon-v2/word/%D1%8F%D0%BA%D0%B1%D0%B8/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/який-небудь/",
+   "href": "/lexicon-v2/word/%D1%8F%D0%BA%D0%B8%D0%B9-%D0%BD%D0%B5%D0%B1%D1%83%D0%B4%D1%8C/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/який/",
+   "href": "/lexicon-v2/word/%D1%8F%D0%BA%D0%B8%D0%B9/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/якийсь/",
+   "href": "/lexicon-v2/word/%D1%8F%D0%BA%D0%B8%D0%B9%D1%81%D1%8C/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/якнайшвидше/",
+   "href": "/lexicon-v2/word/%D1%8F%D0%BA%D0%BD%D0%B0%D0%B9%D1%88%D0%B2%D0%B8%D0%B4%D1%88%D0%B5/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/якщо/",
+   "href": "/lexicon-v2/word/%D1%8F%D0%BA%D1%89%D0%BE/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/якісний/",
+   "href": "/lexicon-v2/word/%D1%8F%D0%BA%D1%96%D1%81%D0%BD%D0%B8%D0%B9/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/якість/",
+   "href": "/lexicon-v2/word/%D1%8F%D0%BA%D1%96%D1%81%D1%82%D1%8C/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/ялинка/",
+   "href": "/lexicon-v2/word/%D1%8F%D0%BB%D0%B8%D0%BD%D0%BA%D0%B0/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/яловичий/",
+   "href": "/lexicon-v2/word/%D1%8F%D0%BB%D0%BE%D0%B2%D0%B8%D1%87%D0%B8%D0%B9/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/яловичина/",
+   "href": "/lexicon-v2/word/%D1%8F%D0%BB%D0%BE%D0%B2%D0%B8%D1%87%D0%B8%D0%BD%D0%B0/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/ярмарок/",
+   "href": "/lexicon-v2/word/%D1%8F%D1%80%D0%BC%D0%B0%D1%80%D0%BE%D0%BA/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/яскравий/",
+   "href": "/lexicon-v2/word/%D1%8F%D1%81%D0%BA%D1%80%D0%B0%D0%B2%D0%B8%D0%B9/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/яскравіший/",
+   "href": "/lexicon-v2/word/%D1%8F%D1%81%D0%BA%D1%80%D0%B0%D0%B2%D1%96%D1%88%D0%B8%D0%B9/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/ясно/",
+   "href": "/lexicon-v2/word/%D1%8F%D1%81%D0%BD%D0%BE/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/яхта/",
+   "href": "/lexicon-v2/word/%D1%8F%D1%85%D1%82%D0%B0/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/ящик/",
+   "href": "/lexicon-v2/word/%D1%8F%D1%89%D0%B8%D0%BA/",
+   "class": "word-page"
+  },
+  {
+   "path": "/lexicon-v2/word/яєчня/",
+   "href": "/lexicon-v2/word/%D1%8F%D1%94%D1%87%D0%BD%D1%8F/",
+   "class": "word-page"
+  }
+ ],
+ "cards": [
+  {
+   "card_id": "wc_02a5cjxcpbcf",
+   "card_kind": "lexeme",
+   "page": "баран",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_043h3npd7ed4",
+   "card_kind": "lexeme",
+   "page": "читати",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_08svjhdbe0fq",
+   "card_kind": "lexeme",
+   "page": "ще",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_0a3k6ypbjhrf",
+   "card_kind": "proper_name",
+   "page": "баран",
+   "entry": 2,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_0c2c6k5nrw0n",
+   "card_kind": "lexeme",
+   "page": "щось",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_0nq8zajmfvcg",
+   "card_kind": "lexeme",
+   "page": "щопонеділка",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_0r1cdw5z36cd",
+   "card_kind": "lexeme",
+   "page": "швидко",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_0wv95b3qm707",
+   "card_kind": "lexeme",
+   "page": "шапка",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_1nrw339ddgvm",
+   "card_kind": "mwe",
+   "page": "різати правду-матку",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_2q1qzzw8gd01",
+   "card_kind": "lexeme",
+   "page": "швидше",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_2xzw44zg56aq",
+   "card_kind": "lexeme",
+   "page": "яскравіший",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_345emw0fe2hr",
+   "card_kind": "lexeme",
+   "page": "який",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_36p338sk68qm",
+   "card_kind": "lexeme",
+   "page": "число",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_3rc3vnk4r328",
+   "card_kind": "lexeme",
+   "page": "шкідливий",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_4fm88q03w5qs",
+   "card_kind": "lexeme",
+   "page": "щонеділі",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_4w8bcapex04x",
+   "card_kind": "lexeme",
+   "page": "щирий",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_5031n96dwgnt",
+   "card_kind": "lexeme",
+   "page": "щотижня",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_562eqy9g3bck",
+   "card_kind": "mwe",
+   "page": "близько не пахне",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_5b36dst0her6",
+   "card_kind": "lexeme",
+   "page": "щодня",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_5btr8jkdzvd1",
+   "card_kind": "lexeme",
+   "page": "ясно",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_5j37jfndz666",
+   "card_kind": "mwe",
+   "page": "блигом світ",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_5s9kgf5brczs",
+   "card_kind": "lexeme",
+   "page": "щодо",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_6bt62wd6zzzf",
+   "card_kind": "lexeme",
+   "page": "яйце",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_6f8yq9yvp0ns",
+   "card_kind": "lexeme",
+   "page": "шоколадний",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_6hg8x80fcnk2",
+   "card_kind": "lexeme",
+   "page": "батьківщина",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_7a6x6n8rek4y",
+   "card_kind": "mwe",
+   "page": "гнат-безп'ятко",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_7e1t38e50r34",
+   "card_kind": "lexeme",
+   "page": "якийсь",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_7vqqh0c120vy",
+   "card_kind": "lexeme",
+   "page": "щітка",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_8bbj9gn4qm3z",
+   "card_kind": "lexeme",
+   "page": "шофер",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_8kf3af4b8vth",
+   "card_kind": "lexeme",
+   "page": "чоловічий",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_8mhjfw05sm0t",
+   "card_kind": "lexeme",
+   "page": "чому",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_8t60pamgdqs0",
+   "card_kind": "lexeme",
+   "page": "шістнадцятий",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_8z09eyahcs88",
+   "card_kind": "lexeme",
+   "page": "любов",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_91fq1gtsh9f5",
+   "card_kind": "proper_name",
+   "page": "новий",
+   "entry": 2,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_91qt0yt5aqnt",
+   "card_kind": "lexeme",
+   "page": "щорічно",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_96p4nx83f894",
+   "card_kind": "lexeme",
+   "page": "бабин",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_9wjbgkp9fak8",
+   "card_kind": "lexeme",
+   "page": "шлюб",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_9zfg3rrkkqzf",
+   "card_kind": "lexeme",
+   "page": "шампанське",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_a4ndp7w0v8dq",
+   "card_kind": "lexeme",
+   "page": "бабуся",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_a7k5wtq89cdg",
+   "card_kind": "lexeme",
+   "page": "яскравий",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_acq6r56secba",
+   "card_kind": "lexeme",
+   "page": "щохвилини",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_anz167as5tn7",
+   "card_kind": "proper_name",
+   "page": "бабуся",
+   "entry": 2,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_b92hz3ncnw1a",
+   "card_kind": "lexeme",
+   "page": "шоколад",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_bej8fh02sp6p",
+   "card_kind": "mwe",
+   "page": "боже помагай",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_bfdeknm81e44",
+   "card_kind": "lexeme",
+   "page": "шестеро",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_bgr5q9c06wxg",
+   "card_kind": "lexeme",
+   "page": "замок",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_btwc6wcf50wv",
+   "card_kind": "lexeme",
+   "page": "щоранку",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_bz5ypsm3wyj7",
+   "card_kind": "proper_name",
+   "page": "шуба",
+   "entry": null,
+   "listed": false,
+   "reason": "Proper name without a common entry on its page"
+  },
+  {
+   "card_id": "wc_c66xvp4hvdev",
+   "card_kind": "mwe",
+   "page": "робінзон на безлюдному острові",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_c6j1qtrpbcgx",
+   "card_kind": "lexeme",
+   "page": "шафка",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_cnq7f88k186e",
+   "card_kind": "lexeme",
+   "page": "шкарпетка",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_cvkw5nzdg00n",
+   "card_kind": "lexeme",
+   "page": "замок",
+   "entry": 2,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_cxjtr6481e7t",
+   "card_kind": "lexeme",
+   "page": "новий",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_d2d38y0ctmct",
+   "card_kind": "proper_name",
+   "page": "бар",
+   "entry": 2,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_d3qyg6mhjx07",
+   "card_kind": "lexeme",
+   "page": "яловичина",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_da7t5vpprjw3",
+   "card_kind": "lexeme",
+   "page": "якщо",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_dstgm8vb5xfr",
+   "card_kind": "lexeme",
+   "page": "школярка",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_e1n2pwrrajma",
+   "card_kind": "lexeme",
+   "page": "якнайшвидше",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_ea2fvbcb6p3k",
+   "card_kind": "lexeme",
+   "page": "мама",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_f0nnsej1zh7n",
+   "card_kind": "lexeme",
+   "page": "ящик",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_f1m5pppp1619",
+   "card_kind": "lexeme",
+   "page": "шматок",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_f70edzrhfy8e",
+   "card_kind": "lexeme",
+   "page": "шістсот",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_fc08gvq844db",
+   "card_kind": "mwe",
+   "page": "бог помилував",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_fd7d7wa6rn62",
+   "card_kind": "lexeme",
+   "page": "шафа",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_ffw1zgt1exvw",
+   "card_kind": "lexeme",
+   "page": "язик",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_fvxestgxf73d",
+   "card_kind": "proper_name",
+   "page": "любов",
+   "entry": 2,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_gbh31d6zptnx",
+   "card_kind": "lexeme",
+   "page": "самий",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_grkg2vxacyp0",
+   "card_kind": "lexeme",
+   "page": "який-небудь",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_gv7g0005qb5d",
+   "card_kind": "proper_name",
+   "page": "бабин",
+   "entry": 2,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_h509ejs613sy",
+   "card_kind": "lexeme",
+   "page": "ключ",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_h54f47k5py6b",
+   "card_kind": "lexeme",
+   "page": "я",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_hde0r633f7cq",
+   "card_kind": "lexeme",
+   "page": "щасливо",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_hec14t866f1c",
+   "card_kind": "lexeme",
+   "page": "щока",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_hmz9x3anb1ma",
+   "card_kind": "lexeme",
+   "page": "чотирнадцятий",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_ht0ejvdkh8qe",
+   "card_kind": "lexeme",
+   "page": "якби",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_j1acg1649rw8",
+   "card_kind": "lexeme",
+   "page": "щогодини",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_jb4p3ppvcyvx",
+   "card_kind": "lexeme",
+   "page": "чорно-білий",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_jgravxme007h",
+   "card_kind": "lexeme",
+   "page": "помилка",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_jm7nfbvag8kp",
+   "card_kind": "lexeme",
+   "page": "ширший",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_jq9rtqw9yt7y",
+   "card_kind": "lexeme",
+   "page": "щоденний",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_jrycyzsy17qk",
+   "card_kind": "lexeme",
+   "page": "чорний",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_k1kp85tahqag",
+   "card_kind": "mwe",
+   "page": "блекоти наїлась",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_k339xj1q2hv7",
+   "card_kind": "lexeme",
+   "page": "шістдесятий",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_k45tstzkx2b6",
+   "card_kind": "lexeme",
+   "page": "самий",
+   "entry": 2,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_ka0tp1vt39e8",
+   "card_kind": "lexeme",
+   "page": "щочетверга",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_km3asrjbxhjb",
+   "card_kind": "lexeme",
+   "page": "бандура",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_m141ewnvv2m4",
+   "card_kind": "lexeme",
+   "page": "шорти",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_m6bs5ramkdgy",
+   "card_kind": "lexeme",
+   "page": "школяр",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_n1g44brn5vs2",
+   "card_kind": "lexeme",
+   "page": "щедрівка",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_nhac073v3589",
+   "card_kind": "lexeme",
+   "page": "чоловік",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_p1d31y378qs1",
+   "card_kind": "mwe",
+   "page": "господь його розбере",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_p41ag4cb6be8",
+   "card_kind": "lexeme",
+   "page": "яблуко",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_p646xsqq40xt",
+   "card_kind": "lexeme",
+   "page": "ключ",
+   "entry": 2,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_pmenjgpx1mh9",
+   "card_kind": "lexeme",
+   "page": "шістнадцять",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_ppr39m6qsr4e",
+   "card_kind": "lexeme",
+   "page": "швидка",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_pr69ykkbh95m",
+   "card_kind": "lexeme",
+   "page": "базар",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_prfy102qxyrn",
+   "card_kind": "lexeme",
+   "page": "юридичний",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_q7x9wprhedkr",
+   "card_kind": "lexeme",
+   "page": "шістдесят",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_q97mnya76nx7",
+   "card_kind": "lexeme",
+   "page": "вряди-годи",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_qm83zt29py0d",
+   "card_kind": "lexeme",
+   "page": "шостий",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_qpcdgkctp7ne",
+   "card_kind": "lexeme",
+   "page": "школа",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_qq67z33prpah",
+   "card_kind": "lexeme",
+   "page": "ширина",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_qs3tehs0xz6e",
+   "card_kind": "lexeme",
+   "page": "чотирнадцять",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_qt1ajf0trs35",
+   "card_kind": "lexeme",
+   "page": "чотириста",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_r6xe3vt4qtw9",
+   "card_kind": "lexeme",
+   "page": "шукати",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_raxj8hwpvp62",
+   "card_kind": "lexeme",
+   "page": "щедрий",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_ref9xyps30mx",
+   "card_kind": "mwe",
+   "page": "божий світ",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_rezqg70bnyy4",
+   "card_kind": "lexeme",
+   "page": "щовівторка",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_rk47ephm1bts",
+   "card_kind": "proper_name",
+   "page": "банк",
+   "entry": 2,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_rmvh0tsz1y1a",
+   "card_kind": "mwe",
+   "page": "благородний жест",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_rn15mnpkqxar",
+   "card_kind": "lexeme",
+   "page": "щиро",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_rq9bnybm7ybm",
+   "card_kind": "proper_name",
+   "page": "бандура",
+   "entry": 2,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_rxz969384q84",
+   "card_kind": "lexeme",
+   "page": "щосереди",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_sfvs2tk37p5y",
+   "card_kind": "lexeme",
+   "page": "щороку",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_sj76cz4exr2z",
+   "card_kind": "lexeme",
+   "page": "яхта",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_spx94fnzqre4",
+   "card_kind": "lexeme",
+   "page": "ягода",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_sr1x6gb3wqbs",
+   "card_kind": "proper_name",
+   "page": "батьківщина",
+   "entry": 2,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_sredngg8tzb0",
+   "card_kind": "lexeme",
+   "page": "шість",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_sye0ppkx0dwh",
+   "card_kind": "proper_name",
+   "page": "юнеско",
+   "entry": null,
+   "listed": false,
+   "reason": "Proper name without a common entry on its page"
+  },
+  {
+   "card_id": "wc_tk3jdz1xf0mf",
+   "card_kind": "lexeme",
+   "page": "щоразу",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_tm57q9wj8y31",
+   "card_kind": "mwe",
+   "page": "блискавкою прорізати",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_tnwfw0gzfm5q",
+   "card_kind": "lexeme",
+   "page": "щомісяця",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_tnxmxw3kjras",
+   "card_kind": "proper_name",
+   "page": "базар",
+   "entry": 2,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_tpye2vc45frf",
+   "card_kind": "lexeme",
+   "page": "юристка",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_vfqatzjagh7j",
+   "card_kind": "lexeme",
+   "page": "якісний",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_vm2hbj30pf6c",
+   "card_kind": "lexeme",
+   "page": "щосуботи",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_vnk3jt6x4cw6",
+   "card_kind": "lexeme",
+   "page": "яєчня",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_vq34ms5wtfev",
+   "card_kind": "lexeme",
+   "page": "ярмарок",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_vqtt12t22gam",
+   "card_kind": "lexeme",
+   "page": "щовечора",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_vtqv6my006c3",
+   "card_kind": "lexeme",
+   "page": "яловичий",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_vy1cr9bw4wsq",
+   "card_kind": "lexeme",
+   "page": "ялинка",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_vzt7m2k3tg48",
+   "card_kind": "mwe",
+   "page": "валаамова ослиця",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_w78q6xbserdn",
+   "card_kind": "lexeme",
+   "page": "ювелірний",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_w7tnaqg1amv4",
+   "card_kind": "lexeme",
+   "page": "чотири",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_wmyzn565rxp4",
+   "card_kind": "lexeme",
+   "page": "бар",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_wq7h18tk76dh",
+   "card_kind": "lexeme",
+   "page": "яблучний",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_wst7h8j302z2",
+   "card_kind": "lexeme",
+   "page": "якість",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_wzct64k4fham",
+   "card_kind": "mwe",
+   "page": "блудний син",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_x5v9xqax0t4d",
+   "card_kind": "lexeme",
+   "page": "штора",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_xbw7msqev2mz",
+   "card_kind": "lexeme",
+   "page": "банк",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_xmnw6aata5me",
+   "card_kind": "lexeme",
+   "page": "шніцель",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_xmzv71z7hwee",
+   "card_kind": "mwe",
+   "page": "бог зна що таке",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_y9j49mes11mr",
+   "card_kind": "lexeme",
+   "page": "штамп",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_yd5ekty2j7kb",
+   "card_kind": "lexeme",
+   "page": "чудовий",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_yff8w36wws3j",
+   "card_kind": "lexeme",
+   "page": "шоколадка",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_yh60ravvq5am",
+   "card_kind": "lexeme",
+   "page": "чути",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_yr4ee7vav0mq",
+   "card_kind": "lexeme",
+   "page": "ювілей",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_zc0b8ncwj5b9",
+   "card_kind": "lexeme",
+   "page": "шампунь",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_zhvykdar3452",
+   "card_kind": "proper_name",
+   "page": "мама",
+   "entry": 2,
+   "listed": true,
+   "reason": "Listed entry"
+  },
+  {
+   "card_id": "wc_zw0vjc1dxpsf",
+   "card_kind": "lexeme",
+   "page": "штраф",
+   "entry": 1,
+   "listed": true,
+   "reason": "Listed entry"
+  }
+ ]
+}
