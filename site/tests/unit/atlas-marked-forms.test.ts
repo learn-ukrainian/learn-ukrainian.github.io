@@ -5,6 +5,7 @@
 // Renders WordAtlasArticle directly with hand-crafted enrichment (no atlas.db needed).
 
 import { describe, expect, test } from 'vitest';
+import { Window } from 'happy-dom';
 import { articleProps } from '../helpers/word-atlas-record';
 import { renderWordAtlasArticle } from '../helpers/render-word-atlas-article';
 
@@ -144,7 +145,15 @@ describe('marked-forms subsection (#4891)', () => {
     // attribute, not the bare slug — the worktree path itself contains "marked-forms".)
     expect(html).not.toContain(MARKED_SUMMARY);
     expect(html).not.toContain('class="marked-forms"');
-    expect(html).not.toContain('<details');
+    const doc = new Window().document;
+    doc.body.innerHTML = html;
+    const morphology = Array.from(doc.querySelectorAll('section.atlas-section'))
+      .find((section) => section.querySelector('h2')?.textContent === 'Морфологія');
+    expect(morphology).toBeDefined();
+    expect(morphology?.querySelectorAll('details')).toHaveLength(0);
+    const disclosures = doc.querySelectorAll('details');
+    expect(disclosures).toHaveLength(1);
+    expect(disclosures[0].matches('.atlas-enrichment-note details.atlas-source-waiting')).toBe(true);
     expect(html).not.toContain(MARKED_FORM);
   });
 });
@@ -188,7 +197,15 @@ describe('fully-marked lemma register treatment (#4900)', () => {
     const html = renderFullyMarked('short');
     expect(html).toContain('class="marked-forms marked-forms-primary"');
     expect(html).not.toContain(MARKED_SUMMARY);
-    expect(html).not.toContain('<details');
+    const doc = new Window().document;
+    doc.body.innerHTML = html;
+    const morphology = Array.from(doc.querySelectorAll('section.atlas-section'))
+      .find((section) => section.querySelector('h2')?.textContent === 'Морфологія');
+    expect(morphology).toBeDefined();
+    expect(morphology?.querySelectorAll('details')).toHaveLength(0);
+    const disclosures = doc.querySelectorAll('details');
+    expect(disclosures).toHaveLength(1);
+    expect(disclosures[0].matches('.atlas-enrichment-note details.atlas-source-waiting')).toBe(true);
     const text = html.replace(/\s+/g, ' ');
     expect(text).toContain(LEARNER_NOTE);
     expect(html.indexOf(LEARNER_NOTE)).toBeLessThan(html.indexOf(ARCHAIC_FORM));
