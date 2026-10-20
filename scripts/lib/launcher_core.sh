@@ -155,7 +155,8 @@ Valid lane selectors:
   epics
   infra | harness | infra.fleet-comms
   devops | infra.devops
-  atlas | practice | atlas.practice
+  atlas | practice-hub | atlas.practice
+  practice
   hramatka | hramatka.lessons
   folk | seminars-folk
   bio | seminars-bio

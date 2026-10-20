@@ -73,6 +73,11 @@ streams:
       - grok-atlas     # slot
       - kimi-atlas     # slot
       - cursor-atlas   # slot
+  # practice: selector practice -> practice -> issue_streams 11151.
+  "epic:11151":
+    initiators:
+      - claude-practice   # slot
+      - codex-practice    # slot
   # epics coordination: selector epics -> epics -> issue_streams 10453.
   "epic:10453":
     initiators:
