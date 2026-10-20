@@ -200,3 +200,36 @@ def test_invalid_card_collections_are_refused(contrast_card, key, value):
     contrast_card[key] = value
     with pytest.raises(QuarantineError, match="invalid_contrast_card"):
         validate_card_contrasts(contrast_card)
+
+
+@pytest.mark.parametrize("collection,key", [("senses", "sense_id"), ("assertions", "assertion_id")])
+@pytest.mark.parametrize("value", [[], {}])
+def test_unhashable_card_ids_are_quarantined(contrast_card, collection, key, value):
+    contrast_card[collection][0][key] = value
+    with pytest.raises(QuarantineError, match="invalid_contrast_card"):
+        validate_card_contrasts(contrast_card)
+
+
+@pytest.mark.parametrize("index,key", [(0, "licence_ref"), (1, "licence_ref"),
+                                       (0, "review"), (0, "mapping")])
+@pytest.mark.parametrize("value", [None, [], "malformed"])
+def test_malformed_assertion_metadata_is_quarantined(contrast_card, index, key, value):
+    contrast_card["assertions"][index][key] = value
+    with pytest.raises(QuarantineError, match="invalid_contrast_card"):
+        validate_card_contrasts(contrast_card)
+
+
+@pytest.mark.parametrize("resolution", [
+    None, [], "malformed", {"values": None}, {"values": {}}, {"values": "malformed"},
+    {"values": ["malformed"]}, {"values": [None]}, {"values": [[]]}, {"values": [1]},
+])
+def test_malformed_contrast_resolutions_are_quarantined(contrast_card, resolution):
+    contrast_card["senses"][0]["fields"]["russification_exposed"] = resolution
+    with pytest.raises(QuarantineError, match="invalid_contrast_card"):
+        validate_card_contrasts(contrast_card)
+
+
+@pytest.mark.parametrize("card", [None, [], "malformed"])
+def test_non_object_cards_are_quarantined(card):
+    with pytest.raises(QuarantineError, match="invalid_contrast_card"):
+        validate_card_contrasts(card)

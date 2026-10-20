@@ -718,6 +718,7 @@ def _store_unavailable(base: dict, reason: str) -> dict:
 def _lookup_in_store(store: CardStore, normalized: str, vesum: dict, base: dict) -> dict:
     from scripts.atlas.word_card_certification import certification_run
     from scripts.atlas.word_card_contrasts import validate_card_contrasts
+    from scripts.open_dataset.russification import QuarantineError
 
     index, unreadable, off_store, file_count = _store_index(store)
     wanted = {_fold(normalized): "spelling"}
@@ -734,7 +735,7 @@ def _lookup_in_store(store: CardStore, normalized: str, vesum: dict, base: dict)
             try:
                 other = _dict(_read_card(store.cards, f"{card_id}.json"))
                 validate_card_contrasts(other)
-            except (OSError, ValueError):
+            except (OSError, ValueError, QuarantineError):
                 other = {}
             endpoint_cards[card_id] = (
                 Endpoint(other, tuple(_certification(other)[0])) if other.get("card_id") == card_id else None
@@ -752,7 +753,7 @@ def _lookup_in_store(store: CardStore, normalized: str, vesum: dict, base: dict)
                 except _OffStore:
                     off_store += 1
                     continue
-                except (OSError, ValueError):
+                except (OSError, ValueError, QuarantineError):
                     unreadable += 1
                     continue
                 if _spelling_key(_dict(card.get("key_at_creation")).get("spelling")) != key:

@@ -199,7 +199,8 @@ def test_unpaired_soviet_text_is_withheld_from_candidate_lookup(tmp_path):
     assert "imposed sense" not in json.dumps(result)
 
 
-def test_complete_soviet_contrast_is_flagged_and_keeps_its_correction(tmp_path):
+@pytest.fixture
+def complete_contrast_card():
     card_id, sense_id = "wc_bbbbbbbbbbbb", "ws_aaaaaaaaaaaa"
     norm = fixture.card_assertion(card_id, 2, "definition_uk", "Modern correction.", source_id="sum20")
     exposed = fixture.card_assertion(card_id, 3, "russification_exposed", "pair:probe", source_id="sum11")
@@ -215,11 +216,14 @@ def test_complete_soviet_contrast_is_flagged_and_keeps_its_correction(tmp_path):
         "norm": {"text": norm["value"], "assertion_id": norm["assertion_id"],
                  "citation": {**{k: norm[k] for k in keys}, "attribution": "Modern fixture"}},
     }}
-    card = fixture.word_card(card_id, "мова", assertions=[norm, exposed], senses=[{
+    return fixture.word_card(card_id, "мова", assertions=[norm, exposed], senses=[{
         "sense_id": sense_id, "order": 1, "state": "active", "sense_map": [],
         "fields": {"definition_uk": fixture.card_field(norm), "russification_exposed": fixture.card_field(exposed)},
     }])
-    store = write_store(tmp_path / "build", card)
+
+
+def test_complete_soviet_contrast_is_flagged_and_keeps_its_correction(tmp_path, complete_contrast_card):
+    store = write_store(tmp_path / "build", complete_contrast_card)
 
     [served] = lookup("мова", store)["cards"]
 
@@ -230,6 +234,37 @@ def test_complete_soviet_contrast_is_flagged_and_keeps_its_correction(tmp_path):
     assert citation["notice"] == word_card.SOVIET_CONTEXT_NOTICE
     assert citation["value"]["red_flag"] is True
     assert citation["value"]["soviet_colonization_context"]["norm"]["text"] == "Modern correction."
+
+
+@pytest.mark.parametrize("path,value", [
+    (("senses", 0, "sense_id"), []),
+    (("assertions", 0, "assertion_id"), []),
+    (("assertions", 0, "licence_ref"), None),
+    (("assertions", 1, "licence_ref"), "malformed"),
+    (("assertions", 0, "review"), []),
+    (("assertions", 0, "mapping"), "malformed"),
+    (("senses", 0, "fields", "russification_exposed"), None),
+    (("senses", 0, "fields", "russification_exposed", "values"), None),
+    (("senses", 0, "fields", "russification_exposed", "values"), {}),
+    (("senses", 0, "fields", "russification_exposed", "values"), "malformed"),
+    (("senses", 0, "fields", "russification_exposed", "values"), ["malformed"]),
+    (("senses", 0, "fields", "russification_exposed", "values"), [None]),
+    (("senses", 0, "fields", "russification_exposed", "values"), [[]]),
+    (("senses", 0, "fields", "russification_exposed", "values"), [1]),
+])
+def test_malformed_contrast_card_is_withheld_and_counted(tmp_path, complete_contrast_card, path, value):
+    target = complete_contrast_card
+    for key in path[:-1]:
+        target = target[key]
+    target[path[-1]] = value
+    store = write_store(tmp_path / "build", complete_contrast_card)
+
+    result = lookup("мова", store)
+
+    assert result["cards"] == []
+    assert result["result"] == "no_card"
+    assert result["card_store"]["unreadable_card_files"] == 1
+    assert "Synthetic imposed quotation." not in json.dumps(result)
 
 
 def test_known_russianism_without_a_card_names_the_russianism_tools(tmp_path):

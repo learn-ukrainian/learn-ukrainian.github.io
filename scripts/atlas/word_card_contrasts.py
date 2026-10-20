@@ -42,6 +42,13 @@ def validate_card_contrasts(card: dict, *, sum11_texts: Iterable[str] = ()) -> i
     from its correction. An independently frozen inventory can also detect
     unlabelled quotations absent from this card's own pairs.
     """
+    try:
+        return _validate_card_contrasts(card, sum11_texts=sum11_texts)
+    except (TypeError, AttributeError, KeyError) as exc:
+        raise QuarantineError("invalid_contrast_card") from exc
+
+
+def _validate_card_contrasts(card: dict, *, sum11_texts: Iterable[str]) -> int:
     assertions = card.get("assertions", [])
     senses = card.get("senses", [])
     if (
@@ -118,11 +125,16 @@ def validate_card_contrasts(card: dict, *, sum11_texts: Iterable[str] = ()) -> i
         fields = dict(sense.get("fields", {}))
         if "russification_exposed" in fields:
             resolution = copy.deepcopy(fields.pop("russification_exposed"))
-            if isinstance(resolution, dict):
-                for entry in resolution.get("values", []):
-                    # This fixed lineage id is metadata, never dictionary text.
-                    if entry.get("independence_groups") == ["G-SUM11"]:
-                        entry["independence_groups"] = []
+            if (
+                not isinstance(resolution, dict)
+                or not isinstance(resolution.get("values", []), list)
+                or not all(isinstance(entry, dict) for entry in resolution.get("values", []))
+            ):
+                raise QuarantineError("invalid_contrast_card")
+            for entry in resolution.get("values", []):
+                # This fixed lineage id is metadata, never dictionary text.
+                if entry.get("independence_groups") == ["G-SUM11"]:
+                    entry["independence_groups"] = []
             resolutions.append(resolution)
         remaining["senses"].append({**sense, "fields": fields})
     validate_default_split([remaining, *resolutions], sum11_texts=inventory)
