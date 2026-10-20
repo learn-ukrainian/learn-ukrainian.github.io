@@ -5567,6 +5567,7 @@ def _count_commits_ahead(
                 if source.returncode:
                     return None
                 head, base = source.stdout.strip(), base_sha or context.driver_base
+                context.isolate_objects(base=base, head=head)
                 if context.run("merge-base", "--is-ancestor", base, head).returncode:
                     return None
                 return int(context.checked("rev-list", "--count", f"{base}..{head}"))
@@ -5591,12 +5592,13 @@ def _count_unpushed_commits(worktree: Path, branch: str) -> int | None:
     try:
         with _finalize_execution_context(worktree) as context:
             head = _finalize_source_head(context, branch)
+            context.isolate_objects(base=context.driver_base, head=head)
             remote = _finalize_remote_head(context, branch)
             if remote == head:
                 return 0
             if remote:
                 if context.run("cat-file", "-e", f"{remote}^{{commit}}").returncode:
-                    context.checked("fetch", "--no-tags", "origin", f"refs/heads/{branch}", network=True)
+                    context.fetch_remote_commits(f"refs/heads/{branch}", head)
                 return int(context.checked("rev-list", "--count", f"{remote}..{head}"))
             return int(context.checked("rev-list", "--count", head))
     except (OSError, RuntimeError, ValueError, subprocess.TimeoutExpired):
@@ -6515,6 +6517,7 @@ TYPED_CAUSE_CODES = frozenset(
         "auto_finalize_validation_unavailable",
         "auto_finalize_invalid_tree_path",
         "auto_finalize_fsck_failed",
+        "auto_finalize_copy_timeout",
         "auto_finalize_object_hardening_violation",
         "auto_finalize_preparation_refused",
         "finalize_delivery_pending",
@@ -7184,7 +7187,7 @@ def _auto_finalize_additions_deletions(worktree: Path) -> tuple[tuple[str, ...],
     # The move inventory stages intent-to-add entries too. Its disposable
     # index must not execute the source's hooks or configured filters.
     try:
-        with _finalize_execution_context(worktree) as context:
+        with _finalize_execution_context(worktree, prepare=True) as context:
             source = context.source_git_dir
             head = context.read_source_ref(source, "HEAD")
             if head.returncode:
@@ -8033,21 +8036,23 @@ def _build_worker_env(
 
 
 @contextlib.contextmanager
-def _finalize_execution_context(worktree: Path, *, publish: bool = False) -> Iterator[SafeGitContext]:
+def _finalize_execution_context(
+    worktree: Path, *, publish: bool = False, prepare: bool = False
+) -> Iterator[SafeGitContext]:
     """Use registered objects, the driver's base and its pinned destination."""
     repo = _rescue_repo(worktree)
     manager = (
-        _rescue_execution_context(repo)
+        _rescue_execution_context(repo, borrow_objects=False)
         if publish
         else SafeGitContext(
             objects=repo.git_dir / "objects",
             temp_root=Path(tempfile.gettempdir()),
             origin=CANONICAL_ORIGIN,
+            borrow_objects=prepare,
         )
     )
     with manager as context:
         context.source_git_dir = repo.admin_dir
-        context.trusted_objects = _REPO_ROOT / ".git/objects"
         driver = context.read_source_ref(_REPO_ROOT / ".git", "HEAD")
         if driver.returncode:
             raise SnapshotRefusal("auto_finalize_committed_scope_unknown")
@@ -8092,6 +8097,8 @@ def _finalize_history(context: SafeGitContext, *, head: str, base: str, owned: S
             upstream if context.run("merge-base", "--is-ancestor", recorded, upstream).returncode == 0 else recorded
         )
         comparisons.append((comparison, commit))
+    # Only these trees are read below; each arrives re-hashed with its attributes.
+    context.receive_trees([oid for pair in comparisons for oid in pair])
     paths = [
         path
         for comparison, commit in comparisons
@@ -8182,7 +8189,7 @@ def _push_auto_finalize_branch(
             _finalize_history(context, head=head, base=base, owned=owned)
             remote = _finalize_remote_head(context, branch)
             if remote and context.run("cat-file", "-e", f"{remote}^{{commit}}").returncode:
-                context.checked("fetch", "--no-tags", "origin", f"refs/heads/{branch}", network=True)
+                context.fetch_remote_commits(f"refs/heads/{branch}", head)
             if remote and context.run("merge-base", "--is-ancestor", remote, head).returncode:
                 raise SnapshotRefusal("auto_finalize_remote_unverified")
             context.prepare_validation(head=head, branch=branch, base=base, interpreter=context.interpreter)
@@ -8400,7 +8407,7 @@ def _auto_finalize_dirty_worktree(
     from scripts.orchestration.execution_safe_git import prepare_scoped_commit
 
     try:
-        with _finalize_execution_context(worktree) as context:
+        with _finalize_execution_context(worktree, prepare=True) as context:
             if _finalize_source_head(context, resolved_branch) != intended_head:
                 return _failed(_TypedCause("auto_finalize_head_moved"))
             try:
@@ -8498,7 +8505,7 @@ def _rescue_canonical_push_url() -> str:
 
 
 @contextlib.contextmanager
-def _rescue_execution_context(repo: _RescueRepo) -> Iterator[SafeGitContext]:
+def _rescue_execution_context(repo: _RescueRepo, *, borrow_objects: bool = True) -> Iterator[SafeGitContext]:
     from scripts.agent_runtime.agent_github_identity import (
         RescueIdentityError,
         resolve_agent_github_identity,
@@ -8526,6 +8533,7 @@ def _rescue_execution_context(repo: _RescueRepo) -> Iterator[SafeGitContext]:
             objects=repo.git_dir / "objects",
             origin=_rescue_canonical_push_url(),
             token=identity.token,
+            borrow_objects=borrow_objects,
             temp_root=Path(tempfile.gettempdir()),
         ) as context:
             yield context

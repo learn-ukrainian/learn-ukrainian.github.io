@@ -1,8 +1,9 @@
-"""Fresh, driver-configured Git execution with borrowed objects, never borrowed config.
+"""Fresh, driver-configured Git execution with borrowed or received objects, never borrowed config.
 
 The caller owns destination, identity and scratch storage. The source repository
 contributes resolved refs, objects and plaintext snapshot-selection metadata;
-its execution configuration is never imported.
+its execution configuration is never imported. Finalization receives objects
+over fetch, which re-hashes them, instead of borrowing the source store.
 Same-user tampering with driver code/storage is outside this execution boundary.
 """
 
@@ -11,6 +12,7 @@ from __future__ import annotations
 import base64
 import hashlib
 import os
+import shlex
 import shutil
 import stat
 import subprocess
@@ -44,7 +46,7 @@ class SafeGitContext:
         origin: str = CANONICAL_ORIGIN,
         token: str | None = None,
         local_remote: bool = False,
-        trusted_objects: Path | None = None,
+        borrow_objects: bool = True,
     ) -> None:
         if origin != CANONICAL_ORIGIN and not (local_remote and Path(origin).is_absolute()):
             raise SnapshotRefusal("rescue_push_url_unavailable")
@@ -53,9 +55,9 @@ class SafeGitContext:
         self.origin = origin
         self.token = token
         self.local_remote = local_remote
-        # A local destination is an explicit driver/test injection, just like
-        # its object store. Never infer trusted storage from worker config.
-        self.trusted_objects = trusted_objects or (self.objects if local_remote else None)
+        # Finalize contexts never borrow: isolate_objects receives everything.
+        self.borrow_objects = borrow_objects
+        self._source: tuple[str, Path] | None = None
 
     def __enter__(self) -> SafeGitContext:
         self._scratch = tempfile.TemporaryDirectory(prefix="lu-safe-git-", dir=self.temp_root)
@@ -95,6 +97,10 @@ class SafeGitContext:
                 '[protocol]\n\tallow = never\n[protocol "https"]\n\tallow = always\n'
                 + ('[protocol "file"]\n\tallow = always\n' if self.local_remote else "")
                 + f'[remote "origin"]\n\turl = "{self.origin}"\n'
+                # A finalize repository holds only the snapshots it received.
+                # Negotiation finds the destination's copy of the base, so a
+                # push never packs history this repository never fetched.
+                + "[push]\n\tnegotiate = true\n"
                 + "[user]\n\tname = Dispatch rescue\n\temail = dispatch@users.noreply.github.com\n"
                 + identity,
                 encoding="utf-8",
@@ -102,12 +108,12 @@ class SafeGitContext:
             self.git_dir.joinpath("config").chmod(0o600)
             self.env.update(
                 GIT_DIR=str(self.git_dir),
-                # Git's quoted alternates syntax also handles separators in paths.
-                GIT_ALTERNATE_OBJECT_DIRECTORIES='"'
-                + str(self.objects).replace("\\", "\\\\").replace('"', '\\"')
-                + '"',
                 GIT_INDEX_FILE=str(self.root / "index"),
             )
+            if self.borrow_objects:
+                self.env["GIT_ALTERNATE_OBJECT_DIRECTORIES"] = (
+                    '"' + str(self.objects).replace("\\", "\\\\").replace('"', '\\"') + '"'
+                )
             return self
         except BaseException:
             self._scratch.cleanup()
@@ -150,7 +156,17 @@ class SafeGitContext:
         )
 
     def isolate_objects(self, *, base: str, head: str) -> None:
-        """Hash-check and fsck only the incoming range against trusted base objects."""
+        """Receive the commit graph through a fetch whose receiver re-hashes every object.
+
+        The source store may be the worker's own, and Git does not re-hash an
+        object it reads from local storage. Every byte the checks read therefore
+        arrives over the fetch protocol into this empty repository: index-pack
+        names each object by the hash of what it received. A forged object
+        stored under a real name arrives under a different name, so the
+        requested one stays missing and any later read of it fails. Reads
+        never fall back to the source store: nothing here points at it.
+        """
+        self.env.pop("GIT_ALTERNATE_OBJECT_DIRECTORIES", None)
         common = self.objects.parent
         admin = self.source_git_dir
         forbidden = [root / name for root in {common, admin} for name in ("info/grafts", "shallow")] + [
@@ -177,58 +193,138 @@ class SafeGitContext:
                 if config.returncode != 1:
                     raise SnapshotRefusal("auto_finalize_object_hardening_violation")
 
-        # rev-list and pack-objects see a fresh config with commitGraph and
-        # replacement lookup disabled, never the worker's refs or config.
-        objects = self.checked("rev-list", "--objects", "--no-object-names", f"{base}..{head}")
-        oids = "".join(line + "\n" for line in dict.fromkeys(objects.splitlines()) if line)
-        pack = self.root / "publication.pack"
-        with pack.open("wb") as output:
-            exported = subprocess.run(
-                [GIT, "pack-objects", "--stdout"],
-                cwd=self.root,
-                env=self.env,
-                input=oids.encode("ascii"),
-                stdout=output,
-                stderr=subprocess.PIPE,
-                check=False,
-                timeout=120,
+        # upload-pack serves only object bytes: an empty repository supplies
+        # refs and configuration, the source store supplies objects.
+        server = self.root / "source.git"
+        subprocess.run(
+            [GIT, "init", "--bare", f"--template={self.root / 'empty-template'}", str(server)],
+            cwd=self.root,
+            env={key: value for key, value in self.env.items() if key not in {"GIT_DIR", "GIT_INDEX_FILE"}},
+            capture_output=True,
+            check=True,
+            timeout=60,
+        )
+        upload = self.root / "upload-pack"
+        upload.write_text(
+            "#!/bin/sh\nexec env "
+            + shlex.join(
+                [
+                    f"GIT_DIR={server}",
+                    f"GIT_OBJECT_DIRECTORY={self.objects}",
+                    "GIT_NO_REPLACE_OBJECTS=1",
+                    GIT,
+                    "-c",
+                    "core.commitGraph=false",
+                    "-c",
+                    "uploadpack.allowFilter=true",
+                    "-c",
+                    "uploadpack.allowAnySHA1InWant=true",
+                    "upload-pack",
+                ]
             )
-        self.env.pop("GIT_ALTERNATE_OBJECT_DIRECTORIES", None)
-        if exported.returncode:
-            raise SnapshotRefusal("auto_finalize_object_hardening_violation")
-        if self.trusted_objects is None:
-            raise SnapshotRefusal("auto_finalize_object_hardening_violation")
-        # This file belongs only to the fresh repository. Validation children
-        # clear GIT_* and must still find the trusted base, never the worker.
-        trusted = self.trusted_objects.resolve(strict=True)
-        self.git_dir.joinpath("objects/info/alternates").write_text(str(trusted) + "\n")
-        with pack.open("rb") as source:
-            imported = subprocess.run(
-                # --strict runs Git's strict fsck on every copied object and
-                # checks outgoing links against the trusted store. A separate
-                # fsck --full would recheck all alternate history as well.
-                [GIT, "index-pack", "--stdin", "--strict"],
-                cwd=self.root,
-                env=self.env,
-                stdin=source,
-                capture_output=True,
-                check=False,
-                timeout=120,
-            )
-        if imported.returncode:
-            raise SnapshotRefusal("auto_finalize_fsck_failed")
-        # Linked workers share the trusted main store, which can also contain
-        # corrupt worker objects. Every requested range OID must be in our
-        # verified pack, rather than merely resolvable through that alternate.
-        copied = set()
-        for index in self.git_dir.glob("objects/pack/*.idx"):
-            verified = self.run("verify-pack", "-v", str(index))
-            if verified.returncode:
-                raise SnapshotRefusal("auto_finalize_fsck_failed")
-            copied.update(line.split()[0] for line in verified.stdout.splitlines() if line)
-        if not set(oids.split()).issubset(copied):
-            raise SnapshotRefusal("auto_finalize_fsck_failed")
+            + ' "$@"\n'
+        )
+        upload.chmod(0o700)
+        self._source = (server.as_uri(), upload)
         self.objects = self.git_dir / "objects"
+        tips = [base, getattr(self, "driver_base", base), head]
+        # Commits only: their parents decide attribution, so all of them,
+        # not a shallow window, must arrive before any merge-base is computed.
+        self._receive(tips, "--filter=tree:0")
+        if self.run("rev-list", "--missing=error", *dict.fromkeys(tips)).returncode:
+            raise SnapshotRefusal("auto_finalize_fsck_failed")
+
+    def _receive(self, oids, *options: str) -> None:
+        """Fetch named objects from the source store and prove each one arrived."""
+        wanted = sorted(set(oids))
+        if not wanted:
+            return
+        if self._source is None:
+            raise SnapshotRefusal("auto_finalize_fsck_failed")
+        url, upload = self._source
+        listing = "".join(oid + "\n" for oid in wanted)
+        try:
+            fetched = self.run(
+                "-c",
+                "protocol.file.allow=always",
+                "-c",
+                "transfer.fsckObjects=true",
+                "fetch",
+                # No negotiation: haves would let the source omit trees and
+                # blobs this partial repository has never received.
+                "--refetch",
+                "--no-tags",
+                "--no-write-fetch-head",
+                "--no-auto-maintenance",
+                "--recurse-submodules=no",
+                f"--upload-pack={shlex.quote(str(upload))}",
+                *options,
+                url,
+                "--stdin",
+                stdin=listing,
+                network=True,
+            )
+            if fetched.returncode:
+                raise SnapshotRefusal("auto_finalize_fsck_failed")
+            # Partial-clone fetches tolerate absent objects. Lazy fetching is
+            # off, so check every requested name directly.
+            present = self.run("cat-file", "--batch-check=%(objectname)", stdin=listing)
+        except subprocess.TimeoutExpired as exc:
+            raise SnapshotRefusal("auto_finalize_copy_timeout") from exc
+        if present.returncode or present.stdout.split() != wanted:
+            raise SnapshotRefusal("auto_finalize_fsck_failed")
+
+    def _require_closure(self, commits, *options: str) -> None:
+        """Every tree (and, without a filter, every blob) of each commit is present."""
+        try:
+            listed = self.run("rev-list", "--objects", "--no-walk", "--missing=error", *options, *commits)
+        except subprocess.TimeoutExpired as exc:
+            raise SnapshotRefusal("auto_finalize_copy_timeout") from exc
+        if listed.returncode:
+            raise SnapshotRefusal("auto_finalize_fsck_failed")
+
+    def _root_trees(self, commits) -> list[str]:
+        # Read from the received commits: their trees may not be here yet.
+        return self.checked("log", "--no-walk", "--format=%T", *commits).split() if commits else []
+
+    def receive_trees(self, commits) -> None:
+        """Receive every tree of the commits the history checks read, and their attribute files.
+
+        check-attr treats a missing .gitattributes blob as no attributes, so
+        each one in these trees must arrive and be proven present as well.
+        """
+        if self._source is None:
+            return
+        commits = sorted(set(commits))
+        trees = self._root_trees(commits)
+        self._receive(trees, "--filter=blob:none")
+        self._require_closure(commits, "--filter=blob:none")
+        attributes = set()
+        for tree in set(trees):
+            for row in self.checked("ls-tree", "-r", "-z", tree).split("\0"):
+                metadata, _, name = row.partition("\t")
+                if name.rpartition("/")[2] == ".gitattributes" and metadata.split()[1] == "blob":
+                    attributes.add(metadata.split()[2])
+        self._receive(attributes)
+
+    def fetch_remote_commits(self, ref: str, *tips: str) -> None:
+        """Receive the commit graph of a destination ref; trees are never needed."""
+        proc = self.run(
+            "-c",
+            "transfer.fsckObjects=true",
+            "fetch",
+            "--no-tags",
+            "--no-write-fetch-head",
+            "--no-auto-maintenance",
+            "--recurse-submodules=no",
+            "--filter=tree:0",
+            *(f"--negotiation-tip={tip}" for tip in tips),
+            "origin",
+            ref,
+            network=True,
+        )
+        if proc.returncode:
+            raise SnapshotRefusal("rescue_input_unreadable")
 
     def prepare_validation(self, *, head: str, branch: str, base: str, interpreter: Path) -> None:
         """Materialize an isolated checkout with the base commit's trusted hook chain.
@@ -236,16 +332,22 @@ class SafeGitContext:
         Subprocesses which clear GIT_* still discover only our configuration,
         refs and objects. No worker hook, config or tracking ref is imported.
         """
+        if self._source is None:
+            raise SnapshotRefusal("auto_finalize_validation_unavailable")
+        # The checkout needs the whole tip, the trusted hooks need the base,
+        # and the push needs every object of the commits the destination may
+        # lack. Their union is about one snapshot plus the changed objects.
+        driver = getattr(self, "driver_base", base)
+        scoped = self.checked("rev-list", head, "--not", base, driver).split()
+        commits = sorted({base, head, *scoped})
+        trees = self._root_trees(commits)
+        self._receive(trees, "--no-filter")
+        self._require_closure(commits)
         checkout = self.root / "checkout"
         checkout.mkdir()
         self.checked("config", "core.bare", "false")
         self.checked("config", "core.worktree", str(checkout))
         (checkout / ".git").write_text(f"gitdir: {self.git_dir}\n")
-        # The gate clears GIT_* in its children. Persist only borrowed object
-        # storage, never source config or source refs, for those children.
-        if self.objects != self.git_dir / "objects":
-            alternates = self.git_dir / "objects/info/alternates"
-            alternates.write_text(str(self.objects) + "\n")
         self.checked("update-ref", f"refs/heads/{branch}", head)
         self.checked("symbolic-ref", "HEAD", f"refs/heads/{branch}")
         self.checked("update-ref", "refs/remotes/origin/main", base)

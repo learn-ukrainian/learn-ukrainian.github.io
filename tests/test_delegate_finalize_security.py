@@ -10,6 +10,7 @@ import struct
 import subprocess
 import sys
 import time
+import zlib
 from pathlib import Path
 
 import pytest
@@ -37,12 +38,13 @@ def publication(tmp_path, monkeypatch):
     base = _git_out(worktree, "rev-parse", "HEAD").strip()
     _git_out(worktree, "push", "origin", "HEAD:refs/heads/main")
 
+    # As in production, the store the checks read is the worker's own store.
     @contextlib.contextmanager
-    def execution(source, **_kwargs):
+    def execution(source, **kwargs):
         assert source == worktree
         with SafeGitContext(
             objects=worktree / ".git/objects",
-            trusted_objects=origin / "objects",
+            borrow_objects=kwargs.get("prepare", False),
             temp_root=tmp_path,
             origin=str(origin),
             local_remote=True,
@@ -518,15 +520,16 @@ def test_publication_uses_only_the_copied_objects(publication, monkeypatch):
 
     def mutate_source_after_validation(context, **kwargs):
         assert "GIT_ALTERNATE_OBJECT_DIRECTORIES" not in context.env
-        assert (context.git_dir / "objects/info/alternates").read_text() == str(origin / "objects") + "\n"
+        assert not (context.git_dir / "objects/info/alternates").exists()
         assert context.checked("config", "core.commitGraph") == "false"
         assert context.checked("config", "core.useReplaceRefs") == "false"
-        # Damage a source object only after the isolated copy passed fsck.
-        # Both checkout and push must continue using that verified copy.
+        prepare(context, **kwargs)
+        # Damage a source object only after it was received and re-hashed.
+        # The push must keep using that received copy, never the source.
         source_blob = worktree / ".git/objects" / blob[:2] / blob[2:]
         source_blob.chmod(0o644)
         source_blob.write_bytes(b"corrupt worker object")
-        prepare(context, **kwargs)
+        assert (context.checkout / "artifact.txt").read_text() == "owned\n"
 
     monkeypatch.setattr(SafeGitContext, "prepare_validation", mutate_source_after_validation)
 
@@ -804,7 +807,7 @@ def test_tiny_finalize_budget_on_100k_object_history(publication, large_history_
 
     def capture_copy(context, **kwargs):
         isolate(context, **kwargs)
-        copied.append((context.root / "publication.pack").stat().st_size)
+        copied.append(sum(path.stat().st_size for path in context.git_dir.glob("objects/pack/*.pack")))
 
     monkeypatch.setattr(SafeGitContext, "isolate_objects", capture_copy)
     # Include both precheck and publication, not just the optimized helper.
@@ -822,21 +825,8 @@ def test_tiny_finalize_budget_on_100k_object_history(publication, large_history_
     print(f"100k objects: full={full_seconds:.3f}s/{full_bytes}B finalize={elapsed:.3f}s copies={copied}")
 
 
-@pytest.mark.parametrize("shared_store", [False, True])
-def test_copy_rehashes_corrupt_worker_object(publication, monkeypatch, shared_store):
-    import zlib
-
+def test_copy_rehashes_corrupt_worker_object(publication):
     worktree, origin, _base, marker = publication
-    execution = delegate._finalize_execution_context
-
-    @contextlib.contextmanager
-    def shared_execution(*args, **kwargs):
-        with execution(*args, **kwargs) as context:
-            if shared_store:
-                context.trusted_objects = worktree / ".git/objects"
-            yield context
-
-    monkeypatch.setattr(delegate, "_finalize_execution_context", shared_execution)
     head = write_commit(worktree)
     blob = _git_out(worktree, "rev-parse", "HEAD:artifact.txt").strip()
     source = worktree / ".git/objects" / blob[:2] / blob[2:]
@@ -856,9 +846,9 @@ def test_copy_connectivity_never_falls_back_to_worker_base_objects(publication):
     worktree, origin, base, marker = publication
     head = write_commit(worktree)
     blob = _git_out(origin, "rev-parse", f"{base}:README.md").strip()
-    trusted_blob = origin / "objects" / blob[:2] / blob[2:]
-    trusted_blob.unlink()
-    assert _git_out(worktree, "show", f"{base}:README.md") == "base\n"
+    source_blob = worktree / ".git/objects" / blob[:2] / blob[2:]
+    source_blob.unlink()
+    assert _git_out(origin, "show", f"{base}:README.md") == "base\n"
 
     result = publish(publication)
 
@@ -867,3 +857,180 @@ def test_copy_connectivity_never_falls_back_to_worker_base_objects(publication):
     assert "refs/heads/codex/finalize" not in refs(origin)
     assert not marker.exists()
     assert delegate._resolve_sha(worktree) == head
+
+
+def forge_loose_object(worktree, oid, kind, data):
+    """Plant other bytes under a real object name, as a same-user worker can."""
+    target = worktree / ".git/objects" / oid[:2] / oid[2:]
+    target.parent.mkdir(exist_ok=True)
+    if target.exists():
+        target.chmod(0o644)
+        target.unlink()
+    target.write_bytes(zlib.compress(f"{kind} {len(data)}\0".encode() + data))
+    # Local reads now return the forged bytes without re-hashing them.
+    shown = subprocess.run(
+        ["git", "cat-file", kind, oid],
+        cwd=worktree,
+        env=delegate._sanitized_git_env(),
+        capture_output=True,
+        check=False,
+        timeout=60,
+    )
+    assert shown.stdout == data
+
+
+@pytest.mark.parametrize("unpack_shared_pack", [False, True])
+def test_forged_base_subtree_cannot_hide_unowned_deletion(publication, unpack_shared_pack):
+    worktree, origin, _base, marker = publication
+    (worktree / "other").mkdir()
+    write_commit(worktree, "other/a.txt", "kept\n")
+    base = write_commit(worktree, "other/b.txt", "unowned\n")
+    _git_out(worktree, "push", "origin", "HEAD:refs/heads/main")
+    subtree = _git_out(worktree, "rev-parse", f"{base}:other").strip()
+    _git_out(worktree, "rm", "-r", "other")
+    _git_out(worktree, "commit", "-m", "delete unowned files")
+    head = write_commit(worktree)
+    if unpack_shared_pack:
+        # Packed objects win over loose ones, so a worker first unpacks them.
+        _git_out(worktree, "repack", "-ad")
+        pack_dir = worktree / ".git/objects/pack"
+        packs = list(pack_dir.glob("*.pack"))
+        assert packs
+        for pack in packs:
+            saved = worktree.parent / pack.name
+            for part in pack_dir.glob(pack.stem + ".*"):
+                part.rename(worktree.parent / part.name)
+            with saved.open("rb") as source:
+                subprocess.run(
+                    ["git", "unpack-objects", "-r"],
+                    cwd=worktree,
+                    env=delegate._sanitized_git_env(),
+                    stdin=source,
+                    capture_output=True,
+                    check=True,
+                    timeout=60,
+                )
+    # An empty forged subtree makes the deletion invisible to local reads.
+    forge_loose_object(worktree, subtree, "tree", b"")
+    assert "other/" not in _git_out(worktree, "diff-tree", "-r", "--name-only", base, head)
+
+    result = publish((worktree, origin, base, marker))
+
+    assert not result.ok
+    assert result.error == "auto_finalize_fsck_failed"
+    assert "refs/heads/codex/finalize" not in refs(origin)
+    assert not marker.exists()
+    assert delegate._resolve_sha(worktree) == head
+
+
+def test_forged_base_hook_is_never_executed(publication):
+    worktree, origin, base, marker = publication
+    head = write_commit(worktree)
+    hook = _git_out(worktree, "rev-parse", f"{base}:.githooks/pre-push").strip()
+    executed = worktree.parent / "worker-code-ran"
+    forge_loose_object(worktree, hook, "blob", f'#!/bin/sh\nprintf stolen > "{executed}"\n'.encode())
+
+    result = publish(publication)
+
+    assert not result.ok
+    assert result.error == "auto_finalize_fsck_failed"
+    assert "refs/heads/codex/finalize" not in refs(origin)
+    assert not executed.exists()
+    assert not marker.exists()
+    assert delegate._resolve_sha(worktree) == head
+
+
+@pytest.mark.parametrize(
+    "path,code",
+    [("unowned.txt", "auto_finalize_committed_scope_unowned"), (".githooks/evil", "auto_finalize_validation_changed")],
+)
+def test_evil_merge_own_tree_is_checked(publication, path, code):
+    worktree, origin, base, marker = publication
+    first = write_commit(worktree)
+    second = _git_out(worktree, "commit-tree", f"{base}^{{tree}}", "-p", base, "-m", "clean side").strip()
+    write_commit(worktree, path, "only the merge introduces this\n")
+    tree = _git_out(worktree, "rev-parse", "HEAD^{tree}").strip()
+    head = _git_out(worktree, "commit-tree", tree, "-p", first, "-p", second, "-m", "evil merge").strip()
+    _git_out(worktree, "reset", "--hard", head)
+
+    result = publish(publication)
+
+    assert not result.ok
+    assert result.error == code
+    assert "refs/heads/codex/finalize" not in refs(origin)
+    assert not marker.exists()
+
+
+@pytest.mark.parametrize("during_publication", [False, True])
+def test_fetch_copy_timeout_is_not_a_push_timeout(publication, monkeypatch, during_publication):
+    worktree, origin, _base, marker = publication
+    write_commit(worktree)
+    if not during_publication:
+        (worktree / "artifact.txt").write_text("dirty owned\n")
+    run = SafeGitContext.run
+
+    def timeout_fetch(context, *args, **kwargs):
+        if "fetch" in args:
+            raise subprocess.TimeoutExpired(["git", "fetch"], 120)
+        return run(context, *args, **kwargs)
+
+    monkeypatch.setattr(SafeGitContext, "run", timeout_fetch)
+    result = publish(publication)
+
+    assert not result.ok
+    assert result.error == "auto_finalize_copy_timeout"
+    assert delegate.is_public_cause(result.error)
+    assert "refs/heads/codex/finalize" not in refs(origin)
+    assert not marker.exists()
+
+
+def test_forged_base_attributes_cannot_hide_a_new_filter(publication):
+    worktree, origin, _base, marker = publication
+    base = write_commit(worktree, ".gitattributes", "README.md text\n")
+    _git_out(worktree, "push", "origin", "HEAD:refs/heads/main")
+    head = write_commit(worktree, ".gitattributes", "artifact.txt filter=worker\n")
+    # A forged base file claims the filter was already there, so comparing
+    # base and commit attributes would see no new filter.
+    attributes = _git_out(worktree, "rev-parse", f"{base}:.gitattributes").strip()
+    forge_loose_object(worktree, attributes, "blob", b"artifact.txt  filter=worker\n")
+
+    result = publish((worktree, origin, base, marker), owned_paths=["artifact.txt", ".gitattributes"])
+
+    assert not result.ok
+    assert result.error == "auto_finalize_fsck_failed"
+    assert "refs/heads/codex/finalize" not in refs(origin)
+    assert not marker.exists()
+    assert delegate._resolve_sha(worktree) == head
+
+
+def test_destination_ahead_of_every_received_commit_still_publishes(publication, tmp_path, monkeypatch):
+    worktree, origin, base, marker = publication
+    other = tmp_path / "other-writer"
+    _git_out(tmp_path, "clone", "--branch", "main", str(origin), str(other))
+    _git_out(other, "config", "user.email", "test@example.com")
+    _git_out(other, "config", "user.name", "test")
+    write_commit(other, "upstream.txt", "landed elsewhere\n")
+    _git_out(other, "push", "origin", "HEAD:refs/heads/main")
+    upstream = _git_out(other, "rev-parse", "HEAD").strip()
+    # Production: origin/main has moved past the driver's checkout, and its
+    # tip exists nowhere in the worker store or the scratch repository.
+    assert subprocess.run(
+        ["git", "cat-file", "-e", upstream], cwd=worktree, env=delegate._sanitized_git_env(), check=False, timeout=60
+    ).returncode
+    execution = delegate._finalize_execution_context
+
+    @contextlib.contextmanager
+    def driver_behind_destination(*args, **kwargs):
+        with execution(*args, **kwargs) as context:
+            context.driver_base = base
+            yield context
+
+    monkeypatch.setattr(delegate, "_finalize_execution_context", driver_behind_destination)
+    head = write_commit(worktree)
+
+    result = publish(publication)
+
+    assert result.ok, result.error
+    assert "refs/heads/codex/finalize " + head in refs(origin)
+    assert _git_out(origin, "show", f"{head}:artifact.txt") == "owned\n"
+    assert marker.read_text() == "checked"
