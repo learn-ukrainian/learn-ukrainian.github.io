@@ -419,9 +419,65 @@ def approved_word_card_tool_baseline(baseline):
     return {**baseline, "adapters": adapters}
 
 
+MUSE_SEAT_PATH = CAPACITY_FIXTURE / "muse-seat-11026.json"
+
+
+def approved_muse_seat_baseline(baseline):
+    """Apply #11026's Muse subject-seat name to frozen unknown-seat refusals."""
+    raw = MUSE_SEAT_PATH.read_bytes()
+    assert hashlib.sha256(raw).hexdigest() == (
+        "eec3a5ff2ff3c4799a6635567b0abb82a83f2dc999968c0a626b8e13e20e0b99"
+    )
+    reviewer = deepcopy(baseline["reviewer"])
+    for replacement in json.loads(raw)["reviewer_fail_closed_reason_replacements"]:
+        before, after = replacement["before"], replacement["after"]
+        for index in replacement["rows"]:
+            reason = reviewer[index]["value"]["fail_closed_reason"]
+            assert reason.count(before) == 1
+            reviewer[index]["value"]["fail_closed_reason"] = reason.replace(before, after)
+    return {**baseline, "reviewer": reviewer}
+
+
 DRIVER_BRIEF_BASELINE = approved_driver_brief_baseline(GROK_LANGUAGE_BASELINE)
-APPROVED_BASELINE = approved_word_card_tool_baseline(DRIVER_BRIEF_BASELINE)
+APPROVED_BASELINE = approved_muse_seat_baseline(approved_word_card_tool_baseline(DRIVER_BRIEF_BASELINE))
 APPROVED_INPUTS = {**GEMINI_INPUTS, **SEATS_OVERLAY["inputs"], **ARGON_OVERLAY["inputs"]}
+
+
+def test_muse_seat_overlay_changes_only_unknown_seat_receipts():
+    fixture = json.loads(MUSE_SEAT_PATH.read_bytes())
+    assert set(fixture) == {"reviewer_fail_closed_reason_replacements"}
+    replacements = fixture["reviewer_fail_closed_reason_replacements"]
+    named = [index for row in replacements for index in row["rows"]]
+    assert len(named) == len(set(named)) == 56
+    before = approved_word_card_tool_baseline(DRIVER_BRIEF_BASELINE)
+    original = deepcopy(before)
+    after = approved_muse_seat_baseline(before)
+    assert before == original
+    assert after == APPROVED_BASELINE
+    assert {k: v for k, v in after.items() if k != "reviewer"} == {
+        k: v for k, v in before.items() if k != "reviewer"
+    }
+    changed = [
+        index for index, (old, new) in enumerate(zip(before["reviewer"], after["reviewer"], strict=True))
+        if old != new
+    ]
+    assert changed == sorted(named)
+    unnamed = set(range(len(before["reviewer"]))) - set(named)
+    assert unnamed
+    for index in unnamed:
+        assert after["reviewer"][index] == before["reviewer"][index]
+    for replacement in replacements:
+        old_reason, new_reason = replacement["before"], replacement["after"]
+        assert old_reason.startswith("unknown subject seat ")
+        assert old_reason.count("kimi, pool, qwen") == 1
+        assert new_reason == old_reason.replace("kimi, pool, qwen", "kimi, muse, pool, qwen")
+        for index in replacement["rows"]:
+            expected = deepcopy(before["reviewer"][index])
+            assert expected["value"]["fail_closed_reason"] == old_reason
+            expected["value"]["fail_closed_reason"] = new_reason
+            assert after["reviewer"][index] == expected
+    with pytest.raises(AssertionError):
+        approved_muse_seat_baseline(after)
 
 
 def test_grok_language_overlay_records_only_the_two_field_delta():
@@ -1445,7 +1501,7 @@ def test_no_cli_capture_equals_separate_frozen_surface(tmp_path):
         assert hashlib.sha256((output / name).read_bytes()).hexdigest() == digest
     actual = json.loads(gzip.decompress((output / "baseline.json.gz").read_bytes()))
     original = json.loads(gzip.decompress((expected / "baseline.json.gz").read_bytes()))
-    assert actual == approved_word_card_tool_baseline(approved_driver_brief_baseline(approved_grok_language_seat_baseline(
+    assert actual == approved_muse_seat_baseline(approved_word_card_tool_baseline(approved_driver_brief_baseline(approved_grok_language_seat_baseline(
         approved_argon_trial_baseline(
             approved_hook_failure_baseline(
                 approved_hermes_effort_baseline(
@@ -1470,7 +1526,7 @@ def test_no_cli_capture_equals_separate_frozen_surface(tmp_path):
             ),
             "no-cli",
         )
-    )))
+    ))))
     assert len(actual["launchers"]) == 70
     errors = [row.get("error", "") for row in actual["adapters"]]
     assert any("grok" in error and "PATH" in error for error in errors)
