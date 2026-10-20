@@ -17,13 +17,59 @@ tracked changes:
    It also runs the existing `check-no-internal-ids` hook explicitly with `--hook-stage pre-commit`
    and the same `--from-ref`/`--to-ref` pair. This preserves that hook's exact learner-surface
    file filter and detection rules while enforcing it during the push gate.
-2. The invariant registry: `KNOWN_REPO_WIDE_MODULES` and `KNOWN_REPO_WIDE_FUNCTIONS` in
-   `tests/test_repo_wide_marker_invariant.py`, read by AST and deduplicated (a function id is dropped
-   when its whole file is selected). Its version is a digest of the gate version and the ids.
-3. Test files the range adds or changes (`tests/**/test_*.py`).
+2. Test files the range adds or changes (`tests/**/test_*.py`).
+3. The test files those changes affect (#11207), from the importer-closure selector
+   `scripts/ci/pre_push_shadow.py` (the name is historical; it ran in shadow before #11207).
 
-Check 1 is the pre-commit stage; checks 2 and 3 form the pytest stage. Importer-closure selection
-(`scripts/ci/pre_push_shadow.py`) runs beside them in shadow: recorded, never blocking.
+Check 1 is the pre-commit stage; checks 2 and 3 form the pytest stage. **The pre-push gate blocks only
+on tests affected by the pushed change. CI runs the full suite, the repository-wide invariant registry
+included, and remains the merge gate.** A green pre-push is never evidence that unaffected tests pass.
+
+### Affected-test selection
+
+The selector starts beside the pre-commit stage, inside the same admission and scope, and must answer
+within `SHADOW_BUDGET_S` before pytest starts. It scans the indexed tree with
+`scripts/ci/components.py` (`scan_imports`) and follows only proven edges, in reverse: Python imports
+with their parent packages, literal `importlib`/`runpy` loads, literal file reads and literal Python
+subprocesses. A test file is affected when it reaches a changed path that way. A changed
+`conftest.py` affects every test file under its directory. A change to a file pytest loads for every
+test file affects every test file: the pytest configuration (`pyproject.toml`, `pytest.ini`,
+`setup.cfg`, `tox.ini`), the root or `tests/conftest.py`, and the `-p` plugins in `addopts`.
+
+Two kinds of reach are deliberately not followed; CI covers them:
+
+- edges the scanner cannot prove (computed paths, shell commands, `sys.path` edits). Treating each as
+  "could read anything" selects nearly every test file on every push;
+- modules reached only through what a conftest or a `-p` plugin imports. The root `tests/conftest.py`
+  imports a chain that reaches most of `scripts/`, and any selected test already loads that conftest.
+
+The answer (`pre-push-selection.v1`) lists the affected test files nearest first, by import hops.
+The gate then:
+
+- always runs the changed test files;
+- defers to CI the selected modules whose tracked duration in `scripts/ci/pytest-file-durations.json`
+  exceeds `HEAVY_MODULE_S`, as it does for registered modules;
+- runs the rest nearest first until the estimated cost of the changed files plus the selected ones
+  (tracked CI seconds, the median for an untracked file) would pass `SELECTION_COST_CAP_S`, and defers
+  that file and every farther one to CI. Changed files run even when they alone pass the cap.
+
+Both deferrals are recorded. A selection with no affected test files and no changed test file is
+green with `pytest: "no tests selected"`, recorded as `selection.no_tests_affected`. That is the
+expected result for a docs-only or data-only change.
+
+### Fallback: the conservative set
+
+When the selector fails or exits non-zero, times out, answers malformed or in another schema, or names
+a path that is not a test file, or when every test file is affected (a configuration change), the
+gate blocks on the conservative set instead: the changed test files plus the invariant registry,
+`KNOWN_REPO_WIDE_MODULES` and `KNOWN_REPO_WIDE_FUNCTIONS` in `tests/test_repo_wide_marker_invariant.py`.
+The registry is read by AST and deduplicated (a function id is dropped when its whole file is
+selected), with the deferrals described in Bounds. Its version is a digest of the gate version and
+the ids. The event records `selection.status: fallback` with a typed `selection.reason`:
+`selector_unavailable`, `selector_failed`, `selector_timeout`, `selector_unparseable`,
+`selector_invalid_output`, `selector_schema_mismatch` or `all_tests_affected`. The set is never
+silently narrower and never green on an unknown selection. The registry is loaded, and its
+materialization checked, on every push, because the fallback needs it.
 
 When the pytest stage holds test slots, its children inherit the thread caps from
 `scripts/common/test_thread_caps.py` (#10716): `OMP_NUM_THREADS`, `MKL_NUM_THREADS`,
@@ -45,7 +91,7 @@ The governor's disabled and CI paths apply no thread caps. See `docs/runbooks/te
 | `pre_commit_failed`, `tests_failed` | 1 | Push refused; failing hook names or pytest node ids are listed. |
 | `tree_mismatch`, `dirty_tree`, `range_unresolved`, `invalid_ref_updates` | 1 | The exact commit cannot be validated as pushed. |
 | `untracked_inputs` | 1 | Untracked or ignored `*.py`, `*.pth` or pytest/tox/setup/pyproject config files exist; they could change the run but not the receipt. Commit or remove them. |
-| `validation_incomplete` | 75 | Not validated and not green: `invalid_configuration`, `admission_timeout`, `timeout`, `registry_unavailable`, `pytest_error` (pytest exited without a verdict), `pytest_temp_unavailable` (no private pytest base temp below a verified root outside every Git checkout and Git directory; see Bounds), `changed_tests_unmaterialized` (a test file the range changes is absent from a sparse worktree; `git sparse-checkout add tests`), `test_slots_wait_timeout`, `test_slots_pool_unavailable`, `test_slots_invalid_configuration`, `test_slots_unavailable` (host test slots, below). The branch is preserved; return to the driver. Never retry blindly. |
+| `validation_incomplete` | 75 | Not validated and not green: `invalid_configuration`, `admission_timeout`, `timeout`, `registry_unavailable`, `pytest_error` (pytest exited without a verdict), `pytest_temp_unavailable` (no private pytest base temp below a verified root outside every Git checkout and Git directory; see Bounds), `changed_tests_unmaterialized` (a test file the range changes is absent from a sparse worktree; `git sparse-checkout add tests`), `selected_tests_unmaterialized` (likewise for an affected test file the gate would run), `test_slots_wait_timeout`, `test_slots_pool_unavailable`, `test_slots_invalid_configuration`, `test_slots_unavailable` (host test slots, below). The branch is preserved; return to the driver. Never retry blindly. |
 
 The last stderr line before the bypass hint is machine-readable: `{"pre_push_gate": {...}}`.
 
@@ -78,7 +124,7 @@ governor from its own checkout and refuses (`test_slots_unavailable`) when it ca
 or a true `CI` variable, leaves the stage exactly as before.
 
 One predecessor's admission allowance (`ADMISSION_WAIT_S`) covers one complete gate run: the run budget,
-the longest test-slot wait, the shadow and two cleanup bounds. The hard admission ceiling is ten of these.
+the longest test-slot wait, the selector and two cleanup bounds. The hard admission ceiling is ten of these.
 The auto-finalize push timeout in `scripts/delegate.py` reads both values from the gate.
 
 Before joining the global queue, a caller joins a FIFO queue for its immutable outgoing head under
@@ -125,11 +171,12 @@ requires xdist. Without xdist, execution is serial.
 
 The pytest stage runs the planned node ids in two pytest invocations that share the pytest stage's
 deadline (#10610). Changed test files run first with `--dist worksteal`, as CI runs them, so one slow changed
-file is spread over the workers instead of setting a one-worker floor. The registered invariant nodes
-then run with `--dist loadfile`, which keeps their files whole. Each invocation gets its own private
-base temp. The first refusal ends the stage, and a green stage and receipt require both invocations to
-pass. One invocation collecting no tests is accepted only when the other ran tests. The receipt keeps
-the single plan node list, which covers both invocations.
+file is spread over the workers instead of setting a one-worker floor. The selected test files, or on
+the fallback set the registered invariant nodes, then run with `--dist loadfile`, which keeps their
+files whole. Each invocation gets its own private base temp. The first refusal ends the stage, and a
+green stage and receipt require both invocations to pass. One invocation collecting no tests is
+accepted only when the other ran tests. The receipt keeps the single plan node list, which covers
+both invocations.
 
 Base temps live outside every Git checkout and Git directory (#10654), as they do in CI, so tests
 that require a scratch tree outside any checkout behave the same in the gate. The root follows the
@@ -188,7 +235,7 @@ It preserves the configured count and the ordinary dispatch clamp described abov
 The gate starts its own `systemd-run --user --scope` executor with `MemoryMax=6G` and verifies the
 actual cgroup-v2 memory limit and peak interface before starting any check. The executor inherits
 the head and global flock descriptors. These reservations remain held if the launching gate exits
-while scoped validation continues. Every blocking stage and the shadow run execute inside that scope.
+while scoped validation continues. Every blocking stage and the selector execute inside that scope.
 No check runs during scope setup. A missing user bus or refused setup falls back to the complete
 serial path. Failure after checks start is incomplete, with no repeated stage or automatic retry.
 Cleanup addresses only the run's generated unit and descendants. Scoped receipt publication follows
@@ -228,15 +275,26 @@ the same Git-common authority. It adds no stream lease or external coordination 
 ## Receipts
 
 `<git-common-dir>/lu-pre-push-gate/receipts/<head>-<base>.json` lets a retry of the same commit skip the run. It is
-bound to the commit, tree, base, registry version, selected ids and gate version, expires after one hour, and
-is ignored when any of them differ or the tree is dirty.
+bound to the commit, tree, base, changed paths, registry version, conservative node ids and gate version,
+and it records the selection that ran (`selection`: status, fallback reason, digest of the selector's
+answer) and the node ids it blocked on (`blocking_node_ids`). It expires after one hour and is ignored
+when any bound input differs or the tree is dirty. Receipts are checked before the selector runs, so
+reuse matches the bound inputs. Those inputs determine the selection: the tree carries the selector,
+the import graph and the durations table, and the gate version carries the cap. A receipt checked
+for a plan whose selection is known must match its whole key, the selection included. A receipt
+validated on the fallback set records the conservative verdict for exactly those inputs and is
+reused like any other.
 Rebuilding the plan also rejects untracked validation inputs after either wait. A missing or unsafe
 immutable identity cannot authorize reuse.
 
 ## Measurement (AC-05)
 
 Each attempt appends a durable `BEGIN` row before validation and a `TERMINAL` row for its typed outcome to `<git-common-dir>/lu-pre-push-gate/measurements.jsonl`: outcome, reason, failing
-ids, admission wait, duration, registry version and the shadow selection. Join with first-attempt CI outcome
+ids, admission wait, duration, registry version and the selection (`selection`: status, reason,
+scope, `selected_count`, `run_count`, `no_tests_affected`, `deferred_heavy`, `deferred_over_cap` with
+`over_cap_digest`, `estimated_s`, `cost_cap_s`). `nodes` counts the node ids pytest blocked on, and
+`deferred_to_ci` lists the deferrals of the set that ran (registry deferrals on the fallback set).
+`invariant_serial_total_s` stays null when the selection, not the registry, ran. Join with first-attempt CI outcome
 per PR head for the before/after report.
 `admission_wait_s` includes both waits; `coalescing_wait_s` records the head queue wait separately.
 `queue_depth` and `queue_position` describe the global queue only. A follower that reuses a receipt
@@ -268,8 +326,9 @@ A row whose stages ran records the configured bounds as `stage_budget_s` and `ru
 Gate version 5 introduced the separate stage allowances. Rows with `gate_version` 4 or lower used one
 budget, the size of today's stage allowance, shared by both stages. Their pytest stage could use only
 what pre-commit left of it.
-The new fields are additive and no existing field changes meaning, so `measurement_schema` remains
-`pre-push-measurement.v1`.
+Those fields were additive and changed no existing meaning, so they stayed in `pre-push-measurement.v1`.
+Gate version 9 (#11207) replaces the `shadow` record with `selection`, and `nodes` and
+`deferred_to_ci` now describe the set that ran, so its rows are `pre-push-measurement.v2`.
 `resources_at_admission` contains fresh admission observations or explicit nulls.
 The top-level requested/effective test process fields remain null when no count was observed.
 `peak_memory_bytes` comes from the scope's `memory.peak`, read by the scoped executor before it exits.

@@ -5,6 +5,7 @@ from __future__ import annotations
 import contextlib
 import errno
 import fcntl
+import hashlib
 import importlib.util
 import json
 import os
@@ -1178,7 +1179,7 @@ def test_failing_node_ids_are_parsed_from_the_pytest_summary() -> None:
     assert gate.failing_node_ids(output) == ("tests/a.py::test_x", "tests/b.py::test_y")
 
 
-# ---- shadow importer-closure selection: recorded, never blocking -----------------------------------------
+# ---- affected-test selection: blocks on the selector's answer, the registry is its fallback (#11207) ------
 
 
 def _install_shadow(repo: Path, body: str) -> None:
@@ -1189,34 +1190,102 @@ def _install_shadow(repo: Path, body: str) -> None:
     _git(repo, "commit", "-m", "shadow")
 
 
-def test_shadow_selection_is_recorded_and_does_not_change_the_verdict(repo: Path) -> None:
-    _install_shadow(
-        repo,
-        "import json\nprint(json.dumps({'components': ['harness'], 'fallback_reasons': [], "
-        "'selected_tests': ['tests/test_x.py']}))\n",
-    )
+def _install_selector(repo: Path, selected: list[str], *, scope: str = "importer_closure") -> None:
+    """A committed selector that answers ``selected`` in the gate's schema, whatever the paths."""
+    answer = {"schema": gate.SELECTION_SCHEMA, "scope": scope, "all_tests_reasons": [], "selected_tests": selected}
+    _install_shadow(repo, f"import json\nprint(json.dumps({answer!r}))\n")
+
+
+MARKER_TEST = "from pathlib import Path\n\n\ndef test_no_marker():\n    assert not Path('RED_MARKER').exists()\n"
+
+
+def _red_unchanged(repo: Path, test: str) -> None:
+    """Land ``test`` on the remote base, so the outgoing range turns it red without changing it."""
+    _git(repo, "checkout", "main")
+    _write(repo, test, MARKER_TEST)
+    _commit(repo, "marker test", test)
+    _git(repo, "push", "--no-verify", "origin", "main")
+    _git(repo, "checkout", "feature")
+    _git(repo, "reset", "--hard", "main")
+    _git(repo, "fetch", "origin")
+
+
+@pytest.mark.parametrize("selector", ["selected", "absent"])
+def test_an_unrelated_red_invariant_blocks_only_the_fallback_set(repo: Path, selector: str) -> None:
+    _red_unchanged(repo, "tests/test_invariant.py")  # a registered invariant module
+    if selector == "selected":
+        _install_selector(repo, ["tests/test_new.py"])
     _write(repo, "tests/test_new.py", GREEN_TEST)
-    _commit(repo, "green", "tests/test_new.py")
+    _write(repo, "RED_MARKER", "breaks the unrelated invariant\n")
+    _commit(repo, "unrelated change", "tests/test_new.py", "RED_MARKER")
+
+    result = _run_gate(repo)
+
+    row = _measurements(repo)[-1]
+    if selector == "selected":
+        assert result.returncode == 0, result.stderr
+        assert row["selection"]["status"] == "selected" and row["selection"]["run_count"] == 0
+        assert row["nodes"] == 1 and row["invariant_serial_total_s"] is None
+    else:  # no selector in the tree: the conservative set still runs the registry and refuses
+        assert result.returncode == gate.EXIT_REFUSED
+        assert "tests/test_invariant.py::test_no_marker" in _verdict(result)["failing"]
+        assert row["selection"] == {
+            "status": "fallback",
+            "reason": "selector_failed",
+            "detail": "exit 1",
+            "selected_count": None,
+        }
+
+
+def test_a_failing_affected_test_blocks_even_when_its_file_is_unchanged(repo: Path) -> None:
+    _red_unchanged(repo, "tests/test_affected.py")
+    _install_selector(repo, ["tests/test_affected.py", "tests/test_new.py"])
+    _write(repo, "tests/test_new.py", GREEN_TEST)
+    _write(repo, "RED_MARKER", "breaks the affected test\n")
+    _commit(repo, "change the affected code", "tests/test_new.py", "RED_MARKER")
+
+    result = _run_gate(repo)
+
+    assert result.returncode == gate.EXIT_REFUSED
+    assert _verdict(result)["failing"] == ["tests/test_affected.py::test_no_marker"]
+    row = _measurements(repo)[-1]
+    assert row["selection"]["status"] == "selected" and row["selection"]["run_count"] == 1
+    assert _receipts(repo) == []
+
+
+def test_no_affected_tests_is_green_and_recorded_as_such(repo: Path) -> None:
+    _install_selector(repo, [])
+    _write(repo, "docs.md", "docs\n")
+    _commit(repo, "docs", "docs.md")
 
     result = _run_gate(repo)
 
     assert result.returncode == 0, result.stderr
-    shadow = _measurements(repo)[-1]["shadow"]
-    assert shadow["status"] == "recorded" and shadow["components"] == ["harness"] and shadow["selected_count"] == 1
+    row = _measurements(repo)[-1]
+    assert row["pytest"] == "no tests selected" and row["nodes"] == 0
+    assert row["selection"]["no_tests_affected"] is True and row["selection"]["selected_count"] == 0
 
 
 @pytest.mark.parametrize(
-    "body",
-    ["raise SystemExit(3)\n", "print('not json')\n", "import time\ntime.sleep(60)\n"],
-    ids=["crash", "garbage", "hang"],
+    ("body", "reason"),
+    [
+        ("raise SystemExit(3)\n", "selector_failed"),
+        ("print('not json')\n", "selector_unparseable"),
+        ("import time\ntime.sleep(60)\n", "selector_timeout"),
+        ("import json\nprint(json.dumps({'selected_tests': ['tests/test_new.py']}))\n", "selector_schema_mismatch"),
+        ("import json\nprint(json.dumps({'selected_tests': ['scripts/x.py']}))\n", "selector_invalid_output"),
+    ],
+    ids=["crash", "garbage", "hang", "old-schema", "not-a-test"],
 )
-def test_a_broken_shadow_never_blocks_a_green_push(
-    repo: Path, body: str, monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+def test_a_broken_selector_falls_back_to_the_registry_and_records_why(
+    repo: Path, body: str, reason: str, monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
+    _red_unchanged(repo, "tests/test_invariant.py")
     _install_shadow(repo, body)
     _write(repo, "tests/test_new.py", GREEN_TEST)
-    _commit(repo, "green", "tests/test_new.py")
-    # The shadow budget is a module constant, so drive validate() in-process with it shortened.
+    _write(repo, "RED_MARKER", "x\n")
+    _commit(repo, "change", "tests/test_new.py", "RED_MARKER")
+    # The selector budget is a module constant, so drive validate() in-process with it shortened.
     monkeypatch.setattr(gate, "SHADOW_BUDGET_S", 2.0)
     monkeypatch.setenv("PRE_COMMIT_HOME", str(tmp_path / "pre-commit-cache"))
     monkeypatch.chdir(repo)
@@ -1224,39 +1293,136 @@ def test_a_broken_shadow_never_blocks_a_green_push(
     update = gate.Update("refs/heads/feature", head, "refs/heads/feature", ZERO_SHA)
     event: dict[str, object] = {}
 
-    gate.validate(
-        update, repo, str(repo / "scripts/pre_commit/project_python.sh"), str(repo / ".pre-commit-config.yaml"), event
-    )
+    with pytest.raises(gate.GateOutcome) as raised:
+        gate.validate(
+            update, repo, str(repo / "scripts/pre_commit/project_python.sh"), str(repo / ".pre-commit-config.yaml"), event
+        )
 
-    assert event["outcome"] == "green"
-    assert event["shadow"]["status"] == "unavailable"
+    assert raised.value.reason == "tests_failed"  # never green on an unknown selection
+    assert "tests/test_invariant.py::test_no_marker" in raised.value.failing
+    assert event["selection"]["status"] == "fallback" and event["selection"]["reason"] == reason
+    assert event["nodes"] == 3  # the registry's two entries plus the changed test file
 
 
-def test_shadow_selector_unions_the_tests_of_every_affected_component(monkeypatch: pytest.MonkeyPatch) -> None:
-    from scripts.ci import components, pre_push_shadow
-
-    monkeypatch.setattr(components, "load_manifest", lambda: {})
-    monkeypatch.setattr(
-        components,
-        "affected",
-        lambda paths, manifest: {
-            "components": ["a", "b"],
-            "fallback_reasons": ["dynamic-unresolved"],
-            "changed_paths": len(paths),
-        },
-    )
-    monkeypatch.setattr(
-        components, "test_files", lambda component, manifest: [f"tests/test_{component}.py", "tests/test_shared.py"]
-    )
-
-    selection = pre_push_shadow.shadow_selection(["scripts/x.py"])
-
-    assert selection == {
-        "components": ["a", "b"],
-        "fallback_reasons": ["dynamic-unresolved"],
-        "changed_paths": 1,
-        "selected_tests": ["tests/test_a.py", "tests/test_b.py", "tests/test_shared.py"],
+def test_every_test_affected_falls_back_to_the_registry(tmp_path: Path) -> None:
+    answer = {
+        "status": "recorded",
+        "schema": gate.SELECTION_SCHEMA,
+        "scope": "all_tests",
+        "all_tests_reasons": ["pytest_configuration"],
+        "selected_tests": ["tests/test_a.py"],
+        "selected_digest": "d",
     }
+
+    selection = gate.blocking_selection(_plan(), tmp_path, answer)
+
+    assert (selection.status, selection.reason) == ("fallback", "all_tests_affected")
+    assert selection.record["detail"] == "pytest_configuration" and selection.record["selected_count"] == 1
+
+
+def _answer(selected: list[str]) -> dict[str, object]:
+    return {
+        "status": "recorded",
+        "schema": gate.SELECTION_SCHEMA,
+        "scope": "importer_closure",
+        "selected_tests": selected,
+        "selected_digest": "digest",
+    }
+
+
+def test_selected_files_run_nearest_first_within_the_cost_cap(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    near, heavy, middle, far = (f"tests/test_{name}.py" for name in ("near", "heavy", "middle", "far"))
+    cap = 100.0
+    monkeypatch.setattr(gate, "SELECTION_COST_CAP_S", cap)
+    durations = {near: 45.0, heavy: gate.HEAVY_MODULE_S + 1, middle: 44.0, far: 2.0, "tests/test_b.py": 10.0}
+    _write(tmp_path, gate.DURATIONS_FILE, json.dumps(durations))
+    for test in (near, middle, far):
+        _write(tmp_path, test, GREEN_TEST)
+
+    selection = gate.blocking_selection(
+        _plan(changed_tests=("tests/test_b.py",)), tmp_path, _answer(["tests/test_b.py", near, heavy, middle, far])
+    )
+
+    # The changed file's cost counts first; the heavy module defers whatever its rank; the far file waits
+    # for CI because the nearer ones used the cap, even though it alone would fit.
+    assert selection.status == "selected" and selection.tests == (middle, near)
+    record = selection.record
+    assert record["deferred_heavy"] == [heavy] and record["deferred_over_cap"] == 1
+    assert record["run_count"] == 2 and record["estimated_s"] == pytest.approx(cap - 1)
+
+    durations["tests/test_b.py"] = cap * 3  # a changed file past the cap still runs; it only crowds out the rest
+    _write(tmp_path, gate.DURATIONS_FILE, json.dumps(durations))
+    crowded = gate.blocking_selection(
+        _plan(changed_tests=("tests/test_b.py",)), tmp_path, _answer(["tests/test_b.py", near, middle])
+    )
+    assert crowded.tests == () and crowded.record["deferred_over_cap"] == 2
+    assert _plan(changed_tests=("tests/test_b.py",), selection=crowded).node_ids == ("tests/test_b.py",)
+    plan = _plan(changed_tests=("tests/test_b.py",), selection=selection)
+    assert plan.node_ids == ("tests/test_b.py", middle, near) and not plan.uses_registry
+    assert gate.pytest_invocations(plan) == ((("tests/test_b.py",), "worksteal"), ((middle, near), "loadfile"))
+
+
+def test_an_unmaterialized_selected_file_is_validation_incomplete(tmp_path: Path) -> None:
+    with pytest.raises(gate.GateOutcome) as raised:
+        gate.blocking_selection(_plan(), tmp_path, _answer(["tests/test_absent.py"]))
+
+    assert raised.value.reason == "selected_tests_unmaterialized" and raised.value.incomplete
+
+
+def test_the_receipt_binds_the_selection_that_ran(repo: Path) -> None:
+    _install_selector(repo, ["tests/test_scanner.py"])
+    _write(repo, "tests/test_new.py", GREEN_TEST)
+    _commit(repo, "green", "tests/test_new.py")
+
+    assert _run_gate(repo).returncode == 0, "the selected and changed tests pass"
+
+    (receipt,) = _receipts(repo)
+    key = json.loads(receipt.read_text(encoding="utf-8"))["key"]
+    digest = hashlib.sha256(b"tests/test_scanner.py").hexdigest()[:16]
+    assert key["gate_version"] == gate.GATE_VERSION
+    assert key["selection"] == {"status": "selected", "reason": None, "digest": digest}
+    assert key["blocking_node_ids"] == ["tests/test_new.py", "tests/test_scanner.py"]
+    assert _measurements(repo)[-1]["selection"]["status"] == "selected"
+
+
+def test_a_receipt_is_stale_for_a_different_selection(tmp_path: Path) -> None:
+    ran = gate.Selection("selected", ("tests/test_x.py",), digest="one")
+    gate.write_receipt(tmp_path, _plan(selection=ran), 1000.0)
+    assert gate.receipt_is_fresh(tmp_path, _plan(selection=ran), 1001.0)
+    assert gate.receipt_is_fresh(tmp_path, _plan(), 1001.0)  # before selection: the same inputs
+
+    for other in (
+        gate.Selection("selected", ("tests/test_x.py",), digest="two"),
+        gate.Selection("selected", ("tests/test_y.py",), digest="one"),
+        gate.Selection("fallback", reason="selector_timeout"),
+    ):
+        assert not gate.receipt_is_fresh(tmp_path, _plan(selection=other), 1001.0)
+    assert not gate.receipt_is_fresh(tmp_path, _plan(changed_paths=("scripts/other.py",)), 1001.0)
+
+
+def test_the_selector_answer_is_returned_in_its_order_with_a_digest(repo: Path) -> None:
+    _install_selector(repo, ["tests/test_b.py", "tests/test_a.py", "tests/test_b.py"])
+    plan = gate.Plan("h", "t", "b", "v", (), (), ("scripts/x.py",))
+
+    result = gate.Shadow(plan, repo, str(repo / "scripts/pre_commit/project_python.sh")).finish()
+
+    digest = hashlib.sha256(b"tests/test_b.py\ntests/test_a.py\ntests/test_b.py").hexdigest()[:16]
+    assert result == {
+        "status": "recorded",
+        "schema": gate.SELECTION_SCHEMA,
+        "scope": "importer_closure",
+        "all_tests_reasons": [],
+        "selected_count": 3,
+        "selected_digest": digest,
+        "selected_tests": ["tests/test_b.py", "tests/test_a.py"],
+    }
+
+
+def test_the_real_selector_answers_in_the_gate_schema() -> None:
+    from scripts.ci import pre_push_shadow
+
+    assert pre_push_shadow.SCHEMA == gate.SELECTION_SCHEMA
+    assert pre_push_shadow.__name__ == gate.SELECTOR_MODULE
 
 
 def test_empty_registry_literals_load_as_an_empty_registry(tmp_path: Path) -> None:
@@ -2395,6 +2561,8 @@ def test_a_detached_shadow_descendant_does_not_outlive_the_shadow(
         ("{'components': [], 'fallback_reasons': []}", "unexpected selected_tests shape"),
         ("{'selected_tests': 'tests/test_x.py'}", "unexpected selected_tests shape"),
         ("{'selected_tests': ['tests/test_x.py', 7]}", "unexpected selected_tests shape"),
+        ("{'selected_tests': ['tests/../scripts/test_x.py']}", "selected path is not a test file"),
+        ("{'selected_tests': ['tests//test_x.py']}", "selected path is not a test file"),
     ],
 )
 def test_a_misshapen_shadow_result_is_unavailable_not_a_crash(repo: Path, answer: str, detail: str) -> None:
@@ -2404,7 +2572,9 @@ def test_a_misshapen_shadow_result_is_unavailable_not_a_crash(repo: Path, answer
 
     result = shadow.finish()
 
-    assert result == {"status": "unavailable", "detail": detail}
+    assert result == {"status": "unavailable", "reason": "selector_invalid_output", "detail": detail}
+    selection = gate.blocking_selection(plan, repo, result)  # the gate blocks on the fallback set instead
+    assert (selection.status, selection.reason) == ("fallback", "selector_invalid_output")
 
 
 def test_a_failed_receipt_write_abandons_the_shadow_and_is_incomplete(
@@ -2416,6 +2586,8 @@ def test_a_failed_receipt_write_abandons_the_shadow_and_is_incomplete(
     _commit(repo, "green", "tests/test_new.py")
     monkeypatch.setenv("PRE_COMMIT_HOME", str(tmp_path / "pre-commit-cache"))
     monkeypatch.chdir(repo)
+    # The selector answers before pytest now; a short budget makes the hang a prompt fallback.
+    monkeypatch.setattr(gate, "SHADOW_BUDGET_S", 2.0)
     abandoned: list[bool] = []
     real_abandon = gate.Shadow.abandon
 
@@ -2454,7 +2626,7 @@ def test_an_unencodable_selected_test_is_unavailable_not_a_crash(repo: Path) -> 
 
     result = shadow.finish()
 
-    assert result == {"status": "unavailable", "detail": "cannot encode selected_tests"}
+    assert result == {"status": "unavailable", "reason": "selector_invalid_output", "detail": "cannot encode selected_tests"}
 
 
 def test_an_io_error_during_a_stage_abandons_the_shadow_and_is_incomplete(

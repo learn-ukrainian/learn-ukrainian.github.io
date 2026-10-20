@@ -4,25 +4,41 @@ Git calls ``.githooks/pre-push`` for a worker's own ``git push`` and for the
 auto-finalize push alike, so this gate sits on the one path both share.  For
 each pushed branch it checks, in order:
 
-1. the pre-commit ``pre-push`` stage over the explicit committed range;
-2. the deduplicated registry of repository-wide invariant tests
-   (``KNOWN_REPO_WIDE_*`` in ``tests/test_repo_wide_marker_invariant.py``);
-3. the test files the outgoing range adds or changes.
+1. the pre-commit ``pre-push`` stage over the explicit committed range, with the
+   per-commit OPSEC scan and the learner-surface internal-ID scan;
+2. pytest over the test files the outgoing range adds or changes, together with
+   the test files those changes affect (#11207).
+
+The affected test files come from the importer-closure selector
+(``scripts/ci/pre_push_shadow.py``), which starts beside the pre-commit stage and
+must answer before pytest starts.  Its answer lists them nearest first; the
+gate defers to CI the modules over ``HEAVY_MODULE_S`` and, once the estimated
+cost of the changed files and the rest passes ``SELECTION_COST_CAP_S``, the
+farther remainder, and records both.  When the selector fails, times out,
+answers malformed or finds every test file affected, the gate falls back to the
+conservative set: the changed test files plus the registry of repository-wide
+invariant tests (``KNOWN_REPO_WIDE_*`` in
+``tests/test_repo_wide_marker_invariant.py``).  The event records which set ran
+and why; the set is never silently narrower.  CI still runs the full suite, the
+registry included, and remains the merge gate.
 
 A red result refuses the push with a typed reason and the failing node ids.
 A run that cannot finish (admission wait, time budget, tooling error) is
 ``validation_incomplete``: the push is refused, the branch is preserved, the
-driver decides, and nothing is retried or reported green.  Importer-closure
-selection runs afterwards in shadow only; it is recorded and never blocks.
+driver decides, and nothing is retried or reported green.
 
 Before pytest starts, the gate takes host test slots from the pool worker pytest runs share
 (``scripts/common/test_slots.py``, #10662) and runs no more test processes than it holds. The wait
 for slots is bounded, recorded apart as ``slot_wait_s``, and spends neither the stage allowance nor
 the run budget.
 
-Receipts are bound to the commit, its tree, the range, the registry digest and
-the gate version, and are ignored once the tree is dirty or any of those
-change.  ``git push --no-verify`` remains the explicit operator bypass.
+Receipts are bound to the commit, its tree, the range, the registry digest, the
+gate version and the selection that ran (its status, fallback reason and
+digest, with the node ids it blocked on), and are ignored once the tree is
+dirty or any of those change.  Receipts are checked before the selector runs, so
+reuse matches the bound inputs, which determine the selection: the tree carries
+the selector, the import graph and the durations table.
+``git push --no-verify`` remains the explicit operator bypass.
 
 Stdlib only: the hook must run before any project import is trustworthy.
 """
@@ -48,10 +64,10 @@ import sys
 import tempfile
 import time
 import uuid
-from dataclasses import dataclass, field
+from dataclasses import asdict, dataclass, field
 from pathlib import Path
 
-GATE_VERSION = 8  # 8: unconditional process cap and invariant timing (#10734)
+GATE_VERSION = 9  # 9: block on the affected-test selection; the registry is its fallback (#11207)
 # Copied from scripts/common/test_thread_caps.py: this gate imports no project policy code.
 # tests/test_pre_push_gate.py checks table and behavior parity.
 THREAD_CAPS = {
@@ -67,14 +83,15 @@ REGISTRY_FILE = "tests/test_repo_wide_marker_invariant.py"
 REGISTRY_NAMES = ("KNOWN_REPO_WIDE_MODULES", "KNOWN_REPO_WIDE_FUNCTIONS")
 MAX_TEST_PROCESSES_ENV = "LU_PRE_PUSH_GATE_MAX_TEST_PROCESSES"
 MAX_CONCURRENT_RUNS_ENV = "LU_PRE_PUSH_GATE_MAX_CONCURRENT_RUNS"
-MEASUREMENT_SCHEMA = "pre-push-measurement.v1"
+MEASUREMENT_SCHEMA = "pre-push-measurement.v2"  # v2: `selection` replaces `shadow` (#11207)
 SCOPE_MEMORY_MAX = 6 * 1024**3
 CGROUP_ROOT = Path("/sys/fs/cgroup")
 # Each blocking stage (pre-commit, pytest) gets its own allowance from its own start, so time one
 # stage spends never shortens the next (#10642). The run budget caps their sum for the whole push.
 STAGE_BUDGET_S = 600.0
 RUN_BUDGET_S = 2 * STAGE_BUDGET_S
-SHADOW_BUDGET_S = 120.0
+SHADOW_BUDGET_S = 120.0  # the selector's own bound; it starts with the pre-commit stage (historical name)
+SELECTOR_MODULE = "scripts.ci.pre_push_shadow"
 CLEANUP_BUDGET_S = 10.0  # after a kill: reaping and the sweep for leftover descendants
 # The host test-slot governor (#10662), loaded by path from this gate's own checkout: it is stdlib-only.
 TEST_SLOTS_MODULE = "scripts/common/test_slots.py"
@@ -93,6 +110,12 @@ OUTPUT_TAIL_BYTES = 8192
 # and recorded on every run. Function entries always run.
 HEAVY_MODULE_S = 60.0
 DURATIONS_FILE = "scripts/ci/pytest-file-durations.json"
+# Selected (not changed) test files run nearest first until the estimated cost of the changed and
+# selected files, in tracked CI seconds, would pass this cap; the remainder is deferred to CI and
+# counted. Shared by the gate's pytest processes it fills about half the pytest stage allowance,
+# leaving headroom on a busy host. Changed files always run, even past the cap.
+SELECTION_COST_CAP_S = STAGE_BUDGET_S
+SELECTION_SCHEMA = "pre-push-selection.v1"  # the only selector answer the gate blocks on
 # Keep existing CI deferrals until the tracked durations table supplies a row.
 CI_DEFERRED_MODULES = frozenset({"tests/test_source_ingest_entrypoints.py"})
 # Registry entries that read a tree a sparse dispatch worktree omits.  They fail there for want of the
@@ -149,6 +172,25 @@ class Update:
     remote_sha: str
 
 
+@dataclass(frozen=True)
+class Selection:
+    """Which set the pytest stage blocks on besides the changed test files (#11207).
+
+    ``selected``: the selector's affected test files that run here (``tests``); ``fallback``: the
+    conservative registry set, for ``reason``. ``digest`` identifies the selector's whole answer.
+    ``record`` is the measurement row's account of it and is not part of the receipt key.
+    """
+
+    status: str
+    tests: tuple[str, ...] = ()
+    reason: str | None = None
+    digest: str | None = None
+    record: dict[str, object] = field(default_factory=dict, compare=False)
+
+    def key(self) -> dict[str, object]:
+        return {"status": self.status, "reason": self.reason, "digest": self.digest}
+
+
 @dataclass
 class Plan:
     head: str
@@ -159,10 +201,19 @@ class Plan:
     changed_tests: tuple[str, ...]
     changed_paths: tuple[str, ...]
     deferred_to_ci: tuple[str, ...] = ()
-    node_ids: tuple[str, ...] = field(init=False)
+    selection: Selection | None = None  # set once the selector has answered, before pytest
 
-    def __post_init__(self) -> None:
-        self.node_ids = dedupe_node_ids((*self.registry_nodes, *self.changed_tests))
+    @property
+    def uses_registry(self) -> bool:
+        """Until a selection succeeds, the conservative registry set is the one that blocks."""
+        return self.selection is None or self.selection.status != "selected"
+
+    @property
+    def node_ids(self) -> tuple[str, ...]:
+        if self.uses_registry:
+            return dedupe_node_ids((*self.registry_nodes, *self.changed_tests))
+        assert self.selection is not None
+        return dedupe_node_ids((*self.changed_tests, *self.selection.tests))
 
 
 def apply_thread_caps(env: dict[str, str]) -> dict[str, str]:
@@ -274,24 +325,33 @@ def defer_to_ci(nodes: tuple[str, ...], root: Path) -> tuple[tuple[str, ...], tu
     a sparse worktree omits cannot pass here; it defers only while sparse-checkout has left part of
     the tree unmaterialized, so a full checkout runs it.
     """
-    try:
-        durations = json.loads((root / DURATIONS_FILE).read_text(encoding="utf-8"))
-    except (OSError, ValueError):
-        durations = {}
-    durations = durations if isinstance(durations, dict) else {}
+    durations = load_durations(root)
     absent = {
         node for tree, tree_nodes in SPARSE_TREE_NODES.items() if tree_is_partial(root, tree) for node in tree_nodes
     }
 
     def deferred(node: str) -> bool:
-        cost = durations.get(node)
-        heavy = "::" not in node and (
-            (isinstance(cost, int | float) and cost > HEAVY_MODULE_S)
-            or (node not in durations and node in CI_DEFERRED_MODULES)
-        )
-        return heavy or node in absent
+        return is_heavy(node, durations) or node in absent
 
     return tuple(n for n in nodes if not deferred(n)), tuple(n for n in nodes if deferred(n))
+
+
+def load_durations(root: Path) -> dict[str, object]:
+    """The tracked per-file CI durations; unreadable or misshapen data is an empty table."""
+    try:
+        durations = json.loads((root / DURATIONS_FILE).read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return {}
+    return durations if isinstance(durations, dict) else {}
+
+
+def is_heavy(node: str, durations: dict[str, object]) -> bool:
+    """A whole module whose tracked CI duration exceeds ``HEAVY_MODULE_S`` (or a listed CI deferral)."""
+    cost = durations.get(node)
+    return "::" not in node and (
+        (isinstance(cost, int | float) and cost > HEAVY_MODULE_S)
+        or (node not in durations and node in CI_DEFERRED_MODULES)
+    )
 
 
 def outgoing_base(update: Update, root: Path) -> str:
@@ -420,7 +480,8 @@ def state_dir(root: Path) -> Path:
     return (path if path.is_absolute() else root / path) / "lu-pre-push-gate"
 
 
-def receipt_key(plan: Plan) -> dict[str, object]:
+def receipt_inputs(plan: Plan) -> dict[str, object]:
+    """What is known before the selector answers: the committed inputs and the conservative set."""
     return {
         "gate_version": GATE_VERSION,
         "head": plan.head,
@@ -428,8 +489,17 @@ def receipt_key(plan: Plan) -> dict[str, object]:
         "base": plan.base,
         "registry_version": plan.registry_version,
         "deferred_to_ci": list(plan.deferred_to_ci),
-        "node_ids": list(plan.node_ids),
+        "node_ids": list(dedupe_node_ids((*plan.registry_nodes, *plan.changed_tests))),
         "changed_paths": list(plan.changed_paths),
+    }
+
+
+def receipt_key(plan: Plan) -> dict[str, object]:
+    """The inputs plus the selection that ran and the node ids it blocked on."""
+    return {
+        **receipt_inputs(plan),
+        "selection": plan.selection.key() if plan.selection is not None else None,
+        "blocking_node_ids": list(plan.node_ids),
     }
 
 
@@ -438,13 +508,22 @@ def receipt_path(state: Path, plan: Plan) -> Path:
 
 
 def receipt_is_fresh(state: Path, plan: Plan, now: float) -> bool:
+    """A live green receipt for the same inputs, whatever selection it recorded.
+
+    The inputs bind everything the selection is computed from: the tree (selector, import graph and
+    durations table included), the changed paths and the gate version. A receipt therefore records,
+    and never stands in for, a different selection. Once ``plan.selection`` is known the whole key,
+    the selection and its blocking node ids included, must match as well.
+    """
     try:
         receipt = json.loads(receipt_path(state, plan).read_text(encoding="utf-8"))
     except (OSError, ValueError):
         return False
+    key = receipt.get("key") if isinstance(receipt, dict) else None
     return (
-        isinstance(receipt, dict)
-        and receipt.get("key") == receipt_key(plan)
+        isinstance(key, dict)
+        and {name: key.get(name) for name in receipt_inputs(plan)} == receipt_inputs(plan)
+        and (plan.selection is None or key == receipt_key(plan))
         and receipt.get("outcome") == "green"
         and isinstance(receipt.get("at"), int | float)
         and 0 <= now - receipt["at"] <= RECEIPT_TTL_S
@@ -817,7 +896,7 @@ class ResourceScope:
             max(0.01, deadline - time.monotonic()) + TEST_SLOT_WAIT_S + SHADOW_BUDGET_S + 2 * CLEANUP_BUDGET_S
         )
         packet = {
-            "plan": {name: value for name, value in vars(plan).items() if name != "node_ids"},
+            "plan": {name: value for name, value in vars(plan).items() if name != "selection"},
             "root": str(self.root),
             "launcher": self.launcher,
             "config": config,
@@ -831,6 +910,8 @@ class ResourceScope:
             self.completed = result["settled"]
             if result["error"] is not None:
                 raise GateOutcome(**result["error"])
+            chosen = result["selection"]  # the receipt the caller writes binds the scoped run's selection
+            plan.selection = Selection(**{**chosen, "tests": tuple(chosen["tests"])})
         except (OSError, ValueError, KeyError, TypeError) as error:
             raise GateOutcome(
                 "validation_incomplete", "scoped executor did not return a complete verdict", incomplete=True
@@ -1330,7 +1411,8 @@ def pytest_invocations(plan: Plan) -> tuple[tuple[tuple[str, ...], str], ...]:
 
     Changed test files are distributed per test (``worksteal``, as CI runs them) so one slow
     changed file cannot pin a single worker for the whole stage (#10610); they run first, as the
-    likeliest to fail. Registered invariant nodes keep whole files on one worker (``loadfile``).
+    likeliest to fail. Selected test files, or the registered invariant nodes of the fallback set,
+    keep whole files on one worker (``loadfile``).
     """
     changed = set(plan.changed_tests)
     distributed = tuple(node for node in plan.node_ids if node.split("::", 1)[0] in changed)
@@ -1687,8 +1769,9 @@ def run_pytest_stage(
         )
     # The runs share the stage deadline and stop at the first refusal; a green stage means every run passed.
     summaries = []
-    # A changed whole file can subsume registered tests; count that invocation's wall time too.
-    invariant_files = {node.split("::", 1)[0] for node in plan.registry_nodes}
+    # A changed whole file can subsume registered tests; count that invocation's wall time too. The
+    # registry runs only on the fallback set, so a selection has no invariant time to report.
+    invariant_files = {node.split("::", 1)[0] for node in plan.registry_nodes} if plan.uses_registry else set()
     for nodes, dist in invocations:
         with own_base_temp(temp_parent) as base_temp:
             started = time.monotonic()
@@ -1739,10 +1822,12 @@ def run_pytest_stage(
 
 
 class Shadow:
-    """Importer-closure selection started beside the blocking stages and only recorded.
+    """The importer-closure selector process, started beside the pre-commit stage (#11207).
 
-    It never gates: every failure, including a timeout, becomes data in the
-    measurement row.  Output goes to a file so a large selection cannot fill a pipe.
+    The name is historical: it ran in shadow before its answer became an input to the pytest stage.
+    ``finish`` waits for the answer within ``SHADOW_BUDGET_S`` and never raises; a failure, timeout or
+    malformed answer is ``unavailable`` with a typed ``reason``, which the gate turns into the fallback
+    set. Output goes to a file so a large selection cannot fill a pipe.
     """
 
     def __init__(self, plan: Plan, root: Path, launcher: str):
@@ -1751,7 +1836,7 @@ class Shadow:
         self.token = uuid.uuid4().hex
         try:
             self.process: subprocess.Popen[str] | None = subprocess.Popen(
-                ["bash", launcher, "-m", "scripts.ci.pre_push_shadow", "--paths", *plan.changed_paths],
+                ["bash", launcher, "-m", SELECTOR_MODULE, "--paths", *plan.changed_paths],
                 cwd=root,
                 env={**clean_environment(), RUN_TOKEN_ENV: self.token},
                 stdin=subprocess.DEVNULL,
@@ -1764,38 +1849,44 @@ class Shadow:
             self.process = None
 
     def finish(self) -> dict[str, object]:
+        def unavailable(reason: str, detail: str) -> dict[str, object]:
+            return {"status": "unavailable", "reason": reason, "detail": detail}
+
         try:
             if self.process is None:
-                return {"status": "unavailable", "detail": "could not start"}
+                return unavailable("selector_unavailable", "could not start")
             try:
                 self.process.wait(timeout=max(0.0, self.deadline - time.monotonic()))
             except subprocess.TimeoutExpired:
                 terminate_run(self.process, self.token)
-                return {"status": "unavailable", "detail": "shadow time budget exhausted"}
+                return unavailable("selector_timeout", "shadow time budget exhausted")
             terminate_run(self.process, self.token)  # the selector exited; its detached descendants must not outlive it
             if self.process.returncode != 0:
-                return {"status": "unavailable", "detail": f"exit {self.process.returncode}"}
+                return unavailable("selector_failed", f"exit {self.process.returncode}")
             try:
                 self.output.seek(0)
                 selection = json.loads(self.output.read().strip().splitlines()[-1])
             except (OSError, ValueError, IndexError):
-                return {"status": "unavailable", "detail": "unparseable output"}
+                return unavailable("selector_unparseable", "unparseable output")
             if not isinstance(selection, dict):
-                return {"status": "unavailable", "detail": "unexpected result shape"}
+                return unavailable("selector_invalid_output", "unexpected result shape")
             selected = selection.get("selected_tests")
             if not isinstance(selected, list) or not all(isinstance(test, str) for test in selected):
-                return {"status": "unavailable", "detail": "unexpected selected_tests shape"}
-            selected = sorted(selected)
+                return unavailable("selector_invalid_output", "unexpected selected_tests shape")
             try:
                 digest = hashlib.sha256("\n".join(selected).encode()).hexdigest()[:16]
             except UnicodeEncodeError:  # e.g. a lone surrogate from a JSON "\ud800" escape
-                return {"status": "unavailable", "detail": "cannot encode selected_tests"}
+                return unavailable("selector_invalid_output", "cannot encode selected_tests")
+            if not all(canonical_test_file(test) for test in selected):
+                return unavailable("selector_invalid_output", "selected path is not a test file")
             return {
                 "status": "recorded",
+                "schema": selection.get("schema"),
+                "scope": selection.get("scope"),
+                "all_tests_reasons": selection.get("all_tests_reasons", []),
                 "selected_count": len(selected),
-                "components": selection.get("components", []),
-                "fallback_reasons": selection.get("fallback_reasons", []),
                 "selected_digest": digest,
+                "selected_tests": list(dict.fromkeys(selected)),  # the selector's order: nearest first
             }
         finally:
             self.output.close()
@@ -1804,6 +1895,99 @@ class Shadow:
         if self.process is not None:
             terminate_run(self.process, self.token)
         self.output.close()
+
+
+def canonical_test_file(path: str) -> bool:
+    """A repository-relative ``tests/**/test_*.py`` path with no empty, ``.`` or ``..`` component."""
+    return TEST_FILE_RE.match(path) is not None and all(part not in ("", ".", "..") for part in path.split("/"))
+
+
+def blocking_selection(plan: Plan, root: Path, answer: dict[str, object]) -> Selection:
+    """Turn the selector's answer into the set pytest blocks on; anything doubtful is the fallback.
+
+    The answer's test files run nearest first: modules over ``HEAVY_MODULE_S`` are deferred to CI,
+    and once the estimated cost of the changed files plus the rest would pass ``SELECTION_COST_CAP_S``
+    so is every farther file. Changed test files always run; their cost counts against the cap.
+    """
+    if answer.get("status") != "recorded" or not isinstance(answer.get("selected_tests"), list):
+        reason = answer.get("reason") if answer.get("status") == "unavailable" else None
+        reason = reason if isinstance(reason, str) else "selector_invalid_output"
+        return Selection(
+            "fallback",
+            reason=reason,
+            record={"status": "fallback", "reason": reason, "detail": answer.get("detail"), "selected_count": None},
+        )
+    selected: list[str] = answer["selected_tests"]  # type: ignore[assignment]
+    digest = answer.get("selected_digest")
+    if answer.get("schema") != SELECTION_SCHEMA or answer.get("scope") not in ("importer_closure", "all_tests"):
+        return Selection(
+            "fallback",
+            reason="selector_schema_mismatch",
+            record={
+                "status": "fallback",
+                "reason": "selector_schema_mismatch",
+                "detail": f"expected {SELECTION_SCHEMA}",
+                "selected_count": len(selected),
+            },
+        )
+    if answer.get("scope") == "all_tests":  # a configuration change: the curated registry beats a capped prefix
+        return Selection(
+            "fallback",
+            reason="all_tests_affected",
+            digest=digest if isinstance(digest, str) else None,
+            record={
+                "status": "fallback",
+                "reason": "all_tests_affected",
+                "detail": ", ".join(str(item) for item in answer.get("all_tests_reasons") or ()),
+                "selected_count": len(selected),
+            },
+        )
+    durations = load_durations(root)
+    known = sorted(cost for cost in durations.values() if isinstance(cost, int | float) and cost >= 0)
+    typical = known[len(known) // 2] if known else 1.0  # an untracked file costs the median, as split_tests does
+
+    def cost(test: str) -> float:
+        value = durations.get(test)
+        return float(value) if isinstance(value, int | float) and value >= 0 else typical
+
+    changed = set(plan.changed_tests)
+    candidates = [test for test in selected if test not in changed]
+    heavy = tuple(test for test in candidates if is_heavy(test, durations))
+    run: list[str] = []
+    over_cap: list[str] = []
+    spent = sum(cost(test) for test in changed)  # the changed files run regardless and share the cap
+    for test in candidates:
+        if test in heavy:
+            continue
+        if over_cap or spent + cost(test) > SELECTION_COST_CAP_S:
+            over_cap.append(test)
+            continue
+        run.append(test)
+        spent += cost(test)
+    absent = [test for test in run if not (root / test).is_file()]
+    if absent:
+        raise GateOutcome(
+            "selected_tests_unmaterialized",
+            "the affected test files include some this worktree has not materialized (sparse-checkout): "
+            f"{', '.join(absent[:10])}; run `git sparse-checkout add tests` and push again",
+            incomplete=True,
+        )
+    record: dict[str, object] = {
+        "status": "selected",
+        "reason": None,
+        "scope": answer.get("scope"),
+        "selected_count": len(selected),
+        "run_count": len(run),
+        "no_tests_affected": not selected,
+        "deferred_heavy": list(heavy),
+        "deferred_over_cap": len(over_cap),
+        "over_cap_digest": hashlib.sha256("\n".join(over_cap).encode()).hexdigest()[:16] if over_cap else None,
+        "estimated_s": round(spent, 1),
+        "cost_cap_s": SELECTION_COST_CAP_S,
+    }
+    return Selection(
+        "selected", tests=tuple(sorted(run)), digest=digest if isinstance(digest, str) else None, record=record
+    )
 
 
 def bounded(name: str, ceiling: float) -> float:
@@ -1908,6 +2092,7 @@ def execute_stages(
     persist_receipt: bool = True,
     admission: Admission | None = None,
 ) -> None:
+    """Pre-commit beside the selector, then the selection, then pytest on it; sets ``plan.selection``."""
     state = state_dir(root)
     shadow: Shadow | None = None
     settled = False
@@ -1922,6 +2107,12 @@ def execute_stages(
                 stage_deadline(deadline, stage_budget_s, diagnostics),
                 diagnostics=diagnostics,
             )
+        plan.selection = blocking_selection(plan, root, shadow.finish())
+        event.update(
+            selection=plan.selection.record,
+            nodes=len(plan.node_ids),
+            deferred_to_ci=list(plan.deferred_to_ci) if plan.uses_registry else plan.selection.record["deferred_heavy"],
+        )
         slots, slot_wait = acquire_pytest_slots(plan, event)
         try:
             with stage_measurement(event, "pytest") as diagnostics:
@@ -1944,11 +2135,10 @@ def execute_stages(
                 raise GateOutcome(
                     "receipt_unwritable", f"cannot persist the green receipt: {error}", incomplete=True
                 ) from error
-        event["shadow"] = shadow.finish()
         settled = True
         event["outcome"] = "green"
     finally:
-        if not settled and shadow is not None:  # whatever escapes, the shadow must not outlive the hook
+        if not settled and shadow is not None:  # whatever escapes, the selector must not outlive the hook
             shadow.abandon()
 
 
@@ -1971,7 +2161,7 @@ def validate(
     )
     state = state_dir(root)
     head_state = coalescing_state(state, plan)
-    frozen_key = receipt_key(plan)
+    frozen_key = receipt_inputs(plan)
     event["validation_fingerprint"] = hashlib.sha256(json.dumps(frozen_key, sort_keys=True).encode()).hexdigest()
     if receipt_is_fresh(state, plan, time.time()):
         event["outcome"] = "green"
@@ -1987,7 +2177,7 @@ def validate(
             # Followers have no global ticket. A head is only a serialization group,
             # so rebuild inputs and compare the entire frozen key before receipt reuse.
             refreshed = build_plan(update, root)
-            if refreshed is None or receipt_key(refreshed) != frozen_key:
+            if refreshed is None or receipt_inputs(refreshed) != frozen_key:
                 raise GateOutcome("tree_mismatch", "validation inputs changed while waiting for coalescing")
             if receipt_is_fresh(state, plan, time.time()):
                 event.update(outcome="green", detail="valid receipt after coalescing")
@@ -2012,7 +2202,7 @@ def validate(
             # A matching gate may have finished while this caller was queued. Rebuild the plan
             # first to preserve the dirty-tree/untracked-input checks after the wait.
             refreshed = build_plan(update, root)
-            if refreshed is None or receipt_key(refreshed) != frozen_key:
+            if refreshed is None or receipt_inputs(refreshed) != frozen_key:
                 raise GateOutcome("tree_mismatch", "validation inputs changed while waiting for admission")
             if receipt_is_fresh(state, plan, time.time()):
                 event.update(outcome="green", detail="valid receipt after admission")
@@ -2115,9 +2305,10 @@ def scope_child(arguments: list[str]) -> int:
         packet = json.loads(text)
         event: dict[str, object] = {}
         error = None
+        plan = Plan(**packet["plan"])
         try:
             execute_stages(
-                Plan(**packet["plan"]),
+                plan,
                 Path(packet["root"]),
                 packet["launcher"],
                 packet["config"],
@@ -2165,7 +2356,9 @@ def scope_child(arguments: list[str]) -> int:
         except (OSError, ValueError):
             event.update(peak_memory_bytes=None, peak_memory_unknown_reason="cgroup_peak_unavailable")
         with contextlib.suppress(BrokenPipeError):
-            channel.sendall((json.dumps({"event": event, "error": error, "settled": settled}) + "\n").encode())
+            selection = None if plan.selection is None else asdict(plan.selection)
+            result = {"event": event, "error": error, "settled": settled, "selection": selection}
+            channel.sendall((json.dumps(result) + "\n").encode())
         if not settled:
             while True:
                 signal.pause()  # Retain the existing reservation, never promote an orphaned owner.
