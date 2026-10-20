@@ -134,6 +134,7 @@ def admission(monkeypatch):
         '<testcase classname="tests.test_sample" name="test_stable"/></testsuite>'
     )
     artifacts = {101: xml, 102: xml}
+    duplicates = {}
     calls = []
 
     def gh(*args):
@@ -145,10 +146,13 @@ def admission(monkeypatch):
         assert args[:2] == ("run", "download")
         assert args[3:7] == ("--repo", "example/project", "--pattern", "pytest-junit-shard-*")
         Path(args[-1], "junit.xml").write_text(artifacts[int(args[2])])
+        if int(args[2]) in duplicates:
+            Path(args[-1], "junit-duplicate.xml").write_text(duplicates[int(args[2])])
         return ""
 
     monkeypatch.setattr(flake_quarantine, "_gh", gh)
-    return SimpleNamespace(entry=entry, responses=responses, artifacts=artifacts, calls=calls, prefix=prefix)
+    return SimpleNamespace(entry=entry, responses=responses, artifacts=artifacts, duplicates=duplicates,
+                           calls=calls, prefix=prefix)
 
 
 def test_admission_verifies_two_main_failures_coverage_issue_and_bound_approval(admission):
@@ -243,6 +247,20 @@ def test_first_failure_recovered_in_baseline_is_still_observed_evidence(admissio
         '<properties><property name="flake.reruns" value="1"/></properties>',
     )
     assert flake_quarantine.check_admissions([admission.entry], [], repository="example/project") == 1
+
+
+@pytest.mark.parametrize("node,message", [
+    ("test_flaky", "exact-node baseline failure"),
+    ("test_stable", "equivalent coverage"),
+])
+def test_admission_refuses_duplicate_results_for_same_node(admission, node, message):
+    duplicate = f'<testcase classname="tests.test_sample" name="{node}">'
+    if node == "test_flaky":
+        duplicate += '<failure message="assert 0"/>'
+    duplicate += '</testcase>'
+    admission.duplicates[102] = f"<testsuite>{duplicate}</testsuite>"
+    with pytest.raises(ValueError, match=message):
+        flake_quarantine.check_admissions([admission.entry], [], repository="example/project")
 
 
 def test_unchanged_entries_and_removals_need_no_expiring_artifacts(admission):

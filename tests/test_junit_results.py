@@ -12,6 +12,22 @@ from scripts.ci.junit_results import main as junit_main
 from scripts.common.flake_quarantine import TIMEOUT_PATTERN
 
 
+def _child_test_path(directory: Path, parameter_id: str) -> Path:
+    return directory / parameter_id / f"test_sample_{parameter_id}.py"
+
+
+@pytest.mark.parametrize("parameter_ids", [
+    ("thread", "signal"),
+    ("0", "2"),
+    ("pull_request", "merge_group", "schedule", "workflow_dispatch"),
+])
+def test_child_test_paths_are_distinct(tmp_path: Path, parameter_ids: tuple[str, ...]):
+    paths = [_child_test_path(tmp_path, parameter_id) for parameter_id in parameter_ids]
+    assert len(set(paths)) == len(parameter_ids)
+    assert len({path.name for path in paths}) == len(parameter_ids)
+    assert len({path.parent for path in paths}) == len(parameter_ids)
+
+
 def test_parser_reads_recovered_rerun_failure_and_class_node_id(tmp_path: Path):
     path = tmp_path / "junit.xml"
     path.write_text(
@@ -47,14 +63,17 @@ def test_parser_rejects_unidentifiable_or_invalid_rerun(tmp_path: Path):
 
 
 @pytest.mark.parametrize("workers", [0, 2])
-def test_rerun_reporter_survives_real_pytest_xunit2(tmp_path: Path, workers: int):
+def test_rerun_reporter_survives_real_pytest_xunit2(tmp_path: Path, workers: int, request):
+    sample = _child_test_path(tmp_path, request.node.callspec.id)
+    tmp_path = sample.parent
+    tmp_path.mkdir()
     (tmp_path / "conftest.py").write_text(
         "from tests.conftest import _FlakeRerunReporter\n"
         "def pytest_configure(config):\n"
         "    config.pluginmanager.register(_FlakeRerunReporter(config), 'flake-reporter')\n",
         encoding="utf-8",
     )
-    (tmp_path / "test_sample.py").write_text(
+    sample.write_text(
         "import pytest\n"
         "attempts = 0\n"
         "@pytest.mark.flaky(reruns=1)\n"
@@ -66,8 +85,8 @@ def test_rerun_reporter_survives_real_pytest_xunit2(tmp_path: Path, workers: int
     )
     xml = tmp_path / "junit.xml"
     summary = tmp_path / "summary.md"
-    env = os.environ | {"GITHUB_STEP_SUMMARY": str(summary)}
-    command = [sys.executable, "-m", "pytest", str(tmp_path / "test_sample.py"), "-o", "addopts=", f"--junitxml={xml}"]
+    env = os.environ | {"GITHUB_STEP_SUMMARY": str(summary), "PYTHONDONTWRITEBYTECODE": "1"}
+    command = [sys.executable, "-m", "pytest", str(sample), "-o", "addopts=", f"--junitxml={xml}"]
     if workers:
         command.extend(["-n", str(workers)])
     result = subprocess.run(
@@ -77,12 +96,15 @@ def test_rerun_reporter_survives_real_pytest_xunit2(tmp_path: Path, workers: int
     assert result.returncode == 0, result.stdout + result.stderr
     parsed = parse_junit([xml])
     assert len(parsed) == 1 and parsed[0].reruns == 1 and parsed[0].outcome == "passed"
-    assert "test_sample.py::test_flaky" in summary.read_text(encoding="utf-8")
+    assert f"{sample.name}::test_flaky" in summary.read_text(encoding="utf-8")
 
 
 @pytest.mark.parametrize("method", ["thread", "signal"])
-def test_thread_timeout_exits_without_rerun(tmp_path: Path, method: str):
-    (tmp_path / "test_timeout.py").write_text(
+def test_thread_timeout_exits_without_rerun(tmp_path: Path, method: str, request):
+    sample = _child_test_path(tmp_path, request.node.callspec.id)
+    tmp_path = sample.parent
+    tmp_path.mkdir()
+    sample.write_text(
         "import time\nimport pytest\nfrom pathlib import Path\n"
         f"@pytest.mark.flaky(reruns=1, rerun_except=[{TIMEOUT_PATTERN!r}])\n"
         f"@pytest.mark.timeout(0.1, method={method!r}, func_only=True)\n"
@@ -94,8 +116,9 @@ def test_thread_timeout_exits_without_rerun(tmp_path: Path, method: str):
     )
     xml = tmp_path / "timeout.xml"
     result = subprocess.run(
-        [sys.executable, "-m", "pytest", str(tmp_path / "test_timeout.py"), "-o", "addopts=", f"--junitxml={xml}"],
+        [sys.executable, "-m", "pytest", str(sample), "-o", "addopts=", f"--junitxml={xml}"],
         cwd=Path(__file__).resolve().parents[1], capture_output=True, text=True, timeout=10,
+        env=os.environ | {"PYTHONDONTWRITEBYTECODE": "1"},
     )
     assert result.returncode != 0
     assert "Timeout" in result.stdout
@@ -110,22 +133,25 @@ def test_thread_timeout_exits_without_rerun(tmp_path: Path, method: str):
     ("merge_group", "0", False, 2, 1),
     ("schedule", "0", True, 1, 1),
     ("workflow_dispatch", "1", True, 1, 1),
-])
+], ids=["pull_request", "merge_group", "schedule", "workflow_dispatch"])
 def test_registry_hook_executes_assertions_with_one_rerun_or_scheduled_failure(
-    tmp_path: Path, event: str, disabled: str, recover: bool, attempts: int, exit_code: int,
+    tmp_path: Path, event: str, disabled: str, recover: bool, attempts: int, exit_code: int, request,
 ):
     """Exercise the real collection hook, rerun plugin and reporter together."""
+    sample = _child_test_path(tmp_path, request.node.callspec.id)
+    tmp_path = sample.parent
+    tmp_path.mkdir()
+    sample = tmp_path / "tests" / sample.name
     (tmp_path / "pytest.ini").write_text("[pytest]\n")
     (tmp_path / "conftest.py").write_text(
         "from datetime import date\n"
         "from tests import conftest as hooks\n"
-        "hooks.load_registry = lambda: [{'node_id': 'tests/test_sample.py::test_flaky', "
+        f"hooks.load_registry = lambda: [{{'node_id': 'tests/{sample.name}::test_flaky', "
         "'admitted_on': date.today(), 'expires_on': date.today()}]\n"
         "pytest_collection_modifyitems = hooks.pytest_collection_modifyitems\n"
         "def pytest_configure(config):\n"
         "    config.pluginmanager.register(hooks._FlakeRerunReporter(config), 'flake-reporter')\n",
     )
-    sample = tmp_path / "tests" / "test_sample.py"
     sample.parent.mkdir()
     sample.write_text(
         "from pathlib import Path\n"
@@ -141,13 +167,13 @@ def test_registry_hook_executes_assertions_with_one_rerun_or_scheduled_failure(
          "-o", "addopts=", "-q", f"--junitxml={xml}"],
         cwd=Path(__file__).resolve().parents[1], capture_output=True, text=True, timeout=30,
         env=os.environ | {"GITHUB_EVENT_NAME": event, "LU_FLAKE_DISABLE_RERUN": disabled,
-                          "GITHUB_STEP_SUMMARY": str(summary)},
+                          "GITHUB_STEP_SUMMARY": str(summary), "PYTHONDONTWRITEBYTECODE": "1"},
     )
     assert result.returncode == exit_code, result.stdout + result.stderr
     assert sample.with_name("attempts.txt").read_text() == str(attempts)
     parsed = parse_junit([xml])
     assert len(parsed) == 1
-    assert parsed[0].node_id == "tests/test_sample.py::test_flaky"
+    assert parsed[0].node_id == f"tests/{sample.name}::test_flaky"
     assert parsed[0].outcome == ("passed" if exit_code == 0 else "failed")
     if exit_code == 0:
         assert parsed[0].reruns == 1
