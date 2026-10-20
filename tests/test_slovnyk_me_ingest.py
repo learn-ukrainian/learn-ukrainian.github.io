@@ -1,5 +1,6 @@
 """Offline VTS snapshot import uses fixtures, never the host dictionary stores."""
 
+import hashlib
 import json
 import sqlite3
 
@@ -67,18 +68,168 @@ def test_bad_cache_refuses_before_creating_database(tmp_path, mutation):
     assert not db.exists()
 
 
-def test_cache_filter_misses_and_overlapping_dictionaries(tmp_path):
-    cache = tmp_path / "cache"
-    cache.mkdir()
+def write_cache(cache, data, name=None):
+    cache.mkdir(exist_ok=True)
+    (cache / f"{name or data.get('lemma', 'fixture')}.json").write_text(json.dumps(data))
+
+
+def test_every_cached_dictionary_is_imported_with_provenance_and_use_role(tmp_path):
+    cache = tmp_path / "slovnyk_cache"
     data = snapshot()
-    data["lookups"].update(snapshot(slug="sum")["lookups"])
-    data["lookups"]["newsum"] = None
-    (cache / "fixture.json").write_text(json.dumps(data))
-    (cache / "other.json").write_text(json.dumps(snapshot(word="other")))
+    for slug in ("newsum", "sum", "orthoepy"):
+        data["lookups"].update(snapshot(slug=slug)["lookups"])
+    data["lookups"]["ukreng"] = None
+    write_cache(cache, data)
+    write_cache(cache, snapshot(word="other"))
     db = tmp_path / "sources.db"
-    assert ingest.ingest_cache(db, cache, words=["fixture"], dictionaries=["vts", "sum", "newsum"], dry_run=False, max_text_chars=30) == 1
+    report = ingest.ingest_cache(db, cache, words=["fixture"], dictionaries=None, dry_run=False, max_text_chars=30)
+    assert report.entries == {"vts": 1, "newsum": 1, "sum": 1, "orthoepy": 1}
+    assert report.files == 1 and report.inserted == 4
+    full_text = snapshot()["lookups"]["vts"]["text"]
     with sqlite3.connect(db) as conn:
-        assert conn.execute("SELECT word, dictionary_slug FROM slovnyk_me_entries").fetchall() == [("fixture", "vts")]
+        rows = conn.execute(
+            "SELECT dictionary_slug, use_role, content_sha256, cache_path, importer_version, length(text) "
+            "FROM slovnyk_me_entries ORDER BY dictionary_slug"
+        ).fetchall()
+    sha = hashlib.sha256(full_text.encode()).hexdigest()
+    assert rows == [
+        ("newsum", "candidate-discovery", sha, "slovnyk_cache/fixture.json", ingest.IMPORTER_VERSION, 30),
+        ("orthoepy", "reference", sha, "slovnyk_cache/fixture.json", ingest.IMPORTER_VERSION, 30),
+        ("sum", "contrast", sha, "slovnyk_cache/fixture.json", ingest.IMPORTER_VERSION, 30),
+        ("vts", "reference", sha, "slovnyk_cache/fixture.json", ingest.IMPORTER_VERSION, 30),
+    ]
+
+
+def test_dict_option_narrows_the_import(tmp_path):
+    cache = tmp_path / "cache"
+    data = snapshot()
+    data["lookups"].update(snapshot(slug="newsum")["lookups"])
+    write_cache(cache, data)
+    db = tmp_path / "sources.db"
+    report = ingest.ingest_cache(db, cache, words=[], dictionaries=["newsum"], dry_run=False, max_text_chars=200)
+    assert report.entries == {"newsum": 1}
+    with sqlite3.connect(db) as conn:
+        assert conn.execute("SELECT dictionary_slug FROM slovnyk_me_entries").fetchall() == [("newsum",)]
+
+
+def test_observed_404_is_a_not_found_row_and_a_bare_null_is_not(tmp_path):
+    cache = tmp_path / "slovnyk_cache"
+    data = snapshot()
+    data["lookups"].update({"synonyms": None, "orthoepy": None, "ukreng": None})
+    data["not_found"] = {
+        "synonyms": {"http_status": 404, "lookup_word": "Fixture"},
+        "ukreng": {"http_status": 503, "lookup_word": "fixture"},
+    }
+    write_cache(cache, data)
+    db = tmp_path / "sources.db"
+    args = dict(words=[], dictionaries=None, dry_run=False, max_text_chars=200)
+    report = ingest.ingest_cache(db, cache, **args)
+    assert report.misses == {"synonyms": 1}
+    assert report.unproven == {"orthoepy": 1, "ukreng": 1}
+    with sqlite3.connect(db) as conn:
+        miss = conn.execute(
+            "SELECT query, lookup_word, normalized_word, dictionary_slug, lookup_status, http_status, "
+            "source_url, fetched_at, use_role, cache_path, importer_version FROM slovnyk_me_lookup_misses"
+        ).fetchall()
+        assert miss == [(
+            "fixture", "Fixture", "fixture", "synonyms", "not_found", 404,
+            "https://slovnyk.me/dict/synonyms/Fixture", snapshot()["fetched_at"], "reference",
+            "slovnyk_cache/fixture.json", ingest.IMPORTER_VERSION,
+        )]
+        assert conn.execute("SELECT count(*) FROM slovnyk_me_entries").fetchone()[0] == 1
+        first = conn.execute("SELECT * FROM slovnyk_me_lookup_misses").fetchall()
+    ingest.ingest_cache(db, cache, **args)
+    with sqlite3.connect(db) as conn:
+        assert conn.execute("SELECT * FROM slovnyk_me_lookup_misses").fetchall() == first
+
+
+def test_positive_entry_supersedes_a_recorded_miss(tmp_path):
+    cache = tmp_path / "cache"
+    missing = snapshot()
+    missing["lookups"] = {"vts": None}
+    missing["not_found"] = {"vts": {"http_status": 404, "lookup_word": "fixture"}}
+    write_cache(cache, missing)
+    db = tmp_path / "sources.db"
+    args = dict(words=[], dictionaries=None, dry_run=False, max_text_chars=200)
+    assert ingest.ingest_cache(db, cache, **args).inserted_misses == 1
+    write_cache(cache, snapshot())
+    ingest.ingest_cache(db, cache, **args)
+    with sqlite3.connect(db) as conn:
+        assert conn.execute("SELECT count(*) FROM slovnyk_me_lookup_misses").fetchone()[0] == 0
+        assert conn.execute("SELECT count(*) FROM slovnyk_me_entries").fetchone()[0] == 1
+
+
+def test_mirror_shape_takes_its_timestamp_from_provenance(tmp_path):
+    cache = tmp_path / "cache"
+    mirror = snapshot()
+    del mirror["schema_version"], mirror["fetched_at"]
+    mirror["sources"] = ["vts"]
+    mirror["provenance"] = {"mirror": "slovnyk.me vts", "updated_at": "2026-10-10T08:16:18+00:00"}
+    write_cache(cache, mirror)
+    db = tmp_path / "sources.db"
+    ingest.ingest_cache(db, cache, words=[], dictionaries=None, dry_run=False, max_text_chars=200)
+    with sqlite3.connect(db) as conn:
+        assert conn.execute("SELECT fetched_at FROM slovnyk_me_entries").fetchall() == [("2026-10-10T08:16:18+00:00",)]
+
+
+def test_dry_run_reads_but_never_writes(tmp_path):
+    cache = tmp_path / "cache"
+    write_cache(cache, snapshot())
+    db = tmp_path / "sources.db"
+    report = ingest.ingest_cache(db, cache, words=[], dictionaries=None, dry_run=True, max_text_chars=200)
+    assert report.entries == {"vts": 1}
+    assert not db.exists()
+
+
+def test_existing_database_is_backed_up_before_the_write(tmp_path):
+    cache = tmp_path / "cache"
+    write_cache(cache, snapshot())
+    db = tmp_path / "sources.db"
+    with sqlite3.connect(db) as conn:
+        conn.execute("CREATE TABLE marker (value TEXT)")
+        conn.execute("INSERT INTO marker VALUES ('before')")
+    backups = tmp_path / "bk"
+    report = ingest.ingest_cache(
+        db, cache, words=[], dictionaries=None, dry_run=False, max_text_chars=200, backup_dir=backups,
+    )
+    assert report.backup_path.parent == backups
+    with sqlite3.connect(report.backup_path) as conn:
+        assert conn.execute("SELECT value FROM marker").fetchall() == [("before",)]
+        assert not conn.execute("SELECT name FROM sqlite_master WHERE name = 'slovnyk_me_entries'").fetchall()
+
+
+def test_network_database_is_refused_before_any_write(tmp_path, monkeypatch):
+    cache = tmp_path / "cache"
+    write_cache(cache, snapshot())
+    monkeypatch.setattr(ingest, "is_network_filesystem_path", lambda path: True)
+    db = tmp_path / "sources.db"
+    with pytest.raises(ValueError, match="local storage"):
+        ingest.ingest_cache(db, cache, words=[], dictionaries=None, dry_run=False, max_text_chars=200)
+    assert not db.exists()
+
+
+def test_older_table_gains_provenance_columns_without_losing_rows(tmp_path):
+    from scripts.wiki.slovnyk_me import SLOVNYK_ME_SCHEMA_SQL, ensure_slovnyk_me_schema
+
+    db = tmp_path / "sources.db"
+    legacy = SLOVNYK_ME_SCHEMA_SQL.replace(
+        """    use_role TEXT NOT NULL DEFAULT 'reference',
+    content_sha256 TEXT NOT NULL DEFAULT '',
+    cache_path TEXT NOT NULL DEFAULT '',
+    importer_version TEXT NOT NULL DEFAULT '',
+    UNIQUE(normalized_word, dictionary_slug, source_url)""",
+        "    UNIQUE(normalized_word, dictionary_slug, source_url)",
+        1,
+    )
+    assert legacy != SLOVNYK_ME_SCHEMA_SQL
+    with sqlite3.connect(db) as conn:
+        conn.executescript(legacy)
+        conn.execute("INSERT INTO slovnyk_me_entries (word, dictionary_slug) VALUES ('стара', 'vts')")
+        ensure_slovnyk_me_schema(conn)
+        ensure_slovnyk_me_schema(conn)
+        assert conn.execute(
+            "SELECT word, use_role, content_sha256, cache_path, importer_version FROM slovnyk_me_entries"
+        ).fetchall() == [("стара", "reference", "", "", "")]
 
 
 def test_cache_path_unavailable_and_missing_input(tmp_path):

@@ -3879,6 +3879,12 @@ async def handle_dict_search(args: dict, collection: str, label: str):
     return [TextContent(type="text", text=prose)], envelope
 
 
+_SLOVNYK_USE_ROLE_NOTES = {
+    "candidate-discovery": "mirror copy: use to find candidates only; confirm against the official СУМ-20 (query_sum20)",
+    "contrast": "Soviet-era contrast context only; never a norm, gloss or proof of meaning",
+}
+
+
 def _slovnyk_outage_note(outages: list[dict]) -> str:
     """One line naming the failed live slovnyk.me lookups (#9005)."""
     failed = sorted({f"{o.get('dictionary_slug', '?')} ({o.get('error', '?')})" for o in outages})
@@ -3925,6 +3931,9 @@ async def handle_search_slovnyk_me(args: dict) -> list[TextContent]:
         lines.append(f"### Result {i}")
         lines.append(f"- **Headword**: {hit.get('word', '')}")
         lines.append(f"- **Dictionary**: {hit.get('dictionary_label', hit.get('dictionary_slug', ''))}")
+        role_note = _SLOVNYK_USE_ROLE_NOTES.get(str(hit.get("use_role") or ""))
+        if role_note:
+            lines.append(f"- **Use role**: {hit['use_role']} — {role_note}")
         if hit.get("source_url"):
             lines.append(f"- **URL**: {hit['source_url']}")
         flags = []

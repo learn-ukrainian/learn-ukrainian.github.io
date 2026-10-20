@@ -378,7 +378,8 @@ sources:
     slovnyk.me (atlas.db public-route payloads of the 2026-09-11 manifest, published as the atlas-manifest release
     asset; counted 2026-09-28).'
   stored_in:
-  - data/sources.db slovnyk_me_entries (snippets capped at 200–500 chars)
+  - data/sources.db slovnyk_me_entries (snippets capped at 200–500 chars; every row carries use_role, content_sha256, cache_path and importer_version —
+    newsum rows are candidate-discovery, sum rows contrast) and slovnyk_me_lookup_misses (the cache's observed 404s)
   - data/lexicon/slovnyk_cache/ (per-lemma cache pre-filled for every manifest lemma by scripts/lexicon/build_slovnyk_mirror.py,
     per its module docstring)
   provenance:
@@ -2024,7 +2025,7 @@ sources:
     urls:
     - https://slovnyk.me/dict/vts/
     retrieved: '2026-10-15'
-    retrieved_evidence: data/lexicon/slovnyk_cache/*.json entries retrieved between 2026-08-06 and 2026-10-15; 31,688 entries with valid text in local cache; sources.db slovnyk_me_entries holds 13,181 rows.
+    retrieved_evidence: data/lexicon/slovnyk_cache/*.json entries retrieved between 2026-08-06 and 2026-10-15; 31,688 entries with valid text in local cache; sources.db slovnyk_me_entries holds all 31,687 cached vts rows (145,191 rows across the 13 cached dictionaries; scripts/ingest/slovnyk_me_ingest.py, 2026-10-20).
   terms:
     found: true
     licence:
