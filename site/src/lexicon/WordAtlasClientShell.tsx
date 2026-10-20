@@ -261,7 +261,7 @@ export default function WordAtlasClientShell({
       el.setAttribute("hidden", "");
     });
     document.querySelectorAll("[data-atlas-shell-boot]").forEach((el) => {
-      el.setAttribute("hidden", "");
+      el.remove();
     });
   }, [slug]);
 
