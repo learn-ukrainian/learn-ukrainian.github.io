@@ -1,7 +1,14 @@
 #!/usr/bin/env python3
-"""Upload unified ULDR dataset directly to Hugging Face Hub.
+"""Upload a previously built external dataset package to a private Hub repository.
 
-Pass the external directory created by package_unified_dataset.py explicitly.
+Require --dataset-dir and a token from --token or HF_TOKEN, without persistent
+login. Validate source quarantine before any Hub call, authenticate, and verify
+effective private visibility before uploading. Only an exact repository-not-found
+error with HTTP 404 permits private repository creation, followed by a fresh
+privacy check. Public or unknown privacy refuses the upload.
+
+These transfer checks do not establish the quality, access, capacity or release
+approval required by docs/projects/open-model-data/HF_DATASET_STORAGE_DESIGN.md.
 """
 
 from __future__ import annotations
@@ -26,10 +33,13 @@ QUARANTINED_PACKAGE_NAME = "Ukrainian Linguistic Decolonization & Reasoning (ULD
 
 
 def refuse_quarantined_package(dataset_dir: Path) -> None:
-    """Refuse a package directory that is, holds, or was built from quarantined artifacts.
+    """Validate quarantine admission before any Hub call.
 
-    The sealed inventory is loaded first, whatever the package holds (even nothing), so a
-    missing or invalid inventory refuses every upload before any hub call.
+    Load the sealed inventory even for an empty package. Raise
+    QuarantinedArtifactError for a missing inventory or unexpected schema, a non-directory,
+    quarantined package or file paths, a malformed JSON or non-object manifest,
+    or the legacy ULDR dataset name. Other inventory read or parse errors
+    propagate. This does not validate release contents.
     """
     quarantine_inventory()
     if not dataset_dir.is_dir():
@@ -52,6 +62,18 @@ def refuse_quarantined_package(dataset_dir: Path) -> None:
 
 
 def main() -> int:
+    """Parse CLI options and upload an admitted package to a verified private target.
+
+    --dataset-dir is required; --repo-id selects the target. --private is enabled
+    by default. --token takes precedence over HF_TOKEN; cached login is not used.
+    Return 0 after upload, or 1 for a missing input, quarantine refusal, missing
+    token or Hub client, authentication failure, target preparation or privacy
+    failure, or upload failure. Hub failures use generic messages without raw
+    exceptions or identity responses. Invalid CLI arguments exit via argparse.
+
+    The caller must satisfy release prerequisites separately. A successful
+    upload does not verify readback, access grants, capacity or semantic quality.
+    """
     parser = argparse.ArgumentParser(
         description=(
             "Upload a previously built dataset to a private Hugging Face repository.\n"
