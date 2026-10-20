@@ -338,6 +338,9 @@ def source_routes(inputs: wa.Inputs, unit: dict, entry: dict, assertion: dict) -
         permitted = {"puls": "cefr", "ukrainian_word_stress": "stress", "frazeolohichnyi": "mwe_form"}
         return [(r["locator"], r["locator"], r["snapshot_id"]) for r in own
                 if r["source_id"] == source and field == permitted[source]
+                and (source != "puls" or wa.puls_matches_identity(
+                    r["raw_row"], entry["key_at_creation"]["spelling"], entry["card_kind"] == "proper_name",
+                    anchor["raw_row"].get("grammatical_label", "")))
                 and assertion["subject"] == {"kind": "card", "id": entry["card_id"]}]
     if source != "ulif":
         return []

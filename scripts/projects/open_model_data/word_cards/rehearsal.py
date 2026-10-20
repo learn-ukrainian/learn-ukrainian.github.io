@@ -28,7 +28,9 @@ W1A_SHA = "c5d5909282c98dbb04fc8e71c7c59a7167b2ae2c"
 # Canonical JSON digests of the two committed W1a inputs, independent of candidates and Git availability.
 MANIFEST_SHA256 = "ffe7ff160ad9b08a97e0bd971d0577be654825b90cc40c2fc37aca7ae70a0b8b"
 REGISTRY_SHA256 = "c1b33a0d498ab2365fb8690b483755c16cb7ca39d62b871fd90bc756dcf22ff5"
-DENOMINATOR = {"cards": 150, "locators": 3163, "source_rows": 272}
+# All frozen identities remain; twelve common-word CEFR assertions are withheld
+# from proper names. The source-scoped uppercase abbreviation retains its CEFR.
+DENOMINATOR = {"cards": 150, "locators": 3151, "source_rows": 272}
 SCENARIOS = frozenset({
     "source_record", "source", "overlap_source_then_record", "overlap_record_then_source",
     "content_stress_set", "content_paradigm_slot", "assertion_id_fallback",
