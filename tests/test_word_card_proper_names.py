@@ -55,6 +55,14 @@ def test_source_scope_alone_does_not_admit_unlisted_names(pilot_cards):
     assert set(wa.learner_cards(names)) == {"name-12"}
 
 
+@pytest.mark.parametrize("kind", ["lexeme", "proper_name"])
+def test_learner_selection_handles_missing_creation_key_consistently(kind):
+    candidate = card("ЮНЕСКО", kind)
+    del candidate["key_at_creation"]
+    expected = {"candidate": candidate} if kind == "lexeme" else {}
+    assert wa.learner_cards({"candidate": candidate}) == expected
+
+
 @pytest.mark.parametrize("change", ["suppressed", "rejected", "ambiguous", "unresolved", "absent"])
 def test_allowlisted_name_still_requires_usable_source_scope(pilot_cards, change):
     name = copy.deepcopy(pilot_cards["name-12"])

@@ -1369,7 +1369,7 @@ def learner_cards(cards: dict[str, dict]) -> dict[str, dict]:
     lexemes = {card["key_at_creation"]["spelling"].lower() for card in cards.values()
                if card["card_kind"] == "lexeme" and "key_at_creation" in card}
     selected = {key: card for key, card in cards.items() if card["card_kind"] != "proper_name" or (
-        card["key_at_creation"]["spelling"] in LEARNER_PROPER_NAME_ALLOWLIST
+        "key_at_creation" in card and card["key_at_creation"]["spelling"] in LEARNER_PROPER_NAME_ALLOWLIST
         and card["key_at_creation"]["spelling"].lower() not in lexemes and any(
         a["source_id"] == "puls" and a["field"] == "cefr" and a["status"] == "active"
         and a.get("review", {}).get("status") != "rejected"
