@@ -52,7 +52,10 @@ from scripts.common.scratch import ensure_scratch_root
 from scripts.guardrails import worktree_containment as containment
 from scripts.lexicon import ulif_raw_cache
 
-ASSEMBLER_VERSION = "pilot-assembly-v4"
+ASSEMBLER_VERSION = "pilot-assembly-v5"
+# CTO proper-name scope (#8977 / #8981, OO-38). Add learner names explicitly;
+# source CEFR evidence alone never expands this set.
+LEARNER_PROPER_NAME_ALLOWLIST = frozenset({"ЮНЕСКО"})
 ALIAS_ORDER = ("uid", "register_position", "content", "query_headword_label", "vesum_entry_form", "table_row")
 # Register source id -> (independence group, tier): schema.md §9.1 (lineage lives in R until the register records it).
 # ukrainian_word_stress follows the register entry (ULIF-derived stress data, 2026-10-06): one lineage with ULIF.
@@ -551,6 +554,16 @@ def puls_matches_identity(row: dict, spelling: str, proper: bool, ulif_label: st
     return source_proper == proper and (not proper or word == spelling)
 
 
+def vesum_spelling_rows(sources: src.PilotSources, spelling: str, pos: str, proper: bool) -> list[dict]:
+    """Read the same-class lemma, trying lowercase for capitalized common lexemes."""
+    rows = [r for r in sources.vesum_forms(spelling)
+            if r["pos"] == pos and ("prop" in r["tags"].split(":")) == proper]
+    if not rows and not proper and spelling != spelling.lower():
+        rows = [r for r in sources.vesum_forms(spelling.lower())
+                if r["pos"] == pos and "prop" not in r["tags"].split(":")]
+    return rows
+
+
 def assemble_lexeme(inputs: Inputs, unit: dict, entry: dict, ledger: Ledger, homograph_count: Counter,
                     match_cache: dict):
     """Assertions for a ULIF-anchored lexeme or proper-name card."""
@@ -611,7 +624,8 @@ def assemble_lexeme(inputs: Inputs, unit: dict, entry: dict, ledger: Ledger, hom
         need(src.nfc(head_text) == src.nfc(unit["literal_head"]), "Unit head differs from the frozen ULIF headword")
 
     # spelling
-    sp_norm = spelling if proper else spelling.lower()
+    spelling_rows = vesum_spelling_rows(sources, spelling, pos, proper)
+    sp_norm = spelling_rows[0]["lemma"] if spelling_rows else (spelling if proper else spelling.lower())
     b.add("card", card_id, "spelling", spelling, sp_norm, "ulif", snapshot, head_locator, src.EXTRACTION["ulif_entry"],
           head_confidence, record=head_record)
     if v_lemma_rows:
@@ -1347,16 +1361,20 @@ def accounting(result: dict) -> dict:
 
 
 def learner_cards(cards: dict[str, dict]) -> dict[str, dict]:
-    """Keep a name only when a source assertion explicitly puts that identity in scope.
+    """Admit allow-listed, source-scoped names only, excluding common-word homographs.
 
     PULS assertions on names have already passed the exact-headword and proper
     disambiguator check. Ambiguous, withdrawn and unresolved rows confer no scope.
     """
-    selected = {key: card for key, card in cards.items() if card["card_kind"] != "proper_name" or any(
+    lexemes = {card["key_at_creation"]["spelling"].lower() for card in cards.values()
+               if card["card_kind"] == "lexeme" and "key_at_creation" in card}
+    selected = {key: card for key, card in cards.items() if card["card_kind"] != "proper_name" or (
+        card["key_at_creation"]["spelling"] in LEARNER_PROPER_NAME_ALLOWLIST
+        and card["key_at_creation"]["spelling"].lower() not in lexemes and any(
         a["source_id"] == "puls" and a["field"] == "cefr" and a["status"] == "active"
         and a.get("review", {}).get("status") != "rejected"
         and a.get("mapping", {}).get("confidence") in {"high", "medium"}
-        and not a.get("mapping", {}).get("ambiguous", False) for a in card["assertions"])}
+        and not a.get("mapping", {}).get("ambiguous", False) for a in card["assertions"]))}
     for key, card in selected.items():
         links = [link for link in card["links"] if all(e["id"] in selected for e in link["endpoints"])]
         if links != card["links"]:
@@ -1447,7 +1465,7 @@ def write_output(output: Path, result: dict, report: dict, anchor: Path | None =
     cards = learner_cards(result["cards"])
     files = {"ledger.json": {"build_id": result["build_id"], "cards": result["ledger"].cards,
                              "unattached": result["ledger"].unattached,
-                             "excluded_cards": {key: "proper_name_without_source_scope"
+                             "excluded_cards": {key: "proper_name_excluded_by_learner_rule"
                                                 for key in result["cards"] if key not in cards}},
              "build-manifest.json": {"build_id": result["build_id"], "inputs": result["block"]["inputs"],
                                      "rules_version": result["block"]["rules_version"]},
