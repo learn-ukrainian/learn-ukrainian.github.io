@@ -229,7 +229,7 @@ def test_discard_covers_both_import_names_and_leaves_other_databases_alone(serve
 
         @staticmethod
         def _read_db_path() -> Path:
-            return Path("sources.db")
+            return Path("fake-store")
 
         @staticmethod
         def _open_conn(path: Path, *, read_only: bool) -> object:
