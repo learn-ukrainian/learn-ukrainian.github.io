@@ -4250,25 +4250,47 @@ def test_review_verdict_recognized_tokens_keep_precedence_over_unsupported(token
 
 @pytest.mark.parametrize("newline", ["\n", "\r", "\r\n"], ids=["lf", "cr", "crlf"])
 @pytest.mark.parametrize(
-    "body,expected",
+    "body,expected,expected_supported",
     [
-        ("```\nVERDICT: CHANGES\n```\nVERDICT: REVISE", ["REVISE"]),
-        ("~~~\nVERDICT: CHANGES\n~~~~ \t\nVERDICT: REVISE", ["REVISE"]),
-        ("````\nVERDICT: CHANGES\n```\nVERDICT: REVISE", []),
-        ("```\nVERDICT: CHANGES\n~~~\nVERDICT: REVISE", []),
-        ("- Example:\n  ```\n  example\n- Outside:\nVERDICT: CHANGES\n  ```", []),
-        ("> VERDICT: CHANGES\n    VERDICT: REVISE", []),
+        ("```\nVERDICT: CHANGES\n```\nVERDICT: REVISE", ["REVISE"], ["BLOCKED"]),
+        ("~~~\nVERDICT: CHANGES\n~~~~ \t\nVERDICT: REVISE", ["REVISE"], ["BLOCKED"]),
+        ("````\nVERDICT: CHANGES\n```\nVERDICT: REVISE", [], []),
+        ("```\nVERDICT: CHANGES\n~~~\nVERDICT: REVISE", [], []),
+        ("- Example:\n  ```\n  example\n- Outside:\nVERDICT: CHANGES\n  ```", ["CHANGES"], ["APPROVE"]),
+        ("> VERDICT: CHANGES\n    VERDICT: REVISE", [], []),
+        ("- Example:\n  ```\n  VERDICT: CHANGES\n  ```", [], []),
+        ("- Example:\n  ```\n  VERDICT: CHANGES\n\nVERDICT: REVISE", ["REVISE"], ["BLOCKED"]),
+        ("- Example:\n  ```\n  example\n\n```\nVERDICT: CHANGES\n```\n\nVERDICT: REVISE",
+         ["REVISE"], ["BLOCKED"]),
+        ("> ```\n> example\n\n```\nVERDICT: CHANGES\n```\n\nVERDICT: REVISE",
+         ["REVISE"], ["BLOCKED"]),
+        ("> Example:\nVERDICT: CHANGES\nVERDICT: REVISE", [], []),
+        ("> Example:\nVERDICT: CHANGES\n\nVERDICT: REVISE", ["REVISE"], ["BLOCKED"]),
+        ("- > Example:\n  VERDICT: CHANGES\n\nVERDICT: REVISE", ["REVISE"], ["BLOCKED"]),
+        ("```\nVERDICT: CHANGES\n```\nVERDICT: CHANGES\nVERDICT: REVISE",
+         ["CHANGES", "REVISE"], ["APPROVE", "BLOCKED"]),
     ],
 )
-def test_integrated_unsupported_verdicts_keep_main_fence_policy(newline, body, expected):
+def test_integrated_verdict_readers_follow_commonmark_visibility(newline, body, expected, expected_supported):
     from scripts.review.verdict_parser import recognized_verdicts, unsupported_verdict_tokens
 
     response = body.replace("\n", newline)
     assert unsupported_verdict_tokens(response) == expected
-    # Both readers share frozen main's lexical verdict policy, including
-    # conservative suppression across a container exit and unclosed fences.
+    # #10153 supersedes lexical suppression after a container exit. Both readers
+    # exclude fenced/quoted examples and retain the literal visible verdicts.
     supported_response = response.replace("CHANGES", "APPROVE").replace("REVISE", "BLOCKED")
-    assert recognized_verdicts(supported_response) == (["BLOCKED"] if expected else [])
+    assert recognized_verdicts(supported_response) == expected_supported
+    assert delegate.parse_review_verdict(response) is None
+    assert delegate.parse_review_verdict(supported_response) == (expected_supported[-1] if expected_supported else None)
+    supported_gate = delegate.run_completion_gate(
+        delegate.COMPLETION_GATE_REVIEW_VERDICT,
+        {},
+        response=supported_response,
+        commits_ahead=None,
+        worktree=None,
+    )
+    assert supported_gate.failure == (None if expected_supported else "review_missing_verdict_line")
+    assert supported_gate.detail == ("" if expected_supported else "review_missing_verdict_line")
     result = delegate.run_completion_gate(
         delegate.COMPLETION_GATE_REVIEW_VERDICT,
         {},
@@ -4279,7 +4301,7 @@ def test_integrated_unsupported_verdicts_keep_main_fence_policy(newline, body, e
     if expected:
         assert result.failure == "review_unsupported_verdict_token"
         assert result.detail == (
-            "review_unsupported_verdict_token: unsupported verdict identifier 'REVISE'; "
+            f"review_unsupported_verdict_token: unsupported verdict identifier {expected[-1]!r}; "
             "accepted tokens: APPROVE, APPROVED, CHANGES_REQUESTED, REQUEST_CHANGES, BLOCKED"
         )
     else:
