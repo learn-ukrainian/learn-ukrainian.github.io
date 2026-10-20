@@ -5,7 +5,7 @@
 # Derivation rule: slots = eligible driver provider identity functions ×
 # launcher_selector_resolve lanes. Gemini drives epics through
 # start-gemini-driver.sh (2026-10-08 approval), so it holds a slot wherever
-# Codex does, except the Claude/Codex-only epics coordination seat.
+# Codex does, except the Claude/Codex-only epics and practice seats.
 # See scripts/lib/handoff_identity.sh — do not add rows without a mintable selector.
 # Both directions are enforced by tests/test_handoff_slot_registry.py, and the launcher
 # refuses a selector whose <provider>-<lane> slot is not listed here (#8303).
@@ -79,6 +79,11 @@ assignments:
       - grok-atlas
       - kimi-atlas
       - cursor-atlas
+  practice:
+    driver_agent_type: infra-orchestrator
+    slots:
+      - claude-practice
+      - codex-practice
   core:
     driver_agent_type: curriculum-orchestrator
     # Dedicated recipient is <provider>-core. Selector curriculum-upgrade
