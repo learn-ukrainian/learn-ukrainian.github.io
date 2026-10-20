@@ -1,8 +1,15 @@
 import { compareCurrent, type PreviewCard } from '../lib/lexicon/word-card-preview';
 import type { EntryRecord } from '../lib/lexicon/atlas-data-source';
-import { releaseReportUrl, type ReleaseCard } from '../lib/lexicon/word-card-release';
+import { releaseReportUrl, type LoadedRelease, type ReleaseCard } from '../lib/lexicon/word-card-release';
 
-export default function WordCardPreview({ card, current, compare }: { card: PreviewCard | ReleaseCard; current: EntryRecord | null; compare: boolean }) {
+export default function WordCardPreview({ card, current, compare }: { card: PreviewCard | ReleaseCard | LoadedRelease; current: EntryRecord | null; compare: boolean }) {
+  if (card.kind === 'release') return <div data-release-summary>
+    <p data-release-version>Release {card.pin.release_version}</p>
+    <p data-release-count>{card.rows.length} cards</p>
+    {card.withdrawalNotice !== undefined && <section aria-label="Withdrawal notice"><h3>Withdrawal notice</h3>
+      <pre>{JSON.stringify(card.withdrawalNotice, null, 2)}</pre>
+    </section>}
+  </div>;
   if (card.kind === 'release-card') return <div data-release-card={card.row.card_id}>
     <h2>{card.row.status} {card.row.card_id}</h2>
     <p data-release-version>Release {card.pin.release_version}</p>

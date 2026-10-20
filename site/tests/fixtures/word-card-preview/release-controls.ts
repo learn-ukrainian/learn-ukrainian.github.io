@@ -73,12 +73,18 @@ export const noticeCases: [string, string | null][] = [
   ['shape', 'Malformed or unsupported withdrawal notice'], ['selector', 'Malformed or unsupported withdrawal notice'],
   ['binding', 'Withdrawal notice release mismatch'],
 ];
-export function noticeControls(root: string): Record<string, Control> {
+export function noticeControls(root: string, empty = false): Record<string, Control> {
   const controls: Record<string, Control> = {};
   for (const encoding of ['json', 'jsonl'] as const) for (const [name] of noticeCases) {
     const path = join(root, `${encoding}-notice-${name}`);
     cpSync(join(fixtureRoot, `release-${encoding}`), path, { recursive: true });
     const manifest = JSON.parse(readFileSync(join(path, 'manifest.json'), 'utf8'));
+    if (empty) {
+      const data = encoding === 'json' ? '[]\n' : '';
+      writeFileSync(join(path, manifest.dataset_file), data);
+      Object.assign(manifest, { dataset_bytes: Buffer.byteLength(data), dataset_sha256: digest(data),
+        card_count: 0, certified_count: 0, candidate_count: 0, field_citation_count: 0 });
+    }
     const notice = { schema_version: 'word-card-withdrawal.v1', previous_release_version: 'previous-control',
       previous_dataset_sha256: '1'.repeat(64), replacement_release_version: manifest.release_version,
       replacement_dataset_sha256: name === 'binding' ? '0'.repeat(64) : manifest.dataset_sha256,
@@ -90,7 +96,7 @@ export function noticeControls(root: string): Record<string, Control> {
     const manifestBytes = JSON.stringify(manifest);
     writeFileSync(join(path, 'manifest.json'), manifestBytes);
     controls[`${encoding}-notice-${name}`] = { enabled: true, artifactPath: path,
-      pin: JSON.stringify({ ...pins[encoding], manifest_sha256: digest(manifestBytes) }) };
+      pin: JSON.stringify({ ...pins[encoding], dataset_sha256: manifest.dataset_sha256, manifest_sha256: digest(manifestBytes) }) };
   }
   return controls;
 }

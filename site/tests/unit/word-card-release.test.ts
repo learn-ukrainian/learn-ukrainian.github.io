@@ -42,6 +42,22 @@ describe('pinned producer release boundary', () => {
         JSON.parse(readFileSync(join(controls[key]?.artifactPath || '', 'withdrawal-notice.json'), 'utf8')));
     }
   });
+  for (const encoding of ['json', 'jsonl']) it.each(noticeCases)(`${encoding} empty withdrawal notice %s`, (name, reason) => {
+    const config = noticeControls(join(scratch, `empty-${encoding}-${name}`), true)[`${encoding}-notice-${name}`];
+    if (!config?.artifactPath) throw Error('Missing empty notice control');
+    const result = loadWordCardRelease(config);
+    if (reason) expect(result).toEqual({ kind: 'unavailable', reason });
+    else {
+      if (result.kind !== 'release') throw Error('Refused empty release');
+      expect(result.rows).toEqual([]);
+      const view = document.createElement('div');
+      view.innerHTML = renderToStaticMarkup(createElement(WordCardPreview, { card: result, current: null, compare: true }));
+      expect(view.querySelector('[data-release-count]')?.textContent).toBe('0 cards');
+      expect(view.querySelector('[data-release-card]')).toBeNull();
+      expect(view.querySelector('[aria-label="Withdrawal notice"] pre')?.textContent).toBe(name === 'absent' ? undefined :
+        JSON.stringify(JSON.parse(readFileSync(join(config.artifactPath, 'withdrawal-notice.json'), 'utf8')), null, 2));
+    }
+  });
   for (const encoding of ['json', 'jsonl']) it.each(semanticCases)(`${encoding} semantic $name`, c => {
     const result = load(`${encoding}-${c.name}`);
     if (c.expected === 'refuse') {

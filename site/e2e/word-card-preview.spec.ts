@@ -210,8 +210,8 @@ test.describe('source fidelity refusals', () => {
       }
     } finally { await closePreview(server); }
   });
-  for (const encoding of ['json', 'jsonl']) for (const [name, reason] of noticeCases) test(`${encoding} withdrawal notice ${name}`, async ({ page, fidelityScratch: scratch }, info) => {
-    const config = noticeControls(join(scratch, 'notices'))[`${encoding}-notice-${name}`];
+  for (const empty of [false, true]) for (const encoding of ['json', 'jsonl']) for (const [name, reason] of noticeCases) test(`${encoding} withdrawal notice ${name}${empty ? ' zero rows' : ''}`, async ({ page, fidelityScratch: scratch }, info) => {
+    const config = noticeControls(join(scratch, 'notices'), empty)[`${encoding}-notice-${name}`];
     if (!config?.artifactPath) throw Error('Missing notice control');
     const root = buildPreview(join(scratch, 'preview'), config);
     const server = await serve(root);
@@ -225,8 +225,17 @@ test.describe('source fidelity refusals', () => {
           await expect(page.locator('[data-release-card]')).toHaveCount(0);
           await page.goto(origin);
           await expect(page.getByRole('status')).toHaveText(`Unavailable: ${reason}`);
-        } else for (const id of [certifiedId, candidateId]) {
-          await page.goto(origin + id + '/');
+          await expect(page.locator('[data-release-summary], [aria-label="Withdrawal notice"], [data-raw-value], [data-report-action]')).toHaveCount(0);
+        } else for (const id of empty ? [''] : [certifiedId, candidateId]) {
+          expect((await page.goto(origin + (id ? id + '/' : '')))?.status()).toBe(200);
+          if (empty) {
+            await expect(page.locator('[data-release-count]')).toHaveText('0 cards');
+            await expect(page.locator('[data-release-card], [data-release-status], [data-card-version], [data-raw-value], [data-report-action]')).toHaveCount(0);
+            expect(existsSync(join(root, 'lexicon-v2', prefix, 'release', certifiedId))).toBe(false);
+            expect(existsSync(join(root, 'lexicon-v2', prefix, 'release', candidateId))).toBe(false);
+            await expect(page.locator('[data-input-hash]')).toHaveText(JSON.parse(config.pin || '{}').dataset_sha256);
+            await expect(page.locator('[data-release-version]')).toHaveText(`Release ${JSON.parse(config.pin || '{}').release_version}`);
+          }
           await info.attach(`${prefix ? 'compare' : 'word'}-${id}`, { body: await page.content(), contentType: 'text/html' });
           const notice = page.getByRole('region', { name: 'Withdrawal notice', exact: true });
           if (name === 'absent') await expect(notice).toHaveCount(0);
@@ -239,6 +248,12 @@ test.describe('source fidelity refusals', () => {
         }
       }
     } finally { await closePreview(server); }
+  });
+  for (const encoding of ['json', 'jsonl']) test(`${encoding} zero rows notice stays flag gated`, async ({ fidelityScratch: scratch }) => {
+    const config = noticeControls(join(scratch, 'notices'), true)[`${encoding}-notice-valid`];
+    if (!config) throw Error('Missing notice control');
+    const root = buildPreview(join(scratch, 'disabled'), { ...config, enabled: false });
+    expect(existsSync(join(root, 'lexicon-v2'))).toBe(false);
   });
   for (const [name, reason] of fidelityRefusals) test(`refuses ${name}`, async ({ page, fidelityScratch: scratch }, info) => {
     const controls = fidelityControls(join(scratch, 'inputs'));

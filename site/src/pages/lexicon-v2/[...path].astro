@@ -4,7 +4,7 @@ import WordAtlasPageShell from '../../lexicon/WordAtlasPageShell.astro';
 import WordCardPreview from '../../lexicon/WordCardPreview';
 import type { PreviewCard } from '../../lib/lexicon/word-card-preview';
 import type { EntryRecord } from '../../lib/lexicon/atlas-data-source';
-import type { ReleaseCard } from '../../lib/lexicon/word-card-release';
+import type { LoadedRelease, ReleaseCard } from '../../lib/lexicon/word-card-release';
 
 export async function getStaticPaths() {
   if (process.env.ATLAS_WORD_CARD_PREVIEW !== '1') return [];
@@ -12,13 +12,18 @@ export async function getStaticPaths() {
   const { loadWordCardRelease } = await import('../../lib/lexicon/word-card-release');
   const release = loadWordCardRelease({ enabled: true,
     artifactPath: process.env.ATLAS_WORD_CARD_RELEASE_PATH, pin: process.env.ATLAS_WORD_CARD_RELEASE_PIN });
-  const samples: Array<{ name: string; card: PreviewCard | ReleaseCard; current: EntryRecord | null;
+  const samples: Array<{ name: string; card: PreviewCard | ReleaseCard | LoadedRelease; current: EntryRecord | null;
     fingerprint: string; source: string; generatedAt: string; manifestVersion: string }> = await previewInputs();
-  if (release.kind === 'release') for (const row of release.rows) samples.push({
-    name: `release/${row.card_id}`, card: { kind: 'release-card', row, pin: release.pin, withdrawalNotice: release.withdrawalNotice }, current: null,
-    fingerprint: release.pin.dataset_sha256, source: `${release.pin.provenance} release ${release.pin.release_version}`,
-    generatedAt: '', manifestVersion: release.pin.release_version,
-  });
+  if (release.kind === 'release') {
+    samples.push({ name: 'release', card: release, current: null,
+      fingerprint: release.pin.dataset_sha256, source: `${release.pin.provenance} release ${release.pin.release_version}`,
+      generatedAt: '', manifestVersion: release.pin.release_version });
+    for (const row of release.rows) samples.push({
+      name: `release/${row.card_id}`, card: { kind: 'release-card', row, pin: release.pin, withdrawalNotice: release.withdrawalNotice }, current: null,
+      fingerprint: release.pin.dataset_sha256, source: `${release.pin.provenance} release ${release.pin.release_version}`,
+      generatedAt: '', manifestVersion: release.pin.release_version,
+    });
+  }
   else samples.push({ name: 'release', card: { kind: 'unavailable', keys: null, claimantId: null,
     reason: release.kind === 'unavailable' ? release.reason : 'Release disabled' }, current: null,
     fingerprint: '', source: 'Configured release refused', generatedAt: '', manifestVersion: '' });
@@ -28,7 +33,7 @@ export async function getStaticPaths() {
   })));
 }
 interface Props {
-  card: PreviewCard | ReleaseCard; current: EntryRecord | null; compare: boolean;
+  card: PreviewCard | ReleaseCard | LoadedRelease; current: EntryRecord | null; compare: boolean;
   fingerprint: string; source: string; generatedAt: string; manifestVersion: string;
 }
 const { card, current, compare, fingerprint, source, generatedAt, manifestVersion } = Astro.props;
@@ -39,7 +44,7 @@ const { card, current, compare, fingerprint, source, generatedAt, manifestVersio
     <aside role="note" data-preview-banner>Local preview. Controlled schema examples, not certified learner cards. Mechanics only.</aside>
     <h1>{compare ? 'Current / candidate comparison' : 'Word-card preview'}</h1>
     <p>Input: {source}. SHA-256: <code data-input-hash>{fingerprint}</code></p>
-    <p>{card.kind === 'release-card' ? 'Local pinned release preview. Fixture proof does not establish real Data integration or publication approval.' : 'Real data unavailable. Data #10516 owns the certified export. Atlas retains deployed preview, accepted better/worse evidence and page-switch gates.'}</p>
+    <p>{card.kind === 'release-card' || card.kind === 'release' ? 'Local pinned release preview. Fixture proof does not establish real Data integration or publication approval.' : 'Real data unavailable. Data #10516 owns the certified export. Atlas retains deployed preview, accepted better/worse evidence and page-switch gates.'}</p>
     <div class:list={['preview-columns', { comparison: compare }]}>
       {compare && <section aria-label="Current presentation"><h2>Current presentation</h2>
         {current ? <WordAtlasPageShell state={{ status: 'ready', record: current, generatedAt, manifestVersion }} /> : <p>Unavailable: unresolved identity pairing.</p>}
