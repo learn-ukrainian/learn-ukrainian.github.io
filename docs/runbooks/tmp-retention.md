@@ -381,79 +381,109 @@ directory as `held`, not `stale`. When the condition in `until` is met,
 remove the entry. A malformed list makes the report exit with code 2, so a
 hold is never ignored without notice.
 
-## uv cache size line (#10779)
+## uv cache size and growth (#10827)
 
-`.venv/bin/python -m scripts.hygiene.uv_cache_status` prints one read-only line
-for `lu-driver-status` to show, for example
-`UV CACHE: 7.23 GiB, +0.40 GiB over 24h [WARN: ...]`. It never deletes from the
-cache. It keeps a small size history (one sample per 10 minutes at most, a week
-retained) in `uv-cache-size.jsonl` in the driver-keeper state directory that
-`lu-driver-status` already reads (override: `LU_DRIVER_STATUS_STATE_DIR`).
-Growth compares against the oldest sample at least an hour old inside the last
-24 hours and names the real span; before that it prints `growth n/a (history
-building)`. `--json` and `--no-record` are available.
+The repository tool prints a status row for the private `lu-driver-status`
+consumer. It measures allocated bytes with `du -skH`, shows growth against the
+oldest sample inside the last 24 hours, and warns above configurable thresholds.
+It never deletes cache content. Symlinks below the cache are not followed;
+a symlink at the cache root is measured where it points.
 
-The command also runs as a plain file
-(`.venv/bin/python scripts/hygiene/uv_cache_status.py`). The size comes from
-`du -skH` in its own process group, bounded by
-`LU_UV_CACHE_SCAN_TIMEOUT_S` (default 8 seconds). A symlinked cache directory
-is measured where it points; symlinks below it are never followed. On timeout
-it prints `UV CACHE: size unavailable (scan exceeded 8s)`; if `du` fails (for example an
-unreadable directory, which would make the total partial) it prints
-`UV CACHE: measurement failed (...)`. Both exit 0 and record no sample.
+### Keeper and status consumer contract
 
-History updates hold an exclusive lock on `uv-cache-size.jsonl.lock` beside the
-history, so concurrent runs never drop each other's samples. The lock is never
-waited on indefinitely: one deadline of `LU_UV_CACHE_LOCK_TIMEOUT_S` (default
-2 seconds) covers opening the lock file, including retries when it disappears
-between attempts, and taking the lock without blocking. If another writer still
-holds it (or keeps recreating it) at the deadline, the command prints `UV CACHE: history busy (...); <size> measured, no
-sample recorded`, writes nothing and exits 0. Every retry and wait decision is
-bounded by these deadlines, but a single synchronous filesystem call (for
-example the `open` of the lock file) is not interrupted when a deadline passes,
-so the command can run past the scan deadline plus the lock deadline by the
-duration of one such call. A lock name that is a symlink,
-a directory or not a regular file is refused with exit code 2; nothing behind it is opened or
-changed.
+Host wiring is a follow-up owned by the keeper's owner, Infra. This PR supplies
+the tool and contract only. It does not install a keeper callback or status row.
+The installed keeper uses its configured `state_dir` for `state.json`; the
+status consumer already reads that file. Use that same configured directory
+for the uv history. Do not embed history in `state.json` or change its schema.
 
-The history directory is checked once and then held open. The configured
-directory must not itself be a symlink. Its path is resolved once and opened
-one directory at a time without following symlinks; every directory on the way
-is compared with the cache's device and inode before anything is created in it,
-and the kernel's path of the opened directory is checked too. Every history
-read and write (lock, history file, temporary file, rename) is relative to that
-open directory, so retargeting a symlink afterwards cannot move the writes into
-the cache. If the directory is a symlink, the cache, or inside it, or its path
-changes while it is being opened, the command refuses with exit code 2 and
-writes nothing. Directories it creates get mode 0700.
+Set `KEEPER_STATE_DIR` to that configured directory and `PROJECT_PYTHON` to the
+project interpreter. Run these commands from the repository root, or use the
+absolute path to `scripts/hygiene/uv_cache_status.py` with the same arguments.
+These variable names are integration placeholders, not additional tool settings.
 
-An open directory keeps its identity, not its place, so it could be moved into
-the cache while the size is measured. Before every write (each attempt to create
-the lock file, retries included; creating the temporary file; every write of
-its contents, so a partial write is checked again before the rest; renaming it
-over the history) the command checks the location again. The new history is
-serialized in full before the temporary file is created and written unbuffered,
-so no slow step separates a check from the
-write it guards. Each check requires that the kernel's path of the open
-directory is still the resolved history path, that this path still names the
-same directory, and that it is not the cache or inside it, judged against the
-cache's real path both at start and now. On a mismatch it refuses with exit code 2, writes nothing
-more, and removes the temporary file and any lock file it created. A move in
-the instant between the last check and the write itself cannot be excluded.
+Exactly one owner, the keeper, records history on its own cadence, at most once
+per tick and preferably every 10 minutes. It runs:
 
-A hard link gives a file a second name, possibly inside the cache, without
-moving the directory, so the location check alone does not catch it. The
-command therefore also checks the link count on the open file: a lock file with
-more than one link is refused before and after the lock is taken, and the
-temporary history file is refused before every write of its contents. Either
-refusal exits with code 2 (`the history lock file has more than one link` or
-`the temporary history file has more than one link`), writes nothing more, and
-removes the temporary file. A lock file it did not create is left in place.
+```bash
+"$PROJECT_PYTHON" -m scripts.hygiene.uv_cache_status --record-history --state-dir "$KEEPER_STATE_DIR"
+```
 
-Warning thresholds: total size above `LU_UV_CACHE_WARN_GB` (default 10) or growth
-above `LU_UV_CACHE_GROWTH_WARN_GB` (default 2) per 24 hours. A warning is a
-prompt for a human to run `uv cache prune`, never an automatic action.
+The status script captures and prints the output of the read-only command:
 
-The installed `lu-driver-status` consumer is private and owned by Infra (see
-`muse-usage.md`). It shows this line by running the module above with the
-project interpreter and printing its output.
+```bash
+"$PROJECT_PYTHON" -m scripts.hygiene.uv_cache_status --state-dir "$KEEPER_STATE_DIR"
+# For a structured consumer:
+"$PROJECT_PYTHON" -m scripts.hygiene.uv_cache_status --state-dir "$KEEPER_STATE_DIR" --json
+```
+
+Both invocations must use the same cache configuration. `UV_CACHE_DIR` selects
+it explicitly; otherwise `XDG_CACHE_HOME` and uv's default cache rule apply.
+`LU_DRIVER_STATUS_STATE_DIR` can replace `--state-dir`. The option takes
+precedence. There is no implicit state directory. Recording without one refuses
+with exit 2; an unconfigured reader shows `history unavailable`.
+
+Default invocation and `--no-record` never create a directory, history sample,
+lock or temporary file. Only `--record-history` writes. The keeper must not pass
+that flag to status readers. Overlapping cooperative keeper invocations share
+an exclusive lock, so they cannot lose each other's samples. The lock stays
+in place between invocations and must not be removed while writers are active.
+
+The keeper owns the directory's location and contents. Keep it and its ancestors
+outside the configured cache, including directory aliases. Do not retarget,
+move, hard-link or unlink them during an update. Preconfigured cache-relative
+paths, symlinked state directories, and symlinked, multiply linked or nonregular
+history and lock files refuse before writing. All operations use one opened
+directory; temporary files are created exclusively beside history, independent
+of `TMPDIR`. New directories use mode 0700 and files use 0600. Updates write and
+sync a temporary file, atomically replace `uv-cache-size.jsonl`, then sync the
+directory. Readers see a complete old or new history file.
+
+### Output and limits
+
+For example, `UV CACHE: 7.23 GiB, +0.40 GiB over 24h` reports the measured size
+and growth. A shorter baseline names its actual span. Until a valid sample is
+at least an hour old, output says `growth n/a (history building)`. Missing,
+unreadable or unusable history says `growth n/a (history unavailable)` instead
+of zero growth. The first successful keeper recording starts history-building.
+Samples are at least 10 minutes apart; updates retain a week of history.
+Malformed rows are ignored when other valid samples remain.
+
+`LU_UV_CACHE_WARN_GB` defaults to 10 and `LU_UV_CACHE_GROWTH_WARN_GB` to 2.
+Values are in GiB despite the setting names. Warnings apply strictly above the
+threshold, including size warnings while history is unavailable or busy. Growth
+warnings compare the measured delta over the displayed span, without
+extrapolating a shorter baseline to a full day. No warning triggers deletion.
+
+`LU_UV_CACHE_SCAN_TIMEOUT_S` defaults to 8 seconds. On timeout the tool kills
+the scan process group and prints `UV CACHE: size unavailable (scan exceeded
+8s)`. A failed measurement prints `UV CACHE: measurement failed (...)`.
+Neither records a sample. `LU_UV_CACHE_LOCK_TIMEOUT_S` defaults to 2 seconds;
+one deadline covers opening the lock, retries and acquisition. A busy writer
+prints its measurement and `history busy (...); no sample recorded`.
+Status states exit 0; unsafe configuration exits 2. A synchronous filesystem
+call may outlast its deadline. Uninterruptible kernel I/O is not certified.
+
+### Threat model and recorded race dispositions
+
+The approved threat model is accidental misconfiguration and cooperative
+concurrent writers. Restrictive permissions, directory descriptors and atomic
+rename do not stop hostile same-user processes from relocating or aliasing
+files. There is no guarantee against such mutation during recording. Hostile
+same-user isolation needs a separate decision.
+
+The four recorded race classes have these dispositions:
+
+| Recorded reproducer | Disposition under the approved model |
+| --- | --- |
+| Retarget a parent symlink after directory validation | Operations stay relative to the directory already opened. A configured alias into the cache refuses at startup. Arbitrary same-user mutation remains outside the contract. |
+| Move the open state directory into the cache during measurement, serialization or a resumed write | The descriptor follows the moved directory. This can still put writes into the cache and is excluded by the keeper ownership contract. Repeated location checks are removed. |
+| Hard-link a lock or temporary file into the cache, including after a short write | Preconfigured history and lock hard links refuse. Adding aliases during recording can still expose a lock or further writes inside the cache and is outside the contract. |
+| Hard-link and unlink the original name, including a decoy replacement | A single remaining link is no proof of safe location. Such mutation can still lock or write a cache inode, fail replacement, or publish a decoy. It is outside the contract. |
+
+Dynamic tests cover configured aliases, atomic updates, cooperative writers,
+concurrent read-only consumers, all four race classes during status reads, and
+short-write alias reproducers that demonstrate the writer's excluded threat.
+Those tests do not certify hostile same-user isolation. Exact-head review and
+CI remain separate gates. The keeper's owner must wire the two invocations,
+verify the real status row and cadence, and retain that host-side evidence.

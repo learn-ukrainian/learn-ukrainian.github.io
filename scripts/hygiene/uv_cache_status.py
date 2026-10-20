@@ -1,50 +1,25 @@
 #!/usr/bin/env python3
-"""Read-only uv cache size and 24-hour growth line for ``lu-driver-status`` (#10779).
+"""Measure uv cache size and growth without deleting cache content (#10827).
 
-The uv cache grows without bound on a busy host (every resolved wheel and
-sdist build stays). This module measures it, keeps a small timestamped size
-history, and renders one status line with a warning threshold. It never deletes
-anything from the cache; the only files it writes are the size history and its
-lock, and never inside the cache.
+Threat model: accidental misconfiguration and cooperative concurrent writers.
+Exactly one owner, the keeper, invokes --record-history on its own cadence.
+Status readers never write history, locks or temporary files. Both modes use
+an explicitly supplied keeper state directory, validated before any writes.
+Recording serializes cooperative invocations and atomically replaces history.
 
-The size comes from ``du -skH`` in its own process group with a deadline, so a
-huge or stalled cache cannot hang the status command; a timeout or a failed
-measurement prints an explicit line and records no sample. The history lock is
-taken without blocking and retried until its own deadline, which also bounds
-opening the lock file; when another writer holds it (or keeps recreating it)
-past that, the line says so and no sample is recorded.
+Symlink retargeting after validation stays bound to the opened directory, but
+moving that directory, adding hard links, or adding a hard link and unlinking
+the original name during a write is outside this threat model. These are the
+four recorded race classes. Restrictive permissions, directory descriptors and
+atomic rename do not prevent hostile same-user relocation or aliasing.
 
-The history directory is resolved and checked once, then held open; every
-history read and write is relative to that descriptor, so retargeting a
-symlink after the check cannot move the writes into the cache. A descriptor
-keeps the directory's identity, not its location, so its location is checked
-again before every write, each lock-creation retry and each partial write
-included: the kernel's path of the descriptor must still be the resolved
-history path, name the same directory there, and lie outside the cache. A directory moved into the cache
-(or anywhere else) is refused. The history is serialized before its temporary
-file exists, so only the last instant between a check and its write remains.
-A hard link can give the lock or temporary file a second name inside the
-cache without moving the directory, so both are refused when their open
-descriptor reports more than one link (at lock acquisition and before every
-write of the temporary file).
-
-Usage: ``.venv/bin/python -m scripts.hygiene.uv_cache_status [--json] [--no-record]``
-(or ``.venv/bin/python scripts/hygiene/uv_cache_status.py ...``)
-
-Environment (all optional):
-- ``UV_CACHE_DIR`` / ``XDG_CACHE_HOME``: where the cache lives (uv's own rules).
-- ``LU_DRIVER_STATUS_STATE_DIR``: history directory (default: the driver-keeper
-  state directory that ``lu-driver-status`` already reads).
-- ``LU_UV_CACHE_WARN_GB``: absolute-size warning threshold (default 10).
-- ``LU_UV_CACHE_GROWTH_WARN_GB``: 24-hour growth warning threshold (default 2).
-- ``LU_UV_CACHE_SCAN_TIMEOUT_S``: measurement deadline in seconds (default 8).
-- ``LU_UV_CACHE_LOCK_TIMEOUT_S``: history-lock deadline in seconds (default 2).
-
-Exit codes: 0 status printed (including "size unavailable", "measurement
-failed" and "history busy"); 2 refused because the history directory is a
-symlink, the cache, inside it, or was moved after it was opened, or because
-its lock file is a symlink, a directory or not a regular file, or because the
-lock or temporary history file has more than one link.
+UV_CACHE_DIR / XDG_CACHE_HOME select the cache. --state-dir or
+LU_DRIVER_STATUS_STATE_DIR must name the keeper's configured state_dir.
+LU_UV_CACHE_WARN_GB (10) and LU_UV_CACHE_GROWTH_WARN_GB (2) set warnings.
+LU_UV_CACHE_SCAN_TIMEOUT_S (8) bounds du; LU_UV_CACHE_LOCK_TIMEOUT_S (2)
+bounds cooperative lock retries. A synchronous filesystem call can outlast a
+deadline. History samples are at least 10 minutes apart and retained one week.
+See docs/runbooks/tmp-retention.md for the host wiring contract and limits.
 """
 
 from __future__ import annotations
@@ -54,6 +29,7 @@ import contextlib
 import errno
 import fcntl
 import json
+import math
 import os
 import signal
 import stat
@@ -92,8 +68,6 @@ KILL_GRACE_SECONDS = 1.0
 GIB = 1024**3
 
 SizeFn = Callable[[Path], int]
-# Raises ``HistoryLocationError`` when the bound history directory may no longer be written.
-LocationCheck = Callable[[], None]
 
 
 class ScanTimeout(Exception):
@@ -130,11 +104,9 @@ def uv_cache_dir() -> Path:
     return base / "uv"
 
 
-def state_dir() -> Path:
+def state_dir() -> Path | None:
     explicit = os.environ.get("LU_DRIVER_STATUS_STATE_DIR")
-    if explicit:
-        return Path(explicit).expanduser()
-    return Path.home() / ".local/state/learn-ukrainian/driver-keeper"
+    return Path(explicit).expanduser() if explicit else None
 
 
 def _seconds_from_env(name: str, default: float) -> float:
@@ -203,36 +175,37 @@ def measure_bytes(root: Path, timeout_s: float | None = None) -> int:
         raise MeasurementError("du printed no size") from None
 
 
-def read_history(dir_fd: int | None) -> list[dict[str, float]]:
-    """Return valid ``{"ts", "bytes"}`` samples, oldest first; bad lines are skipped.
+class HistoryUnavailable(Exception):
+    """No usable history can be read; this must not look like zero growth."""
 
-    ``dir_fd`` is the bound history directory (``None``: no history yet).
-    """
-    samples: list[dict[str, float]] = []
+
+def read_history(dir_fd: int | None) -> list[dict[str, float]]:
+    """Read valid finite samples, oldest first; missing or unusable history is explicit."""
     if dir_fd is None:
-        return samples
+        raise HistoryUnavailable("state directory unavailable")
     try:
         fd = os.open(HISTORY_FILENAME, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK | os.O_CLOEXEC, dir_fd=dir_fd)
-    except OSError:
-        return samples
-    try:
-        if not stat.S_ISREG(os.fstat(fd).st_mode):
-            return samples
-        with os.fdopen(os.dup(fd), encoding="utf-8") as handle:
-            lines = jsonl_lines(handle.read())
+        try:
+            if not stat.S_ISREG(os.fstat(fd).st_mode):
+                raise HistoryUnavailable("history is not a regular file")
+            with os.fdopen(os.dup(fd), encoding="utf-8") as handle:
+                lines = jsonl_lines(handle.read())
+        finally:
+            os.close(fd)
     except (OSError, UnicodeDecodeError):
-        return samples
-    finally:
-        os.close(fd)
+        raise HistoryUnavailable("history missing or unreadable") from None
+    samples: list[dict[str, float]] = []
     for line in lines:
         try:
             row = json.loads(line)
             ts, size = float(row["ts"]), float(row["bytes"])
         except (ValueError, KeyError, TypeError):
             continue
-        samples.append({"ts": ts, "bytes": size})
-    samples.sort(key=lambda sample: sample["ts"])
-    return samples
+        if math.isfinite(ts) and math.isfinite(size) and ts >= 0 and size >= 0:
+            samples.append({"ts": ts, "bytes": size})
+    if not samples:
+        raise HistoryUnavailable("history has no usable samples")
+    return sorted(samples, key=lambda sample: sample["ts"])
 
 
 def _lock_history(lock_fd: int, deadline: float, timeout_s: float) -> None:
@@ -254,21 +227,11 @@ def _require_single_link(fd: int, what: str) -> None:
         raise HistoryLocationError(f"the {what} has more than one link")
 
 
-def _open_lock(dir_fd: int, check: LocationCheck, deadline: float, timeout_s: float) -> tuple[int, bool]:
-    """Open the history lock file in ``dir_fd``; return ``(fd, created_here)``.
-
-    ``check`` runs before every attempt that may create the file, retries
-    included. A lock that keeps disappearing between the exclusive create and
-    the plain open is retried only until the monotonic ``deadline``, then
-    ``HistoryBusy`` is raised. A lock name that is a symlink, a directory, not
-    a regular file, or a file with more than one link (a hard link may be a
-    file in the cache) is refused with ``HistoryLocationError`` before it is
-    locked; nothing behind it is changed.
-    """
+def _open_lock(dir_fd: int, deadline: float, timeout_s: float) -> tuple[int, bool]:
+    """Open a regular, unaliased lock with a bounded retry deadline."""
     base = os.O_RDWR | os.O_NOFOLLOW | os.O_NONBLOCK | os.O_CLOEXEC
     name = HISTORY_FILENAME + LOCK_SUFFIX
     while True:
-        check()
         try:
             fd, created = os.open(name, base | os.O_CREAT | os.O_EXCL, 0o600, dir_fd=dir_fd), True
         except FileExistsError:
@@ -312,40 +275,22 @@ def record_sample(
     size: int,
     *,
     lock_timeout_s: float | None = None,
-    location_check: LocationCheck | None = None,
 ) -> list[dict[str, float]]:
-    """Add a sample (rate-limited), drop expired ones, and return the history.
+    """Keeper-only atomic update, serialized against cooperative invocations.
 
-    Every file operation is relative to ``dir_fd``, the bound history directory
-    (see ``open_history_dir``). The read-modify-replace runs under an exclusive
-    ``flock`` on a lock file beside the history, so concurrent writers
-    serialize and none replaces the file with a copy that lacks another
-    writer's newer sample. One monotonic deadline of ``lock_timeout_s``
-    (default ``LU_UV_CACHE_LOCK_TIMEOUT_S``) covers opening the lock file,
-    retries included, and waiting for the lock; ``HistoryBusy`` is raised when
-    it passes.
-
-    ``location_check`` runs before each write: every attempt to create the lock
-    file, creating the temporary file, every ``write`` of its contents (a
-    partial write is followed by a check before the rest), and renaming it
-    over the history. The contents are serialized in full before the temporary
-    file exists, so no slow step separates a check from the write it guards.
-    The lock file is refused when it has more than one link, checked on its
-    descriptor before and after the lock is taken, and so is the temporary file
-    before every ``write``: another name for either may be a file in the cache.
-    When a check raises ``HistoryLocationError`` nothing more is written, and
-    the temporary file and a lock file created by this call are removed again
-    before it propagates.
+    The caller validates and opens its configured directory once before entry.
+    No concurrent actor may move, unlink, or alias the directory or its files.
     """
     if lock_timeout_s is None:
         lock_timeout_s = lock_timeout_seconds()
-    check = location_check or (lambda: None)
     deadline = time.monotonic() + lock_timeout_s
-    lock_fd, lock_created = _open_lock(dir_fd, check, deadline, lock_timeout_s)
+    lock_fd, _ = _open_lock(dir_fd, deadline, lock_timeout_s)
     try:
         _lock_history(lock_fd, deadline, lock_timeout_s)
-        _require_single_link(lock_fd, "history lock file")
-        history = read_history(dir_fd)
+        try:
+            history = read_history(dir_fd)
+        except HistoryUnavailable:
+            history = []
         if any(abs(now - sample["ts"]) < MIN_SAMPLE_INTERVAL_SECONDS for sample in history):
             return history
         history.append({"ts": now, "bytes": float(size)})
@@ -357,7 +302,6 @@ def record_sample(
             json.dumps({"ts": sample["ts"], "bytes": int(sample["bytes"])}) + "\n" for sample in history
         ).encode("utf-8")
         tmp_name = f".{HISTORY_FILENAME}.{os.getpid()}.{os.urandom(6).hex()}.tmp"
-        check()
         fd = os.open(
             tmp_name, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW | os.O_CLOEXEC, 0o600, dir_fd=dir_fd
         )
@@ -365,22 +309,19 @@ def record_sample(
             try:
                 view = memoryview(payload)
                 while view:
-                    check()
-                    _require_single_link(fd, "temporary history file")
-                    view = view[os.write(fd, view) :]
+                    written = os.write(fd, view)
+                    if written == 0:
+                        raise OSError("history write made no progress")
+                    view = view[written:]
+                os.fsync(fd)
             finally:
                 os.close(fd)
-            check()
             os.replace(tmp_name, HISTORY_FILENAME, src_dir_fd=dir_fd, dst_dir_fd=dir_fd)
-        except BaseException:
+            os.fsync(dir_fd)
+        finally:
             with contextlib.suppress(FileNotFoundError):
                 os.unlink(tmp_name, dir_fd=dir_fd)
-            raise
         return history
-    except HistoryLocationError:
-        if lock_created:
-            _unlink_if_same(HISTORY_FILENAME + LOCK_SUFFIX, lock_fd, dir_fd)
-        raise
     finally:
         os.close(lock_fd)
 
@@ -410,9 +351,10 @@ def _gb_from_env(name: str, default: float) -> float:
 
 def history_inside_cache(cache: Path, history_dir: Path) -> bool:
     """True when ``history_dir`` is ``cache`` or lies inside it, symlinks resolved."""
-    resolved_cache = cache.resolve()
-    resolved_history = history_dir.resolve()
-    return resolved_history == resolved_cache or resolved_cache in resolved_history.parents
+    for root, destination in ((cache.absolute(), history_dir.absolute()), (cache.resolve(), history_dir.resolve())):
+        if destination == root or root in destination.parents:
+            return True
+    return False
 
 
 _DirIdentity = tuple[int, int]
@@ -441,70 +383,26 @@ class BoundHistoryDir(NamedTuple):
     path: Path
 
 
-def location_problem(
-    *,
-    bound_path: str,
-    bound_identity: _DirIdentity,
-    expected_path: Path,
-    expected_identity: _DirIdentity | None,
-    cache_reals: list[Path],
-) -> str | None:
-    """Why an opened history directory may not be written now, or ``None`` when it may.
-
-    ``bound_path`` is the kernel's path of the descriptor (``/proc/self/fd``)
-    and ``bound_identity`` its ``(st_dev, st_ino)``; ``expected_identity`` is
-    what ``lstat`` of ``expected_path`` reports now (``None``: nothing there).
-    """
-    bound = Path(bound_path)
-    if any(bound == cache_real or cache_real in bound.parents for cache_real in cache_reals):
-        return _INSIDE_CACHE
-    if bound != expected_path:
-        return "the history directory was moved after it was opened"
-    if expected_identity != bound_identity:
-        return "the history directory path now names a different directory"
-    return None
-
-
-def verify_history_location(bound: BoundHistoryDir, cache: Path, cache_real: Path) -> None:
-    """Raise ``HistoryLocationError`` unless ``bound`` is still where it was opened, outside the cache.
-
-    Checks the kernel's path of the held descriptor against both the cache's
-    real path at open time and its real path now, and requires that path to
-    still be the resolved history path, naming the same directory (``lstat``).
-    """
-    try:
-        bound_path = os.readlink(f"/proc/self/fd/{bound.fd}")
-        info = os.fstat(bound.fd)
-    except OSError as error:
-        raise HistoryLocationError(f"the history directory location could not be checked ({error.strerror})") from None
-    try:
-        current = os.lstat(bound.path)
-        expected_identity: _DirIdentity | None = (current.st_dev, current.st_ino)
-    except OSError:
-        expected_identity = None
-    problem = location_problem(
-        bound_path=bound_path,
-        bound_identity=(info.st_dev, info.st_ino),
-        expected_path=bound.path,
-        expected_identity=expected_identity,
-        cache_reals=[cache_real, Path(os.path.realpath(cache))],
-    )
-    if problem is not None:
-        raise HistoryLocationError(problem)
+def validate_history_files(dir_fd: int) -> None:
+    """Refuse preconfigured file aliases before creating any lock or temporary file."""
+    for name, label in ((HISTORY_FILENAME, "history file"), (HISTORY_FILENAME + LOCK_SUFFIX, "history lock file")):
+        try:
+            info = os.stat(name, dir_fd=dir_fd, follow_symlinks=False)
+        except FileNotFoundError:
+            continue
+        if stat.S_ISLNK(info.st_mode):
+            raise HistoryLocationError(f"the {label} is a symlink")
+        if not stat.S_ISREG(info.st_mode):
+            raise HistoryLocationError(f"the {label} is not a regular file")
+        if info.st_nlink != 1:
+            raise HistoryLocationError(f"the {label} has more than one link")
 
 
 def open_history_dir(cache: Path, history_dir: Path, *, create: bool) -> BoundHistoryDir | None:
-    """Resolve, check and open the history directory once; return it bound.
+    """Validate configuration once and bind all operations to one directory.
 
-    The configured directory itself must not be a symlink. Its path is resolved
-    once, then opened one component at a time from ``/`` with ``O_NOFOLLOW``,
-    and every directory on the way is compared with the cache's device and
-    inode before anything is created in it (missing components are created
-    with mode 0700, only when ``create``). The final descriptor is then checked
-    with ``verify_history_location``. Returns ``None`` when the directory does
-    not exist and ``create`` is false. Raises ``HistoryLocationError``, having
-    written nothing, when the directory is a symlink, the cache, inside the
-    cache, or its path changed while it was being opened.
+    Ancestor identities also catch cache directory aliases. No location polling
+    or hostile same-user mutation guarantee is made after this boundary.
     """
     if history_dir.is_symlink():
         raise HistoryLocationError("the history directory is a symlink")
@@ -515,7 +413,7 @@ def open_history_dir(cache: Path, history_dir: Path, *, create: bool) -> BoundHi
         cache_identity = None
     cache_real = Path(os.path.realpath(cache))
     resolved = Path(os.path.realpath(history_dir))
-    if history_inside_cache(cache, resolved):
+    if history_inside_cache(cache, history_dir):
         raise HistoryLocationError(_INSIDE_CACHE)
     flags = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC
     fd = os.open("/", flags)
@@ -542,7 +440,7 @@ def open_history_dir(cache: Path, history_dir: Path, *, create: bool) -> BoundHi
         if bound_dir_inside_cache(chain, Path(os.readlink(f"/proc/self/fd/{fd}")), cache_identity, cache_real):
             raise HistoryLocationError(_INSIDE_CACHE)
         bound = BoundHistoryDir(fd, resolved)
-        verify_history_location(bound, cache, cache_real)
+        validate_history_files(fd)
     except OSError as error:
         os.close(fd)
         raise HistoryLocationError(f"the history directory could not be opened safely ({error.strerror})") from None
@@ -558,18 +456,9 @@ def build_status(
     history_dir_fd: int | None,
     now: float,
     size_fn: SizeFn | None = None,
-    record: bool = True,
-    location_check: LocationCheck | None = None,
+    record: bool = False,
 ) -> dict[str, object]:
-    """Measure the cache, update the history, and evaluate the warning thresholds.
-
-    ``history_dir_fd`` is the bound history directory (see
-    ``open_history_dir``; ``None`` when it does not exist). A timed-out or
-    failed measurement returns an ``unavailable`` or ``error`` status and
-    records no sample; a busy history lock returns the measurement with
-    ``history_busy`` and records no sample. ``location_check`` is passed to
-    ``record_sample``; its ``HistoryLocationError`` propagates.
-    """
+    """Measure and render status; only an explicit keeper call records history."""
     if not cache.is_dir():
         return {"present": False, "cache": str(cache), "warnings": []}
     try:
@@ -578,13 +467,17 @@ def build_status(
         return {"present": True, "cache": str(cache), "unavailable": str(timeout), "warnings": []}
     except (MeasurementError, OSError) as error:
         return {"present": True, "cache": str(cache), "error": str(error), "warnings": []}
-    if record and history_dir_fd is not None:
-        try:
-            history = record_sample(history_dir_fd, now, size, location_check=location_check)
-        except HistoryBusy as busy:
-            return {"present": True, "cache": str(cache), "bytes": size, "history_busy": str(busy), "warnings": []}
-    else:
-        history = read_history(history_dir_fd)
+    history: list[dict[str, float]] = []
+    history_state: dict[str, object] = {}
+    try:
+        if record and history_dir_fd is not None:
+            history = record_sample(history_dir_fd, now, size)
+        else:
+            history = read_history(history_dir_fd)
+    except HistoryBusy as busy:
+        history_state["history_busy"] = str(busy)
+    except (HistoryUnavailable, OSError):
+        history_state["history_unavailable"] = True
     # The sample just recorded is "now"; growth compares against earlier samples only.
     growth = growth_over_window([s for s in history if s["ts"] < now], now, size)
     warn_bytes = _gb_from_env("LU_UV_CACHE_WARN_GB", DEFAULT_WARN_GB) * GIB
@@ -598,6 +491,7 @@ def build_status(
         "present": True,
         "cache": str(cache),
         "bytes": size,
+        **history_state,
         "growth_bytes": None if growth is None else growth[0],
         "growth_span_seconds": None if growth is None else growth[1],
         "warnings": warnings,
@@ -617,10 +511,12 @@ def format_line(status: dict[str, object]) -> str:
     if "error" in status:
         return f"UV CACHE: measurement failed ({status['error']})"
     size = float(status["bytes"])  # type: ignore[arg-type]
-    if "history_busy" in status:
-        return f"UV CACHE: history busy ({status['history_busy']}); {_gib(size)} measured, no sample recorded"
     growth = status["growth_bytes"]
-    if growth is None:
+    if "history_busy" in status:
+        growth_text = f"history busy ({status['history_busy']}); no sample recorded"
+    elif "history_unavailable" in status:
+        growth_text = "growth n/a (history unavailable)"
+    elif growth is None:
         growth_text = "growth n/a (history building)"
     else:
         span_h = float(status["growth_span_seconds"]) / 3600  # type: ignore[arg-type]
@@ -634,25 +530,53 @@ def format_line(status: dict[str, object]) -> str:
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Read-only uv cache size and 24 h growth line.")
-    parser.add_argument("--json", action="store_true", help="print the status as JSON")
-    parser.add_argument("--no-record", action="store_true", help="do not append a history sample")
+    parser = argparse.ArgumentParser(
+        description="Measure uv cache size and growth without deleting cache content.\n"
+        "Use status mode for readers; reserve --record-history for the keeper's cadence.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""Examples:
+  .venv/bin/python -m scripts.hygiene.uv_cache_status --state-dir "$KEEPER_STATE_DIR"
+  .venv/bin/python -m scripts.hygiene.uv_cache_status --record-history --state-dir "$KEEPER_STATE_DIR"
+  .venv/bin/python -m scripts.hygiene.uv_cache_status --json
+Outputs: status on stdout. Only --record-history creates the state directory,
+  uv-cache-size.jsonl, its lock and temporary files beside history. No cache deletion.
+Exit codes: 0 status printed, including timeout, unavailable history or busy lock;
+  2 unsafe history configuration or recording without an explicit state directory.
+Related: docs/runbooks/tmp-retention.md; #10827.
+""",
+    )
+    parser.add_argument("--json", action="store_true", help="print JSON instead of a status line (default: line)")
+    modes = parser.add_mutually_exclusive_group()
+    modes.add_argument("--record-history", action="store_true", help="keeper-only history update (default: read-only)")
+    modes.add_argument("--no-record", action="store_true", help="explicit read-only status (the default)")
+    parser.add_argument(
+        "--state-dir",
+        type=Path,
+        help="keeper state_dir, e.g. ./keeper-state (default: LU_DRIVER_STATUS_STATE_DIR; otherwise unavailable)",
+    )
     args = parser.parse_args(argv)
-    cache, history_dir = uv_cache_dir(), state_dir()
-    cache_real = Path(os.path.realpath(cache))
+    cache = uv_cache_dir()
+    history_dir = args.state_dir.expanduser() if args.state_dir is not None else state_dir()
+    if args.record_history and history_dir is None:
+        print(
+            "UV CACHE: refusing to run: --record-history requires --state-dir or LU_DRIVER_STATUS_STATE_DIR",
+            file=sys.stderr,
+        )
+        return 2
     bound: BoundHistoryDir | None = None
     try:
-        bound = open_history_dir(cache, history_dir, create=not args.no_record and cache.is_dir())
-        location_check = None if bound is None else lambda: verify_history_location(bound, cache, cache_real)
+        if history_dir is not None:
+            bound = open_history_dir(cache, history_dir, create=args.record_history and cache.is_dir())
         status = build_status(
             cache=cache,
             history_dir_fd=None if bound is None else bound.fd,
             now=time.time(),
-            record=not args.no_record,
-            location_check=location_check,
+            record=args.record_history,
         )
-    except HistoryLocationError as refusal:
-        print(f"UV CACHE: refusing to run: {refusal} (LU_DRIVER_STATUS_STATE_DIR)", file=sys.stderr)
+    except (HistoryLocationError, OSError, RuntimeError) as refusal:
+        # Never include configured paths or raw OS diagnostics in status output.
+        reason = str(refusal) if isinstance(refusal, HistoryLocationError) else "history configuration unavailable"
+        print(f"UV CACHE: refusing to run: {reason} (LU_DRIVER_STATUS_STATE_DIR)", file=sys.stderr)
         return 2
     finally:
         if bound is not None:
