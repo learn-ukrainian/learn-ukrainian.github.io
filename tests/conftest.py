@@ -109,6 +109,7 @@ from tests import sparse_trees
 from tests.helpers.monitor import UNREACHABLE_MONITOR_URL, UNREACHABLE_TOOL_TIMING_URL
 
 pytest_plugins = [
+    "scripts.common.pytest_scratch",
     "tests.helpers.github_command_boundary",
     "tests.helpers.github_transport",
     "tests.helpers.source_db_write_guard",
