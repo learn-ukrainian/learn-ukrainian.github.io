@@ -1,0 +1,17 @@
+{
+  "schema_version": "word-card-preview-release-pin.v1",
+  "repository": "learn-ukrainian/learn-ukrainian.github.io",
+  "release_tag": "word-cards-v0.1",
+  "release_version": "v0.1.0-pilot",
+  "provenance": "producer-declared",
+  "assets": {
+    "manifest.json": {
+      "bytes": 3292,
+      "sha256": "ca182bf5829f3ed4daa80c2394eb87e28879c3f1dc5088eef689f495b97e4f75"
+    },
+    "word-cards.jsonl": {
+      "bytes": 2879813,
+      "sha256": "45bd9c9325a3b4221c86d1663d784e96a7edc096674415445d37113f793189e6"
+    }
+  }
+}

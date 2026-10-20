@@ -28,6 +28,29 @@ publication wiring, deployment and deployed noindex proof. Local route-only
 browser builds use the same route, components and Astro configuration without
 reading protected stores or hydrating the rest of the site.
 
+## Pages publication
+
+Every `deploy-pages.yml` run publishes this preview with the ordinary site;
+automatic-deployment eligibility is unchanged. The committed pin
+`site/src/data/word-card-preview-release.pin.json` records the release tag and
+both byte sizes and digests above. `scripts/deploy/prepare_word_card_preview.py
+prepare` downloads only those two public assets, without a token, into runner
+scratch. It refuses a size or digest mismatch, a manifest that disagrees with
+the pin, synthetic provenance, and any `PUBLIC_ATLAS_WORD_CARD_PREVIEW_CONTROLS`
+value, including an empty one. The tag only locates the assets.
+
+`Build Site` then sets `ATLAS_WORD_CARD_PREVIEW=1` with the verified directory
+and pin, and refuses to start if the controls flag is set. After the build,
+`verify-dist` requires exactly the two summaries plus one card and one
+comparison page per release row, a single `noindex, nofollow` robots meta on
+each, no preview URL in any emitted sitemap, no refusal text and no committed
+synthetic-fixture identifier. Any failure stops the job before the size gate
+and upload.
+
+Changing the pin is content drift, so a new release needs the manual
+`workflow_dispatch` route. `robots.txt` remains unchanged (`Allow: /`); page
+metadata and sitemap exclusion keep the preview out of indexes.
+
 The public configuration emits 150 `/lexicon-v2/release/<card_id>/` pages,
 150 `/lexicon-v2/compare/release/<card_id>/` pages and two release summaries.
 Every preview route has `noindex, nofollow`; sitemap generation excludes them.
