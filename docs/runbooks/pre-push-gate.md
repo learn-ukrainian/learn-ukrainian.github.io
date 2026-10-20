@@ -15,9 +15,12 @@ tracked changes:
    older remote tip, `<remote>..<head>` also carries main's own commits. The base is then the merge-base
    with `origin/main`, so the range is the change the pull request carries (`origin/main...<head>`). The
    rule narrows only on Git's positive answer: `git merge-base --all origin/main <head>` returns exactly
-   one commit, and `git merge-base --is-ancestor` exits 1 for it against the remote tip. A Git error, an
-   unresolvable `origin/main`, no common history or several merge-bases keep the remote tip and the
-   complete outgoing range. New branches and divergent tips are unchanged; a divergent tip with no
+   one commit other than `<head>`, and `git merge-base --is-ancestor` exits 1 for it against the remote
+   tip. A Git error, an unresolvable `origin/main`, no common history or several merge-bases keep the
+   remote tip and the complete outgoing range. So does a merge-base equal to `<head>` (`origin/main`
+   already contains the head): the update still moves the remote, so its checks run over
+   `<remote>..<head>` and it is never accepted as "no outgoing commits". Only a remote tip equal to the
+   head has no outgoing commits. New branches and divergent tips are unchanged; a divergent tip with no
    merge-base is `range_unresolved`.
    The same bounded stage then always runs `lint_opsec_leaks.py --commit-range <base>..<head>`.
    It reads each commit's version of its touched files, including values later reverted or files
@@ -96,10 +99,10 @@ The governor's disabled and CI paths apply no thread caps. See `docs/runbooks/te
 | Outcome | Exit | Meaning |
 | --- | --- | --- |
 | green | 0 | Push proceeds; a receipt is written. |
-| `pre_commit_failed`, `tests_failed` | 1 | Push refused; failing hook names or pytest node ids are listed. |
+| `pre_commit_failed`, `tests_failed` | 1 | Push refused; failing hook names or pytest node ids are listed. A pytest run killed at its bound after it printed `FAILED`/`ERROR` ids is `tests_failed` with those ids (#11140); only complete output lines count. |
 | `tree_mismatch`, `dirty_tree`, `range_unresolved`, `invalid_ref_updates` | 1 | The exact commit cannot be validated as pushed. |
 | `untracked_inputs` | 1 | Untracked or ignored `*.py`, `*.pth` or pytest/tox/setup/pyproject config files exist; they could change the run but not the receipt. Commit or remove them. |
-| `validation_incomplete` | 75 | Not validated and not green: `invalid_configuration`, `admission_timeout`, `timeout`, `registry_unavailable`, `pytest_error` (pytest exited without a verdict), `pytest_temp_unavailable` (no private pytest base temp below a verified root outside every Git checkout and Git directory; see Bounds), `changed_tests_unmaterialized` (a test file the range changes is absent from a sparse worktree; `git sparse-checkout add tests`), `selected_tests_unmaterialized` (likewise for an affected test file the gate would run), `test_slots_wait_timeout`, `test_slots_pool_unavailable`, `test_slots_invalid_configuration`, `test_slots_unavailable` (host test slots, below), `scope_setup_unavailable` (the scoped executor was never set up or is already closed; no check ran). The branch is preserved; return to the driver. Never retry blindly. |
+| `validation_incomplete` | 75 | Not validated and not green: `invalid_configuration`, `admission_timeout`, `timeout` and `timeout_under_load` (a stage reached its bound; see Bounds), `registry_unavailable`, `pytest_error` (pytest exited without a verdict), `pytest_temp_unavailable` (no private pytest base temp below a verified root outside every Git checkout and Git directory; see Bounds), `changed_tests_unmaterialized` (a test file the range changes is absent from a sparse worktree; `git sparse-checkout add tests`), `selected_tests_unmaterialized` (likewise for an affected test file the gate would run), `test_slots_wait_timeout`, `test_slots_pool_unavailable`, `test_slots_invalid_configuration`, `test_slots_unavailable` (host test slots, below), `scope_setup_unavailable` (the scoped executor was never set up or is already closed; no check ran). The branch is preserved; return to the driver. Never retry blindly. |
 
 The last stderr line before the bypass hint is machine-readable: `{"pre_push_gate": {...}}`.
 After a plan is built, every `validation_incomplete` detail ends with its selection (#10820), for example
@@ -119,7 +122,19 @@ bounds (#10642), both constants in `.githooks/pre_push_gate.py`:
   outlast the remaining total stops at the total instead.
 
 A command that reaches its stage's bound is killed with its descendants. The push is then
-`validation_incomplete` (`timeout`), and no receipt is written. Each update is validated with its own base.
+`validation_incomplete`, and no receipt is written. Each update is validated with its own base.
+The reason is typed by the host load observed at the timeout, just before the kill (#11140), using the
+admission caps (`CPU_SOME_AVG10_MAX`, `CPU_SOME_AVG60_MAX`, 8 GiB available memory):
+`timeout_under_load` when the observation is above a cap, `timeout` when it is below every cap or
+could not be read. The stage row records `load_at_timeout` (the three values and `load`:
+`above_caps`, `below_caps` or `unknown`). High observed load is evidence, not proof of cause, and
+neither reason is green or retried automatically.
+
+The budget rule stays fixed (#11140): one `STAGE_BUDGET_S` allowance per stage, started after the
+test-slot grant. In the last 50 terminal gate rows, every green pytest stage ended inside the allowance.
+Every stage timeout came from a range that merged newer main into an older remote tip, so it also
+selected main's own changed tests, with admission pressure below the caps. The correction was the base
+rule above (#10820), not a longer allowance.
 Command output goes to a file, and after every command the gate kills any descendant that inherited its run
 token within a short cleanup bound, so a detached child cannot stall or outlive the gate.
 `LU_PRE_PUSH_GATE_ADMISSION_WAIT_S`, `LU_PRE_PUSH_GATE_STAGE_BUDGET_S` and `LU_PRE_PUSH_GATE_RUN_BUDGET_S`
@@ -349,6 +364,9 @@ Gate version 9 (#11207) replaces the `shadow` record with `selection`, and `node
 `deferred_to_ci` now describe the set that ran, so its rows are `pre-push-measurement.v2`.
 Once a plan exists, the row also records `base`, `selected_test_files`, `changed_test_files` and
 `changed_paths` (#10820).
+From gate version 9 a stage timeout records `reason` `timeout` or `timeout_under_load` and its stage's
+`load_at_timeout` (#11140); version 8 and older rows record `validation_incomplete` with `(timeout)` in
+`detail`. Version 9 also applies the main-refresh base rule above to every row's `base`.
 `resources_at_admission` contains fresh admission observations or explicit nulls.
 The top-level requested/effective test process fields remain null when no count was observed.
 `peak_memory_bytes` comes from the scope's `memory.peak`, read by the scoped executor before it exits.

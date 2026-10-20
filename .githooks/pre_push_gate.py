@@ -67,7 +67,7 @@ import uuid
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 
-GATE_VERSION = 9  # 9: block on the affected-test selection; the registry is its fallback (#11207)
+GATE_VERSION = 9  # 9: affected-test selection, main-refresh base, typed stage timeouts (#11207, #10820, #11140)
 # Copied from scripts/common/test_thread_caps.py: this gate imports no project policy code.
 # tests/test_pre_push_gate.py checks table and behavior parity.
 THREAD_CAPS = {
@@ -88,6 +88,12 @@ SCOPE_MEMORY_MAX = 6 * 1024**3
 CGROUP_ROOT = Path("/sys/fs/cgroup")
 # Each blocking stage (pre-commit, pytest) gets its own allowance from its own start, so time one
 # stage spends never shortens the next (#10642). The run budget caps their sum for the whole push.
+# Budget rule (#11140): the allowance stays fixed and starts after the host test-slot grant; admission and
+# slot waits never spend it. Evidence from the last 50 terminal gate rows: every green pytest stage ended
+# inside the allowance, and every stage timeout came from a range that merged newer main into an older
+# remote tip, so it also selected main's own changed tests, with admission pressure below the caps. The
+# correction was that range (#10820), not a longer allowance. A timeout is typed by the load observed at
+# it (``stage_timeout``) and is never green.
 STAGE_BUDGET_S = 600.0
 RUN_BUDGET_S = 2 * STAGE_BUDGET_S
 SHADOW_BUDGET_S = 120.0  # the selector's own bound; it starts with the pre-commit stage (historical name)
@@ -359,12 +365,13 @@ def refreshed_main_base(update: Update, root: Path) -> str | None:
 
     A head that merged newer main into an older remote tip carries main's own commits in
     ``remote..head``; the pull request carries only ``merge-base..head``. The merge-base replaces the
-    remote tip only on Git's positive answer: exactly one merge-base, proven not to be an ancestor of the
-    remote tip. A Git error, no common history or several merge-bases return ``None``, which keeps the
-    complete outgoing range.
+    remote tip only on Git's positive answer: exactly one merge-base, other than the head, proven not to
+    be an ancestor of the remote tip. A Git error, no common history or several merge-bases return
+    ``None``, which keeps the complete outgoing range. So does a merge-base equal to the head (``origin/main``
+    already contains it): the update still moves the remote, so its required checks must run.
     """
     bases = (git_ok("merge-base", "--all", "origin/main", update.local_sha, cwd=root) or "").split()
-    if len(bases) != 1:
+    if len(bases) != 1 or bases[0] == update.local_sha:
         return None
     try:
         answer = git("merge-base", "--is-ancestor", bases[0], update.remote_sha, cwd=root).returncode
@@ -1271,6 +1278,44 @@ def terminate_run(process: subprocess.Popen[str], token: str) -> bool:
     return True
 
 
+class StageTimeout(GateOutcome):
+    """A stage killed at its budget: always incomplete, with the output it wrote before the kill."""
+
+    def __init__(self, reason: str, detail: str, *, output: str):
+        super().__init__(reason, detail, incomplete=True)
+        self.output = output
+
+
+def stage_timeout(
+    detail: str,
+    output: str,
+    diagnostics: dict[str, object] | None,
+    observed: dict[str, object] | None = None,
+) -> StageTimeout:
+    """Type a timeout by the host load observed at it (#11140); unknown load stays unknown.
+
+    ``timeout_under_load`` needs a positive observation above an admission cap (``CPU_SOME_AVG10_MAX``,
+    ``CPU_SOME_AVG60_MAX`` or the available-memory floor, as ``admission_resources`` qualifies a host). A host
+    observed below every cap, or not observed at all, gives ``timeout``. Either way the push is not validated
+    and never green.
+    """
+    observed = observed if observed is not None else admission_resources()
+    values = {name: observed.get(name) for name in ("cpu_some_avg10", "cpu_some_avg60", "mem_available_bytes")}
+    if any(value is None for value in values.values()):
+        load = "unknown"
+        described = "unobserved"
+    else:
+        load = "below_caps" if observed.get("qualified") else "above_caps"
+        observation = ", ".join(f"{name}={value}" for name, value in values.items())
+        described = f"{'below' if load == 'below_caps' else 'above'} the admission caps ({observation})"
+    if diagnostics is not None:
+        diagnostics["load_at_timeout"] = {**values, "load": load}
+    reason = "timeout_under_load" if load == "above_caps" else "timeout"
+    # Only whole lines: a line cut by the kill could name a test id that pytest never printed.
+    complete = output[: output.rfind("\n") + 1]
+    return StageTimeout(reason, f"{detail}; host load at the timeout: {described}", output=complete)
+
+
 def run_bounded(
     command: list[str],
     *,
@@ -1290,9 +1335,7 @@ def run_bounded(
     if remaining <= 0:
         if diagnostics is not None:
             diagnostics["child_unavailable_reason"] = "budget_exhausted_before_start"
-        raise GateOutcome(
-            "validation_incomplete", f"{label}: time budget exhausted before start (timeout)", incomplete=True
-        )
+        raise stage_timeout(f"{label}: time budget exhausted before start (timeout)", "", diagnostics)
     token = uuid.uuid4().hex
     environment = {**clean_environment(), **(extra_env or {}), RUN_TOKEN_ENV: token}
     if diagnostics is not None:
@@ -1315,10 +1358,12 @@ def run_bounded(
             except OSError as exc:
                 raise GateOutcome("validation_incomplete", f"{label}: cannot start ({exc})", incomplete=True) from exc
             timed_out = False
+            observed: dict[str, object] | None = None
             try:
                 process.wait(timeout=remaining)
             except subprocess.TimeoutExpired:
                 timed_out = True
+                observed = admission_resources()  # the host while the stage still ran, before the kill
                 with contextlib.suppress(ProcessLookupError):
                     os.killpg(process.pid, signal.SIGKILL)
             except BaseException:
@@ -1333,8 +1378,12 @@ def run_bounded(
                     raise GateOutcome(
                         "validation_incomplete", f"{label}: could not reap the timed-out process", incomplete=True
                     ) from None
-                raise GateOutcome(
-                    "validation_incomplete", f"{label}: exceeded the time budget (timeout)", incomplete=True
+                sink.seek(0)
+                raise stage_timeout(
+                    f"{label}: exceeded the time budget (timeout)",
+                    sink.read().decode("utf-8", errors="replace"),
+                    diagnostics,
+                    observed,
                 )
             sink.seek(0)
             return process.returncode, sink.read().decode("utf-8", errors="replace")
@@ -1828,6 +1877,16 @@ def run_pytest_stage(
                     diagnostics=diagnostics,
                     extra_env=slot_environment,
                 )
+            except StageTimeout as timeout:
+                # Killed after pytest had printed failing ids (e.g. a hang at exit): those tests failed (#11140).
+                failing = failing_node_ids(timeout.output)
+                if failing:
+                    raise GateOutcome(
+                        "tests_failed",
+                        f"{timeout.detail}; pytest reported failures before the kill\n{tail(timeout.output)}",
+                        failing=failing,
+                    ) from None
+                raise
             finally:
                 if (
                     any(node.split("::", 1)[0] in invariant_files for node in nodes)

@@ -5591,12 +5591,15 @@ def test_an_actual_overrun_is_killed_at_its_bound_with_descendants(repo: Path, t
     result = _run_gate(repo, extra_env={gate.MAX_CONCURRENT_RUNS_ENV: "1", **budgets})
 
     assert result.returncode == gate.EXIT_INCOMPLETE, result.stderr
-    assert _verdict(result) == {"outcome": "validation_incomplete", "reason": "validation_incomplete", "failing": []}
+    row = _measurements(repo)[-1]
+    killed = row["stages"]["pre_commit" if bound == "pre_commit" else "pytest"]
+    # The reason is typed by the host load the killed stage observed (#11140); this host's load is not pinned.
+    reason = "timeout_under_load" if killed["load_at_timeout"]["load"] == "above_caps" else "timeout"
+    assert _verdict(result) == {"outcome": "validation_incomplete", "reason": reason, "failing": []}
+    assert killed["reason"] == row["reason"] == reason
     assert "NOT green" in result.stderr and _receipts(repo) == []
     assert _gone(int(pid_file.read_text(encoding="utf-8")))
-    row = _measurements(repo)[-1]
     assert row["outcome"] == "validation_incomplete" and row["failing"] == []
-    killed = row["stages"]["pre_commit" if bound == "pre_commit" else "pytest"]
     assert set(row["stages"]) == ({"pre_commit"} if bound == "pre_commit" else {"pre_commit", "pytest"})
     assert killed["outcome"] == "validation_incomplete" and killed["signal"] == signal.SIGKILL
     assert killed["allowance_s"] <= killed["elapsed_s"] < killed["allowance_s"] + 2 * gate.CLEANUP_BUDGET_S
@@ -6119,3 +6122,216 @@ def test_a_pushed_main_refresh_validates_and_records_the_pull_request_selection(
     assert row["outcome"] == "green" and row["base"] == main
     # Only the feature's own test file joins the two registered invariant files; main's change stays out.
     assert (row["selected_test_files"], row["changed_test_files"], row["changed_paths"]) == (3, 1, 1)
+
+
+def _main_contains_the_head(repo: Path, relation: str, feature_test: str = GREEN_TEST) -> str:
+    """An older feature remote, a later feature commit, a merge of newer main, then main reaching the head.
+
+    The remote stays at its old tip, so the update is not empty, yet the merge-base with ``origin/main`` is the
+    head itself: the graph that skipped every required check (#10820 review F1).
+    """
+    remote, _main = _feature_remote_then_newer_main(repo)
+    _write(repo, "tests/test_feature_new.py", feature_test)
+    _commit(repo, "feature work after the remote tip", "tests/test_feature_new.py")
+    head = _merge_main(repo)
+    _git(repo, "push", "--no-verify", "origin", "HEAD:main")
+    if relation == "descendant":
+        _git(repo, "checkout", "main")
+        _git(repo, "merge", "--ff-only", "feature")
+        _write(repo, "notes/after_landing.md", "main moved on\n")
+        _commit(repo, "main after the feature landed", "notes/after_landing.md")
+        _git(repo, "push", "--no-verify", "origin", "main")
+        _git(repo, "checkout", "feature")
+    assert _git(repo, "merge-base", "origin/main", "HEAD").stdout.strip() == head
+    assert _git(repo, "rev-parse", "origin/main").stdout.strip() != head or relation == "equal"
+    return remote
+
+
+@pytest.mark.parametrize("relation", ["equal", "descendant"])
+def test_a_main_that_contains_the_head_keeps_the_complete_outgoing_range(repo: Path, relation: str) -> None:
+    remote = _main_contains_the_head(repo, relation)
+
+    plan = gate.build_plan(_update(repo, remote), repo)
+
+    assert plan is not None and plan.base == remote  # never the head: the update moves the remote
+    assert plan.changed_tests == ("tests/test_feature_new.py", "tests/test_main_only.py")
+    assert set(plan.registry_nodes) == {"tests/test_invariant.py", "tests/test_scanner.py::test_scan"}
+
+
+@pytest.mark.parametrize("ending", ["green", "red"])
+@pytest.mark.parametrize("relation", ["equal", "descendant"])
+def test_an_outgoing_update_inside_main_still_runs_its_required_checks(repo: Path, relation: str, ending: str) -> None:
+    remote = _main_contains_the_head(repo, relation, GREEN_TEST if ending == "green" else RED_TEST)
+
+    result = _run_gate(repo, remote_sha=remote, extra_env={gate.MAX_CONCURRENT_RUNS_ENV: "1"})
+
+    row = _measurements(repo)[-1]
+    assert row.get("detail") != "no outgoing commits" and row["base"] == remote
+    assert {"pre_commit", "pytest"} <= set(row["stages"])
+    if ending == "green":
+        assert result.returncode == 0, result.stderr
+        assert row["outcome"] == "green" and len(_receipts(repo)) == 1
+        assert (row["selected_test_files"], row["changed_test_files"]) == (4, 2)
+    else:
+        assert result.returncode == gate.EXIT_REFUSED, result.stderr
+        assert _verdict(result) == {
+            "outcome": "refused",
+            "reason": "tests_failed",
+            "failing": ["tests/test_feature_new.py::test_broken"],
+        }
+        assert _receipts(repo) == []
+
+
+def test_an_unmoved_remote_inside_main_is_still_nothing_outgoing(repo: Path) -> None:
+    _main_contains_the_head(repo, "equal")
+    head = _git(repo, "rev-parse", "HEAD").stdout.strip()
+
+    result = _run_gate(repo, remote_sha=head)
+
+    assert result.returncode == 0, result.stderr
+    row = _measurements(repo)[-1]
+    assert row["detail"] == "no outgoing commits" and "stages" not in row
+
+
+# ---- #11140: a stage timeout is typed by the observed load and never hides a reported failure -----------
+
+
+def _observation(avg10: float | None, avg60: float | None, memory: int | None) -> dict[str, object]:
+    """The shape ``admission_resources`` returns, qualified by the same admission caps."""
+    known = None not in (avg10, avg60, memory)
+    return {
+        "cpu_some_avg10": avg10,
+        "cpu_some_avg60": avg60,
+        "mem_available_bytes": memory,
+        "qualified": known
+        and avg10 < gate.CPU_SOME_AVG10_MAX
+        and avg60 < gate.CPU_SOME_AVG60_MAX
+        and memory >= 8 * 1024**3,
+    }
+
+
+GIB = 1024**3
+TIMEOUT_LOADS = {
+    "cpu_avg10_at_cap": (_observation(gate.CPU_SOME_AVG10_MAX, 1.0, 64 * GIB), "above_caps", "timeout_under_load"),
+    "cpu_avg60_at_cap": (_observation(1.0, gate.CPU_SOME_AVG60_MAX, 64 * GIB), "above_caps", "timeout_under_load"),
+    "memory_short": (_observation(1.0, 1.0, 8 * GIB - 1), "above_caps", "timeout_under_load"),
+    "below_caps": (_observation(24.8, 12.0, 64 * GIB), "below_caps", "timeout"),
+    "unobserved": (_observation(None, None, None), "unknown", "timeout"),
+    "partly_observed": (_observation(90.0, None, 64 * GIB), "unknown", "timeout"),
+}
+
+
+@pytest.mark.parametrize("case", sorted(TIMEOUT_LOADS))
+def test_a_killed_stage_is_typed_by_the_load_observed_at_its_timeout(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, case: str
+) -> None:
+    observed, load, reason = TIMEOUT_LOADS[case]
+    monkeypatch.setattr(gate, "admission_resources", lambda: dict(observed))
+    script = (
+        "import sys, time\n"
+        "print('FAILED tests/test_a.py::test_whole - printed', flush=True)\n"
+        "sys.stdout.write('FAILED tests/test_a.py::test_cu'); sys.stdout.flush()\n"
+        "time.sleep(60)\n"
+    )
+    diagnostics: dict[str, object] = {}
+
+    with pytest.raises(gate.StageTimeout) as raised:
+        gate.run_bounded(
+            [sys.executable, "-c", script],
+            cwd=tmp_path,
+            deadline=time.monotonic() + 1.5,
+            label="pytest stage",
+            diagnostics=diagnostics,
+        )
+
+    error = raised.value
+    assert error.reason == reason and error.incomplete and error.failing == ()
+    assert error.detail.startswith("pytest stage: exceeded the time budget (timeout); host load at the timeout: ")
+    assert ("unobserved" in error.detail) is (load == "unknown")
+    assert diagnostics["load_at_timeout"] == {
+        "cpu_some_avg10": observed["cpu_some_avg10"],
+        "cpu_some_avg60": observed["cpu_some_avg60"],
+        "mem_available_bytes": observed["mem_available_bytes"],
+        "load": load,
+    }
+    assert diagnostics["signal"] == signal.SIGKILL
+    # The line the kill cut is dropped, so no id that pytest never finished printing can be reported.
+    assert error.output == "FAILED tests/test_a.py::test_whole - printed\n"
+
+
+def test_a_budget_spent_before_a_stage_starts_is_typed_like_any_timeout(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(gate, "admission_resources", lambda: _observation(None, None, None))
+    diagnostics: dict[str, object] = {}
+
+    with pytest.raises(gate.StageTimeout) as raised:
+        gate.run_bounded(
+            ["true"], cwd=Path("."), deadline=time.monotonic() - 1, label="pytest stage", diagnostics=diagnostics
+        )
+
+    assert raised.value.reason == "timeout" and raised.value.incomplete and raised.value.output == ""
+    assert "time budget exhausted before start (timeout)" in raised.value.detail
+    assert diagnostics["child_unavailable_reason"] == "budget_exhausted_before_start"
+    assert diagnostics["load_at_timeout"]["load"] == "unknown"
+
+
+PYTEST_OUTPUT_AT_KILL = {
+    "summary_printed": (
+        "..F\n= short test summary info =\nFAILED tests/test_b.py::test_red - assert False\n"
+        "ERROR tests/test_a.py::test_setup - RuntimeError\n= 1 failed, 1 error in 3.2s =\n",
+        ("tests/test_b.py::test_red", "tests/test_a.py::test_setup"),
+    ),
+    "progress_only": ("....F...\n", ()),
+    "cut_mid_line": ("..F\n= short test summary info =\nFAILED tests/test_b.py::test_r", ()),
+    "nothing": ("", ()),
+}
+
+
+@pytest.mark.parametrize("case", sorted(PYTEST_OUTPUT_AT_KILL))
+def test_a_pytest_timeout_keeps_only_the_failures_pytest_printed(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, case: str
+) -> None:
+    output, failing = PYTEST_OUTPUT_AT_KILL[case]
+    monkeypatch.setattr(gate, "state_dir", lambda _root: tmp_path / "state")
+    monkeypatch.setattr(gate, "admission_resources", lambda: _observation(1.0, 1.0, 64 * GIB))
+
+    def run_bounded(command, *, cwd, deadline, label, diagnostics=None, extra_env=None):
+        raise gate.stage_timeout(f"{label}: exceeded the time budget (timeout)", output, diagnostics)
+
+    monkeypatch.setattr(gate, "run_bounded", run_bounded)
+
+    with pytest.raises(gate.GateOutcome) as raised:
+        gate.run_pytest_stage(_plan(), tmp_path, "launcher", time.monotonic() + 30)
+
+    error = raised.value
+    assert "exceeded the time budget (timeout)" in error.detail
+    if failing:  # a reported failure stays a failure, never an incomplete run with an empty list
+        assert (error.reason, error.failing, error.incomplete) == ("tests_failed", failing, False)
+        assert "pytest reported failures before the kill" in error.detail
+    else:  # nothing is invented: still a typed, non-green timeout
+        assert isinstance(error, gate.StageTimeout)
+        assert (error.reason, error.failing, error.incomplete) == ("timeout", (), True)
+
+
+@pytest.mark.parametrize("ending", ["printed_failure", "silent_hang"])
+def test_an_actual_pytest_stage_killed_after_printing_a_failure_is_refused_as_failing(repo: Path, ending: str) -> None:
+    failure = "FAILED tests/test_new.py::test_ok - synthetic"
+    report = f'echo "{failure}"; ' if ending == "printed_failure" else ""
+    _stage_launcher(repo, ":", f'case "$*" in *tests/test_new.py*) {report}sleep 60;; esac; echo "1 passed in 0.1s"')
+
+    result = _run_gate(repo, extra_env={gate.MAX_CONCURRENT_RUNS_ENV: "1", "LU_PRE_PUSH_GATE_STAGE_BUDGET_S": "3"})
+
+    row = _measurements(repo)[-1]
+    stage = row["stages"]["pytest"]
+    assert stage["signal"] == signal.SIGKILL
+    assert stage["load_at_timeout"]["load"] in {"above_caps", "below_caps", "unknown"}
+    assert _receipts(repo) == [] and "green" not in (row["outcome"], stage["outcome"])
+    if ending == "printed_failure":
+        assert result.returncode == gate.EXIT_REFUSED, result.stderr
+        failing = ["tests/test_new.py::test_ok"]
+        assert _verdict(result) == {"outcome": "refused", "reason": "tests_failed", "failing": failing}
+        assert stage["reason"] == "tests_failed"
+    else:
+        assert result.returncode == gate.EXIT_INCOMPLETE, result.stderr
+        reason = "timeout_under_load" if stage["load_at_timeout"]["load"] == "above_caps" else "timeout"
+        assert _verdict(result) == {"outcome": "validation_incomplete", "reason": reason, "failing": []}
+        assert "NOT green" in result.stderr
