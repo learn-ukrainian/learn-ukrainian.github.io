@@ -12,7 +12,23 @@ from types import SimpleNamespace
 
 import pytest
 
+from scripts.common.repo_root import main_checkout_root
 from tests.conftest import _TelemetryIsolation
+
+
+def test_live_guard_covers_repo_and_primary_events(pytestconfig: pytest.Config) -> None:
+    repo_root = Path(__file__).resolve().parents[1]
+    primary_root = main_checkout_root(repo_root).resolve()
+    guard = pytestconfig.pluginmanager.get_plugin("telemetry-isolation")
+
+    assert guard is not None
+    assert guard.production_dirs
+    assert guard.production_dirs == {
+        (root / "batch_state" / "telemetry" / "events").resolve()
+        for root in {repo_root, primary_root}
+    }
+    if primary_root != repo_root:
+        assert (primary_root / "batch_state" / "telemetry" / "events").resolve() in guard.production_dirs
 
 
 def _run_guard(

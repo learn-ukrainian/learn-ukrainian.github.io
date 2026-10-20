@@ -174,6 +174,8 @@ class _TelemetryIsolation:
     can append to production throughout a test session. The emitter frame
     attributes an attempted write to this session, including either import
     spelling and a replaced event-path resolver.
+    A child that scrubs the redirect environment can write to production
+    without this process's audit hook observing it.
     """
 
     def __init__(self, production_dirs: tuple[Path, ...]) -> None:
