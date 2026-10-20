@@ -3561,12 +3561,15 @@ def search_esum_batch(
 def search_slovnyk_me_entries_batch(
     words: list[str],
     *,
+    dictionaries: list[str] | tuple[str, ...] | None = None,
     db_path: str | Path | None = None,
 ) -> dict[str, list[dict]]:
     """Exact ``normalized_word`` hits on curated slovnyk.me entries (batched).
 
     Missing table → empty hits (production sources.db may not ship the table).
-    Overlap-blocked dictionaries are excluded, matching single-word search.
+    Overlap-blocked dictionaries are excluded, matching single-word search;
+    ``dictionaries`` narrows the rest (the first hit per word is by row id, so a
+    caller that reads one gloss must name the explanatory dictionary it means).
     """
     requested = list(dict.fromkeys(str(word) for word in words if str(word).strip()))
     results: dict[str, list[dict]] = {word: [] for word in requested}
@@ -3585,7 +3588,13 @@ def search_slovnyk_me_entries_batch(
         blocked = tuple(slovnyk_me.OVERLAP_BLOCKED_DICTS)
         block_filter = ""
         block_params: list[object] = []
-        if blocked:
+        if dictionaries:
+            allowed = _resolved_slovnyk_dicts(dictionaries)
+            if not allowed:
+                return results
+            block_filter = f" AND dictionary.dictionary_slug IN ({','.join('?' for _ in allowed)})"
+            block_params = allowed
+        elif blocked:
             block_filter = (
                 f" AND dictionary.dictionary_slug NOT IN "
                 f"({','.join('?' for _ in blocked)})"
@@ -4143,6 +4152,43 @@ def _search_slovnyk_me_db(
         _close_if_temporary(conn, db_path)
 
 
+def _dictionaries_not_recorded_missing(
+    query: str,
+    dictionaries: list[str] | tuple[str, ...] | None,
+    db_path: str | Path | None,
+) -> list[str]:
+    """Dictionaries a live fetch may still try: those without a recorded 404 for every query variant.
+
+    ``slovnyk_me_lookup_misses`` holds the cache's observed 404s; asking slovnyk.me
+    again would only repeat a known answer. A missing table records nothing.
+    """
+    candidates = list(dictionaries or slovnyk_me.DEFAULT_SLOVNYK_ME_DICTS)
+    try:
+        conn = _get_conn_for(db_path)
+    except FileNotFoundError:
+        return candidates
+    try:
+        if not _table_columns("slovnyk_me_lookup_misses", db_path):
+            return candidates
+        variants = [slovnyk_me.normalize_word(v) for v in slovnyk_me.query_variants(query)]
+        marks = ",".join("?" for _ in variants)
+        missed: dict[str, set[str]] = {}
+        for slug, word in conn.execute(
+            f"SELECT dictionary_slug, normalized_word FROM slovnyk_me_lookup_misses "
+            f"WHERE normalized_word IN ({marks})",
+            variants,
+        ):
+            missed.setdefault(slug, set()).add(word)
+        return [
+            slug for slug in candidates
+            if missed.get(slovnyk_me.resolve_dict_slug(slug), set()) < set(variants)
+        ]
+    except sqlite3.OperationalError:
+        return candidates
+    finally:
+        _close_if_temporary(conn, db_path)
+
+
 def search_slovnyk_me(
     query: str,
     limit: int = 10,
@@ -4189,11 +4235,14 @@ def search_slovnyk_me_with_status(
     if len(rows) >= limit or not live:
         return rows[:limit], outages
 
+    live_dictionaries = _dictionaries_not_recorded_missing(query, dictionaries, db_path)
+    if not live_dictionaries:
+        return rows[:limit], outages
     live_rows = [
         _normalize_slovnyk_row(row, query)
         for row in slovnyk_me.fetch_entries(
             query,
-            dictionaries=dictionaries,
+            dictionaries=live_dictionaries,
             limit=limit - len(rows),
             outages=outages,
         )
@@ -4434,6 +4483,7 @@ def search_heritage(
             "is_dialect": is_dialect,
             "sovietization_risk": int(hit.get("sovietization_risk") or 0),
             "sovietization_keywords": hit.get("sovietization_keywords", ""),
+            "use_role": hit.get("use_role", slovnyk_me.DEFAULT_USE_ROLE),
             "evidence_tags": [tag for tag, present in {
                 "modern": is_modern,
                 "regional_or_historical": is_dialect,
