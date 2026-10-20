@@ -1763,18 +1763,32 @@ sources:
   - The held edition is unverified (holdings_manifest.yaml); edition-dependent records remain unresolved until authenticated.
   - Who represents the author’s heirs?
 - id: ulp_private
-  permission_status: none
+  permission_status: granted
+  permission_note: Operator decision 2026-10-20 admits the dictionary parts (Oho! A1 Словничок; 1000 words; 500
+    verbs; ULP lesson-note vocabulary zones) as a database and word-card source. Prose, transcripts, flashcards
+    and audio stay private references.
   name: Ukrainian Lessons Podcast notes and Anna Ohoiko's books (private references)
   organisation: Anna Ohoiko (Ukrainian Lessons)
-  role: Private reference for pedagogy only; never quoted and never a card field source.
+  role: Dictionary-part source for lexdata L1 and for word-card lexical facts; private pedagogy reference otherwise.
   fields_used:
-  - reference_text
+  - headword
+  - grammatical_label
+  - en_gloss
+  - example_sentence
+  - course_usage
   appears_in:
   - internal
-  appears_note: Private pedagogy reference; its text is not on the site or in the dataset.
+  - site
+  - dataset
+  appears_note: >-
+    PROPOSED DISPLAY RULE (operator confirmation required). Public output may show only lexical facts:
+    membership and lesson position, printed stress and grammatical labels, and only where they agree with
+    VESUM/ULIF, with the credit "Ukrainian Lessons (Anna Ohoiko)". English glosses, example sentences and
+    sense wording are internal evidence and are never shown verbatim. A public English gloss comes from
+    another admitted source or is authored and reviewed in-project.
   stored_in:
-  - data/sources.db textbooks rows ulp-*-lesson-notes, anna-ohoiko-* (from the operator's private files under docs/references/private/,
-    gitignored)
+  - data/sources.db textbooks/textbook_sections (L0, unchanged)
+  - data/lexdata.db L1 (derived)
   provenance:
     urls:
     - The operator's own purchased copies under docs/references/private/ (gitignored)
@@ -1803,11 +1817,12 @@ sources:
       read_on: '2026-09-27'
     searched: []
   citation:
-    form: Not shown; cited only in internal notes as Ukrainian Lessons (Anna Ohoiko).
-    shown_label: null
+    form: Proposed credit "Ukrainian Lessons (Anna Ohoiko)" beside lexical facts only; no printed quotation (display rule awaits operator confirmation).
+    shown_label: Ukrainian Lessons (Anna Ohoiko)
   removal:
     route: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues
-    scope: the stored copies listed in stored_in (deleted only with the operator's authorisation).
+    scope: the Atlas/practice fields carrying this source's label; the same fields in the open dataset export; the
+      stored copies listed in stored_in (deleted only with the operator's authorisation).
   open_questions: []
 - id: zno_nmt
   permission_status: none
