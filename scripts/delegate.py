@@ -6606,6 +6606,7 @@ TYPED_CAUSE_CODES = frozenset(
         "auto_finalize_pr_failed",
         "auto_finalize_publish_blocked",
         "auto_finalize_opsec_blocked",
+        "no_owned_paths_declared",
         "auto_finalize_failed",
         # Rescue.
         "rescue_worktree_unregistered",
@@ -8344,7 +8345,9 @@ def _finalize_transport_credentials() -> Iterator[list[tuple[str, str]]]:
         yield [(f"http.{CANONICAL_ORIGIN}.extraHeader", f"Authorization: Basic {header}")]
 
 
-def _finalize_transport_push(context: SafeGitContext, *, branch: str, head: str) -> subprocess.CompletedProcess:
+def _finalize_transport_push(
+    context: SafeGitContext, *, branch: str, head: str, timeout: float
+) -> subprocess.CompletedProcess:
     """Send the validated, scanned ``head`` with Git's own transport alone.
 
     Validation already ran the trusted hook chain on this exact id, without
@@ -8352,6 +8355,7 @@ def _finalize_transport_push(context: SafeGitContext, *, branch: str, head: str)
     the worker wrote executes while the credential exists. The credential is
     passed in this one process's environment, never written to configuration
     or put on a command line, and the push is an ordinary non-force update.
+    Its bound is the publication's, as when the push itself ran the hook.
     """
     from scripts.orchestration.safe_git_context import GIT
 
@@ -8370,7 +8374,7 @@ def _finalize_transport_push(context: SafeGitContext, *, branch: str, head: str)
             capture_output=True,
             text=True,
             check=False,
-            timeout=DEFAULT_NETWORK_GIT_TIMEOUT_S,
+            timeout=timeout,
         )
 
 
@@ -8434,11 +8438,13 @@ def _push_auto_finalize_branch(
                 timeout=timeout,
             )
             if proc.returncode:
-                raise _TypedFailure("validation refused", _remote_git_cause("auto_finalize_push_failed", proc))
+                # Publicly the push's own pre-push refusal, as when Git ran this hook.
+                cause = dataclasses.replace(_remote_git_cause("auto_finalize_push_failed", proc), command="push")
+                raise _TypedFailure("validation refused", cause)
             if _finalize_source_head(context, branch) != head:
                 raise SnapshotRefusal("auto_finalize_head_moved")
             if remote != head:
-                proc = _finalize_transport_push(context, branch=branch, head=head)
+                proc = _finalize_transport_push(context, branch=branch, head=head, timeout=timeout)
                 if proc.returncode:
                     raise _TypedFailure("push refused", _remote_git_cause("auto_finalize_push_failed", proc))
             if _finalize_remote_head(context, branch) != head:

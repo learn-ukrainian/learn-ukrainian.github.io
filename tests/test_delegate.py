@@ -12761,6 +12761,17 @@ def _add_local_bare_origin(main: Path) -> Path:
     return remote
 
 
+def _pin_driver_destination(main: Path) -> Path:
+    """The driver-pinned destination ``isolated_finalization_context`` binds: a bare origin holding ``main``."""
+    origin = main.parent / "origin.git"
+    for args in (
+        ["init", "--bare", "-q", "-b", "main", str(origin)],
+        ["-C", str(main), "push", "-q", str(origin), "main"],
+    ):
+        subprocess.run(["git", *args], check=True, capture_output=True, env=delegate._sanitized_git_env(), timeout=30)
+    return origin
+
+
 def _init_repo_with_worktree(tmp_path: Path) -> tuple[Path, Path]:
     """Build a real primary checkout + one registered dispatch worktree.
 
@@ -19848,6 +19859,7 @@ def test_finalize_cwd_reuse_with_pushed_commits_counts_deliverable(
 ):
     """Reused --cwd worktree with commits ahead of base counts commits_ahead > 0 and settles as done."""
     main, dispatch_wt = _init_repo_with_worktree(tmp_path)
+    _pin_driver_destination(main)
     _sanitize_git_env_for_test(monkeypatch)
     monkeypatch.setattr(delegate, "_REPO_ROOT", main)
 
@@ -19912,6 +19924,7 @@ def test_run_worker_falls_back_to_resolving_worktree_from_cwd(
 ):
     """When worktree_path is missing in state, _run_worker resolves it from cwd if inside a registered worktree."""
     main, dispatch_wt = _init_repo_with_worktree(tmp_path)
+    _pin_driver_destination(main)
     _sanitize_git_env_for_test(monkeypatch)
     monkeypatch.setattr(delegate, "_REPO_ROOT", main)
 
@@ -22479,6 +22492,7 @@ def advisory_continuation(tmp_path, monkeypatch):
     """An earlier round exceeds the envelope; this round adds only one line."""
     _sanitize_git_env_for_test(monkeypatch)
     _main, worktree = _init_repo_with_worktree(tmp_path)
+    _pin_driver_destination(_main)
 
     def git(*args):
         return subprocess.run(
