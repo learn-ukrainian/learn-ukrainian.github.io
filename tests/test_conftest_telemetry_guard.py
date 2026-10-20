@@ -21,16 +21,29 @@ def _run_guard(tmp_path: Path, source: str, *, workers: int = 0) -> subprocess.C
 
         def pytest_configure(config):
             production = Path(__file__).parent / "repo/batch_state/telemetry/events"
-            config.pluginmanager.register(_TelemetryIsolation(production), "telemetry-isolation")
+            primary = Path(__file__).parent / "primary/batch_state/telemetry/events"
+            config.pluginmanager.register(_TelemetryIsolation((production, primary)), "telemetry-isolation")
         """),
         encoding="utf-8",
     )
     (tmp_path / "test_probe.py").write_text(textwrap.dedent(source), encoding="utf-8")
     return subprocess.run(
         [
-            sys.executable, "-m", "pytest", "-q", "-p", "xdist.plugin",
-            "-c", str(tmp_path / "pytest.ini"), "--confcutdir", str(tmp_path),
-            "--basetemp", str(tmp_path / "pytest-tmp"), "-n", str(workers), str(tmp_path / "test_probe.py"),
+            sys.executable,
+            "-m",
+            "pytest",
+            "-q",
+            "-p",
+            "xdist.plugin",
+            "-c",
+            str(tmp_path / "pytest.ini"),
+            "--confcutdir",
+            str(tmp_path),
+            "--basetemp",
+            str(tmp_path / "pytest-tmp"),
+            "-n",
+            str(workers),
+            str(tmp_path / "test_probe.py"),
         ],
         env={**os.environ, "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1"},
         capture_output=True,
@@ -41,7 +54,9 @@ def _run_guard(tmp_path: Path, source: str, *, workers: int = 0) -> subprocess.C
 
 @pytest.mark.parametrize("workers", [0, 2])
 def test_session_redirect_covers_collection_fixtures_and_children(tmp_path: Path, workers: int) -> None:
-    result = _run_guard(tmp_path, """\
+    result = _run_guard(
+        tmp_path,
+        """\
         import json
         import os
         import subprocess
@@ -67,10 +82,13 @@ def test_session_redirect_covers_collection_fixtures_and_children(tmp_path: Path
                 [sys.executable, "-c", "from scripts.telemetry.emit import emit_event; emit_event('child', {})"],
                 check=True, timeout=30,
             )
-        """, workers=workers)
+        """,
+        workers=workers,
+    )
 
     assert result.returncode == 0, result.stdout + result.stderr
     assert not (tmp_path / "repo/batch_state/telemetry/events").exists()
+    assert not (tmp_path / "primary/batch_state/telemetry/events").exists()
     event_files = {path.resolve() for path in (tmp_path / "pytest-tmp").rglob("telemetry-events*/*.jsonl")}
     assert len(event_files) == (workers or 1)
     for path in event_files:
@@ -79,19 +97,22 @@ def test_session_redirect_covers_collection_fixtures_and_children(tmp_path: Path
 
 
 @pytest.mark.parametrize("mutation", ["create", "append", "delete", "rename"])
-def test_guard_fails_a_deliberately_leaking_fixture(tmp_path: Path, mutation: str) -> None:
-    production = tmp_path / "repo/batch_state/telemetry/events"
+@pytest.mark.parametrize("store", ["repo", "primary"])
+def test_guard_fails_a_deliberately_leaking_fixture(tmp_path: Path, mutation: str, store: str) -> None:
+    production = tmp_path / store / "batch_state/telemetry/events"
     production.mkdir(parents=True)
     existing = production / "existing.jsonl"
     existing.write_text('{"existing":true}\n', encoding="utf-8")
-    result = _run_guard(tmp_path, f"""\
+    result = _run_guard(
+        tmp_path,
+        f"""\
         from pathlib import Path
         import pytest
         from scripts.telemetry import emit
 
         @pytest.fixture(autouse=True)
         def leak(monkeypatch):
-            root = Path(__file__).parent / "repo"
+            root = Path(__file__).parent / {store!r}
             production = root / "batch_state/telemetry/events"
             existing = production / "existing.jsonl"
             if {mutation!r} == "create":
@@ -108,7 +129,8 @@ def test_guard_fails_a_deliberately_leaking_fixture(tmp_path: Path, mutation: st
 
         def test_leaking_fixture(leak):
             pass
-        """)
+        """,
+    )
 
     assert result.returncode == pytest.ExitCode.TESTS_FAILED, result.stdout + result.stderr
     assert "1 passed" in result.stdout

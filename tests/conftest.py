@@ -105,7 +105,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 # scripts.common is on the rules-workflow allowlist; scripts.lib is not.
 from scripts.common.bridge_paths import configured_bridge_db_path, default_bridge_db_path
 from scripts.common.flake_quarantine import TIMEOUT_PATTERN, load_registry, rerun_node_ids
-from scripts.common.repo_root import resolve_repo_root
+from scripts.common.repo_root import main_checkout_root, resolve_repo_root
 from tests import sparse_trees
 from tests.helpers.monitor import UNREACHABLE_MONITOR_URL, UNREACHABLE_TOOL_TIMING_URL
 
@@ -180,13 +180,13 @@ def _telemetry_event_snapshot(root: Path) -> dict[str, str]:
 class _TelemetryIsolation:
     """Redirect collection, fixtures and child processes; guard the default store."""
 
-    def __init__(self, production_dir: Path) -> None:
-        self.production_dir = production_dir
+    def __init__(self, production_dirs: tuple[Path, ...]) -> None:
+        self.production_dirs = production_dirs
 
     def pytest_sessionstart(self, session: pytest.Session) -> None:
         config = session.config
         if not hasattr(config, "workerinput"):
-            self.before = _telemetry_event_snapshot(self.production_dir)
+            self.before = {root: _telemetry_event_snapshot(root) for root in self.production_dirs}
         # Session fixtures start after collection. Install here so imports and
         # session fixtures also inherit the redirect, including xdist workers.
         event_dir = config._tmp_path_factory.mktemp("telemetry-events")
@@ -198,14 +198,16 @@ class _TelemetryIsolation:
     def pytest_sessionfinish(self, session: pytest.Session, exitstatus: int) -> None:
         if hasattr(session.config, "workerinput"):
             return
-        after = _telemetry_event_snapshot(self.production_dir)
-        changed = sorted(name for name in self.before.keys() | after.keys() if self.before.get(name) != after.get(name))
-        if changed:
-            print("telemetry event guard: production event files changed during the test session:")
-            for name in changed:
-                print(f"  batch_state/telemetry/events/{name}")
-            if session.exitstatus == pytest.ExitCode.OK:
-                session.exitstatus = pytest.ExitCode.TESTS_FAILED
+        for root in self.production_dirs:
+            before = self.before[root]
+            after = _telemetry_event_snapshot(root)
+            changed = sorted(name for name in before.keys() | after.keys() if before.get(name) != after.get(name))
+            if changed:
+                print("telemetry event guard: production event files changed during the test session:")
+                for name in changed:
+                    print(f"  batch_state/telemetry/events/{name}")
+                if session.exitstatus == pytest.ExitCode.OK:
+                    session.exitstatus = pytest.ExitCode.TESTS_FAILED
 
 
 def _loaded_module(*parts: str):
@@ -2749,7 +2751,12 @@ def pytest_configure_node(node: Any) -> None:
 
 def pytest_configure(config: pytest.Config) -> None:
     config.pluginmanager.register(
-        _TelemetryIsolation(_REPO_ROOT / "batch_state" / "telemetry" / "events"),
+        _TelemetryIsolation(
+            tuple(
+                root / "batch_state" / "telemetry" / "events"
+                for root in dict.fromkeys((_REPO_ROOT, main_checkout_root(_REPO_ROOT)))
+            )
+        ),
         "telemetry-isolation",
     )
     _restore_published_credentials(config)
