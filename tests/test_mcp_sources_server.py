@@ -269,6 +269,7 @@ class TestListTools:
             "search_heritage",
             "check_russian_shadow",
             "search_ua_gec_errors",
+            "word_card",
         }
         missing = expected - tool_names
         extra = tool_names - expected

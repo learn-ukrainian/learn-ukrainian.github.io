@@ -2,8 +2,10 @@
 import ast
 import copy
 import json
+import re
 import shlex
 import subprocess
+from collections import Counter
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -572,10 +574,13 @@ BILLION_LAUGHS = 'a: &a ["lol","lol","lol","lol","lol","lol","lol","lol","lol"]\
     ('[' + 'a,' * MAX_CATALOGUE_NODES + 'a]', 'too_many_nodes'),
     ('a: 2026-99-99\n', 'scalar'),  # a timestamp-shaped scalar with no such date
     ('a: ' + '1' * 5_000 + '\n', 'scalar'),  # over Python's integer-string digit limit
+    ('a: kept until #6106 closes.\n', 'trailing_comment'),  # loads as 'kept until'
+    ('a:\n  - epic #8875\n', 'trailing_comment'),
+    ('a: x\n  continued #1\n', 'trailing_comment'),  # a multi-line plain scalar
 ], ids=['recursive-aliases', 'deep-flow', 'deep-block', 'billion-laughs', 'alias', 'merge-key', 'python-tag',
         'custom-tag', 'core-tag', 'duplicate-key', 'int-key', 'null-key', 'sequence-key', 'list-root',
         'scalar-root', 'empty', 'two-documents', 'unclosed', 'not-utf8', 'too-many-nodes', 'bad-date',
-        'huge-int'])
+        'huge-int', 'trailing-comment', 'trailing-comment-in-list', 'trailing-comment-multiline'])
 def test_catalogue_outside_the_yaml_subset_is_a_typed_rejection(repo, tmp_path, capsys, text, code):
     raw = text if isinstance(text, bytes) else text.encode('utf-8')
     with pytest.raises(CatalogueLoadError) as caught:
@@ -618,6 +623,36 @@ def test_bounds_admit_the_repository_catalogue_with_headroom():
         top = max(top, depth)
     assert nodes * 10 < MAX_CATALOGUE_NODES and top * 2 < MAX_CATALOGUE_DEPTH
     assert parse(raw)['schema_version'] == 1
+
+
+@pytest.mark.parametrize('text, value', [
+    ("a: 'kept until #6106 closes.'\n", {'a': 'kept until #6106 closes.'}),
+    ("a: 'x'  # a comment after a quoted value cuts nothing\n", {'a': 'x'}),
+    ('# a full-line comment\na: b#1\n', {'a': 'b#1'}),  # '#' without a space before it is text
+    ('a: # null\nb: [x, y]  # c\nc: {d: e}  # f\n', {'a': None, 'b': ['x', 'y'], 'c': {'d': 'e'}}),
+])
+def test_comments_that_cut_no_value_are_accepted(text, value):
+    assert parse(text.encode()) == value
+
+
+def test_every_issue_reference_in_the_catalogue_survives_loading():
+    """Round trip: each '#NNNN' outside full-line comments is in a loaded string, as often as written."""
+    raw = (REPO / 'docs/knowledge/catalogue.yaml').read_text(encoding='utf-8')
+    written = Counter(ref for line in raw.splitlines() if not line.lstrip().startswith('#')
+                      for ref in re.findall(r'#\d+', line))
+
+    def strings(node):
+        if isinstance(node, str):
+            yield node
+        elif isinstance(node, dict):
+            for key, child in node.items():
+                yield key
+                yield from strings(child)
+        elif isinstance(node, list):
+            for child in node:
+                yield from strings(child)
+    loaded = Counter(ref for text in strings(parse(raw.encode('utf-8'))) for ref in re.findall(r'#\d+', text))
+    assert written and loaded == written
 
 
 def test_depth_bound_is_exact():
@@ -793,8 +828,9 @@ def test_only_the_gated_reader_reads_blob_bodies():
                for call in ast.walk(fn) if isinstance(call, ast.Call)
                and getattr(call.func, 'id', None) == '_index_blobs']
     # read_heads gates document bodies with body_readable; store_literals reads scripts/ only and
-    # withholds control-character and inventory-excluded paths before requesting any blob.
-    assert sorted(callers) == ['read_heads', 'store_literals']
+    # withholds control-character and inventory-excluded paths before requesting any blob;
+    # store_registry_errors applies that same gate to the registry's writer files and the backup allowlist.
+    assert sorted(callers) == ['read_heads', 'store_literals', 'store_registry_errors']
     # Git commands that print blob contents appear only in the gated reader and in
     # owner_keys, which reads the two fixed owner registries, never a catalogued path.
     readers = [fn.name for fn in ast.walk(tree) if isinstance(fn, ast.FunctionDef)

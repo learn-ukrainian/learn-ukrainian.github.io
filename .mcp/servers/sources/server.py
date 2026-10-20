@@ -23,6 +23,7 @@ Tools:
     - search_slovnyk_me, search_heritage
     - search_style_guide (Антоненко-Давидович)
     - translate_en_uk (Балла)
+    - word_card (current word card, labelled certified or candidate)
 """
 
 import asyncio
@@ -46,9 +47,21 @@ for _path in (PROJECT_ROOT, SCRIPTS_DIR):
     if str(_path) not in sys.path:
         sys.path.insert(0, str(_path))
 
+# Sibling modules of this file import by plain name, after scripts/ and the repository root, which is the
+# order the review digest (scripts/review/render_contract.server_code) traces them in.
+SERVER_DIR = Path(__file__).resolve().parent
+if str(SERVER_DIR) not in sys.path:
+    sys.path.append(str(SERVER_DIR))
+
+import word_card
+
 from scripts.rag.call_governor import CallGovernor, CallRefused, GovernorLimits
 from scripts.verification.check_ru_morph import is_russian_pattern
 from wiki.textbook_subjects import CANONICAL_TEXTBOOK_SUBJECTS
+
+if Path(word_card.__file__).resolve() != SERVER_DIR / "word_card.py":
+    # Any other module of that name would run code the review digest never hashed.
+    raise ImportError(f"word_card resolved outside the sources server directory: {word_card.__file__}")
 
 try:
     from mcp.server import Server
@@ -1317,6 +1330,29 @@ async def list_tools() -> list[Tool]:
                 "required": ["word"],
             },
         ),
+        _tool(
+            name="word_card",
+            description=(
+                "Everything the current word-card build knows about a Ukrainian word in one call: identity "
+                "(spelling, stress, POS, paradigm), CEFR, senses, relations, Russianism and heritage fields when "
+                "present, each value with its source citations and evidence ids, known gaps per field, and the "
+                "card version. Matches the card spelling or the word's VESUM lemma; homographs return several "
+                "cards. status is recomputed on every call from the review ledger: 'certified' only for an "
+                "exact certified card version; 'candidate' cards are cited source assertions, NOT accepted "
+                "facts. 'no_card' names the per-facet tools to call instead. Reads the host card build named "
+                "by LU_WORD_CARDS_DIR."
+            ),
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "word": {
+                        "type": "string",
+                        "description": "Ukrainian word, form or multiword expression (e.g., 'баран', 'вряди-годи')",
+                    },
+                },
+                "required": ["word"],
+            },
+        ),
     ]
 
 
@@ -1384,6 +1420,11 @@ async def handle_check_russian_shadow(args: dict):
     threshold = args.get("threshold", 0.7)
     result = await asyncio.to_thread(is_russian_pattern, word, threshold)
     return [TextContent(type="text", text=json.dumps(result, indent=2, ensure_ascii=False))]
+
+
+async def handle_word_card(args: dict):
+    result = await asyncio.to_thread(word_card.lookup_word_card, args.get("word"))
+    return [TextContent(type="text", text=json.dumps(result, indent=1, ensure_ascii=False))]
 
 
 def _normalize_quote_text(value: str) -> str:
@@ -1931,6 +1972,7 @@ async def _dispatch_tool_call(
             "search_idioms": lambda: handle_dict_search(arguments, "frazeolohichnyi", "Фразеологічний"),
             "search_synonyms": lambda: handle_dict_search(arguments, "ukrajinet", "Ukrajinet WordNet"),
             "translate_en_uk": lambda: handle_dict_search(arguments, "balla_en_uk", "Балла EN→UK"),
+            "word_card": lambda: handle_word_card(arguments),
         }
         handler = _handlers.get(name)
         if handler:
