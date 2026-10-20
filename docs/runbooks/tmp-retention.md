@@ -70,6 +70,13 @@ its disk space. Summary output includes pytest counts, bytes, protected
 exceptions and quarantine totals without entry names. General managed-root
 protection remains in force.
 
+A live owner stays exempt as `owner_alive` even after it calls `preserve()`
+and releases its lock. Owner liveness is checked again after the quarantine
+rename; an unavailable owner probe returns the run even if its tree fingerprint
+is unchanged. Invalid `LU_SCRATCH_SCAN_ROOT` configuration reports
+`scan_root_invalid` and a nonzero exit while preserving the summary of any
+general temp-sweep actions already applied. It never falls back to host roots.
+
 An explicit `--basetemp` retains its caller's ownership. In particular, the
 pre-push gate already removes its own base temp after each run. This policy
 does not give the scheduled sweep authority over that gate's private trees.

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import fcntl
 import json
 import os
 import subprocess
@@ -105,8 +106,43 @@ run.preserve()
     assert proc.returncode == 0
 
 
+def test_preserved_runs_with_released_locks_keep_live_owner(area):
+    root, args = area
+    proc = subprocess.Popen(
+        [sys.executable, "-c", """
+import json, sys
+from pathlib import Path
+from scripts.common.task_scratch import allocate
+paths = []
+for _ in range(5):
+    run = allocate('pytest', root=Path(sys.argv[1]) / 'pytest-runs')
+    (run.payload_dir / 'payload').write_text('live owner')
+    run.preserve()
+    paths.append(str(run.path))
+print(json.dumps(paths), flush=True)
+sys.stdin.read()
+""", str(root)], cwd=REPO, stdin=subprocess.PIPE, stdout=subprocess.PIPE, text=True,
+    )
+    try:
+        runs = [Path(path) for path in json.loads(proc.stdout.readline())]
+        for path in runs:
+            with (path / "lease.lock").open("r+") as lock:
+                fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        assert proc.poll() is None
+        report = tmp_sweep.sweep(**args, apply=True)["pytest_retention"]
+        assert report["by_decision"] == {"preserve": 5}
+        assert report["by_reason"] == {"owner_alive": 5}
+        assert all(row["decision"] == "preserve" and row["reason"] == "owner_alive" for row in report["rows"])
+        assert all((path / "scratch" / "payload").read_text() == "live owner" for path in runs)
+        assert proc.poll() is None
+    finally:
+        proc.communicate(timeout=10)
+    assert proc.returncode == 0
+
+
 @pytest.mark.parametrize("fault", [
     "missing_lock", "wrong_identity", "unknown_task", "incomplete", "symlink", "metadata_fifo", "lock_fifo",
+    "wrong_uid", "metadata_directory", "lock_directory",
 ])
 def test_unproven_runs_are_exempt_from_retention(area, fault):
     root, args = area
@@ -118,6 +154,8 @@ def test_unproven_runs_are_exempt_from_retention(area, fault):
         (uncertain / "lease.lock").unlink()
     elif fault == "wrong_identity":
         lease["dir"]["ino"] += 1
+    elif fault == "wrong_uid":
+        lease["uid"] += 1
     elif fault == "unknown_task":
         lease["task_id"] = "other"
     elif fault == "incomplete":
@@ -128,17 +166,61 @@ def test_unproven_runs_are_exempt_from_retention(area, fault):
     elif fault == "lock_fifo":
         (uncertain / "lease.lock").unlink()
         os.mkfifo(uncertain / "lease.lock")
+    elif fault == "metadata_directory":
+        metadata.unlink()
+        metadata.mkdir()
+    elif fault == "lock_directory":
+        (uncertain / "lease.lock").unlink()
+        (uncertain / "lease.lock").mkdir()
     elif fault == "symlink":
         destination = uncertain.with_name("relocated")
         uncertain.rename(destination)
         uncertain.symlink_to(destination, target_is_directory=True)
-    if fault not in {"symlink", "metadata_fifo"}:
+    if fault not in {"symlink", "metadata_fifo", "metadata_directory"}:
         metadata.write_text(json.dumps(lease))
     report = tmp_sweep.sweep(**args, apply=True)["pytest_retention"]
     assert (uncertain / "scratch" / "payload").read_bytes() == b"x" * 4096
     assert [path for path in runs[1:] if path.exists()] == runs[-3:]
     row = next(row for row in report["rows"] if row["name"] == uncertain.name)
     assert row["decision"] == "preserve"
+    if fault in {"wrong_uid", "metadata_fifo", "lock_fifo", "metadata_directory", "lock_directory"}:
+        assert row["reason"] == "ownership_unknown"
+
+
+def test_nonprivate_namespace_preserves_all_runs(area):
+    root, args = area
+    runs = completed(root, 5)
+    runs[0].parent.chmod(0o755)
+    report = tmp_sweep.sweep(**args, apply=True)["pytest_retention"]
+    assert report["by_decision"] == {"preserve": 1}
+    assert report["by_reason"] == {"namespace_untrusted": 1}
+    assert report["errors"] == 1
+    assert all((path / "scratch" / "payload").is_file() for path in runs)
+
+
+def test_postrename_recheck_preserves_when_owner_probe_becomes_unknown(area, monkeypatch):
+    root, args = area
+    runs = completed(root, 4)
+    target = runs[0]
+    before = tmp_sweep.tree_fingerprint(target)
+    original = tmp_sweep.rename_noreplace
+    unchanged = []
+
+    def intervene(src_fd, src, dst_fd, dst):
+        original(src_fd, src, dst_fd, dst)
+        if src_fd != dst_fd and src == target.name and not target.exists():
+            quarantined = next(target.parent.glob(f"{tmp_sweep.QUARANTINE_PREFIX}*/{target.name}"))
+            unchanged.append(tmp_sweep.tree_fingerprint(quarantined) == before)
+            monkeypatch.setattr(task_scratch, "owner_alive", lambda *_: None)
+
+    monkeypatch.setattr(tmp_sweep, "rename_noreplace", intervene)
+    report = tmp_sweep.sweep(**args, apply=True)["pytest_retention"]
+    assert unchanged == [True]
+    row = next(row for row in report["rows"] if row["name"] == target.name)
+    assert row["decision"] == "preserve"
+    assert row["reason"] == "owner_liveness_unknown"
+    assert tmp_sweep.tree_fingerprint(target) == before
+    assert all((path / "scratch" / "payload").is_file() for path in runs)
 
 
 @pytest.mark.parametrize("fault", ["relocate", "substitute", "lock_swap", "namespace_swap"])
@@ -271,6 +353,37 @@ def test_scan_confinement_excludes_other_managed_roots(area, monkeypatch, tmp_pa
     report = tmp_sweep.sweep(**args, apply=True)["pytest_retention"]
     assert report["by_decision"] == {"preserve": 3, "quarantined": 1}
     assert [path for path in runs if path.exists()] == runs[-3:]
+
+
+def test_invalid_scan_root_still_reports_applied_sweep(area, monkeypatch, capsys):
+    root, args = area
+    runs = completed(root, 4)
+    candidate = args["temp_root"] / "unowned-scratch"
+    candidate.mkdir()
+    (candidate / "payload").write_text("recoverable")
+    now = tmp_sweep.time.time() + 3 * 86400
+    monkeypatch.setattr(tmp_sweep.time, "time", lambda: now)
+    monkeypatch.setattr(tmp_sweep, "protected_roots", lambda: {root})
+    monkeypatch.setattr(pytest_retention, "scratch_scan_roots", scratch_scan_roots)
+    monkeypatch.setenv("LU_SCRATCH_SCAN_ROOT", "relative-is-invalid")
+    assert tmp_sweep.main([
+        "--temp-root", str(args["temp_root"]), "--task-root", str(args["task_root"]),
+        "--state-dir", str(args["state_dir"]), "--unattributed-scratch", "--apply", "--summary",
+    ]) == 1
+    output = capsys.readouterr()
+    assert output.err == ""
+    summary = json.loads(output.out)
+    assert summary["mode"] == "apply"
+    assert summary["errors"] == 1
+    assert summary["by_decision"] == {"quarantined": 1}
+    assert summary["quarantined_entries"] == 1
+    assert summary["bytes_quarantined"] > 0
+    assert summary["pytest_retention"]["errors"] == 1
+    assert summary["pytest_retention"]["by_reason"] == {"scan_root_invalid": 1}
+    assert not candidate.exists()
+    entry = next(iter(tmp_sweep.Ledger(args["state_dir"]).entries()[0].values()))
+    assert (entry.location / "payload").read_text() == "recoverable"
+    assert all(path.is_dir() for path in runs)
 
 
 def test_real_pytest_publishes_owned_run_and_respects_explicit_base(pytester, area):

@@ -18,7 +18,7 @@ from typing import Any
 
 from scripts.common import task_scratch as ownership
 from scripts.common.pytest_scratch import NAMESPACE
-from scripts.common.scratch import scratch_scan_roots
+from scripts.common.scratch import ScratchScanRootError, scratch_scan_roots
 from scripts.hygiene import tmp_sweep as sweep
 from scripts.hygiene.tmp_sweep_ledger import Ledger
 
@@ -213,7 +213,14 @@ def sweep_pytest_runs(
     """Sweep the dedicated pytest namespace, never the general managed scratch tree."""
     rows = []
     errors = 0
-    roots = set(scratch_scan_roots())
+    try:
+        roots = set(scratch_scan_roots())
+    except ScratchScanRootError:
+        # The general temp sweep may already have applied. Keep its report and
+        # fail this confined scan closed without falling back to host roots.
+        roots = set()
+        errors += 1
+        rows.append(sweep._bare_row("pytest-runs", "scan_root_invalid"))
     for root in sorted(roots):
         namespace = root / NAMESPACE / ownership.NAMESPACE_DIRNAME
         try:
