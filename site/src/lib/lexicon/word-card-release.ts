@@ -18,6 +18,7 @@ const manifestSchema = z.object({
   dataset_file: z.enum(['word-cards.json', 'word-cards.jsonl']), dataset_sha256: digest,
   dataset_bytes: count, card_count: count, certified_count: count,
   candidate_count: count, field_citation_count: count,
+  source_breakdown: z.record(nonempty, z.object({ filtered_assertions: count, filter_reasons: z.record(nonempty, count) })).optional(),
   withdrawal_notice_sha256: digest.optional(),
 });
 const citationSchema = z.object({
@@ -39,7 +40,8 @@ const rowSchema = z.object({
 }).strict();
 export type ReleasePin = z.infer<typeof pinSchema>;
 export type ReleaseRow = z.infer<typeof rowSchema>;
-export type LoadedRelease = { kind: 'release'; pin: ReleasePin; rows: ReleaseRow[]; withdrawalNotice?: z.infer<typeof json> };
+export type LoadedRelease = { kind: 'release'; pin: ReleasePin; rows: ReleaseRow[]; withdrawalNotice?: z.infer<typeof json>;
+  filteredAssertions?: z.infer<typeof manifestSchema>['source_breakdown'] };
 export type ReleaseResult = LoadedRelease | { kind: 'disabled' } | { kind: 'unavailable'; reason: string };
 export type ReleaseCard = { kind: 'release-card'; row: ReleaseRow } & Pick<LoadedRelease, 'pin' | 'withdrawalNotice'>;
 
@@ -103,7 +105,7 @@ function parse(bytes: Buffer, reason: string): unknown {
 }
 
 /** Local build boundary. Disabled previews return before parsing config or reading any path. */
-export function loadWordCardRelease(config: { enabled: boolean; artifactPath?: string; pin?: string }): ReleaseResult {
+export function loadWordCardRelease(config: { enabled: boolean; artifactPath?: string; pin?: string; public?: boolean }): ReleaseResult {
   if (!config.enabled) return { kind: 'disabled' };
   if (!config.artifactPath && !config.pin) return { kind: 'unavailable', reason: 'Release not configured' };
   try {
@@ -111,6 +113,7 @@ export function loadWordCardRelease(config: { enabled: boolean; artifactPath?: s
     const pinResult = pinSchema.safeParse(parse(Buffer.from(config.pin), 'Malformed release pin'));
     if (!pinResult.success) refuse('Malformed release pin');
     const pin = pinResult.data;
+    if (config.public && pin.provenance !== 'producer-declared') refuse('Synthetic provenance forbidden in public preview');
     const manifestBytes = read(join(config.artifactPath, 'manifest.json'));
     if (hash(manifestBytes) !== pin.manifest_sha256) refuse('Manifest pin mismatch');
     const manifestResult = manifestSchema.safeParse(parse(manifestBytes, 'Malformed manifest'));
@@ -164,10 +167,35 @@ export function loadWordCardRelease(config: { enabled: boolean; artifactPath?: s
     if (rows.length !== manifest.card_count || assertions.size !== manifest.field_citation_count ||
         rows.filter(r => r.status === 'CERTIFIED').length !== manifest.certified_count ||
         rows.filter(r => r.status === 'CANDIDATE').length !== manifest.candidate_count) refuse('Manifest count mismatch');
-    return { kind: 'release', rows, pin, ...(withdrawalNotice === undefined ? {} : { withdrawalNotice }) };
+    return { kind: 'release', rows, pin, filteredAssertions: manifest.source_breakdown,
+      ...(withdrawalNotice === undefined ? {} : { withdrawalNotice }) };
   } catch (error) {
     return { kind: 'unavailable', reason: error instanceof Refusal ? error.message : 'Unsupported release input' };
   }
+}
+
+export function attributionGap(citation: ReleaseRow['fields'][number]['citation']): string | null {
+  if (citation.source_id === 'puls' && citation.attribution === 'PULS citation above.') return 'puls_reference_placeholder';
+  if (citation.source_id === 'vesum' && citation.attribution.includes('<used version>')) return 'vesum_version_placeholder';
+  return null;
+}
+
+export function attributionLinks(attribution: string): string[] {
+  return [...new Set(attribution.match(/https:\/\/[^\s<>"']+/g) || [])].filter(url => {
+    try { return ['lcorp.ulif.org.ua', 'vesum.nlp.net.ua'].includes(new URL(url).hostname) && !new URL(url).username && !new URL(url).password; }
+    catch { return false; }
+  });
+}
+
+export function releaseAccounting(rows: ReleaseRow[]) {
+  const fields = rows.flatMap(row => row.fields);
+  const absent = [...new Set([...cardSchema.$defs.card_field_name.enum, ...cardSchema.$defs.sense_field_name.enum])]
+    .filter(name => !fields.some(field => field.field === name));
+  const counts = (values: string[]) => Object.fromEntries([...new Set(values)].sort().map(value => [value, values.filter(v => v === value).length]));
+  return { cards: rows.length, statuses: counts(rows.map(row => row.status)), citations: fields.length,
+    sources: counts(fields.map(field => field.citation.source_id)),
+    attributionGaps: counts(fields.flatMap(field => { const gap = attributionGap(field.citation); return gap ? [gap] : []; })),
+    declaredGaps: rows.reduce((n, row) => n + row.known_gaps.length, 0), absentFieldClasses: absent };
 }
 
 export function releaseReportUrl(card: ReleaseCard, field: ReleaseRow['fields'][number]): string {

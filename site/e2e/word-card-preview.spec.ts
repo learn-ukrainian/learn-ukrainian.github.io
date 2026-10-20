@@ -10,6 +10,9 @@ import snapshot from '../tests/fixtures/word-card-preview/current';
 import { revisionCases, relationCases, record } from '../tests/fixtures/word-card-preview/inputs';
 import { buildPreview, releaseControls, candidateId, certifiedId, pins, fidelityControls, fidelityRefusals, semanticCases, semanticControls, noticeCases, noticeControls } from '../tests/fixtures/word-card-preview/release-controls';
 
+// Historical controls require an explicit test build; public builds omit this flag.
+process.env.PUBLIC_ATLAS_WORD_CARD_PREVIEW_CONTROLS = '1';
+
 async function withScratch(prefix: string, logs: string, use: (scratch: string) => Promise<void>): Promise<void> {
   const scratch = mkdtempSync(join(process.env.TMPDIR || tmpdir(), prefix));
   try {
@@ -38,6 +41,161 @@ const test = base.extend<{ fidelityScratch: string }, { releaseScratch: string }
     await withScratch('release-browser-', join(info.project.outputDir, `release-build-logs-${info.workerIndex}`), use);
   }, { scope: 'worker' }],
 });
+
+// Actual-release proof is an explicit local configuration; CI controls remain offline.
+if (process.env.ATLAS_WORD_CARD_PUBLIC_PROOF_PATH) test('public pinned release: all routes, frozen literals and fixture isolation', async ({ page }, info) => {
+  test.setTimeout(600_000);
+  const artifactPath = process.env.ATLAS_WORD_CARD_PUBLIC_PROOF_PATH;
+  const expectationsPath = process.env.ATLAS_WORD_CARD_EXPECTATIONS_PATH;
+  if (!artifactPath || !expectationsPath) throw Error('Public proof requires frozen expectations');
+  const sha = (bytes: string | Buffer) => createHash('sha256').update(bytes).digest('hex');
+  const canonical = (value: unknown): string => {
+    if (Array.isArray(value)) return `[${value.map(canonical).join(',')}]`;
+    if (value !== null && typeof value === 'object') return `{${Object.entries(value).sort(([a], [b]) => a < b ? -1 : a > b ? 1 : 0).map(([k, v]) => `${JSON.stringify(k)}:${canonical(v)}`).join(',')}}`;
+    return JSON.stringify(value);
+  };
+  const bytes = readFileSync(join(artifactPath, 'word-cards.jsonl'));
+  expect(sha(bytes)).toBe('45bd9c9325a3b4221c86d1663d784e96a7edc096674415445d37113f793189e6');
+  expect(sha(readFileSync(join(artifactPath, 'manifest.json')))).toBe('ca182bf5829f3ed4daa80c2394eb87e28879c3f1dc5088eef689f495b97e4f75');
+  const frozenBytes = readFileSync(expectationsPath);
+  expect(sha(frozenBytes)).toBe('1e86726fb4244c2e31b7a2f67ef7d52fc78ef3fc1de3d1659d1c9b06c8d7a68a');
+  const frozen = record(JSON.parse(frozenBytes.toString()));
+  if (!Array.isArray(frozen.assertions)) throw Error('Missing frozen assertions');
+  const expected = new Map(frozen.assertions.map(value => { const a = record(value); return [`${a.card_id}/${a.assertion_id}`, a]; }));
+  const rows = bytes.toString().trimEnd().split('\n').map(line => record(JSON.parse(line)));
+  const root = mkdtempSync(join(process.env.TMPDIR || tmpdir(), 'public-release-proof-'));
+  const controls = readdirSync('../docs/atlas/word-cards/examples').filter(name => name.endsWith('.json')).flatMap(name => {
+    const input = readFileSync(join('../docs/atlas/word-cards/examples', name));
+    return [String(record(JSON.parse(input.toString())).card_id), sha(input)];
+  });
+  const sentinels = [...new Set([...controls, candidateId, certifiedId, ...Object.values(pins).flatMap(pin => [pin.dataset_sha256, pin.manifest_sha256]),
+    sha(readFileSync('tests/fixtures/word-card-preview/current.ts')), sha(JSON.stringify(snapshot)), 'CONTROL_RAW', 'CONTROL_NORM', 'EXAMPLE_RAW', 'fixture-head', 'synthetic-candidate-1'])];
+  const overlap = sentinels.filter(marker => bytes.includes(marker));
+  writeFileSync(join(root, 'sentinels-before-build.json'), JSON.stringify({ sentinels, overlap }, null, 2));
+  // Keep the real home page so sitemap exclusion has a positive ordinary-route control.
+  mkdirSync(join(root, 'public/src/pages'), { recursive: true });
+  copyFileSync('src/pages/index.astro', join(root, 'public/src/pages/index.astro'));
+  process.env.PUBLIC_ATLAS_WORD_CARD_PREVIEW_CONTROLS = '';
+  let output: string;
+  try { output = buildPreview(join(root, 'public'), { enabled: true, artifactPath }); }
+  finally { process.env.PUBLIC_ATLAS_WORD_CARD_PREVIEW_CONTROLS = '1'; }
+  const files = readdirSync(output, { recursive: true }).filter((name): name is string => typeof name === 'string');
+  const routes = files.filter(name => name.startsWith('lexicon-v2/') && name.endsWith('/index.html'));
+  expect(routes).toHaveLength(302);
+  expect(routes.sort()).toEqual(['lexicon-v2/release/index.html', 'lexicon-v2/compare/release/index.html', ...rows.flatMap(row =>
+    ['', 'compare/'].map(prefix => `lexicon-v2/${prefix}release/${row.card_id}/index.html`))].sort());
+  const scanned = files.filter(name => /\.(html|js|xml)$/.test(name));
+  expect(files).toEqual(expect.arrayContaining(['sitemap-index.xml', 'sitemap-0.xml']));
+  expect(readFileSync(join(output, 'sitemap-0.xml'), 'utf8')).toContain('<loc>https://learn-ukrainian.github.io/</loc>');
+  for (const file of scanned) {
+    const text = readFileSync(join(output, file), 'utf8');
+    for (const marker of sentinels.filter(marker => !overlap.includes(marker))) expect(text, `${file}: ${marker}`).not.toContain(marker);
+    if (file.endsWith('.xml')) expect(text).not.toContain('/lexicon-v2/');
+  }
+  const server = createServer((req, res) => {
+    const path = new URL(req.url || '/', 'http://localhost').pathname;
+    const file = resolve(output, '.' + (path.endsWith('/') ? path + 'index.html' : path));
+    if (!file.startsWith(output + sep) || !existsSync(file)) { res.writeHead(404).end(); return; }
+    res.setHeader('Content-Type', file.endsWith('.css') ? 'text/css' : file.endsWith('.js') ? 'text/javascript' : 'text/html');
+    res.end(readFileSync(file));
+  });
+  await new Promise<void>(done => server.listen(0, '127.0.0.1', done));
+  const address = server.address();
+  if (!address || typeof address === 'string') throw Error('No public proof port');
+  let checked = 0;
+  try {
+    for (const prefix of ['', 'compare/']) {
+      for (const row of rows) {
+        await page.goto(`http://127.0.0.1:${address.port}/lexicon-v2/${prefix}release/${row.card_id}/`);
+        await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex, nofollow');
+        await expect(page.locator('[data-preview-banner]')).toBeVisible();
+        await expect(page.locator('[data-release-status]')).toHaveText('CANDIDATE');
+        await expect(page.locator('[data-card-version]')).toHaveText(`Card version ${row.card_version}`);
+        await expect(page.locator('[data-release-version]')).toHaveText('Release v0.1.0-pilot');
+        await expect(page.getByRole('region', { name: 'Known gaps', exact: true })).toContainText('No declared gaps');
+        if (!Array.isArray(row.fields)) throw Error('Missing source fields');
+        const displayed = await page.locator('[data-release-assertion]').evaluateAll(nodes => nodes.map(node => ({
+          id: node.getAttribute('data-release-assertion'), value: node.querySelector('[data-raw-value]')?.textContent,
+          citation: node.querySelector('[data-release-citation]')?.textContent, attribution: node.querySelector('[data-source-attribution]')?.textContent,
+          field: node.querySelector('h4')?.textContent, subject: node.querySelector('p')?.textContent,
+          links: Array.from(node.querySelectorAll('[data-source-link]')).map(link => link.getAttribute('href')),
+          report: node.querySelector('[data-report-action]')?.getAttribute('href'), gap: node.querySelector('[data-attribution-gap]')?.getAttribute('data-attribution-gap'),
+        })));
+        expect(displayed).toHaveLength(row.fields.length);
+        for (const value of row.fields) {
+          const source = record(value), expectedField = expected.get(`${row.card_id}/${source.assertion_id}`);
+          const actual = displayed.find(item => item.id === source.assertion_id);
+          if (!actual?.citation || !actual.report || !expectedField) throw Error('Missing frozen/displayed assertion');
+          expect(sha(canonical(source.value))).toBe(expectedField.value_sha256);
+          expect(sha(canonical(record(source.citation)))).toBe(expectedField.citation_sha256);
+          expect(actual.value).toBe(typeof source.value === 'string' ? source.value : JSON.stringify(source.value, null, 2));
+          expect(sha(canonical(JSON.parse(actual.citation)))).toBe(expectedField.citation_sha256);
+          expect(actual.attribution).toBe(record(source.citation).attribution);
+          expect(actual.field).toBe(expectedField.field);
+          expect(actual.subject).toBe(`${record(source.subject).kind}: ${record(source.subject).id}`);
+          const citation = record(source.citation);
+          expect(actual.links).toEqual(citation.source_id === 'ulif' ? ['https://lcorp.ulif.org.ua/dictua/'] : citation.source_id === 'vesum' ? ['https://vesum.nlp.net.ua/'] : []);
+          expect(actual.gap ?? null).toBe(citation.source_id === 'puls' ? 'puls_reference_placeholder' : citation.source_id === 'vesum' ? 'vesum_version_placeholder' : null);
+          expect(JSON.parse(new URL(actual.report).searchParams.get('body') || '')).toEqual({ release_version: 'v0.1.0-pilot', dataset_sha256: sha(bytes),
+            card_id: row.card_id, card_version: row.card_version, assertion_id: source.assertion_id, field: source.field });
+          checked++;
+        }
+        await expect(page.locator('[data-comparison], [data-word-atlas], [data-result]')).toHaveCount(0);
+        if (prefix) await expect(page.getByRole('region', { name: 'Field comparison', exact: true })).toContainText('Unresolved pairing');
+      }
+      await page.goto(`http://127.0.0.1:${address.port}/lexicon-v2/${prefix}release/`);
+      await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex, nofollow');
+      await expect(page.locator('[data-card-link]')).toHaveCount(150);
+      await expect(page.locator('[data-compare-link]')).toHaveCount(150);
+      const stats = JSON.parse(await page.locator('[data-release-accounting]').innerText());
+      expect(stats).toMatchObject({ cards: 150, citations: 2978, statuses: { CANDIDATE: 150 }, declaredGaps: 0,
+        sources: frozen.source_counts, attributionGaps: frozen.attribution_gap_counts });
+      expect(stats.absentFieldClasses).toEqual(expect.arrayContaining(['definition_uk', 'examples']));
+      expect(JSON.parse(await page.locator('[data-filtered-assertions]').innerText())).toMatchObject({ puls: { filtered_assertions: 29 }, ulif: { filtered_assertions: 156 } });
+      await expect(page.locator('[data-pairing-count]')).toHaveText('0/150 paired; 150/150 explicitly unpaired. 0 actual comparisons.');
+      await info.attach(`public-summary-${prefix ? 'comparison' : 'normal'}`, { body: await page.screenshot(), contentType: 'image/png' });
+    }
+    expect(checked).toBe(5956);
+    await page.goto(`http://127.0.0.1:${address.port}/lexicon-v2/release/${rows[0]?.card_id}/`);
+    const requests: string[] = [];
+    await page.route('https://github.com/**', route => { requests.push(route.request().url()); return route.fulfill({ body: 'Manual public report draft' }); });
+    const report = page.locator('[data-report-action]').first(), href = await report.getAttribute('href');
+    expect(requests).toEqual([]);
+    await report.click();
+    await expect(page.getByText('Manual public report draft')).toBeVisible();
+    expect(requests).toEqual([href]);
+    writeFileSync(join(root, 'proof.json'), JSON.stringify({ routes, scanned, overlap, checked, expectedAssertions: expected.size,
+      dataset: sha(bytes), expectations: sha(frozenBytes), paired: 0, unpaired: 150, currentBaseline: null,
+      residualOwners: { pairing: 'Data/Atlas', attribution: 'Data', publication: 'Delivery', landing: 'Atlas' } }, null, 2));
+    await info.attach('public-proof-path', { body: root, contentType: 'text/plain' });
+  } finally { await closePreview(server); }
+});
+
+test('public configuration refuses synthetic, missing, tampered and malformed inputs; flag-off stays empty', async ({ fidelityScratch: scratch }) => {
+  test.setTimeout(180_000);
+  const controls = releaseControls(join(scratch, 'public-refusals'));
+  const reasons = { base: 'Synthetic provenance forbidden in public preview', missing: 'Missing artifact',
+    bytes: 'Dataset integrity mismatch', tamper: 'Manifest pin mismatch', status: 'Unknown card status', citation: 'Missing or malformed field citation' };
+  process.env.PUBLIC_ATLAS_WORD_CARD_PREVIEW_CONTROLS = '';
+  try {
+    for (const [name, reason] of Object.entries(reasons)) {
+      const config = controls[name];
+      if (!config?.pin) throw Error('Missing public refusal control');
+      const pin = name === 'base' ? config.pin : JSON.stringify({ ...JSON.parse(config.pin), provenance: 'producer-declared' });
+      const output = buildPreview(join(scratch, `public-${name}`), { ...config, pin });
+      const html = readFileSync(join(output, 'lexicon-v2/release/index.html'), 'utf8');
+      expect(html.replaceAll('<!-- -->', '')).toContain(`Unavailable: ${reason}`);
+      expect(html).not.toContain('data-release-card=');
+      expect(readdirSync(join(output, 'lexicon-v2/release'))).toEqual(['index.html']);
+    }
+    const output = buildPreview(join(scratch, 'public-off'), { ...controls.base, enabled: false });
+    expect(existsSync(join(output, 'lexicon-v2'))).toBe(false);
+    for (const name of readdirSync(output, { recursive: true })) if (typeof name === 'string' && /\.(html|js|xml)$/.test(name)) {
+      expect(readFileSync(join(output, name), 'utf8')).not.toMatch(/fixture-head|synthetic-candidate-1|wc_0123456789a[bc]/);
+    }
+  } finally { process.env.PUBLIC_ATLAS_WORD_CARD_PREVIEW_CONTROLS = '1'; }
+});
+
 
 for (const prefix of ['fidelity-browser-', 'release-browser-']) test(`releases ${prefix}scratch after success and failure`, async ({}, info) => {
   for (const fail of [false, true]) {
