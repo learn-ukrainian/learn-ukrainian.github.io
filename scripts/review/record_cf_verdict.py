@@ -1772,6 +1772,10 @@ def record(
         or not is_security_sensitive_change(facts.changed_paths)
     ):
         raise RecordError("security-signoff requires a qualified critical APPROVE on security-sensitive paths")
+    # The red-team waiver (same family, admitted unknown history) relaxes independence for
+    # ordinary CF only. Cross-family mode already refused every excluded author family above.
+    if security_signoff and review_mode != "cross_family":
+        raise RecordError("security-signoff requires an independent cross-family review with known history")
     adapter = GitHubAdapter(Path.cwd())
     login = adapter.identity()
     reply = repository_relative_reply(reply, task=task, primary_root=root or _repo_root())

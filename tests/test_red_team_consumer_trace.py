@@ -28,7 +28,7 @@ HANDLING = {
     "scripts/lexicon/published_record_dispositions.py": "refuse",
     "scripts/orchestration/integration_sweep.py#CI-blocker-exclusion": "ignore",
     "scripts/review/record_cf_verdict.py": "accept-as-approval",
-    "scripts/review/security_signoff.py": "ignore",
+    "scripts/review/security_signoff.py": "refuse",
     "scripts/fleet_comms/cli.py": "ignore",
     "scripts/fleet_comms/efficiency_metrics.py": "ignore",
     "scripts/entire_context/resolvers.py": "ignore",
@@ -115,7 +115,37 @@ def test_security_gate_ignores_cf_approval_without_explicit_signoff(mode):
         require_security_signoff(SHA, **readers)
     row["body"] = f"<!-- security-signoff v1 sha={SHA} task=security-review verdict=PASS model=gpt-6.1-sol -->"
     require_security_signoff(SHA, **readers)
-    assert HANDLING["scripts/review/security_signoff.py"] == "ignore"
+
+
+@pytest.mark.parametrize("mode", ["cross_family", "red_team"])
+def test_security_gate_refuses_red_team_signoff(mode):
+    """A red-team APPROVE clears ordinary CF only; its sign-off marker is never independent."""
+    from tests.orchestration.test_integration_sweep import SHA
+
+    row = _comment(mode, login="fleet")
+    row["body"] = build_comment(
+        sha=SHA,
+        task_id="security-review",
+        started="2026-10-11T00:00:00.000001+00:00",
+        verdict="APPROVED",
+        model="gpt-6.1-sol",
+        family="openai",
+        reply="VERDICT: APPROVE",
+        review_mode=mode,
+        security_signoff=True,
+    )
+    readers = {
+        "read_files": lambda: [{"filename": "scripts/hooks/guard.py"}],
+        "read_comments": lambda: [row],
+        "read_login": lambda: "fleet",
+    }
+    if mode == "red_team":
+        with pytest.raises(SecuritySignoffError, match="required for current head"):
+            require_security_signoff(SHA, **readers)
+        assert sweep.lookup_verdict([row], SHA, "fleet").state == "APPROVED"
+    else:
+        require_security_signoff(SHA, **readers)
+    assert HANDLING["scripts/review/security_signoff.py"] == "refuse"
 
 
 def test_fleet_board_counts_red_team_as_ready():

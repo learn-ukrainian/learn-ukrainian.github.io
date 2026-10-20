@@ -6,7 +6,16 @@ import re
 from collections.abc import Callable, Mapping, Sequence
 from typing import Any
 
-from scripts.orchestration.integration_sweep import TRUSTED_ASSOCIATIONS, _author_login, _edited, _field
+from scripts.orchestration.integration_sweep import (
+    MARKER_PREFIX as CF_MARKER_PREFIX,
+)
+from scripts.orchestration.integration_sweep import (
+    TRUSTED_ASSOCIATIONS,
+    _author_login,
+    _edited,
+    _field,
+    parse_marker,
+)
 from scripts.review.security_paths import is_security_sensitive_change
 
 MARKER_PREFIX = "<!-- security-signoff"
@@ -31,6 +40,26 @@ def parse_security_signoff(body: str) -> dict[str, str] | None:
         if match and match["model"] in SIGNOFF_MODELS:
             return match.groupdict()
     return None
+
+
+def _independent_review(body: str, signoff: Mapping[str, str]) -> bool:
+    """A marker beside a cf-verdict needs that verdict's cross-family, known-history APPROVE.
+
+    Red-team mode and unknown history are ordinary-CF waivers, never independent sign-off.
+    A body without a cf-verdict keeps the bare-marker handling unchanged.
+    """
+    if CF_MARKER_PREFIX not in body:
+        return True
+    verdict = parse_marker(body)
+    return bool(
+        verdict
+        and verdict["verdict"] == "APPROVED"
+        and verdict["sha"] == signoff["sha"].lower()
+        and verdict["task"] == signoff["task"]
+        and verdict["model"] == signoff["model"]
+        and "review_mode" not in verdict
+        and not verdict.get("unknown_history")
+    )
 
 
 def require_security_signoff(
@@ -81,6 +110,7 @@ def require_security_signoff(
                 and _author_login(comment) == login
                 and _field(comment, "author_association", "authorAssociation") in TRUSTED_ASSOCIATIONS
                 and not _edited(comment)
+                and _independent_review(comment["body"], marker)
             ):
                 return
     except Exception as exc:

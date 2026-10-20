@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import subprocess
+from dataclasses import replace
 
 import pytest
 
@@ -15,7 +16,7 @@ from scripts.review.security_signoff import SecuritySignoffError, parse_security
 from tests.opsec_fixtures import CATALOG, synthetic_rules
 from tests.orchestration.test_merge_queue_keeper import FakeGitHub
 from tests.publish.test_pr_merge_squash_scan import transport
-from tests.test_record_cf_verdict import facts_for, setup_record, write_task
+from tests.test_record_cf_verdict import facts_for, red_team_task, setup_record, write_task
 
 HEAD = "a" * 40
 OTHER = "b" * 40
@@ -30,6 +31,27 @@ def signoff_opsec(synthetic_opsec):
 
 def marker(*, head=HEAD, model="gpt-6.1-sol", verdict="PASS", task="review-one"):
     return f"<!-- security-signoff v1 sha={head} task={task} verdict={verdict} model={model} -->"
+
+
+def combined(*, mode="cross_family", history=(), verdict="APPROVED", sha=HEAD, signoff=None):
+    """The recorder's one comment carrying a cf-verdict and the security marker."""
+    body = recorder.build_comment(
+        sha=sha, task_id="review-one", started="2026-09-01T00:00:00.000001+00:00", verdict=verdict,
+        model="gpt-6.1-sol", family="openai", reply=f"VERDICT: {verdict}", review_mode=mode,
+        unknown_history=history, security_signoff=True,
+    )
+    return body if signoff is None else body.replace(marker(head=sha), signoff)
+
+
+COMBINED = {
+    "combined-cross-family": combined(),
+    "combined-red-team": combined(mode="red_team"),
+    "combined-unknown-history": combined(mode="red_team", history=(OTHER,)),
+    "combined-rejected": combined(verdict="CHANGES_REQUESTED"),
+    "combined-other-task": combined(signoff=marker(task="other-review")),
+    "combined-other-model": combined(signoff=marker(model="claude-opus-5-5")),
+    "combined-other-cf-head": combined(sha=OTHER, signoff=marker()),
+}
 
 
 def comment(body, *, login="driver", association="MEMBER", edited=False):
@@ -61,7 +83,9 @@ def test_parser_rejects_invalid_markers(body):
     ("missing", False), ("matching", True), ("other-head", False), ("non-sensitive", True),
     ("unreadable", False), ("wrong-model", False), ("wrong-verdict", False),
     ("untrusted", False), ("edited", False), ("renamed-away", False), ("malformed-paths", False),
-    ("ordinary-cf", False),
+    ("ordinary-cf", False), ("combined-cross-family", True), ("combined-red-team", False),
+    ("combined-unknown-history", False), ("combined-rejected", False), ("combined-other-task", False),
+    ("combined-other-model", False), ("combined-other-cf-head", False),
 ])
 def test_enqueue_tools_require_security_signoff(tool, case, allowed, tmp_path, monkeypatch, synthetic_opsec):
     monkeypatch.setattr(gate, "catalog", lambda: CATALOG)
@@ -85,6 +109,8 @@ def test_enqueue_tools_require_security_signoff(tool, case, allowed, tmp_path, m
     proofs = [proof] if case in {"matching", "other-head", "wrong-model", "wrong-verdict", "untrusted", "edited"} else []
     if case == "ordinary-cf":
         proofs = FakeGitHub().comments_rows[:1]
+    if case in COMBINED:
+        proofs = [comment(COMBINED[case])]
     if tool == "keeper":
         fake = FakeGitHub()
         fake.file_rows = rows
@@ -128,6 +154,16 @@ def test_enqueue_tools_require_security_signoff(tool, case, allowed, tmp_path, m
         with pytest.raises(gate.PublishBlocked, match="security-signoff"):
             publisher.publish("pr-merge", repo="unit/public", number=1, runner=send)
     assert len(writes) == int(allowed)
+
+
+def test_shared_gate_refuses_marker_beside_malformed_cf_verdict():
+    # The keeper's ordinary CF gate already stops on this body; the shared gate must too.
+    body = marker() + "\n<!-- cf-verdict v1 sha=" + HEAD + " -->"
+    with pytest.raises(SecuritySignoffError, match="required for current head"):
+        require_security_signoff(
+            HEAD, read_files=lambda: [{"filename": SENSITIVE}],
+            read_comments=lambda: [comment(body)], read_login=lambda: "driver",
+        )
 
 
 def test_shared_gate_keeps_non_sensitive_evidence_reads_lazy():
@@ -260,6 +296,38 @@ def test_recorder_refuses_unqualified_signoff(updates, reply, paths, head, tmp_p
     with pytest.raises(recorder.RecordError):
         recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks", security_signoff=True)
     assert comments == [] and calls == {"posts": 0, "statuses": 0}
+
+
+def _red_team_signoff_case(case, tmp_path, monkeypatch):
+    """A qualified critical red-team APPROVE: same family, or admitted unknown history."""
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path, families={"openai"})
+    facts = facts_for({"openai"}, changed_paths=(SENSITIVE,))
+    updates = {"review_risk": "critical"}
+    if case == "unknown-history":
+        write_task(tasks, task_id="current-author", model="gpt-6-luna")
+        current = recorder._attribute_commit(
+            {"sha": HEAD, "commit": {"message": "change\n\nX-Agent: codex/current-author"}},
+            repository="owner/repo", task_root=tasks, base_sha=lambda: OTHER,
+        )
+        history = recorder.CommitAttribution(OTHER, "unknown", "unknown_historical")
+        facts = replace(facts_for({"unknown", "openai"}, changed_paths=(SENSITIVE,)), commits=(history, current))
+        monkeypatch.setattr(recorder, "admitted_unknown_history", lambda **_kwargs: (OTHER,))
+        updates["review_branch_facts"] = {"unknown_history": [OTHER]}
+    monkeypatch.setattr(recorder, "pr_review_facts", lambda *a, **k: facts)
+    prompt = red_team_task(tasks, tmp_path, **updates)
+    kwargs = {"pr_number": 42, "task_root": tasks, "lock_root": tmp_path / "locks", "red_team_prompt": prompt}
+    return comments, calls, kwargs
+
+
+@pytest.mark.parametrize("case", ["same-family", "unknown-history"])
+def test_recorder_refuses_red_team_signoff(case, tmp_path, monkeypatch, signoff_opsec):
+    comments, calls, kwargs = _red_team_signoff_case(case, tmp_path, monkeypatch)
+    with pytest.raises(recorder.RecordError, match="independent cross-family review with known history"):
+        recorder.record("review-one", security_signoff=True, **kwargs)
+    assert comments == [] and calls == {"posts": 0, "statuses": 0}
+    # Ordinary red-team publication of the same review is unchanged and carries no sign-off.
+    assert recorder.record("review-one", **kwargs)["review_mode"] == "red_team"
+    assert parse_security_signoff(comments[0]["body"]) is None
 
 
 def test_reviewer_reply_cannot_inject_security_marker():
