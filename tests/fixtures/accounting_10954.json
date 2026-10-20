@@ -1,0 +1,396 @@
+[
+  {
+    "pin": "claude-sonnet-5-5-high",
+    "case": "matched",
+    "expected": {
+      "requested_selector": "claude-sonnet-5-5-high",
+      "observed_model": "claude-sonnet-5-5-high",
+      "identity_state": "observed",
+      "observed_model_source": "provider-init"
+    },
+    "model": "claude-sonnet-5-5-high",
+    "substituted": false,
+    "expected_provenance": {
+      "requested_model": "claude-sonnet-5-5-high",
+      "invocation_id": "current-invocation"
+    }
+  },
+  {
+    "pin": "claude-sonnet-5-5-high",
+    "case": "provider-failure",
+    "expected": {
+      "requested_selector": "claude-sonnet-5-5-high",
+      "observed_model": "claude-sonnet-5-5-high",
+      "identity_state": "observed",
+      "observed_model_source": "provider-init"
+    },
+    "model": "claude-sonnet-5-5-high",
+    "substituted": false,
+    "expected_provenance": {
+      "requested_model": "claude-sonnet-5-5-high",
+      "invocation_id": "current-invocation"
+    }
+  },
+  {
+    "pin": "claude-sonnet-5-5-high",
+    "case": "other-pin",
+    "expected": {
+      "requested_selector": "claude-sonnet-5-5-high",
+      "observed_model": "claude-opus-5-5-high",
+      "identity_state": "observed",
+      "observed_model_source": "provider-init"
+    },
+    "model": "claude-opus-5-5-high",
+    "substituted": true,
+    "expected_provenance": {
+      "requested_model": "claude-sonnet-5-5-high",
+      "invocation_id": "current-invocation"
+    }
+  },
+  {
+    "pin": "claude-sonnet-5-5-high",
+    "case": "other-family",
+    "expected": {
+      "requested_selector": "claude-sonnet-5-5-high",
+      "observed_model": "gemini-3.8-flash-high",
+      "identity_state": "observed",
+      "observed_model_source": "provider-init"
+    },
+    "model": "gemini-3.8-flash-high",
+    "substituted": true,
+    "expected_provenance": {
+      "requested_model": "claude-sonnet-5-5-high",
+      "invocation_id": "current-invocation"
+    }
+  },
+  {
+    "pin": "claude-sonnet-5-5-high",
+    "case": "repeated",
+    "expected": {
+      "requested_selector": "claude-sonnet-5-5-high",
+      "observed_model": "claude-sonnet-5-5-high",
+      "identity_state": "observed",
+      "observed_model_source": "provider-init"
+    },
+    "model": "claude-sonnet-5-5-high",
+    "substituted": true,
+    "expected_provenance": {
+      "requested_model": "claude-sonnet-5-5-high",
+      "invocation_id": "current-invocation"
+    }
+  },
+  {
+    "pin": "claude-sonnet-5-5-high",
+    "case": "nested-model",
+    "expected": {
+      "requested_selector": "claude-sonnet-5-5-high",
+      "observed_model": null,
+      "identity_state": "unknown",
+      "observed_model_source": null
+    },
+    "model": "claude-sonnet-5-5-high",
+    "substituted": false,
+    "expected_provenance": null
+  },
+  {
+    "pin": "claude-sonnet-5-5-high",
+    "case": "unknown",
+    "expected": {
+      "requested_selector": "claude-sonnet-5-5-high",
+      "observed_model": null,
+      "identity_state": "unknown",
+      "observed_model_source": null
+    },
+    "model": "claude-sonnet-5-5-high",
+    "substituted": false,
+    "expected_provenance": null
+  },
+  {
+    "pin": "claude-sonnet-5-5-high",
+    "case": "unbound",
+    "expected": {
+      "requested_selector": "claude-sonnet-5-5-high",
+      "observed_model": null,
+      "identity_state": "unknown",
+      "observed_model_source": null
+    },
+    "model": "claude-sonnet-5-5-high",
+    "substituted": false,
+    "expected_provenance": null
+  },
+  {
+    "pin": "claude-sonnet-5-5-high",
+    "case": "stale-context",
+    "expected": {
+      "requested_selector": "claude-sonnet-5-5-high",
+      "observed_model": null,
+      "identity_state": "unknown",
+      "observed_model_source": null
+    },
+    "model": "claude-sonnet-5-5-high",
+    "substituted": false,
+    "expected_provenance": null
+  },
+  {
+    "pin": "claude-opus-5-5-high",
+    "case": "matched",
+    "expected": {
+      "requested_selector": "claude-opus-5-5-high",
+      "observed_model": "claude-opus-5-5-high",
+      "identity_state": "observed",
+      "observed_model_source": "provider-init"
+    },
+    "model": "claude-opus-5-5-high",
+    "substituted": false,
+    "expected_provenance": {
+      "requested_model": "claude-opus-5-5-high",
+      "invocation_id": "current-invocation"
+    }
+  },
+  {
+    "pin": "claude-opus-5-5-high",
+    "case": "provider-failure",
+    "expected": {
+      "requested_selector": "claude-opus-5-5-high",
+      "observed_model": "claude-opus-5-5-high",
+      "identity_state": "observed",
+      "observed_model_source": "provider-init"
+    },
+    "model": "claude-opus-5-5-high",
+    "substituted": false,
+    "expected_provenance": {
+      "requested_model": "claude-opus-5-5-high",
+      "invocation_id": "current-invocation"
+    }
+  },
+  {
+    "pin": "claude-opus-5-5-high",
+    "case": "other-pin",
+    "expected": {
+      "requested_selector": "claude-opus-5-5-high",
+      "observed_model": "claude-sonnet-5-5-high",
+      "identity_state": "observed",
+      "observed_model_source": "provider-init"
+    },
+    "model": "claude-sonnet-5-5-high",
+    "substituted": true,
+    "expected_provenance": {
+      "requested_model": "claude-opus-5-5-high",
+      "invocation_id": "current-invocation"
+    }
+  },
+  {
+    "pin": "claude-opus-5-5-high",
+    "case": "other-family",
+    "expected": {
+      "requested_selector": "claude-opus-5-5-high",
+      "observed_model": "gemini-3.8-flash-high",
+      "identity_state": "observed",
+      "observed_model_source": "provider-init"
+    },
+    "model": "gemini-3.8-flash-high",
+    "substituted": true,
+    "expected_provenance": {
+      "requested_model": "claude-opus-5-5-high",
+      "invocation_id": "current-invocation"
+    }
+  },
+  {
+    "pin": "claude-opus-5-5-high",
+    "case": "repeated",
+    "expected": {
+      "requested_selector": "claude-opus-5-5-high",
+      "observed_model": "claude-opus-5-5-high",
+      "identity_state": "observed",
+      "observed_model_source": "provider-init"
+    },
+    "model": "claude-opus-5-5-high",
+    "substituted": true,
+    "expected_provenance": {
+      "requested_model": "claude-opus-5-5-high",
+      "invocation_id": "current-invocation"
+    }
+  },
+  {
+    "pin": "claude-opus-5-5-high",
+    "case": "nested-model",
+    "expected": {
+      "requested_selector": "claude-opus-5-5-high",
+      "observed_model": null,
+      "identity_state": "unknown",
+      "observed_model_source": null
+    },
+    "model": "claude-opus-5-5-high",
+    "substituted": false,
+    "expected_provenance": null
+  },
+  {
+    "pin": "claude-opus-5-5-high",
+    "case": "unknown",
+    "expected": {
+      "requested_selector": "claude-opus-5-5-high",
+      "observed_model": null,
+      "identity_state": "unknown",
+      "observed_model_source": null
+    },
+    "model": "claude-opus-5-5-high",
+    "substituted": false,
+    "expected_provenance": null
+  },
+  {
+    "pin": "claude-opus-5-5-high",
+    "case": "unbound",
+    "expected": {
+      "requested_selector": "claude-opus-5-5-high",
+      "observed_model": null,
+      "identity_state": "unknown",
+      "observed_model_source": null
+    },
+    "model": "claude-opus-5-5-high",
+    "substituted": false,
+    "expected_provenance": null
+  },
+  {
+    "pin": "claude-opus-5-5-high",
+    "case": "stale-context",
+    "expected": {
+      "requested_selector": "claude-opus-5-5-high",
+      "observed_model": null,
+      "identity_state": "unknown",
+      "observed_model_source": null
+    },
+    "model": "claude-opus-5-5-high",
+    "substituted": false,
+    "expected_provenance": null
+  },
+  {
+    "pin": "claude-sonnet-5-5-high",
+    "case": "missing",
+    "expected": {
+      "requested_selector": "claude-sonnet-5-5-high",
+      "observed_model": null,
+      "identity_state": "unknown",
+      "observed_model_source": null
+    },
+    "model": "claude-sonnet-5-5-high",
+    "substituted": false,
+    "expected_provenance": null
+  },
+  {
+    "pin": "claude-sonnet-5-5-high",
+    "case": "duplicate-after",
+    "expected": {
+      "requested_selector": "claude-sonnet-5-5-high",
+      "observed_model": null,
+      "identity_state": "unknown",
+      "observed_model_source": null
+    },
+    "model": "claude-sonnet-5-5-high",
+    "substituted": false,
+    "expected_provenance": null
+  },
+  {
+    "pin": "claude-sonnet-5-5-high",
+    "case": "terminal-session",
+    "expected": {
+      "requested_selector": "claude-sonnet-5-5-high",
+      "observed_model": null,
+      "identity_state": "unknown",
+      "observed_model_source": null
+    },
+    "model": "claude-sonnet-5-5-high",
+    "substituted": false,
+    "expected_provenance": null
+  },
+  {
+    "pin": "claude-sonnet-5-5-high",
+    "case": "repeated-model",
+    "expected": {
+      "requested_selector": "claude-sonnet-5-5-high",
+      "observed_model": null,
+      "identity_state": "unknown",
+      "observed_model_source": null
+    },
+    "model": "claude-sonnet-5-5-high",
+    "substituted": false,
+    "expected_provenance": null
+  },
+  {
+    "pin": "claude-sonnet-5-5-high",
+    "case": "configuration",
+    "expected": {
+      "requested_selector": "claude-sonnet-5-5-high",
+      "observed_model": null,
+      "identity_state": "unknown",
+      "observed_model_source": null
+    },
+    "model": "claude-sonnet-5-5-high",
+    "substituted": false,
+    "expected_provenance": null
+  },
+  {
+    "pin": "claude-opus-5-5-high",
+    "case": "missing",
+    "expected": {
+      "requested_selector": "claude-opus-5-5-high",
+      "observed_model": null,
+      "identity_state": "unknown",
+      "observed_model_source": null
+    },
+    "model": "claude-opus-5-5-high",
+    "substituted": false,
+    "expected_provenance": null
+  },
+  {
+    "pin": "claude-opus-5-5-high",
+    "case": "duplicate-after",
+    "expected": {
+      "requested_selector": "claude-opus-5-5-high",
+      "observed_model": null,
+      "identity_state": "unknown",
+      "observed_model_source": null
+    },
+    "model": "claude-opus-5-5-high",
+    "substituted": false,
+    "expected_provenance": null
+  },
+  {
+    "pin": "claude-opus-5-5-high",
+    "case": "terminal-session",
+    "expected": {
+      "requested_selector": "claude-opus-5-5-high",
+      "observed_model": null,
+      "identity_state": "unknown",
+      "observed_model_source": null
+    },
+    "model": "claude-opus-5-5-high",
+    "substituted": false,
+    "expected_provenance": null
+  },
+  {
+    "pin": "claude-opus-5-5-high",
+    "case": "repeated-model",
+    "expected": {
+      "requested_selector": "claude-opus-5-5-high",
+      "observed_model": null,
+      "identity_state": "unknown",
+      "observed_model_source": null
+    },
+    "model": "claude-opus-5-5-high",
+    "substituted": false,
+    "expected_provenance": null
+  },
+  {
+    "pin": "claude-opus-5-5-high",
+    "case": "configuration",
+    "expected": {
+      "requested_selector": "claude-opus-5-5-high",
+      "observed_model": null,
+      "identity_state": "unknown",
+      "observed_model_source": null
+    },
+    "model": "claude-opus-5-5-high",
+    "substituted": false,
+    "expected_provenance": null
+  }
+]

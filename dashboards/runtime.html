@@ -269,8 +269,8 @@ function renderAgents(agents) {
     document.getElementById('agents-content').innerHTML = '<div class="empty">No runtime agents found</div>';
     return;
   }
-  document.getElementById('agents-content').innerHTML = `<p class="muted" style="margin:0 0 10px">Headroom Model = model used for the 5-min rate-limit probe for this adapter (last-used, else default).</p><table>
-    <thead><tr><th>Name</th><th>Binary</th><th>Default Model</th><th>Headroom Model</th><th>Supported Modes</th></tr></thead>
+  document.getElementById('agents-content').innerHTML = `<p class="muted" style="margin:0 0 10px">Headroom accounting model = legacy usage label used for the rate-limit probe (last-used, else default).</p><table>
+    <thead><tr><th>Name</th><th>Binary</th><th>Default Model</th><th>Headroom accounting model</th><th>Supported Modes</th></tr></thead>
     <tbody>${agents.map(agent => `<tr>
       <td>${escapeHtml(agent.name || '—')}</td>
       <td class="mono">${escapeHtml(agent.binary || '—')}</td>
@@ -447,7 +447,7 @@ function renderRecent(records) {
     return;
   }
   document.getElementById('recent-content').innerHTML = `<table>
-    <thead><tr><th>Time</th><th>Source</th><th>Agent</th><th>Via</th><th>Model</th><th>Outcome</th><th>Failure</th><th>Duration</th></tr></thead>
+    <thead><tr><th>Time</th><th>Source</th><th>Agent</th><th>Via</th><th>Accounting model</th><th>Requested selector</th><th>Observed model</th><th>Identity state</th><th>Outcome</th><th>Failure</th><th>Duration</th></tr></thead>
     <tbody>${records.map(record => {
       const cls = record.outcome === 'ok' ? 'ok' : record.outcome === 'rate_limited' ? 'warn' : record.outcome === 'timeout' ? 'gray' : 'err';
       return `<tr>
@@ -459,6 +459,9 @@ function renderRecent(records) {
         <td>${escapeHtml(record.agent || '—')}</td>
         <td class="mono">${escapeHtml(record.via || record.entrypoint || '—')}</td>
         <td class="mono">${escapeHtml(record.model || '—')}</td>
+        <td class="mono">${escapeHtml(record.requested_selector || 'unknown')}</td>
+        <td class="mono">${escapeHtml(record.observed_model || 'unknown')}</td>
+        <td>${escapeHtml(record.identity_state || 'unknown')} ${escapeHtml(record.observed_model_source || '')}</td>
         <td><span class="pill ${cls}">${escapeHtml(record.outcome || 'unknown')}</span></td>
         <td class="mono">${escapeHtml(record.failure_code || '—')}</td>
         <td>${formatDuration(record.duration_s)}</td>

@@ -199,6 +199,7 @@ if str(_local_repo_root) not in sys.path:
     sys.path.insert(0, str(_local_repo_root))
 
 from scripts.agent_runtime import bounded_advisory
+from scripts.agent_runtime.accounting import model_accounting_fields
 from scripts.agent_runtime.env_sanitize import GITHUB_TOKEN_SEATS as _GH_TOKEN_AGENTS
 from scripts.agent_runtime.routes import RUNTIME_ROUTE_TOOL_CONFIG_KEY
 from scripts.common.jsonl import jsonl_lines
@@ -10901,6 +10902,10 @@ def _emit_terminal_dispatch_event(
                 "task_id": task_id,
                 "agent": agent,
                 "model": model,
+                **{key: final_state.get(key) for key in (
+                    "requested_selector", "observed_model", "identity_state", "observed_model_source",
+                    "observed_model_provenance",
+                )},
                 "resolved_model": final_state.get("resolved_model"),
                 "resolved_model_known": final_state.get("resolved_model_known"),
                 "resolved_model_source": final_state.get("resolved_model_source"),
@@ -11088,6 +11093,7 @@ def _run_worker(
         state.setdefault("model", start_telemetry.model)
         state.setdefault("effort", start_telemetry.effort)
         state.setdefault("cli_version", start_telemetry.cli_version)
+    state.update(model_accounting_fields(requested_selector=model))
     agy_requested_model = model
     if agent == "agy":
         from scripts.agent_runtime.adapters.agy import AgyAdapter
@@ -11549,6 +11555,10 @@ def _run_worker(
 
         final_state = _read_state(state_path) or {}
         final_state.update(agy_model_state)
+        final_state.update(model_accounting_fields(
+            requested_selector=model, identity=runtime_identity,
+            task_id=task_id, run_nonce=effective_nonce,
+        ))
         # #9275: gate evidence is this run's measurement, never an earlier record's.
         for gate_key in _ADVISORY_GATE_KEYS:
             final_state.pop(gate_key, None)
@@ -12431,6 +12441,7 @@ def _record_worktree_prep_failure(
         "attribution_source": attribution.source,
         "agent": agent,
         "model": start_telemetry.model,
+        **model_accounting_fields(requested_selector=requested_model),
         **_cursor_model_state(agent=agent, initial=True),
         **_deepseek_model_state(agent=agent, model=start_telemetry.model),
         "effort": start_telemetry.effort,
@@ -14440,6 +14451,7 @@ def _dispatch(
                 "attribution_source": attribution.source,
                 "agent": dispatch_agent,
                 "model": start_telemetry.model,
+                **model_accounting_fields(requested_selector=args.model),
                 **_cursor_model_state(agent=dispatch_agent, initial=True),
                 **_deepseek_model_state(agent=dispatch_agent, model=start_telemetry.model),
                 "effort": start_telemetry.effort,
@@ -14961,6 +14973,7 @@ def _dispatch(
             "attribution_source": attribution.source,
             "agent": dispatch_agent,
             "model": start_telemetry.model,
+            **model_accounting_fields(requested_selector=args.model),
             **_cursor_model_state(agent=dispatch_agent, initial=True),
             **_deepseek_model_state(agent=dispatch_agent, model=start_telemetry.model),
             "effort": start_telemetry.effort,
