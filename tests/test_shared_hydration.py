@@ -581,19 +581,26 @@ def test_remote_transport_real_loopback_stalled_headers_timeout(monkeypatch: pyt
 
 @pytest.mark.parametrize("phase", ["headers", "body"])
 def test_remote_transport_real_loopback_drip_obeys_total_deadline(monkeypatch: pytest.MonkeyPatch, phase: str) -> None:
+    # Bytes arrive every 10 ms, a tenth of the 100 ms socket inactivity timeout,
+    # so only the total-deadline watchdog can end the read. Unwatched, the drip
+    # would take ~10 s (1000 bytes), far past the 3 s bound that absorbs CI jitter.
+    drip_interval = 0.01
+    drip_bytes = 1000
     received = threading.Event()
+    release = threading.Event()
 
     class Handler(http.server.BaseHTTPRequestHandler):
         def do_GET(self) -> None:
             received.set()
             if phase == "body":
                 self.send_response(200)
-                self.send_header("Content-Length", "50")
+                self.send_header("Content-Length", str(drip_bytes))
                 self.send_header("Connection", "close")
                 self.end_headers()
-                pieces = (b"x" for _ in range(50))
+                pieces = (b"x" for _ in range(drip_bytes))
             else:
-                raw = b"HTTP/1.1 200 OK\r\nContent-Length: 2\r\nConnection: close\r\n\r\n{}"
+                head = b"HTTP/1.1 200 OK\r\nConnection: close\r\nX-Pad: "
+                raw = head + b"a" * (drip_bytes - len(head)) + b"\r\nContent-Length: 2\r\n\r\n{}"
                 pieces = (bytes((byte,)) for byte in raw)
             for piece in pieces:
                 try:
@@ -601,7 +608,8 @@ def test_remote_transport_real_loopback_drip_obeys_total_deadline(monkeypatch: p
                     self.wfile.flush()
                 except (BrokenPipeError, ConnectionResetError):
                     break
-                time.sleep(0.25)
+                if release.wait(drip_interval):
+                    break
 
         def log_message(self, format: str, *args: object) -> None:
             pass
@@ -617,6 +625,7 @@ def test_remote_transport_real_loopback_drip_obeys_total_deadline(monkeypatch: p
         assert received.is_set()
         assert time.monotonic() - started < 3.0
     finally:
+        release.set()
         server.shutdown()
         server.server_close()
         thread.join(timeout=1)
