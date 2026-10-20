@@ -7,6 +7,7 @@ import subprocess
 import pytest
 
 import delegate
+from scripts.orchestration.safe_git_context import SafeGitContext
 from tests.test_delegate import (
     _agy_dispatch_worktree,
     _git_out,
@@ -27,7 +28,7 @@ def checkout(tmp_path, monkeypatch):
     return worktree, tmp_path / "origin.git", marker
 
 
-def finalize(worktree):
+def finalize(worktree, **overrides):
     return delegate._auto_finalize_dirty_worktree(
         worktree=worktree,
         task_id="finalize",
@@ -36,7 +37,34 @@ def finalize(worktree):
         branch="codex/finalize",
         base_branch="main",
         owned_paths=["artifact.txt"],
+        **overrides,
     )
+
+
+# The commands of ``delegate._finalize_history``, the check both the dirty
+# pre-check and the publication boundary run on the re-hashed history.
+HISTORY_STEPS = {
+    "ancestry": lambda args: args[:2] == ("merge-base", "--is-ancestor"),
+    "walk": lambda args: args[:1] == ("rev-list",) and "--not" in args,
+    "scope": lambda args: args[:1] == ("diff-tree",) and "--name-only" in args,
+}
+
+
+def fail_history_step(monkeypatch, step, mode):
+    """Fail the first real history-check command of ``step``; return its hit list."""
+    real_run = SafeGitContext.run
+    hits = []
+
+    def run(context, *args, **kwargs):
+        if not hits and HISTORY_STEPS[step](args):
+            hits.append(args)
+            if mode == "timeout":
+                raise subprocess.TimeoutExpired(["git", *args], 60)
+            return subprocess.CompletedProcess(["git", *args], 128, "", "history unavailable")
+        return real_run(context, *args, **kwargs)
+
+    monkeypatch.setattr(SafeGitContext, "run", run)
+    return hits
 
 
 def remote_head(origin):
@@ -229,12 +257,15 @@ def test_unknown_or_moved_push_destination_never_claims_delivery(checkout, tmp_p
 def test_unknown_finalization_evidence_is_a_typed_refusal(checkout, monkeypatch, uncertainty):
     worktree, origin, marker = checkout
     head = commit(worktree)
+    hits = None
     if uncertainty == "dirty":
         monkeypatch.setattr(delegate, "_worktree_is_dirty", lambda *_a: None)
     elif uncertainty == "changes":
         monkeypatch.setattr(delegate, "_worktree_is_dirty", lambda *_a: True)
     elif uncertainty == "scope":
-        monkeypatch.setattr(delegate, "_advisory_worker_diff", lambda *_a, **_k: (None, "unreadable"))
+        # The committed range cannot be established when the recorded base's
+        # ancestry query itself fails in the real history check.
+        hits = fail_history_step(monkeypatch, "ancestry", "error")
     else:
         real_run = delegate.subprocess.run
 
@@ -256,6 +287,7 @@ def test_unknown_finalization_evidence_is_a_typed_refusal(checkout, monkeypatch,
         }[uncertainty]
     )
     assert delegate.is_public_cause(result.error)
+    assert hits != []
     assert remote_head(origin) is None and not marker.exists()
     assert delegate._resolve_sha(worktree) == head
     assert (worktree / "artifact.txt").read_bytes() == b"committed\r\n"
@@ -339,19 +371,25 @@ def test_prepublication_movement_or_unknown_query_refuses_before_push(checkout, 
     assert (worktree / "artifact.txt").read_bytes() == b"committed\r\n"
 
 
-def test_upstream_binding_failure_keeps_published_commit_but_refuses_success(checkout, monkeypatch):
+def test_delivery_never_depends_on_worker_upstream_binding(checkout, monkeypatch):
     worktree, origin, marker = checkout
     head = commit(worktree)
+    before = _git_out(worktree, "config", "--list", "--local")
     real_run = delegate.subprocess.run
+    branch_calls = []
 
     def run(args, **kwargs):
-        if args[:2] == ["git", "branch"]:
+        if delegate._git_subcommand(args) == "branch":
+            branch_calls.append(args)
             return subprocess.CompletedProcess(args, 1, "", "upstream unavailable")
         return real_run(args, **kwargs)
 
     monkeypatch.setattr(delegate.subprocess, "run", run)
     result = finalize(worktree)
     assert result.ok and result.commit_sha == head == remote_head(origin)
+    # Delivery is proven against the destination, never a worker tracking binding.
+    assert branch_calls == []
+    assert _git_out(worktree, "config", "--list", "--local") == before
     assert delegate._count_unpushed_commits(worktree, "codex/finalize") == 0
     assert marker.read_text() == "observed"
 
@@ -372,30 +410,43 @@ def test_reverted_unowned_commit_is_still_refused_before_publication(checkout):
     assert (worktree / "artifact.txt").read_bytes() == b"committed\r\n"
 
 
-@pytest.mark.parametrize("failure", ["unknown_base", "error", "timeout"])
-def test_unknown_committed_history_never_publishes(checkout, monkeypatch, failure):
+@pytest.mark.parametrize("path", ["committed", "dirty"])
+@pytest.mark.parametrize("failure", ["unknown_base", "error", "unreadable", "timeout"])
+def test_unknown_committed_history_never_publishes(checkout, monkeypatch, failure, path):
     worktree, origin, marker = checkout
     head = commit(worktree)
-    real_run = delegate.subprocess.run
+    if path == "dirty":
+        # Dirty work runs the history pre-check before anything is committed.
+        (worktree / "artifact.txt").write_bytes(b"current\x00\r\n")
+    expected = (worktree / "artifact.txt").read_bytes()
+    overrides = {}
+    hits = None
     if failure == "unknown_base":
-        monkeypatch.setattr(delegate, "_resolve_merge_base", lambda *_a, **_k: None)
-        # Simulate independently unavailable history after the initial diff.
-        monkeypatch.setattr(delegate, "_advisory_worker_diff", lambda *_a, **_k: ("artifact.txt\0", None))
+        # A real recorded base outside the worker's history: no injection.
+        empty_tree = _git_out(worktree, "hash-object", "-t", "tree", "-w", "/dev/null").strip()
+        overrides["base_sha"] = _git_out(worktree, "commit-tree", empty_tree, "-m", "unrelated base").strip()
+    elif failure == "error":
+        hits = fail_history_step(monkeypatch, "ancestry", "error")
     else:
-
-        def run(args, **kwargs):
-            if args[:2] == ["git", "log"]:
-                if failure == "timeout":
-                    raise subprocess.TimeoutExpired(args, 30)
-                return subprocess.CompletedProcess(args, 128, "", "history unavailable")
-            return real_run(args, **kwargs)
-
-        monkeypatch.setattr(delegate.subprocess, "run", run)
-    result = finalize(worktree)
-    assert not result.ok and result.error == "auto_finalize_committed_scope_unknown"
+        hits = fail_history_step(monkeypatch, "walk", "error" if failure == "unreadable" else "timeout")
+    result = finalize(worktree, **overrides)
+    assert not result.ok
+    assert delegate.is_public_cause(result.error)
+    expected_error = {
+        "unknown_base": "auto_finalize_committed_scope_unknown",
+        "error": "auto_finalize_committed_scope_unknown",
+        "unreadable": "rescue_input_unreadable",
+        # The committed-only path reaches this check inside the publication
+        # boundary, which currently types every timeout there as a push
+        # failure; only the never-publish outcome is asserted for it.
+        "timeout": "auto_finalize_scope_check_timeout" if path == "dirty" else None,
+    }[failure]
+    if expected_error is not None:
+        assert result.error == expected_error
+    assert hits != []
     assert remote_head(origin) is None and not marker.exists()
-    assert delegate._resolve_sha(worktree) == head
-    assert (worktree / "artifact.txt").read_bytes() == b"committed\r\n"
+    assert delegate._resolve_sha(worktree) == result.commit_sha == head
+    assert (worktree / "artifact.txt").read_bytes() == expected
 
 
 @pytest.mark.parametrize("case", ["clean", "dirty", "mixed"])
