@@ -9,119 +9,34 @@ Provides:
 
 Public SUM-20 lookups are strictly offline (#10655). They share the live-article
 filter in ``scripts.wiki.sum20_official`` and never fetch or scrape. ``data/lexdata.db``
-is the canonical file when it already holds ``sum20_articles``; otherwise the
-read-only official sources collection is the store. Staging databases are not
-fallback caches. Official ingest owns store population.
+is canonical only when its published generation passes validation and holds
+``sum20_articles``; an absent default uses the read-only official sources
+collection. Staging databases are not fallback caches. Official ingest owns store population.
 """
 
 from __future__ import annotations
 
-import contextlib
 import json
-import os
 import sqlite3
-from functools import lru_cache
 from pathlib import Path
 from typing import Any
-from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
+from scripts.lexicon.sum20_store import open_sources, open_sum20
+from scripts.lib.readonly_sqlite import SQLiteConnection
 from scripts.wiki.sum20_official import (
-    ensure_sum20_official_schema,
     normalize_sum20_lookup,
-    select_sum20_database,
     sum20_live_article_where,
 )
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-_EXCLUSIVE_MISS = object()
-
-
-@lru_cache(maxsize=1)
-def _resolve_primary_checkout() -> Path | None:
-    parts = REPO_ROOT.parts
-    if ".worktrees" in parts:
-        return Path(*parts[: parts.index(".worktrees")])
-    return REPO_ROOT
-
-
-def _resolve_sources_db() -> Path:
-    env_path = os.environ.get("SOURCES_DB_PATH")
-    if env_path and Path(env_path).is_file():
-        return Path(env_path)
-    local = REPO_ROOT / "data" / "sources.db"
-    if local.is_file() and local.stat().st_size > 1_000_000:
-        return local
-    primary = _resolve_primary_checkout()
-    if primary:
-        prim_db = primary / "data" / "sources.db"
-        if prim_db.is_file():
-            return prim_db
-    return local
-
-
-def _read_only_uri(uri: str) -> str:
-    """``uri`` with ``mode=ro`` enforced; a fragment or any other ``mode`` is refused."""
-    parts = urlsplit(uri)
-    if "#" in uri:  # SQLite ends the path/query at "#", so even an empty fragment changes the parse
-        raise ValueError(f"read-only СУМ-20 lookup refuses a URI with a fragment: {uri}")
-    params = parse_qsl(parts.query, keep_blank_values=True)
-    for key, value in params:
-        if key == "mode" and value != "ro":
-            raise ValueError(f"read-only СУМ-20 lookup refuses a URI with mode={value}: {uri}")
-    kept = [(key, value) for key, value in params if key != "mode"]
-    return urlunsplit(parts._replace(query=urlencode([*kept, ("mode", "ro")])))
-
-
-def _get_db(db_path: Path | str | None = None, *, write: bool = False) -> sqlite3.Connection:
-    if isinstance(db_path, str) and db_path.startswith("file:"):
-        conn = sqlite3.connect(db_path if write else _read_only_uri(db_path), uri=True)
-    else:
-        target = Path(db_path) if db_path else _resolve_sources_db()
-        read_only_uri = f"{target.resolve().as_uri()}?mode=ro"
-        conn = sqlite3.connect(target) if write else sqlite3.connect(read_only_uri, uri=True)
-    conn.row_factory = sqlite3.Row
-    if not write:
-        with contextlib.suppress(sqlite3.OperationalError):
-            conn.execute("PRAGMA query_only = ON")
-    else:
-        ensure_sum20_official_schema(conn)
-    return conn
-
-
-def _sum20_table_present(path: Path) -> bool:
-    """True when ``path`` already has official SUM-20 articles. Read-only."""
-    try:
-        conn = _get_db(path, write=False)
-    except sqlite3.Error:
-        return False
-    try:
-        row = conn.execute("SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'sum20_articles'").fetchone()
-        return row is not None
-    except sqlite3.Error:
-        return False
-    finally:
-        conn.close()
-
-
-def _selected_sum20_db(db_path: Path | str | None) -> Path | str | object | None:
-    """Explicit database, canonical lexdata, sources default, or an exclusive miss.
-
-    ``None`` tells ``_get_db`` to open the read-only sources default. The
-    exclusive-miss sentinel means ``LEXDATA_DB_PATH`` was blank.
-    """
-    if db_path is not None:
-        return db_path
-    selection = select_sum20_database(REPO_ROOT, article_table_present=_sum20_table_present)
-    if selection.exclusive:
-        if selection.path is None:
-            return _EXCLUSIVE_MISS
-        return selection.path
-    return selection.path
+def _get_db(db_path: Path | str | None = None, *, write: bool = False) -> SQLiteConnection:
+    """Legacy connection helper; even write=True cannot grant write access."""
+    return open_sources(db_path, repository_root=REPO_ROOT)
 
 
 def lookup_sum20_cached(
     lemma: str,
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     *,
     prefix: bool = True,
 ) -> list[dict[str, Any]]:
@@ -140,7 +55,7 @@ def lookup_sum20_cached(
         parameters = (norm, f"{norm} %") if prefix else (norm,)
         cur.execute(
             f"""
-            SELECT id, wordid, headword, stressed_headword, pos, grammar, definition_text, official_url
+            SELECT id, wordid, headword, stressed_headword, pos, grammar, article_text, definition_text, official_url
             FROM sum20_articles
             WHERE {where}
             ORDER BY wordid
@@ -185,6 +100,7 @@ def lookup_sum20_cached(
                 "pos": r["pos"],
                 "grammar": r["grammar"],
                 "definition": r["definition_text"],
+                "article_text": r["article_text"],
                 "senses": senses,
                 "url": r["official_url"],
             }
@@ -201,20 +117,13 @@ def lookup_sum20_articles(
     """Return modern СУМ-20 articles already stored for ``lemma``.
 
     Strictly offline (#10655). The connection is read-only (``PRAGMA query_only``).
-    A missing database, table, or row returns ``[]`` and does not fetch or scrape.
+    A missing table or row returns ``[]``. Refused stores raise Sum20StoreError.
     ``write`` is retained for existing callers. ``True`` does not open a writable
     database, populate a cache, or contact the network. Official ingest owns that.
     """
     # ``write`` cannot select a live fallback. Both values take the local read.
     _ = write
-    chosen = _selected_sum20_db(db_path)
-    if chosen is _EXCLUSIVE_MISS:
-        return []
-    open_path: Path | str | None = chosen if isinstance(chosen, (Path, str)) else None
-    try:
-        conn = _get_db(open_path, write=False)
-    except sqlite3.OperationalError:  # no database file yet: nothing stored
-        return []
+    conn = open_sum20(db_path, repository_root=REPO_ROOT)
     try:
         return lookup_sum20_cached(lemma, conn)
     finally:

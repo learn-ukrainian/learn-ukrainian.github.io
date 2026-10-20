@@ -183,7 +183,7 @@
       },
       {
         "path": "scripts/lexicon/enrich_manifest.py",
-        "sha256": "179b72310415a3026a3308b83bf149f4da8268dd6db2ef1e1a89ab51a131ada4"
+        "sha256": "fd812e74f14f19c9371d07b979af68d89da48dfab77a7186eaa027ee3156fbfc"
       },
       {
         "path": "scripts/lexicon/esum_garbled.py",
@@ -342,6 +342,10 @@
         "sha256": "b198057deb985cbca702e4bdb24a999946a80d484366b29ee842d01b64e6588d"
       },
       {
+        "path": "scripts/lexicon/reconcile_sum20.py",
+        "sha256": "1b66a1329e07521d4bb3c76c61fc507f77b6d808b2174e12dff2411008a330b8"
+      },
+      {
         "path": "scripts/lexicon/reenrich_thin_manifest_entries.py",
         "sha256": "ef9560322662e0a5cc280feb1f0ddc3b14aa7a56b045d583a4cd4d78877b2bb3"
       },
@@ -367,7 +371,11 @@
       },
       {
         "path": "scripts/lexicon/sum20_lookup.py",
-        "sha256": "c15dc807601970dc425f0ea876c71e214a47a1cbde8025bcd68feb34436636d4"
+        "sha256": "8a2919d141e0f7a024a050cb7fdf5cff7cdbbcd7ea7f6256e8fd573b512b3ac0"
+      },
+      {
+        "path": "scripts/lexicon/sum20_store.py",
+        "sha256": "dce15f19b1e27a3115f4a49f25759f4d9d3269885ae67b6b9690ae641d326a65"
       },
       {
         "path": "scripts/lexicon/sync_curated_heteronyms_ts.py",

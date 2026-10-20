@@ -10,7 +10,6 @@ from __future__ import annotations
 import hashlib
 import html
 import json
-import os
 import re
 import sqlite3
 import sys
@@ -20,8 +19,10 @@ from dataclasses import dataclass
 from datetime import UTC, datetime
 from html.parser import HTMLParser
 from pathlib import Path
+from typing import TYPE_CHECKING
 
-import requests
+if TYPE_CHECKING:
+    import requests
 
 try:
     from scripts.lib.readonly_sqlite import SQLiteConnection
@@ -595,59 +596,6 @@ def sum20_live_article_where(columns: Iterable[str], *, prefix: bool) -> str:
     return f"{match} AND {live_article_predicate(columns)}"
 
 
-@dataclass(frozen=True)
-class Sum20DatabaseSelection:
-    """Chosen SUM-20 file for an offline read.
-
-    ``path is None`` and ``exclusive`` is a blank ``LEXDATA_DB_PATH``: the
-    read is a miss and must not fall back. ``path is None`` without
-    ``exclusive`` means the caller keeps its read-only sources default.
-    ``exclusive`` never falls back, even when ``path`` is missing or has no
-    ``sum20_articles`` table.
-    """
-
-    path: Path | None
-    exclusive: bool
-
-
-def _primary_checkout(repo_root: Path) -> Path:
-    resolved = repo_root.resolve()
-    parts = resolved.parts
-    if ".worktrees" in parts:
-        return Path(*parts[: parts.index(".worktrees")])
-    return resolved
-
-
-def select_sum20_database(
-    repo_root: Path,
-    *,
-    article_table_present: Callable[[Path], bool],
-) -> Sum20DatabaseSelection:
-    """Pick the canonical SUM-20 file without creating one.
-
-    ``LEXDATA_DB_PATH`` is the only file considered when it is set. Otherwise
-    the primary checkout's ``data/lexdata.db`` is used when ``article_table_present``
-    reports ``sum20_articles``. A linked worktree copy is not a candidate.
-    The probe runs only for an existing non-empty file. No staging database
-    is considered, and nothing is created.
-    """
-    raw = os.environ.get("LEXDATA_DB_PATH")
-    if raw is not None:
-        text = raw.strip()
-        if not text:
-            return Sum20DatabaseSelection(path=None, exclusive=True)
-        return Sum20DatabaseSelection(path=Path(text).expanduser(), exclusive=True)
-
-    candidate = _primary_checkout(repo_root) / "data" / "lexdata.db"
-    try:
-        present = candidate.is_file() and candidate.stat().st_size > 0 and article_table_present(candidate)
-    except OSError:
-        present = False
-    if present:
-        return Sum20DatabaseSelection(path=candidate, exclusive=False)
-    return Sum20DatabaseSelection(path=None, exclusive=False)
-
-
 def utc_now() -> str:
     """Return a stable, timezone-aware timestamp for crawl provenance."""
     return datetime.now(UTC).replace(microsecond=0).isoformat()
@@ -820,6 +768,8 @@ def fetch_sum20_wordid(
     responses stop on the first response, stored lossily as ``transient_error``
     with numeric HTTP evidence and ``terminal=True``. Only 404 proves a miss.
     """
+    import requests
+
     client = session or requests.Session()
     # A requests.Session already carries "python-requests/<version>" and
     # "Accept: */*", so setdefault() never applied the project's identifying

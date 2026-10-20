@@ -71,7 +71,6 @@ from .sum20_official import (
     SUM20_ATTRIBUTION_LABEL,
     SUM20_SOURCE_ID,
     normalize_sum20_lookup,
-    select_sum20_database,
     sum20_live_article_where,
 )
 from .textbook_subjects import normalize_subject_slug
@@ -4295,23 +4294,6 @@ def _json_string_list(value: object) -> list[str]:
     return [str(item) for item in decoded] if isinstance(decoded, list) else []
 
 
-def _sum20_articles_present(path: Path) -> bool:
-    """True when ``path`` already has the official article table. Read-only."""
-    try:
-        conn = _open_conn(path, read_only=True)
-    except sqlite3.Error:
-        return False
-    try:
-        row = conn.execute(
-            "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'sum20_articles'"
-        ).fetchone()
-        return row is not None
-    except sqlite3.Error:
-        return False
-    finally:
-        conn.close()
-
-
 def query_sum20(query: str, *, db_path: str | Path | None = None) -> list[dict]:
     """Return every exact-matching article from the offline official СУМ-20 collection.
 
@@ -4324,22 +4306,9 @@ def query_sum20(query: str, *, db_path: str | Path | None = None) -> list[dict]:
     normalized_lookup_key = normalize_sum20_lookup(query)
     if not normalized_lookup_key:
         return []
-    if db_path is None:
-        selection = select_sum20_database(
-            PROJECT_ROOT, article_table_present=_sum20_articles_present
-        )
-        if selection.exclusive:
-            # A blank override is a miss. An existing file, including a zero-byte
-            # database, is handed to the reader below and never replaced by sources.
-            if selection.path is None or not selection.path.is_file():
-                return []
-            db_path = selection.path
-        elif selection.path is not None:
-            db_path = selection.path
-    try:
-        conn = _get_conn_for(db_path)
-    except FileNotFoundError:
-        return []
+    from scripts.lexicon.sum20_store import open_sum20
+
+    conn = open_sum20(db_path, repository_root=PROJECT_ROOT)
     try:
         columns = {str(row["name"]) for row in conn.execute("PRAGMA table_info(sum20_articles)").fetchall()}
         if not columns:
@@ -4406,7 +4375,7 @@ def query_sum20(query: str, *, db_path: str | Path | None = None) -> list[dict]:
             )
         return records
     finally:
-        _close_if_temporary(conn, db_path)
+        conn.close()
 
 
 def _heritage_text(hit: dict) -> str:

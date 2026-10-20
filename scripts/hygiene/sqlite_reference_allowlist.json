@@ -711,18 +711,6 @@
     ]
   },
   {
-    "path": "scripts/lexicon/sum20_lookup.py",
-    "reference_count": 5,
-    "kind": "writer",
-    "target_db": "sources.db",
-    "reason": "write=True opens a writable connection for schema maintenance; public SUM-20 lookup stays offline and does not fetch",
-    "calls": [
-      "sqlite3.connect(db_path if write else _read_only_uri(db_path), uri=True)",
-      "sqlite3.connect(target)",
-      "sqlite3.connect(read_only_uri, uri=True)"
-    ]
-  },
-  {
     "path": "scripts/lexicon/teacher_deck.py",
     "reference_count": 1,
     "kind": "writer",
