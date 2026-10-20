@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import tempfile
 
 import pytest
 
@@ -10,6 +11,7 @@ from scripts.common.scratch import ensure_scratch_root
 from scripts.common.task_scratch import _verify_private_dir, allocate
 
 NAMESPACE = "pytest-runs"
+RUNS_DIRNAME = "runs"
 
 
 @pytest.hookimpl(tryfirst=True)
@@ -27,7 +29,22 @@ def pytest_configure(config: pytest.Config) -> None:
         os.fchmod(fd, 0o700)
     finally:
         os.close(fd)
-    scratch = allocate("pytest", root=root)
+    scratch = allocate("pytest", root=root, namespace_dirname=RUNS_DIRNAME)
     # Pytest recreates --basetemp. Keep ownership metadata outside that payload.
     config.option.basetemp = str(scratch.payload_dir / "base")
     config.add_cleanup(scratch.preserve)
+    # Fixtures and ordinary tempfile users must share a containment root.
+    # Workers inherit TMPDIR; this process may already have cached tempdir.
+    previous_env = os.environ.get("TMPDIR")
+    previous_tempdir = tempfile.tempdir
+    os.environ["TMPDIR"] = str(scratch.payload_dir)
+    tempfile.tempdir = str(scratch.payload_dir)
+
+    def restore_tempdir() -> None:
+        tempfile.tempdir = previous_tempdir
+        if previous_env is None:
+            os.environ.pop("TMPDIR", None)
+        else:
+            os.environ["TMPDIR"] = previous_env
+
+    config.add_cleanup(restore_tempdir)

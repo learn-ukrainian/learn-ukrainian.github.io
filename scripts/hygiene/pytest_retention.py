@@ -17,7 +17,7 @@ from pathlib import Path
 from typing import Any
 
 from scripts.common import task_scratch as ownership
-from scripts.common.pytest_scratch import NAMESPACE
+from scripts.common.pytest_scratch import NAMESPACE, RUNS_DIRNAME
 from scripts.common.scratch import ScratchScanRootError, scratch_scan_roots
 from scripts.hygiene import tmp_sweep as sweep
 from scripts.hygiene.tmp_sweep_ledger import Ledger
@@ -92,80 +92,90 @@ def _locked_run(path: Path, ns_fd: int, stack: ExitStack) -> tuple[int, int]:
 
 
 def _namespace(
-    namespace: Path, *, keep: int, apply: bool, ledger: Ledger, run_id: str,
+    namespaces: tuple[Path, ...], *, keep: int, apply: bool, ledger: Ledger, run_id: str,
     task_root: Path, digest_limit: int, quarantine_s: float, repo_root: Path,
 ) -> tuple[list[dict[str, Any]], int]:
     rows: list[dict[str, Any]] = []
     errors = 0
     with ExitStack() as stack:
-        ns_fd = _open_private(namespace, stack)
-        if ledger.directory == namespace or namespace in ledger.directory.parents:
-            raise ValueError("ledger_inside_pytest_namespace")
-        entries, _malformed = ledger.entries()
-        local = {key: entry for key, entry in entries.items() if entry.original.parent == namespace}
-        recovered, step_errors = sweep.reconcile_ledger(local, ledger, run_id, apply=apply)
-        errors += step_errors
-        rows.extend(recovered)
-        if apply:
+        eligible = []
+        for namespace in namespaces:
+            try:
+                ns_fd = _open_private(namespace, stack)
+            except FileNotFoundError:
+                continue
+            except (OSError, ValueError):
+                errors += 1
+                rows.append(sweep._bare_row("pytest-runs", "namespace_untrusted"))
+                continue
+            if ledger.directory == namespace or namespace in ledger.directory.parents:
+                raise ValueError("ledger_inside_pytest_namespace")
             entries, _malformed = ledger.entries()
             local = {key: entry for key, entry in entries.items() if entry.original.parent == namespace}
-        known = frozenset(entry.location for entry in local.values() if entry.state in sweep.HELD_STATES)
-        recovered, _restored, step_errors = sweep.recover_quarantines(namespace, ns_fd, apply=apply, known=known)
-        errors += step_errors
-        rows.extend(recovered)
-        purged, step_errors = sweep.purge_quarantine(
-            local, ledger, run_id, now=sweep.time.time(), quarantine_s=quarantine_s,
-            task_root=task_root, repo_root=repo_root, apply=apply,
-        )
-        errors += step_errors
-        rows.extend(purged)
-        tasks = sweep.load_tasks(task_root)
-        references, process_complete = sweep.process_snapshot()
-        worktrees = sweep.registered_worktrees(repo_root)
-        eligible = []
-        for name in sorted(os.listdir(ns_fd)):
-            if name.startswith(sweep.QUARANTINE_PREFIX):
-                continue
-            path = namespace / name
-            row = sweep._bare_row(name, "ownership_unknown", kind="directory")
-            rows.append(row)
-            row["bytes"], _newest, _changed, problem = sweep.tree_facts(path)
-            try:
-                fd, lock = _locked_run(path, ns_fd, stack)
-                lease, reason = _proof(fd, name)
-                if reason:
-                    row["reason"] = reason
+            recovered, step_errors = sweep.reconcile_ledger(local, ledger, run_id, apply=apply)
+            errors += step_errors
+            rows.extend(recovered)
+            if apply:
+                entries, _malformed = ledger.entries()
+                local = {key: entry for key, entry in entries.items() if entry.original.parent == namespace}
+            known = frozenset(entry.location for entry in local.values() if entry.state in sweep.HELD_STATES)
+            recovered, _restored, step_errors = sweep.recover_quarantines(namespace, ns_fd, apply=apply, known=known)
+            errors += step_errors
+            rows.extend(recovered)
+            purged, step_errors = sweep.purge_quarantine(
+                local, ledger, run_id, now=sweep.time.time(), quarantine_s=quarantine_s,
+                task_root=task_root, repo_root=repo_root, apply=apply,
+            )
+            errors += step_errors
+            rows.extend(purged)
+            tasks = sweep.load_tasks(task_root)
+            references, process_complete = sweep.process_snapshot()
+            worktrees = sweep.registered_worktrees(repo_root)
+            for name in sorted(os.listdir(ns_fd)):
+                if name.startswith(sweep.QUARANTINE_PREFIX):
                     continue
-                if problem:
-                    row["reason"] = problem
-                    continue
-                if not _same(path, fd) or not _same(namespace, ns_fd):
-                    row["reason"] = "identity_changed"
-                    continue
-                if not tasks.complete:
-                    row["reason"] = "task_inventory_unknown"
-                    continue
-                if sweep.task_referenced(path, tasks.references) or sweep.task_attribution(name, tasks.records):
-                    row["reason"] = "task_reference"
-                    continue
-                if not process_complete or any(ref == path or path in ref.parents for _pid, ref in references):
-                    row["reason"] = "live_process" if process_complete else "liveness_unknown"
-                    continue
-                if worktrees is None or any(w == path or w in path.parents or path in w.parents for w in worktrees):
-                    row["reason"] = "git_registration_unknown" if worktrees is None else "registered_worktree"
-                    continue
-                info = os.fstat(fd)
-                row.update(identity=[info.st_dev, info.st_ino, info.st_uid])
-                eligible.append((lease["created_at"], name, row, fd, lock, lease))
-            except BlockingIOError:
-                row["reason"] = "in_use"
-            except FileNotFoundError:
-                row["reason"] = "lock_missing_or_vanished"
-            except (OSError, ValueError):
-                row["reason"] = "ownership_unknown"
-        quarantine = None
+                path = namespace / name
+                row = sweep._bare_row(name, "ownership_unknown", kind="directory")
+                rows.append(row)
+                row["bytes"], _newest, _changed, problem = sweep.tree_facts(path)
+                try:
+                    fd, lock = _locked_run(path, ns_fd, stack)
+                    lease, reason = _proof(fd, name)
+                    if reason:
+                        row["reason"] = reason
+                        continue
+                    if problem:
+                        row["reason"] = problem
+                        continue
+                    if not _same(path, fd) or not _same(namespace, ns_fd):
+                        row["reason"] = "identity_changed"
+                        continue
+                    if not tasks.complete:
+                        row["reason"] = "task_inventory_unknown"
+                        continue
+                    if sweep.task_referenced(path, tasks.references) or sweep.task_attribution(name, tasks.records):
+                        row["reason"] = "task_reference"
+                        continue
+                    if not process_complete or any(ref == path or path in ref.parents for _pid, ref in references):
+                        row["reason"] = "live_process" if process_complete else "liveness_unknown"
+                        continue
+                    if worktrees is None or any(w == path or w in path.parents or path in w.parents for w in worktrees):
+                        row["reason"] = "git_registration_unknown" if worktrees is None else "registered_worktree"
+                        continue
+                    info = os.fstat(fd)
+                    row.update(identity=[info.st_dev, info.st_ino, info.st_uid])
+                    eligible.append((lease["created_at"], name, namespace, ns_fd, row, fd, lock, lease))
+                except BlockingIOError:
+                    row["reason"] = "in_use"
+                except FileNotFoundError:
+                    row["reason"] = "lock_missing_or_vanished"
+                except (OSError, ValueError):
+                    row["reason"] = "ownership_unknown"
+        quarantines = {}
         try:
-            for index, (_created, name, row, fd, lock, lease) in enumerate(sorted(eligible, reverse=True)):
+            for index, (_created, name, namespace, ns_fd, row, fd, lock, lease) in enumerate(
+                sorted(eligible, key=lambda item: item[:3], reverse=True)
+            ):
                 row["reason"] = "pytest_keep_newest" if index < keep else "completed_pytest_run"
                 if index < keep:
                     continue
@@ -178,6 +188,7 @@ def _namespace(
                 def recheck(
                     location: Path, fd: int = fd, name: str = name, lock: int = lock,
                     lease: dict[str, Any] = lease, before: Any = before,
+                    namespace: Path = namespace, ns_fd: int = ns_fd,
                 ) -> str | None:
                     current, reason = _proof(fd, name)
                     try:
@@ -193,7 +204,9 @@ def _namespace(
                 if before is None or recheck(path):
                     row.update(decision="preserve", reason="proof_changed")
                     continue
-                quarantine = quarantine or sweep.open_quarantine(namespace, ns_fd)
+                if namespace not in quarantines:
+                    quarantines[namespace] = (sweep.open_quarantine(namespace, ns_fd), ns_fd)
+                quarantine, _ = quarantines[namespace]
                 updated = sweep.quarantine_entry(
                     path, row, before, quarantine, root_fd=ns_fd, task_root=task_root,
                     ledger=ledger, run_id=run_id, digest_limit=digest_limit, recheck=recheck,
@@ -201,7 +214,7 @@ def _namespace(
                 row.update(updated)
                 errors += row["reason"] == "restore_blocked"
         finally:
-            if quarantine is not None:
+            for quarantine, ns_fd in quarantines.values():
                 sweep.close_quarantine(quarantine, ns_fd)
     return rows, errors
 
@@ -222,7 +235,7 @@ def sweep_pytest_runs(
         errors += 1
         rows.append(sweep._bare_row("pytest-runs", "scan_root_invalid"))
     for root in sorted(roots):
-        namespace = root / NAMESPACE / ownership.NAMESPACE_DIRNAME
+        namespaces = tuple(root / NAMESPACE / name for name in (RUNS_DIRNAME, ownership.NAMESPACE_DIRNAME))
         try:
             # Legacy lockless roots stay visible, but filenames never prove ownership.
             with ExitStack() as stack:
@@ -232,7 +245,7 @@ def sweep_pytest_runs(
                         size, _newest, _changed, _problem = sweep.tree_facts(root / name)
                         rows.append(sweep._bare_row(name, "legacy_ownership_unknown", bytes=size))
             found, step_errors = _namespace(
-                namespace, keep=keep, apply=apply, ledger=ledger, run_id=run_id,
+                namespaces, keep=keep, apply=apply, ledger=ledger, run_id=run_id,
                 task_root=task_root, digest_limit=digest_limit, quarantine_s=quarantine_s, repo_root=repo_root,
             )
             rows.extend(found)
@@ -245,7 +258,9 @@ def sweep_pytest_runs(
     held = [
         entry for entry in ledger.entries()[0].values()
         if entry.state in sweep.HELD_STATES
-        and entry.original.parent in {root / NAMESPACE / ownership.NAMESPACE_DIRNAME for root in roots}
+        and entry.original.parent in {
+            root / NAMESPACE / name for root in roots for name in (RUNS_DIRNAME, ownership.NAMESPACE_DIRNAME)
+        }
     ]
     return {
         "keep": keep, "rows": rows, "errors": errors,

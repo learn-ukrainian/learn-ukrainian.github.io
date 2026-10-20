@@ -11,7 +11,7 @@ from pathlib import Path
 
 import pytest
 
-from scripts.common import task_scratch
+from scripts.common import pytest_scratch, task_scratch
 from scripts.common.scratch import scratch_scan_roots
 from scripts.hygiene import pytest_retention, tmp_sweep
 
@@ -35,7 +35,7 @@ def area(tmp_path, monkeypatch):
     return root, dict(temp_root=temp, task_root=tasks, state_dir=tmp_path / "state", repo_root=REPO)
 
 
-def completed(root: Path, count: int = 6) -> list[Path]:
+def completed(root: Path, count: int = 6, *, namespace: str = task_scratch.NAMESPACE_DIRNAME) -> list[Path]:
     # Real ownership metadata and flocks, released by a different process that exits.
     result = subprocess.run(
         [sys.executable, "-c", """
@@ -44,12 +44,12 @@ from pathlib import Path
 from scripts.common.task_scratch import allocate
 paths = []
 for index in range(int(sys.argv[2])):
-    run = allocate('pytest', root=Path(sys.argv[1]) / 'pytest-runs')
+    run = allocate('pytest', root=Path(sys.argv[1]) / 'pytest-runs', namespace_dirname=sys.argv[3])
     (run.payload_dir / 'payload').write_bytes(b'x' * 4096)
     paths.append(str(run.path))
     run.preserve()
 print(json.dumps(paths))
-""", str(root), str(count)],
+""", str(root), str(count), namespace],
         cwd=REPO, capture_output=True, text=True, check=True, timeout=30,
     )
     return [Path(path) for path in json.loads(result.stdout)]
@@ -393,7 +393,19 @@ import sys
 sys.path.insert(0, {str(REPO)!r})
 pytest_plugins = ["scripts.common.pytest_scratch"]
 ''')
-    pytester.makepyfile("def test_payload(tmp_path):\n    (tmp_path / 'payload').write_text('hello')\n")
+    pytester.makepyfile('''
+import os
+import tempfile
+from pathlib import Path
+
+def test_payload(tmp_path):
+    root = Path(tempfile.gettempdir())
+    assert root == Path(os.environ["TMPDIR"])
+    assert tmp_path.is_relative_to(root)
+    with tempfile.NamedTemporaryFile() as ordinary:
+        assert Path(ordinary.name).parent == root
+    (tmp_path / "payload").write_text("hello")
+''')
     (root / "pytest-runs").mkdir(mode=0o775)
     (root / "pytest-runs").chmod(0o775)
     # Pytester's runner injects --basetemp, which intentionally opts out of ownership.
@@ -404,12 +416,18 @@ pytest_plugins = ["scripts.common.pytest_scratch"]
     assert result.returncode == 0, result.stdout + result.stderr
     assert "1 passed" in result.stdout
     assert (root / "pytest-runs").stat().st_mode & 0o777 == 0o700
-    namespace = root / "pytest-runs" / "task-scratch"
+    namespace = root / "pytest-runs" / "runs"
     runs = list(namespace.iterdir())
     assert len(runs) == 1
     lease = json.loads((runs[0] / "lease.json").read_text())
     assert lease["state"] == "preserved" and lease["task_id"] == "pytest"
     assert (runs[0] / "scratch" / "base").is_dir()
+    # These prefixes are recognized by secret scanners even in emitted paths.
+    for path in (runs[0] / "scratch" / "base").rglob("payload"):
+        relative = path.relative_to(root).as_posix().lower()
+        for prefix in ("sk-", "ghp_", "github_pat_", "xoxb-", "xoxp-", "akia"):
+            assert prefix not in relative
+    assert list((runs[0] / "scratch" / "base").rglob("payload"))
 
     explicit = pytester.path / "gate-owned"
     result = subprocess.run(
@@ -420,3 +438,110 @@ pytest_plugins = ["scripts.common.pytest_scratch"]
     assert "1 passed" in result.stdout
     assert explicit.is_dir()
     assert list(namespace.iterdir()) == runs
+
+
+def test_retention_counts_legacy_and_neutral_namespaces_together(area):
+    root, args = area
+    legacy = completed(root, 4)
+    neutral = completed(root, 4, namespace="runs")
+    report = tmp_sweep.sweep(**args, apply=True)["pytest_retention"]
+    assert report["errors"] == 0
+    assert report["by_decision"] == {"quarantined": 5, "preserve": 3}
+    assert [path for path in legacy + neutral if path.exists()] == neutral[-3:]
+    assert report["quarantine_held_entries"] == 5
+    again = tmp_sweep.sweep(**args, apply=True)["pytest_retention"]
+    assert again["quarantine_held_entries"] == 5
+    assert again["by_decision"] == {"preserve": 3}
+
+
+def test_missing_pytest_namespaces_do_not_probe_processes(area, monkeypatch):
+    _root, args = area
+    monkeypatch.setattr(tmp_sweep, "process_snapshot", lambda: pytest.fail("no owned pytest namespace to inspect"))
+    report = pytest_retention.sweep_pytest_runs(
+        keep=3, apply=False, ledger=tmp_sweep.Ledger(args["state_dir"]), run_id="missing",
+        task_root=args["task_root"], digest_limit=1024, quarantine_s=86400, repo_root=REPO,
+    )
+    assert report["rows"] == []
+    assert report["errors"] == 0
+
+
+@pytest.mark.parametrize("namespace", ["../escape", "a/b", "", ".", "/absolute"])
+def test_namespace_override_rejects_noncomponents(tmp_path, namespace):
+    with pytest.raises(task_scratch.TaskScratchError, match="invalid scratch namespace"):
+        task_scratch.allocate("pytest", root=tmp_path, namespace_dirname=namespace)
+    assert not list(tmp_path.iterdir())
+
+
+@pytest.mark.parametrize("previous_env", [None, "caller-temp"])
+def test_pytest_restores_temp_environment_and_cache(tmp_path, monkeypatch, previous_env):
+    import tempfile
+    from types import SimpleNamespace
+
+    root = tmp_path / "managed"
+    monkeypatch.setenv("LU_SCRATCH_ROOT", str(root))
+    if previous_env is None:
+        monkeypatch.delenv("TMPDIR", raising=False)
+    else:
+        monkeypatch.setenv("TMPDIR", previous_env)
+    previous = tempfile.tempdir
+    cleanups = []
+    config = SimpleNamespace(option=SimpleNamespace(basetemp=None), add_cleanup=cleanups.append)
+    try:
+        pytest_scratch.pytest_configure(config)
+        relative = Path(config.option.basetemp).relative_to(root).as_posix().lower()
+        for prefix in ("sk-", "ghp_", "github_pat_", "xoxb-", "xoxp-", "akia"):
+            assert prefix not in relative
+        assert Path(config.option.basetemp).parent == Path(tempfile.gettempdir())
+        assert os.environ["TMPDIR"] == tempfile.gettempdir()
+    finally:
+        for cleanup in reversed(cleanups):
+            cleanup()
+    assert os.environ.get("TMPDIR") == previous_env
+    assert tempfile.tempdir == previous
+
+
+def test_relative_shard_file_resolves_from_checkout_after_chdir(tmp_path, monkeypatch):
+    from types import SimpleNamespace
+
+    from tests import conftest as suite
+
+    checkout = tmp_path / "checkout"
+    shards = checkout / "ci-artifacts"
+    shards.mkdir(parents=True)
+    relative = "ci-artifacts/pytest-shard-2-files.txt"
+    (checkout / relative).write_text("tests/test_allowed.py\n")
+    child = tmp_path / "child"
+    child.mkdir()
+    (child / "ci-artifacts").mkdir()
+    (child / relative).write_text("tests/test_decoy.py\n")
+    monkeypatch.chdir(child)
+    monkeypatch.setattr(suite, "_REPO_ROOT", checkout)
+    monkeypatch.setenv(suite.LU_PYTEST_SHARD_FILES_ENV_VAR, relative)
+    suite._load_shard_allowlist.cache_clear()
+    try:
+        assert suite._load_shard_allowlist() == frozenset({"tests/test_allowed.py"})
+        config = SimpleNamespace(rootpath=checkout)
+        assert suite.pytest_ignore_collect(checkout / "tests/test_allowed.py", config) is False
+        assert suite.pytest_ignore_collect(checkout / "tests/test_other.py", config) is True
+        (checkout / relative).unlink()
+        suite._load_shard_allowlist.cache_clear()
+        with pytest.raises(RuntimeError, match="unreadable"):
+            suite._load_shard_allowlist()
+    finally:
+        suite._load_shard_allowlist.cache_clear()
+
+
+def test_generated_child_suite_does_not_inherit_checkout_shard(pytester, monkeypatch):
+    pytester.makeconftest(f'''
+import sys
+sys.path.insert(0, {str(REPO)!r})
+pytest_plugins = ["tests.conftest"]
+''')
+    pytester.makepyfile("def test_child(): pass")
+    monkeypatch.setenv("LU_PYTEST_SHARD_FILES", "ci-artifacts/absent-shard.txt")
+    result = subprocess.run(
+        [sys.executable, "-m", "pytest", "-q"], cwd=pytester.path,
+        capture_output=True, text=True, timeout=30,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert "1 passed" in result.stdout

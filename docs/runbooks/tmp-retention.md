@@ -45,13 +45,20 @@ component.
 
 For #10831, AC-01 is next-sweep retention of the newest N completed eligible
 pytest runs per managed root, default three. Live and unknown runs are exempt.
-The scheduled sweep inventories only `pytest-runs/task-scratch` below the
+The scheduled sweep inventories only `pytest-runs/runs` and the legacy
+`pytest-runs/task-scratch` below the
 existing scratch scan roots and honors `LU_SCRATCH_SCAN_ROOT`. It does not broadly admit
-managed scratch into the general temp sweep.
+managed scratch into the general temp sweep. The retention count applies across
+both layouts together. New invocations use the neutral `runs` component so
+emitted fixture paths do not contain secret-token prefixes.
 
 Ordinary repository pytest sessions allocate an invocation with `lease.json`
 and a lifetime-held `lease.lock` using `scripts.common.task_scratch`. Their
 base temp lives below the invocation's payload, outside the ownership metadata.
+The session points `TMPDIR` and Python's cached temp directory at that payload,
+so ordinary temporary files and pytest fixtures share one containment root.
+Teardown restores the previous environment and cache. Explicit `--basetemp`
+continues to use its caller's ownership and temporary-file configuration.
 The controller holds the lock through xdist teardown. Completed sessions
 release the lock and preserve their metadata for the next sweep. Eligibility
 requires matching owner, invocation and directory identity, completed metadata,

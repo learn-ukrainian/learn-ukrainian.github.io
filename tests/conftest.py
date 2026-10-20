@@ -1201,6 +1201,8 @@ def _load_shard_allowlist() -> frozenset[str] | None:
     if not allowlist_path_str:
         return None
     allowlist_path = Path(allowlist_path_str)
+    if not allowlist_path.is_absolute():
+        allowlist_path = _REPO_ROOT / allowlist_path
     try:
         text = allowlist_path.read_text(encoding="utf-8")
     except OSError as error:
@@ -1227,6 +1229,10 @@ def pytest_ignore_collect(collection_path: Path, config: pytest.Config) -> bool 
     (including ``build``) cannot hide an allowed file. Inactive local
     collection still defers to pytest's normal traversal rules.
     """
+    # Generated child suites inherit CI's environment but have their own root.
+    # The repository shard file governs only this checkout's test session.
+    if config is not None and config.rootpath.resolve() != _REPO_ROOT:
+        return None
     allowlist = _load_shard_allowlist()
     if allowlist is None:
         return None
