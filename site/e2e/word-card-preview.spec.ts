@@ -1,14 +1,63 @@
-import { expect, test } from '@playwright/test';
-import { readFileSync, mkdtempSync, existsSync, readdirSync } from 'node:fs';
+import { expect, test as base } from '@playwright/test';
+import { readFileSync, writeFileSync, mkdtempSync, existsSync, readdirSync, mkdirSync, copyFileSync, rmSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { createServer, type Server } from 'node:http';
 import { connect } from 'node:net';
 import { once } from 'node:events';
-import { join, resolve, sep } from 'node:path';
+import { basename, join, resolve, sep } from 'node:path';
 import { tmpdir } from 'node:os';
 import snapshot from '../tests/fixtures/word-card-preview/current';
 import { revisionCases, relationCases, record } from '../tests/fixtures/word-card-preview/inputs';
 import { buildPreview, releaseControls, candidateId, certifiedId, pins, fidelityControls, fidelityRefusals, semanticCases, semanticControls } from '../tests/fixtures/word-card-preview/release-controls';
+
+async function withScratch(prefix: string, logs: string, use: (scratch: string) => Promise<void>): Promise<void> {
+  const scratch = mkdtempSync(join(process.env.TMPDIR || tmpdir(), prefix));
+  try {
+    await use(scratch);
+  } finally {
+    // Copy only diagnostic files, never the builds or their symlinked dependencies.
+    // If preservation fails, retain scratch and fail teardown rather than lose logs.
+    for (const entry of readdirSync(scratch, { withFileTypes: true })) if (entry.isDirectory()) {
+      for (const name of ['build.log', 'astro.config.mjs']) {
+        const source = join(scratch, entry.name, name);
+        if (!existsSync(source)) continue;
+        const destination = join(logs, basename(scratch), entry.name);
+        mkdirSync(destination, { recursive: true });
+        copyFileSync(source, join(destination, name));
+      }
+    }
+    rmSync(scratch, { recursive: true });
+  }
+}
+
+const test = base.extend<{ fidelityScratch: string }, { releaseScratch: string }>({
+  fidelityScratch: async ({}, use, info) => {
+    await withScratch('fidelity-browser-', info.outputPath('build-logs'), use);
+  },
+  releaseScratch: [async ({}, use, info) => {
+    await withScratch('release-browser-', join(info.project.outputDir, `release-build-logs-${info.workerIndex}`), use);
+  }, { scope: 'worker' }],
+});
+
+for (const prefix of ['fidelity-browser-', 'release-browser-']) test(`releases ${prefix}scratch after success and failure`, async ({}, info) => {
+  for (const fail of [false, true]) {
+    let allocated = '';
+    const logs = info.outputPath(fail ? 'failure' : 'success');
+    const run = withScratch(prefix, logs, async scratch => {
+      allocated = scratch;
+      mkdirSync(join(scratch, 'control'));
+      writeFileSync(join(scratch, 'control', 'build.log'), 'literal build diagnostic');
+      writeFileSync(join(scratch, 'control', 'astro.config.mjs'), 'literal config');
+      if (fail) throw Error('controlled consumer failure');
+    });
+    if (fail) await expect(run).rejects.toThrow('controlled consumer failure');
+    else await run;
+    expect(existsSync(allocated)).toBe(false);
+    const saved = join(logs, basename(allocated), 'control');
+    expect(readFileSync(join(saved, 'build.log'), 'utf8')).toBe('literal build diagnostic');
+    expect(readFileSync(join(saved, 'astro.config.mjs'), 'utf8')).toBe('literal config');
+  }
+});
 
 function closePreview(server: Server): Promise<void> {
   return new Promise((done, reject) => {
@@ -106,8 +155,6 @@ for (const prefix of ['', 'compare/']) for (const c of revisionCases()) test(`${
 
 test.describe('source fidelity refusals', () => {
   test.describe.configure({ timeout: 150_000 });
-  const scratch = mkdtempSync(join(process.env.TMPDIR || tmpdir(), 'fidelity-browser-'));
-  const controls = { ...fidelityControls(join(scratch, 'inputs')), ...semanticControls(join(scratch, 'semantic')) };
   async function serve(root: string): Promise<Server> {
     const server = createServer((req, res) => {
       const path = new URL(req.url || '/', 'http://localhost').pathname;
@@ -116,10 +163,10 @@ test.describe('source fidelity refusals', () => {
       res.setHeader('Content-Type', file.endsWith('.css') ? 'text/css' : file.endsWith('.js') ? 'text/javascript' : 'text/html');
       res.end(readFileSync(file));
     });
-    await new Promise<void>(done => server.listen(0, '127.0.0.1', done));
+    await new Promise<void>((done, reject) => server.once('error', reject).listen(0, '127.0.0.1', done));
     return server;
   }
-  test('closes preview server with a pending browser preconnection', async () => {
+  test('closes preview server with a pending browser preconnection', async ({ fidelityScratch: scratch }) => {
     const server = await serve(scratch);
     const address = server.address();
     if (!address || typeof address === 'string') throw Error('No local port');
@@ -136,7 +183,8 @@ test.describe('source fidelity refusals', () => {
       if (server.listening) await closePreview(server);
     }
   });
-  for (const encoding of ['json', 'jsonl']) for (const c of semanticCases) test(`semantic ${encoding}-${c.name}`, async ({ page }, info) => {
+  for (const encoding of ['json', 'jsonl']) for (const c of semanticCases) test(`semantic ${encoding}-${c.name}`, async ({ page, fidelityScratch: scratch }, info) => {
+    const controls = semanticControls(join(scratch, 'semantic'));
     const name = `${encoding}-${c.name}`;
     const config = controls[name];
     if (!config) throw Error('Missing semantic control');
@@ -162,7 +210,8 @@ test.describe('source fidelity refusals', () => {
       }
     } finally { await closePreview(server); }
   });
-  for (const [name, reason] of fidelityRefusals) test(`refuses ${name}`, async ({ page }, info) => {
+  for (const [name, reason] of fidelityRefusals) test(`refuses ${name}`, async ({ page, fidelityScratch: scratch }, info) => {
+    const controls = fidelityControls(join(scratch, 'inputs'));
     const config = controls[name];
     if (!config) throw Error('Missing fidelity control');
     const root = buildPreview(join(scratch, name), config);
@@ -184,7 +233,8 @@ test.describe('source fidelity refusals', () => {
       }
     } finally { await closePreview(server); }
   });
-  test('retains faithful values and safe citation metadata', async ({ page }) => {
+  test('retains faithful values and safe citation metadata', async ({ page, fidelityScratch: scratch }) => {
+    const controls = fidelityControls(join(scratch, 'inputs'));
     const config = controls.faithful;
     if (!config) throw Error('Missing faithful control');
     const server = await serve(buildPreview(join(scratch, 'faithful'), config));
@@ -226,8 +276,7 @@ test.describe('release controls R01-R16 and R10b', () => {
   const outputs: Record<string, string> = {};
   let server: Server;
   let origin: string;
-  test.beforeAll(async () => {
-    const scratch = mkdtempSync(join(process.env.TMPDIR || tmpdir(), 'release-browser-'));
+  test.beforeAll(async ({ releaseScratch: scratch }) => {
     const controls = releaseControls(join(scratch, 'inputs'));
     for (const name of ['base', 'json', 'replacement', 'absent', 'malformed', 'missing', 'bytes', 'tamper', 'status', 'citation', 'required', 'off']) {
       const config = controls[name];
@@ -246,12 +295,12 @@ test.describe('release controls R01-R16 and R10b', () => {
       res.setHeader('Content-Type', file.endsWith('.css') ? 'text/css' : file.endsWith('.js') ? 'text/javascript' : 'text/html');
       res.end(readFileSync(file));
     });
-    await new Promise<void>(done => server.listen(0, '127.0.0.1', done));
+    await new Promise<void>((done, reject) => server.once('error', reject).listen(0, '127.0.0.1', done));
     const address = server.address();
     if (!address || typeof address === 'string') throw Error('No local port');
     origin = `http://127.0.0.1:${address.port}`;
   });
-  test.afterAll(async () => { if (server) await closePreview(server); });
+  test.afterAll(async () => { if (server?.listening) await closePreview(server); });
   const url = (control: string, path: string) => `${origin}/__control__/${control}/lexicon-v2/${path}/`;
 
   test('R01 candidate literal values, citations and declared gaps', async ({ page }) => {
