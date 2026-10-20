@@ -1955,7 +1955,8 @@ def test_issue_9480_target_argv_matches_bash(monkeypatch, tmp_path, command, exp
     )
     monkeypatch.setattr("sys.stdin", io.StringIO(json.dumps({"tool_input": {"command": command + suffix}})))
     assert guard.main() == 2
-    assert judged == [expected[0]]
+    # A zero-padded number is refused before any lookup: gh would read it as a PR number.
+    assert judged == ([expected[0]] if guard._canonical_selector(expected[0]) else [])
 
 
 @pytest.mark.parametrize("suffix", ["", " >out", " | cat"])
@@ -2163,7 +2164,6 @@ def test_check_states_supported_exits_still_parse(monkeypatch, returncode, bucke
 
 @pytest.mark.parametrize("pr,repo,meta,expected", [
     ("5", None, _META, "owner/repo"),
-    ("#5", None, _META, "owner/repo"),
     ("https://github.com/owner/repo/pull/5", None, _META, "owner/repo"),
     ("http://www.github.com/OWNER/REPO/pull/5?x=1", None, _META, "owner/repo"),
     ("feature", None, _META, "owner/repo"),
@@ -2172,6 +2172,13 @@ def test_check_states_supported_exits_still_parse(monkeypatch, returncode, bucke
     ("5", "github.com/owner/repo", _META, "owner/repo"),
     ("9", None, _META, None),
     ("#9", None, _META, None),
+    ("#5", None, _META, None),
+    ("+5", None, _META, None),
+    ("#+5", None, _META, None),
+    ("+0005", None, _META, None),
+    ("#+0005", None, _META, None),
+    ("05", None, _META, None),
+    ("https://github.com/owner/repo/pull/05", None, _META, None),
     ("https://github.com/owner/repo/pull/9", None, _META, None),
     ("https://github.com/other/repo/pull/5", None, _META, None),
     ("https://github.com/owner/repo/pull/50", None, _META, None),
@@ -2190,6 +2197,27 @@ def test_check_states_supported_exits_still_parse(monkeypatch, returncode, bucke
 ])
 def test_judged_repo_requires_the_selected_pr(pr, repo, meta, expected):
     assert guard._judged_repo(pr, repo, meta) == expected
+
+
+@pytest.mark.parametrize("pr,canonical", [
+    ("9", True), ("10", True), ("https://github.com/owner/repo/pull/9", True),
+    ("https://github.com/Owner/Repo/pull/9/files", True), ("feature-branch", True), ("owner:feat#x", True),
+    ("+9", False), ("#+9", False), ("+0009", False), ("#+0009", False), ("#9", False), ("-9", False),
+    ("0", False), ("0009", False), ("https://github.com/owner/repo/pull/09", False),
+    ("https://github.com/owner/repo/issues/9", False), ("ftp://github.com/owner/repo/pull/9", False),
+])
+def test_canonical_selector(pr, canonical):
+    assert guard._canonical_selector(pr) is canonical
+
+
+@pytest.mark.parametrize("selector", ["+9", "#+9", "+0009", "#+0009", "#9", "0009"])
+def test_non_canonical_selector_blocks_before_any_gh_read(monkeypatch, capsys, selector):
+    calls = _scripted_gh(monkeypatch, {})
+    command = f"gh pr merge '{selector}' --squash"
+    monkeypatch.setattr("sys.stdin", io.StringIO(json.dumps({"tool_input": {"command": command}})))
+    assert guard.main() == 2
+    assert "is not canonical" in capsys.readouterr().err
+    assert calls == []
 
 
 def test_status_rollup_returns_the_bound_response(monkeypatch):

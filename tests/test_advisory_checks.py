@@ -594,13 +594,20 @@ def test_oo48_checks_transport_result_policy_is_shared(code, rows, ready, tmp_pa
     ("gh pr merge 5 --repo ghe.example/owner/repo --squash", {}, False),
     ("gh pr merge 5 --squash", {"url": "https://github.com/owner/repo/pull/77"}, False),
     ("gh pr merge feature-branch --squash", {"number": 77}, False),
+    # gh reads every Atoi spelling after an optional "#" as the PR number; none is a branch.
+    *[(f"gh pr merge '{selector}' --squash", meta, False)
+      for selector in ["+5", "#+5", "+0005", "#+0005", "#5", "0005", "https://github.com/owner/repo/pull/05"]
+      for meta in [{}, {"number": 77, "url": "https://github.com/owner/repo/pull/77"}]],
 ])
-def test_oo48_hook_metadata_must_be_the_selected_pr(command, meta, ready, tmp_path):
+@pytest.mark.parametrize("old_client", [False, True], ids=["checks-json", "old-client-rollup"])
+def test_oo48_hook_metadata_must_be_the_selected_pr(command, meta, ready, old_client, tmp_path):
     data = {"head": HEAD, "checks": [GREEN_GATE, OBSERVED], "runs": [entire_run()], "statuses": [],
-            "old_client": False, "old_client_stderr": OLD_CLIENT_STDERR, "meta": meta}
+            "old_client": old_client, "old_client_stderr": OLD_CLIENT_STDERR, "meta": meta}
     hooked, calls, stderr = hook_ready(data, tmp_path, command)
     assert hooked is ready, stderr
     assert any(call[:1] == ["api"] for call in calls) is ready
+    if "is not canonical" in stderr:
+        assert calls == []
 
 
 def test_oo48_without_an_entry_name_the_selector_is_not_reinterpreted(tmp_path):

@@ -838,6 +838,24 @@ def _gh_api_json(endpoint: str, cwd: str | None = None) -> object:
 
 
 _PR_PATH = r"/([\w.-]+)/([\w.-]+)/pull/(\d+)"
+_URL_SELECTOR_RE = re.compile(r"https?://[^/?#]+/[^/?#]+/[^/?#]+/pull/([0-9]+)(?:[/?#]|$)", re.IGNORECASE)
+
+
+def _canonical_selector(pr: str) -> bool:
+    """True when gh reads ``pr`` exactly as this hook reads it.
+
+    gh's finder reads ``strconv.Atoi(strings.TrimPrefix(selector, "#"))`` as a PR number,
+    so ``#9``, ``+9``, ``#+9`` and ``0009`` all name PR 9 while looking like branch
+    names here. Only a canonical decimal number, an http(s) PR URL with a canonical
+    number, or a branch name gh cannot read as a number is judged; git refuses branch
+    names starting with ``-``, and ``+``/``#`` are where gh's numeric reading starts.
+    """
+    if "://" in pr:
+        url = _URL_SELECTOR_RE.match(pr)
+        return url is not None and not url.group(1).startswith("0")
+    if re.fullmatch(r"[0-9]+", pr):
+        return not pr.startswith("0")
+    return not pr.startswith(("+", "-", "#"))
 
 
 def _repo_name(value: str) -> str | None:
@@ -858,10 +876,10 @@ def _judged_repo(pr: str, repo: str | None, data: object) -> str | None:
     url = data.get("url") if isinstance(data, dict) else None
     own = re.fullmatch(r"https://github\.com" + _PR_PATH, url) if isinstance(url, str) else None
     number = _canonical_pr_number(data.get("number")) if isinstance(data, dict) else None
-    if own is None or number is None or int(own.group(3)) != int(number):
+    if own is None or number is None or int(own.group(3)) != int(number) or not _canonical_selector(pr):
         return None
     owner_repo = f"{own.group(1)}/{own.group(2)}"
-    numeric = re.fullmatch(r"#?(\d+)", pr)
+    numeric = re.fullmatch(r"([0-9]+)", pr)
     selected = re.match(r"https?://(?:www\.)?github\.com" + _PR_PATH + r"(?:[/?#]|$)", pr, flags=re.IGNORECASE)
     if (
         (numeric is not None and int(numeric.group(1)) != int(number))
@@ -1009,6 +1027,13 @@ def _judge(args: list[str], cwd: str | None = None) -> str | None:
         return _block_msg(
             "could not determine which PR this merges",
             "Name the PR explicitly (`gh pr merge <number> ...`) so the merge can be verified.",
+        )
+    if not _canonical_selector(pr):
+        return _block_msg(
+            f"PR selector {pr!r} is not canonical",
+            "gh reads `#N`, `+N`, `#+N` and zero-padded numbers as PR numbers, so this guard\n"
+            "would judge a branch while gh merges a PR. Name the PR as its plain number\n"
+            "(`gh pr merge 9 ...`), its PR URL, or a branch name.",
         )
     meta, states = _pr_snapshot(pr, repo, cwd=cwd)
     if meta is None:
