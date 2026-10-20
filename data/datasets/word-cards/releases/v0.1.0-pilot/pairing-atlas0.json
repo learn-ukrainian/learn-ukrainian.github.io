@@ -1,0 +1,1039 @@
+{
+  "schema_version": "1",
+  "release_version": "v0.1.0-pilot",
+  "cards_sha256": "45bd9c9325a3b4221c86d1663d784e96a7edc096674415445d37113f793189e6",
+  "registry_version": 3,
+  "total_cards": 150,
+  "paired_count": 109,
+  "unpaired_count": 35,
+  "ambiguous_count": 6,
+  "entries": [
+    {
+      "card_id": "wc_02a5cjxcpbcf",
+      "spelling": "баран",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:баран",
+      "pilot_card_id": "wc_r25wxjx5nrb9"
+    },
+    {
+      "card_id": "wc_043h3npd7ed4",
+      "spelling": "читати",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:читати",
+      "pilot_card_id": "wc_d1cvqv950jjw"
+    },
+    {
+      "card_id": "wc_08svjhdbe0fq",
+      "spelling": "ще",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:ще",
+      "pilot_card_id": "wc_gfcc5vk6xpmq"
+    },
+    {
+      "card_id": "wc_0a3k6ypbjhrf",
+      "spelling": "Баран",
+      "status": "unpaired",
+      "reason": "new_candidate_no_current_atlas_entry"
+    },
+    {
+      "card_id": "wc_0c2c6k5nrw0n",
+      "spelling": "щось",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:щось",
+      "pilot_card_id": "wc_bcks3tm0xg7b"
+    },
+    {
+      "card_id": "wc_0nq8zajmfvcg",
+      "spelling": "щопонеділка",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:щопонеділка",
+      "pilot_card_id": "wc_8wwr7z43rhhy"
+    },
+    {
+      "card_id": "wc_0r1cdw5z36cd",
+      "spelling": "швидко",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:швидко",
+      "pilot_card_id": "wc_h9rmpnedcsms"
+    },
+    {
+      "card_id": "wc_0wv95b3qm707",
+      "spelling": "шапка",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:шапка",
+      "pilot_card_id": "wc_9qkmsqw57wd0"
+    },
+    {
+      "card_id": "wc_1nrw339ddgvm",
+      "spelling": null,
+      "status": "unpaired",
+      "reason": "new_candidate_no_current_atlas_entry"
+    },
+    {
+      "card_id": "wc_2q1qzzw8gd01",
+      "spelling": "швидше",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:швидше",
+      "pilot_card_id": "wc_m6g98e4ehs8s"
+    },
+    {
+      "card_id": "wc_2xzw44zg56aq",
+      "spelling": "яскравіший",
+      "status": "unpaired",
+      "reason": "new_candidate_no_current_atlas_entry"
+    },
+    {
+      "card_id": "wc_345emw0fe2hr",
+      "spelling": "який",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:який",
+      "pilot_card_id": "wc_p0xrnj43sg2j"
+    },
+    {
+      "card_id": "wc_36p338sk68qm",
+      "spelling": "число",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:число",
+      "pilot_card_id": "wc_19cf6nhsk5dz"
+    },
+    {
+      "card_id": "wc_3rc3vnk4r328",
+      "spelling": "шкідливий",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:шкідливий",
+      "pilot_card_id": "wc_wv22zsw6daws"
+    },
+    {
+      "card_id": "wc_4fm88q03w5qs",
+      "spelling": "щонеділі",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:щонеділі",
+      "pilot_card_id": "wc_z43w9gx8jd2w"
+    },
+    {
+      "card_id": "wc_4w8bcapex04x",
+      "spelling": "щирий",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:щирий",
+      "pilot_card_id": "wc_j3wqt5ywnz0t"
+    },
+    {
+      "card_id": "wc_5031n96dwgnt",
+      "spelling": "щотижня",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:щотижня",
+      "pilot_card_id": "wc_9hzdx5zzyswb"
+    },
+    {
+      "card_id": "wc_562eqy9g3bck",
+      "spelling": null,
+      "status": "unpaired",
+      "reason": "new_candidate_no_current_atlas_entry"
+    },
+    {
+      "card_id": "wc_5b36dst0her6",
+      "spelling": "щодня",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:щодня",
+      "pilot_card_id": "wc_nhz6q4shjv0h"
+    },
+    {
+      "card_id": "wc_5btr8jkdzvd1",
+      "spelling": "ясно",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:ясно",
+      "pilot_card_id": "wc_vgvf3gwkyke0"
+    },
+    {
+      "card_id": "wc_5j37jfndz666",
+      "spelling": null,
+      "status": "unpaired",
+      "reason": "new_candidate_no_current_atlas_entry"
+    },
+    {
+      "card_id": "wc_5s9kgf5brczs",
+      "spelling": "щодо",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:щодо",
+      "pilot_card_id": "wc_1kt5f2tmcs8q"
+    },
+    {
+      "card_id": "wc_6bt62wd6zzzf",
+      "spelling": "яйце",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:яйце",
+      "pilot_card_id": "wc_mb0hxd3mxt58"
+    },
+    {
+      "card_id": "wc_6f8yq9yvp0ns",
+      "spelling": "шоколадний",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:шоколадний",
+      "pilot_card_id": "wc_ytpv0n4b1e69"
+    },
+    {
+      "card_id": "wc_6hg8x80fcnk2",
+      "spelling": "Батьківщина",
+      "status": "unpaired",
+      "reason": "new_candidate_no_current_atlas_entry"
+    },
+    {
+      "card_id": "wc_7a6x6n8rek4y",
+      "spelling": null,
+      "status": "unpaired",
+      "reason": "new_candidate_no_current_atlas_entry"
+    },
+    {
+      "card_id": "wc_7e1t38e50r34",
+      "spelling": "якийсь",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:якийсь",
+      "pilot_card_id": "wc_wcvp39qn47gx"
+    },
+    {
+      "card_id": "wc_7vqqh0c120vy",
+      "spelling": "щітка",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:щітка",
+      "pilot_card_id": "wc_zg89d2yvysp1"
+    },
+    {
+      "card_id": "wc_8bbj9gn4qm3z",
+      "spelling": "шофер",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:шофер",
+      "pilot_card_id": "wc_jjsqjngbjsbc"
+    },
+    {
+      "card_id": "wc_8kf3af4b8vth",
+      "spelling": "чоловічий",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:чоловічий",
+      "pilot_card_id": "wc_f49khkafdac5"
+    },
+    {
+      "card_id": "wc_8mhjfw05sm0t",
+      "spelling": "чому",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:чому",
+      "pilot_card_id": "wc_cr28dbbc8yac"
+    },
+    {
+      "card_id": "wc_8t60pamgdqs0",
+      "spelling": "шістнадцятий",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:шістнадцятий",
+      "pilot_card_id": "wc_n90was2dp5yg"
+    },
+    {
+      "card_id": "wc_8z09eyahcs88",
+      "spelling": "любов",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:любов",
+      "pilot_card_id": "wc_qfzs6ftf8qfg"
+    },
+    {
+      "card_id": "wc_91fq1gtsh9f5",
+      "spelling": "Новий",
+      "status": "unpaired",
+      "reason": "new_candidate_no_current_atlas_entry"
+    },
+    {
+      "card_id": "wc_91qt0yt5aqnt",
+      "spelling": "щорічно",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:щорічно",
+      "pilot_card_id": "wc_vdv4w9xr6pyp"
+    },
+    {
+      "card_id": "wc_96p4nx83f894",
+      "spelling": "бабин",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:бабин",
+      "pilot_card_id": "wc_f99qh710qsh9"
+    },
+    {
+      "card_id": "wc_9wjbgkp9fak8",
+      "spelling": "шлюб",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:шлюб",
+      "pilot_card_id": "wc_ngxvpg5304gw"
+    },
+    {
+      "card_id": "wc_9zfg3rrkkqzf",
+      "spelling": "шампанське",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:шампанське",
+      "pilot_card_id": "wc_q6zj0kg5qp3b"
+    },
+    {
+      "card_id": "wc_a4ndp7w0v8dq",
+      "spelling": "бабуся",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:бабуся",
+      "pilot_card_id": "wc_tgmd9j7ar9pe"
+    },
+    {
+      "card_id": "wc_a7k5wtq89cdg",
+      "spelling": "яскравий",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:яскравий",
+      "pilot_card_id": "wc_43hd699qc2nf"
+    },
+    {
+      "card_id": "wc_acq6r56secba",
+      "spelling": "щохвилини",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:щохвилини",
+      "pilot_card_id": "wc_jsrkjtt9fh5t"
+    },
+    {
+      "card_id": "wc_anz167as5tn7",
+      "spelling": "Бабуся",
+      "status": "unpaired",
+      "reason": "new_candidate_no_current_atlas_entry"
+    },
+    {
+      "card_id": "wc_b92hz3ncnw1a",
+      "spelling": "шоколад",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:шоколад",
+      "pilot_card_id": "wc_vrkm43wm43kk"
+    },
+    {
+      "card_id": "wc_bej8fh02sp6p",
+      "spelling": null,
+      "status": "unpaired",
+      "reason": "new_candidate_no_current_atlas_entry"
+    },
+    {
+      "card_id": "wc_bfdeknm81e44",
+      "spelling": "шестеро",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:шестеро",
+      "pilot_card_id": "wc_jn2pe9rdvz0z"
+    },
+    {
+      "card_id": "wc_bgr5q9c06wxg",
+      "spelling": "замок",
+      "status": "ambiguous",
+      "reason": "homonym_unresolved",
+      "candidate_atlas0_slugs": [
+        "atlas0:slug:замок"
+      ]
+    },
+    {
+      "card_id": "wc_btwc6wcf50wv",
+      "spelling": "щоранку",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:щоранку",
+      "pilot_card_id": "wc_y9bj891j7t4d"
+    },
+    {
+      "card_id": "wc_bz5ypsm3wyj7",
+      "spelling": "Шуба",
+      "status": "unpaired",
+      "reason": "new_candidate_no_current_atlas_entry"
+    },
+    {
+      "card_id": "wc_c66xvp4hvdev",
+      "spelling": null,
+      "status": "unpaired",
+      "reason": "new_candidate_no_current_atlas_entry"
+    },
+    {
+      "card_id": "wc_c6j1qtrpbcgx",
+      "spelling": "шафка",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:шафка",
+      "pilot_card_id": "wc_jw27y6721etw"
+    },
+    {
+      "card_id": "wc_cnq7f88k186e",
+      "spelling": "шкарпетка",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:шкарпетка",
+      "pilot_card_id": "wc_1bzhd5mkghq9"
+    },
+    {
+      "card_id": "wc_cvkw5nzdg00n",
+      "spelling": "замок",
+      "status": "ambiguous",
+      "reason": "homonym_unresolved",
+      "candidate_atlas0_slugs": [
+        "atlas0:slug:замок"
+      ]
+    },
+    {
+      "card_id": "wc_cxjtr6481e7t",
+      "spelling": "новий",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:новий",
+      "pilot_card_id": "wc_yy4nny14rx51"
+    },
+    {
+      "card_id": "wc_d2d38y0ctmct",
+      "spelling": "Бар",
+      "status": "unpaired",
+      "reason": "new_candidate_no_current_atlas_entry"
+    },
+    {
+      "card_id": "wc_d3qyg6mhjx07",
+      "spelling": "яловичина",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:яловичина",
+      "pilot_card_id": "wc_drdpf166nswc"
+    },
+    {
+      "card_id": "wc_da7t5vpprjw3",
+      "spelling": "якщо",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:якщо",
+      "pilot_card_id": "wc_sxc1eyfz9dv5"
+    },
+    {
+      "card_id": "wc_dstgm8vb5xfr",
+      "spelling": "школярка",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:школярка",
+      "pilot_card_id": "wc_yq3ee67dxmw4"
+    },
+    {
+      "card_id": "wc_e1n2pwrrajma",
+      "spelling": "якнайшвидше",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:якнайшвидше",
+      "pilot_card_id": "wc_8j74z91252k6"
+    },
+    {
+      "card_id": "wc_ea2fvbcb6p3k",
+      "spelling": "мама",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:мама",
+      "pilot_card_id": "wc_k70gc4f097nv"
+    },
+    {
+      "card_id": "wc_f0nnsej1zh7n",
+      "spelling": "ящик",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:ящик",
+      "pilot_card_id": "wc_jfxnt9es5nxt"
+    },
+    {
+      "card_id": "wc_f1m5pppp1619",
+      "spelling": "шматок",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:шматок",
+      "pilot_card_id": "wc_f73jy0zrfecj"
+    },
+    {
+      "card_id": "wc_f70edzrhfy8e",
+      "spelling": "шістсот",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:шістсот",
+      "pilot_card_id": "wc_p1t1snvcx40h"
+    },
+    {
+      "card_id": "wc_fc08gvq844db",
+      "spelling": null,
+      "status": "unpaired",
+      "reason": "new_candidate_no_current_atlas_entry"
+    },
+    {
+      "card_id": "wc_fd7d7wa6rn62",
+      "spelling": "шафа",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:шафа",
+      "pilot_card_id": "wc_t4t0f64khk29"
+    },
+    {
+      "card_id": "wc_ffw1zgt1exvw",
+      "spelling": "язик",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:язик",
+      "pilot_card_id": "wc_1qbkwac9e01x"
+    },
+    {
+      "card_id": "wc_fvxestgxf73d",
+      "spelling": "Любов",
+      "status": "unpaired",
+      "reason": "new_candidate_no_current_atlas_entry"
+    },
+    {
+      "card_id": "wc_gbh31d6zptnx",
+      "spelling": "самий",
+      "status": "ambiguous",
+      "reason": "homonym_unresolved",
+      "candidate_atlas0_slugs": [
+        "atlas0:slug:самий"
+      ]
+    },
+    {
+      "card_id": "wc_grkg2vxacyp0",
+      "spelling": "який-небудь",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:який-небудь",
+      "pilot_card_id": "wc_at0409w61zyq"
+    },
+    {
+      "card_id": "wc_gv7g0005qb5d",
+      "spelling": "Бабин",
+      "status": "unpaired",
+      "reason": "new_candidate_no_current_atlas_entry"
+    },
+    {
+      "card_id": "wc_h509ejs613sy",
+      "spelling": "ключ",
+      "status": "ambiguous",
+      "reason": "homonym_unresolved",
+      "candidate_atlas0_slugs": [
+        "atlas0:slug:ключ"
+      ]
+    },
+    {
+      "card_id": "wc_h54f47k5py6b",
+      "spelling": "я",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:я",
+      "pilot_card_id": "wc_wfymxxqhdgkc"
+    },
+    {
+      "card_id": "wc_hde0r633f7cq",
+      "spelling": "щасливо",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:щасливо",
+      "pilot_card_id": "wc_238mzwtz17gf"
+    },
+    {
+      "card_id": "wc_hec14t866f1c",
+      "spelling": "щока",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:щока",
+      "pilot_card_id": "wc_6w1vkn4r227z"
+    },
+    {
+      "card_id": "wc_hmz9x3anb1ma",
+      "spelling": "чотирнадцятий",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:чотирнадцятий",
+      "pilot_card_id": "wc_67bn6cpmtcqp"
+    },
+    {
+      "card_id": "wc_ht0ejvdkh8qe",
+      "spelling": "якби",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:якби",
+      "pilot_card_id": "wc_v9x0yj69sr7a"
+    },
+    {
+      "card_id": "wc_j1acg1649rw8",
+      "spelling": "щогодини",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:щогодини",
+      "pilot_card_id": "wc_3mz5knpwa0ga"
+    },
+    {
+      "card_id": "wc_jb4p3ppvcyvx",
+      "spelling": "чорно-білий",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:чорно-білий",
+      "pilot_card_id": "wc_2tve9ctvwd7r"
+    },
+    {
+      "card_id": "wc_jgravxme007h",
+      "spelling": "помилка",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:помилка",
+      "pilot_card_id": "wc_1379w0kfx052"
+    },
+    {
+      "card_id": "wc_jm7nfbvag8kp",
+      "spelling": "ширший",
+      "status": "unpaired",
+      "reason": "new_candidate_no_current_atlas_entry"
+    },
+    {
+      "card_id": "wc_jq9rtqw9yt7y",
+      "spelling": "щоденний",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:щоденний",
+      "pilot_card_id": "wc_6wnxmzgyyf66"
+    },
+    {
+      "card_id": "wc_jrycyzsy17qk",
+      "spelling": "чорний",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:чорний",
+      "pilot_card_id": "wc_tvkv1179tsqp"
+    },
+    {
+      "card_id": "wc_k1kp85tahqag",
+      "spelling": null,
+      "status": "unpaired",
+      "reason": "new_candidate_no_current_atlas_entry"
+    },
+    {
+      "card_id": "wc_k339xj1q2hv7",
+      "spelling": "шістдесятий",
+      "status": "unpaired",
+      "reason": "new_candidate_no_current_atlas_entry"
+    },
+    {
+      "card_id": "wc_k45tstzkx2b6",
+      "spelling": "самий",
+      "status": "ambiguous",
+      "reason": "homonym_unresolved",
+      "candidate_atlas0_slugs": [
+        "atlas0:slug:самий"
+      ]
+    },
+    {
+      "card_id": "wc_ka0tp1vt39e8",
+      "spelling": "щочетверга",
+      "status": "unpaired",
+      "reason": "new_candidate_no_current_atlas_entry"
+    },
+    {
+      "card_id": "wc_km3asrjbxhjb",
+      "spelling": "бандура",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:бандура",
+      "pilot_card_id": "wc_aq5w7h0qv447"
+    },
+    {
+      "card_id": "wc_m141ewnvv2m4",
+      "spelling": "шорти",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:шорти",
+      "pilot_card_id": "wc_e198rcrdrh89"
+    },
+    {
+      "card_id": "wc_m6bs5ramkdgy",
+      "spelling": "школяр",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:школяр",
+      "pilot_card_id": "wc_skyw6j2wf8yv"
+    },
+    {
+      "card_id": "wc_n1g44brn5vs2",
+      "spelling": "щедрівка",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:щедрівка",
+      "pilot_card_id": "wc_pc08ayxvtdez"
+    },
+    {
+      "card_id": "wc_nhac073v3589",
+      "spelling": "чоловік",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:чоловік",
+      "pilot_card_id": "wc_12jb159pfddw"
+    },
+    {
+      "card_id": "wc_p1d31y378qs1",
+      "spelling": null,
+      "status": "unpaired",
+      "reason": "new_candidate_no_current_atlas_entry"
+    },
+    {
+      "card_id": "wc_p41ag4cb6be8",
+      "spelling": "яблуко",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:яблуко",
+      "pilot_card_id": "wc_y2qb055dqpsg"
+    },
+    {
+      "card_id": "wc_p646xsqq40xt",
+      "spelling": "ключ",
+      "status": "ambiguous",
+      "reason": "homonym_unresolved",
+      "candidate_atlas0_slugs": [
+        "atlas0:slug:ключ"
+      ]
+    },
+    {
+      "card_id": "wc_pmenjgpx1mh9",
+      "spelling": "шістнадцять",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:шістнадцять",
+      "pilot_card_id": "wc_eze7qceqzc6v"
+    },
+    {
+      "card_id": "wc_ppr39m6qsr4e",
+      "spelling": "швидка",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:швидка",
+      "pilot_card_id": "wc_grr6ktqj7wen"
+    },
+    {
+      "card_id": "wc_pr69ykkbh95m",
+      "spelling": "базар",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:базар",
+      "pilot_card_id": "wc_mktt24jctsme"
+    },
+    {
+      "card_id": "wc_prfy102qxyrn",
+      "spelling": "юридичний",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:юридичний",
+      "pilot_card_id": "wc_efeg5hrqm7er"
+    },
+    {
+      "card_id": "wc_q7x9wprhedkr",
+      "spelling": "шістдесят",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:шістдесят",
+      "pilot_card_id": "wc_wvd4yxs5casj"
+    },
+    {
+      "card_id": "wc_q97mnya76nx7",
+      "spelling": "вряди-годи",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:вряди-годи",
+      "pilot_card_id": "wc_hkda9h3r1fs7"
+    },
+    {
+      "card_id": "wc_qm83zt29py0d",
+      "spelling": "шостий",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:шостий",
+      "pilot_card_id": "wc_xsxz3n2aygp3"
+    },
+    {
+      "card_id": "wc_qpcdgkctp7ne",
+      "spelling": "школа",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:школа",
+      "pilot_card_id": "wc_sebe8jc043tk"
+    },
+    {
+      "card_id": "wc_qq67z33prpah",
+      "spelling": "ширина",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:ширина",
+      "pilot_card_id": "wc_3pzk9ef8b4qy"
+    },
+    {
+      "card_id": "wc_qs3tehs0xz6e",
+      "spelling": "чотирнадцять",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:чотирнадцять",
+      "pilot_card_id": "wc_aegt7hj51rk1"
+    },
+    {
+      "card_id": "wc_qt1ajf0trs35",
+      "spelling": "чотириста",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:чотириста",
+      "pilot_card_id": "wc_a1x9zyzdkvsj"
+    },
+    {
+      "card_id": "wc_r6xe3vt4qtw9",
+      "spelling": "шукати",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:шукати",
+      "pilot_card_id": "wc_kp13rkrrzyvq"
+    },
+    {
+      "card_id": "wc_raxj8hwpvp62",
+      "spelling": "щедрий",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:щедрий",
+      "pilot_card_id": "wc_hqv8j8dc27zf"
+    },
+    {
+      "card_id": "wc_ref9xyps30mx",
+      "spelling": null,
+      "status": "unpaired",
+      "reason": "new_candidate_no_current_atlas_entry"
+    },
+    {
+      "card_id": "wc_rezqg70bnyy4",
+      "spelling": "щовівторка",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:щовівторка",
+      "pilot_card_id": "wc_dk3wrq3h6362"
+    },
+    {
+      "card_id": "wc_rk47ephm1bts",
+      "spelling": "Банк",
+      "status": "unpaired",
+      "reason": "new_candidate_no_current_atlas_entry"
+    },
+    {
+      "card_id": "wc_rmvh0tsz1y1a",
+      "spelling": null,
+      "status": "unpaired",
+      "reason": "new_candidate_no_current_atlas_entry"
+    },
+    {
+      "card_id": "wc_rn15mnpkqxar",
+      "spelling": "щиро",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:щиро",
+      "pilot_card_id": "wc_kns3ymgm7v0c"
+    },
+    {
+      "card_id": "wc_rq9bnybm7ybm",
+      "spelling": "Бандура",
+      "status": "unpaired",
+      "reason": "new_candidate_no_current_atlas_entry"
+    },
+    {
+      "card_id": "wc_rxz969384q84",
+      "spelling": "щосереди",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:щосереди",
+      "pilot_card_id": "wc_rjvdbbbsgypn"
+    },
+    {
+      "card_id": "wc_sfvs2tk37p5y",
+      "spelling": "щороку",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:щороку",
+      "pilot_card_id": "wc_0a24c94z4zcj"
+    },
+    {
+      "card_id": "wc_sj76cz4exr2z",
+      "spelling": "яхта",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:яхта",
+      "pilot_card_id": "wc_1n9ktb2qe1bw"
+    },
+    {
+      "card_id": "wc_spx94fnzqre4",
+      "spelling": "ягода",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:ягода",
+      "pilot_card_id": "wc_1rxnjxc0ya3q"
+    },
+    {
+      "card_id": "wc_sr1x6gb3wqbs",
+      "spelling": "Батьківщина",
+      "status": "unpaired",
+      "reason": "new_candidate_no_current_atlas_entry"
+    },
+    {
+      "card_id": "wc_sredngg8tzb0",
+      "spelling": "шість",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:шість",
+      "pilot_card_id": "wc_xvctddhjdqwa"
+    },
+    {
+      "card_id": "wc_sye0ppkx0dwh",
+      "spelling": "ЮНЕСКО",
+      "status": "unpaired",
+      "reason": "new_candidate_no_current_atlas_entry"
+    },
+    {
+      "card_id": "wc_tk3jdz1xf0mf",
+      "spelling": "щоразу",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:щоразу",
+      "pilot_card_id": "wc_dvxxh71p9gqn"
+    },
+    {
+      "card_id": "wc_tm57q9wj8y31",
+      "spelling": null,
+      "status": "unpaired",
+      "reason": "new_candidate_no_current_atlas_entry"
+    },
+    {
+      "card_id": "wc_tnwfw0gzfm5q",
+      "spelling": "щомісяця",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:щомісяця",
+      "pilot_card_id": "wc_y05eyfgydvky"
+    },
+    {
+      "card_id": "wc_tnxmxw3kjras",
+      "spelling": "Базар",
+      "status": "unpaired",
+      "reason": "new_candidate_no_current_atlas_entry"
+    },
+    {
+      "card_id": "wc_tpye2vc45frf",
+      "spelling": "юристка",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:юристка",
+      "pilot_card_id": "wc_1t0exmzynv9e"
+    },
+    {
+      "card_id": "wc_vfqatzjagh7j",
+      "spelling": "якісний",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:якісний",
+      "pilot_card_id": "wc_81bxw9p9v7hr"
+    },
+    {
+      "card_id": "wc_vm2hbj30pf6c",
+      "spelling": "щосуботи",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:щосуботи",
+      "pilot_card_id": "wc_71ndkamsa0j7"
+    },
+    {
+      "card_id": "wc_vnk3jt6x4cw6",
+      "spelling": "яєчня",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:яєчня",
+      "pilot_card_id": "wc_wvys93vyy6e8"
+    },
+    {
+      "card_id": "wc_vq34ms5wtfev",
+      "spelling": "ярмарок",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:ярмарок",
+      "pilot_card_id": "wc_hfbvq4p8ry38"
+    },
+    {
+      "card_id": "wc_vqtt12t22gam",
+      "spelling": "щовечора",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:щовечора",
+      "pilot_card_id": "wc_g2qa5wwd6mpd"
+    },
+    {
+      "card_id": "wc_vtqv6my006c3",
+      "spelling": "яловичий",
+      "status": "unpaired",
+      "reason": "new_candidate_no_current_atlas_entry"
+    },
+    {
+      "card_id": "wc_vy1cr9bw4wsq",
+      "spelling": "ялинка",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:ялинка",
+      "pilot_card_id": "wc_dkncz6n7wzvz"
+    },
+    {
+      "card_id": "wc_vzt7m2k3tg48",
+      "spelling": null,
+      "status": "unpaired",
+      "reason": "new_candidate_no_current_atlas_entry"
+    },
+    {
+      "card_id": "wc_w78q6xbserdn",
+      "spelling": "ювелірний",
+      "status": "unpaired",
+      "reason": "new_candidate_no_current_atlas_entry"
+    },
+    {
+      "card_id": "wc_w7tnaqg1amv4",
+      "spelling": "чотири",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:чотири",
+      "pilot_card_id": "wc_m1k9r1mdhyc5"
+    },
+    {
+      "card_id": "wc_wmyzn565rxp4",
+      "spelling": "бар",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:бар",
+      "pilot_card_id": "wc_331r6gx6dgb7"
+    },
+    {
+      "card_id": "wc_wq7h18tk76dh",
+      "spelling": "яблучний",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:яблучний",
+      "pilot_card_id": "wc_5fmf8a4ewtwp"
+    },
+    {
+      "card_id": "wc_wst7h8j302z2",
+      "spelling": "якість",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:якість",
+      "pilot_card_id": "wc_y0q9gbga3fsg"
+    },
+    {
+      "card_id": "wc_wzct64k4fham",
+      "spelling": null,
+      "status": "unpaired",
+      "reason": "new_candidate_no_current_atlas_entry"
+    },
+    {
+      "card_id": "wc_x5v9xqax0t4d",
+      "spelling": "штора",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:штора",
+      "pilot_card_id": "wc_ggqh4gb8psjs"
+    },
+    {
+      "card_id": "wc_xbw7msqev2mz",
+      "spelling": "банк",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:банк",
+      "pilot_card_id": "wc_2d3vxce91rnt"
+    },
+    {
+      "card_id": "wc_xmnw6aata5me",
+      "spelling": "шніцель",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:шніцель",
+      "pilot_card_id": "wc_8pm97g6n9wnn"
+    },
+    {
+      "card_id": "wc_xmzv71z7hwee",
+      "spelling": null,
+      "status": "unpaired",
+      "reason": "new_candidate_no_current_atlas_entry"
+    },
+    {
+      "card_id": "wc_y9j49mes11mr",
+      "spelling": "штамп",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:штамп",
+      "pilot_card_id": "wc_7qmqmzx4va3a"
+    },
+    {
+      "card_id": "wc_yd5ekty2j7kb",
+      "spelling": "чудовий",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:чудовий",
+      "pilot_card_id": "wc_sdgrwdcqmgbt"
+    },
+    {
+      "card_id": "wc_yff8w36wws3j",
+      "spelling": "шоколадка",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:шоколадка",
+      "pilot_card_id": "wc_4txjpyjd9j2d"
+    },
+    {
+      "card_id": "wc_yh60ravvq5am",
+      "spelling": "чути",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:чути",
+      "pilot_card_id": "wc_z3xfx5k15xhc"
+    },
+    {
+      "card_id": "wc_yr4ee7vav0mq",
+      "spelling": "ювілей",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:ювілей",
+      "pilot_card_id": "wc_z6qdgknvzrk9"
+    },
+    {
+      "card_id": "wc_zc0b8ncwj5b9",
+      "spelling": "шампунь",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:шампунь",
+      "pilot_card_id": "wc_m2852h4gjzg3"
+    },
+    {
+      "card_id": "wc_zhvykdar3452",
+      "spelling": "Мама",
+      "status": "unpaired",
+      "reason": "new_candidate_no_current_atlas_entry"
+    },
+    {
+      "card_id": "wc_zw0vjc1dxpsf",
+      "spelling": "штраф",
+      "status": "paired",
+      "atlas0_slug": "atlas0:slug:штраф",
+      "pilot_card_id": "wc_5c80746n273n"
+    }
+  ]
+}

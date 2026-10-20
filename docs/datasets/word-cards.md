@@ -162,6 +162,18 @@ already downloaded. Notices must not include private request text.
 Run `--help` for release and withdrawal command examples, arguments, and exit
 codes. Use the interpreter prescribed by the dispatch contract.
 
+## Atlas0 pairing
+
+`scripts/projects/open_model_data/generate_atlas_pairing.py` writes
+`data/datasets/word-cards/releases/v0.1.0-pilot/pairing-atlas0.json`.
+A card is paired only when its spelling assertion exactly matches one active
+`atlas0:slug:` registry entry and no other release card claims that entry.
+Part of speech separates atlas homonyms when the card has one part-of-speech
+value. Shared spellings stay `ambiguous` with reason `homonym_unresolved`.
+A card with no current atlas entry stays `unpaired`. Capitalization is
+significant. The generator does not open `sources.db`. `--check` exits 0 when
+the artifact matches the inputs and 1 when it drifts.
+
 The scoped mechanics regression command is:
 
 ```bash
