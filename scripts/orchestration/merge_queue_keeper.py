@@ -29,7 +29,14 @@ from scripts.opsec.prepublish import (
     publication_boundary,
     publication_cli,
 )
-from scripts.orchestration.integration_sweep import Verdict, classify_pr, lookup_verdict, parse_marker
+from scripts.orchestration.integration_sweep import (
+    COMMENTS_UNAVAILABLE,
+    Verdict,
+    classify_pr,
+    lookup_verdict,
+    parse_marker,
+    verdict_detail,
+)
 from scripts.publish import recovery
 from scripts.publish.github import Request, request_run
 
@@ -693,6 +700,13 @@ def _recorded_approval_for_head(comments: list[dict[str, Any]], head: str, login
     )
 
 
+def _cf_unknown_detail(cause: str, verdict: Verdict) -> str:
+    """Name the typed reason and comment behind a CF-unknown hold or revocation (#11127)."""
+    if not cause.startswith("CF-unknown") or verdict.state != "unknown":
+        return ""
+    return verdict_detail(verdict.reason, verdict.comment_id)
+
+
 def _revoke_reason(
     row: Mapping[str, Any],
     verdict: Verdict,
@@ -898,7 +912,8 @@ def run(
             check_rows = gh.checks(head)
             checks = _evaluate_checks(gh, number, head, check_rows)
         except KeeperError:
-            comments, verdict, checks, check_rows = [], Verdict("unknown"), "CI-unknown", []
+            comments, checks, check_rows = [], "CI-unknown", []
+            verdict = Verdict("unknown", reason=COMMENTS_UNAVAILABLE)
             comment_safe = False
         if comment_safe and _recorded_approval_for_head(comments, head, login):
             approved_before = True
@@ -961,7 +976,10 @@ def run(
             observed_at=observed,
         )
         state = "ready" if reason == "ready" and not queued and not armed else report.state
-        lines.append(f"#{number} head={head[:12]} state={state} reason={reason} queued={queued} armed={armed}")
+        lines.append(
+            f"#{number} head={head[:12]} state={state} reason={reason} queued={queued} armed={armed}"
+            + verdict_detail(verdict.reason, verdict.comment_id, verdict.superseded_markers)
+        )
         if not apply:
             continue
         if not budget:
@@ -976,7 +994,7 @@ def run(
             continue
         can_comment = comment_safe
         try:
-            current_verdict = Verdict("unknown")
+            current_verdict = Verdict("unknown", reason=COMMENTS_UNAVAILABLE)
             current_checks = "CI-unknown"
             verdict_lookup_ok = False
             try:
@@ -1003,7 +1021,7 @@ def run(
                     current_comments = gh.comments(number)
                     current_verdict = lookup_verdict(current_comments, head, login)
                 except KeeperError:
-                    current_comments, current_verdict = [], Verdict("unknown")
+                    current_comments, current_verdict = [], Verdict("unknown", reason=COMMENTS_UNAVAILABLE)
                     comment_safe = False
                     verdict_lookup_ok = False
                 else:
@@ -1056,7 +1074,7 @@ def run(
                         gh.dequeue(node_id)
                     else:
                         gh.disarm(number)
-                    lines.append(f"#{number} revoked: {revoke}")
+                    lines.append(f"#{number} revoked: {revoke}" + _cf_unknown_detail(revoke, current_verdict))
                     if queued is True:
                         queued_now.pop(key, None)
                     if revoke == "squash-text-blocked":
@@ -1068,7 +1086,7 @@ def run(
                             previous.setdefault("pending_comments", {})[drop_key] = revoke
                     estimated_remaining -= 30
                 elif reason != "ready":
-                    lines.append(f"#{number} held: {reason}")
+                    lines.append(f"#{number} held: {reason}" + _cf_unknown_detail(reason, current_verdict))
             elif reason == "ready":
                 if drops >= 1 or drop_key in previous.get("shared_pass", {}):
                     gh.enqueue(number, head, recovery_attempt=True)

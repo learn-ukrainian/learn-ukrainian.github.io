@@ -219,7 +219,8 @@ class FakeGitHub:
 def run(
     fake: FakeGitHub, path: Path, monkeypatch: pytest.MonkeyPatch, verdict: str = "APPROVED", *, apply: bool = True
 ) -> tuple[list[str], bool]:
-    monkeypatch.setattr(keeper, "lookup_verdict", lambda comments, head, login: Verdict(verdict))
+    reason = "comments-unavailable" if verdict == "unknown" else None
+    monkeypatch.setattr(keeper, "lookup_verdict", lambda comments, head, login: Verdict(verdict, reason=reason))
     monkeypatch.setattr(keeper, "_ever_approved", lambda comments, login: verdict == "APPROVED")
     return keeper.run(fake, path, apply=apply)
 
@@ -541,6 +542,86 @@ def test_queued_approval_then_unknown_marker_revokes(tmp_path: Path) -> None:
     fake.comments_rows[0]["updated_at"] = "2026-09-23T13:00:01Z"
     keeper.run(fake, path, apply=True)
     assert ("dequeue", "PR_node_42") in fake.actions
+
+
+OLD_HEAD_C = "c" * 40
+OLD_HEAD_D = "d" * 40
+
+
+def hand_written(body: str, comment_id: int) -> dict[str, Any]:
+    """A trusted comment carrying a marker that ``record_cf_verdict`` did not write (#11127)."""
+    return {
+        "id": comment_id,
+        "body": body,
+        "user": {"login": "driver"},
+        "author_association": "MEMBER",
+        "created_at": "2026-09-23T12:30:00Z",
+        "updated_at": "2026-09-23T12:30:00Z",
+    }
+
+
+def issue_11127_old_head_markers() -> list[dict[str, Any]]:
+    """The two hand-written older-head markers that revoked PR #11095 three times."""
+    no_started = (
+        "Older head needs work.\n\nVERDICT: REQUEST_CHANGES\n\n"
+        f"<!-- cf-verdict v1 sha={OLD_HEAD_C} task=hand-one verdict=REQUEST_CHANGES model=gpt-6.1-sol family=openai -->"
+    )
+    no_microseconds = (
+        f"### Cross-family review\nReview profile: ukrainian\nhead: {OLD_HEAD_D}\nReviewer family: openai\n"
+        "VERDICT: APPROVED\nReviewer model: gpt-6.1-sol\nTask id: hand-two\n\n"
+        f"<!-- cf-verdict v1 sha={OLD_HEAD_D} task=hand-two started=2026-09-23T11:00:00+00:00 "
+        "verdict=APPROVED model=gpt-6.1-sol family=openai review_profile=ukrainian -->"
+    )
+    return [hand_written(no_started, 9001), hand_written(no_microseconds, 9002)]
+
+
+def test_issue_11127_older_head_malformed_markers_never_revoke_queued_approval(tmp_path: Path) -> None:
+    fake = FakeGitHub(pr(isInMergeQueue=True))
+    fake.comments_rows = [
+        *issue_11127_old_head_markers(),
+        recorded("APPROVED", "2026-09-23T12:00:00.000001+00:00"),
+    ]
+    lines, failed = keeper.run(fake, tmp_path / "state.json", apply=True)
+    assert not failed
+    assert "dequeue" not in mutations(fake)
+    assert not any("revoked" in line for line in lines)
+    assert "state=queued" in lines[0] and "superseded-marker=9001,9002" in lines[0]
+    assert "cf-unknown=" not in lines[0]
+
+
+def test_cf_unknown_revocation_names_reason_and_comment(tmp_path: Path) -> None:
+    fake = FakeGitHub(pr(isInMergeQueue=True))
+    approval = recorded("APPROVED", "2026-09-23T12:00:00.000001+00:00")
+    malformed = hand_written(approval["body"].replace("verdict=APPROVED", "verdict=REQUEST_CHANGES"), 4242)
+    fake.comments_rows = [approval, malformed]
+    lines, failed = keeper.run(fake, tmp_path / "state.json", apply=True)
+    assert not failed
+    assert ("dequeue", "PR_node_42") in fake.actions
+    detail = " cf-unknown=marker-malformed-current-head comment=4242"
+    assert f"#42 revoked: CF-unknown-after-approval{detail}" in lines
+    assert lines[0].endswith(detail)
+    assert all("REQUEST_CHANGES" not in line and "Cross-family review" not in line for line in lines)
+
+
+def test_cf_unknown_hold_names_reason_and_comment(tmp_path: Path) -> None:
+    fake = FakeGitHub(pr(isInMergeQueue=True))
+    unattributed = "VERDICT: BLOCKED\n\n<!-- cf-verdict v1 task=hand verdict=BLOCKED model=m family=openai -->"
+    fake.comments_rows = [hand_written(unattributed, 77)]
+    lines, failed = keeper.run(fake, tmp_path / "state.json", apply=True)
+    assert not failed
+    assert "dequeue" not in mutations(fake)
+    assert "#42 held: CF-unknown cf-unknown=marker-unattributable comment=77" in lines
+
+
+def test_cf_unknown_lookup_failure_names_reason(tmp_path: Path) -> None:
+    fake = FakeGitHub()
+
+    def broken(number: int) -> list[dict[str, Any]]:
+        raise keeper.KeeperError("comments unavailable")
+
+    fake.comments = broken  # type: ignore[method-assign]
+    lines, _failed = keeper.run(fake, tmp_path / "state.json", apply=False)
+    assert lines[0].endswith(" cf-unknown=comments-unavailable comment=none")
 
 
 def test_queued_stale_recorded_approval_is_revoked(tmp_path: Path) -> None:

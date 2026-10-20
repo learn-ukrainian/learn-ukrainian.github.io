@@ -548,3 +548,194 @@ def test_corrupt_readable_bot_authorship_refuses_through_parser(history, line, r
     altered = body.replace(line + "\n", replacement + "\n")
     assert sweep.parse_marker(altered) is None
     assert sweep.lookup_verdict([{**item, "body": altered}], SHA, "fleet").state == "unknown"
+
+
+# Issue #11127: PR #11095 had a valid exact-head approval, but two hand-written markers for
+# older heads failed the parser and revoked it from the merge queue with no stated reason.
+CURRENT_11095 = "d5b35951" + "4e0c7a91b2f36d58e0a7c4b19f2d6e83"
+OLDER_ONE = "71f0c2a9e4b85d36c1a07e92f4b6d8c3a5e1f709"
+OLDER_TWO = "3b9e6d1f0a7c42e85b1d9f3a6c0e7b24d8f5a196"
+LATER = "2026-09-23T12:00:01.000001+00:00"
+
+
+def hand_written(body, comment_id):
+    """A trusted comment whose marker ``record_cf_verdict`` did not write."""
+    return {
+        "id": comment_id,
+        "body": body,
+        "user": {"login": "fleet"},
+        "author_association": "MEMBER",
+        "created_at": "2026-09-23T12:30:00Z",
+        "updated_at": "2026-09-23T12:30:00Z",
+    }
+
+
+def issue_11127_markers():
+    no_started = (
+        "Older head needs work.\n\nVERDICT: REQUEST_CHANGES\n\n"
+        f"<!-- cf-verdict v1 sha={OLDER_ONE} task=hand-one verdict=REQUEST_CHANGES model=gpt-6.1-sol family=openai -->"
+    )
+    no_microseconds = (
+        f"### Cross-family review\nReview profile: ukrainian\nhead: {OLDER_TWO}\nReviewer family: openai\n"
+        "VERDICT: APPROVED\nReviewer model: gpt-6.1-sol\nTask id: hand-two\n\n"
+        f"<!-- cf-verdict v1 sha={OLDER_TWO} task=hand-two started=2026-09-23T11:00:00+00:00 "
+        "verdict=APPROVED model=gpt-6.1-sol family=openai review_profile=ukrainian -->"
+    )
+    return [hand_written(no_started, 9001), hand_written(no_microseconds, 9002)]
+
+
+def recorded(comment_id, **fields):
+    return {**comment(sha=CURRENT_11095, **fields), "id": comment_id}
+
+
+def test_issue_11127_malformed_older_head_markers_do_not_poison_current_approval():
+    markers = issue_11127_markers()
+    assert all(sweep.parse_marker(item["body"]) is None for item in markers)
+    verdict = sweep.lookup_verdict([*markers, recorded(5000)], CURRENT_11095, "fleet")
+    assert (verdict.state, verdict.reason, verdict.comment_id) == ("APPROVED", None, None)
+    assert verdict.superseded_markers == ("9001", "9002")
+    report = sweep.classify_pr(pr(headRefOid=CURRENT_11095), verdict, queued=False, observed_at=START)
+    assert report.state == "ready" and report.superseded_markers == ("9001", "9002")
+    # The #10973 rejection rule still governs the current head; old markers alone leave it stale.
+    rejection = recorded(5001, task="later", started=LATER, verdict="CHANGES_REQUESTED")
+    assert sweep.lookup_verdict([*markers, recorded(5000), rejection], CURRENT_11095, "fleet").state == (
+        "CHANGES_REQUESTED"
+    )
+    assert sweep.lookup_verdict(markers, CURRENT_11095, "fleet").state == "CF-stale"
+
+
+@pytest.mark.parametrize(
+    "old,new",
+    [
+        (f"started={START} ", ""),
+        ("verdict=APPROVED ", "verdict=REQUEST_CHANGES "),
+        (START, "2026-09-23T12:00:00+00:00"),
+        ("### Cross-family review\n", ""),
+        ("family=openai -->", "family=openai sources_calls=x -->"),
+    ],
+)
+def test_malformed_current_head_marker_stays_unknown_with_reason_and_comment(old, new):
+    item = recorded(5150)
+    item["body"] = item["body"].replace(old, new)
+    assert sweep.parse_marker(item["body"]) is None
+    rows = [recorded(5000, task="valid", started=LATER), item]
+    verdict = sweep.lookup_verdict(rows, CURRENT_11095, "fleet")
+    assert (verdict.state, verdict.reason, verdict.comment_id) == (
+        "unknown",
+        sweep.MARKER_MALFORMED_CURRENT_HEAD,
+        "5150",
+    )
+
+
+@pytest.mark.parametrize(
+    "marker",
+    [
+        "<!-- cf-verdict v1 task=hand verdict=BLOCKED model=m family=openai -->",
+        f"<!-- cf-verdict v1 sha={OLDER_ONE} sha={OLDER_TWO} verdict=BLOCKED -->",
+        f"<!-- cf-verdict v1 sha={OLDER_ONE[:12]} verdict=BLOCKED -->",
+        f"<!-- cf-verdict v1 sha={OLDER_ONE.upper()} verdict=BLOCKED -->",
+        f"<!-- cf-verdict v1 sha={OLDER_ONE} verdict=BLOCKED",
+        f"<!-- cf-verdict v1 sha={OLDER_ONE} -->\n<!-- cf-verdict v1 sha={OLDER_TWO} -->",
+        f"<!-- cf-verdict v1 verdict=BLOCKED --> sha={OLDER_ONE}",
+    ],
+)
+def test_unattributable_malformed_marker_poisons_every_head(marker):
+    item = hand_written(f"VERDICT: BLOCKED\n\n{marker}", 6100)
+    verdict = sweep.lookup_verdict([recorded(5000), item], CURRENT_11095, "fleet")
+    assert (verdict.state, verdict.reason, verdict.comment_id) == ("unknown", sweep.MARKER_UNATTRIBUTABLE, "6100")
+
+
+@pytest.mark.parametrize(
+    "body",
+    [
+        f"Blocks {CURRENT_11095[:7]} too.\n\n<!-- cf-verdict v1 sha={OLDER_ONE} verdict=BLOCKED -->",
+        f"<!-- cf-verdict v1 sha={OLDER_ONE} verdict=BLOCKED unknown_history={CURRENT_11095} -->",
+        f"head: {CURRENT_11095.upper()}\n<!-- cf-verdict v1 sha={OLDER_ONE} verdict=BLOCKED -->",
+    ],
+)
+def test_older_head_malformed_marker_citing_current_head_poisons_it(body):
+    verdict = sweep.lookup_verdict([recorded(5000), hand_written(body, 6200)], CURRENT_11095, "fleet")
+    assert (verdict.state, verdict.reason, verdict.comment_id) == (
+        "unknown",
+        sweep.MARKER_MENTIONS_CURRENT_HEAD,
+        "6200",
+    )
+    # A different current head the body never cites treats the same marker as superseded.
+    other = sweep.lookup_verdict([hand_written(body, 6200)], "e" * 40, "fleet")
+    assert (other.state, other.superseded_markers) == ("CF-stale", ("6200",))
+
+
+def test_every_unknown_verdict_carries_a_typed_reason():
+    edited = {**recorded(7001), "updated_at": "2026-09-23T13:05:00Z"}
+    cases = [
+        (sweep.lookup_verdict(None, CURRENT_11095, "fleet"), sweep.COMMENTS_UNAVAILABLE, None),
+        (sweep.lookup_verdict([recorded(1)], CURRENT_11095, "fleet", complete=False), sweep.COMMENTS_UNAVAILABLE, None),
+        (
+            sweep.lookup_verdict([recorded(1), [recorded(2)]], CURRENT_11095, "fleet"),
+            sweep.COMMENT_MALFORMED,
+            "index-1",
+        ),
+        (sweep.lookup_verdict([{"id": 7000, "body": None}], CURRENT_11095, "fleet"), sweep.COMMENT_MALFORMED, "7000"),
+        (sweep.lookup_verdict([recorded(1)], CURRENT_11095[:12], "fleet"), sweep.HEAD_INVALID, None),
+        (sweep.lookup_verdict([recorded(1)], CURRENT_11095, None), sweep.IDENTITY_UNAVAILABLE, None),
+        (sweep.lookup_verdict([edited], CURRENT_11095, "fleet"), sweep.MARKER_EDITED, "7001"),
+        (
+            sweep.lookup_verdict([recorded(7002, family="unknown")], CURRENT_11095, "fleet"),
+            sweep.REVIEWER_UNATTESTED,
+            "7002",
+        ),
+    ]
+    for verdict, reason, comment_id in cases:
+        assert (verdict.state, verdict.reason, verdict.comment_id) == ("unknown", reason, comment_id)
+
+
+def test_verdict_reason_codes_are_a_stable_closed_list():
+    assert sweep.UNKNOWN_REASONS == (
+        "comments-unavailable",
+        "head-invalid",
+        "identity-unavailable",
+        "comment-malformed",
+        "marker-unattributable",
+        "marker-malformed-current-head",
+        "marker-mentions-current-head",
+        "marker-edited",
+        "reviewer-unattested",
+    )
+    with pytest.raises(ValueError):
+        sweep.Verdict("unknown")
+    with pytest.raises(ValueError):
+        sweep.Verdict("unknown", reason="because")
+    with pytest.raises(ValueError):
+        sweep.Verdict("APPROVED", reason=sweep.MARKER_EDITED)
+
+
+def test_report_names_unknown_reason_and_comment_without_bodies(monkeypatch, capsys):
+    malformed = recorded(5150)
+    malformed["body"] = malformed["body"].replace("verdict=APPROVED ", "verdict=REQUEST_CHANGES ")
+
+    class Adapter:
+        def __init__(self, root):
+            pass
+
+        def list_open_prs(self, repository):
+            return [pr(headRefOid=CURRENT_11095)]
+
+        def identity(self):
+            return "fleet"
+
+        def comments(self, repository, number):
+            return [*issue_11127_markers(), recorded(5000), malformed]
+
+        def queue_membership(self, repository, item):
+            return False
+
+    monkeypatch.setattr(sweep, "GitHubAdapter", Adapter)
+    assert sweep.main(["--repo", "owner/repo"]) == 0
+    text = capsys.readouterr().out
+    assert "state=CF-unknown" in text
+    assert text.rstrip().endswith(" cf-unknown=marker-malformed-current-head comment=5150 superseded-marker=9001,9002")
+    assert "REQUEST_CHANGES" not in text and "Cross-family review" not in text
+    assert sweep.main(["--repo", "owner/repo", "--json"]) == 0
+    row = json.loads(capsys.readouterr().out)[0]
+    assert (row["verdict_reason"], row["verdict_comment"]) == ("marker-malformed-current-head", "5150")
+    assert row["superseded_markers"] == ["9001", "9002"]
