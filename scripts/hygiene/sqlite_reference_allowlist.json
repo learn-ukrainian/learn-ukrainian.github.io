@@ -1190,13 +1190,13 @@
   },
   {
     "path": "scripts/wiki/sources_db.py",
-    "reference_count": 28,
+    "reference_count": 30,
     "kind": "writer",
     "target_db": "sources.db",
     "reason": "write branch migrates and ingests ULIF schema",
     "calls": [
-      "sqlite3.connect(f'{db_path.resolve().as_uri()}?mode=ro', uri=True, check_same_thread=False)",
-      "sqlite3.connect(str(db_path), check_same_thread=False)"
+      "sqlite3.connect(f'{db_path.resolve().as_uri()}?mode=ro', uri=True, check_same_thread=False, **options)",
+      "sqlite3.connect(str(db_path), check_same_thread=False, **options)"
     ]
   },
   {
