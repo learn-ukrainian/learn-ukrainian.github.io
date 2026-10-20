@@ -1902,6 +1902,48 @@ def test_budget_guard_preserves_unmapped_pin_until_exhausted(monkeypatch, capsys
     assert resolution == {}
 
 
+@pytest.mark.parametrize("signal", ["lane-status", "owner-status", "allowance-status", "plan-window"])
+def test_budget_pin_refuses_each_independent_exhaustion_signal(monkeypatch, signal):
+    """Each owner's exhaustion signal alone must prevent an incompatible pinned dispatch."""
+    monkeypatch.setattr(
+        delegate, "_budget_owner_facts",
+        lambda *_args, **_kwargs: types.SimpleNamespace(
+            status="near_cap" if signal == "owner-status" else "hot",
+            plan_remaining_pct=0.5 if signal == "allowance-status" else 80.0,
+        ),
+    )
+    monkeypatch.setattr(delegate.credit_lane, "plan_window_exhausted", lambda *_args: signal == "plan-window")
+    diagnostics = {}
+    with pytest.raises(delegate.BudgetGuardRefuseError, match="BUDGET_PINNED_MODEL_EXHAUSTED:"):
+        delegate._resolve_budget_substitution_model(
+            "claude", "codex", "claude-opus-5-5",
+            info={"status": "near_cap" if signal == "lane-status" else "hot"},
+            reason="status=hot", snapshot_metadata=None, diagnostic_sink=diagnostics,
+        )
+    assert "pinned_model_retained" not in diagnostics
+
+
+@pytest.mark.parametrize("lane", ["claude", "cursor"])
+@pytest.mark.parametrize("remaining", [None, 0.5])
+def test_budget_pin_refusal_formats_reading_and_lane_remedies(monkeypatch, lane, remaining):
+    monkeypatch.setattr(
+        delegate, "_budget_owner_facts",
+        lambda *_args, **_kwargs: types.SimpleNamespace(status="near_cap", plan_remaining_pct=remaining),
+    )
+    with pytest.raises(delegate.BudgetGuardRefuseError) as raised:
+        delegate._resolve_budget_substitution_model(
+            lane, "codex", "claude-opus-5-5", info={"status": "near_cap"},
+            reason="status=near_cap", snapshot_metadata=None, diagnostic_sink={},
+        )
+    message = str(raised.value)
+    assert message.startswith(f"BUDGET_PINNED_MODEL_EXHAUSTED: --agent {lane}")
+    assert ("unknown" if remaining is None else "0.5% remaining") in message
+    assert "None%" not in message
+    assert "wait for reset" in message and "request a mapped model" in message
+    assert ("Claude account label" in message) == (lane == "claude")
+    assert message.endswith("Refusing before spawn.")
+
+
 def test_budget_guard_retained_pin_is_in_dispatch_record(monkeypatch, tmp_path, capsys):
     commands = _capture_worker_commands(monkeypatch, tmp_path)
     budget = _codex_cursor_budget(codex_status="cool")
@@ -1940,7 +1982,7 @@ def test_budget_guard_pace_keeps_unpinned_and_mapped_substitutions(monkeypatch, 
         "diagnostics": {"records_loaded": 0, "stale": False, "codexbar_data_available": True},
     }
     monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: budget)
-    resolution = {}
+    resolution, diagnostics = {}, {}
     assert (
         delegate._resolve_agent_with_budget_guard(
             "cursor",
@@ -1948,11 +1990,13 @@ def test_budget_guard_pace_keeps_unpinned_and_mapped_substitutions(monkeypatch, 
             fallbacks={"cursor": "codex"},
             claude_account=HOST_ACCOUNT,
             model_resolution=resolution,
+            diagnostic_sink=diagnostics,
         )
         == "codex"
     )
     assert resolution["record"]["actual_model"] == "gpt-6.1-sol"
     assert resolution["record"]["model_resolution"] == ("mapped" if model else "catalog-default")
+    assert "pinned_model_retained" not in diagnostics
 
 
 @pytest.mark.parametrize("model", ["claude-sonnet-5-5-high", "claude-opus-5-5-high"])

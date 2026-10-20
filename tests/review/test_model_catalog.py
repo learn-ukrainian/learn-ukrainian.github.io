@@ -393,8 +393,80 @@ def approved_driver_brief_baseline(baseline):
     return {**baseline, "catalog": catalog, "dispatch": dispatch}
 
 
-APPROVED_BASELINE = approved_driver_brief_baseline(GROK_LANGUAGE_BASELINE)
+def approved_budget_pin_baseline(baseline):
+    """Apply #11110's exhausted, unmapped Claude pin refusals after the other overlays."""
+    path = CAPACITY_FIXTURE / "budget-pin-11110.json"
+    assert hashlib.sha256(path.read_bytes()).hexdigest() == (
+        "4b30a903b56b91349d05eeeb79cdb5a1c13b447e9bcc1aa80b546c54e777418e"
+    )
+    fixture = json.loads(path.read_bytes())
+    dispatch = deepcopy(baseline["dispatch"])
+    for replacement in fixture["dispatch_refusal_replacements"]:
+        before, after = replacement["before"], replacement["after"]
+        for index in replacement["rows"]:
+            refusal = dispatch[index]["value"]["refusal"]
+            assert refusal.count(before) == 1
+            dispatch[index]["value"]["refusal"] = refusal.replace(before, after)
+    return {**baseline, "dispatch": dispatch}
+
+
+PRE_BUDGET_PIN_BASELINE = approved_driver_brief_baseline(GROK_LANGUAGE_BASELINE)
+APPROVED_BASELINE = approved_budget_pin_baseline(PRE_BUDGET_PIN_BASELINE)
 APPROVED_INPUTS = {**GEMINI_INPUTS, **SEATS_OVERLAY["inputs"], **ARGON_OVERLAY["inputs"]}
+
+
+@pytest.mark.parametrize("configuration", ("host-cli", "no-cli"))
+def test_budget_pin_overlay_changes_only_exhausted_unmapped_claude_refusals(configuration):
+    path = FIXTURE / ("baseline.json.gz" if configuration == "host-cli" else "no-cli/baseline.json.gz")
+    before = approved_reviewer_seats_baseline(json.loads(gzip.decompress(path.read_bytes())))
+    original = deepcopy(before)
+    after = approved_budget_pin_baseline(before)
+    assert before == original
+    assert set(after) == set(before)
+    assert {k: v for k, v in after.items() if k != "dispatch"} == {
+        k: v for k, v in before.items() if k != "dispatch"
+    }
+    changed = [i for i, (old, new) in enumerate(zip(before["dispatch"], after["dispatch"], strict=True)) if old != new]
+    models = {
+        62: "claude-sonnet-5-5", 66: "claude-fable-5-1", 70: "composer-2.5",
+        82: "grok-4.7", 86: "unregistered-model",
+    }
+    assert changed == list(models)
+    fixture = json.loads((CAPACITY_FIXTURE / "budget-pin-11110.json").read_bytes())
+    assert set(fixture) == {"dispatch_refusal_replacements"}
+    assert [r["rows"] for r in fixture["dispatch_refusal_replacements"]] == [[i] for i in models]
+    for index, model in models.items():
+        assert APPROVED_INPUTS["dispatch"][index] == {
+            "agent": "claude", "budget_status": "near_cap", "model": model, "review_attempt": None,
+        }
+        old, new = before["dispatch"][index], after["dispatch"][index]
+        expected = deepcopy(old)
+        expected["value"]["refusal"] = (
+            "BUDGET_PINNED_MODEL_EXHAUSTED: --agent claude is exhausted/near_cap "
+            f"(unknown; near_cap (>90% used on FRESH snapshot)); explicit --model {model} has no mapping "
+            "accepted by --agent codex. Supported remedies: wait for reset, request a mapped model, "
+            "or select the other Claude account label where policy permits. Refusing before spawn."
+        )
+        assert new == expected
+    # Historical input rows 86/90 become 74/78 after the existing seat overlay.
+    for historical, index in ((86, 74), (90, 78)):
+        assert APPROVED_INPUTS["dispatch"][index] == INPUTS["dispatch"][historical]
+        assert after["dispatch"][index] == before["dispatch"][index]
+
+
+def test_budget_pin_overlay_refuses_drifted_refusal():
+    drifted = deepcopy(PRE_BUDGET_PIN_BASELINE)
+    drifted["dispatch"][62]["value"]["refusal"] = "unapproved refusal"
+    with pytest.raises(AssertionError):
+        approved_budget_pin_baseline(drifted)
+
+
+@pytest.mark.parametrize("index,field", [(63, "refusal"), (62, "target")])
+def test_budget_pin_overlay_still_rejects_other_dispatch_changes(index, field):
+    actual = deepcopy(APPROVED_BASELINE)
+    actual["dispatch"][index]["value"][field] = "unapproved change"
+    with pytest.raises(AssertionError, match="approved surface differs: dispatch"):
+        assert_frozen_surfaces(actual)
 
 
 def test_grok_language_overlay_records_only_the_two_field_delta():
@@ -1051,7 +1123,7 @@ def test_review_capacity_fixture_is_pinned_and_scope_bounded():
 PINNED_DIGESTS = {
     "routing-10263.json.gz": "3385853a0070ab9a2f77e1fb40d9178ce195e44e7fd6b8c8245702ec529b7d16",
     "SHA256SUMS": "4cba22dff8338f75c8ae96b35119c3da2bea3b3d7d6418c49e466ddc0ddf73a8",
-    "SPEC.md": "4f2549cd5cbe31dd441d924655b45a31f8b4c3f6d0fc28e8f87c4228ace3c01f",
+    "SPEC.md": "ae0434d10341cf742eff148b4702ba0c67a1f3a8906a0671703bb1cc0eaf850e",
     "baseline.json.gz": "2cf8945084c13d7ce0b55e98a91522e897baee5ba53648f21ec7ae7b66cdaa5d",
     "capture.py": "7571955c784ecf973931ba3b3a86c50bc4ee9f5bf2c2bdcfdbcbe096381222ea",
     "inputs.json": "4f9d9dd89acff3872a9e627a9627516c65b7e410da28464a4dda9105c0ec34b0",
@@ -1375,7 +1447,7 @@ def test_no_cli_capture_equals_separate_frozen_surface(tmp_path):
         assert hashlib.sha256((output / name).read_bytes()).hexdigest() == digest
     actual = json.loads(gzip.decompress((output / "baseline.json.gz").read_bytes()))
     original = json.loads(gzip.decompress((expected / "baseline.json.gz").read_bytes()))
-    assert actual == approved_driver_brief_baseline(approved_grok_language_seat_baseline(
+    assert actual == approved_budget_pin_baseline(approved_driver_brief_baseline(approved_grok_language_seat_baseline(
         approved_argon_trial_baseline(
             approved_hook_failure_baseline(
                 approved_hermes_effort_baseline(
@@ -1400,7 +1472,7 @@ def test_no_cli_capture_equals_separate_frozen_surface(tmp_path):
             ),
             "no-cli",
         )
-    ))
+    )))
     assert len(actual["launchers"]) == 70
     errors = [row.get("error", "") for row in actual["adapters"]]
     assert any("grok" in error and "PATH" in error for error in errors)
@@ -1442,7 +1514,7 @@ def test_extended_capture_denominator_and_current_contract():
 
 
 def test_driver_brief_capture_preserves_every_unrelated_value():
-    before, after = GROK_LANGUAGE_BASELINE, APPROVED_BASELINE
+    before, after = GROK_LANGUAGE_BASELINE, PRE_BUDGET_PIN_BASELINE
     for surface in set(before) - {"catalog", "dispatch"}:
         assert before[surface] == after[surface]
     old_models, new_models = before["catalog"]["models"], after["catalog"]["models"]

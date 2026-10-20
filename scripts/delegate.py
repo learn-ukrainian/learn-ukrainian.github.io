@@ -18061,11 +18061,14 @@ def _resolve_budget_substitution_model(
             credit_lane.allowance_status(facts.plan_remaining_pct),
         } or credit_lane.plan_window_exhausted(requested, info)
         if exhausted:
+            remaining = f"{facts.plan_remaining_pct}% remaining" if facts.plan_remaining_pct is not None else "unknown"
+            remedies = "wait for reset, request a mapped model"
+            if requested == "claude":
+                remedies += ", or select the other Claude account label where policy permits"
             raise BudgetGuardRefuseError(
                 f"BUDGET_PINNED_MODEL_EXHAUSTED: --agent {requested} is exhausted/near_cap "
-                f"({facts.plan_remaining_pct}% remaining; {reason}); explicit --model {model} has no mapping "
-                f"accepted by --agent {target}. Supported remedies: wait for reset, request a mapped model, "
-                "or select the other Claude account label where policy permits. Refusing before spawn."
+                f"({remaining}; {reason}); explicit --model {model} has no mapping "
+                f"accepted by --agent {target}. Supported remedies: {remedies}. Refusing before spawn."
             ) from None
         note = {
             "code": "BUDGET_PIN_RETAINED",
