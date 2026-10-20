@@ -23,7 +23,12 @@ for (const [slug, tier] of entries) {
           expect(response?.status(), `actual reference unavailable: ${slug}`).toBe(200);
           const article = page.locator('[data-word-atlas]');
           await expect(article).toBeVisible();
-          await expect(article.locator('h1')).toHaveCount(1);
+          if (tier === 'heteronym') {
+            await expect(article.locator('h1')).toHaveCount(await article.getByRole('tab').count());
+          } else {
+            await expect(article.locator('h1')).toHaveCount(1);
+          }
+          await expect(article.locator('h1:visible')).toHaveCount(1);
           await expect(page.locator('html')).toHaveAttribute('data-chrome-locale', locale);
           await page.evaluate((theme) => document.documentElement.setAttribute('data-theme', theme), theme);
           const note = article.locator('.atlas-enrichment-note');
@@ -69,7 +74,11 @@ for (const [slug, tier] of entries) {
               await expect(selected).toBeFocused();
               const panelId = await selected.getAttribute('aria-controls');
               expect(panelId).toBeTruthy();
-              await expect(article.locator(`#${panelId}`)).toBeVisible();
+              const panel = article.locator(`#${panelId}`);
+              await expect(panel).toBeVisible();
+              await expect(panel.locator('h1')).toHaveCount(1);
+              await expect(article.locator('h1:visible')).toHaveCount(1);
+              await expect(panel.locator('[data-testid="atlas-practice-cta"], [data-testid="atlas-practice-cta-unavailable"]')).toHaveCount(1);
               await expect(article.locator('[role="tabpanel"]:visible')).toHaveCount(1);
               await selected.evaluate(async (tab) => {
                 await Promise.all(tab.getAnimations().map((animation) => animation.finished));
@@ -126,7 +135,9 @@ for (const [slug, tier] of entries) {
           for (const link of await inTextLinks.all()) {
             await expect(link).toHaveCSS('text-decoration-line', 'underline');
           }
-          await expect(article.locator('[data-testid="atlas-practice-cta"], [data-testid="atlas-practice-cta-unavailable"]')).toHaveCount(1);
+          const practiceCtas = article.locator('[data-testid="atlas-practice-cta"], [data-testid="atlas-practice-cta-unavailable"]');
+          await expect(practiceCtas).toHaveCount(tier === 'heteronym' ? await article.getByRole('tab').count() : 1);
+          await expect(practiceCtas.filter({ visible: true })).toHaveCount(1);
           const emptySections = await article.locator('section.atlas-section').evaluateAll((sections) =>
             sections.filter((section) => {
               if (!section.querySelector('h2')) return false;
