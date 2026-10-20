@@ -42,14 +42,14 @@ def response(value, *, status=200, remaining=5000, reset=2000, etag='"one"'):
     )
 
 
-def client(tmp_path, script, *, now=1000, env=None):
+def client(tmp_path, script, *, now=1000, env=None, **limits):
     calls = []
 
     def transport(method, endpoint, headers, body, timeout):
         calls.append((method, endpoint, headers, body))
         return script[len(calls) - 1]
 
-    return REAL_CLIENT(cache_dir=tmp_path, transport=transport, clock=lambda: now, env=env or {}), calls
+    return REAL_CLIENT(cache_dir=tmp_path, transport=transport, clock=lambda: now, env=env or {}, **limits), calls
 
 
 def test_conditional_cache_survives_new_client(tmp_path):
@@ -2624,3 +2624,259 @@ def test_publisher_write_live_limit_records_headers_without_replay(tmp_path):
     assert deferred.github_result.error == "github_rate_limited"
     assert deferred.github_result.reason == "retry_after"
     assert calls.read_text().splitlines() == ["call"]
+
+
+@pytest.mark.parametrize("age,retained", [(9.999, True), (10, False), (10.001, False)])
+def test_retained_age_boundary_controls_stale_and_prunes(tmp_path, age, retained):
+    store, calls = client(tmp_path, [response([1], remaining=0)], cache_ttl_seconds=10)
+    assert store.request("GET", "user").value == [1]
+    store.clock = lambda: 1000 + age
+    result = store.request("GET", "user", allow_stale=True)
+    assert result.stale is retained
+    assert result.value == ([1] if retained else None)
+    assert result.age_seconds == pytest.approx(age if retained else 0)
+    assert result.error == (None if retained else "github_rate_limited")
+    assert len(calls) == 1
+    with store._db() as db:
+        assert db.execute("SELECT count(*) FROM cache").fetchone() == (int(retained),)
+        assert db.execute("SELECT remaining,reset FROM budget").fetchall() == [(0, 2000)]
+
+
+@pytest.mark.parametrize("status", [200, 304])
+def test_expired_etag_is_not_sent_or_reused(tmp_path, status):
+    store, calls = client(tmp_path, [response(1), response(2, status=status)], cache_ttl_seconds=10)
+    store.request("GET", "user")
+    store.clock = lambda: 1010
+    result = store.request("GET", "user")
+    assert "If-None-Match" not in calls[1][2]
+    assert result.value == (2 if status == 200 else None)
+    assert result.error == (None if status == 200 else "github_cache_miss")
+
+
+def test_304_renews_retention_and_fresh_still_refuses_stale(tmp_path):
+    store, calls = client(tmp_path, [response(1), response(None, status=304, remaining=0)], cache_ttl_seconds=10)
+    store.request("GET", "user")
+    store.clock = lambda: 1009
+    result = store.request("GET", "user", fresh=True)
+    assert (result.value, result.status, result.age_seconds, result.stale) == (1, 304, 0, False)
+    assert calls[1][2]["If-None-Match"] == '"one"'
+    store.clock = lambda: 1018
+    assert store.request("GET", "user", allow_stale=True).age_seconds == 9
+    assert store.request("GET", "user", allow_stale=True, fresh=True).error == "github_rate_limited"
+    store.clock = lambda: 1019
+    assert store.request("GET", "user", allow_stale=True).error == "github_rate_limited"
+    assert len(calls) == 2
+
+
+@pytest.mark.parametrize("status", [304, 429])
+def test_response_arriving_after_retention_cannot_reuse_snapshot(tmp_path, status):
+    clock = [1000]
+    store, _ = client(tmp_path, [response(1)], cache_ttl_seconds=10)
+    store.clock = lambda: clock[0]
+    store.request("GET", "user")
+    clock[0] = 1009
+
+    def delayed(*args):
+        clock[0] = 1010
+        return gh.Response(status, {}, b"{}")
+
+    store.transport = delayed
+    result = store.request("GET", "user", allow_stale=True)
+    assert result.value is None and not result.stale
+    assert result.error == ("github_cache_miss" if status == 304 else "github_rate_limited")
+
+
+def test_cache_retention_defaults_and_invalid_limits(tmp_path):
+    store, _ = client(tmp_path, [])
+    assert (store.cache_ttl_seconds, store.cache_max_bytes) == (604800, 67108864)
+    for ttl in (0, -1, float("nan"), float("inf"), True, "7"):
+        with pytest.raises(ValueError, match="cache TTL"):
+            client(tmp_path, [], cache_ttl_seconds=ttl)
+    for size in (-1, 1.5, True, None):
+        with pytest.raises(ValueError, match="cache byte limit"):
+            client(tmp_path, [], cache_max_bytes=size)
+
+
+def test_aggregate_utf8_bytes_across_scopes_and_existing_store(tmp_path):
+    store, calls = client(tmp_path, [], cache_max_bytes=12)
+    # 1 body byte + 10 persisted UTF-8 header bytes = 11 per row.
+    with store._db() as db:
+        db.executemany(
+            "INSERT INTO cache VALUES(?,?,?,?,?)",
+            [
+                ("z", "a", b"1", '{"x":"é"}', 998),
+                ("a", "z", b"2", '{"x":"é"}', 999),
+            ],
+        )
+        db.executemany(
+            "INSERT INTO budget VALUES(?,?,?,?)",
+            [
+                (store.scope, "core", 0, 2000),
+                ("other", "graphql", 4, 2000),
+            ],
+        )
+    # Reintroduce pre-existing over-cap rows through a raw isolated connection.
+    with sqlite3.connect(tmp_path / "cache.sqlite3") as db:
+        db.execute("INSERT INTO cache VALUES(?,?,?,?,?)", ("zz", "zz", "é", "{}", 1000))
+        before = db.execute("SELECT * FROM budget ORDER BY scope,resource").fetchall()
+    assert store.request("GET", "user").error == "github_rate_limited"
+    assert calls == []
+    with sqlite3.connect(tmp_path / "cache.sqlite3") as db:
+        assert db.execute("SELECT scope,key FROM cache").fetchall() == [("zz", "zz")]
+        assert db.execute(
+            "SELECT sum(length(CAST(body AS BLOB))+length(CAST(headers AS BLOB))) FROM cache"
+        ).fetchone() == (4,)
+        assert db.execute("SELECT * FROM budget ORDER BY scope,resource").fetchall() == before
+
+
+@pytest.mark.parametrize("order", [0, 1])
+def test_equal_time_eviction_uses_scope_then_key_not_insertion_order(tmp_path, order):
+    store, _ = client(tmp_path, [], cache_max_bytes=6)
+    rows = [("z", "a", b"1", "{}", 1000), ("a", "z", b"2", "{}", 1000), ("z", "b", b"3", "{}", 1000)]
+    with store._db() as db:
+        db.executemany("INSERT INTO cache VALUES(?,?,?,?,?)", rows if order == 0 else rows[::-1])
+    with store._db() as db:
+        assert db.execute("SELECT scope,key FROM cache ORDER BY scope,key").fetchall() == [("z", "a"), ("z", "b")]
+        assert db.execute("SELECT sum(length(body)+length(headers)) FROM cache").fetchone() == (6,)
+
+
+def test_oversized_response_returns_without_evicting_smaller_row(tmp_path):
+    store, _ = client(tmp_path, [gh.Response(200, {}, b'"123456789"')], cache_max_bytes=10)
+    with store._db() as db:
+        gh._store_cache(db, "other", "old", b"1", {}, 999)
+    assert store.request("GET", "user").value == "123456789"
+    with store._db() as db:
+        assert db.execute("SELECT scope,key,body FROM cache").fetchall() == [("other", "old", b"1")]
+
+
+@pytest.mark.parametrize("limit,expected", [(0, []), (3, [(b"1",)])])
+def test_response_exact_byte_bound(tmp_path, limit, expected):
+    store, _ = client(tmp_path, [gh.Response(200, {}, b"1")], cache_max_bytes=limit)
+    assert store.request("GET", "user").value == 1
+    with store._db() as db:
+        assert db.execute("SELECT body FROM cache").fetchall() == expected
+
+
+def test_repeated_writes_keep_newest_under_size_bound(tmp_path):
+    store, _ = client(tmp_path, [gh.Response(200, {}, b'"ok"')] * 4, cache_max_bytes=10)
+    for at, endpoint in [(1000, "user"), (1001, "user"), (1002, "repos/o/r"), (1003, "user")]:
+        store.clock = lambda at=at: at
+        assert store.request("GET", endpoint).value == "ok"
+        with store._db() as db:
+            assert db.execute("SELECT count(*),sum(length(body)+length(headers)),max(at) FROM cache").fetchone() == (
+                1,
+                6,
+                at,
+            )
+
+
+def test_out_of_order_large_response_does_not_delete_newer_row(tmp_path):
+    store, _ = client(tmp_path, [], cache_max_bytes=6)
+    with store._db() as db:
+        gh._store_cache(db, store.scope, "key", b'"ok"', {}, 1010)
+        gh._store_cache(db, store.scope, "key", b'"way too big"', {}, 1000)
+    with store._db() as db:
+        assert db.execute("SELECT body,at FROM cache").fetchall() == [(b'"ok"', 1010)]
+
+
+def test_concurrent_304_does_not_refresh_replaced_body_or_headers(tmp_path):
+    store, _ = client(tmp_path, [gh.Response(200, {"etag": "old"}, b"1")])
+    store.request("GET", "user")
+    store.clock = lambda: 1010
+    newer, _ = client(tmp_path, [gh.Response(200, {"etag": "new"}, b"2")], now=1005)
+
+    def interleaved(*args):
+        assert newer.request("GET", "user").value == 2
+        return gh.Response(304, {"etag": "old"}, b"")
+
+    store.transport = interleaved
+    result = store.request("GET", "user")
+    assert (result.value, result.status) == (1, 304)
+    with store._db() as db:
+        assert db.execute("SELECT body,headers,at FROM cache").fetchall() == [(b"2", '{"etag": "new"}', 1005)]
+
+
+def test_unclassifiable_rows_are_preserved_without_broad_deletion(tmp_path):
+    store, _ = client(tmp_path, [], cache_max_bytes=0)
+    rows = [("unknown", "time", b"1", "{}", "invalid"), ("unknown", "headers", b"1", "not json", 0)]
+    with store._db() as db:
+        db.executemany("INSERT INTO cache VALUES(?,?,?,?,?)", rows)
+        gh._store_cache(db, "known", "expired", b"1", {}, 0)
+    with store._db() as db:
+        assert db.execute("SELECT * FROM cache ORDER BY key").fetchall() == sorted(rows, key=lambda row: row[1])
+
+
+def test_preexisting_oversized_and_expired_rows_pruned_across_scopes(tmp_path):
+    store, calls = client(tmp_path, [], cache_ttl_seconds=10, cache_max_bytes=8)
+    with store._db() as db:
+        gh._store_budget(db, store.scope, "core", 0, 2000, now=1000)
+    with sqlite3.connect(tmp_path / "cache.sqlite3") as db:
+        db.executemany(
+            "INSERT INTO cache VALUES(?,?,?,?,?)",
+            [
+                ("z", "huge", b'"0123456789"', "{}", 1000),
+                ("a", "expired", b"1", "{}", 990),
+                ("z", "kept", b"2", "{}", 999),
+            ],
+        )
+    assert store.request("GET", "user").error == "github_rate_limited"
+    assert calls == []
+    with sqlite3.connect(tmp_path / "cache.sqlite3") as db:
+        assert db.execute("SELECT scope,key,body FROM cache").fetchall() == [("z", "kept", b"2")]
+        assert db.execute("SELECT * FROM budget").fetchall() == [(store.scope, "core", 0, 2000)]
+
+
+def test_304_header_growth_obeys_aggregate_byte_limit(tmp_path):
+    store, _ = client(
+        tmp_path,
+        [gh.Response(200, {"etag": "x"}, b"1"), gh.Response(304, {"extra": "123456"}, b"")],
+        cache_max_bytes=14,
+    )
+    assert store.request("GET", "user").value == 1
+    with store._db() as db:
+        assert db.execute("SELECT length(body)+length(headers) FROM cache").fetchone() == (14,)
+    assert store.request("GET", "user").value == 1
+    with store._db() as db:
+        assert db.execute("SELECT count(*) FROM cache").fetchone() == (0,)
+
+
+def test_concurrent_success_preserves_newer_body_under_bound(tmp_path):
+    older, _ = client(tmp_path, [], cache_max_bytes=4)
+    newer, _ = client(tmp_path, [gh.Response(200, {}, b"2")], now=1001, cache_max_bytes=4)
+
+    def interleaved(*args):
+        assert newer.request("GET", "user").value == 2
+        return gh.Response(200, {}, b"1")
+
+    older.transport = interleaved
+    assert older.request("GET", "user").value == 1
+    with older._db() as db:
+        assert db.execute("SELECT body,at FROM cache").fetchall() == [(b"2", 1001)]
+
+
+@pytest.mark.parametrize("failure", ["directory_is_file", "read_only_database", "corrupt_database"])
+def test_cache_maintenance_fallback_keeps_bounded_memory_and_budget(tmp_path, monkeypatch, failure):
+    cache = tmp_path / "cache"
+    if failure == "directory_is_file":
+        cache.write_text("not a directory")
+    else:
+        cache.mkdir()
+        database = cache / "cache.sqlite3"
+        database.write_bytes(b"not a database" if failure == "corrupt_database" else b"")
+        if failure == "read_only_database":
+            original = os.access
+            monkeypatch.setattr(
+                gh.os, "access", lambda path, mode: False if Path(path) == database else original(path, mode)
+            )
+    store, calls = client(
+        cache,
+        [gh.Response(200, {"x-ratelimit-remaining": "0", "x-ratelimit-reset": "2000"}, b"1")],
+        cache_max_bytes=0,
+    )
+    assert store.request("GET", "user").value == 1
+    assert store.cache_dir is None
+    assert store.request("GET", "user", allow_stale=True).error == "github_rate_limited"
+    assert len(calls) == 1
+    with store._db() as db:
+        assert db.execute("SELECT count(*) FROM cache").fetchone() == (0,)
+        assert db.execute("SELECT remaining,reset FROM budget").fetchall() == [(0, 2000)]
