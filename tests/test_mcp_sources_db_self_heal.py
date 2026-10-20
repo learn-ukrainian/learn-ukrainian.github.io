@@ -14,9 +14,13 @@ from __future__ import annotations
 import asyncio
 import importlib
 import importlib.util
+import inspect
 import json
 import sqlite3
+import sys
+import threading
 from pathlib import Path
+from typing import ClassVar
 
 import mcp
 import pytest
@@ -101,9 +105,9 @@ def test_held_connection_that_raises_database_error_is_replaced_and_call_succeed
     # a fresh connection reads the file fine).
     real_discard = server._discard_cached_connections
 
-    def restore_then_discard(database):
+    def restore_then_discard(database, seen=None):
         _restore_in_place(db, original)
-        return real_discard(database)
+        return real_discard(database, seen)
 
     monkeypatch.setattr(server, "_discard_cached_connections", restore_then_discard)
 
@@ -148,9 +152,9 @@ def test_recovered_self_heal_is_recorded_in_the_request_log(server, sdb, db, tmp
     original = _truncate_in_place(db)
     real_discard = server._discard_cached_connections
 
-    def restore_then_discard(database):
+    def restore_then_discard(database, seen=None):
         _restore_in_place(db, original)
-        return real_discard(database)
+        return real_discard(database, seen)
 
     monkeypatch.setattr(server, "_discard_cached_connections", restore_then_discard)
     _stats(server)
@@ -229,16 +233,264 @@ def test_discard_covers_both_import_names_and_leaves_other_databases_alone(serve
             self._vesum_conn = None
 
     short, full, vesum = Store(), Store(), Vesum()
+    old_short, old_full = short._conn, full._conn
     monkeypatch.setitem(server.sys.modules, "wiki.sources_db", short)
     monkeypatch.setitem(server.sys.modules, "scripts.wiki.sources_db", full)
     monkeypatch.setitem(server.sys.modules, "scripts.verification.vesum", vesum)
     monkeypatch.delitem(server.sys.modules, "verification.vesum", raising=False)
+    monkeypatch.setattr(server, "_open_observed_sources_conn", lambda module: object())
 
     assert server._discard_cached_connections("sources.db") is True
-    assert short._conn is None and full._conn is None
+    assert short._conn is not None and short._conn is not old_short
+    assert full._conn is not None and full._conn is not old_full
+    assert short._conn is not full._conn
     assert vesum._vesum_conn is not None and vesum.closed == 0
 
     assert server._discard_cached_connections("vesum.db") is True
     assert vesum._vesum_conn is None and vesum.closed == 1
 
-    assert server._discard_cached_connections(None) is False  # nothing cached any more
+    assert server._discard_cached_connections("vesum.db") is False  # nothing cached any more
+
+
+# --- #11115 round 2: false recovery, connection race, WikiCache close ---------
+
+
+def _add_dictionary_tables(path: Path) -> None:
+    conn = sqlite3.connect(path)
+    conn.execute("CREATE TABLE style_guide (id INTEGER PRIMARY KEY, word TEXT, text TEXT)")
+    conn.execute("INSERT INTO style_guide (word, text) VALUES ('Приймати участь', 'брати участь')")
+    conn.execute("CREATE TABLE grinchenko (id INTEGER PRIMARY KEY, word TEXT, text TEXT)")
+    conn.execute("INSERT INTO grinchenko (word, text) VALUES ('Вода', 'рідина')")
+    conn.commit()
+    conn.close()
+
+
+def _failing_connection_opener(server, path: Path, message: str):
+    """An opener whose connection raises ``OperationalError(message)`` on every query, as the reopen would."""
+
+    def raise_error(self, *args, **kwargs):
+        raise sqlite3.OperationalError(message)
+
+    class FailingCursor(server._ObservedCursor):
+        execute = server._observe(raise_error)
+
+    class FailingConnection(server._ObservedConnection):
+        def cursor(self, factory=FailingCursor):
+            return super().cursor(factory)
+
+    def opener(_module):
+        conn = sqlite3.connect(str(path), factory=FailingConnection, check_same_thread=False)
+        conn.row_factory = sqlite3.Row
+        return conn
+
+    return opener
+
+
+def _dispatch(server, name: str, arguments: dict):
+    return asyncio.run(server._dispatch_tool_call(name, dict(arguments)))
+
+
+@pytest.mark.parametrize(
+    ("tool", "arguments"),
+    [
+        # ``_dict_lookup_contains`` swallows OperationalError and returns [].
+        ("search_style_guide", {"query": "участь"}),
+        # ``_dict_lookup`` (exact and prefix path) swallows it the same way.
+        ("search_grinchenko_1907", {"query": "Вода"}),
+    ],
+)
+def test_retry_that_swallows_a_disk_error_is_a_typed_error_not_an_empty_result(
+    server, sdb, db, tmp_path, monkeypatch, tool, arguments
+):
+    _add_dictionary_tables(db)
+    healthy, is_error, _ = _dispatch(server, tool, arguments)  # opens and caches the process-wide connection
+    assert is_error is False and "No results" not in healthy[0].text
+    _truncate_in_place(db)  # first attempt: malformed, propagates out of the helper
+    monkeypatch.setattr(server, "_open_observed_sources_conn", _failing_connection_opener(server, db, "disk I/O error"))
+
+    content, is_error, typed = _dispatch(server, tool, arguments)
+
+    assert is_error is True
+    payload = json.loads(content[0].text)
+    assert payload == typed
+    assert payload["status"] == "error" and payload["error_code"] == "database_unavailable"
+    assert payload["database"] == "sources.db" and payload["error_class"] == "OperationalError"
+    assert "No results" not in content[0].text
+    heal = _log_entries(tmp_path)[-1]["self_heal"]
+    assert heal["recovered"] is False and heal["error_class"] == "DatabaseError"
+
+
+def test_swallowed_damage_on_a_first_attempt_over_the_healed_connection_is_healed(server, sdb, db, tmp_path):
+    _add_dictionary_tables(db)
+    _dispatch(server, "search_style_guide", {"query": "участь"})
+    # A heal already happened, so the cached connection is an observed one; it fails once and the helper swallows it.
+    failing = _failing_connection_opener(server, db, "disk I/O error")(sdb)
+    sdb._conn = failing
+
+    content, is_error, _ = _dispatch(server, "search_style_guide", {"query": "участь"})
+
+    assert is_error is False and "Приймати участь" in content[0].text
+    assert sdb._conn is not failing
+    assert _log_entries(tmp_path)[-1]["self_heal"] == {
+        "database": "sources.db",
+        "error_class": "OperationalError",
+        "reopened": True,
+        "recovered": True,
+    }
+
+
+def test_swallowed_absent_table_is_not_a_database_failure(server, sdb, db, tmp_path):
+    _dispatch(server, "collection_stats", {})  # no style_guide table in this database
+    sdb._conn = server._open_observed_sources_conn(sdb)
+
+    content, is_error, typed = _dispatch(server, "search_style_guide", {"query": "участь"})
+
+    assert is_error is False and typed["status"] == "empty"
+    assert "No results" in content[0].text
+    assert "self_heal" not in _log_entries(tmp_path)[-1]
+
+
+def test_failed_reopen_keeps_the_held_connection_instead_of_clearing_it(server, sdb, db, monkeypatch):
+    _stats(server)
+    held = sdb._conn
+
+    def cannot_reopen(_module):
+        raise FileNotFoundError("sources database is being rebuilt")
+
+    monkeypatch.setattr(server, "_open_observed_sources_conn", cannot_reopen)
+
+    assert server._discard_cached_connections("sources.db") is False
+    assert sdb._conn is held
+
+
+def test_reader_paused_before_returning_the_connection_never_gets_none_when_a_heal_runs(server, sdb, db):
+    _stats(server)
+    held = sdb._conn
+    source, first_line = inspect.getsourcelines(sdb._get_conn)
+    return_line = first_line + next(i for i, text in enumerate(source) if text.strip() == "return _conn")
+    code = sdb._get_conn.__code__
+    paused, resume = threading.Event(), threading.Event()
+    outcome: dict[str, object] = {}
+
+    def trace_calls(frame, event, arg):
+        if frame.f_code is not code:
+            return None
+
+        def trace_lines(frame, event, arg):
+            if event == "line" and frame.f_lineno == return_line:
+                paused.set()
+                assert resume.wait(timeout=30)
+            return trace_lines
+
+        return trace_lines
+
+    def reader():
+        sys.settrace(trace_calls)
+        try:
+            outcome["conn"] = sdb._get_conn()
+        finally:
+            sys.settrace(None)
+
+    thread = threading.Thread(target=reader)
+    thread.start()
+    assert paused.wait(timeout=30)  # the reader has seen a cached connection and is about to return it
+    assert server._discard_cached_connections("sources.db") is True  # the heal runs now
+    resume.set()
+    thread.join(timeout=30)
+
+    returned = outcome["conn"]
+    assert returned is not None
+    assert returned.execute("SELECT COUNT(*) FROM textbooks").fetchone()[0] == ROW_COUNT  # open and usable
+    assert returned is sdb._conn and returned is not held
+
+
+def test_simultaneous_heals_of_one_stale_connection_reopen_once(server, sdb, db, tmp_path, monkeypatch):
+    _stats(server)
+    original = _truncate_in_place(db)
+    opens: list[int] = []
+    real_open = server._open_observed_sources_conn
+
+    def counting_open(module):
+        opens.append(1)
+        return real_open(module)
+
+    monkeypatch.setattr(server, "_open_observed_sources_conn", counting_open)
+
+    async def scenario():
+        failed = 0
+        both_failed = asyncio.Event()
+        attempts = {"a": 0, "b": 0}
+
+        def handler_for(name):
+            async def handler():
+                attempts[name] += 1
+                if attempts[name] > 1:
+                    return await server.handle_collection_stats({})
+                try:
+                    return await server.handle_collection_stats({})
+                except sqlite3.DatabaseError:
+                    nonlocal failed
+                    failed += 1
+                    if failed == 2:  # both callers hold the stale connection's failure before either heals
+                        _restore_in_place(db, original)
+                        both_failed.set()
+                    await both_failed.wait()
+                    raise
+
+            return handler
+
+        heals = {"a": {}, "b": {}}
+        results = await asyncio.gather(
+            server._call_with_database_self_heal(handler_for("a"), heals["a"]),
+            server._call_with_database_self_heal(handler_for("b"), heals["b"]),
+        )
+        return results, heals, attempts
+
+    results, heals, attempts = asyncio.run(scenario())
+
+    assert attempts == {"a": 2, "b": 2}
+    assert [json.loads(r[0].text) for r in results] == [{"textbooks": ROW_COUNT}] * 2
+    assert len(opens) == 1
+    assert all(h["reopened"] is True and h["recovered"] is True for h in heals.values())
+
+
+@pytest.fixture()
+def fake_wiki_cache(monkeypatch):
+    wiki_cache = importlib.import_module("rag.wiki_cache")
+
+    class FakeCache:
+        instances: ClassVar[list[FakeCache]] = []
+        fail = False
+
+        def __init__(self) -> None:
+            self.closed = False
+            FakeCache.instances.append(self)
+
+        def get(self, *_args):
+            if FakeCache.fail:
+                raise RuntimeError("cache read failed")
+            return "cached text"
+
+        def is_negative(self, _value) -> bool:
+            return False
+
+        def close(self) -> None:
+            self.closed = True
+
+    monkeypatch.setattr(wiki_cache, "WikiCache", FakeCache)
+    return FakeCache
+
+
+def test_wikipedia_cache_is_closed_after_a_call(server, fake_wiki_cache):
+    result = asyncio.run(server._query_wikipedia({"query": "Київ", "mode": "search"}))
+
+    assert result[0].text == "cached text"
+    assert [cache.closed for cache in fake_wiki_cache.instances] == [True]
+
+
+def test_wikipedia_cache_is_closed_when_the_call_raises(server, fake_wiki_cache):
+    fake_wiki_cache.fail = True
+    with pytest.raises(RuntimeError, match="cache read failed"):
+        asyncio.run(server._query_wikipedia({"query": "Київ", "mode": "search"}))
+
+    assert [cache.closed for cache in fake_wiki_cache.instances] == [True]

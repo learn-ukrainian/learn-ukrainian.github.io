@@ -27,6 +27,8 @@ Tools:
 """
 
 import asyncio
+import contextvars
+import functools
 import hashlib
 import json
 import re
@@ -1906,9 +1908,15 @@ def _review_before_handler(
 # ``DatabaseError: database disk image is malformed`` until the service is
 # restarted, while a fresh connection reads the file fine. A call that fails
 # that way discards the cached connections of the failing database, reopens
-# lazily and runs once more. The same module can be loaded under two names
+# and runs once more. The same module can be loaded under two names
 # (``wiki.…`` and ``scripts.wiki.…``), each holding its own connection, so
 # both names are covered.
+#
+# Many dictionary helpers in ``wiki.sources_db`` catch ``sqlite3.Error`` and
+# return an empty result, which would turn a damaged database into a false
+# "no results" (and a false recovery). The connection the heal opens therefore
+# reports damage-class errors it raises, swallowed or not, to the attempt that
+# is running (``_ATTEMPT_DAMAGE``); an attempt that saw damage counts as failed.
 
 _STALE_CONNECTION_MARKERS = (
     "malformed",
@@ -1920,17 +1928,103 @@ _STALE_CONNECTION_MARKERS = (
     "unable to open database file",
     "closed database",
 )
+# The subset that always means a damaged file or connection. "no such table"
+# is not in it: helpers treat an absent optional table as a normal empty result.
+_DAMAGE_MARKERS = (
+    "malformed",
+    "disk i/o error",
+    "file is not a database",
+    "unable to open database file",
+    "closed database",
+)
 _DATABASE_UNAVAILABLE_CODE = "database_unavailable"
 _UNATTRIBUTED_DATABASE = "unattributed"
-_SQLITE_CACHE_LOCK = threading.Lock()
+# One lock covers every replacement of a cached connection and the generation
+# counters that stop simultaneous heals from each reopening the same database.
+_SQLITE_CACHE_LOCK = threading.RLock()
+_SQLITE_GENERATION: dict[str, int] = {}
+_ATTEMPT_DAMAGE: contextvars.ContextVar[list[sqlite3.DatabaseError] | None] = contextvars.ContextVar(
+    "sources_attempt_database_damage", default=None
+)
+
+
+def _note_database_damage(exc: sqlite3.DatabaseError) -> None:
+    damage = _ATTEMPT_DAMAGE.get()
+    if damage is not None and _has_marker(exc, _DAMAGE_MARKERS):
+        damage.append(exc)
+
+
+def _observe(method: Any) -> Any:
+    """Wrap a cursor method so damage-class database errors reach the running attempt."""
+
+    @functools.wraps(method)
+    def observed(self: Any, *args: Any, **kwargs: Any) -> Any:
+        try:
+            return method(self, *args, **kwargs)
+        except sqlite3.DatabaseError as exc:
+            _note_database_damage(exc)
+            raise
+
+    return observed
+
+
+class _ObservedCursor(sqlite3.Cursor):
+    execute = _observe(sqlite3.Cursor.execute)
+    executemany = _observe(sqlite3.Cursor.executemany)
+    executescript = _observe(sqlite3.Cursor.executescript)
+    fetchone = _observe(sqlite3.Cursor.fetchone)
+    fetchmany = _observe(sqlite3.Cursor.fetchmany)
+    fetchall = _observe(sqlite3.Cursor.fetchall)
+    __next__ = _observe(sqlite3.Cursor.__next__)
+
+
+class _ObservedConnection(sqlite3.Connection):
+    """A read connection whose cursors report damage-class errors (see ``_observe``)."""
+
+    def cursor(self, factory: Any = _ObservedCursor) -> Any:
+        return super().cursor(factory)
+
+    # ``Connection.execute*`` build their own plain cursor, bypassing ``cursor``.
+    def execute(self, sql: str, parameters: Any = (), /) -> Any:
+        return self.cursor().execute(sql, parameters)
+
+    def executemany(self, sql: str, parameters: Any, /) -> Any:
+        return self.cursor().executemany(sql, parameters)
+
+    def executescript(self, script: str, /) -> Any:
+        return self.cursor().executescript(script)
+
+
+def _open_observed_sources_conn(module: Any) -> sqlite3.Connection:
+    """Open the read-only connection ``module._get_conn`` would, as an observed one."""
+    path = module._read_db_path()
+    if not path.is_file() or not path.stat().st_size:
+        raise FileNotFoundError(f"Sources database not found at {path}.")
+    conn = sqlite3.connect(
+        f"{path.resolve().as_uri()}?mode=ro", uri=True, check_same_thread=False, factory=_ObservedConnection
+    )
+    conn.row_factory = sqlite3.Row
+    conn.execute(f"PRAGMA busy_timeout = {module._SQLITE_BUSY_TIMEOUT_MS}")
+    return conn
 
 
 def _discard_sources_conn(module: Any) -> bool:
-    # Drop the reference only: a call in another thread may still be reading
-    # the old connection, and it closes when the last reader lets go.
+    """Swap the cached connection for a freshly opened one; it is never left unset.
+
+    ``_get_conn`` reads ``_conn`` without a lock, so clearing it would let a
+    reader that already saw it set return ``None``. One attribute store
+    replaces it instead: a reader gets the old or the new connection, never
+    nothing. The old one is not closed here (a call in another thread may
+    still be reading it); it closes when the last reader lets go. If the
+    reopen fails the held connection stays and the retry reports the failure.
+    """
     if getattr(module, "_conn", None) is None:
         return False
-    module._conn = None
+    try:
+        fresh = _open_observed_sources_conn(module)
+    except (OSError, ValueError, sqlite3.Error):
+        return False
+    module._conn = fresh
     return True
 
 
@@ -1958,11 +2052,13 @@ class SourcesDatabaseUnavailable(Exception):
         self.reopened = reopened
 
 
-def _is_stale_connection_error(exc: BaseException) -> bool:
-    if not isinstance(exc, sqlite3.DatabaseError):
-        return False
+def _has_marker(exc: BaseException, markers: tuple[str, ...]) -> bool:
     text = str(exc).lower()
-    return any(marker in text for marker in _STALE_CONNECTION_MARKERS)
+    return any(marker in text for marker in markers)
+
+
+def _is_stale_connection_error(exc: BaseException) -> bool:
+    return isinstance(exc, sqlite3.DatabaseError) and _has_marker(exc, _STALE_CONNECTION_MARKERS)
 
 
 def _failing_database(exc: BaseException) -> str | None:
@@ -1976,33 +2072,66 @@ def _failing_database(exc: BaseException) -> str | None:
     return found
 
 
-def _discard_cached_connections(database: str | None) -> bool:
-    """Drop the cached connections of ``database`` (all when unattributed)."""
-    discarded = False
+def _connection_generations() -> dict[str, int]:
+    with _SQLITE_CACHE_LOCK:
+        return dict(_SQLITE_GENERATION)
+
+
+def _discard_cached_connections(database: str | None, seen: dict[str, int] | None = None) -> bool:
+    """Replace the cached connections of ``database`` (all when unattributed).
+
+    ``seen`` holds the generations the caller read before its failed attempt.
+    A database another call has replaced since is not replaced again, so
+    simultaneous heals of one stale connection reopen it once. Returns whether
+    a replacement connection is now in place for any targeted database.
+    """
+    refreshed = False
     with _SQLITE_CACHE_LOCK:
         for db, (module_names, discard) in _SQLITE_CONNECTION_CACHES.items():
             if database is not None and db != database:
                 continue
+            if seen is not None and _SQLITE_GENERATION.get(db, 0) != seen.get(db, 0):
+                refreshed = True
+                continue
+            replaced = False
             for module_name in module_names:
                 module = sys.modules.get(module_name)
                 if module is not None and discard(module):
-                    discarded = True
-    return discarded
+                    replaced = True
+            if replaced:
+                _SQLITE_GENERATION[db] = _SQLITE_GENERATION.get(db, 0) + 1
+                refreshed = True
+    return refreshed
+
+
+async def _run_attempt(handler: Any) -> Any:
+    """Run ``handler`` once; damage a helper swallowed counts as the attempt's failure."""
+    damage: list[sqlite3.DatabaseError] = []
+    token = _ATTEMPT_DAMAGE.set(damage)
+    try:
+        result = await handler()
+    finally:
+        _ATTEMPT_DAMAGE.reset(token)
+    if damage:
+        raise damage[0]
+    return result
 
 
 async def _call_with_database_self_heal(handler: Any, heal: dict[str, Any]) -> Any:
     """Run ``handler``; on a stale-connection error reopen and retry exactly once.
 
     ``heal`` is filled in when a heal was attempted so the caller can log it.
-    A failure of the retry raises ``SourcesDatabaseUnavailable``.
+    A failure of the retry raises ``SourcesDatabaseUnavailable``; the heal is
+    recorded as recovered only when the retry itself saw no database damage.
     """
+    seen = _connection_generations()
     try:
-        return await handler()
+        return await _run_attempt(handler)
     except sqlite3.DatabaseError as first:
         if not _is_stale_connection_error(first):
             raise
         database = _failing_database(first)
-        reopened = _discard_cached_connections(database)
+        reopened = _discard_cached_connections(database, seen)
         heal.update(
             database=database or _UNATTRIBUTED_DATABASE,
             error_class=type(first).__name__,
@@ -2010,7 +2139,7 @@ async def _call_with_database_self_heal(handler: Any, heal: dict[str, Any]) -> A
             recovered=False,
         )
         try:
-            result = await handler()
+            result = await _run_attempt(handler)
         except sqlite3.DatabaseError as second:
             database = _failing_database(second) or database
             heal["database"] = database or _UNATTRIBUTED_DATABASE
@@ -3249,6 +3378,16 @@ async def handle_query_wikipedia(args: dict) -> list[TextContent]:
 
 
 async def _query_wikipedia(args: dict) -> list[TextContent]:
+    from rag.wiki_cache import WikiCache
+
+    cache = WikiCache()
+    try:
+        return await _query_wikipedia_cached(args, cache)
+    finally:
+        cache.close()
+
+
+async def _query_wikipedia_cached(args: dict, cache: Any) -> list[TextContent]:
     mode = args.get("mode", "summary")
     query = args["query"]
     limit = args.get("limit", 5)
@@ -3258,7 +3397,6 @@ async def _query_wikipedia(args: dict) -> list[TextContent]:
     from functools import partial
 
     from rag import source_query as _sq
-    from rag.wiki_cache import WikiCache
 
     # Every live fetch raises on an outage, so no negative-cache write below can record one (#9005).
     wikipedia_extract = partial(_sq.wikipedia_extract, raise_unavailable=True)
@@ -3266,8 +3404,6 @@ async def _query_wikipedia(args: dict) -> list[TextContent]:
     wikipedia_section_text = partial(_sq.wikipedia_section_text, raise_unavailable=True)
     wikipedia_sections = partial(_sq.wikipedia_sections, raise_unavailable=True)
     wikipedia_summary = partial(_sq.wikipedia_summary, raise_unavailable=True)
-
-    cache = WikiCache()
 
     if mode == "search":
         # Search results use short TTL (24h) — cached separately
