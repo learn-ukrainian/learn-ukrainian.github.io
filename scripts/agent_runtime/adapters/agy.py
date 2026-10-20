@@ -2055,7 +2055,8 @@ def _headless_denial_evidence(
             # on; only the unmatched (prompting) check ends a headless run.
             if native is not None and native.kind == kind and not native.rule_matched:
                 denied.append((call, native.target))
-    candidates = [(call, None) for call in pending] if pending else denied
+    # A native refusal identifies its target even if sibling calls have no result.
+    candidates = denied if denied else [(call, None) for call in pending]
     if len(candidates) != 1:
         return dataclasses.replace(
             base, permission_target_unknown_reason="trigger_ambiguous" if candidates else "trigger_missing"
@@ -2690,9 +2691,10 @@ def _read_transcript_events(
     """Parse the transcript's JSONL events from byte ``offset`` onward.
 
     Returns the events and the count of non-blank lines that are not a JSON
-    object (invalid UTF-8, truncated or corrupt JSON, a bare scalar), or
-    ``None`` when the file cannot be read. Callers decide what an unreadable
-    line means; nothing is silently dropped.
+    object or carry a malformed status (invalid UTF-8, truncated or corrupt
+    JSON, a bare scalar, a non-string or blank status), or ``None`` when the
+    file cannot be read. Callers decide what an unreadable line means;
+    nothing is silently dropped.
     """
     try:
         raw_lines = safe_read_attempt_file(transcript_path, offset=offset, trusted_root=trusted_root).splitlines()
@@ -2714,6 +2716,9 @@ def _read_transcript_events(
             unreadable += 1
             continue
         if isinstance(event, dict):
+            if "status" in event and (not isinstance(event["status"], str) or not event["status"].strip()):
+                unreadable += 1
+                continue
             events.append(event)
         else:
             unreadable += 1
