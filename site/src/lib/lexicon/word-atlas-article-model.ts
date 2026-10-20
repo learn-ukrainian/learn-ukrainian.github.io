@@ -23,7 +23,7 @@ import {
 import { pluralizeUk } from "../i18n/plural";
 import type { EntryRecord, LexiconEntry } from "./atlas-data-source";
 import { safeHref } from "./safe-url";
-import { formatOrigin, type FormattedOrigin } from "./format-origin";
+import { formatOrigin } from "./format-origin";
 
 export interface DefinitionCard {
   id: string;
@@ -1079,7 +1079,9 @@ export function buildWordAtlasArticleView(
   const synonymSets = sections?.synonyms?.synsets ?? [];
   const heritage = entry.heritage_status ?? null;
   const rawDefinitionCards = enrichment?.definition_cards ?? [];
-  const definitionCards = rawDefinitionCards.filter(shouldRenderDefinitionCard);
+  const definitionCards = rawDefinitionCards.filter(shouldRenderDefinitionCard)
+    .filter((card) => card.definitions?.some(hasArticleText) ||
+      hasArticleText(card.note) || hasArticleText(card.flag_note));
   const sovietizedCards = rawDefinitionCards.filter(isSovietizedSum11DefinitionCard);
   const sum11Cards = rawDefinitionCards.filter(isSum11DefinitionCard);
   const maxSovietizationRisk = Math.max(
@@ -1166,7 +1168,7 @@ export function buildWordAtlasArticleView(
   const componentLinks = record.renderContext.componentLinks;
   const atlasLinkTargetForText = (text: string) => linkResolver.resolve(text, entry.url_slug);
   const phraseHasGloss = Boolean(
-    entry.gloss && definitionCards.length === 0 && !enrichment?.meaning,
+    hasArticleText(entry.gloss) && definitionCards.length === 0 && !enrichment?.meaning?.definitions?.some(hasArticleText) && !hasArticleText(enrichment?.meaning?.note),
   );
   const shouldShowEditorialWarning = Boolean(heritageBoxes.red);
   const shouldShowHeritageDefense = Boolean(heritageBoxes.green);
@@ -1184,6 +1186,11 @@ export function buildWordAtlasArticleView(
     isFullyMarked,
     dominantRegisterLabel,
   });
+  const renderable = renderedArticleLayers({
+    entry: resolvedEntry, enrichment, sections, definitionCards, suppressMorphology,
+    styleNotes, heritageBoxes, courseUsage, externalGroups,
+  });
+  const renderedTier = classifyRenderedArticleTier(renderable);
   const articleOverview = buildArticleOverview({
     sections,
     enrichment,
@@ -1196,7 +1203,7 @@ export function buildWordAtlasArticleView(
     entry: resolvedEntry,
     isFullyMarked,
     suppressMorphology,
-    formattedOrigin,
+    renderable,
   });
   const sourceList = buildSourceList({
     entry: resolvedEntry,
@@ -1295,6 +1302,10 @@ export function buildWordAtlasArticleView(
     styleNotes,
     statusBadges,
     articleOverview,
+    renderable,
+    renderedTier,
+    sourceWaitingLayers: articleOverview.filter((card) =>
+      !card.ready && SOURCE_WAITING_LAYERS.has(card.id)),
     sourceList,
     translationSource,
     verbPedagogy,
@@ -1527,6 +1538,82 @@ function groupExternalMaterials(items: NonNullable<Enrichment["external_material
   return Array.from(groups.entries()).map(([name, materials]) => ({ name, materials }));
 }
 
+/** Content, rather than source labels or empty containers, controls rendering. */
+function hasArticleText(value: string | null | undefined): boolean {
+  return Boolean(value?.trim());
+}
+
+function hasMorphologyContent(morphology: Enrichment["morphology"]): boolean {
+  if (!morphology) return false;
+  if (hasArticleText(morphology.pos) || morphology.forms?.some((item) => hasArticleText(item.form)) ||
+    morphology.marked_forms?.some((item) => hasArticleText(item.form))) return true;
+  const paradigm = morphology.paradigm;
+  if (paradigm?.kind === "noun") return Object.values(paradigm.cases ?? {})
+    .some((row) => hasArticleText(row.singular) || hasArticleText(row.plural));
+  if (paradigm?.kind === "participle") return hasArticleText(paradigm.verb) ||
+    hasArticleText(paradigm.voice) || hasArticleText(paradigm.aspect);
+  if (paradigm?.kind !== "verb") return false;
+  return hasArticleText(paradigm.infinitive) || hasArticleText(paradigm.impersonal) ||
+    Object.values(paradigm.tenses ?? {}).some((numbers) => Object.values(numbers)
+      .some((persons) => Object.values(persons).some(hasArticleText))) ||
+    Object.values(paradigm.imperative ?? {}).some((persons) => Object.values(persons).some(hasArticleText)) ||
+    Object.values(paradigm.past ?? {}).some(hasArticleText);
+}
+
+function renderedArticleLayers(args: {
+  entry: LexiconEntryView; enrichment: Enrichment | null; sections: LexiconSections | null;
+  definitionCards: DefinitionCard[]; suppressMorphology: boolean; styleNotes: string[];
+  heritageBoxes: ReturnType<typeof resolveHeritageBoxes>; courseUsage: CourseUsage[];
+  externalGroups: ReturnType<typeof groupExternalMaterials>;
+}) {
+  const { entry, enrichment, sections, definitionCards, suppressMorphology,
+    styleNotes, heritageBoxes, courseUsage, externalGroups } = args;
+  const enrichedMeaning = Boolean(enrichment?.meaning?.definitions?.some(hasArticleText) ||
+    hasArticleText(enrichment?.meaning?.note));
+  return {
+    meaning: definitionCards.length > 0 || enrichedMeaning || hasArticleText(entry.gloss) ||
+      hasArticleText(entry.soviet_colonization_context?.definition),
+    enrichedMeaning,
+    etymology: hasArticleText(enrichment?.etymology?.text) ||
+      Boolean(enrichment?.etymology?.stages?.some((stage) => hasArticleText(stage.word))),
+    morphology: !suppressMorphology && hasMorphologyContent(enrichment?.morphology),
+    formNotes: Boolean(sections?.form_notes?.items?.some((item) => hasArticleText(item.text))),
+    style: styleNotes.some(hasArticleText) || Object.values(heritageBoxes)
+      .some((box) => box && typeof box === "object" && "body" in box && hasArticleText(box.body)),
+    synonyms: Boolean(sections?.synonyms?.items?.some(hasArticleText) || sections?.antonyms?.items?.some(hasArticleText)),
+    homonyms: Boolean(sections?.homonyms?.items?.some((item) => hasArticleText(item.word) || hasArticleText(item.gloss))),
+    paronyms: Boolean(sections?.paronyms?.items?.some((item) => hasArticleText(item.word) || hasArticleText(item.distinction))),
+    idioms: Boolean(sections?.idioms?.items?.some((item) => hasArticleText(item.phrase) || hasArticleText(item.text) || hasArticleText(item.definition))),
+    proverbs: Boolean(sections?.proverbs?.items?.some((item) => hasArticleText(item.text))),
+    usageNotes: Boolean(sections?.usage_notes?.items?.some((item) => hasArticleText(item.text))),
+    literary: hasArticleText(enrichment?.literary_attestation?.text),
+    course: courseUsage.length > 0,
+    translation: Boolean(enrichment?.translation?.en?.some(hasArticleText)),
+    wiki: hasArticleText(entry.wiki_reference?.wikipedia?.title) ||
+      hasArticleText(entry.wiki_reference?.wikipedia?.summary) ||
+      Boolean(safeHref(entry.wiki_reference?.wiktionary_url) || safeHref(entry.wiki_reference?.wikisource_url)),
+    external: externalGroups.some((group) => group.materials.some((item) => hasArticleText(item.title) || hasArticleText(item.description))),
+  };
+}
+
+export type RenderedArticleLayers = ReturnType<typeof renderedArticleLayers>;
+
+/** Same eight buckets and five-bucket threshold as thin_page_report.py. */
+export function classifyRenderedArticleTier(layers: RenderedArticleLayers): {
+  tier: "bare" | "thin" | "rich"; richBuckets: number;
+} {
+  const richBuckets = [layers.meaning, layers.etymology, layers.morphology,
+    layers.synonyms, layers.idioms, layers.literary, layers.translation, layers.wiki]
+    .filter(Boolean).length;
+  return { tier: !layers.meaning && !layers.translation ? "bare" : richBuckets < 5 ? "thin" : "rich", richBuckets };
+}
+
+// Only source-waiting states belong in the disclosure; course/style/selection do not.
+const SOURCE_WAITING_LAYERS = new Set([
+  "meaning", "etymology", "morphology", "formNotes", "synonyms", "homonyms", "paronyms",
+  "idioms", "proverbs", "usageNotes", "literary", "translation", "wiki",
+]);
+
 function buildArticleOverview(args: {
   sections: LexiconSections | null;
   enrichment: Enrichment | null;
@@ -1539,7 +1626,7 @@ function buildArticleOverview(args: {
   entry: LexiconEntryView;
   isFullyMarked: boolean;
   suppressMorphology: boolean;
-  formattedOrigin: ReturnType<typeof formatOrigin>;
+  renderable: RenderedArticleLayers;
 }) {
   const {
     sections,
@@ -1553,7 +1640,7 @@ function buildArticleOverview(args: {
     entry,
     isFullyMarked,
     suppressMorphology,
-    formattedOrigin,
+    renderable,
   } = args;
   const synonymCount =
     (sections?.synonyms?.items?.length ?? 0) + (sections?.antonyms?.items?.length ?? 0);
@@ -1565,50 +1652,43 @@ function buildArticleOverview(args: {
   const formNoteCount = sections?.form_notes?.items?.length ?? 0;
   const externalCount = externalGroups.reduce((total, group) => total + (group.materials?.length ?? 0), 0);
   const definitionCount =
-    definitionCards.length + (enrichment?.meaning ? 1 : 0) + (phraseHasGloss ? 1 : 0);
-  const originCount = formattedOrigin || enrichment?.etymology ? 1 : 0;
+    definitionCards.length + (renderable.enrichedMeaning ? 1 : 0) + (phraseHasGloss ? 1 : 0);
+  const originCount = renderable.etymology ? 1 : 0;
   const cards = [
     {
+      id: "meaning" as const,
       label: "Значення",
-      ready: definitionCount > 0,
       detail:
         definitionCount > 0
           ? `${definitionCount} ${pluralizeUk(definitionCount, ["картка", "картки", "карток"])}`
           : "очікує джерело",
     },
     {
+      id: "etymology" as const,
       label: "Походження",
-      ready: originCount > 0,
       detail:
         originCount > 0
           ? `${originCount} ${pluralizeUk(originCount, ["картка", "картки", "карток"])}`
           : "очікує джерело",
     },
     {
+      id: "morphology" as const,
       label: "Морфологія",
-      ready: Boolean(enrichment?.morphology),
-      detail: enrichment?.morphology
+      detail: renderable.morphology && enrichment?.morphology
         ? morphologyFormCountLabel(enrichment.morphology, isFullyMarked)
         : "очікує VESUM",
     },
     {
+      id: "formNotes" as const,
       label: "Написання і вимова",
-      ready: formNoteCount > 0,
       detail:
         formNoteCount > 0
           ? `${formNoteCount} ${pluralizeUk(formNoteCount, ["джерело", "джерела", "джерел"])}`
           : "очікує джерело",
     },
     {
+      id: "style" as const,
       label: "Стилістика",
-      ready:
-        styleNotes.length > 0 ||
-        Boolean(
-          heritageBoxes.red ||
-            heritageBoxes.yellow ||
-            heritageBoxes.blue ||
-            heritageBoxes.green,
-        ),
       detail:
         styleNotes.length > 0
           ? `${styleNotes.length} ${pluralizeUk(styleNotes.length, ["нотатка", "нотатки", "нотаток"])}`
@@ -1617,77 +1697,77 @@ function buildArticleOverview(args: {
             : "без нотаток",
     },
     {
+      id: "synonyms" as const,
       label: "Синонімія",
-      ready: synonymCount > 0,
       detail:
         synonymCount > 0
           ? `${synonymCount} ${pluralizeUk(synonymCount, ["позиція", "позиції", "позицій"])}`
           : "очікує джерело",
     },
     {
+      id: "homonyms" as const,
       label: "Омонім",
-      ready: homonymCount > 0,
       detail:
         homonymCount > 0
           ? `${homonymCount} ${pluralizeUk(homonymCount, ["позиція", "позиції", "позицій"])}`
           : "очікує джерело",
     },
     {
+      id: "paronyms" as const,
       label: "Паронім",
-      ready: paronymCount > 0,
       detail:
         paronymCount > 0
           ? `${paronymCount} ${pluralizeUk(paronymCount, ["позиція", "позиції", "позицій"])}`
           : "очікує джерело",
     },
     {
+      id: "idioms" as const,
       label: "Фразеологія",
-      ready: idiomCount > 0,
       detail:
         idiomCount > 0
           ? `${idiomCount} ${pluralizeUk(idiomCount, ["вираз", "вирази", "виразів"])}`
           : "очікує джерело",
     },
     {
+      id: "proverbs" as const,
       label: "Приповідки",
-      ready: proverbCount > 0,
       detail:
         proverbCount > 0
           ? `${proverbCount} ${pluralizeUk(proverbCount, ["приповідка", "приповідки", "приповідок"])}`
           : "очікує джерело",
     },
     {
+      id: "usageNotes" as const,
       label: "Стиль і норма",
-      ready: usageNoteCount > 0,
       detail:
         usageNoteCount > 0
           ? `${usageNoteCount} ${pluralizeUk(usageNoteCount, ["нарис", "нариси", "нарисів"])}`
           : "очікує джерело",
     },
     {
+      id: "literary" as const,
       label: "Засвідчення",
-      ready: Boolean(enrichment?.literary_attestation),
-      detail: enrichment?.literary_attestation ? "літературний корпус" : "очікує корпус",
+      detail: renderable.literary ? "літературний корпус" : "очікує корпус",
     },
     {
+      id: "course" as const,
       label: "Курс",
-      ready: courseUsage.length > 0,
       detail:
         courseUsage.length > 0
           ? `${courseUsage.length} ${pluralizeUk(courseUsage.length, ["модуль", "модулі", "модулів"])}`
           : "поза курсом",
     },
     {
+      id: "translation" as const,
       label: "Переклад",
-      ready: (enrichment?.translation?.en?.length ?? 0) > 0,
       detail:
         (enrichment?.translation?.en?.length ?? 0) > 0
           ? `${enrichment?.translation?.en?.length} англ.`
           : "очікує джерело",
     },
     {
+      id: "wiki" as const,
       label: "Wikimedia",
-      ready: Boolean(entry.wiki_reference),
       detail: entry.wiki_reference?.wikipedia
         ? "Wikipedia"
         : entry.wiki_reference
@@ -1695,15 +1775,16 @@ function buildArticleOverview(args: {
           : "очікує джерело",
     },
     {
+      id: "external" as const,
       label: "Зовнішні",
-      ready: externalCount > 0,
       detail:
         externalCount > 0
           ? `${externalCount} ${pluralizeUk(externalCount, ["матеріал", "матеріали", "матеріалів"])}`
           : "очікує добірку",
     },
   ];
-  return suppressMorphology ? cards.filter((card) => card.label !== "Морфологія") : cards;
+  return cards.filter((card) => !suppressMorphology || card.id !== "morphology")
+    .map((card) => ({ ...card, ready: renderable[card.id] }));
 }
 
 function buildSourceList(args: {
