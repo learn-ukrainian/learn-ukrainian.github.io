@@ -74,6 +74,7 @@ _strip_credential_shaped_env()
 import ast
 import contextlib
 import functools
+import hashlib
 import importlib.machinery
 import ipaddress
 import itertools
@@ -165,6 +166,46 @@ def _dispatch_template_factory(tmp_path_factory: pytest.TempPathFactory) -> None
 
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
+
+
+def _telemetry_event_snapshot(root: Path) -> dict[str, str]:
+    """Hash file names and contents, including pre-existing untracked events."""
+    return {
+        path.relative_to(root).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
+        for path in sorted(root.rglob("*"))
+        if path.is_file()
+    }
+
+
+class _TelemetryIsolation:
+    """Redirect collection, fixtures and child processes; guard the default store."""
+
+    def __init__(self, production_dir: Path) -> None:
+        self.production_dir = production_dir
+
+    def pytest_sessionstart(self, session: pytest.Session) -> None:
+        config = session.config
+        if not hasattr(config, "workerinput"):
+            self.before = _telemetry_event_snapshot(self.production_dir)
+        # Session fixtures start after collection. Install here so imports and
+        # session fixtures also inherit the redirect, including xdist workers.
+        event_dir = config._tmp_path_factory.mktemp("telemetry-events")
+        patcher = pytest.MonkeyPatch()
+        patcher.setenv("LU_TELEMETRY_EVENTS_DIR", str(event_dir))
+        config.add_cleanup(patcher.undo)
+
+    @pytest.hookimpl(trylast=True)
+    def pytest_sessionfinish(self, session: pytest.Session, exitstatus: int) -> None:
+        if hasattr(session.config, "workerinput"):
+            return
+        after = _telemetry_event_snapshot(self.production_dir)
+        changed = sorted(name for name in self.before.keys() | after.keys() if self.before.get(name) != after.get(name))
+        if changed:
+            print("telemetry event guard: production event files changed during the test session:")
+            for name in changed:
+                print(f"  batch_state/telemetry/events/{name}")
+            if session.exitstatus == pytest.ExitCode.OK:
+                session.exitstatus = pytest.ExitCode.TESTS_FAILED
 
 
 def _loaded_module(*parts: str):
@@ -2707,6 +2748,10 @@ def pytest_configure_node(node: Any) -> None:
 
 
 def pytest_configure(config: pytest.Config) -> None:
+    config.pluginmanager.register(
+        _TelemetryIsolation(_REPO_ROOT / "batch_state" / "telemetry" / "events"),
+        "telemetry-isolation",
+    )
     _restore_published_credentials(config)
     if (
         not hasattr(config, "workerinput")
