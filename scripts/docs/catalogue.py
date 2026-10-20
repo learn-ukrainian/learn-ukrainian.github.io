@@ -285,7 +285,8 @@ class CatalogueLoadError(ValueError):
 
 class CatalogueLoader(yaml.SafeLoader):
     """Plain-data YAML only: no anchors, aliases, merge keys or explicit tags; unique string
-    keys; at most MAX_CATALOGUE_NODES nodes and MAX_CATALOGUE_DEPTH nested collections.
+    keys; no comment after a plain value on its line; at most MAX_CATALOGUE_NODES nodes and
+    MAX_CATALOGUE_DEPTH nested collections.
 
     The bounds are enforced while composing, before the (recursive) composer descends,
     so no input can exhaust the stack or expand into a large object graph.
@@ -309,6 +310,8 @@ class CatalogueLoader(yaml.SafeLoader):
         if self.nodes > MAX_CATALOGUE_NODES:
             raise CatalogueLoadError('too_many_nodes', f'more than {MAX_CATALOGUE_NODES} YAML nodes',
                                      event.start_mark)
+        if isinstance(event, yaml.ScalarEvent) and event.style is None and event.value:
+            self.reject_trailing_comment(event)
         if not isinstance(event, (yaml.SequenceStartEvent, yaml.MappingStartEvent)):
             return super().compose_node(parent, index)
         self.depth += 1
@@ -319,6 +322,17 @@ class CatalogueLoader(yaml.SafeLoader):
             return super().compose_node(parent, index)
         finally:
             self.depth -= 1
+
+    @staticmethod
+    def reject_trailing_comment(event: yaml.ScalarEvent) -> None:
+        """A '#' after a plain value on its line starts a YAML comment, which silently cuts the
+        value short (``retention: kept until #6106 closes.`` loads as ``kept until``)."""
+        mark = event.end_mark
+        end = mark.buffer.find('\n', mark.pointer)
+        if mark.buffer[mark.pointer:None if end < 0 else end].lstrip().startswith('#'):
+            raise CatalogueLoadError('trailing_comment', "a '#' after a plain value starts a YAML comment and "
+                                     'cuts the value short; quote the value or move the comment to its own line',
+                                     mark)
 
     def flatten_mapping(self, node):
         for key_node, _ in node.value:
@@ -1391,10 +1405,13 @@ def main(argv: list[str] | None = None) -> int:
                'a status marker that disagrees with the catalogue or a stale README block), uncovered paths, '
                'unmatched stores or an SQLite file no store_registry row claims (readme --check: stale block; mark: files need markers); 2 invalid '
                'arguments; 3 unreadable '
-               'repository or catalogue, an unmerged index or unexpected Git output, or a catalogue outside '
+               'repository or catalogue, an unmerged index or unexpected Git output, a census root that '
+               'is not a directory or an incomplete census (a directory or file under it that cannot be '
+               'read, even with --report-only), or a catalogue outside '
                'the accepted YAML subset (anchors, aliases, merge keys, tags, duplicate or non-string keys, '
-               'unconstructible scalars, over 2 MiB, 100,000 nodes or 16 nesting levels); 4 internal error. Failures print a typed '
-               'error (JSON with --json), never a traceback.\n'
+               'a comment after a plain value, unconstructible scalars, over 2 MiB, 100,000 nodes or 16 '
+               'nesting levels); 4 internal error. Failures print a typed '
+               'error (JSON with --json) with repository-relative names only, never a traceback.\n'
                'Related: #9412; #11092; docs/knowledge/catalogue.yaml; scripts/docs/store_census.py; docs/knowledge/catalogue.schema.json; '
                'scripts/docs/docs_inventory.py; docs/architecture/docs-authority-lifecycle.md.')
     sub = parser.add_subparsers(dest='command', required=True)
@@ -1481,7 +1498,7 @@ def _run(label: str, command, args: argparse.Namespace) -> int:
         return command(args)
     except UNREADABLE as exc:
         kind = 'catalogue_rejected' if isinstance(exc, CatalogueLoadError) else 'unreadable'
-        code, message, status = getattr(exc, 'code', type(exc).__name__), str(exc), EXIT_UNREADABLE
+        code, message, status = getattr(exc, 'code', type(exc).__name__), error_message(exc), EXIT_UNREADABLE
     except Exception as exc:  # deliberate catch-all at the process boundary
         kind, code, message, status = 'internal_error', type(exc).__name__, str(exc), EXIT_INTERNAL
     message = message[:500]
@@ -1491,6 +1508,20 @@ def _run(label: str, command, args: argparse.Namespace) -> int:
     else:
         print(f'{label} could not run ({kind}): {code}: {message}')
     return status
+
+
+def error_message(exc: BaseException) -> str:
+    """A failure without host paths: OS and subprocess errors keep their reason, and a file name
+    only when it is relative (``str()`` of either embeds the absolute path or Git command line)."""
+    if isinstance(exc, subprocess.CalledProcessError):
+        return f'{PurePosixPath(str(exc.cmd[0])).name} exited with status {exc.returncode}'
+    if isinstance(exc, subprocess.TimeoutExpired):
+        return f'{PurePosixPath(str(exc.cmd[0])).name} timed out after {exc.timeout:g} s'
+    if isinstance(exc, OSError) and exc.strerror is not None:
+        name = exc.filename
+        relative = isinstance(name, str) and not Path(name).is_absolute()
+        return f'{exc.strerror}: {shown(name)}' if relative else exc.strerror
+    return str(exc)
 
 
 def _check_command(args: argparse.Namespace) -> int:
@@ -1542,6 +1573,8 @@ def _check_command(args: argparse.Namespace) -> int:
             print(f'  # data/ store named in {CODE_ROOT} without an entry: {shown(store)}')
             print(store_stub(store), end='')
     store_gaps = bool(stores and stores[1])
+    if census_result is not None and not census_result.complete:
+        return EXIT_UNREADABLE  # an incomplete census proves nothing, even with --report-only
     census_ok = census_result is None or census_result.ok
     return 0 if args.report_only or (report.ok and not store_gaps and census_ok) else 1
 
@@ -1549,11 +1582,12 @@ def _check_command(args: argparse.Namespace) -> int:
 def census_root(path: Path | None, repo: Path) -> Path:
     """The checkout to census: ``path`` (a plain directory need not be a Git checkout) or ``repo``.
 
-    A path that is not a directory raises, so a typo never yields an empty, passing census.
+    A path that is not a directory raises, so a typo never yields an empty, passing census. The
+    message names the option, never the path (output carries repository-relative names only).
     """
     root = repo if path is None else path.resolve()
     if not root.is_dir():
-        raise FileNotFoundError(f'census root {shown(str(root))} is not a directory')
+        raise FileNotFoundError('the census root (--root or --store-root) is not a directory')
     return root
 
 
@@ -1570,6 +1604,8 @@ def _census_command(args: argparse.Namespace) -> int:
     else:
         for line in store_census.census_lines(result, registry):
             print(shown(line))
+    if not result.complete:
+        return EXIT_UNREADABLE
     return 0 if result.ok else 1
 
 

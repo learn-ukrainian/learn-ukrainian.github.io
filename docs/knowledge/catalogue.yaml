@@ -687,7 +687,7 @@ entries:
   - id: ci-program
     kind: doc_family
     paths: [docs/plans/2026-09-02-ci-sweet-spot.md, docs/epics/ci-speed-program.md]
-    purpose: CI plan of record and the CI speed program (epic #8875 holds the live task list).
+    purpose: 'CI plan of record and the CI speed program (epic #8875 holds the live task list).'
     keywords: [CI, CI speed, sweet spot, test shards, CI plan]
     lifecycle: active
     owner: devops
@@ -821,7 +821,7 @@ entries:
   - id: research-retrieval-bakeoff
     kind: evidence
     paths: [docs/research/retrieval-bakeoff-9233/**]
-    purpose: Query sets, judging rubric and phase-1 results of the #9233 retrieval bake-off (exact FTS versus lemma-aware FTS versus embedder and reranker).
+    purpose: 'Query sets, judging rubric and phase-1 results of the #9233 retrieval bake-off (exact FTS versus lemma-aware FTS versus embedder and reranker).'
     keywords: [retrieval bake-off, FTS, lemma-aware search, reranker, hit@20]
     lifecycle: active
     owner: infra-harness
@@ -1086,7 +1086,7 @@ entries:
   - id: l2en-archive
     kind: doc_family
     paths: [docs/l2-uk-en/_archive/**]
-    purpose: Retired per-level curriculum plans (RFC #409 era); live plans are under curriculum/l2-uk-en/plans.
+    purpose: 'Retired per-level curriculum plans (RFC #409 era); live plans are under curriculum/l2-uk-en/plans.'
     keywords: [archived curriculum plan, RFC 409]
     lifecycle: archive
     owner: curriculum-upgrade
@@ -1317,7 +1317,7 @@ entries:
   - id: bio-epic-queues
     kind: doc_family
     paths: [docs/bio-epic/**]
-    purpose: BIO phase-2 sequence allocation and the phase-4 wiki rewrite queue with its rubric (epic #2309).
+    purpose: 'BIO phase-2 sequence allocation and the phase-4 wiki rewrite queue with its rubric (epic #2309).'
     keywords: [bio wiki queue, phase-4 rubric, bio allocation]
     lifecycle: active
     owner: seminars-bio
@@ -1387,7 +1387,7 @@ entries:
   - id: resources-mapping-reports
     kind: evidence
     paths: [docs/resources/podcasts/*.md, docs/resources/ukrainianlessons/*.md]
-    purpose: January 2026 methodology, review and completion reports for mapping ULP podcasts and blog posts to modules (epic #334).
+    purpose: 'January 2026 methodology, review and completion reports for mapping ULP podcasts and blog posts to modules (epic #334).'
     keywords: [podcast mapping, ULP mapping report, blog mapping methodology]
     lifecycle: archive
     owner: curriculum-upgrade
@@ -1497,7 +1497,7 @@ entries:
   - id: projects-open-model-data
     kind: doc_family
     paths: [docs/projects/open-model-data/**]
-    purpose: ULDR decolonization and reasoning dataset specs, phase plans, runbooks and the paper outline (epics #6321, #7423); the HF pilot is withdrawn.
+    purpose: 'ULDR decolonization and reasoning dataset specs, phase plans, runbooks and the paper outline (epics #6321, #7423); the HF pilot is withdrawn.'
     keywords: [ULDR, decolonization dataset, grammar dataset spec, dataset acceptance check, source record contract]
     lifecycle: active
     owner: open-model-data
@@ -1732,7 +1732,7 @@ entries:
   - id: registry-translations
     kind: registry
     paths: [registry/translations/**]
-    purpose: Legacy vocabulary translation batches and outputs (issue #462 era); the README lists files that are not present.
+    purpose: 'Legacy vocabulary translation batches and outputs (issue #462 era); the README lists files that are not present.'
     keywords: [vocabulary translations, translation batch]
     lifecycle: archive
     owner: curriculum-upgrade
@@ -2292,10 +2292,11 @@ store_registry:
       journal: wal
       busy_ms: 5000
       busy_source: explicit
+      busy_setters: [scripts/ai_agent_bridge/_db.py:_tune_connection, .mcp/servers/message-broker/server.py:get_db]
       protection: keep
       backup: none
-      protection_gap: Legacy broker history is not in the allowlist; DB plan step 6 proposes keep until #6106 retires it, then frozen and kept.
-      retention: Legacy broker history; frozen read-only and kept after #6106 retirement, never row-deleted without operator authorization.
+      protection_gap: 'Legacy broker history is not in the allowlist; DB plan step 6 proposes keep until #6106 retires it, then frozen and kept.'
+      retention: 'Legacy broker history; frozen read-only and kept after #6106 retirement, never row-deleted without operator authorization.'
     - path: batch_state/entire-context/v1/context-links.sqlite3
       owner: infra-harness
       kind: operational
@@ -2412,10 +2413,11 @@ store_registry:
       journal: wal
       busy_ms: 30000
       busy_source: explicit
+      busy_setters: [scripts/wiki/sources_db.py:_open_conn]
       protection: keep
       backup: keep
       retention: The corpus of record; kept indefinitely.
-      note: The sources MCP miss path writes ulif_dictua_entries rows through store_ulif_dictua_entry (DB plan step 9).
+      note: The sources MCP miss path writes ulif_dictua_entries rows through store_ulif_dictua_entry (DB plan step 9), which opens the store through _open_conn; build writes a temporary file and replaces the store, so its default timeout never applies to the store.
     - path: data/vesum.db
       owner: corpus-channels
       kind: reference
@@ -2704,8 +2706,8 @@ store_registry:
       busy_source: explicit
       protection: keep
       backup: none
-      protection_gap: The #6106 broker-retirement evidence is not in the allowlist; DB plan step 6 proposes keep until #6106 closes.
-      retention: Legacy route usage counts; kept until #6106 closes.
+      protection_gap: 'The #6106 broker-retirement evidence is not in the allowlist; DB plan step 6 proposes keep until #6106 closes.'
+      retention: 'Legacy route usage counts; kept until #6106 closes.'
     # ---------------------------------------------------------------- staged and orphan
     - path: data/sum20_staging.db
       owner: corpus-channels
@@ -2784,7 +2786,7 @@ store_registry:
       absent_reason: Default path in scripts/agent_runtime/failover.py; created on the first provider cooldown.
       writers: [scripts/agent_runtime/failover.py:FailoverCooldownStore._connect]
       journal: unknown
-      busy_ms: 10000
+      busy_ms: 5000
       busy_source: explicit
       protection: disposable
       backup: none
@@ -2841,8 +2843,8 @@ store_registry:
       absent_reason: Default in scripts/wiki/embedding_manifest.py; created by the first embedding build.
       writers: [scripts/wiki/embedding_manifest.py:EmbeddingManifest.__init__]
       journal: unknown
-      busy_ms: 5000
-      busy_source: default
+      busy_ms: 30000
+      busy_source: explicit
       protection: rebuild
       backup: none
       retention: Embedding shard manifest; rebuilt with the shards.
@@ -3042,14 +3044,14 @@ store_registry:
       example: batch_state/bakeoff-9233-v3/corpus.sqlite3
       owner: infra-harness
       backup: drop
-      retention: Corpus copies of the #9233 retrieval bake-off; regenerable.
+      retention: 'Corpus copies of the #9233 retrieval bake-off; regenerable.'
     - id: retrieval-bakeoff-embeddings
       class: experiment_copy
       glob: batch_state/bakeoff-9233-v3/embeddings/*.sqlite3
       example: batch_state/bakeoff-9233-v3/embeddings/intfloat--multilingual-e5-small.sqlite3
       owner: infra-harness
       backup: drop
-      retention: Embedding stores of the #9233 retrieval bake-off; regenerable.
+      retention: 'Embedding stores of the #9233 retrieval bake-off; regenerable.'
     - id: write-ownership-test-copies
       class: test_copy
       glob: batch_state/runtime/review-10104-r3-claude/**/write-ownership.sqlite3
@@ -3062,7 +3064,7 @@ store_registry:
       paths: [batch_state/probe-evidence/9008/sessions/session_search.sqlite]
       owner: infra-harness
       backup: none
-      retention: Session-search probe evidence for #9008.
+      retention: 'Session-search probe evidence for #9008.'
 
 # Store names that scripts/ code mentions but that are not stores of this
 # repository. Every other data/<name>.db|.sqlite literal in scripts/ must be

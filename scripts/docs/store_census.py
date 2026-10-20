@@ -14,10 +14,11 @@ The registry is the ``store_registry`` section of ``docs/knowledge/catalogue.yam
   or glob, so a new copy elsewhere is flagged instead of absorbed.
 
 ``registry_errors`` (static, CI) checks owners, that each write entry point is defined in
-tracked code, that each backup fact equals what ``scripts/config/backup-allowlist.json``
-selects (read only; DevOps owns that file), that protection agrees with the backup
-fact, that examples match their globs and that every SQLite ``data/`` store name in
-``scripts/`` is registered.
+tracked code, that a recorded busy timeout equals what the writer (or the shared helper
+named in ``busy_setters``) sets, that each backup fact equals what
+``scripts/config/backup-allowlist.json`` selects (read only; DevOps owns that file), that
+protection agrees with the backup fact, that examples match their globs and that every
+SQLite ``data/`` store name in ``scripts/`` is registered.
 
 ``census`` (filesystem, read-only) walks ``data/``, ``.agent/``, ``.mcp/`` and
 ``batch_state/`` below a root, finds every SQLite file by extension (``.db``,
@@ -25,7 +26,9 @@ fact, that examples match their globs and that every SQLite ``data/`` store name
 ``expect_present`` it also flags present-claimed stores that are missing, declared-absent
 stores that exist, and a journal mode that disagrees with header byte 18. It reads at
 most 100 bytes per file; coverage.py data is confirmed by its ``coverage_schema`` table
-through a read-only, immutable open. Nothing is written, moved or locked.
+through a read-only, immutable open. Nothing is written, moved or locked. A directory
+that cannot be walked or a file that cannot be read or vanishes mid-walk makes the scan
+incomplete (never "not a store"); the report names it by relative path and error code.
 
 Known limit (residual G1): stores written through a directory outside the walked roots
 (``--db``, ``--work-dir`` or ``--state-dir`` elsewhere, temporary directories) are not
@@ -34,9 +37,12 @@ seen, and files inside evidence directories are classified by directory, not per
 from __future__ import annotations
 
 import ast
+import errno
 import fnmatch
 import os
+import re
 import sqlite3
+import stat
 import subprocess
 from collections import Counter
 from dataclasses import dataclass, field
@@ -57,6 +63,12 @@ ALLOWLIST_PATH = 'scripts/config/backup-allowlist.json'
 JOURNAL_HEADER = {'delete': 1, 'wal': 2}
 # task_record_is_staged in scripts/backup-data.sh: the only batch_state/tasks files the nightly stages.
 TASK_RECORD_SUFFIXES = ('.json', '.result', '.diag', '.md', '.prompt')
+# Connection openers whose ``timeout=`` (seconds) sets the busy timeout: sqlite3/aiosqlite
+# ``connect``, scripts/api/resilience.connect_sqlite and scripts/control_plane/storage.connect
+# (imported as cp_connect).
+CONNECT_CALLS = frozenset({'connect', 'connect_sqlite', 'cp_connect'})
+BUSY_PRAGMA = re.compile(r'PRAGMA\s+busy_timeout\s*=\s*([^\s;]+)', re.IGNORECASE)
+UNEVALUATED = 'unevaluated'  # a busy setting whose value is not a literal or module constant
 
 
 # ---------------------------------------------------------------- backup facts
@@ -148,26 +160,116 @@ def evidence_dir(path: str, reg: dict) -> dict | None:
 
 # ---------------------------------------------------------------- static validation
 
-def _writer_defined(source: str, name: str) -> bool:
-    """``name`` (``function`` or ``Class.method``) is defined at module or class level in ``source``."""
-    try:
-        scope: list[ast.stmt] = ast.parse(source).body
-    except (SyntaxError, ValueError):
-        return False
+def _definition(tree: ast.Module, name: str) -> ast.AST | None:
+    """The definition of ``name`` (``function`` or ``Class.method``) at module or class level."""
+    scope: list[ast.stmt] = tree.body
+    found: ast.AST | None = None
     for part in name.split('.'):
         found = next((n for n in scope if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef))
                       and n.name == part), None)
         if found is None:
-            return False
+            return None
         scope = found.body
-    return True
+    return found
+
+
+def _parse(source: str) -> ast.Module | None:
+    try:
+        return ast.parse(source)
+    except (SyntaxError, ValueError):
+        return None
+
+
+def _writer_defined(source: str, name: str) -> bool:
+    tree = _parse(source)
+    return tree is not None and _definition(tree, name) is not None
+
+
+def _number(node: ast.AST, constants: dict[str, float]) -> float | None:
+    """A numeric literal, a module-level numeric constant, or a product or quotient of them."""
+    if isinstance(node, ast.Constant) and type(node.value) in (int, float):
+        return node.value
+    if isinstance(node, ast.Name):
+        return constants.get(node.id)
+    if isinstance(node, ast.BinOp) and isinstance(node.op, (ast.Mult, ast.Div)):
+        left, right = _number(node.left, constants), _number(node.right, constants)
+        if left is None or right is None or (isinstance(node.op, ast.Div) and right == 0):
+            return None
+        return left * right if isinstance(node.op, ast.Mult) else left / right
+    return None
+
+
+def _module_constants(tree: ast.Module) -> dict[str, float]:
+    constants: dict[str, float] = {}
+    for stmt in tree.body:
+        targets = (stmt.targets if isinstance(stmt, ast.Assign)
+                   else [stmt.target] if isinstance(stmt, ast.AnnAssign) and stmt.value is not None else [])
+        value = _number(stmt.value, constants) if targets else None
+        for target in targets:
+            if isinstance(target, ast.Name) and value is not None:
+                constants[target.id] = value
+    return constants
+
+
+def _sql_text(node: ast.AST, constants: dict[str, float]) -> str | None:
+    """A string literal, or an f-string whose fields are numeric constants ('?' otherwise)."""
+    if isinstance(node, ast.Constant) and isinstance(node.value, str):
+        return node.value
+    if not isinstance(node, ast.JoinedStr):
+        return None
+    parts = []
+    for value in node.values:
+        if isinstance(value, ast.FormattedValue):
+            number = _number(value.value, constants)
+            parts.append('?' if number is None else f'{number:g}')
+        else:
+            parts.append(str(value.value))
+    return ''.join(parts)
+
+
+def _call_name(func: ast.AST) -> str | None:
+    return func.attr if isinstance(func, ast.Attribute) else func.id if isinstance(func, ast.Name) else None
+
+
+def writer_busy_ms(source: str, name: str) -> int | str | None:
+    """The busy timeout in ms that the last busy setting in ``name`` gives, in source order.
+
+    A setting is a ``timeout=`` (seconds) on a CONNECT_CALLS call or a ``PRAGMA busy_timeout``
+    passed to ``execute``. None when ``name`` sets none (it inherits a default or a helper's
+    value); UNEVALUATED when the last setting is not a literal or module constant.
+    """
+    tree = _parse(source)
+    node = _definition(tree, name) if tree is not None else None
+    if node is None:
+        return None
+    constants = _module_constants(tree)
+    settings: list[tuple[int, int, int | str]] = []
+    for call in ast.walk(node):
+        if not isinstance(call, ast.Call):
+            continue
+        called = _call_name(call.func)
+        if called in CONNECT_CALLS:
+            for keyword in call.keywords:
+                if keyword.arg == 'timeout':
+                    seconds = _number(keyword.value, constants)
+                    settings.append((call.lineno, call.col_offset,
+                                     UNEVALUATED if seconds is None else round(seconds * 1000)))
+        elif called in ('execute', 'executescript') and call.args:
+            text = _sql_text(call.args[0], constants)
+            if text is not None and (match := BUSY_PRAGMA.search(text)):
+                try:
+                    value: int | str = round(float(match.group(1)))
+                except ValueError:
+                    value = UNEVALUATED
+                settings.append((call.lineno, call.col_offset, value))
+    return max(settings, key=lambda setting: setting[:2])[2] if settings else None
 
 
 def writer_files(catalogue: dict) -> set[str]:
-    """Every file a write entry point names."""
+    """Every file a write entry point or a busy setter names."""
     reg = registry(catalogue)
     return {w.partition(':')[0] for section in ('stores', 'families') for row in reg.get(section, [])
-            for w in row.get('writers', [])}
+            for w in [*row.get('writers', []), *row.get('busy_setters', [])]}
 
 
 def _where(section: str, row: dict) -> str:
@@ -194,21 +296,54 @@ def registry_errors(catalogue: dict, tracked: set[str], owners: set[str], allowl
         if (actual := backup_fact(path, allowlist)) != declared:
             errors.append(f'{here}: backup is {declared!r} but {ALLOWLIST_PATH} gives {actual!r} for {path!r}')
 
+    def defined(here: str, label: str, refs: list[str]) -> list[str]:
+        """The refs whose function is defined in a readable tracked file; errors for the rest."""
+        good = []
+        for ref in refs:
+            path, _, name = ref.partition(':')
+            if path not in tracked:
+                errors.append(f'{here}: {label} {ref!r} names an untracked file')
+            elif path not in sources:
+                errors.append(f'{here}: {label} file {path!r} could not be read, so {name!r} is unverified')
+            elif not _writer_defined(sources[path], name):
+                errors.append(f'{here}: {label} {ref!r}: {name!r} is not defined in {path}')
+            else:
+                good.append(ref)
+        return good
+
+    def busy(here: str, row: dict, writers: list[str], setters: list[str]) -> None:
+        """busy_ms equals what the code sets: each busy setter, else each writer, for an explicit
+        source; a default source is wrong when a writer sets a timeout itself."""
+        explicit, recorded = row['busy_source'] == 'explicit', row['busy_ms']
+        if row.get('busy_setters') and not explicit:
+            errors.append(f"{here}: busy_setters is for busy_source explicit, not {row['busy_source']!r}")
+            return
+        for ref in setters if row.get('busy_setters') else writers:
+            path, _, name = ref.partition(':')
+            value = writer_busy_ms(sources[path], name)
+            if not explicit:
+                if value is not None:
+                    errors.append(f"{here}: busy_source {row['busy_source']!r} but {ref!r} sets the busy "
+                                  f'timeout itself ({value}); record it as explicit')
+            elif value is None:
+                errors.append(f'{here}: busy_source explicit but {ref!r} sets no busy timeout; name the '
+                              'shared helper that sets it in busy_setters')
+            elif value == UNEVALUATED:
+                errors.append(f'{here}: {ref!r} sets the busy timeout from a value the check cannot evaluate; '
+                              'name the function that sets a literal or module constant in busy_setters')
+            elif value != recorded:
+                errors.append(f'{here}: busy_ms {recorded} but {ref!r} sets {value} (its last busy setting)')
+
     def store_like(section: str, row: dict) -> None:
         here = _where(section, row)
         owner(here, row)
-        for writer in row.get('writers', []):
-            path, _, name = writer.partition(':')
-            if path not in tracked:
-                errors.append(f'{here}: writer {writer!r} names an untracked file')
-            elif path not in sources:
-                errors.append(f'{here}: writer file {path!r} could not be read, so {name!r} is unverified')
-            elif not _writer_defined(sources[path], name):
-                errors.append(f'{here}: writer {writer!r}: {name!r} is not defined in {path}')
+        writers = defined(here, 'writer', row.get('writers', []))
+        setters = defined(here, 'busy setter', row.get('busy_setters', []))
         if not row.get('writers') and not row.get('writer_note'):
             errors.append(f'{here}: no writers, so writer_note must say why')
         if (row['busy_ms'] is None) != (row['busy_source'] in ('no_writer', 'not_applicable')):
             errors.append(f"{here}: busy_ms is null exactly when busy_source is no_writer or not_applicable")
+        busy(here, row, writers, setters)
         protection, backup = row['protection'], row['backup']
         if backup == 'keep' and protection != 'keep':
             errors.append(f'{here}: the nightly keeps it (backup keep) but protection is {protection!r}; '
@@ -332,10 +467,22 @@ class Census:
     present: list[str] = field(default_factory=list)  # store rows found
     missing: list[str] = field(default_factory=list)  # present-claimed store rows not found
     evidence: list[str] = field(default_factory=list)  # evidence directories present, not walked
+    # Paths the walk could not read: {'code', 'path' (relative), 'reason' (errno name)}.
+    incomplete: list[dict] = field(default_factory=list)
+
+    @property
+    def complete(self) -> bool:
+        return not self.incomplete
 
     @property
     def ok(self) -> bool:
-        return not self.unregistered and not self.problems and not (self.presence_checked and self.missing)
+        return (self.complete and not self.unregistered and not self.problems
+                and not (self.presence_checked and self.missing))
+
+    def unreadable(self, code: str, logical: str, exc: OSError) -> None:
+        """Record a path the census could not read; the scan is then incomplete, never passing."""
+        reason = errno.errorcode.get(exc.errno, type(exc).__name__) if exc.errno else type(exc).__name__
+        self.incomplete.append({'code': code, 'path': logical, 'reason': reason})
 
     def counts(self, reg: dict) -> dict:
         rows = {row['path']: row for row in reg.get('stores', [])}
@@ -352,21 +499,32 @@ class Census:
             'problems': len(self.problems),
             'missing': len(self.missing) if self.presence_checked else None,
             'evidence_dirs_not_walked': len(self.evidence),
+            'unreadable': len(self.incomplete),
         }
 
     def to_json(self, reg: dict) -> dict:
         return {'root_walked': sorted(self.walked_roots), 'presence_checked': self.presence_checked,
                 'counts': self.counts(reg), 'unregistered': self.unregistered, 'problems': self.problems,
                 'missing': self.missing if self.presence_checked else None,
-                'evidence_dirs_not_walked': self.evidence, 'ok': self.ok}
+                'evidence_dirs_not_walked': self.evidence, 'complete': self.complete,
+                'incomplete': self.incomplete, 'ok': self.ok}
 
 
 def _header(path: Path) -> bytes:
+    """At most HEADER_BYTES of ``path``; OSError (unreadable, vanished) propagates to the caller."""
+    with path.open('rb') as handle:
+        return handle.read(HEADER_BYTES)
+
+
+def _read_header(result: Census, logical: str, path: Path) -> bytes | None:
+    """The header, or None after recording why it could not be read."""
     try:
-        with path.open('rb') as handle:
-            return handle.read(HEADER_BYTES)
-    except OSError:
-        return b''
+        return _header(path)
+    except FileNotFoundError as exc:
+        result.unreadable('vanished_file', logical, exc)
+    except OSError as exc:
+        result.unreadable('unreadable_file', logical, exc)
+    return None
 
 
 def _is_coverage_data(path: Path) -> bool:
@@ -397,14 +555,38 @@ def _resolve(root: Path, logical: str) -> Path | None:
     return (common if common.is_absolute() else root / common) / logical.split('/', 1)[1]
 
 
+def _lstat_mode(result: Census, kind: str, logical: str, path: Path) -> int | None:
+    """The ``lstat`` mode of ``path``, or None after recording a vanished or unreadable ``kind``."""
+    try:
+        return path.lstat().st_mode
+    except FileNotFoundError as exc:
+        result.unreadable(f'vanished_{kind}', logical, exc)
+    except OSError as exc:
+        result.unreadable(f'unreadable_{kind}', logical, exc)
+    return None
+
+
 def _files(root: Path, top: str, reg: dict, result: Census):
-    """(logical path, Path) for every regular file below ``root/top``; symlinks and evidence dirs pruned."""
-    for directory, dirs, files in os.walk(root / top, followlinks=False):
+    """(logical path, Path) for every regular file below ``root/top``; symlinks and evidence dirs pruned.
+
+    A directory the walk cannot list and an entry it cannot stat are recorded in
+    ``result.incomplete`` (os.walk would otherwise skip them silently).
+    """
+    def walk_error(exc: OSError) -> None:
+        try:
+            logical = Path(os.fsdecode(exc.filename)).relative_to(root).as_posix()
+        except (TypeError, ValueError):
+            logical = top
+        kind = 'vanished' if isinstance(exc, FileNotFoundError) else 'unreadable'
+        result.unreadable(f'{kind}_directory', logical, exc)
+
+    for directory, dirs, files in os.walk(root / top, onerror=walk_error, followlinks=False):
         rel = Path(directory).relative_to(root).as_posix()
         kept = []
         for name in sorted(dirs):
             logical = f'{rel}/{name}'
-            if (root / logical).is_symlink():
+            mode = _lstat_mode(result, 'directory', logical, root / logical)
+            if mode is None or stat.S_ISLNK(mode):
                 continue
             row = evidence_dir(logical, reg)
             if row is not None and _segments_match(row['path'], logical):
@@ -413,9 +595,10 @@ def _files(root: Path, top: str, reg: dict, result: Census):
             kept.append(name)
         dirs[:] = kept
         for name in sorted(files):
-            path = Path(directory) / name
-            if not path.is_symlink() and path.is_file():
-                yield f'{rel}/{name}', path
+            logical, path = f'{rel}/{name}', Path(directory) / name
+            mode = _lstat_mode(result, 'file', logical, path)
+            if mode is not None and stat.S_ISREG(mode):
+                yield logical, path
 
 
 def census(root: Path, catalogue: dict, *, expect_present: bool = False) -> Census:
@@ -430,7 +613,9 @@ def census(root: Path, catalogue: dict, *, expect_present: bool = False) -> Cens
         for logical, path in _files(root, top, reg, result):
             if logical.endswith(SQLITE_SIDECARS):
                 continue
-            header = _header(path)
+            header = _read_header(result, logical, path)
+            if header is None:
+                continue  # recorded as incomplete: an unreadable file is never "not a store"
             if not (header.startswith(SQLITE_MAGIC) or logical.lower().endswith(SQLITE_SUFFIXES)):
                 continue
             claim = claims.classify(logical)
@@ -446,8 +631,8 @@ def census(root: Path, catalogue: dict, *, expect_present: bool = False) -> Cens
         else:
             resolved = _resolve(root, logical)
             exists = resolved is not None and resolved.is_file() and not resolved.is_symlink()
-            if exists:
-                _check_claim(result, logical, resolved, _header(resolved), Claim('stores', logical, row))
+            if exists and (header := _read_header(result, logical, resolved)) is not None:
+                _check_claim(result, logical, resolved, header, Claim('stores', logical, row))
         if row['presence'] == 'present':
             (result.present if exists else result.missing).append(logical)
         elif exists:
@@ -486,6 +671,10 @@ def census_lines(result: Census, reg: dict) -> list[str]:
              f"evidence directories not walked {counts['evidence_dirs_not_walked']}",
              'presence: ' + (f"checked, {counts['missing']} missing" if result.presence_checked
                              else 'not checked (pass --expect-present on the store host)')]
+    if not result.complete:
+        lines.append(f'scan: INCOMPLETE, {len(result.incomplete)} path(s) could not be read; the census proves '
+                     'nothing until they are readable')
+    lines += [f"INCOMPLETE SCAN {item['code']} {item['path']} ({item['reason']})" for item in result.incomplete]
     lines += [f'UNREGISTERED SQLITE {p}' for p in result.unregistered]
     lines += [f'REGISTRY MISMATCH {p}' for p in result.problems]
     if result.presence_checked:

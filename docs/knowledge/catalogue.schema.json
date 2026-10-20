@@ -232,6 +232,10 @@
         "journal": {"enum": ["wal", "delete", "unknown"]},
         "busy_ms": {"type": ["integer", "null"], "minimum": 0},
         "busy_source": {"enum": ["default", "explicit", "no_writer", "not_applicable"]},
+        "busy_setters": {
+          "description": "For busy_source explicit when the writers open the store through a shared helper: the functions that set the busy timeout (checked against busy_ms instead of the writers).",
+          "type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/writerRef"}
+        },
         "protection": {"enum": ["keep", "rebuild", "disposable"]},
         "backup": {"enum": ["keep", "drop", "none"]},
         "protection_gap": {"$ref": "#/$defs/text"},
