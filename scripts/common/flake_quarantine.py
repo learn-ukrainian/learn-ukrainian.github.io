@@ -106,6 +106,9 @@ def _gh(*args: str) -> str:
 def _check_admission(entry: dict, *, repository: str, destination: Path) -> None:
     from scripts.ci.junit_results import parse_junit
 
+    if entry.get("renewed_on", entry["admitted_on"]) > date.today():
+        raise ValueError("admission start date must not be in the future")
+
     endpoint = f"repos/{repository}"
     issue = json.loads(_gh("api", f"{endpoint}/issues/{entry['fix_issue']}"))
     if issue.get("state") != "open" or "pull_request" in issue:
@@ -199,10 +202,13 @@ def main(argv: list[str] | None = None) -> int:
 
 
 def rerun_node_ids(entries: list[dict], *, today: date, event_name: str | None) -> set[str]:
-    """Schedule runs expose failures; entries lose reruns after seven grace days."""
+    """Rerun only from admission or renewal through seven grace days, never on schedules."""
     if event_name == "schedule":
         return set()
-    return {entry["node_id"] for entry in entries if today <= entry["expires_on"] + timedelta(days=7)}
+    return {
+        entry["node_id"] for entry in entries
+        if entry.get("renewed_on", entry["admitted_on"]) <= today <= entry["expires_on"] + timedelta(days=7)
+    }
 
 
 if __name__ == "__main__":

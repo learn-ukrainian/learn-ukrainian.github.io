@@ -17,6 +17,8 @@ property, Actions summary and existing nightly flake ledger.
   Downloaded `pytest-junit-shard-*` artifacts must report the exact node failing,
   erroring, or passing after a recorded first failure in each run. A failing
   workflow without the node's failure is insufficient.
+  Test-result artifacts are retained for 14 days, so a renewal usually needs
+  new failing nightly run IDs.
 - `fix_issue` and `owner`: an open repair issue and an accountable repair owner.
   A PR number cannot replace the repair issue.
 - `equivalent_coverage`: a mapping from other exact pytest nodes to explanations
@@ -26,7 +28,8 @@ property, Actions summary and existing nightly flake ledger.
 - `admitted_on`, `expires_on`, `renewals`: the existing date limits apply.
   Initial expiry is at most 30 days after admission. At most one renewal is
   allowed, with `renewed_on` within the original 30 days and expiry at most
-  30 days after renewal. After expiry plus seven grace days, reruns stop.
+  30 days after renewal. The admission or renewal start date must not be in the
+  future. Reruns begin on that date and stop after expiry plus seven grace days.
 - `admission_approval`: the numeric ID of a designated approval record comment
   on the repair issue. A trusted repository publisher records the operator's
   approval or the agreeing designated advisors' approval, with provenance and

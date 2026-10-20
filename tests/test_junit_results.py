@@ -119,7 +119,8 @@ def test_registry_hook_executes_assertions_with_one_rerun_or_scheduled_failure(
     (tmp_path / "conftest.py").write_text(
         "from datetime import date\n"
         "from tests import conftest as hooks\n"
-        "hooks.load_registry = lambda: [{'node_id': 'tests/test_sample.py::test_flaky', 'expires_on': date.today()}]\n"
+        "hooks.load_registry = lambda: [{'node_id': 'tests/test_sample.py::test_flaky', "
+        "'admitted_on': date.today(), 'expires_on': date.today()}]\n"
         "pytest_collection_modifyitems = hooks.pytest_collection_modifyitems\n"
         "def pytest_configure(config):\n"
         "    config.pluginmanager.register(hooks._FlakeRerunReporter(config), 'flake-reporter')\n",

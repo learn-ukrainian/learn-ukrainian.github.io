@@ -91,6 +91,24 @@ def test_single_renewal_and_exact_parameterized_class_node(tmp_path):
         load_registry(path)
 
 
+@pytest.mark.parametrize("renewals", [0, 1])
+def test_reruns_start_on_admission_or_renewal_date(tmp_path, renewals):
+    start = date(2027, 8, 1)
+    entry = _entry(start)
+    if renewals:
+        entry.update(admitted_on=start - timedelta(days=30), renewals=1, renewed_on=start)
+    path = tmp_path / "registry.yaml"
+    path.write_text(yaml.safe_dump({"entries": [entry]}))
+    entries = load_registry(path)
+    assert rerun_node_ids(entries, today=date(2026, 10, 20), event_name="pull_request") == set()
+    assert rerun_node_ids(entries, today=start - timedelta(days=1), event_name="pull_request") == set()
+    assert rerun_node_ids(entries, today=start, event_name="pull_request") == {entry["node_id"]}
+    expiry = entry["expires_on"]
+    assert rerun_node_ids(entries, today=expiry, event_name="pull_request") == {entry["node_id"]}
+    assert rerun_node_ids(entries, today=expiry + timedelta(days=7), event_name="pull_request") == {entry["node_id"]}
+    assert rerun_node_ids(entries, today=expiry + timedelta(days=8), event_name="pull_request") == set()
+
+
 @pytest.fixture
 def admission(monkeypatch):
     entry = _entry(date(2026, 9, 28))
@@ -136,6 +154,28 @@ def admission(monkeypatch):
 def test_admission_verifies_two_main_failures_coverage_issue_and_bound_approval(admission):
     assert flake_quarantine.check_admissions([admission.entry], [], repository="example/project") == 1
     assert [call[2] for call in admission.calls if call[:2] == ("run", "download")] == ["101", "102"]
+
+
+@pytest.mark.parametrize("renewals", [0, 1])
+def test_admission_refuses_future_start_before_fetching_evidence(admission, monkeypatch, renewals):
+    class Today(date):
+        @classmethod
+        def today(cls):
+            return cls(2026, 10, 20)
+
+    monkeypatch.setattr(flake_quarantine, "date", Today)
+    start = date(2026, 10, 21)
+    admission.entry.update(admitted_on=start, expires_on=start + timedelta(days=20))
+    if renewals:
+        admission.entry.update(admitted_on=start - timedelta(days=30), renewals=1, renewed_on=start)
+    admission.responses[f"{admission.prefix}/issues/comments/999"]["body"] = (
+        f"<!-- flake-quarantine-admission:{flake_quarantine.admission_digest(admission.entry)}:APPROVE -->"
+    )
+    with pytest.raises(ValueError, match=r"start date.*future"):
+        flake_quarantine.check_admissions([admission.entry], [], repository="example/project")
+    assert admission.calls == []
+    monkeypatch.setattr(Today, "today", classmethod(lambda cls: cls(2026, 10, 21)))
+    assert flake_quarantine.check_admissions([admission.entry], [], repository="example/project") == 1
 
 
 @pytest.mark.parametrize("leased", [True, False])
