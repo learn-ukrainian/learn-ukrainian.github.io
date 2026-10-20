@@ -5312,6 +5312,33 @@ def test_read_only_mutation_paths_ignore_runtime_state_only():
     ]
 
 
+def test_read_only_mutation_paths_exempt_ignored_site_build_output_only():
+    """#11193: an ignored listed site-build path is exempt; ``!!`` alone is not.
+
+    ``site/astro.config.mjs`` creates the pronunciation manifest, and
+    ``.gitignore`` ignores that directory. A tracked path that matches
+    ``SITE_BUILD_OUTPUT_PATTERNS``, a force-added file, and an ignored path
+    outside that list still trip.
+    """
+    import re
+
+    from scripts.fleet.regenerable_output import SITE_BUILD_OUTPUT_PATTERNS
+
+    manifest = "site/public/audio/pronunciation/manifest.json"
+    unlisted = "site/public/audio/pronunciation/a.wav"
+    assert any(re.fullmatch(pattern, manifest) for pattern in SITE_BUILD_OUTPUT_PATTERNS)
+    assert not any(re.fullmatch(pattern, unlisted) for pattern in SITE_BUILD_OUTPUT_PATTERNS)
+
+    before: dict[str, str] = {}
+    assert delegate._read_only_mutation_paths(before, {manifest: "!!"}) == []
+    assert delegate._read_only_mutation_paths(before, {manifest: " M"}) == [manifest]
+    assert delegate._read_only_mutation_paths(before, {manifest: "A "}) == [manifest]
+    assert delegate._read_only_mutation_paths({manifest: "!!"}, {manifest: "A "}) == [manifest]
+    assert delegate._read_only_mutation_paths(before, {manifest: "??"}) == [manifest]
+    assert delegate._read_only_mutation_paths(before, {unlisted: "!!"}) == [unlisted]
+    assert delegate._read_only_mutation_paths(before, {manifest: "!!", "tracked.txt": " M"}) == ["tracked.txt"]
+
+
 @pytest.mark.parametrize(
     ("layout", "repo_relative"),
     [
