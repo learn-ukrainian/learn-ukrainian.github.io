@@ -299,7 +299,7 @@ def _run(
             else meta
         ),
     )
-    monkeypatch.setattr(guard, "_check_states", lambda p, repo=None, cwd=None: checks)
+    monkeypatch.setattr(guard, "_check_states", lambda p, repo=None, cwd=None, meta=None: checks)
     monkeypatch.setattr(guard, "_owner_repo_from_url", lambda u: owner_repo)
     monkeypatch.setattr(guard, "_base_protected", lambda o, b: protected)
     return guard.main()
@@ -735,7 +735,7 @@ def test_auto_on_base_with_empty_required_checks_is_blocked(monkeypatch):
     monkeypatch.setattr(
         guard, "_pr_meta", lambda p, repo=None, cwd=None: {"isDraft": False, "baseRefName": "main", "url": _URL}
     )
-    monkeypatch.setattr(guard, "_check_states", lambda p, repo=None, cwd=None: ([], []))
+    monkeypatch.setattr(guard, "_check_states", lambda p, repo=None, cwd=None, meta=None: ([], []))
     monkeypatch.setattr(guard, "_owner_repo_from_url", lambda u: "owner/repo")
     assert guard.main() == 2
 
@@ -1167,7 +1167,7 @@ def test_cross_repo_url_selector_uses_that_repo(monkeypatch):
             "url": "https://github.com/other/repo/pull/9",
         },
     )
-    monkeypatch.setattr(guard, "_check_states", lambda p, repo=None, cwd=None: ([], []))
+    monkeypatch.setattr(guard, "_check_states", lambda p, repo=None, cwd=None, meta=None: ([], []))
     monkeypatch.setattr(guard, "_base_protected", lambda o, b: seen.setdefault("repo", o) and True)
     payload = json.dumps({"tool_input": {"command": "gh pr merge https://github.com/other/repo/pull/9 --auto"}})
     monkeypatch.setattr("sys.stdin", io.StringIO(payload))
@@ -1233,7 +1233,7 @@ def test_recursion_cap_fails_closed(monkeypatch):
     monkeypatch.setattr(
         guard, "_pr_meta", lambda p, repo=None, cwd=None: {"isDraft": False, "baseRefName": "main", "url": _URL}
     )
-    monkeypatch.setattr(guard, "_check_states", lambda p, repo=None, cwd=None: ([], []))  # all green
+    monkeypatch.setattr(guard, "_check_states", lambda p, repo=None, cwd=None, meta=None: ([], []))  # all green
     assert guard._judge([guard._UNREADABLE_MARKER]) is not None
 
 
@@ -2003,3 +2003,123 @@ def test_issue_9480_consecutive_cd_matches_bash(monkeypatch, tmp_path, suffix):
     )
     assert oracle.returncode == 0
     assert _judged_cwds(monkeypatch, command) == [("5", oracle.stdout.strip())]
+
+
+# --- OO-48 external advisory provenance (#11184) ------------------------------------------
+# The publisher/hook parity matrix (real hook subprocess) lives in tests/test_advisory_checks.py.
+
+_HEAD = "a" * 40
+_ENTIRE_ROWS = json.dumps(
+    [{"name": "CI Gate", "bucket": "pass", "workflow": "CI"}, {"name": "Entire Gates", "bucket": "pending"}]
+)
+_ENTIRE_RUN = {"name": "Entire Gates", "head_sha": _HEAD, "app": {"id": 2626939, "slug": "entire"}}
+
+
+def _scripted_gh(monkeypatch, replies: dict):
+    """Answer gh argv by the first matching key (an argv prefix); record every call."""
+    import types
+
+    calls = []
+
+    def fake_run(args, **_kwargs):
+        calls.append(args[1:])
+        for prefix, (code, stdout) in replies.items():
+            if tuple(args[1 : 1 + len(prefix)]) == prefix:
+                return types.SimpleNamespace(returncode=code, stdout=stdout, stderr="")
+        return types.SimpleNamespace(returncode=1, stdout="", stderr="unexpected")
+
+    monkeypatch.setattr(guard.subprocess, "run", fake_run)
+    return calls
+
+
+def _provenance_replies(head=_HEAD, runs=(_ENTIRE_RUN,)):
+    return {
+        ("pr", "checks"): (8, _ENTIRE_ROWS),
+        ("api", "--method", "GET", f"repos/owner/repo/commits/{head}/status?per_page=100"): (
+            0, json.dumps({"total_count": 0, "statuses": []})),
+        ("api", "--method", "GET", f"repos/owner/repo/commits/{head}/check-runs?check_name=Entire%20Gates"
+         "&filter=all&per_page=100"): (0, json.dumps({"total_count": len(runs), "check_runs": list(runs)})),
+    }
+
+
+def test_oo48_check_states_prove_at_the_judged_metadata_head(monkeypatch):
+    calls = _scripted_gh(monkeypatch, _provenance_replies())
+    meta = {"headRefOid": _HEAD, "url": _URL}
+    assert guard._check_states("5", None, None, lambda: meta) == ([], [])
+    assert [call[0] for call in calls] == ["pr", "api", "api"]
+
+
+def test_oo48_moved_head_is_not_proven_by_older_runs(monkeypatch):
+    moved = "b" * 40
+    _scripted_gh(monkeypatch, _provenance_replies(head=moved))
+    assert guard._check_states("5", None, None, lambda: {"headRefOid": moved, "url": _URL}) is None
+
+
+@pytest.mark.parametrize("meta", [
+    None, {}, {"headRefOid": _HEAD}, {"headRefOid": _HEAD, "url": "https://ghe.example/owner/repo/pull/5"},
+    {"headRefOid": _HEAD, "url": "https://github.com/owner/repo"}, {"headRefOid": None, "url": _URL},
+])
+def test_oo48_unverifiable_metadata_blocks_the_exemption(monkeypatch, meta):
+    calls = _scripted_gh(monkeypatch, _provenance_replies())
+    assert guard._check_states("5", None, None, lambda: meta) is None
+    assert all(call[0] != "api" for call in calls)
+
+
+def test_oo48_without_snapshot_metadata_reads_the_pr_itself(monkeypatch):
+    replies = _provenance_replies()
+    replies[("pr", "view")] = (0, json.dumps({"isDraft": False, "body": "", "number": 5, "headRefOid": _HEAD,
+                                              "url": _URL}))
+    _scripted_gh(monkeypatch, replies)
+    assert guard._check_states("5") == ([], [])
+
+
+def test_oo48_snapshot_hands_its_metadata_to_the_check_reader(monkeypatch):
+    meta = {"isDraft": False, "headRefOid": _HEAD, "url": _URL}
+    seen = []
+    monkeypatch.setattr(guard, "_pr_meta", lambda *_args: meta)
+    monkeypatch.setattr(guard, "_check_states", lambda pr, repo, cwd, read: seen.append(read()) or ([], []))
+    assert guard._pr_snapshot("5") == (meta, ([], []))
+    assert seen == [meta]
+
+
+def test_oo48_api_failure_or_garbage_is_unproven(monkeypatch):
+    replies = _provenance_replies()
+    replies = {key: ((0, "not json") if key[0] == "api" else value) for key, value in replies.items()}
+    _scripted_gh(monkeypatch, replies)
+    assert guard._check_states("5", None, None, lambda: {"headRefOid": _HEAD, "url": _URL}) is None
+
+
+def test_oo48_unproven_pending_entire_gates_blocks_main(monkeypatch, capsys):
+    _scripted_gh(monkeypatch, {
+        **_provenance_replies(runs=({**_ENTIRE_RUN, "app": {"id": 15368, "slug": "github-actions"}},)),
+        ("pr", "view"): (0, json.dumps({"isDraft": False, "body": "", "number": 5, "headRefOid": _HEAD,
+                                         "url": _URL, "baseRefName": "main"})),
+    })
+    monkeypatch.setattr("sys.stdin", io.StringIO(json.dumps({"tool_input": {"command": "gh pr merge 5"}})))
+    assert guard.main() == 2
+    assert "GitHub App provenance at the PR head is unproven" in capsys.readouterr().err
+
+
+@pytest.mark.parametrize("rollup", [(1, ""), (0, "not json"), (0, '{"statusCheckRollup": {}}'), (0, "[]")])
+def test_old_client_rollup_read_failures_are_unverifiable(monkeypatch, rollup):
+    import types
+
+    def fake_run(args, **_kwargs):
+        if args[1:3] == ["pr", "checks"]:
+            return types.SimpleNamespace(returncode=1, stdout="", stderr=_GH_246_CHECKS_JSON_GAP)
+        return types.SimpleNamespace(returncode=rollup[0], stdout=rollup[1], stderr="")
+
+    monkeypatch.setattr(guard.subprocess, "run", fake_run)
+    assert guard._check_states("5") is None
+
+
+def test_check_states_non_list_rows_and_transport_errors_are_unverifiable(monkeypatch):
+    _fake_gh(monkeypatch, returncode=0, stdout='{"name": "CI Gate"}')
+    assert guard._check_states("5") is None
+
+    def boom(*_args, **_kwargs):
+        raise OSError("gh missing")
+
+    monkeypatch.setattr(guard.subprocess, "run", boom)
+    assert guard._check_states("5") is None
+    assert guard._gh_api_json("repos/owner/repo/commits/" + _HEAD + "/status") is None

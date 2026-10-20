@@ -20,7 +20,9 @@ must not let an *unverifiable* merge through; a human can always run the merge d
 outside the agent harness.
 
 A red check blocks regardless of whether GitHub calls it required: "required" is a
-config accident, red is red. So EVERY check counts unless its name marks it advisory.
+config accident, red is red. So EVERY check counts unless it is a ci.yml advisory job, or an
+operator-switched-off external check proven by GitHub App identity at the PR head
+(scripts/ci/advisory_checks.py); a display name alone never exempts anything.
 `--auto` is the one verdict that consults protection, because it is the one thing
 protection actually changes.
 
@@ -107,7 +109,9 @@ try:
     from scripts.publish.merge_guard import (
         _checks_json_unsupported,
         _parse_status_rollup_rows,
+        external_advisory_names,
         parse_checks,
+        prove_external_advisory,
         readiness_reason,
     )
     from scripts.publish.merge_guard import (
@@ -791,10 +795,8 @@ _ROLLUP_PENDING = {"IN_PROGRESS", "QUEUED", "PENDING", "WAITING", "EXPECTED", "R
 _ROLLUP_PASS = {"SUCCESS", "SKIPPED", "NEUTRAL"}
 
 
-def _check_states_from_status_rollup(
-    pr: str, repo: str | None = None, cwd: str | None = None
-) -> tuple[list[str], list[str]] | None:
-    """Fallback for the gh 2.46.0 ``pr checks --json`` compatibility gap."""
+def _status_rollup_rows(pr: str, repo: str | None = None, cwd: str | None = None) -> list | None:
+    """Fallback rows for the gh 2.46.0 ``pr checks --json`` compatibility gap."""
     try:
         out = subprocess.run(
             ["gh", "pr", "view", pr, *_repo_args(repo), "--json", "statusCheckRollup"],
@@ -814,11 +816,47 @@ def _check_states_from_status_rollup(
         return None
     if not isinstance(data, dict) or not isinstance(data.get("statusCheckRollup"), list):
         return None
-    return _parse_status_rollup_rows(data["statusCheckRollup"])
+    return data["statusCheckRollup"]
 
 
-def _check_states(pr: str, repo: str | None = None, cwd: str | None = None) -> tuple[list[str], list[str]] | None:
-    """(failing, pending) non-advisory check names, or None if undeterminable."""
+def _gh_api_json(endpoint: str, cwd: str | None = None) -> object:
+    """One read-only REST GET through gh, decoded, or None on any failure."""
+    try:
+        out = subprocess.run(
+            ["gh", "api", "--method", "GET", endpoint],
+            capture_output=True,
+            env=_gh_env(),
+            cwd=cwd,
+            text=True,
+            timeout=8,
+        )
+        return json.loads(_decolorize(out.stdout or "")) if out.returncode == 0 else None
+    except Exception:
+        return None
+
+
+def _external_advisory(rows: list, pr: str, repo: str | None, cwd: str | None, meta) -> frozenset[str] | None:
+    """Prove external advisory names at the head of the PR metadata being judged."""
+    names = external_advisory_names(rows)
+    if not names:
+        return frozenset()
+    data = meta() if meta is not None else _pr_meta(pr, repo, cwd)
+    url = data.get("url") if isinstance(data, dict) else None
+    if not isinstance(url, str) or not url.startswith("https://github.com/"):
+        return None
+    return prove_external_advisory(
+        _owner_repo_from_url(url), data.get("headRefOid"), names, lambda endpoint: _gh_api_json(endpoint, cwd)
+    )
+
+
+def _check_states(
+    pr: str, repo: str | None = None, cwd: str | None = None, meta=None
+) -> tuple[list[str], list[str]] | None:
+    """(failing, pending) non-advisory check names, or None if undeterminable.
+
+    ``meta`` returns the PR metadata being judged; an external advisory name is
+    proven against its head, so the exemption never comes from another head.
+    """
     try:
         out = subprocess.run(
             ["gh", "pr", "checks", pr, *_repo_args(repo), "--json", "name,bucket,state,workflow"],
@@ -831,20 +869,23 @@ def _check_states(pr: str, repo: str | None = None, cwd: str | None = None) -> t
     except Exception:
         return None
     if _checks_json_unsupported(out):
-        return _check_states_from_status_rollup(pr, repo, cwd)
-    text = (out.stdout or "").strip()
-    if not text:
-        # Empty output is ambiguous: a PR with zero checks (rc 0 → nothing to wait for)
-        # vs a gh error / non-existent PR (rc != 0 → fail-CLOSED block). Reading an
-        # *error* as "no failing checks" is the fail-open bug guard-admin-merge closed.
-        return ([], []) if out.returncode == 0 else None
-    try:
-        rows = json.loads(_decolorize(text))
-    except json.JSONDecodeError:
-        return None
+        rows, parse = _status_rollup_rows(pr, repo, cwd), _parse_status_rollup_rows
+    else:
+        text = (out.stdout or "").strip()
+        if not text:
+            # Empty output is ambiguous: a PR with zero checks (rc 0 → nothing to wait for)
+            # vs a gh error / non-existent PR (rc != 0 → fail-CLOSED block). Reading an
+            # *error* as "no failing checks" is the fail-open bug guard-admin-merge closed.
+            return ([], []) if out.returncode == 0 else None
+        try:
+            rows = json.loads(_decolorize(text))
+        except json.JSONDecodeError:
+            return None
+        parse = parse_checks
     if not isinstance(rows, list):
         return None
-    return parse_checks(rows)
+    advisory = _external_advisory(rows, pr, repo, cwd, meta)
+    return None if advisory is None else parse(rows, advisory=advisory)
 
 
 def _base_protected(owner_repo: str, base: str) -> bool | None:
@@ -894,7 +935,7 @@ def _pr_snapshot(
     """Read independent PR metadata and check state concurrently."""
     with concurrent.futures.ThreadPoolExecutor(max_workers=2) as pool:
         meta_future = pool.submit(_pr_meta, pr, repo, cwd)
-        states_future = pool.submit(_check_states, pr, repo, cwd)
+        states_future = pool.submit(_check_states, pr, repo, cwd, meta_future.result)
         return meta_future.result(), states_future.result()
 
 
@@ -944,7 +985,8 @@ def _judge(args: list[str], cwd: str | None = None) -> str | None:
         )
     if reason == "check states unverifiable":
         return _block_msg(
-            f"could not verify PR {pr} check states (gh error, timeout, or an unrecognized check state)",
+            f"could not verify PR {pr} check states (gh error, timeout, an unrecognized check state, "
+            "or an external check whose GitHub App provenance at the PR head is unproven)",
             "An unverifiable merge is refused, not assumed safe. Re-read the checks with\n"
             "`gh pr checks` and retry once gh answers.",
         )

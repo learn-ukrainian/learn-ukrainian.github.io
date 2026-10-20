@@ -5,9 +5,16 @@ from __future__ import annotations
 import json
 import re
 import subprocess
+from collections.abc import Callable
 from datetime import UTC, datetime
+from urllib.parse import quote
 
-from scripts.ci.advisory_checks import is_advisory, load_advisory_checks
+from scripts.ci.advisory_checks import (
+    external_advisory_check,
+    is_advisory,
+    is_external_advisory_run,
+    load_advisory_checks,
+)
 from scripts.common.github_client import GitHubRateLimited
 from scripts.opsec.prepublish import PublishBlocked
 
@@ -93,7 +100,78 @@ def _latest_rollup_rows(rows: list[dict]) -> list[dict] | None:
     return [row for _timestamp, row in latest.values()]
 
 
-def _parse_status_rollup_rows(rows: list) -> tuple[list[str], list[str]] | None:
+def external_advisory_names(rows: object) -> frozenset[str]:
+    """Exact operator-entry names among check rows; each still needs exact-head app proof."""
+    if not isinstance(rows, list):
+        return frozenset()
+    return frozenset(
+        row[field]
+        for row in rows
+        if isinstance(row, dict)
+        for field in ("name", "context")
+        if external_advisory_check(row.get(field)) is not None
+    )
+
+
+def _complete_page(document: object, key: str) -> bool:
+    return (
+        isinstance(document, dict)
+        and type(document.get("total_count")) is int
+        and isinstance(document.get(key), list)
+        and document["total_count"] == len(document[key])
+    )
+
+
+def prove_external_advisory(
+    repo: object, head: object, names: frozenset[str], get_json: Callable[[str], object]
+) -> frozenset[str] | None:
+    """``names`` when every same-named record at ``head`` is the entry's GitHub App, else None.
+
+    The check rows carry no app identity, so the exact-head REST check runs supply it.
+    A same-named run from another or no app, another head, a same-named commit status
+    or an incomplete page cannot be attributed: the whole check state is unverifiable.
+    ``get_json(endpoint)`` returns the decoded REST response, or None on failure.
+    """
+    if not names:
+        return frozenset()
+    if (
+        not isinstance(repo, str)
+        or not re.fullmatch(r"[\w.-]+/[\w.-]+", repo)
+        or not isinstance(head, str)
+        or not re.fullmatch(r"[0-9a-fA-F]{40}", head)
+    ):
+        return None
+    head = head.lower()
+    status = get_json(f"repos/{repo}/commits/{head}/status?per_page=100")
+    if not _complete_page(status, "statuses") or any(
+        not isinstance(row, dict) or not isinstance(row.get("context"), str) or row["context"] in names
+        for row in status["statuses"]
+    ):
+        return None
+    for name in sorted(names):
+        entry = external_advisory_check(name)
+        page = get_json(
+            f"repos/{repo}/commits/{head}/check-runs?check_name={quote(name, safe='')}&filter=all&per_page=100"
+        )
+        if (
+            entry is None
+            or not _complete_page(page, "check_runs")
+            or not page["check_runs"]
+            or not all(is_external_advisory_run(entry, run, head) for run in page["check_runs"])
+        ):
+            return None
+    return names
+
+
+def _proven(row: dict, advisory: frozenset[str]) -> bool:
+    """A check row whose exact name was proven external-advisory at the current head."""
+    return isinstance(row.get("name"), str) and row["name"] in advisory
+
+
+def _parse_status_rollup_rows(
+    rows: list, *, advisory: frozenset[str] = frozenset()
+) -> tuple[list[str], list[str]] | None:
+    """Parse old-client rollup rows; ``advisory`` holds only proven external names."""
     if not rows:
         return [], []
     policy = load_advisory_checks()
@@ -107,7 +185,7 @@ def _parse_status_rollup_rows(rows: list) -> tuple[list[str], list[str]] | None:
         # Cancelled runs can retain an unexpanded matrix parent. It is not an
         # executed job and cannot be superseded by the differently named shards.
         # The old-client statusCheckRollup fallback calls the identity workflowName.
-        if "${{" not in name and not is_advisory(
+        if "${{" not in name and not _proven(row, advisory) and not is_advisory(
             name, workflow=row.get("workflowName") or row.get("workflow"), policy=policy
         ):
             named.append(row)
@@ -146,8 +224,11 @@ def _parse_status_rollup_rows(rows: list) -> tuple[list[str], list[str]] | None:
     return failing, pending
 
 
-def parse_checks(rows):
-    """Parse gh check buckets with the hook's advisory and unknown-state policy."""
+def parse_checks(rows, *, advisory: frozenset[str] = frozenset()):
+    """Parse gh check buckets with the hook's advisory and unknown-state policy.
+
+    ``advisory`` holds only external names proven by :func:`prove_external_advisory`.
+    """
     if not isinstance(rows, list):
         return None
     policy = load_advisory_checks()
@@ -156,7 +237,7 @@ def parse_checks(rows):
         if not isinstance(row, dict):
             return None
         name = str(row.get("name") or "")
-        if "${{" in name or is_advisory(
+        if "${{" in name or _proven(row, advisory) or is_advisory(
             name, workflow=row.get("workflow"), policy=policy
         ):
             continue
@@ -204,6 +285,25 @@ def ensure_merge_ready(repo, number, *, runner, cwd, environment, match_head=Non
             timeout=15,
         )
 
+    def get_json(endpoint):
+        result = runner(
+            ["gh", "api", "--method", "GET", endpoint],
+            cwd=cwd,
+            env=env,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=15,
+        )
+        try:
+            return json.loads(result.stdout) if result.returncode == 0 else None
+        except (TypeError, ValueError):
+            return None
+
+    def states_for(rows, parse):
+        advisory = prove_external_advisory(repo, meta["headRefOid"], external_advisory_names(rows), get_json)
+        return None if advisory is None else parse(rows, advisory=advisory)
+
     try:
         meta_result = get(["view", str(number), "--json", "number,isDraft,headRefOid"])
         meta = json.loads(meta_result.stdout) if meta_result.returncode == 0 else None
@@ -219,7 +319,7 @@ def ensure_merge_ready(repo, number, *, runner, cwd, environment, match_head=Non
         if _checks_json_unsupported(checks):
             rollup = get(["view", str(number), "--json", "statusCheckRollup"])
             states = (
-                _parse_status_rollup_rows(json.loads(rollup.stdout)["statusCheckRollup"])
+                states_for(json.loads(rollup.stdout)["statusCheckRollup"], _parse_status_rollup_rows)
                 if rollup.returncode == 0
                 else None
             )
@@ -227,7 +327,7 @@ def ensure_merge_ready(repo, number, *, runner, cwd, environment, match_head=Non
             raw_checks = None
             try:
                 raw_checks = json.loads(checks.stdout)
-                states = parse_checks(raw_checks)
+                states = states_for(raw_checks, parse_checks)
             except (json.JSONDecodeError, TypeError):
                 states = None
             if checks.returncode not in {0, 1, 8} or (

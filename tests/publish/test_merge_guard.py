@@ -77,3 +77,71 @@ def test_failing_advisory_name_without_ci_workflow_blocks_merge(identity):
     ]
     with pytest.raises(PublishBlocked, match=r"merge refused: FAILING checks\."):
         merge_with_checks(json.dumps(checks), returncode=1)
+
+
+# --- OO-48 external advisory provenance (#11184) ------------------------------------------
+# The publisher/hook parity matrix lives in tests/test_advisory_checks.py.
+
+HEAD = "a" * 40
+ENTIRE_ROWS = [{"name": "CI Gate", "bucket": "pass", "workflow": "CI"}, {"name": "Entire Gates", "bucket": "pending"}]
+RUNS = f"repos/unit/public/commits/{HEAD}/check-runs?check_name=Entire%20Gates&filter=all&per_page=100"
+STATUS = f"repos/unit/public/commits/{HEAD}/status?per_page=100"
+
+
+def entire_runner(app, calls, *, head=HEAD, error=None):
+    def runner(args, **kwargs):
+        calls.append(args)
+        if args[2] == "view":
+            return subprocess.CompletedProcess(args, 0, json.dumps({"number": 1, "isDraft": False, "headRefOid": head}), "")
+        if args[2] == "checks":
+            return subprocess.CompletedProcess(args, 8, json.dumps(ENTIRE_ROWS), "")
+        if error is not None:
+            raise error
+        documents = {
+            STATUS: {"total_count": 0, "statuses": []},
+            RUNS: {"total_count": 1, "check_runs": [{"name": "Entire Gates", "head_sha": HEAD, "app": app}]},
+        }
+        if args[:4] == ["gh", "api", "--method", "GET"] and args[4] in documents:
+            return subprocess.CompletedProcess(args, 0, json.dumps(documents[args[4]]), "")
+        return subprocess.CompletedProcess(args, 1, "", "HTTP 404")
+
+    return runner
+
+
+def test_oo48_publisher_proves_entire_gates_at_the_metadata_head():
+    calls = []
+    runner = entire_runner({"id": 2626939, "slug": "entire"}, calls)
+    assert ensure_merge_ready("unit/public", 1, runner=runner, cwd=".", environment={}, match_head=HEAD) == HEAD
+    assert [call for call in calls if call[1] == "api"] == [
+        ["gh", "api", "--method", "GET", STATUS], ["gh", "api", "--method", "GET", RUNS]]
+
+
+@pytest.mark.parametrize("app", [{"id": 15368, "slug": "github-actions"}, None, {"id": "2626939", "slug": "entire"}])
+def test_oo48_publisher_refuses_unproven_entire_gates(app):
+    with pytest.raises(PublishBlocked, match="cannot establish check state"):
+        ensure_merge_ready("unit/public", 1, runner=entire_runner(app, []), cwd=".", environment={})
+
+
+def test_oo48_exemption_never_waives_the_reviewed_head():
+    runner = entire_runner({"id": 2626939, "slug": "entire"}, [])
+    with pytest.raises(PublishBlocked, match="reviewed head changed"):
+        ensure_merge_ready("unit/public", 1, runner=runner, cwd=".", environment={}, match_head="b" * 40)
+
+
+def test_oo48_rate_limit_during_provenance_is_not_masked():
+    from scripts.common.github_client import GitHubRateLimited
+
+    limited = GitHubRateLimited(None, "fixture")
+    runner = entire_runner({"id": 2626939, "slug": "entire"}, [], error=limited)
+    with pytest.raises(GitHubRateLimited):
+        ensure_merge_ready("unit/public", 1, runner=runner, cwd=".", environment={})
+
+
+def test_oo48_garbage_provenance_reply_is_refused():
+    def runner(args, **kwargs):
+        if args[1] == "api":
+            return subprocess.CompletedProcess(args, 0, "not JSON", "")
+        return entire_runner({"id": 2626939, "slug": "entire"}, [])(args, **kwargs)
+
+    with pytest.raises(PublishBlocked, match="cannot establish check state"):
+        ensure_merge_ready("unit/public", 1, runner=runner, cwd=".", environment={})
