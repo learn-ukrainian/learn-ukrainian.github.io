@@ -1241,7 +1241,9 @@ class AgyAdapter:
             stream_problem=stream_problem,
         )
         if denial is not None:
-            attempt = _headless_denial_evidence(bound, plan, denial.permission_kind, read_reason=read_reason)
+            attempt = _headless_denial_evidence(
+                bound, plan, denial.permission_kind, read_reason=read_reason, notice_target=denial.permission_target
+            )
             fallback_details = {}
             if bound is not None and bound.corrupt:
                 fallback_details.update(
@@ -1265,7 +1267,13 @@ class AgyAdapter:
                     denial.permission_target, denial.permission_kind, plan
                 )
                 attempt = dataclasses.replace(
-                    attempt, permission_target=target, permission_target_unknown_reason=reason, via_symlink=via_symlink
+                    attempt,
+                    permission_target=target,
+                    permission_target_unknown_reason=reason
+                    or (
+                        "trigger_ambiguous" if attempt.permission_target_unknown_reason == "trigger_ambiguous" else None
+                    ),
+                    via_symlink=via_symlink,
                 )
             if attempt.permission_kind == "read_file" and plan and plan.metadata.get("agy_permission_profile_id"):
                 fallback_details["driver_hint"] = AGY_DRIVER_HINT_INLINE_REVIEW_INPUTS
@@ -2037,12 +2045,15 @@ def _headless_denial_evidence(
     kind: str,
     *,
     read_reason: str | None = None,
+    notice_target: str | None = None,
 ) -> AgyAttempt:
     """Match a native denial by target, or use a unique unresolved intent.
 
     Read only the already-bound invocation slice, before runtime lease reaping.
     Result order cannot identify a denied tool. Only one matching call in the
     current planner turn can do so; the denial text owns the observed target.
+    Without a native denial result, a leftover call is evidence only if the
+    turn has no results or its target matches the concrete CLI notice.
     """
     base = AgyAttempt(
         completion_reason=AGY_HEADLESS_PERMISSION_DENIED,
@@ -2058,13 +2069,16 @@ def _headless_denial_evidence(
     pending: list[Mapping[str, Any]] = []
     calls: list[Mapping[str, Any]] = []
     denied: list[str] = []
+    has_results = False
     for event in bound.events:
         if event.get("type") == "PLANNER_RESPONSE" and event.get("source") == "MODEL":
             denied.clear()  # A later model turn supersedes an earlier refusal.
             raw_calls = event.get("tool_calls")
             calls = [call for call in raw_calls if isinstance(call, Mapping)] if isinstance(raw_calls, list) else []
             pending = list(calls)
+            has_results = False
         elif event.get("type") in {"GENERIC", "TOOL_RESPONSE"}:
+            has_results = True
             if pending:
                 pending.pop(0)
             native = _native_permission_denial(event)
@@ -2095,7 +2109,10 @@ def _headless_denial_evidence(
         candidates = pending
     if len(candidates) != 1:
         return dataclasses.replace(
-            base, permission_target_unknown_reason="trigger_ambiguous" if candidates else "trigger_missing"
+            base,
+            permission_target_unknown_reason="trigger_ambiguous"
+            if candidates or (notice_target is not None and calls)
+            else "trigger_missing",
         )
     call = candidates[0]
     name = call.get("name")
@@ -2105,7 +2122,16 @@ def _headless_denial_evidence(
     # MCP/command output cannot supply file or URL permission evidence.
     if not arg_key and (kind, name) not in {("command", "run_command"), ("mcp", "call_mcp_tool")}:
         return dataclasses.replace(base, permission_target_unknown_reason="tool_kind_unverified")
+    if native_target is None and has_results and notice_target is None:
+        return dataclasses.replace(base, permission_target_unknown_reason="trigger_ambiguous")
     args = call.get("args")
+    if notice_target is not None:
+        notice_key = _denial_target_key(notice_target, kind, plan)
+        call_key = _denial_target_key(args.get(arg_key), kind, plan) if isinstance(args, Mapping) and arg_key else None
+        if notice_key != call_key or (
+            native_target is not None and notice_key != _denial_target_key(native_target, kind, plan)
+        ):
+            return dataclasses.replace(base, permission_target_unknown_reason="trigger_ambiguous")
     target, reason, via_symlink = _sanitized_denial_target(
         native_target
         if native_target is not None

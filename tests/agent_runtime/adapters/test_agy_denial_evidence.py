@@ -425,7 +425,10 @@ def test_cli_notice_target_fills_missing_transcript_target(tmp_path, recorded_tr
     )
     attempt = record(result)
     assert attempt["permission_target"] == ("workspace:evidence.txt" if kind == "read_file" else "url:example.org")
-    assert attempt["permission_target_unknown_reason"] is None
+    assert attempt["permission_target_unknown_reason"] == (
+        "trigger_ambiguous" if problem in {"ambiguous", "missing-arg"} else None
+    )
+    assert attempt["denied_tool_name"] is None
     assert attempt["via_symlink"] is False
     details = json.loads(result.stderr_excerpt.split("\n", 1)[1])
     assert details["permission_target_source"] == "cli_notice"
@@ -443,13 +446,13 @@ def test_cli_notice_target_fills_missing_transcript_target(tmp_path, recorded_tr
 
 
 @pytest.mark.parametrize("target", ["transcript.txt", "https://fixture.internal/private"])
-def test_cli_fallback_does_not_override_transcript_target(tmp_path, recorded_transcript, target):
+def test_matching_cli_notice_preserves_transcript_target_sanitization(tmp_path, recorded_transcript, target):
     kind = "read_url" if "://" in target else "read_file"
     tool, arg = ("view_file", "AbsolutePath") if kind == "read_file" else ("read_url_content", "Url")
     plan, _ = denial_plan(tmp_path, recorded_transcript, target, tool=tool, arg=arg)
     result = agy.AgyAdapter().parse_response(
         stdout="",
-        stderr=auto_denial(f"{kind}(https://example.org/fallback)"),
+        stderr=auto_denial(f"{kind}({target})"),
         returncode=1,
         output_file=None,
         plan=plan,
@@ -457,6 +460,7 @@ def test_cli_fallback_does_not_override_transcript_target(tmp_path, recorded_tra
     attempt = record(result)
     assert attempt["permission_target"] == ("workspace:transcript.txt" if kind == "read_file" else "unknown")
     assert attempt["permission_target_unknown_reason"] == (None if kind == "read_file" else "url_host_private")
+    assert attempt["denied_tool_name"] == tool
 
 
 @pytest.mark.parametrize(
@@ -526,6 +530,96 @@ def review_plan(tmp_path, events, *, profile=_REVIEW_PROFILE):
     workspace = tmp_path / "repo" / ".worktrees" / "dispatch" / "agy" / "fixture"
     workspace.mkdir(parents=True, exist_ok=True)
     return replace(plan, cwd=workspace, metadata={**plan.metadata, "agy_permission_profile_id": profile})
+
+
+@pytest.mark.parametrize("result_type", ["GENERIC", "TOOL_RESPONSE"])
+@pytest.mark.parametrize("status", ["DONE", "ERROR", "INVALID"])
+def test_leftover_after_unidentified_result_is_ambiguous(tmp_path, result_type, status):
+    events = [
+        _planner(("read_file", "Path", "really-denied.txt"), ("list_dir", "DirectoryPath", "done-dir")),
+        {**_result(status, "Directory listing result."), "type": result_type},
+    ]
+    attempt = record(parse(review_plan(tmp_path, events)))
+    assert attempt["denied_tool_name"] is None
+    assert attempt["permission_target"] == "unknown"
+    assert attempt["permission_target_unknown_reason"] == "trigger_ambiguous"
+
+
+@pytest.mark.parametrize("completed_result", [False, True])
+@pytest.mark.parametrize("native_result", [False, True])
+def test_cli_notice_mismatch_never_attributes_leftover_call(tmp_path, completed_result, native_result):
+    calls = [("list_dir", "DirectoryPath", "done-dir")]
+    if completed_result:
+        calls.insert(0, ("read_file", "Path", "earlier.txt"))
+    events = [
+        _planner(*calls),
+        *([_result("DONE", "Earlier read completed.")] if completed_result else []),
+        *([_result("ERROR", _headless_read_denial("done-dir"))] if native_result else []),
+    ]
+    result = agy.AgyAdapter().parse_response(
+        stdout="",
+        stderr=auto_denial("read_file(really-denied.txt)"),
+        returncode=1,
+        output_file=None,
+        plan=review_plan(tmp_path, events),
+    )
+    attempt = record(result)
+    assert attempt["denied_tool_name"] is None
+    assert attempt["permission_target"] == "workspace:really-denied.txt"
+    assert attempt["permission_target_unknown_reason"] == "trigger_ambiguous"
+
+
+def test_leftover_without_current_turn_results_is_attributed(tmp_path):
+    events = [
+        _planner(("list_dir", "DirectoryPath", "done-dir")),
+        _result("DONE", "Directory listing completed."),
+        _planner(("read_file", "Path", "really-denied.txt")),
+    ]
+    attempt = record(parse(review_plan(tmp_path, events)))
+    assert attempt["denied_tool_name"] == "read_file"
+    assert attempt["permission_target"] == "workspace:really-denied.txt"
+    assert attempt["permission_target_unknown_reason"] is None
+
+
+@pytest.mark.parametrize("completed_result", [False, True])
+def test_leftover_matching_concrete_cli_notice_is_attributed(tmp_path, completed_result):
+    events = [
+        _planner(
+            *([("list_dir", "DirectoryPath", "done-dir")] if completed_result else []),
+            ("read_file", "Path", "./really-denied.txt"),
+        ),
+        *([_result("DONE", "Directory listing completed.")] if completed_result else []),
+    ]
+    plan = review_plan(tmp_path, events)
+    result = agy.AgyAdapter().parse_response(
+        stdout="",
+        stderr=auto_denial(f"read_file({plan.cwd / 'really-denied.txt'})"),
+        returncode=1,
+        output_file=None,
+        plan=plan,
+    )
+    attempt = record(result)
+    assert attempt["denied_tool_name"] == "read_file"
+    assert attempt["permission_target"] == "workspace:really-denied.txt"
+    assert attempt["permission_target_unknown_reason"] is None
+
+
+def test_cli_notice_without_matching_call_keeps_target_and_ambiguity(tmp_path):
+    events = [
+        _planner(("list_dir", "DirectoryPath", "done-dir")),
+        _result("DONE", "Directory listing completed."),
+    ]
+    result = agy.AgyAdapter().parse_response(
+        stdout="",
+        stderr=auto_denial("read_file(really-denied.txt)"),
+        returncode=1,
+        output_file=None,
+        plan=review_plan(tmp_path, events),
+    )
+    attempt = record(result)
+    assert attempt["denied_tool_name"] is None
+    assert attempt["permission_target"] == "workspace:really-denied.txt"
+    assert attempt["permission_target_unknown_reason"] == "trigger_ambiguous"
 
 
 def _git_metadata_chain(tmp_path):
