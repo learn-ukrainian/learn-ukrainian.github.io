@@ -80,12 +80,15 @@ def test_rerun_reporter_survives_real_pytest_xunit2(tmp_path: Path, workers: int
     assert "test_sample.py::test_flaky" in summary.read_text(encoding="utf-8")
 
 
-def test_thread_timeout_exits_without_rerun(tmp_path: Path):
+@pytest.mark.parametrize("method", ["thread", "signal"])
+def test_thread_timeout_exits_without_rerun(tmp_path: Path, method: str):
     (tmp_path / "test_timeout.py").write_text(
-        "import time\nimport pytest\n"
+        "import time\nimport pytest\nfrom pathlib import Path\n"
         f"@pytest.mark.flaky(reruns=1, rerun_except=[{TIMEOUT_PATTERN!r}])\n"
-        "@pytest.mark.timeout(0.1, method='thread')\n"
+        f"@pytest.mark.timeout(0.1, method={method!r}, func_only=True)\n"
         "def test_timeout():\n"
+        "    attempts = Path(__file__).with_name('attempts.txt')\n"
+        "    attempts.write_text(attempts.read_text() + '1' if attempts.exists() else '1')\n"
         "    time.sleep(2)\n",
         encoding="utf-8",
     )
@@ -97,7 +100,61 @@ def test_thread_timeout_exits_without_rerun(tmp_path: Path):
     assert result.returncode != 0
     assert "Timeout" in result.stdout
     assert "RERUN" not in result.stdout
-    assert not xml.exists()  # pytest-timeout's thread method exits before JUnit serialization.
+    assert (tmp_path / "attempts.txt").read_text() == "1"
+    # Thread method exits before JUnit serialization.
+    assert xml.exists() == (method == "signal"), result.stdout + result.stderr
+
+
+@pytest.mark.parametrize("event,disabled,recover,attempts,exit_code", [
+    ("pull_request", "0", True, 2, 0),
+    ("merge_group", "0", False, 2, 1),
+    ("schedule", "0", True, 1, 1),
+    ("workflow_dispatch", "1", True, 1, 1),
+])
+def test_registry_hook_executes_assertions_with_one_rerun_or_scheduled_failure(
+    tmp_path: Path, event: str, disabled: str, recover: bool, attempts: int, exit_code: int,
+):
+    """Exercise the real collection hook, rerun plugin and reporter together."""
+    (tmp_path / "pytest.ini").write_text("[pytest]\n")
+    (tmp_path / "conftest.py").write_text(
+        "from datetime import date\n"
+        "from tests import conftest as hooks\n"
+        "hooks.load_registry = lambda: [{'node_id': 'tests/test_sample.py::test_flaky', 'expires_on': date.today()}]\n"
+        "pytest_collection_modifyitems = hooks.pytest_collection_modifyitems\n"
+        "def pytest_configure(config):\n"
+        "    config.pluginmanager.register(hooks._FlakeRerunReporter(config), 'flake-reporter')\n",
+    )
+    sample = tmp_path / "tests" / "test_sample.py"
+    sample.parent.mkdir()
+    sample.write_text(
+        "from pathlib import Path\n"
+        "def test_flaky():\n"
+        "    path = Path(__file__).with_name('attempts.txt')\n"
+        "    count = int(path.read_text()) + 1 if path.exists() else 1\n"
+        "    path.write_text(str(count))\n"
+        f"    assert count == 2 and {recover!r}\n",
+    )
+    xml, summary = tmp_path / "junit.xml", tmp_path / "summary.md"
+    result = subprocess.run(
+        [sys.executable, "-m", "pytest", str(sample), "-c", str(tmp_path / "pytest.ini"),
+         "-o", "addopts=", "-q", f"--junitxml={xml}"],
+        cwd=Path(__file__).resolve().parents[1], capture_output=True, text=True, timeout=30,
+        env=os.environ | {"GITHUB_EVENT_NAME": event, "LU_FLAKE_DISABLE_RERUN": disabled,
+                          "GITHUB_STEP_SUMMARY": str(summary)},
+    )
+    assert result.returncode == exit_code, result.stdout + result.stderr
+    assert sample.with_name("attempts.txt").read_text() == str(attempts)
+    parsed = parse_junit([xml])
+    assert len(parsed) == 1
+    assert parsed[0].node_id == "tests/test_sample.py::test_flaky"
+    assert parsed[0].outcome == ("passed" if exit_code == 0 else "failed")
+    if exit_code == 0:
+        assert parsed[0].reruns == 1
+        assert "first attempt failed, rerun passed" in result.stdout
+        assert "first attempt failed, rerun passed" in summary.read_text()
+    else:
+        assert parsed[0].reruns == 0
+        assert not summary.exists()
 
 
 def _write_summary_junit(path: Path) -> Path:

@@ -154,6 +154,10 @@ jobs:
 
   checks:
     name: Checks
+    permissions:
+      contents: read
+      actions: read
+      issues: read
     needs: [reuse]
     if: ${{ !cancelled() && needs.reuse.outputs.reuse != 'true' }}
     runs-on: ubuntu-latest
@@ -173,6 +177,11 @@ jobs:
           cache-dependency-path: package-lock.json
       - name: Python CI environment
         uses: ./.github/actions/python-ci-env
+      - name: Verify flake quarantine admissions
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha || 'origin/main' }}
+        run: .venv/bin/python -m scripts.common.flake_quarantine --base-ref "$BASE_SHA"
       - name: Lint and content contracts
         env:
           EVENT_NAME: ${{ github.event_name }}
