@@ -339,7 +339,8 @@ def _format_anchor_shortfall(attempts: list[tuple[str, int, int, int]]) -> str:
     return (
         f"error: could only derive {best}/{N_ANCHORS} durable anchors; "
         f"tried {tried}; "
-        "open a stream session and dual-write handoff next/hands-off sections, then re-mint"
+        "dual-write handoff next/hands-off sections, then re-mint only within thread-rollover; "
+        "the launcher owns the stream lease; agents never open, claim, renew, release, or recover it"
     )
 
 

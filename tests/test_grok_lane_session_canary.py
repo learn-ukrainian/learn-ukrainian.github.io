@@ -101,6 +101,38 @@ def test_build_facts_exactly_ten_from_stream_and_handoff() -> None:
     assert all(f["q"] and f["a"] for f in facts)
 
 
+@pytest.mark.parametrize(
+    ("attempts", "expected"),
+    [
+        (
+            [],
+            "error: could only derive 0/10 durable anchors; "
+            "tried (no handoff) (next=0, hands-off=0); "
+            "dual-write handoff next/hands-off sections, then re-mint only within thread-rollover; "
+            "the launcher owns the stream lease; agents never open, claim, renew, release, or recover it",
+        ),
+        (
+            [("handoff.md", 4, 2, 1)],
+            "error: could only derive 4/10 durable anchors; "
+            "tried handoff.md (next=2, hands-off=1); "
+            "dual-write handoff next/hands-off sections, then re-mint only within thread-rollover; "
+            "the launcher owns the stream lease; agents never open, claim, renew, release, or recover it",
+        ),
+        (
+            [("first.md", 6, 3, 1), ("second.md", 3, 0, 2)],
+            "error: could only derive 6/10 durable anchors; "
+            "tried first.md (next=3, hands-off=1), second.md (next=0, hands-off=2); "
+            "dual-write handoff next/hands-off sections, then re-mint only within thread-rollover; "
+            "the launcher owns the stream lease; agents never open, claim, renew, release, or recover it",
+        ),
+    ],
+)
+def test_anchor_shortfall_output_preserves_launcher_lease_ownership(
+    attempts: list[tuple[str, int, int, int]], expected: str,
+) -> None:
+    assert gl._format_anchor_shortfall(attempts) == expected
+
+
 def test_build_facts_fails_when_insufficient(tmp_path: Path) -> None:
     with pytest.raises(SystemExit, match="could only derive"):
         gl._build_facts(
