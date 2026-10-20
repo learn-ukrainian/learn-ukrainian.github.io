@@ -57,6 +57,13 @@ areas:
     epics:
       - number: 6321
         name: "Ukrainian open-model data infrastructure"
+  practice:
+    id: practice
+    aliases:
+      - practice
+    epics:
+      - number: 11151
+        name: "Practice Hub, ZNO and activities"
   atlas:
     id: atlas
     aliases:
