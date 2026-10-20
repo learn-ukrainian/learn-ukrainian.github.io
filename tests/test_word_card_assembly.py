@@ -565,6 +565,15 @@ def test_assertion_without_registry_sense_evidence_is_refused(inputs):
 
 # --- consumed inputs and derived-form authentication (AC-P01) ---------------------------------------------
 
+
+def test_unconsumed_database_file_changes_do_not_change_card_content(inputs, result, monkeypatch):
+    monkeypatch.setitem(inputs.hashes, "sources_file", "0" * 64)
+    monkeypatch.setitem(inputs.hashes, "atlas_file", "1" * 64)
+    rebuilt = wa.build(inputs)
+    assert rebuilt["build_id"] == result["build_id"]
+    assert foundation.digest(rebuilt["cards"]) == foundation.digest(result["cards"])
+    assert verify.verify(inputs, rebuilt, result)["passed"] is True
+
 def test_mutated_form_with_zeroed_fingerprint_is_refused_and_changes_identity(tmp_path):
     clean = build_world()
     baseline = wa.build(make_inputs(clean, tmp_path / "a"))

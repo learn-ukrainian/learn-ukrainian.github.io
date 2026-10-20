@@ -52,7 +52,7 @@ from scripts.common.scratch import ensure_scratch_root
 from scripts.guardrails import worktree_containment as containment
 from scripts.lexicon import ulif_raw_cache
 
-ASSEMBLER_VERSION = "pilot-assembly-v3"
+ASSEMBLER_VERSION = "pilot-assembly-v4"
 ALIAS_ORDER = ("uid", "register_position", "content", "query_headword_label", "vesum_entry_form", "table_row")
 # Register source id -> (independence group, tier): schema.md §9.1 (lineage lives in R until the register records it).
 # ukrainian_word_stress follows the register entry (ULIF-derived stress data, 2026-10-06): one lineage with ULIF.
@@ -1064,7 +1064,7 @@ def build_block(inputs: Inputs, suppressions: dict, build_id: str, consumed: str
             "S": {
                 "ulif": {"ref": "sources.ulif_dictua_entries + ulif_dictua_sections + ulif_forms",
                          "content_sha256": frozen_sources,
-                         "note": f"whole-file digest at freeze; observed at build {h['sources_file']}. Frozen rows "
+                         "note": "whole-file digest at freeze. Frozen rows "
                                  "are re-read literally at every build; every other row read is in S.consumed"},
                 "consumed": {"ref": "every row lookup and query result the build read: ULIF homonym queries, "
                                     "ulif_forms rows with their entry fingerprint, raw manifest and raw page digests, "
@@ -1077,7 +1077,7 @@ def build_block(inputs: Inputs, suppressions: dict, build_id: str, consumed: str
                 "frazeolohichnyi": {"ref": "sources.frazeolohichnyi", "content_sha256": frozen_sources,
                                     "note": "frozen rows only"},
                 "atlas0": {"ref": "data/atlas.db enrichment", "content_sha256": frozen_atlas,
-                           "note": f"frozen row only; observed at build {h['atlas_file']}"},
+                           "note": "frozen row only"},
             },
             "V": {"vesum": {"ref": "data/vesum.db vesum_build_metadata.canonical_jsonl_sha256",
                             "content_sha256": h["vesum_canonical"]}},
@@ -1514,7 +1514,10 @@ def main(argv=None) -> int:
                 args.heldout_manifest)
             result = build(inputs, suppressions)
             report = learner_accounting(result) | {"build_id": result["build_id"], "heldout_isolation": inputs.heldout,
-                                           "frozen_rows_verified": inputs.hashes["frozen_rows_verified"]}
+                                           "frozen_rows_verified": inputs.hashes["frozen_rows_verified"],
+                                           "observed_store_file_sha256": {
+                                               "sources": inputs.hashes["sources_file"],
+                                               "atlas": inputs.hashes["atlas_file"]}}
             if args.operation == "build":
                 write_output(args.output, result, report)
                 print(json.dumps(report, ensure_ascii=False, sort_keys=True))
