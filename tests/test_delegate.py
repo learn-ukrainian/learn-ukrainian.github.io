@@ -56,13 +56,44 @@ from tests.test_ask_review_admission_floor import ordinary_review_scope as ordin
 from tests.test_ask_review_admission_floor import write_code_review_manifest
 
 
+class _PinnedRemotePublicHead:
+    """The driver-pinned remote's ``main`` as the public default-branch head of the publication scan."""
+
+    def __init__(self):
+        self.origin = None
+        self.calls = 0
+
+    def default_head(self):
+        self.calls += 1
+        if self.origin is None or not self.origin.is_dir():
+            return None
+        listing = subprocess.run(
+            ["git", "ls-remote", str(self.origin), "refs/heads/main"],
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=30,
+        ).stdout.split()
+        return listing[0] if listing else None
+
+
 @pytest.fixture(autouse=True)
-def isolated_finalization_context(tmp_path, monkeypatch):
-    """Explicit driver-bound destination and base for isolated Git fixtures."""
+def isolated_finalization_context(tmp_path, monkeypatch, synthetic_opsec):
+    """Explicit driver-bound destination, base, publication-scan inputs and transport credential.
+
+    The scan reads the synthetic matcher and treats the pinned remote's main
+    as public; the transport receives no credential (a local remote needs none).
+    """
     import contextlib
 
     from scripts.agent_runtime.kimi_boundary import worktree_git_dir
     from scripts.orchestration.safe_git_context import SafeGitContext, SnapshotRefusal
+
+    public = _PinnedRemotePublicHead()
+
+    @contextlib.contextmanager
+    def no_credentials():
+        yield []
 
     @contextlib.contextmanager
     def execution(worktree, **_kwargs):
@@ -74,6 +105,7 @@ def isolated_finalization_context(tmp_path, monkeypatch):
         origin = common.parent.parent / "origin.git"
         if (common.parent.parent / "private.git").is_dir():
             origin = common.parent.parent / "private.git"
+        public.origin = origin
         with SafeGitContext(
             objects=common / "objects", temp_root=tmp_path, origin=str(origin), local_remote=True
         ) as context:
@@ -85,10 +117,15 @@ def isolated_finalization_context(tmp_path, monkeypatch):
             context.interpreter = Path(sys.executable)
             yield context
 
-    monkeypatch.setattr(delegate, "_finalize_execution_context", execution)
+    bindings = {
+        "_finalize_execution_context": execution,
+        "_finalize_public_repository": lambda: public,
+        "_finalize_transport_credentials": no_credentials,
+    }
     alternate = sys.modules.get("scripts.delegate")
-    if alternate is not None and alternate is not delegate:
-        monkeypatch.setattr(alternate, "_finalize_execution_context", execution)
+    for module in {delegate, alternate} - {None}:
+        for name, value in bindings.items():
+            monkeypatch.setattr(module, name, value)
 
 
 @pytest.fixture

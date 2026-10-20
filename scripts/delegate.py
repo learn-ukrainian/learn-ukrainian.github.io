@@ -155,6 +155,7 @@ from __future__ import annotations
 
 import argparse
 import ast
+import base64
 import contextlib
 import dataclasses
 import errno
@@ -5552,8 +5553,9 @@ def _count_commits_ahead(
     ``_worktree_is_dirty`` already treated OSError as unknown; this is the same
     contract, and callers already fail closed on ``None``.
 
-    With ``publication=True``, count original objects from the recorded or
-    driver-bound base in SafeGitContext; never trust worker tracking refs.
+    With ``publication=True`` the same order is measured on re-hashed objects
+    against driver-pinned anchors only (:func:`_publication_commits_ahead`);
+    worker tracking refs are never read.
 
     When every named candidate is gone (the base branch was deleted after it
     merged, #9451), the count falls back to the recorded ``base_sha`` and then
@@ -5561,18 +5563,7 @@ def _count_commits_ahead(
     unchanged.
     """
     if publication:
-        try:
-            with _finalize_execution_context(worktree) as context:
-                source = context.read_source_ref(context.source_git_dir, "HEAD")
-                if source.returncode:
-                    return None
-                head, base = source.stdout.strip(), base_sha or context.driver_base
-                context.isolate_objects(base=base, head=head)
-                if context.run("merge-base", "--is-ancestor", base, head).returncode:
-                    return None
-                return int(context.checked("rev-list", "--count", f"{base}..{head}"))
-        except (OSError, RuntimeError, ValueError, subprocess.TimeoutExpired):
-            return None
+        return _publication_commits_ahead(worktree, base_ref, base_sha)
     for candidate in _commit_count_refs(worktree, base_ref):
         count, base_missing = _run_count_ahead(worktree, candidate)
         if count is not None:
@@ -5580,6 +5571,81 @@ def _count_commits_ahead(
         if not base_missing:
             return None
     return _count_commits_ahead_without_named_base(worktree, base_ref, base_sha)
+
+
+_OBJECT_ID_RE = re.compile(r"[0-9a-f]{40}|[0-9a-f]{64}")
+
+
+def _publication_commits_ahead(worktree: Path, base_ref: str, base_sha: str | None) -> int | None:
+    """The worker's delivered commits, from re-hashed objects and driver-pinned anchors (#9451, #9489).
+
+    In order, the first anchor that applies:
+
+    1. the named base branch on the driver-pinned destination: ``<base>..HEAD``;
+    2. once the destination confirms it is gone, the recorded ``base_sha``
+       when it is an ancestor of ``HEAD``: ``<sha>..HEAD``, exact, so an
+       empty commit still counts;
+    3. otherwise the driver's pinned default head, a proxy for the lost base
+       (:func:`_publication_proxy_count`).
+
+    Any failure, including a shallow source, is None: unknown, never zero.
+    """
+    name = _base_branch_name(base_ref.removeprefix("refs/remotes/"))
+    try:
+        with _finalize_execution_context(worktree) as context:
+            source = context.read_source_ref(context.source_git_dir, "HEAD")
+            if source.returncode or context.run("check-ref-format", f"refs/heads/{name}").returncode:
+                return None
+            head = source.stdout.strip()
+            context.isolate_objects(base=context.driver_base, head=head)
+            named = _finalize_remote_head(context, name)
+            if named is not None:
+                if context.run("cat-file", "-e", f"{named}^{{commit}}").returncode:
+                    context.fetch_remote_commits(f"refs/heads/{name}", context.driver_base, head)
+                return int(context.checked("rev-list", "--count", f"{named}..{head}"))
+            if base_sha and _OBJECT_ID_RE.fullmatch(base_sha):
+                # Every ancestor of HEAD was received, so an absent commit is not one.
+                present = context.run("rev-parse", "--verify", "--quiet", f"{base_sha}^{{commit}}").returncode
+                if present not in (0, 1):
+                    return None
+                ancestry = context.run("merge-base", "--is-ancestor", base_sha, head).returncode if present == 0 else 1
+                if ancestry == 0:
+                    return int(context.checked("rev-list", "--count", f"{base_sha}..{head}"))
+                if ancestry != 1:
+                    return None
+            return _publication_proxy_count(context, head)
+    except (OSError, RuntimeError, ValueError, subprocess.TimeoutExpired):
+        return None
+
+
+def _publication_proxy_count(context: SafeGitContext, head: str) -> int | None:
+    """``<default>..HEAD``, or 0 when merging ``HEAD`` into the default head changes nothing (#9451).
+
+    The default head may already hold the work: an empty commit, a merge of
+    it, a cherry-pick of a change it has or a squash of work it holds is
+    ahead yet delivers nothing. ``merge-tree --write-tree`` answers exactly
+    whether merging changes the default head's tree. A conflict (exit 1) is
+    a real change; any other failure, unrelated histories included, is None.
+    The default head need not be an ancestor of ``HEAD``.
+    """
+    main = context.driver_base
+    ahead = int(context.checked("rev-list", "--count", f"{main}..{head}"))
+    if ahead == 0:
+        return 0
+    bases = context.run("merge-base", "--all", main, head)
+    if bases.returncode or not bases.stdout.split():
+        return None
+    # The merge reads whole snapshots: receive them, re-hashed, as validation does.
+    commits = sorted({main, head, *bases.stdout.split()})
+    context._receive(context._root_trees(commits), "--no-filter")
+    main_tree = context.checked("rev-parse", "--verify", f"{main}^{{tree}}")
+    merged = context.run("merge-tree", "--write-tree", "--no-messages", main, head)
+    if merged.returncode == 1:
+        return ahead
+    lines = merged.stdout.split()
+    if merged.returncode or not lines:
+        return None
+    return 0 if lines[0] == main_tree else ahead
 
 
 def _count_unpushed_commits(worktree: Path, branch: str) -> int | None:
@@ -6539,6 +6605,7 @@ TYPED_CAUSE_CODES = frozenset(
         "auto_finalize_reset_failed",
         "auto_finalize_pr_failed",
         "auto_finalize_publish_blocked",
+        "auto_finalize_opsec_blocked",
         "auto_finalize_failed",
         # Rescue.
         "rescue_worktree_unregistered",
@@ -8036,20 +8103,19 @@ def _build_worker_env(
 
 
 @contextlib.contextmanager
-def _finalize_execution_context(
-    worktree: Path, *, publish: bool = False, prepare: bool = False
-) -> Iterator[SafeGitContext]:
-    """Use registered objects, the driver's base and its pinned destination."""
+def _finalize_execution_context(worktree: Path, *, prepare: bool = False) -> Iterator[SafeGitContext]:
+    """Use registered objects, the driver's base and its pinned destination.
+
+    The context never holds a credential: validation runs worker tests in it.
+    Publication adds the credential to its own transport step alone
+    (:func:`_finalize_transport_push`).
+    """
     repo = _rescue_repo(worktree)
-    manager = (
-        _rescue_execution_context(repo, borrow_objects=False)
-        if publish
-        else SafeGitContext(
-            objects=repo.git_dir / "objects",
-            temp_root=Path(tempfile.gettempdir()),
-            origin=CANONICAL_ORIGIN,
-            borrow_objects=prepare,
-        )
+    manager = SafeGitContext(
+        objects=repo.git_dir / "objects",
+        temp_root=Path(tempfile.gettempdir()),
+        origin=CANONICAL_ORIGIN,
+        borrow_objects=prepare,
     )
     with manager as context:
         context.source_git_dir = repo.admin_dir
@@ -8162,6 +8228,152 @@ def _finalize_refuse_hook_override(context: SafeGitContext) -> None:
             raise SnapshotRefusal("auto_finalize_validation_changed")
 
 
+def _finalize_public_repository():
+    """The catalogue's canonical public repository client, read with the driver's own environment only."""
+    from scripts.opsec.git_push import CanonicalPublicRepository
+
+    return CanonicalPublicRepository.from_catalog(dict(os.environ))
+
+
+class _FinalizePublicHead:
+    """The public default-branch head, with its commits received into the isolated repository.
+
+    The driver's base can trail the public branch. The scan excludes public
+    history only when the head's commits are present (and every one hashes to
+    its id), so a head this repository lacks is fetched from the pinned
+    destination first. A failed fetch leaves it absent: the whole range is
+    scanned, which can only refuse more.
+    """
+
+    def __init__(self, client, context: SafeGitContext, head: str) -> None:
+        self.client = client
+        self.context = context
+        self.head = head
+
+    @property
+    def calls(self) -> int:
+        return getattr(self.client, "calls", 0)
+
+    def default_head(self) -> str | None:
+        public = self.client.default_head() if self.client is not None else None
+        if public and self.context.run("cat-file", "-e", f"{public}^{{commit}}").returncode:
+            with contextlib.suppress(SnapshotRefusal, subprocess.TimeoutExpired):
+                self.context.fetch_remote_commits("refs/heads/main", self.context.driver_base, self.head)
+        return public
+
+
+def _finalize_opsec_scan(context: SafeGitContext, *, branch: str, head: str, remote: str | None) -> None:
+    """Scan what publishing ``head`` to ``branch`` sends, with the agent push hook's own scanner (#9339).
+
+    It runs here, in the driver, on the re-hashed isolated repository and its
+    credential-free environment: no worker code has run yet. The update line
+    is the one Git would give the hook, and the push later sends this exact
+    id. The only override honoured is the one in the driver command's own
+    environment, claimed and logged once by the gate.
+    """
+    from scripts.opsec import git_push
+    from scripts.opsec import prepublish as gate
+    from scripts.orchestration.safe_git_context import GIT
+
+    environment = {key: value for key, value in context.env.items() if key != gate.OVERRIDE}
+    environment["LU_OPSEC_REAL_GIT"] = GIT
+    reason = os.environ.get(gate.OVERRIDE)
+    if reason is not None:
+        environment[gate.OVERRIDE] = reason
+    update = f"refs/heads/{branch} {head} refs/heads/{branch} {remote or '0' * 40}\n"
+    public = _FinalizePublicHead(_finalize_public_repository(), context, head)
+    # The scanner keeps a pushed repository's variables out of this process's
+    # own lookups by removing them from os.environ; the driver's are restored.
+    saved = dict(os.environ)
+    try:
+        git_push.scan_push(["origin", context.origin], update.encode(), environment, public_repository=public)
+    except PublishBlocked as exc:
+        # The gate's text names rules and fields, never the flagged value; it stays in the local diagnostic.
+        raise _TypedFailure(
+            "publication refused", _TypedCause("auto_finalize_opsec_blocked", diagnostic=str(exc))
+        ) from None
+    except Exception as exc:
+        # Any scanner failure refuses: nothing is published unscanned.
+        raise _TypedFailure("publication refused", _exception_cause("auto_finalize_opsec_blocked", exc)) from exc
+    finally:
+        for key, value in saved.items():
+            os.environ.setdefault(key, value)
+
+
+@contextlib.contextmanager
+def _rescue_identity() -> Iterator[str]:
+    """The rescue publication token; an App installation token is revoked on exit."""
+    from scripts.agent_runtime.agent_github_identity import (
+        RescueIdentityError,
+        resolve_agent_github_identity,
+        revoke_installation_token,
+    )
+
+    alternative = "Publish through the normal pre-push push from the worktree."
+    try:
+        identity = resolve_agent_github_identity(
+            repository="learn-ukrainian/learn-ukrainian.github.io",
+            rescue=True,
+        )
+    except RescueIdentityError as exc:
+        raise _RescueFailure(
+            f"Rescue identity unavailable ({', '.join(exc.missing)}). {alternative}",
+            _TypedCause("rescue_identity_unavailable", missing=exc.missing),
+        ) from None
+    if not identity.token:
+        raise _RescueFailure(
+            f"Rescue identity unavailable. {alternative}",
+            _TypedCause("rescue_identity_unavailable", missing=("agent-token:missing",)),
+        )
+    try:
+        yield identity.token
+    finally:
+        if identity.source == "app":
+            try:
+                revoke_installation_token(identity.token)
+            except Exception:
+                # Cleanup must not replace the push result or expose response text.
+                print("WARNING: rescue App token revocation failed", file=sys.stderr)
+
+
+@contextlib.contextmanager
+def _finalize_transport_credentials() -> Iterator[list[tuple[str, str]]]:
+    """Git configuration entries that authorize the push to the canonical destination, and nothing else."""
+    with _rescue_identity() as token:
+        header = base64.b64encode(f"x-access-token:{token}".encode()).decode()
+        yield [(f"http.{CANONICAL_ORIGIN}.extraHeader", f"Authorization: Basic {header}")]
+
+
+def _finalize_transport_push(context: SafeGitContext, *, branch: str, head: str) -> subprocess.CompletedProcess:
+    """Send the validated, scanned ``head`` with Git's own transport alone.
+
+    Validation already ran the trusted hook chain on this exact id, without
+    any credential. This push runs no hook (an empty hooks path), so nothing
+    the worker wrote executes while the credential exists. The credential is
+    passed in this one process's environment, never written to configuration
+    or put on a command line, and the push is an ordinary non-force update.
+    """
+    from scripts.orchestration.safe_git_context import GIT
+
+    hooks = context.root / "transport-hooks"
+    hooks.mkdir()
+    with _finalize_transport_credentials() as entries:
+        settings = [("core.hooksPath", str(hooks)), *entries]
+        env = {**context.env, "GIT_CONFIG_COUNT": str(len(settings))}
+        for index, (key, value) in enumerate(settings):
+            env[f"GIT_CONFIG_KEY_{index}"] = key
+            env[f"GIT_CONFIG_VALUE_{index}"] = value
+        return subprocess.run(
+            [GIT, "push", "origin", f"{head}:refs/heads/{branch}"],
+            cwd=context.root,
+            env=env,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=DEFAULT_NETWORK_GIT_TIMEOUT_S,
+        )
+
+
 def _push_auto_finalize_branch(
     worktree: Path,
     branch: str,
@@ -8170,7 +8382,13 @@ def _push_auto_finalize_branch(
     owned_paths: object = None,
     base_sha: str | None = None,
 ) -> None:
-    """Validate and publish in a driver-configured repo; borrow only objects."""
+    """Scan, validate and publish in a driver-configured repo; borrow only objects.
+
+    Every step before the transport runs without a credential: the history
+    checks, the OPSEC scan of what the push sends, and the trusted hook chain,
+    which runs the worker's tests. The transport then sends that same id with
+    no hook and the credential in its own environment alone.
+    """
     if not branch or branch == "HEAD" or branch in _load_worktree_containment().PROTECTED_BRANCHES:
         raise _TypedFailure("unsafe publication target", _TypedCause("auto_finalize_unsafe_branch"))
     owned = _declared_owned_paths(owned_paths)
@@ -8179,7 +8397,7 @@ def _push_auto_finalize_branch(
     # Only the publication itself is a push; a timeout in a check before it is not.
     pushing = False
     try:
-        with _finalize_execution_context(worktree, publish=True) as context:
+        with _finalize_execution_context(worktree) as context:
             if context.run("check-ref-format", f"refs/heads/{branch}").returncode:
                 raise SnapshotRefusal("auto_finalize_unsafe_branch")
             head = _finalize_source_head(context, branch)
@@ -8194,29 +8412,33 @@ def _push_auto_finalize_branch(
                 context.fetch_remote_commits(f"refs/heads/{branch}", head)
             if remote and context.run("merge-base", "--is-ancestor", remote, head).returncode:
                 raise SnapshotRefusal("auto_finalize_remote_unverified")
+            # Before any worker code runs: the exact id the push sends.
+            _finalize_opsec_scan(context, branch=branch, head=head, remote=remote)
             context.prepare_validation(head=head, branch=branch, base=base, interpreter=context.interpreter)
             if _finalize_source_head(context, branch) != head:
                 raise SnapshotRefusal("auto_finalize_head_moved")
-            # Git itself invokes the base hook. An unchanged retry is still
-            # validated explicitly because Git skips pre-push for no updates.
+            # The base commit's hook chain, with the update line Git would
+            # give it, in the credential-free context. It runs for an
+            # unchanged retry too, for which Git itself would skip pre-push.
             timeout = _auto_finalize_push_timeout_s(context.root / "trusted/.githooks/pre_push_gate.py")
             pushing = True
-            if remote == head:
-                hook = context.root / "trusted/.githooks/pre-push"
-                proc = subprocess.run(
-                    [str(hook), "origin", context.origin],
-                    cwd=context.checkout,
-                    env=context.env,
-                    input=f"refs/heads/{branch} {head} refs/heads/{branch} {remote}\n",
-                    capture_output=True,
-                    text=True,
-                    check=False,
-                    timeout=timeout,
-                )
-                if proc.returncode:
-                    raise _TypedFailure("validation refused", _remote_git_cause("auto_finalize_push_failed", proc))
-            else:
-                proc = context.run("push", "origin", f"{head}:refs/heads/{branch}", network=True, timeout=timeout)
+            hook = context.root / "trusted/.githooks/pre-push"
+            proc = subprocess.run(
+                [str(hook), "origin", context.origin],
+                cwd=context.checkout,
+                env=context.env,
+                input=f"refs/heads/{branch} {head} refs/heads/{branch} {remote or '0' * 40}\n",
+                capture_output=True,
+                text=True,
+                check=False,
+                timeout=timeout,
+            )
+            if proc.returncode:
+                raise _TypedFailure("validation refused", _remote_git_cause("auto_finalize_push_failed", proc))
+            if _finalize_source_head(context, branch) != head:
+                raise SnapshotRefusal("auto_finalize_head_moved")
+            if remote != head:
+                proc = _finalize_transport_push(context, branch=branch, head=head)
                 if proc.returncode:
                     raise _TypedFailure("push refused", _remote_git_cause("auto_finalize_push_failed", proc))
             if _finalize_remote_head(context, branch) != head:
@@ -8514,45 +8736,17 @@ def _rescue_canonical_push_url() -> str:
 
 
 @contextlib.contextmanager
-def _rescue_execution_context(repo: _RescueRepo, *, borrow_objects: bool = True) -> Iterator[SafeGitContext]:
-    from scripts.agent_runtime.agent_github_identity import (
-        RescueIdentityError,
-        resolve_agent_github_identity,
-        revoke_installation_token,
-    )
-
-    alternative = "Publish through the normal pre-push push from the worktree."
-    try:
-        identity = resolve_agent_github_identity(
-            repository="learn-ukrainian/learn-ukrainian.github.io",
-            rescue=True,
-        )
-    except RescueIdentityError as exc:
-        raise _RescueFailure(
-            f"Rescue identity unavailable ({', '.join(exc.missing)}). {alternative}",
-            _TypedCause("rescue_identity_unavailable", missing=exc.missing),
-        ) from None
-    if not identity.token:
-        raise _RescueFailure(
-            f"Rescue identity unavailable. {alternative}",
-            _TypedCause("rescue_identity_unavailable", missing=("agent-token:missing",)),
-        )
-    try:
-        with SafeGitContext(
+def _rescue_execution_context(repo: _RescueRepo) -> Iterator[SafeGitContext]:
+    with (
+        _rescue_identity() as token,
+        SafeGitContext(
             objects=repo.git_dir / "objects",
             origin=_rescue_canonical_push_url(),
-            token=identity.token,
-            borrow_objects=borrow_objects,
+            token=token,
             temp_root=Path(tempfile.gettempdir()),
-        ) as context:
-            yield context
-    finally:
-        if identity.source == "app":
-            try:
-                revoke_installation_token(identity.token)
-            except Exception:
-                # Cleanup must not replace the push result or expose response text.
-                print("WARNING: rescue App token revocation failed", file=sys.stderr)
+        ) as context,
+    ):
+        yield context
 
 
 def _rescue_repo(worktree: Path) -> _RescueRepo:

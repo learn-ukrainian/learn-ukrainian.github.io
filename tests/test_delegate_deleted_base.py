@@ -7,7 +7,9 @@ The count now falls back to the recorded base commit, then to the default
 branch, and still fails closed when neither resolves.
 
 Every test runs in real temporary git repositories (bare origin, clone, linked
-dispatch worktree); git is never mocked.
+dispatch worktree); git is never mocked. Settlement counts on re-hashed objects
+against the driver-pinned destination (``isolated_finalization_context``), so
+the base branch, the recorded commit and the default head are the remote's.
 """
 
 from __future__ import annotations
@@ -22,6 +24,8 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 import delegate
+from scripts.orchestration.safe_git_context import SafeGitContext, SnapshotRefusal
+from tests.test_delegate import isolated_finalization_context  # noqa: F401
 
 BASE_BRANCH = "feat/base"
 TASK_BRANCH = "claude/task"
@@ -208,6 +212,11 @@ def test_base_deleted_and_nothing_resolvable_fails_closed(tmp_tasks_dir, repo):
     repo.delete_base_branch(merged_into_main=False)
     _git(repo.primary, "update-ref", "-d", "refs/remotes/origin/main")
     _git(repo.primary, "branch", "-D", "main")
+    # The driver pins the destination's main. Sharing no history with HEAD,
+    # it cannot stand in for the lost base either.
+    empty_tree = _git(repo.primary, "hash-object", "-t", "tree", "-w", "/dev/null")
+    unrelated = _git(repo.primary, "commit-tree", empty_tree, "-m", "unrelated history")
+    _git(repo.primary, "push", "-q", "--force", "origin", f"{unrelated}:refs/heads/main")
 
     state = _settle(repo, "base-deleted-nothing", base_sha=UNREACHABLE_SHA)
 
@@ -400,12 +409,14 @@ def test_default_branch_fallback_fails_closed_when_the_merge_cannot_be_computed(
     repo.deliver()
     repo.delete_base_branch(merged_into_main=True)
 
-    real_run = delegate._run_git_stdout
+    real_run = SafeGitContext.run
 
-    def broken_merge_tree(worktree, *args):
-        return (129, "") if args and args[0] == "merge-tree" else real_run(worktree, *args)
+    def broken_merge_tree(context, *args, **kwargs):
+        if args[:1] == ("merge-tree",):
+            return subprocess.CompletedProcess(args, 129, "", "")
+        return real_run(context, *args, **kwargs)
 
-    with patch.object(delegate, "_run_git_stdout", broken_merge_tree):
+    with patch.object(SafeGitContext, "run", broken_merge_tree):
         state = _settle(repo, "merge-unknown", base_sha=None)
 
     assert state["status"] == "no_deliverable"
@@ -803,3 +814,118 @@ def test_ref_verification_failures_permit_no_fallback_across_all_checks(tmp_path
     refusal = delegate._kimi_diff_refusal(worktree, "some-base", "kimi", base_sha=None)
     assert refusal is not None
     assert "could not be read" in refusal
+
+
+# --- Settlement counts against driver-pinned anchors only (#10931) ---------------
+
+
+def _publication_count(repo: _Repo, base_sha: str | None) -> int | None:
+    return delegate._count_commits_ahead(repo.worktree, f"origin/{BASE_BRANCH}", base_sha, publication=True)
+
+
+def test_squash_merged_deleted_base_with_recorded_commit_settles_done(tmp_tasks_dir, repo):
+    """The squash commit on main shares no history with the base's own commits; the recorded commit is exact."""
+    repo.deliver()
+    _git(repo.primary, "checkout", "-q", "-B", "main", "origin/main")
+    _git(repo.primary, "merge", "-q", "--squash", repo.base_sha)
+    _git(repo.primary, "commit", "-q", "-m", "squash the base")
+    _git(repo.primary, "push", "-q", "origin", "main")
+    _git(repo.primary, "checkout", "-q", "--detach")
+    repo.delete_base_branch(merged_into_main=False)
+
+    state = _settle(repo, "squash-recorded", base_sha=repo.base_sha)
+
+    assert state["status"] == "done"
+    assert state["commits_ahead"] == 1
+
+
+@pytest.mark.parametrize("deleted", [False, True], ids=["base-present", "base-deleted"])
+def test_forged_worker_base_tracking_ref_is_ignored(tmp_tasks_dir, repo, deleted):
+    """A worker can point its own origin/<base> anywhere; only the pinned destination names the base."""
+    repo.deliver()
+    if deleted:
+        repo.delete_base_branch(merged_into_main=False)
+    head = _git(repo.worktree, "rev-parse", "HEAD")
+    _git(repo.worktree, "update-ref", f"refs/remotes/origin/{BASE_BRANCH}", head)
+    assert delegate._count_commits_ahead(repo.worktree, f"origin/{BASE_BRANCH}", repo.base_sha) == 0
+
+    state = _settle(repo, f"forged-{deleted}", base_sha=repo.base_sha)
+
+    assert state["status"] == "done"
+    assert state["commits_ahead"] == 1
+
+
+def test_recorded_commit_that_is_not_an_ancestor_falls_back_to_the_default_head(tmp_tasks_dir, repo):
+    repo.deliver()
+    repo.delete_base_branch(merged_into_main=True)
+    _git(repo.primary, "checkout", "-q", "--detach", "origin/main")
+    _commit(repo.primary, "other.txt", "unrelated commit on another line")
+    unrelated = _git(repo.primary, "rev-parse", "HEAD")
+
+    assert _publication_count(repo, unrelated) == 1
+    state = _settle(repo, "non-ancestor", base_sha=unrelated)
+
+    assert state["status"] == "done"
+    assert state["commits_ahead"] == 1
+
+
+def test_present_named_base_is_counted_exactly_even_when_the_recorded_commit_differs(repo):
+    """Anchor 1 wins: the destination's base, not the recorded commit or the default head."""
+    repo.deliver()
+    _commit(repo.worktree, "second.py", "a second change")
+    first = _git(repo.worktree, "rev-parse", "HEAD~1")
+
+    assert _publication_count(repo, first) == 2
+    assert _publication_count(repo, None) == 2
+
+
+def test_empty_commit_on_a_recorded_base_is_counted_exactly(repo):
+    """No-op suppression belongs to the default-head proxy alone."""
+    repo.delete_base_branch(merged_into_main=True)
+    _git(repo.worktree, "commit", "-q", "--allow-empty", "-m", "nothing changed")
+
+    assert _publication_count(repo, repo.base_sha) == 1
+    assert _publication_count(repo, None) == 0
+
+
+def test_shallow_source_is_unknown_never_zero(tmp_tasks_dir, repo):
+    repo.delete_base_branch(merged_into_main=True)
+    (repo.primary / ".git/shallow").write_text(repo.base_sha + "\n")
+
+    assert _publication_count(repo, None) is None
+    state = _settle(repo, "shallow", base_sha=None)
+
+    assert state["status"] != "no_deliverable" or state["no_deliverable_reason"] == "commit_count_unknown"
+    assert state["status"] != "done"
+    assert state["commits_ahead"] is None
+
+
+@pytest.mark.parametrize("failure", ["refusal", "timeout", "malformed"])
+def test_unknown_destination_base_is_unknown_never_a_fallback(repo, monkeypatch, failure):
+    """Only confirmed absence on the destination permits a fallback anchor."""
+    repo.delete_base_branch(merged_into_main=True)
+    real_run = SafeGitContext.run
+
+    def run(context, *args, **kwargs):
+        if args[:2] == ("ls-remote", "--refs") and args[-1] == f"refs/heads/{BASE_BRANCH}":
+            if failure == "timeout":
+                raise subprocess.TimeoutExpired(["git", *args], 60)
+            code, out = (128, "") if failure == "refusal" else (0, "not an object id\n")
+            return subprocess.CompletedProcess(args, code, out, "unavailable")
+        return real_run(context, *args, **kwargs)
+
+    monkeypatch.setattr(SafeGitContext, "run", run)
+    # Without the destination's answer, the recorded commit and the default head (0 here) are not consulted.
+    assert _publication_count(repo, repo.base_sha) is None
+
+
+def test_unreadable_driver_base_is_unknown(repo, monkeypatch):
+    execution = delegate._finalize_execution_context
+
+    def unreadable(*args, **kwargs):
+        raise SnapshotRefusal("auto_finalize_committed_scope_unknown")
+
+    monkeypatch.setattr(delegate, "_finalize_execution_context", unreadable)
+    assert _publication_count(repo, repo.base_sha) is None
+    monkeypatch.setattr(delegate, "_finalize_execution_context", execution)
+    assert _publication_count(repo, repo.base_sha) == 0

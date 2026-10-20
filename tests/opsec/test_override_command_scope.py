@@ -111,18 +111,42 @@ for name in config["steps"]:
         step("settle", lambda: dispatch_settle.push_and_maybe_open_pr(
             work, "feature", open_pr=True, title="clean title", body="body " + token))
     elif name == "finalize":
+        import contextlib
+
         import scripts.delegate as delegate
+        from scripts.orchestration.safe_git_context import SafeGitContext
 
         gate()
+
+        # Publication runs from an isolated repository bound to the driver's destination and base (#10931).
+        @contextlib.contextmanager
+        def execution(worktree, prepare=False):
+            remote = config["remote"]
+            with SafeGitContext(objects=worktree / ".git/objects", temp_root=Path(config["scratch"]),
+                                origin=remote, local_remote=True, borrow_objects=prepare) as context:
+                context.source_git_dir = worktree / ".git"
+                context.driver_base = context.checked("ls-remote", remote, "refs/heads/trunk").split()[0]
+                context.interpreter = Path(sys.executable)
+                yield context
+
+        @contextlib.contextmanager
+        def no_credentials():
+            yield []
+
+        delegate._finalize_execution_context = execution
+        delegate._finalize_transport_credentials = no_credentials
         real = delegate.request_run
         delegate.request_run = lambda request, **kwargs: real(request, runner=fake, **kwargs)
         # A task record in the sandbox, so the gate's reason lands in its local diagnostic file (#9878).
         delegate.tasks_dir = lambda: Path(config["sandbox_root"]) / "batch_state" / "tasks"
-        delegate._write_state_atomic(delegate._state_path("impl-unit"), {"task_id": "impl-unit"})
+        # The flagged text reaches the commit subject and the PR title through the task id; agent names
+        # are lowercase identifiers in the X-Agent trailer.
+        task_id = "impl-" + token
+        delegate._write_state_atomic(delegate._state_path(task_id), {"task_id": task_id})
         step("finalize", lambda: repr(delegate._auto_finalize_dirty_worktree(
-            worktree=work, task_id="impl-unit", agent=token, branch="feature", base_branch="trunk",
+            worktree=work, task_id=task_id, agent="codex", branch="feature", base_branch="trunk",
             open_pr=True, owned_paths=["file.txt"])))
-        diag = delegate._diagnostic_path("impl-unit")
+        diag = delegate._diagnostic_path(task_id)
         outcome["finalize_diag"] = diag.read_text(encoding="utf-8") if diag.exists() else ""
     else:
         step(name, {"push": push, "comment": comment, "child_comment": child_comment,
@@ -160,6 +184,8 @@ def driver_config(sandbox, steps, body):
         "tooling": str(sandbox.tooling),
         "sandbox_root": str(sandbox.root),
         "work": str(sandbox.work),
+        "remote": str(sandbox.remote),
+        "scratch": str(sandbox.tmp),
         "sent": str(sandbox.sent),
         "token": TOKEN,
         "steps": steps,
@@ -219,7 +245,16 @@ def test_dispatch_settle_push_then_pr_admits_one_flagged_publication(sandbox):
 
 
 def test_delegate_auto_finalize_admits_one_flagged_publication(sandbox):
-    """_auto_finalize_dirty_worktree: commit and child push, then the in-process draft PR."""
+    """_auto_finalize_dirty_worktree: commit and push, then the in-process draft PR."""
+    # Finalize validates with the base commit's own hook chain.
+    hooks = sandbox.work / ".githooks"
+    hooks.mkdir()
+    (hooks / "pre-push").write_text("#!/bin/sh\ncat > /dev/null\n")
+    (hooks / "pre-push").chmod(0o755)
+    (hooks / "pre_push_gate.py").write_text("ADMISSION_MAX_WAIT_S = 1\nADMISSION_WAIT_S = 1\n")
+    _git(sandbox.work, "add", ".githooks")
+    _git(sandbox.work, "commit", "-q", "-m", "trusted base hooks")
+    _git(sandbox.work, "push", "-q", "origin", "HEAD:refs/heads/trunk")
     (sandbox.work / "file.txt").write_text("dirty\n")
     outcome = drive(sandbox, "finalize", LU_OPSEC_OVERRIDE=REASON)
     sent_commit = _git(sandbox.work, "rev-parse", "HEAD")

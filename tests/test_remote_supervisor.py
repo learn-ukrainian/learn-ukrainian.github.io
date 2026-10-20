@@ -9,9 +9,11 @@ from pathlib import Path
 
 import pytest
 
+import scripts.delegate  # noqa: F401  (loaded before isolated_finalization_context binds it)
 from agents_extensions.shared.session_streams.model import LeaseHolder
 from scripts.session_supervisor import main
 from scripts.session_supervisor.remote import RemoteEpicClient, RemoteSupervisorError, RemoteUnreachableError
+from tests.test_delegate import isolated_finalization_context  # noqa: F401  (driver-pinned origin.git)
 
 
 class _Response:
@@ -690,6 +692,9 @@ def test_successor_preserves_real_worker_needs_finalize(supervisory_cycle, tmp_p
             "fixture",
         ],
         ["update-ref", "refs/remotes/origin/main", "HEAD"],
+        # The driver-pinned destination settlement counts against.
+        ["init", "--bare", "-q", "-b", "main", str(tmp_path / "origin.git")],
+        ["push", "-q", str(tmp_path / "origin.git"), "main"],
     ):
         subprocess.run(
             ["git", *args], cwd=repo, env=delegate._sanitized_git_env(), check=True, capture_output=True, timeout=10
