@@ -158,7 +158,13 @@ def _without_code_fences(text: str, *, keep_unclosed: bool) -> str:
     # Import/parse failures propagate before either consumer can admit a review.
     from markdown_it import MarkdownIt
 
-    for token in MarkdownIt("commonmark").parse("\n".join(lines)):
+    parser = MarkdownIt("commonmark")
+    for token in parser.parse("\n".join(lines)):
+        # These containers recurse after push() increments the open token's
+        # level. At maxNesting, tokenize() silently skips its remaining input;
+        # outer maps can still cover every line, so they cannot prove visibility.
+        if token.type in {"list_item_open", "blockquote_open"} and token.level + 1 >= parser.options["maxNesting"]:
+            raise ValueError("CommonMark verdict visibility nesting limit reached")
         if keep_unclosed:
             if token.type != "fence" or token.level != 0:
                 continue

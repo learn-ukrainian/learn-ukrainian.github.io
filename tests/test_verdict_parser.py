@@ -24,6 +24,63 @@ FROZEN_CONTAINER_CASES = [
     ("U1", "```\nVERDICT: APPROVE\n", []),
 ]
 
+# Opus F1 reproducers. The indented outline reaches the same recursive budget
+# without putting all list markers on one line.
+CAPACITY_OUTLINES = [
+    "- " * 10 + "x\n\n",
+    "\n".join("  " * depth + "- x" for depth in range(10)) + "\n\n",
+]
+OVERLAP_QUOTE = "> a\n>\n> ```\n> x\n> ```\n> para\nVERDICT: APPROVE\n"
+
+
+@pytest.mark.parametrize("newline", ["\n", "\r\n", "\r"])
+@pytest.mark.parametrize("outline", CAPACITY_OUTLINES, ids=["inline", "indented"])
+@pytest.mark.parametrize("prefix", ["", "VERDICT: REQUEST_CHANGES\n\n"])
+def test_capacity_exhaustion_fails_before_any_verdict(outline, prefix, newline):
+    response = (prefix + outline + "```\nVERDICT: APPROVE\n```\n").replace("\n", newline)
+    for reader in (recognized_verdicts, unsupported_verdict_tokens):
+        with pytest.raises(ValueError, match="CommonMark verdict visibility nesting limit"):
+            reader(response)
+    for keep_unclosed in (False, True):
+        with pytest.raises(ValueError, match="CommonMark verdict visibility nesting limit"):
+            _without_code_fences(response, keep_unclosed=keep_unclosed)
+
+
+@pytest.mark.parametrize("newline", ["\n", "\r\n", "\r"])
+@pytest.mark.parametrize("outline", ["- " * 9 + "x\n\n", "> " * 19 + "x\n\n"])
+def test_supported_depth_keeps_fenced_examples_hidden(outline, newline):
+    response = (outline + "```\nVERDICT: APPROVE\n```\n").replace("\n", newline)
+    assert recognized_verdicts(response) == []
+    assert recognized_verdicts(response + newline + "VERDICT: BLOCKED") == ["BLOCKED"]
+    assert "VERDICT: APPROVE" not in _without_code_fences(response, keep_unclosed=True)
+
+
+@pytest.mark.parametrize("newline", ["\n", "\r\n", "\r"])
+@pytest.mark.parametrize("terminal,expected", [("", []), ("\nVERDICT: BLOCKED\n", ["BLOCKED"])])
+def test_overlapping_quote_fence_cannot_reexpose_lazy_continuation(newline, terminal, expected):
+    assert recognized_verdicts((OVERLAP_QUOTE + terminal).replace("\n", newline)) == expected
+
+
+@pytest.mark.parametrize("newline", ["\n", "\r\n", "\r"])
+def test_overlapping_quote_fence_preserves_visible_terminal(newline):
+    response = OVERLAP_QUOTE.replace("> para\nVERDICT", "> para\n\nVERDICT").replace("\n", newline)
+    assert recognized_verdicts(response) == ["APPROVE"]
+
+
+def test_capacity_detection_uses_configured_parser_budget(monkeypatch):
+    from markdown_it import MarkdownIt
+
+    original_init = MarkdownIt.__init__
+
+    def limited_init(self, *args, **kwargs):
+        original_init(self, *args, **kwargs)
+        self.options["maxNesting"] = 6
+
+    monkeypatch.setattr(MarkdownIt, "__init__", limited_init)
+    assert recognized_verdicts("- - x\n\n```\nVERDICT: APPROVE\n```\n") == []
+    with pytest.raises(ValueError, match="CommonMark verdict visibility nesting limit"):
+        recognized_verdicts("- - - x\n\n```\nVERDICT: APPROVE\n```\n")
+
 
 @pytest.mark.parametrize("newline", ["\n", "\r\n", "\r"], ids=["lf", "crlf", "cr"])
 @pytest.mark.parametrize("case,text,expected", FROZEN_CONTAINER_CASES, ids=[c[0] for c in FROZEN_CONTAINER_CASES])
