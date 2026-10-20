@@ -2,11 +2,20 @@ import { expect, test } from '@playwright/test';
 import { readFileSync, mkdtempSync, existsSync, readdirSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { createServer, type Server } from 'node:http';
+import { connect } from 'node:net';
+import { once } from 'node:events';
 import { join, resolve, sep } from 'node:path';
 import { tmpdir } from 'node:os';
 import snapshot from '../tests/fixtures/word-card-preview/current';
 import { revisionCases, relationCases, record } from '../tests/fixtures/word-card-preview/inputs';
-import { buildPreview, releaseControls, candidateId, certifiedId, pins, fidelityControls, fidelityRefusals } from '../tests/fixtures/word-card-preview/release-controls';
+import { buildPreview, releaseControls, candidateId, certifiedId, pins, fidelityControls, fidelityRefusals, semanticCases, semanticControls } from '../tests/fixtures/word-card-preview/release-controls';
+
+function closePreview(server: Server): Promise<void> {
+  return new Promise((done, reject) => {
+    server.close(error => error ? reject(error) : done());
+    server.closeAllConnections();
+  });
+}
 
 // This spec drives an explicitly flag-enabled local build. No data certification.
 const names = ['bronia-armour', 'bronia-reservation', 'idiom-buduvaty-povitriani-zamky', 'kliuch-1', 'vriady-hody-conflict', 'vybihaty-imperf', 'vybihty-perf', 'zamok-castle', 'zamok-legacy-split', 'zamok-lock', 'zamok-settlement',
@@ -98,7 +107,7 @@ for (const prefix of ['', 'compare/']) for (const c of revisionCases()) test(`${
 test.describe('source fidelity refusals', () => {
   test.describe.configure({ timeout: 150_000 });
   const scratch = mkdtempSync(join(process.env.TMPDIR || tmpdir(), 'fidelity-browser-'));
-  const controls = fidelityControls(join(scratch, 'inputs'));
+  const controls = { ...fidelityControls(join(scratch, 'inputs')), ...semanticControls(join(scratch, 'semantic')) };
   async function serve(root: string): Promise<Server> {
     const server = createServer((req, res) => {
       const path = new URL(req.url || '/', 'http://localhost').pathname;
@@ -110,6 +119,49 @@ test.describe('source fidelity refusals', () => {
     await new Promise<void>(done => server.listen(0, '127.0.0.1', done));
     return server;
   }
+  test('closes preview server with a pending browser preconnection', async () => {
+    const server = await serve(scratch);
+    const address = server.address();
+    if (!address || typeof address === 'string') throw Error('No local port');
+    const socket = connect(address.port, '127.0.0.1');
+    try {
+      await once(socket, 'connect');
+      const closed = once(socket, 'close');
+      await closePreview(server);
+      await closed;
+      expect(server.listening).toBe(false);
+      expect(socket.destroyed).toBe(true);
+    } finally {
+      socket.destroy();
+      if (server.listening) await closePreview(server);
+    }
+  });
+  for (const encoding of ['json', 'jsonl']) for (const c of semanticCases) test(`semantic ${encoding}-${c.name}`, async ({ page }, info) => {
+    const name = `${encoding}-${c.name}`;
+    const config = controls[name];
+    if (!config) throw Error('Missing semantic control');
+    const server = await serve(buildPreview(join(scratch, name), config));
+    try {
+      const address = server.address();
+      if (!address || typeof address === 'string') throw Error('No local port');
+      const origin = `http://127.0.0.1:${address.port}`;
+      for (const prefix of ['', 'compare/']) {
+        await page.goto(`${origin}/lexicon-v2/${prefix}release/${candidateId}/`);
+        await info.attach(`${name}-${prefix ? 'compare' : 'word'}-observed`, { body: await page.content(), contentType: 'text/html' });
+        if (c.expected === 'refuse') {
+          await expect(page.locator('[data-release-card]')).toHaveCount(0);
+          await page.goto(`${origin}/lexicon-v2/${prefix}release/`);
+          await expect(page.getByRole('status')).toHaveText('Unavailable: Unsupported release value');
+          await expect(page.locator('[data-raw-value], [data-report-action]')).toHaveCount(0);
+        } else {
+          await expect(page.locator('[data-release-card]')).toHaveAttribute('data-release-card', candidateId);
+          const raw = c.target.includes('value') ? page.locator('[data-raw-value]').nth(1) :
+            page.getByRole('region', { name: 'Known gaps' }).locator('pre').first();
+          expect(await raw.textContent()).toBe(c.displayed);
+        }
+      }
+    } finally { await closePreview(server); }
+  });
   for (const [name, reason] of fidelityRefusals) test(`refuses ${name}`, async ({ page }, info) => {
     const config = controls[name];
     if (!config) throw Error('Missing fidelity control');
@@ -130,7 +182,7 @@ test.describe('source fidelity refusals', () => {
         await expect(page.locator('[data-release-card], [data-raw-value], [data-report-action]')).toHaveCount(0);
         await info.attach(`${name}-${prefix ? 'compare' : 'word'}-refusal`, { body: await page.screenshot(), contentType: 'image/png' });
       }
-    } finally { await new Promise<void>(done => server.close(() => done())); }
+    } finally { await closePreview(server); }
   });
   test('retains faithful values and safe citation metadata', async ({ page }) => {
     const config = controls.faithful;
@@ -149,7 +201,7 @@ test.describe('source fidelity refusals', () => {
         const citation = JSON.parse(await page.locator('[data-release-citation]').nth(1).textContent() || '');
         expect(citation.licence.extra).toEqual({ nested: ['𐐀', -9007199254740991, null] });
       }
-    } finally { await new Promise<void>(done => server.close(() => done())); }
+    } finally { await closePreview(server); }
   });
 });
 
@@ -199,7 +251,7 @@ test.describe('release controls R01-R16 and R10b', () => {
     if (!address || typeof address === 'string') throw Error('No local port');
     origin = `http://127.0.0.1:${address.port}`;
   });
-  test.afterAll(async () => { if (server) await new Promise<void>(done => server.close(() => done())); });
+  test.afterAll(async () => { if (server) await closePreview(server); });
   const url = (control: string, path: string) => `${origin}/__control__/${control}/lexicon-v2/${path}/`;
 
   test('R01 candidate literal values, citations and declared gaps', async ({ page }) => {

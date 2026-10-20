@@ -42,6 +42,56 @@ export const fidelityRefusals: [string, string][] = [
     [`string-${key}`, 'Unsupported release value'] satisfies [string, string]),
 ];
 
+type SemanticCase = { name: string; target: 'value' | 'gap' | 'nested-value' | 'nested-gap' | 'licence';
+  token: string; expected: 'refuse' | 'admit'; displayed?: string };
+export const semanticCases: SemanticCase[] = [
+  ...['1e-400', '2.5e-324', '0.1000000000000000055511151231257827', '1.000000000000000000001', '123456789.123456789']
+    .flatMap((token, i) => (['value', 'gap'] as const).map(target =>
+      ({ name: `${target}-lossy-number-${i}`, target, token, expected: 'refuse' } satisfies SemanticCase))),
+  ...['\r\nA', '\rA', '\r'].flatMap((text, i) => (['value', 'gap'] as const).map(target =>
+    ({ name: `${target}-leading-cr-${i}`, target, token: JSON.stringify(text), expected: 'refuse' } satisfies SemanticCase))),
+  { name: 'nested-value-underflow', target: 'nested-value', token: '1e-400', expected: 'refuse' },
+  { name: 'nested-gap-rounded', target: 'nested-gap', token: '2.5e-324', expected: 'refuse' },
+  { name: 'licence-precision', target: 'licence', token: '1.000000000000000000001', expected: 'refuse' },
+  ...([['1.0', '1'], ['1e0', '1'], ['10.50', '10.5'], ['-0.0', '0'], ['1e-07', '1e-7'], ['0.1', '0.1'], ['5e-324', '5e-324']] as const)
+    .map(([token, displayed], i) => ({ name: `value-equal-number-${i}`, target: 'value', token,
+      expected: 'admit', displayed } satisfies SemanticCase)),
+  { name: 'nested-value-equal-number', target: 'nested-value', token: '1.0', expected: 'admit', displayed: '{\n  "nested": [\n    1\n  ]\n}' },
+  ...([['A\r\nB', 'A\nB'], ['A\rB', 'A\nB'], ['\nA', '\nA'], ['\n\nA', '\n\nA'], ['A\n', 'A\n'],
+    [{ nested: ['\r\nA'] }, '{\n  "nested": [\n    "\\r\\nA"\n  ]\n}']] as const).flatMap(([value, displayed], i) =>
+    (['value', 'gap'] as const).map(target => ({ name: `${target}-faithful-string-${i}`, target,
+      token: JSON.stringify(value), expected: 'admit', displayed: String(displayed) } satisfies SemanticCase))),
+];
+
+/** Keep literal tokens intact through both encodings; JSON.parse would erase the defect. */
+export function semanticControls(root: string): Record<string, Control> {
+  const controls: Record<string, Control> = {};
+  for (const encoding of ['json', 'jsonl'] as const) for (const c of semanticCases) {
+    const rows = readFileSync(join(fixtureRoot, 'release-jsonl/word-cards.jsonl'), 'utf8').trimEnd().split('\n').map(line => JSON.parse(line));
+    const row = rows[1];
+    const value = c.target.startsWith('nested-') ? { nested: ['SEMANTIC_TOKEN'] } : 'SEMANTIC_TOKEN';
+    if (c.target === 'value' || c.target === 'nested-value') row.fields[1].value = value;
+    else if (c.target === 'licence') row.fields[1].citation.licence.extra = value;
+    else row.known_gaps = [value];
+    const data = (encoding === 'json' ? JSON.stringify(rows) : rows.map(row => JSON.stringify(row)).join('\n'))
+      .replace('"SEMANTIC_TOKEN"', c.token) + '\n';
+    const name = `${encoding}-${c.name}`;
+    const path = join(root, name);
+    mkdirSync(path, { recursive: true });
+    const manifest = JSON.parse(readFileSync(join(fixtureRoot, 'release-jsonl/manifest.json'), 'utf8'));
+    manifest.dataset_file = `word-cards.${encoding}`;
+    manifest.dataset_bytes = Buffer.byteLength(data);
+    manifest.dataset_sha256 = digest(data);
+    const manifestBytes = JSON.stringify(manifest) + '\n';
+    writeFileSync(join(path, manifest.dataset_file), data);
+    writeFileSync(join(path, 'manifest.json'), manifestBytes);
+    const pin = JSON.stringify({ ...pins.jsonl, dataset_sha256: manifest.dataset_sha256, manifest_sha256: digest(manifestBytes) });
+    writeFileSync(join(path, 'pin.json'), pin);
+    controls[name] = { enabled: true, artifactPath: path, pin };
+  }
+  return controls;
+}
+
 /** Literal source controls, including numeric tokens JS cannot represent faithfully. */
 export function fidelityControls(root: string): Record<string, Control> {
   const controls: Record<string, Control> = {};
@@ -184,7 +234,7 @@ export default {...base, root:${JSON.stringify(root)}, srcDir:${JSON.stringify(s
 publicDir:${JSON.stringify(join(root, 'public'))}, cacheDir:${JSON.stringify(join(root, 'cache'))}};\n`);
   try {
     const log = execFileSync(join(site, 'node_modules/.bin/astro'), ['build', '--root', root, '--config', 'astro.config.mjs'], {
-      encoding: 'utf8', timeout: 120_000, env: { ...process.env, ATLAS_WORD_CARD_PREVIEW: config.enabled ? '1' : '0',
+      cwd: root, encoding: 'utf8', timeout: 120_000, env: { ...process.env, ATLAS_WORD_CARD_PREVIEW: config.enabled ? '1' : '0',
         ATLAS_WORD_CARD_RELEASE_PATH: config.artifactPath || '', ATLAS_WORD_CARD_RELEASE_PIN: config.pin || '' },
     });
     writeFileSync(join(root, 'build.log'), log);

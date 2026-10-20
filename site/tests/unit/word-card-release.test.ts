@@ -7,11 +7,11 @@ import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { loadWordCardRelease, releaseReportUrl } from '../../src/lib/lexicon/word-card-release';
 import WordCardPreview from '../../src/lexicon/WordCardPreview';
-import { candidateId, certifiedId, pins, releaseControls, fidelityControls, fidelityRefusals } from '../fixtures/word-card-preview/release-controls';
+import { candidateId, certifiedId, pins, releaseControls, fidelityControls, fidelityRefusals, semanticCases, semanticControls, digest } from '../fixtures/word-card-preview/release-controls';
 
 
 const scratch = mkdtempSync(join(process.env.TMPDIR || tmpdir(), 'release-unit-'));
-const controls = { ...releaseControls(scratch), ...fidelityControls(join(scratch, 'fidelity')) };
+const controls = { ...releaseControls(scratch), ...fidelityControls(join(scratch, 'fidelity')), ...semanticControls(join(scratch, 'semantic')) };
 afterAll(() => rmSync(scratch, { recursive: true }));
 const load = (name: string) => {
   const config = controls[name];
@@ -20,6 +20,57 @@ const load = (name: string) => {
 };
 
 describe('pinned producer release boundary', () => {
+  for (const encoding of ['json', 'jsonl']) it.each(semanticCases)(`${encoding} semantic $name`, c => {
+    const result = load(`${encoding}-${c.name}`);
+    if (c.expected === 'refuse') {
+      expect(result).toEqual({ kind: 'unavailable', reason: 'Unsupported release value' });
+    } else {
+      if (result.kind !== 'release') throw Error(`Refused admitted control: ${JSON.stringify(result)}`);
+      const row = result.rows[1];
+      const value = c.target.includes('value') ? row?.fields[1]?.value : row?.known_gaps[0];
+      expect(value).toEqual(JSON.parse(c.target.startsWith('nested-') ? `{"nested":[${c.token}]}` : c.token));
+    }
+  });
+  it.each(['pin', 'manifest'])('refuses lossy numeric %s metadata at the shared boundary', target => {
+    const base = controls.base;
+    if (!base?.artifactPath || !base.pin) throw Error('Missing control');
+    const path = join(scratch, `metadata-${target}`);
+    fs.cpSync(base.artifactPath, path, { recursive: true });
+    let pin = base.pin;
+    if (target === 'pin') pin = pin.replace(/}$/, ',"extra":1e-400}');
+    else {
+      const file = join(path, 'manifest.json');
+      const manifest = fs.readFileSync(file, 'utf8').trimEnd().replace(/}$/, ',"extra":{"n":1.000000000000000000001}}');
+      fs.writeFileSync(file, manifest);
+      pin = JSON.stringify({ ...JSON.parse(pin), manifest_sha256: digest(manifest) });
+    }
+    expect(loadWordCardRelease({ enabled: true, artifactPath: path, pin })).toEqual({ kind: 'unavailable', reason: 'Unsupported release value' });
+  });
+  it.each([
+    ['-12.345', -12.345], ['1234500e-4', 123.45], ['0.0012300e+2', 0.123],
+    ['1e+' + '0'.repeat(100_000), 1], ['0e' + '9'.repeat(100_000), 0],
+    ['1.' + '0'.repeat(100_000), 1], ['0.' + '0'.repeat(100_000) + '1e100001', 1],
+    ['1e-' + '9'.repeat(100_000), null], ['1e' + '9'.repeat(100_000), null],
+    ['1.' + '0'.repeat(100_000) + '1', null], ['-0.0000000000000000000000000000000000000000000000000000000000000000001e-9999', null],
+  ] as const)('compares decimal digits without expanding an exponent (%#)', (token, expected) => {
+    const base = controls['json-value-equal-number-0'];
+    if (!base?.artifactPath || !base.pin) throw Error('Missing numeric control');
+    const path = join(scratch, `decimal-${digest(token)}`);
+    fs.mkdirSync(path);
+    const data = readFileSync(join(base.artifactPath, 'word-cards.json'), 'utf8').replace('"value":1.0', `"value":${token}`);
+    const manifest = { ...JSON.parse(readFileSync(join(base.artifactPath, 'manifest.json'), 'utf8')),
+      dataset_sha256: digest(data), dataset_bytes: Buffer.byteLength(data) };
+    const manifestBytes = JSON.stringify(manifest);
+    fs.writeFileSync(join(path, 'word-cards.json'), data);
+    fs.writeFileSync(join(path, 'manifest.json'), manifestBytes);
+    const pin = JSON.stringify({ ...JSON.parse(base.pin), dataset_sha256: digest(data), manifest_sha256: digest(manifestBytes) });
+    const result = loadWordCardRelease({ enabled: true, artifactPath: path, pin });
+    if (expected === null) expect(result).toEqual({ kind: 'unavailable', reason: 'Unsupported release value' });
+    else {
+      if (result.kind !== 'release') throw Error(`Refused exact decimal: ${JSON.stringify(result)}`);
+      expect(result.rows[1]?.fields[1]?.value).toBe(expected);
+    }
+  });
   it.each(fidelityRefusals)('refuses unsupported source control %s without silently dropping data', (name, reason) => {
     expect(load(name)).toEqual({ kind: 'unavailable', reason });
   });

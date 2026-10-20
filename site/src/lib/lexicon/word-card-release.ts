@@ -57,11 +57,43 @@ function faithfulJson(value: unknown): boolean {
   return typeof value === 'object' && Object.entries(value).every(([key, item]) =>
     !['__proto__', 'constructor', 'prototype'].includes(key) && faithfulJson(key) && faithfulJson(item));
 }
+function decimalParts(token: string) {
+  const negative = token.startsWith('-');
+  const [coefficient = '', exponent = '0'] = (negative ? token.slice(1) : token).toLowerCase().split('e');
+  const point = coefficient.indexOf('.');
+  const digits = coefficient.replace('.', '');
+  let first = 0, end = digits.length;
+  while (first < end && digits[first] === '0') first++;
+  while (end > first && digits[end - 1] === '0') end--;
+  const magnitude = exponent.replace(/^[+-]?0*/, '') || '0';
+  return { negative, digits: digits.slice(first, end),
+    shift: digits.length - end - (point < 0 ? 0 : coefficient.length - point - 1),
+    exponent: (exponent.startsWith('-') && magnitude !== '0' ? '-' : '') + magnitude };
+}
+function sameDecimal(source: string, displayed: string): boolean {
+  const a = decimalParts(source), b = decimalParts(displayed);
+  if (!a.digits || !b.digits) return a.digits === b.digits;
+  // Only the displayed exponent enters arithmetic. Source exponents stay text,
+  // so arbitrarily written exponents never cause powers or large-integer arithmetic.
+  return a.negative === b.negative && a.digits === b.digits &&
+    a.exponent === String(Number(b.exponent) + b.shift - a.shift);
+}
+function losesLeadingLine(value: unknown): boolean {
+  return typeof value === 'string' && value.startsWith('\r');
+}
 function parse(bytes: Buffer, reason: string): unknown {
   let value: unknown;
-  try { value = JSON.parse(new TextDecoder('utf-8', { fatal: true }).decode(bytes)); }
+  let unsupported = false;
+  try {
+    value = JSON.parse(new TextDecoder('utf-8', { fatal: true }).decode(bytes),
+      (_key: string, item: unknown, context?: { source?: string }): unknown => {
+        if (typeof item === 'number' && (!Number.isFinite(item) ||
+          typeof context?.source !== 'string' || !sameDecimal(context.source, String(item)))) unsupported = true;
+        return item;
+      });
+  }
   catch { return refuse(reason); }
-  if (!faithfulJson(value)) refuse('Unsupported release value');
+  if (unsupported || !faithfulJson(value)) refuse('Unsupported release value');
   return value;
 }
 
@@ -93,6 +125,9 @@ export function loadWordCardRelease(config: { enabled: boolean; artifactPath?: s
       const result = rowSchema.safeParse(value);
       if (!result.success) refuse(result.error.issues.some(i => i.path.includes('citation')) ?
         'Missing or malformed field citation' : 'Missing or malformed card field');
+      if (result.data.known_gaps.some(losesLeadingLine) || result.data.fields.some(field => losesLeadingLine(field.value))) {
+        refuse('Unsupported release value');
+      }
       return result.data;
     });
     const ids = new Set<string>();
