@@ -4,11 +4,12 @@ from __future__ import annotations
 
 import json
 import subprocess
+from functools import partial
 from pathlib import Path
 
 import pytest
 
-from scripts.lexdata import build_store, cli, transforms
+from scripts.lexdata import build_store, cli, generation, transforms, verify
 from tests.lexdata._support import NO_BUDGET
 
 
@@ -53,8 +54,12 @@ def test_digests_report_a_closed_registry(capsys) -> None:
 
 
 def test_verify_and_status_on_a_published_generation(harness, capsys, monkeypatch) -> None:
-    # Built under the production registry, so `status` (which reads with it) can open it.
-    result = build_store.build(harness.target, binding=transforms.DEFAULT_BINDING, adapters={}, stores={},
+    # The production registry now holds the Ohoiko sources, which an adapter-less build cannot satisfy:
+    # build, and have the CLI verify and read, under one source-free binding.
+    empty = transforms.TransformBinding(sources={})
+    monkeypatch.setattr(cli.verify, "verify_generation", partial(verify.verify_generation, binding=empty))
+    monkeypatch.setattr(cli.generation, "open_generation", partial(generation.open_generation, binding=empty))
+    result = build_store.build(harness.target, binding=empty, adapters={}, stores={},
                                repository_root=harness.repository_root, admission=NO_BUDGET)
     assert cli.main(["verify", "--path", str(result.published)]) == 0
     assert json.loads(capsys.readouterr().out)["ok"] is True
