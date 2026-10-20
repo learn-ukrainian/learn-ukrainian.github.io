@@ -399,7 +399,8 @@ def _recording_hub(monkeypatch: pytest.MonkeyPatch) -> list[str]:
     calls: list[str] = []
 
     class _Api:
-        def __init__(self, **_: object) -> None:
+        def __init__(self, *, token: str) -> None:
+            assert token == "unused"
             calls.append("HfApi")
 
         def whoami(self) -> dict[str, str]:
@@ -408,8 +409,12 @@ def _recording_hub(monkeypatch: pytest.MonkeyPatch) -> list[str]:
 
     hub = types.ModuleType("huggingface_hub")
     hub.HfApi = _Api  # type: ignore[attr-defined]
-    hub.login = lambda **_: calls.append("login")  # type: ignore[attr-defined]
+    hub.login = lambda **_: pytest.fail("login must never persist uploader authentication")  # type: ignore[attr-defined]
+    hub.set_access_token = lambda *_a, **_kw: pytest.fail("token cache write attempted")  # type: ignore[attr-defined]
+    errors = types.ModuleType("huggingface_hub.errors")
+    errors.RepositoryNotFoundError = type("RepositoryNotFoundError", (Exception,), {})  # type: ignore[attr-defined]
     monkeypatch.setitem(sys.modules, "huggingface_hub", hub)
+    monkeypatch.setitem(sys.modules, "huggingface_hub.errors", errors)
     return calls
 
 
@@ -445,7 +450,7 @@ def test_loader_upload_to_huggingface_requires_valid_inventory_before_any_hub_ca
     assert upload(external / "train.jsonl") == 1
     assert calls == []
     assert upload(external) == 1
-    assert calls == ["login", "HfApi", "whoami"]
+    assert calls == ["HfApi", "whoami"]
 
 
 def test_loader_v4_format_decolonization_refuses(tmp_path: Path, sealed_copy: Path) -> None:
