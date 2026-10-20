@@ -103,7 +103,7 @@ def test_published_generation_is_self_contained_and_untouched_after_swap(harness
     with closing(open_readonly(published)) as conn:
         meta = generation.read_meta(conn)
         assert meta["status"] == "published" and meta["verify_receipt_sha256"]
-        assert meta["verify_receipt_sha256"] == verify.verify_generation(conn).receipt_sha256()
+        assert meta["verify_receipt_sha256"] == verify.verify_generation(conn, binding=fixture_binding()).receipt_sha256()
     assert list(harness.target.work_dir.glob("lexdata.*.db.tmp*")) == []
     reports = sorted(p.name for p in harness.target.reports_dir.iterdir())
     assert reports == [f"build-{result.generation}.json", f"verify-{result.generation}.json"]
@@ -298,7 +298,7 @@ def test_changed_and_missing_units(harness) -> None:
 def test_removed_source_is_tombstoned(harness) -> None:
     harness.build()
     from scripts.lexdata import transforms
-    result = build_store.build(harness.target, binding=transforms.TransformBinding(), adapters={},
+    result = build_store.build(harness.target, binding=transforms.TransformBinding(sources={}), adapters={},
                                repository_root=harness.repository_root, admission=build_store.Admission(0, 0))
     assert result.diff["dropped_sources"] == [FIXTURE_SOURCE]
     assert result.diff["sources"][FIXTURE_SOURCE]["tombstoned_units"] == 5

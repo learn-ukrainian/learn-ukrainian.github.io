@@ -9,7 +9,7 @@ project import that is not registered in the same manifest, so an undeclared
 dependency cannot escape the digest. The build refuses to run while one exists.
 
 Slices register here, in reviewed changes: parsers in ``PARSERS``, list
-grammars in ``LIST_GRAMMARS`` and sources in ``SOURCES``. F registers none.
+grammars in ``LIST_GRAMMARS`` and sources in ``SOURCES``. F registers none; the Ohoiko slice registers four.
 """
 
 from __future__ import annotations
@@ -82,9 +82,48 @@ PRODUCTION_NORMALIZER = NormalizerBinding(
     contents=normalize.table_contents,
 )
 
-PARSERS: Mapping[str, ParserSpec] = MappingProxyType({})
-LIST_GRAMMARS: Mapping[str, ListGrammarSpec] = MappingProxyType({})
-SOURCES: Mapping[str, SourceSpec] = MappingProxyType({})
+# Slice (a)/(b): Ohoiko 1000 words / 500 verbs, Oho! A1 Словничок, ULP lesson notes. One module
+# holds all four adapters, so they share its full project-import closure (the manifest_io chain
+# is reached through the ohoiko_quality_enrichment CLI).
+_OHOIKO_PARSER_MODULES = (
+    "scripts/lexicon/import_ohoiko_vocab.py",
+    "scripts/lexicon/oho_workbook_glossary_parse.py",
+    "scripts/lexicon/ohoiko_quality_enrichment.py",
+    "scripts/lexicon/lemma_normalization.py",
+    "scripts/lexicon/manifest_io.py",
+    "scripts/atlas/word_card_certification.py",
+    "scripts/atlas/word_card_golden_set.py",
+    "scripts/common/github_client.py",
+    "scripts/common/repo_root.py",
+    "scripts/common/scratch.py",
+    "scripts/lib/readonly_sqlite.py",
+    "scripts/opsec/gh_snapshot.py",
+    "scripts/opsec/prepublish.py",
+    "scripts/projects/open_model_data/source_completeness_manifest.py",
+    "scripts/storage/topology.py",
+)
+_OHOIKO_REPAIR_PROPOSERS = ("scripts/lexicon/ulp_glossary_parse.py",)  # repair_ukrainian, join_split_stress
+_OHOIKO_SOURCE_IDS = ("ohoiko_1000_words", "ohoiko_500_verbs", "oho_a1_workbook_glossary", "ulp_lesson_notes")
+
+PARSERS: Mapping[str, ParserSpec] = MappingProxyType({
+    parser_id: ParserSpec(parser_id, "1", _OHOIKO_PARSER_MODULES, _OHOIKO_REPAIR_PROPOSERS)
+    for parser_id in _OHOIKO_SOURCE_IDS
+})
+LIST_GRAMMARS: Mapping[str, ListGrammarSpec] = MappingProxyType({
+    "ohoiko_eq": ListGrammarSpec("ohoiko_eq", "1", ("scripts/lexicon/ulp_glossary_parse.py",)),
+    "oho_line": ListGrammarSpec("oho_line", "1", ("scripts/lexicon/oho_workbook_glossary_parse.py",)),
+})
+OHOIKO_SOURCES: Mapping[str, SourceSpec] = MappingProxyType({
+    source_id: SourceSpec(source_id, source_id, "owned_cite_only", ("ulp_private",), grammar,
+                          f"scripts.lexicon.import_ohoiko_vocab:{factory}", expected)
+    for source_id, grammar, factory, expected in (
+        ("ohoiko_1000_words", "ohoiko_eq", "Words1000Adapter", 1000),
+        ("ohoiko_500_verbs", "ohoiko_eq", "Verbs500Adapter", 500),
+        ("oho_a1_workbook_glossary", "oho_line", "OhoWorkbookAdapter", 17),
+        ("ulp_lesson_notes", "ohoiko_eq", "UlpAdapter", 240),
+    )
+})
+SOURCES: Mapping[str, SourceSpec] = MappingProxyType({**OHOIKO_SOURCES})
 
 
 @dataclass(frozen=True)

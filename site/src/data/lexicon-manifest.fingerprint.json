@@ -246,6 +246,10 @@
         "sha256": "b5017beb1934eb0980360096cce54d6ab66303c27cf7360f30d3d5ff1ec1857c"
       },
       {
+        "path": "scripts/lexicon/import_ohoiko_vocab.py",
+        "sha256": "a5b4149516cf52591287b7e5e9b89ed43d338fd1daec393cfbad20341b6d0e0d"
+      },
+      {
         "path": "scripts/lexicon/lemma_normalization.py",
         "sha256": "d99d41aff8ffb52fc40ca9ac55a79a2eee8090dac4a57b32aabdcbdfc1374c7b"
       },
@@ -298,6 +302,10 @@
         "sha256": "5d11e5d12c3629eebf343e66bcbea8ac0dbde0be98f0e70157f293259404bebb"
       },
       {
+        "path": "scripts/lexicon/oho_workbook_glossary_parse.py",
+        "sha256": "e5a656e5eb5b84941d3b0535caa8a1b310acf1efbff2b0b22d474b786e7c4398"
+      },
+      {
         "path": "scripts/lexicon/ohoiko_atlas_intake.py",
         "sha256": "90a477565bb14f2b18c307d1cae5b0f0e1055c76e55620fe6b026f0e0191222b"
       },
@@ -307,7 +315,7 @@
       },
       {
         "path": "scripts/lexicon/ohoiko_quality_enrichment.py",
-        "sha256": "01c479a7a7ed929366dcc2c0953990c9804bcbd42b67ce88ee27bb81b3398118"
+        "sha256": "888eb4b6a12dcb1faae38dea9981f9fe02ddba6923d43bbb8541a0a2ce84fe62"
       },
       {
         "path": "scripts/lexicon/paradigm_stress.py",
@@ -396,6 +404,10 @@
       {
         "path": "scripts/lexicon/ulif_raw_cache.py",
         "sha256": "7f29130cc7c5223e5c8e79d3dfc70c1ac79553a796bd29a68cf695295c75faef"
+      },
+      {
+        "path": "scripts/lexicon/ulp_glossary_parse.py",
+        "sha256": "01afc0c746e08c8f5baeb814521f6afad6c01c8ab16346aa9d8f5ea8092d55ec"
       },
       {
         "path": "scripts/lexicon/ulp_taught_pair_extractor.py",
