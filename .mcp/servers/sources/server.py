@@ -30,6 +30,7 @@ import asyncio
 import hashlib
 import json
 import re
+import sqlite3
 import sys
 import threading
 import unicodedata
@@ -1365,8 +1366,14 @@ def _log_tool_call(
     *,
     response_text: str = "",
     privacy_mode: bool = False,
+    self_heal: dict[str, Any] | None = None,
 ) -> None:
     """Log MCP tool call to JSONL for build analytics (#1095).
+
+    ``self_heal`` (#11115) records a database self-heal attempt on this call:
+    the database name, the SQLite error class, whether a cached connection was
+    discarded, and whether the retry recovered. It carries no message text or
+    path, so it is written in both modes.
 
     ``privacy_mode`` (Cycle 007 amendment, "internal hash-only privacy
     mode"): the log entry never contains argument values or response text —
@@ -1407,6 +1414,8 @@ def _log_tool_call(
         }
         if error:
             entry["error"] = error[:500]
+    if self_heal:
+        entry["self_heal"] = self_heal
 
     try:
         with open(log_path, "a", encoding="utf-8") as f:
@@ -1890,6 +1899,146 @@ def _review_before_handler(
     return None
 
 
+# --- Database self-heal (#11115) -------------------------------------------
+#
+# This long-lived server keeps process-wide SQLite read connections. When the
+# database file is rewritten under one, every later call on it can raise
+# ``DatabaseError: database disk image is malformed`` until the service is
+# restarted, while a fresh connection reads the file fine. A call that fails
+# that way discards the cached connections of the failing database, reopens
+# lazily and runs once more. The same module can be loaded under two names
+# (``wiki.…`` and ``scripts.wiki.…``), each holding its own connection, so
+# both names are covered.
+
+_STALE_CONNECTION_MARKERS = (
+    "malformed",
+    "disk i/o error",
+    "no such table",
+    "no such column",
+    "schema has changed",
+    "file is not a database",
+    "unable to open database file",
+    "closed database",
+)
+_DATABASE_UNAVAILABLE_CODE = "database_unavailable"
+_UNATTRIBUTED_DATABASE = "unattributed"
+_SQLITE_CACHE_LOCK = threading.Lock()
+
+
+def _discard_sources_conn(module: Any) -> bool:
+    # Drop the reference only: a call in another thread may still be reading
+    # the old connection, and it closes when the last reader lets go.
+    if getattr(module, "_conn", None) is None:
+        return False
+    module._conn = None
+    return True
+
+
+def _discard_vesum_conn(module: Any) -> bool:
+    if getattr(module, "_vesum_conn", None) is None:
+        return False
+    module.close_vesum_conn()  # keeps the connection open while readers hold it
+    return True
+
+
+# database name -> (module names it can be loaded under, cache discarder)
+_SQLITE_CONNECTION_CACHES: dict[str, tuple[tuple[str, ...], Any]] = {
+    "sources.db": (("wiki.sources_db", "scripts.wiki.sources_db"), _discard_sources_conn),
+    "vesum.db": (("verification.vesum", "scripts.verification.vesum"), _discard_vesum_conn),
+}
+
+
+class SourcesDatabaseUnavailable(Exception):
+    """A tool's database call still failed after one connection reopen."""
+
+    def __init__(self, database: str, error_class: str, reopened: bool) -> None:
+        super().__init__(f"{database} unavailable after reopen ({error_class})")
+        self.database = database
+        self.error_class = error_class
+        self.reopened = reopened
+
+
+def _is_stale_connection_error(exc: BaseException) -> bool:
+    if not isinstance(exc, sqlite3.DatabaseError):
+        return False
+    text = str(exc).lower()
+    return any(marker in text for marker in _STALE_CONNECTION_MARKERS)
+
+
+def _failing_database(exc: BaseException) -> str | None:
+    """Name the database whose store module raised ``exc``, from its traceback."""
+    owner_by_module = {module: db for db, (modules, _) in _SQLITE_CONNECTION_CACHES.items() for module in modules}
+    found: str | None = None
+    tb = exc.__traceback__
+    while tb is not None:
+        found = owner_by_module.get(tb.tb_frame.f_globals.get("__name__", ""), found)
+        tb = tb.tb_next
+    return found
+
+
+def _discard_cached_connections(database: str | None) -> bool:
+    """Drop the cached connections of ``database`` (all when unattributed)."""
+    discarded = False
+    with _SQLITE_CACHE_LOCK:
+        for db, (module_names, discard) in _SQLITE_CONNECTION_CACHES.items():
+            if database is not None and db != database:
+                continue
+            for module_name in module_names:
+                module = sys.modules.get(module_name)
+                if module is not None and discard(module):
+                    discarded = True
+    return discarded
+
+
+async def _call_with_database_self_heal(handler: Any, heal: dict[str, Any]) -> Any:
+    """Run ``handler``; on a stale-connection error reopen and retry exactly once.
+
+    ``heal`` is filled in when a heal was attempted so the caller can log it.
+    A failure of the retry raises ``SourcesDatabaseUnavailable``.
+    """
+    try:
+        return await handler()
+    except sqlite3.DatabaseError as first:
+        if not _is_stale_connection_error(first):
+            raise
+        database = _failing_database(first)
+        reopened = _discard_cached_connections(database)
+        heal.update(
+            database=database or _UNATTRIBUTED_DATABASE,
+            error_class=type(first).__name__,
+            reopened=reopened,
+            recovered=False,
+        )
+        try:
+            result = await handler()
+        except sqlite3.DatabaseError as second:
+            database = _failing_database(second) or database
+            heal["database"] = database or _UNATTRIBUTED_DATABASE
+            raise SourcesDatabaseUnavailable(
+                database or _UNATTRIBUTED_DATABASE, type(second).__name__, reopened
+            ) from second
+        heal["recovered"] = True
+        return result
+
+
+def _database_unavailable_outcome(name: str, unavailable: SourcesDatabaseUnavailable) -> dict[str, Any]:
+    """Typed, path-free and message-free error that is safe to send over the wire."""
+    return {
+        "tool": name,
+        "status": "error",
+        "error_code": _DATABASE_UNAVAILABLE_CODE,
+        "database": unavailable.database,
+        "error_class": unavailable.error_class,
+        "retried": True,
+        "reopened": unavailable.reopened,
+        "error": (
+            f"{_DATABASE_UNAVAILABLE_CODE}: {unavailable.database} failed with {unavailable.error_class} "
+            "again after one connection reopen. The database may be mid-rebuild or damaged; "
+            "retry later or report it to the operators."
+        ),
+    }
+
+
 async def _dispatch_tool_call(
     name: str, arguments: dict[str, Any]
 ) -> tuple[list[TextContent], bool, dict[str, Any] | None]:
@@ -1923,6 +2072,7 @@ async def _dispatch_tool_call(
     if refused is not None:
         content, is_err = refused
         return content, is_err, None
+    heal: dict[str, Any] = {}
     try:
         # Dispatch to handler
         _handlers = {
@@ -1976,7 +2126,7 @@ async def _dispatch_tool_call(
         }
         handler = _handlers.get(name)
         if handler:
-            result = await handler()
+            result = await _call_with_database_self_heal(handler, heal)
         else:
             result = [TextContent(type="text", text=f"Unknown tool: {name}")]
             _log_tool_call(name, arguments, error="unknown tool", privacy_mode=privacy_mode)
@@ -1995,6 +2145,7 @@ async def _dispatch_tool_call(
             duration_s=_elapsed,
             response_text=_resp_text,
             privacy_mode=privacy_mode,
+            self_heal=heal,
         )
         if typed_outcome is not None and isinstance(typed_outcome, dict) and "disposition" in typed_outcome:
             _record_v4_typed_invocation(name=name, typed_outcome=typed_outcome)
@@ -2006,10 +2157,31 @@ async def _dispatch_tool_call(
                 return result, True, None
             typed_outcome = _outcome_with_receipt(typed_outcome, receipt_id, receipt_outcome)
         return result, False, typed_outcome
+    except SourcesDatabaseUnavailable as unavailable:
+        _log_tool_call(
+            name,
+            arguments,
+            duration_s=_time.monotonic() - _t0,
+            error=f"{type(unavailable).__name__}: {unavailable}",
+            privacy_mode=privacy_mode,
+            self_heal=heal,
+        )
+        failure = _database_unavailable_outcome(name, unavailable)
+        content = [TextContent(type="text", text=json.dumps(failure, ensure_ascii=False))]
+        if recorder is not None and recorder.mode == "on":
+            content, _rec_err, _receipt, _outcome = _review_record(
+                recorder, name, review_arguments, content, status="error"
+            )
+        return content, True, failure
     except Exception as e:
         _elapsed = _time.monotonic() - _t0
         _log_tool_call(
-            name, arguments, duration_s=_elapsed, error=f"{type(e).__name__}: {e}", privacy_mode=privacy_mode
+            name,
+            arguments,
+            duration_s=_elapsed,
+            error=f"{type(e).__name__}: {e}",
+            privacy_mode=privacy_mode,
+            self_heal=heal,
         )
         content = [TextContent(type="text", text=f"Error in {name}: {type(e).__name__}: {e}")]
         if recorder is not None and recorder.mode == "on":
@@ -2095,6 +2267,9 @@ async def _on_call_tool(_ctx: Any, params: CallToolRequestParams) -> CallToolRes
         )
     except Exception:
         return CallToolResult(content=[TextContent(type="text", text="Tool call failed.")], isError=True)
+    if is_error and isinstance(typed_outcome, dict) and typed_outcome.get("error_code") == _DATABASE_UNAVAILABLE_CODE:
+        # Typed and free of paths and exception text (#11115): the caller learns which database failed.
+        return CallToolResult(content=_content, structured_content=typed_outcome, isError=True)
     if is_error and not _review_env_engaged():
         return CallToolResult(
             content=[TextContent(type="text", text=f"Tool call failed: {params.name}.")], isError=True
