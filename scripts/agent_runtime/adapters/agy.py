@@ -164,6 +164,12 @@ AGY_INCOMPLETE_RUN_REASONS: tuple[str, ...] = (
     AGY_HEADLESS_PERMISSION_DENIED,
 )
 AGY_INTERIM_LANGUAGE_WARNING = "agy_interim_language_warning"
+# Typed ``driver_hint`` for a review route ended by a headless read_file
+# refusal. Review routes grant reads only inside the checkout, so the read was
+# outside it (often the primary checkout's Git metadata, sought after the
+# command(*) rule refused git). Re-dispatch with the diff and every needed file
+# inside the checkout and a brief saying git and outside paths are unavailable.
+AGY_DRIVER_HINT_INLINE_REVIEW_INPUTS = "inline_review_inputs"
 
 # Match the diagnostic header, never status/cancellation tokens inside its message.
 _PROVIDER_DIAGNOSTIC_RE = re.compile(
@@ -1256,6 +1262,8 @@ class AgyAdapter:
                 attempt = dataclasses.replace(
                     attempt, permission_target=target, permission_target_unknown_reason=reason, via_symlink=via_symlink
                 )
+            if attempt.permission_kind == "read_file" and plan and plan.metadata.get("agy_permission_profile_id"):
+                fallback_details["driver_hint"] = AGY_DRIVER_HINT_INLINE_REVIEW_INPUTS
             result = dataclasses.replace(
                 result,
                 agy_attempt=attempt,
@@ -1513,8 +1521,8 @@ def _attempt_evidence(bound: _TranscriptSlice | None, result: ParseResult, plan:
 
     A command intent is not execution. Its bound result must show a task
     start or synchronous completion; missing/error results remain unknown.
-    Deny-rule signals count only in the tool's bound result slot, never on
-    model prose, Sources output or an unrelated diagnostic stream.
+    Native permission refusals count only in the tool's bound result slot,
+    never on model prose, Sources output or an unrelated diagnostic stream.
     """
     reason = (
         result.agy_attempt.completion_reason
@@ -1613,7 +1621,8 @@ def _attempt_evidence(bound: _TranscriptSlice | None, result: ParseResult, plan:
         deny_rule = (
             event.get("status") in {"ERROR", "INVALID"} or content.strip() == "Matches user-configured deny rule."
         ) and "Matches user-configured deny rule." in content
-        if deny_rule:
+        # Headless (prompting) and other rule refusals did not run either.
+        if deny_rule or _native_permission_denial(event) is not None:
             native_denial = event.get("status") in {"ERROR", "INVALID"} and (
                 "Encountered error in step execution: permission check failed for " in content
             )
@@ -1623,10 +1632,14 @@ def _attempt_evidence(bound: _TranscriptSlice | None, result: ParseResult, plan:
                 tool
                 and tool not in {"run_command", "call_mcp_tool"}
                 and native_denial
-                and "Permission denied for read_file(" in content
+                and re.search(r"(?:Permission denied|user denied permission) for read_file\(", content)
             ):
                 denied_file_reads.add(slot)
-            elif tool == "call_mcp_tool" and native_denial and "Permission denied for mcp(" in content:
+            elif (
+                tool == "call_mcp_tool"
+                and native_denial
+                and re.search(r"(?:Permission denied|user denied permission) for mcp\(", content)
+            ):
                 denied_mcp.add(slot)
         if event.get("status") == "RUNNING" and (start := _BACKGROUND_START_HEADER_RE.match(content)):
             if not start.group("timer"):
@@ -1862,8 +1875,41 @@ class AgyHeadlessPermissionDenial(NamedTuple):
     permission_target: str | None
 
 
+class _NativePermissionDenial(NamedTuple):
+    """A tool result slot written by the CLI's permission check."""
+
+    kind: str
+    target: str
+    rule_matched: bool
+
+
+# AGY 1.2.17 wrote the bare error; 1.4.x prefixes step timestamps and words
+# the unmatched (headless-prompting) refusal as "user denied permission".
+# A rule match (a settings deny rule or the CLI's hardcoded protection rule)
+# is returned to the model and the turn continues (live AGY 1.4.3 probe, #10334).
+_NATIVE_DENIAL_RE = re.compile(
+    r"(?:(?:Created|Completed) At: [^\r\n]*\r?\n)*"
+    r"Encountered error in step execution: permission check failed for (?P<kind>[a-z][a-z0-9_]*) "
+    r'"(?P<target>[^"\r\n]*)": (?:Permission denied|user denied permission) for (?P=kind)\((?P=target)\)'
+    r"(?P<rest>[^\r\n]*)"
+)
+_RULE_MATCH_RE = re.compile(r"\.\s*Matches [a-z][a-z -]* rule\.")
+
+
+def _native_permission_denial(event: Mapping[str, Any]) -> _NativePermissionDenial | None:
+    """Parse only a failed result slot's leading CLI text, never model prose."""
+    if event.get("status") not in {"ERROR", "INVALID"}:
+        return None
+    native = _NATIVE_DENIAL_RE.match(str(event.get("content") or ""))
+    if native is None:
+        return None
+    rule_matched = _RULE_MATCH_RE.match(native.group("rest")) is not None
+    return _NativePermissionDenial(native.group("kind"), native.group("target"), rule_matched)
+
+
 _DENIAL_TARGET_ARGS = {
     "read_file": {
+        "read_file": "Path",
         "view_file": "AbsolutePath",
         "view_file_outline": "AbsolutePath",
         "view_code_item": "File",
@@ -2004,22 +2050,11 @@ def _headless_denial_evidence(
                     pending.append(call)
         elif event.get("type") in {"GENERIC", "TOOL_RESPONSE"} and pending:
             call = pending.pop(0)
-            content = str(event.get("content") or "")
-            if (
-                event.get("status") in {"ERROR", "INVALID"}
-                and "Matches user-configured deny rule." not in content
-                and (
-                    native := re.match(
-                        r"^Encountered error in step execution: permission check failed for "
-                        + re.escape(kind)
-                        + r' "(?P<target>[^"\r\n]*)": Permission denied for '
-                        + re.escape(kind)
-                        + r"\((?P=target)\)\.",
-                        content,
-                    )
-                )
-            ):
-                denied.append((call, native.group("target")))
+            native = _native_permission_denial(event)
+            # A rule match returns its refusal to the model and the turn goes
+            # on; only the unmatched (prompting) check ends a headless run.
+            if native is not None and native.kind == kind and not native.rule_matched:
+                denied.append((call, native.target))
     candidates = [(call, None) for call in pending] if pending else denied
     if len(candidates) != 1:
         return dataclasses.replace(

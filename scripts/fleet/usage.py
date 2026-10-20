@@ -86,6 +86,25 @@ def _pct(value: Any) -> str:
     return f"{float(value):.1f}%" if isinstance(value, (int, float)) and not isinstance(value, bool) else "unknown"
 
 
+def _grok_product_lines(info: dict[str, Any]) -> list[str]:
+    """One line per Grok product; an absent or non-list product payload adds nothing."""
+    native = info.get("codexbar") if isinstance(info.get("codexbar"), dict) else {}
+    products = info.get("product_usage")
+    if not isinstance(products, list):
+        products = native.get("product_usage")
+    if not isinstance(products, list):
+        return []
+    lines: list[str] = []
+    for entry in products:
+        if not isinstance(entry, dict):
+            continue
+        name = entry.get("product")
+        if not isinstance(name, str) or name == "":
+            continue
+        lines.append(f"  product {name}: {_pct(entry.get('usage_percent'))}")
+    return lines
+
+
 def _resets_text(value: Any) -> str:
     """Render reset timestamps; integer epoch seconds/ms → ISO-Z."""
     if value is None or value == "":
@@ -441,8 +460,16 @@ def format_human(budget: dict[str, Any], *, for_display: bool = False) -> str:
         allotments = _named_allotments(lane, info)
         if allotments:
             lines.extend(allotments)
+        product_lines = _grok_product_lines(info) if lane == "grok" else []
+        lines.extend(product_lines)
         lines.extend(_lane_tips(lane, info, fail=fail))
-        if not _lane_has_usable_allotment(info) and freshness == "unavailable" and fail == "-" and not allotments:
+        if (
+            not _lane_has_usable_allotment(info)
+            and freshness == "unavailable"
+            and fail == "-"
+            and not allotments
+            and not product_lines
+        ):
             lines.append("  (no allotment windows; probe returned empty)")
 
     lines.extend(["", "Prepaid (USD; key cap remaining is not account balance)"])

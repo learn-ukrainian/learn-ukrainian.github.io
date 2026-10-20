@@ -48,11 +48,30 @@ lists themselves.
 Do not create Atlas headwords from these sources unless a separate reviewed
 source decision explicitly approves the exact rows:
 
-- premium ULP lesson notes, PDFs, flashcards, or transcripts
+- premium ULP lesson prose, notes outside the vocabulary zones, PDFs,
+  flashcards, or transcripts
+- audio of any kind
 - Ohoiko books that are not committed as source-inventory-safe headword rows
+  and are not one of the admitted dictionary parts below
 - topic labels from resource metadata, such as `food`, `family`, or `cases`
 - public article titles when the title only names a topic, not an explicit
   Ukrainian headword list
+
+Admitted by decision on 2026-10-20: only the dictionary parts of the Ohoiko /
+ULP material, as a database and word-card source (register row `ulp_private`
+in `docs/sources/permissions-register.yaml`):
+
+- the Oho! A1 workbook `Словничок`
+- the 1000 words book
+- the 500 verbs book
+- the vocabulary zones of the ULP lesson notes (Key Vocabulary, Bonus
+  Vocabulary, `Словничок`)
+
+Public display of these parts is limited to lexical facts under the proposed
+display rule in the register, which still needs operator confirmation. English
+glosses and example sentences stay internal evidence until it is confirmed.
+This admission does not change the Atlas headword-intake rule: rows
+still enter Atlas only through a reviewed source-inventory decision.
 
 ## Next Valid #3933 PR Shapes
 

@@ -647,6 +647,20 @@ class TestLiveSourceUnavailable:
             result = _run(server_module.handle_query_slovnyk_me({"word": "жжжнемає", "dict": "vts"}))
         assert "No entry found" in result[0].text
 
+    def test_search_slovnyk_me_names_the_use_role_of_restricted_rows(self, server_module):
+        rows = [
+            {"word": "шуба", "dictionary_slug": "newsum", "dictionary_label": "СУМ-20", "use_role": "candidate-discovery",
+             "source_url": "https://slovnyk.me/dict/newsum/шуба", "text": "шуба", "score": 90.0},
+            {"word": "шуба", "dictionary_slug": "vts", "dictionary_label": "ВТС", "use_role": "reference",
+             "source_url": "https://slovnyk.me/dict/vts/шуба", "text": "шуба", "score": 80.0},
+        ]
+        with patch("wiki.sources_db.search_slovnyk_me_with_status", return_value=(rows, [])):
+            text = _run(server_module.handle_search_slovnyk_me({"query": "шуба", "live": False}))[0].text
+        first, second = text.split("### Result 2")
+        assert "**Use role**: candidate-discovery" in first
+        assert "official СУМ-20" in first
+        assert "Use role" not in second
+
     def test_r2u_unavailable_is_not_rendered_as_no_translation(self, server_module):
         from rag.source_query import R2ULookupStatus
 

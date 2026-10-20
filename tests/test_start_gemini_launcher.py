@@ -200,7 +200,6 @@ def test_gemini_interactive_defaults_to_agy_and_rejects_epic() -> None:
     ("selector", "slot"),
     (
         ("atlas", "gemini-atlas"),
-        ("practice", "gemini-atlas"),
         ("infra.devops", "gemini-devops"),
         ("seminars-bio", "gemini-bio"),
         ("hramatka", "gemini-hramatka"),
@@ -210,6 +209,13 @@ def test_gemini_driver_accepts_registered_selectors(selector: str, slot: str) ->
     result = run_launcher("start-gemini-driver.sh", "--epic", selector)
     assert result.returncode == 0, result.stderr
     assert any(f"slot={slot} " in line for line in result.stdout.splitlines()), result.stdout
+
+
+def test_gemini_driver_refuses_unregistered_practice_slot() -> None:
+    result = run_launcher("start-gemini-driver.sh", "--epic", "practice")
+    assert result.returncode == 2, result.stdout + result.stderr
+    assert "'gemini-practice', which is not registered" in result.stderr
+    assert "would claim lease" not in result.stdout
 
 
 def test_gemini_driver_rejects_non_agy_harness() -> None:

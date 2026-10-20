@@ -21,6 +21,7 @@ MATRIX = ROOT / "registry/atlas/source-completeness/required-source-matrix.md"
 CONTRACT = MATRIX.with_name("manifest-contract.md")
 STATES = ("verified-complete", "missing", "corrupt", "quarantined", "genuinely_absent")
 STAGES = ("acquisition", "raw_custody", "parsing", "admission")
+PULS_LEVELS = ("A1", "A2", "B1", "B2", "C1")
 VERSION = "source-completeness.v1"
 TEXT = {"type": "string", "minLength": 1, "pattern": r"\S"}
 DIGEST = {"type": "string", "minLength": 64, "maxLength": 64, "pattern": "^[0-9a-f]{64}$"}
@@ -414,16 +415,8 @@ def _records(inputs: Inputs, base: Path, ranges: dict, requirements: dict) -> di
     return records
 
 
-def _atlas_census(path: Path, inputs: Inputs, ordered: list[dict], ranges: dict[str, dict]) -> dict:
-    """Observe exact Atlas lemma/source-key matches without inferring source membership.
-
-    atlas-census.v1 retains entry ordinals, verbatim lemmas/slugs and every matched
-    range/identity. Counts use entries, including repeated lemmas, as denominator.
-    Partial/unknown source inventories have null full-coverage counts and separate
-    supplied-known counts. All input, matrix and accounting-contract bytes are bound.
-    This observational artifact cannot approve Candidate A or replace source-side
-    lexical-universe/legacy membership, stage evidence or independent reconciliation.
-    """
+def _load_atlas(path: Path, inputs: Inputs) -> list[dict]:
+    """Read and bind the Atlas version 0.1 manifest; entries keep their input order."""
     raw, document = _read(path)
     _validate(
         document,
@@ -445,18 +438,49 @@ def _atlas_census(path: Path, inputs: Inputs, ordered: list[dict], ranges: dict[
     )
     entries = document["entries"]
     _distinct([entry["url_slug"] for entry in entries], "Atlas URL slug")
-    inputs.paths.add(_resolve(path))
-    inputs.bindings["atlas_manifest"] = {
-        "sha256": _sha(raw),
-        "bytes": len(raw),
-        "schema_version": "atlas-manifest:0.1",
+    _bind_census_input(inputs, "atlas_manifest", path, raw, "atlas-manifest:0.1")
+    return entries
+
+
+def _load_puls(path: Path, inputs: Inputs) -> list[dict]:
+    """Read and bind PULS A1-C1 rows from JSONL; every row keeps its input order.
+
+    Rows may carry additional source columns, which are not interpreted. A source
+    id may repeat (a phrase and its lexeme sense share one), so row identity is the
+    ordinal and repeated ids are retained verbatim. Splitting on LF only keeps U+2028/U+2029 inside strings from forging row boundaries.
+    """
+    try:
+        raw = path.read_bytes()
+        lines = raw.split(b"\n")
+        if lines[-1] == b"":
+            lines.pop()
+        rows = [
+            json.loads(line.decode("utf-8"), object_pairs_hook=_unique_pairs, parse_constant=_bad_constant)
+            for line in lines
+        ]
+        _bytes(rows)
+    except (OSError, ValueError, UnicodeError, RecursionError) as exc:
+        raise InvalidEvidence("unreadable or invalid JSONL input") from exc
+    row_schema = {
+        "type": "object",
+        "required": ["id", "word", "level"],
+        "properties": {"id": TEXT, "word": TEXT, "level": {"enum": list(PULS_LEVELS)}},
     }
-    contract_raw = CONTRACT.read_bytes()
-    inputs.paths.add(_resolve(CONTRACT))
-    inputs.paths.add(_resolve(MATRIX))
-    keys = Counter(entry["lemma"] for entry in entries)
+    _validate(rows, _array(row_schema), "puls-entries")
+    _bind_census_input(inputs, "puls_entries", path, raw, "puls-entries:jsonl.v1")
+    return rows
+
+
+def _bind_census_input(inputs: Inputs, name: str, path: Path, raw: bytes, version: str) -> None:
+    inputs.paths.add(_resolve(path))
+    inputs.bindings[name] = {"sha256": _sha(raw), "bytes": len(raw), "schema_version": version}
+
+
+def _key_coverage(counts: Counter, ordered: list[dict], ranges: dict[str, dict]) -> tuple[list[dict], dict[str, list]]:
+    """Match exact keys against each requirement's supplied known units; nothing is normalized."""
     matches: dict[str, list[dict]] = defaultdict(list)
     coverage = []
+    total = sum(counts.values())
     for requirement in ordered:
         requirement_id = requirement["requirement_id"]
         selected = [row for row in ranges.values() if row["requirement_id"] == requirement_id]
@@ -467,7 +491,7 @@ def _atlas_census(path: Path, inputs: Inputs, ordered: list[dict], ranges: dict[
             for unit in row["units"]:
                 key = unit["identity"]["key"]
                 known_keys.add(key)
-                if key in keys:
+                if key in counts:
                     matched_units += 1
                     matches[key].append(
                         {
@@ -476,7 +500,7 @@ def _atlas_census(path: Path, inputs: Inputs, ordered: list[dict], ranges: dict[
                             "identity": unit["identity"],
                         }
                     )
-        matched_entries = sum(keys[key] for key in known_keys)
+        matched_entries = sum(counts[key] for key in known_keys)
         partitioned = bool(selected) and len(known) == len(selected)
         coverage.append(
             {
@@ -484,22 +508,46 @@ def _atlas_census(path: Path, inputs: Inputs, ordered: list[dict], ranges: dict[
                 "gap": requirement["gap"],
                 "owner": requirement["owner"],
                 "partition_status": "PARTITIONED" if partitioned else "UNPARTITIONED",
-                "entry_count": len(entries),
+                "entry_count": total,
                 "exact_key_matched_entry_count": matched_entries if partitioned else None,
-                "no_exact_key_match_entry_count": len(entries) - matched_entries if partitioned else None,
+                "no_exact_key_match_entry_count": total - matched_entries if partitioned else None,
                 "supplied_known_matched_entry_count": matched_entries,
                 "supplied_known_matched_unit_count": matched_units,
             }
         )
+    return coverage, matches
+
+
+def _census_header(schema_version: str, inputs: Inputs, counts: Counter) -> dict:
+    """Fields shared by every census; binds input, matrix and accounting-contract bytes."""
+    inputs.paths.add(_resolve(CONTRACT))
+    inputs.paths.add(_resolve(MATRIX))
     return {
-        "schema_version": "atlas-census.v1",
+        "schema_version": schema_version,
         "evidence_role": "exact_key_observation_only",
         "programme_completeness": "UNRESOLVED",
-        "contract_sha256": _sha(contract_raw),
+        "contract_sha256": _sha(CONTRACT.read_bytes()),
         "matrix_sha256": inputs.documents["requirements"]["matrix_sha256"],
         "inputs": dict(inputs.bindings),
         "required_requirement_count": 20,
-        "entry_count": len(entries),
+        "entry_count": sum(counts.values()),
+    }
+
+
+def _atlas_census(entries: list[dict], inputs: Inputs, ordered: list[dict], ranges: dict[str, dict]) -> dict:
+    """Observe exact Atlas lemma/source-key matches without inferring source membership.
+
+    atlas-census.v1 retains entry ordinals, verbatim lemmas/slugs and every matched
+    range/identity. Counts use entries, including repeated lemmas, as denominator.
+    Partial/unknown source inventories have null full-coverage counts and separate
+    supplied-known counts. All input, matrix and accounting-contract bytes are bound.
+    This observational artifact cannot approve Candidate A or replace source-side
+    lexical-universe/legacy membership, stage evidence or independent reconciliation.
+    """
+    keys = Counter(entry["lemma"] for entry in entries)
+    coverage, matches = _key_coverage(keys, ordered, ranges)
+    return {
+        **_census_header("atlas-census.v1", inputs, keys),
         "distinct_lemma_count": len(keys),
         "requirements": coverage,
         "entries": [
@@ -514,7 +562,39 @@ def _atlas_census(path: Path, inputs: Inputs, ordered: list[dict], ranges: dict[
     }
 
 
-def account(paths: dict[str, Path], *, atlas_manifest: Path | None = None) -> tuple[dict[str, bytes], dict]:
+def _puls_census(rows: list[dict], inputs: Inputs, ordered: list[dict], ranges: dict[str, dict]) -> dict:
+    """Observe exact PULS A1-C1 word/source-key matches; the Candidate A companion to the Atlas census.
+
+    puls-census.v1 keeps the same observational limits as atlas-census.v1 and adds
+    per-level row counts. Rows stay separate from Atlas entries: no union, overlap
+    or deduplication is computed, because the lexical-universe baseline is chosen
+    by designated approval, not by this producer. Unleveled or non-A1-C1 rows are
+    invalid, never silently dropped.
+    """
+    keys = Counter(row["word"] for row in rows)
+    levels = Counter(row["level"] for row in rows)
+    coverage, matches = _key_coverage(keys, ordered, ranges)
+    return {
+        **_census_header("puls-census.v1", inputs, keys),
+        "distinct_word_count": len(keys),
+        "level_entry_counts": {level: levels[level] for level in PULS_LEVELS},
+        "requirements": coverage,
+        "entries": [
+            {
+                "ordinal": ordinal,
+                "id": row["id"],
+                "word": row["word"],
+                "level": row["level"],
+                "source_key_matches": matches.get(row["word"], []),
+            }
+            for ordinal, row in enumerate(rows)
+        ],
+    }
+
+
+def account(
+    paths: dict[str, Path], *, atlas_manifest: Path | None = None, puls_entries: Path | None = None
+) -> tuple[dict[str, bytes], dict]:
     """Validate independent inventories and account for all supplied units and members."""
     if set(paths) != set(SCHEMAS):
         raise InvalidEvidence("all five explicit input artifacts are required")
@@ -676,8 +756,13 @@ def account(paths: dict[str, Path], *, atlas_manifest: Path | None = None) -> tu
                 gap(requirement, member["member_id"], name, "member source linkage unresolved", [])
     members_out["legacy_membership"]["expected_obligation"] = 123
     outputs["members.json"] = _bytes({"schema_version": VERSION, **members_out})
-    if atlas_manifest is not None:
-        outputs["atlas-census.json"] = _bytes(_atlas_census(atlas_manifest, inputs, ordered, ranges))
+    # Bind every census input before building any census so all censuses share one input set.
+    atlas = _load_atlas(atlas_manifest, inputs) if atlas_manifest is not None else None
+    puls = _load_puls(puls_entries, inputs) if puls_entries is not None else None
+    if atlas is not None:
+        outputs["atlas-census.json"] = _bytes(_atlas_census(atlas, inputs, ordered, ranges))
+    if puls is not None:
+        outputs["puls-census.json"] = _bytes(_puls_census(puls, inputs, ordered, ranges))
     status = "INCOMPLETE_DIAGNOSTIC" if gaps else "STRUCTURALLY_ACCOUNTED"
     receipt = {
         "schema_version": VERSION,
@@ -768,9 +853,11 @@ def main(argv: list[str] | None = None) -> int:
     --requirements requirements.json --source-manifest source.json \\
     --stage-evidence stages.json --lexical-universe universe.json \\
     --legacy-membership legacy.json --output-dir "$TMPDIR/accounting"
-Add --atlas-manifest site/src/data/lexicon-manifest.json to census Candidate A.
+Add --atlas-manifest site/src/data/lexicon-manifest.json and --puls-entries
+data/puls/entries.jsonl to census the two Candidate A populations.
 Outputs: SRC-*.json ordered manifests, members.json, manifest-receipt.json last.
-With --atlas-manifest, also atlas-census.json (atlas-census.v1): ordered entries,
+With --atlas-manifest, also atlas-census.json (atlas-census.v1); with --puls-entries,
+also puls-census.json (puls-census.v1, adds per-level counts): ordered entries,
 exact-key observations for all 20 sources, input/matrix/contract hashes. Unknown
 source coverage stays null. Matches never prove source/field completeness or an
 approved lexical universe. All five independent accounting inputs remain required.
@@ -793,6 +880,11 @@ Related: registry/atlas/source-completeness/manifest-contract.md; #10512, #9401.
         help="Optional Atlas version 0.1 JSON, e.g. site/src/data/lexicon-manifest.json; default: no census.",
     )
     parser.add_argument(
+        "--puls-entries",
+        type=Path,
+        help="Optional PULS A1-C1 JSONL rows (id, word, level), e.g. data/puls/entries.jsonl; default: no census.",
+    )
+    parser.add_argument(
         "--output-dir",
         required=True,
         type=Path,
@@ -800,7 +892,11 @@ Related: registry/atlas/source-completeness/manifest-contract.md; #10512, #9401.
     )
     try:
         args = parser.parse_args(argv)
-        outputs, receipt = account({name: getattr(args, name) for name in SCHEMAS}, atlas_manifest=args.atlas_manifest)
+        outputs, receipt = account(
+            {name: getattr(args, name) for name in SCHEMAS},
+            atlas_manifest=args.atlas_manifest,
+            puls_entries=args.puls_entries,
+        )
     except (InvalidEvidence, OSError) as exc:
         print(f"INVALID_EVIDENCE: {exc}", file=sys.stderr)
         return 3

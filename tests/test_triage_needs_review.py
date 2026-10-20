@@ -382,3 +382,27 @@ def test_cli_probe_with_injected_paths(tmp_path: Path, monkeypatch: pytest.Monke
     out = capsys.readouterr().out
     assert "probe (read-only)" in out
     assert "Held triaged: 0" in out
+
+
+def test_default_slovnyk_probe_reads_only_the_vts_gloss_dictionary(tmp_path: Path) -> None:
+    db = tmp_path / "sources.db"
+    conn = sqlite3.connect(db)
+    conn.execute(
+        "CREATE TABLE slovnyk_me_entries (id INTEGER PRIMARY KEY, dictionary_slug TEXT, word TEXT, "
+        "normalized_word TEXT, text TEXT, is_modern INTEGER DEFAULT 0, is_dialect INTEGER DEFAULT 0, "
+        "is_russianism INTEGER DEFAULT 0, sovietization_risk INTEGER DEFAULT 0)"
+    )
+    conn.executemany(
+        "INSERT INTO slovnyk_me_entries (dictionary_slug, word, normalized_word, text) VALUES (?, ?, ?, ?)",
+        [
+            ("ukreng", "шуба", "шуба", "fur coat"),
+            ("newsum", "шуба", "шуба", "mirror text"),
+            ("vts", "шуба", "шуба", "верхній зимовий одяг"),
+        ],
+    )
+    conn.commit()
+    conn.close()
+
+    hits = triage.probe_sources(["шуба"], db_path=db)["slovnyk_me"]["шуба"]
+
+    assert [hit["dictionary_slug"] for hit in hits] == ["vts"]

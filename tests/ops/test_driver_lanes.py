@@ -17,10 +17,10 @@ from tests._host_path_guard import assert_no_host_facts
 REPO = Path(__file__).resolve().parents[2]
 
 
-def test_registry_holds_the_six_lanes_with_generic_launchers() -> None:
+def test_registry_holds_the_seven_lanes_with_generic_launchers() -> None:
     registry = dl.load_registry()
     assert [lane.session for lane in registry.lanes] == [
-        "infra-muse", "devops-muse", "harness", "atlas", "open-model-data", "cto",
+        "infra-muse", "devops-muse", "harness", "atlas", "practice", "open-model-data", "cto",
     ]
     assert [lane.session for lane in registry.lanes if lane.lead] == ["cto"]
     for lane in registry.lanes:
@@ -38,6 +38,28 @@ def test_lane_models_are_active_catalog_models() -> None:
     for lane in dl.load_registry().lanes:
         assert canonical_model_id(lane.model, catalog) == lane.model, lane.session
         assert retired_model_refusal(lane.model, catalog) is None, lane.session
+
+
+def test_practice_lane_uses_the_infra_claude_pattern() -> None:
+    registry = dl.load_registry()
+    lane = registry.by_session("practice")
+    infra = registry.by_session("infra-muse")
+    assert (lane.name, lane.kind, lane.epic, lane.sender) == (
+        "practice", "claude", "practice", "claude-practice",
+    )
+    assert lane.goal == ".claude/practice-epic/DRIVER-STATE.md"
+    assert (lane.launcher, lane.model, lane.effort) == (
+        "start-claude-driver.sh", "claude-sonnet-5-5", "high",
+    )
+    assert lane.account_env == infra.account_env == ("CLAUDE_CONFIG_DIR",)
+    assert lane.provider_args == infra.provider_args == ("--dangerously-skip-permissions",)
+    assert lane.kick == infra.kick.replace("Infra", "Practice").replace("infra", "practice")
+    assert dl.generic_argv(lane) == (
+        "./start-claude-driver.sh", "--epic", "practice", "--model", "claude-sonnet-5-5",
+        "--effort", "high", lane.kick, "--", "--dangerously-skip-permissions",
+    )
+    plan = dl.launch_plan(lane, repo_root=REPO, local={})
+    assert plan.env == {}  # Account choice belongs to ignored local config.
 
 
 def test_generic_command_is_repo_relative() -> None:
