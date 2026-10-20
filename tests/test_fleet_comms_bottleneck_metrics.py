@@ -491,12 +491,15 @@ def test_dispatch_records_scanned_equal_classified_unclassified_plus_errors(
         "non-task": {"decision": "approve", "started_at": started},
         "missing-timestamp": {"task_id": "t"},
         "invalid-timestamp": {"task_id": "t", "started_at": "garbage"},
+        "invalid-finished": {**base, "finished_at": "garbage"},
+        "negative-duration": {**base, "started_at": NOW.isoformat(), "finished_at": started},
     }
     for name, record in records.items():
         directory = tasks_dir / "archive" if name.startswith("archived") else tasks_dir
         (directory / f"{name}.json").write_text(json.dumps(record), encoding="utf-8")
     (tasks_dir / "unreadable.json").write_text("{not json", encoding="utf-8")
-    scanned = len(records) + 1
+    (tasks_dir / "not-object.json").write_text("[1, 2]", encoding="utf-8")
+    scanned = len(records) + 2
     plane_db = tmp_path / "plane.sqlite3"
     _plane_db(plane_db, with_identity=False)
 
@@ -506,9 +509,12 @@ def test_dispatch_records_scanned_equal_classified_unclassified_plus_errors(
 
     dispatch_errors = [e for e in payload["source_errors"] if e["source"] == "dispatch"]
     assert sorted(e["error_kind"] for e in dispatch_errors) == [
+        "invalid_finished_at",
         "invalid_started_at",
         "missing_started_at",
+        "negative_duration",
         "not_a_task_record",
+        "task_record_not_object",
         "task_record_unreadable",
     ]
     for dimension in ("by_stream_epic", "by_task_family"):
@@ -517,3 +523,160 @@ def test_dispatch_records_scanned_equal_classified_unclassified_plus_errors(
         assert classified + unclassified + len(dispatch_errors) == scanned
     assert payload["by_stream_epic"]["6943"]["dispatch"]["n"] == 4
     assert payload["unclassified"]["by_stream_epic"]["dispatch"]["n"] == 2
+
+
+def _assert_aggregate_invariant(payload: dict[str, object], scanned: int) -> None:
+    errors = [e for e in payload["source_errors"] if e["source"] == "dispatch"]
+    for dimension in ("by_stream_epic", "by_task_family"):
+        classified = sum(g["dispatch"]["n"] for g in payload[dimension].values())
+        unclassified = payload["unclassified"][dimension]["dispatch"]["n"]
+        assert classified + unclassified + len(errors) == scanned
+
+
+def test_leading_zero_carrier_of_any_length_canonicalises_without_int_conversion(
+    tmp_path: Path,
+) -> None:
+    zeros = "0" * 5000 + "6943"
+    payload = _identity_payload(
+        tmp_path,
+        {
+            "bare": {"task_lifecycle": {"identity": {"stream_epic": zeros}}},
+            "with-fallback": {"stream_epic": 6943, "task_lifecycle": {"identity": {"stream_epic": zeros}}},
+        },
+    )
+
+    assert list(payload["by_stream_epic"]) == ["6943"]
+    assert payload["by_stream_epic"]["6943"]["dispatch"]["n"] == 2
+    _assert_aggregate_invariant(payload, 2)
+
+
+def test_all_zero_epic_string_canonicalises_to_single_zero(tmp_path: Path) -> None:
+    payload = _identity_payload(
+        tmp_path, {"t": {"task_lifecycle": {"identity": {"stream_epic": "0" * 5000}}}}
+    )
+
+    assert list(payload["by_stream_epic"]) == ["0"]
+
+
+_OVERSIZED_EPICS = [
+    pytest.param("1" + "0" * 5000, id="oversized-string"),
+    pytest.param("9" * 19, id="nineteen-digit-string"),
+    pytest.param(10**18, id="oversized-int-at-bound"),
+    pytest.param(10**4000, id="oversized-int-4000-digits"),
+]
+
+
+@pytest.mark.parametrize("big", _OVERSIZED_EPICS)
+def test_oversized_carrier_epic_falls_back_or_is_unclassified(tmp_path: Path, big: object) -> None:
+    payload = _identity_payload(
+        tmp_path,
+        {
+            "fallback": {"stream_epic": 6943, "task_lifecycle": {"identity": {"stream_epic": big}}},
+            "bare": {"task_lifecycle": {"identity": {"stream_epic": big}}},
+        },
+    )
+
+    assert list(payload["by_stream_epic"]) == ["6943"]
+    assert payload["by_stream_epic"]["6943"]["dispatch"]["n"] == 1
+    assert payload["unclassified"]["by_stream_epic"]["dispatch"]["n"] == 1
+    _assert_aggregate_invariant(payload, 2)
+
+
+@pytest.mark.parametrize("big", _OVERSIZED_EPICS)
+def test_oversized_fallback_epic_does_not_override_valid_carrier(tmp_path: Path, big: object) -> None:
+    payload = _identity_payload(
+        tmp_path,
+        {"t": {"stream_epic": big, "task_lifecycle": {"identity": {"stream_epic": 6943}}}},
+    )
+
+    assert list(payload["by_stream_epic"]) == ["6943"]
+    _assert_aggregate_invariant(payload, 1)
+
+
+def test_oversized_task_family_is_unclassified_or_falls_back(tmp_path: Path) -> None:
+    payload = _identity_payload(
+        tmp_path,
+        {
+            "fallback": {"task_family": "infra", "task_lifecycle": {"identity": {"task_family": "x" * 100_000}}},
+            "bare": {"task_lifecycle": {"identity": {"task_family": "x" * 100_000}}},
+            "at-bound": {"task_family": "y" * 128},
+        },
+    )
+
+    assert sorted(payload["by_task_family"]) == ["infra", "y" * 128]
+    assert payload["unclassified"]["by_task_family"]["dispatch"]["n"] == 1
+    _assert_aggregate_invariant(payload, 3)
+
+
+@pytest.mark.parametrize(
+    "digits",
+    [
+        pytest.param("\u0666\u0669\u0664\u0663", id="arabic-indic"),
+        pytest.param("\uff16\uff19\uff14\uff13", id="fullwidth"),
+        pytest.param("\u00b2", id="superscript"),
+    ],
+)
+def test_unicode_digit_epics_are_not_classified(tmp_path: Path, digits: str) -> None:
+    payload = _identity_payload(
+        tmp_path,
+        {
+            "carrier": {"task_lifecycle": {"identity": {"stream_epic": digits}}},
+            "top": {"stream_epic": digits},
+        },
+    )
+
+    assert payload["by_stream_epic"] == {}
+    assert payload["unclassified"]["by_stream_epic"]["dispatch"]["n"] == 2
+    _assert_aggregate_invariant(payload, 2)
+
+
+_STARTED = b'{"task_id":"t","started_at":"2026-07-22T11:00:00+00:00"'
+
+
+@pytest.mark.parametrize(
+    "raw",
+    [
+        pytest.param(_STARTED + b',"stream_epic":1' + b"0" * 5000 + b"}", id="json-int-over-conversion-limit"),
+        pytest.param(b"\xff\xfe" + _STARTED + b"}", id="invalid-utf8"),
+        pytest.param(b"[" * 100_000, id="deeply-nested"),
+    ],
+)
+def test_hostile_task_file_is_a_source_error_never_an_abort(tmp_path: Path, raw: bytes) -> None:
+    tasks_dir = tmp_path / "tasks"
+    tasks_dir.mkdir()
+    (tasks_dir / "hostile.json").write_bytes(raw)
+    (tasks_dir / "good.json").write_text(
+        json.dumps({"task_id": "g", "started_at": (NOW - timedelta(seconds=5)).isoformat(),
+                    "finished_at": NOW.isoformat(), "stream_epic": 6943}),
+        encoding="utf-8",
+    )
+    plane_db = tmp_path / "plane.sqlite3"
+    _plane_db(plane_db, with_identity=False)
+
+    payload = collect_stream_bottleneck_metrics(
+        tasks_dir=tasks_dir, plane_db=plane_db, now=NOW, github_lookup=_merged_at
+    )
+
+    dispatch_errors = [e["error_kind"] for e in payload["source_errors"] if e["source"] == "dispatch"]
+    assert dispatch_errors == ["task_record_unreadable"]
+    assert payload["by_stream_epic"]["6943"]["dispatch"]["n"] == 1
+    json.dumps(payload)
+
+
+def test_absurd_hard_timeout_cannot_inflate_the_bottleneck_threshold(tmp_path: Path) -> None:
+    tasks_dir = tmp_path / "tasks"
+    tasks_dir.mkdir()
+    started = (NOW - timedelta(seconds=5)).isoformat()
+    for name, timeout in (("huge", 10**3000), ("bool", True), ("sane", 9000)):
+        (tasks_dir / f"{name}.json").write_text(
+            json.dumps({"task_id": name, "started_at": started, "hard_timeout": timeout}),
+            encoding="utf-8",
+        )
+    plane_db = tmp_path / "plane.sqlite3"
+    _plane_db(plane_db, with_identity=False)
+
+    payload = collect_stream_bottleneck_metrics(
+        tasks_dir=tasks_dir, plane_db=plane_db, now=NOW, github_lookup=_merged_at
+    )
+
+    assert payload["threshold_seconds"]["dispatch"] == 9000

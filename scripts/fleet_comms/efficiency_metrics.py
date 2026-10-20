@@ -520,23 +520,35 @@ def _parse_timestamp(value: object) -> datetime | None:
     return parsed.astimezone(UTC)
 
 
+_MAX_EPIC_DIGITS = 18
+_MAX_TASK_FAMILY_CHARS = 128
+_MAX_HARD_TIMEOUT_S = 365 * 24 * 3600
+
+
 def _valid_stream_epic(value: object) -> str | None:
-    """Return a canonical epic number only for a non-negative int or an ASCII-digit string."""
+    """Return a canonical epic number for a bounded non-negative int or ASCII-digit string.
+
+    Digit strings are canonicalised textually, never through ``int()``, so an
+    oversized value cannot hit Python's integer-string-conversion limit; anything
+    longer than ``_MAX_EPIC_DIGITS`` after stripping leading zeros is invalid.
+    """
     if isinstance(value, bool):
         return None
     if isinstance(value, int):
-        return str(value) if value >= 0 else None
+        return str(value) if 0 <= value < 10**_MAX_EPIC_DIGITS else None
     if isinstance(value, str):
         digits = value.strip()
         if digits.isascii() and digits.isdigit():
-            return str(int(digits))
+            canonical = digits.lstrip("0") or "0"
+            return canonical if len(canonical) <= _MAX_EPIC_DIGITS else None
     return None
 
 
 def _valid_task_family(value: object) -> str | None:
-    """Return a stripped task family only when it is a non-empty string."""
+    """Return a stripped task family only when it is a non-empty, bounded string."""
     if isinstance(value, str):
-        return value.strip() or None
+        family = value.strip()
+        return family if 0 < len(family) <= _MAX_TASK_FAMILY_CHARS else None
     return None
 
 
@@ -928,14 +940,16 @@ def collect_stream_bottleneck_metrics(
         for path in task_paths:
             try:
                 record = json.loads(path.read_text(encoding="utf-8"))
-            except (OSError, json.JSONDecodeError):
+            except (OSError, ValueError, RecursionError):
+                # ValueError covers JSONDecodeError, UnicodeDecodeError and the
+                # integer-string-conversion limit; RecursionError covers deep nesting.
                 errors.append(_dispatch_error("task_record_unreadable"))
                 continue
             if not isinstance(record, dict):
                 errors.append(_dispatch_error("task_record_not_object"))
                 continue
             hard_timeout = record.get("hard_timeout")
-            if isinstance(hard_timeout, int) and hard_timeout >= 0:
+            if isinstance(hard_timeout, int) and not isinstance(hard_timeout, bool) and 0 <= hard_timeout <= _MAX_HARD_TIMEOUT_S:
                 dispatch_hard_timeouts.append(hard_timeout)
             if "task_id" not in record:
                 errors.append(_dispatch_error("not_a_task_record"))
