@@ -1838,6 +1838,21 @@ entries:
       - {surface: sqlite, how: "Python API in scripts/atlas/atlas_db.py or read-only SQL on data/atlas.db"}
     content_searchable: false
 
+  - id: data-lexdata-db
+    kind: data_store
+    store: [data/lexdata.db]
+    producer: [scripts/lexdata/build_store.py]
+    producer_note: "The single writer: `.venv/bin/python -m scripts.lexdata build` from the primary checkout builds data/lexdata/lexdata.<gen>.db.tmp, verifies it and swaps it in atomically; backups and receipts stay under data/lexdata/."
+    local_only: true
+    purpose: Derived lexical store for word cards (L1 per-source staging, L2 crosswalk to one lexeme, L3 card inputs), rebuilt as whole generations from sources.db and vesum.db and never their only copy.
+    keywords: [lexdata, lexical data layer, L1 staging, crosswalk, word cards, generation]
+    lifecycle: active
+    owner: open-model-data
+    query:
+      - {surface: cli, how: ".venv/bin/python -m scripts.lexdata status / verify / digests (--help)"}
+      - {surface: sqlite, how: "read-only through scripts.lexdata.generation.open_generation, which refuses an unpublished or digest-mismatched generation"}
+    content_searchable: false
+
   - id: data-atlas-synthetic
     kind: data_store
     store: [data/atlas-synthetic.db]
