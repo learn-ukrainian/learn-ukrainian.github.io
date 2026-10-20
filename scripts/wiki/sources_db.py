@@ -70,8 +70,9 @@ from .sum20_official import (
 from .sum20_official import (
     SUM20_ATTRIBUTION_LABEL,
     SUM20_SOURCE_ID,
-    live_article_predicate,
     normalize_sum20_lookup,
+    select_sum20_database,
+    sum20_live_article_where,
 )
 from .textbook_subjects import normalize_subject_slug
 
@@ -4294,26 +4295,58 @@ def _json_string_list(value: object) -> list[str]:
     return [str(item) for item in decoded] if isinstance(decoded, list) else []
 
 
+def _sum20_articles_present(path: Path) -> bool:
+    """True when ``path`` already has the official article table. Read-only."""
+    try:
+        conn = _open_conn(path, read_only=True)
+    except sqlite3.Error:
+        return False
+    try:
+        row = conn.execute(
+            "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'sum20_articles'"
+        ).fetchone()
+        return row is not None
+    except sqlite3.Error:
+        return False
+    finally:
+        conn.close()
+
+
 def query_sum20(query: str, *, db_path: str | Path | None = None) -> list[dict]:
     """Return every exact-matching article from the offline official СУМ-20 collection.
 
-    The collection is populated only by ``sum20_official_ingest.py``.  This
-    reader deliberately has no live fallback, so its returned provenance is
-    always the official stored ``wordid`` record.
+    The collection is populated only by an explicit ingest. This reader has no
+    live fallback, so its provenance is the stored official ``wordid`` record.
+    An omitted ``db_path`` uses ``data/lexdata.db`` when that file already holds
+    ``sum20_articles``; otherwise it uses the read-only sources collection.
+    ``LEXDATA_DB_PATH`` is exclusive and never falls back.
     """
     normalized_lookup_key = normalize_sum20_lookup(query)
-    columns = _table_columns("sum20_articles", db_path)
-    if not normalized_lookup_key or not columns:
+    if not normalized_lookup_key:
         return []
-    conn = _get_conn_for(db_path)
+    if db_path is None:
+        selection = select_sum20_database(
+            PROJECT_ROOT, article_table_present=_sum20_articles_present
+        )
+        if selection.exclusive:
+            # A blank override is a miss. An existing file, including a zero-byte
+            # database, is handed to the reader below and never replaced by sources.
+            if selection.path is None or not selection.path.is_file():
+                return []
+            db_path = selection.path
+        elif selection.path is not None:
+            db_path = selection.path
     try:
+        conn = _get_conn_for(db_path)
+    except FileNotFoundError:
+        return []
+    try:
+        columns = {str(row["name"]) for row in conn.execute("PRAGMA table_info(sum20_articles)").fetchall()}
+        if not columns:
+            return []
+        where = sum20_live_article_where(columns, prefix=False)
         articles = conn.execute(
-            f"""
-            SELECT *
-            FROM sum20_articles
-            WHERE normalized_lookup_key = ? AND {live_article_predicate(columns)}
-            ORDER BY wordid
-            """,
+            f"SELECT * FROM sum20_articles WHERE {where} ORDER BY wordid",
             (normalized_lookup_key,),
         ).fetchall()
         records: list[dict] = []

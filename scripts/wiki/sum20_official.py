@@ -10,6 +10,7 @@ from __future__ import annotations
 import hashlib
 import html
 import json
+import os
 import re
 import sqlite3
 import sys
@@ -580,6 +581,71 @@ def live_article_predicate_for(conn: SQLiteConnection | sqlite3.Cursor, alias: s
     """``live_article_predicate`` for the ``sum20_articles`` table behind a connection or cursor."""
     rows = conn.execute("PRAGMA table_info(sum20_articles)").fetchall()
     return live_article_predicate((str(row[1]) for row in rows), alias)
+
+
+def sum20_live_article_where(columns: Iterable[str], *, prefix: bool) -> str:
+    """SQL filter shared by official exact lookup and lexicon prefix lookup.
+
+    ``prefix`` also matches a normalized key followed by a space (homonym
+    labels such as ``вода 2``). The key stays a bound parameter. Quarantine
+    and unverified-codification rows stay excluded. This fragment does not
+    create schema, write, or choose a database.
+    """
+    match = "(normalized_lookup_key = ? OR normalized_lookup_key LIKE ?)" if prefix else "normalized_lookup_key = ?"
+    return f"{match} AND {live_article_predicate(columns)}"
+
+
+@dataclass(frozen=True)
+class Sum20DatabaseSelection:
+    """Chosen SUM-20 file for an offline read.
+
+    ``path is None`` and ``exclusive`` is a blank ``LEXDATA_DB_PATH``: the
+    read is a miss and must not fall back. ``path is None`` without
+    ``exclusive`` means the caller keeps its read-only sources default.
+    ``exclusive`` never falls back, even when ``path`` is missing or has no
+    ``sum20_articles`` table.
+    """
+
+    path: Path | None
+    exclusive: bool
+
+
+def _primary_checkout(repo_root: Path) -> Path:
+    resolved = repo_root.resolve()
+    parts = resolved.parts
+    if ".worktrees" in parts:
+        return Path(*parts[: parts.index(".worktrees")])
+    return resolved
+
+
+def select_sum20_database(
+    repo_root: Path,
+    *,
+    article_table_present: Callable[[Path], bool],
+) -> Sum20DatabaseSelection:
+    """Pick the canonical SUM-20 file without creating one.
+
+    ``LEXDATA_DB_PATH`` is the only file considered when it is set. Otherwise
+    the primary checkout's ``data/lexdata.db`` is used when ``article_table_present``
+    reports ``sum20_articles``. A linked worktree copy is not a candidate.
+    The probe runs only for an existing non-empty file. No staging database
+    is considered, and nothing is created.
+    """
+    raw = os.environ.get("LEXDATA_DB_PATH")
+    if raw is not None:
+        text = raw.strip()
+        if not text:
+            return Sum20DatabaseSelection(path=None, exclusive=True)
+        return Sum20DatabaseSelection(path=Path(text).expanduser(), exclusive=True)
+
+    candidate = _primary_checkout(repo_root) / "data" / "lexdata.db"
+    try:
+        present = candidate.is_file() and candidate.stat().st_size > 0 and article_table_present(candidate)
+    except OSError:
+        present = False
+    if present:
+        return Sum20DatabaseSelection(path=candidate, exclusive=False)
+    return Sum20DatabaseSelection(path=None, exclusive=False)
 
 
 def utc_now() -> str:
