@@ -23,7 +23,17 @@ and invalidated on any input-fingerprint drift (§5.4, §6.2).
 
 L0 stores are resolved with ``resolve_store`` and only ever opened read-only:
 parsers get ``open_readonly`` handles, and the build connection ATTACHes the
-same validated files with ``mode=ro`` URIs for the L2 stage.
+same validated files with ``mode=ro`` URIs for the L2 stage. Every source's
+selection snapshot is taken before any source is read and must be unchanged,
+together with the L2 stage's identity-store fingerprints, at the publication
+barrier immediately before the swap (§6.6); unrelated L0 writes are allowed.
+
+SQLite temp files (``temp_store=FILE``) go to ``data/lexdata/tmp`` (§9). The
+build pins that directory itself and proves it with a forced temp-file probe
+before it opens any connection and again at the publication barrier, refusing
+otherwise. It cannot rely on ``SQLITE_TMPDIR``: SQLite reads that variable once,
+when the ``sqlite3`` module initializes the library, so setting it inside a
+running interpreter has no effect.
 """
 
 from __future__ import annotations
@@ -253,7 +263,9 @@ def _ro_uri(path: Path) -> str:
     return path.resolve().as_uri() + "?mode=ro"
 
 
-def _open_build_connection(path: Path) -> Any:
+def _open_build_connection(path: Path, tmp_dir: Path) -> Any:
+    """The one read-write connection; refuses unless SQLite temp files land in ``tmp_dir``."""
+    assert_sqlite_temp_dir(tmp_dir)
     conn = sqlite3.connect(path.resolve().as_uri() + "?mode=rwc", uri=True, isolation_level="DEFERRED")
     conn.execute("PRAGMA journal_mode=DELETE")
     conn.execute("PRAGMA synchronous=FULL")
@@ -262,6 +274,101 @@ def _open_build_connection(path: Path) -> Any:
     conn.execute("PRAGMA mmap_size=0")
     conn.execute("PRAGMA temp_store=FILE")
     return conn
+
+
+TEMP_PROBE_BYTES = 256 * 1024  # spills past a one-page temp cache, so SQLite must open a temp file
+
+
+def _sqlite_temp_files() -> set[Path]:
+    """Paths of the SQLite temp files (``etilqs_*``) this process holds open."""
+    try:
+        entries = list(Path("/proc/self/fd").iterdir())
+    except OSError:
+        raise BuildRefused("sqlite_tmpdir_unverifiable") from None
+    found: set[Path] = set()
+    for entry in entries:
+        try:
+            target = os.readlink(entry)
+        except OSError:  # closed between listing and reading
+            continue
+        path = Path(target.removesuffix(" (deleted)"))
+        if path.name.startswith("etilqs_"):
+            found.add(path)
+    return found
+
+
+def _memory_connection() -> Any:
+    """A private in-memory connection for process-wide SQLite settings and the temp probe."""
+    return sqlite3.connect(":memory:")
+
+
+def _get_sqlite_temp_dir() -> str:
+    conn = _memory_connection()
+    try:
+        row = conn.execute("PRAGMA temp_store_directory").fetchone()  # no row while unset
+        return "" if row is None or row[0] is None else str(row[0])
+    finally:
+        conn.close()
+
+
+def _set_sqlite_temp_dir(directory: str) -> None:
+    """Set SQLite's process-wide temp directory (``''`` restores the default lookup).
+
+    ``PRAGMA temp_store_directory`` is deprecated upstream, but it is the only
+    in-process control: ``SQLITE_TMPDIR`` is read once at library
+    initialization. ``assert_sqlite_temp_dir`` proves the effect, so a build
+    without the pragma refuses instead of spilling elsewhere.
+    """
+    conn = _memory_connection()
+    try:
+        conn.execute("PRAGMA temp_store_directory = '{}'".format(directory.replace("'", "''")))
+    finally:
+        conn.close()
+
+
+def assert_sqlite_temp_dir(tmp_dir: Path) -> None:
+    """Force a FILE temp table to spill and refuse unless its file is in ``tmp_dir``."""
+    before = _sqlite_temp_files()
+    conn = _memory_connection()
+    try:
+        conn.execute("PRAGMA temp_store=FILE")
+        conn.execute("PRAGMA temp.cache_size=1")
+        conn.execute("CREATE TEMP TABLE lexdata_tmpdir_probe (v BLOB)")
+        conn.execute("INSERT INTO lexdata_tmpdir_probe VALUES (zeroblob(?))", (TEMP_PROBE_BYTES,))
+        opened = _sqlite_temp_files() - before
+    finally:
+        conn.close()
+    if not opened:
+        raise BuildRefused("sqlite_tmpdir_unverifiable")
+    if any(path.parent != tmp_dir.resolve() for path in opened):
+        raise BuildRefused("sqlite_tmpdir_outside_budget")
+
+
+@contextmanager
+def pinned_sqlite_temp_dir(tmp_dir: Path) -> Iterator[None]:
+    """Pin every SQLite temp file of this process to ``tmp_dir`` for the block (§9)."""
+    previous = _get_sqlite_temp_dir()
+    _set_sqlite_temp_dir(str(tmp_dir.resolve()))
+    try:
+        assert_sqlite_temp_dir(tmp_dir)
+        yield
+    finally:
+        _set_sqlite_temp_dir(previous)
+
+
+def _same_selection(a: Any, b: Any) -> bool:
+    return (a.query, a.row_count, a.digest) == (b.query, b.row_count, b.digest)
+
+
+def _assert_inputs_unchanged(adapters: Mapping[str, SourceAdapter], l0: Mapping[str, Any],
+                             starts: Mapping[str, Any], stage: L2Stage,
+                             store_fingerprints: Mapping[str, str]) -> None:
+    """§6.6 over the complete build: every selected snapshot and identity store is unchanged."""
+    for source_id in sorted(starts):
+        if not _same_selection(adapters[source_id].snapshot(l0), starts[source_id]):
+            raise BuildRefused(f"input_snapshot_changed:{source_id}")
+    if dict(stage.store_fingerprints(l0)) != dict(store_fingerprints):
+        raise BuildRefused("identity_store_changed")
 
 
 def _load_adapter(spec: transforms.SourceSpec) -> SourceAdapter:
@@ -292,6 +399,9 @@ def _previous(target: WriterTarget) -> dict[str, Any] | None:
     conn = open_readonly(target.published)
     try:
         meta = gen_reader.read_meta(conn)
+    except gen_reader.MetaMalformed:
+        # Carry-forward reads this meta; a silent fresh start would drop adjudications.
+        raise BuildRefused("published_meta_malformed") from None
     finally:
         conn.close()
     if meta is None or meta.get("status") != "published":
@@ -369,9 +479,8 @@ def _copy_unit(run: _Run, prev_unit_id: int) -> None:
 
 
 def _build_source(run: _Run, adapter: SourceAdapter, spec: transforms.SourceSpec, l0: Mapping[str, Any],
-                  digest: str, has_prev: bool, ids: _Ids) -> dict[str, Any]:
+                  start: Any, digest: str, has_prev: bool, ids: _Ids) -> dict[str, Any]:
     parser = run.binding.parsers[spec.parser_id]
-    start = adapter.snapshot(l0)
     counts: Counter[str] = Counter()
     seen: list[str] = []
     for unit in adapter.iter_units(l0):
@@ -394,8 +503,7 @@ def _build_source(run: _Run, adapter: SourceAdapter, spec: transforms.SourceSpec
             counts["reparsed"] += 1
             counts["new" if prev is None else "transform_changed" if prev[2] != digest else "input_changed"] += 1
         run.checkpoint()
-    end = adapter.snapshot(l0)
-    if end.digest != start.digest or end.row_count != start.row_count:
+    if not _same_selection(adapter.snapshot(l0), start):  # early stop; the barrier re-checks every source
         raise BuildRefused(f"input_snapshot_changed:{spec.source_id}")
     tombstoned = 0
     if has_prev:
@@ -541,12 +649,15 @@ def build(
         if shutil.disk_usage(target.data_dir).free < admission.peak_budget_bytes + admission.reserve_bytes:
             raise BuildRefused("disk_admission_refused")
         target.tmp_dir.mkdir(exist_ok=True)
+        _refuse_symlinks([target.tmp_dir])
+        stack.enter_context(pinned_sqlite_temp_dir(target.tmp_dir))
         store_paths = _resolve_stores([s for a in adapters.values() for s in a.stores] + list(stage.stores),
                                       repository_root, stores)
         l0 = {}
         for name, path in store_paths.items():
             l0[name] = open_readonly(path)
             stack.callback(l0[name].close)
+        starts = {source_id: adapters[source_id].snapshot(l0) for source_id in sources}
         digests = {source_id: transforms.transform_digest(source_id, binding) for source_id in sources}
         manifests = {source_id: transforms.transform_manifest(source_id, binding) for source_id in sources}
         normalizer_manifest = transforms.normalizer_manifest(binding)
@@ -557,7 +668,7 @@ def build(
         tmp = target.work_dir / f"lexdata.{generation_id}.db.tmp"
         run = _Run(target, binding, admission)
         try:
-            run.conn = _open_build_connection(tmp)
+            run.conn = _open_build_connection(tmp, target.tmp_dir)
             run.conn.executescript(FULL_DDL)
             for name, path in store_paths.items():
                 run.conn.execute(f"ATTACH DATABASE ? AS src_{name}", (_ro_uri(path),))
@@ -568,7 +679,7 @@ def build(
                 ids.unit = run.conn.execute("SELECT coalesce(max(unit_id), 0) + 1 FROM prev.l1_source_unit").fetchone()[0]
                 ids.item = run.conn.execute("SELECT coalesce(max(item_id), 0) + 1 FROM prev.l1_lex_item").fetchone()[0]
             per_source = {source_id: _build_source(run, adapters[source_id], binding.sources[source_id], l0,
-                                                   digests[source_id], has_prev, ids)
+                                                   starts[source_id], digests[source_id], has_prev, ids)
                           for source_id in sources}
             run.conn.execute(
                 "UPDATE l1_source_unit SET parent_unit_id = (SELECT p.unit_id FROM l1_source_unit p "
@@ -585,8 +696,8 @@ def build(
                                                  "SELECT count(*) FROM prev.l1_source_unit WHERE source_id = ?",
                                                  (source_id,)).fetchone()[0]}
             run.checkpoint(force=True)
+            store_fingerprints = dict(stage.store_fingerprints(l0))
             adjudication_states = _link_and_adjudicate(run, stage, has_prev, adjudications)
-            store_fingerprints = stage.store_fingerprints(l0)
             input_manifest = {
                 "sources": {s: {"parser_id": binding.sources[s].parser_id, **per_source[s]["snapshot"]}
                             for s in sources},
@@ -633,6 +744,9 @@ def build(
                 "peak_rss_bytes": run.peak_rss, "size_bytes": tmp.stat().st_size, "status": "verified_pre_swap"})
             # Step 4: back up the current published generation.
             backup = _backup_published(target, prev_meta["generation"]) if prev_meta else None
+            # Publication barrier (§6.6, §9): after the last L0 read, before the swap.
+            _assert_inputs_unchanged(adapters, l0, starts, stage, store_fingerprints)
+            assert_sqlite_temp_dir(target.tmp_dir)
             # Step 5: atomic swap; nothing is written to either file after it.
             if tmp.stat().st_dev != target.data_dir.stat().st_dev:
                 raise BuildRefused("cross_device_swap")

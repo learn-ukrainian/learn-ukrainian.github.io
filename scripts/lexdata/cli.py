@@ -102,9 +102,11 @@ def build_parser() -> argparse.ArgumentParser:
                 "Outputs: data/lexdata.db; data/lexdata/backups/lexdata-<previous gen>-<utc>.db (two kept); "
                 "data/lexdata/reports/build-<gen>.json and verify-<gen>.json (counts only).\n"
                 "Budgets: refuses to start below 8.5 GB + 20 GB free; aborts below 20 GB free or above 2 GiB RSS. "
-                "Set SQLITE_TMPDIR=data/lexdata/tmp in the launcher so temp_store=FILE stays on the data disk.\n"
+                "SQLite temp files are pinned to data/lexdata/tmp by the build itself (no launcher setting); "
+                "it refuses when it cannot prove that.\n"
                 "Exit codes: 0 = published; 2 = refused (build_locked, linked_worktree, disk_admission_refused, "
-                "verify_failed, input_snapshot_changed:<source>, ...).\n" + RELATED),
+                "verify_failed, input_snapshot_changed:<source>, identity_store_changed, "
+                "sqlite_tmpdir_outside_budget, ...).\n" + RELATED),
     )
     build.set_defaults(func=cmd_build)
 
@@ -125,7 +127,8 @@ def build_parser() -> argparse.ArgumentParser:
     status = sub.add_parser(
         "status", help="Say whether the published generation is usable by this code, and why not.",
         description=("Open the published generation the way every reader does and print its generation and "
-                     "digests,\nor the unavailable reason (lexdata_unpublished, normalizer_mismatch, ...)."),
+                     "digests,\nor the unavailable reason (lexdata_unpublished, normalizer_mismatch, lexdata_stale "
+                     "when this\ncode's transform digests differ from the generation's, ...)."),
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=("Example:\n  .venv/bin/python -m scripts.lexdata status\n"
                 "Outputs: JSON on stdout; nothing written.\n"

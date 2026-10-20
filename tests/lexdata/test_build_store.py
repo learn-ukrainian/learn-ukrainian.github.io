@@ -14,7 +14,14 @@ from scripts.lexdata import build_store, generation, verify
 from scripts.lexdata.canonical import sha256_file
 from scripts.lib.readonly_sqlite import open_readonly
 from scripts.storage import topology
-from tests.lexdata._support import FIXTURE_SOURCE, FixtureAdapter, FixtureStage, make_sqlite, mutate_sqlite
+from tests.lexdata._support import (
+    FIXTURE_SOURCE,
+    FixtureAdapter,
+    FixtureStage,
+    fixture_binding,
+    make_sqlite,
+    mutate_sqlite,
+)
 
 pytestmark = pytest.mark.usefixtures("local_fs")
 
@@ -141,7 +148,8 @@ def test_failed_verify_publishes_nothing_and_deletes_the_temp(harness) -> None:
         harness.build(stage=LeafWithoutLink())
     assert harness.published_sha() == before
     assert list(harness.target.work_dir.glob("lexdata.*.db.tmp*")) == []
-    opened = generation.open_generation(harness.target.published, repository_root=harness.repository_root)
+    opened = generation.open_generation(harness.target.published, binding=fixture_binding(),
+                                        repository_root=harness.repository_root)
     assert isinstance(opened, generation.OpenGeneration) and opened.generation == first.generation
     opened.close()
 
@@ -186,6 +194,72 @@ def test_l0_is_never_written(harness) -> None:
 def test_changed_selection_digest_aborts_the_generation(harness) -> None:
     with pytest.raises(build_store.BuildRefused, match=f"input_snapshot_changed:{FIXTURE_SOURCE}"):
         harness.build(adapter=FixtureAdapter(drift_after_first_snapshot=True))
+    assert not harness.target.published.exists()
+
+
+class LateChange(FixtureStage):
+    """The reviewer's shape: an external L0 writer changes a selected row during the L2 stage."""
+
+    def __init__(self, sources_path: Path) -> None:
+        super().__init__()
+        self.sources_path = sources_path
+
+    def link(self, conn) -> None:
+        mutate_sqlite(self.sources_path, "UPDATE fixture_words SET word = ? WHERE id = 1", ("мама",))
+        super().link(conn)
+
+
+def test_selected_row_changed_during_l2_refuses_publication(harness) -> None:
+    first = harness.build(stage=FixtureStage())
+    before = harness.published_sha()
+    with pytest.raises(build_store.BuildRefused, match=f"input_snapshot_changed:{FIXTURE_SOURCE}"):
+        harness.build(stage=LateChange(harness.sources_path))
+    assert harness.published_sha() == before
+    assert list(harness.target.work_dir.glob("lexdata.*.db.tmp*")) == []
+    opened = generation.open_generation(harness.target.published, binding=fixture_binding())
+    assert isinstance(opened, generation.OpenGeneration) and opened.generation == first.generation
+    opened.close()
+
+
+def test_selected_row_changed_after_verify_refuses_the_swap(harness, monkeypatch) -> None:
+    """Drift at the last moment (during the pre-swap backup) is caught by the publication barrier."""
+    harness.build()
+    before = harness.published_sha()
+    real_backup = build_store._backup_published
+
+    def backup_then_change(target, generation_id):
+        made = real_backup(target, generation_id)
+        mutate_sqlite(harness.sources_path, "DELETE FROM fixture_words WHERE id = 3")
+        return made
+
+    monkeypatch.setattr(build_store, "_backup_published", backup_then_change)
+    with pytest.raises(build_store.BuildRefused, match=f"input_snapshot_changed:{FIXTURE_SOURCE}"):
+        harness.build()
+    assert harness.published_sha() == before
+    assert list(harness.target.work_dir.glob("lexdata.*.db.tmp*")) == []
+
+
+def test_unrelated_l0_write_during_the_build_still_publishes(harness, tmp_path) -> None:
+    mutate_sqlite(harness.sources_path, "CREATE TABLE unrelated (x)")
+
+    class UnrelatedWrite(FixtureStage):
+        def link(self, conn) -> None:
+            mutate_sqlite(harness.sources_path, "INSERT INTO unrelated VALUES (1)")
+            super().link(conn)
+
+    assert harness.build(stage=UnrelatedWrite()).verify_receipt["ok"] is True
+
+
+def test_identity_store_changed_during_the_build_refuses_publication(harness) -> None:
+    class DriftingIdentity(FixtureStage):
+        calls = 0
+
+        def store_fingerprints(self, l0):
+            DriftingIdentity.calls += 1
+            return {"vesum": ("v" if DriftingIdentity.calls == 1 else "w") * 64}
+
+    with pytest.raises(build_store.BuildRefused, match="identity_store_changed"):
+        harness.build(stage=DriftingIdentity())
     assert not harness.target.published.exists()
 
 
@@ -308,13 +382,81 @@ def test_reader_reports_unpublished_and_missing(harness, tmp_path) -> None:
 
 def test_reader_checks_identity_store_fingerprints(harness) -> None:
     result = harness.build(stage=FixtureStage(fingerprints={"vesum": "v" * 64}))
-    path = result.published
-    assert generation.open_generation(path).reason == "identity_store_unavailable"
-    assert generation.open_generation(path, current_store_fingerprints={"vesum": "w" * 64}).reason == \
-        "identity_store_stale"
-    opened = generation.open_generation(path, current_store_fingerprints={"vesum": "v" * 64})
+    path, binding = result.published, fixture_binding()
+    assert generation.open_generation(path, binding=binding).reason == "identity_store_unavailable"
+    assert generation.open_generation(path, binding=binding,
+                                      current_store_fingerprints={"vesum": "w" * 64}).reason == "identity_store_stale"
+    opened = generation.open_generation(path, binding=binding, current_store_fingerprints={"vesum": "v" * 64})
     assert isinstance(opened, generation.OpenGeneration)
     opened.close()
-    stale = generation.open_generation(path, current_store_fingerprints={"vesum": "v" * 64},
-                                       expected_transform_digests={FIXTURE_SOURCE: "0" * 64})
-    assert stale.reason == "lexdata_stale"
+
+
+# --- SQLite temp files stay in data/lexdata/tmp (§9) ---------------------------------------
+
+def _spill_temp_table(conn) -> set[Path]:
+    """The reviewer's temp-probe shape: a FILE temp table forced to spill to disk."""
+    before = build_store._sqlite_temp_files()
+    conn.execute("PRAGMA temp.cache_size=1")
+    conn.execute("CREATE TEMP TABLE probe (value BLOB)")
+    conn.execute("INSERT INTO probe VALUES (zeroblob(4000000))")
+    opened = build_store._sqlite_temp_files() - before
+    conn.execute("DROP TABLE temp.probe")
+    conn.execute("PRAGMA temp.cache_size=-262144")
+    return opened
+
+
+def test_build_connection_temp_files_stay_in_the_budgeted_dir(harness, monkeypatch) -> None:
+    monkeypatch.delenv("SQLITE_TMPDIR", raising=False)
+    target = harness.target
+    target.tmp_dir.mkdir(parents=True)
+    previous = build_store._get_sqlite_temp_dir()
+    with build_store.pinned_sqlite_temp_dir(target.tmp_dir):
+        conn = build_store._open_build_connection(target.work_dir / "probe.db", target.tmp_dir)
+        try:
+            assert conn.execute("PRAGMA temp_store").fetchone() == (1,)
+            opened = _spill_temp_table(conn)
+        finally:
+            conn.close()
+    assert opened and {path.parent for path in opened} == {target.tmp_dir.resolve()}
+    assert build_store._get_sqlite_temp_dir() == previous
+    # Outside the pin, the build connection itself refuses to open.
+    with pytest.raises(build_store.BuildRefused, match="sqlite_tmpdir_outside_budget"):
+        build_store._open_build_connection(target.work_dir / "probe.db", target.tmp_dir)
+
+
+def test_temp_files_during_a_whole_build_stay_in_the_budgeted_dir(harness) -> None:
+    seen: list[set[Path]] = []
+
+    class SpillingStage(FixtureStage):
+        def link(self, conn) -> None:
+            seen.append(_spill_temp_table(conn))
+            super().link(conn)
+
+    harness.build(stage=SpillingStage())
+    assert seen[0] and {path.parent for path in seen[0]} == {harness.target.tmp_dir.resolve()}
+
+
+def test_build_refuses_when_sqlite_temp_dir_cannot_be_pinned(harness, monkeypatch) -> None:
+    monkeypatch.setattr(build_store, "_set_sqlite_temp_dir", lambda directory: None)
+    with pytest.raises(build_store.BuildRefused, match="sqlite_tmpdir_outside_budget"):
+        harness.build()
+    assert not harness.target.published.exists()
+
+
+def test_build_refuses_when_temp_files_cannot_be_observed(harness, monkeypatch) -> None:
+    monkeypatch.setattr(build_store, "_sqlite_temp_files", lambda: set())
+    with pytest.raises(build_store.BuildRefused, match="sqlite_tmpdir_unverifiable"):
+        harness.build()
+    assert not harness.target.published.exists()
+
+
+def test_temp_dir_lost_mid_build_refuses_publication(harness) -> None:
+    """SQLite silently falls back when the pinned directory disappears; the barrier refuses."""
+    class RemovesTmpDir(FixtureStage):
+        def link(self, conn) -> None:
+            harness.target.tmp_dir.rmdir()
+            super().link(conn)
+
+    with pytest.raises(build_store.BuildRefused, match="sqlite_tmpdir_outside_budget"):
+        harness.build(stage=RemovesTmpDir())
+    assert not harness.target.published.exists()

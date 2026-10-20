@@ -70,6 +70,7 @@ records the scope.
 | `data/movne_pytannya.db` | no | The language-question corpus is costly to rebuild. |
 | `data/grac_frequency.db` | no | The GRAC frequency database is costly to rebuild. |
 | `data/atlas.db` | no | The atlas database is costly to rebuild. |
+| `data/lexdata.db` | no | The derived lexical store is costly to rebuild; each published generation is one self-contained file. |
 | `data/wiki_*.db` | no | Wiki databases matched by this non-recursive glob. |
 | `data/lexicon/cache/ulif_raw.sqlite` | no | ULIF raw cache is one SQLite snapshot in the same nightly. |
 | `data/textbook_chunks` | no | Textbook chunks are costly to rebuild. |
