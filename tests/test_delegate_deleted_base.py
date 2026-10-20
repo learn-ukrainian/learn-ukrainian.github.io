@@ -486,9 +486,7 @@ def test_advisory_ceiling_check_resolves_when_base_present_or_fallback_available
 
 
 def test_advisory_ceiling_check_fails_closed_when_nothing_resolves(isolated_repo):
-    verdict = delegate._advisory_ceiling_check(
-        isolated_repo, "origin/deleted-base", ENVELOPE, base_sha=UNREACHABLE_SHA
-    )
+    verdict = delegate._advisory_ceiling_check(isolated_repo, "origin/deleted-base", ENVELOPE, base_sha=UNREACHABLE_SHA)
     assert verdict["measured"] is False
     assert verdict["error"] == "merge-base with the base branch is unknown"
 
@@ -867,6 +865,17 @@ def test_recorded_commit_that_is_not_an_ancestor_falls_back_to_the_default_head(
 
     assert state["status"] == "done"
     assert state["commits_ahead"] == 1
+
+
+def test_recorded_commit_outside_the_branch_is_not_an_exact_anchor(repo):
+    """Main holds the recorded commit, but the worker's branch was rebased off it: only the proxy applies."""
+    repo.delete_base_branch(merged_into_main=True)
+    _git(repo.worktree, "reset", "-q", "--hard", f"{repo.base_sha}~1")
+    _git(repo.worktree, "commit", "-q", "--allow-empty", "-m", "nothing changed")
+    # Counted exactly from the recorded commit, the empty commit would be a delivery.
+    assert _git(repo.worktree, "rev-list", "--count", f"{repo.base_sha}..HEAD") == "1"
+
+    assert _publication_count(repo, repo.base_sha) == 0
 
 
 def test_present_named_base_is_counted_exactly_even_when_the_recorded_commit_differs(repo):
