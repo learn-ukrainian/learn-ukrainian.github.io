@@ -6357,3 +6357,10 @@ entries:
   count: 1
   kind: non_model_label
   reason: Existing harness, task, artifact or descriptive label 'Claude-assigned'; not a model ID.
+- path: scripts/orchestration/backup_failure_alert.py
+  scope: <module>
+  context: expression
+  id: claude-cto
+  count: 1
+  kind: non_model_label
+  reason: Stable operational CTO inbox identity; does not select a runtime model.
