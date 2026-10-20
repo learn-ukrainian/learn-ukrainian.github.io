@@ -1,6 +1,7 @@
 import type { EntryRecord } from './atlas-data-source';
 import type { PreviewCard } from './word-card-preview';
 import { loadWordCardRelease, type LoadedRelease, type ReleaseCard, type ReleasePin } from './word-card-release';
+import { groupReleasePages, type ReleasePage } from './word-card-readable';
 
 export const publicReleasePin = {
   release_version: 'v0.1.0-pilot', provenance: 'producer-declared',
@@ -9,7 +10,7 @@ export const publicReleasePin = {
 } satisfies ReleasePin;
 
 export type PreviewInput = {
-  name: string; card: PreviewCard | ReleaseCard | LoadedRelease; current: EntryRecord | null;
+  name: string; card: PreviewCard | ReleaseCard | ReleasePage | LoadedRelease; current: EntryRecord | null;
   fingerprint: string; source: string; generatedAt: string; manifestVersion: string;
 };
 
@@ -32,5 +33,8 @@ export function releasePreviewInputs(config: {
   return [{ ...common, name: 'release', card: release }, ...release.rows.map(row => ({
     ...common, name: `release/${row.card_id}`,
     card: { kind: 'release-card', row, pin: release.pin, withdrawalNotice: release.withdrawalNotice } satisfies ReleaseCard,
+  })), ...groupReleasePages(release.rows).pages.map(page => ({
+    ...common, name: `word/${page.key}`,
+    card: { kind: 'release-page', page, pin: release.pin, withdrawalNotice: release.withdrawalNotice } satisfies ReleasePage,
   }))];
 }

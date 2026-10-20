@@ -5,6 +5,8 @@ import WordCardPreview from '../../lexicon/WordCardPreview';
 import type { PreviewCard } from '../../lib/lexicon/word-card-preview';
 import type { EntryRecord } from '../../lib/lexicon/atlas-data-source';
 import type { LoadedRelease, ReleaseCard } from '../../lib/lexicon/word-card-release';
+import type { ReleasePage } from '../../lib/lexicon/word-card-readable';
+import '../../styles/word-card-preview.css';
 import { releasePreviewInputs, type PreviewInput } from '../../lib/lexicon/word-card-preview-inputs';
 
 export async function getStaticPaths() {
@@ -24,29 +26,39 @@ export async function getStaticPaths() {
   })));
 }
 interface Props {
-  card: PreviewCard | ReleaseCard | LoadedRelease; current: EntryRecord | null; compare: boolean;
+  card: PreviewCard | ReleaseCard | ReleasePage | LoadedRelease; current: EntryRecord | null; compare: boolean;
   fingerprint: string; source: string; generatedAt: string; manifestVersion: string;
 }
 const { card, current, compare, fingerprint, source, generatedAt, manifestVersion } = Astro.props;
+const page = card.kind === 'release-page' ? card.page : null;
 ---
-<CourseLayout title="Word-card preview" description="Pinned candidate release preview" currentPath={Astro.url.pathname} wide showHero={false}>
+<CourseLayout title={page ? `${page.title} — word-card preview` : 'Word-card preview'} description="Pinned candidate release preview" currentPath={Astro.url.pathname} wide showHero={false}>
   <meta slot="head" name="robots" content="noindex, nofollow" />
   <main class="word-card-preview">
-    <aside role="note" data-preview-banner>Optional noindex preview, not certified learner cards. Producer status is not linguistic certification or switch approval.</aside>
-    <h1>{compare ? 'Current / candidate comparison' : 'Word-card preview'}</h1>
-    <p>Input: {source}. SHA-256: <code data-input-hash>{fingerprint}</code></p>
-    <p>{card.kind === 'release-card' || card.kind === 'release' ? 'Pinned release preview. Publication and switch gates remain separate.' : 'Real data unavailable. Data #10516 owns the certified export. Atlas retains deployed preview, accepted better/worse evidence and page-switch gates.'}</p>
+    {page ? <>
+      <aside role="note" data-preview-banner class="compact">CANDIDATE preview, not certified learner cards.</aside>
+      <h1 lang="uk">{page.title}</h1>
+      {compare && <p>Current / candidate comparison</p>}
+    </> : <>
+      <aside role="note" data-preview-banner>Optional noindex preview, not certified learner cards. Producer status is not linguistic certification or switch approval.</aside>
+      <h1>{compare ? 'Current / candidate comparison' : 'Word-card preview'}</h1>
+      <p>Input: {source}. SHA-256: <code data-input-hash>{fingerprint}</code></p>
+      <p>{card.kind === 'release-card' || card.kind === 'release' ? 'Pinned release preview. Publication and switch gates remain separate.' : 'Real data unavailable. Data #10516 owns the certified export. Atlas retains deployed preview, accepted better/worse evidence and page-switch gates.'}</p>
+    </>}
     <div class:list={['preview-columns', { comparison: compare }]}>
       {compare && <section aria-label="Current presentation"><h2>Current presentation</h2>
         {current ? <WordAtlasPageShell state={{ status: 'ready', record: current, generatedAt, manifestVersion }} /> : <p>Unavailable: unresolved identity pairing.</p>}
       </section>}
       <section aria-label="Candidate presentation"><WordCardPreview card={card} current={current} compare={compare} /></section>
     </div>
+    {page && <p class="input-line">Input: {source}. SHA-256: <code data-input-hash>{fingerprint}</code>. Producer status is not linguistic certification or switch approval.</p>}
   </main>
 </CourseLayout>
 <style>
   .word-card-preview { padding: 1.5rem; }
   aside { border: 2px solid currentColor; padding: 1rem; }
+  aside.compact { padding: .25rem .75rem; font-size: .9rem; }
+  .input-line { font-size: .85rem; overflow-wrap: anywhere; }
   .comparison { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1.5rem; }
   .preview-columns > section { min-width: 0; overflow: auto; }
   .word-card-preview :global(pre) { white-space: pre-wrap; overflow-wrap: anywhere; }

@@ -1,0 +1,36 @@
+/* Readable grouped word-card preview (lexicon-v2). Inherits site colours; no reduced-contrast text. */
+.word-card-preview h1[lang='uk'] { font-size: 2rem; margin: .5rem 0 .25rem; overflow-wrap: anywhere; }
+.wc-page-meta { margin: 0 0 1rem; font-size: .95rem; }
+.wc-entry { border-top: 2px solid currentColor; padding: .75rem 0 1rem; }
+.wc-entry h2 { font-size: 1.6rem; margin: 0; overflow-wrap: anywhere; }
+.wc-ordinal { font-weight: 400; margin-right: .25rem; }
+.wc-kind { margin: .25rem 0 .5rem; }
+.wc-status { border: 1px solid currentColor; border-radius: .25rem; padding: 0 .35rem; font-size: .8rem; letter-spacing: .03em; }
+.wc-facts { display: grid; grid-template-columns: minmax(7rem, max-content) minmax(0, 1fr); gap: .25rem 1rem; margin: .5rem 0; }
+.wc-facts > div { display: contents; }
+.wc-facts dt { grid-column: 1; font-weight: 600; }
+.wc-facts dd { grid-column: 2; margin: 0; overflow-wrap: anywhere; }
+.wc-facts [data-fact-value] { font-size: 1.1rem; }
+.wc-credits { font-size: .85rem; white-space: normal; }
+.wc-note { font-style: italic; }
+.wc-senses { margin: .25rem 0; padding-left: 1.5rem; }
+.wc-paradigm h4 { font-size: 1rem; margin: .75rem 0 .25rem; }
+/* Site tables are display:block scrollers with 120px cells; here the labelled wrapper scrolls instead. */
+.word-card-preview .wc-table { max-width: 100%; overflow-x: auto; margin: .25rem 0 .75rem; }
+.word-card-preview .wc-table:focus-visible { outline: 3px solid currentColor; outline-offset: 2px; }
+.word-card-preview .wc-table table { display: table; width: auto; max-width: none; margin: 0; overflow: visible; }
+.word-card-preview .wc-table th, .word-card-preview .wc-table td { min-width: 0; padding: .35rem .6rem; text-align: left; }
+.wc-audit { margin: .75rem 0; border: 1px solid currentColor; border-radius: .25rem; padding: .25rem .75rem; overflow-wrap: anywhere; }
+.wc-audit > summary { cursor: pointer; font-weight: 600; padding: .25rem 0; }
+.wc-audit > summary:focus-visible { outline: 3px solid currentColor; outline-offset: 2px; }
+.wc-audit table { font-size: .85rem; }
+.wc-page-list { columns: 16rem; padding-left: 1.25rem; }
+.wc-page-list li { break-inside: avoid; margin-bottom: .25rem; }
+.word-card-preview code { overflow-wrap: anywhere; }
+.wc-sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+@media (max-width: 40rem) {
+  .wc-facts { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .wc-facts dt, .wc-facts dd { grid-column: 1; }
+  .wc-facts dd { margin-bottom: .35rem; }
+  .word-card-preview h1[lang='uk'] { font-size: 1.75rem; }
+}
