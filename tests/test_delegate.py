@@ -7365,10 +7365,9 @@ def test_check_budget_refuses_an_exhausted_claude_account_as_before(
     )
 
     assert rc == 2
-    assert (
-        "❌ ROUTING REFUSED: substitute --agent codex rejects explicit --model claude-opus-5-5"
-        in capsys.readouterr().err
-    )
+    err = capsys.readouterr().err
+    assert "❌ BUDGET_PINNED_MODEL_EXHAUSTED: --agent claude" in err
+    assert "explicit --model claude-opus-5-5" in err
     assert not delegate._state_path_no_create("claude-budget-exhausted").exists()
 
 

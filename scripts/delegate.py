@@ -15409,6 +15409,10 @@ class BudgetGuardRefuseError(RuntimeError):
     """Raised when --check-budget must refuse dispatch (hot/deficit/near_cap, no fallback)."""
 
 
+class _UnmappedSubstitutionModelError(BudgetGuardRefuseError):
+    """The substitute rejects an explicit model with no catalog mapping."""
+
+
 class CapacityGuardRefuseError(RuntimeError):
     """Raised when Cursor driver lease admission must refuse a worker spawn."""
 
@@ -18019,7 +18023,7 @@ def _resolve_substitution_model(target_agent: str, explicit_model: str | None) -
     if explicit_model and mapped is None:
         rejection = _adapter_model_rejection(target_agent, explicit_model)
         if rejection:
-            raise BudgetGuardRefuseError(
+            raise _UnmappedSubstitutionModelError(
                 "ROUTING REFUSED: substitute "
                 f"--agent {target_agent} rejects explicit --model {explicit_model} "
                 f"({rejection}). Refusing before spawn."
@@ -18034,6 +18038,50 @@ def _resolve_substitution_model(target_agent: str, explicit_model: str | None) -
         f"catalog default {default or '(none)'}). "
         "Refusing before spawn."
     )
+
+
+def _resolve_budget_substitution_model(
+    requested: str,
+    target: str,
+    model: str | None,
+    *,
+    info: dict[str, Any],
+    reason: str,
+    snapshot_metadata: Mapping[str, Any] | None,
+    diagnostic_sink: dict[str, Any] | None,
+) -> tuple[str, str] | None:
+    """Resolve a writer's budget shed, retaining an incompatible pin unless exhausted (#11110)."""
+    try:
+        return _resolve_substitution_model(target, model)
+    except _UnmappedSubstitutionModelError:
+        facts = _budget_owner_facts(requested, info, model=model, is_stale=False, snapshot_metadata=snapshot_metadata)
+        exhausted = "near_cap" in {
+            _budget_lane_status(requested, info),
+            facts.status,
+            credit_lane.allowance_status(facts.plan_remaining_pct),
+        } or credit_lane.plan_window_exhausted(requested, info)
+        if exhausted:
+            raise BudgetGuardRefuseError(
+                f"BUDGET_PINNED_MODEL_EXHAUSTED: --agent {requested} is exhausted/near_cap "
+                f"({facts.plan_remaining_pct}% remaining; {reason}); explicit --model {model} has no mapping "
+                f"accepted by --agent {target}. Supported remedies: wait for reset, request a mapped model, "
+                "or select the other Claude account label where policy permits. Refusing before spawn."
+            ) from None
+        note = {
+            "code": "BUDGET_PIN_RETAINED",
+            "agent": requested,
+            "model": model,
+            "substitute_agent": target,
+            "trigger": reason,
+        }
+        if diagnostic_sink is not None:
+            diagnostic_sink["pinned_model_retained"] = note
+        print(
+            f"NOTE: BUDGET_PIN_RETAINED: keeping --agent {requested} --model {model} "
+            f"on {reason}; the pin has no mapping accepted by --agent {target} and the original lane is not exhausted.",
+            file=sys.stderr,
+        )
+        return None
 
 
 def _substitution_model_phrase(chosen: str, how: str, explicit_model: str | None) -> str:
@@ -18172,7 +18220,10 @@ def _resolve_agent_with_budget_guard(
     CodexBar deficit (will_last_to_reset is False), if yaml dispatch_fallbacks
     (``fallbacks``, which ``resolve_and_admit`` reads and hands to the launch
     route) has a known target. Without a usable fallback: refuse (raise
-    BudgetGuardRefuseError). ``force_agent`` disables that writer substitution and
+    BudgetGuardRefuseError). An unmapped explicit model rejected by the substitute
+    stays on its original lane for hot/pace triggers, with a task-record note;
+    exhaustion instead refuses with BUDGET_PINNED_MODEL_EXHAUSTED (#11110).
+    ``force_agent`` disables that writer substitution and
     the capacity refusal, and still prints and stores the lane's quota and
     health (explicit unknowns when telemetry is missing).
     Subscription stale/empty: advisory only. Prepaid requires fresh verified
@@ -18537,8 +18588,20 @@ def _resolve_agent_with_budget_guard(
                 requested_model=requested_model,
                 model_resolution=model_resolution,
                 origin_agent=origin_agent or requested,
+                diagnostic_sink=diagnostic_sink,
             )
-        chosen, how = _resolve_substitution_model(fallback, requested_model)
+        resolved = _resolve_budget_substitution_model(
+            requested,
+            fallback,
+            requested_model,
+            info=agent_dict,
+            reason=reason,
+            snapshot_metadata=diags,
+            diagnostic_sink=diagnostic_sink,
+        )
+        if resolved is None:
+            return requested
+        chosen, how = resolved
         note = (
             f"🔄 HARD AUTO-SUBSTITUTE: --agent {requested} → {fallback} "
             f"{_substitution_model_phrase(chosen, how, requested_model)} "
@@ -18588,6 +18651,7 @@ def _language_lane_substitute(
     requested_model: str | None = None,
     model_resolution: dict[str, Any] | None = None,
     origin_agent: str | None = None,
+    diagnostic_sink: dict[str, Any] | None = None,
 ) -> str:
     """Walk fallbacks, staying inside claude/codex/agy (#8449)."""
     seat = requested
@@ -18635,7 +18699,18 @@ def _language_lane_substitute(
                 f"Language work on --agent {requested} cannot move to "
                 f"{nxt or 'no fallback'}; allowed lanes are claude, codex (GPT), and agy (Gemini)."
             )
-        chosen, how = _resolve_substitution_model(nxt, current_model)
+        resolved = _resolve_budget_substitution_model(
+            seat,
+            nxt,
+            current_model,
+            info=info_dict,
+            reason=why,
+            snapshot_metadata=snapshot_metadata,
+            diagnostic_sink=diagnostic_sink,
+        )
+        if resolved is None:
+            return seat
+        chosen, how = resolved
         print(
             f"🔄 HARD AUTO-SUBSTITUTE: --agent {seat} → {nxt} "
             f"{_substitution_model_phrase(chosen, how, current_model)} "

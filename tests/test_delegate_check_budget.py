@@ -1793,7 +1793,7 @@ def test_budget_sub_never_maps_opus_to_a_cursor_claude_slug(monkeypatch, tmp_pat
 
 
 def test_budget_sub_refuses_unmapped_model_the_substitute_rejects(monkeypatch, tmp_path, capsys):
-    """Hot claude → codex: an explicit model Codex rejects, with no mapping row, never spawns."""
+    """An exhausted Claude lane with an unmapped Opus pin refuses before spawn."""
     commands: list[list[str]] = []
 
     def fake_popen(cmd, *_args, **_kwargs):
@@ -1811,9 +1811,9 @@ def test_budget_sub_refuses_unmapped_model_the_substitute_rejects(monkeypatch, t
             "recommendation": {"primary_agent_for_code": "codex", "rationale": "fixture", "warnings": []},
             "agents": {
                 "claude": {
-                    "status": "hot",
-                    "burn_pct_7d": 95.0,
-                    "interactive": {"status": "hot", "burn_pct_7d": 95.0},
+                    "status": "near_cap",
+                    "burn_pct_7d": 99.5,
+                    "interactive": {"status": "near_cap", "burn_pct_7d": 99.5},
                 },
                 "codex": {"status": "cool", "burn_pct_7d": 10.0},
                 "cursor": {"status": "cool", "burn_pct_7d": 5.0},
@@ -1836,20 +1836,142 @@ def test_budget_sub_refuses_unmapped_model_the_substitute_rejects(monkeypatch, t
                 "read-only",
                 "--check-budget",
                 "--model",
-                "claude-fable-5-1",
+                "claude-opus-5-5",
             ]
         )
     )
 
     assert rc == 2
     err = capsys.readouterr().err
-    assert "rejects explicit --model claude-fable-5-1" in err
-    assert "CodexAdapter: model='claude-fable-5-1' rejected" in err
+    assert "BUDGET_PINNED_MODEL_EXHAUSTED:" in err
+    assert "--agent claude" in err and "near_cap" in err
+    assert "--model claude-opus-5-5" in err and "--agent codex" in err
+    assert "wait for reset" in err and "mapped model" in err and "Claude account label" in err
+    assert "CodexAdapter:" not in err
     assert "Refusing before spawn." in err
     assert "catalog default" not in err
     assert "HARD AUTO-SUBSTITUTE" not in err
     assert not any("_worker" in command for command in commands)
     assert not (tmp_path / "tasks" / "probe-8855-reject.json").exists()
+
+
+@pytest.mark.parametrize("language_lane", [False, True])
+@pytest.mark.parametrize("status", ["warm", "hot", "near_cap", "primary_exhausted"])
+def test_budget_guard_preserves_unmapped_pin_until_exhausted(monkeypatch, capsys, language_lane, status):
+    lane = _fresh_lane(
+        status="hot" if status == "primary_exhausted" else status,
+        interactive={"status": "hot" if status == "primary_exhausted" else status},
+        codexbar={
+            "primary_remaining_pct": 0.0 if status == "primary_exhausted" else 86.0,
+            "weekly_used_pct": 20.0,
+            "weekly_remaining_pct": 80.0,
+            "weekly_expected_pct": 11.0,
+            "weekly_pace_delta_pct": 9.0,
+            "will_last_to_reset": False,
+        },
+    )
+    budget = {
+        "agents": {"claude": lane, "codex": _fresh_lane(status="cool")},
+        "diagnostics": {"records_loaded": 0, "stale": False, "codexbar_data_available": True},
+    }
+    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: budget)
+    diagnostics, resolution = {}, {}
+    kwargs = dict(
+        requested_model="claude-opus-5-5",
+        language_lane=language_lane,
+        fallbacks={"claude": "codex"},
+        claude_account=HOST_ACCOUNT,
+        diagnostic_sink=diagnostics,
+        model_resolution=resolution,
+    )
+    if status in {"near_cap", "primary_exhausted"}:
+        with pytest.raises(delegate.BudgetGuardRefuseError, match="BUDGET_PINNED_MODEL_EXHAUSTED:"):
+            delegate._resolve_agent_with_budget_guard("claude", **kwargs)
+        assert "BUDGET_PIN_RETAINED" not in capsys.readouterr().err
+    else:
+        assert delegate._resolve_agent_with_budget_guard("claude", **kwargs) == "claude"
+        err = capsys.readouterr().err
+        assert "BUDGET_PIN_RETAINED" in err and "HARD AUTO-SUBSTITUTE" not in err
+        assert diagnostics["pinned_model_retained"] == {
+            "code": "BUDGET_PIN_RETAINED",
+            "agent": "claude",
+            "model": "claude-opus-5-5",
+            "substitute_agent": "codex",
+            "trigger": "codexbar will_last_to_reset=False (deficit)",
+        }
+    assert resolution == {}
+
+
+def test_budget_guard_retained_pin_is_in_dispatch_record(monkeypatch, tmp_path, capsys):
+    commands = _capture_worker_commands(monkeypatch, tmp_path)
+    budget = _codex_cursor_budget(codex_status="cool")
+    budget["agents"]["claude"] = _fresh_lane(
+        status="hot",
+        interactive={"status": "hot", "burn_pct_7d": 20.0},
+        codexbar={"weekly_remaining_pct": 80.0, "primary_remaining_pct": 86.0},
+    )
+    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: budget)
+    rc = delegate.cmd_dispatch(_dispatch_args("--check-budget", "--model", "claude-opus-5-5"))
+    assert rc == 0
+    argv = _worker_argv(commands)
+    assert argv[argv.index("--agent") + 1] == "claude"
+    assert argv[argv.index("--model") + 1] == "claude-opus-5-5"
+    state = json.loads((tmp_path / "tasks" / "budget-check-fixture.json").read_text())
+    assert state["substitution"] is None
+    assert state["routing_facts"]["pinned_model_retained"]["trigger"] == "status=hot"
+    assert "BUDGET_PIN_RETAINED" in capsys.readouterr().err
+
+
+@pytest.mark.parametrize("model", [None, "gpt-6.1-sol"])
+def test_budget_guard_pace_keeps_unpinned_and_mapped_substitutions(monkeypatch, model):
+    budget = {
+        "agents": {
+            "cursor": _fresh_lane(
+                status="warm",
+                codexbar={
+                    "weekly_used_pct": 50.0,
+                    "weekly_remaining_pct": 50.0,
+                    "weekly_expected_pct": 20.0,
+                    "weekly_pace_delta_pct": 30.0,
+                    "will_last_to_reset": False,
+                },
+            )
+        },
+        "diagnostics": {"records_loaded": 0, "stale": False, "codexbar_data_available": True},
+    }
+    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: budget)
+    resolution = {}
+    assert (
+        delegate._resolve_agent_with_budget_guard(
+            "cursor",
+            requested_model=model,
+            fallbacks={"cursor": "codex"},
+            claude_account=HOST_ACCOUNT,
+            model_resolution=resolution,
+        )
+        == "codex"
+    )
+    assert resolution["record"]["actual_model"] == "gpt-6.1-sol"
+    assert resolution["record"]["model_resolution"] == ("mapped" if model else "catalog-default")
+
+
+@pytest.mark.parametrize("model", ["claude-sonnet-5-5-high", "claude-opus-5-5-high"])
+def test_budget_guard_agy_claude_pin_still_refuses_substitution(monkeypatch, model):
+    monkeypatch.setattr(
+        delegate,
+        "_fetch_routing_budget",
+        lambda: {
+            "agents": {"agy": _fresh_lane(status="hot")},
+            "diagnostics": {"records_loaded": 1, "stale": False},
+        },
+    )
+    with pytest.raises(delegate.BudgetGuardRefuseError, match="pinned AGY Claude identity"):
+        delegate._resolve_agent_with_budget_guard(
+            "agy",
+            requested_model=model,
+            fallbacks={"agy": "codex"},
+            claude_account=HOST_ACCOUNT,
+        )
 
 
 def test_budget_sub_refuses_before_spawn_when_no_model_is_valid(monkeypatch, tmp_path, capsys):
@@ -2303,11 +2425,14 @@ def test_selected_account_with_headroom_keeps_claude_when_the_default_account_is
     err = capsys.readouterr().err
     assert "HARD AUTO-SUBSTITUTE" not in err and "ROUTING REFUSED" not in err and "ROUTING CHECK UNKNOWN" not in err
 
-    # The default account is still judged on the lane row: the explicit Opus model cannot move to codex.
+    # The default account still reads its own row: only exhaustion refuses an unmapped pin (#11110).
     for label in (None, "a"):
         outcome, message = _guard_outcome(monkeypatch, budget, label)
-        assert outcome == "refused"
-        assert "substitute --agent codex rejects explicit --model claude-opus-5-5" in message
+        if default_state == "near_cap":
+            assert outcome == "refused" and "BUDGET_PINNED_MODEL_EXHAUSTED:" in message
+        else:
+            assert (outcome, message) == ("agent", "claude")
+            assert "BUDGET_PIN_RETAINED" in capsys.readouterr().err
 
 
 @pytest.mark.parametrize("model", ["claude-opus-5-5", None])
@@ -2536,10 +2661,12 @@ def test_unattributed_rate_limits_never_refuse_a_selected_account_with_headroom(
         "5min)) is not attributed to an account; not counted against claude account b"
     ) in err
     assert sink["claude_account"]["unattributed_rate_limits"]["headroom_blocked"] is True
-    # The default account still reads its lane row unchanged, runtime block included.
+    # A hot default row without exhaustion retains the pin, including its runtime warning (#11110).
     for label in (None, "a"):
-        outcome, message = _guard_outcome(monkeypatch, budget, label)
-        assert outcome == "refused" and "substitute --agent codex rejects explicit --model" in message
+        default_sink = {}
+        assert _account_guard(monkeypatch, budget, label, diagnostic_sink=default_sink) == "claude"
+        assert default_sink["pinned_model_retained"]["trigger"] == "status=hot"
+        assert "BUDGET_PIN_RETAINED" in capsys.readouterr().err
 
 
 def test_unattributed_rate_limits_never_exclude_a_selected_account_reviewer(monkeypatch, tmp_path):
