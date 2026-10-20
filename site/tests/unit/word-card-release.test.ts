@@ -7,11 +7,11 @@ import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { loadWordCardRelease, releaseReportUrl } from '../../src/lib/lexicon/word-card-release';
 import WordCardPreview from '../../src/lexicon/WordCardPreview';
-import { candidateId, certifiedId, pins, releaseControls, fidelityControls, fidelityRefusals, semanticCases, semanticControls, digest } from '../fixtures/word-card-preview/release-controls';
+import { candidateId, certifiedId, pins, releaseControls, fidelityControls, fidelityRefusals, semanticCases, semanticControls, noticeCases, noticeControls, digest } from '../fixtures/word-card-preview/release-controls';
 
 
 const scratch = mkdtempSync(join(process.env.TMPDIR || tmpdir(), 'release-unit-'));
-const controls = { ...releaseControls(scratch), ...fidelityControls(join(scratch, 'fidelity')), ...semanticControls(join(scratch, 'semantic')) };
+const controls = { ...releaseControls(scratch), ...fidelityControls(join(scratch, 'fidelity')), ...semanticControls(join(scratch, 'semantic')), ...noticeControls(join(scratch, 'notices')) };
 afterAll(() => rmSync(scratch, { recursive: true }));
 const load = (name: string) => {
   const config = controls[name];
@@ -20,6 +20,28 @@ const load = (name: string) => {
 };
 
 describe('pinned producer release boundary', () => {
+  it.each(['json', 'jsonl'] as const)('reports malformed UTF-8 consistently in %s', encoding => {
+    const path = join(scratch, `utf8-${encoding}`);
+    fs.mkdirSync(path);
+    const bytes = Buffer.from([0xff]), manifest = { ...JSON.parse(readFileSync(`tests/fixtures/word-card-preview/release-${encoding}/manifest.json`, 'utf8')),
+      dataset_bytes: bytes.length, dataset_sha256: digest(bytes) };
+    const manifestBytes = JSON.stringify(manifest);
+    fs.writeFileSync(join(path, manifest.dataset_file), bytes);
+    fs.writeFileSync(join(path, 'manifest.json'), manifestBytes);
+    const pin = JSON.stringify({ ...pins[encoding], dataset_sha256: digest(bytes), manifest_sha256: digest(manifestBytes) });
+    expect(loadWordCardRelease({ enabled: true, artifactPath: path, pin })).toEqual({ kind: 'unavailable', reason: 'Malformed dataset' });
+  });
+  for (const encoding of ['json', 'jsonl']) it.each(noticeCases)(`${encoding} withdrawal notice %s`, (name, reason) => {
+    const key = `${encoding}-notice-${name}`, result = load(key);
+    if (reason) expect(result).toEqual({ kind: 'unavailable', reason });
+    else {
+      if (result.kind !== 'release') throw Error('Refused valid notice control');
+      expect(result.rows).toHaveLength(2);
+      expect(result.rows.reduce((n, row) => n + row.fields.length, 0)).toBe(6);
+      expect(result.withdrawalNotice).toEqual(name === 'absent' ? undefined :
+        JSON.parse(readFileSync(join(controls[key]?.artifactPath || '', 'withdrawal-notice.json'), 'utf8')));
+    }
+  });
   for (const encoding of ['json', 'jsonl']) it.each(semanticCases)(`${encoding} semantic $name`, c => {
     const result = load(`${encoding}-${c.name}`);
     if (c.expected === 'refuse') {

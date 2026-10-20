@@ -11,6 +11,9 @@ export default function WordCardPreview({ card, current, compare }: { card: Prev
     <p>{card.pin.provenance === 'synthetic-fixture' ?
       'Synthetic fixture. CERTIFIED exercises the UI branch under test authority only. No linguistic or publication approval.' :
       'Producer-declared status. No publication approval is implied.'}</p>
+    {card.withdrawalNotice !== undefined && <section aria-label="Withdrawal notice"><h3>Withdrawal notice</h3>
+      <pre>{JSON.stringify(card.withdrawalNotice, null, 2)}</pre>
+    </section>}
     <section aria-label="Known gaps"><h3>Known gaps</h3><p>Declared metadata, not language facts.</p>
       {card.row.known_gaps.length ? card.row.known_gaps.map((gap, i) => <pre key={i}>{typeof gap === 'string' ? gap : JSON.stringify(gap, null, 2)}</pre>) : <p>No declared gaps</p>}
     </section>

@@ -39,9 +39,9 @@ const rowSchema = z.object({
 }).strict();
 export type ReleasePin = z.infer<typeof pinSchema>;
 export type ReleaseRow = z.infer<typeof rowSchema>;
-export type LoadedRelease = { kind: 'release'; pin: ReleasePin; rows: ReleaseRow[] };
+export type LoadedRelease = { kind: 'release'; pin: ReleasePin; rows: ReleaseRow[]; withdrawalNotice?: z.infer<typeof json> };
 export type ReleaseResult = LoadedRelease | { kind: 'disabled' } | { kind: 'unavailable'; reason: string };
-export type ReleaseCard = { kind: 'release-card'; row: ReleaseRow; pin: ReleasePin };
+export type ReleaseCard = { kind: 'release-card'; row: ReleaseRow } & Pick<LoadedRelease, 'pin' | 'withdrawalNotice'>;
 
 class Refusal extends Error {}
 function refuse(reason: string): never { throw new Refusal(reason); }
@@ -72,20 +72,25 @@ function decimalParts(token: string) {
 }
 function sameDecimal(source: string, displayed: string): boolean {
   const a = decimalParts(source), b = decimalParts(displayed);
-  if (!a.digits || !b.digits) return a.digits === b.digits;
+  if (!a.digits || !b.digits) return a.digits === b.digits && a.negative === b.negative;
   // Only the displayed exponent enters arithmetic. Source exponents stay text,
   // so arbitrarily written exponents never cause powers or large-integer arithmetic.
   return a.negative === b.negative && a.digits === b.digits &&
     a.exponent === String(Number(b.exponent) + b.shift - a.shift);
 }
-function losesLeadingLine(value: unknown): boolean {
-  return typeof value === 'string' && value.startsWith('\r');
+function losesHtmlText(value: unknown): boolean {
+  // HTML drops the first LF after <pre> and normalizes every CR/CRLF to LF.
+  return typeof value === 'string' && (value.startsWith('\n') || value.includes('\r'));
+}
+function decode(bytes: Buffer, reason: string): string {
+  try { return new TextDecoder('utf-8', { fatal: true }).decode(bytes); }
+  catch { return refuse(reason); }
 }
 function parse(bytes: Buffer, reason: string): unknown {
   let value: unknown;
   let unsupported = false;
   try {
-    value = JSON.parse(new TextDecoder('utf-8', { fatal: true }).decode(bytes),
+    value = JSON.parse(decode(bytes, reason),
       (_key: string, item: unknown, context?: { source?: string }): unknown => {
         if (typeof item === 'number' && (!Number.isFinite(item) ||
           typeof context?.source !== 'string' || !sameDecimal(context.source, String(item)))) unsupported = true;
@@ -115,9 +120,24 @@ export function loadWordCardRelease(config: { enabled: boolean; artifactPath?: s
     if (manifest.dataset_sha256 !== pin.dataset_sha256) refuse('Dataset pin mismatch');
     const bytes = read(join(config.artifactPath, manifest.dataset_file));
     if (bytes.length !== manifest.dataset_bytes || hash(bytes) !== pin.dataset_sha256) refuse('Dataset integrity mismatch');
-    if (manifest.withdrawal_notice_sha256 && hash(read(join(config.artifactPath, 'withdrawal-notice.json'))) !== manifest.withdrawal_notice_sha256) refuse('Withdrawal notice integrity mismatch');
+    let withdrawalNotice: LoadedRelease['withdrawalNotice'];
+    if (manifest.withdrawal_notice_sha256) {
+      const noticeBytes = read(join(config.artifactPath, 'withdrawal-notice.json'));
+      if (hash(noticeBytes) !== manifest.withdrawal_notice_sha256) refuse('Withdrawal notice integrity mismatch');
+      const notice = z.object({
+        schema_version: z.literal('word-card-withdrawal.v1'), previous_release_version: nonempty,
+        previous_dataset_sha256: digest, replacement_release_version: nonempty, replacement_dataset_sha256: digest,
+        withdrawal: z.object({ selector: z.object({ source_id: nonempty.optional(), locator: nonempty.optional() })
+          .strict().refine(s => s.source_id !== undefined || s.locator !== undefined), justification: nonempty }).strict(),
+        removed_field_citations: count,
+      }).catchall(json).safeParse(parse(noticeBytes, 'Malformed withdrawal notice'));
+      if (!notice.success) refuse('Malformed or unsupported withdrawal notice');
+      if (notice.data.replacement_release_version !== pin.release_version ||
+          notice.data.replacement_dataset_sha256 !== pin.dataset_sha256) refuse('Withdrawal notice release mismatch');
+      withdrawalNotice = notice.data;
+    }
     const raw = manifest.dataset_file === 'word-cards.json' ? parse(bytes, 'Malformed dataset') :
-      new TextDecoder('utf-8', { fatal: true }).decode(bytes).split(/\r?\n/).filter(line => line.trim()).map(line => parse(Buffer.from(line), 'Malformed dataset'));
+      decode(bytes, 'Malformed dataset').split(/\r?\n/).filter(line => line.trim()).map(line => parse(Buffer.from(line), 'Malformed dataset'));
     if (!Array.isArray(raw)) refuse('Unsupported dataset input');
     const rows = raw.map((value: unknown) => {
       const status = z.object({ status: z.enum(['CERTIFIED', 'CANDIDATE']) }).safeParse(value);
@@ -125,7 +145,7 @@ export function loadWordCardRelease(config: { enabled: boolean; artifactPath?: s
       const result = rowSchema.safeParse(value);
       if (!result.success) refuse(result.error.issues.some(i => i.path.includes('citation')) ?
         'Missing or malformed field citation' : 'Missing or malformed card field');
-      if (result.data.known_gaps.some(losesLeadingLine) || result.data.fields.some(field => losesLeadingLine(field.value))) {
+      if (result.data.known_gaps.some(losesHtmlText) || result.data.fields.some(field => losesHtmlText(field.value))) {
         refuse('Unsupported release value');
       }
       return result.data;
@@ -144,7 +164,7 @@ export function loadWordCardRelease(config: { enabled: boolean; artifactPath?: s
     if (rows.length !== manifest.card_count || assertions.size !== manifest.field_citation_count ||
         rows.filter(r => r.status === 'CERTIFIED').length !== manifest.certified_count ||
         rows.filter(r => r.status === 'CANDIDATE').length !== manifest.candidate_count) refuse('Manifest count mismatch');
-    return { kind: 'release', rows, pin };
+    return { kind: 'release', rows, pin, ...(withdrawalNotice === undefined ? {} : { withdrawalNotice }) };
   } catch (error) {
     return { kind: 'unavailable', reason: error instanceof Refusal ? error.message : 'Unsupported release input' };
   }

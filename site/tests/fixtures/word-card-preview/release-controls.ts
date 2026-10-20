@@ -50,18 +50,50 @@ export const semanticCases: SemanticCase[] = [
       ({ name: `${target}-lossy-number-${i}`, target, token, expected: 'refuse' } satisfies SemanticCase))),
   ...['\r\nA', '\rA', '\r'].flatMap((text, i) => (['value', 'gap'] as const).map(target =>
     ({ name: `${target}-leading-cr-${i}`, target, token: JSON.stringify(text), expected: 'refuse' } satisfies SemanticCase))),
+  ...['\nA', '\n\nA', '\n', 'A\rB', 'A\r\nB', 'A\r', '\nA\rB'].flatMap((text, i) => (['value', 'gap'] as const).map(target =>
+    ({ name: `${target}-html-line-${i}`, target, token: JSON.stringify(text), expected: 'refuse' } satisfies SemanticCase))),
+  ...['-0', '-0.0', '-0e0'].flatMap((token, i) => (['value', 'gap', 'nested-value', 'nested-gap'] as const).map(target =>
+    ({ name: `${target}-negative-zero-${i}`, target, token, expected: 'refuse' } satisfies SemanticCase))),
   { name: 'nested-value-underflow', target: 'nested-value', token: '1e-400', expected: 'refuse' },
   { name: 'nested-gap-rounded', target: 'nested-gap', token: '2.5e-324', expected: 'refuse' },
   { name: 'licence-precision', target: 'licence', token: '1.000000000000000000001', expected: 'refuse' },
-  ...([['1.0', '1'], ['1e0', '1'], ['10.50', '10.5'], ['-0.0', '0'], ['1e-07', '1e-7'], ['0.1', '0.1'], ['5e-324', '5e-324']] as const)
+  ...([['1.0', '1'], ['1e0', '1'], ['10.50', '10.5'], ['0.0', '0'], ['1e-07', '1e-7'], ['0.1', '0.1'], ['5e-324', '5e-324']] as const)
     .map(([token, displayed], i) => ({ name: `value-equal-number-${i}`, target: 'value', token,
       expected: 'admit', displayed } satisfies SemanticCase)),
   { name: 'nested-value-equal-number', target: 'nested-value', token: '1.0', expected: 'admit', displayed: '{\n  "nested": [\n    1\n  ]\n}' },
-  ...([['A\r\nB', 'A\nB'], ['A\rB', 'A\nB'], ['\nA', '\nA'], ['\n\nA', '\n\nA'], ['A\n', 'A\n'],
+  ...([['A\nB', 'A\nB'], ['A\n', 'A\n'], [' A ', ' A '], ['<&>"😀', '<&>"😀'],
     [{ nested: ['\r\nA'] }, '{\n  "nested": [\n    "\\r\\nA"\n  ]\n}']] as const).flatMap(([value, displayed], i) =>
     (['value', 'gap'] as const).map(target => ({ name: `${target}-faithful-string-${i}`, target,
       token: JSON.stringify(value), expected: 'admit', displayed: String(displayed) } satisfies SemanticCase))),
 ];
+
+export const noticeCases: [string, string | null][] = [
+  ['valid', null], ['absent', null], ['missing', 'Missing artifact'],
+  ['mismatch', 'Withdrawal notice integrity mismatch'], ['malformed', 'Malformed withdrawal notice'],
+  ['shape', 'Malformed or unsupported withdrawal notice'], ['selector', 'Malformed or unsupported withdrawal notice'],
+  ['binding', 'Withdrawal notice release mismatch'],
+];
+export function noticeControls(root: string): Record<string, Control> {
+  const controls: Record<string, Control> = {};
+  for (const encoding of ['json', 'jsonl'] as const) for (const [name] of noticeCases) {
+    const path = join(root, `${encoding}-notice-${name}`);
+    cpSync(join(fixtureRoot, `release-${encoding}`), path, { recursive: true });
+    const manifest = JSON.parse(readFileSync(join(path, 'manifest.json'), 'utf8'));
+    const notice = { schema_version: 'word-card-withdrawal.v1', previous_release_version: 'previous-control',
+      previous_dataset_sha256: '1'.repeat(64), replacement_release_version: manifest.release_version,
+      replacement_dataset_sha256: name === 'binding' ? '0'.repeat(64) : manifest.dataset_sha256,
+      withdrawal: { selector: name === 'selector' ? {} : { source_id: 'fixture-source' },
+        justification: '\nWITHDRAWN\r\n<svg onload=globalThis.noticeInjected=1> & "literal"' }, removed_field_citations: 1 };
+    const bytes = name === 'malformed' ? '{invalid' : JSON.stringify(name === 'shape' ? {} : notice);
+    if (name !== 'absent') manifest.withdrawal_notice_sha256 = digest(bytes);
+    if (!['absent', 'missing'].includes(name)) writeFileSync(join(path, 'withdrawal-notice.json'), name === 'mismatch' ? '{}' : bytes);
+    const manifestBytes = JSON.stringify(manifest);
+    writeFileSync(join(path, 'manifest.json'), manifestBytes);
+    controls[`${encoding}-notice-${name}`] = { enabled: true, artifactPath: path,
+      pin: JSON.stringify({ ...pins[encoding], manifest_sha256: digest(manifestBytes) }) };
+  }
+  return controls;
+}
 
 /** Keep literal tokens intact through both encodings; JSON.parse would erase the defect. */
 export function semanticControls(root: string): Record<string, Control> {
@@ -173,7 +205,9 @@ if fault == 'count': m['card_count'] = 7
 if fault == 'schema': m['schema_version'] = 'unsupported.v1'
 if fault == 'path': m['dataset_file'] = '../private.json'
 if fault == 'withdrawal': m['withdrawal_notice_sha256'] = sha256(b'notice\\n'); (p/'withdrawal-notice.json').write_bytes(b'wrong\\n')
-if fault == 'withdrawal-valid': m['withdrawal_notice_sha256'] = sha256(b'notice\\n'); (p/'withdrawal-notice.json').write_bytes(b'notice\\n')
+if fault == 'withdrawal-valid':
+    notice = canonical(dict(schema_version='word-card-withdrawal.v1', previous_release_version='previous-control', previous_dataset_sha256='1'*64, replacement_release_version=m['release_version'], replacement_dataset_sha256=sha256(data), withdrawal=dict(selector=dict(source_id='fixture-source'), justification='Withdrawal control'), removed_field_citations=1))
+    m['withdrawal_notice_sha256'] = sha256(notice); (p/'withdrawal-notice.json').write_bytes(notice)
 if fault == 'malformed-dataset': data = b'{invalid JSON\\n'
 if fault == 'empty': m.update(card_count=0, certified_count=0, candidate_count=0, field_citation_count=0)
 m.update(dataset_bytes=len(data), dataset_sha256=sha256(data))

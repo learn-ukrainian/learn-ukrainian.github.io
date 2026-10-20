@@ -15,7 +15,7 @@ export async function getStaticPaths() {
   const samples: Array<{ name: string; card: PreviewCard | ReleaseCard; current: EntryRecord | null;
     fingerprint: string; source: string; generatedAt: string; manifestVersion: string }> = await previewInputs();
   if (release.kind === 'release') for (const row of release.rows) samples.push({
-    name: `release/${row.card_id}`, card: { kind: 'release-card', row, pin: release.pin }, current: null,
+    name: `release/${row.card_id}`, card: { kind: 'release-card', row, pin: release.pin, withdrawalNotice: release.withdrawalNotice }, current: null,
     fingerprint: release.pin.dataset_sha256, source: `${release.pin.provenance} release ${release.pin.release_version}`,
     generatedAt: '', manifestVersion: release.pin.release_version,
   });

@@ -8,7 +8,7 @@ import { basename, join, resolve, sep } from 'node:path';
 import { tmpdir } from 'node:os';
 import snapshot from '../tests/fixtures/word-card-preview/current';
 import { revisionCases, relationCases, record } from '../tests/fixtures/word-card-preview/inputs';
-import { buildPreview, releaseControls, candidateId, certifiedId, pins, fidelityControls, fidelityRefusals, semanticCases, semanticControls } from '../tests/fixtures/word-card-preview/release-controls';
+import { buildPreview, releaseControls, candidateId, certifiedId, pins, fidelityControls, fidelityRefusals, semanticCases, semanticControls, noticeCases, noticeControls } from '../tests/fixtures/word-card-preview/release-controls';
 
 async function withScratch(prefix: string, logs: string, use: (scratch: string) => Promise<void>): Promise<void> {
   const scratch = mkdtempSync(join(process.env.TMPDIR || tmpdir(), prefix));
@@ -206,6 +206,36 @@ test.describe('source fidelity refusals', () => {
           const raw = c.target.includes('value') ? page.locator('[data-raw-value]').nth(1) :
             page.getByRole('region', { name: 'Known gaps' }).locator('pre').first();
           expect(await raw.textContent()).toBe(c.displayed);
+        }
+      }
+    } finally { await closePreview(server); }
+  });
+  for (const encoding of ['json', 'jsonl']) for (const [name, reason] of noticeCases) test(`${encoding} withdrawal notice ${name}`, async ({ page, fidelityScratch: scratch }, info) => {
+    const config = noticeControls(join(scratch, 'notices'))[`${encoding}-notice-${name}`];
+    if (!config?.artifactPath) throw Error('Missing notice control');
+    const root = buildPreview(join(scratch, 'preview'), config);
+    const server = await serve(root);
+    try {
+      const address = server.address();
+      if (!address || typeof address === 'string') throw Error('No local port');
+      for (const prefix of ['', 'compare/']) {
+        const origin = `http://127.0.0.1:${address.port}/lexicon-v2/${prefix}release/`;
+        if (reason) {
+          await page.goto(origin + certifiedId + '/');
+          await expect(page.locator('[data-release-card]')).toHaveCount(0);
+          await page.goto(origin);
+          await expect(page.getByRole('status')).toHaveText(`Unavailable: ${reason}`);
+        } else for (const id of [certifiedId, candidateId]) {
+          await page.goto(origin + id + '/');
+          await info.attach(`${prefix ? 'compare' : 'word'}-${id}`, { body: await page.content(), contentType: 'text/html' });
+          const notice = page.getByRole('region', { name: 'Withdrawal notice', exact: true });
+          if (name === 'absent') await expect(notice).toHaveCount(0);
+          else {
+            await expect(notice).toBeVisible();
+            const expected = JSON.parse(readFileSync(join(config.artifactPath, 'withdrawal-notice.json'), 'utf8'));
+            expect(await notice.locator('pre').textContent()).toBe(JSON.stringify(expected, null, 2));
+            expect(await page.evaluate(() => Object.hasOwn(globalThis, 'noticeInjected'))).toBe(false);
+          }
         }
       }
     } finally { await closePreview(server); }
