@@ -18,6 +18,7 @@ import requests
 
 from scripts.lexdata import generation, transforms
 from scripts.lexicon import sum20_lookup
+from scripts.lexicon.source_attribution import learner_facing_mirror_violations, official_url_for_slug
 from scripts.lexicon.sum20_lookup import (
     lookup_decolonized_heteronym_evidence,
     lookup_sum20_articles,
@@ -690,8 +691,8 @@ def _seed_mirror(tmp_path):
     with sqlite3.connect(path) as conn:
         conn.execute("CREATE TABLE sum20_slovnyk_articles (lemma, headword, text, source_url, url)")
         conn.executemany("INSERT INTO sum20_slovnyk_articles VALUES (?, ?, ?, ?, ?)", [
-            ("вода", "ВОДА", "mirror duplicate", "https://example.invalid/water", "water"),
-            ("берег", "БЕРЕГ", "mirror-only definition", "https://example.invalid/bank", "bank"),
+            ("вода", "ВОДА", "mirror duplicate", "https://slovnyk.me/dict/newsum/вода", "water"),
+            ("берег", "БЕРЕГ", "mirror-only definition", "https://slovnyk.me/dict/newsum/берег", "bank"),
         ])
     return path
 
@@ -711,19 +712,75 @@ def test_unified_binding_official_wins_mirror_fills_and_miss_stays_local(tmp_pat
     rows = lookup_sum20_articles("БЕ\u0301РЕГ")
     assert rows == [{
         "headword": "БЕРЕГ", "definition": "mirror-only definition", "article_text": "mirror-only definition",
-        "senses": [], "url": "https://example.invalid/bank", "role": "mirror_candidate",
+        "senses": [], "url": "https://slovnyk.me/dict/newsum/берег", "role": "mirror_candidate",
     }]
     assert lookup_sum20_articles("бракує") == []
     card = enrich_manifest._sum20_definition_card("берег", {"lookups": {"newsum": {"text": "stale cache"}}})
     assert card["definitions"] == ["mirror-only definition"]
     assert card["role"] == "mirror_candidate"
-    assert card["source_url"] == "https://example.invalid/bank"
+    assert card["source_url"] == official_url_for_slug("newsum", "берег")
+    assert card["mirror_source_url"] == "https://slovnyk.me/dict/newsum/берег"
+    assert learner_facing_mirror_violations({"enrichment": {"definition_cards": [card]}}) == []
     assert enrich_manifest._dictionary_definition_rows(None, "берег", cache={})[0]["role"] == "mirror_candidate"
     assert enrich_manifest._homonym_dictionary_rows(None, "берег")[0]["role"] == "mirror_candidate"
     # The normative official API must never promote mirror candidates.
     assert sources_db.query_sum20("берег") == []
     assert (db.read_bytes(), mirror.read_bytes()) == before
     assert calls == []
+
+
+@pytest.mark.parametrize("reader", [
+    "_sum20_official_definition_card", "_dictionary_definition_rows", "_homonym_dictionary_rows",
+])
+@pytest.mark.parametrize("origin_mirror", [False, True])
+def test_sum20_learner_provenance_preserves_origin(tmp_path, reader, origin_mirror):
+    from scripts.lexicon import enrich_manifest as em
+
+    _seed_articles(tmp_path / "data")
+    _seed_mirror(tmp_path)
+    lemma = "берег" if origin_mirror else "вода"
+    if reader == "_sum20_official_definition_card":
+        rows = [getattr(em, reader)(lemma)]
+        entry = {"enrichment": {"definition_cards": rows}}
+    else:
+        rows = getattr(em, reader)(None, lemma, cache={})
+        entry = {"sections": {"meaning": {"items": rows}}}
+    assert len(rows) == 1
+    row = rows[0]
+    if origin_mirror:
+        assert row["source_url"] == official_url_for_slug("newsum", lemma)
+        assert row["mirror_source_url"] == "https://slovnyk.me/dict/newsum/берег"
+        assert row["role"] == "mirror_candidate"
+    else:
+        assert row["source_url"] == "https://example.invalid/sum20/42"
+        assert "mirror_source_url" not in row
+        assert "role" not in row
+    assert learner_facing_mirror_violations(entry) == []
+
+
+@pytest.mark.parametrize("origin_mirror", [False, True])
+def test_sum20_xref_keeps_origin_provenance(tmp_path, monkeypatch, origin_mirror):
+    from scripts.lexicon import enrich_manifest as em
+
+    _seed_articles(tmp_path / "data")
+    _seed_mirror(tmp_path)
+    lemma = "берег" if origin_mirror else "вода"
+    card = em._sum20_official_definition_card(lemma)
+    monkeypatch.setattr(em, "_vesum_base_lemma", lambda word: word)
+    monkeypatch.setattr(em, "_verb_aspect", lambda _: None)
+    origin = {**card, "definitions": ["див. гора"]}
+    resolved = em._resolve_definition_xref(origin, lemma, lambda _: card)
+    assert resolved is not None
+    assert resolved["source_url"] == card["source_url"]
+    if origin_mirror:
+        assert resolved["source_url"] == official_url_for_slug("newsum", lemma)
+        assert resolved["mirror_source_url"] == "https://slovnyk.me/dict/newsum/берег"
+        assert resolved["role"] == "mirror_candidate"
+    else:
+        assert resolved["source_url"] == "https://example.invalid/sum20/42"
+        assert "mirror_source_url" not in resolved
+        assert "role" not in resolved
+    assert learner_facing_mirror_violations({"enrichment": {"definition_cards": [resolved]}}) == []
 
 
 @pytest.mark.parametrize("origin_mirror", [False, True])
@@ -742,18 +799,31 @@ def test_xref_does_not_mix_official_and_mirror_roles(monkeypatch, origin_mirror)
     ("_definition_antonym_relations", "Протилежне гора."),
     ("_homonym_relations", "БЕРЕГ¹, а, ч. synthetic first. БЕРЕГ², а, ч. synthetic second."),
 ])
-def test_mirror_relation_provenance_retains_candidate_role(tmp_path, monkeypatch, reader, text):
+@pytest.mark.parametrize("origin_mirror", [False, True])
+def test_mirror_relation_provenance_retains_candidate_role(tmp_path, monkeypatch, reader, text, origin_mirror):
     from scripts.lexicon import enrich_manifest as em
 
-    _seed_articles(tmp_path / "data")
+    db = _seed_articles(tmp_path / "data")
     mirror = _seed_mirror(tmp_path)
-    with sqlite3.connect(mirror) as conn:
-        conn.execute("UPDATE sum20_slovnyk_articles SET text=? WHERE lemma='берег'", (text,))
+    if origin_mirror:
+        with sqlite3.connect(mirror) as conn:
+            conn.execute("UPDATE sum20_slovnyk_articles SET text=? WHERE lemma='берег'", (text,))
+    else:
+        with sqlite3.connect(db) as conn:
+            conn.execute("UPDATE sum20_articles SET normalized_lookup_key='берег', definition_text=?, article_text=?",
+                         (text, text))
     monkeypatch.setattr(em, "_vesum_valid_synonym", lambda _: True)
     relations = getattr(em, reader)(None, "берег", cache={})
     assert len(relations) == 1
-    assert relations[0]["role"] == "mirror_candidate"
-    assert relations[0]["source_url"] == "https://example.invalid/bank"
+    if origin_mirror:
+        assert relations[0]["role"] == "mirror_candidate"
+        assert relations[0]["source_url"] == official_url_for_slug("newsum", "берег")
+        assert relations[0]["mirror_source_url"] == "https://slovnyk.me/dict/newsum/берег"
+    else:
+        assert relations[0]["source_url"] == "https://example.invalid/sum20/42"
+        assert "mirror_source_url" not in relations[0]
+        assert "role" not in relations[0]
+    assert learner_facing_mirror_violations({"sections": {"relations": {"items": relations}}}) == []
 
 
 def test_missing_mirror_is_a_plain_miss_and_creates_nothing(tmp_path):

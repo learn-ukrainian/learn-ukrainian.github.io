@@ -4453,13 +4453,14 @@ def _sum20_official_definition_card(lookup_word: str) -> dict[str, Any] | None:
     """Build a local card, retaining the mirror candidate role on fallback."""
     definitions: list[str] = []
     official_url = ""
+    mirror_url = ""
     role = "sum20_official"
     for row in _sum20_official_rows(lookup_word):
         if row.get("role") == "mirror_candidate":
             definition = _definition_body(row.get("definition"), headword=lookup_word, strip_leading_headword=True)
             if definition:
                 definitions.append(definition)
-                official_url = official_url or str(row.get("url") or "")
+                mirror_url = mirror_url or str(row.get("url") or "")
                 role = "mirror_candidate"
             continue
         senses = row.get("senses")
@@ -4496,10 +4497,11 @@ def _sum20_official_definition_card(lookup_word: str) -> dict[str, Any] | None:
         "note": "сучасний тлумачний словник",
         "definitions": definitions,
     }
-    if official_url:
-        card["source_url"] = official_url
     if role == "mirror_candidate":
+        attach_official_url(card, mirror_url=mirror_url, slug="newsum", word=lookup_word)
         card["role"] = role
+    elif official_url:
+        card["source_url"] = official_url
     return card
 
 
@@ -4765,11 +4767,15 @@ def _dictionary_definition_rows(
     for article in _sum20_official_rows(_slovnyk_lookup_word(lemma)):
         text = _definition_body(article.get("definition"))
         if text:
-            rows.append({
+            payload = {
                 "source": SUM20_SHORT_LABEL, "text": text,
                 "source_url": str(article.get("url") or ""), "sovietization_risk": 0,
-                **({"role": "mirror_candidate"} if article.get("role") == "mirror_candidate" else {}),
-            })
+            }
+            if article.get("role") == "mirror_candidate":
+                attach_official_url(payload, mirror_url=str(article.get("url") or ""),
+                                    slug="newsum", word=_slovnyk_lookup_word(lemma))
+                payload["role"] = "mirror_candidate"
+            rows.append(payload)
     for slug, source in (("vts", "ВТС"),):
         row = _cache_lookup(cache, slug)
         if not row:
@@ -4851,6 +4857,8 @@ def _definition_pointer_relations(
             }
             if row.get("source_url"):
                 relation["source_url"] = row["source_url"]
+            if row.get("mirror_source_url"):
+                relation["mirror_source_url"] = row["mirror_source_url"]
             if row.get("role") == "mirror_candidate":
                 relation["role"] = "mirror_candidate"
             relations.append(relation)
@@ -4964,6 +4972,8 @@ def _definition_antonym_relations(
             }
             if row.get("source_url"):
                 relation["source_url"] = row["source_url"]
+            if row.get("mirror_source_url"):
+                relation["mirror_source_url"] = row["mirror_source_url"]
             if row.get("role") == "mirror_candidate":
                 relation["role"] = "mirror_candidate"
             relations.append(relation)
@@ -5146,6 +5156,8 @@ def _homonym_dictionary_rows(
             if article.get("url"):
                 payload["source_url"] = str(article["url"])
             if article.get("role") == "mirror_candidate":
+                attach_official_url(payload, mirror_url=str(article.get("url") or ""),
+                                    slug="newsum", word=_slovnyk_lookup_word(lemma))
                 payload["role"] = "mirror_candidate"
             rows.append(payload)
     return rows
@@ -5196,6 +5208,8 @@ def _homonym_relations(
         }
         if best_row["source_url"]:
             relation["source_url"] = best_row["source_url"]
+        if best_row.get("mirror_source_url"):
+            relation["mirror_source_url"] = best_row["mirror_source_url"]
         if best_row.get("role") == "mirror_candidate":
             relation["role"] = "mirror_candidate"
         relations.append(relation)
