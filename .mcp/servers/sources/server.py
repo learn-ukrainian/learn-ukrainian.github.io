@@ -1917,6 +1917,10 @@ def _review_before_handler(
 # "no results" (and a false recovery). The connection the heal opens therefore
 # reports damage-class errors it raises, swallowed or not, to the attempt that
 # is running (``_ATTEMPT_DAMAGE``); an attempt that saw damage counts as failed.
+# On the retry the bar is stricter: the reopened connection must answer every
+# query, so any swallowed stale-connection error (a missing table after a
+# schema change included) fails it. A missing table alone on the first attempt
+# is only an optional table and never starts a heal.
 
 _STALE_CONNECTION_MARKERS = (
     "malformed",
@@ -1943,15 +1947,25 @@ _UNATTRIBUTED_DATABASE = "unattributed"
 # counters that stop simultaneous heals from each reopening the same database.
 _SQLITE_CACHE_LOCK = threading.RLock()
 _SQLITE_GENERATION: dict[str, int] = {}
-_ATTEMPT_DAMAGE: contextvars.ContextVar[list[sqlite3.DatabaseError] | None] = contextvars.ContextVar(
+
+
+class _AttemptDamage:
+    """Database errors one attempt saw, swallowed or not, that make it a failed attempt."""
+
+    def __init__(self, markers: tuple[str, ...]) -> None:
+        self.markers = markers
+        self.errors: list[sqlite3.DatabaseError] = []
+
+
+_ATTEMPT_DAMAGE: contextvars.ContextVar[_AttemptDamage | None] = contextvars.ContextVar(
     "sources_attempt_database_damage", default=None
 )
 
 
 def _note_database_damage(exc: sqlite3.DatabaseError) -> None:
-    damage = _ATTEMPT_DAMAGE.get()
-    if damage is not None and _has_marker(exc, _DAMAGE_MARKERS):
-        damage.append(exc)
+    attempt = _ATTEMPT_DAMAGE.get()
+    if attempt is not None and _has_marker(exc, attempt.markers):
+        attempt.errors.append(exc)
 
 
 def _observe(method: Any) -> Any:
@@ -2104,16 +2118,16 @@ def _discard_cached_connections(database: str | None, seen: dict[str, int] | Non
     return refreshed
 
 
-async def _run_attempt(handler: Any) -> Any:
-    """Run ``handler`` once; damage a helper swallowed counts as the attempt's failure."""
-    damage: list[sqlite3.DatabaseError] = []
-    token = _ATTEMPT_DAMAGE.set(damage)
+async def _run_attempt(handler: Any, markers: tuple[str, ...]) -> Any:
+    """Run ``handler`` once; an error in ``markers`` a helper swallowed fails the attempt."""
+    attempt = _AttemptDamage(markers)
+    token = _ATTEMPT_DAMAGE.set(attempt)
     try:
         result = await handler()
     finally:
         _ATTEMPT_DAMAGE.reset(token)
-    if damage:
-        raise damage[0]
+    if attempt.errors:
+        raise attempt.errors[0]
     return result
 
 
@@ -2122,11 +2136,12 @@ async def _call_with_database_self_heal(handler: Any, heal: dict[str, Any]) -> A
 
     ``heal`` is filled in when a heal was attempted so the caller can log it.
     A failure of the retry raises ``SourcesDatabaseUnavailable``; the heal is
-    recorded as recovered only when the retry itself saw no database damage.
+    recorded as recovered only when the retry itself saw no stale-connection
+    error, including a swallowed ``no such table`` from a rebuilt database.
     """
     seen = _connection_generations()
     try:
-        return await _run_attempt(handler)
+        return await _run_attempt(handler, _DAMAGE_MARKERS)
     except sqlite3.DatabaseError as first:
         if not _is_stale_connection_error(first):
             raise
@@ -2139,7 +2154,7 @@ async def _call_with_database_self_heal(handler: Any, heal: dict[str, Any]) -> A
             recovered=False,
         )
         try:
-            result = await _run_attempt(handler)
+            result = await _run_attempt(handler, _STALE_CONNECTION_MARKERS)
         except sqlite3.DatabaseError as second:
             database = _failing_database(second) or database
             heal["database"] = database or _UNATTRIBUTED_DATABASE

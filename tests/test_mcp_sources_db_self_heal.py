@@ -286,6 +286,14 @@ def _failing_connection_opener(server, path: Path, message: str):
     return opener
 
 
+def _observed_connection_at(server, path: Path):
+    conn = sqlite3.connect(
+        f"{path.as_uri()}?mode=ro", uri=True, factory=server._ObservedConnection, check_same_thread=False
+    )
+    conn.row_factory = sqlite3.Row
+    return conn
+
+
 def _dispatch(server, name: str, arguments: dict):
     return asyncio.run(server._dispatch_tool_call(name, dict(arguments)))
 
@@ -348,6 +356,50 @@ def test_swallowed_absent_table_is_not_a_database_failure(server, sdb, db, tmp_p
     assert is_error is False and typed["status"] == "empty"
     assert "No results" in content[0].text
     assert "self_heal" not in _log_entries(tmp_path)[-1]
+
+
+def test_swallowed_absent_table_on_a_first_attempt_does_not_start_a_heal(server, sdb, db, tmp_path, monkeypatch):
+    _dispatch(server, "collection_stats", {})  # no style_guide table in this database
+    sdb._conn = server._open_observed_sources_conn(sdb)  # as after any earlier heal: swallowed errors are reported
+    reopened: list[object] = []
+    monkeypatch.setattr(server, "_open_observed_sources_conn", lambda module: reopened.append(module))
+
+    content, is_error, typed = _dispatch(server, "search_style_guide", {"query": "участь"})
+
+    assert is_error is False and typed["status"] == "empty"
+    assert "No results" in content[0].text
+    assert reopened == []
+    assert "self_heal" not in _log_entries(tmp_path)[-1]
+
+
+def test_retry_over_a_rebuilt_database_missing_a_table_is_a_typed_error_not_an_empty_result(
+    server, sdb, db, tmp_path, monkeypatch
+):
+    _add_dictionary_tables(db)
+    healthy, is_error, _ = _dispatch(server, "search_style_guide", {"query": "участь"})
+    assert is_error is False and "Приймати участь" in healthy[0].text
+    _truncate_in_place(db)  # first attempt: malformed
+    rebuilt = db.with_name("rebuilt.db")  # a valid database from a schema change: no style_guide table
+    conn = sqlite3.connect(rebuilt)
+    conn.execute("CREATE TABLE textbooks (id INTEGER PRIMARY KEY, body TEXT)")
+    conn.commit()
+    conn.close()
+    monkeypatch.setattr(
+        server,
+        "_open_observed_sources_conn",
+        lambda module: _observed_connection_at(server, rebuilt),
+    )
+
+    content, is_error, typed = _dispatch(server, "search_style_guide", {"query": "участь"})
+
+    assert is_error is True
+    payload = json.loads(content[0].text)
+    assert payload == typed
+    assert payload["status"] == "error" and payload["error_code"] == "database_unavailable"
+    assert payload["database"] == "sources.db" and payload["error_class"] == "OperationalError"
+    assert "No results" not in content[0].text
+    heal = _log_entries(tmp_path)[-1]["self_heal"]
+    assert heal["recovered"] is False and heal["error_class"] == "DatabaseError"
 
 
 def test_failed_reopen_keeps_the_held_connection_instead_of_clearing_it(server, sdb, db, monkeypatch):
