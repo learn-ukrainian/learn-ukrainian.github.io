@@ -571,6 +571,46 @@ def test_review_headless_read_result_slot_is_the_trigger_and_is_counted(tmp_path
     assert "private-" not in json.dumps(attempt) + result.stderr_excerpt
 
 
+@pytest.mark.parametrize("result_type", ["GENERIC", "TOOL_RESPONSE"])
+@pytest.mark.parametrize("status", ["ERROR", "INVALID"])
+@pytest.mark.parametrize("pending_count", [1, 2])
+def test_explicit_denial_takes_precedence_over_pending_sibling_reads(tmp_path, result_type, status, pending_count):
+    events = [
+        _planner(
+            ("read_file", "Path", "actually-denied.txt"),
+            *[("read_file", "Path", f"never-denied-{index}.txt") for index in range(pending_count)],
+        ),
+        {**_result(status, _headless_read_denial("actually-denied.txt")), "type": result_type},
+    ]
+    result = parse(review_plan(tmp_path, events))
+    attempt = record(result)
+    assert attempt["denied_tool_name"] == "read_file"
+    assert attempt["permission_target"] == "workspace:actually-denied.txt"
+    assert attempt["permission_target_unknown_reason"] is None
+    assert attempt["denied_file_read_count"] == 1
+    assert json.loads(result.stderr_excerpt.split("\n", 1)[1])["permission_target"] == "workspace:actually-denied.txt"
+
+
+@pytest.mark.parametrize("status", [None, 17, [], {}, "", " ", True, 1.5])
+@pytest.mark.parametrize("event_index", [0, 1, 2], ids=["user-input", "planner", "result"])
+def test_malformed_transcript_status_stays_typed_unknown(tmp_path, status, event_index):
+    events = [
+        _planner(("read_file", "Path", "actually-denied.txt"), ("read_file", "Path", "never-denied.txt")),
+        _result("ERROR", _headless_read_denial("actually-denied.txt")),
+    ]
+    plan = review_plan(tmp_path, events)
+    transcript = agy._transcript_path_from_plan(plan)
+    recorded = [json.loads(line) for line in transcript.read_text().splitlines()]
+    recorded[event_index]["status"] = status
+    transcript.write_text("\n".join(json.dumps(event) for event in recorded))
+    result = parse(plan)
+    attempt = record(result)
+    assert attempt["permission_target"] == "unknown"
+    assert attempt["permission_target_unknown_reason"] == "transcript_corrupt"
+    assert attempt["denied_tool_name"] is None
+    assert attempt["evidence_complete"] is False
+
+
 @pytest.mark.parametrize(
     "rule", ["user-configured deny", "hardcoded system protection boundary"], ids=["deny-rule", "hardcoded"]
 )
