@@ -2471,6 +2471,9 @@ describe("thin rendered-state presentation (#8327)", () => {
       expect(headings).toContain(heading);
     }
     const waiting = view().doc;
+    for (const [id, label] of Object.entries({ etymology: 'Etymology', wiki: 'Wikipedia' })) {
+      expect(waiting.querySelector(`[data-i18n="atlas.layer.${id}"] [data-loc=en]`)?.textContent).toBe(label);
+    }
     const expectedHeadings = {
       meaning: 'Значення', etymology: 'Етимологія', morphology: 'Морфологія',
       formNotes: 'Написання і вимова', synonyms: 'Синоніми та антоніми',

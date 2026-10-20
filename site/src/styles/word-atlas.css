@@ -307,6 +307,7 @@
 /* Beat the article link rule: accent buttons need the accent's text token. */
 .lu-content .word-atlas a.atlas-button {
   color: var(--lu-on-accent);
+  text-decoration: none;
 }
 
 .word-hero {
@@ -1583,7 +1584,11 @@ html[data-theme='dark'] .lu-content .word-atlas .word-hero .practice-cta-hero {
 [data-theme='dark'] .atlas-heteronym-tab.active {
   background: var(--blue, #3b82f6);
   border-color: var(--blue, #3b82f6);
-  color: #ffffff;
+  color: var(--lu-surface, #0f172a);
+}
+
+[data-theme='dark'] .atlas-heteronym-tab.active .atlas-heteronym-tab-hint {
+  color: inherit;
 }
 
 [data-theme='dark'] .atlas-heteronym-hatnote {
