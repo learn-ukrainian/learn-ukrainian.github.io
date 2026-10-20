@@ -3612,9 +3612,10 @@ def test_run_worker_persists_cursor_resolved_model_companion(tmp_tasks_dir, tmp_
     assert state["resolved_model_source"] == "cursor-stream-json"
 
 
-def test_deepseek_model_state_requires_expected_cached_alias_name(tmp_path):
+@pytest.mark.parametrize("name", ["DeepSeek V4.1 Flash", "DeepSeek V4.1 Flash 1017"])
+def test_deepseek_model_state_requires_expected_cached_alias_name(tmp_path, name):
     cache = tmp_path / "models.json"
-    cache.write_text('{"deepseek":{"models":{"deepseek-flash":{"name":"DeepSeek V4.1 Flash"}}}}')
+    cache.write_text(json.dumps({"deepseek": {"models": {"deepseek-flash": {"name": name}}}}))
     state = delegate._deepseek_model_state(agent="deepseek", model="deepseek-v4.1-flash", cache_path=cache)
     assert state == {
         "resolved_model": "deepseek-v4.1-flash",
