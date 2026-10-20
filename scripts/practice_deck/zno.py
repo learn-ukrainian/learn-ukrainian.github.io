@@ -432,6 +432,7 @@ def build_zno_fill_residual(
     for deck_key, drops in deck_drops.items():
         for entry in drops:
             blocked.append({"deck": deck_key, **entry})
+    blocked_ids = {entry["znoTaskId"] for entry in blocked}
 
     # Unparsed / blocked single-choice rows that never landed in any deck shard.
     unparsed: list[dict[str, str]] = []
@@ -452,6 +453,8 @@ def build_zno_fill_residual(
         _item, reason = _item_from_row(full_row)
         if reason is not None:
             unparsed.append({"znoTaskId": _task_id(task_id), "reason": reason})
+            continue
+        if _task_id(task_id) in blocked_ids:
             continue
         topic_norm = str(row["topic_norm"] or "").strip() or "empty"
         predicate_miss[topic_norm] += 1
