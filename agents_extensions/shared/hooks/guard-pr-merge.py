@@ -847,15 +847,15 @@ def _canonical_selector(pr: str) -> bool:
     gh's finder reads ``strconv.Atoi(strings.TrimPrefix(selector, "#"))`` as a PR number,
     so ``#9``, ``+9``, ``#+9`` and ``0009`` all name PR 9 while looking like branch
     names here. Only a canonical decimal number, an http(s) PR URL with a canonical
-    number, or a branch name gh cannot read as a number is judged; git refuses branch
-    names starting with ``-``, and ``+``/``#`` are where gh's numeric reading starts.
+    number, or a branch name gh cannot read as a number (``+topic``, ``#topic``) is
+    judged; git refuses branch names starting with ``-``.
     """
     if "://" in pr:
         url = _URL_SELECTOR_RE.match(pr)
         return url is not None and not url.group(1).startswith("0")
-    if re.fullmatch(r"[0-9]+", pr):
-        return not pr.startswith("0")
-    return not pr.startswith(("+", "-", "#"))
+    if re.fullmatch(r"#?[+-]?[0-9]+", pr):
+        return re.fullmatch(r"[1-9][0-9]*", pr) is not None
+    return not pr.startswith("-")
 
 
 def _repo_name(value: str) -> str | None:

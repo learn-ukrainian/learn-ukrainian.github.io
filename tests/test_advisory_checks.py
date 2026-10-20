@@ -586,6 +586,9 @@ def test_oo48_checks_transport_result_policy_is_shared(code, rows, ready, tmp_pa
     ("gh pr merge 5 -R github.com/OWNER/REPO --squash", {}, True),
     ("gh pr merge 5 --repo https://github.com/owner/repo.git --squash", {}, True),
     ("gh pr merge feature-branch --squash", {}, True),
+    # gh cannot read these as a number, so they stay branch selectors.
+    ("gh pr merge '+f5-branch-control' --squash", {}, True),
+    ("gh pr merge '#f5-branch-control' --squash", {}, True),
     ("gh pr merge 9 --squash", {}, False),
     ("gh pr merge https://github.com/owner/repo/pull/9 --squash", {}, False),
     ("gh pr merge https://github.com/other/repo/pull/5 --squash", {}, False),
