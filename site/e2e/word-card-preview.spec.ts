@@ -298,7 +298,7 @@ for (const prefix of ['', 'compare/']) for (const c of revisionCases()) test(`${
     if (!Array.isArray(assertions)) throw Error('Missing source assertions');
     const a = record(assertions.find(a => record(a).assertion_id === record(record(record(c.input).fields).stress).selected));
     const citation = candidate.getByRole('region',{name:'citations',exact:true}).locator(`[data-field="${record(a.subject).id}/stress"]`);
-    if (c.name.startsWith('f2-ulif-')) {
+    if (c.name.startsWith('f2-ulif-') || c.name.startsWith('f2-ulp_private-')) {
       expect(await stress.locator('[data-raw-value]').textContent()).toBe(a.value);
       await expect(stress).toContainText(`${a.assertion_id} | ${a.source_id} | ${a.snapshot_id} | ${a.locator}`);
       await expect(citation).toContainText(String(a.assertion_id));
