@@ -380,3 +380,80 @@ A hold anywhere below a top-level directory makes the report show that whole
 directory as `held`, not `stale`. When the condition in `until` is met,
 remove the entry. A malformed list makes the report exit with code 2, so a
 hold is never ignored without notice.
+
+## uv cache size line (#10779)
+
+`.venv/bin/python -m scripts.hygiene.uv_cache_status` prints one read-only line
+for `lu-driver-status` to show, for example
+`UV CACHE: 7.23 GiB, +0.40 GiB over 24h [WARN: ...]`. It never deletes from the
+cache. It keeps a small size history (one sample per 10 minutes at most, a week
+retained) in `uv-cache-size.jsonl` in the driver-keeper state directory that
+`lu-driver-status` already reads (override: `LU_DRIVER_STATUS_STATE_DIR`).
+Growth compares against the oldest sample at least an hour old inside the last
+24 hours and names the real span; before that it prints `growth n/a (history
+building)`. `--json` and `--no-record` are available.
+
+The command also runs as a plain file
+(`.venv/bin/python scripts/hygiene/uv_cache_status.py`). The size comes from
+`du -skH` in its own process group, bounded by
+`LU_UV_CACHE_SCAN_TIMEOUT_S` (default 8 seconds). A symlinked cache directory
+is measured where it points; symlinks below it are never followed. On timeout
+it prints `UV CACHE: size unavailable (scan exceeded 8s)`; if `du` fails (for example an
+unreadable directory, which would make the total partial) it prints
+`UV CACHE: measurement failed (...)`. Both exit 0 and record no sample.
+
+History updates hold an exclusive lock on `uv-cache-size.jsonl.lock` beside the
+history, so concurrent runs never drop each other's samples. The lock is never
+waited on indefinitely: one deadline of `LU_UV_CACHE_LOCK_TIMEOUT_S` (default
+2 seconds) covers opening the lock file, including retries when it disappears
+between attempts, and taking the lock without blocking. If another writer still
+holds it (or keeps recreating it) at the deadline, the command prints `UV CACHE: history busy (...); <size> measured, no
+sample recorded`, writes nothing and exits 0. Every retry and wait decision is
+bounded by these deadlines, but a single synchronous filesystem call (for
+example the `open` of the lock file) is not interrupted when a deadline passes,
+so the command can run past the scan deadline plus the lock deadline by the
+duration of one such call. A lock name that is a symlink,
+a directory or not a regular file is refused with exit code 2; nothing behind it is opened or
+changed.
+
+The history directory is checked once and then held open. The configured
+directory must not itself be a symlink. Its path is resolved once and opened
+one directory at a time without following symlinks; every directory on the way
+is compared with the cache's device and inode before anything is created in it,
+and the kernel's path of the opened directory is checked too. Every history
+read and write (lock, history file, temporary file, rename) is relative to that
+open directory, so retargeting a symlink afterwards cannot move the writes into
+the cache. If the directory is a symlink, the cache, or inside it, or its path
+changes while it is being opened, the command refuses with exit code 2 and
+writes nothing. Directories it creates get mode 0700.
+
+An open directory keeps its identity, not its place, so it could be moved into
+the cache while the size is measured. Before every write (each attempt to create
+the lock file, retries included; creating the temporary file; every write of
+its contents, so a partial write is checked again before the rest; renaming it
+over the history) the command checks the location again. The new history is
+serialized in full before the temporary file is created and written unbuffered,
+so no slow step separates a check from the
+write it guards. Each check requires that the kernel's path of the open
+directory is still the resolved history path, that this path still names the
+same directory, and that it is not the cache or inside it, judged against the
+cache's real path both at start and now. On a mismatch it refuses with exit code 2, writes nothing
+more, and removes the temporary file and any lock file it created. A move in
+the instant between the last check and the write itself cannot be excluded.
+
+A hard link gives a file a second name, possibly inside the cache, without
+moving the directory, so the location check alone does not catch it. The
+command therefore also checks the link count on the open file: a lock file with
+more than one link is refused before and after the lock is taken, and the
+temporary history file is refused before every write of its contents. Either
+refusal exits with code 2 (`the history lock file has more than one link` or
+`the temporary history file has more than one link`), writes nothing more, and
+removes the temporary file. A lock file it did not create is left in place.
+
+Warning thresholds: total size above `LU_UV_CACHE_WARN_GB` (default 10) or growth
+above `LU_UV_CACHE_GROWTH_WARN_GB` (default 2) per 24 hours. A warning is a
+prompt for a human to run `uv cache prune`, never an automatic action.
+
+The installed `lu-driver-status` consumer is private and owned by Infra (see
+`muse-usage.md`). It shows this line by running the module above with the
+project interpreter and printing its output.
