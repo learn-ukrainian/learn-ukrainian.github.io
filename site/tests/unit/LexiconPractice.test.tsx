@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, test, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import { State } from 'ts-fsrs';
 import { renderToString } from 'react-dom/server';
 import { act, render, screen, waitFor, within, fireEvent } from '@testing-library/react';
@@ -6921,7 +6921,43 @@ describe('LexiconPractice', () => {
     //    the same class (a ~3-11 s cold fixture build inside a 5 s test); they already
     //    hoist it into beforeAll (#10640/#10645) and stay under 1.6 s per test contended.
     describe('#6132 mixed-mode session started from a custom deck never draws a lemma outside it', () => {
-      test.each(Array.from({ length: 10 }, (_unused, index) => index + 1))('draw %i of 10', async () => {
+      const drawCases = [
+        { case: 1, precondition: 'fresh', seed: 1, expected: { lemmaId: 'robota', mode: 'flashcards' } },
+        { case: 2, precondition: 'fresh', seed: 2, expected: { lemmaId: 'robota', mode: 'flashcards' } },
+        { case: 3, precondition: 'fresh', seed: 3, expected: { lemmaId: 'knyha', mode: 'flashcards' } },
+        { case: 4, precondition: 'fresh', seed: 4, expected: { lemmaId: 'knyha', mode: 'flashcards' } },
+        { case: 5, precondition: 'fresh', seed: 5, expected: { lemmaId: 'robota', mode: 'flashcards' } },
+        { case: 6, precondition: 'knyha-recognition-mastered', seed: 6, expected: { lemmaId: 'robota', mode: 'flashcards' } },
+        { case: 7, precondition: 'knyha-recognition-mastered', seed: 7, expected: { lemmaId: 'knyha', mode: 'cloze' } },
+        { case: 8, precondition: 'knyha-recognition-mastered', seed: 8, expected: { lemmaId: 'robota', mode: 'flashcards' } },
+        { case: 9, precondition: 'knyha-recognition-mastered', seed: 9, expected: { lemmaId: 'robota', mode: 'flashcards' } },
+        { case: 10, precondition: 'knyha-recognition-mastered', seed: 10, expected: { lemmaId: 'robota', mode: 'flashcards' } },
+      ] satisfies ReadonlyArray<{
+        case: number;
+        precondition: 'fresh' | 'knyha-recognition-mastered';
+        seed: number;
+        expected: { lemmaId: 'knyha' | 'robota'; mode: 'flashcards' | 'cloze' };
+      }>;
+
+      afterEach(() => {
+        vi.useRealTimers();
+        vi.restoreAllMocks();
+      });
+
+      test('the ten-case ledger covers both modes and all three eligible identities', () => {
+        expect(drawCases).toHaveLength(10);
+        expect(new Set(drawCases.map((row) => row.case)).size).toBe(10);
+        expect(new Set(drawCases.map((row) => row.expected.mode))).toEqual(new Set(['flashcards', 'cloze']));
+        expect(new Set(drawCases.map((row) => `${row.expected.lemmaId}/${row.expected.mode}`))).toEqual(
+          new Set(['knyha/flashcards', 'robota/flashcards', 'knyha/cloze']),
+        );
+      });
+
+      test.each(drawCases)('draw $case of 10', async (row) => {
+        expect(vi.isFakeTimers()).toBe(false);
+        vi.useFakeTimers({ toFake: ['Date'], now: new Date('2026-06-22T12:00:00.000Z') });
+        vi.spyOn(Math, 'random').mockReturnValue(row.seed / 4294967296);
+        if (row.precondition === 'knyha-recognition-mastered') seedRecognitionMastery('knyha');
         // 'knyha'/'robota' are IN the deck; 'misto'/'shkola' (sampleDeck's other two
         // lemmas) are NOT. Only 'knyha' carries cloze — proving the MIXED path (not
         // just a single mode card, already covered above) respects the deck filter
@@ -6939,14 +6975,28 @@ describe('LexiconPractice', () => {
         localStorage.setItem(CUSTOM_SETS_STORAGE_KEY, JSON.stringify([customSet]));
 
         const user = userEvent.setup();
+        const renderStarted = performance.now();
         const { container, unmount } = render(
           <LexiconPractice initialDeck={customDeckMixedFixture()} autoStart={false} />,
         );
 
+        console.log(`[10183-phase] path=mixed phase=render ms=${(performance.now() - renderStarted).toFixed(3)}`);
+
+        const activationStarted = performance.now();
+        expect(screen.getByTestId('practice-active-deck-chip')).not.toHaveTextContent('Дві слова');
         await user.click(screen.getByTestId('practice-settings-toggle'));
         await user.click(screen.getByRole('button', { name: /Дві слова/i }));
         await user.click(screen.getByTestId('settings-drawer-close'));
+        expect(screen.getByTestId('practice-active-deck-chip')).toHaveTextContent('Дві слова');
+        expect(screen.getByTestId('practice-mode-count-flashcards').querySelector('[aria-hidden="true"]')).toHaveTextContent(/^2$/);
+        expect(screen.getByTestId('practice-mode-count-cloze').querySelector('[aria-hidden="true"]')).toHaveTextContent(/^1$/);
+        console.log(`[10183-phase] path=mixed phase=activation ms=${(performance.now() - activationStarted).toFixed(3)}`);
+
+        const startStarted = performance.now();
         await user.click(container.querySelector<HTMLButtonElement>('[data-mode="mixed"]')!);
+        console.log(`[10183-phase] path=mixed phase=start ms=${(performance.now() - startStarted).toFixed(3)}`);
+
+        const assertStarted = performance.now();
 
         const clozeStage = screen.queryByTestId('practice-cloze');
         if (clozeStage) {
@@ -6956,11 +7006,23 @@ describe('LexiconPractice', () => {
           expect(['книга', 'робота']).toContain(flashcardWord);
         }
 
+        const observed = {
+          lemmaId: clozeStage ? 'knyha' : new Map([
+            ['книга', 'knyha'],
+            ['робота', 'robota'],
+          ]).get(container.querySelector('.flashcard-word')?.textContent ?? ''),
+          mode: clozeStage ? 'cloze' : 'flashcards',
+        };
+        expect(observed).toEqual(row.expected);
+        console.log(`[10183-phase] path=mixed phase=assert ms=${(performance.now() - assertStarted).toFixed(3)}`);
+        console.log(`[10183-ledger] case=${row.case} precondition=${row.precondition} seed=${row.seed} mode=${observed.mode} lemma=${observed.lemmaId} activation=ok`);
+
         unmount();
       });
     });
 
     test('#6132 mode grid shows a real per-mode count, honest about which modes are empty', async () => {
+      expect(vi.isFakeTimers()).toBe(false);
       // Custom sets load once at mount (`useState(() => readLocalCustomSets())`), so seed
       // localStorage BEFORE render — matching the established pattern in the other
       // Custom Set tests above (e.g. "dashboard session estimate narrows...").
