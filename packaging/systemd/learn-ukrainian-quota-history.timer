@@ -1,0 +1,11 @@
+[Unit]
+Description=Learn Ukrainian hourly quota-history sample timer
+
+[Timer]
+OnCalendar=hourly
+AccuracySec=1min
+Persistent=true
+Unit=learn-ukrainian-quota-history.service
+
+[Install]
+WantedBy=timers.target
