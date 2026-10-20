@@ -26,6 +26,10 @@ import delegate
 from scripts.agent_runtime import bounded_advisory
 from tests.test_ask_review_admission_floor import ordinary_review_scope as ordinary_review_scope
 
+# Delivery is proven against the driver-bound destination, never the worker's
+# tracking refs (#10931); workers built by _bounded_worktree push to its origin.git.
+from tests.test_delegate import isolated_finalization_context  # noqa: F401
+
 OWNED = "scripts/delegate.py"
 # Lease directory names are the task ids. One module-wide id shares a lease
 # across xdist workers (#9927). Each case gets its own worker id and advisor id.
@@ -1070,6 +1074,7 @@ def _run_bounded_worker(tmp_path, monkeypatch, files: dict[str, str], *, seed: d
     return delegate._read_state(state_path)
 
 
+@pytest.mark.usefixtures("isolated_finalization_context")
 def test_m12_worker_exceeding_envelope_ceilings_is_a_typed_failure(tmp_path, monkeypatch):
     state = _run_bounded_worker(
         tmp_path,
@@ -1087,6 +1092,7 @@ def test_m12_worker_exceeding_envelope_ceilings_is_a_typed_failure(tmp_path, mon
     assert state["last_error"].startswith(bounded_advisory.CEILING_EXCEEDED)
 
 
+@pytest.mark.usefixtures("isolated_finalization_context")
 def test_m13_worker_within_envelope_ceilings_settles_done(tmp_path, monkeypatch):
     state = _run_bounded_worker(tmp_path, monkeypatch, {"src/a.py": "x = 1\n" * 4, "tests/test_a.py": "ok\n" * 90})
     assert state["status"] == "done", state.get("last_error")
@@ -1094,6 +1100,7 @@ def test_m13_worker_within_envelope_ceilings_settles_done(tmp_path, monkeypatch)
     assert state["advisory_ceiling_check"]["non_test_loc"] == 4
 
 
+@pytest.mark.usefixtures("isolated_finalization_context")
 def test_m13_worker_exactly_at_both_ceilings_settles_done(tmp_path, monkeypatch):
     """Acceptance 6: exact ceilings pass (2 files, 10 non-test lines)."""
     state = _run_bounded_worker(tmp_path, monkeypatch, {"src/a.py": "x = 1\n" * 6, "src/b.py": "y = 2\n" * 4})
@@ -1102,6 +1109,7 @@ def test_m13_worker_exactly_at_both_ceilings_settles_done(tmp_path, monkeypatch)
     assert (check["changed_files"], check["non_test_loc"], check["exceeded"]) == (2, 10, [])
 
 
+@pytest.mark.usefixtures("isolated_finalization_context")
 @pytest.mark.parametrize(
     ("files", "exceeded"),
     [
@@ -1121,6 +1129,7 @@ def test_m12_exceeding_either_ceiling_alone_is_a_typed_failure(tmp_path, monkeyp
     assert state["advisory_ceiling_check"]["exceeded"] == exceeded
 
 
+@pytest.mark.usefixtures("isolated_finalization_context")
 def test_m12_unmeasurable_ceilings_fail_closed(tmp_path, monkeypatch):
     monkeypatch.setattr(
         delegate, "_worktree_diff_read", lambda *_a, **_k: (None, delegate._TypedCause("diff_command_failed"))
@@ -2191,6 +2200,7 @@ def _exempt_writer_run(
     return delegate._read_state(state_path)
 
 
+@pytest.mark.usefixtures("isolated_finalization_context")
 def test_b3_reviewer_probe_a_content_exempt_worker_adding_code_is_a_typed_failure(env, tmp_path, monkeypatch, capsys):
     """Round 3 B3: the owned directory held no code at admission; the code the worker added fails the task."""
     state = _exempt_writer_run(
@@ -2208,6 +2218,7 @@ def test_b3_reviewer_probe_a_content_exempt_worker_adding_code_is_a_typed_failur
     assert state["last_error"].startswith(bounded_advisory.EXEMPT_CODE_CHANGE)
 
 
+@pytest.mark.usefixtures("isolated_finalization_context")
 def test_b3_a_content_only_diff_in_the_same_directory_settles_done(env, tmp_path, monkeypatch, capsys):
     state = _exempt_writer_run(
         env,
@@ -2220,6 +2231,7 @@ def test_b3_a_content_only_diff_in_the_same_directory_settles_done(env, tmp_path
     assert state["advisory_exempt_change_check"]["problems"] == []
 
 
+@pytest.mark.usefixtures("isolated_finalization_context")
 @pytest.mark.parametrize(
     ("files", "symlinks", "problem"),
     [
@@ -2251,6 +2263,7 @@ def test_b3_code_by_attributes_symlink_or_location_fails_the_exempt_completion_g
     assert problem in state["advisory_exempt_change_check"]["problems"]
 
 
+@pytest.mark.usefixtures("isolated_finalization_context")
 def test_b3_unreadable_exempt_changes_fail_closed(env, tmp_path, monkeypatch, capsys):
     monkeypatch.setattr(
         delegate, "_worktree_diff_read", lambda *_a, **_k: (None, delegate._TypedCause("diff_command_failed"))
@@ -2260,6 +2273,7 @@ def test_b3_unreadable_exempt_changes_fail_closed(env, tmp_path, monkeypatch, ca
     assert state["failure_reason"] == bounded_advisory.EXEMPT_CHANGES_UNMEASURED
 
 
+@pytest.mark.usefixtures("isolated_finalization_context")
 def test_b3_a_failing_exempt_tree_is_never_auto_finalized_or_offered_as_a_pr(env, tmp_path, monkeypatch, capsys):
     """Danger mode would commit, push and open a PR for a dirty tree; the gate runs first and stops it."""
     finalized: list[dict] = []
@@ -2280,6 +2294,7 @@ def test_b3_a_failing_exempt_tree_is_never_auto_finalized_or_offered_as_a_pr(env
     assert "pr_url" not in state
 
 
+@pytest.mark.usefixtures("isolated_finalization_context")
 def test_b3_uncommitted_scratch_residue_is_ignored_but_committed_residue_is_classified(
     env, tmp_path, monkeypatch, capsys
 ):
@@ -2297,6 +2312,7 @@ def test_b3_uncommitted_scratch_residue_is_ignored_but_committed_residue_is_clas
     ]
 
 
+@pytest.mark.usefixtures("isolated_finalization_context")
 def test_b3_uncommitted_pycache_beside_a_content_commit_settles_done(env, tmp_path, monkeypatch, capsys):
     original = delegate._worktree_diff_read
 
@@ -2366,6 +2382,7 @@ def _interrupt_after(monkeypatch, name: str, fired: list[str]) -> None:
     monkeypatch.setattr(delegate, name, interrupted)
 
 
+@pytest.mark.usefixtures("isolated_finalization_context")
 @pytest.mark.parametrize("verdict", ["pass", "fail", "unmeasurable"])
 @pytest.mark.parametrize("gate", ["ceiling", "exempt"])
 @pytest.mark.parametrize(
@@ -2396,6 +2413,7 @@ def test_r5_an_interrupt_before_the_gate_is_recorded_never_persists_done(
     assert state.get("failure_reason") is None
 
 
+@pytest.mark.usefixtures("isolated_finalization_context")
 @pytest.mark.parametrize("verdict", ["pass", "fail", "unmeasurable"])
 @pytest.mark.parametrize("gate", ["ceiling", "exempt"])
 @pytest.mark.parametrize("written", [False, True], ids=["before-the-write", "after-the-write"])
@@ -2432,6 +2450,7 @@ def test_r5_an_interrupt_at_the_terminal_write_persists_the_gated_outcome_with_i
         assert check["measured"] is (verdict == "fail")
 
 
+@pytest.mark.usefixtures("isolated_finalization_context")
 @pytest.mark.parametrize("gate", ["ceiling", "exempt"])
 def test_r5_abrupt_termination_during_the_gate_leaves_a_recoverable_non_success_record(
     env, tmp_path, monkeypatch, capsys, gate
