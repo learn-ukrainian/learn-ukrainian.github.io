@@ -12,8 +12,16 @@ property, Actions summary and existing nightly flake ledger.
 - `node_id`: the exact pytest node, including class and parameter ID when present.
   File, class and function patterns are refused.
 - `observed_run_ids`: at least two distinct GitHub Actions run IDs. Each must
-  be completed CI on unmodified `main` in this repository, with its head SHA
-  still in `main` history. The checker refuses PR, merge-group and other workflow evidence.
+  be completed CI in this repository using one of these evidence paths:
+  - At least two runs on unmodified `main`, with each head SHA still in `main` history.
+  - Merge-group runs for at least two distinct PRs, created within the last seven
+    days. Neither queue diff may touch the test file or its transitive import
+    dependencies. The checker fetches the tested commits and reuses the import
+    scanner behind `scripts/ci/pre_push_shadow.py`. Missing test sources or
+    unresolved dependencies refuse admission. For a multi-PR group, a change
+    by any member to these files refuses the evidence.
+  PR runs and other workflows remain inadmissible. One main run plus one
+  merge-group run does not meet either evidence path.
   Downloaded `pytest-junit-shard-*` artifacts must report the exact node failing,
   erroring, or passing after a recorded first failure in each run. A failing
   workflow without the node's failure is insufficient.

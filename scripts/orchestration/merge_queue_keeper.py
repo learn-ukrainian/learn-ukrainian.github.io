@@ -89,7 +89,6 @@ AGGREGATE_JOBS = frozenset({"CI Gate"})
 DISPLAY_JOB_LIMIT = 100  # characters of a job name shown, before the id suffix
 DISPLAY_TEST_LIMIT = 200  # characters of a failed-test identifier shown
 DISPLAY_REASON_LIMIT = 200  # characters of a gate reason or GitHub error shown
-DISPLAY_TEST_ITEMS = 10  # failed tests listed in one issue body
 DISPLAY_ID_LENGTH = 8  # hex digits of the raw-text digest appended to altered text
 MARKER_ID_LENGTH = 16  # hex digits of the raw-text digest that replaces a disallowed marker value
 
@@ -409,9 +408,10 @@ class GitHub:
             raise KeeperError("merge_group job page incomplete")
         return data["jobs"]
 
-    def first_failed_test(self, job_id: int) -> str:
+    def failed_tests(self, job_id: int) -> list[str]:
         """Extract only a test's relative source identifier, never log values."""
         log = self.call("run", "view", "-R", self.repository, "--job", str(job_id), "--log")
+        tests: list[str] = []
         for match in re.finditer(r"\bFAILED\s+(tests/[^\r\n]+?)(?:\s+-\s|\r?$)", log, re.M):
             # Pytest parameter IDs can contain arbitrary private runtime data.
             # Project only the source path and Python identifiers; decline any
@@ -421,9 +421,12 @@ class GitHub:
                 r"tests/(?:[A-Za-z_][A-Za-z0-9_]*/)*[A-Za-z_][A-Za-z0-9_]*\.py"
                 r"(?:::[A-Za-z_][A-Za-z0-9_]*)+",
                 identifier,
-            ):
-                return identifier
-        return ""
+            ) and identifier not in tests:
+                tests.append(identifier)
+        return tests
+
+    def issue_comment(self, number: int, body: str) -> None:
+        self.call(Request("issue-comment", repo=self.repository, number=number, body=body))
 
     def issues(self, title: str) -> list[dict[str, Any]]:
         return self.paged(Request("read-issues", repo=self.repository))
@@ -666,6 +669,7 @@ def _load(path: Path) -> dict[str, Any]:
         or not isinstance(data.get("undiagnosed", {}), dict)
         or not isinstance(data.get("squash_revoked", {}), dict)
         or not isinstance(data.get("pending_comments", {}), dict)
+        or not isinstance(data.get("flake_issue_updates", {}), dict)
     ):
         raise KeeperError("keeper state malformed")
     return data
@@ -774,8 +778,8 @@ def _comment_once(
     comments.append({"body": marker, "user": {"login": login}})
 
 
-def _drop_detail(gh: GitHub, number: int, head: str, since: str) -> tuple[str, list[str], dict[str, str]]:
-    """Return the diagnosis text, the failed job names and the first failed test per job."""
+def _drop_detail(gh: GitHub, number: int, head: str, since: str) -> tuple[str, list[str], dict[str, list[str]], int | None]:
+    """Return the diagnosis text, the failed job names and all failed tests per job, and run ID."""
     timeline = gh.timeline(number)
     events = [
         item
@@ -803,7 +807,7 @@ def _drop_detail(gh: GitHub, number: int, head: str, since: str) -> tuple[str, l
         and extract_pr_number(str(item.get("head_branch", ""))) == number
     ]
     if not runs:
-        return (" Queue removal confirmed; failing merge_group run unknown." if events else ""), [], {}
+        return (" Queue removal confirmed; failing merge_group run unknown." if events else ""), [], {}, None
     run = max(runs, key=lambda item: item.get("created_at", ""))
     if not isinstance(run.get("id"), int):
         raise KeeperError("matching merge_group run has no valid id")
@@ -811,32 +815,24 @@ def _drop_detail(gh: GitHub, number: int, head: str, since: str) -> tuple[str, l
     try:
         jobs = gh.jobs(run["id"])
     except KeeperError as exc:
-        return f"{run_detail}; failing job lookup failed: {display_text(str(exc), DISPLAY_REASON_LIMIT)}.", [], {}
+        return f"{run_detail}; failing job lookup failed: {display_text(str(exc), DISPLAY_REASON_LIMIT)}.", [], {}, run["id"]
     failed = sorted(
         {str(job["name"]) for job in jobs if job.get("conclusion") == "failure" and isinstance(job.get("name"), str)}
     )
     names = ", ".join(code_span(name) for name in failed) or "none reported"
     detail = f"{run_detail}; failing jobs: {names}."
-    job = next(
-        (
-            job
-            for job in jobs
-            if job.get("conclusion") == "failure"
-            and "pytest" in str(job.get("name", ""))
-            and type(job.get("id")) is int
-        ),
-        None,
-    )
-    tests: dict[str, str] = {}
-    if job:
+    tests: dict[str, list[str]] = {}
+    for job in jobs:
+        if job.get("conclusion") != "failure" or "pytest" not in str(job.get("name", "")) or type(job.get("id")) is not int:
+            continue
         try:
-            test = gh.first_failed_test(job["id"])
-            if test:
-                detail += f" First FAILED test: {code_span(test, DISPLAY_TEST_LIMIT)}."
-                tests[str(job["name"])] = test
+            nodes = gh.failed_tests(job["id"])
+            if nodes:
+                detail += f" First FAILED test: {code_span(nodes[0], DISPLAY_TEST_LIMIT)}."
+                tests[str(job["name"])] = nodes
         except KeeperError:
             pass  # Optional log enrichment must not hide the run/job diagnosis.
-    return detail, failed, tests
+    return detail, failed, tests, run["id"]
 
 
 def _shared_failure(failures: Any, failed_jobs: list[str], number: int) -> list[int]:
@@ -858,7 +854,7 @@ def _shared_failure(failures: Any, failed_jobs: list[str], number: int) -> list[
 
 
 def _flaky_jobs(failures: Any) -> dict[str, tuple[list[int], list[str]]]:
-    """Non-aggregate jobs that failed on two or more distinct PRs, with their PRs and failed tests."""
+    """Group by failed node ID, falling back to the job only without a node."""
     prs: dict[str, set[int]] = defaultdict(set)
     tests: dict[str, set[str]] = defaultdict(set)
     for item in failures if isinstance(failures, list) else []:
@@ -867,9 +863,10 @@ def _flaky_jobs(failures: Any) -> dict[str, tuple[list[int], list[str]]]:
         job, number, test = item.get("job"), item.get("pr"), item.get("test")
         if not isinstance(job, str) or job in AGGREGATE_JOBS or type(number) is not int:
             continue
-        prs[job].add(number)
-        if isinstance(test, str) and test:
-            tests[job].add(test)
+        key = test if isinstance(test, str) and test else job
+        prs[key].add(number)
+        if key != job:
+            tests[key].add(test)
     return {job: (sorted(numbers), sorted(tests[job])) for job, numbers in prs.items() if len(numbers) >= 2}
 
 
@@ -924,7 +921,8 @@ def run(
         dropped = key in previous["queued"] and queued is False
         detail = ""
         failed_jobs: list[str] = []
-        failed_tests: dict[str, str] = {}
+        failed_tests: dict[str, list[str]] = {}
+        failed_run: int | None = None
         if dropped:
             dropped_head = previous["queued"][key]
             previous.setdefault("undiagnosed", {}).setdefault(f"{number}:{dropped_head}", previous.get("observed", ""))
@@ -933,7 +931,7 @@ def run(
         prior_drop_key = f"{number}:{dropped_head}"
         if queued is False and prior_drop_key in previous.get("undiagnosed", {}):
             try:
-                detail, failed_jobs, failed_tests = _drop_detail(gh, number, head, previous["undiagnosed"][prior_drop_key])
+                detail, failed_jobs, failed_tests, failed_run = _drop_detail(gh, number, head, previous["undiagnosed"][prior_drop_key])
                 if detail:
                     previous["undiagnosed"].pop(prior_drop_key)
                     previous["drops"][prior_drop_key] = int(previous["drops"].get(prior_drop_key, 0)) + 1
@@ -1119,10 +1117,13 @@ def run(
             for job in failed_jobs:
                 if job in AGGREGATE_JOBS:
                     continue  # The aggregate gate fails whenever any job fails; it is never a flaky test.
-                record: dict[str, Any] = {"job": job, "pr": number, "at": observed}
-                if job in failed_tests:
-                    record["test"] = failed_tests[job]
-                previous.setdefault("failures", []).append(record)
+                for test in failed_tests.get(job, [""]):
+                    record: dict[str, Any] = {"job": job, "pr": number, "at": observed}
+                    if failed_run is not None:
+                        record["run_id"] = failed_run
+                    if test:
+                        record["test"] = test
+                    previous.setdefault("failures", []).append(record)
         except KeeperError as exc:
             failed = True
             lines.append(f"#{number} FAILED: {exc}")
@@ -1136,32 +1137,57 @@ def run(
                 previous[name] = {
                     item: value for item, value in previous[name].items() if item.split(":", 1)[0] in open_numbers
                 }
-        cutoff = datetime.now(UTC) - timedelta(hours=24)
-        failures = [
-            item
-            for item in previous.get("failures", [])
-            if isinstance(item, dict) and isinstance(item.get("at"), str) and item["at"] >= cutoff.isoformat()
-        ]
-        previous["failures"] = failures
-        for job, (numbers, tests) in _flaky_jobs(failures).items():
-            if not budget:
+    cutoff = datetime.now(UTC) - timedelta(hours=24)
+    failures = [
+        item for item in previous.get("failures", [])
+        if isinstance(item, dict) and isinstance(item.get("at"), str) and item["at"] >= cutoff.isoformat()
+    ]
+    previous["failures"] = failures
+    issue_updates = previous.setdefault("flake_issue_updates", {})
+    for key, (numbers, tests) in sorted(_flaky_jobs(failures).items()):
+        if not budget:
+            continue
+        title = f"Merge queue flaky test: {display_text(key, DISPLAY_TEST_LIMIT)}"
+        matching = [item for item in failures if (item.get("test") or item.get("job")) == key]
+        run_ids = sorted({item["run_id"] for item in matching if type(item.get("run_id")) is int})
+        body = (
+            f"{code_span(key, DISPLAY_TEST_LIMIT)} failed merge_group runs on distinct PRs "
+            f"{', '.join(f'#{n}' for n in numbers)} within 24 hours."
+            f" Run IDs: {', '.join(map(str, run_ids)) or 'unknown (legacy record)'}."
+        )
+        if tests:
+            body += f" Failed test: {code_span(tests[0], DISPLAY_TEST_LIMIT)}."
+        try:
+            issues = gh.issues(key)
+            matches = [item for item in issues if "pull_request" not in item and (
+                key in str(item.get("title", "")) or key in str(item.get("body", "")) or item.get("title") == title
+            )]
+            issue = min(matches, key=lambda item: item.get("number", 0)) if matches else None
+            lines.append(f"flaky record: {display_text(key, DISPLAY_TEST_LIMIT)}; PRs={','.join(map(str, numbers))}; "
+                         f"runs={','.join(map(str, run_ids)) or 'unknown'}; issue={issue.get('number', 'unknown') if issue else 'new'}")
+            if not apply:
                 continue
-            title = f"Merge queue flaky test: {display_text(job)}"
-            body = (
-                f"{code_span(job)} failed merge_group runs on distinct PRs "
-                f"{', '.join(f'#{n}' for n in numbers)} within 24 hours."
-            )
-            if tests:
-                shown = ", ".join(code_span(test, DISPLAY_TEST_LIMIT) for test in tests[:DISPLAY_TEST_ITEMS])
-                more = len(tests) - DISPLAY_TEST_ITEMS
-                body += f" Failed test: {shown}{f' and {more} more' if more > 0 else ''}."
-            try:
-                issues = gh.issues(title)
-                if not any(item.get("title") == title for item in issues):
-                    gh.create_issue(title, body)
-            except KeeperError as exc:
-                failed = True
-                lines.append(f"flaky-test issue FAILED: {exc}")
+            if issue is None:
+                gh.create_issue(title, body)
+            else:
+                issue_number = issue.get("number")
+                if type(issue_number) is not int:
+                    raise KeeperError("matching flaky-test issue has no number")
+                marker = "<!-- mq-keeper-flake -->"
+                comments = gh.comments(issue_number)
+                recent = any(
+                    marker in str(comment.get("body", ""))
+                    and (comment.get("user") or {}).get("login") == login
+                    and str(comment.get("created_at", "")) >= cutoff.strftime("%Y-%m-%dT%H:%M:%SZ")
+                    for comment in comments
+                )
+                if not recent and issue_updates.get(str(issue_number), "") < cutoff.isoformat():
+                    gh.issue_comment(issue_number, body + "\n\n" + marker)
+                    issue_updates[str(issue_number)] = observed
+        except KeeperError as exc:
+            failed = True
+            lines.append(f"flaky-test issue FAILED: {exc}")
+    if apply:
         _save(state_path, previous)
     return lines, failed
 

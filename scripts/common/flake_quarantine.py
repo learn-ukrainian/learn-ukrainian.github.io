@@ -9,7 +9,7 @@ import os
 import re
 import subprocess
 import tempfile
-from datetime import date, datetime, timedelta
+from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
 
 import yaml
@@ -103,6 +103,59 @@ def _gh(*args: str) -> str:
     ).stdout
 
 
+def _merge_group_evidence(run: dict, node_id: str) -> tuple[int, datetime]:
+    """Prove an unrelated queue failure using the tested tree and shared import scan."""
+    from scripts.ci import components
+
+    branch = re.fullmatch(r"gh-readonly-queue/main/pr-([1-9][0-9]*)-([0-9a-f]{40})", run.get("head_branch", ""))
+    try:
+        created = datetime.fromisoformat(run["created_at"].replace("Z", "+00:00"))
+        if created.tzinfo is None or not datetime.now(UTC) - timedelta(days=7) <= created <= datetime.now(UTC):
+            raise ValueError("outside seven-day window")
+    except (KeyError, TypeError, ValueError) as exc:
+        raise ValueError("merge-group evidence must be within seven days") from exc
+    if not branch:
+        raise ValueError("merge-group evidence needs an identifiable PR and base")
+    sha, base = run["head_sha"], branch[2]
+    root = REGISTRY.parents[1]
+
+    def git(*args: str) -> str:
+        return subprocess.run(["git", *args], cwd=root, check=True, capture_output=True,
+                              text=True, timeout=120).stdout
+
+    # Read the actual tested commit, even if the PR or local checkout has moved.
+    git("fetch", "--no-tags", "origin", sha)
+    git("merge-base", "--is-ancestor", base, sha)
+    changed = set(git("diff", "--name-only", "-z", "--no-renames", base, sha).split("\0")) - {""}
+    entries = []
+    paths = []
+    for row in git("ls-tree", "-r", "-z", sha).split("\0"):
+        if not row:
+            continue
+        metadata, path = row.split("\t", 1)
+        paths.append(path)
+        if path.endswith(".py"):
+            entries.append((path, metadata.split()[2]))
+    sources = components.indexed_python_sources(str(root), tuple(entries), ())
+    graph = components.cached_import_scan(tuple(sources.items()), tuple(paths))
+    test_file = node_id.split("::", 1)[0]
+    if test_file not in sources:
+        raise ValueError("merge-group test source is missing")
+    closure = {test_file}
+    while True:
+        expanded = closure | {target for importer, target in graph["file_edges"] if importer in closure}
+        if expanded == closure:
+            break
+        closure = expanded
+    if any(edge["path"] in closure for edge in graph["unresolved_edges"]):
+        raise ValueError("merge-group test import closure is unresolved")
+    # The queue diff includes every PR in a multi-PR group, conservatively
+    # refusing evidence if any member changed this test or its dependencies.
+    if changed & closure:
+        raise ValueError("merge-group PR touches the test or an imported module")
+    return int(branch[1]), created
+
+
 def _check_admission(entry: dict, *, repository: str, destination: Path) -> None:
     from scripts.ci.junit_results import parse_junit
 
@@ -121,21 +174,28 @@ def _check_admission(entry: dict, *, repository: str, destination: Path) -> None
         or marker not in approval.get("body", "").splitlines()
     ):
         raise ValueError("missing designated admission approval bound to this entry on the repair issue")
+    merge_groups: list[tuple[int, datetime]] = []
+    main_runs = 0
     for run_id in entry["observed_run_ids"]:
         run = json.loads(_gh("api", f"{endpoint}/actions/runs/{run_id}"))
         sha = run.get("head_sha", "")
         if (
-            run.get("head_branch") != "main"
-            or run.get("head_repository", {}).get("full_name") != repository
-            or run.get("event") not in {"push", "schedule", "workflow_dispatch"}
+            run.get("head_repository", {}).get("full_name") != repository
+            or run.get("event") not in {"push", "schedule", "workflow_dispatch", "merge_group"}
             or run.get("path") != ".github/workflows/ci.yml"
             or run.get("status") != "completed"
             or not isinstance(sha, str) or not re.fullmatch(r"[0-9a-f]{40}", sha)
         ):
             raise ValueError(f"run {run_id}: expected completed CI on unmodified main in this repository")
-        comparison = json.loads(_gh("api", f"{endpoint}/compare/{sha}...main"))
-        if comparison.get("merge_base_commit", {}).get("sha") != sha:
-            raise ValueError(f"run {run_id}: head is not an ancestor of main")
+        if run["event"] == "merge_group":
+            merge_groups.append(_merge_group_evidence(run, entry["node_id"]))
+        else:
+            if run.get("head_branch") != "main":
+                raise ValueError(f"run {run_id}: expected completed CI on unmodified main in this repository")
+            comparison = json.loads(_gh("api", f"{endpoint}/compare/{sha}...main"))
+            if comparison.get("merge_base_commit", {}).get("sha") != sha:
+                raise ValueError(f"run {run_id}: head is not an ancestor of main")
+            main_runs += 1
         run_dir = destination / str(run_id)
         run_dir.mkdir()
         _gh("run", "download", str(run_id), "--repo", repository,
@@ -151,6 +211,8 @@ def _check_admission(entry: dict, *, repository: str, destination: Path) -> None
             coverage = [result for result in results if result.node_id == node]
             if len(coverage) != 1 or coverage[0].outcome != "passed" or coverage[0].reruns:
                 raise ValueError(f"run {run_id}: equivalent coverage {node} must pass without reruns")
+    if main_runs < 2 and len({number for number, _ in merge_groups}) < 2:
+        raise ValueError("admission requires two main runs or merge-group failures for two distinct PRs within seven days")
 
 
 def check_admissions(entries: list[dict], previous: list[dict], *, repository: str) -> int:
