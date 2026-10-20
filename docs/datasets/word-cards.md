@@ -166,13 +166,35 @@ codes. Use the interpreter prescribed by the dispatch contract.
 
 `scripts/projects/open_model_data/generate_atlas_pairing.py` writes
 `data/datasets/word-cards/releases/v0.1.0-pilot/pairing-atlas0.json`.
-A card is paired only when its spelling assertion exactly matches one active
-`atlas0:slug:` registry entry and no other release card claims that entry.
-Part of speech separates atlas homonyms when the card has one part-of-speech
-value. Shared spellings stay `ambiguous` with reason `homonym_unresolved`.
-A card with no current atlas entry stays `unpaired`. Capitalization is
-significant. The generator does not open `sources.db`. `--check` exits 0 when
-the artifact matches the inputs and 1 when it drifts.
+A card is paired only when its spelling assertion matches one active
+`atlas0:slug:` registry entry with compatible part of speech, the Atlas article
+covers one VESUM entry, and no other release card claims that entry.
+For common cards with `card_kind == "lexeme"`, spelling matching uses
+`casefold()` and is case-insensitive. For example, `Батьківщина`
+(`wc_6hg8x80fcnk2`) pairs to `atlas0:slug:батьківщина`.
+For other card kinds, including `proper_name`, capitalization remains significant.
+Part of speech separates Atlas homonyms when the card has one part-of-speech
+value.
+
+The generator records these disposition reasons:
+
+- `atlas_entry_covers_multiple_homonyms`: `ambiguous` because the Atlas article
+  covers multiple VESUM entries, as with `бар`, `баран`, and `замок`.
+- `pos_mismatch_with_atlas_entry`: `unpaired` because the card's part of speech
+  does not match the Atlas entry, as with the `adv` card for `щось` and its
+  Atlas pronoun article, whose registry POS is `noun`. Multiple part-of-speech
+  values also produce this reason.
+- `phraseologism_mwe_no_atlas_entry`: `unpaired` for phraseologism MWE cards
+  with `mwe_form` assertions.
+- `homonym_unresolved`: `ambiguous` because multiple Atlas entries remain
+  candidates or multiple release cards claim the same Atlas entry.
+- `conflicting_spelling_assertions`: `ambiguous` because the card has multiple
+  distinct spelling assertions.
+- `new_candidate_no_current_atlas_entry`: `unpaired` because the card has no
+  spelling assertion or no current Atlas entry matches its spelling.
+
+The generator does not open `sources.db`. `--check` exits 0 when the artifact
+matches the inputs and 1 when it drifts.
 
 The scoped mechanics regression command is:
 
