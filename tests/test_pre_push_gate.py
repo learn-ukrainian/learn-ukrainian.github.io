@@ -437,6 +437,21 @@ def _measurements(repo: Path) -> list[dict]:
     ]
 
 
+def _measurements_in_start_order(repo: Path) -> list[dict]:
+    """Terminal rows ordered by their BEGIN rows (#11207).
+
+    A gate appends its terminal row only after ``validate`` returns, which is after it released its
+    head admission. A follower that reuses the leader's receipt can therefore append first; the BEGIN
+    rows follow the order in which the test started the gates.
+    """
+    path = repo / ".git/lu-pre-push-gate/measurements.jsonl"
+    rows = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines()]
+    started = [row["attempt_id"] for row in rows if row.get("phase") == "BEGIN"]
+    terminal = {row["attempt_id"]: row for row in rows if row.get("phase") != "BEGIN"}
+    assert len(terminal) == len(started) == len(set(started)) and set(terminal) == set(started)
+    return [terminal[attempt] for attempt in started]
+
+
 def _receipts(repo: Path) -> list[Path]:
     return sorted((repo / ".git/lu-pre-push-gate/receipts").glob("*.json"))
 
@@ -3839,7 +3854,7 @@ def test_production_head_follower_reuses_green_under_global_queue_load(repo: Pat
         assert not (controls[2] / "entered").exists(), "identical follower must reuse green proof"
     finally:
         _stop_controls(processes)
-    rows = _measurements(repo)
+    rows = _measurements_in_start_order(repo)
     assert len(rows) == 2
     leader, follower = rows
     assert leader["queue_position"] == 3
