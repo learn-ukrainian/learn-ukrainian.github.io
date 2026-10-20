@@ -184,6 +184,9 @@ def test_push_uncertainty_never_reports_success(checkout, monkeypatch, failure):
     monkeypatch.setattr(delegate.subprocess, "run", run)
     result = finalize(worktree)
     assert not result.ok
+    if failure == "timeout":
+        # A timeout in the push itself stays a push failure.
+        assert result.error == "auto_finalize_push_failed, git push, TimeoutExpired"
     assert (worktree / "artifact.txt").read_bytes() == b"committed\r\n"
     assert remote_head(origin) == (head if failure in {"remote_moved", "head_moved"} else None)
     assert result.commit_sha == head
@@ -436,13 +439,11 @@ def test_unknown_committed_history_never_publishes(checkout, monkeypatch, failur
         "unknown_base": "auto_finalize_committed_scope_unknown",
         "error": "auto_finalize_committed_scope_unknown",
         "unreadable": "rescue_input_unreadable",
-        # The committed-only path reaches this check inside the publication
-        # boundary, which currently types every timeout there as a push
-        # failure; only the never-publish outcome is asserted for it.
-        "timeout": "auto_finalize_scope_check_timeout" if path == "dirty" else None,
+        # Both the dirty pre-check and the publication boundary type a history
+        # timeout as the check's, never as a push.
+        "timeout": "auto_finalize_scope_check_timeout",
     }[failure]
-    if expected_error is not None:
-        assert result.error == expected_error
+    assert result.error == expected_error
     assert hits != []
     assert remote_head(origin) is None and not marker.exists()
     assert delegate._resolve_sha(worktree) == result.commit_sha == head

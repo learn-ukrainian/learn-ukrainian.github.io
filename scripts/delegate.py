@@ -8176,6 +8176,8 @@ def _push_auto_finalize_branch(
     owned = _declared_owned_paths(owned_paths)
     if not owned:
         raise _TypedFailure("scope unavailable", _TypedCause("no_owned_paths_declared"))
+    # Only the publication itself is a push; a timeout in a check before it is not.
+    pushing = False
     try:
         with _finalize_execution_context(worktree, publish=True) as context:
             if context.run("check-ref-format", f"refs/heads/{branch}").returncode:
@@ -8198,6 +8200,7 @@ def _push_auto_finalize_branch(
             # Git itself invokes the base hook. An unchanged retry is still
             # validated explicitly because Git skips pre-push for no updates.
             timeout = _auto_finalize_push_timeout_s(context.root / "trusted/.githooks/pre_push_gate.py")
+            pushing = True
             if remote == head:
                 hook = context.root / "trusted/.githooks/pre-push"
                 proc = subprocess.run(
@@ -8224,6 +8227,12 @@ def _push_auto_finalize_branch(
         code = exc.code if exc.code in TYPED_CAUSE_CODES else "auto_finalize_committed_scope_unknown"
         raise _TypedFailure("publication refused", _TypedCause(code)) from exc
     except subprocess.TimeoutExpired as exc:
+        if not pushing:
+            # The same public cause as the dirty pre-check's history timeout.
+            raise _TypedFailure(
+                "pre-publication check timed out",
+                _TypedCause("auto_finalize_scope_check_timeout", diagnostic=f"raised TimeoutExpired: {exc}"),
+            ) from exc
         raise _TypedFailure(
             "publication timed out", _exception_cause("auto_finalize_push_failed", exc, command=["git", "push"])
         ) from exc
