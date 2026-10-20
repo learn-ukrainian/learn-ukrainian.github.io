@@ -143,6 +143,8 @@ def run_upload(
             )
         elif dataset == "malformed":
             (package / "manifest.json").write_text("{", encoding="utf-8")
+        elif dataset == "invalid_utf8":
+            (package / "manifest.json").write_bytes(b'{"dataset_name": "\xff"}')
         if request.param == "cli":
             result = subprocess.run(
                 [sys.executable, "-c", launcher, str(hub_dir.parent), *arguments],
@@ -181,6 +183,33 @@ def test_upload_requires_explicit_package_directory() -> None:
     assert result.returncode == 2
     assert "--dataset-dir" in result.stderr
     assert "huggingface" not in result.stdout.lower()
+
+
+def test_upload_requires_explicit_repository(tmp_path: Path) -> None:
+    result = subprocess.run(
+        [sys.executable, str(SCRIPT), "--dataset-dir", str(tmp_path)],
+        capture_output=True,
+        text=True,
+        timeout=15,
+    )
+    assert result.returncode == 2
+    assert "the following arguments are required: --repo-id" in result.stderr
+
+
+def test_help_uses_portable_example() -> None:
+    result = subprocess.run([sys.executable, str(SCRIPT), "--help"], capture_output=True, text=True, timeout=15)
+    assert result.returncode == 0
+    assert "Example: .venv/bin/python scripts/projects/open_model_data/upload_to_huggingface.py" in result.stdout
+    assert "--repo-id '<verified-project-org>/<dataset-name>'" in result.stdout
+
+
+def test_invalid_utf8_manifest_refuses_before_any_hub_call(run_upload: Callable) -> None:
+    code, calls, output = run_upload(dataset="invalid_utf8")
+    assert code == 1
+    assert calls == []
+    assert "unreadable package manifest" in output
+    assert "refusing upload" in output
+    assert "Traceback" not in output
 
 
 @pytest.mark.parametrize("token_source", ["argument", "environment"])

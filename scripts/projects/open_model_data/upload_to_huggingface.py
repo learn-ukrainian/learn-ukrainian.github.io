@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Upload a previously built external dataset package to a private Hub repository.
 
-Require --dataset-dir and a token from --token or HF_TOKEN, without persistent
+Require --dataset-dir, --repo-id and a token from --token or HF_TOKEN, without persistent
 login. Validate source quarantine before any Hub call, authenticate, and verify
 effective private visibility before uploading. Only an exact repository-not-found
 error with HTTP 404 permits private repository creation, followed by a fresh
@@ -37,7 +37,7 @@ def refuse_quarantined_package(dataset_dir: Path) -> None:
 
     Load the sealed inventory even for an empty package. Raise
     QuarantinedArtifactError for a missing inventory or unexpected schema, a non-directory,
-    quarantined package or file paths, a malformed JSON or non-object manifest,
+    quarantined package or file paths, a manifest with invalid UTF-8, malformed JSON or a non-object value,
     or the legacy ULDR dataset name. Other inventory read or parse errors
     propagate. This does not validate release contents.
     """
@@ -52,7 +52,7 @@ def refuse_quarantined_package(dataset_dir: Path) -> None:
     if manifest.is_file():
         try:
             name = json.loads(manifest.read_text(encoding="utf-8")).get("dataset_name")
-        except (json.JSONDecodeError, AttributeError) as exc:
+        except (UnicodeDecodeError, json.JSONDecodeError, AttributeError) as exc:
             raise QuarantinedArtifactError(f"unreadable package manifest {manifest}; refusing upload") from exc
         if name == QUARANTINED_PACKAGE_NAME:
             raise QuarantinedArtifactError(
@@ -64,7 +64,7 @@ def refuse_quarantined_package(dataset_dir: Path) -> None:
 def main() -> int:
     """Parse CLI options and upload an admitted package to a verified private target.
 
-    --dataset-dir is required; --repo-id selects the target. --private is enabled
+    --dataset-dir and --repo-id are required. --private is enabled
     by default. --token takes precedence over HF_TOKEN; cached login is not used.
     Return 0 after upload, or 1 for a missing input, quarantine refusal, missing
     token or Hub client, authentication failure, target preparation or privacy
@@ -80,9 +80,9 @@ def main() -> int:
             "Use only after checking the external package and its intended repository; public targets are refused."
         ),
         epilog=(
-            "Example: /home/ops/learn-ukrainian/.venv/bin/python "
+            "Example: .venv/bin/python "
             "scripts/projects/open_model_data/upload_to_huggingface.py "
-            "--dataset-dir /tmp/uldr-v02 --repo-id owner/uldr --private\n"
+            "--dataset-dir '<external-package-dir>' --repo-id '<verified-project-org>/<dataset-name>' --private\n"
             "Outputs: a dataset repository commit on Hugging Face; no local package files.\n"
             "Exit codes: 0 on upload; nonzero on invalid input, a quarantined package (#9607), authentication, "
             "or upload failure.\n"
@@ -99,8 +99,8 @@ def main() -> int:
     parser.add_argument(
         "--repo-id",
         type=str,
-        default="krisztiankoos/uldr",
-        help="Hugging Face repo ID (default: krisztiankoos/uldr)",
+        required=True,
+        help="Hugging Face repo ID in the verified project organization (required; format: organization/dataset)",
     )
     parser.add_argument(
         "--token",

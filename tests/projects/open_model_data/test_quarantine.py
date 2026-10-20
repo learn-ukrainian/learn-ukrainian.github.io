@@ -388,7 +388,9 @@ def test_loader_upload_to_huggingface_refuses_before_any_hub_call(
     tombstoned = tmp_path / RELEASE_TOMBSTONE_PATH
     tombstoned.mkdir(parents=True)
     for dataset_dir in (sealed_copy.parent, uldr, tombstoned):
-        monkeypatch.setattr(sys, "argv", ["x", "--dataset-dir", str(dataset_dir), "--token", "unused"])
+        monkeypatch.setattr(
+            sys, "argv", ["x", "--dataset-dir", str(dataset_dir), "--repo-id", "fixture/private-dataset", "--token", "unused"]
+        )
         assert module.main() == 1
     with pytest.raises(QuarantinedArtifactError):
         module.refuse_quarantined_package(sealed_copy.parent)
@@ -433,7 +435,9 @@ def test_loader_upload_to_huggingface_requires_valid_inventory_before_any_hub_ca
     invalid.write_text(json.dumps({"schema": "other", "artifacts": []}), encoding="utf-8")
 
     def upload(dataset_dir: Path) -> int:
-        monkeypatch.setattr(sys, "argv", ["x", "--dataset-dir", str(dataset_dir), "--token", "unused"])
+        monkeypatch.setattr(
+            sys, "argv", ["x", "--dataset-dir", str(dataset_dir), "--repo-id", "fixture/private-dataset", "--token", "unused"]
+        )
         return module.main()
 
     for inventory_path, match in ((tmp_path / "missing.json", "inventory missing"), (invalid, "unexpected")):
