@@ -10,6 +10,18 @@ message, not the stream. Source: [agents_extensions/shared/rules/core.md:157](..
 The ownership boundaries follow the existing
 [cooperation best practice](../best-practices/agent-cooperation.md#cooperation-surfaces-ownership--do-not-conflate).
 
+The six required elements, in their original order, are:
+
+1. Durable handoff, native quit, and attributed fenced exit (steps 1–2).
+2. Keep the existing shell pane for the successor launcher (step 4).
+3. Verify both native dry runs and their quoted output (step 3).
+4. Reconcile open orders and their exact authority recipients (step 5).
+5. Use the quoted Grok model-table key as syntax only (step 6).
+6. Stop on failed or unknown prerequisites (step 7).
+
+This is the requirements checklist. Execute the steps below in numerical order:
+both dry runs must pass before typing any real launcher command.
+
 ## 1. Save the predecessor's durable handoff
 
 Drain the current driver's own authority deliveries. Record applied orders,
@@ -67,8 +79,8 @@ Stop on a missing or unattributed marker, nonzero status, `DRIVER_SCOPE_REFUSED`
 a process or session, use `--force`, run a lease-close command, or recover a
 remote lease from local PID observations. The launcher owns release; unresolved
 release or expiry needs the existing authorized supervisor flow. Follow the
-[current lease boundary](../../agents_extensions/shared/rules/core.md#unconditional-invariants),
-even where an older runbook says that an agent should close the stream.
+[current lease boundary](../../agents_extensions/shared/rules/core.md#unconditional-invariants)
+and the corrected [Grok canary protocol](grok-session-canary.md#lifecycle).
 
 ## 3. Verify both native dry runs before a real launch
 
@@ -123,23 +135,6 @@ semantic canary. Source: [scripts/launchers/cursor.sh:19](../../scripts/launcher
 These commands cover native Grok and Cursor only. Do not generalize this safety
 proof to Hermes or probe Hermes as part of this procedure.
 
-For Grok, recognize the quoted model-table key as TOML syntax:
-
-```toml
-[model."grok-4.7"]
-```
-
-The [official Grok model configuration reference](https://github.com/xai-org/grok-build/blob/main/crates/codegen/xai-grok-shell/README.md#model-configuration)
-defines the `model.<name>` table. The [TOML key specification](https://toml.io/en/v1.0.0#keys)
-requires quotes to keep a dot inside one key. Thus `model."grok-4.7"` has one
-model key, while bare `model.grok-4.7` creates nested `grok-4` and `7` keys.
-This is syntax evidence only; runtime acceptance by the installed Grok CLI is
-unverified. Do not edit live configuration or authentication to follow this
-guide. Stop if the intended route needs an unapproved configuration change or
-unproven runtime behavior. Grok preserves its last model selection unless the
-caller supplies a model or effort; verify the intended model against current
-routing before proceeding. Source: [scripts/launchers/grok.sh:31](../../scripts/launchers/grok.sh#L31).
-
 ## 4. Type the real launcher into the existing shell pane
 
 Only after the durable handoff, attributed fenced exit, and both successful dry
@@ -174,18 +169,21 @@ The current examples map to `grok-infra` and `cursor-devops`; arbitrary
 [scripts/lib/handoff_identity.sh:503](../../scripts/lib/handoff_identity.sh#L503),
 [scripts/config/area_assignments.yaml:21](../../scripts/config/area_assignments.yaml#L21),
 [scripts/config/area_assignments.yaml:37](../../scripts/config/area_assignments.yaml#L37).
-Authority delivery routing uses the exact recipient name, without legacy slot
-remapping. Source: [scripts/inbox_pending.py:31](../../scripts/inbox_pending.py#L31).
+Publication admits explicit recipients through `_admit_recipients`; it normalizes
+whitespace and applies bridge admission. It does not certify an arbitrary name
+as a registered driver slot. Verify registration separately as above. Sources:
+[scripts/fleet_comms/authority.py:135](../../scripts/fleet_comms/authority.py#L135),
+[scripts/fleet_comms/authority.py:563](../../scripts/fleet_comms/authority.py#L563).
 
-Have the authorized order sender reconcile unfinished orders against their
-durable outcomes, then re-publish each still-open order to the new exact slot.
-Preserve the original order reference and remaining acceptance criteria; do not
-repeat completed side effects. Use the existing channel, an explicit recipient,
-and a fresh idempotency key for this new delivery. Reuse that key only to retry
-the same publication. This task does not publish or resend any order.
+Have the authorized sender reconcile unfinished orders against their durable
+outcomes before any re-publication. Preserve each original kind, body, reference,
+correlation ID, reply reference, and remaining acceptance criteria in the handoff
+and delivery record. Do not repeat completed side effects or rewrite an order as
+a new kind. Use a fresh idempotency key for each new delivery; reuse that key
+only for the identical publication. This task publishes no orders.
 
-For an authorized sender, this template uses `cto`, a channel named by the
-existing supervisor publication path. Verify that the channel already exists;
+For an ordinary message, this authorized-sender template uses `cto`, a channel
+named by the existing supervisor publication path. Verify that the channel already exists;
 do not create a channel to make this example work. Source:
 [scripts/lib/session_supervisor.sh:332](../../scripts/lib/session_supervisor.sh#L332).
 Replace every placeholder and use the project interpreter prescribed for the
@@ -194,44 +192,79 @@ seat. In a dispatch worktree, use the primary interpreter, not a worktree `.venv
 ```bash
 "$PROJECT_PYTHON" -m scripts.fleet_comms channel publish cto - \
   --sender "<authorized-sender>" --recipient "<new-registered-slot>" \
-  --kind order --idempotency-key "<fresh-order-move-key>" \
+  --kind "<original-non-supervisory-kind>" \
+  --conversation-id "<original-conversation-id>" \
+  --correlation-id "<original-correlation-id>" \
+  --in-reply-to "<original-reply-message-id>" \
+  --deadline-at "<original-deadline-at>" \
+  --idempotency-key "<fresh-delivery-key>" \
   < "<private-order-body-file>"
 ```
 
-`channel publish` passes the explicit recipient and idempotency key to
+Omit an optional reference or deadline flag only if that field was absent originally.
+Use the unchanged original body from the private body file. Preserve the original
+order reference and remaining criteria in durable continuity records even when
+the body only refers to them. Record the original message ID alongside the new
+message and delivery IDs. An `--in-reply-to` parent must exist in the same
+authority store; stop on a missing parent instead of dropping the reference.
+Source: [scripts/fleet_comms/authority.py:1887](../../scripts/fleet_comms/authority.py#L1887).
+
+`channel publish` passes the explicit recipient, original kind, conversation,
+correlation, reply reference, and idempotency key to
 `AuthorityService.publish_message`, which creates the message and deliveries
 in one transaction. Sources: [scripts/fleet_comms/cli.py:983](../../scripts/fleet_comms/cli.py#L983),
 [scripts/fleet_comms/authority.py:541](../../scripts/fleet_comms/authority.py#L541).
 
-The successor claims only its own new slot with its own worker identity:
+For `supervisory-request`, retain the canonical supervisory path instead of
+using the ordinary-message template. The existing
+[supervisory integration](session-supervisor.md#supervisory-event-integration)
+uses `AuthorityService.enqueue_supervisory_request(sender=..., recipient=...,
+body=..., correlation_id=..., idempotency_key=..., deadline_at=...)`. Preserve the
+original body, correlation ID, and optional deadline and use a fresh delivery key. Its recipient remains
+`supervisor:epic:<number>`, not the new driver inbox slot. Source:
+[scripts/fleet_comms/authority.py:582](../../scripts/fleet_comms/authority.py#L582).
+The supervisor accepts only the existing bounded `supervisory-wake.v1` wake/restart contract;
+do not convert arbitrary driver orders to wake/restart events. Reconcile the
+body's predecessor generation with the existing supervisor lifecycle. A stale
+event does not authorize a new restart or a changed body. The helper has no
+`in_reply_to` parameter; if an original request has an unsupported reference,
+stop and retain it for the sender rather than dropping that reference.
+
+The successor claims ordinary messages only from its own new slot with its own
+worker identity:
 
 ```bash
 "$PROJECT_PYTHON" -m scripts.fleet_comms deliveries claim \
   --recipient "<new-registered-slot>" --worker-id "<successor-worker-id>"
 ```
 
-Read and apply the returned message through the existing authority reader,
+Read the original body through the existing authority reader,
 `AuthorityService.read_message_body(message_id)`. Source:
 [scripts/fleet_comms/authority.py:645](../../scripts/fleet_comms/authority.py#L645). Claim output contains metadata and body artifact references, not the
-order body. Record the verified outcome and acknowledge the exact claimed
-delivery with that worker identity and its returned fence token:
+order body. Reconcile prior effects and remaining criteria, apply only the
+remaining authorized work, record its verified outcome, and acknowledge the
+exact claimed delivery with that worker identity and its returned fence token:
 
 ```bash
 "$PROJECT_PYTHON" -m scripts.fleet_comms deliveries ack "<delivery-id>" \
   --worker-id "<successor-worker-id>" --fence-token "<returned-fence-token>"
 ```
 
-For a `supervisory-request` only, the existing supervisor records generation-bound
-consumption before its authorized action, then reconciles the outcome before
-acknowledgment. Its supported command shape is:
+For a `supervisory-request` only, the existing supervisor claims its canonical
+recipient and reads the original body. It records generation-bound consumption
+before any authorized effect, reconciles the outcome, then acknowledges with
+the same worker identity and current delivery fence. Its supported consumption
+command shape is shown below for reference. The launcher/watcher owns this
+sequence; do not execute supervisory consumption from the agent seat.
 
 ```bash
-"$PROJECT_PYTHON" -m scripts.fleet_comms deliveries consume "<delivery-id>" \
-  --worker-id "<successor-worker-id>" --fence-token "<returned-fence-token>" \
-  --driver-generation "<successor-generation>"
+"$PROJECT_PYTHON" -m scripts.fleet_comms deliveries consume "<supervisor-delivery-id>" \
+  --worker-id "<supervisor-worker-id>" --fence-token "<current-delivery-fence>" \
+  --driver-generation "<launcher-driver-generation>"
 ```
 
-Do not use `consume` for ordinary orders; it refuses non-supervisory messages.
+The ordinary-message ack example above is not a substitute for this supervisory
+sequence. Do not use `consume` for ordinary messages; it refuses them.
 The CLI exposes claim, consume, and ack with explicit identities and fences.
 Sources: [scripts/fleet_comms/cli.py:854](../../scripts/fleet_comms/cli.py#L854),
 [scripts/fleet_comms/authority.py:1372](../../scripts/fleet_comms/authority.py#L1372).
@@ -245,3 +278,36 @@ authority delivery path. An empty legacy inbox proves nothing about new-slot
 orders. Stop if the slot, plane, body artifact, current fence, or order outcome
 is unknown. Keep unresolved orders durable with their owner and next action;
 a new prompt or successful launch alone does not prove continuity.
+
+## 6. Check the Grok model-table syntax
+
+For Grok, recognize the quoted model-table key as TOML syntax:
+
+```toml
+[model."grok-4.7"]
+```
+
+The [official Grok model configuration reference](https://github.com/xai-org/grok-build/blob/main/crates/codegen/xai-grok-shell/README.md#model-configuration)
+defines the `model.<name>` table. The [TOML key specification](https://toml.io/en/v1.0.0#keys)
+requires quotes to keep a dot inside one key. Thus `model."grok-4.7"` has one
+model key, while bare `model.grok-4.7` creates nested `grok-4` and `7` keys.
+This is syntax evidence only; runtime acceptance by the installed Grok CLI is
+unverified. Do not edit live configuration or authentication to follow this
+guide. Stop if the intended route needs an unapproved configuration change or
+unproven runtime behavior. Grok preserves its last model selection unless the
+caller supplies a model or effort; verify the intended model against current
+routing before proceeding. Source: [scripts/launchers/grok.sh:31](../../scripts/launchers/grok.sh#L31).
+
+## 7. Stop conditions
+
+Stop before a real launch if the handoff or health protocol failed, the
+predecessor's fenced exit is missing or unattributed, either dry run failed,
+the intended route differs, or authority, lease expiry, or health is unknown.
+Keep the shell pane and durable continuity evidence intact. The launcher owns
+fenced lease close; an agent never claims, renews, releases, or recovers it.
+
+Stop on an unregistered successor slot, missing body or reference, stale delivery
+fence, unknown prior effect, or unsupported supervisory body or generation.
+Keep each unresolved order's original identity, remaining criteria, owner, and
+next action in the handoff. Never replace missing proof with a new prompt,
+plain acknowledgment, forced lease operation, or a second supervisor.

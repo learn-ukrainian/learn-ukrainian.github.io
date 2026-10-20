@@ -9,6 +9,7 @@ from pathlib import Path
 
 import pytest
 
+from scripts.session_canary import diary
 from scripts.session_canary import grok_lane as gl
 from tests.helpers.python import project_python
 
@@ -113,6 +114,8 @@ def test_build_facts_fails_when_insufficient(tmp_path: Path) -> None:
 
 def test_mint_score_roundtrip_pass_and_fail(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     # Avoid depending on live session DB
+    monkeypatch.setattr(diary, "try_stream_state_note", lambda *a, **k: None)
+    monkeypatch.setattr(diary, "try_stream_tail_text", lambda *a, **k: "")
     monkeypatch.setattr(
         gl,
         "_load_stream_entries",
@@ -222,6 +225,75 @@ def test_protocol_prints_epic(capsys: pytest.CaptureFixture[str]) -> None:
     assert "epic:4387" in out  # allow-hardcoded-epic: atlas epic protocol output
     assert "0.8" in out or "8/10" in out
     assert "FAIL-HANDOFF" in out
+    assert "The launcher supplies the fenced lease" in out
+    assert "agents never claim, renew, release, or recover it" in out
+    assert "Only within `thread-rollover`, mint" in out
+    assert "launcher owns fenced lease close" in out
+    for obsolete in ("Open/claim stream lease", "close stream +", "close stream;", "force-close"):
+        assert obsolete not in out
+
+
+@pytest.mark.parametrize(
+    ("score_rc", "score_line", "verdict"),
+    [(0, "SCORE 10/10 = 1.00  ->  PASS", "PASS"),
+     (2, "SCORE 7/10 = 0.70  ->  FAIL-HANDOFF", "FAIL-HANDOFF")],
+)
+def test_score_offline_preserves_handback_and_launcher_instructions(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str],
+    score_rc: int, score_line: str, verdict: str,
+) -> None:
+    canary = tmp_path / "canary"
+    canary.mkdir()
+    (canary / "probe.json").write_text("{}", encoding="utf-8")
+    answers = canary / "answers.json"
+    answers.write_text("{}", encoding="utf-8")
+    handoff = tmp_path / ".claude" / "harness-epic" / "GROK-DRIVER-HANDOFF.md"
+    handoff.parent.mkdir(parents=True)
+    handoff.write_text("## Next Drive\n1. Preserve synthetic task\n## Hands-off\n- Foreign lanes\n", encoding="utf-8")
+    notes = []
+    monkeypatch.setattr(diary, "try_stream_state_note", lambda *a, **k: notes.append(a))
+    monkeypatch.setattr(diary, "try_stream_tail_text", lambda *a, **k: "")
+    monkeypatch.setattr(gl, "_load_stream_entries", lambda *a, **k: [])
+    monkeypatch.setenv("SESSION_STREAM_ID", "epic:999999")
+
+    def offline_scorer(command, **kwargs):
+        assert command[1] == str(tmp_path / "scripts" / "context_canary.py")
+        assert command[command.index("--pass-ratio") + 1] == "0.8"
+        return subprocess.CompletedProcess(command, score_rc, score_line + "\n", "")
+
+    monkeypatch.setattr(gl.subprocess, "run", offline_scorer)
+    rc = gl.main([
+        "--repo", str(tmp_path), "score", "--epic", "harness",
+        "--out-dir", str(canary),
+        "--answers", str(answers), "--handoff", str(handoff),
+        "--next-drive", "Preserve synthetic task",
+        "--context-tokens", "999", "--model", "test-model",
+    ])
+    assert rc == score_rc
+    out = capsys.readouterr().out
+    assert score_line in out
+    payload = json.loads((canary / "last_verdict.json").read_text())
+    assert (payload["rc"], payload["verdict"], payload["pass_ratio"]) == (score_rc, verdict, 0.8)
+    assert payload["action_if_fail"] == [
+        "Append STATE AT HANDBACK to dual-write handoff",
+        "Use /quit; launcher owns fenced lease close",
+        "Do NOT keep driving after FAIL-HANDOFF",
+        "Never claim, renew, release, or recover the stream lease; successor uses the launcher",
+    ]
+    text = handoff.read_text()
+    assert "Preserve synthetic task" in text
+    assert notes[0][0] == "epic:999999"
+    if score_rc == 2:
+        assert "STATE AT HANDBACK" in text
+        assert "canary FAIL-HANDOFF" in text
+        assert "ACTION: FAIL-HANDOFF — STATE AT HANDBACK written; /quit now; launcher owns fenced lease close." in out
+    else:
+        assert "canary score PASS" in text
+        assert "STATE AT HANDBACK" not in text
+        assert "AUTO-HYDRATE (post canary PASS)" in out
+        assert "POST-COMPACT RE-GROUND (mandatory)" in out
+    for obsolete in ("session_streams close", "force-close", "close stream lease; /quit"):
+        assert obsolete not in out + json.dumps(payload)
 
 
 def test_cli_module_help() -> None:

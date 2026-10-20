@@ -10,6 +10,13 @@ Ending a session *only because compact fired* is too early if recall is still sh
 
 ## Policy
 
+Run mint/score only within `thread-rollover`. The examples below describe that
+protocol; compact notifications and cold starts do not authorize standalone
+canary execution. Follow the [current health rule](../../agents_extensions/shared/rules/core.md#p7--continuity).
+The launcher owns the fenced stream lease lifecycle. Agents never open, claim,
+renew, release, or recover it. On FAIL-HANDOFF, preserve the durable handback and
+quit natively; the launcher stops renewal and closes its own fenced lease.
+
 **Operator is not the recovery driver.** Agents own compact recovery
 (score → auto-hydrate on PASS). Do not ask the human whether to restart,
 hydrate, or re-load the diary. Restart only when FAIL-HANDOFF ends the seat
@@ -19,7 +26,7 @@ hydrate, or re-load the diary. Restart only when FAIL-HANDOFF ends the seat
 | --- | --- |
 | Auto-compact | **Re-score** canary → on PASS **auto-hydrate + RE-GROUND** (not blind continue) |
 | Canary **PASS** | Durable **anchors** OK only — **not** proof mid-flight working memory survived |
-| Canary **&lt; 8/10** (`pass-ratio` 0.8) | **FAIL-HANDOFF** → auto **STATE AT HANDBACK** on diary + stream note → close stream → `/quit` |
+| Canary **&lt; 8/10** (`pass-ratio` 0.8) | **FAIL-HANDOFF** → auto **STATE AT HANDBACK** on diary + stream note → `/quit` → launcher closes its fenced lease |
 | Compact count / “compactions remaining” | **Not** an end criterion |
 | First compact | **Not** required before you may end; **not** a reason to delay a clean end |
 
@@ -128,7 +135,7 @@ Operator 2026-09-21: keep the product default of 85%. Do not raise it.
 ## CLI (canary)
 
 ```bash
-# Cold-start (after stream open + diary load)
+# Within thread-rollover, after launcher lease setup + diary load
 .venv/bin/python -m scripts.session_canary.grok_lane mint --epic atlas --stream epic:4387
 .venv/bin/python -m scripts.session_canary.grok_lane questions --epic atlas
 
@@ -149,15 +156,15 @@ Artifacts live under gitignored `.claude/<epic>-epic/canary/`.
 
 ```
 START  → start-grok-driver.sh --epic <name> claims stream lease via common supervisor
-         → load diary + stream → mint canary
+         → load diary + stream; mint only within thread-rollover
 DRIVE  → stamp diary after each batch
-         at ~60–70% context OR after auto-compact → score from memory
+         within thread-rollover, at ~60–70% context OR after auto-compact → score from memory
          PASS → auto-hydrate printed by score; continue (no operator prompt)
-         FAIL → STATE AT HANDBACK + close stream + quit
+         FAIL → STATE AT HANDBACK + native /quit; launcher closes its fenced lease
 END    → handback while PASS (optional) before forced compact
 ```
 
-The launcher owns lease open/close for Grok. The cold-start prompt explicitly tells the model not to open or resume the lease itself.
+The launcher owns lease open/close for Grok. The agent never opens, claims, renews, releases, or recovers the lease itself.
 
 ## SSOT
 
@@ -170,7 +177,7 @@ The launcher owns lease open/close for Grok. The cold-start prompt explicitly te
 ## Related
 
 - `scripts/session_canary/diary.py` — stamp / handback / hydrate capsule helpers
-- `docs/runbooks/epic-stream-handoff.md` — cross-agent stream claim
+- `docs/runbooks/epic-stream-handoff.md` — continuity evidence; current launcher-owned lease rules bind
 - `scripts/context_canary.py` — shared mint/score engine
 - `docs/best-practices/codex-thread-handoff.md` — strict rollover canary
 - `start-grok-driver.sh --epic <name>` — core injects the lane protocol pointer

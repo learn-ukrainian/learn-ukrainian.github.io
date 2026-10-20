@@ -12,7 +12,8 @@ Policy (operational, not production-rollover)
 ---------------------------------------------
 - Mint **10** anchors from stream + handoff dual-write only (no git/PR scrape).
 - Score with legacy ``context_canary``: ``--pass-ratio`` default **0.8** (8/10).
-- FAIL-HANDOFF (rc 2) ⇒ write STATE AT HANDBACK, close stream lease, ``/quit``.
+- FAIL-HANDOFF (rc 2): write STATE AT HANDBACK, ``/quit``; launcher closes its fenced lease.
+- Run mint/score only within ``thread-rollover``; agents never claim, renew, release, or recover leases.
 - First auto-compact is a **re-score trigger**, not an end signal by itself.
 - ``score`` **auto-hydrates on PASS** (Sol Option D) so the operator never
   has to remember hydrate/restart for diary load; use ``--no-hydrate`` only
@@ -31,8 +32,8 @@ Paths (gitignored local; under ``.claude/<epic>-epic/canary/``)
   log.csv          (context_tokens, score) time series
   last_verdict.json  latest machine verdict
 
-Usage
------
+Usage within thread-rollover only
+--------------------------------
   .venv/bin/python -m scripts.session_canary.grok_lane mint --epic atlas
   .venv/bin/python -m scripts.session_canary.grok_lane questions
   .venv/bin/python -m scripts.session_canary.grok_lane score \\
@@ -760,9 +761,9 @@ def cmd_score(args: argparse.Namespace) -> int:
         "policy": "operational-end-on-fail-handoff-not-on-compact-count",
         "action_if_fail": [
             "Append STATE AT HANDBACK to dual-write handoff",
-            "session_streams close / force-close expired then stop",
+            "Use /quit; launcher owns fenced lease close",
             "Do NOT keep driving after FAIL-HANDOFF",
-            "/quit and start a new Grok session with --epic",
+            "Never claim, renew, release, or recover the stream lease; successor uses the launcher",
         ],
     }
     verdict_path.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
@@ -840,7 +841,7 @@ def cmd_score(args: argparse.Namespace) -> int:
                 f"STATE AT HANDBACK (canary FAIL-HANDOFF): {canary_line}",
                 idempotency_key=f"handback-{_utc_now()}",
             )
-            print("ACTION: FAIL-HANDOFF — STATE AT HANDBACK written; close stream lease; /quit now.")
+            print("ACTION: FAIL-HANDOFF — STATE AT HANDBACK written; /quit now; launcher owns fenced lease close.")
         else:
             diary_mod.append_diary_stamp(
                 handoff_path,
@@ -1103,9 +1104,9 @@ Next Drive / Active Working Set / a stamp, it is allowed to evaporate on compact
 - **FAIL-HANDOFF (&lt; 8/10 at pass-ratio 0.8) ⇒ end now** regardless of token %.
 
 ### Cold-start (order is load-bearing)
-1. Open/claim stream lease for `{stream}`
+1. The launcher supplies the fenced lease for `{stream}`; agents never claim, renew, release, or recover it.
 2. **Read diary handoff + stream tail first** (do not invent queue from chat)
-3. Only then mint:
+3. Only within `thread-rollover`, mint after reading continuity:
 ```bash
 .venv/bin/python -m scripts.session_canary.grok_lane mint --epic {epic} --stream {stream}
 .venv/bin/python -m scripts.session_canary.grok_lane questions --epic {epic}
@@ -1113,6 +1114,7 @@ Next Drive / Active Working Set / a stamp, it is allowed to evaporate on compact
 Do not open `probe.json` when later scoring from memory.
 
 ### When to score
+Run mint/score only within `thread-rollover`; these signals do not authorize standalone canary execution.
 1. After **any** auto-compact notification
 2. Around **60–70%** context (`/session-info` or `/context`)
 3. After a big merge/gate wave if still long-running
@@ -1125,7 +1127,7 @@ You own compact recovery. **Never ask the operator** whether to restart, hydrate
 .venv/bin/python -m scripts.session_canary.grok_lane score --epic {epic} \
   --answers .claude/{epic}-epic/canary/answers.json --context-tokens <N>
 ```
-2. If FAIL-HANDOFF → handback is already written → close stream + `/quit` (new session via launcher).
+2. If FAIL-HANDOFF → handback is already written → `/quit`; launcher closes its fenced lease (new session via launcher).
 3. If PASS → **auto-hydrate is already printed** by `score` (bounded capsule + stream tail + **RE-GROUND checklist**).
 4. **RE-GROUND (mandatory after every compact, even on PASS):**
    - Re-read Next Drive + Active Working Set from the capsule
@@ -1144,7 +1146,7 @@ You own compact recovery. **Never ask the operator** whether to restart, hydrate
   --context-tokens <N> --model grok-4.7
 ```
 4. rc 0 = PASS → auto diary stamp with canary line.
-   rc 2 = FAIL-HANDOFF → auto **STATE AT HANDBACK** block; close stream; `/quit`.
+   rc 2 = FAIL-HANDOFF → auto **STATE AT HANDBACK** block; `/quit`; launcher owns fenced lease close.
 
 ### Clean close (optional while still PASS)
 ```bash
