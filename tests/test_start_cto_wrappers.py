@@ -47,7 +47,7 @@ def clean_selection(monkeypatch: pytest.MonkeyPatch) -> None:
 def test_cto_selection_and_dry_run(name: str, case: str, launch_with_usage) -> None:
     model = "claude-sonnet-5-5" if name == WRAPPERS[0] else "gpt-6.1-sol"
     # Explicit CLI Opus is the CTO epics exception. An environment pin is not,
-    # and Fable is retired, so the environment case stays on the certified default.
+    # and Fable is parked with explicit pins only. The environment case stays on the certified default.
     alternate = "claude-opus-5-5" if name == WRAPPERS[0] else model
     env_model = model if name == WRAPPERS[0] else alternate
     args: tuple[str, ...] = ()

@@ -824,8 +824,10 @@ def test_advisor_flags_are_refused_when_inconsistent(env, capsys, extra, model, 
 
 @pytest.mark.parametrize("agent,model", [("claude", "claude-fable-5-1"), ("cursor", "claude-fable-5-1-thinking-high")])
 def test_advisor_role_refuses_a_fable_pin(env, capsys, agent, model, monkeypatch):
-    """OO-58: a retired Fable pin is refused before the advisor route, on every seat."""
-    del monkeypatch
+    """#9583: Fable holds no advisory role; an explicit pin warns once before refusal."""
+    if agent == "cursor":
+        import scripts.agent_runtime.adapters.claude as claude_module
+        monkeypatch.setattr(claude_module, "_default_claude_bin", lambda: "/usr/bin/claude")
     rc = _dispatch(
         _argv(
             "--advisory-role",
@@ -837,13 +839,18 @@ def test_advisor_role_refuses_a_fable_pin(env, capsys, agent, model, monkeypatch
             task_id=_advisor_id(),
         )
     )
-    _assert_refused(
-        env,
-        capsys,
-        rc,
-        "is retired in the model catalog",
-        task_id=_advisor_id(),
+    err = capsys.readouterr().err
+    assert rc == 2, err
+    refusal = (
+        f"❌ CURSOR_CLAUDE_REFUSED: Claude models ({model}) must use the native Claude CLI "
+        "while it is available. (operator decision #10205)"
+        if agent == "cursor"
+        else f"❌ dispatch refused: {bounded_advisory.ADVISOR_ROUTE_REFUSED}: --advisory-role runs on the advisor "
+        f"gpt-6.1-sol; the admitted route launches {agent} {model!r}"
     )
+    assert err == f"Warning: explicit pin claude-fable-5-1 has high cost.\n{refusal}\n"
+    assert env.spawned == []
+    assert _worker_record(env.tasks, _advisor_id()) is None
 
 
 @pytest.mark.parametrize("model", ["grok-4.7-high", "composer-2.5"])

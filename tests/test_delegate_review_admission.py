@@ -1154,8 +1154,9 @@ def test_9959_claude_author_deficit_does_not_replace_explicit_openai(monkeypatch
 
 
 def test_9959_skips_capacity_constrained_resolver_pick(monkeypatch):
-    budget = _budget(claude="near_cap", codex="cool", cursor="near_cap")
-    budget["agents"]["grok"] = {"status": "cool"}
+    budget = _budget(claude="near_cap", codex="cool", cursor="cool")
+    # Grok and Cursor share one meter; Codex is the runtime-constrained pick.
+    budget["agents"]["grok"] = dict(budget["agents"]["cursor"])
     budget["agents"]["codex"]["codexbar"] = {
         "will_last_to_reset": False,
         "weekly_pace_delta_pct": 12.0,
@@ -1775,14 +1776,14 @@ FABLE_PINS = [
     ("claude", "claude-fable-5-1[1m]"),
     ("cursor", "claude-fable-5-1-thinking-high"),  # the Cursor fallback slug
 ]
-NO_REVIEW_ROLE = "is retired in the model catalog"
+NO_REVIEW_ROLE = "holds no review, critique or approval role in the model catalog"
 
 
 @pytest.mark.parametrize("seat,model", FABLE_PINS)
 @pytest.mark.parametrize("risk", ["critical", "high", "medium", "low"])
 @pytest.mark.parametrize("flags", [(), ("--check-budget",), ("--check-budget", "--force-agent")])
 def test_fable_code_review_pin_is_refused(monkeypatch, seat, model, risk, flags):
-    """OO-58: a retired Fable pin is refused, never substituted."""
+    """#9583: Fable holds no review role in the catalog, so an explicit pin is refused, never substituted."""
     args = _args(
         "--agent",
         seat,

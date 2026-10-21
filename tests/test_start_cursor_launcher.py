@@ -467,8 +467,8 @@ def test_cursor_driver_refuses_claude_models(model: str, tmp_path: Path) -> None
     assert "would exec" not in result.stdout
 
 
-def test_cursor_driver_refuses_retired_fable_before_the_claude_gate(tmp_path: Path) -> None:
-    """OO-58: Fable 5.1 is retired, so the catalog refusal precedes CURSOR_CLAUDE_REFUSED."""
+def test_cursor_driver_refuses_parked_fable_at_the_claude_gate(tmp_path: Path) -> None:
+    """An explicit Fable 5.1 pin still uses the native-Claude refusal, before launch."""
     binary = tmp_path / "claude"
     binary.write_text("#!/bin/sh\nexit 0\n", encoding="utf-8")
     binary.chmod(0o755)
@@ -476,7 +476,9 @@ def test_cursor_driver_refuses_retired_fable_before_the_claude_gate(tmp_path: Pa
         DRIVER, "--epic", "infra", "--model", "claude-fable-5-1",
         env={"PATH": f"{tmp_path}{os.pathsep}{os.environ['PATH']}"},
     )
-    assert result.returncode == 2, result.stderr
-    assert "is retired in the model catalog" in result.stderr
-    assert "claude-opus-5-5" in result.stderr
+    assert result.returncode == 4, result.stderr
+    assert "CURSOR_CLAUDE_REFUSED" in result.stderr
+    assert "native Claude CLI" in result.stderr
+    assert "claude-fable-5-1" in result.stderr
+    assert "would claim lease" not in result.stdout
     assert "would exec" not in result.stdout
