@@ -260,7 +260,8 @@ def route(report: dict[str, Any], *, cycle: int, service: AuthorityService) -> l
     messages = []
     # A separate summary is still sent when unknown owners route to the CTO.
     packets = [(lane, "lane", rows) for lane, rows in sorted(groups.items())]
-    packets.append(("claude-cto", "summary", [r for _, rs in sorted(groups.items()) for r in rs]))
+    if groups:
+        packets.append(("claude-cto", "summary", [r for _, rs in sorted(groups.items()) for r in rs]))
     for lane, kind, rows in packets:
         rows = sorted(rows, key=lambda row: json.dumps(row, sort_keys=True))
         payload = json.dumps(rows, sort_keys=True, separators=(",", ":"))

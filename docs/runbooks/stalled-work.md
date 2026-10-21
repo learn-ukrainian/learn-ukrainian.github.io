@@ -11,7 +11,11 @@ stale-record classifiers without settling, archiving or editing any record.
 ```
 
 The JSON rows name the task, dispatch `initiator` lane, commit or PR, stall
-kind, starting timestamp and age in hours. Unrecognized initiators and PRs
+kind, starting timestamp and age in hours. Current lanes come from the slots
+in `area_assignments.yaml`. Retired initiators resolve through
+`terminal_abandon_succession.yaml` and the fleet taxonomy to a current slot.
+The resolver preserves the provider when possible, otherwise using the first
+registered slot for that stream. Unrecognized initiators and PRs
 without a matching recent task go to `claude-cto`. Worker provider and branch
 prefix do not establish ownership.
 
@@ -22,7 +26,9 @@ not retain the remote push timestamp. Branches already contained in origin's
 `main` or tied to a merged PR by exact commit identity are excluded. This also
 excludes squash merges. Rejected PRs require a trusted recorder comment for the
 current head, no live matching task, and two hours since both the rejection
-and the latest terminal repair task. New commits supersede older verdicts.
+and the latest terminal repair task. Author records take precedence over
+read-only or `review_branch` records when selecting the owner and repair time.
+New commits supersede older verdicts.
 Explicit `terminal_abandon` records and `terminal-abandon.v1` ABANDON receipts
 are excluded. This observer does not authorize abandonment or cleanup.
 
@@ -47,11 +53,16 @@ the cycle retryable. Fleet deduplicates messages already accepted on retry.
 
 Report-only is the default. Direct `--route` explicitly sends requests.
 Routing emits one supervisory message per owning lane and a separate CTO
-summary through `AuthorityService(root=None)`. Keys include cycle, lane and
+summary through `AuthorityService(root=None)` when rows exist. Empty reports
+send no messages. Keys include cycle, lane and
 the digest of the sorted row set, excluding changing age values. Retries in
 one cycle deduplicate; the next cycle repeats unresolved work. No tmux input,
 push, rebase, deletion or task-record write occurs. Missing Git or GitHub
-evidence produces errors, exit 1 and no routing from that report.
+evidence produces errors, exit 1 and no routing from that report. An unknown
+PR verdict instead produces a `verdict_unknown` row for `claude-cto`, with the
+reason and unknown age, while other rows continue routing. The keeper's
+post-step ignores the observer's exit status so a scan failure does not mark
+the keeper itself as failed.
 
 After merge, the host configuration owner must deploy the updated keeper
 service or add the entry point to its existing private lane-wake service,

@@ -369,6 +369,19 @@ def test_malformed_record_is_visible(host):
     assert host.scan()["errors"] == ["task record broken.json: JSONDecodeError"]
 
 
+def test_empty_scan_sends_no_lane_request_or_cto_summary(host):
+    report = host.scan()
+    assert report["rows"] == []
+    assert report["errors"] == []
+
+    def enqueue(**kwargs):
+        pytest.fail("empty scan must not enqueue any message")
+
+    service = SimpleNamespace(enqueue_supervisory_request=enqueue)
+    assert mod.route(report, cycle=1, service=service) == []
+    assert mod.route(report, cycle=2, service=service) == []
+
+
 def test_route_is_idempotent_per_lane_and_cycle_with_real_authority(host):
     host.record()
     host.facts.local_branches["codex/fix"] = LOCAL
