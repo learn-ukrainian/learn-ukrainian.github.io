@@ -40,7 +40,7 @@ from pathlib import Path
 from typing import NamedTuple
 
 WELL_KNOWN = ".well-known"
-MARKER_PREFIX = "learn-ukrainian-deployment-"
+DEPLOYMENT_MARKER_FILE_PREFIX = "learn-ukrainian-deployment-"
 SHA_RE = re.compile(r"[0-9a-f]{40}")
 MAX_REPORTED_PATHS = 20
 
@@ -63,7 +63,7 @@ def _identity(st: os.stat_result) -> tuple[int, int]:
 
 def marker_name(sha: str) -> str:
     """Return the marker file name the workflow emits for ``sha``."""
-    return f"{MARKER_PREFIX}{sha}.txt"
+    return f"{DEPLOYMENT_MARKER_FILE_PREFIX}{sha}.txt"
 
 
 def validate_sha(sha: str | None) -> str:
