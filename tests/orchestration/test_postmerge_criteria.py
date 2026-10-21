@@ -164,6 +164,17 @@ def test_closing_references_and_body():
     assert pc.closing_issues(pr, "unit/public") == [("other/repo", 9), ("unit/public", 7), ("unit/public", 8)]
 
 
+@pytest.mark.parametrize("body,expected", [
+    ("Closes #7, #8", [("unit/public", 7), ("unit/public", 8)]),
+    ("Fixes #7,#8 and #9", [("unit/public", 7), ("unit/public", 8), ("unit/public", 9)]),
+    ("Resolves #7, other/repo#9, and #8", [("other/repo", 9), ("unit/public", 7), ("unit/public", 8)]),
+    ("Closes #7 & #8; related #10\nMentions #11", [("unit/public", 7), ("unit/public", 8)]),
+])
+def test_multiple_closing_references(body, expected):
+    pr = {"body": body, "closingIssuesReferences": [{"url": "https://github.com/unit/public/issues/8"}]}
+    assert pc.closing_issues(pr, "unit/public") == expected
+
+
 @pytest.mark.parametrize("state", ["OPEN", "CLOSED"])
 def test_unmerged_pr_rejected(transport, state):
     transport.pr["state"] = state

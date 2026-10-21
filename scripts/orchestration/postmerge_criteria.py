@@ -84,11 +84,14 @@ def closing_issues(pr: dict, repository: str) -> list[tuple[str, int]]:
         if not match:
             raise ValueError("invalid closing issue URL")
         issues.add((match[1], int(match[2])))
-    for match in re.finditer(
-        r"\b(?:close[sd]?|fix(?:e[sd])?|resolve[sd]?)\s+(?:([\w.-]+/[\w.-]+))?#([1-9]\d*)\b",
+    reference = r"(?:[\w.-]+/[\w.-]+)?#[1-9]\d*\b"
+    separator = r"[ \t]*(?:,|and\b|&)[ \t]*(?:and[ \t]+)?"
+    for closing in re.finditer(
+        rf"\b(?:close[sd]?|fix(?:e[sd])?|resolve[sd]?)\s+({reference}(?:{separator}{reference})*)",
         visible_markdown(pr.get("body") or ""), re.I,
     ):
-        issues.add((match[1] or repository, int(match[2])))
+        for match in re.finditer(r"(?:([\w.-]+/[\w.-]+))?#([1-9]\d*)\b", closing[1]):
+            issues.add((match[1] or repository, int(match[2])))
     return sorted(issues)
 
 
