@@ -5,13 +5,16 @@ import re
 import sys
 from pathlib import Path
 
-from slug_utils import review_path as _review_path
-from slug_utils import to_bare_slug
-
-# Add scripts/ to path for internal imports to reach audit.cleaners
+# Bare `slug_utils` lives under scripts/. Module import skips the file guard below.
 SCRIPT_DIR = Path(__file__).parent.parent
 if str(SCRIPT_DIR) not in sys.path:
-    sys.path.append(str(SCRIPT_DIR))
+    sys.path.insert(0, str(SCRIPT_DIR))
+
+if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
+from slug_utils import review_path as _review_path
+from slug_utils import to_bare_slug
 
 try:
     from audit.cleaners import clean_for_stats, extract_core_content
