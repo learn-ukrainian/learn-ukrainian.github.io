@@ -7,6 +7,7 @@ import {
   buildFutureTenseNumbers,
   buildWordAtlasArticleView,
   classifyRenderedArticleTier,
+  hasSovietColonizationContextContent,
   formatConditionalForm,
   formatKhayImperative,
   formatPos,
@@ -2432,6 +2433,62 @@ describe("thin rendered-state presentation (#8327)", () => {
     expect(model.sourceWaitingLayers.map((card) => card.id)).not.toContain('meaning');
     expect(doc.querySelector('.soviet-colonization-box')?.textContent).toContain('Historical context');
     expect(doc.querySelector('.def-card.sum20 .def-text')?.textContent).toBe('Available gloss');
+  });
+
+  test.each([
+    {
+      label: "historical note only",
+      context: { source: "СУМ-11", definition: "", sovietization_risk: 0, keywords: [], historical_note: "Зафіксовано для історичного аналізу." },
+      expectInBox: "Зафіксовано для історичного аналізу.",
+    },
+    {
+      label: "keywords only",
+      context: { source: "СУМ-11", definition: "   ", sovietization_risk: 0, keywords: ["ідеологія"] },
+      expectInBox: "Маркери: ідеологія",
+    },
+    {
+      label: "positive risk only",
+      context: { source: "СУМ-11", definition: "", sovietization_risk: 2, keywords: [] },
+      expectInBox: "Радянський окупаційний контекст",
+    },
+  ])("blank-definition Soviet context stays visible when still informative: $label", ({ context, expectInBox }) => {
+    const { model, doc } = view({ soviet_colonization_context: context });
+    expect(hasSovietColonizationContextContent(context)).toBe(true);
+    expect(model.renderable.meaningSection).toBe(true);
+    expect(model.renderable.meaning).toBe(false);
+    expect(model.articleOverview.find((card) => card.id === "meaning")?.ready).toBe(false);
+    const box = doc.querySelector(".soviet-colonization-box");
+    expect(box?.textContent).toContain(expectInBox);
+    expect(box?.querySelector(".def-text p")).toBeNull();
+    expect(doc.querySelector(".atlas-section h2")?.textContent).toBe("Значення");
+  });
+
+  test.each([
+    null,
+    { source: "СУМ-11", definition: "", sovietization_risk: 0, keywords: [] },
+    { source: "СУМ-11", definition: " \t\n", sovietization_risk: 0, keywords: [" ", ""] },
+  ])("empty Soviet context does not open meaning section or colonization box: %j", (context) => {
+    const { model, doc } = view(
+      context === null ? { soviet_colonization_context: null } : { soviet_colonization_context: context },
+    );
+    expect(hasSovietColonizationContextContent(context)).toBe(false);
+    expect(model.renderable.meaningSection).toBe(false);
+    expect(model.renderable.meaning).toBe(false);
+    expect(doc.querySelector(".soviet-colonization-box")).toBeNull();
+    expect(Array.from(doc.querySelectorAll(".atlas-section h2")).some((h) => h.textContent === "Значення")).toBe(false);
+  });
+
+  test("nonblank historical definition still renders the definition paragraph", () => {
+    const { doc } = view({
+      soviet_colonization_context: {
+        source: "СУМ-11",
+        definition: "ЛАНЕ́ЦЬ, нця́, ч., заст. Ланцюг.",
+        sovietization_risk: 1,
+        keywords: [],
+      },
+    });
+    expect(doc.querySelector(".soviet-colonization-box .def-text p")?.textContent)
+      .toBe("ЛАНЕ́ЦЬ, нця́, ч., заст. Ланцюг.");
   });
 
   test.each([
