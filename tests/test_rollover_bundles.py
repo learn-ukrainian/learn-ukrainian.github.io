@@ -466,7 +466,8 @@ class _BundleServer:
         seq_manifest: dict | None = None,
         answers: dict[str, tuple[int, dict]] | None = None,
     ) -> None:
-        """``ignore_agent`` lists every slot's rows; ``listed_agent`` mislabels them;
+        """``ignore_agent`` lists every slot's rows; ``listed_agent`` mislabels them
+        consistently (row and listed manifest alike), leaving the fetched bundle intact;
         ``seq_manifest`` replaces the fetched manifest; ``answers`` scripts an error
         status for ``"list"`` or ``"seq"`` requests."""
         self.rows = rows
@@ -488,7 +489,7 @@ class _BundleServer:
             limit = int(query.get("limit", ["20"])[0])
             listed = [
                 {
-                    "manifest": {**manifest, "upload_seq": seq},
+                    "manifest": {**manifest, "agent": self.listed_agent or manifest["agent"], "upload_seq": seq},
                     "upload_seq": seq,
                     "agent": self.listed_agent or manifest["agent"],
                 }
@@ -711,7 +712,14 @@ def test_from_api_agent_mismatch_still_exits_invalid_rollover_bundle(
     assert _tree(target) == {}
 
 
-FOREIGN_ROW = {"manifest": {"agent": "claude-devops", "upload_seq": 7}, "upload_seq": 7}
+FOREIGN_ROW = {"manifest": {"agent": "claude-devops", "stream_id": STREAM, "upload_seq": 7}, "upload_seq": 7}
+# The same slot identity carried at both levels, consistently.
+FOREIGN_ROW_WITH_COPIES = {
+    "agent": "gpt-infra",
+    "stream_id": STREAM,
+    "manifest": {"agent": "gpt-infra", "stream_id": STREAM, "upload_seq": 8},
+    "upload_seq": 8,
+}
 
 # Listings whose slot identity is missing or malformed. None of them proves the
 # slot empty, so each must refuse rather than read as the typed none (#11257).
@@ -767,7 +775,7 @@ def test_from_api_well_formed_foreign_row_alone_is_still_none(
     capsys: pytest.CaptureFixture[str],
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    listing = {"bundles": [FOREIGN_ROW, {**FOREIGN_ROW, "agent": "gpt-infra"}]}
+    listing = {"bundles": [FOREIGN_ROW, FOREIGN_ROW_WITH_COPIES]}
     server = _BundleServer({}, answers={"list": (200, listing)})
     monkeypatch.setattr(th, "_bundle_client", lambda *_a, **_kw: server)
     target = tmp_path / "target"
@@ -776,6 +784,58 @@ def test_from_api_well_formed_foreign_row_alone_is_still_none(
     assert th.cmd_import_bundle(_import_args(target, None, from_api=STREAM)) == 0
     assert capsys.readouterr().out == TYPED_NONE
     assert _tree(target) == {}
+
+
+def _contradictory(field: str, row_value: object, manifest_value: object, *, agent: str = "claude-devops") -> dict:
+    """A well-formed row whose top-level ``field`` disagrees with its manifest's."""
+    manifest = {"agent": agent, "stream_id": STREAM, "upload_seq": 7}
+    return {"manifest": {**manifest, field: manifest_value}, **{field: row_value}}
+
+
+# Rows whose top-level identity contradicts their own manifest. Every value is
+# well-formed on its own; only their disagreement makes the row unclassifiable,
+# so it can prove neither a foreign slot nor this one (#11257).
+CONTRADICTORY_LISTINGS = {
+    # The exact probe from the review of 2aa5a0d8: caller AGENT is claude-infra.
+    "foreign-row-own-manifest": {
+        "bundles": [{"agent": "claude-devops", "manifest": {"agent": AGENT, "upload_seq": 7}, "upload_seq": 7}]
+    },
+    "foreign-row-own-manifest-full": {"bundles": [_contradictory("agent", "claude-devops", AGENT)]},
+    "own-row-foreign-manifest": {"bundles": [_contradictory("agent", AGENT, "claude-devops")]},
+    "two-foreign-agents": {"bundles": [_contradictory("agent", "claude-devops", "gpt-infra")]},
+    "stream-mismatch": {"bundles": [_contradictory("stream_id", "epic:1", STREAM)]},
+    "stream-mismatch-own-slot": {"bundles": [_contradictory("stream_id", STREAM, "epic:1", agent=AGENT)]},
+    "upload-seq-mismatch": {"bundles": [_contradictory("upload_seq", 7, 8)]},
+    "upload-seq-mismatch-own-slot": {"bundles": [_contradictory("upload_seq", 7, 8, agent=AGENT)]},
+    "consistent-foreign-then-contradictory": {
+        "bundles": [FOREIGN_ROW_WITH_COPIES, _contradictory("agent", "claude-devops", AGENT)]
+    },
+    "contradictory-then-consistent-foreign": {
+        "bundles": [_contradictory("agent", "claude-devops", AGENT), FOREIGN_ROW]
+    },
+}
+
+
+@pytest.mark.parametrize("listing", list(CONTRADICTORY_LISTINGS.values()), ids=list(CONTRADICTORY_LISTINGS))
+def test_from_api_listing_row_contradicting_its_manifest_refuses(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+    monkeypatch: pytest.MonkeyPatch,
+    listing: dict,
+) -> None:
+    server = _BundleServer({}, answers={"list": (200, listing)})
+    monkeypatch.setattr(th, "_bundle_client", lambda *_a, **_kw: server)
+    target = tmp_path / "target"
+    target.mkdir()
+
+    assert th.cmd_import_bundle(_import_args(target, None, from_api=STREAM)) == 2
+    refusal = _refusal(capsys)
+
+    assert refusal == {"code": "invalid_rollover_bundle", "error": refusal["error"], "action": "import-bundle"}
+    assert "contradicts its manifest" in refusal["error"]
+    assert _tree(target) == {}
+    # The refusal comes from the listing itself; no bundle is fetched.
+    assert [urlsplit(path).path for path in server.paths] == [f"/api/epics/v1/{STREAM}/bundles"]
 
 
 class _DownBundleClient:
@@ -860,8 +920,18 @@ def test_session_start_still_warns_on_a_refusal_and_on_unavailability(
 
 @pytest.mark.parametrize(
     "listing",
-    [MALFORMED_LISTINGS["manifest-without-agent"], MALFORMED_LISTINGS["foreign-then-malformed"]],
-    ids=["identity-missing", "mixed-foreign-and-malformed"],
+    [
+        MALFORMED_LISTINGS["manifest-without-agent"],
+        MALFORMED_LISTINGS["foreign-then-malformed"],
+        CONTRADICTORY_LISTINGS["foreign-row-own-manifest"],
+        CONTRADICTORY_LISTINGS["consistent-foreign-then-contradictory"],
+    ],
+    ids=[
+        "identity-missing",
+        "mixed-foreign-and-malformed",
+        "identity-contradictory",
+        "mixed-foreign-and-contradictory",
+    ],
 )
 def test_session_start_warns_when_a_listed_row_has_no_valid_slot_identity(
     tmp_path: Path,

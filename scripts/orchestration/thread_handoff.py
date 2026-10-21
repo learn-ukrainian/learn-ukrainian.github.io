@@ -6665,30 +6665,42 @@ def cmd_import_bundle(args: argparse.Namespace) -> int:
             stream_id = str(args.from_api)
             listed = _bundle_api_list(args, stream_id=stream_id, agent=agent)
 
-            def upload_seq(row: Mapping[str, Any]) -> int:
-                with _bundle_conversion():
-                    return int(row.get("upload_seq", (row.get("manifest") or {}).get("upload_seq", 0)))
+            def row_identity(row: Mapping[str, Any]) -> tuple[str, int]:
+                """Return a listed row's slot agent and upload sequence.
 
-            def row_agent(row: Mapping[str, Any]) -> str:
+                Only a present, well-formed identity whose row and manifest
+                copies agree can make a row foreign; a missing, malformed or
+                contradictory one never reads as an empty slot (#11257).
+                """
                 manifest = row.get("manifest")
                 if not isinstance(manifest, Mapping):
                     raise ValueError("bundle API list manifest is malformed")
-                # Only a present, well-formed identity can make a row foreign; a
-                # missing or malformed one never reads as an empty slot (#11257).
-                identity = row["agent"] if "agent" in row else manifest.get("agent")
-                if not isinstance(identity, str) or not AGENT_NAME_RE.fullmatch(identity):
-                    raise ValueError("bundle API list row has no valid agent identity")
-                return identity
+                identity: dict[str, Any] = {}
+                for name, valid in (
+                    ("agent", lambda value: isinstance(value, str) and AGENT_NAME_RE.fullmatch(value) is not None),
+                    ("stream_id", lambda value: isinstance(value, str) and bool(value)),
+                    ("upload_seq", lambda value: type(value) is int and value >= 1),
+                ):
+                    values = [source[name] for source in (row, manifest) if name in source]
+                    if not all(valid(value) for value in values):
+                        raise ValueError(f"bundle API list row has no valid {name}")
+                    if len(set(values)) > 1:
+                        raise ValueError(f"bundle API list row contradicts its manifest {name}")
+                    identity[name] = values[0] if values else None
+                if identity["agent"] is None:
+                    raise ValueError("bundle API list row has no valid agent")
+                return identity["agent"], identity["upload_seq"] or 0
 
             # Only this handoff slot's own bundles are candidates; another
             # slot's bundle never installs here, whatever its upload sequence.
-            # Every row's identity is checked, so one malformed row refuses
-            # the whole listing.
-            own_rows = [row for row in listed if row_agent(row) == agent]
-            if not own_rows:
+            # Every row's identity is checked, so one malformed or
+            # contradictory row refuses the whole listing.
+            identities = [row_identity(row) for row in listed]
+            own_sequences = [sequence for row_agent, sequence in identities if row_agent == agent]
+            if not own_sequences:
                 # An empty slot is a normal state, not a refusal (#11257).
                 return _bundle_import_none()
-            sequence = upload_seq(max(own_rows, key=upload_seq))
+            sequence = max(own_sequences)
             manifest, blob = _bundle_api_by_seq(args, stream_id=stream_id, upload_seq=sequence)
             manifest, members = verify_rollover_bundle(blob, repo_root=repo_root, manifest_override=manifest)
 
