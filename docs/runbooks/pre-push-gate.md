@@ -54,6 +54,14 @@ subprocesses. A test file is affected when it reaches a changed path that way. A
 test file affects every test file: the pytest configuration (`pyproject.toml`, `pytest.ini`,
 `setup.cfg`, `tox.ini`), the root or `tests/conftest.py`, and the `-p` plugins in `addopts`.
 
+A deleted path is no longer in the tree, but the tests that still import it are the ones it breaks.
+The gate lists the range without rename detection, so a rename is its new path (changed) plus its old
+path (deleted), and passes the deleted paths with the range's base (`--base <sha> --deleted …`). The
+selector reads the base commit's import graph from Git objects (no checkout needed) and joins its
+edges to the head's, so the importers of a deleted file are selected; the configuration and conftest
+rules apply to deleted paths too. Without the base graph a deleted path is a selector error, never an
+empty selection.
+
 Two kinds of reach are deliberately not followed; CI covers them:
 
 - edges the scanner cannot prove (computed paths, shell commands, `sys.path` edits). Treating each as
@@ -73,19 +81,24 @@ The gate then:
 
 Both deferrals are recorded. A selection with no affected test files and no changed test file is
 green with `pytest: "no tests selected"`, recorded as `selection.no_tests_affected`. That is the
-expected result for a docs-only or data-only change.
+expected result for a docs-only or data-only change, and only for one: when such a range adds, changes
+or deletes a Python file, the gate falls back (`python_change_selects_nothing`, below) instead of
+passing with zero tests.
 
 ### Fallback: the conservative set
 
 When the selector fails or exits non-zero, times out, answers malformed or in another schema, or names
-a path that is not a test file, or when every test file is affected (a configuration change), the
-gate blocks on the conservative set instead: the changed test files plus the invariant registry,
+a path that is not a test file, when every test file is affected (a configuration change), when its
+answer does not report following every deleted path, or when it selects nothing for a range that
+adds, changes or deletes Python files and changes no test file, the gate blocks on the conservative
+set instead: the changed test files plus the invariant registry,
 `KNOWN_REPO_WIDE_MODULES` and `KNOWN_REPO_WIDE_FUNCTIONS` in `tests/test_repo_wide_marker_invariant.py`.
 The registry is read by AST and deduplicated (a function id is dropped when its whole file is
 selected), with the deferrals described in Bounds. Its version is a digest of the gate version and
 the ids. The event records `selection.status: fallback` with a typed `selection.reason`:
 `selector_unavailable`, `selector_failed`, `selector_timeout`, `selector_unparseable`,
-`selector_invalid_output`, `selector_schema_mismatch` or `all_tests_affected`, or one of the
+`selector_invalid_output`, `selector_schema_mismatch`, `all_tests_affected`,
+`selector_ignored_deleted_paths` or `python_change_selects_nothing`, or one of the
 `merge_base_*` reasons from check 1, which skip the selector (#11207). The set is never
 silently narrower and never green on an unknown selection. The registry is loaded, and its
 materialization checked, on every push, because the fallback needs it.
@@ -115,8 +128,11 @@ The governor's disabled and CI paths apply no thread caps. See `docs/runbooks/te
 The last stderr line before the bypass hint is machine-readable: `{"pre_push_gate": {...}}`.
 After a plan is built, every `validation_incomplete` detail ends with its selection (#10820), for example
 `selection: base <sha>, 3 selected test files (1 changed by the range), 1 changed paths`. Selected test
-files count the distinct files of the registered invariants and the changed tests, so a timeout from an
-oversized range is recognisable. The measurement row records the same counts.
+files count the distinct files pytest blocks on when the run ends: once the selector has answered, the
+changed tests plus the selection that ran (on the fallback set, plus the registered invariants), so a
+timeout from an oversized range is recognisable and a selector-narrowed run is never reported with the
+registry's count (#11207). The measurement row's `selected_test_files` records the same count; a
+scoped run returns its selection with a refusal, so the caller reports it too.
 
 ## Bounds
 
@@ -321,15 +337,29 @@ the same Git-common authority. It adds no stream lease or external coordination 
 ## Receipts
 
 `<git-common-dir>/lu-pre-push-gate/receipts/<head>-<base>.json` lets a retry of the same commit skip the run. It is
-bound to the commit, tree, base, changed paths, registry version, conservative node ids and gate version,
-and it records the selection that ran (`selection`: status, fallback reason, digest of the selector's
-answer) and the node ids it blocked on (`blocking_node_ids`). It expires after one hour and is ignored
-when any bound input differs or the tree is dirty. Receipts are checked before the selector runs, so
-reuse matches the bound inputs. Those inputs determine the selection: the tree carries the selector,
-the import graph and the durations table, and the gate version carries the cap. A receipt checked
-for a plan whose selection is known must match its whole key, the selection included. A receipt
-validated on the fallback set records the conservative verdict for exactly those inputs and is
-reused like any other.
+bound to the commit, tree, base and its fallback reason, changed and deleted paths, registry version,
+conservative node ids, gate version and `tools` (digests of the gate, launcher, pre-commit
+configuration, selector and scanner files; the interpreter, pytest, pytest-xdist and pre-commit
+versions; the selection schema). It records the selection that ran (`selection`: status, fallback
+reason, digest of the selector's answer, the selected test files that ran) and the node ids it blocked
+on (`blocking_node_ids`), and carries a `seal`, the SHA-256 of its key, outcome and time. It expires
+after one hour.
+
+Reuse requires every field (#11207): exactly the key, outcome, time and seal; a seal that matches;
+a well-formed recorded selection (`selected` with a digest, sorted test files and no reason;
+`fallback` with one of the fallback reasons above and no test files); and a key equal, field for field with no extra ones, to
+the one the gate would write for the current plan with that recorded selection. `blocking_node_ids` is
+therefore derived from the recorded selection, never taken from the file. A plan with a base fallback
+reuses only a receipt that ran that fallback, and a plan without one never reuses a `merge_base_*`
+receipt. Receipts are checked before the selector runs, so the
+bound inputs stand for the selection: the tree carries the selector, the import graph and the durations
+table, `tools` the code and versions that run them, and the gate version the cap. A plan whose selection
+is known reuses only a receipt that recorded the same selection. A missing, extra, altered or
+inconsistent field refuses reuse and the gate runs. The seal makes any edit after writing visible; a
+receipt rewritten and resealed as a whole is outside what a local receipt can prove, and before the
+selector runs its recorded digest stands for the bound inputs (`git push --no-verify` is the bypass
+anyway). A receipt validated on the fallback set records the
+conservative verdict for exactly those inputs and is reused like any other.
 Rebuilding the plan also rejects untracked validation inputs after either wait. A missing or unsafe
 immutable identity cannot authorize reuse.
 
@@ -378,6 +408,8 @@ Gate version 9 (#11207) replaces the `shadow` record with `selection`, and `node
 Once a plan exists, the row also records `base`, `selected_test_files`, `changed_test_files` and
 `changed_paths` (#10820), and `base_fallback` (null, or the `merge_base_*` reason; #11207), which the
 receipt also binds.
+Gate version 10 (#11207 review) adds `deleted_paths` to the row and the receipt, the `tools` and
+`seal` receipt fields, and `selected_test_files` counted after the selector answered.
 From gate version 9 a stage timeout records `reason` `timeout` or `timeout_under_load` and its stage's
 `load_at_timeout` (#11140); version 8 and older rows record `validation_incomplete` with `(timeout)` in
 `detail`. Version 9 also applies the main-refresh base rule above to every row's `base`.

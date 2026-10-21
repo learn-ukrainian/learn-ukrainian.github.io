@@ -11,6 +11,12 @@ every test file: the pytest configuration, the root and ``tests/conftest.py``,
 and the plugins ``addopts`` loads with ``-p``.  The answer lists the
 test files nearest first (by hop count, then path).
 
+A deleted path is no longer in the tree, so the tests that import it are found
+through the import graph of the range's base commit (``--base``), whose edges
+join the head's; the same configuration and conftest rules apply to it.  Without
+that base graph a deleted path is an error, never an empty selection.  Only base
+files that can hold an edge to a deleted path are parsed (``may_reach``).
+
 Two kinds of reach are not followed, and CI's full suite covers them.  Edges
 the scanner cannot prove (a computed path, a shell command, a ``sys.path``
 edit): treating each as "could read anything" selects almost every test file
@@ -29,6 +35,7 @@ from __future__ import annotations
 import argparse
 import json
 import shlex
+import subprocess
 import tomllib
 from collections.abc import Iterable, Sequence
 from pathlib import Path, PurePosixPath
@@ -86,20 +93,33 @@ def importer_distances(paths: Iterable[str], file_edges: Iterable[Sequence[str]]
     return distances
 
 
-def select(paths: Sequence[str], graph: dict, tracked: Sequence[str], plugins: Sequence[str] = ()) -> dict[str, object]:
-    """The affected test files for ``paths``, nearest first: by hop count, then path.
+def select(
+    paths: Sequence[str],
+    graph: dict,
+    tracked: Sequence[str],
+    plugins: Sequence[str] = (),
+    *,
+    deleted: Sequence[str] = (),
+    base_graph: dict | None = None,
+) -> dict[str, object]:
+    """The affected test files for ``paths`` and ``deleted``, nearest first: by hop count, then path.
 
-    The gate runs a prefix of this order when the whole selection exceeds its cost cap, so the
-    tests closest to the change are the last to be deferred to CI.
+    ``deleted`` paths reach their importers through ``base_graph``, the import graph of the commit they
+    were deleted from; its edges join ``graph``'s. The gate runs a prefix of this order when the whole
+    selection exceeds its cost cap, so the tests closest to the change are the last to be deferred to CI.
     """
+    if deleted and base_graph is None:
+        raise ValueError("deleted paths need the base import graph")
+    base_edges = base_graph["file_edges"] if base_graph is not None else []
     tests = sorted(path for path in tracked if is_test_file(path))
-    distances = importer_distances(paths, graph["file_edges"])
+    touched = [*paths, *deleted]
+    distances = importer_distances(touched, [*graph["file_edges"], *base_edges])
     reasons = sorted(
-        {"pytest_configuration" for path in paths if path in PYTEST_CONFIG_FILES}
-        | {"pytest_plugin" for path in paths if path in plugins}
+        {"pytest_configuration" for path in touched if path in PYTEST_CONFIG_FILES}
+        | {"pytest_plugin" for path in touched if path in plugins}
     )
     # A changed conftest.py changes the fixtures and hooks of every test file under its directory.
-    for conftest in sorted(path for path in paths if PurePosixPath(path).name == "conftest.py"):
+    for conftest in sorted(path for path in touched if PurePosixPath(path).name == "conftest.py"):
         scope = f"{PurePosixPath(conftest).parent.as_posix()}/"
         for test in tests:
             if test.startswith(scope):
@@ -111,33 +131,96 @@ def select(paths: Sequence[str], graph: dict, tracked: Sequence[str], plugins: S
         "scope": "all_tests" if reasons else "importer_closure",
         "all_tests_reasons": reasons,
         "changed_paths": len(paths),
+        "deleted_paths": len(deleted),
         "python_files": graph["python_files"],
         "import_edges": len(graph["file_edges"]),
+        "base_import_edges": len(base_edges),
         "unfollowed_edges": len(graph["unresolved_edges"]),
         "selected_tests": sorted(selected, key=lambda test: (distances.get(test, nearest), test)),
     }
 
 
-def selection(paths: Sequence[str], root: Path = components.ROOT) -> dict[str, object]:
-    """Scan the indexed tree at ``root`` and select for ``paths``."""
+def commit_blobs(root: Path, commit: str) -> dict[str, str]:
+    """Every file of ``commit`` with its blob id; an unknown commit is an error."""
+    listing = subprocess.run(
+        ["git", "ls-tree", "-r", "-z", "--full-tree", commit], cwd=root, check=True, capture_output=True, timeout=30
+    ).stdout
+    blobs = {}
+    for entry in listing.decode("utf-8", errors="surrogateescape").split("\0"):
+        if entry:
+            meta, path = entry.split("\t", 1)
+            _mode, kind, sha = meta.split()
+            if kind == "blob":
+                blobs[path] = sha
+    return blobs
+
+
+def may_reach(path: str, source: bytes, deleted: Sequence[str]) -> bool:
+    """Whether the base file ``path`` can hold a proven edge to a deleted path.
+
+    Every proven edge names its target in the importer's own text: a module import or literal load ends
+    in the target's module name, a literal read or file load in its file name. The exceptions are the
+    package edges a relative import adds (``from . import x`` reaches ``__init__.py`` without naming it),
+    so for a deleted ``__init__.py`` every file under its package is kept, with every file naming the
+    package. The deleted files themselves are kept. Only edges to deleted paths come from the base graph;
+    the head graph supplies the rest of the closure.
+    """
+    for target in deleted:
+        pure = PurePosixPath(target)
+        if path == target:
+            return True
+        if pure.name == "__init__.py":
+            package = pure.parent.as_posix()
+            if path.startswith(f"{package}/") or pure.parent.name.encode() in source:
+                return True
+        elif pure.name.encode() in source or (pure.suffix == ".py" and pure.stem.encode() in source):
+            return True
+    return False
+
+
+def selection(
+    paths: Sequence[str], root: Path = components.ROOT, *, deleted: Sequence[str] = (), base: str | None = None
+) -> dict[str, object]:
+    """Scan the indexed tree at ``root`` and select for ``paths``, and for ``deleted`` through ``base``."""
+    base_graph = None
+    base_known: set[str] = set()
+    if deleted:
+        if not base:
+            raise ValueError("deleted paths need the base commit")
+        blobs = commit_blobs(root, base)
+        base_known = set(blobs)
+        python = tuple((path, sha) for path, sha in sorted(blobs.items()) if path.endswith(".py"))
+        sources = components.indexed_python_sources(str(root), python, ())
+        # Parsing is the cost; reading the blobs is not. Module resolution needs every package.
+        kept = {
+            path: source
+            for path, source in sources.items()
+            if path.endswith("/__init__.py") or may_reach(path, source, deleted)
+        }
+        base_graph = components.scan_imports(kept, base_known)
     tracked = components.tracked_paths(root)
     known = set(tracked)
     graph = components.scan_imports(components.python_sources(root), known)
     pyproject = (root / PYPROJECT).read_bytes() if PYPROJECT in known else b""
-    return select(paths, graph, tracked, plugin_files(pyproject, known))
+    # A deleted plugin file that the configuration still loads resolves against the base tree.
+    plugins = plugin_files(pyproject, known | base_known)
+    return select(paths, graph, tracked, plugins, deleted=deleted, base_graph=base_graph)
 
 
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description=__doc__.splitlines()[0],
-        epilog="Example:\n  .venv/bin/python -m scripts.ci.pre_push_shadow --paths scripts/ci/components.py\n"
+        epilog="Example:\n  .venv/bin/python -m scripts.ci.pre_push_shadow --base origin/main --deleted scripts/old.py "
+        "--paths scripts/ci/components.py\n"
         "Output: one JSON object on stdout (schema pre-push-selection.v1). Exit codes: 0 selected; "
         "non-zero on any error, which the gate treats as an unavailable selector.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument("--paths", nargs="*", default=[], help="repository-relative changed paths; default: none")
+    parser.add_argument("--deleted", nargs="*", default=[], help="repository-relative deleted paths; default: none")
+    parser.add_argument("--base", help="commit the deleted paths are read from; required with --deleted")
     arguments = parser.parse_args(argv)
-    print(json.dumps(selection(arguments.paths), sort_keys=True))
+    print(json.dumps(selection(arguments.paths, deleted=arguments.deleted, base=arguments.base), sort_keys=True))
     return 0
 
 

@@ -16,9 +16,11 @@ gate defers to CI the modules over ``HEAVY_MODULE_S`` and, once the estimated
 cost of the changed files and the rest passes ``SELECTION_COST_CAP_S``, the
 farther remainder, and records both.  The range starts at the merge-base with
 ``origin/main`` after a merge of newer main, so the selector sees only the
-branch's own changes (#10820).  When no single merge-base can be proven, or when
-the selector fails, times out, answers malformed or finds every test file
-affected, the gate falls back to the
+branch's own changes (#10820).  Deleted paths reach the tests that import them
+through the base commit's import graph.  When no single merge-base can be proven, or when
+the selector fails, times out, answers malformed, finds every test file
+affected, ignores a deleted path, or selects nothing for a range that changes
+Python files and no test file, the gate falls back to the
 conservative set: the changed test files plus the registry of repository-wide
 invariant tests (``KNOWN_REPO_WIDE_*`` in
 ``tests/test_repo_wide_marker_invariant.py``).  The event records which set ran
@@ -35,12 +37,13 @@ Before pytest starts, the gate takes host test slots from the pool worker pytest
 for slots is bounded, recorded apart as ``slot_wait_s``, and spends neither the stage allowance nor
 the run budget.
 
-Receipts are bound to the commit, its tree, the range, the registry digest, the
-gate version and the selection that ran (its status, fallback reason and
-digest, with the node ids it blocked on), and are ignored once the tree is
-dirty or any of those change.  Receipts are checked before the selector runs, so
-reuse matches the bound inputs, which determine the selection: the tree carries
-the selector, the import graph and the durations table.
+Receipts are bound to the commit, its tree, the range (changed and deleted
+paths), the registry digest, the gate version, the tools that run it and the
+selection that ran (its status, fallback reason, digest and test files, with the
+node ids it blocked on), and are sealed.  A missing, extra, altered or
+inconsistent field refuses reuse, as does a dirty tree.  Receipts are checked
+before the selector runs, so reuse matches the bound inputs, which determine the
+selection: the tree carries the selector, the import graph and the durations table.
 ``git push --no-verify`` remains the explicit operator bypass.
 
 Stdlib only: the hook must run before any project import is trustworthy.
@@ -54,6 +57,7 @@ import contextlib
 import errno
 import fcntl
 import hashlib
+import importlib.metadata
 import importlib.util
 import json
 import os
@@ -67,10 +71,10 @@ import sys
 import tempfile
 import time
 import uuid
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass, field, replace
 from pathlib import Path
 
-GATE_VERSION = 9  # 9: affected-test selection, main-refresh base, typed stage timeouts (#11207, #10820, #11140)
+GATE_VERSION = 10  # 10: deleted paths, sealed receipts binding the selection and tools (#11207 review)
 # Copied from scripts/common/test_thread_caps.py: this gate imports no project policy code.
 # tests/test_pre_push_gate.py checks table and behavior parity.
 THREAD_CAPS = {
@@ -101,6 +105,21 @@ STAGE_BUDGET_S = 600.0
 RUN_BUDGET_S = 2 * STAGE_BUDGET_S
 SHADOW_BUDGET_S = 120.0  # the selector's own bound; it starts with the pre-commit stage (historical name)
 SELECTOR_MODULE = "scripts.ci.pre_push_shadow"
+SELECTOR_FILE = "scripts/ci/pre_push_shadow.py"
+SCANNER_FILE = "scripts/ci/components.py"  # the import scanner the selector runs
+# What a run depends on beyond the bound tree, plus the selector's own blobs in it; a receipt binds each (#11207).
+TOOL_NAMES = (
+    "gate_source",
+    "launcher",
+    "pre_commit_config",
+    "python",
+    "pytest",
+    "pytest_xdist",
+    "pre_commit",
+    "selection_schema",
+    "selector",
+    "scanner",
+)
 CLEANUP_BUDGET_S = 10.0  # after a kill: reaping and the sweep for leftover descendants
 # The host test-slot governor (#10662), loaded by path from this gate's own checkout: it is stdlib-only.
 TEST_SLOTS_MODULE = "scripts/common/test_slots.py"
@@ -125,6 +144,20 @@ DURATIONS_FILE = "scripts/ci/pytest-file-durations.json"
 # leaving headroom on a busy host. Changed files always run, even past the cap.
 SELECTION_COST_CAP_S = STAGE_BUDGET_S
 SELECTION_SCHEMA = "pre-push-selection.v1"  # the only selector answer the gate blocks on
+# Every reason the conservative set runs for: the merge-base could not set the base (the selector never
+# runs), or the selector's answer could not be blocked on. A receipt recording any other reason is invalid.
+BASE_FALLBACK_REASONS = ("merge_base_unavailable", "merge_base_ambiguous", "merge_base_is_head", "merge_base_unproven")
+SELECTOR_FALLBACK_REASONS = (
+    "selector_unavailable",
+    "selector_timeout",
+    "selector_failed",
+    "selector_unparseable",
+    "selector_invalid_output",
+    "selector_schema_mismatch",
+    "all_tests_affected",
+    "selector_ignored_deleted_paths",
+    "python_change_selects_nothing",
+)
 # Keep existing CI deferrals until the tracked durations table supplies a row.
 CI_DEFERRED_MODULES = frozenset({"tests/test_source_ingest_entrypoints.py"})
 # Registry entries that read a tree a sparse dispatch worktree omits.  They fail there for want of the
@@ -187,7 +220,7 @@ class Selection:
 
     ``selected``: the selector's affected test files that run here (``tests``); ``fallback``: the
     conservative registry set, for ``reason``. ``digest`` identifies the selector's whole answer.
-    ``record`` is the measurement row's account of it and is not part of the receipt key.
+    ``key`` is what a receipt binds; ``record`` is the measurement row's account and is not part of it.
     """
 
     status: str
@@ -197,7 +230,7 @@ class Selection:
     record: dict[str, object] = field(default_factory=dict, compare=False)
 
     def key(self) -> dict[str, object]:
-        return {"status": self.status, "reason": self.reason, "digest": self.digest}
+        return {"status": self.status, "reason": self.reason, "digest": self.digest, "tests": list(self.tests)}
 
 
 @dataclass
@@ -212,6 +245,8 @@ class Plan:
     deferred_to_ci: tuple[str, ...] = ()
     selection: Selection | None = None  # set once the selector has answered, before pytest
     base_fallback: str | None = None  # why the merge-base could not set ``base``; forces the conservative set
+    deleted_paths: tuple[str, ...] = ()  # removed by the range; the selector finds their importers at ``base``
+    tools: dict[str, str | None] = field(default_factory=dict)  # ``tool_versions``
 
     @property
     def uses_registry(self) -> bool:
@@ -478,7 +513,7 @@ def reject_untracked_inputs(root: Path) -> None:
         )
 
 
-def build_plan(update: Update, root: Path) -> Plan | None:
+def build_plan(update: Update, root: Path, launcher: str, config: str) -> Plan | None:
     head = (git_ok("rev-parse", "HEAD", cwd=root) or "").strip()
     if head != update.local_sha:
         raise GateOutcome(
@@ -493,10 +528,14 @@ def build_plan(update: Update, root: Path) -> Plan | None:
     base, base_fallback = outgoing_base(update, root)
     if base == head and base_fallback is None:  # only a remote tip equal to the head is nothing outgoing
         return None
-    names = git_ok("diff", "--name-only", "--diff-filter=ACMR", f"{base}..{head}", cwd=root)
-    if names is None:
+    # Without rename detection a rename is its new path (changed) and its old path (deleted): tests that
+    # import the old path must still be found (#11207).
+    names = git_ok("diff", "--name-only", "--no-renames", "--diff-filter=ACM", f"{base}..{head}", cwd=root)
+    removed = git_ok("diff", "--name-only", "--no-renames", "--diff-filter=D", f"{base}..{head}", cwd=root)
+    if names is None or removed is None:
         raise GateOutcome("range_unresolved", f"cannot list changed paths for {base[:12]}..{head[:12]}")
     changed = tuple(sorted(path for path in names.splitlines() if path))
+    deleted = tuple(sorted(path for path in removed.splitlines() if path))
     changed_tests = tuple(path for path in changed if TEST_FILE_RE.match(path))
     unmaterialized = tuple(path for path in changed_tests if not (root / path).is_file())
     if unmaterialized:
@@ -519,7 +558,53 @@ def build_plan(update: Update, root: Path) -> Plan | None:
             incomplete=True,
         )
     tree = (git_ok("rev-parse", f"{head}^{{tree}}", cwd=root) or "").strip()
-    return Plan(head, tree, base, version, runnable, changed_tests, changed, deferred, base_fallback=base_fallback)
+    return Plan(
+        head,
+        tree,
+        base,
+        version,
+        runnable,
+        changed_tests,
+        changed,
+        deferred,
+        base_fallback=base_fallback,
+        deleted_paths=deleted,
+        tools=tool_versions(root, launcher, config),
+    )
+
+
+def tool_versions(root: Path, launcher: str, config: str) -> dict[str, str | None]:
+    """``TOOL_NAMES``: the gate, launcher, pre-commit configuration and interpreter with its test tools,
+    the selector's answer schema, and the selector and scanner files; unknown is ``None``.
+
+    The selector and scanner are read from the worktree, which ``build_plan`` has proven equal to the
+    outgoing commit, so their digests name the versions in the tree that runs.
+    """
+
+    def digest(path: Path) -> str | None:
+        try:
+            return hashlib.sha256(path.read_bytes()).hexdigest()
+        except OSError:
+            return None
+
+    def installed(distribution: str) -> str | None:
+        try:
+            return importlib.metadata.version(distribution)
+        except importlib.metadata.PackageNotFoundError:
+            return None
+
+    return {
+        "gate_source": digest(Path(__file__)),
+        "launcher": digest(Path(launcher)),
+        "pre_commit_config": digest(Path(config)),
+        "python": sys.version,
+        "pytest": installed("pytest"),
+        "pytest_xdist": installed("pytest-xdist"),
+        "pre_commit": installed("pre-commit"),
+        "selection_schema": SELECTION_SCHEMA,
+        "selector": digest(root / SELECTOR_FILE),
+        "scanner": digest(root / SCANNER_FILE),
+    }
 
 
 # ---- receipts -------------------------------------------------------------
@@ -545,6 +630,8 @@ def receipt_inputs(plan: Plan) -> dict[str, object]:
         "deferred_to_ci": list(plan.deferred_to_ci),
         "node_ids": list(dedupe_node_ids((*plan.registry_nodes, *plan.changed_tests))),
         "changed_paths": list(plan.changed_paths),
+        "deleted_paths": list(plan.deleted_paths),
+        "tools": dict(plan.tools),
     }
 
 
@@ -561,34 +648,74 @@ def receipt_path(state: Path, plan: Plan) -> Path:
     return state / "receipts" / f"{plan.head}-{plan.base}.json"
 
 
-def receipt_is_fresh(state: Path, plan: Plan, now: float) -> bool:
-    """A live green receipt for the same inputs, whatever selection it recorded.
+def receipt_seal(body: dict[str, object]) -> str:
+    """The digest of a receipt's key, outcome and time, so any later edit of one field shows."""
+    return hashlib.sha256(json.dumps(body, sort_keys=True).encode()).hexdigest()
 
-    The inputs bind everything the selection is computed from: the tree (selector, import graph and
-    durations table included), the changed paths and the gate version. A receipt therefore records,
-    and never stands in for, a different selection. Once ``plan.selection`` is known the whole key,
-    the selection and its blocking node ids included, must match as well.
+
+def recorded_selection(value: object) -> Selection | None:
+    """The selection a receipt recorded, or ``None`` unless it is complete and well formed.
+
+    ``selected`` names its digest and its sorted test files and no reason; ``fallback`` names one of the
+    gate's fallback reasons and no test files. Any other shape, a missing field or an extra one is no selection.
+    """
+    if not isinstance(value, dict) or set(value) != {"status", "reason", "digest", "tests"}:
+        return None
+    status, reason, digest, tests = (value[name] for name in ("status", "reason", "digest", "tests"))
+    if not isinstance(tests, list) or not all(isinstance(test, str) and canonical_test_file(test) for test in tests):
+        return None
+    if tests != sorted(set(tests)) or not (digest is None or (isinstance(digest, str) and digest)):
+        return None
+    if status == "selected" and reason is None and digest is not None:
+        return Selection(status, tuple(tests), digest=digest)
+    if status == "fallback" and reason in (*BASE_FALLBACK_REASONS, *SELECTOR_FALLBACK_REASONS) and not tests:
+        return Selection(status, reason=reason, digest=digest)
+    return None
+
+
+def receipt_is_fresh(state: Path, plan: Plan, now: float) -> bool:
+    """A live, sealed green receipt for the same inputs and the selection it recorded.
+
+    Every field binds (#11207): the receipt is exactly its key, outcome, time and seal, and its key is
+    exactly what ``receipt_key`` writes for ``plan`` with the recorded selection, which must be well formed.
+    The node ids it blocked on are therefore derived from that selection, never taken from the file. Before
+    the selector runs, the inputs stand for the selection: the tree carries the selector, the import graph
+    and the durations table, and ``tools`` binds the interpreter, test tools, gate and launcher. A base
+    fallback must have run as that fallback. Once ``plan.selection`` is known it must equal the recorded one.
     """
     try:
         receipt = json.loads(receipt_path(state, plan).read_text(encoding="utf-8"))
     except (OSError, ValueError):
         return False
-    key = receipt.get("key") if isinstance(receipt, dict) else None
+    if not isinstance(receipt, dict) or set(receipt) != {"key", "outcome", "at", "seal"}:
+        return False
+    body = {name: receipt[name] for name in ("key", "outcome", "at")}
+    key = receipt["key"]
+    ran = recorded_selection(key.get("selection")) if isinstance(key, dict) else None
+    if ran is None or receipt["seal"] != receipt_seal(body):
+        return False
+    if plan.selection is not None and plan.selection != ran:
+        return False
+    if plan.base_fallback is not None and (ran.status, ran.reason) != ("fallback", plan.base_fallback):
+        return False
+    if plan.base_fallback is None and ran.reason in BASE_FALLBACK_REASONS:  # the selector ran for this plan
+        return False
     return (
-        isinstance(key, dict)
-        and {name: key.get(name) for name in receipt_inputs(plan)} == receipt_inputs(plan)
-        and (plan.selection is None or key == receipt_key(plan))
-        and receipt.get("outcome") == "green"
-        and isinstance(receipt.get("at"), int | float)
+        key == receipt_key(replace(plan, selection=ran))
+        and receipt["outcome"] == "green"
+        and type(receipt["at"]) in (int, float)
         and 0 <= now - receipt["at"] <= RECEIPT_TTL_S
     )
 
 
 def write_receipt(state: Path, plan: Plan, now: float) -> None:
+    if plan.selection is None:  # a green run always had a selection; without one nothing may be reused
+        raise GateOutcome("receipt_unwritable", "no selection was recorded for the green run", incomplete=True)
     path = receipt_path(state, plan)
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_suffix(".tmp")
-    temporary.write_text(json.dumps({"key": receipt_key(plan), "outcome": "green", "at": now}), encoding="utf-8")
+    body: dict[str, object] = {"key": receipt_key(plan), "outcome": "green", "at": now}
+    temporary.write_text(json.dumps({**body, "seal": receipt_seal(body)}), encoding="utf-8")
     temporary.replace(path)
 
 
@@ -968,10 +1095,14 @@ class ResourceScope:
             result = json.loads(self.stream.readline(16 * 1024 * 1024))
             event.update(result["event"])
             self.completed = result["settled"]
+            # The receipt the caller writes binds the scoped run's selection; a refusal reports its counts.
+            chosen = result["selection"]
+            if chosen is not None:
+                plan.selection = Selection(**{**chosen, "tests": tuple(chosen["tests"])})
             if result["error"] is not None:
                 raise GateOutcome(**result["error"])
-            chosen = result["selection"]  # the receipt the caller writes binds the scoped run's selection
-            plan.selection = Selection(**{**chosen, "tests": tuple(chosen["tests"])})
+            if plan.selection is None:
+                raise ValueError("a green scoped run recorded no selection")
         except (OSError, ValueError, KeyError, TypeError) as error:
             raise GateOutcome(
                 "validation_incomplete", "scoped executor did not return a complete verdict", incomplete=True
@@ -1959,7 +2090,18 @@ class Shadow:
         self.token = uuid.uuid4().hex
         try:
             self.process: subprocess.Popen[str] | None = subprocess.Popen(
-                ["bash", launcher, "-m", SELECTOR_MODULE, "--paths", *plan.changed_paths],
+                [
+                    "bash",
+                    launcher,
+                    "-m",
+                    SELECTOR_MODULE,
+                    "--base",
+                    plan.base,
+                    "--deleted",
+                    *plan.deleted_paths,
+                    "--paths",
+                    *plan.changed_paths,
+                ],
                 cwd=root,
                 env={**clean_environment(), RUN_TOKEN_ENV: self.token},
                 stdin=subprocess.DEVNULL,
@@ -2007,6 +2149,7 @@ class Shadow:
                 "schema": selection.get("schema"),
                 "scope": selection.get("scope"),
                 "all_tests_reasons": selection.get("all_tests_reasons", []),
+                "deleted_paths": selection.get("deleted_paths"),  # how many deleted paths it followed
                 "selected_count": len(selected),
                 "selected_digest": digest,
                 "selected_tests": list(dict.fromkeys(selected)),  # the selector's order: nearest first
@@ -2046,6 +2189,11 @@ def blocking_selection(plan: Plan, root: Path, answer: dict[str, object]) -> Sel
     The answer's test files run nearest first: modules over ``HEAVY_MODULE_S`` are deferred to CI,
     and once the estimated cost of the changed files plus the rest would pass ``SELECTION_COST_CAP_S``
     so is every farther file. Changed test files always run; their cost counts against the cap.
+
+    Two answers fail closed to the fallback (#11207): one that does not report following every deleted
+    path (``selector_ignored_deleted_paths``), and an empty one while the range adds, changes or deletes
+    Python files and changes no test file (``python_change_selects_nothing``), which would otherwise
+    pass with zero tests.
     """
     if answer.get("status") != "recorded" or not isinstance(answer.get("selected_tests"), list):
         reason = answer.get("reason") if answer.get("status") == "unavailable" else None
@@ -2057,29 +2205,29 @@ def blocking_selection(plan: Plan, root: Path, answer: dict[str, object]) -> Sel
         )
     selected: list[str] = answer["selected_tests"]  # type: ignore[assignment]
     digest = answer.get("selected_digest")
+    digest = digest if isinstance(digest, str) else None
+
+    def fallback(reason: str, detail: object, *, keep_digest: bool = False) -> Selection:
+        return Selection(
+            "fallback",
+            reason=reason,
+            digest=digest if keep_digest else None,
+            record={"status": "fallback", "reason": reason, "detail": detail, "selected_count": len(selected)},
+        )
+
     if answer.get("schema") != SELECTION_SCHEMA or answer.get("scope") not in ("importer_closure", "all_tests"):
-        return Selection(
-            "fallback",
-            reason="selector_schema_mismatch",
-            record={
-                "status": "fallback",
-                "reason": "selector_schema_mismatch",
-                "detail": f"expected {SELECTION_SCHEMA}",
-                "selected_count": len(selected),
-            },
-        )
+        return fallback("selector_schema_mismatch", f"expected {SELECTION_SCHEMA}")
     if answer.get("scope") == "all_tests":  # a configuration change: the curated registry beats a capped prefix
-        return Selection(
-            "fallback",
-            reason="all_tests_affected",
-            digest=digest if isinstance(digest, str) else None,
-            record={
-                "status": "fallback",
-                "reason": "all_tests_affected",
-                "detail": ", ".join(str(item) for item in answer.get("all_tests_reasons") or ()),
-                "selected_count": len(selected),
-            },
-        )
+        reasons = answer.get("all_tests_reasons")
+        detail = ", ".join(str(item) for item in reasons) if isinstance(reasons, list) else ""
+        return fallback("all_tests_affected", detail, keep_digest=True)
+    followed = answer.get("deleted_paths")
+    if plan.deleted_paths and (type(followed) is not int or followed != len(plan.deleted_paths)):
+        detail = f"{len(plan.deleted_paths)} deleted paths, followed {followed}"
+        return fallback("selector_ignored_deleted_paths", detail)
+    python = [path for path in (*plan.changed_paths, *plan.deleted_paths) if path.endswith(".py")]
+    if not selected and not plan.changed_tests and python:
+        return fallback("python_change_selects_nothing", f"{len(python)} Python paths changed or deleted")
     durations = load_durations(root)
     known = sorted(cost for cost in durations.values() if isinstance(cost, int | float) and cost >= 0)
     typical = known[len(known) // 2] if known else 1.0  # an untracked file costs the median, as split_tests does
@@ -2123,9 +2271,7 @@ def blocking_selection(plan: Plan, root: Path, answer: dict[str, object]) -> Sel
         "estimated_s": round(spent, 1),
         "cost_cap_s": SELECTION_COST_CAP_S,
     }
-    return Selection(
-        "selected", tests=tuple(sorted(run)), digest=digest if isinstance(digest, str) else None, record=record
-    )
+    return Selection("selected", tests=tuple(sorted(run)), digest=digest, record=record)
 
 
 def bounded(name: str, ceiling: float) -> float:
@@ -2252,6 +2398,7 @@ def execute_stages(
         event.update(
             selection=plan.selection.record,
             nodes=len(plan.node_ids),
+            selected_test_files=selected_test_files(plan),  # what runs now, no longer the conservative set
             deferred_to_ci=list(plan.deferred_to_ci) if plan.uses_registry else plan.selection.record["deferred_heavy"],
         )
         slots, slot_wait = acquire_pytest_slots(plan, event)
@@ -2288,28 +2435,22 @@ def validate(
 ) -> None:
     event["local_ref"] = update.local_ref
     event.update(admission_wait_s=0.0, queue_depth=0, queue_position=0)
-    plan = build_plan(update, root)
+    plan = build_plan(update, root, launcher, config)
     if plan is None:
         event["outcome"] = "green"
         event["detail"] = "no outgoing commits"
         return
-    selected_files = len({node.split("::", 1)[0] for node in plan.node_ids})
     event.update(
         head=plan.head,
         base=plan.base,
         base_fallback=plan.base_fallback,
         nodes=len(plan.node_ids),
-        selected_test_files=selected_files,
+        selected_test_files=selected_test_files(plan),
         changed_test_files=len(plan.changed_tests),
         changed_paths=len(plan.changed_paths),
+        deleted_paths=len(plan.deleted_paths),
         registry_version=plan.registry_version,
         deferred_to_ci=list(plan.deferred_to_ci),
-    )
-    # An incomplete run names its selection, so a timeout from an oversized range is recognisable (#10820).
-    base_label = f"{plan.base} ({plan.base_fallback})" if plan.base_fallback else plan.base
-    selection = (
-        f"selection: base {base_label}, {selected_files} selected test files "
-        f"({len(plan.changed_tests)} changed by the range), {len(plan.changed_paths)} changed paths"
     )
     state = state_dir(root)
     head_state = coalescing_state(state, plan)
@@ -2328,7 +2469,7 @@ def validate(
             locks.enter_context(head_admission)
             # Followers have no global ticket. A head is only a serialization group,
             # so rebuild inputs and compare the entire frozen key before receipt reuse.
-            refreshed = build_plan(update, root)
+            refreshed = build_plan(update, root, launcher, config)
             if refreshed is None or receipt_inputs(refreshed) != frozen_key:
                 raise GateOutcome("tree_mismatch", "validation inputs changed while waiting for coalescing")
             if receipt_is_fresh(state, plan, time.time()):
@@ -2353,7 +2494,7 @@ def validate(
             }
             # A matching gate may have finished while this caller was queued. Rebuild the plan
             # first to preserve the dirty-tree/untracked-input checks after the wait.
-            refreshed = build_plan(update, root)
+            refreshed = build_plan(update, root, launcher, config)
             if refreshed is None or receipt_inputs(refreshed) != frozen_key:
                 raise GateOutcome("tree_mismatch", "validation inputs changed while waiting for admission")
             if receipt_is_fresh(state, plan, time.time()):
@@ -2386,11 +2527,11 @@ def validate(
             budget.exclude_wait(float(event.get("slot_wait_s") or 0.0))  # later ref updates keep it too
     except GateOutcome as error:
         if error.incomplete:
-            error.detail = f"{error.detail}\n{selection}"
+            error.detail = f"{error.detail}\n{selection_summary(plan)}"
         raise
     except OSError as error:  # e.g. the admission lock or a stage's output file could not be created
         raise GateOutcome(
-            "validation_error", f"validation I/O failed: {error}\n{selection}", incomplete=True
+            "validation_error", f"validation I/O failed: {error}\n{selection_summary(plan)}", incomplete=True
         ) from error
     finally:
         event.update(
@@ -2402,6 +2543,23 @@ def validate(
             scope_setup_s=scope.setup_s if scope is not None else 0.0,
             queue_wait_s=max(0.0, admission.waited - (scope.setup_s if scope is not None else 0.0)),
         )
+
+
+def selected_test_files(plan: Plan) -> int:
+    """The test files the pytest stage blocks on: the conservative set until the selector has answered."""
+    return len({node.split("::", 1)[0] for node in plan.node_ids})
+
+
+def selection_summary(plan: Plan) -> str:
+    """An incomplete run names its selection, so a timeout from an oversized range is recognisable (#10820).
+
+    Read when the run ends, so once the selector has answered the count is what actually ran (#11207).
+    """
+    base = f"{plan.base} ({plan.base_fallback})" if plan.base_fallback else plan.base
+    return (
+        f"selection: base {base}, {selected_test_files(plan)} selected test files "
+        f"({len(plan.changed_tests)} changed by the range), {len(plan.changed_paths)} changed paths"
+    )
 
 
 def refuse(error: GateOutcome) -> int:
@@ -2525,7 +2683,7 @@ def attempt_fingerprints(root: Path, launcher: str, config: str, text: str) -> d
     inputs = {
         "source": Path(__file__),
         "registry": root / REGISTRY_FILE,
-        "selector": root / "scripts/ci/pre_push_shadow.py",
+        "selector": root / SELECTOR_FILE,
         "launcher": Path(launcher),
         "config": Path(config),
     }

@@ -3,10 +3,12 @@
 from __future__ import annotations
 
 import contextlib
+import dataclasses
 import errno
 import fcntl
 import hashlib
 import importlib.util
+import io
 import json
 import os
 import re
@@ -277,6 +279,11 @@ def _run_gate(
         timeout=120,
         env=_env({"PRE_COMMIT_HOME": str(repo.parent / "pre-commit-cache"), **(extra_env or {})}),
     )
+
+
+def _hook_inputs(repo: Path) -> tuple[str, str]:
+    """The launcher and pre-commit configuration the tracked hook passes for ``repo``."""
+    return str(repo / "scripts/pre_commit/project_python.sh"), str(repo / ".pre-commit-config.yaml")
 
 
 def _verdict(result: subprocess.CompletedProcess[str]) -> dict:
@@ -642,6 +649,11 @@ def _plan(**overrides):
     return gate.Plan(**values)
 
 
+def _green(plan):
+    """``plan`` as a green run leaves it: a selection always ran, here the conservative set unless given."""
+    return dataclasses.replace(plan, selection=plan.selection or gate.Selection("fallback", reason="selector_failed"))
+
+
 @pytest.fixture
 def surface_repo(tmp_path: Path) -> Path:
     """A real commit range without the unrelated remote-push fixture setup."""
@@ -715,7 +727,7 @@ def test_push_stage_enforces_existing_internal_id_learner_filter(surface_repo: P
 )
 def test_receipt_is_stale_after_any_bound_input_changes(tmp_path: Path, field: str, value: object) -> None:
     plan = _plan()
-    gate.write_receipt(tmp_path, plan, 1000.0)
+    gate.write_receipt(tmp_path, _green(plan), 1000.0)
     assert gate.receipt_is_fresh(tmp_path, plan, 1001.0)
 
     assert not gate.receipt_is_fresh(tmp_path, _plan(**{field: value}), 1001.0)
@@ -723,7 +735,7 @@ def test_receipt_is_stale_after_any_bound_input_changes(tmp_path: Path, field: s
 
 def test_receipt_expires_and_a_tampered_receipt_is_ignored(tmp_path: Path) -> None:
     plan = _plan()
-    gate.write_receipt(tmp_path, plan, 1000.0)
+    gate.write_receipt(tmp_path, _green(plan), 1000.0)
     assert not gate.receipt_is_fresh(tmp_path, plan, 1000.0 + gate.RECEIPT_TTL_S + 1)
 
     path = gate.receipt_path(tmp_path, plan)
@@ -735,7 +747,7 @@ def test_receipt_expires_and_a_tampered_receipt_is_ignored(tmp_path: Path) -> No
 
 def test_gate_version_invalidates_a_green_receipt(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     plan = _plan()
-    gate.write_receipt(tmp_path, plan, 1000.0)
+    gate.write_receipt(tmp_path, _green(plan), 1000.0)
     monkeypatch.setattr(gate, "GATE_VERSION", gate.GATE_VERSION + 1)
 
     assert not gate.receipt_is_fresh(tmp_path, plan, 1001.0)
@@ -920,7 +932,7 @@ def test_a_green_receipt_written_during_admission_is_reused_at_current_time(
     clock = FakeClock()
     deadlines = _fake_validation(tmp_path, monkeypatch, clock)
     # The other gate completes at t=499, after this caller started waiting at t=0.
-    gate.write_receipt(tmp_path, _plan(), 1499.0)
+    gate.write_receipt(tmp_path, _green(_plan()), 1499.0)
     event = {}
     gate.validate(gate.Update("local", "a" * 40, "remote", ZERO_SHA), tmp_path, "x", "y", event)
 
@@ -932,7 +944,7 @@ def test_a_green_receipt_written_during_admission_is_reused_at_current_time(
 def test_a_receipt_expired_while_waiting_cannot_be_reused(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     clock = FakeClock()
     deadlines = _fake_validation(tmp_path, monkeypatch, clock)
-    gate.write_receipt(tmp_path, _plan(), 1000.0)
+    gate.write_receipt(tmp_path, _green(_plan()), 1000.0)
     monkeypatch.setattr(gate, "RECEIPT_TTL_S", 100.0)
     # Force queue entry, then let the real freshness check reject the now-expired receipt.
     real_fresh = gate.receipt_is_fresh
@@ -950,7 +962,7 @@ def test_inputs_changed_while_queued_cannot_reuse_a_receipt(
 ) -> None:
     clock = FakeClock()
     deadlines = _fake_validation(tmp_path, monkeypatch, clock)
-    gate.write_receipt(tmp_path, _plan(), 1499.0)  # it becomes fresh during the wait
+    gate.write_receipt(tmp_path, _green(_plan()), 1499.0)  # it becomes fresh during the wait
 
     def changed_plan(*_args: object):
         if clock.now == 0:
@@ -1295,7 +1307,12 @@ def test_a_failing_affected_test_blocks_even_when_its_file_is_unchanged(repo: Pa
 
 
 def test_no_affected_tests_is_green_and_recorded_as_such(repo: Path) -> None:
+    # The selector lands on main first: a range that changes Python files and selects nothing falls back.
+    _git(repo, "checkout", "main")
     _install_selector(repo, [])
+    _git(repo, "push", "--no-verify", "origin", "main")
+    _git(repo, "checkout", "feature")
+    _git(repo, "merge", "--ff-only", "main")
     _write(repo, "docs.md", "docs\n")
     _commit(repo, "docs", "docs.md")
 
@@ -1446,7 +1463,8 @@ def test_the_receipt_binds_the_selection_that_ran(repo: Path) -> None:
     key = json.loads(receipt.read_text(encoding="utf-8"))["key"]
     digest = hashlib.sha256(b"tests/test_scanner.py").hexdigest()[:16]
     assert key["gate_version"] == gate.GATE_VERSION
-    assert key["selection"] == {"status": "selected", "reason": None, "digest": digest}
+    selection = {"status": "selected", "reason": None, "digest": digest, "tests": ["tests/test_scanner.py"]}
+    assert key["selection"] == selection
     assert key["blocking_node_ids"] == ["tests/test_new.py", "tests/test_scanner.py"]
     assert _measurements(repo)[-1]["selection"]["status"] == "selected"
 
@@ -1478,6 +1496,7 @@ def test_the_selector_answer_is_returned_in_its_order_with_a_digest(repo: Path) 
         "schema": gate.SELECTION_SCHEMA,
         "scope": "importer_closure",
         "all_tests_reasons": [],
+        "deleted_paths": None,
         "selected_count": 3,
         "selected_digest": digest,
         "selected_tests": ["tests/test_b.py", "tests/test_a.py"],
@@ -1597,7 +1616,7 @@ def test_cost_deferral_only_touches_whole_modules_and_tolerates_missing_data(
 
 def test_deferral_changes_the_receipt_key(tmp_path: Path) -> None:
     plan = _plan()
-    gate.write_receipt(tmp_path, plan, 1000.0)
+    gate.write_receipt(tmp_path, _green(plan), 1000.0)
 
     assert not gate.receipt_is_fresh(tmp_path, _plan(deferred_to_ci=("tests/x.py",)), 1001.0)
 
@@ -2599,7 +2618,7 @@ def test_an_absent_registered_file_with_an_approved_deferral_is_not_incomplete(
     monkeypatch.setattr(gate, "CI_DEFERRED_MODULES", frozenset({"tests/test_invariant.py"}))
     update = gate.Update("refs/heads/feature", head, "refs/heads/feature", ZERO_SHA)
 
-    plan = gate.build_plan(update, repo)
+    plan = gate.build_plan(update, repo, *_hook_inputs(repo))
 
     assert plan is not None and plan.deferred_to_ci == ("tests/test_invariant.py",)
     assert "tests/test_invariant.py" not in plan.node_ids
@@ -4300,7 +4319,7 @@ def test_head_ticket_identity_requires_an_exact_named_binding(
     }
     if binding in {"mismatched", "missing"}:
         with pytest.raises(gate.GateOutcome) as raised:
-            gate.build_plan(update, native_repo)
+            gate.build_plan(update, native_repo, *_hook_inputs(native_repo))
         assert raised.value.reason == "tree_mismatch"
 
 
@@ -4323,7 +4342,7 @@ def test_missing_immutable_identity_cannot_reuse_even_a_matching_green_receipt(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, field: str
 ) -> None:
     plan = _plan(**{field: ""})
-    gate.write_receipt(tmp_path, plan, time.time())
+    gate.write_receipt(tmp_path, _green(plan), time.time())
     monkeypatch.setattr(gate, "build_plan", lambda *_args: plan)
     monkeypatch.setattr(gate, "state_dir", lambda *_args: tmp_path)
     with pytest.raises(gate.GateOutcome, match="immutable validation identity"):
@@ -4338,7 +4357,7 @@ def test_unsafe_coalescing_directory_never_reuses_green(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, area: str
 ) -> None:
     plan = _plan()
-    gate.write_receipt(tmp_path, plan, time.time())
+    gate.write_receipt(tmp_path, _green(plan), time.time())
     outside = tmp_path / "preserve"
     outside.mkdir()
     if area == "heads":
@@ -4568,7 +4587,7 @@ def test_coalescing_receipt_reuse_preserves_remaining_multi_ref_execution_budget
     holder.__enter__()
 
     def finish_holder():
-        gate.write_receipt(tmp_path, _plan(), clock.time())
+        gate.write_receipt(tmp_path, _green(_plan()), clock.time())
         holder.__exit__()
 
     clock.on_sleep = finish_holder
@@ -6126,7 +6145,7 @@ def test_a_merge_of_newer_main_selects_the_pull_request_change_not_mains(repo: P
         _commit(repo, "feature work after the merge", "tests/test_feature_new.py")
         expected.append("tests/test_feature_new.py")
 
-    plan = gate.build_plan(_update(repo, remote), repo)
+    plan = gate.build_plan(_update(repo, remote), repo, *_hook_inputs(repo))
 
     assert plan is not None and plan.base == main
     assert plan.changed_tests == tuple(sorted(expected))
@@ -6183,7 +6202,7 @@ def _graph(repo: Path, kind: str) -> tuple[str, str, tuple[str, ...]]:
 def test_base_selection_controls_keep_the_complete_outgoing_range(repo: Path, kind: str) -> None:
     remote, expected_base, expected_tests = _graph(repo, kind)
 
-    plan = gate.build_plan(_update(repo, remote), repo)
+    plan = gate.build_plan(_update(repo, remote), repo, *_hook_inputs(repo))
 
     assert plan is not None and plan.base == expected_base
     assert plan.changed_tests == expected_tests
@@ -6207,7 +6226,7 @@ def test_an_ancestry_error_never_narrows_the_range(repo: Path, monkeypatch: pyte
 
     monkeypatch.setattr(gate, "git", git)
 
-    plan = gate.build_plan(_update(repo, remote), repo)
+    plan = gate.build_plan(_update(repo, remote), repo, *_hook_inputs(repo))
 
     assert plan is not None and plan.base == remote
     assert "tests/test_main_only.py" in plan.changed_tests  # uncertainty keeps the complete outgoing range
@@ -6221,7 +6240,7 @@ def test_a_divergent_push_without_history_in_common_with_main_is_refused(repo: P
     _commit(repo, "unrelated history", ".")
 
     with pytest.raises(gate.GateOutcome) as raised:
-        gate.build_plan(_update(repo, remote), repo)
+        gate.build_plan(_update(repo, remote), repo, *_hook_inputs(repo))
 
     assert raised.value.reason == "range_unresolved" and not raised.value.incomplete
 
@@ -6266,7 +6285,7 @@ def _main_contains_the_head(repo: Path, relation: str, feature_test: str = GREEN
 def test_a_main_that_contains_the_head_keeps_the_complete_outgoing_range(repo: Path, relation: str) -> None:
     remote = _main_contains_the_head(repo, relation)
 
-    plan = gate.build_plan(_update(repo, remote), repo)
+    plan = gate.build_plan(_update(repo, remote), repo, *_hook_inputs(repo))
 
     assert plan is not None and plan.base == remote  # never the head: the update moves the remote
     assert plan.changed_tests == ("tests/test_feature_new.py", "tests/test_main_only.py")
@@ -6609,3 +6628,293 @@ def test_an_actual_pytest_stage_killed_after_printing_a_failure_is_refused_as_fa
         reason = "timeout_under_load" if stage["load_at_timeout"]["load"] == "above_caps" else "timeout"
         assert _verdict(result) == {"outcome": "validation_incomplete", "reason": reason, "failing": []}
         assert "NOT green" in result.stderr
+
+
+# ---- #11207 review round 5: deleted modules, complete receipt binding, post-selector timeout counts -------
+
+# This checkout's real selector, run over the fixture repository it is committed in: the fixture's own
+# ``scripts`` package is dropped so the selector's imports resolve here, and its default root is the fixture.
+REAL_SELECTOR = textwrap.dedent(
+    f"""\
+    import sys
+    from pathlib import Path
+
+    for name in [name for name in sys.modules if name == "scripts" or name.startswith("scripts.")]:
+        del sys.modules[name]
+    sys.path.insert(0, {str(REPO_ROOT)!r})
+    from scripts.ci import pre_push_shadow
+
+    pre_push_shadow.selection.__defaults__ = (Path.cwd(),)
+    raise SystemExit(pre_push_shadow.main(sys.argv[1:]))
+    """
+)
+IMPORTING_TEST = "from scripts.lib import VALUE\n\n\ndef test_value():\n    assert VALUE == 1\n"
+
+
+def _main_with_real_selector(repo: Path, files: dict[str, str]) -> None:
+    """Land the real selector and ``files`` on the remote ``main``; the feature branch starts there."""
+    _git(repo, "checkout", "main")
+    _write(repo, "scripts/__init__.py", "")
+    _write(repo, "scripts/ci/__init__.py", "")
+    _write(repo, "scripts/ci/pre_push_shadow.py", REAL_SELECTOR)
+    for name, text in files.items():
+        _write(repo, name, text)
+    _commit(repo, "real selector and modules", ".")
+    _git(repo, "push", "--no-verify", "origin", "main")
+    _git(repo, "checkout", "feature")
+    _git(repo, "merge", "--ff-only", "main")
+
+
+def test_deleting_an_imported_module_selects_its_importers_from_the_base_graph(repo: Path) -> None:
+    """The deleted file is gone from the head tree; the tests that still import it must run, and fail."""
+    _main_with_real_selector(repo, {"scripts/lib.py": "VALUE = 1\n", "tests/test_lib.py": IMPORTING_TEST})
+    _git(repo, "rm", "-q", "scripts/lib.py")
+    _git(repo, "commit", "-q", "-m", "delete an imported module")
+
+    result = _run_gate(repo)
+
+    row = _measurements(repo)[-1]
+    assert row["selection"]["status"] == "selected", row["selection"]
+    assert row["selection"]["selected_count"] == 1 and row["nodes"] == 1  # never an empty selection
+    assert result.returncode == gate.EXIT_REFUSED, result.stderr
+    assert _verdict(result)["failing"] == ["tests/test_lib.py"]  # its import now fails at collection
+    assert _receipts(repo) == []
+
+
+def test_deleting_a_module_nothing_imports_falls_back_to_the_registry(repo: Path) -> None:
+    """An empty selection for a range that deletes Python code is refused as a selection, never zero tests."""
+    _main_with_real_selector(repo, {"scripts/dead.py": "VALUE = 1\n"})
+    _git(repo, "rm", "-q", "scripts/dead.py")
+    _git(repo, "commit", "-q", "-m", "delete dead code")
+
+    result = _run_gate(repo)
+
+    assert result.returncode == 0, result.stderr
+    row = _measurements(repo)[-1]
+    assert row["selection"]["status"] == "fallback"
+    assert row["selection"]["reason"] == "python_change_selects_nothing"
+    assert row["nodes"] == 2  # the registry's two entries ran
+
+
+def _ran_selected() -> object:
+    return gate.Selection("selected", ("tests/test_x.py",), digest="0123456789abcdef")
+
+
+def _altered(value: object) -> object:
+    if isinstance(value, bool) or value is None:
+        return "altered"
+    if isinstance(value, int | float):
+        return value + 1
+    if isinstance(value, str):
+        return value + "-altered"
+    if isinstance(value, list):
+        return [*value, "tests/test_altered.py"]
+    if isinstance(value, dict):
+        return {**value, "altered": True}
+    raise AssertionError(f"no alteration for {value!r}")
+
+
+# Every field of a green receipt: the reuse check must refuse each one removed and each one altered.
+RECEIPT_FIELDS = (
+    ("seal",),
+    ("outcome",),
+    ("at",),
+    ("key",),
+    ("key", "gate_version"),
+    ("key", "head"),
+    ("key", "tree"),
+    ("key", "base"),
+    ("key", "base_fallback"),
+    ("key", "registry_version"),
+    ("key", "deferred_to_ci"),
+    ("key", "node_ids"),
+    ("key", "changed_paths"),
+    ("key", "deleted_paths"),
+    ("key", "tools"),
+    *(("key", "tools", name) for name in getattr(gate, "TOOL_NAMES", ())),
+    ("key", "selection"),
+    ("key", "selection", "status"),
+    ("key", "selection", "reason"),
+    ("key", "selection", "digest"),
+    ("key", "selection", "tests"),
+    ("key", "blocking_node_ids"),
+)
+TOOLS = {name: f"{name}-1" for name in getattr(gate, "TOOL_NAMES", ())}
+
+
+def _receipt_plan(**overrides):
+    return _plan(tools=dict(TOOLS), **overrides) if TOOLS else _plan(**overrides)
+
+
+def test_the_receipt_field_table_covers_every_written_field(tmp_path: Path) -> None:
+    gate.write_receipt(tmp_path, _receipt_plan(selection=_ran_selected()), 1000.0)
+    receipt = json.loads(gate.receipt_path(tmp_path, _receipt_plan()).read_text(encoding="utf-8"))
+
+    def paths(value: object, prefix: tuple[str, ...]) -> set[tuple[str, ...]]:
+        found = {prefix} if prefix else set()
+        if isinstance(value, dict):
+            for name, item in value.items():
+                found |= paths(item, (*prefix, name))
+        return found
+
+    assert paths(receipt, ()) == set(RECEIPT_FIELDS)
+
+
+# Resealed: a sealed receipt that differs as written, e.g. by other gate code. Before the selector runs, the
+# recorded digest stands for the bound inputs and cannot be checked; a later time is just a later receipt.
+RESEALED_ACCEPTED_BEFORE_SELECTION = {(("key", "selection", "digest"), "altered"), (("at",), "altered")}
+RESEALED_ACCEPTED = {(("at",), "altered")}
+
+
+@pytest.mark.parametrize("sealed", ["edited", "resealed"])
+@pytest.mark.parametrize("change", ["removed", "altered", "extra"])
+@pytest.mark.parametrize("field", RECEIPT_FIELDS, ids=".".join)
+@pytest.mark.parametrize("ran", ["selected", "fallback"])
+def test_a_receipt_with_a_missing_or_altered_field_is_never_reused(
+    tmp_path: Path, field: tuple[str, ...], change: str, ran: str, sealed: str
+) -> None:
+    if sealed == "resealed" and field == ("seal",):
+        return  # resealing would overwrite the very change under test; "edited" covers the seal
+    selection = _ran_selected() if ran == "selected" else gate.Selection("fallback", reason="selector_timeout")
+    gate.write_receipt(tmp_path, _receipt_plan(selection=selection), 1000.0)
+    path = gate.receipt_path(tmp_path, _receipt_plan())
+    receipt = json.loads(path.read_text(encoding="utf-8"))
+    # Reused before the selector runs (no selection yet) and once the same selection is known.
+    assert gate.receipt_is_fresh(tmp_path, _receipt_plan(), 1001.0)
+    assert gate.receipt_is_fresh(tmp_path, _receipt_plan(selection=selection), 1001.0)
+
+    *parents, name = field
+    holder = receipt
+    for parent in parents:
+        holder = holder[parent]
+    if change == "removed":
+        holder.pop(name, None)
+    elif change == "altered":
+        holder[name] = _altered(holder.get(name))
+    else:
+        holder[name] = {"value": holder.get(name), "extra": 1} if name != "key" else {**holder[name], "extra": 1}
+    if sealed == "resealed":
+        body = {name: receipt[name] for name in ("key", "outcome", "at") if name in receipt}
+        receipt["seal"] = gate.receipt_seal(body)
+    path.write_text(json.dumps(receipt), encoding="utf-8")
+
+    accepted_before = sealed == "resealed" and (field, change) in RESEALED_ACCEPTED_BEFORE_SELECTION
+    accepted_after = sealed == "resealed" and (field, change) in RESEALED_ACCEPTED
+    assert gate.receipt_is_fresh(tmp_path, _receipt_plan(), 1001.0) is accepted_before
+    assert gate.receipt_is_fresh(tmp_path, _receipt_plan(selection=selection), 1001.0) is accepted_after
+
+
+def test_a_receipt_for_a_different_selection_or_tool_is_never_reused(tmp_path: Path) -> None:
+    gate.write_receipt(tmp_path, _receipt_plan(selection=_ran_selected()), 1000.0)
+
+    for other in (
+        gate.Selection("selected", ("tests/test_x.py",), digest="fedcba9876543210"),
+        gate.Selection("selected", ("tests/test_y.py",), digest="0123456789abcdef"),
+        gate.Selection("fallback", reason="selector_timeout"),
+    ):
+        assert not gate.receipt_is_fresh(tmp_path, _receipt_plan(selection=other), 1001.0)
+    for name in gate.TOOL_NAMES:
+        assert not gate.receipt_is_fresh(tmp_path, _plan(tools={**TOOLS, name: "other"}), 1001.0), name
+    assert not gate.receipt_is_fresh(tmp_path, _receipt_plan(deleted_paths=("scripts/gone.py",)), 1001.0)
+
+
+def test_a_receipt_written_without_a_selection_cannot_exist(tmp_path: Path) -> None:
+    with pytest.raises(gate.GateOutcome) as raised:
+        gate.write_receipt(tmp_path, _receipt_plan(), 1000.0)
+
+    assert raised.value.reason == "receipt_unwritable" and raised.value.incomplete
+    assert not gate.receipt_path(tmp_path, _receipt_plan()).exists()
+
+
+def test_a_base_fallback_receipt_must_record_that_fallback(tmp_path: Path) -> None:
+    fallback = gate.Selection("fallback", reason="merge_base_ambiguous")
+    plan = _receipt_plan(base_fallback="merge_base_ambiguous", selection=fallback)
+    gate.write_receipt(tmp_path, plan, 1000.0)
+    assert gate.receipt_is_fresh(tmp_path, _receipt_plan(base_fallback="merge_base_ambiguous"), 1001.0)
+
+    # A sealed receipt whose selection contradicts the base fallback is refused, however consistent otherwise.
+    gate.write_receipt(tmp_path, _receipt_plan(base_fallback="merge_base_ambiguous", selection=_ran_selected()), 1000.0)
+    assert not gate.receipt_is_fresh(tmp_path, _receipt_plan(base_fallback="merge_base_ambiguous"), 1001.0)
+    # And a plan the selector runs for never reuses a base fallback's verdict.
+    gate.write_receipt(tmp_path, _receipt_plan(selection=fallback), 1000.0)
+    assert not gate.receipt_is_fresh(tmp_path, _receipt_plan(), 1001.0)
+
+
+def test_every_fallback_reason_the_gate_records_is_a_known_reason() -> None:
+    source = GATE_PATH.read_text(encoding="utf-8")
+    recorded = set(re.findall(r'(?:unavailable|fallback)\("(\w+)"', source))
+    recorded |= set(re.findall(r'return [\w.]+, "(merge_base_\w+)"', source))
+
+    assert recorded == {*gate.BASE_FALLBACK_REASONS, *gate.SELECTOR_FALLBACK_REASONS}
+
+
+def test_a_selector_narrowed_timeout_reports_the_selected_count_not_the_registry(repo: Path) -> None:
+    _install_selector(repo, ["tests/test_slow.py"])
+    _write(repo, "tests/test_slow.py", "import time\n\n\ndef test_slow():\n    time.sleep(120)\n")
+    _commit(repo, "slow", "tests/test_slow.py")
+    base = _git(repo, "merge-base", "origin/main", "HEAD").stdout.strip()
+
+    result = _run_gate(repo, extra_env={"LU_PRE_PUSH_GATE_STAGE_BUDGET_S": "4"})
+
+    assert result.returncode == gate.EXIT_INCOMPLETE, result.stderr
+    row = _measurements(repo)[-1]
+    assert row["selection"]["status"] == "selected" and row["nodes"] == 1
+    # The run held one test file (the changed one); the registry's two files never ran.
+    assert row["selected_test_files"] == 1
+    changed = len(_git(repo, "diff", "--name-only", f"{base}..HEAD").stdout.split())  # the selector and the test
+    selection = f"selection: base {base}, 1 selected test files (1 changed by the range), {changed} changed paths"
+    assert row["detail"].endswith(selection), row["detail"]
+    assert result.stderr.rstrip("\n").endswith(selection)
+
+
+def test_a_scoped_refusal_adopts_the_scoped_selection_before_raising(tmp_path: Path) -> None:
+    chosen = gate.Selection("selected", ("tests/test_x.py",), digest="0123456789abcdef")
+    result = {
+        "event": {"nodes": 2},
+        "error": {"reason": "timeout", "detail": "pytest stage: exceeded", "failing": [], "incomplete": True},
+        "settled": True,
+        "selection": dataclasses.asdict(chosen),
+    }
+
+    class Channel:
+        def settimeout(self, _seconds: float) -> None:
+            pass
+
+        def sendall(self, _data: bytes) -> None:
+            pass
+
+        def close(self) -> None:
+            pass
+
+    scope = gate.ResourceScope(tmp_path, "launcher", None)  # type: ignore[arg-type]
+    scope.stream = io.BytesIO((json.dumps(result) + "\n").encode())
+    scope.channel = Channel()  # type: ignore[assignment]
+    scope.process = subprocess.Popen(["true"])
+    scope.process.wait()
+    plan = _plan(changed_tests=("tests/test_b.py",))
+
+    with pytest.raises(gate.GateOutcome) as raised:
+        scope.execute(plan, "config", time.monotonic() + 30, {}, stage_budget_s=30.0)
+
+    assert raised.value.reason == "timeout"
+    assert plan.selection == chosen and plan.node_ids == ("tests/test_b.py", "tests/test_x.py")
+
+
+@pytest.mark.parametrize("followed", [None, 0, 2, True, "1"])
+def test_an_answer_that_ignores_a_deleted_path_falls_back(tmp_path: Path, followed: object) -> None:
+    _write(tmp_path, "tests/test_x.py", GREEN_TEST)
+    answer = {**_answer(["tests/test_x.py"]), "deleted_paths": followed}
+    plan = _plan(changed_tests=(), deleted_paths=("scripts/gone.py",))
+
+    selection = gate.blocking_selection(plan, tmp_path, answer)
+
+    assert (selection.status, selection.reason) == ("fallback", "selector_ignored_deleted_paths")
+    assert gate.blocking_selection(plan, tmp_path, {**answer, "deleted_paths": 1}).status == "selected"
+
+
+def test_an_empty_answer_for_a_python_change_falls_back_but_not_for_docs(tmp_path: Path) -> None:
+    python = gate.blocking_selection(_plan(changed_tests=(), changed_paths=("scripts/x.py",)), tmp_path, _answer([]))
+    docs = gate.blocking_selection(_plan(changed_tests=(), changed_paths=("docs/x.md",)), tmp_path, _answer([]))
+
+    assert (python.status, python.reason) == ("fallback", "python_change_selects_nothing")
+    assert docs.status == "selected" and docs.record["no_tests_affected"] is True
