@@ -316,3 +316,95 @@ def test_unknown_with_overridden_warning_records_warn(monkeypatch):
     assert record["dor"] == "WARN"
     assert record["unknown"] == {"1": TIMEOUT["errors"][0]["code"]}
     assert record["warnings"] == {"2": "membership_missing_parent"}
+
+
+# #11283 review F1: partial or contradictory timeout evidence keeps the
+# existing overridable WARN refusal, and an explicit non-PASS ``dor`` is never
+# Cursor Auto evidence, with or without the auxiliary ``unknown`` map.
+def _complete_timeout(**overrides):
+    payload = checker.evaluate_issue({"body": COMPLETE}, checker.membership_error("membership_timeout"))
+    payload.update(overrides)
+    return payload
+
+
+PARTIAL_TIMEOUT_EVIDENCE = [
+    pytest.param(
+        {"verdict": "WARN", "missing": ["membership_timeout"], "dor": {"status": "PASS"}}, id="review-reproducer-a"
+    ),
+    pytest.param(
+        _complete_timeout(
+            dod=checker.section(
+                "WARN", [checker.error("dod", "acceptance_criteria", "dod_structure_malformed", "malformed")]
+            )
+        ),
+        id="dod-error-omitted-from-top-level",
+    ),
+    pytest.param(
+        _complete_timeout(membership=checker.membership_error("membership_audit_stale")), id="membership-section-stale"
+    ),
+    pytest.param(
+        checker.evaluate_issue(
+            {"body": COMPLETE}, checker.membership_error("membership_timeout_target_fetch_extra")
+        ),
+        id="forged-target-fetch-prefix",
+    ),
+]
+
+
+@pytest.mark.parametrize("payload", PARTIAL_TIMEOUT_EVIDENCE)
+def test_partial_timeout_evidence_keeps_warn_refusal(monkeypatch, capsys, payload):
+    """Defect class: an incomplete or contradictory checker result admitted as UNKNOWN."""
+    refusal, record = admission(monkeypatch, payload)
+    assert "--allow-dor-warn" in refusal
+    assert record["dor"] == "WARN"
+    assert record["warnings"] == {"123": ",".join(payload["missing"])}
+    assert "unknown" not in record
+    assert "UNKNOWN" not in capsys.readouterr().err
+    # The real override still admits exactly as before, with its reason recorded.
+    refusal, record = admission(monkeypatch, payload, reason="membership evidence gap accepted")
+    assert refusal is None
+    assert record["dor"] == "WARN" and record["allow_warn_reason"] == "membership evidence gap accepted"
+
+
+def _cursor_auto_args():
+    return argparse.Namespace(
+        mode="danger",
+        research_role="implementation",
+        research_task_family=None,
+        owned_path=["scripts/example.py"],
+        review=False,
+        review_attempt=None,
+        require_review_verdict=False,
+        review_profile=None,
+    )
+
+
+@pytest.mark.parametrize(
+    "record",
+    [
+        pytest.param({"issues": [123], "warnings": {}, "dor": "UNKNOWN (timeout)"}, id="review-reproducer-b"),
+        pytest.param({"issues": [123], "dor": "UNKNOWN (timeout)"}, id="unknown-without-any-map"),
+        pytest.param(
+            {"issues": [123], "warnings": {}, "unknown": {"123": "membership_timeout"}}, id="unknown-map-without-dor"
+        ),
+        pytest.param({"issues": [123], "warnings": {}, "dor": "WARN"}, id="warn-without-warnings"),
+        pytest.param({"issues": [123], "warnings": {}, "dor": None}, id="explicit-null"),
+        pytest.param({"issues": [123], "warnings": {}, "dor": "pass"}, id="case-variant"),
+    ],
+)
+def test_explicit_non_pass_dor_is_not_cursor_auto_evidence(record):
+    """Defect class: a consumer reading only auxiliary maps and missing an explicit non-PASS state."""
+    refusal = delegate._cursor_auto_refusal(_cursor_auto_args(), agent="cursor", model="auto", dor_record=record)
+    assert refusal is not None and "not PASS" in refusal
+
+
+@pytest.mark.parametrize(
+    "record",
+    [
+        pytest.param({"issues": [123], "warnings": {}}, id="legacy-without-dor"),
+        pytest.param({"issues": [123], "warnings": {}, "dor": "PASS"}, id="explicit-pass"),
+    ],
+)
+def test_pass_dor_records_remain_cursor_auto_evidence(record):
+    """Defect class: a new refusal for formerly valid PASS records (OO-53)."""
+    assert delegate._cursor_auto_refusal(_cursor_auto_args(), agent="cursor", model="auto", dor_record=record) is None

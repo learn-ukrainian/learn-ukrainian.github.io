@@ -16196,8 +16196,11 @@ def _cursor_auto_refusal(
     (the declared functional role; a missing or any other role is unclassified for
     Auto), a write-capable mode, at least one ``--owned-path``, a DoR preflight that
     checked an issue card and found it PASS (``--allow-dor-warn`` and UNKNOWN are not PASS), and no
-    review typing. No ``--model`` is not Auto: the Cursor adapter pins its default.
+    review typing. No ``--model`` is not Auto: the Cursor adapter pins its default. An explicit
+    ``dor`` state other than PASS refuses on its own; a legacy record without ``dor`` keeps its
+    warning-map reading.
     """
+    from scripts.ci.check_issue_task_quality import AdmissionState
     from scripts.review.model_catalog import (
         CURSOR_AUTO_OUTSIDE_CODING_TASK_CODE,
         cursor_pinned_models,
@@ -16220,7 +16223,12 @@ def _cursor_auto_refusal(
         reasons.append("no --owned-path")
     if not dor_record or not dor_record.get("issues"):
         reasons.append("no DoR issue card was checked")
-    elif dor_record.get("warnings") or dor_record.get("unknown") or dor_record.get("allow_warn_reason") is not None:
+    elif (
+        ("dor" in dor_record and dor_record["dor"] != AdmissionState.PASS.value)
+        or dor_record.get("warnings")
+        or dor_record.get("unknown")
+        or dor_record.get("allow_warn_reason") is not None
+    ):
         reasons.append("the DoR issue card is not PASS")
     if not reasons:
         return None

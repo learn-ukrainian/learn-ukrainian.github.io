@@ -53,26 +53,51 @@ class AdmissionState(Enum):
         raise TypeError("AdmissionState has no truth value; compare with AdmissionState.PASS")
 
 
+# Exactly the codes observe_membership() and main() produce for a membership
+# deadline: "membership_timeout" for ancestry or the whole budget, otherwise
+# "membership_timeout_<stage>" for each stage that can expire. The target fetch
+# (card unread) and the cache write (caught; never a verdict) are not here.
+MEMBERSHIP_TIMEOUT_RE = re.compile(
+    r"membership_timeout(?:_(?:registry|cached_audit_validation|live_audit"
+    r"(?:_repository|_open_issues|_classification|_root_[0-9]+_of_[0-9]+_issue_[0-9]+)?))?"
+)
+
+
 def is_membership_timeout(code: object) -> bool:
-    """A membership observation deadline; a target-fetch timeout left the card unread."""
-    return (
-        isinstance(code, str)
-        and code != TARGET_FETCH_TIMEOUT
-        and (code == "membership_timeout" or code.startswith("membership_timeout_"))
-    )
+    """A produced membership observation deadline code, matched whole, never by prefix."""
+    return isinstance(code, str) and MEMBERSHIP_TIMEOUT_RE.fullmatch(code) is not None
+
+
+def _clean_pass(part: object) -> bool:
+    return isinstance(part, dict) and part.get("status") == "PASS" and part.get("errors") == []
 
 
 def admission_state(payload: dict) -> AdmissionState:
-    """PASS only for a clean PASS; UNKNOWN only when the card read PASS and every finding is a timeout."""
+    """PASS only for a clean PASS; UNKNOWN only for consistent evidence of a membership timeout alone.
+
+    UNKNOWN needs every section present and agreeing with the top level: DoR and
+    DoD read PASS with no errors, and the membership section reports WARN whose
+    only errors are produced timeout codes, listed exactly as ``missing``.
+    """
     missing = payload.get("missing") or []
     if payload.get("verdict") == "PASS" and not missing:
         return AdmissionState.PASS
-    dor = payload.get("dor")
+    membership = payload.get("membership")
+    if not isinstance(membership, dict):
+        return AdmissionState.WARN
+    errors = membership.get("errors")
     if (
-        missing
-        and all(is_membership_timeout(code) for code in missing)
-        and isinstance(dor, dict)
-        and dor.get("status") == "PASS"
+        payload.get("verdict") == "WARN"
+        and payload.get("trivial") is False
+        and _clean_pass(payload.get("dor"))
+        and _clean_pass(payload.get("dod"))
+        and membership.get("status") == "WARN"
+        and isinstance(errors, list)
+        and len(errors) == 1
+        and isinstance(errors[0], dict)
+        and errors[0].get("section") == "membership"
+        and is_membership_timeout(errors[0].get("code"))
+        and missing == [errors[0]["code"]]
     ):
         return AdmissionState.UNKNOWN
     return AdmissionState.WARN
