@@ -220,6 +220,8 @@ jobs:
           fi
           npm run build
 
+      # Atlas owns the route set; its committed inventory is reconciled with the
+      # verified release, then the built preview must match it exactly.
       - name: Verify word-card preview routes
         working-directory: .
         env:
@@ -227,6 +229,7 @@ jobs:
         run: >-
           .venv/bin/python scripts/deploy/prepare_word_card_preview.py verify-dist site/dist
           --release-dir "$RELEASE_DIR"
+          --inventory site/src/lib/lexicon/word-card-preview-route-inventory.json
 
       - name: Emit immutable deployment marker
         run: |

@@ -8,9 +8,11 @@ against the same pin, and only then writes the verified files plus the
 ``ATLAS_WORD_CARD_RELEASE_PIN`` value the Astro build consumes. The release tag
 only locates the assets; the pinned sizes and digests decide what is used.
 
-``verify-dist`` runs after ``npm run build`` and fails the deployment unless the
-built site contains exactly the expected preview routes (two summaries, one card
-and one comparison page per release row), every preview page is
+``verify-dist`` runs after ``npm run build``. Atlas owns the preview's route set
+and commits it as a machine-readable inventory; this script reconciles that
+inventory with the verified release (pin, digests, byte counts, every source
+card, citation and disposition count) and then fails the deployment unless the
+built site contains exactly the inventoried routes, every preview page is
 ``noindex, nofollow``, no emitted sitemap lists a preview URL, and no refusal or
 fixture marker reached the output. Run with ``--help`` for usage.
 """
@@ -24,6 +26,7 @@ import json
 import os
 import re
 import sys
+import unicodedata
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -40,9 +43,11 @@ from scripts.common import github_client
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_PIN = ROOT / "site" / "src" / "data" / "word-card-preview-release.pointer.json"
 DEFAULT_FIXTURE_ROOT = ROOT / "site" / "tests" / "fixtures" / "word-card-preview"
+DEFAULT_INVENTORY = ROOT / "site" / "src" / "lib" / "lexicon" / "word-card-preview-route-inventory.json"
 CARD_SCHEMA = ROOT / "schemas" / "word-card-v1.schema.json"
 
 PIN_SCHEMA_VERSION = "word-card-preview-release-pin.v1"
+INVENTORY_SCHEMA_VERSION = "word-card-preview-route-inventory.v1"
 MANIFEST_SCHEMA_VERSION = "word-card-dataset.v1"
 MANIFEST_ASSET = "manifest.json"
 DATASET_ASSET = "word-cards.jsonl"
@@ -59,6 +64,11 @@ DOWNLOAD_ATTEMPTS = 3
 _REPOSITORY = re.compile(r"^[A-Za-z0-9-]+/[A-Za-z0-9._-]+$")
 _TAG = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]*$")
 _SHA256 = re.compile(r"^[0-9a-f]{64}$")
+# One or more non-empty segments under the preview prefix, each ending in "/".
+# Word-page keys may hold spaces (multi-word expressions); escapes and controls may not.
+_ROUTE_PATH = re.compile(rf"^/{PREVIEW_PREFIX}/(?:[^/%?#\\]+/)+$")
+# encodeURIComponent leaves these unescaped besides letters, digits and "-_.~".
+_HREF_SAFE = "!*'()"
 
 
 class PreviewError(RuntimeError):
@@ -84,6 +94,10 @@ def _strict_json(data: bytes, what: str) -> Any:
 
 def _is_count(value: object) -> bool:
     return isinstance(value, int) and not isinstance(value, bool) and value > 0
+
+
+def _is_tally(value: object) -> bool:
+    return isinstance(value, int) and not isinstance(value, bool) and value >= 0
 
 
 def load_pin(path: Path) -> dict[str, Any]:
@@ -174,8 +188,8 @@ def _card_id_pattern() -> re.Pattern[str]:
     return re.compile(schema["$defs"]["card_id"]["pattern"])
 
 
-def check_release(pin: Mapping[str, Any], manifest_bytes: bytes, dataset_bytes: bytes) -> list[str]:
-    """Check the verified manifest against the pin and return the dataset card ids in order."""
+def check_release(pin: Mapping[str, Any], manifest_bytes: bytes, dataset_bytes: bytes) -> list[dict[str, Any]]:
+    """Check the verified manifest against the pin and return the dataset rows in order."""
     manifest = _strict_json(manifest_bytes, MANIFEST_ASSET)
     if not isinstance(manifest, dict):
         raise PreviewError("manifest must be a JSON object")
@@ -199,18 +213,19 @@ def check_release(pin: Mapping[str, Any], manifest_bytes: bytes, dataset_bytes: 
     except UnicodeDecodeError as exc:
         raise PreviewError(f"{DATASET_ASSET} is not UTF-8: {exc}") from exc
     pattern = _card_id_pattern()
-    card_ids: list[str] = []
+    rows: list[dict[str, Any]] = []
     for number, line in enumerate(lines, start=1):
         row = _strict_json(line.encode("utf-8"), f"{DATASET_ASSET} line {number}")
         card_id = row.get("card_id") if isinstance(row, dict) else None
         if not isinstance(card_id, str) or not pattern.fullmatch(card_id):
             raise PreviewError(f"{DATASET_ASSET} line {number} has no valid card_id")
-        card_ids.append(card_id)
+        rows.append(row)
+    card_ids = [row["card_id"] for row in rows]
     if len(set(card_ids)) != len(card_ids):
         raise PreviewError(f"{DATASET_ASSET} repeats a card_id")
-    if not card_ids or manifest.get("card_count") != len(card_ids):
-        raise PreviewError(f"manifest card_count {manifest.get('card_count')!r} != {len(card_ids)} dataset rows")
-    return card_ids
+    if not rows or manifest.get("card_count") != len(rows):
+        raise PreviewError(f"manifest card_count {manifest.get('card_count')!r} != {len(rows)} dataset rows")
+    return rows
 
 
 def site_pin(pin: Mapping[str, Any]) -> str:
@@ -246,12 +261,158 @@ def prepare(
         raise PreviewError(f"destination must be absent or an empty directory: {dest}")
     manifest_bytes = download_asset(pin, MANIFEST_ASSET, fetch)
     dataset_bytes = download_asset(pin, DATASET_ASSET, fetch)
-    card_ids = check_release(pin, manifest_bytes, dataset_bytes)
+    rows = check_release(pin, manifest_bytes, dataset_bytes)
     dest.mkdir(parents=True, exist_ok=True)
     for name, data in ((MANIFEST_ASSET, manifest_bytes), (DATASET_ASSET, dataset_bytes)):
         with (dest / name).open("xb") as handle:
             handle.write(data)
-    return {"release-path": str(dest.resolve()), "pin": site_pin(pin), "card-count": str(len(card_ids))}
+    return {"release-path": str(dest.resolve()), "pin": site_pin(pin), "card-count": str(len(rows))}
+
+
+def _route_href(path: str) -> str:
+    """The percent-encoded href ``encodeURIComponent`` gives each segment of ``path``."""
+    return "/" + "".join(f"{urllib.parse.quote(segment, safe=_HREF_SAFE)}/" for segment in path.strip("/").split("/"))
+
+
+def _is_route_path(path: object) -> bool:
+    return (
+        isinstance(path, str)
+        and bool(_ROUTE_PATH.fullmatch(path))
+        and not {".", ".."} & set(path.split("/"))
+        and not any(unicodedata.category(char) in {"Cc", "Cf", "Zl", "Zp"} for char in path)
+    )
+
+
+def _check_inventory_routes(routes: object) -> list[dict[str, str]]:
+    if not isinstance(routes, list) or not routes:
+        raise PreviewError("route inventory routes must be a non-empty list")
+    seen: set[str] = set()
+    for number, route in enumerate(routes, start=1):
+        if not isinstance(route, dict) or set(route) != {"path", "href", "class"}:
+            raise PreviewError(f"route inventory route {number} must have exactly path, href and class")
+        path = route["path"]
+        if not _is_route_path(path):
+            raise PreviewError(f"route inventory route {number} is not a /{PREVIEW_PREFIX}/ route path: {path!r}")
+        if path in seen:
+            raise PreviewError(f"route inventory repeats route {path}")
+        seen.add(path)
+        if route["href"] != _route_href(path):
+            raise PreviewError(f"route inventory href {route['href']!r} does not encode {path}")
+        if not isinstance(route["class"], str) or not route["class"]:
+            raise PreviewError(f"route inventory route {path} has no class")
+    return routes
+
+
+_CARD_KEYS = {"card_id", "card_kind", "page", "entry", "listed", "reason"}
+
+
+def _check_inventory_cards(cards: object, rows: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:
+    if not isinstance(cards, list):
+        raise PreviewError("route inventory cards must be a list")
+    kinds = {row["card_id"]: row.get("card_kind") for row in rows}
+    seen: set[str] = set()
+    entries: set[tuple[str, int]] = set()
+    for number, card in enumerate(cards, start=1):
+        if not isinstance(card, dict) or set(card) != _CARD_KEYS:
+            raise PreviewError(f"route inventory card {number} must have exactly the keys {sorted(_CARD_KEYS)}")
+        card_id = card["card_id"]
+        if not isinstance(card_id, str) or card_id not in kinds:
+            raise PreviewError(f"route inventory card {card_id!r} is not in the verified release")
+        if card_id in seen:
+            raise PreviewError(f"route inventory repeats card {card_id}")
+        seen.add(card_id)
+        if not isinstance(card["card_kind"], str) or card["card_kind"] != kinds[card_id]:
+            raise PreviewError(
+                f"route inventory card {card_id} kind {card['card_kind']!r} != release {kinds[card_id]!r}"
+            )
+        page, entry, listed = card["page"], card["entry"], card["listed"]
+        if not isinstance(listed, bool) or not isinstance(card["reason"], str) or not card["reason"]:
+            raise PreviewError(f"route inventory card {card_id} needs a boolean listed and a reason")
+        if page is not None and (not isinstance(page, str) or not page):
+            raise PreviewError(f"route inventory card {card_id} page must be a non-empty string or null")
+        if listed:
+            if page is None or not _is_count(entry):
+                raise PreviewError(f"route inventory card {card_id} is listed without a page and positive entry")
+            if (page, entry) in entries:
+                raise PreviewError(f"route inventory lists entry {entry} of page {page!r} twice")
+            entries.add((page, entry))
+        elif entry is not None:
+            raise PreviewError(f"route inventory card {card_id} is unlisted but has entry {entry!r}")
+    missing = [card_id for card_id in kinds if card_id not in seen]
+    if missing:
+        raise PreviewError(f"route inventory cards omit {len(missing)} release cards {missing[:5]}")
+    return cards
+
+
+def _citations(rows: Sequence[Mapping[str, Any]]) -> int:
+    total = 0
+    for row in rows:
+        fields = row.get("fields")
+        if not isinstance(fields, list):
+            raise PreviewError(f"release card {row['card_id']} has no fields list")
+        total += len(fields)
+    return total
+
+
+def check_route_inventory(
+    inventory_bytes: bytes, pin: Mapping[str, Any], rows: Sequence[Mapping[str, Any]]
+) -> dict[str, Any]:
+    """Reconcile Atlas's committed route inventory with the verified release; return it.
+
+    Atlas declares the routes, card dispositions and counts. Nothing here trusts a
+    declared count: each is recomputed from the inventory's own routes and cards,
+    and the source-card and citation denominators from the verified release rows.
+    """
+    inventory = _strict_json(inventory_bytes, "route inventory")
+    expected_keys = {"schema_version", "release", "counts", "routes", "cards"}
+    if not isinstance(inventory, dict) or set(inventory) != expected_keys:
+        raise PreviewError(f"route inventory must have exactly the keys {sorted(expected_keys)}")
+    if inventory["schema_version"] != INVENTORY_SCHEMA_VERSION:
+        raise PreviewError(f"unsupported route inventory schema {inventory['schema_version']!r}")
+    release = {
+        **json.loads(site_pin(pin)),
+        "dataset_bytes": pin["assets"][DATASET_ASSET]["bytes"],
+        "manifest_bytes": pin["assets"][MANIFEST_ASSET]["bytes"],
+    }
+    if inventory["release"] != release:
+        raise PreviewError(f"route inventory release {inventory['release']!r} does not match the pin {release!r}")
+    routes = _check_inventory_routes(inventory["routes"])
+    cards = _check_inventory_cards(inventory["cards"], rows)
+
+    listed = [card for card in cards if card["listed"]]
+    proper = "proper_name"
+    derived = {
+        "source_cards": len(rows),
+        "citations": _citations(rows),
+        "page_keys": len({card["page"] for card in cards if card["page"] is not None}),
+        "learner_pages": len({card["page"] for card in listed}),
+        "visible_entries": len(listed),
+        "proper_entries_listed": sum(card["card_kind"] == proper for card in listed),
+        "proper_only_unlisted": sum(
+            not card["listed"] and card["page"] is not None and card["card_kind"] == proper for card in cards
+        ),
+        "refused_without_key": sum(card["page"] is None for card in cards),
+        "emitted_routes": len(routes),
+    }
+    counts = inventory["counts"]
+    if not isinstance(counts, dict) or set(counts) != {*derived, "routes_by_class"}:
+        raise PreviewError(f"route inventory counts must have exactly the keys {sorted({*derived, 'routes_by_class'})}")
+    for name, value in derived.items():
+        if not _is_tally(counts[name]) or counts[name] != value:
+            raise PreviewError(f"route inventory counts.{name} declares {counts[name]!r}, derived {value}")
+    by_class = counts["routes_by_class"]
+    if not isinstance(by_class, dict) or not all(_is_tally(value) for value in by_class.values()):
+        raise PreviewError("route inventory counts.routes_by_class must map classes to counts")
+    emitted: dict[str, int] = {}
+    for route in routes:
+        emitted[route["class"]] = emitted.get(route["class"], 0) + 1
+    for name in sorted(set(emitted) | set(by_class)):
+        if by_class.get(name) != emitted.get(name, 0):
+            raise PreviewError(
+                f"route inventory counts.routes_by_class[{name!r}] declares {by_class.get(name)!r}, "
+                f"derived {emitted.get(name, 0)}"
+            )
+    return inventory
 
 
 class _RobotsParser(HTMLParser):
@@ -290,8 +451,10 @@ def fixture_sentinels(fixture_root: Path) -> set[str]:
     return sentinels
 
 
-def verify_dist(dist: Path, release_dir: Path, pin_path: Path, fixture_root: Path) -> dict[str, int]:
-    """Fail unless ``dist`` holds exactly the pinned preview, noindexed and outside every sitemap."""
+def verify_dist(
+    dist: Path, release_dir: Path, pin_path: Path, fixture_root: Path, inventory_path: Path
+) -> dict[str, int]:
+    """Fail unless ``dist`` holds exactly the inventoried preview, noindexed and outside every sitemap."""
     pin = load_pin(pin_path)
     verified: dict[str, bytes] = {}
     for name, asset in pin["assets"].items():
@@ -300,11 +463,13 @@ def verify_dist(dist: Path, release_dir: Path, pin_path: Path, fixture_root: Pat
             raise PreviewError(f"{release_dir / name} no longer matches the pin")
         verified[name] = data
     manifest_bytes, dataset_bytes = verified[MANIFEST_ASSET], verified[DATASET_ASSET]
-    card_ids = check_release(pin, manifest_bytes, dataset_bytes)
-    expected = {f"{PREVIEW_PREFIX}/release/index.html", f"{PREVIEW_PREFIX}/compare/release/index.html"}
-    expected.update(
-        f"{PREVIEW_PREFIX}/{prefix}release/{card_id}/index.html" for card_id in card_ids for prefix in ("", "compare/")
-    )
+    rows = check_release(pin, manifest_bytes, dataset_bytes)
+    try:
+        inventory_bytes = inventory_path.read_bytes()
+    except OSError as exc:
+        raise PreviewError(f"route inventory unreadable: {inventory_path}: {exc}") from exc
+    inventory = check_route_inventory(inventory_bytes, pin, rows)
+    expected = {f"{route['path'].lstrip('/')}index.html" for route in inventory["routes"]}
     preview_root = dist / PREVIEW_PREFIX
     actual = (
         {path.relative_to(dist).as_posix() for path in preview_root.rglob("index.html")}
@@ -339,7 +504,16 @@ def verify_dist(dist: Path, release_dir: Path, pin_path: Path, fixture_root: Pat
     for sitemap in sitemaps:
         if f"/{PREVIEW_PREFIX}/" in sitemap.read_text(encoding="utf-8"):
             raise PreviewError(f"{sitemap.name} lists a preview URL")
-    return {"routes": len(actual), "cards": len(card_ids), "sitemaps": len(sitemaps), "scripts_scanned": len(scripts)}
+    counts = inventory["counts"]
+    return {
+        "routes": len(actual),
+        "cards": counts["source_cards"],
+        "citations": counts["citations"],
+        "learner_pages": counts["learner_pages"],
+        "visible_entries": counts["visible_entries"],
+        "sitemaps": len(sitemaps),
+        "scripts_scanned": len(scripts),
+    }
 
 
 def _write_outputs(path: Path, outputs: Mapping[str, str]) -> None:
@@ -356,20 +530,24 @@ Examples:
   .venv/bin/python scripts/deploy/prepare_word_card_preview.py prepare \\
       --dest "$RUNNER_TEMP/word-card-preview-release" --github-output "$GITHUB_OUTPUT"
   .venv/bin/python scripts/deploy/prepare_word_card_preview.py verify-dist site/dist \\
-      --release-dir "$RUNNER_TEMP/word-card-preview-release"
+      --release-dir "$RUNNER_TEMP/word-card-preview-release" \\
+      --inventory site/src/lib/lexicon/word-card-preview-route-inventory.json
 
 Outputs:
   prepare      writes manifest.json and word-cards.jsonl into --dest and appends
                release-path=, pin= and card-count= lines to --github-output.
-  verify-dist  reads only; prints route, sitemap and script counts.
+  verify-dist  reads only; prints route, card, citation, page, entry, sitemap
+               and script counts.
 
 Exit codes:
   0  release verified / built preview verified
-  1  refused: pin, download, size, digest, manifest, controls flag, routes,
-     robots, sitemap or fixture marker check failed (reason on stderr)
+  1  refused: pin, download, size, digest, manifest, controls flag, route
+     inventory, routes, robots, sitemap or fixture marker check failed
+     (reason on stderr)
 
 Related: .github/workflows/deploy-pages.yml, docs/atlas/word-cards/public-preview.md,
-  site/src/data/word-card-preview-release.pointer.json, issue #11194.
+  site/src/data/word-card-preview-release.pointer.json,
+  site/src/lib/lexicon/word-card-preview-route-inventory.json, issue #11194.
 """
 
 
@@ -401,6 +579,13 @@ def build_parser() -> argparse.ArgumentParser:
     verify.add_argument("--release-dir", type=Path, required=True, help="directory written by `prepare --dest`")
     verify.add_argument("--pin", type=Path, default=DEFAULT_PIN, help=pin_help)
     verify.add_argument(
+        "--inventory",
+        type=Path,
+        default=DEFAULT_INVENTORY,
+        help="Atlas's committed preview route inventory JSON "
+        "(default: site/src/lib/lexicon/word-card-preview-route-inventory.json)",
+    )
+    verify.add_argument(
         "--fixture-root",
         type=Path,
         default=DEFAULT_FIXTURE_ROOT,
@@ -419,10 +604,12 @@ def main(argv: Sequence[str] | None = None) -> int:
                 _write_outputs(args.github_output, outputs)
             print(f"word-card preview: verified {outputs['card-count']} cards from the pinned release")
         else:
-            counts = verify_dist(args.dist, args.release_dir, args.pin, args.fixture_root)
+            counts = verify_dist(args.dist, args.release_dir, args.pin, args.fixture_root, args.inventory)
             print(
-                f"word-card preview: {counts['routes']} noindex routes for {counts['cards']} cards; "
-                f"{counts['sitemaps']} sitemaps exclude them; {counts['scripts_scanned']} scripts fixture-free"
+                f"word-card preview: {counts['routes']} inventoried noindex routes for {counts['cards']} cards "
+                f"({counts['citations']} citations, {counts['learner_pages']} learner pages, "
+                f"{counts['visible_entries']} visible entries); {counts['sitemaps']} sitemaps exclude them; "
+                f"{counts['scripts_scanned']} scripts fixture-free"
             )
     except (PreviewError, OSError, KeyError, ValueError) as exc:
         print(f"::error title=Word-card preview refused::{exc}", file=sys.stderr)

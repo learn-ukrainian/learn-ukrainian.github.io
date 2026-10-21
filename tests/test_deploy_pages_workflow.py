@@ -236,8 +236,10 @@ def test_pages_build_publishes_the_pinned_word_card_preview() -> None:
 
     assert verify["working-directory"] == "."
     assert verify["env"] == {"RELEASE_DIR": "${{ steps.word-card-preview.outputs.release-path }}"}
+    # The route set comes from Atlas's committed inventory, never a count frozen in this workflow.
     assert verify["run"] == (
-        '.venv/bin/python scripts/deploy/prepare_word_card_preview.py verify-dist site/dist --release-dir "$RELEASE_DIR"'
+        '.venv/bin/python scripts/deploy/prepare_word_card_preview.py verify-dist site/dist --release-dir "$RELEASE_DIR" '
+        "--inventory site/src/lib/lexicon/word-card-preview-route-inventory.json"
     )
 
     order = [
