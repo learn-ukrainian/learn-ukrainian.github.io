@@ -1,4 +1,7 @@
-import { beforeAll, describe, expect, test } from "vitest";
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { dirname, join } from "node:path";
+import { beforeAll, describe, expect, onTestFinished, test, vi } from "vitest";
 import type { APIRoute } from "astro";
 import { GET as getContract } from "@site/src/pages/api/lexicon/contract.json";
 import { GET as getDailyPool } from "@site/src/pages/api/lexicon/daily-pool.json";
@@ -14,6 +17,54 @@ import { GET as getSearchIndex } from "@site/src/pages/api/lexicon/search-index.
 import { GET as getSearchAliases } from "@site/src/pages/lexicon/search-aliases.json";
 import { GET as getStatus } from "@site/src/pages/api/lexicon/status.json";
 import { PRACTICE_LEVELS } from "@site/src/lib/lexicon/runtime-contract";
+import type { LexiconApiContract, LexiconRuntimeStatus } from "@site/src/lib/lexicon/runtime-contract";
+import { buildCommittedLexiconRuntimeStatus as originalStatusMemo } from "@site/src/lib/lexicon/committed-runtime-status";
+
+// Supplementary mechanics fixtures. The full-population inputs below remain
+// owned by their original cold hook and static module bindings.
+const MEMO_DAILY_INPUTS = {
+  first: [{ id: 1 }],
+  second: [{ id: 1 }, { id: 2 }, { id: 3 }],
+  rebuilt: [{ id: 1 }, { id: 2 }],
+};
+
+function writeMemoFixture(root: string, dailyPool: { id: number }[]): void {
+  const files: Record<string, unknown> = {
+    "src/data/lexicon-manifest.json": {
+      version: "memo-fixture-v1",
+      generated_at: "2026-10-12T00:00:00Z",
+      entries: [{
+        lemma: "fixture",
+        url_slug: "fixture",
+        primary_source: "source_inventory_grow",
+        surface_admission: { daily: true, practice: true, cloze: true },
+      }],
+    },
+    "src/data/lexicon-manifest.pointer.json": {
+      manifest_version: "memo-release-v1",
+      generated_at: "2026-09-01T00:00:00Z",
+      release_tag: "memo-artifact-v1",
+      json_bytes: 1000,
+      json_sha256: "synthetic-memo-artifact",
+    },
+    "src/data/lexicon-search-index.json": [{ t: "lemma" }],
+    "src/data/lexicon-search-aliases.json": [],
+    "src/data/lexicon-search-shards.json": {},
+    "src/data/lexicon-browse-meta.json": { total: 1, letterCounts: { F: 1 } },
+    "src/data/lexicon-daily-pool.json": dailyPool,
+    "src/data/lexicon-practice-cloze-sources.json": [],
+    "src/data/lexicon-practice-reviewed-sources.json": [],
+    "public/lexicon/practice-index.A1.json": {
+      deckVersion: "memo-deck-v1",
+      counts: { lexemes: 1, cloze: 1 },
+    },
+  };
+  for (const [relativePath, content] of Object.entries(files)) {
+    const path = join(root, relativePath);
+    mkdirSync(dirname(path), { recursive: true });
+    writeFileSync(path, JSON.stringify(content));
+  }
+}
 
 const getPracticeCloze: APIRoute = ({ params }) =>
   practiceShardResponse("practice-cloze", params.level);
@@ -78,6 +129,100 @@ describe("lexicon static API routes", () => {
       console.log(`[10183-phase] path=status phase=daily state=settled ms=${(performance.now() - dailyStarted).toFixed(3)}`);
     }
   }, FIXTURE_BUILD_TIMEOUT_MS);
+
+  test.each(["status", "contract"])(
+    "isolates served status and contract memos with %s as first reader and explicit test reset",
+    async (firstReader) => {
+      // The original beforeAll has already paid the full cold-build cost.
+      const originalMemo = originalStatusMemo();
+      const originalStatus = await (await getStatus({} as Parameters<APIRoute>[0])).text();
+      const originalContract = await (await getContract({} as Parameters<APIRoute>[0])).text();
+      const scratch = mkdtempSync(join(tmpdir(), "lexicon-route-memo-"));
+      let restoreCwd = () => {};
+      let resetPrivateMemo = () => {};
+      // Vitest reports teardown errors alongside a primary assertion failure.
+      onTestFinished(async () => {
+        restoreCwd();
+        try {
+          resetPrivateMemo();
+          vi.resetModules();
+        } finally {
+          rmSync(scratch, { recursive: true, force: true });
+        }
+        expect(originalStatusMemo()).toBe(originalMemo);
+        expect(await (await getStatus({} as Parameters<APIRoute>[0])).text()).toBe(originalStatus);
+        expect(await (await getContract({} as Parameters<APIRoute>[0])).text()).toBe(originalContract);
+      });
+
+      const rootA = join(scratch, "a");
+      const rootB = join(scratch, "b");
+      writeMemoFixture(rootA, MEMO_DAILY_INPUTS.first);
+      writeMemoFixture(rootB, MEMO_DAILY_INPUTS.second);
+      vi.resetModules();
+      const privateMemo = await import("@site/src/lib/lexicon/committed-runtime-status");
+      resetPrivateMemo = privateMemo.resetCommittedLexiconRuntimeStatusForTests;
+      expect(privateMemo.buildCommittedLexiconRuntimeStatus).not.toBe(originalStatusMemo);
+      const { GET: privateStatus } = await import("@site/src/pages/api/lexicon/status.json");
+      const { GET: privateContract } = await import("@site/src/pages/api/lexicon/contract.json");
+      const cwdSpy = vi.spyOn(process, "cwd").mockReturnValue(rootA);
+      restoreCwd = () => cwdSpy.mockRestore();
+
+      async function observe(root: string, dailyCount: number): Promise<void> {
+        cwdSpy.mockReturnValue(root);
+        async function status(): Promise<void> {
+          const response = await privateStatus({} as Parameters<APIRoute>[0]);
+          expect(response.status).toBe(200);
+          expect(response.headers.get("Content-Type")).toBe("application/json; charset=utf-8");
+          expect(response.headers.get("Cache-Control")).toBe("public, max-age=3600");
+          const payload: LexiconRuntimeStatus = await response.json();
+          expect(payload.schema).toBe("atlas-runtime-status");
+          expect(payload.status).toBe("ok");
+          expect(payload.daily.poolEntries).toBe(dailyCount);
+          expect(payload.manifest).toEqual({
+            hydrated: true, records: 1, publicLexemeRecords: 1, grammarTermRecords: 0,
+            version: "memo-fixture-v1", releaseTag: "memo-artifact-v1",
+            generatedAt: "2026-10-12T00:00:00Z", jsonBytes: 1000,
+            jsonSha256: "synthetic-memo-artifact",
+          });
+          expect(payload.sourceInventory).toEqual({
+            atlasRows: 1, dailyAdmitted: 1, practiceAdmitted: 1, clozeAdmitted: 1,
+          });
+        }
+        async function contract(): Promise<void> {
+          const response = await privateContract({} as Parameters<APIRoute>[0]);
+          expect(response.status).toBe(200);
+          expect(response.headers.get("Content-Type")).toBe("application/json; charset=utf-8");
+          expect(response.headers.get("Cache-Control")).toBe("public, max-age=3600");
+          const payload: LexiconApiContract = await response.json();
+          expect(payload.schema).toBe("atlas-api-contract");
+          expect(payload.status).toBe("ok");
+          expect(payload.staticOnly).toBe(true);
+          expect(payload.surfaces.dailyWord).toEqual({
+            poolEntries: dailyCount, endpoint: "/lexicon/daily-pool.json", admission: "reviewed-static-pool",
+          });
+          expect(payload.surfaces.atlas.totalReviewedEntries).toBe(1);
+          expect(payload.surfaces.practice.deckVersions).toEqual(["memo-deck-v1"]);
+        }
+        if (firstReader === "status") {
+          await status();
+          await contract();
+        } else {
+          await contract();
+          await status();
+        }
+      }
+
+      await observe(rootA, 1);
+      await observe(rootB, 3);
+      await observe(rootA, 1);
+      writeFileSync(join(rootA, "src/data/lexicon-daily-pool.json"), JSON.stringify(MEMO_DAILY_INPUTS.rebuilt));
+      // Same-root file changes have no automatic invalidation promise.
+      await observe(rootA, 1);
+      resetPrivateMemo();
+      await observe(rootA, 2);
+      await observe(rootB, 3);
+    },
+  );
 
   test("emits runtime status for public Atlas, Daily Word, and Practice", async () => {
     const started = performance.now();
