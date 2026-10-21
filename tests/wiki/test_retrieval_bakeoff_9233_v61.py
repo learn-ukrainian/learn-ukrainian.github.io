@@ -423,9 +423,9 @@ def test_item6_host_lock_and_unavailable_admission_fail_closed(frozen, monkeypat
 
 def test_item6_probe_unknown_is_not_healthy(monkeypatch):
     from scripts.orchestration import dispatch_admission
-    monkeypatch.setattr(dispatch_admission, "evaluate", lambda *a: SimpleNamespace(admitted=True, probe=None))
+    monkeypatch.setattr(dispatch_admission, "evaluate", lambda *a, **kw: SimpleNamespace(admitted=True, probe=None))
     assert not b._admission_probe()
-    monkeypatch.setattr(dispatch_admission, "evaluate", lambda *a: SimpleNamespace(admitted=True, probe=SimpleNamespace(proc_available=True, mem_available_bytes=100, load_per_cpu=.1)))
+    monkeypatch.setattr(dispatch_admission, "evaluate", lambda *a, **kw: SimpleNamespace(admitted=True, probe=SimpleNamespace(proc_available=True, mem_available_bytes=100, load_per_cpu=.1)))
     assert b._admission_probe()
 
 
