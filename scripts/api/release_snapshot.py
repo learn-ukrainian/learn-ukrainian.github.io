@@ -13,6 +13,7 @@ import contextlib
 import hashlib
 import json
 import os
+import select
 import shutil
 import subprocess
 import tarfile
@@ -106,6 +107,45 @@ def _safe_archive_path(root: Path, name: str) -> Path:
     return target
 
 
+class _DeadlineReader:
+    """Read pipe bytes without a buffered read outliving the archive deadline."""
+
+    def __init__(self, fd: int, deadline: float) -> None:
+        self.fd = fd
+        self.deadline = deadline
+        self.expired = False
+        os.set_blocking(fd, False)
+
+    def read(self, size: int) -> bytes:
+        while True:
+            remaining = self.deadline - time.monotonic()
+            if remaining <= 0 or not select.select([self.fd], [], [], remaining)[0]:
+                self.expired = True
+                # EOF lets tarfile report an incomplete member, while a timeout
+                # during the final drain remains a lifecycle failure only.
+                return b""
+            try:
+                return os.read(self.fd, size)
+            except BlockingIOError:
+                continue
+
+
+class _StrictArchiveInfo(tarfile.TarInfo):
+    """Keep malformed headers from becoming tarfile's silent iteration end."""
+
+    @classmethod
+    def fromtarfile(cls, archive: tarfile.TarFile) -> _StrictArchiveInfo:
+        try:
+            member = super().fromtarfile(archive)
+        except tarfile.EOFHeaderError:
+            raise  # A complete NUL block is the only accepted terminator.
+        except tarfile.HeaderError as exc:
+            raise tarfile.ReadError(f"invalid git archive header: {exc}") from exc
+        if member.size < 0:
+            raise tarfile.ReadError("negative size in git archive header")
+        return member
+
+
 def _extract_archive(repo_root: Path, sha: str, staging_dir: Path) -> None:
     """Extract the selected tracked code paths into a new staging directory."""
     command = [
@@ -140,15 +180,16 @@ def _extract_archive(repo_root: Path, sha: str, staging_dir: Path) -> None:
                     killed = True
                     process.kill()
 
-        # The watchdog ends a git that stalls mid-stream: the kill closes its
-        # stdout, so the tar reader sees EOF instead of blocking forever.
+        # The watchdog also covers producer wait. Pipe reads independently
+        # enforce the same deadline even if a kill cannot close stdout.
         watchdog = threading.Timer(GIT_ARCHIVE_DEADLINE_S, kill_git)
         watchdog.daemon = True
         watchdog.start()
         reader_error: Exception | None = None
         try:
+            reader = _DeadlineReader(process.stdout.fileno(), deadline)
             try:
-                with tarfile.open(fileobj=process.stdout, mode="r|") as archive:
+                with tarfile.open(fileobj=reader, mode="r|", tarinfo=_StrictArchiveInfo) as archive:
                     for member in archive:
                         target = _safe_archive_path(staging_dir, member.name)
                         if member.isdir():
@@ -172,8 +213,18 @@ def _extract_archive(repo_root: Path, sha: str, staging_dir: Path) -> None:
                             target.symlink_to(member.linkname)
                             continue
                         raise ReleaseSnapshotError(f"unsupported entry in git archive: {member.name!r}")
+                    # next() consumed one NUL header. Require the second, then
+                    # validate all padding through the tar stream so read-ahead
+                    # bytes are checked as well as bytes still in the pipe.
+                    if archive.fileobj.read(tarfile.BLOCKSIZE) != b"\0" * tarfile.BLOCKSIZE:
+                        raise tarfile.ReadError("missing second git archive terminator block")
+                    for padding in iter(lambda: archive.fileobj.read(64 * 1024), b""):
+                        if padding.strip(b"\0"):
+                            raise tarfile.ReadError("non-NUL bytes after git archive terminator")
             except Exception as exc:
                 reader_error = exc
+            if reader.expired:
+                kill_git()
             process.stdout.close()
             watchdog.cancel()
             watchdog.join()
@@ -193,7 +244,8 @@ def _extract_archive(repo_root: Path, sha: str, staging_dir: Path) -> None:
         finally:
             process.stdout.close()
         git_status = process.returncode
-        if reader_error is None and git_status == 0:
+        deadline_hit = reader.expired or time.monotonic() >= deadline
+        if reader_error is None and not killed and not deadline_hit and git_status == 0:
             return
         stderr_file.seek(max(0, stderr_file.seek(0, os.SEEK_END) - STDERR_TAIL_BYTES))
         stderr_tail = stderr_file.read().decode("utf-8", errors="replace").strip()
@@ -201,6 +253,8 @@ def _extract_archive(repo_root: Path, sha: str, staging_dir: Path) -> None:
     facts = [f"reader error: {reader_error}"] if reader_error is not None else []
     if killed:
         facts.append(f"deadline of {GIT_ARCHIVE_DEADLINE_S:g}s hit; kill sent to git")
+    elif deadline_hit:
+        facts.append(f"deadline of {GIT_ARCHIVE_DEADLINE_S:g}s hit")
     facts.append("git did not exit after kill" if git_status is None else f"git exit status {git_status}")
     facts.append(f"git stderr tail: {stderr_tail or '<empty>'}")
     raise ReleaseSnapshotError(
