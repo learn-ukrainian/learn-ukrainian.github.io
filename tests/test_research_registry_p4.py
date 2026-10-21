@@ -1309,9 +1309,11 @@ def test_issues_streams_endpoint_strips_private_keys_on_cache_hit(monkeypatch):
     assert body["refreshing"] is False and body["refresh"]["phase"] == "idle"
 
 
-def test_issues_streams_serves_membership_cache_writer_output_without_private_keys(tmp_path, monkeypatch):
-    """#10793: a cache published by the membership writer leaks no private key
-    through the route or the Work projection, and keeps run_audit's warnings."""
+@pytest.mark.parametrize("publisher", ["membership_writer", "run_audit"])
+def test_issues_streams_serves_membership_cache_writer_output_without_private_keys(tmp_path, monkeypatch, publisher):
+    """#10793: a cache published by either writer (the strict checker's validated
+    publication or a Monitor ``run_audit`` refresh) leaks no private key through
+    the route or the Work projection, and keeps run_audit's warnings."""
     from scripts.api import issues_router
     from scripts.ci import check_issue_task_quality as checker
     from scripts.work import sources_public
@@ -1328,8 +1330,23 @@ def test_issues_streams_serves_membership_cache_writer_output_without_private_ke
     ]
     monkeypatch.setattr(checker, "ROOT", tmp_path)
     monkeypatch.setattr(isa, "hygiene_warnings", lambda *a, **k: [dict(w) for w in hygiene])
-    assert checker.write_membership_cache(report, repo, registry)
+    if publisher == "membership_writer":
+        assert checker.write_membership_cache(report, repo, registry)
+    else:
+        (tmp_path / "scripts/config").mkdir(parents=True)
+        (tmp_path / "scripts/config/issue_streams.yaml").write_text(
+            "streams:\n  devops:\n    epics: [5703]\n  harness:\n    epics: [6943]\n"
+        )
+        monkeypatch.setattr(isa, "_repo_owner_name", lambda *a: tuple(repo.split("/")))
+        monkeypatch.setattr(isa, "fetch_open_issues", lambda *a: [{"number": 123, "title": "PRIVATE_TITLE_CANARY"}])
+        monkeypatch.setattr(
+            isa,
+            "_fetch_subissue_batch",
+            lambda cursors, *a: {n: {"body": "- [ ] #123" if n == 5703 else "", "subIssues": {"nodes": []}} for n in cursors},
+        )
+        isa.run_audit(tmp_path)
     cache = tmp_path / "batch_state/issue_stream_audit.json"
+    assert json.loads(cache.read_text())["schema_version"] == 1
     assert json.loads(cache.read_text())["root_results"]["5703"] == {"native": [], "body": [123]}
     monkeypatch.setattr(isa, "CACHE_PATH", cache)
     monkeypatch.setattr(issues_router.audit, "read_refresh_state", lambda: dict(_IDLE_REFRESH))

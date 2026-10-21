@@ -78,6 +78,7 @@ PRIVATE_CACHE_KEYS = (
     "open_issue_titles",
     "root_results",
 )
+MEMBERSHIP_CACHE_SCHEMA_VERSION = 1
 
 # A resolver proving issue N is a live child of stream epic E, offline, from a
 # fresh cache. Signature mirrors P1's ``check_research_registry.MembershipResolver``.
@@ -1383,6 +1384,75 @@ def hygiene_warnings(
     )
 
 
+def membership_root_results(report: dict, registry: dict[str, list[int]]) -> dict | None:
+    """Group the effective index by registered root, or ``None`` when it is not
+    conflict-free, bounded and fully read (#10793).
+
+    The strict DoR checker trusts a cache only when its stored ``root_results``
+    equals this recomputation, so every publisher must write it.
+    """
+    roots = {n for ns in registry.values() for n in ns}
+    if any(
+        w["code"] == "unresolved_subissue"
+        and (not _is_positive_int(w.get("issue")) or w["issue"] in roots)
+        for w in report.get("warnings") or ()
+    ):
+        return None
+    numbers = report.get("open_issue_numbers")
+    if (
+        not isinstance(numbers, list)
+        or len(numbers) >= 500
+        or len(set(numbers)) != len(numbers)
+        or type(report.get("open_total")) is not int
+        or report.get("open_total") != len(numbers)
+        or report.get("multi_homed") != []
+    ):
+        return None
+    root_results = {str(n): {"native": [], "body": []} for n in sorted(roots)}
+    stream_of = {n: key for key, ns in registry.items() for n in ns}
+    for number, entry in report["effective_membership"].items():
+        if entry["unique_stream"] is not True or entry["epics"][0] not in roots:
+            return None
+        epic = entry["epics"][0]
+        if entry["streams"] != [stream_of[epic]]:
+            return None
+        root_results[str(epic)][entry["via"]].append(int(number))
+    for result in root_results.values():
+        for members in result.values():
+            members.sort()
+    return root_results
+
+
+def publish_cache(report: dict, registry: dict[str, list[int]], path: Path) -> None:
+    """Atomically publish ``report`` in the versioned membership cache shape.
+
+    The one writer of ``issue_stream_audit.json`` (``run_audit`` and the strict
+    DoR checker's validated publication, #10793). ``root_results`` is ``None``
+    for a report that cannot certify membership; the Monitor still serves it.
+    The temporary file shares the destination directory, so ``os.replace`` is
+    an atomic rename and a reader never sees partial JSON.
+    """
+    payload = json.dumps(
+        {
+            **report,
+            "schema_version": MEMBERSHIP_CACHE_SCHEMA_VERSION,
+            "root_results": membership_root_results(report, registry),
+        },
+        ensure_ascii=False,
+        sort_keys=True,
+    ) + "\n"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    descriptor, temporary = tempfile.mkstemp(prefix=".issue-stream-audit-", suffix=".json", dir=path.parent)
+    try:
+        with os.fdopen(descriptor, "w", encoding="utf-8") as handle:
+            handle.write(payload)
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.replace(temporary, path)
+    finally:
+        Path(temporary).unlink(missing_ok=True)
+
+
 def run_audit(
     repo_root: Path | None = None,
     *,
@@ -1420,9 +1490,7 @@ def run_audit(
     report["warnings"] = traversal_warnings + hygiene_warnings(
         root, open_issue_numbers, max_confirmed_age_days=max_confirmed_age_days
     )
-    cache_path = root / "batch_state" / "issue_stream_audit.json"
-    cache_path.parent.mkdir(parents=True, exist_ok=True)
-    cache_path.write_text(json.dumps(report, ensure_ascii=False, indent=1), encoding="utf-8")
+    publish_cache(report, registry, root / "batch_state" / "issue_stream_audit.json")
     return report
 
 

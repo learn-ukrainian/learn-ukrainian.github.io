@@ -3,9 +3,11 @@
 from __future__ import annotations
 
 import json
+import os
 import signal
 import time
 from itertools import pairwise
+from pathlib import Path
 from unittest.mock import Mock
 
 import pytest
@@ -541,7 +543,8 @@ def test_fresh_cached_membership_skips_slow_live_audit(monkeypatch, membership_c
     [
         ("stale", "membership_audit_stale"),
         ("incomplete", "membership_audit_incomplete"),
-        ("conflicting", "membership_conflicting_ancestry"),
+        # Conflicting or partly unread evidence cannot certify root_results.
+        ("conflicting", "membership_audit_cache_schema"),
         ("missing", "membership_audit_cache_missing"),
         ("repository", "membership_audit_repository_mismatch"),
         ("issue", "membership_missing_parent"),
@@ -549,7 +552,7 @@ def test_fresh_cached_membership_skips_slow_live_audit(monkeypatch, membership_c
         ("malformed", "membership_audit_cache_unreadable"),
         ("invalid_index", "membership_audit_stale"),
         ("native_entry", "membership_unknown"),
-        ("unread_root", "membership_unknown"),
+        ("unread_root", "membership_audit_cache_schema"),
     ],
 )
 @pytest.mark.parametrize("live_valid", [False, True])
@@ -576,8 +579,11 @@ def test_rejected_cache_never_admits_without_live_proof(
         report["effective_membership"]["123"]["via"] = "native"
     elif cache == "unread_root":
         report["warnings"] = [{"code": "unresolved_subissue", "issue": 6943}]
-    if cache != "missing":
-        membership_cache.write_text("{" if cache == "malformed" else json.dumps(report))
+    if cache == "malformed":
+        membership_cache.write_text("{")
+    elif cache != "missing":
+        # The real publisher, so the tampering under test is the only defect.
+        audit.publish_cache(report, REGISTRY, membership_cache)
     live_report = audit_report(body=[123])
     if not live_valid:
         live_report["membership_complete"] = False
@@ -760,7 +766,6 @@ def test_unregistered_parentless_target_fails_closed_without_repeated_audit(
     {"generated_at": 0}, {"generated_at": time.time() + 10000},
     {"membership_complete": False}, {"incomplete_nodes": [6943]},
     {"repository": "other/repo"}, {"streams": {"devops": [5703]}},
-    {"schema_version": 2}, {"schema_version": True},
     {"effective_membership": {
         "123": {"epics": [5703, 6943], "streams": ["devops", "harness"], "via": "body", "unique_stream": False}
     }},
@@ -779,6 +784,18 @@ def test_cache_writer_rejects_invalid_report_without_replacing_good_cache(monkey
     assert list(membership_cache.parent.iterdir()) == [membership_cache]
 
 
+@pytest.mark.parametrize("claim", [
+    {"schema_version": 2}, {"schema_version": True}, {"schema_version": "1"},
+    {"root_results": {"5703": {"native": [], "body": [999]}}}, {"root_results": None},
+])
+def test_publisher_never_copies_claimed_schema_or_root_results(membership_cache, claim):
+    """Every publication stamps the current schema and recomputes root_results."""
+    assert checker.write_membership_cache({**audit_report(body=[123]), **claim}, REPO, REGISTRY)
+    published = json.loads(membership_cache.read_text())
+    assert published["schema_version"] == 1
+    assert published["root_results"] == {"5703": {"native": [], "body": [123]}, "6943": {"native": [], "body": []}}
+
+
 @pytest.mark.parametrize("entry", [
     {"epics": [9999], "streams": ["devops"], "via": "body", "unique_stream": True},
     {"epics": [5703], "streams": ["harness"], "via": "body", "unique_stream": True},
@@ -792,12 +809,10 @@ def test_cache_writer_rejects_membership_outside_registry(membership_cache, entr
 
 def test_cache_writer_publishes_only_complete_json_by_atomic_rename(monkeypatch, membership_cache):
     membership_cache.write_text("previous cache")
-    replace = checker.os.replace
+    replace = os.replace
     calls = []
 
     def inspect_then_replace(temporary, destination):
-        from pathlib import Path
-
         temporary = Path(temporary)
         assert temporary.parent == destination.parent == membership_cache.parent
         assert membership_cache.read_text() == "previous cache"
@@ -805,7 +820,7 @@ def test_cache_writer_publishes_only_complete_json_by_atomic_rename(monkeypatch,
         calls.append(destination)
         replace(temporary, destination)
 
-    monkeypatch.setattr(checker.os, "replace", inspect_then_replace)
+    monkeypatch.setattr(os, "replace", inspect_then_replace)
     assert checker.write_membership_cache(audit_report(native=[456], body=[123]), REPO, REGISTRY)
     assert calls == [membership_cache]
     assert list(membership_cache.parent.iterdir()) == [membership_cache]
@@ -834,7 +849,7 @@ def test_cache_write_failure_preserves_destination_and_removes_temporary(monkeyp
     def fail(*a):
         raise OSError("failure canary")
 
-    monkeypatch.setattr(checker.os, operation, fail)
+    monkeypatch.setattr(os, operation, fail)
     with pytest.raises(OSError, match="failure canary"):
         checker.write_membership_cache(audit_report(body=[123]), REPO, REGISTRY)
     assert membership_cache.read_text() == "previous cache"
@@ -872,6 +887,48 @@ def test_tampered_index_without_matching_root_results_is_refused(monkeypatch, me
     assert result["cache_rejection"] == "membership_audit_cache_schema"
 
 
+_DELETED = object()
+
+
+@pytest.mark.parametrize("schema", [_DELETED, None, "1", 1.0, 0, 2, True])
+@pytest.mark.parametrize("root_results", ["stale", "deleted", "null"])
+def test_forged_cache_cannot_opt_out_of_schema_validation(monkeypatch, membership_cache, capsys, schema, root_results):
+    """#10793: omitting or mistyping schema_version is a refusal, never an opt-out."""
+    assert checker.write_membership_cache(audit_report(), REPO, REGISTRY)
+    payload = json.loads(membership_cache.read_text())
+    payload["effective_membership"]["123"] = audit_report(body=[123])["effective_membership"]["123"]
+    if schema is _DELETED:
+        del payload["schema_version"]
+    else:
+        payload["schema_version"] = schema
+    if root_results == "deleted":
+        del payload["root_results"]
+    elif root_results == "null":
+        payload["root_results"] = None
+    membership_cache.write_text(json.dumps(payload))
+    live = Mock(return_value={**audit_report(), "membership_complete": False})
+    monkeypatch.setattr(checker, "live_audit", live)
+    assert checker.main(["--issue", "123", "--strict", "--json"]) == 1
+    live.assert_called_once()
+    membership = json.loads(capsys.readouterr().out)["membership"]
+    assert membership["status"] == "WARN"
+    assert membership["errors"][0]["code"] == "membership_audit_incomplete"
+    assert membership["cache_rejection"] == "membership_audit_cache_schema"
+
+
+@pytest.mark.parametrize("key", ["schema_version", "root_results"])
+def test_legacy_shape_cache_without_forgery_is_refused(monkeypatch, membership_cache, key):
+    """A fresh complete cache lacking either versioned key is never trusted."""
+    assert checker.write_membership_cache(audit_report(body=[123]), REPO, REGISTRY)
+    payload = json.loads(membership_cache.read_text())
+    del payload[key]
+    membership_cache.write_text(json.dumps(payload))
+    monkeypatch.setattr(checker, "live_audit", lambda *a, **k: {**audit_report(), "membership_complete": False})
+    result = checker.observe_membership({}, REPO, 123)
+    assert result["status"] == "WARN"
+    assert result["cache_rejection"] == "membership_audit_cache_schema"
+
+
 def test_live_cache_write_failure_does_not_discard_verified_membership(monkeypatch, membership_cache):
     monkeypatch.setattr(checker, "live_audit", lambda *a, **k: audit_report(body=[123]))
 
@@ -886,8 +943,9 @@ def test_live_cache_write_failure_does_not_discard_verified_membership(monkeypat
     }
 
 
-def test_live_check_publication_matches_run_audit_report(monkeypatch, tmp_path):
-    """The Monitor serves this file: a live-check write carries all of run_audit's report."""
+@pytest.fixture
+def audited_checkout(monkeypatch, tmp_path):
+    """A checkout whose live auditor sees #123 only as a body checklist member of #5703."""
     monkeypatch.setattr(audit, "hygiene_warnings", REAL_HYGIENE_WARNINGS)
     (tmp_path / "scripts/config").mkdir(parents=True)
     (tmp_path / "scripts/config/issue_streams.yaml").write_text(
@@ -915,19 +973,92 @@ def test_live_check_publication_matches_run_audit_report(monkeypatch, tmp_path):
         return {n: {"body": "- [ ] #123" if n == 5703 else "", "subIssues": {"nodes": children[n]}} for n in cursors}
 
     monkeypatch.setattr(audit, "_fetch_subissue_batch", fetch)
+    return states
+
+
+AUDITED_ROOT_RESULTS = {"5703": {"native": [456], "body": [123]}, "6943": {"native": [], "body": []}}
+
+
+def test_live_check_publication_matches_run_audit_report(monkeypatch, tmp_path, audited_checkout):
+    """The Monitor serves this file: both publishers write one versioned shape."""
     expected = json.loads(json.dumps(audit.run_audit(tmp_path)))
     assert [w["code"] for w in expected["warnings"]] == [
         "cross_repo_subissue", "closed_epic_reopened", "milestone_row_marked", "milestone_closed_issue",
     ]
     cache = tmp_path / "batch_state/issue_stream_audit.json"
+    from_run_audit = json.loads(cache.read_text())
+    assert from_run_audit == {**expected, "schema_version": 1, "root_results": AUDITED_ROOT_RESULTS}
     cache.unlink()  # A missing cache sends the parentless target to the bounded live audit.
     assert checker.observe_membership({}, REPO, 123) == {"status": "PASS", "errors": [], "pending_native_link": True}
     published = json.loads(cache.read_text())
-    assert published.pop("schema_version") == 1
-    assert published.pop("root_results") == {"5703": {"native": [456], "body": [123]}, "6943": {"native": [], "body": []}}
-    published.pop("generated_at"), expected.pop("generated_at")
-    assert published == expected
-    assert states.call_count == 2 and states.call_args_list[0] == states.call_args_list[1]
+    published.pop("generated_at"), from_run_audit.pop("generated_at")
+    assert published == from_run_audit
+    assert audited_checkout.call_count == 2
+    assert audited_checkout.call_args_list[0] == audited_checkout.call_args_list[1]
+
+
+def test_run_audit_publication_is_trusted_by_strict_checker(monkeypatch, tmp_path, audited_checkout, capsys):
+    """#10793: a Monitor refresh never puts back a cache shape the checker refuses."""
+    audit.run_audit(tmp_path)
+    monkeypatch.setattr(checker, "fetch_issue", lambda *a: {"body": COMPLETE, "title": "[5703] target"})
+    monkeypatch.setattr(checker, "live_audit", Mock(side_effect=AssertionError("fresh cache must resolve")))
+    assert checker.main(["--issue", "123", "--strict", "--json"]) == 0
+    assert json.loads(capsys.readouterr().out)["membership"] == {
+        "status": "PASS", "errors": [], "pending_native_link": True,
+    }
+
+
+def test_run_audit_publishes_unverifiable_report_with_null_root_results(monkeypatch, tmp_path, audited_checkout):
+    """A conflicting report is still published for the Monitor, never trusted for membership."""
+    monkeypatch.setattr(audit, "fetch_open_issues", lambda *a: [{"number": n, "title": ""} for n in (123, 456)])
+    monkeypatch.setattr(audit, "_fetch_subissue_batch", lambda cursors, *a: {
+        n: {"body": "", "subIssues": {"nodes": [
+            {"number": 456, "repository": {"nameWithOwner": REPO}, "subIssuesSummary": {"total": 0}},
+        ]}} for n in cursors
+    })
+    report = audit.run_audit(tmp_path)
+    assert report["multi_homed"]
+    published = json.loads((tmp_path / "batch_state/issue_stream_audit.json").read_text())
+    assert published["schema_version"] == 1 and published["root_results"] is None
+    monkeypatch.setattr(checker, "live_audit", lambda *a, **k: {**audit_report(), "membership_complete": False})
+    assert checker.observe_membership({}, REPO, 123)["cache_rejection"] == "membership_audit_cache_schema"
+
+
+def test_run_audit_publishes_by_atomic_rename(monkeypatch, tmp_path, audited_checkout):
+    cache = tmp_path / "batch_state/issue_stream_audit.json"
+    cache.parent.mkdir()
+    cache.write_text("previous cache")
+    replace = os.replace
+    calls = []
+
+    def inspect_then_replace(temporary, destination):
+        temporary = Path(temporary)
+        assert temporary.parent == Path(destination).parent == cache.parent
+        assert cache.read_text() == "previous cache"
+        assert json.loads(temporary.read_text())["root_results"] == AUDITED_ROOT_RESULTS
+        calls.append(Path(destination))
+        replace(temporary, destination)
+
+    monkeypatch.setattr(os, "replace", inspect_then_replace)
+    audit.run_audit(tmp_path)
+    assert calls == [cache]
+    assert list(cache.parent.iterdir()) == [cache]
+
+
+@pytest.mark.parametrize("operation", ["fsync", "replace"])
+def test_run_audit_write_failure_preserves_destination(monkeypatch, tmp_path, audited_checkout, operation):
+    cache = tmp_path / "batch_state/issue_stream_audit.json"
+    cache.parent.mkdir()
+    cache.write_text("previous cache")
+
+    def fail(*a):
+        raise OSError("failure canary")
+
+    monkeypatch.setattr(os, operation, fail)
+    with pytest.raises(OSError, match="failure canary"):
+        audit.run_audit(tmp_path)
+    assert cache.read_text() == "previous cache"
+    assert list(cache.parent.iterdir()) == [cache]
 
 
 def test_slow_cache_publication_keeps_verified_verdict_inside_deadline(
