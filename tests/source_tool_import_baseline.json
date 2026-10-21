@@ -426,11 +426,6 @@
       "failure_class": "other_import_failure"
     },
     {
-      "path": "scripts/audit/check_ci_dependencies.py",
-      "form": "file",
-      "failure_class": "environment_blocked_subprocess"
-    },
-    {
       "path": "scripts/audit/immersion_gate_calibration.py",
       "form": "file",
       "failure_class": "other_import_failure"
@@ -454,11 +449,6 @@
       "path": "scripts/canary/kimi_oauth_canary.py",
       "form": "file",
       "failure_class": "other_import_failure"
-    },
-    {
-      "path": "scripts/ci/bio_preparation_gate.py",
-      "form": "file",
-      "failure_class": "module_not_found"
     },
     {
       "path": "scripts/debug/debug_hash.py",
