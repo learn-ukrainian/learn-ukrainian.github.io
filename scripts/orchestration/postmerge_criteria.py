@@ -7,7 +7,12 @@ import hashlib
 import json
 import re
 import subprocess
+import sys
 from datetime import date
+from pathlib import Path
+
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from scripts.common import github_client
 from scripts.fleet_comms.authority import AuthorityService
