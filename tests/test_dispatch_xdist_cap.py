@@ -142,9 +142,9 @@ def test_worker_env_resolves_cap_plugin_for_nested_pytest_outside_rootdir(tmp_pa
     """#8795: a real dispatch-worker env must not break a nested pytest.
 
     ``PYTEST_PLUGINS=ci.pytest_dispatch_cap`` only resolves via pyproject.toml's
-    rootdir-relative ``pythonpath = ["scripts"]``. A test like
-    ``tests/test_pytest_tmp_guard.py`` spawns a nested pytest from ``tmp_path``
-    with its own bare ini (no ``pythonpath`` entry), which used to fail with
+    rootdir-relative ``pythonpath = ["scripts"]``. A test that spawns a nested
+    pytest from ``tmp_path`` with its own bare ini (no ``pythonpath`` entry) used
+    to fail with
     ``ImportError: No module named 'ci'`` once it inherited the worker's
     ``PYTEST_PLUGINS``. This builds a real worker env via
     ``scripts.delegate._build_worker_env`` (not a hand-rolled stand-in) and

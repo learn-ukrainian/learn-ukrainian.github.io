@@ -28,7 +28,6 @@ WORK_OWNED = [
     ROOT / "tests" / "fixtures" / "work",
     ROOT / "docs" / "decisions" / "ADR-019-work-control-plane.md",
     ROOT / "docs" / "monitor-api" / "work.md",
-    ROOT / "tests" / "test_work_dashboard.py",
     ROOT / "tests" / "test_work_privacy.py",
     ROOT / "tests" / "test_work_dashboard_private_integration.py",
 ]

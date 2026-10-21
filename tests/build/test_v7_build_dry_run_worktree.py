@@ -5,9 +5,7 @@ The create-then-discard design (round 1) could leak on any exit path between
 ``git worktree add`` and cleanup. Instead, ``main()`` never dispatches a dry
 run to ``_run_in_worktree`` — it runs the dry-run pipeline in place, the same
 way a bare ``--dry-run`` (no ``--worktree``) already does. Unit-level coverage
-against a throwaway git repository (never the shared repo) lives here; the
-end-to-end "invoked from a primary checkout" contract lives in
-``test_v7_build_e2e.py``.
+against a throwaway git repository (never the shared repo) lives here.
 """
 
 from __future__ import annotations

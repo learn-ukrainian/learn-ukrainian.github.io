@@ -18,14 +18,8 @@ Two checks keep the marker honest:
    fails if a marked test has no registry row (#9434), so deleting a row cannot
    pass silently. These checks read the marks pytest applies, from a
    collection-only child run. The PR-tier checks collect only the test files a
-   source prefilter says can carry the mark; that is an early warning, and
-   ``_candidate_test_files`` names the shapes it misses. The exact check,
-   ``test_registry_matches_every_collected_repo_wide_mark`` in
-   ``tests/test_repo_wide_registry_exact.py``, is ``slow`` (the nightly lane):
-   it collects every test file CI collects, with no prefilter, and compares the
-   registry with the collected marks both ways. It lives in its own module,
-   without ``repo_wide``, so a worker's ``pytest -m repo_wide`` never runs a
-   whole-suite collection.
+   source prefilter says can carry the mark, and ``_candidate_test_files``
+   names the shapes it misses.
 2. **The heuristic is a best-effort net.** It parses each test module's AST and
    flags test functions that walk a repository source tree (a repo-root path
    expression joined to ``.rglob()``/``.glob()``, ``os.walk``/``os.scandir``,
@@ -77,42 +71,25 @@ _TESTS_ROOT = _REPO_ROOT / "tests"
 KNOWN_REPO_WIDE_MODULES = frozenset(
     {
         "tests/ai_agent_bridge/test_module_identity.py",
-        "tests/api/test_api_subprocess_timeout.py",
-        "tests/api/test_import_pinning.py",
         "tests/hygiene/test_tracked_symlink_targets.py",
         "tests/orchestration/test_thread_restart_e2e.py",
         "tests/orchestration/test_worktree_removal_invariant.py",
-        "tests/test_agent_fleet_tooling_guardrails.py",
         "tests/test_ask_opencode.py",
-        "tests/test_curriculum_upgrade_no_host_run_root.py",
         "tests/test_cyrillic_roundtrip_invariant.py",
         "tests/test_dispatch_checkout_size.py",
         "tests/test_docs_catalogue.py",
         "tests/test_docs_catalogue_coverage.py",
-        "tests/test_docs_find_lookups_part1.py",
-        "tests/test_docs_find_lookups_part2.py",
-        "tests/test_docs_find_lookups_part3.py",
-        "tests/test_docs_find_lookups_part4.py",
-        "tests/test_docs_find_lookups_part5.py",
-        "tests/test_docs_find_lookups_part6.py",
-        "tests/test_docs_find_lookups_part7.py",
-        "tests/test_docs_find_lookups_part8.py",
-        "tests/test_fleet_routing_open_model_data_import_guard.py",
         "tests/test_frontend_denominator_invariant.py",
         "tests/test_hooks_executable.py",
         "tests/test_issue_template_acceptance_criteria.py",
         "tests/test_lesson_atlas_link_census.py",
         "tests/test_lint_fleet_roster.py",
         "tests/test_lint_prompts.py",
-        "tests/test_lint_test_assertions.py",
         "tests/test_model_catalog_literals_guard.py",
         "tests/test_no_rewrite_contract.py",
         "tests/test_post_processor_mutation_invariant.py",
-        "tests/test_public_tree_no_baked_host_run_root.py",
-        "tests/test_pytest_plugins_not_test_modules.py",
         "tests/test_repo_wide_marker_invariant.py",
         "tests/test_session_identity_env_isolation.py",
-        "tests/test_session_state_retired.py",
         "tests/test_sparse_collection_guard.py",
         "tests/test_source_ingest_entrypoints.py",
         "tests/test_subprocess_timeout_guard.py",
@@ -127,80 +104,33 @@ KNOWN_REPO_WIDE_MODULES = frozenset(
 # the function (or its class) only.
 KNOWN_REPO_WIDE_FUNCTIONS = (
     "tests/agent_runtime/test_agy_spawn_inventory.py::test_every_agy_start_has_a_current_inventory_row",
-    "tests/review/test_model_catalog.py::test_frozen_artifacts_are_pinned_independently_of_manifest",
     "tests/test_github_client_lint.py::test_scripts_have_one_github_client",
-    "tests/agent_runtime/test_attempt_safe_read.py::test_scripts_only_import_does_not_load_isolation",
-    "tests/agent_runtime/test_acpx_claude_host_executable.py::test_tracked_launcher_is_executable_in_git",
-    "tests/agent_runtime/test_claude_no_background.py::test_claude_code_harness_denominator_is_complete",
     "tests/agent_runtime/test_claude_permissions.py::test_tracked_hooks_work_in_fresh_clone_without_deployed_claude",
-    "tests/agent_runtime/test_npm_shim.py::test_shim_files_are_regular_executables",
-    "tests/api/test_app_factory.py::test_db_access_patterns_have_the_step_two_allowlist",
-    "tests/audit/test_post_build_review.py::test_prompt_versions_match_track_policy",
     "tests/audit/test_track_deterministic_audit.py::test_config_consumer_file_launches_without_pythonpath",
-    "tests/build/test_fresh_page_safety.py::test_ci_runs_site_toolchain_tests_in_required_frontend_job",
     "tests/build/test_fresh_plan_review.py::test_every_plan_manifest_of_record_in_the_repository_still_validates",
-    "tests/build/test_fresh_style_cards.py::test_the_three_bands_and_nothing_else",
     "tests/common/test_jsonl_splitlines_guard.py::test_scripts_structured_readers_do_not_use_str_splitlines",
     "tests/curriculum/evidence/test_lessons_lock.py::test_committed_lesson_lock_is_fresh",
     "tests/packaging/test_systemd_templates.py::test_data_volume_dropins_cover_all_services_and_preserve_commands",
     "tests/projects/open_model_data/test_k_path_literal_guard.py::test_k_path_literals_are_resolved_or_allowlisted",
-    "tests/projects/open_model_data/test_quarantine.py::test_archive_import_guard_active_code",
-    "tests/projects/open_model_data/test_quarantine.py::test_archive_lists_every_archived_python_file",
-    "tests/projects/open_model_data/test_v4_per_slot_factory.py::test_no_test_in_this_suite_asserts_nonzero_completion_behind_a_stubbed_validator",
-    "tests/review/test_integration_check.py::test_no_cyrillic_in_the_check_or_its_tests",
-    "tests/review/test_prompts.py::test_a_re_review_template_may_name_its_previous_findings_but_a_first_review_template_may_not",
     "tests/review/test_prompts.py::test_a_template_that_includes_imports_or_extends_a_file_fails_lint_and_render",
-    "tests/review/test_prompts.py::test_no_cyrillic_characters_in_templates_or_code",
-    "tests/review/test_prompts.py::test_no_e3d_placeholder_markers_are_left",
-    "tests/review/test_prompts.py::test_template_lint_refuses_an_unclosed_fence_and_a_template_that_does_not_parse",
-    "tests/review/test_prompts.py::test_template_lint_refuses_another_modules_slug_but_not_ordinary_prose",
-    "tests/review/test_prompts.py::test_template_lint_refuses_unresolved_placeholders_in_what_a_template_renders",
-    "tests/review/test_prompts.py::test_template_lint_refuses_v1_writer_and_earlier_edition_wording",
-    "tests/review/test_prompts.py::test_the_shipped_templates_pass_the_lint_and_are_all_linted",
-    "tests/review/test_prompts.py::test_the_template_prose_exemption_is_exactly_the_real_collisions_of_the_shipped_templates",
     "tests/storage/test_no_tracked_data.py::test_tracked_data_paths_are_all_allowlisted",
-    "tests/test_agent_definitions.py::test_reserved_agent_inventory",
-    "tests/test_agent_seat_onboarding_docs.py::test_live_driver_diagnostics_never_claim_again",
-    "tests/test_ci_dependency_check.py::test_ci_interpreter_pin_matches_the_warmer_and_advisory_cache",
     "tests/test_conftest_task_store_guard.py::test_task_store_consumers_use_call_time_resolver",
     "tests/test_dashboards.py::TestApiEndpoints.test_endpoints_defined_in_router",
     "tests/test_deploy_script_idempotency.py::test_claude_deploy_ships_epic_named_skills_and_keeps_epic_handoffs",
     "tests/test_deploy_script_idempotency.py::test_claude_diff_excludes_do_not_mask_shipped_source",
     "tests/test_deploy_script_idempotency.py::test_codex_skills_have_one_discovery_root_and_migrate_verified_legacy",
     "tests/test_deploy_script_idempotency.py::test_fresh_deploy_produces_synced_output",
-    "tests/test_drive_epic_skill_core.py::test_every_reference_is_linked_from_the_core",
-    "tests/test_drive_epic_skill_core.py::test_measured_behaviors_bind_once_at_their_loop_step",
-    "tests/test_drive_epic_skill_core.py::test_reduced_packet_keeps_nine_behavior_denominator_and_owned_residuals",
-    "tests/test_drive_epic_skill_core.py::test_section_citations_used_by_scripts_still_resolve",
-    "tests/test_driver_work_api_onboarding.py::test_skill_teaches_grok_bot_with_hard_exclusions",
-    "tests/test_driver_work_api_onboarding.py::test_skill_teaches_the_full_health_enum",
-    "tests/test_driver_work_api_onboarding.py::test_skill_teaches_work_api_projection_semantics",
     "tests/test_entire_capture_guard.py::test_canary_evidence_bundle_carries_no_local_absolute_paths",
-    "tests/test_headless_claude_background_controls.py::test_controls_have_a_single_source",
     "tests/test_headless_claude_background_controls.py::test_every_spawn_in_a_claude_referencing_module_is_a_wrapper_or_a_reviewed_exception",
     "tests/test_headless_claude_background_controls.py::test_exceptions_are_live_categorised_and_justified",
     "tests/test_headless_claude_background_controls.py::test_shell_launchers_are_proven_by_a_runner_test",
     "tests/test_headless_claude_background_controls.py::test_wrapper_spawns_and_known_callers_are_wired",
-    "tests/test_kimi_coding_only_admission.py::test_every_allowlisted_root_exists_in_the_repository",
     "tests/test_landings_use_levellanding.py::test_arc_landings_are_generated_pages_the_router_mounts_from_frontmatter",
-    "tests/test_launcher_contract.py::test_retired_names_are_absent_from_tracked_content",
-    "tests/test_live_driver_message_consumption.py::test_drive_epic_skill_keeps_all_required_live_inbox_boundaries",
-    "tests/test_llm_reviewer_dispatch.py::test_no_production_entrypoint_constructs_bare_bakeoff_arm",
     "tests/test_manifest_io.py::test_lexicon_scripts_do_not_open_manifest_inplace",
-    "tests/test_no_hardcoded_venv_interpreter.py::test_no_executing_hardcoded_venv_interpreter",
     "tests/test_ohoiko_source_inventory_scope.py::test_ohoiko_abetka_inventory_covers_all_committed_key_words",
-    "tests/test_operator_contract_wiring.py::test_epic_driver_and_v2_template_keep_prompt_adequacy_gate",
-    "tests/test_prompt_template_render.py::test_phase_template_renders_without_unknown_tokens",
     "tests/test_review_reviewer_resolver.py::test_resolve_reviewer_classifies_every_adapter_and_reviewer_hook",
     "tests/test_readonly_source_db_connects.py::test_repo_has_no_unallowlisted_writable_source_db_connect",
     "tests/test_schema_validation.py::TestPlanYamlSchemaCheck.test_a2_plans_match_module_schema",
-    "tests/test_secret_redactor_urls.py::test_ordinary_repository_corpus_is_unchanged_by_url_pass",
-    "tests/test_session_streams.py::test_backslash_tracked_paths_add_no_hostname_rejections",
-    "tests/test_session_streams.py::test_collision_exceptions_are_exact_tracked_repository_names",
-    "tests/test_session_streams.py::test_embedded_host_filter_accepts_every_tracked_basename",
-    "tests/test_session_streams.py::test_embedded_host_exemptions_are_required_by_tracked_basenames",
-    "tests/test_skill_instruction_routes.py::test_split_skill_references_are_reachable_from_their_entrypoint",
-    "tests/test_skill_instruction_routes.py::test_task_scope_selector_keeps_canonical_sources_and_phase_gates_reachable",
     "tests/test_sources_db_hardening.py::test_shared_sqlite_connections_route_through_open_readonly",
     "tests/test_storage_classification_table.py::test_frozen_rows_and_git_index_totals",
     "tests/test_red_team_consumer_trace.py::test_every_marker_or_status_consumer_has_a_fixed_handling_row",
@@ -210,29 +140,10 @@ KNOWN_REPO_WIDE_FUNCTIONS = (
 # actually repo-wide. Each entry needs a concrete reason; the registry is kept
 # fresh by ``test_not_repo_wide_entries_are_justified``.
 NOT_REPO_WIDE = {
-    "tests/review/test_prompts.py::test_isolated_prompt_bytes_equal_main_before_9464": (
-        "Globs only tests/review/fixtures/isolated-main-prompts/*.md.j2, not a repository "
-        "tree. Fixture files are not test modules, so changes force the full tier; "
-        "changes to the test module select it directly, and prompt renderer changes "
-        "select it through its imports."
-    ),
     "tests/test_ci_split.py::test_planned_shard_collects_build_tests_through_directory": (
         "Runs `git ls-files -- tests` to plan the CI shards and a pytest --collect-only "
         "over one shard's allowlist; it checks the split and the conftest allowlist hook, "
         "not a repository invariant."
-    ),
-    "tests/test_fleet_comms_launcher_awareness.py::test_no_launcher_starts_an_acp_process_at_cold_start": (
-        "Reads only scripts/lib/launcher_core.sh plus the repository root's start-*.sh. "
-        "A root-level addition is never a test/script candidate, and scripts/lib changes "
-        "have no stem-mapped test, so both force the full tier."
-    ),
-    "tests/test_launcher_contract.py::test_root_launcher_allowlist_is_exact": (
-        "Globs only the repository root's start-*.sh; a root-level file change is not a "
-        "test/script candidate and forces the full tier."
-    ),
-    "tests/test_start_cursor_launcher.py::test_cursor_seat_enumerated_in_launcher_core_and_public_estate": (
-        "Globs only the repository root's start-*-driver.sh; a root-level file change is "
-        "not a test/script candidate and forces the full tier."
     ),
     "tests/test_landings_use_levellanding.py::test_content_collection_loads_track_index_mdx_files": (
         "Reads the site/src/content/docs content tree (DOCS_ROOT) as a content reader, "
@@ -279,14 +190,8 @@ NOT_REPO_WIDE = {
         "Runs `git ls-files --stage` on one registry receipt to assert mode 100644. "
         "That path is a single tracked file, not a repository tree scan."
     ),
-    "tests/test_ci_pr_triggers.py::test_no_workflow_reruns_ci_on_a_label": (
-        "Scans .github/workflows; .github/ is on the shared-root denylist, so any change already forces the full tier."
-    ),
     "tests/test_ci_pr_triggers.py::test_exactly_one_ci_gate_job_across_workflows": (
         "Scans .github/workflows; .github/ is on the shared-root denylist, so any change already forces the full tier."
-    ),
-    "tests/test_dashboards.py::TestDashboardInventory.test_expected_dashboards_exist": (
-        "Scans dashboards/; dashboards/ is not a test or script candidate, so any change already forces the full tier."
     ),
     "tests/test_dashboards.py::TestApiEndpoints.test_fetch_calls_in_html": (
         "Scans dashboards/; dashboards/ is not a test or script candidate, so any change already forces the full tier."
@@ -295,56 +200,9 @@ NOT_REPO_WIDE = {
         "Scans tests/fixtures/qg_bakeoff; fixture files are not test modules, so any change "
         "already forces the full tier."
     ),
-    "tests/test_monitor_route_contracts.py::test_every_dashboard_html_file_has_page_contract": (
-        "Scans dashboards/; dashboards/ is not a test or script candidate, so any change already forces the full tier."
-    ),
-    "tests/test_monitor_ui_contracts.py::test_all_playground_pages_use_single_monitor_shell": (
-        "Scans dashboards/*.html; dashboards/ changes already force the full tier, and the "
-        "module also carries reads_content."
-    ),
     "tests/test_ohoiko_source_inventory_scope.py::test_ohoiko_abetka_inventory_has_review_decisions_for_all_rows": (
         "Scans data/lexicon/source-inventory-review-decisions; data/ changes already force "
         "the full tier, and the module also carries reads_content."
-    ),
-    "tests/test_open_model_phase3_historical_protection_channels.py::test_absent_oes_and_church_slavonic_artifacts_remain_blocked": (
-        "Scans data/projects/open_model_data for named artifacts (metadata-only existence "
-        "check, not a content read); data/ is not a test or script candidate, so any change "
-        "already forces the full tier."
-    ),
-    "tests/test_site_links.py::TestMdxFiles.test_no_old_module_nn_files": (
-        "Reads the site/src/content/docs content tree as a content reader; the module "
-        "carries reads_content and the content lane runs it."
-    ),
-    "tests/test_ulif_dictua.py::test_fixture_cells_keep_each_attested_preposition_out_of_the_form": (
-        "Scans tests/fixtures/ulif_dictua; fixture files are not test modules, so any change "
-        "already forces the full tier."
-    ),
-    "tests/build/test_fresh_writer.py::test_nothing_typed_no_cyrillic_in_engine_code": (
-        "Scans the writer engine under scripts/build/fresh; scripts/build/ is on the "
-        "shared-root denylist, so any change already forces the full tier."
-    ),
-    "tests/build/test_fresh_writer.py::test_r11_forbidden_paths_grep": (
-        "Scans the writer engine under scripts/build/fresh; scripts/build/ is on the "
-        "shared-root denylist, so any change already forces the full tier."
-    ),
-    "tests/test_dispatch_xdist_cap.py::test_ci_workflows_do_not_set_the_dispatch_marker": (
-        "Scans .github/workflows; .github/ is on the shared-root denylist, so any change already forces the full tier."
-    ),
-    "tests/test_site_links.py::TestInternalLinks.test_no_broken_cross_references": (
-        "Reads the site/src/content/docs content tree through a per-track variable; that "
-        "tree is content-class, so the content lane runs the module via reads_content."
-    ),
-    "tests/test_site_links.py::TestMdxFiles.test_all_mdx_have_frontmatter": (
-        "Reads the site/src/content/docs content tree through a per-track variable; that "
-        "tree is content-class, so the content lane runs the module via reads_content."
-    ),
-    "tests/test_site_links.py::TestMdxFiles.test_all_mdx_have_title": (
-        "Reads the site/src/content/docs content tree through a per-track variable; that "
-        "tree is content-class, so the content lane runs the module via reads_content."
-    ),
-    "tests/test_site_links.py::TestModuleCounts.test_minimum_module_count": (
-        "Reads the site/src/content/docs content tree through a per-track variable; that "
-        "tree is content-class, so the content lane runs the module via reads_content."
     ),
     "tests/test_source_inventory_intake.py::test_committed_source_inventory_files_are_valid": (
         "Scans data/lexicon/source-inventory; data/ is not a test or script candidate, so "
@@ -376,26 +234,20 @@ NOT_REPO_WIDE.update(
             "helper's whole-tree branch is not taken by this test."
         )
         for name in (
-            "test_deploy_preflight_preserves_declared_glob_and_trailing_slash_subtrees",
             "test_codex_legacy_migration_preserves_modified_content",
             "test_agent_manifest_rejects_symlinked_intermediate_component",
             "test_gemini_shared_skill_overlay_is_checked_without_deleting_provider_skills",
             "test_agent_manifest_reaps_retired_hook_without_touching_agent_state",
             "test_agent_manifest_unlinks_symlink_leaf_without_following_target",
-            "test_agent_manifest_reaps_legitimate_nested_file",
             "test_codex_legacy_migration_recognizes_committed_source_before_edits",
             "test_codex_legacy_python_cache_does_not_block_driver_deployment",
             "test_agent_transient_briefs_are_preserved",
             "test_gemini_shared_skill_name_collision_fails_closed",
-            "test_agent_source_managed_subtrees_propagate_deletions_without_wiping_runtime",
             "test_tracked_mirror_drift_is_detected_before_deploy",
-            "test_second_deploy_is_noop_for_codex_target",
             "test_gemini_shared_skill_exclusion_does_not_mask_root_drift",
             "test_tracked_mirror_resolves_each_deploy_source",
             "test_claude_epic_dirs_are_preserved",
             "test_driver_runtime_state_is_preserved",
-            "test_tracked_agents_skill_declared_orphan_is_skipped",
-            "test_tracked_claude_glob_orphan_is_skipped",
             "test_codex_orphan_prefix_siblings_abort_deploy_and_preserve_user_content",
             "test_drift_is_caught",
             "test_agent_manifest_keeps_lexically_unsafe_entries_rejected",
@@ -407,7 +259,6 @@ NOT_REPO_WIDE.update(
             "test_codex_legacy_migration_requires_provenance_and_preserves_unsafe_content",
             "test_codex_retained_capture_survives_full_redeploy_with_late_writes",
             "test_bytecode_cache_is_not_an_orphan_and_is_not_declared",
-            "test_pyc_named_symlink_is_deployed",
         )
     }
 )
