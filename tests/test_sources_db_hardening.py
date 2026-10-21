@@ -9,8 +9,11 @@ stops a new shared connection from bypassing it.
 from __future__ import annotations
 
 import ast
+import os
 import sqlite3
 import threading
+from collections.abc import Iterator
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 import pytest
@@ -29,7 +32,10 @@ ALLOWED_SHARED_CONNECTS: dict[tuple[str, str], str] = {
     ("scripts/rag/wiki_cache.py", "WikiCache.__init__"): "writable response cache",
     (".mcp/servers/sources/server.py", "_discard_sources_conn"): ":memory: stand-in that fails every query",
     ("scripts/lib/readonly_sqlite.py", "open_readonly"): "the hardened opener itself (sets cached_statements=0)",
-    ("scripts/api/resilience.py", "connect_sqlite"): "pass-through wrapper; no caller shares a connection or opens sources.db",
+    (
+        "scripts/api/resilience.py",
+        "connect_sqlite",
+    ): "pass-through wrapper; no caller shares a connection or opens sources.db",
     ("scripts/control_plane/storage.py", "_connect_postgres"): "psycopg connect, not sqlite",
     ("scripts/control_plane/storage.py", "connect"): "control-plane stores; callers pass no check_same_thread",
 }
@@ -218,6 +224,162 @@ def small_db(tmp_path: Path) -> Path:
     finally:
         conn.close()
     return path
+
+
+@pytest.fixture
+def cached_db(small_db: Path, monkeypatch: pytest.MonkeyPatch) -> Iterator[Path]:
+    monkeypatch.setattr(sources_db, "SOURCES_DB_PATH", small_db)
+    monkeypatch.setattr(sources_db, "_conn", None)
+    monkeypatch.setattr(sources_db, "_conn_state", None)
+    yield small_db
+    if sources_db._conn is not None:
+        sources_db._conn.close()
+
+
+@pytest.mark.parametrize("changed", ["inode", "mtime"])
+def test_cached_reader_reopens_on_file_identity_change(
+    cached_db: Path, changed: str, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    held = sources_db._get_conn()
+    assert held.execute("SELECT v FROM t WHERE id = 0").fetchone()[0] == "v0"
+    before = cached_db.stat()
+    if changed == "inode":
+        replacement = cached_db.with_name("replacement.db")
+        with sqlite3.connect(replacement) as writer:
+            writer.execute("CREATE TABLE t (id INTEGER PRIMARY KEY, v TEXT)")
+            writer.execute("INSERT INTO t VALUES (0, 'replacement')")
+        os.utime(replacement, ns=(before.st_atime_ns, before.st_mtime_ns))
+        replacement.replace(cached_db)
+        assert cached_db.stat().st_ino != before.st_ino
+        assert cached_db.stat().st_mtime_ns == before.st_mtime_ns
+        expected = "replacement"
+    else:
+        os.utime(cached_db, ns=(before.st_atime_ns, before.st_mtime_ns + 1_000_000_000))
+        assert cached_db.stat().st_ino == before.st_ino
+        expected = "v0"
+    cached_db.chmod(0o444)
+    opened: list[str] = []
+    real = sqlite3.connect
+
+    def spy(database, **kwargs):
+        opened.append(database)
+        assert kwargs["uri"] is True
+        return real(database, **kwargs)
+
+    monkeypatch.setattr(sqlite3, "connect", spy)
+    try:
+        fresh = sources_db._get_conn()
+        assert fresh is not held
+        assert fresh.execute("SELECT v FROM t WHERE id = 0").fetchone()[0] == expected
+        with pytest.raises(sqlite3.OperationalError, match="readonly"):
+            fresh.execute("INSERT INTO t VALUES (999, 'mutation')")
+        assert sources_db._get_conn() is fresh
+        assert opened == [cached_db.as_uri() + "?mode=ro"]
+        assert held.execute("SELECT v FROM t WHERE id = 0").fetchone()[0] == "v0"
+    finally:
+        held.close()
+
+
+def test_unchanged_cached_reader_does_not_reopen(cached_db: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    opened: list[tuple[str, dict]] = []
+    real = sqlite3.connect
+
+    def spy(database, **kwargs):
+        opened.append((database, kwargs))
+        return real(database, **kwargs)
+
+    monkeypatch.setattr(sqlite3, "connect", spy)
+    held = sources_db._get_conn()
+    for _ in range(5):
+        assert sources_db._get_conn() is held
+        assert held.execute("SELECT COUNT(*) FROM t").fetchone()[0] == 50
+    assert len(opened) == 1
+    assert opened[0][0] == cached_db.as_uri() + "?mode=ro"
+    assert opened[0][1]["uri"] is True
+
+
+def test_concurrent_cache_misses_open_only_one_reader(cached_db: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    opened: list[sqlite3.Connection] = []
+    real = sources_db._open_conn
+    ready = threading.Barrier(4)
+
+    def spy(path, *, read_only=False):
+        conn = real(path, read_only=read_only)
+        opened.append(conn)
+        return conn
+
+    def read():
+        ready.wait(timeout=5)
+        return sources_db._get_conn()
+
+    monkeypatch.setattr(sources_db, "_open_conn", spy)
+    with ThreadPoolExecutor(max_workers=4) as pool:
+        readers = list(pool.map(lambda _: read(), range(4)))
+    assert len(opened) == 1
+    assert all(reader is opened[0] for reader in readers)
+    assert readers[0].execute("SELECT COUNT(*) FROM t").fetchone()[0] == 50
+
+
+def test_request_connection_override_survives_missing_cached_file(cached_db: Path) -> None:
+    held = sources_db._get_conn()
+    with sources_db.using_connection(held):
+        sources_db.SOURCES_DB_PATH = cached_db.with_name("missing.db")
+        assert sources_db._get_conn() is held
+        assert held.execute("SELECT COUNT(*) FROM t").fetchone()[0] == 50
+
+
+def test_failed_reopen_preserves_cache_until_retry(cached_db: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    held = sources_db._get_conn()
+    before = cached_db.stat()
+    os.utime(cached_db, ns=(before.st_atime_ns, before.st_mtime_ns + 1_000_000_000))
+
+    with monkeypatch.context() as patch:
+
+        def fail_open(*args, **kwargs):
+            raise sqlite3.OperationalError("unable to open database file")
+
+        patch.setattr(sources_db, "_open_conn", fail_open)
+        with pytest.raises(sqlite3.OperationalError, match="unable to open database file"):
+            sources_db._get_conn()
+        assert sources_db._conn is held
+        assert held.execute("SELECT COUNT(*) FROM t").fetchone()[0] == 50
+
+    try:
+        fresh = sources_db._get_conn()
+        assert fresh is not held
+        assert fresh.execute("SELECT COUNT(*) FROM t").fetchone()[0] == 50
+    finally:
+        held.close()
+
+
+def test_self_healer_cache_swap_does_not_trigger_a_duplicate_open(
+    cached_db: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    held = sources_db._get_conn()
+    before = cached_db.stat()
+    os.utime(cached_db, ns=(before.st_atime_ns, before.st_mtime_ns + 1_000_000_000))
+    healed = sources_db._open_conn(cached_db, read_only=True)
+    monkeypatch.setattr(sources_db, "_conn", healed)
+
+    def unexpected_open(*args, **kwargs):
+        pytest.fail("The self-healer already opened the current file")
+
+    monkeypatch.setattr(sources_db, "_open_conn", unexpected_open)
+    try:
+        assert sources_db._get_conn() is healed
+        assert sources_db._get_conn() is healed
+        assert healed.execute("SELECT COUNT(*) FROM t").fetchone()[0] == 50
+        assert held.execute("SELECT COUNT(*) FROM t").fetchone()[0] == 50
+    finally:
+        held.close()
+
+
+def test_missing_file_keeps_existing_reader_available(cached_db: Path) -> None:
+    held = sources_db._get_conn()
+    cached_db.rename(cached_db.with_name("moved.db"))
+    assert sources_db._get_conn() is held
+    assert held.execute("SELECT COUNT(*) FROM t").fetchone()[0] == 50
+    assert not cached_db.exists()
 
 
 def test_open_conn_read_only_disables_statement_cache(small_db: Path, monkeypatch: pytest.MonkeyPatch) -> None:
