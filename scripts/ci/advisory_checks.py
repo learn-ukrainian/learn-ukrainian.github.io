@@ -4,6 +4,10 @@ CI Gate's ``needs`` includes scheduling-only jobs. Its scored set is the
 ``needs.<job>.result`` references in the gate, plus those jobs' dependencies.
 An ordinary gate without ``always()`` also depends on every scheduling result.
 Unsupported expressions or matrix shapes fail closed rather than guessing names.
+
+External checks are not ci.yml jobs. Only an operator-decision entry below can
+make one advisory, and only for check runs proven to come from that exact
+GitHub App on the exact head; the display name alone grants nothing.
 """
 
 from __future__ import annotations
@@ -180,3 +184,39 @@ def is_advisory(name: str, *, workflow: str | None = None, policy: AdvisoryCheck
     """Exact name and workflow match only; missing workflow identity blocks."""
     policy = policy if policy is not None else load_advisory_checks()
     return name in policy.names and workflow is not None and workflow == policy.workflow
+
+
+@dataclass(frozen=True)
+class ExternalAdvisoryCheck:
+    """A third-party check run the operator switched off, keyed by its GitHub App."""
+
+    name: str
+    app_id: int
+    app_slug: str
+    decision: str
+
+
+# Operator decision OO-48 (#11184): the Entire integration is switched off until it is
+# reintroduced, so its "Entire Gates" check is informational in every state. Reintroducing
+# the integration means deleting this entry; no other check shares the exemption.
+OO48_ENTIRE_GATES = ExternalAdvisoryCheck(name="Entire Gates", app_id=2626939, app_slug="entire", decision="OO-48")
+EXTERNAL_ADVISORY_CHECKS: tuple[ExternalAdvisoryCheck, ...] = (OO48_ENTIRE_GATES,)
+
+
+def external_advisory_check(name: object) -> ExternalAdvisoryCheck | None:
+    """The operator entry for an exact check name, which still needs provenance proof."""
+    return next((entry for entry in EXTERNAL_ADVISORY_CHECKS if entry.name == name), None)
+
+
+def is_external_advisory_run(entry: ExternalAdvisoryCheck, run: object, head: str) -> bool:
+    """Whether a REST check run is ``entry``'s exact name, exact head and exact GitHub App."""
+    if not isinstance(run, dict) or not isinstance(run.get("app"), dict):
+        return False
+    app_id = run["app"].get("id")
+    return (
+        run.get("name") == entry.name
+        and run.get("head_sha") == head
+        and type(app_id) is int
+        and app_id == entry.app_id
+        and run["app"].get("slug") == entry.app_slug
+    )
