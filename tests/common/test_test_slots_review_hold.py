@@ -863,3 +863,104 @@ def test_a_turn_whose_slots_changed_hands_while_it_joined_gets_nothing_and_keeps
     joined = test_slots.join_inherited(env, wait_s=0.3)  # nothing of the refused join is still held
     assert joined is not None
     joined.release()
+
+
+def _slot_free(pool: Path, index: int) -> bool:
+    """Whether no process holds slot ``index``'s file in any mode."""
+    fd = os.open(test_slots._slot_path(pool, index), os.O_RDONLY)
+    try:
+        fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except BlockingIOError:
+        return False
+    finally:
+        os.close(fd)
+    return True
+
+
+@pytest.mark.parametrize("kind", ["launcher", "pytest", "review"])
+def test_an_xdist_worker_keeps_the_slots_after_the_run_that_issued_them_ends(pool: Path, kind: str) -> None:
+    """A worker's join holds every slot shared, so they stay taken until the worker lets go; a stale one gets none."""
+    hold = test_slots.acquire(2, kind=kind, task_id=TASK)
+    turn = None
+    try:
+        env = _marked(hold)
+        if kind == "review":
+            assert test_slots.join_as_worker(env) is None  # no turn token: a worker never waits for or takes a turn
+            turn = test_slots.join_inherited(env)
+            assert turn is not None
+            env = {**env, **turn.environment()}
+        worker = test_slots.join_as_worker(env)
+        assert worker is not None and worker.count == 2
+    finally:
+        if turn is not None:
+            turn.release()
+        hold.release()
+    assert [index for index in range(2) if _slot_free(pool, index)] == []
+    assert test_slots.join_as_worker(env) is None  # the issuing hold has ended: nothing new to join
+    worker.release()
+    assert [index for index in range(2) if not _slot_free(pool, index)] == []
+
+
+def test_a_worker_whose_hold_changed_hands_while_it_joined_gets_nothing_and_keeps_nothing(
+    monkeypatch: pytest.MonkeyPatch, pool: Path
+) -> None:
+    """A successor holds its slots shared too, so only the re-check after sharing tells the worker its hold ended."""
+    hold = test_slots.acquire(2, kind="launcher", task_id=TASK)
+    env = _marked(hold)
+    real_share_slots = test_slots._share_slots
+    successors: list[test_slots.Hold] = []
+
+    def changing_hands(found: object, descriptors: list[int]) -> bool:
+        hold.release()  # the controller's hold ends after the worker checked it, and another run takes the slots
+        successors.append(test_slots.acquire(2, kind="pytest", task_id=TASK))
+        return real_share_slots(found, descriptors)
+
+    monkeypatch.setattr(test_slots, "_share_slots", changing_hands)
+    try:
+        assert test_slots.join_as_worker(env) is None
+    finally:
+        hold.release()
+        for successor in successors:
+            successor.release()
+    assert len(successors) == 1
+    assert [index for index in range(2) if not _slot_free(pool, index)] == []
+
+
+@pytest.mark.parametrize("failing", [1, 2])
+@pytest.mark.parametrize("joining", ["turn", "nested", "xdist-worker"])
+def test_a_slot_that_cannot_be_opened_while_joining_keeps_no_slot_held(
+    monkeypatch: pytest.MonkeyPatch, pool: Path, failing: int, joining: str
+) -> None:
+    """An open failure on a later slot refuses the join, typed, and the slots it opened before stay unheld."""
+    monkeypatch.setenv(test_slots.COUNT_ENV, "3")
+    hold = test_slots.acquire(3, kind="review", task_id=TASK)
+    turn = None
+    try:
+        env = _marked(hold)
+        if joining != "turn":  # a run of the turn, or a worker it started, presents the turn's token
+            turn = test_slots.join_inherited(env)
+            assert turn is not None
+            env = {**env, **turn.environment()}
+        unopenable = test_slots._slot_path(pool, failing).name
+        real_open = os.open
+
+        def opening(path: object, flags: int, *args: object, **kwargs: object) -> int:
+            # Only the join's own open of the slot fails; the marker's ownership check reads it first and must pass.
+            if Path(os.fspath(path)).name == unopenable and sys._getframe(1).f_code.co_name == "_share":
+                raise OSError(errno.EIO, "injected open failure")
+            return real_open(path, flags, *args, **kwargs)
+
+        with monkeypatch.context() as patched:
+            patched.setattr(test_slots.os, "open", opening)
+            with pytest.raises(test_slots.SlotError) as refused:
+                if joining == "xdist-worker":
+                    test_slots.join_as_worker(env)
+                else:
+                    test_slots.join_inherited(env, wait_s=0.3)
+        assert refused.value.reason == "pool_unavailable"
+    finally:
+        if turn is not None:
+            turn.release()
+        hold.release()
+    shared_lock_retained_after_refusal = [index for index in range(3) if not _slot_free(pool, index)]
+    assert shared_lock_retained_after_refusal == []

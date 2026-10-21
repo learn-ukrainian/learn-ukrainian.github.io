@@ -33,6 +33,10 @@ that copies or guesses the value is refused (``session_unverified``). Every run 
 slot files and its turn file shared, so slots stay taken, and no next turn starts, until the last of those runs
 ends, even when the worker that issued the hold ends or is killed first.
 
+Every hold keeps its slot files locked shared once issued. xdist starts a governed run's workers with their inherited
+descriptors closed, so each worker joins the hold itself (:func:`join_as_worker`) and keeps its slots taken until
+the worker exits, even when the run that started it is killed first.
+
 Environment:
   LU_TEST_SLOTS         on or off. Default on, except where ``CI`` is true, so CI runs are unchanged.
   LU_TEST_SLOTS_COUNT   pool size. Default: half the CPU count, rounded down, and at least 2.
@@ -481,7 +485,8 @@ def _slot_path(pool: Path, index: int) -> Path:
 def _take_slots(pool: Path, count: int, size: int) -> list[tuple[int, int]] | None:
     """Lock ``count`` free slot files, or none at all.
 
-    A slot is free only when no process holds its file in any mode: the runs of a review turn hold it shared.
+    A slot is free only when no process holds its file in any mode: holds, the runs of a review turn and xdist
+    workers hold it shared.
     """
     taken: list[tuple[int, int]] = []
     try:
@@ -674,9 +679,10 @@ def _hold(
     """Publish the holder record and leave the queue while the queue decision is still serialized.
 
     The record carries a nonce minted here, never an inherited value, and each slot file names the ticket and that
-    nonce: the pool's own record of who holds the slot, which a marker must match. A ``review`` hold also gets its
-    session and turn files (created exclusive, mode 0600) and holds its slots shared, so the runs of its turns can
-    hold them too and keep them taken after this process ends.
+    nonce: the pool's own record of who holds the slot, which a marker must match. Every hold then keeps its slots
+    shared, so the runs of a review's turns and the xdist workers of any run inside it can hold them too and keep
+    them taken after this process ends. A ``review`` hold also gets its session and turn files (created exclusive,
+    mode 0600).
     """
     waited = time.monotonic() - started
     nonce = secrets.token_hex(NONCE_BYTES)
@@ -706,9 +712,8 @@ def _hold(
         for path in companions:  # created before any marker names the hold, so every run joining it finds them
             os.close(os.open(path, os.O_CREAT | os.O_EXCL | os.O_WRONLY | os.O_NOFOLLOW, 0o600))
             created.append(path)
-        if review:  # still inside the pool mutex: no other run takes a slot between the two modes
-            for fd in descriptors:
-                fcntl.flock(fd, fcntl.LOCK_SH | fcntl.LOCK_NB)
+        for fd in descriptors:  # still inside the pool mutex: no other run takes a slot between the two modes
+            fcntl.flock(fd, fcntl.LOCK_SH | fcntl.LOCK_NB)
     except BaseException:
         for path in created:
             with contextlib.suppress(OSError):
@@ -852,8 +857,8 @@ def join_inherited(
 
     A ``review`` hold serves every test run of one sandboxed review, so its runs take turns. A run without
     :data:`SESSION_ENV` waits, up to ``wait_s`` (default :data:`WAIT_ENV`), for the hold's session lock and then
-    for every run of the previous turn to end, and holds the turn until it ends. Its descendants (xdist workers
-    aside, which take no slots; a pytest a test starts; a run the launcher execs) receive :data:`SESSION_ENV`, a
+    for every run of the previous turn to end, and holds the turn until it ends. Its descendants (xdist workers,
+    through :func:`join_as_worker`; a pytest a test starts; a run the launcher execs) receive :data:`SESSION_ENV`, a
     token naming the turn's process, its start time and the descriptor holding the session lock, and join that turn
     without waiting once the kernel confirms the named process is this run or one of its ancestors and holds the
     lock through that descriptor. Every run of a turn holds the hold's slot files and its turn file shared until it
@@ -889,12 +894,11 @@ def join_inherited(
             descriptors.append(session_fd)
             descriptors.append(_wait_for_turn(turn, started + limit, limit, report))
             token = f"{os.getpid()}:{_start_ticks(os.getpid())}:{session_fd}"
-        slot_fds = [_share(_slot_path(found.record.parent.parent, index)) for index in found.slots]
-        descriptors.extend(fd for fd in slot_fds if fd is not None)
+        shared = _share_slots(found, descriptors)
         if env.get(SESSION_ENV):  # the turn this run proved is still the one whose files it now holds
             _verify_turn_token(token, session)
-        # A slot another run holds alone has changed hands, so the holder ended while this run waited or joined.
-        if None in slot_fds or _live_holder(env) is None:
+        # The hold ended while this run waited or joined when a slot is held alone or no longer names it.
+        if not shared or _live_holder(env) is None:
             for fd in descriptors:
                 os.close(fd)
             return None
@@ -910,6 +914,59 @@ def join_inherited(
         queue_position=0,
         descriptors=tuple(descriptors),
         session_environment={SESSION_ENV: token},
+    )
+
+
+def _share_slots(found: _Marked, descriptors: list[int]) -> bool:
+    """Hold every slot ``found`` claims shared; ``False`` when a run holds one alone, so the hold has ended.
+
+    Each descriptor joins ``descriptors`` as soon as it is open, so the caller's cleanup closes it whatever fails
+    next: an open failure on a later slot never leaves an earlier one held.
+    """
+    pool = found.record.parent.parent
+    for index in found.slots:
+        fd = _share(_slot_path(pool, index))
+        if fd is None:
+            return False
+        descriptors.append(fd)
+    return True
+
+
+def join_as_worker(environ: Mapping[str, str] | None = None) -> Hold | None:
+    """Hold the slots of the run that started this xdist worker until the worker ends, or ``None``.
+
+    xdist starts its workers with every inherited descriptor closed, so a worker holds nothing of its controller's
+    hold. A worker that joins keeps the slots taken while it runs tests, even when its controller ends or is killed
+    first, and no other run takes them or starts the review's next turn until the last worker exits. A worker
+    queues for nothing and takes no turn: it joins the hold :data:`HOLDER_ENV` names, checked as
+    :func:`_live_holder` checks it, and for a ``review`` hold the turn its controller holds, proved through
+    :data:`SESSION_ENV` as :func:`join_inherited` proves a nested run. ``None`` when no live hold or turn names
+    this worker. Raises :class:`SlotError` when the hold's files are unusable; nothing stays held then.
+    """
+    env = os.environ if environ is None else environ
+    found = _live_holder(env)
+    if found is None:
+        return None
+    if found.kind == "review":
+        # A worker presents its controller's turn token: it joins that turn or nothing, and never waits for one.
+        return join_inherited(env, wait_s=0.0) if env.get(SESSION_ENV) else None
+    descriptors: list[int] = []
+    try:
+        if not _share_slots(found, descriptors) or _live_holder(env) is None:
+            for fd in descriptors:
+                os.close(fd)
+            return None
+    except BaseException:
+        for fd in descriptors:
+            os.close(fd)
+        raise
+    return Hold(
+        count=found.count,
+        requested=found.count,
+        pool_size=found.count,
+        waited=0.0,
+        queue_position=0,
+        descriptors=tuple(descriptors),
     )
 
 

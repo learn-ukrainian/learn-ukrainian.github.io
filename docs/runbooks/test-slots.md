@@ -95,10 +95,15 @@ The slots stay reserved while the reviewer reads. The dispatch hard timeout boun
 routes are unchanged: a Claude read-only seat has no OS sandbox and takes its own slots, and a write
 worker takes slots for each test run.
 
-Processes a reviewer test run starts without the governor (xdist workers, which take no slots, or other
-commands a test starts) are not counted on their own. They run inside their governed run's slots and end
-with it in the normal case. If their governed run is killed first, they can outlive it until they end or
-`post_task_reap` stops the task's leftover processes.
+Every hold keeps its slot files locked shared once issued. xdist starts a governed run's workers with
+their inherited descriptors closed, so each worker joins the hold itself and keeps its slots locked until
+it exits. Killing the governed run while its workers still run tests therefore frees nothing early: the
+slots stay taken, and a review's next turn waits, until the last worker exits. A worker that cannot join
+(its run's hold has already ended) runs as before and is not refused.
+
+Other commands a test starts without the governor are not counted on their own. They run inside their
+governed run's slots and end with it in the normal case. If their governed run is killed first, they can
+outlive it until they end or `post_task_reap` stops the task's leftover processes.
 
 ## Settings
 

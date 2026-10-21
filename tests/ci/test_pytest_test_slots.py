@@ -9,8 +9,10 @@ from __future__ import annotations
 import contextlib
 import json
 import os
+import signal
 import subprocess
 import sys
+import time
 from collections.abc import Callable
 from pathlib import Path
 from types import SimpleNamespace
@@ -333,6 +335,98 @@ def test_an_in_process_nested_session_restores_the_auto_worker_count(
         assert "MKL_NUM_THREADS" not in os.environ
         assert os.environ[test_slots.HOLDER_ENV] == hold.marker()
         assert test_slots.inherited_hold() == 2
+
+
+_LONG_TESTS = """\
+import os
+import time
+
+
+def _run():
+    out = os.environ["SLOT_PROBE_OUT"] + "." + os.environ["PYTEST_XDIST_WORKER"]
+    start = time.monotonic()
+    with open(out + ".start", "w", encoding="utf-8") as stream:
+        stream.write(f"{start}\\n")
+    time.sleep(float(os.environ["SLOT_TEST_SECONDS"]))
+    with open(out + ".end", "w", encoding="utf-8") as stream:
+        stream.write(f"{start} {time.monotonic()}\\n")
+
+
+def test_first():
+    _run()
+
+
+def test_second():
+    _run()
+"""
+
+# The replacement run's command: when it ran, on the host's monotonic clock, which every process shares.
+_STAMP = "import sys, time; open(sys.argv[1], 'w').write(f'{time.monotonic()}\\n')"
+
+
+def _wait_for_files(paths: list[Path], process: subprocess.Popen[str], seconds: float = 60) -> None:
+    deadline = time.monotonic() + seconds
+    while not all(path.exists() and path.read_text(encoding="utf-8").endswith("\n") for path in paths):
+        assert time.monotonic() < deadline, f"timed out waiting for {[path.name for path in paths]}"
+        assert process.poll() is None or all(path.exists() for path in paths), "the controller ended early"
+        time.sleep(0.05)
+
+
+@pytest.mark.parametrize("hold", ["review-turn", "dispatch-hold"])
+def test_slots_stay_taken_until_the_last_xdist_worker_of_a_killed_controller_exits(
+    project: Path, monkeypatch: pytest.MonkeyPatch, hold: str
+) -> None:
+    """Killing a governed pytest controller while its xdist workers run tests never frees its slots early.
+
+    Workers start with their inherited descriptors closed, so they must join the hold themselves: the slots stay
+    taken, and no replacement run starts, until the last worker has finished its test and exited.
+    """
+    monkeypatch.setenv(test_slots.COUNT_ENV, "2")
+    (project / "tests" / "test_sample.py").write_text(_LONG_TESTS, encoding="utf-8")
+    probe = project / "probe.jsonl"  # SLOT_PROBE_OUT, which each worker suffixes with its id
+    extra: dict[str, str | None] = {"SLOT_TEST_SECONDS": "4", test_slots.SESSION_ENV: None}
+    issued = test_slots.acquire(2, kind="review", environ=_env(project)) if hold == "review-turn" else None
+    if issued is not None:  # the dispatch worker's review hold; the controller below takes its turn
+        extra[test_slots.HOLDER_ENV] = issued.marker()
+    controller = subprocess.Popen(
+        _pytest(project, "-p", "xdist", "-n", "2"),
+        cwd=project,
+        env=_env(project, **extra),
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True,
+        start_new_session=True,  # its own process group, so cleanup reaches the orphaned workers
+    )
+    try:
+        _wait_for_files([Path(f"{probe}.gw0.start"), Path(f"{probe}.gw1.start")], controller)
+        if issued is not None:
+            issued.release()  # the issuing worker ends first; only the turn's runs keep the slots now
+        os.kill(controller.pid, signal.SIGKILL)
+        controller.wait(timeout=30)
+        report = test_slots.status()
+        assert (report["slots_in_use"], report["slots_draining"], report["slots_free"]) == (0, 2, 0), report
+        stamp = project / "replacement"
+        governor = [sys.executable, "-m", "scripts.common.test_slots", "run", "--slots", "2", "--"]
+        replacement = subprocess.run(
+            [*governor, sys.executable, "-c", _STAMP, str(stamp)],
+            cwd=_REPO_ROOT,
+            env=_env(project, **{test_slots.WAIT_ENV: "60", DISPATCH_TASK_ENV: None, test_slots.SESSION_ENV: None}),
+            capture_output=True,
+            text=True,
+            timeout=120,
+        )
+        assert replacement.returncode == 0, replacement.stdout + replacement.stderr
+        ends = [Path(f"{probe}.{worker}.end") for worker in ("gw0", "gw1")]
+        assert all(path.exists() for path in ends), "a worker never finished its test"
+        last_worker_end = max(float(path.read_text(encoding="utf-8").split()[1]) for path in ends)
+        assert float(stamp.read_text(encoding="utf-8")) >= last_worker_end
+    finally:
+        if issued is not None:
+            issued.release()
+        with contextlib.suppress(ProcessLookupError):
+            os.killpg(controller.pid, signal.SIGKILL)
+        if controller.poll() is None:
+            controller.wait(timeout=30)
 
 
 _REFUSED_AFTER_THE_PLUGIN = """\
