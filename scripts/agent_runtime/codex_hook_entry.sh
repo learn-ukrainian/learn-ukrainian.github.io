@@ -61,6 +61,16 @@ case "$MODE" in
     if [ "$TOOL_NAME" = "Bash" ]; then
       printf '%s' "$PAYLOAD" \
         | CLAUDE_PROJECT_DIR="$SCRIPT_ROOT" bash "$HOOKS_DIR/stamp-pytest.sh"
+      # Primary-checkout dirt audit (#11253): exit 2 hands the attribution
+      # report to the model; Codex runs PostToolUse for non-zero exits too.
+      AUDIT_HOOK="$HOOKS_DIR/audit-primary-checkout-dirt.py"
+      if [ -x "$PYTHON_BIN" ]; then
+        printf '%s' "$PAYLOAD" | "$PYTHON_BIN" "$AUDIT_HOOK"
+      else
+        printf '%s' "$PAYLOAD" | "$AUDIT_HOOK"
+      fi
+      audit_rc=$?
+      [ "$audit_rc" -eq 0 ] || exit "$audit_rc"
     fi
     ;;
 
