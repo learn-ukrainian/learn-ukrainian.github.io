@@ -1083,12 +1083,32 @@ still returns the older absolute `primary_checkout` and `worktree` fields to
 other callers. Removing those pre-existing fields is a separate infra-owned
 residual; the new capture and recovery writers convert their own copies.
 
-Recovery never recreates a worktree, backdates an observation, edits previous
-receipts or calls GitHub. Repeating recovery returns the existing verified
-receipt. Missing inputs, changed digests, wrong task/branch and unavailable or
+Recovery never recreates a worktree, backdates an observation or edits previous
+receipts. Ordinary same-carrier recovery makes no GitHub calls. Repeating recovery
+returns the existing verified receipt. Missing inputs, changed digests, wrong task/branch and unavailable or
 unrelated commits produce typed `RECOVERY_*` refusals. Reconcile with current
 GitHub authority afterward; recovery alone does not close the issue or prove
 review, CI or delivery.
+
+For a later child PR delivered by an attempt carrying an earlier lifecycle,
+add `--associate-child` to the recovery command above, pointing `--state-file`
+at the child's ledger. This explicit mode reads that ledger's PR from GitHub
+and requires `MERGED`, its exact repository-qualified URL, head and branch.
+The preserved task's `worktree_reap_proof` must independently name that child
+in `pr_number` and `pr_head_sha`, retain `pr_state: MERGED`, and contain the
+task's branch/head member. Missing proof refuses with
+`RECOVERY_MERGED_PR_UNPROVEN`; a different child PR/head/branch refuses with
+`RECOVERY_CHILD_PR_MISMATCH`; an unavailable GitHub read refuses with
+`RECOVERY_CHILD_PR_UNAVAILABLE`. Do not fill missing proof from ancestry or
+edit the author carrier to match the child.
+
+Rehearse with the copied child ledger and original evidence tree. Verify that
+one receipt contains `recovered_from_preserved.association`, naming both
+lifecycle identities, the exact task/run nonce and child PR/head. Repeat the
+command and check that the receipt ID is unchanged. Confirm that the earlier
+ledger and carrier bytes are unchanged. Alter a copied input and confirm a
+typed refusal with no append. The association supplies local observation only;
+review, CI and behavior evidence require their own verification.
 
 The merge owner closes out the exact PR as soon as GitHub reports it `MERGED`, using
 `scripts.orchestration.merge_closeout` — not the P0 reaper directly. This is the one

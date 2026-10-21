@@ -20,7 +20,9 @@ must not let an *unverifiable* merge through; a human can always run the merge d
 outside the agent harness.
 
 A red check blocks regardless of whether GitHub calls it required: "required" is a
-config accident, red is red. So EVERY check counts unless its name marks it advisory.
+config accident, red is red. So EVERY check counts unless it is a ci.yml advisory job, or an
+operator-switched-off external check proven by GitHub App identity at the PR head
+(scripts/ci/advisory_checks.py); a display name alone never exempts anything.
 `--auto` is the one verdict that consults protection, because it is the one thing
 protection actually changes.
 
@@ -107,6 +109,8 @@ try:
     from scripts.publish.merge_guard import (
         _checks_json_unsupported,
         _parse_status_rollup_rows,
+        bound_rollup_states,
+        external_check_states,
         parse_checks,
         readiness_reason,
     )
@@ -791,13 +795,15 @@ _ROLLUP_PENDING = {"IN_PROGRESS", "QUEUED", "PENDING", "WAITING", "EXPECTED", "R
 _ROLLUP_PASS = {"SUCCESS", "SKIPPED", "NEUTRAL"}
 
 
-def _check_states_from_status_rollup(
-    pr: str, repo: str | None = None, cwd: str | None = None
-) -> tuple[list[str], list[str]] | None:
-    """Fallback for the gh 2.46.0 ``pr checks --json`` compatibility gap."""
+def _status_rollup(pr: str, repo: str | None = None, cwd: str | None = None) -> dict | None:
+    """One ``headRefOid,statusCheckRollup`` read: the rollup and its own head together.
+
+    It is the gh 2.46.0 ``pr checks --json`` compatibility fallback, and the head-bound
+    collection that an external advisory exemption is judged on.
+    """
     try:
         out = subprocess.run(
-            ["gh", "pr", "view", pr, *_repo_args(repo), "--json", "statusCheckRollup"],
+            ["gh", "pr", "view", pr, *_repo_args(repo), "--json", "headRefOid,statusCheckRollup"],
             capture_output=True,
             env=_gh_env(),
             cwd=cwd,
@@ -812,13 +818,118 @@ def _check_states_from_status_rollup(
         data = json.loads(_decolorize(out.stdout or "").strip() or "{}")
     except json.JSONDecodeError:
         return None
-    if not isinstance(data, dict) or not isinstance(data.get("statusCheckRollup"), list):
+    return data if isinstance(data, dict) else None
+
+
+def _gh_api_json(endpoint: str, cwd: str | None = None) -> object:
+    """One read-only REST GET through gh, decoded, or None on any failure."""
+    try:
+        out = subprocess.run(
+            ["gh", "api", "--method", "GET", endpoint],
+            capture_output=True,
+            env=_gh_env(),
+            cwd=cwd,
+            text=True,
+            timeout=8,
+        )
+        return json.loads(_decolorize(out.stdout or "")) if out.returncode == 0 else None
+    except Exception:
         return None
-    return _parse_status_rollup_rows(data["statusCheckRollup"])
 
 
-def _check_states(pr: str, repo: str | None = None, cwd: str | None = None) -> tuple[list[str], list[str]] | None:
-    """(failing, pending) non-advisory check names, or None if undeterminable."""
+_PR_PATH = r"/([\w.-]+)/([\w.-]+)/pull/(\d+)"
+_URL_SELECTOR_RE = re.compile(r"https?://[^/?#]+/[^/?#]+/[^/?#]+/pull/([0-9]+)(?:[/?#]|$)", re.IGNORECASE)
+# Go's `int` on the 64-bit builds gh ships; strconv.Atoi refuses values outside it.
+_GO_INT_MIN, _GO_INT_MAX = -(2**63), 2**63 - 1
+
+
+def _gh_selector_number(pr: str) -> int | None:
+    """The PR number gh reads from a non-URL selector, or None when gh reads a branch.
+
+    gh's finder takes ``strconv.Atoi(strings.TrimPrefix(selector, "#"))`` as the number
+    and the selector as a branch name on any Atoi error, including ``ErrRange``: so
+    ``#+9`` is PR 9 while ``9223372036854775808`` and ``#9223372036854775808`` are
+    branches.
+    """
+    digits = pr.removeprefix("#")
+    if not re.fullmatch(r"[+-]?[0-9]+", digits):
+        return None
+    number = int(digits)
+    return number if _GO_INT_MIN <= number <= _GO_INT_MAX else None
+
+
+def _canonical_selector(pr: str) -> bool:
+    """True when gh reads ``pr`` exactly as this hook reads it.
+
+    gh reads ``#9``, ``+9``, ``#+9`` and ``0009`` as PR 9 while they look like branch
+    names here. Only a canonical decimal number, an http(s) PR URL with a canonical
+    number, or a branch name gh cannot read as a number (``+topic``, ``#topic``, an
+    out-of-range ``9223372036854775808``) is judged; git refuses branch names starting
+    with ``-``.
+    """
+    if "://" in pr:
+        url = _URL_SELECTOR_RE.match(pr)
+        return url is not None and not url.group(1).startswith("0")
+    if _gh_selector_number(pr) is not None:
+        return re.fullmatch(r"[1-9][0-9]*", pr) is not None
+    return not pr.startswith("-")
+
+
+def _repo_name(value: str) -> str | None:
+    """Lower-case ``owner/repo`` of a ``--repo`` value: [https://][github.com/]OWNER/REPO[.git]."""
+    parts = re.sub(r"^https?://", "", value.strip(), flags=re.IGNORECASE).rstrip("/").removesuffix(".git").split("/")
+    if len(parts) == 3 and parts[0].lower() in {"github.com", "www.github.com"}:
+        parts = parts[1:]
+    return "/".join(parts).lower() if len(parts) == 2 and all(parts) else None
+
+
+def _judged_repo(pr: str, repo: str | None, data: object) -> str | None:
+    """``owner/repo`` of PR metadata that is the PR this command names, else None.
+
+    An exemption trusts the metadata's head, so its own number and URL, and the command's
+    number, URL and ``--repo`` selectors, must all name the same PR first. A branch
+    selector names no number; the metadata must still agree with itself and ``--repo``.
+    """
+    url = data.get("url") if isinstance(data, dict) else None
+    own = re.fullmatch(r"https://github\.com" + _PR_PATH, url) if isinstance(url, str) else None
+    number = _canonical_pr_number(data.get("number")) if isinstance(data, dict) else None
+    if own is None or number is None or int(own.group(3)) != int(number) or not _canonical_selector(pr):
+        return None
+    owner_repo = f"{own.group(1)}/{own.group(2)}"
+    numeric = None if "://" in pr else _gh_selector_number(pr)
+    selected = re.match(r"https?://(?:www\.)?github\.com" + _PR_PATH + r"(?:[/?#]|$)", pr, flags=re.IGNORECASE)
+    if (
+        (numeric is not None and numeric != int(number))
+        or ("://" in pr and (selected is None or int(selected.group(3)) != int(number)))
+        or (selected is not None and f"{selected.group(1)}/{selected.group(2)}".lower() != owner_repo.lower())
+        or (repo is not None and _repo_name(repo) != owner_repo.lower())
+    ):
+        return None
+    return owner_repo
+
+
+def _bound_states(pr: str, repo: str | None, cwd: str | None, meta, bound: dict | None):
+    """Judge the head-bound rollup at the head of the PR metadata being judged."""
+    data = meta() if meta is not None else _pr_meta(pr, repo, cwd)
+    owner_repo = _judged_repo(pr, repo, data)
+    if owner_repo is None:
+        return None
+    return bound_rollup_states(
+        _status_rollup(pr, repo, cwd) if bound is None else bound,
+        data.get("headRefOid"),
+        owner_repo,
+        lambda endpoint: _gh_api_json(endpoint, cwd),
+    )
+
+
+def _check_states(
+    pr: str, repo: str | None = None, cwd: str | None = None, meta=None
+) -> tuple[list[str], list[str]] | None:
+    """(failing, pending) non-advisory check names, or None if undeterminable.
+
+    ``meta`` returns the PR metadata being judged. An external advisory name is judged
+    on the head-bound rollup, proven at that metadata's head, never on headless rows.
+    """
     try:
         out = subprocess.run(
             ["gh", "pr", "checks", pr, *_repo_args(repo), "--json", "name,bucket,state,workflow"],
@@ -831,20 +942,27 @@ def _check_states(pr: str, repo: str | None = None, cwd: str | None = None) -> t
     except Exception:
         return None
     if _checks_json_unsupported(out):
-        return _check_states_from_status_rollup(pr, repo, cwd)
-    text = (out.stdout or "").strip()
-    if not text:
-        # Empty output is ambiguous: a PR with zero checks (rc 0 → nothing to wait for)
-        # vs a gh error / non-existent PR (rc != 0 → fail-CLOSED block). Reading an
-        # *error* as "no failing checks" is the fail-open bug guard-admin-merge closed.
-        return ([], []) if out.returncode == 0 else None
-    try:
-        rows = json.loads(_decolorize(text))
-    except json.JSONDecodeError:
-        return None
-    if not isinstance(rows, list):
-        return None
-    return parse_checks(rows)
+        bound = _status_rollup(pr, repo, cwd)
+        rows, parse = (bound.get("statusCheckRollup") if bound is not None else None), _parse_status_rollup_rows
+    else:
+        text = (out.stdout or "").strip()
+        if not text:
+            # Empty output is ambiguous: a PR with zero checks (rc 0 → nothing to wait for)
+            # vs a gh error / non-existent PR (rc != 0 → fail-CLOSED block). Reading an
+            # *error* as "no failing checks" is the fail-open bug guard-admin-merge closed.
+            return ([], []) if out.returncode == 0 else None
+        # gh exits 0, 1 (failing) or 8 (pending) after a complete read; any other code is
+        # an error or cancellation even when stdout parses (the publisher's policy).
+        if out.returncode not in (0, 1, 8):
+            return None
+        try:
+            rows = json.loads(_decolorize(text))
+        except json.JSONDecodeError:
+            return None
+        if not isinstance(rows, list) or (out.returncode == 1 and not rows):
+            return None
+        bound, parse = None, parse_checks
+    return external_check_states(rows, parse, lambda: _bound_states(pr, repo, cwd, meta, bound))
 
 
 def _base_protected(owner_repo: str, base: str) -> bool | None:
@@ -894,7 +1012,7 @@ def _pr_snapshot(
     """Read independent PR metadata and check state concurrently."""
     with concurrent.futures.ThreadPoolExecutor(max_workers=2) as pool:
         meta_future = pool.submit(_pr_meta, pr, repo, cwd)
-        states_future = pool.submit(_check_states, pr, repo, cwd)
+        states_future = pool.submit(_check_states, pr, repo, cwd, meta_future.result)
         return meta_future.result(), states_future.result()
 
 
@@ -927,6 +1045,13 @@ def _judge(args: list[str], cwd: str | None = None) -> str | None:
             "could not determine which PR this merges",
             "Name the PR explicitly (`gh pr merge <number> ...`) so the merge can be verified.",
         )
+    if not _canonical_selector(pr):
+        return _block_msg(
+            f"PR selector {pr!r} is not canonical",
+            "gh reads `#N`, `+N`, `#+N` and zero-padded numbers as PR numbers, so this guard\n"
+            "would judge a branch while gh merges a PR. Name the PR as its plain number\n"
+            "(`gh pr merge 9 ...`), its PR URL, or a branch name.",
+        )
     meta, states = _pr_snapshot(pr, repo, cwd=cwd)
     if meta is None:
         return _block_msg(
@@ -944,7 +1069,8 @@ def _judge(args: list[str], cwd: str | None = None) -> str | None:
         )
     if reason == "check states unverifiable":
         return _block_msg(
-            f"could not verify PR {pr} check states (gh error, timeout, or an unrecognized check state)",
+            f"could not verify PR {pr} check states (gh error, timeout, an unrecognized check state, "
+            "or an external check whose GitHub App provenance at the PR head is unproven)",
             "An unverifiable merge is refused, not assumed safe. Re-read the checks with\n"
             "`gh pr checks` and retry once gh answers.",
         )
