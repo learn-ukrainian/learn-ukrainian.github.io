@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import copy
+import hashlib
 import json
 import random
 import sqlite3
@@ -3820,6 +3822,7 @@ def test_tatoeba_cloze_without_attribution_metadata_fails_closed() -> None:
     assert shards["A1"]["cloze"]["cloze"] == []
 
 
+@pytest.mark.needs_sparse_tree("site/src/data")
 def test_live_curated_cloze_sources_and_allowlist_match() -> None:
     cloze_sources_path = Path("site/src/data/lexicon-practice-cloze-sources.json")
     reviewed_sources_path = Path("site/src/data/lexicon-practice-reviewed-sources.json")
@@ -6166,3 +6169,230 @@ def test_cloze_withheld_report_counts_distinct_items_by_mechanism(tmp_path: Path
         "lexical": {"admitted": 0, "withheld": 1},
     }
     assert report["byLevelMechanism"]["A2"]["lexical"] == {"admitted": 0, "withheld": 0}
+
+
+# --- #10672: cloze occurrences removed by size budgets -------------------------------------------
+
+_TRIM_LEVELS = generate_practice_deck.CEFR_ORDER[:5]
+_HUGE = 10**9
+
+
+def _budget_cloze(
+    level: str, lemma_id: str, n: int, pad: int, rule: str = "nominative_identification"
+) -> dict[str, Any]:
+    return {
+        "clozeId": f"{lemma_id}:inventory:{n}",
+        "lemmaId": lemma_id,
+        "lemma": f"лема-{lemma_id}",
+        "cefr": level,
+        "number": "singular",
+        "sentence": f"Речення {lemma_id} ___ {n}." + "x" * pad,
+        "answer": lemma_id,
+        "caseRule": {"ruleId": rule},
+        "acceptedAlt": [],
+        "options": [{"optionId": f"{lemma_id}:{n}:a", "label": lemma_id, "lemmaId": lemma_id, "strategy": "no-pair"}],
+    }
+
+
+def _budget_level(level: str, lexeme_pads: dict[str, int], cloze: list[dict[str, Any]]) -> dict[str, Any]:
+    return {
+        "index": {
+            "schema": "atlas-practice-index",
+            "items": [{"lemmaId": lemma_id, "modes": ["flashcards"], "clozeIds": []} for lemma_id in lexeme_pads],
+            "counts": {},
+        },
+        "lexemes": {
+            "schema": "atlas-practice-lexemes",
+            "lexemes": [{"lemmaId": lemma_id, "gloss": "g" * pad} for lemma_id, pad in lexeme_pads.items()],
+        },
+        "cloze": {"schema": "atlas-practice-cloze", "cloze": cloze},
+        "stress": {"schema": "atlas-practice-stress", "stress": []},
+    }
+
+
+def _budget_chain(
+    shards: dict[str, Any], path: Path, *, raw: int = _HUGE, cloze_raw: int = _HUGE, withheld: list | None = None
+) -> dict[str, Any]:
+    """Run snapshot -> compaction -> apply_size_budgets -> reconciliation -> report, as main() does."""
+    withheld = [] if withheld is None else withheld
+    snapshot = generate_practice_deck.snapshot_cloze_occurrences(shards)
+    compact_cloze_emit_fields(shards)
+    apply_size_budgets(shards, raw, _HUGE, cloze_raw_limit=cloze_raw, cloze_gzip_limit=_HUGE)
+    generate_practice_deck.reconcile_cloze_budget_trims(shards, snapshot, withheld)
+    generate_practice_deck.write_cloze_withheld_report(path, withheld, shards)
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def _raw_bytes(payload: dict[str, Any]) -> int:
+    return int(generate_practice_deck._size_budget(payload, _HUGE, _HUGE)["rawBytes"])
+
+
+def _cloze_fit(*items: dict[str, Any]) -> int:
+    """Raw cloze limit that admits exactly these items once compacted."""
+    probe = {"A1": {"cloze": {"schema": "atlas-practice-cloze", "cloze": copy.deepcopy(list(items))}}}
+    compact_cloze_emit_fields(probe)
+    return _raw_bytes(probe["A1"]["cloze"]) + 200
+
+
+def _trim_row(level: str, lemma_id: str, n: int, pad: int, mechanism: str = "case-labelled") -> dict[str, str]:
+    return {
+        "clozeId": f"{lemma_id}:inventory:{n}",
+        "lemma": f"лема-{lemma_id}",
+        "level": level,
+        "mechanism": mechanism,
+        "reason": "size_budget_trim",
+        "rule": "size_budget_trim",
+        "sentence": f"Речення {lemma_id} ___ {n}." + "x" * pad,
+    }
+
+
+def _mechanisms(report: dict[str, Any], level: str) -> dict[str, dict[str, int]]:
+    return {k: v for k, v in report["byLevelMechanism"][level].items() if v != {"admitted": 0, "withheld": 0}}
+
+
+@pytest.mark.parametrize("level", _TRIM_LEVELS)
+def test_cloze_withheld_report_accounts_mode_local_cloze_trim(level: str, tmp_path: Path) -> None:
+    lexical = generate_practice_deck.LEXICAL_INSERTION_RULE_ID
+    kept = _budget_cloze(level, "c", 3, 10, lexical)
+    cloze = [_budget_cloze(level, "a", 1, 900), _budget_cloze(level, "b", 2, 800), kept]
+    shards = {level: _budget_level(level, {"a": 1, "b": 1, "c": 1}, cloze)}
+    report = _budget_chain(shards, tmp_path / "r.json", cloze_raw=_cloze_fit(kept))
+    assert [item["clozeId"] for item in shards[level]["cloze"]["cloze"]] == ["c:inventory:3"]
+    assert report["items"] == [_trim_row(level, "a", 1, 900), _trim_row(level, "b", 2, 800)]
+    assert report["count"] == 2
+    assert report["byLevelRule"] == {f"{level}:size_budget_trim": 2}
+    assert _mechanisms(report, level) == {
+        "case-labelled": {"admitted": 0, "withheld": 2},
+        "lexical": {"admitted": 1, "withheld": 0},
+    }
+
+
+@pytest.mark.parametrize("level", _TRIM_LEVELS)
+def test_cloze_withheld_report_accounts_surface_prune(level: str, tmp_path: Path) -> None:
+    cloze = [_budget_cloze(level, "a", 1, 50), _budget_cloze(level, "b", 2, 50)]
+    shards = {level: _budget_level(level, {"a": 3_000, "b": 10}, cloze)}
+    small = {"schema": "atlas-practice-lexemes", "lexemes": [{"lemmaId": "b", "gloss": "g" * 10}]}
+    report = _budget_chain(shards, tmp_path / "r.json", raw=_raw_bytes(small) + 200)
+    assert [item["lemmaId"] for item in shards[level]["lexemes"]["lexemes"]] == ["b"]
+    assert [item["clozeId"] for item in shards[level]["cloze"]["cloze"]] == ["b:inventory:2"]
+    assert report["items"] == [_trim_row(level, "a", 1, 50)]
+    assert _mechanisms(report, level) == {"case-labelled": {"admitted": 1, "withheld": 1}}
+
+
+@pytest.mark.parametrize("level", _TRIM_LEVELS)
+def test_cloze_withheld_report_cross_level_prune_leaves_cloze_unchanged(level: str, tmp_path: Path) -> None:
+    other = next(lvl for lvl in _TRIM_LEVELS if lvl != level)
+    cloze = [_budget_cloze(level, "a", 1, 50), _budget_cloze(level, "b", 2, 50)]
+    target = _budget_level(level, {"a": 10, "b": 10}, cloze)
+    target["stress"]["stress"] = [{"lemmaId": "a"}, {"lemmaId": "z"}]
+    shards = {level: target, other: _budget_level(other, {"y": 10, "z": 3_000}, [])}
+    small = {"schema": "atlas-practice-lexemes", "lexemes": [{"lemmaId": "y", "gloss": "g" * 10}]}
+    report = _budget_chain(shards, tmp_path / "r.json", raw=_raw_bytes(small) + 200)
+    assert shards[level]["stress"]["stress"] == [{"lemmaId": "a"}]
+    assert [item["clozeId"] for item in shards[level]["cloze"]["cloze"]] == ["a:inventory:1", "b:inventory:2"]
+    assert report["count"] == 0
+    assert report["items"] == []
+    assert _mechanisms(report, level) == {"case-labelled": {"admitted": 2, "withheld": 0}}
+
+
+@pytest.mark.parametrize("level", _TRIM_LEVELS)
+def test_cloze_withheld_report_no_trim_control(level: str, tmp_path: Path) -> None:
+    cloze = [_budget_cloze(level, "a", 1, 50), _budget_cloze(level, "b", 2, 50)]
+    shards = {level: _budget_level(level, {"a": 10, "b": 10}, cloze)}
+    report = _budget_chain(shards, tmp_path / "r.json")
+    assert report["count"] == 0
+    assert _mechanisms(report, level) == {"case-labelled": {"admitted": 2, "withheld": 0}}
+
+
+def test_cloze_budget_trim_identical_duplicate_ids_count_occurrences(tmp_path: Path) -> None:
+    cloze = [_budget_cloze("A1", "a", 1, 400) for _ in range(3)]
+    shards = {"A1": _budget_level("A1", {"a": 10}, cloze)}
+    report = _budget_chain(shards, tmp_path / "r.json", cloze_raw=_cloze_fit(cloze[0]))
+    assert [item["clozeId"] for item in shards["A1"]["cloze"]["cloze"]] == ["a:inventory:1"]
+    assert report["items"] == [_trim_row("A1", "a", 1, 400)] * 2
+    assert report["count"] == 2
+    assert report["byLevelRule"] == {"A1:size_budget_trim": 2}
+    # Kept and dropped occurrences share one clozeId: admitted counts occurrences, withheld stays distinct.
+    assert _mechanisms(report, "A1") == {"case-labelled": {"admitted": 1, "withheld": 1}}
+
+
+def test_cloze_budget_trim_differing_duplicate_ids_keep_original_rows(tmp_path: Path) -> None:
+    first = _budget_cloze("A1", "a", 1, 10)
+    second = _budget_cloze("A1", "a", 1, 600)
+    original = {**_trim_row("A1", "z", 9, 0), "rule": "inventory_prompt_level", "reason": "above A1: x"}
+    withheld = [original]
+    shards = {"A1": _budget_level("A1", {"a": 10}, [first, second])}
+    report = _budget_chain(shards, tmp_path / "r.json", cloze_raw=_cloze_fit(first), withheld=withheld)
+    assert [item["sentence"] for item in shards["A1"]["cloze"]["cloze"]] == [_trim_row("A1", "a", 1, 10)["sentence"]]
+    assert report["items"] == [original, _trim_row("A1", "a", 1, 600)]
+    assert report["count"] == 2
+    assert report["byLevelRule"] == {"A1:inventory_prompt_level": 1, "A1:size_budget_trim": 1}
+    assert _mechanisms(report, "A1") == {"case-labelled": {"admitted": 1, "withheld": 2}}
+
+
+def test_cloze_budget_reconcile_rejects_unsnapshotted_occurrence() -> None:
+    shards = {"A1": _budget_level("A1", {"a": 10}, [_budget_cloze("A1", "a", 1, 10)])}
+    with pytest.raises(RuntimeError, match="unaccounted cloze occurrences in final shards: 1"):
+        generate_practice_deck.reconcile_cloze_budget_trims(shards, [], [])
+
+
+def _main_wiring_run(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, *, report: bool) -> tuple[dict[str, str], Path]:
+
+    for name in (
+        "read_cloze_sources",
+        "read_sentence_inventory",
+        "read_heritage_pairs",
+        "read_paronym_pairs",
+        "read_antonym_pairs",
+        "read_homonym_pairs",
+    ):
+        monkeypatch.setattr(generate_practice_deck, name, lambda _path: [])
+    monkeypatch.setattr(generate_practice_deck, "read_manifest", lambda _path: [])
+    monkeypatch.setattr(generate_practice_deck, "read_synonym_verdicts", lambda _path: None)
+    monkeypatch.setattr(generate_practice_deck, "read_end_dictionary_stress_overlay", lambda _path: {})
+    monkeypatch.setattr(generate_practice_deck, "read_ulif_synonym_groups", lambda _db, _verdicts: None)
+    monkeypatch.setattr(generate_practice_deck.ReviewedSourceAllowlist, "from_path", classmethod(lambda cls, _p: None))
+    monkeypatch.setattr(generate_practice_deck.JsonVesumVerifier, "from_path", classmethod(lambda cls, _p: None))
+
+    def fake_build(*_args: Any, **_kwargs: Any) -> dict[str, Any]:
+        cloze = [_budget_cloze("B1", "a", 1, 900), _budget_cloze("B1", "a", 1, 900), _budget_cloze("B1", "b", 2, 10)]
+        level = _budget_level("B1", {"a": 10, "b": 10}, cloze)
+        level["synonym"] = {"schema": "atlas-practice-synonym", "synonym": []}
+        return {"B1": level}
+
+    monkeypatch.setattr(generate_practice_deck, "build_practice_shards", fake_build)
+    out_dir = tmp_path / ("on" if report else "off")
+    report_path = tmp_path / "withheld.json"
+    argv = ["--manifest", str(tmp_path / "m.json"), "--vesum-fixture", str(tmp_path / "v.json")]
+    argv += ["--out-dir", str(out_dir), "--sources-db", str(tmp_path / "missing.db")]
+    argv += ["--end-dictionary-inventory", str(tmp_path / "missing.json")]
+    argv += ["--cloze-raw-limit", str(_cloze_fit(_budget_cloze("B1", "b", 2, 10)))]
+    if report:
+        argv += ["--cloze-withheld-report", str(report_path)]
+    assert main(argv) == 0
+    return {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(out_dir.iterdir())}, report_path
+
+
+def test_main_cloze_withheld_report_wiring_keeps_shard_bytes(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    calls: list[str] = []
+    for name in ("snapshot_cloze_occurrences", "reconcile_cloze_budget_trims"):
+        real = getattr(generate_practice_deck, name)
+        monkeypatch.setattr(
+            generate_practice_deck, name, lambda *a, _real=real, _name=name: calls.append(_name) or _real(*a)
+        )
+    disabled, report_path = _main_wiring_run(tmp_path, monkeypatch, report=False)
+    assert calls == []
+    assert not report_path.exists()
+    enabled, report_path = _main_wiring_run(tmp_path, monkeypatch, report=True)
+    assert calls == ["snapshot_cloze_occurrences", "reconcile_cloze_budget_trims"]
+    assert enabled == disabled
+    assert sorted(enabled) == [
+        "practice-cloze.B1.json",
+        "practice-index.B1.json",
+        "practice-lexemes.B1.json",
+        "practice-stress.B1.json",
+        "practice-synonym.B1.json",
+    ]
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+    assert report["items"] == [_trim_row("B1", "a", 1, 900)] * 2
+    assert _mechanisms(report, "B1") == {"case-labelled": {"admitted": 1, "withheld": 1}}

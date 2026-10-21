@@ -9,6 +9,7 @@ import importlib.util
 import json
 import os
 import re
+import shlex
 import shutil
 import signal
 import stat
@@ -267,6 +268,160 @@ def _verdict(result: subprocess.CompletedProcess[str]) -> dict:
     lines = [line for line in result.stderr.splitlines() if line.startswith('{"pre_push_gate"')]
     assert lines, result.stderr
     return json.loads(lines[-1])["pre_push_gate"]
+
+
+@pytest.mark.parametrize(
+    "route",
+    [
+        "missing-installed-candidate", "installed-entry-escape", "aliased-entry-escape",
+        "canonical-hardlink-decoys", "relocated-hardlink-decoys",
+    ],
+)
+def test_cursor_path_protected_gate_runs_real_deployment(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, route: str
+) -> None:
+    """The maintained gate runs the three original deploy failures with the tripwire active."""
+    from tests import cursor_exec_tripwire as tripwire
+    from tests.test_deploy_script_idempotency import _copy_full_tree
+
+    root = tmp_path / "repo"
+    root.mkdir()
+    _copy_full_tree(root)
+    shutil.copytree(HOOK_DIR, root / ".githooks")
+    for relative in (
+        "tests/__init__.py",
+        "tests/helpers/__init__.py",
+        "tests/helpers/python.py",
+        "tests/cursor_process_guard.py",
+        "tests/cursor_exec_tripwire.py",
+        "tests/test_deploy_script_idempotency.py",
+    ):
+        destination = root / relative
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(REPO_ROOT / relative, destination)
+    _write(root, "tests/conftest.py", 'pytest_plugins = ("tests.cursor_process_guard",)\n')
+    _write(root, "pytest.ini", "[pytest]\nmarkers =\n    repo_wide: repository invariant\n")
+    nodes = (
+        "test_claude_deploy_ships_epic_named_skills_and_keeps_epic_handoffs",
+        "test_codex_skills_have_one_discovery_root_and_migrate_verified_legacy",
+        "test_fresh_deploy_produces_synced_output",
+    )
+    _write(
+        root,
+        "tests/test_repo_wide_marker_invariant.py",
+        "KNOWN_REPO_WIDE_MODULES = ()\nKNOWN_REPO_WIDE_FUNCTIONS = "
+        + repr(tuple(f"tests/test_deploy_script_idempotency.py::{node}" for node in nodes))
+        + "\n",
+    )
+    actual = yaml.safe_load((REPO_ROOT / ".pre-commit-config.yaml").read_text())
+    hooks = [
+        hook
+        for repo in actual["repos"]
+        for hook in repo.get("hooks", [])
+        if hook["id"] in {"lint-opsec-leaks", "check-no-internal-ids"}
+    ]
+    assert len(hooks) == 2
+    _write(root, ".pre-commit-config.yaml", yaml.safe_dump({"repos": [{"repo": "local", "hooks": hooks}]}))
+    for name in ("lint_opsec_leaks.py", "check_no_internal_ids.py"):
+        _write(root, f"scripts/audit/{name}", (REPO_ROOT / "scripts/audit" / name).read_text())
+    _install_test_slot_governor(root)
+    _write(root, "scripts/pre_commit/project_python.sh", f'#!/bin/bash\nexec {shlex.quote(sys.executable)} "$@"\n')
+    _git(root, "init", "-b", "feature")
+    _git(root, "config", "user.email", "gate@example.invalid")
+    _git(root, "config", "user.name", "Gate Test")
+    base = _commit(root, "base", ".")
+    _write(root, "README.md", "Deployment gate regression.\n")
+    _commit(root, "exercise real deploy invariants", "README.md")
+
+    home = tmp_path / "home"
+    install = home / ".local/share/cursor-agent"
+    bundled = install / "versions/author-entry-boundary/bin"
+    bundled.mkdir(parents=True)
+    # This candidate does not exist. Shell PATH search must reach the wrapper;
+    # execvp must not submit the nonexistent installed candidate to the tripwire.
+    assert not (bundled / "rsync").exists()
+    wrapper = tmp_path / "wrapper"
+    wrapper.mkdir()
+    markers = tmp_path / "rsync.jsonl"
+    real_rsync = shutil.which("rsync", path=os.defpath)
+    assert real_rsync
+    _write(
+        wrapper,
+        "rsync",
+        f"""#!{sys.executable}
+import json, os, sys
+import cursor_exec_tripwire as tripwire
+assert tripwire.active and not tripwire.allow_real
+with open(os.environ["DEPLOY_RSYNC_MARKERS"], "a") as log:
+    log.write(json.dumps({{"cwd": os.getcwd(), "argv": sys.argv[1:], "guard_active": tripwire.active}}) + "\\n")
+os.execv({real_rsync!r}, [{real_rsync!r}, *sys.argv[1:]])
+""",
+    )
+    (wrapper / "rsync").chmod(0o755)
+    lookup = bundled
+    if route.endswith("hardlink-decoys"):
+        # All fixtures are marker tools. No installed provider is executed.
+        target = bundled / "physical-worker"
+        if route == "relocated-hardlink-decoys":
+            target = tmp_path / "relocated-worker"
+        shutil.copyfile(wrapper / "rsync", target)
+        target.chmod(0o755)
+        lookup = tmp_path / "hardlink-tools"
+        lookup.mkdir()
+        os.link(target, lookup / "rsync")
+        decoys = tmp_path / "decoys"
+        decoys.mkdir()
+        anchors = tmp_path / "anchors"
+        anchors.mkdir()
+        for name in ("cursor-agent", "agent"):
+            _write(decoys, name, "#!/bin/sh\nexit 0\n")
+            (decoys / name).chmod(0o755)
+            (anchors / name).symlink_to(target)
+        lookup_path = [str(lookup), str(decoys), str(anchors)]
+    elif route != "missing-installed-candidate":
+        # The final target is outside Cursor, but the located entry belongs to
+        # its installation. Refuse it without falling through to the wrapper.
+        (bundled / "rsync").symlink_to(wrapper / "rsync")
+        if route == "aliased-entry-escape":
+            lookup = tmp_path / "path-alias"
+            lookup.symlink_to(bundled, target_is_directory=True)
+        lookup_path = [str(lookup)]
+    else:
+        lookup_path = [str(lookup)]
+    monkeypatch.setattr(tripwire, "real_roots", (*tripwire.real_roots, str(install)))
+    result = _run_gate(
+        root,
+        remote_sha=base,
+        extra_env={
+            "HOME": str(home),
+            "PATH": os.pathsep.join((*lookup_path, str(wrapper), os.environ["PATH"])),
+            "DEPLOY_RSYNC_MARKERS": str(markers),
+            gate.MAX_CONCURRENT_RUNS_ENV: "1",
+            gate.MAX_TEST_PROCESSES_ENV: "2",
+        },
+    )
+    records = [json.loads(line) for line in markers.read_text().splitlines()] if markers.exists() else []
+    print(json.dumps({"route": route, "gate_exit": result.returncode, "rsync_markers": records}))
+    if route != "missing-installed-candidate":
+        assert result.returncode != 0, result.stdout + result.stderr
+        assert _measurements(root)[-1]["outcome"] == "refused"
+        assert "rsync resolves to an installed Cursor target" in result.stdout + result.stderr
+        assert not records, "an installed entry escaped validation or fell through to the later wrapper"
+        return
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert _measurements(root)[-1]["outcome"] == "green"
+    destinations = [row["argv"][-1] for row in records]
+    # Cover shell rsync both before and after the descriptor-bound Python exec.
+    assert destinations.count(".") >= 3
+    for destination in (".claude/", ".codex/", ".agents/skills/", ".gemini/", ".gemini/rules/"):
+        assert destination in destinations, destinations
+    assert all(str(install) not in row["cwd"] for row in records)
+    assert ".agents/" in destinations  # optional AGY overlay shell rsync
+    assert all(row["guard_active"] for row in records)
+    for index, destination in enumerate(destinations):
+        if destination == ".":
+            assert destinations[index - 1] == ".claude/"
+            assert destinations[index + 1] == ".codex/"
 
 
 def _measurements(repo: Path) -> list[dict]:
@@ -4218,35 +4373,120 @@ def test_only_explicit_experiment_adds_a_reservation(value, expected, monkeypatc
     assert gate.concurrent_run_limit() == expected
 
 
+def _cpu_pressure(avg10: str, avg60: str) -> str:
+    return f"some avg10={avg10} avg60={avg60} avg300=1.00 total=10\nfull avg10=0.00 avg60=0.00 avg300=0.00 total=0\n"
+
+
+def _patch_admission_proc(monkeypatch, pressure, memory) -> None:
+    """Feed /proc pressure and meminfo. Load average must not decide the second slot."""
+    original = Path.read_text
+
+    def read_text(path, *args, **kwargs):
+        name = str(path)
+        if name == "/proc/pressure/cpu":
+            if isinstance(pressure, BaseException):
+                raise pressure
+            return pressure
+        if name == "/proc/meminfo":
+            if isinstance(memory, BaseException):
+                raise memory
+            return memory
+        return original(path, *args, **kwargs)
+
+    def load_must_not_decide():
+        raise OSError("load average must not decide admission")
+
+    monkeypatch.setattr(Path, "read_text", read_text)
+    monkeypatch.setattr(gate.os, "getloadavg", load_must_not_decide)
+
+
+_EIGHT_GIB = 8 * 1024**3
+
+
 @pytest.mark.parametrize(
-    "load,memory,qualified",
+    "pressure,memory,expected",
     [
-        (0.0, "MemAvailable: 8388608 kB\n", True),
-        (11.99, "MemAvailable: 8388608 kB\n", True),
-        (12.0, "MemAvailable: 8388608 kB\n", False),
-        (float("nan"), "MemAvailable: 8388608 kB\n", False),
-        (float("inf"), "MemAvailable: 8388608 kB\n", False),
-        (-1.0, "MemAvailable: 8388608 kB\n", False),
-        (0.0, "MemAvailable: 8388607 kB\n", False),
-        (0.0, "MemAvailable: garbage kB\n", False),
-        (0.0, "", False),
+        pytest.param(
+            _cpu_pressure("10.00", "5.00"),
+            "MemAvailable: 8388608 kB\n",
+            {"cpu_some_avg10": 10.0, "cpu_some_avg60": 5.0, "mem_available_bytes": _EIGHT_GIB, "qualified": True},
+            id="qualify",
+        ),
+        pytest.param(
+            _cpu_pressure("34.00", "24.00"),
+            "MemAvailable: 8388608 kB\n",
+            {"cpu_some_avg10": 34.0, "cpu_some_avg60": 24.0, "mem_available_bytes": _EIGHT_GIB, "qualified": True},
+            id="qualify-under-caps",
+        ),
+        pytest.param(
+            _cpu_pressure("35.00", "5.00"),
+            "MemAvailable: 8388608 kB\n",
+            {"cpu_some_avg10": 35.0, "cpu_some_avg60": 5.0, "mem_available_bytes": _EIGHT_GIB, "qualified": False},
+            id="cpu-busy-avg10",
+        ),
+        pytest.param(
+            _cpu_pressure("10.00", "25.00"),
+            "MemAvailable: 8388608 kB\n",
+            {"cpu_some_avg10": 10.0, "cpu_some_avg60": 25.0, "mem_available_bytes": _EIGHT_GIB, "qualified": False},
+            id="cpu-busy-avg60",
+        ),
+        pytest.param(
+            _cpu_pressure("100.00", "100.00"),
+            "MemAvailable: 8388608 kB\n",
+            {
+                "cpu_some_avg10": 100.0,
+                "cpu_some_avg60": 100.0,
+                "mem_available_bytes": _EIGHT_GIB,
+                "qualified": False,
+            },
+            id="cpu-saturated",
+        ),
+        pytest.param(
+            _cpu_pressure("10.00", "5.00"),
+            "MemAvailable: 8388607 kB\n",
+            {
+                "cpu_some_avg10": 10.0,
+                "cpu_some_avg60": 5.0,
+                "mem_available_bytes": 8388607 * 1024,
+                "qualified": False,
+            },
+            id="low-memory",
+        ),
+        pytest.param(
+            "not-a-pressure-file\n",
+            "MemAvailable: 8388608 kB\n",
+            {"cpu_some_avg10": None, "cpu_some_avg60": None, "mem_available_bytes": None, "qualified": False},
+            id="unreadable-pressure",
+        ),
+        pytest.param(
+            _cpu_pressure("101.00", "5.00"),
+            "MemAvailable: 8388608 kB\n",
+            {"cpu_some_avg10": None, "cpu_some_avg60": None, "mem_available_bytes": None, "qualified": False},
+            id="pressure-outside-percent",
+        ),
+        pytest.param(
+            _cpu_pressure("10.00", "5.00"),
+            "MemAvailable: garbage kB\n",
+            {"cpu_some_avg10": None, "cpu_some_avg60": None, "mem_available_bytes": None, "qualified": False},
+            id="unreadable-memory",
+        ),
+        pytest.param(
+            "",
+            "MemAvailable: 8388608 kB\n",
+            {"cpu_some_avg10": None, "cpu_some_avg60": None, "mem_available_bytes": None, "qualified": False},
+            id="empty-pressure",
+        ),
+        pytest.param(
+            OSError("cpu pressure unavailable"),
+            "MemAvailable: 8388608 kB\n",
+            {"cpu_some_avg10": None, "cpu_some_avg60": None, "mem_available_bytes": None, "qualified": False},
+            id="pressure-oserror",
+        ),
     ],
 )
-def test_parallel_admission_qualifies_only_current_numeric_resources(load, memory, qualified, monkeypatch):
-    original = Path.read_text
-    monkeypatch.setattr(gate.os, "getloadavg", lambda: (load, load, load))
-    monkeypatch.setattr(
-        Path, "read_text", lambda path, *a, **kw: memory if str(path) == "/proc/meminfo" else original(path, *a, **kw)
-    )
-    assert gate.admission_resources()["qualified"] is qualified
-
-
-def test_resource_read_failure_is_unknown(monkeypatch):
-    def unavailable():
-        raise OSError("load unavailable")
-
-    monkeypatch.setattr(gate.os, "getloadavg", unavailable)
-    assert gate.admission_resources() == {"load_1m": None, "mem_available_bytes": None, "qualified": False}
+def test_parallel_admission_uses_cpu_pressure_not_load(pressure, memory, expected, monkeypatch):
+    _patch_admission_proc(monkeypatch, pressure, memory)
+    assert gate.admission_resources() == expected
 
 
 def _raw_measurements(repo):

@@ -59,6 +59,8 @@ def open_readonly(
     No additional database can be attached, so none can be detached. VACUUM INTO
     is also refused by the attachment limit. Callers must preserve the limit
     and avoid installing Python SQL callbacks on shared connections.
+    Shared connections disable the statement cache; CPython 3.12+ corrupts it
+    when threads share one connection.
     """
     uri = Path(path).resolve().as_uri() + "?mode=ro"
     if immutable:
@@ -68,6 +70,14 @@ def open_readonly(
         settings["timeout"] = timeout
     if not check_same_thread:
         settings["check_same_thread"] = False
+        # CPython 3.12+ keeps one statement cache per connection, and that cache
+        # is not safe when threads share the connection: fetches come back wrong
+        # and sqlite3 raises InterfaceError or IndexError (CPython #118172,
+        # #11208). SQLite itself is serialized, so the calls stay concurrent.
+        # Disabling the statement cache is the documented upstream mitigation.
+        # A lock around execute() would hide the #10674 callback deadlock this
+        # reader avoids.
+        settings["cached_statements"] = 0
     if isolation_level != "":
         settings["isolation_level"] = isolation_level
     conn = sqlite3.connect(uri, uri=True, **settings)
@@ -75,6 +85,11 @@ def open_readonly(
         if hasattr(conn, "enable_load_extension"):
             conn.enable_load_extension(False)
         conn.execute("PRAGMA query_only=ON")
+        # Refuse ATTACH with SQLite's own limit, never a Python callback: a
+        # callback runs while SQLite holds the connection mutex with the GIL
+        # released, so a connection shared across threads deadlocks against a
+        # thread that holds the GIL and waits for that mutex (#10674). With no
+        # attached database, DETACH has nothing to remove.
         conn.setlimit(sqlite3.SQLITE_LIMIT_ATTACHED, 0)
     except BaseException:
         conn.close()

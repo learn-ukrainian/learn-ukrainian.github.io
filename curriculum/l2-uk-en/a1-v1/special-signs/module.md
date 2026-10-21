@@ -51,7 +51,7 @@ At beginner level, use this rule:
 
 Compare two words:
 
-| Слово́ | Reading effect |
+| Сло́во | Reading effect |
 | --- | --- |
 | **буря́к** | no apostrophe; **р** softens before **я** |
 | **бур'я́н** | apostrophe; **р** stays hard, then you hear **[йа]** |
@@ -72,7 +72,7 @@ consonant.
 
 It has no sound of its own. It changes the consonant before it.
 
-| Слово́ | English support | What to notice |
+| Сло́во | English support | What to notice |
 | --- | --- | --- |
 | **день** | day | final **нь** is soft |
 | **кінь** | horse | final **нь** is soft |
@@ -113,7 +113,7 @@ The first A1 model is:
 
 Start with these words:
 
-| Слово́ | English support | What to hear |
+| Сло́во | English support | What to hear |
 | --- | --- | --- |
 | **сім'я́** | family | **м** stays hard, then **[йа]** |
 | **м'я́со** | meat | **м** stays hard, then **[йа]** |

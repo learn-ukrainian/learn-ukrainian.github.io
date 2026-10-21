@@ -65,6 +65,7 @@ from pathlib import Path
 import pytest
 
 from scripts.ci.pytest_dispatch_cap import DISPATCH_TASK_ENV, FULL_SUITE_BUSY, LOCK_ENV
+from tests.process_group_child import run_in_process_group
 
 pytestmark = [pytest.mark.repo_invariant, pytest.mark.repo_wide]
 
@@ -85,6 +86,7 @@ KNOWN_REPO_WIDE_MODULES = frozenset(
         "tests/test_ask_opencode.py",
         "tests/test_curriculum_upgrade_no_host_run_root.py",
         "tests/test_cyrillic_roundtrip_invariant.py",
+        "tests/test_dispatch_checkout_size.py",
         "tests/test_docs_catalogue.py",
         "tests/test_docs_catalogue_coverage.py",
         "tests/test_docs_find_lookups_part1.py",
@@ -172,6 +174,7 @@ KNOWN_REPO_WIDE_FUNCTIONS = (
     "tests/test_driver_work_api_onboarding.py::test_skill_teaches_grok_bot_with_hard_exclusions",
     "tests/test_driver_work_api_onboarding.py::test_skill_teaches_the_full_health_enum",
     "tests/test_driver_work_api_onboarding.py::test_skill_teaches_work_api_projection_semantics",
+    "tests/test_entire_capture_guard.py::test_canary_evidence_bundle_carries_no_local_absolute_paths",
     "tests/test_headless_claude_background_controls.py::test_controls_have_a_single_source",
     "tests/test_headless_claude_background_controls.py::test_every_spawn_in_a_claude_referencing_module_is_a_wrapper_or_a_reviewed_exception",
     "tests/test_headless_claude_background_controls.py::test_exceptions_are_live_categorised_and_justified",
@@ -240,6 +243,11 @@ NOT_REPO_WIDE = {
     "tests/packaging/test_systemd_templates.py::test_systemd_templates_have_no_host_facts": (
         "Reads packaging/systemd; packaging/ is not a test or script candidate, so any "
         "change to a systemd template already forces the full tier."
+    ),
+    "tests/projects/open_model_data/test_atlas_pairing.py::test_pairing_does_not_modify_sources_db": (
+        "Lists data/ only to stat sources.db without joining that filename onto a checkout "
+        "path. data/ is not a test or script candidate, so a data change already forces the "
+        "full tier. Generator changes select this test through its import."
     ),
     "tests/projects/open_model_data/test_audit_dataset_acceptance.py::test_reproduces_v05_grammar_valency_findings": (
         "Scans data/projects/open_model_data; data/ is not a test or script candidate, so "
@@ -826,6 +834,8 @@ def test_repo_tree_scanners_carry_the_marker() -> None:
 # later deselects, and the marks are read after every modifyitems hook ran.
 # The child is ``--collect-only``, which the dispatch cap exempts from the
 # full-suite lock that a worker's serial ``pytest -m repo_wide`` parent holds.
+# It runs in its own process group (tests/process_group_child.py), so a test
+# timeout that ends the xdist worker ends the child too (#10777).
 _COLLECT_SCRIPT = textwrap.dedent(
     """
     import json
@@ -1127,7 +1137,7 @@ def _collect_repo_wide_marks(
         output = Path(scratch) / "marks.json"
         allowed = Path(scratch) / "allowed.json"
         allowed.write_text(json.dumps(sorted(str(path.resolve()) for path in test_files)), encoding="utf-8")
-        result = subprocess.run(
+        result = run_in_process_group(
             [
                 sys.executable,
                 "-c",
@@ -1142,8 +1152,6 @@ def _collect_repo_wide_marks(
             ],
             cwd=root,
             env=_child_env(),
-            capture_output=True,
-            text=True,
             timeout=timeout,
         )
         report = json.loads(output.read_text(encoding="utf-8")) if output.is_file() else None
@@ -1157,11 +1165,29 @@ def _collect_repo_wide_marks(
 
 
 @lru_cache(maxsize=1)
+def _repository_candidates() -> frozenset[Path]:
+    return _candidate_test_files(_REPO_ROOT, _repository_python_sources(), _test_module_paths(), _global_plugin_names())
+
+
+@lru_cache(maxsize=1)
 def _repository_marks() -> tuple[frozenset[str], frozenset[str]]:
-    candidates = _candidate_test_files(
-        _REPO_ROOT, _repository_python_sources(), _test_module_paths(), _global_plugin_names()
+    return _collect_repo_wide_marks(_REPO_ROOT, _repository_candidates())
+
+
+def test_the_prefilter_leaves_most_test_modules_out() -> None:
+    """A mark source that tests/conftest.py or a global plugin loads makes every test a candidate (#10777).
+
+    Collecting them all outlasts the 120 s test timeout on a loaded host, and
+    the registry checks below then time out instead of checking anything. A
+    test file name in a module that loads modules dynamically reads as a load
+    of that test, as one in scripts/delegate.py did.
+    """
+    candidates, test_modules = _repository_candidates(), frozenset(_test_module_paths())
+
+    assert len(candidates) * 2 < len(test_modules), (
+        f"{len(candidates)} of {len(test_modules)} test modules are repo_wide candidates; find the "
+        "mark source that tests/conftest.py or the -p plugins import and break that chain"
     )
-    return _collect_repo_wide_marks(_REPO_ROOT, candidates)
 
 
 def _unregistered_repo_wide_nodes(
@@ -1260,7 +1286,7 @@ def _selected_node_ids(marker: str, module: str) -> list[str]:
 
     ``--verbosity=-1`` overrides the config's ``-v``, so pytest lists one node id per line.
     """
-    result = subprocess.run(
+    result = run_in_process_group(
         [
             sys.executable,
             "-m",
@@ -1275,8 +1301,6 @@ def _selected_node_ids(marker: str, module: str) -> list[str]:
         ],
         cwd=_REPO_ROOT,
         env=_child_env(),
-        capture_output=True,
-        text=True,
         timeout=_COLLECT_TIMEOUT_S,
     )
     selected = [line for line in result.stdout.splitlines() if line.startswith(f"{module}::")]
@@ -1309,12 +1333,10 @@ def test_collection_child_runs_while_the_parent_holds_the_full_suite_lock(
     try:
         fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
         marked = _collect_repo_wide_marks(_REPO_ROOT, [_REPO_ROOT / "tests/test_hooks_executable.py"])
-        refused = subprocess.run(
+        refused = run_in_process_group(
             [sys.executable, "-m", "pytest", "-q", "-p", "no:cacheprovider", "tests"],
             cwd=_REPO_ROOT,
             env=_child_env(),
-            capture_output=True,
-            text=True,
             timeout=_COLLECT_TIMEOUT_S,
         )
     finally:

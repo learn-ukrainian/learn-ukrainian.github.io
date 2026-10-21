@@ -241,12 +241,20 @@ disposition does not claim recovery or completion of the full ULIF plan.
 VTS receipt citations use bounded retained snapshots in
 `sources.db:slovnyk_me_entries` (#9296). Import existing schema-v4 cache files
 offline with `scripts/ingest/slovnyk_me_ingest.py --cache-dir
-data/lexicon/slovnyk_cache --dict vts --db <sources.db>` using the project
-interpreter. Add `--dry-run` to preview; optional positional words restrict
-the import. This follows the [bounded per-word recipe](audits/slovnyk-me-ingestion-feasibility.md):
+data/lexicon/slovnyk_cache --db <sources.db>` using the project
+interpreter. Every cached dictionary is imported (`--dict` narrows it); add
+`--dry-run` to preview; optional positional words restrict the import. An
+existing database is copied to `data/backups/` first and must be on local
+storage. This follows the [bounded per-word recipe](audits/slovnyk-me-ingestion-feasibility.md):
 200-character text cap by default, original URL and fetch timestamp retained,
-upsert without deleting cache or corpus. It is neither a bulk crawl nor a full
-dictionary mirror. `vts:<id>` refers to the imported row's local SQLite id.
+upsert without deleting cache or corpus. Each row also records `use_role`
+(`newsum` is `candidate-discovery`, `sum` is `contrast`), the SHA-256 of the full
+cached text, the cache file locator and the importer version. The cache's
+observed 404s are stored in `slovnyk_me_lookup_misses`, and live lookups skip
+them; a bare null in the cache is unproven and is not recorded.
+`scripts/ingest/slovnyk_me_coverage.py` reports PULS A1–B1 and Atlas coverage per
+dictionary. It is neither a bulk crawl nor a full dictionary mirror.
+`vts:<id>` refers to the imported row's local SQLite id, which re-imports keep.
 
 Receipt ids bind to the option's **word**, for `valid` and `invalid`
 judgements alike; this proves source identity, never judgement correctness.

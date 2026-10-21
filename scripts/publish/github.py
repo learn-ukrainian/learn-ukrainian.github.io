@@ -10,6 +10,7 @@ import argparse
 import json
 import os
 import re
+import subprocess
 import sys
 import tempfile
 from pathlib import Path
@@ -113,7 +114,19 @@ SCHEMAS = {
     ),
     "issue-unlink": ({"parent_id", "child_id"}, {**COMMON, "parent_id": "node", "child_id": "node"}),
 }
-WORKFLOWS = {"ci.yml": {}, "deploy-pages.yml": {}}
+WORKFLOWS = {"ci.yml": {}, "deploy-pages.yml": {}, "stale-branch-cleanup.yml": {}}
+# The merge-queue reader trusts review-verdict markers from the shared fleet login, so
+# only scripts/review/record_cf_verdict.py may write them (#11127). Comment fields
+# refuse the prefix unless the value is a CfVerdictRecord on the recorder's verb.
+CF_VERDICT_MARKER_PREFIX = "<!-- cf-verdict"
+COMMENT_FIELDS = {
+    "issue-comment": "body",
+    "issue-comment-json": "body",
+    "pr-comment": "body",
+    "pr-review": "body",
+    "issue-close": "comment",
+}
+CF_VERDICT_RECORD_VERB = "issue-comment-json"
 
 ENUMS = {
     "workflow": set(WORKFLOWS),
@@ -189,6 +202,37 @@ def _validate(verb, fields):
     for name in ("body", "notes"):
         if name in fields and name + "_file" in fields:
             raise gate.PublishBlocked("OPSEC: use one text input per field.")
+
+
+class CfVerdictRecord(str):
+    """A review-verdict comment built by ``record_cf_verdict``; the only marker carrier.
+
+    The CLI and ``body_file`` only ever produce plain ``str``, so a hand-written marker
+    cannot reach a comment through the publisher. The record holds exactly one marker,
+    on its last line, which is where the merge-queue reader looks for it.
+    """
+
+    def __new__(cls, text: str) -> CfVerdictRecord:
+        if (
+            not isinstance(text, str)
+            or text.count(CF_VERDICT_MARKER_PREFIX) != 1
+            or not text.rstrip("\n").split("\n")[-1].startswith(CF_VERDICT_MARKER_PREFIX)
+        ):
+            raise gate.PublishBlocked("CF_VERDICT_MARKER_REFUSED: malformed verdict record.")
+        return super().__new__(cls, text)
+
+
+def _refuse_verdict_markers(verb, fields):
+    """Refuse a review-verdict marker in comment text unless the recorder built it."""
+    key = COMMENT_FIELDS.get(verb)
+    value = fields.get(key) if key else None
+    if not isinstance(value, str) or CF_VERDICT_MARKER_PREFIX not in value:
+        return
+    if verb == CF_VERDICT_RECORD_VERB and type(value) is CfVerdictRecord:
+        return
+    raise gate.PublishBlocked(
+        "CF_VERDICT_MARKER_REFUSED: review-verdict markers are written only by scripts/review/record_cf_verdict.py."
+    )
 
 
 class Asset:
@@ -291,6 +335,9 @@ def _prepare_recovery(verb, fields, dest, cwd, environment, runner, *, queue=Fal
                 slurp=name in {"comments", "timeline", "jobs"},
                 **selectors,
             )
+            refusal = github_client.refusal_of(result, injected=runner is not None)
+            if refusal is not None:
+                raise refusal
             value = json.loads(result.stdout)
             if name in {"comments", "timeline"}:
                 return [item for page in value for item in page]
@@ -299,6 +346,11 @@ def _prepare_recovery(verb, fields, dest, cwd, environment, runner, *, queue=Fal
             return value
         except github_client.GitHubRateLimited:
             raise
+        except subprocess.CalledProcessError as exc:
+            refusal = github_client.refusal_of(exc, injected=runner is not None)
+            if refusal is not None:
+                raise refusal from None
+            raise gate.PublishBlocked("RECOVERY_LOOKUP_UNKNOWN: live evidence unavailable") from None
         except Exception:
             raise gate.PublishBlocked("RECOVERY_LOOKUP_UNKNOWN: live evidence unavailable") from None
 
@@ -451,14 +503,18 @@ def publish(
                     fields[field] = raw.decode("utf-8")
                 except UnicodeError:
                     raise gate.PublishBlocked("OPSEC: publisher text is not UTF-8.") from None
+        _refuse_verdict_markers(verb, fields)
 
         def readiness_runner(args, **kwargs):
             if runner is None:
                 kwargs["fresh"] = True
             result = _send(args, environment=kwargs.pop("env"), runner=runner, cwd=kwargs.pop("cwd"), **kwargs)
             observation = getattr(result, "github_result", None)
-            if observation is not None and (observation.stale or observation.error == "github_rate_limited"):
-                raise github_client.GitHubRateLimited(observation.reset_at)
+            if observation is not None and observation.stale:
+                raise github_client.GitHubRateLimited(observation.reset_at, observation.reason)
+            refusal = github_client.refusal_of(result, injected=runner is not None)
+            if refusal is not None:
+                raise refusal
             return result
 
         recovery_queue = False
@@ -795,7 +851,7 @@ REST_READS = {
     "check-annotations": ("repos/{repo}/check-runs/{number}/annotations", {"number": "number"}),
     "jobs": ("repos/{repo}/actions/runs/{number}/jobs", {"number": "number"}),
     "run": ("repos/{repo}/actions/runs/{number}", {"number": "number"}),
-    "issues": ("repos/{repo}/issues?state=open&labels=infra", {}),
+    "issues": ("repos/{repo}/issues?state=open", {}),
     "runs": ("repos/{repo}/actions/runs?event=merge_group&created={start}..{end}", {"start": "timestamp", "end": "timestamp"}),
     "deployments": ("repos/{repo}/deployments?sha={sha}", {"sha": "sha"}),
     "deployment-statuses": ("repos/{repo}/deployments/{number}/statuses", {"number": "number"}),

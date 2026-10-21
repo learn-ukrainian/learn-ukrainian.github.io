@@ -581,19 +581,26 @@ def test_remote_transport_real_loopback_stalled_headers_timeout(monkeypatch: pyt
 
 @pytest.mark.parametrize("phase", ["headers", "body"])
 def test_remote_transport_real_loopback_drip_obeys_total_deadline(monkeypatch: pytest.MonkeyPatch, phase: str) -> None:
+    # Bytes arrive every 10 ms, a tenth of the 100 ms socket inactivity timeout,
+    # so only the total-deadline watchdog can end the read. Unwatched, the drip
+    # would take ~10 s (1000 bytes), far past the 3 s bound that absorbs CI jitter.
+    drip_interval = 0.01
+    drip_bytes = 1000
     received = threading.Event()
+    release = threading.Event()
 
     class Handler(http.server.BaseHTTPRequestHandler):
         def do_GET(self) -> None:
             received.set()
             if phase == "body":
                 self.send_response(200)
-                self.send_header("Content-Length", "50")
+                self.send_header("Content-Length", str(drip_bytes))
                 self.send_header("Connection", "close")
                 self.end_headers()
-                pieces = (b"x" for _ in range(50))
+                pieces = (b"x" for _ in range(drip_bytes))
             else:
-                raw = b"HTTP/1.1 200 OK\r\nContent-Length: 2\r\nConnection: close\r\n\r\n{}"
+                head = b"HTTP/1.1 200 OK\r\nConnection: close\r\nX-Pad: "
+                raw = head + b"a" * (drip_bytes - len(head)) + b"\r\nContent-Length: 2\r\n\r\n{}"
                 pieces = (bytes((byte,)) for byte in raw)
             for piece in pieces:
                 try:
@@ -601,7 +608,8 @@ def test_remote_transport_real_loopback_drip_obeys_total_deadline(monkeypatch: p
                     self.wfile.flush()
                 except (BrokenPipeError, ConnectionResetError):
                     break
-                time.sleep(0.025)
+                if release.wait(drip_interval):
+                    break
 
         def log_message(self, format: str, *args: object) -> None:
             pass
@@ -615,8 +623,9 @@ def test_remote_transport_real_loopback_drip_obeys_total_deadline(monkeypatch: p
         with pytest.raises(LookupError):
             hydration._fetch_remote_stream("epic:123", deadline=started + 0.1)
         assert received.is_set()
-        assert time.monotonic() - started < 0.5
+        assert time.monotonic() - started < 3.0
     finally:
+        release.set()
         server.shutdown()
         server.server_close()
         thread.join(timeout=1)
@@ -659,30 +668,52 @@ def test_terminating_process_group_escalates_after_200ms(monkeypatch: pytest.Mon
 
 
 def test_gh_queries_are_new_sessions_and_timeout_reaps(monkeypatch: pytest.MonkeyPatch) -> None:
+    def pipe(mode):
+        """A real pipe end whose other end is closed: reads see end of file, writes break."""
+        read, write = hydration.os.pipe()
+        hydration.os.close(write if mode == "rb" else read)
+        return hydration.os.fdopen(read if mode == "rb" else write, mode)
+
     class Process:
+        """A ``gh`` that closes its output but is still running at the deadline."""
+
         pid = 4242
         returncode = None
+
+        def __init__(self, stdin):
+            self.args = ["gh"]
+            self.stdin = pipe("wb") if stdin == hydration.subprocess.PIPE else None
+            self.stdout, self.stderr = pipe("rb"), pipe("rb")
 
         def __enter__(self):
             return self
 
         def __exit__(self, *args):
+            for stream in (self.stdin, self.stdout, self.stderr):
+                if stream is not None:
+                    stream.close()
             return False
 
-        def communicate(self, *, input=None, timeout=None):
+        def wait(self, timeout=None):
+            events.append(("wait", timeout))
             if timeout is not None:
                 raise hydration.subprocess.TimeoutExpired("gh", timeout)
-            return b"", b""
+            self.returncode = -signal.SIGKILL
+            return self.returncode
 
     launched = {}
-    signals = []
+    events = []
     monkeypatch.setenv("GH_REPO", "fixture/project")
-    monkeypatch.setattr(hydration.subprocess, "Popen", lambda *args, **kwargs: launched.update(kwargs) or Process())
-    monkeypatch.setattr(hydration.os, "killpg", lambda pid, signum: signals.append((pid, signum)))
+    monkeypatch.setattr(
+        hydration.subprocess, "Popen", lambda *args, **kwargs: launched.update(kwargs) or Process(kwargs["stdin"])
+    )
+    monkeypatch.setattr(hydration.os, "killpg", lambda pid, signum: events.append(("killpg", pid, signum)))
     monkeypatch.setattr(hydration.time, "monotonic", lambda: 1.0)
     assert hydration.run_gh_json(["issue", "view", "5512", "--json", "title"], deadline=1.1) is None
     assert launched["start_new_session"] is True
-    assert signals == [(4242, signal.SIGKILL)]
+    # The bounded wait times out, the whole group is killed, and only then is the process reaped.
+    assert events[0][0] == "wait" and events[0][1] is not None and 0 < events[0][1] <= 0.1 + 1e-9
+    assert events[1:] == [("killpg", 4242, signal.SIGKILL), ("wait", None)]
 
 
 @pytest.mark.parametrize(

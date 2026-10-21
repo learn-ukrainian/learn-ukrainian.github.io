@@ -8,7 +8,7 @@ itself is stated once in the core `SKILL.md` loop.
 ```bash
 .venv/bin/python -m scripts.fleet_comms cold-start-board   # cold-start first action
 curl -sS --max-time 2 "http://127.0.0.1:8765/api/orient?lean=true" || true
-curl -sS --max-time 2 "http://127.0.0.1:8765/api/work/v1/projection" || true  # best-effort: local server, degraded/absent sources are normal
+curl -sS --max-time 2 "http://127.0.0.1:8765/api/work/v1/projection?stream=<your-stream>" || true  # best-effort: local server, degraded/absent sources are normal
 curl -sS --max-time 2 "http://127.0.0.1:8765/api/work/v1/next?stream=<your-stream>" || true  # stream-scoped pick list (#6880)
 .venv/bin/python -m scripts.fleet_comms plane-status        # message-plane mode/parity
 .venv/bin/python -m agents_extensions.shared.session_streams dual-write-status
@@ -25,8 +25,8 @@ session-health signal **by seat**: **grok / gemini / kimi** have a canary lane �
 **Claude / Sonnet** have **no** canary lane and use the native SessionStart / PostCompact
 hook chain + thread-handoff instead (do not call a non-existent `<model>_lane`).
 
-**Work-board orientation surface:** `GET http://127.0.0.1:8765/api/work/v1/projection`
-returns the merged work board — issues, PRs, dispatch tasks, and reviews — with each item
+**Work-board orientation surface:** `GET http://127.0.0.1:8765/api/work/v1/projection?stream=<your-stream>`
+returns that lane's work board — issues, PRs, dispatch tasks, and reviews — with each item
 carrying a rule-derived `health` (`ON_TRACK` / `AT_RISK` / `OFF_TRACK` / `UNKNOWN` — authority
 missing/stale, pairs with the `INSPECT_UNKNOWN` safe action; see `HEALTH_RANK` in
 `scripts/work/attention.py`), an `attention_rank`, and a `safe_next_action`. Query it at orient

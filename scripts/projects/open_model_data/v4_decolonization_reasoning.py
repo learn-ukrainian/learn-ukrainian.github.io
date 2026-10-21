@@ -708,7 +708,7 @@ def find_dictionary_attestation(
     sources_db_path: Path,
     conn: SQLiteConnection | None = None,
 ) -> str | None:
-    """Check historical (Grinchenko) and academic (SUM-11) dictionary presence in sources.db."""
+    """Check pre-Soviet dictionary attestation in Grinchenko only."""
     if not sources_db_path.is_file():
         return None
     close_conn = False
@@ -726,17 +726,8 @@ def find_dictionary_attestation(
             row_g = cur.execute("SELECT 1 FROM grinchenko WHERE word = ? LIMIT 1", (word,)).fetchone()
             if row_g:
                 return "Історичний словник української мови Б. Грінченка (1907–1909); верифіковано у ВЕСУМ"
-            row_s = cur.execute("SELECT 1 FROM sum11 WHERE word = ? LIMIT 1", (word,)).fetchone()
-            if row_s:
-                return "Академічний Словник української мови в 11 томах (СУМ-11); верифіковано у ВЕСУМ"
         else:
-            # Multi-word phrase: verify if full phrase appears in SUM-11 or Grinchenko definitions
             phrase = " ".join(words).lower()
-            row_s = cur.execute("SELECT 1 FROM sum11 WHERE definition LIKE ? LIMIT 1", (f"%{phrase}%",)).fetchone()
-            if row_s:
-                return (
-                    "Академічний Словник української мови (СУМ-11, контекстне вживання фраземи); верифіковано у ВЕСУМ"
-                )
             row_g = cur.execute("SELECT 1 FROM grinchenko WHERE definition LIKE ? LIMIT 1", (f"%{phrase}%",)).fetchone()
             if row_g:
                 return "Історичний словник української мови Б. Грінченка (контекстне вживання фраземи); верифіковано у ВЕСУМ"

@@ -1,0 +1,9 @@
+B1 settings.json at 4d42d321 (direct entire hooks) :: ========================= 2 failed, 1 passed in 2.09s ==========================
+B2 installer at 4d42d321 (no symlink refusal) :: ============================== 7 failed in 3.32s ===============================
+B3 installer at 4d42d321 (Entire failure exits before the gate) :: ============================== 4 failed in 2.90s ===============================
+G1 guard accepts a substring version :: ========================= 4 failed, 65 passed in 8.76s =========================
+G2 guard skips the private-route check :: ========================= 7 failed, 23 passed in 6.37s =========================
+G3 guard propagates an Entire failure :: ========================= 3 failed, 27 passed in 6.19s =========================
+G4 guard leaves a timed-out capture tree running :: ========================= 1 failed in 62.09s (0:01:02) =========================
+RESTORED_OK
+B5 ADR-018 at 4d42d321 (earlier pin sentence, no canary table) :: ======================= 2 failed, 31 deselected in 1.15s =======================

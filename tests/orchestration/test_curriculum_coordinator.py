@@ -15,6 +15,7 @@ from jsonschema import Draft202012Validator
 
 from scripts.fleet import credit_lane
 from scripts.orchestration import curriculum_coordinator as coordinator
+from tests.claude_route_accounts import bound
 
 pytestmark = pytest.mark.reads_content
 
@@ -27,6 +28,11 @@ assert BOUNDED_SPEC is not None and BOUNDED_SPEC.loader is not None
 bounded_completion = importlib.util.module_from_spec(BOUNDED_SPEC)
 sys.modules[BOUNDED_SPEC.name] = bounded_completion
 BOUNDED_SPEC.loader.exec_module(bounded_completion)
+
+
+def _assess(snapshot, *args, **kwargs):
+    """The wave gate on a raw fixture bound as the default account, as ``_probe_health`` binds it (#10770)."""
+    return coordinator._health_assessment(bound(snapshot), *args, **kwargs)
 
 
 @pytest.fixture
@@ -421,7 +427,7 @@ def _build_group(assessment: dict[str, Any]) -> dict[str, Any]:
 
 def test_near_cap_lane_with_fresh_credit_balance_passes_wave_gate() -> None:
     config = coordinator.load_config()
-    passed, assessment = coordinator._health_assessment(
+    passed, assessment = _assess(
         _credit_snapshot(_published_credit(fetched_at=CREDIT_NOW - timedelta(seconds=60))),
         config["health"],
         now=CREDIT_NOW,
@@ -468,7 +474,7 @@ def test_near_cap_lane_with_fresh_credit_balance_passes_wave_gate() -> None:
 )
 def test_near_cap_lane_without_credit_relief_keeps_failing_wave_gate(credit: Any) -> None:
     config = coordinator.load_config()
-    passed, assessment = coordinator._health_assessment(_credit_snapshot(credit), config["health"], now=CREDIT_NOW)
+    passed, assessment = _assess(_credit_snapshot(credit), config["health"], now=CREDIT_NOW)
     assert not passed
     group = _build_group(assessment)
     assert group["available"] == 0 and not group["passed"]
@@ -480,7 +486,7 @@ def test_near_cap_lane_without_credit_relief_keeps_failing_wave_gate(credit: Any
 
 def test_near_cap_lane_without_credit_field_is_unchanged() -> None:
     config = coordinator.load_config()
-    passed, assessment = coordinator._health_assessment(_health(codex="near_cap")(), config["health"], now=CREDIT_NOW)
+    passed, assessment = _assess(_health(codex="near_cap")(), config["health"], now=CREDIT_NOW)
     assert not passed
     assert _build_group(assessment)["lanes"] == [
         {
@@ -497,9 +503,7 @@ def test_near_cap_lane_without_credit_field_is_unchanged() -> None:
 def test_old_published_credit_balance_reads_unverified_and_fails_wave_gate() -> None:
     config = coordinator.load_config()
     old = CREDIT_NOW - timedelta(seconds=credit_lane.load_policy().credit_max_age_s + 1)
-    passed, assessment = coordinator._health_assessment(
-        _credit_snapshot(_published_credit(fetched_at=old)), config["health"], now=CREDIT_NOW
-    )
+    passed, assessment = _assess(_credit_snapshot(_published_credit(fetched_at=old)), config["health"], now=CREDIT_NOW)
     assert not passed
     [lane] = _build_group(assessment)["lanes"]
     assert lane["credit_state"] == "credits_unverified"
@@ -516,14 +520,14 @@ def test_credit_relief_never_overrides_health_staleness_or_non_near_cap_status(
 ) -> None:
     config = coordinator.load_config()
     snapshot = _credit_snapshot(_published_credit(), status=status, healthy=healthy, stale=stale)
-    passed, assessment = coordinator._health_assessment(snapshot, config["health"], now=CREDIT_NOW)
+    passed, assessment = _assess(snapshot, config["health"], now=CREDIT_NOW)
     assert not passed
     assert _build_group(assessment)["available"] == 0
 
 
 def test_cool_lane_records_published_credit_state() -> None:
     config = coordinator.load_config()
-    passed, assessment = coordinator._health_assessment(
+    passed, assessment = _assess(
         _credit_snapshot(_published_credit("plan_healthy"), status="cool"), config["health"], now=CREDIT_NOW
     )
     assert passed
@@ -568,7 +572,7 @@ def test_published_credit_relief_is_not_reused_after_a_new_rate_limit(
         json.dumps({"ts": "2026-07-14T11:50:00Z", "outcome": "rate_limited"}) + "\n", encoding="utf-8"
     )
     config = coordinator.load_config()
-    passed, assessment = coordinator._health_assessment(
+    passed, assessment = _assess(
         _credit_snapshot(_published_credit(fetched_at=CREDIT_NOW - timedelta(seconds=60))),
         config["health"],
         now=CREDIT_NOW,
@@ -586,7 +590,7 @@ def test_unreadable_rate_limit_evidence_fails_the_wave_gate(monkeypatch: pytest.
 
     monkeypatch.setattr(credit_lane, "read_recent_rate_limits", broken)
     config = coordinator.load_config()
-    passed, assessment = coordinator._health_assessment(
+    passed, assessment = _assess(
         _credit_snapshot(_published_credit(fetched_at=CREDIT_NOW - timedelta(seconds=60))),
         config["health"],
         now=CREDIT_NOW,
@@ -648,7 +652,7 @@ def test_wave_receipt_keeps_unknown_health_distinct_from_unhealthy(
         del snapshot["agents"]["codex"]["health"]
     else:
         snapshot["agents"]["codex"]["health"] = health
-    passed, assessment = coordinator._health_assessment(snapshot, coordinator.load_config()["health"], now=CREDIT_NOW)
+    passed, assessment = _assess(snapshot, coordinator.load_config()["health"], now=CREDIT_NOW)
     [lane] = _build_group(assessment)["lanes"]
     assert lane["healthy"] is expected_healthy
     assert lane.get("health_basis") == expected_basis

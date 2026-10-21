@@ -4,7 +4,7 @@
 Verifies factual grounding across Ukrainian Linguistic Decolonization & Reasoning (ULDR)
 Chain-of-Thought (CoT) trajectories against local authoritative databases:
   1. VESUM (data/vesum.db): Lemma attestation, inflected forms count, tags, living standard validity.
-  2. СУМ-11 (data/sources.db): Headword presence, definitions, and sovietization risk flags.
+  2. СУМ-11 (data/sources.db): Soviet historical attestation only, never modern semantic evidence.
   3. R2U (1920s dictionaries / cache): Historical contrast and pre-Soviet attestation.
   4. ULIF (data/sources.db:ulif_dictua_*): Register qualifiers and canonical headwords.
   5. Negative controls (PRESERVE): Verified standard Ukrainian, zero fabricated suppression notes.
@@ -31,6 +31,7 @@ from typing import Any
 
 import jsonschema
 
+from scripts.lexicon.source_attribution import cites_soviet_dictionary, cites_soviet_dictionary_outside_context
 from scripts.lib.readonly_sqlite import SQLiteConnection
 from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.opsec.needles import home_dir_pattern, load_needles
@@ -201,6 +202,7 @@ class ClaimVerificationResult:
     passed: bool
     evidence: str
     error_message: str = ""
+    soviet_colonization_context: dict[str, Any] | None = None
 
 
 @dataclass
@@ -333,90 +335,30 @@ class CoTClaimVerifier:
         return all(t in all_tags_text for t in relevant_expected)
 
     def get_sum11_entry(self, word: str) -> dict[str, Any] | None:
+        """Return exact historical headword evidence, without morphological or phrase inference."""
         norm = clean_word(word)
         if norm in self._sum11_cache:
             return self._sum11_cache[norm]
-        cur = self.sources_conn.cursor()
-        cur.execute(
-            """
-            SELECT id, word, definition, text, sovietization_risk, sovietization_keywords
-            FROM sum11
-            WHERE word = ? OR word LIKE ? OR word LIKE ? OR word LIKE ?
-            LIMIT 1
-            """,
-            (norm, f"{norm}|%", f"%|{norm}|%", f"%|{norm}"),
+        cur = self.sources_conn.execute(
+            "SELECT * FROM sum11 WHERE word = ? OR instr('|' || word || '|', '|' || ? || '|') > 0 LIMIT 1",
+            (norm, norm),
         )
         row = cur.fetchone()
-        if not row:
-            # Fallback 1: resolve inflected form to lemma via VESUM
-            cur_v = self.vesum_conn.cursor()
-            cur_v.execute("SELECT lemma FROM forms_all WHERE word_form = ? LIMIT 1", (norm,))
-            lem_row = cur_v.fetchone()
-            if lem_row:
-                lem = clean_word(lem_row[0])
-                cur.execute(
-                    """
-                    SELECT id, word, definition, text, sovietization_risk, sovietization_keywords
-                    FROM sum11
-                    WHERE word = ? OR word LIKE ? OR word LIKE ? OR word LIKE ?
-                    LIMIT 1
-                    """,
-                    (lem, f"{lem}|%", f"%|{lem}|%", f"%|{lem}"),
-                )
-                row = cur.fetchone()
-
-        if not row and norm.endswith(("ся", "сь")):
-            # Fallback 2: reflexive verb -> base non-reflexive verb
-            base_v = norm[:-2] if norm.endswith("ся") else norm[:-1]
-            cur.execute(
-                """
-                SELECT id, word, definition, text, sovietization_risk, sovietization_keywords
-                FROM sum11
-                WHERE word = ? OR word LIKE ? OR word LIKE ? OR word LIKE ?
-                LIMIT 1
-                """,
-                (base_v, f"{base_v}|%", f"%|{base_v}|%", f"%|{base_v}"),
-            )
-            row = cur.fetchone()
-
-        if not row and " " in norm:
-            # Fallback 3: multi-word phrase -> look up candidate lemmas in VESUM and check sum11 text
-            words = [w.strip() for w in norm.split() if w.strip()]
-            cur_v = self.vesum_conn.cursor()
-            for w in words:
-                cur_v.execute("SELECT DISTINCT lemma FROM forms_all WHERE word_form = ? OR lemma = ?", (w, w))
-                lemmas = [r[0] for r in cur_v.fetchall()]
-                for lem in lemmas:
-                    clean_lem = clean_word(lem)
-                    cur.execute(
-                        """
-                        SELECT id, word, definition, text, sovietization_risk, sovietization_keywords
-                        FROM sum11
-                        WHERE word = ? OR word LIKE ? OR word LIKE ? OR word LIKE ?
-                        LIMIT 1
-                        """,
-                        (clean_lem, f"{clean_lem}|%", f"%|{clean_lem}|%", f"%|{clean_lem}"),
-                    )
-                    candidate_row = cur.fetchone()
-                    if candidate_row:
-                        text_clean = ACUTE_RE.sub("", candidate_row[3]).lower()
-                        other_words = [ow for ow in words if ow != w]
-                        if all(ow in text_clean for ow in other_words):
-                            row = candidate_row
-                            break
-                if row:
-                    break
-
-        if not row:
+        if row is None:
             self._sum11_cache[norm] = None
             return None
-        res = {
-            "id": row[0],
-            "word": row[1],
-            "definition": row[2],
-            "text": row[3],
-            "sovietization_risk": row[4],
-            "sovietization_keywords": row[5],
+        res = dict(zip((column[0] for column in cur.description), row, strict=True))
+        res["soviet_colonization_context"] = {
+            "source": "СУМ-11 (1970–1980)",
+            "source_role": "soviet_colonization_context",
+            "red_flag": True,
+            "historical_only": True,
+            "contrast_only": True,
+            "can_verify_modern_ukrainian": False,
+            "sovietization_risk": res.get("sovietization_risk"),
+            "sovietization_keywords": res.get("sovietization_keywords"),
+            "ideological_markers": res.get("ideological_markers"),
+            "entry_id": res.get("id"),
         }
         self._sum11_cache[norm] = res
         return res
@@ -829,18 +771,14 @@ class CoTClaimVerifier:
                 claim, False, "Tags not found", f"Lemma «{claim.term}» does not match expected tags {expected_tags}"
             )
 
-        # D. СУМ-11 Headword verification
+        # D. Exact Soviet historical headword attestation, never modern validity.
         elif claim.claim_type == ClaimType.SUM11_HEADWORD:
             entry = self.get_sum11_entry(claim.term)
             if entry is not None:
                 return ClaimVerificationResult(
-                    claim, True, f"Found in sum11 table (id={entry['id']}, risk={entry['sovietization_risk']})"
+                    claim, True, "Soviet historical headword attestation only; modern meaning unresolved",
+                    soviet_colonization_context=entry["soviet_colonization_context"],
                 )
-            # If multi-word, check headword
-            head = claim.term.split()[0]
-            entry_head = self.get_sum11_entry(head)
-            if entry_head is not None:
-                return ClaimVerificationResult(claim, True, f"Found headword «{head}» in sum11 (id={entry_head['id']})")
             return ClaimVerificationResult(
                 claim, False, "Not in sum11", f"Cited term «{claim.term}» does not exist in sources.db sum11 table"
             )
@@ -874,7 +812,18 @@ class CoTClaimVerifier:
                     f"Term «{term}» does not fall within alphabetical coverage of СУМ-11 volume {vol}",
                 )
             return ClaimVerificationResult(
-                claim, True, f"СУМ-11 volume {vol} and year {vol_meta['year']} verified for «{term}»"
+                claim, True, f"Historical bibliography only: volume {vol}, year {vol_meta['year']}, alphabetical range for «{term}»",
+                soviet_colonization_context={
+                    "source": "СУМ-11 (1970–1980)",
+                    "source_role": "soviet_colonization_context",
+                    "red_flag": True,
+                    "historical_only": True,
+                    "contrast_only": True,
+                    "can_verify_modern_ukrainian": False,
+                    "sovietization_risk": None,
+                    "sovietization_keywords": None,
+                    "ideological_markers": None,
+                },
             )
 
         # D.2 СУМ-11 Stylistic Label verification
@@ -887,7 +836,10 @@ class CoTClaimVerifier:
                 )
             text = (entry.get("text") or entry.get("definition", "")).lower()
             if label in text:
-                return ClaimVerificationResult(claim, True, f"Stylistic label «{label}» verified in СУМ-11 text")
+                return ClaimVerificationResult(
+                    claim, True, f"Historical editorial label «{label}» only; modern register unresolved",
+                    soviet_colonization_context=entry["soviet_colonization_context"],
+                )
             return ClaimVerificationResult(
                 claim,
                 False,
@@ -897,21 +849,11 @@ class CoTClaimVerifier:
 
         # D.3 СУМ-11 Sovietization / Codification Context verification
         elif claim.claim_type == ClaimType.SUM11_SOVIETIZATION:
-            head = claim.term.split()[0]
-            entry = self.get_sum11_entry(claim.term) or self.get_sum11_entry(head)
-            if entry is not None:
-                risk = entry.get("sovietization_risk", 0)
-                kw = entry.get("sovietization_keywords", "")
-                return ClaimVerificationResult(
-                    claim,
-                    True,
-                    f"СУМ-11 codification verified (id={entry['id']}, sovietization_risk={risk}, kw='{kw}')",
-                )
+            entry = self.get_sum11_entry(claim.term)
             return ClaimVerificationResult(
-                claim,
-                False,
-                "Term not in СУМ-11",
-                f"Trajectory asserts Soviet lexicographical codification in СУМ-11, but «{claim.term}» is not present in СУМ-11",
+                claim, False, "Historical risk metadata is not proof of suppression or codification",
+                "SUM-11 presence and risk flags cannot verify a suppression narrative; independent evidence required",
+                soviet_colonization_context=entry["soviet_colonization_context"] if entry else None,
             )
 
         # E. R2U Historical Dictionary verification with Polarity
@@ -971,6 +913,12 @@ class CoTClaimVerifier:
             alt_entry = claim.expected_attributes.get("alt_entry", {})
             evidence_source = alt_entry.get("evidence_source", "")
 
+            if cites_soviet_dictionary(evidence_source):
+                return ClaimVerificationResult(
+                    claim, False, "Modern semantic evidence unresolved",
+                    "SUM-11 cannot verify modern meaning or register, including mixed modern/Soviet citations",
+                )
+
             if tier == "living_standard":
                 vesum_cnt = self.get_vesum_forms_count(claim.term)
                 ulif_attested = self.check_ulif_attestation(claim.term)
@@ -989,8 +937,7 @@ class CoTClaimVerifier:
                 )
             elif tier in ("classical_regional", "technical_compound"):
                 vesum_cnt = self.get_vesum_forms_count(claim.term)
-                sum_entry = self.get_sum11_entry(claim.term)
-                if vesum_cnt == 0 and sum_entry is None:
+                if vesum_cnt == 0:
                     words = [w for w in claim.term.split() if clean_word(w)]
                     if not (len(words) > 1 and all(self.get_vesum_forms_count(w) > 0 for w in words)):
                         return ClaimVerificationResult(
@@ -1007,7 +954,8 @@ class CoTClaimVerifier:
                         f"Register tier «{tier}» requires non-empty evidence_source citation",
                     )
                 return ClaimVerificationResult(
-                    claim, True, f"Register tier «{tier}» verified (VESUM={vesum_cnt}, source='{evidence_source}')"
+                    claim, False, "Modern sense-bound register evidence unresolved",
+                    f"Register tier «{tier}» needs approved sense-bound evidence; morphology and a citation string are insufficient",
                 )
             elif tier == "purist_neologism":
                 claimed_cnt = alt_entry.get("vesum_forms_count", 0)
@@ -1095,8 +1043,24 @@ class CoTClaimVerifier:
                     rejection_reasons=rejection_reasons,
                 )
 
+        # Historical dictionary citations cannot certify modern answers. The legacy
+        # schema has no approved sense-bound evidence contract; do not infer one
+        # from labels, VESUM counts, or author-supplied prose in any answer field.
+        if cites_soviet_dictionary_outside_context(trajectory):
+            rejection_reasons.append({
+                "claim_type": "SUM11_MODERN_EVIDENCE_REFUSED",
+                "source_field": "root",
+                "error": "SUM-11 outside soviet_colonization_context; modern semantic evidence unresolved",
+            })
+
         # 2. Extract and verify claims
         claims = self.parse_trajectory_claims(trajectory)
+        if not rejection_reasons and any(claim.claim_type.name.startswith("SUM11_") for claim in claims):
+            rejection_reasons.append({
+                "claim_type": "SUM11_MODERN_EVIDENCE_REFUSED",
+                "source_field": "root",
+                "error": "Legacy SUM-11 claims are historical checks only; modern semantic evidence unresolved",
+            })
         results: list[ClaimVerificationResult] = []
         for claim in claims:
             res = self.verify_claim(claim, trajectory)
@@ -1110,6 +1074,8 @@ class CoTClaimVerifier:
                         "claim_text": claim.claim_text,
                         "error": res.error_message,
                         "evidence": res.evidence,
+                        **({"soviet_colonization_context": res.soviet_colonization_context}
+                           if res.soviet_colonization_context is not None else {}),
                     }
                 )
 
@@ -1180,6 +1146,12 @@ def build_verification_receipt(
         )
     ]
     zero_unverified_claims = bool(all(r.passed for r in dict_results)) if dict_results else True
+    if any(
+        reason.get("claim_type") == "SUM11_MODERN_EVIDENCE_REFUSED"
+        for outcome in all_outcomes
+        for reason in outcome.rejection_reasons
+    ):
+        zero_unverified_claims = False
 
     living_std_results = [
         r
@@ -1431,7 +1403,13 @@ def run_claim_verifier(
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Automated CoT Claim-Verifier for Ukrainian Linguistic Reasoning Trajectories"
+        description=("Verify trajectory claims against local databases. Use for rejection and morphology checks; "
+                     "SUM-11 only supports historical attestation and cannot certify modern meaning."),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=("Example: .venv/bin/python -m scripts.projects.open_model_data.v4_verify_trajectory_claims --verify-only\n"
+                "Outputs: verified/rejected JSONL, receipt JSON, and updated R2U cache; verify-only reads existing files.\n"
+                "Exit codes: 0 for completed verification, including rejected records; 1 for invalid inputs or integrity errors.\n"
+                "Related: #9147; v1_decolonization_trajectory schema."),
     )
     parser.add_argument(
         "--input", type=Path, default=DEFAULT_INPUT_TRAJECTORIES, help="Path to input trajectories JSONL"

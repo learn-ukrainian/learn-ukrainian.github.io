@@ -4,6 +4,7 @@ from __future__ import annotations
 import hashlib
 import io
 import json
+import os
 import urllib.error
 from itertools import pairwise
 from pathlib import Path
@@ -1672,13 +1673,22 @@ def test_h_valid_http_hops_check_actual_raw_target(
              ledger=ledger, other_ledger=other_ledger, checked=checked, paced=paced, target=actual)
 
 
+def h_assert_sentinel_content_size_mtime_inode(path, content, size, mtime_ns, inode):
+    """Content, size, mtime, and inode. Access time is not part of this comparison."""
+    observed = path.stat()
+    assert (path.read_bytes(), observed.st_size, observed.st_mtime_ns, observed.st_ino) == (
+        content, size, mtime_ns, inode,
+    )
+
+
 @pytest.mark.parametrize("scheme", ["dict", "ftp", "file", "data", "DiCt", "FtP", "FiLe", "DaTa"])
 def test_h_curl_protocol_restriction_blocks_low_level_io(tmp_path, scheme):
     import socket
 
     sentinel = tmp_path / "source"
     sentinel.write_bytes(b"private synthetic content")
-    before = sentinel.stat(), sentinel.read_bytes()
+    before = sentinel.stat()
+    content = sentinel.read_bytes()
     with socket.socket() as listener:
         listener.bind(("localhost", 0))
         listener.listen()
@@ -1692,9 +1702,70 @@ def test_h_curl_protocol_restriction_blocks_low_level_io(tmp_path, scheme):
         assert status == 0 and rc != 0 and body == b""
         with pytest.raises(BlockingIOError):
             listener.accept()
-    assert (sentinel.stat(), sentinel.read_bytes()) == before
+    h_assert_sentinel_content_size_mtime_inode(
+        sentinel, content, before.st_size, before.st_mtime_ns, before.st_ino,
+    )
     h_record(f"proto-{scheme}", status=status, rc=rc, body_hex=body.hex(), connections=0,
-             source_sha256=hashlib.sha256(before[1]).hexdigest())
+             source_sha256=hashlib.sha256(content).hexdigest())
+
+
+def test_h_curl_sentinel_identity_ignores_access_time(tmp_path):
+    content = b"private synthetic content"
+    sentinel = tmp_path / "source"
+    sentinel.write_bytes(content)
+    before = sentinel.stat()
+    os.utime(sentinel, ns=(before.st_atime_ns + 5_000_000_000, before.st_mtime_ns))
+    # Whole os.stat_result equality uses integer-second stamps, so this
+    # whole-second access-time shift is unequal. A sub-second shift can stay equal.
+    old_equal = (sentinel.stat(), sentinel.read_bytes()) == (before, content)
+    assert old_equal is False
+    h_assert_sentinel_content_size_mtime_inode(
+        sentinel, content, before.st_size, before.st_mtime_ns, before.st_ino,
+    )
+
+    same_size = tmp_path / "same-size"
+    same_size.write_bytes(content)
+    base = same_size.stat()
+    changed = content[:-1] + b"X"
+    same_size.write_bytes(changed)
+    os.utime(same_size, ns=(base.st_atime_ns, base.st_mtime_ns))
+    observed = same_size.stat()
+    assert len(changed) == base.st_size == observed.st_size
+    assert observed.st_mtime_ns == base.st_mtime_ns and observed.st_ino == base.st_ino
+    assert same_size.read_bytes() == changed
+    with pytest.raises(AssertionError):
+        h_assert_sentinel_content_size_mtime_inode(
+            same_size, content, base.st_size, base.st_mtime_ns, base.st_ino,
+        )
+
+    mtime_only = tmp_path / "mtime"
+    mtime_only.write_bytes(content)
+    base = mtime_only.stat()
+    os.utime(mtime_only, ns=(base.st_atime_ns, base.st_mtime_ns + 5_000_000_000))
+    observed = mtime_only.stat()
+    assert mtime_only.read_bytes() == content
+    assert observed.st_size == base.st_size and observed.st_ino == base.st_ino
+    assert observed.st_mtime_ns != base.st_mtime_ns
+    with pytest.raises(AssertionError):
+        h_assert_sentinel_content_size_mtime_inode(
+            mtime_only, content, base.st_size, base.st_mtime_ns, base.st_ino,
+        )
+
+    replaced = tmp_path / "inode"
+    replaced.write_bytes(content)
+    base = replaced.stat()
+    other = tmp_path / "inode-new"
+    other.write_bytes(content)
+    os.utime(other, ns=(base.st_atime_ns, base.st_mtime_ns))
+    os.replace(other, replaced)
+    observed = replaced.stat()
+    assert replaced.read_bytes() == content
+    assert observed.st_size == base.st_size and observed.st_mtime_ns == base.st_mtime_ns
+    assert observed.st_ino != base.st_ino
+    with pytest.raises(AssertionError):
+        h_assert_sentinel_content_size_mtime_inode(
+            replaced, content, base.st_size, base.st_mtime_ns, base.st_ino,
+        )
 
 
 @pytest.mark.parametrize("links,expected", [

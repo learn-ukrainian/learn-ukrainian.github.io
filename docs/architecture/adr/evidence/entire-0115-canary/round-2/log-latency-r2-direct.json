@@ -1,0 +1,24 @@
+{
+  "bin": "bin-0.11.5",
+  "agent_hooks": "direct entire hooks",
+  "user_prompt_submit": {
+    "n": 10,
+    "p50": 1.721,
+    "p95": 3.758,
+    "min": 1.468,
+    "max": 3.758
+  },
+  "stop": {
+    "n": 10,
+    "p50": 2.098,
+    "p95": 2.763,
+    "min": 2.009,
+    "max": 2.763
+  },
+  "failures": [],
+  "loadavg_1m_samples": [
+    "15.83",
+    "17.53",
+    "16.65"
+  ]
+}

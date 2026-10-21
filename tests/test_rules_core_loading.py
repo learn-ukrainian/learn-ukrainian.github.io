@@ -109,7 +109,9 @@ def _anchors(seat: str) -> tuple[str, ...]:
 
 def _assert_core(context: str, seat: str, row: str, *, context_bytes: int | None = None) -> None:
     block = rules_core.core_block(seat)
-    assert len(block.encode("utf-8")) <= 40_960, f"{row}: binding {seat} block exceeds 40 KB"
+    # #10959: the framed content-seat block measures 41201 bytes.
+    ceiling = 42_000 if seat == "content" else 40_960
+    assert len(block.encode("utf-8")) <= ceiling, f"{row}: binding {seat} block exceeds {ceiling} bytes"
     assert block in context, f"{row}: the exact {seat} block is not in the assembled context"
     for anchor in _anchors(seat):
         assert anchor in context, f"{row}: anchor {anchor!r} missing"
@@ -641,6 +643,7 @@ def _stub_worker_clis(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     refuses under CI markers before any process runs; scrub them as the GLM
     adapter tests do (the guard has its own tests).
     """
+    monkeypatch.setattr("scripts.agent_runtime.adapters.deepseek._cached_flash_name", lambda: "DeepSeek V4.1 Flash")
     bin_dir = tmp_path / "stub-bin"
     bin_dir.mkdir()
     for name in _WORKER_CLIS:

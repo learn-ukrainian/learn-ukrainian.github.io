@@ -1309,6 +1309,27 @@ def _probe_kimi_native(*, timeout_s: float) -> dict[str, Any]:
     )
 
 
+def _grok_product_usage(raw: Any) -> list[dict[str, Any]] | None:
+    """Per-product percents from a Grok billing ``productUsage`` list.
+
+    A non-list payload returns ``None`` so the caller leaves the credit window
+    alone. A list always returns a list. Entries without a non-empty string
+    ``product`` are dropped. A missing, non-numeric or out-of-range
+    ``usagePercent`` stays ``None`` (unknown), never 0.
+    """
+    if not isinstance(raw, list):
+        return None
+    products: list[dict[str, Any]] = []
+    for entry in raw:
+        if not isinstance(entry, dict):
+            continue
+        name = entry.get("product")
+        if not isinstance(name, str) or name == "":
+            continue
+        products.append({"product": name, "usage_percent": _public_percent(entry.get("usagePercent"))})
+    return products
+
+
 def _probe_grok_native(*, timeout_s: float) -> dict[str, Any]:
     token = _load_grok_bearer()
     if not token:
@@ -1357,10 +1378,16 @@ def _probe_grok_native(*, timeout_s: float) -> dict[str, Any]:
         if isinstance(used_pct, (int, float))
         else None
     )
-    return _normalize_provider_data(
+    # Product percents are display-only: attach them after the credit window is
+    # built so the product list cannot change creditUsagePercent's weekly number.
+    result = _normalize_provider_data(
         "grok",
         {"provider": "grok", "source": "grok_cli_proxy", "usage": {"secondary": weekly}},
     )
+    products = _grok_product_usage(config.get("productUsage"))
+    if products is not None:
+        result["product_usage"] = products
+    return result
 
 
 def _agy_cli_bin() -> str | None:
@@ -3248,7 +3275,7 @@ def compute_provider_trend(lane: str, *, history: list[dict[str, Any]] | None = 
     }
 
 
-def _fetch_cursor_lane_usage_live(*, prefer_native: bool = True) -> dict[str, Any]:
+def _fetch_cursor_lane_usage_live() -> dict[str, Any]:
     """Probe Cursor login + native Auto/API pools (blocking; background/scheduler only)."""
     login = probe_cursor_login()
     if not login.get("is_authenticated"):
@@ -3364,7 +3391,7 @@ def trigger_cursor_background_refresh() -> None:
         _cursor_refresh_thread.start()
 
 
-def get_cursor_lane_usage(*, prefer_native: bool = True) -> dict[str, Any]:
+def get_cursor_lane_usage() -> dict[str, Any]:
     """Cursor lane: cache-only HTTP path; native probe runs in background."""
     cached = cache_get_with_age(CURSOR_CACHE_KEY, ttl=_cursor_cache_ttl_s())
     if cached is not None:

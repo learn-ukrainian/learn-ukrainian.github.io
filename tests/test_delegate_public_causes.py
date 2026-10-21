@@ -42,7 +42,16 @@ from tests.test_delegate import (  # noqa: F401
     _worktree_add_via_run,
     tmp_tasks_dir,
 )
-from tests.test_kimi_coding_only_admission import _FAKE_TOKEN, HOSTILE_GIT_ERRORS, assert_no_host_details
+from tests.test_kimi_coding_only_admission import (
+    _FAKE_TOKEN,
+    ESCAPE_SEQUENCES,
+    HOSTILE_GIT_ERRORS,
+    JSON_ESCAPED_CHARS,
+    assert_no_host_details,
+    contains_link_local_ipv6,
+    link_local_after_json_escapes,
+    shas_after_json_escapes,
+)
 
 kimi_rescue = rescue_fixtures.kimi_rescue
 
@@ -53,7 +62,7 @@ HOSTILE = (
     "fatal: unable to access 'https://deploy:" + _FAKE_TOKEN + "@git.build-host.example.internal/learn.git/': "
     "cannot read /srv/synthetic-operator/backups/learn.git via 203.0.113.77 and [fe80::1ff:fe23:4567:890a%eth7]"
 )
-HOSTILE_MARKERS = ("build-host", "example.internal", "/srv/", "synthetic-operator", "203.0.113.77", "fe80", "eth7")
+HOSTILE_MARKERS = ("build-host", "example.internal", "/srv/", "synthetic-operator", "203.0.113.77", "eth7")
 # The public reason fields and row keys this contract names, enumerated here rather than read from the module.
 PUBLIC_RECORD_FIELDS = (
     "last_error",
@@ -94,13 +103,44 @@ def _public_values(record: dict) -> list[object]:
     return [value for value in values if value is not None]
 
 
-def _assert_public(record: dict) -> None:
-    """No host detail shows in any public reason of ``record``, and each one is a registered cause."""
-    public = json.dumps(_public_values(record), ensure_ascii=False)
+def _assert_no_hostile_markers(public: str) -> None:
+    """``public`` holds no hostile marker, no credential and no IPv6 link-local literal."""
     for marker in (*HOSTILE_MARKERS, _FAKE_TOKEN):
         assert marker not in public, marker
+    assert not contains_link_local_ipv6(public), "IPv6 link-local literal"
+
+
+def _assert_public(record: dict) -> None:
+    """No host detail shows in any public reason of ``record``, and each one is a registered cause."""
+    _assert_no_hostile_markers(json.dumps(_public_values(record), ensure_ascii=False))
     for value in _public_values(record):
         assert delegate.is_public_cause(value), value
+
+
+def test_a_commit_sha_holding_the_link_local_letters_is_no_host_detail():
+    sha = "426cf32d8175a73823c18d63ca4107ebfe8007cb"
+    assert "fe80" in sha
+    _assert_no_hostile_markers(json.dumps({"head": sha}))
+
+
+def test_the_hostile_link_local_literal_still_fails_the_public_guard():
+    with pytest.raises(AssertionError, match="link-local"):
+        _assert_no_hostile_markers(json.dumps({"last_error": "via [fe80::1ff:fe23:4567:890a]"}))
+    with pytest.raises(AssertionError, match="link-local"):
+        _assert_no_hostile_markers("via fe80::1")
+
+
+@pytest.mark.parametrize("text", link_local_after_json_escapes())
+def test_a_link_local_literal_behind_an_escape_still_fails_the_public_guard(text):
+    with pytest.raises(AssertionError, match="link-local"):
+        _assert_no_hostile_markers(text)
+
+
+def test_a_commit_sha_behind_an_escape_passes_the_public_guard():
+    texts = shas_after_json_escapes()
+    assert len(texts) == 37 * 2 * (len(JSON_ESCAPED_CHARS) * 5 + len(ESCAPE_SEQUENCES) * 3)
+    for text in texts:
+        _assert_no_hostile_markers(text)
 
 
 # --- the registry and the sink -------------------------------------------------------------------
@@ -120,12 +160,26 @@ def test_every_registered_cause_is_fixed_text():
             assert marker not in cause, (cause, marker)
 
 
-def test_unsupported_verdict_cause_survives_public_persistence_without_free_text():
+@pytest.mark.parametrize(
+    "response,identifier",
+    [
+        ("VERDICT: CHANGES", "CHANGES"),
+        ("Verdict: Looks good to me overall.", "Looks"),
+        ("**Verdict:** I approve this change.", "I"),
+        ("VERDICT: ghp_SYNTHETIC10598TOKENabcdefghij", "[REDACTED_SECRET]"),
+    ],
+)
+def test_unsupported_verdict_cause_survives_public_persistence_without_free_text(response, identifier):
     cause = "review_unsupported_verdict_token"
     assert cause in delegate.public_causes()
     task_id = "unsupported-verdict-public"
-    diagnostic = (
-        f"{cause}: unsupported token 'CHANGES'; "
+    gate = delegate.run_completion_gate(
+        delegate.COMPLETION_GATE_REVIEW_VERDICT, {}, response=response, commits_ahead=None, worktree=None,
+    )
+    assert gate.failure == cause and gate.status == "failed"
+    diagnostic = gate.detail
+    assert diagnostic == (
+        f"{cause}: unsupported verdict identifier {identifier!r}; "
         "accepted tokens: APPROVE, APPROVED, CHANGES_REQUESTED, REQUEST_CHANGES, BLOCKED"
     )
     delegate._write_state_atomic(
@@ -145,7 +199,7 @@ def test_unsupported_verdict_cause_survives_public_persistence_without_free_text
     assert state["stderr_excerpt"] == diagnostic
     # Details remain in the existing diagnostic channel, never admitted as
     # arbitrary parameters on a public reason.
-    public, local = delegate.public_cause(f"{cause}, unsupported token {HOSTILE}")
+    public, local = delegate.public_cause(f"{cause}, unsupported verdict identifier {HOSTILE}")
     assert public == delegate.UNCLASSIFIED_CAUSE and local is not None
 
 
@@ -811,3 +865,14 @@ def test_the_advisory_committed_diff_error_names_the_exception_class_only(tmp_pa
 
     assert output is None
     assert error == "the worker's committed diff could not be read (OSError)"
+
+
+def test_agy_unverified_identity_is_a_closed_public_cause():
+    task_id = "agy-unverified-public"
+    delegate._write_state_atomic(delegate._state_path(task_id), {"task_id": task_id})
+    cause = delegate._worker_last_error(
+        task_id, stderr_excerpt=HOSTILE, failure_cause="agy_model_identity_unverified",
+        final_status="failed", returncode=0, runtime_failure_code=None, worker_exception=None,
+    )
+    assert cause == "agy_model_identity_unverified"
+    assert_no_host_details(cause)

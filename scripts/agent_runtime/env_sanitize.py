@@ -30,7 +30,9 @@ _SENSITIVE_VALUE_RE = re.compile(
     r"(?:"
     r"github_pat_[A-Za-z0-9_]+|"
     r"gh[pousr]_[A-Za-z0-9_]+|"
-    r"sk-[A-Za-z0-9_-]+|"
+    # A credential starts at a word boundary; the tail of "task-" is not a
+    # key prefix. Separators, including a hyphen, still expose short keys.
+    r"\bsk-[A-Za-z0-9_-]+|"
     r"xox[baprs]-[A-Za-z0-9-]+|"
     r"hf_[A-Za-z0-9_]+|"
     r"npm_[A-Za-z0-9_]+|"
@@ -51,7 +53,13 @@ _SAFE_NAME_ALLOWLIST = {
     "LEARN_UKRAINIAN_DISPATCH_AGENT",
     "LEARN_UKRAINIAN_DISPATCH_TASK_ID",
     "LOGNAME",
+    # Tool cache directories delegate.py points at the task's scratch lease
+    # (#10777), so caches leave the worktree. Directory paths, never
+    # credentials.
+    "MYPY_CACHE_DIR",
     "PATH",
+    "PYTHONPYCACHEPREFIX",
+    "RUFF_CACHE_DIR",
     "TMPDIR",
     "USER",
 }
@@ -87,6 +95,9 @@ _PUSH_CREDENTIAL_NAMES = (
 _SAFE_VALUE_NAME_ALLOWLIST = {
     "LEARN_UKRAINIAN_DISPATCH_AGENT",
     "LEARN_UKRAINIAN_DISPATCH_TASK_ID",
+    "MYPY_CACHE_DIR",
+    "PYTHONPYCACHEPREFIX",
+    "RUFF_CACHE_DIR",
     "TMPDIR",
     "LU_RUNTIME_TMP_BASE_ROOT",
     "LU_RUNTIME_TMP_ROOT",

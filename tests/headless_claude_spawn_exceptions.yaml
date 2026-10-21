@@ -252,6 +252,22 @@ exceptions:
   - {module: scripts/pipeline/core.py, function: "run_verify_prose_only", program: "audit_script", category: non-claude, reason: "runs the module audit script"}
   # scripts/pipeline/dispatch.py
   - {module: scripts/pipeline/dispatch.py, function: "run_with_heartbeat", program: "cmd", category: generic-runner, reason: "runs the AGY route; dispatch_claude_phase takes run_headless_claude instead (test_pipeline_phase_child_is_controlled)"}
+  # scripts/ops/host_stack_drift.py
+  - {module: scripts/ops/host_stack_drift.py, function: "_default_run", program: "claude", category: claude-probe, reason: "literal `claude --version` session-start version probe"}
+  - {module: scripts/ops/host_stack_drift.py, function: "_default_run", program: "codex", category: non-claude, reason: "literal `codex --version` session-start version probe"}
+  - {module: scripts/ops/host_stack_drift.py, function: "_default_run", program: "grok", category: non-claude, reason: "literal `grok --version` session-start version probe"}
+  - {module: scripts/ops/host_stack_drift.py, function: "_default_run", program: "cursor-agent", category: non-claude, reason: "literal `cursor-agent --version` session-start version probe"}
+  - {module: scripts/ops/host_stack_drift.py, function: "_default_run", program: "agy", category: non-claude, reason: "literal `agy --version` session-start version probe"}
+  - {module: scripts/ops/host_stack_drift.py, function: "_default_run", program: "entire", category: non-claude, reason: "literal `entire --version` session-start version probe"}
+  - {module: scripts/ops/host_stack_drift.py, function: "_default_run", program: "uv", category: non-claude, reason: "literal `uv --version` session-start version probe"}
+  - {module: scripts/ops/host_stack_drift.py, function: "_default_run", program: "node", category: non-claude, reason: "literal `node --version` session-start version probe"}
+  - {module: scripts/ops/host_stack_drift.py, function: "_default_run", program: "sqlite3", category: non-claude, reason: "literal `sqlite3 --version` session-start version probe"}
+  - {module: scripts/ops/host_stack_drift.py, function: "_default_run", program: "psql", category: non-claude, reason: "literal `psql --version` session-start version probe"}
+  - {module: scripts/ops/host_stack_drift.py, function: "_default_run", program: "prometheus", category: non-claude, reason: "literal `prometheus --version` session-start version probe"}
+  - {module: scripts/ops/host_stack_drift.py, function: "_default_run", program: "grafana-server", category: non-claude, reason: "literal `grafana-server -v` session-start version probe"}
+  - {module: scripts/ops/host_stack_drift.py, function: "_default_run", program: "alertmanager", category: non-claude, reason: "literal `alertmanager --version` session-start version probe"}
+  - {module: scripts/ops/host_stack_drift.py, function: "_default_run", program: "restic", category: non-claude, reason: "literal `restic --version` session-start version probe"}
+  - {module: scripts/ops/host_stack_drift.py, function: "_default_run", program: "rclone", category: non-claude, reason: "literal `rclone --version` session-start version probe"}
   # scripts/projects/ua_open_weight_eval/suite_cli.py
   - {module: scripts/projects/ua_open_weight_eval/suite_cli.py, function: "run_local", program: "command", category: generic-runner, reason: "runs the local open-weight model command from the suite config"}
   # scripts/review/closeout_cli.py
@@ -279,3 +295,5 @@ exceptions:
   # scripts/utils/claude_version.py
   - {module: scripts/utils/claude_version.py, function: "run_version_probe", program: "cmd_prefix[0]", category: claude-probe, reason: "literal `<program> --version` probe shared by the version gates, the lane probe and the proxy health probes"}
   - {module: scripts/utils/claude_version.py, function: "run_version_probe", program: "npx", category: claude-probe, reason: "literal `npx @anthropic-ai/claude-code@latest --version` probe of the npx fallback"}
+  # scripts/ops/context_guard.py
+  - {module: scripts/ops/context_guard.py, function: "default_runner", program: "argv", category: generic-runner, reason: "the driver-lane guard's runner; Tmux methods and scripts/ops/lane_relaunch.py pass it only tmux, ps and systemd-run argv. Lane launchers run inside tmux panes (respawn-pane/new-session), never as a spawned Claude print-mode process (#10814)"}

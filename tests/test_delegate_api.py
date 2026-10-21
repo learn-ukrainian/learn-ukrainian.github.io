@@ -289,7 +289,7 @@ def test_zombie_detection_works_on_dead_pid(tmp_path, monkeypatch):
     assert task["alive"] is False
 
 
-# Legacy public summary keys for list/active (no repository attribution).
+# Public summary keys include additive accounting projections, without repository attribution.
 _LEGACY_DELEGATE_SUMMARY_KEYS = {
     "task_id",
     "agent",
@@ -302,6 +302,11 @@ _LEGACY_DELEGATE_SUMMARY_KEYS = {
     "duration_s",
     "age_s",
     "alive",
+    "requested_selector",
+    "observed_model",
+    "identity_state",
+    "observed_model_source",
+    "observed_model_provenance",
 }
 
 
@@ -539,3 +544,71 @@ def test_task_detail_detects_stale_run_nonce_split_brain(tmp_path, monkeypatch):
     resp_mismatch = client.get("/api/delegate/tasks/split-task?run_nonce=round-2-live-nonce")
     assert resp_mismatch.status_code == 409
     assert "Task run_nonce mismatch" in resp_mismatch.json()["detail"]
+
+
+def test_accounting_projection_survives_task_cache_restart_and_upgrade(tmp_path, monkeypatch):
+    tasks_dir = tmp_path / "tasks"
+    ctx = _pin_tasks_dir(monkeypatch, tasks_dir)
+    expected = {
+        "requested_selector": "requested-model", "observed_model": "observed-model",
+        "identity_state": "observed", "observed_model_source": "provider-init",
+        "observed_model_provenance": {"requested_model": "attempt-model", "invocation_id": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"},
+    }
+    _write_task(tasks_dir / "observed.json", _task_payload("observed", model="accounting-model", **expected))
+    _write_task(tasks_dir / "legacy.json", _task_payload("legacy", model="legacy-model"))
+
+    def assert_rows():
+        response = client.get("/api/delegate/tasks")
+        assert response.status_code == 200
+        rows = {row["task_id"]: row for row in response.json()["tasks"]}
+        assert rows["observed"]["model"] == "accounting-model"
+        assert {key: rows["observed"][key] for key in expected} == expected
+        assert {key: rows["legacy"][key] for key in expected} == {
+            "requested_selector": None, "observed_model": None,
+            "identity_state": "unknown", "observed_model_source": None, "observed_model_provenance": None,
+        }
+
+    assert_rows()
+
+    delegate_router._TASK_STATE_CACHE.clear()
+    reloaded = delegate_router._load_task_cache_from_db(str(tasks_dir), ctx)
+    assert len(reloaded) == 2
+    # A process restart uses only the persisted cache when task mtimes match.
+    delegate_router._TASK_STATE_CACHE.update(reloaded)
+    read_task = delegate_router._read_task_state
+    monkeypatch.setattr(delegate_router, "_read_task_state", lambda *a: (_ for _ in ()).throw(AssertionError("unexpected reread")))
+    assert_rows()
+    monkeypatch.setattr(delegate_router, "_read_task_state", read_task)
+    # Entries from the old schema lack projections and must reload real tasks.
+    conn = delegate_router._init_task_cache_db(delegate_router._task_cache_db_path(str(tasks_dir)), ctx)
+    conn.execute("UPDATE task_cache SET model_accounting=NULL")
+    conn.commit()
+    conn.close()
+    assert delegate_router._load_task_cache_from_db(str(tasks_dir), ctx) == {}
+    delegate_router._TASK_STATE_CACHE.clear()
+    assert_rows()
+
+
+def test_accounting_conflict_is_unknown_in_list_and_detail(tmp_path, monkeypatch):
+    tasks_dir = tmp_path / "tasks"
+    _pin_tasks_dir(monkeypatch, tasks_dir)
+    _write_task(tasks_dir / "conflict.json", _task_payload(
+        "conflict", model="accounting-model", requested_selector="requested-model",
+        observed_model="observed-model", identity_state="observed", observed_model_source="provider-init",
+        observed_model_provenance={
+            "requested_model": "attempt-model", "invocation_id": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+        },
+        model_identity={"actual_model_known": True, "actual_model": "conflicting-model", "source": "provider-init"},
+    ))
+
+    listed = client.get("/api/delegate/tasks")
+    detail = client.get("/api/delegate/tasks/conflict")
+
+    assert listed.status_code == detail.status_code == 200
+    expected = {
+        "requested_selector": "requested-model", "observed_model": None,
+        "identity_state": "unknown", "observed_model_source": None, "observed_model_provenance": None,
+    }
+    for record in (listed.json()["tasks"][0], detail.json()["task"]):
+        assert record["model"] == "accounting-model"
+        assert {key: record[key] for key in expected} == expected

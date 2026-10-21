@@ -48,7 +48,7 @@ def test_grok_effort_injects_reasoning_effort_only_when_set() -> None:
     assert "--effort" not in without.stdout
 
 
-@pytest.mark.parametrize("selector", ("atlas", "practice", "infra.devops", "infra"))
+@pytest.mark.parametrize("selector", ("atlas", "infra.devops", "infra"))
 def test_grok_driver_claims_a_lease_for_supported_selectors(selector: str) -> None:
     result = run_launcher("start-grok-driver.sh", "--epic", selector)
     assert result.returncode == 0, result.stderr
@@ -60,13 +60,16 @@ def test_grok_driver_claims_a_lease_for_supported_selectors(selector: str) -> No
 
 
 @pytest.mark.parametrize(
-    "selector, slot", (("seminars-folk", "grok-folk"), ("bio", "grok-bio"), ("hramatka", "grok-hramatka"))
+    "selector, slot",
+    (("practice", "grok-practice"), ("seminars-folk", "grok-folk"), ("bio", "grok-bio"), ("hramatka", "grok-hramatka")),
 )
-def test_grok_driver_refuses_ukrainian_content_slots(selector: str, slot: str) -> None:
+def test_grok_driver_refuses_unregistered_slots(selector: str, slot: str) -> None:
+    """Unregistered Grok slots exit 2 with their identity and never claim a lease."""
     result = run_launcher("start-grok-driver.sh", "--epic", selector)
     assert result.returncode == 2, result.stdout + result.stderr
     assert slot in result.stderr
-    assert "operator order 2026-09-27" in result.stderr
+    assert f"'{slot}', which is not registered" in result.stderr
+    assert "operator order 2026-09-27" not in result.stderr
     assert "would claim lease" not in result.stdout
 
 
@@ -89,7 +92,13 @@ def test_grok_hermes_opt_in_pins_route_and_reuses_driver_lifecycle(tmp_path) -> 
     from tests.test_launcher_contract import hermes_stub_env
 
     result = run_launcher(
-        "start-grok-driver.sh", "--epic", "devops", "--harness", "hermes", "--effort", "high",
+        "start-grok-driver.sh",
+        "--epic",
+        "devops",
+        "--harness",
+        "hermes",
+        "--effort",
+        "high",
         env=hermes_stub_env(tmp_path),
     )
     assert result.returncode == 0, result.stderr

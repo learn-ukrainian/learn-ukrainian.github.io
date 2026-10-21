@@ -1,0 +1,61 @@
+{
+  "bin": "bin-prepushhang",
+  "label": "r2-12-prepushhang",
+  "agent_hooks": "configured guarded commands",
+  "commit_rc": 0,
+  "commit_seconds": 1.159,
+  "commit_guard_lines": [],
+  "commit_sha": "e18f640beb43fd216185be0c9c7705ea983c4df8",
+  "checkpoint_trailer": "6912cb7131da",
+  "local_v1_before": "c2bd51ea935c",
+  "local_v1_after_commit": "01a8830d4f83",
+  "push_remote": "origin",
+  "gate_exit": 0,
+  "push_rc": 0,
+  "push_seconds": 110.195,
+  "push_stderr_tail": "[entire] capture timed out after 110s; continuing without capture\nTo github.com:learn-ukrainian/learn-ukrainian.github.io.git\n   ed73a5e1..e18f640b  HEAD -> main\n",
+  "agent_hook_results": [
+    {
+      "verb": "session-start",
+      "rc": 0,
+      "seconds": 0.229,
+      "guard": []
+    },
+    {
+      "verb": "user-prompt-submit",
+      "rc": 0,
+      "seconds": 1.781,
+      "guard": []
+    },
+    {
+      "verb": "stop",
+      "rc": 0,
+      "seconds": 2.287,
+      "guard": []
+    },
+    {
+      "verb": "session-end",
+      "rc": 0,
+      "seconds": 0.246,
+      "guard": []
+    }
+  ],
+  "repo_gate_calls": [
+    "gate:pre-commit",
+    "gate:commit-msg",
+    "gate:post-commit",
+    "gate:pre-push"
+  ],
+  "refs_after": {
+    "public": [
+      "refs/heads/main e18f640b"
+    ],
+    "private": [
+      "refs/heads/entire/checkpoints/v1 983f768"
+    ],
+    "fork": [
+      "refs/heads/main 517a9ff5"
+    ]
+  },
+  "public_entire_refs": []
+}

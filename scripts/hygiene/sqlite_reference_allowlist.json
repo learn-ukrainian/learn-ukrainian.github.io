@@ -105,6 +105,26 @@
     ]
   },
   {
+    "path": "scripts/atlas/word_card_sources.py",
+    "reference_count": 1,
+    "kind": "writer",
+    "target_db": "temporary pilot WP3 extract DB",
+    "reason": "copies the pilot entries, their homonym siblings and sections verbatim into a throwaway file so the WP3 ingestion modules run over a bounded snapshot (#8981)",
+    "calls": [
+      "sqlite3.connect(destination)"
+    ]
+  },
+  {
+    "path": "scripts/atlas/word_card_universe.py",
+    "reference_count": 1,
+    "kind": "writer",
+    "target_db": "checkpoint.db",
+    "reason": "creates resumable complete-universe build checkpoint database (#10516)",
+    "calls": [
+      "sqlite3.connect(checkpoint)"
+    ]
+  },
+  {
     "path": "scripts/audit/checks/vocabulary.py",
     "reference_count": 2,
     "kind": "writer",
@@ -330,6 +350,17 @@
     ]
   },
   {
+    "path": "scripts/ingest/incremental_dmklinger_ingest.py",
+    "reference_count": 4,
+    "kind": "writer",
+    "target_db": ":memory: builder oracle; existing sources.db (--db, mode=rw)",
+    "reason": "restores pinned dmklinger translations in an explicit existing target after transactional preimage validation (#8959)",
+    "calls": [
+      "sqlite3.connect(db_path.resolve().as_uri() + '?mode=rw', uri=True, isolation_level=None)",
+      "sqlite3.connect(':memory:')"
+    ]
+  },
+  {
     "path": "scripts/ingest/incremental_historical_source_ingest.py",
     "reference_count": 2,
     "kind": "writer",
@@ -535,6 +566,18 @@
     ]
   },
   {
+    "path": "scripts/lexdata/build_store.py",
+    "reference_count": 3,
+    "kind": "writer",
+    "target_db": "lexdata generation temp file; lexdata backup copy; in-memory temp-directory pin and probe",
+    "reason": "single writer of data/lexdata.db: builds the temp generation before the atomic swap and receives the online backup of the published generation (lexdata design r3 §6); a private :memory: connection pins and proves the SQLite temp directory (§9)",
+    "calls": [
+      "sqlite3.connect(':memory:')",
+      "sqlite3.connect(path.resolve().as_uri() + '?mode=rwc', uri=True, isolation_level='DEFERRED')",
+      "sqlite3.connect(destination)"
+    ]
+  },
+  {
     "path": "scripts/lexicon/enrich_heteronyms.py",
     "reference_count": 1,
     "kind": "writer",
@@ -665,18 +708,6 @@
     "reason": "rewrites derived ULIF forms tables",
     "calls": [
       "sqlite3.connect(str(target_db))"
-    ]
-  },
-  {
-    "path": "scripts/lexicon/sum20_lookup.py",
-    "reference_count": 6,
-    "kind": "writer",
-    "target_db": "sources.db",
-    "reason": "write=True caches official SUM-20 articles",
-    "calls": [
-      "sqlite3.connect(db_path if write else _read_only_uri(db_path), uri=True)",
-      "sqlite3.connect(target)",
-      "sqlite3.connect(read_only_uri, uri=True)"
     ]
   },
   {
@@ -1050,7 +1081,7 @@
   },
   {
     "path": "scripts/wiki/build_sources_db.py",
-    "reference_count": 13,
+    "reference_count": 14,
     "kind": "writer",
     "target_db": "sources.db; temporary rebuild DB",
     "reason": "builds source database before atomic replacement",
@@ -1159,13 +1190,13 @@
   },
   {
     "path": "scripts/wiki/sources_db.py",
-    "reference_count": 28,
+    "reference_count": 30,
     "kind": "writer",
     "target_db": "sources.db",
     "reason": "write branch migrates and ingests ULIF schema",
     "calls": [
-      "sqlite3.connect(f'{db_path.resolve().as_uri()}?mode=ro', uri=True, check_same_thread=False)",
-      "sqlite3.connect(str(db_path), check_same_thread=False)"
+      "sqlite3.connect(f'{db_path.resolve().as_uri()}?mode=ro', uri=True, check_same_thread=False, **options)",
+      "sqlite3.connect(str(db_path), check_same_thread=False, **options)"
     ]
   },
   {

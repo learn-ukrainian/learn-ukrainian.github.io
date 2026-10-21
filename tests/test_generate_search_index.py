@@ -732,6 +732,7 @@ def test_main_writes_search_meta_and_per_letter_shards(tmp_path: Path) -> None:
     ]
 
 
+@pytest.mark.needs_sparse_tree("site/src/data")
 def test_committed_browse_records_remain_distinct_from_article_search_entries() -> None:
     search_rows = json.loads((PROJECT_ROOT / DEFAULT_SEARCH_OUT).read_text(encoding="utf-8"))
     meta = json.loads((PROJECT_ROOT / DEFAULT_BROWSE_META_OUT).read_text(encoding="utf-8"))
@@ -1078,6 +1079,7 @@ def test_display_gloss_qualifies_editorial_metadata_outside_lemma_scope() -> Non
         assert display_gloss(gloss, None) == gloss
 
 
+@pytest.mark.needs_sparse_tree("site/src/data")
 def test_committed_browse_and_search_show_scoped_editorial_glosses() -> None:
     """#9603: committed artifacts carry the projected слідуючий/діюча glosses, not raw avoid: metadata."""
     search = {row["s"]: row["g"] for row in json.loads((PROJECT_ROOT / "site/src/data/lexicon-search-index.json").read_text(encoding="utf-8"))}
@@ -1093,6 +1095,7 @@ def test_committed_browse_and_search_show_scoped_editorial_glosses() -> None:
         assert "(russian calque" not in shard[slug]["hay"]
 
 
+@pytest.mark.needs_sparse_tree("site/src/data")
 def test_committed_usage_sources_are_bound_to_their_passages() -> None:
     """#9603: every committed judgment keeps the digest of the passage it quotes."""
     meta = json.loads((PROJECT_ROOT / DEFAULT_BROWSE_META_OUT).read_text(encoding="utf-8"))
@@ -1107,6 +1110,7 @@ def test_committed_usage_sources_are_bound_to_their_passages() -> None:
             assert judgment["passageSha256"] == digest(judgment["passage"])
 
 
+@pytest.mark.needs_sparse_tree("site/src/data")
 def test_committed_browse_flags_never_brand_named_regressions() -> None:
     """#9603 regression seeds stay out of the committed browse filters."""
     flagged = json.loads(
@@ -1175,6 +1179,7 @@ def test_manifest_index_qualifies_unsupported_norm_glosses() -> None:
     assert all("avoid:" not in row["hay"] for row in shards["С"])
 
 
+@pytest.mark.needs_sparse_tree("site/src/data")
 def test_committed_usage_sources_keep_the_pryimaty_expression() -> None:
     """R1: the committed projection binds приймати to «приймати участь» → «брати участь»."""
     records = json.loads((PROJECT_ROOT / DEFAULT_BROWSE_META_OUT).read_text(encoding="utf-8"))["usageSources"]["records"]

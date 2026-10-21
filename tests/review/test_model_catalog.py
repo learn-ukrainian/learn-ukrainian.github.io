@@ -21,7 +21,12 @@ from unittest.mock import patch
 import pytest
 import yaml
 
-from scripts.review.model_catalog import load_model_catalog
+from scripts.review.model_catalog import (
+    ModelCatalogError,
+    _require_routable_model,
+    load_model_catalog,
+    require_execution_model,
+)
 from scripts.review.role_resolution import expanded_legacy_view
 
 FIXTURE = Path(__file__).resolve().parents[1] / "fixtures/routing_baseline"
@@ -250,27 +255,265 @@ def approved_claude_account_dispatch_baseline(baseline):
     return {**baseline, "dispatch": dispatch}
 
 
+def approved_hermes_effort_baseline(baseline):
+    """Apply #10751's constant Hermes effort warning to the frozen adapter stderr.
+
+    The warning no longer carries the requested effort value, so the captured
+    text drops ``='high'``; every other adapter field and surface is unchanged.
+    """
+    fixture = json.loads((CAPACITY_FIXTURE / "hermes-effort-10751.json").read_bytes())
+    adapters = deepcopy(baseline["adapters"])
+    for replacement in fixture["adapter_stderr_replacements"]:
+        before, after = replacement["before"], replacement["after"]
+        for index in replacement["rows"]:
+            assert adapters[index]["stderr"].count(before) == 1
+            adapters[index]["stderr"] = adapters[index]["stderr"].replace(before, after)
+    return {**baseline, "adapters": adapters}
+
+
+# Claude worker adapter rows whose command carries the shared guard settings.
+HOOK_FAILURE_ROWS = list(range(8, 24, 2))
+# Guard -> (captured timeout, approved timeout, refuses the call on hook failure).
+HOOK_FAILURE_POLICY = {
+    "enforce-venv.sh": (3, 10, True),
+    "heal-core-bare.py": (3, 10, False),
+    "guard-branch-switch-in-main.py": (3, 10, True),
+    "guard-admin-merge.py": (30, 30, True),
+    "guard-pr-merge.py": (30, 30, True),
+    "guard-secret-print.py": (5, 10, True),
+    "guard-primary-checkout-write.py": (5, 10, True),
+    "guard-public-github-text.py": (5, 10, True),
+}
+
+
+def settings_index(row):
+    cmd = row["value"]["cmd"]
+    assert cmd.count("--settings") == 1
+    return cmd.index("--settings") + 1
+
+
+def approved_hook_failure_baseline(baseline):
+    """Apply #10848's fail-closed guard policy to the Claude worker settings.
+
+    Only the ``--settings`` argument of the eight Claude worker adapter rows
+    changes: each shared PreToolUse guard takes its approved timeout, and every
+    refusing guard gains ``onFailure: block``. Other fields and surfaces stay.
+    """
+    adapters = deepcopy(baseline["adapters"])
+    for index in HOOK_FAILURE_ROWS:
+        cmd = adapters[index]["value"]["cmd"]
+        position = settings_index(adapters[index])
+        settings = json.loads(cmd[position])
+        guards = [hook for group in settings["hooks"]["PreToolUse"] for hook in group["hooks"]]
+        assert len(guards) == 9
+        for hook in guards:
+            before, after, blocks = HOOK_FAILURE_POLICY[Path(hook["command"]).name]
+            assert hook["timeout"] == before and "onFailure" not in hook
+            hook["timeout"] = after
+            if blocks:
+                hook["onFailure"] = "block"
+        cmd[position] = json.dumps(settings, separators=(",", ":"))
+    return {**baseline, "adapters": adapters}
+
+
 # Apply literal paragraph edits last: a surface overlay such as #10291's Grok
 # help revision must neither erase this wording nor have its other lines erased.
-PRE_ARGON_HOST_BASELINE = approved_claude_account_dispatch_baseline(
-    approved_cto_wrappers_baseline(
-        approved_claude_cap_baseline(
-            approved_cursor_trailer_baseline(
-                approved_launcher_canary_baseline(
-                    approved_reviewer_seats_baseline(
-                        {
-                            **REVIEW_CAPACITY_BASELINE,
-                            **GEMINI_OVERLAY["surfaces"],
-                            **RESOURCE_OVERLAY["surfaces"],
-                        }
+PRE_ARGON_HOST_BASELINE = approved_hook_failure_baseline(
+    approved_hermes_effort_baseline(
+        approved_claude_account_dispatch_baseline(
+            approved_cto_wrappers_baseline(
+                approved_claude_cap_baseline(
+                    approved_cursor_trailer_baseline(
+                        approved_launcher_canary_baseline(
+                            approved_reviewer_seats_baseline(
+                                {
+                                    **REVIEW_CAPACITY_BASELINE,
+                                    **GEMINI_OVERLAY["surfaces"],
+                                    **RESOURCE_OVERLAY["surfaces"],
+                                }
+                            )
+                        )
                     )
                 )
             )
         )
     )
 )
-APPROVED_BASELINE = approved_argon_trial_baseline(PRE_ARGON_HOST_BASELINE, "host-cli")
+GROK_LANGUAGE_OVERLAY_PATH = CAPACITY_FIXTURE / "routing-10835.json"
+GROK_LANGUAGE_OVERLAY = json.loads(GROK_LANGUAGE_OVERLAY_PATH.read_bytes())
+
+
+def approved_grok_language_seat_baseline(baseline):
+    """Apply #10835 (operator order 2026-10-16) last: two literal field edits.
+
+    ``grok-4.7`` gains the ``ukrainian_review`` role and the fallback
+    ``worker_resource_policy`` states the Sonnet worker default, the native Grok
+    measurement rule and the Gemini 4 hold. Each edit checks its recorded
+    ``before`` value, so a drifted baseline fails instead of being overwritten.
+    """
+    catalog = deepcopy(baseline["catalog"])
+    for row in GROK_LANGUAGE_OVERLAY["catalog_model_fields"]:
+        assert catalog["models"][row["model"]][row["field"]] == row["before"]
+        catalog["models"][row["model"]][row["field"]] = row["after"]
+    fallbacks = deepcopy(baseline["fallbacks"])
+    for row in GROK_LANGUAGE_OVERLAY["fallbacks_fields"]:
+        assert fallbacks[row["field"]] == row["before"]
+        fallbacks[row["field"]] = row["after"]
+    return {**baseline, "catalog": catalog, "fallbacks": fallbacks}
+
+
+ARGON_HOST_BASELINE = approved_argon_trial_baseline(PRE_ARGON_HOST_BASELINE, "host-cli")
+GROK_LANGUAGE_BASELINE = approved_grok_language_seat_baseline(ARGON_HOST_BASELINE)
+
+
+def approved_driver_brief_baseline(baseline):
+    """Apply only #10919's Haiku fields and Luna recon/classification roles."""
+    path = CAPACITY_FIXTURE / "haiku-luna-brief-10919.json"
+    assert hashlib.sha256(path.read_bytes()).hexdigest() == (
+        "39b9928c4ce9a261ee329e8f1cb87833a9f9243b9a84298eb2cafbdf056652eb"
+    )
+    changes = json.loads(path.read_bytes())
+    catalog = deepcopy(baseline["catalog"])
+    for row in changes["catalog_model_fields"]:
+        assert (row["model"], row["field"]) in {
+            ("claude-haiku-5-5", "roles"), ("claude-haiku-5-5", "weaknesses"),
+            ("claude-haiku-5-5", "notes"), ("gpt-6-luna", "roles"),
+        }
+        assert catalog["models"][row["model"]][row["field"]] == row["before"]
+        catalog["models"][row["model"]][row["field"]] = row["after"]
+    dispatch = deepcopy(baseline["dispatch"])
+    for row in changes["dispatch_refusals"]:
+        target = dispatch[row["index"]]["value"]
+        assert target["refusal"] == row["before"]
+        assert row["after"] == row["before"].replace(
+            "bounded_investigation; review_scheduler",
+            "bounded_investigation, readonly_recon, mechanical_classification; review_scheduler",
+        )
+        target["refusal"] = row["after"]
+    return {**baseline, "catalog": catalog, "dispatch": dispatch}
+
+
+WORD_CARD_TOOL_PATH = CAPACITY_FIXTURE / "word-card-tool-11084.json"
+# Codex and Codex Desktop read-only rows, which grant every read-only Sources tool.
+WORD_CARD_TOOL_ROWS = [0, 4]
+
+
+def approved_word_card_tool_baseline(baseline):
+    """Apply #11084's read-only ``word_card`` Sources grant to the Codex worker argv.
+
+    The two read-only Codex rows derive their Sources ``enabled_tools`` and
+    approval map from the server's tool declarations, so each gains exactly
+    ``word_card``. Every other row, field and surface stays.
+    """
+    assert hashlib.sha256(WORD_CARD_TOOL_PATH.read_bytes()).hexdigest() == (
+        "d0a1a006af2440f0d823508c8d59228cd7fda6a0dc51eaa894fecf8a47598fb4"
+    )
+    adapters = deepcopy(baseline["adapters"])
+    for replacement in json.loads(WORD_CARD_TOOL_PATH.read_bytes())["adapter_cmd_replacements"]:
+        before, after = replacement["before"], replacement["after"]
+        assert replacement["rows"] == WORD_CARD_TOOL_ROWS
+        for index in replacement["rows"]:
+            cmd = adapters[index]["value"]["cmd"]
+            assert cmd.count(before) == 1
+            cmd[cmd.index(before)] = after
+    return {**baseline, "adapters": adapters}
+
+
+DRIVER_BRIEF_BASELINE = approved_driver_brief_baseline(GROK_LANGUAGE_BASELINE)
+APPROVED_BASELINE = approved_word_card_tool_baseline(DRIVER_BRIEF_BASELINE)
 APPROVED_INPUTS = {**GEMINI_INPUTS, **SEATS_OVERLAY["inputs"], **ARGON_OVERLAY["inputs"]}
+
+
+def test_grok_language_overlay_records_only_the_two_field_delta():
+    """#10835 changes the grok-4.7 roles and the worker policy text; every other surface and field stays."""
+    assert hashlib.sha256(GROK_LANGUAGE_OVERLAY_PATH.read_bytes()).hexdigest() == (
+        "a2b3103dc0675299d54608ae94546a6802778f6c2b4320cfcf5cd1b1d507ae71"
+    )
+    assert set(GROK_LANGUAGE_OVERLAY) == {"issue", "order", "catalog_model_fields", "fallbacks_fields"}
+    before, after = ARGON_HOST_BASELINE, GROK_LANGUAGE_BASELINE
+    assert set(before) == set(after)
+    for surface in set(before) - {"catalog", "fallbacks"}:
+        assert before[surface] == after[surface], surface
+    old_models, new_models = before["catalog"]["models"], after["catalog"]["models"]
+    assert set(old_models) == set(new_models)
+    assert [model for model in old_models if old_models[model] != new_models[model]] == ["grok-4.7"]
+    old_grok, new_grok = old_models["grok-4.7"], new_models["grok-4.7"]
+    assert {k: v for k, v in old_grok.items() if k != "roles"} == {k: v for k, v in new_grok.items() if k != "roles"}
+    assert new_grok["roles"] == [*old_grok["roles"], "ukrainian_review"]
+    assert {k: v for k, v in after["catalog"].items() if k != "models"} == {
+        k: v for k, v in before["catalog"].items() if k != "models"
+    }
+    assert {k: v for k, v in after["fallbacks"].items() if k != "worker_resource_policy"} == {
+        k: v for k, v in before["fallbacks"].items() if k != "worker_resource_policy"
+    }
+    policy = " ".join(after["fallbacks"]["worker_resource_policy"].split())
+    for clause in (
+        "Sol is the default eligible code worker.",
+        "native Claude workers use Sonnet 5.5 by default and Opus 5.5 only for complex or security work",
+        "Claude-lane Ukrainian stays Opus 5.5.",
+        "Cursor Grok or Gemini routes are language-free overflow only",
+        "its Ukrainian work requires the Sources MCP",
+        "Gemini 4 is disabled until the provider fixes its cost.",
+        "Critical and security final sign-off stays Opus 5.5 or Sol 6.1",
+        "no excluded-writer recommendation",
+    ):
+        assert clause in policy, clause
+
+
+@pytest.mark.parametrize("configuration", ("host-cli", "no-cli"))
+def test_word_card_tool_overlay_adds_only_the_read_only_grant(configuration):
+    """#11084 adds ``word_card`` to the two Codex read-only Sources grants and nothing else."""
+    from scripts.agent_runtime.sources_read_only import sources_tool_sets
+
+    path = FIXTURE / ("baseline.json.gz" if configuration == "host-cli" else "no-cli/baseline.json.gz")
+    before = json.loads(gzip.decompress(path.read_bytes()))
+    original = deepcopy(before)
+    after = approved_word_card_tool_baseline(before)
+    assert before == original
+    assert {k: v for k, v in after.items() if k != "adapters"} == {k: v for k, v in before.items() if k != "adapters"}
+    changed = [i for i, (old, new) in enumerate(zip(before["adapters"], after["adapters"], strict=True)) if old != new]
+    assert changed == WORD_CARD_TOOL_ROWS
+    read_only = list(sources_tool_sets()[0])
+    assert "word_card" in read_only
+    for index in changed:
+        assert INPUTS["adapters"][index] == {
+            "agent": ("codex", "codex-desktop")[changed.index(index)],
+            "isolation": False,
+            "mode": "read-only",
+        }
+        old, new = before["adapters"][index], after["adapters"][index]
+        assert {k: v for k, v in old.items() if k != "value"} == {k: v for k, v in new.items() if k != "value"}
+        assert {k: v for k, v in old["value"].items() if k != "cmd"} == {
+            k: v for k, v in new["value"].items() if k != "cmd"
+        }
+        old_cmd, new_cmd = old["value"]["cmd"], new["value"]["cmd"]
+        tokens = [k for k, (a, b) in enumerate(zip(old_cmd, new_cmd, strict=True)) if a != b]
+        assert [old_cmd[k].split("=", 1)[0] for k in tokens] == [
+            "mcp_servers.sources.enabled_tools",
+            "mcp_servers.sources.tools",
+        ]
+        enabled, approvals = (new_cmd[k].split("=", 1)[1] for k in tokens)
+        assert json.loads(enabled) == read_only
+        assert json.loads(enabled) == sorted([*json.loads(old_cmd[tokens[0]].split("=", 1)[1]), "word_card"])
+        assert approvals == "{" + ",".join(f'{name}={{approval_mode="approve"}}' for name in read_only) + "}"
+
+
+def test_word_card_tool_overlay_refuses_drifted_argv():
+    with pytest.raises(AssertionError):
+        approved_word_card_tool_baseline(APPROVED_BASELINE)
+
+
+def test_grok_ukrainian_role_confers_no_ukrainian_review_route():
+    """The catalog role is descriptive: no Grok review route lists the ukrainian profile (#10835)."""
+    source = Path(__file__).resolve().parents[2]
+    catalog = yaml.safe_load((source / "scripts/config/model_catalog.yaml").read_text(encoding="utf-8"))
+    assert "ukrainian_review" in catalog["models"]["grok-4.7"]["roles"]
+    xai = [seat for seat in catalog["seats"].values() if seat.get("model_id") == "grok-4.7"]
+    assert xai, "grok-4.7 reviewer seat missing"
+    routes = [route for candidate in xai for route in candidate["routes"].values()]
+    assert {route["transport"] for route in routes} == {"native_grok", "cursor"}
+    for route in routes:
+        assert route["review_profiles"] == ["code", "infra"]
 
 
 def test_argon_trial_overlay_records_only_the_model_data_delta():
@@ -279,7 +522,7 @@ def test_argon_trial_overlay_records_only_the_model_data_delta():
         "efe9c9b9db2f651e421e42769cc1682c12b724122545d2e2e8b4b0d66d1148ba"
     )
     assert set(ARGON_OVERLAY) == {"adapter_patches", "inputs", "row_patches", "surfaces"}
-    before, after = PRE_ARGON_HOST_BASELINE, APPROVED_BASELINE
+    before, after = PRE_ARGON_HOST_BASELINE, ARGON_HOST_BASELINE
     assert set(before) == set(after)
     assert set(ARGON_OVERLAY["surfaces"]) == {"catalog", "approval", "reviewer"}
     assert set(ARGON_OVERLAY["inputs"]) == {"reviewer"}
@@ -352,6 +595,109 @@ def test_claude_account_dispatch_baseline_changes_only_usage_option(configuratio
 
 
 @pytest.mark.parametrize("configuration", ("host-cli", "no-cli"))
+def test_hermes_effort_fixture_changes_only_hermes_warning_stderr(configuration):
+    fixture_path = CAPACITY_FIXTURE / "hermes-effort-10751.json"
+    assert hashlib.sha256(fixture_path.read_bytes()).hexdigest() == (
+        "7d2d4a65a579b878ea91102d3e7cfa261b1cea5102b51fd5c779e384a508ad76"
+    )
+    fixture = json.loads(fixture_path.read_bytes())
+    assert set(fixture) == {"adapter_stderr_replacements"}
+    replacements = fixture["adapter_stderr_replacements"]
+    assert [row["rows"] for row in replacements] == [list(range(40, 44)), list(range(44, 48)), list(range(48, 52))]
+    for row in replacements:
+        assert row["before"].replace("='high'", "") == row["after"]
+        assert "high" not in row["after"]
+    path = FIXTURE / ("baseline.json.gz" if configuration == "host-cli" else "no-cli/baseline.json.gz")
+    before = json.loads(gzip.decompress(path.read_bytes()))
+    original = deepcopy(before)
+    after = approved_hermes_effort_baseline(before)
+    assert before == original
+    assert {k: v for k, v in after.items() if k != "adapters"} == {k: v for k, v in before.items() if k != "adapters"}
+    changed = [i for i, (old, new) in enumerate(zip(before["adapters"], after["adapters"], strict=True)) if old != new]
+    assert changed == list(range(40, 52))
+    for index in changed:
+        old, new = before["adapters"][index], after["adapters"][index]
+        assert INPUTS["adapters"][index]["agent"] in {"hermes-deepseek", "grok-hermes", "qwen"}
+        assert {k: v for k, v in old.items() if k != "stderr"} == {k: v for k, v in new.items() if k != "stderr"}
+        assert "effort='high'" in old["stderr"] and "effort=" not in new["stderr"]
+
+
+def guard_policy(settings):
+    return [
+        (group["matcher"], Path(hook["command"]).name, hook["timeout"], hook.get("onFailure"))
+        for group in settings["hooks"]["PreToolUse"]
+        for hook in group["hooks"]
+    ]
+
+
+@pytest.mark.parametrize("configuration", ("host-cli", "no-cli"))
+def test_hook_failure_overlay_changes_only_worker_guard_settings(configuration):
+    path = FIXTURE / ("baseline.json.gz" if configuration == "host-cli" else "no-cli/baseline.json.gz")
+    before = json.loads(gzip.decompress(path.read_bytes()))
+    original = deepcopy(before)
+    after = approved_hook_failure_baseline(before)
+    assert before == original
+    assert {k: v for k, v in after.items() if k != "adapters"} == {k: v for k, v in before.items() if k != "adapters"}
+    changed = [i for i, (old, new) in enumerate(zip(before["adapters"], after["adapters"], strict=True)) if old != new]
+    assert changed == HOOK_FAILURE_ROWS
+    assert [i for i, row in enumerate(before["adapters"]) if "--settings" in row.get("value", {}).get("cmd", [])] == (
+        HOOK_FAILURE_ROWS
+    )
+    source = json.loads((Path(__file__).resolve().parents[2] / "agents_extensions/shared/settings.json").read_bytes())
+    tracked = {name: (timeout, on_failure) for _, name, timeout, on_failure in guard_policy(source)}
+    for index in changed:
+        old, new = before["adapters"][index], after["adapters"][index]
+        assert INPUTS["adapters"][index]["agent"] in {"claude", "claude-desktop", "claude-infra", "claude-monitor"}
+        position = settings_index(old)
+        old_cmd, new_cmd = old["value"]["cmd"], new["value"]["cmd"]
+        assert old_cmd[:position] + old_cmd[position + 1 :] == new_cmd[:position] + new_cmd[position + 1 :]
+        assert {k: v for k, v in old["value"].items() if k != "cmd"} == {
+            k: v for k, v in new["value"].items() if k != "cmd"
+        }
+        assert {k: v for k, v in old.items() if k != "value"} == {k: v for k, v in new.items() if k != "value"}
+        old_settings, new_settings = json.loads(old_cmd[position]), json.loads(new_cmd[position])
+        assert {k: v for k, v in old_settings.items() if k != "hooks"} == {
+            k: v for k, v in new_settings.items() if k != "hooks"
+        }
+        old_policy, new_policy = guard_policy(old_settings), guard_policy(new_settings)
+        assert [row[:2] for row in old_policy] == [row[:2] for row in new_policy]
+        assert {row[3] for row in old_policy} == {None}
+        for matcher, name, timeout, on_failure in new_policy:
+            assert (timeout, on_failure) == tracked[name], (matcher, name)
+        assert [row[1] for row in new_policy if row[3] is None] == ["heal-core-bare.py"]
+
+
+@pytest.mark.parametrize(
+    "mutate",
+    [
+        pytest.param(lambda adapters: adapters[9].update(stderr=adapters[9].get("stderr", "") + "x"), id="other-row"),
+        pytest.param(lambda adapters: adapters[8]["value"].update(cwd="elsewhere"), id="same-row-other-field"),
+        pytest.param(
+            lambda adapters: adapters[8]["value"]["cmd"].__setitem__(
+                settings_index(adapters[8]),
+                adapters[8]["value"]["cmd"][settings_index(adapters[8])].replace(
+                    '/heal-core-bare.py","timeout":10}', '/heal-core-bare.py","timeout":10,"onFailure":"block"}'
+                ),
+            ),
+            id="unapproved-guard-policy",
+        ),
+    ],
+)
+def test_hook_failure_overlay_still_rejects_other_adapter_changes(mutate):
+    actual = deepcopy(APPROVED_BASELINE)
+    before = deepcopy(actual["adapters"])
+    mutate(actual["adapters"])
+    assert actual["adapters"] != before
+    with pytest.raises(AssertionError, match="approved surface differs: adapters"):
+        assert_frozen_surfaces(actual)
+
+
+def test_hook_failure_overlay_refuses_drifted_settings():
+    with pytest.raises(AssertionError):
+        approved_hook_failure_baseline(APPROVED_BASELINE)
+
+
+@pytest.mark.parametrize("configuration", ("host-cli", "no-cli"))
 def test_claude_cap_fixture_adds_only_cap_help_lines(configuration):
     fixture_path = CAPACITY_FIXTURE / "claude-cap-10355.json"
     assert hashlib.sha256(fixture_path.read_bytes()).hexdigest() == (
@@ -394,7 +740,7 @@ def test_claude_cap_fixture_adds_only_cap_help_lines(configuration):
 def test_cto_wrappers_fixture_changes_only_cto_help_lines(configuration):
     fixture_path = CAPACITY_FIXTURE / "cto-wrappers-10453.json"
     assert hashlib.sha256(fixture_path.read_bytes()).hexdigest() == (
-        "b13c3c443bddb9fb81fff9e5546e95fb1f10ef067a22646f397a2faad38d9daf"
+        "4593a5c7abb023644821cd93cd9ed12bbcc5af483ea3e3b8275226ea5b6b3cef"
     )
     cto = json.loads(fixture_path.read_bytes())
     assert set(cto) == {"launcher_help_replacements"}
@@ -407,7 +753,9 @@ def test_cto_wrappers_fixture_changes_only_cto_help_lines(configuration):
         " " * 29 + "CTO wrappers reject it with exit 2.\n",
         force["before"].splitlines(True)[1],
     ]
-    assert lanes["after"] == lanes["before"].replace("Valid lane selectors:\n", "Valid lane selectors:\n  epics\n")
+    assert lanes["after"] == lanes["before"].replace(
+        "Valid lane selectors:\n", "Valid lane selectors:\n  epics\n"
+    ).replace("  atlas | practice | atlas.practice\n", "  atlas | practice-hub | atlas.practice\n  practice\n")
     assert cap["after"].startswith(cap["before"].splitlines(True)[0])
     assert "Opus is always blocked outside start-claude-cto.sh on epics:" in cap["after"]
     assert "Opus stays blocked" in cap["before"] and "Opus stays blocked" not in cap["after"]
@@ -521,9 +869,12 @@ def test_resource_policy_fixture_changes_only_approved_fallback_rows():
 
 
 def test_resource_policy_fallbacks_equal_approved_overlay():
+    """The live fallbacks equal #10263's overlay with #10835's policy text applied."""
     source = Path(__file__).resolve().parents[2]
     actual = yaml.safe_load((source / "scripts/config/agent_fallback_substitutions.yaml").read_text())
-    assert actual == RESOURCE_OVERLAY["surfaces"]["fallbacks"]
+    assert actual == approved_grok_language_seat_baseline(
+        {"catalog": ARGON_HOST_BASELINE["catalog"], "fallbacks": RESOURCE_OVERLAY["surfaces"]["fallbacks"]}
+    )["fallbacks"]
 
 
 def test_gemini_fixture_preserves_historical_cases_and_other_seat_eligibility():
@@ -772,7 +1123,7 @@ def test_review_capacity_fixture_is_pinned_and_scope_bounded():
 PINNED_DIGESTS = {
     "routing-10263.json.gz": "3385853a0070ab9a2f77e1fb40d9178ce195e44e7fd6b8c8245702ec529b7d16",
     "SHA256SUMS": "4cba22dff8338f75c8ae96b35119c3da2bea3b3d7d6418c49e466ddc0ddf73a8",
-    "SPEC.md": "7a9f8d2e02c422edf21582162c0e516f637fc6c2e11ce16688c8f3b898f863f5",
+    "SPEC.md": "4f2549cd5cbe31dd441d924655b45a31f8b4c3f6d0fc28e8f87c4228ace3c01f",
     "baseline.json.gz": "2cf8945084c13d7ce0b55e98a91522e897baee5ba53648f21ec7ae7b66cdaa5d",
     "capture.py": "7571955c784ecf973931ba3b3a86c50bc4ee9f5bf2c2bdcfdbcbe096381222ea",
     "inputs.json": "4f9d9dd89acff3872a9e627a9627516c65b7e410da28464a4dda9105c0ec34b0",
@@ -1096,26 +1447,32 @@ def test_no_cli_capture_equals_separate_frozen_surface(tmp_path):
         assert hashlib.sha256((output / name).read_bytes()).hexdigest() == digest
     actual = json.loads(gzip.decompress((output / "baseline.json.gz").read_bytes()))
     original = json.loads(gzip.decompress((expected / "baseline.json.gz").read_bytes()))
-    assert actual == approved_argon_trial_baseline(
-        approved_claude_account_dispatch_baseline(
-            approved_cto_wrappers_baseline(
-                approved_claude_cap_baseline(
-                    approved_cursor_trailer_baseline(
-                        approved_launcher_canary_baseline(
-                            approved_reviewer_seats_baseline(
-                                {
-                                    **approved_review_baseline(original),
-                                    **GEMINI_OVERLAY["surfaces"],
-                                    **RESOURCE_OVERLAY["surfaces"],
-                                }
+    assert actual == approved_word_card_tool_baseline(approved_driver_brief_baseline(approved_grok_language_seat_baseline(
+        approved_argon_trial_baseline(
+            approved_hook_failure_baseline(
+                approved_hermes_effort_baseline(
+                    approved_claude_account_dispatch_baseline(
+                        approved_cto_wrappers_baseline(
+                            approved_claude_cap_baseline(
+                                approved_cursor_trailer_baseline(
+                                    approved_launcher_canary_baseline(
+                                        approved_reviewer_seats_baseline(
+                                            {
+                                                **approved_review_baseline(original),
+                                                **GEMINI_OVERLAY["surfaces"],
+                                                **RESOURCE_OVERLAY["surfaces"],
+                                            }
+                                        )
+                                    )
+                                )
                             )
                         )
                     )
                 )
-            )
-        ),
-        "no-cli",
-    )
+            ),
+            "no-cli",
+        )
+    )))
     assert len(actual["launchers"]) == 70
     errors = [row.get("error", "") for row in actual["adapters"]]
     assert any("grok" in error and "PATH" in error for error in errors)
@@ -1153,3 +1510,52 @@ def test_extended_capture_denominator_and_current_contract():
     assert len(contract["rows"]) == len(catalog["models"]) * 9
     assert {row["outcome"] for row in contract["rows"]} == {"approved", "missing_approval", "operator_disposition"}
     assert all(not row["self_approval_counts"] for row in contract["rows"])
+
+
+
+def test_driver_brief_capture_preserves_every_unrelated_value():
+    before, after = GROK_LANGUAGE_BASELINE, DRIVER_BRIEF_BASELINE
+    for surface in set(before) - {"catalog", "dispatch"}:
+        assert before[surface] == after[surface]
+    old_models, new_models = before["catalog"]["models"], after["catalog"]["models"]
+    assert [pin for pin in old_models if old_models[pin] != new_models[pin]] == ["claude-haiku-5-5", "gpt-6-luna"]
+    old, new = old_models["claude-haiku-5-5"], new_models["claude-haiku-5-5"]
+    assert new["roles"] == [*old["roles"], "bounded_implementation"]
+    assert new["weaknesses"] == [value for value in old["weaknesses"] if value != "no_bounded_implementation"]
+    assert {k: v for k, v in old.items() if k not in {"roles", "weaknesses", "notes"}} == {
+        k: v for k, v in new.items() if k not in {"roles", "weaknesses", "notes"}
+    }
+    expected_dispatch = deepcopy(before["dispatch"])
+    for row in expected_dispatch:
+        value = row.get("value", {})
+        refusal = value.get("refusal")
+        if isinstance(refusal, str) and "model 'gpt-6-luna'" in refusal:
+            value["refusal"] = refusal.replace(
+                "bounded_investigation; review_scheduler",
+                "bounded_investigation, readonly_recon, mechanical_classification; review_scheduler",
+            )
+    assert expected_dispatch == after["dispatch"]
+    old_luna, new_luna = old_models["gpt-6-luna"], new_models["gpt-6-luna"]
+    assert new_luna["roles"] == [*old_luna["roles"], "readonly_recon", "mechanical_classification"]
+    assert {k: v for k, v in old_luna.items() if k != "roles"} == {
+        k: v for k, v in new_luna.items() if k != "roles"
+    }
+
+
+def test_deepseek_flash_execution_requires_opencode():
+    catalog = load_model_catalog()
+    assert require_execution_model("deepseek-v4.1-flash", transport="opencode", catalog=catalog) == "deepseek-v4.1-flash"
+    with pytest.raises(ModelCatalogError, match="requires the opencode transport"):
+        require_execution_model("deepseek-v4.1-flash", transport="hermes", catalog=catalog)
+
+
+@pytest.mark.parametrize("model_id", ["deepseek-v4-pro", "deepseek-v4-flash", "deepseek-other"])
+def test_other_deepseek_execution_models_stay_refused(model_id):
+    catalog = deepcopy(load_model_catalog())
+    # Even an active new catalog entry cannot widen the operator's Flash-only order.
+    if model_id == "deepseek-other":
+        catalog["models"][model_id] = deepcopy(catalog["models"]["deepseek-v4.1-flash"])
+    with pytest.raises(ModelCatalogError, match=r"retired|only deepseek-v4\.1-flash"):
+        require_execution_model(model_id, transport="opencode", catalog=catalog)
+    with pytest.raises(ModelCatalogError, match=r"retired|only deepseek-v4\.1-flash"):
+        _require_routable_model(catalog["models"], model_id, "test execution reference")

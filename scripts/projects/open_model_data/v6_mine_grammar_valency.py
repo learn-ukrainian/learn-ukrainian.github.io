@@ -1263,7 +1263,7 @@ def has_invalid_compound_preposition_case(s: str, cur_ves: sqlite3.Cursor | None
     Compound prepositions like 'за допомогою', 'під час', 'з метою' strictly govern the genitive case.
     Nouns taking '-а/-я' in genitive singular (e.g. 'букет' -> 'букета') that erroneously appear with
     '-у/-ю' (dative/locative 'букету') violate grammatical case government.
-    Infinitive verbal complements (e.g. 'з метою отримати допомогу', СУМ-11) are recognized as valid
+    Infinitive verbal complements (e.g. 'з метою отримати допомогу') are recognized as valid
     verbal phrases only for compound prepositions that license infinitives ('з метою', 'під приводом').
     """
     if not cur_ves:

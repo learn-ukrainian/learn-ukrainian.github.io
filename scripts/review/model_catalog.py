@@ -34,7 +34,7 @@ VALID_LIFECYCLES = frozenset({"active", "fallback", "hold", "retired"})
 VALID_RISKS = frozenset({"low", "medium", "high", "critical"})
 VALID_REVIEW_PROFILES = frozenset({"code", "infra"})
 MECHANICAL_FAMILIES = frozenset({"routine_mechanical", "mechanical_classification", "readonly_recon"})
-MECHANICAL_ROLES = MECHANICAL_FAMILIES | {"mechanical_only"}
+MECHANICAL_ROLES = MECHANICAL_FAMILIES | {"mechanical_only", "bounded_implementation"}
 # ``review_scheduler.activity_roles`` keys (#9583): ``review`` admits a review,
 # critique or approval of record; ``consult`` admits an ACP ask, consult or
 # discussion together with the ``review`` roles.
@@ -159,7 +159,9 @@ def _require_active_execution_model(models: dict[str, Any], value: Any, label: s
     return model_id
 
 
-def _require_routable_model(models: dict[str, Any], value: Any, label: str) -> str:
+def _require_routable_model(
+    models: dict[str, Any], value: Any, label: str, *, deepseek_execution: bool = False,
+) -> str:
     """Validate an executable reference while preserving historical model records."""
     model_id = _require_string(value, label)
     if model_id not in models:
@@ -167,8 +169,10 @@ def _require_routable_model(models: dict[str, Any], value: Any, label: str) -> s
     model = models[model_id]
     if model["lifecycle"] == "retired":
         raise ModelCatalogError(f"{label} references retired model {model_id!r}")
-    if model["family"] == "deepseek":
-        raise ModelCatalogError(f"{label}: DeepSeek is excluded from dispatch and review by core.md P2")
+    if model["family"] == "deepseek" and model_id != "deepseek-v4.1-flash":
+        raise ModelCatalogError(f"{label}: only deepseek-v4.1-flash is admitted for DeepSeek coding by core.md P2")
+    if model["family"] == "deepseek" and not deepseek_execution:
+        raise ModelCatalogError(f"{label}: DeepSeek is admitted only for opencode coding execution by core.md P2")
     return model_id
 
 
@@ -239,8 +243,8 @@ def _validate_execution_routing(raw: Any, models: dict[str, Any]) -> None:
         "execution_routing.sol_advised_bounded.preferred_worker.escalate_to",
     )
 
-    # Operator decision 2026-09-30 (#9275): no bounded worker is dispatched without
-    # a complete advisory envelope, so the catalog carries no direct-worker route.
+    # This section describes the explicit-envelope route (#9275). The narrow
+    # driver-brief route (#10919) is validated separately at dispatch and replay.
     bounded_fallback = _require_mapping(
         route["bounded_fallback_worker"],
         "execution_routing.sol_advised_bounded.bounded_fallback_worker",
@@ -1082,6 +1086,17 @@ class BoundedExecutionPolicy:
 ADVISOR_ROUTE = "execution_routing.sol_advised_bounded.advisor"
 
 
+def driver_brief_models(catalog: dict[str, Any] | None = None) -> frozenset[str]:
+    """Active bounded implementers in the preferred-worker or mechanical-only class."""
+    catalog = catalog or load_model_catalog()
+    preferred = bounded_execution_policy(catalog).bounded_worker_model_id
+    return frozenset(
+        identity for identity, model in catalog["models"].items()
+        if model["lifecycle"] == "active" and "bounded_implementation" in model["roles"]
+        and (identity == preferred or "mechanical_only" in model["roles"])
+    )
+
+
 def bounded_execution_policy(catalog: dict[str, Any] | None = None) -> BoundedExecutionPolicy:
     """The validated bounded-worker policy: who advises, which models need an envelope, and what it holds."""
     route = (catalog or load_model_catalog())["execution_routing"]["sol_advised_bounded"]
@@ -1255,7 +1270,10 @@ def require_execution_model(
     model_id = resolve_catalog_model_id(model, catalog)
     if model_id is None:
         raise ModelCatalogError(f"model {model!r} is not in the model catalog")
+    _require_routable_model(catalog["models"], model_id, "execution model", deepseek_execution=True)
     entry = catalog["models"][model_id]
+    if entry["family"] == "deepseek" and transport != "opencode":
+        raise ModelCatalogError("DeepSeek coding requires the opencode transport by core.md P2")
     if entry["lifecycle"] not in {"active", "fallback"}:
         raise ModelCatalogError(f"model {model!r} is not admitted for execution")
     if transport not in entry["transports"]:

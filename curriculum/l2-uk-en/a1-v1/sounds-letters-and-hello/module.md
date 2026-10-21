@@ -189,8 +189,8 @@ Sometimes stress changes meaning. You do not need to use these words yet, but no
 | --- | --- |
 | **за́мок** | castle |
 | **замо́к** | lock |
-| **бра́ти** | brothers |
-| **брати́** | to take |
+| **бра́ти** | to take |
+| **брати́** | brothers |
 
 For this course, new Ukrainian words usually show stress so you know what to say aloud.
 
@@ -230,7 +230,7 @@ Learn these as whole phrases.
 | **Норма́льно.** | Okay. | neutral answer |
 | **А у тебе́?** | And you? | after **Як спра́ви?** |
 | **Як тебе́ зва́ти?** | What is your name? | informal |
-| **Ме́не зва́ти Анна.** | My name is Anna. | name answer |
+| **Мене́ зва́ти Анна.** | My name is Anna. | name answer |
 | **А тебе́?** | And you? | after a name question |
 | **До поба́чення!** | Goodbye! | leaving |
 | **На все до́бре!** | All the best! | friendly goodbye |
@@ -268,8 +268,8 @@ Now read the name exchange.
 
 ```text
 Марко́: Як тебе́ зва́ти?
-Софія: Ме́не зва́ти Софія. А тебе́?
-Марко́: Ме́не зва́ти Марко́.
+Софія: Мене́ зва́ти Софія. А тебе́?
+Марко́: Мене́ зва́ти Марко́.
 ```
 
 Support after the name exchange:
@@ -277,8 +277,8 @@ Support after the name exchange:
 | Ukrainian | English |
 | --- | --- |
 | **Марко́: Як тебе́ зва́ти?** | Marko: What is your name? |
-| **Софія: Ме́не зва́ти Софія. А тебе́?** | Sofia: My name is Sofia. And you? |
-| **Марко́: Ме́не зва́ти Марко́.** | Marko: My name is Marko. |
+| **Софія: Мене́ зва́ти Софія. А тебе́?** | Sofia: My name is Sofia. And you? |
+| **Марко́: Мене́ зва́ти Марко́.** | Marko: My name is Marko. |
 
 Use **А у тебе́?** after **Як спра́ви?** because you are asking about the other person's state. Use **А тебе́?** after **Як тебе́ зва́ти?** because you are asking for the other person's name.
 

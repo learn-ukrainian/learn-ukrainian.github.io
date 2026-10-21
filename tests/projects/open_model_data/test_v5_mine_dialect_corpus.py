@@ -1355,3 +1355,78 @@ def test_sub_sense_boundary_and_synonym_binding(
             assert "заспокоїти" in lemmas or "затамувати" in lemmas
             assert "приголомшити" not in lemmas
             assert "приголомшити" not in equiv_mech
+
+
+@pytest.mark.parametrize("metadata_present", [True, False])
+def test_sum11_mining_projects_flagged_history_and_withholds_sft(tmp_path, metadata_present):
+    """Exercise real mining, evaluation projection, and SFT acceptance on isolated data."""
+    from scripts.projects.open_model_data.v5_mine_dialect_corpus import (
+        build_evaluation_benchmark,
+        build_sft_dialect_dataset,
+        mine_all_candidate_sentences,
+    )
+
+    db, vesum = tmp_path / "sources.db", tmp_path / "vesum.db"
+    sentence = "Бараболя лежала на столі біля великого вікна"
+    definition = f"БАРАБОЛЯ, і, ж., діал. Картопля. {sentence} (Коб., I, 1956, 9)"
+    with sqlite3.connect(db) as conn:
+        conn.execute("CREATE TABLE sum11 (id INTEGER, word TEXT, definition TEXT, text TEXT)")
+        conn.execute("CREATE TABLE grinchenko (word TEXT, definition TEXT)")
+        conn.execute("INSERT INTO sum11 VALUES (7, 'бараболя', ?, ?)", (definition, definition))
+        if metadata_present:
+            conn.execute("ALTER TABLE sum11 ADD COLUMN sovietization_risk INTEGER")
+            conn.execute("ALTER TABLE sum11 ADD COLUMN sovietization_keywords TEXT")
+            conn.execute("ALTER TABLE sum11 ADD COLUMN ideological_markers TEXT")
+            conn.execute("UPDATE sum11 SET sovietization_risk = 2, sovietization_keywords = 'editorial-keyword', "
+                         "ideological_markers = 'editorial-marker'")
+    with sqlite3.connect(vesum) as conn:
+        conn.execute("CREATE TABLE forms_all (lemma TEXT, pos TEXT)")
+        conn.executemany("INSERT INTO forms_all VALUES (?, 'noun')", [("бараболя",), ("картопля",)])
+
+    candidates = mine_all_candidate_sentences(db)
+    assert len(candidates) == 1
+    assert candidates[0].sentence == sentence
+    assert candidates[0].citation == "(Коб., I, 1956, 9)"
+    expected_context = {
+        "source": "СУМ-11 (1970–1980)", "source_role": "soviet_colonization_context",
+        "red_flag": True, "historical_only": True, "contrast_only": True,
+        "can_verify_modern_ukrainian": False,
+        "sovietization_risk": 2 if metadata_present else None,
+        "sovietization_keywords": "editorial-keyword" if metadata_present else None,
+        "ideological_markers": "editorial-marker" if metadata_present else None,
+        "entry_id": 7, "definition": definition,
+    }
+    assert candidates[0].soviet_colonization_context == expected_context
+
+    # Exercise both mixed-error variants and the unchanged quotation projection.
+    cases = build_evaluation_benchmark(candidates * 4, sw_quota=4, north_quota=0,
+                                       slobozhan_quota=0, steppe_quota=0)
+    assert [case["case_type"] for case in cases] == ["CORRECT_MIXED", "PRESERVE", "PRESERVE", "CORRECT_MIXED"]
+    assert cases[1]["expected_output"] == sentence
+    assert cases[3]["expected_output"] == sentence + ", бо так ведеться з діда-прадіда."
+    for case in cases:
+        assert case["source_metadata"] == {
+            "source": "sum11_literary_citation", "citation": "(Коб., I, 1956, 9)",
+            "language_period": "soviet_historical_context", "soviet_colonization_context": expected_context,
+        }
+        jsonschema.validate(case, json.loads(EVAL_SCHEMA_FILE.read_text()))
+
+    # Both lemmas and the apparent synonym are morphologically attested, but
+    # the only sense evidence is SUM-11. It must not create a modern answer.
+    with pytest.raises(ValueError, match="found 0, required 1"):
+        build_sft_dialect_dataset(candidates, vesum_db=vesum, sft_dialect_quota=1)
+
+
+def test_sum11_context_cannot_be_laundered_by_changing_source_label(tmp_path):
+    from scripts.projects.open_model_data.v5_mine_dialect_corpus import build_sft_dialect_dataset
+
+    vesum = tmp_path / "vesum.db"
+    with sqlite3.connect(vesum) as conn:
+        conn.execute("CREATE TABLE forms_all (lemma TEXT, pos TEXT)")
+        conn.executemany("INSERT INTO forms_all VALUES (?, 'noun')", [("бараболя",), ("картопля",)])
+    item = MinedSentence("бараболя", "Synthetic quotation", "Synthetic citation", "southwestern",
+                         "southwestern_bukovina", "southwestern", "Synthetic locality", "Synthetic collector",
+                         "Synthetic work", "renamed-source", "БАРАБОЛЯ, і, ж., діал. Картопля.",
+                         {"source_role": "soviet_colonization_context"})
+    with pytest.raises(ValueError, match="found 0, required 1"):
+        build_sft_dialect_dataset([item], vesum_db=vesum, sft_dialect_quota=1)

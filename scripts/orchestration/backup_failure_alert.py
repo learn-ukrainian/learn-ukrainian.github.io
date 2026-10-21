@@ -7,15 +7,19 @@ runs ``failed <unit>``. Each service also runs ``recovered <unit>`` as an
 ``ExecStartPost=`` step, which only runs after a successful ``ExecStart=``.
 
 Alerts are change-only, per unit: the first failure posts one report to the
-cto Fleet Comms channel and records the unit as failed; later failures stay
+cto Fleet Comms channel with an explicit operational recipient and records
+the unit as failed only after checking its bound delivery; later failures stay
 quiet until a successful run posts one recovery report and clears the record.
 A publish that fails leaves the record unchanged so the next run retries, and
 exits non-zero so the alert unit itself shows as failed in systemd.
+Legacy failed records without verified delivery require driver reconciliation
+before either suppression or recovery; they are never silently trusted.
 """
 
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 import subprocess
@@ -28,6 +32,8 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_STATE_DIR = Path("batch_state") / "backups" / "alerts"
 LAST_RUN_RECEIPT = Path("batch_state") / "backups" / "last-run.json"
 CHANNEL = "cto"
+# Stable operational seat, independent of provider/model routing.
+RECIPIENT = "claude-cto"
 SENDER = "sre-timers"
 KIND = "report"
 ALLOWED_UNITS = frozenset(
@@ -118,22 +124,8 @@ def recovery_message(unit: str, now: str, since: str, project_root: Path | None 
 
 
 def fleet_comms_publisher(project_root: Path) -> Publisher:
-    def publish(message: str, idempotency_key: str) -> None:
-        command = [
-            sys.executable,
-            "-m",
-            "scripts.fleet_comms",
-            "channel",
-            "publish",
-            CHANNEL,
-            "-",
-            "--sender",
-            SENDER,
-            "--kind",
-            KIND,
-            "--idempotency-key",
-            idempotency_key,
-        ]
+    def run_json(arguments: list[str], message: str | None = None) -> dict:
+        command = [".venv/bin/python", "-m", "scripts.fleet_comms", *arguments]
         try:
             result = subprocess.run(
                 command,
@@ -145,10 +137,62 @@ def fleet_comms_publisher(project_root: Path) -> Publisher:
                 timeout=120,
             )
         except (OSError, subprocess.TimeoutExpired) as error:
-            raise AlertError(f"fleet_comms publish could not run: {error}") from error
+            raise AlertError("fleet_comms delivery could not run") from error
         if result.returncode != 0:
-            detail = (result.stderr or result.stdout).strip()
-            raise AlertError(f"fleet_comms publish exited {result.returncode}: {detail}")
+            # Untrusted output can contain credentials or private storage paths.
+            raise AlertError(f"fleet_comms delivery exited {result.returncode}")
+        try:
+            receipt = json.loads(result.stdout)
+        except ValueError as error:
+            raise AlertError("fleet_comms delivery returned malformed JSON") from error
+        if not isinstance(receipt, dict):
+            raise AlertError("fleet_comms delivery returned an invalid receipt")
+        return receipt
+
+    def publish(message: str, idempotency_key: str) -> None:
+        receipt = run_json(
+            [
+                "channel",
+                "publish",
+                CHANNEL,
+                "-",
+                "--sender",
+                SENDER,
+                "--kind",
+                KIND,
+                "--recipient",
+                RECIPIENT,
+                "--correlation-id",
+                idempotency_key,
+                "--idempotency-key",
+                idempotency_key,
+            ],
+            message,
+        )
+        message_id = receipt.get("message_id")
+        deliveries = receipt.get("delivery_ids")
+        if (
+            not isinstance(message_id, str)
+            or not message_id.strip()
+            or receipt.get("recipient") != RECIPIENT
+            or receipt.get("sender") != SENDER
+            or receipt.get("kind") != KIND
+            or receipt.get("correlation_id") != idempotency_key
+            or receipt.get("content_sha256") != hashlib.sha256(message.encode("utf-8")).hexdigest()
+            or not isinstance(deliveries, list)
+            or not deliveries
+            or any(not isinstance(item, str) or not item.strip() for item in deliveries)
+            or len(set(deliveries)) != len(deliveries)
+        ):
+            raise AlertError("fleet_comms publication has no bound intended-recipient delivery")
+        for delivery_id in deliveries:
+            delivery = run_json(["deliveries", "status", delivery_id])
+            if (
+                delivery.get("delivery_id") != delivery_id
+                or delivery.get("message_id") != message_id
+                or delivery.get("recipient") != RECIPIENT
+            ):
+                raise AlertError("fleet_comms delivery is not bound to the publication and intended recipient")
 
     return publish
 
@@ -167,12 +211,22 @@ def handle(
         raise AlertError(f"unit is not a backup unit: {unit}")
     path = state_path(state_dir, unit)
     state = read_state(path)
+    if state.get("state") == "failed" and state.get("delivery_recipient") != RECIPIENT:
+        raise AlertError("legacy failed state has no verified recipient; driver delivery reconciliation required")
     invocation = environment.get("MONITOR_INVOCATION_ID") or environment.get("INVOCATION_ID") or now
     if event == "failed":
         if state.get("state") == "failed":
             return f"{unit}: already reported failing since {state.get('since_utc', 'unknown')}; not re-posting"
         publish(failure_message(unit, now, environment, project_root), f"lu-backup-alert:{unit}:failed:{invocation}")
-        write_state(path, {"state": "failed", "since_utc": now, "invocation": invocation})
+        write_state(
+            path,
+            {
+                "state": "failed",
+                "since_utc": now,
+                "invocation": invocation,
+                "delivery_recipient": RECIPIENT,
+            },
+        )
         return f"{unit}: failure reported to the {CHANNEL} channel"
     if event == "recovered":
         if state.get("state") != "failed":

@@ -1,0 +1,121 @@
+# Source Admission Record: ВТС (Word-Card Sense Seeding) & СУМ-20 Official Crawl Alignment
+
+- **Date**: 2026-10-17
+- **Authority**: CTO Order `message_d91c2393a03a4df397e097bf278db355` / Operator Directive (22:4xZ)
+- **Programme**: [#8977](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8977) (Word Cards), [#6321](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6321) (Open-Model-Data), [#10512](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/10512) (Source Completeness)
+- **Scope**: Admission of digital copy of **ВТС** as secondary meaning source for Word-Card sense seeding (amending `WORD_CARDS_DATA_PLAN.md` §6 Decision 1, §7 Residuals, §8 Counts), alongside alignment of СУМ-20 sense seeding strictly to official-edition crawl data (`sources.db:sum20_articles`) with mandatory quarantine enforcement (#9609, #9840) and Rule 5 caveat for slovnyk.me mirror cache.
+
+---
+
+## 1. Context & Operational Motivation
+
+In `WORD_CARDS_DATA_PLAN.md` §6 Decision 1, sense seeding order was originally specified as:
+> СУМ-20 (unquarantined, mapped to the lexeme) → ВТС numbered senses → ULIF sense_gloss
+
+However, Decision 1 blocked ВТС from active seeding because:
+> "ВТС is held locally (13,181 slovnyk_me_entries rows...) but its edition, permission-register row and sense parsing are not established; until a source-admission round establishes them, ВТС seeds nothing and the order falls through to ULIF."
+
+Based on Atlas production practice, digital copies of both СУМ-20 and ВТС are already in operational use for definition presentation.
+
+Verified database facts establish that live Atlas (`data/atlas.db:enrichment`) already serves definition cards for 12,468 words:
+- **ВТС definitions**: 7,849 words
+- **СУМ-20 definitions**: 5,844 words
+- **Грінченко (1907) heritage cards**: 4,309 words
+
+Furthermore, the persistent per-word slovnyk.me cache (`data/lexicon/slovnyk_cache/`, 38,190 JSON files, 456.4 MB) contains:
+- **31,688 words** with valid, non-empty ВТС entries
+- **22,075 words** with valid, non-empty СУМ-20 entries
+- **32,306 words** with at least one modern dictionary definition (21,457 with both)
+
+Because СУМ-20's published print volumes currently stop at Volume 16 (entry range А — РЯХТЛИВИЙ), СУМ-20 alone cannot cover the entire modern Ukrainian lexicon. ВТС is therefore required as the secondary explanatory dictionary to provide definition coverage for the post-РЯХТЛИВИЙ alphabet (С — Я) and unquarantined lexemes absent from СУМ-20.
+
+---
+
+## 2. Edition Records
+
+### A. СУМ-20 (Словник української мови у 20 томах)
+- **Work Title**: «Словник української мови: у 20 т.»
+- **Institutions**: Український мовно-інформаційний фонд НАН України (УМІФ), Інститут мовознавства ім. О. О. Потебні НАН України
+- **Published Scope**: Томи 1–16 (літери А — РЯХТЛИВИЙ), Київ: Наукова думка, 2010–2025+
+- **Official Edition (Sole Primary Source)**: https://sum20ua.com/ (stored in `data/sources.db:sum20_articles`; adheres strictly to `permissions-register.yaml:253-254` "official edition only, never a mirror"). The 11 quarantined articles (#9609, #9840) are strictly excluded.
+- **Digital Aggregator Mirror (Candidate Discovery Only)**: slovnyk.me (`dictionary_slug='newsum'`, URL schema `https://slovnyk.me/dict/newsum/{word}`). Governed by `docs/best-practices/atlas-source-presentation.md` Rule 5: mirror rows seed candidate discovery only with an internal accuracy caveat, re-verification against sum20ua.com, and strict quarantine filtering.
+- **Cache Evidence**: 22,075 entries in `data/lexicon/slovnyk_cache/*.json` with `fetched_at` timestamps between 2026-08-06T14:32Z and 2026-10-15T18:45Z.
+
+### B. ВТС (Великий тлумачний словник сучасної української мови)
+- **Work Title**: «Великий тлумачний словник сучасної української мови» (ВТС-СУМ)
+- **Compiler / Editor Reference**: ВТФ «Перун», за ред. В. Т. Бусела (print tradition)
+- **Print Edition Status**: Print edition not established from electronic mirror colophon; digital text published at slovnyk.me/dict/vts under title 'Великий тлумачний словник сучасної української мови' (ВТФ «Перун» / за ред. В. Т. Бусела attribution unverified on mirror). Candidate seeding is admitted under Law 2811-IX Art. 22(2)(1), with print edition verification prerequisite open for formal citations.
+- **Digital Platform / Aggregator**: slovnyk.me (`dictionary_slug='vts'`)
+- **Digital Label**: `Великий тлумачний словник сучасної української мови`
+- **URL Schema**: `https://slovnyk.me/dict/vts/{word}`
+- **Held In Cache**: 31,688 words with verified non-empty definition text in `data/lexicon/slovnyk_cache/*.json`
+- **Retrieval Dates**: `fetched_at` timestamps between 2026-08-06T14:32Z and 2026-10-15T18:45Z.
+
+---
+
+## 3. Permission-Register & Legal Basis
+
+The permissions register (`docs/sources/permissions-register.yaml`) is updated to formally admit ВТС under the exact same legal and operational basis that Atlas already relies on for its live definition cards:
+
+1. **Statutory Reference**: Law of Ukraine No. 2811-IX «Про авторське право і суміжні права» Art. 22(2)(1) provides for the free quotation from lawfully published works without permission and free of charge, with mandatory naming of the author and source of borrowing, conditioned by the critical, polemical, scientific, or informational character of the incorporating work, with semantic and/or graphical marking of quotation boundaries (із семантичним та/або графічним виділенням меж цитати).
+2. **Attribution Display**: All rendered definition cards cite the full academic label:
+   - For ВТС: `Великий тлумачний словник сучасної української мови` (short pill: `ВТС`)
+   - For СУМ-20: `Словник української мови у 20 томах` (short pill: `СУМ-20`)
+3. **Operator IP Responsibility**: Covered under Operator Decision 1 (`d1_content_stays`) and Plan v3.5.0 O1 (verbatim use of in-copyright reference sources is the operator's IP responsibility).
+4. **Licensing Status & Dataset Boundary**:
+   - For internal word cards and live Atlas presentation: **Admitted**.
+   - For open public dataset export (Phase 7): Commercial/redistribution licence status remains **unknown / pending rights-holder confirmation**. As explicitly directed by the CTO and Operator, this limitation blocks ONLY the Phase 7 public dataset release; it does NOT block internal word card building or site display.
+
+---
+
+## 4. Sense Parsing & Extraction Status
+
+In the existing Atlas pipeline (`scripts/lexicon/enrich_manifest.py`), `_SlovnykArticleParser` and `_parse_slovnyk_entry` extract entry text and paragraph blocks from cached HTML, while `_vts_definition_card` and `_sum20_definition_card` package the definitions for Atlas presentation.
+
+However, extracting entry text into definition blocks does not by itself produce isolated, numbered-sense units conforming to the word-card schema. While 31,688 nonblank ВТС entries are cached and available, decomposing multi-sense articles into isolated, numbered sense units with edition-binding verification remains an active engineering prerequisite.
+
+**Interim W1a Behavior**: Until the numbered-sense parser is implemented, a lexeme with no unquarantined official СУМ-20 entry falls through to ULIF `sense_gloss` units (or keeps one `unsplit` sense if ULIF has no nonblank gloss); raw ВТС entry text serves as contextual reference evidence, not isolated card senses.
+
+Therefore, source use of ВТС for lexical sense reference is admitted under Art. 22(2)(1) Law 2811-IX, while numbered-sense extraction and card schema integration are preserved as an active engineering residual under `WORD_CARDS_DATA_PLAN.md` §7.
+
+---
+
+## 5. Hierarchy & Cached Reference Availability Across Lexical Universes
+
+> [!IMPORTANT]
+> **Cached Reference Availability Boundary**: The figures below measure cached lexical reference availability across local dictionaries (`data/lexicon/slovnyk_cache/`). Following §2, mirror cache records serve strictly for candidate discovery and cached reference availability; these numbers **explicitly do not constitute proof of official СУМ-20 verification, quarantine clearance, or W1a sense readiness**. Official СУМ-20 definitions enter the canonical store only via official crawl ingestion (`sources.db:sum20_articles`) and quarantine inspection.
+
+Evaluating candidate reference availability across **СУМ-20 cached reference (first) → ВТС cached reference (second) → ULIF gloss (third)** yields the following baseline counts:
+
+### Universe 1: Atlas Live Articles (`data/atlas.db:articles`, N = 27,128)
+- **Step 1: СУМ-20 cached reference availability**: 21,428 entries (78.99%) *(candidate reference discovery; excludes official verification, quarantine clearance, and W1a sense readiness)*
+- **Step 2: ВТС cached reference availability**: 4,428 entries (16.32%)
+- **Step 3: ULIF gloss fallback third**: 1 entry (0.00%)
+- **Total with cached modern lexical reference**: **25,857 entries (95.31%)**
+- **Real gap (neither)**: **1,271 entries (4.69%)**
+- *(With VESUM base-lemma fallback for inflected headwords, total cached availability rises to 26,111 entries (96.25%), leaving only 1,017 entries (3.75%) lacking a definition — predominantly multi-word idiomatic phrases, hyphenated spellings, or rare participles).*
+
+### Universe 2: PULS CEFR Pedagogical Register (`data/sources.db:puls_cefr`, N = 5,839)
+- **Step 1: СУМ-20 cached reference availability**: 4,072 entries (69.74%) *(candidate reference discovery; excludes official verification, quarantine clearance, and W1a sense readiness)*
+- **Step 2: ВТС cached reference availability**: 865 entries (14.81%)
+- **Step 3: ULIF gloss fallback third**: 4 entries (0.07%)
+- **Total with cached modern lexical reference**: **4,941 entries (84.62%)**
+- **Real gap (neither)**: **898 entries (15.38%)** (primarily comparatives, passive participles, modern loanwords, and compound terms whose base lemmas are covered).
+- *(With VESUM base-lemma fallback, total cached availability rises to 4,958 entries (84.91%), leaving 881 entries (15.09%) neither).*
+
+### Universe 3: Slovnyk Cache Corpus (N = 38,190)
+- **Step 1: СУМ-20 cached reference availability**: 22,075 entries (57.80%) *(raw mirror cache availability; explicitly excludes proof of official verification, quarantine clearance, and W1a sense readiness)*
+- **Step 2: ВТС cached reference availability**: 10,231 entries (26.79%)
+- **Step 3: ULIF gloss fallback third**: 6 entries (0.02%)
+- **Total with cached modern lexical reference**: **32,312 entries (84.61%)**
+- **Real gap (neither)**: **5,878 entries (15.39%)**
+
+---
+
+## 6. Formal Admission Verdict
+
+1. **ВТС is hereby ADMITTED** as an authorized secondary source for Word-Card sense reference under `WORD_CARDS_DATA_PLAN.md` §6 Decision 1 and operator IP responsibility (Plan v3.5.0 O1; an administrative source-use decision, not a legal conclusion), citing the quotation exception under Law 2811-IX Art. 22(2)(1) with mandatory author/source attribution and marked quotation boundaries.
+2. The sense seed sequence is confirmed as:
+   $$\text{СУМ-20 (official, unquarantined)} \longrightarrow \text{ВТС (numbered senses)} \longrightarrow \text{ULIF sense\_gloss}$$
+   With interim W1a fall-through to ULIF for lexemes lacking official СУМ-20 until the numbered-sense parser is completed.
+3. Numbered sense parsing, decomposition, and card schema integration are retained as an active engineering residual under `WORD_CARDS_DATA_PLAN.md` §7 (to be delivered in W1 / engineering steps).

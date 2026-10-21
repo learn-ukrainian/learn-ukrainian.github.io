@@ -380,3 +380,18 @@ refusal with the native CLI, or the allowlist refusal without it. All other
 launchers, dispatch rows, catalog, registry, capacity, role, approval, fallback,
 holder and source-contract surfaces remain identical. Any other difference
 blocks regeneration.
+
+## Constant Hermes effort warning (#10751)
+
+The Hermes DeepSeek, Grok and Qwen adapters no longer put the requested effort
+value in their "requested, but no readable top-level agent.reasoning_effort"
+warning. Both configurations were captured with the documented `capture.py`
+command against this checkout, using the test module's scoped `CAPTURE_RUNNER`
+cache, and compared with every approved surface. Only the `stderr` of adapter
+rows 40–51 differs, identically in both configurations: `effort='high' requested`
+becomes `effort requested`. The hash-pinned
+`tests/review/fixtures/hermes-effort-10751.json` records these exact-once
+literal replacements, and a scope test checks that no other row, field or
+surface changes. Historical baselines, inputs, the occurrence ledger,
+`SHA256SUMS` and `capture.py` stay byte-identical. Any other difference blocks
+regeneration.

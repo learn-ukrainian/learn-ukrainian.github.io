@@ -1210,6 +1210,13 @@ def run_inbox(
 
         recovery = _maybe_recover_orphan_commit(agent, claimed)
 
+        from scripts.agent_runtime.adapters.agy import agy_model_state
+
+        identity_state = agy_model_state(
+            agent=agent, model=_resolve_model(claimed), identity=getattr(result, "model_identity", None),
+            task_id=_thread_session_key(claimed.channel, claimed.thread_id), run_nonce=None,
+        )
+        reply_model = identity_state["resolved_model"] if identity_state else result.model
         try:
             # Reply linkage lives in channel_messages.parent_id, not the
             # deliveries table — we don't need the returned message_id.
@@ -1218,7 +1225,7 @@ def run_inbox(
                 agent,
                 reply_body,
                 parent_id=claimed.deliveries[-1].message_id,
-                from_model=result.model,
+                from_model=reply_model,
                 auto_snapshot=False,
             )
         except Exception as exc:

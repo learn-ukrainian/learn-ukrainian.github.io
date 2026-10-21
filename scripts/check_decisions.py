@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""Stub: module moved to scripts/audit/check_decisions.py"""
+"""Entry point for the decision journal check.
+
+Implementation lives in scripts/audit/check_decisions.py, including overdue
+review_by rows from scripts/config/stack_pins.yaml.
+"""
+
 import importlib.util as _ilu
 import sys as _sys
 from pathlib import Path as _P

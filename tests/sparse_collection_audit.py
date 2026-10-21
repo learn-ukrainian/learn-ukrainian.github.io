@@ -30,16 +30,24 @@ fails. ``os.stat`` and ``os.lstat`` have no audit event and are wrapped.
 ``os.lstat`` and ``follow_symlinks=False`` resolve only the parent directory
 and leave the final component unresolved, so ``os.lstat("/proc/self/cwd")``
 returns the symlink itself when cwd is a hidden root.
+
+``SPARSE_TEST_VISIBLE_ANCHORS`` names cone anchors inside hidden trees
+(``scripts/delegate.py`` ``_DISPATCH_SPARSE_ANCHORS``, #10777). As in a cone
+sparse checkout, an anchor's subtree, its ancestor directories and the
+non-directory entries directly inside those ancestors stay visible. A listing
+of an ancestor still shows its hidden sibling directories, which a real
+checkout would not.
 """
 
 from __future__ import annotations
 
 import errno
 import os
+import stat
 import sys
 import threading
 
-from tests.sparse_trees import REPO_ROOT_ENV, forced_missing_trees
+from tests.sparse_trees import REPO_ROOT_ENV, forced_missing_trees, visible_anchors
 
 _EVENTS = frozenset(("open", "os.listdir", "os.scandir", "sqlite3.connect", "glob.glob"))
 # Python 3.12 audit events (docs.python.org/3.12/library/audit_events.html)
@@ -57,6 +65,7 @@ _NAMESPACE_MUTATIONS = frozenset(
     ("os.symlink", "os.link", "os.rename", "os.remove", "os.rmdir", "os.mkdir")
 )
 _BOUNDS: tuple[tuple[str, str], ...] = ()
+_ANCHORS: tuple[str, ...] = ()
 _GUARD = threading.local()
 _ORIG_STAT = os.stat
 _ORIG_LSTAT = os.lstat
@@ -89,7 +98,26 @@ def _path_text(value: object) -> tuple[str, str | bytes] | None:
 
 
 def _in_bounds(resolved: str) -> bool:
-    return any(resolved == root or resolved.startswith(rooted) for root, rooted in _BOUNDS)
+    hidden = any(resolved == root or resolved.startswith(rooted) for root, rooted in _BOUNDS)
+    return hidden and not _cone_visible(resolved)
+
+
+def _cone_visible(resolved: str) -> bool:
+    """True when a cone checkout of the anchors materializes ``resolved``."""
+    parent = os.path.dirname(resolved)
+    for anchor in _ANCHORS:
+        if resolved == anchor or resolved.startswith(anchor + os.sep) or anchor.startswith(resolved + os.sep):
+            return True
+        if anchor.startswith(parent + os.sep) and not _is_directory(resolved):
+            return True
+    return False
+
+
+def _is_directory(resolved: str) -> bool:
+    try:
+        return stat.S_ISDIR(_ORIG_LSTAT(resolved).st_mode)
+    except OSError:
+        return False
 
 
 def _anchored(text: str, dir_fd: int | None) -> str:
@@ -231,7 +259,7 @@ def _hook(event: str, args: tuple[object, ...]) -> None:
 
 
 def _install() -> None:
-    global _BOUNDS
+    global _ANCHORS, _BOUNDS
     trees = forced_missing_trees()
     if not trees:
         return
@@ -244,6 +272,9 @@ def _install() -> None:
         root = os.path.realpath(os.path.join(repo, *rel.split("/")), strict=False)
         bounds.append((root, root + os.sep))
     _BOUNDS = tuple(bounds)
+    _ANCHORS = tuple(
+        os.path.realpath(os.path.join(repo, *rel.split("/")), strict=False) for rel in sorted(visible_anchors())
+    )
     os.stat = _guarded_stat
     os.lstat = _guarded_lstat
     os.open = _guarded_open

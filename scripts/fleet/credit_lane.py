@@ -1295,12 +1295,14 @@ def dispatch_refusal(lane: str, model: str | None, *, policy: CreditPolicy | Non
             return _policy_error_refusal(lane_key, model, str(exc))
     if model_allowed(policy, lane_key, model):
         return None
-    budget = read_routing_budget()
-    if budget is None:
+    raw = read_routing_budget()
+    if raw is None:
         return None
-    from scripts.fleet.claude_account_lane import other_lane_record
+    from scripts.fleet.claude_account_lane import bind_snapshot, no_claude_account, other_lane_record
 
-    # A credit lane is one no Claude account owns; the claude lane is never read without its account (#10630).
+    # A credit lane is one no Claude account owns: the snapshot is bound to no account where it
+    # enters, and the claude lane is never read without its account (#10630, #10770).
+    budget = bind_snapshot(raw, account=no_claude_account())
     record = other_lane_record(budget, lane_key)
     diagnostics = budget.get("diagnostics") if isinstance(budget.get("diagnostics"), dict) else {}
     state = lane_credit_state(lane_key, record or None, policy, snapshot_stale=bool(diagnostics.get("stale")))

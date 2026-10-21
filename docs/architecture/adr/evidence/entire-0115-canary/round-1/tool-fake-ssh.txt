@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# Fake ssh for the Entire canary: maps <host>:<owner>/<repo>.git onto local bare
+# repositories and logs every invocation. Unknown repositories are refused.
+set -euo pipefail
+C=<scratch>/canary
+host=""; cmd="${!#}"
+if [[ "${1:-}" == "-G" ]]; then echo "$(date -u +%H:%M:%S.%N) PROBE ssh-variant" >> "$C/logs/ssh.log"; exit 1; fi
+for a in "$@"; do case "$a" in *@*) host="${a#*@}";; esac; done
+verb="${cmd%% *}"; path="${cmd#* }"; path="${path//\'/}"; path="${path#/}"
+case "$path" in *.git) ;; *) path="$path.git";; esac
+target="$C/remotes/$host/$path"
+ts=$(date -u +%H:%M:%S.%N)
+if [[ ! -d "$target" ]]; then
+  echo "$ts REFUSED host=$host verb=$verb repo=$path argv=[$*]" >> "$C/logs/ssh.log"; exit 1
+fi
+echo "$ts ALLOW host=$host verb=$verb repo=$path" >> "$C/logs/ssh.log"
+case "$verb" in
+  git-receive-pack) exec git receive-pack "$target";;
+  git-upload-pack) exec git upload-pack "$target";;
+  *) echo "$ts REFUSED-VERB $verb" >> "$C/logs/ssh.log"; exit 1;;
+esac

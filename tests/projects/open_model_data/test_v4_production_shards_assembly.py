@@ -458,3 +458,28 @@ def test_assemble_production_shards_refuses_archive_write() -> None:
             output_dir=HISTORICAL_ARCHIVE_DIR,
             verify_only=False,
         )
+
+
+def test_removed_sum11_lookup_does_not_reopen_production_generation(tmp_path):
+    """Generation refuses before reading even a SUM-11-only synthetic database."""
+    import sqlite3
+
+    from scripts.projects.open_model_data import v4_production_shards_assembly as assembly
+
+    db = tmp_path / "sources.db"
+    with sqlite3.connect(db) as conn:
+        conn.execute("CREATE TABLE sum11 (word TEXT, definition TEXT)")
+        conn.execute("INSERT INTO sum11 VALUES ('fixture', 'historical-only gloss')")
+    original = db.read_bytes()
+    out = tmp_path / "output"
+    from scripts.projects.open_model_data.p3b_refusal import HistoricalProducerDeferredError
+
+    with pytest.raises(HistoricalProducerDeferredError, match="P3b"):
+        assembly.assemble_production_shards(output_dir=out, sources_db_path=db)
+    assert db.read_bytes() == original
+    assert not out.exists()
+    result = subprocess.run([sys.executable, "-m", assembly.__name__, "--output-dir", str(out),
+                             "--sources-db", str(db)], capture_output=True, text=True, timeout=30)
+    assert result.returncode != 0
+    assert "P3b" in result.stderr
+    assert not out.exists()

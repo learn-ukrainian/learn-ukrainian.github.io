@@ -30,6 +30,14 @@ from typing import Any
 
 import yaml
 
+from scripts.atlas.word_card_certification import (
+    card_entry_type,
+    card_field,
+    card_head,
+    certification_run,
+    certified_inventory,
+    guard_card_inventory,
+)
 from scripts.storage.paths import REGISTRY_ROOT
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -375,6 +383,7 @@ def _insert_manifest_metadata(cur: sqlite3.Cursor, manifest: dict[str, Any]) -> 
             )
 
 
+@certification_run()
 def migrate_manifest(
     manifest_path: Path,
     db_path: Path,
@@ -384,6 +393,18 @@ def migrate_manifest(
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     from scripts.lexicon.source_attribution import withhold_legacy_soviet_citations
 
+    guard_card_inventory(manifest)
+    originals = {}
+    if "cards" in manifest or any("card_id" in entry for entry in manifest.get("entries", [])):
+        cards = certified_inventory(manifest, required_approval="site")
+        originals = {card["card_id"]: card for card in cards}
+        # Database columns are projections. The stored card body stays byte-equivalent.
+        manifest = {**manifest, "entries": [
+            {**card, "lemma": card_head(card), "url_slug": card["card_id"],
+             "entry_type": card_entry_type(card), "gloss": card_field(card, "english_gloss"),
+             "enrichment": {"cefr": {"level": card_field(card, "cefr")}}}
+            for card in cards
+        ]}
     entries = []
     withholding: dict[str, Any] = {
         "stage": "migrate", "entries_touched": 0, "citations_withheld": 0, "by_section": {},
@@ -439,7 +460,7 @@ def migrate_manifest(
                 """INSERT OR REPLACE INTO article_payloads
                    (slug, route_order, payload_json, is_public_route)
                    VALUES (?, ?, ?, 1)""",
-                (slug, route_order, json.dumps(e, ensure_ascii=False)),
+                (slug, route_order, json.dumps(originals.get(e.get("card_id"), e), ensure_ascii=False)),
             )
             counts["payloads"] += 1
 
@@ -493,6 +514,10 @@ def migrate_manifest(
             ),
         )
         counts["articles"] += 1
+        if e.get("card_id") in originals:
+            # Assertions, relations and provenance already live inside the certified
+            # card. Legacy generators cannot append facts to that reviewed payload.
+            continue
 
         # provenance
         prov = e.get("source_provenance")
@@ -544,10 +569,11 @@ def migrate_manifest(
             )
             counts["enrichment"] += 1
 
-    counts.update(_insert_verified_synonym_relations(cur, synonym_verdicts_path))
+    if not originals:
+        counts.update(_insert_verified_synonym_relations(cur, synonym_verdicts_path))
 
     # Curated aliases and spelling variants
-    curated_alias_rows = _load_curated_aliases(curated_aliases_path)
+    curated_alias_rows = _load_curated_aliases(curated_aliases_path) if not originals else []
     curated_count = 0
     for a, k, src, target, vis in curated_alias_rows:
         if target in article_visibility:
@@ -625,14 +651,22 @@ def validate_alias_targets(db_path: Path) -> dict[str, int]:
 
 
 def main() -> None:
-    ap = argparse.ArgumentParser(description="Build/migrate the Word Atlas entry-model v1 SQLite DB.")
-    ap.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST)
-    ap.add_argument("--db", type=Path, default=DEFAULT_DB)
+    ap = argparse.ArgumentParser(
+        description="Build the Atlas database from a manifest.\nUse for local migration; word cards require current site certification.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=("Examples:\n  .venv/bin/python -m scripts.atlas.atlas_db --manifest manifest.json --db atlas.db\n"
+                "  .venv/bin/python -m scripts.atlas.atlas_db --db atlas.db --validate-aliases-only\n"
+                "Outputs: Replaces the selected database after certification checks.\n"
+                "Exit codes: 0 success; 1 validation or certification refused; 2 usage error.\n"
+                "Related: #10513; docs/atlas/word-cards/export-invariants.md"),
+    )
+    ap.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST, help="Input manifest JSON (default: %(default)s).")
+    ap.add_argument("--db", type=Path, default=DEFAULT_DB, help="Output SQLite database (default: %(default)s).")
     ap.add_argument(
         "--curated-aliases",
         type=Path,
         default=DEFAULT_CURATED_ALIASES,
-        help="Path to curated aliases YAML file.",
+        help="Curated aliases YAML (default: %(default)s).",
     )
     ap.add_argument(
         "--validate-aliases-only",

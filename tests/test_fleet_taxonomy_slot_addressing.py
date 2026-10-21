@@ -54,18 +54,21 @@ def test_roster_slots_accepted_by_validation() -> None:
     _inbox._validate_agent("cursor-infra")
 
 
-def test_roster_slot_count_is_45() -> None:
-    """Verify 26 infrastructure, two epics coordination, twelve Ukrainian content/data, and five core slots."""
+def test_roster_slot_count_is_49() -> None:
+    """Verify 27 infrastructure, two epics, two practice, thirteen Ukrainian content/data, and five core slots.
+
+    The operator order of 2026-10-16 (#10835) added grok-monitor and grok-open-model-data.
+    """
     text = _AREA_ASSIGNMENTS_YAML.read_text(encoding="utf-8")
     data = yaml.safe_load(text)
     slots = []
     for area_data in data["assignments"].values():
         if isinstance(area_data, dict):
             slots.extend(area_data.get("slots", []))
-    assert len(slots) == 45
-    assert len(set(slots)) == 45
-    assert len([slot for slot in slots if not slot.startswith("muse-")]) == 43
-    assert data["assignments"]["monitor"]["slots"] == ["muse-monitor"]
+    assert len(slots) == 49
+    assert len(set(slots)) == 49
+    assert len([slot for slot in slots if not slot.startswith("muse-")]) == 47
+    assert data["assignments"]["monitor"]["slots"] == ["muse-monitor", "grok-monitor"]
     assert set(data["assignments"]["core"]["slots"]) == {
         "claude-core",
         "codex-core",
@@ -78,7 +81,9 @@ def test_roster_slot_count_is_45() -> None:
         "claude-open-model-data",
         "codex-open-model-data",
         "gemini-open-model-data",
+        "grok-open-model-data",
     ]
+    assert "cursor-open-model-data" not in slots
     assert "cursor-infra" in slots
     assert "cursor-devops" in slots
     assert "cursor-corpus" in slots
@@ -92,7 +97,9 @@ def test_roster_slot_count_is_45() -> None:
 @pytest.mark.parametrize("provider", ["claude", "codex", "gemini", "grok", "kimi", "cursor"])
 def test_monitor_aliases_preserve_inbox_destinations_beside_muse(provider: str) -> None:
     slot = f"{provider}-monitor"
-    assert _channels.resolve_recipient_alias(slot, assignments_path=_AREA_ASSIGNMENTS_YAML) == provider
+    # grok-monitor is a registered slot (#10835); the other monitor names keep the bare-provider inbox.
+    expected = slot if provider == "grok" else provider
+    assert _channels.resolve_recipient_alias(slot, assignments_path=_AREA_ASSIGNMENTS_YAML) == expected
     for muse_slot in ("muse-monitor", "muse-devops"):
         assert muse_slot in _channels.get_valid_recipient_agents(assignments_path=_AREA_ASSIGNMENTS_YAML)
         assert _channels.resolve_recipient_alias(muse_slot, assignments_path=_AREA_ASSIGNMENTS_YAML) == muse_slot
@@ -102,16 +109,30 @@ def test_monitor_aliases_preserve_inbox_destinations_beside_muse(provider: str) 
 
 
 def test_ukrainian_content_areas_have_only_approved_provider_slots() -> None:
-    """Ukrainian content/data areas have only eligible Claude, GPT and Gemini identities."""
+    """Ukrainian content/data areas have only Claude, GPT and Gemini identities, plus native Grok on data.
+
+    The operator order of 2026-10-16 (#10835) registered grok-open-model-data only; seminars and
+    hramatka keep no Grok slot, and Kimi and Cursor stay off every content/data area.
+    """
     assignments = yaml.safe_load(_AREA_ASSIGNMENTS_YAML.read_text(encoding="utf-8"))["assignments"]
-    for area in ("seminars", "hramatka", "open-model-data"):
+    approved = {
+        "seminars": {"claude", "codex", "gemini"},
+        "hramatka": {"claude", "codex", "gemini"},
+        "open-model-data": {"claude", "codex", "gemini", "grok"},
+    }
+    for area, providers in approved.items():
         slots = assignments[area]["slots"]
         assert slots, area
-        assert all(slot.split("-", 1)[0] in {"claude", "codex", "gemini"} for slot in slots), (area, slots)
+        assert {slot.split("-", 1)[0] for slot in slots} <= providers, (area, slots)
 
 
-@pytest.mark.parametrize("provider", ("grok", "kimi", "cursor"))
-@pytest.mark.parametrize("lane", ("folk", "bio", "hramatka", "open-model-data"))
+@pytest.mark.parametrize(
+    ("provider", "lane"),
+    [
+        *((provider, lane) for provider in ("kimi", "cursor") for lane in ("folk", "bio", "hramatka", "open-model-data")),
+        *(("grok", lane) for lane in ("folk", "bio", "hramatka")),
+    ],
+)
 def test_removed_content_slots_are_not_bridge_recipients(provider: str, lane: str) -> None:
     slot = f"{provider}-{lane}"
     assert slot not in _channels.get_valid_recipient_agents(assignments_path=_AREA_ASSIGNMENTS_YAML)

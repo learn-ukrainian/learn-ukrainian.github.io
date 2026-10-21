@@ -123,27 +123,48 @@ def test_find_textbook_attestation_denies_restricted_sources(tmp_path: Path) -> 
     assert "ohoiko" not in res["source_file"]
 
 
-def test_find_dictionary_attestation(tmp_path: Path) -> None:
+@pytest.mark.parametrize(
+    ("lemma", "attested"),
+    [
+        ("охочий", True),
+        (" ОХОЧИЙ ", True),
+        ("брати участь", True),
+        ("холостяк", False),
+        ("приймати участь", False),
+        ("вигаданеслово", False),
+        ("невідома фраза", False),
+        ("  ", False),
+    ],
+)
+def test_find_dictionary_attestation(tmp_path: Path, lemma: str, attested: bool) -> None:
     db_path = tmp_path / "test_dict.db"
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    cur.execute("CREATE TABLE grinchenko (word TEXT)")
-    cur.execute("CREATE TABLE sum11 (word TEXT)")
-    cur.execute("INSERT INTO grinchenko VALUES ('охочий')")
-    cur.execute("INSERT INTO sum11 VALUES ('холостяк')")
+    cur.execute("CREATE TABLE grinchenko (word TEXT, definition TEXT)")
+    cur.execute("CREATE TABLE sum11 (word TEXT, definition TEXT)")
+    cur.execute("INSERT INTO grinchenko VALUES ('охочий', 'брати участь')")
+    cur.execute("INSERT INTO sum11 VALUES ('холостяк', 'приймати участь; брати участь')")
     conn.commit()
     conn.close()
 
-    res_g = find_dictionary_attestation("охочий", db_path)
-    assert res_g is not None
-    assert "Грінченка" in res_g
+    result = find_dictionary_attestation(lemma, db_path)
+    if attested:
+        assert result is not None
+        assert "Грінченка" in result
+        assert "СУМ-11" not in result
+    else:
+        assert result is None
 
-    res_s = find_dictionary_attestation("холостяк", db_path)
-    assert res_s is not None
-    assert "СУМ-11" in res_s
 
-    res_none = find_dictionary_attestation("вигаданеслово", db_path)
-    assert res_none is None
+def test_find_dictionary_attestation_needs_no_soviet_dictionary(tmp_path: Path) -> None:
+    db_path = tmp_path / "historical_dict.db"
+    with sqlite3.connect(db_path) as conn:
+        conn.execute("CREATE TABLE grinchenko (word TEXT, definition TEXT)")
+        conn.execute("INSERT INTO grinchenko VALUES ('охочий', 'брати участь')")
+        assert find_dictionary_attestation("брати участь", db_path, conn=conn) is not None
+        assert find_dictionary_attestation("холостяк", db_path, conn=conn) is None
+        assert find_dictionary_attestation("приймати участь", db_path, conn=conn) is None
+        assert conn.execute("SELECT COUNT(*) FROM grinchenko").fetchone() == (1,)
 
 
 def test_synthesize_trajectory_and_dpo(
@@ -249,10 +270,13 @@ def test_scan_generated_files_detects_violations(tmp_path: Path) -> None:
     assert any("isolated multiplication" in v or "repeated adjacent word" in v for v in viols)
 
 
+@pytest.mark.parametrize(("modern_attestation", "expected_records"), [(True, 2), (False, 1)])
 def test_generate_pipeline_mock(
     tmp_path: Path,
     trajectory_schema: dict[str, Any],
     dpo_pair_schema: dict[str, Any],
+    modern_attestation: bool,
+    expected_records: int,
 ) -> None:
     mock_lt = tmp_path / "mock_lt.json"
     mock_lt.write_text(
@@ -279,6 +303,12 @@ def test_generate_pipeline_mock(
     cur.execute("CREATE TABLE grinchenko (word TEXT)")
     cur.execute("CREATE TABLE sum11 (word TEXT)")
     cur.execute("INSERT INTO sum11 VALUES ('автовежа')")
+    cur.execute("INSERT INTO grinchenko VALUES ('автовежа')")
+    if modern_attestation:
+        cur.execute(
+            "INSERT INTO textbooks VALUES ('Українська мова', '7', 'ukrmova', 'avramenko', "
+            "'На майданчику стоїть автовежа.', '7-klas-ukrmova-avramenko-2024')"
+        )
     conn.commit()
     conn.close()
 
@@ -303,15 +333,15 @@ def test_generate_pipeline_mock(
         verify_schema=True,
     )
 
-    assert manifest["total_trajectories"] >= 2
-    assert manifest["total_dpo_pairs"] >= 2
+    assert manifest["total_trajectories"] == expected_records
+    assert manifest["total_dpo_pairs"] == expected_records
     assert "partition_counts" in manifest
     assert "partition_firewall" in manifest
     assert manifest["partition_firewall"]["verified_partition_isolation"] is True
     assert manifest["partition_firewall"]["train_held_out_overlap_count"] == 0
     assert manifest["quality_metrics"]["vesum_verification_rate"] == 1.0
-    assert manifest["quality_metrics"]["vesum_verification_count"] >= 2
-    assert manifest["quality_metrics"]["vesum_verification_denominator"] >= 2
+    assert manifest["quality_metrics"]["vesum_verification_count"] == expected_records
+    assert manifest["quality_metrics"]["vesum_verification_denominator"] == expected_records
     assert manifest["quality_metrics"]["zero_private_paths"] is True
     assert manifest["quality_metrics"]["zero_restricted_sources"] is True
     assert (out_dir / "decolonization_manifest.json").is_file()
@@ -333,6 +363,7 @@ def test_generate_pipeline_mock(
         assert "ulp-" not in t_content
         assert "ohoiko" not in t_content
         assert "СУМ-20" not in t_content
+        assert "СУМ-11" not in t_content
         assert "ВТС" not in t_content
 
 

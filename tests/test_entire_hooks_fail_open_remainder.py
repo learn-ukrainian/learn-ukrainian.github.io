@@ -30,7 +30,7 @@ def _hook_env() -> dict[str, str]:
 
 def _claude_entire_hooks() -> list[dict]:
     settings = json.loads(CLAUDE_SETTINGS.read_text(encoding="utf-8"))
-    needle = "entire hooks claude-code"
+    needle = "hooks claude-code "
     return [
         hook
         for event in settings["hooks"]
@@ -91,7 +91,7 @@ def test_claude_entire_hooks_manifest_structure() -> None:
     assert len(hooks) == 7
 
     verbs = {
-        re.search(r"entire hooks claude-code (\S+)", hook["command"]).group(1)
+        re.search(r"hooks claude-code ([a-z-]+)", hook["command"]).group(1)
         for hook in hooks
     }
     assert verbs == {
@@ -103,10 +103,24 @@ def test_claude_entire_hooks_manifest_structure() -> None:
         "stop",
         "session-end",
     }
-    assert all(hook["timeout"] == 30 for hook in hooks)
+    # Entire 0.11.5's Claude Code template gives stop and post-task 120s, the rest 30s.
+    assert {
+        re.search(r"hooks claude-code ([a-z-]+)", hook["command"]).group(1): hook["timeout"]
+        for hook in hooks
+    } == {
+        "session-start": 30,
+        "pre-task": 30,
+        "post-task": 120,
+        "post-todo": 30,
+        "user-prompt-submit": 30,
+        "stop": 120,
+        "session-end": 30,
+    }
     assert all("if ! command -v entire" in hook["command"] for hook in hooks)
     assert all("exec entire" not in hook["command"] for hook in hooks)
-    assert all(hook["command"].endswith("|| true'") for hook in hooks)
+    # Capture runs only behind the guard (version + private route), which always exits 0.
+    assert all("/scripts/entire/capture_guard.sh" in hook["command"] for hook in hooks)
+    assert not any("entire hooks claude-code" in hook["command"] for hook in hooks)
 
 
 def test_claude_entire_hooks_fail_open_when_cli_errors(tmp_path: Path) -> None:

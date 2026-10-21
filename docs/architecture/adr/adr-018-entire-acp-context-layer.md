@@ -39,9 +39,9 @@ guard is a prerequisite, not a follow-up.
 
 ## Decision
 
-Entire 0.8.42 is an optional, read-only context and provenance index. It never
-owns task state, coordination, leases, recovery, review eligibility, or source
-content. An LLM may use an Entire search result only as a locator; before any
+Entire (pinned by the 0.11.5 amendment below) is an optional, read-only context
+and provenance index. It never owns task state, coordination, leases, recovery,
+review eligibility, or source content. An LLM may use an Entire search result only as a locator; before any
 context is injected, the locator is resolved against the authoritative local
 system and its digest is verified.
 
@@ -58,7 +58,9 @@ The operator authorizes body-bearing Entire retrieval because checkpoint
 storage is separated from the public product origin. Native recall is allowed
 only after a live preflight proves all of these facts:
 
-- CLI remains pinned to 0.8.42 and Entire authentication is valid;
+- CLI remains pinned to the version the 0.11.5 amendment below names, and
+  Entire authentication is valid;
+- Entire's own status reports the dedicated private checkpoint route;
 - `learn-ukrainian/entire-checkpoints-private` is private and contains the
   canonical checkpoint ref;
 - the public product origin contains zero `entire/*` branches;
@@ -76,6 +78,142 @@ explain stays within the root's private working context; raw-transcript flags
 remain prohibited. Generated recap/dispatch and worktree-mutating
 resume/rewind remain operator-directed. Native Entire remains optional and
 non-authoritative.
+
+### Amendment: Entire 0.11.5 (2026-10-16)
+
+Recorded under [#10846](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/10846);
+it replaces the earlier rule that this decision does not authorize moving
+beyond 0.8.42.
+
+The last accepted Entire CLI version is recorded in stack_pins.yaml; it is an acceptance record, not an expiry. A newer CLI is allowed only after a compatibility review re-proves the version-sensitive canaries (fail-closed version preflight, private-destination allowlist, zero public entire/* refs, body-leakage scan, fail-open outage behaviour, locator digest checks), with independent cross-family review and a reviewed rollback procedure. Until that review is recorded, automated calls prove the accepted version. A version probe is not that review. After approval, the native-recall preflight and the runtime version guard move to the new version in the same change.
+
+`stack_pins.yaml` does not exist yet (DevOps stack-currency policy v3), so this
+ADR records the accepted version until it lands: **Entire CLI 0.11.5**, accepted
+by the #10846 compatibility review below. The pin row is added when the file
+lands. The runtime version guard is `ACCEPTED_VERSION` in
+`scripts/entire/capture_guard.py`; the native-recall preflight imports it.
+
+What the upgrade changes in this repository:
+
+- **Control-plane calls.** 0.11.0 removed `repo mirror collaborators list`
+  without an alias, and 0.11.3 removed its successor `repo access list`. The
+  preflight now reads each mirror's ACL with
+  `entire repo grant list /gh/<owner>/<repo> --json` (rows carry `granteeName`,
+  `role` and `source: "github"`) and each mirror's readiness with
+  `entire repo view /gh/<owner>/<repo> --json`. The provider takes the dispatch
+  jurisdiction from that `repo view` row's ready placements instead of the old
+  `repo mirror list` row shape. `search`, `checkpoint explain`,
+  `api --jurisdiction`, `status --json`, `recap`, `dispatch` and
+  `session resume` keep the shapes `.entire/private-recall.json` lists.
+- **Route proof.** The preflight compares the version's first line exactly and
+  requires `entire status --json` to report
+  `checkpoint_sync_remote_source: "dedicated"` for the private repository with no
+  `checkpoint_remote_ignored`. When `checkpoint_remote` is judged not to belong
+  to the checkout (for example an `origin` owned by another account), both 0.8.42
+  and 0.11.5 push checkpoints to the push remote instead; 0.11.5 reports that in
+  `status --json`, so the preflight now fails closed on it.
+- **Capture guard.** Recall is not the only place the version and route
+  matter: every checkpoint-producing entry point runs Entire through
+  `scripts/entire/capture_guard.sh`. That covers the Claude Code and Codex
+  lifecycle hooks, the Cursor shim, fleet capture, and all five Entire git hook
+  wrappers. Before Entire runs, the guard checks the routing allowlist, the
+  exact version line and the same `status --json` route predicate the preflight
+  uses. A failed check refuses capture with one `[entire] capture refused (...)`
+  stderr line, and Entire is never called. An Entire failure or hang after the
+  checks is an outage. The guard exits 0 in both cases, so the host session and
+  `git` continue and the repository pre-push gate alone decides a push. The
+  pre-push wrapper is the only automatic checkpoint egress in 0.11.5 (Entire's
+  `PrePush`; the manual `entire attach` is the other caller), so the route check
+  there is what keeps checkpoints off a public remote. The guard adds about one
+  `entire version` and one `entire status --json` call per hook. Measured cost is
+  in the table below.
+- **Checkpoint backend.** It stays `branch`. The settings carry no
+  `checkpoints` block, which 0.11.5 resolves to the branch backend, and
+  `entire enable --force` did not add one in the canary. Migrating to the
+  git-refs backend is a separate decision.
+- **Hooks.** Claude Code Stop and post-task timeouts follow the 0.11.5 template
+  (120 s); the other Entire hooks keep 30 s, which matches the template. Entire
+  git hook wrappers without a chain are byte-identical in both versions; the
+  0.11.5 chained form differs, and `scripts/install_git_hooks.sh` now writes
+  that form and still recognizes the 0.8.42 form (see `hook-audit.md`). The
+  installer also routes each wrapper's `entire hooks git` call through the
+  capture guard. Entire 0.11.5 treats the guarded line as current and leaves it
+  in place; `entire enable --force` rewrites it, after which
+  `scripts/install_git_hooks.sh --check` reports the wrapper `UNGUARDED` until
+  the installer is rerun. The installer refuses to write through a symlinked
+  hooks directory or hook file.
+- **External agents.** Since 0.10.6, `external_agents` is honored only from an
+  untracked `.entire/settings.local.json`. No `entire-agent-*` binary is
+  installed today, so nothing changes until one is.
+
+Canary evidence (#10846). The receipts are tracked, sanitized text under
+[`evidence/entire-0115-canary/`](evidence/entire-0115-canary/) (`round-1/` for
+the first upgrade canary, `round-2/` for the capture-guard canary; local paths
+are replaced by placeholders and scripts keep a `.txt` suffix). Both rounds
+used a throwaway clone of the branch with about 32,600 tracked files and
+463,000 gitignored files. Each binary ran with an isolated home directory and
+no credentials, inside a network namespace with no route out
+(`round-2/tool-cenv.sh.txt`). Every remote was a local bare repository behind
+a GitHub-shaped URL, reached through a logging fake `ssh`
+(`round-2/tool-fake-ssh.txt`, transfer log `round-2/log-ssh.txt`): a public
+`origin`, the private checkpoint store, and a fork owned by another account.
+The 0.11.5 release archive matched the pinned checksum. The 0.8.42 archive
+matched its release `checksums.txt` (`round-1/CANARY-SUMMARY.txt`,
+`round-2/tool-canary-setup.sh.txt`). In round 2 the agent hooks ran the
+configured, guarded commands from `agents_extensions/shared/settings.json`, and
+the git hooks were the installed, guarded wrappers.
+
+The six version-sensitive canaries (round 2 unless noted):
+
+| Canary | Result | Receipts |
+| --- | --- | --- |
+| Fail-closed version preflight | Proved. The real 0.11.5 binary captures (trailer, private store advanced). The real 0.8.42 binary and 0.11.5-backed variants reporting `0.11.50`, `0.11.6` or a malformed line are all refused with `cli_version_not_accepted`. A hung `version` call is refused with `guard_probe_timeout`. Each refusal leaves no trailer and no checkpoint, and the push still goes through the gate. | `log-r2-01-accepted.json`, `log-r2-02-version-0.8.42-real.json` … `log-r2-06-version-hang.json`, `log-scenarios.txt` |
+| Private-destination allowlist | Proved. The tracked settings were pointed at the public repository, and raw `status --json` then reported a `dedicated` route to it: refused with `routing_allowlist_failed`. A `settings.local.json` override to a foreign repository was refused with `checkpoint_route_not_private`. So was an `origin` owned by another account, which is round 1's S3, where an unguarded push put `entire/checkpoints/v1` on the fork. | `status-r2-07-tampered-tracked.json`, `log-r2-07-…`, `status-r2-08-local-override.json`, `log-r2-08-…`, `status-r2-09-misowned-origin.json`, `log-r2-09-…`, `round-1/log-s3-capture-0115.json.txt` |
+| Zero public `entire/*` refs | Proved. Every scenario log records the refs of all three remotes after its push (`refs_after`, `public_entire_refs: []`). The final public and fork remotes hold only `refs/heads/main`. | every `log-r2-*.json`, `refs-final.json`, `log-ssh.txt` |
+| Body-leakage scan | Proved. Every object in each bare repository, reachable or not, was read with `git cat-file --batch-all-objects --batch` and searched for three planted strings: one in the prompt, one in an ignored file and one in an untracked file never committed, and one in committed code. Public (34,272 objects) and fork: 0 objects held the prompt or the uncommitted bodies. Private store: 0 objects held the uncommitted bodies. The prompt appears only in `full.jsonl`, `prompt.txt` and `transcript.jsonl`, the transcript kinds the private store exists to hold. | `log-r2-19-leakage-scan.json`, `tool-canary-leakscan.py.txt` |
+| Fail-open outage behaviour | Proved. In every case the repository pre-push gate ran and decided the push. Cases: every Entire call failing; `hooks git pre-push` exiting 1; that call hanging (stopped at the 110 s budget, push completed in 110.2 s); the private store unreachable (Entire kept the checkpoint locally, and the next push synced it). With a failing gate and an Entire outage, the push was refused by the gate. | `log-r2-10-…` … `log-r2-14-…`, `log-r2-16-accepted-store-back.json` |
+| Locator digest checks | Proved for a 0.11.5 checkpoint and for a checkpoint written by 0.8.42 before the upgrade. The commit's `Entire-Checkpoint` trailer names the checkpoint the locator carries, and 0.11.5 `checkpoint explain <commit-sha>` returns the same id. `reverify_link` accepts the locator, and rejects a tampered digest and a locator moved to another commit with `digest_mismatch`. | `log-r2-18-locator-digest.json`, `log-r2-17-legacy-0842-unguarded.json`, `tool-canary-locator.py.txt` |
+
+Wrapper bytes: Entire's own unchained and chained wrappers, the installer's
+guarded output, and the `entire enable --force` → `--check UNGUARDED` →
+rerun round trip, which reproduces the first install byte for byte
+(`wrapper-*.txt`, `log-hooks-phase.txt`). Entire's `status --json` left the
+guarded wrappers unchanged.
+
+| Measurement | 0.8.42 p50 / p95 | 0.11.5 p50 / p95 |
+| --- | --- | --- |
+| `hooks claude-code user-prompt-submit`, direct (round 1, n = 20) | 8.33 s / 9.31 s | 1.68 s / 1.94 s |
+| `hooks claude-code stop`, direct (round 1, n = 20) | 7.20 s / 7.45 s | 2.15 s / 2.36 s |
+| `checkpoint explain <id> --json` (round 1) | 0.10 s / 0.16 s | 0.09 s / 0.12 s |
+| user-prompt-submit, direct / guarded (round 2, n = 10 each) | — | 1.72 s / 1.72 s (p95 3.76 s / 1.84 s) |
+| stop, direct / guarded (round 2, n = 10 each) | — | 2.10 s / 2.25 s (p95 2.76 s / 2.55 s) |
+
+Latency receipts are in `round-1/log-latency-*.json.txt` and
+`round-2/log-latency-r2-*.json`. The 1-minute load average was 13.7–17.8.
+`status --json` alone took 0.06–0.07 s in that clone. No hook call failed. In
+round 1 (`round-1/CANARY-SUMMARY.txt`), 0.11.5 explained a 0.8.42 checkpoint
+with the same core fields, and 0.8.42 read a 0.11.5 checkpoint after
+rollback. A non-interactive `entire doctor` changed no hook, setting or ref.
+The round-2 mutation checks (`round-2/mutation-r2-tests.txt`) show the new
+tests fail on the round-1 behaviour.
+
+Not proved: authenticated cloud search. The canary used no credentials,
+because a token refresh could rotate the live refresh token. Its JSON count
+fields are unchanged in the 0.11.5 source, and the install runbook checks it
+live.
+
+Install and rollback:
+[`docs/runbooks/entire-cli-upgrade.md`](../../runbooks/entire-cli-upgrade.md).
+Rollback reinstalls the kept 0.8.42 binary and reverts the PR. Downgrading
+discards pending, uncommitted agent session state, and legacy shadow branches
+are not removed automatically (Entire 0.11.5 release notes); leave them for a
+separate, operator-approved cleanup.
+
+Residuals, owned by the infra lane: the repository-managed Claude Code hooks
+keep the `Task` and `TodoWrite` matchers, which never fire (0.11.5 uses `Agent`
+and `Skill`), and add none of the 0.11.5 StopFailure or Subagent hooks; the
+OpenCode plugin differs from the 0.11.5 template. `entire doctor` reports both
+as "OUT OF DATE". Changing which hooks run is outside this amendment.
 
 ### Authority boundary
 
@@ -135,7 +273,7 @@ The first implementation stores these relationships in an existing
 authoritative receipt path or a rebuildable local projection after a separate
 schema review. It does not invent synthetic Entire sessions. Arbitrary
 metadata-card ingestion into Entire itself is optional and may be added only if
-a 0.8.42 canary proves a documented path. Native session capture stores
+a canary on the pinned CLI proves a documented path. Native session capture stores
 redacted prompt and transcript bodies in the private checkpoint repository;
 that is permitted by the operator amendment and remains isolated from the
 shared automatic corpus.
@@ -234,8 +372,7 @@ plugin could technically be written.
 - The production gate in #5880 remains independent and closed until its full
   atomic/fenced/idempotent closure, traps, successor recovery, and TTL reroute
   contract is proved.
-- CLI upgrades require a new compatibility review; this decision does not
-  authorize moving beyond 0.8.42.
+- CLI upgrades follow the 0.11.5 amendment below.
 
 ### Implemented slice (2026-08-02)
 

@@ -104,11 +104,12 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 # scripts.common is on the rules-workflow allowlist; scripts.lib is not.
 from scripts.common.bridge_paths import configured_bridge_db_path, default_bridge_db_path
 from scripts.common.flake_quarantine import TIMEOUT_PATTERN, load_registry, rerun_node_ids
-from scripts.common.repo_root import resolve_repo_root
+from scripts.common.repo_root import main_checkout_root, resolve_repo_root
 from tests import sparse_trees
 from tests.helpers.monitor import UNREACHABLE_MONITOR_URL, UNREACHABLE_TOOL_TIMING_URL
 
 pytest_plugins = [
+    "scripts.common.pytest_scratch",
     "tests.helpers.github_command_boundary",
     "tests.helpers.github_transport",
     "tests.helpers.source_db_write_guard",
@@ -165,6 +166,75 @@ def _dispatch_template_factory(tmp_path_factory: pytest.TempPathFactory) -> None
 
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
+
+
+class _TelemetryIsolation:
+    """Redirect events and refuse this process's emitter writes to production.
+
+    Audit opens rather than shared directory contents: live fleet processes
+    can append to production throughout a test session. The emitter frame
+    attributes an attempted write to this session, including either import
+    spelling and a replaced event-path resolver.
+    A child that scrubs the redirect environment can write to production
+    without this process's audit hook observing it.
+    """
+
+    def __init__(self, production_dirs: tuple[Path, ...]) -> None:
+        self.production_dirs = {root.resolve() for root in production_dirs}
+        self.leaks: set[str] = set()
+
+    def _audit_write(self, event: str, args: tuple[object, ...]) -> None:
+        if not self.production_dirs or event != "open" or len(args) < 3:
+            return
+        raw_path, mode, flags = args
+        writing = isinstance(mode, str) and any(char in mode for char in "wax+")
+        if not writing and not (isinstance(flags, int) and flags & (os.O_WRONLY | os.O_RDWR)):
+            return
+        if not isinstance(raw_path, (str, bytes, os.PathLike)):
+            return
+        path = Path(os.fsdecode(raw_path)).resolve()
+        root = next((root for root in self.production_dirs if path.is_relative_to(root)), None)
+        if root is None:
+            return
+        frame = sys._getframe(1)
+        try:
+            while frame is not None:
+                if frame.f_globals.get("__name__") in {"telemetry.emit", "scripts.telemetry.emit"}:
+                    self.leaks.add(f"batch_state/telemetry/events/{path.relative_to(root).as_posix()}")
+                    # emit_event swallows ordinary write errors. Retain the
+                    # attempt for sessionfinish as well as preventing the write.
+                    raise PermissionError("telemetry event guard: test emitter attempted a production write")
+                frame = frame.f_back
+        finally:
+            del frame
+
+    def pytest_sessionstart(self, session: pytest.Session) -> None:
+        config = session.config
+        # Session fixtures start after collection. Install here so imports and
+        # session fixtures also inherit the redirect, including xdist workers.
+        event_dir = config._tmp_path_factory.mktemp("telemetry-events")
+        patcher = pytest.MonkeyPatch()
+        patcher.setenv("LU_TELEMETRY_EVENTS_DIR", str(event_dir))
+        config.add_cleanup(patcher.undo)
+        sys.addaudithook(self._audit_write)
+        # Python audit hooks cannot be removed. Disable this session's hook
+        # during cleanup so a later pytest.main session has its own boundary.
+        config.add_cleanup(self.production_dirs.clear)
+
+    @pytest.hookimpl(optionalhook=True)
+    def pytest_testnodedown(self, node: Any, error: object) -> None:
+        self.leaks.update(getattr(node, "workeroutput", {}).get("telemetry_leaks", ()))
+
+    @pytest.hookimpl(trylast=True)
+    def pytest_sessionfinish(self, session: pytest.Session, exitstatus: int) -> None:
+        if hasattr(session.config, "workerinput"):
+            session.config.workeroutput["telemetry_leaks"] = sorted(self.leaks)
+        if self.leaks:
+            print("telemetry event guard: test emitter attempted production writes:")
+            for name in sorted(self.leaks):
+                print(f"  {name}")
+            if session.exitstatus == pytest.ExitCode.OK:
+                session.exitstatus = pytest.ExitCode.TESTS_FAILED
 
 
 def _loaded_module(*parts: str):
@@ -1200,6 +1270,8 @@ def _load_shard_allowlist() -> frozenset[str] | None:
     if not allowlist_path_str:
         return None
     allowlist_path = Path(allowlist_path_str)
+    if not allowlist_path.is_absolute():
+        allowlist_path = _REPO_ROOT / allowlist_path
     try:
         text = allowlist_path.read_text(encoding="utf-8")
     except OSError as error:
@@ -1226,6 +1298,10 @@ def pytest_ignore_collect(collection_path: Path, config: pytest.Config) -> bool 
     (including ``build``) cannot hide an allowed file. Inactive local
     collection still defers to pytest's normal traversal rules.
     """
+    # Generated child suites inherit CI's environment but have their own root.
+    # The repository shard file governs only this checkout's test session.
+    if config is not None and config.rootpath.resolve() != _REPO_ROOT:
+        return None
     allowlist = _load_shard_allowlist()
     if allowlist is None:
         return None
@@ -1404,6 +1480,7 @@ def _hermetic_dispatch_admission_host(monkeypatch):
         "DISPATCH_MAX_LOAD_PER_CPU",
         "DISPATCH_WORKER_MEM_RESERVE_GIB",
         "DISPATCH_MAX_TEST_SLOT_QUEUE",
+        "DISPATCH_DISK_REAP_USED_PERCENT",
         "DISPATCH_DISK_REFUSE_USED_PERCENT",
         "DISPATCH_DISK_ALERT_USED_PERCENT",
         "LU_SLICE_CGROUP",
@@ -2016,12 +2093,29 @@ _install_socket_guard()
 # always runs them. Needs are derived from the test module (path joins,
 # Path/open arguments, imported path constants, fixtures, and
 # pytest.mark.needs_sparse_tree), not from a hand list. A string that only
-# mentions the tree name is not a read.
+# mentions the tree name is not a read. Every default exclusion in
+# scripts/delegate.py is listed except wiki and the trees with a cone anchor
+# (_DISPATCH_SPARSE_ANCHORS): their directory exists in a default checkout,
+# so a directory check cannot see them absent (#10777,
+# tests/test_dispatch_checkout_size.py). _SPARSE_ANCHORED_TREES below reads
+# that absence from the sparse cone instead.
 _SPARSE_TREE_DIRS: dict[str, tuple[str, ...]] = {
     "data/projects": ("tests/projects/open_model_data",),
     "data/lexicon": ("tests/lexicon",),
+    "data/datasets": (),
+    "data/processed": (),
+    "registry/lexicon/source-inventory-review-decisions": (),
 }
-_SPARSE_TREES = frozenset(_SPARSE_TREE_DIRS)
+# Site trees skip only through pytest.mark.needs_sparse_tree. Build and
+# review tests lay out tmp_path/site/src/content as fixtures, so a path match
+# is no evidence of a read: derived needs skipped 400 tests that pass
+# without the trees (#10777).
+# An anchored tree is absent when the sparse cone does not hold all of it
+# (_sparse_cone_holds); its anchors keep the directory. It also skips only
+# through the marker, so tests that read just the anchored files keep running.
+_SPARSE_ANCHORED_TREES = frozenset({"registry/lexicon/source-inventory"})
+_SPARSE_MARKER_ONLY_TREES = frozenset({"site/src/content", "site/src/data"}) | _SPARSE_ANCHORED_TREES
+_SPARSE_TREES = frozenset(_SPARSE_TREE_DIRS) | _SPARSE_MARKER_ONLY_TREES
 _SPARSE_READ_ATTRS = frozenset(
     {
         "read_text",
@@ -2052,7 +2146,10 @@ def sparse_missing_tree_skip_reason(
         return None
     normalized = rel_path.replace("\\", "/").lstrip("./")
     needed = _trees_needed_by_test(normalized, item_name)
-    for tree in ("data/projects", "data/lexicon"):
+    # Declaration order names data/projects before data/lexicon, which is no
+    # longer tracked (#8853), so a test that reads both names the include
+    # that brings files.
+    for tree in (*_SPARSE_TREE_DIRS, *sorted(_SPARSE_MARKER_ONLY_TREES)):
         if tree in missing_trees and tree in needed:
             return f"{tree} is absent from this sparse worktree; re-include it with --sparse-include {tree}"
     return None
@@ -2081,7 +2178,7 @@ def _path_trees(text: str, *, allow_bare: bool = False) -> set[str]:
     """
     normalized = text.replace("\\", "/")
     found: set[str] = set()
-    for tree in ("data/projects", "data/lexicon"):
+    for tree in _SPARSE_TREE_DIRS:
         into_tree = f"{tree}/" in normalized
         bare_tree = allow_bare and (normalized == tree or normalized.endswith(f"/{tree}"))
         if into_tree or bare_tree:
@@ -2430,10 +2527,46 @@ def _sparse_missing_trees() -> frozenset[str]:
     if not _sparse_checkout_enabled():
         return frozenset(forced)
     missing = set(forced)
-    for rel in ("data/projects", "data/lexicon"):
-        if not (_REPO_ROOT / rel).is_dir():
+    for rel in _SPARSE_TREES:
+        present = _sparse_cone_holds(rel) if rel in _SPARSE_ANCHORED_TREES else (_REPO_ROOT / rel).is_dir()
+        if not present:
             missing.add(rel)
     return frozenset(missing)
+
+
+@functools.lru_cache(maxsize=1)
+def _sparse_cone_dirs() -> tuple[str, ...] | None:
+    """Directories of this checkout's sparse cone; None when it is not in cone mode or git fails."""
+    try:
+        cone_mode = subprocess.run(
+            ["git", "-C", str(_REPO_ROOT), "config", "--get", "--type=bool", "core.sparseCheckoutCone"],
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=30,
+        )
+        if cone_mode.stdout.strip().lower() != "true":
+            return None
+        listing = subprocess.run(
+            ["git", "-C", str(_REPO_ROOT), "sparse-checkout", "list"],
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=30,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return None
+    if listing.returncode != 0:
+        return None
+    return tuple(line.strip().strip("/") for line in listing.stdout.splitlines() if line.strip())
+
+
+def _sparse_cone_holds(tree: str) -> bool:
+    """Whether the sparse cone holds all of ``tree``; an unknown cone reads as holding it, so the test runs."""
+    cone = _sparse_cone_dirs()
+    if cone is None:
+        return True
+    return any(tree == entry or tree.startswith(entry + "/") for entry in cone)
 
 
 def _item_repo_rel(item: pytest.Item) -> str:
@@ -2650,6 +2783,15 @@ def pytest_configure_node(node: Any) -> None:
 
 
 def pytest_configure(config: pytest.Config) -> None:
+    config.pluginmanager.register(
+        _TelemetryIsolation(
+            tuple(
+                root / "batch_state" / "telemetry" / "events"
+                for root in dict.fromkeys((_REPO_ROOT, main_checkout_root(_REPO_ROOT)))
+            )
+        ),
+        "telemetry-isolation",
+    )
     _restore_published_credentials(config)
     if (
         not hasattr(config, "workerinput")
@@ -2682,8 +2824,9 @@ def pytest_configure(config: pytest.Config) -> None:
     )
     config.addinivalue_line(
         "markers",
-        "needs_sparse_tree(tree): test reads data/projects or data/lexicon; "
-        "skipped when sparse-checkout omits that tree",
+        "needs_sparse_tree(tree): test reads a default sparse-excluded tree such as data/projects; "
+        "skipped when sparse-checkout omits that tree. A tree with a cone anchor (curriculum) "
+        "cannot be seen as absent and is named so a dispatch that owns the test includes it",
     )
     config.addinivalue_line(
         "markers",

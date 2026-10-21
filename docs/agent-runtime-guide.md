@@ -88,7 +88,14 @@ interactive launcher, this stateless `--bare` route does not install an
 
 Ownership matrix, troubleshooting, and seat smoke (including ACPX scope):
 [`docs/runbooks/agent-seat-onboarding.md`](runbooks/agent-seat-onboarding.md).
-Claude AGY review pins and driver qualification:
+Claude through AGY supports the existing `claude-sonnet-5-5-high` and
+`claude-opus-5-5-high` pins for implementation in verified dispatch worktrees.
+Sonnet remains excluded from security work. The dispatch keeps the requested
+selector separate from the provider-reported initialization identity, including
+same-run provenance through failure and cancellation. Missing or invalid
+identity cannot establish successful Claude dispatch. Review permissions and
+formal-review eligibility remain separate. Per-variant stop conditions and
+post-merge driver qualification:
 [`docs/runbooks/agy-claude-routes.md`](runbooks/agy-claude-routes.md).
 
 ## ACPX structured transport (runtime boundary)

@@ -894,8 +894,7 @@ def _recommend_agent(
         )
 
     avoid_by_lane = {
-        lane: lane in capacity_pick._EXCLUDED_DISPATCH_LANES
-        or capacity_pick.is_avoid_lane(agents.get(lane), lane=lane, facts=owner_facts(lane))
+        lane: capacity_pick.is_avoid_lane(agents.get(lane), lane=lane, facts=owner_facts(lane))
         for lane in status_by_agent
     }
 
@@ -1522,6 +1521,10 @@ def _compute_dispatch_routing_budget(
                 agents[lane][field] = cb_data.get(field)
             agents[lane]["freshness"] = cb_data.get("freshness", "unavailable")
             agents[lane]["age_s"] = cb_data.get("age_s")
+            # Per-product percents are display-only and Grok-only (#10864); the
+            # lane record keeps them even when the credit window is absent.
+            if lane == "grok" and isinstance(cb_data.get("product_usage"), list):
+                agents[lane]["product_usage"] = cb_data["product_usage"]
             if cb_data.get("error_kind") == "need_login" or cb_data.get("failure_kind") == "need_login":
                 agents[lane]["probe_state"] = "NEED_LOGIN"
             cb_freshness[lane] = _probe_freshness_label(cb_data)

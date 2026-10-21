@@ -20,6 +20,9 @@ streams:
   atlas-practice:
     title: "Word Atlas + Practice Hub product"
     epics: [4387]  # umbrella (closed #4700 UX-quality + intake #4220/#4378/#5224 folded into #4387; closed #5331 removed)
+  practice:
+    title: "Practice Hub, ZNO and activities"
+    epics: [11151]
   corpus-channels:
     title: "Corpus channels — acquisition & ingestion"
     epics: [4706]
@@ -31,7 +34,7 @@ streams:
     epics: [5535]  # nested program; was provisionally under #4707/#6943 until this registry bootstrap (#5537)
   devops:
     title: "DevOps automation, CI, release & launcher reliability"
-    epics: [5703]
+    epics: [5703, 10844]  # #10844 overflow epic for the existing stream (#5703 is at GitHub's 100 native sub-issue limit)
   monitor:
     # Product name: Ops API + UI. Stream key stays `monitor` for launcher/handoff
     # stability; selectors `ops-api` / `ops.api` alias here via handoff_identity.sh.

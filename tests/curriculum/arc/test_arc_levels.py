@@ -32,9 +32,8 @@ FIRST_BAND_KEY = {"a2": "a2-bridge", "b1": "b1-core", "b2": "b2+"}
 
 A1_ARC_DOC = REPO_ROOT / "docs/epics/fresh-build-a1-arc.md"
 A1_ARC_YAML = REPO_ROOT / "curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml"
-# Pinned candidate's positions block before the #10108 orientation-marker repair.
-# Removing only the marker must recover these exact bytes for all 55 rows.
-A1_POSITIONS_BLOCK_SHA256 = "da425d882220c8f5b8fb5a311e443bf5a58ad7c3fb42f5d83dd00a14f3aeff59"
+# All 55 generated rows after the #10108 floor ownership amendment, with duplicate line refs removed.
+A1_POSITIONS_BLOCK_SHA256 = "9c8aa2641676e87c42bdd9eee8ada09baa105ddcb7d62a2322768915ba400e9f"
 NON_A1_ARC_SHA256 = {
     "a2": "d9419ea84a8f3bac3d1ba9159061e25ffd8a126813986c5e5efbd8e164db03aa",
     "b1": "274cbfdf28f7c7193d5efd4b4cd623d4ebb0933fd20e391303d3cd36bcf5390f",
@@ -116,7 +115,16 @@ def test_loader_band_keys() -> None:
     assert all(position.band_key is None for position in a1[1:])
 
 
-def test_a1_arc_gains_only_position_1_orientation_marker() -> None:
+@pytest.mark.parametrize("level", ("a1", *sorted(LEVELS)))
+def test_standard_line_refs_have_no_duplicate_pairs(level: str) -> None:
+    for record in _records(level):
+        pairs = [tuple(pair) for pair in record["standard_line_refs"]]
+        assert len(pairs) == len(set(pairs)), (
+            f"{level} position {record['position']} repeats a standard_line_refs pair"
+        )
+
+
+def test_a1_arc_preserves_orientation_and_amended_positions() -> None:
     text = A1_ARC_YAML.read_text(encoding="utf-8")
     data = yaml.safe_load(text)
     assert data["level"] == "a1"
@@ -126,23 +134,7 @@ def test_a1_arc_gains_only_position_1_orientation_marker() -> None:
     assert declared == [(1, "a1-orientation")]
     block = text[text.index("positions:\n") :]
     assert block.count("  band_key: a1-orientation\n") == 1
-    # Verify exact byte preservation of all rows outside the approved staged-facet delta:
-    reverted = (
-        block.replace("  band_key: a1-orientation\n", "", 1)
-        .replace(
-            data["positions"][2]["inventory_text"],
-            "**9 letters**: Д З К Л С У Х ь Г; hard/soft contrast; recycle stress and intonation",
-        )
-        .replace(
-            data["positions"][3]["inventory_text"],
-            "**5 letters**: Б Й Ї Ю Є; apostrophe; recycle stress and intonation",
-        )
-        .replace(
-            data["positions"][4]["inventory_text"],
-            "**7 letters**: Ґ Ж Ч Ш Щ Ц Ф; дж and дз; alphabet order and letter names; capital/small letters and recognising handwritten letters (`:571-572`)",
-        )
-    )
-    assert hashlib.sha256(reverted.encode()).hexdigest() == A1_POSITIONS_BLOCK_SHA256
+    assert hashlib.sha256(block.encode()).hexdigest() == A1_POSITIONS_BLOCK_SHA256
 
 
 def test_a1_arc_positions_3_to_5_stage_approved_phonetic_facets() -> None:

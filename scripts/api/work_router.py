@@ -20,6 +20,7 @@ from scripts.api.state_helpers import cache_get, cache_get_with_age, cache_inval
 from scripts.orchestration.fleet_taxonomy import FleetTaxonomyError, resolve_area
 from scripts.orchestration.issue_stream_audit import load_registry
 from scripts.orchestration.launcher_aliases import load_launcher_aliases
+from scripts.orientation_packet import cap_projection
 from scripts.work.attention import is_actionable
 from scripts.work.normalize import build_public_projection, downgrade_expired_projection, qualify_pr_snapshot_age
 from scripts.work.schema import (
@@ -96,6 +97,7 @@ def _filters_from_request(request: Request) -> dict[str, Any]:
             "repository_id",
             "source_id",
             "fresh",
+            "stream",
         }
     }
     if forbidden:
@@ -457,14 +459,116 @@ async def refresh_projection_cache_periodically(ctx: MonitorContext) -> None:
             log.warning("Work projection periodic refresh failed: %s", type(exc).__name__)
 
 
+def _require_projection_stream(request: Request, ctx: MonitorContext) -> str:
+    """One registry lane. The warm cache stays unscoped; the HTTP body does not."""
+    values = request.query_params.getlist("stream")
+    if not values:
+        known = _known_streams(ctx) or []
+        raise HTTPException(
+            status_code=400,
+            detail={
+                "error": "lane_required",
+                "message": "GET /api/work/v1/projection requires one stream lane filter",
+                "locator": "/api/work/v1/projection?stream=<lane>",
+                "valid_streams": known,
+            },
+        )
+    if len(values) != 1 or not values[0].strip():
+        raise HTTPException(
+            status_code=400,
+            detail={"error": "invalid_saved_view", "message": "stream must be one lane"},
+        )
+    known = _known_streams(ctx)
+    if known is None:
+        raise HTTPException(
+            status_code=503,
+            detail={
+                "error": "registry_unavailable",
+                "message": "issue stream registry is unreadable; refusing to serve the projection",
+            },
+        )
+    requested = values[0].strip()
+    stream = requested
+    alias_diagnostic = None
+    if stream not in known:
+        stream, alias_diagnostic = _resolve_stream_alias(requested, known)
+        stream = stream or requested
+    if stream not in known:
+        detail: dict[str, Any] = {
+            "error": "unknown_stream",
+            "message": f"unknown stream {requested!r}",
+            "valid_streams": known,
+        }
+        if alias_diagnostic is not None:
+            detail["diagnostic"] = alias_diagnostic
+        raise HTTPException(status_code=400, detail=detail)
+    return stream
+
+
+def _projection_lane_names(item: dict[str, Any]) -> list[str]:
+    """Current lane names, plus names retained when a stale row is downgraded.
+
+    ``/next`` keeps using ``_item_streams`` so a freshness downgrade cannot
+    widen the pick list. The HTTP projection still has to show the row whose
+    decision fields just became unknown.
+    """
+    stream = (item.get("projections") or {}).get("stream") or {}
+    if not isinstance(stream, dict):
+        return []
+    found: list[str] = []
+    for key in ("streams", "historical_streams"):
+        values = stream.get(key)
+        if not isinstance(values, list):
+            continue
+        for name in values:
+            if isinstance(name, str) and name and name not in found:
+                found.append(name)
+    return found
+
+
+def _lane_view(payload: dict[str, Any], stream: str) -> dict[str, Any]:
+    """Copy one lane out of a cached projection without mutating the cache."""
+    if not isinstance(payload, dict):
+        return payload
+    items = [
+        item for item in payload.get("items") or [] if isinstance(item, dict) and stream in _projection_lane_names(item)
+    ]
+    viewed = dict(payload)
+    viewed["items"] = items
+    unassigned = [
+        {
+            "class": "orientation_lane",
+            "reason": "pr_stream_unassigned",
+            "count": 1,
+            "work_id": item.get("work_id"),
+            "locator": f"/api/work/v1/projection#/items/{index}",
+        }
+        for index, item in enumerate(payload.get("items") or [])
+        if isinstance(item, dict) and item.get("resource_kind") == "pr" and not _projection_lane_names(item)
+    ]
+    if unassigned:
+        denominator = dict(payload.get("denominator") or {})
+        denominator["streams_complete"] = False
+        denominator["omissions"] = [*(denominator.get("omissions") or []), *unassigned]
+        viewed["denominator"] = denominator
+    ids = {item.get("work_id") for item in items}
+    viewed["attention"] = [
+        row for row in payload.get("attention") or [] if isinstance(row, dict) and row.get("work_id") in ids
+    ]
+    return cap_projection(viewed)
+
+
 @router.get("/v1/projection", response_class=JSONResponse)
 async def work_projection(
     request: Request,
     fresh: bool = Query(False, description="Bypass warm projection cache."),
     ctx: MonitorContext = Depends(get_ctx),
 ) -> JSONResponse:
-    """Normalized public attention list with source envelopes and degradation."""
+    """Normalized public attention list for one lane, inside the orientation byte bound."""
+    # Forbidden keys fail before the lane check, so a private query is still
+    # invalid_saved_view even when stream is absent.
     filters = _filters_from_request(request)
+    stream = _require_projection_stream(request, ctx)
     key = projection_cache_key(filters, ctx)
 
     if not fresh:
@@ -479,7 +583,7 @@ async def work_projection(
                     (s.get("sections", {}).get("prs") or {}).get("status") == "stale" for s in out.get("sources", [])
                 ):
                     _get_or_create_build_task(key, filters, ctx)
-                return JSONResponse(content=out)
+                return JSONResponse(content=_lane_view(out, stream))
 
     if fresh:
         cache_invalidate(CACHE_KEY)
@@ -497,7 +601,7 @@ async def work_projection(
                 age_s=float(stale[1]),
                 freshness_s=CACHE_TTL_S,
             )
-            return JSONResponse(content=qualify_pr_snapshot_age(out))
+            return JSONResponse(content=_lane_view(qualify_pr_snapshot_age(out), stream))
         # Typed degradation envelope — never a bare 500 hide of healthy sources.
         raise HTTPException(
             status_code=504,
@@ -521,7 +625,7 @@ async def work_projection(
     # The builder already validates JSON-native data. Avoid FastAPI walking
     # every nested value again through jsonable_encoder on this large response.
     out = qualify_pr_snapshot_age(payload)
-    return JSONResponse(content=out)
+    return JSONResponse(content=_lane_view(out, stream))
 
 
 def _known_streams(ctx: MonitorContext | None = None) -> list[str] | None:

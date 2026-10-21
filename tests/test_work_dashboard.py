@@ -75,6 +75,19 @@ def test_index_and_primary_nav_link_to_work():
         assert 'href="/work.html"' in html, name
 
 
+def test_work_lane_options_match_stream_registry():
+    """The lane picker is the registry, with no production lane pre-selected."""
+    from scripts.orchestration.issue_stream_audit import load_registry
+
+    html = WORK.read_text(encoding="utf-8")
+    select = re.search(r'<select id="filter-stream">(.*?)</select>', html, re.S)
+    assert select
+    values = re.findall(r'<option value="([^"]*)">', select.group(1))
+    assert values[0] == ""
+    assert values[1:] == sorted(load_registry())
+    assert "selected" not in select.group(1)
+
+
 def test_saved_view_client_writes_only_allowlisted_keys():
     """FX-09: client allowlist excludes free-text / endpoint keys."""
     html = WORK.read_text(encoding="utf-8")

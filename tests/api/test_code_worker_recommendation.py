@@ -32,6 +32,29 @@ def test_cool_plan_lane_with_headroom_outranks_low_headroom_cursor(preferred):
     assert result["primary_agent_for_code"] == preferred
 
 
+def test_monitor_recommends_funded_healthy_deepseek_as_only_cool_lane():
+    agents = {
+        "deepseek": _lane(
+            None,
+            probe_state="ok",
+            freshness="fresh",
+            age_s=0,
+            currency="USD",
+            total_balance=30.0,
+            is_available=True,
+        ),
+    }
+    rows = capacity_pick.build_lane_rows(
+        {"agents": agents, "api_accounts": {"deepseek": agents["deepseek"]}},
+        lanes=("deepseek",), reset_reserve={}, now=NOW,
+    )
+    assert rows[0]["avoid"] is False
+
+    result = state_router._recommend_agent(agents, [], records_loaded=1, current_time=NOW)
+
+    assert result["primary_agent_for_code"] == "deepseek"
+
+
 @pytest.mark.parametrize(
     ("agents", "in_flight", "expected"),
     [
@@ -55,14 +78,14 @@ def test_cool_plan_lane_with_headroom_outranks_low_headroom_cursor(preferred):
         ({"codex": _lane(85, resets_at="2026-10-09T13:00:00Z"), "cursor": _lane(35)}, {}, "codex"),
         ({"gemini": _lane(87.6), "codex": _lane(72)}, {}, "agy"),
         ({"glm": _lane(100), "codex": _lane(72)}, {}, "codex"),
-        ({"deepseek": _lane(100), "codex": _lane(72)}, {}, "codex"),
+        ({"deepseek": _lane(100, eligible=False), "codex": _lane(72)}, {}, "codex"),
     ],
     ids=[
         "codex-headroom", "claude-headroom", "cursor-stronger-headroom", "tie",
         "claude-cursor-tie", "missing-headroom", "codex-claude-same-band", "same-band", "cursor-lower-load",
         "codex-lower-load", "unknown-load", "missing-load", "known-headroom",
         "heat-first", "burn-is-not-headroom", "tightest-window", "separate-pool", "imminent-reset",
-        "retired-gemini", "retired-glm", "excluded-deepseek",
+        "retired-gemini", "retired-glm", "ineligible-deepseek",
     ],
 )
 def test_monitor_and_capacity_picker_agree(agents, in_flight, expected):
@@ -82,7 +105,7 @@ def test_monitor_and_capacity_picker_agree(agents, in_flight, expected):
 
 @pytest.mark.parametrize("lane", ["glm", "deepseek", "codex"])
 def test_monitor_suppresses_avoid_only_fallback(lane):
-    agents = {lane: _lane(80, health={"healthy": lane != "codex"})}
+    agents = {lane: _lane(80, health={"healthy": lane == "glm"})}
     rows = capacity_pick.build_lane_rows({"agents": agents}, lanes=(lane,), reset_reserve={}, now=NOW)
     assert all(row["pick"] == "AVOID" for row in capacity_pick.build_pick_order(rows))
     assert state_router._recommend_agent(agents, [], records_loaded=1, current_time=NOW)["primary_agent_for_code"] is None
@@ -143,6 +166,8 @@ def test_monitor_picker_seeded_fuzz(monkeypatch):
             )
             for lane in capacity_pick.CODE_LANES
         }
+        # No prepaid account is supplied in this fixture, so DeepSeek is ineligible.
+        agents["deepseek"]["eligible"] = False
         if case % 10 == 0:
             for info in agents.values():
                 info["status"] = rng.choice(["hot", "near_cap"])
@@ -164,7 +189,10 @@ def test_monitor_picker_seeded_fuzz(monkeypatch):
         if monitor == picker:
             continue
         if monitor == "inline_orchestrator":
-            assert all(info["status"] in {"hot", "near_cap"} for info in agents.values())
+            assert all(
+                info["status"] in {"hot", "near_cap"}
+                for info in agents.values() if info.get("eligible", True)
+            )
             counts["inline_orchestrator"] += 1
         elif monitor == pick([row for row in rows if row["health"] == "healthy"]) and any(
             row["health"] == "healthy" for row in rows

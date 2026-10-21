@@ -70,8 +70,8 @@ from .sum20_official import (
 from .sum20_official import (
     SUM20_ATTRIBUTION_LABEL,
     SUM20_SOURCE_ID,
-    live_article_predicate,
     normalize_sum20_lookup,
+    sum20_live_article_where,
 )
 from .textbook_subjects import normalize_subject_slug
 
@@ -1668,11 +1668,26 @@ def _read_db_path() -> Path:
     return require_local_active_sources_db(main_checkout_root(PROJECT_ROOT)).resolve()
 
 
+# Class ``_open_conn`` opens every connection with. ``None`` (the default) is a
+# plain ``sqlite3.Connection``; the Sources MCP server installs a subclass that
+# reports database errors the helpers below swallow (#11115).
+_connection_factory: type[sqlite3.Connection] | None = None
+
+
+def set_connection_factory(factory: type[sqlite3.Connection] | None) -> None:
+    """Open every later ``_open_conn`` connection as ``factory`` (``None``: plain)."""
+    global _connection_factory
+    _connection_factory = factory
+
+
 def _open_conn(db_path: Path, *, read_only: bool = False) -> sqlite3.Connection:
+    options: dict[str, Any] = {} if _connection_factory is None else {"factory": _connection_factory}
     if read_only:
-        conn = sqlite3.connect(f"{db_path.resolve().as_uri()}?mode=ro", uri=True, check_same_thread=False)
+        conn = sqlite3.connect(
+            f"{db_path.resolve().as_uri()}?mode=ro", uri=True, check_same_thread=False, **options
+        )
     else:
-        conn = sqlite3.connect(str(db_path), check_same_thread=False)
+        conn = sqlite3.connect(str(db_path), check_same_thread=False, **options)
     conn.row_factory = sqlite3.Row
     # Concurrent readers must wait for a concurrent writer rather
     # than silently returning empty rowsets — see §race-condition
@@ -2786,6 +2801,9 @@ def search_sources(
     with ThreadPoolExecutor(max_workers=len(_CORPORA)) as executor:
         futures = [
             executor.submit(
+                # Each worker gets its own Context, sharing the request's
+                # mutable damage record with the caller (#11115).
+                contextvars.copy_context().run,
                 _dispatch_corpus_search,
                 corpus,
                 bucket_a_phrases=bucket_a_phrases,
@@ -3561,12 +3579,15 @@ def search_esum_batch(
 def search_slovnyk_me_entries_batch(
     words: list[str],
     *,
+    dictionaries: list[str] | tuple[str, ...] | None = None,
     db_path: str | Path | None = None,
 ) -> dict[str, list[dict]]:
     """Exact ``normalized_word`` hits on curated slovnyk.me entries (batched).
 
     Missing table → empty hits (production sources.db may not ship the table).
-    Overlap-blocked dictionaries are excluded, matching single-word search.
+    Overlap-blocked dictionaries are excluded, matching single-word search;
+    ``dictionaries`` narrows the rest (the first hit per word is by row id, so a
+    caller that reads one gloss must name the explanatory dictionary it means).
     """
     requested = list(dict.fromkeys(str(word) for word in words if str(word).strip()))
     results: dict[str, list[dict]] = {word: [] for word in requested}
@@ -3585,7 +3606,13 @@ def search_slovnyk_me_entries_batch(
         blocked = tuple(slovnyk_me.OVERLAP_BLOCKED_DICTS)
         block_filter = ""
         block_params: list[object] = []
-        if blocked:
+        if dictionaries:
+            allowed = _resolved_slovnyk_dicts(dictionaries)
+            if not allowed:
+                return results
+            block_filter = f" AND dictionary.dictionary_slug IN ({','.join('?' for _ in allowed)})"
+            block_params = allowed
+        elif blocked:
             block_filter = (
                 f" AND dictionary.dictionary_slug NOT IN "
                 f"({','.join('?' for _ in blocked)})"
@@ -4143,6 +4170,43 @@ def _search_slovnyk_me_db(
         _close_if_temporary(conn, db_path)
 
 
+def _dictionaries_not_recorded_missing(
+    query: str,
+    dictionaries: list[str] | tuple[str, ...] | None,
+    db_path: str | Path | None,
+) -> list[str]:
+    """Dictionaries a live fetch may still try: those without a recorded 404 for every query variant.
+
+    ``slovnyk_me_lookup_misses`` holds the cache's observed 404s; asking slovnyk.me
+    again would only repeat a known answer. A missing table records nothing.
+    """
+    candidates = list(dictionaries or slovnyk_me.DEFAULT_SLOVNYK_ME_DICTS)
+    try:
+        conn = _get_conn_for(db_path)
+    except FileNotFoundError:
+        return candidates
+    try:
+        if not _table_columns("slovnyk_me_lookup_misses", db_path):
+            return candidates
+        variants = [slovnyk_me.normalize_word(v) for v in slovnyk_me.query_variants(query)]
+        marks = ",".join("?" for _ in variants)
+        missed: dict[str, set[str]] = {}
+        for slug, word in conn.execute(
+            f"SELECT dictionary_slug, normalized_word FROM slovnyk_me_lookup_misses "
+            f"WHERE normalized_word IN ({marks})",
+            variants,
+        ):
+            missed.setdefault(slug, set()).add(word)
+        return [
+            slug for slug in candidates
+            if missed.get(slovnyk_me.resolve_dict_slug(slug), set()) < set(variants)
+        ]
+    except sqlite3.OperationalError:
+        return candidates
+    finally:
+        _close_if_temporary(conn, db_path)
+
+
 def search_slovnyk_me(
     query: str,
     limit: int = 10,
@@ -4189,11 +4253,14 @@ def search_slovnyk_me_with_status(
     if len(rows) >= limit or not live:
         return rows[:limit], outages
 
+    live_dictionaries = _dictionaries_not_recorded_missing(query, dictionaries, db_path)
+    if not live_dictionaries:
+        return rows[:limit], outages
     live_rows = [
         _normalize_slovnyk_row(row, query)
         for row in slovnyk_me.fetch_entries(
             query,
-            dictionaries=dictionaries,
+            dictionaries=live_dictionaries,
             limit=limit - len(rows),
             outages=outages,
         )
@@ -4230,23 +4297,25 @@ def _json_string_list(value: object) -> list[str]:
 def query_sum20(query: str, *, db_path: str | Path | None = None) -> list[dict]:
     """Return every exact-matching article from the offline official СУМ-20 collection.
 
-    The collection is populated only by ``sum20_official_ingest.py``.  This
-    reader deliberately has no live fallback, so its returned provenance is
-    always the official stored ``wordid`` record.
+    The collection is populated only by an explicit ingest. This reader has no
+    live fallback, so its provenance is the stored official ``wordid`` record.
+    An omitted ``db_path`` uses ``data/lexdata.db`` when that file already holds
+    ``sum20_articles``; otherwise it uses the read-only sources collection.
+    ``LEXDATA_DB_PATH`` is exclusive and never falls back.
     """
     normalized_lookup_key = normalize_sum20_lookup(query)
-    columns = _table_columns("sum20_articles", db_path)
-    if not normalized_lookup_key or not columns:
+    if not normalized_lookup_key:
         return []
-    conn = _get_conn_for(db_path)
+    from scripts.lexicon.sum20_store import open_sum20
+
+    conn = open_sum20(db_path, repository_root=PROJECT_ROOT)
     try:
+        columns = {str(row["name"]) for row in conn.execute("PRAGMA table_info(sum20_articles)").fetchall()}
+        if not columns:
+            return []
+        where = sum20_live_article_where(columns, prefix=False)
         articles = conn.execute(
-            f"""
-            SELECT *
-            FROM sum20_articles
-            WHERE normalized_lookup_key = ? AND {live_article_predicate(columns)}
-            ORDER BY wordid
-            """,
+            f"SELECT * FROM sum20_articles WHERE {where} ORDER BY wordid",
             (normalized_lookup_key,),
         ).fetchall()
         records: list[dict] = []
@@ -4306,7 +4375,7 @@ def query_sum20(query: str, *, db_path: str | Path | None = None) -> list[dict]:
             )
         return records
     finally:
-        _close_if_temporary(conn, db_path)
+        conn.close()
 
 
 def _heritage_text(hit: dict) -> str:
@@ -4434,6 +4503,7 @@ def search_heritage(
             "is_dialect": is_dialect,
             "sovietization_risk": int(hit.get("sovietization_risk") or 0),
             "sovietization_keywords": hit.get("sovietization_keywords", ""),
+            "use_role": hit.get("use_role", slovnyk_me.DEFAULT_USE_ROLE),
             "evidence_tags": [tag for tag, present in {
                 "modern": is_modern,
                 "regional_or_historical": is_dialect,

@@ -31,7 +31,7 @@ import sys
 import tempfile
 import unicodedata
 from collections import defaultdict
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -45,6 +45,7 @@ if str(REPO_ROOT) not in sys.path:
 import jsonschema
 
 from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
+from scripts.lexicon.source_attribution import cites_soviet_dictionary
 from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.projects.open_model_data.paths import assert_not_archived_path
 from scripts.storage import paths as storage_paths
@@ -368,6 +369,7 @@ class MinedSentence:
     work: str
     source_db: str
     raw_definition: str = ""
+    soviet_colonization_context: dict[str, Any] = field(default_factory=dict)
 
 
 def is_true_dialect_header(header: str) -> bool:
@@ -382,7 +384,7 @@ def is_true_dialect_header(header: str) -> bool:
 
 
 def mine_all_candidate_sentences(db_path: Path = DEFAULT_SOURCES_DB) -> list[MinedSentence]:
-    """Mine genuine dialect sentences with author attribution from sum11 and grinchenko."""
+    """Mine attributed passages; SUM-11 labels describe historical editorial treatment only."""
     if not db_path.exists() or db_path.stat().st_size == 0:
         raise FileNotFoundError(f"Database missing or empty: {db_path}")
 
@@ -394,11 +396,14 @@ def mine_all_candidate_sentences(db_path: Path = DEFAULT_SOURCES_DB) -> list[Min
 
     # 1. Mine sum11 literature citations tagged "діал." (classic Ukrainian literature only)
     cur.execute("""
-        SELECT word, definition, text FROM sum11
+        SELECT * FROM sum11
         WHERE definition LIKE '%діал.%' OR text LIKE '%діал.%'
            OR definition LIKE '%зах.%' OR text LIKE '%зах.%'
     """)
-    for raw_word, defn, txt in cur.fetchall():
+    columns = [column[0] for column in cur.description]
+    for values in cur.fetchall():
+        row = dict(zip(columns, values, strict=True))
+        raw_word, defn, txt = row["word"], row["definition"], row["text"]
         w_clean = clean_headword(raw_word)
         if len(w_clean) < 3:
             continue
@@ -484,6 +489,19 @@ def mine_all_candidate_sentences(db_path: Path = DEFAULT_SOURCES_DB) -> list[Min
                                 work=work,
                                 source_db="sum11_literary_citation",
                                 raw_definition=sub_sec,
+                                soviet_colonization_context={
+                                    "source": "СУМ-11 (1970–1980)",
+                                    "source_role": "soviet_colonization_context",
+                                    "red_flag": True,
+                                    "historical_only": True,
+                                    "contrast_only": True,
+                                    "can_verify_modern_ukrainian": False,
+                                    "sovietization_risk": row.get("sovietization_risk"),
+                                    "sovietization_keywords": row.get("sovietization_keywords"),
+                                    "ideological_markers": row.get("ideological_markers"),
+                                    "entry_id": row.get("id"),
+                                    "definition": sub_sec,
+                                },
                             )
                         )
 
@@ -875,6 +893,24 @@ def build_evaluation_benchmark(
                         },
                     }
 
+            if cites_soviet_dictionary(item.source_db) or item.soviet_colonization_context:
+                rec["source_metadata"]["language_period"] = "soviet_historical_context"
+                rec["source_metadata"]["soviet_colonization_context"] = {
+                    **item.soviet_colonization_context,
+                    "source": "СУМ-11 (1970–1980)",
+                    "source_role": "soviet_colonization_context",
+                    "red_flag": True,
+                    "historical_only": True,
+                    "contrast_only": True,
+                    "can_verify_modern_ukrainian": False,
+                    "sovietization_risk": item.soviet_colonization_context.get("sovietization_risk"),
+                    "sovietization_keywords": item.soviet_colonization_context.get("sovietization_keywords"),
+                    "ideological_markers": item.soviet_colonization_context.get("ideological_markers"),
+                }
+                rec["linguistic_notes"] = (
+                    "Historical quotation preservation only. SUM-11 editorial labels do not establish "
+                    "modern dialect status, meaning, or correctness."
+                )
             eval_cases.append(rec)
 
     return eval_cases
@@ -1018,6 +1054,11 @@ def build_sft_dialect_dataset(
         if len(sft_trajectories) >= sft_dialect_quota:
             break
 
+        # A historical definition plus VESUM morphology cannot prove a modern
+        # synonym or validate usage. No approved sense-bound source is supplied.
+        if cites_soviet_dictionary(item.source_db) or item.soviet_colonization_context:
+            continue
+
         # Extract authentic literary synonym verified in VESUM; skip candidate if none exists
         syn_result = find_attested_synonym(item.raw_definition, item.word, vesum_db)
         if syn_result is None:
@@ -1070,7 +1111,7 @@ def build_sft_dialect_dataset(
                     {
                         "lemma": syn_word,
                         "register_tier": "living_standard",
-                        "evidence_source": f"СУМ-20 / СУМ-11 (лексема «{syn_word}»)",
+                        "evidence_source": f"{item.source_db}: {item.citation}; VESUM morphology only",
                     },
                 ],
             },
@@ -1509,7 +1550,13 @@ def execute_mining_and_release(
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Phase 5.6: Dialect Corpus Mining, SFT Defense Trajectories & Multi-Zone Evaluation"
+        description=("Mine dialect candidates and evaluate preservation. SUM-11 quotations are historical contrast; "
+                     "do not use their definitions or labels to produce modern answers. SUM-11 SFT candidates are withheld."),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=("Example: .venv/bin/python -m scripts.projects.open_model_data.v5_mine_dialect_corpus --evaluate --predictions predictions.jsonl\n"
+                "Outputs: evaluation/SFT JSONL and release receipts; --evaluate reads existing files or mines if absent.\n"
+                "Exit codes: 0 for completed work, nonzero for missing evidence, quotas, or invalid inputs.\n"
+                "Related: #9147, #8102; archived replay remains prohibited."),
     )
     parser.add_argument("--db", type=Path, default=DEFAULT_SOURCES_DB, help="Path to sources.db")
     parser.add_argument("--vesum-db", type=Path, default=DEFAULT_VESUM_DB, help="Path to vesum.db")

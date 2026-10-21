@@ -1,4 +1,4 @@
-"""Export the Word Atlas open dataset shards from lexicon-manifest.json.
+"""Export the Word Atlas open dataset shards from lexicon-manifest.json (#10513 / #8977).
 
 Run from the repo root::
 
@@ -6,6 +6,12 @@ Run from the repo root::
 
 Bare invocation and ``--help`` refuse / print usage without writing dataset
 files (``#5393`` sibling guard).
+
+SAFETY GUARD (#10513 / AC-02):
+Uncertified cards and legacy manifest entries are strictly refused before
+writing any output. Cannot export dataset without exact-artifact card certification.
+Use ``--draft-mechanics`` for Phase 2/3 draft engineering (AC-03) which isolates
+draft artifacts to data/lexicon-dataset/draft/ and marks them export-ineligible.
 """
 
 from __future__ import annotations
@@ -14,9 +20,21 @@ import argparse
 import hashlib
 import json
 import shutil
+import sys
 from collections.abc import Sequence
 from pathlib import Path
 from typing import Any
+
+# Ensure repo root is on sys.path for direct CLI execution (F4: documented script invocation)
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+
+from scripts.atlas.word_card_certification import (
+    UncertifiedCardRefusal,
+    certification_run,
+    certified_inventory,
+)
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 MANIFEST_PATH = PROJECT_ROOT / "site" / "src" / "data" / "lexicon-manifest.json"
@@ -78,58 +96,99 @@ Provenance is tracked per-field where applicable. For full attribution details, 
 
 
 def build_parser() -> argparse.ArgumentParser:
-    """CLI parser for export_open_dataset (``#5393`` argv guard)."""
-    return argparse.ArgumentParser(
+    """CLI parser for export_open_dataset (``#5393`` argv guard, ``#10513`` safety guard)."""
+    parser = argparse.ArgumentParser(
         description=(
             "Export the Word Atlas open dataset (sharded JSONL + attribution docs) "
             "from site/src/data/lexicon-manifest.json. "
-            "Use when publishing the open lexicon dataset; "
-            "do NOT use for flag probes — bare invocation must not rewrite dataset files."
+            "Requires exact-artifact card certification (AC-02 / Issue #10513). "
+            "Bare invocation and --help refuse / print usage without writing dataset files."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
             "  # Print usage without touching any files\n"
             "  .venv/bin/python scripts/lexicon/export_open_dataset.py --help\n\n"
-            "  # Export open dataset shards\n"
+            "  # Export open dataset shards (requires certified cards)\n"
             "  .venv/bin/python scripts/lexicon/export_open_dataset.py --write\n\n"
-            "Outputs (only with --write):\n"
+            "  # Mechanics-only draft export (Phase 2/3 engineering, AC-03)\n"
+            "  .venv/bin/python scripts/lexicon/export_open_dataset.py --write --draft-mechanics\n\n"
+            "Outputs:\n"
             "  data/lexicon-dataset/ATTRIBUTION.md, NOTICE.md, README.md\n"
-            "  data/lexicon-dataset/dataset/*.jsonl  — lemma shards by first letter\n\n"
+            "  data/lexicon-dataset/dataset/*.jsonl  — lemma shards by first letter\n"
+            "  data/lexicon-dataset/draft/mechanics.json (only with --draft-mechanics)\n\n"
             "Exit codes:\n"
-            "  0  success (--help or successful --write)\n"
-            "  2  refused (no --write) or argparse error\n\n"
+            "  0  success (--help, or successful export)\n"
+            "  2  refused (no --write, uncertified card refusal, or argparse error)\n\n"
             "Related:\n"
-            "  scripts/lexicon/enrich_manifest.py  — produce the enriched manifest first\n"
-            "  issue #5393                        — argv guard sibling"
+            "  issue #10513                        — refuse acceptance/export of uncertified cards\n"
+            "  issue #8977                         — word cards programme\n"
+            "  issue #5393                         — argv guard sibling"
         ),
     )
+    parser.add_argument(
+        "--write",
+        action="store_true",
+        help=(
+            "Write open dataset shards and attribution docs. "
+            "Refuses if input cards lack exact-artifact certification (Issue #10513). "
+            "Default: refuse with usage and exit non-zero (no files touched)."
+        ),
+    )
+    parser.add_argument(
+        "--draft-mechanics",
+        action="store_true",
+        help=(
+            "Allow exporting mechanics-only draft artifacts to data/lexicon-dataset/draft/ "
+            "without certifying cards (AC-03 / Phase 2/3). Draft files are marked "
+            "non-certified and export-ineligible."
+        ),
+    )
+    return parser
 
 
-def export_dataset() -> tuple[int, int]:
-    """Write open-dataset shards from the Atlas manifest.
+@certification_run()
+def export_dataset(*, allow_draft: bool = False) -> tuple[int, int]:
+    """Write open-dataset shards from the card inventory or manifest.
 
-    Returns ``(entry_count, shard_count)``. Side-effecting: creates/replaces
-    files under ``data/lexicon-dataset/``.
+    Enforces AC-02 certification refusal before creating or touching any output files.
+    Returns ``(entry_count, shard_count)``.
     """
-    DATASET_ROOT.mkdir(parents=True, exist_ok=True)
-    if DATASET_DIR.exists():
-        shutil.rmtree(DATASET_DIR)
-    DATASET_DIR.mkdir(parents=True, exist_ok=True)
-
-    (DATASET_ROOT / "ATTRIBUTION.md").write_text(ATTRIBUTION_MD, encoding="utf-8")
-    (DATASET_ROOT / "NOTICE.md").write_text(NOTICE_MD, encoding="utf-8")
-    (DATASET_ROOT / "README.md").write_text(README_MD, encoding="utf-8")
+    if not MANIFEST_PATH.exists():
+        raise FileNotFoundError(f"Manifest not found at {MANIFEST_PATH}")
 
     with open(MANIFEST_PATH, encoding="utf-8") as f:
         manifest = json.load(f)
 
-    entries = manifest.get("entries", [])
+    # AC-02: Strictly refuse uncertified cards BEFORE touching any dataset directory or writing any files.
+    if allow_draft:
+        # Mechanics output is deliberately not a dataset shard or a card acceptance.
+        target = DATASET_ROOT / "draft" / "mechanics.json"
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(json.dumps({"draft_engineering": True, "certified": False,
+                                     "export_eligible": False, "candidate": manifest},
+                                    ensure_ascii=False) + "\n", encoding="utf-8")
+        return 0, 0
+    entries = certified_inventory(manifest)
+
+    target_root = DATASET_ROOT
+    target_dir = DATASET_DIR
+
+    target_root.mkdir(parents=True, exist_ok=True)
+    if target_dir.exists():
+        shutil.rmtree(target_dir)
+    target_dir.mkdir(parents=True, exist_ok=True)
+
+    (target_root / "ATTRIBUTION.md").write_text(ATTRIBUTION_MD, encoding="utf-8")
+    (target_root / "NOTICE.md").write_text(NOTICE_MD, encoding="utf-8")
+    (target_root / "README.md").write_text(README_MD, encoding="utf-8")
 
     # Group entries by first character
     shards: dict[str, list[dict]] = {}
     for entry in entries:
-        lemma = entry.get("lemma", "")
+        key_at_creation = entry.get("key_at_creation") if isinstance(entry, dict) else None
+        spelling = key_at_creation.get("spelling", "") if isinstance(key_at_creation, dict) else ""
+        lemma = entry.get("lemma") or spelling
         if not lemma:
             continue
 
@@ -145,8 +204,8 @@ def export_dataset() -> tuple[int, int]:
 
     for char, char_entries in shards.items():
         shard_filename = f"{char}.jsonl"
-        file_path = DATASET_DIR / shard_filename
-        tmp_path = DATASET_DIR / f"{shard_filename}.tmp"
+        file_path = target_dir / shard_filename
+        tmp_path = target_dir / f"{shard_filename}.tmp"
 
         hasher = hashlib.sha256()
         total_bytes = 0
@@ -165,29 +224,24 @@ def export_dataset() -> tuple[int, int]:
             "entries": len(char_entries),
         }
 
-    metadata = {k: v for k, v in manifest.items() if k != "entries"}
+    metadata = {key: manifest[key] for key in ("version", "generated_at") if key in manifest}
+    metadata["stats"] = {"cards": len(entries)}
     metadata["shard_integrity"] = shard_integrity
+    metadata["certified"] = True
+    metadata["draft_engineering"] = False
+    metadata["export_eligible"] = True
 
-    meta_file = DATASET_DIR / "_metadata.json"
-    meta_tmp = DATASET_DIR / "_metadata.json.tmp"
+    meta_file = target_dir / "_metadata.json"
+    meta_tmp = target_dir / "_metadata.json.tmp"
     meta_tmp.write_text(json.dumps(metadata, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     meta_tmp.replace(meta_file)
 
     return len(entries), len(shards)
 
 
-
 def main(argv: Sequence[str] | None = None) -> int:
-    """Parse CLI args and export only when ``--write`` is given."""
+    """Parse CLI args and export only when ``--write`` is given and cards are certified."""
     parser = build_parser()
-    parser.add_argument(
-        "--write",
-        action="store_true",
-        help=(
-            "Write data/lexicon-dataset/ (replaces dataset/ shards and attribution docs). "
-            "Default: refuse with usage and exit non-zero (no files touched)."
-        ),
-    )
     args = parser.parse_args(argv)
     if not args.write:
         parser.error(
@@ -195,9 +249,16 @@ def main(argv: Sequence[str] | None = None) -> int:
             "(writes data/lexicon-dataset/; pass --write to proceed)"
         )
 
-    entry_count, shard_count = export_dataset()
+    try:
+        entry_count, shard_count = export_dataset(allow_draft=args.draft_mechanics)
+    except UncertifiedCardRefusal as exc:
+        print(f"REFUSED: {exc}", file=sys.stderr)
+        return 2
+
+    target_dir = DATASET_DIR if not args.draft_mechanics else (DATASET_ROOT / "draft" / "mechanics.json")
+    mode_str = "certified" if not args.draft_mechanics else "draft mechanics"
     print(
-        f"Exported {entry_count} entries to {DATASET_DIR.relative_to(PROJECT_ROOT)} "
+        f"Exported {entry_count} entries ({mode_str}) to {target_dir.relative_to(PROJECT_ROOT)} "
         f"across {shard_count} shards."
     )
     return 0

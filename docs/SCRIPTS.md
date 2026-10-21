@@ -166,8 +166,12 @@ pytest-stamp and Git LFS hooks; and restores the primary-checkout guards after
 checkout or merge. The installer also materializes `.githooks` in existing sparse
 worktrees without broadening their checkout. Where Entire CLI owns a hook, the
 delegator sits at `<name>.pre-entire` and the installer makes Entire's wrapper
-chain to it. `scripts/install_git_hooks.sh --check` (read-only) fails when a hook
-stage declared in `.pre-commit-config.yaml` has no reachable delegator.
+chain to it, and routes Entire's own call through `scripts/entire/capture_guard.sh`
+(Entire runs only with the accepted CLI version and the private checkpoint route,
+and never blocks a commit or push). It refuses, without changing anything, when a
+hook path is a symlink. `scripts/install_git_hooks.sh --check` (read-only) fails
+when a hook stage declared in `.pre-commit-config.yaml` has no reachable
+delegator, an Entire wrapper is unguarded, or a hook path is a symlink.
 
 ---
 
@@ -853,6 +857,8 @@ Additional audit guardrails:
 - `scripts/lexicon/admit_teacher_table.py` - local-only teacher-table Atlas admission and English-card enrichment; writes a separate staged manifest, private deltas, and a named VESUM residual ledger but never publishes
 - `scripts/atlas/atlas_db.py` - rebuild `data/atlas.db` from the hydrated Atlas manifest, materialize the Astro article payload projection, and validate alias targets
 - `scripts/atlas/fill_local.py` - Phase-1 offline local enrichment writer for `data/atlas.db`; reads local dictionary/cache data only and reports per-section before/after coverage
+- `scripts/atlas/word_card_assembly.py` - pilot word-card `build`/`verify`/`rehearse` (#8981): assembles the frozen pilot units into host-only cards from cited ULIF/VESUM/PULS rows (derived ULIF forms authenticated against the held raw pages; build id over every consumed row and query), re-reads every locator, rehearses withdrawal and rollback; output is refused in the primary checkout and every sibling worktree; pass `--sources-db/--vesum-db/--atlas-db` as absolute paths; see `docs/atlas/word-cards/pilot-findings.md`
+- `scripts/atlas/allocate_pilot_identities.py` - pilot identity allocation audit (#9402); `--append-holding` appends the `unsplit` holding senses the assembler needs (append-only, idempotent, #8981); `--apply` refuses to regenerate an existing allocation
 - `scripts/lexicon/thin_page_report.py` - read-only thin-page report over `data/atlas.db` (#8313): per-entry thinness tier (`bare`/`thin`/`rich`), missing enrichment sections of all 18, and per-section × per-source fillable counts from `data/lexicon/slovnyk_cache/` and `data/sources.db` (`ulif_dictua_sections`); never parks or mutates entries. CLI: `.venv/bin/python -m scripts.lexicon.thin_page_report --json /tmp/thin.json`
 - `scripts/lexicon/lesson_atlas_link_census.py` - read-only census of committed lesson `/lexicon/<slug>/` targets against the published search index and alias file (#8734). Classifies each slug as entry, unique alias, ambiguous, or dead. Does not generate links. CLI: `.venv/bin/python scripts/lexicon/lesson_atlas_link_census.py`
 - `site/scripts/benchmark-atlas-db.mjs` - benchmark Atlas DB build, preload, and getStaticPaths mapping at current and synthetic sizes
@@ -1150,7 +1156,8 @@ private operations docs):
 | `DISPATCH_MIN_MEM_AVAILABLE_GIB` | `MemAvailable` in `/proc/meminfo` is below the floor |
 | `DISPATCH_MAX_LOAD_PER_CPU` | the 1-minute load average divided by the CPU count is above the limit |
 | `DISPATCH_WORKER_MEM_RESERVE_GIB` | the shared `lu.slice` pool's non-cache use plus this per-worker reserve would exceed its `memory.high` (#9975) |
-| `DISPATCH_DISK_REFUSE_USED_PERCENT` | the filesystem holding `.worktrees/` is at or above this percent used (default 85, as `df` reports it) after the worktree reaper has run once (#10776); a hard stop, exit 4 |
+| `DISPATCH_DISK_REAP_USED_PERCENT` | not a refusal: at or above this percent used (default 85, as `df` reports it) the worktree reaper runs once and the dispatch is admitted (#10871); must be below the refuse value, else reading the thresholds fails with a configuration error |
+| `DISPATCH_DISK_REFUSE_USED_PERCENT` | the filesystem holding `.worktrees/` is at or above this percent used (default 90) after the worktree reaper has run once (#10776, #10871); a hard stop, exit 4 |
 
 A refusal exits 3 and prints one line that names each failed check with its measured value
 and threshold. Retry once a worker finishes or the host recovers, or override one dispatch

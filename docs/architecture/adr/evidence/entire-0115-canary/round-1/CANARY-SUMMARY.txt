@@ -1,0 +1,82 @@
+Entire 0.8.42 -> 0.11.5 canary (#10846), 2026-10-16 UTC
+=====================================================
+
+Source and integrity
+- Release: https://github.com/entireio/cli/releases/tag/v0.11.5 (published 2026-10-14T18:14:11Z).
+- Vendor channel: release assets (the same URLs entire.io/install.sh downloads and checks).
+- checksums.txt sha256 d3dce3e819f7e8d679eab9e12845fe3bf7d3fa711b3d8a18866624b7bdf143b6
+  (matches the GitHub asset digest). entire_linux_amd64.tar.gz sha256
+  c20476c4ba9689b1800fe8d590601792e2b6f3c89d03a95280d88484029d7eba: OK against checksums.txt.
+  No signature is published. Source read: tag v0.11.5 (and v0.8.42 for comparison).
+- The live binary was never executed. 0.8.42 ran from a byte-identical copy at a separate path.
+
+Isolation (tool-cenv.sh.txt, tool-fake-ssh.txt)
+- Every Entire/git command ran under `bwrap --unshare-net` (no network), `env -i`, an
+  isolated HOME/XDG/ENTIRE_CONFIG_DIR, ENTIRE_TOKEN_STORE=file with no token, and no system git config.
+- Throwaway clone: depth-1 clone of main (9ea79e14), 32,597 tracked files plus 463,000
+  gitignored files under batch_state/ (495,597 total) to reproduce the live status walk.
+- Remotes, checked with `git remote -v` before any Entire command:
+  origin = https://github.com/learn-ukrainian/learn-ukrainian.github.io.git (fake PUBLIC bare)
+  checkpoint_remote = learn-ukrainian/entire-checkpoints-private (fake PRIVATE bare)
+  fork = https://github.com/someone-else/learn-ukrainian.github.io.git (fake foreign bare)
+  url.git@github.com:.insteadOf=https://github.com/ and core.sshCommand=fake-ssh map these
+  onto local bare repositories and log every transfer. Unknown repositories are refused.
+
+Hook latency, n=20 each, same clone, 1-min load 13.7-17.8 on 16 cores (log-latency-*.json.txt)
+| hook                     | 0.8.42 p50 | p95   | min   | max   | 0.11.5 p50 | p95   | min   | max   |
+| user-prompt-submit       | 8.331      | 9.312 | 7.543 | 9.444 | 1.678      | 1.936 | 1.534 | 2.011 |
+| stop                     | 7.200      | 7.448 | 6.918 | 7.529 | 2.153      | 2.356 | 1.993 | 2.378 |
+| checkpoint explain --json| 0.102      | 0.160 |       |       | 0.086      | 0.117 |       |       |
+Failures: 0/40 hook calls per version.
+
+Privacy and capture (log-s*-*.json.txt; fake-ssh transfer log quoted in each)
+- S0 0.8.42 turn+commit+push origin: checkpoint 709bc56e1002; private gets entire/checkpoints/v1;
+  public holds only main.
+- S1 0.11.5 same: checkpoint fc6b24caa3e5; private v1 fast-forwards (2f283ec -> 903e7e4);
+  public holds only main.
+- S2 0.11.5 push to the foreign fork: no checkpoint data to any remote; fork holds only main.
+- S3 (misconfiguration, not live): origin owned by another account. Both 0.8.42 and 0.11.5
+  push entire/checkpoints/v1 to origin. 0.11.5 `status --json` reports
+  checkpoint_remote_ignored + checkpoint_sync_remote_source "default"; the branch preflight's
+  new checkpoint_route_private check fails closed on exactly this.
+- S4 rollback: 0.8.42 after 0.11.5: checkpoint e543c2480f7b to private only; 0.8.42 reads the
+  0.11.5 checkpoint fc6b24caa3e5 (same core fields).
+- 0.11.5 explains the 0.8.42 checkpoint: identical core fields (+ "tasks", extra token
+  counters); `--full --no-pager` rc 0 and contains the turn text.
+- 0.11.5 `status --json` on the 0.8.42-enabled clone: checkpoint_sync_remote_source "dedicated",
+  checkpoint_sync_remote learn-ukrainian/entire-checkpoints-private.
+- Backend: no "checkpoints" block -> branch backend; `entire enable --force` (claude-code, codex)
+  left .entire/settings.json byte-identical.
+- Non-interactive `entire doctor`: hooks, settings and refs unchanged.
+
+CLI surface (log-argv-probe.txt; no auth, no network)
+- `repo mirror collaborators list ...` : 0.8.42 parses; 0.11.5 prints Usage, rc 1.
+- `repo grant list /gh/<o>/<r> --json` : 0.11.5 parses (fails only on network); 0.8.42 prints help.
+- `repo view /gh/<o>/<r> --json`        : 0.11.5 parses (not logged in).
+- `repo access list ... --cluster`      : rejected by both.
+- `search ... --json --limit --repo`, `api --jurisdiction ... --include`: parse on both.
+- `auth status` logged out on 0.11.5: "○ Not logged in / Run 'entire login'...", rc 0
+  (the preflight's marker check still fails closed).
+- recap --static/--day..., dispatch --local --all-branches --since, session resume [branch]: present.
+- Branch preflight against the real 0.11.5 binary in the clone (log-preflight-canary.json.txt):
+  pinned_cli, checkpoint_route_private, routing_allowlist, public_origin_clean,
+  private_checkpoint_ref = true; GitHub/Entire-auth checks false (no credentials); rc 2.
+
+Git hook wrappers (wrapper-*.txt, log-installer-*.txt)
+- Unchained wrappers: byte-identical between 0.8.42 and 0.11.5.
+- Chained (<name>.pre-entire present): 0.11.5 adds an ENTIRE_CHAINING_<HOOK> guard, the
+  pre-commit legacy branch, and for pre-push an exit on Entire failure.
+- origin/main installer on 0.11.5 chained wrappers: appends a second chain to commit-msg,
+  post-commit and pre-push (repo hooks would run twice).
+- Branch installer: chains unchained 0.11.5 wrappers to bytes identical to Entire's own output;
+  Entire reinstall leaves them unchanged; rerun adds nothing; 0.8.42 chained form still recognized.
+
+Mutation checks
+- mutation-rename-tests.txt: origin/main preflight/provider with only the pin bumped to 0.11.5
+  -> 49 failed, 26 passed (acceptance, grant-list, repo-view, jurisdiction, route tests fail).
+- mutation-installer-tests.txt: origin/main installer -> 2 failed (chain bytes; 0.11.5-written chain runs once).
+
+Not measured
+- Authenticated `entire search` / dispatch (canary held no credentials by design: a token
+  refresh could rotate the live refresh token). Count fields repos/checkpoints/commits/prs/
+  sessions and total are unchanged in the 0.11.5 source. Runbook Verify step 3 checks live.

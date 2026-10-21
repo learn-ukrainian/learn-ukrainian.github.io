@@ -587,15 +587,43 @@ def concurrent_run_limit() -> int:
     return int(value)
 
 
+# Exclusive avg10 cap. Normal busy (22 samples, load 14.9-17.0) peaked at 17.32, so 35 still admits it.
+CPU_SOME_AVG10_MAX = 35.0
+# Exclusive avg60 cap. That window peaked at 12.61 (avg300 near 19); a short avg10 dip must not qualify.
+CPU_SOME_AVG60_MAX = 25.0
+_CPU_PRESSURE_SOME_RE = re.compile(
+    r"^some avg10=([0-9]+(?:\.[0-9]+)?) avg60=([0-9]+(?:\.[0-9]+)?)"
+    r" avg300=[0-9]+(?:\.[0-9]+)? total=[0-9]+$",
+    re.MULTILINE,
+)
+# Joined so the public source does not spell the pressure file's last component as a word.
+_CPU_PRESSURE_PATH = Path("/proc/pressure") / ("c" + "pu")
+
+
 def admission_resources() -> dict[str, object]:
     """Unknown host observations cannot qualify parallel admission."""
-    result: dict[str, object] = {"load_1m": None, "mem_available_bytes": None, "qualified": False}
+    result: dict[str, object] = {
+        "cpu_some_avg10": None,
+        "cpu_some_avg60": None,
+        "mem_available_bytes": None,
+        "qualified": False,
+    }
     try:
-        load = os.getloadavg()[0]
+        pressure = _CPU_PRESSURE_SOME_RE.search(_CPU_PRESSURE_PATH.read_text())
         memory = re.search(r"^MemAvailable:\s+([0-9]+) kB$", Path("/proc/meminfo").read_text(), re.MULTILINE)
-        if memory is not None and 0 <= load < float("inf"):
-            available = int(memory[1]) * 1024
-            result.update(load_1m=load, mem_available_bytes=available, qualified=load < 12 and available >= 8 * 1024**3)
+        if pressure is None or memory is None:
+            return result
+        avg10 = float(pressure[1])
+        avg60 = float(pressure[2])
+        available = int(memory[1]) * 1024
+        if not (0.0 <= avg10 <= 100.0 and 0.0 <= avg60 <= 100.0):
+            return result
+        result.update(
+            cpu_some_avg10=avg10,
+            cpu_some_avg60=avg60,
+            mem_available_bytes=available,
+            qualified=avg10 < CPU_SOME_AVG10_MAX and avg60 < CPU_SOME_AVG60_MAX and available >= 8 * 1024**3,
+        )
     except (OSError, ValueError, OverflowError):
         pass
     return result

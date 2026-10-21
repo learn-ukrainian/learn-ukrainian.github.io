@@ -199,6 +199,7 @@ if str(_local_repo_root) not in sys.path:
     sys.path.insert(0, str(_local_repo_root))
 
 from scripts.agent_runtime import bounded_advisory
+from scripts.agent_runtime.accounting import model_accounting_fields
 from scripts.agent_runtime.env_sanitize import GITHUB_TOKEN_SEATS as _GH_TOKEN_AGENTS
 from scripts.agent_runtime.routes import RUNTIME_ROUTE_TOOL_CONFIG_KEY
 from scripts.common.jsonl import jsonl_lines
@@ -219,6 +220,7 @@ from scripts.config import (
     DELEGATE_WORKTREE_ADD_TIMEOUT_S,
 )
 from scripts.fleet import claude_account_lane, credit_lane
+from scripts.fleet.regenerable_output import SITE_BUILD_OUTPUT_PATTERNS
 from scripts.fleet.regenerable_output import is_disposable_auto_finalize_path as _is_disposable_auto_finalize_path
 from scripts.fleet.reset_reserve import codex_is_threatened as _codex_is_threatened
 from scripts.fleet.reset_reserve import codex_reset_reserve_eligible as _codex_reset_reserve_eligible
@@ -347,6 +349,7 @@ def dispatch_args_sha256(args: argparse.Namespace) -> str:
         and not (key == "review_mode" and value == "cross_family")
         and not (key == "authoring_review_plan" and value == "cross_family")
         and not (key == "claude_account" and value in (None, "a"))
+        and not (key == "verify_command" and value is None)
     }
     canonical = json.dumps(payload, sort_keys=True, separators=(",", ":"))
     return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
@@ -369,6 +372,7 @@ def advisory_args_payload(args: argparse.Namespace) -> dict[str, Any]:
         and not (key == "review_mode" and value == "cross_family")
         and not (key == "authoring_review_plan" and value == "cross_family")
         and not (key == "claude_account" and value in (None, "a"))
+        and not (key == "verify_command" and value is None)
     }
 
 
@@ -2721,8 +2725,19 @@ def _cursor_model_state(
     return state
 
 
+def _agy_model_state(
+    *, agent: str, model: str | None, identity: Any, task_id: str, run_nonce: str | None,
+) -> dict[str, Any]:
+    """Project the canonical invocation-bound AGY observation into task state."""
+    from scripts.agent_runtime.adapters.agy import agy_model_state
+
+    return agy_model_state(agent=agent, model=model, identity=identity, task_id=task_id, run_nonce=run_nonce)
+
+
 def _deepseek_model_state(*, agent: str, model: str | None, cache_path: Path | None = None) -> dict[str, Any]:
     """Attest a DeepSeek route from its versioned pin or cached alias name."""
+    from scripts.agent_runtime.adapters.deepseek import _is_flash_model_line
+
     if agent != "deepseek":
         return {}
     if model == "deepseek-v4-pro":
@@ -2743,7 +2758,7 @@ def _deepseek_model_state(*, agent: str, model: str | None, cache_path: Path | N
         name = cache["deepseek"]["models"]["deepseek-flash"]["name"]
     except (OSError, ValueError, KeyError, TypeError):
         name = None
-    if name == "DeepSeek V4.1 Flash":
+    if isinstance(name, str) and _is_flash_model_line(name):
         return {
             "resolved_model": "deepseek-v4.1-flash",
             "resolved_model_known": True,
@@ -6110,9 +6125,11 @@ _READ_ONLY_RUNTIME_TELEMETRY_FILES = frozenset({".entire/settings.local.json"})
 # ``.pytest_cache/``, ``.pytest_breadcrumbs/``. Siblings are the same class
 # (harness/session/cache residue). Membership is load-bearing (#8516 AC-02):
 # an ignored ``!!`` path escapes the mutation guard ONLY through this
-# classification, so task-authored leak targets like ``.cache/`` (#4840),
-# root-level ``/*.py`` scratch, and ``/scratch/`` deliberately stay OUT and
-# now fail the task. Deploy-target dirs (``.claude``, ``.codex``, ``.gemini``,
+# classification, or when it is ignored and full-matches the existing
+# ``SITE_BUILD_OUTPUT_PATTERNS`` list (#11193). Task-authored leak targets
+# like ``.cache/`` (#4840), root-level ``/*.py`` scratch, and ``/scratch/``
+# deliberately stay OUT and now fail the task. Deploy-target dirs
+# (``.claude``, ``.codex``, ``.gemini``,
 # ``.cursor``, ``.agents``) are not in this set: they hold tracked,
 # harness-executed content, so an untracked new file there (e.g.
 # ``.claude/hooks/``) must still fail a read-only task in its own worktree.
@@ -6192,10 +6209,12 @@ def _is_read_only_runtime_state_path(path: str) -> bool:
 
     Covers Entire telemetry (#6803) plus the gitignored runtime dirs and sqlite
     sidecars that false-failed successful read-only tasks (#6860). Since #8516
-    AC-02 this classification is ALSO the only way an ignored ``!!`` path
-    escapes the mutation guard: task-authored ignored leaks outside it (the
+    AC-02 an ignored ``!!`` status alone does not escape the mutation guard.
+    Task-authored ignored leaks outside this classification (the
     review-a3-api-ui ``/*.py`` + ``/scratch/`` scratch class; ``.cache/``
-    residue from #4840/#7253) now fail the task like any other mutation.
+    residue from #4840/#7253) fail the task like any other mutation. The other
+    narrow escape is an ignored path that full-matches the existing
+    ``SITE_BUILD_OUTPUT_PATTERNS`` list (#11193), not ``!!`` by itself.
     """
     if _is_read_only_delegate_snapshot_sidecar_path(path):
         return True
@@ -6335,16 +6354,43 @@ def _read_only_ignored_mutation_paths(before: dict[str, str], after: dict[str, s
     )
 
 
+def _is_read_only_ignored_site_build_output(
+    path: str,
+    *,
+    before_state: str | None,
+    after_state: str | None,
+) -> bool:
+    """Exempt an ignored path that full-matches ``SITE_BUILD_OUTPUT_PATTERNS``.
+
+    ``site/astro.config.mjs`` creates
+    ``site/public/audio/pronunciation/manifest.json`` when it is absent, and
+    ``.gitignore`` ignores that directory (#11193). The match calls the
+    existing pattern list and does not add patterns. A tracked status on
+    either side, including a force-added file, is not exempt. An ignored
+    ``!!`` path outside the list is not exempt (#8516).
+    """
+    if not _is_read_only_ignored_mutation(before_state=before_state, after_state=after_state):
+        return False
+    # ``after`` is already ignored or absent. A tracked or force-added
+    # ``before`` (`` M``, ``A ``) must still trip, even when ``after`` is ``!!``.
+    if before_state is not None and not _is_read_only_ignored_status(before_state):
+        return False
+    normalized = _normalize_read_only_relpath(path)
+    return any(re.fullmatch(pattern, normalized) for pattern in SITE_BUILD_OUTPUT_PATTERNS)
+
+
 def _read_only_mutation_paths(before: dict[str, str], after: dict[str, str]) -> list[str]:
     """Return exact paths whose observable Git state changed during a review.
 
     A changed path is exempt only when it is recognized harness/runtime noise
     (:func:`_is_read_only_runtime_state_exemption`: gitignored tooling residue
-    such as ``.pytest_cache/`` or ``batch_state/``) or a newly appeared
+    such as ``.pytest_cache/`` or ``batch_state/``), a newly appeared
     sibling dispatch sandbox under ``.worktrees/dispatch/<agent>/<task>/``
     (#6938 defense in depth; since #7124 the snapshot itself already drops
-    every ``.worktrees/`` path). Tracked paths under runtime prefixes
-    (including force-added files) still trip the guard.
+    every ``.worktrees/`` path), or an ignored path that full-matches the
+    existing ``SITE_BUILD_OUTPUT_PATTERNS`` list (#11193). Tracked paths,
+    including ones that match that list, and force-added files still trip
+    the guard.
 
     #8516 AC-02: an ignored ``!!`` status BY ITSELF no longer exempts a path.
     The review-a3-api-ui leak showed why: the agy worker wrote its scratch
@@ -6352,7 +6398,9 @@ def _read_only_mutation_paths(before: dict[str, str], after: dict[str, str]) -> 
     (``/*.py``, ``/scratch/``) marked them ``!!``, and the guard filed them
     as diagnostic-only "ignored mutations" while the task settled ``done``.
     Now any other new, modified, or deleted path — tracked, untracked, or
-    ignored — fails the task and is named.
+    ignored — fails the task and is named. Matching the site-build list does
+    not widen that rule: the path must be ignored, and an ignored path
+    outside the list still fails.
     """
     before_roots = _read_only_dispatch_sandbox_roots(before)
     return sorted(
@@ -6365,6 +6413,11 @@ def _read_only_mutation_paths(before: dict[str, str], after: dict[str, str]) -> 
             after_state=after.get(path),
         )
         and not _is_read_only_new_sibling_dispatch_sandbox_path(path, before_roots=before_roots)
+        and not _is_read_only_ignored_site_build_output(
+            path,
+            before_state=before.get(path),
+            after_state=after.get(path),
+        )
     )
 
 
@@ -6446,6 +6499,7 @@ def _worktree_diff_output(worktree: Path, diff_args: Sequence[str], *, git_optio
 # file (:func:`_append_diagnostics`).
 TYPED_CAUSE_CODES = frozenset(
     {
+        "agy_model_identity_unverified",
         # Reading a Kimi worker's changes for the content check.
         "merge_base_unresolved",
         "temp_index_failed",
@@ -6624,7 +6678,7 @@ def public_causes() -> frozenset[str]:
             "OWNED_PATHS_INVALID", "BINDING_MISMATCH", "OWNED_PATHS_MISMATCH", "ENVELOPE_CHANGED", "SEAL_MISSING",
             "SEAL_MISMATCH", "ADMISSION_MISSING", "ADMISSION_INVALID", "ADVISOR_ROUTE_REFUSED",
             "EXECUTION_MISMATCH", "CEILING_EXCEEDED", "CEILING_UNMEASURED", "EXEMPT_CODE_CHANGE",
-            "EXEMPT_CHANGES_UNMEASURED",
+            "EXEMPT_CHANGES_UNMEASURED", "DRIVER_BRIEF_REFUSED",
         )
         if isinstance(getattr(bounded_advisory, name, None), str)
     }  # fmt: skip
@@ -7653,7 +7707,7 @@ def run_completion_gate(
         reason = _review_verdict_failure_reason(response or "")
         if reason == _REVIEW_UNSUPPORTED_VERDICT_REASON:
             token = unsupported_verdict_tokens(response or "")[-1]
-            detail = f"{reason}: unsupported token {token!r}; accepted tokens: {', '.join(ACCEPTED_VERDICT_TOKENS)}"
+            detail = f"{reason}: unsupported verdict identifier {token!r}; accepted tokens: {', '.join(ACCEPTED_VERDICT_TOKENS)}"
             return CompletionGateResult(gate, reason, redact_text(detail) or "")
         return CompletionGateResult(gate, reason, reason or "")
     if gate in (COMPLETION_GATE_ADVISORY_CEILING, COMPLETION_GATE_ADVISORY_EXEMPT_CHANGE):
@@ -7862,6 +7916,28 @@ def _x_agent_trailer(agent: str, task_id: str) -> str:
     return f"X-Agent: {agent}/{_x_agent_task_id(agent, task_id)}"
 
 
+def _worker_tool_cache_env(runtime_tmp_root: Path) -> dict[str, str]:
+    """Point tool caches at the task scratch lease instead of the worktree (#10777).
+
+    The lease is reaped when the worker exits; a cache in the worktree stays
+    until the tree is removed. Measured 2026-10-16 on old dispatch trees:
+    ``__pycache__`` 61-126MB and ``.mypy_cache`` 33MB per tree. The bytecode
+    prefix also holds compiled interpreter libraries for the task, so they
+    are compiled once per lease. ``.ruff_cache`` is about 1MB.
+
+    Left in the worktree: ``.pytest_cache`` (at most 2MB) has no environment
+    override, and setting it through ``PYTEST_ADDOPTS`` would reach the
+    nested pytest runs that tests start; ``.pytest_breadcrumbs`` names the
+    test that hung and must survive the worker for diagnosis.
+    """
+    cache_root = runtime_tmp_root / "tool-cache"
+    return {
+        "MYPY_CACHE_DIR": str(cache_root / "mypy"),
+        "PYTHONPYCACHEPREFIX": str(cache_root / "pycache"),
+        "RUFF_CACHE_DIR": str(cache_root / "ruff"),
+    }
+
+
 def _build_worker_env(
     *,
     task_id: str,
@@ -7916,6 +7992,7 @@ def _build_worker_env(
     if runtime_tmp_root is not None:
         worker_env["TMPDIR"] = str(runtime_tmp_root)
         worker_env["LU_RUNTIME_TMP_ROOT"] = str(runtime_tmp_root)
+        worker_env.update(_worker_tool_cache_env(Path(runtime_tmp_root)))
     if runtime_tmp_namespace_root is not None:
         worker_env["LU_RUNTIME_TMP_BASE_ROOT"] = str(Path(runtime_tmp_namespace_root).parent)
     if worktree_path is not None:
@@ -9205,6 +9282,39 @@ def _provision_data_symlinks(worktree_path: Path, main_repo_root: Path, *, read_
 # module-mapping.json, callout-claims-review.md). ``du -sh`` of that
 # tree: 3.6M, not 289M. The anchor is added only when that directory
 # exists at HEAD.
+#
+# #10777 (measured 2026-10-16 on main c0f3aaf4639, tracked bytes from
+# ``git ls-tree -r -l``): the profile above still kept 408.9 MiB. Its
+# largest trees were registry/lexicon/source-inventory (49.8 MiB) and
+# source-inventory-review-decisions (49.3 MiB), site/src/data (51.7 MiB,
+# mostly generated lexicon JSON), site/src/content (26.9 MiB, published
+# lessons), data/processed (23.4 MiB, ESUM volumes) and data/datasets
+# (14.4 MiB). Excluding them, with the anchors below, leaves 196.3 MiB;
+# tests/test_dispatch_checkout_size.py holds the ceiling. data/lexicon moved
+# to registry/lexicon in #8853 and is no longer tracked; it stays a valid
+# --sparse-include name. ``pytest -m repo_wide`` in a default checkout built
+# from this profile was compared with a full checkout; each remaining
+# difference got an anchor or a conftest skip:
+# - registry/projects/open_model_data/integrations (one 614-byte file)
+#   brings instruction_catalog.yaml and its schema, the only files directly
+#   in open_model_data. test_instruction_catalog.py reads them at import, and
+#   their absence aborted collection of the whole run, already before
+#   #10777.
+# - registry/lexicon/source-inventory/grade-01 (1.0 MiB) brings the 25 loose
+#   inventories (0.7 MiB) beside it. Plan validation reads
+#   ohoiko-oho-a1-reference.yaml (tests/review/test_prompts.py fixtures);
+#   the grade-NN and oneshot subtrees (48 MiB) stay out.
+# - curriculum/l2-uk-en/plans/a1 (0.5 MiB):
+#   tests/audit/test_track_deterministic_audit.py launches review_plan.py
+#   on a real A1 plan.
+# - curriculum/l2-uk-direct/a1 (0.5 MiB):
+#   tests/test_ohoiko_source_inventory_scope.py checks the Ohoiko inventory
+#   against the committed abetka key words.
+# - No anchor for site/src/data (its largest files sit directly in it, so
+#   any anchor brings them back) or site/src/content (its readers read the
+#   published lessons themselves). The repo_wide tests that read them carry
+#   pytest.mark.needs_sparse_tree and skip in a sparse checkout, naming the
+#   --sparse-include to use (tests/conftest.py).
 _DISPATCH_SPARSE_EXCLUDE_DEFAULT = frozenset(
     {
         "curriculum",
@@ -9212,33 +9322,72 @@ _DISPATCH_SPARSE_EXCLUDE_DEFAULT = frozenset(
         "data/projects",
         "data/lexicon",
         "registry/projects",
+        "data/datasets",
+        "data/processed",
+        "registry/lexicon/source-inventory",
+        "registry/lexicon/source-inventory-review-decisions",
+        "site/src/content",
+        "site/src/data",
     }
 )
-_DISPATCH_SPARSE_CURRICULUM_MANIFEST_CONE = "curriculum/l2-uk-en/lesson-plans"
+# Cone directories kept inside an excluded tree so tests that every
+# dispatch can run (``pytest -m repo_wide``, ``tests/curriculum``
+# collection) still find the files they read. Each anchor is added only
+# when that directory exists at HEAD.
+_DISPATCH_SPARSE_ANCHORS: dict[str, tuple[str, ...]] = {
+    "curriculum": (
+        "curriculum/l2-uk-direct/a1",
+        "curriculum/l2-uk-en/lesson-plans",
+        "curriculum/l2-uk-en/plans/a1",
+    ),
+    "registry/lexicon/source-inventory": ("registry/lexicon/source-inventory/grade-01",),
+    "registry/projects": ("registry/projects/open_model_data/integrations",),
+}
 # Owned-path prefixes that re-include a default-excluded tree even when the
 # path itself is not under that tree (tests and scripts that read it).
 # Filename stems end with "_" and match tests/test_open_model_*.py. Exact
-# files are listed only when grep shows that file reads the tree. ``site/``
-# consumes site/src/data/lexicon-*.json, not raw data/lexicon/.
+# files are listed only when grep shows that file reads the tree.
 # ``tests/test_open_model_`` is content-gated: most of those modules never
-# read data/projects, and a blanket stem would check out ~633MB.
+# read data/projects, and a blanket stem would check out ~633MB. The lexicon
+# readers read the source inventories, which #8853 moved from data/lexicon
+# to registry/lexicon. Frontend work under ``site/`` builds from the
+# generated data and the published lessons. Test files are not listed: an
+# owned test gets the trees its pytest.mark.needs_sparse_tree marks name
+# (_owned_test_marked_trees).
+_SOURCE_INVENTORY_READERS = (
+    "scripts/lexicon",
+    "tests/lexicon",
+    "tests/test_source_inventory_",
+    "scripts/audit/source_inventory_review_decisions.py",
+    "scripts/audit/generate_source_inventory_review_candidates.py",
+    "scripts/practice/author_densified_pairs.py",
+    "scripts/practice/creation_review.py",
+    "scripts/practice/thin_mode_source_inventory.py",
+)
 _SPARSE_OWNED_PATH_REINCLUDE: dict[str, tuple[str, ...]] = {
+    # Landing pages take module titles from the plans and status files.
+    "curriculum": ("scripts/generate_landing_pages.py",),
     "data/projects": (
         "data/projects",
         "tests/projects/open_model_data",
         "scripts/projects/open_model_data",
         "tests/test_open_model_",
     ),
-    "data/lexicon": (
-        "data/lexicon",
-        "scripts/lexicon",
-        "tests/lexicon",
-        "tests/test_source_inventory_",
-        "scripts/audit/source_inventory_review_decisions.py",
-        "scripts/audit/generate_source_inventory_review_candidates.py",
-        "scripts/practice/author_densified_pairs.py",
-        "scripts/practice/creation_review.py",
-        "scripts/practice/thin_mode_source_inventory.py",
+    "registry/lexicon/source-inventory": _SOURCE_INVENTORY_READERS,
+    "registry/lexicon/source-inventory-review-decisions": _SOURCE_INVENTORY_READERS,
+    # Scripts whose tests carry pytest.mark.needs_sparse_tree for the tree.
+    "site/src/content": (
+        "site",
+        "scripts/api/preparation_state.py",
+        "scripts/generate_landing_pages.py",
+        "scripts/generate_mdx/reading_links.py",
+        "scripts/lexicon/lesson_atlas_link_census.py",
+    ),
+    "site/src/data": (
+        "site",
+        "scripts/audit/check_static_practice_assets.py",
+        "scripts/lexicon/check_manifest_freshness.py",
+        "scripts/lexicon/lesson_atlas_link_census.py",
     ),
 }
 # Stem prefixes whose match still has to mention the tree in that file.
@@ -9341,13 +9490,37 @@ def _reinclude_file_confirms(path: str, prefix: str) -> bool:
     return _imported_binding_mentions_marker(text, markers)
 
 
+def _owned_test_marked_trees(path: str) -> tuple[str, ...]:
+    """Excluded trees an owned test file names in ``pytest.mark.needs_sparse_tree``.
+
+    The owner gets them, so the marked tests run instead of skipping. Test
+    file names stay out of this module: the repo_wide marker prefilter
+    (tests/test_repo_wide_marker_invariant.py) reads a file name in a module
+    that loads modules dynamically as a load of that test, and this module is
+    imported by tests/conftest.py, so every test became a candidate (#10777).
+    """
+    if not (path.startswith("tests/") and path.endswith(".py")):
+        return ()
+    try:
+        tree = ast.parse((_REPO_ROOT / path).read_text(encoding="utf-8"))
+    except (OSError, SyntaxError, UnicodeError, ValueError):
+        return ()
+    found = {
+        arg.value
+        for node in ast.walk(tree)
+        if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute) and node.func.attr == "needs_sparse_tree"
+        for arg in node.args
+        if isinstance(arg, ast.Constant) and arg.value in _DISPATCH_SPARSE_EXCLUDE_DEFAULT
+    }
+    return tuple(sorted(found))
+
+
 def _normalize_sparse_include(raw: Sequence[str] | None) -> tuple[str, ...]:
     """Normalize --sparse-include values to unique default-excluded trees.
 
     Fail closed: explicit values must be names in the default exclusion set
-    (``curriculum``, ``wiki``, ``data/projects``, ``data/lexicon``,
-    ``registry/projects``). Other nested paths and unknown names raise
-    :class:`ValueError`.
+    (``_DISPATCH_SPARSE_EXCLUDE_DEFAULT``). Other nested paths and unknown
+    names raise :class:`ValueError`.
     """
     if not raw:
         return ()
@@ -9364,11 +9537,7 @@ def _normalize_sparse_include(raw: Sequence[str] | None) -> tuple[str, ...]:
             )
         if name not in _DISPATCH_SPARSE_EXCLUDE_DEFAULT:
             if "/" in name:
-                raise ValueError(
-                    f"--sparse-include {item!r} must name a default-excluded tree "
-                    "(nested exclusions: data/projects, data/lexicon, registry/projects). "
-                    f"Allowed: {allowed}"
-                )
+                raise ValueError(f"--sparse-include {item!r} must name a default-excluded tree. Allowed: {allowed}")
             raise ValueError(f"--sparse-include {name!r} is not a default-excluded tree; allowed: {allowed}")
         if name in seen:
             continue
@@ -9389,21 +9558,67 @@ def _infer_sparse_include_from_text(text: str | None) -> tuple[str, ...]:
     return tuple(found)
 
 
-def _sparse_tree_for_owned_path(raw: str) -> str | None:
-    """Return the excluded tree a research-owned path requires, if any."""
-    path = str(raw).strip().strip("/")
-    if not path:
+def _sparse_owned_path_root(raw: str) -> str | None:
+    """The repo-relative path an owned-path claim covers, read as ownership admission reads it.
+
+    ``./site/src/data/x.json``, ``registry/./projects/x`` and ``a//b`` name
+    the same path as their canonical spelling (``normalize_claim``). A glob
+    covers the literal directories before its first wildcard segment
+    (``curriculum/l2-uk-en/**/lessons.lock.yaml`` covers
+    ``curriculum/l2-uk-en``). A claim that owns nothing (empty, ``.``,
+    absolute, ``..``) covers nothing.
+    """
+    try:
+        from scripts.guardrails.delegate_ownership import ClaimKind, normalize_claim, owned_path_matcher
+    except ImportError:  # pragma: no cover - flat script path
+        from guardrails.delegate_ownership import ClaimKind, normalize_claim, owned_path_matcher  # type: ignore
+
+    if owned_path_matcher(raw) is None:
         return None
-    for name in sorted(_DISPATCH_SPARSE_EXCLUDE_DEFAULT, key=len, reverse=True):
+    claim = normalize_claim(raw)
+    if claim.kind is ClaimKind.SUBTREE:
+        return claim.norm
+    literal: list[str] = []
+    for segment in claim.norm.split("/"):
+        if any(ch in segment for ch in "*?["):
+            break
+        literal.append(segment)
+    root = normalize_claim("/".join(literal))
+    return root.norm if root.kind is ClaimKind.SUBTREE else None
+
+
+def _sparse_trees_for_owned_path(raw: str) -> tuple[str, ...]:
+    """Return the excluded trees an owned path (``--owned-path`` or research) requires.
+
+    A path inside an excluded tree needs that tree. A directory that holds
+    excluded trees (``site``, ``registry/lexicon``) needs all of them. A
+    path outside every excluded tree needs the trees its reader prefixes
+    name in ``_SPARSE_OWNED_PATH_REINCLUDE`` and, for a test file, the trees
+    its ``needs_sparse_tree`` marks name.
+    """
+    path = _sparse_owned_path_root(str(raw))
+    if path is None:
+        return ()
+    for name in _DISPATCH_SPARSE_EXCLUDE_DEFAULT:
         if _sparse_path_has_prefix(path, name):
-            return name
-    for tree, prefixes in _SPARSE_OWNED_PATH_REINCLUDE.items():
-        if any(
-            _sparse_reinclude_prefix_matches(path, prefix) and _reinclude_file_confirms(path, prefix)
-            for prefix in prefixes
-        ):
-            return tree
-    return None
+            return (name,)
+    nested = sorted(name for name in _DISPATCH_SPARSE_EXCLUDE_DEFAULT if name.startswith(path + "/"))
+    return tuple(
+        dict.fromkeys(
+            [
+                *nested,
+                *(
+                    tree
+                    for tree, prefixes in _SPARSE_OWNED_PATH_REINCLUDE.items()
+                    if any(
+                        _sparse_reinclude_prefix_matches(path, prefix) and _reinclude_file_confirms(path, prefix)
+                        for prefix in prefixes
+                    )
+                ),
+                *_owned_test_marked_trees(path),
+            ]
+        )
+    )
 
 
 def _infer_sparse_include(
@@ -9414,19 +9629,19 @@ def _infer_sparse_include(
 ) -> tuple[str, ...]:
     """Merge explicit includes with owned-path prefixes and prompt path references.
 
-    A dispatch that already declares ``--research-owned-path curriculum/...``,
-    ``scripts/projects/open_model_data/...``, or a lexicon reader such as
-    ``scripts/lexicon/...`` materializes the matching excluded tree without a
-    second flag. ``site/...`` does not: the frontend reads runtime JSON under
-    ``site/src/data/``, not raw ``data/lexicon/``.
+    ``owned_paths`` holds the dispatch's ``--owned-path`` claims and its
+    ``--research-owned-path`` values. An owned path such as
+    ``curriculum/...``, ``scripts/projects/open_model_data/...`` or a lexicon
+    reader such as ``scripts/lexicon/...`` materializes the matching excluded
+    tree without a second flag.
     """
     merged: list[str] = list(_normalize_sparse_include(explicit))
     seen = set(merged)
     for raw in owned_paths or ():
-        name = _sparse_tree_for_owned_path(str(raw))
-        if name and name not in seen:
-            seen.add(name)
-            merged.append(name)
+        for name in _sparse_trees_for_owned_path(str(raw)):
+            if name not in seen:
+                seen.add(name)
+                merged.append(name)
     for name in _infer_sparse_include_from_text(prompt_text):
         if name not in seen:
             seen.add(name)
@@ -9468,43 +9683,75 @@ def _list_worktree_top_dirs(worktree_path: Path, *, at_ref: str = "HEAD") -> lis
 
 
 def _dispatch_sparse_cone_dirs(
-    top_dirs: Sequence[str],
-    data_children: Sequence[str],
+    list_dirs: Callable[[str], Sequence[str]],
     exclude: Collection[str],
-    registry_children: Sequence[str] = (),
 ) -> tuple[list[str], list[str]]:
     """Build a cone include list that drops excluded dirs at directory level.
 
-    Nested exclusions (``data/projects``, ``data/lexicon``, and
-    ``registry/projects``) are expressed by listing the sibling directories
-    instead of their parent. Cone mode then keeps files directly in each
-    parent and preserves the other sibling trees.
+    ``list_dirs("")`` returns the top-level directories and
+    ``list_dirs("site/src")`` the repo-relative child directories of
+    ``site/src``. A nested exclusion (``data/projects``,
+    ``site/src/data``) is expressed by listing the sibling directories at
+    every level down to it instead of their parent. Cone mode then keeps
+    files directly in each parent and preserves the other sibling trees.
+    A parent whose every child directory is excluded keeps its own files
+    only when an anchor sits below it, since cone mode has no file entries.
     """
-    exclude_set = set(exclude)
-    nested_children = {"data": data_children, "registry": registry_children}
+    exclude_set = {name.strip("/") for name in exclude}
     cone: list[str] = []
     excluded: list[str] = []
-    for name in top_dirs:
-        if name not in nested_children:
-            if name in exclude_set:
-                excluded.append(name)
-            else:
-                cone.append(name)
-            continue
-        if name in exclude_set:
-            excluded.append(name)
-            continue
-        children = list(nested_children[name])
-        dropped = [child for child in children if child in exclude_set]
-        if not dropped:
-            cone.append(name)
-            continue
-        for child in children:
+
+    def walk(parent: str) -> None:
+        for child in list_dirs(parent):
+            if parent and not child.startswith(parent + "/"):
+                # Not a child of ``parent``: descending again would never end.
+                continue
             if child in exclude_set:
                 excluded.append(child)
+            elif any(name.startswith(child + "/") for name in exclude_set):
+                cone_mark, excluded_mark = len(cone), len(excluded)
+                walk(child)
+                if len(excluded) == excluded_mark:
+                    # Nothing beneath exists at this ref: keep the whole tree,
+                    # including the files directly in it.
+                    del cone[cone_mark:]
+                    cone.append(child)
             else:
                 cone.append(child)
+
+    walk("")
     return cone, sorted(excluded)
+
+
+def _dispatch_sparse_profile(
+    list_dirs: Callable[[str], Sequence[str]],
+    sparse_include: Sequence[str] = (),
+) -> tuple[list[str], list[str]]:
+    """Return ``(cone_dirs, excluded_trees)`` for the default dispatch profile.
+
+    ``sparse_include`` names default-excluded trees to keep. Anchors of a
+    tree that stays excluded join the cone when they exist at HEAD.
+    """
+    includes = _normalize_sparse_include(sparse_include)
+    exclude = set(_DISPATCH_SPARSE_EXCLUDE_DEFAULT) - set(includes)
+    included, excluded = _dispatch_sparse_cone_dirs(list_dirs, exclude)
+    for tree in excluded:
+        for anchor in _DISPATCH_SPARSE_ANCHORS.get(tree, ()):
+            parent = anchor.rpartition("/")[0]
+            if anchor in list_dirs(parent):
+                included.append(anchor)
+    return included, excluded
+
+
+def _worktree_dir_lister(worktree_path: Path) -> Callable[[str], list[str]]:
+    """List directories at HEAD in ``worktree_path`` for the sparse profile."""
+
+    def list_dirs(parent: str) -> list[str]:
+        if not parent:
+            return _list_worktree_top_dirs(worktree_path)
+        return _list_worktree_dirs(worktree_path, parent + "/")
+
+    return list_dirs
 
 
 def _apply_dispatch_sparse_checkout(
@@ -9515,16 +9762,13 @@ def _apply_dispatch_sparse_checkout(
 ) -> dict[str, Any]:
     """Apply (or disable) cone sparse-checkout on a dispatch worktree.
 
-    Default profile excludes ``curriculum/``, ``wiki/``, ``data/projects/``
-    (~633MB), ``data/lexicon/`` (~277MB), and ``registry/projects/``. The
-    latter is excluded as a nested tree so ``registry/lexicon/`` stays
-    available. When ``curriculum`` stays
-    excluded and ``curriculum/l2-uk-en/lesson-plans`` exists at HEAD, that
-    directory is still cone-included so ``curriculum/l2-uk-en/curriculum.yaml``
-    and ``lesson-plans/a1/_arc.yaml`` are present (~3.6MB) without the rest
-    of ``curriculum/``.
-    ``--full-checkout`` disables sparse mode. ``--sparse-include`` keeps a
-    named excluded tree.
+    The default profile drops every tree in
+    ``_DISPATCH_SPARSE_EXCLUDE_DEFAULT``; nested trees such as
+    ``site/src/data`` are dropped by listing their siblings, so the rest of
+    ``site/`` stays. Anchors in ``_DISPATCH_SPARSE_ANCHORS`` keep the files
+    collection reads (``curriculum/l2-uk-en/curriculum.yaml``) without the
+    rest of their tree. ``--full-checkout`` disables sparse mode.
+    ``--sparse-include`` keeps a named excluded tree.
     """
     includes = _normalize_sparse_include(sparse_include)
     telemetry: dict[str, Any] = {
@@ -9566,14 +9810,7 @@ def _apply_dispatch_sparse_checkout(
         telemetry["applied"] = True
         return telemetry
 
-    exclude = set(_DISPATCH_SPARSE_EXCLUDE_DEFAULT) - set(includes)
-    all_dirs = _list_worktree_top_dirs(worktree_path)
-    data_children = _list_worktree_dirs(worktree_path, "data/") if "data" in all_dirs else []
-    registry_children = _list_worktree_dirs(worktree_path, "registry/") if "registry" in all_dirs else []
-    included, excluded = _dispatch_sparse_cone_dirs(all_dirs, data_children, exclude, registry_children)
-    manifest_cone = _DISPATCH_SPARSE_CURRICULUM_MANIFEST_CONE
-    if "curriculum" in excluded and manifest_cone in _list_worktree_dirs(worktree_path, manifest_cone):
-        included.append(manifest_cone)
+    included, excluded = _dispatch_sparse_profile(_worktree_dir_lister(worktree_path), includes)
     telemetry["excluded"] = excluded
     telemetry["included_dirs"] = included
 
@@ -9965,6 +10202,9 @@ def _ensure_worktree(
                 full_checkout=full_checkout,
                 sparse_include=sparse_include,
             )
+            # Sparse checkout can remove ignored links with an excluded parent.
+            # Keep the pre-sparse read-only containment check and restore links afterward.
+            _provision_data_symlinks(worktree_path, _REPO_ROOT, read_only=read_only or detached)
         _record_worktree_local_venv_warning(worktree_path, telemetry)
         return worktree_path, worktree_branch, telemetry
 
@@ -10076,6 +10316,7 @@ def _ensure_worktree(
         full_checkout=full_checkout,
         sparse_include=sparse_include,
     )
+    _provision_data_symlinks(worktree_path, _REPO_ROOT, read_only=read_only or detached)
     _record_worktree_local_venv_warning(worktree_path, telemetry)
     return worktree_path, worktree_branch, telemetry
 
@@ -10132,7 +10373,8 @@ def _augment_prompt_with_worktree(
                 + ". To materialize one inside this worktree, run "
                 + add_commands
                 + " (for example `git sparse-checkout add data/projects`). "
-                + "Do not invent content for missing paths.\n"
+                + "A test that fails because a file under one of these trees is missing needs that "
+                + "command, not a code change. Do not invent content for missing paths.\n"
             )
     delivery_note = ""
     if mode in _WRITE_CAPABLE_MODES and delegate_commits:
@@ -10685,7 +10927,9 @@ def _emit_terminal_dispatch_event(
         usage_record = getattr(result, "usage_record", None)
         tokens = usage_record.get("tokens") if isinstance(usage_record, dict) else None
         substitution = final_state.get("substitution")
-        if substitution is None and isinstance(usage_record, dict):
+        if substitution is None and isinstance(usage_record, dict) and not (
+            agent == "agy" and "identity_matches_request" in final_state
+        ):
             substitution = usage_record.get("substitution")
         model = final_state.get("model")
         cost = compute_cost(
@@ -10699,6 +10943,11 @@ def _emit_terminal_dispatch_event(
                 "task_id": task_id,
                 "agent": agent,
                 "model": model,
+                **{key: final_state.get(key) for key in (
+                    "requested_selector", "observed_model", "observed_model_source",
+                    "observed_model_provenance",
+                )},
+                "identity_state": final_state.get("identity_state") or "unknown",
                 "resolved_model": final_state.get("resolved_model"),
                 "resolved_model_known": final_state.get("resolved_model_known"),
                 "resolved_model_source": final_state.get("resolved_model_source"),
@@ -10886,6 +11135,18 @@ def _run_worker(
         state.setdefault("model", start_telemetry.model)
         state.setdefault("effort", start_telemetry.effort)
         state.setdefault("cli_version", start_telemetry.cli_version)
+    state.update(model_accounting_fields(requested_selector=model))
+    agy_requested_model = model
+    if agent == "agy":
+        from scripts.agent_runtime.adapters.agy import AgyAdapter
+
+        agy_requested_model = model or state.get("model") or AgyAdapter.default_model
+        agy_start_state = _agy_model_state(
+            agent=agent, model=agy_requested_model, identity=None, task_id=task_id, run_nonce=effective_nonce,
+        )
+        state.update(agy_start_state)
+        if agy_start_state:
+            state["substitution"] = None
     _write_state_atomic(state_path, state)
 
     cwd = Path(cwd_str)
@@ -10929,6 +11190,7 @@ def _run_worker(
     failure_cause: str | None = None
     timed_out = False
     result = None
+    runtime_identity = None
     substitution: dict[str, Any] | None = None
     runtime_tmp_reap: dict[str, Any] | None = None
 
@@ -11002,6 +11264,9 @@ def _run_worker(
             stdout_silence_timeout = silence_timeout if silence_timeout > 0 else None
             initial_probe = initial_response_timeout if initial_response_timeout > 0 else None
             tool_config: dict[str, Any] = {}
+            if agent == "agy" and "claude" in (agy_requested_model or "").casefold():
+                tool_config.update(run_nonce=effective_nonce, owned_paths=state.get("owned_paths") or [])
+                tool_config["risk"] = state.get("review_risk")
             if state.get("mechanical_task"):
                 tool_config["mechanical_task"] = state["mechanical_task"]
             if agent == "claude" and CLAUDE_ACCOUNT_KEY in state:
@@ -11171,6 +11436,7 @@ def _run_worker(
                 initial_response_timeout=initial_probe,
                 effort=effort,
             )
+            runtime_identity = getattr(result, "model_identity", None)
             ok_outcome = result.ok
             response = result.response
             stderr_excerpt = result.stderr_excerpt
@@ -11182,6 +11448,7 @@ def _run_worker(
             substitution = getattr(result, "substitution", None)
             agy_telemetry = getattr(result, "agy_telemetry", agy_telemetry)
         except KeyboardInterrupt as exc:
+            runtime_identity = getattr(exc, "model_identity", None)
             # Raised by our SIGTERM handler (or by Ctrl+C in manual runs).
             # The runtime's finally block has already killed the CLI
             # subprocess and stopped the watchdog by the time we catch
@@ -11190,11 +11457,13 @@ def _run_worker(
             stderr_excerpt = f"cancelled via SIGTERM or Ctrl+C: {exc}"[:500]
             returncode_reason = "worker interrupted before a terminal subprocess returncode was available"
         except RateLimitedError as exc:
+            runtime_identity = getattr(exc, "model_identity", None)
             agy_telemetry = getattr(exc, "agy_telemetry", None) or agy_telemetry
             rate_limited = True
             stderr_excerpt = str(exc)[:500]
             returncode_reason = "runtime rejected the dispatch before a terminal subprocess returncode was available"
         except AgentStalledError as exc:
+            runtime_identity = getattr(exc, "model_identity", None)
             agy_telemetry = getattr(exc, "agy_telemetry", None) or agy_telemetry
             timed_out = True
             substitution = getattr(exc, "substitution", None)
@@ -11215,6 +11484,7 @@ def _run_worker(
                 )[:500]
             returncode_reason = "runtime timeout raised before a terminal subprocess returncode was available"
         except AgentTimeoutError as exc:
+            runtime_identity = getattr(exc, "model_identity", None)
             agy_telemetry = getattr(exc, "agy_telemetry", None) or agy_telemetry
             substitution = getattr(exc, "substitution", None)
             stderr_excerpt = (
@@ -11224,16 +11494,19 @@ def _run_worker(
             )[:500]
             returncode_reason = "runtime timeout raised before a terminal subprocess returncode was available"
         except AgentRuntimeError as exc:
+            runtime_identity = getattr(exc, "model_identity", None)
             agy_telemetry = getattr(exc, "agy_telemetry", None) or agy_telemetry
             worker_exception = _exception_cause("worker_runtime_error", exc)
             stderr_excerpt = f"runtime error: {type(exc).__name__}: {exc}"[:500]
             returncode_reason = "runtime exception did not expose a terminal subprocess returncode"
         except ClaudeAccountRefused as exc:
+            runtime_identity = getattr(exc, "model_identity", None)
             pre_spawn_failure = True
             failure_cause = exc.code
             stderr_excerpt = f"CLAUDE_ACCOUNT_REFUSED: {exc.code}"
             returncode_reason = "the task record's Claude account label was refused; provider not started"
         except bounded_advisory.AdvisoryRefused as exc:
+            runtime_identity = getattr(exc, "model_identity", None)
             pre_spawn_failure = True
             advisory_handoff_refusal = exc.code
             failure_cause = exc.code
@@ -11242,12 +11515,14 @@ def _run_worker(
                 "bounded model failed its advisory admission at the provider handoff; provider not started"
             )
         except ValueError as exc:
+            runtime_identity = getattr(exc, "model_identity", None)
             agy_telemetry = getattr(exc, "agy_telemetry", None) or agy_telemetry
             pre_spawn_failure = True
             worker_exception = _exception_cause("adapter_rejected", exc)
             stderr_excerpt = f"adapter rejected before spawn: {exc}"[:500]
             returncode_reason = "adapter rejected the dispatch before a process was spawned"
         except Exception as exc:
+            runtime_identity = getattr(exc, "model_identity", None)
             # Last-ditch: don't crash the worker on an unexpected bug — we
             # need to update the state file or the parent will see us as
             # "crashed" forever.
@@ -11282,6 +11557,13 @@ def _run_worker(
                     )
                     final_state.update(runtime_tmp_reap)
 
+        agy_model_state = _agy_model_state(
+            agent=agent, model=agy_requested_model, identity=runtime_identity, task_id=task_id, run_nonce=effective_nonce,
+        )
+        if ok_outcome and agy_model_state and not agy_model_state["identity_matches_request"]:
+            ok_outcome = False
+            failure_cause = "agy_model_identity_unverified"
+            stderr_excerpt = "agy_model_identity_unverified"
         duration_s = time.monotonic() - start
         final_status = _classify_final_status(
             cancelled=cancelled,
@@ -11314,6 +11596,11 @@ def _run_worker(
             returncode_reason = f"worker subprocess terminated by {signal_name} (returncode {returncode})"
 
         final_state = _read_state(state_path) or {}
+        final_state.update(agy_model_state)
+        final_state.update(model_accounting_fields(
+            requested_selector=model, identity=runtime_identity,
+            task_id=task_id, run_nonce=effective_nonce,
+        ))
         # #9275: gate evidence is this run's measurement, never an earlier record's.
         for gate_key in _ADVISORY_GATE_KEYS:
             final_state.pop(gate_key, None)
@@ -11919,7 +12206,21 @@ def _run_worker(
     if substitution is None and isinstance(usage_record, dict):
         substitution = usage_record.get("substitution")
     runtime_substitution = substitution
-    substitution = _merge_agent_substitution(final_state.get("substitution"), runtime_substitution)
+    if agy_model_state:
+        # Reproject from the same bound observation. Neither Result/usage fallback
+        # nor a prior task's nested attribution may resurrect rejected evidence.
+        runtime_substitution = {
+            "requested_provider": "agy",
+            "requested_model": agy_requested_model,
+            "actual_provider": "agy",
+            "actual_model": agy_model_state["resolved_model"],
+            "actual_model_known": True,
+            "source": agy_model_state["resolved_model_source"],
+            "substituted": True,
+        } if agy_model_state["resolved_model_known"] and agy_model_state["model_identity"]["substituted"] else None
+        substitution = runtime_substitution
+    else:
+        substitution = _merge_agent_substitution(final_state.get("substitution"), runtime_substitution)
     cursor_model_state = _cursor_model_state(
         agent=agent,
         result=result,
@@ -11934,6 +12235,7 @@ def _run_worker(
             **core_terminal_state,
             "model": getattr(result, "model", final_state.get("model")),
             **cursor_model_state,
+            **({"model": agy_requested_model} if agy_model_state else {}),
             **_deepseek_model_state(
                 agent=agent,
                 model=getattr(result, "model", final_state.get("model")),
@@ -12181,6 +12483,7 @@ def _record_worktree_prep_failure(
         "attribution_source": attribution.source,
         "agent": agent,
         "model": start_telemetry.model,
+        **model_accounting_fields(requested_selector=requested_model),
         **_cursor_model_state(agent=agent, initial=True),
         **_deepseek_model_state(agent=agent, model=start_telemetry.model),
         "effort": start_telemetry.effort,
@@ -13157,6 +13460,7 @@ def _dispatch(
             launch_model=launch_target.model,
             bound_args=advisory_args,
             repo_root=target_repo_root,
+            caller={"identity": attribution.initiator, "source": attribution.source},
         )
     except bounded_advisory.AdvisoryRefused as exc:
         print(f"❌ dispatch refused: {exc}", file=sys.stderr)
@@ -13375,9 +13679,14 @@ def _dispatch(
     requested_branch = getattr(args, "branch", None)
     full_checkout = bool(getattr(args, "full_checkout", False))
     try:
+        # Declared ownership keeps the trees it owns; research paths only add
+        # to it, and a dispatch without research flags still gets them (#10777).
         sparse_include = _infer_sparse_include(
             getattr(args, "sparse_include", None),
-            owned_paths=getattr(args, "research_owned_path", None),
+            owned_paths=[
+                *(_declared_owned_paths(getattr(args, "owned_path", None)) or ()),
+                *(getattr(args, "research_owned_path", None) or ()),
+            ],
             prompt_text=early_prompt,
         )
     except ValueError as exc:
@@ -14184,6 +14493,7 @@ def _dispatch(
                 "attribution_source": attribution.source,
                 "agent": dispatch_agent,
                 "model": start_telemetry.model,
+                **model_accounting_fields(requested_selector=args.model),
                 **_cursor_model_state(agent=dispatch_agent, initial=True),
                 **_deepseek_model_state(agent=dispatch_agent, model=start_telemetry.model),
                 "effort": start_telemetry.effort,
@@ -14705,6 +15015,7 @@ def _dispatch(
             "attribution_source": attribution.source,
             "agent": dispatch_agent,
             "model": start_telemetry.model,
+            **model_accounting_fields(requested_selector=args.model),
             **_cursor_model_state(agent=dispatch_agent, initial=True),
             **_deepseek_model_state(agent=dispatch_agent, model=start_telemetry.model),
             "effort": start_telemetry.effort,
@@ -15367,6 +15678,7 @@ class _AdvisoryAdmission:
     agent: str | None = None  # the admitted launch the bounded worker must run
     model_id: str | None = None
     exemption: dict[str, Any] | None = None  # a Gemini Flash launch classified Ukrainian
+    driver_brief: dict[str, Any] | None = None
 
     def state_fields(self, *, research_block: str = "", execution: Mapping[str, Any] | None = None) -> dict[str, Any]:
         """Task-record fields; ``research_block`` is the research pointer block added to the worker prompt.
@@ -15375,6 +15687,11 @@ class _AdvisoryAdmission:
         recorded with the admitted agent and model as ``admitted_execution``;
         None for a dry run, which starts no worker.
         """
+        if self.driver_brief is not None:
+            admitted = {**self.driver_brief, "research_block": research_block}
+            if execution is not None:
+                admitted["admitted_execution"] = {"agent": self.agent, "model_id": self.model_id, **execution}
+            return {"driver_brief": admitted}
         if self.envelope is not None and self.requirement is not None:
             assert self.args is not None and self.prompt_sha256 is not None and self.repo_root is not None
             assert self.agent is not None and self.model_id is not None
@@ -15402,6 +15719,8 @@ class _AdvisoryAdmission:
 
     def prompt_block(self) -> tuple[str, str | None]:
         """``(text, block kind)`` appended to the worker prompt; empty when neither role applies."""
+        if self.driver_brief is not None:
+            return bounded_advisory.driver_brief_prompt_block(self.args or {}), "driver_brief"
         if self.envelope is not None:
             return bounded_advisory.worker_prompt_block(self.envelope), "advisory_envelope"
         if self.advisor_binding is not None:
@@ -15443,6 +15762,7 @@ def _admit_advisory(
     launch_model: str | None,
     bound_args: dict[str, Any],
     repo_root: Path,
+    caller: Mapping[str, Any] | None = None,
 ) -> _AdvisoryAdmission:
     """Admit the admitted route under #9275 or raise ``AdvisoryRefused``.
 
@@ -15499,6 +15819,30 @@ def _admit_advisory(
                 }
             )
         return _AdvisoryAdmission()
+    if advisory_task is None and model_id in bounded_advisory.driver_brief_models() and task_family in {
+        "bounded_implementation", "readonly_recon", "mechanical_classification"
+    }:
+        try:
+            prompt_sha256 = _binding_prompt_sha256(args, read_stdin=False)
+        except (OSError, UnicodeError):
+            raise bounded_advisory.AdvisoryRefused(
+                bounded_advisory.DRIVER_BRIEF_REFUSED, "the driver brief cannot be read"
+            ) from None
+        owned = bounded_advisory.validate_driver_brief(
+            bound_args, repo_root=repo_root, brief_sha256=prompt_sha256, model_id=model_id
+        )
+        return _AdvisoryAdmission(
+            prompt_sha256=prompt_sha256, args=bound_args, repo_root=repo_root, agent=dispatch_agent, model_id=model_id,
+            driver_brief={
+                "driver": dict(caller or {"identity": "unknown", "source": "unknown"}),
+                "advisory_args": bound_args,
+                "advisory_args_sha256": bounded_advisory.canonical_sha256(bound_args),
+                "prompt_sha256": prompt_sha256,
+                "dispatch_args_sha256": advisory_binding(bounded_advisory.canonical_sha256(bound_args), prompt_sha256),
+                "owned_paths": owned,
+                "repo_root": str(repo_root),
+            },
+        )
     if advisory_task is None:
         raise bounded_advisory.AdvisoryRefused(
             bounded_advisory.ENVELOPE_REQUIRED,
@@ -15549,7 +15893,7 @@ def _bounded_prompt_composer(
     """
     from scripts.agent_runtime.kimi_admission import is_kimi_seat
 
-    def compose(brief: str, validated: bounded_advisory.ValidatedEnvelope, args: Mapping[str, Any]) -> str:
+    def compose(brief: str, validated: bounded_advisory.ValidatedEnvelope | None, args: Mapping[str, Any]) -> str:
         carrier = record.get("task_lifecycle")
         lifecycle = ""
         if isinstance(carrier, dict):
@@ -15558,7 +15902,7 @@ def _bounded_prompt_composer(
             lifecycle = task_lifecycle.render_carrier_prompt(carrier)
         worktree = record.get("worktree_path")
         sparse = record.get("worktree_sparse")
-        admitted = record.get("advisory_envelope") or {}
+        admitted = record.get("driver_brief") or record.get("advisory_envelope") or {}
         return _compose_dispatch_prompt(
             brief + lifecycle,
             worktree_path=Path(str(worktree)) if worktree else None,
@@ -15566,8 +15910,9 @@ def _bounded_prompt_composer(
             sparse_telemetry=sparse if isinstance(sparse, dict) else None,
             delegate_commits=is_kimi_seat(agent, model=model),
             research_block=_recorded_research_block(admitted.get("research_block")),
-            advisory_block=bounded_advisory.worker_prompt_block(validated),
-            advisory_block_kind="advisory_envelope",
+            advisory_block=(bounded_advisory.worker_prompt_block(validated) if validated is not None
+                            else bounded_advisory.driver_brief_prompt_block(args)),
+            advisory_block_kind="advisory_envelope" if validated is not None else "driver_brief",
             rules_seat=args.get("rules_seat"),
             agent=agent,
             review_route=(record.get("review_attempt") is not None),
@@ -15661,6 +16006,10 @@ def _advisory_worker_refusal(
 
 def _recheck_advisory(admission: _AdvisoryAdmission, *, repo_root: Path) -> None:
     """Refuse when the admitted envelope's advisor record or result changed before spawn (#9275)."""
+    if admission.driver_brief is not None:
+        bounded_advisory.validate_driver_brief(
+            admission.args or {}, repo_root=repo_root, brief_sha256=admission.prompt_sha256, model_id=admission.model_id
+        )
     validated = admission.envelope
     if validated is None:
         return
@@ -17490,7 +17839,7 @@ def _mechanical_task_scope(args: argparse.Namespace, *, admitted: bool = False) 
         # Persist the inputs captured at admission, even if argv or the prompt file changed since then.
         return dict(getattr(args, "_mechanical_admitted_scope", {}))
     family = getattr(args, "research_task_family", None)
-    if family not in MECHANICAL_FAMILIES:
+    if family not in MECHANICAL_FAMILIES | {"bounded_implementation"}:
         return {}
     prompt_file = getattr(args, "prompt_file", None)
     try:
@@ -17707,6 +18056,16 @@ def _resolve_substitution_model(target_agent: str, explicit_model: str | None) -
     when the explicit model is rejected, or neither a mapped model nor the
     default is valid for the substitute.
     """
+    # These pins require their original AGY invocation and observed identity;
+    # a substitute lane's default cannot stand in for either variant (#10420).
+    from scripts.agent_runtime.adapters.agy import AgyAdapter
+
+    claude_pin = None
+    if explicit_model and "claude" in explicit_model.casefold():
+        with contextlib.suppress(ValueError):
+            claude_pin = AgyAdapter.resolve_model_slug(explicit_model)
+    if claude_pin in AgyAdapter.claude_model_slugs:
+        raise BudgetGuardRefuseError("ROUTING REFUSED: pinned AGY Claude identity cannot use a substitute route")
     table = _load_budget_substitution_table().get(target_agent, {})
     mapped = table.get(explicit_model) if explicit_model else None
     default = _lane_default_model(target_agent)
@@ -17919,7 +18278,7 @@ def _resolve_agent_with_budget_guard(
         # #10733: no claude seat is selected on an account that was not resolved and bound.
         raise BudgetGuardRefuseError(f"CLAUDE_ACCOUNT_REFUSED: {claude_account.refusal}")
     try:
-        payload = _fetch_routing_budget()
+        routing_payload = _fetch_routing_budget()
     except MonitorApiUnavailable:
         if (requested == "deepseek" or provider == "openrouter") and not force_agent:
             raise BudgetGuardRefuseError(
@@ -17933,7 +18292,7 @@ def _resolve_agent_with_budget_guard(
     if prepaid:
         from scripts.api.state_router import _api_lane_status_from_account
 
-        accounts = payload.get("api_accounts") or {}
+        accounts = routing_payload.get("api_accounts") or {}
         account = accounts.get(prepaid) or {}
         prepaid_status = _api_lane_status_from_account(prepaid, account)
         blocked = (
@@ -17959,18 +18318,17 @@ def _resolve_agent_with_budget_guard(
             _publish_lane_diagnostics(
                 requested,
                 account if isinstance(account, dict) else None,
-                payload.get("diagnostics") if isinstance(payload.get("diagnostics"), dict) else None,
+                routing_payload.get("diagnostics") if isinstance(routing_payload.get("diagnostics"), dict) else None,
                 model=requested_model,
                 sink=diagnostic_sink,
             )
         return requested
 
-    diags = payload.get("diagnostics") or {}
-    rec = payload.get("recommendation") or {}
-    # #10619, #10630: every lane record below is read as the dispatch's claude account.
-    routing_payload = payload
-    view, account_evidence = claude_account_lane.select_account(payload, account=claude_account)
-    payload = dict(view)
+    diags = routing_payload.get("diagnostics") or {}
+    rec = routing_payload.get("recommendation") or {}
+    # #10619, #10630, #10770: every lane record below is read from the snapshot bound to the
+    # dispatch's claude account; the raw payload is kept only to bind the cooler-seat advice.
+    payload, account_evidence = claude_account_lane.select_account(routing_payload, account=claude_account)
     agents = claude_account_lane.account_agents(payload, account=claude_account)
     records_loaded = int(diags.get("records_loaded", 0) or 0)
     is_stale = bool(diags.get("stale", False))
@@ -18158,11 +18516,10 @@ def _resolve_agent_with_budget_guard(
             blocked, cause = review_capacity_action(candidate.route, info, diags, candidate.concrete_model)
             if blocked:
                 capacity_exclusions[candidate.name] = cause
-        review_snapshot = {
-            **payload,
-            "agents": {lane: info if isinstance(info, Mapping) else {} for lane, info in agents.items()},
-            "review_capacity_exclusions": capacity_exclusions,
-        }
+        review_snapshot = payload.evolve(
+            agents={lane: info if isinstance(info, Mapping) else {} for lane, info in agents.items()},
+            review_capacity_exclusions=capacity_exclusions,
+        )
         sub, chosen = review_select(review_snapshot, requested if needs_action else "")
         if sub == requested and chosen == requested_model:
             if not needs_action:
@@ -19068,6 +19425,8 @@ def build_parser() -> argparse.ArgumentParser:
             "test slots (scripts/common/test_slots.py), or the .worktrees filesystem is still at or above\n"
             f"  DISPATCH_DISK_REFUSE_USED_PERCENT (default {admission_defaults.disk_refuse_used_percent:g}% used) "
             "after one run of the worktree reaper;\n"
+            f"  at DISPATCH_DISK_REAP_USED_PERCENT (default {admission_defaults.disk_reap_used_percent:g}%) "
+            "that one reaper run happens and the dispatch is still admitted;\n"
             f"  at DISPATCH_DISK_ALERT_USED_PERCENT (default {admission_defaults.disk_alert_used_percent:g}%) "
             "one alert per 6 hours goes to the epics channel. "
             "Environment variables override the scripts/config.py defaults.\n"
@@ -19433,10 +19792,10 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help=(
             "Materialize the full git working tree in the dispatch worktree. "
-            "Default cone sparse-checkout excludes curriculum/ (289MB), wiki/ (66MB), "
-            "data/projects/ (633MB), data/lexicon/ (277MB), and registry/projects/ "
-            "while retaining registry/lexicon/, leaving a default "
-            "worktree under 450MB. Use this when the task needs the entire tree."
+            "Default cone sparse-checkout excludes curriculum/, wiki/, site/src/data/, "
+            "site/src/content/, the registry/lexicon source inventories, registry/projects/, "
+            "data/projects/, data/datasets/ and data/processed/, leaving about 200MB of tracked "
+            "files instead of 730MB. Use this when the task needs the entire tree."
         ),
     )
     d.add_argument(
@@ -19445,10 +19804,13 @@ def build_parser() -> argparse.ArgumentParser:
         default=None,
         metavar="DIR",
         help=(
-            "Keep a tree that default sparse-checkout would exclude "
-            "(curriculum, wiki, data/projects, data/lexicon, registry/projects). Repeatable. "
-            "Example: --sparse-include data/projects, or --sparse-include registry/projects "
-            "for module content. Owned paths under those trees are included automatically."
+            "Keep a tree that default sparse-checkout would exclude (curriculum, wiki, "
+            "data/projects, data/lexicon, data/datasets, data/processed, registry/projects, "
+            "registry/lexicon/source-inventory, registry/lexicon/source-inventory-review-decisions, "
+            "site/src/content, site/src/data). Repeatable. "
+            "Example: --sparse-include data/projects, or --sparse-include site/src/content "
+            "for published lessons. Owned paths under or above those trees, and known readers "
+            "of them, are included automatically."
         ),
     )
     d.add_argument(
@@ -19636,7 +19998,8 @@ def build_parser() -> argparse.ArgumentParser:
         metavar="TASK_ID",
         help=(
             "#9275: the finished advisor task whose envelope admits this bounded-worker dispatch. "
-            "Required whenever the admitted route launches the bounded worker (gpt-6-luna) or the "
+            "Optional for Luna/Haiku read-only recon/classification or workspace-write bounded implementation with a complete driver brief, owned paths and --verify-command. "
+            "Otherwise required whenever the admitted route launches the bounded worker (gpt-6-luna) or the "
             "Gemini Flash bounded fallback without a Ukrainian authoring/review classification; "
             "refused on any other dispatch. Its owned_paths must equal --owned-path. Default: None."
         ),
@@ -19700,6 +20063,11 @@ def build_parser() -> argparse.ArgumentParser:
     )
     # Keep legacy argument-error output byte-identical; the option help exposes the opt-in.
     d.usage = d.format_usage().removeprefix("usage: ").rstrip("\n")
+    d.add_argument(
+        "--verify-command", default=None, metavar="COMMAND",
+        help=("Acceptance command for a driver brief. Required with "
+              "owned paths for Luna/Haiku read-only recon/classification or workspace-write bounded implementation without --advisory-task. Default: None."),
+    )
     d.add_argument(
         "--review-mode",
         choices=("cross_family", "red_team"),

@@ -42,7 +42,7 @@ def repo(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
 def commit_files(
     repo: Path,
     branch: str,
-    files: dict[str, str],
+    files: dict[str, str | bytes],
     message: str,
     *,
     when: str | None = None,
@@ -67,7 +67,7 @@ def commit_files(
     for name, content in files.items():
         path = repo / name
         path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(content)
+        path.write_bytes(content.encode("utf-8") if isinstance(content, str) else content)
         run("add", "--", name)
     tree = run("write-tree")
     parent = git(repo, "rev-parse", branch)
@@ -252,6 +252,140 @@ def test_dry_run_reports_patch_id_evidence_without_writing_or_deleting(repo: Pat
     assert git(repo, "ls-remote", "--heads", "origin", "codex/impl-1001")
 
 
+@pytest.mark.parametrize(
+    "content",
+    [b"ordinary UTF-8: \xc3\xa9\n", b"non-UTF-8: \xff\xfe\n", b"line\r\nnext\rline\n", b"binary\x00\xff\n", b""],
+    ids=["utf8", "non-utf8", "line-endings", "binary", "empty-file"],
+)
+def test_real_patch_bytes_match_stable_git_oracle(repo: Path, monkeypatch: pytest.MonkeyPatch, content: bytes) -> None:
+    name = "codex/impl-1001"
+    start(repo, name)
+    tip = commit_files(repo, name, {"alpha.txt": content}, "branch patch")
+    landed = commit_files(repo, "main", {"alpha.txt": content}, "landed patch")
+    publish(repo, "main", name)
+    raw = subprocess.run(
+        ["git", "log", "-p", "--no-walk", "--pretty=format:%H", tip, landed],
+        cwd=repo,
+        capture_output=True,
+        check=True,
+        timeout=30,
+    ).stdout
+    oracle_patch = subprocess.run(
+        ["git", "show", "--format=%H", tip], cwd=repo, capture_output=True, check=True, timeout=30
+    ).stdout
+    oracle = (
+        subprocess.run(
+            ["git", "patch-id", "--stable"],
+            input=oracle_patch,
+            cwd=repo,
+            capture_output=True,
+            check=True,
+            timeout=30,
+        )
+        .stdout.decode("ascii")
+        .split()[0]
+    )
+    original = subprocess.run
+    inputs: list[bytes] = []
+
+    def capture(command, **kwargs):
+        if command == ["git", "patch-id", "--stable"]:
+            inputs.append(kwargs["input"])
+        return original(command, **kwargs)
+
+    monkeypatch.setattr(sweep.subprocess, "run", capture)
+    cache: dict[str, str | None] = {}
+    sweep._load_patch_ids(repo, cache, [tip, landed])
+    assert inputs == [raw]
+    assert cache == {tip: oracle, landed: oracle}
+    sweep._load_patch_ids(repo, cache, [tip, landed])
+    assert inputs == [raw]
+    item = only(repo, name)
+    assert item.classification == "delete-evidence"
+    assert item.evidence_kind == "patch-id"
+    assert not item.remote_deleted and not item.local_deleted
+    assert not ledger(repo).exists()
+    assert git(repo, "rev-parse", name) == tip
+    assert git(repo, "ls-remote", "--heads", "origin", name).startswith(tip)
+
+
+def test_non_utf8_unique_patch_is_retained(repo: Path) -> None:
+    name = "codex/impl-1001"
+    start(repo, name)
+    tip = commit_files(repo, name, {"alpha.txt": b"unique: \xff\n"}, "branch patch")
+    commit_files(repo, "main", {"alpha.txt": b"different: \xfe\n"}, "different patch")
+    publish(repo, "main", name)
+    item = only(repo, name)
+    assert item.classification == "report-only"
+    assert not item.remote_deleted and not item.local_deleted
+    assert git(repo, "rev-parse", name) == tip
+    assert not ledger(repo).exists()
+
+
+def test_empty_patch_history_has_no_evidence(repo: Path) -> None:
+    git(repo, "commit", "--allow-empty", "-m", "empty commit")
+    tip = git(repo, "rev-parse", "HEAD")
+    cache: dict[str, str | None] = {}
+    sweep._load_patch_ids(repo, cache, [tip])
+    assert cache == {tip: None}
+    assert sweep._parse_patch_ids(repo, b"") == {}
+
+
+@pytest.mark.parametrize(
+    "output",
+    [
+        b"invalid " + b"a" * 40 + b"\n",
+        b"a" * 40 + b" invalid\n",
+        b"a" * 40 + b" " + b"b" * 40 + b" extra\n",
+        b"a" * 40 + b"\t" + b"b" * 40 + b"\n",
+        b"a" * 40 + b" " + b"b" * 40 + b"\r\n",
+        b"a" * 40 + b" " + b"b" * 40 + b"\x00\n",
+        b"\xff " + b"b" * 40 + b"\n",
+        b"\n",
+        (b"a" * 40 + b" " + b"b" * 40 + b"\n") * 2,
+    ],
+    ids=["patch-id", "commit-id", "extra-field", "tab", "crlf", "nul", "non-ascii", "blank", "duplicate"],
+)
+def test_patch_id_metadata_fails_closed(repo: Path, monkeypatch: pytest.MonkeyPatch, output: bytes) -> None:
+    original = subprocess.run
+
+    def malformed(command, **kwargs):
+        if command == ["git", "patch-id", "--stable"]:
+            return subprocess.CompletedProcess(command, 0, output, b"")
+        return original(command, **kwargs)
+
+    monkeypatch.setattr(sweep.subprocess, "run", malformed)
+    cache: dict[str, str | None] = {}
+    with pytest.raises(RuntimeError, match="git patch-id returned"):
+        sweep._load_patch_ids(repo, cache, [git(repo, "rev-parse", "HEAD")])
+    assert cache == {}
+
+
+@pytest.mark.parametrize("command_name", ["log", "patch-id"])
+def test_patch_pipeline_command_failure_leaves_cache_unknown(
+    repo: Path, monkeypatch: pytest.MonkeyPatch, command_name: str
+) -> None:
+    original = subprocess.run
+
+    def fail(command, **kwargs):
+        if command[:2] == ["git", command_name]:
+            return subprocess.CompletedProcess(command, 128, b"untrusted\xff", b"diagnostic\xfe\x1b")
+        return original(command, **kwargs)
+
+    monkeypatch.setattr(sweep.subprocess, "run", fail)
+    cache: dict[str, str | None] = {}
+    with pytest.raises(RuntimeError, match=rf"^git {command_name} failed \(exit 128\)$"):
+        sweep._load_patch_ids(repo, cache, [git(repo, "rev-parse", "HEAD")])
+    assert cache == {}
+
+
+def test_real_git_log_failure_leaves_cache_unknown(repo: Path) -> None:
+    cache: dict[str, str | None] = {}
+    with pytest.raises(RuntimeError, match=r"^git log failed \(exit 128\)$"):
+        sweep._load_patch_ids(repo, cache, ["f" * 40])
+    assert cache == {}
+
+
 def test_superseded_branch_is_accepted_when_merged_pr_covers_its_files(repo: Path) -> None:
     start(repo, "codex/impl-2002")
     tip = commit_files(repo, "codex/impl-2002", {"alpha.txt": "branch\n"}, "rewrite the guard")
@@ -361,10 +495,10 @@ def test_failed_delete_records_outcome_without_claiming_success(
     tip = same_change(repo, "codex/impl-1001")
     original = sweep._git
 
-    def fail_push(root: Path, *args: str, timeout: int = 30) -> subprocess.CompletedProcess[str]:
+    def fail_push(root: Path, *args: str, **kwargs):
         if args and args[0] == "push":
             return subprocess.CompletedProcess(list(args), 1, stdout="", stderr="rejected by test")
-        return original(root, *args, timeout=timeout)
+        return original(root, *args, **kwargs)
 
     monkeypatch.setattr(sweep, "_git", fail_push)
     item = only(repo, "codex/impl-1001", apply=True)

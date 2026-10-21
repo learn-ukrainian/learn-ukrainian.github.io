@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# Parse-level argv probe: run each argv with both binaries (no auth, no network)
+# and print rc plus the first stderr line, so "parsed, then auth/network failure"
+# is distinguishable from "rejected by the CLI parser".
+set -uo pipefail
+C=<scratch>/canary
+cd "$C/clone"
+probe() {
+  for B in bin-0.8.42 bin-0.11.5; do
+    err=$("$C/tools/cenv.sh" "$C/$B" entire "$@" 2>&1 >/dev/null | grep -v '^\s*$' | head -n 2 | tr '\n' ' ' | cut -c1-170)
+    rc=${PIPESTATUS[0]}
+    printf '%s | %s | %s\n' "$B" "$*" "$err"
+  done
+}
+probe repo mirror collaborators list github.com/learn-ukrainian/entire-checkpoints-private cluster.example --json
+probe repo grant list /gh/learn-ukrainian/entire-checkpoints-private --json
+probe repo access list github.com/learn-ukrainian/entire-checkpoints-private --cluster cluster.example --json
+probe repo mirror list --name learn-ukrainian --json
+probe repo view /gh/learn-ukrainian/learn-ukrainian.github.io --json
+probe search canary --json --limit 10 --repo learn-ukrainian/learn-ukrainian.github.io
+probe api --jurisdiction us -X GET /api/v1/me --include
+probe auth status

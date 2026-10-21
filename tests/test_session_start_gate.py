@@ -23,6 +23,15 @@ SESSION_SETUP_HOOK = REPO_ROOT / "agents_extensions" / "shared" / "hooks" / "ses
 sys.path.insert(0, str(REPO_ROOT))
 
 from scripts.hooks import session_start_gate as gate
+from tests._host_path_guard import FIXTURE_HOME, assert_no_host_facts, assert_no_host_paths
+
+_REAL_PHASE_STACK_DRIFT = gate.phase_stack_drift
+
+
+@pytest.fixture(autouse=True)
+def _stub_stack_drift(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Host probes stay out of gate tests unless a test restores the real phase."""
+    monkeypatch.setattr(gate, "phase_stack_drift", lambda _args: {"status": "ok"})
 
 
 @pytest.fixture(autouse=True)
@@ -681,6 +690,154 @@ def test_shell_maps_gate_failure_to_could_not_run(tmp_path: Path) -> None:
     assert "DURABLE THREAD LEASE CONFLICT" not in context
 
 
+def test_drift_report_stays_off_the_session_context(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """The private report may hold a version, a path, and an address. Session JSON may not."""
+    monkeypatch.setattr(gate, "phase_stack_drift", _REAL_PHASE_STACK_DRIFT)
+    monkeypatch.setattr(gate, "phase_session_record", lambda _args: {"status": "ok"})
+    monkeypatch.setattr(gate, "phase_python_version", lambda _args: {"status": "ok"})
+    monkeypatch.setattr(gate, "phase_primary_main", lambda _args: {"status": "ok"})
+    monkeypatch.setattr(gate, "phase_thread_lease", lambda _args: {"status": "skipped", "reason": "test"})
+    monkeypatch.setattr(gate, "phase_rollover_import", lambda _args: {"status": "skipped", "reason": "test"})
+    monkeypatch.setattr(gate, "phase_rollover_detect", lambda _args: {"status": "skipped", "reason": "test"})
+    sentinel_version = "9.9.9"
+    sentinel_path = f"{FIXTURE_HOME}/bin/gh"
+    sentinel_address = "203.0.113.10"
+    destination = tmp_path / "learn-ukrainian" / "stack-drift" / "report.json"
+
+    def write_report(repo_root: Path, *, canonical_root: Path | None = None) -> Path:
+        assert repo_root == tmp_path
+        assert canonical_root == REPO_ROOT
+        print(sentinel_version)
+        print(sentinel_path)
+        print(sentinel_address)
+        destination.parent.mkdir(parents=True)
+        destination.write_text(
+            json.dumps({"installed": sentinel_version, "path": sentinel_path, "address": sentinel_address}),
+            encoding="utf-8",
+        )
+        return destination
+
+    monkeypatch.setattr("scripts.ops.host_stack_drift.write_report", write_report)
+    rc = gate.main(
+        [
+            "--repo-root",
+            str(REPO_ROOT),
+            "--project-dir",
+            str(tmp_path),
+            "--agent",
+            "claude-testlane",
+            "--session-id",
+            "s-drift",
+        ]
+    )
+    assert rc == 0
+    out = capsys.readouterr().out
+    result = json.loads(out)
+    assert result["stack_drift"] == {"status": "ok"}
+    assert sentinel_version not in out
+    assert sentinel_path not in out
+    assert sentinel_address not in out
+    assert_no_host_paths(out, "session gate json")
+    assert_no_host_facts(out, "session gate json")
+    private = destination.read_text(encoding="utf-8")
+    assert sentinel_version in private
+    assert sentinel_path in private
+    assert sentinel_address in private
+
+
+def test_canonical_checkout_drift_refusal_reports_crashed(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """A destination inside the canonical checkout writes nothing and reports crashed."""
+    monkeypatch.setattr(gate, "phase_stack_drift", _REAL_PHASE_STACK_DRIFT)
+    monkeypatch.setattr(gate, "phase_session_record", lambda _args: {"status": "ok"})
+    monkeypatch.setattr(gate, "phase_python_version", lambda _args: {"status": "ok"})
+    monkeypatch.setattr(gate, "phase_primary_main", lambda _args: {"status": "ok"})
+    monkeypatch.setattr(gate, "phase_thread_lease", lambda _args: {"status": "skipped", "reason": "test"})
+    monkeypatch.setattr(gate, "phase_rollover_import", lambda _args: {"status": "skipped", "reason": "test"})
+    monkeypatch.setattr(gate, "phase_rollover_detect", lambda _args: {"status": "skipped", "reason": "test"})
+
+    worktree = tmp_path / "worktree"
+    canonical = tmp_path / "canonical"
+    outside = tmp_path / "outside"
+    worktree.mkdir()
+    canonical.mkdir()
+    outside.mkdir()
+    alias = outside / "state"
+    alias.symlink_to(canonical, target_is_directory=True)
+    monkeypatch.setenv("XDG_STATE_HOME", str(alias))
+    report_path = canonical / "learn-ukrainian" / "stack-drift" / "report.json"
+
+    rc = gate.main(
+        [
+            "--repo-root",
+            str(canonical),
+            "--project-dir",
+            str(worktree),
+            "--agent",
+            "claude-testlane",
+            "--session-id",
+            "s-drift-refuse",
+        ]
+    )
+    assert rc == 0
+    out = capsys.readouterr().out
+    result = json.loads(out)
+    assert result["stack_drift"] == {"status": "crashed"}
+    assert not report_path.exists()
+    assert str(canonical) not in out
+    assert str(worktree) not in out
+
+
+def test_planted_temp_alias_refusal_reports_crashed(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """A planted temp-file alias writes nothing and the hook reports crashed."""
+    monkeypatch.setattr(gate, "phase_stack_drift", _REAL_PHASE_STACK_DRIFT)
+    monkeypatch.setattr(gate, "phase_session_record", lambda _args: {"status": "ok"})
+    monkeypatch.setattr(gate, "phase_python_version", lambda _args: {"status": "ok"})
+    monkeypatch.setattr(gate, "phase_primary_main", lambda _args: {"status": "ok"})
+    monkeypatch.setattr(gate, "phase_thread_lease", lambda _args: {"status": "skipped", "reason": "test"})
+    monkeypatch.setattr(gate, "phase_rollover_import", lambda _args: {"status": "skipped", "reason": "test"})
+    monkeypatch.setattr(gate, "phase_rollover_detect", lambda _args: {"status": "skipped", "reason": "test"})
+
+    worktree = tmp_path / "worktree"
+    canonical = tmp_path / "canonical"
+    external = tmp_path / "external"
+    worktree.mkdir()
+    canonical.mkdir()
+    protected = canonical / "report.json"
+    original = b'{"keep":"checkout"}\n'
+    protected.write_bytes(original)
+    drift_dir = external / "learn-ukrainian" / "stack-drift"
+    drift_dir.mkdir(parents=True)
+    (drift_dir / "report.json.tmp").symlink_to(protected)
+    monkeypatch.setenv("XDG_STATE_HOME", str(external))
+
+    rc = gate.main(
+        [
+            "--repo-root",
+            str(canonical),
+            "--project-dir",
+            str(worktree),
+            "--agent",
+            "claude-testlane",
+            "--session-id",
+            "s-drift-alias",
+        ]
+    )
+    assert rc == 0
+    out = capsys.readouterr().out
+    result = json.loads(out)
+    assert result["stack_drift"] == {"status": "crashed"}
+    assert protected.read_bytes() == original
+    assert not (drift_dir / "report.json").exists()
+    assert str(canonical) not in out
+    assert str(worktree) not in out
+
+
 def test_shell_surfaces_takeover_banner(tmp_path: Path) -> None:
     result = dict(BASE_GATE_RESULT)
     result["thread_lease"] = {
@@ -690,3 +847,16 @@ def test_shell_surfaces_takeover_banner(tmp_path: Path) -> None:
     }
     context = _run_hook(tmp_path, {"FAKE_GATE_JSON": json.dumps(result)})
     assert "THREAD LEASE TAKEOVER" in context
+
+
+def test_drift_exception_is_status_only(monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]) -> None:
+    def crash(*_args, **_kwargs):
+        print("PUBLICATION_CANARY")
+        print("PUBLICATION_CANARY", file=sys.stderr)
+        raise RuntimeError(f"{FIXTURE_HOME}/PUBLICATION_CANARY")
+
+    monkeypatch.setattr("scripts.ops.host_stack_drift.write_report", crash)
+    assert _REAL_PHASE_STACK_DRIFT(_args()) == {"status": "crashed"}
+    captured = capsys.readouterr()
+    assert captured.out == ""
+    assert captured.err == ""

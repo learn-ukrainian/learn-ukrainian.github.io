@@ -82,6 +82,7 @@ def _decision_counts_from_validated_lines(path: Path) -> Counter[str]:
     return counts
 
 
+@pytest.mark.needs_sparse_tree("registry/lexicon/source-inventory-review-decisions")
 def test_committed_first_source_inventory_review_batch_validates() -> None:
     summary = decisions.validate_committed_decision_files([FIRST_BATCH])
 
@@ -102,6 +103,7 @@ def committed_source_index() -> dict[tuple[str, str, str], SourceInventoryRecord
     return decisions._source_record_index(records)
 
 
+@pytest.mark.needs_sparse_tree("registry/lexicon/source-inventory-review-decisions")
 def test_default_committed_decision_file_parametrization_is_complete() -> None:
     discovered = tuple(sorted(decisions.DEFAULT_DECISION_DIR.glob("*.yaml")))
 
@@ -111,6 +113,7 @@ def test_default_committed_decision_file_parametrization_is_complete() -> None:
     assert len(set(COMMITTED_DECISION_FILES)) == len(COMMITTED_DECISION_FILES)
 
 
+@pytest.mark.needs_sparse_tree("registry/lexicon/source-inventory-review-decisions")
 def test_default_committed_decision_files_keep_aggregate_floors(
     committed_source_index: dict[tuple[str, str, str], SourceInventoryRecord],
 ) -> None:
@@ -142,6 +145,7 @@ _SLOW_COMMITTED_DECISION_FILES = frozenset(
 )
 
 
+@pytest.mark.needs_sparse_tree("registry/lexicon/source-inventory-review-decisions")
 @pytest.mark.parametrize(
     "ledger_path",
     [
@@ -447,6 +451,7 @@ def test_decision_validator_requires_committed_inventory_present(
         decisions.validate_committed_decision_files([path])
 
 
+@pytest.mark.needs_sparse_tree("registry/lexicon/source-inventory-review-decisions")
 @pytest.mark.slow
 def test_committed_ohoiko_batch_ledgers_validate() -> None:
     # The real committed per-batch Ohoiko ledgers validate with the regenerable

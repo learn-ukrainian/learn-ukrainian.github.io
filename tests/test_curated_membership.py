@@ -109,6 +109,7 @@ def test_apply_membership_rejects_missing_atlas_route() -> None:
         apply_membership([], [{"lemma": "слово", "slug": "слово", "sources": ["homework"]}])
 
 
+@pytest.mark.needs_sparse_tree("site/src/data")
 def test_pending_admission_is_recorded_outside_fail_closed_membership() -> None:
     pending = json.loads(PENDING.read_text(encoding="utf-8"))
     schema = json.loads(PENDING_SCHEMA.read_text(encoding="utf-8"))

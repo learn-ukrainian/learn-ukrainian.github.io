@@ -248,6 +248,7 @@ def test_checker_is_independent_of_the_generator() -> None:
     assert not any(str(name).startswith("scripts") for name in imported), imported
 
 
+@pytest.mark.needs_sparse_tree("site/src/data")
 def test_committed_frozen_key_list_pins_the_denominator() -> None:
     frozen = json.loads((ROOT / "site/src/data/lexicon-teacher-deck-frozen-keys.json").read_text(encoding="utf-8"))
     assert frozen["docxSha256"].startswith("35da757f")
@@ -735,8 +736,12 @@ class FakeGh:
     """The `gh release` CLI in memory (no network); every other command runs for real."""
 
     def __init__(
-        self, monkeypatch: pytest.MonkeyPatch, *, release_exists: bool = False,
-        fail_upload: bool = False, fail_at: str | None = None,
+        self,
+        monkeypatch: pytest.MonkeyPatch,
+        *,
+        release_exists: bool = False,
+        fail_upload: bool = False,
+        fail_at: str | None = None,
     ):
         self.assets: dict[str, bytes] | None = {} if release_exists else None
         self.fail_upload = fail_upload
@@ -753,7 +758,7 @@ class FakeGh:
         if verb in {"create", "upload"}:
             # Typed writes pin the repository, freeze payloads and put the tag
             # after --; reads retain their existing positional shape.
-            operands = command[command.index("--") + 1:]
+            operands = command[command.index("--") + 1 :]
             assert operands[0] == teacher_deck.RELEASE_TAG
             assert command[3:5] == ["--repo", teacher_deck.release.DEFAULT_REPO]
         else:
@@ -892,13 +897,21 @@ def test_a_failed_publish_changes_nothing_committed_facing(
     assert leftovers == []
 
 
-@pytest.mark.parametrize("step,expected", [
-    ("create", ["view", "create"]),
-    ("view --json", ["view", "view --json"]),
-    ("upload", ["view", "view --json", "view", "upload"]),
-])
+@pytest.mark.parametrize(
+    "step,expected",
+    [
+        ("create", ["view", "create"]),
+        ("view --json", ["view", "view --json"]),
+        ("upload", ["view", "view --json", "view", "upload"]),
+    ],
+)
 def test_release_publish_failure_preserves_the_set_and_stops_the_sequence(
-    world, tmp_path, monkeypatch, capsys, step, expected,
+    world,
+    tmp_path,
+    monkeypatch,
+    capsys,
+    step,
+    expected,
 ):
     assert _refresh(world) == 0
     before = _committed(world)
@@ -1418,9 +1431,7 @@ def checked_world(world: dict[str, Path], tmp_path: Path) -> dict[str, Path]:
     return world
 
 
-def _check_main(
-    world: dict[str, Path], report: Path, *, publication: bool, with_sources: bool
-) -> int:
+def _check_main(world: dict[str, Path], report: Path, *, publication: bool, with_sources: bool) -> int:
     args = ["--deck-dir", str(world["out"]), "--json", str(report)]
     if publication or with_sources:
         args += ["--withheld", str(world["withheld"])]
@@ -1436,8 +1447,12 @@ def _check_main(
 @pytest.mark.parametrize("payload", _NON_OBJECT_JSON)
 @pytest.mark.parametrize("publication", [False, True], ids=["normal", "publication"])
 def test_checker_rejects_required_non_object_json(
-    checked_world: dict[str, Path], tmp_path: Path, capsys: pytest.CaptureFixture[str],
-    artifact: str, payload: object, publication: bool,
+    checked_world: dict[str, Path],
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+    artifact: str,
+    payload: object,
+    publication: bool,
 ) -> None:
     world = checked_world
     (world["out"] / artifact).write_text(json.dumps(payload), encoding="utf-8")
@@ -1455,7 +1470,10 @@ def test_checker_rejects_required_non_object_json(
 
 @pytest.mark.parametrize("publication", [False, True], ids=["normal", "publication"])
 def test_checker_accepts_required_object_json(
-    checked_world: dict[str, Path], tmp_path: Path, capsys: pytest.CaptureFixture[str], publication: bool,
+    checked_world: dict[str, Path],
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+    publication: bool,
 ) -> None:
     capsys.readouterr()
     for with_sources in (False, True):
@@ -1472,8 +1490,12 @@ def test_checker_accepts_required_object_json(
 @pytest.mark.parametrize("damage", ["missing", "malformed"])
 @pytest.mark.parametrize("publication", [False, True], ids=["normal", "publication"])
 def test_checker_preserves_required_json_read_failures(
-    checked_world: dict[str, Path], tmp_path: Path, capsys: pytest.CaptureFixture[str],
-    artifact: str, damage: str, publication: bool,
+    checked_world: dict[str, Path],
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+    artifact: str,
+    damage: str,
+    publication: bool,
 ) -> None:
     path = checked_world["out"] / artifact
     if damage == "missing":
@@ -1493,11 +1515,17 @@ def test_checker_preserves_required_json_read_failures(
 
 
 @pytest.mark.parametrize("artifact", _REQUIRED_JSON_ARTIFACTS)
-@pytest.mark.parametrize("payload", [[], "shape-control", 0, False, None], ids=["array", "string", "number", "boolean", "null"])
+@pytest.mark.parametrize(
+    "payload", [[], "shape-control", 0, False, None], ids=["array", "string", "number", "boolean", "null"]
+)
 @pytest.mark.parametrize("publication", [False, True], ids=["normal", "publication"])
 def test_refresh_propagates_required_json_shape_failure(
-    checked_world: dict[str, Path], monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str],
-    artifact: str, payload: object, publication: bool,
+    checked_world: dict[str, Path],
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+    artifact: str,
+    payload: object,
+    publication: bool,
 ) -> None:
     world = checked_world
     before = _committed(world)
@@ -1519,3 +1547,443 @@ def test_refresh_propagates_required_json_shape_failure(
     assert _committed(world) == before
     assert not world["pointer"].exists()
     assert not world["out"].with_name(f".{world['out'].name}.check").exists()
+
+
+@pytest.mark.parametrize("publication", [False, True], ids=["normal", "publication"])
+@pytest.mark.parametrize(
+    ("case", "content", "diagnostic"),
+    [
+        (name, content, "invalid artifact coverage.json: expected JSON object")
+        for name, content in (
+            ("array", "[]"),
+            ("string", '"optional"'),
+            ("number", "42"),
+            ("bool", "true"),
+            ("null", "null"),
+        )
+    ]
+    + [
+        (
+            "invalid-syntax",
+            "{",
+            "unreadable artifact coverage.json: "
+            "Expecting property name enclosed in double quotes: line 1 column 2 (char 1)",
+        ),
+        (
+            "invalid-utf8-continuation",
+            b"\x80",
+            "unreadable artifact coverage.json: 'utf-8' codec can't decode byte 0x80 in position 0: invalid start byte",
+        ),
+        (
+            "invalid-utf8-truncated",
+            b"\xe2\x82",
+            "unreadable artifact coverage.json: "
+            "'utf-8' codec can't decode bytes in position 0-1: unexpected end of data",
+        ),
+        ("present", None, None),
+        ("absent", None, None),
+        ("missing", None, "manifest file missing: coverage.json"),
+    ],
+)
+def test_checker_optional_manifest_json_cli(
+    checked_world: dict[str, Path],
+    tmp_path: Path,
+    publication: bool,
+    case: str,
+    content: str | bytes | None,
+    diagnostic: str | None,
+) -> None:
+    world = checked_world
+    artifact = world["out"] / checker.COVERAGE_FILE
+    manifest_path = world["out"] / checker.MANIFEST_FILE
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    record = next(record for record in manifest["files"] if record["path"] == artifact.name)
+    if content is not None:
+        artifact.write_bytes(content.encode("utf-8") if isinstance(content, str) else content)
+        data = artifact.read_bytes()
+        record.update(sha256=hashlib.sha256(data).hexdigest(), bytes=len(data))
+    if case == "absent":
+        manifest["files"].remove(record)
+    if case in ("absent", "missing"):
+        artifact.unlink()
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+    report = tmp_path / "optional-report.json"
+    args = [
+        sys.executable,
+        str(ROOT / "scripts/audit/check_teacher_deck.py"),
+        "--deck-dir",
+        str(world["out"]),
+        "--json",
+        str(report),
+    ]
+    if publication:
+        args += ["--publication", "--withheld", str(world["withheld"])]
+        for flag, key in (("docx", "docx"), ("vesum-db", "vesum"), ("sources-db", "sources"), ("atlas-db", "atlas")):
+            args += [f"--{flag}", str(world[key])]
+    result = subprocess.run(args, capture_output=True, text=True, check=False, timeout=120)
+    assert result.returncode == (1 if diagnostic else 0), result
+    assert result.stderr == ""
+    payload = json.loads(report.read_text(encoding="utf-8"))
+    assert payload["ok"] is (diagnostic is None)
+    assert payload["errors"] == ([diagnostic] if diagnostic else [])
+    assert payload["entries"] == 16
+    assert payload["aspectVerified"] is publication
+    assert payload["atlasVerified"] is publication
+    assert payload["reviewRequired"] is publication
+    assert f"teacher deck check: {'FAIL (1 errors)' if diagnostic else 'PASS (0 errors)'}" in result.stdout
+    if diagnostic:
+        assert diagnostic in result.stdout
+
+
+@pytest.mark.parametrize("publication", [False, True], ids=["normal", "publication"])
+@pytest.mark.parametrize("case", ["directory", "valid", "missing"])
+def test_checker_manifest_byte_read_cli(
+    checked_world: dict[str, Path], tmp_path: Path, publication: bool, case: str
+) -> None:
+    world = checked_world
+    artifact = world["out"] / "extra.json"
+    data = b'{"schema":"fixture","schemaVersion":1}'
+    if case == "directory":
+        artifact.mkdir()
+    elif case == "valid":
+        artifact.write_bytes(data)
+    manifest_path = world["out"] / checker.MANIFEST_FILE
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["files"].append(
+        {
+            "path": artifact.name,
+            "sha256": hashlib.sha256(data).hexdigest(),
+            "bytes": len(data),
+            "schema": "fixture",
+            "schemaVersion": 1,
+            "gzipBudget": 100,
+        }
+    )
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+    report = tmp_path / "byte-read-report.json"
+    args = [
+        sys.executable,
+        str(ROOT / "scripts/audit/check_teacher_deck.py"),
+        "--deck-dir",
+        str(world["out"]),
+        "--json",
+        str(report),
+    ]
+    if publication:
+        args += ["--publication", "--withheld", str(world["withheld"])]
+        for flag, key in (("docx", "docx"), ("vesum-db", "vesum"), ("sources-db", "sources"), ("atlas-db", "atlas")):
+            args += [f"--{flag}", str(world[key])]
+    result = subprocess.run(args, capture_output=True, text=True, check=False, timeout=120)
+    expected = {
+        "directory": [f"unreadable artifact extra.json: [Errno 21] Is a directory: '{artifact}'"],
+        "missing": ["manifest file missing: extra.json"],
+        "valid": [],
+    }[case]
+    assert result.returncode == (0 if case == "valid" else 1), result
+    assert result.stderr == ""
+    payload = json.loads(report.read_text(encoding="utf-8"))
+    assert payload["ok"] is (case == "valid")
+    assert payload["errors"] == expected
+    assert payload["entries"] == 16
+    assert f"teacher deck check: {'PASS (0 errors)' if case == 'valid' else 'FAIL (1 errors)'}" in result.stdout
+    assert all(message in result.stdout for message in expected)
+
+
+@pytest.mark.parametrize(
+    ("error", "message"),
+    [(PermissionError, "permission fixture"), (FileNotFoundError, "vanished fixture"), (RuntimeError, "bug fixture")],
+)
+def test_checker_manifest_byte_read_exceptions(
+    checked_world: dict[str, Path],
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+    error: type[Exception],
+    message: str,
+) -> None:
+    artifact = checked_world["out"] / checker.COVERAGE_FILE
+    read_bytes = Path.read_bytes
+    attempts = []
+
+    def fail_read(path: Path) -> bytes:
+        if path == artifact:
+            assert path.exists()
+            attempts.append(path.name)
+            raise error(message)
+        return read_bytes(path)
+
+    monkeypatch.setattr(Path, "read_bytes", fail_read)
+    report = tmp_path / "exception-report.json"
+    capsys.readouterr()
+    if error is RuntimeError:
+        with pytest.raises(RuntimeError, match=r"^bug fixture$"):
+            _check_main(checked_world, report, publication=False, with_sources=False)
+        assert not report.exists()
+    else:
+        assert _check_main(checked_world, report, publication=False, with_sources=False) == 1
+        output = capsys.readouterr()
+        expected = f"unreadable artifact coverage.json: {message}"
+        payload = json.loads(report.read_text(encoding="utf-8"))
+        assert payload["ok"] is False
+        assert payload["errors"] == [expected]
+        assert expected in output.out and "FAIL (1 errors)" in output.out
+        assert output.err == ""
+    assert attempts == ["coverage.json"]
+
+
+@pytest.mark.parametrize(
+    ("damage", "diagnostic"),
+    [
+        ("hash", "manifest hash/size mismatch: extra.json"),
+        ("size", "manifest hash/size mismatch: extra.json"),
+        ("schema", "manifest schema mismatch: extra.json"),
+        ("schemaVersion", "manifest schema mismatch: extra.json"),
+        ("gzip", "extra.json: gzip 54 B exceeds budget 0 B"),
+        ("missing", "manifest file missing: extra.json"),
+        ("reference", "manifest does not reference practice-deck.teacher.json"),
+        ("nonobject", "invalid artifact extra.json: expected JSON object"),
+        (
+            "syntax",
+            "unreadable artifact extra.json: "
+            "Expecting property name enclosed in double quotes: line 1 column 2 (char 1)",
+        ),
+    ],
+)
+def test_manifest_preserves_artifact_validation(tmp_path: Path, damage: str, diagnostic: str) -> None:
+    data = b'{"schema": "fixture", "schemaVersion": 1}'
+    records = []
+    for name in (checker.DECK_FILE, checker.CLOZE_FILE, checker.FROZEN_FILE, "extra.json"):
+        (tmp_path / name).write_bytes(data)
+        records.append(
+            {
+                "path": name,
+                "schema": "fixture",
+                "schemaVersion": 1,
+                "sha256": hashlib.sha256(data).hexdigest(),
+                "bytes": len(data),
+                "gzipBudget": 100,
+            }
+        )
+    optional = tmp_path / "extra.json"
+    record = records[-1]
+    if damage in ("hash", "size", "schema", "schemaVersion", "gzip"):
+        key, value = {
+            "hash": ("sha256", "0" * 64),
+            "size": ("bytes", 0),
+            "schema": ("schema", "other"),
+            "schemaVersion": ("schemaVersion", 2),
+            "gzip": ("gzipBudget", 0),
+        }[damage]
+        record[key] = value
+    elif damage == "missing":
+        optional.unlink()
+    elif damage == "reference":
+        records.pop(0)
+    else:
+        data = b"[]" if damage == "nonobject" else b"{"
+        optional.write_bytes(data)
+        record.update(sha256=hashlib.sha256(data).hexdigest(), bytes=len(data))
+    report = checker.Report()
+    checker.check_manifest(tmp_path, {"files": records}, report)
+    assert report.errors == [diagnostic]
+
+
+@pytest.mark.parametrize(
+    ("case", "content", "diagnostic", "publication"),
+    [
+        (case, content, diagnostic, publication)
+        for publication in (False, True)
+        for case, content, diagnostic in (
+            (
+                "utf8", b"\x80",
+                "unreadable artifact withheld.json: 'utf-8' codec can't decode byte 0x80 in position 0: invalid start byte",
+            ),
+            (
+                "syntax", b"{",
+                "unreadable artifact withheld.json: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)",
+            ),
+            ("root", b"[]", "invalid artifact withheld.json: expected JSON object"),
+            ("missing", None, "missing artifact: withheld.json"),
+            ("valid", None, None),
+        )
+    ] + [("absent", None, None, False)],
+    ids=[f"{mode}-{case}" for mode in ("normal", "publication")
+         for case in ("utf8", "syntax", "root", "missing", "valid")] + ["normal-absent"],
+)
+def test_checker_withheld_ledger_json_cli(
+    checked_world: dict[str, Path],
+    tmp_path: Path,
+    case: str,
+    content: bytes | None,
+    diagnostic: str | None,
+    publication: bool,
+) -> None:
+    world = checked_world
+    if content is not None:
+        world["withheld"].write_bytes(content)
+    if case == "missing":
+        world["withheld"].unlink()
+    report = tmp_path / "ledger-report.json"
+    args = [sys.executable, str(ROOT / "scripts/audit/check_teacher_deck.py"),
+            "--deck-dir", str(world["out"]), "--json", str(report)]
+    for flag, key in (("docx", "docx"), ("vesum-db", "vesum"), ("sources-db", "sources"), ("atlas-db", "atlas")):
+        args += [f"--{flag}", str(world[key])]
+    if case != "absent":
+        args += ["--withheld", str(world["withheld"])]
+    if publication:
+        args += ["--publication"]
+    result = subprocess.run(args, capture_output=True, text=True, check=False, timeout=120)
+    assert result.returncode == (1 if diagnostic else 0), result
+    assert result.stderr == ""
+    payload = json.loads(report.read_text(encoding="utf-8"))
+    assert payload["ok"] is (diagnostic is None)
+    assert payload["errors"] == ([diagnostic] if diagnostic else [])
+    assert f"teacher deck check: {'FAIL (1 errors)' if diagnostic else 'PASS (0 errors)'}" in result.stdout
+    if diagnostic:
+        assert diagnostic in result.stdout
+        assert "withheldVerified" not in payload
+    else:
+        assert payload["withheldVerified"] is (case == "valid")
+        assert payload["entries"] == 16 and payload["cloze"] == 6
+        assert payload["reviewRequired"] is publication
+        assert payload["aspectVerified"] is True and payload["atlasVerified"] is True
+
+
+@pytest.mark.parametrize("publication", [False, True], ids=["normal", "publication"])
+@pytest.mark.parametrize(
+    ("damage", "diagnostic"),
+    [
+        ("schema", "review ledger schema/version mismatch"),
+        ("kept-record", "review ledger: malformed kept record ['sentenceSha256']"),
+        ("digest", "review ledger: a record is not a SHA-256 digest"),
+        ("conflict", "review ledger: a sentence is both kept and withheld"),
+        ("served-withheld", "serves a sentence the language review withheld (ERR)"),
+    ],
+)
+def test_checker_preserves_ledger_review_guards(
+    checked_world: dict[str, Path],
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+    publication: bool,
+    damage: str,
+    diagnostic: str,
+) -> None:
+    world = checked_world
+    ledger = json.loads(world["withheld"].read_text(encoding="utf-8"))
+    if damage == "schema":
+        ledger["schemaVersion"] = 99
+    elif damage == "kept-record":
+        ledger["kept"].append({"sentenceSha256": "0" * 64})
+    elif damage == "digest":
+        ledger["kept"].append({"sentenceSha256": "not-a-hash", "reviewer": "fixture", "reviewedAt": "2026-09-27"})
+    else:
+        record = ledger["kept"][0]
+        ledger["withheld"].append({**record, "code": "ERR"})
+        if damage == "served-withheld":
+            ledger["kept"].remove(record)
+    world["withheld"].write_text(json.dumps(ledger), encoding="utf-8")
+    capsys.readouterr()
+    report = tmp_path / "ledger-guard.json"
+    assert _check_main(world, report, publication=publication, with_sources=True) == 1
+    output = capsys.readouterr()
+    payload = json.loads(report.read_text(encoding="utf-8"))
+    assert payload["ok"] is False and output.err == ""
+    assert any(diagnostic in error for error in payload["errors"])
+    assert diagnostic in output.out and "FAIL" in output.out
+
+
+def _manifest_cli(world: dict[str, Path], report: Path, *, publication: bool) -> subprocess.CompletedProcess[str]:
+    args = [sys.executable, str(ROOT / "scripts/audit/check_teacher_deck.py"), "--deck-dir", str(world["out"])]
+    args += ["--json", str(report)]
+    if publication:
+        args += ["--publication", "--withheld", str(world["withheld"])]
+    return subprocess.run(args, capture_output=True, text=True, check=False, timeout=120)
+
+
+def _set_manifest_files(world: dict[str, Path], shape: str) -> list[str]:
+    """Damage manifest.files in the named shape; return the exact errors the checker must report."""
+
+    path = world["out"] / checker.MANIFEST_FILE
+    manifest = json.loads(path.read_text(encoding="utf-8"))
+    prefix = f"invalid manifest {checker.MANIFEST_FILE}:"
+    if shape.startswith("files-"):
+        manifest["files"] = {"null": None, "int": 7, "str": "files", "object": {"path": "x"}}[shape[6:]]
+        errors = [f"{prefix} files must be a list"]
+    else:
+        row = {"null": None, "int": 7, "str": "row"}[shape.split("-")[1]]
+        if shape.endswith("-appended"):
+            index = len(manifest["files"])
+            manifest["files"].append(row)
+            errors = [f"{prefix} files[{index}] must be an object"]
+        else:
+            manifest["files"] = [row]
+            errors = [f"{prefix} files[0] must be an object"]
+            errors += [f"manifest does not reference {name}" for name in (
+                checker.DECK_FILE, checker.CLOZE_FILE, checker.FROZEN_FILE)]
+    path.write_text(json.dumps(manifest), encoding="utf-8")
+    return errors
+
+
+_MANIFEST_SHAPES = (
+    "files-null", "files-int", "files-str", "files-object",
+    "row-null", "row-int", "row-str",
+    "row-null-appended", "row-int-appended", "row-str-appended",
+)
+
+
+@pytest.mark.parametrize("publication", [False, True], ids=["normal", "publication"])
+@pytest.mark.parametrize("shape", _MANIFEST_SHAPES)
+def test_checker_reports_malformed_manifest_files_json_cli(
+    checked_world: dict[str, Path], tmp_path: Path, shape: str, publication: bool
+) -> None:
+    errors = _set_manifest_files(checked_world, shape)
+    report = tmp_path / "manifest-shape.json"
+    result = _manifest_cli(checked_world, report, publication=publication)
+    assert result.returncode == 1, result
+    assert result.stderr == ""
+    payload = json.loads(report.read_text(encoding="utf-8"))
+    assert payload["ok"] is False and payload["errors"] == errors
+    assert f"teacher deck check: FAIL ({len(errors)} errors)" in result.stdout and "PASS" not in result.stdout
+    assert all(error in result.stdout for error in errors)
+    assert str(checked_world["out"]) not in "".join(errors)
+
+
+@pytest.mark.parametrize("publication", [False, True], ids=["normal", "publication"])
+def test_checker_accepts_valid_manifest_files_json_cli(
+    checked_world: dict[str, Path], tmp_path: Path, publication: bool
+) -> None:
+    report = tmp_path / "manifest-valid.json"
+    result = _manifest_cli(checked_world, report, publication=publication)
+    assert result.returncode == 0 and result.stderr == "", result
+    payload = json.loads(report.read_text(encoding="utf-8"))
+    assert payload["ok"] is True and payload["errors"] == [] and payload["entries"] == 16
+    assert "PASS (0 errors)" in result.stdout
+
+
+@pytest.mark.parametrize("publication", [False, True], ids=["normal", "publication"])
+@pytest.mark.parametrize("shape", ["files-null", "row-str-appended"])
+def test_missing_required_artifact_outranks_malformed_manifest_files(
+    checked_world: dict[str, Path], tmp_path: Path, shape: str, publication: bool
+) -> None:
+    _set_manifest_files(checked_world, shape)
+    (checked_world["out"] / checker.DECK_FILE).unlink()
+    report = tmp_path / "manifest-precedence.json"
+    result = _manifest_cli(checked_world, report, publication=publication)
+    assert result.returncode == 1 and result.stderr == "", result
+    payload = json.loads(report.read_text(encoding="utf-8"))
+    assert payload == {"ok": False, "errors": [f"missing artifact: {checker.DECK_FILE}"]}
+
+
+def test_manifest_without_files_key_keeps_reporting_unreferenced_artifacts(tmp_path: Path) -> None:
+    report = checker.Report()
+    checker.check_manifest(tmp_path, {}, report)
+    assert report.errors == [
+        f"manifest does not reference {name}" for name in (checker.DECK_FILE, checker.CLOZE_FILE, checker.FROZEN_FILE)
+    ]
+
+
+def test_manifest_records_skips_only_the_malformed_rows() -> None:
+    report = checker.Report()
+    good = {"path": "a.json"}
+    assert checker._manifest_records({"files": [None, good, 3, "x", good]}, report) == [good, good]
+    assert report.errors == [f"invalid manifest {checker.MANIFEST_FILE}: files[{i}] must be an object" for i in (0, 2, 3)]

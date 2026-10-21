@@ -142,7 +142,7 @@ jobs:
           persist-credentials: false
 
       - name: Setup Node.js
-        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           # Astro 6 requires Node >=22.12.0; matches ci.yml. Node 20 broke the
           # deploy build ("Node.js v20.x is not supported by Astro").
@@ -187,14 +187,49 @@ jobs:
           path: site/src/data/lexicon-manifest.json
           key: lexicon-manifest-${{ hashFiles('site/src/data/lexicon-manifest.pointer.json') }}
 
+      # #11194: the optional noindex /lexicon-v2/ candidate preview. Downloads only
+      # the public word-cards release assets named by the committed pin, without a
+      # token, and refuses any size/SHA-256 mismatch before the build sees them.
+      # The release tag only locates the assets; the pinned bytes decide.
+      - name: Prepare pinned word-card preview release
+        id: word-card-preview
+        working-directory: .
+        env:
+          RELEASE_DIR: ${{ runner.temp }}/word-card-preview-release
+        run: >-
+          .venv/bin/python scripts/deploy/prepare_word_card_preview.py prepare
+          --dest "$RELEASE_DIR" --github-output "$GITHUB_OUTPUT"
+
       - name: Install dependencies
         run: npm ci
 
       # #5274: normal build leaves BUILD_ETYMOLOGY_ROUTES off (~296 MB). build:full
       # prerenders ~25k standalone etymology pages and blew the 1 GiB Pages budget.
       # Pronunciation audio stays a local Makefile target (gitignored); Pages CI must not invoke TTS.
+      # #11194: PUBLIC_ATLAS_WORD_CARD_PREVIEW_CONTROLS is test-only and must be
+      # absent here (Vite inlines it); the build refuses to start if it is set.
       - name: Build Site
-        run: npm run build
+        env:
+          ATLAS_WORD_CARD_PREVIEW: '1'
+          ATLAS_WORD_CARD_RELEASE_PATH: ${{ steps.word-card-preview.outputs.release-path }}
+          ATLAS_WORD_CARD_RELEASE_PIN: ${{ steps.word-card-preview.outputs.pin }}
+        run: |
+          if [[ -n "${PUBLIC_ATLAS_WORD_CARD_PREVIEW_CONTROLS+set}" ]]; then
+            echo "::error title=Word-card preview refused::PUBLIC_ATLAS_WORD_CARD_PREVIEW_CONTROLS must be absent from the public build"
+            exit 1
+          fi
+          npm run build
+
+      # Atlas owns the route set; its committed inventory is reconciled with the
+      # verified release, then the built preview must match it exactly.
+      - name: Verify word-card preview routes
+        working-directory: .
+        env:
+          RELEASE_DIR: ${{ steps.word-card-preview.outputs.release-path }}
+        run: >-
+          .venv/bin/python scripts/deploy/prepare_word_card_preview.py verify-dist site/dist
+          --release-dir "$RELEASE_DIR"
+          --inventory site/src/lib/lexicon/word-card-preview-route-inventory.json
 
       - name: Emit immutable deployment marker
         run: |

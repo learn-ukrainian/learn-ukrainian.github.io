@@ -3,10 +3,12 @@
 from __future__ import annotations
 
 import time
+from types import SimpleNamespace
 
 import pytest
 from fastapi.testclient import TestClient
 
+from scripts.api import observer_presence
 from scripts.api.main import app
 from scripts.api.observer_presence import (
     PRESENCE_FRESHNESS_SECONDS,
@@ -99,9 +101,14 @@ def test_default_occupancy_keeps_quiet_mac_without_presence() -> None:
 
 
 def test_unmocked_testclient_flow_reaches_mac_occupancy_and_manifest(monkeypatch: pytest.MonkeyPatch) -> None:
+    now = time.monotonic()
+    monkeypatch.setattr(observer_presence, "time", SimpleNamespace(monotonic=lambda: now))
     session_id = "123e4567-e89b-12d3-a456-426614174000"
     posted = loop_client.post("/api/observer/presence", json=_notebook_body(session_id))
     assert posted.status_code == 200
+    (row,) = list_live()
+    assert row.instance_id == session_id
+    assert row.updated_at_mono == now
 
     occupancy = loop_client.get("/api/occupancy")
     assert occupancy.status_code == 200
@@ -125,6 +132,8 @@ def test_unmocked_testclient_flow_reaches_mac_occupancy_and_manifest(monkeypatch
     ]
 
     monkeypatch.setattr(telemetry_response, "session_context_telemetry", lambda *args, **kwargs: None)
+    # Model manifest latency at the presence clock boundary, without changing other clocks.
+    now += 1.03
     manifest = loop_client.get(f"/api/state/manifest?session={session_id}")
     assert manifest.status_code == 200
     assert manifest.json()["_telemetry"] == {
@@ -133,8 +142,20 @@ def test_unmocked_testclient_flow_reaches_mac_occupancy_and_manifest(monkeypatch
         "turn": None,
         "caller_match": True,
         "source": "notebook-presence",
-        "age_s": pytest.approx(0, abs=1),
+        "age_s": 1.03,
         "window": 272000,
+    }
+
+    now = row.updated_at_mono + PRESENCE_FRESHNESS_SECONDS + 1
+    assert list_live() == [row]  # Still stored, but too old to supply telemetry.
+    stale_manifest = loop_client.get(f"/api/state/manifest?session={session_id}")
+    assert stale_manifest.status_code == 200
+    assert stale_manifest.json()["_telemetry"] == {
+        "ctx": None,
+        "prev_ctx": None,
+        "turn": None,
+        "caller_match": False,
+        "reason": "session-transcript-not-found",
     }
 
 

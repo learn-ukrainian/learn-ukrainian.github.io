@@ -47,6 +47,79 @@ def _project_dir() -> Path | None:
     return None
 
 
+# Git reads an empty value as false and any other non-false value as true.
+_GIT_FALSE = frozenset({"", "false", "no", "off", "0"})
+
+
+class _Undecidable(Exception):
+    """The config cannot be judged without git itself."""
+
+
+def _git_dirs(project_dir: Path) -> tuple[Path, Path]:
+    """Return the git dir and the shared (common) git dir of ``project_dir``."""
+    dot_git = project_dir / ".git"
+    if dot_git.is_dir():
+        return dot_git, dot_git
+    if dot_git.is_file():
+        text = dot_git.read_text(encoding="utf-8").strip()
+        if not text.startswith("gitdir:"):
+            raise _Undecidable
+        git_dir = Path(text.split(":", 1)[1].strip())
+        if not git_dir.is_absolute():
+            git_dir = project_dir / git_dir
+        common = git_dir
+        commondir = git_dir / "commondir"
+        if commondir.is_file():
+            pointer = Path(commondir.read_text(encoding="utf-8").strip())
+            common = pointer if pointer.is_absolute() else git_dir / pointer
+        return git_dir, common
+    if (project_dir / "HEAD").is_file():
+        return project_dir, project_dir
+    raise _Undecidable
+
+
+def _scan_config(text: str) -> dict[str, bool]:
+    """Return the effective core.bare and extensions.worktreeConfig values set in one file."""
+    found: dict[str, bool] = {}
+    section = ""
+    for raw in text.splitlines():
+        line = raw.split("#", 1)[0].split(";", 1)[0].strip()
+        if line.startswith("["):
+            header, _, line = line[1:].partition("]")
+            words = header.split()
+            section = words[0].lower() if words else ""
+            if section in {"include", "includeif"}:
+                raise _Undecidable
+            line = line.strip()
+        if not line:
+            continue
+        key, sep, value = line.partition("=")
+        name = f"{section}.{key.strip().lower()}"
+        if name in {"core.bare", "extensions.worktreeconfig"}:
+            # The last assignment wins, as in git.
+            found[name] = not sep or value.strip().strip('"').lower() not in _GIT_FALSE
+    return found
+
+
+def _may_be_bare(project_dir: Path) -> bool:
+    """False only when the git config provably keeps core.bare off.
+
+    Reading the files in-process spares a second interpreter on every git
+    command. Anything this scan cannot decide (no readable config, include
+    directives) defers to the authoritative checker.
+    """
+    try:
+        git_dir, common = _git_dirs(project_dir)
+        found = _scan_config((common / "config").read_text(encoding="utf-8"))
+        per_worktree = git_dir / "config.worktree"
+        # With worktreeConfig on, git reads config.worktree after the shared file.
+        if found.get("extensions.worktreeconfig") and per_worktree.exists():
+            found |= _scan_config(per_worktree.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, _Undecidable):
+        return True
+    return found.get("core.bare", False)
+
+
 def main() -> int:
     payload = _read_payload()
     command = _bash_command(payload)
@@ -55,7 +128,7 @@ def main() -> int:
         return 0
 
     project_dir = _project_dir()
-    if project_dir is None:
+    if project_dir is None or not _may_be_bare(project_dir):
         return 0
 
     script = project_dir / "scripts" / "audit" / "check_core_bare.py"

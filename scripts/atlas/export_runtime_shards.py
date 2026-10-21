@@ -52,6 +52,17 @@ if __package__ is None or __package__ == "":
         sys.path.insert(0, str(_REPO_ROOT))
 
 from scripts.atlas.normalization import normalize_atlas_text, normalize_slug_for_hash
+from scripts.atlas.word_card_certification import (
+    UncertifiedCardRefusal,
+    card_entry_type,
+    card_head,
+    certification_run,
+    load_certified_card_for_export,
+    looks_like_card,
+)
+from scripts.atlas.word_card_certification import (
+    card_field as _card_field,
+)
 from scripts.etymology.transliterate import transliterate
 from scripts.lexicon.source_attribution import withhold_legacy_soviet_citations
 
@@ -217,8 +228,25 @@ def _cefr_from_enrichment(entry: Mapping[str, Any]) -> str | None:
     return None
 
 
+def _cefr_from_card(entry: Mapping[str, Any]) -> str | None:
+    return _card_field(entry, "cefr") if looks_like_card(entry) else _cefr_from_enrichment(entry)
+
+
+def _card_search_gloss(entry: Mapping[str, Any]) -> str | None:
+    return _card_field(entry, "english_gloss")
+
+
+def _runtime_card(entry: dict[str, Any], entry_type: object) -> None:
+    try:
+        load_certified_card_for_export(entry, required_approval="site")
+        if entry_type != card_entry_type(entry):
+            raise ExportError("database entry_type does not match certified card_kind")
+    except UncertifiedCardRefusal as exc:
+        raise ExportError("uncertified word card refused") from exc
+
+
 def _assert_cefr_consistent(slug: str, article_cefr: str | None, entry: Mapping[str, Any]) -> None:
-    payload_cefr = _cefr_from_enrichment(entry)
+    payload_cefr = _cefr_from_card(entry)
     left = _clean_text(article_cefr)
     right = _clean_text(payload_cefr)
     if left and right and left.upper() != right.upper():
@@ -444,6 +472,8 @@ def _sorted_provenance_rows(rows: Iterable[sqlite3.Row]) -> list[dict[str, str |
 
 _PAYLOAD_SELECT = """SELECT ap.slug AS slug,
                             ap.payload_json AS payload_json,
+                            a.display_head AS display_head,
+                            a.gloss AS gloss,
                             a.entry_type AS entry_type,
                             a.cefr AS cefr
                      FROM article_payloads ap
@@ -521,6 +551,20 @@ class EntryReplay:
         entry = json.loads(row["payload_json"])
         if not isinstance(entry, dict):
             raise ExportError(f"payload_json for {row['slug']!r} is not an object")
+
+        is_word_card = looks_like_card(entry)
+        if is_word_card:
+            _runtime_card(entry, row["entry_type"])
+            _article_search_row(row["slug"], row["display_head"], row["gloss"],
+                                row["entry_type"], row["cefr"], entry)
+            slug = entry["card_id"]
+            for table, column in (("aliases", "target_slug"), ("related_entries", "slug"),
+                                  ("article_provenance", "slug")):
+                if self._conn.execute(f"SELECT 1 FROM {table} WHERE {column} = ? LIMIT 1", (slug,)).fetchone():
+                    raise ExportError("database additions are outside the certified card projection")
+            return {"slug": slug, "kind": "article", "entry": entry, "aliases": [], "relations": [],
+                    "provenance": [], "renderContext": {"componentLinks": [], "practiceLevels": []}}
+
         try:
             entry, withdrawn = withhold_legacy_soviet_citations(entry)
         except ValueError as exc:
@@ -533,8 +577,9 @@ class EntryReplay:
         for section, count in withdrawn["by_section"].items():
             by_section = self.withholding["by_section"]
             by_section[section] = by_section.get(section, 0) + count
-        # Authoritative entry_type from articles (SSOT). form_of routes → null.
-        entry["entry_type"] = row["entry_type"]
+
+        if not is_word_card:
+            entry["entry_type"] = row["entry_type"]
         _assert_cefr_consistent(row["slug"], row["cefr"], entry)
 
         kind = "article" if row["entry_type"] is not None else "form_route"
@@ -584,6 +629,7 @@ class EntryReplay:
         }
 
 
+@certification_run()
 def load_entry_records(
     conn: SQLiteConnection,
     *,
@@ -595,8 +641,26 @@ def load_entry_records(
 
 
 def _article_search_row(
-    slug: str, display_head: str, gloss: object, entry_type: str, cefr: object
+    slug: str,
+    display_head: str,
+    gloss: object,
+    entry_type: str,
+    cefr: object,
+    payload_json: object = None,
 ) -> dict[str, Any]:
+    # Legacy article bodies can be very large. Parse only possible cards;
+    # escaped keys take the full parser path to prevent spelling bypasses.
+    if isinstance(payload_json, str) and not any(
+        key in payload_json for key in ('"card_id"', '"card_kind"', '"build"', '"quality"', '"assertions"', '\\u')
+    ):
+        payload_json = None
+    entry = json.loads(payload_json) if isinstance(payload_json, str) else payload_json
+    if looks_like_card(entry):
+        _runtime_card(entry, entry_type)
+        if (slug != entry["card_id"] or display_head != card_head(entry) or _clean_text(gloss) != _card_search_gloss(entry)
+                or _clean_text(cefr) != _cefr_from_card(entry)):
+            raise ExportError("search fields do not match certified card projection")
+
     row: dict[str, Any] = {
         "l": display_head,
         "s": slug,
@@ -613,18 +677,23 @@ def _article_search_row(
 def _iter_article_search_rows(conn: SQLiteConnection) -> Iterator[dict[str, Any]]:
     # Row order is irrelevant: slug is the primary key, so the (normalized head,
     # slug) sort applied afterwards is total.
-    for slug, display_head, gloss, entry_type, cefr in conn.execute(
-        """SELECT slug, display_head, gloss, entry_type, cefr
-           FROM articles
-           WHERE review_state = 'approved' AND visibility = 'public'"""
+    for slug, display_head, gloss, entry_type, cefr, payload_json in conn.execute(
+        """SELECT a.slug, a.display_head, a.gloss, a.entry_type, a.cefr, ap.payload_json
+           FROM articles a
+           LEFT JOIN article_payloads ap ON ap.slug = a.slug
+           WHERE a.review_state = 'approved' AND a.visibility = 'public'"""
     ):
-        yield _article_search_row(slug, display_head, gloss, entry_type, cefr)
+        yield _article_search_row(slug, display_head, gloss, entry_type, cefr, payload_json=payload_json)
 
 
 def _replay_article_search_row(conn: SQLiteConnection, slug: str) -> dict[str, Any]:
     """Re-read one article search row by primary key (same snapshot as the scan)."""
     found = conn.execute(
-        "SELECT slug, display_head, gloss, entry_type, cefr FROM articles WHERE slug = ?", (slug,)
+        """SELECT a.slug, a.display_head, a.gloss, a.entry_type, a.cefr, ap.payload_json
+           FROM articles a
+           LEFT JOIN article_payloads ap ON ap.slug = a.slug
+           WHERE a.slug = ?""",
+        (slug,),
     ).fetchone()
     if found is None:
         raise ExportError(f"search article row vanished during export: {slug!r}")
@@ -682,6 +751,7 @@ def _alias_sort_key(row: Mapping[str, Any]) -> tuple[str, str, str]:
     return (normalize_atlas_text(row["a"]), row["s"], row["k"])
 
 
+@certification_run()
 def load_search_rows(conn: SQLiteConnection) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     """Whole-corpus search rows in canonical order (compatibility / test oracle)."""
     articles = sorted(_iter_article_search_rows(conn), key=_article_sort_key)
@@ -2087,8 +2157,8 @@ def _file_digest(path: Path) -> tuple[int, str]:
     return size, digest.hexdigest()
 
 
-def _entry_verify_row(record: Any) -> tuple[Any, str | None, int] | Exception:
-    """``(slug, kind, alias-target mismatches)`` of one entry record, or the error reading it raised.
+def _entry_verify_row(record: Any) -> tuple[Any, str | None, int, dict[str, Any] | None] | Exception:
+    """``(slug, kind, alias-target mismatches, card_projection)`` of one entry record, or the error reading it raised.
 
     Same lookups, in the same order, as the historical whole-shard pass; an
     exception is kept (not raised) so it surfaces only where that pass would have.
@@ -2102,11 +2172,46 @@ def _entry_verify_row(record: Any) -> tuple[Any, str | None, int] | Exception:
         for alias in record.get("aliases") or []:
             if alias.get("target_slug") != slug:
                 mismatches += 1
-        return slug, category, mismatches
+        entry = record.get("entry")
+        card_projection: dict[str, Any] | None = None
+        if looks_like_card(entry):
+            try:
+                load_certified_card_for_export(entry, required_approval="site")
+            except UncertifiedCardRefusal as exc:
+                raise ExportError("uncertified runtime card refused") from exc
+            if kind != "article":
+                raise ExportError("certified card cannot be a form route")
+            if (slug != entry["card_id"] or record.get("aliases") or record.get("relations")
+                    or record.get("provenance")
+                    or record.get("renderContext") != {"componentLinks": [], "practiceLevels": []}):
+                raise ExportError("runtime additions are outside the certified card projection")
+            card_projection = {
+                "l": card_head(entry), "t": card_entry_type(entry),
+                "g": _card_search_gloss(entry), "c": _cefr_from_card(entry),
+            }
+        return slug, category, mismatches, card_projection
     except Exception as exc:  # replayed verbatim at commit time
         return exc
 
 
+def _search_article_verify_row(
+    record: Any, expected_word_card_search: Mapping[str, Any]
+) -> tuple[str, str, str | None, str | None, str | None] | Exception | None:
+    """Extract search article row fields for verification of certified word cards."""
+    try:
+        slug = str(record["s"])
+        if slug not in expected_word_card_search:
+            return None
+        head = str(record["l"])
+        entry_type = record.get("t")
+        gloss = record.get("g")
+        cefr = record.get("c")
+        return slug, head, entry_type, gloss, cefr
+    except Exception as exc:
+        return exc
+
+
+@certification_run()
 def verify_tree(out_dir: Path, base_path: str, *, manifest_path: Path | None = None) -> dict[str, Any]:
     current_path = out_dir / base_path / "current.json"
     if manifest_path is None:
@@ -2186,6 +2291,7 @@ def verify_tree(out_dir: Path, base_path: str, *, manifest_path: Path | None = N
     # verified: their errors are held apart and a malformed record's exception is
     # raised only after the object checks passed.
     seen_slugs: dict[str, str] = {}
+    expected_word_card_search: dict[str, dict[str, Any]] = {}
     article_count = 0
     form_count = 0
     entry_errors: list[str] = []
@@ -2205,7 +2311,9 @@ def verify_tree(out_dir: Path, base_path: str, *, manifest_path: Path | None = N
             if isinstance(row, Exception):
                 entry_failure = row
                 return
-            slug, kind, mismatches = row
+            slug, kind, mismatches, card_projection = row
+            if card_projection is not None:
+                expected_word_card_search[slug] = card_projection
             if slug in seen_slugs:
                 entry_errors.append(f"duplicate slug {slug!r} in {seen_slugs[slug]} and {shard_id}")
             seen_slugs[slug] = shard_id
@@ -2223,9 +2331,52 @@ def verify_tree(out_dir: Path, base_path: str, *, manifest_path: Path | None = N
         if scanned is not None:
             commit_entry_rows(shard_id, scanned)
 
-    for family in ("articles", "aliases"):
-        for descriptor in manifest["search"][family]["shards"].values():
-            check_descriptor(descriptor, family=f"search.{family}")
+    seen_search_cards: set[str] = set()
+    search_summarizer = (
+        (lambda rec: _search_article_verify_row(rec, expected_word_card_search))
+        if expected_word_card_search
+        else None
+    )
+    for descriptor in manifest["search"]["articles"]["shards"].values():
+        scanned = check_descriptor(descriptor, family="search.articles", summarize=search_summarizer)
+        if scanned is not None and scanned.rows is not None:
+            for row in scanned.rows:
+                if isinstance(row, Exception):
+                    errors.append(f"search.articles: {row}")
+                    continue
+                if row is None:
+                    continue
+                s_slug, s_head, s_type, s_gloss, s_cefr = row
+                if s_slug in expected_word_card_search:
+                    seen_search_cards.add(s_slug)
+                    expected = expected_word_card_search[s_slug]
+                    if expected["l"] is not None and s_head != expected["l"]:
+                        errors.append(
+                            f"search.articles {s_slug!r}: display_head {s_head!r} != certified card {expected['l']!r}"
+                        )
+                    if expected["t"] is not None and s_type != expected["t"]:
+                        errors.append(
+                            f"search.articles {s_slug!r}: entry_type {s_type!r} != certified card {expected['t']!r}"
+                        )
+                    if s_gloss != expected["g"]:
+                        errors.append(
+                            f"search.articles {s_slug!r}: gloss {s_gloss!r} != certified card {expected['g']!r}"
+                        )
+                    if expected["c"] is not None and s_cefr != expected["c"]:
+                        errors.append(
+                            f"search.articles {s_slug!r}: cefr {s_cefr!r} != certified card {expected['c']!r}"
+                        )
+                    elif expected["c"] is None and s_cefr is not None:
+                        errors.append(
+                            f"search.articles {s_slug!r}: cefr {s_cefr!r} != certified card None"
+                        )
+
+    missing_search_cards = set(expected_word_card_search.keys()) - seen_search_cards
+    if missing_search_cards:
+        errors.append(f"missing search.articles projection for certified cards: {sorted(missing_search_cards)}")
+
+    for descriptor in manifest["search"]["aliases"]["shards"].values():
+        check_descriptor(descriptor, family="search.aliases")
 
     for level, info in (manifest.get("decks", {}).get("levels") or {}).items():
         for part, descriptor in (info.get("parts") or {}).items():
@@ -2435,6 +2586,7 @@ class StagedVersion:
         return Publication(manifest_url)
 
 
+@certification_run()
 def export_runtime_shards(
     *,
     db_path: Path,

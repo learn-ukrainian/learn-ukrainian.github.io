@@ -249,6 +249,28 @@ def search_dictionary(
     collection = collection.lower()
     if collection in {"sum11", "sum", "definitions"}:
         rows = sources_db.search_definitions(query, limit=limit)
+        # Keep dictionary prose out of the generic answer slot, even for aliases.
+        return [
+            {
+                "score": _score(row),
+                "text": "Historical Soviet colonization context only; cannot verify modern Ukrainian.",
+                "word": row.get("word", query),
+                "collection": collection,
+                "soviet_colonization_context": {
+                    "source": "СУМ-11 (1970–1980)",
+                    "source_role": "soviet_colonization_context",
+                    "red_flag": True,
+                    "historical_only": True,
+                    "contrast_only": True,
+                    "can_verify_modern_ukrainian": False,
+                    "sovietization_risk": row.get("sovietization_risk"),
+                    "sovietization_keywords": row.get("sovietization_keywords"),
+                    "ideological_markers": row.get("ideological_markers"),
+                    "entry": row,
+                },
+            }
+            for row in rows[:limit]
+        ]
     elif collection in {"grinchenko", "grinchenko_dict", "grinchenko_1907"}:
         rows = sources_db.search_grinchenko_1907(query, limit=limit)
     elif collection in {"style_guide", "style"}:
@@ -297,31 +319,40 @@ def collection_stats() -> dict[str, dict[str, Any]]:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Query SQLite source corpus")
+    parser = argparse.ArgumentParser(
+        description=("Query the SQLite source corpus. Use dictionary results for their stated source role; "
+                     "SUM-11 aliases return historical contrast only, never modern Ukrainian evidence."),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=("Examples: .venv/bin/python -m scripts.rag.query dict sum11 WORD\n"
+                "          .venv/bin/python -m scripts.rag.query text WORD --limit 3\n"
+                "Outputs: JSON to stdout; no database writes.\n"
+                "Exit codes: 0 for a completed query, nonzero for invalid arguments or query errors.\n"
+                "Related: #9147, scripts/wiki/sources_db.py."),
+    )
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     text_parser = subparsers.add_parser("text", help="Search textbook chunks")
-    text_parser.add_argument("query")
-    text_parser.add_argument("--grade", type=int)
-    text_parser.add_argument("--subject")
-    text_parser.add_argument("--trust-tier", type=int)
-    text_parser.add_argument("--limit", type=int, default=5)
+    text_parser.add_argument("query", help="Text search phrase, e.g. WORD")
+    text_parser.add_argument("--grade", type=int, help="School grade; default: all")
+    text_parser.add_argument("--subject", help="Subject slug; default: all")
+    text_parser.add_argument("--trust-tier", type=int, help="Trust tier; default: all")
+    text_parser.add_argument("--limit", type=int, default=5, help="Maximum hits; default: 5")
 
     lit_parser = subparsers.add_parser("literary", help="Search literary texts")
-    lit_parser.add_argument("query")
-    lit_parser.add_argument("--work")
-    lit_parser.add_argument("--genre")
-    lit_parser.add_argument("--period")
-    lit_parser.add_argument("--limit", type=int, default=5)
+    lit_parser.add_argument("query", help="Literary search phrase, e.g. WORD")
+    lit_parser.add_argument("--work", help="Work title substring; default: all")
+    lit_parser.add_argument("--genre", help="Genre substring; default: all")
+    lit_parser.add_argument("--period", help="Language period substring; default: all")
+    lit_parser.add_argument("--limit", type=int, default=5, help="Maximum hits; default: 5")
 
     dict_parser = subparsers.add_parser("dict", help="Search dictionary/reference data")
-    dict_parser.add_argument("collection")
-    dict_parser.add_argument("query")
-    dict_parser.add_argument("--limit", type=int, default=5)
+    dict_parser.add_argument("collection", help="Dictionary name, e.g. sum11; historical contrast only for sum/sum11/definitions")
+    dict_parser.add_argument("query", help="Headword, e.g. WORD")
+    dict_parser.add_argument("--limit", type=int, default=5, help="Maximum hits; default: 5")
 
     full_parser = subparsers.add_parser("full-text", help="Concatenate literary text")
-    full_parser.add_argument("work")
-    full_parser.add_argument("--max-chars", type=int, default=50_000)
+    full_parser.add_argument("work", help="Work title search phrase")
+    full_parser.add_argument("--max-chars", type=int, default=50_000, help="Maximum characters; default: 50000")
 
     subparsers.add_parser("stats", help="Source table counts")
 

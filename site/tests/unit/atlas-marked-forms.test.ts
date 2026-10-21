@@ -5,6 +5,9 @@
 // Renders WordAtlasArticle directly with hand-crafted enrichment (no atlas.db needed).
 
 import { describe, expect, test } from 'vitest';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+import { Window } from 'happy-dom';
 import { articleProps } from '../helpers/word-atlas-record';
 import { renderWordAtlasArticle } from '../helpers/render-word-atlas-article';
 
@@ -17,6 +20,31 @@ const ARCHAIC_FORM = 'дину';
 const LEARNER_NOTE = 'не належать до сучасної літературної норми';
 const REGISTER_BADGE_SHORT = 'коротка форма';
 const REGISTER_BADGE_ARCHAIC = 'застаріле';
+
+test.each([false, true])('chip links retain their appearance with hover=%s', (hover) => {
+  const window = new Window();
+  try {
+    const style = window.document.createElement('style');
+    // Happy DOM has no pointer. Match the production hover rules with an attribute.
+    style.textContent = ':root { --lu-primary: #0057B7; }\n' + readFileSync(resolve('src/styles/word-atlas.css'), 'utf8')
+      .replaceAll(':hover', '[data-test-hover]');
+    window.document.head.appendChild(style);
+    window.document.body.innerHTML = '<main class="lu-content"><article class="word-atlas"><a class="chip" href="/lexicon/">Chip</a><p><a href="/lexicon/">Prose</a></p></article></main>';
+    const chip = window.document.querySelector('a.chip')!;
+    const prose = window.document.querySelector('p a')!;
+    if (hover) {
+      chip.setAttribute('data-test-hover', '');
+      prose.setAttribute('data-test-hover', '');
+    }
+    const chipStyle = window.getComputedStyle(chip);
+    expect(chipStyle.textDecoration).toBe(hover ? 'underline' : 'none');
+    expect(chipStyle.color).toBe('#0057B7');
+    expect(chipStyle.backgroundColor).toBe(hover ? '#00695C' : '#E0F2F1');
+    expect(window.getComputedStyle(prose).textDecoration).toBe('underline');
+  } finally {
+    window.close();
+  }
+});
 
 /** A корисний-shaped lemma whose нестягнені (:long) forms are segregated by the enricher. */
 function makeMorphology(withMarked: boolean) {
@@ -144,7 +172,15 @@ describe('marked-forms subsection (#4891)', () => {
     // attribute, not the bare slug — the worktree path itself contains "marked-forms".)
     expect(html).not.toContain(MARKED_SUMMARY);
     expect(html).not.toContain('class="marked-forms"');
-    expect(html).not.toContain('<details');
+    const doc = new Window().document;
+    doc.body.innerHTML = html;
+    const morphology = Array.from(doc.querySelectorAll('section.atlas-section'))
+      .find((section) => section.querySelector('h2')?.textContent === 'Морфологія');
+    expect(morphology).toBeDefined();
+    expect(morphology?.querySelectorAll('details')).toHaveLength(0);
+    const disclosures = doc.querySelectorAll('details');
+    expect(disclosures).toHaveLength(1);
+    expect(disclosures[0].matches('.atlas-enrichment-note details.atlas-source-waiting')).toBe(true);
     expect(html).not.toContain(MARKED_FORM);
   });
 });
@@ -188,7 +224,15 @@ describe('fully-marked lemma register treatment (#4900)', () => {
     const html = renderFullyMarked('short');
     expect(html).toContain('class="marked-forms marked-forms-primary"');
     expect(html).not.toContain(MARKED_SUMMARY);
-    expect(html).not.toContain('<details');
+    const doc = new Window().document;
+    doc.body.innerHTML = html;
+    const morphology = Array.from(doc.querySelectorAll('section.atlas-section'))
+      .find((section) => section.querySelector('h2')?.textContent === 'Морфологія');
+    expect(morphology).toBeDefined();
+    expect(morphology?.querySelectorAll('details')).toHaveLength(0);
+    const disclosures = doc.querySelectorAll('details');
+    expect(disclosures).toHaveLength(1);
+    expect(disclosures[0].matches('.atlas-enrichment-note details.atlas-source-waiting')).toBe(true);
     const text = html.replace(/\s+/g, ' ');
     expect(text).toContain(LEARNER_NOTE);
     expect(html.indexOf(LEARNER_NOTE)).toBeLessThan(html.indexOf(ARCHAIC_FORM));

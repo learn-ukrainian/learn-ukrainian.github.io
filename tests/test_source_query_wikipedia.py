@@ -288,3 +288,68 @@ def test_enrich_manifest_query_wikipedia_and_wiki_reference(monkeypatch: pytest.
     assert ref["wikipedia"]["url"] == "https://uk.wikipedia.org/wiki/%D0%A8%D0%BA%D0%BE%D0%BB%D0%B0"
     assert ref["wiktionary_url"] == f"https://uk.wiktionary.org/wiki/{quote('школа')}"
     assert ref["wikisource_url"] == f"https://uk.wikisource.org/wiki/{quote('школа')}"
+
+
+@pytest.mark.parametrize("collection", ["sum11", "sum", "definitions"])
+@pytest.mark.parametrize("risk", [None, 0, 3])
+def test_sum11_reader_and_cli_withhold_generic_definitions(collection, risk, tmp_path, monkeypatch, capsys):
+    """Real SQL and CLI projections keep historical prose out of answer text."""
+    import json
+    import sqlite3
+    import sys
+
+    from scripts.rag import query
+
+    db = tmp_path / "sources.db"
+    with sqlite3.connect(db) as conn:
+        conn.execute("CREATE TABLE sum11 (id INTEGER, word TEXT, definition TEXT, text TEXT, "
+                     "sovietization_risk INTEGER, sovietization_keywords TEXT, ideological_markers TEXT)")
+        conn.execute("INSERT INTO sum11 VALUES (1, 'fixture', 'historical gloss', 'historical prose', ?, ?, ?)",
+                     (risk, "editorial-keyword", "editorial-marker"))
+    from functools import partial
+
+    monkeypatch.setattr(query.sources_db, "search_definitions",
+                        partial(query.sources_db.search_definitions, db_path=db))
+    monkeypatch.setattr(sys, "argv", ["query", "dict", collection, "fixture"])
+    query.main()
+    hits = json.loads(capsys.readouterr().out)
+    assert hits == query.search_dictionary("fixture", collection)
+    assert len(hits) == 1
+    hit = hits[0]
+    assert hit["text"] == "Historical Soviet colonization context only; cannot verify modern Ukrainian."
+    assert "definition" not in hit
+    assert "metadata" not in hit
+    context = hit["soviet_colonization_context"]
+    assert context == {
+        "source": "СУМ-11 (1970–1980)",
+        "source_role": "soviet_colonization_context",
+        "red_flag": True,
+        "historical_only": True,
+        "contrast_only": True,
+        "can_verify_modern_ukrainian": False,
+        "sovietization_risk": risk,
+        "sovietization_keywords": "editorial-keyword",
+        "ideological_markers": "editorial-marker",
+        "entry": {"id": 1, "word": "fixture", "definition": "historical gloss", "text": "historical prose",
+                  "sovietization_risk": risk, "sovietization_keywords": "editorial-keyword",
+                  "ideological_markers": "editorial-marker"},
+    }
+
+
+def test_sum11_reader_missing_metadata_stays_unknown(tmp_path, monkeypatch):
+    import sqlite3
+
+    from scripts.rag import query
+
+    db = tmp_path / "sources.db"
+    with sqlite3.connect(db) as conn:
+        conn.execute("CREATE TABLE sum11 (word TEXT, definition TEXT)")
+        conn.execute("INSERT INTO sum11 VALUES ('fixture', 'historical gloss')")
+    from functools import partial
+
+    monkeypatch.setattr(query.sources_db, "search_definitions",
+                        partial(query.sources_db.search_definitions, db_path=db))
+    context = query.search_dictionary("fixture", "definitions")[0]["soviet_colonization_context"]
+    assert context["sovietization_risk"] is None
+    assert context["sovietization_keywords"] is None
+    assert context["ideological_markers"] is None

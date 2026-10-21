@@ -39,13 +39,13 @@ streams:
       - kimi-infra     # slot
       - cursor-infra   # slot
   # monitor (Ops API + UI): selector monitor -> monitor -> issue_streams 7919.
-  # area_assignments: only muse-monitor is a slot; the rest are retired seats.
+  # area_assignments: muse-monitor and grok-monitor are slots; the rest are retired seats.
   "epic:7919":
     initiators:
       - muse-monitor     # slot
       - claude-monitor   # retired
       - codex-monitor    # retired
-      - grok-monitor     # retired
+      - grok-monitor     # slot
       - cursor-monitor   # retired
   # open-model-data: generic selector -> issue_streams 6321.
   "epic:6321":
@@ -53,7 +53,7 @@ streams:
       - claude-open-model-data   # slot
       - codex-open-model-data    # slot
       - gemini-open-model-data   # slot
-      - grok-open-model-data     # retired
+      - grok-open-model-data     # slot
   # devops: selector devops -> devops -> issue_streams 5703.
   "epic:5703":
     initiators:
@@ -73,6 +73,11 @@ streams:
       - grok-atlas     # slot
       - kimi-atlas     # slot
       - cursor-atlas   # slot
+  # practice: selector practice -> practice -> issue_streams 11151.
+  "epic:11151":
+    initiators:
+      - claude-practice   # slot
+      - codex-practice    # slot
   # epics coordination: selector epics -> epics -> issue_streams 10453.
   "epic:10453":
     initiators:

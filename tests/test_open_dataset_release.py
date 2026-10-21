@@ -8,10 +8,11 @@ import pytest
 
 from scripts.open_dataset.hydrate import OpenDatasetHydrationError, _download_with_gh, hydrate_open_dataset
 from scripts.open_dataset.publish import publish_open_dataset, write_pointer
+from tests.word_card_certification_fixtures import certification_fixture  # noqa: F401
 
 pytestmark = pytest.mark.usefixtures("github_command_boundary")
 
-def _write_fixture_dataset(root: Path) -> None:
+def _write_fixture_dataset(root: Path, card: dict) -> None:
     (root / "dataset").mkdir(parents=True)
     (root / "README.md").write_text("# Dataset\n", encoding="utf-8")
     (root / "ATTRIBUTION.md").write_text("# Attribution\n", encoding="utf-8")
@@ -20,6 +21,7 @@ def _write_fixture_dataset(root: Path) -> None:
         json.dumps(
             {
                 "version": "0.1",
+                "certified": True, "export_eligible": True, "draft_engineering": False,
                 "generated_at": "2026-06-30T00:00:00+00:00",
                 "stats": {"lemmas_total": 2, "form_of_count": 1},
             }
@@ -27,14 +29,14 @@ def _write_fixture_dataset(root: Path) -> None:
         encoding="utf-8",
     )
     (root / "dataset" / "А.jsonl").write_text(
-        json.dumps({"lemma": "абетка", "url_slug": "абетка"}, ensure_ascii=False) + "\n",
+        json.dumps(card, ensure_ascii=False) + "\n",
         encoding="utf-8",
     )
 
 
-def test_open_dataset_publish_pointer_and_hydrate_round_trip(tmp_path: Path) -> None:
+def test_open_dataset_publish_pointer_and_hydrate_round_trip(tmp_path: Path, certification) -> None:
     dataset_root = tmp_path / "dataset-source"
-    _write_fixture_dataset(dataset_root)
+    _write_fixture_dataset(dataset_root, certification.card)
     gzip_path = tmp_path / "lexicon-open-dataset.json.gz"
     pointer_path = tmp_path / "lexicon-dataset.pointer.json"
 
@@ -70,12 +72,12 @@ def test_open_dataset_publish_pointer_and_hydrate_round_trip(tmp_path: Path) -> 
     assert json.loads((hydrated_root / "dataset" / "_metadata.json").read_text(encoding="utf-8"))["stats"][
         "lemmas_total"
     ] == 2
-    assert "абетка" in (hydrated_root / "dataset" / "А.jsonl").read_text(encoding="utf-8")
+    assert json.loads((hydrated_root / "dataset" / "А.jsonl").read_bytes()) == certification.card
 
 
-def test_open_dataset_hydrate_rejects_digest_mismatch(tmp_path: Path) -> None:
+def test_open_dataset_hydrate_rejects_digest_mismatch(tmp_path: Path, certification) -> None:
     dataset_root = tmp_path / "dataset-source"
-    _write_fixture_dataset(dataset_root)
+    _write_fixture_dataset(dataset_root, certification.card)
     gzip_path = tmp_path / "lexicon-open-dataset.json.gz"
     pointer_path = tmp_path / "lexicon-dataset.pointer.json"
     pointer = publish_open_dataset(

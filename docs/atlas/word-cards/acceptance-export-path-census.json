@@ -1,0 +1,124 @@
+{
+  "schema_version": "acceptance-export-path-census.v1",
+  "issue": 10513,
+  "source_census_issue": 9401,
+  "boundary": "word-card acceptance and export; historical Atlas articles remain compatibility evidence, never word-card certification",
+  "frozen_paths": [
+    {
+      "path_id": "versioned_dataset_projection",
+      "entry_point": "scripts/projects/open_model_data/word_cards/dataset_projection.py",
+      "functions": "create_release, withdraw_release, main",
+      "approval": "dataset",
+      "regression": "tests/projects/open_model_data/test_word_card_dataset_release.py::test_certification_refusals"
+    },
+    {
+      "path_id": "dataset_export",
+      "entry_point": "scripts/lexicon/export_open_dataset.py",
+      "functions": "export_dataset, main",
+      "approval": "dataset",
+      "regression": "tests/test_export_open_dataset_integrity.py::test_public_boundaries"
+    },
+    {
+      "path_id": "acceptance",
+      "entry_point": "scripts/atlas/atlas_db.py",
+      "functions": "migrate_manifest",
+      "approval": "site",
+      "regression": "tests/test_export_open_dataset_integrity.py::test_public_boundaries"
+    },
+    {
+      "path_id": "runtime_export",
+      "entry_point": "scripts/atlas/export_runtime_shards.py",
+      "functions": "export_runtime_shards",
+      "approval": "site",
+      "regression": "tests/test_export_open_dataset_integrity.py::test_runtime_certification"
+    },
+    {
+      "path_id": "runtime_verify",
+      "entry_point": "scripts/atlas/export_runtime_shards.py",
+      "functions": "verify_tree",
+      "approval": "site",
+      "regression": "tests/test_export_open_dataset_integrity.py::test_runtime_certification"
+    },
+    {
+      "path_id": "package_collect",
+      "entry_point": "scripts/open_dataset/publish.py",
+      "functions": "collect_dataset",
+      "approval": "dataset",
+      "regression": "tests/test_export_open_dataset_integrity.py::test_public_boundaries"
+    },
+    {
+      "path_id": "package_build",
+      "entry_point": "scripts/open_dataset/publish.py",
+      "functions": "build_package",
+      "approval": "dataset",
+      "regression": "tests/test_export_open_dataset_integrity.py::test_public_boundaries"
+    },
+    {
+      "path_id": "dataset_publish",
+      "entry_point": "scripts/open_dataset/publish.py",
+      "functions": "publish_open_dataset",
+      "approval": "dataset",
+      "regression": "tests/test_export_open_dataset_integrity.py::test_public_boundaries"
+    },
+    {
+      "path_id": "dataset_hydrate",
+      "entry_point": "scripts/open_dataset/hydrate.py",
+      "functions": "hydrate_open_dataset",
+      "approval": "dataset",
+      "regression": "tests/test_export_open_dataset_integrity.py::test_public_boundaries"
+    },
+    {
+      "path_id": "manifest_read",
+      "entry_point": "scripts/lexicon/manifest_io.py",
+      "functions": "load_manifest, _hydrate",
+      "approval": "site",
+      "regression": "tests/test_export_open_dataset_integrity.py::test_manifest_cache_rechecks_authority"
+    },
+    {
+      "path_id": "manifest_publish",
+      "entry_point": "scripts/lexicon/publish_manifest.py",
+      "functions": "gzip_manifest, build_pointer_payload, publish_manifest",
+      "approval": "site",
+      "regression": "tests/test_export_open_dataset_integrity.py::test_public_boundaries"
+    }
+  ],
+  "draft_producers": [
+    {
+      "path": "scripts/atlas/word_card_foundation.py",
+      "contract": "Identity allocation and pilot freeze are mechanics, never linguistic acceptance."
+    },
+    {
+      "path": "scripts/atlas/word_card_assembly.py",
+      "contract": "Host-only build; no accepted cards or dataset export."
+    },
+    {
+      "path": "scripts/atlas/word_card_batch1.py",
+      "contract": "Mechanics-only pilot; no language certification."
+    },
+    {
+      "path": "scripts/atlas/word_card_resolver.py",
+      "contract": "Recomputes draft projections; certification still required at acceptance/export."
+    },
+    {
+      "path": "scripts/lexicon/enrich_manifest.py",
+      "contract": "Legacy manifest rows remain candidates; dataset export refuses them."
+    },
+    {
+      "path": "scripts/practice/",
+      "contract": "Legacy practice generators have no certified word-card intake; card-bearing manifest reads are guarded."
+    },
+    {
+      "path": "scripts/lexicon/build_data_manifest.py",
+      "contract": "Produces legacy candidate rows without card certification; dataset export refuses these rows."
+    }
+  ],
+  "cache_paths": [
+    "scripts/lexicon/manifest_io.py::_read_verified_cache",
+    "scripts/open_dataset/hydrate.py::hydrate_open_dataset",
+    "data/lexicon/slovnyk_cache",
+    "data/lexicon/cache"
+  ],
+  "rollback_contract": "Every new read, reimport, package or export checks current review authority and suppression snapshots. Restoring authority itself is outside the verifier trust boundary.",
+  "source_census_status": "#9401 remains the owner of source/consumer coverage and source completeness; this boundary census does not attest its completion.",
+  "residual_owner": "open-model-data"
+}

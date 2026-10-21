@@ -183,7 +183,7 @@ def test_provider_refresh_is_allowlisted_cached_and_version_pinned(
     def fake_run(_root: Path, *args: str):
         if args == ("version",):
             return subprocess.CompletedProcess(
-                ["entire", "version"], 0, "Entire CLI 0.8.42\nGo version: hidden\n", ""
+                ["entire", "version"], 0, "Entire CLI 0.11.5\nGo version: hidden\n", ""
             )
         raw = {
             "enabled": True,
@@ -204,11 +204,41 @@ def test_provider_refresh_is_allowlisted_cached_and_version_pinned(
         now=datetime.now(UTC) + timedelta(seconds=901),
     )
 
-    assert refreshed["version"] == "0.8.42"
+    assert refreshed["version"] == "0.11.5"
     assert refreshed["installed_agents"] == ["claude-code", "codex"]
     assert "prompt" not in target.read_text(encoding="utf-8")
     assert "forbidden" not in target.read_text(encoding="utf-8")
     assert loaded["stale"] is True
+
+
+@pytest.mark.parametrize("version_line", ["Entire CLI 0.8.42", "Entire CLI 0.11.50", "Entire CLI 0.11.4"])
+def test_provider_refresh_refuses_an_unpinned_cli(tmp_path: Path, monkeypatch, version_line: str) -> None:
+    def fake_run(_root: Path, *args: str):
+        assert args == ("version",), "no other Entire command may run for an unpinned CLI"
+        return subprocess.CompletedProcess(["entire", "version"], 0, f"{version_line}\n", "")
+
+    target = tmp_path / "provider.json"
+    monkeypatch.setattr(provider, "_run", fake_run)
+
+    assert provider.refresh_provider_status(tmp_path, output_path=target) == {
+        "available": False,
+        "reason": "entire_version_mismatch",
+        "required_version": "0.11.5",
+    }
+    assert not target.exists()
+
+
+def test_dispatch_jurisdiction_reads_the_0_11_5_repo_view(tmp_path, monkeypatch):
+    calls = []
+
+    def run(_root, *args):
+        calls.append(args)
+        return _mirror_result()
+
+    monkeypatch.setattr(provider, "_run", run)
+
+    assert provider._dispatch_jurisdiction(tmp_path, "learn-ukrainian/learn-ukrainian.github.io") == "eu"
+    assert calls == [SOURCE_MIRROR_VIEW]
 
 
 def _write_provider_policy(root: Path) -> None:
@@ -220,19 +250,23 @@ def _write_provider_policy(root: Path) -> None:
     )
 
 
+SOURCE_MIRROR_VIEW = ("repo", "view", "/gh/learn-ukrainian/learn-ukrainian.github.io", "--json")
+
+
 def _mirror_result():
+    # `entire repo view /gh/<owner>/<repo> --json` row shape in Entire 0.11.5.
     return subprocess.CompletedProcess(
         [],
         0,
         json.dumps(
-            [
-                {
-                    "owner": "learn-ukrainian",
-                    "repo": "learn-ukrainian.github.io",
-                    "status": "ready",
-                    "jurisdiction": "eu",
-                }
-            ]
+            {
+                "repo": "/gh/learn-ukrainian/learn-ukrainian.github.io",
+                "private": False,
+                "status": "ready",
+                "placements": [
+                    {"cluster": "cluster.example", "clusterSlug": "cluster-eu", "jurisdiction": "eu", "status": "ready"}
+                ],
+            }
         ),
         "",
     )
@@ -254,8 +288,8 @@ def test_provider_capability_refresh_is_body_free_and_deletes_eu_dispatch(tmp_pa
     )
 
     def fake_run(_root: Path, *args: str):
-        if args[:3] == ("repo", "mirror", "list"):
-            assert args == ("repo", "mirror", "list", "--name", "learn-ukrainian", "--json")
+        if args[:2] == ("repo", "view"):
+            assert args == SOURCE_MIRROR_VIEW
             return _mirror_result()
         if "DELETE" in args:
             assert "dispatch_input" in observed
@@ -367,7 +401,7 @@ def test_provider_capability_refresh_reports_empty_index_and_region_failure(tmp_
         "_run",
         lambda _root, *_args: (
             _mirror_result()
-            if _args[:3] == ("repo", "mirror", "list")
+            if _args == SOURCE_MIRROR_VIEW
             else subprocess.CompletedProcess(
                 [],
                 0,
@@ -715,14 +749,24 @@ def test_monitor_search_reverifies_typed_issue_from_shared_local_cache(
     assert stale["omitted"] == [{"locator_id": admitted.locator_id, "reason": "partial_terminal"}]
 
 
+def _view(placements: list[dict], repo: str = "/gh/learn-ukrainian/learn-ukrainian.github.io") -> str:
+    return json.dumps({"repo": repo, "status": "ready", "placements": placements})
+
+
 @pytest.mark.parametrize(
     "mirror_output",
     [
         "not json",
         "{}",
         "[]",
-        '[{"owner":"other","repo":"repo","status":"ready","jurisdiction":"eu"}]',
-        '[{"owner":"learn-ukrainian","repo":"learn-ukrainian.github.io","status":"ready"}]',
+        _view([{"jurisdiction": "eu", "status": "ready"}], repo="/gh/other/repo"),
+        _view([{"status": "ready"}]),
+        _view([{"jurisdiction": "eu", "status": "processing"}]),
+        _view([{"jurisdiction": "eu", "status": "ready"}, {"jurisdiction": "us", "status": "ready"}]),
+        _view([{"jurisdiction": "EU!", "status": "ready"}]),
+        json.dumps({"repo": "/gh/learn-ukrainian/learn-ukrainian.github.io", "status": "ready"}),
+        # The 0.8.42 `repo mirror list` row shape no longer comes back from 0.11.5.
+        '[{"owner":"learn-ukrainian","repo":"learn-ukrainian.github.io","status":"ready","jurisdiction":"eu"}]',
     ],
 )
 def test_dispatch_requires_source_mirror_jurisdiction(tmp_path, monkeypatch, mirror_output):
@@ -755,7 +799,7 @@ def test_dispatch_cleanup_and_failures(tmp_path, monkeypatch, body, location, de
     deleted = []
 
     def run(_root, *args):
-        if args[:3] == ("repo", "mirror", "list"):
+        if args == SOURCE_MIRROR_VIEW:
             return _mirror_result()
         assert args == ("api", "--jurisdiction", "eu", "-X", "DELETE", "/api/v1/me/dispatches/test-id", "--include")
         deleted.append(args)
@@ -778,7 +822,7 @@ def test_dispatch_cleanup_and_failures(tmp_path, monkeypatch, body, location, de
 @pytest.mark.parametrize("status,reason", [(404, "repository_unavailable_or_region"), (422, "provider_error")])
 def test_dispatch_post_failure_does_not_delete(tmp_path, monkeypatch, status, reason):
     def run(_root, *args):
-        assert args[:3] == ("repo", "mirror", "list")
+        assert args == SOURCE_MIRROR_VIEW
         return _mirror_result()
 
     monkeypatch.setattr(provider, "_run", run)

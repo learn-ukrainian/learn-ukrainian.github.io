@@ -211,15 +211,21 @@ class FakeGitHub:
     def issues(self, title: str) -> list[dict[str, Any]]:
         return self.issue_rows
 
-    def create_issue(self, title: str, body: str) -> None:
+    def issue_comment(self, number: int, body: str) -> None:
+        self.actions.append(("issue-comment", (number, body)))
+
+    def create_issue(self, title: str, body: str) -> int:
         self.actions.append(("issue", title))
-        self.issue_rows.append({"title": title})
+        number = 1000 + len(self.issue_rows)
+        self.issue_rows.append({"title": title, "body": body, "number": number})
+        return number
 
 
 def run(
     fake: FakeGitHub, path: Path, monkeypatch: pytest.MonkeyPatch, verdict: str = "APPROVED", *, apply: bool = True
 ) -> tuple[list[str], bool]:
-    monkeypatch.setattr(keeper, "lookup_verdict", lambda comments, head, login: Verdict(verdict))
+    reason = "comments-unavailable" if verdict == "unknown" else None
+    monkeypatch.setattr(keeper, "lookup_verdict", lambda comments, head, login: Verdict(verdict, reason=reason))
     monkeypatch.setattr(keeper, "_ever_approved", lambda comments, login: verdict == "APPROVED")
     return keeper.run(fake, path, apply=apply)
 
@@ -446,6 +452,24 @@ def test_queued_recorded_rejection_revokes(tmp_path: Path) -> None:
     assert "CF-changes_requested" in lines[0]
 
 
+@pytest.mark.parametrize("entry", ["queued", "armed"])
+def test_later_posted_rejection_with_earlier_start_dequeues(tmp_path: Path, entry: str) -> None:
+    """#10973: replay the #10947 timeline; how the PR entered the queue does not matter."""
+    queue = {"isInMergeQueue": True} if entry == "queued" else {"autoMergeRequest": {"enabledAt": "x"}}
+    fake = FakeGitHub(pr(**queue))
+    approval = recorded("APPROVED", "2026-10-18T17:17:37.175425+00:00")
+    rejection = recorded("CHANGES_REQUESTED", "2026-10-18T17:17:36.933735+00:00")
+    approval.update(created_at="2026-10-18T17:19:35Z", updated_at="2026-10-18T17:19:35Z")
+    rejection.update(created_at="2026-10-18T17:44:00Z", updated_at="2026-10-18T17:44:00Z")
+    fake.comments_rows = [approval, rejection]
+    lines, failed = keeper.run(fake, tmp_path / "state.json", apply=True)
+    assert not failed
+    action = ("dequeue", "PR_node_42") if entry == "queued" else ("disarm", 42)
+    assert action in fake.actions
+    assert "#42 revoked: CF-changes_requested" in lines
+    assert "enqueue" not in mutations(fake)
+
+
 def test_queued_recorded_approval_then_hold_revokes(tmp_path: Path) -> None:
     fake = FakeGitHub(pr(isInMergeQueue=True))
     fake.comments_rows = [recorded("APPROVED", "2026-09-23T12:00:00.000001+00:00")]
@@ -523,6 +547,86 @@ def test_queued_approval_then_unknown_marker_revokes(tmp_path: Path) -> None:
     fake.comments_rows[0]["updated_at"] = "2026-09-23T13:00:01Z"
     keeper.run(fake, path, apply=True)
     assert ("dequeue", "PR_node_42") in fake.actions
+
+
+OLD_HEAD_C = "c" * 40
+OLD_HEAD_D = "d" * 40
+
+
+def hand_written(body: str, comment_id: int) -> dict[str, Any]:
+    """A trusted comment carrying a marker that ``record_cf_verdict`` did not write (#11127)."""
+    return {
+        "id": comment_id,
+        "body": body,
+        "user": {"login": "driver"},
+        "author_association": "MEMBER",
+        "created_at": "2026-09-23T12:30:00Z",
+        "updated_at": "2026-09-23T12:30:00Z",
+    }
+
+
+def issue_11127_old_head_markers() -> list[dict[str, Any]]:
+    """The two hand-written older-head markers that revoked PR #11095 three times."""
+    no_started = (
+        "Older head needs work.\n\nVERDICT: REQUEST_CHANGES\n\n"
+        f"<!-- cf-verdict v1 sha={OLD_HEAD_C} task=hand-one verdict=REQUEST_CHANGES model=gpt-6.1-sol family=openai -->"
+    )
+    no_microseconds = (
+        f"### Cross-family review\nReview profile: ukrainian\nhead: {OLD_HEAD_D}\nReviewer family: openai\n"
+        "VERDICT: APPROVED\nReviewer model: gpt-6.1-sol\nTask id: hand-two\n\n"
+        f"<!-- cf-verdict v1 sha={OLD_HEAD_D} task=hand-two started=2026-09-23T11:00:00+00:00 "
+        "verdict=APPROVED model=gpt-6.1-sol family=openai review_profile=ukrainian -->"
+    )
+    return [hand_written(no_started, 9001), hand_written(no_microseconds, 9002)]
+
+
+def test_issue_11127_older_head_malformed_markers_never_revoke_queued_approval(tmp_path: Path) -> None:
+    fake = FakeGitHub(pr(isInMergeQueue=True))
+    fake.comments_rows = [
+        *issue_11127_old_head_markers(),
+        recorded("APPROVED", "2026-09-23T12:00:00.000001+00:00"),
+    ]
+    lines, failed = keeper.run(fake, tmp_path / "state.json", apply=True)
+    assert not failed
+    assert "dequeue" not in mutations(fake)
+    assert not any("revoked" in line for line in lines)
+    assert "state=queued" in lines[0] and "superseded-marker=9001,9002" in lines[0]
+    assert "cf-unknown=" not in lines[0]
+
+
+def test_cf_unknown_revocation_names_reason_and_comment(tmp_path: Path) -> None:
+    fake = FakeGitHub(pr(isInMergeQueue=True))
+    approval = recorded("APPROVED", "2026-09-23T12:00:00.000001+00:00")
+    malformed = hand_written(approval["body"].replace("verdict=APPROVED", "verdict=REQUEST_CHANGES"), 4242)
+    fake.comments_rows = [approval, malformed]
+    lines, failed = keeper.run(fake, tmp_path / "state.json", apply=True)
+    assert not failed
+    assert ("dequeue", "PR_node_42") in fake.actions
+    detail = " cf-unknown=marker-malformed-current-head comment=4242"
+    assert f"#42 revoked: CF-unknown-after-approval{detail}" in lines
+    assert lines[0].endswith(detail)
+    assert all("REQUEST_CHANGES" not in line and "Cross-family review" not in line for line in lines)
+
+
+def test_cf_unknown_hold_names_reason_and_comment(tmp_path: Path) -> None:
+    fake = FakeGitHub(pr(isInMergeQueue=True))
+    unattributed = "VERDICT: BLOCKED\n\n<!-- cf-verdict v1 task=hand verdict=BLOCKED model=m family=openai -->"
+    fake.comments_rows = [hand_written(unattributed, 77)]
+    lines, failed = keeper.run(fake, tmp_path / "state.json", apply=True)
+    assert not failed
+    assert "dequeue" not in mutations(fake)
+    assert "#42 held: CF-unknown cf-unknown=marker-unattributable comment=77" in lines
+
+
+def test_cf_unknown_lookup_failure_names_reason(tmp_path: Path) -> None:
+    fake = FakeGitHub()
+
+    def broken(number: int) -> list[dict[str, Any]]:
+        raise keeper.KeeperError("comments unavailable")
+
+    fake.comments = broken  # type: ignore[method-assign]
+    lines, _failed = keeper.run(fake, tmp_path / "state.json", apply=False)
+    assert lines[0].endswith(" cf-unknown=comments-unavailable comment=none")
 
 
 def test_queued_stale_recorded_approval_is_revoked(tmp_path: Path) -> None:
@@ -907,8 +1011,9 @@ def test_drop_lookup_error_is_not_reported_as_unknown(tmp_path, monkeypatch) -> 
 def test_drop_without_matching_run_is_unknown() -> None:
     fake = FakeGitHub()
     fake.events = [{"event": "removed_from_merge_queue", "created_at": "2026-09-23T00:00:01Z"}]
-    detail, jobs, tests = keeper._drop_detail(fake, 42, HEAD_A, "2026-09-23T00:00:00Z")
+    detail, jobs, tests, run_id = keeper._drop_detail(fake, 42, HEAD_A, "2026-09-23T00:00:00Z")
     assert "failing merge_group run unknown" in detail and jobs == [] and tests == {}
+    assert run_id is None
 
 
 @pytest.mark.parametrize("entry_available", [False, True])
@@ -938,10 +1043,11 @@ def test_drop_finds_run_created_before_last_queue_observation(monkeypatch, entry
 
     monkeypatch.setattr(fake, "runs", runs)
     fake.job_rows = [{"name": "pytest", "conclusion": "failure"}]
-    detail, jobs, tests = keeper._drop_detail(fake, 42, HEAD_A, observed)
+    detail, jobs, tests, run_id = keeper._drop_detail(fake, 42, HEAD_A, observed)
     assert windows == [entered if entry_available else fake.created_at(42)]
     assert "Failing merge_group: 123; failing jobs: `pytest`" in detail
     assert jobs == ["pytest"] and tests == {}
+    assert run_id == 123
 
 
 @pytest.mark.parametrize("payload,valid", [
@@ -976,7 +1082,7 @@ def test_pr_creation_lower_bound_is_validated(tmp_path, monkeypatch, payload, va
 def test_failed_test_log_projects_only_source_identifier(tmp_path, monkeypatch, node, expected) -> None:
     client = keeper.GitHub(tmp_path, "unit/public")
     monkeypatch.setattr(client, "call", lambda *args: f"FAILED {node} - AssertionError: private-error-value\n")
-    assert client.first_failed_test(456) == expected
+    assert client.failed_tests(456) == ([expected] if expected else [])
 
 
 def test_drop_comment_does_not_publish_failed_test_parameters(tmp_path, monkeypatch) -> None:
@@ -991,7 +1097,7 @@ def test_drop_comment_does_not_publish_failed_test_parameters(tmp_path, monkeypa
     private_value = "private-runtime-value"
     monkeypatch.setattr(client, "call", lambda *args:
                         f"FAILED tests/test_unit.py::test_case[{private_value}] - private-error-value\n")
-    monkeypatch.setattr(fake, "first_failed_test", client.first_failed_test, raising=False)
+    monkeypatch.setattr(fake, "failed_tests", client.failed_tests, raising=False)
     path = tmp_path / "state.json"
     path.write_text(json.dumps({"queued": {"42": HEAD_A}, "drops": {}, "observed": "2026-10-10T08:00:00Z"}))
     lines, failed = run(fake, path, monkeypatch)
@@ -1027,12 +1133,13 @@ def test_drop_detail_keeps_run_and_jobs_with_optional_first_failed_test(tmp_path
         return "2026-10-10T01:00:00Z FAILED tests/test_lint_tmp_paths.py::test_paths - AssertionError\nFAILED tests/other.py::test_other - error"
 
     monkeypatch.setattr(client, "call", call)
-    detail, jobs, tests = keeper._drop_detail(client, 10256, HEAD_A, "2026-10-10T00:00:00Z")
+    detail, jobs, tests, run_id = keeper._drop_detail(client, 10256, HEAD_A, "2026-10-10T00:00:00Z")
     assert "https://github.com/example/runs/123" in detail and "pytest (N)" in detail
     assert jobs == ["CI Gate", "pytest (N)"]
     assert ("First FAILED test: `tests/test_lint_tmp_paths.py::test_paths`" in detail) is not log_error
-    assert tests == ({} if log_error else {"pytest (N)": "tests/test_lint_tmp_paths.py::test_paths"})
+    assert tests == ({} if log_error else {"pytest (N)": ["tests/test_lint_tmp_paths.py::test_paths", "tests/other.py::test_other"]})
     assert "other.py" not in detail and "unknown" not in detail
+    assert run_id == 123
 
 
 def test_base_changed_before_mutation_cannot_merge_directly(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -1911,7 +2018,7 @@ def test_real_job_failing_on_two_distinct_prs_opens_one_issue_naming_it(
     prior = [_recent("pytest (3)", 10596), _recent("CI Gate", 10596)]
     fake, _ = _flaky_run(tmp_path, monkeypatch, prior, ["pytest (3)", "CI Gate"])
     assert _issue_titles(fake) == ["Merge queue flaky test: pytest (3)"]
-    assert [title for title in fake.issue_rows] == [{"title": "Merge queue flaky test: pytest (3)"}]
+    assert [item["title"] for item in fake.issue_rows] == ["Merge queue flaky test: pytest (3)"]
 
 
 def test_aggregate_plus_real_job_names_the_real_job_only(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -1933,12 +2040,12 @@ def test_issue_body_names_the_failed_test_when_known(tmp_path: Path, monkeypatch
     fake = FakeGitHub()
     _ejected(fake, path, [], failures=[{**_recent("pytest (3)", 10596), "test": test}])
     fake.job_rows = [{"id": 5, "name": "pytest (3)", "conclusion": "failure"}]
-    monkeypatch.setattr(fake, "first_failed_test", lambda job_id: test, raising=False)
+    monkeypatch.setattr(fake, "failed_tests", lambda job_id: [test], raising=False)
     bodies: list[str] = []
-    monkeypatch.setattr(fake, "create_issue", lambda title, body: bodies.append(body))
+    monkeypatch.setattr(fake, "create_issue", lambda title, body: (bodies.append(body), 1000)[1])
     run(fake, path, monkeypatch)
     assert len(bodies) == 1
-    assert "`pytest (3)` failed" in bodies[0] and "#42" in bodies[0] and "#10596" in bodies[0]
+    assert f"`{test}` failed" in bodies[0] and "#42" in bodies[0] and "#10596" in bodies[0]
     assert f"Failed test: `{test}`." in bodies[0]
     assert {item["test"] for item in json.loads(path.read_text())["failures"] if item["pr"] == 42} == {test}
 
@@ -1954,7 +2061,7 @@ def test_flaky_jobs_counts_distinct_prs_and_skips_aggregate_jobs() -> None:
         {"job": 3, "pr": 9},
         {"job": "pytest (2)", "pr": True},
     ]
-    assert keeper._flaky_jobs(failures) == {"pytest (1)": ([5, 6], ["tests/a.py::test_a"])}
+    assert keeper._flaky_jobs(failures) == {}
 
 
 def test_flaky_jobs_counts_one_pr_failing_the_same_job_twice_once() -> None:
@@ -1994,10 +2101,14 @@ def _public_flaky_issue(
     fake = FakeGitHub()
     _ejected(fake, path, [job], failures=[record])
     filed: list[tuple[str, str]] = []
+    if test:
+        fake.job_rows = [{"id": 5, "name": job, "conclusion": "failure"}]
+        fake.failed_tests = lambda job_id: [test]
 
     def create_issue(title: str, body: str) -> None:
         filed.append((title, body))
-        fake.issue_rows.append({"title": title})
+        fake.issue_rows.append({"title": title, "body": body, "number": 1000})
+        return 1000
 
     monkeypatch.setattr(fake, "create_issue", create_issue)
     run(fake, path, monkeypatch)
@@ -2141,18 +2252,13 @@ def test_hostile_failed_test_text_is_sanitised_in_issue_body(tmp_path: Path, mon
         assert token not in body
 
 
-def test_failed_test_list_in_issue_body_is_bounded(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    tests = [f"tests/a.py::test_{index:03d}" for index in range(keeper.DISPLAY_TEST_ITEMS + 5)]
-    failures = [{"job": "pytest (3)", "pr": number, "test": test} for number, test in enumerate(tests, 100)]
-    path = tmp_path / "state.json"
-    fake = FakeGitHub()
-    _ejected(fake, path, [], failures=[{**item, "at": "2999-01-01T00:00:00+00:00"} for item in failures])
-    bodies: list[str] = []
-    monkeypatch.setattr(fake, "create_issue", lambda title, body: bodies.append(body))
-    run(fake, path, monkeypatch)
-    assert len(bodies) == 1
-    assert bodies[0].count("`tests/a.py::test_") == keeper.DISPLAY_TEST_ITEMS
-    assert "and 5 more." in bodies[0]
+def test_different_tests_in_one_shard_do_not_share_a_record(tmp_path, monkeypatch) -> None:
+    tests = ["tests/a.py::test_one", "tests/a.py::test_two"]
+    failures = [{"job": "pytest (3)", "pr": number, "test": test}
+                for number in (100, 101) for test in tests]
+    fake, _ = _flaky_run(tmp_path, monkeypatch,
+                         [{**item, "at": "2999-01-01T00:00:00+00:00"} for item in failures], [])
+    assert _issue_titles(fake) == [f"Merge queue flaky test: {test}" for test in tests]
 
 
 def test_drop_comment_sanitises_failed_job_names_and_log_derived_test(
@@ -2164,7 +2270,7 @@ def test_drop_comment_sanitises_failed_job_names_and_log_derived_test(
     fake = FakeGitHub()
     _ejected(fake, path, [])
     fake.job_rows = [{"id": 5, "name": job, "conclusion": "failure"}]
-    monkeypatch.setattr(fake, "first_failed_test", lambda job_id: test, raising=False)
+    monkeypatch.setattr(fake, "failed_tests", lambda job_id: [test], raising=False)
     run(fake, path, monkeypatch)
     comments = [body for kind, body in fake.actions if kind == "comment"]
     assert comments, fake.actions
@@ -2174,3 +2280,141 @@ def test_drop_comment_sanitises_failed_job_names_and_log_derived_test(
         assert f"First FAILED test: `{keeper.display_text(test, keeper.DISPLAY_TEST_LIMIT)}`." in body
     # Raw names stay in the recorded failures so grouping still works.
     assert json.loads(path.read_text())["failures"][-1]["job"] == job
+
+
+@pytest.mark.parametrize("where", ["title", "body"])
+def test_existing_node_issue_is_commented_once_per_day(tmp_path, monkeypatch, where):
+    node = "tests/test_unit.py::test_one"
+    timestamp = keeper.datetime.now(keeper.UTC).isoformat()
+    failures = [{"job": "pytest (3)", "test": node, "pr": pr, "run_id": run, "at": timestamp}
+                for pr, run in ((41, 101), (42, 102))]
+    path = tmp_path / "state.json"
+    path.write_text(json.dumps({"queued": {}, "drops": {}, "failures": failures}))
+    fake = FakeGitHub()
+    fake.issue_rows = [{"number": 77, "title": "Repair the test", "body": "", where: node}]
+    run(fake, path, monkeypatch)
+    updates = [value for kind, value in fake.actions if kind == "issue-comment"]
+    assert len(updates) == 1 and updates[0][0] == 77
+    assert "#41, #42" in updates[0][1] and "101, 102" in updates[0][1]
+    assert "issue" not in mutations(fake)
+    run(fake, path, monkeypatch)
+    assert len([kind for kind, _ in fake.actions if kind == "issue-comment"]) == 1
+    state = json.loads(path.read_text())
+    state["flake_issue_updates"]["77"] = (keeper.datetime.now(keeper.UTC) - keeper.timedelta(hours=25)).isoformat()
+    path.write_text(json.dumps(state))
+    run(fake, path, monkeypatch)
+    assert len([kind for kind, _ in fake.actions if kind == "issue-comment"]) == 2
+
+
+def test_flake_comment_cap_survives_lost_local_state(tmp_path, monkeypatch):
+    node = "tests/test_unit.py::test_one"
+    timestamp = keeper.datetime.now(keeper.UTC).isoformat()
+    path = tmp_path / "state.json"
+    path.write_text(json.dumps({"queued": {}, "drops": {}, "failures": [
+        {"job": "pytest", "test": node, "pr": pr, "at": timestamp} for pr in (41, 42)
+    ]}))
+    fake = FakeGitHub()
+    fake.issue_rows = [{"number": 77, "body": node}]
+    fake.comments_rows.append({"body": "<!-- mq-keeper-flake -->", "user": {"login": "driver"},
+                               "created_at": keeper.datetime.now(keeper.UTC).strftime("%Y-%m-%dT%H:%M:%SZ")})
+    run(fake, path, monkeypatch)
+    assert not any(kind in {"issue", "issue-comment"} for kind, _ in fake.actions)
+
+
+def test_collects_every_failed_test_in_every_pytest_job(tmp_path, monkeypatch):
+    fake = FakeGitHub()
+    path = tmp_path / "state.json"
+    _ejected(fake, path, [])
+    fake.job_rows = [{"id": 5, "name": "pytest (1)", "conclusion": "failure"},
+                     {"id": 6, "name": "pytest (2)", "conclusion": "failure"}]
+    nodes = {5: ["tests/a.py::test_a", "tests/a.py::test_b"], 6: ["tests/b.py::test_c"]}
+    fake.failed_tests = lambda job: nodes[job]
+    run(fake, path, monkeypatch)
+    records = json.loads(path.read_text())["failures"]
+    assert {row["test"] for row in records} == {"tests/a.py::test_a", "tests/a.py::test_b", "tests/b.py::test_c"}
+    assert {row["run_id"] for row in records} == {321}
+
+
+def test_failed_test_parser_collects_all_nodes_and_deduplicates(tmp_path, monkeypatch):
+    client = keeper.GitHub(tmp_path, "unit/public")
+    monkeypatch.setattr(client, "call", lambda *args: (
+        "FAILED tests/a.py::test_one - assertion\n"
+        "FAILED tests/a.py::test_two - assertion\n"
+        "FAILED tests/a.py::test_one - repeated summary\n"
+    ))
+    assert client.failed_tests(456) == ["tests/a.py::test_one", "tests/a.py::test_two"]
+
+
+def test_report_shows_node_records_without_writes(tmp_path, monkeypatch):
+    path = tmp_path / "state.json"
+    failures = [{"test": "tests/a.py::test_one", "job": "pytest (1)", "pr": pr, "run_id": run_id,
+                 "at": keeper.datetime.now(keeper.UTC).isoformat()} for pr, run_id in ((41, 101), (42, 102))]
+    path.write_text(json.dumps({"queued": {}, "drops": {}, "failures": failures}))
+    before = path.read_bytes()
+    fake = FakeGitHub()
+    fake.issue_rows = [{"number": 77, "body": "tests/a.py::test_one"}]
+    lines, failed = run(fake, path, monkeypatch, apply=False)
+    assert not failed
+    assert "flaky record: tests/a.py::test_one; PRs=41,42; runs=101,102; issue=77" in lines
+    assert mutations(fake) == [] and path.read_bytes() == before
+
+
+@pytest.mark.parametrize("job", ["pytest (7)", "Frontend", "Checks", "Secret scan"])
+def test_job_fallback_ignores_unrelated_issue_body(tmp_path, monkeypatch, job):
+    path = tmp_path / "state.json"
+    fake = FakeGitHub()
+    _ejected(fake, path, [job], failures=[_recent(job, 41)])
+    fake.issue_rows = [{"number": 77, "title": "Umbrella epic", "body": job},
+                       {"number": 78, "title": f"Merge queue flaky test: {job}"}]
+    run(fake, path, monkeypatch)
+    assert [payload[0] for kind, payload in fake.actions if kind == "issue-comment"] == [78]
+    assert _issue_titles(fake) == []
+
+
+def test_job_fallback_accepts_keeper_marked_issue(tmp_path, monkeypatch):
+    path = tmp_path / "state.json"
+    fake = FakeGitHub()
+    _ejected(fake, path, ["Frontend"], failures=[_recent("Frontend", 41)])
+    fake.issue_rows = [{"number": 77, "title": "Renamed", "body": "Frontend\n<!-- mq-keeper-flake -->"}]
+    run(fake, path, monkeypatch)
+    assert [payload[0] for kind, payload in fake.actions if kind == "issue-comment"] == [77]
+
+
+@pytest.mark.parametrize("suffix", ["_slow", "[param]", "::test_other"])
+def test_node_id_match_rejects_prefix_collision(tmp_path, monkeypatch, suffix):
+    node = "tests/test_unit.py::test_one"
+    path = tmp_path / "state.json"
+    fake = FakeGitHub()
+    _ejected(fake, path, [], failures=[_recent("pytest", pr) | {"test": node} for pr in (41, 42)])
+    fake.issue_rows = [{"number": 77, "body": node + suffix}]
+    run(fake, path, monkeypatch)
+    assert len(_issue_titles(fake)) == 1
+    assert not any(kind == "issue-comment" for kind, _ in fake.actions)
+
+
+def test_new_issue_records_update_and_next_run_does_not_comment(tmp_path, monkeypatch):
+    fake, path = _flaky_run(tmp_path, monkeypatch, [_recent("Frontend", 41)], ["Frontend"])
+    assert json.loads(path.read_text())["flake_issue_updates"]["1000"]
+    fake.actions.clear()
+    run(fake, path, monkeypatch)
+    assert not any(kind in {"issue", "issue-comment"} for kind, _ in fake.actions)
+
+
+def test_issue_listing_is_once_for_multiple_flaky_keys(tmp_path, monkeypatch):
+    fake = FakeGitHub()
+    path = tmp_path / "state.json"
+    _ejected(fake, path, [], failures=[_recent(job, pr) for job in ("Frontend", "Checks") for pr in (41, 42)])
+    calls = []
+    monkeypatch.setattr(fake, "issues", lambda query: calls.append(query) or list(fake.issue_rows))
+    run(fake, path, monkeypatch)
+    assert calls == [""]
+    assert len(_issue_titles(fake)) == 2
+
+
+def test_create_issue_returns_new_issue_number(tmp_path, monkeypatch):
+    client = keeper.GitHub(tmp_path, "unit/public")
+    monkeypatch.setattr(client, "call", lambda *a: "https://github.com/unit/public/issues/123\n")
+    assert client.create_issue("title", "body") == 123
+    monkeypatch.setattr(client, "call", lambda *a: "invalid")
+    with pytest.raises(keeper.KeeperError, match="returned no issue number"):
+        client.create_issue("title", "body")

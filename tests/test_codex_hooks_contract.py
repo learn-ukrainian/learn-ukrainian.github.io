@@ -193,9 +193,13 @@ def test_ordinary_codex_start_is_concise_and_compact_session_start_is_silent(
 
     assert started.returncode == 0, started.stderr
     context = json.loads(started.stdout)["hookSpecificOutput"]["additionalContext"]
+    # This start reads the real checkout and PATH, so a tool cache at its root
+    # and a missing Codex CLI can both add a notice; both must still fit (#10952).
     assert len(context.encode()) < 500
     assert "profile=native_codex" in context
     assert "Native compaction is runtime-owned" in context
+    if "ROOT HYGIENE" in context:
+        assert context.endswith(_ROOT_DETAIL)
     assert "NO EPIC ASSIGNED" not in context
     assert "THREAD ROLLOVER" not in context
     assert "MEMORY.md" not in context
@@ -211,6 +215,253 @@ def test_ordinary_codex_start_is_concise_and_compact_session_start_is_silent(
     )
     assert compacted.returncode == 0, compacted.stderr
     assert compacted.stdout == ""
+
+
+# A real Codex session id is a UUID; it lands in the capsule's orientation
+# URL, so the byte budget is measured with one rather than an empty id.
+_CODEX_SESSION_ID = "0199a5c1-1234-7abc-8def-0123456789ab"
+_SYNTHETIC_ROOT_GUARD = (
+    "import json\n"
+    "import pathlib\n"
+    "report = pathlib.Path(__file__).with_name('report.json').read_text(encoding='utf-8')\n"
+    "print(json.dumps(json.loads(report), indent=2))\n"
+)
+_ROOT_DETAIL = "Detail: .venv/bin/python -m scripts.hygiene.root_entry_guard"
+# The lane self-test's literal verdict when the probed CLI is not on PATH.
+_CODEX_CLI_MISSING = (
+    "DISPATCH LANE SELF-TEST FAILED for codex: FileNotFoundError while building or spawning the adapter"
+)
+
+
+def _path_without(executable: str) -> str:
+    """The inherited PATH minus every directory that provides ``executable``."""
+    return os.pathsep.join(
+        directory
+        for directory in os.environ.get("PATH", "").split(os.pathsep)
+        if directory and not os.access(os.path.join(directory, executable), os.X_OK)
+    )
+
+
+def _start_with_root_names(
+    tmp_path: Path,
+    names: list[str],
+    *,
+    synthetic: bool,
+    lane_cli: bool = True,
+    agent: str = "codex",
+) -> tuple[subprocess.CompletedProcess[bytes], Path, dict[str, str]]:
+    """Run ordinary SessionStart with ``names`` as unexpected root entries.
+
+    ``agent`` is ``codex`` (deployed under ``.codex``) or ``claude``.
+    ``lane_cli`` puts a stub of the agent's CLI on PATH; without it, every
+    PATH directory that provides that CLI is removed, so the lane self-test
+    fails exactly as on a CI runner. Returns the hook result, the fixture
+    checkout and the hook environment.
+    """
+    project = tmp_path / "primary"
+    project.mkdir()
+    _run(["git", "init", "-b", "main"], cwd=project)
+    _run(["git", "config", "user.email", "hooks@example.invalid"], cwd=project)
+    _run(["git", "config", "user.name", "Hook Tests"], cwd=project)
+    (project / ".gitignore").write_text(".venv\nscripts\n", encoding="utf-8")
+    (project / ".python-version").write_text(
+        (REPO_ROOT / ".python-version").read_text(encoding="utf-8"),
+        encoding="utf-8",
+    )
+    (project / "README.md").write_text("hook test\n", encoding="utf-8")
+    (project / ".venv").symlink_to(PRIMARY_ROOT / ".venv")
+    (project / "scripts").symlink_to(REPO_ROOT / "scripts")
+    _run(["git", "add", ".gitignore", ".python-version", "README.md"], cwd=project)
+    _run(["git", "commit", "-m", "fixture"], cwd=project)
+    hook_cwd = project
+    if synthetic:
+        # ``python -m`` puts its cwd first on sys.path. This shadow package
+        # serves only scripts.hygiene.root_entry_guard and resolves every
+        # other scripts.* module from the real tree.
+        hook_cwd = tmp_path / "shadow"
+        shadow_hygiene = hook_cwd / "scripts" / "hygiene"
+        shadow_hygiene.mkdir(parents=True)
+        (hook_cwd / "scripts" / "__init__.py").write_text(
+            f"__path__.append({os.fspath(REPO_ROOT / 'scripts')!r})\n", encoding="utf-8"
+        )
+        (shadow_hygiene / "__init__.py").write_text("", encoding="utf-8")
+        (shadow_hygiene / "root_entry_guard.py").write_text(_SYNTHETIC_ROOT_GUARD, encoding="utf-8")
+        report = {
+            "repo_root": os.fspath(project),
+            "unexpected_count": len(names),
+            "unexpected": [{"name": name, "kind": "dir", "git_invisible": True} for name in names],
+        }
+        (shadow_hygiene / "report.json").write_text(json.dumps(report), encoding="utf-8")
+    else:
+        for name in names:
+            (project / name).mkdir()
+
+    stub_bin = tmp_path / "bin"
+    stub_bin.mkdir()
+    if lane_cli:
+        (stub_bin / agent).write_text(f"#!/bin/sh\necho '{agent} 0.0.0-test'\n", encoding="utf-8")
+        (stub_bin / agent).chmod(0o755)
+
+    deployed = tmp_path / f".{agent}" / "hooks"
+    deployed.mkdir(parents=True)
+    session_hook = deployed / "session-setup.sh"
+    shutil.copy2(SESSION_SETUP_HOOK, session_hook)
+    shutil.copy2(POST_COMPACT_HOOK, deployed / "post-compact.sh")
+    environment = os.environ.copy()
+    for key in tuple(environment):
+        if (
+            key.startswith("LEARN_UKRAINIAN_")
+            or key.startswith("CODEX_")
+            or key.startswith("SESSION_")
+            or key == "CLAUDE_CODE_FILE_READ_MAX_OUTPUT_TOKENS"
+        ):
+            environment.pop(key, None)
+    environment.update(
+        {
+            "CLAUDE_PROJECT_DIR": os.fspath(project),
+            "CLAUDE_PROFILE_RESOLVER_SH": os.fspath(REPO_ROOT / "scripts/lib/profile_resolver.sh"),
+            "CLAUDE_PROFILE_RESOLVER_PY": os.fspath(REPO_ROOT / "scripts/lib/context_profiles.py"),
+            "HOME": os.fspath(tmp_path / "home"),
+            "PATH": os.fspath(stub_bin) + os.pathsep + _path_without(agent),
+        }
+    )
+    model = "gpt-6.1-sol"
+    if agent == "codex":
+        environment["CODEX_CANONICAL_REPO_ROOT"] = os.fspath(project)
+    else:
+        environment["CLAUDE_CODE_FILE_READ_MAX_OUTPUT_TOKENS"] = "32000"
+        model = "claude-opus-5-5"
+    started = subprocess.run(
+        ["bash", os.fspath(session_hook)],
+        cwd=hook_cwd,
+        input=json.dumps({"source": "startup", "model": model, "session_id": _CODEX_SESSION_ID}).encode(),
+        capture_output=True,
+        check=False,
+        env=environment,
+        timeout=60,
+    )
+    return started, project, environment
+
+
+_ROOT_NAME_CASES = [
+    pytest.param(["n" * 139], False, "1", None, id="real-139-byte-name"),
+    pytest.param(["nnnnnnn€nnnn"], False, "1", None, id="three-byte-char-straddles-old-cut"),
+    pytest.param(["nnnnnn😀nnn"], False, "1", None, id="four-byte-emoji-straddles-old-cut"),
+    *(
+        pytest.param(["n" * offset + "é" + "nnnn"], False, "1", None, id=f"e-acute-at-byte-{offset}")
+        for offset in range(5, 10)
+    ),
+    pytest.param(["x\x1b[2J\x1b[H"], False, "1", None, id="terminal-clear-and-home"),
+    pytest.param(["a\nb"], False, "1", None, id="newline"),
+    pytest.param(["bell\x07"], False, "1", None, id="control-character"),
+    pytest.param([".mypy_cache"], False, "1", ".mypy_cache", id="observed-ci-tool-cache"),
+    pytest.param(["abcd", "efghi"], False, "2", "abcd, efghi", id="exactly-at-limit"),
+    pytest.param(["abcd", "efghij"], False, "2", None, id="one-over-limit"),
+    pytest.param([f"garbage-{index:04d}" for index in range(1000)], True, "99+", None, id="1000-entries"),
+]
+
+
+@pytest.mark.parametrize("lane_cli", [True, False], ids=["codex-cli", "no-codex-cli"])
+@pytest.mark.parametrize(("names", "synthetic", "shown_count", "inline"), _ROOT_NAME_CASES)
+def test_ordinary_codex_start_bounds_root_hygiene_names(
+    tmp_path: Path,
+    names: list[str],
+    synthetic: bool,
+    shown_count: str,
+    inline: str | None,
+    lane_cli: bool,
+) -> None:
+    """Root-entry names are unbounded and attacker-shaped (#6863).
+
+    The ordinary SessionStart context must stay strictly under 500 bytes and
+    valid UTF-8 for any names, also when the dispatch-lane self-test fails
+    beside it because the Codex CLI is missing, as on a CI runner (#10952).
+    Names appear inline only as a whole printable ASCII list of at most 11
+    bytes; otherwise the Detail command lists them and stderr gets every name
+    on one escaped line. A synthetic guard report stands in for 1,000 real
+    directories, which the guard cannot scan inside its deadline.
+    """
+    started, project, environment = _start_with_root_names(tmp_path, names, synthetic=synthetic, lane_cli=lane_cli)
+
+    assert started.returncode == 0, started.stderr
+    context = json.loads(started.stdout.decode("utf-8"))["hookSpecificOutput"]["additionalContext"]
+    assert len(context.encode("utf-8")) < 500
+    assert _CODEX_SESSION_ID in context
+    assert "profile=native_codex" in context
+    assert "Native compaction is runtime-owned" in context
+    assert "SESSION SETUP CHECK" not in context
+    if lane_cli:
+        assert "DISPATCH LANE SELF-TEST FAILED" not in context
+    else:
+        assert f"\n- {_CODEX_CLI_MISSING}\n" in context
+    root_line = (
+        f"\n- ROOT HYGIENE: {shown_count} unexpected primary-checkout root entries"
+        f"{f' ({inline})' if inline else ''}; manual removal only (#6863). {_ROOT_DETAIL}"
+    )
+    assert context.endswith(root_line)
+    escaped_line = b"ROOT HYGIENE unexpected entries (escaped): " + ascii(names).encode() + b"\n"
+    if inline is None:
+        assert all(name not in context for name in names)
+        assert escaped_line in started.stderr
+    else:
+        assert escaped_line not in started.stderr
+    for raw in (b"\x1b", b"\x07"):
+        assert raw not in started.stderr
+    for name in names:
+        if not (name.isascii() and name.isprintable()):
+            assert name.encode() not in started.stderr
+    if not synthetic:
+        assert all((project / name).is_dir() for name in names), "the canary never deletes"
+
+    compacted = subprocess.run(
+        ["bash", os.fspath(tmp_path / ".codex" / "hooks" / "post-compact.sh")],
+        input=json.dumps({"source": "compact", "model": "gpt-6.1-sol"}),
+        text=True,
+        capture_output=True,
+        check=False,
+        env=environment | {"CODEX_COMPACT_SESSION_START": "1"},
+        timeout=10,
+    )
+    assert compacted.returncode == 0, compacted.stderr
+    assert compacted.stdout == ""
+
+
+@pytest.mark.parametrize("lane_cli", [True, False], ids=["codex-cli", "no-codex-cli"])
+def test_empty_name_list_is_an_unchanged_control(tmp_path: Path, lane_cli: bool) -> None:
+    """An empty name list must still print no root-hygiene notice."""
+    started, _, _ = _start_with_root_names(tmp_path, [], synthetic=False, lane_cli=lane_cli)
+
+    assert started.returncode == 0, started.stderr
+    context = json.loads(started.stdout.decode("utf-8"))["hookSpecificOutput"]["additionalContext"]
+    assert len(context.encode("utf-8")) < 500
+    assert _CODEX_SESSION_ID in context
+    assert "profile=native_codex" in context
+    assert "Native compaction is runtime-owned" in context
+    assert ("DISPATCH LANE SELF-TEST FAILED" in context) is not lane_cli
+    assert "ROOT HYGIENE" not in context
+    assert b"ROOT HYGIENE" not in started.stderr
+
+
+@pytest.mark.parametrize(
+    ("names", "shown_names"),
+    [
+        pytest.param([".mypy_cache"], ".mypy_cache", id="inline"),
+        pytest.param(["n" * 139], "names on stderr", id="withheld"),
+    ],
+)
+def test_claude_session_start_keeps_full_notice_layout(tmp_path: Path, names: list[str], shown_names: str) -> None:
+    """The issue formatter is shared; only ordinary Codex is compacted (#10952)."""
+    started, _, _ = _start_with_root_names(tmp_path, names, synthetic=False, lane_cli=False, agent="claude")
+
+    assert started.returncode == 0, started.stderr
+    context = json.loads(started.stdout.decode("utf-8"))["hookSpecificOutput"]["additionalContext"]
+    assert "\n\nSESSION SETUP CHECK:\nISSUES:\n  - " in context
+    assert "\n  - DISPATCH LANE SELF-TEST FAILED for claude (handoff identity claude): " in context
+    assert (
+        f"\n  - ROOT HYGIENE: 1 unexpected primary-checkout root entries ({shown_names}). "
+        f"Remove manually; never auto-deleted (#6863). {_ROOT_DETAIL}\n"
+    ) in context
+    assert "\nINFO:\n  - Orientation diagnostics: " in context
 
 
 def test_explicit_non_driver_codex_compact_session_start_is_silent(tmp_path: Path) -> None:
@@ -384,11 +635,11 @@ def test_codex_tool_events_preserve_policy_then_run_optional_entire_hook() -> No
     assert len(post_groups) == 1
     assert len(post_groups[0]["hooks"]) == 2
     assert 'codex_hook_entry.sh" post-tool-use' in post_groups[0]["hooks"][0]["command"]
-    assert "entire hooks codex post-tool-use" in post_groups[0]["hooks"][1]["command"]
+    assert "--budget 25 hooks codex post-tool-use" in post_groups[0]["hooks"][1]["command"]
     assert post_groups[0]["hooks"][1]["timeout"] == 30
-    # Optional Entire capture must fail open (exit 0) even when the
-    # installed CLI errors, so it can never poison Codex exec.
-    assert post_groups[0]["hooks"][1]["command"].endswith("|| true'")
+    # Optional Entire capture runs behind the capture guard, which exits 0 even
+    # when the installed CLI errors, so it can never poison Codex exec (#10846).
+    assert "/scripts/entire/capture_guard.sh" in post_groups[0]["hooks"][1]["command"]
 
 
 def test_codex_policy_preserves_tool_scopes_and_per_guard_deadlines() -> None:

@@ -24,8 +24,8 @@ Known behavioral facts (verify against the installed CLI when changing transport
   ``MCP_TOOL`` events; both shapes are paired with planner intents.
 - Per-invocation model is an allowlisted ``--model <slug>``. Slugs and
   display strings normalize to the same key. Missing models use the default;
-  unknown explicit names are refused. Claude 5.5 high pins require the
-  permission-denied review route and separate driver qualification (#10420).
+  unknown explicit names are refused. Claude 5.5 high pins use the existing
+  worker or permission-denied review route and separate driver qualification (#10420).
 - ``agy plugin`` only exposes ``import gemini|claude``, ``install``,
   ``enable``, ``disable``. There is no plugin-marketplace browse surface,
   and ``import gemini`` is a no-op in a default install.
@@ -92,7 +92,7 @@ import tempfile
 import unicodedata
 import urllib.parse
 import uuid
-from collections.abc import Iterator, Mapping
+from collections.abc import Iterable, Iterator, Mapping
 from pathlib import Path
 from typing import Any, NamedTuple
 
@@ -164,6 +164,12 @@ AGY_INCOMPLETE_RUN_REASONS: tuple[str, ...] = (
     AGY_HEADLESS_PERMISSION_DENIED,
 )
 AGY_INTERIM_LANGUAGE_WARNING = "agy_interim_language_warning"
+# Typed ``driver_hint`` for a review route ended by a headless read_file
+# refusal. Review routes grant reads only inside the checkout, so the read was
+# outside it (often the primary checkout's Git metadata, sought after the
+# command(*) rule refused git). Re-dispatch with the diff and every needed file
+# inside the checkout and a brief saying git and outside paths are unavailable.
+AGY_DRIVER_HINT_INLINE_REVIEW_INPUTS = "inline_review_inputs"
 
 # Match the diagnostic header, never status/cancellation tokens inside its message.
 _PROVIDER_DIAGNOSTIC_RE = re.compile(
@@ -581,7 +587,7 @@ def _pre_model_failure(plan: InvocationPlan | None, stdout: str, bound: _Transcr
         ):
             return False
     if bound is not None:
-        return not bound.unreadable_lines and not any(
+        return not bound.corrupt and not any(
             event.get("type") == "USER_INPUT" or _is_model_event(event) or event.get("source") == "MODEL"
             for event in bound.events
         )
@@ -761,7 +767,7 @@ _AGY_MODEL_SLUGS: tuple[str, ...] = (
     "claude-sonnet-5-5-high",
     "claude-opus-5-5-high",
 )
-_AGY_CLAUDE_REVIEW_SLUGS = frozenset({"claude-sonnet-5-5-high", "claude-opus-5-5-high"})
+_AGY_CLAUDE_SLUGS = frozenset({"claude-sonnet-5-5-high", "claude-opus-5-5-high"})
 
 # Recognize legacy display labels for active selection or retired-model refusal.
 _AGY_MODEL_LEGACY_LABELS: tuple[str, ...] = (
@@ -841,9 +847,110 @@ def unknown_model_suggestion(model: str) -> str:
 
 _WRITE_MODE_PROMPT_CONTRACT = (
     "\n\n[WRITE MODE CONTRACT: Do not start timers or waits. "
-    "If a command becomes a background task, track it to confirmed completion (poll its status) before replying. "
+    'If a command becomes a background task, use the native manage_task tool with Action="status" '
+    'and the exact returned TaskId to track it to confirmed completion before replying. '
+    'Do not spawn shell pgrep/sleep wait loops or use manage_task Action="kill" to coordinate waiting. '
     "Never end the turn while a task is running. Reply ONLY after push and verification are confirmed.]"
 )
+
+
+class AgyRuntimeIdentity(dict):
+    """In-memory custody of a runner-observed init, serialized as an ordinary mapping.
+
+    A dictionary from model output or a cached record cannot acquire this type.
+    The snapshot also detects mutation between observation and dispatch storage.
+    This is provider-reported identity, not backend attestation.
+    """
+
+    def __init__(self, observation: Mapping[str, Any] | Iterable[tuple[str, Any]]) -> None:
+        super().__init__(observation)
+        self._snapshot = json.dumps(self, sort_keys=True)
+
+    def bound_to(self, *, task_id: str, run_nonce: str | None, requested_model: str | None) -> bool:
+        provenance = self.get("provenance") or {}
+        return (
+            json.dumps(self, sort_keys=True) == self._snapshot
+            and bool(task_id)
+            and bool(run_nonce)
+            and provenance.get("task_id") == task_id
+            and provenance.get("run_nonce") == run_nonce
+            and provenance.get("requested_model") == requested_model
+        )
+
+
+def agy_model_state(
+    *, agent: str, model: str | None, identity: Any, task_id: str | None, run_nonce: str | None, invocation_id: str | None = None,
+) -> dict[str, Any]:
+    """Persist only same-run observations supplied by the normal runtime."""
+    if agent != "agy":
+        return {}
+
+    try:
+        requested = AgyAdapter.resolve_model_slug(model) if model else None
+    except ValueError:
+        requested = None
+    if requested not in AgyAdapter.claude_model_slugs:
+        return {}
+    from scripts.review.model_catalog import load_model_catalog
+
+    trusted = False
+    observed_slug = family = None
+    if isinstance(identity, AgyRuntimeIdentity):
+        provenance = identity.get("provenance")
+        if isinstance(provenance, dict):
+            events = provenance.get("init_events")
+            invocation = provenance.get("invocation_id")
+            cli_digest = provenance.get("cli_sha256")
+            cli_version = provenance.get("cli_version")
+            session = provenance.get("provider_session_id")
+            observed = identity.get("actual_model")
+            try:
+                observed_slug = AgyAdapter.resolve_model_slug(observed) if isinstance(observed, str) else None
+                bound = identity.bound_to(task_id=task_id, run_nonce=run_nonce, requested_model=requested)
+            except (TypeError, ValueError):
+                bound = False
+            family = next((
+                spec["family"] for key, spec in load_model_catalog()["models"].items()
+                if key == observed_slug or spec.get("routing_wire_ids", {}).get("agy") == observed_slug
+            ), None) if observed_slug else None
+            # Custody and binding do not establish consistency of a sealed mapping.
+            # A genuine mismatch stays known; a contradictory receipt stays untrusted.
+            trusted = (
+                bound
+                and identity.get("source") == "provider-init"
+                and identity.get("harness") == "agy"
+                and provenance.get("origin") == "subprocess.stdout"
+                and isinstance(invocation, str) and re.fullmatch(r"[0-9a-f]{32}", invocation) is not None
+                and (invocation_id is None or invocation == invocation_id)
+                and isinstance(cli_digest, str) and re.fullmatch(r"[0-9a-f]{64}", cli_digest) is not None
+                and isinstance(cli_version, str) and bool(cli_version.strip()) and cli_version != "unknown"
+                and (session is None or (isinstance(session, str) and 0 < len(session) <= 200))
+                and isinstance(events, list) and bool(events)
+                and all(
+                    isinstance(event, dict)
+                    and isinstance(event.get("sha256"), str)
+                    and re.fullmatch(r"[0-9a-f]{64}", event["sha256"]) is not None
+                    and (event.get("provider_session_id") is None or event["provider_session_id"] == session)
+                    for event in events
+                )
+                and identity.get("actual_model_known") is (observed_slug is not None)
+                and (observed_slug is not None or observed is None)
+                and identity.get("actual_family") == family
+                and isinstance(identity.get("substituted"), bool)
+                and identity["substituted"] is (observed_slug != requested or len(events) > 1)
+            )
+    observed = identity.get("actual_model") if trusted else None
+    known = trusted and identity.get("actual_model_known") is True
+    matched = known and observed_slug == requested and identity.get("substituted") is False
+    return {
+        "model_identity": identity if trusted else None,
+        "resolved_model": observed if known else "unattested-harness",
+        "resolved_model_known": bool(known),
+        "resolved_model_source": identity["source"] if trusted else "unattested-harness",
+        "resolved_model_family": family if trusted else None,
+        "resolved_model_harness": "agy",
+        "identity_matches_request": bool(matched),
+    }
 
 
 class AgyAdapter:
@@ -852,6 +959,7 @@ class AgyAdapter:
     name: str = "agy"
     default_model: str = os.environ.get("LEARN_UK_AGY_MODEL", "gemini-3.8-flash-high")
     supported_modes: frozenset[str] = frozenset({"read-only", "workspace-write", "danger"})
+    claude_model_slugs = _AGY_CLAUDE_SLUGS
 
     @staticmethod
     def resolve_model_slug(model: str) -> str | None:
@@ -899,8 +1007,8 @@ class AgyAdapter:
 
         Slugs and display strings resolve to an allowlisted ``--model`` slug.
         Missing models use the configured default; unknown explicit models
-        fail before subprocesses. Claude pins require the permission-denied
-        review route. ``effort`` remains a no-op (#1396).
+        fail before subprocesses. Claude high pins use the existing worker or
+        permission-denied review route. ``effort`` remains a no-op (#1396).
         """
         if mode not in self.supported_modes:
             raise ValueError(f"AgyAdapter: unsupported mode {mode!r}")
@@ -911,25 +1019,23 @@ class AgyAdapter:
         resolved_model = self._resolve_model_flag(model)
         tc = tool_config or {}
         review_route = _agy_review_route(tc)
-        if resolved_model in _AGY_CLAUDE_REVIEW_SLUGS and not review_route:
-            raise ValueError(
-                f"agy_claude_requires_review_route: rejected {model if model is not None else self.default_model}; "
-                "Claude requires the permission-denied AGY review route"
-            )
+        if resolved_model in self.claude_model_slugs and not review_route:
+            from scripts.review.security_paths import is_security_sensitive_change
+
+            model_spec = next((
+                spec for spec in load_model_catalog()["models"].values()
+                if spec.get("routing_wire_ids", {}).get("agy") == resolved_model
+            ), {})
+            security_scope = tc.get("risk") == "critical" or is_security_sensitive_change((), tc.get("owned_paths") or ())
+            if security_scope and "security_review" not in model_spec.get("roles", ()):
+                raise ValueError("agy_sonnet_security_refused: Sonnet cannot implement security-sensitive work")
 
         max_budget_usd = (tool_config or {}).get("max_budget_usd")
         if max_budget_usd is not None:
-            _logger.warning(
-                "non-claude adapter %s ignoring max_budget_usd=%s; use hard-timeout/silence-timeout instead",
-                self.name,
-                max_budget_usd,
-            )
+            _logger.warning("non-claude adapter ignoring max_budget_usd; use hard-timeout/silence-timeout instead")
 
         if effort is not None:
-            _logger.debug(
-                "agy effort %r not yet wired through CLI — using TUI-selected model default (#1396 follow-up)",
-                effort,
-            )
+            _logger.debug("agy effort not yet wired through CLI — using TUI-selected model default (#1396 follow-up)")
 
         review_isolation = bool(tc.get("review_isolation"))
         if review_isolation and not tc.get("review_attempt_boundary"):
@@ -1065,7 +1171,8 @@ class AgyAdapter:
                 ),
                 "entire_fleet": {
                     "requested_model": model or self.default_model,
-                    "actual_model": resolved_model or model or self.default_model,
+                    "actual_model": None if resolved_model in _AGY_CLAUDE_SLUGS else resolved_model or model or self.default_model,
+                    **({"actual_model_known": "false"} if resolved_model in _AGY_CLAUDE_SLUGS else {}),
                 },
             },
             host_harness="agy",
@@ -1134,8 +1241,15 @@ class AgyAdapter:
             stream_problem=stream_problem,
         )
         if denial is not None:
-            attempt = _headless_denial_evidence(bound, plan, denial.permission_kind, read_reason=read_reason)
+            attempt = _headless_denial_evidence(
+                bound, plan, denial.permission_kind, read_reason=read_reason, notice_target=denial.permission_target
+            )
             fallback_details = {}
+            if bound is not None and bound.corrupt:
+                fallback_details.update(
+                    transcript_unreadable_lines=bound.unreadable_lines,
+                    transcript_malformed_status_lines=bound.malformed_status_lines,
+                )
             if denial.permission_target is not None and attempt.permission_target_unknown_reason in {
                 "transcript_read_refused",
                 "transcript_corrupt",
@@ -1153,8 +1267,16 @@ class AgyAdapter:
                     denial.permission_target, denial.permission_kind, plan
                 )
                 attempt = dataclasses.replace(
-                    attempt, permission_target=target, permission_target_unknown_reason=reason, via_symlink=via_symlink
+                    attempt,
+                    permission_target=target,
+                    permission_target_unknown_reason=reason
+                    or (
+                        "trigger_ambiguous" if attempt.permission_target_unknown_reason == "trigger_ambiguous" else None
+                    ),
+                    via_symlink=via_symlink,
                 )
+            if attempt.permission_kind == "read_file" and plan and plan.metadata.get("agy_permission_profile_id"):
+                fallback_details["driver_hint"] = AGY_DRIVER_HINT_INLINE_REVIEW_INPUTS
             result = dataclasses.replace(
                 result,
                 agy_attempt=attempt,
@@ -1202,7 +1324,10 @@ class AgyAdapter:
             agy_killed_commands=killed,
             agy_pre_model_failure=False if denial else _pre_model_failure(plan, stdout, bound),
             agy_attempt=attempt,
-            substitution=model_identity if not result.ok and model_identity["actual_model_known"] else None,
+            substitution={
+                **model_identity,
+                "requested_model": plan.cmd[plan.cmd.index("--model") + 1] if plan and "--model" in plan.cmd else None,
+            } if model_identity["actual_model_known"] and model_identity["substituted"] else None,
             model_identity={
                 "actual_model": model_identity["actual_model"],
                 "actual_model_known": model_identity["actual_model_known"],
@@ -1409,8 +1534,8 @@ def _attempt_evidence(bound: _TranscriptSlice | None, result: ParseResult, plan:
 
     A command intent is not execution. Its bound result must show a task
     start or synchronous completion; missing/error results remain unknown.
-    Deny-rule signals count only in the tool's bound result slot, never on
-    model prose, Sources output or an unrelated diagnostic stream.
+    Native permission refusals count only in the tool's bound result slot,
+    never on model prose, Sources output or an unrelated diagnostic stream.
     """
     reason = (
         result.agy_attempt.completion_reason
@@ -1429,7 +1554,7 @@ def _attempt_evidence(bound: _TranscriptSlice | None, result: ParseResult, plan:
         else None,
         via_symlink=result.agy_attempt.via_symlink if result.agy_attempt else False,
     )
-    if bound is None or bound.unreadable_lines:
+    if bound is None or bound.corrupt:
         return base
     events = bound.events
     # The same final-reply boundary used by the completion gate.
@@ -1509,7 +1634,8 @@ def _attempt_evidence(bound: _TranscriptSlice | None, result: ParseResult, plan:
         deny_rule = (
             event.get("status") in {"ERROR", "INVALID"} or content.strip() == "Matches user-configured deny rule."
         ) and "Matches user-configured deny rule." in content
-        if deny_rule:
+        # Headless (prompting) and other rule refusals did not run either.
+        if deny_rule or _native_permission_denial(event) is not None:
             native_denial = event.get("status") in {"ERROR", "INVALID"} and (
                 "Encountered error in step execution: permission check failed for " in content
             )
@@ -1519,10 +1645,14 @@ def _attempt_evidence(bound: _TranscriptSlice | None, result: ParseResult, plan:
                 tool
                 and tool not in {"run_command", "call_mcp_tool"}
                 and native_denial
-                and "Permission denied for read_file(" in content
+                and re.search(r"(?:Permission denied|user denied permission) for read_file\(", content)
             ):
                 denied_file_reads.add(slot)
-            elif tool == "call_mcp_tool" and native_denial and "Permission denied for mcp(" in content:
+            elif (
+                tool == "call_mcp_tool"
+                and native_denial
+                and re.search(r"(?:Permission denied|user denied permission) for mcp\(", content)
+            ):
                 denied_mcp.add(slot)
         if event.get("status") == "RUNNING" and (start := _BACKGROUND_START_HEADER_RE.match(content)):
             if not start.group("timer"):
@@ -1758,8 +1888,41 @@ class AgyHeadlessPermissionDenial(NamedTuple):
     permission_target: str | None
 
 
+class _NativePermissionDenial(NamedTuple):
+    """A tool result slot written by the CLI's permission check."""
+
+    kind: str
+    target: str
+    rule_matched: bool
+
+
+# AGY 1.2.17 wrote the bare error; 1.4.x prefixes step timestamps and words
+# the unmatched (headless-prompting) refusal as "user denied permission".
+# A rule match (a settings deny rule or the CLI's hardcoded protection rule)
+# is returned to the model and the turn continues (live AGY 1.4.3 probe, #10334).
+_NATIVE_DENIAL_RE = re.compile(
+    r"(?:(?:Created|Completed) At: [^\r\n]*\r?\n)*"
+    r"Encountered error in step execution: permission check failed for (?P<kind>[a-z][a-z0-9_]*) "
+    r'"(?P<target>[^"\r\n]*)": (?:Permission denied|user denied permission) for (?P=kind)\((?P=target)\)'
+    r"(?P<rest>[^\r\n]*)"
+)
+_RULE_MATCH_RE = re.compile(r"\.\s*Matches [a-z][a-z -]* rule\.")
+
+
+def _native_permission_denial(event: Mapping[str, Any]) -> _NativePermissionDenial | None:
+    """Parse only a failed result slot's leading CLI text, never model prose."""
+    if event.get("status") not in {"ERROR", "INVALID"}:
+        return None
+    native = _NATIVE_DENIAL_RE.match(str(event.get("content") or ""))
+    if native is None:
+        return None
+    rule_matched = _RULE_MATCH_RE.match(native.group("rest")) is not None
+    return _NativePermissionDenial(native.group("kind"), native.group("target"), rule_matched)
+
+
 _DENIAL_TARGET_ARGS = {
     "read_file": {
+        "read_file": "Path",
         "view_file": "AbsolutePath",
         "view_file_outline": "AbsolutePath",
         "view_code_item": "File",
@@ -1866,62 +2029,92 @@ def _sanitized_denial_target(target: Any, kind: str, plan: InvocationPlan | None
         return "unknown", "file_target_invalid", False
 
 
+def _denial_target_key(target: Any, kind: str, plan: InvocationPlan | None) -> str | None:
+    """Compare decoded targets before privacy classes collapse distinct paths."""
+    target = _decode_jsonish(target)
+    if not isinstance(target, str) or not target:
+        return None
+    if kind == "read_file" and plan is not None:
+        return os.path.abspath(plan.cwd / target)
+    return target
+
+
 def _headless_denial_evidence(
     bound: _TranscriptSlice | None,
     plan: InvocationPlan | None,
     kind: str,
     *,
     read_reason: str | None = None,
+    notice_target: str | None = None,
 ) -> AgyAttempt:
-    """Pair native result slots or a unique unresolved intent; never use prose.
+    """Match a native denial by target, or use a unique unresolved intent.
 
     Read only the already-bound invocation slice, before runtime lease reaping.
-    Multiple unresolved calls do not establish which permission request fired.
+    Result order cannot identify a denied tool. Only one matching call in the
+    current planner turn can do so; the denial text owns the observed target.
+    Without a native denial result, a leftover call is evidence only if the
+    turn has no results or its target matches the concrete CLI notice.
     """
     base = AgyAttempt(
         completion_reason=AGY_HEADLESS_PERMISSION_DENIED,
         permission_kind=kind,
         permission_target="unknown",
     )
-    if bound is None or bound.unreadable_lines:
+    if bound is None or bound.corrupt:
         return dataclasses.replace(
             base,
             permission_target_unknown_reason=read_reason
             or ("transcript_corrupt" if bound else "transcript_unbound_or_unreadable"),
         )
     pending: list[Mapping[str, Any]] = []
-    denied: list[tuple[Mapping[str, Any], str]] = []
+    calls: list[Mapping[str, Any]] = []
+    denied: list[str] = []
+    has_results = False
     for event in bound.events:
         if event.get("type") == "PLANNER_RESPONSE" and event.get("source") == "MODEL":
             denied.clear()  # A later model turn supersedes an earlier refusal.
-            calls = event.get("tool_calls")
-            for call in calls if isinstance(calls, list) else []:
-                if isinstance(call, Mapping) and call not in pending:
-                    pending.append(call)
-        elif event.get("type") in {"GENERIC", "TOOL_RESPONSE"} and pending:
-            call = pending.pop(0)
-            content = str(event.get("content") or "")
+            raw_calls = event.get("tool_calls")
+            calls = [call for call in raw_calls if isinstance(call, Mapping)] if isinstance(raw_calls, list) else []
+            pending = list(calls)
+            has_results = False
+        elif event.get("type") in {"GENERIC", "TOOL_RESPONSE"}:
+            has_results = True
+            if pending:
+                pending.pop(0)
+            native = _native_permission_denial(event)
+            # A rule match returns its refusal to the model and the turn goes
+            # on; only the unmatched (prompting) check ends a headless run.
+            if native is not None and native.kind == kind and not native.rule_matched:
+                denied.append(native.target)
+    native_target = None
+    if denied:
+        if len(denied) != 1:
+            return dataclasses.replace(base, permission_target_unknown_reason="trigger_ambiguous")
+        native_target = denied[0]
+        target_key = _denial_target_key(native_target, kind, plan)
+        candidates = []
+        for call in calls:
+            name, args = call.get("name"), call.get("args")
+            arg_key = _DENIAL_TARGET_ARGS.get(kind, {}).get(name) if isinstance(name, str) else None
             if (
-                event.get("status") in {"ERROR", "INVALID"}
-                and "Matches user-configured deny rule." not in content
-                and (
-                    native := re.match(
-                        r"^Encountered error in step execution: permission check failed for "
-                        + re.escape(kind)
-                        + r' "(?P<target>[^"\r\n]*)": Permission denied for '
-                        + re.escape(kind)
-                        + r"\((?P=target)\)\.",
-                        content,
-                    )
-                )
+                arg_key
+                and isinstance(args, Mapping)
+                and target_key is not None
+                and _denial_target_key(args.get(arg_key), kind, plan) == target_key
             ):
-                denied.append((call, native.group("target")))
-    candidates = [(call, None) for call in pending] if pending else denied
+                candidates.append(call)
+        if len(candidates) != 1:
+            return dataclasses.replace(base, permission_target_unknown_reason="trigger_ambiguous")
+    else:
+        candidates = pending
     if len(candidates) != 1:
         return dataclasses.replace(
-            base, permission_target_unknown_reason="trigger_ambiguous" if candidates else "trigger_missing"
+            base,
+            permission_target_unknown_reason="trigger_ambiguous"
+            if candidates or (notice_target is not None and calls)
+            else "trigger_missing",
         )
-    call, native_target = candidates[0]
+    call = candidates[0]
     name = call.get("name")
     arg_key = _DENIAL_TARGET_ARGS.get(kind, {}).get(name) if isinstance(name, str) else None
     if not isinstance(name, str) or not re.fullmatch(r"[a-z][a-z0-9_]{0,79}", name):
@@ -1929,7 +2122,28 @@ def _headless_denial_evidence(
     # MCP/command output cannot supply file or URL permission evidence.
     if not arg_key and (kind, name) not in {("command", "run_command"), ("mcp", "call_mcp_tool")}:
         return dataclasses.replace(base, permission_target_unknown_reason="tool_kind_unverified")
+    if native_target is None and has_results and notice_target is None:
+        return dataclasses.replace(base, permission_target_unknown_reason="trigger_ambiguous")
     args = call.get("args")
+    if notice_target is not None:
+        notice_key = _denial_target_key(notice_target, kind, plan)
+        call_key = _denial_target_key(args.get(arg_key), kind, plan) if isinstance(args, Mapping) and arg_key else None
+        notice_matches = 0
+        for candidate in calls:
+            candidate_name, candidate_args = candidate.get("name"), candidate.get("args")
+            candidate_arg = _DENIAL_TARGET_ARGS.get(kind, {}).get(candidate_name) if isinstance(candidate_name, str) else None
+            if (
+                candidate_arg
+                and isinstance(candidate_args, Mapping)
+                and _denial_target_key(candidate_args.get(candidate_arg), kind, plan) == notice_key
+            ):
+                notice_matches += 1
+        if (
+            notice_key is None
+            or notice_matches != 1
+            or notice_key != call_key
+        ):
+            return dataclasses.replace(base, permission_target_unknown_reason="trigger_ambiguous")
     target, reason, via_symlink = _sanitized_denial_target(
         native_target
         if native_target is not None
@@ -2055,59 +2269,149 @@ def _stream_result(
     *,
     plan: InvocationPlan | None = None,
     model_identity: dict[str, Any] | None = None,
+    identity_events: list[dict[str, Any]] | None = None,
 ) -> tuple[dict[str, Any] | None, str | None]:
-    """Read exactly one terminal result from AGY's NDJSON event stream."""
+    """Read terminal output and every initialization before selecting identity."""
+    def unique_members(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+        event: dict[str, Any] = {}
+        for key, value in pairs:
+            if key in event:
+                raise ValueError("duplicate NDJSON member")
+            event[key] = value
+        return event
+
+    def invalidate(reason: str) -> tuple[None, str]:
+        if model_identity is not None:
+            # Invalid evidence has no observation to substitute. Execution failure
+            # belongs to the returned problem, never to the substitution flag.
+            model_identity.update(actual_model=None, actual_model_known=False, source="unattested-harness")
+        return None, reason
+
     result: dict[str, Any] | None = None
     expected_model = plan.cmd[plan.cmd.index("--model") + 1] if plan and "--model" in plan.cmd else None
     try:
-        resolved_expected = AgyAdapter.resolve_model_slug(expected_model) if expected_model is not None else None
+        expected = AgyAdapter.resolve_model_slug(expected_model) if expected_model is not None else None
     except ValueError:
-        resolved_expected = None
-    argon_identity = resolved_expected in _AGY_ARGON_SLUGS
-    check_identity = argon_identity or resolved_expected in _AGY_CLAUDE_REVIEW_SLUGS
+        expected = None
+    claude_identity = expected in _AGY_CLAUDE_SLUGS
+    argon_identity = expected in _AGY_ARGON_SLUGS
+    check_identity = claude_identity or argon_identity
     identity_seen = False
+    init_seen = False
+    activity_seen = False
+    provider_session = None
+    observed_slug = None
+    observed_model = None
+    identity_problem = None
     if not stdout or not stdout.strip():
         return None, "agy_stream_output_invalid: missing terminal result"
     for line in stdout.split("\n"):
         if not line.strip():
             continue
         try:
-            event = json.loads(line)
+            event = json.loads(line, object_pairs_hook=unique_members if claude_identity else None)
         except json.JSONDecodeError:
             return None, "agy_stream_output_invalid: malformed NDJSON event"
+        except ValueError:
+            return invalidate("agy_model_event_mismatch")
         if not isinstance(event, dict) or not isinstance(event.get("event"), str):
             return None, "agy_stream_output_invalid: malformed NDJSON event"
         if check_identity and event["event"] == "init":
             config = event.get("init")
-            reported = [config.get("model")] if isinstance(config, dict) else []
-            reported.append(event.get("model"))
-            for provider_model in reported:
-                if provider_model is None or provider_model == "":
-                    continue
-                try:
-                    if argon_identity:
-                        mismatch = provider_model != resolved_expected
-                    else:
-                        mismatch = (
-                            not isinstance(provider_model, str)
-                            or AgyAdapter.resolve_model_slug(provider_model) != resolved_expected
-                        )
-                except ValueError:
-                    mismatch = True
+            metadata_order = (event, config) if claude_identity else (config, event)
+            reported = [metadata["model"] for metadata in metadata_order
+                        if isinstance(metadata, dict) and "model" in metadata]
+            if claude_identity:
+                import hashlib
+
+                if "\ufffd" in line:
+                    return invalidate("agy_model_identity_missing")
+                sessions = [metadata[key] for metadata in (event, config) if isinstance(metadata, dict)
+                            for key in ("conversation_id", "session_id") if metadata.get(key) is not None]
+                if identity_events is not None:
+                    identity_events.append({
+                        "sha256": hashlib.sha256(line.removesuffix("\r").encode("utf-8")).hexdigest(),
+                        "provider_session_id": sessions[0] if sessions else None,
+                    })
+                if activity_seen:
+                    return invalidate("agy_model_event_mismatch")
+                if any(metadata.get(key) not in (None, "provider-init", "runtime")
+                       for metadata in (event, config) if isinstance(metadata, dict)
+                       for key in ("source", "model_source")):
+                    return invalidate("agy_model_identity_missing")
+                if any(not isinstance(value, str) or not value or len(value) > 200 for value in sessions):
+                    return invalidate("agy_model_identity_missing")
+                if len(set(sessions)) > 1:
+                    return invalidate("agy_model_event_mismatch")
+                session = sessions[0] if sessions else None
+                resumed = next((arg.split("=", 1)[1] for arg in plan.cmd if arg.startswith("--conversation=")), None)
+                if session is not None and ((provider_session is not None and session != provider_session)
+                                            or (resumed is not None and session != resumed)):
+                    return invalidate("agy_model_event_mismatch")
+                provider_session = session or provider_session
+                if not reported or all(value is None or value == "" for value in reported):
+                    return invalidate("agy_model_identity_missing")
+                resolved = []
+                for value in reported:
+                    try:
+                        slug = AgyAdapter.resolve_model_slug(value) if isinstance(value, str) and value.strip() else None
+                    except ValueError:
+                        slug = None
+                    resolved.append(slug)
+                # Validate the whole init before choosing either representation.
+                if len(reported) > 1 and any(
+                    slug != resolved[0] or (slug is None and value != reported[0])
+                    for value, slug in zip(reported[1:], resolved[1:], strict=True)
+                ):
+                    return invalidate("agy_model_event_mismatch")
+                candidate = resolved[0] if resolved else None
+                value = reported[0] if reported else None
+                if init_seen:
+                    if candidate != observed_slug or (candidate is None and value != observed_model):
+                        return invalidate("agy_model_event_mismatch")
+                    identity_problem = "agy_model_event_mismatch"
+                else:
+                    observed_slug, observed_model = candidate, value
+                init_seen = True
+                mismatch = candidate != expected
+                identity_seen = candidate is not None
                 if model_identity is not None:
                     model_identity.update(
-                        actual_model=provider_model[:200] if isinstance(provider_model, str) else None,
-                        actual_model_known=isinstance(provider_model, str),
-                        substituted=mismatch,
+                        actual_model=observed_model[:200] if candidate is not None else None,
+                        actual_model_known=candidate is not None,
+                        substituted=mismatch or identity_problem is not None,
                         source="provider-init",
                     )
                 if mismatch:
-                    return None, "agy_model_event_mismatch"
-                identity_seen = True
+                    identity_problem = "agy_model_event_mismatch"
+                # Keep reading: a later duplicate/session/source/init can revoke
+                # an otherwise honest mismatch or consistent repeated observation.
+            else:
+                for value in reported:
+                    if value is None or value == "":
+                        continue
+                    mismatch = value != expected
+                    if model_identity is not None:
+                        model_identity.update(actual_model=value[:200] if isinstance(value, str) else None,
+                                              actual_model_known=isinstance(value, str), substituted=mismatch,
+                                              source="provider-init")
+                    if mismatch:
+                        return None, "agy_model_event_mismatch"
+                    identity_seen = True
+        elif event["event"] != "init":
+            activity_seen = True
         if event["event"] == "result":
-            if result is not None or not isinstance(event.get("result"), dict):
+            terminal = event.get("result")
+            if provider_session is not None and isinstance(terminal, dict) and (
+                terminal.get("conversation_id") != provider_session
+                or terminal.get("session_id", provider_session) != provider_session
+            ):
+                return invalidate("agy_model_event_mismatch")
+            if result is not None or not isinstance(terminal, dict):
                 return None, "agy_stream_output_invalid: duplicate or malformed terminal result"
-            result = event["result"]
+            result = terminal
+    if identity_problem:
+        return None, identity_problem
     if result is None:
         return None, "agy_stream_output_invalid: missing terminal result"
     if "response" in result and not isinstance(result["response"], str):
@@ -2119,7 +2423,7 @@ def _stream_result(
         ) and error else "agy_stream_result_error"
     if not result.get("response", "").strip() and "structured_output" not in result:
         return result, "agy_stream_output_invalid: empty terminal response"
-    if argon_identity and not identity_seen:
+    if check_identity and not identity_seen:
         return None, "agy_model_identity_missing"
     return result, None
 
@@ -2155,7 +2459,7 @@ def _completion_gap(stderr_text: str, plan: InvocationPlan | None) -> tuple[str 
     bound = _invocation_transcript(plan)
     if bound is None:
         return AGY_TRANSCRIPT_UNBOUND, None
-    if bound.unreadable_lines:
+    if bound.corrupt:
         return AGY_TRANSCRIPT_UNREADABLE, None
     gap = _slice_completion_gap(bound.events, stderr_text)
     if gap is not None:
@@ -2322,7 +2626,7 @@ def _with_language_warning(detail: str, stderr_text: str | None) -> str:
     task records and usage rows carry it; it is not in
     ``AGY_INCOMPLETE_RUN_REASONS``, so ``delegate.py`` still settles the run.
     """
-    _logger.warning("%s: %s", AGY_INTERIM_LANGUAGE_WARNING, detail)
+    _logger.warning(AGY_INTERIM_LANGUAGE_WARNING)
     return "\n".join(part for part in (AGY_INTERIM_LANGUAGE_WARNING, detail, stderr_text) if part)[:500]
 
 
@@ -2453,17 +2757,21 @@ class _TranscriptSlice(NamedTuple):
     path: Path
     events: list[dict[str, Any]]
     unreadable_lines: int
+    malformed_status_lines: int = 0
+
+    @property
+    def corrupt(self) -> bool:
+        return bool(self.unreadable_lines or self.malformed_status_lines)
 
 
 def _read_transcript_events(
     transcript_path: Path, *, offset: int = 0, trusted_root: Path = Path("/")
-) -> tuple[list[dict[str, Any]], int] | None:
+) -> tuple[list[dict[str, Any]], int, int] | None:
     """Parse the transcript's JSONL events from byte ``offset`` onward.
 
-    Returns the events and the count of non-blank lines that are not a JSON
-    object (invalid UTF-8, truncated or corrupt JSON, a bare scalar), or
-    ``None`` when the file cannot be read. Callers decide what an unreadable
-    line means; nothing is silently dropped.
+    Returns events, unreadable-line count (invalid UTF-8, corrupt JSON or a
+    non-object), and malformed-status count (non-string or blank), or ``None``
+    when the file cannot be read. Both counts make evidence fail closed.
     """
     try:
         raw_lines = safe_read_attempt_file(transcript_path, offset=offset, trusted_root=trusted_root).splitlines()
@@ -2476,6 +2784,7 @@ def _read_transcript_events(
 
     events: list[dict[str, Any]] = []
     unreadable = 0
+    malformed_status = 0
     for raw_line in raw_lines:
         if not raw_line.strip():
             continue
@@ -2485,10 +2794,13 @@ def _read_transcript_events(
             unreadable += 1
             continue
         if isinstance(event, dict):
+            if "status" in event and (not isinstance(event["status"], str) or not event["status"].strip()):
+                malformed_status += 1
+                continue
             events.append(event)
         else:
             unreadable += 1
-    return events, unreadable
+    return events, unreadable, malformed_status
 
 
 def _event_step_index(event: Mapping[str, Any]) -> int | None:
@@ -2783,8 +3095,12 @@ def _invocation_transcript(plan: InvocationPlan | None) -> _TranscriptSlice | No
     parsed = _read_transcript_events(transcript, offset=offset, trusted_root=read_root)
     if parsed is None:
         return None
-    events, unreadable = parsed
-    return _TranscriptSlice(transcript, events, unreadable) if events or unreadable else None
+    events, unreadable, malformed_status = parsed
+    return (
+        _TranscriptSlice(transcript, events, unreadable, malformed_status)
+        if events or unreadable or malformed_status
+        else None
+    )
 
 
 def _log_read_root(plan: InvocationPlan) -> Path:
@@ -2998,7 +3314,7 @@ def _decode_jsonish(value: Any) -> Any:
         return ""
     try:
         return json.loads(stripped)
-    except json.JSONDecodeError:
+    except (ValueError, RecursionError):
         return stripped.strip('"')
 
 

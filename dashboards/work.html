@@ -28,7 +28,7 @@ button, input, select { font: inherit; }
 .signal-card { align-self: end; background: var(--bg2); border: 1px solid var(--border); border-left: 4px solid var(--accent); padding: 14px 16px; }
 .signal-card strong { display: block; font-family: Charter, Georgia, serif; font-size: 18px; margin-bottom: 4px; }
 .signal-card p { color: var(--text3); font-size: 12px; margin: 0; line-height: 1.4; }
-.filter-strip { background: var(--bg2); border: 1px solid var(--border); display: grid; gap: 10px; grid-template-columns: repeat(7, minmax(0, 1fr)) auto; margin: 18px 0; padding: 12px; }
+.filter-strip { background: var(--bg2); border: 1px solid var(--border); display: grid; gap: 10px; grid-template-columns: repeat(8, minmax(0, 1fr)) auto; margin: 18px 0; padding: 12px; }
 .field { display: grid; gap: 4px; min-width: 0; }
 .field label { color: var(--text3); font-size: 10px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
 .field select, .field input { border: 1px solid var(--border); border-radius: 3px; min-width: 0; padding: 7px 8px; background: var(--bg); color: var(--text); }
@@ -171,6 +171,27 @@ button, input, select { font: inherit; }
 
   <section class="filter-strip" aria-label="Public-safe filters">
     <div class="field">
+      <label for="filter-stream">Lane</label>
+      <select id="filter-stream">
+        <option value="">Choose a lane</option>
+        <option value="atlas-practice">atlas-practice</option>
+        <option value="core-quality">core-quality</option>
+        <option value="corpus-channels">corpus-channels</option>
+        <option value="curriculum-upgrade">curriculum-upgrade</option>
+        <option value="devops">devops</option>
+        <option value="docs-knowledge">docs-knowledge</option>
+        <option value="epics">epics</option>
+        <option value="hramatka">hramatka</option>
+        <option value="infra-harness">infra-harness</option>
+        <option value="monitor">monitor</option>
+        <option value="open-model-data">open-model-data</option>
+        <option value="practice">practice</option>
+        <option value="seminars-bio">seminars-bio</option>
+        <option value="seminars-cross">seminars-cross</option>
+        <option value="seminars-folk">seminars-folk</option>
+      </select>
+    </div>
+    <div class="field">
       <label for="filter-view">View</label>
       <select id="filter-view">
         <option value="actionable">Actionable</option>
@@ -270,7 +291,8 @@ button, input, select { font: inherit; }
 
 <script>
 (function () {
-  const ALLOWED_FILTER_KEYS = new Set(['health', 'kind', 'lifecycle', 'orphan', 'repository_id', 'source_id', 'view']);
+  const ALLOWED_FILTER_KEYS = new Set(['health', 'kind', 'lifecycle', 'orphan', 'repository_id', 'source_id', 'stream', 'view']);
+  const LANE_STREAMS = ['atlas-practice', 'core-quality', 'corpus-channels', 'curriculum-upgrade', 'devops', 'docs-knowledge', 'epics', 'hramatka', 'infra-harness', 'monitor', 'open-model-data', 'seminars-bio', 'seminars-cross', 'seminars-folk'];
   const PUBLIC_SINGLETON_REPO = 'learn-ukrainian/learn-ukrainian.github.io';
   const PUBLIC_PROJECTION_URL = '/api/work/v1/projection';
   // Fixed constant — never configurable, never persisted, never rendered into shareable state.
@@ -316,6 +338,7 @@ button, input, select { font: inherit; }
     privateMeta: document.getElementById('source-private-meta'),
     attentionMeta: document.getElementById('attention-meta'),
     foundation: document.getElementById('foundation-label'),
+    stream: document.getElementById('filter-stream'),
     view: document.getElementById('filter-view'),
     health: document.getElementById('filter-health'),
     kind: document.getElementById('filter-kind'),
@@ -699,6 +722,7 @@ button, input, select { font: inherit; }
       if (key === 'lifecycle' && !['open', 'draft', 'running', 'failed'].includes(value)) continue;
       if (key === 'orphan' && value !== 'true' && value !== 'false') continue;
       if (key === 'view' && !['actionable', 'all'].includes(value)) continue;
+      if (key === 'stream' && !LANE_STREAMS.includes(value)) continue;
       out[key] = value;
     }
     if (!out.view) out.view = 'actionable';
@@ -706,6 +730,7 @@ button, input, select { font: inherit; }
   }
 
   function applyFiltersToControls(filters) {
+    if (els.stream) els.stream.value = filters.stream || '';
     if (els.view) els.view.value = filters.view || 'actionable';
     els.health.value = filters.health || '';
     els.kind.value = filters.kind || '';
@@ -717,6 +742,7 @@ button, input, select { font: inherit; }
 
   function controlsToFilters() {
     const filters = {};
+    if (els.stream && els.stream.value) filters.stream = els.stream.value;
     if (els.view && els.view.value) filters.view = els.view.value;
     else filters.view = 'actionable';
     if (els.health.value) filters.health = els.health.value;
@@ -1140,9 +1166,23 @@ button, input, select { font: inherit; }
     const generation = ++projectionGeneration;
     showError('');
     state.publicStatusOverride = null;
-    const publicUrl = (opts && opts.fresh)
-      ? (PUBLIC_PROJECTION_URL + '?fresh=true')
-      : PUBLIC_PROJECTION_URL;
+    const filters = controlsToFilters();
+    const stream = filters.stream || '';
+    if (!stream) {
+      state.merged = null;
+      state.projection = null;
+      state.itemsById = new Map();
+      state.attention = [];
+      state.selectedId = null;
+      state.selectedIndex = -1;
+      showError('Choose a lane before loading the work projection.');
+      els.list.innerHTML = '<div class="empty">Choose a lane. The full board is not loaded.</div>';
+      els.list.removeAttribute('aria-busy');
+      renderDetail(null);
+      return;
+    }
+    const publicUrl = PUBLIC_PROJECTION_URL + '?stream=' + encodeURIComponent(stream)
+      + ((opts && opts.fresh) ? '&fresh=true' : '');
 
     // Public results are usable while the optional private adapter is pending.
     const publicPromise = fetchJson(publicUrl, { timeoutMs: 10000 }).then((doc) => {
@@ -1355,6 +1395,7 @@ button, input, select { font: inherit; }
   });
 
   applyFiltersToControls(readFiltersFromUrl());
+  if (els.stream) els.stream.addEventListener('change', () => loadProjection());
   loadProjection();
 })();
 </script>

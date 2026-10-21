@@ -4,8 +4,11 @@ from __future__ import annotations
 
 import json
 import socket
+import subprocess
 import sys
 from pathlib import Path
+
+import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
@@ -115,3 +118,42 @@ def test_emit_event_hot_path_makes_no_network_call(tmp_path, monkeypatch):
 
     assert emit_mod.emit_event("unit", {"ok": True}) is None
     assert len(_event_lines(event_dir)) == 1
+
+
+def test_emit_event_honors_directory_env(tmp_path, monkeypatch):
+    event_dir = tmp_path / "redirected" / "events"
+    monkeypatch.setenv("LU_TELEMETRY_EVENTS_DIR", str(event_dir))
+
+    emit_mod.emit_event("redirected", {"ok": True})
+
+    rows = _event_lines(event_dir)
+    assert len(rows) == 1
+    assert rows[0]["event_type"] == "redirected"
+    assert rows[0]["ok"] is True
+
+
+@pytest.mark.parametrize("override", [None, ""])
+def test_event_directory_default_is_unchanged(tmp_path, monkeypatch, override):
+    # Exercise the real resolver against a synthetic checkout, never the store.
+    monkeypatch.setattr(emit_mod, "__file__", str(tmp_path / "scripts" / "telemetry" / "emit.py"))
+    if override is None:
+        monkeypatch.delenv("LU_TELEMETRY_EVENTS_DIR", raising=False)
+    else:
+        monkeypatch.setenv("LU_TELEMETRY_EVENTS_DIR", override)
+
+    assert emit_mod._event_dir() == tmp_path / "batch_state" / "telemetry" / "events"
+
+
+def test_redirect_is_inherited_by_subprocess_and_package_import(tmp_path, monkeypatch):
+    event_dir = tmp_path / "child-events"
+    monkeypatch.setenv("LU_TELEMETRY_EVENTS_DIR", str(event_dir))
+    result = subprocess.run(
+        [sys.executable, "-c", "from scripts.telemetry.emit import emit_event; emit_event('child', {'ok': True})"],
+        check=False,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+
+    assert result.returncode == 0, result.stderr
+    assert [row["event_type"] for row in _event_lines(event_dir)] == ["child"]

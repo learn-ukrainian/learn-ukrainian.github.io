@@ -45,7 +45,7 @@ it never mutates them.
   transcripts, responses, session bodies, generated recaps, or generated
   summaries in a distributed capsule or public evidence. The root may consume
   search and task-relevant full explain privately after a green preflight.
-- **No load-bearing Entire dependency.** Entire CLI 0.8.42 stays pinned,
+- **No load-bearing Entire dependency.** Entire CLI 0.11.5 stays pinned,
   optional, and fail-open. A preflight or provider failure falls back to the
   local body-free workflow and cannot alter task disposition. Native tools
   never create public `refs/entire/*` or become fleet evidence.
@@ -94,7 +94,7 @@ projection; provider refreshes write only sanitized local caches.
 # After verified locators actually informed the task, attest that use explicitly
 .venv/bin/python -m scripts.entire_context record-use --task-id <task> --consumer <harness> --purpose <category> --locator-id clink_<64hex> [--locator-id ...]
 
-# Explicit Entire 0.8.42 probe for Monitor's sanitized local cache
+# Explicit Entire 0.11.5 probe for Monitor's sanitized local cache
 .venv/bin/python -m scripts.entire_context refresh-provider-status [--repo PATH]
 
 # Explicit cloud capability probe after private preflight; query/provider bodies are never cached

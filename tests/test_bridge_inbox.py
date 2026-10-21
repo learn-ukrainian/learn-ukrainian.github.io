@@ -105,6 +105,47 @@ def _ok_result(
     )
 
 
+@pytest.mark.parametrize("pin", ["claude-sonnet-5-5-high", "claude-opus-5-5-high"])
+@pytest.mark.parametrize("case,ok", [
+    ("exact", True), ("display", True), ("other-pin", False), ("other-family", False),
+    ("repeated", False), ("nested-model", False), ("nested-session", False),
+    ("terminal-session", False), ("duplicate-after", False), ("missing", False),
+    ("configuration", False), ("provider-failure", False),
+])
+def test_native_agy_inbox_uses_observation_not_requested_identity(monkeypatch, tmp_path, pin, case, ok):
+    from scripts.agent_runtime import runner
+    from scripts.fleet_comms import bottleneck_alerts
+    from tests.agent_runtime.adapters.test_agy_claude_routes import consistency_stream, mock_agy_provider
+
+    monkeypatch.setattr(bottleneck_alerts, "scan_bottlenecks_at_inbox_checkpoint", lambda **k: None)
+    thread = _make_thread("agy")
+    _set_delivery_model(str(thread[0]["message_id"]), pin)
+    monkeypatch.setattr(_inbox, "REPO_ROOT", tmp_path)
+    launches, _, _ = mock_agy_provider(monkeypatch, tmp_path, runner, stdout=consistency_stream(pin, case))
+    results = []
+
+    def invoke(*args, **kwargs):
+        assert not (kwargs.get("tool_config") or {}).get("run_nonce")
+        result = runner.invoke(*args, **kwargs)
+        results.append(result)
+        return result
+
+    monkeypatch.setattr(_inbox, "runtime_invoke", invoke)
+    summary = _inbox.run_inbox("agy", max_messages=1, until_idle=False)
+
+    assert len(launches) == len(results) == 1
+    assert results[0].ok is ok
+    assert results[0].model_identity is None
+    assert results[0].model == pin
+    assert summary.deliveries_failed == (0 if ok else 1)
+    assert summary.deliveries_delivered == summary.replies_posted == (1 if ok else 0)
+    messages = _channels.read("topic", thread_id=str(thread[0]["thread_id"]))
+    assert len(messages) == (2 if ok else 1)
+    if ok:
+        assert messages[-1]["from_model"] == "unattested-harness"
+        assert messages[-1]["body"] == "READY"
+
+
 @patch("scripts.ai_agent_bridge._inbox.runtime_invoke")
 def test_run_inbox_single_thread_single_delivery(mock_invoke):
     thread = _make_thread("claude", count=1)

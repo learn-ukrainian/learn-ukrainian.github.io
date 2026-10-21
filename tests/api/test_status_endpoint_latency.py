@@ -1,15 +1,18 @@
-"""Concurrent status routes must share one scan and return without the request timeout.
+"""Concurrent status routes must share one scan and serve cache hits on the event loop.
 
 A warm hit stays on the event loop, so a saturated worker pool cannot turn a
-cached dashboard read into a timeout. Cold misses for the same key share one
-compute.
+cached dashboard read into a wait. Cold misses for the same key share one
+compute. The burst holds that compute until every request has joined the
+flight, so a later cache hit cannot hide a missing single-flight. Call counts
+and completion while that pool or refresh is still blocked are the proof;
+wall-clock budgets are not.
 """
 
 from __future__ import annotations
 
 import asyncio
+import concurrent.futures
 import threading
-import time
 from pathlib import Path
 
 import httpx
@@ -21,8 +24,10 @@ from scripts.api import artifacts_router, delegate_router, epics_router, state_h
 from scripts.api.monitor_context import fixture_context
 
 _BURST = 20
-_BUDGET_S = 2.0
-_SLOW_S = 0.3
+# Attempt bound for observable polls. Not a latency budget: the loop exits
+# when the condition is true, and a loaded runner only makes each yield slower.
+_ATTEMPTS = 10_000
+_COLD_ROUTERS = (delegate_router, state_router, artifacts_router, epics_router)
 
 
 @pytest.fixture(autouse=True)
@@ -39,17 +44,92 @@ def _mount(tmp_path: Path, router, prefix: str) -> FastAPI:
     return app
 
 
-async def _burst(app: FastAPI, path: str) -> tuple[float, list[httpx.Response]]:
+async def _until(ready, failure: str) -> None:
+    """Poll until ``ready`` or the attempt bound is exhausted."""
+    for _ in range(_ATTEMPTS):
+        if ready():
+            return
+        await asyncio.sleep(0)
+    pytest.fail(failure)
+
+
+class _ColdOverlap:
+    """Gate that stays shut until every cold request has joined one flight.
+
+    A missing single-flight opens the same gate by starting one compute per
+    request. Either way the burst can finish, and the counts show which
+    happened. The wait has no timeout.
+    """
+
+    def __init__(self) -> None:
+        self.counts = {"computes": 0, "joined": 0}
+        self.release = threading.Event()
+        self.lock = threading.Lock()
+        self.barrier: asyncio.Barrier | None = None
+
+    def open_if_complete(self) -> None:
+        if self.counts["joined"] >= _BURST or self.counts["computes"] >= _BURST:
+            self.release.set()
+
+
+def _arm_overlapping_cold_misses(monkeypatch: pytest.MonkeyPatch) -> _ColdOverlap:
+    overlap = _ColdOverlap()
+    original_claim = state_helpers._claim_flight
+    original_async = state_helpers.cache_get_or_compute_async
+
+    def wrapped_claim(key: str, ttl: float, *, force: bool = False):
+        claimed = original_claim(key, ttl, force=force)
+        with overlap.lock:
+            overlap.counts["joined"] += 1
+            overlap.open_if_complete()
+        return claimed
+
+    async def wrapped_async(key: str, ttl: float, compute, *, force: bool = False):
+        def gated():
+            with overlap.lock:
+                overlap.counts["computes"] += 1
+                overlap.open_if_complete()
+            overlap.release.wait()
+            return compute()
+
+        barrier = overlap.barrier
+        if barrier is None:
+            pytest.fail("cold-miss barrier was not armed")
+        await barrier.wait()
+        return await original_async(key, ttl, gated, force=force)
+
+    monkeypatch.setattr(state_helpers, "_claim_flight", wrapped_claim)
+    for module in _COLD_ROUTERS:
+        monkeypatch.setattr(module, "cache_get_or_compute_async", wrapped_async)
+    return overlap
+
+
+async def _overlapping_burst(app: FastAPI, path: str, overlap: _ColdOverlap) -> list[httpx.Response]:
+    overlap.barrier = asyncio.Barrier(_BURST)
+    loop = asyncio.get_running_loop()
+    # A missing single-flight starts one blocked compute per request. The pool
+    # has to fit all of them, or that failure would stall instead of counting.
+    loop.set_default_executor(concurrent.futures.ThreadPoolExecutor(max_workers=_BURST + 1))
     transport = ASGITransport(app=app)
-    async with httpx.AsyncClient(transport=transport, base_url="http://test") as client:
-        started = time.perf_counter()
-        responses = await asyncio.gather(*[client.get(path) for _ in range(_BURST)])
-        return time.perf_counter() - started, list(responses)
+    try:
+        async with httpx.AsyncClient(transport=transport, base_url="http://test") as client:
+            responses = await asyncio.gather(*[client.get(path) for _ in range(_BURST)])
+            return list(responses)
+    finally:
+        overlap.release.set()
 
 
-def _assert_burst(elapsed: float, responses: list[httpx.Response], calls: dict[str, int]) -> None:
-    assert elapsed < _BUDGET_S, f"burst took {elapsed:.3f}s"
+def _run_overlapping_burst(
+    monkeypatch: pytest.MonkeyPatch, app: FastAPI, path: str
+) -> tuple[list[httpx.Response], dict[str, int]]:
+    overlap = _arm_overlapping_cold_misses(monkeypatch)
+    return asyncio.run(_overlapping_burst(app, path, overlap)), overlap.counts
+
+
+def _assert_burst(responses: list[httpx.Response], calls: dict[str, int], overlap: dict[str, int]) -> None:
     assert calls["n"] == 1
+    assert overlap["computes"] == 1
+    assert overlap["joined"] == _BURST
     assert [response.status_code for response in responses] == [200] * _BURST
 
 
@@ -58,12 +138,13 @@ def test_delegate_active_burst_shares_one_scan(tmp_path: Path, monkeypatch: pyte
 
     def slow(**_kwargs):
         calls["n"] += 1
-        time.sleep(_SLOW_S)
         return {"total": 0, "tasks": []}
 
     monkeypatch.setattr(delegate_router, "active_delegate_tasks", slow)
-    elapsed, responses = asyncio.run(_burst(_mount(tmp_path, delegate_router.router, "/api/delegate"), "/api/delegate/active"))
-    _assert_burst(elapsed, responses, calls)
+    responses, overlap = _run_overlapping_burst(
+        monkeypatch, _mount(tmp_path, delegate_router.router, "/api/delegate"), "/api/delegate/active"
+    )
+    _assert_burst(responses, calls, overlap)
 
 
 def test_delegate_tasks_burst_shares_one_scan(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -71,14 +152,13 @@ def test_delegate_tasks_burst_shares_one_scan(tmp_path: Path, monkeypatch: pytes
 
     def slow(**_kwargs):
         calls["n"] += 1
-        time.sleep(_SLOW_S)
         return {"total": 0, "tasks": []}
 
     monkeypatch.setattr(delegate_router, "list_delegate_tasks", slow)
-    elapsed, responses = asyncio.run(
-        _burst(_mount(tmp_path, delegate_router.router, "/api/delegate"), "/api/delegate/tasks")
+    responses, overlap = _run_overlapping_burst(
+        monkeypatch, _mount(tmp_path, delegate_router.router, "/api/delegate"), "/api/delegate/tasks"
     )
-    _assert_burst(elapsed, responses, calls)
+    _assert_burst(responses, calls, overlap)
 
 
 def test_state_summary_burst_shares_one_scan(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -86,12 +166,13 @@ def test_state_summary_burst_shares_one_scan(tmp_path: Path, monkeypatch: pytest
 
     def slow(**_kwargs):
         calls["n"] += 1
-        time.sleep(_SLOW_S)
         return {"generated_at": "2026-01-01T00:00:00Z", "tracks": {}, "totals": {}}
 
     monkeypatch.setattr(state_router, "compute_summary", slow)
-    elapsed, responses = asyncio.run(_burst(_mount(tmp_path, state_router.router, "/api/state"), "/api/state/summary"))
-    _assert_burst(elapsed, responses, calls)
+    responses, overlap = _run_overlapping_burst(
+        monkeypatch, _mount(tmp_path, state_router.router, "/api/state"), "/api/state/summary"
+    )
+    _assert_burst(responses, calls, overlap)
 
 
 def test_pipeline_versions_burst_shares_one_scan(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -99,14 +180,13 @@ def test_pipeline_versions_burst_shares_one_scan(tmp_path: Path, monkeypatch: py
 
     def slow(_ctx, _track):
         calls["n"] += 1
-        time.sleep(_SLOW_S)
         return {"generated_at": "2026-01-01T00:00:00Z", "total": 0, "counts": {}}
 
     monkeypatch.setattr(state_router, "_compute_pipeline_versions_payload", slow)
-    elapsed, responses = asyncio.run(
-        _burst(_mount(tmp_path, state_router.router, "/api/state"), "/api/state/pipeline-versions")
+    responses, overlap = _run_overlapping_burst(
+        monkeypatch, _mount(tmp_path, state_router.router, "/api/state"), "/api/state/pipeline-versions"
     )
-    _assert_burst(elapsed, responses, calls)
+    _assert_burst(responses, calls, overlap)
 
 
 def test_weak_points_burst_shares_one_scan(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -114,14 +194,13 @@ def test_weak_points_burst_shares_one_scan(tmp_path: Path, monkeypatch: pytest.M
 
     def slow(_ctx, _track, _min_score, _limit):
         calls["n"] += 1
-        time.sleep(_SLOW_S)
         return {"count": 0, "modules": []}
 
     monkeypatch.setattr(state_router, "_compute_weak_points_payload", slow)
-    elapsed, responses = asyncio.run(
-        _burst(_mount(tmp_path, state_router.router, "/api/state"), "/api/state/weak-points")
+    responses, overlap = _run_overlapping_burst(
+        monkeypatch, _mount(tmp_path, state_router.router, "/api/state"), "/api/state/weak-points"
     )
-    _assert_burst(elapsed, responses, calls)
+    _assert_burst(responses, calls, overlap)
 
 
 def test_research_coverage_burst_shares_one_scan(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -129,14 +208,13 @@ def test_research_coverage_burst_shares_one_scan(tmp_path: Path, monkeypatch: py
 
     def slow(**_kwargs):
         calls["n"] += 1
-        time.sleep(_SLOW_S)
         return {"generated_at": "2026-01-01T00:00:00Z", "tracks": {}}
 
     monkeypatch.setattr(state_router, "compute_research_coverage", slow)
-    elapsed, responses = asyncio.run(
-        _burst(_mount(tmp_path, state_router.router, "/api/state"), "/api/state/research-coverage")
+    responses, overlap = _run_overlapping_burst(
+        monkeypatch, _mount(tmp_path, state_router.router, "/api/state"), "/api/state/research-coverage"
     )
-    _assert_burst(elapsed, responses, calls)
+    _assert_burst(responses, calls, overlap)
 
 
 def test_artifacts_html_burst_shares_one_scan(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -144,14 +222,13 @@ def test_artifacts_html_burst_shares_one_scan(tmp_path: Path, monkeypatch: pytes
 
     def slow(**_kwargs):
         calls["n"] += 1
-        time.sleep(_SLOW_S)
         return {"generated_at": "2026-01-01T00:00:00Z", "total": 0, "artifacts": []}
 
     monkeypatch.setattr(artifacts_router, "collect_html_artifacts", slow)
-    elapsed, responses = asyncio.run(
-        _burst(_mount(tmp_path, artifacts_router.router, "/api/artifacts"), "/api/artifacts/html")
+    responses, overlap = _run_overlapping_burst(
+        monkeypatch, _mount(tmp_path, artifacts_router.router, "/api/artifacts"), "/api/artifacts/html"
     )
-    _assert_burst(elapsed, responses, calls)
+    _assert_burst(responses, calls, overlap)
 
 
 def test_epics_list_burst_shares_one_read(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -159,12 +236,13 @@ def test_epics_list_burst_shares_one_read(tmp_path: Path, monkeypatch: pytest.Mo
 
     def slow(_ctx):
         calls["n"] += 1
-        time.sleep(_SLOW_S)
         return {"schema": "remote-epic-lifecycle.v1", "registry_status": "ok", "streams": []}
 
     monkeypatch.setattr(epics_router, "_build_remote_epic_list", slow)
-    elapsed, responses = asyncio.run(_burst(_mount(tmp_path, epics_router.router, "/api/epics"), "/api/epics/v1"))
-    _assert_burst(elapsed, responses, calls)
+    responses, overlap = _run_overlapping_burst(
+        monkeypatch, _mount(tmp_path, epics_router.router, "/api/epics"), "/api/epics/v1"
+    )
+    _assert_burst(responses, calls, overlap)
 
 
 def test_routing_budget_burst_shares_one_compute(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -172,92 +250,117 @@ def test_routing_budget_burst_shares_one_compute(tmp_path: Path, monkeypatch: py
 
     def slow(**_kwargs):
         calls["n"] += 1
-        time.sleep(_SLOW_S)
         return {"generated_at": "2026-01-01T00:00:00Z", "agents": {}, "recommendation": {}}
 
     monkeypatch.setattr(state_router, "compute_routing_budget", slow)
-    elapsed, responses = asyncio.run(
-        _burst(_mount(tmp_path, state_router.router, "/api/state"), "/api/state/routing-budget")
+    responses, overlap = _run_overlapping_burst(
+        monkeypatch, _mount(tmp_path, state_router.router, "/api/state"), "/api/state/routing-budget"
     )
-    _assert_burst(elapsed, responses, calls)
+    _assert_burst(responses, calls, overlap)
 
 
-def test_warm_routing_budget_does_not_wait_on_the_worker_pool(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_warm_routing_budget_does_not_wait_on_the_worker_pool(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """A cached read finishes while every default-executor worker is still blocked."""
     calls = {"n": 0}
-    hold = threading.Event()
 
     def slow(**_kwargs):
         calls["n"] += 1
-        if calls["n"] > 1:
-            hold.wait(timeout=2)
         return {"generated_at": "2026-01-01T00:00:00Z", "marker": calls["n"]}
 
     monkeypatch.setattr(state_router, "compute_routing_budget", slow)
     app = _mount(tmp_path, state_router.router, "/api/state")
 
-    async def scenario() -> float:
+    async def scenario() -> None:
         transport = ASGITransport(app=app)
         release = threading.Event()
+        entered = {"n": 0}
+        entered_lock = threading.Lock()
+        pool_full = threading.Event()
         async with httpx.AsyncClient(transport=transport, base_url="http://test") as client:
             first = await client.get("/api/state/routing-budget")
             assert first.status_code == 200
             loop = asyncio.get_running_loop()
-            blockers = [loop.run_in_executor(None, release.wait) for _ in range(64)]
+            await asyncio.to_thread(lambda: None)
+            # asyncio publishes no worker count; the live executor is the pool the route uses.
+            executor = getattr(loop, "_default_executor", None)
+            worker_count = getattr(executor, "_max_workers", None)
+            if not isinstance(worker_count, int) or worker_count < 1:
+                pytest.fail("could not read the default executor size")
+
+            def blocker() -> None:
+                with entered_lock:
+                    entered["n"] += 1
+                    if entered["n"] >= worker_count:
+                        pool_full.set()
+                release.wait()
+
+            blockers = [loop.run_in_executor(None, blocker) for _ in range(worker_count)]
+            second_task: asyncio.Task | None = None
             try:
-                await asyncio.sleep(0.05)
-                started = time.perf_counter()
-                second = await asyncio.wait_for(client.get("/api/state/routing-budget"), timeout=1.0)
-                elapsed = time.perf_counter() - started
+                await _until(pool_full.is_set, "default executor workers did not start")
+                second_task = asyncio.create_task(client.get("/api/state/routing-budget"))
+                await _until(second_task.done, "warm routing budget waited on the saturated worker pool")
+                second = second_task.result()
+                assert second.status_code == 200
+                assert second.json()["marker"] == 1
+                assert entered["n"] == worker_count
             finally:
                 release.set()
+                if second_task is not None and not second_task.done():
+                    second_task.cancel()
                 await asyncio.gather(*blockers, return_exceptions=True)
-        assert second.status_code == 200
-        assert second.json()["marker"] == 1
-        return elapsed
 
-    try:
-        assert asyncio.run(scenario()) < 0.5
-        assert calls["n"] == 1
-    finally:
-        hold.set()
+    asyncio.run(scenario())
+    assert calls["n"] == 1
 
 
-def test_stale_routing_budget_returns_while_refresh_runs(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_stale_routing_budget_returns_while_refresh_runs(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """A stale snapshot is served while its scheduled refresh is still blocked."""
     clock = {"t": 1_000.0}
     calls = {"n": 0}
-    hold = threading.Event()
+    refresh_entered = threading.Event()
+    release_refresh = threading.Event()
+    refresh_finished = threading.Event()
     monkeypatch.setattr(state_helpers, "_ttl_clock", lambda: clock["t"])
 
     def slow(**_kwargs):
         calls["n"] += 1
         if calls["n"] > 1:
-            hold.wait(timeout=2)
+            refresh_entered.set()
+            try:
+                release_refresh.wait()
+            finally:
+                refresh_finished.set()
         return {"generated_at": "2026-01-01T00:00:00Z", "marker": 1}
 
     monkeypatch.setattr(state_router, "compute_routing_budget", slow)
     app = _mount(tmp_path, state_router.router, "/api/state")
 
-    async def scenario() -> float:
+    async def scenario() -> None:
         transport = ASGITransport(app=app)
         async with httpx.AsyncClient(transport=transport, base_url="http://test") as client:
             first = await client.get("/api/state/routing-budget")
             assert first.status_code == 200
+            assert calls["n"] == 1
             clock["t"] += state_router.ROUTING_BUDGET_TTL_S + 1
-            started = time.perf_counter()
-            second = await asyncio.wait_for(client.get("/api/state/routing-budget"), timeout=1.0)
-            elapsed = time.perf_counter() - started
-        assert second.status_code == 200
-        assert second.json()["marker"] == 1
-        return elapsed
+            second_task = asyncio.create_task(client.get("/api/state/routing-budget"))
+            try:
+                await _until(refresh_entered.is_set, "stale routing budget scheduled no refresh")
+                await _until(second_task.done, "stale routing budget waited on its refresh")
+                second = second_task.result()
+                assert second.status_code == 200
+                assert second.json()["marker"] == 1
+                assert calls["n"] == 2
+                assert not refresh_finished.is_set()
+            finally:
+                release_refresh.set()
+                if not second_task.done():
+                    second_task.cancel()
+                await asyncio.gather(second_task, return_exceptions=True)
+        await _until(refresh_finished.is_set, "stale routing budget refresh did not finish after release")
 
-    try:
-        assert asyncio.run(scenario()) < 0.5
-    finally:
-        hold.set()
+    asyncio.run(scenario())
+    assert calls["n"] == 2
 
 
 def test_expired_routing_budget_reports_age_and_withdraws_authorization(
@@ -330,9 +433,7 @@ def _routing_snapshot(data_age_s: float) -> dict:
     }
 
 
-def test_cumulative_source_age_withdraws_routing_authorization(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_cumulative_source_age_withdraws_routing_authorization(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """Source age plus cache residence is the age compared to the threshold."""
     clock = {"t": 1_000.0}
     calls = {"n": 0}

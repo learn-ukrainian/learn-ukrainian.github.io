@@ -32,7 +32,7 @@ from tests.rules_core_view import (
     install_loader_bypass,
     rules_core_absent_when_marked,  # noqa: F401  (autouse: serves @rules_core_absent)
 )
-from tests.test_launcher_driver_scope import install_scope_sandbox
+from tests.test_launcher_driver_scope import install_scope_sandbox, manager_guard
 
 pytestmark = pytest.mark.usefixtures("hermetic_monitor")
 
@@ -95,22 +95,36 @@ def run_launcher(
             checkout = Path(temporary) / "checkout"
             copy_interactive_launcher_checkout(checkout)
             _install_claude_usage_fixture(checkout)
-            if "-driver.sh" in name:
-                install_scope_sandbox(checkout)
+            # Every non-dry launch, interactive or driver, enters a scope (#9624).
+            install_scope_sandbox(checkout)
             return run_launcher(name, *args, env=env, dry_run=False, root=checkout)
     launch_root = root if root is not None else LAUNCH_ROOT
     launch_env = os.environ.copy()
     launch_env["LAUNCHER_DRY_RUN"] = "1" if dry_run else "0"
     launch_env.update(env or {})
-    return subprocess.run(
-        [str(launch_root / name), *args],
-        cwd=launch_root,
-        env=launch_env,
-        text=True,
-        capture_output=True,
-        check=False,
-        timeout=30,
-    )
+    with TemporaryDirectory(prefix="launcher-manager-guard-", dir=ensure_scratch_root()) as guard:
+        contact = Path(guard) / "real-manager-contact"
+        if not dry_run:
+            # After the directories a test put ahead of the inherited PATH (its
+            # fake manager), before the system ones: an unfaked call fails the
+            # test rather than reaching this host's real user manager.
+            inherited, path = os.environ.get("PATH", ""), launch_env.get("PATH", "")
+            prefix = path[: -len(inherited)] if inherited and path.endswith(inherited) else ""
+            rest = path[len(prefix) :]
+            launch_env["PATH"] = f"{prefix}{manager_guard(Path(guard) / 'bin')}{os.pathsep}{rest}"
+            launch_env["LU_TEST_REAL_MANAGER_CONTACT"] = str(contact)
+        result = subprocess.run(
+            [str(launch_root / name), *args],
+            cwd=launch_root,
+            env=launch_env,
+            text=True,
+            capture_output=True,
+            check=False,
+            timeout=30,
+        )
+        if contact.exists():
+            pytest.fail(f"{name} reached for the real user manager: {contact.read_text()}")
+    return result
 
 
 def test_real_launcher_deploy_is_confined_to_temporary_checkout(tmp_path: Path) -> None:
@@ -118,6 +132,7 @@ def test_real_launcher_deploy_is_confined_to_temporary_checkout(tmp_path: Path) 
     checkout = tmp_path / "checkout with spaces"
     copy_interactive_launcher_checkout(checkout)
     _install_claude_usage_fixture(checkout)
+    install_scope_sandbox(checkout)
     binary = tmp_path / "bin" / "claude"
     binary.parent.mkdir()
     binary.write_text("#!/bin/sh\nprintf 'provider cwd=%s\\n' \"$PWD\"\n", encoding="utf-8")
@@ -232,6 +247,27 @@ def test_driver_dry_run_force_announces_release_then_claim() -> None:
     assert result.returncode == 0, result.stderr
     assert "would force-release any live holder on epic:" in result.stdout
     assert "then claim" in result.stdout
+
+
+@pytest.mark.parametrize(
+    ("epic", "session_epic"),
+    (("monitor", "monitor"), ("curriculum-upgrade", "curriculum-upgrade"), ("open-model-data", "open-model-data")),
+)
+def test_grok_driver_cold_prompt_names_lane_handoff_and_canary(epic: str, session_epic: str) -> None:
+    """Grok has no SessionStart hook, so its cold prompt names the shared handoff file and the canary (#10835)."""
+    result = run_launcher("start-grok-driver.sh", "--epic", epic)
+    assert result.returncode == 0, result.stderr
+    prompt = next(line for line in result.stdout.splitlines() if line.startswith("would exec grok ")).replace("\\", "")
+    assert f"read the lane handoff .claude/{session_epic}-epic/CLAUDE-DRIVER-HANDOFF.md" in prompt
+    assert "scripts.session_canary.grok_lane mint and score, run only within the thread-rollover skill" in prompt
+    assert f".claude/{session_epic}-epic/DRIVER-STATE.md" in prompt
+
+
+def test_non_grok_driver_cold_prompt_omits_grok_handoff_clause() -> None:
+    result = run_launcher("start-codex-driver.sh", "--epic", "infra")
+    assert result.returncode == 0, result.stderr
+    assert "would exec codex " in result.stdout
+    assert "Grok has no SessionStart hook" not in result.stdout.replace("\\", "")
 
 
 def test_driver_requires_certified_model_and_valid_epic() -> None:
@@ -1243,7 +1279,10 @@ launcher_close_driver_lease
 def test_compat_wrappers_forward_to_shared_adapters() -> None:
     kimicc = (REPO / "start-kimicc.sh").read_text(encoding="utf-8")
     glmcc = (REPO / "start-glmcc.sh").read_text(encoding="utf-8")
-    assert 'exec "$ROOT/start-kimi.sh" --harness claude-code "$@"' in kimicc
+    # In-process, so scope re-entry replays start-kimicc.sh itself (#9624).
+    assert "LC_WRAPPER_LAUNCHER_ARGS=(--harness claude-code)" in kimicc
+    assert 'launcher_main kimi interactive "$@"' in kimicc
+    assert 'start-kimi.sh" ' not in kimicc
     assert "launcher_main glm interactive" in glmcc
     assert "GLM_OPENCODE_FLASH" not in glmcc
     start_glm = (REPO / "start-glm.sh").read_text(encoding="utf-8")

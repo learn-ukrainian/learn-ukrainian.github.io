@@ -149,7 +149,6 @@ def build_repository_authority(
     *,
     project_root: Path,
     live_repo_root: Path,
-    data_branch: str | None = None,
     data_head_sha: str | None = None,
 ) -> dict[str, object]:
     """Build the single authority envelope used by agent-facing API routes.

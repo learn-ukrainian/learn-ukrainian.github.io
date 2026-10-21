@@ -318,3 +318,95 @@ def test_cursor_auto_selectors_share_canonical_family(selector):
 def test_explicit_auto_selector_keeps_cursor_despite_runtime_telemetry(field, selector, reported):
     metadata = {"family": "cursor", field: selector, "resolved_model": reported}
     assert model_families.normalize_lineage_family(metadata) is model_families.Family.CURSOR
+
+
+@pytest.mark.parametrize(
+    "selector,expected",
+    [
+        ("claude-opus-5-5-agy", "anthropic"),
+        ("agy:claude-opus-5-5", "anthropic"),
+        ("antigravity:claude-opus-5-5", "anthropic"),
+        ("agy:gpt-6.1-sol", "openai"),
+        ("AGY/CLAUDE-OPUS-5-5[1m]", "anthropic"),
+        ("ANTIGRAVITY:GPT-6.1-SOL", "openai"),
+        ("gpt-6.1-sol-antigravity", "openai"),
+        ("[antigravity]claude-opus-5-5", "anthropic"),
+        ("gpt-6.1-sol[agy]", "openai"),
+    ],
+)
+def test_agy_decoration_preserves_concrete_family_in_all_shared_consumers(selector, expected):
+    from scripts.review.reviewer_resolver import resolve_author_family, resolve_family
+
+    assert model_families.normalize_family(selector).value == expected
+    assert model_families.normalize_lineage_family({"model": selector}).value == expected
+    assert llm_reviewer_dispatch.normalize_family(selector) == expected
+    assert layerb_shadow.normalize_lineage_family({"pin": selector}) == expected
+    assert resolve_family(selector) == expected
+    assert resolve_author_family(selector) == expected
+
+
+def test_agy_decorated_catalog_models_keep_their_existing_family():
+    from scripts.review.model_catalog import load_model_catalog
+
+    for model_id, model in load_model_catalog()["models"].items():
+        if model["family"] not in {"anthropic", "openai"}:
+            continue
+        for token in (model_id, *model.get("aliases", [])):
+            assert model_families.normalize_family(token).value == model["family"], token
+            for route in ("agy", "antigravity"):
+                for decorated in (f"{route}:{token}", f"{route}/{token}", f"{token}-{route}", f"{token}[{route}]"):
+                    assert model_families.normalize_family(decorated).value == model["family"], decorated
+
+
+@pytest.mark.parametrize(
+    "token,expected",
+    [
+        ("agy", "google"),
+        ("ANTIGRAVITY", "google"),
+        ("agy:mystery-model", "google"),
+        ("antigravity:gemini-3.1-pro-high", "google"),
+        ("gemma-agy", "google"),
+        ("agy:deepseek-v4.1-flash", "deepseek"),
+        ("agy:grok-4.7", "xai"),
+        ("agy:composer-2.5", "moonshot"),
+        ("agy:glm-5.3", "zhipu"),
+        ("agy:laguna-s-2.1", "poolside"),
+        ("agy:qwen", "qwen"),
+        ("cursor:agy:gpt-6.1-sol", "unknown"),
+        ("cursor:auto", "cursor"),
+        ("fixture", "fixture"),
+        ("adversarial-fixture", "fixture"),
+        ("agyx:mystery", "unknown"),
+        ("xantigravity:mystery", "unknown"),
+        ("mystery:antigravityx", "unknown"),
+    ],
+)
+def test_agy_route_fallback_and_other_family_controls(token, expected):
+    assert model_families.normalize_family(token).value == expected
+
+
+@pytest.mark.parametrize(
+    "mixed,expected",
+    [
+        ("claude-opus-5-5:gpt-6.1-sol", "openai"),
+        ("gpt-6.1-sol:claude-opus-5-5", "openai"),
+        ("claude-opus-5-5:gemini-3.1-pro-high", "google"),
+        ("gemini-3.1-pro-high:gpt-6.1-sol", "google"),
+        ("deepseek-v4.1-flash:gemini-3.1-pro-high", "deepseek"),
+        ("grok-4.7:claude-opus-5-5", "anthropic"),
+    ],
+)
+def test_agy_does_not_change_existing_mixed_concrete_token_precedence(mixed, expected):
+    for selector in (mixed, f"agy:{mixed}", f"{mixed}-antigravity"):
+        assert model_families.normalize_family(selector).value == expected
+
+
+@pytest.mark.parametrize("model,family", [("claude-opus-5-5", "anthropic"), ("gpt-6.1-sol", "openai")])
+def test_agy_decoration_does_not_override_conflicting_lineage_or_author_family(model, family):
+    from scripts.review.reviewer_resolver import resolve_author_family
+
+    decorated = f"agy:{model}"
+    assert model_families.normalize_lineage_family({"family": "google", "pin": decorated}).value == "unknown"
+    assert model_families.normalize_lineage_family({"family": family, "pin": decorated}).value == family
+    assert resolve_author_family(decorated, "google") == "conflict"
+    assert resolve_author_family(decorated, family) == family

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import subprocess
 from pathlib import Path
@@ -37,6 +38,41 @@ def repo(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     git(root, "remote", "add", "origin", str(remote))
     git(root, "push", "-u", "origin", "main")
     return root
+
+
+def test_git_default_text_input_and_output(repo: Path) -> None:
+    content = "ordinary UTF-8: \u00e9\n"
+    raw = content.encode("utf-8")
+    expected = hashlib.sha1(f"blob {len(raw)}\0".encode("ascii") + raw).hexdigest()
+    result = sweep._git(repo, "hash-object", "--stdin", input=content)
+    assert result.returncode == 0
+    assert result.stdout == expected + "\n"
+    assert result.stderr == ""
+
+
+def test_git_binary_mode_preserves_input_and_output(repo: Path) -> None:
+    content = b"arbitrary: \xff\x00\r\nnext\rline\n"
+    expected = hashlib.sha1(f"blob {len(content)}\0".encode("ascii") + content).hexdigest()
+    stored = sweep._git(repo, "hash-object", "-w", "--stdin", input=content, text=False)
+    assert stored.returncode == 0
+    assert stored.stdout == (expected + "\n").encode("ascii")
+    assert stored.stderr == b""
+    read = sweep._git(repo, "cat-file", "blob", expected, text=False)
+    assert read.returncode == 0
+    assert read.stdout == content
+    assert read.stderr == b""
+    with pytest.raises(UnicodeDecodeError):
+        sweep._git(repo, "cat-file", "blob", expected)
+
+
+def test_git_failure_keeps_default_text_and_binary_diagnostics(repo: Path) -> None:
+    text = sweep._git(repo, "rev-parse", "--verify", "refs/heads/absent")
+    binary = sweep._git(repo, "rev-parse", "--verify", "refs/heads/absent", text=False)
+    assert text.returncode == binary.returncode == 128
+    assert text.stdout == ""
+    assert binary.stdout == b""
+    assert text.stderr == "fatal: Needed a single revision\n"
+    assert binary.stderr == b"fatal: Needed a single revision\n"
 
 
 def branch(repo: Path, name: str, *, unique: bool = False, remote: bool = True) -> str:

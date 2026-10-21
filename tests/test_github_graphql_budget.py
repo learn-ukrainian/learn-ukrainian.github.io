@@ -12,6 +12,12 @@ from types import SimpleNamespace
 import pytest
 
 from scripts import github_graphql_budget as probe
+from tests.common.github_cache_isolation import isolate_github_client_cache
+
+
+@pytest.fixture(autouse=True)
+def _isolate_github_client_cache(tmp_path, monkeypatch):
+    yield from isolate_github_client_cache(tmp_path, monkeypatch)
 
 
 @pytest.fixture(autouse=True)

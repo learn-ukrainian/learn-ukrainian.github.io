@@ -38,7 +38,7 @@ from scripts.common import github_client
 from scripts.common.task_scratch import recover_orphans as recover_task_scratch
 from scripts.hygiene import fetch_refspecs, home_session_retention_check
 from scripts.maintenance.claude_session_scratch import sweep_sessions
-from scripts.orchestration import reap_worktrees
+from scripts.orchestration import backup_failure_alert, disk_watermark_alert, reap_worktrees
 from scripts.orchestration.tmp_leak_sweep import sweep_tmp_leaks
 from scripts.review.isolation import sweep_review_temp_orphans
 
@@ -82,6 +82,17 @@ def _run_git(repo_root: Path, *args: str) -> subprocess.CompletedProcess[str]:
         timeout=120,
         env=reap_worktrees.sanitized_git_env(),
     )
+
+
+def _fetch_origin(repo_root: Path) -> subprocess.CompletedProcess[str]:
+    """``git fetch --prune origin`` with automatic maintenance disabled.
+
+    A fetch whose loose-object count trips ``maintenance.auto`` runs
+    ``maintenance run --auto``, which expires every reflog and can run
+    ``gc --auto`` before this process reaches the reaper (#10856). The
+    explicit ``git gc --auto`` after the reaper stays the only maintenance.
+    """
+    return _run_git(repo_root, *reap_worktrees.GIT_NO_AUTO_MAINTENANCE, "fetch", "--prune", "origin")
 
 
 def _failure(proc: subprocess.CompletedProcess[str]) -> str:
@@ -1041,7 +1052,7 @@ def _repo_result_unlocked(repo_root: Path, *, apply: bool) -> dict[str, Any]:
 
     fetch_ok = True
     if apply:
-        fetch = _run_git(repo_root, "fetch", "--prune", "origin")
+        fetch = _fetch_origin(repo_root)
         fetch_ok = fetch.returncode == 0
         result["fetch"] = {
             "ok": fetch_ok,
@@ -1126,7 +1137,7 @@ def _repo_result_unlocked(repo_root: Path, *, apply: bool) -> dict[str, Any]:
                         fetch_refspecs.reconcile_fetch_refspecs(repo_root, apply=True)
                     except Exception as exc:
                         result["errors"].append(f"post-origin fetch refspec reconcile failed: {exc}")
-                prune_after = _run_git(repo_root, "fetch", "--prune", "origin")
+                prune_after = _fetch_origin(repo_root)
                 if prune_after.returncode != 0:
                     result["errors"].append(f"post-origin prune failed ({_failure(prune_after)})")
             branches = cleanup_gone_local_branches(repo_root, apply=apply, fetch_ok=fetch_ok) + (
@@ -1143,6 +1154,9 @@ def _repo_result_unlocked(repo_root: Path, *, apply: bool) -> dict[str, Any]:
             f"{row['branch']}: {row.get('error') or row['reason']}" for row in branches if row["action"] == "error"
         )
         result["orphans"] = find_orphaned_worktree_directories(repo_root)
+        # #10856: git gc --auto rewrites every worktree logs/HEAD. Fetch above
+        # runs with automatic maintenance disabled; this explicit gc stays
+        # after the reaper has judged activity.
         maintenance = _git_maintenance(repo_root, apply=apply)
         result["maintenance"] = maintenance
         if not maintenance["ok"]:
@@ -1366,6 +1380,13 @@ Related:
         default=default_state_dir() / "receipts" / "v2",
         help="Private receipt directory. Default: configured hygiene state receipts/v2. Example: <receipts-dir>",
     )
+    parser.add_argument(
+        "--alert-state-dir",
+        type=Path,
+        default=default_state_dir() / "disk-watermark",
+        help="Change-only disk watermark alert state. Default: configured hygiene state disk-watermark. "
+        "Example: <alert-state-dir>",
+    )
     parser.set_defaults(default_repo_roots=[public_repo, default_private_repo(public_repo)])
     return parser
 
@@ -1490,6 +1511,14 @@ def batch_state_retention_reports(repo_roots: list[Path], *, apply: bool) -> lis
     return reports
 
 
+def disk_watermark_alert_report(state_dir: Path) -> dict[str, Any]:
+    """Run the once-per-crossing cto alert; a failure is reported as an error, never raised (#10871)."""
+    try:
+        return {"detail": disk_watermark_alert.check_and_alert(state_dir, PROJECT_ROOT), "errors": 0}
+    except (ValueError, backup_failure_alert.AlertError) as exc:
+        return {"detail": f"disk watermark alert failed: {exc}", "errors": 1}
+
+
 @github_client.timer
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
@@ -1503,6 +1532,11 @@ def main(argv: list[str] | None = None) -> int:
         apply=bool(args.apply),
     )
     receipt["summary"]["errors"] += receipt["claude_session_scratch"]["summary"]["errors"]
+    if args.apply:
+        receipt["disk_watermark_alert"] = disk_watermark_alert_report(args.alert_state_dir.expanduser())
+        receipt["summary"]["errors"] += receipt["disk_watermark_alert"]["errors"]
+        if receipt["disk_watermark_alert"]["errors"]:
+            sys.stderr.write(f"{receipt['disk_watermark_alert']['detail']}\n")
     for line in home_session_retention_check.warning_lines(home_session_retention):
         sys.stderr.write(f"{line}\n")
     for line in rescue_warning_lines(receipt):

@@ -2408,13 +2408,24 @@ def _discard_pending_sigterm_and_restore(previous_mask: set[int], previous_handl
 
 
 @contextmanager
-def _fifo_input_ready(proc: subprocess.Popen, fifo_path: Path, *, timeout: float = 10.0):
-    """Pair with the child's FIFO reader, keeping input blocked without payload or EOF."""
-    deadline = time.monotonic() + timeout
+def _fifo_input_ready(
+    proc: subprocess.Popen,
+    fifo_path: Path,
+    *,
+    timeout: float = 10.0,
+    monotonic=time.monotonic,
+    sleeper=time.sleep,
+):
+    """Pair with the child's FIFO reader, keeping input blocked without payload or EOF.
+
+    ``monotonic`` and ``sleeper`` default to the real clock. Tests that pin the
+    deadline pass fakes so a loaded runner cannot turn the poll into a flake.
+    """
+    deadline = monotonic() + timeout
     while True:
         if proc.poll() is not None:
             raise AssertionError(f"child exited before FIFO input readiness: {proc.returncode}")
-        remaining = deadline - time.monotonic()
+        remaining = deadline - monotonic()
         if remaining <= 0:
             raise AssertionError("timed out waiting for FIFO input readiness")
         try:
@@ -2423,7 +2434,7 @@ def _fifo_input_ready(proc: subprocess.Popen, fifo_path: Path, *, timeout: float
         except OSError as exc:
             if exc.errno != errno.ENXIO:
                 raise
-            time.sleep(min(0.01, remaining))
+            sleeper(min(0.01, remaining))
         else:
             break
     try:
@@ -2436,6 +2447,25 @@ def _fifo_input_ready(proc: subprocess.Popen, fifo_path: Path, *, timeout: float
         raise
     finally:
         os.close(writer_fd)
+
+
+def _wait_child_exit(proc: subprocess.Popen, *, attempts: int = 2_000) -> str:
+    """Return stderr once the child has exited.
+
+    The bound is a retry count. ``sleep`` only yields; under load each pause
+    overruns, so a live handler still finishes. A handler that never runs
+    exhausts the retries and the caller fails.
+    """
+    if proc.stderr is None:
+        raise AssertionError("child has no stderr pipe")
+    for _ in range(attempts):
+        if proc.poll() is not None:
+            text = proc.stderr.read()
+            if not isinstance(text, str):
+                raise AssertionError("child stderr was not text")
+            return text
+        time.sleep(0.01)
+    raise AssertionError("child did not exit")
 
 
 @pytest.mark.parametrize(
@@ -2482,14 +2512,17 @@ def test_sigterm_during_input_reading_subprocess_boundary(tmp_path, startup_dela
             # cannot finish and reach the network, even if the child is descheduled.
             with _fifo_input_ready(proc, fifo_path) as writer_fd:
                 proc.send_signal(signal.SIGTERM)
-                _, err = proc.communicate(timeout=_SIGTERM_REAP_SECONDS)
+                err = _wait_child_exit(proc)
             with pytest.raises(OSError) as closed:
                 os.fstat(writer_fd)
             assert closed.value.errno == errno.EBADF
         finally:
             if proc.poll() is None:
                 proc.kill()
-            proc.communicate(timeout=_SIGTERM_REAP_SECONDS)
+                try:
+                    _wait_child_exit(proc)
+                except AssertionError:
+                    proc.wait(timeout=5)
     finally:
         if parent_mask is not None:
             signal.pthread_sigmask(signal.SIG_SETMASK, parent_mask)
@@ -3664,16 +3697,34 @@ def test_fifo_input_ready_refuses_unready_child(tmp_path, child_code, message, t
     fifo_path = tmp_path / "spellings_fifo"
     os.mkfifo(fifo_path)
     proc = subprocess.Popen([sys.executable, "-c", child_code], stderr=subprocess.PIPE, text=True)
-    started = time.monotonic()
+    # The timeout case never opens the FIFO, so a fake clock hits the deadline
+    # without sleeping on the wall. The premature-exit case must use the real
+    # clock so the child can actually be reaped.
+    clock: dict[str, float] = {"t": 0.0}
+    fake_clock = "timed out" in message
+
+    def monotonic() -> float:
+        return clock["t"]
+
+    def sleeper(seconds: float) -> None:
+        clock["t"] += seconds
+        if clock["t"] > timeout + 0.02:
+            raise AssertionError(f"readiness wait passed the injected deadline: {clock['t']}")
+
     try:
         with pytest.raises(AssertionError, match=message):
-            with _fifo_input_ready(proc, fifo_path, timeout=timeout):
+            kwargs = {"timeout": timeout}
+            if fake_clock:
+                kwargs["monotonic"] = monotonic
+                kwargs["sleeper"] = sleeper
+            with _fifo_input_ready(proc, fifo_path, **kwargs):
                 pytest.fail("unready child was accepted")
-        assert time.monotonic() - started < timeout + 1.0
+        if fake_clock:
+            assert timeout <= clock["t"] <= timeout + 0.02
     finally:
         if proc.poll() is None:
             proc.kill()
-        proc.communicate(timeout=5)
+        proc.wait(timeout=5)
 
 
 def test_fifo_input_ready_propagates_unexpected_open_error(tmp_path):

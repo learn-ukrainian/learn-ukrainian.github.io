@@ -19,9 +19,13 @@ from pathlib import Path
 import pytest
 import yaml
 
-from agents_extensions.shared.session_streams.inventory import stream_anchor_id, stream_map
+from agents_extensions.shared.session_streams.inventory import load_stream_epic_inventory, stream_anchor_id, stream_map
+from scripts.agent_runtime.lane_probe import resolve_handoff_agent
 from scripts.ai_agent_bridge import _channels
 from scripts.orchestration import handoff_slot_registry as registry
+from scripts.orchestration.driver_agent_type import resolve_driver_agent_type
+from scripts.orchestration.fleet_taxonomy import resolve_area
+from scripts.orchestration.slot_routing import resolve_slot_holder
 
 REPO = Path(__file__).resolve().parents[1]
 HANDOFF_IDENTITY = REPO / "scripts" / "lib" / "handoff_identity.sh"
@@ -249,7 +253,7 @@ def test_alias_selector_gate_matches_content_provider_policy() -> None:
         != (
             3
             if (provider not in {"claude", "codex", "gemini"} and lanes[selector] in {"folk", "bio", "hramatka"})
-            or (provider not in {"claude", "codex"} and lanes[selector] == "epics")
+            or (provider not in {"claude", "codex"} and lanes[selector] in {"epics", "practice"})
             or (provider == "muse" and lanes[selector] not in {"devops", "monitor"})
             else 0
         )
@@ -316,7 +320,7 @@ def test_generic_registry_keys_are_registered_or_refused_for_every_provider() ->
                 )
 
 
-@pytest.mark.parametrize("provider", ("grok", "kimi", "cursor"))
+@pytest.mark.parametrize("provider", ("kimi", "cursor"))
 @pytest.mark.parametrize(
     "selector, lane",
     (("folk", "folk"), ("bio", "bio"), ("hramatka", "hramatka"), ("open-model-data", "open-model-data")),
@@ -327,6 +331,38 @@ def test_removed_content_slot_refused_by_operator_order(provider: str, selector:
     assert f"'{provider}-{lane}'" in result.stderr
     assert "operator order 2026-09-27" in result.stderr
     assert "only claude, gpt and gemini" in result.stderr
+
+
+def test_registered_grok_open_model_data_seat_is_admitted() -> None:
+    """The 2026-10-16 order (#10835) registers grok-open-model-data; the gate admits and mints it."""
+    assert registry.is_registered_slot("grok-open-model-data")
+    result = _bash(
+        'source "$1"; launcher_require_registered_slot grok open-model-data && handoff_identity_for_grok_epic open-model-data',
+        str(HANDOFF_IDENTITY),
+    )
+    assert result.returncode == 0, result.stderr
+    assert result.stdout == "grok-open-model-data"
+
+
+@pytest.mark.parametrize("selector, lane", (("folk", "folk"), ("bio", "bio"), ("hramatka", "hramatka")))
+def test_unregistered_grok_content_slot_is_refused_as_unregistered(selector: str, lane: str) -> None:
+    """Grok content lanes without a slot stay refused, now as unregistered rather than by the superseded order."""
+    assert not registry.is_registered_slot(f"grok-{lane}")
+    result = _gate("grok", selector)
+    assert result.returncode == 1, result.stdout + result.stderr
+    assert f"'grok-{lane}', which is not registered" in result.stderr
+    assert "operator order 2026-09-27" not in result.stderr
+
+
+def test_grok_monitor_is_a_dedicated_slot_and_muse_monitor_stays_locked() -> None:
+    """grok-monitor receives its own inbox; Muse keeps its monitor identity; other monitor names stay legacy."""
+    roster = yaml.safe_load((REPO / "scripts/config/area_assignments.yaml").read_text(encoding="utf-8"))
+    assert roster["assignments"]["monitor"]["slots"] == ["muse-monitor", "grok-monitor"]
+    assert _channels.resolve_recipient_alias("grok-monitor") == "grok-monitor"
+    assert _channels.resolve_recipient_alias("muse-monitor") == "muse-monitor"
+    assert _channels.resolve_recipient_alias("claude-monitor") == "claude"
+    gate = _gate("grok", "monitor")
+    assert gate.returncode == 0, gate.stderr
 
 
 @pytest.mark.parametrize("provider", PROVIDERS)
@@ -341,12 +377,85 @@ def test_gate_names_the_refused_provider_slot(provider: str) -> None:
     assert f"{provider}-{lanes[selector]}" in result.stderr
 
 
-REGISTERED_SELECTORS = ("infra", "devops", "monitor", "open-model-data", "atlas", "folk", "bio", "corpus", "hramatka")
+REGISTERED_SELECTORS = ("infra", "devops", "monitor", "open-model-data", "atlas", "practice", "folk", "bio", "corpus", "hramatka")
 
 
-@pytest.mark.parametrize("provider", ("claude", "codex"))
+def test_practice_area_registers_only_claude_and_codex() -> None:
+    data = yaml.safe_load((REPO / "scripts/config/area_assignments.yaml").read_text(encoding="utf-8"))
+    assert data["assignments"]["practice"] == {
+        "driver_agent_type": "infra-orchestrator",
+        "slots": ["claude-practice", "codex-practice"],
+    }
+    assert resolve_driver_agent_type("practice") == "infra-orchestrator"
+
+
+def test_practice_stream_is_registered_without_moving_atlas() -> None:
+    data = yaml.safe_load(ISSUE_STREAMS.read_text(encoding="utf-8"))["streams"]
+    assert data["practice"] == {"title": "Practice Hub, ZNO and activities", "epics": [11151]}
+    assert data["atlas-practice"]["epics"] == [4387]
+    record = next(row for row in load_stream_epic_inventory(REPO) if row.stream_id == "epic:11151")
+    assert (record.stream_name, record.title) == ("practice", "Practice Hub, ZNO and activities")
+    assert record.handoff_candidates[0] == ".claude/practice-epic/CLAUDE-DRIVER-HANDOFF.md"
+
+
+def test_practice_taxonomy_resolves_the_new_epic() -> None:
+    area = resolve_area("practice")
+    assert area.id == "practice"
+    assert [(epic.number, epic.name) for epic in area.epics] == [(11151, "Practice Hub, ZNO and activities")]
+    assert resolve_area(11151).id == "practice"
+    assert resolve_area(4387).id == "atlas"
+
+
+def test_practice_selector_has_its_own_alias_registration() -> None:
+    with ALIASES.open(encoding="utf-8", newline="") as handle:
+        rows = [row for row in csv.reader(handle, delimiter="\t") if row and row[0] == "practice"]
+    assert rows == [["practice", "practice", "practice"]]
+    assert _session_epic_and_lane(["practice"])["practice"] == ("practice", "practice")
+
+
+@pytest.mark.parametrize("provider", ["claude", "codex"])
+def test_practice_slots_reach_existing_consumers(provider: str, tmp_path: Path) -> None:
+    slot = f"{provider}-practice"
+    assert registry.is_registered_slot(slot)
+    assert _channels.resolve_recipient_alias(slot) == slot
+    assert slot in _channels.get_valid_agents()
+    assert resolve_handoff_agent(slot) == provider
+    holder = resolve_slot_holder(slot, session_db_path=tmp_path / "absent.sqlite3")
+    assert (holder.area_id, holder.reason) == ("practice", "no-live-holder")
+
+
+@pytest.mark.parametrize("provider", PROVIDERS)
+def test_practice_launcher_gate_enforces_the_two_provider_roster(provider: str) -> None:
+    result = _gate(provider, "practice")
+    assert result.returncode == (0 if provider in {"claude", "codex"} else 1), result.stderr
+
+
+@pytest.mark.parametrize("provider", ["claude", "codex"])
+def test_practice_launcher_dry_run_uses_the_dedicated_stream(provider: str) -> None:
+    result = subprocess.run(
+        [str(REPO / f"start-{provider}-driver.sh"), "--epic", "practice"],
+        cwd=REPO,
+        env={**os.environ, "LAUNCHER_DRY_RUN": "1"},
+        capture_output=True,
+        text=True,
+        timeout=60,
+        check=False,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    stream = stream_anchor_id("practice", REPO)
+    assert f"would claim lease stream={stream}" in result.stdout
+    assert f"session epic=practice slot={provider}-practice handoff=" in result.stdout
+    assert ".claude/practice-epic/CLAUDE-DRIVER-HANDOFF.md" in result.stdout
+    assert "not registered" not in result.stderr
+
+
+@pytest.mark.parametrize("provider", ("claude", "codex", "grok"))
 def test_open_model_data_selector_mints_registered_slot(provider: str) -> None:
-    identity_function = "handoff_identity_for_epic" if provider == "claude" else "handoff_identity_for_codex_epic"
+    identity_function = {
+        "claude": "handoff_identity_for_epic",
+        "codex": "handoff_identity_for_codex_epic",
+        "grok": "handoff_identity_for_grok_epic",
+    }[provider]
     result = _bash(
         'source "$1"; launcher_require_registered_slot "$2" open-model-data && "$3" open-model-data',
         str(HANDOFF_IDENTITY),

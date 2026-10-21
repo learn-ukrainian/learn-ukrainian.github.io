@@ -1,0 +1,52 @@
+== entire enable --force (0.11.5), no .pre-entire yet
+enable rc=0
+tracked .entire/settings.json unchanged
+== repo installer
+commit-msg: added Entire chain to commit-msg.pre-entire
+commit-msg: chained-under-entire
+post-checkout: installed
+post-commit: added Entire chain to post-commit.pre-entire
+post-commit: chained-under-entire
+post-merge: installed
+pre-commit: installed
+pre-push: added Entire chain to pre-push.pre-entire
+pre-push: chained-under-entire
+reference-transaction: installed
+prepare-commit-msg: Entire capture routed through scripts/entire/capture_guard.sh
+commit-msg: Entire capture routed through scripts/entire/capture_guard.sh
+post-commit: Entire capture routed through scripts/entire/capture_guard.sh
+post-rewrite: Entire capture routed through scripts/entire/capture_guard.sh
+pre-push: Entire capture routed through scripts/entire/capture_guard.sh
+installer rc=0
+== installer --check
+commit-msg: ok (chained under Entire)
+pre-commit: ok (delegator)
+pre-push: ok (chained under Entire)
+check rc=0
+== entire enable --force (0.11.5) again, .pre-entire present
+enable rc=0
+== installer --check after Entire regeneration
+prepare-commit-msg: UNGUARDED — <scratch>/canary/clone/.git/hooks/prepare-commit-msg runs Entire without scripts/entire/capture_guard.sh (rerun scripts/install_git_hooks.sh)
+commit-msg: UNGUARDED — <scratch>/canary/clone/.git/hooks/commit-msg runs Entire without scripts/entire/capture_guard.sh (rerun scripts/install_git_hooks.sh)
+post-commit: UNGUARDED — <scratch>/canary/clone/.git/hooks/post-commit runs Entire without scripts/entire/capture_guard.sh (rerun scripts/install_git_hooks.sh)
+post-rewrite: UNGUARDED — <scratch>/canary/clone/.git/hooks/post-rewrite runs Entire without scripts/entire/capture_guard.sh (rerun scripts/install_git_hooks.sh)
+pre-push: UNGUARDED — <scratch>/canary/clone/.git/hooks/pre-push runs Entire without scripts/entire/capture_guard.sh (rerun scripts/install_git_hooks.sh)
+commit-msg: ok (chained under Entire)
+pre-commit: ok (delegator)
+pre-push: ok (chained under Entire)
+check: 5 hook problem(s) in <scratch>/canary/clone/.git/hooks
+== installer rerun
+prepare-commit-msg: Entire capture routed through scripts/entire/capture_guard.sh
+commit-msg: Entire capture routed through scripts/entire/capture_guard.sh
+post-commit: Entire capture routed through scripts/entire/capture_guard.sh
+post-rewrite: Entire capture routed through scripts/entire/capture_guard.sh
+pre-push: Entire capture routed through scripts/entire/capture_guard.sh
+prepare-commit-msg: reguarded == first install
+commit-msg: reguarded == first install
+post-commit: reguarded == first install
+post-rewrite: reguarded == first install
+pre-push: reguarded == first install
+check after rerun: OK
+== Entire's own git-hook state check on the guarded wrappers (status/doctor must not reinstall)
+status rc=0
+pre-push wrapper unchanged by entire status

@@ -160,6 +160,60 @@ def test_workflow_closed_names_and_inputs(fields):
         pub.publish("workflow-run", repo="unit/public", runner=lambda *a, **k: pytest.fail("send"), **fields)
 
 
+@pytest.mark.parametrize("workflow", ["ci.yml", "deploy-pages.yml", "stale-branch-cleanup.yml"])
+@pytest.mark.parametrize("inputs", [None, {}])
+@pytest.mark.parametrize("entrypoint", ["publisher", "cli"])
+def test_named_workflow_run_no_inputs(workflow, inputs, entrypoint, synthetic_opsec):
+    calls = []
+
+    def spy(args, **kwargs):
+        calls.append(args)
+        return subprocess.CompletedProcess(args, 0, "", "")
+
+    if entrypoint == "cli":
+        args = ["workflow-run", "--repo", "unit/public", "--workflow", workflow, "--ref", "main"]
+        if inputs is not None:
+            args += ["--inputs", json.dumps(inputs)]
+        assert pub.main(args, runner=spy) == 0
+    else:
+        fields = {} if inputs is None else {"inputs": inputs}
+        result = pub.publish(
+            "workflow-run", repo="unit/public", workflow=workflow, ref="main", runner=spy, **fields
+        )
+        assert result.returncode == 0
+    assert calls == [["gh", "workflow", "run", workflow, "--repo", "unit/public", "--ref=main"]]
+
+
+@pytest.mark.parametrize("workflow", ["ci.yml", "deploy-pages.yml", "stale-branch-cleanup.yml"])
+@pytest.mark.parametrize("invalid", [
+    {"inputs": {"force": "true"}},
+    {"repo": "owner/repo?unexpected=true"},
+    {"ref": "--flag"},
+    {"ref": "main\nother"},
+])
+def test_workflow_invalid_fields_refuse_before_send(workflow, invalid):
+    fields = {"repo": "unit/public", "workflow": workflow, "ref": "main", **invalid}
+
+    def sender(*args, **kwargs):
+        pytest.fail("send")
+
+    with pytest.raises(gate.PublishBlocked):
+        pub.publish("workflow-run", runner=sender, **fields)
+    args = ["workflow-run"]
+    for key, value in fields.items():
+        args.append("--" + key + "=" + (json.dumps(value) if key == "inputs" else value))
+    assert pub.main(args, runner=sender) == 2
+
+
+def test_unknown_workflow_cli_refuses_before_send():
+    with pytest.raises(SystemExit) as error:
+        pub.main(
+            ["workflow-run", "--repo", "unit/public", "--workflow", "unknown.yml", "--ref", "main"],
+            runner=lambda *a, **k: pytest.fail("send"),
+        )
+    assert error.value.code == 2
+
+
 def test_checkout_only_in_real_dispatch_directory(tmp_path):
     worktree = tmp_path / ".worktrees/dispatch/unit/task"
     worktree.mkdir(parents=True)

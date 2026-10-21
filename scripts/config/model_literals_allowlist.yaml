@@ -1476,13 +1476,6 @@ entries:
   count: 1
   kind: non_model_label
   reason: Existing harness, task, artifact or descriptive label 'grok-hermes'; not a model ID.
-- path: scripts/ai_agent_bridge/_channels.py
-  scope: resolve_recipient_alias
-  context: docstring
-  id: grok-monitor
-  count: 1
-  kind: non_model_label
-  reason: Existing harness, task, artifact or descriptive label 'grok-monitor'; not a model ID.
 - path: scripts/ai_agent_bridge/_channels_cli.py
   scope: <module>
   context: docstring
@@ -1826,13 +1819,6 @@ entries:
   count: 1
   kind: non_model_label
   reason: Existing harness, task, artifact or descriptive label 'grok-build'; not a model ID.
-- path: scripts/ai_agent_bridge/_messaging.py
-  scope: check_inbox
-  context: docstring
-  id: grok-monitor
-  count: 1
-  kind: non_model_label
-  reason: Existing harness, task, artifact or descriptive label 'grok-monitor'; not a model ID.
 - path: scripts/ai_agent_bridge/_model.py
   scope: <module>
   context: expression
@@ -4570,6 +4556,13 @@ entries:
   count: 1
   kind: non_model_label
   reason: Existing harness, task, artifact or descriptive label 'claude-1000'; not a model ID.
+- path: scripts/ops/host_stack_drift.py
+  scope: <module>
+  context: expression
+  id: claude-code
+  count: 1
+  kind: non_model_label
+  reason: Exact stack-pin component name for the literal CLI version probe; not a model ID.
 - path: scripts/orchestration/codex_transport_health.py
   scope: <module>
   context: expression
@@ -5602,6 +5595,13 @@ entries:
   kind: documentation
   reason: Explanatory model identity in an AST docstring; does not select a runtime model.
 - path: scripts/review/model_catalog.py
+  scope: _require_routable_model
+  context: expression
+  id: deepseek-v4.1-flash
+  count: 2
+  kind: adapter_identity
+  reason: 'Operator order cto-deepseek-unban (#10959) permits only this Flash identity for coding; exact comparison and refusal text.'
+- path: scripts/review/model_catalog.py
   scope: apply_cursor_model_pins
   context: expression
   id: grok-4.7
@@ -6357,3 +6357,52 @@ entries:
   count: 1
   kind: non_model_label
   reason: Existing harness, task, artifact or descriptive label 'Claude-assigned'; not a model ID.
+- path: scripts/orchestration/backup_failure_alert.py
+  scope: <module>
+  context: expression
+  id: claude-cto
+  count: 1
+  kind: non_model_label
+  reason: Stable operational CTO inbox identity; does not select a runtime model.
+- path: scripts/orchestration/postmerge_criteria.py
+  scope: <module>
+  context: expression
+  id: claude-infra
+  count: 1
+  kind: non_model_label
+  reason: Accountable issue lane for post-merge evidence; does not select a runtime model.
+- path: scripts/orchestration/postmerge_criteria.py
+  scope: <module>
+  context: expression
+  id: grok-monitor
+  count: 1
+  kind: non_model_label
+  reason: Accountable issue lane for post-merge evidence; does not select a runtime model.
+- path: scripts/orchestration/postmerge_criteria.py
+  scope: <module>
+  context: expression
+  id: gemini-open-model-data
+  count: 1
+  kind: non_model_label
+  reason: Accountable issue lane for post-merge evidence; does not select a runtime model.
+- path: scripts/orchestration/postmerge_criteria.py
+  scope: <module>
+  context: expression
+  id: claude-cto
+  count: 1
+  kind: non_model_label
+  reason: Accountable issue lane for post-merge evidence; does not select a runtime model.
+- path: scripts/orchestration/postmerge_criteria.py
+  scope: run_postmerge_criteria
+  context: expression
+  id: claude-cto
+  count: 1
+  kind: non_model_label
+  reason: Stable supervisory request recipient; does not select a runtime model.
+- path: scripts/orchestration/postmerge_criteria.py
+  scope: main
+  context: expression
+  id: claude-cto
+  count: 1
+  kind: non_model_label
+  reason: Help text names the supervisory request recipient; does not select a runtime model.

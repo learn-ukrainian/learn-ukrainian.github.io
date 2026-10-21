@@ -122,7 +122,7 @@ def mock_dbs(tmp_path: Path) -> tuple[Path, Path, Path]:
 
 
 def test_seed_trajectories_full_verification_suite(tmp_path: Path, receipt_schema: dict) -> None:
-    """Validate that real seed trajectories pass all checks with 100% verification rate."""
+    """Legacy SUM-11-bearing seeds remain withheld until modern evidence is re-sourced."""
     if not (DEFAULT_VESUM_DB.is_file() and DEFAULT_SOURCES_DB.is_file()):
         pytest.skip(f"Requires local databases: {DEFAULT_VESUM_DB}, {DEFAULT_SOURCES_DB}")
 
@@ -140,11 +140,15 @@ def test_seed_trajectories_full_verification_suite(tmp_path: Path, receipt_schem
     jsonschema.validate(instance=receipt, schema=receipt_schema)
 
     assert receipt["counts"]["total_trajectories"] == 3
-    assert receipt["counts"]["trajectories_passed"] == 3
-    assert receipt["counts"]["trajectories_rejected"] == 0
+    assert receipt["counts"]["trajectories_passed"] == 0
+    assert receipt["counts"]["trajectories_rejected"] == 3
     assert receipt["counts"]["total_claims_verified"] >= 40
-    assert receipt["invariants"]["pass_rate_100_percent"] is True
-    assert receipt["invariants"]["zero_unverified_dictionary_claims"] is True
+    assert receipt["invariants"]["pass_rate_100_percent"] is False
+    assert (tmp_path / "verified.jsonl").read_bytes() == b""
+    rejected = [json.loads(line) for line in (tmp_path / "rejected.jsonl").read_text().splitlines()]
+    assert len(rejected) == 3
+    assert all(any(reason["claim_type"] == "SUM11_MODERN_EVIDENCE_REFUSED"
+                   for reason in record["rejection_reasons"]) for record in rejected)
     assert receipt["invariants"]["no_private_host_paths"] is True
 
 
@@ -1757,3 +1761,88 @@ def test_check_ulif_attestation_separately_supplied_canonical_db(tmp_path: Path)
     verifier = CoTClaimVerifier(vesum_conn=v_conn, sources_conn=s_conn, ulif_conn=u_conn)
     assert verifier.check_ulif_attestation("словник") is True
     assert verifier.check_ulif_attestation("неіснуюче") is False
+
+
+@pytest.mark.parametrize("term,expected", [("дифузія", True), ("дифузії", False),
+                                          ("дифузія fixture", False), ("дифузіяся", False)])
+def test_sum11_exact_historical_attestation_never_infers_forms_or_phrases(mock_dbs, term, expected):
+    from scripts.projects.open_model_data.v4_verify_trajectory_claims import ClaimType, ParsedClaim
+
+    vesum, sources, _ = mock_dbs
+    with sqlite3.connect(vesum) as vc, sqlite3.connect(sources) as sc:
+        verifier = CoTClaimVerifier(vc, sc)
+        result = verifier.verify_claim(ParsedClaim(ClaimType.SUM11_HEADWORD, "historical", term, "presence"), {})
+        assert result.passed is expected
+        if expected:
+            assert result.evidence == "Soviet historical headword attestation only; modern meaning unresolved"
+            assert result.soviet_colonization_context == {
+                "source": "СУМ-11 (1970–1980)", "source_role": "soviet_colonization_context",
+                "red_flag": True, "historical_only": True, "contrast_only": True,
+                "can_verify_modern_ukrainian": False, "sovietization_risk": 0,
+                "sovietization_keywords": "", "ideological_markers": None, "entry_id": 102,
+            }
+
+
+@pytest.mark.parametrize("tier", ["living_standard", "classical_regional", "technical_compound"])
+def test_sum11_register_not_rescued_by_morphology_or_modern_source_label(mock_dbs, tier):
+    from scripts.projects.open_model_data.v4_verify_trajectory_claims import ClaimType, ParsedClaim
+
+    vesum, sources, ulif = mock_dbs
+    with sqlite3.connect(vesum) as vc, sqlite3.connect(sources) as sc, sqlite3.connect(ulif) as uc:
+        verifier = CoTClaimVerifier(vc, sc, uc)
+        result = verifier.verify_claim(ParsedClaim(
+            ClaimType.ULIF_REGISTER, "register_spectrum.alternatives[0]", "дифузія", "modern meaning",
+            {"tier": tier, "alt_entry": {"evidence_source": "СУМ-20 / СУМ-11"}},
+        ), {})
+        assert result.passed is False
+        assert result.error_message == "SUM-11 cannot verify modern meaning or register, including mixed modern/Soviet citations"
+
+
+def test_sum11_risk_does_not_prove_suppression(mock_dbs):
+    from scripts.projects.open_model_data.v4_verify_trajectory_claims import ClaimType, ParsedClaim
+
+    vesum, sources, _ = mock_dbs
+    with sqlite3.connect(vesum) as vc, sqlite3.connect(sources) as sc:
+        sc.execute("ALTER TABLE sum11 ADD COLUMN ideological_markers TEXT")
+        sc.execute("UPDATE sum11 SET ideological_markers = 'editorial-marker' WHERE id = 101")
+        result = CoTClaimVerifier(vc, sc).verify_claim(ParsedClaim(
+            ClaimType.SUM11_SOVIETIZATION, "historical", "пилосос", "suppression"), {})
+        assert result.passed is False
+        assert result.soviet_colonization_context["sovietization_risk"] == 1
+        assert result.soviet_colonization_context["ideological_markers"] == "editorial-marker"
+
+
+@pytest.mark.parametrize("field", ["reasoning_steps", "final_response", "register_spectrum", "lexicographical_context"])
+def test_sum11_modern_answers_rejected_by_actual_jsonl_consumer(mock_dbs, tmp_path, field):
+    """SUM-11 cannot escape via answer prose, mixed citations, or legacy suppression notes."""
+    vesum, sources, ulif = mock_dbs
+    record = {
+        "schema_version": "v1_decolonization_trajectory", "trajectory_id": "traj.decolonize.1111111111111111",
+        "query": "Synthetic semantic verification probe", "target_term": "дифузія",
+        "is_calque_or_russianism": False,
+        "morphemic_breakdown": {"source_formation": "Synthetic fixture", "ukrainian_equivalent_mechanism": "Synthetic fixture"},
+        "vesum_attestation": [{"lemma": "дифузія", "vesum_forms_count": 2, "is_standard_attested": True}],
+        "register_spectrum": {"primary_living_standard": "дифузія", "alternatives": [
+            {"lemma": "дифузія", "register_tier": "living_standard", "evidence_source": "Synthetic modern fixture"}]},
+        "reasoning_steps": ["Synthetic reasoning fixture"], "final_response": "Synthetic answer fixture",
+    }
+    if field == "register_spectrum":
+        record[field]["alternatives"][0]["evidence_source"] = "СУМ-20 / СУМ-11"
+    elif field == "lexicographical_context":
+        record[field] = {"historical_suppression_note": "СУМ-11: «дифузія»", "restoration_era": "Synthetic fixture"}
+    else:
+        record[field] = ["СУМ-11: «дифузія»"] if field == "reasoning_steps" else "СУМ-11 establishes modern meaning"
+    inp = tmp_path / "input.jsonl"
+    inp.write_text(json.dumps(record, ensure_ascii=False) + "\n")
+    out, rejected = tmp_path / "verified.jsonl", tmp_path / "rejected.jsonl"
+    receipt = run_claim_verifier(input_path=inp, verified_output_path=out, rejected_output_path=rejected,
+                                 receipt_output_path=tmp_path / "receipt.json", vesum_db=vesum,
+                                 sources_db=sources, ulif_db=ulif)
+    assert receipt["counts"]["total_trajectories"] == 1
+    assert receipt["counts"]["trajectories_passed"] == 0
+    assert receipt["counts"]["trajectories_rejected"] == 1
+    assert out.read_bytes() == b""
+    assert receipt["invariants"]["zero_unverified_dictionary_claims"] is False
+    reasons = json.loads(rejected.read_text())["rejection_reasons"]
+    assert any(r["claim_type"] == "SUM11_MODERN_EVIDENCE_REFUSED" for r in reasons)
+    assert not any(r["claim_type"] == "SCHEMA_VALIDATION" for r in reasons)

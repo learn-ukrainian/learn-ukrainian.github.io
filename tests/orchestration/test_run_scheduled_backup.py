@@ -538,12 +538,98 @@ def test_record_writes_success_receipt(writer_environment: tuple[dict[str, str],
         "started_at_utc": "2026-09-26T03:30:00Z",
         "finished_at_utc": "2026-09-26T03:54:12Z",
         "exit_status": 0,
+        "repository_check": "not_run",
         "run_id": "20260926T033000Z-ab12cd34",
         "snapshot_count": 2,
         "bytes_added": 3072,
         "databases_backed_up": 1,
     }
     assert receipt_path.stat().st_mode & 0o777 == 0o600
+
+
+@pytest.mark.parametrize("status", [0, 3])
+@pytest.mark.parametrize(
+    ("log_text", "expected"),
+    [
+        pytest.param(None, "not_run", id="missing-log"),
+        pytest.param("", "not_run", id="empty-log"),
+        pytest.param(SUCCESS_LOG, "not_run", id="backup-complete-without-check"),
+        pytest.param(FAILURE_LOG, "not_run", id="backup-failed-before-check"),
+        pytest.param("==> Checking repository metadata after backup.\n", "passed", id="check-marker"),
+        pytest.param("  Repository check failed\n", "failed", id="failure-marker"),
+        pytest.param(
+            "==> Checking repository metadata after backup.\n  Repository check failed\n",
+            "failed",
+            id="check-then-failure",
+        ),
+        pytest.param(
+            "Repository check failed\n==> Checking repository metadata after backup.\n",
+            "failed",
+            id="failure-then-check",
+        ),
+        pytest.param("checking repository metadata after backup.\nrepository check failed\n", "not_run", id="case-sensitive"),
+    ],
+)
+def test_record_repository_check_uses_log_not_exit_status(
+    writer_environment: tuple[dict[str, str], Path, Path],
+    tmp_path: Path,
+    status: int,
+    log_text: str | None,
+    expected: str,
+) -> None:
+    environment, project, fake_bin = writer_environment
+    log = tmp_path / "backup.log"
+    if log_text is not None:
+        log.write_text(log_text, encoding="utf-8")
+    _fake_restic(fake_bin, "#!/bin/bash\nprintf '[]\\n'\n")
+
+    result = _run_wrapper(
+        environment,
+        "record",
+        "--status",
+        str(status),
+        "--started",
+        "2026-09-26T03:30:00Z",
+        "--log",
+        str(log),
+    )
+
+    assert result.returncode == 0, result.stderr
+    receipt = json.loads(_default_receipt(project).read_text(encoding="utf-8"))
+    assert receipt["repository_check"] == expected
+    assert receipt["exit_status"] == status
+    assert receipt["schema_version"] == 1
+
+
+@pytest.mark.parametrize(
+    ("log_text", "status", "expected"),
+    [
+        ("==> Checking repository metadata after backup.\n", 0, "passed"),
+        ("==> Checking repository metadata after backup.\n", 3, "passed"),
+        ("==> Checking repository metadata after backup.\nRepository check failed\n", 0, "failed"),
+        ("backup failed before repository check\n", 3, "not_run"),
+    ],
+)
+def test_run_records_repository_check_from_captured_log(
+    writer_environment: tuple[dict[str, str], Path, Path],
+    tmp_path: Path,
+    log_text: str,
+    status: int,
+    expected: str,
+) -> None:
+    environment, project, fake_bin = writer_environment
+    backup = tmp_path / "backup.sh"
+    _write_executable(backup, '#!/bin/bash\nprintf "%s" "$TEST_LOG"\nexit "$TEST_STATUS"\n')
+    _fake_restic(fake_bin, "#!/bin/bash\nprintf '[]\\n'\n")
+    environment.update({"LU_BACKUP_SCRIPT": str(backup), "TEST_LOG": log_text, "TEST_STATUS": str(status)})
+
+    result = _run_wrapper(environment)
+
+    assert result.returncode == status, result.stderr
+    receipt = json.loads(_default_receipt(project).read_text(encoding="utf-8"))
+    assert receipt["repository_check"] == expected
+    assert receipt["exit_status"] == status
+    assert receipt["schema_version"] == 1
 
 
 def test_record_writes_failure_receipt_without_repository(

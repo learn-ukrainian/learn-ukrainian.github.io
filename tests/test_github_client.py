@@ -6,18 +6,36 @@ import json
 import os
 import sqlite3
 import subprocess
+import sys
 import tempfile
 from pathlib import Path
 
 import pytest
 
 from scripts.common import github_client as gh
+from tests.common.github_cache_isolation import isolate_github_client_cache
 
 # Captured at import: tests that monkeypatch ``gh.GitHubClient`` must still build stores from the real class.
 REAL_CLIENT = gh.GitHubClient
 
 
-def response(value, *, status=200, remaining=100, reset=2000, etag='"one"'):
+@pytest.fixture(autouse=True)
+def _isolate_github_client_cache(tmp_path, monkeypatch):
+    yield from isolate_github_client_cache(tmp_path, monkeypatch)
+
+
+def natively_runs(args):
+    """The command line the native transport runs for ``args`` (#10730): a ``gh api`` that is neither
+    paginated, verbose nor already ``--include``d gets ``--include`` after its last flag, so GitHub's
+    status and headers come from gh's own framing; any other command line is unchanged."""
+    tokens = list(args)
+    if tokens[1:2] != ["api"] or {"--paginate", "--verbose", "--include", "-i"} & set(tokens):
+        return tokens
+    return [*tokens, "--include"]
+
+
+# A healthy default budget: above the core landing reserve, so ordinary calls are admitted.
+def response(value, *, status=200, remaining=5000, reset=2000, etag='"one"'):
     return gh.Response(
         status,
         {"ETag": etag, "X-RateLimit-Remaining": str(remaining), "X-RateLimit-Reset": str(reset)},
@@ -25,14 +43,14 @@ def response(value, *, status=200, remaining=100, reset=2000, etag='"one"'):
     )
 
 
-def client(tmp_path, script, *, now=1000, env=None):
+def client(tmp_path, script, *, now=1000, env=None, **limits):
     calls = []
 
     def transport(method, endpoint, headers, body, timeout):
         calls.append((method, endpoint, headers, body))
         return script[len(calls) - 1]
 
-    return REAL_CLIENT(cache_dir=tmp_path, transport=transport, clock=lambda: now, env=env or {}), calls
+    return REAL_CLIENT(cache_dir=tmp_path, transport=transport, clock=lambda: now, env=env or {}, **limits), calls
 
 
 def test_conditional_cache_survives_new_client(tmp_path):
@@ -640,16 +658,18 @@ def test_auto_merge_timestamp_is_not_invented_from_rest(tmp_path):
 
 
 def test_publishing_preflight_returns_typed_limit_without_write(tmp_path, monkeypatch):
+    """Only GitHub's own hold refuses a landing verb; an exhausted core pool alone does not (#10730)."""
     from scripts.publish import github as pub
 
     store, calls = client(tmp_path, [])
     with store._db() as db:
         gh._store_budget(db, store.scope, "core", 0, 2000)
+        gh._store_budget(db, store.scope, "retry_after", 0, 2000)
     monkeypatch.setattr(gh, "GitHubClient", lambda **kw: store)
     monkeypatch.setattr(pub.gate, "real_gh", lambda env: "gh")
     result = pub.publish("pr-merge", repo="o/r", number=1, env={"AGENT_NO_MERGE": "0"}, capture_output=True, text=True)
     assert result.returncode == 75
-    assert json.loads(result.stdout) == {"error": "github_rate_limited", "reset_at": 2000}
+    assert json.loads(result.stdout) == {"error": "github_rate_limited", "reset_at": 2000, "reason": "retry_after"}
     assert calls == []
 
 
@@ -963,6 +983,135 @@ def test_cli_timeout_reaps_a_real_descendant(tmp_path):
     assert _observe_reaped_descendant(int(pid_file.read_text())) in {"disappeared", "reaped"}
 
 
+def _script(tmp_path, name, body):
+    """An executable Python script standing in for a CLI process."""
+    import sys
+
+    path = tmp_path / name
+    path.write_text(f"#!{sys.executable}\n{body}")
+    path.chmod(0o700)
+    return str(path)
+
+
+def test_transport_keeps_at_most_its_limit_and_never_blocks_the_process(tmp_path):
+    """Standard output past the kept bytes is read and dropped: the spool never grows beyond the limit."""
+    script = _script(
+        tmp_path,
+        "big",
+        "import sys\nsys.stdout.buffer.write(b'x' * (3 << 20))\nsys.stdout.flush()\nprint('done', file=sys.stderr)\n",
+    )
+    completed = gh._transport_process([script], input=None, env=None, cwd=None, timeout=30, limit=99)
+    assert (completed.returncode, completed.stdout, completed.stderr) == (0, b"x" * 100, b"done\n")
+
+
+def test_transport_output_under_its_limit_is_byte_identical(tmp_path):
+    import os
+
+    script = _script(tmp_path, "echo", "import sys\nsys.stdout.buffer.write(sys.stdin.buffer.read())\n")
+    payload = os.urandom(300_000)
+    for limit in (None, len(payload) - 1, len(payload)):
+        completed = gh._transport_process([script], input=payload, env=None, cwd=None, timeout=30, limit=limit)
+        assert completed.stdout == payload
+    # Standard input of any size arrives whole: the former 8 MiB request cap is no limit.
+    big = os.urandom(9 << 20)
+    assert gh._transport_process([script], input=big, env=None, cwd=None, timeout=60).stdout == big
+
+
+def test_a_bounded_request_never_kills_the_process_group_after_a_completed_wait(tmp_path):
+    """A descendant the CLI left running, on its own stdio, survives a run that completed (pin 2, #10730)."""
+    import os
+
+    import psutil
+
+    pid_file = tmp_path / "descendant.pid"
+    executable = _script(
+        tmp_path,
+        "gh",
+        "import subprocess, sys\n"
+        "child = subprocess.Popen([sys.executable, '-c', 'import time; time.sleep(30)'], "
+        "stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)\n"
+        f"open({str(pid_file)!r}, 'w').write(str(child.pid))\n"
+        "sys.stdout.write('HTTP/2.0 200 OK\\nX-Ratelimit-Remaining: 4000\\r\\n\\r\\n[]')\n",
+    )
+    store = gh.GitHubClient(
+        cache_dir=tmp_path / "cache", env={**os.environ, "AGENT_REAL_GH": executable}, max_response_bytes=1024
+    )
+    result = store.request("GET", "repos/o/r/issues")
+    descendant = psutil.Process(int(pid_file.read_text()))
+    try:
+        assert (result.error, result.value) == (None, [])
+        assert descendant.status() not in {psutil.STATUS_ZOMBIE, psutil.STATUS_DEAD}
+    finally:
+        descendant.kill()
+
+
+@pytest.mark.parametrize("limit", [None, 6000, 4999])
+def test_native_output_is_the_processs_own_bytes_until_the_ceiling(tmp_path, limit):
+    """Under the ceiling the caller gets gh's body byte for byte; over it, a typed result carrying none of it."""
+    import os
+
+    body = os.urandom(5000)
+    (tmp_path / "body").write_bytes(body)
+    executable = _script(
+        tmp_path,
+        "gh",
+        "import sys\n"
+        "assert sys.argv[-1] == '--include', sys.argv\n"
+        "sys.stdout.buffer.write(b'HTTP/2.0 200 OK\\nX-Ratelimit-Remaining: 4000\\r\\n\\r\\n')\n"
+        f"sys.stdout.buffer.write(open({str(tmp_path / 'body')!r}, 'rb').read())\n",
+    )
+    environment = {**os.environ, "AGENT_REAL_GH": executable}
+    argv = ["gh", "api", "repos/o/r/issues", "--template", "{{.}}"]
+    result = gh.run(argv, env=environment, capture_output=True, max_response_bytes=limit)
+    if limit is None or limit >= len(body):
+        assert (result.returncode, result.stdout) == (0, body)
+    else:
+        assert result.returncode == 1 and result.github_result.error == "github_response_too_large"
+        assert json.loads(result.stdout) == {"error": "github_response_too_large", "reset_at": None}
+
+
+@pytest.mark.parametrize("block", [1, 2, 3, 7, 4096])
+def test_a_framed_ceiling_keeps_the_frame_and_counts_only_the_body(block):
+    """gh's frame is kept to its empty line; then at most ceiling + 1 body bytes, whatever the read sizes."""
+    import io
+
+    for frame in (b"HTTP/2.0 200 OK\nX-Ratelimit-Remaining: 4000\r\n\r\n", b"HTTP/2.0 204 No Content\n\r\n"):
+        output, spool = frame + b"b" * 100, io.BytesIO()
+        kept = gh._Kept(spool, 9, framed=True)
+        for start in range(0, len(output), block):
+            kept.write(output[start : start + block])
+        assert spool.getvalue() == frame + b"b" * 10
+
+
+def test_output_with_no_frame_end_within_the_frame_limit_is_body(monkeypatch):
+    import io
+
+    monkeypatch.setattr(gh, "_FRAME_BYTES", 16)
+    spool = io.BytesIO()
+    kept = gh._Kept(spool, 4, framed=True)
+    for block in (b"HTTP/2.0 200 OK ", b"and no header end", b"x" * 50):
+        kept.write(block)
+    assert spool.getvalue() == b"HTTP/2.0 200 OK and no header end" + b"x" * 5
+
+
+def test_a_bounded_cli_request_keeps_its_frame_and_refuses_the_oversized_body(tmp_path):
+    import os
+
+    executable = _script(
+        tmp_path,
+        "gh",
+        "import sys\n"
+        "sys.stdout.buffer.write(b'HTTP/2.0 200 OK\\nX-Ratelimit-Remaining: 4000\\r\\nX-Ratelimit-Reset: 2000\\r\\n\\r\\n')\n"
+        "sys.stdout.buffer.write(b'b' * 50000)\n",
+    )
+    store = gh.GitHubClient(
+        cache_dir=tmp_path / "cache", env={**os.environ, "AGENT_REAL_GH": executable}, max_response_bytes=100
+    )
+    result = store.request("GET", "repos/o/r/actions/artifacts/1/zip")
+    assert (result.status, result.value) == (413, {"message": "github_response_too_large"})
+    assert result.headers["x-ratelimit-remaining"] == "4000"
+
+
 def test_low_keeper_budget_skips_identity_checks_and_state_write(tmp_path):
     from scripts.orchestration import merge_queue_keeper as keeper
 
@@ -1024,7 +1173,7 @@ def test_real_cli_transport_uses_conditional_headers_and_preserves_frozen_body(t
 
     executable = tmp_path / "gh"
     executable.write_text(
-        f'#!{sys.executable}\nimport sys,os,json\nassert not any(k in os.environ for k in ("FORCE_COLOR","CLICOLOR_FORCE","GH_FORCE_TTY"))\nbody=sys.stdin.buffer.read()\nconditional=any("If-None-Match:" in arg for arg in sys.argv)\nprint("HTTP/2 304" if conditional else "HTTP/2 200")\nprint("X-RateLimit-Remaining: 100")\nprint("X-RateLimit-Reset: 2000")\nprint("ETag: \\"one\\"")\nprint()\nif not conditional: print(json.dumps({{"body":body.decode(),"no_colour":os.environ["NO_COLOR"]}}))\n'
+        f'#!{sys.executable}\nimport sys,os,json\nassert not any(k in os.environ for k in ("FORCE_COLOR","CLICOLOR_FORCE","GH_FORCE_TTY"))\nbody=sys.stdin.buffer.read()\nconditional=any("If-None-Match:" in arg for arg in sys.argv)\nprint("HTTP/2 304" if conditional else "HTTP/2 200")\nprint("X-RateLimit-Remaining: 5000")\nprint("X-RateLimit-Reset: 2000")\nprint("ETag: \\"one\\"")\nprint()\nif not conditional: print(json.dumps({{"body":body.decode(),"no_colour":os.environ["NO_COLOR"]}}))\n'
     )
     executable.chmod(0o700)
     store = gh.GitHubClient(
@@ -1426,7 +1575,7 @@ def test_run_hostname_cannot_poison_caller_budget_or_cache(tmp_path, overrides):
         calls.append((args, host))
         if "--include" not in args:
             return subprocess.CompletedProcess(args, 0, json.dumps({"authority": host}).encode(), b"")
-        remaining = 100 if host == "github.com" else 5
+        remaining = 5000 if host == "github.com" else 5
         raw = (
             f'HTTP/2.0 200 OK\r\nETag: "one"\r\nX-RateLimit-Resource: core\r\n'
             f"X-RateLimit-Remaining: {remaining}\r\nX-RateLimit-Reset: 2000\r\n\r\n" + json.dumps({"authority": host})
@@ -1531,7 +1680,7 @@ def test_host_boundary_option_normalization_preserves_flag_values(tmp_path):
 
     args = ["gh", "api", "--template", "--hostname", "user", "--hostname", "GITHUB.COM."]
     assert gh.run(args, client=store, runner=runner, capture_output=True).returncode == 0
-    assert commands == [["gh", "api", "--template", "--hostname", "user", "--hostname", "github.com"]]
+    assert commands == [natively_runs(["gh", "api", "--template", "--hostname", "user", "--hostname", "github.com"])]
     assert args[-1] == "GITHUB.COM."
 
 
@@ -2040,7 +2189,7 @@ def test_every_shim_admitted_read_translates_or_falls_through(tmp_path, args):
     assert result.returncode == 0
     assert bool(translated) != bool(native)
     if native:
-        assert native == [args]
+        assert native == [natively_runs(args)]
     else:
         assert gh._translation_options(args) is not None
 
@@ -2171,7 +2320,7 @@ def test_unmodelled_api_flag_semantics_fall_through(tmp_path, suffix):
         return subprocess.CompletedProcess(command, 0, b"[]", b"")
 
     assert gh.run(args, client=store, runner=native, capture_output=True).returncode == 0
-    assert seen == [args] and not calls
+    assert seen == [natively_runs(args)] and not calls
 
 
 @pytest.mark.parametrize("flag", ["-a", "--approve", "--approve=true"])
@@ -2334,7 +2483,7 @@ def test_every_admitted_api_read_translates_exactly_or_falls_through(tmp_path, a
     assert result.returncode == 0
     assert bool(translated) != bool(native)
     if native:
-        assert native == [args]
+        assert native == [natively_runs(args)]
     else:
         assert gh._translation_options(args) is not None
         assert result.stdout == _native_api_shape(args)
@@ -2467,8 +2616,379 @@ def test_publisher_write_live_limit_records_headers_without_replay(tmp_path):
                 "SELECT resource,remaining,reset FROM budget WHERE scope=?", (store.scope,)
             )
         }
-    assert budgets["core"] == (77, 4000000000)
-    assert budgets["secondary"] == (0, result.github_result.reset_at)
+    # A reset centuries ahead is not a GitHub window, so the core observation is not stored.
+    assert "core" not in budgets
+    # GitHub's Retry-After is an authentic hold, distinct from the client's synthetic ones.
+    assert budgets["retry_after"] == (0, result.github_result.reset_at) and "secondary" not in budgets
+    assert result.github_result.reason == "retry_after"
     deferred = publisher._run_transport(command, env=environment, capture_output=True, text=True)
     assert deferred.github_result.error == "github_rate_limited"
+    assert deferred.github_result.reason == "retry_after"
     assert calls.read_text().splitlines() == ["call"]
+
+
+@pytest.mark.parametrize("age,retained", [(9.999, True), (10, False), (10.001, False)])
+def test_retained_age_boundary_controls_stale_and_prunes(tmp_path, age, retained):
+    store, calls = client(tmp_path, [response([1], remaining=0)], cache_ttl_seconds=10)
+    assert store.request("GET", "user").value == [1]
+    store.clock = lambda: 1000 + age
+    result = store.request("GET", "user", allow_stale=True)
+    assert result.stale is retained
+    assert result.value == ([1] if retained else None)
+    assert result.age_seconds == pytest.approx(age if retained else 0)
+    assert result.error == (None if retained else "github_rate_limited")
+    assert len(calls) == 1
+    with store._db() as db:
+        assert db.execute("SELECT count(*) FROM cache").fetchone() == (int(retained),)
+        assert db.execute("SELECT remaining,reset FROM budget").fetchall() == [(0, 2000)]
+
+
+@pytest.mark.parametrize("status", [200, 304])
+def test_expired_etag_is_not_sent_or_reused(tmp_path, status):
+    store, calls = client(tmp_path, [response(1), response(2, status=status)], cache_ttl_seconds=10)
+    store.request("GET", "user")
+    store.clock = lambda: 1010
+    result = store.request("GET", "user")
+    assert "If-None-Match" not in calls[1][2]
+    assert result.value == (2 if status == 200 else None)
+    assert result.error == (None if status == 200 else "github_cache_miss")
+
+
+def test_304_renews_retention_and_fresh_still_refuses_stale(tmp_path):
+    store, calls = client(tmp_path, [response(1), response(None, status=304, remaining=0)], cache_ttl_seconds=10)
+    store.request("GET", "user")
+    store.clock = lambda: 1009
+    result = store.request("GET", "user", fresh=True)
+    assert (result.value, result.status, result.age_seconds, result.stale) == (1, 304, 0, False)
+    assert calls[1][2]["If-None-Match"] == '"one"'
+    store.clock = lambda: 1018
+    assert store.request("GET", "user", allow_stale=True).age_seconds == 9
+    assert store.request("GET", "user", allow_stale=True, fresh=True).error == "github_rate_limited"
+    store.clock = lambda: 1019
+    assert store.request("GET", "user", allow_stale=True).error == "github_rate_limited"
+    assert len(calls) == 2
+
+
+@pytest.mark.parametrize("status", [304, 429])
+def test_response_arriving_after_retention_cannot_reuse_snapshot(tmp_path, status):
+    clock = [1000]
+    store, _ = client(tmp_path, [response(1)], cache_ttl_seconds=10)
+    store.clock = lambda: clock[0]
+    store.request("GET", "user")
+    clock[0] = 1009
+
+    def delayed(*args):
+        clock[0] = 1010
+        return gh.Response(status, {}, b"{}")
+
+    store.transport = delayed
+    result = store.request("GET", "user", allow_stale=True)
+    assert result.value is None and not result.stale
+    assert result.error == ("github_cache_miss" if status == 304 else "github_rate_limited")
+
+
+def test_cache_retention_defaults_and_invalid_limits(tmp_path):
+    store, _ = client(tmp_path, [])
+    assert (store.cache_ttl_seconds, store.cache_max_bytes) == (604800, 67108864)
+    for ttl in (0, -1, float("nan"), float("inf"), True, "7"):
+        with pytest.raises(ValueError, match="cache TTL"):
+            client(tmp_path, [], cache_ttl_seconds=ttl)
+    for size in (-1, 1.5, True, None):
+        with pytest.raises(ValueError, match="cache byte limit"):
+            client(tmp_path, [], cache_max_bytes=size)
+
+
+def test_aggregate_utf8_bytes_across_scopes_and_existing_store(tmp_path):
+    store, calls = client(tmp_path, [], cache_max_bytes=12)
+    # 1 body byte + 10 persisted UTF-8 header bytes = 11 per row.
+    with store._db() as db:
+        db.executemany(
+            "INSERT INTO cache VALUES(?,?,?,?,?)",
+            [
+                ("z", "a", b"1", '{"x":"é"}', 998),
+                ("a", "z", b"2", '{"x":"é"}', 999),
+            ],
+        )
+        db.executemany(
+            "INSERT INTO budget VALUES(?,?,?,?)",
+            [
+                (store.scope, "core", 0, 2000),
+                ("other", "graphql", 4, 2000),
+            ],
+        )
+    # Reintroduce pre-existing over-cap rows through a raw isolated connection.
+    with sqlite3.connect(tmp_path / "cache.sqlite3") as db:
+        db.execute("INSERT INTO cache VALUES(?,?,?,?,?)", ("zz", "zz", "é", "{}", 1000))
+        before = db.execute("SELECT * FROM budget ORDER BY scope,resource").fetchall()
+    assert store.request("GET", "user").error == "github_rate_limited"
+    assert calls == []
+    with sqlite3.connect(tmp_path / "cache.sqlite3") as db:
+        assert db.execute("SELECT scope,key FROM cache").fetchall() == [("zz", "zz")]
+        assert db.execute(
+            "SELECT sum(length(CAST(body AS BLOB))+length(CAST(headers AS BLOB))) FROM cache"
+        ).fetchone() == (4,)
+        assert db.execute("SELECT * FROM budget ORDER BY scope,resource").fetchall() == before
+
+
+@pytest.mark.parametrize("order", [0, 1])
+def test_equal_time_eviction_uses_scope_then_key_not_insertion_order(tmp_path, order):
+    store, _ = client(tmp_path, [], cache_max_bytes=6)
+    rows = [("z", "a", b"1", "{}", 1000), ("a", "z", b"2", "{}", 1000), ("z", "b", b"3", "{}", 1000)]
+    with store._db() as db:
+        db.executemany("INSERT INTO cache VALUES(?,?,?,?,?)", rows if order == 0 else rows[::-1])
+    with store._db() as db:
+        assert db.execute("SELECT scope,key FROM cache ORDER BY scope,key").fetchall() == [("z", "a"), ("z", "b")]
+        assert db.execute("SELECT sum(length(body)+length(headers)) FROM cache").fetchone() == (6,)
+
+
+def test_oversized_response_returns_without_evicting_smaller_row(tmp_path):
+    store, _ = client(tmp_path, [gh.Response(200, {}, b'"123456789"')], cache_max_bytes=10)
+    with store._db() as db:
+        gh._store_cache(db, "other", "old", b"1", {}, 999)
+    assert store.request("GET", "user").value == "123456789"
+    with store._db() as db:
+        assert db.execute("SELECT scope,key,body FROM cache").fetchall() == [("other", "old", b"1")]
+
+
+@pytest.mark.parametrize("limit,expected", [(0, []), (3, [(b"1",)])])
+def test_response_exact_byte_bound(tmp_path, limit, expected):
+    store, _ = client(tmp_path, [gh.Response(200, {}, b"1")], cache_max_bytes=limit)
+    assert store.request("GET", "user").value == 1
+    with store._db() as db:
+        assert db.execute("SELECT body FROM cache").fetchall() == expected
+
+
+def test_repeated_writes_keep_newest_under_size_bound(tmp_path):
+    store, _ = client(tmp_path, [gh.Response(200, {}, b'"ok"')] * 4, cache_max_bytes=10)
+    for at, endpoint in [(1000, "user"), (1001, "user"), (1002, "repos/o/r"), (1003, "user")]:
+        store.clock = lambda at=at: at
+        assert store.request("GET", endpoint).value == "ok"
+        with store._db() as db:
+            assert db.execute("SELECT count(*),sum(length(body)+length(headers)),max(at) FROM cache").fetchone() == (
+                1,
+                6,
+                at,
+            )
+
+
+def test_out_of_order_large_response_does_not_delete_newer_row(tmp_path):
+    store, _ = client(tmp_path, [], cache_max_bytes=6)
+    with store._db() as db:
+        gh._store_cache(db, store.scope, "key", b'"ok"', {}, 1010)
+        gh._store_cache(db, store.scope, "key", b'"way too big"', {}, 1000)
+    with store._db() as db:
+        assert db.execute("SELECT body,at FROM cache").fetchall() == [(b'"ok"', 1010)]
+
+
+def test_concurrent_304_does_not_refresh_replaced_body_or_headers(tmp_path):
+    store, _ = client(tmp_path, [gh.Response(200, {"etag": "old"}, b"1")])
+    store.request("GET", "user")
+    store.clock = lambda: 1010
+    newer, _ = client(tmp_path, [gh.Response(200, {"etag": "new"}, b"2")], now=1005)
+
+    def interleaved(*args):
+        assert newer.request("GET", "user").value == 2
+        return gh.Response(304, {"etag": "old"}, b"")
+
+    store.transport = interleaved
+    result = store.request("GET", "user")
+    assert (result.value, result.status) == (1, 304)
+    with store._db() as db:
+        assert db.execute("SELECT body,headers,at FROM cache").fetchall() == [(b"2", '{"etag": "new"}', 1005)]
+
+
+def test_unclassifiable_rows_are_preserved_without_broad_deletion(tmp_path):
+    store, _ = client(tmp_path, [], cache_max_bytes=0)
+    rows = [("unknown", "time", b"1", "{}", "invalid"), ("unknown", "headers", b"1", "not json", 0)]
+    with store._db() as db:
+        db.executemany("INSERT INTO cache VALUES(?,?,?,?,?)", rows)
+        gh._store_cache(db, "known", "expired", b"1", {}, 0)
+    with store._db() as db:
+        assert db.execute("SELECT * FROM cache ORDER BY key").fetchall() == sorted(rows, key=lambda row: row[1])
+
+
+def test_preexisting_oversized_and_expired_rows_pruned_across_scopes(tmp_path):
+    store, calls = client(tmp_path, [], cache_ttl_seconds=10, cache_max_bytes=8)
+    with store._db() as db:
+        gh._store_budget(db, store.scope, "core", 0, 2000, now=1000)
+    with sqlite3.connect(tmp_path / "cache.sqlite3") as db:
+        db.executemany(
+            "INSERT INTO cache VALUES(?,?,?,?,?)",
+            [
+                ("z", "huge", b'"0123456789"', "{}", 1000),
+                ("a", "expired", b"1", "{}", 990),
+                ("z", "kept", b"2", "{}", 999),
+            ],
+        )
+    assert store.request("GET", "user").error == "github_rate_limited"
+    assert calls == []
+    with sqlite3.connect(tmp_path / "cache.sqlite3") as db:
+        assert db.execute("SELECT scope,key,body FROM cache").fetchall() == [("z", "kept", b"2")]
+        assert db.execute("SELECT * FROM budget").fetchall() == [(store.scope, "core", 0, 2000)]
+
+
+def test_304_header_growth_obeys_aggregate_byte_limit(tmp_path):
+    store, _ = client(
+        tmp_path,
+        [gh.Response(200, {"etag": "x"}, b"1"), gh.Response(304, {"extra": "123456"}, b"")],
+        cache_max_bytes=14,
+    )
+    assert store.request("GET", "user").value == 1
+    with store._db() as db:
+        assert db.execute("SELECT length(body)+length(headers) FROM cache").fetchone() == (14,)
+    assert store.request("GET", "user").value == 1
+    with store._db() as db:
+        assert db.execute("SELECT count(*) FROM cache").fetchone() == (0,)
+
+
+def test_concurrent_success_preserves_newer_body_under_bound(tmp_path):
+    older, _ = client(tmp_path, [], cache_max_bytes=4)
+    newer, _ = client(tmp_path, [gh.Response(200, {}, b"2")], now=1001, cache_max_bytes=4)
+
+    def interleaved(*args):
+        assert newer.request("GET", "user").value == 2
+        return gh.Response(200, {}, b"1")
+
+    older.transport = interleaved
+    assert older.request("GET", "user").value == 1
+    with older._db() as db:
+        assert db.execute("SELECT body,at FROM cache").fetchall() == [(b"2", 1001)]
+
+
+@pytest.mark.parametrize("failure", ["directory_is_file", "read_only_database", "corrupt_database"])
+def test_cache_maintenance_fallback_keeps_bounded_memory_and_budget(tmp_path, monkeypatch, failure):
+    cache = tmp_path / "cache"
+    if failure == "directory_is_file":
+        cache.write_text("not a directory")
+    else:
+        cache.mkdir()
+        database = cache / "cache.sqlite3"
+        database.write_bytes(b"not a database" if failure == "corrupt_database" else b"")
+        if failure == "read_only_database":
+            original = os.access
+            monkeypatch.setattr(
+                gh.os, "access", lambda path, mode: False if Path(path) == database else original(path, mode)
+            )
+    store, calls = client(
+        cache,
+        [gh.Response(200, {"x-ratelimit-remaining": "0", "x-ratelimit-reset": "2000"}, b"1")],
+        cache_max_bytes=0,
+    )
+    assert store.request("GET", "user").value == 1
+    assert store.cache_dir is None
+    assert store.request("GET", "user", allow_stale=True).error == "github_rate_limited"
+    assert len(calls) == 1
+    with store._db() as db:
+        assert db.execute("SELECT count(*) FROM cache").fetchone() == (0,)
+        assert db.execute("SELECT remaining,reset FROM budget").fetchall() == [(0, 2000)]
+
+
+def test_bounded_cache_reads_release_probe_lock_and_budget_writes_do_not_prune(tmp_path, monkeypatch):
+    store, _ = client(tmp_path, [response(1)])
+    store.request("GET", "user")
+    statements = []
+    connect = gh.sqlite3.connect
+
+    def traced(*args, **kwargs):
+        db = connect(*args, **kwargs)
+        db.set_trace_callback(statements.append)
+        return db
+
+    monkeypatch.setattr(gh.sqlite3, "connect", traced)
+    with store._db() as db:
+        assert not db.in_transaction
+        assert db.execute("SELECT body FROM cache").fetchall() == [(b"1",)]
+        with connect(tmp_path / "cache.sqlite3", timeout=0) as sibling:
+            gh._store_budget(sibling, store.scope, "core", 0, 2000, now=1000)
+        assert gh._admission(db, store.scope, ["core"], None, 1000) == ("core_below_landing_reserve", 2000)
+    with store._db() as db:
+        gh._store_budget(db, "other", "core", 5, 2000, now=1000)
+    assert not any("DELETE FROM cache" in sql for sql in statements)
+    assert store.cache_dir == tmp_path
+    with connect(tmp_path / "cache.sqlite3") as db:
+        assert db.execute("SELECT remaining FROM budget WHERE scope='other'").fetchone() == (5,)
+
+
+def test_cache_eviction_and_index_bytes_roll_back_with_failed_store(tmp_path):
+    store, _ = client(tmp_path, [], cache_max_bytes=6)
+    with store._db() as db:
+        gh._store_cache(db, "a", "old", b"1", {}, 999)
+        gh._store_budget(db, "a", "core", 10, 2000, now=1000)
+    with pytest.raises(RuntimeError, match="abort"):
+        with store._db() as db:
+            gh._store_cache(db, "b", "new", b'"ok"', {}, 1000)
+            gh._store_budget(db, "a", "core", 0, 2000, now=1000)
+            gh._maintain_cache(db, 1000, store.cache_ttl_seconds, store.cache_max_bytes)
+            assert db.execute("SELECT scope,key FROM cache").fetchall() == [("b", "new")]
+            raise RuntimeError("abort")
+    with store._db() as db:
+        assert db.execute("SELECT scope,key,body FROM cache").fetchall() == [("a", "old", b"1")]
+        assert db.execute("SELECT remaining FROM budget").fetchall() == [(10,)]
+        gh._store_cache(db, "c", "after", b"2", {}, 1000)
+    with store._db() as db:
+        assert db.execute("SELECT scope,key FROM cache ORDER BY scope").fetchall() == [("a", "old"), ("c", "after")]
+
+
+def test_near_cap_multiprocess_304s_keep_shared_cache_and_observe_persisted_budget(tmp_path):
+    store, _ = client(tmp_path, [], env={"GH_CONFIG_DIR": str(tmp_path / "no-config")})
+    with store._db() as db:
+        db.executemany(
+            "INSERT INTO cache VALUES(?,?,?,?,?)",
+            [(f"s{i % 7}", f"k{i}", b'{"x":"' + b"y" * 1990 + b'"}', '{"etag": "z"}', 900)
+             for i in range(31000)],
+        )
+        gh._store_budget(db, "sentinel", "core", 7, 2000, now=1000)
+    script = r'''
+import json, sys
+from pathlib import Path
+from scripts.common import github_client as gh
+directory, index = Path(sys.argv[1]), int(sys.argv[2])
+calls = []
+def transport(method, endpoint, headers, body, timeout):
+    status = 304 if "If-None-Match" in headers else 200
+    calls.append(status)
+    return gh.Response(status, {"etag": "fixture", "x-ratelimit-remaining": "4000",
+                              "x-ratelimit-reset": "2000"},
+                       b"" if status == 304 else json.dumps({"p": index, "pad": "q" * 20000}).encode())
+client = gh.GitHubClient(cache_dir=directory, env={"GH_CONFIG_DIR": str(directory / "no-config")},
+                         clock=lambda: 1000, transport=transport)
+for i in range(15):
+    result = client.request("GET", f"repos/o/r/issues/{index}-{i % 5}")
+    assert result.error is None and result.value["p"] == index, result
+print(json.dumps({"disk": client.cache_dir is not None, "statuses": calls}), flush=True)
+assert sys.stdin.readline() == "budget stored\n"
+stale = client.request("GET", f"repos/o/r/issues/{index}-0", allow_stale=True)
+fresh = client.request("GET", f"repos/o/r/issues/{index}-0", fresh=True)
+assert stale.stale and stale.value["p"] == index, stale
+assert fresh.error == "github_rate_limited" and fresh.reset_at == 2000, fresh
+assert len(calls) == 15, calls
+print(json.dumps({"disk": client.cache_dir is not None, "shared_budget_observed": True}), flush=True)
+'''
+    processes = [subprocess.Popen(
+        [sys.executable, "-c", script, str(tmp_path), str(index)],
+        stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
+    ) for index in range(8)]
+    try:
+        for process in processes:
+            line = process.stdout.readline()
+            assert line, process.stderr.read()
+            assert json.loads(line) == {"disk": True, "statuses": [200] * 5 + [304] * 10}
+        with sqlite3.connect(tmp_path / "cache.sqlite3") as db:
+            assert db.execute("SELECT remaining FROM budget WHERE scope=?", (store.scope,)).fetchone() == (4000,)
+            gh._store_budget(db, store.scope, "core", 0, 2000, now=1000)
+        for process in processes:
+            output, error = process.communicate("budget stored\n", timeout=30)
+            assert process.returncode == 0, error
+            assert json.loads(output) == {"disk": True, "shared_budget_observed": True}
+        with sqlite3.connect(tmp_path / "cache.sqlite3") as db:
+            assert db.execute("SELECT remaining,reset FROM budget WHERE scope='sentinel'").fetchone() == (7, 2000)
+            total, count = db.execute(
+                "SELECT sum(length(CAST(body AS BLOB))+length(CAST(headers AS BLOB))),count(*) FROM cache"
+            ).fetchone()
+            assert 62_000_000 < total <= 67_108_864
+            assert count == 31040
+    finally:
+        for process in processes:
+            if process.poll() is None:
+                process.terminate()
+            process.communicate(timeout=30)

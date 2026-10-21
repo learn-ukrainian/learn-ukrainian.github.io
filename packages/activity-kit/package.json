@@ -24,7 +24,7 @@
     "react-dom": ">=18"
   },
   "devDependencies": {
-    "@types/react": "^19.2.15"
+    "@types/react": "^19.3.0"
   },
   "scripts": {
     "generate:types": "node scripts/generate-types.mjs"

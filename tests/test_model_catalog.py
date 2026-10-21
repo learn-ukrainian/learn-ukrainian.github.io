@@ -1545,6 +1545,34 @@ def test_catalog_rejects_retired_and_rule_excluded_executable_references(model, 
         validate_catalog(catalog)
 
 
+def test_deepseek_flash_catalog_class_is_opencode_execution_only():
+    model = "deepseek-v4.1-flash"
+    assert require_execution_model(model, transport="opencode") == model
+    for transport in ("hermes", "cursor", "codex"):
+        with pytest.raises(ModelCatalogError, match="requires the opencode transport"):
+            require_execution_model(model, transport=transport)
+
+    catalog = load_model_catalog()
+    for reference in ("candidate", "default", "escalation", "family", "endpoint", "substitution_source", "substitution_target"):
+        changed = deepcopy(catalog)
+        if reference == "candidate":
+            changed["review_candidates"]["claude-opus-5-5"]["model_id"] = model
+        elif reference == "default":
+            changed["formal_cf_defaults"]["claude"]["model_id"] = model
+        elif reference == "escalation":
+            changed["formal_cf_defaults"]["claude"]["escalate_model_id"] = model
+        elif reference == "family":
+            changed["formal_cf_defaults"]["claude"]["family_models"].append(model)
+        elif reference == "endpoint":
+            changed["review_scheduler"]["endpoints"]["claude"]["models"].append(model)
+        elif reference == "substitution_source":
+            changed["budget_substitution_models"]["cursor"][model] = "grok-4.7"
+        else:
+            changed["budget_substitution_models"]["cursor"]["grok-4.7"] = model
+        with pytest.raises(ModelCatalogError, match=r"DeepSeek|does not admit"):
+            validate_catalog(changed)
+
+
 @pytest.mark.parametrize("model", ["claude-sonnet-5-5", "claude-sonnet-5"])
 def test_catalog_rejects_sonnet_on_critical_security_ladder(model):
     catalog = deepcopy(load_model_catalog())
@@ -1686,3 +1714,15 @@ def test_native_grok_runtime_attestation_allowlist_is_exact():
     model = load_model_catalog()["models"]["grok-4.7"]
     assert model["runtime_model_ids"] == ["grok-4.7-build"]
     assert "grok-4.7-build-fast" not in model["runtime_model_ids"]
+
+
+def test_driver_brief_population_follows_catalog_capabilities():
+    from scripts.review.model_catalog import driver_brief_models
+
+    catalog = deepcopy(load_model_catalog())
+    assert driver_brief_models(catalog) == {"gpt-6-luna", "claude-haiku-5-5"}
+    catalog["models"]["claude-haiku-5-5"]["roles"].remove("bounded_implementation")
+    assert driver_brief_models(catalog) == {"gpt-6-luna"}
+    catalog["models"]["claude-haiku-5-5"]["roles"].append("bounded_implementation")
+    catalog["models"]["claude-haiku-5-5"]["lifecycle"] = "hold"
+    assert driver_brief_models(catalog) == {"gpt-6-luna"}

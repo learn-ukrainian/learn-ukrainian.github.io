@@ -259,9 +259,23 @@ class Result:
     transport_metadata: dict[str, str] | None = None
     transport_outcome: str | None = None
     # Optional provenance; absent historical records imply no provider observation.
-    model_identity: dict[str, str | bool | None] | None = None
+    # Validated same-invocation AGY observation, including bounded provenance.
+    # The routing/accounting model above never supplies missing actual identity.
+    model_identity: dict[str, Any] | None = None
     # The adapter's closed, body-free failure classification (ParseResult.failure_code),
     # e.g. ``provider_policy_refusal``; None on success or when unclassified.
     failure_code: str | None = None
     agy_killed_commands: list[str] = field(default_factory=list)
     agy_telemetry: AgyTelemetry | None = None
+
+    requested_selector: str | None = field(default=None, init=False)
+    observed_model: str | None = field(default=None, init=False)
+    identity_state: str = field(default="unknown", init=False)
+    observed_model_source: str | None = field(default=None, init=False)
+    observed_model_provenance: dict[str, str] | None = field(default=None, init=False)
+
+    def __post_init__(self) -> None:
+        from .accounting import recorded_model_accounting_fields
+
+        for key, value in recorded_model_accounting_fields(self.usage_record).items():
+            object.__setattr__(self, key, value)

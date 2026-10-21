@@ -16,7 +16,13 @@ import pytest
 from scripts.opsec import prepublish as gate
 from scripts.opsec.gh_snapshot import READ_GRAMMARS, admit
 from scripts.publish import github as pub
+from tests.common.github_cache_isolation import isolate_github_client_cache
 from tests.opsec_fixtures import CATALOG, ROOT, TOKEN
+
+
+@pytest.fixture(autouse=True)
+def _isolate_github_client_cache(tmp_path, monkeypatch):
+    yield from isolate_github_client_cache(tmp_path, monkeypatch)
 
 
 @pytest.fixture(autouse=True)
@@ -1017,7 +1023,7 @@ def test_real_matcher_cli_overhead_median_20_writes(gh_shim_sandbox, tmp_path):
     shutil.copyfile(source / "matcher.py", tooling / "matcher.py")
     shutil.copyfile(source / "rules.json", tooling / "rules.json")
     executable = tmp_path / "real-gh"
-    executable.write_text('#!/bin/sh\nprintf "HTTP/2.0 200 OK\\r\\nX-RateLimit-Remaining: 100\\r\\nX-RateLimit-Reset: 2000000000\\r\\n\\r\\n{}"\n')
+    executable.write_text('#!/bin/sh\nprintf "HTTP/2.0 200 OK\\r\\nX-RateLimit-Remaining: 5000\\r\\nX-RateLimit-Reset: 2000000000\\r\\n\\r\\n{}"\n')
     executable.chmod(0o755)
     body = tmp_path / "clean.md"
     body.write_text("a" * 10_240)
@@ -1193,3 +1199,15 @@ def test_9794_issue_parent_read_selects_typed_parent_repository(github_transport
         "repos/unit/public/issues/1",
         "repos/unit/public/issues/1/parent",
     ]
+
+
+def test_keeper_issue_search_includes_unlabelled_open_issues():
+    calls = []
+
+    def send(argv, **kwargs):
+        calls.append(argv)
+        return subprocess.CompletedProcess(argv, 0, '[[{"number":11208,"body":"tests/test_unit.py::test_one"}]]', '')
+
+    result = pub.read("issues", repo="unit/public", paginate=True, slurp=True, runner=send, env={})
+    assert json.loads(result.stdout) == [[{"number": 11208, "body": "tests/test_unit.py::test_one"}]]
+    assert calls == [["gh", "api", "--method", "GET", "repos/unit/public/issues?state=open&per_page=100", "--paginate", "--slurp"]]

@@ -114,7 +114,7 @@
       "phase": "A1.1",
       "title_uk": null,
       "title_en": "First conversations",
-      "job": "Sustain a scaffolded conversation using greetings, identity, family and familiar belongings",
+      "job": "Sustain a scaffolded 4-6-turn conversation with greetings, Добраніч, personal data, family and belongings; practise stressed/unstressed [е], [и]",
       "skills": [
         "Li",
         "S",
@@ -160,7 +160,7 @@
       "phase": "A1.2",
       "title_uk": null,
       "title_en": "Things have gender",
-      "job": "Identify familiar belongings using noun gender and matching pronoun and possessive forms",
+      "job": "Identify familiar belongings using noun gender and the complete singular possessive set, including наш, ваш, їхній",
       "skills": [
         "Li",
         "S",
@@ -186,7 +186,8 @@
       "skills": [
         "Li",
         "S",
-        "R"
+        "R",
+        "W"
       ],
       "is_checkpoint": false,
       "est_lessons": 3,
@@ -204,11 +205,12 @@
       "phase": "A1.2",
       "title_uk": null,
       "title_en": "Colors",
-      "job": "Use colours and agreeing descriptions to distinguish objects; soft-group adjectives",
+      "job": "Use colours and agreeing hard/soft-group nominative descriptions of objects and appearance",
       "skills": [
         "Li",
         "S",
-        "R"
+        "R",
+        "W"
       ],
       "is_checkpoint": false,
       "est_lessons": 2,
@@ -264,7 +266,7 @@
       "phase": "A1.2",
       "title_uk": null,
       "title_en": "Many things",
-      "job": "Go from one to many: nominative plural",
+      "job": "Go from one to many: nominative nouns with vowel alternation, agreeing adjectives, possessives and demonstratives",
       "skills": [],
       "is_checkpoint": false,
       "est_lessons": 3,
@@ -320,7 +322,7 @@
       "phase": "A1.3",
       "title_uk": null,
       "title_en": "Verbs group one",
-      "job": "Conjugate first-conjugation verbs in the present",
+      "job": "Conjugate читати, працювати, іти, їхати in the present",
       "skills": [],
       "is_checkpoint": false,
       "est_lessons": 3,
@@ -338,7 +340,7 @@
       "phase": "A1.3",
       "title_uk": null,
       "title_en": "Verbs group two",
-      "job": "Conjugate second-conjugation verbs; tell the two apart",
+      "job": "Conjugate сидіти and дивитися in the present, including the reflexive paradigm; distinguish the two conjugations",
       "skills": [],
       "is_checkpoint": false,
       "est_lessons": 3,
@@ -356,7 +358,7 @@
       "phase": "A1.3",
       "title_uk": null,
       "title_en": "I want i can",
-      "job": "Say what you want, can and must do",
+      "job": "Say what you want, can and must do using modal plus infinitive; conjugate могти in the present",
       "skills": [],
       "is_checkpoint": false,
       "est_lessons": 3,
@@ -394,7 +396,7 @@
       "phase": "A1.3",
       "title_uk": null,
       "title_en": "My morning",
-      "job": "Describe a morning routine with reflexive verbs",
+      "job": "Describe a morning routine with reflexive verbs; divide written words at line breaks using syllables from position 3",
       "skills": [
         "W"
       ],
@@ -434,7 +436,7 @@
       "phase": "A1.4",
       "title_uk": null,
       "title_en": "What time",
-      "job": "Ask and tell the time",
+      "job": "Ask and tell the time using ordinal forms in all three genders, including first, second and third; reuse date phrases at 23",
       "skills": [
         "Li",
         "R"
@@ -475,9 +477,11 @@
       "phase": "A1.4",
       "title_uk": null,
       "title_en": "Weather",
-      "job": "Talk about the weather and the natural world around you: animals, plants, landscape",
+      "job": "Talk about weather, plants, pets and landscape",
       "skills": [
-        "Li"
+        "Li",
+        "S",
+        "W"
       ],
       "is_checkpoint": false,
       "est_lessons": 3,
@@ -495,8 +499,11 @@
       "phase": "A1.4",
       "title_uk": null,
       "title_en": "My day",
-      "job": "Tell your day in order",
+      "job": "Tell your day in order, including a work day, a day off, lunch break, and the start and end of work",
       "skills": [
+        "Li",
+        "S",
+        "R",
         "W"
       ],
       "is_checkpoint": false,
@@ -515,8 +522,9 @@
       "phase": "A1.4",
       "title_uk": null,
       "title_en": "Free time",
-      "job": "Talk about leisure; invite someone",
+      "job": "Talk about hobbies, sports and leisure venues; invite someone",
       "skills": [
+        "R",
         "W"
       ],
       "is_checkpoint": false,
@@ -573,7 +581,7 @@
       "phase": "A1.5",
       "title_uk": null,
       "title_en": "Where is it",
-      "job": "Say where something is: locative of nouns with agreeing adjectives",
+      "job": "Say where something is: locative nouns and agreeing hard/soft-group adjectives in all three genders",
       "skills": [],
       "is_checkpoint": false,
       "est_lessons": 4,
@@ -591,9 +599,12 @@
       "phase": "A1.5",
       "title_uk": null,
       "title_en": "My city",
-      "job": "Name places in a city and say what is where",
+      "job": "Name city institutions, worship buildings, public facilities and streets; say what is where",
       "skills": [
-        "R"
+        "Li",
+        "S",
+        "R",
+        "W"
       ],
       "is_checkpoint": false,
       "est_lessons": 3,
@@ -611,7 +622,7 @@
       "phase": "A1.5",
       "title_uk": null,
       "title_en": "Where to",
-      "job": "Say where you are going: accusative of direction; де vs куди",
+      "job": "Say where you are going: accusative direction with в, у, на and agreeing hard/soft-group adjectives in all three genders; де vs куди",
       "skills": [],
       "is_checkpoint": false,
       "est_lessons": 3,
@@ -629,10 +640,12 @@
       "phase": "A1.5",
       "title_uk": null,
       "title_en": "Transport",
-      "job": "Get around: transport phrases",
+      "job": "Get around: travel hubs including автовокзал, public transport and taxi; іти, їхати in basic phrases",
       "skills": [
+        "Li",
+        "S",
         "R",
-        "Li"
+        "W"
       ],
       "is_checkpoint": false,
       "est_lessons": 3,
@@ -670,7 +683,7 @@
       "phase": "A1.5",
       "title_uk": null,
       "title_en": "Where from",
-      "job": "Say where you and things are from; compass points; at the border",
+      "job": "Say where you and things are from; parts of the world (continents); at the border",
       "skills": [
         "W"
       ],
@@ -730,7 +743,7 @@
       "phase": "A1.6",
       "title_uk": null,
       "title_en": "I eat i drink",
-      "job": "Say what you eat and drink: accusative, inanimate, with agreeing adjectives",
+      "job": "Say what you eat and drink: accusative inanimate nouns and agreeing hard/soft-group adjectives in all three genders",
       "skills": [],
       "is_checkpoint": false,
       "est_lessons": 3,
@@ -748,10 +761,12 @@
       "phase": "A1.6",
       "title_uk": null,
       "title_en": "At the cafe",
-      "job": "Order and pay in a café",
+      "job": "Order and pay in a café; request dishes, drinks, crockery and cutlery",
       "skills": [
         "Li",
-        "R"
+        "S",
+        "R",
+        "W"
       ],
       "is_checkpoint": false,
       "est_lessons": 3,
@@ -769,10 +784,12 @@
       "phase": "A1.6",
       "title_uk": null,
       "title_en": "Shopping",
-      "job": "Ask prices and buy things: food, toiletries, stationery; weight and volume",
+      "job": "Ask prices and buy food, toiletries including шампунь, and stationery; use weight, volume and money",
       "skills": [
+        "Li",
+        "S",
         "R",
-        "Li"
+        "W"
       ],
       "is_checkpoint": false,
       "est_lessons": 3,
@@ -790,7 +807,7 @@
       "phase": "A1.6",
       "title_uk": null,
       "title_en": "People around me",
-      "job": "Talk about people you see, know and think about: accusative, animate; мене / тебе / нас / вас; про + accusative",
+      "job": "Talk about people you see, know and think about: accusative animate nouns and agreeing hard/soft-group adjectives in all three genders; мене, тебе, нас, вас; про + accusative",
       "skills": [],
       "is_checkpoint": false,
       "est_lessons": 3,
@@ -846,9 +863,12 @@
       "phase": "A1.7",
       "title_uk": null,
       "title_en": "Please do this",
-      "job": "Ask someone to do something: imperative, ти and ви",
+      "job": "Ask someone to do something and prohibit an action; all Standard imperative pairs, second person singular and plural",
       "skills": [
-        "R"
+        "Li",
+        "S",
+        "R",
+        "W"
       ],
       "is_checkpoint": false,
       "est_lessons": 3,
@@ -888,6 +908,7 @@
       "title_en": "When and where",
       "job": "Build first complex sentences with що, де, коли — talking about your home: housing, rooms, furniture, what is where",
       "skills": [
+        "R",
         "W"
       ],
       "is_checkpoint": false,
@@ -906,8 +927,11 @@
       "phase": "A1.7",
       "title_uk": null,
       "title_en": "Holidays",
-      "job": "Greet people on holidays; family and state holidays",
+      "job": "Greet people on holidays; state and religious holidays, birthdays, weddings and gifts",
       "skills": [
+        "Li",
+        "S",
+        "R",
         "W"
       ],
       "is_checkpoint": false,
@@ -947,7 +971,7 @@
       "phase": "A1.8",
       "title_uk": null,
       "title_en": "What happened",
-      "job": "Say what happened: past tense and gender",
+      "job": "Say what happened using past forms, including reflexive verbs and бути",
       "skills": [],
       "is_checkpoint": false,
       "est_lessons": 4,
@@ -985,7 +1009,7 @@
       "phase": "A1.8",
       "title_uk": null,
       "title_en": "What will happen",
-      "job": "Say what will happen: compound future",
+      "job": "Say what will happen using all future forms of бути and the compound imperfective future",
       "skills": [],
       "is_checkpoint": false,
       "est_lessons": 3,
@@ -1003,7 +1027,7 @@
       "phase": "A1.8",
       "title_uk": null,
       "title_en": "My plans",
-      "job": "Make plans and arrange to meet",
+      "job": "Make plans and arrange to meet using selected perfective futures зможу, скажете, прочитають; recycle at 52",
       "skills": [
         "W"
       ],
@@ -1023,9 +1047,11 @@
       "phase": "A1.8",
       "title_uk": null,
       "title_en": "My story",
-      "job": "Tell your life in three tenses",
+      "job": "Tell your life in three tenses and complete a personal profile, including gender, date/place of birth and education",
       "skills": [
-        "W"
+        "R",
+        "W",
+        "S"
       ],
       "is_checkpoint": false,
       "est_lessons": 3,
@@ -1043,10 +1069,12 @@
       "phase": "A1.8",
       "title_uk": null,
       "title_en": "Health",
-      "job": "Say what hurts; at the pharmacy and doctor",
+      "job": "Say what hurts, including injury and high temperature; at the pharmacy and doctor",
       "skills": [
         "Li",
-        "R"
+        "S",
+        "R",
+        "W"
       ],
       "is_checkpoint": false,
       "est_lessons": 3,
@@ -1067,7 +1095,9 @@
       "job": "Get help in an emergency",
       "skills": [
         "Li",
-        "R"
+        "S",
+        "R",
+        "W"
       ],
       "is_checkpoint": false,
       "est_lessons": 2,
@@ -1085,7 +1115,7 @@
       "phase": "A1.8",
       "title_uk": null,
       "title_en": "A1 finale",
-      "job": "One full day in a Ukrainian city: everything together",
+      "job": "Spend one full day in a Ukrainian city: integrated reuse of all taught Standard A1 intentions, themes and speech skills; no new language",
       "skills": [
         "W",
         "Li",

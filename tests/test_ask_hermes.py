@@ -18,9 +18,22 @@ from scripts.agent_runtime.adapters.base import InvocationPlan
 from scripts.agent_runtime.errors import AgentUnavailableError
 from scripts.agent_runtime.result import ParseResult, Result
 from scripts.ai_agent_bridge._hermes import HERMES_DEFAULT_MODEL, _invoke_hermes
+from scripts.entire import capture_guard
 from scripts.entire import cursor_native_hook_shim as shim
 from scripts.entire import fleet_capture as capture
 from scripts.lib import rules_core
+
+
+@pytest.fixture(autouse=True)
+def _capture_guard_passes(monkeypatch: pytest.MonkeyPatch) -> list[tuple[Path, str]]:
+    """These tests cover delegation shape; the guard's own proofs live in test_entire_capture_guard."""
+    guarded: list[tuple[Path, str]] = []
+
+    def passes(root: Path, entire: str, deadline: float) -> None:
+        guarded.append((root, entire))
+
+    monkeypatch.setattr(capture_guard, "refusal", passes)
+    return guarded
 
 
 def _repo_root(tmp_path: Path) -> Path:
@@ -682,6 +695,79 @@ def test_cursor_adapter_marks_only_headless_runner_for_fleet(tmp_path: Path, mon
         }
 
 
+def test_fleet_capture_refused_by_the_guard_never_calls_entire_hooks(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    hooks: list[tuple[str, dict[str, object]]] = []
+    monkeypatch.setattr(capture.shutil, "which", lambda name: "/fake/entire")
+    monkeypatch.setattr(capture.subprocess, "run", _fake_run(hooks))
+    monkeypatch.setattr(capture_guard, "refusal", lambda root, entire, deadline: "cli_version_not_accepted")
+
+    fleet = capture.FleetCapture.start(
+        host_harness="agy",
+        runner_agent="agy",
+        entrypoint="dispatch",
+        requested_model="gemini-3.8-flash-high",
+        prompt="fixture",
+        repo_path=tmp_path,
+        runtime_repo_root=tmp_path,
+    )
+    assert fleet is not None
+    fleet.finish(response="provider result", outcome="ok", returncode=0)
+
+    assert hooks == []
+    assert not fleet.session_dir.exists()
+
+
+def test_fleet_capture_runs_the_guard_against_the_session_repository(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, _capture_guard_passes: list[tuple[Path, str]]
+) -> None:
+    hooks: list[tuple[str, dict[str, object]]] = []
+    monkeypatch.setattr(capture.shutil, "which", lambda name: "/fake/entire")
+    monkeypatch.setattr(capture.subprocess, "run", _fake_run(hooks))
+
+    capture.FleetCapture.start(
+        host_harness="agy",
+        runner_agent="agy",
+        entrypoint="dispatch",
+        requested_model="gemini-3.8-flash-high",
+        prompt="fixture",
+        repo_path=tmp_path,
+        runtime_repo_root=tmp_path,
+    )
+
+    assert [name for name, _ in hooks] == ["session-start", "turn-start"]
+    assert _capture_guard_passes == [(tmp_path.resolve(), "/fake/entire")] * 2
+
+
+def test_cursor_hook_refused_by_the_guard_never_calls_entire(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    root = _repo_root(tmp_path)
+    home = tmp_path / "home"
+    (_cursor_base(home, root) / "session-9").mkdir()
+    _patch_git_root(monkeypatch, root)
+    calls: list[list[str]] = []
+    monkeypatch.setattr(shim.Path, "home", lambda: home)
+    monkeypatch.setattr(shim.Path, "cwd", lambda: root)
+    monkeypatch.setattr(shim.shutil, "which", lambda _name: "/fake/entire")
+    monkeypatch.setattr(capture_guard, "refusal", lambda r, entire, deadline: "checkpoint_route_not_private")
+    payload = json.dumps({"conversation_id": "session-9", "workspace_roots": [str(root)]}).encode()
+    monkeypatch.setattr(shim.sys, "stdin", SimpleNamespace(buffer=SimpleNamespace(read=lambda _limit: payload)))
+
+    def fake_run(command, **kwargs):
+        if command[0] == "git":
+            return SimpleNamespace(returncode=0, stdout=f"{root}\n")
+        calls.append(command)
+        return SimpleNamespace(returncode=0)
+
+    monkeypatch.setattr(shim.subprocess, "run", fake_run)
+
+    assert shim._hook("stop") == 0
+    assert calls == []
+    assert "capture refused (checkpoint_route_not_private)" in capsys.readouterr().err
+
+
 def test_entire_outage_is_fail_open_and_spool_is_cleaned(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     def timed_out(command, **kwargs):
         if command[0] == "git":
@@ -911,3 +997,28 @@ def test_invoke_hermes_raises_on_nonzero_exit():
     ):
         with pytest.raises(SystemExit, match="no usable response"):
             _invoke_hermes("hello", "deepseek-v4.1-flash")
+
+
+@pytest.mark.parametrize("pin", ["claude-sonnet-5-5-high", "claude-opus-5-5-high"])
+@pytest.mark.parametrize("outcome", ["ok", "error", "runner_exception", "hard_timeout", "cancelled"])
+def test_agy_capture_unknown_never_falls_back_to_requested_pin(tmp_path, monkeypatch, pin, outcome):
+    hooks = []
+    monkeypatch.setattr(capture.shutil, "which", lambda _name: "/fake/entire")
+    monkeypatch.setattr(capture.subprocess, "run", _fake_run(hooks))
+    fleet = capture.FleetCapture.start(
+        host_harness="agy", runner_agent="agy", entrypoint="delegate", requested_model=pin,
+        prompt="Implement.", repo_path=tmp_path, runtime_repo_root=tmp_path,
+        plan_metadata={"entire_fleet": {"requested_model": pin, "actual_model": None, "actual_model_known": "false"}},
+    )
+    assert fleet is not None
+    for _, payload in hooks:
+        assert payload["raw_data"]["actual_model_known"] == "false"
+        assert payload["raw_data"].get("actual_model") is None
+    fleet.finish(response="", outcome=outcome, returncode=None, actual_model="",
+                 route_metadata={"actual_model": "", "actual_model_known": "false", "requested_model": pin})
+    terminal = [payload for name, payload in hooks if name == "session-end"]
+    assert len(terminal) == 1
+    assert terminal[0]["raw_data"]["actual_model_known"] == "false"
+    assert terminal[0]["raw_data"].get("actual_model") is None
+    assert terminal[0]["raw_data"]["requested_model"] == pin
+    assert terminal[0]["raw_data"]["outcome"] == outcome

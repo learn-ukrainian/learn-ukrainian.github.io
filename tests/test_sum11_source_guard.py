@@ -21,11 +21,15 @@ SCOPES = (
     ":(glob)agents_extensions/shared/rules/**",
     ":(glob)site/src/lib/lexicon/**",
     ":(glob)scripts/lexicon/**",
+    ":(glob)scripts/projects/open_model_data/**",
     ":(exclude,glob)curriculum/**/_archive/**",
     ":(exclude)scripts/data/stress_overrides.yaml",  # Owned by the separate gloss-source branch.
 )
 # Exact approved lines: edits or new references require renewed review.
 RULE_CONTEXT_LINES = {
+    "site/src/lib/lexicon/word-card-preview.ts": frozenset({
+        "visible: value.status === 'active' && value.review.status !== 'rejected' && value.source_id !== 'sum11' && value.licence_ref.register_source_id !== 'sum11' &&",
+    }),
     "scripts/review/prompts/lesson-review.md.j2": frozenset({
         "`search_definitions` (SUM-11) is available for Sovietization context only;",
     }),
@@ -72,6 +76,259 @@ RULE_CONTEXT_LINES = {
         "     2. **СУМ-11 (1970–1980):** compiled under **Soviet totalitarian occupation, censorship, and Russification**. We do not erase it; we surface it under `soviet_colonization_context` with its `sovietization_risk` and ideological markers to expose Soviet editorial interference, artificial archaisms, and forced Russian convergence.",
     }),
 }
+# Existing source inventories, historical contrast/audit checks, and rejected answers.
+# Keep exact lines so changes and new verification uses remain subject to the guard.
+OPEN_MODEL_CONTEXT_LINES = {
+    'scripts/projects/open_model_data/audit_dataset_acceptance.py': frozenset({
+        '"""Check 5: Epic Rules 3 & 4 (СУМ-11 distortion boundary, translation dictionaries, approved authorities)."""',
+        '"max_sum11_negative_inferences": 0,',
+        '"max_sum11_normative_violations": 0,',
+        '"sum 11",',
+        '"sum-11",',
+        '"sum11",',
+        '"sum11_negative_inferences": len(sum11_negative_inference_hits),',
+        '"sum11_normative_violations": len(sum11_normative_hits),',
+        '"zero_soviet_sum11",',
+        '"сум 11",',
+        '"сум-11",',
+        '"сум11",',
+        '# 2. Check for negative inference from СУМ-11 absence',
+        '# A compound citation containing Soviet SUM-11 is never an approved modern authority',
+        '# Check for СУМ-11 cited in metadata, authorities, or affirmative body text',
+        '# If not contrastive, already captured in sum11_normative_hits above',
+        '# In contrastive context, SUM-11 citation is valid only if an independent, modern approved authority is also present',
+        '5. Source rules (Epic rules 3 & 4: Soviet СУМ-11 distortion rules, translation dictionaries, approved authorities)',
+        'SOVIET_SUM11_ALIASES = [',
+        'and not any(alias in a.lower() for alias in SOVIET_SUM11_ALIASES)',
+        'auth_has_sum11 = any(alias in auth_lower for alias in SOVIET_SUM11_ALIASES)',
+        'f"Condemning words based on СУМ-11 absence in {len(sum11_negative_inference_hits)} records (0 allowed)"',
+        'f"Line {r.line_number}: claims word is wrong/rare because absent from СУМ-11"',
+        'f"Line {r.line_number}: contrastive СУМ-11 citation lacks approved modern Ukrainian authority"',
+        'failures.append(f"Citing СУМ-11 as normative source in {len(sum11_normative_hits)} records (0 allowed)")',
+        'has_sum11_in_sources = any(any(alias in s for alias in SOVIET_SUM11_ALIASES) for s in all_sources_lower)',
+        'if (has_sum11_in_sources or has_affirmative_citation) and not is_contrastive_context:',
+        'if auth_has_sum11:',
+        'if sum11_negative_inference_hits:',
+        'if sum11_normative_hits:',
+        'sum11_negative_inference_hits = []',
+        'sum11_negative_inference_hits.append(',
+        'sum11_normative_hits = []',
+        'sum11_normative_hits.append(f"Line {r.line_number}: cites Soviet СУМ-11 as normative authority")',
+    }),
+    'scripts/projects/open_model_data/freeze_phase3_p1_universe.py': frozenset({
+        '"lexical_sum11": "normative_lexical",',
+    }),
+    'scripts/projects/open_model_data/generate_grammar_signoff_8342.py': frozenset({
+        '"soviet_sum11_violations": 0,',
+        '"zero_soviet_sum11",',
+        '"zero_soviet_sum11_influence": True,',
+    }),
+    'scripts/projects/open_model_data/holdings_manifest.py': frozenset({
+        'id="sum11_contrast",',
+        'origin="СУМ-11 digitisation (see register entry sum11)",',
+        'register_id="sum11",',
+        'selection="SELECT * FROM sum11 ORDER BY id",',
+    }),
+    'scripts/projects/open_model_data/inventory_existing_assets.py': frozenset({
+        '("sum11", "СУМ-11", "human_authored_source", "sum11/chunks.jsonl"),',
+    }),
+    'scripts/projects/open_model_data/language_contact_detector.py': frozenset({
+        '("sum11", "word", "СУМ-11"),',
+    }),
+    'scripts/projects/open_model_data/package_unified_dataset.py': frozenset({
+        '| **Decolonization & Reasoning** | {domain_counts.get("decolonization", 0):,} | Deep anti-calque reasoning against Sovietized lexicography (СУМ-11). |',
+    }),
+    'scripts/projects/open_model_data/phase3_recovery_contracts.py': frozenset({
+        '"lexical_sum11": 127069,',
+    }),
+    'scripts/projects/open_model_data/phase3_source_universe.py': frozenset({
+        '"lexical_sum11": "sum11",',
+    }),
+    'scripts/projects/open_model_data/profiles/default.yaml': frozenset({
+        'max_sum11_negative_inferences: 0',
+        'max_sum11_normative_violations: 0',
+    }),
+    'scripts/projects/open_model_data/review_build/README.md': frozenset({
+        '`modern`, `sum11`, `ua_gec`, `textbook`, `forbidden`). All citation triples must',
+        'filenames. SUM-11 citations are refused as `sum11_role`; Russification contrast',
+    }),
+    'scripts/projects/open_model_data/review_build/roles.py': frozenset({
+        'require(entry["role"] in {"modern", "sum11", "ua_gec", "textbook", "forbidden"}, "role_spec")',
+        'require(spec["role"] != "sum11" and citation.source_id != "sum11", "sum11_role")',
+    }),
+    'scripts/projects/open_model_data/seeds_history.py': frozenset({
+        '"2. Радянська інтервенція: введення слова «мисль» у СУМ-11 мало на меті виправдати російські кальки «образ мислей», «політ мислі».",',
+        'historical_suppression_note="СУМ-11 визнав «галстук» літературним словом (піонерський галстук), витісняючи питоме «краватка».",',
+        'historical_suppression_note="СУМ-11 висунув «трясовину» на перший план через максимальну схожість із російським словом.",',
+        'historical_suppression_note="СУМ-11 подав «мисль» як рівноправний синонім до «думка», наводячи штучні цитати для підтвердження «спільного фонду».",',
+        'historical_suppression_note="СУМ-11 подав «салфетка» поруч із «серветка», штучно створюючи видимість спільного кореня.",',
+        'historical_suppression_note="СУМ-11 поставив «зонтик» на перше місце під російським тиском.",',
+    }),
+    'scripts/projects/open_model_data/seeds_participles.py': frozenset({
+        'dpo_rejected="Форма «працюючий» цілком правильна, оскільки суфікс -юч- є слов\'янським і законно утворює дієприкметники в СУМ-11.",',
+        'historical_suppression_note="СУМ-11 визнав «знаючий» літературним словом, витісняючи самобутні синоніми «тямущий» та «обізнаний».",',
+        'historical_suppression_note="СУМ-11 визнав «пануючий» нормативним за рахунок пригнічення класичного «панівний».",',
+        'historical_suppression_note="СУМ-11 визнав «хвилюючий» допустимим, нівелюючи витончені художні синоніми «зворушливий» та «бентежний».",',
+        'historical_suppression_note="СУМ-11 фіксував «слідуючий» із позначкою «рідко», хоча в мові радянських установ воно панувало безроздільно.",',
+    }),
+    'scripts/projects/open_model_data/seeds_phraseology.py': frozenset({
+        'historical_suppression_note="СУМ-11 визнав «бути правим» нормативним під тиском російської мови.",',
+        'historical_suppression_note="СУМ-11 визнав «кидатися в очі» варіантом норми, копіюючи російську метафору.",',
+        'historical_suppression_note="СУМ-11 калькував «задавати тон» для політичних статей.",',
+    }),
+    'scripts/projects/open_model_data/seeds_polysemy.py': frozenset({
+        'dpo_rejected="Вислів «я рахую, що...» цілком допустимий у літературній мові, оскільки в СУМ-11 дієслово «рахувати» зафіксоване в значенні «мати якусь думку, міркувати».",',
+        'dpo_rejected="Обидва слова рівноправні, бо в радянському словнику СУМ-11 «болільник» наведено без жодних обмежень.",',
+        'dpo_rejected="Оскільки в СУМ-11 для слова «вірний» наведено значення «який відповідає дійсності; правильний», цей вислів є цілком законним.",',
+        'historical_suppression_note="СУМ-11 дозволив слово «білет» для транспорту («автобусний білет»), руйнуючи традиційну українську терміносистему.",',
+        'historical_suppression_note="СУМ-11 дозволив слово «розкривати» для книг і зошитів, дублюючи російське вживання за рахунок витіснення питомого «розгортати».",',
+        'historical_suppression_note="СУМ-11 допускав слово «показник» у значенні дороговказу, змазуючи функціональну диференціацію суфіксів -ник і -чик.",',
+        'historical_suppression_note="СУМ-11 допустив вживання «положення» для соціальних обставин під тиском канцеляризмів УРСР.",',
+        'historical_suppression_note="СУМ-11 допустив дієслово «тушити» як синонім до «гасити», руйнуючи чітку кулінарну й фізичну межу.",',
+        'historical_suppression_note="СУМ-11 зафіксував «получатися» як розмовне слово під прямим тиском російськомовного мовного середовища.",',
+        'historical_suppression_note="СУМ-11 звів обидва дієслова до повної взаємозамінності, ігноруючи високий суспільно-політичний реєстр дієслова «обирати».",',
+        'historical_suppression_note="СУМ-11 кодифікував «башня» як синонім до вежі, попри чужість цього фонетичного комплексу народній мові.",',
+        'historical_suppression_note="СУМ-11 нівелював багатогранність слів «галузь» і «царина», копіюючи російське використання «області» у будь-яких абстрактних сполученнях.",',
+        'historical_suppression_note="СУМ-11 нівелював різницю між словами «відносини», «стосунки» та «відношення», підганяючи їх під єдиний шаблон «отношения».",',
+        'historical_suppression_note="СУМ-11 об\'єднав «відчиняти» й «відкривати» під одним широким значенням дієслова «відкривати», копіюючи російську лексичну структуру.",',
+        'historical_suppression_note="СУМ-11 подав «мішати» у значенні «чинити перешкоди» як розмовне припустиме, орієнтуючись на російську семантичну структуру.",',
+        'historical_suppression_note="СУМ-11 під впливом російського зразка додав до слова «білизна» перше значення «білий колір», створивши семантичний парадокс.",',
+        'historical_suppression_note="СУМ-11 штучно поєднав значення лічби й судження під одним гаслом «рахувати», витісняючи питоме розмежування для наближення до російської полісемії.",',
+    }),
+    'scripts/projects/open_model_data/seeds_prepositions.py': frozenset({
+        'historical_suppression_note="СУМ-11 визнав зворот «на протязі» часовим під тиском російської мови, породивши комічну двозначність про холодний вітер.",',
+        'historical_suppression_note="СУМ-11 зафіксував вживання «завдяки» для небажаних наслідків, копіюючи російське розмовне змішування.",',
+        'historical_suppression_note="СУМ-11 надав слову «біля» значення приблизної кількості, дублюючи функції російського прийменника «около».",',
+    }),
+    'scripts/projects/open_model_data/seeds_restitution.py': frozenset({
+        'dpo_rejected="Слово «пилосос» є загальноприйнятим літературним словом, зафіксованим у радянському Словнику української мови (СУМ-11). Також як синоніми можна вживати «порохосмок» або «вакуум».",',
+        'historical_suppression_note="СУМ-11 ввів покруч «розстрочка» під тиском радянської торговельної документації.",',
+        'historical_suppression_note="СУМ-11 надав слову «переключати» статус основного технічного терміна під впливом російської номенклатури, витісняючи питоме «перемикати».",',
+        'historical_suppression_note="СУМ-11 насаджував термін «накладна плата» / «накладений платіж», витісняючи стандартизоване в 1920-х роках слово «післяплата».",',
+        'historical_suppression_note="СУМ-11 поставив «переписку» на перше місце за російським зразком.",',
+        'historical_suppression_note="У 1930-х роках радянські термінологічні бюлетені та згодом СУМ-11 закріплювали спільні з російською мовою форми, витісняючи питомі українські аналоги 1920-х років.",',
+    }),
+    'scripts/projects/open_model_data/seeds_voice.py': frozenset({
+        'historical_suppression_note="СУМ-11 допустив вживання дієслова «попередити» у значенні «унеможливити лихо», копіюючи російське «предупредить».",',
+    }),
+    'scripts/projects/open_model_data/v4_differential_soviet_miner.py': frozenset({
+        '"""Adjudicate a single sum11 entry flagged with sovietization_risk > 0."""',
+        '"FROM sum11 WHERE sovietization_risk > 0 ORDER BY id"',
+        '"candidate_id": f"soviet.cand.{hashlib.sha256(f\'sum11:{entry.id}:{norm}\'.encode()).hexdigest()[:16]}",',
+        '"sum11_id": entry.id,',
+        '"sum11_risk_pool": {',
+        '"total_entries": TOTAL_SUM11_RISK_POOL,',
+        '# 5. Default Standard Living Ukrainian (Flagged only by incidental quote in СУМ-11)',
+        '# Ingest from sources.db sum11',
+        'Contrasts Soviet СУМ-11 entries flagged under `sovietization_risk > 0` against',
+        'TOTAL_SUM11_RISK_POOL = 7152',
+        'candidate = adjudicate_sum11_entry(',
+        'class Sum11RiskEntry:',
+        'def adjudicate_sum11_entry(',
+        'entry = Sum11RiskEntry(',
+        'entry: Sum11RiskEntry,',
+        'parser = argparse.ArgumentParser(description="Mine and adjudicate differential Soviet candidates from СУМ-11.")',
+        'print(f"Ingested {len(rows)} entries with sovietization_risk > 0 from sum11.")',
+    }),
+    'scripts/projects/open_model_data/v4_evaluate_decolonization.py': frozenset({
+        '"сум-11",',
+    }),
+    'scripts/projects/open_model_data/v4_production_shards_assembly.py': frozenset({
+        'f"2. Нормативний статус: Калькованість терміна не є перешкодою для його нормативного закріплення в СУМ-11.\\n"',
+    }),
+    'scripts/projects/open_model_data/v4_verify_trajectory_claims.py': frozenset({
+        '"""Verify if a term falls into the alphabetical range of a СУМ-11 volume.',
+        '"SELECT * FROM sum11 WHERE word = ? OR instr(\'|\' || word || \'|\', \'|\' || ? || \'|\') > 0 LIMIT 1",',
+        '"SUM-11 cannot verify modern meaning or register, including mixed modern/Soviet citations",',
+        '"SUM-11 only supports historical attestation and cannot certify modern meaning."),',
+        '"SUM-11 presence and risk flags cannot verify a suppression narrative; independent evidence required",',
+        '"claim_type": "SUM11_MODERN_EVIDENCE_REFUSED",',
+        '"error": "Legacy SUM-11 claims are historical checks only; modern semantic evidence unresolved",',
+        '"error": "SUM-11 outside soviet_colonization_context; modern semantic evidence unresolved",',
+        '"source": "СУМ-11 (1970–1980)",',
+        '"sum11_claims_verified": sum11_claims,',
+        '# Check general СУМ-11 citations in step',
+        '# Check СУМ-11 headword citation in suppression note',
+        '# Check СУМ-11 stylistic label claims: e.g. ремарка «рідко», «заст.», «діал.»',
+        '# Check СУМ-11 volume and year citations in reasoning steps',
+        '# Check СУМ-11 volume and year citations: e.g. "СУМ-11 (т. 6, 1975)"',
+        '# D.1 СУМ-11 Volume and Year verification',
+        '# D.2 СУМ-11 Stylistic Label verification',
+        '# D.3 СУМ-11 Sovietization / Codification Context verification',
+        '2. СУМ-11 (data/sources.db): Soviet historical attestation only, never modern semantic evidence.',
+        'ClaimType.SUM11_HEADWORD,',
+        'ClaimType.SUM11_SOVIETIZATION,',
+        'ClaimType.SUM11_STYLISTIC,',
+        'ClaimType.SUM11_VOLUME_YEAR,',
+        'SUM11_HEADWORD = "SUM11_HEADWORD"',
+        'SUM11_SOVIETIZATION = "SUM11_SOVIETIZATION"',
+        'SUM11_STYLISTIC = "SUM11_STYLISTIC"',
+        'SUM11_VOLUMES: dict[int, dict[str, Any]] = {',
+        'SUM11_VOLUME_YEAR = "SUM11_VOLUME_YEAR"',
+        'claim, False, "Not in sum11", f"Cited term «{claim.term}» does not exist in sources.db sum11 table"',
+        'claim, False, "Not in sum11", f"Term «{claim.term}» does not exist in sum11 table"',
+        'claim_text=f"CoT step asserts stylistic label «{lbl}» in СУМ-11 for «{t_word}»",',
+        'claim_text=f"CoT step cites СУМ-11 presence/treatment for «{term_c}»",',
+        'claim_text=f"CoT step cites СУМ-11 vol. {vol_num}" + (f", year {year_num}" if year_num else ""),',
+        'claim_text=f"Suppression note cites СУМ-11 presence for «{s_term}»",',
+        'claim_text=f"Suppression note cites СУМ-11 vol. {vol_num}"',
+        'claim_type=ClaimType.SUM11_HEADWORD,',
+        'claim_type=ClaimType.SUM11_SOVIETIZATION,',
+        'claim_type=ClaimType.SUM11_STYLISTIC,',
+        'claim_type=ClaimType.SUM11_VOLUME_YEAR,',
+        'def get_sum11_entry(self, word: str) -> dict[str, Any] | None:',
+        'def is_term_in_sum11_volume(term: str, volume: int) -> bool:',
+        'elif claim.claim_type == ClaimType.SUM11_HEADWORD:',
+        'elif claim.claim_type == ClaimType.SUM11_SOVIETIZATION:',
+        'elif claim.claim_type == ClaimType.SUM11_STYLISTIC:',
+        'elif claim.claim_type == ClaimType.SUM11_VOLUME_YEAR:',
+        'entry = self.get_sum11_entry(claim.term)',
+        'f"Term «{term}» does not fall within alphabetical coverage of СУМ-11 volume {vol}",',
+        'f"СУМ-11 entry for «{claim.term}» does not contain claimed stylistic label «{label}»",',
+        'f"СУМ-11 has exactly 11 volumes, but volume {vol} was claimed",',
+        'f"СУМ-11 volume {vol} was published in {vol_meta[\'year\']}, but trajectory claimed year {year}",',
+        'if norm in self._sum11_cache:',
+        'if not is_term_in_sum11_volume(term, vol):',
+        'if not rejection_reasons and any(claim.claim_type.name.startswith("SUM11_") for claim in claims):',
+        'if not t or volume not in SUM11_VOLUMES:',
+        'if re.search(r"СУМ-11|СУМ\\s*\\(?1970–1980\\)?|Словник української мови в 11 томах", step):',
+        'if vol not in SUM11_VOLUMES:',
+        'reason.get("claim_type") == "SUM11_MODERN_EVIDENCE_REFUSED"',
+        'return self._sum11_cache[norm]',
+        'self._sum11_cache: dict[str, dict[str, Any] | None] = {}',
+        'self._sum11_cache[norm] = None',
+        'self._sum11_cache[norm] = res',
+        'sum11_claims += 1',
+        'sum11_claims = 0',
+        'vol_meta = SUM11_VOLUMES[vol]',
+    }),
+    'scripts/projects/open_model_data/v5_build_dialect_historical_protection_suite.py': frozenset({
+        '# All targets verified strictly clean of SUM-11 headwords, inflected lemmas, and defined subentries',
+    }),
+    'scripts/projects/open_model_data/v5_evaluation_harness.py': frozenset({
+        '# 3c. Direct introductory attribution phrases: "За <Entities>," (e.g. "За СУМ-11, це правильно.")',
+        '# 4b. Bare parenthetical citations: "(СУМ-11)", "(ВЕСУМ)", "(Словник української мови)", "(«СУМ-20»)", "(ВЕСУМ, p. 25; СУМ)"',
+        "# Modern decolonized СУМ-20 only (Bilodid's Russian-Soviet occupation СУМ-11 permanently purged, Issue #8054).",
+        "# Modern decolonized СУМ-20 only. Bilodid's Russian-Soviet occupation СУМ-11 (1970–1980)",
+        "# Permanent Quarantine: Bilodid's Russian-Soviet occupation СУМ-11 (1970–1980)",
+    }),
+    'scripts/projects/open_model_data/v5_mine_dialect_corpus.py': frozenset({
+        '"""Mine attributed passages; SUM-11 labels describe historical editorial treatment only."""',
+        '"Historical quotation preservation only. SUM-11 editorial labels do not establish "',
+        '"do not use their definitions or labels to produce modern answers. SUM-11 SFT candidates are withheld."),',
+        '"source": "СУМ-11 (1970–1980)",',
+        '# 1. Mine sum11 literature citations tagged "діал." (classic Ukrainian literature only)',
+        '# B. Standardize Arabic numeral volume fields in SUM-11 format: ", 1, 1955" -> ", I, 1955"',
+        'SELECT * FROM sum11',
+        'description=("Mine dialect candidates and evaluate preservation. SUM-11 quotations are historical contrast; "',
+        'source_db="sum11_literary_citation",',
+    }),
+    'scripts/projects/open_model_data/verify_phase3_source_universe_freeze.py': frozenset({
+        '"lexical_sum11",',
+    }),
+}
+RULE_CONTEXT_LINES.update(OPEN_MODEL_CONTEXT_LINES)
+
 # Normalize to stripped lines: exemptions match regardless of leading/trailing whitespace,
 # same as the raw lines git grep reports.
 RULE_CONTEXT_LINES = {
@@ -301,6 +558,29 @@ def test_approved_line_matches_regardless_of_surrounding_whitespace() -> None:
     assert _is_exempt(path, "  " + approved + "  ")
 
 
+@pytest.mark.parametrize("mutation", ["source_id", "register_source_id", "appended", "added"])
+def test_preview_exclusion_only_exempts_the_exact_line(tmp_path: Path, mutation: str) -> None:
+    path = "site/src/lib/lexicon/word-card-preview.ts"
+    approved = next(iter(RULE_CONTEXT_LINES[path]))
+    subprocess.run(["git", "init", "-q", str(tmp_path)], check=True, timeout=30)
+    source = tmp_path / path
+    source.parent.mkdir(parents=True)
+    source.write_text(approved + "\n", encoding="utf-8")
+    subprocess.run(["git", "add", path], cwd=tmp_path, check=True, timeout=30)
+    assert _source_references(root=tmp_path) == []
+    if mutation in {"source_id", "register_source_id"}:
+        changed = approved.replace(f".{mutation} !== 'sum11'", f".{mutation} === 'sum11'")
+        content, number, reported = changed, 1, changed
+    elif mutation == "appended":
+        content = approved + " definition = search_definitions(word)"
+        number, reported = 1, content
+    else:
+        reported = "definition = search_definitions(word)"
+        content, number = approved + "\n" + reported, 2
+    source.write_text(content + "\n", encoding="utf-8")
+    assert _source_references(root=tmp_path) == [f"{path}:{number}:{reported}"]
+
+
 def test_new_lexicon_verification_use_fails_scanner(tmp_path: Path) -> None:
     subprocess.run(["git", "init", "-q", str(tmp_path)], check=True, timeout=30)
     lexicon = tmp_path / "scripts" / "lexicon"
@@ -313,3 +593,15 @@ def test_new_lexicon_verification_use_fails_scanner(tmp_path: Path) -> None:
     assert {line.split(":", 1)[0] for line in references} == {
         "scripts/lexicon/new_verifier.py", "scripts/lexicon/x_heteronym_verify.py"
     }
+
+
+@pytest.mark.parametrize("name", ["new_verifier.py", "v4_decolonization_reasoning.py"])
+def test_new_open_model_verification_use_fails_scanner(tmp_path: Path, name: str) -> None:
+    subprocess.run(["git", "init", "-q", str(tmp_path)], check=True, timeout=30)
+    project = tmp_path / "scripts" / "projects" / "open_model_data"
+    project.mkdir(parents=True)
+    (project / name).write_text("definition = search_definitions(word)\n", encoding="utf-8")
+    subprocess.run(["git", "add", "scripts/projects/open_model_data"], cwd=tmp_path, check=True, timeout=30)
+    assert _source_references(root=tmp_path) == [
+        f"scripts/projects/open_model_data/{name}:1:definition = search_definitions(word)"
+    ]

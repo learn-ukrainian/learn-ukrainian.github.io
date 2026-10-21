@@ -143,6 +143,7 @@ def test_write_creates_missing_output_directory(paths) -> None:
     assert json.loads(output.read_text(encoding="utf-8")) == {"a2": {"modules": 1}, "_total": 1}
 
 
+@pytest.mark.needs_sparse_tree("site/src/data")
 def test_committed_stats_match_current_manifest_for_every_key() -> None:
     """All level keys and `_total` equal the manifest-derived producer output."""
     manifest = yaml.safe_load(gcs.CURRICULUM.read_text(encoding="utf-8"))
@@ -155,6 +156,7 @@ def test_committed_stats_match_current_manifest_for_every_key() -> None:
     assert gcs.stats_drift(expected) == []
 
 
+@pytest.mark.needs_sparse_tree("site/src/data")
 def test_check_cli_passes_on_committed_stats() -> None:
     result = subprocess.run(
         [sys.executable, str(SCRIPT), "--check"],

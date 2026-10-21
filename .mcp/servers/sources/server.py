@@ -23,12 +23,16 @@ Tools:
     - search_slovnyk_me, search_heritage
     - search_style_guide (Антоненко-Давидович)
     - translate_en_uk (Балла)
+    - word_card (current word card, labelled certified or candidate)
 """
 
 import asyncio
+import contextvars
+import functools
 import hashlib
 import json
 import re
+import sqlite3
 import sys
 import threading
 import unicodedata
@@ -46,8 +50,23 @@ for _path in (PROJECT_ROOT, SCRIPTS_DIR):
     if str(_path) not in sys.path:
         sys.path.insert(0, str(_path))
 
+# Sibling modules of this file import by plain name, after scripts/ and the repository root, which is the
+# order the review digest (scripts/review/render_contract.server_code) traces them in.
+SERVER_DIR = Path(__file__).resolve().parent
+if str(SERVER_DIR) not in sys.path:
+    sys.path.append(str(SERVER_DIR))
+
+import word_card
+
+import scripts.wiki.sources_db as sources_db_full_name
+import wiki.sources_db as sources_db_short_name
+from scripts.rag.call_governor import CallGovernor, CallRefused, GovernorLimits
 from scripts.verification.check_ru_morph import is_russian_pattern
 from wiki.textbook_subjects import CANONICAL_TEXTBOOK_SUBJECTS
+
+if Path(word_card.__file__).resolve() != SERVER_DIR / "word_card.py":
+    # Any other module of that name would run code the review digest never hashed.
+    raise ImportError(f"word_card resolved outside the sources server directory: {word_card.__file__}")
 
 try:
     from mcp.server import Server
@@ -1316,6 +1335,29 @@ async def list_tools() -> list[Tool]:
                 "required": ["word"],
             },
         ),
+        _tool(
+            name="word_card",
+            description=(
+                "Everything the current word-card build knows about a Ukrainian word in one call: identity "
+                "(spelling, stress, POS, paradigm), CEFR, senses, relations, Russianism and heritage fields when "
+                "present, each value with its source citations and evidence ids, known gaps per field, and the "
+                "card version. Matches the card spelling or the word's VESUM lemma; homographs return several "
+                "cards. status is recomputed on every call from the review ledger: 'certified' only for an "
+                "exact certified card version; 'candidate' cards are cited source assertions, NOT accepted "
+                "facts. 'no_card' names the per-facet tools to call instead. Reads the host card build named "
+                "by LU_WORD_CARDS_DIR."
+            ),
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "word": {
+                        "type": "string",
+                        "description": "Ukrainian word, form or multiword expression (e.g., 'баран', 'вряди-годи')",
+                    },
+                },
+                "required": ["word"],
+            },
+        ),
     ]
 
 
@@ -1328,8 +1370,14 @@ def _log_tool_call(
     *,
     response_text: str = "",
     privacy_mode: bool = False,
+    self_heal: dict[str, Any] | None = None,
 ) -> None:
     """Log MCP tool call to JSONL for build analytics (#1095).
+
+    ``self_heal`` (#11115) records a database self-heal attempt on this call:
+    the database name, the SQLite error class, whether a cached connection was
+    discarded, and whether the retry recovered. It carries no message text or
+    path, so it is written in both modes.
 
     ``privacy_mode`` (Cycle 007 amendment, "internal hash-only privacy
     mode"): the log entry never contains argument values or response text —
@@ -1370,6 +1418,8 @@ def _log_tool_call(
         }
         if error:
             entry["error"] = error[:500]
+    if self_heal:
+        entry["self_heal"] = self_heal
 
     try:
         with open(log_path, "a", encoding="utf-8") as f:
@@ -1383,6 +1433,11 @@ async def handle_check_russian_shadow(args: dict):
     threshold = args.get("threshold", 0.7)
     result = await asyncio.to_thread(is_russian_pattern, word, threshold)
     return [TextContent(type="text", text=json.dumps(result, indent=2, ensure_ascii=False))]
+
+
+async def handle_word_card(args: dict):
+    result = await asyncio.to_thread(word_card.lookup_word_card, args.get("word"))
+    return [TextContent(type="text", text=json.dumps(result, indent=1, ensure_ascii=False))]
 
 
 def _normalize_quote_text(value: str) -> str:
@@ -1848,6 +1903,313 @@ def _review_before_handler(
     return None
 
 
+# --- Database self-heal (#11115) -------------------------------------------
+#
+# This long-lived server keeps process-wide SQLite read connections. When the
+# database file is rewritten under one, every later call on it can raise
+# ``DatabaseError: database disk image is malformed`` until the service is
+# restarted, while a fresh connection reads the file fine. A call that fails
+# that way discards the cached connections of the failing database, reopens
+# and runs once more. The same module can be loaded under two names
+# (``wiki.…`` and ``scripts.wiki.…``), each holding its own connection, so
+# both names are covered.
+#
+# Many dictionary helpers in ``wiki.sources_db`` catch ``sqlite3.Error`` and
+# return an empty result, which would turn a damaged database into a false
+# "no results" (and a false recovery). Every connection that module opens is
+# therefore an observed one, from its first open: the server installs
+# ``_ObservedConnection`` through ``set_connection_factory`` at import. It
+# reports stale-connection errors it raises, swallowed or not, to the attempt
+# that is running (``_ATTEMPT_DAMAGE``); an attempt that saw one counts as
+# failed. A missing table alone on the first attempt is only an optional table
+# and never starts a heal; on the retry the reopened connection must answer
+# every query, so a missing table (a schema change) fails it too.
+
+_STALE_CONNECTION_MARKERS = (
+    "malformed",
+    "disk i/o error",
+    "no such table",
+    "no such column",
+    "schema has changed",
+    "file is not a database",
+    "unable to open database file",
+    "closed database",
+)
+# What a first attempt must not have swallowed. "no such table" is left out:
+# helpers treat an absent optional table as a normal empty result.
+_FIRST_ATTEMPT_MARKERS = tuple(marker for marker in _STALE_CONNECTION_MARKERS if marker != "no such table")
+_DATABASE_UNAVAILABLE_CODE = "database_unavailable"
+_UNATTRIBUTED_DATABASE = "unattributed"
+# One lock covers every replacement of a cached connection and the generation
+# counters that stop simultaneous heals from each reopening the same database.
+_SQLITE_CACHE_LOCK = threading.RLock()
+_SQLITE_GENERATION: dict[str, int] = {}
+
+
+class _AttemptDamage:
+    """Database errors one attempt saw, swallowed or not, that make it a failed attempt."""
+
+    def __init__(self, markers: tuple[str, ...]) -> None:
+        self.markers = markers
+        self.errors: list[sqlite3.DatabaseError] = []
+        self.lock = threading.Lock()
+
+
+_ATTEMPT_DAMAGE: contextvars.ContextVar[_AttemptDamage | None] = contextvars.ContextVar(
+    "sources_attempt_database_damage", default=None
+)
+
+
+def _note_database_damage(exc: sqlite3.DatabaseError) -> None:
+    attempt = _ATTEMPT_DAMAGE.get()
+    if attempt is not None and _has_marker(exc, attempt.markers):
+        with attempt.lock:
+            attempt.errors.append(exc)
+
+
+def _observe(method: Any) -> Any:
+    """Wrap a cursor method so damage-class database errors reach the running attempt."""
+
+    @functools.wraps(method)
+    def observed(self: Any, *args: Any, **kwargs: Any) -> Any:
+        try:
+            return method(self, *args, **kwargs)
+        except sqlite3.DatabaseError as exc:
+            _note_database_damage(exc)
+            raise
+
+    return observed
+
+
+class _ObservedCursor(sqlite3.Cursor):
+    execute = _observe(sqlite3.Cursor.execute)
+    executemany = _observe(sqlite3.Cursor.executemany)
+    executescript = _observe(sqlite3.Cursor.executescript)
+    fetchone = _observe(sqlite3.Cursor.fetchone)
+    fetchmany = _observe(sqlite3.Cursor.fetchmany)
+    fetchall = _observe(sqlite3.Cursor.fetchall)
+    __next__ = _observe(sqlite3.Cursor.__next__)
+
+
+class _ObservedConnection(sqlite3.Connection):
+    """A read connection whose cursors report damage-class errors (see ``_observe``)."""
+
+    def cursor(self, factory: Any = _ObservedCursor) -> Any:
+        return super().cursor(factory)
+
+    # ``Connection.execute*`` build their own plain cursor, bypassing ``cursor``.
+    def execute(self, sql: str, parameters: Any = (), /) -> Any:
+        return self.cursor().execute(sql, parameters)
+
+    def executemany(self, sql: str, parameters: Any, /) -> Any:
+        return self.cursor().executemany(sql, parameters)
+
+    def executescript(self, script: str, /) -> Any:
+        return self.cursor().executescript(script)
+
+
+class _UnavailableConnection(sqlite3.Connection):
+    """Stands in for a cached connection that could not be replaced; every query on it fails.
+
+    Clearing the cache instead would let a lock-free ``_get_conn`` reader that
+    already saw it set return ``None``, and a retry that opens the database
+    lazily would see a helper swallow ``FileNotFoundError`` as "no results".
+    """
+
+    def _unavailable(self) -> sqlite3.OperationalError:
+        exc = sqlite3.OperationalError("unable to open database file")
+        _note_database_damage(exc)
+        return exc
+
+    def cursor(self, factory: Any = None) -> Any:
+        raise self._unavailable()
+
+    def execute(self, sql: str, parameters: Any = (), /) -> Any:
+        raise self._unavailable()
+
+    def executemany(self, sql: str, parameters: Any, /) -> Any:
+        raise self._unavailable()
+
+    def executescript(self, script: str, /) -> Any:
+        raise self._unavailable()
+
+
+def _discard_sources_conn(module: Any) -> bool:
+    """Swap the cached connection for a freshly opened one; never keep the failed one.
+
+    ``_get_conn`` reads ``_conn`` without a lock, so the swap is one attribute
+    store: a reader gets the old or the new connection, never nothing. The old
+    one is not closed here (a call in another thread may still be reading it).
+    If the reopen fails the failed connection is still replaced, by one that
+    fails every query (``_UnavailableConnection``): the retry reports the
+    failure instead of reusing the damaged object, and the next call heals
+    again once the file can be opened.
+    """
+    if getattr(module, "_conn", None) is None:
+        return False
+    try:
+        fresh = module._open_conn(module._read_db_path(), read_only=True)
+    except Exception:  # any reason the file cannot be opened leaves the failed connection unusable
+        module._conn = sqlite3.connect(":memory:", check_same_thread=False, factory=_UnavailableConnection)
+        return False
+    module._conn = fresh
+    return True
+
+
+def _discard_vesum_conn(module: Any) -> bool:
+    if getattr(module, "_vesum_conn", None) is None:
+        return False
+    module.close_vesum_conn()  # keeps the connection open while readers hold it
+    return True
+
+
+# database name -> (module names it can be loaded under, cache discarder)
+_SQLITE_CONNECTION_CACHES: dict[str, tuple[tuple[str, ...], Any]] = {
+    "sources.db": (("wiki.sources_db", "scripts.wiki.sources_db"), _discard_sources_conn),
+    "vesum.db": (("verification.vesum", "scripts.verification.vesum"), _discard_vesum_conn),
+}
+
+
+def _install_observed_connections() -> None:
+    """Make every connection ``wiki.sources_db`` opens, in either import name, an observed one."""
+    for module in (sources_db_short_name, sources_db_full_name):
+        module.set_connection_factory(_ObservedConnection)
+
+
+_install_observed_connections()
+
+
+class SourcesDatabaseUnavailable(Exception):
+    """A tool's database call still failed after one connection reopen."""
+
+    def __init__(self, database: str, error_class: str, reopened: bool) -> None:
+        super().__init__(f"{database} unavailable after reopen ({error_class})")
+        self.database = database
+        self.error_class = error_class
+        self.reopened = reopened
+
+
+def _has_marker(exc: BaseException, markers: tuple[str, ...]) -> bool:
+    text = str(exc).lower()
+    return any(marker in text for marker in markers)
+
+
+def _is_stale_connection_error(exc: BaseException) -> bool:
+    return isinstance(exc, sqlite3.DatabaseError) and _has_marker(exc, _STALE_CONNECTION_MARKERS)
+
+
+def _failing_database(exc: BaseException) -> str | None:
+    """Name the database whose store module raised ``exc``, from its traceback."""
+    owner_by_module = {module: db for db, (modules, _) in _SQLITE_CONNECTION_CACHES.items() for module in modules}
+    found: str | None = None
+    tb = exc.__traceback__
+    while tb is not None:
+        found = owner_by_module.get(tb.tb_frame.f_globals.get("__name__", ""), found)
+        tb = tb.tb_next
+    return found
+
+
+def _connection_generations() -> dict[str, int]:
+    with _SQLITE_CACHE_LOCK:
+        return dict(_SQLITE_GENERATION)
+
+
+def _discard_cached_connections(database: str | None, seen: dict[str, int] | None = None) -> bool:
+    """Replace the cached connections of ``database`` (all when unattributed).
+
+    ``seen`` holds the generations the caller read before its failed attempt.
+    A database another call has replaced since is not replaced again, so
+    simultaneous heals of one stale connection reopen it once. Returns whether
+    a replacement connection is now in place for any targeted database.
+    """
+    refreshed = False
+    with _SQLITE_CACHE_LOCK:
+        for db, (module_names, discard) in _SQLITE_CONNECTION_CACHES.items():
+            if database is not None and db != database:
+                continue
+            if seen is not None and _SQLITE_GENERATION.get(db, 0) != seen.get(db, 0):
+                refreshed = True
+                continue
+            replaced = False
+            for module_name in module_names:
+                module = sys.modules.get(module_name)
+                if module is not None and discard(module):
+                    replaced = True
+            if replaced:
+                _SQLITE_GENERATION[db] = _SQLITE_GENERATION.get(db, 0) + 1
+                refreshed = True
+    return refreshed
+
+
+async def _run_attempt(handler: Any, markers: tuple[str, ...]) -> Any:
+    """Run ``handler`` once; an error in ``markers`` a helper swallowed fails the attempt."""
+    attempt = _AttemptDamage(markers)
+    token = _ATTEMPT_DAMAGE.set(attempt)
+    try:
+        result = await handler()
+    except Exception as exc:
+        if attempt.errors and not isinstance(exc, sqlite3.DatabaseError):
+            raise attempt.errors[0] from exc  # the swallowed damage is the cause of whatever broke next
+        raise
+    finally:
+        _ATTEMPT_DAMAGE.reset(token)
+    if attempt.errors:
+        raise attempt.errors[0]
+    return result
+
+
+async def _call_with_database_self_heal(handler: Any, heal: dict[str, Any]) -> Any:
+    """Run ``handler``; on a stale-connection error reopen and retry exactly once.
+
+    ``heal`` is filled in when a heal was attempted so the caller can log it.
+    A failure of the retry raises ``SourcesDatabaseUnavailable``; the heal is
+    recorded as recovered only when the retry itself saw no stale-connection
+    error, including a swallowed ``no such table`` from a rebuilt database.
+    """
+    seen = _connection_generations()
+    try:
+        return await _run_attempt(handler, _FIRST_ATTEMPT_MARKERS)
+    except sqlite3.DatabaseError as first:
+        if not _is_stale_connection_error(first):
+            raise
+        database = _failing_database(first)
+        reopened = _discard_cached_connections(database, seen)
+        heal.update(
+            database=database or _UNATTRIBUTED_DATABASE,
+            error_class=type(first).__name__,
+            reopened=reopened,
+            recovered=False,
+        )
+        try:
+            result = await _run_attempt(handler, _STALE_CONNECTION_MARKERS)
+        except sqlite3.DatabaseError as second:
+            database = _failing_database(second) or database
+            heal["database"] = database or _UNATTRIBUTED_DATABASE
+            raise SourcesDatabaseUnavailable(
+                database or _UNATTRIBUTED_DATABASE, type(second).__name__, reopened
+            ) from second
+        heal["recovered"] = True
+        return result
+
+
+def _database_unavailable_outcome(name: str, unavailable: SourcesDatabaseUnavailable) -> dict[str, Any]:
+    """Typed, path-free and message-free error that is safe to send over the wire."""
+    return {
+        "tool": name,
+        "status": "error",
+        "error_code": _DATABASE_UNAVAILABLE_CODE,
+        "database": unavailable.database,
+        "error_class": unavailable.error_class,
+        "retried": True,
+        "reopened": unavailable.reopened,
+        "error": (
+            f"{_DATABASE_UNAVAILABLE_CODE}: {unavailable.database} failed with {unavailable.error_class} "
+            "again after one connection reopen. The database may be mid-rebuild or damaged; "
+            "retry later or report it to the operators."
+        ),
+    }
+
+
 async def _dispatch_tool_call(
     name: str, arguments: dict[str, Any]
 ) -> tuple[list[TextContent], bool, dict[str, Any] | None]:
@@ -1881,6 +2243,7 @@ async def _dispatch_tool_call(
     if refused is not None:
         content, is_err = refused
         return content, is_err, None
+    heal: dict[str, Any] = {}
     try:
         # Dispatch to handler
         _handlers = {
@@ -1930,10 +2293,11 @@ async def _dispatch_tool_call(
             "search_idioms": lambda: handle_dict_search(arguments, "frazeolohichnyi", "Фразеологічний"),
             "search_synonyms": lambda: handle_dict_search(arguments, "ukrajinet", "Ukrajinet WordNet"),
             "translate_en_uk": lambda: handle_dict_search(arguments, "balla_en_uk", "Балла EN→UK"),
+            "word_card": lambda: handle_word_card(arguments),
         }
         handler = _handlers.get(name)
         if handler:
-            result = await handler()
+            result = await _call_with_database_self_heal(handler, heal)
         else:
             result = [TextContent(type="text", text=f"Unknown tool: {name}")]
             _log_tool_call(name, arguments, error="unknown tool", privacy_mode=privacy_mode)
@@ -1952,6 +2316,7 @@ async def _dispatch_tool_call(
             duration_s=_elapsed,
             response_text=_resp_text,
             privacy_mode=privacy_mode,
+            self_heal=heal,
         )
         if typed_outcome is not None and isinstance(typed_outcome, dict) and "disposition" in typed_outcome:
             _record_v4_typed_invocation(name=name, typed_outcome=typed_outcome)
@@ -1963,10 +2328,31 @@ async def _dispatch_tool_call(
                 return result, True, None
             typed_outcome = _outcome_with_receipt(typed_outcome, receipt_id, receipt_outcome)
         return result, False, typed_outcome
+    except SourcesDatabaseUnavailable as unavailable:
+        _log_tool_call(
+            name,
+            arguments,
+            duration_s=_time.monotonic() - _t0,
+            error=f"{type(unavailable).__name__}: {unavailable}",
+            privacy_mode=privacy_mode,
+            self_heal=heal,
+        )
+        failure = _database_unavailable_outcome(name, unavailable)
+        content = [TextContent(type="text", text=json.dumps(failure, ensure_ascii=False))]
+        if recorder is not None and recorder.mode == "on":
+            content, _rec_err, _receipt, _outcome = _review_record(
+                recorder, name, review_arguments, content, status="error"
+            )
+        return content, True, failure
     except Exception as e:
         _elapsed = _time.monotonic() - _t0
         _log_tool_call(
-            name, arguments, duration_s=_elapsed, error=f"{type(e).__name__}: {e}", privacy_mode=privacy_mode
+            name,
+            arguments,
+            duration_s=_elapsed,
+            error=f"{type(e).__name__}: {e}",
+            privacy_mode=privacy_mode,
+            self_heal=heal,
         )
         content = [TextContent(type="text", text=f"Error in {name}: {type(e).__name__}: {e}")]
         if recorder is not None and recorder.mode == "on":
@@ -2004,6 +2390,26 @@ async def _on_list_tools(_ctx: Any, _params: Any) -> ListToolsResult:
     return ListToolsResult(tools=tools)
 
 
+_CALL_GOVERNOR: CallGovernor | None = None
+
+
+def _call_governor() -> CallGovernor:
+    """The process-wide bound on concurrent tool calls (#10674).
+
+    Slow-call stack dumps are written only by the standalone HTTP service;
+    a per-agent stdio server keeps the bound and the logging.
+    """
+    global _CALL_GOVERNOR
+    if _CALL_GOVERNOR is None:
+        from scripts.rag.hang_diagnostics import resolve_dump_dir
+
+        _CALL_GOVERNOR = CallGovernor(
+            GovernorLimits.from_environ(),
+            dump_dir=resolve_dump_dir(PROJECT_ROOT) if _HTTP_MODE else None,
+        )
+    return _CALL_GOVERNOR
+
+
 async def _on_call_tool(_ctx: Any, params: CallToolRequestParams) -> CallToolResult:
     """MCP 2.0 registered handler for tools/call — the actual wire path.
 
@@ -2015,10 +2421,26 @@ async def _on_call_tool(_ctx: Any, params: CallToolRequestParams) -> CallToolRes
     wire result is the recorded text plus the receipt line, so the seat
     can cite the call. With that environment unset this stays generic.
     """
+    arguments = dict(params.arguments or {})
     try:
-        _content, is_error, typed_outcome = await _dispatch_tool_call(params.name, dict(params.arguments or {}))
+        _content, is_error, typed_outcome = await _call_governor().run(
+            params.name, lambda: _dispatch_tool_call(params.name, arguments)
+        )
+    except CallRefused as refusal:
+        # Typed and argument-free (#10674): server_busy (queue wait exceeded),
+        # call_timeout (no result within the per-call limit) or
+        # server_overloaded (every slot held by timed-out work still running).
+        return CallToolResult(
+            content=[
+                TextContent(type="text", text=f"Tool call failed: {params.name} ({refusal.code}: {refusal.detail}).")
+            ],
+            isError=True,
+        )
     except Exception:
         return CallToolResult(content=[TextContent(type="text", text="Tool call failed.")], isError=True)
+    if is_error and isinstance(typed_outcome, dict) and typed_outcome.get("error_code") == _DATABASE_UNAVAILABLE_CODE:
+        # Typed and free of paths and exception text (#11115): the caller learns which database failed.
+        return CallToolResult(content=_content, structured_content=typed_outcome, isError=True)
     if is_error and not _review_env_engaged():
         return CallToolResult(
             content=[TextContent(type="text", text=f"Tool call failed: {params.name}.")], isError=True
@@ -2781,13 +3203,14 @@ def _lookup_wikipedia_in_db(query: str) -> dict | None:
     """Serve the pre-ingested wikipedia table in sources.db as a persistent
     cache (#1170). Matches by exact title first, then by FTS5 title match.
     Returns None if the query isn't in the DB — callers must then fall back
-    to the live API.
+    to the live API. Database errors propagate to the heal boundary before
+    the caller can cache a miss.
     """
     import contextlib
     import sqlite3
 
     from scripts.storage.topology import ActiveDatabaseNetworkError
-    from wiki.sources_db import _read_db_path
+    from wiki.sources_db import _open_conn, _read_db_path
 
     try:
         db = _read_db_path()
@@ -2797,8 +3220,7 @@ def _lookup_wikipedia_in_db(query: str) -> dict | None:
         return None
     conn: sqlite3.Connection | None = None
     try:
-        conn = sqlite3.connect(f"{db.as_uri()}?mode=ro", uri=True)
-        conn.row_factory = sqlite3.Row
+        conn = _open_conn(db, read_only=True)
         # 1. Exact title match (case-insensitive) — the common case after
         #    fetch_wikipedia.py has ingested a batch from plan topics.
         row = conn.execute(
@@ -2821,8 +3243,6 @@ def _lookup_wikipedia_in_db(query: str) -> dict | None:
         ).fetchone()
         if row:
             return dict(row)
-    except sqlite3.Error:
-        return None
     finally:
         if conn is not None:
             with contextlib.suppress(Exception):
@@ -2998,6 +3418,16 @@ async def handle_query_wikipedia(args: dict) -> list[TextContent]:
 
 
 async def _query_wikipedia(args: dict) -> list[TextContent]:
+    from rag.wiki_cache import WikiCache
+
+    cache = WikiCache()
+    try:
+        return await _query_wikipedia_cached(args, cache)
+    finally:
+        cache.close()
+
+
+async def _query_wikipedia_cached(args: dict, cache: Any) -> list[TextContent]:
     mode = args.get("mode", "summary")
     query = args["query"]
     limit = args.get("limit", 5)
@@ -3007,7 +3437,6 @@ async def _query_wikipedia(args: dict) -> list[TextContent]:
     from functools import partial
 
     from rag import source_query as _sq
-    from rag.wiki_cache import WikiCache
 
     # Every live fetch raises on an outage, so no negative-cache write below can record one (#9005).
     wikipedia_extract = partial(_sq.wikipedia_extract, raise_unavailable=True)
@@ -3015,8 +3444,6 @@ async def _query_wikipedia(args: dict) -> list[TextContent]:
     wikipedia_section_text = partial(_sq.wikipedia_section_text, raise_unavailable=True)
     wikipedia_sections = partial(_sq.wikipedia_sections, raise_unavailable=True)
     wikipedia_summary = partial(_sq.wikipedia_summary, raise_unavailable=True)
-
-    cache = WikiCache()
 
     if mode == "search":
         # Search results use short TTL (24h) — cached separately
@@ -3845,6 +4272,12 @@ async def handle_dict_search(args: dict, collection: str, label: str):
     return [TextContent(type="text", text=prose)], envelope
 
 
+_SLOVNYK_USE_ROLE_NOTES = {
+    "candidate-discovery": "mirror copy: use to find candidates only; confirm against the official СУМ-20 (query_sum20)",
+    "contrast": "Soviet-era contrast context only; never a norm, gloss or proof of meaning",
+}
+
+
 def _slovnyk_outage_note(outages: list[dict]) -> str:
     """One line naming the failed live slovnyk.me lookups (#9005)."""
     failed = sorted({f"{o.get('dictionary_slug', '?')} ({o.get('error', '?')})" for o in outages})
@@ -3891,6 +4324,9 @@ async def handle_search_slovnyk_me(args: dict) -> list[TextContent]:
         lines.append(f"### Result {i}")
         lines.append(f"- **Headword**: {hit.get('word', '')}")
         lines.append(f"- **Dictionary**: {hit.get('dictionary_label', hit.get('dictionary_slug', ''))}")
+        role_note = _SLOVNYK_USE_ROLE_NOTES.get(str(hit.get("use_role") or ""))
+        if role_note:
+            lines.append(f"- **Use role**: {hit['use_role']} — {role_note}")
         if hit.get("source_url"):
             lines.append(f"- **URL**: {hit['source_url']}")
         flags = []
@@ -4079,6 +4515,14 @@ async def main_sse(host: str = "127.0.0.1", port: int = 8766):
     _set_http_mode(True)
     import uvicorn
 
+    # All-thread stack dump on SIGUSR1 for the hang watchdog (#10674).
+    from scripts.rag.hang_diagnostics import install_signal_dump, resolve_dump_dir
+
+    try:
+        print(f"Thread dump on SIGUSR1: {install_signal_dump(resolve_dump_dir(PROJECT_ROOT))}")
+    except OSError as error:
+        print(f"⚠️  Thread dump handler not installed: {type(error).__name__}: {error}")
+
     # Verify SQLite sources database exists
     from wiki.sources_db import source_count
 
@@ -4097,7 +4541,14 @@ async def main_sse(host: str = "127.0.0.1", port: int = 8766):
     print(f"  Health: http://{host}:{port}/health")
     sys.stdout.flush()
 
-    config = uvicorn.Config(app, host=host, port=port, log_level="warning")
+    limits = _call_governor().limits
+    print(
+        f"  Call limits: {limits.max_concurrent} concurrent, queue {limits.queue_timeout:.0f}s, "
+        f"timeout {limits.call_timeout:.0f}s, slow-call dump {limits.slow_dump_after:.0f}s"
+    )
+    sys.stdout.flush()
+    # Idle keep-alive connections close after 5 s (uvicorn's default, pinned).
+    config = uvicorn.Config(app, host=host, port=port, log_level="warning", timeout_keep_alive=5)
     srv = uvicorn.Server(config)
     await srv.serve()
 

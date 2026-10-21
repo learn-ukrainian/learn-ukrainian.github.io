@@ -50,6 +50,7 @@ jobs:
             scripts/__init__.py
             scripts/common/__init__.py
             scripts/common/github_client.py
+            scripts/common/scratch.py
             scripts/opsec/__init__.py
             scripts/opsec/gh_snapshot.py
             scripts/opsec/prepublish.py
@@ -91,7 +92,7 @@ jobs:
       # steps to the newest trufflesecurity/trufflehog release (3.99.0 or
       # newer — never an older tag to clear a finding) and re-scan with
       # scripts/audit/secret_scan_local.py tree.
-      - uses: trufflesecurity/trufflehog@0186870afd2c4a90def791d80260923ba583d076 # action v3.98.0
+      - uses: trufflesecurity/trufflehog@e76dff8a7e57d6df0c60ad8cbf5d5cba505a8fc9 # action v3.99.2
         with:
           version: "3.99.0"
           base: ${{ steps.metadata.outputs.parent }}
@@ -112,6 +113,11 @@ jobs:
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version-file: '.python-version'
+      # schedule has no before/after. An empty base and head makes the pinned
+      # action scan every commit and exit 183 on historical findings.
+      # secret_scan_scope walks a fixed first-parent ancestry window, or the
+      # whole branch when history is shorter, and never the same base and head.
+      # A git failure exits non-zero instead of narrowing that window.
       - name: Resolve secret scan commit scope
         id: secret-scan-scope
         env:
@@ -139,7 +145,7 @@ jobs:
       # Same scanner pin as the queue-metadata step. Bump both together:
       # newest trufflesecurity/trufflehog release, never an older tag to clear
       # a finding, then re-scan with scripts/audit/secret_scan_local.py tree.
-      - uses: trufflesecurity/trufflehog@0186870afd2c4a90def791d80260923ba583d076 # action v3.98.0
+      - uses: trufflesecurity/trufflehog@e76dff8a7e57d6df0c60ad8cbf5d5cba505a8fc9 # action v3.99.2
         with:
           version: "3.99.0"
           base: ${{ steps.secret-scan-scope.outputs.trufflehog_base }}
@@ -148,6 +154,10 @@ jobs:
 
   checks:
     name: Checks
+    permissions:
+      contents: read
+      actions: read
+      issues: read
     needs: [reuse]
     if: ${{ !cancelled() && needs.reuse.outputs.reuse != 'true' }}
     runs-on: ubuntu-latest
@@ -160,13 +170,18 @@ jobs:
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version-file: '.python-version'
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: '22'
           cache: npm
           cache-dependency-path: package-lock.json
       - name: Python CI environment
         uses: ./.github/actions/python-ci-env
+      - name: Verify flake quarantine admissions
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha || 'origin/main' }}
+        run: .venv/bin/python -m scripts.common.flake_quarantine --base-ref "$BASE_SHA"
       - name: Lint and content contracts
         env:
           EVENT_NAME: ${{ github.event_name }}
@@ -192,7 +207,7 @@ jobs:
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version-file: '.python-version'
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: '22'
           cache: npm
@@ -259,7 +274,7 @@ jobs:
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version-file: '.python-version'
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: '22'
           cache: npm
@@ -305,7 +320,7 @@ jobs:
         run: python3 -m scripts.ci.junit_results ci-artifacts/pytest-shard-*.xml --title "pytest (${SHARD})" >> "$GITHUB_STEP_SUMMARY"
       - name: Upload pytest JUnit report
         if: ${{ !cancelled() }}
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: pytest-junit-shard-${{ matrix.shard }}
           path: |
@@ -334,7 +349,7 @@ jobs:
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version-file: '.python-version'
-      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           pattern: pytest-junit-shard-*
           path: ci-artifacts/shards
@@ -345,13 +360,13 @@ jobs:
       # further requires the entire merge-group workflow to have passed.
       - name: Record pytest durations
         run: python3 -m scripts.ci.split_tests durations ci-artifacts/shards/*/pytest-shard-*.xml > ci-artifacts/pytest-file-durations.json
-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: pytest-file-durations
           path: ci-artifacts/pytest-file-durations.json
           if-no-files-found: error
           retention-days: 14
-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: ci-tested-tree
           path: ci-artifacts/tested-tree.json
@@ -382,7 +397,7 @@ jobs:
           HEAD_SHA: ${{ github.event.pull_request.head.sha || github.event.merge_group.head_sha || github.sha }}
         run: python3 scripts/ci/dependency_change_scope.py --event "$EVENT_NAME" --base "$BASE_SHA" --head "$HEAD_SHA"
       - if: steps.scope.outputs.run == 'true'
-        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: '22'
       - if: steps.scope.outputs.run == 'true'
@@ -472,3 +487,28 @@ jobs:
             [ "$expected" = success ] || echo "${job%%:*} reused from run ${REUSED_RUN}: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${REUSED_RUN}"
           done
           [ "$status" != 0 ] || echo "CI Gate green"; exit "$status"
+      # docs/runbooks/agent-attribution.md. Runs on reused-tree queue runs too: the queue
+      # commit's message is new even when its tree's run is reused. Report-only until the
+      # repository variable ATTRIBUTION_ENFORCE is exactly 1; report-only downgrades
+      # attribution violations only, so a crash of the checker still fails this step.
+      - name: Check agent attribution
+        if: github.event_name == 'pull_request' || github.event_name == 'merge_group'
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_SHA: ${{ github.event_name == 'merge_group' && github.event.merge_group.base_sha || github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event_name == 'merge_group' && github.event.merge_group.head_sha || github.event.pull_request.head.sha }}
+          PYTHON_BIN: ${{ steps.setup-python-gate.outputs.python-path }}
+          GITHUB_TOKEN: ${{ github.token }}
+          ATTRIBUTION_ENFORCE: ${{ vars.ATTRIBUTION_ENFORCE }}
+        run: |
+          set -euo pipefail
+          if [ -z "$BASE_SHA" ] || [ -z "$HEAD_SHA" ]; then
+            echo "::error::Missing base or head SHA for agent attribution in $EVENT_NAME"
+            exit 1
+          fi
+          # The parser pins from requirements-lock.txt; this job has no project environment.
+          "$PYTHON_BIN" -m pip install --disable-pip-version-check --quiet --no-deps --only-binary=:all: \
+            markdown-it-py==4.2.0 mdurl==0.1.2
+          mode=--pr
+          [ "$EVENT_NAME" != merge_group ] || mode=--merge-group
+          "$PYTHON_BIN" scripts/ci/check_agent_attribution.py "$mode" "$BASE_SHA" "$HEAD_SHA"

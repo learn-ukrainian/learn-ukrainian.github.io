@@ -24,7 +24,7 @@ if __package__ in (None, ""):
 
 from scripts.common import github_client
 from scripts.common.repo_root import main_checkout_root
-from scripts.orchestration import fleet_repos
+from scripts.orchestration import fleet_repos, postmerge_criteria
 from scripts.orchestration import issue_stream_audit as audit
 from scripts.orchestration import task_lifecycle as lifecycle
 from scripts.publish.github import read
@@ -622,7 +622,16 @@ def complete_result(result: dict, body: str, membership: dict | None = None) -> 
     )
     dod_errors = []
     try:
-        lifecycle.parse_issue_acceptance_criteria(body)
+        criteria = lifecycle.parse_issue_acceptance_criteria(postmerge_criteria.visible_markdown(body))
+        for item in criteria:
+            if postmerge_criteria.POST_MERGE_RE.search(item["text"]):
+                owner, due = postmerge_criteria.item_assignment(item["text"])
+                if not owner or not due:
+                    dod_errors.append(error(
+                        "dod", item["id"], "post_merge_unowned",
+                        "post-merge evidence requires owner: <recognized lane> and due: YYYY-MM-DD "
+                        "on the same item line; due is the evidence collection and review deadline",
+                    ))
     except lifecycle.LifecycleError as exc:
         code = (
             "dod_structure_absent"
@@ -637,6 +646,7 @@ def complete_result(result: dict, body: str, membership: dict | None = None) -> 
     # remains visible in the DoD section, comments, reports and CLI notes.
     if result["trivial"]:
         result["notes"] = [*result["notes"], *(e["code"] for e in dod_errors)]
+        result["missing"].extend(e["code"] for e in dod_errors if e["code"] == "post_merge_unowned")
     for part in ([result["membership"]] if result["trivial"] else [result["dod"], result["membership"]]):
         result["missing"].extend(e["code"] for e in part["errors"])
     result["verdict"] = "WARN" if result["missing"] else "PASS"

@@ -12,6 +12,7 @@ import pytest
 
 from scripts.review.model_catalog import load_model_catalog
 from tests.test_launcher_contract import REPO, run_launcher
+from tests.test_launcher_driver_scope import manager_guard
 
 pytestmark = pytest.mark.usefixtures("hermetic_monitor")
 
@@ -291,6 +292,9 @@ def test_cursor_seat_enumerated_in_launcher_core_and_public_estate() -> None:
 # Interactive Cursor sessions (#9274): no public start-cursor.sh exists, but
 # launcher_main cursor interactive is reachable, and it is not a typed
 # implementation dispatch, so it pins a concrete model like the driver seat.
+# Admission runs first; a live launch from this untracked caller is then refused
+# at scope entry (#9624), so an admitted pin is proven on the argv the dry run
+# prints, which the live exec passes unchanged.
 _INTERACTIVE = r"""
 source() {
   builtin source "$@" || return
@@ -304,21 +308,27 @@ launcher_main cursor interactive "$@"
 """
 
 
-def _run_interactive(tmp_path: Path, *args: str, env: dict[str, str] | None = None):
-    """Run launcher_main cursor interactive with a mock cursor-agent that records its argv."""
+def _run_interactive(tmp_path: Path, *args: str, env: dict[str, str] | None = None, dry_run: bool = False):
+    """Run launcher_main cursor interactive with a mock cursor-agent that records its argv.
+
+    Stand-ins for the user manager fail the test on any call (#9624).
+    """
     bin_dir = tmp_path / "bin"
-    bin_dir.mkdir(exist_ok=True)
+    bin_dir.mkdir(parents=True, exist_ok=True)
     argv_file = tmp_path / "cursor-agent.argv"
     mock = bin_dir / "cursor-agent"
     mock.write_text(f"#!/bin/sh\nprintf '%s\\0' \"$@\" > '{argv_file}'\n", encoding="utf-8")
     mock.chmod(0o755)
+    guard = manager_guard(tmp_path / "manager-guard-bin")
+    contact = tmp_path / "real-manager-contact"
     launch_env = os.environ.copy()
     launch_env.update(
         {
-            "LAUNCHER_DRY_RUN": "0",
+            "LAUNCHER_DRY_RUN": "1" if dry_run else "0",
             "LC_TEST_REPO": str(REPO),
             "LU_SKIP_PLANE_TUNNEL_CHECK": "1",
-            "PATH": f"{bin_dir}{os.pathsep}{launch_env['PATH']}",
+            "LU_TEST_REAL_MANAGER_CONTACT": str(contact),
+            "PATH": f"{bin_dir}{os.pathsep}{guard}{os.pathsep}{launch_env['PATH']}",
         }
     )
     launch_env.pop("LAUNCHER_MODEL", None)
@@ -332,8 +342,23 @@ def _run_interactive(tmp_path: Path, *args: str, env: dict[str, str] | None = No
         check=False,
         timeout=60,
     )
+    assert not contact.exists(), f"the launcher reached for the real user manager: {contact.read_text()}"
     argv = argv_file.read_text(encoding="utf-8").split("\0")[:-1] if argv_file.exists() else None
     return result, argv
+
+
+def _assert_admitted_pin(tmp_path: Path, *args: str, model: str, env: dict[str, str] | None = None) -> None:
+    """The pin leads cursor-agent's argv; a live launch never starts it unscoped."""
+    result, argv = _run_interactive(tmp_path / "dry", *args, env=env, dry_run=True)
+    assert result.returncode == 0, result.stdout + result.stderr
+    line = next(line for line in result.stdout.splitlines() if line.startswith("would exec "))
+    assert line.removeprefix("would exec ").split(" ", 3)[:3] == ["cursor-agent", "--model", model], line
+    assert argv is None
+    result, argv = _run_interactive(tmp_path / "live", *args, env=env)
+    assert result.returncode == 6, result.stdout + result.stderr
+    assert "DRIVER_SCOPE_REFUSED reason=entrypoint-not-allowlisted;" in result.stderr
+    assert argv is None
+    assert "mock deploy" not in result.stdout
 
 
 def test_cursor_seat_pin_matches_the_catalog_seat() -> None:
@@ -344,9 +369,7 @@ def test_cursor_seat_pin_matches_the_catalog_seat() -> None:
 
 
 def test_cursor_interactive_defaults_to_the_concrete_pin(tmp_path: Path) -> None:
-    result, argv = _run_interactive(tmp_path, env={"LAUNCHER_MODEL": ""})
-    assert result.returncode == 0, result.stdout + result.stderr
-    assert argv is not None and argv[:2] == ["--model", "grok-4.7-high"]
+    _assert_admitted_pin(tmp_path, model="grok-4.7-high", env={"LAUNCHER_MODEL": ""})
 
 
 @pytest.mark.parametrize(
@@ -400,11 +423,9 @@ def test_cursor_interactive_refuses_auto_and_fast_from_the_environment(tmp_path:
 
 
 @pytest.mark.parametrize("model", ("composer-2.5", "grok-4.7", "grok-4.7-high"))
-def test_cursor_interactive_executes_an_explicit_approved_pin(tmp_path: Path, model: str) -> None:
-    result, argv = _run_interactive(tmp_path, "--model", model)
-    assert result.returncode == 0, result.stdout + result.stderr
+def test_cursor_interactive_admits_an_explicit_approved_pin(tmp_path: Path, model: str) -> None:
     expected_model = "grok-4.7-high" if model == "grok-4.7" else model
-    assert argv is not None and argv[:2] == ["--model", expected_model]
+    _assert_admitted_pin(tmp_path, "--model", model, model=expected_model)
 
 def test_cursor_rewrites_bare_grok_4_7_to_high() -> None:
     result = run_launcher(DRIVER, "--epic", "infra", "--model", "grok-4.7")

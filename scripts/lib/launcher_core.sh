@@ -3,6 +3,15 @@
 # route, credential, endpoint, and binary decision; this file owns only the
 # uniform public CLI and driver lifecycle.
 
+# Fixed arguments a public wrapper adds to its caller's argv: launcher options
+# (the CTO lane, the kimicc harness) and leading provider arguments (the bio
+# agent). A wrapper sets them after sourcing this file. Scope re-entry and
+# supervisory successors replay the caller's argv alone, so the wrapper adds
+# them exactly once (#9624). Sourcing resets them; arrays are never inherited.
+unset LC_WRAPPER_LAUNCHER_ARGS LC_WRAPPER_PROVIDER_ARGS
+LC_WRAPPER_LAUNCHER_ARGS=()
+LC_WRAPPER_PROVIDER_ARGS=()
+
 launcher_usage() {
   if [ "$LC_PROVIDER" = muse ]; then
     # shellcheck source=scripts/launchers/muse.sh
@@ -146,7 +155,8 @@ Valid lane selectors:
   epics
   infra | harness | infra.fleet-comms
   devops | infra.devops
-  atlas | practice | atlas.practice
+  atlas | practice-hub | atlas.practice
+  practice
   hramatka | hramatka.lessons
   folk | seminars-folk
   bio | seminars-bio
@@ -1195,7 +1205,10 @@ launcher_close_failed_driver_lease() {
 launcher_forward_driver_signal() {
   local signal="$1"
   local exit_code="$2"
-  trap - "$signal"
+  # The scope waiter can relay the terminal signal again during close. Keep
+  # that signal non-fatal until the client returns and EXIT cleanup is cleared;
+  # otherwise EXIT can close again before the successful-close flag is set.
+  trap '' "$signal"
   if [ -n "${LC_DRIVER_CHILD_PID:-}" ] && kill -0 "$LC_DRIVER_CHILD_PID" 2>/dev/null; then
     kill -s "$signal" "$LC_DRIVER_CHILD_PID" 2>/dev/null || true
     wait "$LC_DRIVER_CHILD_PID" 2>/dev/null || true
@@ -1411,6 +1424,11 @@ launcher_bind_drive_epic() {
   # A successful hook alone is no execution evidence; dry runs never run a probe.
   if [ "${LC_PROVIDER_CANARY_RAN:-0}" = 1 ] && [ "$LC_DRY_RUN" != 1 ]; then canary_status='ran'; fi
   LC_DRIVER_PROMPT="Load agents_extensions/shared/skills/drive-epic/SKILL.md before acting. The launcher already claimed the ${LC_EPIC} lease; provider canary: ${canary_status}; do not claim, renew, or reopen the lease. ${fleet_clause} Consult the Work API projection (http://127.0.0.1:8765/api/work/v1/projection) for orientation and treat grok-bot QA-observer issues as a queue input — the skill covers both. Obtain independent cross-family review. Your pinned epic, goals and next step live in .claude/${LC_EPIC}-epic/DRIVER-STATE.md; after any compaction or doubt run .venv/bin/python -m scripts.driver_state whoami, and update that file when a goal lands. Follow its standing decision policy: decide and execute reversible rule-following choices yourself, never ask for overrides, do listed actions in the same turn, escalate only deletes, money, security or rule changes (final message starts CTO-ESCALATION:), and end each turn with the privately configured worker target met and a wake-up armed. Put every owned blocker in --current with complete: true; run .venv/bin/python -m scripts.driver_blockers delta --epic ${LC_EPIC} --current blockers.json; post each item that is not UNCHANGED with all its fields on one line, and each RESOLVED item with the exact case-sensitive standalone token RESOLVED <id> on its own non-active line (no other fields or prose); if delta fails or the baseline is unknown, post everything currently blocking; after the post succeeds, record with the receipt and the exact posted body using .venv/bin/python -m scripts.driver_blockers record --epic ${LC_EPIC} --current blockers.json --receipt receipt.json --body-file posted.md --expect-generation N (N is the generation from delta)."
+  if [ "${LC_PROVIDER:-}" = grok ]; then
+    # Grok has no SessionStart hook to inject the lane handoff (#10835); the
+    # file name is shared with every provider.
+    LC_DRIVER_PROMPT+=" Grok has no SessionStart hook, so before acting read the lane handoff .claude/${SESSION_EPIC:-$LC_EPIC}-epic/CLAUDE-DRIVER-HANDOFF.md and treat its housekeeping and in-flight lines as to-dos. Session health is the Grok canary (.venv/bin/python -m scripts.session_canary.grok_lane mint and score, run only within the thread-rollover skill); end on FAIL-HANDOFF below 8/10."
+  fi
   launcher_inject_driver_agent
   LC_FORWARD_ARGS+=("$LC_DRIVER_PROMPT")
   if [ "$LC_DRY_RUN" = "1" ]; then
@@ -1512,7 +1530,8 @@ launcher_main() {
   LC_MODE="$2"
   LC_PROVIDER_CANARY_RAN=0
   shift 2
-  # Consumed by session_supervisor_exec_successor in the sourced helper.
+  # The caller's argv, without the wrapper's fixed arguments, which the
+  # replayed wrapper adds again. Consumed by session_supervisor_exec_successor.
   # shellcheck disable=SC2034
   LC_DRIVER_ORIGINAL_ARGS=("$@")
   # Re-entry must retain --force for the first actual lease acquisition;
@@ -1529,7 +1548,11 @@ launcher_main() {
   fi
   launcher_clear_foreign_route_state
   launcher_defaults
-  launcher_parse "$@"
+  launcher_parse ${LC_WRAPPER_LAUNCHER_ARGS[@]+"${LC_WRAPPER_LAUNCHER_ARGS[@]}"} "$@"
+  LC_FORWARD_ARGS=(
+    ${LC_WRAPPER_PROVIDER_ARGS[@]+"${LC_WRAPPER_PROVIDER_ARGS[@]}"}
+    ${LC_FORWARD_ARGS[@]+"${LC_FORWARD_ARGS[@]}"}
+  )
   if [ "$LC_PROVIDER" = muse ] && [ "$LC_MODEL" != muse-wonder-full-1.0 ]; then
     launcher_error 'MUSE_MODEL_UNCERTIFIED'
     exit 4
@@ -1559,15 +1582,18 @@ launcher_main() {
   launcher_validate_driver_certification
   # Usage errors and certification refusals come first; then the weekly cap.
   launcher_claude_cap_guard
-  # Every admitted driver path enters before expensive preparation, import and lease.
-  if [ "$LC_MODE" = driver ]; then
-    if [ "$LC_DRY_RUN" = 1 ]; then
+  # Every admitted session, driver or interactive, enters before expensive
+  # preparation, import and lease (#9624).
+  if [ "$LC_DRY_RUN" = 1 ]; then
+    if [ "$LC_MODE" = driver ]; then
       printf 'LAUNCHER_DRY_RUN=1: would enter a verified per-driver memory-limited scope in lu-driver.slice\n'
     else
-      # shellcheck source=scripts/lib/driver_scope.sh
-      source "$LC_ROOT/scripts/lib/driver_scope.sh" || exit 6
-      launcher_enter_driver_scope || exit 6
+      printf 'LAUNCHER_DRY_RUN=1: would enter a verified per-session memory-limited scope in lu-driver.slice\n'
     fi
+  else
+    # shellcheck source=scripts/lib/driver_scope.sh
+    source "$LC_ROOT/scripts/lib/driver_scope.sh" || exit 6
+    launcher_enter_driver_scope || exit 6
   fi
   # Before any adapter check, plane probe or deploy: no core, no launch.
   launcher_load_rules_core

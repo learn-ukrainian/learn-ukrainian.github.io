@@ -36,7 +36,7 @@ and ≥2 tiers for 14 consecutive days. A review does not expire the standing ru
 **Codex role boundary:** GPT-6.1 Sol (`gpt-6.1-sol`) @ `high` is the only Sol: the coding and
 review seat and, since operator 2026-09-29 (#9230), took over the former Astra advisory seat at `high`.
 Ordinary advice uses Opus 5.5 / Sol 6.1; Fable and the former Astra seat hold no advisory role (#9583).
-Luna @ `high` handles routine bounded work and scouting under a Sol advisory envelope (§2).
+Luna @ `high` handles routine bounded work and scouting under the driver-brief or Sol-envelope contract (§2).
 `gpt-6-sol` and `gpt-6-astra` are not routable. Designated approval remains separate
 from ordinary advice; do not spend advisory turns on ordinary implementation or review.
 
@@ -62,7 +62,7 @@ For mechanical and ordinary infra/code implement that is not LANGUAGE-LANES and 
 advisor/authority, prefer `--agent cursor --model grok-4.7-high` while the Cursor Models
 pool has headroom. A review of a Grok author runs the reviewer resolver's non-xAI pick
 (native Claude, Codex or another eligible seat the resolver returns); no Claude model reviews
-through Cursor (D-129, #10464), and the Other Models pool never carries a review. DeepSeek is excluded from dispatch and review; `deepseek-v4.1-flash` remains active in the catalog, and Pro is retired.
+through Cursor (D-129, #10464), and the Other Models pool never carries a review. DeepSeek V4.1 Flash coding through opencode is allowed; review-of-record and Ukrainian work need measured evidence first; `deepseek-v4.1-flash` remains active in the catalog, and Pro is retired.
 
 **Utilize, do not trim.** Keep **Kimi** and **Z.AI/GLM** as first-class seats. Live check:
 `.venv/bin/python -m scripts.fleet.capacity_pick` (preferred) +
@@ -96,7 +96,7 @@ stampede one hot lane.
 | --- | --- | --- |
 | **Cursor, included pool** | code/infra CI, mechanical + ordinary infra/code implement | `--agent cursor --model grok-4.7-high`. Not Fast, not `grok-4.6`, not `grok-4.5`. Not CF of a Grok author |
 | **Cursor, Other Models** | named third-party model, non-review work only; never a review (D-129, #10464) | Pin only an approved concrete slug from § Cursor pools. Draws the API pool. A review of a Grok author goes to the `resolve-reviewer` non-xAI pick instead. |
-| **DeepSeek V4.1 Flash** | Excluded from dispatch and review | `deepseek-v4.1-flash` remains active in the catalog; Pro is retired. `ask-deepseek` is consult-only for non-language work, never implementation or review. |
+| **DeepSeek V4.1 Flash** | Latest `deepseek-v4.1-flash` coding through opencode | Direct DeepSeek API or OpenRouter with a named US provider allow-list; never private-repository content or secrets. Pro and older are retired. Review-of-record and Ukrainian work need measured evidence first. `scripts/ai_agent_bridge/routing_guard.py` still refuses `openrouter/deepseek` until a named US provider allow-list exists. `ask-deepseek` remains consult-only for non-language work. |
 | **Kimi k3-256k** | everyday fast coding/impl | `--agent kimi --model k3-256k` (or catalog id `kimi-code/k3-256k`) |
 | **Kimi k3** | complex / long-context coding only (Kimi: web, UI and backend coding only — no Ukrainian-language content, no reviews, consults, design or rules) | `--model k3` @ high/max — not routine queue |
 | **AGY Gemini Flash** | agentic scripts, language-lane content | `gemini-3.8-flash-high` |
@@ -129,7 +129,7 @@ balance (near cap without credits: unchanged), or on other lanes. A dispatch wit
 judged by the lane default. A broken policy file restricts only Codex, to the built-in copy of that allowlist; other
 lanes are unaffected. The reset advice is text only: spending a free full reset stays an operator
 decision, and no tool consumes credits or resets.
-Luna handles bounded work under a Sol advisory envelope (§2); hard advice uses Opus 5.5 / Sol 6.1.
+Luna handles bounded work under the driver-brief or Sol-envelope contract (§2); hard advice uses Opus 5.5 / Sol 6.1.
 
 The operator records a shared assertion at `batch_state/routing_budget/operator_reset_reserve.json`
 in the primary checkout. Its exact JSON fields are `schema_version` (`operator-reset-reserve.v1`),
@@ -171,7 +171,20 @@ Full table: `model-assignment.md` § *No-idle utilization + transport map*. Issu
 ## 2. Default execution shape (binding)
 
 For **bounded** work (clear owned paths, objective acceptance command, no open
-architecture decision):
+architecture decision), the #10919 exception admits Luna/Haiku from a complete
+nonempty driver brief, typed task role, narrow `--owned-path` and `--verify-command`.
+`readonly_recon` with role `recon` and `mechanical_classification` with role
+`classification` or `triage` require read-only mode. `bounded_implementation`
+with role `implementation` requires `workspace-write`. No separate `--advisory-task`
+is needed. Caller identity/provenance and the exact brief SHA are recorded; replay
+rechecks the brief, ownership, execution and core instructions. Attribution records
+a caller, not an authenticated driver role. Security paths, Ukrainian content,
+review, design/approval and driver roles remain excluded. Haiku bounded writes
+are `workspace-write` only through every route, including explicit envelopes.
+Existing Luna envelopes retain their mode rules, free-form research roles and
+non-security code containing Cyrillic; security paths remain refused.
+
+Other bounded work retains the existing envelope flow:
 
 ```text
 0) Driver fixes the worker dispatch arguments and prints their binding digest:
@@ -186,10 +199,9 @@ architecture decision):
 3) Driver integrates; formal CF = independent cross-family (discussion ≠ CF)
 ```
 
-This is the catalog `execution_routing.sol_advised_bounded` route. **Operator decision
-2026-09-30 (#9275): there is no direct bounded dispatch.** Every dispatch to the bounded
-worker (`gpt-6-luna`), and to its `gemini-3.8-flash-high` fallback unless the dispatch is
-classified Ukrainian authoring or review, needs a complete envelope from a finished
+This is the catalog `execution_routing.sol_advised_bounded` route. Outside the #10919
+driver-brief exception, Luna dispatches and the `gemini-3.8-flash-high` fallback
+unless classified Ukrainian authoring or review need a complete envelope from a finished
 `gpt-6.1-sol` advisor task bound to that dispatch's arguments and prompt text; `delegate.py` refuses it
 otherwise (`BOUNDED_ENVELOPE_REQUIRED`), including after a budget substitution, and fails
 the worker at finalize when it exceeds the envelope ceilings (a completion gate checked after
@@ -197,8 +209,8 @@ the worker exits, not a limit on what it does while running). A second completio
 fails a Ukrainian-classified `gemini-3.8-flash-high` write worker whose changes include a
 code file or a path outside the Ukrainian content roots (`advisory_exempt_code_change`),
 because admission can only classify the files its owned paths held then. The envelope's `owned_paths`
-must equal the worker's `--owned-path` set. A design brief that is not a Sol envelope does
-not admit a bounded worker (the packet path used to be "Fable or Astra"; it is now the catalog
+must equal the worker's `--owned-path` set. Outside the #10919 exception, a brief
+that is not a Sol envelope does not admit a bounded worker (the packet path used to be "Fable or Astra"; it is now the catalog
 advisor route only). Routine lockfile, pointer and smoke tasks take
 no advisory seat, so they go to a non-bounded worker (for example `claude-sonnet-5-5`)
 instead of a bounded one. Native Codex subagents spawned in-session by a `gpt-6.1-sol`
@@ -222,7 +234,7 @@ task_id: <id>
 tier: authority | practical | heap
 model_x_harness: <e.g. codex/gpt-6-luna>   # both axes
 why_this_tier: <one sentence>
-advisor_packet: none | sol=<advisor task id>  # required for heap; delegate refuses Luna/Flash without it
+advisor_packet: none | driver-brief | sol=<advisor task id>  # driver-brief only for #10919; other bounded routes require Sol
 owned_paths: <paths>
 acceptance_cmd: <deterministic command that proves done>
 alternatives_considered:
