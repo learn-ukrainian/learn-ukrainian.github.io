@@ -943,6 +943,12 @@ def test_shared_reader_serializes_native_cursor_calls(server, sdb, db, monkeypat
         def __exit__(self, *args):
             self.lock.release()
 
+        def acquire(self, blocking=True):
+            return self.lock.acquire(blocking=blocking)
+
+        def release(self):
+            self.lock.release()
+
     # This probe delegates mutual exclusion to a real RLock. Without production
     # locking it is simply unused, and the native-call probe observes overlap.
     if hasattr(conn, "__dict__"):

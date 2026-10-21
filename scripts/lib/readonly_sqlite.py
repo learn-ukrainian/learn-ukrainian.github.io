@@ -11,6 +11,7 @@ import importlib
 import sqlite3
 import threading
 from collections.abc import Callable, Iterable
+from contextlib import suppress
 from pathlib import Path
 from types import ModuleType
 from typing import Any, Protocol, Self
@@ -48,7 +49,14 @@ def _serialized(method: Any) -> Any:
     def call(self: Any, *args: Any, **kwargs: Any) -> Any:
         connection = self.connection if isinstance(self, sqlite3.Cursor) else self
         with connection._operation_lock:
-            return method(self, *args, **kwargs)
+            try:
+                return method(self, *args, **kwargs)
+            finally:
+                while connection._pending_cursor_closes:
+                    cursor = connection._pending_cursor_closes.pop()
+                    # Connection.close() may already have closed the reader.
+                    with suppress(sqlite3.ProgrammingError):
+                        sqlite3.Cursor.close(cursor)
 
     return call
 
@@ -65,6 +73,26 @@ class SerializedCursor(sqlite3.Cursor):
     __next__ = _serialized(sqlite3.Cursor.__next__)
     close = _serialized(sqlite3.Cursor.close)
 
+    def __del__(self) -> None:
+        try:
+            connection = self.connection
+            lock = connection._operation_lock
+            # RLock permits same-thread GC. Never wait across connections:
+            # two threads may each hold one lock while finalizing the other's
+            # cursor. Retain a contended cursor until a locked call drains it;
+            # letting native deallocation run here would reset SQLite unlocked.
+            if not lock.acquire(blocking=False):
+                connection._pending_cursor_closes.append(self)
+                return
+            try:
+                self.close()
+            finally:
+                lock.release()
+        except Exception:
+            # Failed construction, an already closed connection, or teardown
+            # may leave no usable connection or module globals for close().
+            pass
+
 
 class SerializedConnection(sqlite3.Connection):
     """Serialize shared read operations without holding the cache/reopen lock.
@@ -76,6 +104,7 @@ class SerializedConnection(sqlite3.Connection):
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         self._operation_lock = threading.RLock()
+        self._pending_cursor_closes: list[SerializedCursor] = []
         super().__init__(*args, **kwargs)
 
     @_serialized
@@ -133,6 +162,8 @@ def open_readonly(
     if timeout != 5.0:
         settings["timeout"] = timeout
     if not check_same_thread:
+        if factory is not None and not issubclass(factory, SerializedConnection):
+            raise TypeError("shared reader factory must inherit SerializedConnection")
         settings["check_same_thread"] = False
         # CPython 3.12+ keeps one statement cache per connection, and that cache
         # is not safe when threads share the connection: fetches come back wrong

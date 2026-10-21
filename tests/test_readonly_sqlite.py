@@ -2,18 +2,21 @@
 
 from __future__ import annotations
 
+import gc
 import os
 import sqlite3
 import subprocess
 import sys
 import textwrap
+import threading
+import weakref
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import closing
 from pathlib import Path
 
 import pytest
 
-from scripts.lib.readonly_sqlite import is_sqlite_connection, open_readonly
+from scripts.lib.readonly_sqlite import SerializedConnection, SerializedCursor, is_sqlite_connection, open_readonly
 
 
 @pytest.fixture
@@ -258,6 +261,188 @@ def test_same_thread_connection_keeps_the_statement_cache(monkeypatch, database)
         assert conn.execute("SELECT id FROM synthetic").fetchall() == [(7,)]
     assert "cached_statements" not in seen
     assert "check_same_thread" not in seen
+
+
+@pytest.mark.parametrize("cyclic", [False, True])
+def test_abandoned_unfinished_cursor_closes_under_connection_lock(database, cyclic):
+    """#11209: refcount and cyclic cleanup must not reset SQLite outside the lock."""
+    with closing(open_readonly(database, check_same_thread=False)) as conn:
+        cursor = conn.execute("SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9")
+        assert cursor.fetchone() == (7,)
+        if cyclic:
+            cursor.cycle = cursor
+        reference = weakref.ref(cursor)
+        cursor_id = id(cursor)
+        closes = []
+
+        def profile(frame, event, arg):
+            if (event == "c_call" and getattr(arg, "__name__", "") == "close"
+                    and id(getattr(arg, "__self__", None)) == cursor_id):
+                closes.append(conn._operation_lock._is_owned())
+
+        sys.setprofile(profile)
+        try:
+            del cursor
+            gc.collect()
+        finally:
+            sys.setprofile(None)
+        assert closes == [True]
+        assert reference() is None
+
+
+def test_shared_cursor_fetch_keeps_native_call_under_operation_lock(database):
+    """A bypassed operation wrapper must not expose native result/error handling."""
+    with closing(open_readonly(database, check_same_thread=False)) as conn:
+        cursor = conn.execute("SELECT 7 UNION ALL SELECT 8")
+        locks = []
+
+        def profile(frame, event, arg):
+            if (event == "c_call" and getattr(arg, "__name__", "") == "fetchall"
+                    and getattr(arg, "__self__", None) is cursor):
+                locks.append(conn._operation_lock._is_owned())
+
+        sys.setprofile(profile)
+        try:
+            assert cursor.fetchall() == [(7,), (8,)]
+        finally:
+            sys.setprofile(None)
+            cursor.close()
+        assert locks == [True]
+
+
+@pytest.mark.parametrize("reentrant", [False, True])
+def test_cursor_finalizer_never_waits_for_another_connections_lock(database, reentrant):
+    """Cross-connection finalization cannot invert two operation locks or lose a close."""
+    connections = [open_readonly(database, check_same_thread=False) for _ in range(2)]
+    cursors = [conn.execute("SELECT 7 UNION ALL SELECT 8") for conn in connections]
+    references = [weakref.ref(cursor) for cursor in cursors]
+    barrier = threading.Barrier(2)
+    closes = []
+
+    def drop(index):
+        owned = connections[index]
+        target = index if reentrant else 1 - index
+
+        def profile(frame, event, arg):
+            if (event == "c_call" and getattr(arg, "__name__", "") == "close"
+                    and isinstance(getattr(arg, "__self__", None), SerializedCursor)):
+                cursor = arg.__self__
+                closes.append(cursor.connection._operation_lock._is_owned())
+
+        sys.setprofile(profile)
+        try:
+            with owned._operation_lock:
+                barrier.wait(timeout=5)
+                cursors[target] = None
+                # Neither thread can release its held lock until both finalizers return.
+                barrier.wait(timeout=5)
+            assert owned.execute("SELECT 11").fetchall() == [(11,)]
+        finally:
+            sys.setprofile(None)
+
+    try:
+        with ThreadPoolExecutor(max_workers=2) as pool:
+            futures = [pool.submit(drop, index) for index in range(2)]
+            for future in futures:
+                future.result(timeout=10)
+        assert all(closes) and len(closes) >= 2
+        assert all(reference() is None for reference in references)
+    finally:
+        for conn in connections:
+            conn.close()
+
+
+def test_cursor_finalizer_tolerates_partial_init_closed_connection_and_shutdown(database, monkeypatch):
+    """Finalization must not emit unraisable errors after failed init or module teardown."""
+    from scripts.lib import readonly_sqlite
+
+    finalizer = getattr(SerializedCursor, "__del__", None)
+    assert finalizer is not None
+    partial = SerializedCursor.__new__(SerializedCursor)
+    finalizer(partial)
+    conn = open_readonly(database, check_same_thread=False)
+    cursor = conn.execute("SELECT 7 UNION ALL SELECT 8")
+    conn.close()
+    finalizer(cursor)
+    monkeypatch.setattr(readonly_sqlite, "sqlite3", None)
+    finalizer(cursor)
+
+
+def test_connection_close_releases_cursor_deferred_by_another_threads_lock(database):
+    """A pending cursor must survive contention and be released even on connection close."""
+    conn = open_readonly(database, check_same_thread=False)
+    cursors = [conn.execute("SELECT 7 UNION ALL SELECT 8")]
+    reference = weakref.ref(cursors[0])
+    try:
+        with conn._operation_lock:
+            with ThreadPoolExecutor(max_workers=1) as pool:
+                pool.submit(cursors.clear).result(timeout=5)
+            assert reference() is not None
+        conn.close()
+        assert reference() is None
+        with pytest.raises(sqlite3.ProgrammingError, match="closed database"):
+            conn.execute("SELECT 11")
+    finally:
+        conn.close()
+
+
+@pytest.mark.timeout(30)
+@pytest.mark.parametrize("iterations", [50_000], ids=["bounded-50000"])
+def test_abandoned_cursor_race_preserves_native_error_and_query_results(database, iterations):
+    """#11209: bounded contention must never produce 'not an error' or SystemError."""
+    with closing(open_readonly(database, check_same_thread=False)) as conn:
+        start = threading.Barrier(3)
+        stop = threading.Event()
+
+        def abandon():
+            start.wait(timeout=5)
+            count = 0
+            while not stop.is_set():
+                assert conn.execute("SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9").fetchone() == (7,)
+                count += 1
+            return count
+
+        def fail():
+            errors = []
+            start.wait(timeout=5)
+            try:
+                for _ in range(iterations):
+                    try:
+                        conn.execute("SELECT * FROM missing_table")
+                    except Exception as exc:
+                        if type(exc) is not sqlite3.OperationalError or str(exc) != "no such table: missing_table":
+                            errors.append(repr(exc))
+                    else:
+                        errors.append("missing-table query unexpectedly succeeded")
+                return errors
+            finally:
+                stop.set()
+
+        with ThreadPoolExecutor(max_workers=3) as pool:
+            readers = [pool.submit(abandon) for _ in range(2)]
+            errors = pool.submit(fail).result(timeout=45)
+            counts = [future.result(timeout=10) for future in readers]
+        assert errors == []
+        assert all(count > 0 for count in counts)
+        assert conn.execute("SELECT 11").fetchall() == [(11,)]
+
+
+def test_shared_reader_refuses_unserialized_custom_factory_before_connect(database, monkeypatch):
+    """A custom factory must not silently bypass shared-connection serialization."""
+    calls = []
+    monkeypatch.setattr(sqlite3, "connect", lambda *args, **kwargs: calls.append(1))
+    with pytest.raises(TypeError, match="SerializedConnection"):
+        open_readonly(database, check_same_thread=False, factory=sqlite3.Connection)
+    assert calls == []
+
+
+def test_shared_reader_accepts_serialized_custom_factory(database):
+    class Reader(SerializedConnection):
+        pass
+
+    with closing(open_readonly(database, check_same_thread=False, factory=Reader)) as conn:
+        assert isinstance(conn, Reader)
+        assert conn.execute("SELECT id FROM synthetic").fetchall() == [(7,)]
 
 
 def test_shared_connection_makes_progress_without_python_callbacks(database):
