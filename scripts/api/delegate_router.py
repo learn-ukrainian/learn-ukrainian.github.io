@@ -15,6 +15,8 @@ from typing import Any, Literal
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 
+from scripts.agent_runtime.accounting import recorded_model_accounting_fields
+
 try:
     from scripts.lib.readonly_sqlite import SQLiteConnection
 except ModuleNotFoundError as exc:
@@ -224,7 +226,8 @@ def _init_task_cache_db(db_path: Path, ctx: MonitorContext | None = None) -> SQL
                 substitution TEXT,
                 claimed_repo TEXT,
                 run_nonce TEXT,
-                linked_issues TEXT
+                linked_issues TEXT,
+                model_accounting TEXT
             )
             """
         )
@@ -232,6 +235,8 @@ def _init_task_cache_db(db_path: Path, ctx: MonitorContext | None = None) -> SQL
             conn.execute("ALTER TABLE task_cache ADD COLUMN run_nonce TEXT")
         with contextlib.suppress(sqlite3.OperationalError):
             conn.execute("ALTER TABLE task_cache ADD COLUMN linked_issues TEXT")
+        with contextlib.suppress(sqlite3.OperationalError):
+            conn.execute("ALTER TABLE task_cache ADD COLUMN model_accounting TEXT")
         conn.execute("CREATE INDEX IF NOT EXISTS idx_task_cache_mtime ON task_cache(mtime)")
         conn.commit()
         return conn
@@ -255,7 +260,7 @@ def _load_task_cache_from_db(
             """
             SELECT path, mtime, task_id, status, derived_status, pid, alive,
                    started_at, duration_s, agent, model, effort, cli_version,
-                   substitution, claimed_repo, run_nonce, linked_issues
+                   substitution, claimed_repo, run_nonce, linked_issues, model_accounting
             FROM task_cache
             """
         )
@@ -283,7 +288,17 @@ def _load_task_cache_from_db(
                 claimed_repo,
                 run_nonce,
                 linked_issues_raw,
+                model_accounting_raw,
             ) = row
+            # Old cache entries must reread their task record after this upgrade.
+            if model_accounting_raw is None:
+                continue
+            try:
+                model_accounting = json.loads(model_accounting_raw)
+            except (json.JSONDecodeError, TypeError):
+                continue
+            if not isinstance(model_accounting, dict):
+                continue
             subst = None
             if subst_str:
                 try:
@@ -294,6 +309,7 @@ def _load_task_cache_from_db(
                 "task_id": task_id,
                 "agent": agent,
                 "model": model,
+                **recorded_model_accounting_fields(model_accounting),
                 "effort": effort,
                 "cli_version": cli_version,
                 "substitution": subst,
@@ -330,7 +346,7 @@ def _save_task_cache_entries(
             return
         conn.executemany(
             """
-            INSERT OR REPLACE INTO task_cache VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+            INSERT OR REPLACE INTO task_cache VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
             """,
             records,
         )
@@ -521,6 +537,7 @@ def _delegate_task_rows_locked(
                 "task_id": task_id,
                 "agent": task.get("agent"),
                 "model": task.get("model"),
+                **recorded_model_accounting_fields(task),
                 "effort": task.get("effort"),
                 "cli_version": task.get("cli_version"),
                 "substitution": subst,
@@ -564,6 +581,7 @@ def _delegate_task_rows_locked(
                     claimed_repo,
                     run_nonce,
                     json.dumps(linked_issues) if linked_issues is not None else None,
+                    json.dumps(recorded_model_accounting_fields(summary)),
                 )
             )
 
@@ -581,6 +599,7 @@ def _delegate_task_rows_locked(
             "task_id": task_id,
             "agent": summary.get("agent"),
             "model": summary.get("model"),
+            **recorded_model_accounting_fields(summary),
             "effort": summary.get("effort"),
             "cli_version": summary.get("cli_version"),
             "substitution": summary.get("substitution"),
@@ -677,7 +696,7 @@ def get_delegate_task_detail(
                 truncated = True
 
     return task, {
-        "task": task,
+        "task": {**task, **recorded_model_accounting_fields(task)},
         "result": result_text,
         "result_truncated": truncated,
         "alive": alive,

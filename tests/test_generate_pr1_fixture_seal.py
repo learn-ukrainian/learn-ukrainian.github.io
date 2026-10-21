@@ -10,6 +10,7 @@ from pathlib import Path
 import pytest
 
 from scripts.lexicon.runner import generate_pr1_fixture as gen
+from tests.helpers.sum20_store import bind_empty_sum20_store, seed_sum20_rows
 
 _SEALED = {
     "baseline_enriched.json": b'{"sealed": true}\n',
@@ -98,6 +99,11 @@ def test_write_sealed_is_explicit_and_restores_offline_env(
 ) -> None:
     fixture_dir = _isolate_fixture(tmp_path, monkeypatch)
     monkeypatch.delenv("LEXICON_SLOVNYK_OFFLINE", raising=False)
+    canonical_store = bind_empty_sum20_store(monkeypatch, tmp_path)
+    sources = gen.build_sources_slice(tmp_path / "inputs")
+    with sqlite3.connect(sources) as conn:
+        documents = {lemma: json.loads(document) for lemma, document in conn.execute("SELECT lemma, document FROM slovnyk_cache")}
+    seed_sum20_rows(canonical_store, documents)
 
     assert gen.main(["--write-sealed"]) == 0
 
@@ -107,6 +113,9 @@ def test_write_sealed_is_explicit_and_restores_offline_env(
     assert "--write-sealed" in note
     assert (fixture_dir / gen.SOURCES_SLICE_NAME).is_file()
     assert "LEXICON_SLOVNYK_OFFLINE" not in os.environ
+    baseline = json.loads((fixture_dir / "baseline_enriched.json").read_text(encoding="utf-8"))
+    assert len(baseline["relations"]["synonym"]) == 100
+    assert len(baseline["relations"]["antonym"]) == 50
 
 
 def test_help_states_when_sealed_files_are_written(capsys: pytest.CaptureFixture[str]) -> None:

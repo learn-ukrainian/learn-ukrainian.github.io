@@ -897,7 +897,9 @@ The DeepSeek seat's **standing route** is first-party via opencode:
   The catalog identity is `deepseek-v4.1-flash`; this provider id is a moving
   alias. Before consequential dispatch, check the cached models.dev name with
   `jq -r '.deepseek.models["deepseek-flash"].name' ~/.cache/opencode/models.json`
-  and stop if it no longer reads `DeepSeek V4.1 Flash`.
+  and require the catalog's `provider_alias_expected_name`, `DeepSeek V4.1 Flash`,
+  optionally followed by a space and a numeric release tag such as `1017`.
+  Stop on a different model line, version, or tier.
   DeepSeek ASKs are toolless and self-contained: the seat has no repo or
   tool access, so paste everything the answer needs into the prompt —
   reviews that require repo access go to `delegate.py dispatch --agent
