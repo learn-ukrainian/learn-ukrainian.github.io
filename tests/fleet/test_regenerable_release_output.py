@@ -1,13 +1,16 @@
 """Only byte-identical, committed release pins may exempt local Atlas output."""
 
+import gzip
 import hashlib
 import json
 import os
+import shutil
 import subprocess
 from pathlib import Path
 
 import pytest
 
+from scripts.common import github_client
 from scripts.fleet import ignored_task_output as output
 from scripts.fleet import regenerable_output as patterns
 from tests import test_fleet_post_task_reap as reap_fixtures
@@ -19,6 +22,40 @@ MANIFEST = "site/src/data/lexicon-manifest.json"
 PRACTICE = "site/public/lexicon/practice-index.A1.json"
 POINTER = "site/src/data/lexicon-manifest.pointer.json"
 PRACTICE_POINTER = "site/src/data/lexicon-practice-deck.pointer.json"
+
+
+@pytest.fixture(autouse=True)
+def release_store(monkeypatch):
+    """Hermetic upload store with metadata derived from real compressed bytes."""
+
+    def listing(args, **kwargs):
+        assert args[:2] == ["gh", "api"]
+        assert kwargs["timeout"] == 10 and kwargs["fresh"] is True
+        store = Path(kwargs["cwd"]).parent / "release-store.json"
+        assets = json.loads(store.read_text()) if store.exists() else []
+        return subprocess.CompletedProcess(args, 0, json.dumps({"assets": assets}))
+
+    monkeypatch.setattr(github_client, "run", listing)
+
+
+def upload_fixture(repo, pointer, source):
+    store = repo.parent / "release-store.json"
+    assets = json.loads(store.read_text()) if store.exists() else []
+    gz = repo.parent / (Path(source).name + ".gz")
+    with (repo / source).open("rb") as src, gzip.open(gz, "wb") as dst:
+        shutil.copyfileobj(src, dst)
+    compressed = gz.read_bytes()
+    pointer.update(gz_bytes=len(compressed), gz_sha256=hashlib.sha256(compressed).hexdigest())
+    assets = [asset for asset in assets if asset["browser_download_url"] != pointer["asset_url"]]
+    assets.append(
+        {
+            "browser_download_url": pointer["asset_url"],
+            "state": "uploaded",
+            "size": len(compressed),
+            "digest": "sha256:" + hashlib.sha256(compressed).hexdigest(),
+        }
+    )
+    store.write_text(json.dumps(assets))
 
 
 def git(repo, *args):
@@ -47,18 +84,14 @@ def pinned_checkout(checkout):
         "fingerprint_schema_version": 1,
         "json_bytes": len(payload),
         "json_sha256": hashlib.sha256(payload).hexdigest(),
-        "gz_bytes": 1,
-        "gz_sha256": "a" * 64,
     }
     practice_pointer = {
         "asset_url": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/releases/download/atlas-practice-deck/test.json.gz",
         "release_tag": "atlas-practice-deck",
         "deck_version": "test",
         "package_schema_version": 1,
-        "gz_bytes": 1,
-        "gz_sha256": "a" * 64,
-        "package_bytes": 1,
-        "package_sha256": "b" * 64,
+        "package_bytes": len(shard),
+        "package_sha256": hashlib.sha256(shard).hexdigest(),
         "file_count": 1,
         "files": [
             {
@@ -70,6 +103,8 @@ def pinned_checkout(checkout):
             }
         ],
     }
+    upload_fixture(repo, pointer, MANIFEST)
+    upload_fixture(repo, practice_pointer, PRACTICE)
     fixtures.artifact(checkout, POINTER, json.dumps(pointer).encode())
     fixtures.artifact(checkout, PRACTICE_POINTER, json.dumps(practice_pointer).encode())
     fixtures.artifact(checkout, "site/package-lock.json", b'{"lockfileVersion":3}')
@@ -80,6 +115,132 @@ def pinned_checkout(checkout):
     git(repo, "add", "-f", ".gitignore", POINTER, PRACTICE_POINTER, "site/package-lock.json", "site/scripts")
     git(repo, "-c", "user.name=Test", "-c", "user.email=test@example.invalid", "commit", "-m", "fixture pins")
     return payload, shard
+
+
+@pytest.mark.parametrize("capped", [False, True])
+def test_never_uploaded_pointer_preserves_only_copy(checkout, monkeypatch, capped):
+    payload, _ = pinned_checkout(checkout)
+    repo, primary, _ = checkout
+    monkeypatch.setattr(
+        github_client, "run", lambda *args, **kwargs: subprocess.CompletedProcess(args, 0, '{"assets":[]}')
+    )
+    if capped:
+        monkeypatch.setattr(output, "MAX_PRESERVED_BYTES", 1)
+    tracked = set(output.artifacts._git_paths(repo, "--cached"))
+    assert not patterns.is_regenerable_ignored_path(MANIFEST, worktree=repo, tracked=tracked)
+    ok, reason, receipt = fixtures.guard(checkout)
+    assert ok is not capped
+    assert {entry["path"] for entry in receipt["paths"]} == {MANIFEST, PRACTICE}
+    if capped:
+        assert "exceeds preservation cap" in reason
+        assert (repo / MANIFEST).read_bytes() == payload
+    else:
+        assert (primary / receipt["location"] / MANIFEST).read_bytes() == payload
+
+
+def test_reviewer_unuploaded_pointer_manifest_requires_preservation(checkout, monkeypatch):
+    # Regression form of 9828-review-probe-test.py. The pointer commit has
+    # never reached main and its asset is absent from the release store.
+    payload, _ = pinned_checkout(checkout)
+    repo = checkout[0]
+    head = git(repo, "rev-parse", "HEAD").strip()
+    assert head and (repo / MANIFEST).read_bytes() == payload
+    monkeypatch.setattr(github_client, "run", lambda *args, **kwargs: subprocess.CompletedProcess(args, 0, '{"assets":[]}'))
+    ok, reason, receipt = fixtures.guard(checkout)
+    assert ok and not reason and receipt is not None
+    assert (checkout[1] / receipt["location"] / MANIFEST).read_bytes() == payload
+
+
+@pytest.mark.parametrize("change", ["digest", "digestless", "size", "url", "state", "duplicate", "shape"])
+def test_asset_listing_must_match_pointer(checkout, monkeypatch, change):
+    pinned_checkout(checkout)
+    repo = checkout[0]
+    assets = json.loads((repo.parent / "release-store.json").read_text())
+    if change == "digest":
+        assets[0]["digest"] = "sha256:" + "0" * 64
+    elif change == "digestless":
+        assets[0].pop("digest")
+    elif change == "size":
+        assets[0]["size"] += 1
+    elif change == "url":
+        assets[0]["browser_download_url"] += "-other"
+    elif change == "state":
+        assets[0]["state"] = "starter"
+    elif change == "duplicate":
+        assets.append(assets[0])
+    else:
+        assets = None
+    monkeypatch.setattr(
+        github_client,
+        "run",
+        lambda *args, **kwargs: subprocess.CompletedProcess(args, 0, json.dumps({"assets": assets})),
+    )
+    tracked = set(output.artifacts._git_paths(repo, "--cached"))
+    assert not patterns.is_regenerable_ignored_path(MANIFEST, worktree=repo, tracked=tracked)
+    assert MANIFEST in output._ignored_output_files(repo, checkout[1], {})
+
+
+@pytest.mark.parametrize(
+    "error",
+    [
+        OSError("unavailable"),
+        subprocess.TimeoutExpired("gh", 10),
+        subprocess.CalledProcessError(1, "gh"),
+        ValueError("bad JSON"),
+    ],
+)
+def test_asset_listing_error_fails_closed(checkout, monkeypatch, error):
+    pinned_checkout(checkout)
+
+    def fail(*args, **kwargs):
+        raise error
+
+    monkeypatch.setattr(github_client, "run", fail)
+    assert MANIFEST in output._ignored_output_files(checkout[0], checkout[1], {})
+
+
+@pytest.mark.parametrize("state", ["valid", "mismatch", "symlink", "ancestor-link", "unignored"])
+@pytest.mark.parametrize("stem,name", [("lexicon-manifest", MANIFEST), ("lexicon-practice-deck", PRACTICE)])
+def test_kept_gzip_requires_safe_matching_bytes(checkout, monkeypatch, stem, name, state):
+    pinned_checkout(checkout)
+    repo, primary, _ = checkout
+    kept = f"site/src/data/{stem}.json.gz"
+    gz = repo.parent / (Path(name).name + ".gz")
+    if state != "unignored":
+        (repo / ".gitignore").write_text((repo / ".gitignore").read_text() + "site/src/data/*.gz\n")
+    else:
+        (repo / ".gitignore").write_text((repo / ".gitignore").read_text().replace("data/\n", "/data/\n"))
+    if state == "symlink":
+        (repo / kept).symlink_to(gz)
+    else:
+        fixtures.artifact(checkout, kept, gz.read_bytes() if state != "mismatch" else b"x" * gz.stat().st_size)
+    if state == "ancestor-link":
+        (repo / kept).parent.rename(repo.parent / "saved-data")
+        (repo / kept).parent.symlink_to(repo.parent / "saved-data", target_is_directory=True)
+
+    def no_network(*args, **kwargs):
+        raise AssertionError("kept gzip must avoid a network lookup")
+
+    original = github_client.run
+    tag = "atlas-manifest" if stem == "lexicon-manifest" else "atlas-practice-deck"
+    monkeypatch.setattr(
+        github_client,
+        "run",
+        lambda args, **kwargs: no_network() if args[-1].endswith(tag) else original(args, **kwargs),
+    )
+    tracked = set(output.artifacts._git_paths(repo, "--cached"))
+    assert patterns.is_regenerable_ignored_path(name, worktree=repo, tracked=tracked) is (state == "valid")
+    if state != "ancestor-link":
+        files = output._ignored_output_files(repo, primary, {})
+        assert (kept in files) is (state != "unignored")
+        assert (name in files) is (state != "valid")
+    if state == "valid":
+        ok, reason, receipt = fixtures.guard(checkout)
+        assert ok and not reason
+        assert (primary / receipt["location"] / kept).read_bytes() == gz.read_bytes()
+        monkeypatch.setattr(output, "MAX_PRESERVED_BYTES", 1)
+        ok, reason, _ = fixtures.guard(checkout)
+        assert not ok and "exceeds preservation cap" in reason
 
 
 @pytest.mark.parametrize("total_bytes", [760_367_968, 788_933_556])
@@ -99,6 +260,7 @@ def test_observed_size_regenerable_tree_has_no_preservation(checkout, total_byte
             remaining -= len(chunk)
     pointer = json.loads((repo / POINTER).read_bytes())
     pointer.update(json_bytes=manifest_size, json_sha256=digest.hexdigest())
+    upload_fixture(repo, pointer, MANIFEST)
     (repo / POINTER).write_text(json.dumps(pointer))
     git(repo, "add", "-f", POINTER)
     git(repo, "-c", "user.name=Test", "-c", "user.email=test@example.invalid", "commit", "-m", "fixture large pin")
@@ -350,6 +512,7 @@ def test_reap_pinned_hardlinks_leaves_outside_names_and_bytes_intact(hermetic_re
     payload, shard = pinned_checkout((repo, repo, tasks))
     reap_fixtures._run(["git", "push", "origin", "main"], cwd=repo)
     tree = reap_fixtures._add_dispatch_worktree(repo, "codex", "pinned-hardlink-9828")
+    (tree.parent / "release-store.json").write_bytes((repo.parent / "release-store.json").read_bytes())
     outside = tmp_path / "other-manifest.json"
     os.link(repo / MANIFEST, outside)
     os.link(repo / MANIFEST, tree / MANIFEST)

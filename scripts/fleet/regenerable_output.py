@@ -11,6 +11,7 @@ import subprocess
 from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
+from urllib.parse import quote
 
 from scripts.common.nofollow_walk import ComponentOpenError
 from scripts.orchestration.worktree_artifacts import REGENERABLE_CACHE_DIRECTORIES
@@ -187,8 +188,54 @@ RELEASE_OUTPUT_PATTERNS = (
 _RELEASE_OUTPUT = re.compile("(?:" + "|".join(RELEASE_OUTPUT_PATTERNS) + ")")
 
 
+def _release_is_recoverable(worktree: Path, stem: str, pointer: dict[str, Any]) -> bool:
+    """Prefer a kept gzip; otherwise require fresh uploaded-asset metadata.
+
+    The fixed sibling gzip is never regenerable/disposable: the ordinary
+    preservation gate must retain it (or refuse removal at its unchanged cap).
+    A gzip in this checkout therefore cannot prove its own deletion safe.
+    """
+    from scripts.common import github_client
+    from scripts.orchestration import worktree_artifacts as artifacts
+
+    size, digest = pointer.get("gz_bytes"), pointer.get("gz_sha256")
+    if type(size) is not int or size <= 0 or not isinstance(digest, str) or not re.fullmatch(r"[0-9a-f]{64}", digest):
+        return False
+    kept = Path(f"site/src/data/{stem}.json.gz")
+    if os.path.lexists(worktree / kept):
+        if kept.as_posix() not in artifacts._git_paths(worktree, "--others", "--ignored", "--exclude-standard"):
+            return False
+        return _matches_release_pin(worktree, kept, (size, digest))
+    tag, url = pointer.get("release_tag"), pointer.get("asset_url")
+    if not isinstance(tag, str) or not tag:
+        return False
+    prefix = "https://github.com/learn-ukrainian/learn-ukrainian.github.io/releases/download/"
+    if not isinstance(url, str) or not url.startswith(f"{prefix}{quote(tag, safe='')}/"):
+        return False
+    result = github_client.run(
+        ["gh", "api", f"repos/learn-ukrainian/learn-ukrainian.github.io/releases/tags/{quote(tag, safe='')}"],
+        cwd=worktree,
+        check=True,
+        capture_output=True,
+        text=True,
+        timeout=10,
+        fresh=True,
+    )
+    listing = json.loads(result.stdout)
+    assets = listing.get("assets") if isinstance(listing, dict) else None
+    if not isinstance(assets, list):
+        return False
+    matches = [asset for asset in assets if isinstance(asset, dict) and asset.get("browser_download_url") == url]
+    return len(matches) == 1 and (
+        matches[0].get("state") == "uploaded"
+        and type(matches[0].get("size")) is int
+        and matches[0]["size"] == size
+        and matches[0].get("digest") == f"sha256:{digest}"
+    )
+
+
 def committed_release_pins(worktree: Path, tracked: set[str]) -> dict[str, tuple[int, str]]:
-    """Read clean HEAD pointers once per inventory, never trust a local-only pin."""
+    """Read clean HEAD pointers with recoverability proof once per inventory."""
     from scripts.orchestration import worktree_artifacts as artifacts
 
     pins = {}
@@ -240,6 +287,8 @@ def committed_release_pins(worktree: Path, tracked: set[str]) -> dict[str, tuple
             ):
                 continue
             if not all(pointer_data.get(key) for key in ("release_tag", "gz_sha256", "gz_bytes")):
+                continue
+            if not _release_is_recoverable(worktree, stem, pointer_data):
                 continue
             if stem == "lexicon-manifest":
                 if not all(
