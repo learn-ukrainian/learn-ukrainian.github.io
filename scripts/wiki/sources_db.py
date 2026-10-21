@@ -70,8 +70,8 @@ from .sum20_official import (
 from .sum20_official import (
     SUM20_ATTRIBUTION_LABEL,
     SUM20_SOURCE_ID,
-    live_article_predicate,
     normalize_sum20_lookup,
+    sum20_live_article_where,
 )
 from .textbook_subjects import normalize_subject_slug
 
@@ -4297,23 +4297,25 @@ def _json_string_list(value: object) -> list[str]:
 def query_sum20(query: str, *, db_path: str | Path | None = None) -> list[dict]:
     """Return every exact-matching article from the offline official СУМ-20 collection.
 
-    The collection is populated only by ``sum20_official_ingest.py``.  This
-    reader deliberately has no live fallback, so its returned provenance is
-    always the official stored ``wordid`` record.
+    The collection is populated only by an explicit ingest. This reader has no
+    live fallback, so its provenance is the stored official ``wordid`` record.
+    An omitted ``db_path`` uses ``data/lexdata.db`` when that file already holds
+    ``sum20_articles``; otherwise it uses the read-only sources collection.
+    ``LEXDATA_DB_PATH`` is exclusive and never falls back.
     """
     normalized_lookup_key = normalize_sum20_lookup(query)
-    columns = _table_columns("sum20_articles", db_path)
-    if not normalized_lookup_key or not columns:
+    if not normalized_lookup_key:
         return []
-    conn = _get_conn_for(db_path)
+    from scripts.lexicon.sum20_store import open_sum20
+
+    conn = open_sum20(db_path, repository_root=PROJECT_ROOT)
     try:
+        columns = {str(row["name"]) for row in conn.execute("PRAGMA table_info(sum20_articles)").fetchall()}
+        if not columns:
+            return []
+        where = sum20_live_article_where(columns, prefix=False)
         articles = conn.execute(
-            f"""
-            SELECT *
-            FROM sum20_articles
-            WHERE normalized_lookup_key = ? AND {live_article_predicate(columns)}
-            ORDER BY wordid
-            """,
+            f"SELECT * FROM sum20_articles WHERE {where} ORDER BY wordid",
             (normalized_lookup_key,),
         ).fetchall()
         records: list[dict] = []
@@ -4373,7 +4375,7 @@ def query_sum20(query: str, *, db_path: str | Path | None = None) -> list[dict]:
             )
         return records
     finally:
-        _close_if_temporary(conn, db_path)
+        conn.close()
 
 
 def _heritage_text(hit: dict) -> str:
