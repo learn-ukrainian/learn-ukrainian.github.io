@@ -34,6 +34,11 @@ from scripts.review.reviewer_resolver import (
     resolve_family,
     resolve_reviewer,
 )
+from scripts.review.subject_seat import (
+    candidate_matches_subject_seat,
+    normalize_subject_family,
+    normalize_subject_seat,
+)
 from tests.claude_route_accounts import HOST_ACCOUNT
 
 # Synthetic same-tier OpenAI candidate for ranking tests, never a fleet route.
@@ -1619,6 +1624,58 @@ def test_resolve_reviewer_subject_seat_cursor_excludes_cursor_transport_only():
     assert "subject seat cursor" in fallback.reason
     assert composer.status == "excluded"
     assert "subject seat cursor" in composer.reason
+
+
+def test_normalize_muse_subject_seat_and_meta_family():
+    assert normalize_subject_seat("muse") == "muse"
+    assert normalize_subject_family("meta") == "meta"
+
+
+@pytest.mark.parametrize(
+    "normalize,value,message",
+    [
+        (normalize_subject_seat, "not-a-seat", "unknown subject seat"),
+        (normalize_subject_family, "not-a-family", "unknown subject family"),
+    ],
+)
+def test_unknown_subject_values_fail_closed(normalize, value, message):
+    with pytest.raises(ValueError, match=message):
+        normalize(value)
+
+
+@pytest.mark.parametrize(
+    "changes,expected",
+    [
+        ({"route": "muse"}, True),
+        ({"name": "muse"}, True),
+        ({"family": "meta"}, True),
+        ({"route": "MUSE", "name": "MUSE", "family": "META"}, True),
+        ({"route": "openai", "name": "openai", "family": "openai"}, False),
+        ({"route": "anthropic", "name": "anthropic", "family": "anthropic"}, False),
+        ({"route": "xai", "name": "xai", "family": "xai"}, False),
+        ({"route": "muse-other", "name": "muse-other", "family": "unknown"}, False),
+    ],
+)
+def test_muse_subject_matcher(changes, expected):
+    candidate = replace(OPENAI_FRONTIER, **changes)
+    assert candidate_matches_subject_seat(candidate, "muse") is expected
+
+
+def test_muse_ambiguous_adapter_requires_explicit_subject():
+    inputs = ResolverInputs(
+        author_model="codex",
+        risk="high",
+        owned_paths=("scripts/agent_runtime/adapters/muse.py",),
+        claude_account=HOST_ACCOUNT,
+    )
+    ambiguous = resolve_reviewer(inputs)
+    assert ambiguous.selected is None
+    assert ambiguous.trace == ()
+    assert "ambiguous subject-seat inference" in ambiguous.fail_closed_reason
+
+    explicit = resolve_reviewer(replace(inputs, subject_seats=frozenset({"muse"})))
+    assert explicit.fail_closed_reason is None
+    assert explicit.selected is not None
 
 
 def test_resolve_reviewer_unknown_subject_seat_and_family_fail_closed():
