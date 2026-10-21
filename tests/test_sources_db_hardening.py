@@ -43,35 +43,76 @@ def _is_true(node: ast.expr) -> bool:
     return isinstance(node, ast.Constant) and node.value is True
 
 
+def _positional_args(call: ast.Call) -> list[ast.expr] | None:
+    """Positional arguments with literal ``*(...)``/``*[...]`` expanded; ``None`` if any stays opaque."""
+    args: list[ast.expr] = []
+    for arg in call.args:
+        if not isinstance(arg, ast.Starred):
+            args.append(arg)
+        elif isinstance(arg.value, ast.Tuple | ast.List):
+            nested = ast.Call(func=call.func, args=list(arg.value.elts), keywords=[])
+            expanded = _positional_args(nested)
+            if expanded is None:
+                return None
+            args.extend(expanded)
+        else:
+            return None
+    return args
+
+
 def _is_unsafe_connect(call: ast.Call) -> bool:
     """True when a ``connect(...)`` call is, or may be, a thread-shared connection.
 
     The default ``check_same_thread=True`` is safe. Anything else is flagged: a
     ``False``/non-constant keyword, a positional argument in the fifth slot that
-    is not ``True``, or ``**kwargs`` the scanner cannot inspect.
+    is not ``True``, or ``**kwargs`` / ``*args`` the scanner cannot inspect (an
+    explicit ``check_same_thread=True`` keyword still proves safety for ``*args``,
+    since a duplicate fifth positional would raise ``TypeError``).
     """
-    if len(call.args) > _CHECK_SAME_THREAD_POSITION and not _is_true(call.args[_CHECK_SAME_THREAD_POSITION]):
+    flag = next((kw for kw in call.keywords if kw.arg == "check_same_thread"), None)
+    if any(kw.arg is None for kw in call.keywords):
         return True
-    return any(
-        kw.arg is None or (kw.arg == "check_same_thread" and not _is_true(kw.value)) for kw in call.keywords
-    )
+    if flag is not None:
+        return not _is_true(flag.value)
+    args = _positional_args(call)
+    if args is None:
+        return True
+    return len(args) > _CHECK_SAME_THREAD_POSITION and not _is_true(args[_CHECK_SAME_THREAD_POSITION])
+
+
+def _is_connect_ref(node: ast.expr | None, names: set[str]) -> bool:
+    """``sqlite3.connect`` / ``x.connect`` or a name already known to alias it."""
+    if isinstance(node, ast.Attribute):
+        return node.attr == "connect"
+    return isinstance(node, ast.Name) and node.id in names
+
+
+def _alias_targets(node: ast.AST) -> list[ast.expr]:
+    if isinstance(node, ast.Assign):
+        return node.targets
+    if isinstance(node, ast.AnnAssign | ast.NamedExpr):
+        return [node.target]
+    return []
 
 
 def _shared_connects(source: str) -> list[tuple[int, str]]:
     """(line, enclosing function) of every ``connect(...)`` that may be thread-shared."""
     tree = ast.parse(source)
     found: list[tuple[int, str]] = []
-    # ``from sqlite3 import connect as c`` / ``c = sqlite3.connect`` rebind the name.
+    # ``from sqlite3 import connect as c`` / ``c = sqlite3.connect`` / ``d = c`` rebind the name.
     names = {"connect"}
     for node in ast.walk(tree):
         if isinstance(node, ast.ImportFrom) and node.module == "sqlite3":
             names |= {a.asname for a in node.names if a.name == "connect" and a.asname}
-        elif (
-            isinstance(node, ast.Assign)
-            and isinstance(node.value, ast.Attribute)
-            and node.value.attr == "connect"
-        ):
-            names |= {t.id for t in node.targets if isinstance(t, ast.Name)}
+    grew = True
+    while grew:  # fixpoint: alias chains resolve regardless of statement order
+        grew = False
+        for node in ast.walk(tree):
+            if _is_connect_ref(getattr(node, "value", None), names):
+                new = {t.id for t in _alias_targets(node) if isinstance(t, ast.Name)} - names
+                if new:
+                    names |= new
+                    grew = True
 
     def visit(node: ast.AST, scope: tuple[str, ...]) -> None:
         if isinstance(node, ast.ClassDef | ast.FunctionDef | ast.AsyncFunctionDef):
@@ -107,6 +148,16 @@ def test_shared_connect_scanner_flags_plain_connect() -> None:
         "sqlite3.connect('x', check_same_thread=flag)\n",
         "sqlite3.connect('x', **opts)\n",
         "connect('x', check_same_thread=False, **opts)\n",
+        "sqlite3.connect(*(':memory:', 5.0, 0, 'DEFERRED', False))\n",
+        "sqlite3.connect('x', *rest)\n",
+        "sqlite3.connect(*args)\n",
+        "sqlite3.connect('x', *(5.0, 0, 'DEFERRED'), False)\n",
+        "sqlite3.connect(*[':memory:', *rest])\n",
+        "c: object = sqlite3.connect\nc('x', check_same_thread=False)\n",
+        "from sqlite3 import connect as c\nd = c\nd('x', check_same_thread=False)\n",
+        "d = c\nc = sqlite3.connect\nd('x', check_same_thread=False)\n",
+        "c = sqlite3.connect\nd: object = c\ne = d\ne('x', 5.0, 0, 'DEFERRED', False)\n",
+        "(c := sqlite3.connect)('x', check_same_thread=False)\nc('x', check_same_thread=False)\n",
     ],
 )
 def test_shared_connect_scanner_flags_unsafe_call_forms(call: str) -> None:
@@ -116,6 +167,9 @@ def test_shared_connect_scanner_flags_unsafe_call_forms(call: str) -> None:
 def test_shared_connect_scanner_ignores_safe_positional_forms() -> None:
     assert _shared_connects("sqlite3.connect('x', 5.0, 0, 'DEFERRED', True)\n") == []
     assert _shared_connects("sqlite3.connect('x', 5.0)\n") == []
+    assert _shared_connects("sqlite3.connect(*(':memory:', 5.0, 0, 'DEFERRED', True))\n") == []
+    assert _shared_connects("sqlite3.connect(*args, check_same_thread=True)\n") == []
+    assert _shared_connects("c: object = sqlite3.connect\nd = c\nd('x')\n") == []
 
 
 @pytest.mark.repo_wide
