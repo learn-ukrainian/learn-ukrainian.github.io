@@ -419,9 +419,66 @@ def approved_word_card_tool_baseline(baseline):
     return {**baseline, "adapters": adapters}
 
 
+AGY_MODE_PATH = CAPACITY_FIXTURE / "agy-mode-11152.json"
+AGY_AUTHORING_ROWS = [108, 110]
+AGY_REVIEW_ROWS = [109, 111]
+
+
+def approved_agy_mode_baseline(baseline):
+    """Apply #11152's auto mode and native MCP config metadata to AGY authoring."""
+    assert hashlib.sha256(AGY_MODE_PATH.read_bytes()).hexdigest() == (
+        "858a1ef91de7803d0996469ee437788e1ca624a2aa659268271a1304e0712c54"
+    )
+    fixture = json.loads(AGY_MODE_PATH.read_bytes())
+    adapters = deepcopy(baseline["adapters"])
+    for replacement in fixture["adapter_cmd_replacements"]:
+        before, after = replacement["before"], replacement["after"]
+        assert replacement["rows"] == AGY_AUTHORING_ROWS
+        for index in replacement["rows"]:
+            cmd = adapters[index]["value"]["cmd"]
+            assert cmd.count(before) == 1
+            assert "--mode" not in cmd
+            position = cmd.index(before)
+            cmd[position:position + 1] = after.split()
+    for replacement in fixture["adapter_metadata_replacements"]:
+        before, after = replacement["before"], replacement["after"]
+        assert replacement["rows"] == AGY_AUTHORING_ROWS
+        for index in replacement["rows"]:
+            metadata = json.dumps(adapters[index]["value"]["metadata"])
+            assert metadata.count(before) == 1
+            adapters[index]["value"]["metadata"] = json.loads(metadata.replace(before, after))
+    return {**baseline, "adapters": adapters}
+
+
 DRIVER_BRIEF_BASELINE = approved_driver_brief_baseline(GROK_LANGUAGE_BASELINE)
-APPROVED_BASELINE = approved_word_card_tool_baseline(DRIVER_BRIEF_BASELINE)
+APPROVED_BASELINE = approved_agy_mode_baseline(approved_word_card_tool_baseline(DRIVER_BRIEF_BASELINE))
 APPROVED_INPUTS = {**GEMINI_INPUTS, **SEATS_OVERLAY["inputs"], **ARGON_OVERLAY["inputs"]}
+
+
+@pytest.mark.parametrize("configuration", ("host-cli", "no-cli"))
+def test_agy_mode_overlay_changes_only_authoring_mode_and_mcp_metadata(configuration):
+    path = FIXTURE / ("baseline.json.gz" if configuration == "host-cli" else "no-cli/baseline.json.gz")
+    before = json.loads(gzip.decompress(path.read_bytes()))
+    original = deepcopy(before)
+    after = approved_agy_mode_baseline(before)
+    assert before == original
+    assert {k: v for k, v in after.items() if k != "adapters"} == {k: v for k, v in before.items() if k != "adapters"}
+    changed = [i for i, (old, new) in enumerate(zip(before["adapters"], after["adapters"], strict=True)) if old != new]
+    assert changed == AGY_AUTHORING_ROWS
+    assert [i for i, row in enumerate(INPUTS["adapters"]) if row["agent"] == "agy" and not row["isolation"]] == changed
+    for index in changed:
+        old, new = before["adapters"][index], after["adapters"][index]
+        expected = deepcopy(old)
+        expected["value"]["cmd"][1:1] = ["--mode", "auto"]
+        expected["value"]["metadata"]["agy_mcp_config_path"] = "<CAPTURE_ROOT>/home/.gemini/config/mcp_config.json"
+        assert new == expected
+    assert [i for i, row in enumerate(INPUTS["adapters"]) if row["agent"] == "agy" and row["isolation"]] == AGY_REVIEW_ROWS
+    for index in AGY_REVIEW_ROWS:
+        assert after["adapters"][index] == before["adapters"][index]
+        assert APPROVED_BASELINE["adapters"][index] == before["adapters"][index]
+        assert "--mode" not in after["adapters"][index].get("value", {}).get("cmd", [])
+    with pytest.raises(AssertionError):
+        approved_agy_mode_baseline(after)
 
 
 def test_grok_language_overlay_records_only_the_two_field_delta():
@@ -1481,7 +1538,7 @@ def test_no_cli_capture_equals_separate_frozen_surface(tmp_path):
         assert hashlib.sha256((output / name).read_bytes()).hexdigest() == digest
     actual = json.loads(gzip.decompress((output / "baseline.json.gz").read_bytes()))
     original = json.loads(gzip.decompress((expected / "baseline.json.gz").read_bytes()))
-    assert actual == approved_word_card_tool_baseline(approved_driver_brief_baseline(approved_grok_language_seat_baseline(
+    approved = approved_word_card_tool_baseline(approved_driver_brief_baseline(approved_grok_language_seat_baseline(
         approved_argon_trial_baseline(
             approved_hook_failure_baseline(
                 approved_hermes_effort_baseline(
@@ -1507,6 +1564,7 @@ def test_no_cli_capture_equals_separate_frozen_surface(tmp_path):
             "no-cli",
         )
     )))
+    assert actual == approved_agy_mode_baseline(approved)
     assert len(actual["launchers"]) == 70
     errors = [row.get("error", "") for row in actual["adapters"]]
     assert any("grok" in error and "PATH" in error for error in errors)
