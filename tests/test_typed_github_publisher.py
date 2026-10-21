@@ -391,6 +391,34 @@ def test_single_commit_read_is_bound_to_the_exact_sha():
     assert calls[0]["argv"][2:5] == ["--method", "GET", f"repos/unit/public/commits/{'a' * 40}?per_page=100"]
 
 
+@pytest.mark.parametrize("sha", [None, "a" * 40])
+def test_run_search_keeps_legacy_range_and_projects_optional_exact_sha(sha):
+    """F3: bind the target at GitHub without changing existing range callers."""
+    calls = []
+    fields = {"start": "2026-01-01", "end": "2026-01-02"}
+    if sha is not None:
+        fields["sha"] = sha
+    pub.request_run(pub.Request("read-runs", repo="unit/public", paginate=True, slurp=True, **fields), runner=spy(calls))
+    selector = "" if sha is None else "&head_sha=" + sha
+    assert calls[0]["argv"] == [
+        "gh", "api", "--method", "GET",
+        "repos/unit/public/actions/runs?event=merge_group&created=2026-01-01..2026-01-02"
+        + selector + "&per_page=100", "--paginate", "--slurp",
+    ]
+
+
+@pytest.mark.parametrize("extra", [
+    {"sha": "a" * 39}, {"sha": "g" * 40}, {"sha": "a" * 40 + "&status=success"},
+    {"sha": None}, {"head_sha": "a" * 40}, {"sha": "a" * 40, "event": "push"},
+    {"sha": "a" * 40, "endpoint": "user"}, {"sha": "a" * 40, "argv": ["--jq", "."]},
+])
+def test_run_search_rejects_selector_injection_and_unapproved_fields(extra):
+    """The new selector cannot add arbitrary endpoint, event, argv or query authority."""
+    with pytest.raises(gate.PublishBlocked):
+        pub.read("runs", repo="unit/public", start="2026-01-01", end="2026-01-02",
+                 runner=lambda *a, **k: pytest.fail("send"), **extra)
+
+
 @pytest.mark.parametrize(
     "operation,fields",
     [
