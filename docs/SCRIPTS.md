@@ -1279,7 +1279,9 @@ advisory envelope.
 `--owned-path` values (repeatable), recorded verbatim at dispatch as `owned_paths`. It is
 never derived from `--research-owned-path`, which classifies research context. Claims are
 read like the write-path admission guard reads them: `dir/` and `dir/**` own the subtree,
-a plain path owns itself and anything below it, and other wildcards are globs. Dispatch
+a plain path owns itself and anything below it, and other wildcards are globs. A claim
+whose only glob syntax is `[...]` (`site/src/pages/[...path].astro`) also owns its literal
+file, as a git pathspec does (#11281). Dispatch
 refuses an empty, `.` or absolute value, any value with a `..` segment, and any glob whose
 first segment is a wildcard (`**`, `./**`, `*`, `*/**`, `*.py`), which would own the whole
 repository or every top-level entry. Without any `--owned-path`, auto-finalize
@@ -1292,6 +1294,21 @@ file is added, no owned deletion is. Those paths are listed in
 `auto_finalize.cross_boundary_moves`. If any skipped change remains, the task ends
 `needs_finalize`, not `done`. When no change falls under the owned paths, nothing is
 committed (`no_changes_under_owned_paths`).
+
+**Write-path ownership queue (#11281):** before a write-capable dispatch creates anything,
+the ownership ledger (`batch_state/tasks/write-ownership.sqlite3`) compares its
+`--owned-path` claims with every active writer's. Disjoint files admit, also inside one
+shared directory. A concrete overlap (the same file, or a directory claim that covers the
+file) waits in a FIFO queue behind the holder and is admitted once the holder stops
+writing: its task reaches a terminal status or its claim is released explicitly. Opening a
+PR releases nothing; a review-fix dispatch takes the claim again through the same queue.
+The wait is bounded by `DELEGATE_OWNERSHIP_WAIT_S` (default 1800 s, capped at 7200 s;
+`0` answers at once); at the bound dispatch exits 2 with `write-path ownership queue timed
+out … (QUEUE_TIMEOUT)`. A `[...]`-only claim reserves its literal file and every path its
+glob matches; any other glob, a range or negated set, or a claim with no `--owned-path`
+cannot be compared and still refuses beside an active writer (`cannot prove write-path
+disjointness`). `--allow-path-overlap '<reason>'` and `DELEGATE_OWNERSHIP_MODE=warn` admit
+without waiting, as before.
 
 **Explicit auto-finalize PRs (#8508, #8658):** Auto-finalize pushes the branch and
 records `final_branch_head_commit`, but it never opens a pull request implicitly. To
