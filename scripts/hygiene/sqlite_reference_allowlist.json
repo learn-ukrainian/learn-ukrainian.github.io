@@ -158,12 +158,11 @@
   },
   {
     "path": "scripts/audit/verbatim_overlap_gate.py",
-    "reference_count": 7,
+    "reference_count": 6,
     "kind": "writer",
     "target_db": "verbatim shingle index DB",
     "reason": "builds and updates overlap index",
     "calls": [
-      "sqlite3.connect(str(db_path), check_same_thread=False)",
       "sqlite3.connect(str(self.db_path), check_same_thread=False)"
     ]
   },
@@ -1190,12 +1189,11 @@
   },
   {
     "path": "scripts/wiki/sources_db.py",
-    "reference_count": 30,
+    "reference_count": 29,
     "kind": "writer",
     "target_db": "sources.db",
     "reason": "write branch migrates and ingests ULIF schema",
     "calls": [
-      "sqlite3.connect(f'{db_path.resolve().as_uri()}?mode=ro', uri=True, check_same_thread=False, **options)",
       "sqlite3.connect(str(db_path), check_same_thread=False, **options)"
     ]
   },

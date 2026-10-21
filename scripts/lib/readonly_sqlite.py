@@ -46,6 +46,7 @@ def open_readonly(
     check_same_thread: bool = True,
     isolation_level: str | None = "",
     immutable: bool = False,
+    factory: type[sqlite3.Connection] | None = None,
 ) -> sqlite3.Connection:
     """Open exactly path, read-only; refuse extensions and other databases.
 
@@ -60,7 +61,8 @@ def open_readonly(
     is also refused by the attachment limit. Callers must preserve the limit
     and avoid installing Python SQL callbacks on shared connections.
     Shared connections disable the statement cache; CPython 3.12+ corrupts it
-    when threads share one connection.
+    when threads share one connection. ``factory`` is a ``sqlite3.Connection``
+    subclass for readers that observe errors (the Sources MCP server, #11115).
     """
     uri = Path(path).resolve().as_uri() + "?mode=ro"
     if immutable:
@@ -80,6 +82,8 @@ def open_readonly(
         settings["cached_statements"] = 0
     if isolation_level != "":
         settings["isolation_level"] = isolation_level
+    if factory is not None:
+        settings["factory"] = factory
     conn = sqlite3.connect(uri, uri=True, **settings)
     try:
         if hasattr(conn, "enable_load_extension"):

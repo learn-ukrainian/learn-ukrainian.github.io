@@ -34,6 +34,7 @@ import hashlib
 import json
 import re
 import sqlite3
+import sys
 import unicodedata
 from collections import defaultdict
 from collections.abc import Callable
@@ -43,6 +44,11 @@ from pathlib import Path
 from typing import Any
 
 import yaml
+
+if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
+from scripts.lib.readonly_sqlite import open_readonly
 
 # Version the extraction contract so golden tests + index can invalidate together.
 EXTRACTION_SPEC_VERSION: str = "2026-07-v1-ua-learner-activities"
@@ -546,6 +552,7 @@ class ShingleIndex:
     def __init__(self, db_path: Path | str, k: int = K_DEFAULT):
         self.db_path = Path(db_path) if db_path != ":memory:" else db_path
         self.k = k
+        # Writable derived index (not sources.db); allowlisted in tests/test_sources_db_hardening.py.
         self.conn = sqlite3.connect(str(self.db_path), check_same_thread=False)
         self.conn.row_factory = sqlite3.Row
         self._ensure_schema()
@@ -961,7 +968,9 @@ def _chained_run_len(tokens: list[str], hit_start_positions: set[int], k: int) -
 
 
 def open_sources(db_path: Path | str) -> sqlite3.Connection:
-    conn = sqlite3.connect(str(db_path), check_same_thread=False)
+    # sources.db is only read here; open_readonly also disables the statement
+    # cache that is unsafe on a shared connection (#11217).
+    conn = open_readonly(db_path, check_same_thread=False)
     conn.row_factory = sqlite3.Row
     return conn
 

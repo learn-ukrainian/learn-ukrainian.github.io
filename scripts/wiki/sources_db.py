@@ -52,6 +52,7 @@ from scripts.lexicon.runner.ulif_dictua_store import (
     ULIF_DICTUA_ENTRIES_DDL,
     ulif_dictua_entries_table_sql,
 )
+from scripts.lib.readonly_sqlite import open_readonly
 
 # ``python -m scripts.wiki.sources_db`` puts the repository root on sys.path.
 # The top-level ``audit/`` tree is a namespace package, so ``import audit``
@@ -1685,12 +1686,14 @@ def set_connection_factory(factory: type[sqlite3.Connection] | None) -> None:
 
 
 def _open_conn(db_path: Path, *, read_only: bool = False) -> sqlite3.Connection:
-    options: dict[str, Any] = {} if _connection_factory is None else {"factory": _connection_factory}
     if read_only:
-        conn = sqlite3.connect(
-            f"{db_path.resolve().as_uri()}?mode=ro", uri=True, check_same_thread=False, **options
-        )
+        # Shared across threads: open_readonly disables the statement cache
+        # that CPython 3.12 corrupts under concurrent use (#11217).
+        conn = open_readonly(db_path, check_same_thread=False, factory=_connection_factory)
     else:
+        # Writable path (schema create / migrate): never a shared reader, so it
+        # keeps the plain connect. Allowlisted in tests/test_sources_db_hardening.py.
+        options: dict[str, Any] = {} if _connection_factory is None else {"factory": _connection_factory}
         conn = sqlite3.connect(str(db_path), check_same_thread=False, **options)
     conn.row_factory = sqlite3.Row
     # Concurrent readers must wait for a concurrent writer rather
