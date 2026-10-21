@@ -42,8 +42,10 @@ def leave_foreign_request(pg, root, monkeypatch):
     return request.request_id
 
 
-def test_real_pg_cluster_lifecycle_isolates_queued_requests(pytester):
+def test_real_pg_cluster_lifecycle_isolates_queued_requests(pytester, pg_cluster, monkeypatch):
     """Two ordered tests must use the actual fixtures on one module's server."""
+    # Exercise automatic short-root selection in the nested pytest process.
+    monkeypatch.delenv("LU_SCRATCH_ROOT", raising=False)
     fixture_dir = Path(__file__).resolve().parent
     repo = fixture_dir.parents[2]
     pytester.makeini("[pytest]\n")
