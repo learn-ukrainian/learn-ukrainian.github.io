@@ -35,7 +35,13 @@ DEPLOYED_AUDIT = "$CLAUDE_PROJECT_DIR/.claude/hooks/audit-primary-checkout-dirt.
 
 
 def _git(cwd: Path, *args: str) -> str:
-    return subprocess.run(["git", "-C", str(cwd), *args], check=True, capture_output=True, text=True, timeout=30).stdout
+    # No inherited GIT_* variables: importing scripts.api.main in an earlier test on
+    # the same worker exports GIT_OPTIONAL_LOCKS=0, which would silence the
+    # index-refresh control below (CI run 39616999527).
+    env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+    return subprocess.run(
+        ["git", "-C", str(cwd), *args], check=True, capture_output=True, text=True, env=env, timeout=30
+    ).stdout
 
 
 def _make_primary(tmp_path: Path) -> Path:
