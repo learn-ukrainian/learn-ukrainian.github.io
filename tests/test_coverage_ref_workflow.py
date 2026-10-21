@@ -34,7 +34,9 @@ def step(job, name):
 def test_validation_rejects_moving_refs_and_shell_input(tmp_path, sha, valid):
     validate = step(WORKFLOW["jobs"]["prepare"], "Validate an exact repository commit")
     gh = tmp_path / "gh"
-    gh.write_text('#!/bin/bash\nprintf "%s\\n" "${SHA,,}"\n')
+    gh.write_text(
+        '#!/bin/bash\ncase "$*" in\n  *compare*) echo identical ;;\n  *) printf "%s\\n" "${SHA,,}" ;;\nesac\n'
+    )
     gh.chmod(0o755)
     output = tmp_path / "output"
     env = os.environ | {
@@ -47,7 +49,7 @@ def test_validation_rejects_moving_refs_and_shell_input(tmp_path, sha, valid):
         ["bash", "-c", validate["run"]], cwd=tmp_path, env=env, capture_output=True, text=True, timeout=10
     )
     assert (result.returncode == 0) is valid, result.stdout + result.stderr
-    assert output.read_text() == f"sha={sha.lower()}\n" if valid else not output.exists()
+    assert output.read_text() == f"validated_revision={sha.lower()}\n" if valid else not output.exists()
     assert not (tmp_path / "injected").exists()
 
 
@@ -91,12 +93,60 @@ def test_ci_partition_and_pytest_denominator_are_unchanged():
     )
     instrumented = instrumented[instrumented.index("--") + 1 :]
     assert [arg for arg in instrumented if not arg.startswith("--cov")] == original[3:]
-    for name in ("Python CI environment", "Download pytest duration snapshot"):
-        assert (
-            step(measured, name)["uses" if name == "Python CI environment" else "run"]
-            == step(baseline, name)["uses" if name == "Python CI environment" else "run"]
-        )
+    assert (
+        step(measured, "Download pytest duration snapshot")["run"]
+        == step(baseline, "Download pytest duration snapshot")["run"]
+    )
     assert measured["timeout-minutes"] > baseline["timeout-minutes"]
+
+
+@pytest.mark.parametrize(
+    "comparison,allowed", [("ahead", True), ("identical", True), ("behind", False), ("diverged", False), ("", False)]
+)
+def test_pull_only_commits_are_rejected_unless_reachable_from_own_branch(tmp_path, comparison, allowed):
+    """The commit API resolving a fork PR head must not authorize its execution."""
+    gh = tmp_path / "gh"
+    gh.write_text(
+        '#!/bin/bash\ncase "$*" in\n'
+        '  *branches*) printf "%040d\\n" 1 ;;\n'
+        '  *compare*) printf "%s\\n" "$COMPARISON" ;;\n'
+        '  *) printf "%s\\n" "$SHA" ;;\nesac\n'
+    )
+    gh.chmod(0o755)
+    output = tmp_path / "output"
+    env = os.environ | {
+        "PATH": f"{tmp_path}:{os.environ['PATH']}",
+        "SHA": "a" * 40,
+        "REPO": "test/repo",
+        "GITHUB_OUTPUT": str(output),
+        "COMPARISON": comparison,
+    }
+    result = subprocess.run(
+        ["bash", "-c", step(WORKFLOW["jobs"]["prepare"], "Validate an exact repository commit")["run"]],
+        cwd=tmp_path,
+        env=env,
+        capture_output=True,
+        text=True,
+        timeout=10,
+    )
+    assert (result.returncode == 0) is allowed, result.stderr
+    assert output.exists() is allowed
+
+
+def test_diagnostic_workflow_cannot_save_uv_or_npm_caches_even_for_old_commits():
+    """A main dispatch must never save caches modified by measured code."""
+    job = WORKFLOW["jobs"]["pytest"]
+    tooling = step(job, "Check out measurement tooling")
+    assert tooling["with"]["ref"] == "${{ github.workflow_sha }}"
+    assert tooling["with"]["path"] == "coverage-tooling"
+    action = step(job, "Python CI environment")
+    assert action["uses"] == "./coverage-tooling/.github/actions/python-ci-env"
+    assert action["with"]["save-cache"] is False
+    for job in WORKFLOW["jobs"].values():
+        for item in job["steps"]:
+            assert not str(item.get("uses", "")).startswith("actions/cache@")
+            if str(item.get("uses", "")).startswith("actions/setup-node@"):
+                assert "cache" not in item.get("with", {})
 
 
 def test_workflow_is_manual_and_uploads_hidden_data_even_after_failure():
