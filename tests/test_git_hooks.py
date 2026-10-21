@@ -134,11 +134,6 @@ def _fixture_repository(tmp_path: Path) -> tuple[Path, Path, dict[str, str]]:
         encoding="utf-8",
     )
     (repo / "README.md").write_text("base\n", encoding="utf-8")
-    # The pre-push gate reads its invariant registry from here; the fixture has none to run (#10033).
-    (repo / "tests").mkdir()
-    (repo / "tests/test_repo_wide_marker_invariant.py").write_text(
-        "KNOWN_REPO_WIDE_MODULES = frozenset()\nKNOWN_REPO_WIDE_FUNCTIONS = ()\n", encoding="utf-8"
-    )
 
     bin_dir = tmp_path / "bin"
     _write_executable(
