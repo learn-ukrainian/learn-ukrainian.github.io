@@ -168,7 +168,8 @@ worktrees without broadening their checkout. Where Entire CLI owns a hook, the
 delegator sits at `<name>.pre-entire` and the installer makes Entire's wrapper
 chain to it, and routes Entire's own call through `scripts/entire/capture_guard.sh`
 (Entire runs only with the accepted CLI version and the private checkpoint route,
-and never blocks a commit or push). It refuses, without changing anything, when a
+and never blocks a commit or push; the post-commit capture runs at niceness +10
+and idle I/O priority). It refuses, without changing anything, when a
 hook path is a symlink. `scripts/install_git_hooks.sh --check` (read-only) fails
 when a hook stage declared in `.pre-commit-config.yaml` has no reachable
 delegator, an Entire wrapper is unguarded, or a hook path is a symlink.
@@ -967,7 +968,7 @@ the primary checkout's interpreter, source DB and deck dir via an exported
 .venv/bin/python -m scripts.common.test_slots status [--json]
 ```
 
-Dispatch-worker pytest runs and the pre-push gate already hold slots, so they need no wrapper. A
+Dispatch-worker pytest runs already hold slots, so they need no wrapper; the pre-push gate runs no tests and holds none. A
 waiting run prints `TEST SLOTS: waiting ... queue position N/M`. Settings, refusals and the
 long-queue procedure: `docs/runbooks/test-slots.md`.
 

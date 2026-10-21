@@ -1,7 +1,8 @@
 # Host test slots
 
 The host defaults to a test pool of half its CPUs, rounded down, with at least 2 slots (#10715).
-Worker pytest runs and the pre-push gate take slots from one pool before they start their processes. A run that cannot get slots
+Worker pytest runs, the launcher and `scripts.common.test_slots run` take slots from one pool before they start their processes.
+The pre-push gate takes none: it runs no tests (#11276). A run that cannot get slots
 waits in a first-come-first-served queue and prints its position. It never starts and piles up.
 
 Code: `scripts/common/test_slots.py`. Status: `.venv/bin/python -m scripts.common.test_slots status` or
@@ -20,7 +21,7 @@ Code: `scripts/common/test_slots.py`. Status: `.venv/bin/python -m scripts.commo
   live tickets count toward the limit of 1024. Until a waiter has reaped them, `status` reports
   `test_slots_pool_unavailable` while more than 1024 ticket files exist.
 - Descendants of a holder run inside its slots and never queue themselves. Examples are xdist workers,
-  pytest runs started by tests and the gate's pytest children. The holder marks them with
+  pytest runs started by tests. The holder marks them with
   `LU_TEST_SLOTS_HOLDER`. The marker is checked, never trusted. It counts only when all of these hold:
   - it names a ticket in the `holders` directory of the pool that environment selects;
   - the current user owns that ticket and a live process holds its lock;
@@ -48,7 +49,6 @@ Code: `scripts/common/test_slots.py`. Status: `.venv/bin/python -m scripts.commo
 | Caller | How |
 | --- | --- |
 | Dispatch-worker pytest runs | The `ci.pytest_dispatch_cap` plugin holds slots when `LEARN_UKRAINIAN_DISPATCH_TASK_ID` is set. This covers every documented command, such as `.venv/bin/python -m pytest -n 2 -q <files>`, the pre-commit pytest hooks and `scripts/ci/components.py`. It skips `--collect-only` and `--help`. A nested run queues for nothing and starts at most the inherited count of workers. A wait timeout is a pytest usage error (exit 4) naming `test_slots_wait_timeout`. |
-| Pre-push gate | The pytest stage holds slots and passes `-n` equal to the slots held. The wait is bounded by `TEST_SLOT_WAIT_S` (600 s) and recorded as `slot_wait_s`. It spends neither the stage allowance nor the run budget. See `docs/runbooks/pre-push-gate.md`. |
 | Any other test command | `.venv/bin/python -m scripts.common.test_slots run -- <command>` waits for slots, rewrites a visible `-n`/`--numprocesses` (including `auto`) to the slots held, caps a hidden `-n auto` through `PYTEST_XDIST_AUTO_NUM_WORKERS`, and execs the command, so the command itself holds the slots until it exits. A repo pytest the command starts with a hidden explicit `-n` is capped by the plugin above. |
 | Codex read-only reviews | The dispatch worker holds 2 `review` slots before the CLI starts. See "Sandboxed reviews" below. |
 | Dispatch admission | `delegate.py dispatch` refuses a new write worker while more than `DISPATCH_MAX_TEST_SLOT_QUEUE` runs (default 4) wait for slots. The refusal uses the usual admission message and exit 3. |
@@ -118,8 +118,8 @@ outlive it until they end or `post_task_reap` stops the task's leftover processe
 | --- | --- | --- |
 | `LU_TEST_SLOTS` | on (off when `CI` is true) | `off` restores the previous behaviour everywhere: no waits, no `-n` changes and no admission check. |
 | `LU_TEST_SLOTS_COUNT` | Half the CPU count, rounded down, at least 2 | Pool size. Every participant on the host must use the same value. |
-| `LU_TEST_SLOTS_WAIT_S` | 3600 | Longest wait before a typed refusal. The gate never waits longer than 600 s. |
-| `LU_TEST_SLOTS_DIR` | `<fleet scratch root>/test-slots-<uid>` | Absolute pool directory, for tests and experiments. The default root is `LU_SCRATCH_ROOT` or `/var/tmp/lu`; the pool sits beside the pre-push gate's `pre-push-gate-<uid>`. |
+| `LU_TEST_SLOTS_WAIT_S` | 3600 | Longest wait before a typed refusal. |
+| `LU_TEST_SLOTS_DIR` | `<fleet scratch root>/test-slots-<uid>` | Absolute pool directory, for tests and experiments. The default root is `LU_SCRATCH_ROOT` or `/var/tmp/lu`; the pool sits in that root as `test-slots-<uid>`. |
 | `LU_TEST_THREAD_CAP` | on | `off` preserves the caller's thread environment for a run that needs threads. Slot accounting stays enabled. |
 
 ## Threads inside each worker
@@ -127,7 +127,7 @@ outlive it until they end or `post_task_reap` stops the task's leftover processe
 Governed runs also limit native library threads (#10716). Before xdist starts workers, the plugin sets
 `OMP_NUM_THREADS`, `MKL_NUM_THREADS`, `OPENBLAS_NUM_THREADS`, `NUMEXPR_NUM_THREADS`,
 `ORT_NUM_THREADS` and `RAYON_NUM_THREADS` to `1`, and `TOKENIZERS_PARALLELISM` to `false`.
-The launcher and the pre-push gate's pytest stage apply the same policy. Children inherit the limits.
+The launcher applies the same policy. Children inherit the limits.
 The policy preserves only positive integers at or below `1` for numeric settings, written as ASCII
 decimal digits. It replaces every other value with `1`, including zero, negatives, fractions, padded
 or signed values, empty strings, `nan`, infinities, oversized integers and nonnumeric tokens such as
@@ -145,14 +145,13 @@ describes its BLAS backend controls.
 ## Pool directory permissions
 
 The pool directory is mode 0700 and owned by the current user. Its path follows the trust model of
-the pre-push gate's base temp (#10654; see "Bounds" in `docs/runbooks/pre-push-gate.md`): only the
+the fleet scratch root: only the
 current user and root are trusted, and no other user may be able to redirect the path. Before anything
 is created, the path is resolved from `/` one component at a time. Every directory on the way must be
 owned by the user or root and must not be writable by group or others unless it is sticky, as the
 system temp directories are. A link is followed only if the user or root owns it, and its target passes
 the same checks. Missing components, the scratch root included, are created with mode 0700 whatever
-the umask. A root created under umask 002 would be group-writable, and the gate would then refuse its
-own base temp below the same root. `status` runs the same checks and creates nothing.
+the umask. A root created under umask 002 would be group-writable, which this check refuses on the next run. `status` runs the same checks and creates nothing.
 
 Each of these is refused with `test_slots_pool_unavailable`:
 

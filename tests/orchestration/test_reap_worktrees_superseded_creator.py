@@ -4,12 +4,14 @@ from __future__ import annotations
 
 import contextlib
 import json
+import subprocess
 
 import pytest
 
 from scripts.fleet import ignored_task_output as output
 from scripts.orchestration import reap_worktrees as rw
 from scripts.orchestration import worktree_claims as claims
+from tests.orchestration import test_merge_closeout as closeout
 from tests.orchestration.test_worktree_claims_cli import _git
 from tests.orchestration.test_worktree_output_chokepoint import boundary_tree as boundary_tree
 
@@ -167,3 +169,147 @@ def test_run_identity_changed_at_lock_refused(merged_cohort, monkeypatch, member
         _proof(merged_cohort)
     assert tree.exists()
     assert all("worktree_reap_proof" not in json.loads(p.read_text()) for p in tasks.rglob("*.json"))
+
+
+@pytest.fixture
+def queue_merged_cohort(merged_cohort, monkeypatch):
+    """A squash landing retains the PR ref after deleting its branch."""
+    repo, tree, tasks, path, creator, current_path, current, _, _ = merged_cohort
+    for name in ("first.txt", "last.txt"):
+        (tree / name).write_text(name)
+        closeout.git(tree, "add", name)
+        closeout.git(tree, "commit", "-m", f"add {name}")
+    head = closeout.git(tree, "rev-parse", "HEAD")
+    closeout.publish_pr_head(repo, 9645, "codex/boundary", head)
+    closeout.git(repo, "merge", "--squash", "codex/boundary")
+    closeout.git(repo, "commit", "-m", "merge queue squash landing")
+    closeout.git(repo, "push", "origin", "main")
+    closeout.git(repo, "push", "origin", "--delete", "codex/boundary")
+    closeout.git(repo, "fetch", "--prune", "origin")
+    assert closeout.git(repo, "ls-remote", "--heads", "origin", "codex/boundary") == ""
+    assert closeout.git(tree, "rev-parse", "HEAD") == head
+    assert closeout.git(repo, "rev-parse", "origin/main") != head
+    assert not rw._sha_is_ancestor(tree, head, "origin/main")
+    for record, target in ((creator, path), (current, current_path)):
+        record["final_branch_head_commit"] = head
+        target.write_text(json.dumps(record))
+    calls = closeout.patch_gh(
+        monkeypatch,
+        pr_number=9645,
+        state="MERGED",
+        head_ref_name="codex/boundary",
+        head_sha=head,
+        branch_prs={},
+        sha_prs={head: [{"number": 9645, "state": "MERGED"}]},
+    )
+    return repo, tree, tasks, path, creator, current_path, current, head, calls
+
+
+@pytest.mark.parametrize("apply", [False, True])
+@pytest.mark.parametrize("status", ["done", "needs_finalize"])
+def test_queue_merged_deleted_branch_uses_recorded_pr_head(queue_merged_cohort, apply, status):
+    repo, tree, tasks, path, creator, current_path, current, head, calls = queue_merged_cohort
+    for record, target in ((creator, path), (current, current_path)):
+        record["status"] = status
+        target.write_text(json.dumps(record))
+    before = {p: p.read_bytes() for p in tasks.glob("*.json")}
+
+    result = next(r for r in rw.reap_worktrees(repo_root=repo, apply=apply, live_cwds=set()) if r.path == str(tree))
+
+    assert result.action == ("removed" if apply else "would_remove"), result.reason
+    assert tree.exists() is not apply
+    assert any("repos/learn-ukrainian/learn-ukrainian.github.io/pulls/9645" in call for call in calls)
+    if apply:
+        proof = result.preserved_artifacts["merged_head_proof"]
+        assert proof["head_sha"] == proof["pr_head_sha"] == head
+        assert proof["pr_number"] == 9645
+        assert proof["pr_state"] == "MERGED"
+        assert proof["head_relation"] == "exact"
+        assert proof["pr_head_source"] == "merged_pr_record"
+        assert proof == json.loads(path.read_text())["worktree_reap_proof"]
+        assert current_path.read_bytes() == before[current_path]
+        assert {k: v for k, v in json.loads(path.read_text()).items() if k != "worktree_reap_proof"} == creator
+    else:
+        assert {p: p.read_bytes() for p in before} == before
+
+
+@pytest.mark.parametrize("apply", [False, True])
+@pytest.mark.parametrize(
+    "unsafe",
+    [
+        "differing_head",
+        "dirty",
+        "unpushed",
+        "lookup_error",
+        "missing_head",
+        "open",
+        "closed",
+        "wrong_pr",
+        "uncontained_creator",
+    ],
+)
+def test_queue_merged_deleted_branch_refuses_unproven_work(queue_merged_cohort, monkeypatch, apply, unsafe):
+    repo, tree, tasks, path, creator, current_path, current, head, _ = queue_merged_cohort
+    if unsafe == "dirty":
+        (tree / "README.md").write_text("unique uncommitted work\n")
+    elif unsafe == "uncontained_creator":
+        foreign = closeout.git(tree, "commit-tree", f"{head}^{{tree}}", "-m", "uncontained creator history")
+        creator["final_branch_head_commit"] = foreign
+        for record, target in ((creator, path), (current, current_path)):
+            record["status"] = "needs_finalize"
+            target.write_text(json.dumps(record))
+    elif unsafe == "unpushed":
+        (tree / "unique.txt").write_text("unique unpushed work\n")
+        closeout.git(tree, "add", "unique.txt")
+        closeout.git(tree, "commit", "-m", "unpublished continuation")
+        local = closeout.git(tree, "rev-parse", "HEAD")
+        # Search membership is deliberately insufficient to establish a PR tip.
+        closeout.patch_gh(
+            monkeypatch,
+            pr_number=9645,
+            state="MERGED",
+            head_ref_name="codex/boundary",
+            head_sha=head,
+            sha_prs={local: [{"number": 9645, "state": "MERGED"}]},
+        )
+    elif unsafe == "differing_head":
+        # A search hit can name an earlier commit rather than the PR's last head.
+        closeout.git(tree, "reset", "--hard", f"{head}^")
+        local = closeout.git(tree, "rev-parse", "HEAD")
+        closeout.patch_gh(
+            monkeypatch,
+            pr_number=9645,
+            state="MERGED",
+            head_ref_name="codex/boundary",
+            head_sha=head,
+            sha_prs={local: [{"number": 9645, "state": "MERGED"}]},
+        )
+    else:
+        original = rw._run_gh
+
+        def numbered_pr(args, **kwargs):
+            if (args[1:3] == ["api", "-X"] and args[-1].endswith("/pulls/9645")) or args[1:3] == ["pr", "view"]:
+                if unsafe == "lookup_error":
+                    return subprocess.CompletedProcess(args, 1, "", "lookup unavailable")
+                payload = {
+                    "number": 9646 if unsafe == "wrong_pr" else 9645,
+                    "state": "open" if unsafe == "open" else "closed",
+                    "merged_at": None if unsafe in {"open", "closed"} else "2026-01-02T03:04:05Z",
+                    "head": {"ref": "codex/boundary", "sha": None if unsafe == "missing_head" else head},
+                }
+                return subprocess.CompletedProcess(args, 0, json.dumps(payload), "")
+            return original(args, **kwargs)
+
+        monkeypatch.setattr(rw, "_run_gh", numbered_pr)
+    before = {p: p.read_bytes() for p in tasks.glob("*.json")}
+
+    result = next(r for r in rw.reap_worktrees(repo_root=repo, apply=apply, live_cwds=set()) if r.path == str(tree))
+
+    assert result.action == "skipped", result
+    assert tree.exists()
+    assert {p: p.read_bytes() for p in before} == before
+    assert all("worktree_reap_proof" not in json.loads(p.read_text()) for p in before)
+    if unsafe == "dirty":
+        assert (tree / "README.md").read_text() == "unique uncommitted work\n"
+    if unsafe == "unpushed":
+        assert (tree / "unique.txt").read_text() == "unique unpushed work\n"
