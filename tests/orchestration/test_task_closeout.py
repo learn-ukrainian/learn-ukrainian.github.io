@@ -10,6 +10,9 @@ from pathlib import Path
 import pytest
 
 from scripts.orchestration import issue_stream_audit, task_closeout, task_identity, task_lifecycle
+from tests.orchestration import test_closeout_run_evidence as run_evidence
+
+bound_case = run_evidence.bound_case
 
 NOW = "2026-07-16T10:00:00Z"
 HEAD = "a" * 40
@@ -479,9 +482,8 @@ def test_intent_recovery_does_not_repeat_remote_close(tmp_path: Path) -> None:
     assert task_lifecycle.mutation_status(task_lifecycle.load_lifecycle(path), operation_id) == "complete"
 
 
-def test_verified_merge_permits_one_explicit_close(tmp_path: Path) -> None:
-    path, _ = _ledger(tmp_path, merged=True)
-    adapter = FakeAdapter(_observation(body=_body(checked=True), pr_state="MERGED"))
+def test_verified_merge_permits_one_explicit_close(merged_mutation) -> None:
+    path, adapter, _case = merged_mutation
 
     result = task_closeout.perform_mutation(
         path,
@@ -1657,17 +1659,21 @@ def test_9794_init_accepts_same_epic_sibling_reparent(tmp_path, monkeypatch):
 
 @pytest.mark.parametrize("action", ["sync-acs", "arm-auto-merge", "close-issue"])
 @pytest.mark.parametrize("transferred", [False, True], ids=["primary-body", "transferred-body"])
-def test_9794_body_membership_permits_each_mutation_with_shared_audit(tmp_path, monkeypatch, action, transferred):
+def test_9794_body_membership_permits_each_mutation_with_shared_audit(tmp_path, monkeypatch, action, transferred, merged_mutation):
     closing = action == "close-issue"
-    path, ledger = _ledger(tmp_path, merged=closing)
-    observation = _observation(body=_body(checked=closing), pr_state="MERGED" if closing else "OPEN")
+    if closing:
+        path, adapter, case = merged_mutation
+        ledger, observation, *_ = case
+    else:
+        path, ledger = _ledger(tmp_path)
+        observation = _observation()
     github = observation["github"]
     github["registered_stream_epics"] = [10, 20]
     github["issue"]["parent_epic"] = None
     github["membership_audit"] = _body_audit()
     if transferred:
         ledger, evidence = task_lifecycle.add_evidence(
-            ledger, ac_id="AC-IMPL", evidence_type="follow_up", summary="Scope transferred",
+            ledger, ac_id=ledger["ac_snapshot"]["criteria"][0]["id"], evidence_type="follow_up", summary="Scope transferred",
             url="https://github.com/org/repo/issues/43", commit=None, details={}, recorded_at=NOW,
         )
         ledger = task_lifecycle.set_remaining_scope(
@@ -1679,7 +1685,10 @@ def test_9794_body_membership_permits_each_mutation_with_shared_audit(tmp_path, 
         github["membership_audit"]["effective_membership"]["43"] = {
             "epics": [20], "streams": ["other"], "via": "body", "unique_stream": True,
         }
-    adapter = FakeAdapter(observation)
+    if closing:
+        adapter.observation = deepcopy(observation)
+    else:
+        adapter = FakeAdapter(observation)
     # The gate must consume observe's object, not fetch another registry/audit.
     adapter.registered_stream_epics = lambda repository: pytest.fail("duplicate registry read")
     adapter.membership_audit_report = lambda: pytest.fail("duplicate audit")
@@ -1831,3 +1840,218 @@ def test_9794_null_parent_requires_typed_target_identity(tmp_path, number, githu
     adapter = task_closeout.GhGitHubAdapter(tmp_path)
     with pytest.raises(task_lifecycle.LifecycleError, match="issue is unread or malformed"):
         adapter.read_issue_parent("org/repo", 1)
+
+
+@pytest.fixture
+def merged_mutation(bound_case, tmp_path, monkeypatch):
+    """Exercise the real fresh collector with named GitHub response fixtures."""
+    from scripts.orchestration import merge_closeout as mc
+
+    ledger, observation, pull, run, jobs = bound_case
+    path = tmp_path / "merged.json"
+    task_lifecycle.write_lifecycle(path, ledger)
+    adapter = FakeAdapter(observation)
+    adapter.repo_root = tmp_path
+    adapter.merged_run_evidence = lambda *a, **k: task_closeout.GhGitHubAdapter.merged_run_evidence(adapter, *a, **k)
+    def api(root, request):
+        assert root == tmp_path
+        assert request.fields["repo"] == "org/repo"
+        return {
+            "read-pull": pull, "read-runs": [{"total_count": 1, "workflow_runs": [run]}],
+            "read-run": run, "read-jobs": [{"total_count": len(jobs), "jobs": jobs}],
+        }[request.verb]
+    monkeypatch.setattr(mc, "_closeout_api", api)
+    return path, adapter, bound_case
+
+
+def _mutate_merged(path, adapter, action):
+    return task_closeout.perform_mutation(
+        path, adapter, action=action, authorized_by="codex/11279", branch=None, worktree=None, now=NOW,
+    )
+
+
+@pytest.mark.parametrize("action", ["sync-acs", "close-issue"])
+def test_copied_rows_cannot_mutate_merged_issue(merged_mutation, action):
+    from tests.orchestration.test_closeout_run_evidence import evidence
+
+    path, adapter, case = merged_mutation
+    ledger, observation, *_ = case
+    ledger["evidence"] = [row for row in ledger["evidence"] if row["type"] != "test"]
+    ledger = evidence(ledger, "ci", url="https://github.com/org/repo/actions/runs/100/job/1")
+    ledger = evidence(ledger, "test", url=None, details={"note": "local pytest"})
+    task_lifecycle.write_lifecycle(path, ledger)
+    adapter.observation["github"]["issue"]["body"] = observation["github"]["issue"]["body"].replace("[x]", "[ ]")
+    if action == "close-issue":
+        with pytest.raises(task_lifecycle.LifecycleError, match="merged criterion execution"):
+            _mutate_merged(path, adapter, action)
+    else:
+        result = _mutate_merged(path, adapter, action)
+        assert result["remote_mutation_performed"] is False
+    saved = task_lifecycle.load_lifecycle(path)
+    report = saved["observation_receipts"][-1]["observation"]["github"]["closeout_run"]
+    assert report["criteria"][0]["missing"] == ["ci", "test"]
+    assert adapter.calls == []
+    assert "[ ] **AC-RUN**" in adapter.observation["github"]["issue"]["body"]
+    assert adapter.observation["github"]["issue"]["state"] == "OPEN"
+
+
+def test_mapped_merged_criterion_syncs_then_closes(merged_mutation):
+    path, adapter, _ = merged_mutation
+    adapter.observation["github"]["issue"]["body"] = adapter.observation["github"]["issue"]["body"].replace("[x]", "[ ]")
+    assert _mutate_merged(path, adapter, "sync-acs")["remote_mutation_performed"] is True
+    assert adapter.observation["github"]["issue"]["body"].startswith("- [x] **AC-RUN**")
+    replay = _mutate_merged(path, adapter, "sync-acs")
+    assert replay["replayed"] is True
+    assert replay["remote_mutation_performed"] is False
+    assert _mutate_merged(path, adapter, "close-issue")["remote_mutation_performed"] is True
+    assert adapter.calls == ["sync-acs", "close-issue"]
+    saved = task_lifecycle.load_lifecycle(path)
+    report = saved["observation_receipts"][-1]["observation"]["github"]["closeout_run"]
+    assert (report["pr"], report["head_sha"], report["merge_sha"], report["run_id"], report["run_attempt"]) == (77, HEAD, MERGE, 123, 2)
+
+
+@pytest.mark.parametrize("failure", ["unreadable", "missing_run", "stale_attempt", "skipped_job", "skipped_step", "wrong_pr", "wrong_merge"])
+@pytest.mark.parametrize("action", ["sync-acs", "close-issue"])
+def test_fresh_execution_failure_never_writes(merged_mutation, monkeypatch, failure, action):
+    from scripts.orchestration import merge_closeout as mc
+
+    path, adapter, case = merged_mutation
+    _, _, pull, run, jobs = case
+    if failure == "unreadable":
+        def unreadable(*args):
+            raise mc.MergeCloseoutError("CLOSEOUT_EXECUTION_UNREADABLE")
+        monkeypatch.setattr(mc, "_closeout_api", unreadable)
+    elif failure == "missing_run":
+        run["head_sha"] = "c" * 40
+    elif failure == "stale_attempt":
+        jobs[0]["run_attempt"] = 1
+    elif failure == "skipped_job":
+        jobs[0]["conclusion"] = "skipped"
+    elif failure == "skipped_step":
+        jobs[0]["steps"][0]["conclusion"] = "skipped"
+    elif failure == "wrong_pr":
+        pull["number"] = 78
+    else:
+        pull["merge_commit_sha"] = "c" * 40
+    if failure == "skipped_step" and action == "sync-acs":
+        assert _mutate_merged(path, adapter, action)["remote_mutation_performed"] is False
+    else:
+        with pytest.raises(task_lifecycle.LifecycleError, match=r"CLOSEOUT_|merged criterion execution"):
+            _mutate_merged(path, adapter, action)
+    assert adapter.calls == []
+
+
+@pytest.mark.parametrize("failure", ["missing", "unreadable", "timestamp", "digest", "pr", "head_sha", "merge_sha", "run_id", "run_attempt", "execution_attempt", "execution_step"])
+def test_mutation_consumers_reject_invalid_receipt(bound_case, failure):
+    from scripts.orchestration import lifecycle_observation as lo
+    from tests.orchestration.test_closeout_run_evidence import derive
+
+    ledger, observation, *_ = bound_case
+    ledger, report = derive(bound_case)
+    if failure == "missing":
+        del observation["github"]["closeout_run"]
+    elif failure == "unreadable":
+        observation["github"]["closeout_run"] = None
+    elif failure == "timestamp":
+        observation["observed_at"] = "2026-07-17T10:00:00Z"
+    elif failure == "digest":
+        report["execution_sha256"] = "bad"
+    elif failure == "execution_attempt":
+        report["execution"]["run"]["run_attempt"] = 3
+        report["execution_sha256"] = task_lifecycle.digest(report["execution"])
+    elif failure == "execution_step":
+        report["execution"]["jobs"][0]["steps"][0]["conclusion"] = "skipped"
+        report["execution_sha256"] = task_lifecycle.digest(report["execution"])
+    else:
+        report[failure] = "wrong"
+    if failure == "execution_step":
+        # Recomputed criterion truth overrides even a copied True status.
+        assert report["criteria_passed"] is True
+        assert task_closeout.evidenced_issue_body(ledger, observation)[1] == []
+        with pytest.raises(task_lifecycle.LifecycleError, match="merged criterion execution"):
+            task_closeout._assert_mutation_ready("close-issue", ledger, observation)
+    else:
+        for consume in (task_closeout.evidenced_issue_body, lambda l, o: task_closeout._assert_mutation_ready("close-issue", l, o)):
+            with pytest.raises(lo.ObservationRefusal, match="CLOSEOUT_"):
+                consume(ledger, observation)
+
+
+@pytest.mark.parametrize("gap", ["behavior_proof", "deployment", "cleanup", "review", "terminal_deploy", "cleanup_residual"])
+def test_other_closure_requirements_survive_execution_enforcement(merged_mutation, gap):
+    path, adapter, case = merged_mutation
+    ledger = case[0]
+    if gap == "cleanup_residual":
+        adapter.observation["local"]["worktree_present"] = True
+    elif gap == "terminal_deploy":
+        identity = dict(ledger["identity"])
+        identity["terminal_goal"] = "deploy"
+        ledger = task_lifecycle.build_lifecycle(identity, author_family="codex", ac_snapshot=ledger["ac_snapshot"], required_checks=["CI Gate"], now=NOW, pr_number=77)
+        ledger["evidence"] = case[0]["evidence"]
+    elif gap == "review":
+        ledger["evidence"] = [row for row in ledger["evidence"] if row["type"] != "review"]
+    else:
+        ledger["ac_snapshot"]["criteria"].append({
+            "id": "AC-LATE", "text": "Late proof is required.", "applicable": True, "due_state": "CLEANED_UP",
+            "required_evidence": [gap], "behavior_proof_required": False,
+        })
+        ledger["ac_snapshot"]["content_hash"] = task_lifecycle.ac_content_hash(ledger["ac_snapshot"]["criteria"])
+        adapter.observation["github"]["issue"]["body"] += "- [x] **AC-LATE** — Late proof is required.\n"
+    task_lifecycle.write_lifecycle(path, ledger)
+    with pytest.raises(task_lifecycle.LifecycleError, match="merged criterion execution"):
+        _mutate_merged(path, adapter, "close-issue")
+    assert adapter.calls == []
+
+
+def test_sync_marks_only_criteria_with_verified_execution(merged_mutation):
+    path, adapter, case = merged_mutation
+    ledger = case[0]
+    ledger["ac_snapshot"]["criteria"].append({
+        "id": "AC-UNMAPPED", "text": "Unmapped execution stays incomplete.", "applicable": True,
+        "due_state": "MERGED", "required_evidence": ["test"], "behavior_proof_required": False,
+    })
+    ledger["ac_snapshot"]["content_hash"] = task_lifecycle.ac_content_hash(ledger["ac_snapshot"]["criteria"])
+    ledger, _ = task_lifecycle.add_evidence(
+        ledger, ac_id="AC-UNMAPPED", evidence_type="test", url=None, commit=HEAD,
+        summary="Local test output only", recorded_at=NOW, details={},
+    )
+    adapter.observation["github"]["issue"]["body"] = (
+        adapter.observation["github"]["issue"]["body"].replace("[x]", "[ ]")
+        + "- [ ] **AC-UNMAPPED** — Unmapped execution stays incomplete.\n"
+    )
+    task_lifecycle.write_lifecycle(path, ledger)
+    assert _mutate_merged(path, adapter, "sync-acs")["remote_mutation_performed"] is True
+    assert adapter.observation["github"]["issue"]["body"].splitlines() == [
+        "- [x] **AC-RUN** — The criterion has executed tests and CI.",
+        "- [ ] **AC-UNMAPPED** — Unmapped execution stays incomplete.",
+    ]
+    assert adapter.calls == ["sync-acs"]
+
+
+def test_merged_pr_cannot_be_reenqueued(merged_mutation):
+    path, adapter, _ = merged_mutation
+    ledger, _ = adapter.merged_run_evidence(task_lifecycle.load_lifecycle(path), adapter.observation, now=NOW)
+    adapter.observation["github"]["pr"]["closing_issue_numbers"] = []
+    with pytest.raises(task_lifecycle.LifecycleError, match="requires an open PR"):
+        task_closeout._assert_mutation_ready("arm-auto-merge", ledger, adapter.observation)
+    assert adapter.calls == []
+
+
+def test_verified_execution_keeps_remaining_scope_guard(merged_mutation):
+    path, adapter, _ = merged_mutation
+    ledger = task_lifecycle.set_remaining_scope(
+        task_lifecycle.load_lifecycle(path), status="open", summary="Required outcome remains open",
+        now=NOW,
+    )
+    task_lifecycle.write_lifecycle(path, ledger)
+    with pytest.raises(task_lifecycle.LifecycleError, match="merged criterion execution"):
+        _mutate_merged(path, adapter, "close-issue")
+    assert task_lifecycle.load_lifecycle(path)["remaining_scope"]["status"] == "open"
+    assert adapter.calls == []
+
+
+def test_sync_still_refuses_authoritative_issue_mismatch(tmp_path):
+    _, ledger = _ledger(tmp_path)
+    observation = _observation()
+    observation["github"]["issue"]["number"] = 43
+    with pytest.raises(task_lifecycle.LifecycleError, match="AC sync blocked"):
+        task_closeout._assert_mutation_ready("sync-acs", ledger, observation)
