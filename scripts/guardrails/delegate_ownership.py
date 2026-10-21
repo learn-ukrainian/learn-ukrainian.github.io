@@ -1121,11 +1121,23 @@ class OwnershipLedger:
                         )
                     conn.execute("COMMIT")
                 if requeued and not requeue_notified and on_requeued is not None:
-                    on_requeued(
+                    notice = (
                         f"write-path ownership: {task_id} re-queued after wait expiry "
                         f"(ticket {ticket}); still behind {summary}"
                     )
-                    requeue_notified = True
+                    try:
+                        on_requeued(notice)
+                    except Exception:
+                        # Delivery is advisory; retry at the next expiry without
+                        # turning a Fleet failure into an ownership refusal.
+                        with contextlib.suppress(OSError):
+                            print(
+                                "write-path ownership warning: requeue notice failed; "
+                                f"continuing to wait: {sanitize_for_display(notice, limit=10 * len(notice))}",
+                                file=sys.stderr,
+                            )
+                    else:
+                        requeue_notified = True
                 if not notified and on_queued is not None:
                     notified = True
                     on_queued(

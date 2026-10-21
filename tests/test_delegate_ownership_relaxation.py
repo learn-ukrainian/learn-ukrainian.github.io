@@ -622,6 +622,72 @@ def test_requeue_multiple_expirations_issues_one_notice_and_retains_enqueue_time
     assert _waiters(ledger) == []
 
 
+@pytest.mark.parametrize("initiator", ["claude-infra", "kimi"])
+@pytest.mark.parametrize("warning_io_failure", [False, True])
+def test_requeue_publish_failure_does_not_drop_waiter(
+    env, tmp_path, monkeypatch, capsys, initiator, warning_io_failure,
+):
+    """AC-02: transient and permanent Fleet failures cannot refuse a queued writer."""
+    from scripts.fleet_comms.authority import AuthorityService
+
+    ledger, state_dir = env
+    _hold(ledger, state_dir, "holder", ["a.py"])
+    root = tmp_path / "fleet"
+    monkeypatch.setenv("FLEET_COMMS_ROOT", str(root))
+    publish = AuthorityService.publish_message
+    attempts = []
+
+    def failing_publish(service, **kwargs):
+        attempts.append(kwargs["body"])
+        if initiator == "claude-infra" and len(attempts) == 1:
+            raise RuntimeError("temporary delivery failure")
+        return publish(service, **kwargs)
+
+    monkeypatch.setattr(AuthorityService, "publish_message", failing_publish)
+    if warning_io_failure:
+        def broken_stderr(*args, **kwargs):
+            raise BrokenPipeError("diagnostic output unavailable")
+
+        monkeypatch.setattr(ownership, "print", broken_stderr, raising=False)
+    fake = FakeTime(limit=40)
+
+    def observe():
+        assert _claims(ledger, "holder") == ["a.py"]
+        assert _claims(ledger, "waiter") == []
+        assert _waiters(ledger) == [("waiter",)]
+        if len(fake.sleeps) == 8:
+            _state(state_dir, "holder", status="done")
+
+    fake.hooks = [observe] * 8
+    result = ledger.admit(
+        task_id="waiter", mode="workspace-write", owned_paths=["a.py"], pid=PID,
+        wait_s=10, poll_s=5, clock=fake.clock, monotonic=fake.clock, sleep=fake.sleep,
+        requeue_on_timeout=True,
+        on_requeued=lambda notice: ownership.publish_requeue_notice(
+            notice, task_id="waiter", initiator=initiator, run_nonce="run-1",
+        ),
+    )
+    assert result.admitted and not result.would_refuse and not result.queue_timeout
+    assert result.waited_s == pytest.approx(40)
+    assert _claims(ledger, "holder") == []
+    assert _claims(ledger, "waiter") == ["a.py"]
+    assert _waiters(ledger) == []
+    assert _events(ledger, "waiter").count("requeued") == 3
+    warnings = capsys.readouterr().err.splitlines()
+    failures = 1 if initiator == "claude-infra" else 3
+    assert len(attempts) == (2 if initiator == "claude-infra" else 3)
+    assert len(warnings) == (0 if warning_io_failure else failures)
+    failed_notices = [] if warning_io_failure else attempts[:failures]
+    for notice, warning in zip(failed_notices, warnings, strict=True):
+        assert "warning" in warning
+        assert notice in warning
+    with AuthorityService(root=root) as service:
+        messages = service._conn.execute("SELECT message_id FROM comms_messages").fetchall()
+        deliveries = service._conn.execute("SELECT recipient FROM authority_deliveries").fetchall()
+        assert len(messages) == (1 if initiator == "claude-infra" else 0)
+        assert [row[0] for row in deliveries] == ([initiator] if initiator == "claude-infra" else [])
+
+
 @pytest.mark.parametrize("claim,narrow", [
     ("tests/", "tests/<file>"),
     ("scripts/guardrails", "scripts/guardrails/<file>"),
