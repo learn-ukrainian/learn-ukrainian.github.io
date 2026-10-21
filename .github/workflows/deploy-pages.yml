@@ -262,10 +262,21 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
 
+      # #11194: the pinned upload action drops every dot-named path unless
+      # include-hidden-files is true, which silently removed the .well-known
+      # marker. Turning it on would publish ANY hidden path, so this final audit
+      # (after marker, build and vendoring) allows only .well-known/ holding the
+      # single regular exact-SHA marker and fails the job before upload otherwise.
+      - name: Audit hidden Pages outputs (deployment marker only)
+        working-directory: .
+        run: .venv/bin/python scripts/deploy/verify_pages_deployment_marker.py site/dist --sha "$GITHUB_SHA"
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
           path: './site/dist'
+          # Explicit, never the action default: publishes the audited marker.
+          include-hidden-files: true
 
       - name: Deploy to GitHub Pages
         id: deployment

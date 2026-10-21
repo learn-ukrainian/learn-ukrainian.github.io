@@ -68,6 +68,31 @@ that inventory's `counts`. Every preview route has `noindex, nofollow`;
 sitemap generation excludes them.
 With `ATLAS_WORD_CARD_PREVIEW` unset, no preview routes are generated.
 
+### Deployment marker
+
+Each run also writes `.well-known/learn-ukrainian-deployment-<sha>.txt`, where
+`<sha>` is the full deployed commit SHA. Its body is exactly that SHA plus one
+newline. The pinned `upload-pages-artifact` action drops dot-named paths
+unless `include-hidden-files` is `true`, and with it set would publish every
+hidden path. `scripts/deploy/verify_pages_deployment_marker.py` therefore runs
+directly before upload: it allows only `.well-known/` holding that one regular
+marker file and fails the job on any other hidden file or directory, at any
+depth or behind a directory symlink. Only then does the upload set
+`include-hidden-files: true`.
+
+A green deploy job proves upload, not public readability. After deployment,
+check the live marker read-only:
+
+```bash
+sha='<full deployed commit SHA>'  # replace with the 40-hex SHA
+curl --fail --silent --show-error \
+  "https://learn-ukrainian.github.io/.well-known/learn-ukrainian-deployment-${sha}.txt" \
+  | cmp - <(printf '%s\n' "$sha") && echo "marker OK: $sha"
+```
+
+`--fail` turns the Pages 404 page into an error, and `cmp` refuses any other
+body.
+
 ## Values, coverage and unresolved dependencies
 
 All 150 rows are producer-declared `CANDIDATE`, with 0 `CERTIFIED` and 2978
