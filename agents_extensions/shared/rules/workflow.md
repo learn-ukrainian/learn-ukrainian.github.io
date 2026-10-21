@@ -541,6 +541,7 @@ Every task follows this workflow. No exceptions for non-trivial changes.
    path without operator approval. Repairs to existing gates are permitted. A gate
    is removed or relaxed only with a demonstrated replacement or an approved
    removal; zero catches alone are not enough for a security gate.
+   **Test placement:** pre-push runs no tests; CI Gate runs the full suite.
 7. **Reach the explicit terminal goal** — `merge`, `deploy`, and `certify` are
    distinct and cannot substitute for one another.
 8. **Reconcile and close** — read actual GitHub state, transfer any remaining
