@@ -97,10 +97,35 @@ Known tool directories (`__pycache__`, `.pytest_cache`, `.ruff_cache`,
 `.hypothesis`, `.tox`, `.nox`, `.entire/logs`, and Git metadata) are excluded. `.cache`
 itself is deliberately not a tool-cache exemption. Shared state and verified
 provisioned database links survive outside the worktree and are never copied.
-Task output placed in an excluded cache remains disposable. Real `.venv` and
-`node_modules` directories are never disposable, including below caches; only
-verified provisioned links are disposable. `worktree_artifacts.is_disposable_path`
-is the shared taxonomy for creation, preservation and scheduled reaping.
+Task output placed in an excluded cache remains disposable. Real `.venv`
+directories retain the normal output rules. A real ignored `node_modules`
+directory is regenerable only with a local regular, tracked sibling
+`package-lock.json`. Verified provisioned links are disposable without following
+their targets. `worktree_artifacts.is_disposable_path` and
+`regenerable_output.is_regenerable_ignored_path` supply the shared taxonomy.
+
+The reviewed site build patterns live in `regenerable_output.SITE_BUILD_OUTPUT_PATTERNS`.
+They exclude tracked files, symlink components, database files and unknown output.
+`RELEASE_OUTPUT_PATTERNS` adds two conditional classes (#9828, #10061):
+
+- `site/src/data/lexicon-manifest.json`, reproduced by
+  `node site/scripts/hydrate-manifest.mjs` from `lexicon-manifest.pointer.json`.
+- `site/public/lexicon/practice-{kind}.{level}.json`, for the hydrator's enumerated
+  kinds and levels, reproduced by `node site/scripts/hydrate-practice-deck.mjs`
+  from `lexicon-practice-deck.pointer.json`.
+
+Each conditional file must be ignored, untracked, a local regular file without
+symlink components, and match its committed pointer's byte count and SHA-256.
+The pointer and hydrator must be tracked, committed and clean in both index and
+worktree. Hashing streams through directory descriptors without following links.
+Missing proof, richer unpublished content, `.tmp`, staged manifests and gzip
+copies retain the normal preservation and cap rules. No filename-only exemption
+applies to these release files. `data/atlas.db` and its sidecars remain task output;
+their names and an `atlas:build-db` command do not prove their local provenance.
+
+Task-record inventory retries one complete scan after a read failure, logging
+the retry. A vanished task filename must have a visible archive counterpart;
+persistent unreadable records or unaccounted disappearance still refuse removal.
 
 The issue-stream audit's refresh sidecars, `batch_state/issue_stream_audit_refresh.json`
 and `batch_state/issue_stream_audit_refresh.lock`, are regenerable tool state, not

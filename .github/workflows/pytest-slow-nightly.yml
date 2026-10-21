@@ -56,10 +56,6 @@ jobs:
           path: site/src/data/lexicon-manifest.json
           key: lexicon-manifest-${{ hashFiles('site/src/data/lexicon-manifest.pointer.json') }}
 
-      - name: Verify Atlas manifest matches pointer (rehydrate if stale)
-        run: |
-          python -c "import sys; sys.path.insert(0, 'scripts'); from lexicon.manifest_io import load_manifest; load_manifest(); print('Atlas manifest verified against pointer')"
-
       - name: Restore pip wheel cache
         id: pip-wheel-cache
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
@@ -77,6 +73,18 @@ jobs:
           .venv/bin/python -m pip install --no-deps --index-url https://download.pytorch.org/whl/cpu \
             torch==2.13.0
           .venv/bin/python -m pip install --no-deps multiprocess==0.70.18 huggingface-hub==1.24.0
+
+      # The loader imports locked project dependencies (jsonschema), so it runs
+      # in the project venv after Install dependencies, never the setup interpreter.
+      - name: Verify Atlas manifest matches pointer (rehydrate if stale)
+        run: |
+          .venv/bin/python - <<'PY'
+          import sys
+          sys.path.insert(0, 'scripts')
+          from lexicon.manifest_io import load_manifest
+          load_manifest()
+          print('Atlas manifest verified against pointer')
+          PY
 
       - name: Set Stanza resources directory
         run: echo "STANZA_RESOURCES_DIR=${STANZA_RESOURCES_DIR:-${HOME}/stanza_resources}" >> "$GITHUB_ENV"

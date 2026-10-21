@@ -28,7 +28,7 @@ from typing import Any
 
 import yaml
 
-from scripts.fleet.regenerable_output import is_regenerable_ignored_path
+from scripts.fleet.regenerable_output import committed_release_pins, is_regenerable_ignored_path
 from scripts.orchestration import worktree_artifacts as artifacts
 from scripts.orchestration.preparation_evidence import UniqueKeyLoader
 from scripts.orchestration.task_record_store import task_record_path
@@ -1184,7 +1184,9 @@ def _ignored_output_files(
     # Retain the existing named-link safety checks and nested-repository gates.
     named = artifacts._named_artifact_files(worktree, record, primary=primary)
     names = artifacts._git_paths(worktree, "--others", "--ignored", "--exclude-standard")
+    ignored = set(names)
     tracked = set(artifacts._git_paths(worktree, "--cached"))
+    release_pins = committed_release_pins(worktree, tracked)
     if not tracked:
         # --no-checkout leaves an empty index and no on-disk .gitignore.
         # Unignored scratch can be task output too; inventory both classes.
@@ -1198,7 +1200,9 @@ def _ignored_output_files(
             continue
         source = worktree / relative
         try:
-            if is_regenerable_ignored_path(name, worktree=worktree, tracked=tracked):
+            if is_regenerable_ignored_path(
+                name, worktree=worktree, tracked=tracked, ignored=ignored, release_pins=release_pins
+            ):
                 continue
             status = source.lstat()
             if stat.S_ISLNK(status.st_mode):
@@ -1226,7 +1230,9 @@ def _ignored_output_files(
         name
         for name in files
         if not artifacts.is_disposable_path(Path(name), worktree=worktree, primary=primary)
-        and not is_regenerable_ignored_path(name, worktree=worktree, tracked=tracked)
+        and not is_regenerable_ignored_path(
+            name, worktree=worktree, tracked=tracked, ignored=ignored, release_pins=release_pins
+        )
     )
 
 
