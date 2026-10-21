@@ -46,7 +46,8 @@ def measurement(tmp_path, monkeypatch):
             "pytest_exit_status": 0,
             "wall_seconds": 0.1,
             "versions": versions(),
-            "core": "ctrace",
+            "core": "CTracer",
+            "subprocess_patch": True,
             "config_sha256": hashlib.sha256(CONFIG.read_bytes()).hexdigest(),
             "durations_sha256": "same-snapshot",
         }
@@ -59,6 +60,8 @@ def test_complete_combination_preserves_all_executed_arcs(measurement):
     assert combine(raw, output, SHA, 2, "success") == 0
     manifest = json.loads((output / "manifest.json").read_text())
     assert manifest["complete"] is True
+    assert manifest["core"] == "CTracer"
+    assert manifest["subprocess_patch"] is True
     assert manifest["total_collected_count"] == 2
     report_path = output / "coverage.json"
     assert manifest["coverage_sha256"] == hashlib.sha256(report_path.read_bytes()).hexdigest()
@@ -80,6 +83,8 @@ def test_complete_combination_preserves_all_executed_arcs(measurement):
         ("config_sha256", "changed"),
         ("durations_sha256", "changed"),
         ("shard", 3),
+        ("core", "PyTracer"),
+        ("subprocess_patch", False),
         ("collected_nodeids", ["tests/test_1.py::test_ok"]),
     ],
 )
@@ -154,6 +159,52 @@ def test_source_reporting_failure_keeps_incomplete_manifest(measurement):
     assert "combine:" in manifest["errors"][0]
 
 
+@pytest.mark.parametrize("missing", ["coverage", "metadata", "config"])
+def test_prepare_or_dependency_failure_still_writes_incomplete_manifest(measurement, monkeypatch, missing):
+    """Combine must leave a manifest even before coverage imports/configuration succeed."""
+    raw, output = measurement
+    if missing == "coverage":
+        result = subprocess.run(
+            [
+                sys.executable,
+                "-S",
+                str(ROOT / "scripts/ci/coverage_ref.py"),
+                "combine",
+                "--input",
+                str(raw),
+                "--output",
+                str(output),
+                "--sha",
+                SHA,
+                "--matrix-result",
+                "skipped",
+            ],
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+        assert result.returncode == 1, result.stdout + result.stderr
+    else:
+        if missing == "metadata":
+
+            def missing_version(name):
+                from importlib.metadata import PackageNotFoundError
+
+                raise PackageNotFoundError(name)
+
+            monkeypatch.setattr("scripts.ci.coverage_ref.importlib.metadata.version", missing_version)
+        else:
+            monkeypatch.setenv("COVERAGE_RCFILE", "missing.ini")
+        assert combine(raw, output, SHA, 2, "skipped") == 1
+    manifest = json.loads((output / "manifest.json").read_text())
+    assert manifest["complete"] is False
+    assert manifest["core"] is None
+    assert manifest["subprocess_patch"] is None
+    assert manifest["errors"][0] == "pytest matrix: skipped"
+    assert manifest["errors"][1].startswith("combine:")
+    assert not (output / "coverage.json").exists()
+
+
 def test_xdist_collection_recorder_retains_controller_ids():
     recorder = CollectionRecorder()
     recorder.pytest_collection_finish(SimpleNamespace(items=[SimpleNamespace(nodeid="serial::test")]))
@@ -187,6 +238,8 @@ def test_runner_records_failures_and_rejects_empty_or_inconsistent_collection(
 
     def fake_pytest(args, plugins):
         assert args == ["tests", "-n", "2"]
+        plugins[0].core = "CTracer"
+        plugins[0].subprocess_patch = True
         for ids in collections:
             plugins[0].pytest_xdist_node_collection_finished(None, ids)
         return status
@@ -199,8 +252,16 @@ def test_runner_records_failures_and_rejects_empty_or_inconsistent_collection(
     assert receipt["collection_consistent"] == all(ids == collections[-1] for ids in collections)
 
 
-@pytest.mark.parametrize("fail", [False, True])
-def test_real_xdist_and_subprocess_measurement_records_status_and_child_lines(tmp_path, fail):
+@pytest.mark.parametrize(
+    "fail,core,patch,expected",
+    [
+        (False, "ctrace", "subprocess", 0),
+        (True, "ctrace", "subprocess", 1),
+        (False, "pytrace", "subprocess", 1),
+        (False, "ctrace", "", 1),
+    ],
+)
+def test_real_xdist_and_subprocess_measurement_records_status_and_child_lines(tmp_path, fail, core, patch, expected):
     """Catch disabled subprocess patching, lost xdist IDs and masked pytest failures."""
     for directory in ("scripts", ".mcp", "agents_extensions", "packages", "ci-artifacts"):
         (tmp_path / directory).mkdir()
@@ -212,6 +273,10 @@ def test_real_xdist_and_subprocess_measurement_records_status_and_child_lines(tm
         f"    assert {not fail!r}\n"
     )
     (tmp_path / "ci-artifacts/pytest-file-durations.json").write_text("{}")
+    config = tmp_path / "coverage.ini"
+    config.write_text(
+        CONFIG.read_text().replace("core = ctrace", f"core = {core}").replace("patch = subprocess", f"patch = {patch}")
+    )
     subprocess.run(["git", "init", "-q", str(tmp_path)], check=True, timeout=30)
     subprocess.run(
         [
@@ -234,7 +299,7 @@ def test_real_xdist_and_subprocess_measurement_records_status_and_child_lines(tm
     env = {key: value for key, value in os.environ.items() if not key.startswith("COVERAGE_")}
     env.update(
         {
-            "COVERAGE_RCFILE": str(CONFIG),
+            "COVERAGE_RCFILE": str(config),
             "COVERAGE_FILE": str(tmp_path / "raw/.coverage"),
             "GITHUB_RUN_ID": "456",
             "GITHUB_RUN_ATTEMPT": "1",
@@ -264,7 +329,7 @@ def test_real_xdist_and_subprocess_measurement_records_status_and_child_lines(tm
             "--cov=packages",
             "--cov-branch",
             "--cov-report=",
-            f"--cov-config={CONFIG}",
+            f"--cov-config={config}",
             "test_child.py",
         ],
         cwd=tmp_path,
@@ -273,14 +338,15 @@ def test_real_xdist_and_subprocess_measurement_records_status_and_child_lines(tm
         text=True,
         timeout=60,
     )
-    assert result.returncode == int(fail), result.stdout + result.stderr
+    assert result.returncode == expected, result.stdout + result.stderr
     receipt = json.loads((tmp_path / "raw/receipt.json").read_text())
     assert receipt["collected_nodeids"] == ["test_child.py::test_child"]
     assert receipt["collected_count"] == 1
     assert receipt["pytest_exit_status"] == int(fail)
-    assert receipt["core"] == "ctrace"
+    assert receipt["core"] == ("CTracer" if core == "ctrace" else "PyTracer")
+    assert receipt["subprocess_patch"] is bool(patch)
     assert receipt["wall_seconds"] > 0
     data = coverage.CoverageData(basename=str(tmp_path / "raw/.coverage"))
     data.read()
-    assert data.has_arcs()
-    assert data.lines("scripts/child.py") == [1, 2]
+    assert data.has_arcs() is bool(patch)
+    assert data.lines("scripts/child.py") == ([1, 2] if patch else [])

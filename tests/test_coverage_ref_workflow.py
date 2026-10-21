@@ -169,3 +169,27 @@ def test_workflow_is_manual_and_uploads_hidden_data_even_after_failure():
     assert merge["if"] == "${{ always() }}"
     assert set(merge["needs"]) == {"prepare", "pytest"}
     assert "continue-on-error" not in step(merge, "Validate receipts, combine and report")
+
+
+def test_prepare_failure_keeps_tooling_and_dependency_lock_available_for_manifest():
+    """A skipped target checkout must not remove the interpreter pin or coverage installer."""
+    job = WORKFLOW["jobs"]["combine"]
+    sources = step(job, "Check out measured sources for JSON reporting")
+    assert "if" not in sources
+    assert sources["with"]["ref"] == "${{ needs.prepare.outputs.validated_revision || github.workflow_sha }}"
+    for name in ("pytest", "combine"):
+        job = WORKFLOW["jobs"][name]
+        tooling = step(job, "Check out measurement tooling")
+        assert tooling["with"]["path"] == "coverage-tooling"
+        assert tooling["with"]["ref"] == "${{ github.workflow_sha }}"
+        if name == "pytest":
+            assert {".python-version", "scripts/__init__.py"} <= set(tooling["with"]["sparse-checkout"].splitlines())
+            assert tooling["with"]["sparse-checkout-cone-mode"] is False
+        else:
+            assert "sparse-checkout" not in tooling["with"]
+        assert job["steps"].index(tooling) > next(
+            i
+            for i, item in enumerate(job["steps"])
+            if item.get("with", {}).get("ref") != "${{ github.workflow_sha }}"
+            and str(item.get("uses", "")).startswith("actions/checkout@")
+        )

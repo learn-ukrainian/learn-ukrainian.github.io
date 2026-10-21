@@ -10,6 +10,7 @@ import os
 import subprocess
 import sys
 import time
+from collections.abc import Generator
 from pathlib import Path
 
 
@@ -19,6 +20,17 @@ class CollectionRecorder:
     def __init__(self) -> None:
         self.nodeids: list[str] = []
         self.collections: list[list[str]] = []
+        self.core: str | None = None
+        self.subprocess_patch: bool | None = None
+
+    def pytest_runtestloop(self, session) -> Generator[None, None, object]:
+        # Read the active pytest-cov instance before it switches to its reporting instance.
+        plugin = session.config.pluginmanager.getplugin("_cov")
+        if plugin is not None and plugin.cov_controller is not None:
+            cov = plugin.cov_controller.cov
+            self.core = dict(cov.sys_info())["core"]
+            self.subprocess_patch = "subprocess" in cov.get_option("run:patch")
+        return (yield)
 
     def pytest_collection_finish(self, session) -> None:
         self.nodeids = [item.nodeid for item in session.items]
@@ -36,6 +48,8 @@ def run_shard(output: Path, shard: int, pytest_args: list[str]) -> int:
     import pytest
 
     output.mkdir(parents=True, exist_ok=True)
+    # Keep pytest optional for combine, but wrap xdist's first-result runtest hook.
+    pytest.hookimpl(wrapper=True)(CollectionRecorder.pytest_runtestloop)
     recorder = CollectionRecorder()
     started = time.monotonic()
     # Match `python -m pytest` import semantics despite running a helper outside the measured tree.
@@ -53,27 +67,28 @@ def run_shard(output: Path, shard: int, pytest_args: list[str]) -> int:
         "pytest_exit_status": status,
         "wall_seconds": round(time.monotonic() - started, 3),
         "versions": versions(),
-        "core": "ctrace",
+        "core": recorder.core,
+        "subprocess_patch": recorder.subprocess_patch,
         "config_sha256": hashlib.sha256(Path(os.environ["COVERAGE_RCFILE"]).read_bytes()).hexdigest(),
         "durations_sha256": hashlib.sha256(Path("ci-artifacts/pytest-file-durations.json").read_bytes()).hexdigest(),
     }
     (output / "receipt.json").write_text(json.dumps(receipt, indent=2) + "\n", encoding="utf-8")
-    return status or int(not consistent or not recorder.nodeids)
+    return status or int(
+        not consistent or not recorder.nodeids or recorder.core != "CTracer" or recorder.subprocess_patch is not True
+    )
 
 
 def combine(root: Path, output: Path, sha: str, shard_count: int, matrix_result: str) -> int:
-    import coverage
-
     output.mkdir(parents=True, exist_ok=True)
     manifest = {
         "sha": sha,
         "workflow_run_id": os.environ["GITHUB_RUN_ID"],
         "workflow_run_attempt": os.environ["GITHUB_RUN_ATTEMPT"],
-        "core": "ctrace",
-        "subprocess_patch": True,
+        "core": None,
+        "subprocess_patch": None,
         "expected_shards": shard_count,
         "matrix_result": matrix_result,
-        "versions": versions(),
+        "versions": {},
         "complete": False,
         "shards": [],
         "errors": [],
@@ -82,18 +97,33 @@ def combine(root: Path, output: Path, sha: str, shard_count: int, matrix_result:
     data_files = []
     seen_nodeids: set[str] = set()
     duration_hashes = set()
-    config_hash = hashlib.sha256(Path(os.environ["COVERAGE_RCFILE"]).read_bytes()).hexdigest()
     if matrix_result != "success":
         errors.append(f"pytest matrix: {matrix_result}")
     try:
+        import coverage
+
+        manifest["versions"] = versions()
+        config_hash = hashlib.sha256(Path(os.environ["COVERAGE_RCFILE"]).read_bytes()).hexdigest()
         for shard in range(1, shard_count + 1):
             directory = root / f"coverage-shard-{shard}"
             try:
                 receipt = json.loads((directory / "receipt.json").read_text(encoding="utf-8"))
                 manifest["shards"].append(receipt)
+                if manifest["core"] is None:
+                    manifest["core"] = receipt.get("core")
+                    manifest["subprocess_patch"] = receipt.get("subprocess_patch")
+                if receipt.get("core") != "CTracer" or receipt.get("subprocess_patch") is not True:
+                    raise ValueError("CTracer core or subprocess patch was not active")
                 if any(
                     receipt.get(key) != manifest[key]
-                    for key in ("sha", "workflow_run_id", "workflow_run_attempt", "versions", "core")
+                    for key in (
+                        "sha",
+                        "workflow_run_id",
+                        "workflow_run_attempt",
+                        "versions",
+                        "core",
+                        "subprocess_patch",
+                    )
                 ):
                     raise ValueError("receipt identity/version mismatch")
                 if receipt["shard"] != shard or receipt["config_sha256"] != config_hash:
@@ -140,7 +170,8 @@ def combine(root: Path, output: Path, sha: str, shard_count: int, matrix_result:
             manifest["coverage_sha256"] = hashlib.sha256(report_path.read_bytes()).hexdigest()
             manifest["total_collected_count"] = len(seen_nodeids)
             manifest["complete"] = True
-    except (OSError, ValueError, coverage.CoverageException) as error:
+    except Exception as error:
+        # This is the artifact boundary: even missing coverage/dependencies must leave a failure manifest.
         errors.append(f"combine: {error}")
     finally:
         (output / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
