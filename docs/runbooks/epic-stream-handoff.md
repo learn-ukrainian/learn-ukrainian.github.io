@@ -135,6 +135,13 @@ exit 2 unless `--force` is explicit. A confirmed local replacement is never
 archived for a remote pending copy. Differing existing lane handoffs are kept
 beside the target as `CLAUDE-DRIVER-HANDOFF.<utc>.superseded.md` before install.
 
+`--from-api` with no bundle for the caller's slot (none at all, or only other
+slots' bundles) installs nothing and exits 0 with
+`{"status":"none","action":"import-bundle"}`; SessionStart reports it as ok.
+Refusals (403, 409, a listed bundle that 404s, hash or agent mismatch) still
+exit 2 with `invalid_rollover_bundle`; an unreachable API still fails open with
+a `WARNING: rollover bundle import skipped (fail-open)` line.
+
 The bundle API is loopback-mutation protected just like claim and handoff. A
 remote host reaches it through the SSH tunnel to the API host. If tunnelling is
 not available, export to a file and copy only that file:
