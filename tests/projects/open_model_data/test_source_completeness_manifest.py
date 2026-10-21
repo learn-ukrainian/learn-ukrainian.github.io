@@ -586,6 +586,7 @@ def test_complete_finite_inventory_cli_callable_and_rerun(fixture):
     assert json.loads(result.stdout) == {"status": "STRUCTURALLY_ACCOUNTED", "gap_count": 0}
     receipt = fixture.receipt()
     assert receipt["required_requirement_count"] == 20
+    assert receipt["contract_sha256"] == digest(manifest.CONTRACT.read_bytes())
     assert receipt["supplied_unit_count"] == 144
     assert receipt["lexical_member_count"] == 3
     assert receipt["legacy_member_count"] == receipt["legacy_expected_obligation"] == 123
@@ -1367,3 +1368,70 @@ def test_cli_rejects_trailing_newline_in_unacquired_unit_digest(fixture):
     assert result.returncode == 3, result.stdout + result.stderr
     assert result.stderr.startswith("INVALID_EVIDENCE:")
     assert not (fixture.root / "output").exists()
+
+
+def test_validation_stops_at_first_invalid_row():
+    class InvalidTail(list):
+        def __getitem__(self, index):
+            if index != 0:
+                raise AssertionError("validation traversed beyond the first error")
+            return None
+
+    with pytest.raises(manifest.InvalidEvidence, match=r"^bounded\.0: type failed$"):
+        manifest._validate(InvalidTail([None, None]), {"type": "array", "items": {"type": "integer"}}, "bounded")
+
+
+@pytest.mark.parametrize("censuses", [False, True])
+def test_receipt_and_censuses_bind_one_contract_snapshot(fixture, monkeypatch, censuses):
+    contract = fixture.root / "accounting-contract.md"
+    contract.write_bytes(b"literal accounting contract snapshot\n")
+    monkeypatch.setattr(manifest, "CONTRACT", contract)
+    monkeypatch.setenv("TMPDIR", str(fixture.root))
+    optional = {"atlas_manifest": atlas_input(fixture), "puls_entries": puls_input(fixture)} if censuses else {}
+    original_read = manifest.Path.read_bytes
+    reads = []
+
+    def changing_contract(path):
+        raw = original_read(path)
+        if path == contract:
+            reads.append(raw)
+            contract.write_bytes(b"subsequent contract revision\n")
+        return raw
+
+    monkeypatch.setattr(manifest.Path, "read_bytes", changing_contract)
+    outputs, receipt = manifest.account(fixture.paths, **optional)
+    manifest.publish(fixture.root / "output", outputs, receipt)
+    published = fixture.receipt()
+    expected = digest(b"literal accounting contract snapshot\n")
+    assert published["contract_sha256"] == expected
+    assert reads == [b"literal accounting contract snapshot\n"]
+    assert contract.resolve() in receipt["_input_paths"]
+    if censuses:
+        for name in ("atlas-census.json", "puls-census.json"):
+            assert json.loads(outputs[name])["contract_sha256"] == expected
+    for output in published["outputs"]:
+        raw = (fixture.root / "output" / output["path"]).read_bytes()
+        assert (digest(raw), len(raw)) == (output["sha256"], output["bytes"])
+
+
+def test_diagnostic_bundle_is_deterministic_across_hash_seeds(fixture, monkeypatch):
+    records = fixture.docs["stage_evidence"]["records"]
+    records[0].update(state="corrupt", reason="retained corrupt capture")
+    records[1].update(state="quarantined", reason="retained quarantined capture")
+    del records[2]  # Unexplained parsing loss stays missing.
+    fixture.save()
+    for seed in ("1", "719"):
+        monkeypatch.setenv("PYTHONHASHSEED", seed)
+        result = fixture.cli(out=f"seed-{seed}")
+        assert (result.returncode, result.stderr) == (2, "")
+        assert json.loads(result.stdout) == {"status": "INCOMPLETE_DIAGNOSTIC", "gap_count": 3}
+    first = {p.name: p.read_bytes() for p in (fixture.root / "seed-1").iterdir()}
+    second = {p.name: p.read_bytes() for p in (fixture.root / "seed-719").iterdir()}
+    assert first == second
+    receipt = fixture.receipt(out="seed-1")
+    assert receipt["supplied_unit_count"] == 144
+    assert [(g["stage"], g["owner"]) for g in receipt["gaps"]] == [
+        ("acquisition", "open-model-data"),
+        ("raw_custody", "open-model-data"),
+        ("parsing", "open-model-data"),
+    ]

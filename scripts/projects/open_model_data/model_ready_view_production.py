@@ -16,6 +16,7 @@ import math
 import platform
 import re
 import sqlite3
+import sys
 import unicodedata
 from collections.abc import Iterable, Iterator, Mapping, Sequence
 from contextlib import closing
@@ -26,6 +27,10 @@ from pathlib import Path
 from typing import Any
 
 from jsonschema import Draft202012Validator, FormatChecker
+
+if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
+
 from referencing import Registry, Resource
 from tokenizers import Tokenizer
 

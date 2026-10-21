@@ -56,69 +56,93 @@ describe("lexicon static API routes", () => {
   beforeAll(async () => {
     // Status first: it primes the committed runtime-status cache that the status
     // and contract routes (and the tests below) then read in milliseconds.
-    await routeJson(getStatus);
-    sharedSearch = await routeJson<unknown[]>(getSearchIndex);
-    sharedDaily = await routeJson<unknown[]>(getDailyPool);
+    const statusStarted = performance.now();
+    console.log('[10183-phase] path=status phase=status state=started');
+    try {
+      await routeJson(getStatus);
+    } finally {
+      console.log(`[10183-phase] path=status phase=status state=settled ms=${(performance.now() - statusStarted).toFixed(3)}`);
+    }
+    const searchStarted = performance.now();
+    console.log('[10183-phase] path=status phase=search state=started');
+    try {
+      sharedSearch = await routeJson<unknown[]>(getSearchIndex);
+    } finally {
+      console.log(`[10183-phase] path=status phase=search state=settled ms=${(performance.now() - searchStarted).toFixed(3)}`);
+    }
+    const dailyStarted = performance.now();
+    console.log('[10183-phase] path=status phase=daily state=started');
+    try {
+      sharedDaily = await routeJson<unknown[]>(getDailyPool);
+    } finally {
+      console.log(`[10183-phase] path=status phase=daily state=settled ms=${(performance.now() - dailyStarted).toFixed(3)}`);
+    }
   }, FIXTURE_BUILD_TIMEOUT_MS);
 
   test("emits runtime status for public Atlas, Daily Word, and Practice", async () => {
-    const search = sharedSearch;
-    const daily = sharedDaily;
-    const status = await routeJson<{
-      schema: string;
-      status: string;
-      publicAtlas: { searchArticleEntries: number; searchAliasRows: number; browseRecords: number };
-      entryModel: {
-        reviewed_entries_by_type: Record<string, number>;
-        total_reviewed_entries: number;
-        alias_records: number;
-        candidate_evidence_count: number;
-        candidate_evidence_by_bucket: Record<string, number>;
-      };
-      daily: { poolEntries: number };
-      practice: { totalLexemes: number };
-      checks: { searchMatchesReviewedEntries: boolean; singlePracticeDeckVersion: boolean };
-      endpoints: {
-        contract: string;
-        searchIndex: string;
-        searchAliases: string;
-        searchShards: string;
-      dailyPool: string;
-      practiceIndexTemplate: string;
-        practiceLexemesTemplate: string;
-        practiceClozeTemplate: string;
-      };
-    }>(getStatus);
+    const started = performance.now();
+    console.log('[10183-phase] path=status phase=assert state=started');
+    try {
+      const search = sharedSearch;
+      const daily = sharedDaily;
+      const status = await routeJson<{
+        schema: string;
+        status: string;
+        publicAtlas: { searchArticleEntries: number; searchAliasRows: number; browseRecords: number };
+        entryModel: {
+          reviewed_entries_by_type: Record<string, number>;
+          total_reviewed_entries: number;
+          alias_records: number;
+          candidate_evidence_count: number;
+          candidate_evidence_by_bucket: Record<string, number>;
+        };
+        daily: { poolEntries: number };
+        practice: { totalLexemes: number };
+        checks: { searchMatchesReviewedEntries: boolean; singlePracticeDeckVersion: boolean };
+        endpoints: {
+          contract: string;
+          searchIndex: string;
+          searchAliases: string;
+          searchShards: string;
+        dailyPool: string;
+        practiceIndexTemplate: string;
+          practiceLexemesTemplate: string;
+          practiceClozeTemplate: string;
+        };
+      }>(getStatus);
 
-    expect(status.schema).toBe("atlas-runtime-status");
-    expect(status.status).toBe("ok");
-    expect(status.publicAtlas.searchArticleEntries).toBe(search.length);
-    expect(status.publicAtlas.searchArticleEntries).toBe(status.entryModel.total_reviewed_entries);
-    expect(Object.values(status.entryModel.reviewed_entries_by_type).reduce((sum, count) => sum + count, 0)).toBe(
-      status.entryModel.total_reviewed_entries,
-    );
-    expect(status.publicAtlas.searchAliasRows).toBeGreaterThan(0);
-    expect(status.entryModel.alias_records).toBeGreaterThanOrEqual(status.publicAtlas.searchAliasRows);
-    expect(status.entryModel.candidate_evidence_count).toBe(0);
-    expect(status.entryModel.candidate_evidence_by_bucket).toEqual({});
-    expect(status.daily.poolEntries).toBe(daily.length);
-    expect(status.practice.totalLexemes).toBeGreaterThan(0);
-    expect(status.checks.searchMatchesReviewedEntries).toBe(true);
-    expect(status.checks.singlePracticeDeckVersion).toBe(true);
-    expect(status.endpoints.contract).toBe("/api/lexicon/contract.json");
-    expect(status.endpoints.searchIndex).toBe("/lexicon/search-index.json");
-    expect(status.endpoints.searchAliases).toBe("/lexicon/search-aliases.json");
-    expect(status.endpoints.searchShards).toBe("/lexicon/search-shards.json");
-    expect(status.endpoints.dailyPool).toBe("/lexicon/daily-pool.json");
-    expect(status.endpoints.practiceIndexTemplate).toBe(
-      "/lexicon/practice-index.{level}.json",
-    );
-    expect(status.endpoints.practiceLexemesTemplate).toBe(
-      "/lexicon/practice-lexemes.{level}.json",
-    );
-    expect(status.endpoints.practiceClozeTemplate).toBe(
-      "/lexicon/practice-cloze.{level}.json",
-    );
+      expect(status.schema).toBe("atlas-runtime-status");
+      expect(status.status).toBe("ok");
+      expect(status.publicAtlas.searchArticleEntries).toBe(search.length);
+      expect(status.publicAtlas.searchArticleEntries).toBe(status.entryModel.total_reviewed_entries);
+      expect(Object.values(status.entryModel.reviewed_entries_by_type).reduce((sum, count) => sum + count, 0)).toBe(
+        status.entryModel.total_reviewed_entries,
+      );
+      expect(status.publicAtlas.searchAliasRows).toBeGreaterThan(0);
+      expect(status.entryModel.alias_records).toBeGreaterThanOrEqual(status.publicAtlas.searchAliasRows);
+      expect(status.entryModel.candidate_evidence_count).toBe(0);
+      expect(status.entryModel.candidate_evidence_by_bucket).toEqual({});
+      expect(status.daily.poolEntries).toBe(daily.length);
+      expect(status.practice.totalLexemes).toBeGreaterThan(0);
+      expect(status.checks.searchMatchesReviewedEntries).toBe(true);
+      expect(status.checks.singlePracticeDeckVersion).toBe(true);
+      expect(status.endpoints.contract).toBe("/api/lexicon/contract.json");
+      expect(status.endpoints.searchIndex).toBe("/lexicon/search-index.json");
+      expect(status.endpoints.searchAliases).toBe("/lexicon/search-aliases.json");
+      expect(status.endpoints.searchShards).toBe("/lexicon/search-shards.json");
+      expect(status.endpoints.dailyPool).toBe("/lexicon/daily-pool.json");
+      expect(status.endpoints.practiceIndexTemplate).toBe(
+        "/lexicon/practice-index.{level}.json",
+      );
+      expect(status.endpoints.practiceLexemesTemplate).toBe(
+        "/lexicon/practice-lexemes.{level}.json",
+      );
+      expect(status.endpoints.practiceClozeTemplate).toBe(
+        "/lexicon/practice-cloze.{level}.json",
+      );
+    } finally {
+      console.log(`[10183-phase] path=status phase=assert state=settled ms=${(performance.now() - started).toFixed(3)}`);
+    }
   });
 
   test("publishes one static API contract for Atlas, Daily Word, and practice", async () => {
