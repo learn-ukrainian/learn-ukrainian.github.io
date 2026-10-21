@@ -11,6 +11,7 @@ import json
 import os
 import re
 import sqlite3
+import stat
 import subprocess
 from collections.abc import Callable, Iterator
 from contextlib import contextmanager
@@ -35,7 +36,7 @@ from scripts.control_plane.storage import (
 from scripts.control_plane.storage import connect as cp_connect
 from scripts.fleet_comms.message_plane import resolve_plane_mode
 from scripts.fleet_comms.opsec_store import batch_tasks_store, comms_plane_store
-from scripts.orchestration.task_record_store import iter_task_records
+from scripts.orchestration.task_record_store import ARCHIVE_DIR_NAME
 
 # Alert thresholds are intentionally reported, not enforced here. #5646 owns
 # consuming them. Dispatch uses the delegate default floor of 7,200 seconds.
@@ -520,13 +521,72 @@ def _parse_timestamp(value: object) -> datetime | None:
     return parsed.astimezone(UTC)
 
 
+_MAX_EPIC_DIGITS = 18
+_MAX_TASK_FAMILY_CHARS = 128
+_MAX_HARD_TIMEOUT_S = 365 * 24 * 3600
+# Largest task record read. Measured read-only over every ``*.json`` under
+# ``batch_state/tasks`` (hot and archive, 2026-10-20): genuine records reach
+# 18,666,561 bytes (~17.8 MiB, review dispatches embedding their prompt), so
+# 32 MiB leaves ~1.8x headroom. Anything larger is counted, never parsed.
+_MAX_TASK_RECORD_BYTES = 32 * 1024 * 1024
+
+
+def _valid_stream_epic(value: object) -> str | None:
+    """Return a canonical epic number for a bounded non-negative int or ASCII-digit string.
+
+    Digit strings are canonicalised textually, never through ``int()``, so an
+    oversized value cannot hit Python's integer-string-conversion limit; anything
+    longer than ``_MAX_EPIC_DIGITS`` after stripping leading zeros is invalid.
+    """
+    if isinstance(value, bool):
+        return None
+    if isinstance(value, int):
+        return str(value) if 0 <= value < 10**_MAX_EPIC_DIGITS else None
+    if isinstance(value, str):
+        digits = value.strip()
+        if digits.isascii() and digits.isdigit():
+            canonical = digits.lstrip("0") or "0"
+            return canonical if len(canonical) <= _MAX_EPIC_DIGITS else None
+    return None
+
+
+def _valid_task_family(value: object) -> str | None:
+    """Return a stripped task family only when it is a non-empty, bounded string."""
+    if isinstance(value, str):
+        family = value.strip()
+        return family if 0 < len(family) <= _MAX_TASK_FAMILY_CHARS else None
+    return None
+
+
 def _identity(record: dict[str, Any]) -> tuple[str | None, str | None]:
-    """Read only explicit lifecycle identity fields; never infer from labels."""
-    stream_epic = record.get("stream_epic")
-    task_family = record.get("task_family")
-    stream = str(stream_epic).strip() if stream_epic is not None else ""
-    family = str(task_family).strip() if task_family is not None else ""
-    return (stream or None, family or None)
+    """Read only explicit lifecycle identity fields; never infer from labels.
+
+    A malformed value (list, dict, float, bool, blank) is treated as absent so it
+    can never become a group key.
+    """
+    return (
+        _valid_stream_epic(record.get("stream_epic")),
+        _valid_task_family(record.get("task_family")),
+    )
+
+
+def _task_identity(record: dict[str, Any]) -> tuple[str | None, str | None]:
+    """Read dispatch identity from the task-lifecycle carrier, then top-level keys.
+
+    Producers write ``task_lifecycle.identity`` (``task-lifecycle-carrier.v1``);
+    top-level ``stream_epic``/``task_family`` remain a per-field fallback for older
+    records. Each field is validated before precedence, so an invalid carrier value
+    falls through to a valid top-level one. The list-valued
+    ``dor_preflight.stream_epic`` is ambiguous and is never consulted.
+    """
+    lifecycle = record.get("task_lifecycle")
+    carrier = lifecycle.get("identity") if isinstance(lifecycle, dict) else None
+    if isinstance(carrier, dict):
+        stream, family = _identity(carrier)
+    else:
+        stream, family = None, None
+    fallback_stream, fallback_family = _identity(record)
+    return (stream or fallback_stream, family or fallback_family)
 
 
 def _percentile(samples: list[float], percentile: float) -> float:
@@ -815,6 +875,56 @@ def _resolve_pr_merge_facts(
     return resolved
 
 
+def _task_record_paths(directory: Path, *, optional: bool) -> list[Path]:
+    """Name-sorted ``*.json`` entries of ``directory``, whatever their type.
+
+    Unlike ``iter_task_records`` this filters nothing by file type: a FIFO, a
+    symlink loop or a directory named like a record is still an entry the
+    collector is responsible for, so the caller can count it. ``optional``
+    directories (the archive) may be absent.
+    """
+    try:
+        with os.scandir(directory) as entries:
+            return sorted(directory / entry.name for entry in entries if entry.name.endswith(".json"))
+    except (FileNotFoundError, NotADirectoryError):
+        if optional:
+            return []
+        raise
+
+
+def _read_task_record(path: Path) -> tuple[object, str | None]:
+    """Return ``(parsed, None)`` or ``(None, error_kind)``; never block or raise.
+
+    The path is ``stat``-ed (following symlinks, so a loop or dangling link is
+    just an ``OSError``) before it is opened, so a FIFO or device is never
+    opened. The open itself is non-blocking and re-checked with ``fstat`` to
+    survive a swap between the two. At most ``_MAX_TASK_RECORD_BYTES + 1``
+    bytes are read, so an oversized or growing file is never loaded whole.
+    """
+    try:
+        if not stat.S_ISREG(os.stat(path).st_mode):
+            return None, "task_record_not_regular"
+        fd = os.open(path, os.O_RDONLY | os.O_NONBLOCK | getattr(os, "O_CLOEXEC", 0))
+        try:
+            info = os.fstat(fd)
+            if not stat.S_ISREG(info.st_mode):
+                return None, "task_record_not_regular"
+            if info.st_size > _MAX_TASK_RECORD_BYTES:
+                return None, "task_record_too_large"
+            with os.fdopen(fd, "rb", closefd=False) as handle:
+                raw = handle.read(_MAX_TASK_RECORD_BYTES + 1)
+        finally:
+            os.close(fd)
+        if len(raw) > _MAX_TASK_RECORD_BYTES:
+            return None, "task_record_too_large"
+        return json.loads(raw.decode("utf-8")), None
+    except (OSError, ValueError, RecursionError, MemoryError):
+        # ValueError covers JSONDecodeError, UnicodeDecodeError and the
+        # integer-string-conversion limit; RecursionError covers deep nesting;
+        # OSError covers vanished, dangling, looping and permission-denied files.
+        return None, "task_record_unreadable"
+
+
 def collect_stream_bottleneck_metrics(
     *,
     tasks_dir: Path,
@@ -880,21 +990,31 @@ def collect_stream_bottleneck_metrics(
         )
 
     try:
-        task_paths = list(iter_task_records(tasks_dir, include_archive=True))
         if not tasks_dir.is_dir():
             raise FileNotFoundError("tasks_dir_missing")
-        for path in task_paths:
+        task_paths: list[Path] = []
+        for directory, optional in ((tasks_dir, False), (tasks_dir / ARCHIVE_DIR_NAME, True)):
             try:
-                record = json.loads(path.read_text(encoding="utf-8"))
-            except (OSError, json.JSONDecodeError):
-                errors.append(_dispatch_error("task_record_unreadable"))
+                task_paths.extend(_task_record_paths(directory, optional=optional))
+            except OSError:
+                errors.append(_dispatch_error("tasks_dir_unreadable"))
+        for path in task_paths:
+            record, read_error = _read_task_record(path)
+            if read_error is not None:
+                errors.append(_dispatch_error(read_error))
                 continue
             if not isinstance(record, dict):
                 errors.append(_dispatch_error("task_record_not_object"))
                 continue
             hard_timeout = record.get("hard_timeout")
-            if isinstance(hard_timeout, int) and hard_timeout >= 0:
+            if isinstance(hard_timeout, int) and not isinstance(hard_timeout, bool) and 0 <= hard_timeout <= _MAX_HARD_TIMEOUT_S:
                 dispatch_hard_timeouts.append(hard_timeout)
+            if "task_id" not in record:
+                errors.append(_dispatch_error("not_a_task_record"))
+                continue
+            if record.get("started_at") is None:
+                errors.append(_dispatch_error("missing_started_at"))
+                continue
             started = _parse_timestamp(record.get("started_at"))
             if started is None:
                 errors.append(_dispatch_error("invalid_started_at"))
@@ -908,7 +1028,7 @@ def collect_stream_bottleneck_metrics(
                 errors.append(_dispatch_error("negative_duration"))
                 continue
             add(
-                _identity(record),
+                _task_identity(record),
                 "dispatch",
                 (finished - started).total_seconds() if finished else None,
                 max(0.0, (clock - started).total_seconds()) if finished is None else None,

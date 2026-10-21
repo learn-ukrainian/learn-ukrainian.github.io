@@ -59,6 +59,9 @@ def _format_recall(label: str, caught: int, total: int) -> str:
 
 
 def main() -> int:
+    if len(sys.argv) > 1 and sys.argv[1] in {"-h", "--help"}:
+        print(__doc__.strip())
+        return 0
     if not SOURCE.exists():
         print(__doc__.strip())
         print(f"\nERROR: missing required source file: {SOURCE}")

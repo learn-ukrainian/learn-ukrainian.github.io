@@ -115,6 +115,100 @@ def _json(value: Any) -> str:
     return json.dumps(value, ensure_ascii=False)
 
 
+WORD_CARD_ID = "wc_mcp000000001"
+
+
+def card_assertion(card_id: str, index: int, field: str, value: Any, source_id: str = "ulif") -> dict[str, Any]:
+    """A synthetic cited assertion in the word-card schema's shape."""
+    return {
+        "assertion_id": f"wa_{index:024x}",
+        "subject": {"kind": "card", "id": card_id},
+        "field": field,
+        "value": value,
+        "value_norm": value if isinstance(value, str) else _json(value),
+        "source_id": source_id,
+        "snapshot_id": "probe-snapshot-v1",
+        "locator": f"{source_id}:probe:{index}",
+        "source_record_key": f"{source_id}:record:{index}",
+        "extraction_version": "probe-v1",
+        "extraction_confidence": "high",
+        "producer": {"kind": "source_extract", "name": "probe"},
+        "review": {"status": "none"},
+        "licence_ref": {"register_source_id": source_id, "register_version": 2},
+        "status": "active",
+    }
+
+
+def card_field(*assertions: dict[str, Any], state: str = "single-source") -> dict[str, Any]:
+    """A field resolution selecting the first assertion, one value per assertion."""
+    return {
+        "state": state,
+        "selected": assertions[0]["assertion_id"] if assertions else None,
+        "values": [
+            {
+                "value_norm": a["value_norm"],
+                "assertion_ids": [a["assertion_id"]],
+                "independence_groups": [f"G-{a['source_id'].upper()}"],
+                "mapping_evidenced": True,
+                "independence_groups_evidenced": 1,
+            }
+            for a in assertions
+        ],
+        "independence_groups_agreeing": 1,
+        "mapping_evidenced": bool(assertions),
+        "independence_groups_evidenced": len(assertions),
+        "comparison": "scalar",
+        "proposition": "probe",
+    }
+
+
+def word_card(
+    card_id: str,
+    spelling: str,
+    *,
+    card_kind: str = "lexeme",
+    fields: dict[str, Any] | None = None,
+    senses: list[dict[str, Any]] | None = None,
+    assertions: list[dict[str, Any]] | None = None,
+) -> dict[str, Any]:
+    """A synthetic, uncertified word card; the repository review ledger never approves it."""
+    return {
+        "schema_version": "1",
+        "card_id": card_id,
+        "card_kind": card_kind,
+        "state": "active",
+        "key_at_creation": {"spelling": spelling, "stress_patterns": [], "pos": "noun", "source_keys": []},
+        "identity": {"confidence": "high", "method": "unique_match", "source_keys": []},
+        "senses": senses or [],
+        "links": [],
+        "fields": fields or {},
+        "assertions": assertions or [],
+        "quality": {"identity_confidence": "high", "linguistic_review": {"status": "none"}, "practice_eligibility": []},
+        "build": {
+            "build_id": "probe-build",
+            "rules_version": "rules-v1-draft",
+            "inputs": {},
+            "card_version": "cv_probe",
+        },
+    }
+
+
+def build_word_cards(scratch: Path) -> Path:
+    """Write a card build directory holding one candidate card for мова; return the directory."""
+    stress = card_assertion(WORD_CARD_ID, 1, "stress", "мо́ва")
+    cefr = card_assertion(WORD_CARD_ID, 2, "cefr", "A1", source_id="puls")
+    card = word_card(
+        WORD_CARD_ID,
+        WORD,
+        fields={"stress": card_field(stress), "cefr": card_field(cefr)},
+        assertions=[stress, cefr],
+    )
+    cards = scratch / "word_cards" / "cards"
+    cards.mkdir(parents=True)
+    (cards / f"{WORD_CARD_ID}.json").write_text(_json(card), encoding="utf-8")
+    return cards.parent
+
+
 # The probe's lookup words. Every row below exists so one of them is found.
 WORD = "мова"
 OLD_WORD = "хата"

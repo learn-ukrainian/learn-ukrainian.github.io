@@ -24,6 +24,7 @@ import copy
 import hashlib
 import json
 import os
+import sys
 import tempfile
 from collections import Counter
 from collections.abc import Callable, Mapping, Sequence
@@ -31,6 +32,9 @@ from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
+
+if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from scripts.lexicon import enrich_manifest
 from scripts.lexicon.build_data_manifest import _lemma_key, _slug_for_url

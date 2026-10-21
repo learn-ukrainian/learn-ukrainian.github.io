@@ -65,6 +65,20 @@
       "path_prepend": ["scripts/agent_runtime/shims"]
     },
     {
+      "session": "practice",
+      "name": "practice",
+      "kind": "claude",
+      "epic": "practice",
+      "sender": "claude-practice",
+      "goal": ".claude/practice-epic/DRIVER-STATE.md",
+      "launcher": "start-claude-driver.sh",
+      "model": "claude-sonnet-5-5",
+      "effort": "high",
+      "account_env": ["CLAUDE_CONFIG_DIR"],
+      "kick": "Resume as the Practice driver from the NEWEST HANDOFF at the top of .claude/practice-epic/DRIVER-STATE.md. Consume your claude-practice Fleet inbox first, adopt the in-flight workers listed in the handoff (do not restart them), then continue the recorded chains. Never /compact; hand off before 70% context.",
+      "provider_args": ["--dangerously-skip-permissions"]
+    },
+    {
       "session": "open-model-data",
       "name": "open-model-data",
       "kind": "codex",

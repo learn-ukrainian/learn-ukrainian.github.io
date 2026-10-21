@@ -32,9 +32,9 @@ def test_happy_path_real_files() -> None:
     """Validate real fleet_taxonomy.yaml and area_assignments.yaml."""
     res = validate_fleet_taxonomy()
     assert res["ok"] is True
-    assert res["areas_count"] == 10
-    assert res["epics_count"] == 21
-    assert res["assignments_count"] == 10
+    assert res["areas_count"] == 11
+    assert res["epics_count"] == 22
+    assert res["assignments_count"] == 11
 
 
 def test_negative_duplicate_alias_across_areas(tmp_path: Any) -> None:

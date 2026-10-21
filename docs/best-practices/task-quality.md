@@ -49,6 +49,20 @@ trivial card remains visible in the DoD section, comment and report, but does
 not refuse admission. Body-only CLI modes report
 membership `unchecked` and cannot establish membership proof.
 
+Acceptance items that explicitly require evidence after merge, post-merge,
+once merged, or after landing must name `owner: <lane>` and a valid calendar
+date as `due: YYYY-MM-DD` on the same line. The recognized lanes are
+`claude-infra`, `codex-devops`, `codex-atlas`, `grok-monitor`,
+`gemini-open-model-data`, and `claude-cto`. The date is the deadline to collect
+and review the evidence. Missing or invalid fields produce
+`post_merge_unowned` WARN, which blocks implementation dispatch unless a reason
+is recorded. Generic mentions of runs, windows, days, or receipts alone do
+not trigger this rule. Fenced code blocks and quoted examples are excluded.
+
+```markdown
+- [ ] AC-03: After merge, review five CI receipts; owner: codex-devops; due: 2026-11-20
+```
+
 The live checker follows at most eight repository-qualified parent links to a
 registered active root and calls `resolve_live_ancestry`. Active roots retain
 only their documented membership exemption. Canonical fresh unique body
@@ -64,8 +78,47 @@ the exact target number must have unique body membership for the claimed root.
 An invalid, conflicting, missing or unreadable cache cannot admit the target.
 It falls back to a live audit within the same membership budget. A failed
 fallback records both its typed refusal and the cache rejection reason. Native
-parent traversal does not read the cache or run the audit. Neither path writes
-the audit cache.
+parent traversal does not read the cache or run the audit.
+
+The daily issue-quality report and successful bounded live checks publish the
+cache through `write_membership_cache`. It validates the repository, current
+registry, complete traversal, listing denominator and conflict-free effective
+membership before writing. Every writer of the file, including the Monitor's
+`run_audit` refresh, uses the one atomic publisher `publish_cache`: a sibling
+temporary file is flushed and synced, then renamed over the shared cache.
+Failed validation or a failed write leaves the previous cache intact. The
+payload retains the audit's original `generated_at`, `membership_complete`,
+index and open-issue numbers. It adds `schema_version: 1` and `root_results`,
+which lists each registered root's effective native and body members, or is
+`null` when the report cannot certify membership (`run_audit` still publishes
+such a report for the Monitor). The strict checker trusts a cache only when
+`schema_version` is the integer `1` and `root_results` equals its
+recomputation from the index. A missing, mistyped or other version, or a
+missing or mismatched `root_results`, is the typed refusal
+`membership_audit_cache_schema` and falls back to the live audit; the legacy
+unversioned shape is never trusted. No new process or timer is required. Daily
+publication retries reuse the saved report bytes and do not renew the
+membership timestamp.
+
+The Monitor serves this same file at `/api/issues/streams`, so every
+publication is a complete hygiene report. The writer appends the closed-epic and
+milestone warnings that `run_audit` adds, from the same shared helper. If that
+lookup fails, nothing is written. `root_results` is private like the
+membership index: both the route and the Work projection strip every key in
+`PRIVATE_CACHE_KEYS`. A checker's verdict is final before publication, so a
+deadline or write failure during publication keeps the verdict and records
+`cache_write_error` (`membership_audit_cache_write_timeout` or
+`membership_audit_cache_write_failed`).
+
+A parentless issue resolves only when the audit records exact unique body
+membership, even if its own title or body has no parent claim. A valid audit
+that observed the open target but found no stream returns
+`membership_unregistered_parentless`, without repeating the live audit. Its
+message gives the registration step: link the issue as a native sub-issue of
+one registered root or its overflow container. If native linking is at capacity,
+add `- [ ] #N` to exactly one registered root's body and refresh the audit.
+A target absent from the snapshot still needs a live audit. A fresh cache
+does not register a new issue by itself.
 
 Issue fetching and membership observation each have a 60-second budget,
 including cache validation and the entire live audit. Together they leave 15
@@ -84,7 +137,17 @@ triage stays exempt. Non-trivial malformed DoD and conflicting ancestry cannot
 be overridden.
 Absent DoD, missing parent, unavailable registry and unknown membership refuse
 by default, with the existing recorded `--allow-dor-warn REASON` exception.
-Cursor Auto refuses any override. Registered fleet repositories without a
+A membership timeout on a card whose DoR and DoD read PASS is the one
+exception (#11283): dispatch records `dor: UNKNOWN (timeout)` with the timeout
+codes under `unknown`, prints an advisory and proceeds without the override.
+UNKNOWN is never PASS. It needs consistent positive evidence: DoR and DoD
+sections that read PASS with no errors, and a membership section whose single
+error is a timeout code the checker produces, matched whole (never by prefix)
+and listed exactly as the top-level `missing`. A target-fetch timeout, a
+checker failure, a card finding next to the timeout, or any missing, unchecked
+or contradictory section keeps the refusal, so a timeout never stands in for
+unread or incomplete card evidence. Cursor Auto refuses any override, any
+`unknown` entry and any explicit `dor` other than PASS. Registered fleet repositories without a
 membership registry report `membership_not_applicable` in admission, while DoR
 and DoD remain required. They need no permanent override.
 
@@ -215,6 +278,21 @@ Naming a residual owner does **not** satisfy an unmet acceptance criterion;
 in-scope residual keeps the task unfinished unless an authorized scope revision
 and transfer resolve it.
 
+After merge, run `.venv/bin/python -m scripts.orchestration.postmerge_criteria
+--pr N --apply`. For the PR's closing links and explicit `Closes #N` references,
+the command reopens closed issues with unchecked acceptance criteria and posts
+one comment per outstanding item set with each owner and deadline. Missing or
+invalid assignments go to `claude-cto` through Fleet Comms, idempotently per
+issue and item set. Dry-run omits `--apply`; outstanding criteria return exit 1.
+The owning lane checks due items in its existing reconciliation cycle, records
+evidence, and escalates overdue items. Naming an owner never satisfies an item.
+This command does not close issues or audit historical issues.
+
+Follow-up for the separate `merge_closeout.py` owner: call
+`postmerge_criteria.run_postmerge_criteria(pr_number, apply=apply)` after
+confirming MERGED and before reporting successful closeout; propagate a false
+`ok` as unfinished closeout. The integration is not installed by #11213.
+
 Compose only the rows that apply (N/A needs a reason — do not skip silently):
 
 - [ ] **Outcome verified** against denominator on the **exact merged SHA / shipped
@@ -279,7 +357,8 @@ fields listed), including when GitHub/API input cannot be read. It does **not**
 block issue creation or merge. Implementation dispatch uses `--strict`: WARN,
 GitHub/API lookup failure, or checker failure refuses dispatch by default.
 The recorded `--allow-dor-warn <reason>` exception covers absent DoD or missing
-and unknown membership. Malformed DoD and conflicting ancestry remain
+and unknown membership; a membership timeout alone on an otherwise PASS card is
+an UNKNOWN advisory that needs no override. Malformed DoD and conflicting ancestry remain
 non-overrideable. PR references are skipped after API resolution; a brief
 without an issue reference is not gated. The detailed admission rules are above.
 

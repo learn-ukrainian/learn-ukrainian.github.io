@@ -53,6 +53,9 @@ def count_words(text: str) -> dict:
 
 
 def main() -> int:
+    if len(sys.argv) > 1 and sys.argv[1] in {"-h", "--help"}:
+        print("Usage: calc_immersion.py <content_file>", file=sys.stderr)
+        return 0
     if len(sys.argv) < 2:
         print("Usage: calc_immersion.py <content_file>", file=sys.stderr)
         return 1

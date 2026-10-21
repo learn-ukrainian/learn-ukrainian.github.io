@@ -183,6 +183,70 @@ describe("reportAtlasShellAnalytics", () => {
   });
 });
 
+function render404BootDocument() {
+  const source = readFileSync(resolve(process.cwd(), "src/pages/404.astro"), "utf8");
+  const boot = source.slice(
+    source.indexOf('<div data-atlas-shell-boot hidden>'),
+    source.indexOf('<div data-atlas-client-shell>'),
+  );
+  expect(boot).toContain('data-word-atlas-state="loading"');
+  return render(createElement("div", {
+    dangerouslySetInnerHTML: { __html: boot },
+  }));
+}
+
+describe("404 boot handover", () => {
+  test("preserves the hidden no-JS fallback and accessible pre-mount loading state", () => {
+    const boot = render404BootDocument();
+    const placeholder = boot.container.querySelector("[data-atlas-shell-boot]");
+    expect(placeholder).toHaveAttribute("hidden");
+    expect(boot.container.querySelector('[data-word-atlas-state="loading"]')).toHaveAttribute("aria-busy", "true");
+    placeholder?.removeAttribute("hidden");
+    expect(screen.getByRole("status")).toHaveAttribute("data-word-atlas-state", "loading");
+  });
+
+  test("boot-to-ready retires every loading marker after the real boot DOM mounts", async () => {
+    const boot = render404BootDocument();
+    boot.container.querySelector("[data-atlas-shell-boot]")?.removeAttribute("hidden");
+    render(createElement(WordAtlasClientShell, {
+      pathname: "/lexicon/прапор/",
+      assetBaseUrl: "/atlas",
+      fetchImpl: fixtureFetchImpl(),
+    }));
+    expect(screen.getByRole("status")).toHaveAttribute("aria-busy", "true");
+    await waitFor(() => expect(document.querySelector("[data-word-atlas]")).toBeTruthy());
+    expect(document.querySelectorAll("[data-word-atlas-state]")).toHaveLength(0);
+  });
+
+  test.each([
+    { status: "not_found", slug: "немає-такого-xyz", overrides: {} },
+    { status: "corrupt", slug: "прапор", overrides: { corruptShard: true } },
+    { status: "network_error", slug: "прапор", overrides: { failUrls: /current\.json$/ } },
+  ])("$status replaces boot loading with one accessible terminal state", async ({ status, slug, overrides }) => {
+    render404BootDocument();
+    render(createElement(WordAtlasClientShell, {
+      pathname: `/lexicon/${slug}/`,
+      assetBaseUrl: "/atlas",
+      fetchImpl: fixtureFetchImpl(overrides),
+    }));
+    await waitFor(() => expect(screen.getByRole("alert")).toHaveAttribute("data-word-atlas-state", status));
+    expect(document.querySelectorAll('[data-word-atlas-state="loading"]')).toHaveLength(0);
+    expect(document.querySelectorAll("[data-word-atlas-state]")).toHaveLength(1);
+    expect(document.querySelector("[data-word-atlas]")).toBeNull();
+  });
+
+  test("nonlexicon 404 preserves the untouched hidden boot fallback", () => {
+    const boot = render404BootDocument();
+    const before = boot.container.innerHTML;
+    const fetchImpl = vi.fn<typeof fetch>();
+    const view = render(createElement(WordAtlasClientShell, { pathname: "/missing/", fetchImpl }));
+    expect(view.container).toBeEmptyDOMElement();
+    expect(boot.container.innerHTML).toBe(before);
+    expect(document.documentElement).not.toHaveAttribute("data-atlas-shell");
+    expect(fetchImpl).not.toHaveBeenCalled();
+  });
+});
+
 describe("WordAtlasClientShell React mount", () => {
   test("renders fixture article via stubbed fetch", async () => {
     render(
@@ -229,6 +293,7 @@ describe("WordAtlasClientShell React mount", () => {
 
   test("network fail → retry recovers", async () => {
     const user = userEvent.setup();
+    render404BootDocument();
     render(
       createElement(WordAtlasClientShell, {
         pathname: "/lexicon/прапор/",
@@ -239,10 +304,13 @@ describe("WordAtlasClientShell React mount", () => {
     await waitFor(() => {
       expect(screen.getByRole("alert")).toHaveAttribute("data-word-atlas-state", "network_error");
     });
+    expect(document.querySelectorAll('[data-word-atlas-state="loading"]')).toHaveLength(0);
     await user.click(screen.getByRole("button", { name: /Спробувати знову/i }));
+    expect(screen.getByRole("status")).toHaveAttribute("data-word-atlas-state", "loading");
     await waitFor(() => {
       expect(document.querySelector("[data-word-atlas]")).toBeTruthy();
     });
+    expect(document.querySelectorAll("[data-word-atlas-state]")).toHaveLength(0);
   });
 
   test("not_found via search-index preflight never requests current.json", async () => {

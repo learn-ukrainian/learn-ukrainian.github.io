@@ -38,7 +38,7 @@ import stat
 import subprocess
 import sys
 import time
-from collections.abc import Callable, Iterator
+from collections.abc import Callable, Iterator, Sequence
 from dataclasses import asdict, dataclass, field, replace
 from datetime import datetime
 from pathlib import Path
@@ -4053,7 +4053,12 @@ def _terminal_abandon_matches(repo_root: Path, worktree: Path) -> list[tuple[Pat
 
 
 def _merged_reuse_claim_proven_settled(
-    repo_root: Path, worktree: Path, record: dict[str, Any], *, tasks_dir: Path
+    repo_root: Path,
+    worktree: Path,
+    record: dict[str, Any],
+    *,
+    tasks_dir: Path,
+    merged_pr: PullRequestState | None = None,
 ) -> list[tuple[Path, dict[str, Any]]] | None:
     """Settle a keep-false creator via a successor contained in a merged PR.
 
@@ -4082,7 +4087,7 @@ def _merged_reuse_claim_proven_settled(
             return None
         try:
             _, creator, alternate = _resolve_merged_reuse_creator(
-                matches, worktree, repo_root=repo_root, tasks_dir=tasks_dir
+                matches, worktree, repo_root=repo_root, tasks_dir=tasks_dir, merged_pr=merged_pr
             )
         except ValueError:
             branch = worktree_claims.checked_out_branch(worktree)
@@ -4116,6 +4121,14 @@ def _merged_reuse_claim_proven_settled(
         branch = worktree_claims.checked_out_branch(worktree)
         info = WorktreeInfo(worktree, branch, head.stdout.strip(), detached=branch is None)
         if branch is not None:
+            # The numbered PR record survives deletion of the branch. Keep
+            # the full cohort's containment and worker-absence requirements.
+            if (
+                merged_pr is not None
+                and merged_pr.head_sha == info.head
+                and _same_branch_merged_cohort(info, merged_pr, cohort)
+            ):
+                return matches
             states, error = _query_pr_states(repo_root, branch)
             if error is None and (
                 _same_branch_merged_cohort(info, _best_pr(states), cohort)
@@ -4230,6 +4243,7 @@ def _record_merged_reuse_proof(
         "head_relation": _merged_head_relation(info, pr),
         "pr_number": pr.number,
         "pr_state": pr.state,
+        "pr_head_source": "merged_pr_record",
         "clean": True,
         "members": [
             {
@@ -4278,6 +4292,7 @@ def _enter_dispatch_worktree_guard(
     *,
     repo_root: Path,
     info: WorktreeInfo,
+    merged_pr: PullRequestState | None = None,
 ) -> str | None:
     """Take delegate's per-worktree lock and refuse another task's live claim (#8610).
 
@@ -4349,7 +4364,9 @@ def _enter_dispatch_worktree_guard(
                 return True
         except (OSError, ValueError, KeyError, TypeError, RuntimeError, subprocess.SubprocessError):
             return False
-        merged_reuse = _merged_reuse_claim_proven_settled(primary, info.path, record, tasks_dir=tasks_dir)
+        merged_reuse = _merged_reuse_claim_proven_settled(
+            primary, info.path, record, tasks_dir=tasks_dir, merged_pr=merged_pr
+        )
         if merged_reuse is not None:
             identity = _needs_finalize_claim_identity(record)
             if identity is not None:
@@ -4474,6 +4491,38 @@ def _reap_qualified_worktree(
             dirty=True,
             pr=_pr_dict(pr_state),
         )
+    # Search only establishes commit membership, not the actual PR head.
+    # Refresh before planning too, and before acquiring any dispatch/worktree lock.
+    if pr_state is not None and pr_state.head_from_commit_search:
+        from scripts.fleet import ignored_task_output
+
+        tasks_dir = task_store_paths.tasks_dir()
+        matches = ignored_task_output.matching_worktree_records(
+            info.path, tasks_dir, repo_root=control_plane_root(repo_root), publish_cache=False
+        )
+        cohort = ignored_task_output._current_reuse_records(matches, tasks_dir)
+    else:
+        cohort = []
+    if len(cohort) >= 2:
+        states, error = _query_pr_by_number(repo_root, pr_state.number) if pr_state.number else ([], None)
+        fresh = next((state for state in states if state.number == pr_state.number), None)
+        if (
+            error is not None
+            or fresh is None
+            or fresh.head_from_commit_search
+            or fresh.state != "MERGED"
+            or not info.head
+            or fresh.head_sha != info.head
+        ):
+            return ReapResult(
+                path=str(info.path),
+                branch=info.branch,
+                action="skipped",
+                reason="commit-search PR head unavailable",
+                dirty=dirty,
+                pr=_pr_dict(pr_state),
+            )
+        pr_state = fresh
     if not apply:
         from scripts.fleet import ignored_task_output
 
@@ -4562,31 +4611,6 @@ def _reap_qualified_worktree(
     recovery_ref: str | None = None
     dispatch_guard = contextlib.ExitStack()
     try:
-        # Search only establishes commit membership, not the actual PR head.
-        # Refresh by number before acquiring the dispatch/worktree lock.
-        if pr_state is not None and pr_state.head_from_commit_search:
-            from scripts.fleet import ignored_task_output
-
-            tasks_dir = task_store_paths.tasks_dir()
-            matches = ignored_task_output.matching_worktree_records(
-                info.path, tasks_dir, repo_root=control_plane_root(repo_root), publish_cache=False
-            )
-            cohort = ignored_task_output._current_reuse_records(matches, tasks_dir)
-        else:
-            cohort = []
-        if len(cohort) >= 2:
-            states, error = _query_pr_by_number(repo_root, pr_state.number) if pr_state.number else ([], None)
-            fresh = next((state for state in states if state.number == pr_state.number), None)
-            if error is not None or fresh is None or fresh.head_from_commit_search:
-                return ReapResult(
-                    path=str(info.path),
-                    branch=info.branch,
-                    action="skipped",
-                    reason="commit-search PR head unavailable",
-                    dirty=dirty,
-                    pr=_pr_dict(pr_state),
-                )
-            pr_state = fresh
         # This reservation is intentionally before the final TOCTOU checks.
         # Scheduler/delegate consumers can reject a new bind while it exists.
         if not reaper_lifecycle.mark_reap_pending(
@@ -4622,7 +4646,9 @@ def _reap_qualified_worktree(
         ):
             pr_snapshot = _query_pr_states(repo_root, info.branch)
 
-        guard_refusal = _enter_dispatch_worktree_guard(dispatch_guard, repo_root=repo_root, info=info)
+        guard_refusal = _enter_dispatch_worktree_guard(
+            dispatch_guard, repo_root=repo_root, info=info, merged_pr=pr_state
+        )
         if guard_refusal is not None:
             return ReapResult(
                 path=str(info.path),
@@ -5164,7 +5190,7 @@ def _reap_qualified_worktree(
             reaper_lifecycle.clear_reap_pending(repo_root, info.path)
 
 
-def _target_filter(target_paths: list[Path] | None) -> set[Path] | None:
+def _target_filter(target_paths: Sequence[Path] | None) -> set[Path] | None:
     if target_paths is None:
         return None
     return {path.resolve() for path in target_paths}
@@ -7301,7 +7327,13 @@ def _restore_refusal(
 
 
 def _recover_quarantine(
-    primary: Path, ctx: _CleanPushedContext, listing: list[WorktreeInfo], *, control_root: Path, dry_run: bool
+    primary: Path,
+    ctx: _CleanPushedContext,
+    listing: list[WorktreeInfo],
+    *,
+    control_root: Path,
+    dry_run: bool,
+    targets: set[Path] | None = None,
 ) -> tuple[list[CleanPushedOutcome], set[Path], bool]:
     """Judge what an interrupted run left in ``.worktrees/.reaping/`` (#10778).
 
@@ -7311,7 +7343,8 @@ def _recover_quarantine(
     else is kept and reported: no or an unreadable record, removal possibly
     started, another directory under the recorded name, an occupied
     original path. A record left with no checkout is cleared. Returns
-    ``(outcomes, paths judged, whether a checkout moved)``.
+    ``(outcomes, paths judged, whether a checkout moved)``. With ``targets``,
+    only records naming a selected original path are evaluated for recovery.
     """
     root = primary.resolve() / QUARANTINE_RELATIVE
     outcomes: list[CleanPushedOutcome] = []
@@ -7323,7 +7356,9 @@ def _recover_quarantine(
         handled.update(path for path in registered if path.parent.parent == root)
         reason = "quarantine: the quarantine directory is not a real directory; inspect it (runbook)"
         return (
-            [CleanPushedOutcome(path=_display_path(root, primary.resolve()), action="skipped", reason=reason)],
+            [CleanPushedOutcome(path=_display_path(root, primary.resolve()), action="skipped", reason=reason)]
+            if targets is None
+            else [],
             handled,
             False,
         )
@@ -7341,9 +7376,14 @@ def _recover_quarantine(
             )
 
         if holder.is_symlink() or not holder.is_dir():
-            keep("not a directory")
+            if targets is None:
+                keep("not a directory")
             continue
         record = _read_quarantine_record(holder)
+        if targets is not None and (
+            record is None or (primary.resolve() / record["original"]).resolve() not in targets
+        ):
+            continue
         if record is None:
             keep("no readable quarantine record")
             continue
@@ -7401,6 +7441,7 @@ def reap_clean_pushed(
     dry_run: bool = True,
     actor: str = DEFAULT_CLEAN_PUSHED_ACTOR,
     lock_timeout_s: float | None = None,
+    target_paths: Sequence[Path] | None = None,
 ) -> CleanPushedReport:
     """Remove clean, fully pushed, idle dispatch worktrees; dry run by default (#10778).
 
@@ -7450,6 +7491,9 @@ def reap_clean_pushed(
     the run stops and reports ``lock_busy``, preserving any earlier results.
     """
     primary = primary_checkout_root((repo_root or resolve_repo_root()).resolve())
+    # Like the general reaper, relative targets resolve against the process cwd.
+    # None preserves the unfiltered loop; an empty sequence selects nobody.
+    targets = _target_filter(target_paths)
 
     def refused(reason: str, *, busy: bool = False, stale: bool = False) -> CleanPushedReport:
         return CleanPushedReport(
@@ -7491,8 +7535,10 @@ def reap_clean_pushed(
             census=census,
             remember_reflog=not dry_run,
         )
+        # Recovery can restore checkouts or clear records. Scope those effects
+        # to selected original paths, just like the general reaper's recovery.
         recovered, handled, moved = _recover_quarantine(
-            primary, ctx, listing, control_root=control_root, dry_run=dry_run
+            primary, ctx, listing, control_root=control_root, dry_run=dry_run, targets=targets
         )
         skipped.extend(recovered)
         if moved:
@@ -7500,6 +7546,12 @@ def reap_clean_pushed(
                 listing = list_git_worktrees(primary, resolve_paths=False)
             except RuntimeError as exc:
                 return refused(str(exc))
+        if targets is not None:
+            registered = {info.path.resolve() for info in listing} | handled
+            for target in sorted(targets - registered):
+                skipped.append(
+                    CleanPushedOutcome(path=_display_path(target, primary), action="skipped", reason="not_registered")
+                )
     finally:
         lock.__exit__(None, None, None)
     busy_reason = ""
@@ -7507,6 +7559,13 @@ def reap_clean_pushed(
         if info.path.resolve() in handled:
             continue
         shown = _display_path(info.path, primary)
+        if targets is not None and info.path.resolve() not in targets:
+            skipped.append(
+                CleanPushedOutcome(
+                    path=shown, action="skipped", reason="not_selected", head=info.head, branch=info.branch
+                )
+            )
+            continue
         claims = list(ctx.index.by_path.get(info.path.resolve(), ()))
         refusal, claims = _clean_pushed_refusal(info, ctx, claims, recheck=False)
         outcome = CleanPushedOutcome(
@@ -7965,7 +8024,9 @@ def main(argv: list[str] | None = None) -> int:
     if args.clean_pushed:
         status = 0
         for repo_root in repo_roots:
-            report = reap_clean_pushed(repo_root=repo_root, dry_run=not apply, actor=args.actor)
+            report = reap_clean_pushed(
+                repo_root=repo_root, dry_run=not apply, actor=args.actor, target_paths=args.worktree
+            )
             print(json.dumps(report.as_dict(), indent=2) if args.json else format_clean_pushed_report(report))
             if any(outcome.action == "error" for outcome in report.skipped):
                 status = 1

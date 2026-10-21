@@ -6,6 +6,7 @@ probe; no test allocates memory, generates load, or spawns a worker.
 
 from __future__ import annotations
 
+import argparse
 import hashlib
 import json
 import os
@@ -449,7 +450,10 @@ def _stub_worktree(monkeypatch, tasks: Path):
 
 
 def test_live_dispatch_records_the_admission_snapshot(tasks_dir, monkeypatch, capsys):
+    from agent_runtime import telemetry
+
     _stub_worktree(monkeypatch, tasks_dir)
+    monkeypatch.setattr(telemetry, "_probe_version", lambda *_a, **_k: "test")
     spawned: list[list[str]] = []
 
     class _Proc:
@@ -946,6 +950,10 @@ def test_capacity_pick_prints_the_admission_line(tmp_path, monkeypatch, capsys):
     dead = _running_record(tasks, "gone", pid=424242)
     monkeypatch.setattr(dispatch_admission, "process_alive", lambda pid: pid == 515151)
     monkeypatch.setattr(dispatch_admission, "slice_usage_clause", lambda: None)
+    monkeypatch.setattr(
+        dispatch_admission.admission_shadow, "read_pressure",
+        lambda _: {"cpu.some": {"avg10": None, "avg60": None}},
+    )
     monkeypatch.setenv("LU_TASKS_DIR", str(tasks))
     monkeypatch.setattr(capacity_pick, "fetch_active_in_flight", lambda **_kwargs: {})
     monkeypatch.setattr(
@@ -959,7 +967,9 @@ def test_capacity_pick_prints_the_admission_line(tmp_path, monkeypatch, capsys):
         "admission (write dispatch): would admit now | live write workers 1/2, "
         "MemAvailable 64.0 GiB (floor 8.5 GiB), load 0.00 per CPU (limit 1.00), "
         "lu.slice pool check skipped (test host), test-slot queue check skipped (test host), "
-        "disk check skipped (test host); 1 record(s) dead pid, not counted: gone"
+        "disk check skipped (test host), PSI shadow unknown (calibration only; "
+        "unknown: test journal not configured; CPU ownership unknown, unattributed load unknown); "
+        "1 record(s) dead pid, not counted: gone"
     )
 
     monkeypatch.setenv("DISPATCH_MAX_LIVE_WRITE_WORKERS", "1")
@@ -1084,6 +1094,10 @@ def test_capacity_pick_shows_the_disk_decision_without_reaping(tmp_path, monkeyp
 
     monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
     monkeypatch.setattr(dispatch_admission, "slice_usage_clause", lambda: None)
+    monkeypatch.setattr(
+        dispatch_admission.admission_shadow, "read_pressure",
+        lambda _: {"cpu.some": {"avg10": None, "avg60": None}},
+    )
     monkeypatch.setattr(capacity_pick, "fetch_active_in_flight", lambda **_kwargs: {})
     monkeypatch.setattr(
         usage,
@@ -1094,7 +1108,9 @@ def test_capacity_pick_shows_the_disk_decision_without_reaping(tmp_path, monkeyp
 
     assert capacity_pick.main([]) == 0
     assert capsys.readouterr().out.splitlines()[-1].endswith(
-        "disk 82.0% used, 72.0 GiB free (reap at 85%, refuse at 90%, alert at 80%) [epics alert posted]"
+        "disk 82.0% used, 72.0 GiB free (reap at 85%, refuse at 90%, alert at 80%) [epics alert posted], "
+        "PSI shadow unknown (calibration only; unknown: test journal not configured; "
+        "CPU ownership unknown, unattributed load unknown)"
     )
 
     disk["readings"] = [91.0]
@@ -1602,3 +1618,35 @@ def test_early_host_refusal_costs_under_two_cpu_seconds_in_a_fresh_process(tmp_p
         assert "dispatch admission refused for a workspace-write worker: MemAvailable" in proc.stderr
         assert cpu_s < 2.0, f"refusal used {cpu_s:.2f} CPU s"
     assert {name: _tree_state(tmp_path / name) for name in ("tasks", "scratch")} == before
+
+
+def _freeze_check(monkeypatch, tmp_path, open_prs: int) -> int | None:
+    from types import SimpleNamespace
+
+    from scripts.orchestration import pr_freeze
+
+    fetched: list[str] = []
+
+    def fetch(repo):
+        fetched.append(repo)
+        return open_prs
+
+    monkeypatch.setattr(pr_freeze, "fetch_open_pr_count", fetch)
+    monkeypatch.setenv("XDG_CACHE_HOME", str(tmp_path / "cache"))
+    monkeypatch.setenv(pr_freeze.CACHE_ENV, "0")
+    args = argparse.Namespace(mode="workspace-write", branch=None, pr=None, cwd=None, worktree="auto", task_id="freeze")
+    repo = SimpleNamespace(github="example/repo", role="public-monorepo")
+    return delegate._check_open_pr_freeze(args, repo)
+
+
+def test_open_pr_freeze_is_off_by_default(monkeypatch, tmp_path, capsys):
+    """With no override a new-PR dispatch is admitted however many PRs are open (#11272)."""
+    monkeypatch.delenv("LU_OPEN_PR_FREEZE_THRESHOLD", raising=False)
+    assert _freeze_check(monkeypatch, tmp_path, open_prs=500) is None
+    assert "dispatch refused" not in capsys.readouterr().err
+
+
+@pytest.mark.parametrize("threshold, open_prs, expected", [("5", 4, None), ("5", 5, 3), ("5", 50, 3), ("0", 500, None)])
+def test_open_pr_freeze_explicit_opt_in(monkeypatch, tmp_path, threshold, open_prs, expected):
+    monkeypatch.setenv("LU_OPEN_PR_FREEZE_THRESHOLD", threshold)
+    assert _freeze_check(monkeypatch, tmp_path, open_prs=open_prs) == expected

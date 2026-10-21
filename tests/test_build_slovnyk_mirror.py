@@ -621,7 +621,8 @@ def test_default_checkpoint_is_ignored_by_real_cache_consumers(mirror_fixture):
     cache_dir = enrich_manifest_module.SLOVNYK_CACHE
     before = {path: path.read_bytes() for path in cache_dir.iterdir()}
     db = manifest.parent / "must-not-create.db"
-    assert ingest_cache(db, cache_dir, words=[], dictionaries=["vts"], dry_run=True, max_text_chars=1000) == 2
+    report = ingest_cache(db, cache_dir, words=[], dictionaries=["vts"], dry_run=True, max_text_chars=1000)
+    assert sum(report.entries.values()) == 2
     assert not db.exists()
     assert scan(cache_dir) == {"total": 2, "already_current": 2}
     assert migrate(cache_dir, dry_run=False) == {"total": 2, "already_current": 2}

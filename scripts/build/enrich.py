@@ -923,7 +923,7 @@ if __name__ == "__main__":
 
     if len(sys.argv) < 3:
         print("Usage: .venv/bin/python scripts/build/enrich.py <content.md> <plan.yaml>")
-        sys.exit(1)
+        sys.exit(0 if len(sys.argv) > 1 and sys.argv[1] in {"-h", "--help"} else 1)
 
     content_p = Path(sys.argv[1])
     plan_p = Path(sys.argv[2])

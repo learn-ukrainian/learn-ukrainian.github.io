@@ -20,6 +20,7 @@ from scripts.review.record_cf_verdict import build_comment
 HANDLING = {
     "scripts/orchestration/merge_queue_keeper.py": "accept-as-approval",
     "scripts/orchestration/integration_sweep.py": "accept-as-approval",
+    "scripts/orchestration/stalled_work.py": "ignore",
     "scripts/publish/github.py": "accept-as-approval",
     "scripts/fleet_comms/review_publisher.py": "accept-as-approval",
     "scripts/api/fleet_board/prs.py": "display-label",

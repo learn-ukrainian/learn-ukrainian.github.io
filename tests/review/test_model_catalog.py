@@ -410,9 +410,151 @@ def approved_budget_pin_baseline(baseline):
     return {**baseline, "dispatch": dispatch}
 
 
-PRE_BUDGET_PIN_BASELINE = approved_driver_brief_baseline(GROK_LANGUAGE_BASELINE)
+WORD_CARD_TOOL_PATH = CAPACITY_FIXTURE / "word-card-tool-11084.json"
+# Codex and Codex Desktop read-only rows, which grant every read-only Sources tool.
+WORD_CARD_TOOL_ROWS = [0, 4]
+
+
+def approved_word_card_tool_baseline(baseline):
+    """Apply #11084's read-only ``word_card`` Sources grant to the Codex worker argv.
+
+    The two read-only Codex rows derive their Sources ``enabled_tools`` and
+    approval map from the server's tool declarations, so each gains exactly
+    ``word_card``. Every other row, field and surface stays.
+    """
+    assert hashlib.sha256(WORD_CARD_TOOL_PATH.read_bytes()).hexdigest() == (
+        "d0a1a006af2440f0d823508c8d59228cd7fda6a0dc51eaa894fecf8a47598fb4"
+    )
+    adapters = deepcopy(baseline["adapters"])
+    for replacement in json.loads(WORD_CARD_TOOL_PATH.read_bytes())["adapter_cmd_replacements"]:
+        before, after = replacement["before"], replacement["after"]
+        assert replacement["rows"] == WORD_CARD_TOOL_ROWS
+        for index in replacement["rows"]:
+            cmd = adapters[index]["value"]["cmd"]
+            assert cmd.count(before) == 1
+            cmd[cmd.index(before)] = after
+    return {**baseline, "adapters": adapters}
+
+
+MUSE_SEAT_PATH = CAPACITY_FIXTURE / "muse-seat-11026.json"
+
+
+def approved_muse_seat_baseline(baseline):
+    """Apply #11026's Muse subject-seat name to frozen unknown-seat refusals."""
+    raw = MUSE_SEAT_PATH.read_bytes()
+    assert hashlib.sha256(raw).hexdigest() == (
+        "eec3a5ff2ff3c4799a6635567b0abb82a83f2dc999968c0a626b8e13e20e0b99"
+    )
+    reviewer = deepcopy(baseline["reviewer"])
+    for replacement in json.loads(raw)["reviewer_fail_closed_reason_replacements"]:
+        before, after = replacement["before"], replacement["after"]
+        for index in replacement["rows"]:
+            reason = reviewer[index]["value"]["fail_closed_reason"]
+            assert reason.count(before) == 1
+            reviewer[index]["value"]["fail_closed_reason"] = reason.replace(before, after)
+    return {**baseline, "reviewer": reviewer}
+
+
+AGY_MODE_PATH = CAPACITY_FIXTURE / "agy-mode-11152.json"
+AGY_AUTHORING_ROWS = [108, 110]
+AGY_REVIEW_ROWS = [109, 111]
+
+
+def approved_agy_mode_baseline(baseline):
+    """Apply #11152's auto mode and native MCP config metadata to AGY authoring."""
+    assert hashlib.sha256(AGY_MODE_PATH.read_bytes()).hexdigest() == (
+        "858a1ef91de7803d0996469ee437788e1ca624a2aa659268271a1304e0712c54"
+    )
+    fixture = json.loads(AGY_MODE_PATH.read_bytes())
+    adapters = deepcopy(baseline["adapters"])
+    for replacement in fixture["adapter_cmd_replacements"]:
+        before, after = replacement["before"], replacement["after"]
+        assert replacement["rows"] == AGY_AUTHORING_ROWS
+        for index in replacement["rows"]:
+            cmd = adapters[index]["value"]["cmd"]
+            assert cmd.count(before) == 1
+            assert "--mode" not in cmd
+            position = cmd.index(before)
+            cmd[position:position + 1] = after.split()
+    for replacement in fixture["adapter_metadata_replacements"]:
+        before, after = replacement["before"], replacement["after"]
+        assert replacement["rows"] == AGY_AUTHORING_ROWS
+        for index in replacement["rows"]:
+            metadata = json.dumps(adapters[index]["value"]["metadata"])
+            assert metadata.count(before) == 1
+            adapters[index]["value"]["metadata"] = json.loads(metadata.replace(before, after))
+    return {**baseline, "adapters": adapters}
+
+
+DRIVER_BRIEF_BASELINE = approved_driver_brief_baseline(GROK_LANGUAGE_BASELINE)
+PRE_BUDGET_PIN_BASELINE = approved_muse_seat_baseline(
+    approved_agy_mode_baseline(approved_word_card_tool_baseline(DRIVER_BRIEF_BASELINE))
+)
 APPROVED_BASELINE = approved_budget_pin_baseline(PRE_BUDGET_PIN_BASELINE)
 APPROVED_INPUTS = {**GEMINI_INPUTS, **SEATS_OVERLAY["inputs"], **ARGON_OVERLAY["inputs"]}
+
+
+def test_muse_seat_overlay_changes_only_unknown_seat_receipts():
+    fixture = json.loads(MUSE_SEAT_PATH.read_bytes())
+    assert set(fixture) == {"reviewer_fail_closed_reason_replacements"}
+    replacements = fixture["reviewer_fail_closed_reason_replacements"]
+    named = [index for row in replacements for index in row["rows"]]
+    assert len(named) == len(set(named)) == 56
+    before = approved_agy_mode_baseline(approved_word_card_tool_baseline(DRIVER_BRIEF_BASELINE))
+    original = deepcopy(before)
+    after = approved_muse_seat_baseline(before)
+    assert before == original
+    assert after == PRE_BUDGET_PIN_BASELINE
+    assert {k: v for k, v in after.items() if k != "reviewer"} == {
+        k: v for k, v in before.items() if k != "reviewer"
+    }
+    changed = [
+        index for index, (old, new) in enumerate(zip(before["reviewer"], after["reviewer"], strict=True))
+        if old != new
+    ]
+    assert changed == sorted(named)
+    unnamed = set(range(len(before["reviewer"]))) - set(named)
+    assert unnamed
+    for index in unnamed:
+        assert after["reviewer"][index] == before["reviewer"][index]
+    for replacement in replacements:
+        old_reason, new_reason = replacement["before"], replacement["after"]
+        assert old_reason.startswith("unknown subject seat ")
+        assert old_reason.count("kimi, pool, qwen") == 1
+        assert new_reason == old_reason.replace("kimi, pool, qwen", "kimi, muse, pool, qwen")
+        for index in replacement["rows"]:
+            expected = deepcopy(before["reviewer"][index])
+            assert expected["value"]["fail_closed_reason"] == old_reason
+            expected["value"]["fail_closed_reason"] = new_reason
+            assert after["reviewer"][index] == expected
+    with pytest.raises(AssertionError):
+        approved_muse_seat_baseline(after)
+
+
+@pytest.mark.parametrize("configuration", ("host-cli", "no-cli"))
+def test_agy_mode_overlay_changes_only_authoring_mode_and_mcp_metadata(configuration):
+    path = FIXTURE / ("baseline.json.gz" if configuration == "host-cli" else "no-cli/baseline.json.gz")
+    before = json.loads(gzip.decompress(path.read_bytes()))
+    original = deepcopy(before)
+    after = approved_agy_mode_baseline(before)
+    assert before == original
+    assert {k: v for k, v in after.items() if k != "adapters"} == {k: v for k, v in before.items() if k != "adapters"}
+    changed = [i for i, (old, new) in enumerate(zip(before["adapters"], after["adapters"], strict=True)) if old != new]
+    assert changed == AGY_AUTHORING_ROWS
+    assert [i for i, row in enumerate(INPUTS["adapters"]) if row["agent"] == "agy" and not row["isolation"]] == changed
+    for index in changed:
+        old, new = before["adapters"][index], after["adapters"][index]
+        expected = deepcopy(old)
+        expected["value"]["cmd"][1:1] = ["--mode", "auto"]
+        expected["value"]["metadata"]["agy_mcp_config_path"] = "<CAPTURE_ROOT>/home/.gemini/config/mcp_config.json"
+        assert new == expected
+    assert [i for i, row in enumerate(INPUTS["adapters"]) if row["agent"] == "agy" and row["isolation"]] == AGY_REVIEW_ROWS
+    for index in AGY_REVIEW_ROWS:
+        assert after["adapters"][index] == before["adapters"][index]
+        assert APPROVED_BASELINE["adapters"][index] == before["adapters"][index]
+        assert "--mode" not in after["adapters"][index].get("value", {}).get("cmd", [])
+    with pytest.raises(AssertionError):
+        approved_agy_mode_baseline(after)
 
 
 @pytest.mark.parametrize("configuration", ("host-cli", "no-cli"))
@@ -503,6 +645,49 @@ def test_grok_language_overlay_records_only_the_two_field_delta():
         "no excluded-writer recommendation",
     ):
         assert clause in policy, clause
+
+
+@pytest.mark.parametrize("configuration", ("host-cli", "no-cli"))
+def test_word_card_tool_overlay_adds_only_the_read_only_grant(configuration):
+    """#11084 adds ``word_card`` to the two Codex read-only Sources grants and nothing else."""
+    from scripts.agent_runtime.sources_read_only import sources_tool_sets
+
+    path = FIXTURE / ("baseline.json.gz" if configuration == "host-cli" else "no-cli/baseline.json.gz")
+    before = json.loads(gzip.decompress(path.read_bytes()))
+    original = deepcopy(before)
+    after = approved_word_card_tool_baseline(before)
+    assert before == original
+    assert {k: v for k, v in after.items() if k != "adapters"} == {k: v for k, v in before.items() if k != "adapters"}
+    changed = [i for i, (old, new) in enumerate(zip(before["adapters"], after["adapters"], strict=True)) if old != new]
+    assert changed == WORD_CARD_TOOL_ROWS
+    read_only = list(sources_tool_sets()[0])
+    assert "word_card" in read_only
+    for index in changed:
+        assert INPUTS["adapters"][index] == {
+            "agent": ("codex", "codex-desktop")[changed.index(index)],
+            "isolation": False,
+            "mode": "read-only",
+        }
+        old, new = before["adapters"][index], after["adapters"][index]
+        assert {k: v for k, v in old.items() if k != "value"} == {k: v for k, v in new.items() if k != "value"}
+        assert {k: v for k, v in old["value"].items() if k != "cmd"} == {
+            k: v for k, v in new["value"].items() if k != "cmd"
+        }
+        old_cmd, new_cmd = old["value"]["cmd"], new["value"]["cmd"]
+        tokens = [k for k, (a, b) in enumerate(zip(old_cmd, new_cmd, strict=True)) if a != b]
+        assert [old_cmd[k].split("=", 1)[0] for k in tokens] == [
+            "mcp_servers.sources.enabled_tools",
+            "mcp_servers.sources.tools",
+        ]
+        enabled, approvals = (new_cmd[k].split("=", 1)[1] for k in tokens)
+        assert json.loads(enabled) == read_only
+        assert json.loads(enabled) == sorted([*json.loads(old_cmd[tokens[0]].split("=", 1)[1]), "word_card"])
+        assert approvals == "{" + ",".join(f'{name}={{approval_mode="approve"}}' for name in read_only) + "}"
+
+
+def test_word_card_tool_overlay_refuses_drifted_argv():
+    with pytest.raises(AssertionError):
+        approved_word_card_tool_baseline(APPROVED_BASELINE)
 
 
 def test_grok_ukrainian_role_confers_no_ukrainian_review_route():
@@ -742,7 +927,7 @@ def test_claude_cap_fixture_adds_only_cap_help_lines(configuration):
 def test_cto_wrappers_fixture_changes_only_cto_help_lines(configuration):
     fixture_path = CAPACITY_FIXTURE / "cto-wrappers-10453.json"
     assert hashlib.sha256(fixture_path.read_bytes()).hexdigest() == (
-        "b13c3c443bddb9fb81fff9e5546e95fb1f10ef067a22646f397a2faad38d9daf"
+        "4593a5c7abb023644821cd93cd9ed12bbcc5af483ea3e3b8275226ea5b6b3cef"
     )
     cto = json.loads(fixture_path.read_bytes())
     assert set(cto) == {"launcher_help_replacements"}
@@ -755,7 +940,9 @@ def test_cto_wrappers_fixture_changes_only_cto_help_lines(configuration):
         " " * 29 + "CTO wrappers reject it with exit 2.\n",
         force["before"].splitlines(True)[1],
     ]
-    assert lanes["after"] == lanes["before"].replace("Valid lane selectors:\n", "Valid lane selectors:\n  epics\n")
+    assert lanes["after"] == lanes["before"].replace(
+        "Valid lane selectors:\n", "Valid lane selectors:\n  epics\n"
+    ).replace("  atlas | practice | atlas.practice\n", "  atlas | practice-hub | atlas.practice\n  practice\n")
     assert cap["after"].startswith(cap["before"].splitlines(True)[0])
     assert "Opus is always blocked outside start-claude-cto.sh on epics:" in cap["after"]
     assert "Opus stays blocked" in cap["before"] and "Opus stays blocked" not in cap["after"]
@@ -1135,12 +1322,46 @@ PINNED_DIGESTS = {
 }
 
 
+def _is_direct_fixture_bytecode(root: Path, path: Path) -> bool:
+    """True only for a regular ``__pycache__/*.pyc`` file directly under ``root``.
+
+    Pytest's assertion rewriter writes that cache when ``capture.py`` is named
+    on the command line (#10615). It is not fixture content. A symlink, a
+    non-``.pyc`` name, and any nested cache stay visible to the pin.
+    """
+    relative = path.relative_to(root)
+    if len(relative.parts) != 2:
+        return False
+    cache_name, name = relative.parts
+    if cache_name != "__pycache__" or not name.endswith(".pyc"):
+        return False
+    return not path.is_symlink() and path.is_file()
+
+
+def routing_fixture_pin_members(root: Path) -> set[str]:
+    """Relative files the pin binds. Generated bytecode caches are omitted."""
+    return {
+        str(path.relative_to(root))
+        for path in root.rglob("*")
+        if path.is_file() and not _is_direct_fixture_bytecode(root, path)
+    }
+
+
+def assert_frozen_routing_fixture_pinned(root: Path) -> None:
+    """Require every literal digest, and no other fixture content, under ``root``."""
+    assert PINNED_DIGESTS
+    members = routing_fixture_pin_members(root)
+    missing = sorted(set(PINNED_DIGESTS) - members)
+    extra = sorted(members - set(PINNED_DIGESTS))
+    assert not missing and not extra, f"pin membership missing={missing} extra={extra}"
+    for name, expected in PINNED_DIGESTS.items():
+        actual = hashlib.sha256((root / name).read_bytes()).hexdigest()
+        assert actual == expected, f"{name} pinned digest mismatch"
+
+
 @pytest.mark.repo_wide
 def test_frozen_artifacts_are_pinned_independently_of_manifest():
-    assert PINNED_DIGESTS
-    assert set(PINNED_DIGESTS) == {str(p.relative_to(FIXTURE)) for p in FIXTURE.rglob("*") if p.is_file()}
-    for name, expected in PINNED_DIGESTS.items():
-        assert hashlib.sha256((FIXTURE / name).read_bytes()).hexdigest() == expected, name
+    assert_frozen_routing_fixture_pinned(FIXTURE)
 
 
 def test_frozen_hashes_and_matrix_denominator():
@@ -1447,7 +1668,7 @@ def test_no_cli_capture_equals_separate_frozen_surface(tmp_path):
         assert hashlib.sha256((output / name).read_bytes()).hexdigest() == digest
     actual = json.loads(gzip.decompress((output / "baseline.json.gz").read_bytes()))
     original = json.loads(gzip.decompress((expected / "baseline.json.gz").read_bytes()))
-    assert actual == approved_budget_pin_baseline(approved_driver_brief_baseline(approved_grok_language_seat_baseline(
+    approved = approved_word_card_tool_baseline(approved_driver_brief_baseline(approved_grok_language_seat_baseline(
         approved_argon_trial_baseline(
             approved_hook_failure_baseline(
                 approved_hermes_effort_baseline(
@@ -1473,6 +1694,7 @@ def test_no_cli_capture_equals_separate_frozen_surface(tmp_path):
             "no-cli",
         )
     )))
+    assert actual == approved_budget_pin_baseline(approved_muse_seat_baseline(approved_agy_mode_baseline(approved)))
     assert len(actual["launchers"]) == 70
     errors = [row.get("error", "") for row in actual["adapters"]]
     assert any("grok" in error and "PATH" in error for error in errors)
@@ -1514,7 +1736,7 @@ def test_extended_capture_denominator_and_current_contract():
 
 
 def test_driver_brief_capture_preserves_every_unrelated_value():
-    before, after = GROK_LANGUAGE_BASELINE, PRE_BUDGET_PIN_BASELINE
+    before, after = GROK_LANGUAGE_BASELINE, DRIVER_BRIEF_BASELINE
     for surface in set(before) - {"catalog", "dispatch"}:
         assert before[surface] == after[surface]
     old_models, new_models = before["catalog"]["models"], after["catalog"]["models"]

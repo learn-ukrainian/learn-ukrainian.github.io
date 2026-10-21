@@ -1600,7 +1600,21 @@ def test_round5_dispatcher_keeps_path_value_filter(monkeypatch: pytest.MonkeyPat
     from agent_runtime.env_sanitize import build_agent_env
 
     monkeypatch.setattr(identity, "resolve_agent_github_identity", lambda **kwargs: None)
-    assert name not in build_agent_env(provider="claude", overrides={name: "synthetic/task-ghp_path"})
+    # A classic GitHub PAT body is 36 characters; the short ``ghp_path``
+    # fragment is the #11326 run-directory collision, not a credential.
+    token = "ghp_" + "A1b2C3d4E5f6G7h8I9j0K1l2M3n4O5p6Q7r8"
+    assert name not in build_agent_env(provider="claude", overrides={name: f"synthetic/task-{token}"})
+
+
+@pytest.mark.parametrize("name", ["PATH", "HOME"])
+def test_round5_dispatcher_keeps_short_key_prefix_in_path_value(monkeypatch: pytest.MonkeyPatch, name: str) -> None:
+    """#11326: a run-directory name embedding a key prefix is not a credential."""
+    from agent_runtime import agent_github_identity as identity
+    from agent_runtime.env_sanitize import build_agent_env
+
+    monkeypatch.setattr(identity, "resolve_agent_github_identity", lambda **kwargs: None)
+    value = "synthetic/task-ghp_path"
+    assert build_agent_env(provider="claude", overrides={name: value})[name] == value
 
 
 @pytest.mark.parametrize("length", [40, 108, 325])

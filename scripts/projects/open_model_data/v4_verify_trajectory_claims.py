@@ -31,6 +31,9 @@ from typing import Any
 
 import jsonschema
 
+if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
+
 from scripts.lexicon.source_attribution import cites_soviet_dictionary, cites_soviet_dictionary_outside_context
 from scripts.lib.readonly_sqlite import SQLiteConnection
 from scripts.lib.readonly_sqlite import open_readonly as _open_readonly

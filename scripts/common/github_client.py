@@ -6,6 +6,12 @@ Conditional GETs follow GitHub's documented ETag protocol. No request is retried
 Only fully modelled argv/JSON fields translate; other commands retain their
 native gh semantics through the same bounded, colour-safe process transport.
 Stale JSON reads require allow_stale=True; binary responses are never cached.
+Refetchable response rows expire at seven days since their last successful response
+or 304 validation. Transactions prune across all scopes to at most 64 MiB of
+logical body bytes plus persisted header UTF-8 bytes, oldest validation first,
+then scope/key ascending. Oversized responses are returned without retention.
+These bounds never prune budgets or compact SQLite's allocated file. Records
+whose stored types/headers cannot identify a response are retained untouched.
 
 Every request path (REST, injected transports and native gh) is normalized once
 (``_normalize``) and admitted by one decision, ``_refusal``. Only GitHub's own
@@ -38,6 +44,17 @@ from datetime import UTC
 from pathlib import Path
 from typing import Any
 from urllib.parse import quote, quote_plus, urlencode, urlsplit
+
+CACHE_TTL_SECONDS = 7 * 24 * 60 * 60
+CACHE_MAX_BYTES = 64 * 1024 * 1024
+# Only identifiable response rows participate in maintenance and reuse. CASE
+# prevents malformed headers from making JSON functions abort the transaction.
+_CACHE_RESPONSE = """typeof(scope)='text' AND typeof(key)='text'
+    AND typeof(body) IN ('blob','text') AND typeof(headers)='text'
+    AND typeof(at) IN ('real','integer') AND at>=0 AND at<1e999
+    AND CASE WHEN json_valid(headers) THEN json_type(headers)='object'
+        AND coalesce(json_extract(headers,'$._github_binary'),0)=0 ELSE 0 END"""
+_CACHE_BYTES = "length(CAST(body AS BLOB))+length(CAST(headers AS BLOB))"
 
 RESERVE = 10
 """GraphQL and search pools: a non-landing call is refused at or below this many remaining."""
@@ -1078,6 +1095,43 @@ def _store_cache(db, scope, key, body, headers, at):
     )
 
 
+def _maintain_cache(db, now, ttl, max_bytes):
+    """Prune response rows only; acquire a write lock only when pruning is needed.
+
+    The partial expression index supplies age and byte counts without loading
+    response bodies or parsing headers on each access. Recheck after deletion
+    inside the write transaction before deciding whether to evict by size.
+    Drop individually oversized rows before aggregate eviction so an unretainable
+    response cannot evict smaller responses. A descending cumulative sum keeps
+    the newest suffix, with scope/key breaking equal validation times stably.
+    """
+    oldest, largest, total = db.execute(
+        f"SELECT min(at),max({_CACHE_BYTES}),sum({_CACHE_BYTES}) FROM cache WHERE {_CACHE_RESPONSE}"
+    ).fetchone()
+    if oldest is None:
+        return
+    if oldest <= now - ttl or largest > max_bytes:
+        db.execute(
+            f"DELETE FROM cache WHERE ({_CACHE_RESPONSE}) AND (at<=? OR {_CACHE_BYTES}>?)",
+            (now - ttl, max_bytes),
+        )
+        total = db.execute(
+            f"SELECT coalesce(sum({_CACHE_BYTES}),0) FROM cache WHERE {_CACHE_RESPONSE}"
+        ).fetchone()[0]
+    if total <= max_bytes:
+        return
+    db.execute(
+        f"""WITH ranked AS (
+            SELECT scope,key,SUM({_CACHE_BYTES}) OVER (
+                ORDER BY at DESC,scope DESC,key DESC ROWS UNBOUNDED PRECEDING
+            ) AS retained_bytes FROM cache WHERE {_CACHE_RESPONSE}
+        ) DELETE FROM cache WHERE (scope,key) IN (
+            SELECT scope,key FROM ranked WHERE retained_bytes>?
+        )""",
+        (max_bytes,),
+    )
+
+
 class _Kept:
     """Standard output kept in a spool: with a ``limit``, at most ``limit + 1`` bytes of body.
 
@@ -1220,6 +1274,8 @@ class GitHubClient:
         clock=time.time,
         max_response_bytes=None,
         allow_stale=False,
+        cache_ttl_seconds=CACHE_TTL_SECONDS,
+        cache_max_bytes=CACHE_MAX_BYTES,
     ):
         self.env = colour_safe_environment(env)
         self.cwd = cwd
@@ -1229,6 +1285,16 @@ class GitHubClient:
         self.allow_stale = allow_stale
         if max_response_bytes is not None and (type(max_response_bytes) is not int or max_response_bytes < 0):
             raise ValueError("invalid GitHub response byte limit")
+        if (
+            type(cache_ttl_seconds) not in (int, float)
+            or not math.isfinite(cache_ttl_seconds)
+            or cache_ttl_seconds <= 0
+        ):
+            raise ValueError("invalid GitHub cache TTL")
+        if type(cache_max_bytes) is not int or cache_max_bytes < 0:
+            raise ValueError("invalid GitHub cache byte limit")
+        self.cache_ttl_seconds = cache_ttl_seconds
+        self.cache_max_bytes = cache_max_bytes
         self.max_response_bytes = max_response_bytes
         self._configure_host(canonical_host(self.env.get("GH_HOST", "github.com")))
         self.cache_dir = Path(cache_dir) if cache_dir is not None else _cache_directory()
@@ -1284,11 +1350,18 @@ class GitHubClient:
                 db.execute(
                     "CREATE TABLE IF NOT EXISTS budget (scope TEXT, resource TEXT, remaining INTEGER, reset INTEGER, PRIMARY KEY(scope,resource))"
                 )
+                db.execute(
+                    f"CREATE INDEX IF NOT EXISTS cache_retention ON cache(at,scope,key,{_CACHE_BYTES}) "
+                    f"WHERE {_CACHE_RESPONSE}"
+                )
                 if self.cache_dir is not None:
                     db.execute(
                         "INSERT OR REPLACE INTO budget (scope, resource, remaining, reset) VALUES ('__probe__', '__probe__', 0, 0)"
                     )
                     db.execute("DELETE FROM budget WHERE scope='__probe__'")
+                    # The writability probe must not hold its lock during reads
+                    # or the maintenance check of an already bounded cache.
+                    db.commit()
                 break
             except (sqlite3.OperationalError, sqlite3.DatabaseError, OSError):
                 if self.cache_dir is not None:
@@ -1301,7 +1374,11 @@ class GitHubClient:
                 raise
         try:
             with db:
+                _maintain_cache(db, self.clock(), self.cache_ttl_seconds, self.cache_max_bytes)
+                changes = db.total_changes
                 yield db
+                if db.total_changes != changes:
+                    _maintain_cache(db, self.clock(), self.cache_ttl_seconds, self.cache_max_bytes)
         finally:
             if self.cache_dir is not None:
                 db.close()
@@ -1401,8 +1478,15 @@ class GitHubClient:
             with self._db() as db:
                 cached = (
                     db.execute(
-                        "SELECT body,headers,at FROM cache WHERE scope=? AND key=? AND (? IS NULL OR length(body)<=?)",
-                        (self.scope, key, self.max_response_bytes, self.max_response_bytes),
+                        f"SELECT body,headers,at FROM cache WHERE scope=? AND key=? AND ({_CACHE_RESPONSE}) "
+                        "AND at>? AND (? IS NULL OR length(body)<=?)",
+                        (
+                            self.scope,
+                            key,
+                            now - self.cache_ttl_seconds,
+                            self.max_response_bytes,
+                            self.max_response_bytes,
+                        ),
                     ).fetchone()
                     if cacheable
                     else None
@@ -1414,7 +1498,7 @@ class GitHubClient:
             return _unprepared(refused.reason)
 
         def deferred(reason, reset):
-            if allow_stale and cached and not fresh:
+            if allow_stale and cached and not fresh and self.clock() - cached[2] < self.cache_ttl_seconds:
                 return _limited(
                     reason,
                     reset,
@@ -1451,14 +1535,15 @@ class GitHubClient:
                             _store_budget(db, self.scope, hold, 0, reset, now=now)
                         return deferred(reason, reset)
                     if response.status == 304:
-                        if not cached:
+                        if not cached or self.clock() - cached[2] >= self.cache_ttl_seconds:
                             return Result(status=304, error="github_cache_miss", headers=h)
                         # 304 is authoritative freshness; its remaining header is used,
                         # never decremented locally.
                         h = {**json.loads(cached[1]), **h}
                         db.execute(
-                            "UPDATE cache SET at=?,headers=? WHERE scope=? AND key=? AND at<=?",
-                            (now, json.dumps(h), self.scope, key, now),
+                            "UPDATE cache SET at=?,headers=? WHERE scope=? AND key=? AND at<=? "
+                            "AND at=? AND body=? AND headers=?",
+                            (now, json.dumps(h), self.scope, key, now, cached[2], cached[0], cached[1]),
                         )
                         return Result(_cached_value(cached), status=304, headers=h)
                     if 200 <= response.status < 300 and (

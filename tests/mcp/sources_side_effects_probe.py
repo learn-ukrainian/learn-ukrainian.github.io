@@ -13,9 +13,9 @@ What counts as a persistent write, and is refused before it happens:
   link, chmod or utime.
 
 The server's request log (``LU_MCP_SOURCES_LOG_DIR``) is the one allowed write.
-Network calls are recorded, not refused. ``--hermetic`` points the sources DB, VESUM
-and the Wikipedia cache at ``--scratch``, fills the first two with
-``sources_probe_fixture`` rows, replaces the network with that module's synthetic
+Network calls are recorded, not refused. ``--hermetic`` points the sources DB, VESUM,
+the Wikipedia cache and the word-card build at ``--scratch``, fills all but the
+cache with ``sources_probe_fixture`` rows, replaces the network with that module's synthetic
 pages, and skips sleeps, so every read-only tool's lookup finds its row and runs
 its success path, and the result does not depend on host data. Without it the
 tools read the host's databases, refused writes included, and use the live network.
@@ -47,6 +47,7 @@ import sources_probe_fixture as fixture  # Sibling module; this file runs as a s
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 ENV_SOURCES_DB = "LU_SOURCES_DB"
+ENV_WORD_CARDS_DIR = "LU_WORD_CARDS_DIR"
 SERVER_PATH = PROJECT_ROOT / ".mcp" / "servers" / "sources" / "server.py"
 
 _SQLITE_WRITE_ACTIONS = frozenset(
@@ -137,6 +138,7 @@ TOOL_ARGUMENTS: dict[str, dict[str, Any]] = {
     "search_slovnyk_me": {"query": "мова"},
     "search_heritage": {"query": "хата"},
     "check_russian_shadow": {"word": "являється"},
+    "word_card": {"word": "мова"},
 }
 
 # Text each read-only tool's hermetic result shows only when its lookup found the
@@ -184,6 +186,7 @@ HERMETIC_HITS: dict[str, str] = {
     "search_slovnyk_me": "slovnyk.me result(s)",
     "search_heritage": "heritage evidence row(s)",
     "check_russian_shadow": '"matches_russian": true',
+    "word_card": f'"card_id": "{fixture.WORD_CARD_ID}"',
 }
 
 
@@ -425,6 +428,7 @@ def main(argv: list[str] | None = None) -> int:
         fixture.build(scratch)
         # The store's own override, honoured by every resolver of the active sources DB.
         os.environ[ENV_SOURCES_DB] = str(scratch / "sources.db")
+        os.environ[ENV_WORD_CARDS_DIR] = str(fixture.build_word_cards(scratch))
     effects = SideEffects([log_dir])
     # Before the server import, so a module that binds ``connect`` at import is guarded too.
     sqlite3.connect = effects.guard_connect(sqlite3.connect)  # type: ignore[assignment]

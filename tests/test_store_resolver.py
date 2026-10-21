@@ -9,6 +9,8 @@ import pytest
 from scripts.lib.readonly_sqlite import open_readonly
 from scripts.storage import topology as storage
 
+STORES = ['sources', 'vesum', 'lexdata']
+
 
 @pytest.fixture
 def checkouts(tmp_path, monkeypatch):
@@ -38,7 +40,7 @@ def refusal(result, reason):
     assert not hasattr(result, 'path')
 
 
-@pytest.mark.parametrize('store', ['sources', 'vesum'])
+@pytest.mark.parametrize('store', STORES)
 @pytest.mark.parametrize('linked', [False, True])
 def test_primary_store_success(checkouts, store, linked):
     primary, worker = checkouts
@@ -52,7 +54,7 @@ def test_primary_store_success(checkouts, store, linked):
             conn.execute('CREATE TABLE forbidden (x)')
 
 
-@pytest.mark.parametrize('store', ['sources', 'vesum'])
+@pytest.mark.parametrize('store', STORES)
 @pytest.mark.parametrize('value,reason', [('', 'empty_override'), ('  ', 'empty_override'),
     ('relative/sources.db', 'relative_override'), ('file:/sources.db?mode=ro', 'uri_override')])
 def test_invalid_override_has_no_path(checkouts, store, value, reason):
@@ -61,7 +63,7 @@ def test_invalid_override_has_no_path(checkouts, store, value, reason):
     refusal(storage.resolve_store(store, worker, env={f'LU_{store.upper()}_DB': value}), reason)
 
 
-@pytest.mark.parametrize('store', ['sources', 'vesum'])
+@pytest.mark.parametrize('store', STORES)
 @pytest.mark.parametrize('directory', [False, True])
 def test_missing_or_directory_override(checkouts, store, directory):
     primary, worker = checkouts
@@ -73,7 +75,7 @@ def test_missing_or_directory_override(checkouts, store, directory):
     assert not (primary / 'data' / f'{store}.db').exists()
 
 
-@pytest.mark.parametrize('store', ['sources', 'vesum'])
+@pytest.mark.parametrize('store', STORES)
 def test_missing_primary_has_no_path(checkouts, store):
     _, worker = checkouts
     refusal(storage.resolve_store(store, worker, env={}), 'store_missing')
@@ -100,7 +102,7 @@ def test_locality_dependency_unavailable(checkouts, monkeypatch):
     refusal(storage.resolve_store('sources', worker, env={'LU_SOURCES_DB': str(db)}), 'locality_unknown')
 
 
-@pytest.mark.parametrize('store', ['sources', 'vesum'])
+@pytest.mark.parametrize('store', STORES)
 @pytest.mark.parametrize('symlink', [False, True, 'dangling'])
 def test_worktree_store_refused_even_with_override(checkouts, store, symlink):
     primary, worker = checkouts
@@ -114,7 +116,7 @@ def test_worktree_store_refused_even_with_override(checkouts, store, symlink):
             'worktree_local_store')
 
 
-@pytest.mark.parametrize('store', ['sources', 'vesum'])
+@pytest.mark.parametrize('store', STORES)
 @pytest.mark.parametrize('symlink', [False, True])
 def test_special_override_and_injected_precedence(checkouts, monkeypatch, store, symlink):
     primary, worker = checkouts
@@ -139,6 +141,22 @@ def test_injected_binding_mismatch_and_write_refused(checkouts):
     refusal(storage.resolve_store('sources', worker, binding=storage.StoreBinding('vesum', db)), 'invalid_binding')
     refusal(storage.resolve_store('sources', worker,
             binding=storage.StoreBinding('sources', db, access_mode='write')), 'invalid_binding')
+
+
+def test_store_mapping_is_the_single_source():
+    assert dict(storage.STORE_FILES) == {
+        'sources': ('sources.db', 'LU_SOURCES_DB'),
+        'vesum': ('vesum.db', 'LU_VESUM_DB'),
+        'lexdata': ('lexdata.db', 'LU_LEXDATA_DB'),
+    }
+    assert set(storage.STORE_FILES) == set(STORES)
+
+
+def test_lexdata_override_never_reads_another_store(checkouts):
+    primary, worker = checkouts
+    make_db(primary / 'data' / 'sources.db')
+    refusal(storage.resolve_store('lexdata', worker, env={'LU_SOURCES_DB': str(primary / 'data' / 'sources.db')}),
+            'store_missing')
 
 
 def test_invalid_store_rejected(checkouts):
@@ -167,7 +185,7 @@ def test_uninspectable_path_has_no_path(checkouts, monkeypatch):
     refusal(storage.resolve_store('sources', worker, env={}), 'store_unavailable')
 
 
-@pytest.mark.parametrize('store', ['sources', 'vesum'])
+@pytest.mark.parametrize('store', STORES)
 @pytest.mark.parametrize('injected', [False, True])
 def test_nul_path_returns_path_free_refusal(checkouts, store, injected):
     primary, worker = checkouts

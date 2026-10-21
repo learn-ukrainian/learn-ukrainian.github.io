@@ -302,6 +302,16 @@ assert_contains "$output" ".claude/devops-epic/CLAUDE-DRIVER-HANDOFF.md" "Codex 
 assert_not_contains "$output" ".claude/devops-epic/CODEX-DRIVER-HANDOFF.md" "Codex new epic fallback"
 assert_contains "$output" "No driver handoff exists yet" "Codex new epic fallback"
 
+# Practice has a dedicated handoff directory and namespace for both providers.
+for provider in claude codex; do
+  setup_fixture "$fixture_root"
+  output="$(run_hook "$fixture_root" 0 "$provider-practice" "" "" "native_$provider" "" "" practice)"
+  assert_contains "$output" "ASSIGNED EPIC: practice.epic" "Practice epic assignment"
+  assert_contains "$output" "Rollover namespace: $provider-practice" "Practice epic namespace"
+  assert_contains "$output" ".claude/practice-epic/CLAUDE-DRIVER-HANDOFF.md" "Practice shared handoff"
+  assert_not_contains "$output" ".claude/atlas-epic/" "Practice handoff isolation"
+done
+
 # 2e. An unknown SESSION_EPIC fails closed: epic binding is stopped and a
 # fail-closed banner listing valid selectors is surfaced.
 setup_fixture "$fixture_root"

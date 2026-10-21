@@ -4,7 +4,120 @@ from types import SimpleNamespace
 
 import pytest
 
-from scripts.review.verdict_parser import _code_fence_spans, _without_code_fences, recognized_verdicts
+from scripts.review.verdict_parser import (
+    _code_fence_spans,
+    _without_code_fences,
+    recognized_verdicts,
+    unsupported_verdict_tokens,
+)
+
+# Exact #10153 recon inputs and expectations, frozen before the repair.
+FROZEN_CONTAINER_CASES = [
+    ("L1", "- Sample:\n  ```\n  example\n\nVERDICT: BLOCKED\n", ["BLOCKED"]),
+    ("L2", "1. Sample:\n   ~~~\n   example\n\nVERDICT: REQUEST_CHANGES\n", ["REQUEST_CHANGES"]),
+    ("Q1", "> ```\n> example\n\nVERDICT: BLOCKED\n", ["BLOCKED"]),
+    ("L3", "- Sample:\n  ```\n  example\n\n```\nVERDICT: APPROVE\n```\n\nVERDICT: REQUEST_CHANGES\n",
+     ["REQUEST_CHANGES"]),
+    ("Q2", "> ```\n> example\n\n```\nVERDICT: APPROVE\n```\n\nVERDICT: BLOCKED\n", ["BLOCKED"]),
+    ("Q3", "> Sample verdict:\nVERDICT: APPROVE\n", []),
+    ("M1", "```bad`info\n\nVERDICT: BLOCKED\n", ["BLOCKED"]),
+    ("U1", "```\nVERDICT: APPROVE\n", []),
+]
+
+# Opus F1 reproducers. The indented outline reaches the same recursive budget
+# without putting all list markers on one line.
+CAPACITY_OUTLINES = [
+    "- " * 10 + "x\n\n",
+    "\n".join("  " * depth + "- x" for depth in range(10)) + "\n\n",
+]
+OVERLAP_QUOTE = "> a\n>\n> ```\n> x\n> ```\n> para\nVERDICT: APPROVE\n"
+
+
+@pytest.mark.parametrize("newline", ["\n", "\r\n", "\r"])
+@pytest.mark.parametrize("outline", CAPACITY_OUTLINES, ids=["inline", "indented"])
+@pytest.mark.parametrize("prefix", ["", "VERDICT: REQUEST_CHANGES\n\n"])
+def test_capacity_exhaustion_fails_before_any_verdict(outline, prefix, newline):
+    response = (prefix + outline + "```\nVERDICT: APPROVE\n```\n").replace("\n", newline)
+    for reader in (recognized_verdicts, unsupported_verdict_tokens):
+        with pytest.raises(ValueError, match="CommonMark verdict visibility nesting limit"):
+            reader(response)
+    for keep_unclosed in (False, True):
+        with pytest.raises(ValueError, match="CommonMark verdict visibility nesting limit"):
+            _without_code_fences(response, keep_unclosed=keep_unclosed)
+
+
+@pytest.mark.parametrize("newline", ["\n", "\r\n", "\r"])
+@pytest.mark.parametrize("outline", ["- " * 9 + "x\n\n", "> " * 19 + "x\n\n"])
+def test_supported_depth_keeps_fenced_examples_hidden(outline, newline):
+    response = (outline + "```\nVERDICT: APPROVE\n```\n").replace("\n", newline)
+    assert recognized_verdicts(response) == []
+    assert recognized_verdicts(response + newline + "VERDICT: BLOCKED") == ["BLOCKED"]
+    assert "VERDICT: APPROVE" not in _without_code_fences(response, keep_unclosed=True)
+
+
+@pytest.mark.parametrize("newline", ["\n", "\r\n", "\r"])
+@pytest.mark.parametrize("terminal,expected", [("", []), ("\nVERDICT: BLOCKED\n", ["BLOCKED"])])
+def test_overlapping_quote_fence_cannot_reexpose_lazy_continuation(newline, terminal, expected):
+    assert recognized_verdicts((OVERLAP_QUOTE + terminal).replace("\n", newline)) == expected
+
+
+@pytest.mark.parametrize("newline", ["\n", "\r\n", "\r"])
+def test_overlapping_quote_fence_preserves_visible_terminal(newline):
+    response = OVERLAP_QUOTE.replace("> para\nVERDICT", "> para\n\nVERDICT").replace("\n", newline)
+    assert recognized_verdicts(response) == ["APPROVE"]
+
+
+def test_capacity_detection_uses_configured_parser_budget(monkeypatch):
+    from markdown_it import MarkdownIt
+
+    original_init = MarkdownIt.__init__
+
+    def limited_init(self, *args, **kwargs):
+        original_init(self, *args, **kwargs)
+        self.options["maxNesting"] = 6
+
+    monkeypatch.setattr(MarkdownIt, "__init__", limited_init)
+    assert recognized_verdicts("- - x\n\n```\nVERDICT: APPROVE\n```\n") == []
+    with pytest.raises(ValueError, match="CommonMark verdict visibility nesting limit"):
+        recognized_verdicts("- - - x\n\n```\nVERDICT: APPROVE\n```\n")
+
+
+@pytest.mark.parametrize("newline", ["\n", "\r\n", "\r"], ids=["lf", "crlf", "cr"])
+@pytest.mark.parametrize("case,text,expected", FROZEN_CONTAINER_CASES, ids=[c[0] for c in FROZEN_CONTAINER_CASES])
+def test_frozen_container_visibility(case, text, expected, newline):
+    assert recognized_verdicts(text.replace("\n", newline)) == expected
+
+
+@pytest.mark.parametrize("separator", ["\v", "\f", "\x1c", "\x1d", "\x1e", "\x85", "\u2028", "\u2029"])
+@pytest.mark.parametrize("newline", ["\n", "\r\n", "\r"])
+def test_verdict_readers_do_not_create_lines_at_unicode_separators(separator, newline):
+    text = f"Prose.{separator}VERDICT: APPROVE{newline}Prose.{separator}VERDICT: UNKNOWN"
+    assert recognized_verdicts(text) == []
+    assert unsupported_verdict_tokens(text) == []
+    assert recognized_verdicts(text + newline + "VERDICT: BLOCKED") == ["BLOCKED"]
+
+
+@pytest.mark.parametrize("newline", ["\n", "\r\n", "\r"])
+@pytest.mark.parametrize("container", [
+    "> Example:\nVERDICT: UNKNOWN\n",
+    "> ```\n> VERDICT: UNKNOWN\n> ```\n",
+    "- Example:\n  ~~~\n  VERDICT: UNKNOWN\n",
+    "- > Example:\n  VERDICT: UNKNOWN\n",
+])
+def test_diagnostics_use_the_same_visible_regions(newline, container):
+    text = (container + "\nVERDICT: REVISE\nVERDICT: APPROVE").replace("\n", newline)
+    assert unsupported_verdict_tokens(text) == ["REVISE"]
+    assert recognized_verdicts(text) == ["APPROVE"]
+
+
+@pytest.mark.parametrize("text", [
+    "VERDICT: https://example.invalid/private",
+    "VERDICT: /private/path",
+    "VERDICT: " + "X" * 65,
+    "VERDICT: UNKNOWN\x00private",
+])
+def test_diagnostics_never_echo_arbitrary_text(text):
+    assert unsupported_verdict_tokens(text) == []
 
 
 @pytest.mark.parametrize(
@@ -79,19 +192,19 @@ def test_commonmark_indented_top_level_fence_allows_unindented_data(fence, inden
 
 
 @pytest.mark.parametrize(
-    "text",
+    "text,expected_verdicts",
     [
-        "1. Old example:\n   ```py\n   x = 1\n2. Fix #8886.\n3. New example:\n   ```\n",
-        "- Old example:\n  ~~~py\n  x = 1\n- Fix #8886.\n- New example:\n  ~~~\n",
-        "- Old example:\n\n  ```py\n  x = 1\nFix #8886.\n  ```\n",
-        "1. Old example:\n\n   ```py\n   x = 1\n\n2. Fix #8886.\n\n3. New example:\n   ```\n",
-        "- Old example:\n  ```py\n  Fix #8886.\n  ```\n",
+        ("1. Old example:\n   ```py\n   x = 1\n2. Fix #8886.\n3. New example:\n   ```\n", []),
+        ("- Old example:\n  ~~~py\n  x = 1\n- Fix #8886.\n- New example:\n  ~~~\n", []),
+        ("- Old example:\n\n  ```py\n  x = 1\nFix #8886.\n  ```\n", ["APPROVE"]),
+        ("1. Old example:\n\n   ```py\n   x = 1\n\n2. Fix #8886.\n\n3. New example:\n   ```\n", []),
+        ("- Old example:\n  ```py\n  Fix #8886.\n  ```\n", []),
     ],
 )
-def test_commonmark_container_fences_stay_visible_to_safety_consumers(text):
+def test_commonmark_container_fences_stay_visible_to_safety_consumers(text, expected_verdicts):
     assert _without_code_fences(text, keep_unclosed=True) == text
-    # Verdict extraction retains its conservative lexical suppression policy.
-    assert recognized_verdicts(text.replace("Fix #8886.", "VERDICT: APPROVE")) == []
+    # #10153: only a verdict outside the implicitly terminated fence is visible.
+    assert recognized_verdicts(text.replace("Fix #8886.", "VERDICT: APPROVE")) == expected_verdicts
 
 
 def test_commonmark_container_span_does_not_prevent_later_top_level_data_removal():
@@ -158,16 +271,40 @@ def test_parser_spans_dispatch_never_uses_lexical_span_state(monkeypatch):
     assert parser._without_code_fences("```\nquoted\n```\nVisible\n", keep_unclosed=True) == "\nVisible\n"
 
 
-def test_parser_spans_verdicts_never_import_commonmark_parser(monkeypatch):
+def test_verdict_visibility_requires_parser_without_importing_consumers(monkeypatch):
     import builtins
 
     original_import = builtins.__import__
 
-    def refuse_parser(name, *args, **kwargs):
-        if name == "markdown_it":
-            pytest.fail("verdict policy must remain lexical")
+    def refuse_consumers(name, *args, **kwargs):
+        if name in {"delegate", "scripts.delegate", "scripts.review.record_cf_verdict"}:
+            pytest.fail("shared parser must not import heavyweight consumers")
         return original_import(name, *args, **kwargs)
 
-    monkeypatch.setattr(builtins, "__import__", refuse_parser)
+    monkeypatch.setattr(builtins, "__import__", refuse_consumers)
     response = "```\nVERDICT: APPROVE\n```\nVERDICT: REQUEST_CHANGES\n~~~\nVERDICT: APPROVE\n"
     assert recognized_verdicts(response) == ["REQUEST_CHANGES"]
+    assert recognized_verdicts("> Example:\nVERDICT: APPROVE\n\nVERDICT: BLOCKED") == ["BLOCKED"]
+
+
+@pytest.mark.parametrize("reader", [recognized_verdicts, unsupported_verdict_tokens])
+@pytest.mark.parametrize("source_map", [None, [], [0], [0, 3, 4], ["0", 3], [False, 3], [-1, 3], [0, 4], [2, 1], [0, 0]])
+def test_verdict_visibility_invalid_maps_fail_closed(monkeypatch, source_map, reader):
+    from markdown_it import MarkdownIt
+
+    token = SimpleNamespace(type="fence", level=0, map=source_map, markup="```")
+    monkeypatch.setattr(MarkdownIt, "parse", lambda *_a: [token])
+    with pytest.raises(ValueError, match="CommonMark verdict visibility map"):
+        reader("```\nVERDICT: APPROVE\n```")
+
+
+@pytest.mark.parametrize("reader", [recognized_verdicts, unsupported_verdict_tokens])
+def test_verdict_visibility_parser_failure_propagates(monkeypatch, reader):
+    from markdown_it import MarkdownIt
+
+    def unavailable(*_args):
+        raise RuntimeError("synthetic parser unavailable")
+
+    monkeypatch.setattr(MarkdownIt, "parse", unavailable)
+    with pytest.raises(RuntimeError, match="synthetic parser unavailable"):
+        reader("VERDICT: APPROVE")

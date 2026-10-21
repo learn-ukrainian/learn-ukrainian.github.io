@@ -46,6 +46,7 @@ as directories. If roots are missing or ambiguous, treat bulk as **unavailable**
 | `LU_GDRIVE_DATA` | Force Drive bulk path when SMB is absent (marker-valid). Authoritative over auto/caller Drive candidates; **invalid → fail closed** (no silent Drive fallback). |
 | `LU_SOURCES_DB` | Explicit local sources store path; invalid or unknown locality returns a path-free refusal |
 | `LU_VESUM_DB` | Explicit local VESUM store path; same refusal semantics |
+| `LU_LEXDATA_DB` | Explicit local lexdata store path for readers; same refusal semantics (the writer ignores it) |
 
 Precedence: `LU_BULK_ROOT` → SMB → `LU_GDRIVE_DATA` → auto Drive → unavailable.
 
@@ -57,8 +58,9 @@ is the public topology label.
 
 ## Logical read-store bindings (#9945)
 
-New callers use `scripts.storage.topology.resolve_store("sources")` or
-`resolve_store("vesum")` at call time. A `StoreBinding` contains `store`,
+New callers use `scripts.storage.topology.resolve_store("sources")`,
+`resolve_store("vesum")` or `resolve_store("lexdata")` at call time; the one
+`STORE_FILES` mapping names each store's file and environment override. A `StoreBinding` contains `store`,
 `path`, `access_mode="read"`, and `provenance`; pass its path to
 `scripts.lib.readonly_sqlite.open_readonly`. A `StoreRefusal` contains only
 `store` and `reason`, with no path attribute and no silent fallback.
@@ -70,6 +72,19 @@ network, and unknown-locality inputs are refused. Symlinks to existing local
 files are validated at their resolved target. A linked worktree's own
 `data/<store>.db` file or symlink (including a dangling link) is refused.
 The resolver creates no files or connections and grants no write access.
+
+### Derived lexical store (`lexdata`)
+
+`data/lexdata.db` is a derived store (L1 staging, L2 crosswalk, L3 card
+inputs); it is never the only copy of anything, and it never writes
+`sources.db` or `vesum.db`. Readers follow the rules above and open it through
+`scripts.lexdata.generation.open_generation`, which also refuses an
+unpublished or digest-mismatched generation. Its only writer is
+`.venv/bin/python -m scripts.lexdata build`, run from the primary checkout:
+`build_store.writer_target` refuses a linked worktree, a network or unknown
+filesystem and symlinked `data`/`data/lexdata` paths. One build holds an
+exclusive lock on `data/lexdata/.build.lock`, writes a new generation file,
+verifies it and swaps it in atomically; L0 stores are attached `mode=ro`.
 
 The legacy `resolve_active_sources_db` and `require_local_active_sources_db`
 retain their existing behavior pending caller migration. In particular, the

@@ -773,3 +773,30 @@ def test_example_agreement_is_diagnostic_not_decision_gate(tmp_path: Path, monke
     result = bakeoff.score(work, *paths, iterations=20)
     assert result["cohen_kappa"]["usable_example"] == 0.0
     assert result["kappa_gate"] is True
+
+
+@pytest.mark.parametrize("refused", [False, True])
+def test_admission_probe_does_not_write_shadow_journal(tmp_path, monkeypatch, refused):
+    from scripts.common import task_store_paths
+    from scripts.orchestration import admission_shadow as shadow
+    from scripts.orchestration import dispatch_admission as adm
+
+    journal = tmp_path / "journal"
+    monkeypatch.setenv(shadow.DIRECTORY_ENV, str(journal))
+    monkeypatch.setattr(adm, "load_thresholds", lambda: adm.Thresholds(2, 3.5, 1.5))
+    monkeypatch.setattr(adm, "probe_host", lambda: adm.HostProbe(12 * 1024**3, 100 if refused else 0, 8, True))
+    monkeypatch.setattr(adm, "probe_disk", lambda: adm.DiskProbe(10, 90))
+    tasks = tmp_path / "tasks"
+    monkeypatch.setattr(task_store_paths, "tasks_dir", lambda: tasks)
+    baseline = adm.evaluate("danger", tasks)
+    paths = list(journal.glob("*.jsonl"))
+    assert len(paths) == 1
+    before = paths[0].read_bytes()
+    assert bakeoff._admission_probe() is (not refused)
+    assert paths[0].read_bytes() == before
+    rows = [json.loads(line) for line in before.splitlines()]
+    assert len(rows) == 1
+    assert rows[0]["phase"] == "evaluate"
+    assert rows[0]["current_admission_decision"] == ("refuse" if refused else "admit")
+    assert shadow.compare_day(journal, paths[0].stem)["samples"] == 1
+    assert baseline.admitted is (not refused)

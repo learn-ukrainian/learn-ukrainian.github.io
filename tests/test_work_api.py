@@ -1151,7 +1151,7 @@ def test_next_stream_alias_resolves_via_fleet_taxonomy(monkeypatch):
         "ops.api": "monitor",
         "operator-api": "monitor",
         "atlas": "atlas-practice",
-        "practice": "atlas-practice",
+        "practice": "practice",
         "practice-hub": "atlas-practice",
         "atlas.practice": "atlas-practice",
         "hramatka.lessons": "hramatka",
@@ -1164,7 +1164,10 @@ def test_next_stream_alias_resolves_via_fleet_taxonomy(monkeypatch):
         assert response.status_code == 200, (selector, response.text)
         data = response.json()
         assert data["stream"] == expected_stream, selector
-        assert data["requested_stream"] == selector
+        if selector == expected_stream:
+            assert "requested_stream" not in data
+        else:
+            assert data["requested_stream"] == selector
         if expected_stream == "infra-harness":
             assert [r["work_id"] for r in data["queue"]] == [_wid(6004), _wid(6001)]
 

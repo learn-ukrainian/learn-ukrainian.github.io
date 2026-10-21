@@ -35,7 +35,7 @@ if __package__ in (None, ""):
 
 from scripts.github_check_rollup import collapse_status_rollup
 from scripts.opsec.prepublish import publication_boundary, publication_cli
-from scripts.orchestration import task_identity, task_lifecycle
+from scripts.orchestration import lifecycle_observation, task_identity, task_lifecycle
 from scripts.publish.github import Request, request_run
 
 Runner = Callable[[list[str], str | None], str]
@@ -508,6 +508,16 @@ class GhGitHubAdapter:
             "local": local,
         }
 
+    def merged_run_evidence(
+        self, ledger: dict[str, Any], observation: dict[str, Any], *, now: str,
+    ) -> tuple[dict[str, Any], dict[str, Any]]:
+        from scripts.orchestration.merge_closeout import collect_merged_run_evidence
+
+        try:
+            return collect_merged_run_evidence(self.repo_root, ledger, observation, now=now)
+        except (OSError, ValueError, KeyError, TypeError, RuntimeError) as exc:
+            raise task_lifecycle.LifecycleError(f"merged execution observation failed: {exc}") from exc
+
     def update_issue_body(self, repository: str, issue_number: int, body: str) -> None:
         self._run(
             Request("issue-edit", repo=repository, number=issue_number, body=body),
@@ -542,10 +552,16 @@ def evidenced_issue_body(ledger: Mapping[str, Any], observation: Mapping[str, An
     valid = {key: set(value) for key, value in evaluation["valid_evidence"].items()}
     body = str(observation["github"]["issue"].get("body") or "")
     checked_ids: list[str] = []
+    merged = str(observation["github"]["pr"].get("state") or "").upper() == "MERGED"
+    passed = None
+    if merged:
+        report = lifecycle_observation.validated_merged_criteria(ledger, observation)
+        passed = {item["ac_id"] for item in report["criteria"] if item["passed"]}
     for criterion in ledger["ac_snapshot"]["criteria"]:
         if not criterion["applicable"]:
             continue
-        if set(criterion["required_evidence"]).issubset(valid.get(criterion["id"], set())):
+        if (criterion["id"] in passed if passed is not None else
+                set(criterion["required_evidence"]).issubset(valid.get(criterion["id"], set()))):
             body = task_lifecycle.check_ac_checkbox(body, criterion["id"])
             checked_ids.append(criterion["id"])
     return body, checked_ids
@@ -573,6 +589,9 @@ def _assert_mutation_ready(
 ) -> dict[str, Any]:
     evaluation = task_lifecycle.evaluate(ledger, observation)
     hard = evaluation["hard_blockers"]
+    merged_report = None
+    if action in {"sync-acs", "close-issue"} and str(observation["github"]["pr"].get("state") or "").upper() == "MERGED":
+        merged_report = lifecycle_observation.validated_merged_criteria(ledger, observation)
     if action == "sync-acs":
         fatal_fragments = (
             "repository does not match",
@@ -584,6 +603,8 @@ def _assert_mutation_ready(
             "authoritative PR does not match",
         )
         fatal = [item for item in hard if any(fragment in item for fragment in fatal_fragments)]
+        if merged_report is not None and observation["github"].get("error") == "CLOSEOUT_CRITERION_EXECUTION_OR_PROOF_MISSING":
+            fatal = [item for item in fatal if item != "GitHub observation failed: CLOSEOUT_CRITERION_EXECUTION_OR_PROOF_MISSING"]
         if fatal:
             raise task_lifecycle.LifecycleError("AC sync blocked: " + "; ".join(fatal))
     elif action == "arm-auto-merge":
@@ -599,6 +620,8 @@ def _assert_mutation_ready(
         if observation["github"]["pr"].get("is_draft"):
             raise task_lifecycle.LifecycleError("auto-merge requires a ready-for-review PR")
     else:
+        if merged_report is not None and not merged_report["closure_ready"]:
+            raise task_lifecycle.LifecycleError("issue close requires passing current merged criterion execution and closure proof")
         if hard:
             raise task_lifecycle.LifecycleError("issue close blocked: " + "; ".join(hard))
         if not evaluation["goal_reached"]:
@@ -750,6 +773,8 @@ def perform_mutation(
                 registered_epics=before["github"].get("registered_stream_epics"),
                 membership_report=before["github"].get("membership_audit"),
             )
+            if action == "sync-acs" and str(before["github"]["pr"].get("state") or "").upper() == "MERGED":
+                ledger, _ = adapter.merged_run_evidence(ledger, before, now=now)
         except task_lifecycle.LifecycleError as exc:
             _, failed = _record_failed_mutation(
                 state_file, ledger, operation_id=operation_id, action=action,
@@ -759,6 +784,7 @@ def perform_mutation(
             raise task_lifecycle.LifecycleError(
                 f"mutation blocked with durable receipt {failed['id']}: {exc}"
             ) from exc
+        operation_id = task_lifecycle.mutation_operation_id(ledger, action)
         ledger, before_receipt, _ = task_lifecycle.reconcile(ledger, before, now=now)
         task_lifecycle.write_lifecycle(state_file, ledger)
         prior_status = task_lifecycle.mutation_status(ledger, operation_id)
@@ -797,6 +823,10 @@ def perform_mutation(
             }
 
         try:
+            if action == "close-issue" and str(before["github"]["pr"].get("state") or "").upper() == "MERGED":
+                ledger, _ = adapter.merged_run_evidence(ledger, before, now=now)
+                ledger, before_receipt, _ = task_lifecycle.reconcile(ledger, before, now=now)
+                task_lifecycle.write_lifecycle(state_file, ledger)
             _assert_mutation_ready(action, ledger, before)
         except task_lifecycle.LifecycleError as exc:
             _, failed = _record_failed_mutation(
@@ -841,6 +871,8 @@ def perform_mutation(
 
             after_time = utc_now()
             after = adapter.observe(ledger, now=after_time, branch=branch, worktree=worktree)
+            if action in {"sync-acs", "close-issue"} and str(after["github"]["pr"].get("state") or "").upper() == "MERGED":
+                ledger, _ = adapter.merged_run_evidence(ledger, after, now=after_time)
             if not _desired_remote_state(action, ledger, after):
                 raise task_lifecycle.LifecycleError("authoritative readback did not confirm the requested mutation")
             ledger, after_receipt, _ = task_lifecycle.reconcile(ledger, after, now=after_time)
@@ -1107,9 +1139,19 @@ def cmd_carrier(args: argparse.Namespace) -> int:
 def cmd_recover_local(args: argparse.Namespace) -> int:
     from scripts.orchestration.lifecycle_observation import recover
 
+    child_pr = None
+    if args.associate_child:
+        ledger = task_lifecycle.load_lifecycle(Path(args.state_file))
+        try:
+            child_pr = GhGitHubAdapter(args.repo_root)._read_pr(ledger["identity"]["repository"], ledger["pr"]["number"])
+        except task_lifecycle.LifecycleError as exc:
+            from scripts.orchestration.lifecycle_observation import ObservationRefusal
+
+            raise ObservationRefusal("RECOVERY_CHILD_PR_UNAVAILABLE") from exc
     receipt, replayed = recover(
         args.repo_root, state_file=Path(args.state_file), task_file=Path(args.task_record),
         manifest_file=Path(args.preserved_manifest), push_file=Path(args.push_record), now=args.now or utc_now(),
+        child_pr=child_pr,
     )
     print(json.dumps({"receipt": receipt, "replayed": replayed}, ensure_ascii=False, indent=2))
     return 0
@@ -1125,7 +1167,7 @@ def build_parser() -> argparse.ArgumentParser:
     sub = parser.add_subparsers(dest="command", required=True)
     recover = sub.add_parser(
         "recover-local", help="Append a verified local observation for an already-reaped merged task.",
-        description="Recover historical dispatch facts from a verified preservation bundle. Use only after removal; no GitHub calls.",
+        description="Recover historical dispatch facts from a verified preservation bundle. Use only after removal.\nChild association reads GitHub; ordinary recovery is offline.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""Example:
   .venv/bin/python -m scripts.orchestration.task_closeout recover-local --state-file ledger.json --task-record task.json --preserved-manifest batch_state/preserved/task/attempt.manifest.json --push-record push.json
@@ -1138,6 +1180,10 @@ Related: docs/runbooks/worktree-cleanup.md; #10752.
     recover.add_argument("--task-record", required=True, help="Delegate task JSON with lifecycle and merged reaper proof, e.g. task.json.")
     recover.add_argument("--preserved-manifest", required=True, help="Canonical preservation manifest, e.g. batch_state/preserved/task/attempt.manifest.json.")
     recover.add_argument("--push-record", required=True, help="Successful pushed_exact_head JSON record with head, remote_head, cwd and push step exit_code=0.")
+    recover.add_argument(
+        "--associate-child", action="store_true",
+        help="Associate an earlier carrier's preserved attempt with this child lifecycle; reads its exact merged PR from GitHub.",
+    )
     recover.add_argument("--now", help="UTC recovery timestamp in ISO 8601; default: current UTC, never backdated.")
     recover.set_defaults(func=cmd_recover_local)
 

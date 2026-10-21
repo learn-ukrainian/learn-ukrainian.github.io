@@ -12,6 +12,9 @@ from dataclasses import asdict
 from pathlib import Path
 from typing import Any
 
+if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
+
 from scripts.lexicon.runner.contracts import ErrorCode, WorkerResult
 from scripts.lexicon.runner.memory import (
     BoundedTimeoutExpired,
@@ -252,6 +255,9 @@ def _worker_crash_message(completed: subprocess.CompletedProcess[str]) -> str:
 def worker_cli(argv: list[str] | None = None) -> int:
     """``python -m scripts.lexicon.runner.worker <payload.json> <result.json>``."""
     args = argv if argv is not None else sys.argv[1:]
+    if args and args[0] in {"-h", "--help"}:
+        print("usage: worker <payload.json> <result.json>", file=sys.stderr)
+        return 0
     if len(args) not in (2, 3) or (len(args) == 3 and args[2] != "--scope-capped"):
         print("usage: worker <payload.json> <result.json>", file=sys.stderr)
         return 2

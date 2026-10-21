@@ -27,6 +27,9 @@ from pathlib import Path
 from typing import Any
 from uuid import uuid4
 
+if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
 from scripts.api.config import LIVE_REPO_ROOT, PROJECT_ROOT
 from scripts.api.resilience import connect_sqlite
 from scripts.common.git_context import sanitized_git_env

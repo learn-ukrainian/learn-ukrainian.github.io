@@ -28,6 +28,9 @@ from pathlib import Path
 
 import pytest
 
+if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
 from scripts.common import github_client
 from scripts.common.repo_root import project_interpreter
 from scripts.common.scratch import resolve_scratch_root

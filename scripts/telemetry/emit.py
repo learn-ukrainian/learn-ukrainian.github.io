@@ -21,6 +21,7 @@ except ImportError:  # pragma: no cover - package import path
 
 SCHEMA_VERSION = 1
 _DISABLED_ENV = "LU_TELEMETRY_DISABLED"
+_EVENTS_DIR_ENV = "LU_TELEMETRY_EVENTS_DIR"
 _RUN_ID_ENV = "LU_RUN_ID"
 _SESSION_ID_ENV = "LU_SESSION_ID"
 _SOURCE_ENV = "LU_TELEMETRY_SOURCE"
@@ -105,7 +106,8 @@ def _current_or_new_env_id(env_name: str, prefix: str) -> str:
 
 def _event_dir() -> Path:
     repo_root = Path(__file__).resolve().parents[2]
-    path = repo_root / "batch_state" / "telemetry" / "events"
+    override = os.environ.get(_EVENTS_DIR_ENV)
+    path = Path(override) if override else repo_root / "batch_state" / "telemetry" / "events"
     path.mkdir(parents=True, exist_ok=True)
     return path
 

@@ -81,9 +81,11 @@ no task record (#8717); the dispatch's later records replace it in place and
 keep the slot until the worker's pid is written.
 
 Before its costly preflights, a dispatch that would spawn on this host calls
-:func:`precheck`: memory and load only, read-only, and able only to refuse,
+:func:`precheck`: memory and load only, and able only to refuse,
 so an overloaded host turns a dispatch away cheaply (#10799). It steps aside
 for a full disk, whose reaper attempt and hard stop stay with :func:`evaluate`.
+Both paths append bounded PSI shadow observations (#10802); candidate PSI
+decisions never change any enforcement check. See ``admission_shadow``.
 
 Stdlib-only apart from sibling helpers, so capacity_pick and delegate can
 import it cheaply.
@@ -115,7 +117,7 @@ if __package__ in (None, ""):  # run as a file: put the repository root on sys.p
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from scripts.common import test_slots
-from scripts.orchestration import pool_headroom, task_record_store, worktree_prep
+from scripts.orchestration import admission_shadow, pool_headroom, task_record_store, worktree_prep
 from scripts.orchestration.dispatch_isolation import slice_usage_clause
 
 _logger = logging.getLogger(__name__)
@@ -318,6 +320,8 @@ class SlotQueueProbe:
     depth: int | None = None
     pool_size: int | None = None
     skipped: str | None = None
+    holders: tuple[dict[str, Any], ...] = ()
+    queued: tuple[dict[str, Any], ...] = ()
 
 
 @dataclass(frozen=True)
@@ -354,6 +358,7 @@ class AdmissionDecision:
     pool: pool_headroom.PoolCheck | None = None
     slots: SlotQueueProbe | None = None
     disk: DiskCheck | None = None
+    psi_shadow: dict[str, Any] | None = None
 
     @property
     def live_write_workers(self) -> int:
@@ -394,6 +399,12 @@ class AdmissionDecision:
             )
         if self.disk is not None:
             parts.append(self.disk.clause(limits))
+        if self.psi_shadow is not None:
+            shadow = self.psi_shadow
+            parts.append(
+                f"PSI shadow {shadow['psi']['decision']} (calibration only; "
+                f"{shadow['persistence']}; CPU ownership unknown, unattributed load unknown)"
+            )
         text = ", ".join(parts)
         if not probe.proc_available:
             text += " — /proc is not available on this platform, so only the worker cap is enforced"
@@ -474,6 +485,7 @@ class AdmissionDecision:
             "disk_alert": disk.alert if disk else None,
             "disk_refused": self.disk_refused,
             "swept_crashed": list(self.dead_task_ids) if self.swept else [],
+            "psi_shadow": self.psi_shadow,
         }
 
 
@@ -724,7 +736,11 @@ def probe_test_slots() -> SlotQueueProbe:
         return SlotQueueProbe(skipped=f"{error['reason']}: {error['detail']}")  # type: ignore[index]
     if not report["enabled"]:
         return SlotQueueProbe(skipped="pool disabled")
-    return SlotQueueProbe(depth=int(report["queue_depth"]), pool_size=int(report["pool_size"]))  # type: ignore[call-overload]
+    return SlotQueueProbe(
+        depth=int(report["queue_depth"]), pool_size=int(report["pool_size"]),  # type: ignore[call-overload]
+        holders=tuple(report["holders"][:admission_shadow.MAX_ATTRIBUTED]),  # type: ignore[index, arg-type]
+        queued=tuple(report["queue"][:admission_shadow.MAX_ATTRIBUTED]),  # type: ignore[index, arg-type]
+    )
 
 
 def primary_checkout() -> Path:
@@ -1514,11 +1530,87 @@ def host_failures(probe: HostProbe, limits: Thresholds) -> list[str]:
     return failures
 
 
+def observe_pressure(
+    probe: HostProbe,
+    limits: Thresholds,
+    *,
+    phase: str,
+    decision: AdmissionDecision | None = None,
+    record: bool = True,
+) -> dict[str, Any]:
+    """Shadow the CPU gate using only already collected attribution (#10802).
+
+    No task/pool/slot scan is added to the cheap path. These snapshots identify
+    participants, not measured CPU owners; unattributed load is always unknown.
+    """
+    try:
+        load = probe.load_per_cpu
+        slots = decision.slots if decision else None
+        pool = decision.pool if decision else None
+        memory = pool.memory if pool else None
+        live = decision.live_task_ids if decision and phase == "evaluate" else None
+        context = {
+            "phase": phase,
+            "current_admission_decision": "unknown" if decision is None else "admit" if decision.admitted else "refuse",
+            "override_outcome": "unknown: shadow observes checks before force overrides",
+            "load_per_cpu": load,
+            "load_limit": limits.max_load_per_cpu,
+            "load_decision": "unknown" if load is None else "refuse" if load > limits.max_load_per_cpu else "admit",
+            "attribution": {
+                "live_task_ids": (
+                    [admission_shadow.label(t) for t in live[:admission_shadow.MAX_ATTRIBUTED]]
+                    if live is not None else None
+                ),
+                "live_task_count": len(live) if live is not None else None,
+                "pool_nonreclaimable_bytes": memory.nonreclaimable if memory else None,
+                "pool_limit_bytes": memory.limit if memory else None,
+                "test_slot_queue_depth": slots.depth if slots else None,
+                "test_slot_pool_size": slots.pool_size if slots else None,
+                "test_slot_holders": [
+                    {"task_id": admission_shadow.label(h.get("task_id")), "slots": h.get("slots")}
+                    for h in slots.holders[:admission_shadow.MAX_ATTRIBUTED]
+                ] if slots and slots.depth is not None else None,
+                "test_slot_waiters": [
+                    {"task_id": admission_shadow.label(h.get("task_id"))}
+                    for h in slots.queued[:admission_shadow.MAX_ATTRIBUTED]
+                ] if slots and slots.depth is not None else None,
+                "cpu_ownership": "unknown: existing snapshots do not measure CPU shares",
+                "unattributed_load": "unknown: no per-actor CPU measurement",
+                "missing_attribution": "unknown: not collected on cheap path or unavailable",
+                "limit": admission_shadow.MAX_ATTRIBUTED,
+            },
+        }
+        pressure = admission_shadow.read_pressure(PROC_ROOT)
+        directory = os.environ.get(admission_shadow.DIRECTORY_ENV)
+        # Match the existing host-probe seam: tests opt into a private store.
+        persistence = (
+            "unknown: test journal not configured"
+            if "PYTEST_CURRENT_TEST" in os.environ and directory is None
+            else "unknown: report-only evaluation" if not record else None
+        )
+        if persistence is not None:
+            return {
+                **context,
+                "pressure": pressure,
+                "psi": admission_shadow.transition(pressure, {}, time.time()),
+                "persistence": persistence,
+            }
+        root = Path(directory) if directory else primary_checkout() / "batch_state" / "admission-shadow"
+        return admission_shadow.observe(root, pressure, context)
+    except Exception as exc:  # optional diagnostics must never abort admission
+        return {
+            "phase": phase,
+            "psi": {"decision": "unknown", "low_since": None, "reason": "observer_error"},
+            "persistence": "unknown: observer_error",
+            "observer_error": type(exc).__name__,
+        }
+
+
 def precheck(mode: str, *, thresholds: Thresholds | None = None) -> AdmissionDecision | None:
     """A refusal when this host's memory or load already fails, else ``None`` (#10799).
 
-    Read-only and refusal-only: it reads the thresholds, ``/proc`` and the
-    disk usage and nothing else (no task record, sweep, pool or slot probe),
+    Refusal-only: it reads the thresholds, ``/proc`` and the disk usage,
+    plus bounded PSI shadow journal state (no task record, sweep, pool or slot probe),
     so dispatch can refuse an overloaded host before its costly preflights.
     The refusal carries the failure text :func:`evaluate` gives. A disk at or
     above its refuse threshold steps aside: :func:`evaluate` then runs the
@@ -1533,13 +1625,16 @@ def precheck(mode: str, *, thresholds: Thresholds | None = None) -> AdmissionDec
     probe = probe_host()
     failures = host_failures(probe, limits)
     if not failures:
+        observe_pressure(probe, limits, phase="precheck")
         return None
     disk_used = probe_disk().used_percent
     if disk_used is not None and disk_used >= limits.disk_refuse_used_percent:
+        observe_pressure(probe, limits, phase="precheck")
         return None
-    return AdmissionDecision(
+    decision = AdmissionDecision(
         mode=mode, exempt=False, admitted=False, thresholds=limits, probe=probe, failures=tuple(failures)
     )
+    return replace(decision, psi_shadow=observe_pressure(probe, limits, phase="precheck", decision=decision))
 
 
 def evaluate(
@@ -1552,6 +1647,7 @@ def evaluate(
     thresholds: Thresholds | None = None,
     reaper: DiskReaper | None = None,
     disk_guard: bool = True,
+    record_shadow: bool = True,
 ) -> AdmissionDecision:
     """Decide whether a ``mode`` dispatch may start a worker on this host now.
 
@@ -1561,7 +1657,9 @@ def evaluate(
     :func:`run_disk_reaper`) is attempted at most once, through
     :func:`attempt_disk_reaper`, when the disk is at or above the reap
     watermark; without it the disk is only measured and only the refuse
-    watermark refuses. ``disk_guard=False``
+    watermark refuses. Report-only callers pass ``record_shadow=False`` to keep PSI diagnostics
+    without reading or writing journal state or changing the admission decision.
+    ``disk_guard=False``
     (a dispatch that reuses an existing worktree) skips the disk check, the
     reaper and the alert. Invalid threshold environment variables raise
     ``ValueError``.
@@ -1607,7 +1705,7 @@ def evaluate(
     if disk_used is not None and disk_used >= limits.disk_alert_used_percent:
         alert = maybe_alert_disk(tasks_dir, disk, limits, refused=disk_failure is not None)
         disk = replace(disk, alert=alert)
-    return AdmissionDecision(
+    decision = AdmissionDecision(
         mode=mode,
         exempt=False,
         admitted=not failures,
@@ -1620,6 +1718,10 @@ def evaluate(
         pool=pool,
         slots=slots,
         disk=disk,
+    )
+    return replace(
+        decision,
+        psi_shadow=observe_pressure(probe, limits, phase="evaluate", decision=decision, record=record_shadow),
     )
 
 

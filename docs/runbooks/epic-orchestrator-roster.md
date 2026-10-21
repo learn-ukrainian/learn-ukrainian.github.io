@@ -1,5 +1,7 @@
 # Epic-orchestrator routing — which model drives which epic
 
+For an authorized CLI seat move, follow [Move a driver seat to another CLI](driver-seat-cli-move.md); the launcher owns lease release.
+
 **Audience:** operator (you) + any agent launched as an epic/track driver.
 **Companion skill:** [`drive-epic`](../../agents_extensions/shared/skills/drive-epic/SKILL.md)
 — the model-agnostic playbook every driver runs.

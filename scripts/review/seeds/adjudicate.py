@@ -57,6 +57,9 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
+
 try:
     from scripts.lib.readonly_sqlite import SQLiteConnection
 except ModuleNotFoundError as exc:

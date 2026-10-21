@@ -66,17 +66,22 @@ def test_card_covers_the_contract_sections(band: str) -> None:
 
 @pytest.mark.parametrize("band", sorted(BANDS))
 def test_card_ukrainian_is_only_exemplars_or_contract_terms(band: str) -> None:
-    """Every Cyrillic run in the card is an exemplar line or one of the contract's own terms (§5 table, tab names)."""
+    """Cyrillic is sourced exemplar text, contract terminology or approved policy notation."""
     front, body, _ = read_card(band)
     allowed = {norm(t) for e in front["exemplars"] for t in e["text"]}
     allowed |= {norm(e["source"]) for e in front["exemplars"]}
-    contract_terms = {"звук", "літера", "відмінок", "наголос", "ти", "ви", "Урок", "Ресурси", "Словник"}
+    contract_terms = {"звук", "літера", "відмінок", "наголос", "ти", "ви", "Урок", "Ресурси", "Словник", "Правопис", "ЕСУМ"}
+    # Policy notation names alternations and the cited §158 I.11 note 2 defect,
+    # not new learner-facing exemplars. Match the approved fragments exactly.
+    policy_notation = ('у/в, і/й and з/із/зі', '"а втім, часу..."')
     for line in body.splitlines():
         if not re.search(r"[Ѐ-ӿ]", line):
             continue
         stripped = norm(line.lstrip("> ").strip())
         if stripped in allowed:
             continue
+        for fragment in policy_notation:
+            line = line.replace(fragment, "")
         for run in re.findall(r"[Ѐ-ӿ][Ѐ-ӿ'’\-]*", line):
             assert run in contract_terms or any(run in a for a in allowed), f"{band}: unsourced Ukrainian {run!r} in: {line[:80]}"
 

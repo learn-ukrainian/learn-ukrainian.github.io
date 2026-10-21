@@ -490,8 +490,9 @@ def test_codex_outer_timeout_exceeds_the_inner_deadline_chain() -> None:
     assert "codex_hook_entry.sh" in entry["command"] and "pre-tool-use" in entry["command"]
     serial = policy.ENFORCE_VENV_TIMEOUT + sum(t for _, t in policy.LOCAL_BASH_GUARDS) + policy.PRIMARY_WRITE_GUARD[1]
     merge = max(t for _, t in policy.MERGE_GUARDS)
+    snapshot = policy.DIRT_AUDIT_SNAPSHOT[1]
     # Two seconds cover the entry script's own git probe and interpreter start-up.
-    assert entry["timeout"] >= serial + merge + 2, (entry["timeout"], serial, merge)
+    assert entry["timeout"] >= serial + merge + snapshot + 2, (entry["timeout"], serial, merge, snapshot)
 
 
 def test_agy_outer_timeout_exceeds_the_secret_guard_deadline() -> None:

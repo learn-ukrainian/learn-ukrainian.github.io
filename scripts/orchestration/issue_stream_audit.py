@@ -68,13 +68,17 @@ MAX_MILESTONE_ISSUE_RANGE = 100
 
 # ADR-011 P4 — private keys added to the cache report for the strict adoption
 # gate/observability. They carry an exact effective issue→epic membership index,
-# the bounded open-issue set, and the open-issue titles map; all are stripped
-# from the public ``/api/issues/streams`` response (see ``issues_router._strip_private_index``).
+# the bounded open-issue set, the open-issue titles map, and the validated
+# membership cache writer's per-root grouping of that same index (#10793); all
+# are stripped from the public ``/api/issues/streams`` response (see
+# ``issues_router._strip_private_index``).
 PRIVATE_CACHE_KEYS = (
     "effective_membership",
     "open_issue_numbers",
     "open_issue_titles",
+    "root_results",
 )
+MEMBERSHIP_CACHE_SCHEMA_VERSION = 1
 
 # A resolver proving issue N is a live child of stream epic E, offline, from a
 # fresh cache. Signature mirrors P1's ``check_research_registry.MembershipResolver``.
@@ -1341,6 +1345,114 @@ def _effective_membership(
     return index
 
 
+def hygiene_warnings(
+    root: Path,
+    open_issue_numbers: set[int],
+    *,
+    max_confirmed_age_days: int = DEFAULT_MAX_CONFIRMED_AGE_DAYS,
+) -> list[dict]:
+    """Closed-epic and stream-milestone warnings every published report carries.
+
+    They never affect membership or ``ok``. ``run_audit`` and the validated
+    membership cache writer both append them after the traversal warnings, so
+    no publication of the shared cache serves a reduced hygiene report (#10793).
+    """
+    registry_path = root / "scripts" / "config" / "issue_streams.yaml"
+    closed_epics = load_closed_epics(registry_path)
+    milestone_rows = load_milestone_rows(root / "docs" / "WORKSTREAMS.md")
+    milestone_numbers = {number for row in milestone_rows for number in row["issue_numbers"]}
+    closed_epic_numbers = {n for numbers in closed_epics.values() for n in numbers}
+    issue_states, unavailable_numbers = fetch_issue_states(
+        milestone_numbers | closed_epic_numbers,
+        root,
+        known_open_issue_numbers=open_issue_numbers,
+    )
+    # closed_epics is hand-maintained: a listed epic that is actually OPEN on
+    # GitHub must surface as a warning instead of silently dropping out of the
+    # audit (it is excluded from audit roots either way).
+    reopened_warnings = [
+        {"code": "closed_epic_reopened", "stream": key, "epic": number}
+        for key, numbers in sorted(closed_epics.items())
+        for number in numbers
+        if issue_states.get(number) == "OPEN"
+    ]
+    return reopened_warnings + milestone_warnings(
+        milestone_rows,
+        issue_states,
+        unavailable_issue_numbers=unavailable_numbers,
+        max_confirmed_age_days=max_confirmed_age_days,
+    )
+
+
+def membership_root_results(report: dict, registry: dict[str, list[int]]) -> dict | None:
+    """Group the effective index by registered root, or ``None`` when it is not
+    conflict-free, bounded and fully read (#10793).
+
+    The strict DoR checker trusts a cache only when its stored ``root_results``
+    equals this recomputation, so every publisher must write it.
+    """
+    roots = {n for ns in registry.values() for n in ns}
+    if any(
+        w["code"] == "unresolved_subissue"
+        and (not _is_positive_int(w.get("issue")) or w["issue"] in roots)
+        for w in report.get("warnings") or ()
+    ):
+        return None
+    numbers = report.get("open_issue_numbers")
+    if (
+        not isinstance(numbers, list)
+        or len(numbers) >= 500
+        or len(set(numbers)) != len(numbers)
+        or type(report.get("open_total")) is not int
+        or report.get("open_total") != len(numbers)
+        or report.get("multi_homed") != []
+    ):
+        return None
+    root_results = {str(n): {"native": [], "body": []} for n in sorted(roots)}
+    stream_of = {n: key for key, ns in registry.items() for n in ns}
+    for number, entry in report["effective_membership"].items():
+        if entry["unique_stream"] is not True or entry["epics"][0] not in roots:
+            return None
+        epic = entry["epics"][0]
+        if entry["streams"] != [stream_of[epic]]:
+            return None
+        root_results[str(epic)][entry["via"]].append(int(number))
+    for result in root_results.values():
+        for members in result.values():
+            members.sort()
+    return root_results
+
+
+def publish_cache(report: dict, registry: dict[str, list[int]], path: Path) -> None:
+    """Atomically publish ``report`` in the versioned membership cache shape.
+
+    The one writer of ``issue_stream_audit.json`` (``run_audit`` and the strict
+    DoR checker's validated publication, #10793). ``root_results`` is ``None``
+    for a report that cannot certify membership; the Monitor still serves it.
+    The temporary file shares the destination directory, so ``os.replace`` is
+    an atomic rename and a reader never sees partial JSON.
+    """
+    payload = json.dumps(
+        {
+            **report,
+            "schema_version": MEMBERSHIP_CACHE_SCHEMA_VERSION,
+            "root_results": membership_root_results(report, registry),
+        },
+        ensure_ascii=False,
+        sort_keys=True,
+    ) + "\n"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    descriptor, temporary = tempfile.mkstemp(prefix=".issue-stream-audit-", suffix=".json", dir=path.parent)
+    try:
+        with os.fdopen(descriptor, "w", encoding="utf-8") as handle:
+            handle.write(payload)
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.replace(temporary, path)
+    finally:
+        Path(temporary).unlink(missing_ok=True)
+
+
 def run_audit(
     repo_root: Path | None = None,
     *,
@@ -1358,9 +1470,7 @@ def run_audit(
     """
     root = repo_root.resolve() if repo_root is not None else ROOT
     repository = "/".join(_repo_owner_name(root))
-    registry_path = root / "scripts" / "config" / "issue_streams.yaml"
-    registry = load_registry(registry_path, audit_only=True)
-    closed_epics = load_closed_epics(registry_path)
+    registry = load_registry(root / "scripts" / "config" / "issue_streams.yaml", audit_only=True)
     open_issues = fetch_open_issues(root)
     traversal_warnings: list[dict] = []
     membership = fetch_tree_membership(
@@ -1376,37 +1486,11 @@ def run_audit(
         report["ok"] = False
         report["membership_complete"] = False
         report["incomplete_nodes"] = incomplete_nodes
-    milestone_rows = load_milestone_rows(root / "docs" / "WORKSTREAMS.md")
-    milestone_numbers = {number for row in milestone_rows for number in row["issue_numbers"]}
     open_issue_numbers = {issue["number"] for issue in open_issues if isinstance(issue.get("number"), int)}
-    closed_epic_numbers = {n for numbers in closed_epics.values() for n in numbers}
-    issue_states, unavailable_numbers = fetch_issue_states(
-        milestone_numbers | closed_epic_numbers,
-        root,
-        known_open_issue_numbers=open_issue_numbers,
+    report["warnings"] = traversal_warnings + hygiene_warnings(
+        root, open_issue_numbers, max_confirmed_age_days=max_confirmed_age_days
     )
-    # closed_epics is hand-maintained: a listed epic that is actually OPEN on
-    # GitHub must surface as a warning instead of silently dropping out of the
-    # audit (it is excluded from audit roots above either way).
-    reopened_warnings = [
-        {"code": "closed_epic_reopened", "stream": key, "epic": number}
-        for key, numbers in sorted(closed_epics.items())
-        for number in numbers
-        if issue_states.get(number) == "OPEN"
-    ]
-    report["warnings"] = (
-        traversal_warnings
-        + reopened_warnings
-        + milestone_warnings(
-            milestone_rows,
-            issue_states,
-            unavailable_issue_numbers=unavailable_numbers,
-            max_confirmed_age_days=max_confirmed_age_days,
-        )
-    )
-    cache_path = root / "batch_state" / "issue_stream_audit.json"
-    cache_path.parent.mkdir(parents=True, exist_ok=True)
-    cache_path.write_text(json.dumps(report, ensure_ascii=False, indent=1), encoding="utf-8")
+    publish_cache(report, registry, root / "batch_state" / "issue_stream_audit.json")
     return report
 
 

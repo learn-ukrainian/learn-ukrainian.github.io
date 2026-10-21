@@ -972,6 +972,9 @@ def main() -> int:
     if len(sys.argv) < 2:
         parser.print_help(sys.stderr)
         return 2
+    if sys.argv[1] in {"-h", "--help"}:
+        parser.print_help(sys.stderr)
+        return 0
     state_root = _state_root_from_args(None)
     try:
         supervisor = ClaudexSupervisor(

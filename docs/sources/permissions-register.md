@@ -83,7 +83,7 @@ term of protection (Art. 31) and public domain (Art. 32(3)).
 | `textbooks` | Individual authors and publishers (e.g. Заболотний, Авраменко, Вашуленко, Карман, Літвінова, Глазова); PDFs via pidruchnyk.com.ua and lib.imzo.gov.ua | internal, site, dataset | In copyright (authors/publishers); free public access by law, no reuse licence | — |
 | `frazeolohichnyi` | Compilers В. М. Білоноженко, І. С. Гнатюк, В. В. Дятчук, Неровня, Т. О. Федоренко; responsible editor В. О. Винник; publisher Наукова думка; Український мовно-інформаційний фонд НАН України | internal, site, dataset | In copyright (co-authored, 2003); no licence found | Фразеологічний словник української мови — scripts/lexicon/source_attribution.py PHRASEOLOGY_LABEL |
 | `antonenko_style_guide` | Heirs of Борис Антоненко-Давидович (d. 9 May 1984) — no contact found | internal, site, dataset | In copyright until 31 Dec 2054 (Art. 31(2)); rights with the heirs | «Як ми говоримо» Антоненка-Давидовича — scripts/lexicon/source_attribution.py DAVYDOV_LABEL |
-| `ulp_private` | Anna Ohoiko (Ukrainian Lessons) | internal | All rights reserved (Anna Ohoiko) | — |
+| `ulp_private` | Anna Ohoiko (Ukrainian Lessons) | internal | All rights reserved (Anna Ohoiko) | Ukrainian Lessons (Anna Ohoiko) |
 | `zno_nmt` | Український центр оцінювання якості освіти (test author); copies published by osvita.ua, zno.osvita.ua and lv.testportal.gov.ua | internal | No licence text recorded | — |
 | `pravopys_2019` | Інститут мовознавства ім. О. О. Потебні НАН України, Інститут української мови НАН України and Український мовно-інформаційний фонд НАН України (copyright holders per the imprint page); publisher Наукова думка | internal, site, dataset | No licence text recorded | — |
 | `pohribnyi_1992` | Author М. І. Погрібний; published by агентство «TRANSFORM», Дніпропетровськ (per the ingest record) | internal | No licence text recorded | — |
@@ -645,19 +645,19 @@ The held edition remains unverified in the holdings record; a 1991 ingest filena
 
 ### Ukrainian Lessons Podcast notes and Anna Ohoiko's books (private references) — `ulp_private`
 
-- **Permission status:** `none`
+- **Permission status:** `granted` — Operator decision 2026-10-20 admits the dictionary parts (Oho! A1 Словничок; 1000 words; 500 verbs; ULP lesson-note vocabulary zones) as a database and word-card source. Prose, transcripts, flashcards and audio stay private references. Anna Ohoiko directly confirmed consent to citation display on 2026-10-20 after reviewing example citations from her books. The confirmed display rule permits attributed quotations of example sentences and glosses on public learner pages.
 - **Organisation:** Anna Ohoiko (Ukrainian Lessons)
-- **Role:** Private reference for pedagogy only; never quoted and never a card field source.
-- **Fields:** reference_text
-- **Appears in:** internal — Private pedagogy reference; its text is not on the site or in the dataset.
-- **Stored in:** data/sources.db textbooks rows ulp-*-lesson-notes, anna-ohoiko-* (from the operator's private files under docs/references/private/, gitignored)
+- **Role:** Dictionary-part source for lexdata L1 and for word-card lexical facts; private pedagogy reference otherwise.
+- **Fields:** headword, grammatical_label, en_gloss, example_sentence, course_usage
+- **Appears in:** internal, site. Public learner pages (lexicon and word cards) may quote her example sentences and glosses with visible credit to Anna Ohoiko and the book title, linked to her work where possible. Her teaching content is never republished as our own. We learn from her teaching methods as from any other teacher and author our own curriculum, following the [ULP presentation pattern](../best-practices/ulp-presentation-pattern.md).
+- **Stored in:** data/sources.db textbooks/textbook_sections (L0, unchanged); data/lexdata.db L1 (derived)
 - **Where from:** The operator's own purchased copies under docs/references/private/ (gitignored) · Supplied by the operator; not fetched from the website.
 - **Licence as found:** All rights reserved (Anna Ohoiko). Share-alike: not stated. Non-commercial: not stated.
 - **Terms as found:**
   - «This Agreement does not transfer to you any intellectual property owned by Ogoiko, Anna or third parties, and all rights, titles, and interests in and to such property will remain (as between the parties) solely with Ogoiko, Anna.» (https://www.ukrainianlessons.com/terms-and-conditions/, read 2026-09-27)
   - «(h) to spam, phish, pharm, pretext, spider, crawl, or scrape» — Listed among prohibited uses of the website (https://www.ukrainianlessons.com/terms-and-conditions/, read 2026-09-27)
-- **Citation:** Not shown; cited only in internal notes as Ukrainian Lessons (Anna Ohoiko). Label shown: not named on learner pages.
-- **Removal:** [GitHub issue](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues) — the stored copies listed in stored_in (deleted only with the operator's authorisation).
+- **Citation:** Mark quoted example sentences and glosses as quotations and display "Anna Ohoiko, <book title>" beside them, linked to her work where possible. Keep the source locator for each quotation. Visible attribution credits and promotes her work without presenting it as our own teaching content. Anna Ohoiko directly consented to citation display on 2026-10-20 after reviewing example citations from her books.
+- **Removal:** [GitHub issue](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues) — the Atlas/practice fields carrying this source's label; the same fields in the open dataset export; the stored copies listed in stored_in (deleted only with the operator's authorisation).
 
 ### ЗНО (2010–2021) and НМТ (2022–2025) Ukrainian-language tests with official answer keys — `zno_nmt`
 
@@ -732,7 +732,7 @@ Open questions: none recorded.
 - **Appears in:** internal, site. Live Atlas definition_cards displays ВТС definitions for 7,849 words (data/atlas.db count) and the public atlas-manifest release asset distributes definition-card presentation blocks. Internal word cards use ВТС as secondary sense seed (official СУМ-20 → ВТС → ULIF). Open model training dataset export remains withheld pending Phase 7 licensing clearance.
 - **Stored in:** data/lexicon/slovnyk_cache/*.json (slug vts; 31,688 valid entries); data/sources.db slovnyk_me_entries (dictionary_slug='vts'); data/atlas.db enrichment (section='definition_cards')
 - **Where from:** https://slovnyk.me/dict/vts/
-- **Retrieval evidence:** data/lexicon/slovnyk_cache/*.json entries retrieved between 2026-08-06 and 2026-10-15; 31,688 entries with valid text in local cache; sources.db slovnyk_me_entries holds 13,181 rows.
+- **Retrieval evidence:** data/lexicon/slovnyk_cache/*.json entries retrieved between 2026-08-06 and 2026-10-15; 31,688 entries with valid text in local cache; sources.db slovnyk_me_entries holds all 31,687 cached vts rows (145,191 rows across the 13 cached dictionaries; scripts/ingest/slovnyk_me_ingest.py, 2026-10-20).
 - **Terms:** All rights reserved (rights holder unverified / candidate ВТФ «Перун» / В. Т. Бусел); no open licence on slovnyk.me aggregator. Search record: https://slovnyk.me/ (no explicit open license terms declared for VTS dictionary text); https://slovnyk.me/terms (archived terms forbid copying without permission; quotation exception claimed for underlying work, not mirror; blocks Phase 7 public dataset release only).
 - **Statute referred to:** `law_art22_quotation`
 - **Citation:** Великий тлумачний словник сучасної української мови (електронна копія на Slovnyk.me, https://slovnyk.me/dict/vts/ — друковане видання ВТФ «Перун» не встановлено за колофоном електронного дзеркала; вимагає бібліографічної верифікації). Label shown: Великий тлумачний словник сучасної української мови.

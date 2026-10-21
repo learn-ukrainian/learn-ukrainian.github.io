@@ -1204,11 +1204,13 @@ def test_issues_streams_strips_private_index(tmp_path, monkeypatch):
         "effective_membership": {"5": {"epics": [100], "streams": ["s"], "unique_stream": True}},
         "open_issue_numbers": [5, 100],
         "open_issue_titles": {"5": "Issue 5 title", "100": "Issue 100 title"},
+        "root_results": {"100": {"native": [], "body": [5]}},
     }
     stripped = issues_router._strip_private_index(report)
     assert "effective_membership" not in stripped
     assert "open_issue_numbers" not in stripped
     assert "open_issue_titles" not in stripped
+    assert "root_results" not in stripped
     assert stripped["open_total"] == 3 and stripped["ok"] is True
 
 
@@ -1225,6 +1227,8 @@ _LEAKY_REPORT = {
     "effective_membership": {"5": {"epics": [100], "streams": ["s"], "unique_stream": True}},
     "open_issue_numbers": [5, 100],
     "open_issue_titles": {"5": "Issue 5 title", "100": "Issue 100 title"},
+    # #10793: the validated membership cache writer's per-root index.
+    "root_results": {"100": {"native": [], "body": [5]}},
 }
 
 _IDLE_REFRESH = {
@@ -1251,6 +1255,8 @@ def _assert_no_private_keys(body: dict[str, Any]) -> None:
     assert "effective_membership" not in body
     assert "open_issue_numbers" not in body
     assert "open_issue_titles" not in body
+    assert "root_results" not in body
+    assert not set(isa.PRIVATE_CACHE_KEYS) & set(body)
     assert body["open_total"] == 3 and body["ok"] is True
 
 
@@ -1301,6 +1307,74 @@ def test_issues_streams_endpoint_strips_private_keys_on_cache_hit(monkeypatch):
     body = resp.json()
     _assert_no_private_keys(body)
     assert body["refreshing"] is False and body["refresh"]["phase"] == "idle"
+
+
+@pytest.mark.parametrize("publisher", ["membership_writer", "run_audit"])
+def test_issues_streams_serves_membership_cache_writer_output_without_private_keys(tmp_path, monkeypatch, publisher):
+    """#10793: a cache published by either writer (the strict checker's validated
+    publication or a Monitor ``run_audit`` refresh) leaks no private key through
+    the route or the Work projection, and keeps run_audit's warnings."""
+    from scripts.api import issues_router
+    from scripts.ci import check_issue_task_quality as checker
+    from scripts.work import sources_public
+
+    repo = "learn-ukrainian/learn-ukrainian.github.io"
+    registry = {"devops": [5703], "harness": [6943]}
+    report = isa.classify(
+        [{"number": 123, "title": "PRIVATE_TITLE_CANARY"}], registry, {5703: (set(), {123}), 6943: (set(), set())}
+    )
+    report.update(repository=repo, warnings=[])
+    hygiene = [
+        {"code": "closed_epic_reopened", "stream": "devops", "epic": 4000},
+        {"code": "milestone_closed_issue", "stream": "devops", "issue": 77},
+    ]
+    monkeypatch.setattr(checker, "ROOT", tmp_path)
+    monkeypatch.setattr(isa, "hygiene_warnings", lambda *a, **k: [dict(w) for w in hygiene])
+    if publisher == "membership_writer":
+        assert checker.write_membership_cache(report, repo, registry)
+    else:
+        (tmp_path / "scripts/config").mkdir(parents=True)
+        (tmp_path / "scripts/config/issue_streams.yaml").write_text(
+            "streams:\n  devops:\n    epics: [5703]\n  harness:\n    epics: [6943]\n"
+        )
+        monkeypatch.setattr(isa, "_repo_owner_name", lambda *a: tuple(repo.split("/")))
+        monkeypatch.setattr(isa, "fetch_open_issues", lambda *a: [{"number": 123, "title": "PRIVATE_TITLE_CANARY"}])
+        monkeypatch.setattr(
+            isa,
+            "_fetch_subissue_batch",
+            lambda cursors, *a: {n: {"body": "- [ ] #123" if n == 5703 else "", "subIssues": {"nodes": []}} for n in cursors},
+        )
+        isa.run_audit(tmp_path)
+    cache = tmp_path / "batch_state/issue_stream_audit.json"
+    assert json.loads(cache.read_text())["schema_version"] == 1
+    assert json.loads(cache.read_text())["root_results"]["5703"] == {"native": [], "body": [123]}
+    monkeypatch.setattr(isa, "CACHE_PATH", cache)
+    monkeypatch.setattr(issues_router.audit, "read_refresh_state", lambda: dict(_IDLE_REFRESH))
+    monkeypatch.setattr(
+        issues_router.audit,
+        "schedule_refresh",
+        lambda **_kwargs: (_ for _ in ()).throw(AssertionError("fresh cache must not schedule")),
+    )
+
+    resp = client.get("/api/issues/streams")
+    assert resp.status_code == 200
+    body = resp.json()
+    # Allowlist tripwire: a new writer key fails here until it is classified.
+    assert set(body) == {
+        "closed_or_missing_epics", "generated_at", "incomplete_nodes", "membership_complete", "multi_homed",
+        "ok", "open_total", "orphans", "pending_native_link", "refresh", "refreshing", "repository",
+        "schema_version", "streams", "warnings",
+    }
+    assert "root_results" not in body and not set(isa.PRIVATE_CACHE_KEYS) & set(body)
+    assert "PRIVATE_TITLE_CANARY" not in json.dumps(body)
+    assert body["warnings"] == hygiene
+
+    projection = sources_public.fetch_streams_projection()
+    assert projection.status == "ok"
+    assert "root_results" not in projection.payload
+    assert not set(isa.PRIVATE_CACHE_KEYS) & set(projection.payload)
+    assert "PRIVATE_TITLE_CANARY" not in json.dumps(projection.payload)
+    assert projection.payload["open_stream_membership"] == {"123": ["devops"]}
 
 
 def test_issues_streams_offloads_sync_state_io_from_event_loop(monkeypatch):

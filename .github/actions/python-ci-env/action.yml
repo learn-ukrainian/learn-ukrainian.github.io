@@ -4,6 +4,10 @@ description: >-
   index retry, #9061), install ./packages/v4-runtime, then verify the Atlas
   lexicon manifest. Shared by ci.yml and uv-cache-warm.yml so
   the install cannot drift between jobs (#9062).
+inputs:
+  save-cache:
+    description: 'Whether to save the uv cache; diagnostic workflows must disable writes.'
+    default: ${{ github.ref == 'refs/heads/main' && 'true' || 'false' }}
 outputs:
   uv-cache-key:
     description: 'Exact setup-uv cache key for this runner, Python and requirements-lock.txt.'
@@ -39,7 +43,7 @@ runs:
         # still restore main's entry: the key has no event or ref component and
         # a PR may read its base branch's caches. merge_group never saved (its
         # gh-readonly-queue ref is unreadable by the next run) and still cannot.
-        save-cache: ${{ github.ref == 'refs/heads/main' && 'true' || 'false' }}
+        save-cache: ${{ inputs.save-cache }}
 
     - name: Install Python deps
       shell: bash

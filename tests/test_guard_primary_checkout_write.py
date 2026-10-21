@@ -1880,6 +1880,49 @@ def test_issue_10343_cd_then_tee_containment(repo: Path, outside_dir: Path, prim
         assert "untracked_primary_checkout" in result.stderr
 
 
+@pytest.mark.parametrize("tool", ["Bash", "Shell"])
+@pytest.mark.parametrize(
+    "command, cwd_kind, reason",
+    [
+        # Each allowed case is paired with a blocked one of the same shape whose
+        # only difference is a symlink, or a cd, into the primary checkout.
+        ("cd {plain}; tee scratch.txt", "dispatch", None),
+        ("cd {links}; tee scratch.txt", "dispatch", "untracked_primary_checkout"),
+        ("cd {primary}; tee scratch.txt", "dispatch", "untracked_primary_checkout"),
+        ("tee {plain}/new.md", "dispatch", None),
+        ("tee {links}/pdir/new.md", "dispatch", "untracked_primary_checkout"),
+        ("cd {links}/pdir; tee new.md", "dispatch", "untracked_primary_checkout"),
+        ("tee primary-link/curriculum/new.md", "dispatch", "untracked_primary_checkout"),
+        ("echo x > {links}/tracked-link.md", "dispatch", "tracked_primary_checkout"),
+        ("tee plain.txt", "outside", None),
+        ("tee {links}/scratch.txt", "outside", "untracked_primary_checkout"),
+        ("tee {links}/pdir/new.md", "outside", "untracked_primary_checkout"),
+    ],
+)
+def test_issue_10343_symlinks_into_primary_block_for_bash_and_shell(
+    repo: Path, outside_dir: Path, tool: str, command: str, cwd_kind: str, reason: str | None
+):
+    # #10343: symlink resolution, not the spelling of the path, decides.
+    dispatch = repo / ".worktrees/dispatch/claude/task-1"
+    plain = outside_dir / "plain scratch"
+    links = outside_dir / "linked scratch"
+    plain.mkdir()
+    links.mkdir()
+    (links / "scratch.txt").symlink_to(repo / "scratch.txt")
+    (links / "pdir").symlink_to(repo / "curriculum", target_is_directory=True)
+    (links / "tracked-link.md").symlink_to(repo / "curriculum/tracked.md")
+    (dispatch / "primary-link").symlink_to(repo, target_is_directory=True)
+    cwd = dispatch if cwd_kind == "dispatch" else plain
+    command = command.format(
+        plain=shlex.quote(str(plain)), links=shlex.quote(str(links)), primary=shlex.quote(str(repo))
+    )
+    tool_input = {"command": command, **({"cwd": str(cwd)} if tool == "Shell" else {})}
+    result = _run(repo, {"tool_name": tool, "cwd": str(cwd), "tool_input": tool_input})
+    assert result.returncode == (0 if reason is None else 2), (command, result.stderr)
+    if reason is not None:
+        assert f"[{reason}]" in result.stderr
+
+
 @pytest.mark.parametrize(
     "template, reason",
     [

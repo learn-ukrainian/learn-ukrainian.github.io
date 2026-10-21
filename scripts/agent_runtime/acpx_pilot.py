@@ -29,6 +29,10 @@ _SCRIPTS_DIR = Path(__file__).resolve().parents[1]
 if str(_SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(_SCRIPTS_DIR))
 
+if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    __package__ = "scripts.agent_runtime"
+
 from scripts.guardrails.worktree_containment import classify_repo_path
 
 from .adapters.acpx import (

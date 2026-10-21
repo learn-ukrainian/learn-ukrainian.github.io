@@ -61,6 +61,10 @@ eq "$(launcher_selector_stream infra.monitor)" "epic:7919" "monitor resolves to 
 eq "$(launcher_selector_stream ops-api)" "epic:7919" "ops-api alias → monitor stream epic"
 eq "$(launcher_selector_lane ops-api)" "monitor" "ops-api alias → monitor lane"
 eq "$(launcher_selector_lane atlas.practice)" "atlas" "atlas practice resolves to atlas"
+eq "$(launcher_selector_lane practice)" "practice" "practice resolves to dedicated lane"
+eq "$(launcher_selector_stream practice)" "epic:11151" "practice resolves to dedicated stream"
+eq "$(handoff_identity_for_epic practice)" "claude-practice" "Practice Claude slot"
+eq "$(handoff_identity_for_codex_epic practice)" "codex-practice" "Practice Codex slot"
 eq "$(launcher_selector_stream hramatka.lessons)" "epic:4542" "hramatka lessons resolves"
 # corpus is a documented driver epic for eligible providers and a legacy
 # selector retained for historical handoff lookup — it must

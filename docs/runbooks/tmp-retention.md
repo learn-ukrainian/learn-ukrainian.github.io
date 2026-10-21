@@ -1,26 +1,30 @@
 # Temp scratch retention and batch_state staleness
 
-Operator retention decision, 2026-10-06 (#9737). A daily user timer removes
-agent scratch from the system temp area that no task owns and that has gone
-quiet. It also prints a report of stale `batch_state/` directories. The report
-never deletes anything.
+Operator retention decision, 2026-10-06 (#9737). An hourly user timer
+(#11297) removes agent scratch from the system temp area that no task owns and
+that has gone quiet. It also deletes inactive pytest scratch (see
+[Inactive pytest scratch](#inactive-pytest-scratch)) and prints a report of
+stale `batch_state/` directories. The report never deletes anything.
 
-Removal is recoverable (#9887): the sweep moves an entry into a quarantine,
-records it in an append-only ledger first, and deletes it only after 7 days,
-when the same checks still pass. Until then `tmp_sweep restore <ledger-id>`
-puts it back. See [Deletion ledger and quarantine](#deletion-ledger-and-quarantine).
+Removal of system-temp scratch is recoverable (#9887): the sweep moves an
+entry into a quarantine, records it in an append-only ledger first, and
+deletes it only after 7 days, when the same checks still pass. Until then
+`tmp_sweep restore <ledger-id>` puts it back. See
+[Deletion ledger and quarantine](#deletion-ledger-and-quarantine). Inactive
+pytest scratch is deleted directly, without quarantine.
 
 ## What runs
 
-`learn-ukrainian-tmp-sweep.timer` runs once a day at 05:30 UTC, with up to
-15 minutes of random delay. Missed runs catch up. It starts
+`learn-ukrainian-tmp-sweep.timer` runs every hour at 30 minutes past, UTC,
+with up to 10 minutes of random delay. Missed runs catch up. It starts
 `learn-ukrainian-tmp-sweep.service`, which runs two steps in order:
 
 1. `scripts.hygiene.batch_state_retention`: the read-only staleness report.
 2. `scripts.hygiene.tmp_sweep --unattributed-scratch --apply --summary`: the
-   sweep. It purges expired quarantine entries, then quarantines newly proven
-   ones. It logs counts and byte totals only, never entry names; the ledger
-   holds the names.
+   sweep. It purges expired quarantine entries, quarantines newly proven
+   ones and deletes inactive, unheld pytest run folders. It logs counts and
+   byte totals only, never entry names; the ledger holds the quarantined
+   names.
 
 The service has no network: `RestrictAddressFamilies=AF_UNIX` refuses every
 IPv4 and IPv6 socket. `PrivateNetwork=yes` is not used, because the user
@@ -40,6 +44,83 @@ from the home directory down to the unit directory; the error names the
 component.
 
 ## The temp-scratch rule
+
+### Inactive pytest scratch
+
+Operator retention decision for #11297. The sweep looks only inside the two
+managed pytest namespaces, `pytest-runs/runs` and the legacy
+`pytest-runs/task-scratch`, below the existing scratch scan roots. It honors
+`LU_SCRATCH_SCAN_ROOT`. A run folder there is deleted outright when both of
+these hold:
+
+- Its newest change anywhere inside is more than two hours old. A change is a
+  write or an inode change, so a folder whose files were extracted recently
+  with old preserved mtimes stays young. Exactly two hours is still young.
+- No live process holds it. The sweep reads every process's working
+  directory, open descriptors, memory-mapped files, command line and
+  environment. A reference is the folder's path or a path below it in any
+  spelling the process can use: an argument, a `VAR=value` value or a `:`
+  list entry, read relative to the process's working directory, with `.`
+  and `..` folded and symlinked aliases resolved as the kernel does (a
+  symlink is followed before a later `..`). Command lines and
+  environment values are never reported. Rows carry only PIDs and channel
+  names (`cwd`, `fd`, `maps`, `argv`, `environ`).
+
+No ownership record is required. A run with no `lease.json`, a malformed one
+or a completed one is treated the same way. Retention counts, completion
+proofs and the seven-day quarantine play no part in this class. A run lock
+(`lease.lock`) is used where it exists. A lock held by anyone else keeps the
+run as `in_use`, and a lock the sweep cannot open keeps it as `lock_unknown`.
+A missing lock is not a reason to keep anything.
+
+The run is still kept, with its reason in the report, when:
+
+- any live process could not be inspected (`liveness_unknown`; see
+  [Process coverage](#process-coverage));
+- the tree has a mount point, a foreign owner, `.git` metadata, hard-linked
+  content, a socket or FIFO, or cannot be read (the tree-safety reasons in
+  [Other scratch](#other-scratch));
+- it is a registered worktree, or the worktree probe failed;
+- the entry is a symlink or not a directory;
+- its namespace is a symlink, not owned by the agent user or not private
+  (`namespace_untrusted`, counted as an error).
+
+With `--apply`, every proven folder is first renamed, never replacing
+anything, into a locked holding directory inside its namespace. One fresh
+process scan then checks both the original and the held path, and the tree is
+compared with the fingerprint taken before the rename. A changed inode, any
+holder, an uninspectable process or any write renames the folder back under
+its own name. Otherwise the common descriptor-safe remover deletes it; it
+refuses mount points and identity changes, and whatever a refused deletion
+leaves is renamed back. If the original name was taken meanwhile, the folder
+stays in the holding directory as `restore_blocked`. A crash leaves it there
+too. The next run returns it to its name, where it waits two more hours.
+
+A dry run reports the same decisions as `would_delete` and changes nothing.
+Under `pytest_retention`, the `--summary` output includes
+`would_delete_entries` and `would_delete_bytes` (dry run), `deleted_entries`
+and `deleted_bytes` (allocated bytes actually removed), `liveness_complete`,
+`liveness_unreadable_processes`, protected bytes and counts by reason. It
+never includes entry names. Entries an earlier policy left in the ledger
+quarantine keep their recorded recovery and purge path. Invalid
+`LU_SCRATCH_SCAN_ROOT` configuration reports `scan_root_invalid` and a nonzero
+exit while preserving the summary of any general temp-sweep actions already
+applied. It never falls back to host roots.
+
+Ordinary repository pytest sessions still allocate an invocation with
+`lease.json` and a lifetime-held `lease.lock` using
+`scripts.common.task_scratch`. The session points `TMPDIR` and Python's cached
+temp directory at the invocation's payload, so ordinary temporary files and
+pytest fixtures share one containment root; teardown restores both. A running
+session is therefore held by its lock descriptor and, in its xdist workers
+and child processes, by the exported `TMPDIR`. New invocations use the neutral
+`runs` component so emitted fixture paths do not contain secret-token
+prefixes. Pytest folders directly below a scratch root, outside the two
+namespaces, are reported as `legacy_ownership_unknown` and never touched. An
+explicit `--basetemp` keeps its caller's ownership; the pre-push gate removes
+its own base temp. Other managed scratch is untouched.
+
+### Other scratch
 
 `tmp_sweep` considers only direct children of the temp root. With
 `--unattributed-scratch`, an entry that no task owns is removed only when all
@@ -71,12 +152,16 @@ overrides a task that is still unsettled.
 ### Process coverage
 
 The sweep reads `/proc/<pid>/cwd`, `/proc/<pid>/fd` and `/proc/<pid>/maps`
-for every process.
+for every process. For inactive pytest scratch it also reads
+`/proc/<pid>/cmdline` and `/proc/<pid>/environ`, and inspects its own process
+too, excusing only the run locks it holds itself.
 The kernel refuses some of these reads. Examples are other users' processes,
 such as root daemons, and non-dumpable processes of the agent user, such as
 its systemd manager or SSH sessions. A process that cannot be read could hold
 any entry. Any refusal therefore makes the probe incomplete, and every
-candidate in both classes is kept as `liveness_unknown`.
+candidate in every class, pytest scratch included, is kept as
+`liveness_unknown`. Zombies and processes that exit during the scan hold
+nothing.
 
 Consequence: an unprivileged user cannot read root's processes on a normal
 Linux host. The probe is then never complete, so the timer reports what it
@@ -380,3 +465,110 @@ A hold anywhere below a top-level directory makes the report show that whole
 directory as `held`, not `stale`. When the condition in `until` is met,
 remove the entry. A malformed list makes the report exit with code 2, so a
 hold is never ignored without notice.
+
+## uv cache size and growth (#10827)
+
+The repository tool prints a status row for the private `lu-driver-status`
+consumer. It measures allocated bytes with `du -skH`, shows growth against the
+oldest sample inside the last 24 hours, and warns above configurable thresholds.
+It never deletes cache content. Symlinks below the cache are not followed;
+a symlink at the cache root is measured where it points.
+
+### Keeper and status consumer contract
+
+Host wiring is a follow-up owned by the keeper's owner, Infra. This PR supplies
+the tool and contract only. It does not install a keeper callback or status row.
+The installed keeper uses its configured `state_dir` for `state.json`; the
+status consumer already reads that file. Use that same configured directory
+for the uv history. Do not embed history in `state.json` or change its schema.
+
+Set `KEEPER_STATE_DIR` to that configured directory and `PROJECT_PYTHON` to the
+project interpreter. Run these commands from the repository root, or use the
+absolute path to `scripts/hygiene/uv_cache_status.py` with the same arguments.
+These variable names are integration placeholders, not additional tool settings.
+
+Exactly one owner, the keeper, records history on its own cadence, at most once
+per tick and preferably every 10 minutes. It runs:
+
+```bash
+"$PROJECT_PYTHON" -m scripts.hygiene.uv_cache_status --record-history --state-dir "$KEEPER_STATE_DIR"
+```
+
+The status script captures and prints the output of the read-only command:
+
+```bash
+"$PROJECT_PYTHON" -m scripts.hygiene.uv_cache_status --state-dir "$KEEPER_STATE_DIR"
+# For a structured consumer:
+"$PROJECT_PYTHON" -m scripts.hygiene.uv_cache_status --state-dir "$KEEPER_STATE_DIR" --json
+```
+
+Both invocations must use the same cache configuration. `UV_CACHE_DIR` selects
+it explicitly; otherwise `XDG_CACHE_HOME` and uv's default cache rule apply.
+`LU_DRIVER_STATUS_STATE_DIR` can replace `--state-dir`. The option takes
+precedence. There is no implicit state directory. Recording without one refuses
+with exit 2; an unconfigured reader shows `history unavailable`.
+
+Default invocation and `--no-record` never create a directory, history sample,
+lock or temporary file. Only `--record-history` writes. The keeper must not pass
+that flag to status readers. Overlapping cooperative keeper invocations share
+an exclusive lock, so they cannot lose each other's samples. The lock stays
+in place between invocations and must not be removed while writers are active.
+
+The keeper owns the directory's location and contents. Keep it and its ancestors
+outside the configured cache, including directory aliases. Do not retarget,
+move, hard-link or unlink them during an update. Preconfigured cache-relative
+paths, symlinked state directories, and symlinked, multiply linked or nonregular
+history and lock files refuse before writing. All operations use one opened
+directory; temporary files are created exclusively beside history, independent
+of `TMPDIR`. New directories use mode 0700 and files use 0600. Updates write and
+sync a temporary file, atomically replace `uv-cache-size.jsonl`, then sync the
+directory. Readers see a complete old or new history file.
+
+### Output and limits
+
+For example, `UV CACHE: 7.23 GiB, +0.40 GiB over 24h` reports the measured size
+and growth. A shorter baseline names its actual span. Until a valid sample is
+at least an hour old, output says `growth n/a (history building)`. Missing,
+unreadable or unusable history says `growth n/a (history unavailable)` instead
+of zero growth. The first successful keeper recording starts history-building.
+Samples are at least 10 minutes apart; updates retain a week of history.
+Malformed rows are ignored when other valid samples remain.
+
+`LU_UV_CACHE_WARN_GB` defaults to 10 and `LU_UV_CACHE_GROWTH_WARN_GB` to 2.
+Values are in GiB despite the setting names. Warnings apply strictly above the
+threshold, including size warnings while history is unavailable or busy. Growth
+warnings compare the measured delta over the displayed span, without
+extrapolating a shorter baseline to a full day. No warning triggers deletion.
+
+`LU_UV_CACHE_SCAN_TIMEOUT_S` defaults to 8 seconds. On timeout the tool kills
+the scan process group and prints `UV CACHE: size unavailable (scan exceeded
+8s)`. A failed measurement prints `UV CACHE: measurement failed (...)`.
+Neither records a sample. `LU_UV_CACHE_LOCK_TIMEOUT_S` defaults to 2 seconds;
+one deadline covers opening the lock, retries and acquisition. A busy writer
+prints its measurement and `history busy (...); no sample recorded`.
+Status states exit 0; unsafe configuration exits 2. A synchronous filesystem
+call may outlast its deadline. Uninterruptible kernel I/O is not certified.
+
+### Threat model and recorded race dispositions
+
+The approved threat model is accidental misconfiguration and cooperative
+concurrent writers. Restrictive permissions, directory descriptors and atomic
+rename do not stop hostile same-user processes from relocating or aliasing
+files. There is no guarantee against such mutation during recording. Hostile
+same-user isolation needs a separate decision.
+
+The four recorded race classes have these dispositions:
+
+| Recorded reproducer | Disposition under the approved model |
+| --- | --- |
+| Retarget a parent symlink after directory validation | Operations stay relative to the directory already opened. A configured alias into the cache refuses at startup. Arbitrary same-user mutation remains outside the contract. |
+| Move the open state directory into the cache during measurement, serialization or a resumed write | The descriptor follows the moved directory. This can still put writes into the cache and is excluded by the keeper ownership contract. Repeated location checks are removed. |
+| Hard-link a lock or temporary file into the cache, including after a short write | Preconfigured history and lock hard links refuse. Adding aliases during recording can still expose a lock or further writes inside the cache and is outside the contract. |
+| Hard-link and unlink the original name, including a decoy replacement | A single remaining link is no proof of safe location. Such mutation can still lock or write a cache inode, fail replacement, or publish a decoy. It is outside the contract. |
+
+Dynamic tests cover configured aliases, atomic updates, cooperative writers,
+concurrent read-only consumers, all four race classes during status reads, and
+short-write alias reproducers that demonstrate the writer's excluded threat.
+Those tests do not certify hostile same-user isolation. Exact-head review and
+CI remain separate gates. The keeper's owner must wire the two invocations,
+verify the real status row and cadence, and retain that host-side evidence.
