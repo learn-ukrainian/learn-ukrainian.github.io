@@ -634,5 +634,7 @@ def validated_merged_criteria(ledger: Mapping[str, Any], observation: Mapping[st
             if type(report[key]) is not type(verified[key]) or report[key] != verified[key]:
                 raise ObservationRefusal("CLOSEOUT_RECEIPT_STALE_OR_MISMATCHED")
         return verified
+    except ObservationRefusal:
+        raise
     except (KeyError, TypeError, ValueError, AttributeError) as exc:
         raise ObservationRefusal("CLOSEOUT_RECEIPT_MISSING_OR_INVALID") from exc
