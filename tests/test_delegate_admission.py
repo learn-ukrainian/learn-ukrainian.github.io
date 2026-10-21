@@ -6,6 +6,7 @@ probe; no test allocates memory, generates load, or spawns a worker.
 
 from __future__ import annotations
 
+import argparse
 import hashlib
 import json
 import os
@@ -1617,3 +1618,35 @@ def test_early_host_refusal_costs_under_two_cpu_seconds_in_a_fresh_process(tmp_p
         assert "dispatch admission refused for a workspace-write worker: MemAvailable" in proc.stderr
         assert cpu_s < 2.0, f"refusal used {cpu_s:.2f} CPU s"
     assert {name: _tree_state(tmp_path / name) for name in ("tasks", "scratch")} == before
+
+
+def _freeze_check(monkeypatch, tmp_path, open_prs: int) -> int | None:
+    from types import SimpleNamespace
+
+    from scripts.orchestration import pr_freeze
+
+    fetched: list[str] = []
+
+    def fetch(repo):
+        fetched.append(repo)
+        return open_prs
+
+    monkeypatch.setattr(pr_freeze, "fetch_open_pr_count", fetch)
+    monkeypatch.setenv("XDG_CACHE_HOME", str(tmp_path / "cache"))
+    monkeypatch.setenv(pr_freeze.CACHE_ENV, "0")
+    args = argparse.Namespace(mode="workspace-write", branch=None, pr=None, cwd=None, worktree="auto", task_id="freeze")
+    repo = SimpleNamespace(github="example/repo", role="public-monorepo")
+    return delegate._check_open_pr_freeze(args, repo)
+
+
+def test_open_pr_freeze_is_off_by_default(monkeypatch, tmp_path, capsys):
+    """With no override a new-PR dispatch is admitted however many PRs are open (#11272)."""
+    monkeypatch.delenv("LU_OPEN_PR_FREEZE_THRESHOLD", raising=False)
+    assert _freeze_check(monkeypatch, tmp_path, open_prs=500) is None
+    assert "dispatch refused" not in capsys.readouterr().err
+
+
+@pytest.mark.parametrize("threshold, open_prs, expected", [("5", 4, None), ("5", 5, 3), ("5", 50, 3), ("0", 500, None)])
+def test_open_pr_freeze_explicit_opt_in(monkeypatch, tmp_path, threshold, open_prs, expected):
+    monkeypatch.setenv("LU_OPEN_PR_FREEZE_THRESHOLD", threshold)
+    assert _freeze_check(monkeypatch, tmp_path, open_prs=open_prs) == expected

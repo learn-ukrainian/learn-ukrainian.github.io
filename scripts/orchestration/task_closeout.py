@@ -1107,9 +1107,19 @@ def cmd_carrier(args: argparse.Namespace) -> int:
 def cmd_recover_local(args: argparse.Namespace) -> int:
     from scripts.orchestration.lifecycle_observation import recover
 
+    child_pr = None
+    if args.associate_child:
+        ledger = task_lifecycle.load_lifecycle(Path(args.state_file))
+        try:
+            child_pr = GhGitHubAdapter(args.repo_root)._read_pr(ledger["identity"]["repository"], ledger["pr"]["number"])
+        except task_lifecycle.LifecycleError as exc:
+            from scripts.orchestration.lifecycle_observation import ObservationRefusal
+
+            raise ObservationRefusal("RECOVERY_CHILD_PR_UNAVAILABLE") from exc
     receipt, replayed = recover(
         args.repo_root, state_file=Path(args.state_file), task_file=Path(args.task_record),
         manifest_file=Path(args.preserved_manifest), push_file=Path(args.push_record), now=args.now or utc_now(),
+        child_pr=child_pr,
     )
     print(json.dumps({"receipt": receipt, "replayed": replayed}, ensure_ascii=False, indent=2))
     return 0
@@ -1125,7 +1135,7 @@ def build_parser() -> argparse.ArgumentParser:
     sub = parser.add_subparsers(dest="command", required=True)
     recover = sub.add_parser(
         "recover-local", help="Append a verified local observation for an already-reaped merged task.",
-        description="Recover historical dispatch facts from a verified preservation bundle. Use only after removal; no GitHub calls.",
+        description="Recover historical dispatch facts from a verified preservation bundle. Use only after removal.\nChild association reads GitHub; ordinary recovery is offline.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""Example:
   .venv/bin/python -m scripts.orchestration.task_closeout recover-local --state-file ledger.json --task-record task.json --preserved-manifest batch_state/preserved/task/attempt.manifest.json --push-record push.json
@@ -1138,6 +1148,10 @@ Related: docs/runbooks/worktree-cleanup.md; #10752.
     recover.add_argument("--task-record", required=True, help="Delegate task JSON with lifecycle and merged reaper proof, e.g. task.json.")
     recover.add_argument("--preserved-manifest", required=True, help="Canonical preservation manifest, e.g. batch_state/preserved/task/attempt.manifest.json.")
     recover.add_argument("--push-record", required=True, help="Successful pushed_exact_head JSON record with head, remote_head, cwd and push step exit_code=0.")
+    recover.add_argument(
+        "--associate-child", action="store_true",
+        help="Associate an earlier carrier's preserved attempt with this child lifecycle; reads its exact merged PR from GitHub.",
+    )
     recover.add_argument("--now", help="UTC recovery timestamp in ISO 8601; default: current UTC, never backdated.")
     recover.set_defaults(func=cmd_recover_local)
 

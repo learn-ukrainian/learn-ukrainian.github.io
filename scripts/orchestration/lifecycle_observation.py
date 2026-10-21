@@ -157,6 +157,49 @@ def before_reap(
     return receipts
 
 
+def _child_association(
+    task: Mapping[str, Any], ledger: Mapping[str, Any], child_pr: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Bind a preserved attempt to a child, without changing its earlier carrier."""
+    carrier = task.get("task_lifecycle") or {}
+    source = carrier.get("identity") or {}
+    target = ledger["identity"]
+    try:
+        valid_source = carrier.get("lifecycle_id") == tl.lifecycle_id(source)
+    except (tl.LifecycleError, ValueError, KeyError, TypeError):
+        valid_source = False
+    if (
+        not valid_source
+        or source.get("repository") != target["repository"]
+        or source.get("stream_epic") != target["stream_epic"]
+        or source.get("github_issue_number") == target["github_issue_number"]
+    ):
+        raise ObservationRefusal("RECOVERY_LIFECYCLE_MISMATCH")
+    if not isinstance(task.get("run_nonce"), str) or not task["run_nonce"]:
+        raise ObservationRefusal("RECOVERY_ASSOCIATION_INVALID")
+    proof = task.get("worktree_reap_proof") or {}
+    if proof.get("pr_state") != "MERGED" or proof.get("pr_number") != ledger["pr"]["number"]:
+        raise ObservationRefusal("RECOVERY_MERGED_PR_UNPROVEN")
+    # Exact preserved PR membership is required in addition to Git ancestry.
+    if (
+        child_pr.get("number") != ledger["pr"]["number"]
+        or child_pr.get("url") != ledger["pr"]["url"]
+        or child_pr.get("state") != "MERGED"
+        or not child_pr.get("head_sha")
+        or child_pr.get("head_sha") != proof.get("pr_head_sha")
+        or child_pr.get("head_branch") != task.get("worktree_branch")
+    ):
+        raise ObservationRefusal("RECOVERY_CHILD_PR_MISMATCH")
+    return {
+        "schema_version": "local-recovery-association.v1",
+        "task_id": task["task_id"],
+        "run_nonce": task["run_nonce"],
+        "source": {"lifecycle_id": carrier["lifecycle_id"], "identity": source},
+        "target": {"lifecycle_id": ledger["lifecycle_id"], "identity": target},
+        "child_pr": {key: child_pr[key] for key in ("number", "url", "state", "head_sha", "head_branch")},
+    }
+
+
 def _recovered_local(repo_root: Path, ledger: Mapping[str, Any], recovery: Mapping[str, Any]) -> dict[str, Any]:
     """Re-read every input and reconstruct facts; stored booleans are not proof."""
     inputs = recovery["inputs"]
@@ -179,7 +222,12 @@ def _recovered_local(repo_root: Path, ledger: Mapping[str, Any], recovery: Mappi
     ):
         raise ObservationRefusal("RECOVERY_TASK_MISMATCH")
     carrier = task.get("task_lifecycle") or {}
-    if carrier.get("lifecycle_id") != ledger["lifecycle_id"] or carrier.get("identity") != ledger["identity"]:
+    association = recovery.get("association")
+    if association is not None:
+        expected = _child_association(task, ledger, association["child_pr"])
+        if association != expected:
+            raise ObservationRefusal("RECOVERY_ASSOCIATION_INVALID")
+    elif carrier.get("lifecycle_id") != ledger["lifecycle_id"] or carrier.get("identity") != ledger["identity"]:
         raise ObservationRefusal("RECOVERY_LIFECYCLE_MISMATCH")
     preserved = task.get("preserved_artifacts") or {}
     if any(
@@ -295,6 +343,9 @@ def recovery_refusal(
         if branch is not None and branch != rebuilt["branch"]:
             raise ObservationRefusal("RECOVERY_BRANCH_MISMATCH")
         if head_sha:
+            association = recovery.get("association")
+            if association is not None and head_sha != association["child_pr"]["head_sha"]:
+                raise ObservationRefusal("RECOVERY_CHILD_PR_MISMATCH")
             try:
                 tl._run_git(repo_root, ["merge-base", "--is-ancestor", rebuilt["commits"][0]["sha"], head_sha])
             except tl.LifecycleError as exc:
@@ -314,6 +365,7 @@ def recover(
     manifest_file: Path,
     push_file: Path,
     now: str,
+    child_pr: Mapping[str, Any] | None = None,
 ) -> tuple[dict[str, Any], bool]:
     """Append one recovery receipt, returning the verified existing receipt on retry."""
     with repository_context(repo_root), tl.lifecycle_lock(state_file):
@@ -329,6 +381,16 @@ def recover(
                 refusal = recovery_refusal(ledger, local)
                 if refusal:
                     raise ObservationRefusal(refusal)
+                recovery = local["recovered_from_preserved"]
+                if "association" in recovery:
+                    # recovery_refusal verifies the stored locators and digests.
+                    # Also bind the caller's replay paths; for unchanged paths,
+                    # the repeated digest checks are defence in depth.
+                    for name, source in (("task", task_file), ("manifest", manifest_file), ("push", push_file)):
+                        if _source(source, repo_root)[1] != recovery["inputs"][name]:
+                            raise ObservationRefusal("RECOVERY_DIGEST_MISMATCH")
+                    if child_pr is not None and _child_association(task, ledger, child_pr) != recovery["association"]:
+                        raise ObservationRefusal("RECOVERY_ASSOCIATION_INVALID")
                 return receipt, True
         if not isinstance(task.get("worktree_path"), str):
             raise ObservationRefusal("RECOVERY_WORKTREE_MISMATCH")
@@ -343,6 +405,8 @@ def recover(
             },
         }
         try:
+            if child_pr is not None:
+                recovery["association"] = _child_association(task, ledger, child_pr)
             local = _recovered_local(repo_root, ledger, recovery)
         except ObservationRefusal:
             raise
