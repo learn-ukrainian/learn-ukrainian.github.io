@@ -55,6 +55,11 @@ _CACHE_RESPONSE = """typeof(scope)='text' AND typeof(key)='text'
     AND CASE WHEN json_valid(headers) THEN json_type(headers)='object'
         AND coalesce(json_extract(headers,'$._github_binary'),0)=0 ELSE 0 END"""
 _CACHE_BYTES = "length(CAST(body AS BLOB))+length(CAST(headers AS BLOB))"
+CACHE_SCHEMA = (
+    "CREATE TABLE cache (scope TEXT, key TEXT, body BLOB, headers TEXT, at REAL, PRIMARY KEY(scope,key))",
+    "CREATE TABLE budget (scope TEXT, resource TEXT, remaining INTEGER, reset INTEGER, PRIMARY KEY(scope,resource))",
+    f"CREATE INDEX cache_retention ON cache(at,scope,key,{_CACHE_BYTES}) WHERE {_CACHE_RESPONSE}",
+)
 
 RESERVE = 10
 """GraphQL and search pools: a non-landing call is refused at or below this many remaining."""
@@ -1344,16 +1349,12 @@ class GitHubClient:
                 else:
                     with suppress(OSError):
                         os.chmod(path, 0o600)
-                db.execute(
-                    "CREATE TABLE IF NOT EXISTS cache (scope TEXT, key TEXT, body BLOB, headers TEXT, at REAL, PRIMARY KEY(scope,key))"
-                )
-                db.execute(
-                    "CREATE TABLE IF NOT EXISTS budget (scope TEXT, resource TEXT, remaining INTEGER, reset INTEGER, PRIMARY KEY(scope,resource))"
-                )
-                db.execute(
-                    f"CREATE INDEX IF NOT EXISTS cache_retention ON cache(at,scope,key,{_CACHE_BYTES}) "
-                    f"WHERE {_CACHE_RESPONSE}"
-                )
+                for statement in CACHE_SCHEMA:
+                    db.execute(
+                        statement.replace("CREATE TABLE ", "CREATE TABLE IF NOT EXISTS ").replace(
+                            "CREATE INDEX ", "CREATE INDEX IF NOT EXISTS "
+                        )
+                    )
                 if self.cache_dir is not None:
                     db.execute(
                         "INSERT OR REPLACE INTO budget (scope, resource, remaining, reset) VALUES ('__probe__', '__probe__', 0, 0)"
