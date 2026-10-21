@@ -8,7 +8,9 @@ import hashlib
 import io
 import json
 import shutil
+import subprocess
 import tarfile
+import urllib.error
 from datetime import UTC, datetime
 from decimal import Decimal
 from pathlib import Path
@@ -455,26 +457,52 @@ def _exported(
 class _BundleServer:
     """In-memory bundle API behind the real request helpers: newest first, honoring agent and limit."""
 
-    def __init__(self, rows: dict[int, tuple[dict, bytes]]) -> None:
+    def __init__(
+        self,
+        rows: dict[int, tuple[dict, bytes]],
+        *,
+        ignore_agent: bool = False,
+        listed_agent: str | None = None,
+        seq_manifest: dict | None = None,
+        answers: dict[str, tuple[int, dict]] | None = None,
+    ) -> None:
+        """``ignore_agent`` lists every slot's rows; ``listed_agent`` mislabels them;
+        ``seq_manifest`` replaces the fetched manifest; ``answers`` scripts an error
+        status for ``"list"`` or ``"seq"`` requests."""
         self.rows = rows
+        self.ignore_agent = ignore_agent
+        self.listed_agent = listed_agent
+        self.seq_manifest = seq_manifest
+        self.answers = answers or {}
         self.paths: list[str] = []
 
     def get(self, path: str, headers: dict | None = None) -> tuple[int, str, dict]:
         self.paths.append(path)
         parsed = urlsplit(path)
         if parsed.path.endswith("/bundles"):
+            if "list" in self.answers:
+                status, body = self.answers["list"]
+                return status, json.dumps(body), {}
             query = parse_qs(parsed.query)
-            agent = query.get("agent", [None])[0]
+            agent = None if self.ignore_agent else query.get("agent", [None])[0]
             limit = int(query.get("limit", ["20"])[0])
             listed = [
-                {"manifest": {**manifest, "upload_seq": seq}, "upload_seq": seq, "agent": manifest["agent"]}
+                {
+                    "manifest": {**manifest, "upload_seq": seq},
+                    "upload_seq": seq,
+                    "agent": self.listed_agent or manifest["agent"],
+                }
                 for seq, (manifest, _blob) in sorted(self.rows.items(), reverse=True)
                 if agent is None or manifest["agent"] == agent
             ][:limit]
             return 200, json.dumps({"bundles": listed}), {}
+        if "seq" in self.answers:
+            status, body = self.answers["seq"]
+            return status, json.dumps(body), {}
         seq = int(parsed.path.rsplit("/", 1)[1])
         manifest, blob = self.rows[seq]
-        body = {"manifest": {**manifest, "upload_seq": seq}, "blob": base64.b64encode(blob).decode("ascii")}
+        manifest = self.seq_manifest or {**manifest, "upload_seq": seq}
+        body = {"manifest": manifest, "blob": base64.b64encode(blob).decode("ascii")}
         return 200, json.dumps(body), {}
 
 
@@ -562,21 +590,240 @@ def test_from_api_twenty_newer_foreign_rows_do_not_hide_the_callers_bundle(
     assert (target / HANDOFF_PATH).read_text(encoding="utf-8") == "own lane handoff\n"
 
 
-def test_from_api_with_only_another_agents_bundle_installs_nothing(
+TYPED_NONE = '{"status":"none","action":"import-bundle"}\n'
+
+
+def test_from_api_slot_without_a_bundle_is_a_typed_none(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    server = _BundleServer({})
+    monkeypatch.setattr(th, "_bundle_client", lambda *_a, **_kw: server)
+    target = tmp_path / "target"
+    target.mkdir()
+
+    assert th.cmd_import_bundle(_import_args(target, None, from_api=STREAM)) == 0
+    captured = capsys.readouterr()
+
+    assert captured.out == TYPED_NONE
+    assert captured.err == ""
+    assert _tree(target) == {}
+    assert [urlsplit(path).path for path in server.paths] == [f"/api/epics/v1/{STREAM}/bundles"]
+
+
+@pytest.mark.parametrize("ignore_agent", [False, True], ids=["api-filters-slot", "api-lists-every-slot"])
+def test_from_api_with_only_another_agents_bundle_is_none_and_installs_nothing(
+    tmp_path: Path,
+    handoff_candidates: None,
+    capsys: pytest.CaptureFixture[str],
+    monkeypatch: pytest.MonkeyPatch,
+    ignore_agent: bool,
+) -> None:
+    _foreign, manifest, blob = _exported(tmp_path, capsys, "foreign", handoff="foreign lane handoff\n")
+    server = _BundleServer({3: (manifest, blob)}, ignore_agent=ignore_agent)
+    monkeypatch.setattr(th, "_bundle_client", lambda *_a, **_kw: server)
+    target = tmp_path / "target"
+    target.mkdir()
+
+    assert th.cmd_import_bundle(_import_args(target, None, agent="grok-infra", from_api=STREAM)) == 0
+    assert capsys.readouterr().out == TYPED_NONE
+    assert _tree(target) == {}
+    # The foreign blob is never even fetched.
+    assert all(urlsplit(path).path.endswith("/bundles") for path in server.paths)
+
+
+def _refusal(capsys: pytest.CaptureFixture[str]) -> dict:
+    out = capsys.readouterr().out
+    assert "invalid_rollover_bundle" in out
+    return json.loads(out)
+
+
+@pytest.mark.parametrize(
+    ("request_kind", "status", "detail"),
+    [
+        ("list", 409, "stale generation"),
+        ("seq", 409, "stale generation"),
+        ("list", 403, "fenced lease"),
+        ("seq", 403, "fenced lease"),
+        # A row the list just named vanished: an inconsistency, not an empty slot.
+        ("seq", 404, "rollover bundle not found"),
+        # The stream itself is unknown to the API.
+        ("list", 404, "epic stream not found"),
+    ],
+)
+def test_from_api_semantic_refusal_still_exits_invalid_rollover_bundle(
+    tmp_path: Path,
+    handoff_candidates: None,
+    capsys: pytest.CaptureFixture[str],
+    monkeypatch: pytest.MonkeyPatch,
+    request_kind: str,
+    status: int,
+    detail: str,
+) -> None:
+    _own, manifest, blob = _exported(tmp_path, capsys, "own", handoff="own lane handoff\n")
+    server = _BundleServer({4: (manifest, blob)}, answers={request_kind: (status, {"detail": detail})})
+    monkeypatch.setattr(th, "_bundle_client", lambda *_a, **_kw: server)
+    target = tmp_path / "target"
+    target.mkdir()
+
+    assert th.cmd_import_bundle(_import_args(target, None, from_api=STREAM)) == 2
+    refusal = _refusal(capsys)
+
+    assert refusal == {"code": "invalid_rollover_bundle", "error": refusal["error"], "action": "import-bundle"}
+    assert detail in refusal["error"]
+    assert _tree(target) == {}
+
+
+def test_from_api_hash_mismatch_still_exits_invalid_rollover_bundle(
     tmp_path: Path,
     handoff_candidates: None,
     capsys: pytest.CaptureFixture[str],
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
+    _own, manifest, blob = _exported(tmp_path, capsys, "own", handoff="own lane handoff\n")
+    forged = {**manifest, "upload_seq": 4, "bundle_sha256": "0" * 64}
+    server = _BundleServer({4: (manifest, blob)}, seq_manifest=forged)
+    monkeypatch.setattr(th, "_bundle_client", lambda *_a, **_kw: server)
+    target = tmp_path / "target"
+    target.mkdir()
+
+    assert th.cmd_import_bundle(_import_args(target, None, from_api=STREAM)) == 2
+    assert "does not match the embedded manifest" in _refusal(capsys)["error"]
+    assert _tree(target) == {}
+
+
+def test_from_api_agent_mismatch_still_exits_invalid_rollover_bundle(
+    tmp_path: Path,
+    handoff_candidates: None,
+    capsys: pytest.CaptureFixture[str],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    # The list row claims the caller's slot, but the fetched bundle belongs to another.
     _foreign, manifest, blob = _exported(tmp_path, capsys, "foreign", handoff="foreign lane handoff\n")
-    server = _BundleServer({3: (manifest, blob)})
+    server = _BundleServer({4: (manifest, blob)}, ignore_agent=True, listed_agent="grok-infra")
     monkeypatch.setattr(th, "_bundle_client", lambda *_a, **_kw: server)
     target = tmp_path / "target"
     target.mkdir()
 
     assert th.cmd_import_bundle(_import_args(target, None, agent="grok-infra", from_api=STREAM)) == 2
-    assert "no matching bundle" in json.loads(capsys.readouterr().out)["error"]
+    assert _refusal(capsys)["error"] == "bundle agent does not match --agent"
     assert _tree(target) == {}
+
+
+class _DownBundleClient:
+    def get(self, path: str, headers: dict | None = None) -> tuple[int, str, dict]:
+        raise urllib.error.URLError("connection refused")
+
+
+@pytest.mark.parametrize(
+    "client",
+    [_DownBundleClient(), _BundleServer({}, answers={"list": (503, {"detail": "store offline"})})],
+    ids=["transport", "http-503"],
+)
+def test_from_api_unavailable_still_fails_open_with_the_warning(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+    monkeypatch: pytest.MonkeyPatch,
+    client: object,
+) -> None:
+    monkeypatch.setattr(th, "_bundle_client", lambda *_a, **_kw: client)
+    target = tmp_path / "target"
+    target.mkdir()
+
+    assert th.cmd_import_bundle(_import_args(target, None, from_api=STREAM)) == 0
+    captured = capsys.readouterr()
+
+    assert captured.err.startswith("WARNING: rollover bundle import skipped (fail-open): bundle API unavailable")
+    assert json.loads(captured.out)["status"] == "warning"
+    assert _tree(target) == {}
+
+
+def _gate_import(monkeypatch: pytest.MonkeyPatch, target: Path, client: object, *, agent: str = AGENT) -> dict:
+    from scripts.hooks import session_start_gate as gate
+
+    monkeypatch.setattr(gate, "_import_thread_handoff", lambda: th)
+    monkeypatch.setattr(th, "_bundle_client", lambda *_a, **_kw: client)
+    return gate.phase_rollover_import(
+        SimpleNamespace(import_bundle=True, repo_root=str(target), agent=agent, stream=STREAM)
+    )
+
+
+@pytest.mark.parametrize("foreign_row", [False, True], ids=["empty-slot", "another-slot-only"])
+def test_session_start_reports_a_slot_without_a_bundle_as_ok(
+    tmp_path: Path,
+    handoff_candidates: None,
+    capsys: pytest.CaptureFixture[str],
+    monkeypatch: pytest.MonkeyPatch,
+    foreign_row: bool,
+) -> None:
+    rows = {}
+    if foreign_row:
+        _foreign, manifest, blob = _exported(tmp_path, capsys, "foreign", handoff="foreign lane handoff\n")
+        rows = {3: (manifest, blob)}
+    target = tmp_path / "target"
+    target.mkdir()
+
+    result = _gate_import(monkeypatch, target, _BundleServer(rows, ignore_agent=True), agent="grok-infra")
+
+    assert result["status"] == "ok"
+    assert "warning" not in result
+    assert "invalid_rollover_bundle" not in json.dumps(result)
+    assert _tree(target) == {}
+
+
+def test_session_start_still_warns_on_a_refusal_and_on_unavailability(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    target = tmp_path / "target"
+    target.mkdir()
+
+    refused = _gate_import(monkeypatch, target, _BundleServer({}, answers={"list": (409, {"detail": "stale"})}))
+    assert refused["status"] == "issue"
+    assert refused["warning"].startswith("WARNING: rollover bundle import skipped (fail-open):")
+    assert "invalid_rollover_bundle" in refused["warning"]
+
+    down = _gate_import(monkeypatch, target, _DownBundleClient())
+    assert down["status"] == "issue"
+    assert down["warning"].startswith("WARNING: rollover bundle import skipped (fail-open):")
+    assert "bundle API unavailable" in down["warning"]
+    assert _tree(target) == {}
+
+
+@pytest.mark.skipif(shutil.which("bash") is None, reason="bash not available")
+@pytest.mark.parametrize(
+    ("payload", "rc", "warns"),
+    [
+        (TYPED_NONE.strip(), 0, False),
+        ('{"code":"invalid_rollover_bundle","error":"stale","action":"import-bundle"}', 2, True),
+    ],
+    ids=["typed-none", "refusal"],
+)
+def test_launcher_import_is_silent_for_the_typed_none_only(tmp_path: Path, payload: str, rc: int, warns: bool) -> None:
+    helper = tmp_path / "helper"
+    script = helper / "scripts" / "orchestration" / "thread_handoff.py"
+    script.parent.mkdir(parents=True)
+    script.write_text("# placeholder: the stub interpreter answers for it\n", encoding="utf-8")
+    python = helper / ".venv" / "bin" / "python"
+    python.parent.mkdir(parents=True)
+    python.write_text(f"#!/usr/bin/env bash\nprintf '%s\\n' '{payload}'\nexit {rc}\n", encoding="utf-8")
+    python.chmod(0o755)
+    harness = (
+        'source "$1/scripts/lib/launcher_core.sh"\n'
+        f"launcher_selector_stream() {{ printf '%s\\n' '{STREAM}'; }}\n"
+        'LC_EPIC=infra LC_DURABLE_HELPER_ROOT="$2" launcher_import_rollover_bundle\n'
+    )
+    result = subprocess.run(
+        ["bash", "-c", harness, "bash", str(REPO_ROOT), str(helper)],
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+
+    assert result.returncode == 0, result.stderr
+    assert ("WARNING:" in result.stderr) is warns
 
 
 def test_api_down_import_is_fail_open_and_secret_prose_is_not_a_hit(

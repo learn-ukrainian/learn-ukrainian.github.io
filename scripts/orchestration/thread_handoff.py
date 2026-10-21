@@ -6003,6 +6003,16 @@ def _bundle_import_error(reason: str) -> int:
     return 2
 
 
+def _bundle_import_none() -> int:
+    """The API lists no bundle for this handoff slot: nothing to install (#11257).
+
+    Only the empty own-slot listing is this typed none. A 404 on a bundle the
+    listing named stays a refusal, like every other semantic 4xx.
+    """
+    print(json.dumps({"status": "none", "action": "import-bundle"}, separators=(",", ":")))
+    return 0
+
+
 class BundleReconcileRefused(ValueError):
     """A typed refusal at a reconciliation filesystem boundary."""
 
@@ -6671,7 +6681,8 @@ def cmd_import_bundle(args: argparse.Namespace) -> int:
             # slot's bundle never installs here, whatever its upload sequence.
             own_rows = [row for row in listed if row_agent(row) == agent]
             if not own_rows:
-                raise RolloverBundleNotFound("bundle API has no matching bundle")
+                # An empty slot is a normal state, not a refusal (#11257).
+                return _bundle_import_none()
             sequence = upload_seq(max(own_rows, key=upload_seq))
             manifest, blob = _bundle_api_by_seq(args, stream_id=stream_id, upload_seq=sequence)
             manifest, members = verify_rollover_bundle(blob, repo_root=repo_root, manifest_override=manifest)
