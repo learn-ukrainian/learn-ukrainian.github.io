@@ -727,6 +727,9 @@ MALFORMED_LISTINGS = {
     "manifest-without-agent": {"bundles": [{"manifest": {}}]},
     "manifest-missing": {"bundles": [{"upload_seq": 3}]},
     "manifest-not-a-mapping": {"bundles": [{"manifest": ["claude-devops"]}]},
+    # A valid row identity cannot stand in for the manifest it must agree with.
+    "row-agent-without-manifest": {"bundles": [{"agent": "claude-devops", "upload_seq": 3}]},
+    "row-agent-manifest-not-a-mapping": {"bundles": [{"agent": "claude-devops", "manifest": ["claude-devops"]}]},
     "manifest-agent-null": {"bundles": [{"manifest": {"agent": None}}]},
     "manifest-agent-empty": {"bundles": [{"manifest": {"agent": ""}}]},
     "manifest-agent-int": {"bundles": [{"manifest": {"agent": 7}}]},
