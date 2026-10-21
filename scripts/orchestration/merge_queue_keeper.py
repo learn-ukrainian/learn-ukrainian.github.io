@@ -431,8 +431,12 @@ class GitHub:
     def issues(self, title: str) -> list[dict[str, Any]]:
         return self.paged(Request("read-issues", repo=self.repository))
 
-    def create_issue(self, title: str, body: str) -> None:
-        self.call(Request("issue-create", repo=self.repository, title=title, body=body, labels=["infra"]))
+    def create_issue(self, title: str, body: str) -> int:
+        result = self.call(Request("issue-create", repo=self.repository, title=title, body=body, labels=["infra"]))
+        match = re.search(r"/issues/([1-9][0-9]*)\s*$", result)
+        if not match:
+            raise KeeperError("created flaky-test issue returned no issue number")
+        return int(match[1])
 
 
 def _hold(row: Mapping[str, Any]) -> bool | None:
@@ -1144,8 +1148,16 @@ def run(
     ]
     previous["failures"] = failures
     issue_updates = previous.setdefault("flake_issue_updates", {})
-    for key, (numbers, tests) in sorted(_flaky_jobs(failures).items()):
-        if not budget:
+    flaky = _flaky_jobs(failures)
+    issues = None
+    if flaky and budget:
+        try:
+            issues = list(gh.issues(""))
+        except KeeperError as exc:
+            failed = True
+            lines.append(f"flaky-test issue listing FAILED: {exc}")
+    for key, (numbers, tests) in sorted(flaky.items()):
+        if not budget or issues is None:
             continue
         title = f"Merge queue flaky test: {display_text(key, DISPLAY_TEST_LIMIT)}"
         matching = [item for item in failures if (item.get("test") or item.get("job")) == key]
@@ -1158,9 +1170,13 @@ def run(
         if tests:
             body += f" Failed test: {code_span(tests[0], DISPLAY_TEST_LIMIT)}."
         try:
-            issues = gh.issues(key)
+            pattern = re.compile(r"(?<![\w/.:\[\]-])" + re.escape(key) + r"(?![\w/:\[\]-])")
+            marker = "<!-- mq-keeper-flake -->"
             matches = [item for item in issues if "pull_request" not in item and (
-                key in str(item.get("title", "")) or key in str(item.get("body", "")) or item.get("title") == title
+                item.get("title") == title
+                or ((bool(tests) or marker in str(item.get("body", ""))) and (
+                    pattern.search(str(item.get("title", ""))) or pattern.search(str(item.get("body", "")))
+                ))
             )]
             issue = min(matches, key=lambda item: item.get("number", 0)) if matches else None
             lines.append(f"flaky record: {display_text(key, DISPLAY_TEST_LIMIT)}; PRs={','.join(map(str, numbers))}; "
@@ -1168,7 +1184,11 @@ def run(
             if not apply:
                 continue
             if issue is None:
-                gh.create_issue(title, body)
+                issue_number = gh.create_issue(title, body)
+                if type(issue_number) is not int:
+                    raise KeeperError("created flaky-test issue has no number")
+                issue_updates[str(issue_number)] = observed
+                issues.append({"number": issue_number, "title": title, "body": body})
             else:
                 issue_number = issue.get("number")
                 if type(issue_number) is not int:

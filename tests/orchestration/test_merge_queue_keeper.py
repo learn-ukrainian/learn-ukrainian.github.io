@@ -214,9 +214,11 @@ class FakeGitHub:
     def issue_comment(self, number: int, body: str) -> None:
         self.actions.append(("issue-comment", (number, body)))
 
-    def create_issue(self, title: str, body: str) -> None:
+    def create_issue(self, title: str, body: str) -> int:
         self.actions.append(("issue", title))
-        self.issue_rows.append({"title": title, "body": body, "number": 1000})
+        number = 1000 + len(self.issue_rows)
+        self.issue_rows.append({"title": title, "body": body, "number": number})
+        return number
 
 
 def run(
@@ -2040,7 +2042,7 @@ def test_issue_body_names_the_failed_test_when_known(tmp_path: Path, monkeypatch
     fake.job_rows = [{"id": 5, "name": "pytest (3)", "conclusion": "failure"}]
     monkeypatch.setattr(fake, "failed_tests", lambda job_id: [test], raising=False)
     bodies: list[str] = []
-    monkeypatch.setattr(fake, "create_issue", lambda title, body: bodies.append(body))
+    monkeypatch.setattr(fake, "create_issue", lambda title, body: (bodies.append(body), 1000)[1])
     run(fake, path, monkeypatch)
     assert len(bodies) == 1
     assert f"`{test}` failed" in bodies[0] and "#42" in bodies[0] and "#10596" in bodies[0]
@@ -2106,6 +2108,7 @@ def _public_flaky_issue(
     def create_issue(title: str, body: str) -> None:
         filed.append((title, body))
         fake.issue_rows.append({"title": title, "body": body, "number": 1000})
+        return 1000
 
     monkeypatch.setattr(fake, "create_issue", create_issue)
     run(fake, path, monkeypatch)
@@ -2354,3 +2357,64 @@ def test_report_shows_node_records_without_writes(tmp_path, monkeypatch):
     assert not failed
     assert "flaky record: tests/a.py::test_one; PRs=41,42; runs=101,102; issue=77" in lines
     assert mutations(fake) == [] and path.read_bytes() == before
+
+
+@pytest.mark.parametrize("job", ["pytest (7)", "Frontend", "Checks", "Secret scan"])
+def test_job_fallback_ignores_unrelated_issue_body(tmp_path, monkeypatch, job):
+    path = tmp_path / "state.json"
+    fake = FakeGitHub()
+    _ejected(fake, path, [job], failures=[_recent(job, 41)])
+    fake.issue_rows = [{"number": 77, "title": "Umbrella epic", "body": job},
+                       {"number": 78, "title": f"Merge queue flaky test: {job}"}]
+    run(fake, path, monkeypatch)
+    assert [payload[0] for kind, payload in fake.actions if kind == "issue-comment"] == [78]
+    assert _issue_titles(fake) == []
+
+
+def test_job_fallback_accepts_keeper_marked_issue(tmp_path, monkeypatch):
+    path = tmp_path / "state.json"
+    fake = FakeGitHub()
+    _ejected(fake, path, ["Frontend"], failures=[_recent("Frontend", 41)])
+    fake.issue_rows = [{"number": 77, "title": "Renamed", "body": "Frontend\n<!-- mq-keeper-flake -->"}]
+    run(fake, path, monkeypatch)
+    assert [payload[0] for kind, payload in fake.actions if kind == "issue-comment"] == [77]
+
+
+@pytest.mark.parametrize("suffix", ["_slow", "[param]", "::test_other"])
+def test_node_id_match_rejects_prefix_collision(tmp_path, monkeypatch, suffix):
+    node = "tests/test_unit.py::test_one"
+    path = tmp_path / "state.json"
+    fake = FakeGitHub()
+    _ejected(fake, path, [], failures=[_recent("pytest", pr) | {"test": node} for pr in (41, 42)])
+    fake.issue_rows = [{"number": 77, "body": node + suffix}]
+    run(fake, path, monkeypatch)
+    assert len(_issue_titles(fake)) == 1
+    assert not any(kind == "issue-comment" for kind, _ in fake.actions)
+
+
+def test_new_issue_records_update_and_next_run_does_not_comment(tmp_path, monkeypatch):
+    fake, path = _flaky_run(tmp_path, monkeypatch, [_recent("Frontend", 41)], ["Frontend"])
+    assert json.loads(path.read_text())["flake_issue_updates"]["1000"]
+    fake.actions.clear()
+    run(fake, path, monkeypatch)
+    assert not any(kind in {"issue", "issue-comment"} for kind, _ in fake.actions)
+
+
+def test_issue_listing_is_once_for_multiple_flaky_keys(tmp_path, monkeypatch):
+    fake = FakeGitHub()
+    path = tmp_path / "state.json"
+    _ejected(fake, path, [], failures=[_recent(job, pr) for job in ("Frontend", "Checks") for pr in (41, 42)])
+    calls = []
+    monkeypatch.setattr(fake, "issues", lambda query: calls.append(query) or list(fake.issue_rows))
+    run(fake, path, monkeypatch)
+    assert calls == [""]
+    assert len(_issue_titles(fake)) == 2
+
+
+def test_create_issue_returns_new_issue_number(tmp_path, monkeypatch):
+    client = keeper.GitHub(tmp_path, "unit/public")
+    monkeypatch.setattr(client, "call", lambda *a: "https://github.com/unit/public/issues/123\n")
+    assert client.create_issue("title", "body") == 123
+    monkeypatch.setattr(client, "call", lambda *a: "invalid")
+    with pytest.raises(keeper.KeeperError, match="returned no issue number"):
+        client.create_issue("title", "body")

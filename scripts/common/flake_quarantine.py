@@ -120,12 +120,19 @@ def _merge_group_evidence(run: dict, node_id: str) -> tuple[int, datetime]:
     root = REGISTRY.parents[1]
 
     def git(*args: str) -> str:
-        return subprocess.run(["git", *args], cwd=root, check=True, capture_output=True,
-                              text=True, timeout=120).stdout
+        try:
+            return subprocess.run(["git", *args], cwd=root, check=True, capture_output=True,
+                                  text=True, timeout=120).stdout
+        except (subprocess.CalledProcessError, subprocess.TimeoutExpired, OSError) as exc:
+            raise ValueError(f"merge-group admission refused: git {args[0]} failed") from exc
 
     # Read the actual tested commit, even if the PR or local checkout has moved.
     git("fetch", "--no-tags", "origin", sha)
     git("merge-base", "--is-ancestor", base, sha)
+    git("fetch", "--no-tags", "origin", "main")
+    # A queue branch base can itself contain speculative PRs ahead of this one.
+    # Compare against main history so their changes participate in admission.
+    base = git("merge-base", base, "origin/main").strip()
     changed = set(git("diff", "--name-only", "-z", "--no-renames", base, sha).split("\0")) - {""}
     entries = []
     paths = []
@@ -142,13 +149,22 @@ def _merge_group_evidence(run: dict, node_id: str) -> tuple[int, datetime]:
     if test_file not in sources:
         raise ValueError("merge-group test source is missing")
     closure = {test_file}
+    for parent in Path(test_file).parents:
+        conftest = (parent / "conftest.py").as_posix()
+        if conftest in sources or conftest in changed:
+            closure.add(conftest)
     while True:
         expanded = closure | {target for importer, target in graph["file_edges"] if importer in closure}
         if expanded == closure:
             break
         closure = expanded
-    if any(edge["path"] in closure for edge in graph["unresolved_edges"]):
-        raise ValueError("merge-group test import closure is unresolved")
+    # The shared CI scanner also flags runtime data reads and subprocesses.
+    # Those are not Python imports. Unknown import loaders/path precedence can
+    # reach any Python source, so conservatively require all Python unchanged.
+    import_reasons = {"missing-local-import", "nonliteral-or-missing-load", "sys-path", "parse-error"}
+    if any(edge["path"] in closure and edge["reason"] in import_reasons
+           for edge in graph["unresolved_edges"]) and any(path.endswith(".py") for path in changed):
+        raise ValueError("merge-group test import closure is unresolved for changed Python sources")
     # The queue diff includes every PR in a multi-PR group, conservatively
     # refusing evidence if any member changed this test or its dependencies.
     if changed & closure:
@@ -258,7 +274,11 @@ def main(argv: list[str] | None = None) -> int:
         print(f"Quarantine admission: {len(entries)} entries, 0 changed; offline lint passed")
         return 0
     repository = json.loads(_gh("repo", "view", "--json", "nameWithOwner"))["nameWithOwner"]
-    checked = check_admissions(entries, previous, repository=repository)
+    try:
+        checked = check_admissions(entries, previous, repository=repository)
+    except ValueError as exc:
+        print(f"Quarantine admission refused: {exc}")
+        return 1
     print(f"Quarantine admission: {len(entries)} entries, {checked} changed admissions verified")
     return 0
 

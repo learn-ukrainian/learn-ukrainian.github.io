@@ -148,9 +148,10 @@ class Subject(keeper.GitHub):
         super().comment(number, body)
         self.comment_rows.append({"body": body, "user": {"login": "driver"}})
 
-    def create_issue(self, title: str, body: str) -> None:
-        super().create_issue(title, body)
-        self.issue_rows.append({"title": title, "body": body, "number": 1000})
+    def create_issue(self, title: str, body: str) -> int:
+        number = super().create_issue(title, body)
+        self.issue_rows.append({"title": title, "body": body, "number": number})
+        return number
 
 
 @pytest.fixture
