@@ -169,9 +169,7 @@ class SafeGitContext:
         self.env.pop("GIT_ALTERNATE_OBJECT_DIRECTORIES", None)
         common = self.objects.parent
         admin = self.source_git_dir
-        forbidden = [root / name for root in {common, admin} for name in ("info/grafts", "shallow")] + [
-            self.objects / "info" / name for name in ("alternates", "http-alternates")
-        ]
+        forbidden = [root / name for root in {common, admin} for name in ("info/grafts", "shallow")]
         replacements = common / "refs/replace"
         packed = common / "packed-refs"
         if (
@@ -192,10 +190,22 @@ class SafeGitContext:
                 config = self.run("config", "--no-includes", "--file", str(path), "--get-all", "core.graftFile")
                 if config.returncode != 1:
                     raise SnapshotRefusal("auto_finalize_object_hardening_violation")
+        self._serve(self.objects)
+        self.objects = self.git_dir / "objects"
+        tips = [base, getattr(self, "driver_base", base), head]
+        # Commits only: their parents decide attribution, so all of them,
+        # not a shallow window, must arrive before any merge-base is computed.
+        self._receive(tips, "--filter=tree:0")
+        if self.run("rev-list", "--missing=error", *dict.fromkeys(tips)).returncode:
+            raise SnapshotRefusal("auto_finalize_fsck_failed")
 
+    def _serve(self, objects: Path) -> None:
+        """Answer the next fetches from the objects of ``objects`` alone, which each fetch re-hashes."""
+        if any(os.path.lexists(objects / "info" / name) for name in ("alternates", "http-alternates")):
+            raise SnapshotRefusal("auto_finalize_object_hardening_violation")
         # upload-pack serves only object bytes: an empty repository supplies
         # refs and configuration, the source store supplies objects.
-        server = self.root / "source.git"
+        server = Path(tempfile.mkdtemp(prefix="source-", suffix=".git", dir=self.root))
         subprocess.run(
             [GIT, "init", "--bare", f"--template={self.root / 'empty-template'}", str(server)],
             cwd=self.root,
@@ -204,13 +214,13 @@ class SafeGitContext:
             check=True,
             timeout=60,
         )
-        upload = self.root / "upload-pack"
+        upload = server.with_name(server.name + "-upload-pack")
         upload.write_text(
             "#!/bin/sh\nexec env "
             + shlex.join(
                 [
                     f"GIT_DIR={server}",
-                    f"GIT_OBJECT_DIRECTORY={self.objects}",
+                    f"GIT_OBJECT_DIRECTORY={objects}",
                     "GIT_NO_REPLACE_OBJECTS=1",
                     GIT,
                     "-c",
@@ -226,13 +236,6 @@ class SafeGitContext:
         )
         upload.chmod(0o700)
         self._source = (server.as_uri(), upload)
-        self.objects = self.git_dir / "objects"
-        tips = [base, getattr(self, "driver_base", base), head]
-        # Commits only: their parents decide attribution, so all of them,
-        # not a shallow window, must arrive before any merge-base is computed.
-        self._receive(tips, "--filter=tree:0")
-        if self.run("rev-list", "--missing=error", *dict.fromkeys(tips)).returncode:
-            raise SnapshotRefusal("auto_finalize_fsck_failed")
 
     def _receive(self, oids, *options: str) -> None:
         """Fetch named objects from the source store and prove each one arrived."""
@@ -326,23 +329,33 @@ class SafeGitContext:
         if proc.returncode:
             raise SnapshotRefusal("rescue_input_unreadable")
 
+    def receive_publication(self, *, head: str, base: str, objects: Path | None = None) -> None:
+        """Receive every object of ``base``, ``head`` and the commits between them, re-hashed.
+
+        The checkout needs the whole tip, the trusted hooks need the base,
+        and a push needs every object of the commits the destination may
+        lack. Their union is about one snapshot plus the changed objects.
+        ``objects``, when given, is a store that already holds them all.
+        """
+        if self._source is None:
+            raise SnapshotRefusal("auto_finalize_validation_unavailable")
+        if objects is not None:
+            self._serve(objects)
+        driver = getattr(self, "driver_base", base)
+        scoped = self.checked("rev-list", head, "--not", base, driver).split()
+        commits = sorted({base, head, *scoped})
+        self._receive(self._root_trees(commits), "--no-filter")
+        self._require_closure(commits)
+
     def prepare_validation(self, *, head: str, branch: str, base: str, interpreter: Path) -> None:
         """Materialize an isolated checkout with the base commit's trusted hook chain.
 
         Subprocesses which clear GIT_* still discover only our configuration,
         refs and objects. No worker hook, config or tracking ref is imported.
+        Code run in the checkout can write this repository, so it is never
+        the one a credentialed push reads.
         """
-        if self._source is None:
-            raise SnapshotRefusal("auto_finalize_validation_unavailable")
-        # The checkout needs the whole tip, the trusted hooks need the base,
-        # and the push needs every object of the commits the destination may
-        # lack. Their union is about one snapshot plus the changed objects.
-        driver = getattr(self, "driver_base", base)
-        scoped = self.checked("rev-list", head, "--not", base, driver).split()
-        commits = sorted({base, head, *scoped})
-        trees = self._root_trees(commits)
-        self._receive(trees, "--no-filter")
-        self._require_closure(commits)
+        self.receive_publication(head=head, base=base)
         checkout = self.root / "checkout"
         checkout.mkdir()
         self.checked("config", "core.bare", "false")

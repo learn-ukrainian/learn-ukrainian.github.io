@@ -834,7 +834,8 @@ def test_tiny_finalize_budget_on_100k_object_history(publication, large_history_
     assert result.ok, result.error
     assert _git_out(origin, "show", f"{result.commit_sha}:artifact.txt") == "dirty owned\n"
     assert marker.read_text() == "checked"
-    assert len(copied) == 2
+    # The precheck, the validation repository and the fresh transport repository each receive a copy.
+    assert len(copied) == 3
     assert elapsed < full_seconds / 3, (elapsed, full_seconds)
     assert max(copied) < full_bytes / 100
     print(f"100k objects: full={full_seconds:.3f}s/{full_bytes}B finalize={elapsed:.3f}s copies={copied}")
@@ -1395,6 +1396,180 @@ def test_validation_never_sees_the_transport_credential(publication, monkeypatch
     hooks = Path(settings["core.hooksPath"])
     assert hooks.name == "transport-hooks"
     assert not any(sentinel in value for key, value in pushes[0].items() if not key.startswith("GIT_CONFIG_VALUE_"))
+
+
+# --- Validation code can write the repository it runs in; the credentialed push must not read it (#10931) ---
+
+
+def hostile_validation(publication, script):
+    """A trusted base hook whose run executes code that edits the validation repository, as a worker test can."""
+    worktree, origin, _base, marker = publication
+    hook = worktree / ".githooks/pre-push"
+    hook.write_text("#!/bin/sh\nset -e\n" + script + f'printf checked >> "{marker}"\n')
+    _git_out(worktree, "add", ".githooks/pre-push")
+    _git_out(worktree, "commit", "-q", "-m", "trusted base runs validation code")
+    _git_out(worktree, "push", "-q", "origin", "HEAD:refs/heads/main")
+    base = _git_out(worktree, "rev-parse", "HEAD").strip()
+    return (worktree, origin, base, marker), write_commit(worktree)
+
+
+def recorded_pushes(monkeypatch, *keys):
+    """Each push's view of its configuration, read with its own cwd and environment as it starts."""
+    real_run = delegate.subprocess.run
+    pushes = []
+
+    def config(*args, **kwargs):
+        return real_run(["git", "config", *args], capture_output=True, text=True, timeout=60, **kwargs)
+
+    def run(args, **kwargs):
+        if list(args[1:2]) == ["push"]:
+            where = {"cwd": kwargs["cwd"], "env": kwargs["env"]}
+            listed = config("--list", "--show-origin", **where)
+            assert listed.returncode == 0, listed.stderr
+            pushes.append((listed.stdout, {key: config("--get", key, **where).stdout.strip() for key in keys}))
+        return real_run(args, **kwargs)
+
+    monkeypatch.setattr(delegate.subprocess, "run", run)
+    return pushes
+
+
+def unintended_copy(publication, tmp_path):
+    """A writable copy of the destination: a redirected push lands there and can pass as delivered."""
+    unintended = tmp_path / "unintended.git"
+    _git_out(tmp_path, "clone", "-q", "--bare", str(publication[1]), str(unintended))
+    return unintended
+
+
+def test_validation_written_alias_and_include_never_reach_the_credentialed_push(publication, tmp_path):
+    unintended = unintended_copy(publication, tmp_path)
+    ran = tmp_path / "hostile-program-ran"
+    program = tmp_path / "hostile-program"
+    program.write_text(f'#!/bin/sh\nenv > "{ran}"\nexit 0\n')
+    program.chmod(0o755)
+    include = tmp_path / "hostile-config"
+    include.write_text(f'[remote "origin"]\n\tpushurl = {unintended}\n[alias]\n\tpush = !{program}\n')
+    publication, head = hostile_validation(
+        publication, f"git config alias.push '!{program}'\ngit config include.path '{include}'\n"
+    )
+    _worktree, origin, _base, marker = publication
+
+    result = publish(publication)
+
+    assert "refs/heads/codex/finalize" not in refs(unintended), "an included pushurl redirected the credentialed push"
+    assert not ran.exists(), "a configuration-defined command ran during publication"
+    assert result.ok, result.error
+    assert "refs/heads/codex/finalize " + head in refs(origin)
+    assert marker.read_text() == "checked"
+
+
+def test_validation_created_tag_with_follow_tags_never_reaches_the_remote(publication):
+    publication, head = hostile_validation(
+        publication, "git tag -a hook-tag -m 'unowned ref' HEAD\ngit config push.followTags true\n"
+    )
+    _worktree, origin, _base, marker = publication
+
+    result = publish(publication)
+
+    assert "refs/tags/hook-tag" not in refs(origin), "a validation-time tag escaped branch-only publication"
+    assert result.ok, result.error
+    assert "refs/heads/codex/finalize " + head in refs(origin)
+    assert marker.read_text() == "checked"
+
+
+def test_validation_rewritten_destination_never_redirects_or_fakes_delivery(publication, tmp_path):
+    unintended = unintended_copy(publication, tmp_path)
+    publication, head = hostile_validation(publication, f"git config --replace-all remote.origin.url '{unintended}'\n")
+    _worktree, origin, _base, marker = publication
+
+    result = publish(publication)
+
+    assert "refs/heads/codex/finalize" not in refs(unintended), "the rewritten url received the credentialed push"
+    assert result.ok, result.error
+    assert "refs/heads/codex/finalize " + head in refs(origin)
+    assert marker.read_text() == "checked"
+
+
+def test_validation_written_transport_configuration_is_not_seen_by_the_credentialed_push(
+    publication, tmp_path, monkeypatch
+):
+    hostile = {
+        "http.proxy": "http://invalid.invalid:1",
+        f"http.{delegate.CANONICAL_ORIGIN}.proxy": "http://invalid.invalid:1",
+        "protocol.allow": "always",
+        "protocol.ext.allow": "always",
+        "credential.helper": "!hostile-helper",
+        "core.askPass": "hostile-askpass",
+        "push.followTags": "true",
+        "alias.push": "!hostile-alias",
+    }
+    script = "".join(f"git config '{key}' '{value}'\n" for key, value in hostile.items())
+    publication, head = hostile_validation(publication, script)
+    _worktree, origin, _base, marker = publication
+    pushes = recorded_pushes(monkeypatch, "http.proxy", "protocol.allow", "push.followTags")
+
+    result = publish(publication)
+
+    assert result.ok, result.error
+    assert "refs/heads/codex/finalize " + head in refs(origin)
+    assert len(pushes) == 1
+    listed, effective = pushes[0]
+    written = {f"{key}={value}".lower() for key, value in hostile.items()}
+    leaked = [line for line in listed.splitlines() if line.partition("\t")[2].lower() in written]
+    assert leaked == [], "the credentialed push reads configuration validation wrote"
+    assert all(value != hostile[key] for key, value in effective.items()), effective
+    assert marker.read_text() == "checked"
+
+
+def test_transport_pins_its_own_scope_even_in_a_configured_repository(publication, monkeypatch):
+    """Configuration in the transport repository itself cannot add a ref or a proxy to the push."""
+    worktree, origin, _base, _marker = publication
+    head = write_commit(worktree)
+    real_transport = delegate._finalize_transport_push
+    pushes = recorded_pushes(monkeypatch, "http.proxy")
+
+    def configured(transport, **kwargs):
+        transport.checked("tag", "-a", "transport-tag", "-m", "unowned ref", kwargs["head"])
+        transport.checked("config", "push.followTags", "true")
+        transport.checked("config", "http.proxy", "http://invalid.invalid:1")
+        return real_transport(transport, **kwargs)
+
+    monkeypatch.setattr(delegate, "_finalize_transport_push", configured)
+
+    result = publish(publication)
+
+    assert "refs/tags/transport-tag" not in refs(origin)
+    assert result.ok, result.error
+    assert "refs/heads/codex/finalize " + head in refs(origin)
+    assert [effective for _listed, effective in pushes] == [{"http.proxy": ""}]
+
+
+def test_a_push_that_sends_an_extra_ref_is_a_typed_failure(publication, monkeypatch):
+    """Git's own report of the refs it sent is checked: one surprise ref fails the publication."""
+    from scripts.orchestration.safe_git_context import GIT
+
+    worktree, origin, _base, _marker = publication
+    head = write_commit(worktree)
+
+    def leaking(transport, *, branch, head, timeout):
+        transport.checked("tag", "-a", "leaked-tag", "-m", "unowned ref", head)
+        return subprocess.run(
+            [GIT, "push", "--porcelain", "--follow-tags", transport.origin, f"{head}:refs/heads/{branch}"],
+            cwd=transport.root,
+            env=transport.env,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=timeout,
+        )
+
+    monkeypatch.setattr(delegate, "_finalize_transport_push", leaking)
+
+    result = publish(publication)
+
+    assert "refs/tags/leaked-tag" in refs(origin)  # the leak really happened
+    assert not result.ok
+    assert result.error == "auto_finalize_push_unexpected_ref, count 2"
+    assert delegate._resolve_sha(worktree) == head
 
 
 def test_flagged_push_consumes_the_override_before_a_later_flagged_pr(publication, monkeypatch, override_log):

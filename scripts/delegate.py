@@ -6602,6 +6602,7 @@ TYPED_CAUSE_CODES = frozenset(
         "auto_finalize_add_failed",
         "auto_finalize_commit_failed",
         "auto_finalize_push_failed",
+        "auto_finalize_push_unexpected_ref",
         "auto_finalize_reset_failed",
         "auto_finalize_pr_failed",
         "auto_finalize_publish_blocked",
@@ -8345,37 +8346,83 @@ def _finalize_transport_credentials() -> Iterator[list[tuple[str, str]]]:
         yield [(f"http.{CANONICAL_ORIGIN}.extraHeader", f"Authorization: Basic {header}")]
 
 
+@contextlib.contextmanager
+def _finalize_transport_context(
+    worktree: Path, validation: SafeGitContext, *, base: str, head: str
+) -> Iterator[SafeGitContext]:
+    """A fresh repository for the credentialed push, created after validation returned.
+
+    Validation runs worker code with its repository as the code's own, so
+    that code can rewrite the repository's configuration, refs, hooks and
+    objects. The push reads none of it: this repository's configuration is
+    the driver's alone. Its commit graph comes from the worker's store, as
+    for the checks, and every tree and blob from the copy validation used;
+    each fetch re-hashes what it receives.
+    """
+    with _finalize_execution_context(worktree) as transport:
+        # The base the checks and validation used, even if the driver checkout moved since.
+        transport.driver_base = validation.driver_base
+        transport.isolate_objects(base=base, head=head)
+        transport.receive_publication(head=head, base=base, objects=validation.git_dir / "objects")
+        yield transport
+
+
 def _finalize_transport_push(
-    context: SafeGitContext, *, branch: str, head: str, timeout: float
+    transport: SafeGitContext, *, branch: str, head: str, timeout: float
 ) -> subprocess.CompletedProcess:
     """Send the validated, scanned ``head`` with Git's own transport alone.
 
     Validation already ran the trusted hook chain on this exact id, without
-    any credential. This push runs no hook (an empty hooks path), so nothing
-    the worker wrote executes while the credential exists. The credential is
-    passed in this one process's environment, never written to configuration
-    or put on a command line, and the push is an ordinary non-force update.
+    any credential, in another repository (:func:`_finalize_transport_context`).
+    This push runs no hook, so nothing the worker wrote executes while the
+    credential exists. It names the pinned URL and one non-force refspec,
+    sends no tags, and pins the proxy and protocol keys over whatever its
+    repository holds. The credential is passed in this one process's
+    environment, never written to configuration or put on a command line.
     Its bound is the publication's, as when the push itself ran the hook.
     """
     from scripts.orchestration.safe_git_context import GIT
 
-    hooks = context.root / "transport-hooks"
+    hooks = transport.root / "transport-hooks"
     hooks.mkdir()
+    scheme = "file" if transport.local_remote else "https"
     with _finalize_transport_credentials() as entries:
-        settings = [("core.hooksPath", str(hooks)), *entries]
-        env = {**context.env, "GIT_CONFIG_COUNT": str(len(settings))}
+        settings = [
+            ("core.hooksPath", str(hooks)),
+            ("protocol.allow", "never"),
+            (f"protocol.{scheme}.allow", "always"),
+            ("http.proxy", ""),
+            (f"http.{CANONICAL_ORIGIN}.proxy", ""),
+            *entries,
+        ]
+        env = {**transport.env, "GIT_CONFIG_COUNT": str(len(settings))}
         for index, (key, value) in enumerate(settings):
             env[f"GIT_CONFIG_KEY_{index}"] = key
             env[f"GIT_CONFIG_VALUE_{index}"] = value
         return subprocess.run(
-            [GIT, "push", "origin", f"{head}:refs/heads/{branch}"],
-            cwd=context.root,
+            [
+                GIT,
+                "push",
+                "--porcelain",
+                "--no-verify",
+                "--no-follow-tags",
+                transport.origin,
+                f"{head}:refs/heads/{branch}",
+            ],
+            cwd=transport.root,
             env=env,
             capture_output=True,
             text=True,
             check=False,
             timeout=timeout,
         )
+
+
+def _finalize_refuse_unexpected_refs(proc: subprocess.CompletedProcess, *, branch: str, head: str) -> None:
+    """Git's own list of the refs the push touched must be exactly ``head`` to ``branch``, unforced."""
+    rows = [line.split("\t") for line in proc.stdout.splitlines() if line not in {"", "Done"} and line[:3] != "To "]
+    if len(rows) != 1 or rows[0][0] not in {" ", "*", "="} or rows[0][1:2] != [f"{head}:refs/heads/{branch}"]:
+        raise _TypedFailure("push scope unverified", _TypedCause("auto_finalize_push_unexpected_ref", count=len(rows)))
 
 
 def _push_auto_finalize_branch(
@@ -8390,8 +8437,9 @@ def _push_auto_finalize_branch(
 
     Every step before the transport runs without a credential: the history
     checks, the OPSEC scan of what the push sends, and the trusted hook chain,
-    which runs the worker's tests. The transport then sends that same id with
-    no hook and the credential in its own environment alone.
+    which runs the worker's tests. The transport then sends that same id from
+    a fresh repository, with no hook, the credential in its own environment
+    alone, and Git's report of the refs it touched checked against that one.
     """
     if not branch or branch == "HEAD" or branch in _load_worktree_containment().PROTECTED_BRANCHES:
         raise _TypedFailure("unsafe publication target", _TypedCause("auto_finalize_unsafe_branch"))
@@ -8443,12 +8491,15 @@ def _push_auto_finalize_branch(
                 raise _TypedFailure("validation refused", cause)
             if _finalize_source_head(context, branch) != head:
                 raise SnapshotRefusal("auto_finalize_head_moved")
-            if remote != head:
-                proc = _finalize_transport_push(context, branch=branch, head=head, timeout=timeout)
-                if proc.returncode:
-                    raise _TypedFailure("push refused", _remote_git_cause("auto_finalize_push_failed", proc))
-            if _finalize_remote_head(context, branch) != head:
-                raise SnapshotRefusal("auto_finalize_remote_unverified")
+            # Validation could write ``context``'s repository: the push and its check never read it.
+            with _finalize_transport_context(worktree, context, base=base, head=head) as transport:
+                if remote != head:
+                    proc = _finalize_transport_push(transport, branch=branch, head=head, timeout=timeout)
+                    if proc.returncode:
+                        raise _TypedFailure("push refused", _remote_git_cause("auto_finalize_push_failed", proc))
+                    _finalize_refuse_unexpected_refs(proc, branch=branch, head=head)
+                if _finalize_remote_head(transport, branch) != head:
+                    raise SnapshotRefusal("auto_finalize_remote_unverified")
             if _finalize_source_head(context, branch) != head:
                 raise SnapshotRefusal("auto_finalize_head_moved")
     except SnapshotRefusal as exc:
