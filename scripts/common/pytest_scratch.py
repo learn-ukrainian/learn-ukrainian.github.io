@@ -4,16 +4,20 @@ A reviewer sandbox mounts the shared scratch root read-only (#11317). The root
 is then still verified, and refused if a symlink, foreign-owned or writable by
 group or others, but the run itself is allocated in a fresh owner-only
 directory under the sandbox's writable temp: ``TMPDIR``, else shared memory.
-A temp where others may rename entries (writable, not sticky) is skipped, and
-the run must land in the very directory created there.
+``TMPDIR`` is used only if no other user can replace any directory on its path
+(each owned by this user or root, and writable by others only when sticky);
+shared memory only if others may not rename entries in it. The run must land
+in the very directory created there.
 """
 
 from __future__ import annotations
 
 import errno
 import os
+import secrets
 import stat
 import tempfile
+from collections.abc import Callable
 from pathlib import Path
 
 import pytest
@@ -82,31 +86,89 @@ def _private_shared_root() -> Path | None:
     return root
 
 
-def _fallback_bases() -> list[Path]:
-    bases = []
-    tmpdir = os.environ.get("TMPDIR", "").strip()
-    if os.path.isabs(tmpdir):
-        bases.append(Path(tmpdir))
-    bases.append(SHARED_MEMORY_TEMP)
-    return bases
-
-
-def _others_can_rename_in(base: Path) -> bool:
-    """Group or others may write ``base`` without the sticky bit, so may swap our entry in it."""
-    mode = os.stat(base).st_mode
+def _others_can_rename_in(mode: int) -> bool:
+    """Group or others may write the directory without the sticky bit, so may swap our entry in it."""
     return bool(mode & 0o022) and not mode & stat.S_ISVTX
 
 
-def _allocate_in_created(private: Path) -> TaskScratch:
-    """Allocate below ``private`` only if the run lands in the directory this process just created."""
+def _replaceable_by_others(st: os.stat_result) -> bool:
+    """Another user could rename or replace entries of this directory: it is theirs, or theirs to write."""
+    return st.st_uid not in (0, os.geteuid()) or _others_can_rename_in(st.st_mode)
+
+
+def _open_unreplaceable(path: Path) -> int | None:
+    """Open ``path`` from ``/`` one component at a time; None if another user could replace any of it.
+
+    Owner-only mode on ``path`` does not protect its name in its parent, so every
+    directory from ``/`` down must be unreplaceable. ``O_NOFOLLOW`` refuses a symlink.
+    """
+    fd = os.open("/", _DIR_FLAGS)
     try:
-        fd = os.open(private, _DIR_FLAGS)
+        for part in path.parts[1:]:
+            if _replaceable_by_others(os.fstat(fd)):
+                os.close(fd)
+                return None
+            child = os.open(part, _DIR_FLAGS, dir_fd=fd)
+            os.close(fd)
+            fd = child
+        if _replaceable_by_others(os.fstat(fd)):
+            os.close(fd)
+            return None
+    except BaseException:
+        os.close(fd)
+        raise
+    return fd
+
+
+def _open_shared_memory(path: Path) -> int | None:
+    """Open the provisioned shared-memory temp; None if others may rename entries in it."""
+    fd = os.open(path, _DIR_FLAGS)
+    if _others_can_rename_in(os.fstat(fd).st_mode):
+        os.close(fd)
+        return None
+    return fd
+
+
+def _fallback_bases() -> list[tuple[Path, Callable[[Path], int | None]]]:
+    """Each candidate temp with how to open it: TMPDIR only if its whole path is unreplaceable."""
+    bases: list[tuple[Path, Callable[[Path], int | None]]] = []
+    tmpdir = os.environ.get("TMPDIR", "").strip()
+    if os.path.isabs(tmpdir):
+        bases.append((Path(os.path.normpath(tmpdir)), _open_unreplaceable))
+    bases.append((SHARED_MEMORY_TEMP, _open_shared_memory))
+    return bases
+
+
+def _make_private_dir(base_fd: int) -> str:
+    """Create a fresh 0700 directory with a random name below ``base_fd``; return its name."""
+    for _ in range(100):
+        name = FALLBACK_PREFIX + secrets.token_hex(4)
+        try:
+            os.mkdir(name, PRIVATE_MODE, dir_fd=base_fd)
+        except FileExistsError:
+            continue
+        return name
+    raise FileExistsError(errno.EEXIST, "no unused private temp name")
+
+
+def _allocate_in_created(base: Path, base_fd: int, name: str) -> TaskScratch:
+    """Allocate below ``base/name`` only if the run lands in the directory this process just created."""
+    private = base / name
+    try:
+        fd = os.open(name, _DIR_FLAGS, dir_fd=base_fd)
     except OSError as exc:
         raise TaskScratchError(f"pytest private temp changed after creation: {private}") from exc
     try:
         st = os.fstat(fd)
         if st.st_uid != os.geteuid() or stat.S_IMODE(st.st_mode) != PRIVATE_MODE:
             raise TaskScratchError(f"pytest private temp is not owner-only: {private}")
+        # allocate() takes a path: it must still name this directory, or it would write elsewhere.
+        try:
+            named = os.stat(private, follow_symlinks=False)
+        except OSError as exc:
+            raise TaskScratchError(f"pytest private temp changed after creation: {private}") from exc
+        if (named.st_dev, named.st_ino) != (st.st_dev, st.st_ino):
+            raise TaskScratchError(f"pytest private temp changed after creation: {private}")
         scratch = allocate("pytest", root=private, namespace_dirname=RUNS_DIRNAME)
         # allocate() walks the path again; reach the run from the descriptor and compare.
         expected = (scratch.lease["dir"]["dev"], scratch.lease["dir"]["ino"])
@@ -128,19 +190,27 @@ def _allocate_in_created(private: Path) -> TaskScratch:
 
 
 def _allocate_private_fallback() -> TaskScratch:
-    """Allocate in a fresh owner-only directory below the first writable temp no other user can rename in."""
+    """Allocate in a fresh owner-only directory below the first writable temp no other user can tamper with."""
     failures = []
-    for base in _fallback_bases():
+    for base, open_base in _fallback_bases():
         try:
-            if _others_can_rename_in(base):
-                failures.append("not-sticky")
+            base_fd = open_base(base)
+            if base_fd is None:
+                failures.append("replaceable")
                 continue
-            # A new 0700 directory with a random name: exclusive even in a shared sticky parent.
-            private = Path(tempfile.mkdtemp(prefix=FALLBACK_PREFIX, dir=base))
+            try:
+                # A new 0700 directory with a random name: exclusive even in a shared sticky parent.
+                name = _make_private_dir(base_fd)
+            except OSError:
+                os.close(base_fd)
+                raise
         except OSError as exc:
             failures.append(errno.errorcode.get(exc.errno or 0, "error"))
             continue
-        return _allocate_in_created(private)
+        try:
+            return _allocate_in_created(base, base_fd, name)
+        finally:
+            os.close(base_fd)
     raise TaskScratchError(
         "pytest scratch root is not writable and no private writable temp could be created "
         f"(TMPDIR, then shared memory): {', '.join(failures)}"

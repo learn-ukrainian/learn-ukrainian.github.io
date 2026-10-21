@@ -406,10 +406,9 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
     ),
     (
         "scripts/common/pytest_scratch.py",
-        "Read-only sandbox fallback: a fresh 0700 mkdtemp under TMPDIR, else shared memory, when the shared "
+        "Read-only sandbox fallback: a fresh 0700 directory under TMPDIR, else shared memory, when the shared "
         "scratch root cannot be written (#11317).",
-        "7cae75542a9198566a8b0ab24d2d419fc1076e026764e18f632d7aa8fd8c4456:1 "
-        "60dc637df99961e3fc77f216c8d2d72e543aa969a636399307cc9a27c8be8f47:1",
+        "7cae75542a9198566a8b0ab24d2d419fc1076e026764e18f632d7aa8fd8c4456:1",
     ),
     (
         "scripts/common/scratch.py",

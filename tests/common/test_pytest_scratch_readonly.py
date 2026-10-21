@@ -115,8 +115,22 @@ def _listing(path: Path) -> list[str]:
     return sorted(str(entry.relative_to(path)) for entry in path.rglob("*"))
 
 
+def _require_unreplaceable(path: Path) -> None:
+    """Fail loudly when the test's own temp could be replaced by another user: the plugin rightly refuses it."""
+    for directory in (path, *path.parents):
+        st = directory.lstat()
+        mode = stat.S_IMODE(st.st_mode)
+        if st.st_uid not in (0, os.geteuid()) or (mode & 0o022 and not mode & stat.S_ISVTX):
+            pytest.fail(
+                f"tmp_path sits below {directory}, which another user could replace, so the plugin refuses "
+                "every TMPDIR here; run with a --basetemp whose ancestors are owned by you or root and are "
+                "not group- or other-writable unless sticky"
+            )
+
+
 @pytest.fixture
 def world(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    _require_unreplaceable(tmp_path)
     shared = tmp_path / "shared"
     shared.mkdir(mode=0o700)
     temp = tmp_path / "sandbox-temp"
@@ -370,15 +384,14 @@ def _swap_fallback_root(world: World, outside: Path, *, under: Path, when: str) 
             swapped.append(private)
 
     if when == "after-create":
-        real_mkdtemp = tempfile.mkdtemp
+        real_make = pytest_scratch._make_private_dir
 
-        def mkdtemp(suffix=None, prefix=None, dir=None):
-            created = real_mkdtemp(suffix, prefix, dir)
-            if prefix == pytest_scratch.FALLBACK_PREFIX:
-                swap(Path(created))
-            return created
+        def make_private_dir(base_fd):
+            name = real_make(base_fd)
+            swap(_fd_path(base_fd) / name)
+            return name
 
-        world.monkeypatch.setattr(tempfile, "mkdtemp", mkdtemp)
+        world.monkeypatch.setattr(pytest_scratch, "_make_private_dir", make_private_dir)
     else:
         real_allocate = pytest_scratch.allocate
 
@@ -419,6 +432,161 @@ def test_fallback_skips_a_temp_others_can_rename_entries_in(world, tmp_path, mod
     assert swapped == [] and list(world.temp.iterdir()) == [] and list(outside.iterdir()) == []
 
 
+@pytest.mark.parametrize("mode", [0o777, 0o770], ids=oct)
+def test_shared_memory_others_can_rename_entries_in_is_refused(world, mode):
+    """Defect class: with TMPDIR unusable, a non-sticky shared-memory temp is used and its run swapped."""
+    world.make_runs_root(0o700)
+    world.monkeypatch.setenv("TMPDIR", str(world.temp / "absent"))
+    world.shm.chmod(mode)
+    world.readonly()
+    with pytest.raises(TaskScratchError, match=r"no private writable temp.*replaceable"):
+        world.configure()
+    assert list(world.shm.iterdir()) == [] and world.cleanups == []
+
+
+# ---- TMPDIR ancestors ----------------------------------------------------------------------------------------
+
+
+def _nested_tmpdir(world: World, chain: list[tuple[str, int]]) -> Path:
+    """Point TMPDIR at an owner-only temp below ``(name, mode)`` ancestors made in the test's own temp."""
+    parent = world.shared.parent
+    for name, mode in chain:
+        parent = parent / name
+        parent.mkdir()
+        parent.chmod(mode)
+    temp = parent / "sandbox-temp"
+    temp.mkdir(mode=0o700)
+    world.monkeypatch.setenv("TMPDIR", str(temp))
+    world.make_runs_root(0o700)
+    world.readonly()
+    return temp
+
+
+def test_private_tmpdir_name_replaceable_from_shared_ancestor_stays_contained(world, tmp_path):
+    """Held-out regression from the round-2 review (#11317).
+
+    Defect class: a 0700 TMPDIR below a non-sticky shared ancestor is renamed and
+    replaced by a symlink between its check and the allocation, so the run lands
+    outside the provisioned scratch.
+    """
+    ancestor = tmp_path / "shared-ancestor"
+    ancestor.mkdir()
+    ancestor.chmod(0o777)
+    provisioned = ancestor / "sandbox-temp"
+    provisioned.mkdir(mode=0o700)
+    outside = tmp_path / "outside-provisioned"
+    outside.mkdir(mode=0o700)
+    provisioned_id = (provisioned.stat().st_dev, provisioned.stat().st_ino)
+    world.monkeypatch.setenv("TMPDIR", str(provisioned))
+    real_mkdir = os.mkdir
+    swapped: list[bool] = []
+
+    def mkdir(path, mode=0o777, *, dir_fd=None):
+        # Another user swaps the TMPDIR name just before anything is created in it.
+        parent = os.fstat(dir_fd) if dir_fd is not None else os.stat(Path(os.fsdecode(path)).parent)
+        if (parent.st_dev, parent.st_ino) == provisioned_id and not swapped:
+            provisioned.rename(ancestor / "sandbox-temp.saved")
+            provisioned.symlink_to(outside, target_is_directory=True)
+            swapped.append(True)
+        return real_mkdir(path, mode, dir_fd=dir_fd)
+
+    world.monkeypatch.setattr(os, "mkdir", mkdir)
+    world.make_runs_root(0o700)
+    world.readonly()
+    config = world.configure()
+    assert Path(config.option.basetemp).is_relative_to(world.shm), "accepted payload outside provisioned scratch"
+    _assert_private_fallback(world, config, world.shm)
+    assert swapped == [] and list(outside.iterdir()) == [] and list(provisioned.iterdir()) == []
+
+
+@pytest.mark.parametrize(
+    "chain",
+    [
+        pytest.param([("parent", 0o777)], id="nonsticky-0777-parent"),
+        pytest.param([("grandparent", 0o777), ("parent", 0o755)], id="nonsticky-0777-grandparent"),
+        pytest.param([("grandparent", 0o770), ("parent", 0o700)], id="group-writable-grandparent"),
+    ],
+)
+def test_tmpdir_below_an_ancestor_others_can_rename_in_is_skipped(world, chain):
+    """Defect class: only TMPDIR's own mode is checked, so an ancestor another user can rename in redirects it."""
+    temp = _nested_tmpdir(world, chain)
+    config = world.configure()
+    _assert_private_fallback(world, config, world.shm)
+    assert list(temp.iterdir()) == []
+
+
+def test_tmpdir_below_a_sticky_world_writable_ancestor_is_used(world):
+    """Defect class: a normal sticky system temp on TMPDIR's path is refused, losing the sandbox's own temp."""
+    temp = _nested_tmpdir(world, [("system-temp", 0o1777)])
+    config = world.configure()
+    _assert_private_fallback(world, config, temp)
+    assert list(world.shm.iterdir()) == []
+
+
+@pytest.mark.parametrize("owner", ["another-user", "root"])
+def test_tmpdir_ancestor_owned_by_another_user_is_skipped(world, owner):
+    """Defect class: an ancestor owned by another user (who may rename in it at will) is trusted; root is not one."""
+    temp = _nested_tmpdir(world, [("owned", 0o755)])
+    ancestor = temp.parent
+    uid = 0 if owner == "root" else os.geteuid() + 1
+    real_fstat = os.fstat
+
+    def fstat(fd):
+        st = real_fstat(fd)
+        if _fd_path(fd) != ancestor:
+            return st
+        fields = list(st[:10])
+        fields[4] = uid
+        return os.stat_result(fields)
+
+    world.monkeypatch.setattr(os, "fstat", fstat)
+    config = world.configure()
+    if owner == "root":
+        _assert_private_fallback(world, config, temp)
+        assert list(world.shm.iterdir()) == []
+    else:
+        _assert_private_fallback(world, config, world.shm)
+        assert list(temp.iterdir()) == []
+
+
+def test_tmpdir_below_a_symlinked_ancestor_is_skipped(world, tmp_path):
+    """Defect class: a symlink on TMPDIR's path is followed, so whoever can re-point it chooses the run's home."""
+    real_parent = tmp_path / "real-parent"
+    real_parent.mkdir(mode=0o700)
+    target = real_parent / "sandbox-temp"
+    target.mkdir(mode=0o700)
+    link = tmp_path / "link-parent"
+    link.symlink_to(real_parent, target_is_directory=True)
+    world.monkeypatch.setenv("TMPDIR", str(link / "sandbox-temp"))
+    world.make_runs_root(0o700)
+    world.readonly()
+    config = world.configure()
+    _assert_private_fallback(world, config, world.shm)
+    assert list(target.iterdir()) == []
+
+
+def test_tmpdir_replaced_after_the_walk_fails_closed_without_writing_outside(world, tmp_path):
+    """Defect class: the run directory is made by path after the walk, so a replaced TMPDIR still redirects it."""
+    outside = tmp_path / "outside"
+    outside.mkdir(mode=0o700)
+    world.make_runs_root(0o700)
+    world.readonly()
+    real_make = pytest_scratch._make_private_dir
+
+    def make_private_dir(base_fd):
+        # The same user (the only one left who can) swaps TMPDIR after it was verified and opened.
+        world.temp.rename(world.temp.with_name("sandbox-temp.moved"))
+        world.temp.symlink_to(outside, target_is_directory=True)
+        return real_make(base_fd)
+
+    world.monkeypatch.setattr(pytest_scratch, "_make_private_dir", make_private_dir)
+    with pytest.raises(TaskScratchError, match="changed after creation"):
+        world.configure()
+    assert list(outside.iterdir()) == [] and world.cleanups == []
+    (made,) = world.temp.with_name("sandbox-temp.moved").iterdir()
+    assert made.name.startswith(pytest_scratch.FALLBACK_PREFIX)
+
+
 # ---- callers that own their base temp ------------------------------------------------------------------------
 
 
@@ -455,11 +623,15 @@ def _readonly_bind(shared: Path) -> list[str]:
 
 def test_real_pytest_on_readonly_shared_root_runs_to_completion(tmp_path):
     """AC-01 end to end. Defect class: a governed pytest in a read-only reviewer sandbox exits 3 at configure."""
+    _require_unreplaceable(tmp_path)
     shared = tmp_path / "shared"
     (shared / pytest_scratch.NAMESPACE).mkdir(parents=True, mode=0o700)
     shared.chmod(0o700)
     temp = tmp_path / "sandbox-temp"
     temp.mkdir(mode=0o700)
+    shm = tmp_path / "shm"
+    shm.mkdir()
+    shm.chmod(0o1777)
     suite = tmp_path / "suite"
     suite.mkdir()
     prefix = _readonly_bind(shared)
@@ -474,16 +646,30 @@ def test_real_pytest_on_readonly_shared_root_runs_to_completion(tmp_path):
     )
     (suite / "conftest.py").write_text(
         f"import sys\nfrom pathlib import Path\nsys.path.insert(0, {str(REPO)!r})\n{shim}"
+        "import scripts.common.pytest_scratch as plugin\n"
+        f"plugin.SHARED_MEMORY_TEMP = Path({str(shm)!r})\n"
         'pytest_plugins = ["scripts.common.pytest_scratch"]\n'
     )
     (suite / "test_child.py").write_text(f"""
 import os
+import stat
 import tempfile
 from pathlib import Path
 
+def _unreplaceable(path):
+    for directory in (path, *path.parents):
+        st = directory.lstat()
+        mode = stat.S_IMODE(st.st_mode)
+        if st.st_uid not in (0, os.geteuid()) or (mode & 0o022 and not mode & stat.S_ISVTX):
+            return False
+    return True
+
 def test_payload(tmp_path):
+    # The policy as this namespace sees it: an unprivileged user namespace shows root's directories as unmapped.
+    temp = Path({str(temp)!r})
+    expected = temp if _unreplaceable(temp) else Path({str(shm)!r})
     payload = Path(tempfile.gettempdir())
-    parts = payload.relative_to({str(temp)!r}).parts
+    parts = payload.relative_to(expected).parts
     assert parts[0].startswith("lu-pytest-") and parts[1] == "runs" and parts[-1] == "scratch"
     assert os.environ["TMPDIR"] == str(payload)
     assert tmp_path.is_relative_to(payload)
@@ -501,7 +687,8 @@ def test_payload(tmp_path):
     assert result.returncode == 0, result.stdout + result.stderr
     assert "1 passed" in result.stdout
     assert _listing(shared) == [pytest_scratch.NAMESPACE]
-    (private,) = temp.iterdir()
+    (used,) = [base for base in (temp, shm) if any(base.iterdir())]
+    (private,) = used.iterdir()
     assert stat.S_IMODE(private.stat().st_mode) == 0o700
     (run,) = (private / pytest_scratch.RUNS_DIRNAME).iterdir()
     assert json.loads((run / "lease.json").read_text())["state"] == "preserved"
