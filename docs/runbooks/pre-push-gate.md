@@ -16,12 +16,19 @@ tracked changes:
    with `origin/main`, so the range is the change the pull request carries (`origin/main...<head>`). The
    rule narrows only on Git's positive answer: `git merge-base --all origin/main <head>` returns exactly
    one commit other than `<head>`, and `git merge-base --is-ancestor` exits 1 for it against the remote
-   tip. A Git error, an unresolvable `origin/main`, no common history or several merge-bases keep the
-   remote tip and the complete outgoing range. So does a merge-base equal to `<head>` (`origin/main`
-   already contains the head): the update still moves the remote, so its checks run over
-   `<remote>..<head>` and it is never accepted as "no outgoing commits". Only a remote tip equal to the
-   head has no outgoing commits. New branches and divergent tips are unchanged; a divergent tip with no
-   merge-base is `range_unresolved`.
+   tip. A plain fast-forward keeps `<remote>..<head>`, which lies inside `<merge-base>..<head>`; new
+   branches and divergent tips start at the merge-base. Either way the range, and so the selector's input
+   (check 3), holds only the branch's own changes, never main's (#11207).
+   When no single merge-base other than `<head>` can be proven, the base stays the previous one (the
+   remote tip, or Git's single `merge-base` answer for a new or divergent tip) and the gate does not ask
+   the selector: it blocks on the conservative set (changed test files plus the registry) and records the
+   cause as `base_fallback` and as the selection's `reason`: `merge_base_unavailable` (no `origin/main`,
+   a shallow clone, no common history or a Git error), `merge_base_ambiguous` (several merge-bases),
+   `merge_base_unproven` (the `is-ancestor` check failed) or `merge_base_is_head` (`origin/main` already
+   contains the head). The last still runs: the update moves the remote, so its checks run over
+   `<remote>..<head>`, or over the registry alone for a new branch at a commit main already has, and it
+   is never accepted as "no outgoing commits". Only a remote tip equal to the head has no outgoing
+   commits. A new or divergent tip with no merge-base at all is `range_unresolved`.
    The same bounded stage then always runs `lint_opsec_leaks.py --commit-range <base>..<head>`.
    It reads each commit's version of its touched files, including values later reverted or files
    later deleted. Missing selected blobs refuse the push; diagnostics omit matched values.
@@ -78,7 +85,8 @@ The registry is read by AST and deduplicated (a function id is dropped when its 
 selected), with the deferrals described in Bounds. Its version is a digest of the gate version and
 the ids. The event records `selection.status: fallback` with a typed `selection.reason`:
 `selector_unavailable`, `selector_failed`, `selector_timeout`, `selector_unparseable`,
-`selector_invalid_output`, `selector_schema_mismatch` or `all_tests_affected`. The set is never
+`selector_invalid_output`, `selector_schema_mismatch` or `all_tests_affected`, or one of the
+`merge_base_*` reasons from check 1, which skip the selector (#11207). The set is never
 silently narrower and never green on an unknown selection. The registry is loaded, and its
 materialization checked, on every push, because the fallback needs it.
 
@@ -363,7 +371,8 @@ Those fields were additive and changed no existing meaning, so they stayed in `p
 Gate version 9 (#11207) replaces the `shadow` record with `selection`, and `nodes` and
 `deferred_to_ci` now describe the set that ran, so its rows are `pre-push-measurement.v2`.
 Once a plan exists, the row also records `base`, `selected_test_files`, `changed_test_files` and
-`changed_paths` (#10820).
+`changed_paths` (#10820), and `base_fallback` (null, or the `merge_base_*` reason; #11207), which the
+receipt also binds.
 From gate version 9 a stage timeout records `reason` `timeout` or `timeout_under_load` and its stage's
 `load_at_timeout` (#11140); version 8 and older rows record `validation_incomplete` with `(timeout)` in
 `detail`. Version 9 also applies the main-refresh base rule above to every row's `base`.

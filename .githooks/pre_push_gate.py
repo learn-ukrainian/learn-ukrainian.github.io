@@ -14,8 +14,11 @@ The affected test files come from the importer-closure selector
 must answer before pytest starts.  Its answer lists them nearest first; the
 gate defers to CI the modules over ``HEAVY_MODULE_S`` and, once the estimated
 cost of the changed files and the rest passes ``SELECTION_COST_CAP_S``, the
-farther remainder, and records both.  When the selector fails, times out,
-answers malformed or finds every test file affected, the gate falls back to the
+farther remainder, and records both.  The range starts at the merge-base with
+``origin/main`` after a merge of newer main, so the selector sees only the
+branch's own changes (#10820).  When no single merge-base can be proven, or when
+the selector fails, times out, answers malformed or finds every test file
+affected, the gate falls back to the
 conservative set: the changed test files plus the registry of repository-wide
 invariant tests (``KNOWN_REPO_WIDE_*`` in
 ``tests/test_repo_wide_marker_invariant.py``).  The event records which set ran
@@ -208,6 +211,7 @@ class Plan:
     changed_paths: tuple[str, ...]
     deferred_to_ci: tuple[str, ...] = ()
     selection: Selection | None = None  # set once the selector has answered, before pytest
+    base_fallback: str | None = None  # why the merge-base could not set ``base``; forces the conservative set
 
     @property
     def uses_registry(self) -> bool:
@@ -360,40 +364,63 @@ def is_heavy(node: str, durations: dict[str, object]) -> bool:
     )
 
 
-def refreshed_main_base(update: Update, root: Path) -> str | None:
-    """The merge-base with ``origin/main`` when a fast-forward also brings in main history (#10820).
+def main_merge_base(update: Update, root: Path) -> tuple[str | None, str | None]:
+    """``(merge-base, None)`` with ``origin/main``, or ``(None, reason)`` when Git gives no usable one.
 
-    A head that merged newer main into an older remote tip carries main's own commits in
-    ``remote..head``; the pull request carries only ``merge-base..head``. The merge-base replaces the
-    remote tip only on Git's positive answer: exactly one merge-base, other than the head, proven not to
-    be an ancestor of the remote tip. A Git error, no common history or several merge-bases return
-    ``None``, which keeps the complete outgoing range. So does a merge-base equal to the head (``origin/main``
-    already contains it): the update still moves the remote, so its required checks must run.
+    Usable means exactly one merge-base, other than the head. ``merge_base_unavailable``: no
+    ``origin/main``, a Git error, a shallow clone or no common history; ``merge_base_ambiguous``: several
+    merge-bases (criss-cross merges); ``merge_base_is_head``: ``origin/main`` already contains the head.
     """
     bases = (git_ok("merge-base", "--all", "origin/main", update.local_sha, cwd=root) or "").split()
-    if len(bases) != 1 or bases[0] == update.local_sha:
-        return None
-    try:
-        answer = git("merge-base", "--is-ancestor", bases[0], update.remote_sha, cwd=root).returncode
-    except (OSError, subprocess.SubprocessError):
-        return None
-    return bases[0] if answer == 1 else None  # 1 is Git's "not an ancestor"; other non-zero codes are errors
+    if not bases:
+        return None, "merge_base_unavailable"
+    if len(bases) > 1:
+        return None, "merge_base_ambiguous"
+    if bases[0] == update.local_sha:
+        return None, "merge_base_is_head"
+    return bases[0], None
 
 
-def outgoing_base(update: Update, root: Path) -> str:
-    """The commit below the outgoing range; never inferred from HEAD or shell arguments."""
-    if (
+def outgoing_base(update: Update, root: Path) -> tuple[str, str | None]:
+    """``(base, fallback)``: the commit below the range the gate validates, never inferred from HEAD.
+
+    The range is the change the pull request carries, so the selection sees only the branch's own
+    changes (#10820, #11207). A fast-forward keeps the remote tip, whose range lies inside
+    ``merge-base..head``, unless the head merged newer ``origin/main`` into it: the merge-base then
+    replaces the tip, on Git's positive answer that it is not an ancestor of the tip (``is-ancestor``
+    exits 1). A new branch or a divergent tip starts at the merge-base.
+
+    ``fallback`` names why the merge-base could not set the base (``main_merge_base`` reasons, or
+    ``merge_base_unproven`` for an ``is-ancestor`` error). The base is then the previous one, the remote
+    tip or Git's single merge-base answer, and the gate blocks on the conservative set. A tip equal to
+    the head is nothing outgoing; with no merge-base at all a new or divergent tip is ``range_unresolved``.
+    """
+    if update.remote_sha == update.local_sha:
+        return update.remote_sha, None
+    base, fallback = main_merge_base(update, root)
+    fast_forward = (
         update.remote_sha != ZERO_SHA
         and git_ok("merge-base", "--is-ancestor", update.remote_sha, update.local_sha, cwd=root) is not None
-    ):
-        return refreshed_main_base(update, root) or update.remote_sha
-    base = (git_ok("merge-base", "origin/main", update.local_sha, cwd=root) or "").strip()
-    if not base:
+    )
+    if fast_forward:
+        if base is None:
+            return update.remote_sha, fallback
+        try:
+            answer = git("merge-base", "--is-ancestor", base, update.remote_sha, cwd=root).returncode
+        except (OSError, subprocess.SubprocessError):
+            answer = None
+        if answer in (0, 1):  # 1 is Git's "not an ancestor"; other non-zero codes are errors
+            return (base if answer == 1 else update.remote_sha), None
+        return update.remote_sha, "merge_base_unproven"
+    if base is not None:
+        return base, None
+    previous = (git_ok("merge-base", "origin/main", update.local_sha, cwd=root) or "").strip()
+    if not previous:
         raise GateOutcome(
             "range_unresolved",
             f"cannot resolve the outgoing range for {update.local_ref}: no merge-base with origin/main",
         )
-    return base
+    return previous, fallback
 
 
 def is_regenerable_dependency_input(path: str, *, root: Path, tracked: set[str]) -> bool:
@@ -463,8 +490,8 @@ def build_plan(update: Update, root: Path) -> Plan | None:
     if dirty is None or dirty.strip():
         raise GateOutcome("dirty_tree", "tracked files differ from the outgoing commit; commit or restore them first")
     reject_untracked_inputs(root)
-    base = outgoing_base(update, root)
-    if base == head:
+    base, base_fallback = outgoing_base(update, root)
+    if base == head and base_fallback is None:  # only a remote tip equal to the head is nothing outgoing
         return None
     names = git_ok("diff", "--name-only", "--diff-filter=ACMR", f"{base}..{head}", cwd=root)
     if names is None:
@@ -492,7 +519,7 @@ def build_plan(update: Update, root: Path) -> Plan | None:
             incomplete=True,
         )
     tree = (git_ok("rev-parse", f"{head}^{{tree}}", cwd=root) or "").strip()
-    return Plan(head, tree, base, version, runnable, changed_tests, changed, deferred)
+    return Plan(head, tree, base, version, runnable, changed_tests, changed, deferred, base_fallback=base_fallback)
 
 
 # ---- receipts -------------------------------------------------------------
@@ -513,6 +540,7 @@ def receipt_inputs(plan: Plan) -> dict[str, object]:
         "head": plan.head,
         "tree": plan.tree,
         "base": plan.base,
+        "base_fallback": plan.base_fallback,
         "registry_version": plan.registry_version,
         "deferred_to_ci": list(plan.deferred_to_ci),
         "node_ids": list(dedupe_node_ids((*plan.registry_nodes, *plan.changed_tests))),
@@ -1991,6 +2019,21 @@ def canonical_test_file(path: str) -> bool:
     return TEST_FILE_RE.match(path) is not None and all(part not in ("", ".", "..") for part in path.split("/"))
 
 
+def base_fallback_selection(plan: Plan) -> Selection:
+    """The conservative set when the merge-base could not set the base (#11207): never an empty selection."""
+    assert plan.base_fallback is not None
+    return Selection(
+        "fallback",
+        reason=plan.base_fallback,
+        record={
+            "status": "fallback",
+            "reason": plan.base_fallback,
+            "detail": f"previous range {plan.base}..{plan.head} plus the registry",
+            "selected_count": None,
+        },
+    )
+
+
 def blocking_selection(plan: Plan, root: Path, answer: dict[str, object]) -> Selection:
     """Turn the selector's answer into the set pytest blocks on; anything doubtful is the fallback.
 
@@ -2186,7 +2229,8 @@ def execute_stages(
     shadow: Shadow | None = None
     settled = False
     try:
-        shadow = Shadow(plan, root, launcher)
+        # Without a merge-base the range may carry main's own changes: no selector, the conservative set.
+        shadow = Shadow(plan, root, launcher) if plan.base_fallback is None else None
         with stage_measurement(event, "pre_commit") as diagnostics:
             run_pre_commit_stage(
                 plan,
@@ -2196,7 +2240,9 @@ def execute_stages(
                 stage_deadline(deadline, stage_budget_s, diagnostics),
                 diagnostics=diagnostics,
             )
-        plan.selection = blocking_selection(plan, root, shadow.finish())
+        plan.selection = (
+            blocking_selection(plan, root, shadow.finish()) if shadow is not None else base_fallback_selection(plan)
+        )
         event.update(
             selection=plan.selection.record,
             nodes=len(plan.node_ids),
@@ -2245,6 +2291,7 @@ def validate(
     event.update(
         head=plan.head,
         base=plan.base,
+        base_fallback=plan.base_fallback,
         nodes=len(plan.node_ids),
         selected_test_files=selected_files,
         changed_test_files=len(plan.changed_tests),
@@ -2253,8 +2300,9 @@ def validate(
         deferred_to_ci=list(plan.deferred_to_ci),
     )
     # An incomplete run names its selection, so a timeout from an oversized range is recognisable (#10820).
+    base_label = f"{plan.base} ({plan.base_fallback})" if plan.base_fallback else plan.base
     selection = (
-        f"selection: base {plan.base}, {selected_files} selected test files "
+        f"selection: base {base_label}, {selected_files} selected test files "
         f"({len(plan.changed_tests)} changed by the range), {len(plan.changed_paths)} changed paths"
     )
     state = state_dir(root)

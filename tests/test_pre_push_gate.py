@@ -6091,6 +6091,9 @@ def test_base_selection_controls_keep_the_complete_outgoing_range(repo: Path, ki
 
     assert plan is not None and plan.base == expected_base
     assert plan.changed_tests == expected_tests
+    # Without one proven merge-base the previous range stays, and the gate blocks on the conservative set.
+    expected_fallback = {"unproven_main": "merge_base_unavailable", "criss_cross": "merge_base_ambiguous"}
+    assert plan.base_fallback == expected_fallback.get(kind)
 
 
 @pytest.mark.parametrize("failure", ["exit_128", "timeout"])
@@ -6112,6 +6115,7 @@ def test_an_ancestry_error_never_narrows_the_range(repo: Path, monkeypatch: pyte
 
     assert plan is not None and plan.base == remote
     assert "tests/test_main_only.py" in plan.changed_tests  # uncertainty keeps the complete outgoing range
+    assert plan.base_fallback == "merge_base_unproven"
 
 
 def test_a_divergent_push_without_history_in_common_with_main_is_refused(repo: Path) -> None:
@@ -6171,6 +6175,7 @@ def test_a_main_that_contains_the_head_keeps_the_complete_outgoing_range(repo: P
     assert plan is not None and plan.base == remote  # never the head: the update moves the remote
     assert plan.changed_tests == ("tests/test_feature_new.py", "tests/test_main_only.py")
     assert set(plan.registry_nodes) == {"tests/test_invariant.py", "tests/test_scanner.py::test_scan"}
+    assert plan.base_fallback == "merge_base_is_head"
 
 
 @pytest.mark.parametrize("ending", ["green", "red"])
@@ -6183,6 +6188,7 @@ def test_an_outgoing_update_inside_main_still_runs_its_required_checks(repo: Pat
     row = _measurements(repo)[-1]
     assert row.get("detail") != "no outgoing commits" and row["base"] == remote
     assert {"pre_commit", "pytest"} <= set(row["stages"])
+    assert row["base_fallback"] == row["selection"]["reason"] == "merge_base_is_head"
     if ending == "green":
         assert result.returncode == 0, result.stderr
         assert row["outcome"] == "green" and len(_receipts(repo)) == 1
@@ -6206,6 +6212,161 @@ def test_an_unmoved_remote_inside_main_is_still_nothing_outgoing(repo: Path) -> 
     assert result.returncode == 0, result.stderr
     row = _measurements(repo)[-1]
     assert row["detail"] == "no outgoing commits" and "stages" not in row
+
+
+# ---- #11207 on #10820: the selector sees only the branch's change; without a merge-base, the fallback ------
+
+# Records the paths it was given and selects ``tests/test_<name>.py`` for each changed ``scripts/<name>.py``,
+# so a range that carried main's change would select main's test as well.
+PATH_RECORDING_SELECTOR = textwrap.dedent(
+    """\
+    import json, os, sys
+    from pathlib import Path
+
+    paths = sys.argv[sys.argv.index("--paths") + 1:]
+    Path(os.environ["SELECTOR_LOG"]).write_text(json.dumps(paths))
+    modules = [Path(path).stem for path in paths if path.startswith("scripts/") and path.endswith(".py")]
+    selected = [f"tests/test_{name}.py" for name in modules if Path(f"tests/test_{name}.py").is_file()]
+    answer = {"schema": SCHEMA, "scope": "importer_closure", "all_tests_reasons": [], "selected_tests": selected}
+    print(json.dumps(answer))
+    """
+).replace("SCHEMA", repr(gate.SELECTION_SCHEMA))
+
+
+def _module(repo: Path, name: str, message: str) -> str:
+    """Commit ``scripts/<name>.py`` and its ``tests/test_<name>.py``."""
+    _write(repo, f"scripts/{name}.py", "VALUE = 1\n")
+    _write(repo, f"tests/test_{name}.py", GREEN_TEST)
+    return _commit(repo, message, f"scripts/{name}.py", f"tests/test_{name}.py")
+
+
+def _feature_then_newer_main_with_selector(repo: Path) -> str:
+    """The recording selector on main; a pushed feature module; then a newer main module."""
+    _git(repo, "checkout", "main")
+    _install_shadow(repo, PATH_RECORDING_SELECTOR)
+    _git(repo, "push", "--no-verify", "origin", "main")
+    _git(repo, "checkout", "feature")
+    _git(repo, "merge", "--ff-only", "main")
+    remote = _module(repo, "feature_mod", "feature module, already on the remote")
+    _git(repo, "push", "--no-verify", "origin", "feature")
+    _git(repo, "checkout", "main")
+    _module(repo, "main_only", "unrelated main module")
+    _git(repo, "push", "--no-verify", "origin", "main")
+    _git(repo, "checkout", "feature")
+    return remote
+
+
+AFFECTED_AFTER_MAIN = {
+    # kind: (merge newer main, commit after it, push as a new branch) -> the selector's paths
+    "merged_main": ((True, False, False), ["scripts/feature_mod.py", "tests/test_feature_mod.py"]),
+    "merged_main_then_commit": (
+        (True, True, False),
+        ["scripts/feature_mod.py", "scripts/feature_two.py", "tests/test_feature_mod.py", "tests/test_feature_two.py"],
+    ),
+    "remote_behind_main_unmerged": ((False, True, False), ["scripts/feature_two.py", "tests/test_feature_two.py"]),
+    "new_branch_after_merge": ((True, False, True), ["scripts/feature_mod.py", "tests/test_feature_mod.py"]),
+}
+
+
+@pytest.mark.parametrize("kind", list(AFFECTED_AFTER_MAIN))
+def test_the_selector_sees_only_the_branch_change_after_main_moved(repo: Path, tmp_path: Path, kind: str) -> None:
+    (merge, commit_after, new_branch), expected_paths = AFFECTED_AFTER_MAIN[kind]
+    remote = _feature_then_newer_main_with_selector(repo)
+    if merge:
+        _merge_main(repo)
+    if commit_after:
+        _module(repo, "feature_two", "more feature work")
+    log = tmp_path / "selector-paths.json"
+
+    result = _run_gate(repo, remote_sha=None if new_branch else remote, extra_env={"SELECTOR_LOG": str(log)})
+
+    assert result.returncode == 0, result.stderr
+    assert json.loads(log.read_text()) == expected_paths  # main's module never reaches the selector
+    row = _measurements(repo)[-1]
+    assert row["base_fallback"] is None and row["selection"]["status"] == "selected"
+    expected_selected = [path for path in expected_paths if path.startswith("tests/")]
+    assert row["selection"]["selected_count"] == len(expected_selected)
+    (receipt,) = _receipts(repo)
+    blocking = json.loads(receipt.read_text(encoding="utf-8"))["key"]["blocking_node_ids"]
+    assert blocking == expected_selected and "tests/test_main_only.py" not in blocking
+
+
+def _criss_cross_with_selector(repo: Path) -> str:
+    """Two merge-bases with ``origin/main`` (criss-cross merges), the recording selector on both sides."""
+    _install_shadow(repo, PATH_RECORDING_SELECTOR)
+    remote, _base, _tests = _criss_cross(repo)
+    return remote
+
+
+@pytest.mark.parametrize("cause", ["merge_base_unavailable", "merge_base_ambiguous"])
+def test_without_one_merge_base_the_gate_blocks_on_the_conservative_set(repo: Path, tmp_path: Path, cause: str) -> None:
+    if cause == "merge_base_unavailable":
+        remote = _feature_then_newer_main_with_selector(repo)
+        _merge_main(repo)
+        _git(repo, "update-ref", "-d", "refs/remotes/origin/main")  # no origin/main: nothing proves a base
+    else:
+        remote = _criss_cross_with_selector(repo)
+    log = tmp_path / "selector-paths.json"
+
+    result = _run_gate(repo, remote_sha=remote, extra_env={"SELECTOR_LOG": str(log)})
+
+    assert result.returncode == 0, result.stderr
+    assert not log.exists(), "the selector must not narrow an unproven range"
+    row = _measurements(repo)[-1]
+    assert row["base"] == remote and row["base_fallback"] == cause
+    assert row["selection"] == {
+        "status": "fallback",
+        "reason": cause,
+        "detail": f"previous range {remote}..{row['head']} plus the registry",
+        "selected_count": None,
+    }
+    (receipt,) = _receipts(repo)
+    key = json.loads(receipt.read_text(encoding="utf-8"))["key"]
+    assert key["base_fallback"] == cause and key["selection"]["reason"] == cause
+    # The previous range's changed tests plus the registry, never an empty selection.
+    assert {"tests/test_invariant.py", "tests/test_scanner.py::test_scan"} <= set(key["blocking_node_ids"])
+
+
+def test_an_unrelated_red_invariant_still_blocks_a_push_without_a_merge_base(repo: Path) -> None:
+    _red_unchanged(repo, "tests/test_invariant.py")
+    _install_selector(repo, ["tests/test_new.py"])  # would select only the new test, if it were asked
+    _write(repo, "tests/test_new.py", GREEN_TEST)
+    _write(repo, "RED_MARKER", "breaks the unrelated invariant\n")
+    remote = _commit(repo, "unrelated change", "tests/test_new.py", "RED_MARKER")
+    _git(repo, "push", "--no-verify", "origin", "feature")
+    _write(repo, "tests/test_more.py", GREEN_TEST)
+    _commit(repo, "more", "tests/test_more.py")
+    _git(repo, "update-ref", "-d", "refs/remotes/origin/main")
+
+    result = _run_gate(repo, remote_sha=remote)
+
+    assert result.returncode == gate.EXIT_REFUSED, result.stderr
+    assert "tests/test_invariant.py::test_no_marker" in _verdict(result)["failing"]
+    assert _measurements(repo)[-1]["selection"]["reason"] == "merge_base_unavailable"
+
+
+def test_a_new_branch_already_inside_main_runs_the_conservative_set(repo: Path) -> None:
+    """A new branch whose head ``origin/main`` contains: the merge-base is the head, never "nothing outgoing"."""
+    result = _run_gate(repo)  # the fixture's feature branch is still main's tip
+
+    assert result.returncode == 0, result.stderr
+    row = _measurements(repo)[-1]
+    assert row.get("detail") != "no outgoing commits" and {"pre_commit", "pytest"} <= set(row["stages"])
+    assert row["base"] == row["head"] and row["changed_paths"] == 0
+    assert row["base_fallback"] == row["selection"]["reason"] == "merge_base_is_head"
+    assert row["nodes"] == 2  # the registry's two entries: the fallback is never empty
+
+
+def test_a_new_branch_without_origin_main_is_refused_as_unresolved(repo: Path) -> None:
+    _write(repo, "tests/test_new.py", GREEN_TEST)
+    _commit(repo, "new", "tests/test_new.py")
+    _git(repo, "update-ref", "-d", "refs/remotes/origin/main")
+
+    result = _run_gate(repo)  # no remote tip and no origin/main: no range can be named
+
+    assert result.returncode == gate.EXIT_REFUSED
+    assert _verdict(result)["reason"] == "range_unresolved"
+    assert _receipts(repo) == []
 
 
 # ---- #11140: a stage timeout is typed by the observed load and never hides a reported failure -----------
