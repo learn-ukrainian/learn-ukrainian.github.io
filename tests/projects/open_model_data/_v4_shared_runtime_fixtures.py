@@ -24,9 +24,11 @@ import sys
 import tempfile
 import tomllib
 import uuid
+from contextlib import suppress
 from dataclasses import replace
 from pathlib import Path
 
+import psutil
 import psycopg
 import pytest
 from _v4_a7_real_slot_fixture import (
@@ -80,26 +82,57 @@ def role_connection(pg, role):
     return connection
 
 
+def _pg_scratch_directory(tmp_path_factory):
+    """Allocate a private directory whose longest socket name fits."""
+    override = os.environ.get("LU_SCRATCH_ROOT")
+    base = Path(override) if override else tmp_path_factory.getbasetemp()
+    base.mkdir(parents=True, exist_ok=True)
+    candidates = [base] if override else [base, Path(f"/run/user/{os.getuid()}"), Path("/dev/shm"), Path("/tmp")]
+    for candidate in candidates:
+        try:
+            root = Path(tempfile.mkdtemp(prefix="pg-", dir=candidate)).resolve()
+        except OSError:
+            if override:
+                raise
+            continue
+        if len(os.fsencode(root / ".s.PGSQL.65535")) <= 103:
+            return root
+        shutil.rmtree(root)
+    raise AssertionError(
+        "PostgreSQL Unix socket path exceeds the portable 103-byte limit or no writable short root exists; "
+        "set LU_SCRATCH_ROOT or pytest --basetemp to a shorter private path"
+    )
+
+
+def _terminate_pg_server(data):
+    """Wait for the postmaster and its children before removing their data."""
+    try:
+        pid = int((data / "postmaster.pid").read_text().splitlines()[0])
+        server = psutil.Process(pid)
+        processes = [server, *server.children(recursive=True)]
+    except (FileNotFoundError, psutil.NoSuchProcess):
+        return
+    with suppress(psutil.NoSuchProcess):
+        server.terminate()
+    _, alive = psutil.wait_procs(processes, timeout=5)
+    for process in alive:
+        with suppress(psutil.NoSuchProcess):
+            process.kill()
+    _, alive = psutil.wait_procs(alive, timeout=5)
+    assert not alive, "PostgreSQL processes survived shutdown; preserving fixture directory"
+
+
 @pytest.fixture(scope="module")
 def _pg_server(tmp_path_factory):
     """Keep one server and a closed, schema-applied template per module."""
-    TMPDIR = (
-        Path(os.environ["LU_SCRATCH_ROOT"]) if os.environ.get("LU_SCRATCH_ROOT") else tmp_path_factory.getbasetemp()
-    )
-    TMPDIR.mkdir(parents=True, exist_ok=True)
-    with tempfile.TemporaryDirectory(prefix="pg-", dir=TMPDIR) as directory:
-        root = Path(directory).resolve()
-        data = root / "data"
-        # TCP is disabled, so the private directory isolates the socket even if
-        # another run happens to receive the same ephemeral port number.
+    root = _pg_scratch_directory(tmp_path_factory)
+    data = root / "data"
+    try:
+        # This briefly reserves an ephemeral number, not a server TCP listener.
+        # -h "" disables TCP; the port names the socket in our private directory.
         with socket.socket() as reservation:
             reservation.bind(("localhost", 0))
             port = reservation.getsockname()[1]
-        socket_path = root / f".s.PGSQL.{port}"
-        assert len(os.fsencode(socket_path)) <= 103, (
-            "PostgreSQL Unix socket path exceeds the portable 103-byte limit; "
-            "set LU_SCRATCH_ROOT or pytest --basetemp to a shorter private path"
-        )
         reported = Path(
             subprocess.run(
                 ["pg_config", "--bindir"], check=True, capture_output=True, text=True, timeout=30
@@ -158,6 +191,10 @@ def _pg_server(tmp_path_factory):
                     capture_output=True,
                     timeout=60,
                 )
+    finally:
+        # If shutdown cannot confirm exit, keep the data for recovery.
+        _terminate_pg_server(data)
+        shutil.rmtree(root)
 
 
 @pytest.fixture

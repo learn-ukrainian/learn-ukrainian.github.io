@@ -1695,7 +1695,12 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
     (
         "tests/projects/open_model_data/_v4_shared_runtime_fixtures.py",
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
-        "2c21077af928cf8552623d6a3620a12311d8739bb22040adecf476a239f9e0ef:1 605fb8639928f90750b53bf5a571ef513c548afe9fc6b5626dd31fa252a4226a:1",
+        "2c21077af928cf8552623d6a3620a12311d8739bb22040adecf476a239f9e0ef:1 605fb8639928f90750b53bf5a571ef513c548afe9fc6b5626dd31fa252a4226a:1 2575f5bd4dcaf40d1565a693f0aecd71226f534dc467e5c666edd487537613a6:1 b332642766008f2ec2d731a2420d03a0e92e377d9d35b316cc5372352959f852:1",
+    ),
+    (
+        "tests/projects/open_model_data/test_v4_pg_fixture.py",
+        "Private PostgreSQL socket-path regression fixtures require short roots; all directories are owner-private and cleaned (#10786).",
+        "a394a3ab2ccce0728e08ab781ce6d19691fc2622e7f5511a3c4de4f52f2a31f8:1 47b16500dfe7106be6f7b6c5a720a854c1e8295d90eab82f5b0a3001d0d87d40:1 f18ffe771f4e6353696e1d73ebc4d6a5c438eb903d12d42b46c9e106df052c29:1",
     ),
     (
         "tests/projects/open_model_data/_v4_synthetic_chain_fixture.py",

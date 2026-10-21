@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import signal
 import subprocess
 import tempfile
 from concurrent.futures import ThreadPoolExecutor
@@ -10,16 +11,14 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import _v4_shared_runtime_fixtures as fixtures
+import psutil
 import pytest
-
-_PRIVATE_ROOT = os.environ.get("LU_SCRATCH_ROOT") or os.environ.get("TMPDIR")
 
 
 @pytest.fixture(scope="module")
-def pg_scratch(tmp_path_factory):
-    # Avoid adding pytest's nested session/worker names to a socket path.
-    TMPDIR = Path(_PRIVATE_ROOT) if _PRIVATE_ROOT else tmp_path_factory.getbasetemp()
-    with tempfile.TemporaryDirectory(prefix="", dir=TMPDIR) as directory:
+def pg_scratch():
+    # Test setup must stay short independently of the fixture under test.
+    with tempfile.TemporaryDirectory(prefix="pg-test-", dir="/tmp") as directory:
         yield Path(directory)
 
 
@@ -65,7 +64,41 @@ def test_pg_fixture_rejects_long_socket_path(pg_scratch, monkeypatch):
     assert list(scratch.iterdir()) == []
 
 
-@pytest.mark.parametrize("stage", ["pg_config", "initdb", "start", "connect", "schema", "stop"])
+@pytest.mark.parametrize("unavailable_roots", [0, 1, 2])
+def test_pg_fixture_falls_back_from_long_tmpdir(pg_scratch, monkeypatch, unavailable_roots):
+    scratch = pg_scratch / ("long-dispatch-" * 10 + str(unavailable_roots))
+    scratch.mkdir()
+    monkeypatch.setenv("TMPDIR", str(scratch))
+    monkeypatch.delenv("LU_SCRATCH_ROOT", raising=False)
+    real_mkdtemp = fixtures.tempfile.mkdtemp
+    short_roots = [Path(f"/run/user/{os.getuid()}"), Path("/dev/shm"), Path("/tmp")]
+
+    def mkdtemp(*args, **kwargs):
+        if Path(kwargs["dir"]) in short_roots[:unavailable_roots]:
+            raise PermissionError("injected unavailable short root")
+        return real_mkdtemp(*args, **kwargs)
+
+    monkeypatch.setattr(fixtures.tempfile, "mkdtemp", mkdtemp)
+    server = fixtures._pg_server.__wrapped__(SimpleNamespace(getbasetemp=lambda: Path(os.environ["TMPDIR"])))
+    try:
+        conn = next(server)
+        root = Path(conn.info.host)
+        socket_path = root / f".s.PGSQL.{conn.info.port}"
+        assert root.parent in short_roots[unavailable_roots:]
+        assert root.stat().st_mode & 0o777 == 0o700
+        assert len(os.fsencode(socket_path)) <= 103
+        assert socket_path.is_socket()
+        assert conn.execute("SELECT 42 AS answer").fetchone() == {"answer": 42}
+        assert conn.execute("SHOW listen_addresses").fetchone() == {"listen_addresses": ""}
+    finally:
+        server.close()
+    assert not root.exists()
+    assert list(scratch.iterdir()) == []
+
+
+@pytest.mark.parametrize(
+    "stage", ["pg_config", "initdb", "start", "connect", "schema", "stop", "stop_timeout", "stop_kill"]
+)
 def test_pg_fixture_cleans_up_after_failure(pg_scratch, monkeypatch, stage):
     scratch = pg_scratch / "f"
     monkeypatch.setenv("LU_SCRATCH_ROOT", str(scratch))
@@ -77,15 +110,20 @@ def test_pg_fixture_cleans_up_after_failure(pg_scratch, monkeypatch, stage):
         tool = Path(command[0]).name
         if tool == stage and stage in {"pg_config", "initdb"}:
             raise RuntimeError("injected " + stage)
+        if tool == "pg_ctl" and command[-1] == "stop" and stage.startswith("stop"):
+            if stage == "stop_kill":
+                os.kill(pids[0], signal.SIGSTOP)
+            if stage == "stop_timeout":
+                raise subprocess.TimeoutExpired(command, 60)
+            raise RuntimeError("injected " + stage)
         result = real_run(command, **kwargs)
         if tool == "pg_ctl" and command[-1] == "start":
             data = Path(command[command.index("-D") + 1])
             roots.append(data.parent)
-            pids.append(int((data / "postmaster.pid").read_text().splitlines()[0]))
+            pid = int((data / "postmaster.pid").read_text().splitlines()[0])
+            pids.extend([pid, *(child.pid for child in psutil.Process(pid).children(recursive=True))])
             if stage == "start":
                 raise subprocess.TimeoutExpired(command, 60)
-        if tool == "pg_ctl" and command[-1] == "stop" and stage == "stop":
-            raise RuntimeError("injected stop")
         return result
 
     monkeypatch.setattr(fixtures.subprocess, "run", run)
@@ -102,7 +140,7 @@ def test_pg_fixture_cleans_up_after_failure(pg_scratch, monkeypatch, stage):
 
         monkeypatch.setattr(fixtures, "apply_pg_schema", fail_schema)
     server = fixtures._pg_server.__wrapped__(SimpleNamespace(getbasetemp=lambda: pg_scratch))
-    error = subprocess.TimeoutExpired if stage == "start" else RuntimeError
+    error = subprocess.TimeoutExpired if stage in {"start", "stop_timeout"} else RuntimeError
     with pytest.raises(error):
         next(server)
         server.close()
