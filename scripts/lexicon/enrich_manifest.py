@@ -4450,7 +4450,7 @@ def _sum20_official_rows(lookup_word: str) -> tuple[dict[str, Any], ...]:
 
 
 def _sum20_official_definition_card(lookup_word: str) -> dict[str, Any] | None:
-    """Build a local card, retaining the mirror candidate role on fallback."""
+    """Build a local card with the shared homonym-prefix match and mirror role."""
     definitions: list[str] = []
     official_url = ""
     mirror_url = ""
@@ -8145,7 +8145,6 @@ def _ordered_sections(sections: dict[str, object], baseline: dict[str, Any]) -> 
     return ordered
 
 
-@slovnyk_offline_env()
 def enrich_entry(
     entry,
     conn,
@@ -8157,7 +8156,7 @@ def enrich_entry(
     pointer_paronym_relations: list[dict[str, Any]] | None = None,
     available_lemmas: set[str] | None = None,
 ) -> bool:
-    """Enrich a single manifest entry from local stores and caches, without network.
+    """Enrich a single manifest entry, honoring the caller's offline setting.
     Returns True if any enrichment was attached. Extracted from enrich() so the
     same per-lemma enrichment runs on delta lemmas (#3675 P2)."""
     published_sections = entry.get("sections") if isinstance(entry.get("sections"), dict) else {}
@@ -8496,12 +8495,11 @@ def enrich_entry(
     return bool(block or sections or pronunciation or wiki_ref or filled_anchor)
 
 
-@slovnyk_offline_env()
 def enrich(
     manifest_path: Path | None = None,
     fingerprint_path: Path | None = None,
 ) -> tuple[int, int]:
-    """Enrich the Atlas manifest from local stores and caches, without network.
+    """Enrich the Atlas manifest, honoring the caller's offline setting.
 
     When ``LEXICON_USE_RUNNER=1``, delegates to the PR1 offline runner (streaming
     staging, sealed CEFR/relations, side DBs, hard-capped workers). Otherwise

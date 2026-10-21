@@ -288,12 +288,18 @@ def test_database_without_the_article_table_is_an_empty_miss(tmp_path: Path, mon
     assert calls == []
 
 
-def test_prefix_match_keeps_homonym_labels_and_exact_query_does_not(tmp_path: Path) -> None:
+def test_prefix_match_keeps_homonym_labels_and_exact_query_does_not(tmp_path: Path, monkeypatch) -> None:
+    from scripts.lexicon import enrich_manifest
+
     db = tmp_path / "articles.db"
     conn = sqlite3.connect(db)
     ensure_sum20_official_schema(conn)
     _insert_article(conn, 1, "вода", "synthetic base")
     _insert_article(conn, 2, "вода 2", "synthetic homonym")
+    conn.execute(
+        "INSERT INTO sum20_senses (article_id, sense_order, definition, register_labels) "
+        "SELECT id, 1, definition_text, '[]' FROM sum20_articles"
+    )
     conn.commit()
     conn.row_factory = sqlite3.Row
     try:
@@ -306,6 +312,9 @@ def test_prefix_match_keeps_homonym_labels_and_exact_query_does_not(tmp_path: Pa
     assert exact == [1]
     assert [row["wordid"] for row in lookup_sum20_articles("вода", db)] == [1, 2]
     assert [int(row["source_record_id"]) for row in sources_db.query_sum20("вода", db_path=db)] == [1]
+    monkeypatch.setenv("LU_SOURCES_DB", str(db))
+    card = enrich_manifest._sum20_official_definition_card("вода")
+    assert card["definitions"] == ["synthetic base", "synthetic homonym"]
 
 
 def test_lexdata_with_articles_replaces_the_sources_default(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -634,55 +643,70 @@ def test_override_symlink_is_validated_at_its_target(tmp_path, monkeypatch):
     assert seen == [target.resolve()]
 
 
-def test_entry_enrichment_enforces_offline_even_when_environment_disables_it(tmp_path, monkeypatch):
+@pytest.mark.parametrize("offline_value", [None, "0", "1"])
+def test_entry_enrichment_preserves_non_sum20_source_mode(tmp_path, monkeypatch, offline_value):
     import os
     from contextlib import closing
 
     from scripts.lexicon import enrich_manifest
-    from tests.test_lexicon_enrich_manifest import _conn
+    from tests.test_lexicon_enrich_manifest import _conn, _stub_section_producers
 
-    _seed_articles(tmp_path / "data")
-    monkeypatch.setenv("LEXICON_SLOVNYK_OFFLINE", "0")
-    monkeypatch.setattr(enrich_manifest, "SLOVNYK_CACHE", tmp_path / "cache")
-    monkeypatch.setattr(enrich_manifest, "verify_word", lambda *_args: [])
-    monkeypatch.setattr(enrich_manifest, "verify_lemma", lambda *_args: [])
-    monkeypatch.setattr(enrich_manifest, "classify_lemma", lambda *_args: {"classification": "unknown"})
-    monkeypatch.setattr(enrich_manifest, "_polite_slovnyk_delay", lambda: None)
+    if offline_value is None:
+        monkeypatch.delenv("LEXICON_SLOVNYK_OFFLINE", raising=False)
+    else:
+        monkeypatch.setenv("LEXICON_SLOVNYK_OFFLINE", offline_value)
+    wiki_reference = enrich_manifest._wiki_reference
+    _stub_section_producers(monkeypatch)
+    monkeypatch.setattr(enrich_manifest, "_wiki_reference", wiki_reference)
+    monkeypatch.setattr(enrich_manifest, "_slovnyk_cache", lambda _lemma: {})
+    monkeypatch.setattr(enrich_manifest, "_synonyms_mphdict", lambda *_args: None)
+    monkeypatch.setattr(enrich_manifest, "_WIKI_REFERENCE_CACHE_DATA", {})
+    monkeypatch.setattr(enrich_manifest, "_WIKI_REFERENCE_CACHE_DIRTY", False)
+    monkeypatch.setattr(enrich_manifest, "WIKI_REFERENCE_CACHE", tmp_path / "wiki.json")
+    seen = []
 
-    def forbidden(*args, **kwargs):
-        raise AssertionError("entry enrichment attempted network access")
+    def fetch_wikipedia(title):
+        seen.append((title, os.environ.get("LEXICON_SLOVNYK_OFFLINE")))
+        return {"title": title, "extract": "synthetic Wikipedia summary", "url": "https://example.invalid/wiki"}
 
-    monkeypatch.setattr("socket.socket", forbidden)
-    monkeypatch.setattr(requests.Session, "request", forbidden)
+    monkeypatch.setattr(enrich_manifest, "query_wikipedia", fetch_wikipedia)
+    calls = _forbid_network(monkeypatch)
     entry = {"lemma": "вода", "pos": "noun"}
     with closing(_conn()) as conn:
-        assert enrich_manifest.enrich_entry(entry, conn, {}) is True
-    assert entry["enrichment"]["definition_cards"][0]["definitions"] == ["synthetic stored definition"]
-    assert os.environ["LEXICON_SLOVNYK_OFFLINE"] == "0"
-    assert not (tmp_path / "cache").exists()
+        enrich_manifest.enrich_entry(
+            entry, conn, {}, pointer_synonym_relations=[], pointer_antonym_relations=[],
+            pointer_homonym_relations=[], pointer_paronym_relations=[],
+        )
+    assert seen == ([] if offline_value == "1" else [("вода", offline_value)])
+    assert ("wiki_reference" in entry) is (offline_value != "1")
+    assert os.environ.get("LEXICON_SLOVNYK_OFFLINE") == offline_value
+    assert calls == []
 
 
-def test_full_enrichment_passes_offline_environment_to_runner(tmp_path, monkeypatch):
+@pytest.mark.parametrize("offline_value", [None, "0", "1"])
+def test_full_enrichment_preserves_caller_source_mode(tmp_path, monkeypatch, offline_value):
     import os
 
     from scripts.lexicon import enrich_manifest
     from scripts.lexicon.runner import offline_engine
 
     monkeypatch.setenv("LEXICON_USE_RUNNER", "1")
-    monkeypatch.setenv("LEXICON_SLOVNYK_OFFLINE", "0")
+    if offline_value is None:
+        monkeypatch.delenv("LEXICON_SLOVNYK_OFFLINE", raising=False)
+    else:
+        monkeypatch.setenv("LEXICON_SLOVNYK_OFFLINE", offline_value)
     monkeypatch.setattr(enrich_manifest, "_load_grac_frequency_cache", lambda: {})
     monkeypatch.setattr(enrich_manifest, "artifact_path", lambda *_args: tmp_path / "kaikki.json")
     seen = []
 
     def run(**kwargs):
-        seen.append(enrich_manifest._phase1_offline_mode())
-        assert enrich_manifest._phase1_offline_mode()
+        seen.append(os.environ.get("LEXICON_SLOVNYK_OFFLINE"))
         return {"completed": 0, "entry_count": 0}
 
     monkeypatch.setattr(offline_engine, "enrich_offline_slice", run)
     assert enrich_manifest.enrich(tmp_path / "manifest.json", tmp_path / "fingerprint.json") == (0, 0)
-    assert seen == [True]
-    assert os.environ["LEXICON_SLOVNYK_OFFLINE"] == "0"
+    assert seen == [offline_value]
+    assert os.environ.get("LEXICON_SLOVNYK_OFFLINE") == offline_value
 
 
 def _seed_mirror(tmp_path):
@@ -695,6 +719,31 @@ def _seed_mirror(tmp_path):
             ("берег", "БЕРЕГ", "mirror-only definition", "https://slovnyk.me/dict/newsum/берег", "bank"),
         ])
     return path
+
+
+def test_injected_official_miss_does_not_consult_default_mirror(tmp_path):
+    db = _seed_articles(tmp_path / "data")
+    mirror = _seed_mirror(tmp_path)
+    # The default mirror does contain this key, but an injected official DB is
+    # fixture-bound unless its caller also supplies an explicit mirror binding.
+    assert lookup_sum20_articles("берег", db) == []
+    assert lookup_sum20_articles("берег", db, mirror_db_path=mirror)[0]["definition"] == "mirror-only definition"
+
+
+@pytest.mark.parametrize("identity", [None, ""])
+def test_mirror_missing_identity_is_path_free_typed_refusal(tmp_path, identity):
+    _seed_articles(tmp_path / "data")
+    mirror = _seed_mirror(tmp_path)
+    with sqlite3.connect(mirror) as conn:
+        conn.execute("UPDATE sum20_slovnyk_articles SET lemma = ? WHERE url = 'bank'", (identity,))
+    # A malformed mirror cannot turn a missing or even another valid key into
+    # an untyped crash or a cached successful lookup.
+    assert lookup_sum20_articles("вода")[0]["wordid"] == 42
+    for lemma in ("берег", "бракує"):
+        with pytest.raises(Sum20StoreError) as exc:
+            lookup_sum20_articles(lemma)
+        assert str(exc.value) == "mirror_unavailable"
+        assert exc.value.reason == "mirror_unavailable"
 
 
 def test_unified_binding_official_wins_mirror_fills_and_miss_stays_local(tmp_path, monkeypatch):

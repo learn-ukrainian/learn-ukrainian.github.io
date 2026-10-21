@@ -165,6 +165,9 @@ def _mirror_index(path: Path, signature: tuple) -> dict[str, list[tuple[str, str
         # Validate the full reader schema even when the requested key is absent.
         conn.execute("SELECT lemma, headword, text, source_url, url FROM sum20_slovnyk_articles LIMIT 0")
         for raw, url in conn.execute("SELECT lemma, url FROM sum20_slovnyk_articles"):
+            raw = str(raw or "")
+            if not raw:
+                raise Sum20StoreError("mirror_unavailable")
             keys = [(normalize_sum20_lookup(raw), 1)]
             if "/" in raw:
                 keys.extend((normalize_sum20_lookup(member), 2) for member in raw.split("/"))
@@ -187,11 +190,14 @@ def resolve_sum20_articles(
     error, as do invalid official bindings. Neither path writes to a store.
     The staging file uses an injected sources binding for locality validation;
     this does not promote its records to official evidence.
+    An injected official store uses a mirror only when explicitly supplied too.
     """
     with closing(open_sum20(db_path, repository_root=repository_root)) as conn:
         official = lookup_sum20_cached(lemma, conn)
     if official:
         return official
+    if db_path is not None and mirror_db_path is None:
+        return []
     path = (Path(mirror_db_path) if mirror_db_path is not None else
             main_checkout_root(repository_root or Path.cwd()) / "data" / "sum20_slovnyk_staging.db")
     resolved = resolve_store("sources", repository_root, binding=StoreBinding("sources", path))

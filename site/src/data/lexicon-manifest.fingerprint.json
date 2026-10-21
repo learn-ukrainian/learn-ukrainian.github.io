@@ -183,7 +183,7 @@
       },
       {
         "path": "scripts/lexicon/enrich_manifest.py",
-        "sha256": "432713cecdbe22679b50b8e83daaa07973534368e74ca62e265bd8457354fbf2"
+        "sha256": "6da436fbe3963586a66302d14e189ae2abdf9487aaf632d78335ee96af41b9e9"
       },
       {
         "path": "scripts/lexicon/esum_garbled.py",
@@ -375,7 +375,7 @@
       },
       {
         "path": "scripts/lexicon/sum20_store.py",
-        "sha256": "695b0f67d02975ad4b33a6d26af06b32aa47f60b5349acbbbf25a3a83d75e737"
+        "sha256": "a3edc8176527384b81367395e943cdc0b18a84b42e7f42739be518e237614bd4"
       },
       {
         "path": "scripts/lexicon/sync_curated_heteronyms_ts.py",
