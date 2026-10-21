@@ -74,8 +74,9 @@ def open_readonly(
         # is not safe when threads share the connection: fetches come back wrong
         # and sqlite3 raises InterfaceError or IndexError (CPython #118172,
         # #11208). SQLite itself is serialized, so the calls stay concurrent.
-        # Disabling the cache is the upstream workaround. A lock around
-        # execute() would hide the #10674 callback deadlock this reader avoids.
+        # Disabling the statement cache is the documented upstream mitigation.
+        # A lock around execute() would hide the #10674 callback deadlock this
+        # reader avoids.
         settings["cached_statements"] = 0
     if isolation_level != "":
         settings["isolation_level"] = isolation_level
