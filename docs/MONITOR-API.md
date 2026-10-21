@@ -3762,7 +3762,7 @@ state. Cache age and `stale` are returned explicitly.
 ## Host test slots — `/api/ops/v1/test-slots`
 
 `GET /api/ops/v1/test-slots` is the read-only view of the host test-slot pool that worker pytest runs and
-the pre-push gate share (#10662; runbook: [`docs/runbooks/test-slots.md`](runbooks/test-slots.md)). It
+the launcher share (#10662; runbook: [`docs/runbooks/test-slots.md`](runbooks/test-slots.md)). It
 returns the same object as `.venv/bin/python -m scripts.common.test_slots status --json`
 (schema `test-slots.status.v1`):
 

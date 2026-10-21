@@ -968,7 +968,7 @@ the primary checkout's interpreter, source DB and deck dir via an exported
 .venv/bin/python -m scripts.common.test_slots status [--json]
 ```
 
-Dispatch-worker pytest runs and the pre-push gate already hold slots, so they need no wrapper. A
+Dispatch-worker pytest runs already hold slots, so they need no wrapper; the pre-push gate runs no tests and holds none. A
 waiting run prints `TEST SLOTS: waiting ... queue position N/M`. Settings, refusals and the
 long-queue procedure: `docs/runbooks/test-slots.md`.
 
