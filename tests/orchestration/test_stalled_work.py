@@ -272,10 +272,25 @@ def test_unowned_pr_goes_to_cto(host):
     assert (row["task_id"], row["lane"]) == ("unknown", "claude-cto")
 
 
-def test_unknown_dispatch_identity_goes_to_cto(host):
-    host.record(initiator="unrecognized")
+@pytest.mark.parametrize(
+    "initiator,lane",
+    [
+        ("codex-infra", "codex-infra"),
+        ("claude-epics", "claude-epics"),
+        ("grok-devops", "grok-devops"),
+        ("claude-monitor", "muse-monitor"),
+        ("codex-monitor", "muse-monitor"),
+        ("grok-curriculum-upgrade", "grok-core"),
+        ("unrecognized", "claude-cto"),
+        ("codex", "claude-cto"),
+        ("session-123", "claude-cto"),
+        (None, "claude-cto"),
+    ],
+)
+def test_dispatch_owner_uses_registry_and_retired_seat_succession(host, initiator, lane):
+    host.record(initiator=initiator)
     host.facts.local_branches["codex/fix"] = LOCAL
-    assert host.scan()["rows"][0]["lane"] == "claude-cto"
+    assert host.scan()["rows"][0]["lane"] == lane
 
 
 def test_failed_fetch_is_unknown_and_cannot_route(host):

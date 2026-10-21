@@ -17,22 +17,44 @@ from pathlib import Path
 from typing import Any
 
 from scripts.common.task_store_paths import tasks_dir as default_tasks_dir
+from scripts.fleet.ignored_task_output import succession_streams
 from scripts.fleet_comms.authority import AuthorityService
 from scripts.orchestration import stale_task_records as stale
 from scripts.orchestration.integration_sweep import GitHubAdapter, SweepError, lookup_verdict
+from scripts.orchestration.validate_fleet_taxonomy import ASSIGNMENTS_PATH, TAXONOMY_PATH, _load_yaml
 from scripts.orchestration.worktree_claims import RELEASED_TASK_STATUSES
 
-LANES = frozenset({"codex-devops", "claude-infra", "codex-atlas", "grok-monitor", "gemini-open-model-data"})
 UNPUSHED_STATUSES = frozenset({"needs_finalize", "failed", "timeout", "timed_out", "timed-out"})
 TERMINAL = RELEASED_TASK_STATUSES | UNPUSHED_STATUSES
 MAX_AGE_DAYS = 14
 GRACE_SECONDS = 2 * 3600
 
 
-def owner(record: dict[str, Any]) -> str:
+def owner_lanes() -> dict[str, str]:
+    """Resolve current slots and retired initiators through their registered stream."""
+    assignments = _load_yaml(ASSIGNMENTS_PATH)["assignments"]
+    areas = _load_yaml(TAXONOMY_PATH)["areas"]
+    lanes = {slot: slot for area in assignments.values() for slot in area["slots"]}
+    stream_slots = {
+        f"epic:{epic['number']}": assignments[area]["slots"]
+        for area, spec in areas.items()
+        for epic in spec["epics"]
+    }
+    succession, _ = succession_streams()
+    for initiator, stream in succession.items():
+        slots = stream_slots.get(stream, [])
+        if initiator not in lanes and slots:
+            # Keep the provider when its successor slot exists; otherwise use
+            # the stream's first registered slot, never an invented identity.
+            provider = initiator.split("-", 1)[0]
+            lanes[initiator] = next((slot for slot in slots if slot.startswith(provider + "-")), slots[0])
+    return lanes
+
+
+def owner(record: dict[str, Any], lanes: dict[str, str]) -> str:
     """Dispatch initiator is the owner, independently of the worker's provider."""
     initiator = record.get("initiator")
-    return initiator if isinstance(initiator, str) and initiator in LANES else "claude-cto"
+    return lanes.get(initiator, "claude-cto") if isinstance(initiator, str) else "claude-cto"
 
 
 def abandoned(record: dict[str, Any]) -> bool:
@@ -85,6 +107,7 @@ def finished(candidate: stale.Candidate) -> datetime:
 def scan(tasks: Path, checkouts: dict[str, Path], *, now: datetime, adapter_factory=GitHubAdapter) -> dict[str, Any]:
     """Use batched fresh remote refs, complete open PRs, and trusted exact-head verdicts."""
     candidates, errors = load_records(tasks, now)
+    lanes = owner_lanes()
     rows: list[dict[str, Any]] = []
     terminal_count = sum(
         c.record.get("status") in TERMINAL and c.record.get("repository") in checkouts for c in candidates
@@ -95,7 +118,7 @@ def scan(tasks: Path, checkouts: dict[str, Path], *, now: datetime, adapter_fact
         rows.append(
             {
                 "task_id": candidate.task_id if candidate else "unknown",
-                "lane": owner(candidate.record) if candidate else "claude-cto",
+                "lane": owner(candidate.record, lanes) if candidate else "claude-cto",
                 "repository": slug,
                 "kind": kind,
                 "commit": commit,
