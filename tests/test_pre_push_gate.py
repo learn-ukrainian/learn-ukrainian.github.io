@@ -7080,3 +7080,348 @@ def test_a_deleted_paths_receipt_is_reused_only_for_the_identical_deletion_set(t
     for deleted in ((), ("docs/guide.md",)):
         gate.write_receipt(tmp_path, _receipt_plan(deleted_paths=deleted, selection=fallback), 1000.0)
         assert not gate.receipt_is_fresh(tmp_path, _receipt_plan(deleted_paths=deleted), 1001.0), deleted
+
+
+# ---- #11207 review round 7: the range's paths are read NUL-delimited, with Git's output options pinned -------
+
+# The reviewer's two bypasses of the deletion rule. With ``core.quotePath=false`` a name holding a Unicode line
+# separator was split by ``str.splitlines``, which drops the separator, so ``\u2028docs/guide.md`` read as the
+# exempt ``docs/guide.md``; with ``diff.ignoreSubmodules=all`` a deleted gitlink left the listing. Either let the
+# selector answer for a range that deletes a non-documentation path. Every name below is not documentation,
+# and the plan must carry it byte for byte, whatever Git's quoting would have printed.
+LINE_BREAKING_NAMES = [
+    pytest.param("\u2028docs/guide.md", id="line_separator_prefix"),
+    pytest.param("\u2029docs/guide.md", id="paragraph_separator_prefix"),
+    pytest.param("\x85docs/guide.md", id="next_line_prefix"),
+    pytest.param("\x0bdocs/guide.md", id="vertical_tab_prefix"),
+    pytest.param("\x0cdocs/guide.md", id="form_feed_prefix"),
+    pytest.param("\x1cdocs/guide.md", id="file_separator_prefix"),
+    pytest.param("\x1ddocs/guide.md", id="group_separator_prefix"),
+    pytest.param("\x1edocs/guide.md", id="record_separator_prefix"),
+    pytest.param("\rdocs/guide.md", id="carriage_return_prefix"),
+    pytest.param("\ndocs/guide.md", id="newline_prefix"),
+    pytest.param("docs/guide.md\u2028", id="line_separator_suffix"),
+    pytest.param("scripts/x.py\u2028docs/guide.md", id="line_separator_inside"),
+    pytest.param("scripts/x.py\ndocs/guide.md", id="newline_inside"),
+    pytest.param(" docs/guide.md", id="leading_space"),
+]
+
+
+def _land_on_main(repo: Path, files: dict[str, str]) -> None:
+    """Commit ``files`` on the remote ``main``; the feature branch starts there."""
+    _git(repo, "checkout", "main")
+    for name, text in files.items():
+        _write(repo, name, text)
+    _git(repo, "add", "--", *files)
+    _git(repo, "commit", "-m", "paths the branch changes")
+    _git(repo, "push", "--no-verify", "origin", "main")
+    _git(repo, "checkout", "feature")
+    _git(repo, "merge", "--ff-only", "main")
+
+
+def _land_gitlink_on_main(repo: Path, path: str) -> None:
+    """Commit a gitlink (a submodule entry, mode 160000) at ``path`` on the remote ``main``."""
+    _git(repo, "checkout", "main")
+    sha = _git(repo, "rev-parse", "HEAD").stdout.strip()
+    _git(repo, "update-index", "--add", "--cacheinfo", f"160000,{sha},{path}")
+    _git(repo, "commit", "-m", "a gitlink")
+    _git(repo, "push", "--no-verify", "origin", "main")
+    _git(repo, "checkout", "feature")
+    _git(repo, "merge", "--ff-only", "main")
+
+
+def _new_branch_plan(repo: Path) -> Any:
+    return gate.build_plan(_update(repo, ZERO_SHA), repo, *_hook_inputs(repo))
+
+
+@pytest.mark.parametrize("quote_path", ["true", "false"])
+@pytest.mark.parametrize("name", LINE_BREAKING_NAMES)
+def test_a_deleted_name_with_a_line_break_is_recorded_whole_and_runs_the_registry(
+    repo: Path, name: str, quote_path: str
+) -> None:
+    assert not gate.documentation_only(name)
+    _land_on_main(repo, {name: "data\n"})
+    _git(repo, "config", "core.quotePath", quote_path)
+    _git(repo, "rm", "-q", "--", name)
+    _git(repo, "commit", "-m", "remove an oddly named path")
+
+    plan = _new_branch_plan(repo)
+
+    assert plan is not None
+    assert (plan.changed_paths, plan.deleted_paths) == ((), (name,))
+    assert plan.forced_fallback == "deleted_paths"
+
+
+@pytest.mark.parametrize("ignore", ["all", "dirty", "untracked", "none"])
+def test_a_deleted_gitlink_runs_the_registry_whatever_the_submodule_setting(repo: Path, ignore: str) -> None:
+    _land_gitlink_on_main(repo, "vendor/lib")
+    _git(repo, "config", "diff.ignoreSubmodules", ignore)
+    _git(repo, "rm", "-q", "--cached", "vendor/lib")
+    _git(repo, "commit", "-m", "remove the gitlink")
+
+    plan = _new_branch_plan(repo)
+
+    assert plan is not None
+    assert (plan.changed_paths, plan.deleted_paths) == ((), ("vendor/lib",))
+    assert plan.forced_fallback == "deleted_paths"
+
+
+def test_the_users_global_git_configuration_cannot_hide_a_deletion(
+    repo: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    home = tmp_path / "home"
+    home.mkdir()
+    (home / ".gitconfig").write_text(
+        "[core]\n\tquotePath = false\n[diff]\n\tignoreSubmodules = all\n\trenames = copies\n", encoding="utf-8"
+    )
+    monkeypatch.setenv("HOME", str(home))
+    monkeypatch.delenv("XDG_CONFIG_HOME", raising=False)
+    _land_gitlink_on_main(repo, "vendor/lib")
+    _land_on_main(repo, {"\u2028docs/guide.md": "data\n"})
+    _git(repo, "rm", "-q", "--cached", "vendor/lib")
+    _git(repo, "rm", "-q", "--", "\u2028docs/guide.md")
+    _git(repo, "commit", "-m", "remove both")
+
+    plan = _new_branch_plan(repo)
+
+    assert plan is not None
+    assert plan.deleted_paths == tuple(sorted(("\u2028docs/guide.md", "vendor/lib")))
+    assert plan.forced_fallback == "deleted_paths"
+
+
+def test_caller_git_environment_cannot_hide_a_deletion(repo: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    _land_gitlink_on_main(repo, "vendor/lib")
+    _git(repo, "rm", "-q", "--cached", "vendor/lib")
+    _git(repo, "commit", "-m", "remove the gitlink")
+    for name, value in {
+        "GIT_CONFIG_COUNT": "2",
+        "GIT_CONFIG_KEY_0": "diff.ignoreSubmodules",
+        "GIT_CONFIG_VALUE_0": "all",
+        "GIT_CONFIG_KEY_1": "core.quotePath",
+        "GIT_CONFIG_VALUE_1": "false",
+        "GIT_CONFIG_PARAMETERS": "'diff.ignoresubmodules'='all'",
+        "GIT_EXTERNAL_DIFF": "false",
+        "GIT_DIFF_OPTS": "-u0",
+        "GIT_PAGER": "sed s/^/x/",
+    }.items():
+        monkeypatch.setenv(name, value)
+
+    plan = _new_branch_plan(repo)
+
+    assert plan is not None and plan.deleted_paths == ("vendor/lib",)
+    assert plan.forced_fallback == "deleted_paths"
+
+
+@pytest.mark.parametrize(
+    ("key", "value"),
+    [
+        ("diff.renames", "copies"),
+        ("diff.noprefix", "true"),
+        ("diff.mnemonicPrefix", "true"),
+        ("diff.relative", "true"),
+        ("diff.external", "false"),
+        ("diff.ignoreSubmodules", "all"),
+        ("color.ui", "always"),
+        ("color.diff", "always"),
+        ("core.pager", "sed s/^/x/"),
+        ("pager.diff", "sed s/^/x/"),
+        ("core.quotePath", "false"),
+    ],
+)
+def test_output_shaping_configuration_does_not_change_the_listed_paths(repo: Path, key: str, value: str) -> None:
+    _land_on_main(
+        repo,
+        {"scripts/old.py": "OLD = 1\n", "scripts/gone.py": "GONE = 1\n", "scripts/kept.py": "KEPT = 1\n"},
+    )
+    _git(repo, "config", key, value)
+    _git(repo, "mv", "scripts/old.py", "scripts/new.py")  # identical content: a rename to rename detection
+    _git(repo, "rm", "-q", "scripts/gone.py")
+    _write(repo, "scripts/kept.py", "KEPT = 2\n")
+    _write(repo, "scripts/added.py", "ADDED = 1\n")
+    _git(repo, "add", "scripts")
+    _git(repo, "commit", "-m", "rename, delete, modify, add")
+
+    plan = _new_branch_plan(repo)
+
+    assert plan is not None
+    assert plan.changed_paths == ("scripts/added.py", "scripts/kept.py", "scripts/new.py")
+    assert plan.deleted_paths == ("scripts/gone.py", "scripts/old.py")
+
+
+def test_a_changed_non_ascii_path_reaches_the_selector_unquoted(repo: Path) -> None:
+    """Default ``core.quotePath`` octal-quotes non-ASCII names: the selector would match no tracked file."""
+    _write(repo, "scripts/модуль.py", "VALUE = 1\n")
+    _commit(repo, "a module with a Ukrainian name", "scripts/модуль.py")
+
+    plan = _new_branch_plan(repo)
+
+    assert plan is not None and plan.changed_paths == ("scripts/модуль.py",)
+
+
+TYPE_CHANGES = {
+    # kind: (how main holds the path, how the branch replaces it)
+    "file_to_symlink": ("file", "symlink"),
+    "symlink_to_file": ("symlink", "file"),
+    "gitlink_to_file": ("gitlink", "file"),
+}
+
+
+@pytest.mark.parametrize("kind", sorted(TYPE_CHANGES))
+def test_a_type_change_removes_the_old_object_and_runs_the_registry(repo: Path, kind: str) -> None:
+    """The old object at the path is gone (``T`` in Git's status letters): a deletion, and a change."""
+    before, after = TYPE_CHANGES[kind]
+    path = "scripts/data.json"
+    _land_on_main(repo, {"scripts/target.json": "{}\n"})
+    if before == "gitlink":
+        _land_gitlink_on_main(repo, path)
+    else:
+        _git(repo, "checkout", "main")
+        if before == "symlink":
+            (repo / path).symlink_to("target.json")
+        else:
+            _write(repo, path, "{}\n")
+        _commit(repo, f"the path as a {before}", path)
+        _git(repo, "push", "--no-verify", "origin", "main")
+        _git(repo, "checkout", "feature")
+        _git(repo, "merge", "--ff-only", "main")
+    _git(repo, "rm", "-q", "--cached", path)
+    if (repo / path).is_dir():
+        (repo / path).rmdir()
+    else:
+        (repo / path).unlink()
+    if after == "symlink":
+        (repo / path).symlink_to("target.json")
+    else:
+        _write(repo, path, '{"replaced": true}\n')
+    _commit(repo, f"the path as a {after}", path)
+    assert _git(repo, "diff", "--name-status", "--no-renames", "origin/main", "HEAD").stdout == f"T\t{path}\n"
+
+    plan = _new_branch_plan(repo)
+
+    assert plan is not None
+    assert (plan.changed_paths, plan.deleted_paths) == ((path,), (path,))
+    assert plan.forced_fallback == "deleted_paths"
+
+
+def test_a_mode_only_change_is_a_change_not_a_deletion(repo: Path) -> None:
+    _land_on_main(repo, {"scripts/tool.py": "VALUE = 1\n"})
+    (repo / "scripts/tool.py").chmod(0o755)
+    _commit(repo, "make the tool executable", "scripts/tool.py")
+    assert _git(repo, "diff", "--summary", "origin/main", "HEAD").stdout.strip() == (
+        "mode change 100644 => 100755 scripts/tool.py"
+    )
+
+    plan = _new_branch_plan(repo)
+
+    assert plan is not None
+    assert (plan.changed_paths, plan.deleted_paths) == (("scripts/tool.py",), ())
+    assert plan.forced_fallback is None
+
+
+def test_a_dirty_gitlink_is_a_dirty_tree_whatever_the_submodule_setting(repo: Path) -> None:
+    """A submodule checked out at another commit than the outgoing one: the tree that would run differs."""
+    nested = repo / "vendor/lib"
+    nested.mkdir(parents=True)
+    _git(nested, "init", "-q", "-b", "main")
+    _git(nested, "config", "user.email", "gate@example.invalid")
+    _git(nested, "config", "user.name", "Gate Test")
+    for message in ("first", "second"):
+        _git(nested, "commit", "-q", "--allow-empty", "-m", message)
+    first = _git(nested, "rev-parse", "HEAD~1").stdout.strip()
+    _git(repo, "update-index", "--add", "--cacheinfo", f"160000,{first},vendor/lib")
+    _git(repo, "commit", "-m", "a gitlink behind its checkout")
+    _git(repo, "config", "diff.ignoreSubmodules", "all")
+
+    with pytest.raises(gate.GateOutcome) as refused:
+        _new_branch_plan(repo)
+
+    assert refused.value.reason == "dirty_tree"
+
+
+def test_a_partial_tree_is_not_inferred_from_a_name_holding_a_line_separator(repo: Path) -> None:
+    """``ls-files -v`` tags each entry; a name that splits into ``S ...`` must not read as skip-worktree."""
+    _write(repo, "curriculum/a\u2028S b.md", "lesson\n")
+    _write(repo, "curriculum/lesson.md", "lesson\n")
+    _commit(repo, "lessons", "curriculum")
+    _git(repo, "config", "core.quotePath", "false")
+
+    assert gate.tree_is_partial(repo, "curriculum") is False
+
+    _git(repo, "update-index", "--skip-worktree", "curriculum/lesson.md")
+    assert gate.tree_is_partial(repo, "curriculum") is True
+
+
+@pytest.mark.parametrize(
+    ("returncode", "stdout", "records"),
+    [
+        (0, b"", []),
+        (0, b"D\0scripts/gone.py\0", ["D", "scripts/gone.py"]),
+        (0, b"D\0scripts/a\xffb.py\0", ["D", "scripts/a\udcffb.py"]),  # not UTF-8: kept whole, no crash
+        (0, b"D\0scripts/gone.py\0M\0scripts/kep", None),  # cut short: the last name is not known whole
+        (128, b"D\0scripts/gone.py\0", None),
+    ],
+)
+def test_a_listing_is_read_only_when_git_succeeds_and_ends_on_a_record(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, returncode: int, stdout: bytes, records: list[str] | None
+) -> None:
+    completed = subprocess.CompletedProcess(["git"], returncode, stdout=stdout, stderr=b"")
+    monkeypatch.setattr(gate.subprocess, "run", lambda *_args, **_kwargs: completed)
+
+    assert gate.git_records("diff", "--name-status", "-z", cwd=tmp_path) == records
+
+
+@pytest.mark.parametrize(
+    "stdout",
+    [
+        pytest.param(b"D\0scripts/gone.py\0M\0", id="status_without_path"),
+        pytest.param(b"U\0scripts/conflict.py\0", id="unmerged"),
+        pytest.param(b"X\0scripts/unknown.py\0", id="unknown"),
+        pytest.param(b"R100\0scripts/old.py\0scripts/new.py\0", id="rename_pair"),
+        pytest.param(b"D\0\0", id="empty_path"),
+    ],
+)
+def test_a_listing_the_gate_cannot_classify_refuses(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, stdout: bytes
+) -> None:
+    completed = subprocess.CompletedProcess(["git"], 0, stdout=stdout, stderr=b"")
+    monkeypatch.setattr(gate.subprocess, "run", lambda *_args, **_kwargs: completed)
+
+    with pytest.raises(gate.GateOutcome) as refused:
+        gate.range_paths("a" * 40, "b" * 40, tmp_path)
+
+    assert refused.value.reason == "range_unresolved"
+
+
+SEPARATOR_DOC_DELETION = "\u2028docs/guide.md"
+END_TO_END_BYPASSES = {
+    # bypass: (configuration the pusher has, the deleted path the fallback records)
+    "unicode_line_separator": (("core.quotePath", "false"), SEPARATOR_DOC_DELETION),
+    "ignored_gitlink": (("diff.ignoreSubmodules", "all"), "vendor/lib"),
+}
+
+
+@pytest.mark.parametrize("bypass", sorted(END_TO_END_BYPASSES))
+def test_the_reviewed_deletion_bypasses_run_the_registry_without_the_selector(
+    repo: Path, tmp_path: Path, bypass: str
+) -> None:
+    (key, value), deleted = END_TO_END_BYPASSES[bypass]
+    _git(repo, "checkout", "main")
+    _install_shadow(repo, PATH_RECORDING_SELECTOR)
+    _git(repo, "push", "--no-verify", "origin", "main")
+    _git(repo, "checkout", "feature")
+    _git(repo, "merge", "--ff-only", "main")
+    if deleted == "vendor/lib":
+        _land_gitlink_on_main(repo, deleted)
+        _git(repo, "rm", "-q", "--cached", deleted)
+    else:
+        _land_on_main(repo, {deleted: "# Guide\n"})
+        _git(repo, "rm", "-q", "--", deleted)
+    _git(repo, "commit", "-m", f"remove {bypass}")
+    _git(repo, "config", key, value)
+    log = tmp_path / "selector-paths.json"
+
+    result = _run_gate(repo, extra_env={"SELECTOR_LOG": str(log)})
+
+    row = _deletion_row(repo, result, [deleted])
+    assert not log.exists(), "a deletion never reaches the selector: its answer could be too small"
+    assert row["nodes"] == 2 and row["deleted_paths"] == 1

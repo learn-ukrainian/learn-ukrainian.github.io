@@ -173,6 +173,17 @@ SPARSE_TREE_NODES = {
         "tests/test_ohoiko_source_inventory_scope.py::test_ohoiko_abetka_inventory_covers_all_committed_key_words",
     ),
 }
+# A diff that lists paths pins what could change which paths it holds (#11207): no rename pairing, every
+# gitlink, no external diff or textconv, no colour and no subdirectory-relative output. Every listing is
+# ``-z``, which prints each name verbatim whatever the quoting setting says, and runs without a pager.
+DIFF_PINNED = (
+    "--no-renames",
+    "--ignore-submodules=none",
+    "--no-ext-diff",
+    "--no-textconv",
+    "--no-color",
+    "--no-relative",
+)
 ZERO_SHA = "0" * 40
 EXIT_REFUSED = 1
 EXIT_INCOMPLETE = 75  # EX_TEMPFAIL: the push was not validated, not judged bad
@@ -327,6 +338,52 @@ def git_ok(*args: str, cwd: Path) -> str | None:
     return result.stdout if result.returncode == 0 else None
 
 
+def git_records(*args: str, cwd: Path) -> list[str] | None:
+    """The NUL-terminated records of a ``-z`` listing, each name byte for byte; ``None`` when Git fails (#11207).
+
+    The caller passes ``-z`` (and ``DIFF_PINNED`` for a diff), so neither user, repository nor environment
+    configuration decides which paths are listed or how they are spelled. Splitting on NUL alone keeps a
+    name whole: ``str.splitlines`` also splits on, and drops, CR, VT, FF, the separators U+001C to U+001E,
+    U+0085, U+2028 and U+2029, all of which a path may hold.
+    """
+    try:
+        result = subprocess.run(
+            ["git", "--no-pager", *args], capture_output=True, check=False, cwd=cwd, env=clean_environment(), timeout=30
+        )
+    except (OSError, subprocess.SubprocessError):
+        return None
+    output = result.stdout.decode("utf-8", errors="surrogateescape")
+    if result.returncode != 0 or (output and not output.endswith("\0")):
+        return None
+    return output.split("\0")[:-1]
+
+
+def range_paths(base: str, head: str, root: Path) -> tuple[tuple[str, ...], tuple[str, ...]]:
+    """``(changed, deleted)`` for ``base..head``, read from one pinned NUL-delimited listing (#11207).
+
+    Without rename detection a rename is its new path (changed) and its old path (deleted), so renaming
+    a path away forces the registry like any other deletion. A type change (``T``: a file, symlink or
+    gitlink replaced by another kind) removes the old object, so its path is both. A gitlink is listed
+    whatever the submodule settings say. Any other status cannot come from a diff of two commits and
+    refuses, as an unreadable listing does.
+    """
+    records = git_records("diff", "--name-status", "-z", *DIFF_PINNED, f"{base}..{head}", "--", cwd=root)
+    if records is None or len(records) % 2:
+        raise GateOutcome("range_unresolved", f"cannot list changed paths for {base[:12]}..{head[:12]}")
+    changed: set[str] = set()
+    deleted: set[str] = set()
+    for status, path in zip(records[::2], records[1::2], strict=True):
+        if status not in ("A", "M", "D", "T") or not path:
+            raise GateOutcome(
+                "range_unresolved", f"unexpected change {status!r} to {path!r} in {base[:12]}..{head[:12]}"
+            )
+        if status != "D":
+            changed.add(path)
+        if status in ("D", "T"):
+            deleted.add(path)
+    return tuple(sorted(changed)), tuple(sorted(deleted))
+
+
 def parse_updates(text: str) -> list[Update]:
     updates = []
     for line in text.splitlines():
@@ -387,8 +444,8 @@ def load_registry(root: Path) -> tuple[tuple[str, ...], str]:
 
 def tree_is_partial(root: Path, tree: str) -> bool:
     """True when sparse-checkout left some tracked file under ``tree`` unmaterialized (skip-worktree)."""
-    listing = git_ok("ls-files", "-v", "--", tree, cwd=root)
-    return listing is not None and any(line.startswith("S ") for line in listing.splitlines())
+    records = git_records("ls-files", "-z", "-v", "--", tree, cwd=root)
+    return records is not None and any(record.startswith("S ") for record in records)
 
 
 def defer_to_ci(nodes: tuple[str, ...], root: Path) -> tuple[tuple[str, ...], tuple[str, ...]]:
@@ -550,21 +607,14 @@ def build_plan(update: Update, root: Path, launcher: str, config: str) -> Plan |
             f"{update.local_ref} ({update.local_sha[:12]}) is not the checked-out HEAD ({head[:12] or 'unknown'}); "
             "push from the worktree that has the commit checked out so the exact commit is the one validated",
         )
-    dirty = git_ok("status", "--porcelain", "--untracked-files=no", cwd=root)
-    if dirty is None or dirty.strip():
+    dirty = git_records("status", "--porcelain", "-z", "--untracked-files=no", "--ignore-submodules=none", cwd=root)
+    if dirty is None or dirty:
         raise GateOutcome("dirty_tree", "tracked files differ from the outgoing commit; commit or restore them first")
     reject_untracked_inputs(root)
     base, base_fallback = outgoing_base(update, root)
     if base == head and base_fallback is None:  # only a remote tip equal to the head is nothing outgoing
         return None
-    # Without rename detection a rename is its new path (changed) and its old path (deleted), so renaming
-    # a path away forces the registry like any other deletion (#11207).
-    names = git_ok("diff", "--name-only", "--no-renames", "--diff-filter=ACM", f"{base}..{head}", cwd=root)
-    removed = git_ok("diff", "--name-only", "--no-renames", "--diff-filter=D", f"{base}..{head}", cwd=root)
-    if names is None or removed is None:
-        raise GateOutcome("range_unresolved", f"cannot list changed paths for {base[:12]}..{head[:12]}")
-    changed = tuple(sorted(path for path in names.splitlines() if path))
-    deleted = tuple(sorted(path for path in removed.splitlines() if path))
+    changed, deleted = range_paths(base, head, root)
     changed_tests = tuple(path for path in changed if TEST_FILE_RE.match(path))
     unmaterialized = tuple(path for path in changed_tests if not (root / path).is_file())
     if unmaterialized:

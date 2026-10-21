@@ -56,7 +56,12 @@ test file affects every test file: the pytest configuration (`pyproject.toml`, `
 
 **A range that deletes anything but documentation runs the registry, not the selector** (#11207,
 `selection.reason: deleted_paths`). The gate lists the range without rename detection, so renaming a
-path away deletes its old path too. Documentation is Markdown under `docs/` (`documentation_only`);
+path away deletes its old path too. A type change (a file, symlink or gitlink replaced by another kind)
+removes the old object, so its path is both changed and deleted. The listing is NUL-delimited (`-z`
+prints every name verbatim) and pins its options on the command line (`--no-renames`,
+`--ignore-submodules=none`, no pager, external diff, textconv, colour or relative output), so no user,
+repository or environment setting decides it: a name holding a line break or Unicode line separator
+stays whole, and a deleted gitlink is listed whatever `diff.ignoreSubmodules` says. Documentation is Markdown under `docs/` (`documentation_only`);
 Markdown elsewhere is data that tests and scripts read (lessons, rules, fixtures, a script's README),
 so deleting it counts like any other deletion. Why: a deleted path is gone from the tree the selector
 scans, and the tests it breaks are the ones that still reach it. An earlier design found them through
