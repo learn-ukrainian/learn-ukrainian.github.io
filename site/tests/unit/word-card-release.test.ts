@@ -5,7 +5,7 @@ import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
 import fs from 'node:fs';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
-import { loadWordCardRelease, releaseReportUrl } from '../../src/lib/lexicon/word-card-release';
+import { attributionGap, attributionLinks, releaseAccounting, loadWordCardRelease, releaseReportUrl } from '../../src/lib/lexicon/word-card-release';
 import WordCardPreview from '../../src/lexicon/WordCardPreview';
 import { candidateId, certifiedId, pins, releaseControls, fidelityControls, fidelityRefusals, semanticCases, semanticControls, noticeCases, noticeControls, digest } from '../fixtures/word-card-preview/release-controls';
 
@@ -20,6 +20,31 @@ const load = (name: string) => {
 };
 
 describe('pinned producer release boundary', () => {
+  it('measures absent classes separately and retains exact owned attribution gaps', () => {
+    const result = load('base');
+    if (result.kind !== 'release') throw Error('Missing release');
+    const row = structuredClone(result.rows[0]);
+    if (!row?.fields[0] || !row.fields[1]) throw Error('Missing fields');
+    row.fields[0].citation = { ...row.fields[0].citation, source_id: 'puls', attribution: 'PULS citation above.' };
+    row.fields[1].citation = { ...row.fields[1].citation, source_id: 'vesum', attribution: 'Version <used version> https://vesum.nlp.net.ua/' };
+    const stats = releaseAccounting([row]);
+    expect(stats).toMatchObject({ cards: 1, citations: 3, declaredGaps: 0, statuses: { CERTIFIED: 1 },
+      sources: { puls: 1, vesum: 1, ulif: 1 }, attributionGaps: { puls_reference_placeholder: 1, vesum_version_placeholder: 1 } });
+    expect(stats.absentFieldClasses).toContain('examples');
+    expect(stats.absentFieldClasses).not.toContain('definition_uk');
+    expect(attributionGap({ ...row.fields[0].citation, attribution: 'PULS full credit' })).toBeNull();
+    expect(attributionLinks('https://vesum.nlp.net.ua/ https://vesum.nlp.net.ua/ javascript:alert(1) https://evil.invalid/ https://user@vesum.nlp.net.ua/')).toEqual(['https://vesum.nlp.net.ua/']);
+    expect(attributionLinks('no URL')).toEqual([]);
+    const view = document.createElement('div');
+    view.innerHTML = renderToStaticMarkup(createElement(WordCardPreview, { card: { kind: 'release-card', row, pin: result.pin }, current: null, compare: true }));
+    expect(Array.from(view.querySelectorAll('[data-source-attribution]')).map(e => e.textContent)).toEqual(row.fields.map(f => f.citation.attribution));
+    expect(view.querySelectorAll('[data-attribution-gap]')).toHaveLength(2);
+    expect(view.querySelector('[data-source-link]')?.getAttribute('href')).toBe('https://vesum.nlp.net.ua/');
+    view.innerHTML = renderToStaticMarkup(createElement(WordCardPreview, { card: { ...result, filteredAssertions: { puls: { filtered_assertions: 29, filter_reasons: { unresolved_mapping: 29 } } } }, current: null, compare: true }));
+    expect(view.querySelector('[data-filtered-assertions]')?.textContent).toContain('29');
+    expect(view.querySelector('[data-pairing-count]')?.textContent).toBe('0/2 paired; 2/2 explicitly unpaired. 0 actual comparisons.');
+    expect(view.querySelectorAll('[data-card-link]')).toHaveLength(2);
+  });
   it.each(['json', 'jsonl'] as const)('reports malformed UTF-8 consistently in %s', encoding => {
     const path = join(scratch, `utf8-${encoding}`);
     fs.mkdirSync(path);

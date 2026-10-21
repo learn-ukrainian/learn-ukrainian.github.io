@@ -16,7 +16,9 @@ from agent_runtime.usage import _reset_rate_limit_cache_for_tests
 
 
 @pytest.fixture(autouse=True)
-def _isolate_runtime(tmp_path):
+def _isolate_runtime(tmp_path, monkeypatch):
+    monkeypatch.setattr("agent_runtime.adapters.deepseek._cached_flash_name", lambda: "DeepSeek V4.1 Flash")
+    monkeypatch.setattr("scripts.agent_runtime.adapters.deepseek._cached_flash_name", lambda: "DeepSeek V4.1 Flash")
     _reset_rate_limit_cache_for_tests()
     with patch("agent_runtime.usage._usage_dir", return_value=tmp_path / "api_usage"):
         yield

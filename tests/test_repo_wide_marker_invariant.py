@@ -100,6 +100,7 @@ KNOWN_REPO_WIDE_MODULES = frozenset(
         "tests/test_fleet_routing_open_model_data_import_guard.py",
         "tests/test_frontend_denominator_invariant.py",
         "tests/test_hooks_executable.py",
+        "tests/test_issue_template_acceptance_criteria.py",
         "tests/test_lesson_atlas_link_census.py",
         "tests/test_lint_fleet_roster.py",
         "tests/test_lint_prompts.py",
@@ -243,6 +244,11 @@ NOT_REPO_WIDE = {
     "tests/packaging/test_systemd_templates.py::test_systemd_templates_have_no_host_facts": (
         "Reads packaging/systemd; packaging/ is not a test or script candidate, so any "
         "change to a systemd template already forces the full tier."
+    ),
+    "tests/projects/open_model_data/test_atlas_pairing.py::test_pairing_does_not_modify_sources_db": (
+        "Lists data/ only to stat sources.db without joining that filename onto a checkout "
+        "path. data/ is not a test or script candidate, so a data change already forces the "
+        "full tier. Generator changes select this test through its import."
     ),
     "tests/projects/open_model_data/test_audit_dataset_acceptance.py::test_reproduces_v05_grammar_valency_findings": (
         "Scans data/projects/open_model_data; data/ is not a test or script candidate, so "

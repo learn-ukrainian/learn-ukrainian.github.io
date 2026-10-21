@@ -1,11 +1,33 @@
 import { compareCurrent, type PreviewCard } from '../lib/lexicon/word-card-preview';
 import type { EntryRecord } from '../lib/lexicon/atlas-data-source';
-import { releaseReportUrl, type LoadedRelease, type ReleaseCard } from '../lib/lexicon/word-card-release';
+import { attributionGap, attributionLinks, releaseAccounting, releaseReportUrl, type LoadedRelease, type ReleaseCard } from '../lib/lexicon/word-card-release';
+
+function Accounting({ rows }: Pick<LoadedRelease, 'rows'>) {
+  return <section aria-label="Measured release coverage"><h3>Measured release coverage</h3>
+    <pre data-release-accounting>{JSON.stringify(releaseAccounting(rows), null, 2)}</pre>
+    <p>Absent field classes are measured separately from producer-declared gaps. No declared gaps does not establish completeness.</p>
+    <p>Attribution gaps remain owned by Data. Source strings are preserved, including placeholders.</p>
+  </section>;
+}
 
 export default function WordCardPreview({ card, current, compare }: { card: PreviewCard | ReleaseCard | LoadedRelease; current: EntryRecord | null; compare: boolean }) {
   if (card.kind === 'release') return <div data-release-summary>
     <p data-release-version>Release {card.pin.release_version}</p>
     <p data-release-count>{card.rows.length} cards</p>
+    <p>Dataset SHA-256: {card.pin.dataset_sha256}. Manifest SHA-256: {card.pin.manifest_sha256}.</p>
+    <Accounting rows={card.rows} />
+    <section aria-label="Manifest filtered assertions"><h3>Manifest filtered assertions</h3>
+      <pre data-filtered-assertions>{card.filteredAssertions === undefined ? 'Not declared' : JSON.stringify(card.filteredAssertions, null, 2)}</pre>
+      <p>Producer-reported filtering counts, separate from declared gaps and measured absent field classes.</p>
+    </section>
+    <p data-pairing-count>0/{card.rows.length} paired; {card.rows.length}/{card.rows.length} explicitly unpaired. 0 actual comparisons.</p>
+    <p>Data owns the authoritative identity relation; Atlas owns subsequent current-page integration. PP-03/PV-02 and section 9 remain open.</p>
+    <a href={`https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/new?body=${encodeURIComponent(JSON.stringify(card.pin, null, 2))}`}>Report / improve this release</a>
+    <ul>{card.rows.map(row => <li key={row.card_id}>
+      <a data-card-link href={`/lexicon-v2/release/${row.card_id}/`}>{row.card_id}</a>{' '}
+      <a data-compare-link href={`/lexicon-v2/compare/release/${row.card_id}/`}>Unpaired comparison page</a>{' '}
+      {row.status}, card version {row.card_version}
+    </li>)}</ul>
     {card.withdrawalNotice !== undefined && <section aria-label="Withdrawal notice"><h3>Withdrawal notice</h3>
       <pre>{JSON.stringify(card.withdrawalNotice, null, 2)}</pre>
     </section>}
@@ -24,18 +46,23 @@ export default function WordCardPreview({ card, current, compare }: { card: Prev
     <section aria-label="Known gaps"><h3>Known gaps</h3><p>Declared metadata, not language facts.</p>
       {card.row.known_gaps.length ? card.row.known_gaps.map((gap, i) => <pre key={i}>{typeof gap === 'string' ? gap : JSON.stringify(gap, null, 2)}</pre>) : <p>No declared gaps</p>}
     </section>
+    <Accounting rows={[card.row]} />
     <section aria-label="Parallel cited assertions"><h3>Parallel cited assertions</h3>
       <p>Assertions remain separate. No field resolution or semantic verdict is inferred.</p>
       {card.row.fields.map(field => <article key={field.assertion_id} data-release-assertion={field.assertion_id}>
         <h4>{field.field}</h4><p>{field.subject.kind}: {field.subject.id}</p>
         <pre data-raw-value>{typeof field.value === 'string' ? field.value : JSON.stringify(field.value, null, 2)}</pre>
         <pre data-release-citation>{JSON.stringify(field.citation, null, 2)}</pre>
+        <p data-source-attribution>{field.citation.attribution}</p>
+        {attributionLinks(field.citation.attribution).map(url => <a data-source-link key={url} href={url}>{url}</a>)}
+        {attributionGap(field.citation) && <p data-attribution-gap={attributionGap(field.citation)}>Attribution gap: {attributionGap(field.citation)}. Owner Data. Placeholder retained verbatim.</p>}
         <a data-report-action href={releaseReportUrl(card, field)}>Report / improve this assertion</a>
       </article>)}
     </section>
     {compare && <section aria-label="Field comparison"><h2>Field comparison</h2>
       <p>Unresolved pairing. This release has no assembled-card identity keys. No comparison rows.</p>
       <p>Better/worse unavailable pending independently accepted comparison evidence.</p>
+      <p>Data owns the authoritative identity relation; Atlas owns current-page integration. No actual comparison is claimed.</p>
     </section>}
   </div>;
   if (card.kind === 'unavailable') return <p role="status">Unavailable: {card.reason}</p>;

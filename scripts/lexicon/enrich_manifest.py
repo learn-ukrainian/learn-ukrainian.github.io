@@ -4419,6 +4419,8 @@ def _resolve_definition_xref(
         target_card = fetch_target(resolved_lemma)
         if not target_card:
             continue
+        if (card.get("role") == "mirror_candidate") != (target_card.get("role") == "mirror_candidate"):
+            continue
         target_defs = target_card.get("definitions") or []
         target_body = str(target_defs[0]).strip() if target_defs else ""
         if not target_body or _xref_target_lemmas(target_body, resolved_lemma):
@@ -4440,25 +4442,27 @@ def _sum20_in_coverage(lemma: str) -> bool:
     return lookup[0].casefold() in _SUM20_COVERED_INITIALS
 
 
-@lru_cache(maxsize=8192)
-def _sum20_official_rows(lookup_word: str, db_path: str) -> tuple[dict[str, Any], ...]:
-    """Read exact official СУМ-20 rows without creating a table or using the web."""
-    if not lookup_word:
-        return ()
-    try:
-        from scripts.rag.source_query import query_sum20
+def _sum20_official_rows(lookup_word: str) -> tuple[dict[str, Any], ...]:
+    """Read only the canonical store; a refusal must propagate to the caller."""
+    from scripts.lexicon.sum20_lookup import lookup_sum20_articles
 
-        rows = query_sum20(lookup_word, db_path=db_path)
-    except (OSError, sqlite3.Error):
-        return ()
-    return tuple(row for row in rows if isinstance(row, dict))
+    return tuple(lookup_sum20_articles(lookup_word)) if lookup_word else ()
 
 
 def _sum20_official_definition_card(lookup_word: str) -> dict[str, Any] | None:
-    """Build a public definition card from locally ingested official rows."""
+    """Build a local card with the shared homonym-prefix match and mirror role."""
     definitions: list[str] = []
     official_url = ""
-    for row in _sum20_official_rows(lookup_word, str(SOURCES_DB)):
+    mirror_url = ""
+    role = "sum20_official"
+    for row in _sum20_official_rows(lookup_word):
+        if row.get("role") == "mirror_candidate":
+            definition = _definition_body(row.get("definition"), headword=lookup_word, strip_leading_headword=True)
+            if definition:
+                definitions.append(definition)
+                mirror_url = mirror_url or str(row.get("url") or "")
+                role = "mirror_candidate"
+            continue
         senses = row.get("senses")
         if not isinstance(senses, list):
             continue
@@ -4482,7 +4486,7 @@ def _sum20_official_definition_card(lookup_word: str) -> dict[str, Any] | None:
                 " ".join(f"{index}. {definition}" for index, definition in enumerate(row_definitions, 1))
             ]
         definitions.extend(row_definitions)
-        official_url = official_url or str(row.get("official_url") or "")
+        official_url = official_url or str(row.get("url") or "")
 
     if not definitions:
         return None
@@ -4493,7 +4497,10 @@ def _sum20_official_definition_card(lookup_word: str) -> dict[str, Any] | None:
         "note": "сучасний тлумачний словник",
         "definitions": definitions,
     }
-    if official_url:
+    if role == "mirror_candidate":
+        attach_official_url(card, mirror_url=mirror_url, slug="newsum", word=lookup_word)
+        card["role"] = role
+    elif official_url:
         card["source_url"] = official_url
     return card
 
@@ -4518,54 +4525,7 @@ def _sum20_definition_card(
             if resolved is not None:
                 return resolved
         return official_card
-    row = _cache_lookup(cache, "newsum") if cache is not None else None
-    if not row:
-        transient = False
-        try:
-            row = _fetch_slovnyk_entry(lemma, lookup_word, "newsum") if lookup_word else None
-        except _SlovnykTransientError:
-            transient = True
-            row = None
-        if cache is not None and not transient and not _phase1_offline_mode():
-            _cache_store_lookup(lemma, cache, "newsum", row)
-    if not row:
-        # Inflected-form entry (e.g. моєму) → resolve to its base lemma (мій) and
-        # fetch the base's clean СУМ-20 definition. Closes the coverage gap, zero Soviet.
-        base = _vesum_base_lemma(lemma)
-        if base and _sum20_in_coverage(base):
-            row = _slovnyk_base_row(base, "newsum")
-    if not row:
-        return None
-    text = _definition_body(
-        row.get("text"),
-        headword=str(row.get("word") or lookup_word),
-        strip_leading_headword=True,
-    )
-    if not text:
-        return None
-    card = {
-        "id": "sum20",
-        "source": SUM20_ACADEMIC_LABEL,
-        "source_pill": SUM20_SHORT_LABEL,
-        "note": "сучасний тлумачний словник",
-        "definitions": [text],
-    }
-    mirror_url = str(row.get("source_url") or "")
-    attach_official_url(
-        card,
-        mirror_url=mirror_url,
-        slug="newsum",
-        word=str(row.get("word") or lookup_word),
-    )
-    if resolve_xref:
-        resolved = _resolve_definition_xref(
-            card,
-            lemma,
-            lambda target: _sum20_definition_card(target, resolve_xref=False),
-        )
-        if resolved is not None:
-            return resolved
-    return card
+    return None
 
 
 def _vts_definition_card(
@@ -4798,13 +4758,25 @@ def _dictionary_definition_rows(
 ) -> list[dict[str, Any]]:
     """Return local definition rows with the evidence metadata needed for gates.
 
-    Slovnyk.me entries come only from the cache supplied by the caller (or a
-    read-only cache read). This helper must never turn synonym extraction into a
+    SUM-20 comes only from the canonical reader. Other dictionaries use the
+    supplied cache or a read-only cache read. This helper never turns synonym extraction into a
     network fetch or a cache/database write.
     """
     cache = cache if cache is not None else _read_cached_slovnyk_rows(lemma)
     rows: list[dict[str, Any]] = []
-    for slug, source in (("newsum", "СУМ-20"), ("vts", "ВТС")):
+    for article in _sum20_official_rows(_slovnyk_lookup_word(lemma)):
+        text = _definition_body(article.get("definition"))
+        if text:
+            payload = {
+                "source": SUM20_SHORT_LABEL, "text": text,
+                "source_url": str(article.get("url") or ""), "sovietization_risk": 0,
+            }
+            if article.get("role") == "mirror_candidate":
+                attach_official_url(payload, mirror_url=str(article.get("url") or ""),
+                                    slug="newsum", word=_slovnyk_lookup_word(lemma))
+                payload["role"] = "mirror_candidate"
+            rows.append(payload)
+    for slug, source in (("vts", "ВТС"),):
         row = _cache_lookup(cache, slug)
         if not row:
             continue
@@ -4815,7 +4787,7 @@ def _dictionary_definition_rows(
         )
         if text:
             row_payload: dict[str, Any] = {
-                "source": SUM20_SHORT_LABEL if source == "СУМ-20" else source,
+                "source": source,
                 "text": text,
                 "sovietization_risk": 0,
             }
@@ -4824,7 +4796,7 @@ def _dictionary_definition_rows(
                 attach_official_url(
                     row_payload,
                     mirror_url=mirror_url,
-                    slug="newsum" if slug == "newsum" else "vts",
+                    slug="vts",
                     word=str(row.get("word") or lemma),
                 )
             rows.append(row_payload)
@@ -4885,6 +4857,10 @@ def _definition_pointer_relations(
             }
             if row.get("source_url"):
                 relation["source_url"] = row["source_url"]
+            if row.get("mirror_source_url"):
+                relation["mirror_source_url"] = row["mirror_source_url"]
+            if row.get("role") == "mirror_candidate":
+                relation["role"] = "mirror_candidate"
             relations.append(relation)
     return relations
 
@@ -4996,6 +4972,10 @@ def _definition_antonym_relations(
             }
             if row.get("source_url"):
                 relation["source_url"] = row["source_url"]
+            if row.get("mirror_source_url"):
+                relation["mirror_source_url"] = row["mirror_source_url"]
+            if row.get("role") == "mirror_candidate":
+                relation["role"] = "mirror_candidate"
             relations.append(relation)
     return relations
 
@@ -5168,21 +5148,18 @@ def _homonym_dictionary_rows(
     Unlike ordinary definition cards, a homonym set cannot be truncated at the
     first 900 characters: later numbered heads are part of the same evidence.
     """
-    cache = cache if cache is not None else _read_cached_slovnyk_rows(lemma)
     rows: list[dict[str, str]] = []
-    sum20 = _cache_lookup(cache, "newsum")
-    if sum20 and sum20.get("text"):
-        payload = {
-            "source": SUM20_SHORT_LABEL,
-            "text": _definition_body(sum20["text"], limit=20_000),
-        }
-        attach_official_url(
-            payload,
-            mirror_url=str(sum20.get("source_url") or ""),
-            slug="newsum",
-            word=str(sum20.get("word") or lemma),
-        )
-        rows.append(payload)
+    for article in _sum20_official_rows(_slovnyk_lookup_word(lemma)):
+        text = str(article.get("article_text") or article.get("definition") or "")
+        if text:
+            payload = {"source": SUM20_SHORT_LABEL, "text": _definition_body(text, limit=20_000)}
+            if article.get("url"):
+                payload["source_url"] = str(article["url"])
+            if article.get("role") == "mirror_candidate":
+                attach_official_url(payload, mirror_url=str(article.get("url") or ""),
+                                    slug="newsum", word=_slovnyk_lookup_word(lemma))
+                payload["role"] = "mirror_candidate"
+            rows.append(payload)
     return rows
 
 
@@ -5231,6 +5208,10 @@ def _homonym_relations(
         }
         if best_row["source_url"]:
             relation["source_url"] = best_row["source_url"]
+        if best_row.get("mirror_source_url"):
+            relation["mirror_source_url"] = best_row["mirror_source_url"]
+        if best_row.get("role") == "mirror_candidate":
+            relation["role"] = "mirror_candidate"
         relations.append(relation)
     return relations
 
@@ -8175,7 +8156,7 @@ def enrich_entry(
     pointer_paronym_relations: list[dict[str, Any]] | None = None,
     available_lemmas: set[str] | None = None,
 ) -> bool:
-    """Enrich a single manifest entry in place (dictionary-grounded).
+    """Enrich a single manifest entry, honoring the caller's offline setting.
     Returns True if any enrichment was attached. Extracted from enrich() so the
     same per-lemma enrichment runs on delta lemmas (#3675 P2)."""
     published_sections = entry.get("sections") if isinstance(entry.get("sections"), dict) else {}
@@ -8518,7 +8499,7 @@ def enrich(
     manifest_path: Path | None = None,
     fingerprint_path: Path | None = None,
 ) -> tuple[int, int]:
-    """Enrich the Atlas manifest.
+    """Enrich the Atlas manifest, honoring the caller's offline setting.
 
     When ``LEXICON_USE_RUNNER=1``, delegates to the PR1 offline runner (streaming
     staging, sealed CEFR/relations, side DBs, hard-capped workers). Otherwise

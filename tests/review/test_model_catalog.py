@@ -740,7 +740,7 @@ def test_claude_cap_fixture_adds_only_cap_help_lines(configuration):
 def test_cto_wrappers_fixture_changes_only_cto_help_lines(configuration):
     fixture_path = CAPACITY_FIXTURE / "cto-wrappers-10453.json"
     assert hashlib.sha256(fixture_path.read_bytes()).hexdigest() == (
-        "b13c3c443bddb9fb81fff9e5546e95fb1f10ef067a22646f397a2faad38d9daf"
+        "4593a5c7abb023644821cd93cd9ed12bbcc5af483ea3e3b8275226ea5b6b3cef"
     )
     cto = json.loads(fixture_path.read_bytes())
     assert set(cto) == {"launcher_help_replacements"}
@@ -753,7 +753,9 @@ def test_cto_wrappers_fixture_changes_only_cto_help_lines(configuration):
         " " * 29 + "CTO wrappers reject it with exit 2.\n",
         force["before"].splitlines(True)[1],
     ]
-    assert lanes["after"] == lanes["before"].replace("Valid lane selectors:\n", "Valid lane selectors:\n  epics\n")
+    assert lanes["after"] == lanes["before"].replace(
+        "Valid lane selectors:\n", "Valid lane selectors:\n  epics\n"
+    ).replace("  atlas | practice | atlas.practice\n", "  atlas | practice-hub | atlas.practice\n  practice\n")
     assert cap["after"].startswith(cap["before"].splitlines(True)[0])
     assert "Opus is always blocked outside start-claude-cto.sh on epics:" in cap["after"]
     assert "Opus stays blocked" in cap["before"] and "Opus stays blocked" not in cap["after"]
