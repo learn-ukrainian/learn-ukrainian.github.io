@@ -576,6 +576,10 @@ PROJECT_PYTHON_GUARDS = frozenset({"guard-pr-merge.py", "guard-admin-merge.py", 
 # A command whose raw text or shell words contain any of these is a fleet guard
 # and must take one of the two supported forms.
 _FLEET_GUARD_MARKERS = (".claude/hooks/", _PROJECT_PYTHON_HOOK_WRAPPER, *sorted(PROJECT_PYTHON_GUARDS))
+# PreToolUse halves of observational pre/post pairs. Worker settings carry no
+# PostToolUse hooks, so the pre-call snapshot of the primary-checkout dirt
+# audit (#11253) would never be compared; workers write in their own worktree.
+_WORKER_UNPAIRED_HOOKS = frozenset({_DEPLOYED_HOOKS_PREFIX + "audit-primary-checkout-dirt.py"})
 
 
 def _worker_guard_invocation(command: str, source_root: Path) -> str | None:
@@ -624,6 +628,8 @@ def _worker_guard_settings(*, publish_guard: bool = False) -> str:
     for group in source["hooks"]["PreToolUse"]:
         hooks = []
         for hook in group["hooks"]:
+            if hook.get("command") in _WORKER_UNPAIRED_HOOKS:
+                continue
             invocation = _worker_guard_invocation(hook.get("command", ""), source_root)
             if invocation is not None:
                 hooks.append({**hook, "command": invocation})

@@ -737,6 +737,11 @@ drop-in.
 
 ## Deletion ownership
 
+Untracked files that a shell call left in the primary checkout itself are a
+separate path: `scripts.hygiene.primary_dirt_cleanup` removes only the files
+an audit record proves the calling session created
+([`primary-checkout-dirt.md`](primary-checkout-dirt.md), #11253).
+
 Every worktree removal goes through one guarded chokepoint (#8610): Python
 callers use `worktree_claims.remove_unclaimed_worktree`, and shell and YAML
 callers use `python -m scripts.orchestration.worktree_claims remove PATH`

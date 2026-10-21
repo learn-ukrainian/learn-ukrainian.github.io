@@ -768,6 +768,11 @@
             "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/guard-public-github-text.py",
             "timeout": 10,
             "onFailure": "block"
+          },
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/audit-primary-checkout-dirt.py",
+            "timeout": 10
           }
         ]
       },
@@ -815,6 +820,11 @@
             "type": "command",
             "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/stamp-pytest.sh",
             "timeout": 3
+          },
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/audit-primary-checkout-dirt.py",
+            "timeout": 10
           }
         ]
       },
@@ -856,6 +866,11 @@
             "type": "command",
             "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/stamp-pytest.sh",
             "timeout": 3
+          },
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/audit-primary-checkout-dirt.py",
+            "timeout": 10
           }
         ]
       }
