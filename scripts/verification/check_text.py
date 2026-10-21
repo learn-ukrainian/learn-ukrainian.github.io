@@ -26,6 +26,7 @@ except ModuleNotFoundError as exc:
 from scripts.curriculum.evidence.sources import _signature
 from scripts.curriculum.resolver.codes import SKIPPED_KINDS
 from scripts.curriculum.resolver.tokenize import (
+    APOSTROPHES,
     Token,
     has_accent,
     lookup_form,
@@ -65,6 +66,40 @@ _VESUM_WRAPPERS = " \t\u00a0\"'«»„“”‘’()[]{}—–-*_`"
 _VESUM_LABEL_MARKUP = str.maketrans("", "", "*_`[]")
 
 
+_LINE_BREAK = re.compile(r"\r\n|[\n\r\v\f\x1c-\x1e\x85\u2028\u2029]")
+_LABEL_WORD = rf"[^\W\d_]+(?:[{re.escape(''.join(APOSTROPHES))}][^\W\d_]+)*"
+_LABEL_SHAPE = re.compile(rf"{_LABEL_WORD}(?:[ \t-]+{_LABEL_WORD})*")
+_LABEL_SEPARATORS = re.compile(r"[ \t-]+")
+
+
+def _vesum_prefix(text: str, token: Token) -> tuple[str, str]:
+    """Return the block-marker prefix and the wrapper-stripped text before ``token`` on its line."""
+    line_start = max(text.rfind("\n", 0, token.start), text.rfind("\r", 0, token.start)) + 1
+    prefix = text[line_start : token.start]
+    block = _VESUM_BLOCK_PREFIX.match(prefix)
+    assert block is not None  # The pattern also matches the empty prefix.
+    return block.group(), prefix[block.end() :].rstrip(_VESUM_WRAPPERS)
+
+
+def _colon_label_words(before: str) -> list[str] | None:
+    """Words of a speaker or caption label that ends ``before`` with a colon, else None."""
+    label = re.split(r"[.!?…|]", before[:-1])[-1].translate(_VESUM_LABEL_MARKUP).strip()
+    if not _LABEL_SHAPE.fullmatch(label):
+        return None
+    words = _LABEL_SEPARATORS.split(label)
+    return words if words[0][:1].isupper() else None
+
+
+def _next_line_is_setext_rule(text: str, token: Token) -> bool:
+    """True when the line after ``token``'s line is a setext underline (``===`` or ``---``)."""
+    current_end = _LINE_BREAK.search(text, token.start)
+    if current_end is None:
+        return False
+    following_end = _LINE_BREAK.search(text, current_end.end())
+    following = text[current_end.end() : following_end.start() if following_end else len(text)]
+    return re.fullmatch(r"[ \t]*(?:=+|-+)[ \t]*", following) is not None
+
+
 def _vesum_sentence_initial(text: str, token: Token) -> bool:
     """Extra orthographic starts for VESUM only; keep tokenizer spans and flags intact.
 
@@ -73,25 +108,47 @@ def _vesum_sentence_initial(text: str, token: Token) -> bool:
     """
     if token.sentence_initial:
         return True
-    line_start = max(text.rfind("\n", 0, token.start), text.rfind("\r", 0, token.start)) + 1
-    prefix = text[line_start : token.start]
-    block = _VESUM_BLOCK_PREFIX.match(prefix)
-    assert block is not None  # The pattern also matches the empty prefix.
-    before = prefix[block.end() :].rstrip(_VESUM_WRAPPERS)
+    block, before = _vesum_prefix(text, token)
     if not before or before[-1] in ".!?…|":
         return True
     if not before.endswith(":"):
         return False
-    if "#" in block.group():
+    if "#" in block:
         return True
     # Setext headings can contain a subtitle after a colon too.
-    following_lines = text[token.start :].splitlines()
-    if len(following_lines) > 1 and re.fullmatch(r"[ \t]*(?:=+|-+)[ \t]*", following_lines[1]):
+    if _next_line_is_setext_rule(text, token):
         return True
-    label = re.split(r"[.!?…|]", before[:-1])[-1].translate(_VESUM_LABEL_MARKUP).strip()
-    return bool(re.fullmatch(r"[^\W\d_]+(?:[ \t-]+[^\W\d_]+)*", label)) and all(
-        part[:1].isupper() for part in re.split(r"[ \t-]+", label)
-    )
+    words = _colon_label_words(before)
+    return words is not None and all(part[:1].isupper() for part in words)
+
+
+def _vesum_lowercase_label(text: str, token: Token) -> list[str] | None:
+    """Words of a colon label that contains a lowercase word (``Слово дня: Добре``), else None.
+
+    The shape alone cannot tell this label from a sentence that introduces a
+    quotation (``Він сказав: Так``); the caller accepts it only when VESUM
+    finds no verb reading among the label words.
+    """
+    if token.sentence_initial:
+        return None
+    _, before = _vesum_prefix(text, token)
+    if not before.endswith(":"):
+        return None
+    words = _colon_label_words(before)
+    if words is None or all(part[:1].isupper() for part in words):
+        return None
+    return words
+
+
+def _label_is_nominal(words: list[str], vesum_map: dict[str, list[dict[str, Any]]]) -> bool:
+    """True when every label word has a VESUM row and none of them reads as a verb."""
+    for word in words:
+        # Every case variant counts: an uppercase noun row (``Мили``) must not hide a lowercase verb (``мили``).
+        form = lookup_form(word)
+        rows = [row for variant in (form, form.lower(), _lower_first(form)) for row in vesum_map.get(variant) or []]
+        if not rows or any(row.get("pos") == "verb" or str(row.get("tags", "")).startswith("verb") for row in rows):
+            return False
+    return True
 
 
 def _sources_path_resolved() -> Path:
@@ -378,6 +435,8 @@ def check_text(
     tokens_by_form: dict[str, list[tuple[int, Any, Token]]] = {}
     unit_sentences: list[tuple[int, Any, str, list[Token]]] = []
     sent_init_caps: set[str] = set()
+    unlicensed_caps: set[str] = set()  # capitalised forms with an occurrence that needs its own capitalised row
+    label_candidates: dict[str, list[list[str]]] = {}
 
     for item_idx, item_id, item_text in units:
         unit_toks = tokenize(item_text)
@@ -393,8 +452,13 @@ def check_text(
 
             total_tokens += 1
             tokens_by_form.setdefault(t.lookup, []).append((item_idx, item_id, t))
-            if "vesum" in active_checks and t.capitalised and _vesum_sentence_initial(item_text, t):
-                sent_init_caps.add(t.lookup)
+            if "vesum" in active_checks and t.capitalised:
+                if _vesum_sentence_initial(item_text, t):
+                    sent_init_caps.add(t.lookup)
+                elif (label := _vesum_lowercase_label(item_text, t)) is not None:
+                    label_candidates.setdefault(t.lookup, []).append(label)
+                else:
+                    unlicensed_caps.add(t.lookup)
 
             if t.sentence_initial and current_sentence:
                 unit_sentences.append((item_idx, item_id, item_text, current_sentence))
@@ -435,7 +499,16 @@ def check_text(
             }
 
     if "vesum" in active_checks and unique_forms:
-        query_words = list(dict.fromkeys(unique_forms + [f.lower() for f in unique_forms] + book_range_parts))
+        label_words = [
+            variant
+            for labels in label_candidates.values()
+            for label in labels
+            for word in label
+            for variant in (lookup_form(word), lookup_form(word).lower(), _lower_first(lookup_form(word)))
+        ]
+        query_words = list(
+            dict.fromkeys(unique_forms + [f.lower() for f in unique_forms] + book_range_parts + label_words)
+        )
         try:
             vesum_map = verify_words(query_words, db_path=vesum_path)
         except FileNotFoundError as err:
@@ -444,6 +517,12 @@ def check_text(
                 "error_code": "source_unavailable",
                 "error": f"source_unavailable: {err}",
             }
+
+        # Caption acceptance is per occurrence: every label occurrence must be nominal and
+        # no other occurrence of the form may lack its own licence.
+        for form, labels in label_candidates.items():
+            if form not in unlicensed_caps and all(_label_is_nominal(label, vesum_map) for label in labels):
+                sent_init_caps.add(form)
 
         for form in unique_forms:
             is_verified = bool(vesum_map.get(form) or (form in sent_init_caps and vesum_map.get(_lower_first(form))))

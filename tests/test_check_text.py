@@ -584,6 +584,148 @@ def _markup_style_sample():
     return "\n".join([*lines, "квартира " * (602 - used - 2), "> Технологіческа", "+ Квартирра"])
 
 
+LABEL_VESUM_ROWS = {
+    "Мар'яна": [{"pos": "noun", "tags": "noun:anim:f:v_naz"}],
+    "Дар'я": [{"pos": "noun", "tags": "noun:anim:f:v_naz"}],
+    "Марта": [{"pos": "noun", "tags": "noun:anim:f:v_naz"}],
+    "добре": [{"pos": "adv", "tags": "adv:compb:predic"}],
+    "слово": [{"pos": "noun", "tags": "noun:inanim:n:v_naz"}],
+    "дня": [{"pos": "noun", "tags": "noun:inanim:m:v_rod"}],
+    "він": [{"pos": "noun", "tags": "noun:anim:m:v_naz:&pron:pers:3"}],
+    "сказав": [{"pos": "verb", "tags": "verb:perf:past:m"}],
+    "так": [{"pos": "adv", "tags": "adv"}],
+    "привіт": [{"pos": "noun", "tags": "noun:inanim:m:v_naz"}],
+    "Олеже": [{"pos": "noun", "tags": "noun:anim:m:v_kly"}],
+    "олеже": [{"pos": "noun", "tags": "noun:anim:m:v_kly"}],
+    "квартира": [{"pos": "noun", "tags": "noun:inanim:f:v_naz"}],
+    "Мили": [{"pos": "noun", "tags": "noun:anim:f:v_naz"}],
+    "мили": [{"pos": "verb", "tags": "verb:imperf:past:p"}],
+    "посуд": [{"pos": "noun", "tags": "noun:inanim:m:v_rod"}],
+}
+
+
+@pytest.fixture
+def label_vesum(hermetic_ua_gec_vesum):
+    hermetic_ua_gec_vesum.update(LABEL_VESUM_ROWS)
+
+
+def _vesum_problem_forms(text):
+    return [p["form"] for p in check_text(text=text, checks=["vesum"])["problems"]]
+
+
+@pytest.mark.usefixtures("label_vesum")
+@pytest.mark.parametrize(
+    "text",
+    (
+        "**Мар'яна:** Добре",
+        "**Мар’яна:** Добре",
+        "**Мар’яна:**\nДобре",
+        "**Дар'я:** Добре",
+        "__Дар’я:__ Добре",
+        "Мар'яна: Добре",
+        "Слово дня: Добре",
+        "**Слово дня:** Добре",
+        "Привіт, Олеже!  Слово дня: Добре",
+    ),
+)
+def test_label_shapes_clean(text):
+    assert _vesum_problem_forms(text) == []
+
+
+@pytest.mark.usefixtures("label_vesum")
+@pytest.mark.parametrize(
+    "text",
+    (
+        "Він сказав: Так",
+        "**Він сказав:** Так",
+        "Привіт, Марта: Добре",
+        "квартира: Добре",
+        "Слово дня, Мар'яна: Добре",
+    ),
+)
+def test_label_shapes_still_flag_mid_sentence_colon(text):
+    word = text.split()[-1]
+    assert _vesum_problem_forms(text) == [word]
+
+
+@pytest.mark.usefixtures("label_vesum")
+@pytest.mark.parametrize(
+    ("label", "word"),
+    (
+        ("**Мар'яна:**", "Технологіческа"),
+        ("**Мар’яна:**", "Квартирра"),
+        ("**Дар'я:**", "Технологіческа"),
+        ("Слово дня:", "Квартирра"),
+    ),
+)
+def test_label_shapes_still_flag_nonwords(label, word):
+    text = f"{label} {word}"
+    start = text.index(word)
+    result = check_text(text=text, checks=["vesum"])
+    assert result["problems"] == [
+        {
+            "form": word,
+            "check": "vesum",
+            "detail": {"status": "no_vesum_row"},
+            "locations": [[None, start, start + len(word)]],
+        }
+    ]
+
+
+@pytest.mark.usefixtures("label_vesum")
+def test_lowercase_label_needs_known_words():
+    # An unknown word in the label gives no evidence that it is a caption.
+    assert _vesum_problem_forms("Слово технологіческа: Добре") == ["технологіческа", "Добре"]
+
+
+@pytest.mark.usefixtures("label_vesum")
+def test_label_candidate_is_per_occurrence_evidence():
+    # A verbal sentence is rejected on its own; a caption elsewhere does not vouch for it.
+    assert _vesum_problem_forms("Він сказав: Добре") == ["Добре"]
+    assert _vesum_problem_forms("Слово дня: Добре\nВін сказав: Добре") == ["Добре"]
+
+
+@pytest.mark.usefixtures("label_vesum")
+def test_caption_evidence_does_not_leak_to_other_occurrences():
+    text = "Слово дня: Так\nВін сказав: Так"
+    result = check_text(text=text, checks=["vesum"])
+    assert [p["form"] for p in result["problems"]] == ["Так"]
+    second = text.rindex("Так")
+    assert [None, second, second + len("Так")] in result["problems"][0]["locations"]
+    # A capitalised occurrence outside any label also withdraws the caption licence.
+    assert _vesum_problem_forms("Слово дня: Так\nВін Так") == ["Так"]
+    assert _vesum_problem_forms("Слово дня: Так\nСлово дня: Так") == []
+
+
+@pytest.mark.usefixtures("label_vesum")
+def test_uppercase_noun_row_does_not_hide_lowercase_verb_reading():
+    assert _vesum_problem_forms("Мили посуд: Так") == ["Так"]
+
+
+@pytest.mark.parametrize(
+    ("text", "expected"),
+    (
+        ("Сценарій\n===", True),
+        ("Сценарій\r\n---", True),
+        ("Сценарій\n\n===", False),
+        ("Сценарій\nтекст\n===", False),
+        ("Сценарій", False),
+        ("Сценарій\n", False),
+    ),
+)
+def test_setext_lookahead_is_bounded_to_next_line(text, expected):
+    from scripts.verification.check_text import _next_line_is_setext_rule
+
+    assert _next_line_is_setext_rule(text, tokenize(text)[0]) is expected
+
+
+def test_label_shapes_real_vesum(requires_vesum_db):
+    for text in ("**Мар'яна:** Добре", "**Мар’яна:** Добре", "**Дар'я:** Добре", "Слово дня: Добре"):
+        assert _vesum_problem_forms(text) == []
+    assert _vesum_problem_forms("Він сказав: Так") == ["Так"]
+    assert _vesum_problem_forms("**Мар'яна:** Технологіческа") == ["Технологіческа"]
+
+
 @pytest.mark.usefixtures("markup_vesum")
 def test_markup_602_word_style_sample():
     text = _markup_style_sample()
