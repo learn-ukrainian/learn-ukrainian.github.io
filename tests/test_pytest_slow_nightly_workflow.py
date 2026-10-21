@@ -9,7 +9,9 @@ offline sandbox. A ``python`` shim stands in for setup-python: it has no project
 dependencies. Its ``-m venv`` creates a ``.venv/bin/python`` that gains the
 project's packages only after ``pip install -r`` receives a file carrying the
 locked ``jsonschema`` pin. The verification step then reaches the real
-``load_manifest()`` against controlled pointer and manifest fixtures.
+``load_manifest()`` against controlled pointer and manifest fixtures. Its
+release download goes through a synthetic GitHub client that refuses every
+request before opening a socket, so a hydrate attempt fails without network.
 """
 
 from __future__ import annotations
@@ -28,6 +30,8 @@ from pathlib import Path
 import pytest
 import yaml
 
+from scripts.lexicon.manifest_io import DOWNLOAD_ATTEMPTS
+
 REPO_ROOT = Path(__file__).resolve().parents[1]
 WORKFLOW = REPO_ROOT / ".github" / "workflows" / "pytest-slow-nightly.yml"
 REQUIREMENTS_LOCK = REPO_ROOT / "requirements-lock.txt"
@@ -41,8 +45,19 @@ ORIGINAL_VERIFY_RUN = (
     "from lexicon.manifest_io import load_manifest; load_manifest(); "
     "print('Atlas manifest verified against pointer')\"\n"
 )
-# Nothing listens on the discard port, so a hydrate attempt fails offline.
-OFFLINE_ASSET_URL = "http://127.0.0.1:9/lexicon-manifest.json.gz"
+# The synthetic client refuses every download, so the asset URI has no authority.
+OFFLINE_ASSET_URL = "offline:lexicon-manifest.json.gz"
+# The loader's download seam, as the loader sees it, without any transport.
+OFFLINE_GITHUB_CLIENT = """\
+import os
+import urllib.error
+
+
+def http_open(request, **_kwargs):
+    with open(os.environ["OFFLINE_DOWNLOAD_LOG"], "a", encoding="utf-8") as log:
+        log.write(request.full_url + "\\n")
+    raise urllib.error.URLError("offline sandbox: network access refused")
+"""
 VALID_MANIFEST = {"generated_at": "2026-01-01T00:00:00+00:00", "entries": []}
 # Steps outside the venv/manifest boundary (services, Stanza, network) are not run.
 EXECUTED_STEPS = frozenset({INSTALL_STEP})
@@ -86,12 +101,21 @@ def _build_sandbox(root: Path, control: str) -> tuple[Path, dict[str, str]]:
     workspace = root / "workspace"
     scripts = workspace / "scripts"
     lexicon = scripts / "lexicon"
+    common = scripts / "common"
     lexicon.mkdir(parents=True)
-    # Other submodules come from the real packages; only the loader is local,
-    # because it resolves its own path to find site/src/data.
-    for package, real in ((scripts, REPO_ROOT / "scripts"), (lexicon, REPO_ROOT / "scripts" / "lexicon")):
+    common.mkdir()
+    # Other submodules come from the real packages. The loader is local because
+    # it resolves its own path to find site/src/data; the GitHub client is
+    # synthetic so no hydrate attempt can reach the network.
+    packages = (
+        (scripts, REPO_ROOT / "scripts"),
+        (lexicon, REPO_ROOT / "scripts" / "lexicon"),
+        (common, REPO_ROOT / "scripts" / "common"),
+    )
+    for package, real in packages:
         (package / "__init__.py").write_text(f"__path__.append({str(real)!r})\n", encoding="utf-8")
     shutil.copy2(REPO_ROOT / "scripts" / "lexicon" / "manifest_io.py", lexicon / "manifest_io.py")
+    (common / "github_client.py").write_text(OFFLINE_GITHUB_CLIENT, encoding="utf-8")
     shutil.copy2(REQUIREMENTS_LOCK, workspace / "requirements-lock.txt")
 
     data_dir = workspace / "site" / "src" / "data"
@@ -170,6 +194,7 @@ exec '{real}' -S "$@"
         "RUNNER_TEMP": str(runner_temp),
         "LU_LEXICON_MANIFEST_CACHE": str(cache_dir),
         "LU_GITHUB_CACHE_DIR": str(home / "github-cache"),
+        "OFFLINE_DOWNLOAD_LOG": str(root / "offline-downloads.log"),
         "PYTHONDONTWRITEBYTECODE": "1",
     }
     return workspace, env
@@ -274,22 +299,31 @@ def test_valid_control_records_locked_install_before_loader(tmp_path: Path) -> N
     installs = (tmp_path / "workspace" / ".venv" / "pip-installs.log").read_text(encoding="utf-8")
     assert f"--no-deps -r {tmp_path / 'runner-temp' / 'requirements-ci.txt'}" in installs
     assert (tmp_path / "workspace" / ".venv" / "locked-dependencies").exists()
+    assert _offline_downloads(tmp_path) == []
+
+
+def _offline_downloads(root: Path) -> list[str]:
+    log = root / "offline-downloads.log"
+    return log.read_text(encoding="utf-8").splitlines() if log.exists() else []
 
 
 @pytest.mark.parametrize(
-    ("control", "refusal"),
+    ("control", "refusal", "downloads"),
     [
-        ("missing", "failed to download Atlas manifest release asset"),
-        ("mismatched", "failed to download Atlas manifest release asset"),
-        ("malformed", "must contain a JSON object"),
+        ("missing", "failed to download Atlas manifest release asset", DOWNLOAD_ATTEMPTS),
+        ("mismatched", "failed to download Atlas manifest release asset", DOWNLOAD_ATTEMPTS),
+        ("malformed", "must contain a JSON object", 0),
     ],
 )
-def test_repaired_workflow_refuses_bad_manifest(tmp_path: Path, control: str, refusal: str) -> None:
+def test_repaired_workflow_refuses_bad_manifest(tmp_path: Path, control: str, refusal: str, downloads: int) -> None:
     result = _run_until_verification(_steps(_load_workflow()), tmp_path, control)
 
     assert result.returncode != 0
     assert VERIFIED not in result.stdout
     assert refusal in result.stderr
+    attempted = _offline_downloads(tmp_path)
+    assert len(attempted) == downloads
+    assert all(url.startswith(OFFLINE_ASSET_URL) and "://" not in url for url in attempted)
 
 
 def test_cached_control_rehydrates_the_pinned_manifest(tmp_path: Path) -> None:
@@ -298,6 +332,7 @@ def test_cached_control_rehydrates_the_pinned_manifest(tmp_path: Path) -> None:
     assert _verified(result), result.stderr
     manifest = tmp_path / "workspace" / "site" / "src" / "data" / "lexicon-manifest.json"
     assert json.loads(manifest.read_text(encoding="utf-8")) == VALID_MANIFEST
+    assert _offline_downloads(tmp_path) == []
 
 
 def _drop_locked_install(workflow: dict) -> dict:
