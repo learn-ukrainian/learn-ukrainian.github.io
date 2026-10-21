@@ -6,6 +6,9 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = SCRIPT_DIR.parents[1]
 sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
 
+if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
 from rag.query import search_dictionary, search_text
 from rag.source_query import pravopys_lookup, r2u_translate
 from verification.vesum import verify_words
@@ -62,4 +65,7 @@ def run_verification():
             print(f"'{word}': NOT FOUND in CEFR")
 
 if __name__ == "__main__":
+    if len(sys.argv) > 1 and sys.argv[1] in {"-h", "--help"}:
+        print("Usage: python scripts/rag/verify_module_1_v6.py")
+        raise SystemExit(0)
     run_verification()

@@ -744,8 +744,10 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
     ),
     (
         "scripts/orchestration/issue_stream_audit.py",
-        "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
-        "190bf8f61e9cdcfae7b5495b37b89ef5dcee3c2ba1e12ed4aa6faf8f4f250465:1",
+        "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702. "
+        "publish_cache stages its atomic os.replace in the cache's own directory and unlinks it (#10793).",
+        "190bf8f61e9cdcfae7b5495b37b89ef5dcee3c2ba1e12ed4aa6faf8f4f250465:1 "
+        "8640cf7f0d0116eec5bc28feaf76e1e70769ffd900775c0ba583c1b91735f6d3:1",
     ),
     (
         "scripts/orchestration/job_host_exec.py",

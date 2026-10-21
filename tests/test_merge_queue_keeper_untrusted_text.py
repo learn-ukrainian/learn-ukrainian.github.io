@@ -43,7 +43,7 @@ class Transport:
 
     def __call__(self, argv: list[str], **kwargs: Any) -> subprocess.CompletedProcess:
         verb = argv[1:3]
-        if verb in (["pr", "comment"], ["issue", "create"]):
+        if verb in (["pr", "comment"], ["issue", "comment"], ["issue", "create"]):
             body = Path(argv[argv.index("--body-file") + 1]).read_text(encoding="utf-8")
             title = next((arg.partition("=")[2] for arg in argv if arg.startswith("--title=")), "")
             self.sent.append((" ".join(verb), title, body))
@@ -148,9 +148,10 @@ class Subject(keeper.GitHub):
         super().comment(number, body)
         self.comment_rows.append({"body": body, "user": {"login": "driver"}})
 
-    def create_issue(self, title: str, body: str) -> None:
-        super().create_issue(title, body)
-        self.issue_rows.append({"title": title})
+    def create_issue(self, title: str, body: str) -> int:
+        number = super().create_issue(title, body)
+        self.issue_rows.append({"title": title, "body": body, "number": number})
+        return number
 
 
 @pytest.fixture
@@ -389,6 +390,8 @@ def test_flaky_issue_title_and_body_stay_inert(tmp_path: Path, transport: Transp
     subject = Subject(tmp_path)
     path = tmp_path / "state.json"
     ejected(subject, path, [job], failures=[{"job": job, "pr": 7, "at": "2999-01-01T00:00:00+00:00", "test": test}])
+    subject.job_rows[0]["id"] = 456
+    subject.failed_tests = lambda job_id: [test]
     lines, failed = keeper.run(subject, path, apply=True)
     assert not failed, lines
     [(title, body)] = transport.issues()
@@ -397,7 +400,7 @@ def test_flaky_issue_title_and_body_stay_inert(tmp_path: Path, transport: Transp
         assert "://" not in field
         assert not any(unicodedata.category(char) in {"Cc", "Cf", "Zl", "Zp"} for char in field)
     assert "`" not in CODE_SPAN.sub("", body)
-    assert title == f"Merge queue flaky test: {keeper.display_text(job)}" and len(title) < 256
+    assert title == f"Merge queue flaky test: {keeper.display_text(test, keeper.DISPLAY_TEST_LIMIT)}" and len(title) < 256
     assert {item["job"] for item in json.loads(path.read_text())["failures"]} == {job}  # raw name kept
     keeper.run(subject, path, apply=True)
     assert len(transport.issues()) == 1
@@ -411,6 +414,6 @@ def test_plain_flaky_issue_is_unchanged(tmp_path: Path, transport: Transport) ->
     assert transport.issues() == [
         (
             "Merge queue flaky test: pytest (3)",
-            "`pytest (3)` failed merge_group runs on distinct PRs #7, #42 within 24 hours.",
+            "`pytest (3)` failed merge_group runs on distinct PRs #7, #42 within 24 hours. Run IDs: 321.",
         )
     ]

@@ -1,0 +1,100 @@
+# Flake quarantine admission
+
+Issue #10608 uses the existing `tests/flake_quarantine.yaml` registry and
+`pytest-rerunfailures`. Admission never skips a test or changes its assertions.
+An eligible first failure gets one rerun. A second failure and pytest timeouts
+fail the job. Scheduled runs and `LU_FLAKE_DISABLE_RERUN=1` disable reruns.
+Recovered failures remain visible in the terminal, JUnit `flake.reruns`
+property, Actions summary and existing nightly flake ledger.
+
+## Evidence required for an entry
+
+- `node_id`: the exact pytest node, including class and parameter ID when present.
+  File, class and function patterns are refused.
+- `observed_run_ids`: at least two distinct GitHub Actions run IDs. Each must
+  be completed CI in this repository using one of these evidence paths:
+  - At least two runs on unmodified `main`, with each head SHA still in `main` history.
+  - Merge-group runs for at least two distinct PRs, created within the last seven
+    days. Neither queue diff may touch the test file or its transitive import
+    dependencies. The checker fetches the tested commits and reuses the import
+    scanner behind `scripts/ci/pre_push_shadow.py`. Missing test sources or
+    unresolved import loaders with changed Python sources refuse admission.
+    For a multi-PR group, a change by any member to these files refuses the evidence.
+  PR runs and other workflows remain inadmissible. One main run plus one
+  merge-group run does not meet either evidence path.
+  Downloaded `pytest-junit-shard-*` artifacts must report the exact node failing,
+  erroring, or passing after a recorded first failure in each run. A failing
+  workflow without the node's failure is insufficient.
+  Test-result artifacts are retained for 14 days, so a renewal usually needs
+  new failing nightly run IDs.
+- `fix_issue` and `owner`: an open repair issue and an accountable repair owner.
+  A PR number cannot replace the repair issue.
+- `equivalent_coverage`: a mapping from other exact pytest nodes to explanations
+  of the behavior each preserves. Each node must pass without reruns in both
+  baseline runs. Designated approvers judge whether these assertions provide
+  equivalent behavior coverage, including their continued execution in CI.
+- `admitted_on`, `expires_on`, `renewals`: the existing date limits apply.
+  Initial expiry is at most 30 days after admission. At most one renewal is
+  allowed, with `renewed_on` within the original 30 days and expiry at most
+  30 days after renewal. The admission or renewal start date must not be in the
+  future. Reruns begin on that date and stop after expiry plus seven grace days.
+- `admission_approval`: the numeric ID of a designated approval record comment
+  on the repair issue. A trusted repository publisher records the operator's
+  approval or the agreeing designated advisors' approval, with provenance and
+  the coverage judgment, before the entry is admitted. Ordinary discussion or
+  independent implementation review cannot replace this designated decision.
+
+The approval comment must contain this marker on its own line, replacing
+`DIGEST` with `admission_digest(entry)` from
+`scripts.common.flake_quarantine`:
+
+```text
+<!-- flake-quarantine-admission:DIGEST:APPROVE -->
+```
+
+The digest is SHA-256 of sorted JSON for all entry fields except
+`admission_approval`, with date values represented as ISO strings. The comment
+ID is excluded so the publisher can compute the digest before posting it.
+The checker verifies the comment's repair-issue identity, repository affiliation
+and exact digest. The trusted publisher attests designated approval provenance;
+the checker does not infer model identity or coverage adequacy from prose.
+Changing any admission field, including renewal dates, needs a new bound approval.
+
+## Verify before admission
+
+Set `PROJECT_PYTHON` to the interpreter prescribed by the task. Run this command
+from its dispatch worktree:
+
+```bash
+"$PROJECT_PYTHON" -m scripts.common.flake_quarantine --base-ref origin/main
+```
+
+Use the PR or merge-group base SHA when replaying that event. The CI Checks job
+runs this command against that trusted base with read-only GitHub permissions.
+Missing, expired, malformed or unavailable evidence refuses admission. Repair
+missing evidence before requesting another admission check.
+
+Every run lints the complete registry offline. New entries and changed entries,
+including renewals, additionally require online admission checks. Unchanged
+entries need no downloads because Actions artifacts can expire before the
+quarantine does. Removing an entry requires no new admission. Pytest collection
+uses offline lint and exact-node selection, with no GitHub dependency.
+
+The registry starts empty. This change admits no existing flake. The existing
+nightly expiry announcements, seven-day grace and escalation ledger remain in
+effect. See [the CI speed program](../epics/ci-speed-program.md) for D2 behavior.
+
+## Import evidence limits
+
+The queue comparison starts at the tested queue base's merge-base with current
+main, including speculative changes from PRs ahead in the queue. The untouched
+set includes the test, its Python imports, and each applicable `conftest.py`
+and its imports. When an import loader or path precedence is unresolved, any
+Python source change refuses admission. Unchanged Python sources can still
+supply evidence; runtime data reads and subprocess warnings alone are not
+unresolved Python imports.
+
+Residual risk, owned by the repair issue's admission approvers: non-Python
+inputs can affect tests without an import edge. These include pytest settings
+in `pyproject.toml`, `.github/workflows/ci.yml`, lockfiles, runtime data reads
+and subprocess inputs. Admission approval must assess these inputs separately.

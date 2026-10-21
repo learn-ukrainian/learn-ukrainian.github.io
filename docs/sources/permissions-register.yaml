@@ -1767,7 +1767,9 @@ sources:
   permission_status: granted
   permission_note: Operator decision 2026-10-20 admits the dictionary parts (Oho! A1 Словничок; 1000 words; 500
     verbs; ULP lesson-note vocabulary zones) as a database and word-card source. Prose, transcripts, flashcards
-    and audio stay private references.
+    and audio stay private references. Anna Ohoiko directly confirmed consent to citation display on 2026-10-20
+    after reviewing example citations from her books. The confirmed display rule permits attributed quotations
+    of example sentences and glosses on public learner pages.
   name: Ukrainian Lessons Podcast notes and Anna Ohoiko's books (private references)
   organisation: Anna Ohoiko (Ukrainian Lessons)
   role: Dictionary-part source for lexdata L1 and for word-card lexical facts; private pedagogy reference otherwise.
@@ -1779,13 +1781,12 @@ sources:
   - course_usage
   appears_in:
   - internal
+  - site
   appears_note: >-
-    Internal only until the operator confirms the display rule and per-field gating exists. PROPOSED public
-    scope (awaiting operator confirmation): site and dataset, lexical facts only (membership and lesson
-    position, printed stress and grammatical labels, only where they agree with VESUM/ULIF), credit
-    "Ukrainian Lessons (Anna Ohoiko)". English glosses, example sentences and sense wording would stay
-    internal evidence and never be shown verbatim. A public English gloss comes from another admitted
-    source or is authored and reviewed in-project.
+    Public learner pages (lexicon and word cards) may quote her example sentences and glosses with visible
+    credit to Anna Ohoiko and the book title, linked to her work where possible. Her teaching content is never
+    republished as our own. We learn from her teaching methods as from any other teacher and author
+    our own curriculum, following docs/best-practices/ulp-presentation-pattern.md.
   stored_in:
   - data/sources.db textbooks/textbook_sections (L0, unchanged)
   - data/lexdata.db L1 (derived)
@@ -1817,8 +1818,12 @@ sources:
       read_on: '2026-09-27'
     searched: []
   citation:
-    form: Proposed credit "Ukrainian Lessons (Anna Ohoiko)" beside lexical facts only; no printed quotation (display rule awaits operator confirmation).
-    shown_label: Ukrainian Lessons (Anna Ohoiko)
+    form: >-
+      Mark quoted example sentences and glosses as quotations and display "Anna Ohoiko, <book title>" beside
+      them, linked to her work where possible. Keep the source locator for each quotation. Visible attribution
+      credits and promotes her work without presenting it as our own teaching content. Anna Ohoiko directly
+      consented to citation display on 2026-10-20 after reviewing example citations from her books.
+    shown_label: Anna Ohoiko, <book title>
   removal:
     route: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues
     scope: the Atlas/practice fields carrying this source's label; the same fields in the open dataset export; the

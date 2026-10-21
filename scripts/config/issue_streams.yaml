@@ -20,12 +20,15 @@ streams:
   atlas-practice:
     title: "Word Atlas + Practice Hub product"
     epics: [4387]  # umbrella (closed #4700 UX-quality + intake #4220/#4378/#5224 folded into #4387; closed #5331 removed)
+  practice:
+    title: "Practice Hub, ZNO and activities"
+    epics: [11151]
   corpus-channels:
     title: "Corpus channels — acquisition & ingestion"
     epics: [4706]
   infra-harness:
     title: "Infra & fleet reliability (hooks, dispatch, routing)"
-    epics: [6943, 9737]  # #6943 successor to closed #4707; #9737 nested program (#6943 is at GitHub's 100 sub-issue limit)
+    epics: [6943, 9737, 11254]  # #6943 successor to closed #4707; #9737 nested program; #11254 overflow epic for the existing stream (#6943, #9737 and #10535 are at GitHub's 100 native sub-issue limit)
   docs-knowledge:
     title: "Repository knowledge system — docs authority, Astro truth, OpenWiki"
     epics: [5535]  # nested program; was provisionally under #4707/#6943 until this registry bootstrap (#5537)

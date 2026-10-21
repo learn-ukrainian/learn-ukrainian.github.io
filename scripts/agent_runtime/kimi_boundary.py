@@ -234,6 +234,9 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     args = list(sys.argv[1:] if argv is None else argv)
     hook = args[0] if args else ""
+    if hook in {"-h", "--help"}:
+        print(f"usage: kimi_boundary.py {{{'|'.join(GUARDED_HOOKS)}}}", file=sys.stderr)
+        return 0
     if hook not in GUARDED_HOOKS:
         print(f"usage: kimi_boundary.py {{{'|'.join(GUARDED_HOOKS)}}}", file=sys.stderr)
         return 2

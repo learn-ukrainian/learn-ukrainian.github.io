@@ -104,11 +104,12 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 # scripts.common is on the rules-workflow allowlist; scripts.lib is not.
 from scripts.common.bridge_paths import configured_bridge_db_path, default_bridge_db_path
 from scripts.common.flake_quarantine import TIMEOUT_PATTERN, load_registry, rerun_node_ids
-from scripts.common.repo_root import resolve_repo_root
+from scripts.common.repo_root import main_checkout_root, resolve_repo_root
 from tests import sparse_trees
 from tests.helpers.monitor import UNREACHABLE_MONITOR_URL, UNREACHABLE_TOOL_TIMING_URL
 
 pytest_plugins = [
+    "scripts.common.pytest_scratch",
     "tests.helpers.github_command_boundary",
     "tests.helpers.github_transport",
     "tests.helpers.source_db_write_guard",
@@ -165,6 +166,75 @@ def _dispatch_template_factory(tmp_path_factory: pytest.TempPathFactory) -> None
 
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
+
+
+class _TelemetryIsolation:
+    """Redirect events and refuse this process's emitter writes to production.
+
+    Audit opens rather than shared directory contents: live fleet processes
+    can append to production throughout a test session. The emitter frame
+    attributes an attempted write to this session, including either import
+    spelling and a replaced event-path resolver.
+    A child that scrubs the redirect environment can write to production
+    without this process's audit hook observing it.
+    """
+
+    def __init__(self, production_dirs: tuple[Path, ...]) -> None:
+        self.production_dirs = {root.resolve() for root in production_dirs}
+        self.leaks: set[str] = set()
+
+    def _audit_write(self, event: str, args: tuple[object, ...]) -> None:
+        if not self.production_dirs or event != "open" or len(args) < 3:
+            return
+        raw_path, mode, flags = args
+        writing = isinstance(mode, str) and any(char in mode for char in "wax+")
+        if not writing and not (isinstance(flags, int) and flags & (os.O_WRONLY | os.O_RDWR)):
+            return
+        if not isinstance(raw_path, (str, bytes, os.PathLike)):
+            return
+        path = Path(os.fsdecode(raw_path)).resolve()
+        root = next((root for root in self.production_dirs if path.is_relative_to(root)), None)
+        if root is None:
+            return
+        frame = sys._getframe(1)
+        try:
+            while frame is not None:
+                if frame.f_globals.get("__name__") in {"telemetry.emit", "scripts.telemetry.emit"}:
+                    self.leaks.add(f"batch_state/telemetry/events/{path.relative_to(root).as_posix()}")
+                    # emit_event swallows ordinary write errors. Retain the
+                    # attempt for sessionfinish as well as preventing the write.
+                    raise PermissionError("telemetry event guard: test emitter attempted a production write")
+                frame = frame.f_back
+        finally:
+            del frame
+
+    def pytest_sessionstart(self, session: pytest.Session) -> None:
+        config = session.config
+        # Session fixtures start after collection. Install here so imports and
+        # session fixtures also inherit the redirect, including xdist workers.
+        event_dir = config._tmp_path_factory.mktemp("telemetry-events")
+        patcher = pytest.MonkeyPatch()
+        patcher.setenv("LU_TELEMETRY_EVENTS_DIR", str(event_dir))
+        config.add_cleanup(patcher.undo)
+        sys.addaudithook(self._audit_write)
+        # Python audit hooks cannot be removed. Disable this session's hook
+        # during cleanup so a later pytest.main session has its own boundary.
+        config.add_cleanup(self.production_dirs.clear)
+
+    @pytest.hookimpl(optionalhook=True)
+    def pytest_testnodedown(self, node: Any, error: object) -> None:
+        self.leaks.update(getattr(node, "workeroutput", {}).get("telemetry_leaks", ()))
+
+    @pytest.hookimpl(trylast=True)
+    def pytest_sessionfinish(self, session: pytest.Session, exitstatus: int) -> None:
+        if hasattr(session.config, "workerinput"):
+            session.config.workeroutput["telemetry_leaks"] = sorted(self.leaks)
+        if self.leaks:
+            print("telemetry event guard: test emitter attempted production writes:")
+            for name in sorted(self.leaks):
+                print(f"  {name}")
+            if session.exitstatus == pytest.ExitCode.OK:
+                session.exitstatus = pytest.ExitCode.TESTS_FAILED
 
 
 def _loaded_module(*parts: str):
@@ -1200,6 +1270,8 @@ def _load_shard_allowlist() -> frozenset[str] | None:
     if not allowlist_path_str:
         return None
     allowlist_path = Path(allowlist_path_str)
+    if not allowlist_path.is_absolute():
+        allowlist_path = _REPO_ROOT / allowlist_path
     try:
         text = allowlist_path.read_text(encoding="utf-8")
     except OSError as error:
@@ -1226,6 +1298,10 @@ def pytest_ignore_collect(collection_path: Path, config: pytest.Config) -> bool 
     (including ``build``) cannot hide an allowed file. Inactive local
     collection still defers to pytest's normal traversal rules.
     """
+    # Generated child suites inherit CI's environment but have their own root.
+    # The repository shard file governs only this checkout's test session.
+    if config is not None and config.rootpath.resolve() != _REPO_ROOT:
+        return None
     allowlist = _load_shard_allowlist()
     if allowlist is None:
         return None
@@ -2707,6 +2783,15 @@ def pytest_configure_node(node: Any) -> None:
 
 
 def pytest_configure(config: pytest.Config) -> None:
+    config.pluginmanager.register(
+        _TelemetryIsolation(
+            tuple(
+                root / "batch_state" / "telemetry" / "events"
+                for root in dict.fromkeys((_REPO_ROOT, main_checkout_root(_REPO_ROOT)))
+            )
+        ),
+        "telemetry-isolation",
+    )
     _restore_published_credentials(config)
     if (
         not hasattr(config, "workerinput")

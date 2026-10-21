@@ -18,6 +18,9 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
 from scripts.audit.grounding_gate_v2 import DEFAULT_TAU
 from scripts.audit.layerb_derivation import derive_keyed_records
 

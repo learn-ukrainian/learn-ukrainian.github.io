@@ -30,6 +30,10 @@ from typing import Any
 import yaml
 from jsonschema import Draft202012Validator
 
+if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
+    __package__ = "scripts.review.validate"
+
 from scripts.curriculum.resolver.codes import TABS
 from scripts.review.receipts.ledger import LedgerError, LedgerHashStaleLastLine, records, review_tools
 

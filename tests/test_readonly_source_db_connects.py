@@ -286,7 +286,6 @@ SOURCE_INGEST_BUILD_WRITERS = {
     "scripts/lexicon/load_relation_candidates.py",
     "scripts/lexicon/migrate_sum11_sovietization.py",
     "scripts/lexicon/runner/ulif_forms.py",
-    "scripts/lexicon/sum20_lookup.py",
     "scripts/lexicon/teacher_deck.py",
     "scripts/lexicon/tools/import_ulif_dump.py",
     "scripts/lexicon/tools/migrate_ulif_raw.py",

@@ -140,7 +140,7 @@ def test_open_model_data_resolves_to_dedicated_provider_slot(resolver: str, expe
         ("devops", "devops\tepic:5703\n"),
         ("infra.devops", "devops\tepic:5703\n"),
         ("atlas", "atlas\tepic:4387\n"),
-        ("practice", "atlas\tepic:4387\n"),
+        ("practice", "practice\tepic:11151\n"),
         ("practice-hub", "atlas\tepic:4387\n"),
         ("atlas.practice", "atlas\tepic:4387\n"),
         ("hramatka", "hramatka\tepic:4542\n"),
