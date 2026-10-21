@@ -3,12 +3,16 @@
 from __future__ import annotations
 
 import hashlib
+import json
 import os
 import re
 import stat
+import subprocess
+from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
 
+from scripts.common.nofollow_walk import ComponentOpenError
 from scripts.orchestration.worktree_artifacts import REGENERABLE_CACHE_DIRECTORIES
 
 # #10227: archive before release; these are never auto-finalize exclusions.
@@ -173,6 +177,171 @@ SITE_BUILD_OUTPUT_PATTERNS = (
 )
 _SITE_BUILD_OUTPUT = re.compile("(?:" + "|".join(SITE_BUILD_OUTPUT_PATTERNS) + ")")
 
+# These names alone never authorize deletion. The committed hydrators reproduce
+# exactly the bytes pinned by their committed release pointers; richer local
+# manifests/shards must still be preserved (#4917).
+RELEASE_OUTPUT_PATTERNS = (
+    r"site/src/data/lexicon-manifest\.json",
+    r"site/public/lexicon/practice-(?:index|lexemes|cloze|stress|classify|paradigm|synonym|heritage|paronym|antonym|homonym|imperative)\.(?:A1|A2|B1|B2|C1)\.json",
+)
+_RELEASE_OUTPUT = re.compile("(?:" + "|".join(RELEASE_OUTPUT_PATTERNS) + ")")
+
+
+def committed_release_pins(worktree: Path, tracked: set[str]) -> dict[str, tuple[int, str]]:
+    """Read clean HEAD pointers once per inventory, never trust a local-only pin."""
+    from scripts.orchestration import worktree_artifacts as artifacts
+
+    pins = {}
+    for stem, command in (
+        ("lexicon-manifest", "hydrate-manifest.mjs"),
+        ("lexicon-practice-deck", "hydrate-practice-deck.mjs"),
+    ):
+        pointer = f"site/src/data/{stem}.pointer.json"
+        generator = f"site/scripts/{command}"
+        if not {pointer, generator} <= tracked:
+            continue
+        try:
+            # Check the index and worktree independently: a staged pointer
+            # restored only on disk must not acquire committed provenance.
+            for args in (
+                ["diff", "--cached", "--quiet", "HEAD", "--", pointer, generator],
+                ["diff", "--quiet", "--", pointer, generator],
+            ):
+                artifacts.safe_git(
+                    args, cwd=worktree, env=artifacts._safe_git_env(), capture_output=True, check=True, timeout=30
+                )
+            committed = artifacts.safe_git(
+                ["cat-file", "blob", f"HEAD:{pointer}"],
+                cwd=worktree,
+                env=artifacts._safe_git_env(),
+                capture_output=True,
+                check=True,
+                timeout=30,
+            ).stdout
+            walked = artifacts._read_preserved_bytes(worktree / pointer, root=worktree)
+            if walked.file_type != "regular" or walked.payload != committed:
+                continue
+            command_bytes = artifacts.safe_git(
+                ["cat-file", "blob", f"HEAD:{generator}"],
+                cwd=worktree,
+                env=artifacts._safe_git_env(),
+                capture_output=True,
+                check=True,
+                timeout=30,
+            ).stdout
+            command_file = artifacts._read_preserved_bytes(worktree / generator, root=worktree)
+            if command_file.file_type != "regular" or command_file.payload != command_bytes:
+                continue
+            pointer_data = json.loads(committed)
+            if not isinstance(pointer_data, dict):
+                continue
+            if not str(pointer_data.get("asset_url", "")).startswith(
+                "https://github.com/learn-ukrainian/learn-ukrainian.github.io/releases/download/"
+            ):
+                continue
+            if not all(pointer_data.get(key) for key in ("release_tag", "gz_sha256", "gz_bytes")):
+                continue
+            if stem == "lexicon-manifest":
+                if not all(
+                    pointer_data.get(key)
+                    for key in (
+                        "manifest_version",
+                        "manifest_fingerprint",
+                        "fingerprint_schema_version",
+                    )
+                ):
+                    continue
+                entries = [
+                    (
+                        "site/src/data/lexicon-manifest.json",
+                        pointer_data.get("json_bytes"),
+                        pointer_data.get("json_sha256"),
+                    )
+                ]
+            else:
+                files = pointer_data.get("files")
+                if (
+                    pointer_data.get("package_schema_version") != 1
+                    or not isinstance(files, list)
+                    or len(files) != pointer_data.get("file_count")
+                    or not all(pointer_data.get(key) for key in ("deck_version", "package_sha256", "package_bytes"))
+                ):
+                    continue
+                entries = [
+                    (f"site/public/lexicon/{item.get('path', '')}", item.get("bytes"), item.get("sha256"))
+                    for item in files
+                    if isinstance(item, dict)
+                ]
+                if len(entries) != len(files) or len({name for name, _, _ in entries}) != len(entries):
+                    continue
+            for name, size, digest in entries:
+                if (
+                    _RELEASE_OUTPUT.fullmatch(name)
+                    and type(size) is int
+                    and size >= 0
+                    and isinstance(digest, str)
+                    and re.fullmatch(r"[0-9a-f]{64}", digest)
+                ):
+                    pins[name] = (size, digest)
+        except (OSError, ValueError, ComponentOpenError, subprocess.SubprocessError):
+            # Unverifiable regeneration is ordinary task output, never permission.
+            continue
+    return pins
+
+
+def _matches_release_pin(worktree: Path, relative: Path, pin: tuple[int, str]) -> bool:
+    """Stream bytes through the existing descriptor walk; never follow a link."""
+    from scripts.orchestration import worktree_artifacts as artifacts
+
+    root_fd = artifacts._open_trusted_root(worktree)
+    try:
+        parent_fd, owned = artifacts._open_parent(root_fd, relative.parts[:-1])
+        try:
+            fd = os.open(relative.name, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=parent_fd)
+            try:
+                before = os.fstat(fd)
+                if not stat.S_ISREG(before.st_mode) or before.st_size != pin[0]:
+                    return False
+                digest = hashlib.sha256()
+                size = 0
+                while chunk := os.read(fd, 1024 * 1024):
+                    size += len(chunk)
+                    if size > pin[0]:
+                        return False
+                    digest.update(chunk)
+                after = os.fstat(fd)
+                # Rewalk after hashing: a renamed ancestor or replaced leaf
+                # must not lend the old inode's proof to new local output.
+                current_parent, current_owned = artifacts._open_parent(root_fd, relative.parts[:-1])
+                try:
+                    current = os.stat(relative.name, dir_fd=current_parent, follow_symlinks=False)
+                finally:
+                    if current_owned:
+                        os.close(current_parent)
+                return (size, digest.hexdigest()) == pin and (
+                    before.st_dev,
+                    before.st_ino,
+                    before.st_size,
+                    before.st_mtime_ns,
+                    before.st_ctime_ns,
+                ) == (after.st_dev, after.st_ino, after.st_size, after.st_mtime_ns, after.st_ctime_ns) == (
+                    current.st_dev,
+                    current.st_ino,
+                    current.st_size,
+                    current.st_mtime_ns,
+                    current.st_ctime_ns,
+                )
+            finally:
+                os.close(fd)
+        finally:
+            if owned:
+                os.close(parent_fd)
+    except (OSError, ValueError, ComponentOpenError):
+        return False
+    finally:
+        os.close(root_fd)
+
+
 # #10519: the issue-stream audit's refresh sidecars (scripts/orchestration/
 # issue_stream_audit.py REFRESH_STATE_PATH / REFRESH_LOCK_PATH) are runtime
 # state that the next audit run rewrites. Older audit runs wrote them into the
@@ -192,7 +361,14 @@ _DATABASE_SUFFIXES = frozenset(
 )
 
 
-def is_regenerable_ignored_path(path: str, *, worktree: Path, tracked: set[str]) -> bool:
+def is_regenerable_ignored_path(
+    path: str,
+    *,
+    worktree: Path,
+    tracked: set[str],
+    ignored: set[str] | None = None,
+    release_pins: Mapping[str, tuple[int, str]] | None = None,
+) -> bool:
     """Classify regenerable output without traversing any symbolic link.
 
     A lockfile must be tracked and a local regular file. Environment contents
@@ -202,6 +378,12 @@ def is_regenerable_ignored_path(path: str, *, worktree: Path, tracked: set[str])
     if relative.is_absolute() or ".." in relative.parts or ".venv" in relative.parts or not relative.parts:
         return False
     if relative.as_posix() in tracked:
+        return False
+    if ignored is None:
+        from scripts.orchestration import worktree_artifacts as artifacts
+
+        ignored = set(artifacts._git_paths(worktree, "--others", "--ignored", "--exclude-standard"))
+    if relative.as_posix() not in ignored:
         return False
     # Site candidates require a complete component walk before pattern matching.
     site_tree = relative.parts[:2] in {("site", "dist"), ("site", "public")} or relative.parts[:3] == (
@@ -237,6 +419,11 @@ def is_regenerable_ignored_path(path: str, *, worktree: Path, tracked: set[str])
     # a tracked file, a database, or unlisted output. Never exempt a subtree.
     if audit_state:
         return stat.S_ISREG(status.st_mode) and status.st_size <= AUDIT_REFRESH_STATE_MAX_BYTES
+    if stat.S_ISREG(status.st_mode) and _RELEASE_OUTPUT.fullmatch(relative.as_posix()):
+        if release_pins is None:
+            release_pins = committed_release_pins(worktree, tracked)
+        pin = release_pins.get(relative.as_posix())
+        return pin is not None and _matches_release_pin(worktree, relative, pin)
     return (
         stat.S_ISREG(status.st_mode)
         and not _DATABASE_SUFFIXES.intersection(suffix.casefold() for suffix in relative.suffixes)
