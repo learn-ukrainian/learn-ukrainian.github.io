@@ -14429,8 +14429,8 @@ def _dispatch(
     # leaves no residue. Read-only modes are exempt inside the helper.
     # Dry-run must leave zero residue (same contract as tmp-lease reap) — skip
     # the shared ownership ledger entirely (Claude CF #5649 r11).
-    # A concrete overlap waits in the ledger's bounded FIFO queue
-    # (DELEGATE_OWNERSHIP_WAIT_S) instead of refusing at once (#11281); only
+    # A concrete overlap waits on live holders and requeues expired tickets
+    # (#11351; DELEGATE_OWNERSHIP_WAIT_S is the unknown-holder fallback); only
     # this dispatch's own worktree lock is held while it waits.
     if not bool(getattr(args, "dry_run", False)):
         try:
@@ -14439,6 +14439,7 @@ def _dispatch(
                 admit_write_paths,
                 env_guard_mode,
                 env_queue_wait_s,
+                publish_requeue_notice,
             )
         except ImportError:  # pragma: no cover - flat script path
             from guardrails.delegate_ownership import (  # type: ignore
@@ -14446,6 +14447,7 @@ def _dispatch(
                 admit_write_paths,
                 env_guard_mode,
                 env_queue_wait_s,
+                publish_requeue_notice,
             )
 
         guard_mode = env_guard_mode()
@@ -14459,6 +14461,10 @@ def _dispatch(
                 guard_mode=guard_mode,
                 wait_s=env_queue_wait_s(),
                 on_queued=lambda notice: print(f"⏳ {notice}", file=sys.stderr, flush=True),
+                requeue_on_timeout=True,
+                on_requeued=lambda notice: publish_requeue_notice(
+                    notice, task_id=task_id, initiator=attribution.initiator, run_nonce=run_nonce,
+                ),
             )
         except Exception as own_exc:
             # WARN (opt-in via DELEGATE_OWNERSHIP_MODE=warn): never crash on ledger I/O.
