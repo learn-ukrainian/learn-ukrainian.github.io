@@ -256,12 +256,14 @@ _TRIGGER_CASES = [
 
 
 @pytest.mark.parametrize(("trigger_name", "primary_failure"), _TRIGGER_CASES)
+@pytest.mark.parametrize("selector", ["primary-model", None])
 def test_runner_failover_switches_for_eligible_trigger_classes(
     tmp_path,
     monkeypatch,
     capsys,
     trigger_name,
     primary_failure,
+    selector,
 ):
     sink_events: list[tuple[str, dict[str, Any]]] = []
     adapter, records, emitted_events = _install_fake_runtime(
@@ -279,6 +281,7 @@ def test_runner_failover_switches_for_eligible_trigger_classes(
     result = runner_mod.invoke(
         "failover-test",
         "hello",
+        model=selector,
         mode="read-only",
         cwd=tmp_path,
         event_sink=lambda name, **fields: sink_events.append((name, fields)),
@@ -296,6 +299,16 @@ def test_runner_failover_switches_for_eligible_trigger_classes(
     assert sink_events[0][0] == "agent_runtime_substitution"
     assert emitted_events[0][0] == "agent_runtime_substitution"
     assert RUNNER_FAILOVER_MARKER in capsys.readouterr().err
+
+    expected = {
+        "requested_selector": selector, "observed_model": None,
+        "identity_state": "unknown", "observed_model_source": None,
+    }
+    for row in (records[0], vars(result), sink_events[0][1], emitted_events[0][1]):
+        assert {key: row[key] for key in expected} == expected
+        assert row.get("model", "fallback-model") == "fallback-model"
+    assert runner_mod._REQUESTED_SELECTOR.get() is None
+    assert runner_mod._INVOCATION_NONCE.get() is None
 
 
 def test_runner_failover_does_not_switch_for_content_policy(
@@ -1100,6 +1113,48 @@ def test_agy_configured_failover_validates_before_projection(tmp_path, monkeypat
     assert runner_mod._AGY_OBSERVED_IDENTITY.get() is None
 
 
+@pytest.mark.parametrize("kill_reason", ["stdout_silence_timeout", "initial_response_timeout", "hard_timeout"])
+def test_watchdog_substitution_events_preserve_observed_identity(tmp_path, monkeypatch, kill_reason):
+    from agent_runtime.errors import AgentTimeoutError
+    from telemetry import emit as telemetry_emit
+    from tests.agent_runtime.adapters.test_agy_claude_routes import consistency_stream, mock_agy_provider
+
+    pin, observed = "claude-sonnet-5-5-high", "claude-opus-5-5-high"
+    launches, _, _ = mock_agy_provider(
+        monkeypatch, tmp_path, runner_mod, stdout=consistency_stream(pin, "other-pin"), exit_kind="timeout",
+    )
+    monkeypatch.setattr(runner_mod, "should_kill", lambda *a, **k: kill_reason)
+    emitted, sink, records = [], [], []
+    monkeypatch.setattr(telemetry_emit, "emit_event", lambda name, fields: emitted.append((name, fields)))
+    monkeypatch.setattr(runner_mod, "write_record", records.append)
+
+    error = AgentTimeoutError if kill_reason == "hard_timeout" else AgentStalledError
+    with pytest.raises(error):
+        runner_mod.invoke(
+            "agy", "Implement.", model=pin, mode="workspace-write", cwd=tmp_path,
+            task_id="watchdog-task", tool_config={"run_nonce": "watchdog-run"},
+            event_sink=lambda name, **fields: sink.append((name, fields)),
+        )
+
+    assert len(launches) == len(records) == 1
+    expected = {
+        "requested_selector": pin, "observed_model": observed,
+        "identity_state": "observed", "observed_model_source": "provider-init",
+    }
+    for events in (emitted, sink):
+        event, = [fields for name, fields in events if name == "agent_runtime_substitution"]
+        assert {key: event[key] for key in expected} == expected
+        assert event["observed_model_provenance"] == {
+            "requested_model": pin,
+            "invocation_id": records[0]["observed_model_provenance"]["invocation_id"],
+        }
+        assert event["observed_model_provenance"]["invocation_id"].replace("-", "") == (
+            records[0]["model_identity"]["provenance"]["invocation_id"]
+        )
+        assert event["substitution"]["actual_model"] == observed
+    assert runner_mod._AGY_OBSERVED_IDENTITY.get() is None
+
+
 @pytest.mark.parametrize("pin,other", [
     ("claude-sonnet-5-5-high", "claude-opus-5-5-high"),
     ("claude-opus-5-5-high", "claude-sonnet-5-5-high"),
@@ -1110,6 +1165,8 @@ def test_agy_configured_failover_validates_before_projection(tmp_path, monkeypat
     ("other-pin", True, True), ("other-family", True, True), ("repeated", True, True),
     ("nested-model", False, False), ("unknown", False, False),
     ("unbound", False, False), ("stale-context", False, False),
+    ("missing", False, False), ("duplicate-after", False, False),
+    ("terminal-session", False, False), ("repeated-model", False, False), ("configuration", False, False),
 ])
 def test_agy_substitution_summary_through_runner_and_saved_usage(
     tmp_path, monkeypatch, pin, other, path, case, known, substituted,
@@ -1157,6 +1214,20 @@ def test_agy_substitution_summary_through_runner_and_saved_usage(
     saved, = [json.loads(line) for line in usage_file.read_text().splitlines()]
     assert result.model == saved["model"] == (actual if substituted else pin)
     assert result.usage_record["model"] == saved["model"]
+    expected_row = next(row for row in json.loads(
+        (Path(__file__).resolve().parents[1] / "fixtures" / "accounting_10954.json").read_text()
+    ) if row["pin"] == pin and row["case"] == case)
+    expected_projection = expected_row["expected"]
+    from scripts.agent_runtime.accounting import recorded_model_accounting_fields
+
+    for row in (saved, result.usage_record, vars(result), recorded_model_accounting_fields(saved)):
+        assert {key: row[key] for key in expected_projection} == expected_projection
+        provenance = row["observed_model_provenance"]
+        if provenance is not None:
+            assert provenance["invocation_id"].replace("-", "") == result.model_identity["provenance"]["invocation_id"]
+            provenance = {**provenance, "invocation_id": "current-invocation"}
+        assert provenance == expected_row["expected_provenance"]
+    assert saved["model"] == expected_row["model"]
     summary_events = [fields for name, fields in emitted if name == "agent_runtime_substitution"]
     sink_events = [fields for name, fields in sink if name == "agent_runtime_substitution"]
     if substituted:
@@ -1168,6 +1239,8 @@ def test_agy_substitution_summary_through_runner_and_saved_usage(
         assert len(summary_events) == len(sink_events) == 1
         for event in summary_events + sink_events:
             assert event["model"] == actual
+            assert {key: event[key] for key in expected_projection} == expected_projection
+            assert event["observed_model_provenance"] == result.observed_model_provenance
             assert {key: event["substitution"][key] for key in expected} == expected
     else:
         assert result.substitution is None

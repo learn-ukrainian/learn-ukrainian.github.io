@@ -660,6 +660,8 @@ def test_changed_runtime_invalidates_resource_proof(packet, monkeypatch):
     "scripts/atlas/word_card_certification.py",
     "scripts/atlas/word_card_golden_set.py",
     "scripts/atlas/word_card_assembly.py",
+    "scripts/atlas/word_card_contrasts.py",
+    "scripts/open_dataset/russification.py",
     "scripts/projects/open_model_data/source_completeness_manifest.py",
 ])
 def test_changed_implementation_invalidates_resource_proof(packet, monkeypatch, tmp_path, changed_file):

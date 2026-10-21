@@ -4,28 +4,38 @@ import WordAtlasPageShell from '../../lexicon/WordAtlasPageShell.astro';
 import WordCardPreview from '../../lexicon/WordCardPreview';
 import type { PreviewCard } from '../../lib/lexicon/word-card-preview';
 import type { EntryRecord } from '../../lib/lexicon/atlas-data-source';
+import type { LoadedRelease, ReleaseCard } from '../../lib/lexicon/word-card-release';
+import { releasePreviewInputs, type PreviewInput } from '../../lib/lexicon/word-card-preview-inputs';
 
 export async function getStaticPaths() {
   if (process.env.ATLAS_WORD_CARD_PREVIEW !== '1') return [];
-  const { previewInputs } = await import('../../../tests/fixtures/word-card-preview/inputs');
-  return (await previewInputs()).flatMap(sample => [false, true].map(compare => ({
+  const samples: PreviewInput[] = [];
+  // Vite removes this import entirely from builds without the explicit test flag.
+  if (import.meta.env.PUBLIC_ATLAS_WORD_CARD_PREVIEW_CONTROLS === '1') {
+    const { previewInputs } = await import('../../../tests/fixtures/word-card-preview/inputs');
+    samples.push(...await previewInputs());
+  }
+  samples.push(...releasePreviewInputs({ enabled: true,
+    controlled: import.meta.env.PUBLIC_ATLAS_WORD_CARD_PREVIEW_CONTROLS === '1',
+    artifactPath: process.env.ATLAS_WORD_CARD_RELEASE_PATH, pin: process.env.ATLAS_WORD_CARD_RELEASE_PIN }));
+  return samples.flatMap(sample => [false, true].map(compare => ({
     params: { path: `${compare ? 'compare/' : ''}${sample.name}` },
     props: { ...sample, compare },
   })));
 }
 interface Props {
-  card: PreviewCard; current: EntryRecord | null; compare: boolean;
+  card: PreviewCard | ReleaseCard | LoadedRelease; current: EntryRecord | null; compare: boolean;
   fingerprint: string; source: string; generatedAt: string; manifestVersion: string;
 }
 const { card, current, compare, fingerprint, source, generatedAt, manifestVersion } = Astro.props;
 ---
-<CourseLayout title="Word-card local preview" description="Controlled presentation diagnostics" currentPath={Astro.url.pathname} wide showHero={false}>
+<CourseLayout title="Word-card preview" description="Pinned candidate release preview" currentPath={Astro.url.pathname} wide showHero={false}>
   <meta slot="head" name="robots" content="noindex, nofollow" />
   <main class="word-card-preview">
-    <aside role="note" data-preview-banner>Local preview. Controlled schema examples, not certified learner cards. Mechanics only.</aside>
+    <aside role="note" data-preview-banner>Optional noindex preview, not certified learner cards. Producer status is not linguistic certification or switch approval.</aside>
     <h1>{compare ? 'Current / candidate comparison' : 'Word-card preview'}</h1>
     <p>Input: {source}. SHA-256: <code data-input-hash>{fingerprint}</code></p>
-    <p>Real data unavailable. Data #10516 owns the certified export. Atlas retains deployed preview, accepted better/worse evidence and page-switch gates.</p>
+    <p>{card.kind === 'release-card' || card.kind === 'release' ? 'Pinned release preview. Publication and switch gates remain separate.' : 'Real data unavailable. Data #10516 owns the certified export. Atlas retains deployed preview, accepted better/worse evidence and page-switch gates.'}</p>
     <div class:list={['preview-columns', { comparison: compare }]}>
       {compare && <section aria-label="Current presentation"><h2>Current presentation</h2>
         {current ? <WordAtlasPageShell state={{ status: 'ready', record: current, generatedAt, manifestVersion }} /> : <p>Unavailable: unresolved identity pairing.</p>}

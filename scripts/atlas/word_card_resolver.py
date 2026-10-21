@@ -10,6 +10,9 @@ from __future__ import annotations
 
 import hashlib
 import json
+from collections.abc import Iterable
+
+from scripts.atlas.word_card_contrasts import sum11_quotations, validate_card_contrasts
 
 
 def canonical(obj) -> str:
@@ -337,8 +340,9 @@ def _recompute(c: dict) -> None:
             link_rec["state"] = "suppressed"
 
 
-def _project(c: dict) -> dict:
+def _project(c: dict, *, sum11_texts: Iterable[str] = ()) -> dict:
     out = json.loads(json.dumps(c, ensure_ascii=False))
+    inventory = [*sum11_texts, *sum11_quotations(out["assertions"])]
     _recompute(out)
     out["assertions"] = [
         a
@@ -350,13 +354,14 @@ def _project(c: dict) -> dict:
         }
         for a in out["assertions"]
     ]
+    validate_card_contrasts(out, sum11_texts=inventory)
     return out
 
 
-def public_projection(c: dict) -> dict:
+def public_projection(c: dict, *, sum11_texts: Iterable[str] = ()) -> dict:
     """Public outputs are RECOMPUTED from the surviving assertions and then carry suppressed assertions as
     tombstones only (schema.md §12.3): a withdrawn value is gone from `fields`, `senses[].fields`, `links`
     and `assertions` alike, and the projection's `card_version` reflects the withdrawal."""
-    out = _project(c)
+    out = _project(c, sum11_texts=sum11_texts)
     out["build"]["card_version"] = card_version(out)
     return out

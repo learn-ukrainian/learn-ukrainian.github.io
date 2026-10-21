@@ -23,6 +23,9 @@ if _pkg_dir not in sys.path:
 
 import yaml
 
+if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
 from scripts.generate_mdx.generate_mdx_direct_content import (
     render_checkpoint,
     render_communicative,

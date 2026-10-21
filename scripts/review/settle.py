@@ -15,6 +15,7 @@ import hashlib
 import json
 import os
 import re
+import sys
 import tempfile
 from contextlib import closing
 from pathlib import Path
@@ -22,6 +23,9 @@ from typing import Any
 
 import yaml
 from jsonschema import Draft202012Validator
+
+if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from scripts.build.fresh.assemble import component_props_from_jsx
 from scripts.build.fresh.path_guard import SLUG_RE

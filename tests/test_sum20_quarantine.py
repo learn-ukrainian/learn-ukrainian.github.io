@@ -13,6 +13,7 @@ import pytest
 
 from scripts.ingest import sum20_quarantine_unverified as quarantine_mod
 from scripts.lexicon import sum20_lookup, thin_page_report
+from scripts.lexicon.sum20_store import Sum20StoreError
 from scripts.wiki import sources_db
 from scripts.wiki.sum20_official import (
     PARSER_VERSION,
@@ -22,6 +23,16 @@ from scripts.wiki.sum20_official import (
     live_article_predicate,
     live_article_predicate_for,
 )
+
+
+@pytest.fixture(autouse=True)
+def isolated_store_roots(monkeypatch, tmp_path):
+    monkeypatch.setattr(sum20_lookup, "REPO_ROOT", tmp_path)
+    monkeypatch.setattr(sources_db, "PROJECT_ROOT", tmp_path)
+    monkeypatch.delenv("LEXDATA_DB_PATH", raising=False)
+    monkeypatch.delenv("LU_LEXDATA_DB", raising=False)
+    monkeypatch.delenv("LU_SOURCES_DB", raising=False)
+
 
 _LEGACY_ARTICLES_SQL = """
 CREATE TABLE sum20_articles (
@@ -175,78 +186,64 @@ def test_lookup_read_path_opens_read_only(quarantined_db):
 
 def test_lookup_on_a_missing_database_returns_nothing_and_creates_no_file(tmp_path):
     missing = tmp_path / "absent.db"
-    assert sum20_lookup.lookup_sum20_articles("дух", missing) == []
+    with pytest.raises(Sum20StoreError, match="store_missing"):
+        sum20_lookup.lookup_sum20_articles("дух", missing)
     assert not missing.exists()
 
 
 def test_read_only_uri_caller_cannot_create_a_missing_database(tmp_path):
     missing = tmp_path / "absent.db"
-    with pytest.raises(sqlite3.OperationalError):
+    with pytest.raises(Sum20StoreError, match="uri_override"):
         sum20_lookup._get_db(missing.as_uri(), write=False)
     assert not missing.exists()
 
 
 def test_read_only_uri_caller_cannot_write(quarantined_db):
-    conn = sum20_lookup._get_db(quarantined_db.as_uri(), write=False)
-    try:
-        conn.execute("PRAGMA query_only = OFF")
-        with pytest.raises(sqlite3.OperationalError, match="readonly"):
-            conn.execute("DELETE FROM sum20_articles")
-    finally:
-        conn.close()
+    with pytest.raises(Sum20StoreError, match="uri_override"):
+        sum20_lookup._get_db(quarantined_db.as_uri(), write=False)
 
 
 @pytest.mark.parametrize("mode", ["rw", "rwc", "memory", "%72w"])
 def test_read_only_uri_caller_refuses_a_writable_mode(quarantined_db, mode):
-    with pytest.raises(ValueError, match="refuses a URI"):
+    with pytest.raises(Sum20StoreError, match="uri_override"):
         sum20_lookup._get_db(f"{quarantined_db.as_uri()}?mode={mode}", write=False)
 
 
 @pytest.mark.parametrize("suffix", ["#section", "?cache=shared#section", "?mode=ro#x", "#"])
 def test_read_only_uri_caller_refuses_a_fragment(quarantined_db, tmp_path, suffix):
-    with pytest.raises(ValueError, match="fragment"):
+    with pytest.raises(Sum20StoreError, match="uri_override"):
         sum20_lookup._get_db(quarantined_db.as_uri() + suffix, write=False)
     missing = tmp_path / "absent.db"
-    with pytest.raises(ValueError, match="fragment"):
+    with pytest.raises(Sum20StoreError, match="uri_override"):
         sum20_lookup._get_db(missing.as_uri() + suffix, write=False)
     assert not missing.exists()
 
 
 def test_refused_fragment_uri_leaves_an_existing_database_unmodified(quarantined_db):
     before = quarantined_db.read_bytes()
-    with pytest.raises(ValueError, match="fragment"):
+    with pytest.raises(Sum20StoreError, match="uri_override"):
         sum20_lookup._get_db(quarantined_db.as_uri() + "?cache=shared#section", write=False)
     assert quarantined_db.read_bytes() == before
 
 
-def test_read_only_uri_rewrites_to_one_mode_ro_parameter(quarantined_db):
-    rewritten = sum20_lookup._read_only_uri(quarantined_db.as_uri() + "?cache=shared&mode=ro&mode=ro")
-    assert rewritten == quarantined_db.as_uri() + "?cache=shared&mode=ro"
-    assert sum20_lookup._read_only_uri("file:rel.db") == "file:rel.db?mode=ro"
+def test_read_only_uri_is_refused_instead_of_rewritten(quarantined_db):
+    with pytest.raises(Sum20StoreError, match="uri_override"):
+        sum20_lookup._get_db(quarantined_db.as_uri() + "?cache=shared&mode=ro&mode=ro")
+    with pytest.raises(Sum20StoreError, match="uri_override"):
+        sum20_lookup._get_db("file:rel.db")
 
 
-def test_write_branch_passes_a_file_uri_through_unchanged(tmp_path):
+def test_write_branch_cannot_create_a_file_from_uri(tmp_path):
     uri = (tmp_path / "fresh.db").as_uri() + "?cache=shared"
-    conn = sum20_lookup._get_db(uri, write=True)
-    try:
-        conn.execute("CREATE TABLE IF NOT EXISTS probe (x INTEGER)")
-        conn.execute("INSERT INTO probe VALUES (1)")
-        conn.commit()
-    finally:
-        conn.close()
-    assert (tmp_path / "fresh.db").exists()
+    with pytest.raises(Sum20StoreError, match="uri_override"):
+        sum20_lookup._get_db(uri, write=True)
+    assert not (tmp_path / "fresh.db").exists()
 
 
-def test_read_only_uri_keeps_other_parameters_and_an_explicit_mode_ro(quarantined_db):
+def test_read_only_uri_parameters_cannot_authorize_access(quarantined_db):
     for uri in (f"{quarantined_db.as_uri()}?mode=ro", f"{quarantined_db.as_uri()}?cache=shared"):
-        conn = sum20_lookup._get_db(uri, write=False)
-        try:
-            conn.execute("PRAGMA query_only = OFF")
-            with pytest.raises(sqlite3.OperationalError, match="readonly"):
-                conn.execute("DELETE FROM sum20_articles")
-            assert conn.execute("SELECT COUNT(*) FROM sum20_articles").fetchone()[0] > 0
-        finally:
-            conn.close()
+        with pytest.raises(Sum20StoreError, match="uri_override"):
+            sum20_lookup._get_db(uri, write=False)
 
 
 def test_path_branch_still_opens_read_only_and_creates_no_file(quarantined_db, tmp_path):
@@ -258,7 +255,7 @@ def test_path_branch_still_opens_read_only_and_creates_no_file(quarantined_db, t
     finally:
         conn.close()
     missing = tmp_path / "absent.db"
-    with pytest.raises(sqlite3.OperationalError):
+    with pytest.raises(Sum20StoreError, match="store_missing"):
         sum20_lookup._get_db(missing)
     assert not missing.exists()
 

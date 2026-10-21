@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import json
 import logging
+import re
 import shutil
 from pathlib import Path
 
@@ -39,6 +40,14 @@ _logger = logging.getLogger(__name__)
 DEEPSEEK_OPENCODE_MODEL_ROUTES: dict[str, str] = {
     "deepseek-v4.1-flash": "deepseek/deepseek-flash",
 }
+
+_FLASH_MODEL_LINE = "DeepSeek V4.1 Flash"
+
+
+def _is_flash_model_line(name: str) -> bool:
+    # #11143 policy: V4.1 Flash only, always the latest release. Numeric
+    # release tags stay within that line; other versions and tiers do not.
+    return re.fullmatch(re.escape(_FLASH_MODEL_LINE) + r"(?: [0-9]+)?", name) is not None
 
 
 def _cached_flash_name() -> str | None:
@@ -127,10 +136,10 @@ class DeepSeekAdapter:
         invocation_model = DEEPSEEK_OPENCODE_MODEL_ROUTES.get(target_model, target_model)
         if invocation_model == "deepseek/deepseek-flash":
             cached_name = _cached_flash_name()
-            if cached_name is not None and cached_name != "DeepSeek V4.1 Flash":
+            if cached_name is not None and not _is_flash_model_line(cached_name):
                 raise ValueError(
                     "deepseek/deepseek-flash alias drift: cached models.dev name "
-                    f"is {cached_name!r}, expected 'DeepSeek V4.1 Flash'"
+                    f"is {cached_name!r}, expected {_FLASH_MODEL_LINE!r} with an optional numeric release tag"
                 )
 
         if is_deepseek_first_party_forbidden_in_ci("deepseek", invocation_model):

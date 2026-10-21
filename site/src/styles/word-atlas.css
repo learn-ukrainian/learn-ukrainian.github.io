@@ -12,7 +12,7 @@
   --red-light: var(--lu-state-wrong-bg, rgba(198,40,40,.08));
   --purple: #6A1B9A;
   --purple-light: var(--lu-state-drag, rgba(106,27,154,.08));
-  --orange: #E65100;
+  --orange: #A63B00;
   --orange-light: var(--lu-match-right, rgba(230,81,0,.08));
   --teal: #00695C;
   --teal-fill: #00695C;
@@ -51,7 +51,7 @@
 
 [data-theme='dark'] .word-atlas {
   color-scheme: dark;
-  --blue: var(--lu-primary);
+  --blue: #80B8EC;
   --blue-light: var(--lu-state-active, rgba(91,155,213,.22));
   --yellow: var(--lu-accent);
   --yellow-dark: var(--lu-accent);
@@ -92,7 +92,7 @@
 
 .word-atlas a {
   color: var(--blue);
-  text-decoration: none;
+  text-decoration: underline;
 }
 
 .lu-content .word-atlas a {
@@ -302,6 +302,12 @@
   background: var(--lu-accent);
   color: var(--lu-on-accent);
   border-color: var(--lu-accent);
+}
+
+/* Beat the article link rule: accent buttons need the accent's text token. */
+.lu-content .word-atlas a.atlas-button {
+  color: var(--lu-on-accent);
+  text-decoration: none;
 }
 
 .word-hero {
@@ -1036,7 +1042,7 @@ html[data-theme='dark'] .lu-content .word-atlas .word-hero .practice-cta-hero {
 }
 
 .source-box .source-cite {
-  color: var(--gray-600);
+  color: var(--gray-800);
   font-size: 12px;
   text-align: right;
 }
@@ -1151,6 +1157,10 @@ html[data-theme='dark'] .lu-content .word-atlas .word-hero .practice-cta-hero {
   transition: all 0.2s;
 }
 
+.word-atlas a.chip {
+  text-decoration: none;
+}
+
 .chip-gloss {
   font-size: 11px;
   font-weight: 400;
@@ -1162,6 +1172,10 @@ html[data-theme='dark'] .lu-content .word-atlas .word-hero .practice-cta-hero {
   background: var(--teal-fill);
   color: #ffffff;
   text-decoration: none;
+}
+
+.word-atlas a.chip:hover {
+  text-decoration: underline;
 }
 
 .ext-link-indicator {
@@ -1578,11 +1592,32 @@ html[data-theme='dark'] .lu-content .word-atlas .word-hero .practice-cta-hero {
 [data-theme='dark'] .atlas-heteronym-tab.active {
   background: var(--blue, #3b82f6);
   border-color: var(--blue, #3b82f6);
-  color: #ffffff;
+  color: var(--lu-surface, #0f172a);
+}
+
+[data-theme='dark'] .atlas-heteronym-tab.active .atlas-heteronym-tab-hint {
+  color: inherit;
 }
 
 [data-theme='dark'] .atlas-heteronym-hatnote {
   background: rgba(0, 105, 92, 0.2);
   border-left-color: var(--teal, #2dd4bf);
   color: var(--lu-text, #f1f5f9);
+}
+
+/* Thin entries show available layers first; disclosure reuses marked-forms. */
+.word-atlas .atlas-enrichment-note {
+  overflow-wrap: anywhere;
+}
+.word-atlas .atlas-enrichment-note > p {
+  color: var(--lu-text-muted);
+  margin: 0 0 0.75rem;
+}
+.word-atlas .atlas-source-waiting ul {
+  margin: 0.75rem 0;
+  padding-inline-start: 1.5rem;
+}
+
+.word-atlas .atlas-source-waiting > summary {
+  color: var(--lu-text);
 }

@@ -1255,6 +1255,147 @@ def test_driver_keyboard_interrupt_cleans_the_lease_once(tmp_path: Path) -> None
     assert _signal_log(env).count("INT") >= 1
 
 
+@pytest.mark.parametrize("forward_path", ["pending", "direct"])
+@pytest.mark.parametrize("failure", ["none", "monitor-once", "unknown-once", "fenced"])
+def test_driver_relay_during_close_preserves_client_result(
+    tmp_path: Path, forward_path: str, failure: str
+) -> None:
+    """Deliver the real scope relay while the first close client is in flight."""
+    root, env = _checkout(tmp_path)
+    gates = {name: tmp_path / name for name in ("entry-gate", "relay-gate", "close-gate")}
+    fds = []
+    for gate in gates.values():
+        os.mkfifo(gate)
+        fds.append(os.open(gate, os.O_RDWR | os.O_NONBLOCK))
+    ready = tmp_path / "forward-ready"
+    relayed = tmp_path / "relayed"
+    clients = tmp_path / "close-clients"
+    env.update(
+        TEST_PROVIDER=env["TEST_SIGNAL_PROVIDER"],
+        TEST_ENTRY_GATE=str(gates["entry-gate"]),
+        TEST_RELAY_GATE=str(gates["relay-gate"]),
+        TEST_CLOSE_GATE=str(gates["close-gate"]),
+        TEST_FORWARD_READY=str(ready),
+        TEST_RELAYED=str(relayed),
+        TEST_CLOSE_CLIENTS=str(clients),
+        TEST_CLOSE_FAILURE=failure,
+    )
+    # Instrument disposable copies only. The entry barrier selects an existing
+    # trap window; the relay barrier orders the second INT after client start.
+    barrier = 'printf "ready\\n" > "$TEST_FORWARD_READY"\nIFS= read -r _ < "$TEST_ENTRY_GATE" || true\n'
+    if forward_path == "pending":
+        adapter = root / "scripts/launchers/claude.sh"
+        with adapter.open("a") as stream:
+            stream.write("\nlauncher_driver_wait_hook() {\n" + barrier + "}\n")
+    else:
+        core = root / "scripts/lib/launcher_core.sh"
+        body = core.read_text()
+        needle = '  if [ -n "$LC_DRIVER_PENDING_SIGNAL" ]; then\n'
+        assert needle in body
+        core.write_text(body.replace(needle, barrier + needle, 1))
+    scope = root / "scripts/lib/driver_scope.sh"
+    body = scope.read_text()
+    needle = '    kill -"$signal" "$1" 2>/dev/null || true\n'
+    assert body.count(needle) == 1
+    scope.write_text(body.replace(
+        needle,
+        f'    IFS= read -r -t {DEADLINE_S} _ < "$TEST_RELAY_GATE"\n' + needle
+        + '    printf "relayed\\n" > "$TEST_RELAYED"\n',
+    ))
+    interpreter = root / ".venv/bin/python"
+    body = interpreter.read_text()
+    needle = '    lu_test_event "lease-${3:-}"\n'
+    assert body.count(needle) == 1
+    interpreter.write_text(body.replace(needle, needle + """    if [ "${3:-}" = close ]; then
+      first=0
+      [ -e "$TEST_CLOSE_CLIENTS" ] || first=1
+      printf 'start\\n' >> "$TEST_CLOSE_CLIENTS"
+      if [ "$first" = 1 ]; then
+        printf 'close\\n' > "$TEST_RELAY_GATE"
+        IFS= read -r -t 60 _ < "$TEST_CLOSE_GATE" || exit 98
+        case "$TEST_CLOSE_FAILURE" in
+          monitor-once) echo 'Monitor API unreachable' >&2; exit 1 ;;
+          unknown-once) echo 'synthetic client failure' >&2; exit 1 ;;
+          fenced) echo 'LEASE LOST' >&2; exit 1 ;;
+        esac
+      fi
+      printf 'success\\n' >> "$TEST_CLOSE_CLIENTS"
+    fi
+""", 1))
+    terminal = _Terminal(tmp_path, ["bash", str(root / "start-claude-driver.sh"), "--epic", "devops"], env, root)
+    try:
+        terminal.wait_for(lambda: ready.exists() and any(row.startswith("ready ") for row in _signal_log(env)),
+                          "provider and selected forwarder window")
+        terminal.send(b"\x03")
+        terminal.wait_for(lambda: "INT" in _signal_log(env), "terminal group INT")
+        os.write(fds[0], b"release\n")
+        terminal.send(b"done\n")
+        terminal.wait_for(relayed.exists, "scope relay during first close")
+        # Release a possible erroneous second client too, so the literal event
+        # assertions catch the duplicate instead of failing on a fixture timeout.
+        os.write(fds[2], b"release\nrelease\n")
+        assert terminal.finish() == 130
+        names = [name for name, _ in _events(env)]
+        assert names.count("lease-open") == 1, names
+        if failure in {"monitor-once", "unknown-once"}:
+            assert names.count("lease-close") == 2, names
+            assert _lines(clients) == ["start", "start", "success"]
+        elif failure == "fenced":
+            assert names.count("lease-close") == 1, names
+            assert _lines(clients) == ["start"]
+            assert "close_failure_reason=lease-fenced" in terminal.output.decode(errors="replace")
+        else:
+            assert names.count("lease-close") == 1, names
+            assert _lines(clients) == ["start", "success"]
+        if failure == "monitor-once":
+            assert "waiting for Monitor API to recover" in terminal.output.decode(errors="replace")
+        wait_until(lambda: not _test_processes(tmp_path), timeout=5, message="native driver cleanup")
+        _assert_no_test_processes(tmp_path)
+    finally:
+        terminal.close()
+        for fd in fds:
+            os.close(fd)
+
+
+def test_driver_group_hup_duplicate_lease_close_is_idempotent(tmp_path: Path) -> None:
+    """Group HUP and the waiter relay can both close the same fenced lease."""
+    from agents_extensions.shared.session_streams.db import SessionStreamDatabase
+    from agents_extensions.shared.session_streams.model import LeaseHolder, SessionState
+    from agents_extensions.shared.session_streams.store import SessionStreamStore
+    from scripts.session_supervisor import SessionSupervisor
+
+    terminal, env = _signal_session(tmp_path, "start-claude-driver.sh", "--epic", "devops")
+    try:
+        job = int(next(line.split()[1] for line in _lines(terminal.status) if line.startswith("job ")))
+        os.killpg(job, signal.SIGHUP)
+        assert terminal.finish() == 129
+    finally:
+        terminal.close()
+    names = [name for name, _ in _events(env)]
+    assert names.count("lease-open") == 1, names
+    # Group HUP reaches both the child and waiter. Before #11142, the relayed
+    # HUP could interrupt cleanup and make EXIT retry the close. Signal ordering
+    # may coalesce delivery; verify repeated closes independently below.
+    assert names.count("lease-close") in (1, 2), names
+
+    # Recording calls does not prove their safety. Exercise two closes through
+    # the real supervisor/store even when this group delivery produced only one.
+    # The second close must neither append another release nor close a successor.
+    store = SessionStreamStore(SessionStreamDatabase(tmp_path / "streams.sqlite3"))
+    supervisor = SessionSupervisor(store, repo_root=REPO)
+    holder = LeaseHolder(agent="codex", harness="native-codex", instance_id="hup-test", process_id=os.getpid())
+    lease = store.open_session(stream_id="epic:11106", holder=holder, lineage_id="hup-test", ttl_seconds=300)
+    assert supervisor.close_driver(role="driver", lease=lease) == "closed"
+    closed = store.dump_stream(lease.stream_id)
+    assert sum(row["event_type"] == "released" for row in closed["lease_events"]) == 1
+    successor = store.open_session(stream_id=lease.stream_id, holder=holder, lineage_id="hup-test", ttl_seconds=300)
+    before_duplicate = store.dump_stream(lease.stream_id)
+    assert supervisor.close_driver(role="driver", lease=lease) == "closed"
+    assert store.dump_stream(lease.stream_id) == before_duplicate
+    assert store.session_state(lease.stream_id, lease.session_id) is SessionState.CLOSED
+    assert store.session_state(successor.stream_id, successor.session_id) is SessionState.OPEN
+
+
 def test_driver_quit_is_not_relayed_or_used_to_replace_provider_status(tmp_path: Path) -> None:
     terminal, env = _signal_session(tmp_path, "start-claude-driver.sh", "--epic", "devops")
     try:

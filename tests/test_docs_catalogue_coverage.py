@@ -110,7 +110,7 @@ def test_the_readme_block_is_generated_from_the_catalogue(checked):
 def test_the_store_registry_is_checked_against_code_and_the_allowlist(checked):
     report, catalogue = checked
     registry = store_census.registry(catalogue)
-    assert len(registry['stores']) == 48, 'expected 39 present stores and 9 declared-absent defaults'
+    assert len(registry['stores']) == 49, 'expected 40 present stores and 9 declared-absent defaults'
     assert [e for e in report.errors if e.startswith(store_census.REGISTRY_KEY)] == []
 
 

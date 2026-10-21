@@ -1321,6 +1321,7 @@ def test_private_cache_keys_includes_open_issue_titles():
         "effective_membership",
         "open_issue_numbers",
         "open_issue_titles",
+        "root_results",
     )
 
 
