@@ -1,10 +1,10 @@
 [Unit]
-Description=Learn Ukrainian daily temp scratch sweep timer
+Description=Learn Ukrainian hourly temp scratch sweep timer
 
 [Timer]
-OnCalendar=*-*-* 05:30:00 UTC
+OnCalendar=*-*-* *:30:00 UTC
 Persistent=true
-RandomizedDelaySec=15min
+RandomizedDelaySec=10min
 Unit=learn-ukrainian-tmp-sweep.service
 
 [Install]
