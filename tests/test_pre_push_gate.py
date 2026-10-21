@@ -3,9 +3,12 @@
 from __future__ import annotations
 
 import contextlib
+import dataclasses
 import errno
 import fcntl
+import hashlib
 import importlib.util
+import io
 import json
 import os
 import re
@@ -19,6 +22,7 @@ import textwrap
 import time
 from pathlib import Path
 from types import SimpleNamespace
+from typing import Any
 
 import pytest
 import yaml
@@ -182,11 +186,25 @@ def test_gate_thread_policy_parity(value: str | None, setting: str) -> None:
     assert env == original
 
 
+@pytest.fixture(autouse=True)
+def _no_inherited_gate_concurrency(monkeypatch: pytest.MonkeyPatch) -> None:
+    """An in-process gate under test never takes the invoking push's opt-in concurrency (#11207).
+
+    With two runs allowed, a qualified host and a reachable user bus, ``validate`` runs its stages in a
+    ``systemd-run`` scope child: a fresh process that the test's monkeypatches never reach. A test that
+    needs two runs sets the value itself, after this fixture.
+    """
+    monkeypatch.delenv(gate.MAX_CONCURRENT_RUNS_ENV, raising=False)
+
+
 def _env(extra: dict[str, str] | None = None) -> dict[str, str]:
     env = {k: v for k, v in os.environ.items() if not k.startswith("GIT_")}
     env.pop("AGENT_NO_MERGE", None)
     env.pop("PYTEST_ADDOPTS", None)
     env.pop("LU_TEST_SLOTS_HOLDER", None)  # a gate under test is never nested in this run's test slots
+    # Nor does it inherit the invoking push's opt-in concurrency: under two slots a qualified host lets a
+    # second gate share, which breaks serial FIFO assertions (#10820). Tests opt in through ``extra``.
+    env.pop("LU_PRE_PUSH_GATE_MAX_CONCURRENT_RUNS", None)
     env["PYTHONPATH"] = str(REPO_ROOT / "scripts")
     env.update(extra or {})
     return env
@@ -262,6 +280,11 @@ def _run_gate(
         timeout=120,
         env=_env({"PRE_COMMIT_HOME": str(repo.parent / "pre-commit-cache"), **(extra_env or {})}),
     )
+
+
+def _hook_inputs(repo: Path) -> tuple[str, str]:
+    """The launcher and pre-commit configuration the tracked hook passes for ``repo``."""
+    return str(repo / "scripts/pre_commit/project_python.sh"), str(repo / ".pre-commit-config.yaml")
 
 
 def _verdict(result: subprocess.CompletedProcess[str]) -> dict:
@@ -431,6 +454,21 @@ def _measurements(repo: Path) -> list[dict]:
         for line in path.read_text(encoding="utf-8").splitlines()
         if (row := json.loads(line)).get("phase") != "BEGIN"
     ]
+
+
+def _measurements_in_start_order(repo: Path) -> list[dict]:
+    """Terminal rows ordered by their BEGIN rows (#11207).
+
+    A gate appends its terminal row only after ``validate`` returns, which is after it released its
+    head admission. A follower that reuses the leader's receipt can therefore append first; the BEGIN
+    rows follow the order in which the test started the gates.
+    """
+    path = repo / ".git/lu-pre-push-gate/measurements.jsonl"
+    rows = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines()]
+    started = [row["attempt_id"] for row in rows if row.get("phase") == "BEGIN"]
+    terminal = {row["attempt_id"]: row for row in rows if row.get("phase") != "BEGIN"}
+    assert len(terminal) == len(started) == len(set(started)) and set(terminal) == set(started)
+    return [terminal[attempt] for attempt in started]
 
 
 def _receipts(repo: Path) -> list[Path]:
@@ -612,6 +650,11 @@ def _plan(**overrides):
     return gate.Plan(**values)
 
 
+def _green(plan):
+    """``plan`` as a green run leaves it: a selection always ran, here the conservative set unless given."""
+    return dataclasses.replace(plan, selection=plan.selection or gate.Selection("fallback", reason="selector_failed"))
+
+
 @pytest.fixture
 def surface_repo(tmp_path: Path) -> Path:
     """A real commit range without the unrelated remote-push fixture setup."""
@@ -685,7 +728,7 @@ def test_push_stage_enforces_existing_internal_id_learner_filter(surface_repo: P
 )
 def test_receipt_is_stale_after_any_bound_input_changes(tmp_path: Path, field: str, value: object) -> None:
     plan = _plan()
-    gate.write_receipt(tmp_path, plan, 1000.0)
+    gate.write_receipt(tmp_path, _green(plan), 1000.0)
     assert gate.receipt_is_fresh(tmp_path, plan, 1001.0)
 
     assert not gate.receipt_is_fresh(tmp_path, _plan(**{field: value}), 1001.0)
@@ -693,7 +736,7 @@ def test_receipt_is_stale_after_any_bound_input_changes(tmp_path: Path, field: s
 
 def test_receipt_expires_and_a_tampered_receipt_is_ignored(tmp_path: Path) -> None:
     plan = _plan()
-    gate.write_receipt(tmp_path, plan, 1000.0)
+    gate.write_receipt(tmp_path, _green(plan), 1000.0)
     assert not gate.receipt_is_fresh(tmp_path, plan, 1000.0 + gate.RECEIPT_TTL_S + 1)
 
     path = gate.receipt_path(tmp_path, plan)
@@ -705,7 +748,7 @@ def test_receipt_expires_and_a_tampered_receipt_is_ignored(tmp_path: Path) -> No
 
 def test_gate_version_invalidates_a_green_receipt(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     plan = _plan()
-    gate.write_receipt(tmp_path, plan, 1000.0)
+    gate.write_receipt(tmp_path, _green(plan), 1000.0)
     monkeypatch.setattr(gate, "GATE_VERSION", gate.GATE_VERSION + 1)
 
     assert not gate.receipt_is_fresh(tmp_path, plan, 1001.0)
@@ -890,7 +933,7 @@ def test_a_green_receipt_written_during_admission_is_reused_at_current_time(
     clock = FakeClock()
     deadlines = _fake_validation(tmp_path, monkeypatch, clock)
     # The other gate completes at t=499, after this caller started waiting at t=0.
-    gate.write_receipt(tmp_path, _plan(), 1499.0)
+    gate.write_receipt(tmp_path, _green(_plan()), 1499.0)
     event = {}
     gate.validate(gate.Update("local", "a" * 40, "remote", ZERO_SHA), tmp_path, "x", "y", event)
 
@@ -902,7 +945,7 @@ def test_a_green_receipt_written_during_admission_is_reused_at_current_time(
 def test_a_receipt_expired_while_waiting_cannot_be_reused(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     clock = FakeClock()
     deadlines = _fake_validation(tmp_path, monkeypatch, clock)
-    gate.write_receipt(tmp_path, _plan(), 1000.0)
+    gate.write_receipt(tmp_path, _green(_plan()), 1000.0)
     monkeypatch.setattr(gate, "RECEIPT_TTL_S", 100.0)
     # Force queue entry, then let the real freshness check reject the now-expired receipt.
     real_fresh = gate.receipt_is_fresh
@@ -920,7 +963,7 @@ def test_inputs_changed_while_queued_cannot_reuse_a_receipt(
 ) -> None:
     clock = FakeClock()
     deadlines = _fake_validation(tmp_path, monkeypatch, clock)
-    gate.write_receipt(tmp_path, _plan(), 1499.0)  # it becomes fresh during the wait
+    gate.write_receipt(tmp_path, _green(_plan()), 1499.0)  # it becomes fresh during the wait
 
     def changed_plan(*_args: object):
         if clock.now == 0:
@@ -1035,6 +1078,7 @@ def test_four_process_pushers_all_validate_without_wait_consuming_the_run_budget
 def test_time_budget_exhaustion_is_validation_incomplete_and_leaves_no_receipt(repo: Path) -> None:
     _write(repo, "tests/test_slow.py", "import time\n\n\ndef test_slow():\n    time.sleep(120)\n")
     _commit(repo, "slow", "tests/test_slow.py")
+    base = _git(repo, "merge-base", "origin/main", "HEAD").stdout.strip()
 
     result = _run_gate(repo, extra_env={"LU_PRE_PUSH_GATE_RUN_BUDGET_S": "4"})
 
@@ -1043,7 +1087,13 @@ def test_time_budget_exhaustion_is_validation_incomplete_and_leaves_no_receipt(r
     assert verdict["outcome"] == "validation_incomplete"
     assert "NOT green" in result.stderr
     assert _receipts(repo) == []
-    assert _measurements(repo)[-1]["outcome"] == "validation_incomplete"
+    row = _measurements(repo)[-1]
+    assert row["outcome"] == "validation_incomplete"
+    # The timeout names its selection (#10820): the changed file plus the two registered invariant files.
+    assert "(timeout)" in row["detail"]
+    selection = f"selection: base {base}, 3 selected test files (1 changed by the range), 1 changed paths"
+    assert row["detail"].endswith(selection) and result.stderr.rstrip("\n").endswith(selection)
+    assert (row["base"], row["selected_test_files"], row["changed_test_files"], row["changed_paths"]) == (base, 3, 1, 1)
 
 
 def test_a_second_gate_waits_for_admission_then_reports_validation_incomplete(repo: Path) -> None:
@@ -1178,7 +1228,7 @@ def test_failing_node_ids_are_parsed_from_the_pytest_summary() -> None:
     assert gate.failing_node_ids(output) == ("tests/a.py::test_x", "tests/b.py::test_y")
 
 
-# ---- shadow importer-closure selection: recorded, never blocking -----------------------------------------
+# ---- affected-test selection: blocks on the selector's answer, the registry is its fallback (#11207) ------
 
 
 def _install_shadow(repo: Path, body: str) -> None:
@@ -1189,74 +1239,277 @@ def _install_shadow(repo: Path, body: str) -> None:
     _git(repo, "commit", "-m", "shadow")
 
 
-def test_shadow_selection_is_recorded_and_does_not_change_the_verdict(repo: Path) -> None:
-    _install_shadow(
-        repo,
-        "import json\nprint(json.dumps({'components': ['harness'], 'fallback_reasons': [], "
-        "'selected_tests': ['tests/test_x.py']}))\n",
-    )
+# A stub's hang blocks until it is killed. A ``time.sleep`` hang can end while the gate is still busy
+# on a loaded host, and the gate then rightly reads its empty answer as unparseable, not as a timeout.
+_BLOCK_UNTIL_KILLED = "import threading\nthreading.Event().wait()\n"
+
+
+def _install_selector(repo: Path, selected: list[str], *, scope: str = "importer_closure") -> None:
+    """A committed selector that answers ``selected`` in the gate's schema, whatever the paths."""
+    answer = {"schema": gate.SELECTION_SCHEMA, "scope": scope, "all_tests_reasons": [], "selected_tests": selected}
+    _install_shadow(repo, f"import json\nprint(json.dumps({answer!r}))\n")
+
+
+MARKER_TEST = "from pathlib import Path\n\n\ndef test_no_marker():\n    assert not Path('RED_MARKER').exists()\n"
+
+
+def _red_unchanged(repo: Path, test: str) -> None:
+    """Land ``test`` on the remote base, so the outgoing range turns it red without changing it."""
+    _git(repo, "checkout", "main")
+    _write(repo, test, MARKER_TEST)
+    _commit(repo, "marker test", test)
+    _git(repo, "push", "--no-verify", "origin", "main")
+    _git(repo, "checkout", "feature")
+    _git(repo, "reset", "--hard", "main")
+    _git(repo, "fetch", "origin")
+
+
+@pytest.mark.parametrize("selector", ["selected", "absent"])
+def test_an_unrelated_red_invariant_blocks_only_the_fallback_set(repo: Path, selector: str) -> None:
+    _red_unchanged(repo, "tests/test_invariant.py")  # a registered invariant module
+    if selector == "selected":
+        _install_selector(repo, ["tests/test_new.py"])
     _write(repo, "tests/test_new.py", GREEN_TEST)
-    _commit(repo, "green", "tests/test_new.py")
+    _write(repo, "RED_MARKER", "breaks the unrelated invariant\n")
+    _commit(repo, "unrelated change", "tests/test_new.py", "RED_MARKER")
+
+    result = _run_gate(repo)
+
+    row = _measurements(repo)[-1]
+    if selector == "selected":
+        assert result.returncode == 0, result.stderr
+        assert row["selection"]["status"] == "selected" and row["selection"]["run_count"] == 0
+        assert row["nodes"] == 1 and row["invariant_serial_total_s"] is None
+    else:  # no selector in the tree: the conservative set still runs the registry and refuses
+        assert result.returncode == gate.EXIT_REFUSED
+        assert "tests/test_invariant.py::test_no_marker" in _verdict(result)["failing"]
+        assert row["selection"] == {
+            "status": "fallback",
+            "reason": "selector_failed",
+            "detail": "exit 1",
+            "selected_count": None,
+        }
+
+
+def test_a_failing_affected_test_blocks_even_when_its_file_is_unchanged(repo: Path) -> None:
+    _red_unchanged(repo, "tests/test_affected.py")
+    _install_selector(repo, ["tests/test_affected.py", "tests/test_new.py"])
+    _write(repo, "tests/test_new.py", GREEN_TEST)
+    _write(repo, "RED_MARKER", "breaks the affected test\n")
+    _commit(repo, "change the affected code", "tests/test_new.py", "RED_MARKER")
+
+    result = _run_gate(repo)
+
+    assert result.returncode == gate.EXIT_REFUSED
+    assert _verdict(result)["failing"] == ["tests/test_affected.py::test_no_marker"]
+    row = _measurements(repo)[-1]
+    assert row["selection"]["status"] == "selected" and row["selection"]["run_count"] == 1
+    assert _receipts(repo) == []
+
+
+def test_no_affected_tests_is_green_and_recorded_as_such(repo: Path) -> None:
+    # The selector lands on main first: a range that changes Python files and selects nothing falls back.
+    _git(repo, "checkout", "main")
+    _install_selector(repo, [])
+    _git(repo, "push", "--no-verify", "origin", "main")
+    _git(repo, "checkout", "feature")
+    _git(repo, "merge", "--ff-only", "main")
+    _write(repo, "docs.md", "docs\n")
+    _commit(repo, "docs", "docs.md")
 
     result = _run_gate(repo)
 
     assert result.returncode == 0, result.stderr
-    shadow = _measurements(repo)[-1]["shadow"]
-    assert shadow["status"] == "recorded" and shadow["components"] == ["harness"] and shadow["selected_count"] == 1
+    row = _measurements(repo)[-1]
+    assert row["pytest"] == "no tests selected" and row["nodes"] == 0
+    assert row["selection"]["no_tests_affected"] is True and row["selection"]["selected_count"] == 0
 
 
 @pytest.mark.parametrize(
-    "body",
-    ["raise SystemExit(3)\n", "print('not json')\n", "import time\ntime.sleep(60)\n"],
-    ids=["crash", "garbage", "hang"],
+    ("body", "reason"),
+    [
+        ("raise SystemExit(3)\n", "selector_failed"),
+        ("print('not json')\n", "selector_unparseable"),
+        # Part of an answer, then a hang: the cut output must never be parsed.
+        (
+            "import sys\nfrom pathlib import Path\n"
+            'sys.stdout.write(\'{"selected_tests": ["tests/test_n\'); sys.stdout.flush()\n'
+            "Path(HUNG_MARKER).touch()\n" + _BLOCK_UNTIL_KILLED,
+            "selector_timeout",
+        ),
+        ("import json\nprint(json.dumps({'selected_tests': ['tests/test_new.py']}))\n", "selector_schema_mismatch"),
+        ("import json\nprint(json.dumps({'selected_tests': ['scripts/x.py']}))\n", "selector_invalid_output"),
+    ],
+    ids=["crash", "garbage", "hang", "old-schema", "not-a-test"],
 )
-def test_a_broken_shadow_never_blocks_a_green_push(
-    repo: Path, body: str, monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+def test_a_broken_selector_falls_back_to_the_registry_and_records_why(
+    repo: Path, body: str, reason: str, monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
-    _install_shadow(repo, body)
+    hung = tmp_path / "selector-hung"
+    _red_unchanged(repo, "tests/test_invariant.py")
+    _install_shadow(repo, body.replace("HUNG_MARKER", repr(str(hung))))
     _write(repo, "tests/test_new.py", GREEN_TEST)
-    _commit(repo, "green", "tests/test_new.py")
-    # The shadow budget is a module constant, so drive validate() in-process with it shortened.
-    monkeypatch.setattr(gate, "SHADOW_BUDGET_S", 2.0)
+    _write(repo, "RED_MARKER", "x\n")
+    _commit(repo, "change", "tests/test_new.py", "RED_MARKER")
+    if reason == "selector_timeout":
+        # The gate looks only once the selector has blocked after part of an answer. It never exits, so
+        # the budget always ends it as a timeout, however fast the host. Every other stub exits by itself
+        # within the default budget, which only bounds the wait.
+        monkeypatch.setattr(gate, "SHADOW_BUDGET_S", 0.5)
+        real_finish = gate.Shadow.finish
+
+        def finish_once_hung(shadow: Any) -> dict[str, object]:
+            assert shadow.process is not None
+            wait_until(  # well inside the per-test timeout, so a stub that never starts fails typed
+                lambda: hung.exists() or shadow.process.poll() is not None,
+                timeout=60.0,
+                message="the selector reaching its hang",
+            )
+            answer: dict[str, object] = real_finish(shadow)
+            return answer
+
+        monkeypatch.setattr(gate.Shadow, "finish", finish_once_hung)
     monkeypatch.setenv("PRE_COMMIT_HOME", str(tmp_path / "pre-commit-cache"))
     monkeypatch.chdir(repo)
     head = _git(repo, "rev-parse", "HEAD").stdout.strip()
     update = gate.Update("refs/heads/feature", head, "refs/heads/feature", ZERO_SHA)
     event: dict[str, object] = {}
 
-    gate.validate(
-        update, repo, str(repo / "scripts/pre_commit/project_python.sh"), str(repo / ".pre-commit-config.yaml"), event
-    )
+    with pytest.raises(gate.GateOutcome) as raised:
+        gate.validate(
+            update, repo, str(repo / "scripts/pre_commit/project_python.sh"), str(repo / ".pre-commit-config.yaml"), event
+        )
 
-    assert event["outcome"] == "green"
-    assert event["shadow"]["status"] == "unavailable"
+    # The patched budget and finish reach only the serial path: a scope child is a fresh process (#11207).
+    assert event["scope"] == {"status": "serial", "reason": "default_or_worker_bound"}
+    assert raised.value.reason == "tests_failed"  # never green on an unknown selection
+    assert "tests/test_invariant.py::test_no_marker" in raised.value.failing
+    selection = event["selection"]
+    assert isinstance(selection, dict) and selection["status"] == "fallback" and selection["reason"] == reason
+    assert event["nodes"] == 3  # the registry's two entries plus the changed test file
+    assert hung.exists() is (reason == "selector_timeout")  # the hang case was killed in its hang
 
 
-def test_shadow_selector_unions_the_tests_of_every_affected_component(monkeypatch: pytest.MonkeyPatch) -> None:
-    from scripts.ci import components, pre_push_shadow
-
-    monkeypatch.setattr(components, "load_manifest", lambda: {})
-    monkeypatch.setattr(
-        components,
-        "affected",
-        lambda paths, manifest: {
-            "components": ["a", "b"],
-            "fallback_reasons": ["dynamic-unresolved"],
-            "changed_paths": len(paths),
-        },
-    )
-    monkeypatch.setattr(
-        components, "test_files", lambda component, manifest: [f"tests/test_{component}.py", "tests/test_shared.py"]
-    )
-
-    selection = pre_push_shadow.shadow_selection(["scripts/x.py"])
-
-    assert selection == {
-        "components": ["a", "b"],
-        "fallback_reasons": ["dynamic-unresolved"],
-        "changed_paths": 1,
-        "selected_tests": ["tests/test_a.py", "tests/test_b.py", "tests/test_shared.py"],
+def test_every_test_affected_falls_back_to_the_registry(tmp_path: Path) -> None:
+    answer = {
+        "status": "recorded",
+        "schema": gate.SELECTION_SCHEMA,
+        "scope": "all_tests",
+        "all_tests_reasons": ["pytest_configuration"],
+        "selected_tests": ["tests/test_a.py"],
+        "selected_digest": "d",
     }
+
+    selection = gate.blocking_selection(_plan(), tmp_path, answer)
+
+    assert (selection.status, selection.reason) == ("fallback", "all_tests_affected")
+    assert selection.record["detail"] == "pytest_configuration" and selection.record["selected_count"] == 1
+
+
+def _answer(selected: list[str]) -> dict[str, object]:
+    return {
+        "status": "recorded",
+        "schema": gate.SELECTION_SCHEMA,
+        "scope": "importer_closure",
+        "selected_tests": selected,
+        "selected_digest": "digest",
+    }
+
+
+def test_selected_files_run_nearest_first_within_the_cost_cap(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    near, heavy, middle, far = (f"tests/test_{name}.py" for name in ("near", "heavy", "middle", "far"))
+    cap = 100.0
+    monkeypatch.setattr(gate, "SELECTION_COST_CAP_S", cap)
+    durations = {near: 45.0, heavy: gate.HEAVY_MODULE_S + 1, middle: 44.0, far: 2.0, "tests/test_b.py": 10.0}
+    _write(tmp_path, gate.DURATIONS_FILE, json.dumps(durations))
+    for test in (near, middle, far):
+        _write(tmp_path, test, GREEN_TEST)
+
+    selection = gate.blocking_selection(
+        _plan(changed_tests=("tests/test_b.py",)), tmp_path, _answer(["tests/test_b.py", near, heavy, middle, far])
+    )
+
+    # The changed file's cost counts first; the heavy module defers whatever its rank; the far file waits
+    # for CI because the nearer ones used the cap, even though it alone would fit.
+    assert selection.status == "selected" and selection.tests == (middle, near)
+    record = selection.record
+    assert record["deferred_heavy"] == [heavy] and record["deferred_over_cap"] == 1
+    assert record["run_count"] == 2 and record["estimated_s"] == pytest.approx(cap - 1)
+
+    durations["tests/test_b.py"] = cap * 3  # a changed file past the cap still runs; it only crowds out the rest
+    _write(tmp_path, gate.DURATIONS_FILE, json.dumps(durations))
+    crowded = gate.blocking_selection(
+        _plan(changed_tests=("tests/test_b.py",)), tmp_path, _answer(["tests/test_b.py", near, middle])
+    )
+    assert crowded.tests == () and crowded.record["deferred_over_cap"] == 2
+    assert _plan(changed_tests=("tests/test_b.py",), selection=crowded).node_ids == ("tests/test_b.py",)
+    plan = _plan(changed_tests=("tests/test_b.py",), selection=selection)
+    assert plan.node_ids == ("tests/test_b.py", middle, near) and not plan.uses_registry
+    assert gate.pytest_invocations(plan) == ((("tests/test_b.py",), "worksteal"), ((middle, near), "loadfile"))
+
+
+def test_an_unmaterialized_selected_file_is_validation_incomplete(tmp_path: Path) -> None:
+    with pytest.raises(gate.GateOutcome) as raised:
+        gate.blocking_selection(_plan(), tmp_path, _answer(["tests/test_absent.py"]))
+
+    assert raised.value.reason == "selected_tests_unmaterialized" and raised.value.incomplete
+
+
+def test_the_receipt_binds_the_selection_that_ran(repo: Path) -> None:
+    _install_selector(repo, ["tests/test_scanner.py"])
+    _write(repo, "tests/test_new.py", GREEN_TEST)
+    _commit(repo, "green", "tests/test_new.py")
+
+    assert _run_gate(repo).returncode == 0, "the selected and changed tests pass"
+
+    (receipt,) = _receipts(repo)
+    key = json.loads(receipt.read_text(encoding="utf-8"))["key"]
+    digest = hashlib.sha256(b"tests/test_scanner.py").hexdigest()[:16]
+    assert key["gate_version"] == gate.GATE_VERSION
+    selection = {"status": "selected", "reason": None, "digest": digest, "tests": ["tests/test_scanner.py"]}
+    assert key["selection"] == selection
+    assert key["blocking_node_ids"] == ["tests/test_new.py", "tests/test_scanner.py"]
+    assert _measurements(repo)[-1]["selection"]["status"] == "selected"
+
+
+def test_a_receipt_is_stale_for_a_different_selection(tmp_path: Path) -> None:
+    ran = gate.Selection("selected", ("tests/test_x.py",), digest="one")
+    gate.write_receipt(tmp_path, _plan(selection=ran), 1000.0)
+    assert gate.receipt_is_fresh(tmp_path, _plan(selection=ran), 1001.0)
+    assert gate.receipt_is_fresh(tmp_path, _plan(), 1001.0)  # before selection: the same inputs
+
+    for other in (
+        gate.Selection("selected", ("tests/test_x.py",), digest="two"),
+        gate.Selection("selected", ("tests/test_y.py",), digest="one"),
+        gate.Selection("fallback", reason="selector_timeout"),
+    ):
+        assert not gate.receipt_is_fresh(tmp_path, _plan(selection=other), 1001.0)
+    assert not gate.receipt_is_fresh(tmp_path, _plan(changed_paths=("scripts/other.py",)), 1001.0)
+
+
+def test_the_selector_answer_is_returned_in_its_order_with_a_digest(repo: Path) -> None:
+    _install_selector(repo, ["tests/test_b.py", "tests/test_a.py", "tests/test_b.py"])
+    plan = gate.Plan("h", "t", "b", "v", (), (), ("scripts/x.py",))
+
+    result = gate.Shadow(plan, repo, str(repo / "scripts/pre_commit/project_python.sh")).finish()
+
+    digest = hashlib.sha256(b"tests/test_b.py\ntests/test_a.py\ntests/test_b.py").hexdigest()[:16]
+    assert result == {
+        "status": "recorded",
+        "schema": gate.SELECTION_SCHEMA,
+        "scope": "importer_closure",
+        "all_tests_reasons": [],
+        "selected_count": 3,
+        "selected_digest": digest,
+        "selected_tests": ["tests/test_b.py", "tests/test_a.py"],
+    }
+
+
+def test_the_real_selector_answers_in_the_gate_schema() -> None:
+    from scripts.ci import pre_push_shadow
+
+    assert pre_push_shadow.SCHEMA == gate.SELECTION_SCHEMA
+    assert pre_push_shadow.__name__ == gate.SELECTOR_MODULE
 
 
 def test_empty_registry_literals_load_as_an_empty_registry(tmp_path: Path) -> None:
@@ -1365,7 +1618,7 @@ def test_cost_deferral_only_touches_whole_modules_and_tolerates_missing_data(
 
 def test_deferral_changes_the_receipt_key(tmp_path: Path) -> None:
     plan = _plan()
-    gate.write_receipt(tmp_path, plan, 1000.0)
+    gate.write_receipt(tmp_path, _green(plan), 1000.0)
 
     assert not gate.receipt_is_fresh(tmp_path, _plan(deferred_to_ci=("tests/x.py",)), 1001.0)
 
@@ -1953,7 +2206,16 @@ def test_dependency_input_predicate_matches_reaper(
         link.symlink_to(target, target_is_directory=True)
     tracked = set(_git(repo, "ls-files", "-z", "--cached").stdout.split("\0"))
 
-    assert is_regenerable_ignored_path(relative, worktree=repo, tracked=tracked) is expected
+    # The input scanner also sees unignored dependency overlays. Reaping needs
+    # Git-ignore proof in addition to the shared lockfile/containment predicate.
+    assert not is_regenerable_ignored_path(relative, worktree=repo, tracked=tracked)
+    exclude = repo / ".git" / "info" / "exclude"
+    previous_exclude = exclude.read_text() if exclude.exists() else ""
+    try:
+        exclude.write_text(previous_exclude + "\nnode_modules/\n")
+        assert is_regenerable_ignored_path(relative, worktree=repo, tracked=tracked) is expected
+    finally:
+        exclude.write_text(previous_exclude)
     assert gate.is_regenerable_dependency_input(relative, root=repo, tracked=tracked) is expected
     # Git does not descend directory symlinks. Supply that enumerated path to
     # also prove the scan applies its predicate if such an input is returned.
@@ -2046,6 +2308,21 @@ def _gone(pid: int) -> bool:
     return True
 
 
+def _wait_once_child_hangs(monkeypatch: pytest.MonkeyPatch, hung: Path) -> None:
+    """Hold each wait on a child until the child creates ``hung`` (or exits), then let the wait's budget run.
+
+    A short ``run_bounded`` budget then always kills a child that has reached its hang, after the output it
+    wrote first, however slowly a loaded host started it.
+    """
+
+    class HangAwarePopen(subprocess.Popen):
+        def wait(self, timeout: float | None = None) -> int:
+            wait_until(lambda: hung.exists() or self.poll() is not None, timeout=60.0, message=f"{hung.name}")
+            return super().wait(timeout)
+
+    monkeypatch.setattr(gate.subprocess, "Popen", HangAwarePopen)
+
+
 _DETACHED_CHILD = (
     "import os, subprocess, sys, time\n"
     "child = subprocess.Popen([sys.executable, '-c', 'import time; time.sleep(300)'], start_new_session=True)\n"
@@ -2054,12 +2331,16 @@ _DETACHED_CHILD = (
 
 
 @pytest.mark.parametrize("hang", [False, True], ids=["command-exits", "command-times-out"])
-def test_a_detached_descendant_holding_the_output_cannot_stall_or_survive_the_gate(tmp_path: Path, hang: bool) -> None:
+def test_a_detached_descendant_holding_the_output_cannot_stall_or_survive_the_gate(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, hang: bool
+) -> None:
     pid_file = tmp_path / "child.pid"
-    script = _DETACHED_CHILD + ("time.sleep(300)\n" if hang else "")
+    hung = tmp_path / "hung"
+    script = _DETACHED_CHILD + (f"open({str(hung)!r}, 'w').close()\n{_BLOCK_UNTIL_KILLED}" if hang else "")
     started = time.monotonic()
 
     if hang:
+        _wait_once_child_hangs(monkeypatch, hung)  # the kill finds the descendant already spawned
         with pytest.raises(gate.GateOutcome) as raised:
             gate.run_bounded(
                 [sys.executable, "-c", script, str(pid_file)],
@@ -2091,19 +2372,24 @@ def test_command_output_and_exit_code_are_returned(tmp_path: Path) -> None:
 
 
 @pytest.mark.parametrize("ending", ["nonzero", "signal", "timeout", "spawn-error", "no-budget"])
-def test_failed_command_measurement_keeps_output_and_observed_exit(tmp_path: Path, ending: str) -> None:
+def test_failed_command_measurement_keeps_output_and_observed_exit(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, ending: str
+) -> None:
+    hung = tmp_path / "hung"
     script = (
-        "import os, signal, time; print('synthetic output', flush=True); "
+        "import os, signal, threading; print('synthetic output', flush=True); "
         + {
             "nonzero": "raise SystemExit(3)",
             "signal": "os.kill(os.getpid(), signal.SIGTERM)",
-            "timeout": "time.sleep(60)",
+            "timeout": f"open({str(hung)!r}, 'w').close(); threading.Event().wait()",
             "spawn-error": "raise SystemExit(0)",
             "no-budget": "raise SystemExit(0)",
         }[ending]
     )
     command = [sys.executable, "-c", script] if ending != "spawn-error" else [str(tmp_path / "absent")]
     allowance = 0.0 if ending == "no-budget" else 1.0 if ending == "timeout" else 30.0
+    if ending == "timeout":
+        _wait_once_child_hangs(monkeypatch, hung)  # the kill comes after the output, never before it
     event = {}
     with pytest.raises(gate.GateOutcome) as raised:
         with gate.stage_measurement(event, "pre_commit") as diagnostics:
@@ -2343,7 +2629,7 @@ def test_an_absent_registered_file_with_an_approved_deferral_is_not_incomplete(
     monkeypatch.setattr(gate, "CI_DEFERRED_MODULES", frozenset({"tests/test_invariant.py"}))
     update = gate.Update("refs/heads/feature", head, "refs/heads/feature", ZERO_SHA)
 
-    plan = gate.build_plan(update, repo)
+    plan = gate.build_plan(update, repo, *_hook_inputs(repo))
 
     assert plan is not None and plan.deferred_to_ci == ("tests/test_invariant.py",)
     assert "tests/test_invariant.py" not in plan.node_ids
@@ -2363,7 +2649,7 @@ def test_a_detached_shadow_descendant_does_not_outlive_the_shadow(
     repo: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, ending: str
 ) -> None:
     pid_file = tmp_path / "shadow-child.pid"
-    tail = _SHADOW_ANSWER if ending == "success" else "import time\ntime.sleep(300)\n"
+    tail = _SHADOW_ANSWER if ending == "success" else _BLOCK_UNTIL_KILLED
     _install_shadow(repo, _SHADOW_DETACHED.format(pid_file=str(pid_file), tail=tail))
     monkeypatch.setattr(gate, "SHADOW_BUDGET_S", 3.0 if ending == "timeout" else 60.0)
     plan = gate.Plan("h", "t", "b", "v", (), (), ("scripts/x.py",))
@@ -2395,6 +2681,8 @@ def test_a_detached_shadow_descendant_does_not_outlive_the_shadow(
         ("{'components': [], 'fallback_reasons': []}", "unexpected selected_tests shape"),
         ("{'selected_tests': 'tests/test_x.py'}", "unexpected selected_tests shape"),
         ("{'selected_tests': ['tests/test_x.py', 7]}", "unexpected selected_tests shape"),
+        ("{'selected_tests': ['tests/../scripts/test_x.py']}", "selected path is not a test file"),
+        ("{'selected_tests': ['tests//test_x.py']}", "selected path is not a test file"),
     ],
 )
 def test_a_misshapen_shadow_result_is_unavailable_not_a_crash(repo: Path, answer: str, detail: str) -> None:
@@ -2404,18 +2692,22 @@ def test_a_misshapen_shadow_result_is_unavailable_not_a_crash(repo: Path, answer
 
     result = shadow.finish()
 
-    assert result == {"status": "unavailable", "detail": detail}
+    assert result == {"status": "unavailable", "reason": "selector_invalid_output", "detail": detail}
+    selection = gate.blocking_selection(plan, repo, result)  # the gate blocks on the fallback set instead
+    assert (selection.status, selection.reason) == ("fallback", "selector_invalid_output")
 
 
 def test_a_failed_receipt_write_abandons_the_shadow_and_is_incomplete(
     repo: Path, monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
     monkeypatch.setenv(gate.MAX_CONCURRENT_RUNS_ENV, "1")
-    _install_shadow(repo, "import time\ntime.sleep(60)\n")
+    _install_shadow(repo, _BLOCK_UNTIL_KILLED)
     _write(repo, "tests/test_new.py", GREEN_TEST)
     _commit(repo, "green", "tests/test_new.py")
     monkeypatch.setenv("PRE_COMMIT_HOME", str(tmp_path / "pre-commit-cache"))
     monkeypatch.chdir(repo)
+    # The selector answers before pytest now; a short budget makes the hang a prompt fallback.
+    monkeypatch.setattr(gate, "SHADOW_BUDGET_S", 2.0)
     abandoned: list[bool] = []
     real_abandon = gate.Shadow.abandon
 
@@ -2454,14 +2746,14 @@ def test_an_unencodable_selected_test_is_unavailable_not_a_crash(repo: Path) -> 
 
     result = shadow.finish()
 
-    assert result == {"status": "unavailable", "detail": "cannot encode selected_tests"}
+    assert result == {"status": "unavailable", "reason": "selector_invalid_output", "detail": "cannot encode selected_tests"}
 
 
 def test_an_io_error_during_a_stage_abandons_the_shadow_and_is_incomplete(
     repo: Path, monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
     monkeypatch.setenv(gate.MAX_CONCURRENT_RUNS_ENV, "1")
-    _install_shadow(repo, "import time\ntime.sleep(60)\n")
+    _install_shadow(repo, _BLOCK_UNTIL_KILLED)
     _write(repo, "tests/test_new.py", GREEN_TEST)
     _commit(repo, "green", "tests/test_new.py")
     monkeypatch.setenv("PRE_COMMIT_HOME", str(tmp_path / "pre-commit-cache"))
@@ -3657,7 +3949,7 @@ def test_production_head_follower_reuses_green_under_global_queue_load(repo: Pat
         assert not (controls[2] / "entered").exists(), "identical follower must reuse green proof"
     finally:
         _stop_controls(processes)
-    rows = _measurements(repo)
+    rows = _measurements_in_start_order(repo)
     assert len(rows) == 2
     leader, follower = rows
     assert leader["queue_position"] == 3
@@ -4038,7 +4330,7 @@ def test_head_ticket_identity_requires_an_exact_named_binding(
     }
     if binding in {"mismatched", "missing"}:
         with pytest.raises(gate.GateOutcome) as raised:
-            gate.build_plan(update, native_repo)
+            gate.build_plan(update, native_repo, *_hook_inputs(native_repo))
         assert raised.value.reason == "tree_mismatch"
 
 
@@ -4061,7 +4353,7 @@ def test_missing_immutable_identity_cannot_reuse_even_a_matching_green_receipt(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, field: str
 ) -> None:
     plan = _plan(**{field: ""})
-    gate.write_receipt(tmp_path, plan, time.time())
+    gate.write_receipt(tmp_path, _green(plan), time.time())
     monkeypatch.setattr(gate, "build_plan", lambda *_args: plan)
     monkeypatch.setattr(gate, "state_dir", lambda *_args: tmp_path)
     with pytest.raises(gate.GateOutcome, match="immutable validation identity"):
@@ -4076,7 +4368,7 @@ def test_unsafe_coalescing_directory_never_reuses_green(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, area: str
 ) -> None:
     plan = _plan()
-    gate.write_receipt(tmp_path, plan, time.time())
+    gate.write_receipt(tmp_path, _green(plan), time.time())
     outside = tmp_path / "preserve"
     outside.mkdir()
     if area == "heads":
@@ -4306,7 +4598,7 @@ def test_coalescing_receipt_reuse_preserves_remaining_multi_ref_execution_budget
     holder.__enter__()
 
     def finish_holder():
-        gate.write_receipt(tmp_path, _plan(), clock.time())
+        gate.write_receipt(tmp_path, _green(_plan()), clock.time())
         holder.__exit__()
 
     clock.on_sleep = finish_holder
@@ -5139,6 +5431,36 @@ def test_dead_scope_executor_still_requires_own_unit_descendant_cleanup(tmp_path
     assert scope.process is None
 
 
+@pytest.mark.parametrize("step", ["unit kill", "executor reap", "descendant drain"])
+def test_unverified_scope_cleanup_names_the_step_that_failed(tmp_path, qualified_cgroups, monkeypatch, step):
+    monkeypatch.setattr(gate, "CLEANUP_BUDGET_S", 0.2)
+    scope = gate.ResourceScope(tmp_path, "unused", gate.Admission(tmp_path / "head", 0))
+    _fake_cgroup(qualified_cgroups, scope.unit)  # stays populated: only the drain step reads it
+    scope.group = "/" + scope.unit
+    scope.completed = step != "unit kill"  # a settled executor is reaped without a kill
+    body = _BLOCK_UNTIL_KILLED if step == "executor reap" else "pass"
+    scope.process = process = subprocess.Popen([sys.executable, "-c", body], env=_env())
+    if step != "executor reap":
+        process.wait(timeout=10)
+
+    def kill(command, **kwargs):
+        raise subprocess.TimeoutExpired(command, kwargs["timeout"])
+
+    monkeypatch.setattr(gate.subprocess, "run", kill)
+    try:
+        with pytest.raises(gate.GateOutcome) as raised:
+            scope.close()
+    finally:
+        process.kill()
+        process.wait(timeout=10)
+
+    error = {"unit kill": "TimeoutExpired", "executor reap": "TimeoutExpired", "descendant drain": "OSError"}[step]
+    settled = "not proven settled" if step == "unit kill" else "settled"
+    assert raised.value.incomplete and raised.value.reason == "validation_incomplete"
+    assert raised.value.detail == f"own scope cleanup is unverified at the {step} ({error}; executor {settled}); stop"
+    assert scope.process is None
+
+
 @pytest.mark.parametrize("failure_phase", ["BEGIN", "TERMINAL"])
 def test_measurement_storage_failure_cannot_claim_green_or_start_without_begin(repo, monkeypatch, failure_phase):
     monkeypatch.chdir(repo)
@@ -5409,12 +5731,15 @@ def test_an_actual_overrun_is_killed_at_its_bound_with_descendants(repo: Path, t
     result = _run_gate(repo, extra_env={gate.MAX_CONCURRENT_RUNS_ENV: "1", **budgets})
 
     assert result.returncode == gate.EXIT_INCOMPLETE, result.stderr
-    assert _verdict(result) == {"outcome": "validation_incomplete", "reason": "validation_incomplete", "failing": []}
+    row = _measurements(repo)[-1]
+    killed = row["stages"]["pre_commit" if bound == "pre_commit" else "pytest"]
+    # The reason is typed by the host load the killed stage observed (#11140); this host's load is not pinned.
+    reason = "timeout_under_load" if killed["load_at_timeout"]["load"] == "above_caps" else "timeout"
+    assert _verdict(result) == {"outcome": "validation_incomplete", "reason": reason, "failing": []}
+    assert killed["reason"] == row["reason"] == reason
     assert "NOT green" in result.stderr and _receipts(repo) == []
     assert _gone(int(pid_file.read_text(encoding="utf-8")))
-    row = _measurements(repo)[-1]
     assert row["outcome"] == "validation_incomplete" and row["failing"] == []
-    killed = row["stages"]["pre_commit" if bound == "pre_commit" else "pytest"]
     assert set(row["stages"]) == ({"pre_commit"} if bound == "pre_commit" else {"pre_commit", "pytest"})
     assert killed["outcome"] == "validation_incomplete" and killed["signal"] == signal.SIGKILL
     assert killed["allowance_s"] <= killed["elapsed_s"] < killed["allowance_s"] + 2 * gate.CLEANUP_BUDGET_S
@@ -5629,10 +5954,11 @@ def test_the_real_gate_waits_for_a_host_slot_and_records_the_wait(repo: Path, tm
     try:
         process.stdin.write(f"refs/heads/feature {head} refs/heads/feature {ZERO_SHA}\n")
         process.stdin.close()
-        assert "queue position 1/1" in wait_for_line(log, timeout=120, stop_if=lambda: process.poll() is not None)
+        # Both waits together stay inside the per-test timeout, so a stuck gate fails typed with its log.
+        assert "queue position 1/1" in wait_for_line(log, timeout=50, stop_if=lambda: process.poll() is not None)
     finally:
         held.release()
-    assert process.wait(timeout=180) == 0, log.read_text()
+    assert process.wait(timeout=50) == 0, log.read_text()
     row = _measurements(repo)[-1]
     assert row["outcome"] == "green"
     assert row["test_slots"]["status"] == "held" and row["test_slots"]["held"] == 1
@@ -5698,3 +6024,1413 @@ def test_the_gate_holds_host_slots_beside_its_verified_base_temp_under_umask_002
         info = directory.lstat()
         assert stat.S_IMODE(info.st_mode) == 0o700 and info.st_uid == os.geteuid(), directory.name
     assert not os.path.lexists(base) and governor.status()["slots_in_use"] == 0  # both released at stage end
+
+
+# ---- #10820: closed scoped executors and main-refresh base selection ---------------------------------------
+
+
+def test_exclusive_admission_never_keeps_an_unstarted_scope(qualified_cgroups, tmp_path):
+    """A busy sharing transition falls back to exclusive admission, which must run the serial path."""
+    state = tmp_path / "state"
+    state.mkdir()
+    candidate = InjectedScope(qualified_cgroups)
+    with (state / "sharing.lock").open("a") as busy:
+        fcntl.flock(busy, fcntl.LOCK_EX | fcntl.LOCK_NB)  # another waiter is inside its transition check
+        with gate.Admission(state, 0, scope=candidate) as admitted:
+            assert admitted._exclusive and admitted.scope is None
+            assert candidate.group is None and candidate.reason == "exclusive_admission_serial"
+            fd = os.open(state / "admission.lock", os.O_RDWR)
+            try:
+                with pytest.raises(BlockingIOError):
+                    fcntl.flock(fd, fcntl.LOCK_SH | fcntl.LOCK_NB)  # the serial holder still excludes sharing
+            finally:
+                os.close(fd)
+    _assert_queue_released(state)
+
+
+@pytest.mark.parametrize("ending", ["green", "red", "incomplete"])
+def test_a_busy_sharing_transition_validates_once_on_the_serial_path(repo, ending, monkeypatch, qualified_cgroups):
+    """The #10820 crash: an exclusive holder kept its unstarted scope and ``execute`` hit an assertion."""
+    _write(
+        repo,
+        "scripts/pre_commit/project_python.sh",
+        textwrap.dedent(f"""\
+        #!/bin/bash
+        if [ "$1" = scripts/audit/lint_opsec_leaks.py ]; then echo opsec >> scans; exec "{sys.executable}" "$@"; fi
+        if [ "$4" = check-no-internal-ids ]; then echo internal-ids >> scans; exec "{sys.executable}" "$@"; fi
+        if [ "$2" = pre_commit ]; then echo pre >> checks; exit 0; fi
+        if [ "$2" = scripts.ci.pre_push_shadow ]; then echo shadow >> checks; echo '{{"selected_tests":[]}}'; exit 0; fi
+        echo pytest >> checks
+        echo '1 passed in 0.1s'
+        exit {dict(green=0, red=1, incomplete=2)[ending]}
+    """),
+    )
+    _commit(repo, "serial fallback after a busy sharing transition", "scripts/pre_commit/project_python.sh")
+    monkeypatch.chdir(repo)
+    monkeypatch.setenv(gate.MAX_CONCURRENT_RUNS_ENV, "2")
+    monkeypatch.delenv(gate.MAX_TEST_PROCESSES_ENV, raising=False)  # keep the run eligible for the scope
+    state = gate.state_dir(repo)
+    state.mkdir(parents=True, exist_ok=True)
+    head = _git(repo, "rev-parse", "HEAD").stdout.strip()
+    with (state / "sharing.lock").open("a") as busy:
+        fcntl.flock(busy, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        code = gate.main(
+            [
+                "--launcher",
+                str(repo / "scripts/pre_commit/project_python.sh"),
+                "--config",
+                str(repo / ".pre-commit-config.yaml"),
+            ],
+            stdin=f"refs/heads/feature {head} refs/heads/feature {ZERO_SHA}\n",
+        )
+    assert code == dict(green=0, red=1, incomplete=75)[ending]
+    assert sorted((repo / "checks").read_text().splitlines()) == ["pre", "pytest", "shadow"]
+    assert (repo / "scans").read_text().splitlines() == ["opsec", "internal-ids"]
+    row = _measurements(repo)[-1]
+    assert row["outcome"] == dict(green="green", red="refused", incomplete="validation_incomplete")[ending]
+    assert row["scope"] == {"status": "serial", "reason": "exclusive_admission_serial"}
+    assert row["stages"]["pytest"]["stale_pytest_cleanup"] == "exclusive_sweep"
+    assert (_receipts(repo) != []) is (ending == "green")  # only a genuinely passed execution is green
+    _assert_queue_released(state)
+
+
+@pytest.mark.parametrize("condition", ["unstarted", "closed"])
+def test_a_missing_or_closed_scope_is_typed_incomplete_and_runs_nothing(
+    tmp_path: Path, injected_systemd: object, qualified_cgroups: object, condition: str
+) -> None:
+    state = tmp_path / "state"
+    launcher = tmp_path / "launcher"
+    launcher.write_text(f'#!/bin/bash\nexec "{sys.executable}" "$@"\n')
+    event: dict[str, object] = {}
+    with gate.Admission(state / "head", 0) as head:
+        scope = gate.ResourceScope(tmp_path, str(launcher), head)
+        with contextlib.ExitStack() as admitted:
+            if condition == "closed":
+                admission = admitted.enter_context(gate.Admission(state, 0, scope=scope))
+                assert admission.scope is scope and scope.stream is not None  # a genuinely started scope
+                scope.close()
+            with pytest.raises(gate.GateOutcome) as raised:
+                scope.execute(_plan(), "config", time.monotonic() + 30, event, stage_budget_s=30.0)
+    assert raised.value.reason == "scope_setup_unavailable" and raised.value.incomplete
+    assert event == {} and not scope.completed  # no stage ran and nothing was inferred
+    _assert_queue_released(state)
+
+
+def _feature_remote_then_newer_main(repo: Path) -> tuple[str, str]:
+    """An older pushed feature tip, then newer main on ``origin`` with changes unrelated to the feature."""
+    _write(repo, "tests/test_feature_old.py", GREEN_TEST)
+    remote = _commit(repo, "feature work already on the remote", "tests/test_feature_old.py")
+    _git(repo, "push", "--no-verify", "origin", "feature")
+    _git(repo, "checkout", "main")
+    _write(repo, "tests/test_main_only.py", GREEN_TEST)
+    _write(repo, "scripts/main_only.py", "VALUE = 1\n")
+    main = _commit(repo, "unrelated main change", "tests/test_main_only.py", "scripts/main_only.py")
+    _git(repo, "push", "--no-verify", "origin", "main")
+    _git(repo, "checkout", "feature")
+    return remote, main
+
+
+def _merge_main(repo: Path) -> str:
+    _git(repo, "merge", "--no-ff", "--no-edit", "-m", "merge newer main", "main")
+    return _git(repo, "rev-parse", "HEAD").stdout.strip()
+
+
+def _update(repo: Path, remote_sha: str) -> object:
+    head = _git(repo, "rev-parse", "HEAD").stdout.strip()
+    return gate.Update("refs/heads/feature", head, "refs/heads/feature", remote_sha)
+
+
+def _pull_request_paths(repo: Path) -> tuple[str, ...]:
+    """What the pull request carries: the three-dot diff from the merge-base with ``origin/main``."""
+    names = _git(repo, "diff", "--name-only", "--diff-filter=ACMR", "origin/main...HEAD").stdout.split()
+    return tuple(sorted(names))
+
+
+@pytest.mark.parametrize("commit_after_merge", [False, True])
+def test_a_merge_of_newer_main_selects_the_pull_request_change_not_mains(repo: Path, commit_after_merge: bool) -> None:
+    remote, main = _feature_remote_then_newer_main(repo)
+    _merge_main(repo)
+    expected = ["tests/test_feature_old.py"]
+    if commit_after_merge:
+        _write(repo, "tests/test_feature_new.py", GREEN_TEST)
+        _commit(repo, "feature work after the merge", "tests/test_feature_new.py")
+        expected.append("tests/test_feature_new.py")
+
+    plan = gate.build_plan(_update(repo, remote), repo, *_hook_inputs(repo))
+
+    assert plan is not None and plan.base == main
+    assert plan.changed_tests == tuple(sorted(expected))
+    assert plan.changed_paths == _pull_request_paths(repo)
+    assert not {"scripts/main_only.py", "tests/test_main_only.py"} & set(plan.changed_paths)
+
+
+def _criss_cross(repo: Path) -> tuple[str, str, tuple[str, ...]]:
+    """Main and feature each merged the other's tip: two merge-bases, so the range is not narrowed."""
+    _write(repo, "tests/test_a_side.py", GREEN_TEST)
+    remote = _commit(repo, "feature side", "tests/test_a_side.py")
+    _git(repo, "checkout", "main")
+    _write(repo, "tests/test_b_side.py", GREEN_TEST)
+    _commit(repo, "main side", "tests/test_b_side.py")
+    _git(repo, "checkout", "feature")
+    _git(repo, "merge", "--no-ff", "--no-edit", "-m", "feature merges main", "main")
+    _git(repo, "checkout", "main")
+    _git(repo, "merge", "--no-ff", "--no-edit", "-m", "main merges feature side", remote)
+    _git(repo, "push", "--no-verify", "origin", "main")
+    _git(repo, "checkout", "feature")
+    bases = _git(repo, "merge-base", "--all", "origin/main", "HEAD").stdout.split()
+    assert len(bases) == 2
+    return remote, remote, ("tests/test_b_side.py",)
+
+
+def _graph(repo: Path, kind: str) -> tuple[str, str, tuple[str, ...]]:
+    """Build one control graph; return the remote tip, the expected base and the expected changed tests."""
+    fork = _git(repo, "rev-parse", "HEAD").stdout.strip()
+    if kind == "criss_cross":
+        return _criss_cross(repo)
+    if kind in ("incremental", "new_branch"):
+        _write(repo, "tests/test_feature_old.py", GREEN_TEST)
+        remote = _commit(repo, "feature work already on the remote", "tests/test_feature_old.py")
+    else:
+        remote, main = _feature_remote_then_newer_main(repo)
+    if kind == "rebased_onto_newer_main":
+        _git(repo, "rebase", "main")
+        return remote, main, ("tests/test_feature_old.py",)
+    if kind == "unproven_main":
+        _merge_main(repo)
+        _git(repo, "update-ref", "-d", "refs/remotes/origin/main")  # main cannot be resolved: no narrowing
+        return remote, remote, ("tests/test_main_only.py",)
+    _write(repo, "tests/test_feature_new.py", GREEN_TEST)
+    _commit(repo, "new feature work", "tests/test_feature_new.py")
+    if kind == "new_branch":
+        return ZERO_SHA, fork, ("tests/test_feature_new.py", "tests/test_feature_old.py")
+    return remote, remote, ("tests/test_feature_new.py",)  # incremental, main moved or not
+
+
+@pytest.mark.parametrize(
+    "kind",
+    ["incremental", "incremental_main_moved", "new_branch", "rebased_onto_newer_main", "unproven_main", "criss_cross"],
+)
+def test_base_selection_controls_keep_the_complete_outgoing_range(repo: Path, kind: str) -> None:
+    remote, expected_base, expected_tests = _graph(repo, kind)
+
+    plan = gate.build_plan(_update(repo, remote), repo, *_hook_inputs(repo))
+
+    assert plan is not None and plan.base == expected_base
+    assert plan.changed_tests == expected_tests
+    # Without one proven merge-base the previous range stays, and the gate blocks on the conservative set.
+    expected_fallback = {"unproven_main": "merge_base_unavailable", "criss_cross": "merge_base_ambiguous"}
+    assert plan.base_fallback == expected_fallback.get(kind)
+
+
+@pytest.mark.parametrize("failure", ["exit_128", "timeout"])
+def test_an_ancestry_error_never_narrows_the_range(repo: Path, monkeypatch: pytest.MonkeyPatch, failure: str) -> None:
+    remote, main = _feature_remote_then_newer_main(repo)
+    _merge_main(repo)
+    real_git = gate.git
+
+    def git(*args: str, cwd: Path, timeout: float = 30.0):
+        if args == ("merge-base", "--is-ancestor", main, remote):
+            if failure == "timeout":
+                raise subprocess.TimeoutExpired(["git", *args], timeout)
+            return subprocess.CompletedProcess(["git", *args], 128, "", "fatal: synthetic")
+        return real_git(*args, cwd=cwd, timeout=timeout)
+
+    monkeypatch.setattr(gate, "git", git)
+
+    plan = gate.build_plan(_update(repo, remote), repo, *_hook_inputs(repo))
+
+    assert plan is not None and plan.base == remote
+    assert "tests/test_main_only.py" in plan.changed_tests  # uncertainty keeps the complete outgoing range
+    assert plan.base_fallback == "merge_base_unproven"
+
+
+def test_a_divergent_push_without_history_in_common_with_main_is_refused(repo: Path) -> None:
+    _write(repo, "tests/test_feature_old.py", GREEN_TEST)
+    remote = _commit(repo, "feature work already on the remote", "tests/test_feature_old.py")
+    _git(repo, "checkout", "--orphan", "lonely")
+    _commit(repo, "unrelated history", ".")
+
+    with pytest.raises(gate.GateOutcome) as raised:
+        gate.build_plan(_update(repo, remote), repo, *_hook_inputs(repo))
+
+    assert raised.value.reason == "range_unresolved" and not raised.value.incomplete
+
+
+def test_a_pushed_main_refresh_validates_and_records_the_pull_request_selection(repo: Path) -> None:
+    remote, main = _feature_remote_then_newer_main(repo)
+    _merge_main(repo)
+
+    result = _run_gate(repo, remote_sha=remote)
+
+    assert result.returncode == 0, result.stderr
+    row = _measurements(repo)[-1]
+    assert row["outcome"] == "green" and row["base"] == main
+    # Only the feature's own test file joins the two registered invariant files; main's change stays out.
+    assert (row["selected_test_files"], row["changed_test_files"], row["changed_paths"]) == (3, 1, 1)
+
+
+def _main_contains_the_head(repo: Path, relation: str, feature_test: str = GREEN_TEST) -> str:
+    """An older feature remote, a later feature commit, a merge of newer main, then main reaching the head.
+
+    The remote stays at its old tip, so the update is not empty, yet the merge-base with ``origin/main`` is the
+    head itself: the graph that skipped every required check (#10820 review F1).
+    """
+    remote, _main = _feature_remote_then_newer_main(repo)
+    _write(repo, "tests/test_feature_new.py", feature_test)
+    _commit(repo, "feature work after the remote tip", "tests/test_feature_new.py")
+    head = _merge_main(repo)
+    _git(repo, "push", "--no-verify", "origin", "HEAD:main")
+    if relation == "descendant":
+        _git(repo, "checkout", "main")
+        _git(repo, "merge", "--ff-only", "feature")
+        _write(repo, "notes/after_landing.md", "main moved on\n")
+        _commit(repo, "main after the feature landed", "notes/after_landing.md")
+        _git(repo, "push", "--no-verify", "origin", "main")
+        _git(repo, "checkout", "feature")
+    assert _git(repo, "merge-base", "origin/main", "HEAD").stdout.strip() == head
+    assert _git(repo, "rev-parse", "origin/main").stdout.strip() != head or relation == "equal"
+    return remote
+
+
+@pytest.mark.parametrize("relation", ["equal", "descendant"])
+def test_a_main_that_contains_the_head_keeps_the_complete_outgoing_range(repo: Path, relation: str) -> None:
+    remote = _main_contains_the_head(repo, relation)
+
+    plan = gate.build_plan(_update(repo, remote), repo, *_hook_inputs(repo))
+
+    assert plan is not None and plan.base == remote  # never the head: the update moves the remote
+    assert plan.changed_tests == ("tests/test_feature_new.py", "tests/test_main_only.py")
+    assert set(plan.registry_nodes) == {"tests/test_invariant.py", "tests/test_scanner.py::test_scan"}
+    assert plan.base_fallback == "merge_base_is_head"
+
+
+@pytest.mark.parametrize("ending", ["green", "red"])
+@pytest.mark.parametrize("relation", ["equal", "descendant"])
+def test_an_outgoing_update_inside_main_still_runs_its_required_checks(repo: Path, relation: str, ending: str) -> None:
+    remote = _main_contains_the_head(repo, relation, GREEN_TEST if ending == "green" else RED_TEST)
+
+    result = _run_gate(repo, remote_sha=remote, extra_env={gate.MAX_CONCURRENT_RUNS_ENV: "1"})
+
+    row = _measurements(repo)[-1]
+    assert row.get("detail") != "no outgoing commits" and row["base"] == remote
+    assert {"pre_commit", "pytest"} <= set(row["stages"])
+    assert row["base_fallback"] == row["selection"]["reason"] == "merge_base_is_head"
+    if ending == "green":
+        assert result.returncode == 0, result.stderr
+        assert row["outcome"] == "green" and len(_receipts(repo)) == 1
+        assert (row["selected_test_files"], row["changed_test_files"]) == (4, 2)
+    else:
+        assert result.returncode == gate.EXIT_REFUSED, result.stderr
+        assert _verdict(result) == {
+            "outcome": "refused",
+            "reason": "tests_failed",
+            "failing": ["tests/test_feature_new.py::test_broken"],
+        }
+        assert _receipts(repo) == []
+
+
+def test_an_unmoved_remote_inside_main_is_still_nothing_outgoing(repo: Path) -> None:
+    _main_contains_the_head(repo, "equal")
+    head = _git(repo, "rev-parse", "HEAD").stdout.strip()
+
+    result = _run_gate(repo, remote_sha=head)
+
+    assert result.returncode == 0, result.stderr
+    row = _measurements(repo)[-1]
+    assert row["detail"] == "no outgoing commits" and "stages" not in row
+
+
+# ---- #11207 on #10820: the selector sees only the branch's change; without a merge-base, the fallback ------
+
+# Records the paths it was given and selects ``tests/test_<name>.py`` for each changed ``scripts/<name>.py``,
+# so a range that carried main's change would select main's test as well.
+PATH_RECORDING_SELECTOR = textwrap.dedent(
+    """\
+    import json, os, sys
+    from pathlib import Path
+
+    paths = sys.argv[sys.argv.index("--paths") + 1:]
+    Path(os.environ["SELECTOR_LOG"]).write_text(json.dumps(paths))
+    modules = [Path(path).stem for path in paths if path.startswith("scripts/") and path.endswith(".py")]
+    selected = [f"tests/test_{name}.py" for name in modules if Path(f"tests/test_{name}.py").is_file()]
+    answer = {"schema": SCHEMA, "scope": "importer_closure", "all_tests_reasons": [], "selected_tests": selected}
+    print(json.dumps(answer))
+    """
+).replace("SCHEMA", repr(gate.SELECTION_SCHEMA))
+
+
+def _module(repo: Path, name: str, message: str) -> str:
+    """Commit ``scripts/<name>.py`` and its ``tests/test_<name>.py``."""
+    _write(repo, f"scripts/{name}.py", "VALUE = 1\n")
+    _write(repo, f"tests/test_{name}.py", GREEN_TEST)
+    return _commit(repo, message, f"scripts/{name}.py", f"tests/test_{name}.py")
+
+
+def _feature_then_newer_main_with_selector(repo: Path) -> str:
+    """The recording selector on main; a pushed feature module; then a newer main module."""
+    _git(repo, "checkout", "main")
+    _install_shadow(repo, PATH_RECORDING_SELECTOR)
+    _git(repo, "push", "--no-verify", "origin", "main")
+    _git(repo, "checkout", "feature")
+    _git(repo, "merge", "--ff-only", "main")
+    remote = _module(repo, "feature_mod", "feature module, already on the remote")
+    _git(repo, "push", "--no-verify", "origin", "feature")
+    _git(repo, "checkout", "main")
+    _module(repo, "main_only", "unrelated main module")
+    _git(repo, "push", "--no-verify", "origin", "main")
+    _git(repo, "checkout", "feature")
+    return remote
+
+
+AFFECTED_AFTER_MAIN = {
+    # kind: (merge newer main, commit after it, push as a new branch) -> the selector's paths
+    "merged_main": ((True, False, False), ["scripts/feature_mod.py", "tests/test_feature_mod.py"]),
+    "merged_main_then_commit": (
+        (True, True, False),
+        ["scripts/feature_mod.py", "scripts/feature_two.py", "tests/test_feature_mod.py", "tests/test_feature_two.py"],
+    ),
+    "remote_behind_main_unmerged": ((False, True, False), ["scripts/feature_two.py", "tests/test_feature_two.py"]),
+    "new_branch_after_merge": ((True, False, True), ["scripts/feature_mod.py", "tests/test_feature_mod.py"]),
+}
+
+
+@pytest.mark.parametrize("kind", list(AFFECTED_AFTER_MAIN))
+def test_the_selector_sees_only_the_branch_change_after_main_moved(repo: Path, tmp_path: Path, kind: str) -> None:
+    (merge, commit_after, new_branch), expected_paths = AFFECTED_AFTER_MAIN[kind]
+    remote = _feature_then_newer_main_with_selector(repo)
+    if merge:
+        _merge_main(repo)
+    if commit_after:
+        _module(repo, "feature_two", "more feature work")
+    log = tmp_path / "selector-paths.json"
+
+    result = _run_gate(repo, remote_sha=None if new_branch else remote, extra_env={"SELECTOR_LOG": str(log)})
+
+    assert result.returncode == 0, result.stderr
+    assert json.loads(log.read_text()) == expected_paths  # main's module never reaches the selector
+    row = _measurements(repo)[-1]
+    assert row["base_fallback"] is None and row["selection"]["status"] == "selected"
+    expected_selected = [path for path in expected_paths if path.startswith("tests/")]
+    assert row["selection"]["selected_count"] == len(expected_selected)
+    (receipt,) = _receipts(repo)
+    blocking = json.loads(receipt.read_text(encoding="utf-8"))["key"]["blocking_node_ids"]
+    assert blocking == expected_selected and "tests/test_main_only.py" not in blocking
+
+
+def _criss_cross_with_selector(repo: Path) -> str:
+    """Two merge-bases with ``origin/main`` (criss-cross merges), the recording selector on both sides."""
+    _install_shadow(repo, PATH_RECORDING_SELECTOR)
+    remote, _base, _tests = _criss_cross(repo)
+    return remote
+
+
+@pytest.mark.parametrize("cause", ["merge_base_unavailable", "merge_base_ambiguous"])
+def test_without_one_merge_base_the_gate_blocks_on_the_conservative_set(repo: Path, tmp_path: Path, cause: str) -> None:
+    if cause == "merge_base_unavailable":
+        remote = _feature_then_newer_main_with_selector(repo)
+        _merge_main(repo)
+        _git(repo, "update-ref", "-d", "refs/remotes/origin/main")  # no origin/main: nothing proves a base
+    else:
+        remote = _criss_cross_with_selector(repo)
+    log = tmp_path / "selector-paths.json"
+
+    result = _run_gate(repo, remote_sha=remote, extra_env={"SELECTOR_LOG": str(log)})
+
+    assert result.returncode == 0, result.stderr
+    assert not log.exists(), "the selector must not narrow an unproven range"
+    row = _measurements(repo)[-1]
+    assert row["base"] == remote and row["base_fallback"] == cause
+    assert row["selection"] == {
+        "status": "fallback",
+        "reason": cause,
+        "detail": f"previous range {remote}..{row['head']} plus the registry",
+        "selected_count": None,
+    }
+    (receipt,) = _receipts(repo)
+    key = json.loads(receipt.read_text(encoding="utf-8"))["key"]
+    assert key["base_fallback"] == cause and key["selection"]["reason"] == cause
+    # The previous range's changed tests plus the registry, never an empty selection.
+    assert {"tests/test_invariant.py", "tests/test_scanner.py::test_scan"} <= set(key["blocking_node_ids"])
+
+
+def test_an_unrelated_red_invariant_still_blocks_a_push_without_a_merge_base(repo: Path) -> None:
+    _red_unchanged(repo, "tests/test_invariant.py")
+    _install_selector(repo, ["tests/test_new.py"])  # would select only the new test, if it were asked
+    _write(repo, "tests/test_new.py", GREEN_TEST)
+    _write(repo, "RED_MARKER", "breaks the unrelated invariant\n")
+    remote = _commit(repo, "unrelated change", "tests/test_new.py", "RED_MARKER")
+    _git(repo, "push", "--no-verify", "origin", "feature")
+    _write(repo, "tests/test_more.py", GREEN_TEST)
+    _commit(repo, "more", "tests/test_more.py")
+    _git(repo, "update-ref", "-d", "refs/remotes/origin/main")
+
+    result = _run_gate(repo, remote_sha=remote)
+
+    assert result.returncode == gate.EXIT_REFUSED, result.stderr
+    assert "tests/test_invariant.py::test_no_marker" in _verdict(result)["failing"]
+    assert _measurements(repo)[-1]["selection"]["reason"] == "merge_base_unavailable"
+
+
+def test_a_new_branch_already_inside_main_runs_the_conservative_set(repo: Path) -> None:
+    """A new branch whose head ``origin/main`` contains: the merge-base is the head, never "nothing outgoing"."""
+    result = _run_gate(repo)  # the fixture's feature branch is still main's tip
+
+    assert result.returncode == 0, result.stderr
+    row = _measurements(repo)[-1]
+    assert row.get("detail") != "no outgoing commits" and {"pre_commit", "pytest"} <= set(row["stages"])
+    assert row["base"] == row["head"] and row["changed_paths"] == 0
+    assert row["base_fallback"] == row["selection"]["reason"] == "merge_base_is_head"
+    assert row["nodes"] == 2  # the registry's two entries: the fallback is never empty
+
+
+def test_a_new_branch_without_origin_main_is_refused_as_unresolved(repo: Path) -> None:
+    _write(repo, "tests/test_new.py", GREEN_TEST)
+    _commit(repo, "new", "tests/test_new.py")
+    _git(repo, "update-ref", "-d", "refs/remotes/origin/main")
+
+    result = _run_gate(repo)  # no remote tip and no origin/main: no range can be named
+
+    assert result.returncode == gate.EXIT_REFUSED
+    assert _verdict(result)["reason"] == "range_unresolved"
+    assert _receipts(repo) == []
+
+
+# ---- #11140: a stage timeout is typed by the observed load and never hides a reported failure -----------
+
+
+def _observation(avg10: float | None, avg60: float | None, memory: int | None) -> dict[str, object]:
+    """The shape ``admission_resources`` returns, qualified by the same admission caps."""
+    return {
+        "cpu_some_avg10": avg10,
+        "cpu_some_avg60": avg60,
+        "mem_available_bytes": memory,
+        "qualified": avg10 is not None
+        and avg60 is not None
+        and memory is not None
+        and avg10 < gate.CPU_SOME_AVG10_MAX
+        and avg60 < gate.CPU_SOME_AVG60_MAX
+        and memory >= 8 * 1024**3,
+    }
+
+
+GIB = 1024**3
+TIMEOUT_LOADS = {
+    "cpu_avg10_at_cap": (_observation(gate.CPU_SOME_AVG10_MAX, 1.0, 64 * GIB), "above_caps", "timeout_under_load"),
+    "cpu_avg60_at_cap": (_observation(1.0, gate.CPU_SOME_AVG60_MAX, 64 * GIB), "above_caps", "timeout_under_load"),
+    "memory_short": (_observation(1.0, 1.0, 8 * GIB - 1), "above_caps", "timeout_under_load"),
+    "below_caps": (_observation(24.8, 12.0, 64 * GIB), "below_caps", "timeout"),
+    "unobserved": (_observation(None, None, None), "unknown", "timeout"),
+    "partly_observed": (_observation(90.0, None, 64 * GIB), "unknown", "timeout"),
+}
+
+
+@pytest.mark.parametrize("case", sorted(TIMEOUT_LOADS))
+def test_a_killed_stage_is_typed_by_the_load_observed_at_its_timeout(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, case: str
+) -> None:
+    observed, load, reason = TIMEOUT_LOADS[case]
+    monkeypatch.setattr(gate, "admission_resources", lambda: dict(observed))
+    hung = tmp_path / "hung"
+    script = (
+        "import sys\n"
+        "print('FAILED tests/test_a.py::test_whole - printed', flush=True)\n"
+        "sys.stdout.write('FAILED tests/test_a.py::test_cu'); sys.stdout.flush()\n"
+        f"open({str(hung)!r}, 'w').close()\n" + _BLOCK_UNTIL_KILLED
+    )
+    _wait_once_child_hangs(monkeypatch, hung)  # the kill always cuts the second line, never the first
+    diagnostics: dict[str, object] = {}
+
+    with pytest.raises(gate.StageTimeout) as raised:
+        gate.run_bounded(
+            [sys.executable, "-c", script],
+            cwd=tmp_path,
+            deadline=time.monotonic() + 1.5,
+            label="pytest stage",
+            diagnostics=diagnostics,
+        )
+
+    error = raised.value
+    assert error.reason == reason and error.incomplete and error.failing == ()
+    assert error.detail.startswith("pytest stage: exceeded the time budget (timeout); host load at the timeout: ")
+    assert ("unobserved" in error.detail) is (load == "unknown")
+    assert diagnostics["load_at_timeout"] == {
+        "cpu_some_avg10": observed["cpu_some_avg10"],
+        "cpu_some_avg60": observed["cpu_some_avg60"],
+        "mem_available_bytes": observed["mem_available_bytes"],
+        "load": load,
+    }
+    assert diagnostics["signal"] == signal.SIGKILL
+    # The line the kill cut is dropped, so no id that pytest never finished printing can be reported.
+    assert error.output == "FAILED tests/test_a.py::test_whole - printed\n"
+
+
+def test_a_budget_spent_before_a_stage_starts_is_typed_like_any_timeout(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(gate, "admission_resources", lambda: _observation(None, None, None))
+    diagnostics: dict[str, object] = {}
+
+    with pytest.raises(gate.StageTimeout) as raised:
+        gate.run_bounded(
+            ["true"], cwd=Path("."), deadline=time.monotonic() - 1, label="pytest stage", diagnostics=diagnostics
+        )
+
+    assert raised.value.reason == "timeout" and raised.value.incomplete and raised.value.output == ""
+    assert "time budget exhausted before start (timeout)" in raised.value.detail
+    assert diagnostics["child_unavailable_reason"] == "budget_exhausted_before_start"
+    load = diagnostics["load_at_timeout"]
+    assert isinstance(load, dict) and load["load"] == "unknown"
+
+
+PYTEST_OUTPUT_AT_KILL = {
+    "summary_printed": (
+        "..F\n= short test summary info =\nFAILED tests/test_b.py::test_red - assert False\n"
+        "ERROR tests/test_a.py::test_setup - RuntimeError\n= 1 failed, 1 error in 3.2s =\n",
+        ("tests/test_b.py::test_red", "tests/test_a.py::test_setup"),
+    ),
+    "progress_only": ("....F...\n", ()),
+    "cut_mid_line": ("..F\n= short test summary info =\nFAILED tests/test_b.py::test_r", ()),
+    "nothing": ("", ()),
+}
+
+
+@pytest.mark.parametrize("case", sorted(PYTEST_OUTPUT_AT_KILL))
+def test_a_pytest_timeout_keeps_only_the_failures_pytest_printed(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, case: str
+) -> None:
+    output, failing = PYTEST_OUTPUT_AT_KILL[case]
+    monkeypatch.setattr(gate, "state_dir", lambda _root: tmp_path / "state")
+    monkeypatch.setattr(gate, "admission_resources", lambda: _observation(1.0, 1.0, 64 * GIB))
+
+    def run_bounded(command, *, cwd, deadline, label, diagnostics=None, extra_env=None):
+        raise gate.stage_timeout(f"{label}: exceeded the time budget (timeout)", output, diagnostics)
+
+    monkeypatch.setattr(gate, "run_bounded", run_bounded)
+
+    with pytest.raises(gate.GateOutcome) as raised:
+        gate.run_pytest_stage(_plan(), tmp_path, "launcher", time.monotonic() + 30)
+
+    error = raised.value
+    assert "exceeded the time budget (timeout)" in error.detail
+    if failing:  # a reported failure stays a failure, never an incomplete run with an empty list
+        assert (error.reason, error.failing, error.incomplete) == ("tests_failed", failing, False)
+        assert "pytest reported failures before the kill" in error.detail
+    else:  # nothing is invented: still a typed, non-green timeout
+        assert isinstance(error, gate.StageTimeout)
+        assert (error.reason, error.failing, error.incomplete) == ("timeout", (), True)
+
+
+@pytest.mark.parametrize("ending", ["printed_failure", "silent_hang"])
+def test_an_actual_pytest_stage_killed_after_printing_a_failure_is_refused_as_failing(repo: Path, ending: str) -> None:
+    failure = "FAILED tests/test_new.py::test_ok - synthetic"
+    report = f'echo "{failure}"; ' if ending == "printed_failure" else ""
+    _stage_launcher(repo, ":", f'case "$*" in *tests/test_new.py*) {report}sleep 60;; esac; echo "1 passed in 0.1s"')
+
+    result = _run_gate(repo, extra_env={gate.MAX_CONCURRENT_RUNS_ENV: "1", "LU_PRE_PUSH_GATE_STAGE_BUDGET_S": "3"})
+
+    row = _measurements(repo)[-1]
+    stage = row["stages"]["pytest"]
+    assert stage["signal"] == signal.SIGKILL
+    assert stage["load_at_timeout"]["load"] in {"above_caps", "below_caps", "unknown"}
+    assert _receipts(repo) == [] and "green" not in (row["outcome"], stage["outcome"])
+    if ending == "printed_failure":
+        assert result.returncode == gate.EXIT_REFUSED, result.stderr
+        failing = ["tests/test_new.py::test_ok"]
+        assert _verdict(result) == {"outcome": "refused", "reason": "tests_failed", "failing": failing}
+        assert stage["reason"] == "tests_failed"
+    else:
+        assert result.returncode == gate.EXIT_INCOMPLETE, result.stderr
+        reason = "timeout_under_load" if stage["load_at_timeout"]["load"] == "above_caps" else "timeout"
+        assert _verdict(result) == {"outcome": "validation_incomplete", "reason": reason, "failing": []}
+        assert "NOT green" in result.stderr
+
+
+# ---- #11207 review round 5: deleted modules, complete receipt binding, post-selector timeout counts -------
+
+# This checkout's real selector, run over the fixture repository it is committed in: the fixture's own
+# ``scripts`` package is dropped so the selector's imports resolve here, and its default root is the fixture.
+REAL_SELECTOR = textwrap.dedent(
+    f"""\
+    import sys
+    from pathlib import Path
+
+    for name in [name for name in sys.modules if name == "scripts" or name.startswith("scripts.")]:
+        del sys.modules[name]
+    sys.path.insert(0, {str(REPO_ROOT)!r})
+    from scripts.ci import pre_push_shadow
+
+    pre_push_shadow.selection.__defaults__ = (Path.cwd(),)
+    raise SystemExit(pre_push_shadow.main(sys.argv[1:]))
+    """
+)
+IMPORTING_TEST = "from scripts.lib import VALUE\n\n\ndef test_value():\n    assert VALUE == 1\n"
+
+
+def _main_with_real_selector(repo: Path, files: dict[str, str]) -> None:
+    """Land the real selector and ``files`` on the remote ``main``; the feature branch starts there."""
+    _git(repo, "checkout", "main")
+    _write(repo, "scripts/__init__.py", "")
+    _write(repo, "scripts/ci/__init__.py", "")
+    _write(repo, "scripts/ci/pre_push_shadow.py", REAL_SELECTOR)
+    for name, text in files.items():
+        _write(repo, name, text)
+    _commit(repo, "real selector and modules", ".")
+    _git(repo, "push", "--no-verify", "origin", "main")
+    _git(repo, "checkout", "feature")
+    _git(repo, "merge", "--ff-only", "main")
+
+
+@pytest.mark.parametrize("imported", [True, False])
+def test_deleting_a_module_runs_the_registry_whether_or_not_it_is_imported(repo: Path, imported: bool) -> None:
+    """Never a selection, so never an empty or a too-small one: the registry runs (#11207, round 6)."""
+    _main_with_real_selector(
+        repo, {"scripts/lib.py": "VALUE = 1\n", **({"tests/test_lib.py": IMPORTING_TEST} if imported else {})}
+    )
+    _git(repo, "rm", "-q", "scripts/lib.py")
+    _git(repo, "commit", "-q", "-m", "delete a module")
+
+    result = _run_gate(repo)
+
+    row = _deletion_row(repo, result, ["scripts/lib.py"])
+    assert row["nodes"] == 2  # the registry's two entries ran
+
+
+def _ran_selected() -> object:
+    return gate.Selection("selected", ("tests/test_x.py",), digest="0123456789abcdef")
+
+
+def _altered(value: object) -> object:
+    if isinstance(value, bool) or value is None:
+        return "altered"
+    if isinstance(value, int | float):
+        return value + 1
+    if isinstance(value, str):
+        return value + "-altered"
+    if isinstance(value, list):
+        return [*value, "tests/test_altered.py"]
+    if isinstance(value, dict):
+        return {**value, "altered": True}
+    raise AssertionError(f"no alteration for {value!r}")
+
+
+# Every field of a green receipt: the reuse check must refuse each one removed and each one altered.
+RECEIPT_FIELDS = (
+    ("seal",),
+    ("outcome",),
+    ("at",),
+    ("key",),
+    ("key", "gate_version"),
+    ("key", "head"),
+    ("key", "tree"),
+    ("key", "base"),
+    ("key", "base_fallback"),
+    ("key", "registry_version"),
+    ("key", "deferred_to_ci"),
+    ("key", "node_ids"),
+    ("key", "changed_paths"),
+    ("key", "deleted_paths"),
+    ("key", "tools"),
+    *(("key", "tools", name) for name in getattr(gate, "TOOL_NAMES", ())),
+    ("key", "selection"),
+    ("key", "selection", "status"),
+    ("key", "selection", "reason"),
+    ("key", "selection", "digest"),
+    ("key", "selection", "tests"),
+    ("key", "blocking_node_ids"),
+)
+TOOLS = {name: f"{name}-1" for name in getattr(gate, "TOOL_NAMES", ())}
+
+
+def _receipt_plan(**overrides):
+    return _plan(tools=dict(TOOLS), **overrides) if TOOLS else _plan(**overrides)
+
+
+def test_the_receipt_field_table_covers_every_written_field(tmp_path: Path) -> None:
+    gate.write_receipt(tmp_path, _receipt_plan(selection=_ran_selected()), 1000.0)
+    receipt = json.loads(gate.receipt_path(tmp_path, _receipt_plan()).read_text(encoding="utf-8"))
+
+    def paths(value: object, prefix: tuple[str, ...]) -> set[tuple[str, ...]]:
+        found = {prefix} if prefix else set()
+        if isinstance(value, dict):
+            for name, item in value.items():
+                found |= paths(item, (*prefix, name))
+        return found
+
+    assert paths(receipt, ()) == set(RECEIPT_FIELDS)
+
+
+# Resealed: a sealed receipt that differs as written, e.g. by other gate code. Before the selector runs, the
+# recorded digest stands for the bound inputs and cannot be checked; a later time is just a later receipt.
+RESEALED_ACCEPTED_BEFORE_SELECTION = {(("key", "selection", "digest"), "altered"), (("at",), "altered")}
+RESEALED_ACCEPTED = {(("at",), "altered")}
+
+
+@pytest.mark.parametrize("sealed", ["edited", "resealed"])
+@pytest.mark.parametrize("change", ["removed", "altered", "extra"])
+@pytest.mark.parametrize("field", RECEIPT_FIELDS, ids=".".join)
+@pytest.mark.parametrize("ran", ["selected", "fallback"])
+def test_a_receipt_with_a_missing_or_altered_field_is_never_reused(
+    tmp_path: Path, field: tuple[str, ...], change: str, ran: str, sealed: str
+) -> None:
+    if sealed == "resealed" and field == ("seal",):
+        return  # resealing would overwrite the very change under test; "edited" covers the seal
+    selection = _ran_selected() if ran == "selected" else gate.Selection("fallback", reason="selector_timeout")
+    gate.write_receipt(tmp_path, _receipt_plan(selection=selection), 1000.0)
+    path = gate.receipt_path(tmp_path, _receipt_plan())
+    receipt = json.loads(path.read_text(encoding="utf-8"))
+    # Reused before the selector runs (no selection yet) and once the same selection is known.
+    assert gate.receipt_is_fresh(tmp_path, _receipt_plan(), 1001.0)
+    assert gate.receipt_is_fresh(tmp_path, _receipt_plan(selection=selection), 1001.0)
+
+    *parents, name = field
+    holder = receipt
+    for parent in parents:
+        holder = holder[parent]
+    if change == "removed":
+        holder.pop(name, None)
+    elif change == "altered":
+        holder[name] = _altered(holder.get(name))
+    else:
+        holder[name] = {"value": holder.get(name), "extra": 1} if name != "key" else {**holder[name], "extra": 1}
+    if sealed == "resealed":
+        body = {name: receipt[name] for name in ("key", "outcome", "at") if name in receipt}
+        receipt["seal"] = gate.receipt_seal(body)
+    path.write_text(json.dumps(receipt), encoding="utf-8")
+
+    accepted_before = sealed == "resealed" and (field, change) in RESEALED_ACCEPTED_BEFORE_SELECTION
+    accepted_after = sealed == "resealed" and (field, change) in RESEALED_ACCEPTED
+    assert gate.receipt_is_fresh(tmp_path, _receipt_plan(), 1001.0) is accepted_before
+    assert gate.receipt_is_fresh(tmp_path, _receipt_plan(selection=selection), 1001.0) is accepted_after
+
+
+def test_a_receipt_for_a_different_selection_or_tool_is_never_reused(tmp_path: Path) -> None:
+    gate.write_receipt(tmp_path, _receipt_plan(selection=_ran_selected()), 1000.0)
+
+    for other in (
+        gate.Selection("selected", ("tests/test_x.py",), digest="fedcba9876543210"),
+        gate.Selection("selected", ("tests/test_y.py",), digest="0123456789abcdef"),
+        gate.Selection("fallback", reason="selector_timeout"),
+    ):
+        assert not gate.receipt_is_fresh(tmp_path, _receipt_plan(selection=other), 1001.0)
+    for name in gate.TOOL_NAMES:
+        assert not gate.receipt_is_fresh(tmp_path, _plan(tools={**TOOLS, name: "other"}), 1001.0), name
+    assert not gate.receipt_is_fresh(tmp_path, _receipt_plan(deleted_paths=("scripts/gone.py",)), 1001.0)
+
+
+def test_a_receipt_written_without_a_selection_cannot_exist(tmp_path: Path) -> None:
+    with pytest.raises(gate.GateOutcome) as raised:
+        gate.write_receipt(tmp_path, _receipt_plan(), 1000.0)
+
+    assert raised.value.reason == "receipt_unwritable" and raised.value.incomplete
+    assert not gate.receipt_path(tmp_path, _receipt_plan()).exists()
+
+
+def test_a_base_fallback_receipt_must_record_that_fallback(tmp_path: Path) -> None:
+    fallback = gate.Selection("fallback", reason="merge_base_ambiguous")
+    plan = _receipt_plan(base_fallback="merge_base_ambiguous", selection=fallback)
+    gate.write_receipt(tmp_path, plan, 1000.0)
+    assert gate.receipt_is_fresh(tmp_path, _receipt_plan(base_fallback="merge_base_ambiguous"), 1001.0)
+
+    # A sealed receipt whose selection contradicts the base fallback is refused, however consistent otherwise.
+    gate.write_receipt(tmp_path, _receipt_plan(base_fallback="merge_base_ambiguous", selection=_ran_selected()), 1000.0)
+    assert not gate.receipt_is_fresh(tmp_path, _receipt_plan(base_fallback="merge_base_ambiguous"), 1001.0)
+    # And a plan the selector runs for never reuses a base fallback's verdict.
+    gate.write_receipt(tmp_path, _receipt_plan(selection=fallback), 1000.0)
+    assert not gate.receipt_is_fresh(tmp_path, _receipt_plan(), 1001.0)
+
+
+def test_every_fallback_reason_the_gate_records_is_a_known_reason() -> None:
+    source = GATE_PATH.read_text(encoding="utf-8")
+    recorded = set(re.findall(r'(?:unavailable|fallback)\("(\w+)"', source))
+    recorded |= set(re.findall(r'return [\w.]+, "(merge_base_\w+)"', source))
+
+    assert recorded == {*gate.BASE_FALLBACK_REASONS, *gate.SELECTOR_FALLBACK_REASONS}
+
+
+def test_a_selector_narrowed_timeout_reports_the_selected_count_not_the_registry(repo: Path) -> None:
+    _install_selector(repo, ["tests/test_slow.py"])
+    _write(repo, "tests/test_slow.py", "import time\n\n\ndef test_slow():\n    time.sleep(120)\n")
+    _commit(repo, "slow", "tests/test_slow.py")
+    base = _git(repo, "merge-base", "origin/main", "HEAD").stdout.strip()
+
+    result = _run_gate(repo, extra_env={"LU_PRE_PUSH_GATE_STAGE_BUDGET_S": "4"})
+
+    assert result.returncode == gate.EXIT_INCOMPLETE, result.stderr
+    row = _measurements(repo)[-1]
+    assert row["selection"]["status"] == "selected" and row["nodes"] == 1
+    # The run held one test file (the changed one); the registry's two files never ran.
+    assert row["selected_test_files"] == 1
+    changed = len(_git(repo, "diff", "--name-only", f"{base}..HEAD").stdout.split())  # the selector and the test
+    selection = f"selection: base {base}, 1 selected test files (1 changed by the range), {changed} changed paths"
+    assert row["detail"].endswith(selection), row["detail"]
+    assert result.stderr.rstrip("\n").endswith(selection)
+
+
+def test_a_scoped_refusal_adopts_the_scoped_selection_before_raising(tmp_path: Path) -> None:
+    chosen = gate.Selection("selected", ("tests/test_x.py",), digest="0123456789abcdef")
+    result = {
+        "event": {"nodes": 2},
+        "error": {"reason": "timeout", "detail": "pytest stage: exceeded", "failing": [], "incomplete": True},
+        "settled": True,
+        "selection": dataclasses.asdict(chosen),
+    }
+
+    class Channel:
+        def settimeout(self, _seconds: float) -> None:
+            pass
+
+        def sendall(self, _data: bytes) -> None:
+            pass
+
+        def close(self) -> None:
+            pass
+
+    scope = gate.ResourceScope(tmp_path, "launcher", None)  # type: ignore[arg-type]
+    scope.stream = io.BytesIO((json.dumps(result) + "\n").encode())
+    scope.channel = Channel()  # type: ignore[assignment]
+    scope.process = subprocess.Popen(["true"])
+    scope.process.wait()
+    plan = _plan(changed_tests=("tests/test_b.py",))
+
+    with pytest.raises(gate.GateOutcome) as raised:
+        scope.execute(plan, "config", time.monotonic() + 30, {}, stage_budget_s=30.0)
+
+    assert raised.value.reason == "timeout"
+    assert plan.selection == chosen and plan.node_ids == ("tests/test_b.py", "tests/test_x.py")
+
+
+def test_an_empty_answer_for_a_python_change_falls_back_but_not_for_docs(tmp_path: Path) -> None:
+    python = gate.blocking_selection(_plan(changed_tests=(), changed_paths=("scripts/x.py",)), tmp_path, _answer([]))
+    docs = gate.blocking_selection(_plan(changed_tests=(), changed_paths=("docs/x.md",)), tmp_path, _answer([]))
+
+    assert (python.status, python.reason) == ("fallback", "python_change_selects_nothing")
+    assert docs.status == "selected" and docs.record["no_tests_affected"] is True
+
+
+# ---- #11207 review round 6: a range that deletes a non-documentation path runs the registry ------------
+
+# The reviewer's two shapes: the scanner resolves the constant concatenation, so the importer closure of the
+# base commit reaches the deleted path, while no text of the deleted path's name appears in the importer.
+DYNAMIC_IMPORTER = "def test_loaded():\n    assert __import__('scripts.' + 'tar' + 'get')\n"
+CONCATENATED_READER = (
+    "from pathlib import Path\n\n\ndef test_rows():\n    assert (Path('scripts') / ('tab' + 'le.json')).read_text()\n"
+)
+REVIEWED_SHAPES = {
+    "dunder_import_concatenation": ("scripts/target.py", {"scripts/target.py": "VALUE = 1\n"}, DYNAMIC_IMPORTER),
+    "path_read_concatenation": ("scripts/table.json", {"scripts/table.json": "{}\n"}, CONCATENATED_READER),
+}
+
+
+def _deletion_row(repo: Path, result: subprocess.CompletedProcess[str], deleted: list[str]) -> dict:
+    """The measurement row of a run that took the deletion fallback, checked for its typed reason."""
+    row = _measurements(repo)[-1]
+    assert row["selection"] == {
+        "status": "fallback",
+        "reason": "deleted_paths",
+        "detail": f"{len(deleted)} deleted paths; the registry runs instead of the selector",
+        "selected_count": None,
+        "deleted_paths": deleted,
+    }, row["selection"]
+    assert result.returncode == 0, result.stderr
+    return row
+
+
+@pytest.mark.parametrize("shape", sorted(REVIEWED_SHAPES))
+def test_a_deletion_reached_through_concatenation_runs_the_registry(repo: Path, shape: str) -> None:
+    deleted, files, importer = REVIEWED_SHAPES[shape]
+    _main_with_real_selector(repo, {**files, "tests/test_importer.py": importer, "tests/test_unrelated.py": GREEN_TEST})
+    _git(repo, "rm", "-q", deleted)
+    _write(repo, "tests/test_unrelated.py", GREEN_TEST + "\n\ndef test_more():\n    assert True\n")
+    _commit(repo, "delete a path and change an unrelated test", "tests/test_unrelated.py")
+
+    result = _run_gate(repo)
+
+    row = _deletion_row(repo, result, [deleted])
+    # The registry's two entries and the changed test, never a selection narrowed to the unrelated test.
+    assert row["nodes"] == 3
+    (receipt,) = _receipts(repo)
+    key = json.loads(receipt.read_text(encoding="utf-8"))["key"]
+    assert key["deleted_paths"] == [deleted] and key["selection"]["reason"] == "deleted_paths"
+    assert set(key["blocking_node_ids"]) == {
+        "tests/test_invariant.py",
+        "tests/test_scanner.py::test_scan",
+        "tests/test_unrelated.py",
+    }
+
+
+DELETION_KINDS = {
+    # kind: (files on main, how the branch removes them) -> the deleted paths the fallback records
+    "package": (
+        {"scripts/pkg/__init__.py": "VALUE = 1\n", "scripts/pkg/mod.py": "from . import VALUE\n"},
+        ("rm", "-q", "-r", "scripts/pkg"),
+        ["scripts/pkg/__init__.py", "scripts/pkg/mod.py"],
+    ),
+    "data_file": ({"scripts/data/rows.csv": "a,b\n"}, ("rm", "-q", "scripts/data/rows.csv"), ["scripts/data/rows.csv"]),
+    "module_renamed_away": (
+        {"scripts/old_name.py": "VALUE = 1\n"},
+        ("mv", "scripts/old_name.py", "scripts/new_name.py"),
+        ["scripts/old_name.py"],
+    ),
+}
+
+
+@pytest.mark.parametrize("kind", sorted(DELETION_KINDS))
+def test_every_deletion_kind_runs_the_registry_without_the_selector(repo: Path, tmp_path: Path, kind: str) -> None:
+    files, removal, deleted = DELETION_KINDS[kind]
+    _git(repo, "checkout", "main")
+    _install_shadow(repo, PATH_RECORDING_SELECTOR)
+    for name, text in files.items():
+        _write(repo, name, text)
+    _commit(repo, "files the branch removes", ".")
+    _git(repo, "push", "--no-verify", "origin", "main")
+    _git(repo, "checkout", "feature")
+    _git(repo, "merge", "--ff-only", "main")
+    _git(repo, *removal)
+    _git(repo, "commit", "-q", "-m", f"remove: {kind}")
+    log = tmp_path / "selector-paths.json"
+
+    result = _run_gate(repo, extra_env={"SELECTOR_LOG": str(log)})
+
+    row = _deletion_row(repo, result, deleted)
+    assert not log.exists(), "a deletion never reaches the selector: its answer could be too small"
+    assert row["nodes"] == 2 and row["deleted_paths"] == len(deleted)
+
+
+def test_deleting_documentation_only_keeps_the_selection(repo: Path, tmp_path: Path) -> None:
+    _git(repo, "checkout", "main")
+    _install_shadow(repo, PATH_RECORDING_SELECTOR)
+    _write(repo, "docs/guide.md", "# Guide\n")
+    _commit(repo, "a guide", "docs/guide.md")
+    _git(repo, "push", "--no-verify", "origin", "main")
+    _git(repo, "checkout", "feature")
+    _git(repo, "merge", "--ff-only", "main")
+    _git(repo, "rm", "-q", "docs/guide.md")
+    _write(repo, "tests/test_new.py", GREEN_TEST)
+    _commit(repo, "drop the guide, add a test", "tests/test_new.py")
+    log = tmp_path / "selector-paths.json"
+
+    result = _run_gate(repo, extra_env={"SELECTOR_LOG": str(log)})
+
+    assert result.returncode == 0, result.stderr
+    row = _measurements(repo)[-1]
+    assert row["selection"]["status"] == "selected" and row["deleted_paths"] == 1
+    assert json.loads(log.read_text()) == ["tests/test_new.py"]  # the selector ran for the changed paths
+    assert row["nodes"] == 1  # the changed test only: the registry did not run
+
+
+@pytest.mark.parametrize(
+    ("path", "documentation"),
+    [
+        ("docs/guide.md", True),
+        ("docs/runbooks/pre-push-gate.md", True),
+        # Markdown tests read as data, or that a script ships: never documentation-only.
+        ("README.md", False),
+        ("scripts/README.md", False),
+        ("scripts/docs/notes.md", False),
+        ("tests/fixtures/lesson.md", False),
+        ("curriculum/l2-uk-en/a1/lesson.md", False),
+        ("agents_extensions/shared/rules/core.md", False),
+        ("docs/guide.md.py", False),
+        ("docs/data.json", False),
+        ("docs/schema.yaml", False),
+        ("docsx/guide.md", False),
+        ("docs/", False),
+        ("docs/.md", False),
+    ],
+)
+def test_only_markdown_under_docs_is_a_documentation_only_deletion(path: str, documentation: bool) -> None:
+    plan = _plan(changed_tests=(), deleted_paths=(path,))
+
+    assert gate.documentation_only(path) is documentation
+    assert plan.forced_fallback == (None if documentation else "deleted_paths")
+    # One non-documentation deletion among documentation deletions still runs the registry.
+    mixed = _plan(changed_tests=(), deleted_paths=("docs/guide.md", path))
+    assert mixed.forced_fallback == (None if documentation else "deleted_paths")
+    # A base fallback names the stronger cause: the range itself is unproven.
+    assert _plan(base_fallback="merge_base_ambiguous", deleted_paths=(path,)).forced_fallback == "merge_base_ambiguous"
+
+
+def test_the_deletion_fallback_records_a_bounded_list_of_deleted_paths() -> None:
+    deleted = tuple(f"scripts/gone_{index:03}.py" for index in range(gate.DELETED_PATHS_RECORDED + 5))
+    plan = _plan(deleted_paths=("docs/guide.md", *deleted))
+
+    selection = gate.plan_fallback_selection(plan)
+
+    assert (selection.status, selection.reason, selection.tests, selection.digest) == (
+        "fallback",
+        "deleted_paths",
+        (),
+        None,
+    )
+    assert selection.record["deleted_paths"] == list(deleted[: gate.DELETED_PATHS_RECORDED])
+    assert selection.record["detail"] == f"{len(deleted)} deleted paths; the registry runs instead of the selector"
+
+
+def test_a_deleted_paths_receipt_is_reused_only_for_the_identical_deletion_set(tmp_path: Path) -> None:
+    fallback = gate.Selection("fallback", reason="deleted_paths")
+    gone = ("scripts/gone.py",)
+    gate.write_receipt(tmp_path, _receipt_plan(deleted_paths=gone, selection=fallback), 1000.0)
+    receipt = json.loads(gate.receipt_path(tmp_path, _receipt_plan()).read_text(encoding="utf-8"))
+
+    assert receipt["seal"] == gate.receipt_seal({name: receipt[name] for name in ("key", "outcome", "at")})
+    assert gate.receipt_is_fresh(tmp_path, _receipt_plan(deleted_paths=gone), 1001.0)
+    assert gate.receipt_is_fresh(tmp_path, _receipt_plan(deleted_paths=gone, selection=fallback), 1001.0)
+    for other in (
+        ("scripts/other.py",),
+        ("scripts/gone.py", "scripts/more.py"),
+        ("scripts/gone.py", "docs/guide.md"),  # documentation deletions are bound too, though exempt
+        ("docs/guide.md",),
+        (),
+    ):
+        assert not gate.receipt_is_fresh(tmp_path, _receipt_plan(deleted_paths=other), 1001.0), other
+
+    # A sealed receipt whose selection contradicts the deletion is refused, however consistent otherwise.
+    gate.write_receipt(tmp_path, _receipt_plan(deleted_paths=gone, selection=_ran_selected()), 1000.0)
+    assert not gate.receipt_is_fresh(tmp_path, _receipt_plan(deleted_paths=gone), 1001.0)
+    # And a plan without a non-documentation deletion never reuses a deletion fallback's verdict.
+    for deleted in ((), ("docs/guide.md",)):
+        gate.write_receipt(tmp_path, _receipt_plan(deleted_paths=deleted, selection=fallback), 1000.0)
+        assert not gate.receipt_is_fresh(tmp_path, _receipt_plan(deleted_paths=deleted), 1001.0), deleted
+
+
+# ---- #11207 review round 7: the range's paths are read NUL-delimited, with Git's output options pinned -------
+
+# The reviewer's two bypasses of the deletion rule. With ``core.quotePath=false`` a name holding a Unicode line
+# separator was split by ``str.splitlines``, which drops the separator, so ``\u2028docs/guide.md`` read as the
+# exempt ``docs/guide.md``; with ``diff.ignoreSubmodules=all`` a deleted gitlink left the listing. Either let the
+# selector answer for a range that deletes a non-documentation path. Every name below is not documentation,
+# and the plan must carry it byte for byte, whatever Git's quoting would have printed.
+LINE_BREAKING_NAMES = [
+    pytest.param("\u2028docs/guide.md", id="line_separator_prefix"),
+    pytest.param("\u2029docs/guide.md", id="paragraph_separator_prefix"),
+    pytest.param("\x85docs/guide.md", id="next_line_prefix"),
+    pytest.param("\x0bdocs/guide.md", id="vertical_tab_prefix"),
+    pytest.param("\x0cdocs/guide.md", id="form_feed_prefix"),
+    pytest.param("\x1cdocs/guide.md", id="file_separator_prefix"),
+    pytest.param("\x1ddocs/guide.md", id="group_separator_prefix"),
+    pytest.param("\x1edocs/guide.md", id="record_separator_prefix"),
+    pytest.param("\rdocs/guide.md", id="carriage_return_prefix"),
+    pytest.param("\ndocs/guide.md", id="newline_prefix"),
+    pytest.param("docs/guide.md\u2028", id="line_separator_suffix"),
+    pytest.param("scripts/x.py\u2028docs/guide.md", id="line_separator_inside"),
+    pytest.param("scripts/x.py\ndocs/guide.md", id="newline_inside"),
+    pytest.param(" docs/guide.md", id="leading_space"),
+]
+
+
+def _land_on_main(repo: Path, files: dict[str, str]) -> None:
+    """Commit ``files`` on the remote ``main``; the feature branch starts there."""
+    _git(repo, "checkout", "main")
+    for name, text in files.items():
+        _write(repo, name, text)
+    _git(repo, "add", "--", *files)
+    _git(repo, "commit", "-m", "paths the branch changes")
+    _git(repo, "push", "--no-verify", "origin", "main")
+    _git(repo, "checkout", "feature")
+    _git(repo, "merge", "--ff-only", "main")
+
+
+def _land_gitlink_on_main(repo: Path, path: str) -> None:
+    """Commit a gitlink (a submodule entry, mode 160000) at ``path`` on the remote ``main``."""
+    _git(repo, "checkout", "main")
+    sha = _git(repo, "rev-parse", "HEAD").stdout.strip()
+    _git(repo, "update-index", "--add", "--cacheinfo", f"160000,{sha},{path}")
+    _git(repo, "commit", "-m", "a gitlink")
+    _git(repo, "push", "--no-verify", "origin", "main")
+    _git(repo, "checkout", "feature")
+    _git(repo, "merge", "--ff-only", "main")
+
+
+def _new_branch_plan(repo: Path) -> Any:
+    return gate.build_plan(_update(repo, ZERO_SHA), repo, *_hook_inputs(repo))
+
+
+@pytest.mark.parametrize("quote_path", ["true", "false"])
+@pytest.mark.parametrize("name", LINE_BREAKING_NAMES)
+def test_a_deleted_name_with_a_line_break_is_recorded_whole_and_runs_the_registry(
+    repo: Path, name: str, quote_path: str
+) -> None:
+    assert not gate.documentation_only(name)
+    _land_on_main(repo, {name: "data\n"})
+    _git(repo, "config", "core.quotePath", quote_path)
+    _git(repo, "rm", "-q", "--", name)
+    _git(repo, "commit", "-m", "remove an oddly named path")
+
+    plan = _new_branch_plan(repo)
+
+    assert plan is not None
+    assert (plan.changed_paths, plan.deleted_paths) == ((), (name,))
+    assert plan.forced_fallback == "deleted_paths"
+
+
+@pytest.mark.parametrize("ignore", ["all", "dirty", "untracked", "none"])
+def test_a_deleted_gitlink_runs_the_registry_whatever_the_submodule_setting(repo: Path, ignore: str) -> None:
+    _land_gitlink_on_main(repo, "vendor/lib")
+    _git(repo, "config", "diff.ignoreSubmodules", ignore)
+    _git(repo, "rm", "-q", "--cached", "vendor/lib")
+    _git(repo, "commit", "-m", "remove the gitlink")
+
+    plan = _new_branch_plan(repo)
+
+    assert plan is not None
+    assert (plan.changed_paths, plan.deleted_paths) == ((), ("vendor/lib",))
+    assert plan.forced_fallback == "deleted_paths"
+
+
+def test_the_users_global_git_configuration_cannot_hide_a_deletion(
+    repo: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    home = tmp_path / "home"
+    home.mkdir()
+    (home / ".gitconfig").write_text(
+        "[core]\n\tquotePath = false\n[diff]\n\tignoreSubmodules = all\n\trenames = copies\n", encoding="utf-8"
+    )
+    monkeypatch.setenv("HOME", str(home))
+    monkeypatch.delenv("XDG_CONFIG_HOME", raising=False)
+    _land_gitlink_on_main(repo, "vendor/lib")
+    _land_on_main(repo, {"\u2028docs/guide.md": "data\n"})
+    _git(repo, "rm", "-q", "--cached", "vendor/lib")
+    _git(repo, "rm", "-q", "--", "\u2028docs/guide.md")
+    _git(repo, "commit", "-m", "remove both")
+
+    plan = _new_branch_plan(repo)
+
+    assert plan is not None
+    assert plan.deleted_paths == tuple(sorted(("\u2028docs/guide.md", "vendor/lib")))
+    assert plan.forced_fallback == "deleted_paths"
+
+
+def test_caller_git_environment_cannot_hide_a_deletion(repo: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    _land_gitlink_on_main(repo, "vendor/lib")
+    _git(repo, "rm", "-q", "--cached", "vendor/lib")
+    _git(repo, "commit", "-m", "remove the gitlink")
+    for name, value in {
+        "GIT_CONFIG_COUNT": "2",
+        "GIT_CONFIG_KEY_0": "diff.ignoreSubmodules",
+        "GIT_CONFIG_VALUE_0": "all",
+        "GIT_CONFIG_KEY_1": "core.quotePath",
+        "GIT_CONFIG_VALUE_1": "false",
+        "GIT_CONFIG_PARAMETERS": "'diff.ignoresubmodules'='all'",
+        "GIT_EXTERNAL_DIFF": "false",
+        "GIT_DIFF_OPTS": "-u0",
+        "GIT_PAGER": "sed s/^/x/",
+    }.items():
+        monkeypatch.setenv(name, value)
+
+    plan = _new_branch_plan(repo)
+
+    assert plan is not None and plan.deleted_paths == ("vendor/lib",)
+    assert plan.forced_fallback == "deleted_paths"
+
+
+@pytest.mark.parametrize(
+    ("key", "value"),
+    [
+        ("diff.renames", "copies"),
+        ("diff.noprefix", "true"),
+        ("diff.mnemonicPrefix", "true"),
+        ("diff.relative", "true"),
+        ("diff.external", "false"),
+        ("diff.ignoreSubmodules", "all"),
+        ("color.ui", "always"),
+        ("color.diff", "always"),
+        ("core.pager", "sed s/^/x/"),
+        ("pager.diff", "sed s/^/x/"),
+        ("core.quotePath", "false"),
+    ],
+)
+def test_output_shaping_configuration_does_not_change_the_listed_paths(repo: Path, key: str, value: str) -> None:
+    _land_on_main(
+        repo,
+        {"scripts/old.py": "OLD = 1\n", "scripts/gone.py": "GONE = 1\n", "scripts/kept.py": "KEPT = 1\n"},
+    )
+    _git(repo, "config", key, value)
+    _git(repo, "mv", "scripts/old.py", "scripts/new.py")  # identical content: a rename to rename detection
+    _git(repo, "rm", "-q", "scripts/gone.py")
+    _write(repo, "scripts/kept.py", "KEPT = 2\n")
+    _write(repo, "scripts/added.py", "ADDED = 1\n")
+    _git(repo, "add", "scripts")
+    _git(repo, "commit", "-m", "rename, delete, modify, add")
+
+    plan = _new_branch_plan(repo)
+
+    assert plan is not None
+    assert plan.changed_paths == ("scripts/added.py", "scripts/kept.py", "scripts/new.py")
+    assert plan.deleted_paths == ("scripts/gone.py", "scripts/old.py")
+
+
+def test_a_changed_non_ascii_path_reaches_the_selector_unquoted(repo: Path) -> None:
+    """Default ``core.quotePath`` octal-quotes non-ASCII names: the selector would match no tracked file."""
+    _write(repo, "scripts/модуль.py", "VALUE = 1\n")
+    _commit(repo, "a module with a Ukrainian name", "scripts/модуль.py")
+
+    plan = _new_branch_plan(repo)
+
+    assert plan is not None and plan.changed_paths == ("scripts/модуль.py",)
+
+
+TYPE_CHANGES = {
+    # kind: (how main holds the path, how the branch replaces it)
+    "file_to_symlink": ("file", "symlink"),
+    "symlink_to_file": ("symlink", "file"),
+    "gitlink_to_file": ("gitlink", "file"),
+}
+
+
+@pytest.mark.parametrize("kind", sorted(TYPE_CHANGES))
+def test_a_type_change_removes_the_old_object_and_runs_the_registry(repo: Path, kind: str) -> None:
+    """The old object at the path is gone (``T`` in Git's status letters): a deletion, and a change."""
+    before, after = TYPE_CHANGES[kind]
+    path = "scripts/data.json"
+    _land_on_main(repo, {"scripts/target.json": "{}\n"})
+    if before == "gitlink":
+        _land_gitlink_on_main(repo, path)
+    else:
+        _git(repo, "checkout", "main")
+        if before == "symlink":
+            (repo / path).symlink_to("target.json")
+        else:
+            _write(repo, path, "{}\n")
+        _commit(repo, f"the path as a {before}", path)
+        _git(repo, "push", "--no-verify", "origin", "main")
+        _git(repo, "checkout", "feature")
+        _git(repo, "merge", "--ff-only", "main")
+    _git(repo, "rm", "-q", "--cached", path)
+    if (repo / path).is_dir():
+        (repo / path).rmdir()
+    else:
+        (repo / path).unlink()
+    if after == "symlink":
+        (repo / path).symlink_to("target.json")
+    else:
+        _write(repo, path, '{"replaced": true}\n')
+    _commit(repo, f"the path as a {after}", path)
+    assert _git(repo, "diff", "--name-status", "--no-renames", "origin/main", "HEAD").stdout == f"T\t{path}\n"
+
+    plan = _new_branch_plan(repo)
+
+    assert plan is not None
+    assert (plan.changed_paths, plan.deleted_paths) == ((path,), (path,))
+    assert plan.forced_fallback == "deleted_paths"
+
+
+def test_a_mode_only_change_is_a_change_not_a_deletion(repo: Path) -> None:
+    _land_on_main(repo, {"scripts/tool.py": "VALUE = 1\n"})
+    (repo / "scripts/tool.py").chmod(0o755)
+    _commit(repo, "make the tool executable", "scripts/tool.py")
+    assert _git(repo, "diff", "--summary", "origin/main", "HEAD").stdout.strip() == (
+        "mode change 100644 => 100755 scripts/tool.py"
+    )
+
+    plan = _new_branch_plan(repo)
+
+    assert plan is not None
+    assert (plan.changed_paths, plan.deleted_paths) == (("scripts/tool.py",), ())
+    assert plan.forced_fallback is None
+
+
+def test_a_dirty_gitlink_is_a_dirty_tree_whatever_the_submodule_setting(repo: Path) -> None:
+    """A submodule checked out at another commit than the outgoing one: the tree that would run differs."""
+    nested = repo / "vendor/lib"
+    nested.mkdir(parents=True)
+    _git(nested, "init", "-q", "-b", "main")
+    _git(nested, "config", "user.email", "gate@example.invalid")
+    _git(nested, "config", "user.name", "Gate Test")
+    for message in ("first", "second"):
+        _git(nested, "commit", "-q", "--allow-empty", "-m", message)
+    first = _git(nested, "rev-parse", "HEAD~1").stdout.strip()
+    _git(repo, "update-index", "--add", "--cacheinfo", f"160000,{first},vendor/lib")
+    _git(repo, "commit", "-m", "a gitlink behind its checkout")
+    _git(repo, "config", "diff.ignoreSubmodules", "all")
+
+    with pytest.raises(gate.GateOutcome) as refused:
+        _new_branch_plan(repo)
+
+    assert refused.value.reason == "dirty_tree"
+
+
+def test_a_partial_tree_is_not_inferred_from_a_name_holding_a_line_separator(repo: Path) -> None:
+    """``ls-files -v`` tags each entry; a name that splits into ``S ...`` must not read as skip-worktree."""
+    _write(repo, "curriculum/a\u2028S b.md", "lesson\n")
+    _write(repo, "curriculum/lesson.md", "lesson\n")
+    _commit(repo, "lessons", "curriculum")
+    _git(repo, "config", "core.quotePath", "false")
+
+    assert gate.tree_is_partial(repo, "curriculum") is False
+
+    _git(repo, "update-index", "--skip-worktree", "curriculum/lesson.md")
+    assert gate.tree_is_partial(repo, "curriculum") is True
+
+
+@pytest.mark.parametrize(
+    ("returncode", "stdout", "records"),
+    [
+        (0, b"", []),
+        (0, b"D\0scripts/gone.py\0", ["D", "scripts/gone.py"]),
+        (0, b"D\0scripts/a\xffb.py\0", ["D", "scripts/a\udcffb.py"]),  # not UTF-8: kept whole, no crash
+        (0, b"D\0scripts/gone.py\0M\0scripts/kep", None),  # cut short: the last name is not known whole
+        (128, b"D\0scripts/gone.py\0", None),
+    ],
+)
+def test_a_listing_is_read_only_when_git_succeeds_and_ends_on_a_record(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, returncode: int, stdout: bytes, records: list[str] | None
+) -> None:
+    completed = subprocess.CompletedProcess(["git"], returncode, stdout=stdout, stderr=b"")
+    monkeypatch.setattr(gate.subprocess, "run", lambda *_args, **_kwargs: completed)
+
+    assert gate.git_records("diff", "--name-status", "-z", cwd=tmp_path) == records
+
+
+@pytest.mark.parametrize(
+    "stdout",
+    [
+        pytest.param(b"D\0scripts/gone.py\0M\0", id="status_without_path"),
+        pytest.param(b"U\0scripts/conflict.py\0", id="unmerged"),
+        pytest.param(b"X\0scripts/unknown.py\0", id="unknown"),
+        pytest.param(b"R100\0scripts/old.py\0scripts/new.py\0", id="rename_pair"),
+        pytest.param(b"D\0\0", id="empty_path"),
+    ],
+)
+def test_a_listing_the_gate_cannot_classify_refuses(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, stdout: bytes
+) -> None:
+    completed = subprocess.CompletedProcess(["git"], 0, stdout=stdout, stderr=b"")
+    monkeypatch.setattr(gate.subprocess, "run", lambda *_args, **_kwargs: completed)
+
+    with pytest.raises(gate.GateOutcome) as refused:
+        gate.range_paths("a" * 40, "b" * 40, tmp_path)
+
+    assert refused.value.reason == "range_unresolved"
+
+
+SEPARATOR_DOC_DELETION = "\u2028docs/guide.md"
+END_TO_END_BYPASSES = {
+    # bypass: (configuration the pusher has, the deleted path the fallback records)
+    "unicode_line_separator": (("core.quotePath", "false"), SEPARATOR_DOC_DELETION),
+    "ignored_gitlink": (("diff.ignoreSubmodules", "all"), "vendor/lib"),
+}
+
+
+@pytest.mark.parametrize("bypass", sorted(END_TO_END_BYPASSES))
+def test_the_reviewed_deletion_bypasses_run_the_registry_without_the_selector(
+    repo: Path, tmp_path: Path, bypass: str
+) -> None:
+    (key, value), deleted = END_TO_END_BYPASSES[bypass]
+    _git(repo, "checkout", "main")
+    _install_shadow(repo, PATH_RECORDING_SELECTOR)
+    _git(repo, "push", "--no-verify", "origin", "main")
+    _git(repo, "checkout", "feature")
+    _git(repo, "merge", "--ff-only", "main")
+    if deleted == "vendor/lib":
+        _land_gitlink_on_main(repo, deleted)
+        _git(repo, "rm", "-q", "--cached", deleted)
+    else:
+        _land_on_main(repo, {deleted: "# Guide\n"})
+        _git(repo, "rm", "-q", "--", deleted)
+    _git(repo, "commit", "-m", f"remove {bypass}")
+    _git(repo, "config", key, value)
+    log = tmp_path / "selector-paths.json"
+
+    result = _run_gate(repo, extra_env={"SELECTOR_LOG": str(log)})
+
+    row = _deletion_row(repo, result, [deleted])
+    assert not log.exists(), "a deletion never reaches the selector: its answer could be too small"
+    assert row["nodes"] == 2 and row["deleted_paths"] == 1

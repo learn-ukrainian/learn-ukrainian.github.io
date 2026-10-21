@@ -5,7 +5,10 @@
  * from main pre-port) vs React WordAtlasArticle SSR for every fixture entry type.
  */
 import Database from "better-sqlite3";
-import { buildWordAtlasArticleView } from "@site/src/lib/lexicon/word-atlas-article-model";
+import {
+  buildWordAtlasArticleView,
+  hasSovietColonizationContextContent,
+} from "@site/src/lib/lexicon/word-atlas-article-model";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { beforeAll, describe, expect, test } from "vitest";
@@ -14,6 +17,7 @@ import {
   SqliteAtlasDataSource,
 } from "@site/src/lib/lexicon/sqlite-atlas-data-source";
 import { renderWordAtlasArticle } from "../helpers/render-word-atlas-article";
+import { articleProps } from "../helpers/word-atlas-record";
 import { normalizeArticleDom } from "../helpers/normalize-article-dom";
 
 const FIXTURE_DB = resolve(
@@ -136,6 +140,34 @@ describe("WordAtlasArticle normalized DOM parity (PR3)", () => {
   }
 });
 
+describe("Soviet colonization context DOM (#8327 F2)", () => {
+  test("note-only context renders the box without an empty definition paragraph", () => {
+    const props = articleProps({
+      lemma: "fixture",
+      url_slug: "fixture-soviet-note-only",
+      gloss: null,
+      entry_type: "lemma",
+      pos: null,
+      ipa: null,
+      primary_source: "test",
+      course_usage: [],
+      soviet_colonization_context: {
+        source: "СУМ-11",
+        definition: "",
+        sovietization_risk: 0,
+        keywords: [],
+        historical_note: "SYNTHETIC_HISTORICAL_NOTE_ONLY",
+      },
+    });
+    const model = buildWordAtlasArticleView(props.record, "test", "test");
+    const doc = new DOMParser().parseFromString(renderWordAtlasArticle(props), "text/html");
+    expect(hasSovietColonizationContextContent(props.record.entry.soviet_colonization_context)).toBe(true);
+    expect(model.renderable.meaning).toBe(false);
+    expect(model.renderable.meaningSection).toBe(true);
+    expect(doc.querySelector(".soviet-colonization-box")?.textContent).toContain("SYNTHETIC_HISTORICAL_NOTE_ONLY");
+    expect(doc.querySelector(".soviet-colonization-box .def-text")).toBeNull();
+  });
+});
 
 // Optional live-reference proof uses real public article payloads, never synthetic
 // substitutes. The required worker run supplies ATLAS_REFERENCE_DB_PATH; CI keeps
