@@ -2736,6 +2736,8 @@ def _agy_model_state(
 
 def _deepseek_model_state(*, agent: str, model: str | None, cache_path: Path | None = None) -> dict[str, Any]:
     """Attest a DeepSeek route from its versioned pin or cached alias name."""
+    from scripts.agent_runtime.adapters.deepseek import _is_flash_model_line
+
     if agent != "deepseek":
         return {}
     if model == "deepseek-v4-pro":
@@ -2756,7 +2758,7 @@ def _deepseek_model_state(*, agent: str, model: str | None, cache_path: Path | N
         name = cache["deepseek"]["models"]["deepseek-flash"]["name"]
     except (OSError, ValueError, KeyError, TypeError):
         name = None
-    if name == "DeepSeek V4.1 Flash":
+    if isinstance(name, str) and _is_flash_model_line(name):
         return {
             "resolved_model": "deepseek-v4.1-flash",
             "resolved_model_known": True,
