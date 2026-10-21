@@ -223,6 +223,67 @@ def test_nonregular_marker_is_refused(tmp_path: Path) -> None:
     _refused(dist, r"is not a regular file")
 
 
+def _change_well_known(dist: Path, scratch: Path, change: str) -> None:
+    well_known = dist / ".well-known"
+    marker = well_known / marker_name(SHA)
+    if change == "extra-child":
+        (well_known / ".private").write_text("x", encoding="utf-8")
+    elif change == "marker-body":
+        marker.write_bytes(b"wrong deployment\n")
+    elif change == "marker-symlink":
+        (scratch / "payload.txt").write_text("x", encoding="utf-8")
+        marker.unlink()
+        marker.symlink_to(scratch / "payload.txt")
+    elif change == "well-known-symlink":
+        well_known.rename(scratch / "moved")
+        (scratch / "moved" / ".private").write_text("x", encoding="utf-8")
+        well_known.symlink_to(scratch / "moved", target_is_directory=True)
+    elif change == "marker-replaced-same-bytes":
+        (scratch / "copy.txt").write_bytes(f"{SHA}\n".encode("ascii"))
+        os.replace(scratch / "copy.txt", marker)
+    else:  # well-known-replaced-same-content
+        shutil.copytree(well_known, scratch / "copy")
+        shutil.rmtree(well_known)
+        os.rename(scratch / "copy", well_known)
+
+
+@pytest.mark.parametrize(
+    ("change", "match"),
+    [
+        ("extra-child", r"unexpected entries: \.well-known/\.private"),
+        ("marker-body", r"body is not exactly"),
+        ("marker-symlink", r"is a symlink"),
+        ("well-known-symlink", r"\.well-known is a symlink"),
+        ("marker-replaced-same-bytes", r"replaced during the audit"),
+        ("well-known-replaced-same-content", r"replaced during the audit"),
+    ],
+)
+def test_marker_subtree_changed_during_the_scan_is_refused(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, change: str, match: str
+) -> None:
+    """Check-then-scan race defect: the scan skips .well-known, so a change after its check must still fail.
+
+    The change is made when the scan first lists the artifact root, after the
+    marker check has passed. The last two cases keep a valid shape but swap the
+    inodes, so the decision must be bound to the approved files, not their names.
+    """
+    dist = _site(tmp_path)
+    scratch = tmp_path / "scratch"
+    scratch.mkdir()
+    real_scandir = os.scandir
+    changed = []
+
+    def scandir_then_change(path: Path) -> object:
+        if not changed and Path(path) == dist:
+            changed.append(change)
+            _change_well_known(dist, scratch, change)
+        return real_scandir(path)
+
+    monkeypatch.setattr(os, "scandir", scandir_then_change)
+    _refused(dist, match)
+    assert changed == [change]
+
+
 def test_missing_or_symlinked_dist_is_refused(tmp_path: Path) -> None:
     _refused(tmp_path / "absent", r"does not exist")
     dist = _site(tmp_path)

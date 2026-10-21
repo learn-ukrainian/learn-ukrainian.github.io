@@ -16,6 +16,13 @@ Any other dot-named file or directory at any depth fails the job before upload.
 The scan follows directory symlinks, as the action's ``tar --dereference`` does,
 so a hidden path reached through a visible symlink is also refused.
 
+The scan skips the root ``.well-known``, so the marker subtree is validated again
+after the scan and must still be the same directory and file inodes; a change to
+it during the audit fails closed. The audit cannot see a write made after it last
+reads a path: an entry added to a visible directory after the scan has listed it,
+or any write after the audit returns. The workflow runs no step between this
+audit and the upload.
+
 Usage::
 
     .venv/bin/python scripts/deploy/verify_pages_deployment_marker.py site/dist --sha "$GITHUB_SHA"
@@ -30,6 +37,7 @@ import stat
 import sys
 from collections.abc import Iterable, Sequence
 from pathlib import Path
+from typing import NamedTuple
 
 WELL_KNOWN = ".well-known"
 MARKER_PREFIX = "learn-ukrainian-deployment-"
@@ -39,6 +47,18 @@ MAX_REPORTED_PATHS = 20
 
 class MarkerAuditError(Exception):
     """The artifact directory is not safe to upload with hidden files included."""
+
+
+class MarkerState(NamedTuple):
+    """``(st_dev, st_ino)`` of the artifact root, ``.well-known`` and marker that one check approved."""
+
+    root: tuple[int, int]
+    well_known: tuple[int, int]
+    marker: tuple[int, int]
+
+
+def _identity(st: os.stat_result) -> tuple[int, int]:
+    return (st.st_dev, st.st_ino)
 
 
 def marker_name(sha: str) -> str:
@@ -55,7 +75,14 @@ def validate_sha(sha: str | None) -> str:
     return sha
 
 
-def _check_marker(dist: Path, sha: str) -> Path:
+def _check_marker(dist: Path, sha: str) -> MarkerState:
+    """Validate the marker subtree and return the inodes this decision applies to.
+
+    The listing and body are read through descriptors opened without following
+    symlinks and matched to the inodes just ``lstat``-ed, so a swap between the
+    type check and the read fails instead of reading another file.
+    """
+    root = _identity(dist.lstat())
     well_known = dist / WELL_KNOWN
     try:
         well_known_stat = well_known.lstat()
@@ -67,24 +94,37 @@ def _check_marker(dist: Path, sha: str) -> Path:
         raise MarkerAuditError(f"{WELL_KNOWN} is not a directory")
 
     expected = marker_name(sha)
-    children = sorted(os.listdir(well_known))
-    unexpected = [name for name in children if name != expected]
-    if unexpected:
-        raise MarkerAuditError(
-            f"{WELL_KNOWN}/ has unexpected entries: {_format_paths(f'{WELL_KNOWN}/{name}' for name in unexpected)}"
-        )
-    if expected not in children:
-        raise MarkerAuditError(f"{WELL_KNOWN}/{expected} is missing")
+    well_known_fd = os.open(well_known, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
+    try:
+        if _identity(os.fstat(well_known_fd)) != _identity(well_known_stat):
+            raise MarkerAuditError(f"{WELL_KNOWN}/ changed during the audit")
+        children = sorted(os.listdir(well_known_fd))
+        unexpected = [name for name in children if name != expected]
+        if unexpected:
+            raise MarkerAuditError(
+                f"{WELL_KNOWN}/ has unexpected entries: {_format_paths(f'{WELL_KNOWN}/{name}' for name in unexpected)}"
+            )
+        if expected not in children:
+            raise MarkerAuditError(f"{WELL_KNOWN}/{expected} is missing")
 
-    marker = well_known / expected
-    marker_stat = marker.lstat()
-    if stat.S_ISLNK(marker_stat.st_mode):
-        raise MarkerAuditError(f"{WELL_KNOWN}/{expected} is a symlink")
-    if not stat.S_ISREG(marker_stat.st_mode):
-        raise MarkerAuditError(f"{WELL_KNOWN}/{expected} is not a regular file")
-    if marker.read_bytes() != f"{sha}\n".encode("ascii"):
-        raise MarkerAuditError(f"{WELL_KNOWN}/{expected} body is not exactly the SHA followed by one newline")
-    return marker
+        marker_stat = os.stat(expected, dir_fd=well_known_fd, follow_symlinks=False)
+        if stat.S_ISLNK(marker_stat.st_mode):
+            raise MarkerAuditError(f"{WELL_KNOWN}/{expected} is a symlink")
+        if not stat.S_ISREG(marker_stat.st_mode):
+            raise MarkerAuditError(f"{WELL_KNOWN}/{expected} is not a regular file")
+        body = f"{sha}\n".encode("ascii")
+        # O_NONBLOCK: a FIFO swapped in after the type check must not hang the job.
+        marker_fd = os.open(expected, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=well_known_fd)
+        try:
+            if _identity(os.fstat(marker_fd)) != _identity(marker_stat):
+                raise MarkerAuditError(f"{WELL_KNOWN}/{expected} changed during the audit")
+            if os.read(marker_fd, len(body) + 1) != body:
+                raise MarkerAuditError(f"{WELL_KNOWN}/{expected} body is not exactly the SHA followed by one newline")
+        finally:
+            os.close(marker_fd)
+    finally:
+        os.close(well_known_fd)
+    return MarkerState(root, _identity(well_known_stat), _identity(marker_stat))
 
 
 def find_hidden_paths(dist: Path) -> list[str]:
@@ -133,11 +173,14 @@ def audit(dist: Path, sha: str | None) -> Path:
     if stat.S_ISLNK(dist_stat.st_mode) or not stat.S_ISDIR(dist_stat.st_mode):
         raise MarkerAuditError(f"artifact directory {dist} is not a real directory")
 
-    marker = _check_marker(dist, checked_sha)
+    approved = _check_marker(dist, checked_sha)
     hidden = find_hidden_paths(dist)
     if hidden:
         raise MarkerAuditError(f"unexpected hidden paths would be published: {_format_paths(hidden)}")
-    return marker
+    # The scan skips the root .well-known, so re-check it last and require the same inodes.
+    if _check_marker(dist, checked_sha) != approved:
+        raise MarkerAuditError(f"{WELL_KNOWN}/ was replaced during the audit")
+    return dist / WELL_KNOWN / marker_name(checked_sha)
 
 
 def build_parser() -> argparse.ArgumentParser:

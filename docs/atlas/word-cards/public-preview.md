@@ -78,7 +78,10 @@ hidden path. `scripts/deploy/verify_pages_deployment_marker.py` therefore runs
 directly before upload: it allows only `.well-known/` holding that one regular
 marker file and fails the job on any other hidden file or directory, at any
 depth or behind a directory symlink. Only then does the upload set
-`include-hidden-files: true`.
+`include-hidden-files: true`. Because the scan skips `.well-known/`, the audit
+re-checks it after the scan and refuses if it changed or was replaced during the
+audit. It cannot see writes after it last reads a path, so no step may run
+between the audit and the upload.
 
 A green deploy job proves upload, not public readability. After deployment,
 check the live marker read-only:
