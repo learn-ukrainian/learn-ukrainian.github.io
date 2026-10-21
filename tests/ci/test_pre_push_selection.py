@@ -70,7 +70,8 @@ def test_a_pytest_configuration_change_affects_every_test(path: str) -> None:
     answer = selector.select([path], CHAIN, TESTS)
 
     assert answer["scope"] == "all_tests" and answer["all_tests_reasons"] == ["pytest_configuration"]
-    assert sorted(answer["selected_tests"]) == sorted(TESTS)
+    selected = answer["selected_tests"]
+    assert isinstance(selected, list) and sorted(selected) == sorted(TESTS)
 
 
 def test_a_changed_configured_plugin_affects_every_test_but_its_imports_do_not() -> None:

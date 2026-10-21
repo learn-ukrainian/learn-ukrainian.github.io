@@ -22,6 +22,7 @@ import textwrap
 import time
 from pathlib import Path
 from types import SimpleNamespace
+from typing import Any
 
 import pytest
 import yaml
@@ -1357,14 +1358,15 @@ def test_a_broken_selector_falls_back_to_the_registry_and_records_why(
         monkeypatch.setattr(gate, "SHADOW_BUDGET_S", 0.5)
         real_finish = gate.Shadow.finish
 
-        def finish_once_hung(shadow: gate.Shadow) -> dict[str, object]:
+        def finish_once_hung(shadow: Any) -> dict[str, object]:
             assert shadow.process is not None
             wait_until(  # well inside the per-test timeout, so a stub that never starts fails typed
                 lambda: hung.exists() or shadow.process.poll() is not None,
                 timeout=60.0,
                 message="the selector reaching its hang",
             )
-            return real_finish(shadow)
+            answer: dict[str, object] = real_finish(shadow)
+            return answer
 
         monkeypatch.setattr(gate.Shadow, "finish", finish_once_hung)
     monkeypatch.setenv("PRE_COMMIT_HOME", str(tmp_path / "pre-commit-cache"))
@@ -1382,7 +1384,8 @@ def test_a_broken_selector_falls_back_to_the_registry_and_records_why(
     assert event["scope"] == {"status": "serial", "reason": "default_or_worker_bound"}
     assert raised.value.reason == "tests_failed"  # never green on an unknown selection
     assert "tests/test_invariant.py::test_no_marker" in raised.value.failing
-    assert event["selection"]["status"] == "fallback" and event["selection"]["reason"] == reason
+    selection = event["selection"]
+    assert isinstance(selection, dict) and selection["status"] == "fallback" and selection["reason"] == reason
     assert event["nodes"] == 3  # the registry's two entries plus the changed test file
     assert hung.exists() is (reason == "selector_timeout")  # the hang case was killed in its hang
 
@@ -6084,8 +6087,8 @@ def test_a_busy_sharing_transition_validates_once_on_the_serial_path(repo, endin
 
 @pytest.mark.parametrize("condition", ["unstarted", "closed"])
 def test_a_missing_or_closed_scope_is_typed_incomplete_and_runs_nothing(
-    tmp_path, injected_systemd, qualified_cgroups, condition
-):
+    tmp_path: Path, injected_systemd: object, qualified_cgroups: object, condition: str
+) -> None:
     state = tmp_path / "state"
     launcher = tmp_path / "launcher"
     launcher.write_text(f'#!/bin/bash\nexec "{sys.executable}" "$@"\n')
@@ -6488,12 +6491,13 @@ def test_a_new_branch_without_origin_main_is_refused_as_unresolved(repo: Path) -
 
 def _observation(avg10: float | None, avg60: float | None, memory: int | None) -> dict[str, object]:
     """The shape ``admission_resources`` returns, qualified by the same admission caps."""
-    known = None not in (avg10, avg60, memory)
     return {
         "cpu_some_avg10": avg10,
         "cpu_some_avg60": avg60,
         "mem_available_bytes": memory,
-        "qualified": known
+        "qualified": avg10 is not None
+        and avg60 is not None
+        and memory is not None
         and avg10 < gate.CPU_SOME_AVG10_MAX
         and avg60 < gate.CPU_SOME_AVG60_MAX
         and memory >= 8 * 1024**3,
@@ -6563,7 +6567,8 @@ def test_a_budget_spent_before_a_stage_starts_is_typed_like_any_timeout(monkeypa
     assert raised.value.reason == "timeout" and raised.value.incomplete and raised.value.output == ""
     assert "time budget exhausted before start (timeout)" in raised.value.detail
     assert diagnostics["child_unavailable_reason"] == "budget_exhausted_before_start"
-    assert diagnostics["load_at_timeout"]["load"] == "unknown"
+    load = diagnostics["load_at_timeout"]
+    assert isinstance(load, dict) and load["load"] == "unknown"
 
 
 PYTEST_OUTPUT_AT_KILL = {
