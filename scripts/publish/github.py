@@ -851,7 +851,7 @@ REST_READS = {
     "check-annotations": ("repos/{repo}/check-runs/{number}/annotations", {"number": "number"}),
     "jobs": ("repos/{repo}/actions/runs/{number}/jobs", {"number": "number"}),
     "run": ("repos/{repo}/actions/runs/{number}", {"number": "number"}),
-    "issues": ("repos/{repo}/issues?state=open&labels=infra", {}),
+    "issues": ("repos/{repo}/issues?state=open", {}),
     "runs": ("repos/{repo}/actions/runs?event=merge_group&created={start}..{end}", {"start": "timestamp", "end": "timestamp"}),
     "deployments": ("repos/{repo}/deployments?sha={sha}", {"sha": "sha"}),
     "deployment-statuses": ("repos/{repo}/deployments/{number}/statuses", {"number": "number"}),

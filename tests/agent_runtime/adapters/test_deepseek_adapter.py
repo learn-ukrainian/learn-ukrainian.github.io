@@ -24,6 +24,11 @@ from agent_runtime.routes import DEEPSEEK_FIRST_PARTY_FORBIDDEN_MARKER
 FAKE_OPENCODE = "/usr/local/bin/opencode"
 
 
+@pytest.fixture(autouse=True)
+def _isolate_flash_cache(monkeypatch):
+    monkeypatch.setattr("agent_runtime.adapters.deepseek._cached_flash_name", lambda: "DeepSeek V4.1 Flash")
+
+
 def _build(prompt: str, tmp_path: Path, **kw):
     with patch("agent_runtime.adapters.deepseek.shutil.which", return_value=FAKE_OPENCODE):
         return DeepSeekAdapter().build_invocation(
@@ -116,10 +121,36 @@ def test_retired_v4_identity_cannot_launch_moving_flash_alias(tmp_path, model):
         _build("Check.", tmp_path, model=model)
 
 
-def test_cached_alias_drift_refuses_new_flash_dispatch(tmp_path):
+@pytest.mark.parametrize("name", ["DeepSeek V4.1 Flash", "DeepSeek V4.1 Flash 1017", None])
+@pytest.mark.parametrize("model", [None, "deepseek/deepseek-flash"])
+def test_cached_flash_model_line_allows_dispatch(tmp_path, monkeypatch, name, model):
+    monkeypatch.setattr("agent_runtime.adapters.deepseek._cached_flash_name", lambda: name)
+
+    plan = _build("Check.", tmp_path, model=model)
+
+    assert plan.cmd[plan.cmd.index("--model") + 1] == "deepseek/deepseek-flash"
+
+
+@pytest.mark.parametrize(
+    "name",
+    [
+        "DeepSeek V4.2 Flash",
+        "DeepSeek V4 Flash",
+        "DeepSeek V4.1 Pro",
+        "DeepSeek V4.1 Flash Vision",
+        "DeepSeek V4.1 Flash 1017 Vision",
+        "DeepSeek V4.1 Flash 10x7",
+        "DeepSeek V4.1 Flash ١٠١٧",
+        "DeepSeek V4.1 Flash ",
+        "DeepSeek V4.1 Flash 1017\n",
+        "unknown DeepSeek V4.1 Flash",
+        "",
+    ],
+)
+def test_cached_alias_drift_refuses_new_flash_dispatch(tmp_path, name):
     with patch(
         "agent_runtime.adapters.deepseek._cached_flash_name",
-        return_value="DeepSeek V4.2 Flash",
+        return_value=name,
     ), pytest.raises(ValueError, match="alias drift"):
         _build("Check.", tmp_path)
 
