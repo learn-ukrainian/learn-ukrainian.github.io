@@ -303,9 +303,12 @@ def test_sealed_search_preserves_articles_aliases_and_form_routes(
         "lemma": "alpha",
         "url_slug": "alpha",
         "display_head": "Alpha head",
-        "gloss": "Keep this gloss exactly.",
+        "gloss": "avoid: наступний",
         "entry_type": "proper_name",
-        "enrichment": {"cefr": {"level": "A2"}},
+        "enrichment": {
+            "cefr": {"level": "A2"},
+            "morphology": {"source": "VESUM", "pos": "advp", "paradigm": {"verb": "читати"}},
+        },
         "search_aliases": [
             {"alias": "Explicit alias", "kind": "spelling_variant", "target_slug": "alpha"},
             {"alias": "Explicit alias", "kind": "spelling_variant", "target_slug": "alpha"},
@@ -344,13 +347,18 @@ def test_sealed_search_preserves_articles_aliases_and_form_routes(
         {
             "s": "alpha",
             "l": "Alpha head",
-            "g": "Keep this gloss exactly.",
+            "g": "примітка Атласу: радять «наступний»; обсяг застереження не встановлено",
             "r": "alpha-head",
             "t": "proper_name",
             "c": "A2",
+            "p": "читати",
         },
         {"s": "gamma", "l": "gamma", "g": "g-gamma", "r": "gamma", "t": "lemma"},
     ]
+    from scripts.audit.generate_search_index import build_index
+
+    established, = build_index([alpha])
+    assert (rows[0]["g"], rows[0]["p"]) == (established["g"], established["p"])
     aliases = json.loads((out / "vendor-dist/lexicon/search-aliases.json").read_bytes())
     assert aliases == [
         {"a": "beta", "s": "alpha", "h": "Alpha head", "k": "inflected_form"},

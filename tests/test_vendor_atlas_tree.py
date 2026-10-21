@@ -129,6 +129,61 @@ def _archive_for(tree_root: Path, tmp: Path) -> tuple[Path, str]:
     return archive, digest
 
 
+@pytest.mark.parametrize("gloss, expected", [
+    ("avoid: наступний", "примітка Атласу: радять «наступний»; обсяг застереження не встановлено"),
+    ("1. first meaning 2. second meaning", "first meaning"),
+    ("first meaning… quoted fragment... later", "first meaning"),
+    ("while reading", "while reading"),
+])
+@pytest.mark.parametrize("parent_case", ["vesum", "dictionary", "unsourced", "conflict", "unbound-label"])
+@pytest.mark.parametrize("projected_runtime", [False, True])
+def test_vendor_preserves_public_gloss_and_sourced_gerund_backlink(
+    tmp_path: Path, gloss: str, expected: str, parent_case: str, projected_runtime: bool,
+) -> None:
+    """B1: raw pinned glosses and missing p must not regress public search semantics."""
+    from scripts.audit.generate_search_index import build_index
+
+    tree = _build_two_gen_tree(tmp_path)
+    version = tree / "atlas/versions/v-current"
+    entry = {
+        "lemma": "читаючи", "url_slug": "unit-article", "gloss": gloss,
+        "primary_source": "built_vocabulary",
+        "enrichment": {"morphology": {"source": "VESUM", "pos": "advp", "paradigm": {"verb": "читати"}}},
+    }
+    if parent_case == "unsourced":
+        entry["enrichment"]["morphology"]["source"] = "manual"
+    if parent_case == "unbound-label":
+        entry["enrichment"]["heritage"] = {"classification": "historical"}
+    if parent_case in {"dictionary", "conflict"}:
+        definition = "Дієприсл. до читати." if parent_case == "dictionary" else "Дієприсл. до працювати."
+        if parent_case == "dictionary":
+            entry["enrichment"] = {}
+        entry["enrichment"]["meaning"] = {"source": "словник", "definitions": [definition]}
+    parent = "читати" if parent_case in {"vesum", "dictionary", "unbound-label"} else None
+    established = build_index([entry])[0]
+    _replace_runtime_shard(version, "entries", "p00-0", [{"slug": "unit-article", "kind": "article", "entry": entry}])
+    _replace_runtime_shard(version, "articles", "unit", [
+        {"s": "unit-article", "l": "читаючи", "g": established["g"] if projected_runtime else gloss,
+         "r": "chytaiuchy", "t": "lemma", "p": "unproven", "cls": "avoid"},
+    ])
+    frozen = {p.relative_to(tree): p.read_bytes() for p in tree.rglob("*") if p.is_file()}
+    archive, digest = _archive_for(tree, tmp_path)
+    dist = tmp_path / "dist"
+    vendor_atlas_tree(dist, sha256=digest, archive_path=archive)
+    for endpoint in ("lexicon/search-index.json", "api/lexicon/search-index.json"):
+        row, = json.loads((dist / endpoint).read_bytes())
+        assert row["g"] == established["g"] == expected
+        assert row.get("p") == established.get("p") == parent
+        assert row.get("cls") == established.get("cls") is None
+        assert row["s"] == "unit-article"
+    manifest = json.loads((dist / "lexicon/search-shards.json").read_bytes())
+    for desc in manifest["shards"].values():
+        row, = json.loads((dist / desc["path"].lstrip("/")).read_bytes())
+        assert (row["g"], row.get("p")) == (expected, parent)
+    for path, blob in frozen.items():
+        assert (dist / path).read_bytes() == blob
+
+
 def test_happy_path_vendors_current_and_prior(tmp_path: Path) -> None:
     tree_root = _build_two_gen_tree(tmp_path)
     archive, digest = _archive_for(tree_root, tmp_path)

@@ -49,7 +49,17 @@ if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from scripts.atlas.normalization import normalize_atlas_text
-from scripts.audit.generate_search_index import build_search_shards, write_aliases, write_index, write_search_shards
+from scripts.audit.generate_search_index import (
+    _gerund_parent,
+    _sanitize_typeahead_gloss,
+    _search_gloss,
+    build_search_shards,
+    classification_code,
+    display_gloss,
+    write_aliases,
+    write_index,
+    write_search_shards,
+)
 from scripts.common import github_client
 
 # ---------------------------------------------------------------------------
@@ -592,8 +602,8 @@ def _runtime_shard_records(
 def build_pinned_search(extract_root: Path) -> tuple[list[dict[str, Any]], list[dict[str, Any]], dict[str, Any]]:
     """Project search from the installed pin, refusing full-set or alias drift.
 
-    No DB search rows are filtered or relabelled. The immutable runtime already
-    owns its approved article rows and alias rows; copy those fields unchanged.
+    The immutable runtime owns membership. Apply the established public display
+    projection using only that pin's article payloads; never consult another DB.
     """
     try:
         current = json.loads((extract_root / CURRENT_REL).read_bytes())
@@ -612,6 +622,7 @@ def build_pinned_search(extract_root: Path) -> tuple[list[dict[str, Any]], list[
         routes: set[str] = set()
         articles: set[str] = set()
         forms: set[str] = set()
+        public_fields: dict[str, tuple[str | None, str | None, str | None]] = {}
         for rows in _runtime_shard_records(
             version_root, manifest["entries"], schema="atlas-entry-shard", data_version=data_version
         ):
@@ -622,6 +633,8 @@ def build_pinned_search(extract_root: Path) -> tuple[list[dict[str, Any]], list[
                 routes.add(slug)
                 if row["kind"] == "article":
                     articles.add(slug)
+                    entry = row.get("entry") or {}
+                    public_fields[slug] = (classification_code(entry), _gerund_parent(entry), _search_gloss(entry))
                 elif row["kind"] == "form_route":
                     forms.add(slug)
                 else:
@@ -678,7 +691,22 @@ def build_pinned_search(extract_root: Path) -> tuple[list[dict[str, Any]], list[
         ):
             if counts[name] != actual:
                 raise VendorError(f"runtime {name} count mismatch: {counts[name]} != {actual}")
-        article_rows = sorted(families["articles"], key=lambda row: (normalize_atlas_text(row["l"]), row["s"]))
+        article_rows = []
+        for runtime_row in families["articles"]:
+            row = dict(runtime_row)
+            cls, parent, gloss = public_fields[row["s"]]
+            # Use the raw payload's public gloss when present. New runtimes may
+            # already qualify editorial notes; sanitizing those a second time
+            # can truncate the qualification. Old pins still need projection.
+            row["g"] = display_gloss(gloss or _sanitize_typeahead_gloss(row.get("g")), cls)
+            row.pop("cls", None)
+            row.pop("p", None)
+            if cls:
+                row["cls"] = cls
+            if parent:
+                row["p"] = parent
+            article_rows.append(row)
+        article_rows.sort(key=lambda row: (normalize_atlas_text(row["l"]), row["s"]))
         aliases = sorted(families["aliases"], key=lambda row: (normalize_atlas_text(row["a"]), row["s"], row["k"]))
         return (
             article_rows,
