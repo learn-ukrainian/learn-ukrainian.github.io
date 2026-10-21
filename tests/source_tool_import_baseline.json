@@ -426,16 +426,6 @@
       "failure_class": "other_import_failure"
     },
     {
-      "path": "scripts/ai_agent_bridge/_hermes_stdin.py",
-      "form": "file",
-      "failure_class": "module_not_found"
-    },
-    {
-      "path": "scripts/ai_agent_bridge/_hermes_stdin.py",
-      "form": "module",
-      "failure_class": "module_not_found"
-    },
-    {
       "path": "scripts/audit/check_ci_dependencies.py",
       "form": "file",
       "failure_class": "environment_blocked_subprocess"
@@ -559,16 +549,6 @@
       "path": "scripts/scoring/calculate_richness.py",
       "form": "file",
       "failure_class": "import_error"
-    },
-    {
-      "path": "scripts/tools/agent_watcher.py",
-      "form": "file",
-      "failure_class": "other_import_failure"
-    },
-    {
-      "path": "scripts/tools/agent_watcher.py",
-      "form": "module",
-      "failure_class": "other_import_failure"
     },
     {
       "path": "scripts/tools/check_gate.py",
