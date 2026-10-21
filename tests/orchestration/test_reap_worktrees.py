@@ -5549,9 +5549,10 @@ def test_qualified_reap_skips_when_git_hangs_under_the_guard(
         *,
         repo_root: Path,
         info: rw.WorktreeInfo,
+        merged_pr: rw.PullRequestState | None = None,
     ) -> str | None:
         hang_marker.touch()
-        return real_guard(stack, repo_root=repo_root, info=info)
+        return real_guard(stack, repo_root=repo_root, info=info, merged_pr=merged_pr)
 
     monkeypatch.setattr(rw, "_enter_dispatch_worktree_guard", arm_hang)
 
@@ -5611,9 +5612,10 @@ def test_removed_then_branch_prune_timeout_reports_removed(
         *,
         repo_root: Path,
         info: rw.WorktreeInfo,
+        merged_pr: rw.PullRequestState | None = None,
     ) -> str | None:
         hang_marker.touch()
-        return real_guard(stack, repo_root=repo_root, info=info)
+        return real_guard(stack, repo_root=repo_root, info=info, merged_pr=merged_pr)
 
     monkeypatch.setattr(rw, "_enter_dispatch_worktree_guard", arm_hang)
 
@@ -5686,9 +5688,10 @@ def test_qualified_reap_skips_when_the_region_deadline_expires(
         *,
         repo_root: Path,
         info: rw.WorktreeInfo,
+        merged_pr: rw.PullRequestState | None = None,
     ) -> str | None:
         hang_marker.touch()
-        return real_guard(stack, repo_root=repo_root, info=info)
+        return real_guard(stack, repo_root=repo_root, info=info, merged_pr=merged_pr)
 
     monkeypatch.setattr(rw, "_enter_dispatch_worktree_guard", arm_hang)
 
@@ -5863,12 +5866,13 @@ def test_network_probes_run_before_the_per_worktree_lock(
         *,
         repo_root: Path,
         info: rw.WorktreeInfo,
+        merged_pr: rw.PullRequestState | None = None,
     ) -> str | None:
         nonlocal in_guard
         order.append("guard")
         in_guard = True
         try:
-            return real_guard(stack, repo_root=repo_root, info=info)
+            return real_guard(stack, repo_root=repo_root, info=info, merged_pr=merged_pr)
         finally:
             in_guard = False
 
