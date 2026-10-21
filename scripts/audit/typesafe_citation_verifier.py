@@ -50,6 +50,9 @@ from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import Any, Protocol
 
+if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
 from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 from scripts.typesafe.client import (
     DEFAULT_MODEL,

@@ -19,6 +19,10 @@ from typing import Any
 
 import yaml
 
+if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
+    __package__ = "scripts.curriculum.evidence"
+
 from scripts.curriculum.validate import codes as val_codes
 from scripts.curriculum.validate.loader import active_plan_paths, load_plan, retired_plan_paths, retirement_record
 from scripts.curriculum.validate.validate import _pack_ids_in_plan, _word_ids_in_plan

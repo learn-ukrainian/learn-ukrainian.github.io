@@ -37,6 +37,10 @@ from typing import Any
 
 import yaml
 
+if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    __package__ = "scripts.wiki"
+
 from scripts.lexicon import ulif_raw_cache
 from scripts.lexicon.esum_garbled import (
     garbled_esum_entry,

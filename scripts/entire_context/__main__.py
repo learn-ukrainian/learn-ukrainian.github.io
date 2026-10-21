@@ -1,4 +1,10 @@
 """Entry point for ``python -m scripts.entire_context``."""
+import sys
+from pathlib import Path
+
+if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    __package__ = "scripts.entire_context"
 
 from .cli import main
 
