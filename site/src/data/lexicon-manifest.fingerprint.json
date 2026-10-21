@@ -51,7 +51,7 @@
       },
       {
         "path": "scripts/lexicon/build_fmu_booster_inventory.py",
-        "sha256": "14acb8d991a44531642a146ecccb83c436e6061780aeb4e62088e576dfaad32f"
+        "sha256": "9ad42ac5cda6cc5dd093f29de12327bb90642e0bc63af200d8ee63bf26e78d48"
       },
       {
         "path": "scripts/lexicon/build_kaikki_lookup.py",
