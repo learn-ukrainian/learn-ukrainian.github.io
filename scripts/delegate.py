@@ -200,6 +200,7 @@ if str(_local_repo_root) not in sys.path:
     sys.path.insert(0, str(_local_repo_root))
 
 from scripts.agent_runtime import bounded_advisory
+from scripts.agent_runtime.accounting import model_accounting_fields
 from scripts.agent_runtime.env_sanitize import GITHUB_TOKEN_SEATS as _GH_TOKEN_AGENTS
 from scripts.agent_runtime.routes import RUNTIME_ROUTE_TOOL_CONFIG_KEY
 from scripts.common.jsonl import jsonl_lines
@@ -220,6 +221,7 @@ from scripts.config import (
     DELEGATE_WORKTREE_ADD_TIMEOUT_S,
 )
 from scripts.fleet import claude_account_lane, credit_lane
+from scripts.fleet.regenerable_output import SITE_BUILD_OUTPUT_PATTERNS
 from scripts.fleet.regenerable_output import is_disposable_auto_finalize_path as _is_disposable_auto_finalize_path
 from scripts.fleet.reset_reserve import codex_is_threatened as _codex_is_threatened
 from scripts.fleet.reset_reserve import codex_reset_reserve_eligible as _codex_reset_reserve_eligible
@@ -2749,6 +2751,8 @@ def _agy_model_state(
 
 def _deepseek_model_state(*, agent: str, model: str | None, cache_path: Path | None = None) -> dict[str, Any]:
     """Attest a DeepSeek route from its versioned pin or cached alias name."""
+    from scripts.agent_runtime.adapters.deepseek import _is_flash_model_line
+
     if agent != "deepseek":
         return {}
     if model == "deepseek-v4-pro":
@@ -2769,7 +2773,7 @@ def _deepseek_model_state(*, agent: str, model: str | None, cache_path: Path | N
         name = cache["deepseek"]["models"]["deepseek-flash"]["name"]
     except (OSError, ValueError, KeyError, TypeError):
         name = None
-    if name == "DeepSeek V4.1 Flash":
+    if isinstance(name, str) and _is_flash_model_line(name):
         return {
             "resolved_model": "deepseek-v4.1-flash",
             "resolved_model_known": True,
@@ -6202,9 +6206,11 @@ _READ_ONLY_RUNTIME_TELEMETRY_FILES = frozenset({".entire/settings.local.json"})
 # ``.pytest_cache/``, ``.pytest_breadcrumbs/``. Siblings are the same class
 # (harness/session/cache residue). Membership is load-bearing (#8516 AC-02):
 # an ignored ``!!`` path escapes the mutation guard ONLY through this
-# classification, so task-authored leak targets like ``.cache/`` (#4840),
-# root-level ``/*.py`` scratch, and ``/scratch/`` deliberately stay OUT and
-# now fail the task. Deploy-target dirs (``.claude``, ``.codex``, ``.gemini``,
+# classification, or when it is ignored and full-matches the existing
+# ``SITE_BUILD_OUTPUT_PATTERNS`` list (#11193). Task-authored leak targets
+# like ``.cache/`` (#4840), root-level ``/*.py`` scratch, and ``/scratch/``
+# deliberately stay OUT and now fail the task. Deploy-target dirs
+# (``.claude``, ``.codex``, ``.gemini``,
 # ``.cursor``, ``.agents``) are not in this set: they hold tracked,
 # harness-executed content, so an untracked new file there (e.g.
 # ``.claude/hooks/``) must still fail a read-only task in its own worktree.
@@ -6284,10 +6290,12 @@ def _is_read_only_runtime_state_path(path: str) -> bool:
 
     Covers Entire telemetry (#6803) plus the gitignored runtime dirs and sqlite
     sidecars that false-failed successful read-only tasks (#6860). Since #8516
-    AC-02 this classification is ALSO the only way an ignored ``!!`` path
-    escapes the mutation guard: task-authored ignored leaks outside it (the
+    AC-02 an ignored ``!!`` status alone does not escape the mutation guard.
+    Task-authored ignored leaks outside this classification (the
     review-a3-api-ui ``/*.py`` + ``/scratch/`` scratch class; ``.cache/``
-    residue from #4840/#7253) now fail the task like any other mutation.
+    residue from #4840/#7253) fail the task like any other mutation. The other
+    narrow escape is an ignored path that full-matches the existing
+    ``SITE_BUILD_OUTPUT_PATTERNS`` list (#11193), not ``!!`` by itself.
     """
     if _is_read_only_delegate_snapshot_sidecar_path(path):
         return True
@@ -6427,16 +6435,43 @@ def _read_only_ignored_mutation_paths(before: dict[str, str], after: dict[str, s
     )
 
 
+def _is_read_only_ignored_site_build_output(
+    path: str,
+    *,
+    before_state: str | None,
+    after_state: str | None,
+) -> bool:
+    """Exempt an ignored path that full-matches ``SITE_BUILD_OUTPUT_PATTERNS``.
+
+    ``site/astro.config.mjs`` creates
+    ``site/public/audio/pronunciation/manifest.json`` when it is absent, and
+    ``.gitignore`` ignores that directory (#11193). The match calls the
+    existing pattern list and does not add patterns. A tracked status on
+    either side, including a force-added file, is not exempt. An ignored
+    ``!!`` path outside the list is not exempt (#8516).
+    """
+    if not _is_read_only_ignored_mutation(before_state=before_state, after_state=after_state):
+        return False
+    # ``after`` is already ignored or absent. A tracked or force-added
+    # ``before`` (`` M``, ``A ``) must still trip, even when ``after`` is ``!!``.
+    if before_state is not None and not _is_read_only_ignored_status(before_state):
+        return False
+    normalized = _normalize_read_only_relpath(path)
+    return any(re.fullmatch(pattern, normalized) for pattern in SITE_BUILD_OUTPUT_PATTERNS)
+
+
 def _read_only_mutation_paths(before: dict[str, str], after: dict[str, str]) -> list[str]:
     """Return exact paths whose observable Git state changed during a review.
 
     A changed path is exempt only when it is recognized harness/runtime noise
     (:func:`_is_read_only_runtime_state_exemption`: gitignored tooling residue
-    such as ``.pytest_cache/`` or ``batch_state/``) or a newly appeared
+    such as ``.pytest_cache/`` or ``batch_state/``), a newly appeared
     sibling dispatch sandbox under ``.worktrees/dispatch/<agent>/<task>/``
     (#6938 defense in depth; since #7124 the snapshot itself already drops
-    every ``.worktrees/`` path). Tracked paths under runtime prefixes
-    (including force-added files) still trip the guard.
+    every ``.worktrees/`` path), or an ignored path that full-matches the
+    existing ``SITE_BUILD_OUTPUT_PATTERNS`` list (#11193). Tracked paths,
+    including ones that match that list, and force-added files still trip
+    the guard.
 
     #8516 AC-02: an ignored ``!!`` status BY ITSELF no longer exempts a path.
     The review-a3-api-ui leak showed why: the agy worker wrote its scratch
@@ -6444,7 +6479,9 @@ def _read_only_mutation_paths(before: dict[str, str], after: dict[str, str]) -> 
     (``/*.py``, ``/scratch/``) marked them ``!!``, and the guard filed them
     as diagnostic-only "ignored mutations" while the task settled ``done``.
     Now any other new, modified, or deleted path — tracked, untracked, or
-    ignored — fails the task and is named.
+    ignored — fails the task and is named. Matching the site-build list does
+    not widen that rule: the path must be ignored, and an ignored path
+    outside the list still fails.
     """
     before_roots = _read_only_dispatch_sandbox_roots(before)
     return sorted(
@@ -6457,6 +6494,11 @@ def _read_only_mutation_paths(before: dict[str, str], after: dict[str, str]) -> 
             after_state=after.get(path),
         )
         and not _is_read_only_new_sibling_dispatch_sandbox_path(path, before_roots=before_roots)
+        and not _is_read_only_ignored_site_build_output(
+            path,
+            before_state=before.get(path),
+            after_state=after.get(path),
+        )
     )
 
 
@@ -10842,8 +10884,8 @@ def _augment_prompt_with_worktree(
             "\n[write-mode closeout]\n"
             "Commit your work (use the literal trailer in `$LU_X_AGENT_TRAILER`).\n"
             "`git push -u origin HEAD`\n"
-            "The push runs a pre-push gate on that exact commit (pre-commit pre-push stage, repo-wide "
-            "invariant tests, your changed tests); a refusal names the failing node ids, and "
+            "The push runs a pre-push gate on that exact commit (pre-commit pre-push stage, your changed "
+            "tests and the tests they affect; CI runs the full suite); a refusal names the failing node ids, and "
             "`validation_incomplete` means it did not finish: stop and report, never `--no-verify`.\n"
             "Do not merge `origin/main` into your branch unless `git merge-tree` against a freshly fetched "
             "main reports a conflict, or the driver orders it.\n"
@@ -11396,6 +11438,11 @@ def _emit_terminal_dispatch_event(
                 "task_id": task_id,
                 "agent": agent,
                 "model": model,
+                **{key: final_state.get(key) for key in (
+                    "requested_selector", "observed_model", "observed_model_source",
+                    "observed_model_provenance",
+                )},
+                "identity_state": final_state.get("identity_state") or "unknown",
                 "resolved_model": final_state.get("resolved_model"),
                 "resolved_model_known": final_state.get("resolved_model_known"),
                 "resolved_model_source": final_state.get("resolved_model_source"),
@@ -11583,6 +11630,7 @@ def _run_worker(
         state.setdefault("model", start_telemetry.model)
         state.setdefault("effort", start_telemetry.effort)
         state.setdefault("cli_version", start_telemetry.cli_version)
+    state.update(model_accounting_fields(requested_selector=model))
     agy_requested_model = model
     if agent == "agy":
         from scripts.agent_runtime.adapters.agy import AgyAdapter
@@ -12053,6 +12101,10 @@ def _run_worker(
 
         final_state = _read_state(state_path) or {}
         final_state.update(agy_model_state)
+        final_state.update(model_accounting_fields(
+            requested_selector=model, identity=runtime_identity,
+            task_id=task_id, run_nonce=effective_nonce,
+        ))
         # #9275: gate evidence is this run's measurement, never an earlier record's.
         for gate_key in _ADVISORY_GATE_KEYS:
             final_state.pop(gate_key, None)
@@ -13002,6 +13054,7 @@ def _record_worktree_prep_failure(
         "attribution_source": attribution.source,
         "agent": agent,
         "model": start_telemetry.model,
+        **model_accounting_fields(requested_selector=requested_model),
         **_cursor_model_state(agent=agent, initial=True),
         **_deepseek_model_state(agent=agent, model=start_telemetry.model),
         "effort": start_telemetry.effort,
@@ -14876,18 +14929,23 @@ def _dispatch(
     # leaves no residue. Read-only modes are exempt inside the helper.
     # Dry-run must leave zero residue (same contract as tmp-lease reap) — skip
     # the shared ownership ledger entirely (Claude CF #5649 r11).
+    # A concrete overlap waits in the ledger's bounded FIFO queue
+    # (DELEGATE_OWNERSHIP_WAIT_S) instead of refusing at once (#11281); only
+    # this dispatch's own worktree lock is held while it waits.
     if not bool(getattr(args, "dry_run", False)):
         try:
             from scripts.guardrails.delegate_ownership import (
                 GuardMode,
                 admit_write_paths,
                 env_guard_mode,
+                env_queue_wait_s,
             )
         except ImportError:  # pragma: no cover - flat script path
             from guardrails.delegate_ownership import (  # type: ignore
                 GuardMode,
                 admit_write_paths,
                 env_guard_mode,
+                env_queue_wait_s,
             )
 
         guard_mode = env_guard_mode()
@@ -14899,6 +14957,8 @@ def _dispatch(
                 allow_path_overlap=getattr(args, "allow_path_overlap", None),
                 pid=os.getpid(),
                 guard_mode=guard_mode,
+                wait_s=env_queue_wait_s(),
+                on_queued=lambda notice: print(f"⏳ {notice}", file=sys.stderr, flush=True),
             )
         except Exception as own_exc:
             # WARN (opt-in via DELEGATE_OWNERSHIP_MODE=warn): never crash on ledger I/O.
@@ -14914,6 +14974,9 @@ def _dispatch(
                 )
                 return 2
         else:
+            if ownership.queue_timeout:
+                print(f"❌ {ownership.reason} for task_id={task_id!r}", file=sys.stderr)
+                return 2
             if ownership.would_refuse or ownership.override_reason:
                 # Only report a conflict count when there ARE conflicts: an
                 # unprovable-disjointness refusal has none, and printing
@@ -15013,6 +15076,7 @@ def _dispatch(
                 "attribution_source": attribution.source,
                 "agent": dispatch_agent,
                 "model": start_telemetry.model,
+                **model_accounting_fields(requested_selector=args.model),
                 **_cursor_model_state(agent=dispatch_agent, initial=True),
                 **_deepseek_model_state(agent=dispatch_agent, model=start_telemetry.model),
                 "effort": start_telemetry.effort,
@@ -15534,6 +15598,7 @@ def _dispatch(
             "attribution_source": attribution.source,
             "agent": dispatch_agent,
             "model": start_telemetry.model,
+            **model_accounting_fields(requested_selector=args.model),
             **_cursor_model_state(agent=dispatch_agent, initial=True),
             **_deepseek_model_state(agent=dispatch_agent, model=start_telemetry.model),
             "effort": start_telemetry.effort,
@@ -20514,6 +20579,8 @@ def build_parser() -> argparse.ArgumentParser:
             "dirty danger-mode worktree commits only changes under these paths; without "
             "any it commits nothing and the task ends needs_finalize. Required for a "
             "write-capable --mode: review admission checks the branch's scope from it (#9739). "
+            "A writer whose paths overlap an active writer's waits in the ownership queue for "
+            "up to DELEGATE_OWNERSHIP_WAIT_S seconds (default 1800) (#11281). "
             "Independent of --research-owned-path."
         ),
     )
@@ -20561,8 +20628,9 @@ def build_parser() -> argparse.ArgumentParser:
         metavar="REASON",
         help=(
             "Explicitly admit a write-capable dispatch that intersects another "
-            "active claim. Records task, conflicts, reason, and caller in the "
-            "ownership ledger. Required text reason; empty string is ignored."
+            "active claim, without waiting in the ownership queue. Records task, "
+            "conflicts, reason, and caller in the ownership ledger. Required text "
+            "reason; empty string is ignored."
         ),
     )
     d.add_argument(

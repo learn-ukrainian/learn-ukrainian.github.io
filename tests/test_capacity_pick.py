@@ -857,3 +857,38 @@ def test_strict_fails_when_the_only_capacity_is_stale_advisory(monkeypatch, caps
     codex = next(row for row in report["rows"] if row["lane"] == "codex")
     assert (codex["status"], codex["avoid"], codex["capacity"]["state"]) == ("unknown", False, "unknown_stale")
     assert report["cooler_lanes"] == []
+
+
+@pytest.mark.parametrize("refused", [False, True])
+def test_admission_status_does_not_write_shadow_journal(tmp_path, monkeypatch, refused):
+    from scripts.orchestration import admission_shadow as shadow
+    from scripts.orchestration import dispatch_admission as adm
+
+    journal = tmp_path / "journal"
+    monkeypatch.setenv(shadow.DIRECTORY_ENV, str(journal))
+    monkeypatch.setattr(adm, "load_thresholds", lambda: adm.Thresholds(2, 3.5, 1.5))
+    monkeypatch.setattr(adm, "probe_host", lambda: adm.HostProbe(12 * 1024**3, 100 if refused else 0, 8, True))
+    monkeypatch.setattr(adm, "probe_disk", lambda: adm.DiskProbe(10, 90))
+    tasks = tmp_path / "tasks"
+    baseline = adm.evaluate("workspace-write", tasks)
+    paths = list(journal.glob("*.jsonl"))
+    assert len(paths) == 1
+    before = paths[0].read_bytes()
+    report = capacity_pick.admission_status(tasks)
+    assert report["admitted"] is (not refused)
+    assert report["psi_shadow"]["persistence"] == "unknown: report-only evaluation"
+    assert paths[0].read_bytes() == before
+    rows = [json.loads(line) for line in before.splitlines()]
+    assert len(rows) == 1
+    assert rows[0]["phase"] == "evaluate"
+    assert rows[0]["current_admission_decision"] == ("refuse" if refused else "admit")
+    day = paths[0].stem
+    assert shadow.compare_day(journal, day)["samples"] == 1
+    assert baseline.admitted == report["admitted"]
+
+
+def test_admission_status_invalid_threshold_is_unknown(monkeypatch):
+    monkeypatch.setenv("DISPATCH_MAX_LIVE_WRITE_WORKERS", "invalid")
+    report = capacity_pick.admission_status()
+    assert report["admitted"] is None
+    assert "invalid threshold" in report["line"]

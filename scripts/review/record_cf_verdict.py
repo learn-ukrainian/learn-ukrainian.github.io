@@ -57,7 +57,7 @@ from scripts.orchestration.integration_sweep import (
     parse_marker,
 )
 from scripts.orchestration.task_record_store import ARCHIVE_DIR_NAME
-from scripts.publish.github import Request, request_run
+from scripts.publish.github import CfVerdictRecord, Request, request_run
 from scripts.review.app_bot_authorship import VERIFIED_APP_BOT, listing_app_bot_login, verified_app_bot_login
 from scripts.review.language_lane import is_ukrainian_review
 from scripts.review.model_catalog import (
@@ -1828,7 +1828,8 @@ def record(
                     break
         if existing is None:
             data = _run_json(
-                Request("issue-comment-json", repo=repository, number=number, body=comment),
+                # The typed record is the publisher's only admitted marker carrier (#11127).
+                Request("issue-comment-json", repo=repository, number=number, body=CfVerdictRecord(comment)),
             )
             comment_id = data.get("id") if isinstance(data, dict) else None
             if not isinstance(comment_id, int):

@@ -20,6 +20,9 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
 
+if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
 from scripts.api.occupancy_local import resolve_launcher_host_id
 from scripts.api.occupancy_sanitize import CLOUD_OBSERVER_HOST_ID, opaque_host_id, safe_field
 from scripts.api.telemetry.transcript_tokens import read_session_record, session_context_telemetry

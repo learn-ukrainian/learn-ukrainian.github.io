@@ -68,8 +68,10 @@ from typing import Any
 
 import yaml
 
-# sys.path shim matching review.py
+# sys.path shim matching review.py: scripts/ for bare imports, repo root for scripts.*.
 _REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
 if str(_REPO_ROOT / "scripts") not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT / "scripts"))
 

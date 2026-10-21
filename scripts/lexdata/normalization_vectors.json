@@ -1,0 +1,427 @@
+{
+ "schema": "lexdata-normalization-vectors",
+ "schemaVersion": 1,
+ "normalizer": "lexdata.normalize",
+ "cases": [
+  {
+   "note": "control lowercase noun",
+   "input": "шуба",
+   "surface": "шуба",
+   "key_stressed": "шуба",
+   "key_unstressed": "шуба",
+   "key_fold": "шуба",
+   "case_signal": "lower",
+   "refusal_code": null,
+   "norm_flags": [],
+   "proposed_repairs": []
+  },
+  {
+   "note": "stressed form keeps U+0301 only in key_stressed",
+   "input": "шу́ба",
+   "surface": "шу́ба",
+   "key_stressed": "шу́ба",
+   "key_unstressed": "шуба",
+   "key_fold": "шуба",
+   "case_signal": "lower",
+   "refusal_code": null,
+   "norm_flags": [],
+   "proposed_repairs": []
+  },
+  {
+   "note": "sentence-initial capital and trailing punctuation",
+   "input": "Бува́й!",
+   "surface": "Бува́й!",
+   "key_stressed": "Бува́й",
+   "key_unstressed": "Бувай",
+   "key_fold": "бувай",
+   "case_signal": "initial_cap",
+   "refusal_code": null,
+   "norm_flags": [
+    "edge_punctuation_stripped"
+   ],
+   "proposed_repairs": []
+  },
+  {
+   "note": "U+2019 apostrophe unified in keys, kept in surface",
+   "input": "м’ята",
+   "surface": "м’ята",
+   "key_stressed": "м'ята",
+   "key_unstressed": "м'ята",
+   "key_fold": "м'ята",
+   "case_signal": "lower",
+   "refusal_code": null,
+   "norm_flags": [
+    "apostrophe_unified"
+   ],
+   "proposed_repairs": []
+  },
+  {
+   "note": "U+02BC apostrophe unified",
+   "input": "мʼята",
+   "surface": "мʼята",
+   "key_stressed": "м'ята",
+   "key_unstressed": "м'ята",
+   "key_fold": "м'ята",
+   "case_signal": "lower",
+   "refusal_code": null,
+   "norm_flags": [
+    "apostrophe_unified"
+   ],
+   "proposed_repairs": []
+  },
+  {
+   "note": "HTML entity unescaped (PULS &#39; rows)",
+   "input": "м&#39;ята",
+   "surface": "м'ята",
+   "key_stressed": "м'ята",
+   "key_unstressed": "м'ята",
+   "key_fold": "м'ята",
+   "case_signal": "lower",
+   "refusal_code": null,
+   "norm_flags": [
+    "html_unescaped"
+   ],
+   "proposed_repairs": []
+  },
+  {
+   "note": "double-escaped entity refused",
+   "input": "м&amp;#39;ята",
+   "surface": "м&#39;ята",
+   "key_stressed": null,
+   "key_unstressed": null,
+   "key_fold": null,
+   "case_signal": null,
+   "refusal_code": "html_entity_residual",
+   "norm_flags": [
+    "html_unescaped"
+   ],
+   "proposed_repairs": []
+  },
+  {
+   "note": "Latin C homoglyph (PULS 5939) refused with a proposal only",
+   "input": "Cпасибі!",
+   "surface": "Cпасибі!",
+   "key_stressed": null,
+   "key_unstressed": null,
+   "key_fold": null,
+   "case_signal": null,
+   "refusal_code": "homoglyph_mixed_script",
+   "norm_flags": [],
+   "proposed_repairs": [
+    "Спасибі!"
+   ]
+  },
+  {
+   "note": "Latin-only span refused",
+   "input": "SMS",
+   "surface": "SMS",
+   "key_stressed": null,
+   "key_unstressed": null,
+   "key_fold": null,
+   "case_signal": null,
+   "refusal_code": "foreign_script",
+   "norm_flags": [],
+   "proposed_repairs": []
+  },
+  {
+   "note": "Greek-only span refused",
+   "input": "αβ",
+   "surface": "αβ",
+   "key_stressed": null,
+   "key_unstressed": null,
+   "key_fold": null,
+   "case_signal": null,
+   "refusal_code": "foreign_script",
+   "norm_flags": [],
+   "proposed_repairs": []
+  },
+  {
+   "note": "heteronym stressed on the first syllable",
+   "input": "за́мок",
+   "surface": "за́мок",
+   "key_stressed": "за́мок",
+   "key_unstressed": "замок",
+   "key_fold": "замок",
+   "case_signal": "lower",
+   "refusal_code": null,
+   "norm_flags": [],
+   "proposed_repairs": []
+  },
+  {
+   "note": "heteronym stressed on the second syllable",
+   "input": "замо́к",
+   "surface": "замо́к",
+   "key_stressed": "замо́к",
+   "key_unstressed": "замок",
+   "key_fold": "замок",
+   "case_signal": "lower",
+   "refusal_code": null,
+   "norm_flags": [],
+   "proposed_repairs": []
+  },
+  {
+   "note": "inflected form",
+   "input": "замка́",
+   "surface": "замка́",
+   "key_stressed": "замка́",
+   "key_unstressed": "замка",
+   "key_fold": "замка",
+   "case_signal": "lower",
+   "refusal_code": null,
+   "norm_flags": [],
+   "proposed_repairs": []
+  },
+  {
+   "note": "Ґ is never folded to г",
+   "input": "Ґанок",
+   "surface": "Ґанок",
+   "key_stressed": "Ґанок",
+   "key_unstressed": "Ґанок",
+   "key_fold": "ґанок",
+   "case_signal": "initial_cap",
+   "refusal_code": null,
+   "norm_flags": [],
+   "proposed_repairs": []
+  },
+  {
+   "note": "all capitals",
+   "input": "ФАЙНИЙ",
+   "surface": "ФАЙНИЙ",
+   "key_stressed": "ФАЙНИЙ",
+   "key_unstressed": "ФАЙНИЙ",
+   "key_fold": "файний",
+   "case_signal": "all_caps",
+   "refusal_code": null,
+   "norm_flags": [],
+   "proposed_repairs": []
+  },
+  {
+   "note": "capital after a hyphen is mixed",
+   "input": "Нью-Йорк",
+   "surface": "Нью-Йорк",
+   "key_stressed": "Нью-Йорк",
+   "key_unstressed": "Нью-Йорк",
+   "key_fold": "нью-йорк",
+   "case_signal": "mixed",
+   "refusal_code": null,
+   "norm_flags": [],
+   "proposed_repairs": []
+  },
+  {
+   "note": "single capital letter",
+   "input": "В",
+   "surface": "В",
+   "key_stressed": "В",
+   "key_unstressed": "В",
+   "key_fold": "в",
+   "case_signal": "initial_cap",
+   "refusal_code": null,
+   "norm_flags": [],
+   "proposed_repairs": []
+  },
+  {
+   "note": "stress on a consonant is invalid",
+   "input": "ш́уба",
+   "surface": "ш́уба",
+   "key_stressed": null,
+   "key_unstressed": null,
+   "key_fold": null,
+   "case_signal": null,
+   "refusal_code": "stress_invalid",
+   "norm_flags": [],
+   "proposed_repairs": []
+  },
+  {
+   "note": "precomposed г+acute is a stress on a consonant",
+   "input": "ѓ",
+   "surface": "ѓ",
+   "key_stressed": null,
+   "key_unstressed": null,
+   "key_fold": null,
+   "case_signal": null,
+   "refusal_code": "stress_invalid",
+   "norm_flags": [],
+   "proposed_repairs": []
+  },
+  {
+   "note": "stress on й is invalid",
+   "input": "й́",
+   "surface": "й́",
+   "key_stressed": null,
+   "key_unstressed": null,
+   "key_fold": null,
+   "case_signal": null,
+   "refusal_code": "stress_invalid",
+   "norm_flags": [],
+   "proposed_repairs": []
+  },
+  {
+   "note": "repeated stress mark is invalid",
+   "input": "шу́́ба",
+   "surface": "шу́́ба",
+   "key_stressed": null,
+   "key_unstressed": null,
+   "key_fold": null,
+   "case_signal": null,
+   "refusal_code": "stress_invalid",
+   "norm_flags": [],
+   "proposed_repairs": []
+  },
+  {
+   "note": "stress mark with no base letter is invalid",
+   "input": "́шуба",
+   "surface": "́шуба",
+   "key_stressed": null,
+   "key_unstressed": null,
+   "key_fold": null,
+   "case_signal": null,
+   "refusal_code": "stress_invalid",
+   "norm_flags": [],
+   "proposed_repairs": []
+  },
+  {
+   "note": "stress on ї is valid",
+   "input": "ї́жак",
+   "surface": "ї́жак",
+   "key_stressed": "ї́жак",
+   "key_unstressed": "їжак",
+   "key_fold": "їжак",
+   "case_signal": "lower",
+   "refusal_code": null,
+   "norm_flags": [],
+   "proposed_repairs": []
+  },
+  {
+   "note": "grave is accepted on a vowel and removed from keys",
+   "input": "прѝві́т",
+   "surface": "прѝві́т",
+   "key_stressed": "приві́т",
+   "key_unstressed": "привіт",
+   "key_fold": "привіт",
+   "case_signal": "lower",
+   "refusal_code": null,
+   "norm_flags": [
+    "nfc_changed",
+    "grave_removed"
+   ],
+   "proposed_repairs": []
+  },
+  {
+   "note": "whitespace runs collapse, NBSP included",
+   "input": "  кіт   і пес  ",
+   "surface": "  кіт   і пес  ",
+   "key_stressed": "кіт і пес",
+   "key_unstressed": "кіт і пес",
+   "key_fold": "кіт і пес",
+   "case_signal": "lower",
+   "refusal_code": null,
+   "norm_flags": [
+    "edge_punctuation_stripped",
+    "whitespace_collapsed"
+   ],
+   "proposed_repairs": []
+  },
+  {
+   "note": "edge quotes and ellipsis stripped",
+   "input": "«шуба»…",
+   "surface": "«шуба»…",
+   "key_stressed": "шуба",
+   "key_unstressed": "шуба",
+   "key_fold": "шуба",
+   "case_signal": "lower",
+   "refusal_code": null,
+   "norm_flags": [
+    "edge_punctuation_stripped"
+   ],
+   "proposed_repairs": []
+  },
+  {
+   "note": "the normalizer never splits a list",
+   "input": "у, в",
+   "surface": "у, в",
+   "key_stressed": "у, в",
+   "key_unstressed": "у, в",
+   "key_fold": "у, в",
+   "case_signal": "lower",
+   "refusal_code": null,
+   "norm_flags": [],
+   "proposed_repairs": []
+  },
+  {
+   "note": "Latin e with acute composes and is refused",
+   "input": "é",
+   "surface": "é",
+   "key_stressed": null,
+   "key_unstressed": null,
+   "key_fold": null,
+   "case_signal": null,
+   "refusal_code": "foreign_script",
+   "norm_flags": [
+    "nfc_changed"
+   ],
+   "proposed_repairs": []
+  },
+  {
+   "note": "no letter",
+   "input": "123",
+   "surface": "123",
+   "key_stressed": null,
+   "key_unstressed": null,
+   "key_fold": null,
+   "case_signal": null,
+   "refusal_code": "no_letter",
+   "norm_flags": [],
+   "proposed_repairs": []
+  },
+  {
+   "note": "empty span",
+   "input": "",
+   "surface": "",
+   "key_stressed": null,
+   "key_unstressed": null,
+   "key_fold": null,
+   "case_signal": null,
+   "refusal_code": "empty_span",
+   "norm_flags": [],
+   "proposed_repairs": []
+  },
+  {
+   "note": "whitespace-only span",
+   "input": "   ",
+   "surface": "   ",
+   "key_stressed": null,
+   "key_unstressed": null,
+   "key_fold": null,
+   "case_signal": null,
+   "refusal_code": "empty_span",
+   "norm_flags": [],
+   "proposed_repairs": []
+  },
+  {
+   "note": "punctuation only",
+   "input": "…",
+   "surface": "…",
+   "key_stressed": null,
+   "key_unstressed": null,
+   "key_fold": null,
+   "case_signal": null,
+   "refusal_code": "no_letter",
+   "norm_flags": [
+    "edge_punctuation_stripped"
+   ],
+   "proposed_repairs": []
+  },
+  {
+   "note": "decomposed stress on a capital vowel",
+   "input": "И́",
+   "surface": "И́",
+   "key_stressed": "И́",
+   "key_unstressed": "И",
+   "key_fold": "и",
+   "case_signal": "initial_cap",
+   "refusal_code": null,
+   "norm_flags": [],
+   "proposed_repairs": []
+  }
+ ]
+}

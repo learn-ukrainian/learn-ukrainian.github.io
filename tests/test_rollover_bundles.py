@@ -8,7 +8,9 @@ import hashlib
 import io
 import json
 import shutil
+import subprocess
 import tarfile
+import urllib.error
 from datetime import UTC, datetime
 from decimal import Decimal
 from pathlib import Path
@@ -455,26 +457,53 @@ def _exported(
 class _BundleServer:
     """In-memory bundle API behind the real request helpers: newest first, honoring agent and limit."""
 
-    def __init__(self, rows: dict[int, tuple[dict, bytes]]) -> None:
+    def __init__(
+        self,
+        rows: dict[int, tuple[dict, bytes]],
+        *,
+        ignore_agent: bool = False,
+        listed_agent: str | None = None,
+        seq_manifest: dict | None = None,
+        answers: dict[str, tuple[int, dict]] | None = None,
+    ) -> None:
+        """``ignore_agent`` lists every slot's rows; ``listed_agent`` mislabels them
+        consistently (row and listed manifest alike), leaving the fetched bundle intact;
+        ``seq_manifest`` replaces the fetched manifest; ``answers`` scripts an error
+        status for ``"list"`` or ``"seq"`` requests."""
         self.rows = rows
+        self.ignore_agent = ignore_agent
+        self.listed_agent = listed_agent
+        self.seq_manifest = seq_manifest
+        self.answers = answers or {}
         self.paths: list[str] = []
 
     def get(self, path: str, headers: dict | None = None) -> tuple[int, str, dict]:
         self.paths.append(path)
         parsed = urlsplit(path)
         if parsed.path.endswith("/bundles"):
+            if "list" in self.answers:
+                status, body = self.answers["list"]
+                return status, json.dumps(body), {}
             query = parse_qs(parsed.query)
-            agent = query.get("agent", [None])[0]
+            agent = None if self.ignore_agent else query.get("agent", [None])[0]
             limit = int(query.get("limit", ["20"])[0])
             listed = [
-                {"manifest": {**manifest, "upload_seq": seq}, "upload_seq": seq, "agent": manifest["agent"]}
+                {
+                    "manifest": {**manifest, "agent": self.listed_agent or manifest["agent"], "upload_seq": seq},
+                    "upload_seq": seq,
+                    "agent": self.listed_agent or manifest["agent"],
+                }
                 for seq, (manifest, _blob) in sorted(self.rows.items(), reverse=True)
                 if agent is None or manifest["agent"] == agent
             ][:limit]
             return 200, json.dumps({"bundles": listed}), {}
+        if "seq" in self.answers:
+            status, body = self.answers["seq"]
+            return status, json.dumps(body), {}
         seq = int(parsed.path.rsplit("/", 1)[1])
         manifest, blob = self.rows[seq]
-        body = {"manifest": {**manifest, "upload_seq": seq}, "blob": base64.b64encode(blob).decode("ascii")}
+        manifest = self.seq_manifest or {**manifest, "upload_seq": seq}
+        body = {"manifest": manifest, "blob": base64.b64encode(blob).decode("ascii")}
         return 200, json.dumps(body), {}
 
 
@@ -562,21 +591,582 @@ def test_from_api_twenty_newer_foreign_rows_do_not_hide_the_callers_bundle(
     assert (target / HANDOFF_PATH).read_text(encoding="utf-8") == "own lane handoff\n"
 
 
-def test_from_api_with_only_another_agents_bundle_installs_nothing(
+TYPED_NONE = '{"status":"none","action":"import-bundle"}\n'
+
+
+def test_from_api_slot_without_a_bundle_is_a_typed_none(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    server = _BundleServer({})
+    monkeypatch.setattr(th, "_bundle_client", lambda *_a, **_kw: server)
+    target = tmp_path / "target"
+    target.mkdir()
+
+    assert th.cmd_import_bundle(_import_args(target, None, from_api=STREAM)) == 0
+    captured = capsys.readouterr()
+
+    assert captured.out == TYPED_NONE
+    assert captured.err == ""
+    assert _tree(target) == {}
+    assert [urlsplit(path).path for path in server.paths] == [f"/api/epics/v1/{STREAM}/bundles"]
+
+
+@pytest.mark.parametrize("ignore_agent", [False, True], ids=["api-filters-slot", "api-lists-every-slot"])
+def test_from_api_with_only_another_agents_bundle_is_none_and_installs_nothing(
+    tmp_path: Path,
+    handoff_candidates: None,
+    capsys: pytest.CaptureFixture[str],
+    monkeypatch: pytest.MonkeyPatch,
+    ignore_agent: bool,
+) -> None:
+    _foreign, manifest, blob = _exported(tmp_path, capsys, "foreign", handoff="foreign lane handoff\n")
+    server = _BundleServer({3: (manifest, blob)}, ignore_agent=ignore_agent)
+    monkeypatch.setattr(th, "_bundle_client", lambda *_a, **_kw: server)
+    target = tmp_path / "target"
+    target.mkdir()
+
+    assert th.cmd_import_bundle(_import_args(target, None, agent="grok-infra", from_api=STREAM)) == 0
+    assert capsys.readouterr().out == TYPED_NONE
+    assert _tree(target) == {}
+    # The foreign blob is never even fetched.
+    assert all(urlsplit(path).path.endswith("/bundles") for path in server.paths)
+
+
+def _refusal(capsys: pytest.CaptureFixture[str]) -> dict:
+    out = capsys.readouterr().out
+    assert "invalid_rollover_bundle" in out
+    return json.loads(out)
+
+
+@pytest.mark.parametrize(
+    ("request_kind", "status", "detail"),
+    [
+        ("list", 409, "stale generation"),
+        ("seq", 409, "stale generation"),
+        ("list", 403, "fenced lease"),
+        ("seq", 403, "fenced lease"),
+        # A row the list just named vanished: an inconsistency, not an empty slot.
+        ("seq", 404, "rollover bundle not found"),
+        # The stream itself is unknown to the API.
+        ("list", 404, "epic stream not found"),
+    ],
+)
+def test_from_api_semantic_refusal_still_exits_invalid_rollover_bundle(
+    tmp_path: Path,
+    handoff_candidates: None,
+    capsys: pytest.CaptureFixture[str],
+    monkeypatch: pytest.MonkeyPatch,
+    request_kind: str,
+    status: int,
+    detail: str,
+) -> None:
+    _own, manifest, blob = _exported(tmp_path, capsys, "own", handoff="own lane handoff\n")
+    server = _BundleServer({4: (manifest, blob)}, answers={request_kind: (status, {"detail": detail})})
+    monkeypatch.setattr(th, "_bundle_client", lambda *_a, **_kw: server)
+    target = tmp_path / "target"
+    target.mkdir()
+
+    assert th.cmd_import_bundle(_import_args(target, None, from_api=STREAM)) == 2
+    refusal = _refusal(capsys)
+
+    assert refusal == {"code": "invalid_rollover_bundle", "error": refusal["error"], "action": "import-bundle"}
+    assert detail in refusal["error"]
+    assert _tree(target) == {}
+
+
+def test_from_api_hash_mismatch_still_exits_invalid_rollover_bundle(
     tmp_path: Path,
     handoff_candidates: None,
     capsys: pytest.CaptureFixture[str],
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
+    _own, manifest, blob = _exported(tmp_path, capsys, "own", handoff="own lane handoff\n")
+    forged = {**manifest, "upload_seq": 4, "bundle_sha256": "0" * 64}
+    server = _BundleServer({4: (manifest, blob)}, seq_manifest=forged)
+    monkeypatch.setattr(th, "_bundle_client", lambda *_a, **_kw: server)
+    target = tmp_path / "target"
+    target.mkdir()
+
+    assert th.cmd_import_bundle(_import_args(target, None, from_api=STREAM)) == 2
+    assert "does not match the embedded manifest" in _refusal(capsys)["error"]
+    assert _tree(target) == {}
+
+
+def test_from_api_agent_mismatch_still_exits_invalid_rollover_bundle(
+    tmp_path: Path,
+    handoff_candidates: None,
+    capsys: pytest.CaptureFixture[str],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    # The list row claims the caller's slot, but the fetched bundle belongs to another.
     _foreign, manifest, blob = _exported(tmp_path, capsys, "foreign", handoff="foreign lane handoff\n")
-    server = _BundleServer({3: (manifest, blob)})
+    server = _BundleServer({4: (manifest, blob)}, ignore_agent=True, listed_agent="grok-infra")
     monkeypatch.setattr(th, "_bundle_client", lambda *_a, **_kw: server)
     target = tmp_path / "target"
     target.mkdir()
 
     assert th.cmd_import_bundle(_import_args(target, None, agent="grok-infra", from_api=STREAM)) == 2
-    assert "no matching bundle" in json.loads(capsys.readouterr().out)["error"]
+    assert _refusal(capsys)["error"] == "bundle agent does not match --agent"
     assert _tree(target) == {}
+
+
+FOREIGN_ROW = {"manifest": {"agent": "claude-devops", "stream_id": STREAM, "upload_seq": 7}, "upload_seq": 7}
+# The same slot identity carried at both levels, consistently.
+FOREIGN_ROW_WITH_COPIES = {
+    "agent": "gpt-infra",
+    "stream_id": STREAM,
+    "manifest": {"agent": "gpt-infra", "stream_id": STREAM, "upload_seq": 8},
+    "upload_seq": 8,
+}
+
+# Listings whose slot identity is missing or malformed. None of them proves the
+# slot empty, so each must refuse rather than read as the typed none (#11257).
+MALFORMED_LISTINGS = {
+    "manifest-without-agent": {"bundles": [{"manifest": {}}]},
+    "manifest-missing": {"bundles": [{"upload_seq": 3}]},
+    "manifest-not-a-mapping": {"bundles": [{"manifest": ["claude-devops"]}]},
+    # A valid row identity cannot stand in for the manifest it must agree with.
+    "row-agent-without-manifest": {"bundles": [{"agent": "claude-devops", "upload_seq": 3}]},
+    "row-agent-manifest-not-a-mapping": {"bundles": [{"agent": "claude-devops", "manifest": ["claude-devops"]}]},
+    "manifest-agent-null": {"bundles": [{"manifest": {"agent": None}}]},
+    "manifest-agent-empty": {"bundles": [{"manifest": {"agent": ""}}]},
+    "manifest-agent-int": {"bundles": [{"manifest": {"agent": 7}}]},
+    "manifest-agent-list": {"bundles": [{"manifest": {"agent": ["claude-devops"]}}]},
+    "manifest-agent-not-a-slot-name": {"bundles": [{"manifest": {"agent": "Claude Devops"}}]},
+    "row-agent-null": {"bundles": [{"agent": None, "manifest": {}}]},
+    # A present but null row identity is malformed even beside a manifest agent.
+    "row-agent-null-over-manifest-agent": {"bundles": [{"agent": None, "manifest": {"agent": "claude-devops"}}]},
+    "row-agent-empty": {"bundles": [{"agent": "", "manifest": {"agent": "claude-devops"}}]},
+    "row-agent-int": {"bundles": [{"agent": 7, "manifest": {"agent": "claude-devops"}}]},
+    "row-agent-list": {"bundles": [{"agent": ["claude-devops"], "manifest": {"agent": "claude-devops"}}]},
+    "row-not-an-object": {"bundles": ["claude-devops"]},
+    "bundles-not-a-list": {"bundles": {"agent": "claude-devops"}},
+    "bundles-null": {"bundles": None},
+    "bundles-missing": {},
+    "foreign-then-malformed": {"bundles": [FOREIGN_ROW, {"manifest": {}}]},
+    "malformed-then-foreign": {"bundles": [{"manifest": {"agent": 7}}, FOREIGN_ROW]},
+}
+
+
+@pytest.mark.parametrize("listing", list(MALFORMED_LISTINGS.values()), ids=list(MALFORMED_LISTINGS))
+def test_from_api_listing_without_a_valid_slot_identity_refuses(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+    monkeypatch: pytest.MonkeyPatch,
+    listing: dict,
+) -> None:
+    server = _BundleServer({}, answers={"list": (200, listing)})
+    monkeypatch.setattr(th, "_bundle_client", lambda *_a, **_kw: server)
+    target = tmp_path / "target"
+    target.mkdir()
+
+    assert th.cmd_import_bundle(_import_args(target, None, from_api=STREAM)) == 2
+    captured = capsys.readouterr()
+
+    assert captured.out != TYPED_NONE
+    refusal = json.loads(captured.out)
+    assert refusal == {"code": "invalid_rollover_bundle", "error": refusal["error"], "action": "import-bundle"}
+    assert _tree(target) == {}
+    # Nothing past the listing is fetched.
+    assert [urlsplit(path).path for path in server.paths] == [f"/api/epics/v1/{STREAM}/bundles"]
+
+
+def test_from_api_well_formed_foreign_row_alone_is_still_none(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    listing = {"bundles": [FOREIGN_ROW, FOREIGN_ROW_WITH_COPIES]}
+    server = _BundleServer({}, answers={"list": (200, listing)})
+    monkeypatch.setattr(th, "_bundle_client", lambda *_a, **_kw: server)
+    target = tmp_path / "target"
+    target.mkdir()
+
+    assert th.cmd_import_bundle(_import_args(target, None, from_api=STREAM)) == 0
+    assert capsys.readouterr().out == TYPED_NONE
+    assert _tree(target) == {}
+
+
+def _contradictory(field: str, row_value: object, manifest_value: object, *, agent: str = "claude-devops") -> dict:
+    """A well-formed row whose top-level ``field`` disagrees with its manifest's."""
+    manifest = {"agent": agent, "stream_id": STREAM, "upload_seq": 7}
+    return {"manifest": {**manifest, field: manifest_value}, **{field: row_value}}
+
+
+# Rows whose top-level identity contradicts their own manifest. Every value is
+# well-formed on its own; only their disagreement makes the row unclassifiable,
+# so it can prove neither a foreign slot nor this one (#11257).
+CONTRADICTORY_LISTINGS = {
+    # The exact probe from the review of 2aa5a0d8: caller AGENT is claude-infra.
+    "foreign-row-own-manifest": {
+        "bundles": [{"agent": "claude-devops", "manifest": {"agent": AGENT, "upload_seq": 7}, "upload_seq": 7}]
+    },
+    "foreign-row-own-manifest-full": {"bundles": [_contradictory("agent", "claude-devops", AGENT)]},
+    "own-row-foreign-manifest": {"bundles": [_contradictory("agent", AGENT, "claude-devops")]},
+    "two-foreign-agents": {"bundles": [_contradictory("agent", "claude-devops", "gpt-infra")]},
+    "stream-mismatch": {"bundles": [_contradictory("stream_id", "epic:1", STREAM)]},
+    "stream-mismatch-own-slot": {"bundles": [_contradictory("stream_id", STREAM, "epic:1", agent=AGENT)]},
+    "upload-seq-mismatch": {"bundles": [_contradictory("upload_seq", 7, 8)]},
+    "upload-seq-mismatch-own-slot": {"bundles": [_contradictory("upload_seq", 7, 8, agent=AGENT)]},
+    "consistent-foreign-then-contradictory": {
+        "bundles": [FOREIGN_ROW_WITH_COPIES, _contradictory("agent", "claude-devops", AGENT)]
+    },
+    "contradictory-then-consistent-foreign": {
+        "bundles": [_contradictory("agent", "claude-devops", AGENT), FOREIGN_ROW]
+    },
+}
+
+
+@pytest.mark.parametrize("listing", list(CONTRADICTORY_LISTINGS.values()), ids=list(CONTRADICTORY_LISTINGS))
+def test_from_api_listing_row_contradicting_its_manifest_refuses(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+    monkeypatch: pytest.MonkeyPatch,
+    listing: dict,
+) -> None:
+    server = _BundleServer({}, answers={"list": (200, listing)})
+    monkeypatch.setattr(th, "_bundle_client", lambda *_a, **_kw: server)
+    target = tmp_path / "target"
+    target.mkdir()
+
+    assert th.cmd_import_bundle(_import_args(target, None, from_api=STREAM)) == 2
+    refusal = _refusal(capsys)
+
+    assert refusal == {"code": "invalid_rollover_bundle", "error": refusal["error"], "action": "import-bundle"}
+    assert "contradicts its manifest" in refusal["error"]
+    assert _tree(target) == {}
+    # The refusal comes from the listing itself; no bundle is fetched.
+    assert [urlsplit(path).path for path in server.paths] == [f"/api/epics/v1/{STREAM}/bundles"]
+
+
+# Values no canonical identity field takes: the handoff slot and bundle store
+# validators reject each, whatever the field (#11257).
+NONCANONICAL_VALUES = {
+    "null": None,
+    "empty": "",
+    "whitespace": " ",
+    "tab": "\t",
+    "bool-true": True,
+    "bool-false": False,
+    "negative": -1,
+    "zero": 0,
+    "float": 7.0,
+    "str-digits": "7",
+    "unicode-digits": "٧",
+    "very-long": "a" * 4096,
+    "control-char": "claude\x07devops",
+    "nul": "claude\x00devops",
+    "list": ["claude-devops"],
+    "mapping": {"agent": "claude-devops"},
+}
+# Values only one field rejects: each is the near miss of that field's syntax.
+NONCANONICAL_FIELD_VALUES = {
+    "agent": {
+        "uppercase": "Claude-Devops",
+        "underscore": "claude_devops",
+        "leading-hyphen": "-claude-devops",
+        "leading-space": " claude-devops",
+        "trailing-newline": "claude-devops\n",
+        "over-store-bound": "a" * 257,
+        "stream-shaped": "epic:9999",
+    },
+    "stream_id": {
+        "epic-zero": "epic:0",
+        "epic-leading-zero": "epic:09999",
+        "epic-negative": "epic:-9999",
+        "epic-empty": "epic:",
+        "epic-uppercase": "EPIC:9999",
+        "epic-leading-space": " epic:9999",
+        "epic-trailing-newline": "epic:9999\n",
+        "epic-unicode-digits": "epic:٩٩٩٩",
+        "epic-bare-number": 9999,
+        "shared-empty": "shared:",
+        "no-kind": "9999",
+    },
+    "upload_seq": {
+        "over-sqlite-max": 2**63,
+        "huge": 10**100,
+        "str-digits-with-space": " 7",
+        "float-fraction": 7.5,
+    },
+}
+IDENTITY_FIELDS = ("agent", "stream_id", "upload_seq")
+
+
+def _canonical_foreign_row() -> dict:
+    identity = {"agent": "claude-devops", "stream_id": STREAM, "upload_seq": 7}
+    return {**identity, "manifest": dict(identity)}
+
+
+def _noncanonical_row(field: str, value: object, position: str) -> dict:
+    """A foreign row whose only defect is ``field`` = ``value`` in ``position``.
+
+    ``row`` and ``manifest`` carry the value in that copy alone (the other copy
+    omits the field), so neither disagreement nor absence can refuse the row;
+    ``both`` carries it in both copies, so the copies agree."""
+    row = _canonical_foreign_row()
+    if position in {"row", "both"}:
+        row[field] = value
+    else:
+        del row[field]
+    if position in {"manifest", "both"}:
+        row["manifest"][field] = value
+    else:
+        del row["manifest"][field]
+    return row
+
+
+NONCANONICAL_CASES = [
+    pytest.param(field, value, position, id=f"{field}-{name}-{position}")
+    for field in IDENTITY_FIELDS
+    for name, value in {**NONCANONICAL_VALUES, **NONCANONICAL_FIELD_VALUES[field]}.items()
+    for position in ("row", "manifest", "both")
+]
+
+
+@pytest.mark.parametrize(("field", "value", "position"), NONCANONICAL_CASES)
+@pytest.mark.parametrize("neighbour", ["alone", "after-foreign", "before-foreign"])
+def test_from_api_noncanonical_row_identity_refuses_the_listing(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+    monkeypatch: pytest.MonkeyPatch,
+    field: str,
+    value: object,
+    position: str,
+    neighbour: str,
+) -> None:
+    bad = _noncanonical_row(field, value, position)
+    rows = {
+        "alone": [bad],
+        "after-foreign": [_canonical_foreign_row(), bad],
+        "before-foreign": [bad, _canonical_foreign_row()],
+    }[neighbour]
+    server = _BundleServer({}, answers={"list": (200, {"bundles": rows})})
+    monkeypatch.setattr(th, "_bundle_client", lambda *_a, **_kw: server)
+    target = tmp_path / "target"
+    target.mkdir()
+
+    assert th.cmd_import_bundle(_import_args(target, None, from_api=STREAM)) == 2
+    refusal = _refusal(capsys)
+
+    assert refusal == {
+        "code": "invalid_rollover_bundle",
+        "error": f"bundle API list row has no valid {field}",
+        "action": "import-bundle",
+    }
+    assert _tree(target) == {}
+    assert [urlsplit(path).path for path in server.paths] == [f"/api/epics/v1/{STREAM}/bundles"]
+
+
+@pytest.mark.parametrize("field", IDENTITY_FIELDS)
+def test_from_api_row_without_an_identity_field_refuses_the_listing(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+    monkeypatch: pytest.MonkeyPatch,
+    field: str,
+) -> None:
+    row = _canonical_foreign_row()
+    del row[field], row["manifest"][field]
+    server = _BundleServer({}, answers={"list": (200, {"bundles": [_canonical_foreign_row(), row]})})
+    monkeypatch.setattr(th, "_bundle_client", lambda *_a, **_kw: server)
+    target = tmp_path / "target"
+    target.mkdir()
+
+    assert th.cmd_import_bundle(_import_args(target, None, from_api=STREAM)) == 2
+    assert _refusal(capsys)["error"] == f"bundle API list row has no valid {field}"
+    assert _tree(target) == {}
+
+
+@pytest.mark.parametrize("position", ["row", "manifest", "both"])
+def test_from_api_row_of_another_stream_refuses_the_listing(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+    monkeypatch: pytest.MonkeyPatch,
+    position: str,
+) -> None:
+    # A canonical stream id, but not the stream this listing was requested for.
+    row = _noncanonical_row("stream_id", "epic:1", position)
+    server = _BundleServer({}, answers={"list": (200, {"bundles": [row]})})
+    monkeypatch.setattr(th, "_bundle_client", lambda *_a, **_kw: server)
+    target = tmp_path / "target"
+    target.mkdir()
+
+    assert th.cmd_import_bundle(_import_args(target, None, from_api=STREAM)) == 2
+    assert _refusal(capsys)["error"] == "bundle API list row is not of the listed stream"
+    assert _tree(target) == {}
+
+
+@pytest.mark.parametrize("position", ["row", "manifest", "both"])
+def test_from_api_canonical_foreign_rows_in_every_position_are_still_none(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+    monkeypatch: pytest.MonkeyPatch,
+    position: str,
+) -> None:
+    # Every identity copy in ``position`` only, at the store's bounds, stays a foreign slot.
+    longest_agent = "a" * 256
+    rows = [
+        _noncanonical_row("agent", longest_agent, position),
+        _noncanonical_row("stream_id", STREAM, position),
+        _noncanonical_row("upload_seq", 2**63 - 1, position),
+        _noncanonical_row("upload_seq", 1, position),
+    ]
+    server = _BundleServer({}, answers={"list": (200, {"bundles": rows})})
+    monkeypatch.setattr(th, "_bundle_client", lambda *_a, **_kw: server)
+    target = tmp_path / "target"
+    target.mkdir()
+
+    assert th.cmd_import_bundle(_import_args(target, None, from_api=STREAM)) == 0
+    assert capsys.readouterr().out == TYPED_NONE
+    assert _tree(target) == {}
+
+
+class _DownBundleClient:
+    def get(self, path: str, headers: dict | None = None) -> tuple[int, str, dict]:
+        raise urllib.error.URLError("connection refused")
+
+
+@pytest.mark.parametrize(
+    "client",
+    [_DownBundleClient(), _BundleServer({}, answers={"list": (503, {"detail": "store offline"})})],
+    ids=["transport", "http-503"],
+)
+def test_from_api_unavailable_still_fails_open_with_the_warning(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+    monkeypatch: pytest.MonkeyPatch,
+    client: object,
+) -> None:
+    monkeypatch.setattr(th, "_bundle_client", lambda *_a, **_kw: client)
+    target = tmp_path / "target"
+    target.mkdir()
+
+    assert th.cmd_import_bundle(_import_args(target, None, from_api=STREAM)) == 0
+    captured = capsys.readouterr()
+
+    assert captured.err.startswith("WARNING: rollover bundle import skipped (fail-open): bundle API unavailable")
+    assert json.loads(captured.out)["status"] == "warning"
+    assert _tree(target) == {}
+
+
+def _gate_import(monkeypatch: pytest.MonkeyPatch, target: Path, client: object, *, agent: str = AGENT) -> dict:
+    from scripts.hooks import session_start_gate as gate
+
+    monkeypatch.setattr(gate, "_import_thread_handoff", lambda: th)
+    monkeypatch.setattr(th, "_bundle_client", lambda *_a, **_kw: client)
+    return gate.phase_rollover_import(
+        SimpleNamespace(import_bundle=True, repo_root=str(target), agent=agent, stream=STREAM)
+    )
+
+
+@pytest.mark.parametrize("foreign_row", [False, True], ids=["empty-slot", "another-slot-only"])
+def test_session_start_reports_a_slot_without_a_bundle_as_ok(
+    tmp_path: Path,
+    handoff_candidates: None,
+    capsys: pytest.CaptureFixture[str],
+    monkeypatch: pytest.MonkeyPatch,
+    foreign_row: bool,
+) -> None:
+    rows = {}
+    if foreign_row:
+        _foreign, manifest, blob = _exported(tmp_path, capsys, "foreign", handoff="foreign lane handoff\n")
+        rows = {3: (manifest, blob)}
+    target = tmp_path / "target"
+    target.mkdir()
+
+    result = _gate_import(monkeypatch, target, _BundleServer(rows, ignore_agent=True), agent="grok-infra")
+
+    assert result["status"] == "ok"
+    assert "warning" not in result
+    assert "invalid_rollover_bundle" not in json.dumps(result)
+    assert _tree(target) == {}
+
+
+def test_session_start_still_warns_on_a_refusal_and_on_unavailability(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    target = tmp_path / "target"
+    target.mkdir()
+
+    refused = _gate_import(monkeypatch, target, _BundleServer({}, answers={"list": (409, {"detail": "stale"})}))
+    assert refused["status"] == "issue"
+    assert refused["warning"].startswith("WARNING: rollover bundle import skipped (fail-open):")
+    assert "invalid_rollover_bundle" in refused["warning"]
+
+    down = _gate_import(monkeypatch, target, _DownBundleClient())
+    assert down["status"] == "issue"
+    assert down["warning"].startswith("WARNING: rollover bundle import skipped (fail-open):")
+    assert "bundle API unavailable" in down["warning"]
+    assert _tree(target) == {}
+
+
+@pytest.mark.parametrize(
+    "listing",
+    [
+        MALFORMED_LISTINGS["manifest-without-agent"],
+        MALFORMED_LISTINGS["foreign-then-malformed"],
+        CONTRADICTORY_LISTINGS["foreign-row-own-manifest"],
+        CONTRADICTORY_LISTINGS["consistent-foreign-then-contradictory"],
+    ],
+    ids=[
+        "identity-missing",
+        "mixed-foreign-and-malformed",
+        "identity-contradictory",
+        "mixed-foreign-and-contradictory",
+    ],
+)
+def test_session_start_warns_when_a_listed_row_has_no_valid_slot_identity(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    listing: dict,
+) -> None:
+    target = tmp_path / "target"
+    target.mkdir()
+
+    result = _gate_import(monkeypatch, target, _BundleServer({}, answers={"list": (200, listing)}))
+
+    assert result["status"] == "issue"
+    assert result["warning"].startswith("WARNING: rollover bundle import skipped (fail-open):")
+    assert "invalid_rollover_bundle" in result["warning"]
+    assert _tree(target) == {}
+
+
+@pytest.mark.skipif(shutil.which("bash") is None, reason="bash not available")
+@pytest.mark.parametrize(
+    ("payload", "rc", "warns"),
+    [
+        (TYPED_NONE.strip(), 0, False),
+        ('{"code":"invalid_rollover_bundle","error":"stale","action":"import-bundle"}', 2, True),
+    ],
+    ids=["typed-none", "refusal"],
+)
+def test_launcher_import_is_silent_for_the_typed_none_only(tmp_path: Path, payload: str, rc: int, warns: bool) -> None:
+    helper = tmp_path / "helper"
+    script = helper / "scripts" / "orchestration" / "thread_handoff.py"
+    script.parent.mkdir(parents=True)
+    script.write_text("# placeholder: the stub interpreter answers for it\n", encoding="utf-8")
+    python = helper / ".venv" / "bin" / "python"
+    python.parent.mkdir(parents=True)
+    python.write_text(f"#!/usr/bin/env bash\nprintf '%s\\n' '{payload}'\nexit {rc}\n", encoding="utf-8")
+    python.chmod(0o755)
+    harness = (
+        'source "$1/scripts/lib/launcher_core.sh"\n'
+        f"launcher_selector_stream() {{ printf '%s\\n' '{STREAM}'; }}\n"
+        'LC_EPIC=infra LC_DURABLE_HELPER_ROOT="$2" launcher_import_rollover_bundle\n'
+    )
+    result = subprocess.run(
+        ["bash", "-c", harness, "bash", str(REPO_ROOT), str(helper)],
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+
+    assert result.returncode == 0, result.stderr
+    assert ("WARNING:" in result.stderr) is warns
 
 
 def test_api_down_import_is_fail_open_and_secret_prose_is_not_a_hit(

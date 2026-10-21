@@ -144,7 +144,7 @@ export default defineConfig({
     mdx(),
     react(),
     sitemap({
-      filter: (page) => !isRedirectSource(page),
+      filter: (page) => !new URL(page).pathname.startsWith('/lexicon-v2/') && !isRedirectSource(page),
     }),
   ],
 });

@@ -29,4 +29,7 @@ def verify():
             print(text[:400].strip() + "...")
 
 if __name__ == "__main__":
+    if len(sys.argv) > 1 and sys.argv[1] in {"-h", "--help"}:
+        print("Usage: python scripts/rag/verify_grammar_m02.py")
+        raise SystemExit(0)
     verify()

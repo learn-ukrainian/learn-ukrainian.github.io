@@ -38,6 +38,9 @@ import yaml
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
 
+if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
 from pipeline.consultation import TemplateChange, apply_template_patch
 
 QUEUE_DIR = PROJECT_ROOT / "agents_extensions/shared" / "consultation-queue"

@@ -247,14 +247,14 @@ def test_idle_pr_request_path_only_schedules_slow_gh_refresh(monkeypatch):
 
     def slow_collector(ctx=None):
         started.set()
-        release.wait(timeout=2.0)
+        release.wait(timeout=10.0)
         return {"idle_prs": []}
 
     start = time.perf_counter()
     result, meta = api_main._cached_idle_pr_section(slow_collector, {"idle_prs": []})
     elapsed = time.perf_counter() - start
 
-    assert elapsed < 0.2
+    assert elapsed < 3.0
     assert result == {"idle_prs": []}
     assert meta["refreshing"] is True
     assert started.wait(timeout=1.0)

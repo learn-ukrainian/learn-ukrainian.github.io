@@ -12,9 +12,12 @@ from __future__ import annotations
 
 import argparse
 import ast
+import posixpath
 import re
+import subprocess
 import sys
 from collections import Counter
+from collections.abc import Iterable
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -67,15 +70,9 @@ _ALLOWLIST: tuple[tuple[str, str, int], ...] = (
 )
 
 _WRITE_OWNERSHIP = re.compile(r"write[-_]ownership")
-_SESSION_STREAMS = re.compile(
-    r"session[-_]streams|SessionStreamDatabase|session_streams_db_path|stream_leases"
-)
-_FLEET_COMMS = re.compile(
-    r"comms\.sqlite3|default_plane_root|_plane_db_path|comms_plane_store|plane_db"
-)
-_LEGACY = re.compile(
-    r"legacy_broker|legacy_db|MESSAGE_DB|import_legacy|_probe_inbox_legacy|source_path"
-)
+_SESSION_STREAMS = re.compile(r"session[-_]streams|SessionStreamDatabase|session_streams_db_path|stream_leases")
+_FLEET_COMMS = re.compile(r"comms\.sqlite3|default_plane_root|_plane_db_path|comms_plane_store|plane_db")
+_LEGACY = re.compile(r"legacy_broker|legacy_db|MESSAGE_DB|import_legacy|_probe_inbox_legacy|source_path")
 
 
 @dataclass(frozen=True)
@@ -94,15 +91,27 @@ def _allowlist_lookup() -> dict[tuple[str, str], int]:
     return {(path, snippet): max_count for path, snippet, max_count in _ALLOWLIST}
 
 
-def iter_scan_paths(repo_root: Path | None = None) -> list[Path]:
+def iter_scan_paths(repo_root: Path | None = None, only: Iterable[Path] | None = None) -> list[Path]:
+    """Scope files; ``only`` narrows to those files, using the same scope rules as repo-wide."""
     root = (repo_root or REPO_ROOT).resolve()
-    found: list[Path] = []
-    for scan_root in _SCAN_ROOTS:
-        base = root / scan_root
-        if not base.is_dir():
-            continue
-        found.extend(base.rglob("*.py"))
-    unique = sorted({path.resolve() for path in found if path.is_file()})
+    found = (
+        [path for scan_root in _SCAN_ROOTS for path in (root / scan_root).rglob("*.py")]
+        if only is None
+        else [Path(posixpath.normpath((Path.cwd() / name).as_posix())) for name in only]
+    )
+    unique = sorted(
+        {
+            path.resolve()
+            for path in found
+            if path.is_file()
+            and path.suffix == ".py"
+            and path.is_relative_to(root)
+            and any(path.relative_to(root).as_posix().startswith(scan_root + "/") for scan_root in _SCAN_ROOTS)
+            and not any(
+                (root / parent).is_symlink() for parent in path.relative_to(root).parents if parent != Path(".")
+            )
+        }
+    )
     return [
         path
         for path in unique
@@ -122,10 +131,7 @@ def _stores_for_context(context: str) -> set[str]:
     if (
         fleet_hit
         and not (legacy_hit and "comms_plane" not in context and "plane_db" not in context)
-        and (
-            not legacy_hit
-            or re.search(r"comms_plane|plane_db|default_plane_root|_plane_db", context)
-        )
+        and (not legacy_hit or re.search(r"comms_plane|plane_db|default_plane_root|_plane_db", context))
     ):
         stores.add("fleet_comms")
     if re.search(r"task_index|task-index", context):
@@ -153,11 +159,11 @@ def _call_snippet(lines: list[str], line_index: int) -> str:
     return " ".join(part.strip() for part in parts).strip()
 
 
-def find_control_plane_connects(repo_root: Path | None = None) -> list[Finding]:
+def find_control_plane_connects(repo_root: Path | None = None, only: Iterable[Path] | None = None) -> list[Finding]:
     """Return direct control-plane ``sqlite3.connect`` findings outside the seam."""
     root = (repo_root or REPO_ROOT).resolve()
     findings: list[Finding] = []
-    for path in iter_scan_paths(root):
+    for path in iter_scan_paths(root, only):
         rel = _rel(path, root)
         try:
             source = path.read_text(encoding="utf-8")
@@ -184,8 +190,7 @@ def find_control_plane_connects(repo_root: Path | None = None) -> list[Finding]:
             for candidate in ast.walk(tree):
                 if isinstance(candidate, (ast.FunctionDef, ast.AsyncFunctionDef)) and (
                     candidate.lineno <= node.lineno
-                    and (getattr(candidate, "end_lineno", candidate.lineno) or candidate.lineno)
-                    >= node.lineno
+                    and (getattr(candidate, "end_lineno", candidate.lineno) or candidate.lineno) >= node.lineno
                 ):
                     enclosing = _function_context(candidate, lines)
             context = f"{enclosing}\n{snippet}"
@@ -197,12 +202,14 @@ def find_control_plane_connects(repo_root: Path | None = None) -> list[Finding]:
     return findings
 
 
-def find_unallowlisted_connects(repo_root: Path | None = None) -> list[tuple[str, str]]:
+def find_unallowlisted_connects(
+    repo_root: Path | None = None, only: Iterable[Path] | None = None
+) -> list[tuple[str, str]]:
     """Return ``(path:line, detail)`` for hits not covered by the allowlist."""
     allowlist = _allowlist_lookup()
     usage: Counter[tuple[str, str]] = Counter()
     violations: list[tuple[str, str]] = []
-    for finding in find_control_plane_connects(repo_root):
+    for finding in find_control_plane_connects(repo_root, only):
         key = (finding.rel_path, finding.snippet)
         max_allowed = allowlist.get(key)
         if max_allowed is not None:
@@ -226,9 +233,66 @@ def find_unallowlisted_connects(repo_root: Path | None = None) -> list[tuple[str
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.parse_args(argv)
-    violations = find_unallowlisted_connects()
+    parser = argparse.ArgumentParser(
+        description=(
+            "Flag direct control-plane SQLite opens outside the counted allowlist.\n"
+            "Use before review; route new opens through scripts/control_plane/."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "Examples:\n"
+            "  .venv/bin/python -m scripts.hygiene.lint_control_plane_sqlite\n"
+            "  .venv/bin/python -m scripts.hygiene.lint_control_plane_sqlite scripts/example.py\n"
+            "  .venv/bin/python -m scripts.hygiene.lint_control_plane_sqlite --changed-from origin/main\n"
+            "Outputs: findings on stderr or a clean summary on stdout; no writes.\n"
+            "Exit codes: 0 clean; 1 findings; 2 invalid arguments or Git diff error.\n"
+            "Related: #7365; #11091; scripts/control_plane/."
+        ),
+    )
+    parser.add_argument(
+        "--repo", type=Path, default=REPO_ROOT, help="Repository root (default this checkout; example .)."
+    )
+    parser.add_argument(
+        "paths",
+        nargs="*",
+        type=Path,
+        help="Scan only these cwd-relative or absolute files (default: repo-wide; example scripts/example.py).",
+    )
+    parser.add_argument(
+        "--changed-from",
+        metavar="REF",
+        help="Also scan tracked files changed against REF, including the working tree (default: unset; example HEAD).",
+    )
+    args = parser.parse_args(argv)
+    selected = None
+    if args.paths or args.changed_from:
+        selected = list(args.paths)
+        if args.changed_from:
+            try:
+                listing = subprocess.run(
+                    [
+                        "git",
+                        "-C",
+                        str(args.repo),
+                        "diff",
+                        "--relative",
+                        "--name-only",
+                        "--no-renames",
+                        "--diff-filter=ACMR",
+                        "-z",
+                        "--end-of-options",
+                        args.changed_from,
+                        "--",
+                    ],
+                    capture_output=True,
+                    check=True,
+                    timeout=60,
+                ).stdout.decode()
+            except (OSError, subprocess.SubprocessError, UnicodeError):
+                print("git: cannot list changed files", file=sys.stderr)
+                return 2
+            selected.extend(args.repo.resolve() / name for name in listing.split("\0") if name)
+    violations = find_unallowlisted_connects(args.repo, only=selected)
     if not violations:
         print("OK: no unallowlisted control-plane sqlite3.connect opens")
         return 0

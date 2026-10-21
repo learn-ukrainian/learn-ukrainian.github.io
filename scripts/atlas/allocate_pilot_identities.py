@@ -82,10 +82,22 @@ def label_pos(label):
     return next((pos for prefix, pos in LABEL_POS if label.startswith(prefix)), None)
 
 
-def is_proper_name(label, spelling, gloss):
-    """A proper name by its label, or by a capitalised head glossed as a place or a given name."""
-    return label.startswith(("прізвище", "власна назва")) or (
-        spelling[:1].isupper() and any(marker in gloss for marker in PROPER_GLOSS_MARKERS))
+def is_proper_name(label, spelling, gloss, vesum_proof=None, common_proof=()):
+    """Use the source's name label/disambiguator or an exclusively proper VESUM head.
+
+    Checked ULIF heads preserve their case unless common VESUM evidence identifies
+    the head or its explicit gloss. An unglossed name never borrows its lowercase
+    homonym's identity. Without a VESUM lookup, require an explicit name label or
+    disambiguator: a capitalised PULS row alone cannot establish name scope.
+    """
+    if label.startswith(("прізвище", "власна назва")) or (
+            spelling[:1].isupper() and any(marker in gloss for marker in PROPER_GLOSS_MARKERS)):
+        return True
+    if vesum_proof is None:
+        return False
+    common_head = any("prop" not in r["tags"].split(":") for r in vesum_proof)
+    common_gloss = bool(gloss) and any("prop" not in r["tags"].split(":") for r in common_proof)
+    return not common_gloss and not common_head and (bool(vesum_proof) or spelling[:1].isupper())
 
 
 def creation(unit, records, vesum):
@@ -103,12 +115,16 @@ def creation(unit, records, vesum):
     label = raw["grammatical_label"]
     gloss = raw.get("sense_gloss", "")
 
-    proper = is_proper_name(label, spelling, gloss)
-
     # Query VESUM forms for the headword spelling
     raw_proof = [dict(r) for r in vesum.execute(
         "SELECT DISTINCT entry_id, lemma, pos, tags FROM forms_all "
         "WHERE lemma=? AND word_form=lemma ORDER BY entry_id,tags", (spelling,))]
+
+    lower_proof = [dict(r) for r in vesum.execute(
+        "SELECT DISTINCT entry_id, lemma, pos, tags FROM forms_all "
+        "WHERE lemma=? AND word_form=lemma ORDER BY entry_id,tags", (spelling.lower(),))] \
+        if spelling.lower() != spelling else []
+    proper = is_proper_name(label, spelling, gloss, raw_proof, lower_proof)
 
     if label == "абревіатура":
         abbr_proof = [r for r in raw_proof if ":abbr" in r["tags"]]
@@ -131,14 +147,12 @@ def creation(unit, records, vesum):
     # For lexemes (not proper names): exclude :prop entries.
     # If the case-kept spelling only returned :prop (like Батьківщина settlement),
     # query lowercase lemma to find the common noun (e.g. батьківщина entry 18180).
-    if not proper:
+    if proper:
+        proof = [r for r in proof if "prop" in r["tags"].split(":")]
+    else:
         common_proof = [r for r in proof if ":prop" not in r["tags"]]
         if not common_proof and spelling.lower() != spelling:
-            lower_proof = [dict(r) for r in vesum.execute(
-                "SELECT DISTINCT entry_id, lemma, pos, tags FROM forms_all "
-                "WHERE lemma=? AND word_form=lemma AND pos=? ORDER BY entry_id,tags",
-                (spelling.lower(), pos))]
-            common_proof = [r for r in lower_proof if ":prop" not in r["tags"]]
+            common_proof = [r for r in lower_proof if r["pos"] == pos and "prop" not in r["tags"].split(":")]
         proof = common_proof
 
     assert proof or proper, f"Missing VESUM POS evidence for a common lexeme {spelling}"

@@ -1387,15 +1387,15 @@ def test_structured_citation_discovery_preserves_existing_sources_and_ignores_pr
 
 
 @pytest.mark.parametrize("level,recap,pin", [
-    ("a2", False, "7b0b6e68c5255ca1529a48f6560043949a5b291e8949d9930627430028f9756d"),
-    ("a2", True, "6cfa05410218130b9e60970bcbc30d50e580220d2c197458911bb99b8673268a"),
-    ("b1", False, "7967052035a78642555229c7222e0b5dde4a4eba45fbcdc17a7142186e0e3ed9"),
-    ("b1", True, "31952e84fcc63ab7d6319349d42d91501fe6cb2a6a3ebcca53e90b85039242ab"),
-    ("b2", False, "437a8846c6c4d9f31f5737f3a2ee92b00ab8403cf7af9f04ca47cc5021eb629a"),
-    ("b2", True, "4f2bce2d003884811c6254ee92630eb68c8e34ee9e2e9e2d6eb7e56f927eefd1"),
+    ("a2", False, "1ae2b3c21b5a6d16694f018de3f01d4939911283d9938105e97b0751cf85bbce"),
+    ("a2", True, "a02d1f7fdf206cadb01c0cb8cd4a9af23dc60a11c1624ac17dc191906d8fff2c"),
+    ("b1", False, "5fb952bea06c6df6b7a5ef24e1dbbf317f9a4dce864105b4228854558888cb86"),
+    ("b1", True, "c962d215ec884901b26067bda0d4065dd4b6d2a53ea02d013d193e769c7d8aec"),
+    ("b2", False, "c5516ffbb82987361a786f8a7cb8af003e182272301c14438a989ca0edc7b9bf"),
+    ("b2", True, "50506b610721f4d79895610f2b3da53f7640fe84647c2e76fc8ca2211dff215d"),
 ])
-def test_non_a1_writer_bytes_match_10104_base(sample_plan_entry, sample_learner_state, sample_cited_records, level, recap, pin):
-    # Rendered from base 23ecf8c4620f06cec6f3bc402a8934f4c30be6f3 before #10105.
+def test_non_a1_writer_bytes_match_approved_style_cards(sample_plan_entry, sample_learner_state, sample_cited_records, level, recap, pin):
+    # Original #10104 snapshots refreshed for the approved style-card additions (#8431).
     kwargs = dict(plan_entry=sample_plan_entry, learner_state=sample_learner_state, cited_records=sample_cited_records, word_store=SAMPLE_WORD_STORE, immersion=compute_immersion_payload(level,1,1,0), level=level, slug="sounds-intro", lesson_n=1)
     render = render_recap_prompt if recap else render_lesson_prompt
     if recap:

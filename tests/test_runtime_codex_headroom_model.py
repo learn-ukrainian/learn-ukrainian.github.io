@@ -116,5 +116,7 @@ def test_agents_endpoint_picks_most_recent_model_when_multiple_records(tmp_path:
 def test_runtime_dashboard_queries_headroom_with_headroom_or_last_used_model() -> None:
     html = (DASHBOARDS_DIR / "runtime.html").read_text(encoding="utf-8")
     assert "agent.headroom_model || agent.last_used_model || agent.default_model" in html
-    assert "<th>Headroom Model</th>" in html
-    assert "Model used for the 5-min rate-limit probe for this adapter" in html
+    assert "<th>Headroom accounting model</th>" in html
+    assert (
+        "Headroom accounting model = legacy usage label used for the rate-limit probe (last-used, else default)."
+    ) in html

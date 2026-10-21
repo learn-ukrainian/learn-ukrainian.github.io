@@ -360,11 +360,24 @@ def build_zno_shards(
                     continue
                 task_id = str(item["znoTaskId"])
                 item, markup_reason = apply_markup_overlay(item, overlay_by_id.get(task_id))
+                if item is not None:
+                    option_keys = []
+                    for option, marks in zip(
+                        item["options"], item.get("optionMarks", [[] for _ in item["options"]]), strict=True
+                    ):
+                        offset = len(option) - len(option.lstrip(" "))
+                        highlights = tuple(
+                            (mark["start"] - offset, mark["end"] - offset, mark.get("style", "underline"))
+                            for mark in marks
+                        )
+                        option_keys.append((option.strip(" "), highlights))
+                    if len(set(option_keys)) != len(option_keys):
+                        item, markup_reason = None, "invalid_options"
                 if item is None:
                     drop_reason = markup_reason or "broken_missing_markup"
                     dropped[drop_reason] += 1
                     dropped_tasks.append({"znoTaskId": _task_id(int(row["id"])), "reason": drop_reason})
-                    if stem_requires_markup(str(row["stem"])):
+                    if drop_reason == "broken_missing_markup" and stem_requires_markup(str(row["stem"])):
                         quarantined_markup += 1
                     continue
                 items.append(item)
@@ -432,6 +445,7 @@ def build_zno_fill_residual(
     for deck_key, drops in deck_drops.items():
         for entry in drops:
             blocked.append({"deck": deck_key, **entry})
+    blocked_ids = {entry["znoTaskId"] for entry in blocked}
 
     # Unparsed / blocked single-choice rows that never landed in any deck shard.
     unparsed: list[dict[str, str]] = []
@@ -452,6 +466,8 @@ def build_zno_fill_residual(
         _item, reason = _item_from_row(full_row)
         if reason is not None:
             unparsed.append({"znoTaskId": _task_id(task_id), "reason": reason})
+            continue
+        if _task_id(task_id) in blocked_ids:
             continue
         topic_norm = str(row["topic_norm"] or "").strip() or "empty"
         predicate_miss[topic_norm] += 1

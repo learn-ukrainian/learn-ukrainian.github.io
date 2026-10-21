@@ -117,6 +117,29 @@ repos:
         pass_filenames: false
         stages: [pre-commit]
 
+      - id: lint-tmp-paths
+        name: block system-temp paths and unmanaged temp producers
+        entry: bash scripts/pre_commit/project_python.sh -m scripts.hygiene.lint_tmp_paths
+        language: system
+        pass_filenames: true
+        files: ^(?:scripts|tests)/.*\.(?:py|sh|bash)$
+        stages: [pre-commit]
+
+      - id: lint-control-plane-sqlite
+        name: block direct control-plane SQLite opens
+        entry: bash scripts/pre_commit/project_python.sh -m scripts.hygiene.lint_control_plane_sqlite
+        language: system
+        pass_filenames: true
+        files: ^(?!(?:scripts/control_plane|tests/))(?:scripts|agents_extensions/shared/session_streams)/.*\.py$
+        stages: [pre-commit]
+
+      - id: lint-raw-rm-rf
+        name: block unscoped recursive shell deletion
+        entry: bash scripts/pre_commit/project_python.sh -m scripts.hygiene.lint_raw_rm_rf
+        language: system
+        pass_filenames: false
+        stages: [pre-commit]
+
       - id: no-private-source-review-exports
         name: block local-only private-source review exports
         entry: bash scripts/pre_commit/project_python.sh scripts/audit/check_no_private_source_review_exports.py

@@ -288,6 +288,9 @@ def generate_status_for_level(level: str, module_filter: set[int] | None = None)
 
 
 def main():
+    if len(sys.argv) > 1 and sys.argv[1] in {"-h", "--help"}:
+        print("Usage: python scripts/generate_level_status.py {level|all} [module_filter]")
+        sys.exit(0)
     if len(sys.argv) < 2:
         print("Usage: python scripts/generate_level_status.py {level|all} [module_filter]")
         sys.exit(1)

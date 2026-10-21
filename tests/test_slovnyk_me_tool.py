@@ -305,3 +305,53 @@ def test_primary_synonym_sense_text_cuts_later_groups():
     assert primary_synonym_sense_text(text, "karavansky") == (
         "місто д. город, ур. град, (головне) столиця, центр"
     )
+
+
+def _record_miss(db_path, word, slug):
+    with sqlite3.connect(str(db_path)) as conn:
+        conn.execute(
+            "INSERT INTO slovnyk_me_lookup_misses (query, lookup_word, normalized_word, dictionary_slug) "
+            "VALUES (?, ?, ?, ?)",
+            (word, word, word, slug),
+        )
+
+
+def test_batch_lookup_can_be_narrowed_to_the_explanatory_dictionary(slovnyk_sources_db):
+    from wiki.sources_db import search_slovnyk_me_entries_batch
+
+    assert search_slovnyk_me_entries_batch(["блакитний"])["блакитний"]
+    assert search_slovnyk_me_entries_batch(["блакитний"], dictionaries=["newsum"])["блакитний"]
+    assert search_slovnyk_me_entries_batch(["блакитний"], dictionaries=["vts"])["блакитний"] == []
+    # An overlap-blocked dictionary stays unreachable even when named.
+    assert search_slovnyk_me_entries_batch(["гаразд"], dictionaries=["hrinchenko"])["гаразд"] == []
+
+
+def test_live_lookup_skips_dictionaries_with_a_recorded_404(slovnyk_sources_db, monkeypatch):
+    from wiki import slovnyk_me
+    from wiki.sources_db import search_slovnyk_me
+
+    calls = []
+    monkeypatch.setattr(slovnyk_me, "fetch_entries", lambda query, **kw: calls.append(kw["dictionaries"]) or [])
+    _record_miss(slovnyk_sources_db, "невідомеслово", "vts")
+
+    search_slovnyk_me("невідомеслово", dictionaries=["vts", "newsum"], live=True)
+    assert calls == [["newsum"]]
+
+    _record_miss(slovnyk_sources_db, "невідомеслово", "newsum")
+    search_slovnyk_me("невідомеслово", dictionaries=["vts", "newsum"], live=True)
+    assert calls == [["newsum"]]  # every requested dictionary already answered 404: no new fetch
+
+    search_slovnyk_me("інше слово", dictionaries=["vts", "newsum"], live=True)
+    assert calls[-1] == ["vts", "newsum"]
+
+
+def test_heritage_rows_carry_the_slovnyk_use_role(slovnyk_sources_db):
+    from wiki.sources_db import search_heritage
+
+    with sqlite3.connect(str(slovnyk_sources_db)) as conn:
+        conn.execute("UPDATE slovnyk_me_entries SET use_role = 'candidate-discovery' WHERE dictionary_slug = 'newsum'")
+
+    rows = [hit for hit in search_heritage("блакитний", include_live_slovnyk=False) if hit["source_family"] == "slovnyk_me"]
+
+    assert rows
+    assert {hit["use_role"] for hit in rows} == {"candidate-discovery"}

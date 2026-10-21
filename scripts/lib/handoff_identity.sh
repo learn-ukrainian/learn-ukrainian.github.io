@@ -317,7 +317,8 @@ EOF
     infra | harness | infra.fleet-comms
     devops | infra.devops
     monitor | infra.monitor | ops-api | ops.api | operator-api
-    atlas | practice | practice-hub | atlas.practice
+    atlas | practice-hub | atlas.practice
+    practice
     hramatka | hramatka.lessons
     folk | seminars-folk
     bio | seminars-bio

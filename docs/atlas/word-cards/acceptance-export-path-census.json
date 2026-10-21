@@ -5,6 +5,13 @@
   "boundary": "word-card acceptance and export; historical Atlas articles remain compatibility evidence, never word-card certification",
   "frozen_paths": [
     {
+      "path_id": "versioned_dataset_projection",
+      "entry_point": "scripts/projects/open_model_data/word_cards/dataset_projection.py",
+      "functions": "create_release, withdraw_release, main",
+      "approval": "dataset",
+      "regression": "tests/projects/open_model_data/test_word_card_dataset_release.py::test_certification_refusals"
+    },
+    {
       "path_id": "dataset_export",
       "entry_point": "scripts/lexicon/export_open_dataset.py",
       "functions": "export_dataset, main",

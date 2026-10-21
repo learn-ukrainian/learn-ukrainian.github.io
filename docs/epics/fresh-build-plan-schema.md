@@ -328,6 +328,23 @@ passes silently and never invents a value.
 - **Failure, not-checked and waiver codes are a registry**, one constant per code in the validator
   package, listed in its `--help`; tests assert the exact set of codes a fixture produces.
 
+### Pre-generated lesson guidance for plan and activity authors
+
+A tutor reacts to the learner's actual sentences; a lesson must anticipate them and cannot ask back. This table is design guidance for plan and activity authors; it adds no writer scope beyond what the plan specifies.
+
+| Tutor behaviour | Pre-generated lesson equivalent |
+|---|---|
+| "Природніше сказати" on the learner's own error | Anticipated-error notes ("Типова помилка -> правильно + чому") only where the plan carries evidence of real learner errors (UA-GEC via search_ua_gec_errors, plan known-difficulty notes); never invented errors |
+| "Як кажуть носії" upgrade + a question that makes the learner use it | A planned production activity whose answer key requires the new expression |
+| Immediate feedback | Answer keys with a one-line reason per wrong option where the activity schema has a field for it |
+| Review mode (weave 3-5 items into a paragraph) | A planned recap activity reusing the lesson's items in one guided production task |
+| Anki cards | Engine-generated vocabulary from the lesson's core and incidental records, using existing supported record fields and verified stress. Aspect-pair information and examples remain governed by the plan and cited records; this table adds no per-word example requirement. |
+| Conversation / roleplay persona | Model dialogue for a real situation (docs/best-practices/dialogue-situations.md), then a guided role task |
+| Personal interests | Topic variety decided at plan level (no per-learner personalisation) |
+| "Mark stress only when confident" | Writer marks no stress; the engine applies only verified stress (writer contract §3) |
+| Ask the learner / confirm / modes | Not applicable: each lesson is self-contained for its learner-state position; the plan must carry what the writer needs |
+| Advantage the lesson has | Everything is verified and cross-family reviewed before a learner sees it |
+
 ### 2b. A1 activity planning and report (#8889, A1 phase)
 
 Choose activities from the pack's textbook models (`model: X-…`) first. The plan fixes type,

@@ -40,4 +40,7 @@ def run_extra():
     print(f"Translations: {res}")
 
 if __name__ == "__main__":
+    if len(sys.argv) > 1 and sys.argv[1] in {"-h", "--help"}:
+        print("Usage: python scripts/rag/verify_extra.py")
+        raise SystemExit(0)
     run_extra()

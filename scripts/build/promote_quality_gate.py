@@ -6,11 +6,15 @@ import argparse
 import datetime as dt
 import hashlib
 import json
+import sys
 from collections.abc import Iterable, Mapping
 from pathlib import Path
 from typing import Any
 
 import yaml
+
+if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from scripts.audit.wiki_completeness_gate import SEMINAR_LEVELS
 from scripts.common.thresholds import seminar_promote_floors_for

@@ -45,6 +45,8 @@ def test_sibling_invocation_logs_constant_message(tmp_path, monkeypatch, caplog,
     monkeypatch.setenv("LOG_REDACTION_TEST_VALUE", environment_value)
     secret = "secret-looking-command-option-value"
     adapter = adapter_type()
+    if adapter_type is DeepSeekAdapter:
+        monkeypatch.setattr(f"{adapter_type.__module__}._cached_flash_name", lambda: "DeepSeek V4.1 Flash")
     tool_config = {}
     if adapter_type is KimiAdapter:
         binary = tmp_path / "private-executable-value"

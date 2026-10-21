@@ -693,8 +693,8 @@ function renderOccupancy(data) {
 }
 
 function renderActivity(data) {
-  const rows = (data.records || []).map(item => `<tr><td>${escapeHtml(formatTime(item.ts))}</td><td>${escapeHtml(short(item.source))}</td><td>${escapeHtml(short(item.agent))}</td><td>${escapeHtml(short(item.via))}</td><td>${escapeHtml(short(item.outcome))}</td><td class="mono">${escapeHtml(short(item.model))}</td></tr>`);
-  document.getElementById('activity-content').innerHTML = table(['When', 'Source', 'Agent', 'Via', 'Outcome', 'Model'], rows, 'No runtime provenance records match the current observer filters.');
+  const rows = (data.records || []).map(item => `<tr><td>${escapeHtml(formatTime(item.ts))}</td><td>${escapeHtml(short(item.source))}</td><td>${escapeHtml(short(item.agent))}</td><td>${escapeHtml(short(item.via))}</td><td>${escapeHtml(short(item.outcome))}</td><td class="mono">${escapeHtml(short(item.model))}</td><td>${escapeHtml(short(item.requested_selector))}</td><td>${escapeHtml(short(item.observed_model))}</td><td>${escapeHtml(item.identity_state || 'unknown')}</td></tr>`);
+  document.getElementById('activity-content').innerHTML = table(['When', 'Source', 'Agent', 'Via', 'Outcome', 'Accounting model', 'Requested selector', 'Observed model', 'Identity state'], rows, 'No runtime provenance records match the current observer filters.');
 }
 
 function renderMessages(data) {

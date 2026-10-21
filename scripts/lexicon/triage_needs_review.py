@@ -230,7 +230,9 @@ def probe_sources(
         return sdb.search_grinchenko_batch(words, db_path=path)
 
     def _slov(words: list[str]) -> dict[str, list[dict[str, Any]]]:
-        return sdb.search_slovnyk_me_entries_batch(words, db_path=path)
+        # The gloss is ВТС text; newsum is candidate-discovery only and the other
+        # cached dictionaries (spelling, stress, translation lists) are not glosses.
+        return sdb.search_slovnyk_me_entries_batch(words, dictionaries=["vts"], db_path=path)
 
     def _balla(words: list[str]) -> dict[str, list[dict[str, Any]]]:
         return sdb.search_balla_en_uk_batch(words, db_path=path)

@@ -115,6 +115,13 @@
       "reason": "The atlas database is costly to rebuild."
     },
     {
+      "path": "data/lexdata.db",
+      "kind": "file",
+      "required": false,
+      "action": "keep",
+      "reason": "The derived lexical store is costly to rebuild; each published generation is one self-contained file."
+    },
+    {
       "path": "data/wiki_*.db",
       "kind": "glob_files",
       "required": false,

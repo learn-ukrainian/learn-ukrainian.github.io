@@ -19,9 +19,13 @@ from pathlib import Path
 import pytest
 import yaml
 
-from agents_extensions.shared.session_streams.inventory import stream_anchor_id, stream_map
+from agents_extensions.shared.session_streams.inventory import load_stream_epic_inventory, stream_anchor_id, stream_map
+from scripts.agent_runtime.lane_probe import resolve_handoff_agent
 from scripts.ai_agent_bridge import _channels
 from scripts.orchestration import handoff_slot_registry as registry
+from scripts.orchestration.driver_agent_type import resolve_driver_agent_type
+from scripts.orchestration.fleet_taxonomy import resolve_area
+from scripts.orchestration.slot_routing import resolve_slot_holder
 
 REPO = Path(__file__).resolve().parents[1]
 HANDOFF_IDENTITY = REPO / "scripts" / "lib" / "handoff_identity.sh"
@@ -249,7 +253,7 @@ def test_alias_selector_gate_matches_content_provider_policy() -> None:
         != (
             3
             if (provider not in {"claude", "codex", "gemini"} and lanes[selector] in {"folk", "bio", "hramatka"})
-            or (provider not in {"claude", "codex"} and lanes[selector] == "epics")
+            or (provider not in {"claude", "codex"} and lanes[selector] in {"epics", "practice"})
             or (provider == "muse" and lanes[selector] not in {"devops", "monitor"})
             else 0
         )
@@ -373,7 +377,76 @@ def test_gate_names_the_refused_provider_slot(provider: str) -> None:
     assert f"{provider}-{lanes[selector]}" in result.stderr
 
 
-REGISTERED_SELECTORS = ("infra", "devops", "monitor", "open-model-data", "atlas", "folk", "bio", "corpus", "hramatka")
+REGISTERED_SELECTORS = ("infra", "devops", "monitor", "open-model-data", "atlas", "practice", "folk", "bio", "corpus", "hramatka")
+
+
+def test_practice_area_registers_only_claude_and_codex() -> None:
+    data = yaml.safe_load((REPO / "scripts/config/area_assignments.yaml").read_text(encoding="utf-8"))
+    assert data["assignments"]["practice"] == {
+        "driver_agent_type": "infra-orchestrator",
+        "slots": ["claude-practice", "codex-practice"],
+    }
+    assert resolve_driver_agent_type("practice") == "infra-orchestrator"
+
+
+def test_practice_stream_is_registered_without_moving_atlas() -> None:
+    data = yaml.safe_load(ISSUE_STREAMS.read_text(encoding="utf-8"))["streams"]
+    assert data["practice"] == {"title": "Practice Hub, ZNO and activities", "epics": [11151]}
+    assert data["atlas-practice"]["epics"] == [4387]
+    record = next(row for row in load_stream_epic_inventory(REPO) if row.stream_id == "epic:11151")
+    assert (record.stream_name, record.title) == ("practice", "Practice Hub, ZNO and activities")
+    assert record.handoff_candidates[0] == ".claude/practice-epic/CLAUDE-DRIVER-HANDOFF.md"
+
+
+def test_practice_taxonomy_resolves_the_new_epic() -> None:
+    area = resolve_area("practice")
+    assert area.id == "practice"
+    assert [(epic.number, epic.name) for epic in area.epics] == [(11151, "Practice Hub, ZNO and activities")]
+    assert resolve_area(11151).id == "practice"
+    assert resolve_area(4387).id == "atlas"
+
+
+def test_practice_selector_has_its_own_alias_registration() -> None:
+    with ALIASES.open(encoding="utf-8", newline="") as handle:
+        rows = [row for row in csv.reader(handle, delimiter="\t") if row and row[0] == "practice"]
+    assert rows == [["practice", "practice", "practice"]]
+    assert _session_epic_and_lane(["practice"])["practice"] == ("practice", "practice")
+
+
+@pytest.mark.parametrize("provider", ["claude", "codex"])
+def test_practice_slots_reach_existing_consumers(provider: str, tmp_path: Path) -> None:
+    slot = f"{provider}-practice"
+    assert registry.is_registered_slot(slot)
+    assert _channels.resolve_recipient_alias(slot) == slot
+    assert slot in _channels.get_valid_agents()
+    assert resolve_handoff_agent(slot) == provider
+    holder = resolve_slot_holder(slot, session_db_path=tmp_path / "absent.sqlite3")
+    assert (holder.area_id, holder.reason) == ("practice", "no-live-holder")
+
+
+@pytest.mark.parametrize("provider", PROVIDERS)
+def test_practice_launcher_gate_enforces_the_two_provider_roster(provider: str) -> None:
+    result = _gate(provider, "practice")
+    assert result.returncode == (0 if provider in {"claude", "codex"} else 1), result.stderr
+
+
+@pytest.mark.parametrize("provider", ["claude", "codex"])
+def test_practice_launcher_dry_run_uses_the_dedicated_stream(provider: str) -> None:
+    result = subprocess.run(
+        [str(REPO / f"start-{provider}-driver.sh"), "--epic", "practice"],
+        cwd=REPO,
+        env={**os.environ, "LAUNCHER_DRY_RUN": "1"},
+        capture_output=True,
+        text=True,
+        timeout=60,
+        check=False,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    stream = stream_anchor_id("practice", REPO)
+    assert f"would claim lease stream={stream}" in result.stdout
+    assert f"session epic=practice slot={provider}-practice handoff=" in result.stdout
+    assert ".claude/practice-epic/CLAUDE-DRIVER-HANDOFF.md" in result.stdout
+    assert "not registered" not in result.stderr
 
 
 @pytest.mark.parametrize("provider", ("claude", "codex", "grok"))

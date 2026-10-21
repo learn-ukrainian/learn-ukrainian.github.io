@@ -22,8 +22,33 @@ CREATE TABLE IF NOT EXISTS slovnyk_me_entries (
     sovietization_risk INTEGER NOT NULL DEFAULT 0,
     sovietization_keywords TEXT NOT NULL DEFAULT '',
     fetched_at TEXT NOT NULL DEFAULT '',
+    use_role TEXT NOT NULL DEFAULT 'reference',
+    content_sha256 TEXT NOT NULL DEFAULT '',
+    cache_path TEXT NOT NULL DEFAULT '',
+    importer_version TEXT NOT NULL DEFAULT '',
     UNIQUE(normalized_word, dictionary_slug, source_url)
 );
+
+-- Observed slovnyk.me 404s from the per-word cache, so a miss is not re-queried.
+CREATE TABLE IF NOT EXISTS slovnyk_me_lookup_misses (
+    id INTEGER PRIMARY KEY,
+    query TEXT NOT NULL DEFAULT '',
+    lookup_word TEXT NOT NULL,
+    normalized_word TEXT NOT NULL,
+    dictionary_slug TEXT NOT NULL,
+    dictionary_label TEXT NOT NULL DEFAULT '',
+    lookup_status TEXT NOT NULL DEFAULT 'not_found',
+    http_status INTEGER NOT NULL DEFAULT 404,
+    source_url TEXT NOT NULL DEFAULT '',
+    fetched_at TEXT NOT NULL DEFAULT '',
+    use_role TEXT NOT NULL DEFAULT 'reference',
+    content_sha256 TEXT NOT NULL DEFAULT '',
+    cache_path TEXT NOT NULL DEFAULT '',
+    importer_version TEXT NOT NULL DEFAULT '',
+    UNIQUE(normalized_word, dictionary_slug)
+);
+-- Databases created before the provenance columns are upgraded in place by
+-- scripts/wiki/slovnyk_me.py ensure_slovnyk_me_schema().
 
 CREATE VIRTUAL TABLE IF NOT EXISTS slovnyk_me_entries_fts USING fts5(
     word,

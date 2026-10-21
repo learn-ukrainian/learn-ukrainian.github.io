@@ -20,7 +20,7 @@ from scripts.projects.open_model_data.review_build.output import OutputGuard
 
 SCHEMA = "russification-contrast.v1"
 CARD = Path(__file__).with_name("RUSSIFICATION_DATASET_CARD.md")
-MODERN_SOURCES = frozenset({"sum20", "ulif", "vts_busel_slovnyk_me"})
+MODERN_SOURCES = frozenset({"sum20", "ulif", "vts_busel_slovnyk_me", "antonenko_style_guide"})
 QUARANTINE_FIELDS = frozenset({
     "russification_exposed", "soviet_colonization_context", "sovietization_risk", "sovietization_keywords",
 })

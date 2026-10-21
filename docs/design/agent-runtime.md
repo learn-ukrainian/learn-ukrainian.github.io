@@ -587,3 +587,45 @@ This is AC #11 on #1184. The guide is shipped in the same PR as the runtime code
 - Default `stall_timeout` value per adapter. Current proposal: 180s runner default, Gemini adapter may request 300s based on `_STALL_THRESHOLD` history. Decide during implementation.
 - Liveness path cap per adapter. Current proposal: 5 paths max. Arbitrary but bounded.
 - Token extraction from CLIs. Current proposal: `tokens: null` always in v1, populate when CLIs expose it. Defensible per Gemini, avoids inventing numbers.
+
+
+## Accounting labels and provider observation
+
+`model` retains its legacy meaning. Normal terminal Result, usage, and substitution-event records use the
+substituted model when one is reported. Watchdog and admission failures retain
+their existing attempt labels.
+An AGY task record retains its requested Claude pin. Headroom, rate-limit
+caches, cost estimates, and historical aggregates keep their existing keys.
+These labels alone provide no provider identity evidence.
+
+New Result, usage, task, dispatch-event, and substitution-event projections add:
+
+| Field | Meaning |
+| --- | --- |
+| `requested_selector` | Selector as admitted for launch, preserved across runtime failover; null when the admitted launch has no explicit selector. |
+| `observed_model` | Same-run validated provider-init observation, or null. |
+| `identity_state` | `observed` or `unknown`, independent of execution success. |
+| `observed_model_source` | `provider-init` for a validated observation, otherwise null. |
+| `observed_model_provenance` | Actual attempt's `requested_model` and UUID-form `invocation_id`, or null. |
+
+The observation's `observed_model_provenance.requested_model` belongs to its
+actual attempt. It may differ from the admitted selector after runtime failover.
+Admission may replace or clear the caller's original selector, including during
+budget substitution; this field does not preserve the selector before admission.
+Existing AGY custody, task, nonce, consistency, and eligibility checks remain
+binding. A matching provider failure can retain an observation without becoming
+a model substitution. Repeated initialization retains the existing refusal and
+substitution semantics. Unknown or conflicting identity stays unknown, even
+when an accounting label matches a requested pin. Codex configured-request
+metadata and non-AGY route substitutions do not establish an observation.
+Provider-reported identity is not backend attestation.
+
+Runtime recent records, fleet activity, and delegate list and detail responses
+expose these additive fields through the same serialized-identity reader check.
+Their dashboards label the legacy value as an accounting model and show the
+selector and observation separately. The delegate cache retains the projections
+across process restarts and reloads entries from older cache schemas.
+Historical records without explicit projections display unknown observation;
+readers never backfill it from `model`, `resolved_model`, or substitution labels.
+Generic event readers preserve the additive payload. Lane aggregates, cost
+reports, and quota readers continue using their existing accounting labels.

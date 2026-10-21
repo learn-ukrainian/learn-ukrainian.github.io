@@ -56,6 +56,7 @@ SLOVNYK_ME_DICTS: dict[str, str] = {
     "synonyms_karavansky": "Словник синонімів Караванського",
     "synonyms": "Словник синонімів української мови",
     "phraseology": "Фразеологічний словник української мови",
+    "proverbs": "Приповідки або українсько-народня філософія",
     "davydov": "«Як ми говоримо» Антоненка-Давидовича",
     "khreshchatyk": "«Уроки державної мови» з газети «Хрещатик»",
     "linguistic_norm": "Літературне слововживання",
@@ -107,6 +108,11 @@ DIALECT_OR_HERITAGE_DICTS: frozenset[str] = frozenset(
     {"holoskevych", "obsolete_words", "bukovina", "franko", "slang_lviv", "slang", "slang_modern"}
 )
 RUSSIANISM_GUIDE_DICTS: frozenset[str] = frozenset({"davydov", "linguistic_norm", "voloschak"})
+# Permissions-register use roles for stored rows. Every other dictionary is a
+# plain reference; newsum (СУМ-20 mirror) only seeds candidate discovery, and
+# sum (СУМ-11, Soviet-era) is contrast context only (never a norm or a gloss).
+DICTIONARY_USE_ROLES: dict[str, str] = {"newsum": "candidate-discovery", "sum": "contrast"}
+DEFAULT_USE_ROLE = "reference"
 OVERLAP_BLOCKED_DICTS: dict[str, str] = {
     "sum": "search_definitions",
     "hrinchenko": "search_grinchenko_1907",
@@ -139,7 +145,28 @@ CREATE TABLE IF NOT EXISTS slovnyk_me_entries (
     sovietization_risk INTEGER NOT NULL DEFAULT 0,
     sovietization_keywords TEXT NOT NULL DEFAULT '',
     fetched_at TEXT NOT NULL DEFAULT '',
+    use_role TEXT NOT NULL DEFAULT 'reference',
+    content_sha256 TEXT NOT NULL DEFAULT '',
+    cache_path TEXT NOT NULL DEFAULT '',
+    importer_version TEXT NOT NULL DEFAULT '',
     UNIQUE(normalized_word, dictionary_slug, source_url)
+);
+CREATE TABLE IF NOT EXISTS slovnyk_me_lookup_misses (
+    id INTEGER PRIMARY KEY,
+    query TEXT NOT NULL DEFAULT '',
+    lookup_word TEXT NOT NULL,
+    normalized_word TEXT NOT NULL,
+    dictionary_slug TEXT NOT NULL,
+    dictionary_label TEXT NOT NULL DEFAULT '',
+    lookup_status TEXT NOT NULL DEFAULT 'not_found',
+    http_status INTEGER NOT NULL DEFAULT 404,
+    source_url TEXT NOT NULL DEFAULT '',
+    fetched_at TEXT NOT NULL DEFAULT '',
+    use_role TEXT NOT NULL DEFAULT 'reference',
+    content_sha256 TEXT NOT NULL DEFAULT '',
+    cache_path TEXT NOT NULL DEFAULT '',
+    importer_version TEXT NOT NULL DEFAULT '',
+    UNIQUE(normalized_word, dictionary_slug)
 );
 CREATE VIRTUAL TABLE IF NOT EXISTS slovnyk_me_entries_fts USING fts5(
     word,
@@ -253,9 +280,27 @@ class _SlovnykHTMLParser(HTMLParser):
             self.h1_parts.append(data)
 
 
+# Columns added after the first sources.db shipped slovnyk_me_entries.
+_PROVENANCE_COLUMNS: dict[str, str] = {
+    "use_role": f"TEXT NOT NULL DEFAULT '{DEFAULT_USE_ROLE}'",
+    "content_sha256": "TEXT NOT NULL DEFAULT ''",
+    "cache_path": "TEXT NOT NULL DEFAULT ''",
+    "importer_version": "TEXT NOT NULL DEFAULT ''",
+}
+
+
 def ensure_slovnyk_me_schema(conn: SQLiteConnection) -> None:
-    """Create the curated slovnyk.me table and FTS index if missing."""
+    """Create the curated slovnyk.me tables and FTS index; upgrade older tables in place."""
     conn.executescript(SLOVNYK_ME_SCHEMA_SQL)
+    existing = {row[1] for row in conn.execute("PRAGMA table_info(slovnyk_me_entries)")}
+    for column, ddl in _PROVENANCE_COLUMNS.items():
+        if column not in existing:
+            conn.execute(f"ALTER TABLE slovnyk_me_entries ADD COLUMN {column} {ddl}")
+
+
+def dictionary_use_role(slug: str) -> str:
+    """Return the permissions-register use role for a dictionary slug or alias."""
+    return DICTIONARY_USE_ROLES.get(resolve_dict_slug(slug), DEFAULT_USE_ROLE)
 
 
 def normalize_word(word: str) -> str:

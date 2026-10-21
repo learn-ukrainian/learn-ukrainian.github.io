@@ -22,6 +22,9 @@ from dataclasses import asdict
 from pathlib import Path
 from typing import Any
 
+if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
 from scripts.common.git_context import sanitized_git_env
 from scripts.fleet import claude_account_lane, credit_lane
 from scripts.review.evidence import compute_target_input_fingerprint

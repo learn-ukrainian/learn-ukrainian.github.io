@@ -1,5 +1,7 @@
 # Common session supervisor
 
+For an authorized CLI seat move, follow [Move a driver seat to another CLI](driver-seat-cli-move.md); the launcher owns lease release.
+
 `scripts.session_supervisor` is the PR-I launcher boundary for a session-stream
 driver. It opens the fenced lease before a harness starts, then emits the
 read-only bootstrap capsule. A harness or model must never open, renew, close,

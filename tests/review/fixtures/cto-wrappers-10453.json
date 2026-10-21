@@ -38,8 +38,8 @@
         59,
         69
       ],
-      "before": "Valid lane selectors:\n  infra | harness | infra.fleet-comms\n",
-      "after": "Valid lane selectors:\n  epics\n  infra | harness | infra.fleet-comms\n"
+      "before": "Valid lane selectors:\n  infra | harness | infra.fleet-comms\n  devops | infra.devops\n  atlas | practice | atlas.practice\n",
+      "after": "Valid lane selectors:\n  epics\n  infra | harness | infra.fleet-comms\n  devops | infra.devops\n  atlas | practice-hub | atlas.practice\n  practice\n"
     }
   ]
 }

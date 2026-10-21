@@ -526,9 +526,16 @@ def test_reuse_when_one_green_attempt_tested_the_identical_tree() -> None:
     assert decision.reuse and decision.run_id == "11", decision.reason
     # Every job of the inventory is logged with its job id in the reused run.
     assert [name for name, _job in decision.jobs] == list(_QUEUED.jobs)
-    assert {"pytest (1)", "pytest (2)", "pytest (3)", "Secret scan", "Checks", "Frontend", "pytest report"} <= {
-        name for name, _job in decision.jobs
-    }
+    assert {
+        "pytest (1)",
+        "pytest (2)",
+        "pytest (3)",
+        "Secret scan",
+        "Checks",
+        "Frontend",
+        "Refresh pytest durations",
+        "pytest report",
+    } <= {name for name, _job in decision.jobs}
     assert "PR #7" in decision.reason and _MERGE in decision.reason
 
 
@@ -661,6 +668,42 @@ def test_pytest_shards_match_the_ci_matrix() -> None:
     assert (
         set(reuse_green_run.EXPECTED_JOBS) | set(reuse_green_run.SKIPPED_ON_PULL_REQUEST)
     ) == names - {"pytest (${{ matrix.shard }})"}
+
+
+def test_reused_green_run_requires_a_successful_refresh_job() -> None:
+    """A reused run requires Refresh pytest durations to have completed successfully.
+
+    The job ``if`` is ``!cancelled()``, so a pull_request run finishes it as success
+    rather than skipping it. Only its steps skip when the queue reuses a green run.
+    Removing the name from ``EXPECTED_JOBS`` fails this test: the real job is then
+    unexpected, and a missing or non-success outcome is no longer refused.
+    """
+    name = "Refresh pytest durations"
+    assert name in reuse_green_run.EXPECTED_JOBS
+    assert name not in reuse_green_run.SKIPPED_ON_PULL_REQUEST
+    assert name not in reuse_green_run.REUSE_NEUTRAL_JOBS
+    assert name in _QUEUED.jobs
+
+    accepted = reuse_green_run.decide(_QUEUED, [_candidate()])
+    assert accepted.reuse and dict(accepted.jobs)[name]
+
+    refusals = (
+        (_jobs(lambda jobs: [job for job in jobs if job["name"] != name]), f"0 jobs named {name!r}"),
+        (_jobs(_set(name, conclusion="failure")), f"{name!r} is 'completed'/'failure'"),
+        (_jobs(_set(name, conclusion="skipped")), f"{name!r} is 'completed'/'skipped'"),
+        (_jobs(_set(name, conclusion="cancelled")), f"{name!r} is 'completed'/'cancelled'"),
+    )
+    for jobs, reason in refusals:
+        decision = reuse_green_run.decide(_QUEUED, [_candidate(jobs=jobs)])
+        assert not decision.reuse and not decision.jobs and decision.run_id == ""
+        assert reason in decision.reason
+
+    refresh = _jobs_of_ci()["refresh-pytest-durations"]
+    assert refresh["name"] == name
+    assert refresh["if"] == "${{ !cancelled() }}"
+    assert refresh["steps"]
+    for step in refresh["steps"]:
+        assert step.get("if") == "needs.reuse.outputs.reuse != 'true'"
 
 
 @pytest.mark.parametrize("text", ["", "        shard: [1, 2]\n        shard: [1]\n", "        shard: [2, 3]\n"])
@@ -813,6 +856,8 @@ def _run_pytest_script() -> str:
 def test_pytest_job_runs_the_full_non_slow_tier_through_the_split() -> None:
     script = _run_pytest_script()
     assert 'python3 -m scripts.ci.split_tests split --shard "$SHARD" --of "$SHARDS"' in script
+    assert "scripts.ci.split_tests duration-source" in script
+    assert '--durations "$durations"' in script
     assert 'export LU_PYTEST_SHARD_FILES="ci-artifacts/pytest-shard-${SHARD}-files.txt"' in script
     assert "-m 'not atlas_release and not slow and not site_toolchain' --strict-markers" in script
     assert "not site_toolchain" in script
@@ -841,7 +886,11 @@ def test_pytest_matrix_is_contiguous_and_counted_by_the_job() -> None:
     shards = pytest_job["strategy"]["matrix"]["shard"]
     assert shards == list(range(1, len(shards) + 1))
     env = next(step["env"] for step in pytest_job["steps"] if step.get("name") == "Run pytest")
-    assert env == {"SHARD": "${{ matrix.shard }}", "SHARDS": "${{ strategy.job-total }}"}
+    assert env == {
+        "SHARD": "${{ matrix.shard }}",
+        "SHARDS": "${{ strategy.job-total }}",
+        "REFRESH_RESULT": "${{ needs.refresh-pytest-durations.result }}",
+    }
 
 
 def test_shard_artifacts_feed_the_report_and_the_flake_ledger() -> None:
@@ -864,7 +913,10 @@ def test_shard_artifacts_feed_the_report_and_the_flake_ledger() -> None:
 
 def test_pytest_is_skipped_only_on_a_recorded_reuse() -> None:
     jobs = _jobs_of_ci()
-    assert jobs["pytest"]["needs"] == ["reuse"]
+    assert jobs["pytest"]["needs"] == ["reuse", "refresh-pytest-durations"]
+    refresh = jobs["refresh-pytest-durations"]
+    assert refresh["needs"] == ["reuse"]
+    assert refresh["if"] == "${{ !cancelled() }}"
     assert jobs["pytest"]["if"] == "${{ !cancelled() && needs.reuse.outputs.reuse != 'true' }}"
     assert jobs["reuse"]["if"] == "github.event_name == 'merge_group'"
     assert jobs["reuse"]["permissions"] == {"contents": "read", "actions": "read", "pull-requests": "read"}

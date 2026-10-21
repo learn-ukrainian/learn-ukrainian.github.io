@@ -19,6 +19,10 @@ from typing import Any
 import yaml
 from jsonschema import Draft202012Validator
 
+if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
+    __package__ = "scripts.curriculum.evidence"
+
 from scripts.curriculum.validate.loader import read_plan_text, retirement_record
 from scripts.verification import stress
 

@@ -80,6 +80,7 @@ from scripts.agent_runtime.attempt_safe_read import AttemptReadError, safe_attem
 from scripts.agent_runtime.result import AgyAttempt, AgyTelemetry
 from scripts.entire.fleet_capture import FleetCapture, resolved_route
 
+from .accounting import model_accounting_fields
 from .adapters.base import AgentAdapter
 from .adapters.codex_events import mcp_tool_event
 from .attribution import InvocationAttribution, resolve_invocation_attribution
@@ -175,6 +176,12 @@ _INTER_AGENT_TRANSPORT: contextvars.ContextVar[AcpxTransportProvenance | None] =
 )
 _AGY_OBSERVED_IDENTITY: contextvars.ContextVar[AgyRuntimeIdentity | None] = contextvars.ContextVar(
     "agy_observed_identity", default=None
+)
+_REQUESTED_SELECTOR: contextvars.ContextVar[str | None] = contextvars.ContextVar(
+    "agent_runtime_requested_selector", default=None
+)
+_INVOCATION_NONCE: contextvars.ContextVar[str | None] = contextvars.ContextVar(
+    "agent_runtime_invocation_nonce", default=None
 )
 _INTER_AGENT_TRANSPORT_NAME = "acp"
 _RESERVED_TRANSPORT_PROVENANCE = frozenset({"source", "agent", "via"})
@@ -1200,6 +1207,10 @@ def _build_usage_record(
             "source": "provider-init",
             "substituted": model_identity.get("substituted") is True,
         }
+    record.update(model_accounting_fields(
+        requested_selector=_REQUESTED_SELECTOR.get(), identity=model_identity,
+        task_id=task_id, run_nonce=_INVOCATION_NONCE.get(),
+    ))
     safe_substitution = _safe_substitution_record(substitution)
     if safe_substitution is not None:
         record["substitution"] = safe_substitution
@@ -1283,6 +1294,7 @@ def _emit_substitution_event(
     model: str,
     substitution: dict[str, Any] | None,
     event_sink: Callable[..., None] | None,
+    model_identity: AgyModelIdentity | None = None,
 ) -> None:
     """Emit a telemetry event when a harness-level provider/model changed."""
     safe_substitution = _safe_substitution_record(substitution)
@@ -1295,6 +1307,10 @@ def _emit_substitution_event(
         "cwd": str(cwd)[-250:] if cwd else "",
         "model": model,
         "substitution": safe_substitution,
+        **model_accounting_fields(
+            requested_selector=_REQUESTED_SELECTOR.get(), identity=model_identity,
+            task_id=task_id, run_nonce=_INVOCATION_NONCE.get(),
+        ),
     }
     if event_sink is not None:
         with contextlib.suppress(Exception):
@@ -2683,6 +2699,7 @@ def _raise_for_kill_reason(
             cwd=cwd,
             model=model,
             substitution=record_substitution,
+            model_identity=getattr(parse, "model_identity", None),
             event_sink=event_sink,
         )
         write_record(record)
@@ -2737,6 +2754,7 @@ def _raise_for_kill_reason(
             cwd=cwd,
             model=model,
             substitution=record_substitution,
+            model_identity=getattr(parse, "model_identity", None),
             event_sink=event_sink,
         )
         write_record(record)
@@ -2786,6 +2804,7 @@ def _raise_for_kill_reason(
             cwd=cwd,
             model=model,
             substitution=record_substitution,
+            model_identity=getattr(parse, "model_identity", None),
             event_sink=event_sink,
         )
         write_record(record)
@@ -3480,6 +3499,7 @@ def _invoke_with_runner_failover(
             cwd=cwd,
             model=record_model,
             substitution=substitution,
+            model_identity=getattr(parse, "model_identity", None),
             event_sink=event_sink,
         )
 
@@ -3859,6 +3879,7 @@ def _invoke_impl(
         cwd=effective_cwd,
         model=record_model,
         substitution=substitution,
+        model_identity=getattr(parse, "model_identity", None),
         event_sink=event_sink,
     )
 
@@ -3974,6 +3995,8 @@ def invoke(
         _AgyLaunchBudget(time.monotonic() + hard_timeout) if agent_name in {"agy", "gemini"} else None
     )
     identity_token = _AGY_OBSERVED_IDENTITY.set(None)
+    selector_token = _REQUESTED_SELECTOR.set(model)
+    nonce_token = _INVOCATION_NONCE.set((tool_config or {}).get("run_nonce"))
     launch = None
     attempt = None
     try:
@@ -4033,6 +4056,8 @@ def invoke(
             _INVOCATION_ATTRIBUTION.reset(attribution_token)
             _AGY_INVOCATION_BUDGET.reset(agy_token)
             _AGY_OBSERVED_IDENTITY.reset(identity_token)
+            _REQUESTED_SELECTOR.reset(selector_token)
+            _INVOCATION_NONCE.reset(nonce_token)
 
 
 @dataclass(frozen=True)

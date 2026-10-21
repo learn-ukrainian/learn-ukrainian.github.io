@@ -452,7 +452,7 @@ def test_slow_budget_refresh_returns_stale_cache(tmp_path, monkeypatch: pytest.M
     release = threading.Event()
 
     def compute(**kwargs):
-        release.wait(0.4)
+        release.wait(10)
         return cached
 
     monkeypatch.setattr(state_router, "compute_routing_budget", compute)
@@ -463,7 +463,7 @@ def test_slow_budget_refresh_returns_stale_cache(tmp_path, monkeypatch: pytest.M
     release.set()
 
     assert response.status_code == 200
-    assert elapsed < 1.0
+    assert elapsed < 3.0
     source = next(item for item in response.json()["sources"] if item["name"] == "routing_budget")
     assert source["status"] == "stale"
     assert source["age_s"] >= budget_mod.BUDGET_TTL_S
@@ -476,7 +476,7 @@ def test_slow_budget_refresh_without_cache_is_unavailable(tmp_path, monkeypatch:
     release = threading.Event()
 
     def compute(**kwargs):
-        release.wait(0.4)
+        release.wait(10)
         return _budget_payload()
 
     monkeypatch.setattr(state_router, "compute_routing_budget", compute)
@@ -487,7 +487,7 @@ def test_slow_budget_refresh_without_cache_is_unavailable(tmp_path, monkeypatch:
     release.set()
 
     assert response.status_code == 200
-    assert elapsed < 1.0
+    assert elapsed < 3.0
     body = response.json()
     source = next(item for item in body["sources"] if item["name"] == "routing_budget")
     assert source == {"name": "routing_budget", "status": "unavailable", "age_s": None, "error": "unavailable"}

@@ -1,5 +1,6 @@
 import argparse
 import datetime
+import shutil
 import subprocess
 from pathlib import Path
 
@@ -91,8 +92,8 @@ def category_a(root: Path):
 
 
 def category_b(root: Path):
-    vulture_path = root / ".venv" / "bin" / "vulture"
-    if not vulture_path.exists():
+    vulture_path = shutil.which(str(root / ".venv" / "bin" / "vulture")) or shutil.which("vulture")
+    if not vulture_path:
         return ["NEEDS-MANUAL-REVIEW: vulture-unavailable"]
     res = run_cmd(
         [

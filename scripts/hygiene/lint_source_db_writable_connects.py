@@ -23,10 +23,12 @@ import ast
 import gc
 import hashlib
 import json
+import os
 import re
 import subprocess
 import sys
 from collections import Counter
+from concurrent.futures import ProcessPoolExecutor
 from dataclasses import dataclass
 from functools import cached_property, lru_cache, wraps
 from pathlib import Path
@@ -109,6 +111,25 @@ def _dotted(node: ast.AST) -> str:
     return ""
 
 
+# Context/operator markers are exact node types; none has a subclass.
+_MARKER_TYPES = frozenset(
+    marker for base in (ast.expr_context, ast.operator, ast.unaryop, ast.boolop, ast.cmpop)
+    for marker in base.__subclasses__())
+
+
+def _structural_children(node: ast.AST) -> tuple[ast.AST, ...]:
+    """``ast.iter_child_nodes`` order without context/operator markers, minus its generator overhead."""
+    children = []
+    for field in node._fields:
+        value = getattr(node, field, None)
+        if isinstance(value, ast.AST):
+            if type(value) not in _MARKER_TYPES:
+                children.append(value)
+        elif isinstance(value, list):
+            children.extend(item for item in value if isinstance(item, ast.AST) and type(item) not in _MARKER_TYPES)
+    return tuple(children)
+
+
 class _Syntax:
     """One parse and child inventory per input, shared by all boundary classes."""
 
@@ -154,8 +175,7 @@ class _Syntax:
             else:
                 if node_type is ast.ImportFrom:
                     self.names.add(node.module)
-                children = tuple(child for child in ast.iter_child_nodes(node) if not isinstance(
-                    child, (ast.expr_context, ast.operator, ast.unaryop, ast.boolop, ast.cmpop)))
+                children = _structural_children(node)
             self.edges.append(children)
             self.nodes.extend(children)
 
@@ -795,6 +815,73 @@ def iter_scan_paths(root: Path) -> list[Path]:
     return sorted([*(root / "scripts").rglob("*.py"), *(root / "tests").rglob("*.py")])
 
 
+@dataclass(frozen=True)
+class _FileScan:
+    """Pure per-file result, so files can be scanned in separate processes."""
+
+    store_findings: list[StoreFinding]
+    reference_violations: list[str]
+    unreadable: bool = False
+
+
+def _scan_file(job: tuple[str, str, AllowedReference | None, list[StoreFinding], str | None, int]) -> _FileScan:
+    """Classify one file exactly as the serial pass did; no cross-file state."""
+    rel, source, entry, pinned, oid, pinned_count = job
+    store_findings: list[StoreFinding] = []
+    violations: list[str] = []
+    try:
+        syntax = None
+        unchanged = oid is not None and source_blob_id(source, "sha256" if len(oid) == 64 else "sha1") == oid
+        if unchanged and len(pinned) == pinned_count:
+            store_findings = pinned
+        else:
+            syntax = _Syntax(source, rel)
+            store_findings = classify_store_source(source, rel, syntax=syntax)
+        if rel.startswith("tests/") and (entry is None or entry.kind != "fixture_factory"):
+            return _FileScan(store_findings, violations)
+        if entry is not None and entry.kind == "store_resolver":
+            # This kind never exempts constructor references.
+            entry = None
+        if rel == READER_BOUNDARY:
+            return _FileScan(store_findings, violations)
+        syntax = syntax if syntax is not None else _Syntax(source, rel)
+        references = classify_source(source, rel, syntax=syntax)
+        if entry is not None:
+            if len(references) != entry.reference_count:
+                violations.append(f"{rel}: pinned {entry.reference_count} references, found {len(references)}")
+            if entry.kind == "writer":
+                violations.extend(writer_target_violations(source, entry, references, syntax=syntax))
+            else:
+                calls = [
+                    ast.unparse(n)
+                    for n in syntax.nodes
+                    if isinstance(n, ast.Call) and _dotted(n.func) == "sqlite3.connect"
+                ]
+                if Counter(calls) != Counter(entry.calls):
+                    violations.append(f"{rel}: reader opens differ from pinned call expressions")
+        else:
+            violations.extend(f"{f.rel_path}:{f.line_no}: {f.kind}: {f.snippet}" for f in references)
+    except SyntaxError:
+        return _FileScan(store_findings, violations, unreadable=True)
+    return _FileScan(store_findings, violations)
+
+
+# Below this many files the pool start-up costs more than it saves, and small
+# injected roots keep the in-process path that tests instrument.
+PARALLEL_MIN_FILES = 256
+MAX_WORKERS = 8
+CHUNK_SIZE = 8
+
+
+def _scan_all(jobs: list) -> list[_FileScan]:
+    """Scan jobs in input order, across processes when the batch is large."""
+    workers = min(os.cpu_count() or 1, MAX_WORKERS)
+    if len(jobs) < PARALLEL_MIN_FILES or workers < 2:
+        return [_scan_file(job) for job in jobs]
+    with ProcessPoolExecutor(max_workers=workers) as pool:
+        return list(pool.map(_scan_file, jobs, chunksize=CHUNK_SIZE))
+
+
 @_without_cyclic_gc
 def find_violations(
     repo_root: Path | None = None, allowlist: tuple[AllowedReference, ...] | None = None
@@ -812,53 +899,32 @@ def find_violations(
     current = set()
     if root == REPO_ROOT.resolve():
         violations.extend(baseline_policy_violations(root))
+    order: list[tuple[str, tuple | None]] = []  # (rel, job); job None = unreadable on disk
     for path in iter_scan_paths(root):
         rel = path.relative_to(root).as_posix()
         seen.add(rel)
         try:
             # Preserve bytes (including CRLF) when comparing Git object IDs.
             source = path.read_bytes().decode("utf-8")
-            syntax = None
-            entry = writers.get(rel)
-            pinned = by_path.get(rel, [])
-            oid = base_blobs.get(rel)
-            unchanged = oid is not None and source_blob_id(source, "sha256" if len(oid) == 64 else "sha1") == oid
-            if unchanged and len(pinned) == payload.get("file_counts", {}).get(rel, 0):
-                store_findings = pinned
-            else:
-                syntax = _Syntax(source, rel)
-                store_findings = classify_store_source(source, rel, syntax=syntax)
-            current.update(store_findings)
-            for finding in store_findings:
-                sanctioned = (entry is not None and entry.kind == "store_resolver"
-                              and finding.kind == "store_path" and finding.scope in entry.functions)
-                if finding not in baseline and not sanctioned:
-                    violations.append(f"{rel}: {finding.kind} in {finding.scope} ({finding.fingerprint})")
-            if rel.startswith("tests/") and (entry is None or entry.kind != "fixture_factory"):
-                continue
-            if entry is not None and entry.kind == "store_resolver":
-                # This kind never exempts constructor references.
-                entry = None
-            if rel == READER_BOUNDARY:
-                continue
-            syntax = syntax if syntax is not None else _Syntax(source, rel)
-            references = classify_source(source, rel, syntax=syntax)
-            if entry is not None:
-                if len(references) != entry.reference_count:
-                    violations.append(f"{rel}: pinned {entry.reference_count} references, found {len(references)}")
-                if entry.kind == "writer":
-                    violations.extend(writer_target_violations(source, entry, references, syntax=syntax))
-                else:
-                    calls = [
-                        ast.unparse(n)
-                        for n in syntax.nodes
-                        if isinstance(n, ast.Call) and _dotted(n.func) == "sqlite3.connect"
-                    ]
-                    if Counter(calls) != Counter(entry.calls):
-                        violations.append(f"{rel}: reader opens differ from pinned call expressions")
-            else:
-                violations.extend(f"{f.rel_path}:{f.line_no}: {f.kind}: {f.snippet}" for f in references)
-        except (OSError, SyntaxError):
+        except OSError:
+            order.append((rel, None))
+            continue
+        order.append((rel, (rel, source, writers.get(rel), by_path.get(rel, []), base_blobs.get(rel),
+                            payload.get("file_counts", {}).get(rel, 0))))
+    scans = iter(_scan_all([job for _, job in order if job is not None]))
+    for rel, job in order:
+        if job is None:
+            unreadable.append(rel)
+            continue
+        scan, entry = next(scans), job[2]
+        current.update(scan.store_findings)
+        for finding in scan.store_findings:
+            sanctioned = (entry is not None and entry.kind == "store_resolver"
+                          and finding.kind == "store_path" and finding.scope in entry.functions)
+            if finding not in baseline and not sanctioned:
+                violations.append(f"{rel}: {finding.kind} in {finding.scope} ({finding.fingerprint})")
+        violations.extend(scan.reference_violations)
+        if scan.unreadable:
             unreadable.append(rel)
     violations.extend(f"{f.path}: stale baseline {f.kind} in {f.scope} ({f.fingerprint})"
                       for f in sorted(baseline - current, key=lambda f: (f.path, f.kind, f.scope, f.fingerprint, f.occurrence)))

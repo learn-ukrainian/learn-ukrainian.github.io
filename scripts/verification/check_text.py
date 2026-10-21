@@ -11,6 +11,7 @@ a single call:
 
 from __future__ import annotations
 
+import re
 import sqlite3
 from pathlib import Path
 from typing import Any
@@ -58,6 +59,39 @@ _UA_GEC_INDEX: dict[tuple[str, ...], list[dict[str, Any]]] | None = None
 _UA_GEC_SIGNATURE: tuple[int, int, int, int] | None = None
 _UA_GEC_MAX_LEN: int = 1
 _UA_GEC_DROPPED_SKIPPED_KIND: int = 0
+
+_VESUM_BLOCK_PREFIX = re.compile(r"(?:[ \t]*(?:>|#{1,6}(?=[ \t])|[-+*](?=[ \t])|[0-9]{1,9}[.)](?=[ \t]))[ \t]*)*")
+_VESUM_WRAPPERS = " \t\u00a0\"'«»„“”‘’()[]{}—–-*_`"
+_VESUM_LABEL_MARKUP = str.maketrans("", "", "*_`[]")
+
+
+def _vesum_sentence_initial(text: str, token: Token) -> bool:
+    """Extra orthographic starts for VESUM only; keep tokenizer spans and flags intact.
+
+    A line, list item, heading, table cell or speech turn can start with an
+    orthographic capital. Acceptance still requires the lowercase VESUM row.
+    """
+    if token.sentence_initial:
+        return True
+    line_start = max(text.rfind("\n", 0, token.start), text.rfind("\r", 0, token.start)) + 1
+    prefix = text[line_start : token.start]
+    block = _VESUM_BLOCK_PREFIX.match(prefix)
+    assert block is not None  # The pattern also matches the empty prefix.
+    before = prefix[block.end() :].rstrip(_VESUM_WRAPPERS)
+    if not before or before[-1] in ".!?…|":
+        return True
+    if not before.endswith(":"):
+        return False
+    if "#" in block.group():
+        return True
+    # Setext headings can contain a subtitle after a colon too.
+    following_lines = text[token.start :].splitlines()
+    if len(following_lines) > 1 and re.fullmatch(r"[ \t]*(?:=+|-+)[ \t]*", following_lines[1]):
+        return True
+    label = re.split(r"[.!?…|]", before[:-1])[-1].translate(_VESUM_LABEL_MARKUP).strip()
+    return bool(re.fullmatch(r"[^\W\d_]+(?:[ \t-]+[^\W\d_]+)*", label)) and all(
+        part[:1].isupper() for part in re.split(r"[ \t-]+", label)
+    )
 
 
 def _sources_path_resolved() -> Path:
@@ -343,6 +377,7 @@ def check_text(
     total_tokens = 0
     tokens_by_form: dict[str, list[tuple[int, Any, Token]]] = {}
     unit_sentences: list[tuple[int, Any, str, list[Token]]] = []
+    sent_init_caps: set[str] = set()
 
     for item_idx, item_id, item_text in units:
         unit_toks = tokenize(item_text)
@@ -358,6 +393,8 @@ def check_text(
 
             total_tokens += 1
             tokens_by_form.setdefault(t.lookup, []).append((item_idx, item_id, t))
+            if "vesum" in active_checks and t.capitalised and _vesum_sentence_initial(item_text, t):
+                sent_init_caps.add(t.lookup)
 
             if t.sentence_initial and current_sentence:
                 unit_sentences.append((item_idx, item_id, item_text, current_sentence))
@@ -398,13 +435,6 @@ def check_text(
             }
 
     if "vesum" in active_checks and unique_forms:
-        sent_init_caps: set[str] = set()
-        for form, occurrences in tokens_by_form.items():
-            for _, _, t in occurrences:
-                if t.sentence_initial and t.capitalised:
-                    sent_init_caps.add(form)
-                    break
-
         query_words = list(dict.fromkeys(unique_forms + [f.lower() for f in unique_forms] + book_range_parts))
         try:
             vesum_map = verify_words(query_words, db_path=vesum_path)

@@ -46,7 +46,7 @@ def test_area_assignments_give_gemini_a_driver_slot_wherever_codex_has_one() -> 
     codex_lanes = {slot.removeprefix("codex-") for slot in slots if slot.startswith("codex-")}
     gemini_lanes = {slot.removeprefix("gemini-") for slot in slots if slot.startswith("gemini-")}
     assert codex_lanes
-    assert gemini_lanes == codex_lanes - {"epics"}
+    assert gemini_lanes == codex_lanes - {"epics", "practice"}
     assert assignments["assignments"]["epics"] == {
         "driver_agent_type": "infra-orchestrator",
         "slots": ["claude-epics", "codex-epics"],
@@ -218,7 +218,7 @@ def test_inventory_session_streams_wiring() -> None:
         ("ops.api", "monitor", "epic:7919"),
         ("operator-api", "monitor", "epic:7919"),
         ("atlas", "atlas", "epic:4387"),
-        ("practice", "atlas", "epic:4387"),
+        ("practice", "practice", "epic:11151"),
         ("practice-hub", "atlas", "epic:4387"),
         ("atlas.practice", "atlas", "epic:4387"),
         ("hramatka", "hramatka", "epic:4542"),

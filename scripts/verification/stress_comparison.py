@@ -7,9 +7,13 @@ import hashlib
 import json
 import random
 import re
+import sys
 from pathlib import Path
 
 import yaml
+
+if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 from scripts.verification import stress

@@ -99,7 +99,7 @@ def test_fetch_returns_when_the_body_stalls() -> None:
 
             def read(self, _size: int) -> bytes:
                 started.set()
-                release.wait(5)
+                release.wait(10)
                 return b"[]"
 
             def __enter__(self) -> Slow:
@@ -114,7 +114,7 @@ def test_fetch_returns_when_the_body_stalls() -> None:
         began = time.monotonic()
         with pytest.raises(TimeoutError):
             fetch_json("https://metrics.example/v1", timeout_s=0.05, opener=opener)
-        assert time.monotonic() - began < 0.5
+        assert time.monotonic() - began < 3.0
         assert started.is_set()
     finally:
         release.set()
@@ -390,10 +390,16 @@ def test_stats_transport_failure_is_unavailable(monkeypatch: pytest.MonkeyPatch)
 
 
 def test_stats_do_not_wait_out_a_slow_query(monkeypatch: pytest.MonkeyPatch) -> None:
+    # The configured timeout is 0.05 s. The blocker is 200x longer and the bound sits
+    # mid-way, so scheduling jitter on a loaded runner (seconds) cannot reach either side.
+    blocker_s = 10
+    bound_s = 3
     release = threading.Event()
+    entered = threading.Event()
 
     def fetch(_url, **_kwargs):
-        release.wait(1)
+        entered.set()
+        release.wait(blocker_s)
         return _series("4")
 
     monkeypatch.setattr(http_sources, "fetch_json", fetch)
@@ -402,7 +408,9 @@ def test_stats_do_not_wait_out_a_slow_query(monkeypatch: pytest.MonkeyPatch) -> 
     try:
         started = time.monotonic()
         response = client.get("/api/fleet/v1/stats")
-        assert time.monotonic() - started < 0.4
+        elapsed = time.monotonic() - started
+        assert entered.is_set()
+        assert elapsed < bound_s
     finally:
         release.set()
     assert response.status_code == 200

@@ -24,6 +24,7 @@ relaunch, and keepers read the same file
 | `devops-muse` | devops | Claude | `start-claude-driver.sh --epic devops` |
 | `harness` | harness | Codex | `start-codex-driver.sh --epic monitor` |
 | `atlas` | atlas | Codex | `start-codex-driver.sh --epic atlas` |
+| `practice` | practice | Claude | `start-claude-driver.sh --epic practice` |
 | `open-model-data` | open-model-data | Codex | `start-codex-driver.sh --epic open-model-data` |
 | `cto` | cto (lead, started last) | Claude | `start-claude-cto.sh --epic epics` |
 

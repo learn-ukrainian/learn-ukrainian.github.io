@@ -54,8 +54,8 @@ def test_roster_slots_accepted_by_validation() -> None:
     _inbox._validate_agent("cursor-infra")
 
 
-def test_roster_slot_count_is_47() -> None:
-    """Verify 27 infrastructure, two epics coordination, thirteen Ukrainian content/data, and five core slots.
+def test_roster_slot_count_is_49() -> None:
+    """Verify 27 infrastructure, two epics, two practice, thirteen Ukrainian content/data, and five core slots.
 
     The operator order of 2026-10-16 (#10835) added grok-monitor and grok-open-model-data.
     """
@@ -65,9 +65,9 @@ def test_roster_slot_count_is_47() -> None:
     for area_data in data["assignments"].values():
         if isinstance(area_data, dict):
             slots.extend(area_data.get("slots", []))
-    assert len(slots) == 47
-    assert len(set(slots)) == 47
-    assert len([slot for slot in slots if not slot.startswith("muse-")]) == 45
+    assert len(slots) == 49
+    assert len(set(slots)) == 49
+    assert len([slot for slot in slots if not slot.startswith("muse-")]) == 47
     assert data["assignments"]["monitor"]["slots"] == ["muse-monitor", "grok-monitor"]
     assert set(data["assignments"]["core"]["slots"]) == {
         "claude-core",

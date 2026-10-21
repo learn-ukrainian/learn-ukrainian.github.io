@@ -1,8 +1,8 @@
 """Nested program epic #9737 inside the infra-harness stream (#9776).
 
-infra-harness registers two epics, #6943 (the stream epic) and #9737 (a nested
-program whose native parent is #6943). Every registry consumer must accept two
-epics in one stream, and a #9737 child must resolve to exactly one effective
+infra-harness registers #6943 (the stream epic), #9737 (a nested
+program whose native parent is #6943) and #11254 (an overflow epic). Every
+registry consumer must accept several epics in one stream, and a #9737 child must resolve to exactly one effective
 epic (9737) — never to both, which would be double membership.
 """
 
@@ -26,7 +26,7 @@ from scripts.orchestration.task_closeout import GhGitHubAdapter
 ROOT = Path(__file__).resolve().parents[1]
 REGISTRY_PATH = ROOT / "scripts" / "config" / "issue_streams.yaml"
 STREAM = "infra-harness"
-PARENT, PROGRAM = 6943, 9737
+PARENT, PROGRAM, OVERFLOW = 6943, 9737, 11254
 CHILD = 9739
 
 
@@ -57,8 +57,8 @@ def _audit_report(edges: dict[int, list[int]], open_numbers: list[int]) -> dict:
 
 def test_registry_lists_both_epics_in_one_stream_and_no_epic_in_two_streams():
     registry = load_registry(REGISTRY_PATH)
-    assert registry[STREAM] == [PARENT, PROGRAM]
-    assert load_registry(REGISTRY_PATH, audit_only=True)[STREAM] == [PARENT, PROGRAM]
+    assert registry[STREAM] == [PARENT, PROGRAM, OVERFLOW]
+    assert load_registry(REGISTRY_PATH, audit_only=True)[STREAM] == [PARENT, PROGRAM, OVERFLOW]
     all_epics = [epic for epics in registry.values() for epic in epics]
     assert len(all_epics) == len(set(all_epics))
 
@@ -242,7 +242,7 @@ def test_lifecycle_refuses_native_cycle_that_never_reaches_a_registered_epic():
 
 
 def test_session_stream_readers_keep_stream_epic_as_anchor():
-    assert stream_map(ROOT)[STREAM] == [PARENT, PROGRAM]
+    assert stream_map(ROOT)[STREAM] == [PARENT, PROGRAM, OVERFLOW]
     # The first listed epic stays the launcher/handoff anchor.
     assert stream_anchor_id(STREAM, ROOT).split(":", 1)[1] == str(load_registry(REGISTRY_PATH)[STREAM][0])
 

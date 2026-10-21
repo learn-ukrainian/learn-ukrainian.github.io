@@ -748,6 +748,15 @@ def test_creator_path_never_consults_custody_or_copies_output(writer_fixture, mo
     assert "succession" not in receipt and "output" not in manifest
 
 
+def test_practice_succession_has_exact_lane_slots():
+    import yaml
+
+    streams = yaml.safe_load(output.SUCCESSION_MAP.read_text())["streams"]
+    assert streams["epic:11151"]["initiators"] == [  # designated-fixture: #11176 practice anchor
+        "claude-practice", "codex-practice"
+    ]
+
+
 def test_reviewed_map_is_exact_and_launcher_canonical():
     import yaml
 

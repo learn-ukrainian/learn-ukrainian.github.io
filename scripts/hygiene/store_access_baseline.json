@@ -1177,20 +1177,6 @@
       "occurrence": 0
     },
     {
-      "path": "scripts/lexicon/sum20_lookup.py",
-      "kind": "store_path",
-      "scope": "_resolve_sources_db",
-      "fingerprint": "9ee9cc970c9e137b4d115fafa58d58a87ee2f41ce76ac525b3d1d8b82918f90f",
-      "occurrence": 0
-    },
-    {
-      "path": "scripts/lexicon/sum20_lookup.py",
-      "kind": "store_path",
-      "scope": "_resolve_sources_db",
-      "fingerprint": "862f697430b60b3b9f3e172b00c6db49e2fc6c3d12c3a4fb84c43bcae1814e22",
-      "occurrence": 0
-    },
-    {
       "path": "scripts/lexicon/teacher_deck.py",
       "kind": "store_path",
       "scope": "_parser",

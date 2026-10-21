@@ -19,12 +19,14 @@ Validates:
 from __future__ import annotations
 
 import asyncio
+import hashlib
 import importlib.util
 import json
 import logging
 import sqlite3
 import sys
 import time
+from dataclasses import asdict
 from pathlib import Path
 from unittest.mock import patch
 
@@ -136,9 +138,7 @@ def test_mcp_round2_no_firm_book_false_positives(server_module, requires_vesum_d
 
 
 def test_mcp_concluding_is_reported_once(server_module, requires_vesum_db, requires_sources_db):
-    result = _run(
-        server_module.call_tool("check_text", {"text": "Це заключна вистава", "checks": ["russian_shadow"]})
-    )
+    result = _run(server_module.call_tool("check_text", {"text": "Це заключна вистава", "checks": ["russian_shadow"]}))
     payload = json.loads(result[0].text)
     assert len(payload["problems"]) == 1
     assert payload["problems"][0]["detail"]["pattern_id"] == "concluding"
@@ -377,6 +377,244 @@ def hermetic_ua_gec_vesum(monkeypatch, tmp_path):
 
     monkeypatch.setattr("scripts.verification.check_text.verify_words", _verify)
     return analyses
+
+
+# Sources verify_words, 2026-10-20: lowercase forms and proper names FOUND;
+# common-word initial capitals and both spellings of the non-word controls NOT FOUND.
+MARKUP_CONTEXTS = {
+    **{f"atx-{level}": "#" * level + " {word}" for level in range(1, 7)},
+    "setext-equals": "{word}\n===",
+    "setext-dashes": "{word}\n---",
+    "setext-subtitle": "Сценарій 1: {word}\n===",
+    **{
+        f"speaker-{name}-{position}": f"{marker}Марта{':' if position == 'inside' else ''}{marker}"
+        + (" " if position == "inside" else ": ")
+        + "{word}"
+        for name, marker in (
+            ("bold-star", "**"),
+            ("bold-underscore", "__"),
+            ("italic-star", "*"),
+            ("italic-underscore", "_"),
+        )
+        for position in ("inside", "outside")
+    },
+    "list-dash": "- {word}",
+    "list-star": "* {word}",
+    "list-plus": "+ {word}",
+    "list-number-period": "1. {word}",
+    "list-number-parenthesis": "2) {word}",
+    "quote": "> {word}",
+    "quote-nested": "> > {word}",
+    "table-first": "| {word} | квартира |",
+    "table-later": "| квартира | {word} |",
+    "table-no-leading-pipe": "квартира | {word}",
+    "bold-star": "**{word}**",
+    "bold-underscore": "__{word}__",
+    "italic-star": "*{word}*",
+    "italic-underscore": "_{word}_",
+    "inline-code": "`{word}`",
+    "inline-code-double": "``{word}``",
+    "link": "[{word}](https://example.org)",
+    "reference-link": "[{word}][home]",
+    "combination": "> - **[{word}](https://example.org)**",
+    "combination-number": "> 2) _{word}_",
+    "combination-heading": "> - ## {word}",
+    "combination-speaker": "> - **Марта:** [{word}](https://example.org)",
+    "heading-colon": "## Сценарій 1: {word}",
+    "speaker-plain": "Олег: {word}",
+    "speaker-midline": "Привіт, Олеже!  Марта: {word}",
+    "speaker-newline": "квартира\nОлег: {word}",
+    "line-start": "квартира\n{word}",
+    "windows-line-start": "квартира\r\n{word}",
+    "multiline-markup": "квартира\n> + __{word}__",
+    "plain": "{word}",
+    "plain-sentence": "квартира. {word}",
+}
+MARKUP_WORDS = ("Яка", "Марта", "Технологіческа", "Квартирра")
+MARKUP_VALID_FORMS = (
+    "сценарій",
+    "моє",
+    "помешкання",
+    "Марта",
+    "яка",
+    "світла",
+    "квартира",
+    "привіт",
+    "Олег",
+    "із",
+    "задоволенням",
+    "кухня",
+    "велика",
+    "Марто",
+    "дякую",
+    "Олеже",
+    "слово",
+    "це",
+    "ця",
+    "гарний",
+    "день",
+    "тут",
+    "там",
+    "будинок",
+    "вода",
+    "світло",
+)
+MARKUP_STYLE_CAPITALS = (
+    "Сценарій",
+    "Моє",
+    "Яка",
+    "Привіт",
+    "Із",
+    "Кухня",
+    "Дякую",
+    "Слово",
+    "Квартира",
+    "Це",
+    "Ця",
+    "Світла",
+    "Велика",
+    "Помешкання",
+    "Задоволенням",
+    "Гарний",
+    "День",
+    "Тут",
+    "Там",
+    "Будинок",
+    "Вода",
+    "Світло",
+)
+MARKUP_REPRODUCTIONS = (
+    "## Сценарій 1: Моє помешкання",
+    "**Марта:** Яка світла квартира!",
+    "Привіт.\n**Олег:** Із задоволенням.",
+    "Олег: Привіт, Марто! Дякую.",
+    "Привіт, Олеже!  Марта: Яка світла квартира!",
+    "Яка світла квартира.",
+    "- Кухня велика",
+)
+
+
+@pytest.fixture
+def markup_vesum(hermetic_ua_gec_vesum):
+    """Existence-only replay of Sources-verified rows, without synthetic analyses."""
+    hermetic_ua_gec_vesum.update({word: [{}] for word in MARKUP_VALID_FORMS})
+
+
+@pytest.mark.usefixtures("markup_vesum")
+@pytest.mark.parametrize("context", MARKUP_CONTEXTS, ids=list(MARKUP_CONTEXTS))
+@pytest.mark.parametrize("word", MARKUP_WORDS, ids=("lowercase-row", "proper-noun", "nonword-1", "nonword-2"))
+def test_markup_denominator(context, word):
+    text = MARKUP_CONTEXTS[context].format(word=word)
+    result = check_text(text=text, checks=["vesum"])
+    expected = []
+    if word in ("Технологіческа", "Квартирра"):
+        start = text.index(word)
+        expected = [
+            {
+                "form": word,
+                "check": "vesum",
+                "detail": {"status": "no_vesum_row"},
+                "locations": [[None, start, start + len(word)]],
+            }
+        ]
+    assert result["problems"] == expected
+    assert result["suspicions"] == []
+
+
+@pytest.mark.usefixtures("markup_vesum")
+@pytest.mark.parametrize("text", MARKUP_REPRODUCTIONS)
+def test_markup_order_reproductions(text):
+    assert check_text(text=text, checks=["vesum"])["problems"] == []
+
+
+@pytest.mark.usefixtures("markup_vesum")
+@pytest.mark.parametrize(
+    "text",
+    (
+        "квартира Яка",
+        "квартира: Технологіческа",
+        "квартира: Марта",
+        "квартира: Яка",
+        "квартира **Яка**",
+        "квартира `Яка`",
+        "квартира [Яка](home)",
+    ),
+)
+def test_markup_mid_sentence_guards(text):
+    result = check_text(text=text, checks=["vesum"])
+    word = text.split()[-1].strip("*`") if "[" not in text else "Яка"
+    if word == "Марта":
+        assert result["problems"] == []
+    else:
+        start = text.index(word)
+        assert [(p["form"], p["locations"]) for p in result["problems"]] == [(word, [[None, start, start + len(word)]])]
+
+
+@pytest.mark.usefixtures("markup_vesum")
+def test_markup_item_ids_and_repeated_locations():
+    text = "> **Технологіческа**\r\n| Технологіческа |"
+    result = check_text(items=[{"id": "markup", "text": text}], checks=["vesum"])
+    assert result["problems"][0]["locations"] == [["markup", 4, 18], ["markup", 24, 38]]
+
+
+@pytest.mark.usefixtures("markup_vesum")
+@pytest.mark.parametrize("text", ("## ЯКА", "####### Яка", "+Яка", "квартира # Яка"))
+def test_markup_keeps_first_letter_only_and_prefix_guards(text):
+    word = "ЯКА" if "ЯКА" in text else "Яка"
+    assert [p["form"] for p in check_text(text=text, checks=["vesum"])["problems"]] == [word]
+
+
+def _markup_style_sample():
+    """602 synthetic Cyrillic words, assembled only from Sources-verified forms."""
+    contexts = (
+        "atx-2",
+        "speaker-bold-star-inside",
+        "list-plus",
+        "quote-nested",
+        "table-later",
+        "bold-underscore",
+        "inline-code",
+        "speaker-plain",
+        "line-start",
+    )
+    lines = [
+        MARKUP_CONTEXTS[contexts[i % len(contexts)]].format(word=word) for i, word in enumerate(MARKUP_STYLE_CAPITALS)
+    ]
+    used = sum(t.kind == "cyrillic" for line in lines for t in tokenize(line))
+    return "\n".join([*lines, "квартира " * (602 - used - 2), "> Технологіческа", "+ Квартирра"])
+
+
+@pytest.mark.usefixtures("markup_vesum")
+def test_markup_602_word_style_sample():
+    text = _markup_style_sample()
+    result = check_text(text=text, checks=["vesum"])
+    assert result["summary"]["tokens"] == 602
+    assert [p["form"] for p in result["problems"]] == ["Технологіческа", "Квартирра"]
+    assert sum(len(p["locations"]) for p in result["problems"]) == 2
+
+
+def test_markup_real_vesum_denominator(requires_vesum_db):
+    rows = verify_words([*MARKUP_VALID_FORMS, *MARKUP_WORDS], db_path=requires_vesum_db)
+    assert all(rows[word] for word in MARKUP_VALID_FORMS)
+    assert all(not rows[word] for word in ("Яка", "Технологіческа", "Квартирра"))
+    for template in MARKUP_CONTEXTS.values():
+        for word in MARKUP_WORDS:
+            result = check_text(text=template.format(word=word), checks=["vesum"])
+            assert [p["form"] for p in result["problems"]] == (
+                [word] if word in ("Технологіческа", "Квартирра") else []
+            )
+
+
+@pytest.mark.usefixtures("markup_vesum")
+def test_markup_tokenizer_plain_golden():
+    # Freeze full token records, including offsets and sentence_initial, before
+    # the local verifier runs. The digest was captured on the unchanged base.
+    text = "Яка світла квартира.\nОлег: Привіт, Марто! Дякую.\r\nквартира\nМарта"
+    before = json.dumps([asdict(t) for t in tokenize(text)], ensure_ascii=False, sort_keys=True).encode()
+    assert hashlib.sha256(before).hexdigest() == "5403f2bc03799e444829a49406b0358da081d1d2afe01d87540aecc5006cdb44"
+    check_text(text=text, checks=["vesum"])
+    after = json.dumps([asdict(t) for t in tokenize(text)], ensure_ascii=False, sort_keys=True).encode()
+    assert after == before
 
 
 @pytest.mark.usefixtures("hermetic_ua_gec_vesum")

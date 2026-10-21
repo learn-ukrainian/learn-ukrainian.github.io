@@ -24,6 +24,9 @@ from typing import Any
 
 import yaml
 
+if __package__ in (None, ""):  # run as a file: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
+
 from scripts.build.fresh.draft_schema import LEVELS
 from scripts.build.fresh.immersion import lesson_immersion_payload
 from scripts.build.fresh.manifest import learner_state_sha256
