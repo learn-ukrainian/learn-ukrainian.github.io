@@ -672,9 +672,10 @@ def cooler_lanes(rows: list[dict[str, Any]]) -> list[str]:
 
 def admission_status(tasks_dir: Path | None = None) -> dict[str, Any]:
     """Would ``delegate.py dispatch`` admit a write worker now? Report only: dead pids are not swept
-    and the disk reaper does not run, so a disk at the refuse threshold reads as a refusal."""
+    and the disk reaper does not run. PSI diagnostics do not read or write journal
+    state. A disk at the refuse threshold reads as a refusal."""
     try:
-        decision = dispatch_admission.evaluate("workspace-write", tasks_dir or default_tasks_dir())
+        decision = dispatch_admission.evaluate("workspace-write", tasks_dir or default_tasks_dir(), record_shadow=False)
     except ValueError as exc:
         return {"admitted": None, "line": f"admission (write dispatch): unknown — invalid threshold: {exc}"}
     record = decision.to_record()
