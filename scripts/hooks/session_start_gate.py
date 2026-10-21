@@ -388,8 +388,10 @@ def phase_rollover_detect(args: argparse.Namespace) -> dict[str, Any]:
                 frc, fout, _ferr = _formatted()
             except Exception as exc:
                 return _crash(exc)
-            if frc == 0:
-                return {"status": "stop", "context": fout}
+            # detect exits 2 for the ambiguous case in every format; the
+            # session-start rendering is the deliverable, not a failure.
+            if frc in {0, 2} and fout.startswith(thread_handoff.MULTIPLE_PENDING_SESSION_START_HEADER):
+                return {"status": "stop", "context": fout, "detect_status": "ambiguous"}
             return {
                 "status": "stop",
                 "context": (
