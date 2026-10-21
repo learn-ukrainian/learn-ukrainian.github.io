@@ -5,6 +5,7 @@ GitHub's TruffleHog action has built-in range handling for ``push`` and
 This resolver supplies explicit base/head values for those events and main
 pushes. Invalid landing ranges select the action's full-history path.
 Invalid manual-dispatch ranges raise instead of falling back to a full scan.
+Only the explicit ``full-history-audit`` dispatch input requests an audit.
 
 A scheduled run has no ``before``/``after``.  Leaving both inputs empty makes
 the pinned action scan every commit (``--since-commit '' --branch ''``) and
@@ -235,6 +236,7 @@ def resolve_scan_scope(
     dispatch_head_sha: str = "",
     dispatch_ref: str = "",
     default_branch_ref: str = "",
+    dispatch_scan_mode: str = "",
     repo_root: Path | None = None,
 ) -> ScanScope:
     """Return a validated landing range or an explicit full-scan fallback.
@@ -253,6 +255,8 @@ def resolve_scan_scope(
     ``workflow_dispatch`` scans the default-branch merge-base through the
     dispatched SHA. Main refs and heads already on main reuse the schedule
     window, anchored to that SHA. Missing inputs or ancestry raise an error.
+    Only ``dispatch_scan_mode=full-history-audit`` selects full history with
+    ``mode=audit``. An absent or empty mode stays bounded; invalid modes raise.
     """
 
     event = event_name.strip()
@@ -260,6 +264,10 @@ def resolve_scan_scope(
     if event == "schedule":
         return _schedule_scope(root)
     if event == "workflow_dispatch":
+        if dispatch_scan_mode == "full-history-audit":
+            return ScanScope("", "HEAD", "", "audit", "explicit-full-history-audit")
+        if dispatch_scan_mode not in ("", "bounded"):
+            raise SecretScanScopeError("invalid-dispatch-scan-mode")
         return _dispatch_scope(root, dispatch_head_sha, dispatch_ref, default_branch_ref)
     if event not in _SCOPED_EVENTS:
         return ScanScope("", "", "", "unchanged", "event-not-scoped")
@@ -325,6 +333,7 @@ def main() -> int:
             dispatch_head_sha=os.environ.get("DISPATCH_HEAD_SHA", ""),
             dispatch_ref=os.environ.get("DISPATCH_REF", ""),
             default_branch_ref=os.environ.get("DEFAULT_BRANCH_REF", ""),
+            dispatch_scan_mode=os.environ.get("DISPATCH_SCAN_MODE", ""),
         )
     except SecretScanScopeError as exc:
         print(f"secret-scan-scope: {exc}", file=sys.stderr)
