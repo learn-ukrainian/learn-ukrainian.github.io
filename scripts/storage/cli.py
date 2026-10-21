@@ -1,7 +1,7 @@
-"""CLI for the storage topology status/resolver.
+"""CLI for storage topology and SQLite database permission holds.
 
-What it does: reports the approved bulk-root and active-DB topology read-only.
-When to use: agent onboarding, rebuild path debugging, SMB outage checks.
+What it does: reports topology or holds/lifts database and companion permissions.
+When to use: onboarding, path debugging, and quiesced SQLite maintenance.
 When NOT to use: do not use this to copy, delete, or evict corpus files.
 """
 
@@ -13,33 +13,35 @@ import sys
 from pathlib import Path
 
 from scripts.storage.topology import resolve_topology
+from scripts.storage.wal_permissions import hold_database, lift_database
 
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="python -m scripts.storage",
         description=(
-            "Report the approved storage topology (local sources.db, SMB bulk "
-            "mirror, Google Drive fallback) without mutating any files.\n"
-            "Use for status/debugging only — never to open SQLite on SMB or to "
-            "evict/delete bulk sources."
+            "Report storage topology or hold/lift SQLite database permissions.\n"
+            "Use status for debugging and hold/lift for quiesced maintenance; "
+            "never use this to evict/delete bulk sources."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
             "  .venv/bin/python -m scripts.storage status\n"
             "  .venv/bin/python -m scripts.storage status --json\n"
-            "  .venv/bin/python -m scripts.storage status --repo /path/to/checkout\n"
+            "  .venv/bin/python -m scripts.storage hold example.db --json\n"
             "\n"
             "From a dispatch worktree, use the primary checkout interpreter:\n"
             "  <primary-checkout>/.venv/bin/python -m scripts.storage status\n"
             "Never create or use a worktree-local .venv for project commands.\n"
             "\n"
             "Outputs:\n"
-            "  Human text or JSON on stdout. No files written. No cloud materialization.\n"
+            "  Human text or JSON on stdout. Status is read-only. Hold/lift change\n"
+            "  db and existing companion modes to 0444/0644. No cloud materialization.\n"
             "\n"
             "Exit codes:\n"
-            "  0 — status emitted (bulk may still be unavailable)\n"
+            "  0 — status emitted or permissions changed\n"
+            "  1 — permission change failed (see stderr for rollback failures)\n"
             "  2 — invalid arguments\n"
             "\n"
             "Related:\n"
@@ -66,6 +68,27 @@ def build_parser() -> argparse.ArgumentParser:
         default=None,
         help="Repository root to inspect (default: discover from cwd).",
     )
+    for command, mode in (("hold", "0444"), ("lift", "0644")):
+        permissions = sub.add_parser(
+            command,
+            help=f"Set database and existing companion permissions to {mode}.",
+            description=(
+                f"Set database and existing -wal/-shm/-journal permissions to {mode}.\n"
+                "Quiesce clients first and reopen connections afterwards. This is\n"
+                "not crash-atomic; original modes are restored on chmod failure."
+            ),
+            formatter_class=argparse.RawDescriptionHelpFormatter,
+            epilog=(
+                f"Example: .venv/bin/python -m scripts.storage {command} example.db --json\n"
+                "Outputs: changed path/mode pairs on stdout; file modes changed.\n"
+                "Exit codes: 0 success; 1 filesystem/rollback failure; 2 invalid arguments.\n"
+                "Related: docs/runbooks/storage-topology.md; issue #11284."
+            ),
+        )
+        permissions.add_argument("db_path", type=Path, help="SQLite database path, e.g. example.db.")
+        permissions.add_argument(
+            "--json", action="store_true", help="Emit affected paths and octal modes as JSON (default: human text)."
+        )
     return parser
 
 
@@ -116,6 +139,23 @@ def _format_human(payload: dict) -> str:
 def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
+    if args.command in {"hold", "lift"}:
+        operation, mode = (hold_database, 0o444) if args.command == "hold" else (lift_database, 0o644)
+        try:
+            affected = operation(args.db_path)
+        except (OSError, ExceptionGroup) as error:
+            print(f"{args.command} failed: {error}", file=sys.stderr)
+            if isinstance(error, ExceptionGroup):
+                for failure in error.exceptions:
+                    print(f"  {failure}", file=sys.stderr)
+            return 1
+        payload = {str(path): f"{mode:04o}" for path in affected}
+        if args.json:
+            print(json.dumps(payload, indent=2, sort_keys=True))
+        else:
+            for path, new_mode in payload.items():
+                print(f"{path}: {new_mode}")
+        return 0
     if args.command != "status":
         parser.error(f"unsupported command: {args.command}")
         return 2

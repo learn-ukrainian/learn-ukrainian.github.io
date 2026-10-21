@@ -76,6 +76,33 @@ Rebuild consumers (`scripts/wiki/config.py` → `GDRIVE_DATA`) use the same
 resolver: `LU_BULK_ROOT` → SMB → `LU_GDRIVE_DATA` → auto Drive → unavailable.
 The legacy name `GDRIVE_DATA` is retained for call-site compatibility.
 
+## Hold or lift SQLite permissions
+
+Quiesce database clients before changing permissions, and prevent concurrent
+creation, removal, or replacement of database components. Reopen connections
+afterwards: existing connections can retain writable file descriptors.
+
+```bash
+.venv/bin/python -m scripts.storage hold example.db --json
+.venv/bin/python -m scripts.storage lift example.db --json
+```
+
+`hold` sets the database and existing `-wal`, `-shm`, and `-journal` files to
+`0444`. `lift` sets the same files to `0644`. Missing companions are optional;
+a missing database is an error. JSON maps affected paths to octal mode strings.
+The commands refuse symlinks and non-regular files.
+
+The programmatic API exports `hold_database`, `lift_database`,
+`get_companion_paths`, and `inspect_database_permissions` from `scripts.storage`.
+Inspection returns integer modes, with `None` for absent components.
+`strict=False` on hold or lift skips missing paths, including the database.
+Other filesystem errors still raise.
+
+If chmod fails, the helper attempts to restore every changed file's original
+mode. A rollback failure is reported alongside the original error. Multi-file
+chmod is not crash-atomic and does not exclude concurrent clients. Privileged
+users can bypass mode bits. See the helper's module documentation for its contract.
+
 ## Mirror maintenance
 
 Tracked scripts (manual, non-destructive):

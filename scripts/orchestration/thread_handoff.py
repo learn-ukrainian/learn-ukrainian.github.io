@@ -676,10 +676,42 @@ def _bundle_order(manifest: Mapping[str, Any]) -> tuple[int, int, datetime, str,
         upload_seq = int(manifest.get("upload_seq", 0))
     if generation != manifest["generation"] or upload_seq != manifest.get("upload_seq", 0):
         raise ValueError("bundle generation or upload_seq is not an integer")
-    # Stored generations and upload sequences must fit SQLite signed 64-bit integers.
-    if not 1 <= generation <= 2**63 - 1 or not 0 <= upload_seq <= 2**63 - 1:
+    if not 1 <= generation <= _BUNDLE_SQLITE_INT_MAX or not 0 <= upload_seq <= _BUNDLE_SQLITE_INT_MAX:
         raise ValueError("bundle generation or upload_seq is out of range")
     return generation, ROLLOVER_BUNDLE_STATUS_RANK[status], prepared_at, rollover_id, upload_seq
+
+
+# Stored generations and upload sequences must fit SQLite signed 64-bit integers.
+_BUNDLE_SQLITE_INT_MAX = 2**63 - 1
+
+
+def _bundle_canonical_agent(value: object) -> bool:
+    """A handoff slot name exactly as written, that the bundle store also accepts on upload."""
+    from agents_extensions.shared.session_streams.store import rollover_bundle_identity_is_safe
+
+    if not isinstance(value, str) or not rollover_bundle_identity_is_safe(value):
+        return False
+    try:
+        return normalize_agent_name(value) == value
+    except ValueError:
+        return False
+
+
+def _bundle_canonical_stream_id(value: object) -> bool:
+    """A stream id the session-stream store accepts, exactly as written."""
+    from agents_extensions.shared.session_streams.model import validate_stream_id
+
+    if not isinstance(value, str):
+        return False
+    try:
+        return validate_stream_id(value) == value
+    except ValueError:
+        return False
+
+
+def _bundle_canonical_upload_seq(value: object) -> bool:
+    """A stored upload sequence: a positive JSON integer (never a bool) within SQLite range."""
+    return type(value) is int and 1 <= value <= _BUNDLE_SQLITE_INT_MAX
 
 
 def _bundle_state_manifest(
@@ -6003,6 +6035,16 @@ def _bundle_import_error(reason: str) -> int:
     return 2
 
 
+def _bundle_import_none() -> int:
+    """The API lists no bundle for this handoff slot: nothing to install (#11257).
+
+    Only the empty own-slot listing is this typed none. A 404 on a bundle the
+    listing named stays a refusal, like every other semantic 4xx.
+    """
+    print(json.dumps({"status": "none", "action": "import-bundle"}, separators=(",", ":")))
+    return 0
+
+
 class BundleReconcileRefused(ValueError):
     """A typed refusal at a reconciliation filesystem boundary."""
 
@@ -6655,24 +6697,43 @@ def cmd_import_bundle(args: argparse.Namespace) -> int:
             stream_id = str(args.from_api)
             listed = _bundle_api_list(args, stream_id=stream_id, agent=agent)
 
-            def upload_seq(row: Mapping[str, Any]) -> int:
-                with _bundle_conversion():
-                    return int(row.get("upload_seq", (row.get("manifest") or {}).get("upload_seq", 0)))
+            def row_identity(row: Mapping[str, Any]) -> tuple[str, int]:
+                """Return a listed row's slot agent and upload sequence.
 
-            def row_agent(row: Mapping[str, Any]) -> str:
-                if row.get("agent") is not None:
-                    return str(row["agent"])
+                Only a complete, canonical identity whose row and manifest
+                copies agree, of the listed stream, can make a row foreign; a
+                missing, non-canonical or contradictory one never reads as an
+                empty slot (#11257).
+                """
                 manifest = row.get("manifest")
                 if not isinstance(manifest, Mapping):
                     raise ValueError("bundle API list manifest is malformed")
-                return str(manifest.get("agent") or "")
+                identity: dict[str, Any] = {}
+                for name, canonical in (
+                    ("agent", _bundle_canonical_agent),
+                    ("stream_id", _bundle_canonical_stream_id),
+                    ("upload_seq", _bundle_canonical_upload_seq),
+                ):
+                    values = [source[name] for source in (row, manifest) if name in source]
+                    if not values or not all(canonical(value) for value in values):
+                        raise ValueError(f"bundle API list row has no valid {name}")
+                    if len(set(values)) > 1:
+                        raise ValueError(f"bundle API list row contradicts its manifest {name}")
+                    identity[name] = values[0]
+                if identity["stream_id"] != stream_id:
+                    raise ValueError("bundle API list row is not of the listed stream")
+                return identity["agent"], identity["upload_seq"]
 
             # Only this handoff slot's own bundles are candidates; another
             # slot's bundle never installs here, whatever its upload sequence.
-            own_rows = [row for row in listed if row_agent(row) == agent]
-            if not own_rows:
-                raise RolloverBundleNotFound("bundle API has no matching bundle")
-            sequence = upload_seq(max(own_rows, key=upload_seq))
+            # Every row's identity is checked, so one malformed or
+            # contradictory row refuses the whole listing.
+            identities = [row_identity(row) for row in listed]
+            own_sequences = [sequence for row_agent, sequence in identities if row_agent == agent]
+            if not own_sequences:
+                # An empty slot is a normal state, not a refusal (#11257).
+                return _bundle_import_none()
+            sequence = max(own_sequences)
             manifest, blob = _bundle_api_by_seq(args, stream_id=stream_id, upload_seq=sequence)
             manifest, members = verify_rollover_bundle(blob, repo_root=repo_root, manifest_override=manifest)
 
